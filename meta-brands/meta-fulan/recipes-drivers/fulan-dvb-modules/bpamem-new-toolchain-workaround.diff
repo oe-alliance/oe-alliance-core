@@ -1,0 +1,54 @@
+For unknown reasons, building with jethro's gcc-4.9 makes the
+data.bpa_part point to a bogus location, making the whole code
+blow up badly.
+Instead of wasting time trying to debug all this, just hardcode
+the LMI_IO partition, as this is all that is used (by me :-)
+anyway.
+Looking more thoroughly at the code, copy_from_user() of a struct
+containing a char * pointer is a *very* questionable thing to do
+anyway, so it was probably pure luck that this worked at all...
+
+Index: b/bpamem/bpamem.c
+===================================================================
+--- a/bpamem/bpamem.c
++++ b/bpamem/bpamem.c
+@@ -71,16 +71,17 @@ int bpamemio_allocmem(BPAMemAllocMemData
+ 		return -1;
+ 	}
+ 		
+-	DEBUG_PRINTK("data.bpa_part = %s\n", data.bpa_part);
++	DEBUG_PRINTK("data.mem_size = %lu\n", data.mem_size);
++	// DEBUG_PRINTK("data.bpa_part = %s\n", data.bpa_part);
+ 	
+ 	data.device_num = dev;
+ 	if(data.mem_size % PAGE_SIZE != 0) 
+ 	      data.mem_size = (data.mem_size / PAGE_SIZE + 1) * PAGE_SIZE;
+ 	
+-	bpamem_dev[dev].part = bpa2_find_part(data.bpa_part);
++	bpamem_dev[dev].part = bpa2_find_part("LMI_IO");
+ 	if(!bpamem_dev[dev].part)
+ 	{
+-		DEBUG_PRINTK("bpa part %s not found\n", data.bpa_part);
++		DEBUG_PRINTK("bpa part %s not found\n", "LMI_IO");
+ 		bpamem_dev[dev].used = 0;
+ 		return -1;
+ 	}
+@@ -125,14 +126,15 @@ int bpamemio_mapmem(BPAMemMapMemData *in
+ 		return -1;
+ 	}
+ 		
+-	DEBUG_PRINTK("data.bpa_part = %s\n", data.bpa_part);
++	DEBUG_PRINTK("data.mem_size = %lu\n", data.mem_size);
++	// DEBUG_PRINTK("data.bpa_part = %s\n", data.bpa_part);
+ 	
+ 	data.device_num = dev;
+ 	
+-	bpamem_dev[dev].part = bpa2_find_part(data.bpa_part);
++	bpamem_dev[dev].part = bpa2_find_part("LMI_IO");
+ 	if(!bpamem_dev[dev].part)
+ 	{
+-		DEBUG_PRINTK("bpa part %s not found\n", data.bpa_part);
++		DEBUG_PRINTK("bpa part %s not found\n", "LMI_IO");
+ 		bpamem_dev[dev].used = 0;
+ 		return -1;
+ 	}

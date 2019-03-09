@@ -1,0 +1,10 @@
+--- linux-3.4.100/include/linux/Kbuild	2015-10-06 10:23:56.122903416 +0200
++++ linux-3.4.100/include/linux/Kbuild_patched	2015-10-06 10:38:46.291039210 +0200
+@@ -385,6 +385,7 @@ header-y += usbdevice_fs.h
+ header-y += utime.h
+ header-y += utsname.h
+ header-y += uvcvideo.h
++header-y += v4l2-dv-timings.h
+ header-y += v4l2-mediabus.h
+ header-y += v4l2-subdev.h
+ header-y += veth.h

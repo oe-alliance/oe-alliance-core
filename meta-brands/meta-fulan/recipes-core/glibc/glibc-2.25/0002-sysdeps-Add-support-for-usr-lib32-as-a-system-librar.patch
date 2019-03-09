@@ -1,0 +1,51 @@
+From ede475790c43ed4d10dc0f506372bc3724f695c6 Mon Sep 17 00:00:00 2001
+From: Ikey Doherty <ikey@solus-project.com>
+Date: Tue, 11 Apr 2017 05:16:27 +0100
+Subject: [PATCH 2/3] sysdeps: Add support for /usr/lib32 as a system library
+ directory
+
+As part of the Solus multilib implementation, we mandate a complete
+separation between 64-bit and 32-bit libraries, as a 64-bit first
+operating system.
+
+We currently configure slibdir/rtlddir as /usr/lib32, however without
+an ld.so.conf.d configuration, ldconfig will not pick up on these
+libraries.
+
+This trivial patch ensures /usr/lib32 is natively known to the toolchain
+without requiring /etc/ files to keep things glued together.
+
+Signed-off-by: Ikey Doherty <ikey@solus-project.com>
+---
+ sysdeps/unix/sysv/linux/x86_64/dl-cache.h | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/sysdeps/unix/sysv/linux/x86_64/dl-cache.h b/sysdeps/unix/sysv/linux/x86_64/dl-cache.h
+index fd61441..a7f3865 100644
+--- a/sysdeps/unix/sysv/linux/x86_64/dl-cache.h
++++ b/sysdeps/unix/sysv/linux/x86_64/dl-cache.h
+@@ -32,6 +32,12 @@
+ 	  len -= 2;						\
+ 	  path[len] = '\0';					\
+ 	}							\
++      else if (len >= 6						\
++	       && ! memcmp (path + len - 6, "/lib32", 6))	\
++	{							\
++	  len -= 2;						\
++	  path[len] = '\0';					\
++	}							\
+       else if (len >= 7						\
+ 	       && ! memcmp (path + len - 7, "/libx32", 7))	\
+ 	{							\
+@@ -43,6 +49,8 @@
+ 	{							\
+ 	  memcpy (path + len, "64", 3);				\
+ 	  add_dir (path);					\
++	  memcpy (path + len, "32", 3);				\
++	  add_dir (path);					\
+ 	  memcpy (path + len, "x32", 4);				\
+ 	  add_dir (path);					\
+ 	}							\
+-- 
+2.12.2
+

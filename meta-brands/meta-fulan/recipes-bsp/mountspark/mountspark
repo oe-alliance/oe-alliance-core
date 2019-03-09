@@ -1,0 +1,28 @@
+#! /bin/sh
+#
+# mountspark	Mount spark root as usb.
+#
+# chkconfig: S 39 0
+#
+
+if [ -f /lib/modules/$(uname -r)/kernel/fs/yaffs2/yaffs.ko ]; then
+	MOUNT=$(mount | grep "/media/spark ")
+	if [ -z "$MOUNT" ]; then
+		modprobe yaffs
+		if [ ! -d /media/spark ]; then
+			mkdir /media/spark
+		fi 
+		echo "Mount /dev/mtdblock4 on /media/spark"
+		mount -t yaffs2 /dev/mtdblock4 /media/spark
+	fi
+fi
+
+#
+# copy picon directories
+#
+echo "Copy picons from /media/spark to tmp..."
+[ -f /media/spark/picon_tmp.tar ] && tar -xf /media/spark/picon_tmp.tar -C /tmp
+[ ! -d /tmp/piconProv ] && [ -d /media/spark/piconProv ] && cp -R /media/spark/piconProv /tmp
+
+exit 0
+

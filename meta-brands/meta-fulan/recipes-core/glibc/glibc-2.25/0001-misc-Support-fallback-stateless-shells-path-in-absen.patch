@@ -1,0 +1,46 @@
+From e0eee6163a4b86744eafcc08832381e31758a988 Mon Sep 17 00:00:00 2001
+From: Ikey Doherty <michael.i.doherty@intel.com>
+Date: Thu, 20 Apr 2017 18:14:15 +0100
+Subject: [PATCH] misc: Support fallback stateless shells path in absence of
+ /etc/shells
+
+This modifies the getusershell() function to fall back to the vendor shells
+file in the absence of a local admin file, ensuring that the function works
+in accordance with the stateless policy.
+
+Signed-off-by: Ikey Doherty <michael.i.doherty@intel.com>
+---
+ misc/getusershell.c             | 3 +++
+ sysdeps/unix/sysv/linux/paths.h | 1 +
+ 2 files changed, 4 insertions(+)
+
+diff --git a/misc/getusershell.c b/misc/getusershell.c
+index fc2c43b..238875f 100644
+--- a/misc/getusershell.c
++++ b/misc/getusershell.c
+@@ -104,7 +104,10 @@ initshells (void)
+ 	shells = NULL;
+ 	free(strings);
+ 	strings = NULL;
++	/* Attempt /etc/shells, otherwise fall back to /usr/share/defaults/etc/shells */
+ 	if ((fp = fopen(_PATH_SHELLS, "rce")) == NULL)
++		fp = fopen(_PATH_SHELLS2, "rce");
++	if (fp == NULL)
+ 		goto init_okshells_noclose;
+ 	if (fstat64(fileno(fp), &statb) == -1) {
+ 	init_okshells:
+diff --git a/sysdeps/unix/sysv/linux/paths.h b/sysdeps/unix/sysv/linux/paths.h
+index 1342ab3..a808fcb 100644
+--- a/sysdeps/unix/sysv/linux/paths.h
++++ b/sysdeps/unix/sysv/linux/paths.h
+@@ -59,6 +59,7 @@
+ #define	_PATH_SENDMAIL	"/usr/sbin/sendmail"
+ #define	_PATH_SHADOW	"/etc/shadow"
+ #define	_PATH_SHELLS	"/etc/shells"
++#define	_PATH_SHELLS2	"/usr/share/defaults/etc/shells"
+ #define	_PATH_TTY	"/dev/tty"
+ #define	_PATH_UNIX	"/boot/vmlinux"
+ #define	_PATH_UTMP	"/var/run/utmp"
+-- 
+2.12.2
+

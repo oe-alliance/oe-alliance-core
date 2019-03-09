@@ -1,0 +1,2007 @@
+diff -Naur linux-3.4.100/include/linux/dvb/dmx.h linux-3.4.100_patched/include/linux/dvb/dmx.h
+--- linux-3.4.100/include/linux/dvb/dmx.h	2015-05-27 11:15:20.286634200 +0530
++++ linux-3.4.100_patched/include/linux/dvb/dmx.h	2015-09-30 18:24:06.412818200 +0530
+@@ -75,7 +75,177 @@
+ 	DMX_PES_SUBTITLE3,
+ 	DMX_PES_PCR3,
+ 
+-	DMX_PES_OTHER
++	DMX_PES_OTHER,
++
++	DMX_PES_AUDIO4,
++	DMX_PES_VIDEO4,
++	DMX_PES_TELETEXT4,
++	DMX_PES_SUBTITLE4,
++	DMX_PES_PCR4,
++
++	DMX_PES_AUDIO5,
++	DMX_PES_VIDEO5,
++	DMX_PES_TELETEXT5,
++	DMX_PES_SUBTITLE5,
++	DMX_PES_PCR5,
++
++	DMX_PES_AUDIO6,
++	DMX_PES_VIDEO6,
++	DMX_PES_TELETEXT6,
++	DMX_PES_SUBTITLE6,
++	DMX_PES_PCR6,
++
++	DMX_PES_AUDIO7,
++	DMX_PES_VIDEO7,
++	DMX_PES_TELETEXT7,
++	DMX_PES_SUBTITLE7,
++	DMX_PES_PCR7,
++
++	DMX_PES_AUDIO8,
++	DMX_PES_VIDEO8,
++	DMX_PES_TELETEXT8,
++	DMX_PES_SUBTITLE8,
++	DMX_PES_PCR8,
++
++	DMX_PES_AUDIO9,
++	DMX_PES_VIDEO9,
++	DMX_PES_TELETEXT9,
++	DMX_PES_SUBTITLE9,
++	DMX_PES_PCR9,
++
++	DMX_PES_AUDIO10,
++	DMX_PES_VIDEO10,
++	DMX_PES_TELETEXT10,
++	DMX_PES_SUBTITLE10,
++	DMX_PES_PCR10,
++
++	DMX_PES_AUDIO11,
++	DMX_PES_VIDEO11,
++	DMX_PES_TELETEXT11,
++	DMX_PES_SUBTITLE11,
++	DMX_PES_PCR11,
++
++	DMX_PES_AUDIO12,
++	DMX_PES_VIDEO12,
++	DMX_PES_TELETEXT12,
++	DMX_PES_SUBTITLE12,
++	DMX_PES_PCR12,
++
++	DMX_PES_AUDIO13,
++	DMX_PES_VIDEO13,
++	DMX_PES_TELETEXT13,
++	DMX_PES_SUBTITLE13,
++	DMX_PES_PCR13,
++
++	DMX_PES_AUDIO14,
++	DMX_PES_VIDEO14,
++	DMX_PES_TELETEXT14,
++	DMX_PES_SUBTITLE14,
++	DMX_PES_PCR14,
++
++	DMX_PES_AUDIO15,
++	DMX_PES_VIDEO15,
++	DMX_PES_TELETEXT15,
++	DMX_PES_SUBTITLE15,
++	DMX_PES_PCR15,
++
++	DMX_PES_AUDIO16,
++	DMX_PES_VIDEO16,
++	DMX_PES_TELETEXT16,
++	DMX_PES_SUBTITLE16,
++	DMX_PES_PCR16,
++
++	DMX_PES_AUDIO17,
++	DMX_PES_VIDEO17,
++	DMX_PES_TELETEXT17,
++	DMX_PES_SUBTITLE17,
++	DMX_PES_PCR17,
++
++	DMX_PES_AUDIO18,
++	DMX_PES_VIDEO18,
++	DMX_PES_TELETEXT18,
++	DMX_PES_SUBTITLE18,
++	DMX_PES_PCR18,
++
++	DMX_PES_AUDIO19,
++	DMX_PES_VIDEO19,
++	DMX_PES_TELETEXT19,
++	DMX_PES_SUBTITLE19,
++	DMX_PES_PCR19,
++
++	DMX_PES_AUDIO20,
++	DMX_PES_VIDEO20,
++	DMX_PES_TELETEXT20,
++	DMX_PES_SUBTITLE20,
++	DMX_PES_PCR20,
++
++	DMX_PES_AUDIO21,
++	DMX_PES_VIDEO21,
++	DMX_PES_TELETEXT21,
++	DMX_PES_SUBTITLE21,
++	DMX_PES_PCR21,
++
++	DMX_PES_AUDIO22,
++	DMX_PES_VIDEO22,
++	DMX_PES_TELETEXT22,
++	DMX_PES_SUBTITLE22,
++	DMX_PES_PCR22,
++
++	DMX_PES_AUDIO23,
++	DMX_PES_VIDEO23,
++	DMX_PES_TELETEXT23,
++	DMX_PES_SUBTITLE23,
++	DMX_PES_PCR23,
++
++	DMX_PES_AUDIO24,
++	DMX_PES_VIDEO24,
++	DMX_PES_TELETEXT24,
++	DMX_PES_SUBTITLE24,
++	DMX_PES_PCR24,
++
++	DMX_PES_AUDIO25,
++	DMX_PES_VIDEO25,
++	DMX_PES_TELETEXT25,
++	DMX_PES_SUBTITLE25,
++	DMX_PES_PCR25,
++
++	DMX_PES_AUDIO26,
++	DMX_PES_VIDEO26,
++	DMX_PES_TELETEXT26,
++	DMX_PES_SUBTITLE26,
++	DMX_PES_PCR26,
++
++	DMX_PES_AUDIO27,
++	DMX_PES_VIDEO27,
++	DMX_PES_TELETEXT27,
++	DMX_PES_SUBTITLE27,
++	DMX_PES_PCR27,
++
++	DMX_PES_AUDIO28,
++	DMX_PES_VIDEO28,
++	DMX_PES_TELETEXT28,
++	DMX_PES_SUBTITLE28,
++	DMX_PES_PCR28,
++
++	DMX_PES_AUDIO29,
++	DMX_PES_VIDEO29,
++	DMX_PES_TELETEXT29,
++	DMX_PES_SUBTITLE29,
++	DMX_PES_PCR29,
++
++	DMX_PES_AUDIO30,
++	DMX_PES_VIDEO30,
++	DMX_PES_TELETEXT30,
++	DMX_PES_SUBTITLE30,
++	DMX_PES_PCR30,
++
++	DMX_PES_AUDIO31,
++	DMX_PES_VIDEO31,
++	DMX_PES_TELETEXT31,
++	DMX_PES_SUBTITLE31,
++	DMX_PES_PCR31,
++
++	DMX_PES_LAST
+ } dmx_pes_type_t;
+ 
+ #define DMX_PES_AUDIO    DMX_PES_AUDIO0
+diff -Naur linux-3.4.100/include/linux/dvb/frontend.h linux-3.4.100_patched/include/linux/dvb/frontend.h
+--- linux-3.4.100/include/linux/dvb/frontend.h	2015-05-27 11:15:20.301634200 +0530
++++ linux-3.4.100_patched/include/linux/dvb/frontend.h	2015-10-01 11:34:35.045669300 +0530
+@@ -62,6 +62,7 @@
+ 	FE_CAN_8VSB			= 0x200000,
+ 	FE_CAN_16VSB			= 0x400000,
+ 	FE_HAS_EXTENDED_CAPS		= 0x800000,   /* We need more bitspace for newer APIs, indicate this. */
++	FE_CAN_MULTISTREAM		= 0x4000000,  /* frontend supports multistream filtering */
+ 	FE_CAN_TURBO_FEC		= 0x8000000,  /* frontend supports "turbo fec modulation" */
+ 	FE_CAN_2G_MODULATION		= 0x10000000, /* frontend supports "2nd generation modulation" (DVB-S2) */
+ 	FE_NEEDS_BENDING		= 0x20000000, /* not supported anymore, don't use (frontend requires frequency bending) */
+@@ -121,16 +122,27 @@
+ } fe_sec_mini_cmd_t;
+ 
+ 
++/**
++ * enum fe_status - enumerates the possible frontend status
++ * @FE_HAS_SIGNAL:	found something above the noise level
++ * @FE_HAS_CARRIER:	found a DVB signal
++ * @FE_HAS_VITERBI:	FEC is stable
++ * @FE_HAS_SYNC:	found sync bytes
++ * @FE_HAS_LOCK:	everything's working
++ * @FE_TIMEDOUT:	no lock within the last ~2 seconds
++ * @FE_REINIT:		frontend was reinitialized, application is recommended
++ *			to reset DiSEqC, tone and parameters
++ */
++
+ typedef enum fe_status {
+-	FE_HAS_SIGNAL	= 0x01,   /* found something above the noise level */
+-	FE_HAS_CARRIER	= 0x02,   /* found a DVB signal  */
+-	FE_HAS_VITERBI	= 0x04,   /* FEC is stable  */
+-	FE_HAS_SYNC	= 0x08,   /* found sync bytes  */
+-	FE_HAS_LOCK	= 0x10,   /* everything's working... */
+-	FE_TIMEDOUT	= 0x20,   /* no lock within the last ~2 seconds */
+-	FE_REINIT	= 0x40    /* frontend was reinitialized,  */
+-} fe_status_t;			  /* application is recommended to reset */
+-				  /* DiSEqC, tone and parameters */
++	FE_HAS_SIGNAL		= 0x01,
++	FE_HAS_CARRIER		= 0x02,
++	FE_HAS_VITERBI		= 0x04,
++	FE_HAS_SYNC		= 0x08,
++	FE_HAS_LOCK		= 0x10,
++	FE_TIMEDOUT		= 0x20,
++	FE_REINIT		= 0x40,
++} fe_status_t;
+ 
+ typedef enum fe_spectral_inversion {
+ 	INVERSION_OFF,
+@@ -152,6 +164,7 @@
+ 	FEC_AUTO,
+ 	FEC_3_5,
+ 	FEC_9_10,
++	FEC_2_5,
+ } fe_code_rate_t;
+ 
+ 
+@@ -169,6 +182,7 @@
+ 	APSK_16,
+ 	APSK_32,
+ 	DQPSK,
++	QAM_4_NR,
+ } fe_modulation_t;
+ 
+ typedef enum fe_transmit_mode {
+@@ -179,6 +193,8 @@
+ 	TRANSMISSION_MODE_1K,
+ 	TRANSMISSION_MODE_16K,
+ 	TRANSMISSION_MODE_32K,
++	TRANSMISSION_MODE_C1,
++	TRANSMISSION_MODE_C3780,
+ } fe_transmit_mode_t;
+ 
+ typedef enum fe_bandwidth {
+@@ -200,6 +216,9 @@
+ 	GUARD_INTERVAL_1_128,
+ 	GUARD_INTERVAL_19_128,
+ 	GUARD_INTERVAL_19_256,
++	GUARD_INTERVAL_PN420,
++	GUARD_INTERVAL_PN595,
++	GUARD_INTERVAL_PN945,
+ } fe_guard_interval_t;
+ 
+ 
+@@ -211,6 +230,12 @@
+ 	HIERARCHY_AUTO
+ } fe_hierarchy_t;
+ 
++enum fe_interleaving {
++	INTERLEAVING_NONE,
++	INTERLEAVING_AUTO,
++	INTERLEAVING_240,
++	INTERLEAVING_720,
++};
+ 
+ struct dvb_qpsk_parameters {
+ 	__u32		symbol_rate;  /* symbol rate in Symbols per second */
+@@ -312,11 +337,46 @@
+ 
+ #define DTV_ISDBS_TS_ID		42
+ 
+-#define DTV_DVBT2_PLP_ID	43
++#define DTV_STREAM_ID		42
++#define DTV_ISDBS_TS_ID_LEGACY	DTV_STREAM_ID
++#define DTV_DVBT2_PLP_ID_LEGACY	43
+ 
+ #define DTV_ENUM_DELSYS		44
+ 
+-#define DTV_MAX_COMMAND				DTV_ENUM_DELSYS
++/* ATSC-MH */
++#define DTV_ATSCMH_FIC_VER		45
++#define DTV_ATSCMH_PARADE_ID		46
++#define DTV_ATSCMH_NOG			47
++#define DTV_ATSCMH_TNOG			48
++#define DTV_ATSCMH_SGN			49
++#define DTV_ATSCMH_PRC			50
++#define DTV_ATSCMH_RS_FRAME_MODE	51
++#define DTV_ATSCMH_RS_FRAME_ENSEMBLE	52
++#define DTV_ATSCMH_RS_CODE_MODE_PRI	53
++#define DTV_ATSCMH_RS_CODE_MODE_SEC	54
++#define DTV_ATSCMH_SCCC_BLOCK_MODE	55
++#define DTV_ATSCMH_SCCC_CODE_MODE_A	56
++#define DTV_ATSCMH_SCCC_CODE_MODE_B	57
++#define DTV_ATSCMH_SCCC_CODE_MODE_C	58
++#define DTV_ATSCMH_SCCC_CODE_MODE_D	59
++
++#define DTV_INTERLEAVING			60
++#define DTV_LNA					61
++
++/* Quality parameters */
++#define DTV_STAT_SIGNAL_STRENGTH	62
++#define DTV_STAT_CNR			63
++#define DTV_STAT_PRE_ERROR_BIT_COUNT	64
++#define DTV_STAT_PRE_TOTAL_BIT_COUNT	65
++#define DTV_STAT_POST_ERROR_BIT_COUNT	66
++#define DTV_STAT_POST_TOTAL_BIT_COUNT	67
++#define DTV_STAT_ERROR_BLOCK_COUNT	68
++#define DTV_STAT_TOTAL_BLOCK_COUNT	69
++
++#define DTV_RF_INPUT_SOURCE_SELECT	70
++#define DTV_RF_INPUT_SOURCE_MAX		71
++
++#define DTV_MAX_COMMAND		DTV_RF_INPUT_SOURCE_MAX
+ 
+ typedef enum fe_pilot {
+ 	PILOT_ON,
+@@ -345,7 +405,7 @@
+ 	SYS_ISDBC,
+ 	SYS_ATSC,
+ 	SYS_ATSCMH,
+-	SYS_DMBTH,
++	SYS_DTMB,
+ 	SYS_CMMB,
+ 	SYS_DAB,
+ 	SYS_DVBT2,
+@@ -353,9 +413,44 @@
+ 	SYS_DVBC_ANNEX_C,
+ } fe_delivery_system_t;
+ 
+-
++/* backward compatibility */
+ #define SYS_DVBC_ANNEX_AC	SYS_DVBC_ANNEX_A
++#define SYS_DMBTH SYS_DTMB /* DMB-TH is legacy name, use DTMB instead */
++
++/* ATSC-MH */
++
++enum atscmh_sccc_block_mode {
++	ATSCMH_SCCC_BLK_SEP      = 0,
++	ATSCMH_SCCC_BLK_COMB     = 1,
++	ATSCMH_SCCC_BLK_RES      = 2,
++};
++
++enum atscmh_sccc_code_mode {
++	ATSCMH_SCCC_CODE_HLF     = 0,
++	ATSCMH_SCCC_CODE_QTR     = 1,
++	ATSCMH_SCCC_CODE_RES     = 2,
++};
++
++enum atscmh_rs_frame_ensemble {
++	ATSCMH_RSFRAME_ENS_PRI   = 0,
++	ATSCMH_RSFRAME_ENS_SEC   = 1,
++};
+ 
++enum atscmh_rs_frame_mode {
++	ATSCMH_RSFRAME_PRI_ONLY  = 0,
++	ATSCMH_RSFRAME_PRI_SEC   = 1,
++	ATSCMH_RSFRAME_RES       = 2,
++};
++
++enum atscmh_rs_code_mode {
++	ATSCMH_RSCODE_211_187    = 0,
++	ATSCMH_RSCODE_223_187    = 1,
++	ATSCMH_RSCODE_235_187    = 2,
++	ATSCMH_RSCODE_RES        = 3,
++};
++
++#define NO_STREAM_ID_FILTER	(~0U)
++#define LNA_AUTO                (~0U)
+ 
+ struct dtv_cmds_h {
+ 	char	*name;		/* A display name for debugging purposes */
+@@ -368,11 +463,78 @@
+ 	__u32	reserved:30;	/* Align */
+ };
+ 
++/**
++ * Scale types for the quality parameters.
++ * @FE_SCALE_NOT_AVAILABLE: That QoS measure is not available. That
++ *			    could indicate a temporary or a permanent
++ *			    condition.
++ * @FE_SCALE_DECIBEL: The scale is measured in 0.0001 dB steps, typically
++ *		  used on signal measures.
++ * @FE_SCALE_RELATIVE: The scale is a relative percentual measure,
++ *			ranging from 0 (0%) to 0xffff (100%).
++ * @FE_SCALE_COUNTER: The scale counts the occurrence of an event, like
++ *			bit error, block error, lapsed time.
++ */
++enum fecap_scale_params {
++	FE_SCALE_NOT_AVAILABLE = 0,
++	FE_SCALE_DECIBEL,
++	FE_SCALE_RELATIVE,
++	FE_SCALE_COUNTER
++};
++
++/**
++ * struct dtv_stats - Used for reading a DTV status property
++ *
++ * @value:	value of the measure. Should range from 0 to 0xffff;
++ * @scale:	Filled with enum fecap_scale_params - the scale
++ *		in usage for that parameter
++ *
++ * For most delivery systems, this will return a single value for each
++ * parameter.
++ * It should be noticed, however, that new OFDM delivery systems like
++ * ISDB can use different modulation types for each group of carriers.
++ * On such standards, up to 8 groups of statistics can be provided, one
++ * for each carrier group (called "layer" on ISDB).
++ * In order to be consistent with other delivery systems, the first
++ * value refers to the entire set of carriers ("global").
++ * dtv_status:scale should use the value FE_SCALE_NOT_AVAILABLE when
++ * the value for the entire group of carriers or from one specific layer
++ * is not provided by the hardware.
++ * st.len should be filled with the latest filled status + 1.
++ *
++ * In other words, for ISDB, those values should be filled like:
++ *	u.st.stat.svalue[0] = global statistics;
++ *	u.st.stat.scale[0] = FE_SCALE_DECIBELS;
++ *	u.st.stat.value[1] = layer A statistics;
++ *	u.st.stat.scale[1] = FE_SCALE_NOT_AVAILABLE (if not available);
++ *	u.st.stat.svalue[2] = layer B statistics;
++ *	u.st.stat.scale[2] = FE_SCALE_DECIBELS;
++ *	u.st.stat.svalue[3] = layer C statistics;
++ *	u.st.stat.scale[3] = FE_SCALE_DECIBELS;
++ *	u.st.len = 4;
++ */
++struct dtv_stats {
++	__u8 scale;	/* enum fecap_scale_params type */
++	union {
++		__u64 uvalue;	/* for counters and relative scales */
++		__s64 svalue;	/* for 0.0001 dB measures */
++	};
++} __attribute__ ((packed));
++
++
++#define MAX_DTV_STATS   4
++
++struct dtv_fe_stats {
++	__u8 len;
++	struct dtv_stats stat[MAX_DTV_STATS];
++} __attribute__ ((packed));
++
+ struct dtv_property {
+ 	__u32 cmd;
+ 	__u32 reserved[3];
+ 	union {
+ 		__u32 data;
++		struct dtv_fe_stats st;
+ 		struct {
+ 			__u8 data[32];
+ 			__u32 len;
+diff -Naur linux-3.4.100/include/linux/dvb/version.h linux-3.4.100_patched/include/linux/dvb/version.h
+--- linux-3.4.100/include/linux/dvb/version.h	2015-05-27 11:15:20.350634200 +0530
++++ linux-3.4.100_patched/include/linux/dvb/version.h	2015-10-01 11:37:00.021658700 +0530
+@@ -24,6 +24,6 @@
+ #define _DVBVERSION_H_
+ 
+ #define DVB_API_VERSION 5
+-#define DVB_API_VERSION_MINOR 5
++#define DVB_API_VERSION_MINOR 10
+ 
+ #endif /*_DVBVERSION_H_*/
+diff -Naur linux-3.4.100/include/linux/dvb/video.h linux-3.4.100_patched/include/linux/dvb/video.h
+--- linux-3.4.100/include/linux/dvb/video.h	2015-05-27 11:15:20.369134200 +0530
++++ linux-3.4.100_patched/include/linux/dvb/video.h	2015-10-01 17:26:47.743863800 +0530
+@@ -116,6 +116,11 @@
+ 		struct {
+ 			__u32 data[16];
+ 		} raw;
++
++		struct {
++			__u32 option;
++			__u32 value;
++		} option;
+ 	};
+ };
+ 
+diff -Naur linux-3.4.100/include/linux/v4l2-dv-timings.h linux-3.4.100_patched/include/linux/v4l2-dv-timings.h
+--- linux-3.4.100/include/linux/v4l2-dv-timings.h	1970-01-01 05:30:00.000000000 +0530
++++ linux-3.4.100_patched/include/linux/v4l2-dv-timings.h	2015-10-05 13:09:27.987627100 +0530
+@@ -0,0 +1,904 @@
++/*
++ * V4L2 DV timings header.
++ *
++ * Copyright (C) 2012  Hans Verkuil <hans.verkuil@cisco.com>
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License
++ * version 2 as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful, but
++ * WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++ * General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, write to the Free Software
++ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
++ * 02110-1301 USA
++ */
++
++#ifndef _V4L2_DV_TIMINGS_H
++#define _V4L2_DV_TIMINGS_H
++
++#if __GNUC__ < 4 || (__GNUC__ == 4 && (__GNUC_MINOR__ < 6))
++/* Sadly gcc versions older than 4.6 have a bug in how they initialize
++   anonymous unions where they require additional curly brackets.
++   This violates the C1x standard. This workaround adds the curly brackets
++   if needed. */
++#define V4L2_INIT_BT_TIMINGS(_width, args...) \
++	{ .bt = { _width , ## args } }
++#else
++#define V4L2_INIT_BT_TIMINGS(_width, args...) \
++	.bt = { _width , ## args }
++#endif
++
++/* CEA-861-E timings (i.e. standard HDTV timings) */
++
++#define V4L2_DV_BT_CEA_640X480P59_94 { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(640, 480, 0, 0, \
++		25175000, 16, 96, 48, 10, 2, 33, 0, 0, 0, \
++		V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CEA861, 0) \
++}
++
++/* Note: these are the nominal timings, for HDMI links this format is typically
++ * double-clocked to meet the minimum pixelclock requirements.  */
++#define V4L2_DV_BT_CEA_720X480I59_94 { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(720, 480, 1, 0, \
++		13500000, 19, 62, 57, 4, 3, 15, 4, 3, 16, \
++		V4L2_DV_BT_STD_CEA861, V4L2_DV_FL_HALF_LINE) \
++}
++
++#define V4L2_DV_BT_CEA_720X480P59_94 { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(720, 480, 0, 0, \
++		27000000, 16, 62, 60, 9, 6, 30, 0, 0, 0, \
++		V4L2_DV_BT_STD_CEA861, 0) \
++}
++
++/* Note: these are the nominal timings, for HDMI links this format is typically
++ * double-clocked to meet the minimum pixelclock requirements.  */
++#define V4L2_DV_BT_CEA_720X576I50 { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(720, 576, 1, 0, \
++		13500000, 12, 63, 69, 2, 3, 19, 2, 3, 20, \
++		V4L2_DV_BT_STD_CEA861, V4L2_DV_FL_HALF_LINE) \
++}
++
++#define V4L2_DV_BT_CEA_720X576P50 { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(720, 576, 0, 0, \
++		27000000, 12, 64, 68, 5, 5, 39, 0, 0, 0, \
++		V4L2_DV_BT_STD_CEA861, 0) \
++}
++
++#define V4L2_DV_BT_CEA_1280X720P24 { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(1280, 720, 0, \
++		V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL, \
++		59400000, 1760, 40, 220, 5, 5, 20, 0, 0, 0, \
++		V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CEA861, \
++		V4L2_DV_FL_CAN_REDUCE_FPS) \
++}
++
++#define V4L2_DV_BT_CEA_1280X720P25 { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(1280, 720, 0, \
++		V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL, \
++		74250000, 2420, 40, 220, 5, 5, 20, 0, 0, 0, \
++		V4L2_DV_BT_STD_CEA861, 0) \
++}
++
++#define V4L2_DV_BT_CEA_1280X720P30 { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(1280, 720, 0, \
++		V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL, \
++		74250000, 1760, 40, 220, 5, 5, 20, 0, 0, 0, \
++		V4L2_DV_BT_STD_CEA861, V4L2_DV_FL_CAN_REDUCE_FPS) \
++}
++
++#define V4L2_DV_BT_CEA_1280X720P50 { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(1280, 720, 0, \
++		V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL, \
++		74250000, 440, 40, 220, 5, 5, 20, 0, 0, 0, \
++		V4L2_DV_BT_STD_CEA861, 0) \
++}
++
++#define V4L2_DV_BT_CEA_1280X720P60 { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(1280, 720, 0, \
++		V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL, \
++		74250000, 110, 40, 220, 5, 5, 20, 0, 0, 0, \
++		V4L2_DV_BT_STD_CEA861, V4L2_DV_FL_CAN_REDUCE_FPS) \
++}
++
++#define V4L2_DV_BT_CEA_1920X1080P24 { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(1920, 1080, 0, \
++		V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL, \
++		74250000, 638, 44, 148, 4, 5, 36, 0, 0, 0, \
++		V4L2_DV_BT_STD_CEA861, V4L2_DV_FL_CAN_REDUCE_FPS) \
++}
++
++#define V4L2_DV_BT_CEA_1920X1080P25 { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(1920, 1080, 0, \
++		V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL, \
++		74250000, 528, 44, 148, 4, 5, 36, 0, 0, 0, \
++		V4L2_DV_BT_STD_CEA861, 0) \
++}
++
++#define V4L2_DV_BT_CEA_1920X1080P30 { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(1920, 1080, 0, \
++		V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL, \
++		74250000, 88, 44, 148, 4, 5, 36, 0, 0, 0, \
++		V4L2_DV_BT_STD_CEA861, V4L2_DV_FL_CAN_REDUCE_FPS) \
++}
++
++#define V4L2_DV_BT_CEA_1920X1080I50 { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(1920, 1080, 1, \
++		V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL, \
++		74250000, 528, 44, 148, 2, 5, 15, 2, 5, 16, \
++		V4L2_DV_BT_STD_CEA861, V4L2_DV_FL_HALF_LINE) \
++}
++
++#define V4L2_DV_BT_CEA_1920X1080P50 { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(1920, 1080, 0, \
++		V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL, \
++		148500000, 528, 44, 148, 4, 5, 36, 0, 0, 0, \
++		V4L2_DV_BT_STD_CEA861, 0) \
++}
++
++#define V4L2_DV_BT_CEA_1920X1080I60 { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(1920, 1080, 1, \
++		V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL, \
++		74250000, 88, 44, 148, 2, 5, 15, 2, 5, 16, \
++		V4L2_DV_BT_STD_CEA861, \
++		V4L2_DV_FL_CAN_REDUCE_FPS | V4L2_DV_FL_HALF_LINE) \
++}
++
++#define V4L2_DV_BT_CEA_1920X1080P60 { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(1920, 1080, 0, \
++		V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL, \
++		148500000, 88, 44, 148, 4, 5, 36, 0, 0, 0, \
++		V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CEA861, \
++		V4L2_DV_FL_CAN_REDUCE_FPS) \
++}
++
++#define V4L2_DV_BT_CEA_3840X2160P24 { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(3840, 2160, 0, V4L2_DV_HSYNC_POS_POL, \
++		297000000, 1276, 88, 296, 8, 10, 72, 0, 0, 0, \
++		V4L2_DV_BT_STD_CEA861, V4L2_DV_FL_CAN_REDUCE_FPS) \
++}
++
++#define V4L2_DV_BT_CEA_3840X2160P25 { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(3840, 2160, 0, V4L2_DV_HSYNC_POS_POL, \
++		297000000, 1056, 88, 296, 8, 10, 72, 0, 0, 0, \
++		V4L2_DV_BT_STD_CEA861, 0) \
++}
++
++#define V4L2_DV_BT_CEA_3840X2160P30 { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(3840, 2160, 0, V4L2_DV_HSYNC_POS_POL, \
++		297000000, 176, 88, 296, 8, 10, 72, 0, 0, 0, \
++		V4L2_DV_BT_STD_CEA861, V4L2_DV_FL_CAN_REDUCE_FPS) \
++}
++
++#define V4L2_DV_BT_CEA_3840X2160P50 { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(3840, 2160, 0, V4L2_DV_HSYNC_POS_POL, \
++		594000000, 1056, 88, 296, 8, 10, 72, 0, 0, 0, \
++		V4L2_DV_BT_STD_CEA861, 0) \
++}
++
++#define V4L2_DV_BT_CEA_3840X2160P60 { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(3840, 2160, 0, V4L2_DV_HSYNC_POS_POL, \
++		594000000, 176, 88, 296, 8, 10, 72, 0, 0, 0, \
++		V4L2_DV_BT_STD_CEA861, V4L2_DV_FL_CAN_REDUCE_FPS) \
++}
++
++#define V4L2_DV_BT_CEA_4096X2160P24 { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(4096, 2160, 0, V4L2_DV_HSYNC_POS_POL, \
++		297000000, 1020, 88, 296, 8, 10, 72, 0, 0, 0, \
++		V4L2_DV_BT_STD_CEA861, V4L2_DV_FL_CAN_REDUCE_FPS) \
++}
++
++#define V4L2_DV_BT_CEA_4096X2160P25 { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(4096, 2160, 0, V4L2_DV_HSYNC_POS_POL, \
++		297000000, 968, 88, 128, 8, 10, 72, 0, 0, 0, \
++		V4L2_DV_BT_STD_CEA861, 0) \
++}
++
++#define V4L2_DV_BT_CEA_4096X2160P30 { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(4096, 2160, 0, V4L2_DV_HSYNC_POS_POL, \
++		297000000, 88, 88, 128, 8, 10, 72, 0, 0, 0, \
++		V4L2_DV_BT_STD_CEA861, V4L2_DV_FL_CAN_REDUCE_FPS) \
++}
++
++#define V4L2_DV_BT_CEA_4096X2160P50 { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(4096, 2160, 0, V4L2_DV_HSYNC_POS_POL, \
++		594000000, 968, 88, 128, 8, 10, 72, 0, 0, 0, \
++		V4L2_DV_BT_STD_CEA861, 0) \
++}
++
++#define V4L2_DV_BT_CEA_4096X2160P60 { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(4096, 2160, 0, V4L2_DV_HSYNC_POS_POL, \
++		594000000, 88, 88, 128, 8, 10, 72, 0, 0, 0, \
++		V4L2_DV_BT_STD_CEA861, V4L2_DV_FL_CAN_REDUCE_FPS) \
++}
++
++
++/* VESA Discrete Monitor Timings as per version 1.0, revision 12 */
++
++#define V4L2_DV_BT_DMT_640X350P85 { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(640, 350, 0, V4L2_DV_HSYNC_POS_POL, \
++		31500000, 32, 64, 96, 32, 3, 60, 0, 0, 0, \
++		V4L2_DV_BT_STD_DMT, 0) \
++}
++
++#define V4L2_DV_BT_DMT_640X400P85 { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(640, 400, 0, V4L2_DV_VSYNC_POS_POL, \
++		31500000, 32, 64, 96, 1, 3, 41, 0, 0, 0, \
++		V4L2_DV_BT_STD_DMT, 0) \
++}
++
++#define V4L2_DV_BT_DMT_720X400P85 { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(720, 400, 0, V4L2_DV_VSYNC_POS_POL, \
++		35500000, 36, 72, 108, 1, 3, 42, 0, 0, 0, \
++		V4L2_DV_BT_STD_DMT, 0) \
++}
++
++/* VGA resolutions */
++#define V4L2_DV_BT_DMT_640X480P60 V4L2_DV_BT_CEA_640X480P59_94
++
++#define V4L2_DV_BT_DMT_640X480P72 { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(640, 480, 0, 0, \
++		31500000, 24, 40, 128, 9, 3, 28, 0, 0, 0, \
++		V4L2_DV_BT_STD_DMT, 0) \
++}
++
++#define V4L2_DV_BT_DMT_640X480P75 { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(640, 480, 0, 0, \
++		31500000, 16, 64, 120, 1, 3, 16, 0, 0, 0, \
++		V4L2_DV_BT_STD_DMT, 0) \
++}
++
++#define V4L2_DV_BT_DMT_640X480P85 { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(640, 480, 0, 0, \
++		36000000, 56, 56, 80, 1, 3, 25, 0, 0, 0, \
++		V4L2_DV_BT_STD_DMT, 0) \
++}
++
++/* SVGA resolutions */
++#define V4L2_DV_BT_DMT_800X600P56 { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(800, 600, 0, \
++		V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL, \
++		36000000, 24, 72, 128, 1, 2, 22, 0, 0, 0, \
++		V4L2_DV_BT_STD_DMT, 0) \
++}
++
++#define V4L2_DV_BT_DMT_800X600P60 { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(800, 600, 0, \
++		V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL, \
++		40000000, 40, 128, 88, 1, 4, 23, 0, 0, 0, \
++		V4L2_DV_BT_STD_DMT, 0) \
++}
++
++#define V4L2_DV_BT_DMT_800X600P72 { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(800, 600, 0, \
++		V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL, \
++		50000000, 56, 120, 64, 37, 6, 23, 0, 0, 0, \
++		V4L2_DV_BT_STD_DMT, 0) \
++}
++
++#define V4L2_DV_BT_DMT_800X600P75 { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(800, 600, 0, \
++		V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL, \
++		49500000, 16, 80, 160, 1, 3, 21, 0, 0, 0, \
++		V4L2_DV_BT_STD_DMT, 0) \
++}
++
++#define V4L2_DV_BT_DMT_800X600P85 { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(800, 600, 0, \
++		V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL, \
++		56250000, 32, 64, 152, 1, 3, 27, 0, 0, 0, \
++		V4L2_DV_BT_STD_DMT, 0) \
++}
++
++#define V4L2_DV_BT_DMT_800X600P120_RB { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(800, 600, 0, V4L2_DV_HSYNC_POS_POL, \
++		73250000, 48, 32, 80, 3, 4, 29, 0, 0, 0, \
++		V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, \
++		V4L2_DV_FL_REDUCED_BLANKING) \
++}
++
++#define V4L2_DV_BT_DMT_848X480P60 { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(848, 480, 0, \
++		V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL, \
++		33750000, 16, 112, 112, 6, 8, 23, 0, 0, 0, \
++		V4L2_DV_BT_STD_DMT, 0) \
++}
++
++#define V4L2_DV_BT_DMT_1024X768I43 { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(1024, 768, 1, \
++		V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL, \
++		44900000, 8, 176, 56, 0, 4, 20, 0, 4, 21, \
++		V4L2_DV_BT_STD_DMT, 0) \
++}
++
++/* XGA resolutions */
++#define V4L2_DV_BT_DMT_1024X768P60 { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(1024, 768, 0, 0, \
++		65000000, 24, 136, 160, 3, 6, 29, 0, 0, 0, \
++		V4L2_DV_BT_STD_DMT, 0) \
++}
++
++#define V4L2_DV_BT_DMT_1024X768P70 { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(1024, 768, 0, 0, \
++		75000000, 24, 136, 144, 3, 6, 29, 0, 0, 0, \
++		V4L2_DV_BT_STD_DMT, 0) \
++}
++
++#define V4L2_DV_BT_DMT_1024X768P75 { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(1024, 768, 0, \
++		V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL, \
++		78750000, 16, 96, 176, 1, 3, 28, 0, 0, 0, \
++		V4L2_DV_BT_STD_DMT, 0) \
++}
++
++#define V4L2_DV_BT_DMT_1024X768P85 { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(1024, 768, 0, \
++		V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL, \
++		94500000, 48, 96, 208, 1, 3, 36, 0, 0, 0, \
++		V4L2_DV_BT_STD_DMT, 0) \
++}
++
++#define V4L2_DV_BT_DMT_1024X768P120_RB { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(1024, 768, 0, V4L2_DV_HSYNC_POS_POL, \
++		115500000, 48, 32, 80, 3, 4, 38, 0, 0, 0, \
++		V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, \
++		V4L2_DV_FL_REDUCED_BLANKING) \
++}
++
++/* XGA+ resolution */
++#define V4L2_DV_BT_DMT_1152X864P75 { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(1152, 864, 0, \
++		V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL, \
++		108000000, 64, 128, 256, 1, 3, 32, 0, 0, 0, \
++		V4L2_DV_BT_STD_DMT, 0) \
++}
++
++#define V4L2_DV_BT_DMT_1280X720P60 V4L2_DV_BT_CEA_1280X720P60
++
++/* WXGA resolutions */
++#define V4L2_DV_BT_DMT_1280X768P60_RB { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(1280, 768, 0, V4L2_DV_HSYNC_POS_POL, \
++		68250000, 48, 32, 80, 3, 7, 12, 0, 0, 0, \
++		V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, \
++		V4L2_DV_FL_REDUCED_BLANKING) \
++}
++
++#define V4L2_DV_BT_DMT_1280X768P60 { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(1280, 768, 0, V4L2_DV_VSYNC_POS_POL, \
++		79500000, 64, 128, 192, 3, 7, 20, 0, 0, 0, \
++		V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, 0) \
++}
++
++#define V4L2_DV_BT_DMT_1280X768P75 { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(1280, 768, 0, V4L2_DV_VSYNC_POS_POL, \
++		102250000, 80, 128, 208, 3, 7, 27, 0, 0, 0, \
++		V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, 0) \
++}
++
++#define V4L2_DV_BT_DMT_1280X768P85 { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(1280, 768, 0, V4L2_DV_VSYNC_POS_POL, \
++		117500000, 80, 136, 216, 3, 7, 31, 0, 0, 0, \
++		V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, 0) \
++}
++
++#define V4L2_DV_BT_DMT_1280X768P120_RB { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(1280, 768, 0, V4L2_DV_HSYNC_POS_POL, \
++		140250000, 48, 32, 80, 3, 7, 35, 0, 0, 0, \
++		V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, \
++		V4L2_DV_FL_REDUCED_BLANKING) \
++}
++
++#define V4L2_DV_BT_DMT_1280X800P60_RB { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(1280, 800, 0, V4L2_DV_HSYNC_POS_POL, \
++		71000000, 48, 32, 80, 3, 6, 14, 0, 0, 0, \
++		V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, \
++		V4L2_DV_FL_REDUCED_BLANKING) \
++}
++
++#define V4L2_DV_BT_DMT_1280X800P60 { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(1280, 800, 0, V4L2_DV_VSYNC_POS_POL, \
++		83500000, 72, 128, 200, 3, 6, 22, 0, 0, 0, \
++		V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, 0) \
++}
++
++#define V4L2_DV_BT_DMT_1280X800P75 { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(1280, 800, 0, V4L2_DV_VSYNC_POS_POL, \
++		106500000, 80, 128, 208, 3, 6, 29, 0, 0, 0, \
++		V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, 0) \
++}
++
++#define V4L2_DV_BT_DMT_1280X800P85 { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(1280, 800, 0, V4L2_DV_VSYNC_POS_POL, \
++		122500000, 80, 136, 216, 3, 6, 34, 0, 0, 0, \
++		V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, 0) \
++}
++
++#define V4L2_DV_BT_DMT_1280X800P120_RB { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(1280, 800, 0, V4L2_DV_HSYNC_POS_POL, \
++		146250000, 48, 32, 80, 3, 6, 38, 0, 0, 0, \
++		V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, \
++		V4L2_DV_FL_REDUCED_BLANKING) \
++}
++
++#define V4L2_DV_BT_DMT_1280X960P60 { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(1280, 960, 0, \
++		V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL, \
++		108000000, 96, 112, 312, 1, 3, 36, 0, 0, 0, \
++		V4L2_DV_BT_STD_DMT, 0) \
++}
++
++#define V4L2_DV_BT_DMT_1280X960P85 { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(1280, 960, 0, \
++		V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL, \
++		148500000, 64, 160, 224, 1, 3, 47, 0, 0, 0, \
++		V4L2_DV_BT_STD_DMT, 0) \
++}
++
++#define V4L2_DV_BT_DMT_1280X960P120_RB { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(1280, 960, 0, V4L2_DV_HSYNC_POS_POL, \
++		175500000, 48, 32, 80, 3, 4, 50, 0, 0, 0, \
++		V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, \
++		V4L2_DV_FL_REDUCED_BLANKING) \
++}
++
++/* SXGA resolutions */
++#define V4L2_DV_BT_DMT_1280X1024P60 { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(1280, 1024, 0, \
++		V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL, \
++		108000000, 48, 112, 248, 1, 3, 38, 0, 0, 0, \
++		V4L2_DV_BT_STD_DMT, 0) \
++}
++
++#define V4L2_DV_BT_DMT_1280X1024P75 { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(1280, 1024, 0, \
++		V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL, \
++		135000000, 16, 144, 248, 1, 3, 38, 0, 0, 0, \
++		V4L2_DV_BT_STD_DMT, 0) \
++}
++
++#define V4L2_DV_BT_DMT_1280X1024P85 { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(1280, 1024, 0, \
++		V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL, \
++		157500000, 64, 160, 224, 1, 3, 44, 0, 0, 0, \
++		V4L2_DV_BT_STD_DMT, 0) \
++}
++
++#define V4L2_DV_BT_DMT_1280X1024P120_RB { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(1280, 1024, 0, V4L2_DV_HSYNC_POS_POL, \
++		187250000, 48, 32, 80, 3, 7, 50, 0, 0, 0, \
++		V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, \
++		V4L2_DV_FL_REDUCED_BLANKING) \
++}
++
++#define V4L2_DV_BT_DMT_1360X768P60 { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(1360, 768, 0, \
++		V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL, \
++		85500000, 64, 112, 256, 3, 6, 18, 0, 0, 0, \
++		V4L2_DV_BT_STD_DMT, 0) \
++}
++
++#define V4L2_DV_BT_DMT_1360X768P120_RB { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(1360, 768, 0, V4L2_DV_HSYNC_POS_POL, \
++		148250000, 48, 32, 80, 3, 5, 37, 0, 0, 0, \
++		V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, \
++		V4L2_DV_FL_REDUCED_BLANKING) \
++}
++
++#define V4L2_DV_BT_DMT_1366X768P60 { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(1366, 768, 0, \
++		V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL, \
++		85500000, 70, 143, 213, 3, 3, 24, 0, 0, 0, \
++		V4L2_DV_BT_STD_DMT, 0) \
++}
++
++#define V4L2_DV_BT_DMT_1366X768P60_RB { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(1366, 768, 0, \
++		V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL, \
++		72000000, 14, 56, 64, 1, 3, 28, 0, 0, 0, \
++		V4L2_DV_BT_STD_DMT, V4L2_DV_FL_REDUCED_BLANKING) \
++}
++
++/* SXGA+ resolutions */
++#define V4L2_DV_BT_DMT_1400X1050P60_RB { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(1400, 1050, 0, V4L2_DV_HSYNC_POS_POL, \
++		101000000, 48, 32, 80, 3, 4, 23, 0, 0, 0, \
++		V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, \
++		V4L2_DV_FL_REDUCED_BLANKING) \
++}
++
++#define V4L2_DV_BT_DMT_1400X1050P60 { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(1400, 1050, 0, V4L2_DV_VSYNC_POS_POL, \
++		121750000, 88, 144, 232, 3, 4, 32, 0, 0, 0, \
++		V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, 0) \
++}
++
++#define V4L2_DV_BT_DMT_1400X1050P75 { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(1400, 1050, 0, V4L2_DV_VSYNC_POS_POL, \
++		156000000, 104, 144, 248, 3, 4, 42, 0, 0, 0, \
++		V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, 0) \
++}
++
++#define V4L2_DV_BT_DMT_1400X1050P85 { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(1400, 1050, 0, V4L2_DV_VSYNC_POS_POL, \
++		179500000, 104, 152, 256, 3, 4, 48, 0, 0, 0, \
++		V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, 0) \
++}
++
++#define V4L2_DV_BT_DMT_1400X1050P120_RB { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(1400, 1050, 0, V4L2_DV_HSYNC_POS_POL, \
++		208000000, 48, 32, 80, 3, 4, 55, 0, 0, 0, \
++		V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, \
++		V4L2_DV_FL_REDUCED_BLANKING) \
++}
++
++/* WXGA+ resolutions */
++#define V4L2_DV_BT_DMT_1440X900P60_RB { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(1440, 900, 0, V4L2_DV_HSYNC_POS_POL, \
++		88750000, 48, 32, 80, 3, 6, 17, 0, 0, 0, \
++		V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, \
++		V4L2_DV_FL_REDUCED_BLANKING) \
++}
++
++#define V4L2_DV_BT_DMT_1440X900P60 { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(1440, 900, 0, V4L2_DV_VSYNC_POS_POL, \
++		106500000, 80, 152, 232, 3, 6, 25, 0, 0, 0, \
++		V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, 0) \
++}
++
++#define V4L2_DV_BT_DMT_1440X900P75 { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(1440, 900, 0, V4L2_DV_VSYNC_POS_POL, \
++		136750000, 96, 152, 248, 3, 6, 33, 0, 0, 0, \
++		V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, 0) \
++}
++
++#define V4L2_DV_BT_DMT_1440X900P85 { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(1440, 900, 0, V4L2_DV_VSYNC_POS_POL, \
++		157000000, 104, 152, 256, 3, 6, 39, 0, 0, 0, \
++		V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, 0) \
++}
++
++#define V4L2_DV_BT_DMT_1440X900P120_RB { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(1440, 900, 0, V4L2_DV_HSYNC_POS_POL, \
++		182750000, 48, 32, 80, 3, 6, 44, 0, 0, 0, \
++		V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, \
++		V4L2_DV_FL_REDUCED_BLANKING) \
++}
++
++#define V4L2_DV_BT_DMT_1600X900P60_RB { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(1600, 900, 0, \
++		V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL, \
++		108000000, 24, 80, 96, 1, 3, 96, 0, 0, 0, \
++		V4L2_DV_BT_STD_DMT, V4L2_DV_FL_REDUCED_BLANKING) \
++}
++
++/* UXGA resolutions */
++#define V4L2_DV_BT_DMT_1600X1200P60 { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(1600, 1200, 0, \
++		V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL, \
++		162000000, 64, 192, 304, 1, 3, 46, 0, 0, 0, \
++		V4L2_DV_BT_STD_DMT, 0) \
++}
++
++#define V4L2_DV_BT_DMT_1600X1200P65 { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(1600, 1200, 0, \
++		V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL, \
++		175500000, 64, 192, 304, 1, 3, 46, 0, 0, 0, \
++		V4L2_DV_BT_STD_DMT, 0) \
++}
++
++#define V4L2_DV_BT_DMT_1600X1200P70 { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(1600, 1200, 0, \
++		V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL, \
++		189000000, 64, 192, 304, 1, 3, 46, 0, 0, 0, \
++		V4L2_DV_BT_STD_DMT, 0) \
++}
++
++#define V4L2_DV_BT_DMT_1600X1200P75 { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(1600, 1200, 0, \
++		V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL, \
++		202500000, 64, 192, 304, 1, 3, 46, 0, 0, 0, \
++		V4L2_DV_BT_STD_DMT, 0) \
++}
++
++#define V4L2_DV_BT_DMT_1600X1200P85 { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(1600, 1200, 0, \
++		V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL, \
++		229500000, 64, 192, 304, 1, 3, 46, 0, 0, 0, \
++		V4L2_DV_BT_STD_DMT, 0) \
++}
++
++#define V4L2_DV_BT_DMT_1600X1200P120_RB { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(1600, 1200, 0, V4L2_DV_HSYNC_POS_POL, \
++		268250000, 48, 32, 80, 3, 4, 64, 0, 0, 0, \
++		V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, \
++		V4L2_DV_FL_REDUCED_BLANKING) \
++}
++
++/* WSXGA+ resolutions */
++#define V4L2_DV_BT_DMT_1680X1050P60_RB { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(1680, 1050, 0, V4L2_DV_HSYNC_POS_POL, \
++		119000000, 48, 32, 80, 3, 6, 21, 0, 0, 0, \
++		V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, \
++		V4L2_DV_FL_REDUCED_BLANKING) \
++}
++
++#define V4L2_DV_BT_DMT_1680X1050P60 { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(1680, 1050, 0, V4L2_DV_VSYNC_POS_POL, \
++		146250000, 104, 176, 280, 3, 6, 30, 0, 0, 0, \
++		V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, 0) \
++}
++
++#define V4L2_DV_BT_DMT_1680X1050P75 { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(1680, 1050, 0, V4L2_DV_VSYNC_POS_POL, \
++		187000000, 120, 176, 296, 3, 6, 40, 0, 0, 0, \
++		V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, 0) \
++}
++
++#define V4L2_DV_BT_DMT_1680X1050P85 { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(1680, 1050, 0, V4L2_DV_VSYNC_POS_POL, \
++		214750000, 128, 176, 304, 3, 6, 46, 0, 0, 0, \
++		V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, 0) \
++}
++
++#define V4L2_DV_BT_DMT_1680X1050P120_RB { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(1680, 1050, 0, V4L2_DV_HSYNC_POS_POL, \
++		245500000, 48, 32, 80, 3, 6, 53, 0, 0, 0, \
++		V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, \
++		V4L2_DV_FL_REDUCED_BLANKING) \
++}
++
++#define V4L2_DV_BT_DMT_1792X1344P60 { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(1792, 1344, 0, V4L2_DV_VSYNC_POS_POL, \
++		204750000, 128, 200, 328, 1, 3, 46, 0, 0, 0, \
++		V4L2_DV_BT_STD_DMT, 0) \
++}
++
++#define V4L2_DV_BT_DMT_1792X1344P75 { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(1792, 1344, 0, V4L2_DV_VSYNC_POS_POL, \
++		261000000, 96, 216, 352, 1, 3, 69, 0, 0, 0, \
++		V4L2_DV_BT_STD_DMT, 0) \
++}
++
++#define V4L2_DV_BT_DMT_1792X1344P120_RB { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(1792, 1344, 0, V4L2_DV_HSYNC_POS_POL, \
++		333250000, 48, 32, 80, 3, 4, 72, 0, 0, 0, \
++		V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, \
++		V4L2_DV_FL_REDUCED_BLANKING) \
++}
++
++#define V4L2_DV_BT_DMT_1856X1392P60 { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(1856, 1392, 0, V4L2_DV_VSYNC_POS_POL, \
++		218250000, 96, 224, 352, 1, 3, 43, 0, 0, 0, \
++		V4L2_DV_BT_STD_DMT, 0) \
++}
++
++#define V4L2_DV_BT_DMT_1856X1392P75 { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(1856, 1392, 0, V4L2_DV_VSYNC_POS_POL, \
++		288000000, 128, 224, 352, 1, 3, 104, 0, 0, 0, \
++		V4L2_DV_BT_STD_DMT, 0) \
++}
++
++#define V4L2_DV_BT_DMT_1856X1392P120_RB { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(1856, 1392, 0, V4L2_DV_HSYNC_POS_POL, \
++		356500000, 48, 32, 80, 3, 4, 75, 0, 0, 0, \
++		V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, \
++		V4L2_DV_FL_REDUCED_BLANKING) \
++}
++
++#define V4L2_DV_BT_DMT_1920X1080P60 V4L2_DV_BT_CEA_1920X1080P60
++
++/* WUXGA resolutions */
++#define V4L2_DV_BT_DMT_1920X1200P60_RB { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(1920, 1200, 0, V4L2_DV_HSYNC_POS_POL, \
++		154000000, 48, 32, 80, 3, 6, 26, 0, 0, 0, \
++		V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, \
++		V4L2_DV_FL_REDUCED_BLANKING) \
++}
++
++#define V4L2_DV_BT_DMT_1920X1200P60 { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(1920, 1200, 0, V4L2_DV_VSYNC_POS_POL, \
++		193250000, 136, 200, 336, 3, 6, 36, 0, 0, 0, \
++		V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, 0) \
++}
++
++#define V4L2_DV_BT_DMT_1920X1200P75 { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(1920, 1200, 0, V4L2_DV_VSYNC_POS_POL, \
++		245250000, 136, 208, 344, 3, 6, 46, 0, 0, 0, \
++		V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, 0) \
++}
++
++#define V4L2_DV_BT_DMT_1920X1200P85 { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(1920, 1200, 0, V4L2_DV_VSYNC_POS_POL, \
++		281250000, 144, 208, 352, 3, 6, 53, 0, 0, 0, \
++		V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, 0) \
++}
++
++#define V4L2_DV_BT_DMT_1920X1200P120_RB { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(1920, 1200, 0, V4L2_DV_HSYNC_POS_POL, \
++		317000000, 48, 32, 80, 3, 6, 62, 0, 0, 0, \
++		V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, \
++		V4L2_DV_FL_REDUCED_BLANKING) \
++}
++
++#define V4L2_DV_BT_DMT_1920X1440P60 { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(1920, 1440, 0, V4L2_DV_VSYNC_POS_POL, \
++		234000000, 128, 208, 344, 1, 3, 56, 0, 0, 0, \
++		V4L2_DV_BT_STD_DMT, 0) \
++}
++
++#define V4L2_DV_BT_DMT_1920X1440P75 { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(1920, 1440, 0, V4L2_DV_VSYNC_POS_POL, \
++		297000000, 144, 224, 352, 1, 3, 56, 0, 0, 0, \
++		V4L2_DV_BT_STD_DMT, 0) \
++}
++
++#define V4L2_DV_BT_DMT_1920X1440P120_RB { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(1920, 1440, 0, V4L2_DV_HSYNC_POS_POL, \
++		380500000, 48, 32, 80, 3, 4, 78, 0, 0, 0, \
++		V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, \
++		V4L2_DV_FL_REDUCED_BLANKING) \
++}
++
++#define V4L2_DV_BT_DMT_2048X1152P60_RB { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(2048, 1152, 0, \
++		V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL, \
++		162000000, 26, 80, 96, 1, 3, 44, 0, 0, 0, \
++		V4L2_DV_BT_STD_DMT, V4L2_DV_FL_REDUCED_BLANKING) \
++}
++
++/* WQXGA resolutions */
++#define V4L2_DV_BT_DMT_2560X1600P60_RB { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(2560, 1600, 0, V4L2_DV_HSYNC_POS_POL, \
++		268500000, 48, 32, 80, 3, 6, 37, 0, 0, 0, \
++		V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, \
++		V4L2_DV_FL_REDUCED_BLANKING) \
++}
++
++#define V4L2_DV_BT_DMT_2560X1600P60 { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(2560, 1600, 0, V4L2_DV_VSYNC_POS_POL, \
++		348500000, 192, 280, 472, 3, 6, 49, 0, 0, 0, \
++		V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, 0) \
++}
++
++#define V4L2_DV_BT_DMT_2560X1600P75 { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(2560, 1600, 0, V4L2_DV_VSYNC_POS_POL, \
++		443250000, 208, 280, 488, 3, 6, 63, 0, 0, 0, \
++		V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, 0) \
++}
++
++#define V4L2_DV_BT_DMT_2560X1600P85 { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(2560, 1600, 0, V4L2_DV_VSYNC_POS_POL, \
++		505250000, 208, 280, 488, 3, 6, 73, 0, 0, 0, \
++		V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, 0) \
++}
++
++#define V4L2_DV_BT_DMT_2560X1600P120_RB { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(2560, 1600, 0, V4L2_DV_HSYNC_POS_POL, \
++		552750000, 48, 32, 80, 3, 6, 85, 0, 0, 0, \
++		V4L2_DV_BT_STD_DMT | V4L2_DV_BT_STD_CVT, \
++		V4L2_DV_FL_REDUCED_BLANKING) \
++}
++
++#define V4L2_DV_BT_DMT_1366X768P60 { \
++	.type = V4L2_DV_BT_656_1120, \
++	V4L2_INIT_BT_TIMINGS(1366, 768, 0, \
++		V4L2_DV_HSYNC_POS_POL | V4L2_DV_VSYNC_POS_POL, \
++		85500000, 70, 143, 213, 3, 3, 24, 0, 0, 0, \
++		V4L2_DV_BT_STD_DMT, 0) \
++}
++
++#endif
+\ No newline at end of file
+diff -Naur linux-3.4.100/include/linux/v4l2-mediabus.h linux-3.4.100_patched/include/linux/v4l2-mediabus.h
+--- linux-3.4.100/include/linux/v4l2-mediabus.h	2015-05-27 11:15:26.007634200 +0530
++++ linux-3.4.100_patched/include/linux/v4l2-mediabus.h	2015-10-05 13:07:43.636261000 +0530
+@@ -37,7 +37,7 @@
+ enum v4l2_mbus_pixelcode {
+ 	V4L2_MBUS_FMT_FIXED = 0x0001,
+ 
+-	/* RGB - next is 0x1009 */
++	/* RGB - next is 0x100d */
+ 	V4L2_MBUS_FMT_RGB444_2X8_PADHI_BE = 0x1001,
+ 	V4L2_MBUS_FMT_RGB444_2X8_PADHI_LE = 0x1002,
+ 	V4L2_MBUS_FMT_RGB555_2X8_PADHI_BE = 0x1003,
+@@ -46,9 +46,14 @@
+ 	V4L2_MBUS_FMT_BGR565_2X8_LE = 0x1006,
+ 	V4L2_MBUS_FMT_RGB565_2X8_BE = 0x1007,
+ 	V4L2_MBUS_FMT_RGB565_2X8_LE = 0x1008,
++	V4L2_MBUS_FMT_RGB666_1X18 = 0x1009,
++	V4L2_MBUS_FMT_RGB888_1X24 = 0x100a,
++	V4L2_MBUS_FMT_RGB888_2X12_BE = 0x100b,
++	V4L2_MBUS_FMT_RGB888_2X12_LE = 0x100c,
+ 
+-	/* YUV (including grey) - next is 0x2014 */
++	/* YUV (including grey) - next is 0x2017 */
+ 	V4L2_MBUS_FMT_Y8_1X8 = 0x2001,
++	V4L2_MBUS_FMT_UV8_1X8 = 0x2015,
+ 	V4L2_MBUS_FMT_UYVY8_1_5X8 = 0x2002,
+ 	V4L2_MBUS_FMT_VYUY8_1_5X8 = 0x2003,
+ 	V4L2_MBUS_FMT_YUYV8_1_5X8 = 0x2004,
+@@ -65,14 +70,20 @@
+ 	V4L2_MBUS_FMT_VYUY8_1X16 = 0x2010,
+ 	V4L2_MBUS_FMT_YUYV8_1X16 = 0x2011,
+ 	V4L2_MBUS_FMT_YVYU8_1X16 = 0x2012,
++	V4L2_MBUS_FMT_YDYUYDYV8_1X16 = 0x2014,
+ 	V4L2_MBUS_FMT_YUYV10_1X20 = 0x200d,
+ 	V4L2_MBUS_FMT_YVYU10_1X20 = 0x200e,
++	V4L2_MBUS_FMT_YUV10_1X30 = 0x2016,
+ 
+ 	/* Bayer - next is 0x3015 */
+ 	V4L2_MBUS_FMT_SBGGR8_1X8 = 0x3001,
+ 	V4L2_MBUS_FMT_SGBRG8_1X8 = 0x3013,
+ 	V4L2_MBUS_FMT_SGRBG8_1X8 = 0x3002,
+ 	V4L2_MBUS_FMT_SRGGB8_1X8 = 0x3014,
++	V4L2_MBUS_FMT_SBGGR10_ALAW8_1X8 = 0x3015,
++	V4L2_MBUS_FMT_SGBRG10_ALAW8_1X8 = 0x3016,
++	V4L2_MBUS_FMT_SGRBG10_ALAW8_1X8 = 0x3017,
++	V4L2_MBUS_FMT_SRGGB10_ALAW8_1X8 = 0x3018,
+ 	V4L2_MBUS_FMT_SBGGR10_DPCM8_1X8 = 0x300b,
+ 	V4L2_MBUS_FMT_SGBRG10_DPCM8_1X8 = 0x300c,
+ 	V4L2_MBUS_FMT_SGRBG10_DPCM8_1X8 = 0x3009,
+@@ -92,6 +103,11 @@
+ 
+ 	/* JPEG compressed formats - next is 0x4002 */
+ 	V4L2_MBUS_FMT_JPEG_1X8 = 0x4001,
++
++	/* Vendor specific formats - next is 0x5002 */
++
++	/* S5C73M3 sensor specific interleaved UYVY and JPEG */
++	V4L2_MBUS_FMT_S5C_UYVY_JPEG_1X8 = 0x5001,
+ };
+ 
+ /**
+diff -Naur linux-3.4.100/include/linux/v4l2-subdev.h linux-3.4.100_patched/include/linux/v4l2-subdev.h
+--- linux-3.4.100/include/linux/v4l2-subdev.h	2015-05-27 11:15:26.021134200 +0530
++++ linux-3.4.100_patched/include/linux/v4l2-subdev.h	2015-10-05 13:08:52.851101200 +0530
+@@ -123,6 +123,38 @@
+ 	__u32 reserved[9];
+ };
+ 
++/**
++ * struct v4l2_subdev_selection - selection info
++ *
++ * @which: either V4L2_SUBDEV_FORMAT_ACTIVE or V4L2_SUBDEV_FORMAT_TRY
++ * @pad: pad number, as reported by the media API
++ * @target: Selection target, used to choose one of possible rectangles,
++ *	    defined in v4l2-common.h; V4L2_SEL_TGT_* .
++ * @flags: constraint flags, defined in v4l2-common.h; V4L2_SEL_FLAG_*.
++ * @r: coordinates of the selection window
++ * @reserved: for future use, set to zero for now
++ *
++ * Hardware may use multiple helper windows to process a video stream.
++ * The structure is used to exchange this selection areas between
++ * an application and a driver.
++ */
++struct v4l2_subdev_selection {
++	__u32 which;
++	__u32 pad;
++	__u32 target;
++	__u32 flags;
++	struct v4l2_rect r;
++	__u32 reserved[8];
++};
++
++struct v4l2_subdev_edid {
++	__u32 pad;
++	__u32 start_block;
++	__u32 blocks;
++	__u32 reserved[5];
++	__u8  *edid;
++};
++
+ #define VIDIOC_SUBDEV_G_FMT	_IOWR('V',  4, struct v4l2_subdev_format)
+ #define VIDIOC_SUBDEV_S_FMT	_IOWR('V',  5, struct v4l2_subdev_format)
+ #define VIDIOC_SUBDEV_G_FRAME_INTERVAL \
+@@ -137,5 +169,16 @@
+ 			_IOWR('V', 75, struct v4l2_subdev_frame_interval_enum)
+ #define VIDIOC_SUBDEV_G_CROP	_IOWR('V', 59, struct v4l2_subdev_crop)
+ #define VIDIOC_SUBDEV_S_CROP	_IOWR('V', 60, struct v4l2_subdev_crop)
++#define VIDIOC_SUBDEV_G_SELECTION \
++	_IOWR('V', 61, struct v4l2_subdev_selection)
++#define VIDIOC_SUBDEV_S_SELECTION \
++	_IOWR('V', 62, struct v4l2_subdev_selection)
++#define VIDIOC_SUBDEV_G_EDID	_IOWR('V', 40, struct v4l2_subdev_edid)
++#define VIDIOC_SUBDEV_S_EDID	_IOWR('V', 41, struct v4l2_subdev_edid)
++#define VIDIOC_SUBDEV_S_DV_TIMINGS		_IOWR('V', 87, struct v4l2_dv_timings)
++#define VIDIOC_SUBDEV_G_DV_TIMINGS		_IOWR('V', 88, struct v4l2_dv_timings)
++#define VIDIOC_SUBDEV_ENUM_DV_TIMINGS		_IOWR('V', 98, struct v4l2_enum_dv_timings)
++#define VIDIOC_SUBDEV_QUERY_DV_TIMINGS		_IOR('V', 99, struct v4l2_dv_timings)
++#define VIDIOC_SUBDEV_DV_TIMINGS_CAP		_IOWR('V', 100, struct v4l2_dv_timings_cap)
+ 
+ #endif
+diff -Naur linux-3.4.100/include/linux/videodev2.h linux-3.4.100_patched/include/linux/videodev2.h
+--- linux-3.4.100/include/linux/videodev2.h	2015-05-27 11:15:26.066634200 +0530
++++ linux-3.4.100_patched/include/linux/videodev2.h	2015-10-05 15:23:35.000000000 +0530
+@@ -154,6 +154,12 @@
+ #endif
+ 	V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE = 9,
+ 	V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE  = 10,
++
++	/* for STM tsmux device */
++	V4L2_BUF_TYPE_DVB_CAPTURE	   = 11,
++	V4L2_BUF_TYPE_DVB_OUTPUT	   = 12,
++
++	/* Deprecated, do not use */
+ 	V4L2_BUF_TYPE_PRIVATE              = 0x80,
+ };
+ 
+@@ -163,6 +169,7 @@
+ 
+ #define V4L2_TYPE_IS_OUTPUT(type)				\
+ 	((type) == V4L2_BUF_TYPE_VIDEO_OUTPUT			\
++	 || (type) == V4L2_BUF_TYPE_DVB_OUTPUT			\
+ 	 || (type) == V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE		\
+ 	 || (type) == V4L2_BUF_TYPE_VIDEO_OVERLAY		\
+ 	 || (type) == V4L2_BUF_TYPE_VIDEO_OUTPUT_OVERLAY	\
+@@ -179,6 +186,7 @@
+ 	V4L2_MEMORY_MMAP             = 1,
+ 	V4L2_MEMORY_USERPTR          = 2,
+ 	V4L2_MEMORY_OVERLAY          = 3,
++	V4L2_MEMORY_DMABUF           = 4,
+ };
+ 
+ /* see also http://vektor.theorem.ca/graphics/ycbcr/ */
+@@ -207,8 +215,59 @@
+ 
+ 	/* For RGB colourspaces, this is probably a good start. */
+ 	V4L2_COLORSPACE_SRGB          = 8,
++
++	/* AdobeRGB colorspace */
++	V4L2_COLORSPACE_ADOBERGB      = 9,
++
++	/* BT.2020 colorspace, used for UHDTV. */
++	V4L2_COLORSPACE_BT2020        = 10,
+ };
+ 
++/*
++ * Determine how COLORSPACE_DEFAULT should map to a proper colorspace.
++ * This depends on whether this is a SDTV image (use SMPTE 170M), an
++ * HDTV image (use Rec. 709), or something else (use sRGB).
++ */
++#define V4L2_MAP_COLORSPACE_DEFAULT(is_sdtv, is_hdtv) \
++	((is_sdtv) ? V4L2_COLORSPACE_SMPTE170M : \
++	 ((is_hdtv) ? V4L2_COLORSPACE_REC709 : V4L2_COLORSPACE_SRGB))
++
++enum v4l2_xfer_func {
++	 /*
++	 * Mapping of V4L2_XFER_FUNC_DEFAULT to actual transfer functions
++	 * for the various colorspaces:
++	 *
++	 * V4L2_COLORSPACE_SMPTE170M, V4L2_COLORSPACE_470_SYSTEM_M,
++	 * V4L2_COLORSPACE_470_SYSTEM_BG, V4L2_COLORSPACE_REC709 and
++	 * V4L2_COLORSPACE_BT2020: V4L2_XFER_FUNC_709
++	 *
++	 * V4L2_COLORSPACE_SRGB, V4L2_COLORSPACE_JPEG: V4L2_XFER_FUNC_SRGB
++	 *
++	 * V4L2_COLORSPACE_ADOBERGB: V4L2_XFER_FUNC_ADOBERGB
++	 *
++	 * V4L2_COLORSPACE_SMPTE240M: V4L2_XFER_FUNC_SMPTE240M
++	 *
++	 * V4L2_COLORSPACE_RAW: V4L2_XFER_FUNC_NONE
++	 */
++	V4L2_XFER_FUNC_DEFAULT     = 0,
++	V4L2_XFER_FUNC_709         = 1,
++	V4L2_XFER_FUNC_SRGB        = 2,
++	V4L2_XFER_FUNC_ADOBERGB    = 3,
++	V4L2_XFER_FUNC_SMPTE240M   = 4,
++	V4L2_XFER_FUNC_NONE        = 5,
++};
++
++/*
++ * Determine how XFER_FUNC_DEFAULT should map to a proper transfer function.
++ * This depends on the colorspace.
++ */
++#define V4L2_MAP_XFER_FUNC_DEFAULT(colsp) \
++	((colsp) == V4L2_XFER_FUNC_ADOBERGB ? V4L2_XFER_FUNC_ADOBERGB : \
++	 ((colsp) == V4L2_COLORSPACE_SMPTE240M ? V4L2_XFER_FUNC_SMPTE240M : \
++	  ((colsp) == V4L2_COLORSPACE_RAW ? V4L2_XFER_FUNC_NONE : \
++	   ((colsp) == V4L2_COLORSPACE_SRGB || (colsp) == V4L2_COLORSPACE_JPEG ? \
++	    V4L2_XFER_FUNC_SRGB : V4L2_XFER_FUNC_709))))
++
+ enum v4l2_priority {
+ 	V4L2_PRIORITY_UNSET       = 0,  /* not initialized */
+ 	V4L2_PRIORITY_BACKGROUND  = 1,
+@@ -262,6 +321,8 @@
+ #define V4L2_CAP_VIDEO_OUTPUT_OVERLAY	0x00000200  /* Can do video output overlay */
+ #define V4L2_CAP_HW_FREQ_SEEK		0x00000400  /* Can do hardware frequency seek  */
+ #define V4L2_CAP_RDS_OUTPUT		0x00000800  /* Is an RDS encoder */
++#define V4L2_CAP_DVB_CAPTURE		0x00003000  /* Is a tsmux capture device */
++#define V4L2_CAP_DVB_OUTPUT		0x00004000  /* Is a tsmux output device */
+ 
+ /* Is a video capture device that supports multiplanar formats */
+ #define V4L2_CAP_VIDEO_CAPTURE_MPLANE	0x00001000
+@@ -280,6 +341,23 @@
+ #define V4L2_CAP_DEVICE_CAPS            0x80000000  /* sets device capabilities field */
+ 
+ /*
++ *      D V B  T S   F O R M A T
++ */
++
++struct v4l2_dvb_format {
++	__u32 data_type;
++	__u32 buffer_size;
++	__u32 codec;
++	__u32 reserved[3];
++};
++
++#define V4L2_DVB_FMT_TS		v4l2_fourcc('T', 'S', '0', '1')/* (Standard 188 bytes TS) */
++#define V4L2_DVB_FMT_DLNA_TS	v4l2_fourcc('D', 'L', 'N', 'A')/* (192 bytes timestamped TS) */
++#define V4L2_DVB_FMT_ES		v4l2_fourcc('E', 'S', '0', '1')/* (ES data) */
++#define V4L2_DVB_FMT_PES	v4l2_fourcc('P', 'E', 'S', '0')/* (PES data) */
++#define V4L2_DVB_FMT_DATA	v4l2_fourcc('D', 'A', 'T', 'A')/* (DATA) */
++
++/*
+  *	V I D E O   I M A G E   F O R M A T
+  */
+ struct v4l2_pix_format {
+@@ -298,7 +376,11 @@
+ /* RGB formats */
+ #define V4L2_PIX_FMT_RGB332  v4l2_fourcc('R', 'G', 'B', '1') /*  8  RGB-3-3-2     */
+ #define V4L2_PIX_FMT_RGB444  v4l2_fourcc('R', '4', '4', '4') /* 16  xxxxrrrr ggggbbbb */
++#define V4L2_PIX_FMT_ARGB444 v4l2_fourcc('A', 'R', '1', '2') /* 16  aaaarrrr ggggbbbb */
++#define V4L2_PIX_FMT_XRGB444 v4l2_fourcc('X', 'R', '1', '2') /* 16  xxxxrrrr ggggbbbb */
+ #define V4L2_PIX_FMT_RGB555  v4l2_fourcc('R', 'G', 'B', 'O') /* 16  RGB-5-5-5     */
++#define V4L2_PIX_FMT_ARGB555 v4l2_fourcc('A', 'R', '1', '5') /* 16  ARGB-1-5-5-5  */
++#define V4L2_PIX_FMT_XRGB555 v4l2_fourcc('X', 'R', '1', '5') /* 16  XRGB-1-5-5-5  */
+ #define V4L2_PIX_FMT_RGB565  v4l2_fourcc('R', 'G', 'B', 'P') /* 16  RGB-5-6-5     */
+ #define V4L2_PIX_FMT_RGB555X v4l2_fourcc('R', 'G', 'B', 'Q') /* 16  RGB-5-5-5 BE  */
+ #define V4L2_PIX_FMT_RGB565X v4l2_fourcc('R', 'G', 'B', 'R') /* 16  RGB-5-6-5 BE  */
+@@ -306,7 +388,11 @@
+ #define V4L2_PIX_FMT_BGR24   v4l2_fourcc('B', 'G', 'R', '3') /* 24  BGR-8-8-8     */
+ #define V4L2_PIX_FMT_RGB24   v4l2_fourcc('R', 'G', 'B', '3') /* 24  RGB-8-8-8     */
+ #define V4L2_PIX_FMT_BGR32   v4l2_fourcc('B', 'G', 'R', '4') /* 32  BGR-8-8-8-8   */
++#define V4L2_PIX_FMT_ABGR32  v4l2_fourcc('A', 'R', '2', '4') /* 32  BGRA-8-8-8-8  */
++#define V4L2_PIX_FMT_XBGR32  v4l2_fourcc('X', 'R', '2', '4') /* 32  BGRX-8-8-8-8  */
+ #define V4L2_PIX_FMT_RGB32   v4l2_fourcc('R', 'G', 'B', '4') /* 32  RGB-8-8-8-8   */
++#define V4L2_PIX_FMT_ARGB32  v4l2_fourcc('B', 'A', '2', '4') /* 32  ARGB-8-8-8-8  */
++#define V4L2_PIX_FMT_XRGB32  v4l2_fourcc('B', 'X', '2', '4') /* 32  XRGB-8-8-8-8  */
+ 
+ /* Grey formats */
+ #define V4L2_PIX_FMT_GREY    v4l2_fourcc('G', 'R', 'E', 'Y') /*  8  Greyscale     */
+@@ -354,9 +440,10 @@
+ 
+ /* two non contiguous planes - one Y, one Cr + Cb interleaved  */
+ #define V4L2_PIX_FMT_NV12M   v4l2_fourcc('N', 'M', '1', '2') /* 12  Y/CbCr 4:2:0  */
++#define V4L2_PIX_FMT_NV12MT  v4l2_fourcc('T', 'M', '1', '2') /* 12  Y/CbCr 4:2:0 64x32 macroblocks */
++/* next two used by STM SDK2 C8jpeg decoder */
+ #define V4L2_PIX_FMT_NV16M   v4l2_fourcc('N', 'M', '1', '6') /* 16  Y/CbCr 4:2:2  */
+ #define V4L2_PIX_FMT_NV24M   v4l2_fourcc('N', 'M', '2', '4') /* 24  Y/CbCr 4:4:4  */
+-#define V4L2_PIX_FMT_NV12MT  v4l2_fourcc('T', 'M', '1', '2') /* 12  Y/CbCr 4:2:0 64x32 macroblocks */
+ 
+ /* three non contiguous planes - Y, Cb, Cr */
+ #define V4L2_PIX_FMT_YUV420M v4l2_fourcc('Y', 'M', '1', '2') /* 12  YUV420 planar */
+@@ -585,6 +672,8 @@
+  *			should be passed to mmap() called on the video node)
+  * @userptr:		when memory is V4L2_MEMORY_USERPTR, a userspace pointer
+  *			pointing to this plane
++ * @fd:			when memory is V4L2_MEMORY_DMABUF, a userspace file
++ *			descriptor associated with this plane
+  * @data_offset:	offset in the plane to the start of data; usually 0,
+  *			unless there is a header in front of the data
+  *
+@@ -599,6 +688,7 @@
+ 	union {
+ 		__u32		mem_offset;
+ 		unsigned long	userptr;
++		__s32		fd;
+ 	} m;
+ 	__u32			data_offset;
+ 	__u32			reserved[11];
+@@ -623,6 +713,8 @@
+  *		a userspace pointer pointing to this buffer
+  * @planes:	for multiplanar buffers; userspace pointer to the array of plane
+  *		info structs for this buffer
++ * @fd:		for non-multiplanar buffers with memory == V4L2_MEMORY_DMABUF;
++ *		a userspace file descriptor associated with this buffer
+  * @length:	size in bytes of the buffer (NOT its payload) for single-plane
+  *		buffers (when type != *_MPLANE); number of elements in the
+  *		planes array for multi-plane buffers
+@@ -644,9 +736,10 @@
+ 	/* memory location */
+ 	enum v4l2_memory        memory;
+ 	union {
+-		__u32           offset;
+-		unsigned long   userptr;
+-		struct v4l2_plane *planes;
++		__u32			offset;
++		unsigned long	userptr;
++		struct v4l2_plane	*planes;
++		__s32		fd;
+ 	} m;
+ 	__u32			length;
+ 	__u32			input;
+@@ -669,6 +762,33 @@
+ #define V4L2_BUF_FLAG_NO_CACHE_INVALIDATE	0x0800
+ #define V4L2_BUF_FLAG_NO_CACHE_CLEAN		0x1000
+ 
++/**
++ * struct v4l2_exportbuffer - export of video buffer as DMABUF file descriptor
++ *
++ * @index:	id number of the buffer
++ * @type:	enum v4l2_buf_type; buffer type (type == *_MPLANE for
++ *		multiplanar buffers);
++ * @plane:	index of the plane to be exported, 0 for single plane queues
++ * @flags:	flags for newly created file, currently only O_CLOEXEC is
++ *		supported, refer to manual of open syscall for more details
++ * @fd:		file descriptor associated with DMABUF (set by driver)
++ *
++ * Contains data used for exporting a video buffer as DMABUF file descriptor.
++ * The buffer is identified by a 'cookie' returned by VIDIOC_QUERYBUF
++ * (identical to the cookie used to mmap() the buffer to userspace). All
++ * reserved fields must be set to zero. The field reserved0 is expected to
++ * become a structure 'type' allowing an alternative layout of the structure
++ * content. Therefore this field should not be used for any other extensions.
++ */
++struct v4l2_exportbuffer {
++	__u32		type; /* enum v4l2_buf_type */
++	__u32		index;
++	__u32		plane;
++	__u32		flags;
++	__s32		fd;
++	__u32		reserved[11];
++};
++
+ /*
+  *	O V E R L A Y   P R E V I E W
+  */
+@@ -1016,6 +1136,36 @@
+ #define V4L2_DV_VSYNC_POS_POL	0x00000001
+ #define V4L2_DV_HSYNC_POS_POL	0x00000002
+ 
++/* Timings standards */
++#define V4L2_DV_BT_STD_CEA861	(1 << 0)  /* CEA-861 Digital TV Profile */
++#define V4L2_DV_BT_STD_DMT	(1 << 1)  /* VESA Discrete Monitor Timings */
++#define V4L2_DV_BT_STD_CVT	(1 << 2)  /* VESA Coordinated Video Timings */
++#define V4L2_DV_BT_STD_GTF	(1 << 3)  /* VESA Generalized Timings Formula */
++
++/* Flags */
++
++/* CVT/GTF specific: timing uses reduced blanking (CVT) or the 'Secondary
++   GTF' curve (GTF). In both cases the horizontal and/or vertical blanking
++   intervals are reduced, allowing a higher resolution over the same
++   bandwidth. This is a read-only flag. */
++#define V4L2_DV_FL_REDUCED_BLANKING		(1 << 0)
++/* CEA-861 specific: set for CEA-861 formats with a framerate of a multiple
++   of six. These formats can be optionally played at 1 / 1.001 speed.
++   This is a read-only flag. */
++#define V4L2_DV_FL_CAN_REDUCE_FPS		(1 << 1)
++/* CEA-861 specific: only valid for video transmitters, the flag is cleared
++   by receivers.
++   If the framerate of the format is a multiple of six, then the pixelclock
++   used to set up the transmitter is divided by 1.001 to make it compatible
++   with 60 Hz based standards such as NTSC and PAL-M that use a framerate of
++   29.97 Hz. Otherwise this flag is cleared. If the transmitter can't generate
++   such frequencies, then the flag will also be cleared. */
++#define V4L2_DV_FL_REDUCED_FPS			(1 << 2)
++/* Specific to interlaced formats: if set, then field 1 is really one half-line
++   longer and field 2 is really one half-line shorter, so each field has
++   exactly the same number of half-lines. Whether half-lines can be detected
++   or used depends on the hardware. */
++#define V4L2_DV_FL_HALF_LINE			(1 << 0)
+ 
+ /* DV timings */
+ struct v4l2_dv_timings {
+@@ -1029,6 +1179,70 @@
+ /* Values for the type field */
+ #define V4L2_DV_BT_656_1120	0	/* BT.656/1120 timing type */
+ 
++
++/** struct v4l2_enum_dv_timings - DV timings enumeration
++ * @index:	enumeration index
++ * @pad:	the pad number for which to enumerate timings (used with
++ *		v4l-subdev nodes only)
++ * @reserved:	must be zeroed
++ * @timings:	the timings for the given index
++ */
++struct v4l2_enum_dv_timings {
++	__u32 index;
++	__u32 pad;
++	__u32 reserved[2];
++	struct v4l2_dv_timings timings;
++};
++
++/** struct v4l2_bt_timings_cap - BT.656/BT.1120 timing capabilities
++ * @min_width:		width in pixels
++ * @max_width:		width in pixels
++ * @min_height:		height in lines
++ * @max_height:		height in lines
++ * @min_pixelclock:	Pixel clock in HZ. Ex. 74.25MHz->74250000
++ * @max_pixelclock:	Pixel clock in HZ. Ex. 74.25MHz->74250000
++ * @standards:		Supported standards
++ * @capabilities:	Supported capabilities
++ * @reserved:		Must be zeroed
++ */
++struct v4l2_bt_timings_cap {
++	__u32	min_width;
++	__u32	max_width;
++	__u32	min_height;
++	__u32	max_height;
++	__u64	min_pixelclock;
++	__u64	max_pixelclock;
++	__u32	standards;
++	__u32	capabilities;
++	__u32	reserved[16];
++} __attribute__ ((packed));
++
++/* Supports interlaced formats */
++#define V4L2_DV_BT_CAP_INTERLACED	(1 << 0)
++/* Supports progressive formats */
++#define V4L2_DV_BT_CAP_PROGRESSIVE	(1 << 1)
++/* Supports CVT/GTF reduced blanking */
++#define V4L2_DV_BT_CAP_REDUCED_BLANKING	(1 << 2)
++/* Supports custom formats */
++#define V4L2_DV_BT_CAP_CUSTOM		(1 << 3)
++
++/** struct v4l2_dv_timings_cap - DV timings capabilities
++ * @type:	the type of the timings (same as in struct v4l2_dv_timings)
++ * @pad:	the pad number for which to query capabilities (used with
++ *		v4l-subdev nodes only)
++ * @bt:		the BT656/1120 timings capabilities
++ */
++struct v4l2_dv_timings_cap {
++	__u32 type;
++	__u32 pad;
++	__u32 reserved[2];
++	union {
++		struct v4l2_bt_timings_cap bt;
++		__u32 raw_data[32];
++	};
++};
++
++
+ /*
+  *	V I D E O   I N P U T S
+  */
+@@ -1134,6 +1348,26 @@
+ #define V4L2_CTRL_CLASS_FM_TX 0x009b0000	/* FM Modulator control class */
+ #define V4L2_CTRL_CLASS_FLASH 0x009c0000	/* Camera flash controls */
+ #define V4L2_CTRL_CLASS_JPEG 0x009d0000		/* JPEG-compression controls */
++#define V4L2_CTRL_CLASS_IMAGE_SOURCE    0x009e0000	   /* Image source controls */
++#define V4L2_CTRL_CLASS_IMAGE_PROC	0x009f0000	   /* Image processing controls */
++#define V4L2_CTRL_CLASS_DV 		0x00a00000	   /* DV controls */
++#define V4L2_CTRL_CLASS_TSMUX		0x00b00000	   /* TSMUX controls */
++
++/* Image source controls */
++#define V4L2_CID_IMAGE_SOURCE_CLASS_BASE        (V4L2_CTRL_CLASS_IMAGE_SOURCE | 0x900)
++#define V4L2_CID_IMAGE_SOURCE_CLASS             (V4L2_CTRL_CLASS_IMAGE_SOURCE | 1)
++
++/* Image processing controls */
++#define V4L2_CID_IMAGE_PROC_CLASS_BASE          (V4L2_CTRL_CLASS_IMAGE_PROC | 0x900)
++#define V4L2_CID_IMAGE_PROC_CLASS               (V4L2_CTRL_CLASS_IMAGE_PROC | 1)
++
++/*  DV-class control IDs defined by V4L2 */
++#define V4L2_CID_DV_CLASS_BASE			(V4L2_CTRL_CLASS_DV | 0x900)
++#define V4L2_CID_DV_CLASS			(V4L2_CTRL_CLASS_DV | 1)
++
++/*  TSMUX-class control IDs defined by V4L2 */
++#define V4L2_CID_TSMUX_CLASS_BASE                  (V4L2_CTRL_CLASS_TSMUX | 0x900)
++#define V4L2_CID_TSMUX_CLASS                       (V4L2_CTRL_CLASS_TSMUX | 1)
+ 
+ #define V4L2_CTRL_ID_MASK      	  (0x0fffffff)
+ #define V4L2_CTRL_ID2CLASS(id)    ((id) & 0x0fff0000UL)
+@@ -1583,6 +1817,38 @@
+ };
+ #define V4L2_CID_MPEG_VIDEO_MPEG4_QPEL		(V4L2_CID_MPEG_BASE+407)
+ 
++/*  Control IDs for VP8 streams
++ *  Although VP8 is not part of MPEG we add these controls to the MPEG class
++ *  as that class is already handling other video compression standards
++ */
++#define V4L2_CID_MPEG_VIDEO_VPX_NUM_PARTITIONS		(V4L2_CID_MPEG_BASE+500)
++enum v4l2_vp8_num_partitions {
++	V4L2_CID_MPEG_VIDEO_VPX_1_PARTITION	= 0,
++	V4L2_CID_MPEG_VIDEO_VPX_2_PARTITIONS	= 1,
++	V4L2_CID_MPEG_VIDEO_VPX_4_PARTITIONS	= 2,
++	V4L2_CID_MPEG_VIDEO_VPX_8_PARTITIONS	= 3,
++};
++#define V4L2_CID_MPEG_VIDEO_VPX_IMD_DISABLE_4X4		(V4L2_CID_MPEG_BASE+501)
++#define V4L2_CID_MPEG_VIDEO_VPX_NUM_REF_FRAMES		(V4L2_CID_MPEG_BASE+502)
++enum v4l2_vp8_num_ref_frames {
++	V4L2_CID_MPEG_VIDEO_VPX_1_REF_FRAME	= 0,
++	V4L2_CID_MPEG_VIDEO_VPX_2_REF_FRAME	= 1,
++	V4L2_CID_MPEG_VIDEO_VPX_3_REF_FRAME	= 2,
++};
++#define V4L2_CID_MPEG_VIDEO_VPX_FILTER_LEVEL		(V4L2_CID_MPEG_BASE+503)
++#define V4L2_CID_MPEG_VIDEO_VPX_FILTER_SHARPNESS	(V4L2_CID_MPEG_BASE+504)
++#define V4L2_CID_MPEG_VIDEO_VPX_GOLDEN_FRAME_REF_PERIOD	(V4L2_CID_MPEG_BASE+505)
++#define V4L2_CID_MPEG_VIDEO_VPX_GOLDEN_FRAME_SEL	(V4L2_CID_MPEG_BASE+506)
++enum v4l2_vp8_golden_frame_sel {
++	V4L2_CID_MPEG_VIDEO_VPX_GOLDEN_FRAME_USE_PREV		= 0,
++	V4L2_CID_MPEG_VIDEO_VPX_GOLDEN_FRAME_USE_REF_PERIOD	= 1,
++};
++#define V4L2_CID_MPEG_VIDEO_VPX_MIN_QP			(V4L2_CID_MPEG_BASE+507)
++#define V4L2_CID_MPEG_VIDEO_VPX_MAX_QP			(V4L2_CID_MPEG_BASE+508)
++#define V4L2_CID_MPEG_VIDEO_VPX_I_FRAME_QP		(V4L2_CID_MPEG_BASE+509)
++#define V4L2_CID_MPEG_VIDEO_VPX_P_FRAME_QP		(V4L2_CID_MPEG_BASE+510)
++#define V4L2_CID_MPEG_VIDEO_VPX_PROFILE			(V4L2_CID_MPEG_BASE+511)
++
+ /*  MPEG-class control IDs specific to the CX2341x driver as defined by V4L2 */
+ #define V4L2_CID_MPEG_CX2341X_BASE 				(V4L2_CTRL_CLASS_MPEG | 0x1000)
+ #define V4L2_CID_MPEG_CX2341X_VIDEO_SPATIAL_FILTER_MODE 	(V4L2_CID_MPEG_CX2341X_BASE+0)
+@@ -1779,6 +2045,29 @@
+ #define	V4L2_JPEG_ACTIVE_MARKER_DQT		(1 << 17)
+ #define	V4L2_JPEG_ACTIVE_MARKER_DHT		(1 << 18)
+ 
++
++/*  DV-class control IDs defined by V4L2 */
++#define V4L2_CID_DV_CLASS_BASE			(V4L2_CTRL_CLASS_DV | 0x900)
++#define V4L2_CID_DV_CLASS			(V4L2_CTRL_CLASS_DV | 1)
++
++#define	V4L2_CID_DV_TX_HOTPLUG			(V4L2_CID_DV_CLASS_BASE + 1)
++#define	V4L2_CID_DV_TX_RXSENSE			(V4L2_CID_DV_CLASS_BASE + 2)
++#define	V4L2_CID_DV_TX_EDID_PRESENT		(V4L2_CID_DV_CLASS_BASE + 3)
++#define	V4L2_CID_DV_TX_MODE			(V4L2_CID_DV_CLASS_BASE + 4)
++enum v4l2_dv_tx_mode {
++	V4L2_DV_TX_MODE_DVI_D	= 0,
++	V4L2_DV_TX_MODE_HDMI	= 1,
++};
++#define V4L2_CID_DV_TX_RGB_RANGE		(V4L2_CID_DV_CLASS_BASE + 5)
++enum v4l2_dv_rgb_range {
++	V4L2_DV_RGB_RANGE_AUTO	  = 0,
++	V4L2_DV_RGB_RANGE_LIMITED = 1,
++	V4L2_DV_RGB_RANGE_FULL	  = 2,
++};
++
++#define	V4L2_CID_DV_RX_POWER_PRESENT		(V4L2_CID_DV_CLASS_BASE + 100)
++#define V4L2_CID_DV_RX_RGB_RANGE		(V4L2_CID_DV_CLASS_BASE + 101)
++
+ /*
+  *	T U N I N G
+  */
+@@ -2169,6 +2458,7 @@
+ 		struct v4l2_window		win;     /* V4L2_BUF_TYPE_VIDEO_OVERLAY */
+ 		struct v4l2_vbi_format		vbi;     /* V4L2_BUF_TYPE_VBI_CAPTURE */
+ 		struct v4l2_sliced_vbi_format	sliced;  /* V4L2_BUF_TYPE_SLICED_VBI_CAPTURE */
++		struct v4l2_dvb_format		dvb;	 /* V4L2_BUF_TYPE_DVB_CAPTURE */
+ 		__u8	raw_data[200];                   /* user-defined */
+ 	} fmt;
+ };
+@@ -2193,6 +2483,7 @@
+ #define V4L2_EVENT_EOS				2
+ #define V4L2_EVENT_CTRL				3
+ #define V4L2_EVENT_FRAME_SYNC			4
++#define V4L2_EVENT_SOURCE_CHANGE		5
+ #define V4L2_EVENT_PRIVATE_START		0x08000000
+ 
+ /* Payload for V4L2_EVENT_VSYNC */
+@@ -2223,12 +2514,19 @@
+ 	__u32 frame_sequence;
+ };
+ 
++#define V4L2_EVENT_SRC_CH_RESOLUTION		(1 << 0)
++
++struct v4l2_event_src_change {
++	__u32 changes;
++};
++
+ struct v4l2_event {
+ 	__u32				type;
+ 	union {
+ 		struct v4l2_event_vsync		vsync;
+ 		struct v4l2_event_ctrl		ctrl;
+ 		struct v4l2_event_frame_sync	frame_sync;
++		struct v4l2_event_src_change	src_change;
+ 		__u8				data[64];
+ 	} u;
+ 	__u32				pending;
+@@ -2316,6 +2614,7 @@
+ #define VIDIOC_S_FBUF		 _IOW('V', 11, struct v4l2_framebuffer)
+ #define VIDIOC_OVERLAY		 _IOW('V', 14, int)
+ #define VIDIOC_QBUF		_IOWR('V', 15, struct v4l2_buffer)
++#define VIDIOC_EXPBUF		_IOWR('V', 16, struct v4l2_exportbuffer)
+ #define VIDIOC_DQBUF		_IOWR('V', 17, struct v4l2_buffer)
+ #define VIDIOC_STREAMON		 _IOW('V', 18, int)
+ #define VIDIOC_STREAMOFF	 _IOW('V', 19, int)
+@@ -2404,6 +2703,7 @@
+    versions. */
+ #define VIDIOC_DECODER_CMD	_IOWR('V', 96, struct v4l2_decoder_cmd)
+ #define VIDIOC_TRY_DECODER_CMD	_IOWR('V', 97, struct v4l2_decoder_cmd)
++#define VIDIOC_ENUM_DV_TIMINGS  _IOWR('V', 98, struct v4l2_enum_dv_timings)
+ 
+ /* Reminder: when adding new ioctls please add support for them to
+    drivers/media/video/v4l2-compat-ioctl32.c as well! */

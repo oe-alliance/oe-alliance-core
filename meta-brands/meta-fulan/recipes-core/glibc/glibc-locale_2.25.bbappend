@@ -1,0 +1,1 @@
+BINARY_LOCALE_ARCHES += "sh4"
