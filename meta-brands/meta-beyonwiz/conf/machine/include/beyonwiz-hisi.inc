@@ -64,6 +64,7 @@ MACHINE_EXTRA_RRECOMMENDS += " \
     gstreamer1.0-libav \
     enigma2-plugin-drivers-dvb-usb-it913x \
     enigma2-plugin-drivers-dvb-usb-rtl2832 \
+    enigma2-plugin-drivers-ct2-dvb-usb-dualhd \
     "
 
 DVBPROVIDER = "kernel"

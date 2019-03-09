@@ -7,7 +7,7 @@ SRCDATE = "20181224"
 
 inherit kernel machine_kernel_pr
 
-MACHINE_KERNEL_PR_append = ".20"
+MACHINE_KERNEL_PR_append = ".21"
 
 
 SRC_URI[md5sum] = "ad7eab17a5071a0d5f9ff44eb44e027d"
@@ -26,6 +26,7 @@ RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 SRC_URI += "http://source.mynonpublic.com/uclan/uclan-linux-${PV}-${SRCDATE}.tar.gz \
     file://defconfig \
     file://0001-remote.patch \
+    file://HauppaugeWinTV-dualHD.patch \
     file://findkerneldevice.py \
 "
 
