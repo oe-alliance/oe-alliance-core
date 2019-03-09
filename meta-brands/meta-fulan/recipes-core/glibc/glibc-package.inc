@@ -44,7 +44,7 @@ FILES_sln = "${base_sbindir}/sln"
 FILES_${PN}-pic = "${libdir}/*_pic.a ${libdir}/*_pic.map ${libdir}/libc_pic/*.o"
 FILES_libsotruss = "${libdir}/audit/sotruss-lib.so"
 FILES_SOLIBSDEV = "${libdir}/lib*${SOLIBSDEV}"
-FILES_${PN}-dev += "${bindir}/rpcgen ${libdir}/*_nonshared.a ${base_libdir}/*_nonshared.a ${base_libdir}/*.o ${datadir}/aclocal"
+FILES_${PN}-dev += "${libdir}/*_nonshared.a ${base_libdir}/*_nonshared.a ${base_libdir}/*.o ${datadir}/aclocal"
 FILES_${PN}-staticdev += "${libdir}/*.a ${base_libdir}/*.a"
 FILES_nscd = "${sbindir}/nscd* ${sysconfdir}/init.d/nscd ${systemd_unitdir}/system/nscd* ${sysconfdir}/tmpfiles.d/nscd.conf \
               ${sysconfdir}/nscd.conf ${sysconfdir}/default/volatiles/98_nscd ${localstatedir}/db/nscd"
@@ -67,7 +67,7 @@ DESCRIPTION_glibc-extra-nss = "glibc: nis, nisplus and hesiod search services."
 SUMMARY_ldd = "print shared library dependencies"
 DESCRIPTION_ldd = "${bindir}/ldd prints shared library dependencies for each program or shared library specified on the command line."
 SUMMARY_${PN}-utils = "Miscellaneous utilities provided by glibc"
-DESCRIPTION_${PN}-utils = "Miscellaneous utilities including getconf, iconv, locale, gencat, rpcgen, ..."
+DESCRIPTION_${PN}-utils = "Miscellaneous utilities including getconf, iconv, locale, gencat, ..."
 DESCRIPTION_libsotruss = "Library to support sotruss which traces calls through PLTs"
 DESCRIPTION_tzcode = "tzcode, timezone zoneinfo utils -- zic, zdump, tzselect"
 
@@ -82,7 +82,7 @@ do_install_append () {
 		rmdir --ignore-fail-on-non-empty ${D}${libexecdir}
 	fi
 
-	oe_multilib_header bits/syscall.h bits/long-double.h
+	oe_multilib_header bits/syscall.h
 
 	if [ -f ${D}${bindir}/mtrace ]; then
 		sed -i -e '1s,#!.*perl,#! ${USRBINPATH}/env perl,' -e '2s,exec.*perl,exec ${USRBINPATH}/env perl,' ${D}${bindir}/mtrace
@@ -94,7 +94,7 @@ do_install_append () {
 	fi
 
 	if ! ${@bb.utils.contains('DISTRO_FEATURES', 'ldconfig', 'true', 'false', d)}; then
-		# The distro doesn't want these files so let's not install them
+		# The distro doesn't want these files so let's not install them	
 		rm -f ${D}${sysconfdir}/ld.so.conf
 		rm -f ${D}${base_sbindir}/ldconfig
 		# This directory will be empty now so remove it too.
@@ -129,35 +129,18 @@ do_install_append () {
 }
 
 do_install_append_aarch64 () {
-	if [ "${base_libdir}" != "/lib" ] ; then
-		# The aarch64 ABI says the dynamic linker -must- be /lib/ld-linux-aarch64[_be].so.1
-		install -d ${D}/lib
-		if [ -e ${D}${base_libdir}/ld-linux-aarch64.so.1 ]; then
-			ln -s ${@base_path_relative('/lib', '${base_libdir}')}/ld-linux-aarch64.so.1 \
-				${D}/lib/ld-linux-aarch64.so.1
-		elif [ -e ${D}${base_libdir}/ld-linux-aarch64_be.so.1 ]; then
-			ln -s ${@base_path_relative('/lib', '${base_libdir}')}/ld-linux-aarch64_be.so.1 \
-				${D}/lib/ld-linux-aarch64_be.so.1
-		fi
-	fi
-	do_install_armmultilib
+        if [ "${base_libdir}" != "${nonarch_base_libdir}" ]; then
+                # The aarch64 ABI says the dynamic linker -must- be /lib/ld-linux-aarch64[_be].so.1
+                install -d ${D}${nonarch_base_libdir}
+                if [ -e ${D}${base_libdir}/ld-linux-aarch64.so.1 ]; then
+                        ln -s ${@oe.path.relative('${nonarch_base_libdir}', '${base_libdir}')}/ld-linux-aarch64.so.1 \
+                                ${D}${nonarch_base_libdir}/ld-linux-aarch64.so.1
+                elif [ -e ${D}${base_libdir}/ld-linux-aarch64_be.so.1 ]; then
+                        ln -s ${@oe.path.relative('${nonarch_base_libdir}', '${base_libdir}')}/ld-linux-aarch64_be.so.1 \
+                                ${D}${nonarch_base_libdir}/ld-linux-aarch64_be.so.1
+                fi
+        fi
 }
-
-do_install_append_arm () {
-	do_install_armmultilib
-}
-
-do_install_armmultilib () {
-
-	oe_multilib_header bits/endian.h bits/fcntl.h bits/fenv.h bits/fp-fast.h bits/hwcap.h bits/ipc.h bits/link.h bits/wordsize.h
-	oe_multilib_header bits/local_lim.h bits/mman.h bits/msq.h bits/pthreadtypes.h  bits/sem.h  bits/semaphore.h bits/setjmp.h
-	oe_multilib_header bits/shm.h bits/sigstack.h bits/stat.h bits/statfs.h bits/string.h bits/typesizes.h
-
-	oe_multilib_header fpu_control.h gnu/lib-names.h gnu/stubs.h ieee754.h
-
-	oe_multilib_header sys/elf.h sys/procfs.h sys/ptrace.h sys/ucontext.h sys/user.h
-}
-
 
 LOCALESTASH = "${WORKDIR}/stashed-locale"
 bashscripts = "mtrace sotruss xtrace"
@@ -207,20 +190,23 @@ python do_stash_locale_setscene () {
 addtask do_stash_locale_setscene
 
 do_poststash_install_cleanup () {
-	# Remove all files which do_stash_locale would remove (mv)
-	# since that task could have come from sstate and not get run.
-	for i in ${bashscripts}; do
-	    rm -f ${D}${bindir}/$i
-	done
-	rm -f ${D}${bindir}/localedef
-	rm -rf ${D}${datadir}/i18n
-	rm -rf ${D}${libdir}/gconv
-	rm -rf ${D}/${localedir}
-	rm -rf ${D}${datadir}/locale
-	if [ "${libdir}" != "${exec_prefix}/lib" ]; then
-		# This dir only exists to hold locales
-		rm -rf ${D}${exec_prefix}/lib
-	fi
+        # Remove all files which do_stash_locale would remove (mv)
+        # since that task could have come from sstate and not get run.
+        for i in ${bashscripts}; do
+            rm -f ${D}${bindir}/$i
+        done
+        rm -f ${D}${bindir}/localedef
+        rm -rf ${D}${datadir}/i18n
+        rm -rf ${D}${libdir}/gconv
+        rm -rf ${D}/${localedir}
+        rm -rf ${D}${datadir}/locale
+        if [ "${libdir}" != "${exec_prefix}/lib" ]; then
+                if [ -d ${D}${exec_prefix}/lib/locale ] ; then
+                        rm -rf ${D}${exec_prefix}/lib/locale
+                        # error out if directory isn't empty
+                        rm -f ${D}${exec_prefix}/lib
+                fi
+        fi
 }
 addtask do_poststash_install_cleanup after do_stash_locale do_install before do_populate_sysroot do_package
 

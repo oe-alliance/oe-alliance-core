@@ -12,7 +12,7 @@ BINUTILSDEP = "virtual/${MLPREFIX}${TARGET_PREFIX}binutils:do_populate_sysroot"
 BINUTILSDEP_class-nativesdk = "virtual/${TARGET_PREFIX}binutils-crosssdk:do_populate_sysroot"
 do_package[depends] += "${BINUTILSDEP}"
 
-# localedef links with libc.so and glibc-collateral.incinhibits all default deps
+# localedef links with libc.so and glibc-collateral.inc inhibits all default deps
 # cannot add virtual/libc to DEPENDS, because it would conflict with libc-initial in RSS
 RDEPENDS_localedef += "glibc"
 
@@ -27,7 +27,7 @@ ENABLE_BINARY_LOCALE_GENERATION_pn-nativesdk-glibc-locale = "1"
 
 #enable locale generation on these arches
 # BINARY_LOCALE_ARCHES is a space separated list of regular expressions
-BINARY_LOCALE_ARCHES ?= "arm.* aarch64 i[3-6]86 x86_64 powerpc mips mips64"
+BINARY_LOCALE_ARCHES ?= "arm.* aarch64 i[3-6]86 x86_64 powerpc mips mips64 sh sh4"
 
 # set "1" to use cross-localedef for locale generation
 # set "0" for qemu emulation of native localedef for locale generation
@@ -39,7 +39,6 @@ PACKAGES = "localedef ${PN}-dbg"
 
 PACKAGES_DYNAMIC = "^locale-base-.* \
                     ^glibc-gconv-.* ^glibc-charmap-.* ^glibc-localedata-.* ^glibc-binary-localedata-.* \
-                    ^glibc-gconv-.*  ^glibc-charmap-.*  ^glibc-localedata-.*  ^glibc-binary-localedata-.* \
                     ^${MLPREFIX}glibc-gconv$"
 
 # Create a glibc-binaries package
@@ -73,25 +72,24 @@ FILES_localedef = "${bindir}/localedef"
 LOCALETREESRC = "${COMPONENTS_DIR}/${PACKAGE_ARCH}/glibc-stash-locale"
 
 do_install () {
-	mkdir -p ${D}${bindir} ${D}${datadir} ${D}${libdir}
-	if [ -n "$(ls ${LOCALETREESRC}/${bindir})" ]; then
-		cp -fpPR ${LOCALETREESRC}/${bindir}/* ${D}${bindir}
-	fi
-	if [ -n "$(ls ${LOCALETREESRC}/${localedir})" ]; then
-		mkdir -p ${D}${localedir}
-		cp -fpPR ${LOCALETREESRC}/${localedir}/* ${D}${localedir}
-	fi
-	if [ -e ${LOCALETREESRC}/${libdir}/gconv ]; then
-		cp -fpPR ${LOCALETREESRC}/${libdir}/gconv ${D}${libdir}
-	fi
-	if [ -e ${LOCALETREESRC}/${datadir}/i18n ]; then
-		cp -fpPR ${LOCALETREESRC}/${datadir}/i18n ${D}${datadir}
-	fi
-	if [ -e ${LOCALETREESRC}/${datadir}/locale ]; then
-		cp -fpPR ${LOCALETREESRC}/${datadir}/locale ${D}${datadir}
-	fi
-	chown root:root -R ${D}
-	cp -fpPR ${LOCALETREESRC}/SUPPORTED ${WORKDIR}
+        mkdir -p ${D}${bindir} ${D}${datadir} ${D}${libdir}
+        if [ -n "$(ls ${LOCALETREESRC}/${bindir})" ]; then
+                cp -R --no-dereference --preserve=mode,links ${LOCALETREESRC}/${bindir}/* ${D}${bindir}
+        fi
+        if [ -n "$(ls ${LOCALETREESRC}/${localedir})" ]; then
+                mkdir -p ${D}${localedir}
+                cp -R --no-dereference --preserve=mode,links ${LOCALETREESRC}/${localedir}/* ${D}${localedir}
+        fi
+        if [ -e ${LOCALETREESRC}/${libdir}/gconv ]; then
+                cp -R --no-dereference --preserve=mode,links ${LOCALETREESRC}/${libdir}/gconv ${D}${libdir}
+        fi
+        if [ -e ${LOCALETREESRC}/${datadir}/i18n ]; then
+                cp -R --no-dereference --preserve=mode,links ${LOCALETREESRC}/${datadir}/i18n ${D}${datadir}
+        fi
+        if [ -e ${LOCALETREESRC}/${datadir}/locale ]; then
+                cp -R --no-dereference --preserve=mode,links ${LOCALETREESRC}/${datadir}/locale ${D}${datadir}
+        fi
+        cp -R --no-dereference --preserve=mode,links ${LOCALETREESRC}/SUPPORTED ${WORKDIR}
 }
 
 inherit libc-package

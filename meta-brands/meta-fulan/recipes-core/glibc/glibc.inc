@@ -33,8 +33,7 @@ siteconfig_do_siteconfig_gencache_prepend = " \
 
 # nptl needs unwind support in gcc, which can't be built without glibc.
 DEPENDS = "virtual/${TARGET_PREFIX}gcc-initial libgcc-initial linux-libc-headers virtual/${TARGET_PREFIX}libc-initial"
-# nptl needs libgcc but dlopens it, so our shlibs code doesn't detect this
-#RDEPENDS_${PN} += "${@['','libgcc']['nptl' in '${GLIBC_ADDONS}']}"
+
 PROVIDES = "virtual/libc virtual/${TARGET_PREFIX}libc-for-gcc"
 PROVIDES += "virtual/libintl virtual/libiconv"
 inherit autotools texinfo distro_features_check systemd
@@ -47,6 +46,7 @@ CACHED_CONFIGUREVARS += " \
   libc_cv_rootsbindir=${base_sbindir} \
   libc_cv_localedir=${localedir} \
   libc_cv_ssp_strong=no \
+  libc_cv_ssp_all=no \
   libc_cv_ssp=no \
 "
 
@@ -57,7 +57,8 @@ INHIBIT_DEFAULT_DEPS = "1"
 # This needs to match with glibc-collateral.inc, otherwise glibc-scripts and glibc-locale
 # will fail to find main glibc, for details see
 # http://lists.openembedded.org/pipermail/openembedded-core/2015-January/100679.html
-ARM_INSTRUCTION_SET = "arm"
+ARM_INSTRUCTION_SET_armv4 = "arm"
+ARM_INSTRUCTION_SET_armv5 = "arm"
 
 # glibc uses PARALLELMFLAGS variable to pass parallel build info so transfer
 # PARALLEL_MAKE into PARALLELMFLAGS and empty out PARALLEL_MAKE
@@ -74,8 +75,6 @@ EXTRA_OEMAKE += "SHELL=/bin/bash"
 do_configure_prepend() {
 	sed -e "s#@BASH@#/bin/sh#" -i ${S}/elf/ldd.bash.in
 }
-
-GLIBC_ADDONS ?= "nptl,libidn"
 
 # Enable backtrace from abort()
 do_configure_append_arm () {
