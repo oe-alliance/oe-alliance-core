@@ -65,6 +65,7 @@ MACHINE_EXTRA_RRECOMMENDS += " \
     enigma2-plugin-drivers-dvb-usb-it913x \
     enigma2-plugin-drivers-dvb-usb-rtl2832 \
     enigma2-plugin-drivers-ct2-dvb-usb-dualhd \
+    enigma2-plugin-picons-tv-australia \
     "
 
 DVBPROVIDER = "kernel"
