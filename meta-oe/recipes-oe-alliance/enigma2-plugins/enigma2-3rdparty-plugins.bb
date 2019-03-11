@@ -11,7 +11,7 @@ DEPENDS = "tslib mpfr gmp"
 SRCREV = "${AUTOREV}"
 PV = "${IMAGE_VERSION}+gitr${SRCPV}"
 PKGV = "${IMAGE_VERSION}+gitr${GITPKGV}"
-PR = "r212"
+PR = "r213"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -107,8 +107,6 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-systemplugins-channelselectionnavigator_1.5_mipsel.ipk \
     enigma2-plugin-systemplugins-extnumberzap_1.20_all.ipk \
     enigma2-plugin-systemplugins-recinfobar_1.22rc2_mips32el.ipk \
-    enigma2-plugin-picons-snp-full.400x240-400x240.light.on.transparent_2017-08-30--10-28-13_all.ipk \
-    enigma2-plugin-picons-srp-full.400x240-400x240.light.on.transparent_2017-08-30--10-28-13_all.ipk \
     "
 
 #     Install any packages t_append =hat are only For this machines feed here, uncomment the line below and change as required
