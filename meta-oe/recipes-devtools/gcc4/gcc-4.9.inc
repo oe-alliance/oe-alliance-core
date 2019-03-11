@@ -108,7 +108,7 @@ EXTRA_OECONF_INITIAL = "\
     --disable-libssp \
     --disable-libquadmath \
     --with-system-zlib \
-    --disable-lto \
+    --enable-lto \
     --disable-plugin \
     --enable-decimal-float=no \
 "
