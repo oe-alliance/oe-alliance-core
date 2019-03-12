@@ -99,9 +99,7 @@ IMAGE_CMD_beyonwizemmc_append = "\
     zip ${IMAGE_NAME}_mmc.zip ${IMAGEDIR}/*; \
     zip -j ${IMAGE_NAME}_mmc.zip ${DEPLOY_DIR_IMAGE}/${MACHINE}-partitions/bootargs.bin ${DEPLOY_DIR_IMAGE}/${MACHINE}-partitions/fastboot.bin ${DEPLOY_DIR_IMAGE}/${MACHINE}-partitions/apploader.bin; \
     rm -f ${DEPLOY_DIR_IMAGE}/*.ext4; \
-    rm -f ${DEPLOY_DIR_IMAGE}/*.manifest; \
     rm -f ${DEPLOY_DIR_IMAGE}/.ext4; \
-    rm -f ${DEPLOY_DIR_IMAGE}/.manifest; \
     rm -f -f ${DEPLOY_DIR_IMAGE}/*.json; \
     rm -Rf ${DEPLOY_DIR_IMAGE}/usb_update.bin; \
     rm -Rf ${IMAGEDIR}; \
