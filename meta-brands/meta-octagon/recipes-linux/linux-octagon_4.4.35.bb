@@ -7,7 +7,7 @@ SRCDATE = "20181224"
 
 inherit kernel machine_kernel_pr
 
-MACHINE_KERNEL_PR_append = ".22"
+MACHINE_KERNEL_PR_append = ".23"
 
 
 SRC_URI[md5sum] = "ad7eab17a5071a0d5f9ff44eb44e027d"
@@ -27,6 +27,8 @@ SRC_URI += "http://source.mynonpublic.com/octagon/octagon-linux-${PV}-${SRCDATE}
     file://defconfig \
     file://0001-remote.patch \
     file://HauppaugeWinTV-dualHD.patch \
+    file://dib7000-linux_4.4.179.patch \
+    file://dvb-usb-linux_4.4.179.patch \
     file://findkerneldevice.py \
 "
 

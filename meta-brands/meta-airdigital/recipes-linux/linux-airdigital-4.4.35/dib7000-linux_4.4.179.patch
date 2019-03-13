@@ -1,0 +1,158 @@
+diff -Nur a/drivers/media/usb/dvb-usb/dib0700_core.c b/drivers/media/usb/dvb-usb/dib0700_core.c
+--- a/drivers/media/usb/dvb-usb/dib0700_core.c	2017-07-31 15:25:15.000000000 +0200
++++ b/drivers/media/usb/dvb-usb/dib0700_core.c	2019-02-23 09:05:14.000000000 +0100
+@@ -783,6 +783,9 @@
+ 
+ 	/* Starting in firmware 1.20, the RC info is provided on a bulk pipe */
+ 
++	if (intf->altsetting[0].desc.bNumEndpoints < rc_ep + 1)
++		return -ENODEV;
++
+ 	purb = usb_alloc_urb(0, GFP_KERNEL);
+ 	if (purb == NULL) {
+ 		err("rc usb alloc urb failed");
+diff -Nur a/drivers/media/usb/dvb-usb/dib0700_devices.c b/drivers/media/usb/dvb-usb/dib0700_devices.c
+--- a/drivers/media/usb/dvb-usb/dib0700_devices.c	2017-07-31 15:25:15.000000000 +0200
++++ b/drivers/media/usb/dvb-usb/dib0700_devices.c	2019-02-23 09:05:14.000000000 +0100
+@@ -292,7 +292,7 @@
+ 					     stk7700d_dib7000p_mt2266_config)
+ 		    != 0) {
+ 			err("%s: state->dib7000p_ops.i2c_enumeration failed.  Cannot continue\n", __func__);
+-			dvb_detach(&state->dib7000p_ops);
++			dvb_detach(state->dib7000p_ops.set_wbd_ref);
+ 			return -ENODEV;
+ 		}
+ 	}
+@@ -326,7 +326,7 @@
+ 					     stk7700d_dib7000p_mt2266_config)
+ 		    != 0) {
+ 			err("%s: state->dib7000p_ops.i2c_enumeration failed.  Cannot continue\n", __func__);
+-			dvb_detach(&state->dib7000p_ops);
++			dvb_detach(state->dib7000p_ops.set_wbd_ref);
+ 			return -ENODEV;
+ 		}
+ 	}
+@@ -431,6 +431,7 @@
+ 		state->dib7000p_ops.set_gpio(adap->fe_adap[0].fe, 8, 0, 1);
+ 		break;
+ 	case XC2028_RESET_CLK:
++	case XC2028_I2C_FLUSH:
+ 		break;
+ 	default:
+ 		err("%s: unknown command %d, arg %d\n", __func__,
+@@ -479,7 +480,7 @@
+ 				     &stk7700ph_dib7700_xc3028_config) != 0) {
+ 		err("%s: state->dib7000p_ops.i2c_enumeration failed.  Cannot continue\n",
+ 		    __func__);
+-		dvb_detach(&state->dib7000p_ops);
++		dvb_detach(state->dib7000p_ops.set_wbd_ref);
+ 		return -ENODEV;
+ 	}
+ 
+@@ -1010,7 +1011,7 @@
+ 				     &dib7070p_dib7000p_config) != 0) {
+ 		err("%s: state->dib7000p_ops.i2c_enumeration failed.  Cannot continue\n",
+ 		    __func__);
+-		dvb_detach(&state->dib7000p_ops);
++		dvb_detach(state->dib7000p_ops.set_wbd_ref);
+ 		return -ENODEV;
+ 	}
+ 
+@@ -1068,7 +1069,7 @@
+ 				     &dib7770p_dib7000p_config) != 0) {
+ 		err("%s: state->dib7000p_ops.i2c_enumeration failed.  Cannot continue\n",
+ 		    __func__);
+-		dvb_detach(&state->dib7000p_ops);
++		dvb_detach(state->dib7000p_ops.set_wbd_ref);
+ 		return -ENODEV;
+ 	}
+ 
+@@ -3036,7 +3037,7 @@
+ 
+ 	if (state->dib7000p_ops.i2c_enumeration(&adap->dev->i2c_adap, 1, 0x10, &nim7090_dib7000p_config) != 0) {
+ 		err("%s: state->dib7000p_ops.i2c_enumeration failed.  Cannot continue\n", __func__);
+-		dvb_detach(&state->dib7000p_ops);
++		dvb_detach(state->dib7000p_ops.set_wbd_ref);
+ 		return -ENODEV;
+ 	}
+ 	adap->fe_adap[0].fe = state->dib7000p_ops.init(&adap->dev->i2c_adap, 0x80, &nim7090_dib7000p_config);
+@@ -3089,7 +3090,7 @@
+ 	/* initialize IC 0 */
+ 	if (state->dib7000p_ops.i2c_enumeration(&adap->dev->i2c_adap, 1, 0x20, &tfe7090pvr_dib7000p_config[0]) != 0) {
+ 		err("%s: state->dib7000p_ops.i2c_enumeration failed.  Cannot continue\n", __func__);
+-		dvb_detach(&state->dib7000p_ops);
++		dvb_detach(state->dib7000p_ops.set_wbd_ref);
+ 		return -ENODEV;
+ 	}
+ 
+@@ -3119,7 +3120,7 @@
+ 	i2c = state->dib7000p_ops.get_i2c_master(adap->dev->adapter[0].fe_adap[0].fe, DIBX000_I2C_INTERFACE_GPIO_6_7, 1);
+ 	if (state->dib7000p_ops.i2c_enumeration(i2c, 1, 0x10, &tfe7090pvr_dib7000p_config[1]) != 0) {
+ 		err("%s: state->dib7000p_ops.i2c_enumeration failed.  Cannot continue\n", __func__);
+-		dvb_detach(&state->dib7000p_ops);
++		dvb_detach(state->dib7000p_ops.set_wbd_ref);
+ 		return -ENODEV;
+ 	}
+ 
+@@ -3194,7 +3195,7 @@
+ 				1, 0x10, &tfe7790p_dib7000p_config) != 0) {
+ 		err("%s: state->dib7000p_ops.i2c_enumeration failed.  Cannot continue\n",
+ 				__func__);
+-		dvb_detach(&state->dib7000p_ops);
++		dvb_detach(state->dib7000p_ops.set_wbd_ref);
+ 		return -ENODEV;
+ 	}
+ 	adap->fe_adap[0].fe = state->dib7000p_ops.init(&adap->dev->i2c_adap,
+@@ -3289,7 +3290,7 @@
+ 				     stk7070pd_dib7000p_config) != 0) {
+ 		err("%s: state->dib7000p_ops.i2c_enumeration failed.  Cannot continue\n",
+ 		    __func__);
+-		dvb_detach(&state->dib7000p_ops);
++		dvb_detach(state->dib7000p_ops.set_wbd_ref);
+ 		return -ENODEV;
+ 	}
+ 
+@@ -3364,7 +3365,7 @@
+ 					     stk7070pd_dib7000p_config) != 0) {
+ 			err("%s: state->dib7000p_ops.i2c_enumeration failed.  Cannot continue\n",
+ 			    __func__);
+-			dvb_detach(&state->dib7000p_ops);
++			dvb_detach(state->dib7000p_ops.set_wbd_ref);
+ 			return -ENODEV;
+ 		}
+ 	}
+@@ -3600,7 +3601,7 @@
+ 
+ 	if (state->dib7000p_ops.dib7000pc_detection(&adap->dev->i2c_adap) == 0) {
+ 		/* Demodulator not found for some reason? */
+-		dvb_detach(&state->dib7000p_ops);
++		dvb_detach(state->dib7000p_ops.set_wbd_ref);
+ 		return -ENODEV;
+ 	}
+ 
+diff -Nur a/drivers/media/usb/dvb-usb/dibusb-common.c b/drivers/media/usb/dvb-usb/dibusb-common.c
+--- a/drivers/media/usb/dvb-usb/dibusb-common.c	2017-07-31 15:25:15.000000000 +0200
++++ b/drivers/media/usb/dvb-usb/dibusb-common.c	2019-02-23 09:05:14.000000000 +0100
+@@ -179,8 +179,20 @@
+ 
+ int dibusb_read_eeprom_byte(struct dvb_usb_device *d, u8 offs, u8 *val)
+ {
+-	u8 wbuf[1] = { offs };
+-	return dibusb_i2c_msg(d, 0x50, wbuf, 1, val, 1);
++	u8 *buf;
++	int rc;
++
++	buf = kmalloc(2, GFP_KERNEL);
++	if (!buf)
++		return -ENOMEM;
++
++	buf[0] = offs;
++
++	rc = dibusb_i2c_msg(d, 0x50, &buf[0], 1, &buf[1], 1);
++	*val = buf[1];
++	kfree(buf);
++
++	return rc;
+ }
+ EXPORT_SYMBOL(dibusb_read_eeprom_byte);
+ 
