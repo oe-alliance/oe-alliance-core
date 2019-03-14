@@ -7,7 +7,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 PROVIDES += "virtual/blindscan-dvbs"
 RPROVIDES_${PN} += "virtual/blindscan-dvbs"
 
-SRCDATE = "20190216"
+SRCDATE = "20190307"
 
 PV = "${SRCDATE}"
 PR = "r0"
@@ -26,8 +26,8 @@ do_package_qa() {
 
 FILES_${PN}  = "${bindir}/gigablue_blindscan"
 
-SRC_URI[md5sum] = "3f1c5f7d5b0b5a418a016687ea5994c8"
-SRC_URI[sha256sum] = "c78916982ee95a6152e319b5f8f99f02d55be54f51ad1fa8b5a1179e9f0bdd77"
+SRC_URI[md5sum] = "b71bd793f450cd5e492e9171575475a4"
+SRC_URI[sha256sum] = "bb55956f8b7b32bb483040151f374cd84162cdff6f12f3943504e432c3f16311"
 
 do_prepare_recipe_sysroot[noexec] = "1"
 INHIBIT_PACKAGE_STRIP = "1"
