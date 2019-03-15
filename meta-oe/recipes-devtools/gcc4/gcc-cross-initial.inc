@@ -1,5 +1,5 @@
 DEPENDS = "virtual/${TARGET_PREFIX}binutils ${NATIVEDEPS}"
-PROVIDES = "virtual/${TARGET_PREFIX}gcc-initial"
+PROVIDES = "virtual/${TARGET_PREFIX}gcc-initial virtual/nativesdk-${SDK_PREFIX}gcc-initial"
 PACKAGES = ""
 
 INHIBIT_AUTOTOOLS_DEPS = "1"
