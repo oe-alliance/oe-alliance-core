@@ -37,7 +37,7 @@ EXTRA_OECONF = "\
 
 do_configure_prepend_openatv () {
     sed 's/config.EMC.use_orig_skin             = ConfigYesNo(default = True)/config.EMC.use_orig_skin             = ConfigYesNo(default = False)/g' -i ${S}/src/plugin.py
-    sed 's/config.EMC.movie_date_format = ConfigSelection(default = "%d.%m.%Y %H:%M", choices = date_choices)/config.EMC.movie_date_format = ConfigSelection(default = "%d.%m.%Y", choices = date_choices)/g' -i ${S}/src/plugin.py
+    sed 's/config.EMC.movie_date_format         = ConfigSelection(default = "%d.%m.%Y %H:%M", choices = date_choices)/config.EMC.movie_date_format         = ConfigSelection(default = "%d.%m.%Y", choices = date_choices)/g' -i ${S}/src/plugin.py
 }
 
 do_configure_prepend_beyonwiz () {
