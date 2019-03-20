@@ -22,6 +22,7 @@ RDEPENDS_${PN} = " \
         python-compression \
         python-core \
         python-html \
+        python-e2icjson \
         python-json \
         python-shell \
         python-subprocess \
