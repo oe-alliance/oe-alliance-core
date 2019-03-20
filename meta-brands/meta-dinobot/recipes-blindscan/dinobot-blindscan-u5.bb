@@ -1,6 +1,6 @@
-SRCDATE = "20181015"
+SRCDATE = "20190319"
 
-SRC_URI[md5sum] = "efbc92c4a74df60a06f0377f84eb8a6b"
-SRC_URI[sha256sum] = "5fd3751b9d6654dabeb07baf2da836c7f86e3499df4a747c102496417cc5ece9"
+SRC_URI[md5sum] = "8a056cfbd0ff2a5d287d0afd54e69b92"
+SRC_URI[sha256sum] = "349973489a599d2b8621b444bc951cea914cb761a4804f34bd71690f2152213a"
 
 require dinobot-blindscan.inc
