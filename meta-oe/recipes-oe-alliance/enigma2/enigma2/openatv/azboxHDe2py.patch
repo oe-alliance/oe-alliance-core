@@ -51,9 +51,9 @@
 --- a/lib/python/Components/Converter/ServiceInfo.py	Mon Jan 30 19:45:46 2017
 +++ b/lib/python/Components/Converter/ServiceInfo.py	Mon Jan 30 19:45:46 2017
 @@ -1,6 +1,7 @@
- from Components.Converter.Converter import Converter
  from enigma import iServiceInformation, iPlayableService
  from Components.Element import cached
+ from Components.AVSwitch import iAVSwitch
 +from boxbranding import getBoxType
  
  from os import path
