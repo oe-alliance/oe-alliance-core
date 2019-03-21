@@ -13,7 +13,7 @@ SRCDATE = "20190321"
 PV = "${SRCDATE}"
 PR = "r0"
 
-SRC_URI = "http://source.mynonpublic.com/octagon/${MACHINE}-libreader-${SRCDATE}.zip"
+SRC_URI = "http://source.mynonpublic.com/octagon/${MACHINE}-libreader-${SRCDATE}.tar.gz"
 
 S = "${WORKDIR}"
 
