@@ -1,0 +1,42 @@
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides: bluealsa
+# Default-Start:  2345
+# Default-Stop:   016
+# Short-Description: Bluetooth Audio ALSA Backend
+# Description:
+### END INIT INFO
+
+DAEMON=/usr/bin/bluealsa
+NAME=bluealsa
+DESC="Bluetooth Audio ALSA Backend"
+ARGS="-p a2dp-source -p a2dp-sink"
+
+test -f $DAEMON || exit 0
+
+set -e
+
+case "$1" in
+    start)
+        echo -n "* starting $DESC: $NAME... "
+        start-stop-daemon -S -b -x $DAEMON -- $ARGS
+        echo "done."
+        ;;
+    stop)
+        echo -n "* stopping $DESC: $NAME... "
+        start-stop-daemon -K -x $DAEMON
+        echo "done."
+        ;;
+    restart)
+        echo "* restarting $DESC: $NAME... "
+        $0 stop || true
+        $0 start
+        echo "done."
+        ;;
+    *)
+        echo "Usage: $0 {start|stop|restart}"
+        exit 1
+        ;;
+esac
+
+exit 0
