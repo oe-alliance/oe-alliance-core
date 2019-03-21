@@ -200,11 +200,11 @@ MACHINE_EXTRA_RRECOMMENDS += " \
     "
 
 EXTRA_IMAGEDEPENDS += "\
-    ${@bb.utils.contains('MACHINE_FEATURES', 'hisi', '' , 'enigma2-plugin-systemplugins-vfdcontrol', d)} \
+    enigma2-plugin-systemplugins-vfdcontrol \
     "
 
 MACHINE_EXTRA_RDEPENDS += "\
-    ${@bb.utils.contains('MACHINE_FEATURES', 'hisi', '' , 'enigma2-plugin-systemplugins-vfdcontrol', d)} \
+    enigma2-plugin-systemplugins-vfdcontrol \
     ${@bb.utils.contains('MACHINE', 'gb7252', 'enigma2-plugin-systemplugins-remotecontrolcode' , '', d)} \
     ${@bb.utils.contains('MACHINE', 'gbmv200', 'enigma2-plugin-systemplugins-remotecontrolcode' , '', d)} \
     ${@bb.utils.contains('MACHINEBUILD', 'gb800solo', 'mtd-utils-jffs2' , '', d)} \
