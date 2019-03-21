@@ -14,9 +14,9 @@ index 303d451bd..c31a574e5 100644
 --- a/lib/python/Components/Converter/ServiceInfo.py
 +++ b/lib/python/Components/Converter/ServiceInfo.py
 @@ -2,6 +2,8 @@ from Components.Converter.Converter import Converter
- from enigma import iServiceInformation, iPlayableService
  from Screens.InfoBarGenerics import hasActiveSubservicesForCurrentChannel
  from Components.Element import cached
+ from Poll import Poll
 +from boxbranding import getBoxType
 +import NavigationInstance
  
