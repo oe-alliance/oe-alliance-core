@@ -1,4 +1,4 @@
-MACHINE_FEATURES += "qthbbtv qtstalker"
+MACHINE_FEATURES += "qthbbtv qtstalker linuxwifi"
 
 PREFERRED_PROVIDER_virtual/egl ?= "gfutures-mali-${HICHIPSET}"
 PREFERRED_PROVIDER_virtual/libgles1 ?= "gfutures-mali-${HICHIPSET}"

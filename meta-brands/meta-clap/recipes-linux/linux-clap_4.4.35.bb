@@ -27,6 +27,7 @@ SRC_URI += "http://source.mynonpublic.com/clap/clap-linux-${PV}-${SRCDATE}.tar.g
     file://defconfig \
     file://0001-remote.patch \
     file://findkerneldevice.py \
+    file://mt7601u_check_return_value_of_alloc_skb.patch \
 "
 
 S = "${WORKDIR}/linux-${PV}"
