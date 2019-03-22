@@ -1,0 +1,58 @@
+From 2b1ef3df1c85fc0cb648ec9b1b9c8d966717a41d Mon Sep 17 00:00:00 2001
+From: Pan Bian <bianpan2016@163.com>
+Date: Sun, 23 Apr 2017 15:00:23 +0800
+Subject: mt7601u: check return value of alloc_skb
+
+[ Upstream commit 5fb01e91daf84ad1e50edfcf63116ecbe31e7ba7 ]
+
+Function alloc_skb() will return a NULL pointer if there is no enough
+memory. However, in function mt7601u_mcu_msg_alloc(), its return value
+is not validated before it is used. This patch fixes it.
+
+Signed-off-by: Pan Bian <bianpan2016@163.com>
+Acked-by: Jakub Kicinski <kubakici@wp.pl>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ drivers/net/wireless/mediatek/mt7601u/mcu.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/net/wireless/mediatek/mt7601u/mcu.c b/drivers/net/wireless/mediatek/mt7601u/mcu.c
+index fbb1986eda3c..686b1b5dd394 100644
+--- a/drivers/net/wireless/mediatek/mt7601u/mcu.c
++++ b/drivers/net/wireless/mediatek/mt7601u/mcu.c
+@@ -66,8 +66,10 @@ mt7601u_mcu_msg_alloc(struct mt7601u_dev *dev, const void *data, int len)
+ 	WARN_ON(len % 4); /* if length is not divisible by 4 we need to pad */
+ 
+ 	skb = alloc_skb(len + MT_DMA_HDR_LEN + 4, GFP_KERNEL);
+-	skb_reserve(skb, MT_DMA_HDR_LEN);
+-	memcpy(skb_put(skb, len), data, len);
++	if (skb) {
++		skb_reserve(skb, MT_DMA_HDR_LEN);
++		memcpy(skb_put(skb, len), data, len);
++	}
+ 
+ 	return skb;
+ }
+@@ -170,6 +172,8 @@ static int mt7601u_mcu_function_select(struct mt7601u_dev *dev,
+ 	};
+ 
+ 	skb = mt7601u_mcu_msg_alloc(dev, &msg, sizeof(msg));
++	if (!skb)
++		return -ENOMEM;
+ 	return mt7601u_mcu_msg_send(dev, skb, CMD_FUN_SET_OP, func == 5);
+ }
+ 
+@@ -205,6 +209,8 @@ mt7601u_mcu_calibrate(struct mt7601u_dev *dev, enum mcu_calibrate cal, u32 val)
+ 	};
+ 
+ 	skb = mt7601u_mcu_msg_alloc(dev, &msg, sizeof(msg));
++	if (!skb)
++		return -ENOMEM;
+ 	return mt7601u_mcu_msg_send(dev, skb, CMD_CALIBRATION_OP, true);
+ }
+ 
+-- 
+cgit 1.2-0.3.lf.el7
+
