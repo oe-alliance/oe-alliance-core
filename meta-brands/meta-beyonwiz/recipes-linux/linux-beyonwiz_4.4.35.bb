@@ -32,6 +32,7 @@ SRC_URI += "http://source.mynonpublic.com/beyonwiz/beyonwiz-linux-${PV}-${SRCDAT
     file://findkerneldevice.py \
     file://0002-log2-give-up-on-gcc-constant-optimizations.patch \
     file://0003-dont-mark-register-as-const.patch \
+    file://mt7601u_check_return_value_of_alloc_skb.patch \
 "
 
 S = "${WORKDIR}/linux-${PV}"

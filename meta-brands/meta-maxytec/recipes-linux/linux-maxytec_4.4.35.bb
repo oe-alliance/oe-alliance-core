@@ -24,6 +24,7 @@ SRC_URI = "http://source.mynonpublic.com/maxytec/linux-${PV}-${SRCDATE}-${ARCH}.
 	file://HauppaugeWinTV-dualHD.patch \
 	file://dib7000-linux_4.4.179.patch \
 	file://dvb-usb-linux_4.4.179.patch \
+	file://mt7601u_check_return_value_of_alloc_skb.patch \
 	"
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
