@@ -9,10 +9,10 @@ require conf/license/license-gplv2.inc
 
 inherit gitpkgv
 SRCREV = "${AUTOREV}"
-PV = "2.1+git${SRCPV}"
-PKGV = "2.1+git${GITPKGV}"
-VER ="2.1"
-PR = "r2"
+PV = "2.2+git${SRCPV}"
+PKGV = "2.2+git${GITPKGV}"
+VER ="2.2"
+PR = "r3"
 
 SRC_URI="git://github.com/opendroid-Team/gioppygio-settings-and-picons.git"
 
