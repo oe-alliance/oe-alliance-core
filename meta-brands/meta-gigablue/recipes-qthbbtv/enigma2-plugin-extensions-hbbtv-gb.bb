@@ -21,6 +21,10 @@ S = "${WORKDIR}"
 
 FILES_${PN} =  "${bindir} ${libdir}"
 
+do_configure_prepend () {
+    sed 's/reader.doDump()/#reader.doDump()/g' -i ${S}/plugin/plugin.py
+}
+
 do_install(){
     install -d ${D}${libdir}/enigma2/python/Plugins/Extensions/Hbbtv
     install -m 0755 ${S}/plugin/*.py ${D}${libdir}/enigma2/python/Plugins/Extensions/Hbbtv
@@ -29,7 +33,6 @@ do_install(){
     install -m 0755 ${S}/run_hbbtv.sh ${D}${bindir}
     install -d ${D}${libdir}/mozilla/plugins
     install -m 0755 ${S}/libhbbtvbrowserplugin.so ${D}${libdir}/mozilla/plugins
-    sed 's/reader.doDump()/#reader.doDump()/g' -i ${D}${libdir}/enigma2/python/Plugins/Extensions/Hbbtv/plugin.py
 }
 
 pkg_postinst_${PN}(){
