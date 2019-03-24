@@ -12,13 +12,16 @@ SRC_URI = "http://archive.vuplus.com/download/build_support/webkit-hbbtv-plugin_
 
 S = "${WORKDIR}"
 
+do_configure_prepend () {
+    sed 's/reader.doDump()/#reader.doDump()/g' -i ${S}/webkit-hbbtv-plugin/WebkitHbbTV/plugin.py
+}
+
 do_install_append() {
     install -d ${D}/usr/bin
     install -d ${D}/usr/lib/enigma2/python/Plugins/Extensions/WebkitHbbTV
 
     install -m 0755 ${WORKDIR}/webkit-hbbtv-plugin/run-webkit.sh ${D}/usr/bin
     cp -aRf ${WORKDIR}/webkit-hbbtv-plugin/WebkitHbbTV/* ${D}/usr/lib/enigma2/python/Plugins/Extensions/WebkitHbbTV/
-    sed 's/reader.doDump()/#reader.doDump()/g' -i ${D}/usr/lib/enigma2/python/Plugins/Extensions/WebkitHbbTV/plugin.py
 }
 
 do_package_qa() {
