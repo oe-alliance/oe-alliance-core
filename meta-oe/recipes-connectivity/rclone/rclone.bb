@@ -20,11 +20,10 @@ SRC_URI = "git://${GO_IMPORT}.git;protocol=http \
            file://rclonefs \
            file://COPYING"
 
-GO_IMPORT = "github.com/ncw/rclone"
+GO_DYNLINK_aarch64 = ""
+GO_DYNLINK_arm = ""
 
-do_compile_prepend() {
-    export GOCACHE=on
-}
+GO_IMPORT = "github.com/ncw/rclone"
 
 do_install_append() {
     rm -rf ${D}${libdir}
