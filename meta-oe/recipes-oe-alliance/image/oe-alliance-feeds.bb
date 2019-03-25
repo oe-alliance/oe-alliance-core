@@ -72,6 +72,7 @@ RDEPENDS_${PN} = " \
     dvblast \
     dvbsnoop \
     dvdfs \
+    edid-decode \
     exfat-utils \
     fuse-exfat \
     gptfdisk \
