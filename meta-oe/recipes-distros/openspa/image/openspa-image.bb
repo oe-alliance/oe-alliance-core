@@ -30,6 +30,8 @@ IMAGE_LINGUAS += "${@bb.utils.contains_any("FLASHSIZE", "64 96 128 256", "", "de
 
 IMAGE_FEATURES += "package-management"
 
+INHIBIT_DEFAULT_DEPS = "1"
+
 inherit image
 
 image_preprocess() {
@@ -39,3 +41,12 @@ image_preprocess() {
 }
 
 IMAGE_PREPROCESS_COMMAND += "image_preprocess; "
+
+do_package_index[nostamp] = "1"
+do_package_index[depends] += "${PACKAGEINDEXDEPS}"
+
+python do_package_index() {
+    from oe.rootfs import generate_index_files
+    generate_index_files(d)
+}
+addtask do_package_index after do_rootfs before do_image_complete
