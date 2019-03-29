@@ -5,9 +5,9 @@ LICENSE = "CLOSED"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 RDEPENDS_${PN} = "libjpeg-turbo"
 
-COMPATIBLE_MACHINE = "^(u55)$"
+COMPATIBLE_MACHINE = "^(u56)$"
 
-SRCDATE = "20190329"
+SRCDATE = "20190116"
 
 PV = "${SRCDATE}"
 PR = "r0"
@@ -30,5 +30,5 @@ do_package_qa() {
 
 FILES_${PN}  = "${bindir}/showiframe"
 
-SRC_URI[md5sum] = "62d40e2a1e5d2d12f67c61db0438c5de"
-SRC_URI[sha256sum] = "77087f1831d48b44e5de0628ce270998bf62da6facfc3d706c066696771acbb1"
+SRC_URI[md5sum] = "5d52738728298bca0bdb53cb6b054b9b"
+SRC_URI[sha256sum] = "40e1465bdd5d7e9ae6295d8efb18121c08ca179ed70f46f92a3413a4f1bb0540"
