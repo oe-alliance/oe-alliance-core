@@ -28,6 +28,8 @@ RDEPENDS_${PN} = "\
     ${@bb.utils.contains("MACHINE_FEATURES", "gbbluetooth", "bluetoothsetup-${MACHINE}", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "recovery", "recovery" , "", d)} \
     ${@bb.utils.contains("DEFAULTTUNE", "sh4", "alsa-utils-amixer-conf" , "", d)} \
+    ${@bb.utils.contains("TARGET_ARCH", "arm", "edid-decode", "", d)} \
+    ${@bb.utils.contains("TARGET_ARCH", "aarch64", "edid-decode", "", d)} \
     avahi-daemon \
     bash \
     cronie \
