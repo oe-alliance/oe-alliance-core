@@ -50,7 +50,8 @@ IMAGE_CMD_hdfastboot8gb_append = " \
     else \
         cp ${DEPLOY_DIR_IMAGE}/gfutures-partitions-${MACHINE}/${MACHINE}/logo.img ${DEPLOY_DIR_IMAGE}/${MACHINE}/${IMAGEDIR}/logo.img; \
     fi; \
-    echo "${IMAGEVERSION}" > ${DEPLOY_DIR_IMAGE}/${MACHINE}/${IMAGEDIR}/imageversion; \
+    echo "${IMAGE_NAME}" > ${DEPLOY_DIR_IMAGE}/${MACHINE}/${IMAGEDIR}/imageversion; \
+    echo "${IMAGE_NAME}_usb.zip" > ${DEPLOY_DIR_IMAGE}/${MACHINE}/unforce_${MACHINE}.txt; \
     cd ${DEPLOY_DIR_IMAGE}/${MACHINE}; \
     zip -r ../${IMAGE_NAME}_usb.zip *; \
     rm -f ${DEPLOY_DIR_IMAGE}/*.manifest; \
