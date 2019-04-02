@@ -1,14 +1,15 @@
 diff -Nur a/Documentation/video4linux/CARDLIST.em28xx b/Documentation/video4linux/CARDLIST.em28xx
 --- a/Documentation/video4linux/CARDLIST.em28xx	2017-07-31 15:25:12.000000000 +0200
-+++ b/Documentation/video4linux/CARDLIST.em28xx	2019-03-09 20:47:36.412463200 +0100
-@@ -96,3 +96,4 @@
++++ b/Documentation/video4linux/CARDLIST.em28xx	2019-04-02 08:35:00.919204500 +0200
+@@ -96,3 +96,5 @@
   95 -> Leadtek VC100                            (em2861)        [0413:6f07]
   96 -> Terratec Cinergy T2 Stick HD             (em28178)
   97 -> Elgato EyeTV Hybrid 2008 INT             (em2884)        [0fd9:0018]
 + 98 -> Hauppauge WinTV-dualHD DVB               (em28174)       [2040:0265]
++ 
 diff -Nur a/drivers/media/usb/em28xx/em28xx.h b/drivers/media/usb/em28xx/em28xx.h
 --- a/drivers/media/usb/em28xx/em28xx.h	2017-07-31 15:25:15.000000000 +0200
-+++ b/drivers/media/usb/em28xx/em28xx.h	2019-03-09 21:40:13.147378000 +0100
++++ b/drivers/media/usb/em28xx/em28xx.h	2019-04-02 08:30:40.196114900 +0200
 @@ -145,6 +145,7 @@
  #define EM2861_BOARD_LEADTEK_VC100                95
  #define EM28178_BOARD_TERRATEC_T2_STICK_HD        96
@@ -99,12 +100,13 @@ diff -Nur a/drivers/media/usb/em28xx/em28xx.h b/drivers/media/usb/em28xx/em28xx.
  #define kref_to_dev(d) container_of(d, struct em28xx, ref)
 diff -Nur a/drivers/media/usb/em28xx/em28xx-cards.c b/drivers/media/usb/em28xx/em28xx-cards.c
 --- a/drivers/media/usb/em28xx/em28xx-cards.c	2017-07-31 15:25:15.000000000 +0200
-+++ b/drivers/media/usb/em28xx/em28xx-cards.c	2019-03-09 21:28:04.772099700 +0100
-@@ -491,6 +491,29 @@
++++ b/drivers/media/usb/em28xx/em28xx-cards.c	2019-04-02 08:43:27.288403900 +0200
+@@ -491,6 +491,30 @@
  	{-1,                             -1,   -1,     -1},
  };
  
-+/* 2040:0265 Hauppauge WinTV-dualHD DVB
++/* 2040:0265 Hauppauge WinTV-dualHD DVB Isoc
++ * 2040:8265 Hauppauge WinTV-dualHD DVB Bulk
 + * reg 0x80/0x84:
 + * GPIO_0: Yellow LED tuner 1, 0=on, 1=off
 + * GPIO_1: Green LED tuner 1, 0=on, 1=off
@@ -130,7 +132,7 @@ diff -Nur a/drivers/media/usb/em28xx/em28xx-cards.c b/drivers/media/usb/em28xx/e
  /*
   *  Button definitions
   */
-@@ -560,6 +583,22 @@
+@@ -560,6 +584,22 @@
  	{-1, 0, 0, 0},
  };
  
@@ -153,11 +155,12 @@ diff -Nur a/drivers/media/usb/em28xx/em28xx-cards.c b/drivers/media/usb/em28xx/e
  /*
   *  Board definitions
   */
-@@ -2288,6 +2327,19 @@
+@@ -2288,6 +2328,20 @@
  		.has_dvb       = 1,
  		.ir_codes      = RC_MAP_TERRATEC_SLIM_2,
  	},
-+	/* 2040:0265 Hauppauge WinTV-dualHD (DVB version).
++	/* 2040:0265 Hauppauge WinTV-dualHD (DVB version) Isoc.
++	 * 2040:8265 Hauppauge WinTV-dualHD (DVB version) Bulk.
 +	 * Empia EM28274, 2x Silicon Labs Si2168, 2x Silicon Labs Si2157 */
 +	[EM28174_BOARD_HAUPPAUGE_WINTV_DUALHD_DVB] = {
 +		.name          = "Hauppauge WinTV-dualHD DVB",
@@ -173,16 +176,18 @@ diff -Nur a/drivers/media/usb/em28xx/em28xx-cards.c b/drivers/media/usb/em28xx/e
  };
  EXPORT_SYMBOL_GPL(em28xx_boards);
  
-@@ -2411,6 +2463,8 @@
+@@ -2411,6 +2465,10 @@
  			.driver_info = EM2883_BOARD_HAUPPAUGE_WINTV_HVR_950 },
  	{ USB_DEVICE(0x2040, 0x651f),
  			.driver_info = EM2883_BOARD_HAUPPAUGE_WINTV_HVR_850 },
 +	{ USB_DEVICE(0x2040, 0x0265),
 +			.driver_info = EM28174_BOARD_HAUPPAUGE_WINTV_DUALHD_DVB },
++	{ USB_DEVICE(0x2040, 0x8265),
++			.driver_info = EM28174_BOARD_HAUPPAUGE_WINTV_DUALHD_DVB },
  	{ USB_DEVICE(0x0438, 0xb002),
  			.driver_info = EM2880_BOARD_AMD_ATI_TV_WONDER_HD_600 },
  	{ USB_DEVICE(0x2001, 0xf112),
-@@ -2804,6 +2858,7 @@
+@@ -2804,6 +2862,7 @@
  	case EM2883_BOARD_HAUPPAUGE_WINTV_HVR_850:
  	case EM2883_BOARD_HAUPPAUGE_WINTV_HVR_950:
  	case EM2884_BOARD_HAUPPAUGE_WINTV_HVR_930C:
@@ -190,7 +195,7 @@ diff -Nur a/drivers/media/usb/em28xx/em28xx-cards.c b/drivers/media/usb/em28xx/e
  	{
  		struct tveeprom tv;
  
-@@ -3013,6 +3068,8 @@
+@@ -3013,6 +3072,8 @@
  */
  static void em28xx_release_resources(struct em28xx *dev)
  {
@@ -199,7 +204,7 @@ diff -Nur a/drivers/media/usb/em28xx/em28xx-cards.c b/drivers/media/usb/em28xx/e
  	/*FIXME: I2C IR should be disconnected */
  
  	mutex_lock(&dev->lock);
-@@ -3021,7 +3078,8 @@
+@@ -3021,7 +3082,8 @@
  		em28xx_i2c_unregister(dev, 1);
  	em28xx_i2c_unregister(dev, 0);
  
@@ -209,7 +214,7 @@ diff -Nur a/drivers/media/usb/em28xx/em28xx-cards.c b/drivers/media/usb/em28xx/e
  
  	/* Mark device as unused */
  	clear_bit(dev->devno, em28xx_devused);
-@@ -3063,6 +3121,7 @@
+@@ -3063,6 +3125,7 @@
  	const char *chip_name = default_chip_name;
  
  	dev->udev = udev;
@@ -217,7 +222,7 @@ diff -Nur a/drivers/media/usb/em28xx/em28xx-cards.c b/drivers/media/usb/em28xx/e
  	mutex_init(&dev->ctrl_urb_lock);
  	spin_lock_init(&dev->slock);
  
-@@ -3220,6 +3279,35 @@
+@@ -3220,6 +3283,35 @@
  	return 0;
  }
  
@@ -253,7 +258,7 @@ diff -Nur a/drivers/media/usb/em28xx/em28xx-cards.c b/drivers/media/usb/em28xx/e
  /* high bandwidth multiplier, as encoded in highspeed endpoint descriptors */
  #define hb_mult(wMaxPacketSize) (1 + (((wMaxPacketSize) >> 11) & 0x03))
  
-@@ -3340,6 +3428,17 @@
+@@ -3340,6 +3432,17 @@
  						}
  					}
  					break;
@@ -271,7 +276,7 @@ diff -Nur a/drivers/media/usb/em28xx/em28xx-cards.c b/drivers/media/usb/em28xx/e
  				}
  			}
  			/* NOTE:
-@@ -3354,6 +3453,8 @@
+@@ -3354,6 +3457,8 @@
  			 *  0x83	isoc*		=> audio
  			 *  0x84	isoc		=> digital
  			 *  0x84	bulk		=> analog or digital**
@@ -280,7 +285,7 @@ diff -Nur a/drivers/media/usb/em28xx/em28xx-cards.c b/drivers/media/usb/em28xx/e
  			 * (*: audio should always be isoc)
  			 * (**: analog, if ep 0x82 is isoc, otherwise digital)
  			 *
-@@ -3422,6 +3523,10 @@
+@@ -3422,6 +3527,10 @@
  	dev->has_video = has_video;
  	dev->ifnum = ifnum;
  
@@ -291,7 +296,7 @@ diff -Nur a/drivers/media/usb/em28xx/em28xx-cards.c b/drivers/media/usb/em28xx/e
  	if (has_vendor_audio) {
  		printk(KERN_INFO DRIVER_NAME ": Audio interface %i found %s\n",
  		       ifnum, "(Vendor Class)");
-@@ -3491,6 +3596,65 @@
+@@ -3491,6 +3600,65 @@
  			    dev->dvb_xfer_bulk ? "bulk" : "isoc");
  	}
  
@@ -357,7 +362,7 @@ diff -Nur a/drivers/media/usb/em28xx/em28xx-cards.c b/drivers/media/usb/em28xx/e
  	kref_init(&dev->ref);
  
  	request_modules(dev);
-@@ -3528,6 +3692,13 @@
+@@ -3528,6 +3696,13 @@
  	if (!dev)
  		return;
  
@@ -371,7 +376,7 @@ diff -Nur a/drivers/media/usb/em28xx/em28xx-cards.c b/drivers/media/usb/em28xx/e
  	dev->disconnected = 1;
  
  	em28xx_info("Disconnecting %s\n", dev->name);
-@@ -3536,7 +3707,14 @@
+@@ -3536,7 +3711,14 @@
  
  	em28xx_close_extension(dev);
  
@@ -388,7 +393,7 @@ diff -Nur a/drivers/media/usb/em28xx/em28xx-cards.c b/drivers/media/usb/em28xx/e
  
 diff -Nur a/drivers/media/usb/em28xx/em28xx-core.c b/drivers/media/usb/em28xx/em28xx-core.c
 --- a/drivers/media/usb/em28xx/em28xx-core.c	2017-07-31 15:25:15.000000000 +0200
-+++ b/drivers/media/usb/em28xx/em28xx-core.c	2019-03-09 20:47:36.421504300 +0100
++++ b/drivers/media/usb/em28xx/em28xx-core.c	2019-04-02 08:30:40.204091800 +0200
 @@ -636,10 +636,19 @@
  	    dev->chip_id == CHIP_ID_EM28174 ||
  	    dev->chip_id == CHIP_ID_EM28178) {
@@ -487,7 +492,7 @@ diff -Nur a/drivers/media/usb/em28xx/em28xx-core.c b/drivers/media/usb/em28xx/em
  	return 0;
 diff -Nur a/drivers/media/usb/em28xx/em28xx-dvb.c b/drivers/media/usb/em28xx/em28xx-dvb.c
 --- a/drivers/media/usb/em28xx/em28xx-dvb.c	2017-07-31 15:25:15.000000000 +0200
-+++ b/drivers/media/usb/em28xx/em28xx-dvb.c	2019-03-09 21:13:23.160269100 +0100
++++ b/drivers/media/usb/em28xx/em28xx-dvb.c	2019-04-02 08:30:40.206087100 +0200
 @@ -211,7 +211,6 @@
  		dvb_alt = dev->dvb_alt_isoc;
  	}
@@ -601,7 +606,7 @@ diff -Nur a/drivers/media/usb/em28xx/em28xx-dvb.c b/drivers/media/usb/em28xx/em2
  	kref_get(&dev->ref);
 diff -Nur a/drivers/media/usb/em28xx/em28xx-reg.h b/drivers/media/usb/em28xx/em28xx-reg.h
 --- a/drivers/media/usb/em28xx/em28xx-reg.h	2017-07-31 15:25:15.000000000 +0200
-+++ b/drivers/media/usb/em28xx/em28xx-reg.h	2019-03-09 20:47:36.427461000 +0100
++++ b/drivers/media/usb/em28xx/em28xx-reg.h	2019-04-02 08:30:40.209080400 +0200
 @@ -193,6 +193,19 @@
  /* em2874 registers */
  #define EM2874_R50_IR_CONFIG    0x50
