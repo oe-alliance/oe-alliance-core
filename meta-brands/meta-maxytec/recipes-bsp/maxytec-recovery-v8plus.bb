@@ -1,0 +1,8 @@
+SRCDATE = "20190329"
+
+require maxytec-recovery.inc
+
+SRC_URI[md5sum] = "d9bf06d963ef31d02d16bae47f393154"
+SRC_URI[sha256sum] = "fa44c2647b3a6a6d1907832c6ef71f706b08d5e8c02ac3e15a40972149845859"
+
+COMPATIBLE_MACHINE = "v8plus"
