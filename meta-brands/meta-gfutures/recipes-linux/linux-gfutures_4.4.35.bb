@@ -10,7 +10,7 @@ SRCDATE = "20181228"
 
 inherit kernel machine_kernel_pr
 
-MACHINE_KERNEL_PR_append = ".9"
+MACHINE_KERNEL_PR_append = ".10"
 
 SRC_URI[md5sum] = "ede25f1c2c060f1059529a2896cee5a9"
 SRC_URI[sha256sum] = "ea4ba0433d252c18f38ff2f4dce4b70880e447e1cffdc2066d5a9b5f8098ae7e"
@@ -21,6 +21,7 @@ SRC_URI = "http://source.mynonpublic.com/gfutures/linux-${PV}-${SRCDATE}-${ARCH}
 	file://0002-log2-give-up-on-gcc-constant-optimizations.patch \
 	file://0003-dont-mark-register-as-const.patch \
 	file://0001-remote.patch \
+	file://initramfs-subdirboot.cpio.gz;unpack=0 \
 	file://HauppaugeWinTV-dualHD.patch \
 	file://dib7000-linux_4.4.179.patch \
 	file://dvb-usb-linux_4.4.179.patch \
@@ -48,6 +49,11 @@ KERNEL_EXTRA_ARGS = "EXTRA_CFLAGS=-Wno-attribute-alias"
 
 FILES_${KERNEL_PACKAGE_NAME}-image = "/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}"
 
+kernel_do_configure_prepend() {
+    install -d ${B}/usr
+    install -m 0644 ${WORKDIR}/initramfs-subdirboot.cpio.gz ${B}/
+}
+
 kernel_do_install_append() {
 	install -d ${D}${KERNEL_IMAGEDEST}
 	install -m 0755 ${KERNEL_OUTPUT} ${D}${KERNEL_IMAGEDEST}
@@ -56,7 +62,7 @@ kernel_do_install_append() {
 pkg_postinst_kernel-image() {
 	if [ "x$D" == "x" ]; then
 		if [ -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE} ] ; then
-			dd if=${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE} of=/dev/mmcblk0p20
+			dd if=${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE} of=/dev/${MTD_KERNEL}
 		fi
 	fi
 	true

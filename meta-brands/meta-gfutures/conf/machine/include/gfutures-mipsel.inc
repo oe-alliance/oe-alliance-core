@@ -1,5 +1,3 @@
-MTD_KERNEL = "mtd1"
-MTD_ROOTFS = "mtd2"
 KERNEL_FILE = "kernel.bin"
 ROOTFS_FILE = "rootfs.bin"
 

@@ -83,6 +83,46 @@ ${@bb.utils.contains('MACHINEBUILD', 'vimastec1000', 'vs1000' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'vimastec1500', 'vs1500' , '', d)}\
 "
 
+MTD_KERNEL ?= "\
+${@bb.utils.contains('MACHINEBUILD', 'mutant1100', 'mtd1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mutant1265', 'mtd1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mutant1500', 'mtd1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mutant500c', 'mtd1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mutant530c', 'mtd1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mutant1200', 'mtd1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'vizyonvita', 'mtd1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mutant11', 'mtd1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mutant51', 'mmcblk0p2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mutant60', 'mmcblk0p19' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mutant61', 'mmcblk0p20' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'ax51', 'mmcblk0p2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'ax60', 'mmcblk0p19' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'bre2ze4k', 'mmcblk0p2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'axultra', 'mmcblk0p2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'vimastec1000', 'mtd1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'vimastec1500', 'mmcblk0p2' , '', d)}\
+"
+
+MTD_ROOTFS ?= "\
+${@bb.utils.contains('MACHINEBUILD', 'mutant1100', 'mtd2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mutant1265', 'mtd2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mutant1500', 'mtd2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mutant500c', 'mtd2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mutant530c', 'mtd2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mutant1200', 'mtd2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'vizyonvita', 'mtd2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mutant11', 'mtd2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mutant51', 'mmcblk0p3' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mutant60', 'mmcblk0p20' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mutant61', 'mmcblk0p21' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'ax51', 'mmcblk0p3' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'ax60', 'mmcblk0p20' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'bre2ze4k', 'mmcblk0p3' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'axultra', 'mmcblk0p3' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'vimastec1000', 'mtd2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'vimastec1500', 'mmcblk0p3' , '', d)}\
+"
+
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "\
     gfutures-dvb-modules-${MACHINE_DRIVER} \
     "
