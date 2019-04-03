@@ -11,6 +11,7 @@ PV = "1.20+svn${SRCPV}"
 SRCREV = "9620"
 SRC_URI = "svn://www.streamboard.tv/svn/oscam;protocol=http;module=trunk;scmdata=keep;rev=${SRCREV} \
             file://fix_glibc_major.patch \
+            file://export_build_flags.patch \
 "
 
 PR = "r20"
@@ -36,6 +37,7 @@ EXTRA_OECMAKE += "\
     -DHAVE_LIBUSB=1 \
     -DSTATIC_LIBUSB=1 \
     -DWITH_SSL=1 \
+    -DHAVE_CLOCKFIX=0 \
     -DHAVE_PCSC=0"
 
 do_install() {
