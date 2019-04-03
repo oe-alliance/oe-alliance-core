@@ -9,7 +9,7 @@ SRCDATE = "20181121"
 
 inherit kernel machine_kernel_pr
 
-MACHINE_KERNEL_PR_append = ".22"
+MACHINE_KERNEL_PR_append = ".23"
 
 SRC_URI[md5sum] = "ede25f1c2c060f1059529a2896cee5a9"
 SRC_URI[sha256sum] = "ea4ba0433d252c18f38ff2f4dce4b70880e447e1cffdc2066d5a9b5f8098ae7e"
@@ -17,13 +17,20 @@ SRC_URI[sha256sum] = "ea4ba0433d252c18f38ff2f4dce4b70880e447e1cffdc2066d5a9b5f80
 SRC_URI = "http://source.mynonpublic.com/zgemma/linux-${PV}-${SRCDATE}-${ARCH}.tar.gz \
 	file://defconfig \
 	file://0002-ieee80211-increase-scan-result-expire-time.patch \
-	file://0001-mmc-switch-1.8V.patch \
 	file://0001-remote.patch \
 	file://HauppaugeWinTV-dualHD.patch \
 	file://dib7000-linux_4.4.179.patch \
 	file://dvb-usb-linux_4.4.179.patch \
 	file://mt7601u_check_return_value_of_alloc_skb.patch \
-	"
+	file://initramfs-subdirboot.cpio.gz;unpack=0 \
+"
+
+SRC_URI_append_h9 += " \
+	file://0001-mmc-switch-1.8V.patch \
+"
+SRC_URI_append_i55plus += " \
+	file://0001-mmc-switch-1.8V.patch \
+"
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
@@ -43,6 +50,11 @@ KERNEL_IMAGETYPE = "uImage"
 KERNEL_OUTPUT = "arch/${ARCH}/boot/${KERNEL_IMAGETYPE}"
 
 FILES_${KERNEL_PACKAGE_NAME}-image = "/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}"
+
+kernel_do_configure_prepend() {
+	install -d ${B}/usr
+	install -m 0644 ${WORKDIR}/initramfs-subdirboot.cpio.gz ${B}/
+}
 
 kernel_do_install_append() {
 	install -d ${D}${KERNEL_IMAGEDEST}

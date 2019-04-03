@@ -125,6 +125,7 @@ IMAGE_CMD_fastboot8gb_append = " \
         cp ${DEPLOY_DIR_IMAGE}/zgemma-partitions-${MACHINE}/${MACHINE}/logo.img ${DEPLOY_DIR_IMAGE}/${MACHINE}/${IMAGEDIR}/logo.img; \
     fi; \
     echo "${IMAGE_NAME}" > ${DEPLOY_DIR_IMAGE}/${MACHINE}/${IMAGEDIR}/imageversion; \
+    echo "${IMAGE_NAME}_usb.zip" > ${DEPLOY_DIR_IMAGE}/${MACHINE}/unforce_${MACHINE}.txt; \
     cd ${DEPLOY_DIR_IMAGE}/${MACHINE}; \
     zip -r ../${IMAGE_NAME}_usb.zip *; \
     rm -f ${DEPLOY_DIR_IMAGE}/*.manifest; \
