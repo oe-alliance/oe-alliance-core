@@ -1,90 +1,28 @@
-From d5ea8747158793ffb23b6b1558a9e4be6277d8ff Mon Sep 17 00:00:00 2001
+From 66806088e93843d84fccdc669e76918802600573 Mon Sep 17 00:00:00 2001
 From: captain <captain.onboard@web.de>
-Date: Fri, 11 Jan 2019 16:11:26 +0100
-Subject: [PATCH] dd
+Date: Wed, 3 Apr 2019 17:23:53 +0200
+Subject: [PATCH] azboxMEe2py
 
 ---
- .../Components/Converter/ServiceInfo.py       | 50 ++++++++++++---
+ .../Components/Converter/ServiceInfo.py       | 21 ++++++-
  lib/python/Screens/InfoBarGenerics.py         | 18 +++---
  lib/python/Screens/VideoMode.py               | 61 ++++++++++++-------
- 3 files changed, 91 insertions(+), 38 deletions(-)
+ 3 files changed, 66 insertions(+), 34 deletions(-)
 
 diff --git a/lib/python/Components/Converter/ServiceInfo.py b/lib/python/Components/Converter/ServiceInfo.py
-index 303d451bd..c31a574e5 100644
+index 1cd8538a7..0d7ba0478 100644
 --- a/lib/python/Components/Converter/ServiceInfo.py
 +++ b/lib/python/Components/Converter/ServiceInfo.py
-@@ -2,6 +2,8 @@ from Components.Converter.Converter import Converter
- from Screens.InfoBarGenerics import hasActiveSubservicesForCurrentChannel
+@@ -4,6 +4,8 @@ from Screens.InfoBarGenerics import hasActiveSubservicesForCurrentChannel
  from Components.Element import cached
  from Poll import Poll
+ from Tools.Transponder import ConvertToHumanReadable
 +from boxbranding import getBoxType
 +import NavigationInstance
  
  from os import path
  
-@@ -111,10 +113,18 @@ class ServiceInfo(Converter, object):
- 		if not info:
- 			return False
- 
-+		fix_azboxme = refstr = None # Azbox (mini)ME patch
-+		if getBoxType().startswith('azboxm'):
-+			if NavigationInstance.instance:
-+				refstr = NavigationInstance.instance.getCurrentlyPlayingServiceReference()
-+			fix_azboxme = refstr and ':0:/' in refstr.toString()
-+
- 		video_height = None
- 		video_width = None
- 		video_aspect = None
--		if path.exists("/proc/stb/vmpeg/0/yres"):
-+		if path.exists("/proc/stb/vmpeg/0/yres") and fix_azboxme:
-+			pass
-+		else:
- 			f = open("/proc/stb/vmpeg/0/yres", "r")
- 			try:
- 				video_height = int(f.read(),16)
-@@ -233,9 +243,17 @@ class ServiceInfo(Converter, object):
- 		if not info:
- 			return ""
- 
-+		fix_azboxme = refstr = None # Azbox (mini)ME patch
-+		if getBoxType().startswith('azboxm'):
-+			if NavigationInstance.instance:
-+				refstr = NavigationInstance.instance.getCurrentlyPlayingServiceReference()
-+			fix_azboxme = refstr and ':0:/' in refstr.toString()
-+
- 		if self.type == self.XRES:
- 			video_width = None
--			if path.exists("/proc/stb/vmpeg/0/xres"):
-+			if path.exists("/proc/stb/vmpeg/0/xres") and fix_azboxme:
-+				pass
-+			else:
- 				f = open("/proc/stb/vmpeg/0/xres", "r")
- 				try:
- 					video_width = int(f.read(),16)
-@@ -250,7 +268,9 @@ class ServiceInfo(Converter, object):
- 			return "%d" % video_width
- 		elif self.type == self.YRES:
- 			video_height = None
--			if path.exists("/proc/stb/vmpeg/0/yres"):
-+			if path.exists("/proc/stb/vmpeg/0/yres") and fix_azboxme:
-+				pass
-+			else:
- 				f = open("/proc/stb/vmpeg/0/yres", "r")
- 				try:
- 					video_height = int(f.read(),16)
-@@ -284,7 +304,10 @@ class ServiceInfo(Converter, object):
- 			if path.exists("/proc/stb/vmpeg/0/framerate"):
- 				f = open("/proc/stb/vmpeg/0/framerate", "r")
- 				try:
--					video_rate = int(f.read())
-+					if getBoxType().startswith('azbox'): #Azbox outputs framerate in HEX
-+						video_rate = int(f.read(),16)
-+					else:
-+						video_rate = int(f.read())
- 				except:
- 					pass
- 				f.close()
-@@ -306,9 +329,17 @@ class ServiceInfo(Converter, object):
+@@ -377,9 +379,17 @@ class ServiceInfo(Poll, Converter, object):
  		if not info:
  			return -1
  
@@ -103,7 +41,7 @@ index 303d451bd..c31a574e5 100644
  				f = open("/proc/stb/vmpeg/0/xres", "r")
  				try:
  					video_width = int(f.read(),16)
-@@ -320,7 +351,9 @@ class ServiceInfo(Converter, object):
+@@ -391,7 +401,9 @@ class ServiceInfo(Poll, Converter, object):
  			return str(video_width)
  		elif self.type == self.YRES:
  			video_height = None
@@ -114,7 +52,7 @@ index 303d451bd..c31a574e5 100644
  				f = open("/proc/stb/vmpeg/0/yres", "r")
  				try:
  					video_height = int(f.read(),16)
-@@ -335,7 +368,10 @@ class ServiceInfo(Converter, object):
+@@ -406,7 +418,10 @@ class ServiceInfo(Poll, Converter, object):
  			if path.exists("/proc/stb/vmpeg/0/framerate"):
  				f = open("/proc/stb/vmpeg/0/framerate", "r")
  				try:
@@ -127,10 +65,10 @@ index 303d451bd..c31a574e5 100644
  					pass
  				f.close()
 diff --git a/lib/python/Screens/InfoBarGenerics.py b/lib/python/Screens/InfoBarGenerics.py
-index aae845433..0625330d4 100644
+index bfc9bab09..17b5607bc 100644
 --- a/lib/python/Screens/InfoBarGenerics.py
 +++ b/lib/python/Screens/InfoBarGenerics.py
-@@ -4430,16 +4430,16 @@ class InfoBarResolutionSelection:
+@@ -4439,16 +4439,16 @@ class InfoBarResolutionSelection:
  		f = open("/proc/stb/vmpeg/0/yres", "r")
  		yresString = f.read()
  		f.close()
@@ -157,7 +95,7 @@ index aae845433..0625330d4 100644
  		xres = int(xresString, 16)
  		yres = int(yresString, 16)
 diff --git a/lib/python/Screens/VideoMode.py b/lib/python/Screens/VideoMode.py
-index c88917300..558c7b76d 100644
+index 717322859..98c86dd8d 100644
 --- a/lib/python/Screens/VideoMode.py
 +++ b/lib/python/Screens/VideoMode.py
 @@ -16,6 +16,8 @@ from Components.ServiceEventTracker import ServiceEventTracker
@@ -169,7 +107,7 @@ index c88917300..558c7b76d 100644
  
  resolutionlabel = None
  
-@@ -693,31 +695,46 @@ class AutoVideoMode(Screen):
+@@ -703,31 +705,46 @@ class AutoVideoMode(Screen):
  		video_width = None
  		video_pol = None
  		video_rate = None
@@ -239,5 +177,5 @@ index c88917300..558c7b76d 100644
  				video_rate = 50
  			f.close()
 -- 
-2.19.1.windows.1
+2.21.0.windows.1
 
