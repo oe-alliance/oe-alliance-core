@@ -10,7 +10,7 @@ inherit gitpkgv
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
 SRCREV = "${AUTOREV}"
-PR = "r1"
+PR = "r2"
 VER ?= ""
 HAVE_GLES ?= "virtual/libgles2"
 
@@ -37,7 +37,7 @@ do_install(){
 	chmod -R a+rX ${D}/usr/share/stalker/
 }
 
-pkg_postinst_${PN}(){
+pkg_postinst_ontarget_${PN}(){
 #!/bin/sh
 ln -sf /usr/share/fonts /usr/lib/fonts
 exit 0
