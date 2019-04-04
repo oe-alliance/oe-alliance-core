@@ -27,6 +27,7 @@ DEPENDS = "\
     enigma2-plugin-drivers-ct2-dvb-usb-t330 \
     enigma2-plugin-drivers-ct2-dvb-usb-pctv292e \
     enigma2-plugin-drivers-dvb-usb-mn8847x \
+    enigma2-plugin-drivers-ct2-dvb-usb-dualhd \
     ${@bb.utils.contains("DEFAULTTUNE", "sh4", "" , "enigma2-plugin-drivers-dvb-usb-dvbsky-classic", d)} \
     ${@bb.utils.contains("MACHINE", "vuduo", "enigma2-plugin-drivers-dvb-usb-turbo", "", d)} \
     ${@bb.utils.contains("MACHINE", "vuduo2", "enigma2-plugin-drivers-dvb-usb-turbo", "", d)} \

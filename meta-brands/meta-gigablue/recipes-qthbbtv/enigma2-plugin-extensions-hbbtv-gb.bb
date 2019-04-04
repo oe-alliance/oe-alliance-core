@@ -27,6 +27,10 @@ PACKAGES =+ "${PN}-src"
 FILES_${PN} = "${bindir} ${libdir}/mozilla/plugins/libhbbtvbrowserplugin.so ${PLUGINPATH}/*.pyo"
 FILES_${PN}-src = "${PLUGINPATH}/*.py"
 
+do_configure_prepend () {
+    sed 's/reader.doDump()/#reader.doDump()/g' -i ${S}/plugin/plugin.py
+}
+
 do_install(){
     install -d ${D}${PLUGINPATH}
     install -m 0755 ${S}/plugin/*.py ${D}${PLUGINPATH}

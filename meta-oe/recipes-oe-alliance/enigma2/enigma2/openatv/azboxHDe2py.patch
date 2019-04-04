@@ -1,0 +1,104 @@
+From 34fe4b37a22e21a46946665a57dd412a2cb8aeae Mon Sep 17 00:00:00 2001
+From: captain <captain.onboard@web.de>
+Date: Wed, 3 Apr 2019 17:09:41 +0200
+Subject: [PATCH] azboxHDe2py
+
+---
+ lib/python/Components/Converter/ServiceInfo.py | 11 +++++++++--
+ lib/python/Screens/InfoBarGenerics.py          | 18 +++++++++---------
+ lib/python/Screens/VideoMode.py                |  6 +++++-
+ 3 files changed, 23 insertions(+), 12 deletions(-)
+
+diff --git a/lib/python/Components/Converter/ServiceInfo.py b/lib/python/Components/Converter/ServiceInfo.py
+index 1cd8538a7..9fe7dd52a 100644
+--- a/lib/python/Components/Converter/ServiceInfo.py
++++ b/lib/python/Components/Converter/ServiceInfo.py
+@@ -4,6 +4,7 @@ from Screens.InfoBarGenerics import hasActiveSubservicesForCurrentChannel
+ from Components.Element import cached
+ from Poll import Poll
+ from Tools.Transponder import ConvertToHumanReadable
++from boxbranding import getBoxType
+ 
+ from os import path
+ 
+@@ -317,7 +318,10 @@ class ServiceInfo(Poll, Converter, object):
+ 			if path.exists("/proc/stb/vmpeg/0/framerate"):
+ 				f = open("/proc/stb/vmpeg/0/framerate", "r")
+ 				try:
+-					video_rate = int(f.read())
++					if getBoxType().startswith('azbox'): #Azbox outputs framerate in HEX
++						video_rate = int(f.read(),16)
++					else:
++						video_rate = int(f.read())
+ 				except:
+ 					pass
+ 				f.close()
+@@ -406,7 +410,10 @@ class ServiceInfo(Poll, Converter, object):
+ 			if path.exists("/proc/stb/vmpeg/0/framerate"):
+ 				f = open("/proc/stb/vmpeg/0/framerate", "r")
+ 				try:
+-					video_rate = f.read()
++					if getBoxType().startswith('azbox'): #Azbox outputs framerate in HEX
++						video_rate = int(f.read(),16)
++					else:
++						video_rate = int(f.read())
+ 				except:
+ 					pass
+ 				f.close()
+diff --git a/lib/python/Screens/InfoBarGenerics.py b/lib/python/Screens/InfoBarGenerics.py
+index bfc9bab09..17b5607bc 100644
+--- a/lib/python/Screens/InfoBarGenerics.py
++++ b/lib/python/Screens/InfoBarGenerics.py
+@@ -4439,16 +4439,16 @@ class InfoBarResolutionSelection:
+ 		f = open("/proc/stb/vmpeg/0/yres", "r")
+ 		yresString = f.read()
+ 		f.close()
+-		if getBoxType().startswith('azbox'):
++		try:
++			f = open("/proc/stb/vmpeg/0/framerate", "r")
++			if getBoxType().startswith('azbox'): #Azbox outputs framerate in HEX
++				fpsString = int(f.read(),16)
++			else:
++				fpsString = int(f.read())
++			f.close()
++		except:
++			print"[InfoBarResolutionSelection] Error open /proc/stb/vmpeg/0/framerate !!"
+ 			fpsString = '50000'
+-		else:	
+-			try:
+-				f = open("/proc/stb/vmpeg/0/framerate", "r")
+-				fpsString = f.read()
+-				f.close()
+-			except:
+-				print"[InfoBarResolutionSelection] Error open /proc/stb/vmpeg/0/framerate !!"
+-				fpsString = '50000'
+ 		
+ 		xres = int(xresString, 16)
+ 		yres = int(yresString, 16)
+diff --git a/lib/python/Screens/VideoMode.py b/lib/python/Screens/VideoMode.py
+index 717322859..5486dae80 100644
+--- a/lib/python/Screens/VideoMode.py
++++ b/lib/python/Screens/VideoMode.py
+@@ -16,6 +16,7 @@ from Components.ServiceEventTracker import ServiceEventTracker
+ from Tools.Directories import resolveFilename, SCOPE_PLUGINS
+ from Tools.HardwareInfo import HardwareInfo
+ from Components.AVSwitch import iAVSwitch
++from boxbranding import getBoxType
+ 
+ resolutionlabel = None
+ 
+@@ -727,7 +728,10 @@ class AutoVideoMode(Screen):
+ 		if path.exists("/proc/stb/vmpeg/0/framerate"):
+ 			f = open("/proc/stb/vmpeg/0/framerate", "r")
+ 			try:
+-				video_rate = int(f.read())
++				if getBoxType().startswith('azbox'): #Azbox outputs framerate in HEX
++					video_rate = int(f.read(),16)
++				else:
++					video_rate = int(f.read())
+ 			except:
+ 				video_rate = 50
+ 			f.close()
+-- 
+2.21.0.windows.1
+

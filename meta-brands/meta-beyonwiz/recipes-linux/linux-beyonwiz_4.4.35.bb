@@ -7,7 +7,7 @@ SRCDATE = "20181224"
 
 inherit kernel machine_kernel_pr
 
-MACHINE_KERNEL_PR_append = ".20"
+MACHINE_KERNEL_PR_append = ".22"
 
 
 SRC_URI[md5sum] = "ad7eab17a5071a0d5f9ff44eb44e027d"
@@ -26,9 +26,13 @@ RPROVIDES_${KERNEL_PACKAGE_NAME}-image = "kernel-image-${KERNEL_VERSION}"
 SRC_URI += "http://source.mynonpublic.com/beyonwiz/beyonwiz-linux-${PV}-${SRCDATE}.tar.gz \
     file://defconfig \
     file://0001-remote.patch \
+    file://HauppaugeWinTV-dualHD.patch \
+    file://dib7000-linux_4.4.179.patch \
+    file://dvb-usb-linux_4.4.179.patch \
     file://findkerneldevice.py \
     file://0002-log2-give-up-on-gcc-constant-optimizations.patch \
     file://0003-dont-mark-register-as-const.patch \
+    file://mt7601u_check_return_value_of_alloc_skb.patch \
 "
 
 S = "${WORKDIR}/linux-${PV}"
