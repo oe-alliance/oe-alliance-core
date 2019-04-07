@@ -16,7 +16,7 @@ SRC_URI="git://github.com/stein17/Skins-for-openHDF.git;protocol=git"
 
 FILES_${PN} = "${libdir} /usr/share"
 
-S = "${WORKDIR}/git/Multibox FHD Skin 4 HDF"
+S = "${WORKDIR}/git/Multibox-FHD-Skin-4HDF"
 
 do_compile_append() {
 python -O -m compileall ${S}
