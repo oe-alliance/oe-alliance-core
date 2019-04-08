@@ -27,6 +27,7 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-skins-nblack51-hdfmod \
     enigma2-plugin-skins-ax-blue-fhd-4hdf \
     enigma2-plugin-skins-blue-line-oct-4hdf \
+    enigma2-plugin-skins-multibox-fhd-4hdf \
     "
 
 RRECOMMENDS_${PN}_append_gb800solo = "enigma2-plugin-extensions-gbipboxclient"
