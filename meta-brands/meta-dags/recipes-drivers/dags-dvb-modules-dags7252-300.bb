@@ -6,14 +6,14 @@ require conf/license/license-close.inc
 
 PACKAGE_ARCH = "${MACHINEBUILD}"
 
-SRCDATE = "20190319"
+SRCDATE = "20190401"
 SRCDATE_openspa = "20181001"
 KV = "3.14.28"
 PV = "${KV}+${SRCDATE}"
 PR = "r0"
 
-SRC_URI[md5sum] = "07403873f7e88b7d26d5f39a7b60a5aa"
-SRC_URI[sha256sum] = "8e5e664fd63d6944aa72a1491fffc77a4983cd20325ebaa74c088c763058d846"
+SRC_URI[md5sum] = "2a7c6a5c2715fffcfe36090c048bf2b4"
+SRC_URI[sha256sum] = "937c6afdc2b29113549f4c3c776a2ee162b47b20879b840fe729f3b0da852608"
 SRC_URI[openspa.md5sum] = "866c3b336005157ddd17249226ebe701"
 SRC_URI[openspa.sha256sum] = "25f1818ea20faae5dafa787a46a297fd471b0cd0231e3b718bc267b4390981b1"
 
