@@ -1,0 +1,55 @@
+diff --git a/aplay/aplay.c b/aplay/aplay.c
+index 0aa1688a6710..9cd2f7bd6b33 100644
+--- a/aplay/aplay.c
++++ b/aplay/aplay.c
+@@ -135,6 +135,7 @@ static long long max_file_size = 0;
+ static int max_file_time = 0;
+ static int use_strftime = 0;
+ volatile static int recycle_capture_file = 0;
++volatile static int restart_playback = 0;
+ static long term_c_lflag = -1;
+ static int dump_hw_params = 0;
+ 
+@@ -413,6 +414,12 @@ static void signal_handler_recycle (int sig)
+ 	recycle_capture_file = 1;
+ }
+ 
++/* call on SIGUSR2 signal. */
++static void signal_handler_restart (int sig)
++{
++	restart_playback = 1;
++}
++
+ enum {
+ 	OPT_VERSION = 1,
+ 	OPT_PERIOD_SIZE,
+@@ -881,7 +888,9 @@ int main(int argc, char *argv[])
+ 	signal(SIGTERM, signal_handler);
+ 	signal(SIGABRT, signal_handler);
+ 	signal(SIGUSR1, signal_handler_recycle);
++	signal(SIGUSR2, signal_handler_restart);
+ 	if (interleaved) {
++		__restart:
+ 		if (optind > argc - 1) {
+ 			if (stream == SND_PCM_STREAM_PLAYBACK)
+ 				playback(NULL);
+@@ -895,6 +904,10 @@ int main(int argc, char *argv[])
+ 					capture(argv[optind++]);
+ 			}
+ 		}
++		if (restart_playback) {
++			restart_playback = 0;
++			goto __restart;
++		}
+ 	} else {
+ 		if (stream == SND_PCM_STREAM_PLAYBACK)
+ 			playbackv(&argv[optind], argc - optind);
+@@ -2769,7 +2782,7 @@ static void playback_go(int fd, size_t loaded, off64_t count, int rtype, char *n
+ 		memmove(audiobuf, audiobuf + written, loaded);
+ 
+ 	l = loaded;
+-	while (written < count && !in_aborting) {
++	while (written < count && !in_aborting && !restart_playback) {
+ 		do {
+ 			c = count - written;
+ 			if (c > chunk_bytes)
