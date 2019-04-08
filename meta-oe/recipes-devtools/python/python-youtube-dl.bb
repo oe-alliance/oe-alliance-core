@@ -10,10 +10,10 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=7246f848faa4e9c9fc0ea91122d6e680"
 DEPENDS = "libxml2 bash-completion"
 
 SRCREV = "${AUTOREV}"
-PV = "2019.04.01+git${SRCPV}"
+PV = "2019.04.07+git${SRCPV}"
 PR = "r1"
 
-SRC_URI = "git://github.com/rg3/youtube-dl.git;branch=master"
+SRC_URI = "git://github.com/ytdl-org/youtube-dl.git;protocol=https;branch=master"
 
 S = "${WORKDIR}/git"
 
