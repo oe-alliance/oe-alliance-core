@@ -163,6 +163,7 @@ startmnt()
 
 	chmod -R 644 /mnt/network
 	rm /var/etc/.firstboot
+	touch /var/etc/.firstok
 }
 
 startopkg()
