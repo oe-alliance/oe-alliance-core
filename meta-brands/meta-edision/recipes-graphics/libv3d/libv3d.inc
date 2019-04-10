@@ -9,6 +9,8 @@ PROVIDES = "virtual/libgles2 virtual/egl"
 
 SRC_URI = "http://source.mynonpublic.com/edision/libv3d-${MACHINE}-${PV}.tar.xz"
 
+S = "${WORKDIR}/libv3d-osmio4k-${PV}"
+
 FILES_SOLIBSDEV = ""
 FILES_${PN} += "${libdir}/lib*${SOLIBSDEV}"
 INSANE_SKIP_${PN} = "ldflags dev-so"
