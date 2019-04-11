@@ -64,6 +64,7 @@ RDEPENDS_${PN} = "\
     ${@bb.utils.contains("MACHINE", "i55plus", "enigma2-plugin-drivers-network-usb-rtl8192eu kernel-module-mt7601u", "", d)} \
     ${@bb.utils.contains("MACHINE", "ustym4kpro", "enigma2-plugin-drivers-network-usb-rtl8192eu", "", d)} \
     ${@bb.utils.contains("MACHINEBUILD", "osmio4k", "enigma2-plugin-drivers-network-usb-qca6174", "", d)} \
+    ${@bb.utils.contains("MACHINEBUILD", "osmio4kplus", "enigma2-plugin-drivers-network-usb-qca6174", "", d)} \
     "
 
 RDEPENDS_${PN}_remove_odroidc2 = "enigma2-plugin-drivers-network-usb-rtl8192cu"
