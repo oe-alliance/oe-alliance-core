@@ -1,0 +1,35 @@
+--- a/IPTVPlayer/setup/iptvsetupimpl.py	2018-07-27 00:55:11.192716609 +0200
++++ b/IPTVPlayer/setup/iptvsetupimpl.py	2018-07-27 00:58:24.105474454 +0200
+@@ -940,16 +940,16 @@
+         if len(self.ffmpegVersion) >= 5:
+             shortFFmpegVersion = self.ffmpegVersion[:-2]
+             
+-        if self.platform in ['sh4'] and shortFFmpegVersion in ['1.0', '1.1', '1.2', '2.0', '2.2', '2.5', '2.6', '2.7', '2.8', '3.0', '3.1', '3.2', '3.3', '3.4']: 
++        if self.platform in ['sh4'] and shortFFmpegVersion in ['1.0', '1.1', '1.2', '2.0', '2.2', '2.5', '2.6', '2.7', '2.8', '3.0', '3.1', '3.2', '3.3', '3.4', '4.0', '4.1']: 
+             self.ffmpegVersion = shortFFmpegVersion
+             self.exteplayer3Step()
+-        elif self.platform in ['mipsel'] and shortFFmpegVersion in ['2.8', '3.0', '3.1', '3.2', '3.3', '3.4']:
++        elif self.platform in ['mipsel'] and shortFFmpegVersion in ['2.8', '3.0', '3.1', '3.2', '3.3', '3.4', '4.0', '4.1']:
+             self.ffmpegVersion = shortFFmpegVersion
+             self.exteplayer3Step()
+-        elif self.platform in ['armv7'] and shortFFmpegVersion in ['2.8', '3.0', '3.1', '3.2', '3.3', '3.4']:
++        elif self.platform in ['armv7'] and shortFFmpegVersion in ['2.8', '3.0', '3.1', '3.2', '3.3', '3.4', '4.0', '4.1']:
+             self.ffmpegVersion = shortFFmpegVersion
+             self.exteplayer3Step()
+-        elif self.platform in ['armv5t'] and shortFFmpegVersion in ['2.8', '3.0', '3.1', '3.2', '3.3', '3.4']:
++        elif self.platform in ['armv5t'] and shortFFmpegVersion in ['2.8', '3.0', '3.1', '3.2', '3.3', '3.4', '4.0', '4.1']:
+             self.ffmpegVersion = shortFFmpegVersion
+             self.exteplayer3Step()
+         elif "" != self.gstreamerVersion: self.gstplayerStep()
+--- a/IPTVPlayer/setup/iptvsetupimpl.py
++++ b/IPTVPlayer/setup/iptvsetupimpl2.py
+@@ -81,7 +81,7 @@
+                                           (_('Install into the "%s".') % "IPTVPlayer/bin/gstplayer", GetBinDir("gstplayer", "")),
+                                           (_("Do not install (not recommended)"), "")]
+         # exteplayer3
+-        self.exteplayer3Version = {'sh4':50, 'mipsel':50, 'armv7':50, 'armv5t':50}
++        self.exteplayer3Version = {'sh4':49, 'mipsel':49, 'armv7':49, 'armv5t':49}
+         self.exteplayer3paths = ["/usr/bin/exteplayer3", GetBinDir("exteplayer3", "")]
+         self._exteplayer3InstallChoiseList = [(_('Install into the "%s".') % ("/usr/bin/exteplayer3 (%s)" % _("recommended")), "/usr/bin/exteplayer3"),
+                                           (_('Install into the "%s".') % "IPTVPlayer/bin/exteplayer3", GetBinDir("exteplayer3", "")),
+
