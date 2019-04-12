@@ -1,0 +1,47 @@
+--- a/libavformat/hls.c	2018-08-17 13:16:57.721007600 +0200
++++ b/libavformat/hls.c	2018-08-17 13:33:57.530170057 +0200
+@@ -208,6 +208,8 @@
+     int max_reload;
+     int http_persistent;
+     int http_multiple;
++    char *key_uri_replace_old;
++    char *key_uri_replace_new;
+     AVIOContext *playlist_pb;
+ } HLSContext;
+ 
+@@ -1198,8 +1200,16 @@
+     } else if (seg->key_type == KEY_AES_128) {
+         char iv[33], key[33], url[MAX_URL_SIZE];
+         if (strcmp(seg->key, pls->key_url)) {
++            char *key_url = NULL;
+             AVIOContext *pb = NULL;
+-            if (open_url(pls->parent, &pb, seg->key, c->avio_opts, opts, NULL) == 0) {
++            if (NULL != c->key_uri_replace_old && \
++                NULL != c-> key_uri_replace_new && \
++                '\0' != c->key_uri_replace_old[0]) {
++                key_url = av_strireplace(seg->key, c->key_uri_replace_old, c->key_uri_replace_new);
++            } else {
++                key_url = seg->key;
++            }
++            if (open_url(pls->parent, &pb, key_url, c->avio_opts, opts, NULL) == 0) {
+                 ret = avio_read(pb, pls->key, sizeof(pls->key));
+                 if (ret != sizeof(pls->key)) {
+                     av_log(NULL, AV_LOG_ERROR, "Unable to read key file %s\n",
+@@ -1211,6 +1221,8 @@
+                        seg->key);
+             }
+             av_strlcpy(pls->key_url, seg->key, sizeof(pls->key_url));
++            if (key_url != seg->key)
++                av_free(key_url);
+         }
+         ff_data_to_hex(iv, seg->iv, sizeof(seg->iv), 0);
+         ff_data_to_hex(key, pls->key, sizeof(pls->key), 0);
+@@ -2315,6 +2327,8 @@
+         OFFSET(http_persistent), AV_OPT_TYPE_BOOL, {.i64 = 1}, 0, 1, FLAGS },
+     {"http_multiple", "Use multiple HTTP connections for fetching segments",
+         OFFSET(http_multiple), AV_OPT_TYPE_BOOL, {.i64 = -1}, -1, 1, FLAGS},
++    { "key_uri_old", "allow to replace part of AES key uri - old", OFFSET(key_uri_replace_old), AV_OPT_TYPE_STRING, { .str = "" }, 0, 0, FLAGS },
++    { "key_uri_new", "allow to replace part of AES key uri - new", OFFSET(key_uri_replace_new), AV_OPT_TYPE_STRING, { .str = "" }, 0, 0, FLAGS },
+     {NULL}
+ };
+ 
