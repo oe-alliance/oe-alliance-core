@@ -1,6 +1,6 @@
 SRCDATE = "20170302"
 
-SRC_URI = "http://gi-et.info/${MACHINE}/vmlinuz-initrd-${MACHINE}-${SRCDATE}.zip"
+SRC_URI = "http://source.mynonpublic.com/xtrend/vmlinuz-initrd-${MACHINE}-${SRCDATE}.zip"
 
 require et-initrd.inc
 
