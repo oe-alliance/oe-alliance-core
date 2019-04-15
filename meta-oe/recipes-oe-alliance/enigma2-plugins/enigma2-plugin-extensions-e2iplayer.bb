@@ -14,7 +14,7 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r1"
+PR = "r2"
 
 inherit distutils-openplugins gettext
 
