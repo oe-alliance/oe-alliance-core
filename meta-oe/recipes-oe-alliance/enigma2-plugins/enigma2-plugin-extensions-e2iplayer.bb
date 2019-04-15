@@ -20,7 +20,7 @@ inherit distutils-openplugins gettext
 
 DEPENDS = "gettext-native python"
 RRECOMMENDS_${PN} = " \
-	enigma2-plugin-extensions-e2iplayer-deps \
+        enigma2-plugin-extensions-e2iplayer-deps \
         python-compression \
         python-core \
         python-html \
