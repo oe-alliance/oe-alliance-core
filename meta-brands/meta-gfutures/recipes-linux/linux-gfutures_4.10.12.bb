@@ -13,7 +13,7 @@ SRC_URI[arm.sha256sum] = "67a3ac98727595a399d5c399d3b66a7fadbe8136ac517e08decba5
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR_prepend = "oea4.7"
+MACHINE_KERNEL_PR_prepend = "oea4.8"
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
@@ -39,6 +39,7 @@ SRC_URI += "http://source.mynonpublic.com/gfutures/linux-${PV}-${ARCH}.tar.gz;na
 
 SRC_URI_append_arm = " \
     file://findkerneldevice.py \
+    file://initramfs-subdirboot.cpio.gz;unpack=0 \
     file://reserve_dvb_adapter_0.patch \
     file://blacklist_mmc0.patch \
     "
@@ -82,6 +83,11 @@ KERNEL_IMAGETYPE_arm = "zImage"
 KERNEL_IMAGEDEST_arm = "tmp"
 
 FILES_${KERNEL_PACKAGE_NAME}-image_arm = "/${KERNEL_IMAGEDEST}/zImage /${KERNEL_IMAGEDEST}/findkerneldevice.py"
+
+kernel_do_configure_prepend_arm() {
+    install -d ${B}/usr
+    install -m 0644 ${WORKDIR}/initramfs-subdirboot.cpio.gz ${B}/
+}
 
 kernel_do_install_append_arm() {
         install -d ${D}/${KERNEL_IMAGEDEST}
