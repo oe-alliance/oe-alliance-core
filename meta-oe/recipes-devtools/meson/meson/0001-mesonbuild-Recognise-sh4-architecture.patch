@@ -1,10 +1,8 @@
-diff --git a/mesonbuild/environment.py b/mesonbuild/environment.py
-index 44e3fb0..c6cb760 100644
---- a/mesonbuild/environment.py
-+++ b/mesonbuild/environment.py
-@@ -88,6 +88,7 @@ known_cpu_families = (
-     'riscv32',
-     'riscv64',
+--- a/mesonbuild/envconfig.py
++++ b/mesonbuild/envconfig.py
+@@ -49,6 +49,7 @@ known_cpu_families = (
+     'rl78',
+     'rx',
      's390x',
 +    'sh4',
      'sparc',
