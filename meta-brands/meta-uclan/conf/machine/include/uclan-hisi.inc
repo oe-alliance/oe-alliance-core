@@ -46,6 +46,7 @@ DEFAULTTUNE = "cortexa15hf-neon-vfpv4"
 
 PREFERRED_VERSION_linux-uclan = "4.4.35"
 PREFERRED_VERSION_linux-libc-headers = "4.4"
+PREFERRED_VERSION_ffmpeg = "3.4.2"
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-uclan"
 PREFERRED_PROVIDER_virtual/egl = "uclan-opengl-${MACHINE}" 
