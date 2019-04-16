@@ -1,0 +1,15 @@
+--- a/libavformat/mpegts.c	2018-02-12 01:29:06.000000000 +0100
++++ b/libavformat/mpegts.c	2018-02-14 19:36:28.175054407 +0100
+@@ -948,10 +948,12 @@
+     pes->buffer = NULL;
+     reset_pes_packet_state(pes);
+ 
++    /*
+     sd = av_packet_new_side_data(pkt, AV_PKT_DATA_MPEGTS_STREAM_ID, 1);
+     if (!sd)
+         return AVERROR(ENOMEM);
+     *sd = pes->stream_id;
++    */
+ 
+     return 0;
+ }
