@@ -37,7 +37,7 @@ IMAGE_CMD_fastboot8gb () {
 	echo "bootargs=root=/dev/mmcblk0p24 rootsubdir=linuxrootfs4 rootfstype=ext4" >> ${WORKDIR}/STARTUP_LINUX_4
 	echo "bootcmd=setenv bootargs \$(bootargs_common); mmc read 0 0x1000000 0x1000 0x9000; bootm 0x1000000" > ${WORKDIR}/STARTUP_RECOVERY
 	echo "bootcmd=setenv bootargs \$(bootargs_common); mmc read 0 0x1000000 0x1000 0x9000; bootm 0x1000000" > ${WORKDIR}/STARTUP_ONCE
-	echo "imageurl https://raw.githubusercontent.com/oe-alliance/bootmenu/master/${MACHINE}/images" > ${WORKDIR}/bootmenu.conf
+	echo "imageurl https://raw.githubusercontent.com/oe-alliance/bootmenu/master/${MACHINEBUILD}/images" > ${WORKDIR}/bootmenu.conf
 	echo "# " >> ${WORKDIR}/bootmenu.conf
 	echo "iface eth0" >> ${WORKDIR}/bootmenu.conf
 	echo "dhcp yes" >> ${WORKDIR}/bootmenu.conf
