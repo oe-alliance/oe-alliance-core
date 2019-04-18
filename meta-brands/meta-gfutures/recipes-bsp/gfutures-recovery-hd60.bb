@@ -1,0 +1,8 @@
+SRCDATE = "20190415"
+
+require gfutures-recovery.inc
+
+SRC_URI[md5sum] = "83aefc8d9408987e47f09f06d09c96d6"
+SRC_URI[sha256sum] = "484399201961c4e17ce1ef7191c3215b3da6c148377a9edbcce60ddbc86d8902"
+
+COMPATIBLE_MACHINE = "hd60"

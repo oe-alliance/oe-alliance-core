@@ -8,12 +8,12 @@ SRC_URI_remove = "file://e2player.patch \
            file://add-gstplayer-support.patch \
 "
 
-SRC_URI_append = "http://source.mynonpublic.com/amiko/hiplayer_${SRCDATE}.tar.gz \
+SRC_URI_append = "http://source.mynonpublic.com/amiko/hiplayer_gcc8_${SRCDATE}.tar.gz \
     file://hiplayer.patch \
 "
 
-SRC_URI[md5sum] = "598dc7d5c56893e4d3ac35b194599a9f"
-SRC_URI[sha256sum] = "31dfdcf23d56115267423d6d827af3c606fc1e9f0ffe0bf6ac8fee6b305e1efd"
+SRC_URI[md5sum] = "9fc70dcf40e43cecd8af6af782a08e01"
+SRC_URI[sha256sum] = "0c2b5eeefecdbaede5cb2b89c6e143287f4032650ef860907100e4cb21b97ee6"
 
 DEPENDS += "amiko-libs-${MACHINE}"
 PROVIDES += "virtual/kodi"

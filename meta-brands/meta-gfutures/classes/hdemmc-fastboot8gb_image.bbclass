@@ -2,7 +2,6 @@ inherit image_types
 
 IMAGE_ROOTFS = "${WORKDIR}/rootfs/linuxrootfs1"
 BOOTOPTIONS_PARTITION_SIZE = "2048"
-IMAGE_ROOTFS_SIZE = "786432"
 
 do_image_hdfastboot8gb[depends] = " \
 	e2fsprogs-native:do_populate_sysroot \
@@ -17,8 +16,8 @@ IMAGE_CMD_hdfastboot8gb () {
     if [ $ROOTFS_SIZE -lt $MIN_COUNT ]; then
         eval COUNT=\"$MIN_COUNT\"
     fi
-    dd if=/dev/zero of=${IMGDEPLOYDIR}/${IMAGE_NAME}.rootfs.ext4 seek=${IMAGE_ROOTFS_SIZE} count=$COUNT bs=1024
-    mkfs.ext4 -F -i 4096 ${IMGDEPLOYDIR}/${IMAGE_NAME}.rootfs.ext4 -d ${WORKDIR}/rootfs
+    dd if=/dev/zero of=${IMGDEPLOYDIR}/${IMAGE_NAME}${IMAGE_NAME_SUFFIX}.ext4 seek=$ROOTFS_SIZE count=$COUNT bs=1024
+    mkfs.ext4 -F -i 4096 ${IMGDEPLOYDIR}/${IMAGE_NAME}${IMAGE_NAME_SUFFIX}.ext4 -d ${WORKDIR}/rootfs
     dd if=/dev/zero of=${WORKDIR}/bootoptions.img bs=1024 count=${BOOTOPTIONS_PARTITION_SIZE}
     mkfs.msdos -S 512 ${WORKDIR}/bootoptions.img
     echo "bootcmd=setenv bootargs \$(bootargs) \$(bootargs_common); mmc read 0 0x1000000 0x3BD000 0x8000; bootm 0x1000000; run bootcmd_fallback" > ${WORKDIR}/STARTUP
@@ -37,7 +36,7 @@ IMAGE_CMD_hdfastboot8gb () {
     echo "bootargs=root=/dev/mmcblk0p24 rootsubdir=linuxrootfs4 rootfstype=ext4" >> ${WORKDIR}/STARTUP_LINUX_4
     echo "bootcmd=setenv bootargs \$(bootargs_common); mmc read 0 0x1000000 0x1000 0x9000; bootm 0x1000000" > ${WORKDIR}/STARTUP_RECOVERY
     echo "bootcmd=setenv bootargs \$(bootargs_common); mmc read 0 0x1000000 0x1000 0x9000; bootm 0x1000000" > ${WORKDIR}/STARTUP_ONCE
-    echo "imageurl https://raw.githubusercontent.com/oe-alliance/bootmenu/master/${MACHINE}/images" > ${WORKDIR}/bootmenu.conf
+    echo "imageurl https://raw.githubusercontent.com/oe-alliance/bootmenu/master/${MACHINEBUILD}/images" > ${WORKDIR}/bootmenu.conf
     echo "# " >> ${WORKDIR}/bootmenu.conf
     echo "iface eth0" >> ${WORKDIR}/bootmenu.conf
     echo "dhcp yes" >> ${WORKDIR}/bootmenu.conf
