@@ -1,4 +1,4 @@
-SRCDATE = "20190329"
+SRCDATE = "20190419"
 
 require gfutures-partitions.inc
 
