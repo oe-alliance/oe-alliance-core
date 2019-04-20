@@ -5,7 +5,7 @@ LICENSE = "GPLv2+ & LGPLv2.1+"
 LIC_FILES_CHKSUM = "file://COPYING-GPL;md5=1ed9d357695b2e3ef099df37fed63d96 \
                     file://COPYING-LGPL;md5=d370feaa1c9edcdbd29ca27ea3d2304d"
 SECTION = "multimedia"
-SRCREV = "19649"
+SRCREV = "19661"
 PV = "10.2+svnr${SRCPV}"
 
 SRC_URI = "svn://svn.xiph.org/trunk;module=cdparanoia;protocol=http \
