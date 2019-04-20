@@ -2,7 +2,7 @@ inherit image_types
 
 IMAGE_TYPEDEP_amikoemmc = "ext4"
 
-do_image_uclanemmc[depends] = " \
+do_image_amikoemmc[depends] = " \
     parted-native:do_populate_sysroot \
     dosfstools-native:do_populate_sysroot \
     mtools-native:do_populate_sysroot \
