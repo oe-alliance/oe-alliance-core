@@ -4,9 +4,10 @@ SECTION = "kernel/modules"
 LICENSE = "GPLv2"
 require conf/license/license-gplv2.inc
 
-PR = "r2"
+PR = "r3"
 
 SRC_URI = "https://github.com/anthonywong/rtl8723bs/archive/v4.4.1.tar.gz \
+    file://0001-makefile-disable-POWER_SAVING.patch \
     file://rt8723bs-makefile.patch \
     file://rt8723bs-remove-debug.patch \
     file://rt8723bs-gcc5.patch \
@@ -17,7 +18,7 @@ SRC_URI = "https://github.com/anthonywong/rtl8723bs/archive/v4.4.1.tar.gz \
     file://compat.patch \
     file://rt8723bs-add-4.19-support.patch \
     file://rt8723bs-add-4.20-support.patch \
-    file://rt8723bs-add-5.0-support.patch\
+    file://rt8723bs-add-5.0-support.patch \
     "
 
 SRC_URI_append_sh4 = "file://rt8723bs_sh4.patch;patch=1 \
