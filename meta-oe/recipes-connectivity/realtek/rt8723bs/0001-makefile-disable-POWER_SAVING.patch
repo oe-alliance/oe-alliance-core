@@ -1,0 +1,11 @@
+--- a/Makefile	2019-04-22 14:11:28.418936982 +0200
++++ b/Makefile	2019-04-22 14:11:53.030955255 +0200
+@@ -40,7 +40,7 @@
+ CONFIG_GSPI_HCI = n
+ ########################## Features ###########################
+ CONFIG_MP_INCLUDED = y
+-CONFIG_POWER_SAVING = y
++CONFIG_POWER_SAVING = n
+ CONFIG_USB_AUTOSUSPEND = n
+ CONFIG_HW_PWRP_DETECTION = n
+ CONFIG_WIFI_TEST = n
