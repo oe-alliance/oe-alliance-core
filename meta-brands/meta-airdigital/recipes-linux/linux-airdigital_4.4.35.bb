@@ -38,10 +38,10 @@ SRC_URI_append_i55plus += " \
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
 # package names instead, to allow only one kernel to be installed.
-PKG_${KERNEL_PACKAGE_NAME}-base = "kernel-base"
-PKG_${KERNEL_PACKAGE_NAME}-image = "kernel-image"
-RPROVIDES_${KERNEL_PACKAGE_NAME}-base = "kernel-${KERNEL_VERSION}"
-RPROVIDES_${KERNEL_PACKAGE_NAME}-image = "kernel-image-${KERNEL_VERSION}"
+PKG_${KERNEL_PACKAGE_NAME}-base = "${KERNEL_PACKAGE_NAME}-base"
+PKG_${KERNEL_PACKAGE_NAME}-image = "${KERNEL_PACKAGE_NAME}-image"
+RPROVIDES_${KERNEL_PACKAGE_NAME}-base = "${KERNEL_PACKAGE_NAME}-${KERNEL_VERSION}"
+RPROVIDES_${KERNEL_PACKAGE_NAME}-image = "${KERNEL_PACKAGE_NAME}-image-${KERNEL_VERSION}"
 
 S = "${WORKDIR}/linux-${PV}"
 B = "${WORKDIR}/build"
@@ -77,16 +77,6 @@ kernel_do_install_append() {
 	install -d ${D}${KERNEL_IMAGEDEST}
 	install -m 0755 ${KERNEL_OUTPUT} ${D}${KERNEL_IMAGEDEST}
 	install -m 0755 ${WORKDIR}/findkerneldevice.py ${D}${KERNEL_IMAGEDEST}
-}
-
-pkg_postinst_kernel-image() {
-	if [ "x$D" == "x" ]; then
-		if [ -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE} ] ; then
-			flash_eraseall /dev/${MTD_KERNEL}
-			nandwrite -p /dev/${MTD_KERNEL} /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}
-		fi
-	fi
-	true
 }
 
 pkg_postinst_kernel-image_h9() {
