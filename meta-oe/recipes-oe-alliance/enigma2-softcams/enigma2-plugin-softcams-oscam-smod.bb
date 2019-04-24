@@ -1,8 +1,8 @@
 include oscam-smod.inc
 
 EXTRA_OECMAKE += "\
-	-DIPV6SUPPORT=1 \
-	"
+    -DIPV6SUPPORT=1 \
+"
 
 DESCRIPTION += "- IPv6 support\nThis version can connect to servers using IPv6 and/or IPv4."
 
