@@ -52,7 +52,7 @@ DEPENDS = "\
     ${@bb.utils.contains('MACHINE_FEATURES', 'blindscan-dvbc', 'virtual/blindscan-dvbc' , '', d)} \
     ${@bb.utils.contains('MACHINE_FEATURES', 'blindscan-dvbs', 'virtual/blindscan-dvbs' , '', d)} \
     ${@bb.utils.contains('MACHINE_FEATURES', 'transcoding', 'virtual/transtreamproxy' , '', d)} \
-    python-dnspython python-beautifulsoup python-lxml python-simplejson python-pyamf python-icalendar python-pyusb \
+    python-dnspython python-beautifulsoup4 python-lxml python-simplejson python-pyamf python-icalendar python-pyusb \
     djmount \
     librtmp \
     minidlna \
@@ -108,7 +108,7 @@ DESCRIPTION_enigma2-plugin-systemplugins-transcodingsetup = "Setup transcoding o
 RDEPENDS_enigma2-plugin-systemplugins-transcodingsetup = "virtual/transtreamproxy"
 DESCRIPTION_enigma2-plugin-systemplugins-multitranscodingsetup = "Setup multitranscoding"
 DESCRIPTION_enigma2-plugin-systemplugins-micomupgrade = "micomupgrade"
-RDEPENDS_enigma2-plugin-extensions-ondemand = "python-dnspython python-beautifulsoup python-lxml python-simplejson python-pyamf"
+RDEPENDS_enigma2-plugin-extensions-ondemand = "python-dnspython python-beautifulsoup4 python-lxml python-simplejson python-pyamf"
 DESCRIPTION_enigma2-plugin-extensions-ondemand = "Watch on demand TV."
 DESCRIPTION_enigma2-plugin-extensions-fempa = "Norwegian P4 FEM PAA radio show player."
 DESCRIPTION_enigma2-plugin-extensions-lcd4linux = "Web/DPF/Samsung LCD Ansteuerung"

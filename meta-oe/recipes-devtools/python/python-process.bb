@@ -26,6 +26,6 @@ do_compile() {
 
 do_install() {
     install -d ${D}${PYTHON_SITEPACKAGES_DIR}
-    install -m 644 ${S}/process.py ${D}${PYTHON_SITEPACKAGES_DIR}/    
-    install -m 644 ${S}/process.pyo ${D}${PYTHON_SITEPACKAGES_DIR}/    
+    install -m 644 ${S}/process.py ${D}${PYTHON_SITEPACKAGES_DIR}/
+    install -m 644 ${S}/process.pyo ${D}${PYTHON_SITEPACKAGES_DIR}/
 }

@@ -1,2 +1,3 @@
-DEPENDS += " python-setuptools-native"
+DEPENDS += "python-setuptools-native"
+
 include python-package-split.inc
