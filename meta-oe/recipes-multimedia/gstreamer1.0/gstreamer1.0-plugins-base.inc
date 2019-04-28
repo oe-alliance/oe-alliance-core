@@ -10,7 +10,7 @@ LICENSE = "GPLv2+ & LGPLv2+"
 
 DEPENDS += "iso-codes util-linux zlib"
 
-inherit gettext
+inherit gettext gobject-introspection
 
 PACKAGES_DYNAMIC =+ "^libgst.*"
 
