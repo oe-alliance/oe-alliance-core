@@ -2,7 +2,7 @@ require gstreamer1.0-plugins.inc
 
 LICENSE = "GPLv2+ & LGPLv2+ & LGPLv2.1+"
 
-DEPENDS += "gstreamer1.0-plugins-base libpng jpeg libdca"
+DEPENDS += "gstreamer1.0-plugins-base libpng libdca"
 
 inherit gettext bluetooth gobject-introspection
 
