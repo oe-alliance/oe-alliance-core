@@ -22,6 +22,7 @@ SRC_URI = " \
     file://workaround-to-build-gst-libav-for-i586-with-gcc.patch \
     file://mips64_cpu_detection.patch \
     file://0001-configure-check-for-armv7ve-variant.patch \
+    file://0001-fix-host-contamination.patch \
  "
 
 GST_VERSION_FULL ="1.16.0"
