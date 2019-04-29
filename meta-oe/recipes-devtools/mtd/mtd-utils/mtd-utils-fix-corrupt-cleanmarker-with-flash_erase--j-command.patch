@@ -1,18 +1,20 @@
+From dd5fe850fe7e3a750bdb5d8827dfd6721a9c8fd9 Mon Sep 17 00:00:00 2001
+From: Liu Shuo <b35362@freescale.com>
+Date: Sun, 7 Aug 2011 22:16:43 +0000
+Subject: [PATCH] mtd-utils: fix corrupt cleanmarker with flash_erase -j
+ command
+
 Upstream-Status: Pending
 From patchwork Mon Aug  8 08:16:43 2011
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Subject: mtd-utils: fix corrupt cleanmarker with flash_erase -j command
-Date: Sun, 07 Aug 2011 22:16:43 -0000
 From: b35362@freescale.com
 X-Patchwork-Id: 108873
 Message-Id: <1312791403-13473-1-git-send-email-b35362@freescale.com>
 To: <dwmw2@infradead.org>
 Cc: Liu Shuo <b35362@freescale.com>, Artem.Bityutskiy@nokia.com,
  Li Yang <leoli@freescale.com>, linux-mtd@lists.infradead.org
-
-From: Liu Shuo <b35362@freescale.com>
 
 Flash_erase -j should fill discrete freeoob areas with required bytes
 of JFFS2 cleanmarker in jffs2_check_nand_cleanmarker(). Not just fill
@@ -41,17 +43,14 @@ Updated for the new version
 Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
 
 ---
-v2 : get length of availble freeoob bytes from oobinfo information,
-      not use the ioctl ECCGETLAYOUT which is being deprecated.
+ misc-utils/flash_erase.c | 46 ++++++++++++++++++++++++++++++++++------
+ 1 file changed, 39 insertions(+), 7 deletions(-)
 
- flash_erase.c |   46 +++++++++++++++++++++++++++++++++++++++-------
- 1 files changed, 39 insertions(+), 7 deletions(-)
-
-diff --git a/flash_erase.c b/flash_erase.c
-index 933373a..4b9d84b 100644
+diff --git a/misc-utils/flash_erase.c b/misc-utils/flash_erase.c
+index 2bca78d..210ce79 100644
 --- a/misc-utils/flash_erase.c
 +++ b/misc-utils/flash_erase.c
-@@ -99,6 +99,7 @@ int main(int argc, char *argv[])
+@@ -98,6 +98,7 @@ int main(int argc, char *argv[])
  	bool isNAND;
  	int error = 0;
  	off_t offset = 0;
@@ -59,7 +58,7 @@ index 933373a..4b9d84b 100644
  
  	/*
  	 * Process user arguments
-@@ -201,15 +202,43 @@ int main(int argc, char *argv[])
+@@ -196,15 +197,43 @@ int main(int argc, char *argv[])
  			if (ioctl(fd, MEMGETOOBSEL, &oobinfo) != 0)
  				return sys_errmsg("%s: unable to get NAND oobinfo", mtd_device);
  
@@ -108,7 +107,7 @@ index 933373a..4b9d84b 100644
  			} else {
  				/* Legacy mode */
  				switch (mtd.oob_size) {
-@@ -227,7 +256,6 @@ int main(int argc, char *argv[])
+@@ -222,7 +251,6 @@ int main(int argc, char *argv[])
  						break;
  				}
  			}
@@ -116,7 +115,7 @@ index 933373a..4b9d84b 100644
  		}
  		cleanmarker.hdr_crc = cpu_to_je32(mtd_crc32(0, &cleanmarker, sizeof(cleanmarker) - 4));
  	}
-@@ -276,7 +304,8 @@ int main(int argc, char *argv[])
+@@ -271,7 +299,8 @@ int main(int argc, char *argv[])
  
  		/* write cleanmarker */
  		if (isNAND) {
@@ -126,7 +125,7 @@ index 933373a..4b9d84b 100644
  				sys_errmsg("%s: MTD writeoob failure", mtd_device);
  				continue;
  			}
-@@ -291,5 +320,8 @@ int main(int argc, char *argv[])
+@@ -286,5 +315,8 @@ int main(int argc, char *argv[])
  	show_progress(&mtd, offset, eb, eb_start, eb_cnt);
  	bareverbose(!quiet, "\n");
  
