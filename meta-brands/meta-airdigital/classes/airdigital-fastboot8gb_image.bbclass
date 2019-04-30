@@ -3,6 +3,8 @@ inherit image_types
 IMAGE_TYPEDEP_zgemmafastboot8gb = "ext4 tar"
 BOOTOPTIONS_PARTITION_SIZE = "2048"
 
+do_image_zgemmafastboot8gb[vardepsexclude] = "DATETIME"
+
 do_image_zgemmafastboot8gb[depends] = " \
 	e2fsprogs-native:do_populate_sysroot \
 	dosfstools-native:do_populate_sysroot \
