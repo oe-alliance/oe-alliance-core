@@ -3,6 +3,8 @@ inherit image_types
 IMAGE_TYPEDEP_hdfastboot8gb = "ext4 tar"
 BOOTOPTIONS_PARTITION_SIZE = "2048"
 
+do_image_hdfastboot8gb[vardepsexclude] = "DATETIME"
+
 do_image_hdfastboot8gb[depends] = " \
 	e2fsprogs-native:do_populate_sysroot \
 	android-tools-native:do_populate_sysroot \
