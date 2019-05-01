@@ -1,4 +1,4 @@
-IMAGE_CLASSES += "ceryonemmc_image_multi"
+IMAGE_CLASSES += "ceryonemmc_image_multiboot"
 
 MACHINE_FEATURES += "qthbbtv qtstalker"
 DISTRO_FEATURES_remove = "directfb gtk-directfb"

@@ -1,10 +1,10 @@
 #IMAGE_CLASSES += "hdemmc_image_single"
-IMAGE_CLASSES += "hdemmc_image_multi"
+IMAGE_CLASSES += "hdemmc_image_multiboot"
 
 MACHINE_FEATURES += "qthbbtv qtstalker"
 DISTRO_FEATURES_remove = "directfb gtk-directfb"
 
-IMAGE_FSTYPES += "hdemmc"
+IMAGE_FSTYPES += "hdemmc tar"
 IMAGE_ROOTFS_SIZE ?= "589824"
 
 TARGET_ARCH = "arm"
