@@ -45,6 +45,7 @@ PACKAGES += "${PN}-bash-completion"
 FILES_${PN} += "${libdir}/gstreamer-1.0/*.so ${libdir}/gstreamer-1.0/gst-*"
 FILES_${PN}-dev += "${libdir}/gstreamer-1.0/*.la ${libdir}/gstreamer-1.0/*.a ${libdir}/gstreamer-1.0/include"
 FILES_${PN}-bash-completion += "${datadir}/bash-completion/completions/ ${datadir}/bash-completion/helpers/gst*"
+FILES_${PN}-dbg += "${datadir}/gdb ${datadir}/gstreamer-1.0"
 
 RRECOMMENDS_${PN}_qemux86 += "kernel-module-snd-ens1370 kernel-module-snd-rawmidi"
 RRECOMMENDS_${PN}_qemux86-64 += "kernel-module-snd-ens1370 kernel-module-snd-rawmidi"
