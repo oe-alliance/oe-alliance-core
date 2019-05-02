@@ -1,0 +1,25 @@
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides:           resize2fs rootfs
+# Required-Start:     $local_fs
+# Required-Stop:      $local_fs
+# Default-Start:      S
+# Default-Stop:
+# Short-Description:  Resizes once rootfs to full partition size
+### END INIT INFO
+
+if [ ! -f "/.resize-rootfs" ]; then
+  if grep -q linuxrootfs1 /proc/cmdline; then
+    echo "Resizing rootfs, Do not unplug power!..."
+    resize2fs /dev/block/by-name/linuxrootfs
+    touch "/.resize-rootfs"
+  fi
+fi
+if [ ! -f "/.resize-userdata" ]; then
+  if [ -f "/dev/block/by-name/userdata" ]; then
+    echo "Resizing rootfs, Do not unplug power!..."
+    resize2fs /dev/block/by-name/userdata
+    touch "/.resize-userdata"
+  fi
+fi
+: exit 0

@@ -13,14 +13,14 @@ SRC_URI[arm.sha256sum] = "67a3ac98727595a399d5c399d3b66a7fadbe8136ac517e08decba5
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR_prepend = "oea4.8"
+MACHINE_KERNEL_PR_prepend = "r1"
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
 # package names instead, to allow only one kernel to be installed.
-PKG_${KERNEL_PACKAGE_NAME}-base = "kernel-base"
-PKG_${KERNEL_PACKAGE_NAME}-image = "kernel-image"
-RPROVIDES_${KERNEL_PACKAGE_NAME}-base = "kernel-${KERNEL_VERSION}"
+PKG_kernel-base = "kernel-base"
+PKG_kernel-image = "kernel-image"
+RPROVIDES_kernel-base = "kernel-${KERNEL_VERSION}"
 RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 
 SRC_URI += "http://source.mynonpublic.com/gfutures/linux-${PV}-${ARCH}.tar.gz;name=${ARCH} \
@@ -38,7 +38,7 @@ SRC_URI += "http://source.mynonpublic.com/gfutures/linux-${PV}-${ARCH}.tar.gz;na
     "
 
 SRC_URI_append_arm = " \
-    file://findkerneldevice.py \
+    file://findkerneldevice.sh \
     file://initramfs-subdirboot.cpio.gz;unpack=0 \
     file://reserve_dvb_adapter_0.patch \
     file://blacklist_mmc0.patch \
@@ -49,28 +49,21 @@ B = "${WORKDIR}/build"
 
 export OS = "Linux"
 KERNEL_OBJECT_SUFFIX = "ko"
+KERNEL_IMAGEDEST = "tmp"
 
 # Linux MIPS Models
 
-KERNEL_OUTPUT_mips = "vmlinux"
-KERNEL_IMAGETYPE_mips = "vmlinux"
-KERNEL_IMAGEDEST_mips = "tmp"
+KERNEL_OUTPUT_mips = "vmlinux.gz"
+KERNEL_OUTPUT_DIR_mips = "."
+KERNEL_IMAGETYPE_mips = "vmlinux.gz"
 
 KERNEL_EXTRA_ARGS = "EXTRA_CFLAGS=-Wno-attribute-alias"
 
-FILES_${KERNEL_PACKAGE_NAME}-image_mips = "${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}*"
-
-kernel_do_install_append_mips() {
-	${STRIP} ${D}/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}
-	gzip -9c ${D}/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION} > ${D}/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz
-	rm ${D}/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}
-}
-
 pkg_postinst_kernel-image_mips () {
 	if [ "x$D" == "x" ]; then
-		if [ -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz ] ; then
+		if [ -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE} ] ; then
 			flash_erase /dev/${MTD_KERNEL} 0 0
-			nandwrite -p /dev/${MTD_KERNEL} /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz
+			nandwrite -p /dev/${MTD_KERNEL} /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}
 		fi
 	fi
 	true
@@ -80,9 +73,8 @@ pkg_postinst_kernel-image_mips () {
 
 KERNEL_OUTPUT_arm = "arch/${ARCH}/boot/${KERNEL_IMAGETYPE}"
 KERNEL_IMAGETYPE_arm = "zImage"
-KERNEL_IMAGEDEST_arm = "tmp"
 
-FILES_${KERNEL_PACKAGE_NAME}-image_arm = "/${KERNEL_IMAGEDEST}/zImage /${KERNEL_IMAGEDEST}/findkerneldevice.py"
+FILES_kernel-image_arm = "/${KERNEL_IMAGEDEST}/findkerneldevice.sh"
 
 kernel_do_configure_prepend_arm() {
     install -d ${B}/usr
@@ -91,14 +83,13 @@ kernel_do_configure_prepend_arm() {
 
 kernel_do_install_append_arm() {
         install -d ${D}/${KERNEL_IMAGEDEST}
-        install -m 0755 ${KERNEL_OUTPUT} ${D}/${KERNEL_IMAGEDEST}
-        install -m 0755 ${WORKDIR}/findkerneldevice.py ${D}/${KERNEL_IMAGEDEST}
+        install -m 0755 ${WORKDIR}/findkerneldevice.sh ${D}/${KERNEL_IMAGEDEST}
 }
 
 pkg_postinst_kernel-image_arm () {
     if [ "x$D" == "x" ]; then
         if [ -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE} ] ; then
-            python /${KERNEL_IMAGEDEST}/findkerneldevice.py
+            /${KERNEL_IMAGEDEST}/./findkerneldevice.sh
             dd if=/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE} of=/dev/kernel
         fi
     fi
@@ -107,6 +98,3 @@ pkg_postinst_kernel-image_arm () {
 
 do_rm_work() {
 }
-
-# extra tasks
-addtask kernel_link_images after do_compile before do_install
