@@ -16,9 +16,9 @@ IMAGE_CMD_zgemmafastboot8gb () {
 	mkfs.msdos -S 512 ${WORKDIR}/bootoptions.img
 	echo "bootcmd=setenv bootargs \$(bootargs) \$(bootargs_common); mmc read 0 0x1000000 0x3BD000 0x8000; bootm 0x1000000; run bootcmd_fallback" > ${WORKDIR}/STARTUP
 	echo "bootargs=root=/dev/mmcblk0p23 rootsubdir=linuxrootfs1 rootfstype=ext4 kernel=/dev/mmcblk0p19" >> ${WORKDIR}/STARTUP
-	echo "bootcmd=setenv vfd_msg andr;setenv bootargs \$(bootargs) \$(bootargs_common); mmc read 0 0x3F000000 0x30000 0x4000; bootm 0x3F000000; mmc read 0 0x1FFFFC0 0x26000 0xA000; bootm 0x1FFFFC0; run bootcmd_fallback" > ${WORKDIR}/STARTUP_ANDROID
+	echo "bootcmd=setenv vfd_msg andr;setenv bootargs \$(bootargs) \$(bootargs_common); run bootcmd_android; run bootcmd_fallback" > ${WORKDIR}/STARTUP_ANDROID
 	echo "bootargs=androidboot.selinux=enforcing androidboot.serialno=0123456789" >> ${WORKDIR}/STARTUP_ANDROID
-	echo "bootcmd=setenv vfd_msg andr;setenv bootargs \$(bootargs) \$(bootargs_common); \$(bootcmd_android)" > ${WORKDIR}/STARTUP_ANDROID_DISABLE_LINUXSE
+	echo "bootcmd=setenv vfd_msg andr;setenv bootargs \$(bootargs) \$(bootargs_common); run bootcmd_android; run bootcmd_fallback" > ${WORKDIR}/STARTUP_ANDROID_DISABLE_LINUXSE
 	echo "bootargs=androidboot.selinux=disable androidboot.serialno=0123456789" >> ${WORKDIR}/STARTUP_ANDROID_DISABLE_LINUXSE
 	echo "bootcmd=setenv bootargs \$(bootargs) \$(bootargs_common); mmc read 0 0x1000000 0x3BD000 0x8000; bootm 0x1000000; run bootcmd_fallback" > ${WORKDIR}/STARTUP_LINUX_1
 	echo "bootargs=root=/dev/mmcblk0p23 rootsubdir=linuxrootfs1 rootfstype=ext4 kernel=/dev/mmcblk0p19" >> ${WORKDIR}/STARTUP_LINUX_1
@@ -41,15 +41,15 @@ IMAGE_CMD_zgemmafastboot8gb () {
 	echo "#netmask 255.255.255.0" >> ${WORKDIR}/bootmenu.conf
 	echo "#gateway 192.168.1.1" >> ${WORKDIR}/bootmenu.conf
 	echo "#dns 192.168.1.1" >> ${WORKDIR}/bootmenu.conf
-    mcopy -i ${WORKDIR}/bootoptions.img -v ${WORKDIR}/STARTUP ::
-    mcopy -i ${WORKDIR}/bootoptions.img -v ${WORKDIR}/STARTUP_ONCE ::
-    mcopy -i ${WORKDIR}/bootoptions.img -v ${WORKDIR}/STARTUP_ANDROID ::
-    mcopy -i ${WORKDIR}/bootoptions.img -v ${WORKDIR}/STARTUP_ANDROID_DISABLE_LINUXSE ::
-    mcopy -i ${WORKDIR}/bootoptions.img -v ${WORKDIR}/STARTUP_LINUX_1 ::
-    mcopy -i ${WORKDIR}/bootoptions.img -v ${WORKDIR}/STARTUP_LINUX_2 ::
-    mcopy -i ${WORKDIR}/bootoptions.img -v ${WORKDIR}/STARTUP_LINUX_3 ::
-    mcopy -i ${WORKDIR}/bootoptions.img -v ${WORKDIR}/STARTUP_LINUX_4 ::
-    mcopy -i ${WORKDIR}/bootoptions.img -v ${WORKDIR}/STARTUP_RECOVERY ::
-    mcopy -i ${WORKDIR}/bootoptions.img -v ${WORKDIR}/bootmenu.conf ::
-    cp ${WORKDIR}/bootoptions.img ${IMGDEPLOYDIR}/bootoptions.img
+	mcopy -i ${WORKDIR}/bootoptions.img -v ${WORKDIR}/STARTUP ::
+	mcopy -i ${WORKDIR}/bootoptions.img -v ${WORKDIR}/STARTUP_ONCE ::
+	mcopy -i ${WORKDIR}/bootoptions.img -v ${WORKDIR}/STARTUP_ANDROID ::
+	mcopy -i ${WORKDIR}/bootoptions.img -v ${WORKDIR}/STARTUP_ANDROID_DISABLE_LINUXSE ::
+	mcopy -i ${WORKDIR}/bootoptions.img -v ${WORKDIR}/STARTUP_LINUX_1 ::
+	mcopy -i ${WORKDIR}/bootoptions.img -v ${WORKDIR}/STARTUP_LINUX_2 ::
+	mcopy -i ${WORKDIR}/bootoptions.img -v ${WORKDIR}/STARTUP_LINUX_3 ::
+	mcopy -i ${WORKDIR}/bootoptions.img -v ${WORKDIR}/STARTUP_LINUX_4 ::
+	mcopy -i ${WORKDIR}/bootoptions.img -v ${WORKDIR}/STARTUP_RECOVERY ::
+	mcopy -i ${WORKDIR}/bootoptions.img -v ${WORKDIR}/bootmenu.conf ::
+	cp ${WORKDIR}/bootoptions.img ${IMGDEPLOYDIR}/bootoptions.img
 }

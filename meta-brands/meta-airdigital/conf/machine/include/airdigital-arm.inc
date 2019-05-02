@@ -1,5 +1,5 @@
 #IMAGE_CLASSES += "airdigitalemmc_image_single"
-IMAGE_CLASSES += "airdigitalemmc_image_multi"
+IMAGE_CLASSES += "airdigital-emmc_image_multiboot"
 
 MACHINE_FEATURES += "qthbbtv qtstalker linuxwifi"
 

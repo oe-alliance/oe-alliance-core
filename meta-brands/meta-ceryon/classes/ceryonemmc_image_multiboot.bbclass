@@ -2,7 +2,7 @@ inherit image_types
 
 IMAGE_ROOTFS = "${WORKDIR}/rootfs/linuxrootfs1"
 
-do_image_airdigitalemmc[depends] = " \
+do_image_ceryonemmc[depends] = " \
 	e2fsprogs-native:do_populate_sysroot \
 	parted-native:do_populate_sysroot \
 	dosfstools-native:do_populate_sysroot \
@@ -26,7 +26,7 @@ THRID_KERNEL_PARTITION_OFFSET = "$(expr ${SECOND_KERNEL_PARTITION_OFFSET} \+ ${K
 FOURTH_KERNEL_PARTITION_OFFSET = "$(expr ${THRID_KERNEL_PARTITION_OFFSET} \+ ${KERNEL_PARTITION_SIZE})"
 MULTI_ROOTFS_PARTITION_OFFSET = "$(expr ${FOURTH_KERNEL_PARTITION_OFFSET} \+ ${KERNEL_PARTITION_SIZE})"
 
-IMAGE_CMD_airdigitalemmc () {
+IMAGE_CMD_ceryonemmc () {
     eval local COUNT=\"0\"
     eval local MIN_COUNT=\"60\"
     if [ $ROOTFS_SIZE -lt $MIN_COUNT ]; then
@@ -45,11 +45,11 @@ IMAGE_CMD_airdigitalemmc () {
     parted -s ${EMMC_IMAGE} unit KiB mkpart userdata ext4 ${MULTI_ROOTFS_PARTITION_OFFSET} 100%
     dd if=/dev/zero of=${WORKDIR}/boot.img bs=${BLOCK_SIZE} count=$(expr ${BOOT_PARTITION_SIZE} \* ${BLOCK_SECTOR})
     mkfs.msdos -S 512 ${WORKDIR}/boot.img
-    echo "boot emmcflash0.linuxkernel 'brcm_cma=440M@328M brcm_cma=192M@768M root=/dev/mmcblk0p3 rootsubdir=linuxrootfs1 kernel=/dev/mmcblk0p2 rw rootwait ${MACHINE}_4.boxmode=1'" > ${WORKDIR}/STARTUP
-    echo "boot emmcflash0.linuxkernel 'brcm_cma=440M@328M brcm_cma=192M@768M root=/dev/mmcblk0p3 rootsubdir=linuxrootfs1 kernel=/dev/mmcblk0p2 rw rootwait ${MACHINE}_4.boxmode=1'" > ${WORKDIR}/STARTUP_1
-    echo "boot emmcflash0.linuxkerne2 'brcm_cma=440M@328M brcm_cma=192M@768M root=/dev/mmcblk0p7 rootsubdir=linuxrootfs2 kernel=/dev/mmcblk0p4 rw rootwait ${MACHINE}_4.boxmode=1'" > ${WORKDIR}/STARTUP_2
-    echo "boot emmcflash0.linuxkerne3 'brcm_cma=440M@328M brcm_cma=192M@768M root=/dev/mmcblk0p7 rootsubdir=linuxrootfs3 kernel=/dev/mmcblk0p5 rw rootwait ${MACHINE}_4.boxmode=1'" > ${WORKDIR}/STARTUP_3
-    echo "boot emmcflash0.linuxkerne4 'brcm_cma=440M@328M brcm_cma=192M@768M root=/dev/mmcblk0p7 rootsubdir=linuxrootfs4 kernel=/dev/mmcblk0p6 rw rootwait ${MACHINE}_4.boxmode=1'" > ${WORKDIR}/STARTUP_4
+    echo "boot emmcflash0.linuxkernel 'brcm_cma=504M@264M brcm_cma=192M@768M brcm_cma=1024M@2048M root=/dev/mmcblk0p3 rootsubdir=linuxrootfs1 kernel=/dev/mmcblk0p2 rw rootwait ${MACHINE}_4.boxmode=5'" > ${WORKDIR}/STARTUP
+    echo "boot emmcflash0.linuxkernel 'brcm_cma=504M@264M brcm_cma=192M@768M brcm_cma=1024M@2048M root=/dev/mmcblk0p3 rootsubdir=linuxrootfs1 kernel=/dev/mmcblk0p2 rw rootwait ${MACHINE}_4.boxmode=5'" > ${WORKDIR}/STARTUP_1
+    echo "boot emmcflash0.linuxkerne2 'brcm_cma=504M@264M brcm_cma=192M@768M brcm_cma=1024M@2048M root=/dev/mmcblk0p7 rootsubdir=linuxrootfs2 kernel=/dev/mmcblk0p4 rw rootwait ${MACHINE}_4.boxmode=5'" > ${WORKDIR}/STARTUP_2
+    echo "boot emmcflash0.linuxkerne3 'brcm_cma=504M@264M brcm_cma=192M@768M brcm_cma=1024M@2048M root=/dev/mmcblk0p7 rootsubdir=linuxrootfs3 kernel=/dev/mmcblk0p5 rw rootwait ${MACHINE}_4.boxmode=5'" > ${WORKDIR}/STARTUP_3
+    echo "boot emmcflash0.linuxkerne4 'brcm_cma=504M@264M brcm_cma=192M@768M brcm_cma=1024M@2048M root=/dev/mmcblk0p7 rootsubdir=linuxrootfs4 kernel=/dev/mmcblk0p6 rw rootwait ${MACHINE}_4.boxmode=5'" > ${WORKDIR}/STARTUP_4
     mcopy -i ${WORKDIR}/boot.img -v ${WORKDIR}/STARTUP ::
     mcopy -i ${WORKDIR}/boot.img -v ${WORKDIR}/STARTUP_1 ::
     mcopy -i ${WORKDIR}/boot.img -v ${WORKDIR}/STARTUP_2 ::
