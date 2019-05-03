@@ -22,7 +22,7 @@ RDEPENDS_${PN} = "\
     ${@bb.utils.contains("MACHINE_FEATURES", "gbwol", "gigablue-ethwol", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "gbsoftwol", "gigablue-ethsoftwol", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "no-nmap", "" , "nmap", d)} \
-    ${@bb.utils.contains("MACHINE_FEATURES", "emmc", "dosfstools mtools p7zip e2fsprogs-resize2fs partitions-by-name" , "", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "emmc", "dosfstools mtools e2fsprogs-resize2fs partitions-by-name" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "fastboot", "dosfstools mtools android-tools" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "vubluetooth", "bluetoothsetup-${MACHINE} enigma2-plugin-extensions-witaispeechtotext", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "gbbluetooth", "bluetoothsetup-${MACHINE}", "", d)} \
@@ -48,6 +48,7 @@ RDEPENDS_${PN} = "\
     opkg \
     rc-local \
     sdparm \
+    p7zip \
     packagegroup-base \
     packagegroup-core-boot \
     tzdata tzdata-europe tzdata-australia tzdata-asia tzdata-pacific tzdata-africa tzdata-americas \
