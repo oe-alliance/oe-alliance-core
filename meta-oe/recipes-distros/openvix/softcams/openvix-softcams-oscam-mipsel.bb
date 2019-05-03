@@ -8,13 +8,10 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 FILESEXTRAPATHS_prepend := "${THISDIR}/openvix-softcams-oscam:"
 
 PV = "1.20+svn${SRCPV}"
-SRCREV = "9620"
-SRC_URI = "svn://www.streamboard.tv/svn/oscam;protocol=http;module=trunk;scmdata=keep;rev=${SRCREV} \
-            file://fix_glibc_major.patch \
-            file://export_build_flags.patch \
-"
+SRCREV = "11517"
+SRC_URI = "svn://www.streamboard.tv/svn/oscam;protocol=http;module=trunk;scmdata=keep;rev=${SRCREV}"
 
-PR = "r20"
+PR = "r1"
 
 PACKAGES = "enigma2-plugin-softcams-oscam"
 
