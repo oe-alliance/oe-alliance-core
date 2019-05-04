@@ -47,7 +47,7 @@ exit 0
 
 pkg_postrm_${PN}() {
 #!/bin/sh
-rm ${libdir}/lib/enigma2/python/Plugins/Extensions/GioppyGio/
+rm -r ${libdir}/enigma2/python/Plugins/Extensions/GioppyGio > /dev/null 2>&1
 echo "Plugin removed! You should restart enigma2 now!"
 exit 0
 }
