@@ -41,12 +41,6 @@ RDEPENDS_${PN}-telnetd += "${PN}"
 PROVIDES += "virtual/telnetd"
 RPROVIDES_${PN}-telnetd += "virtual/telnetd"
 
-cml1_do_configure() {
-    set -e
-    unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS
-    oe_runmake oldconfig
-}
-
 do_install_append() {
     if grep "CONFIG_FEATURE_TELNETD_STANDALONE=y" ${B}/.config; then
 	install -m 0755 ${WORKDIR}/telnetd ${D}${sysconfdir}/init.d/telnetd.${BPN}
