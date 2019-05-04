@@ -27,9 +27,9 @@ do_install() {
 }
 
 pkg_postinst_${PN}() {
-    ln -sf gstplayer ${bindir}/gstplayer_gst-1.0
+    ln -sf $D${bindir}/gstplayer $D${bindir}/gstplayer_gst-1.0
 }
 
 pkg_prerm_${PN}() {
-    rm -f ${bindir}/gstplayer_gst-1.0
+    rm -f $D${bindir}/gstplayer_gst-1.0
 }
