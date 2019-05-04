@@ -12,7 +12,7 @@ SRCREV = "${AUTOREV}"
 PV = "2.3+git${SRCPV}"
 PKGV = "2.3+git${GITPKGV}"
 VER ="2.3"
-PR = "r4"
+PR = "r5"
 
 SRC_URI="git://github.com/opendroid-Team/gioppygio-settings-and-picons.git"
 
