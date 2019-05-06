@@ -1,9 +1,10 @@
---- a/include/uapi/linux/fs.h	2016-12-11 20:17:54.000000000 +0100
-+++ b/include/uapi/linux/fs.h	2016-12-12 18:57:20.686857000 +0100
-@@ -151,18 +151,6 @@
- #define MS_MGC_MSK 0xffff0000
-
- /*
+--- a/include/uapi/linux/fs.h
++++ b/include/uapi/linux/fs.h
+@@ -106,18 +106,6 @@ struct inodes_stat_t {
+ 
+ #define NR_FILE  8192	/* this can well be larger on a larger system */
+ 
+-/*
 - * Structure for FS_IOC_FSGETXATTR[A] and FS_IOC_FSSETXATTR.
 - */
 -struct fsxattr {
@@ -15,7 +16,6 @@
 -	unsigned char	fsx_pad[8];
 -};
 -
--/*
+ /*
   * Flags for the fsx_xflags field
   */
- #define FS_XFLAG_REALTIME	0x00000001	/* data in realtime volume */
