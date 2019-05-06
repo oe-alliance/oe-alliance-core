@@ -1,6 +1,9 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
-# sh4 boxes require some headers from the kernel modules (for the frameb
+# sh4 boxes require some headers from the kernel modules (for the framebuffer and ioctls) which
+# are not shipped by the kernel headers. In order to avoid adding explicit sh4-conditional dependancies
+# to the driver package in several packages (just for a couple of generic headers) we add them here.
+# In this way, we also avoid unnecessary rebuilds of several stuff when drivers are updated.
 
 SRC_URI_append_sh4 = "\
     file://stmfb.h \
