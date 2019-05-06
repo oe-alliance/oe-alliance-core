@@ -1,6 +1,6 @@
---- a/libavformat/hls.c	2018-08-17 13:06:01.428702126 +0200
-+++ b/libavformat/hls.c	2018-08-17 13:06:15.077944569 +0200
-@@ -2062,8 +2062,10 @@
+--- a/libavformat/hls.c
++++ b/libavformat/hls.c
+@@ -2074,8 +2074,10 @@ static int hls_read_packet(AVFormatContext *s, AVPacket *pkt)
      HLSContext *c = s->priv_data;
      int ret, i, minplaylist = -1;
  

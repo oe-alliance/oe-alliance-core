@@ -1,4 +1,4 @@
-From 82839c3c0371ca2a1643a99d7d01f5bc1c850b28 Mon Sep 17 00:00:00 2001
+From 98be9bb1ac91e94b54b49c3fa461c37f4346e242 Mon Sep 17 00:00:00 2001
 From: David Oberhollenzer <david.oberhollenzer@sigma-star.at>
 Date: Thu, 2 Mar 2017 11:40:36 +0100
 Subject: [PATCH] Replace rpmatch() usage with checking first character of line
@@ -12,15 +12,16 @@ Upstream-Status: Backport
 
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
 Signed-off-by: David Oberhollenzer <david.oberhollenzer@sigma-star.at>
+
 ---
  include/common.h | 25 ++++++-------------------
  1 file changed, 6 insertions(+), 19 deletions(-)
 
 diff --git a/include/common.h b/include/common.h
-index d0c706d..d609257 100644
+index 2812f49..24abfd5 100644
 --- a/include/common.h
 +++ b/include/common.h
-@@ -129,21 +129,6 @@ extern "C" {
+@@ -125,21 +125,6 @@ extern "C" {
  	fprintf(stderr, "%s: warning!: " fmt "\n", PROGRAM_NAME, ##__VA_ARGS__); \
  } while(0)
  
@@ -42,7 +43,7 @@ index d0c706d..d609257 100644
  /**
   * prompt the user for confirmation
   */
-@@ -164,10 +149,12 @@ static inline bool prompt(const char *msg, bool def)
+@@ -160,10 +145,12 @@ static inline bool prompt(const char *msg, bool def)
  		}
  
  		if (strcmp("\n", line) != 0) {
@@ -59,5 +60,3 @@ index d0c706d..d609257 100644
  				puts("unknown response; please try again");
  				continue;
  			}
--- 
-2.6.1

@@ -1,6 +1,6 @@
---- a/libavformat/hls.c	2018-08-17 13:16:57.721007600 +0200
-+++ b/libavformat/hls.c	2018-08-17 13:33:57.530170057 +0200
-@@ -208,6 +208,8 @@
+--- a/libavformat/hls.c
++++ b/libavformat/hls.c
+@@ -208,6 +208,8 @@ typedef struct HLSContext {
      int max_reload;
      int http_persistent;
      int http_multiple;
@@ -9,7 +9,7 @@
      AVIOContext *playlist_pb;
  } HLSContext;
  
-@@ -1198,8 +1200,16 @@
+@@ -1198,8 +1200,16 @@ static int open_input(HLSContext *c, struct playlist *pls, struct segment *seg,
      } else if (seg->key_type == KEY_AES_128) {
          char iv[33], key[33], url[MAX_URL_SIZE];
          if (strcmp(seg->key, pls->key_url)) {
@@ -27,7 +27,7 @@
                  ret = avio_read(pb, pls->key, sizeof(pls->key));
                  if (ret != sizeof(pls->key)) {
                      av_log(NULL, AV_LOG_ERROR, "Unable to read key file %s\n",
-@@ -1211,6 +1221,8 @@
+@@ -1211,6 +1221,8 @@ static int open_input(HLSContext *c, struct playlist *pls, struct segment *seg,
                         seg->key);
              }
              av_strlcpy(pls->key_url, seg->key, sizeof(pls->key_url));
@@ -36,7 +36,7 @@
          }
          ff_data_to_hex(iv, seg->iv, sizeof(seg->iv), 0);
          ff_data_to_hex(key, pls->key, sizeof(pls->key), 0);
-@@ -2315,6 +2327,8 @@
+@@ -2313,6 +2325,8 @@ static const AVOption hls_options[] = {
          OFFSET(http_persistent), AV_OPT_TYPE_BOOL, {.i64 = 1}, 0, 1, FLAGS },
      {"http_multiple", "Use multiple HTTP connections for fetching segments",
          OFFSET(http_multiple), AV_OPT_TYPE_BOOL, {.i64 = -1}, -1, 1, FLAGS},
