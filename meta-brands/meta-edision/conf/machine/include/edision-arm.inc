@@ -1,6 +1,6 @@
 
-PREFERRED_VERSION_linux-edision = "5.0"
-PREFERRED_VERSION_linux-libc-headers = "5.0"
+PREFERRED_VERSION_linux-edision = "5.1"
+PREFERRED_VERSION_linux-libc-headers = "5.1"
 
 KERNEL_MODULE_AUTOLOAD += "hci_uart"
 KERNEL_MODULE_AUTOLOAD += "wlan"

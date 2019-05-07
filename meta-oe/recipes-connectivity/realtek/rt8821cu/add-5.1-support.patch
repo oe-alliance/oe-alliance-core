@@ -1,0 +1,49 @@
+diff --git a/os_dep/osdep_service.c b/os_dep/osdep_service.c
+index 83c7640f1550..198c52d34aa8 100755
+--- a/os_dep/osdep_service.c
++++ b/os_dep/osdep_service.c
+@@ -2201,7 +2201,13 @@ static int isFileReadable(const char *path, u32 *sz)
+ 		ret = PTR_ERR(fp);
+ 	else {
+ 		oldfs = get_fs();
+-		set_fs(get_ds());
++		set_fs(
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(5,1,0))
++			KERNEL_DS
++#else
++			get_ds()
++#endif
++			);
+ 
+ 		if (1 != readFile(fp, &buf, 1))
+ 			ret = PTR_ERR(fp);
+@@ -2239,7 +2245,13 @@ static int retriveFromFile(const char *path, u8 *buf, u32 sz)
+ 			RTW_INFO("%s openFile path:%s fp=%p\n", __FUNCTION__, path , fp);
+ 
+ 			oldfs = get_fs();
+-			set_fs(get_ds());
++			set_fs(
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(5,1,0))
++			KERNEL_DS
++#else
++			get_ds()
++#endif
++			);
+ 			ret = readFile(fp, buf, sz);
+ 			set_fs(oldfs);
+ 			closeFile(fp);
+@@ -2274,7 +2286,13 @@ static int storeToFile(const char *path, u8 *buf, u32 sz)
+ 			RTW_INFO("%s openFile path:%s fp=%p\n", __FUNCTION__, path , fp);
+ 
+ 			oldfs = get_fs();
+-			set_fs(get_ds());
++			set_fs(
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(5,1,0))
++			KERNEL_DS
++#else
++			get_ds()
++#endif
++			);
+ 			ret = writeFile(fp, buf, sz);
+ 			set_fs(oldfs);
+ 			closeFile(fp);
