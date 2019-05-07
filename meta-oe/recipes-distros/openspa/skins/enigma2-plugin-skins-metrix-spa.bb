@@ -15,7 +15,7 @@ PKGV = "2.1+git${GITPKGV}"
 VER ="2.1"
 PR = "r0"
 
-PACKAGES =+ "enigma2-plugin-skins-metrix-spa-fhd-icons enigma2-plugin-skins-metrix-spa-uhd-icons ${PN}-src"
+PACKAGES =+ "enigma2-plugin-skins-metrix-spa-fhd-icons enigma2-plugin-skins-metrix-spa-uhd-icons"
 PROVIDES =+ "enigma2-plugin-skins-metrix-spa-fhd-icons enigma2-plugin-skins-metrix-spa-uhd-icons"
 RPROVIDES_enigma2-plugin-skins-metrix-spa-fhd-icons += "enigma2-plugin-skins-metrix-spa-fhd-icons"
 RPROVIDES_enigma2-plugin-skins-metrix-spa-uhd-icons += "enigma2-plugin-skins-metrix-spa-uhd-icons"
