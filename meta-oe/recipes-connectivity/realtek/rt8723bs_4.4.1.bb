@@ -19,6 +19,7 @@ SRC_URI = "https://github.com/anthonywong/rtl8723bs/archive/v4.4.1.tar.gz \
     file://rt8723bs-add-4.19-support.patch \
     file://rt8723bs-add-4.20-support.patch \
     file://rt8723bs-add-5.0-support.patch \
+    file://rt8723bs-add-5.1-support.patch \
     "
 
 SRC_URI_append_sh4 = "file://rt8723bs_sh4.patch;patch=1 \

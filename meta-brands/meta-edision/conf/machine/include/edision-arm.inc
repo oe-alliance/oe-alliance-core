@@ -1,5 +1,5 @@
 
-PREFERRED_VERSION_linux-edision = "5.0"
+PREFERRED_VERSION_linux-edision = "5.1"
 
 
 KERNEL_MODULE_AUTOLOAD += "hci_uart"
