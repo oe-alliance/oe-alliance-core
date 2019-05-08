@@ -1,4 +1,4 @@
-From 983ebb5577e64704bfeb0a2ccc8f2f2a8f9aa648 Mon Sep 17 00:00:00 2001
+From 301291bb99f729b59b0c15d98835efbb9f86f28b Mon Sep 17 00:00:00 2001
 From: Jaedon Shin <jaedon.shin@gmail.com>
 Date: Tue, 27 Nov 2018 14:21:30 +0900
 Subject: [PATCH] qcacld-2.0: Make driver compatiable with mainline kernel
@@ -23,12 +23,12 @@ Signed-off-by: Jaedon Shin <jaedon.shin@gmail.com>
  CORE/SERVICES/HTC/htc_internal.h              |  2 +-
  CORE/SERVICES/HTC/htc_send.c                  |  6 +++-
  CORE/SVC/src/logging/wlan_logging_sock_svc.c  | 11 +++++++
- CORE/VOSS/inc/vos_cnss.h                      |  7 +++++
+ CORE/VOSS/inc/vos_cnss.h                      | 15 ++++++++++
  CORE/VOSS/src/vos_packet.c                    | 11 +++++++
  CORE/VOSS/src/vos_timer.c                     | 24 ++++++++++++++-
- Kbuild                                        |  3 +-
+ Kbuild                                        |  5 ++--
  Makefile                                      |  6 ++++
- 23 files changed, 174 insertions(+), 34 deletions(-)
+ 23 files changed, 183 insertions(+), 35 deletions(-)
 
 diff --git a/CORE/CLD_TXRX/HTT/htt_rx.c b/CORE/CLD_TXRX/HTT/htt_rx.c
 index adbdeb759383..dc0659bb99b8 100644
@@ -116,7 +116,7 @@ index 986efea00ba7..d40683893d58 100644
  adf_nbuf_t
  ol_tx_non_std_ll(
 diff --git a/CORE/CLD_TXRX/TXRX/ol_tx_queue.c b/CORE/CLD_TXRX/TXRX/ol_tx_queue.c
-index 2158fc80f2e9..78ae875b87fd 100644
+index ece6da7ad106..504d48998df0 100644
 --- a/CORE/CLD_TXRX/TXRX/ol_tx_queue.c
 +++ b/CORE/CLD_TXRX/TXRX/ol_tx_queue.c
 @@ -1235,7 +1235,11 @@ ol_txrx_vdev_unpause(ol_txrx_vdev_handle vdev, u_int32_t reason)
@@ -131,7 +131,7 @@ index 2158fc80f2e9..78ae875b87fd 100644
              } else {
                  adf_os_spin_unlock_bh(&vdev->ll_pause.mutex);
              }
-@@ -1282,9 +1286,13 @@ u_int8_t ol_tx_pdev_is_target_empty(void)
+@@ -1284,9 +1288,13 @@ u_int8_t ol_tx_pdev_is_target_empty(void)
      return 1;
  }
  
@@ -146,7 +146,7 @@ index 2158fc80f2e9..78ae875b87fd 100644
      int ms = 0;
      throttle_level cur_level;
      throttle_phase cur_phase;
-@@ -1335,9 +1343,13 @@ void ol_tx_pdev_throttle_phase_timer(void *context)
+@@ -1337,9 +1345,13 @@ void ol_tx_pdev_throttle_phase_timer(void *context)
  }
  
  #ifdef QCA_SUPPORT_TXRX_VDEV_LL_TXQ
@@ -241,10 +241,10 @@ index 1df87224dd03..46b9b563c0b7 100644
      ssr_timer_started = true;
  }
 diff --git a/CORE/HDD/src/wlan_hdd_main.c b/CORE/HDD/src/wlan_hdd_main.c
-index 6e63c326afa0..7126760b0e3d 100644
+index 55a356b68ec8..eff9d6fcad35 100644
 --- a/CORE/HDD/src/wlan_hdd_main.c
 +++ b/CORE/HDD/src/wlan_hdd_main.c
-@@ -11079,7 +11079,9 @@ static void hdd_set_multicast_list(struct net_device *dev)
+@@ -10940,7 +10940,9 @@ static void hdd_set_multicast_list(struct net_device *dev)
    --------------------------------------------------------------------------*/
  static v_U16_t hdd_select_queue(struct net_device *dev,
                           struct sk_buff *skb
@@ -255,7 +255,7 @@ index 6e63c326afa0..7126760b0e3d 100644
                           , void *accel_priv
  #endif
  #if (LINUX_VERSION_CODE >= KERNEL_VERSION(3,14,0))
-@@ -13466,13 +13468,13 @@ static void hdd_populate_fils_params(struct cfg80211_connect_resp_params
+@@ -13330,13 +13332,13 @@ static void hdd_populate_fils_params(struct cfg80211_connect_resp_params
                       uint16_t fils_seq_num)
  {
      /* Increament seq number to be used for next FILS */
@@ -276,7 +276,7 @@ index 6e63c326afa0..7126760b0e3d 100644
  }
  #else /* CFG80211_FILS_SK_OFFLOAD_SUPPORT */
  static inline void hdd_populate_fils_params(struct cfg80211_connect_resp_params
-@@ -13538,7 +13540,7 @@ static void hdd_connect_done(struct net_device *dev, const u8 *bssid,
+@@ -13402,7 +13404,7 @@ static void hdd_connect_done(struct net_device *dev, const u8 *bssid,
      }
      hddLog(LOG1, "FILS indicate connect status %d seq no %d",
            fils_params.status,
@@ -285,7 +285,7 @@ index 6e63c326afa0..7126760b0e3d 100644
  
      cfg80211_connect_done(dev, &fils_params, gfp);
  
-@@ -18651,9 +18653,15 @@ static bool unload_timer_started;
+@@ -18519,9 +18521,15 @@ static bool unload_timer_started;
   *
   * Return: None
   */
@@ -301,7 +301,7 @@ index 6e63c326afa0..7126760b0e3d 100644
  }
  
  /**
-@@ -18676,7 +18684,7 @@ static void hdd_unload_timer_del(void)
+@@ -18544,7 +18552,7 @@ static void hdd_unload_timer_del(void)
   *
   * Return: None
   */
@@ -310,7 +310,7 @@ index 6e63c326afa0..7126760b0e3d 100644
  {
  	v_CONTEXT_t vos_context = NULL;
  	hdd_context_t *hdd_ctx = NULL;
-@@ -18716,7 +18724,9 @@ static void hdd_unload_timer_start(int msec)
+@@ -18584,7 +18592,9 @@ static void hdd_unload_timer_start(int msec)
  			"%s: Starting unload timer when it's running!",
  			__func__);
  	unload_timer.expires = jiffies + msecs_to_jiffies(msec);
@@ -527,10 +527,25 @@ index 6ed6c0418ea5..5b9b041a58ed 100644
  {
  	/* Add the current time stamp */
 diff --git a/CORE/VOSS/inc/vos_cnss.h b/CORE/VOSS/inc/vos_cnss.h
-index 51e1eaf316e4..292021d467c7 100644
+index 51e1eaf316e4..8539de07eca3 100644
 --- a/CORE/VOSS/inc/vos_cnss.h
 +++ b/CORE/VOSS/inc/vos_cnss.h
-@@ -119,6 +119,13 @@ static inline int vos_wlan_pm_control(bool vote)
+@@ -107,6 +107,14 @@ static inline void vos_pm_wake_lock_release(struct wakeup_source *ws)
+ 	__pm_relax(ws);
+ }
+ 
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(5,1,0))
++static inline void wakeup_source_trash(struct wakeup_source *ws)
++{
++	wakeup_source_remove(ws);
++	__pm_relax(ws);
++}
++#endif
++
+ static inline void vos_pm_wake_lock_destroy(struct wakeup_source *ws)
+ {
+ 	wakeup_source_trash(ws);
+@@ -119,6 +127,13 @@ static inline int vos_wlan_pm_control(bool vote)
  static inline void vos_lock_pm_sem(void) { return; }
  static inline void vos_release_pm_sem(void) { return; }
  
@@ -624,7 +639,7 @@ index 42654ce65dbd..f87c7bb8c589 100644
  
    \brief vos_timer_get_system_time() - Get the system time in milliseconds
 diff --git a/Kbuild b/Kbuild
-index 1a54971c31a2..7326219f2fd8 100644
+index 8695c57204a4..6335b2700793 100644
 --- a/Kbuild
 +++ b/Kbuild
 @@ -189,7 +189,7 @@ endif
@@ -636,7 +651,16 @@ index 1a54971c31a2..7326219f2fd8 100644
  
  #Enable this flag to build driver in diag version
  BUILD_DIAG_VERSION := 1
-@@ -1039,7 +1039,6 @@ CDEFINES :=	-DANI_LITTLE_BYTE_ENDIAN \
+@@ -960,7 +960,7 @@ WDI_INC :=	$(WDI_CP_INC) \
+ 
+ WCNSS_INC :=	-I$(WLAN_ROOT)/wcnss/inc
+ 
+-LINUX_INC :=	-Iinclude/linux
++LINUX_INC :=	-I$(srctree)/include/linux
+ 
+ INCS :=		$(HDD_INC) \
+ 		$(EPPING_INC) \
+@@ -1036,7 +1036,6 @@ CDEFINES :=	-DANI_LITTLE_BYTE_ENDIAN \
  		-DWLAN_PERF \
  		-DPTT_SOCK_SVC_ENABLE \
  		-Wall\
