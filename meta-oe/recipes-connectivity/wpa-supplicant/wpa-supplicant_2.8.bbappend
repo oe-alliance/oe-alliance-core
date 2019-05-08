@@ -1,6 +1,6 @@
 PR .= ".1"
 
-FILESEXTRAPATHS_prepend := "${THISDIR}/${P}:"
+FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
 DEPENDS += "openssl"
 
