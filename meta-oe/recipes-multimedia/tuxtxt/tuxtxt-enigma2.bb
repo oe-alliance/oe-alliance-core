@@ -1,11 +1,17 @@
 SUMMARY = "tuxbox tuxtxt for 32bit framebuffer"
+DESCRIPTION = "tuxbox tuxtxt for enigma2"
 LICENSE = "LGPLv2.1"
 LIC_FILES_CHKSUM = "file://COPYING;md5=393a5ca445f6965873eca0259a17f833"
-DEPENDS = "freetype libtuxtxt"
-SUMMARY = "tuxbox tuxtxt for enigma2"
+
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
+DEPENDS = "freetype libtuxtxt"
+
 inherit gitpkgv
+
+SRCREV = "${AUTOREV}"
+PV = "2.0+git${SRCPV}"
+PKGV = "2.0+git${GITPKGV}"
 
 SRC_URI = "git://github.com/OpenPLi/tuxtxt.git;protocol=git \
            file://0001-Workaround-for-Gigablue-Quad-receivers.patch \
@@ -26,10 +32,13 @@ SRC_URI_append = " \
     ${@bb.utils.contains('DISTRO_FEATURES', 'tuxtxtfhd', 'file://tuxtxt_FHD.patch', '', d)} \
     "
 
+inherit autotools pkgconfig
+
 S = "${WORKDIR}/git/tuxtxt"
 
-PV = "2.0+git${SRCPV}"
-PKGV = "2.0+git${GITPKGV}"
+EXTRA_OECONF = "--with-boxtype=generic --with-configdir=/etc \
+    ${@bb.utils.contains("MACHINE_FEATURES", "textlcd", "--with-textlcd" , "", d)} \
+     "
 
 do_configure_prepend() {
     touch ${S}/NEWS
@@ -69,9 +78,3 @@ PACKAGES = "${PN}-src ${PN}-dbg ${PN}-dev ${PN}"
 FILES_${PN}-src = "/usr/src ${libdir}/enigma2/python/Plugins/Extensions/Tuxtxt/*.py"
 FILES_${PN} = "${libdir}/libtuxtxt32bpp.so.* /usr/share/fonts ${libdir}/enigma2/python/Plugins/Extensions/Tuxtxt/*.pyo /etc/tuxtxt"
 CONFFILES_${PN} = "/etc/tuxtxt/tuxtxt2.conf"
-
-inherit autotools pkgconfig
-
-EXTRA_OECONF = "--with-boxtype=generic --with-configdir=/etc \
-    ${@bb.utils.contains("MACHINE_FEATURES", "textlcd", "--with-textlcd" , "", d)} \
-     "
