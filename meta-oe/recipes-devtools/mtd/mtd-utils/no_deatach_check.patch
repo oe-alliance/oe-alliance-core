@@ -1,8 +1,6 @@
-diff --git a/ubi-utils/ubiformat.c b/ubi-utils/ubiformat.c
-index a265a9a..51259a3 100644
 --- a/ubi-utils/ubiformat.c
 +++ b/ubi-utils/ubiformat.c
-@@ -64,6 +64,7 @@ struct args {
+@@ -63,6 +63,7 @@ struct args {
  	const char *image;
  	const char *node;
  	int node_fd;
@@ -10,7 +8,7 @@ index a265a9a..51259a3 100644
  };
  
  static struct args args =
-@@ -93,6 +94,7 @@ static const char optionsstr[] =
+@@ -92,6 +93,7 @@ static const char optionsstr[] =
  "                             (default is 1)\n"
  "-Q, --image-seq=<num>        32-bit UBI image sequence number to use\n"
  "                             (by default a random number is picked)\n"
@@ -46,7 +44,7 @@ index a265a9a..51259a3 100644
  		case 'x':
  			args.ubi_ver = simple_strtoul(optarg, &error);
  			if (error || args.ubi_ver < 0)
-@@ -801,16 +808,19 @@ int main(int argc, char * const argv[])
+@@ -775,16 +782,19 @@ int main(int argc, char * const argv[])
  	}
  
  	/* Make sure this MTD device is not attached to UBI */

@@ -1,8 +1,8 @@
 include oscam-smod.inc
 
 EXTRA_OECMAKE += "\
-	-DIPV6SUPPORT=0 \
-	"
+    -DIPV6SUPPORT=0 \
+"
 
 DESCRIPTION += "Note: You should never need this IPv4-ONLY version!"
 

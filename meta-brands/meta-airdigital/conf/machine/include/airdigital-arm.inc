@@ -1,5 +1,5 @@
 #IMAGE_CLASSES += "airdigitalemmc_image_single"
-IMAGE_CLASSES += "airdigitalemmc_image_multi"
+IMAGE_CLASSES += "airdigital-emmc_image_multiboot"
 
 MACHINE_FEATURES += "qthbbtv qtstalker linuxwifi"
 
@@ -17,6 +17,8 @@ PREFERRED_PROVIDER_virtual/libgles2 ?= "airdigital-v3ddriver-${MACHINE}"
 PREFERRED_PROVIDER_virtual/libgbm ?= "airdigital-v3ddriver-${MACHINE}"
 PREFERRED_PROVIDER_virtual/libgl ?= "mesa"
 PREFERRED_PROVIDER_virtual/mesa ?= "mesa"
+PREFERRED_PROVIDER_virtual/blindscan-dvbc ?= "airdigital-dvb-modules-${MACHINE}"
+PREFERRED_PROVIDER_virtual/blindscan-dvbs ?= "airdigital-dvb-modules-${MACHINE}"
 
 # Qt
 PACKAGECONFIG_GL_pn-qtbase = "no-opengl linuxfb"

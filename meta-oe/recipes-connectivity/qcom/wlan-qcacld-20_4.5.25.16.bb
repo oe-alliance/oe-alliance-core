@@ -5,7 +5,7 @@ CAF_MIRROR = "https://www.codeaurora.org/cgit/external/wlan"
 
 inherit module
 
-COMPATIBLE_MACHINE = "osmio4k|xc7439"
+COMPATIBLE_MACHINE = "osmio4k|osmio4kplus|xc7439"
 
 SRC_URI = "${CAF_MIRROR}/qcacld-2.0/snapshot/qcacld-2.0-${PV}.tar.gz \
     file://qcacld-2.0-support.patch \

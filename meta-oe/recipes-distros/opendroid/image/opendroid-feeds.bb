@@ -7,7 +7,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "6.8"
-PR = "r3"
+PR = "r4"
 
 inherit packagegroup
 
@@ -16,6 +16,7 @@ RRECOMMENDS_${PN} = "\
     enigma2-skins \
     enigma2-display-skins \
     cdfs \
+    curlftpfs \
     enigma2-plugin-extensions-epgimport \
     enigma2-plugin-extensions-vhannibal-autosettings \
     enigma2-plugin-systemplugins-crossepg \

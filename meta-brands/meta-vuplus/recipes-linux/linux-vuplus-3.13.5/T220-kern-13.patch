@@ -1,8 +1,6 @@
-diff --git a/drivers/media/usb/dvb-usb/dw2102.c b/drivers/media/usb/dvb-usb/dw2102.c
-index 6136a2c..12e00aa 100644
 --- a/drivers/media/usb/dvb-usb/dw2102.c
 +++ b/drivers/media/usb/dvb-usb/dw2102.c
-@@ -2,12 +2,12 @@
+@@ -2,7 +2,7 @@
   *	DVBWorld DVB-S 2101, 2102, DVB-S2 2104, DVB-C 3101,
   *	TeVii S600, S630, S650, S660, S480, S421, S632
   *	Prof 1100, 7500,
@@ -11,11 +9,6 @@ index 6136a2c..12e00aa 100644
   * Copyright (C) 2008-2012 Igor M. Liplianin (liplianin@me.by)
   *
   *	This program is free software; you can redistribute it and/or modify it
-  *	under the terms of the GNU General Public License as published by the
-  *	Free Software Foundation, version 2.
-  *
-  * see Documentation/dvb/README.dvb-usb for more information
-  */
 @@ -29,6 +29,9 @@
  #include "stb6100.h"
  #include "stb6100_proc.h"
@@ -23,13 +16,13 @@ index 6136a2c..12e00aa 100644
 +#include "tda18271.h"
 +#include "tda18273.h"
 +#include "cxd2820r.h"
-
- #ifndef USB_PID_DW2102
- #define USB_PID_DW2102 0x2102
-@@ -1025,6 +1027,17 @@ static struct ds3000_config su3000_ds3000_config = {
-        .set_lock_led = dw210x_led_ctrl,
+ 
+ /* Max transfer size done by I2C transfer functions */
+ #define MAX_XFER_SIZE  64
+@@ -1095,6 +1098,17 @@ static struct ds3000_config su3000_ds3000_config = {
+ 	.set_lock_led = dw210x_led_ctrl,
  };
-
+ 
 +static struct cxd2820r_config cxd2820r_config = {
 +       .i2c_address = 0x6c, /* (0xd8 >> 1) */
 +       .ts_mode = 0x38,
@@ -42,12 +35,12 @@ index 6136a2c..12e00aa 100644
 +};
 +
  static u8 m88rs2000_inittab[] = {
-        DEMOD_WRITE, 0x9a, 0x30,
-        DEMOD_WRITE, 0x00, 0x01,
-@@ -1294,6 +1306,105 @@ static int su3000_frontend_attach(struct dvb_usb_adapter *d)
-        return -EIO;
+ 	DEMOD_WRITE, 0x9a, 0x30,
+ 	DEMOD_WRITE, 0x00, 0x01,
+@@ -1364,6 +1378,105 @@ static int su3000_frontend_attach(struct dvb_usb_adapter *d)
+ 	return -EIO;
  }
-
+ 
 +static int t220_frontend_attach(struct dvb_usb_adapter *d)
 +{
 +	u8 obuf[3] = { 0xe, 0x87, 0 };
@@ -149,30 +142,29 @@ index 6136a2c..12e00aa 100644
 +
  static int m88rs2000_frontend_attach(struct dvb_usb_adapter *d)
  {
-        u8 obuf[] = { 0x51 };
-@@ -1630,6 +1630,8 @@
-	TEVII_S632,
-	TERRATEC_CINERGY_S2_R2,
-	GOTVIEW_SAT_HD,
+ 	u8 obuf[] = { 0x51 };
+@@ -1630,6 +1743,8 @@ enum dw2102_table_entry {
+ 	TEVII_S632,
+ 	TERRATEC_CINERGY_S2_R2,
+ 	GOTVIEW_SAT_HD,
 +        GENIATECH_T220,
 +	 GENIATECH_T220A,
  };
-
+ 
  static struct usb_device_id dw2102_table[] = {
-@@ -1652,7 +1652,9 @@
-	[TEVII_S632] = {USB_DEVICE(0x9022, USB_PID_TEVII_S632)},
-	[TERRATEC_CINERGY_S2_R2] = {USB_DEVICE(USB_VID_TERRATEC, 0x00b0)},
-	[GOTVIEW_SAT_HD] = {USB_DEVICE(0x1FE1, USB_PID_GOTVIEW_SAT_HD)},
+@@ -1652,6 +1767,8 @@ static struct usb_device_id dw2102_table[] = {
+ 	[TEVII_S632] = {USB_DEVICE(0x9022, USB_PID_TEVII_S632)},
+ 	[TERRATEC_CINERGY_S2_R2] = {USB_DEVICE(USB_VID_TERRATEC, 0x00b0)},
+ 	[GOTVIEW_SAT_HD] = {USB_DEVICE(0x1FE1, USB_PID_GOTVIEW_SAT_HD)},
 +        [GENIATECH_T220] = {USB_DEVICE(0x1f4d, 0xD220)},
 +	 [GENIATECH_T220A] = {USB_DEVICE(0x0572, 0xC686)},
-	{ }
+ 	{ }
  };
-
- MODULE_DEVICE_TABLE(usb, dw2102_table);
-@@ -2007,6 +2064,102 @@ static struct dvb_usb_device_properties su3000_properties = {
-        }
+ 
+@@ -2077,6 +2194,102 @@ static struct dvb_usb_device_properties su3000_properties = {
+ 	}
  };
-
+ 
 +static struct dvb_usb_device_properties t220_properties = {
 +	.caps = DVB_USB_IS_AN_I2C_ADAPTER,
 +	.usb_ctrl = DEVICE_SPECIFIC,
@@ -270,26 +262,25 @@ index 6136a2c..12e00aa 100644
 +};
 +
  static int dw2102_probe(struct usb_interface *intf,
-                const struct usb_device_id *id)
+ 		const struct usb_device_id *id)
  {
-@@ -2149,7 +2149,11 @@
-	    0 == dvb_usb_device_init(intf, s421,
-			THIS_MODULE, NULL, adapter_nr) ||
-	    0 == dvb_usb_device_init(intf, &su3000_properties,
+@@ -2149,7 +2362,11 @@ static int dw2102_probe(struct usb_interface *intf,
+ 	    0 == dvb_usb_device_init(intf, s421,
+ 			THIS_MODULE, NULL, adapter_nr) ||
+ 	    0 == dvb_usb_device_init(intf, &su3000_properties,
 -				     THIS_MODULE, NULL, adapter_nr))
 +                        THIS_MODULE, NULL, adapter_nr) ||
 +           0 == dvb_usb_device_init(intf, &t220_properties,
 +                        THIS_MODULE, NULL, adapter_nr) ||
 +	    0 == dvb_usb_device_init(intf, &t220a_properties,
 +                        THIS_MODULE, NULL, adapter_nr))
-		return 0;
-
-	return -ENODEV;
-@@ -2168,8 +2168,8 @@
- MODULE_DESCRIPTION("Driver for DVBWorld DVB-S 2101, 2102, DVB-S2 2104,"
-			" DVB-C 3101 USB2.0,"
-			" TeVii S600, S630, S650, S660, S480, S421, S632"
-			" Prof 1100, 7500 USB2.0,"
+ 		return 0;
+ 
+ 	return -ENODEV;
+@@ -2169,7 +2386,7 @@ MODULE_DESCRIPTION("Driver for DVBWorld DVB-S 2101, 2102, DVB-S2 2104,"
+ 			" DVB-C 3101 USB2.0,"
+ 			" TeVii S600, S630, S650, S660, S480, S421, S632"
+ 			" Prof 1100, 7500 USB2.0,"
 -			" Geniatech SU3000 devices");
 +                        " Geniatech SU3000, T220, T220A devices");
  MODULE_VERSION("0.1");

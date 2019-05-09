@@ -1,13 +1,11 @@
 #!/bin/sh
 
-if ! test -e /.resizerootfs
-then
-    if grep -q mmcblk0p10 /proc/cmdline
-    then
-        echo "Resizing /dev/mmcblk0p10 Do not unplug power!..."
-        resize2fs /dev/mmcblk0p10
-        touch /.resizerootfs
-    fi
+if [ ! -f "/.resize-rootfs" ]; then
+  if [ -f "/dev/block/by-name/rootfs" ]; then
+    echo "Resizing rootfs, Do not unplug power!..."
+    resize2fs /dev/block/by-name/rootfs
+    touch "/.resize-rootfs"
+  fi
 fi
 
 echo "dinobot start!!!"

@@ -14,7 +14,7 @@ SRCDATE = "20170918"
 SRC_URI[md5sum] = "665818a65559cb09fbb4cf007b8a253f"
 SRC_URI[sha256sum] = "db0c50fa38ef73fac52a7457bef062fdba2aa51b0af311ec08e6efb631926804"
 
-SRC_URI = "http://gi-et.info/${MACHINE}/${MACHINE_DRIVER}-drivers-${KV}-${GCCREV}-${SRCDATE}.zip"
+SRC_URI = "http://source.mynonpublic.com/xtrend/${MACHINE_DRIVER}-drivers-${KV}-${GCCREV}-${SRCDATE}.zip"
 
 S = "${WORKDIR}"
 

@@ -9,10 +9,10 @@ require conf/license/license-gplv2.inc
 
 inherit gitpkgv
 SRCREV = "${AUTOREV}"
-PV = "2.2+git${SRCPV}"
-PKGV = "2.2+git${GITPKGV}"
-VER ="2.2"
-PR = "r3"
+PV = "2.3+git${SRCPV}"
+PKGV = "2.3+git${GITPKGV}"
+VER ="2.3"
+PR = "r5"
 
 SRC_URI="git://github.com/opendroid-Team/gioppygio-settings-and-picons.git"
 
@@ -47,7 +47,7 @@ exit 0
 
 pkg_postrm_${PN}() {
 #!/bin/sh
-rm ${libdir}/lib/enigma2/python/Plugins/Extensions/GioppyGio/
+rm -r ${libdir}/enigma2/python/Plugins/Extensions/GioppyGio > /dev/null 2>&1
 echo "Plugin removed! You should restart enigma2 now!"
 exit 0
 }

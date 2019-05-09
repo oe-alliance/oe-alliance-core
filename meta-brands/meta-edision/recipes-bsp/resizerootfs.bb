@@ -1,7 +1,7 @@
 DESCRIPTION = "Resize Rootfs"
 require conf/license/license-gplv2.inc
 
-COMPATIBLE_MACHINE = "osmio4k"
+COMPATIBLE_MACHINE = "^(osmio4k|osmio4kplus)$"
 
 RDEPENDS_${PN} = "e2fsprogs-resize2fs"
 PV = "1.0"

@@ -8,7 +8,9 @@ DEPENDS ="bc-native"
 
 inherit module
 SRCREV = "${AUTOREV}"
-SRC_URI = "git://github.com/atvcaptain/rtl8188fu.git"
+SRC_URI = "git://github.com/atvcaptain/rtl8188fu.git \
+    file://add-5.1-support.patch \
+"
 
 EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR} KDIR=${STAGING_KERNEL_DIR}"
 

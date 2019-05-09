@@ -1,8 +1,9 @@
 KV = "4.10.12"
-SRCDATE = "20180830"
+SRCDATE = "20190405"
+
+PROVIDES = "virtual/blindscan-dvbs"
 
 require airdigital-dvb-modules.inc
 
-SRC_URI[md5sum] = "694953db896c9710487eeb642141fff6"
-SRC_URI[sha256sum] = "3259f8faf628d9eef00e7b154b2e3707ed2bc0849da7b4166ce9bfe2139dccf2"
-
+SRC_URI[md5sum] = "b780fddcc2dc6b831fe27e5fea61a353"
+SRC_URI[sha256sum] = "841a04aa481c20eb1c972c0a169ceb65f910a10724b4a0ed6324fefcdcfb8f71"

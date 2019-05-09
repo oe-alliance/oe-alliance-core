@@ -1,0 +1,47 @@
+---
+ drivers/hisilicon/ir/Kconfig | 29 -----------------------------
+ 1 file changed, 29 deletions(-)
+
+diff --git a/drivers/hisilicon/ir/Kconfig b/drivers/hisilicon/ir/Kconfig
+index 57e1fe52..45976f03 100644
+--- a/drivers/hisilicon/ir/Kconfig
++++ b/drivers/hisilicon/ir/Kconfig
+@@ -12,35 +12,6 @@ config HISI_IR
+ 	---help---
+ 	   Say Y here if you want to use hisilicon remote control.
+ 
+-if RC_DECODERS
+-config IR_NEC_2HDR_40BIT_DECODER
+-	tristate "Enable IR raw decoder for the NEC 2 head 40bit protocol"
+-	depends on RC_CORE
+-	select BITREVERSE
+-	default y
+-	---help---
+-	   Enable this option if you have IR with NEC protocol, and
+-	   if the IR is decoded in software
+-
+-config IR_NEC_FULL_40BIT_DECODER
+-	tristate "Enable IR raw decoder for the NEC full 40bit protocol"
+-	depends on RC_CORE
+-	select BITREVERSE
+-	default y
+-	---help---
+-	   Enable this option if you have IR with NEC protocol, and
+-	   if the IR is decoded in software
+-
+-config IR_NEC_FULL_48BIT_DECODER
+-	tristate "Enable IR raw decoder for the NEC full 48bit protocol"
+-	depends on RC_CORE
+-	select BITREVERSE
+-	default y
+-	---help---
+-	   Enable this option if you have IR with NEC protocol, and
+-	   if the IR is decoded in software
+-
+-endif #RC_DECODERS
+ 
+ if HISI_IR
+ menu "Hisilicon IR key map driver"
+-- 
+2.17.1
+
