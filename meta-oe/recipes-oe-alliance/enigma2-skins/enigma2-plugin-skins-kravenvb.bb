@@ -12,7 +12,7 @@ VER="6.6"
 
 RDEPENDS_${PN} = "python-imaging python-subprocess python-requests python-lxml enigma2-plugin-systemplugins-mphelp"
 
-SRC_URI="git://github.com/Schimmelreiter/KravenVB.git;protocol=git"
+SRC_URI="git://github.com/openatv/KravenVB.git;protocol=git"
 
 FILES_${PN} = "/usr/*"
 
