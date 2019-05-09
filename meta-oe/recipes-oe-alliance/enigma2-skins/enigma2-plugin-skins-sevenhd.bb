@@ -13,7 +13,7 @@ VER="3.6.83"
 
 RDEPENDS_${PN} = "python-requests python-subprocess python-imaging enigma2-plugin-systemplugins-mphelp python-lxml"
 
-SRC_URI="git://github.com/KravenHD/SevenHD.git;protocol=git"
+SRC_URI="git://github.com/openatv/SevenHD.git;protocol=git"
 
 FILES_${PN} = "/usr/*"
 
