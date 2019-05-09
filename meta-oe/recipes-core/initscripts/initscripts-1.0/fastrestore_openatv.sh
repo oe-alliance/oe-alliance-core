@@ -155,7 +155,8 @@ restart_network() {
 	echo >>$LOG
 	[ -e "${ROOTFS}etc/init.d/hostname.sh" ] && ${ROOTFS}etc/init.d/hostname.sh
 	[ -e "${ROOTFS}etc/init.d/networking" ] && ${ROOTFS}etc/init.d/networking restart >>$LOG
-	sleep 5
+	# TODO: Find a better method to wait for network without blocking
+	sleep 10
 	echo >>$LOG
 }
 
