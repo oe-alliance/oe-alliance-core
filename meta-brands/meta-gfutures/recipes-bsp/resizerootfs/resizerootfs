@@ -8,14 +8,14 @@
 # Short-Description:  Resizes once linuxrootfs and userdata to full partition size
 ### END INIT INFO
 
-if [ ! -f "/.resize-linuxrootfs" ] & [ -e "/dev/block/by-name/linuxrootfs" ]
+if [ ! -f "/.resize-linuxrootfs" ] && [ -e "/dev/block/by-name/linuxrootfs" ]
   then
     echo "Resizing linuxrootfs partition, Do not unplug power!..."
     resize2fs /dev/block/by-name/linuxrootfs
     touch "/.resize-linuxrootfs"
 fi
 
-if [ ! -f "/.resize-userdata" ] & [ -e "/dev/block/by-name/userdata" ] & [ -e "/sbin/blkid" ]; then
+if [ ! -f "/.resize-userdata" ] && [ -e "/dev/block/by-name/userdata" ] && [ -e "/sbin/blkid" ]; then
   if blkid /dev/block/by-name/userdata | grep "ext4"; then
     echo "Resizing userdata partition, Do not unplug power!..."
     resize2fs /dev/block/by-name/userdata
