@@ -17,9 +17,9 @@ S = "${WORKDIR}/git"
 
 inherit autotools-brokensep
 
-DEPENDS = "python"
+DEPENDS = "python lzo"
 
-RDEPENDS_${PN} = "kernel-module-nandsim openmultiboot enigma2"
+RDEPENDS_${PN} = "kernel-module-nandsim openmultiboot enigma2 lzo"
 
 RDEPENDS_${PN}_gb800solo = "kernel-module-block2mtd openmultiboot"
 RDEPENDS_${PN}_spark7162 = "kernel-module-block2mtd openmultiboot unjffs2"
@@ -75,3 +75,5 @@ python populate_packages_prepend() {
     do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/(.*/)?\.debug/.*$', 'enigma2-plugin-%s-dbg', '%s (debug)', recursive=True, match_path=True, prepend=True)
     do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/.*\/.*\.po$', 'enigma2-plugin-%s-po', '%s (translations)', recursive=True, match_path=True, prepend=True)
 }
+
+INSANE_SKIP_${PN} = "already-stripped"

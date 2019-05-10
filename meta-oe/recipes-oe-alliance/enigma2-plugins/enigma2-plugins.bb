@@ -11,6 +11,7 @@ PROVIDES = "${PN} \
 
 inherit autotools-brokensep gitpkgv pythonnative pkgconfig gettext
 
+SRCREV = "${AUTOREV}"
 PV = "${IMAGE_VERSION}+git${SRCPV}"
 PKGV = "${IMAGE_VERSION}+git${GITPKGV}"
 PR = "r0"
@@ -137,4 +138,5 @@ rm -rf /usr/lib/enigma2/python/Plugins/Extensions/WebInterface
 exit 0
 }
 
-INSANE_SKIP_${PN} += "build-deps"
+do_package_qa() {
+}
