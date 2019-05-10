@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda
 ALLOW_EMPTY_${PN} = "1"
 
 PV = "1.0"
-PR = "r40"
+PR = "r41"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
@@ -43,7 +43,6 @@ RDEPENDS_${PN} = "\
     enigma2-plugin-systemplugins-serviceapp \
     zip \
     ", d)} \
-    ${@bb.utils.contains("SOC_FAMILY", "hisi3798mv200", "", "enigma2-plugin-systemplugins-serviceapp", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "dreambox", "", "ofgwrite", d)} \
     ${@bb.utils.contains("TUNE_FEATURES", "armv", "glibc-compat", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "singlecore", "", \
@@ -53,3 +52,5 @@ RDEPENDS_${PN} = "\
     ", d)} \
     packagegroup-base-smbfs-client \
     "
+
+RDEPENDS_${PN}_remove_hd60 = "enigma2-plugin-systemplugins-serviceapp"
