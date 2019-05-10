@@ -1,15 +1,14 @@
-SUMMARY = "A Pure Python SNMP Package"
+SUMMARY = "Python SNMP Toolkit (Speed Enhanced)"
 SECTION = "devel/python"
 PRIORITY = "optional"
-RDEPENDS_${PN} = "python-core"
 LICENSE = "BSD"
 LIC_FILES_CHKSUM = "file://README;beginline=13;endline=14;md5=fe0c3d0cab1e25fcec2777b0a8b8e4bf"
 
+RDEPENDS_${PN} = "python-core"
 
-SRCNAME = "pysnmp-se"
-SRC_URI = "https://files.pythonhosted.org/packages/f0/f3/4c0e4e1aef2972076333295f90d3651a01d18b0f6f7a6804d9ca6cdc1cc5/pysnmp-se-3.5.2.tar.gz"
+SRC_URI = "https://files.pythonhosted.org/packages/f0/f3/4c0e4e1aef2972076333295f90d3651a01d18b0f6f7a6804d9ca6cdc1cc5/pysnmp-se-${PV}.tar.gz"
 
-S = "${WORKDIR}/${SRCNAME}-${PV}"
+S = "${WORKDIR}/pysnmp-se-${PV}"
 
 inherit distutils
 

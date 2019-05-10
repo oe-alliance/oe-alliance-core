@@ -49,3 +49,5 @@ do_install_append() {
     find ${D}${libdir}/enigma2/python/ -name '*.pyc' -exec rm {} \;
 }
 
+do_package_qa() {
+}

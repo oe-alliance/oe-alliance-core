@@ -1,5 +1,5 @@
 SUMMARY = "Provides access to Linux Wireless Extensions"
-HOMEPAGE = "http://pythonwifi.wikispot.org/"
+HOMEPAGE = "http://pythonwifi.tuxfamily.org"
 SECTION = "devel/python"
 LICENSE = "LGPLv2+"
 LICENSE_${PN}-examples = "LGPLv2+"

@@ -16,21 +16,21 @@ inherit python-dir pythonnative
 
 # we only need the python bindings
 do_install () {
-	install -d ${D}${PYTHON_SITEPACKAGES_DIR}/avahi
+    install -d ${D}${PYTHON_SITEPACKAGES_DIR}/avahi
 
-	sed -i'' -e "s,@PYTHON\@,${bindir}/python,g" \
-		${S}/avahi-python/avahi/__init__.py  \
-		${S}/avahi-python/avahi-bookmarks.in
+    sed -i'' -e "s,@PYTHON\@,${bindir}/python,g" \
+        ${S}/avahi-python/avahi/__init__.py  \
+        ${S}/avahi-python/avahi-bookmarks.in
 
-	install -m 0775 ${S}/avahi-python/avahi/__init__.py \
-		${D}${PYTHON_SITEPACKAGES_DIR}/avahi/__init__.py
+    install -m 0775 ${S}/avahi-python/avahi/__init__.py \
+        ${D}${PYTHON_SITEPACKAGES_DIR}/avahi/__init__.py
 
-	install -m 0775 ${S}/avahi-python/avahi-bookmarks.in \
-		${D}${PYTHON_SITEPACKAGES_DIR}/avahi/avahi-bookmarks
+    install -m 0775 ${S}/avahi-python/avahi-bookmarks.in \
+        ${D}${PYTHON_SITEPACKAGES_DIR}/avahi/avahi-bookmarks
 }
 
 RDEPENDS_${PN} += "python-core python-dbus"
 
 FILES_${PN} = "${PYTHON_SITEPACKAGES_DIR}/avahi"
 
-require python-package-split.inc
+include python-package-split.inc

@@ -1,5 +1,3 @@
-include python-package-split.inc
-
 do_install_append() {
 
 # If things were installed a level down. move them up:
@@ -10,3 +8,5 @@ if [ -d ${D}/usr/lib/python2.7/site-packages/simplejson-${PV}*/simplejson ]; the
 fi
     rm -rf ${D}/usr/lib/python2.7/site-packages/simplejson-${PV}*
 }
+
+include python-package-split.inc

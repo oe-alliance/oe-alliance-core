@@ -5,7 +5,6 @@ DEPENDS = "python"
 LICENSE = "LGPLv2+"
 LIC_FILES_CHKSUM = " file://COPYING;md5=24b9569831c46d4818450b55282476b4"
 
-
 SRC_URI = "https://files.pythonhosted.org/packages/source/p/python-Levenshtein/python-Levenshtein-${PV}.tar.gz"
 
 SRC_URI[md5sum] = "e8cde197d6d304bbdc3adae66fec99fb"
@@ -16,4 +15,3 @@ S = "${WORKDIR}/python-Levenshtein-${PV}"
 inherit setuptools
 
 include python-package-split.inc
-

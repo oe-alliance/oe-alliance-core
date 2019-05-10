@@ -1,6 +1,6 @@
 SUMMARY = "TCP bridge for data transfer"
 DESCRIPTION = "Simple single and dual endpoint tcp bridges."
-HOMEPAGE = "https://github.com/emlid/tcp-bridge"
+HOMEPAGE = "https://pypi.org/project/tcpbridge"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=2434fd31b55d6326fc3dfe4246efcf96"
 
