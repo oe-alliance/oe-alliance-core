@@ -1,5 +1,8 @@
 SUMMARY = "Older CCcam ${PV} softcam"
 
+DEPENDS = "libxcrypt"
+RDEPENDS_${PN} = "libxcrypt"
+
 PR = "r0"
 
 SRC_URI = "http://downloads.pli-images.org/softcams/CCcam-${PV}.zip"
@@ -20,3 +23,5 @@ do_install() {
     install -d ${D}/etc
     install -m 0644 ${S}/CCcam.cfg ${D}/etc/CCcam.cfg
 }
+
+INSANE_SKIP_${PN} = "already-stripped"

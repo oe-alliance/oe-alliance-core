@@ -196,7 +196,7 @@ do_compile_prepend() {
     done
 }
 
-INSANE_SKIP_${PN} = "rpaths"
+INSANE_SKIP_${PN} = "rpaths already-stripped"
 
 FILES_${PN} = "${libdir}/kodi ${libdir}/xbmc"
 FILES_${PN} += "${bindir}/kodi ${bindir}/xbmc"
