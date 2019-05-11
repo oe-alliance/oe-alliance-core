@@ -6,8 +6,9 @@ LICENSE = "proprietary"
 
 require conf/license/license-gplv2.inc
 
-inherit gitpkgv gettext
 DEPENDS += "gettext-native"
+
+inherit gitpkgv gettext
 
 SRCREV = "${AUTOREV}"
 PV = "2.1+git${SRCPV}"
@@ -15,11 +16,12 @@ PKGV = "2.1+git${GITPKGV}"
 VER ="2.1"
 PR = "r7"
 
-PACKAGES =+ "enigma2-plugin-skins-metrix-beyonwiz-fhd-icons enigma2-plugin-skins-metrix-beyonwiz-uhd-icons ${PN}-src"
+PACKAGES =+ "enigma2-plugin-skins-metrix-beyonwiz-fhd-icons enigma2-plugin-skins-metrix-beyonwiz-uhd-icons"
 PROVIDES =+ "enigma2-plugin-skins-metrix-beyonwiz-fhd-icons enigma2-plugin-skins-metrix-beyonwiz-uhd-icons"
 RPROVIDES_enigma2-plugin-skins-metrix-beyonwiz-fhd-icons += "enigma2-plugin-skins-metrix-beyonwiz-fhd-icons"
 RPROVIDES_enigma2-plugin-skins-metrix-beyonwiz-uhd-icons += "enigma2-plugin-skins-metrix-beyonwiz-uhd-icons"
-SRC_URI="git://github.com/beyonwiz-dev/MetrixHD.git"
+
+SRC_URI = "git://github.com/beyonwiz-dev/MetrixHD.git"
 
 S = "${WORKDIR}/git"
 
@@ -34,12 +36,12 @@ FILES_${PN}-src = "\
 FILES_${PN} = "${libdir} /usr/share"
 
 do_compile() {
-	python -O -m compileall ${S}/usr
-	for f in $(find ${S}/locale -name *.po ); do
-		l=$(echo ${f%} | sed 's/\.po//' | sed 's/.*locale\///')
-		mkdir -p ${S}/usr/lib/enigma2/python/Plugins/Extensions/MyMetrixLite/locale/${l%}/LC_MESSAGES
-		msgfmt -o ${S}/usr/lib/enigma2/python/Plugins/Extensions/MyMetrixLite/locale/${l%}/LC_MESSAGES/MyMetrixLite.mo ${S}/locale/$l.po
-	done
+    python -O -m compileall ${S}/usr
+    for f in $(find ${S}/locale -name *.po ); do
+        l=$(echo ${f%} | sed 's/\.po//' | sed 's/.*locale\///')
+        mkdir -p ${S}/usr/lib/enigma2/python/Plugins/Extensions/MyMetrixLite/locale/${l%}/LC_MESSAGES
+        msgfmt -o ${S}/usr/lib/enigma2/python/Plugins/Extensions/MyMetrixLite/locale/${l%}/LC_MESSAGES/MyMetrixLite.mo ${S}/locale/$l.po
+    done
 }
 
 do_install() {
