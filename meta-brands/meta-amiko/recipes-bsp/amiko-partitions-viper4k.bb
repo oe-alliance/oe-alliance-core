@@ -21,6 +21,7 @@ do_install() {
     install -d ${D}/usr/share
     install -m 0644 ${S}/bootargs.bin ${D}/usr/share/bootargs.bin
     install -m 0644 ${S}/fastboot.bin ${D}/usr/share/fastboot.bin
+    install -m 0644 ${S}/apploader.bin ${D}/usr/share/apploader.bin
 }
 
 FILES_${PN} = "/usr/share"
