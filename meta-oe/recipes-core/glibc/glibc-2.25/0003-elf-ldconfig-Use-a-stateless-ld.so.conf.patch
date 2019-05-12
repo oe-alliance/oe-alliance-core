@@ -1,0 +1,30 @@
+From 71e539202021cc7b6fc58106574b6efae7ffc7db Mon Sep 17 00:00:00 2001
+From: Ikey Doherty <ikey@solus-project.com>
+Date: Mon, 12 Dec 2016 08:52:17 +0000
+Subject: [PATCH 3/3] elf/ldconfig: Use a stateless ld.so.conf
+
+This will be preconfigured to read from both the vendor directories
+and from /etc/ld.so.conf.d if the user provides files there. This
+is part of our effort to make Solus stateless by default.
+
+Signed-off-by: Ikey Doherty <ikey@solus-project.com>
+---
+ elf/ldconfig.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/elf/ldconfig.c b/elf/ldconfig.c
+index 99caf9e..d73ff29 100644
+--- a/elf/ldconfig.c
++++ b/elf/ldconfig.c
+@@ -51,7 +51,7 @@
+ #endif
+ 
+ #ifndef LD_SO_CONF
+-# define LD_SO_CONF SYSCONFDIR "/ld.so.conf"
++# define LD_SO_CONF "/usr/share/defaults/etc/ld.so.conf"
+ #endif
+ 
+ /* Get libc version number.  */
+-- 
+2.12.2
+
