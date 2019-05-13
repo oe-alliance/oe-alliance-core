@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "1.0"
-PR = "r65"
+PR = "r66"
 
 inherit packagegroup
 
@@ -18,6 +18,7 @@ RRECOMMENDS_${PN} = " \
     ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", "enigma2-plugin-drivers-usbserial", d)} \
     enigma2-plugin-extensions-infopanel \
     enigma2-plugin-extensions-filecommander \
+    enigma2-plugin-extensions-icetv \
     enigma2-plugin-extensions-autotimer \
     enigma2-plugin-extensions-epgsearch \
     enigma2-plugin-extensions-imdb \
