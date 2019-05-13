@@ -1,10 +1,11 @@
 DSCRIPTION = "GigaBlue bluetooth plugin"
-
+PRIORITY = "required"
 LICENSE = "CLOSED"
 require conf/license/license-close.inc
 
 DEPENDS = "python-native"
-RDEPENDS_${PN} = "gb-bluetooth-util libusb1"
+RDEPENDS_${PN} = "libcurl libsqlite3 libssl libcrypto libudev libusb-compat"
+RDEPENDS_${PN} += "gb-bluetooth-util"
 
 PROVIDES += "enigma2-plugin-systemplugins-bluetoothsetup"
 RPROVIDES_${PN} += "enigma2-plugin-systemplugins-bluetoothsetup"
@@ -30,6 +31,9 @@ do_install() {
 	install -d  ${D}${BLUETOOTH_PLUGIN_PATH}
 	cp -r ${S}/* ${D}${BLUETOOTH_PLUGIN_PATH}
 
+}
+
+do_package_qa() {
 }
 
 FILES_${PN} = "${BLUETOOTH_PLUGIN_PATH}"
