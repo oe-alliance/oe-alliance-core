@@ -22,12 +22,11 @@ FILES_${PN}="/"
 do_install() {
 	install -d ${D}/usr/local/bin
 	install -m 0755 ${S}/bsa_server ${D}/usr/local/bin/
-	install -m 0755 ${S}/bcm_bt_agent ${D}/usr/local/bin/
 
-	install -d ${D}/usr/local/modules
-	install -m 0644 ${S}/btusb.ko ${D}/usr/local/modules/btusb.ko
-
+	install -d ${D}/usr/local/lib
+	install -d ${D}/usr/local/lib/modules
+	install -m 0644 ${S}/btusb.ko ${D}/usr/local/lib/modules/btusb.ko
+	install -m 0644 ${S}/bthid.ko ${D}/usr/local/lib/modules/bthid.ko
 }
 
 INSANE_SKIP_${PN} = "already-stripped"
-
