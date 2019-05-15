@@ -9,7 +9,7 @@ require conf/license/license-gplv2.inc
 RDEPENDS_${PN} += "showiframe"
 
 PV = "${IMAGE_VERSION}"
-PR = "r6"
+PR = "r7"
 
 S = "${WORKDIR}"
 
@@ -37,6 +37,7 @@ SRC_URI_append_h9 = "file://logo.img"
 SRC_URI_append_i55plus = "file://logo.img"
 SRC_URI_append_hd60 = "file://logo.img"
 SRC_URI_append_hd61 = "file://logo.img"
+SRC_URI_append_multibox = "file://logo.img"
 SRC_URI_append_cc1 = "file://logo.img"
 SRC_URI_append_sf8008 = "file://logo.img"
 SRC_URI_append_ustym4kpro = "file://logo.img"
