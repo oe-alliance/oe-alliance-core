@@ -4,7 +4,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 require conf/license/license-gplv2.inc
 
 RRECOMMENDS_${PN} = "\
-    ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "enigma2-locale-de enigma2-locale-en", " \
+    ${@bb.utils.contains("ONLY_SMALL", "True", "enigma2-locale-de enigma2-locale-en", " \
     enigma2-locale-ar \
     enigma2-locale-bg \
     enigma2-locale-ca \
@@ -49,6 +49,11 @@ RRECOMMENDS_${PN} = "\
     enigma2-locale-zh-cn \
     enigma2-locale-zh-hk \
     ", d)}"
+
+ONLY_SMALL = "\
+    ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "True", "", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "BootloaderMax110", "True" , "", d)} \
+"
 
 PR = "r0"
 
