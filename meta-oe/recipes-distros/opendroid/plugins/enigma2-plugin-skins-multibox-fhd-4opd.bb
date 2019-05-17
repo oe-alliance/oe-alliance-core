@@ -12,7 +12,7 @@ VER="1.0"
 
 RDEPENDS_${PN} = "enigma2-plugin-systemplugins-weathercomponenthandler, enigma2-plugin-skincomponents-weathercomponent"
 
-SRC_URI="git://github.com/stein17/Skins-for-OPD.git;protocol=git"
+SRC_URI="git://github.com/stein17/Skins-for-openOPD.git;protocol=git"
 
 FILES_${PN} = "${libdir} /usr/share"
 
