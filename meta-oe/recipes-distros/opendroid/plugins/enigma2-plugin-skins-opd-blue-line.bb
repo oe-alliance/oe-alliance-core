@@ -3,17 +3,20 @@ MAINTAINER = "stein17"
 
 require conf/license/license-gplv2.inc
 
-inherit gitpkgv allarch
+inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "1.6+git${SRCPV}"
 PKGV = "1.6+git${GITPKGV}"
 VER="1.6"
-PR = "r4"
+PR = "r5"
 
-SRC_URI="git://github.com/opendroid-Team/OPD-Blue-Line.git;protocol=git"
-FILES_${PN} = "${libdir} /usr/share"
+RDEPENDS_${PN} = "enigma2-plugin-systemplugins-weathercomponenthandler, enigma2-plugin-skincomponents-weathercomponent"
 
-S = "${WORKDIR}/git"
+SRC_URI="git://github.com/stein17/Skins-for-openOPD.git;protocol=git"
+
+FILES_${PN} = "/"
+
+S = "${WORKDIR}/git/OPD-Blue-Line"
 
 do_compile_append() {
 python -O -m compileall ${S}
@@ -46,7 +49,7 @@ exit 0
 pkg_prerm_${PN} () {
 #!/bin/sh
 echo "                                                           "
-echo "              OPD-Blue-Line is now being removed...          "
+echo "              OPD-Blue-Line is now being removed...        "
 echo "                                                           "
 exit 0
 }
