@@ -6,9 +6,9 @@ require conf/license/license-gplv2.inc
 inherit gitpkgv
 
 SRCREV = "${AUTOREV}"
-PV = "1.0+git${SRCPV}"
-PKGV = "1.0+git${GITPKGV}"
-VER="1.0"
+PV = "0.0.5+git${SRCPV}"
+PKGV = "0.0.5+git${GITPKGV}"
+VER="0.0.5"
 
 
 SRC_URI="git://github.com/stein17/Skins-for-openOPD.git;protocol=git"
