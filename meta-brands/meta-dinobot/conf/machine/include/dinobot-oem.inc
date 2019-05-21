@@ -24,6 +24,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'iziboxone4k', 'ONE 4K' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axashistwin', 'HIS Twin' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axashisc4k', 'HIS C 4K' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'protek4kx1', '4K X1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'anadolprohd5', 'Pro HD5' , '', d)}\
 "
 
 MACHINE_BRAND = "\
@@ -47,6 +48,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'iziboxone4k', 'IZIBOX' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axashistwin', 'AXAS' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axashisc4k', 'AXAS' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'protek4kx1', 'PROTEK' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'anadolprohd5', 'ANADOL' , '', d)}\
 "
 
 MTD_KERNEL = "\
@@ -70,6 +72,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'iziboxone4k', 'mtd10' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axashistwin', 'mtd8' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axashisc4k', 'mmcblk0p10' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'protek4kx1', 'mmcblk0p9' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'anadolprohd5', 'mtd8' , '', d)}\
 "
 
 MTD_ROOTFS = "\
@@ -93,6 +96,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'iziboxone4k', 'mtd11' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axashistwin', 'mtd9' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axashisc4k', 'mmcblk0p13' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'protek4kx1', 'mmcblk0p10' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'anadolprohd5', 'mtd11' , '', d)}\
 "
 
 SDCARDIMG = "\
@@ -116,6 +120,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'iziboxone4k', 'no' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axashistwin', 'no' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axashisc4k', 'no' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'protek4kx1', 'no' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'anadolprohd5', 'no' , '', d)}\
 "
 
 IMAGEDIR = "\
@@ -139,6 +144,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'iziboxone4k', 'dinobot/${MACHINE}' , '', d
 ${@bb.utils.contains('MACHINEBUILD', 'axashistwin', 'axas/axashistwin' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axashisc4k', 'axas/axasc4k' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'protek4kx1', 'dinobot/${MACHINE}' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'anadolprohd5', 'dinobot/${MACHINE}' , '', d)}\
 "
 
 KERNEL_MODULE_AUTOLOAD += "xhci-plat-hcd"
