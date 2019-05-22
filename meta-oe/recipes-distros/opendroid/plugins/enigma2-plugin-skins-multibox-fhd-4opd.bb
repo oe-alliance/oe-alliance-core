@@ -1,4 +1,4 @@
-SUMMARY = "Skin Multibox FHD for ATV Images"
+SUMMARY = "Skin Multibox FHD for OPD Images"
 MAINTAINER = "stein17"
 
 require conf/license/license-gplv2.inc
@@ -6,17 +6,16 @@ require conf/license/license-gplv2.inc
 inherit gitpkgv
 
 SRCREV = "${AUTOREV}"
-PV = "1.1+git${SRCPV}"
-PKGV = "1.1+git${GITPKGV}"
-VER="1.1"
+PV = "0.0.5+git${SRCPV}"
+PKGV = "0.0.5+git${GITPKGV}"
+VER="0.0.5"
 
-RDEPENDS_${PN} = "enigma2-plugin-systemplugins-weathercomponenthandler, enigma2-plugin-skincomponents-weathercomponent"
 
-SRC_URI="git://github.com/stein17/Skins-for-openATV.git;protocol=git"
+SRC_URI="git://github.com/stein17/Skins-for-openOPD.git;protocol=git"
 
 FILES_${PN} = "${libdir} /usr/share"
 
-S = "${WORKDIR}/git/Multibox-FHD-Skin-4ATV"
+S = "${WORKDIR}/git/Multibox-FHD-Skin-4OPD"
 
 do_compile_append() {
 python -O -m compileall ${S}

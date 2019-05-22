@@ -6,7 +6,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 RDEPENDS_${PN} = "harfbuzz"
 
-SRCDATE = "20180823"
+SRCDATE = "20190515"
 
 PV = "${SRCDATE}"
 PR = "r1"
@@ -33,7 +33,7 @@ do_package_qa() {
 
 FILES_${PN}  = "${bindir}/hihalt ${sysconfdir}/init.d"
 
-SRC_URI[md5sum] = "b46b23d07684d83f7cb3511c78e87908"
-SRC_URI[sha256sum] = "714076da36959138ec9322d7e6ee50015df675591a47bbf4b9a5f7f094293f5b"
+SRC_URI[md5sum] = "846f50982a99eadd98392526dd46ce0f"
+SRC_URI[sha256sum] = "baeb686c21872d20c50823bae48f9733d99c7748f341f4a25ec360f189e38cfe"
 
 

@@ -7,7 +7,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 inherit deploy
 
-SRCDATE = "20190402"
+SRCDATE = "20190515"
 PR = "${SRCDATE}"
 
 S = "${WORKDIR}/patitions"
@@ -21,6 +21,7 @@ do_install() {
     install -d ${D}/usr/share
     install -m 0644 ${S}/bootargs.bin ${D}/usr/share/bootargs.bin
     install -m 0644 ${S}/fastboot.bin ${D}/usr/share/fastboot.bin
+    install -m 0644 ${S}/apploader.bin ${D}/usr/share/apploader.bin
 }
 
 FILES_${PN} = "/usr/share"
@@ -40,7 +41,7 @@ do_deploy() {
 
 addtask deploy before do_build after do_install
 
-SRC_URI[md5sum] = "1e71b38867ce0e8d9beeec91fce64ea9"
-SRC_URI[sha256sum] = "9a30fbe5662a335dc84e358968a833e62424eeadd116065cf60082c4bf62c7f8"
+SRC_URI[md5sum] = "07d78ac8046b09d6f4fffae1f3b50fe8"
+SRC_URI[sha256sum] = "530715463cf87f87aee81128ec8cd51ed7696fc8a75522d03053ead680d9dc8e"
 
 INSANE_SKIP_${PN} += "already-stripped"
