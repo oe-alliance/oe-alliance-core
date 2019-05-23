@@ -1,4 +1,4 @@
-MACHINE_FEATURES += "qthbbtv qtstalker linuxwifi"
+MACHINE_FEATURES += "qthbbtv qtstalker"
 
 DISTRO_FEATURES_EXTRA = "opengl"
 
