@@ -1,4 +1,4 @@
-MACHINE_FEATURES += "qthbbtv qtstalker linuxwifi"
+MACHINE_FEATURES += "qthbbtv qtstalker"
 
 PREFERRED_PROVIDER_virtual/egl ?= "maxytec-mali-${HICHIPSET}"
 PREFERRED_PROVIDER_virtual/libgles1 ?= "maxytec-mali-${HICHIPSET}"
