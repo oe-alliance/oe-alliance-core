@@ -26,6 +26,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'axashisc4k', 'HIS C 4K' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'protek4kx1', '4K X1' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'anadolprohd5', 'Pro HD5' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'spycatminiv2', 'Mini V2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'iziboxecohd', 'ECO TWIN HD' , '', d)}\
 "
 
 MACHINE_BRAND = "\
@@ -51,6 +52,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'axashisc4k', 'AXAS' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'protek4kx1', 'PROTEK' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'anadolprohd5', 'ANADOL' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'spycatminiv2', 'SPYCAT' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'iziboxecohd', 'IZIBOX' , '', d)}\
 "
 
 MTD_KERNEL = "\
@@ -76,6 +78,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'axashisc4k', 'mmcblk0p10' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'protek4kx1', 'mmcblk0p9' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'anadolprohd5', 'mtd8' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'spycatminiv2', 'mtd8' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'iziboxecohd', 'mtd8' , '', d)}\
 "
 
 MTD_ROOTFS = "\
@@ -101,6 +104,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'axashisc4k', 'mmcblk0p13' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'protek4kx1', 'mmcblk0p10' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'anadolprohd5', 'mtd11' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'spycatminiv2', 'mtd11' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'iziboxecohd', 'mtd11' , '', d)}\
 "
 
 SDCARDIMG = "\
@@ -126,6 +130,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'axashisc4k', 'no' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'protek4kx1', 'no' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'anadolprohd5', 'no' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'spycatminiv2', 'no' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'iziboxecohd', 'no' , '', d)}\
 "
 
 IMAGEDIR = "\
@@ -151,6 +156,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'axashisc4k', 'axas/axasc4k' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'protek4kx1', 'dinobot/${MACHINE}' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'anadolprohd5', 'dinobot/${MACHINE}' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'spycatminiv2', 'dinobot/${MACHINE}' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'iziboxecohd', 'dinobot/${MACHINE}' , '', d)}\
 "
 
 KERNEL_MODULE_AUTOLOAD += "xhci-plat-hcd"
