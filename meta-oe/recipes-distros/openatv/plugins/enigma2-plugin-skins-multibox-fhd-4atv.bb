@@ -50,19 +50,8 @@ echo "                                                          "
 
 pkg_preinst_${PN} () {
 #!/bin/sh
-rm -rf /usr/share/enigma2/Multibox
-rm -rf /usr/lib/enigma2/python/Components/Converter/AMB
-rm -rf /usr/lib/enigma2/python/Components/Renderer/AMB
-echo "                                                                           "
-echo "                                                                           "
-echo "                                                                           "
-echo "                                                                           "
-echo "                                                                           "
-echo "                                                                           "
 echo "                                                                           "
 echo "  Multibox Skin Full HD by stein17 is now being installed...               "
-echo "                                                                           " 
-echo "                                                                           "
 echo "                                                                           "
 exit 0
 }
