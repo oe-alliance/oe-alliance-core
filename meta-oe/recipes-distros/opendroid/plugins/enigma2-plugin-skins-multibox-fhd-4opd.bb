@@ -75,7 +75,7 @@ if [ -f /usr/share/enigma2/Multibox/skin.xml ]; then
 fi
 echo "                                                       "
 echo "Multibox FHD OPD skin is now being installed...        "
-echo "                                                           "
+echo "                                                       "
 exit 0
 }
 
@@ -83,8 +83,8 @@ pkg_prerm_${PN} () {
 #!/bin/sh
 echo "                                                                           "
 echo "Multibox Skin Full HD by stein17 is now being removed from your receiver..."
-echo "
-exit 0                                                                           "
+echo "                                                                           "
+exit 0
 }
 
 do_package_qa[noexec] = "1"
