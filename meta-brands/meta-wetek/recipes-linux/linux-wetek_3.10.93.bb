@@ -26,6 +26,7 @@ SRC_URI = "http://source.mynonpublic.com/wetek/linux-wetek-3.10.y-master.tar.gz 
     file://kernel-add-support-for-gcc6.patch \
     file://kernel-add-support-for-gcc7.patch \
     file://kernel-add-support-for-gcc8.patch \
+    file://kernel-add-support-for-gcc9.patch \
     file://0001-log2-give-up-on-gcc-constant-optimizations.patch \
     file://0002-uaccess-dont-mark-register-as-const.patch \
     file://0003-makefile-disable-warnings.patch \

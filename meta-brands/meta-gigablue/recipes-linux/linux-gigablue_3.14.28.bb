@@ -14,28 +14,29 @@ SRC_URI[sha256sum] = "72928012a7dbacbf95a371d9faa6800a20afd6b106958298cfc4102887
 LIC_FILES_CHKSUM = "file://COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
 SRC_URI += "http://source.mynonpublic.com/gigablue/linux/gigablue-linux-${PV}-20170331.tar.gz \
-	file://defconfig \
-	file://linux_dvb_adapter.patch \
-	file://bcm_genet_disable_warn.patch \
-	file://rt2800usb_fix_warn_tx_status_timeout_to_dbg.patch \
-	file://usb_core_hub_msleep.patch \
-	file://rtl8712_fix_build_error.patch \
-	file://kernel-add-support-for-gcc6.patch \
-	file://kernel-add-support-for-gcc7.patch \
-	file://kernel-add-support-for-gcc8.patch \
-	file://0001-Support-TBS-USB-drivers.patch \
-	file://0001-STV-Add-PLS-support.patch \
-	file://0001-STV-Add-SNR-Signal-report-parameters.patch \
-	file://linux_prevent_usb_dma_from_bmem.patch \
-	file://genksyms_fix_typeof_handling.patch \
-	file://gbfindkerneldevice.py \
-	file://0001-tuners-tda18273-silicon-tuner-driver.patch \
-	file://01-10-si2157-Silicon-Labs-Si2157-silicon-tuner-driver.patch \
-	file://02-10-si2168-Silicon-Labs-Si2168-DVB-T-T2-C-demod-driver.patch \
-	file://0003-cxusb-Geniatech-T230-support.patch \
-	file://CONFIG_DVB_SP2.patch \
-	file://dvbsky.patch \
-	file://rtl2832u-2.patch \
+    file://defconfig \
+    file://linux_dvb_adapter.patch \
+    file://bcm_genet_disable_warn.patch \
+    file://rt2800usb_fix_warn_tx_status_timeout_to_dbg.patch \
+    file://usb_core_hub_msleep.patch \
+    file://rtl8712_fix_build_error.patch \
+    file://kernel-add-support-for-gcc6.patch \
+    file://kernel-add-support-for-gcc7.patch \
+    file://kernel-add-support-for-gcc8.patch \
+    file://kernel-add-support-for-gcc9.patch \
+    file://0001-Support-TBS-USB-drivers.patch \
+    file://0001-STV-Add-PLS-support.patch \
+    file://0001-STV-Add-SNR-Signal-report-parameters.patch \
+    file://linux_prevent_usb_dma_from_bmem.patch \
+    file://genksyms_fix_typeof_handling.patch \
+    file://gbfindkerneldevice.py \
+    file://0001-tuners-tda18273-silicon-tuner-driver.patch \
+    file://01-10-si2157-Silicon-Labs-Si2157-silicon-tuner-driver.patch \
+    file://02-10-si2168-Silicon-Labs-Si2168-DVB-T-T2-C-demod-driver.patch \
+    file://0003-cxusb-Geniatech-T230-support.patch \
+    file://CONFIG_DVB_SP2.patch \
+    file://dvbsky.patch \
+    file://rtl2832u-2.patch \
 "
 
 S = "${WORKDIR}/linux-${PV}"

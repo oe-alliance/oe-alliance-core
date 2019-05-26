@@ -47,6 +47,7 @@ SRC_URI += "http://source.mynonpublic.com/ini/bcm7358-linux-${KV}-${SRCDATE}.tgz
     file://kernel-add-support-for-gcc6.patch \
     file://kernel-add-support-for-gcc7.patch \
     file://kernel-add-support-for-gcc8.patch \
+    file://kernel-add-support-for-gcc9.patch \
     file://0001-Support-TBS-USB-drivers.patch \
     file://0001-STV-Add-PLS-support.patch \
     file://0001-STV-Add-SNR-Signal-report-parameters.patch \
@@ -70,20 +71,20 @@ KERNEL_IMAGEDEST = "tmp"
 FILES_${KERNEL_PACKAGE_NAME}-image = "/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz"
 
 kernel_do_install_append() {
-	${STRIP} ${D}/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}
-	gzip -9c ${D}/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION} > ${D}/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz
-	rm ${D}/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}
+    ${STRIP} ${D}/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}
+    gzip -9c ${D}/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION} > ${D}/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz
+    rm ${D}/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}
 }
 
 pkg_postinst_kernel-image () {
-	if [ "x$D" == "x" ]; then
-		if [ -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz ] ; then
-			flash_erase /dev/${MTD_KERNEL} 0 0
-			nandwrite -p /dev/${MTD_KERNEL} /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz
-			rm -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz
-		fi
-	fi
-	true
+    if [ "x$D" == "x" ]; then
+        if [ -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz ] ; then
+            flash_erase /dev/${MTD_KERNEL} 0 0
+            nandwrite -p /dev/${MTD_KERNEL} /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz
+            rm -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz
+        fi
+    fi
+    true
 }
 
 do_rm_work() {
