@@ -151,7 +151,7 @@ do_configure_prepend() {
         DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-MAXYTEC-BASE}/recipes-drivers/maxytec-dvb-modules-${MACHINE}.bb | cut -b 12-19`
     elif [ "${BRAND_OEM}" = "dreambox" ]; then
         if [ "${MACHINE}" = "dm7080" ]; then
-            DRIVERSDATE="20181002"
+            DRIVERSDATE="20190502"
         elif [ "${MACHINE}" = "dm820" ]; then
             DRIVERSDATE="20181018"
         elif [ "${MACHINE}" = "dm520" ]; then
