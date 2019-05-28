@@ -32,6 +32,5 @@ RPROVIDES_${PN} += "enigma2-plugin-extensions-webkithbbtv"
 
 FILES_${PN} = "/"
 
-
 SRC_URI[md5sum] = "8b93c2f013934658daa2162cf58e3b71"
 SRC_URI[sha256sum] = "b6322cbfc06abe19052cfff0ae1f76d00d6a6f185fdc09fd10085823f9203c26"

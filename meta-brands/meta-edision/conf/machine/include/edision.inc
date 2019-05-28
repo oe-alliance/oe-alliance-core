@@ -36,8 +36,6 @@ PREFERRED_PROVIDER_virtual/kernel = "linux-edision"
 PREFERRED_PROVIDER_virtual/blindscan-dvbs = "edision-blindscan-utils-${MACHINE}"
 PREFERRED_PROVIDER_virtual/blindscan-dvbc = "edision-blindscan-utils-${MACHINE}"
 
-
-
 KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_OUTPUT = "${KERNEL_IMAGETYPE}"
 KERNEL_CONSOLE = "ttyS0,115200n8"
@@ -73,4 +71,3 @@ BOOTLOGO_FILENAME = "splash.bin"
 require conf/machine/include/tune-mips32.inc
 require conf/machine/include/soc-family.inc
 require conf/machine/box-hardware.inc
-

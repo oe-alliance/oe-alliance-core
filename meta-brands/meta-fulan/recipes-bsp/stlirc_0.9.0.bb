@@ -56,4 +56,3 @@ do_install_append() {
        install -m 0644 ${WORKDIR}/lircd_spark.conf ${D}${sysconfdir}/lircd.conf
     fi
 }
-

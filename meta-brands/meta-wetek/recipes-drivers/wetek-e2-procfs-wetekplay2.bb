@@ -10,7 +10,6 @@ SRCDATE = "20161023"
 PV = "${KV}+${SRCDATE}"
 PR = "r1"
 
-
 SRC_URI = "file://wetek-e2-procfs-${KV}-${SRCDATE}.zip"
 
 S = "${WORKDIR}"
@@ -20,14 +19,10 @@ inherit module
 do_compile() {
 }
 
-
-
 do_install() {
     install -d ${D}${nonarch_base_libdir}/modules/${KV}/extra
     install -m 0755 ${WORKDIR}/e2-procfs.ko ${D}${nonarch_base_libdir}/modules/${KV}/extra/
 }
 
-
 do_package_qa() {
 }
-

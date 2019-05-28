@@ -16,7 +16,6 @@ SRC_URI = "file://lcdwaitkey220.bin \
            file://lcdwarning220.bin \
 "
 
-
 ALLOW_EMPTY_${PN} = "1"
 
 do_deploy() {

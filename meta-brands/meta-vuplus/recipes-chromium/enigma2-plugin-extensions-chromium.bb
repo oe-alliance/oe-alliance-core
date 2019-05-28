@@ -28,4 +28,3 @@ FILES_${PN} = "/"
 
 SRC_URI[md5sum] = "525ab918ae8c5e41ffec3e57d748da25"
 SRC_URI[sha256sum] = "d671f1dfeaefd8f3d05a79348e86c7debd40403cc5f9d59780ccb04c7fa655cf"
-

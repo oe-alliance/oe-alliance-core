@@ -16,7 +16,6 @@ SRC_URI[sha256sum] = "0c66f77ea32ee0cffb610a916aac85dd80cf0f1799a03987ae4308f5a6
 
 SRC_URI = "http://source.mynonpublic.com/linkdroid/${BPN}-${SRCDATE}.zip"
 
-
 S = "${WORKDIR}"
 
 do_install() {

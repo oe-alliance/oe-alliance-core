@@ -16,7 +16,6 @@ do_install() {
 	> ${D}/tmp/secondstage-${PRECOMPILED_ARCH}.bin
 }
 
-
 PACKAGES = "${PN} ${PN}-bin"
 
 PACKAGE_ARCH := "${MACHINE_ARCH}"

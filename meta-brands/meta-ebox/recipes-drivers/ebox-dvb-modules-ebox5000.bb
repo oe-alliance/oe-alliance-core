@@ -14,7 +14,6 @@ SRC_URI[sha256sum] = "74f109c8c99d7c2ad31460639c20d19e877a5adc844f284275896e35c9
 
 SRC_URI = "http://source.mynonpublic.com/ebox/ebox-dvb-modules-${MACHINE}-${KV}-${SRCDATE}.zip"
 
-
 S = "${WORKDIR}"
 
 INHIBIT_PACKAGE_STRIP = "1"

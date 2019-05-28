@@ -10,7 +10,6 @@ PR = "${SRCDATE}"
 DEPENDS = "linkdroid-libamavutils-${MACHINE} alsa-lib rtmpdump "
 RDEPENDS_${PN} = "ffmpeg linkdroid-libamavutils-${MACHINE}"
 
-
 inherit lib_package
 
 SRC_URI[md5sum] = "4a01acdd4a0b5f80f209a38ab4acee40"

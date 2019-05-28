@@ -43,4 +43,3 @@ do_populate_sysroot[noexec] = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 INSANE_SKIP_${PN} = "already-stripped"
-

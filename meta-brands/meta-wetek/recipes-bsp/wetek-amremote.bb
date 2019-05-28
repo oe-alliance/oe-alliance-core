@@ -56,6 +56,4 @@ do_install() {
     install -m 0644 ${WORKDIR}/zgemmastar.conf ${D}${sysconfdir}/amremote/
 }
 
-
 FILES_${PN} = "${bindir} ${sysconfdir}"
-

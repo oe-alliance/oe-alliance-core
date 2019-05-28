@@ -24,5 +24,4 @@ do_install() {
     install -m 0644 ${S}/usr/share/dreambox-secondstage/ssbl.bin ${D}/usr/share/dreambox-secondstage/ssbl.bin
 }
 
-
 FILES_${PN} = "/usr/share/dreambox-secondstage/ssbl.bin"

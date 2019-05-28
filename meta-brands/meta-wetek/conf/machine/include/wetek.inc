@@ -4,13 +4,10 @@ include conf/machine/include/autoload-filesystems.inc
 # We know about rtc
 include conf/machine/include/build-extras.inc
 
-
 PREFERRED_PROVIDER_virtual/libgles1 = "wetek-opengl-amlogic"
 PREFERRED_PROVIDER_virtual/libgles2 = "wetek-opengl-amlogic"
 PREFERRED_PROVIDER_virtual/egl = "wetek-opengl-amlogic"
 PREFERRED_PROVIDER_virtual/kodi = "stb-kodi-${MACHINE}"
-
-
 
 PREFERRED_PROVIDER_jpeg = "libjpeg-turbo"
 PREFERRED_PROVIDER_jpeg-native = "libjpeg-turbo-native"

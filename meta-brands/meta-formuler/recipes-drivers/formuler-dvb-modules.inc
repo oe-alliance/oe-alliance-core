@@ -18,7 +18,6 @@ do_compile() {
 do_populate_sysroot() {
 }
 
-
 do_install() {
     install -d ${D}/lib/modules/${KV}/extra
     install -d ${D}/${sysconfdir}/modules-load.d

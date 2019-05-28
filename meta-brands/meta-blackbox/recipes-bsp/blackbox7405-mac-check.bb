@@ -15,7 +15,6 @@ inherit pkgconfig update-rc.d
 INITSCRIPT_NAME = "${PN}"
 INITSCRIPT_PARAMS = "defaults"
 
-
 do_install() {
 	install -d ${D}/usr/bin
 	install -m 0755 ${WORKDIR}/blackbox7405_mac_check ${D}/usr/bin/blackbox7405_mac_check

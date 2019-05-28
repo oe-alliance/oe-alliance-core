@@ -10,7 +10,6 @@ SRCDATE = "20140904"
 SRC_URI[md5sum] = "0cb37745787e0ff5070e14a7bbf3dc5c"
 SRC_URI[sha256sum] = "018d9792c6ba00400d7779568bc096cd1df2edb8d57501d3477c4734655c6e0f"
 
-
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
 MACHINE_KERNEL_PR_append = ".3"
@@ -108,4 +107,3 @@ do_rm_work() {
 
 # extra tasks
 addtask kernel_link_images after do_compile before do_install
-

@@ -37,7 +37,6 @@ do_configure_prepend() {
     sed -e "/^SUBLEVEL = /d" -i ${S}/Makefile
 }
 
-
 require linux-dreambox-3.4.inc
 require linux-extra-image.inc
 

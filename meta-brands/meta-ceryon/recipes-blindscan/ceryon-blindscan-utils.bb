@@ -37,4 +37,3 @@ do_compile[noexec] = "1"
 deltask do_populate_sysroot
 INSANE_SKIP_ceryon-blindscan-dvbc-utils = "file-rdeps"
 INSANE_SKIP_ceryon-blindscan-dvbs-utils = "file-rdeps"
-

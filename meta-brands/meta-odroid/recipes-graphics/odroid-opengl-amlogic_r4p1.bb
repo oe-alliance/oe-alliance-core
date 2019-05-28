@@ -11,7 +11,6 @@ PROVIDES = "virtual/libgles1 virtual/libgles2 virtual/egl"
 SRC_URI[gxbb.md5sum] = "90ef0a79c37ba65f2c1b992a9bba2874"
 SRC_URI[mx.md5sum] = "c833d32411389cba490bdaaa43263ba"
 
-
 SRC_URI = "file://opengl-meson6-r4p1-armhf.tgz;name=mx \
    http://sources.libreelec.tv/devel/opengl-meson-gxbb-r6p1-01rel0.tar.xz;name=gxbb \
    file://10-meson_mali.rules \

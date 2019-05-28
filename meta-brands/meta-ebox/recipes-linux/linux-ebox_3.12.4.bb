@@ -43,7 +43,6 @@ SRC_URI = "http://source.mynonpublic.com/ebox/${MACHINE}-linux-${KV}_${SRCDATE}.
 S = "${WORKDIR}/linux-${KV}"
 B = "${WORKDIR}/build"
 
-
 export OS = "Linux"
 KERNEL_OBJECT_SUFFIX = "ko"
 KERNEL_OUTPUT = "vmlinux"

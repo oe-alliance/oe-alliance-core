@@ -25,5 +25,3 @@ pkg_postinst_${PN} () {
 pkg_postrm_${PN} () {
 [ -z $D ] && sed -i 's|${libdir}/libpagecache.so.0.0.0||g' ${sysconfdir}/ld.so.preload || /bin/true
 }
-
-

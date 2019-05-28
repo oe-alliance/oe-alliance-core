@@ -29,4 +29,3 @@ FILES_${PN}  = "${bindir}/libreader"
 
 SRC_URI[md5sum] = "b3d67f58859ceb628e5b559ac6c3ba11"
 SRC_URI[sha256sum] = "8f7cb12da2c660a19b2624b13b9a4cc509fcbafc0c29809adb479138593aa68a"
-

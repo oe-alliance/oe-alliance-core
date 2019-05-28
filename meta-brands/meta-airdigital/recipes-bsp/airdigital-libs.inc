@@ -30,7 +30,6 @@ do_install() {
 	ln -sf /lib/ld-linux-armhf.so.3 ${D}${libdir}/hisilicon/ld-linux.so
 }
 
-
 do_package_qa() {
 }
 

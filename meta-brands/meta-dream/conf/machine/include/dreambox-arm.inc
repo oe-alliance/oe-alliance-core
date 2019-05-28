@@ -48,8 +48,6 @@ PREFERRED_PROVIDER_virtual/blindscan-dvbc = "dreambox-blindscan-utils"
 
 PREFERRED_VERSION_linux-dreambox ?= "3.14"
 
-
-
 TARGET_ARCH = "arm"
 DEFAULTTUNE = "cortexa15hf-neon-vfpv4"
 OLDEST_KERNEL = "3.14"
@@ -58,4 +56,3 @@ MACHINE_FEATURES_BACKFILL_CONSIDERED = "rtc gobject-introspection-data"
 
 # Add "MACHINEBUILD" override for recipes
 MACHINEOVERRIDES =. "${@['', '${MACHINEBUILD}:']['${MACHINEBUILD}' != '']}"
-

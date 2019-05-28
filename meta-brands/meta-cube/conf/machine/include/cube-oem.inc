@@ -71,7 +71,6 @@ IMAGE_DEVICE_TABLES = ""
 
 PREFERRED_VERSION_rtl8192cu = "3.3.0"
 
-
 PREFERRED_PROVIDER_virtual/kernel = "linux-cube"
 PREFERRED_PROVIDER_virtual/egl = "opengl"
 

@@ -10,7 +10,6 @@ SRCDATE = "20161023"
 PV = "${KV}+${SRCDATE}"
 PR = "r1"
 
-
 SRC_URI = "file://odroid-e2-procfs-${KV}-${SRCDATE}.zip"
 
 S = "${WORKDIR}"
@@ -27,4 +26,3 @@ do_install() {
 
 do_package_qa() {
 }
-
