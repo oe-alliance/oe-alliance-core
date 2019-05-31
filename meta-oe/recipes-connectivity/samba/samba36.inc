@@ -158,7 +158,7 @@ EXTRA_OECONF="--exec-prefix=/usr \
 
 PACKAGECONFIG[talloc] = "--enable-external-libtalloc --with-libtalloc, --disable-external-libtalloc --without-libtalloc, talloc"
 
-CFLAGS      += '-fPIC -DHAVE_IPV6=1 -DMAX_DEBUG_LEVEL=-1 -ffunction-sections -fdata-sections -ltalloc -I${STAGING_INCDIR}/tirpc'
+CFLAGS      += '-Wno-deprecated -fPIC -DHAVE_IPV6=1 -DMAX_DEBUG_LEVEL=-1 -ffunction-sections -fdata-sections -ltalloc -I${STAGING_INCDIR}/tirpc'
 LDFLAGS     += "-Wl,--gc-sections -ltirpc"
 EXTRA_OEMAKE+= "DYNEXP= PICFLAG= MODULES="
 
