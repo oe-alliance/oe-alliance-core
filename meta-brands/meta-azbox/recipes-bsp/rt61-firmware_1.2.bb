@@ -3,7 +3,6 @@ LICENSE = "CLOSED"
 PROVIDES = "rt61-firmware"
 require conf/license/license-close.inc
 
-
 SRC_URI = "http://www.ralinktech.com.tw/data/RT61_Firmware_V${PV}.zip"
 
 S = "${WORKDIR}/RT61_Firmware_V${PV}"

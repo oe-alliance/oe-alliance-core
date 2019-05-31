@@ -9,7 +9,6 @@ inherit kernel machine_kernel_pr
 
 MACHINE_KERNEL_PR_append = ".18"
 
-
 SRC_URI[md5sum] = "9aa3305104807a5bdc0e0b53dcccc45b"
 SRC_URI[sha256sum] = "b543c8a7655ef588ca2f6ffb0bda7e496e5b909bae04443f01ea309381f6655c"
 

@@ -107,7 +107,6 @@ IMAGE_CMD_clapemmc_append = "\
     rm -Rf ${IMAGEDIR}; \
     "
 
-
 OEM_ARCH = "${MACHINEBUILD}"
 
 # Add "MACHINEBUILD" override for recipes

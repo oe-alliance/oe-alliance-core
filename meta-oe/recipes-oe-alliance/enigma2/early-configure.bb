@@ -5,7 +5,7 @@ PACKAGES = "${PN}"
 
 require conf/license/license-gplv2.inc
 
-SRC_URI = "file://${PN}.sh"
+SRC_URI = "file://${BPN}.sh"
 
 S = "${WORKDIR}"
 

@@ -23,7 +23,6 @@ MACHINE_EXTRA_RRECOMMENDS += " \
 
 include conf/machine/include/autoload-filesystems.inc
 
-
 PREFERRED_VERSION_icu_arm = "58.2"
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-vuplus"
@@ -34,8 +33,6 @@ PREFERRED_PROVIDER_virtual/egl = "vuplus-libgles-${MACHINE}"
 PREFERRED_PROVIDER_virtual/libgles2 = "vuplus-libgles-${MACHINE}"
 PREFERRED_PROVIDER_virtual/kodi = "stb-kodi-${MACHINE}"
 
-
-
 KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_OUTPUT = "${KERNEL_IMAGETYPE}"
 KERNEL_CONSOLE = "ttyS0,115200n8"
@@ -44,7 +41,6 @@ UBI_VOLNAME = "rootfs"
 MKUBIFS_ARGS = "-m 2048 -e 126976 -c ${MKFS_UBI_MAX_ERASE_BLK_COUNT} ${MKFS_EXTRA}"
 UBINIZE_ARGS = "-m 2048 -p 128KiB"
 EXTRA_IMAGECMD_COMPAT = "--eraseblock=0x20000 -n -l"
-
 
 IMAGEDIR ?= "vuplus/${UPDATE_DIR}"
 
@@ -65,5 +61,3 @@ MACHINEOVERRIDES =. "${@['', '${MACHINEBUILD}:']['${MACHINEBUILD}' != '']}"
 
 BBMASK = "meta-octagon/"
 BBMASK += "meta-fulan/recipes-graphics/"
-
-

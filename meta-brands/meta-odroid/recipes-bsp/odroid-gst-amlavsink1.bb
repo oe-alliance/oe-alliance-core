@@ -32,4 +32,3 @@ FILES_${PN}-dev += "${S}/include/* "
 
 #do_rm_work() {
 #}
-

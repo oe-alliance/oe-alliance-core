@@ -43,6 +43,7 @@ SRC_URI += "http://archive.vuplus.com/download/kernel/stblinux-${KSRC_VER}.tar.b
     file://kernel-add-support-for-gcc6.patch \
     file://kernel-add-support-for-gcc7.patch \
     file://kernel-add-support-for-gcc8.patch \
+    file://kernel-add-support-for-gcc9.patch \
     file://0001-Support-TBS-USB-drivers-for-4.1-kernel.patch \
     file://0001-TBS-fixes-for-4.1-kernel.patch \
     file://0001-STV-Add-PLS-support.patch \
@@ -95,4 +96,3 @@ do_rm_work() {
 
 # extra tasks
 addtask kernel_link_images after do_compile before do_install
-

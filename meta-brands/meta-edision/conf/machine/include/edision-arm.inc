@@ -1,7 +1,6 @@
 
 PREFERRED_VERSION_linux-edision = "5.1"
 
-
 KERNEL_MODULE_AUTOLOAD += "hci_uart"
 KERNEL_MODULE_AUTOLOAD += "wlan"
 
@@ -44,8 +43,6 @@ include conf/machine/include/autoload-filesystems.inc
 PREFERRED_PROVIDER_virtual/kernel = "linux-edision"
 PREFERRED_PROVIDER_virtual/blindscan-dvbs = "edision-blindscan-utils-${MACHINE}"
 PREFERRED_PROVIDER_virtual/blindscan-dvbc = "edision-blindscan-utils-${MACHINE}"
-
-GCCVERSION = "8.%"
 
 KERNEL_IMAGETYPE = "Image.gz"
 KERNEL_OUTPUT = "${KERNEL_IMAGETYPE}"

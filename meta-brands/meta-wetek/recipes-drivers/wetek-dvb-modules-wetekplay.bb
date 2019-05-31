@@ -32,4 +32,3 @@ FILES_${PN} += "${sysconfdir}/modules-load.d/_${MACHINE}.conf"
 
 do_package_qa() {
 }
-

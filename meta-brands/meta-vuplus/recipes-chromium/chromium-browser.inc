@@ -36,4 +36,3 @@ RPROVIDES_${PN} += "chromium-browser"
 FILES_${PN} = "/"
 
 INSANE_SKIP_${PN} += "already-stripped"
-

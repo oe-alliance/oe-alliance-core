@@ -25,6 +25,7 @@ SRC_URI += "http://source.mynonpublic.com/stblinux-3.3.0-20130404.tgz \
     file://kernel-add-support-for-gcc6.patch \
     file://kernel-add-support-for-gcc7.patch \
     file://kernel-add-support-for-gcc8.patch \
+    file://kernel-add-support-for-gcc9.patch \
     file://fix-proc-cputype.patch \
     file://fixme-hardfloat.patch \
     file://0001-Revert-MIPS-Add-fast-get_user_pages.patch \
@@ -85,7 +86,6 @@ do_configure_prepend() {
     rm -rf ${STAGING_KERNEL_DIR}/include/config
     rm -rf ${STAGING_KERNEL_DIR}/arch/mips/include/generated
 }
-
 
 kernel_do_install_append() {
     ${STRIP} ${D}/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}

@@ -14,7 +14,6 @@ SRC_URI[sha256sum] = "3f36b094d00bce2300c726e2da1c3db96df3f834a4715a652eb51a2d70
 
 SRC_URI = "http://source.mynonpublic.com/ebox/ebox-dvb-modules-${MACHINE}-${KV}-${SRCDATE}.zip"
 
-
 S = "${WORKDIR}"
 
 INHIBIT_PACKAGE_STRIP = "1"
@@ -36,4 +35,3 @@ do_install() {
 }
 
 FILES_${PN} += "${sysconfdir}/modules-load.d/_${MACHINE}.conf /lib/modules/${KV}/extra"
-

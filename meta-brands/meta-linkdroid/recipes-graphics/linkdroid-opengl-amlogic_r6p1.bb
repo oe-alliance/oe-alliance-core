@@ -5,12 +5,10 @@ LICENSE = "CLOSED"
 PACKAGE_ARCH := "${MACHINE_ARCH}"
 require conf/license/license-close.inc
 
-
 PR="r0"
 
 PROVIDES = "virtual/libgles1 virtual/libgles2 virtual/egl"
 RPROVIDES_${PN} = "virtual/libgles1 virtual/libgles2 virtual/egl"
-
 
 SRC_URI = "file://opengl-905-r6p1.tgz \
            file://10-meson_mali.rules \

@@ -25,7 +25,6 @@ FILES_${PN} += "${nonarch_base_libdir}/modules/${KV}/extra"
 FILES_${PN} += "/usr/bin/komession"
 FILES_${PN} += "${sysconfdir}/init.d"
 
-
 do_compile() {
 }
 do_populate_sysroot() {

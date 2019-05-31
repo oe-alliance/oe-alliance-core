@@ -15,7 +15,6 @@ inherit lib_package pkgconfig
 ## QA still complains about host headers used, does not make any sense
 DEPENDS = " gstreamer1.0 linkdroid-libamcodec-${MACHINE} linkdroid-libamavutils-${MACHINE} gstreamer1.0-libav  gstreamer1.0-plugins-base  gstreamer1.0-plugins-good gstreamer1.0-plugins-ugly "
 
-
 SRC_URI = "file://gst-aml-plugins-1.0.zip"
 
 S = "${WORKDIR}/gst-aml-plugins-1.0"

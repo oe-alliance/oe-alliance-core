@@ -29,4 +29,3 @@ do_install () {
         rm /etc/rcS.d/S03stslave
     fi
 }
-

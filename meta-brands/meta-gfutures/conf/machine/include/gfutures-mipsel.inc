@@ -33,7 +33,6 @@ IMAGE_CMD_ubi_append = "\
     rm -Rf ${IMAGEDIR}; \
     "
 
-
 MACHINE_FEATURES += " bootsplash omb boxmodel feature1"
 
 BOOTLOGO_FILENAME = "splash.bin"

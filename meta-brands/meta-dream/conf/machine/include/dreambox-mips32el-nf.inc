@@ -78,4 +78,3 @@ DREAMBOX_BUILDIMAGE = "buildimage --arch ${MACHINE} ${EXTRA_BUILDCMD} \
 IMAGE_FSTYPES ?= "jffs2nfi"
 
 require conf/machine/include/tune-mips32.inc
-

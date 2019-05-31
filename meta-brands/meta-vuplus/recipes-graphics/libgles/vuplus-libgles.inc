@@ -36,4 +36,3 @@ do_package_qa() {
 
 FILES_${PN} = "/usr/lib/*"
 FILES_${PN}-dev = "/usr/include/*"
-

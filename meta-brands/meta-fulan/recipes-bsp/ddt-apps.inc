@@ -27,4 +27,3 @@ do_configure_prepend() {
     touch ${S}/COPYING
     touch ${S}/ChangeLog
 }
-

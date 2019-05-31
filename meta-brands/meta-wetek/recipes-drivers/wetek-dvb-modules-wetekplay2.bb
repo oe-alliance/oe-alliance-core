@@ -28,9 +28,7 @@ do_install() {
     install -m 0755 ${WORKDIR}/wetekdvb.ko ${D}${nonarch_base_libdir}/modules/${KV}/extra/
 }
 
-
 FILES_${PN} += "${sysconfdir}/modules-load.d/_${MACHINE}.conf"
 
 do_package_qa() {
 }
-

@@ -51,8 +51,6 @@ PREFERRED_PROVIDER_virtual/egl = "skylake-v3ddriver-${MACHINE}"
 PREFERRED_PROVIDER_virtual/libgles2 = "skylake-v3ddriver-${MACHINE}"
 PREFERRED_PROVIDER_virtual/kodi = "stb-kodi-${MACHINE}"
 
-
-
 KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_OUTPUT = "${KERNEL_IMAGETYPE}"
 KERNEL_CONSOLE = "ttyS0,115200n8"

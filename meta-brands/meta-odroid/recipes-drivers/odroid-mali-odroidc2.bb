@@ -26,4 +26,3 @@ do_install() {
 	install -d ${D}${nonarch_base_libdir}/modules/${KV}/drivers/gpu/mali
 	install -m 0644 ${S}/mali.ko ${D}${nonarch_base_libdir}/modules/${KV}/drivers/gpu/mali
 }
-

@@ -4,7 +4,6 @@ require conf/license/license-gplv2.inc
 COMPATIBLE_MACHINE = "i55plus"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-
 PV = "1.0"
 PR = "r0"
 

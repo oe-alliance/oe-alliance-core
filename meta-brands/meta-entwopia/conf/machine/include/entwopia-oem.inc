@@ -102,8 +102,6 @@ GLIBC_EXTRA_OECONF = "--with-tls --with-__thread"
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-entwopia"
 
-
-
 KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_OUTPUT = "${KERNEL_IMAGETYPE}"
 KERNEL_CONSOLE = "ttyS0,115200n8"
@@ -141,7 +139,6 @@ IMAGE_CMD_ubi_append = "\
     rm -f ${DEPLOY_DIR_IMAGE}/.manifest; \
     rm -Rf ${IMAGEDIR}; \
     "
-
 
 MACHINE_FEATURES += "3dtv alsa hdmicec switchoff bootsplash omb skins1080 feature1 feature2 blindscan-tbs HDMI "
 

@@ -39,4 +39,3 @@ do_install() {
 }
 
 INSANE_SKIP_${PN} = "already-stripped"
-

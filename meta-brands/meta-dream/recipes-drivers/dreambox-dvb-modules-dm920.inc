@@ -58,7 +58,6 @@ DM_LOCALVERSION = "${@'-'.join('${PV}'.split('-')[:-1])}-${MACHINE}"
 DRIVERDATE = "${@'${PV}'.split('-')[-1]}"
 MD5SUM = "${@d.getVarFlag('SRC_URI', 'dm920.md5sum', True)}"
 
-
 pkg_postinst_${PN} () {
 if [ -z "$D" ]; then
 	depmod -a ${DM_LOCALVERSION}

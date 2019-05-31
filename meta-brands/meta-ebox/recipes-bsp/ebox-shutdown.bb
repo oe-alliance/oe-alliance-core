@@ -16,4 +16,3 @@ do_install() {
 }
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
-

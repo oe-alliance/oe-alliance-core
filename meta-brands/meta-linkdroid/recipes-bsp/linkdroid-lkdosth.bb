@@ -33,4 +33,3 @@ INITSCRIPT_PARAMS = "defaults 08"
 
 do_rm_work() {
 }
-

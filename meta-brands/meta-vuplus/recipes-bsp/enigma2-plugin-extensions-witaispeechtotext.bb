@@ -37,4 +37,3 @@ INSANE_SKIP_${PN} = "already-stripped"
 
 SRC_URI[md5sum] = "6b1fe4fd6f921a08721e4613b88da485"
 SRC_URI[sha256sum] = "cfb889fc95a3223783d9448abeaa37b5d17144d19c6278c8d9f24851f51dddb9"
-

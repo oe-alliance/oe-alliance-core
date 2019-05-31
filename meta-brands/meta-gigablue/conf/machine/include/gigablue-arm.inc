@@ -41,4 +41,3 @@ IMAGE_CMD_tar_prepend = "\
     rm -f ${DEPLOY_DIR_IMAGE}/.manifest; \
     rm -Rf gigablue; \
 "
-

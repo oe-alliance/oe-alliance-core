@@ -19,7 +19,6 @@ RPROVIDES_${KERNEL_PACKAGE_NAME}-image = "kernel-image-${KERNEL_VERSION}"
 #RPROVIDES_${KERNEL_PACKAGE_NAME}-image-zimage = "kernel-image"
 RDEPENDS_${KERNEL_PACKAGE_NAME}-image = "kernel-devicetree flash-scripts"
 
-
 pkg_postinst_kernel-image () {
 #!/bin/sh
 if [ -z "$D" ]; then

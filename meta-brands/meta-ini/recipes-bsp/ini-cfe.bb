@@ -13,7 +13,6 @@ S = "${WORKDIR}"
 
 SRC_URI = "file://cfe.bmp file://finished.bmp file://imageversion.bmp file://kernel.bmp file://rootfs.bmp file://splash.bmp"
 
-
 ALLOW_EMPTY_${PN} = "1"
 
 do_deploy() {

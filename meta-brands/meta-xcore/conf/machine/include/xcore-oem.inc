@@ -151,8 +151,6 @@ PREFERRED_PROVIDER_virtual/egl = "xcore-v3ddriver-${MACHINE}"
 PREFERRED_PROVIDER_virtual/libgles2 = "xcore-v3ddriver-${MACHINE}"
 PREFERRED_PROVIDER_virtual/kodi = "stb-kodi-${MACHINE}"
 
-
-
 MACHINE_FEATURES += "alsa 3dtv switchoff hdmicec bootsplash omb boxmodel HDMI"
 
 BOOTLOGO_FILENAME = "splash.bin"

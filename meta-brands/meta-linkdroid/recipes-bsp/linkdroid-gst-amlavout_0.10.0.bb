@@ -24,8 +24,6 @@ SRC_URI = " file://gst-aml-plugins-0.10.0.zip "
 
 S = "${WORKDIR}/gst-aml-plugins-0.10.0"
 
-
-
 CFLAGS =+ " -O2 -fPIC -I${STAGING_INCDIR} -I${S}/include  -I${S}/include/amports  -I${S}/common/include/ppmgr \
 -I${S}/amlaudio -I${S}/amlvideo "
 LDFLAGS =+ " -L${STAGING_LIBDIR} -L${STAGING_BASELIBDIR} " 
@@ -36,6 +34,3 @@ FILES_${PN}-dev += "${S}/include/* "
 
 do_rm_work(){
 }
-
-
-

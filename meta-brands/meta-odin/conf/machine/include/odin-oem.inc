@@ -121,8 +121,6 @@ PREFERRED_PROVIDER_virtual/kernel = "linux-odin"
 PREFERRED_PROVIDER_virtual/blindscan-dvbc = "odin-blindscan-utils-${MACHINE}"
 PREFERRED_PROVIDER_virtual/blindscan-dvbs = "odin-blindscan-utils-${MACHINE}"
 
-
-
 KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_OUTPUT = "${KERNEL_IMAGETYPE}"
 KERNEL_CONSOLE = "ttyS0,115200n8"

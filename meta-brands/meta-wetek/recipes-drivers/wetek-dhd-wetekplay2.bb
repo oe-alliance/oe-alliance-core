@@ -41,4 +41,3 @@ do_install() {
 }
 
 FILES_${PN} += "${nonarch_base_libdir}/firmware/brcm/*"
-

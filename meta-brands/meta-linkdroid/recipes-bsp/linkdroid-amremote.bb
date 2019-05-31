@@ -29,6 +29,4 @@ do_install() {
     install -m 0644 ${WORKDIR}/alien2.conf ${D}${sysconfdir}/amremote/
 }
 
-
 FILES_${PN} = "${bindir} ${sysconfdir}"
-

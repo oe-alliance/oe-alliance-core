@@ -36,6 +36,7 @@ SRC_URI += "${KERNELORG_MIRROR}/linux/kernel/v3.x/linux-${KV}.tar.bz2;name=azbox
     file://kernel-add-support-for-gcc6.patch \
     file://kernel-add-support-for-gcc7.patch \
     file://kernel-add-support-for-gcc8.patch \
+    file://kernel-add-support-for-gcc9.patch \
     file://0002-cp1emu-do-not-use-bools-for-arithmetic.patch \
     file://0003-log2-give-up-on-gcc-constant-optimizations.patch \
     "

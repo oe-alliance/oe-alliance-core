@@ -11,7 +11,6 @@ inherit pkgconfig update-rc.d
 INITSCRIPT_NAME = "amlsetfb"
 INITSCRIPT_PARAMS = "start 03 S ."
 
-
 INHIBIT_DEFAULT_DEPS = "1"
 RDEPENDS_${PN} = "initscripts fbset fbset-modes"
 
@@ -27,4 +26,3 @@ do_install() {
     install -m 0755 ${WORKDIR}/amlsetfb  ${D}${sysconfdir}/init.d/amlsetfb
     install -m 0755 ${WORKDIR}/aaa  ${D}${sysconfdir}/init.d/aaa
 }
-

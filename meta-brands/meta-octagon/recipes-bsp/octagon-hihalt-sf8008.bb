@@ -35,5 +35,3 @@ FILES_${PN}  = "${bindir}/hihalt ${sysconfdir}/init.d"
 
 SRC_URI[md5sum] = "846f50982a99eadd98392526dd46ce0f"
 SRC_URI[sha256sum] = "baeb686c21872d20c50823bae48f9733d99c7748f341f4a25ec360f189e38cfe"
-
-

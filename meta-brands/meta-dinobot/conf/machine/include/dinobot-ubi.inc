@@ -1,7 +1,6 @@
 KERNEL_FILE = "uImage"
 ROOTFS_FILE = "rootfs.bin"
 
-
 IMAGE_FSTYPES += "ubi"
 UBI_VOLNAME = "rootfs"
 MKUBIFS_ARGS = "-F -m 2048 -e 126976 -c 3840"

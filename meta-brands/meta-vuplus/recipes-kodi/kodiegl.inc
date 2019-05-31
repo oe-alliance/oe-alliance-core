@@ -32,4 +32,3 @@ FILES_${PN}="${libdir} ${bindir}"
 FILES_${PN}-dev = "${includedir}"
 
 PACKAGE_ARCH = "${MACHINE}"
-

@@ -15,7 +15,6 @@ SRC_URI = " file://shutdown.sh \
 
 S = "${WORKDIR}"
 
-
 inherit pkgconfig update-rc.d
 
 do_install() {
