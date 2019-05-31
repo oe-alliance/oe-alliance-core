@@ -5,21 +5,21 @@ LICENSE = "GPLv2+ & LGPLv2.1+"
 LIC_FILES_CHKSUM = "file://COPYING-GPL;md5=1ed9d357695b2e3ef099df37fed63d96 \
                     file://COPYING-LGPL;md5=d370feaa1c9edcdbd29ca27ea3d2304d"
 SECTION = "multimedia"
-SRCREV = "17289"
-PV = "10.2+svnr${SRCPV}"
+SRCREV = "${AUTOREV}"
+PV = "10.2+gitr${SRCPV}"
 
-SRC_URI = "svn://svn.xiph.org/trunk;module=cdparanoia;protocol=http \
+SRC_URI = "git://github.com/oe-mirrors/cdparanoia.git \
      file://fixes10.patch \
      file://Makefile.in.patch \
      file://interface_Makefile.in.patch \
      file://paranoia_Makefile.in.patch \
      file://configure.in.patch"
 
-S = "${WORKDIR}/cdparanoia"
+S = "${WORKDIR}/git"
 
 PARALLEL_MAKE = ""
 
-inherit autotools-brokensep pkgconfig
+inherit autotools-brokensep pkgconfig gitpkgv
 
 PACKAGES += "libcdparanoia libcdparanoia-dev libcdparanoia-static"
 
