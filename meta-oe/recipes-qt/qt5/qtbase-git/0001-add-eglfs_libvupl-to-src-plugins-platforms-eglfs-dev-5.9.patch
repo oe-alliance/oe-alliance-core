@@ -1,0 +1,25 @@
+From ca3d139c9ebadfd54b9dab8dfee369c75021eb9b Mon Sep 17 00:00:00 2001
+From: dpeddi <eddi@depieri.net>
+Date: Sat, 25 May 2019 20:22:05 +0000
+Subject: [PATCH 1/4] add eglfs_libvupl to
+ src/plugins/platforms/eglfs/deviceintegration/deviceintegration.pro
+
+---
+ src/plugins/platforms/eglfs/deviceintegration/deviceintegration.pro | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/src/plugins/platforms/eglfs/deviceintegration/deviceintegration.pro b/src/plugins/platforms/eglfs/deviceintegration/deviceintegration.pro
+index 92ee83f..6f20622 100644
+--- a/src/plugins/platforms/eglfs/deviceintegration/deviceintegration.pro
++++ b/src/plugins/platforms/eglfs/deviceintegration/deviceintegration.pro
+@@ -2,6 +2,7 @@ TEMPLATE = subdirs
+ QT_FOR_CONFIG += gui-private
+ 
+ qtConfig(egl_x11): SUBDIRS += eglfs_x11
++qtConfig(eglfs_libvupl): SUBDIRS += eglfs_libvupl
+ qtConfig(eglfs_gbm): SUBDIRS *= eglfs_kms_support eglfs_kms
+ qtConfig(eglfs_egldevice): SUBDIRS *= eglfs_kms_support eglfs_kms_egldevice
+ qtConfig(eglfs_brcm): SUBDIRS += eglfs_brcm
+-- 
+2.7.4
+
