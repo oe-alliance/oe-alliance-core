@@ -64,6 +64,11 @@ kernel_do_install_append_h9combo() {
 	install -m 0755 ${WORKDIR}/findkerneldevice.sh ${D}${KERNEL_IMAGEDEST}
 }
 
+kernel_do_install_append_h10() {
+	install -d ${D}${KERNEL_IMAGEDEST}
+	install -m 0755 ${WORKDIR}/findkerneldevice.sh ${D}${KERNEL_IMAGEDEST}
+}
+
 pkg_postinst_kernel-image_h9() {
 	if [ "x$D" == "x" ]; then
 		if [ -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE} ] ; then
