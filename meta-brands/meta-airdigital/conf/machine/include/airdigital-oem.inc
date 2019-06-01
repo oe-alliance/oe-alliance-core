@@ -35,6 +35,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'zgemmah9splus', 'H9S PLUS' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmai55plus', 'I55 Plus' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah9combo', 'H9 COMBO' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah9twin', 'H9 TWIN' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmah10', 'H10' , '', d)}\
 "
 
 MACHINE_BRAND = "\
@@ -69,6 +70,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'zgemmah9splus', 'Zgemma' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmai55plus', 'Zgemma' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah9combo', 'Zgemma' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah9twin', 'Zgemma' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmah10', 'Zgemma' , '', d)}\
 "
 
 IMAGEDIR ?= "\
@@ -103,6 +105,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'zgemmah9splus', 'h9' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmai55plus', 'i55plus' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah9combo', 'h9combo' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah9twin', 'h9combo' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmah10', 'h10' , '', d)}\
 "
 
 MACHINE_DRIVER = "\
@@ -137,6 +140,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'zgemmah9splus', 'h9' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmai55plus', 'i55plus' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah9combo', 'h9combo' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah9twin', 'h9combo' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmah10', 'h10' , '', d)}\
 "
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "\
@@ -169,6 +173,7 @@ DVBMEDIASINK_CONFIG = "--with-wma --with-wmv --with-pcm --with-dts --with-eac3 \
     ${@bb.utils.contains('MACHINE', 'h9', '--with-h265 --with-vb6 --with-vb8 --with-vb9 --with-spark' , '', d)} \
     ${@bb.utils.contains('MACHINE', 'h9combo', '--with-h265 --with-vb6 --with-vb8 --with-vb9 --with-spark' , '', d)} \
     ${@bb.utils.contains('MACHINE', 'i55plus', '--with-h265 --with-vb6 --with-vb8 --with-vb9 --with-spark' , '', d)} \
+    ${@bb.utils.contains('MACHINE', 'h10', '--with-h265 --with-vb6 --with-vb8 --with-vb9 --with-spark' , '', d)} \
     "
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-airdigital"

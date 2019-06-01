@@ -25,6 +25,8 @@ RDEPENDS_${PN} = "\
     python-imaging \
     python-service-identity \
     rtmpdump \
+    tar \
+    zip \
     ${@bb.utils.contains("TUNE_FEATURES", "armv", "glibc-compat", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "dreamboxv1", "", "ofgwrite", d)} \
     ${@bb.utils.contains_any("FLASHSIZE", "64", "", " \

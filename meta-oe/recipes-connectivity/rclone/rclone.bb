@@ -11,7 +11,7 @@ LIC_FILES_CHKSUM = "file://${WORKDIR}/COPYING;md5=bed161b82a1ecab65ff7ba3c3b9604
 DEPENDS = "go-cross-${TUNE_PKGARCH}"
 RDEPENDS_${PN} += "bash"
 
-inherit go gitpkgv
+inherit gitpkgv go upx-compress
 
 SRCREV = "${AUTOREV}"
 PV = "1.46-DEV+git${SRCPV}"
@@ -27,6 +27,7 @@ GO_IMPORT = "github.com/ncw/rclone"
 
 do_install_append() {
     rm -rf ${D}${libdir}
-    install -m 0755 ${WORKDIR}/rclonefs ${D}${bindir}
-    ln -sf rclone ${D}${bindir}/mount.rclone
+    rm ${D}${bindir}/test_all
+    install -m 755 ${WORKDIR}/rclonefs ${D}${bindir}
+    ln -s rclone ${D}${bindir}/mount.rclone
 }
