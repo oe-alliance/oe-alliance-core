@@ -29,7 +29,9 @@ DEPENDS = "go-cross-${TUNE_PKGARCH}"
 RDEPENDS_${PN} += "bash"
 
 # Don't use gitpkgv here ...
-inherit go
+inherit go upx-compress
+
+PR="r1"
 
 # ... because shitquake fails to eval nested variables like PV="git${PKGV}" later ...
 # ... so keep PV updated manually (git rev-list --count <revision>)
@@ -44,6 +46,7 @@ SRC_URI = "git://${GO_IMPORT}.git;protocol=https;destsuffix=${BPN}-${PV}/src/${G
 
 do_install_append() {
     rm -rf ${D}${libdir}
+    rm ${D}${bindir}/test_all
     install -m 755 ${WORKDIR}/rclonefs ${D}${bindir}
     ln -s rclone ${D}${bindir}/mount.rclone
 }
