@@ -4,7 +4,6 @@ LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 
 
-DEPENDS += "enigma2 virtual/kodi"
 RDEPENDS_${PN} += "virtual/kodi"
 
 RRECOMMENDS_${PN} = "${@bb.utils.contains("MACHINE_FEATURES", "no-subssupport", "" , "enigma2-plugin-extensions-subssupport", d)}"
@@ -29,3 +28,4 @@ FILES_${PN} = " \
     "
 
 inherit autotools
+INSANE_SKIP += "file-deps"
