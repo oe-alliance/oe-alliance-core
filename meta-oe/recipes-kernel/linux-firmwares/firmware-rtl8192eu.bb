@@ -1,20 +1,10 @@
-LICENSE = "CLOSED"
-require conf/license/license-close.inc
-SRC_URI = " \
-    file://rtl8192eu_nic.zip \
-"
+require linux-firmware.inc
 
-S = "${WORKDIR}"
+DESCRIPTION = "Firmware for RTL8192EU"
 
-PACKAGES = "${PN}"
-FILES_${PN} += "${base_libdir}/firmware"
-
-inherit allarch
-
-SUMMARY = "Firmware for rtl8192eu"
+SRCREV = "${AUTOREV}"
 
 do_install() {
-    install -d ${D}${nonarch_base_libdir}/firmware
-    install -d ${D}${nonarch_base_libdir}/firmware/rtlwifi
-    install -m 0644 rtl8192eu_nic.bin ${D}${nonarch_base_libdir}/firmware/rtlwifi
+	install -d ${D}${nonarch_base_libdir}/firmware/rtlwifi
+	install -m 0644 rtlwifi/rtl8192eu_nic.bin ${D}/${nonarch_base_libdir}/firmware/rtlwifi/
 }
