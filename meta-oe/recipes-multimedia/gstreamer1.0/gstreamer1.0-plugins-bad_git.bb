@@ -8,12 +8,12 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=73a5855a8119deb017f5f13cf327095d \
 
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>(\d+(\.\d+)+))"
 
-SRCREV_base = "5fde70bb63a1cbf6f734fb2429e74ffb53126217"
+SRCREV_base = "015566daec774b19fa8eadce2361aa6814b8e7a0"
 SRCREV_common = "32edeb4f0e665ccad767ab6a104e013522ce7e6f"
 SRCREV_FORMAT = "base"
 
-SRC_URI = "git://anongit.freedesktop.org/gstreamer/gst-plugins-bad;branch=master;name=base \
-           git://anongit.freedesktop.org/gstreamer/common;destsuffix=git/common;name=common \
+SRC_URI = "git://gitlab.freedesktop.org/gstreamer/gst-plugins-bad;protocol=https;branch=master;name=base \
+           git://gitlab.freedesktop.org/gstreamer/common;protocol=https;destsuffix=git/common;name=common \
 "
 
 SRC_URI += " \
