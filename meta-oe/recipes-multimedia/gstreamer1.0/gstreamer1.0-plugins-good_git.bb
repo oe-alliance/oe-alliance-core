@@ -8,12 +8,12 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=a6f89e2100d9b6cdffcea4f398e37343 \
 
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>(\d+(\.\d+)+))"
 
-SRCREV_base = "646dc1ef9b92841e235d10a8262882b6e7d97422"
+SRCREV_base = "f554369ed59fab1d54f63fee424179cce9e4f8ba"
 SRCREV_common = "32edeb4f0e665ccad767ab6a104e013522ce7e6f"
 SRCREV_FORMAT = "base"
 
-SRC_URI = "git://anongit.freedesktop.org/gstreamer/gst-plugins-good;branch=master;name=base \
-           git://anongit.freedesktop.org/gstreamer/common;destsuffix=git/common;name=common \
+SRC_URI = "git://gitlab.freedesktop.org/gstreamer/gst-plugins-good;protocol=https;branch=master;name=base \
+           git://gitlab.freedesktop.org//gstreamer/common;protocol=https;destsuffix=git/common;name=common \
            file://0001-gstrtpmp4gpay-set-dafault-value-for-MPEG4-without-co.patch \
            file://0001-introspection.m4-prefix-pkgconfig-paths-with-PKG_CON.patch \
 "

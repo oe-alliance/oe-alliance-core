@@ -15,8 +15,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
 # and remove the ffmpeg sources from SRC_URI below. However, first note the
 # warnings in gstreamer1.0-libav.inc
 SRC_URI = " \
-    git://anongit.freedesktop.org/gstreamer/gst-libav;name=base \
-    git://anongit.freedesktop.org/gstreamer/common;destsuffix=git/common;name=common \
+    git://gitlab.freedesktop.org/gstreamer/gst-libav;protocol=https;name=base \
+    git://gitlab.freedesktop.org/gstreamer/common;protocol=https;destsuffix=git/common;name=common \
     git://github.com/FFmpeg/FFmpeg;destsuffix=git/gst-libs/ext/libav;name=ffmpeg;branch=release/4.1 \
     file://0001-Disable-yasm-for-libav-when-disable-yasm.patch \
     file://workaround-to-build-gst-libav-for-i586-with-gcc.patch \
@@ -32,9 +32,9 @@ PKGV = "${GST_VERSION_FULL}+git${GITPKGV}"
 
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>(\d+(\.\d+)+))"
 
-SRCREV_base = "d6c61e69b36eaa144a5ef8fdac73a8162f072509"
+SRCREV_base = "2e59973cca6d42657bfeb27006343d28d023c0b7"
 SRCREV_common = "32edeb4f0e665ccad767ab6a104e013522ce7e6f"
-SRCREV_ffmpeg = "7c2dd1f969c9decf217f1b2117087c4b8918de22"
+SRCREV_ffmpeg = "7211e1ca9367f7f1a4a04983a66c7b1e2c9a3c92"
 SRCREV_FORMAT = "base"
 
 LIBAV_INCLUDED_EXLUCED = "--disable-everything \

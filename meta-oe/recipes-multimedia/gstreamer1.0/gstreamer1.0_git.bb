@@ -9,12 +9,12 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=6762ed442b3822387a51c92d928ead0d \
 
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>(\d+(\.\d+)+))"
 
-SRCREV_base = "89c221a6972513f629c969f5485f37e77ccfa6e1"
+SRCREV_base = "b22a0c3873926be16313c776ccea764936ab6e4b"
 SRCREV_common = "32edeb4f0e665ccad767ab6a104e013522ce7e6f"
 SRCREV_FORMAT = "base"
 
-SRC_URI = "git://anongit.freedesktop.org/gstreamer/gstreamer;branch=master;name=base \
-           git://anongit.freedesktop.org/gstreamer/common;destsuffix=git/common;name=common \
+SRC_URI = "git://gitlab.freedesktop.org/gstreamer/gstreamer;protocol=https;branch=master;name=base \
+           git://gitlab.freedesktop.org/gstreamer/common;protocol=https;destsuffix=git/common;name=common \
            file://0001-revert-use-new-gst-adapter-get-buffer.patch \
            file://0002-continue-on-nondefined-64bit-atomics.patch \
 "
