@@ -8,12 +8,12 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=a6f89e2100d9b6cdffcea4f398e37343 \
 
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>(\d+(\.\d+)+))"
 
-SRCREV_base = "6cbac8d09f7866827381a9d0554b7a61d45b41b5"
+SRCREV_base = "dd96c2a98903c0299a945d53cbc481c0b93ae7d5"
 SRCREV_common = "32edeb4f0e665ccad767ab6a104e013522ce7e6f"
 SRCREV_FORMAT = "base"
 
-SRC_URI = "git://anongit.freedesktop.org/gstreamer/gst-plugins-ugly;branch=master;name=base \
-           git://anongit.freedesktop.org/gstreamer/common;destsuffix=git/common;name=common \
+SRC_URI = "git://gitlab.freedesktop.org/gstreamer/gst-plugins-ugly;protocol=https;branch=master;name=base \
+           git://gitlab.freedesktop.org/gstreamer/common;protocol=https;destsuffix=git/common;name=common \
            file://0001-introspection.m4-prefix-pkgconfig-paths-with-PKG_CON.patch \
 "
 
