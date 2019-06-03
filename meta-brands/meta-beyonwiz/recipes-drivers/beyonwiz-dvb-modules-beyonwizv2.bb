@@ -1,7 +1,7 @@
 KV = "4.4.35"
-SRCDATE = "20190531"
+SRCDATE = "20190603"
 
 require beyonwiz-dvb-modules-hisi.inc
 
-SRC_URI[md5sum] = "4f4d24df8af6e62c0d3b5e4e8ea88322"
-SRC_URI[sha256sum] = "72a5bd263aad663c9a818ca8290a34e0c59c561e3d7e49d088eca1cfd650d914"
+SRC_URI[md5sum] = "0e17e10d790b37485af2f22c7c938871"
+SRC_URI[sha256sum] = "7e52a27aa51b29f36f1c10714d03cb6c50cb753dd263b0296f73441ac1d5c8ba"
