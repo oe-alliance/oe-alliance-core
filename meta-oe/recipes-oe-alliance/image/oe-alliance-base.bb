@@ -46,7 +46,7 @@ RDEPENDS_${PN} = "\
     opkg \
     rc-local \
     sdparm \
-    p7zip \
+    ${@bb.utils.contains("MACHINE_FEATURES", "dreamboxv1", "", "p7zip", d)} \
     packagegroup-base \
     packagegroup-core-boot \
     tzdata tzdata-europe tzdata-australia tzdata-asia tzdata-pacific tzdata-africa tzdata-americas \
