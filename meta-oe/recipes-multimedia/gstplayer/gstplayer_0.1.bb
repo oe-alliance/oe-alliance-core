@@ -14,7 +14,7 @@ SRC_URI =+ "file://0001-set-iptv-download-timeout-0-to-disable-ifdsrc.patch \
             file://0009-try-to-get-PTS-from-video-sink-first.patch \
             file://0011-increase-eos-fix-timeout-to-10s.patch"
 
-S = "${WORKDIR}/git/"
+S = "${WORKDIR}/git"
 
 do_compile() {
     cd ${S}/gstplayer/gst-1.0
@@ -26,8 +26,8 @@ do_install() {
     install -m 0755 ${S}/gstplayer/gst-1.0/gstplayer_gst-1.0 ${D}${bindir}/gstplayer
 }
 
-pkg_postinst_${PN}() {
-    ln -sf $D${bindir}/gstplayer $D${bindir}/gstplayer_gst-1.0
+pkg_postinst_ontarget_${PN}() {
+    ln -sf gstplayer ${bindir}/gstplayer_gst-1.0
 }
 
 pkg_prerm_${PN}() {
