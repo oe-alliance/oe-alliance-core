@@ -66,7 +66,7 @@ PACKAGECONFIG[webrtcdsp]       = "--enable-webrtcdsp,--disable-webrtcdsp,webrtc-
 #   openni2 winks direct3d directsound winscreencap acm apple_media iqa
 #   android_media avc bs2b chromaprint daala dts fdkaac gme gsm kate ladspa
 #   lv2 mpeg2enc mplex musepack nvenc ofa opensles soundtouch
-#   spandsp spc teletextdec vdpau wasapi x265 zbar
+#   spandsp spc teletextdec wasapi x265 zbar
 
 EXTRA_OECONF += " \
     --enable-decklink \
@@ -105,7 +105,6 @@ EXTRA_OECONF += " \
     --disable-spandsp \
     --disable-teletextdec \
     --disable-tinyalsa \
-    --disable-vdpau \
     --disable-wasapi \
     --disable-webrtcdsp \
     --disable-wildmidi \
