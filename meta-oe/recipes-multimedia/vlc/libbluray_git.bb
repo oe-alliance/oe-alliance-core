@@ -1,12 +1,28 @@
-SUMMARY = "Library to access Blu-Ray disks"
-SECTION = "libs/multimedia"
-LICENSE = "LGPLv2.1+"
-LIC_FILES_CHKSUM = "file://COPYING;md5=435ed639f84d4585d93824e7da3d85da"
-SRCREV = "3b9a9f044644a6abe9cb09377f714ded9fdd6c87"
-PV = "0.2.1+git${SRCPV}"
+SUMMARY  = "Library to access Blu-Ray disk"
+SECTION = "misc"
+HOMEPAGE = "http://videolan.org"
+LICENSE = "GPLv2"
+LIC_FILES_CHKSUM="file://COPYING;md5=435ed639f84d4585d93824e7da3d85da"
 
-SRC_URI = "git://git.videolan.org/${BPN}.git;protocol=git"
+DEPENDS = "libxml2"
 
-S = "${WORKDIR}/git"
+SRC_URI = "gitsm://git.videolan.org/libbluray.git"
 
-inherit autotools lib_package pkgconfig
+inherit gitpkgv autotools-brokensep pkgconfig
+
+SRCREV = "${AUTOREV}"
+PV = "v1.1.2+git${SRCPV}"
+PKGV = "v1.1.2+git${GITPKGV}"
+
+S="${WORKDIR}/git"
+
+EXTRA_OECONF = " \
+    --disable-bdjava-jar \
+    --disable-doxygen-doc \
+    --disable-doxygen-dot \
+    --without-freetype \
+    --without-fontconfig \
+"
+
+do_package_qa() {
+}
