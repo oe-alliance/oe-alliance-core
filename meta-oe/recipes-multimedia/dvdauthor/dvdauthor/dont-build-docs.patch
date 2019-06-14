@@ -1,0 +1,8 @@
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -1,4 +1,4 @@
+-SUBDIRS = doc src
++SUBDIRS = src
+ 
+ noinst_DATA = dvdauthor.spec
+ 
