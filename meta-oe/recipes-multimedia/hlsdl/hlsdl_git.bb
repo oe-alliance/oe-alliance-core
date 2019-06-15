@@ -12,7 +12,7 @@ PKGV = "1.0+git${GITPKGV}"
 PR = "r0"
 
 SRC_URI = "git://github.com/e2iplayer/hlsdl.git;protocol=git"
-SRCREV = "a0aa96f228396c2c05bb82bd53435a2675d9c982"
+SRCREV = "${AUTOREV}"
 
 S = "${WORKDIR}/git/"
 
