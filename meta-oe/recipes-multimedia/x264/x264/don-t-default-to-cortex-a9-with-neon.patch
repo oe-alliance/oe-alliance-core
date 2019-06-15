@@ -1,4 +1,4 @@
-From a72bf499a0674fc75eedf15008b424e28f67e4bd Mon Sep 17 00:00:00 2001
+From 74cc185fa61bce4fb62563b5aaee97e0424cda0a Mon Sep 17 00:00:00 2001
 From: Andrei Gherzan <andrei@gherzan.ro>
 Date: Fri, 2 Feb 2018 15:10:08 +0200
 Subject: [PATCH] dont default to cortex-a9 with neon
@@ -10,15 +10,16 @@ Upstream-Status: Pending
 
 Signed-off-by: Andrei Gherzan <andrei@gherzan.ro>
 Signed-off-by: Maxin B. John <maxin.john@intel.com>
+
 ---
  configure | 3 ---
  1 file changed, 3 deletions(-)
 
 diff --git a/configure b/configure
-index 0e3ef23..955b993 100755
+index 741ae506..3344220f 100755
 --- a/configure
 +++ b/configure
-@@ -911,9 +911,6 @@ if [ $asm = auto -a \( $ARCH = X86 -o $ARCH = X86_64 \) ] ; then
+@@ -930,9 +930,6 @@ if [ $asm = auto -a \( $ARCH = X86 -o $ARCH = X86_64 \) ] ; then
  fi
  
  if [ $asm = auto -a $ARCH = ARM ] ; then
@@ -28,6 +29,3 @@ index 0e3ef23..955b993 100755
      cc_check '' '' '__asm__("add r0, r1, r2");' && define HAVE_ARM_INLINE_ASM
      if [ $compiler = CL ] && cpp_check '' '' 'defined(_M_ARM) && _M_ARM >= 7' ; then
          define HAVE_ARMV6
--- 
-2.4.0
-
