@@ -31,5 +31,7 @@ RDEPENDS_${PN} = "\
         iproute2 \
         ntfs-3g \
         unrar \
+        tar \
+        zip \
     ", d)} \
     "

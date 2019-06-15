@@ -1,4 +1,4 @@
-PR .= ".4"
+PR .= ".5"
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/${P}:"
 
@@ -11,8 +11,7 @@ RRECOMMENDS_${PN} = ""
 SRC_URI += "file://hotplug.sh \
             file://nocam.sh \
             file://nocard.sh \
-            file://fastrestore_openatv.sh \
-			file://fastrestore_titannit.sh \
+      			file://fastrestore_titannit.sh \
 "
 
 do_install_append() {
@@ -26,10 +25,6 @@ do_install_append() {
     perl -i -pe 's:mount -a.+?$:mount -a -t nonfs,nfs4,smbfs,cifs,ncp,ncpfs,coda,ocfs2,gfs,gfs2,ceph -O no_netdev 2>/dev/null:' ${D}${sysconfdir}/init.d/mountall.sh
     perl -i -pe 's:(mount -a).*?$:$1:' ${D}${sysconfdir}/init.d/mountnfs.sh
 
-    if [ "x${DISTRO}" = "xopenatv" ]; then
-        install -m 0755    ${WORKDIR}/fastrestore_openatv.sh	${D}${sysconfdir}/init.d/fastrestore
-        ln -sf        ../init.d/fastrestore      ${D}${sysconfdir}/rcS.d/S75fastrestore
-    fi
     if [ "x${DISTRO}" = "xtitannit" ]; then
         install -m 0755    ${WORKDIR}/fastrestore_titannit.sh	${D}${sysconfdir}/init.d/fastrestore
         ln -sf        ../init.d/fastrestore      ${D}${sysconfdir}/rcS.d/S75fastrestore

@@ -3,7 +3,7 @@ LICENSE = "GPL2"
 require conf/license/license-gplv2.inc
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-PR = "r3"
+PR = "r4"
 
 SRCREV = "${AUTOREV}"
 
@@ -16,6 +16,11 @@ INHIBIT_PACKAGE_STRIP = "1"
 ALLOW_EMPTY_${PN} = "1"
 
 S="${WORKDIR}/git/files"
+
+do_install() {
+	install -d ${D}/usr
+	mkdir -p ${D}/usr/softcams
+}
 
 do_install_append_mipsel() {
 	mkdir -p ${D}/${libdir}/enigma2/python/Plugins/Extensions/OPDBoot/bin/
