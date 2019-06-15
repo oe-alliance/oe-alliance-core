@@ -4,7 +4,11 @@ SECTION = "libs/multimedia"
 LICENSE = "LGPLv2.1"
 LIC_FILES_CHKSUM = "file://COPYING;md5=a6f89e2100d9b6cdffcea4f398e37343"
 
-SRCREV = "ff57e585c47fd62b484d0a8f96fe4f020f5840e3"
+inherit gitpkgv
+
+SRCREV = "${AUTOREV}"
+PV = "0.3.8+git${SRCPV}"
+PKGV = "0.3.8+git${GITPKGV}"
 
 SRC_URI = "git://git.opendreambox.org/git/obi/libdvbsi++.git \
 	file://fix_section_len_check.patch \
