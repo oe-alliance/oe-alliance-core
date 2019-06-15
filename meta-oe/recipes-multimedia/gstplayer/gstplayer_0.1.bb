@@ -7,7 +7,7 @@ DEPENDS = "gstreamer1.0 gstreamer1.0-plugins-base"
 
 inherit pkgconfig
 
-SRCREV = "3beb10950bb79977339d9ca6c638bf962392fca4"
+SRCREV = "${AUTOREV}"
 SRC_URI = "git://gitlab.com/samsamsam/iptvplayer-bin-components.git;protocol=http"
 SRC_URI =+ "file://0001-set-iptv-download-timeout-0-to-disable-ifdsrc.patch \
             file://0004-rename-stored-sink-to-dvbSink-for-clarity.patch \
