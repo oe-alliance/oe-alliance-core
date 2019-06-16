@@ -1,0 +1,13 @@
+diff --git a/zutil.h b/zutil.h
+index b079ea6..45b93d3 100644
+--- a/zutil.h
++++ b/zutil.h
+@@ -29,7 +29,7 @@
+ #  include <stdlib.h>
+ #endif
+ 
+-#ifdef Z_SOLO
++#ifndef Z_SOLO
+    typedef long ptrdiff_t;  /* guess -- will be caught if guess is wrong */
+ #endif
+ 

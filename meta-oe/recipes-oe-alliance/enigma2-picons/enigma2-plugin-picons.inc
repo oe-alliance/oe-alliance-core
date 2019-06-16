@@ -58,7 +58,7 @@ python populate_packages_prepend() {
                     if resize:
                         os.system(resize % (fn, tmpfile))
                         fn = tmpfile
-                    os.system("pngcrush -quiet -bit_depth 8 '%s' '%s'" % (fn, dn))
+                    os.system("pngcrush -q -reduce '%s' '%s'" % (fn, dn))
                 files.append("/picon/" + file)
 
         d.setVar('FILES_' + packagename, " ".join(files))
