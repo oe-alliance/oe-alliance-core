@@ -134,6 +134,7 @@ RDEPENDS_${PN} = " \
     python-levenshtein \
     python-soco \
     python-pyexecjs \
+    radiotimesxmltvemulator \
     ${@bb.utils.contains("DEFAULTTUNE", "sh4", "" , "rclone", d)} \
     rsync \
     rtorrent \
