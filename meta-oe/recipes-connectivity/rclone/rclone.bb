@@ -14,7 +14,7 @@ RDEPENDS_${PN} += "bash"
 inherit gitpkgv go upx-compress
 
 SRCREV = "${AUTOREV}"
-PV = "1.46-DEV+git${SRCPV}"
+PV = "1.47-DEV+git${SRCPV}"
 
 SRC_URI = "git://${GO_IMPORT}.git;protocol=http \
            file://rclonefs \

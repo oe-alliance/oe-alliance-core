@@ -1,22 +1,22 @@
 SUMMARY = "H.264/MPEG-4 AVC video encoder"
 DESCRIPTION = "A free software library and application for encoding video streams into the H.264/MPEG-4 AVC format."
 HOMEPAGE = "http://www.videolan.org/developers/x264.html"
-
 LICENSE = "GPLv2"
 LICENSE_FLAGS = "commercial"
 LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f"
 
 DEPENDS = "nasm-native"
 
-SRC_URI = "git://github.com/mirror/x264;branch=stable \
+SRCREV = "${AUTOREV}"
+
+PV = "r2970+git${SRCPV}"
+
+SRC_URI = "git://code.videolan.org/videolan/x264;protocol=https \
            file://don-t-default-to-cortex-a9-with-neon.patch \
            file://Fix-X32-build-by-disabling-asm.patch \
            "
+
 UPSTREAM_CHECK_COMMITS = "1"
-
-SRCREV = "e9a5903edf8ca59ef20e6f4894c196f135af735e"
-
-PV = "r2854+git${SRCPV}"
 
 S = "${WORKDIR}/git"
 

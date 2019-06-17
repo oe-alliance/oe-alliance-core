@@ -7,8 +7,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=892f569a555ba9c07a568a7c0c4fa63a"
 
 SRC_URI = "http://wirbel.htpc-forum.de/w_scan/w_scan-${PV}.tar.bz2"
 
-SRC_URI[md5sum] = "57aa860b4c9e6aa480ca6eb0504bd4f5"
-SRC_URI[sha256sum] = "2077af7f8b42b7af038e83abf0565f96f59461bbc5e14c4516b68f50b5c00d79"
+SRC_URI[md5sum] = "c7f9adf92d46b8da5391be80be6fbd72"
+SRC_URI[sha256sum] = "38e0f38a7bf06cff6d6ea01652ad4ee60da2cb0e937360468f936da785b46ffe"
 
 S = "${WORKDIR}/w_scan-${PV}"
 

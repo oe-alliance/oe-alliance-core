@@ -4,19 +4,18 @@ MAINTAINER = "Oona Räisänen <windyoona@gmail.com>"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=884926124e31c67b8c1bdaa062802dec"
 
+DEPENDS = "liquid-dsp libsndfile1"
+
 inherit gitpkgv
 
-PV = "1.0+git${SRCPV}"
-PKGV = "1.0+git${GITPKGV}"
+SRCREV = "${AUTOREV}"
+PV = "0.18+git${SRCPV}"
+PKGV = "0.18+git${GITPKGV}"
 
 SRC_URI = "git://github.com/windytan/redsea.git;protocol=http"
 
-SRCREV = "aeed25e6eccd1da1924bbbb4af0c5fb49cfc962a"
-
 S = "${WORKDIR}/git"
-
-DEPENDS = "liquid-dsp"
 
 inherit autotools-brokensep
 
-EXTRA_OECONF += "--disable-tmc --without-sndfile --without-macports"
+EXTRA_OECONF += "--disable-tmc --without-macports"

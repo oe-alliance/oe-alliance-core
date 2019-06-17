@@ -3,9 +3,11 @@ SECTION = "libs/multimedia"
 LICENSE = "LGPLv2.1+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f"
 
-SRCREV = "bc6c0b164a87ce05e9925785cc6fb3f54c02b026"
+inherit gitpkgv
 
-PV = "1.1.0"
+SRCREV = "${AUTOREV}"
+PV = "1.1.0+git${SRCPV}"
+PKGV = "1.1.0+git${GITPKGV}"
 
 SRC_URI = "git://code.videolan.org/videolan/libdvbcsa.git;protocol=https \
            file://libdvbcsa.pc \
