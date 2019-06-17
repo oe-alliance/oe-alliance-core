@@ -17,6 +17,7 @@ UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>\d+\.\d+(\.(?!90)\d+)*)"
 SRC_URI = "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \
            file://etc/ld.so.conf \
            file://generate-supported.mk \
+           file://makedbs.sh \
            \
            ${NATIVESDKFIXES} \
            file://0005-fsl-e500-e5500-e6500-603e-fsqrt-implementation.patch \
@@ -80,8 +81,14 @@ EXTRA_OECONF = "--enable-kernel=${OLDEST_KERNEL} \
                 --enable-add-ons \
                 --with-headers=${STAGING_INCDIR} \
                 --without-selinux \
+                --enable-tunables \
                 --enable-bind-now \
+                --enable-stack-protector=strong \
                 --enable-stackguard-randomization \
+                --disable-crypt \
+                --with-default-link \
+                --enable-nscd \
+                ${@bb.utils.contains_any('SELECTED_OPTIMIZATION', '-O0 -Og', '--disable-werror', '', d)} \
                 ${GLIBCPIE} \
                 ${GLIBC_EXTRA_OECONF}"
 
