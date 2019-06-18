@@ -6,11 +6,16 @@ LIC_FILES_CHKSUM = "file://LICENCE;md5=94d55d512a9ba36caa9b7df079bae19f"
 DEPENDS = "pcsc-lite"
 RDEPENDS_${PN} = "pcsc-lite"
 
-inherit autotools pkgconfig
+inherit gitpkgv
 
-SRCREV = "e6efd02002decabe1dfa956a5257109190fc6ae8"
+SRCREV = "${AUTOREV}"
+PV = "1.5.4+git${SRCPV}"
+PKGV = "1.5.4+git${GITPKGV}"
+
 SRC_URI = "git://github.com/LudovicRousseau/pcsc-tools.git"
 
 S = "${WORKDIR}/git"
 
-FILES_${PN} += "/usr/share"
+inherit autotools pkgconfig
+
+FILES_${PN} += "${datadir}"
