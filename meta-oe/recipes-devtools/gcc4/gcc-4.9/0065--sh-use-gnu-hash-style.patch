@@ -1,0 +1,11 @@
+diff -rub gcc-4.7.0-orig/gcc/config/sh/linux.h gcc-4.7.0/gcc/config/sh/linux.h
+--- gcc-4.7.0-orig/gcc/config/sh/linux.h	2012-04-10 16:05:00.000000000 +0200
++++ gcc-4.7.0/gcc/config/sh/linux.h	2012-04-10 16:18:30.000000000 +0200
+@@ -57,6 +57,7 @@
+    %{!static: \
+      %{rdynamic:-export-dynamic} \
+      -dynamic-linker " GNU_USER_DYNAMIC_LINKER "} \
++  --hash-style=gnu \
+    %{static:-static}"
+ 
+ /* Output assembler code to STREAM to call the profiler.  */

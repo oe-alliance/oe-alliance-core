@@ -15,7 +15,7 @@ do_configure () {
 		--prefix=/usr \
 		--disable-sanity-checks \
 		--with-headers=${STAGING_DIR_TARGET}${includedir} \
-		--enable-hacker-mode
+		--enable-hacker-mode --enable-addons
 }
 
 do_compile () {

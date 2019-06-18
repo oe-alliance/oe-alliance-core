@@ -38,5 +38,6 @@ do_package_write_ipk[depends] += "virtual/${MLPREFIX}libc:do_packagedata"
 do_package_write_deb[depends] += "virtual/${MLPREFIX}libc:do_packagedata"
 do_package_write_rpm[depends] += "virtual/${MLPREFIX}libc:do_packagedata"
 
+INSANE_SKIP_${PN} += "ldflags"
 INSANE_SKIP_${PN}-dev = "staticdev"
 
