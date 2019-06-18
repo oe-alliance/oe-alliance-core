@@ -1,18 +1,17 @@
 SUMMARY  = "UDF reader"
 SECTION = "misc"
 HOMEPAGE = "http://videolan.org"
-LICENSE = "GPLv2"
+LICENSE = "LGPLv2.1"
 LIC_FILES_CHKSUM="file://COPYING;md5=4fbd65380cdd255951079008b364516c"
 
-SRC_URI = "git://git.videolan.org/libudfread.git;branch=master;protocol=git"
-SRCREV="131629921cc756c38eaf3e2d6b69ba2db690b199"
+inherit gitpkgv
 
-inherit gitpkgv autotools-brokensep pkgconfig
-
+SRCREV="${AUTOREV}"
 PV = "1.0.0+git${SRCPV}"
 PKGV = "1.0.0+git${GITPKGV}"
 
-S="${WORKDIR}/git"
+SRC_URI = "git://code.videolan.org/videolan/libudfread;protocol=https"
 
-do_package_qa() {
-}
+inherit autotools-brokensep pkgconfig
+
+S="${WORKDIR}/git"
