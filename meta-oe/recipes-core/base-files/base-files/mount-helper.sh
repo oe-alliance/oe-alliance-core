@@ -53,8 +53,6 @@ case $ACTION in
 			if [ $stbcheck == "viper4k" ] || [ $stbcheck == "sf8008" ] || [ $stbcheck == "cc1" ] || [ $stbcheck == "ustym4kpro" ] || [ $stbcheck == "beyonwizv2" ] || [ $stbcheck == "gbmv200" ]; then
 
 				if [ ${MDEV} == "sda5" ] ; then
-#					mkdir -p /media/userspace
-#					mount -t ext4 /dev/sda5  /media/userspace
 					# mount micro SD userspace as hdd to avoid drama with epg/backup/etc 
 					mkdir -p /media/hdd
 					mount -t ext4 /dev/sda5  /media/hdd
