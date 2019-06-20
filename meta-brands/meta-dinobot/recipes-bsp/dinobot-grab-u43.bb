@@ -4,7 +4,7 @@ PRIORITY = "optional"
 LICENSE = "CLOSED"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-COMPATIBLE_MACHINE = "^(u41)$"
+COMPATIBLE_MACHINE = "^(u43)$"
 
 SRCDATE = "20190620"
 
@@ -29,5 +29,5 @@ do_package_qa() {
 
 FILES_${PN}  = "${bindir}/grab"
 
-SRC_URI[md5sum] = "61af9ea5112212def7bdb6cf3b95d50f"
-SRC_URI[sha256sum] = "40c365724ef914a0ba4f7aec5d4648eee511f189aa7fb7a8a1fb4b7d68e71b8e"
+SRC_URI[md5sum] = "3d4901fb2ed0516adf74599bdc39fa5e"
+SRC_URI[sha256sum] = "8beb533554c316af4da6c736105f4f92dfd654b0ed59cd159077344b3e4690fc"
