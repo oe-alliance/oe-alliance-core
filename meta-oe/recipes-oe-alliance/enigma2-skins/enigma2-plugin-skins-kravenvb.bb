@@ -19,12 +19,12 @@ PACKAGES =+ " ${PN}-src"
 
 FILES_${PN} = "/usr/*"
 FILES_${PN}-src = "\
-    ${libdir}/enigma2/python/Components/Converter/*.py \
-    ${libdir}/enigma2/python/Components/Renderer/*.py \
-    ${libdir}/enigma2/python/Plugins/Extensions/KravenVB/*.py \
-    ${libdir}/enigma2/python/Plugins/Extensions/KravenVB/*/*.py \
-    ${libdir}/enigma2/python/Plugins/Extensions/KravenVB/*/*/*.py \
-    ${libdir}/enigma2/python/Plugins/Extensions/KravenVB/locale/*/LC_MESSAGES/*.po \
+    /usr/lib/enigma2/python/Components/Converter/*.py \
+    /usr/lib/enigma2/python/Components/Renderer/*.py \
+    /usr/lib/enigma2/python/Plugins/Extensions/KravenVB/*.py \
+    /usr/lib/enigma2/python/Plugins/Extensions/KravenVB/*/*.py \
+    /usr/lib/enigma2/python/Plugins/Extensions/KravenVB/*/*/*.py \
+    /usr/lib/enigma2/python/Plugins/Extensions/KravenVB/locale/*/LC_MESSAGES/*.po \
     "
 
 S = "${WORKDIR}/git"
@@ -39,9 +39,9 @@ do_compile() {
 }
 
 do_install() {
-    install -d ${D}${libdir}
+    install -d ${D}/usr/lib
     install -d ${D}/usr/share
-    cp -r --preserve=mode,links ${S}${libdir}/* ${D}${libdir}/
+    cp -r --preserve=mode,links ${S}/usr/lib/* ${D}/usr/lib/
     cp -r --preserve=mode,links ${S}/usr/share/* ${D}/usr/share/
 }
 
