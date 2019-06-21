@@ -2,7 +2,7 @@ SUMMARY = "mgcamd ${PV} softcam"
 LICENSE = "CLOSED"
 require conf/license/license-close.inc
 
-RDEPENDS_enigma2-plugin-softcams-mgcamd135a = "libxcrypt libcrypto-compat-0.9.7 zlib"
+RDEPENDS_enigma2-plugin-softcams-mgcamd135a = "libxcrypt-compat libcrypto-compat-0.9.7 zlib"
 
 PR = "r6"
 

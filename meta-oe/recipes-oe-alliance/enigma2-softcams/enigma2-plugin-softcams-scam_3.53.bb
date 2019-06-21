@@ -1,8 +1,8 @@
 CAMNAME = "scam"
 SUMMARY = "${CAMNAME} ${PV} softcam"
 
-DEPENDS = "libxcrypt"
-RDEPENDS_${PN} = "libcrypto-compat-0.9.7"
+DEPENDS = "virtual/crypt"
+RDEPENDS_${PN} = "libcrypto-compat-0.9.7 libxcrypt-compat"
 
 PR = "r0"
 
