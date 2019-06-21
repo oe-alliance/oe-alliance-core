@@ -48,13 +48,16 @@ do_install() {
 
 pkg_postinst_${PN} () {
 #!/bin/sh
+if [ -f /tmp/kravenskin ]; then
+    mv -f /tmp/kravenskin /usr/share/enigma2/KravenFHD/skin.xml
+fi
 if [ -d /tmp/graphics ]; then
     mv -f /tmp/graphics/*.* /usr/share/enigma2/KravenFHD/graphics
 fi
 if [ -f /tmp/skin-user.xml ]; then
     mv -f /tmp/skin-user.xml /usr/lib/enigma2/python/Plugins/Extensions/KravenFHD/data
 fi
-if [ -f /usr/lib/enigma2/python/Plugins/Extensions/KravenFHD/plugin.py ]; then
+if [ -f /usr/lib/enigma2/python/Plugins/Extensions/KravenFHD/plugin.py* ]; then
     wget -q -O /dev/null 'http://127.0.0.1/web/message?type=1&text=KravenFHD%20wurde%20erfolgreich%20installiert.%0A%0AZur%20Nutzung%20rufen%20Sie%20das%20Plugin%20auf,%20speichern%20Ihre%20Einstellungen%0Aund%20starten%20die%20Oberfl%C3%A4che%20neu.&timeout=13' || true
 fi
 echo " .##....##.########.....###....##.....##.########.##....## "
@@ -105,17 +108,6 @@ exit 0
 
 pkg_preinst_${PN} () {
 #!/bin/sh
-echo "Checking for previous installations..."
-if [ -d /usr/share/enigma2/KravenFHD/graphics ]; then
-    mkdir /tmp/graphics
-    cp /usr/share/enigma2/KravenFHD/graphics/*.* /tmp/graphics
-fi
-if [ -f /usr/lib/enigma2/python/Plugins/Extensions/KravenFHD/data/skin-user.xml ]; then
-    cp /usr/lib/enigma2/python/Plugins/Extensions/KravenFHD/data/skin-user.xml /tmp
-fi
-if [ -f /usr/share/enigma2/KravenFHD/skin.xml ]; then
-    rm -rf /usr/share/enigma2/KravenFHD/skin.xml
-fi
 echo "                                                           "
 echo "        The Skin KravenFHD is now being installed...       "
 echo "                                                           "
@@ -127,6 +119,19 @@ pkg_prerm_${PN} () {
 echo "                                                           "
 echo "        The Skin KravenFHD is now being removed...         "
 echo "                                                           "
+if [ -e /usr/share/enigma2/KravenFHD/skin.xml ]; then
+    cp /usr/share/enigma2/KravenFHD/skin.xml /tmp/kravenskin
+fi
+if [ -d /usr/share/enigma2/KravenFHD/graphics ]; then
+    mkdir /tmp/graphics
+    cp /usr/share/enigma2/KravenFHD/graphics/* /tmp/graphics/
+fi
+if [ -f /usr/lib/enigma2/python/Plugins/Extensions/KravenFHD/data/skin-user.xml ]; then
+    cp /usr/lib/enigma2/python/Plugins/Extensions/KravenFHD/data/skin-user.xml /tmp/
+fi
+if [ -f /usr/share/enigma2/KravenFHD/skin.xml ]; then
+    rm -rf /usr/share/enigma2/KravenFHD/skin.xml
+fi
 exit 0
 }
 
