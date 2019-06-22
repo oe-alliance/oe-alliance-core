@@ -15,8 +15,6 @@ RDEPENDS_${PN} += "python-imaging python-subprocess python-requests python-lxml 
 
 SRC_URI="git://github.com/KravenHD/KravenVB.git;protocol=git"
 
-PACKAGES =+ " ${PN}-src"
-
 FILES_${PN} = "/usr/*"
 FILES_${PN}-src = "\
     /usr/lib/enigma2/python/Components/Converter/*.py \
