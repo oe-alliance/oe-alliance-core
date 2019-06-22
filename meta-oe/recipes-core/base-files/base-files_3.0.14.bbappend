@@ -1,6 +1,6 @@
 PACKAGE_ARCH = "${MACHINEBUILD}"
 
-PR_append = ".1"
+PR_append = ".2"
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 FILESEXTRAPATHS_prepend := "${THISDIR}/${DISTRO_NAME}:"
