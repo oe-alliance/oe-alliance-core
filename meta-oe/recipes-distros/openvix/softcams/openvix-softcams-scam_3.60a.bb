@@ -2,7 +2,7 @@ SUMMARY = "scam ${PV} softcam"
 LICENSE = "CLOSED"
 require conf/license/license-close.inc
 
-RDEPENDS_enigma2-plugin-softcams-scam = "libcrypto-compat-0.9.7 libxcrypt"
+RDEPENDS_enigma2-plugin-softcams-scam = "libcrypto-compat-0.9.7 libxcrypt-compat"
 
 PR = "r2"
 

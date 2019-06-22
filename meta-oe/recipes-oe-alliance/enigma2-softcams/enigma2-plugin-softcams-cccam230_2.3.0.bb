@@ -4,8 +4,8 @@ FILESEXTRAPATHS_prepend := "${THISDIR}/enigma2-plugin-softcams-cccam:"
 
 PR = "r0"
 
-DEPENDS = "libxcrypt"
-RDEPENDS_${PN} = "libxcrypt"
+DEPENDS = "virtual/crypt"
+RDEPENDS_${PN} = "libxcrypt-compat"
 
 SRC_URI = "http://downloads.pli-images.org/softcams/CCcam-${PV}.zip \
     file://CCcam.xml"

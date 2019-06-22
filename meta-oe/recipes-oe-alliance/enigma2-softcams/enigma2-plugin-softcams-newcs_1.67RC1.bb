@@ -2,8 +2,8 @@ SUMMARY = "newcs ${PV} cardserver"
 
 PR = "r0"
 
-DEPENDS = "libxcrypt"
-RDEPENDS_${PN} = "libcrypto-compat-0.9.7 libxcrypt"
+DEPENDS = "virtual/crypt"
+RDEPENDS_${PN} = "libcrypto-compat-0.9.7 libxcrypt-compat"
 
 SRC_URI = "http://downloads.pli-images.org/softcams/newcs-${PV}.zip\
     http://downloads.pli-images.org/softcams/newcs.xml;name=xml"

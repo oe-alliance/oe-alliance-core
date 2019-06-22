@@ -2,8 +2,8 @@ SUMMARY = "CCcam ${PV} softcam"
 
 PR = "r0"
 
-DEPENDS = "libxcrypt"
-RDEPENDS_${PN} = "libxcrypt"
+DEPENDS = "virtual/crypt"
+RDEPENDS_${PN} = "libxcrypt-compat"
 
 SRC_URI = "http://downloads.openpli.org/softcams/CCcam-${PV}.zip;name=softcam \
     file://CCcam.xml"

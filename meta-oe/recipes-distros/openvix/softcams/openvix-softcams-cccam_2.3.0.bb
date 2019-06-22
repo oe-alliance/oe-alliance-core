@@ -4,7 +4,7 @@ require conf/license/license-close.inc
 
 PR = "r4"
 
-RDEPENDS_enigma2-plugin-softcams-cccam = "libxcrypt"
+RDEPENDS_enigma2-plugin-softcams-cccam = "libxcrypt-compat"
 
 PACKAGES = "enigma2-plugin-softcams-cccam"
 

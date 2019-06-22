@@ -1,8 +1,8 @@
 SUMMARY = "mgcamd ${PV} softcam"
 CAMNAME = "mgcamd"
 
-DEPENDS = "libcrypto-compat-0.9.7 libxcrypt zlib"
-RDEPENDS_${PN} = "libcrypto-compat-0.9.7 libxcrypt zlib"
+DEPENDS = "libcrypto-compat-0.9.7 virtual/crypt zlib"
+RDEPENDS_${PN} = "libcrypto-compat-0.9.7 libxcrypt-compat zlib"
 
 PR = "r0"
 

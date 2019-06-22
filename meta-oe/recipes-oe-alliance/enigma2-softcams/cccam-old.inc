@@ -1,7 +1,7 @@
 SUMMARY = "Older CCcam ${PV} softcam"
 
-DEPENDS = "libxcrypt"
-RDEPENDS_${PN} = "libxcrypt"
+DEPENDS = "virtual/crypt"
+RDEPENDS_${PN} = "libxcrypt-compat"
 
 PR = "r0"
 
