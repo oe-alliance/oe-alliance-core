@@ -45,3 +45,12 @@ SRC_URI[md5sum] = "9627010e91d1052e45358640c95b694f"
 SRC_URI[sha256sum] = "989a7e9e3e16a0ef0e3ae3790f9d05f8f22fb00b5c2cb9bad7b4eb72dc99f319"
 
 INSANE_SKIP_${PN} += "already-stripped"
+
+pkg_postinst_${PN}() {
+    if [ "x$D" == "x" ]; then
+        if [ -f /usr/share/apploader.bin -a -b /dev/block/by-name/loader ] ; then
+            dd if=/usr/share/apploader.bin of=/dev/block/by-name/loader
+        fi
+    fi
+    true
+}
