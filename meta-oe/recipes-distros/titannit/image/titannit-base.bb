@@ -55,7 +55,6 @@ RDEPENDS_${PN} = "\
 	mc \
 	minilocale \
 	minidlna \
-	mjpegtools \
 	module-init-tools-depmod \
 	modutils-loadscript \
 	mtd-utils \
@@ -80,7 +79,6 @@ RDEPENDS_${PN} = "\
 	sdparm \
 	smbclient \
 	smbnetfs \
-	strace \
 	titannit-bootlogo \
 	titan-rarfs \
 	tuxtxt-enigma2 \
