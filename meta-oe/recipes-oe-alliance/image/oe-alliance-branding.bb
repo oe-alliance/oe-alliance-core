@@ -173,7 +173,7 @@ do_configure_prepend() {
         elif [ "${MACHINE}" = "dm900" ]; then
             DRIVERSDATE="20190312"
         elif [ "${MACHINE}" = "dm920" ]; then
-            DRIVERSDATE="20190312"
+            DRIVERSDATE="20190312a"
         else
             DRIVERSDATE="20150618"
         fi

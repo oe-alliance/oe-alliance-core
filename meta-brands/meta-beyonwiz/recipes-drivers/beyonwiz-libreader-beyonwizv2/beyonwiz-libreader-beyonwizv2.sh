@@ -5,5 +5,5 @@ resize2fs /dev/mmcblk0p13
 
 echo "libreader start!!!"
 mount /dev/mmcblk0p3 /boot/
-/usr/bin/libreader 720P_50
+/usr/bin/libreader 1080P_50
 sleep 2

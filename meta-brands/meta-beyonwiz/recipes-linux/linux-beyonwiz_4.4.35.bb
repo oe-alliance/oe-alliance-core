@@ -7,7 +7,7 @@ SRCDATE = "20181224"
 
 inherit kernel machine_kernel_pr
 
-MACHINE_KERNEL_PR_append = ".22"
+MACHINE_KERNEL_PR_append = "26"
 
 SRC_URI[md5sum] = "ad7eab17a5071a0d5f9ff44eb44e027d"
 SRC_URI[sha256sum] = "0654d5aa21c51eaea46f7203014afe60052ec0990a92b9e289e1ca8a2793907c"
@@ -43,7 +43,7 @@ KERNEL_IMAGEDEST = "tmp"
 
 KERNEL_EXTRA_ARGS = "EXTRA_CFLAGS=-Wno-attribute-alias"
 
-FILES_${KERNEL_PACKAGE_NAME}-image = "${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE} /${KERNEL_IMAGEDEST}/findkerneldevice.py"
+FILES_${KERNEL_PACKAGE_NAME}-image = "/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE} /${KERNEL_IMAGEDEST}/findkerneldevice.py"
 
 KERNEL_IMAGETYPE = "uImage"
 KERNEL_OUTPUT = "arch/${ARCH}/boot/${KERNEL_IMAGETYPE}"
