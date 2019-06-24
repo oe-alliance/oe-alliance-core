@@ -42,7 +42,7 @@ MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "\
     gptfdisk \
 "
 
-MACHINE_FEATURES += "switchoff 7segment textlcd skins1080 hdmicec emmc mmc blindscan-dvbs kodi alsa hbbtv-browser-webkit qtstalker HDMI AV_JACK"
+MACHINE_FEATURES += "switchoff 7segment skins1080 hdmicec emmc mmc blindscan-dvbs kodi alsa hbbtv-browser-webkit qtstalker HDMI AV_JACK"
 
 IMAGE_CLASSES  += "clap-emmc_image"
 IMAGE_FSTYPES += "clapemmc"
