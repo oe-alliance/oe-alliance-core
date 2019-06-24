@@ -35,7 +35,7 @@ MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "\
     gptfdisk \
 "
 
-MACHINE_FEATURES += "switchoff 7segment hdmicec skins1080 emmc mmc dvbc-only kodi alsa hbbtv-browser-webkit qtstalker"
+MACHINE_FEATURES += "switchoff textlcd 7segment hdmicec skins1080 emmc mmc dvbc-only kodi alsa hbbtv-browser-webkit qtstalker"
 
 IMAGE_CLASSES  += "beyonwiz-emmc_image"
 IMAGE_FSTYPES += "beyonwizemmc"
@@ -95,7 +95,7 @@ IMAGE_CMD_beyonwizemmc_append = "\
     mkupdate -s 00000003-00000001-01010101 -f ${DEPLOY_DIR_IMAGE}/${MACHINE}-partitions/emmc_partitions.xml -d ${DEPLOY_DIR_IMAGE}/usb_update.bin; \ 
     cd ${DEPLOY_DIR_IMAGE}; \
     cp ${IMGDEPLOYDIR}/${IMAGE_NAME}.rootfs.manifest ${IMAGE_NAME}_usb.zip.manifest; \
-    zip -j ${IMAGE_NAME}_usb.zip ${DEPLOY_DIR_IMAGE}/usb_update.bin ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/imageversion; \
+    zip -j ${IMAGE_NAME}_recovery_emmc.zip ${DEPLOY_DIR_IMAGE}/usb_update.bin ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/imageversion; \
     zip ${IMAGE_NAME}_mmc.zip ${IMAGEDIR}/*; \
     zip -j ${IMAGE_NAME}_mmc.zip ${DEPLOY_DIR_IMAGE}/${MACHINE}-partitions/bootargs.bin ${DEPLOY_DIR_IMAGE}/${MACHINE}-partitions/fastboot.bin ${DEPLOY_DIR_IMAGE}/${MACHINE}-partitions/apploader.bin; \
     rm -f ${DEPLOY_DIR_IMAGE}/*.ext4; \
