@@ -8,7 +8,7 @@ SRCDATE = "20180828"
 
 inherit kernel machine_kernel_pr
 
-MACHINE_KERNEL_PR_append = ".29"
+MACHINE_KERNEL_PR_append = ".30"
 
 SRC_URI[md5sum] = "bd22f82d08a5feb4f1360d5739919ee0"
 SRC_URI[sha256sum] = "df83207ddfe34ac41a55e5e42eaae9c3ac3c4ef0750c786886719a33bf08b617"
@@ -43,7 +43,7 @@ SRC_URI = "http://source.mynonpublic.com/dinobot/dinobot-linux-${PV}-${SRCDATE}.
     file://defconfig \
     file://410dts.patch \
     file://0001-mmc-switch-1.8V.patch \
-    file://0002-ieee80211-increase-scan-result-expire-time.patch \
+    file://wifi-linux_4.4.183.patch \
     file://0002-log2-give-up-on-gcc-constant-optimizations.patch \
     file://0003-uaccess-dont-mark-register-as-const.patch \
     file://0004-makefile-disable-warnings.patch \

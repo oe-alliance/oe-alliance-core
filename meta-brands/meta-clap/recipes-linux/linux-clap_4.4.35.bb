@@ -7,7 +7,7 @@ SRCDATE = "20180830"
 
 inherit kernel machine_kernel_pr
 
-MACHINE_KERNEL_PR_append = ".18"
+MACHINE_KERNEL_PR_append = ".19"
 
 SRC_URI[md5sum] = "9aa3305104807a5bdc0e0b53dcccc45b"
 SRC_URI[sha256sum] = "b543c8a7655ef588ca2f6ffb0bda7e496e5b909bae04443f01ea309381f6655c"
@@ -28,7 +28,7 @@ SRC_URI += "http://source.mynonpublic.com/clap/clap-linux-${PV}-${SRCDATE}.tar.g
     file://findkerneldevice.py \
     file://0002-log2-give-up-on-gcc-constant-optimizations.patch \
     file://0003-dont-mark-register-as-const.patch \
-    file://mt7601u_check_return_value_of_alloc_skb.patch \
+    file://wifi-linux_4.4.183.patch \
 "
 
 S = "${WORKDIR}/linux-${PV}"
