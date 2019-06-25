@@ -7,7 +7,7 @@ SRCDATE = "20181224"
 
 inherit kernel machine_kernel_pr
 
-MACHINE_KERNEL_PR_append = "27"
+MACHINE_KERNEL_PR_append = "28"
 
 SRC_URI[md5sum] = "ad7eab17a5071a0d5f9ff44eb44e027d"
 SRC_URI[sha256sum] = "0654d5aa21c51eaea46f7203014afe60052ec0990a92b9e289e1ca8a2793907c"
@@ -31,7 +31,7 @@ SRC_URI += "http://source.mynonpublic.com/beyonwiz/beyonwiz-linux-${PV}-${SRCDAT
     file://findkerneldevice.py \
     file://0002-log2-give-up-on-gcc-constant-optimizations.patch \
     file://0003-dont-mark-register-as-const.patch \
-    file://mt7601u_check_return_value_of_alloc_skb.patch \
+    file://wifi-linux_4.4.183.patch \
 "
 
 S = "${WORKDIR}/linux-${PV}"

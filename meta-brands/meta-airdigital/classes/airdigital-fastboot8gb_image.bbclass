@@ -1,6 +1,5 @@
 inherit image_types
 
-IMAGE_TYPEDEP_zgemmafastboot8gb = "ext4 tar"
 BOOTOPTIONS_PARTITION_SIZE = "2048"
 
 do_image_zgemmafastboot8gb[vardepsexclude] = "DATETIME"

@@ -1,8 +1,8 @@
-SRCDATE = "20190530"
+SRCDATE = "20190531"
 
 require airdigital-fastboot.inc
 
-SRC_URI[md5sum] = "b6c7ef87b5e2363bf5856a7481fcdc05"
-SRC_URI[sha256sum] = "8f8a85bab8fd5f85e866b1bbaa0c1e56265e7512ddc2fb2c9bc1b640efee1640"
+SRC_URI[md5sum] = "fa0cb0f594caeb99fa22dff63f731ca9"
+SRC_URI[sha256sum] = "99215067261dc34e25c93c6525fb190ae09159a18c4210441554944c0be8e5ba"
 
 COMPATIBLE_MACHINE = "^h9$|^h9combo$|^h10$|^i55plus$"
