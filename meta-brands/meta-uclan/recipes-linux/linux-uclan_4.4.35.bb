@@ -7,7 +7,7 @@ SRCDATE = "20181224"
 
 inherit kernel machine_kernel_pr
 
-MACHINE_KERNEL_PR_append = ".23"
+MACHINE_KERNEL_PR_append = ".24"
 
 
 SRC_URI[md5sum] = "ad7eab17a5071a0d5f9ff44eb44e027d"
@@ -30,7 +30,7 @@ SRC_URI += "http://source.mynonpublic.com/uclan/uclan-linux-${PV}-${SRCDATE}.tar
     file://dib7000-linux_4.4.179.patch \
     file://dvb-usb-linux_4.4.179.patch \
     file://findkerneldevice.py \
-    file://mt7601u_check_return_value_of_alloc_skb.patch \
+    file://wifi-linux_4.4.183.patch \
 "
 
 S = "${WORKDIR}/linux-${PV}"
