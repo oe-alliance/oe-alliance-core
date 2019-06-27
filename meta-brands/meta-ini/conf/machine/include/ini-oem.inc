@@ -5,6 +5,9 @@ BRAND_OEM = "ini"
 
 GST_VERSION = "1.0"
 
+# Broken bootloader can only flash around 100 MB
+FLASHSIZE = "96"
+
 MACHINE_NAME = "\
 ${@bb.utils.contains('MACHINEBUILD', 'ventonhdx', 'HD-x' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'sezam1000hd', '1000-HD' , '', d)}\
@@ -231,7 +234,7 @@ IMAGE_CMD_ubi_append = "\
     rm -rf opticum; \
     "
 
-MACHINE_FEATURES += "3dtv alsa hdmicec switchoff wifi bootsplash omb feature1 feature2 HDMI smallflash"
+MACHINE_FEATURES += "3dtv alsa hdmicec switchoff wifi bootsplash omb feature1 feature2 HDMI"
 
 BOOTLOGO_FILENAME = "splash.bin"
 
