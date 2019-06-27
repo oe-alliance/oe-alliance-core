@@ -1,4 +1,3 @@
-inherit upx-compress
 require samba36.inc
 
 inherit update-rc.d upx-compress
