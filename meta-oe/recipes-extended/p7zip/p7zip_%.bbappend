@@ -1,3 +1,5 @@
+inherit upx
+
 EXTRA_OEMAKE = "all3"
 
 do_install() {
