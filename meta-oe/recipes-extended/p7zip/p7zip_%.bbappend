@@ -1,4 +1,4 @@
-inherit upx
+inherit upx-compress
 
 EXTRA_OEMAKE = "all3"
 
