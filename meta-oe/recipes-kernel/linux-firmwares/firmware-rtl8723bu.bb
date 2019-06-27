@@ -1,3 +1,5 @@
+SRCREV = "${AUTOREV}"
+
 require linux-firmware.inc
 
 DESCRIPTION = "Firmware for SDIO RTL8723BU"
