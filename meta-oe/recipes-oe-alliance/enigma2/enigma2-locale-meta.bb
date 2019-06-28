@@ -53,6 +53,7 @@ RRECOMMENDS_${PN} = "\
 ONLY_SMALL = "\
     ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "True", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "BootloaderMax110", "True" , "", d)} \
+    ${@bb.utils.contains_any("FLASHSIZE", "64 96", "True" , "", d)} \
 "
 
 PR = "r0"
