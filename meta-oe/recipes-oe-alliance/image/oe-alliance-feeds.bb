@@ -11,7 +11,7 @@ PACKAGES = "${PN}"
 PV = "${IMAGE_VERSION}"
 PR = "r4"
 
-DEPENDS = "enigma2-plugin-drivers-usbserial enigma2-plugin-systemplugins-hrtunerproxy"
+DEPENDS = "enigma2-plugin-drivers-usbserial enigma2-plugin-systemplugins-hrtunerproxy enigma2-plugin-systemplugins-radiotimesemulator"
 RECOMMENDS = "enigma2-plugin-extensions-et-livestream"
 
 
@@ -43,6 +43,7 @@ RDEPENDS_${PN} = " \
     enigma2-plugin-extensions-e2m3u2bouquet \
     enigma2-plugin-extensions-xmodem \
     enigma2-plugin-systemplugins-hrtunerproxy \
+    enigma2-plugin-systemplugins-radiotimesemulator \
     oe-alliance-branding-remote \
     exteplayer3 \
     enigma2-plugin-systemplugins-serviceapp \
