@@ -2,7 +2,7 @@ require recipes-mediacenter/kodi/stb-kodi_${PV}.bb
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
 
-SRCDATE = "20190320"
+SRCDATE = "20190626"
 
 SRC_URI_remove = "file://e2player.patch \
            file://add-gstplayer-support.patch \
@@ -12,8 +12,8 @@ SRC_URI_append = "http://source.mynonpublic.com/uclan/hiplayer_${SRCDATE}.tar.gz
     file://hiplayer.patch \
 "
 
-SRC_URI[md5sum] = "598dc7d5c56893e4d3ac35b194599a9f"
-SRC_URI[sha256sum] = "31dfdcf23d56115267423d6d827af3c606fc1e9f0ffe0bf6ac8fee6b305e1efd"
+SRC_URI[md5sum] = "b6dd5e69b933da6389f4b69936fa84fa"
+SRC_URI[sha256sum] = "1b8c3551ea32036a05c65d214f7459380a341ca99539f9beffe59c056a41cbd0"
 
 DEPENDS += "uclan-libs-${MACHINE}"
 PROVIDES += "virtual/kodi"
