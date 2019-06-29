@@ -72,6 +72,9 @@ PREFERRED_PROVIDER_virtual/kernel = "linux-ebox"
 PREFERRED_VERSION_linux-ebox = "3.12.4"
 PREFERRED_VERSION_linux-libc-headers = "3.12.4"
 
+# Broken bootloader can only flash around 100 MB
+FLASHSIZE = "96"
+
 KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_OUTPUT = "${KERNEL_IMAGETYPE}"
 KERNEL_CONSOLE = "null"
