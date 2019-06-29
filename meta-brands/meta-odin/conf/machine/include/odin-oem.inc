@@ -125,6 +125,9 @@ KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_OUTPUT = "${KERNEL_IMAGETYPE}"
 KERNEL_CONSOLE = "ttyS0,115200n8"
 
+# Broken bootloader can only flash around 100 MB
+FLASHSIZE = "96"
+
 IMAGE_FSTYPES ?= "ubi"
 
 UBI_VOLNAME = "rootfs"
