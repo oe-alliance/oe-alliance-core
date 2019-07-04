@@ -9,7 +9,6 @@ SRC_URI += " \
             file://ntp.script \
             file://0001-Prevent-telnet-connections-from-the-internet-to-the-.patch \
             file://0002-Extended-network-interfaces-support.patch \
-            file://0001-Revert-ip-fix-ip-oneline-a.patch \
             "
 
 # we do not really depend on mtd-utils, but as mtd-utils replaces 
