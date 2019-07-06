@@ -85,6 +85,7 @@ RDEPENDS_${PN} = " \
     inadyn-mt \
     iperf3 \
     joe \
+    libxcrypt \
     lighttpd \
     livestreamersrv \
     streamlink \
