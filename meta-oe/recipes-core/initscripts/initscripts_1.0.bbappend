@@ -25,10 +25,6 @@ do_install_append() {
     perl -i -pe 's:mount -a.+?$:mount -a -t nonfs,nfs4,smbfs,cifs,ncp,ncpfs,coda,ocfs2,gfs,gfs2,ceph -O no_netdev 2>/dev/null:' ${D}${sysconfdir}/init.d/mountall.sh
     perl -i -pe 's:(mount -a).*?$:$1:' ${D}${sysconfdir}/init.d/mountnfs.sh
 
-    if [ "x${DISTRO}" = "xtitannit" ]; then
-        install -m 0755    ${WORKDIR}/fastrestore_titannit.sh	${D}${sysconfdir}/init.d/fastrestore
-        ln -sf        ../init.d/fastrestore      ${D}${sysconfdir}/rcS.d/S75fastrestore
-    fi
     # run bootmisc.sh after S37populate-volatile.sh  to fix /tmp issue
     update-rc.d -f -r ${D} bootmisc.sh remove
     update-rc.d -r ${D} bootmisc.sh start 55 S .
