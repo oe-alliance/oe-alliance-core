@@ -71,7 +71,8 @@ RDEPENDS_${PN} = "\
 	packagegroup-base-smbfs-client \
 	packagegroup-base-smbfs-server \
    	packagegroup-base-smbfs-utils \
-   	packagegroup-base-nfs \    
+   	packagegroup-base-nfs \
+	${@bb.utils.contains('MACHINE_FEATURES', 'emmc', 'partitions-by-name' , '', d)} \ 
 	pngquant \
 	procps \
 	rtmpdump \
