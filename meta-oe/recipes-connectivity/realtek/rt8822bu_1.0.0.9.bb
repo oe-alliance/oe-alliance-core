@@ -13,6 +13,7 @@ SRC_URI = "http://source.mynonpublic.com/rtl8822bu-driver-1.0.0.9-20180511a.zip 
     file://add-linux-4.20-support.patch \
     file://add-linux-5.0-support.patch \
     file://add-linux-5.1-support.patch \
+    file://add-linux-5.2-support.patch \
 "
 
 SRC_URI_append_sh4 = " file://fix_sh4_build.patch"
@@ -39,7 +40,6 @@ do_compile () {
 do_install() {
     install -d ${D}${nonarch_base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/net/wireless
     install -m 0644 ${S}/88x2bu.ko ${D}${nonarch_base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/net/wireless
-
 }
 
 do_package_qa() {

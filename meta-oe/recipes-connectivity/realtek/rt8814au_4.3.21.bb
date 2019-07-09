@@ -12,6 +12,7 @@ SRC_URI = "http://source.mynonpublic.com/rtl8814AU-driver-4.3.21-20170707.zip \
     file://add-linux-4.20-support.patch \
     file://add-linux-5.0-support.patch \
     file://add-linux-5.1-support.patch \
+    file://add-linux-5.2-support.patch \
 "
 
 EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR} KDIR=${STAGING_KERNEL_DIR}"

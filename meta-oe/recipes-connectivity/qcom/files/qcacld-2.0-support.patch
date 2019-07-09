@@ -1,4 +1,4 @@
-From 301291bb99f729b59b0c15d98835efbb9f86f28b Mon Sep 17 00:00:00 2001
+From f804148827b02c93fd8dee12aff04418b0dc9b61 Mon Sep 17 00:00:00 2001
 From: Jaedon Shin <jaedon.shin@gmail.com>
 Date: Tue, 27 Nov 2018 14:21:30 +0900
 Subject: [PATCH] qcacld-2.0: Make driver compatiable with mainline kernel
@@ -10,25 +10,25 @@ Signed-off-by: Jaedon Shin <jaedon.shin@gmail.com>
  CORE/CLD_TXRX/TXRX/ol_tx.h                    |  6 ++--
  CORE/CLD_TXRX/TXRX/ol_tx_queue.c              | 16 ++++++++--
  CORE/EPPING/src/epping_txrx.c                 |  6 +++-
- CORE/HDD/inc/wlan_hdd_wmm.h                   |  4 ++-
- CORE/HDD/src/wlan_hdd_early_suspend.c         | 10 ++++++-
- CORE/HDD/src/wlan_hdd_main.c                  | 30 ++++++++++++-------
- CORE/HDD/src/wlan_hdd_wmm.c                   |  4 ++-
+ CORE/HDD/inc/wlan_hdd_wmm.h                   |  6 +++-
+ CORE/HDD/src/wlan_hdd_early_suspend.c         | 10 +++++-
+ CORE/HDD/src/wlan_hdd_main.c                  | 32 +++++++++++++------
+ CORE/HDD/src/wlan_hdd_wmm.c                   |  6 +++-
  CORE/SERVICES/COMMON/adf/adf_os_types.h       |  8 ++++-
- .../COMMON/adf/linux/adf_os_timer_pvt.h       |  7 +++++
- CORE/SERVICES/COMMON/osdep_adf.h              | 10 +++++--
+ .../COMMON/adf/linux/adf_os_timer_pvt.h       |  7 ++++
+ CORE/SERVICES/COMMON/adf/linux/qdf_crypto.c   |  6 ++++
+ CORE/SERVICES/COMMON/osdep_adf.h              | 10 ++++--
  CORE/SERVICES/HIF/PCIe/copy_engine.c          |  6 +++-
  CORE/SERVICES/HIF/PCIe/hif_pci.c              |  6 +++-
  .../HIF/sdio/linux/native_sdio/src/hif.c      |  6 +++-
  CORE/SERVICES/HTC/htc_internal.h              |  2 +-
  CORE/SERVICES/HTC/htc_send.c                  |  6 +++-
  CORE/SVC/src/logging/wlan_logging_sock_svc.c  | 11 +++++++
- CORE/VOSS/inc/vos_cnss.h                      | 15 ++++++++++
+ CORE/VOSS/inc/vos_cnss.h                      | 15 +++++++++
  CORE/VOSS/src/vos_packet.c                    | 11 +++++++
- CORE/VOSS/src/vos_timer.c                     | 24 ++++++++++++++-
- Kbuild                                        |  5 ++--
- Makefile                                      |  6 ++++
- 23 files changed, 183 insertions(+), 35 deletions(-)
+ CORE/VOSS/src/vos_timer.c                     | 24 +++++++++++++-
+ Kbuild                                        |  5 ++-
+ 23 files changed, 189 insertions(+), 35 deletions(-)
 
 diff --git a/CORE/CLD_TXRX/HTT/htt_rx.c b/CORE/CLD_TXRX/HTT/htt_rx.c
 index adbdeb759383..dc0659bb99b8 100644
@@ -187,10 +187,10 @@ index 2b408ce8ebb4..19131398ab26 100644
        EPPING_LOG(VOS_TRACE_LEVEL_FATAL,
           "%s: adapter = NULL", __func__);
 diff --git a/CORE/HDD/inc/wlan_hdd_wmm.h b/CORE/HDD/inc/wlan_hdd_wmm.h
-index 1634157cf5a0..9982614fa2c6 100644
+index 1634157cf5a0..cf048f0eae06 100644
 --- a/CORE/HDD/inc/wlan_hdd_wmm.h
 +++ b/CORE/HDD/inc/wlan_hdd_wmm.h
-@@ -269,7 +269,9 @@ v_U16_t hdd_wmm_select_queue(struct net_device * dev, struct sk_buff *skb);
+@@ -269,12 +269,16 @@ v_U16_t hdd_wmm_select_queue(struct net_device * dev, struct sk_buff *skb);
    ===========================================================================*/
  
  v_U16_t hdd_hostapd_select_queue(struct net_device * dev, struct sk_buff *skb
@@ -200,7 +200,14 @@ index 1634157cf5a0..9982614fa2c6 100644
 +#elif (LINUX_VERSION_CODE >= KERNEL_VERSION(3,13,0))
                                   , void *accel_priv
  #endif
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(5,2,0))
  #if (LINUX_VERSION_CODE >= KERNEL_VERSION(3,14,0))
+                                  , select_queue_fallback_t fallback
+ #endif
++#endif
+ );
+ 
+ /**============================================================================
 diff --git a/CORE/HDD/src/wlan_hdd_early_suspend.c b/CORE/HDD/src/wlan_hdd_early_suspend.c
 index 1df87224dd03..46b9b563c0b7 100644
 --- a/CORE/HDD/src/wlan_hdd_early_suspend.c
@@ -241,10 +248,10 @@ index 1df87224dd03..46b9b563c0b7 100644
      ssr_timer_started = true;
  }
 diff --git a/CORE/HDD/src/wlan_hdd_main.c b/CORE/HDD/src/wlan_hdd_main.c
-index 55a356b68ec8..eff9d6fcad35 100644
+index 55a356b68ec8..11c0817c4949 100644
 --- a/CORE/HDD/src/wlan_hdd_main.c
 +++ b/CORE/HDD/src/wlan_hdd_main.c
-@@ -10940,7 +10940,9 @@ static void hdd_set_multicast_list(struct net_device *dev)
+@@ -10940,12 +10940,16 @@ static void hdd_set_multicast_list(struct net_device *dev)
    --------------------------------------------------------------------------*/
  static v_U16_t hdd_select_queue(struct net_device *dev,
                           struct sk_buff *skb
@@ -254,8 +261,15 @@ index 55a356b68ec8..eff9d6fcad35 100644
 +#elif (LINUX_VERSION_CODE >= KERNEL_VERSION(3,13,0))
                           , void *accel_priv
  #endif
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(5,2,0))
  #if (LINUX_VERSION_CODE >= KERNEL_VERSION(3,14,0))
-@@ -13330,13 +13332,13 @@ static void hdd_populate_fils_params(struct cfg80211_connect_resp_params
+                          , select_queue_fallback_t fallback
+ #endif
++#endif
+ )
+ {
+    return hdd_wmm_select_queue(dev, skb);
+@@ -13330,13 +13334,13 @@ static void hdd_populate_fils_params(struct cfg80211_connect_resp_params
                       uint16_t fils_seq_num)
  {
      /* Increament seq number to be used for next FILS */
@@ -276,7 +290,7 @@ index 55a356b68ec8..eff9d6fcad35 100644
  }
  #else /* CFG80211_FILS_SK_OFFLOAD_SUPPORT */
  static inline void hdd_populate_fils_params(struct cfg80211_connect_resp_params
-@@ -13402,7 +13404,7 @@ static void hdd_connect_done(struct net_device *dev, const u8 *bssid,
+@@ -13402,7 +13406,7 @@ static void hdd_connect_done(struct net_device *dev, const u8 *bssid,
      }
      hddLog(LOG1, "FILS indicate connect status %d seq no %d",
            fils_params.status,
@@ -285,7 +299,7 @@ index 55a356b68ec8..eff9d6fcad35 100644
  
      cfg80211_connect_done(dev, &fils_params, gfp);
  
-@@ -18519,9 +18521,15 @@ static bool unload_timer_started;
+@@ -18519,9 +18523,15 @@ static bool unload_timer_started;
   *
   * Return: None
   */
@@ -301,7 +315,7 @@ index 55a356b68ec8..eff9d6fcad35 100644
  }
  
  /**
-@@ -18544,7 +18552,7 @@ static void hdd_unload_timer_del(void)
+@@ -18544,7 +18554,7 @@ static void hdd_unload_timer_del(void)
   *
   * Return: None
   */
@@ -310,7 +324,7 @@ index 55a356b68ec8..eff9d6fcad35 100644
  {
  	v_CONTEXT_t vos_context = NULL;
  	hdd_context_t *hdd_ctx = NULL;
-@@ -18584,7 +18592,9 @@ static void hdd_unload_timer_start(int msec)
+@@ -18584,7 +18594,9 @@ static void hdd_unload_timer_start(int msec)
  			"%s: Starting unload timer when it's running!",
  			__func__);
  	unload_timer.expires = jiffies + msecs_to_jiffies(msec);
@@ -321,10 +335,10 @@ index 55a356b68ec8..eff9d6fcad35 100644
  	unload_timer_started = true;
  }
 diff --git a/CORE/HDD/src/wlan_hdd_wmm.c b/CORE/HDD/src/wlan_hdd_wmm.c
-index f3f32b7d11ca..e7d940895400 100644
+index f3f32b7d11ca..d83c3ae3cb91 100644
 --- a/CORE/HDD/src/wlan_hdd_wmm.c
 +++ b/CORE/HDD/src/wlan_hdd_wmm.c
-@@ -1838,7 +1838,9 @@ hdd_wmm_classify_pkt(hdd_adapter_t* pAdapter, struct sk_buff *skb,
+@@ -1838,12 +1838,16 @@ hdd_wmm_classify_pkt(hdd_adapter_t* pAdapter, struct sk_buff *skb,
    @return         : Qdisc queue index
    ===========================================================================*/
  v_U16_t hdd_hostapd_select_queue(struct net_device * dev, struct sk_buff *skb
@@ -334,7 +348,14 @@ index f3f32b7d11ca..e7d940895400 100644
 +#elif (LINUX_VERSION_CODE >= KERNEL_VERSION(3,13,0))
                                   , void *accel_priv
  #endif
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(5,2,0))
  #if (LINUX_VERSION_CODE >= KERNEL_VERSION(3,14,0))
+                                  , select_queue_fallback_t fallback
+ #endif
++#endif
+ )
+ {
+    WLANTL_ACEnumType ac;
 diff --git a/CORE/SERVICES/COMMON/adf/adf_os_types.h b/CORE/SERVICES/COMMON/adf/adf_os_types.h
 index a1b5ce591c01..5ca432050aef 100644
 --- a/CORE/SERVICES/COMMON/adf/adf_os_types.h
@@ -378,6 +399,40 @@ index d12b74a31163..ac63e0b85804 100644
  
      return A_STATUS_OK;
  }
+diff --git a/CORE/SERVICES/COMMON/adf/linux/qdf_crypto.c b/CORE/SERVICES/COMMON/adf/linux/qdf_crypto.c
+index 44088838b857..19a17cb4bf6e 100644
+--- a/CORE/SERVICES/COMMON/adf/linux/qdf_crypto.c
++++ b/CORE/SERVICES/COMMON/adf/linux/qdf_crypto.c
+@@ -72,7 +72,9 @@ int qdf_get_hash(uint8_t *type,
+     } desc;
+ 
+     desc.shash.tfm = tfm;
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(5,2,0))
+     desc.shash.flags = 0;
++#endif
+     ret = crypto_shash_init(&desc.shash);
+     if (ret)
+         goto fail;
+@@ -105,7 +107,9 @@ int qdf_get_hmac_hash(uint8_t *type, uint8_t *key,
+     } desc;
+ 
+     desc.shash.tfm = tfm;
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(5,2,0))
+     desc.shash.flags = 0;
++#endif
+     ret = crypto_shash_setkey(desc.shash.tfm, key, keylen);
+     if (ret)
+         goto fail;
+@@ -175,7 +179,9 @@ int qdf_get_keyed_hash(const char *alg, const uint8_t *key,
+     do {
+         SHASH_DESC_ON_STACK(desc, tfm);
+         desc->tfm = tfm;
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(5,2,0))
+         desc->flags = crypto_shash_get_flags(tfm);
++#endif
+ 
+         ret = crypto_shash_init(desc);
+         if (ret) {
 diff --git a/CORE/SERVICES/COMMON/osdep_adf.h b/CORE/SERVICES/COMMON/osdep_adf.h
 index 7b2ba62e3aea..adf971081283 100644
 --- a/CORE/SERVICES/COMMON/osdep_adf.h
@@ -639,10 +694,10 @@ index 42654ce65dbd..f87c7bb8c589 100644
  
    \brief vos_timer_get_system_time() - Get the system time in milliseconds
 diff --git a/Kbuild b/Kbuild
-index 8695c57204a4..6335b2700793 100644
+index 3de481b8ba66..ff599306a3ac 100644
 --- a/Kbuild
 +++ b/Kbuild
-@@ -189,7 +189,7 @@ endif
+@@ -192,7 +192,7 @@ CONFIG_WLAN_FEATURE_SAE := y
  # Feature flags which are not (currently) configurable via Kconfig
  
  #Whether to build debug version
@@ -651,7 +706,7 @@ index 8695c57204a4..6335b2700793 100644
  
  #Enable this flag to build driver in diag version
  BUILD_DIAG_VERSION := 1
-@@ -960,7 +960,7 @@ WDI_INC :=	$(WDI_CP_INC) \
+@@ -980,7 +980,7 @@ WDI_INC :=	$(WDI_CP_INC) \
  
  WCNSS_INC :=	-I$(WLAN_ROOT)/wcnss/inc
  
@@ -660,7 +715,7 @@ index 8695c57204a4..6335b2700793 100644
  
  INCS :=		$(HDD_INC) \
  		$(EPPING_INC) \
-@@ -1036,7 +1036,6 @@ CDEFINES :=	-DANI_LITTLE_BYTE_ENDIAN \
+@@ -1056,7 +1056,6 @@ CDEFINES :=	-DANI_LITTLE_BYTE_ENDIAN \
  		-DWLAN_PERF \
  		-DPTT_SOCK_SVC_ENABLE \
  		-Wall\
@@ -668,20 +723,6 @@ index 8695c57204a4..6335b2700793 100644
  		-D__linux__ \
  		-DHAL_SELF_STA_PER_BSS=1 \
  		-DWLAN_FEATURE_VOWIFI_11R \
-diff --git a/Makefile b/Makefile
-index f78d774f595d..87d69b13f90d 100644
---- a/Makefile
-+++ b/Makefile
-@@ -1,3 +1,9 @@
-+KBUILD_EXTRA :=
-+KBUILD_EXTRA += CONFIG_NON_QC_PLATFORM=y
-+KBUILD_EXTRA += CONFIG_LINUX_QCMBR=y
-+KBUILD_EXTRA += CONFIG_WLAN_FEATURE_11W=y
-+KBUILD_EXTRA += CONFIG_WLAN_FEATURE_FILS=y
-+
- KERNEL_SRC ?= /lib/modules/$(shell uname -r)/build
- 
- KBUILD_OPTIONS := WLAN_ROOT=$(PWD)
 -- 
-2.21.0
+2.22.0
 

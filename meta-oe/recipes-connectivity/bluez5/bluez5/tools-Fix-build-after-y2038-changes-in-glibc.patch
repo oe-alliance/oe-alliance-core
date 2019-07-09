@@ -1,0 +1,44 @@
+--- a/tools/l2test.c	2019-07-09 15:09:51.043659121 +0200
++++ b/tools/l2test.c	2019-07-09 15:11:14.155745140 +0200
+@@ -54,6 +54,10 @@
+ #define BREDR_DEFAULT_PSM	0x1011
+ #define LE_DEFAULT_PSM		0x0080
+ 
++#ifndef SIOCGSTAMP_OLD
++#define SIOCGSTAMP_OLD SIOCGSTAMP
++#endif
++
+ /* Test modes */
+ enum {
+ 	SEND,
+@@ -906,7 +910,7 @@
+ 			if (timestamp) {
+ 				struct timeval tv;
+ 
+-				if (ioctl(sk, SIOCGSTAMP, &tv) < 0) {
++				if (ioctl(sk, SIOCGSTAMP_OLD, &tv) < 0) {
+ 					timestamp = 0;
+ 					memset(ts, 0, sizeof(ts));
+ 				} else {
+--- a/tools/rctest.c	2019-07-09 15:12:47.667842383 +0200
++++ b/tools/rctest.c	2019-07-09 15:13:50.091907529 +0200
+@@ -49,6 +49,10 @@
+ 
+ #include "src/shared/util.h"
+ 
++#ifndef SIOCGSTAMP_OLD
++#define SIOCGSTAMP_OLD SIOCGSTAMP
++#endif
++
+ /* Test modes */
+ enum {
+ 	SEND,
+@@ -504,7 +508,7 @@
+ 			if (timestamp) {
+ 				struct timeval tv;
+ 
+-				if (ioctl(sk, SIOCGSTAMP, &tv) < 0) {
++				if (ioctl(sk, SIOCGSTAMP_OLD, &tv) < 0) {
+ 					timestamp = 0;
+ 					memset(ts, 0, sizeof(ts));
+ 				} else {
