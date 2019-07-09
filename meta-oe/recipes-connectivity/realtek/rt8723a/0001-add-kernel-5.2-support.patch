@@ -1,0 +1,17 @@
+diff --git a/os_dep/os_intfs.c b/os_dep/os_intfs.c
+index aad11c987bbe..575ce6554b07 100644
+--- a/os_dep/os_intfs.c
++++ b/os_dep/os_intfs.c
+@@ -904,8 +904,10 @@ unsigned int rtw_classify8021d(struct sk_buff *skb)
+ 
+ #if (LINUX_VERSION_CODE>=KERNEL_VERSION(4,19,0))
+ static u16 rtw_select_queue(struct net_device *dev, struct sk_buff *skb,
+-				struct net_device *sb_dev,
+-				select_queue_fallback_t fallback
++				struct net_device *sb_dev
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(5,2,0))
++				, select_queue_fallback_t fallback
++#endif
+ #else
+ static u16 rtw_select_queue(struct net_device *dev, struct sk_buff *skb
+ #if (LINUX_VERSION_CODE >= KERNEL_VERSION(3, 13, 0))
