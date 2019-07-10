@@ -1,5 +1,5 @@
 
-PREFERRED_VERSION_linux-edision = "5.1"
+PREFERRED_VERSION_linux-edision = "5.2"
 
 KERNEL_MODULE_AUTOLOAD += "hci_uart"
 KERNEL_MODULE_AUTOLOAD += "wlan"
