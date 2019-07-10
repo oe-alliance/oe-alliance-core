@@ -106,7 +106,7 @@ RDEPENDS_${PN} = "\
 	oe-alliance-feeds-configs \
 	openatv-version-info \
 	\
-	${@bb.utils.contains("DISTRO_NAME", "titannit", "titannit-autorestore" , "", d)} \
+	titan-autorestore \
  	titan-infobox \
 	titan-rarfs \
 	titan-fbread \
