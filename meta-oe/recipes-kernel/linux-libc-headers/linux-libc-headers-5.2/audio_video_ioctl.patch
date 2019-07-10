@@ -1,0 +1,24 @@
+diff --git a/include/uapi/linux/dvb/audio.h b/include/uapi/linux/dvb/audio.h
+index afeae063e640..a4d3b8744919 100644
+--- a/include/uapi/linux/dvb/audio.h
++++ b/include/uapi/linux/dvb/audio.h
+@@ -94,6 +94,7 @@ typedef struct audio_status {
+ #define AUDIO_SET_ID               _IO('o', 13)
+ #define AUDIO_SET_MIXER            _IOW('o', 14, audio_mixer_t)
+ #define AUDIO_SET_STREAMTYPE       _IO('o', 15)
++#define AUDIO_GET_PTS              _IOR('o', 19, __u64)
+ #define AUDIO_BILINGUAL_CHANNEL_SELECT _IO('o', 20)
+ 
+ #endif /* _DVBAUDIO_H_ */
+diff --git a/include/uapi/linux/dvb/video.h b/include/uapi/linux/dvb/video.h
+index 43ba8b0a3d14..1a928cb717c9 100644
+--- a/include/uapi/linux/dvb/video.h
++++ b/include/uapi/linux/dvb/video.h
+@@ -195,6 +195,7 @@ typedef __u16 video_attributes_t;
+ #define VIDEO_SET_STREAMTYPE       _IO('o', 36)
+ #define VIDEO_SET_FORMAT           _IO('o', 37)
+ #define VIDEO_GET_SIZE             _IOR('o', 55, video_size_t)
++#define VIDEO_GET_FRAME_RATE       _IOR('o', 56, unsigned int)
+ 
+ /**
+  * VIDEO_GET_PTS
