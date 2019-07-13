@@ -188,6 +188,7 @@ MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "\
     kernel-module-ehci-platform \
     kernel-module-ohci-platform \
     ${@bb.utils.contains('MACHINE_FEATURES', 'KODI', 'dinobot-opengl-${MACHINE}', '',d)} \
+    dinobot-partitions-${SOC_FAMILY} \
     dinobot-libs-${MACHINE} \
     dinobot-hihalt-${MACHINE} \
     dinobot-pvr \
