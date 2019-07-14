@@ -1,9 +1,7 @@
 DESCRIPTION = "Linux Bluetooth Stack Userland v5 configurations"
 require conf/license/license-gplv2.inc
 
-inherit bluetooth
-
-DEPENDS = "glib-2.0 ${BLUEZ}"
+DEPENDS = "glib-2.0 bluez5"
 
 SRC_URI = "file://main.conf file://uart.conf"
 
