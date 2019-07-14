@@ -1,8 +1,8 @@
 diff --git a/Makefile.am b/Makefile.am
-index 3f62601..b3a2916 100644
+index 09343ff1..b3a2916a 100644
 --- a/Makefile.am
 +++ b/Makefile.am
-@@ -1,111 +1,59 @@
+@@ -1,110 +1,59 @@
  ACLOCAL_AMFLAGS = -I m4
  
  SUBDIRS = \
@@ -101,7 +101,6 @@ index 3f62601..b3a2916 100644
 -	zaphistorybrowser \
  	zapstatistic \
 -	zdfmediathek \
--	oscaminfo \
 -	esame \
 -	schiffe \
 -	sudoku \
