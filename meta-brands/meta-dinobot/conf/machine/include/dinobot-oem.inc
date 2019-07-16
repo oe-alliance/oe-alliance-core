@@ -30,6 +30,8 @@ ${@bb.utils.contains('MACHINEBUILD', 'spycatminiv2', 'Mini V2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iziboxecohd', 'ECO TWIN HD' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'jdhdduo', 'HD DUO' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'turing', 'TURING' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'arivatwin', 'ARIVA ATV TT' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'arivacombo', 'ARIVA ATV COMBO' , '', d)}\
 "
 
 MACHINE_BRAND = "\
@@ -59,6 +61,8 @@ ${@bb.utils.contains('MACHINEBUILD', 'spycatminiv2', 'SPYCAT' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iziboxecohd', 'IZIBOX' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'JamesDonkey', 'HD DUO' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'turing', 'Atto.TV' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'arivatwin', 'Ferguson' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'arivacombo', 'Ferguson' , '', d)}\
 "
 
 MTD_KERNEL = "\
@@ -88,6 +92,8 @@ ${@bb.utils.contains('MACHINEBUILD', 'spycatminiv2', 'mtd8' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iziboxecohd', 'mtd8' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'JamesDonkey', 'mtd8' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'turing', 'mtd8' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'arivatwin', 'mmcblk0p10' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'arivacombo', 'mmcblk0p10' , '', d)}\
 "
 
 MTD_ROOTFS = "\
@@ -117,6 +123,8 @@ ${@bb.utils.contains('MACHINEBUILD', 'spycatminiv2', 'mtd11' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iziboxecohd', 'mtd11' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'JamesDonkey', 'mtd11' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'turing', 'mtd11' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'arivatwin', 'mmcblk0p13' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'arivacombo', 'mmcblk0p13' , '', d)}\
 "
 
 SDCARDIMG = "\
@@ -146,6 +154,8 @@ ${@bb.utils.contains('MACHINEBUILD', 'spycatminiv2', 'no' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iziboxecohd', 'no' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'JamesDonkey', 'no' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'turing', 'no' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'arivatwin', 'no' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'arivacombo', 'no' , '', d)}\
 "
 
 IMAGEDIR = "\
@@ -169,12 +179,14 @@ ${@bb.utils.contains('MACHINEBUILD', 'hitube4k', 'dinobot/${MACHINE}' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iziboxone4k', 'dinobot/${MACHINE}' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axashistwin', 'axas/axashistwin' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axashisc4k', 'axas/axasc4k' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'protek4kx1', 'dinobot/${MACHINE}' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'anadolprohd5', 'dinobot/${MACHINE}' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'spycatminiv2', 'dinobot/${MACHINE}' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'iziboxecohd', 'dinobot/${MACHINE}' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'JamesDonkey', 'dinobot/${MACHINE}' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'turing', 'dinobot/${MACHINE}' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'protek4kx1', 'protek/4kx1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'anadolprohd5', 'anadol/prohd5' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'spycatminiv2', 'spycat/miniv2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'iziboxecohd', 'izibox/ecohd' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'JamesDonkey', 'jamesdonkey/hdduo' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'turing', 'atto/turing' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'arivatwin', 'ferguson\atvtt' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'arivacombo', 'ferguson\atvcombo' , '', d)}\
 "
 
 KERNEL_MODULE_AUTOLOAD += "xhci-plat-hcd"
