@@ -3,8 +3,8 @@ SRCDATE = "20190718"
 
 do_install_append() {
 	install -d ${D}/lib/firmware/brcm
-	install -m 0644 ${S}/brcmfmac43455-sdio.bin ${D}/lib/firmware/brcm
-	install -m 0644 ${S}/brcmfmac43455-sdio.txt ${D}/lib/firmware/brcm
+	install -m 0644 ${WORKDIR}/brcmfmac43455-sdio.bin ${D}/lib/firmware/brcm
+	install -m 0644 ${WORKDIR}/brcmfmac43455-sdio.txt ${D}/lib/firmware/brcm
 }
 
 FILES_${PN} += "/lib/firmware/brcm"
