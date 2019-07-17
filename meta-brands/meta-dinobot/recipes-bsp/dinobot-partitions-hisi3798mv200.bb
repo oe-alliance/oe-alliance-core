@@ -5,7 +5,7 @@ LICENSE = "CLOSED"
 require conf/license/license-close.inc
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-SRCDATE = "20190711"
+SRCDATE = "20190716"
 PR = "${SRCDATE}"
 
 S = "${WORKDIR}"
@@ -21,7 +21,7 @@ do_install() {
 
 FILES_${PN} = "/usr/share"
 
-SRC_URI[md5sum] = "dae32c99577f84967cbccbb618ce317b"
-SRC_URI[sha256sum] = "498ee6356a3a46ff5a34fae8594e84d9477a1d7e3ba391f05a6e67a3f8f2ddae"
+SRC_URI[md5sum] = "20363ec258cd283cb89908cbd132809e"
+SRC_URI[sha256sum] = "0f68f71dd3abbc2df8169900bc87165b768bd17bbf2b9871de76d534b2d5752b"
 
 INSANE_SKIP_${PN} += "already-stripped"
