@@ -215,9 +215,9 @@ MACHINE_FEATURES += "switchoff  hdmicec skins1080 blindscan-tbs alsa hbbtv-brows
 
 PREFERRED_VERSION_linux-dinobot = "4.4.35"
 PREFERRED_VERSION_linux-libc-headers = "4.4"
-PREFERRED_PROVIDER_virtual/egl = "dinobot-opengl-${MACHINE}" 
-PREFERRED_PROVIDER_virtual/libgles1 = "dinobot-opengl-${MACHINE}"
-PREFERRED_PROVIDER_virtual/libgles2 = "dinobot-opengl-${MACHINE}"
+PREFERRED_PROVIDER_virtual/egl = "dinobot-opengl-${SOC_FAMILY}" 
+PREFERRED_PROVIDER_virtual/libgles1 = "dinobot-opengl-${SOC_FAMILY}"
+PREFERRED_PROVIDER_virtual/libgles2 = "dinobot-opengl-${SOC_FAMILY}"
 PREFERRED_PROVIDER_virtual/kodi = "stb-kodi-${MACHINE}"
 PREFERRED_PROVIDER_virtual/blindscan-dvbs = "dinobot-blindscan-${MACHINE}"
 
