@@ -1,0 +1,22 @@
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides:           resize2fs mmcblk0p13
+# Required-Start:     $local_fs
+# Required-Stop:      $local_fs
+# Default-Start:      S
+# Default-Stop:
+# Short-Description:  Resizes once rootfs to full partition size
+### END INIT INFO
+
+if [ ! -f "/.resize-rootfs" ]; then
+  if [ -e "/dev/block/by-name/rootfs" ]; then
+    echo "Resizing rootfs, Do not unplug power!..."
+    resize2fs /dev/block/by-name/rootfs
+    touch "/.resize-rootfs"
+  elif [ -e "/dev/block/by-name/exrootfs" ]; then
+    echo "Resizing rootfs, Do not unplug power!..."
+    resize2fs /dev/block/by-name/exrootfs
+    touch "/.resize-rootfs"
+  fi
+fi
+: exit 0
