@@ -4,7 +4,7 @@ PROVIDES += "virtual/kodi"
 RPROVIDES_${PN} += "virtual/kodi"
 PROVIDES += "kodi"
 RPROVIDES_${PN} += "kodi"
-RDEPENDS_${PN} += "dinobot-opengl-${MACHINE}"
+RDEPENDS_${PN} += "dinobot-opengl-${SOC_FAMILY}"
 
 EXTRA_OECONF += " \
     --with-platform=mali-cortexa15 \
