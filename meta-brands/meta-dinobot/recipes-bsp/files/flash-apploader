@@ -1,0 +1,20 @@
+#!/bin/sh
+if [ -f "/usr/share/apploader.bin" ]; then
+  if [ -e "/dev/block/by-name/loader" ]; then
+    DEVICE=/dev/block/by-name/loader
+  elif [ -e "/dev/block/by-name/exloader" ]; then
+    DEVICE=/dev/block/by-name/exloader
+  fi
+  if [ ! -z $DEVICE ]; then
+    dd if=$DEVICE of=/tmp/current.bin count=8192 2> /dev/null
+    dd if=/usr/share/apploader.bin of=/tmp/new.bin count=8192 2> /dev/null
+    NEW=`md5sum /tmp/new.bin | cut -d ' ' -f1`
+    CURRENT=`md5sum /tmp/current.bin | cut -d ' ' -f1`
+    if [ $NEW == $CURRENT ]; then
+      echo "Apploader uptodate"
+    else
+      echo "new Apploader Flashing"
+      dd if=/usr/share/apploader.bin of=$DEVICE 2> /dev/null
+    fi
+  fi
+fi
