@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "1.0"
-PR = "r65"
+PR = "r66"
 
 inherit packagegroup
 
@@ -15,13 +15,21 @@ DEPENDS = "enigma2-pliplugins openatv-feeds"
 RRECOMMENDS_${PN} = " \
     enigma2-skindefault \
     openatv-version-info \
-    ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", "enigma2-plugin-drivers-usbserial enigma2-plugin-extensions-filecommander", d)} \
-    enigma2-plugin-extensions-infopanel \
+    ${@bb.utils.contains_any("FLASHSIZE", "64 96", " \
+    enigma2-plugin-extensions-openwebif-webtv \
+    ", " \
+    enigma2-plugin-drivers-usbserial \
     enigma2-plugin-extensions-autotimer \
-    enigma2-plugin-extensions-epgsearch \
-    enigma2-plugin-extensions-imdb \
     enigma2-plugin-extensions-cutlisteditor \
     enigma2-plugin-extensions-dvdplayer \
+    enigma2-plugin-extensions-epgsearch \
+    enigma2-plugin-extensions-filecommander \
+    enigma2-plugin-extensions-imdb \
+    enigma2-plugin-extensions-openwebif-themes \
+    enigma2-plugin-extensions-openwebif-vxg \
+    ", d)} \
+    \
+    enigma2-plugin-extensions-infopanel \
     enigma2-plugin-extensions-volume-adjust \
     enigma2-plugin-extensions-atilehd \
     enigma2-plugin-systemplugins-videotune \
@@ -29,8 +37,7 @@ RRECOMMENDS_${PN} = " \
     enigma2-plugin-systemplugins-softwaremanager \
     enigma2-plugin-systemplugins-hotplug \
     enigma2-plugin-extensions-mediaplayer \
-    ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", "enigma2-plugin-extensions-openwebif-themes enigma2-plugin-extensions-openwebif-terminal", d)} \
-    ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "enigma2-plugin-extensions-openwebif-webtv", "enigma2-plugin-extensions-openwebif-vxg", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", "enigma2-plugin-extensions-openwebif-terminal", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", "enigma2-plugin-extensions-enhancedmoviecenter", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "dreamboxv1", "enigma2-plugin-extensions-dflash mtd-utils-jffs2", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "dreamboxv2", "enigma2-plugin-extensions-dbackup e2fsprogs-badblocks", "", d)} \
@@ -41,7 +48,7 @@ RRECOMMENDS_${PN} = " \
     ${@bb.utils.contains("MACHINE_FEATURES", "grautec", "enigma2-plugin-extensions-grautec", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "chromiumos", "enigma2-plugin-extensions-chromium", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "dvbc-only", "", "enigma2-plugin-extensions-programmlistenupdater", d)} \
-	${@bb.utils.contains("MACHINE_FEATURES", "dvd", "bdremux replex mjpegtools dvdauthor dvd+rw-tools cdrkit cdfs cdtextinfo enigma2-plugin-extensions-cdinfo enigma2-plugin-extensions-dvdburn enigma2-plugin-extensions-dvdplayer ${GST_BASE_DVD}", "", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "dvd", "bdremux replex mjpegtools dvdauthor dvd+rw-tools cdrkit cdfs cdtextinfo enigma2-plugin-extensions-cdinfo enigma2-plugin-extensions-dvdburn enigma2-plugin-extensions-dvdplayer ${GST_BASE_DVD}", "", d)} \
     "
 
 GST_BASE_DVD = "${@bb.utils.contains('GST_VERSION', '1.0', ' \
