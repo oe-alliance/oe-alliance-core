@@ -24,6 +24,7 @@ INHIBIT_PACKAGE_STRIP = "1"
 FILES_${PN} += "${nonarch_base_libdir}/modules/${KV}/extra"
 FILES_${PN} += "/usr/bin/komession"
 FILES_${PN} += "${sysconfdir}/init.d"
+FILES_${PN} += "${sysconfdir}/modules-load.d"
 
 do_compile() {
 }
