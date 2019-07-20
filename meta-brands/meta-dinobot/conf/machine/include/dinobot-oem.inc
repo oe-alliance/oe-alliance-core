@@ -85,7 +85,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'dinoboth265', 'mtd8' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'hitube4k', 'mtd10' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iziboxone4k', 'mtd10' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axashistwin', 'mtd8' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'axashisc4k', 'mmcblk0p10' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'axashisc4k', 'mmcblk0p9' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'protek4kx1', 'mmcblk0p9' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'anadolprohd5', 'mtd8' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'spycatminiv2', 'mtd8' , '', d)}\
@@ -116,7 +116,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'dinoboth265', 'mtd9' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'hitube4k', 'mtd11' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iziboxone4k', 'mtd11' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axashistwin', 'mtd9' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'axashisc4k', 'mmcblk0p13' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'axashisc4k', 'mmcblk0p10' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'protek4kx1', 'mmcblk0p10' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'anadolprohd5', 'mtd11' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'spycatminiv2', 'mtd11' , '', d)}\
