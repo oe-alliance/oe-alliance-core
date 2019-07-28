@@ -38,7 +38,7 @@ PR="r1"
 PV = "1.42-DEV-git2446+751bfd4"
 SRCREV = "751bfd456f459cb2046af249d91e20be8fbc8ea2"
 
-GO_IMPORT = "github.com/ncw/rclone"
+GO_IMPORT = "github.com/rclone/rclone"
 
 SRC_URI = "git://${GO_IMPORT}.git;protocol=https;destsuffix=${BPN}-${PV}/src/${GO_IMPORT} \
            file://rclonefs \
