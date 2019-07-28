@@ -14,7 +14,7 @@ RDEPENDS_${PN} += "bash"
 inherit gitpkgv go upx-compress
 
 SRCREV = "${AUTOREV}"
-PV = "1.47-DEV+git${SRCPV}"
+PV = "1.48-DEV+git${SRCPV}"
 
 SRC_URI = "git://${GO_IMPORT}.git;protocol=http \
            file://rclonefs \
@@ -23,7 +23,7 @@ SRC_URI = "git://${GO_IMPORT}.git;protocol=http \
 GO_DYNLINK_aarch64 = ""
 GO_DYNLINK_arm = ""
 
-GO_IMPORT = "github.com/ncw/rclone"
+GO_IMPORT = "github.com/rclone/rclone"
 
 do_install_append() {
     rm -rf ${D}${libdir}
