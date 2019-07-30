@@ -71,6 +71,7 @@ RDEPENDS_${PN} = " \
     davfs2 \
     djmount \
     dosfstools \
+    dvb-apps \
     dvblast \
     dvbsnoop \
     dvdfs \
