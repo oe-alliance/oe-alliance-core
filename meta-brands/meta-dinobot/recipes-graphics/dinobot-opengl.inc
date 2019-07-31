@@ -18,6 +18,11 @@ S = "${WORKDIR}/usr"
 SOLIBS = ".so"
 FILES_SOLIBSDEV = ""
 
+# Disable anything auto depending
+EXCLUDE_FROM_SHLIBS = "1"
+
+PRIVATE_LIBS_${PN} = "libm.so-2.27.so"
+
 do_configure() {
 }
 
@@ -47,7 +52,7 @@ do_install() {
     done
     install -d ${D}/lib
     install -m 0755 ${WORKDIR}/libm-2.27.so ${D}/lib
-    ln -s /lib/libm.so-2.27.so  ${D}/lib/lim.so
+    ln -s /lib/libm.so-2.27.so  ${D}/lib/libm.so
 }
 
 FILES_${PN} = "/usr/lib/* /lib"
