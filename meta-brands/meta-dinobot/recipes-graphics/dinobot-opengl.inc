@@ -28,6 +28,8 @@ do_configure() {
 
 do_compile() {
 }
+do_package_qa() {
+}
 
 do_install() {
     install -d ${D}${libdir}
