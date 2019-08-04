@@ -71,6 +71,7 @@ RDEPENDS_${PN} = " \
     davfs2 \
     djmount \
     dosfstools \
+    dvb-apps \
     dvblast \
     dvbsnoop \
     dvdfs \
@@ -100,7 +101,7 @@ RDEPENDS_${PN} = " \
     net-snmp \
     ntfs-3g \
     ntp \
-    ${@bb.utils.contains("DEFAULTTUNE", "sh4", "" , "nodejs dvb-apps ", d)} \
+    ${@bb.utils.contains("DEFAULTTUNE", "sh4", "" , "nodejs", d)} \
     odhcp6c \
     ofgwrite \
     openresolv \
