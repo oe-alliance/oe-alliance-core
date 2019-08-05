@@ -3,13 +3,10 @@ HOMEPAGE = "http://www.linuxtv.org"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe"
 SRCREV = "3d43b280298c39a67d1d889e01e173f52c12da35"
-SRCREV_FORMAT = "SRCREV"
 
 SRC_URI = "hg://linuxtv.org/hg;module=dvb-apps;protocol=http \
-          file://dvb-fe-xc5000c-4.1.30.7.fw \
           file://dvb-scan-table \
           file://0001-Fix-generate-keynames.patch \
-          file://0002-Fix-compiler-warning-flags.patch \
           file://0003-handle-static-shared-only-build.patch \
           file://0004-Makefile-remove-test.patch \
           file://0005-libucsi-optimization-removal.patch \
@@ -22,6 +19,8 @@ S = "${WORKDIR}/${BPN}"
 
 inherit perlnative
 
+export enable_static="no"
+
 do_configure() {
     sed -i -e s:/usr/include:${STAGING_INCDIR}:g util/av7110_loadkeys/generate-keynames.sh
 }
@@ -32,10 +31,6 @@ do_install() {
     install -d ${D}/${docdir}/dvb-apps/scan
     install -d ${D}/${docdir}/dvb-apps/szap
     chmod a+rx ${D}/${libdir}/*.so*
-    if [ "${DVB_WINTV_TUNER}" = "true" ]; then
-        install -d ${D}/lib/firmware
-        install -m 0644 ${WORKDIR}/*.fw ${D}/lib/firmware/
-    fi
     cp -R --no-dereference --preserve=mode,links ${S}/util/szap/channels-conf* ${D}/${docdir}/dvb-apps/szap/
     cp -R --no-dereference --preserve=mode,links ${S}/util/szap/README   ${D}/${docdir}/dvb-apps/szap/
     cp -R --no-dereference --preserve=mode,links ${WORKDIR}/dvb-scan-table/* ${D}/usr/share/dvb
@@ -65,7 +60,7 @@ RDEPENDS_dvbnet =+ "libdvbapi"
 
 RCONFLICTS_dvb-evtest = "evtest"
 
-FILES_${PN} = "${bindir} ${datadir}/dvb lib/firmware"
+FILES_${PN} = "${bindir} ${datadir}/dvb"
 FILES_${PN}-doc = ""
 FILES_${PN}-dev = "${includedir}"
 FILES_dvb-evtest = "${bindir}/evtest"
@@ -104,5 +99,4 @@ python populate_packages_prepend () {
 INSANE_SKIP_${PN} = "ldflags"
 INSANE_SKIP_${PN}-dev = "ldflags"
 
-DVB_WINTV_TUNER = "true"
 TARGET_CC_ARCH += "${LDFLAGS}"
