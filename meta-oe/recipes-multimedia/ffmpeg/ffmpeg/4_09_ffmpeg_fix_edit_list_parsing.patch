@@ -1,6 +1,6 @@
 --- a/libavformat/mov.c
 +++ b/libavformat/mov.c
-@@ -3561,8 +3561,10 @@ static void mov_fix_index(MOVContext *mov, AVStream *st)
+@@ -3558,8 +3558,10 @@ static void mov_fix_index(MOVContext *mov, AVStream *st)
  
              if (ctts_data_old && ctts_index_old < ctts_count_old) {
                  curr_ctts = ctts_data_old[ctts_index_old].duration;
