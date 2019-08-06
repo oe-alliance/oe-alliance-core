@@ -4,7 +4,7 @@ SECTION = "devel/python"
 LICENSE = "AGPL-3.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=9908f765b999cf8858b921c1cdacc5a7"
 
-DEPENDS_${PN} = "python-circuits python-circuits-bricks"
+DEPENDS = "python-circuits python-circuits-bricks"
 RDEPENDS_${PN} = "python-circuits python-circuits-bricks"
 
 SRC_URI = "git://github.com/mnlipp/CoCy;protocol=https"
