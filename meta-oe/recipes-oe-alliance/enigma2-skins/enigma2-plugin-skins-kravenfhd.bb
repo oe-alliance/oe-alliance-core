@@ -1,7 +1,9 @@
 SUMMARY = "KravenFHD Skin for Enigma2 by Kraven Team"
 MAINTAINER = "Kraven Team"
-
 require conf/license/license-gplv2.inc
+
+DEPENDS += "gettext-native"
+RDEPENDS_${PN} += "python-imaging python-subprocess python-requests python-lxml enigma2-plugin-systemplugins-mphelp"
 
 inherit gitpkgv allarch gettext
 
@@ -9,9 +11,6 @@ SRCREV = "${AUTOREV}"
 PV = "3.6+git${SRCPV}"
 PKGV = "3.6+git${GITPKGV}"
 VER="3.6"
-
-DEPENDS_${PN} += "gettext-native"
-RDEPENDS_${PN} += "python-imaging python-subprocess python-requests python-lxml enigma2-plugin-systemplugins-mphelp"
 
 SRC_URI="git://github.com/KravenHD/KravenFHD.git;protocol=git"
 
@@ -134,4 +133,3 @@ exit 0
 }
 
 do_package_qa[noexec] = "1"
-
