@@ -19,7 +19,6 @@ SRC_URI_append = " \
         file://4_07_increase_buffer_size.patch \
         file://4_08_recheck_discard_flags.patch \
         file://4_09_ffmpeg_fix_edit_list_parsing.patch \
-        file://4_10_remove_avpriv_request_sample.patch \
         "
 
 EXTRA_FFCONF = " \

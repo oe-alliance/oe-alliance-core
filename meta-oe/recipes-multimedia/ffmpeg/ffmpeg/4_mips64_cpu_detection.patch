@@ -15,7 +15,7 @@ Upstream-Status: Inappropriate [OE-Specific]
 
 --- a/configure
 +++ b/configure
-@@ -5650,12 +5650,9 @@ elif enabled mips; then
+@@ -5762,12 +5762,9 @@ elif enabled mips; then
  
      # Enable minimum ISA based on selected options
      if enabled mips64; then
