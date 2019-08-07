@@ -34,6 +34,7 @@ EXTRA_OECMAKE += "\
     -DSTATIC_LIBUSB=1 \
     -DWITH_SSL=1 \
     -DCLOCKFIX=0 \
+    -DMODULE_CONSTCW=1 \
     -DHAVE_PCSC=0"
 
 do_install() {
