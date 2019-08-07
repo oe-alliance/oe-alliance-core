@@ -22,7 +22,8 @@ S = "${WORKDIR}/git"
 
 inherit lib_package pkgconfig perlnative
 
-X264_DISABLE_ASM = ""
+X264_DISABLE_ASM = "--disable-asm"
+X264_DISABLE_ASM_aarch64 = ""
 X264_DISABLE_ASM_armv4 = "--disable-asm"
 X264_DISABLE_ASM_armv5 = "--disable-asm"
 X264_DISABLE_ASM_powerpc = "${@bb.utils.contains("TUNE_FEATURES", "spe", "--disable-asm", "", d)}"
