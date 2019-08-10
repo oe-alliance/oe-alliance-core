@@ -1,19 +1,19 @@
-SUMMARY = "Components for UPnP."
-HOMEPAGE = "http://github.com/mnlipp/CoCy"
+SUMMARY = "A components library for UPnP."
+HOMEPAGE = "http://packages.python.org/cocy"
+AUTHOR = "Michael N. Lipp <mnl@mnl.de>"
 SECTION = "devel/python"
-LICENSE = "AGPL-3.0"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=9908f765b999cf8858b921c1cdacc5a7"
+LICENSE = "GPL-1.0"
+LIC_FILES_CHKSUM = "file://setup.py;md5=552ebae154a08bed6e46b2207714d6a6"
 
-DEPENDS = "python-circuits python-circuits-bricks"
-RDEPENDS_${PN} = "python-circuits python-circuits-bricks"
-
-SRC_URI = "git://github.com/mnlipp/CoCy;protocol=https"
+RDEPENDS_${PN} = "python-circuits python-circuits-bricks python-rbtranslations python-tenjin"
 
 inherit gitpkgv
 
 SRCREV = "${AUTOREV}"
 PV = "0.3+git${SRCPV}"
 PKGV = "0.3+git${GITPKGV}"
+
+SRC_URI = "git://github.com/mnlipp/CoCy;protocol=https"
 
 S = "${WORKDIR}/git"
 
