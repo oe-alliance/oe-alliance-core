@@ -19,9 +19,7 @@ S = "${WORKDIR}/git"
 
 inherit setuptools
 
-# some txt files which should go into -doc
-FILES_${PN}-doc += " \
-    /usr/share/pypi-overview.rst \
-"
+# txt file which should go into -doc
+FILES_${PN}-doc += "${datadir}/pypi-overview.rst"
 
 include python-package-split.inc
