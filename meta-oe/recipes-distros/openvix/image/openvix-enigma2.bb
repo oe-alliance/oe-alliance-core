@@ -31,7 +31,6 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-skins-openvix-simple-ten-eighty \
     enigma2-plugin-skins-openvix-vix-day-hd \
     enigma2-plugin-skins-openvix-youvix-blue \
-    enigma2-plugin-systemplugins-crossepg \
     enigma2-plugin-systemplugins-xmlupdate \
     ${@bb.utils.contains("MACHINE_FEATURES", "uianimation", "enigma2-plugin-systemplugins-animationsetup" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "osdanimation", "enigma2-plugin-systemplugins-animationsetup" , "", d)} \
