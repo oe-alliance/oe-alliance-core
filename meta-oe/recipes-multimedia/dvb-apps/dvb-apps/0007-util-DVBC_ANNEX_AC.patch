@@ -1,0 +1,41 @@
+--- a/util/szap/czap.c
++++ b/util/szap/czap.c
+@@ -189,7 +189,11 @@ static int setup_frontend(int fe_fd, struct dvb_frontend_parameters *frontend)
+ 		close(fe_fd);
+ 		return -1;
+ 	}
++#ifdef SYS_DVBC_ANNEX_A
+ 	ret = dvbfe_set_delsys(fe_fd, SYS_DVBC_ANNEX_A);
++#else
++	ret = dvbfe_set_delsys(fe_fd, SYS_DVBC_ANNEX_AC);
++#endif
+ 	if (ret) {
+ 		PERROR("SET Delsys failed");
+ 		return -1;
+--- a/util/szap/util.c
++++ b/util/szap/util.c
+@@ -190,8 +190,12 @@ static int map_delivery_mode(fe_type_t *type, enum fe_delivery_system delsys)
+ 	case SYS_ISDBT:
+ 		*type = FE_OFDM;
+ 		break;
++#ifdef SYS_DVBC_ANNEX_A
+ 	case SYS_DVBC_ANNEX_A:
+ 	case SYS_DVBC_ANNEX_C:
++#else
++	case SYS_DVBC_ANNEX_AC:
++#endif
+ 		*type = FE_QAM;
+ 		break;
+ 	case SYS_ATSC:
+@@ -259,7 +263,11 @@ int dvbfe_set_delsys(int fd, enum fe_delivery_system delsys)
+ 
+ int dvbfe_enum_delsys(int fd, uint32_t *len, uint8_t *data)
+ {
++#if defined DTV_ENUM_DELSYS
+ 	return get_property(fd, DTV_ENUM_DELSYS, len, data);
++#else
++	return 0;
++#endif
+ }
+ 
+ int dvbfe_get_version(int fd, int *major, int *minor)
