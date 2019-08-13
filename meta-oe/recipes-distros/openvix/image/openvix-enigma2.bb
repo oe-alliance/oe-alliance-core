@@ -26,6 +26,7 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-extensions-autotimer \
     enigma2-plugin-extensions-epgimport \
     enigma2-plugin-extensions-epgsearch \
+    enigma2-plugin-extensions-epgrefresh \
     enigma2-plugin-extensions-imdb \
     enigma2-plugin-skins-openvix-magic-fhd \
     enigma2-plugin-skins-openvix-simple-ten-eighty \
