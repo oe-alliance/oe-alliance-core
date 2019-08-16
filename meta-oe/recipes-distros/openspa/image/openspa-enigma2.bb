@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "7.4"
-PR = "r0"
+PR = "r5"
 
 inherit packagegroup
 
@@ -15,15 +15,21 @@ DEPENDS = "openspa-feeds"
 RRECOMMENDS_${PN} = " \
     enigma2-skindefault \
     openspa-version-info \
-    ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", "enigma2-plugin-drivers-usbserial", d)} \
+    ${@bb.utils.contains_any("FLASHSIZE", "64 96", " \
+    enigma2-plugin-extensions-openwebif-webtv \
+    ", " \
+    enigma2-plugin-drivers-usbserial \
     enigma2-plugin-extensions-autotimer \
+    enigma2-plugin-extensions-openwebif-themes \
+    enigma2-plugin-extensions-openwebif-vxg \
+    ", d)} \
+    \
     enigma2-plugin-extensions-spateam \
     enigma2-plugin-systemplugins-videotune \
     ${@bb.utils.contains("MACHINE_FEATURES", "videoenhancement", "", "enigma2-plugin-systemplugins-videoenhancement", d)} \
     enigma2-plugin-systemplugins-softwaremanager \
     enigma2-plugin-systemplugins-hotplug \
-    ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", "enigma2-plugin-extensions-openwebif-themes enigma2-plugin-extensions-openwebif-terminal", d)} \
-    ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "enigma2-plugin-extensions-openwebif-webtv", "enigma2-plugin-extensions-openwebif-vxg", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", "enigma2-plugin-extensions-openwebif-terminal", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", "enigma2-plugin-extensions-enhancedmoviecenter", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "dreamboxv1", "enigma2-plugin-extensions-dflash mtd-utils-jffs2", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "dreamboxv2", "enigma2-plugin-extensions-dbackup e2fsprogs-badblocks", "", d)} \
@@ -53,3 +59,4 @@ RRECOMMENDS_${PN}_append_bre2ze = " enigma2-plugin-systemplugins-satipclient"
 RRECOMMENDS_${PN}_append_dm900 = " enigma2-plugin-systemplugins-fsblupdater"
 RRECOMMENDS_${PN}_append_dm920 = " enigma2-plugin-systemplugins-fsblupdater"
 RRECOMMENDS_${PN}_append_osmio4k = " enigma2-plugin-extensions-hbbtv-webkit enigma2-plugin-systemplugins-satipclient enigma2-plugin-extensions-simpleumount"
+RRECOMMENDS_${PN}_append_osmio4kplus = " enigma2-plugin-extensions-hbbtv-webkit enigma2-plugin-systemplugins-satipclient enigma2-plugin-extensions-simpleumount"
