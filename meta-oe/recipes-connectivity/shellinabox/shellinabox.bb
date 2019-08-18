@@ -6,12 +6,11 @@ require conf/license/license-gplv2.inc
 DEPENDS = "zlib"
 
 
-SRCREV = "a3792ce8468590f61f5b5a83e2753d019c1e0e19"
-PV = "2.21+git${SRCPV}"
+SRCREV = "${AUTOREV}"
+PV = "2.21.0+git${SRCPV}"
 
 SRC_URI = " \
-           git://github.com/ravermeister/shellinabox.git;branch=dev \
-           file://0001-Use-IPv6.patch \
+           git://github.com/oe-mirrors/shellinabox.git;branch=master \
            file://0002-Enforce-localhost-only.patch \
            file://styles.css \
            file://shellinabox.service \
