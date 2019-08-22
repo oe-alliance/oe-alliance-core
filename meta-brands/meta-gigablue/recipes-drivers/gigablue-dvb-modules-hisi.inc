@@ -3,10 +3,9 @@ SECTION = "base"
 PRIORITY = "required"
 LICENSE = "CLOSED"
 require conf/license/license-close.inc
-PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "${KV}+${SRCDATE}"
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "http://source.mynonpublic.com/gigablue/mv200/${MACHINE}-hiko-${SRCDATE}.zip \
     file://modules \
