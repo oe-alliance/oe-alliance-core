@@ -81,12 +81,12 @@
 +}
 --- a/src/syscall.h
 +++ b/src/syscall.h
-@@ -34,6 +34,8 @@
+@@ -35,6 +35,8 @@
  #include "syscall-parisc.h"
  #elif defined(__mips__)
  #include "syscall-mips.h"
 +#elif defined(__sh__)
 +#include "syscall-sh.h"
  #else
- #warning "using generic syscall method"
- #include "syscall-generic.h"
+ #warning "using system call numbers from sys/syscall.h"
+ #endif
