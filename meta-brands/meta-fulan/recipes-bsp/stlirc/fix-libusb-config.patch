@@ -1,7 +1,5 @@
-Index: lirc-0.9.0/configure.ac
-===================================================================
---- lirc-0.9.0.orig/configure.ac
-+++ lirc-0.9.0/configure.ac
+--- a/configure.ac
++++ b/configure.ac
 @@ -20,7 +20,7 @@ AC_PROG_MAKE_SET
  AC_PATH_PROG(mknod, mknod, /bin/mknod)
  AC_PATH_PROG(mkfifo, mkfifo, /usr/bin/mkfifo)
@@ -11,7 +9,7 @@ Index: lirc-0.9.0/configure.ac
  AC_PROG_LN_S
  AC_PROG_LIBTOOL
  AM_PATH_PYTHON(,, [:])
-@@ -498,8 +498,8 @@ if test "$driver" = "userspace" -o "$dri
+@@ -498,8 +498,8 @@ if test "$driver" = "userspace" -o "$driver" = "all"; then
  		;;
  	atilibusb)
  		hw_module="${hw_module} hw_atilibusb.o receive.o"
@@ -22,7 +20,7 @@ Index: lirc-0.9.0/configure.ac
  		;;
  	atwf83)
  		hw_module="${hw_module} hw_atwf83.o"
-@@ -515,8 +515,8 @@ if test "$driver" = "userspace" -o "$dri
+@@ -515,8 +515,8 @@ if test "$driver" = "userspace" -o "$driver" = "all"; then
  		;;
  	awlibusb)
  		hw_module="${hw_module} hw_awlibusb.o receive.o"
@@ -33,7 +31,7 @@ Index: lirc-0.9.0/configure.ac
  		;;
  	bte)
  		hw_module="${hw_module} hw_bte.o serial.o"
-@@ -536,16 +536,16 @@ if test "$driver" = "userspace" -o "$dri
+@@ -536,16 +536,16 @@ if test "$driver" = "userspace" -o "$driver" = "all"; then
  		;;
  	commandir)
  		hw_module="${hw_module} hw_commandir.o receive.o"
@@ -54,7 +52,7 @@ Index: lirc-0.9.0/configure.ac
  		;;
  	dsp)
  		hw_module="${hw_module} hw_dsp.o receive.o"
-@@ -665,8 +665,8 @@ if test "$driver" = "userspace" -o "$dri
+@@ -665,8 +665,8 @@ if test "$driver" = "userspace" -o "$driver" = "all"; then
  		#;;
  	srm7500libusb)
  		hw_module="${hw_module} hw_srm7500libusb.o receive.o"
@@ -109,7 +107,7 @@ Index: lirc-0.9.0/configure.ac
    fi
  fi
  
-@@ -1332,8 +1332,8 @@ if test "$driver" = "srm7500libusb"; the
+@@ -1332,8 +1332,8 @@ if test "$driver" = "srm7500libusb"; then
    HW_DEFAULT="hw_srm7500libusb"
    lircd_conf="philips/lircd.conf.srm7500libusb"
    if test -n "${LIBUSB_CONFIG}"; then
