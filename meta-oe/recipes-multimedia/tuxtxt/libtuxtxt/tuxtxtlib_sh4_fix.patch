@@ -1,8 +1,8 @@
---- a/tuxtxt_common.h.orig	2014-06-09 13:01:05.263971761 +0200
-+++ b/tuxtxt_common.h	2014-06-09 13:01:05.299971762 +0200
-@@ -23,6 +23,68 @@
- 
- #include <linux/input.h>
+--- a/tuxtxt_common.h
++++ b/tuxtxt_common.h
+@@ -27,6 +27,68 @@
+ # define FB_DEV "/dev/fb/0"
+ #endif
  
 +#ifdef __sh__
 +#include <linux/stmfb.h>
@@ -69,7 +69,7 @@
  const char *ObjectSource[] =
  {
  	"(illegal)",
-@@ -4830,8 +4892,10 @@
+@@ -4874,8 +4936,10 @@ void tuxtxt_CopyBB2FB(tstRenderInfo* renderinfo)
  			renderinfo->var_screeninfo.yoffset = 0;
  		else
  			renderinfo->var_screeninfo.yoffset = renderinfo->var_screeninfo.yres;
@@ -80,7 +80,7 @@
  #ifdef HAVE_TRIPLEDRAGON
  		tdfb_attr();
  #endif
-@@ -5364,6 +5428,9 @@
+@@ -5408,6 +5472,9 @@ void tuxtxt_RenderPage(tstRenderInfo* renderinfo)
  
  		tuxtxt_cache.pageupdate=0;
  	}
@@ -90,7 +90,7 @@
  }
  /******************************************************************************
   * MyFaceRequester
-@@ -5533,6 +5600,15 @@
+@@ -5580,6 +5647,15 @@ int tuxtxt_InitRendering(tstRenderInfo* renderinfo,int setTVFormat)
  		return 0;
  	}
  
@@ -104,9 +104,9 @@
 +	renderinfo->var_screeninfo.yoffset = 0;
 +#else
  	/* change to PAL resolution */
- 	if (renderinfo->var_screeninfo.xres != 720) 
- 	{
-@@ -5552,6 +5628,7 @@
+ 	/* or, when using TrueType fonts, pick PAL / HD / full-HD based on TTFScreenResX */
+ 
+@@ -5649,6 +5725,7 @@ int tuxtxt_InitRendering(tstRenderInfo* renderinfo,int setTVFormat)
  		FT_Done_FreeType(renderinfo->library);
  		return 0;
  	}
@@ -114,7 +114,7 @@
  
  	/* get fixed screeninfo */
  	if (ioctl(renderinfo->fb, FBIOGET_FSCREENINFO, &renderinfo->fix_screeninfo) == -1)
-@@ -5577,8 +5654,17 @@
+@@ -5674,8 +5751,17 @@ int tuxtxt_InitRendering(tstRenderInfo* renderinfo,int setTVFormat)
  	renderinfo->var_screeninfo.yoffset);
  #endif
  		/* map framebuffer into memory */
@@ -132,7 +132,7 @@
  	/* set new colormap */
  	tuxtxt_setcolors(renderinfo,(unsigned short *)tuxtxt_defaultcolors, 0, tuxtxt_color_SIZECOLTABLE);
  
-@@ -5621,8 +5707,10 @@
+@@ -5718,8 +5804,10 @@ void tuxtxt_EndRendering(tstRenderInfo* renderinfo)
  	{
  		renderinfo->var_screeninfo.yoffset = 0;
  
@@ -143,9 +143,9 @@
  	}
  	 /* close avs */
  	if (renderinfo->avs >= 0)
---- a/tuxtxt_def.h.orig	2014-06-09 13:01:05.263971761 +0200
-+++ b/tuxtxt_def.h	2014-06-09 13:01:05.299971762 +0200
-@@ -301,6 +301,11 @@
+--- a/tuxtxt_def.h
++++ b/tuxtxt_def.h
+@@ -301,6 +301,11 @@ typedef struct
  	unsigned char axdrcs[12+1+10+1];
  	struct fb_var_screeninfo var_screeninfo;
  	struct fb_fix_screeninfo fix_screeninfo;
