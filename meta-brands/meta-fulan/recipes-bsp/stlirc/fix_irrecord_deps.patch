@@ -1,7 +1,6 @@
-diff -Naur lirc-0.9.0/daemons/Makefile.am lirc-0.9.0.new/daemons/Makefile.am
---- lirc-0.9.0/daemons/Makefile.am	2011-03-25 23:28:18.000000000 +0100
-+++ lirc-0.9.0.new/daemons/Makefile.am	2018-08-16 21:55:26.899991763 +0200
-@@ -83,7 +83,7 @@
+--- a/daemons/Makefile.am
++++ b/daemons/Makefile.am
+@@ -83,7 +83,7 @@ irrecord_SOURCES = irrecord.c \
  		transmit.c transmit.h
  
  irrecord_LDADD = libhw_module.a @hw_module_libs@ @receive@
@@ -10,10 +9,9 @@ diff -Naur lirc-0.9.0/daemons/Makefile.am lirc-0.9.0.new/daemons/Makefile.am
  
  ## maintainer mode stuff
  EXTRA_PROGRAMS = lircd.simsend lircd.simrec slinke
-diff -Naur lirc-0.9.0/daemons/Makefile.in lirc-0.9.0.new/daemons/Makefile.in
---- lirc-0.9.0/daemons/Makefile.in	2011-03-25 23:28:53.000000000 +0100
-+++ lirc-0.9.0.new/daemons/Makefile.in	2018-08-16 21:55:26.903991722 +0200
-@@ -340,7 +340,7 @@
+--- a/daemons/Makefile.in
++++ b/daemons/Makefile.in
+@@ -340,7 +340,7 @@ irrecord_SOURCES = irrecord.c \
  		transmit.c transmit.h
  
  irrecord_LDADD = libhw_module.a @hw_module_libs@ @receive@
