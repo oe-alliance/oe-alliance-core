@@ -22,11 +22,11 @@ do_install () {
     install -m 644 ${BINARY_STSLAVE_FW_PATH}/${MACHINE}/audio.elf  ${D}/boot
     install -m 644 ${BINARY_STSLAVE_FW_PATH}/${MACHINE}/video.elf  ${D}/boot
     # Remove stuff from old packages if present
-    if [ -e /etc/init.d/stslave.sh ] ; then
-        rm /etc/init.d/stslave.sh
+    if [ -e ${sysconfdir}/init.d/stslave.sh ] ; then
+        rm ${sysconfdir}/init.d/stslave.sh
     fi
-    if [ -e /etc/rcS.d/S03stslave ] ; then
-        rm /etc/rcS.d/S03stslave
+    if [ -e ${sysconfdir}/rcS.d/S03stslave ] ; then
+        rm ${sysconfdir}/rcS.d/S03stslave
     fi
 }
 

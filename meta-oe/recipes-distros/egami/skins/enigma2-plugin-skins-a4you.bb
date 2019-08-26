@@ -17,7 +17,7 @@ PROVIDES = "${EPSM}-a4you"
 
 SRC_URI="git://github.com/a4tech/Egami-skins.git;protocol=git"
 
-FILES_${EPSM}-a4you = "/usr/share/enigma2/a4you /usr/lib/*"
+FILES_${EPSM}-a4you = "${datadir}/enigma2/a4you ${libdir}/*"
 
 S = "${WORKDIR}/git"
 

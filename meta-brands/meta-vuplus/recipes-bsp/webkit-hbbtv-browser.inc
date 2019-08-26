@@ -11,13 +11,13 @@ SRC_URI = "http://archive.vuplus.com/download/build_support/webkit-hbbtv-browser
 RDEPENDS_${PN} = "webkit-gtk"
 
 do_install_append() {
-	install -d ${D}/usr/bin
-	install -d ${D}/usr/lib/mozilla/plugins
+	install -d ${D}${bindir}
+	install -d ${D}${libdir}/mozilla/plugins
 	install -d ${D}/home/root
 
 	install -m 0755 ${WORKDIR}/webkit-hbbtv-browser/none.html ${D}/home/root
-	install -m 0755 ${WORKDIR}/webkit-hbbtv-browser/browser ${D}/usr/bin
-	install -m 0755 ${WORKDIR}/webkit-hbbtv-browser/libhbbtvplugin.so ${D}/usr/lib/mozilla/plugins/
+	install -m 0755 ${WORKDIR}/webkit-hbbtv-browser/browser ${D}${bindir}
+	install -m 0755 ${WORKDIR}/webkit-hbbtv-browser/libhbbtvplugin.so ${D}${libdir}/mozilla/plugins/
 }
 
 do_package_qa() {

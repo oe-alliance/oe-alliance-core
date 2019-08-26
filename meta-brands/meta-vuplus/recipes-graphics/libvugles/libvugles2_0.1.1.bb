@@ -23,7 +23,7 @@ do_install() {
 }
 
 PACKAGES = "${PN}"
-FILES_${PN} = "/usr/include /usr/lib"
+FILES_${PN} = "/usr/include ${libdir}"
 
 COMPATIBLE_MACHINE = "^(vusolose|vusolo2|vuduo2|vusolo4k|vuuno4k|vuuno4kse|vuultimo4k|vuzero4k|vuduo4k)$"
 

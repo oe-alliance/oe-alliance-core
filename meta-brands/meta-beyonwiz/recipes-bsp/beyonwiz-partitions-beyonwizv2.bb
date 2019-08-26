@@ -18,13 +18,13 @@ ALLOW_EMPTY_${PN} = "1"
 do_configure[nostamp] = "1"
 
 do_install() {
-    install -d ${D}/usr/share
-    install -m 0644 ${S}/bootargs.bin ${D}/usr/share/bootargs.bin
-    install -m 0644 ${S}/fastboot.bin ${D}/usr/share/fastboot.bin
-    install -m 0644 ${S}/apploader.bin ${D}/usr/share/apploader.bin
+    install -d ${D}${datadir}
+    install -m 0644 ${S}/bootargs.bin ${D}${datadir}/bootargs.bin
+    install -m 0644 ${S}/fastboot.bin ${D}${datadir}/fastboot.bin
+    install -m 0644 ${S}/apploader.bin ${D}${datadir}/apploader.bin
 }
 
-FILES_${PN} = "/usr/share"
+FILES_${PN} = "${datadir}"
 
 do_deploy() {
     install -d ${DEPLOY_DIR_IMAGE}/${MACHINE}-partitions
@@ -48,8 +48,8 @@ INSANE_SKIP_${PN} += "already-stripped"
 
 pkg_postinst_${PN}() {
     if [ "x$D" == "x" ]; then
-        if [ -f /usr/share/apploader.bin -a -b /dev/block/by-name/loader ] ; then
-            dd if=/usr/share/apploader.bin of=/dev/block/by-name/loader
+        if [ -f ${datadir}/apploader.bin -a -b /dev/block/by-name/loader ] ; then
+            dd if=${datadir}/apploader.bin of=/dev/block/by-name/loader
         fi
     fi
     true

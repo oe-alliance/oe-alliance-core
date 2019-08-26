@@ -19,9 +19,9 @@ S = "${WORKDIR}/git"
 
 PACKAGES =+ "${PN}-src"
 PACKAGES =+ "${PN}-po"
-FILES_${PN} = "/usr/lib"
-FILES_${PN}-src = "/usr/lib/enigma2/python/Plugins/Extensions/YahooWeather/*.py"
-FILES_${PN}-po = "/usr/lib/enigma2/python/Plugins/Extensions/YahooWeather/locale/*/*/*.po"
+FILES_${PN} = "${libdir}"
+FILES_${PN}-src = "${libdir}/enigma2/python/Plugins/Extensions/YahooWeather/*.py"
+FILES_${PN}-po = "${libdir}/enigma2/python/Plugins/Extensions/YahooWeather/locale/*/*/*.po"
 
 inherit autotools gettext
 
@@ -32,8 +32,8 @@ EXTRA_OECONF = "\
 	STAGING_LIBDIR=${STAGING_LIBDIR} \
 "
 CONFFILES_${PN} = " \
-    /usr/lib/enigma2/python/Plugins/Extensions/YahooWeather/Config/Location_id \
-    /usr/lib/enigma2/python/Plugins/Extensions/YahooWeather/Config/Region_id "
+    ${libdir}/enigma2/python/Plugins/Extensions/YahooWeather/Config/Location_id \
+    ${libdir}/enigma2/python/Plugins/Extensions/YahooWeather/Config/Region_id "
 
 pkg_postinst_${PN}() {
 #!/bin/sh 
@@ -46,7 +46,7 @@ exit 0
 
 pkg_postrm_${PN}() {
 #!/bin/sh
-rm -r /usr/lib/enigma2/python/Plugins/Extensions/YahooWeather
+rm -r ${libdir}/enigma2/python/Plugins/Extensions/YahooWeather
 echo " YahooWeather removed! You should restart enigma2 now!"
 exit 0
 }

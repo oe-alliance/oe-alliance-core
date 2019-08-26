@@ -61,43 +61,43 @@ do_compile_prepend() {
 
 do_install() {
     install -d ${D}/${bindir}
-    install -m 0755 ${WORKDIR}/build/oscam ${D}/usr/bin/${BINFILE}
+    install -m 0755 ${WORKDIR}/build/oscam ${D}${bindir}/${BINFILE}
     install -d ${D}/${sysconfdir}/init.d
     install -m 0755 ${F}/softcam.oscam ${D}/${sysconfdir}/init.d/softcam.${BINFILE}
     install -d ${D}/${sysconfdir}/tuxbox/config/${BINFILE}
 }
 
-FILES_${PN} = "/usr /etc/init.d /etc/tuxbox"
-CONFFILES_${PN} = "/etc/tuxbox/config/${BINFILE}"
+FILES_${PN} = "/usr ${sysconfdir}/init.d ${sysconfdir}/tuxbox"
+CONFFILES_${PN} = "${sysconfdir}/tuxbox/config/${BINFILE}"
 
 pkg_prerm_${PN} () {
     if [ "x$D" == "x" ]; then
-        /etc/init.d/softcam.${BINFILE} stop 2>/dev/null || true
+        ${sysconfdir}/init.d/softcam.${BINFILE} stop 2>/dev/null || true
     fi
-    OLDLINK="`readlink -f $D/etc/init.d/softcam`" 2>/dev/null
-    rm -f "$D/etc/init.d/softcam"
-    if [ "${OLDLINK}" == "$D/etc/init.d/softcam.${BINFILE}" -a -f $D/etc/init.d/softcam.None ]
+    OLDLINK="`readlink -f $D${sysconfdir}/init.d/softcam`" 2>/dev/null
+    rm -f "$D${sysconfdir}/init.d/softcam"
+    if [ "${OLDLINK}" == "$D${sysconfdir}/init.d/softcam.${BINFILE}" -a -f $D${sysconfdir}/init.d/softcam.None ]
     then
         echo "${BINFILE} was selected, now selecting None as softcam"
-        ln -s "softcam.None" "$D/etc/init.d/softcam"
+        ln -s "softcam.None" "$D${sysconfdir}/init.d/softcam"
     fi
     exit 0
 }
 
 pkg_postinst_${PN} () {
-    [ "x$D" == "x" ] && [ -e "/etc/init.d/softcam" ] && /etc/init.d/softcam stop 2>/dev/null || true
-    #if [ ! -e "$D/etc/init.d/softcam" ] || [ "$D/etc/init.d/softcam.None" == "`readlink -f $D/etc/init.d/softcam`" ]
+    [ "x$D" == "x" ] && [ -e "${sysconfdir}/init.d/softcam" ] && ${sysconfdir}/init.d/softcam stop 2>/dev/null || true
+    #if [ ! -e "$D${sysconfdir}/init.d/softcam" ] || [ "$D${sysconfdir}/init.d/softcam.None" == "`readlink -f $D${sysconfdir}/init.d/softcam`" ]
     #then
-        rm -f "$D/etc/init.d/softcam" 2>/dev/null
-        ln -s "softcam.${BINFILE}" "$D/etc/init.d/softcam"
+        rm -f "$D${sysconfdir}/init.d/softcam" 2>/dev/null
+        ln -s "softcam.${BINFILE}" "$D${sysconfdir}/init.d/softcam"
         echo "Switching default softcam to ${BINFILE}"
     #fi
 
     if [ "x$D" == "x" ]; then
-        if [ "$D/etc/init.d/softcam.${BINFILE}" == "`readlink -f $D/etc/init.d/softcam`" ]
+        if [ "$D${sysconfdir}/init.d/softcam.${BINFILE}" == "`readlink -f $D${sysconfdir}/init.d/softcam`" ]
         then
             echo "Softcam is selected as default, (re)starting ${BINFILE}"
-            $D/etc/init.d/softcam.${BINFILE} restart || true
+            $D${sysconfdir}/init.d/softcam.${BINFILE} restart || true
         fi
     fi
     exit 0

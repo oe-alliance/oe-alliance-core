@@ -52,17 +52,17 @@ PRIVATE_LIBS_${PN}_append_class-target = "\
 "
 
 do_install_append_class-target() {
-	install -d ${D}/etc
-	install -d ${D}/usr/lib/directfb-${RV}/systems
-	install -d ${D}/usr/lib/directfb-${RV}/gfxdrivers
+	install -d ${D}${sysconfdir}
+	install -d ${D}${libdir}/directfb-${RV}/systems
+	install -d ${D}${libdir}/directfb-${RV}/gfxdrivers
 
-	install -m 0644 ${WORKDIR}/directfb-vuplus/etc/directfbrc ${D}/etc/directfbrc
-	cp -r --preserve=mode,links ${WORKDIR}/directfb-vuplus/usr/lib/directfb-${RV}/systems/* ${D}/usr/lib/directfb-${RV}/systems/
-	rm -f ${D}/usr/lib/directfb-${RV}/systems/libdirectfb_dummy.so
-	rm -f ${D}/usr/lib/directfb-${RV}/systems/libdirectfb_fbdev.so
-	install -m 0755 ${WORKDIR}/directfb-vuplus/usr/lib/directfb-${RV}/gfxdrivers/* ${D}/usr/lib/directfb-${RV}/gfxdrivers/
+	install -m 0644 ${WORKDIR}/directfb-vuplus${sysconfdir}/directfbrc ${D}${sysconfdir}/directfbrc
+	cp -r --preserve=mode,links ${WORKDIR}/directfb-vuplus${libdir}/directfb-${RV}/systems/* ${D}${libdir}/directfb-${RV}/systems/
+	rm -f ${D}${libdir}/directfb-${RV}/systems/libdirectfb_dummy.so
+	rm -f ${D}${libdir}/directfb-${RV}/systems/libdirectfb_fbdev.so
+	install -m 0755 ${WORKDIR}/directfb-vuplus${libdir}/directfb-${RV}/gfxdrivers/* ${D}${libdir}/directfb-${RV}/gfxdrivers/
 
-	cp -r --preserve=mode,links ${WORKDIR}/directfb-vuplus/usr/lib/libinit* ${D}/usr/lib/
+	cp -r --preserve=mode,links ${WORKDIR}/directfb-vuplus${libdir}/libinit* ${D}${libdir}/
 }
 
 do_package_qa() {
@@ -71,14 +71,14 @@ do_package_qa() {
 INSANE_SKIP_${PN}_append_class-target += "dev-so"
 
 FILES_${PN}_append_class-target += "\
-	/etc/directfbrc \
-	/usr/lib/libinit* \
-	/usr/lib/directfb-${RV}/systems/libdirectfb_dvb_proxy_sys* \
-	/usr/lib/directfb-${RV}/gfxdrivers/* \
+	${sysconfdir}/directfbrc \
+	${libdir}/libinit* \
+	${libdir}/directfb-${RV}/systems/libdirectfb_dvb_proxy_sys* \
+	${libdir}/directfb-${RV}/gfxdrivers/* \
 "
 
 FILES_${PN}-dbg_append_class-target += "\
-	/usr/lib/.debug/libinit* \
-	/usr/lib/directfb-${RV}/systems/.debug/* \
-	/usr/lib/directfb-${RV}/gfxdrivers/.debug/* \
+	${libdir}/.debug/libinit* \
+	${libdir}/directfb-${RV}/systems/.debug/* \
+	${libdir}/directfb-${RV}/gfxdrivers/.debug/* \
 "

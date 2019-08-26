@@ -26,7 +26,7 @@ S = "${WORKDIR}/blindscan-utils"
 FILES_vuplus-blindscan-dvbs-utils = "${bindir}/*_blindscan"
 FILES_vuplus-blindscan-dvbc-utils = "${bindir}/tda1002x ${bindir}/ssh108* ${bindir}/tt3l10* ${bindir}/tt2l08* ${bindir}/bcm3*"
 
-FILES_${PN}-dev = "/usr/bin/release.txt"
+FILES_${PN}-dev = "${bindir}/release.txt"
 
 do_install() {
 	install -d ${D}/${bindir}/

@@ -15,7 +15,7 @@ GLIBC_GIT_URI ?= "git://sourceware.org/git/glibc.git"
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>\d+\.\d+(\.(?!90)\d+)*)"
 
 SRC_URI = "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \
-           file://etc/ld.so.conf \
+           file:/${sysconfdir}/ld.so.conf \
            file://generate-supported.mk \
            \
            ${NATIVESDKFIXES} \

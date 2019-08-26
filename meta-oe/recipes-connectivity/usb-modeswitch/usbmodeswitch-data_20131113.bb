@@ -22,9 +22,9 @@ do_compile() {
 }
 
 do_install() {
-    install -d ${D}/usr/share/usb_modeswitch
+    install -d ${D}${datadir}/usb_modeswitch
     DESTDIR=${D} make install
-    install -m 0755 ${S}/usb_modeswitch.d/* ${D}/usr/share/usb_modeswitch/
+    install -m 0755 ${S}/usb_modeswitch.d/* ${D}${datadir}/usb_modeswitch/
 }
 
-FILES_${PN} += "/etc /lib /usr"
+FILES_${PN} += "${sysconfdir} /lib /usr"

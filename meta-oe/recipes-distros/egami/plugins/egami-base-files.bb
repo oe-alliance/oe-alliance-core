@@ -12,7 +12,7 @@ SRCREV = "${AUTOREV}"
 
 SRC_URI = "git://github.com/a4tech/egami-base-files.git"
 
-FILES_${PN} = "/bin /etc /scripts /media /usr /mipsel /arm"
+FILES_${PN} = "/bin ${sysconfdir} /scripts /media /usr /mipsel /arm"
 
 INHIBIT_PACKAGE_STRIP = "1"
 
@@ -21,8 +21,8 @@ ALLOW_EMPTY_${PN} = "1"
 S="${WORKDIR}/git/files"
 
 do_install() {
-	install -d ${D}/etc
-	cp -a ${S}/etc/* ${D}/etc/
+	install -d ${D}${sysconfdir}
+	cp -a ${S}${sysconfdir}/* ${D}${sysconfdir}/
 
 	install -d ${D}/media
 	mkdir -p ${D}/media/card
@@ -41,15 +41,15 @@ do_install() {
 }
 
 do_install_append_mipsel() {
-	mkdir -p ${D}/usr/lib/enigma2/python/Plugins/Extensions/EGAMIBoot/bin/
-	cp -a ${S}/mipsel/fbclear_mipsel ${D}/usr/lib/enigma2/python/Plugins/Extensions/EGAMIBoot/bin/fbclear
-	cp -a ${S}/mipsel/nfidump_mipsel ${D}/usr/lib/enigma2/python/Plugins/Extensions/EGAMIBoot/bin/nfidump
+	mkdir -p ${D}${libdir}/enigma2/python/Plugins/Extensions/EGAMIBoot/bin/
+	cp -a ${S}/mipsel/fbclear_mipsel ${D}${libdir}/enigma2/python/Plugins/Extensions/EGAMIBoot/bin/fbclear
+	cp -a ${S}/mipsel/nfidump_mipsel ${D}${libdir}/enigma2/python/Plugins/Extensions/EGAMIBoot/bin/nfidump
 	
-	mkdir -p ${D}/usr/lib/enigma2/python/Plugins/Extensions/EGAMIBoot/ubi_reader/ubifs/
-	cp -a ${S}/mipsel/lzo_mipsel.so ${D}/usr/lib/enigma2/python/Plugins/Extensions/EGAMIBoot/ubi_reader/ubifs/lzo.so
+	mkdir -p ${D}${libdir}/enigma2/python/Plugins/Extensions/EGAMIBoot/ubi_reader/ubifs/
+	cp -a ${S}/mipsel/lzo_mipsel.so ${D}${libdir}/enigma2/python/Plugins/Extensions/EGAMIBoot/ubi_reader/ubifs/lzo.so
 }
 
 do_install_append_arm() {
-	mkdir -p ${D}/usr/lib/enigma2/python/Plugins/Extensions/EGAMIBoot/bin/
-	cp -a ${S}/arm/fbclear_arm ${D}/usr/lib/enigma2/python/Plugins/Extensions/EGAMIBoot/bin/fbclear
+	mkdir -p ${D}${libdir}/enigma2/python/Plugins/Extensions/EGAMIBoot/bin/
+	cp -a ${S}/arm/fbclear_arm ${D}${libdir}/enigma2/python/Plugins/Extensions/EGAMIBoot/bin/fbclear
 }

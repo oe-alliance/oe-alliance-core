@@ -26,7 +26,7 @@ do_install() {
 
 pkg_postrm_${PN}() {
 #!/bin/sh
-rm -rf /usr/lib/enigma2/python/Plugins/Extensions/OscamSmartcard 2>/dev/null
+rm -rf ${libdir}/enigma2/python/Plugins/Extensions/OscamSmartcard 2>/dev/null
 echo "**************************************************"
 echo "* Successfully removed OscamSmartcard!           *"
 echo "**************************************************"

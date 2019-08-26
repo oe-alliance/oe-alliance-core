@@ -110,36 +110,36 @@ pkg_postinst_${BPN}-common_append() {
 
 if [ -n "$D" ]; then
         set +e
-        grep -qE '^kids:' $D/etc/passwd
+        grep -qE '^kids:' $D${sysconfdir}/passwd
         if [[ $? -ne 0 ]] ; then
-                echo 'kids:x:500:500:Linux User,,,:/media:/bin/false' >> $D/etc/passwd
-                echo 'kids:!:16560:0:99999:7:::' >> $D/etc/shadow
+                echo 'kids:x:500:500:Linux User,,,:/media:/bin/false' >> $D${sysconfdir}/passwd
+                echo 'kids:!:16560:0:99999:7:::' >> $D${sysconfdir}/shadow
         fi
 fi
 
-if [ -e $D/etc/samba/distro/smb-vmc.vmc ]; then
-	rm $D/etc/samba/distro/smb-vmc.conf 2>/dev/null || true
-	ln -s smb-vmc.vmc $D/etc/samba/distro/smb-vmc.conf
+if [ -e $D${sysconfdir}/samba/distro/smb-vmc.vmc ]; then
+	rm $D${sysconfdir}/samba/distro/smb-vmc.conf 2>/dev/null || true
+	ln -s smb-vmc.vmc $D${sysconfdir}/samba/distro/smb-vmc.conf
 else
-	rm $D/etc/samba/distro/smb-vmc.conf 2>/dev/null || true
-	ln -s smb-vmc.samba $D/etc/samba/distro/smb-vmc.conf
+	rm $D${sysconfdir}/samba/distro/smb-vmc.conf 2>/dev/null || true
+	ln -s smb-vmc.samba $D${sysconfdir}/samba/distro/smb-vmc.conf
 fi
 
 if [ -z "$D" ]; then
         set +e
-        [ -e /etc/samba/private/smbpasswd ] || touch /etc/samba/private/smbpasswd
+        [ -e ${sysconfdir}/samba/private/smbpasswd ] || touch ${sysconfdir}/samba/private/smbpasswd
 
-        grep -qE '^root:' /etc/samba/private/smbpasswd
+        grep -qE '^root:' ${sysconfdir}/samba/private/smbpasswd
         if [[ $? -ne 0 ]] ; then
                 smbpasswd -Ln root >/dev/null
         fi
 
-        grep -qE '^kids:' /etc/passwd
+        grep -qE '^kids:' ${sysconfdir}/passwd
         if [[ $? -ne 0 ]] ; then
                 adduser -h /media -s /bin/false -H -D -u 500 kids 2>/dev/null || adduser -h /media -s /bin/false -H -D kids
         fi
 
-        grep -qE '^kids:' /etc/samba/private/smbpasswd
+        grep -qE '^kids:' ${sysconfdir}/samba/private/smbpasswd
         if [[ $? -ne 0 ]] ; then
                 smbpasswd -Ln kids >/dev/null
         fi
@@ -148,5 +148,5 @@ fi
 
 pkg_postrm_${BPN}-common_prepend() {
 #!/bin/sh
-rm $D/etc/samba/distro/smb-vmc.conf 2>/dev/null || true
+rm $D${sysconfdir}/samba/distro/smb-vmc.conf 2>/dev/null || true
 }

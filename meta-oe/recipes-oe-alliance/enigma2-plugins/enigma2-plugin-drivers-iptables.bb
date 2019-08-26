@@ -41,10 +41,10 @@ INITSCRIPT_PARAMS = "defaults"
 inherit update-rc.d
 
 do_install() {
-    install -d ${D}/etc/init.d
-    install -m 0755 ${WORKDIR}/firewall.sh ${D}/etc/init.d/firewall
-    install -d ${D}/etc
-    install -m 0755 ${WORKDIR}/firewall.users ${D}/etc/firewall.users
+    install -d ${D}${sysconfdir}/init.d
+    install -m 0755 ${WORKDIR}/firewall.sh ${D}${sysconfdir}/init.d/firewall
+    install -d ${D}${sysconfdir}
+    install -m 0755 ${WORKDIR}/firewall.users ${D}${sysconfdir}/firewall.users
     install -d ${D}/${sysconfdir}/modules-load.d
     echo nf_nat_masquerade_ipv4 >> ${D}/${sysconfdir}/modules-load.d/firewall.conf
     echo nf_nat_ipv4 >> ${D}/${sysconfdir}/modules-load.d/firewall.conf

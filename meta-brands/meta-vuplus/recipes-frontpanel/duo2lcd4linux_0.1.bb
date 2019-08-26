@@ -14,7 +14,7 @@ S = "${WORKDIR}/LCD4linux"
 
 PR = "r11"
 
-PLUGINPATH = "/usr/lib/enigma2/python/Plugins/Extensions/LCD4linux"
+PLUGINPATH = "${libdir}/enigma2/python/Plugins/Extensions/LCD4linux"
 
 do_install() {
     install -d  ${D}${PLUGINPATH}

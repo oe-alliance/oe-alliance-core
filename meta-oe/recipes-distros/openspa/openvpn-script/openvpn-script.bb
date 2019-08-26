@@ -13,6 +13,6 @@ PR = "r3"
 SRC_URI="file://setup_openvpn.sh"
 
 do_install() {
-    install -d ${D}/usr/bin/
-    install -m 0755 ${WORKDIR}/setup_openvpn.sh ${D}/usr/bin/setup_openvpn.sh
+    install -d ${D}${bindir}/
+    install -m 0755 ${WORKDIR}/setup_openvpn.sh ${D}${bindir}/setup_openvpn.sh
 }

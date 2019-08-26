@@ -19,21 +19,21 @@ SRC_URI="git://github.com/KravenHD/XionHDF.git"
 
 S = "${WORKDIR}/git"
 
-FILES_${PN} = "/usr/share ${libdir}"
+FILES_${PN} = "${datadir} ${libdir}"
 
 do_install() {
 	install -d ${D}${libdir}
-	install -d ${D}/usr/share
-        cp -rp ${S}/usr/lib/* ${D}/${libdir}
-	cp -rp ${S}/usr/share/* ${D}/usr/share
+	install -d ${D}${datadir}
+        cp -rp ${S}${libdir}/* ${D}/${libdir}
+	cp -rp ${S}${datadir}/* ${D}${datadir}
 }
 
 pkg_preinst_${PN}() {
 #!/bin/sh
 echo "Checking for previous installations..."
-if [ -f /usr/share/enigma2/XionHDF/skin.xml ]; then
-    cp -R /usr/share/enigma2/XionHDF/ /tmp
-    rm -rf /usr/share/enigma2/XionHDF
+if [ -f ${datadir}/enigma2/XionHDF/skin.xml ]; then
+    cp -R ${datadir}/enigma2/XionHDF/ /tmp
+    rm -rf ${datadir}/enigma2/XionHDF
     rm -rf /usr/${libdir}/enigma2/python/Components/Converter/XionHDF*
     rm -rf /usr/${libdir}/enigma2/python/Components/Renderer/XionHDF*
 		echo "                                                           "
@@ -61,9 +61,9 @@ exit 0
 pkg_postinst_${PN} () {
 #!/bin/sh
 if [ -f /tmp/XionHDF/skin.xml ]; then
-	cp -R /usr/share/enigma2/XionHDF/buttonsets/ /tmp/XionHDF/
-	rm -rf /usr/share/enigma2/XionHDF/
-	mv /tmp/XionHDF /usr/share/enigma2/
+	cp -R ${datadir}/enigma2/XionHDF/buttonsets/ /tmp/XionHDF/
+	rm -rf ${datadir}/enigma2/XionHDF/
+	mv /tmp/XionHDF ${datadir}/enigma2/
 fi
 echo "                                                          "
 echo "             ...Skin successful installed.                "
@@ -81,7 +81,7 @@ exit 0
 
 pkg_postrm_${PN} () {
 #!/bin/sh
-rm -rf /usr/share/enigma2/XionHDF
+rm -rf ${datadir}/enigma2/XionHDF
 rm -rf /usr/${libdir}/enigma2/python/Plugins/Extensions/XionHDF
 rm -rf /usr/${libdir}/enigma2/python/Components/Converter/XionHDF*
 rm -rf /usr/${libdir}/enigma2/python/Components/Renderer/XionHDF*

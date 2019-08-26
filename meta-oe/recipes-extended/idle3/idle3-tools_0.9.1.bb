@@ -10,15 +10,15 @@ SRC_URI="http://source.mynonpublic.com/idle3-tools-0.9.1.tgz"
 
 S = "${WORKDIR}/${BPN}-${PV}"
 
-EXTRA_OEMAKE = "'CC=${CC}' 'RANLIB=${RANLIB}' 'AR=${AR}' 'CFLAGS=${CFLAGS} -I${S}/include -I${S}/ubi-utils/include -I=${includedir}/glib-2.0 -I=/usr/lib/glib-2.0/include -I=${includedir}/c++ -I=${includedir}/c++/mipsel-oe-linux -DWITHOUT_XATTR' 'BUILDDIR=${S}'"
+EXTRA_OEMAKE = "'CC=${CC}' 'RANLIB=${RANLIB}' 'AR=${AR}' 'CFLAGS=${CFLAGS} -I${S}/include -I${S}/ubi-utils/include -I=${includedir}/glib-2.0 -I=${libdir}/glib-2.0/include -I=${includedir}/c++ -I=${includedir}/c++/mipsel-oe-linux -DWITHOUT_XATTR' 'BUILDDIR=${S}'"
 
 do_compile() {
    make -f ${S}/Makefile idle3ctl
 }
 
 do_install() {
-    install -d ${D}/usr/bin
-    install -m 755 ${S}/idle3ctl ${D}/usr/bin
+    install -d ${D}${bindir}
+    install -m 755 ${S}/idle3ctl ${D}${bindir}
 }
 
 SRC_URI[md5sum] = "797d8775b80b7b7b67a1f8b0a5b41f30"

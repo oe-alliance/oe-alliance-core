@@ -20,6 +20,6 @@ do_compile() {
 }
 
 do_install() {
-    install -d ${D}/etc/init.d/
-    install -m 0755 ${WORKDIR}/clap-libreader-cc1.sh ${D}/etc/init.d/clap-libreader
+    install -d ${D}${sysconfdir}/init.d/
+    install -m 0755 ${WORKDIR}/clap-libreader-cc1.sh ${D}${sysconfdir}/init.d/clap-libreader
 }

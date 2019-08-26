@@ -23,7 +23,7 @@ RREPLACES_${PN} = "${RCONFLICTS_${PN}}"
 
 S = "${WORKDIR}/trunk"
 CAMNAME = "oscam"
-CAMSTART = "/usr/bin/oscam --config-dir /etc/tuxbox/config/oscam --daemon --pidfile /tmp/oscam.pid --restart 2 --utf8"
+CAMSTART = "${bindir}/oscam --config-dir ${sysconfdir}/tuxbox/config/oscam --daemon --pidfile /tmp/oscam.pid --restart 2 --utf8"
 CAMSTOP = "kill \`cat /tmp/oscam.pid\` 2> /dev/null"
 
 SRC_URI += " \
@@ -33,9 +33,9 @@ SRC_URI += " \
     file://oscam.user \
     file://oscam.provid"
 
-CONFFILES = "/etc/tuxbox/config/oscam/oscam.conf /etc/tuxbox/config/oscam/oscam.server /etc/tuxbox/config/oscam/oscam.srvid /etc/tuxbox/config/oscam/oscam.user /etc/tuxbox/config/oscam/oscam.provid"
+CONFFILES = "${sysconfdir}/tuxbox/config/oscam/oscam.conf ${sysconfdir}/tuxbox/config/oscam/oscam.server ${sysconfdir}/tuxbox/config/oscam/oscam.srvid ${sysconfdir}/tuxbox/config/oscam/oscam.user ${sysconfdir}/tuxbox/config/oscam/oscam.provid"
 
-FILES_${PN} = "/usr/bin/oscam /etc/tuxbox/config/oscam/* /etc/init.d/softcam.oscam"
+FILES_${PN} = "${bindir}/oscam ${sysconfdir}/tuxbox/config/oscam/* ${sysconfdir}/init.d/softcam.oscam"
 
 EXTRA_OECMAKE += "\
     -DOSCAM_SYSTEM_NAME=Tuxbox \
@@ -47,10 +47,10 @@ EXTRA_OECMAKE += "\
     -DHAVE_PCSC=0"
 
 do_install() {
-    install -d ${D}/etc/tuxbox/config/oscam
-    install -m 0644 ${WORKDIR}/oscam.* ${D}/etc/tuxbox/config/oscam/
-    install -d ${D}/usr/bin
-    install -m 0755 ${B}/oscam ${D}/usr/bin
+    install -d ${D}${sysconfdir}/tuxbox/config/oscam
+    install -m 0644 ${WORKDIR}/oscam.* ${D}${sysconfdir}/tuxbox/config/oscam/
+    install -d ${D}${bindir}
+    install -m 0755 ${B}/oscam ${D}${bindir}
 }
 
 INSANE_SKIP_${PN} = "already-stripped"

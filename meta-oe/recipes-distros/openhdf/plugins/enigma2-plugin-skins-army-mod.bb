@@ -19,9 +19,9 @@ SRC_URI="git://github.com/openhdf/army-mod-skin.git"
 
 S = "${WORKDIR}/git"
 
-FILES_${PN} = "/usr/share"
+FILES_${PN} = "${datadir}"
 
 do_install() {
-	install -d ${D}/usr/share
-	cp -rp ${S}/usr/share/* ${D}/usr/share/
+	install -d ${D}${datadir}
+	cp -rp ${S}${datadir}/* ${D}${datadir}/
 }

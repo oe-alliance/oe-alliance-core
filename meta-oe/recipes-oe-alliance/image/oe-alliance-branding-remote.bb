@@ -76,12 +76,12 @@ do_configure_prepend() {
 
 do_install_append() {
     rm -rf ${D}/${libdir}
-    rm ${D}/usr/share/enigma2/*.png 2>/dev/null || true
-    rm ${D}/usr/share/enigma2/*.jpg 2>/dev/null || true
-    install -d ${D}/usr/share/enigma2
+    rm ${D}${datadir}/enigma2/*.png 2>/dev/null || true
+    rm ${D}${datadir}/enigma2/*.jpg 2>/dev/null || true
+    install -d ${D}${datadir}/enigma2
 }
 
 python populate_packages_prepend() {
-    enigma2_remotesdir = '/usr/share/enigma2/rc_models'
+    enigma2_remotesdir = '${datadir}/enigma2/rc_models'
     do_split_packages(d, enigma2_remotesdir, '^(\w+)/.*$', 'oe-alliance-branding-remote-%s', '%s (Additional remote for enigma2)', recursive=True, match_path=True, prepend=True, extra_depends='')
 }

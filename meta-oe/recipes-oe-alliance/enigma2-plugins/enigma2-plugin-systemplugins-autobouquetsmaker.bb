@@ -40,8 +40,8 @@ pkg_preinst_${PN}_prepend() {
 #!/bin/sh
 echo "Checking for an ABM cache file"
 
-if [ -f /usr/lib/enigma2/python/Plugins/SystemPlugins/AutoBouquetsMaker/providers/providers.cache ]; then
-	rm -f /usr/lib/enigma2/python/Plugins/SystemPlugins/AutoBouquetsMaker/providers/providers.cache > /dev/null 2>&1
+if [ -f ${libdir}/enigma2/python/Plugins/SystemPlugins/AutoBouquetsMaker/providers/providers.cache ]; then
+	rm -f ${libdir}/enigma2/python/Plugins/SystemPlugins/AutoBouquetsMaker/providers/providers.cache > /dev/null 2>&1
 	echo "Cache file has been removed"
 else
 	echo "No cache file found, continuing."

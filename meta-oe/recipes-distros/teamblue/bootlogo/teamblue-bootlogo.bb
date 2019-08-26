@@ -30,30 +30,30 @@ SRC_URI = "file://bootlogo.mvi file://bootlogo.sh \
 
 SRC_URI_append_gbmv200 = "file://logo.img"
 
-FILES_${PN} = "/boot /usr/share /usr/bin /etc/init.d"
+FILES_${PN} = "/boot ${datadir} ${bindir} ${sysconfdir}/init.d"
 
 INSANE_SKIP_${PN} = "already-stripped"
 
 do_install() {
-    install -d ${D}/usr/share
-    install -m 0644 bootlogo.mvi ${D}/usr/share/bootlogo.mvi
-    ln -sf /usr/share/bootlogo.mvi ${D}/usr/share/backdrop.mvi
+    install -d ${D}${datadir}
+    install -m 0644 bootlogo.mvi ${D}${datadir}/bootlogo.mvi
+    ln -sf ${datadir}/bootlogo.mvi ${D}${datadir}/backdrop.mvi
 
-    ${@bb.utils.contains("MACHINE_FEATURES", "gigabluemipsbootvideo", "install -m 0644 bootvideo.mp4 ${D}/usr/share/bootvideo.mp4" , "", d)}
-    ${@bb.utils.contains("MACHINE_FEATURES", "gigabluemipsbootvideo", "install -d ${D}/usr/bin" , "", d)}
-    ${@bb.utils.contains("MACHINE_FEATURES", "gigabluemipsbootvideo", "install -m 0755 ${S}/bootvideo-mips ${D}/usr/bin/bootvideo" , "", d)}
+    ${@bb.utils.contains("MACHINE_FEATURES", "gigabluemipsbootvideo", "install -m 0644 bootvideo.mp4 ${D}${datadir}/bootvideo.mp4" , "", d)}
+    ${@bb.utils.contains("MACHINE_FEATURES", "gigabluemipsbootvideo", "install -d ${D}${bindir}" , "", d)}
+    ${@bb.utils.contains("MACHINE_FEATURES", "gigabluemipsbootvideo", "install -m 0755 ${S}/bootvideo-mips ${D}${bindir}/bootvideo" , "", d)}
 
-    ${@bb.utils.contains("MACHINE_FEATURES", "gigabluearmbootvideo", "install -m 0644 bootvideo.mp4 ${D}/usr/share/bootvideo.mp4" , "", d)}
-    ${@bb.utils.contains("MACHINE_FEATURES", "gigabluearmbootvideo", "install -d ${D}/usr/bin" , "", d)}
-    ${@bb.utils.contains("MACHINE_FEATURES", "gigabluearmbootvideo", "install -m 0755 ${S}/bootvideo-arm ${D}/usr/bin/bootvideo" , "", d)}
+    ${@bb.utils.contains("MACHINE_FEATURES", "gigabluearmbootvideo", "install -m 0644 bootvideo.mp4 ${D}${datadir}/bootvideo.mp4" , "", d)}
+    ${@bb.utils.contains("MACHINE_FEATURES", "gigabluearmbootvideo", "install -d ${D}${bindir}" , "", d)}
+    ${@bb.utils.contains("MACHINE_FEATURES", "gigabluearmbootvideo", "install -m 0755 ${S}/bootvideo-arm ${D}${bindir}/bootvideo" , "", d)}
 
-    install -d ${D}/usr/share/enigma2
+    install -d ${D}${datadir}/enigma2
     install -d ${D}/${sysconfdir}/init.d
     install -m 0755 ${S}/bootlogo.sh ${D}/${sysconfdir}/init.d/bootlogo
-    ${@bb.utils.contains("MACHINE_FEATURES", "gigabluelcd400", "install -m 0644 lcdwaitkey400.bin ${D}/usr/share/lcdwaitkey.bin" , "", d)}
-    ${@bb.utils.contains("MACHINE_FEATURES", "gigabluelcd400", "install -m 0644 lcdwarning400.bin ${D}/usr/share/lcdwarning.bin" , "", d)}
-    ${@bb.utils.contains("MACHINE_FEATURES", "gigabluelcd220", "install -m 0644 lcdwaitkey220.bin ${D}/usr/share/lcdwaitkey.bin" , "", d)}
-    ${@bb.utils.contains("MACHINE_FEATURES", "gigabluelcd220", "install -m 0644 lcdwarning220.bin ${D}/usr/share/lcdwarning.bin" , "", d)}
+    ${@bb.utils.contains("MACHINE_FEATURES", "gigabluelcd400", "install -m 0644 lcdwaitkey400.bin ${D}${datadir}/lcdwaitkey.bin" , "", d)}
+    ${@bb.utils.contains("MACHINE_FEATURES", "gigabluelcd400", "install -m 0644 lcdwarning400.bin ${D}${datadir}/lcdwarning.bin" , "", d)}
+    ${@bb.utils.contains("MACHINE_FEATURES", "gigabluelcd220", "install -m 0644 lcdwaitkey220.bin ${D}${datadir}/lcdwaitkey.bin" , "", d)}
+    ${@bb.utils.contains("MACHINE_FEATURES", "gigabluelcd220", "install -m 0644 lcdwarning220.bin ${D}${datadir}/lcdwarning.bin" , "", d)}
 }
 
 inherit deploy

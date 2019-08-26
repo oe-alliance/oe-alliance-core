@@ -55,16 +55,16 @@ do_install_append() {
     fi
 }
 
-# For Classic Dreambox Inject the /boot partition into /etc/fstab. At image creation time,
+# For Classic Dreambox Inject the /boot partition into ${sysconfdir}/fstab. At image creation time,
 # this is done by IMAGE_CMD_ubi.nfi (image_types_nfi.bbclass).
 pkg_postinst_${PN}_dreamboxv1() {
 if [ -z "$D" ]; then
 	ROOT='\<root=ubi0:rootfs\>'
-	if grep -q $ROOT /proc/cmdline && ! grep -q '\s\+/boot\s\+' /etc/fstab; then
-	       printf '/dev/mtdblock2\t/boot\t\tjffs2\tro\t\t\t\t0 0\n' >> /etc/fstab
+	if grep -q $ROOT /proc/cmdline && ! grep -q '\s\+/boot\s\+' ${sysconfdir}/fstab; then
+	       printf '/dev/mtdblock2\t/boot\t\tjffs2\tro\t\t\t\t0 0\n' >> ${sysconfdir}/fstab
 	fi
-	if grep -q '/dev/ubi0_1' /proc/mounts && ! grep -q '\s\+/data\s\+' /etc/fstab; then
-	        printf '/dev/ubi0_1\t/data\t\tubifs\trw,nofail\t\t\t\t0 0\n' >> /etc/fstab
+	if grep -q '/dev/ubi0_1' /proc/mounts && ! grep -q '\s\+/data\s\+' ${sysconfdir}/fstab; then
+	        printf '/dev/ubi0_1\t/data\t\tubifs\trw,nofail\t\t\t\t0 0\n' >> ${sysconfdir}/fstab
 	fi
 fi
 }

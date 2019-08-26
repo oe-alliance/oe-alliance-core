@@ -19,14 +19,14 @@ SRC_URI="git://github.com/openatv/enigma2-plugin-extensions-dflash.git"
 
 S = "${WORKDIR}/git"
 
-FILES_${PN} = "${libdir} /usr/sbin"
+FILES_${PN} = "${libdir} ${sbindir}"
 
 do_install() {
     install -d ${D}${libdir}
-    cp -rp ${S}/usr/lib/* ${D}${libdir}/
-    install -d ${D}/usr/sbin
-    install -m 0755 ${S}/bin/nand_check ${D}/usr/sbin/nand_check
-    install -m 0755 ${S}/bin/nfiwrite ${D}/usr/sbin/nfiwrite
+    cp -rp ${S}${libdir}/* ${D}${libdir}/
+    install -d ${D}${sbindir}
+    install -m 0755 ${S}/bin/nand_check ${D}${sbindir}/nand_check
+    install -m 0755 ${S}/bin/nfiwrite ${D}${sbindir}/nfiwrite
 }
 
 pkg_postrm_${PN}() {

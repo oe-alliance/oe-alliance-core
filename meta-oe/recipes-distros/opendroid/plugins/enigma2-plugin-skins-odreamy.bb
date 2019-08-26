@@ -15,11 +15,11 @@ VER="1.1"
 PR = "r2"
 
 SRC_URI="git://github.com/opendroid-Team/skins-oDreamy.git"
-FILES_${PN} = "/usr/share ${libdir}"
+FILES_${PN} = "${datadir} ${libdir}"
 
 S = "${WORKDIR}/git"
 do_install() {
-	install -d ${D}/usr/share
-	cp -rp ${S}/usr/share/* ${D}/usr/share/
-	chmod -R a+rX ${D}/usr/share/enigma2/
+	install -d ${D}${datadir}
+	cp -rp ${S}${datadir}/* ${D}${datadir}/
+	chmod -R a+rX ${D}${datadir}/enigma2/
 }

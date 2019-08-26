@@ -21,7 +21,7 @@ FILES_${PN} = "${libdir}"
 
 do_install_mipsel() {
     install -d ${D}${libdir}
-    cp -rp ${S}/usr/lib/* ${D}${libdir}/
+    cp -rp ${S}${libdir}/* ${D}${libdir}/
     cp -rp ${S}/mipsel/* ${D}${libdir}/enigma2/python/Plugins/Extensions/dBackup/
     chmod -R 777 ${D}${libdir}/enigma2/python/Plugins/Extensions/dBackup
 }

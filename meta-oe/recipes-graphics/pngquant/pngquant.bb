@@ -19,9 +19,9 @@ S = "${WORKDIR}/git"
 inherit autotools-brokensep
 
 do_install() {
-    install -d ${D}/usr/bin
-    install -m 0755 ${S}/pngquant ${D}/usr/bin/pngquant
+    install -d ${D}${bindir}
+    install -m 0755 ${S}/pngquant ${D}${bindir}/pngquant
 }
 
-FILES_${PN} = "/usr/bin/pngquant"
+FILES_${PN} = "${bindir}/pngquant"
 

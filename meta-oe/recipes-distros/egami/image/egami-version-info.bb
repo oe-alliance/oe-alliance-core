@@ -22,21 +22,21 @@ do_install() {
     else
         BUILDTYPE="0"
     fi
-    # generate /etc/image-version
-    install -d ${D}/etc
-    echo "box_type=${MACHINEBUILD}" > ${D}/etc/image-version
-    echo "build_type=${BUILDTYPE}" >> ${D}/etc/image-version
-    echo "machine_brand=${MACHINE_BRAND}" >> ${D}/etc/image-version
-    echo "machine_name=${MACHINE_NAME}" >> ${D}/etc/image-version
-    echo "version=${IMAGE_VERSION}" >> ${D}/etc/image-version
-    echo "build=${BUILD_VERSION}" >> ${D}/etc/image-version
-    echo "date=${DATETIME}" >> ${D}/etc/image-version
-    echo "comment=EGAMI" >> ${D}/etc/image-version
-    echo "target=9" >> ${D}/etc/image-version
-    echo "creator=EGAMI" >> ${D}/etc/image-version
-    echo "url=${URL}" >> ${D}/etc/image-version
-    echo "catalog=${URL}" >> ${D}/etc/image-version
+    # generate ${sysconfdir}/image-version
+    install -d ${D}${sysconfdir}
+    echo "box_type=${MACHINEBUILD}" > ${D}${sysconfdir}/image-version
+    echo "build_type=${BUILDTYPE}" >> ${D}${sysconfdir}/image-version
+    echo "machine_brand=${MACHINE_BRAND}" >> ${D}${sysconfdir}/image-version
+    echo "machine_name=${MACHINE_NAME}" >> ${D}${sysconfdir}/image-version
+    echo "version=${IMAGE_VERSION}" >> ${D}${sysconfdir}/image-version
+    echo "build=${BUILD_VERSION}" >> ${D}${sysconfdir}/image-version
+    echo "date=${DATETIME}" >> ${D}${sysconfdir}/image-version
+    echo "comment=EGAMI" >> ${D}${sysconfdir}/image-version
+    echo "target=9" >> ${D}${sysconfdir}/image-version
+    echo "creator=EGAMI" >> ${D}${sysconfdir}/image-version
+    echo "url=${URL}" >> ${D}${sysconfdir}/image-version
+    echo "catalog=${URL}" >> ${D}${sysconfdir}/image-version
 }
 do_install[vardepsexclude] += "DATETIME"
 
-FILES_${PN} = "/etc/image-version"
+FILES_${PN} = "${sysconfdir}/image-version"

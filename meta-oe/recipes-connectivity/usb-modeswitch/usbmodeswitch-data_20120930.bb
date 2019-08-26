@@ -19,13 +19,13 @@ do_compile() {
 }
 
 do_install() {
-    install -d ${D}/usr/share/usb_modeswitch
-    #install -d ${D}/etc/usb_modeswitch.d
+    install -d ${D}${datadir}/usb_modeswitch
+    #install -d ${D}${sysconfdir}/usb_modeswitch.d
     #install -d ${D}/lib/udev/rules.d
     #install -m 0755 ${S}/40-usb_modeswitch.rules ${D}/lib/udev/rules.d/
-    #install -m 0755 ${S}/usb_modeswitch.d/* ${D}/usr/share/usb_modeswitch/
+    #install -m 0755 ${S}/usb_modeswitch.d/* ${D}${datadir}/usb_modeswitch/
     DESTDIR=${D} make install
-    install -m 0755 ${S}/usb_modeswitch.d/* ${D}/usr/share/usb_modeswitch/
+    install -m 0755 ${S}/usb_modeswitch.d/* ${D}${datadir}/usb_modeswitch/
 }
 
-FILES_${PN} += "/etc /lib /usr"
+FILES_${PN} += "${sysconfdir} /lib /usr"

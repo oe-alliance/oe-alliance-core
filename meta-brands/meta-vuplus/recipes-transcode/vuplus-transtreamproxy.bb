@@ -33,41 +33,41 @@ EXTRA_OECONF_dags7252 += " --enable-ext-pid "
 S = "${WORKDIR}/git"
 
 do_install() {
-    install -d ${D}/usr/bin
-    install -m 0755 ${WORKDIR}/build/src/transtreamproxy ${D}/usr/bin/transtreamproxy
+    install -d ${D}${bindir}
+    install -m 0755 ${WORKDIR}/build/src/transtreamproxy ${D}${bindir}/transtreamproxy
 }
 
 pkg_prerm_${PN}() {
 #!/bin/sh
-grep -vE '^#*\s*8002' $D/etc/inetd.conf > $D/tmp/inetd.tmp
-mv $D/tmp/inetd.tmp $D/etc/inetd.conf
+grep -vE '^#*\s*8002' $D${sysconfdir}/inetd.conf > $D/tmp/inetd.tmp
+mv $D/tmp/inetd.tmp $D${sysconfdir}/inetd.conf
 
-if [ -z "$D" -a -f "/etc/init.d/inetd.busybox" ]; then
-    /etc/init.d/inetd.busybox restart
+if [ -z "$D" -a -f "${sysconfdir}/init.d/inetd.busybox" ]; then
+    ${sysconfdir}/init.d/inetd.busybox restart
 fi
 }
 
 pkg_preinst_${PN}() {
 #!/bin/sh
 if [ -z "$D" ]; then
-    grep -vE '^#*\s*8002' $D/etc/inetd.conf > $D/tmp/inetd.tmp
-    mv $D/tmp/inetd.tmp $D/etc/inetd.conf
+    grep -vE '^#*\s*8002' $D${sysconfdir}/inetd.conf > $D/tmp/inetd.tmp
+    mv $D/tmp/inetd.tmp $D${sysconfdir}/inetd.conf
 fi
 
-if [ -z "$D" -a -f "/etc/init.d/inetd.busybox" ]; then
-    /etc/init.d/inetd.busybox restart
+if [ -z "$D" -a -f "${sysconfdir}/init.d/inetd.busybox" ]; then
+    ${sysconfdir}/init.d/inetd.busybox restart
 fi
 }
 
 pkg_postinst_${PN}() {
 #!/bin/sh
-if grep -qE "^#*\s*8003" $D/etc/inetd.conf; then
-    sed -i "s#^\(\#*\s*8003\)#8002\t\tstream\ttcp6\tnowait\troot\t/usr/bin/transtreamproxy\ttranstreamproxy\n\1#" $D/etc/inetd.conf
+if grep -qE "^#*\s*8003" $D${sysconfdir}/inetd.conf; then
+    sed -i "s#^\(\#*\s*8003\)#8002\t\tstream\ttcp6\tnowait\troot\t${bindir}/transtreamproxy\ttranstreamproxy\n\1#" $D${sysconfdir}/inetd.conf
 else
-    echo -e "8002\t\tstream\ttcp6\tnowait\troot\t/usr/bin/transtreamproxy\ttranstreamproxy" >> $D/etc/inetd.conf
+    echo -e "8002\t\tstream\ttcp6\tnowait\troot\t${bindir}/transtreamproxy\ttranstreamproxy" >> $D${sysconfdir}/inetd.conf
 fi
 
-if [ -z "$D" -a -f "/etc/init.d/inetd.busybox" ]; then
-    /etc/init.d/inetd.busybox restart
+if [ -z "$D" -a -f "${sysconfdir}/init.d/inetd.busybox" ]; then
+    ${sysconfdir}/init.d/inetd.busybox restart
 fi
 }

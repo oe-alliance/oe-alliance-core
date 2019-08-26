@@ -22,5 +22,5 @@ include python-package-split.inc
 
 # some txt files which should go into -doc
 FILES_${PN}-doc += " \
-    /usr/share/pypi-overview.rst \
+    ${datadir}/pypi-overview.rst \
     "

@@ -76,19 +76,19 @@ do_package_qa() {
 do_install_append() {
     install -d ${D}${bindir}
     install -d ${D}/home/root
-    install -d ${D}/etc
-    install -d ${D}/etc/pki/tls
+    install -d ${D}${sysconfdir}
+    install -d ${D}${sysconfdir}/pki/tls
 
     # browser
     install -m 0755 ${S}/run.sh ${D}${bindir}
     install -m 0755 ${S}/none.html ${D}/home/root
-    install -m 0755 ${S}/${MACHINE}/directfbrc ${D}/etc/
-    install -m 0755 ${S}/${MACHINE}/fb.modes ${D}/etc/
-    install -m 0755 ${S}/cert.pem ${D}/etc/pki/tls/
+    install -m 0755 ${S}/${MACHINE}/directfbrc ${D}${sysconfdir}/
+    install -m 0755 ${S}/${MACHINE}/fb.modes ${D}${sysconfdir}/
+    install -m 0755 ${S}/cert.pem ${D}${sysconfdir}/pki/tls/
 
     # 32bit binary
-    install -d ${D}/usr/lib/mozilla/plugins
-    install -m 0755 ${S}/libhbbtvplugin.so ${D}/usr/lib/mozilla/plugins/
+    install -d ${D}${libdir}/mozilla/plugins
+    install -m 0755 ${S}/libhbbtvplugin.so ${D}${libdir}/mozilla/plugins/
 }
 
 FILES_${PN} = "/"

@@ -23,22 +23,22 @@ do_install() {
         BUILDTYPE="0"
     fi
 
-    install -d ${D}/etc
-    # generate /etc/image-version
-    echo "box_type=${MACHINEBUILD}" > ${D}/etc/image-version
-    echo "build_type=${BUILDTYPE}" >> ${D}/etc/image-version
-    echo "machine_brand=${MACHINE_BRAND}" >> ${D}/etc/image-version
-    echo "machine_name=${MACHINE_NAME}" >> ${D}/etc/image-version
-    echo "version=${IMAGE_VERSION}" >> ${D}/etc/image-version
-    echo "build=${BUILD_VERSION}" >> ${D}/etc/image-version
-    echo "date=${DATETIME}" >> ${D}/etc/image-version
-    echo "comment=OpenEight" >> ${D}/etc/image-version
-    echo "target=9" >> ${D}/etc/image-version
-    echo "creator=OpenEight" >> ${D}/etc/image-version
-    echo "url=${URL}" >> ${D}/etc/image-version
-    echo "catalog=${URL}" >> ${D}/etc/image-version
-    echo "${MACHINE}" > ${D}/etc/model
+    install -d ${D}${sysconfdir}
+    # generate ${sysconfdir}/image-version
+    echo "box_type=${MACHINEBUILD}" > ${D}${sysconfdir}/image-version
+    echo "build_type=${BUILDTYPE}" >> ${D}${sysconfdir}/image-version
+    echo "machine_brand=${MACHINE_BRAND}" >> ${D}${sysconfdir}/image-version
+    echo "machine_name=${MACHINE_NAME}" >> ${D}${sysconfdir}/image-version
+    echo "version=${IMAGE_VERSION}" >> ${D}${sysconfdir}/image-version
+    echo "build=${BUILD_VERSION}" >> ${D}${sysconfdir}/image-version
+    echo "date=${DATETIME}" >> ${D}${sysconfdir}/image-version
+    echo "comment=OpenEight" >> ${D}${sysconfdir}/image-version
+    echo "target=9" >> ${D}${sysconfdir}/image-version
+    echo "creator=OpenEight" >> ${D}${sysconfdir}/image-version
+    echo "url=${URL}" >> ${D}${sysconfdir}/image-version
+    echo "catalog=${URL}" >> ${D}${sysconfdir}/image-version
+    echo "${MACHINE}" > ${D}${sysconfdir}/model
 }
 
-FILES_${PN} += "/etc"
+FILES_${PN} += "${sysconfdir}"
 

@@ -23,7 +23,7 @@ SRC_URI="git://github.com/DougMac/e2m3u2bouquet-plugin.git"
 
 S = "${WORKDIR}/git"
 
-FILES_${PN} = "/usr/lib/enigma2/python/Plugins/Extensions/E2m3u2bouquet"
+FILES_${PN} = "${libdir}/enigma2/python/Plugins/Extensions/E2m3u2bouquet"
 D_FILES_PN = "${D}${FILES_${PN}}"
 
 EXTRA_OECONF = ""
@@ -45,13 +45,13 @@ echo "Installing Engima2 IPTV E2m3u2bouquet plugin"
 echo "********************************************"
 echo
 if [ -d "/var/tmp/e2m3u2bouquet" ]; then
-  mv /var/tmp/e2m3u2bouquet /etc/enigma2 2>&1
+  mv /var/tmp/e2m3u2bouquet ${sysconfdir}/enigma2 2>&1
 fi
-if [ ! -d "/etc/enigma2/e2m3u2bouquet/" ]; then
-  mkdir -p /etc/enigma2/e2m3u2bouquet/ 2>&1
+if [ ! -d "${sysconfdir}/enigma2/e2m3u2bouquet/" ]; then
+  mkdir -p ${sysconfdir}/enigma2/e2m3u2bouquet/ 2>&1
 fi
-if [ -f "/var/tmp/config.xml" -a ! -f "/etc/enigma2/e2m3u2bouquet/config.xml" ]; then
-  mv  /var/tmp/config.xml /etc/enigma2/e2m3u2bouquet/ 2>&1
+if [ -f "/var/tmp/config.xml" -a ! -f "${sysconfdir}/enigma2/e2m3u2bouquet/config.xml" ]; then
+  mv  /var/tmp/config.xml ${sysconfdir}/enigma2/e2m3u2bouquet/ 2>&1
 fi
 exit 0
 }
@@ -74,7 +74,7 @@ echo "********************************************"
 echo "Removing IPTV bouquets"
 echo "********************************************"
 echo
-cd /etc/enigma2/
+cd ${sysconfdir}/enigma2/
 sed -i '/suls_iptv/d' bouquets.tv
 rm -f bouquets.tv.bak
 echo
@@ -82,14 +82,14 @@ echo "********************************************"
 echo "Removing files"
 echo "********************************************"
 echo
-rm -r /usr/lib/enigma2/python/Plugins/Extensions/E2m3u2bouquet > /dev/null 2>&1
+rm -r ${libdir}/enigma2/python/Plugins/Extensions/E2m3u2bouquet > /dev/null 2>&1
 if [ -d "/var/tmp" ]; then
-  mv /etc/enigma2/e2m3u2bouquet /var/tmp 2>&1
+  mv ${sysconfdir}/enigma2/e2m3u2bouquet /var/tmp 2>&1
 else
-  rm -r /etc/enigma2/e2m3u2bouquet > /dev/null 2>&1
+  rm -r ${sysconfdir}/enigma2/e2m3u2bouquet > /dev/null 2>&1
 fi
-find /etc/enigma2/ -type f -name '*suls_iptv*' -delete
-find /etc/epgimport/ -type f -name '*suls_iptv*' -delete
+find ${sysconfdir}/enigma2/ -type f -name '*suls_iptv*' -delete
+find ${sysconfdir}/epgimport/ -type f -name '*suls_iptv*' -delete
 echo
 echo "********************************************"
 echo "Engima2 IPTV E2m3u2bouquet plugin uninstalled"

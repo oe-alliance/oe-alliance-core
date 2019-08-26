@@ -71,56 +71,56 @@ SRC_URI[dm800sev2.sha256sum] = "af522a5d4dc75507f2cd96582a270236fedade35b8dca74c
 SRC_URI[dm500hdv2.md5sum] = "c0413bfe6c03efc5fa1825b6ad8ac7bd"
 SRC_URI[dm500hdv2.sha256sum] = "005b9e99566fdee4d76ec1532273dc3e29a14b723d0bf6108228988e2a30d013"
 
-FILES_${PN} = "/boot /usr/share /etc/init.d"
+FILES_${PN} = "/boot ${datadir} ${sysconfdir}/init.d"
 
 do_install() {
     ${@bb.utils.contains("MACHINE_FEATURES", "dreambox", "install -d ${D}/boot", "", d)}
     ${@bb.utils.contains("MACHINE_FEATURES", "dreambox", "install -m 0755 ${S}/dreambox-bootlogo_${BINARY_VERSION}_${MACHINE_ARCH}/bootlogo-${MACHINE_ARCH}.elf.gz ${D}/boot/; install -m 0755 ${S}/dreambox-bootlogo_${BINARY_VERSION}_${MACHINE_ARCH}/bootlogo-${MACHINE_ARCH}.jpg ${D}/boot/", "", d)}
-    install -d ${D}/usr/share
-    install -m 0644 bootlogo.mvi ${D}/usr/share/bootlogo.mvi
-    ln -sf /usr/share/bootlogo.mvi ${D}/usr/share/backdrop.mvi
-    install -d ${D}/usr/share/enigma2
-    install -m 0644 radio.mvi ${D}/usr/share/enigma2/radio.mvi
+    install -d ${D}${datadir}
+    install -m 0644 bootlogo.mvi ${D}${datadir}/bootlogo.mvi
+    ln -sf ${datadir}/bootlogo.mvi ${D}${datadir}/backdrop.mvi
+    install -d ${D}${datadir}/enigma2
+    install -m 0644 radio.mvi ${D}${datadir}/enigma2/radio.mvi
     install -d ${D}/${sysconfdir}/init.d
     install -m 0755 bootlogo.sh ${D}/${sysconfdir}/init.d/bootlogo
 }
 
 do_install_append_vuduo2() {
-    install -m 0644 lcdbootlogo.png ${D}/usr/share/lcdbootlogo.png
+    install -m 0644 lcdbootlogo.png ${D}${datadir}/lcdbootlogo.png
     install -m 0644 bootlogo.py ${D}/${sysconfdir}/init.d/bootlogo.py
 }
 
 do_install_append_vusolo4k() {
-    install -m 0644 lcdbootlogo.png ${D}/usr/share/lcdbootlogo.png
+    install -m 0644 lcdbootlogo.png ${D}${datadir}/lcdbootlogo.png
     install -m 0644 bootlogo.py ${D}/${sysconfdir}/init.d/bootlogo.py
 }
 
 do_install_append_7100s() {
-    install -d ${D}/usr/share
-    install -m 0644 lcdwaitkey220.bin ${D}/usr/share/lcdwaitkey.bin
-    install -m 0644 lcdwarning220.bin ${D}/usr/share/lcdwarning.bin
-    install -m 0644 lcdcomplete220.bin ${D}/usr/share/lcdcomplete.bin
+    install -d ${D}${datadir}
+    install -m 0644 lcdwaitkey220.bin ${D}${datadir}/lcdwaitkey.bin
+    install -m 0644 lcdwarning220.bin ${D}${datadir}/lcdwarning.bin
+    install -m 0644 lcdcomplete220.bin ${D}${datadir}/lcdcomplete.bin
 }
 
 do_install_append_7210s() {
-    install -d ${D}/usr/share
-    install -m 0644 lcdwaitkey220.bin ${D}/usr/share/lcdwaitkey.bin
-    install -m 0644 lcdwarning220.bin ${D}/usr/share/lcdwarning.bin
-    install -m 0644 lcdcomplete220.bin ${D}/usr/share/lcdcomplete.bin
+    install -d ${D}${datadir}
+    install -m 0644 lcdwaitkey220.bin ${D}${datadir}/lcdwaitkey.bin
+    install -m 0644 lcdwarning220.bin ${D}${datadir}/lcdwarning.bin
+    install -m 0644 lcdcomplete220.bin ${D}${datadir}/lcdcomplete.bin
 }
 
 do_install_append_7105s() {
-    install -d ${D}/usr/share
-    install -m 0644 lcdwaitkey220.bin ${D}/usr/share/lcdwaitkey.bin
-    install -m 0644 lcdwarning220.bin ${D}/usr/share/lcdwarning.bin
-    install -m 0644 lcdcomplete220.bin ${D}/usr/share/lcdcomplete.bin
+    install -d ${D}${datadir}
+    install -m 0644 lcdwaitkey220.bin ${D}${datadir}/lcdwaitkey.bin
+    install -m 0644 lcdwarning220.bin ${D}${datadir}/lcdwarning.bin
+    install -m 0644 lcdcomplete220.bin ${D}${datadir}/lcdcomplete.bin
 }
 
 do_install_append_7215s() {
-    install -d ${D}/usr/share
-    install -m 0644 lcdwaitkey220.bin ${D}/usr/share/lcdwaitkey.bin
-    install -m 0644 lcdwarning220.bin ${D}/usr/share/lcdwarning.bin
-    install -m 0644 lcdcomplete220.bin ${D}/usr/share/lcdcomplete.bin
+    install -d ${D}${datadir}
+    install -m 0644 lcdwaitkey220.bin ${D}${datadir}/lcdwaitkey.bin
+    install -m 0644 lcdwarning220.bin ${D}${datadir}/lcdwarning.bin
+    install -m 0644 lcdcomplete220.bin ${D}${datadir}/lcdcomplete.bin
 }
 
 inherit deploy
@@ -169,7 +169,7 @@ do_deploy_append_lunix() {
 addtask deploy before do_build after do_install
 
 pkg_preinst_${PN}() {
-    if grep dm /etc/hostname > /dev/null ; then
+    if grep dm ${sysconfdir}/hostname > /dev/null ; then
         if [ -z "$D" ]
         then
             if mountpoint -q /boot
@@ -183,7 +183,7 @@ pkg_preinst_${PN}() {
 }
 
 pkg_postinst_${PN}() {
-    if grep dm /etc/hostname > /dev/null ; then
+    if grep dm ${sysconfdir}/hostname > /dev/null ; then
         if [ -z "$D" ]
         then
             umount /boot
@@ -192,7 +192,7 @@ pkg_postinst_${PN}() {
 }
 
 pkg_prerm_${PN}() {
-    if grep dm /etc/hostname > /dev/null ; then
+    if grep dm ${sysconfdir}/hostname > /dev/null ; then
         if [ -z "$D" ]
         then
             if mountpoint -q /boot
@@ -206,7 +206,7 @@ pkg_prerm_${PN}() {
 }
 
 pkg_postrm_${PN}() {
-    if grep dm /etc/hostname > /dev/null ; then
+    if grep dm ${sysconfdir}/hostname > /dev/null ; then
         if [ -z "$D" ]
         then
             umount /boot
@@ -215,5 +215,5 @@ pkg_postrm_${PN}() {
 }
 
 PACKAGE_ARCH := "${MACHINE_ARCH}"
-FILES_${PN} = "/boot /usr/share /etc/init.d"
+FILES_${PN} = "/boot ${datadir} ${sysconfdir}/init.d"
 

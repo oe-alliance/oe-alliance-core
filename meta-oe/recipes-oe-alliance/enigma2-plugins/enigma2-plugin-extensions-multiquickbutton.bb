@@ -21,7 +21,7 @@ S = "${WORKDIR}/git"
 
 PACKAGES =+ "${PN}-src"
 PACKAGES =+ "${PN}-po"
-FILES_${PN} = "/tmp /etc ${libdir}"
+FILES_${PN} = "/tmp ${sysconfdir} ${libdir}"
 FILES_${PN}-src = "${libdir}/enigma2/python/Plugins/Extensions/MultiQuickButton/*.py"
 FILES_${PN}-po = "${libdir}/enigma2/python/Plugins/Extensions/MultiQuickButton/locale/*.po"
 
@@ -36,20 +36,20 @@ EXTRA_OECONF = "\
 
 pkg_postinst_${PN}() {
 #!/bin/sh
-if ! test -d /etc/MultiQuickButton; then
-    mkdir /etc/MultiQuickButton
+if ! test -d ${sysconfdir}/MultiQuickButton; then
+    mkdir ${sysconfdir}/MultiQuickButton
 fi
 cd /tmp/mqb
 for buttonfile in *.xml; do
-    if ! test -f /etc/MultiQuickButton/$buttonfile; then
-        cp /tmp/mqb/$buttonfile /etc/MultiQuickButton
+    if ! test -f ${sysconfdir}/MultiQuickButton/$buttonfile; then
+        cp /tmp/mqb/$buttonfile ${sysconfdir}/MultiQuickButton
     fi
 done
 cd /
 rm -rf /tmp/mqb
 
-echo "Backup /usr/share/enigma2/keymap.xml in /usr/share/enigma2/keymap_backup_mqb.xml"
-cp /usr/share/enigma2/keymap.xml /usr/share/enigma2/keymap_backup_mqb.xml
+echo "Backup ${datadir}/enigma2/keymap.xml in ${datadir}/enigma2/keymap_backup_mqb.xml"
+cp ${datadir}/enigma2/keymap.xml ${datadir}/enigma2/keymap_backup_mqb.xml
 
 echo "Please restart your STB to load Menu Multi QuickButton Plugin ..."
 exit 0
@@ -57,11 +57,11 @@ exit 0
 
 pkg_postrm_${PN}() {
 #!/bin/sh
-echo "... Restore flags in /usr/share/enigma2/keymap.xml..."
-sed -ie s!"<key id=\"KEY_TEXT\" mapto=\"startTeletext\" flags=\"b\" />"!"<key id=\"KEY_TEXT\" mapto=\"startTeletext\" flags=\"m\" />"!g "/usr/share/enigma2/keymap.xml"
-sed -ie s!"<key id=\"KEY_HELP\" mapto=\"displayHelp\" flags=\"b\" />"!"<key id=\"KEY_HELP\" mapto=\"displayHelp\" flags=\"m\" />"!g "/usr/share/enigma2/keymap.xml"
-rm -r /usr/lib/enigma2/python/Plugins/Extensions/MultiQuickButton > /dev/null 2>&1
-rm -r /etc/MultiQuickButton > /dev/null 2>&1
+echo "... Restore flags in ${datadir}/enigma2/keymap.xml..."
+sed -ie s!"<key id=\"KEY_TEXT\" mapto=\"startTeletext\" flags=\"b\" />"!"<key id=\"KEY_TEXT\" mapto=\"startTeletext\" flags=\"m\" />"!g "${datadir}/enigma2/keymap.xml"
+sed -ie s!"<key id=\"KEY_HELP\" mapto=\"displayHelp\" flags=\"b\" />"!"<key id=\"KEY_HELP\" mapto=\"displayHelp\" flags=\"m\" />"!g "${datadir}/enigma2/keymap.xml"
+rm -r ${libdir}/enigma2/python/Plugins/Extensions/MultiQuickButton > /dev/null 2>&1
+rm -r ${sysconfdir}/MultiQuickButton > /dev/null 2>&1
 
 echo "Please restart your STB to kick ass Multi Quickbutton Plugin to nirvana..."
 exit 0

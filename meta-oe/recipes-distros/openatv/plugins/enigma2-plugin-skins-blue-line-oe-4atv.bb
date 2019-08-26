@@ -26,10 +26,10 @@ python -O -m compileall ${S}
 
 do_install() {
     install -d ${D}${libdir}
-    install -d ${D}/usr/share
-    cp -rp ${S}/usr/lib/* ${D}${libdir}/
-    cp -rp ${S}/usr/share/* ${D}/usr/share/
-    chmod -R a+rX ${D}/usr/share/enigma2/
+    install -d ${D}${datadir}
+    cp -rp ${S}${libdir}/* ${D}${libdir}/
+    cp -rp ${S}${datadir}/* ${D}${datadir}/
+    chmod -R a+rX ${D}${datadir}/enigma2/
     cp -rp ${S}/tmp ${D}/
 }
 
@@ -41,14 +41,14 @@ if grep -qs 'getMachineBrand=Octagon' cat /tmp/boxbranding.cfg  ; then
 	echo "Octagon Box found!"
 	echo "*********************************"
 	echo "                                 "
-	cp /tmp/octagon/*.png /usr/share/enigma2/Blue-Line-OE-4ATV/menu	
+	cp /tmp/octagon/*.png ${datadir}/enigma2/Blue-Line-OE-4ATV/menu	
 else
 	echo "                                 "
 	echo "*********************************"
 	echo "No Octagon Box found!"
 	echo "*********************************"
 	echo "                                 "
-	cp /tmp/atv/*.png /usr/share/enigma2/Blue-Line-OE-4ATV/menu
+	cp /tmp/atv/*.png ${datadir}/enigma2/Blue-Line-OE-4ATV/menu
 fi
 
 echo " Skin Blue-Line-OE-4ATV installed "
@@ -57,7 +57,7 @@ exit 0
 
 pkg_postrm_${PN} () {
 #!/bin/sh
-rm -rf /usr/share/enigma2/Blue-Line-OE-4ATV
+rm -rf ${datadir}/enigma2/Blue-Line-OE-4ATV
 echo "                                                           "
 echo "               ...Skin successful removed.                 "
 exit 0

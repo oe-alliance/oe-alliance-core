@@ -23,72 +23,72 @@ SRC_URI="git://github.com/openatv/MetrixHD.git"
 
 S = "${WORKDIR}/git"
 
-FILES_enigma2-plugin-skins-metrix-atv-fhd-icons = "/usr/share/enigma2/MetrixHD/FHD"
-FILES_enigma2-plugin-skins-metrix-atv-uhd-icons = "/usr/share/enigma2/MetrixHD/UHD"
+FILES_enigma2-plugin-skins-metrix-atv-fhd-icons = "${datadir}/enigma2/MetrixHD/FHD"
+FILES_enigma2-plugin-skins-metrix-atv-uhd-icons = "${datadir}/enigma2/MetrixHD/UHD"
 FILES_${PN}-src = "\
     ${libdir}/enigma2/python/Components/Converter/*.py \
     ${libdir}/enigma2/python/Components/Renderer/*.py \
     ${libdir}/enigma2/python/Plugins/Extensions/MyMetrixLite/*.py \
     "
 
-FILES_${PN} = "${libdir} /usr/share"
+FILES_${PN} = "${libdir} ${datadir}"
 
 do_compile() {
 	python -O -m compileall ${S}/usr
 	for f in $(find ${S}/locale -name *.po ); do
 		l=$(echo ${f%} | sed 's/\.po//' | sed 's/.*locale\///')
-		mkdir -p ${S}/usr/lib/enigma2/python/Plugins/Extensions/MyMetrixLite/locale/${l%}/LC_MESSAGES
-		msgfmt -o ${S}/usr/lib/enigma2/python/Plugins/Extensions/MyMetrixLite/locale/${l%}/LC_MESSAGES/MyMetrixLite.mo ${S}/locale/$l.po
+		mkdir -p ${S}${libdir}/enigma2/python/Plugins/Extensions/MyMetrixLite/locale/${l%}/LC_MESSAGES
+		msgfmt -o ${S}${libdir}/enigma2/python/Plugins/Extensions/MyMetrixLite/locale/${l%}/LC_MESSAGES/MyMetrixLite.mo ${S}/locale/$l.po
 	done
 }
 
 do_install() {
     install -d ${D}${libdir}
-    install -d ${D}/usr/share
-    cp -r --preserve=mode,links ${S}/usr/lib/* ${D}${libdir}/
-    cp -r --preserve=mode,links ${S}/usr/share/* ${D}/usr/share/
+    install -d ${D}${datadir}
+    cp -r --preserve=mode,links ${S}${libdir}/* ${D}${libdir}/
+    cp -r --preserve=mode,links ${S}${datadir}/* ${D}${datadir}/
 }
 
 pkg_preinst_${PN}() {
 #!/bin/sh
 echo "Checking for skin.MySkin.xml in the skinfolder"
-if [ -f /usr/share/enigma2/MetrixHD/skin.MySkin.xml ]; then
-    rm -f /usr/share/enigma2/MetrixHD/skin.MySkin.xml
+if [ -f ${datadir}/enigma2/MetrixHD/skin.MySkin.xml ]; then
+    rm -f ${datadir}/enigma2/MetrixHD/skin.MySkin.xml
     echo "skin.MySkin.xml was found and removed"
 else
     echo "skin.MySkin.xml was not found in the skinfolder"
 fi
 echo "Checking for skin_00a_InfoBar.MySkin.xml in the skinfolder"
-if [ -f /usr/share/enigma2/MetrixHD/skin_00a_InfoBar.MySkin.xml ]; then
-    rm -f /usr/share/enigma2/MetrixHD/skin_00a_InfoBar.MySkin.xml
+if [ -f ${datadir}/enigma2/MetrixHD/skin_00a_InfoBar.MySkin.xml ]; then
+    rm -f ${datadir}/enigma2/MetrixHD/skin_00a_InfoBar.MySkin.xml
     echo "skin_00a_InfoBar.MySkin.xml was found and removed"
 else
     echo "skin_00a_InfoBar.MySkin.xml was not found in the skinfolder"
 fi
 echo "Checking for skin_00b_SecondInfoBar.MySkin.xml in the skinfolder"
-if [ -f /usr/share/enigma2/MetrixHD/skin_00b_SecondInfoBar.MySkin.xml ]; then
-    rm -f /usr/share/enigma2/MetrixHD/skin_00b_SecondInfoBar.MySkin.xml
+if [ -f ${datadir}/enigma2/MetrixHD/skin_00b_SecondInfoBar.MySkin.xml ]; then
+    rm -f ${datadir}/enigma2/MetrixHD/skin_00b_SecondInfoBar.MySkin.xml
     echo "skin_00b_SecondInfoBar.MySkin.xml was found and removed"
 else
     echo "skin_00b_SecondInfoBar.MySkin.xml was not found in the skinfolder"
 fi
 echo "Checking for skin_00c_SecondInfoBarECM.MySkin.xml in the skinfolder"
-if [ -f /usr/share/enigma2/MetrixHD/skin_00c_SecondInfoBarECM.MySkin.xml ]; then
-    rm -f /usr/share/enigma2/MetrixHD/skin_00c_SecondInfoBarECM.MySkin.xml
+if [ -f ${datadir}/enigma2/MetrixHD/skin_00c_SecondInfoBarECM.MySkin.xml ]; then
+    rm -f ${datadir}/enigma2/MetrixHD/skin_00c_SecondInfoBarECM.MySkin.xml
     echo "skin_00c_SecondInfoBarECM.MySkin.xml was found and removed"
 else
     echo "skin_00c_SecondInfoBarECM.MySkin.xml was not found in the skinfolder"
 fi
 echo "Checking for skin_00d_InfoBarLite.MySkin.xml in the skinfolder"
-if [ -f /usr/share/enigma2/MetrixHD/skin_00d_InfoBarLite.MySkin.xml ]; then
-    rm -f /usr/share/enigma2/MetrixHD/skin_00d_InfoBarLite.MySkin.xml
+if [ -f ${datadir}/enigma2/MetrixHD/skin_00d_InfoBarLite.MySkin.xml ]; then
+    rm -f ${datadir}/enigma2/MetrixHD/skin_00d_InfoBarLite.MySkin.xml
     echo "skin_00d_InfoBarLite.MySkin.xml was found and removed"
 else
     echo "skin_00d_InfoBarLite.MySkin.xml was not found in the skinfolder"
 fi
 echo "Checking for skin_00e_ChannelSelection.MySkin.xml in the skinfolder"
-if [ -f /usr/share/enigma2/MetrixHD/skin_00e_ChannelSelection.MySkin.xml ]; then
-    rm -f /usr/share/enigma2/MetrixHD/skin_00e_ChannelSelection.MySkin.xml
+if [ -f ${datadir}/enigma2/MetrixHD/skin_00e_ChannelSelection.MySkin.xml ]; then
+    rm -f ${datadir}/enigma2/MetrixHD/skin_00e_ChannelSelection.MySkin.xml
     echo "skin_00e_ChannelSelection.MySkin.xml was found and removed"
 else
     echo "skin_00e_ChannelSelection.MySkin.xml was not found in the skinfolder"
