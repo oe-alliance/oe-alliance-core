@@ -21,7 +21,7 @@ INHIBIT_PACKAGE_STRIP = "1"
 
 FILES_${PN} += "${sysconfdir}/modules-load.d/_${MACHINE}.conf"
 FILES_${PN} += "/lib/modules/${KV}/extra"
-FILES_${PN} += "${bindir}/komession"
+FILES_${PN} += "/usr/bin/komession"
 FILES_${PN} += "${sysconfdir}/init.d"
 
 do_compile() {
@@ -35,15 +35,15 @@ do_package_qa() {
 
 do_install() {
 	install -d ${D}/lib/modules/${KV}/extra
-	install -d ${D}${bindir}
+	install -d ${D}/usr/bin
 	install -m 0644 ${S}/dvbmodule ${D}/lib/modules/${KV}/extra
-	install -m 0755 ${S}/komession ${D}${bindir}
+	install -m 0755 ${S}/komession ${D}/usr/bin
 	install -d ${D}/${sysconfdir}/modules-load.d
 	for i in ${KOFILES}; do
 		install -m 0644 ${S}/$i.ko ${D}/lib/modules/${KV}/extra
 		echo $i >> ${D}/${sysconfdir}/modules-load.d/_${MACHINE}.conf
 	done
-	install -d ${D}${sysconfdir}/init.d/
+	install -d ${D}/etc/init.d/
 	echo "#!/bin/sh" > ${S}/zload-dinobot
 	echo "komession" >> ${S}/zload-dinobot
 	echo "echo 2097152 > /proc/sys/net/core/rmem_max" >> ${S}/zload-dinobot

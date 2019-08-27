@@ -61,7 +61,7 @@ SAMBAMMAP_libc-glibc = "yes"
 
 # The file system settings --foodir=dirfoo and overridden unconditionally
 # in the samba config by --with-foodir=dirfoo - even if the --with is not
-# specified!  Fix that here.  Set the privatedir to ${sysconfdir}/samba/private.
+# specified!  Fix that here.  Set the privatedir to /etc/samba/private.
 EXTRA_OECONF="--exec-prefix=/usr \
               --with-readline=${STAGING_LIBDIR}/.. \
               --with-libiconv=${STAGING_LIBDIR}/.. \

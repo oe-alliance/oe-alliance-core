@@ -20,11 +20,11 @@ SRC_URI = "http://addons.hdfreaks.cc/feeds/*git/enigma2-plugins-web_package_mips
 
 S = "${WORKDIR}"
 
-FILES_${PN} = "${libdir} ${sysconfdir}/*"
+FILES_${PN} = "${libdir} /etc/*"
 
 do_install() {
 	install -d ${D}${libdir}
-	install -d ${D}${sysconfdir}
-	cp -rp ${S}${libdir}/* ${D}${libdir}/
-	cp -rp ${S}${sysconfdir}/* ${S}${sysconfdir}/
+	install -d ${D}/etc
+	cp -rp ${S}/usr/lib/* ${D}${libdir}/
+	cp -rp ${S}/etc/* ${S}/etc/
 }

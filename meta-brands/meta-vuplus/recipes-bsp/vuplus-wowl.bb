@@ -12,10 +12,10 @@ SRC_URI = "\
 "
 
 do_install() {
-    install -d ${D}${sysconfdir}/init.d \
-    ${D}${bindir} \
+    install -d ${D}/etc/init.d \
+    ${D}/usr/bin \
     ${D}${sysconfdir}/rc0.d 
-    install -m 0755 ${WORKDIR}/wowl.sh ${D}${sysconfdir}/init.d/wowl.sh
+    install -m 0755 ${WORKDIR}/wowl.sh ${D}/etc/init.d/wowl.sh
     ln -sf   ../init.d/wowl.sh ${D}${sysconfdir}/rc0.d/K32wowl.sh
 }
 

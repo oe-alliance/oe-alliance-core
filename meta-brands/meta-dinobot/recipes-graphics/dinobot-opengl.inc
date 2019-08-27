@@ -57,7 +57,7 @@ do_install() {
     ln -s /lib/libm.so-2.27.so  ${D}/lib/libm.so
 }
 
-FILES_${PN} = "${libdir}/* /lib"
+FILES_${PN} = "/usr/lib/* /lib"
 FILES_${PN}-dev = "/usr/include/*"
 
 INSANE_SKIP_${PN} += "already-stripped dev-so"

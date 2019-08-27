@@ -12,7 +12,7 @@ SRC_URI = ""
 do_compile_append () {
 	cat > ethwol.sh << EOF
 #! /bin/sh
-PATH=/sbin:/bin:${sbindir}:${bindir}
+PATH=/sbin:/bin:/usr/sbin:/usr/bin
 #activate WakeOnLAN
 grep -q 'on' /proc/stb/power/wol
 if [ $? -eq 0 ]
@@ -33,6 +33,6 @@ INITSCRIPT_NAME = "ethwol"
 INITSCRIPT_PARAMS = "stop 32 0 ."
 
 do_install() {
-    install -d ${D}${sysconfdir}/init.d
-    install -m 0755 ${WORKDIR}/ethwol.sh ${D}${sysconfdir}/init.d/ethwol
+    install -d ${D}/etc/init.d
+    install -m 0755 ${WORKDIR}/ethwol.sh ${D}/etc/init.d/ethwol
 }

@@ -13,7 +13,7 @@ VER="0.0.6"
 
 SRC_URI="git://github.com/stein17/Skins-for-openOPD.git;protocol=git"
 
-FILES_${PN} = "${libdir} ${datadir}"
+FILES_${PN} = "${libdir} /usr/share"
 
 S = "${WORKDIR}/git/Multibox-FHD-Skin-4OPD"
 
@@ -23,17 +23,17 @@ python -O -m compileall ${S}
 
 do_install() {
     install -d ${D}${libdir}
-    install -d ${D}${datadir}
-    cp -rp ${S}${libdir}/* ${D}${libdir}/
-    cp -rp ${S}${datadir}/* ${D}${datadir}/
-    chmod -R a+rX ${D}${datadir}/enigma2/
+    install -d ${D}/usr/share
+    cp -rp ${S}/usr/lib/* ${D}${libdir}/
+    cp -rp ${S}/usr/share/* ${D}/usr/share/
+    chmod -R a+rX ${D}/usr/share/enigma2/
 }
 
 pkg_postinst_${PN} () {
 #!/bin/sh
 if [ -f /Multibox/skin.xml ]; then
-  rm -rf ${datadir}/enigma2/Multibox/
-  mv /tmp/Multibox ${datadir}/enigma2/
+  rm -rf /usr/share/enigma2/Multibox/
+  mv /tmp/Multibox /usr/share/enigma2/
 fi
 echo "                                                          "
 echo " ..Multibox Skin Full HD by stein17 successful installed. "
@@ -43,9 +43,9 @@ exit 0
 
 pkg_postrm_${PN} () {
 #!/bin/sh
-rm -rf ${datadir}/enigma2/Multibox
-rm -rf ${libdir}/enigma2/python/Components/Converter/AMB*
-rm -rf ${libdir}/enigma2/python/Components/Renderer/AMB*
+rm -rf /usr/share/enigma2/Multibox
+rm -rf /usr/lib/enigma2/python/Components/Converter/AMB*
+rm -rf /usr/lib/enigma2/python/Components/Renderer/AMB*
 echo "                                                                 "
 echo "Multibox FHD OPD skin was successfully removed from your receiver"
 echo "                                                                 "
@@ -63,11 +63,11 @@ echo "                                                                          
 echo "                                                                            "
 echo "                                                                            "
 echo "Check if a previous version of the Multibox FHD OPD skin is installed"
-if [ -f ${datadir}/enigma2/Multibox/skin.xml ]; then
-    cp -R ${datadir}/enigma2/Multibox/ /tmp
-    rm -rf ${datadir}/enigma2/Multibox
-    rm -rf ${libdir}/enigma2/python/Components/Converter/AMB*
-    rm -rf ${libdir}/enigma2/python/Components/Renderer/AMB*
+if [ -f /usr/share/enigma2/Multibox/skin.xml ]; then
+    cp -R /usr/share/enigma2/Multibox/ /tmp
+    rm -rf /usr/share/enigma2/Multibox
+    rm -rf /usr/lib/enigma2/python/Components/Converter/AMB*
+    rm -rf /usr/lib/enigma2/python/Components/Renderer/AMB*
     echo "                                                   "
     echo "Previous Multibox FHD-OPD skin installation        "
     echo "    was found and removed successfully!            "

@@ -40,13 +40,13 @@ do_compile() {
 do_install() {
 	cd ${S}
 	gzip flip.1
-	install -d ${D}${bindir}
-	install -m 755 ${S}/flip ${D}${bindir}
-	cd ${D}${bindir} && { ln -s flip toix; ln -s flip toms; }
+	install -d ${D}/usr/bin
+	install -m 755 ${S}/flip ${D}/usr/bin
+	cd ${D}/usr/bin && { ln -s flip toix; ln -s flip toms; }
 
-	install -d ${D}${datadir}/man/man1
-	install -m 644 ${S}/flip.1.gz ${D}${datadir}/man/man1
-	cd ${D}${datadir}/man/man1 && { ln -s flip.1.gz toix.1.gz; ln -s flip.1.gz toms.1.gz; }
+	install -d ${D}/usr/share/man/man1
+	install -m 644 ${S}/flip.1.gz ${D}/usr/share/man/man1
+	cd ${D}/usr/share/man/man1 && { ln -s flip.1.gz toix.1.gz; ln -s flip.1.gz toms.1.gz; }
 }
 
-#FILES_${PN}-doc = "${datadir}"
+#FILES_${PN}-doc = "/usr/share"

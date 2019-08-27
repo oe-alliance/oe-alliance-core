@@ -18,8 +18,8 @@ EXTRA_OECMAKE += "-DVUPLUS=1"
 inherit cmake
 
 do_install() {
-	install -d ${D}${bindir}
-	install -m 0755 ${WORKDIR}/build/Simple_VertexShader/Simple_VertexShader ${D}${bindir}/cube
+	install -d ${D}/usr/bin
+	install -m 0755 ${WORKDIR}/build/Simple_VertexShader/Simple_VertexShader ${D}/usr/bin/cube
 }
 
 do_package_qa() {

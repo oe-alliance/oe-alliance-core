@@ -14,8 +14,8 @@ DEPENDS = "chromium-browser"
 RDEPENDS_${PN} = "chromium-browser"
 
 do_install_append() {
-    install -d ${D}${libdir}/enigma2/python/Plugins/Extensions/Chromium
-    cp -aRf ${WORKDIR}/e2plugin/* ${D}${libdir}/enigma2/python/Plugins/Extensions/Chromium/
+    install -d ${D}/usr/lib/enigma2/python/Plugins/Extensions/Chromium
+    cp -aRf ${WORKDIR}/e2plugin/* ${D}/usr/lib/enigma2/python/Plugins/Extensions/Chromium/
 }
 
 do_package_qa() {

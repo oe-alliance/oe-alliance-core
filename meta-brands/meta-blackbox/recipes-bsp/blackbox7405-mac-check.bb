@@ -17,10 +17,10 @@ INITSCRIPT_PARAMS = "defaults"
 
 
 do_install() {
-	install -d ${D}${bindir}
-	install -m 0755 ${WORKDIR}/blackbox7405_mac_check ${D}${bindir}/blackbox7405_mac_check
-	install -d ${D}${sysconfdir}/init.d
-	install -m 0755 ${WORKDIR}/${PN}.sh ${D}${sysconfdir}/init.d/${PN}
+	install -d ${D}/usr/bin
+	install -m 0755 ${WORKDIR}/blackbox7405_mac_check ${D}/usr/bin/blackbox7405_mac_check
+	install -d ${D}/etc/init.d
+	install -m 0755 ${WORKDIR}/${PN}.sh ${D}/etc/init.d/${PN}
 }
 	
 PACKAGE_ARCH = "${MACHINE_ARCH}"

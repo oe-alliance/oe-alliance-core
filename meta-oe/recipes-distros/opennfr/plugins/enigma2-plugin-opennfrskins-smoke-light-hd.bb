@@ -16,13 +16,13 @@ SRC_URI="git://github.com/carlo0815/Smoke-Light-HD.git"
 
 S = "${WORKDIR}/git"
 
-FILES_${PN} = "${libdir} ${datadir}"
+FILES_${PN} = "${libdir} /usr/share"
 
 do_install() {
     install -d ${D}${libdir}
-    install -d ${D}${datadir}
-    cp -rp ${S}${libdir}/* ${D}${libdir}/
-    cp -rp ${S}${datadir}/* ${D}${datadir}/
+    install -d ${D}/usr/share
+    cp -rp ${S}/usr/lib/* ${D}${libdir}/
+    cp -rp ${S}/usr/share/* ${D}/usr/share/
 }
 
 do_populate_sysroot[noexec] = "1"

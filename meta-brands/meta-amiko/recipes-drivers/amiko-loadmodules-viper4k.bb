@@ -20,6 +20,6 @@ do_compile() {
 }
 
 do_install() {
-    install -d ${D}${sysconfdir}/init.d/
-    install -m 0755 ${WORKDIR}/amiko-loadmodules-viper4k.sh ${D}${sysconfdir}/init.d/amiko-loadmodules
+    install -d ${D}/etc/init.d/
+    install -m 0755 ${WORKDIR}/amiko-loadmodules-viper4k.sh ${D}/etc/init.d/amiko-loadmodules
 }

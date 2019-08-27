@@ -26,8 +26,8 @@ FILES_${PN} = "/"
 
 do_install() {
 
-	install -d ${D}${bindir}
-	install -m 0755 ${S2}/blackholesocker ${D}${bindir}/blackholesocker
-	install -d ${D}${sysconfdir}/init.d
-	install -m 0755 ${S}/${PN}.sh ${D}${sysconfdir}/init.d/${PN}
+	install -d ${D}/usr/bin
+	install -m 0755 ${S2}/blackholesocker ${D}/usr/bin/blackholesocker
+	install -d ${D}/etc/init.d
+	install -m 0755 ${S}/${PN}.sh ${D}/etc/init.d/${PN}
 }

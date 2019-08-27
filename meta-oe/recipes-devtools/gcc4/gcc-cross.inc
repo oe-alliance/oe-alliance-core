@@ -55,7 +55,7 @@ do_compile () {
 
 	oe_runmake all-host configure-target-libgcc
 	# now generate script to drive testing
-	echo "#!${bindir}/env sh" >${B}/${TARGET_PREFIX}testgcc
+	echo "#!/usr/bin/env sh" >${B}/${TARGET_PREFIX}testgcc
 	set >> ${B}/${TARGET_PREFIX}testgcc
 	# prune out the unneeded vars
 	sed -i -e "/^BASH/d" ${B}/${TARGET_PREFIX}testgcc

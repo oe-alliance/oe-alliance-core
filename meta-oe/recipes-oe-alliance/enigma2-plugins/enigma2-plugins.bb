@@ -41,7 +41,7 @@ RREPLACES_enigma2-plugin-skincomponents-eventlist = "enigma2-plugin-components-e
 RCONFLICTS_enigma2-plugin-skincomponents-eventlist = "enigma2-plugin-components-eventlist"
 
 CONFFILES_${PN} += "${sysconfdir}/enigma2/movietags"
-FILES_${PN} += " ${datadir}/enigma2 ${datadir}/fonts "
+FILES_${PN} += " /usr/share/enigma2 /usr/share/fonts "
 FILES_${PN}-meta = "${datadir}/meta"
 FILES_enigma2-plugin-extensions-bmediacenter += " ${libdir}/enigma2/python/Components/Renderer/LizWatches.pyo ${libdir}/enigma2/python/Components/Converter/LizExtraNumText.pyo"
 FILES_enigma2-plugin-extensions-bmediacenter-src += " ${libdir}/enigma2/python/Components/Renderer/LizWatches.py ${libdir}/enigma2/python/Components/Converter/LizExtraNumText.py"
@@ -134,7 +134,7 @@ python populate_packages_prepend() {
 
 pkg_preinst_enigma2-plugin-extensions-webinterface() {
 #!/bin/sh
-rm -rf ${libdir}/enigma2/python/Plugins/Extensions/WebInterface
+rm -rf /usr/lib/enigma2/python/Plugins/Extensions/WebInterface
 exit 0
 }
 

@@ -36,7 +36,7 @@ inherit autotools pkgconfig
 
 S = "${WORKDIR}/git/tuxtxt"
 
-EXTRA_OECONF = "--with-boxtype=generic --with-configdir=${sysconfdir} \
+EXTRA_OECONF = "--with-boxtype=generic --with-configdir=/etc \
     ${@bb.utils.contains("MACHINE_FEATURES", "textlcd", "--with-textlcd" , "", d)} \
      "
 
@@ -64,15 +64,15 @@ do_configure_prepend_openvix () {
 
 do_install_append() {
     if ${@bb.utils.contains('DISTRO_FEATURES', 'tuxtxtfhd', 'true', 'false', d)}; then
-        install -d ${D}${datadir}/fonts
-        rm -f ${D}${datadir}/fonts/tuxtxt.ttf
-        rm -f ${D}${datadir}/fonts/tuxtxt_nonbold.ttf
-        cp -f ${WORKDIR}/tuxtxt.ttf ${D}${datadir}/fonts/tuxtxt.ttf
-        cp -f ${WORKDIR}/tuxtxt_nonbold.ttf ${D}${datadir}/fonts/tuxtxt_nonbold.ttf
+        install -d ${D}/usr/share/fonts
+        rm -f ${D}/usr/share/fonts/tuxtxt.ttf
+        rm -f ${D}/usr/share/fonts/tuxtxt_nonbold.ttf
+        cp -f ${WORKDIR}/tuxtxt.ttf ${D}/usr/share/fonts/tuxtxt.ttf
+        cp -f ${WORKDIR}/tuxtxt_nonbold.ttf ${D}/usr/share/fonts/tuxtxt_nonbold.ttf
     fi
 }
 
 PACKAGES = "${PN}-src ${PN}-dbg ${PN}-dev ${PN}"
 FILES_${PN}-src = "/usr/src ${libdir}/enigma2/python/Plugins/Extensions/Tuxtxt/*.py"
-FILES_${PN} = "${libdir}/libtuxtxt32bpp.so.* ${datadir}/fonts ${libdir}/enigma2/python/Plugins/Extensions/Tuxtxt/*.pyo ${sysconfdir}/tuxtxt"
-CONFFILES_${PN} = "${sysconfdir}/tuxtxt/tuxtxt2.conf"
+FILES_${PN} = "${libdir}/libtuxtxt32bpp.so.* /usr/share/fonts ${libdir}/enigma2/python/Plugins/Extensions/Tuxtxt/*.pyo /etc/tuxtxt"
+CONFFILES_${PN} = "/etc/tuxtxt/tuxtxt2.conf"

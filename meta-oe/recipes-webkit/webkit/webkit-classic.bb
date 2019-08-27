@@ -70,22 +70,22 @@ do_configure_append() {
 	for makefile in $(find ${B} -name "GNUmakefile") ; do
 		sed -i s:-I/usr/include::g $makefile
 	done
-	# remove hardcoded path to ${bindir}/glib-mkenums
+	# remove hardcoded path to /usr/bin/glib-mkenums
 	for makefile in $(find ${B} -name "GNUmakefile") ; do
-		sed -i s:${bindir}/glib-mkenums:glib-mkenums:g $makefile
+		sed -i s:/usr/bin/glib-mkenums:glib-mkenums:g $makefile
 	done
 }
 
 do_install_append() {
         rmdir ${D}${libexecdir}
-        install -d ${D}${bindir}
-        install -m 0755 ${WORKDIR}/build/Programs/GtkLauncher ${D}${bindir}/browser
+        install -d ${D}/usr/bin
+        install -m 0755 ${WORKDIR}/build/Programs/GtkLauncher ${D}/usr/bin/browser
 }
 
 PACKAGES =+ "${PN}-webinspector ${PN}-browser bjavascriptcore"
 FILES_libjavascriptcore = "${libdir}/libjavascriptcoregtk-1.0.so.*"
 FILES_${PN}-webinspector = "${datadir}/webkitgtk-*/webinspector/"
-FILES_${PN}-browser = "${bindir}/browser"
+FILES_${PN}-browser = "/usr/bin/browser"
 FILES_${PN} += "${datadir}/webkitgtk-*/resources/error.html \
                 ${datadir}/webkitgtk-*/images \
                 ${datadir}/glib-2.0/schemas"

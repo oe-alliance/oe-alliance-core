@@ -18,7 +18,7 @@ S = "${WORKDIR}/git"
 
 PACKAGES =+ "${PN}-src"
 PACKAGES =+ "${PN}-po"
-FILES_${PN} = "${sysconfdir} ${libdir}"
+FILES_${PN} = "/etc ${libdir}"
 FILES_${PN}-src = "${libdir}/enigma2/python/Plugins/Extensions/MovieArchiver/*.py"
 FILES_${PN}-po = "${libdir}/enigma2/python/Plugins/Extensions/MovieArchiver/locale/*/*/*.po"
 

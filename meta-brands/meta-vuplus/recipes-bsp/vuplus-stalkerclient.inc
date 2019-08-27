@@ -10,8 +10,8 @@ PR = "${SRCDATE}"
 SRC_URI = "http://source.mynonpublic.com/vuplus/stalkerclient-plugin-${PV}-${MACHINE}-${PR}.tar.gz"
 
 do_install() {
-	install -d ${D}${libdir}/enigma2/python/Plugins/Extensions/StalkerClient
-	cp -rp ${WORKDIR}/plugin-extensions-stalkerclient/* ${D}${libdir}/enigma2/python/Plugins/Extensions/StalkerClient/
+	install -d ${D}/usr/lib/enigma2/python/Plugins/Extensions/StalkerClient
+	cp -rp ${WORKDIR}/plugin-extensions-stalkerclient/* ${D}/usr/lib/enigma2/python/Plugins/Extensions/StalkerClient/
 }
 
 do_package_qa() {

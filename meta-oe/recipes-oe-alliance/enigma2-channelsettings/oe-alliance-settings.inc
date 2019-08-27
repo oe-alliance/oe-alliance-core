@@ -13,11 +13,11 @@ PR = "r6"
 SRC_URI = "git://github.com/oe-alliance/oe-alliance-settings.git;protocol=git"
 S = "${WORKDIR}/git"
 
-FILES_${PN} = "${sysconfdir}/enigma2/"
+FILES_${PN} = "/etc/enigma2/"
 
 do_install () {
-    install -d ${D}${sysconfdir}/enigma2
-    cp -r ${S}/${SETTINGS_FILENAME}/* ${D}${sysconfdir}/enigma2
+    install -d ${D}/etc/enigma2
+    cp -r ${S}/${SETTINGS_FILENAME}/* ${D}/etc/enigma2
 }
 
 do_prepare_recipe_sysroot[noexec] = "1"

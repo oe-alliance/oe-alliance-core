@@ -24,19 +24,19 @@ python -O -m compileall ${S}
 }
 
 do_install() {
-    install -d ${D}${datadir}/enigma2
+    install -d ${D}/usr/share/enigma2
     cp -rp ${S}/usr ${D}/
-    chmod -R a+rX ${D}${datadir}/enigma2/
+    chmod -R a+rX ${D}/usr/share/enigma2/
 }
 
 pkg_postinst_${PN} () {
 #!/bin/sh
 if [ -d /tmp/user ]; then
-    cp -r /tmp/user/* ${libdir}/enigma2/python/Plugins/Extensions/SevenHD/user
+    cp -r /tmp/user/* /usr/lib/enigma2/python/Plugins/Extensions/SevenHD/user
 fi
 
 if [ -f /tmp/skin-user.xml ]; then
-    cp /tmp/skin-user.xml ${libdir}/enigma2/python/Plugins/Extensions/SevenHD/data
+    cp /tmp/skin-user.xml /usr/lib/enigma2/python/Plugins/Extensions/SevenHD/data
 fi
 
 echo "                                                          "
@@ -47,10 +47,10 @@ exit 0
 
 pkg_postrm_${PN} () {
 #!/bin/sh
-rm -rf ${datadir}/enigma2/SevenHD
-rm -rf ${libdir}/enigma2/python/Plugins/Extensions/SevenHD
-rm -rf ${libdir}/enigma2/python/Components/Converter/SevenHD*
-rm -rf ${libdir}/enigma2/python/Components/Renderer/SevenHD*
+rm -rf /usr/share/enigma2/SevenHD
+rm -rf /usr/lib/enigma2/python/Plugins/Extensions/SevenHD
+rm -rf /usr/lib/enigma2/python/Components/Converter/SevenHD*
+rm -rf /usr/lib/enigma2/python/Components/Renderer/SevenHD*
 echo " "
 echo " ...Skin successful removed. "
 echo " "
@@ -60,19 +60,19 @@ exit 0
 pkg_preinst_${PN} () {
 #!/bin/sh
 echo "Checking for previous installations..."
-if [ -d ${libdir}/enigma2/python/Plugins/Extensions/SevenHD/user ]; then
+if [ -d /usr/lib/enigma2/python/Plugins/Extensions/SevenHD/user ]; then
     mkdir -p /tmp/user 
-    cp -r ${libdir}/enigma2/python/Plugins/Extensions/SevenHD/user/* /tmp/user
+    cp -r /usr/lib/enigma2/python/Plugins/Extensions/SevenHD/user/* /tmp/user
 fi
 
-if [ -f ${libdir}/enigma2/python/Plugins/Extensions/SevenHD/data/skin-user.xml ]; then
-    cp ${libdir}/enigma2/python/Plugins/Extensions/SevenHD/data/skin-user.xml /tmp
+if [ -f /usr/lib/enigma2/python/Plugins/Extensions/SevenHD/data/skin-user.xml ]; then
+    cp /usr/lib/enigma2/python/Plugins/Extensions/SevenHD/data/skin-user.xml /tmp
 fi
 
-if [ -f ${libdir}/enigma2/python/Plugins/Extensions/SevenHD/plugin.py ]; then
-    rm -rf ${libdir}/enigma2/python/Plugins/Extensions/SevenHD
-    rm -rf ${libdir}/enigma2/python/Components/Converter/SevenHD*
-    rm -rf ${libdir}/enigma2/python/Components/Renderer/SevenHD*
+if [ -f /usr/lib/enigma2/python/Plugins/Extensions/SevenHD/plugin.py ]; then
+    rm -rf /usr/lib/enigma2/python/Plugins/Extensions/SevenHD
+    rm -rf /usr/lib/enigma2/python/Components/Converter/SevenHD*
+    rm -rf /usr/lib/enigma2/python/Components/Renderer/SevenHD*
     echo "                                                           "
     echo "           SevenHD configuration plugin                    "
     echo "              was found and removed!                       "

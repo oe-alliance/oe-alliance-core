@@ -27,12 +27,12 @@ RRECOMMENDS_${PN}-atalkd = "kernel-module-appletalk"
 SSTATE_DUPWHITELIST += "${STAGING_INCDIR}/netatalk/at.h"
 
 FILES_${PN}-atalkd += "${sysconfdir}/netatalk/atalkd.conf \
-                    ${sbindir}/atalkd"
-FILES_${PN}-pap +=    "${bindir}/pap \
+                    /usr/sbin/atalkd"
+FILES_${PN}-pap +=    "/usr/bin/pap \
                     ${sysconfdir}/netatalk/papd.conf \
-                    ${sbindir}/papd \
-                    ${bindir}/papstatus"
-FILES_${PN}-timelord += "${sbindir}/timelord"
+                    /usr/sbin/papd \
+                    /usr/bin/papstatus"
+FILES_${PN}-timelord += "/usr/sbin/timelord"
 FILES_${PN}-dbg += "${sysconfdir}/netatalk/uams/.debug"
 FILES_${PN}-staticdev += "${libdir}/*.a"
 
@@ -54,10 +54,10 @@ EXTRA_OECONF += "ac_cv_path_KRB5_CONFIG=no \
 LDFLAGS += "-lpthread -L${STAGING_LIBDIR}"
 
 do_install_append() {
-    perl -i -pe 's:#!.+/perl$:#!${bindir}/perl:g' ${D}${bindir}/apple_dump
-    perl -i -pe 's:#!.+/perl$:#!${bindir}/perl:g' ${D}${bindir}/asip-status.pl
-    perl -i -pe 's:#!.+/perl$:#!${bindir}/perl:g' ${D}${bindir}/cnid2_create
-    perl -i -pe 's:#!.+/perl$:#!${bindir}/perl:g' ${D}${bindir}/macusers
+    perl -i -pe 's:#!.+/perl$:#!/usr/bin/perl:g' ${D}${bindir}/apple_dump
+    perl -i -pe 's:#!.+/perl$:#!/usr/bin/perl:g' ${D}${bindir}/asip-status.pl
+    perl -i -pe 's:#!.+/perl$:#!/usr/bin/perl:g' ${D}${bindir}/cnid2_create
+    perl -i -pe 's:#!.+/perl$:#!/usr/bin/perl:g' ${D}${bindir}/macusers
     install -D -m 0755 ${WORKDIR}/init ${D}${sysconfdir}/init.d/atalk
     install -D -m 0644 ${WORKDIR}/netatalk.conf ${D}${sysconfdir}/netatalk/netatalk.conf
     install -D -m 0644 ${WORKDIR}/AppleVolumes.default ${D}${sysconfdir}/netatalk/AppleVolumes.default

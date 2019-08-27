@@ -16,10 +16,10 @@ PR = "r0"
 
 RDEPENDS_${PN} = "${@bb.utils.contains("GST_VERSION", "1.0", "gstreamer1.0-plugins-ugly-asf gstreamer1.0-plugins-bad-mms gstreamer1.0-plugins-good-rtsp gstreamer1.0-plugins-good-flv gstreamer1.0-plugins-bad-rtmp gst-plugin-libxt", "gst-plugins-ugly-asf gst-plugins-bad-mms gst-plugins-good-rtsp gst-plugins-good-flv gst-plugins-bad-rtmp gst-plugin-libxt", d)}"
 
-FILES_${PN} = "${libdir}/enigma2/python/Plugins/Extensions/EtLiveStream"
+FILES_${PN} = "/usr/lib/enigma2/python/Plugins/Extensions/EtLiveStream"
 
 do_install_append() {
-    install -d ${D}${libdir}/enigma2/python/Plugins/Extensions/EtLiveStream
-    install -m 0644 ${S}/__init__.py ${D}${libdir}/enigma2/python/Plugins/Extensions/EtLiveStream
-    install -m 0644 ${S}/plugin.py ${D}${libdir}/enigma2/python/Plugins/Extensions/EtLiveStream
+    install -d ${D}/usr/lib/enigma2/python/Plugins/Extensions/EtLiveStream
+    install -m 0644 ${S}/__init__.py ${D}/usr/lib/enigma2/python/Plugins/Extensions/EtLiveStream
+    install -m 0644 ${S}/plugin.py ${D}/usr/lib/enigma2/python/Plugins/Extensions/EtLiveStream
 }

@@ -14,7 +14,7 @@ RDEPENDS_${PN} = "enigma2-plugin-systemplugins-weathercomponenthandler, enigma2-
 
 SRC_URI="git://github.com/openatv/iflat.git;protocol=git"
 
-FILES_${PN} = "${libdir} ${datadir}"
+FILES_${PN} = "${libdir} /usr/share"
 
 S = "${WORKDIR}/git"
 
@@ -24,10 +24,10 @@ python -O -m compileall ${S}
 
 do_install() {
     install -d ${D}${libdir}
-    install -d ${D}${datadir}
-    cp -rp ${S}${libdir}/* ${D}${libdir}/
-    cp -rp ${S}${datadir}/* ${D}${datadir}/
-    chmod -R a+rX ${D}${datadir}/enigma2/
+    install -d ${D}/usr/share
+    cp -rp ${S}/usr/lib/* ${D}${libdir}/
+    cp -rp ${S}/usr/share/* ${D}/usr/share/
+    chmod -R a+rX ${D}/usr/share/enigma2/
 }
 
 pkg_postinst_${PN} () {
@@ -39,9 +39,9 @@ echo "*                    by Nathanael                      *"
 echo "*                  support by gordon55                 *"
 echo "********************************************************"
 
-iFlatDir="${datadir}/enigma2/iFlatFHD"
+iFlatDir="/usr/share/enigma2/iFlatFHD"
 widgetSP="skin_0ld-widgets.xml"                                                    # file name of the skinpart
-MPDir="${libdir}/enigma2/python/Plugins/Extensions/MediaPortal"						
+MPDir="/usr/lib/enigma2/python/Plugins/Extensions/MediaPortal"						
 
 if [ ! -d "$iFlatDir/mySkin_off" ]
 	then
@@ -87,7 +87,7 @@ exit 0
 
 pkg_postrm_${PN} () {
 #!/bin/sh
-rm -rf ${datadir}/enigma2/iFlatFHD
+rm -rf /usr/share/enigma2/iFlatFHD
 
 echo "********************************************************"
 echo "*                      iFlatFHD                        *"

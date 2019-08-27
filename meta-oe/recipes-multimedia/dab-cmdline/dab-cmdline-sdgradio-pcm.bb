@@ -19,8 +19,8 @@ SRC_URI = "git://github.com/satdreamgr/dab-cmdline.git;branch=sdgradio"
 NEON_cube =" "
 NEON = "-DNEON_AVAILABLE=ON"
 
-EXTRA_OECMAKE ?= "-DRTLSDR=ON -DCMAKE_INSTALL_PREFIX=${bindir}"
-EXTRA_OECMAKE_arm = "-DRTLSDR=ON ${NEON} -DCMAKE_INSTALL_PREFIX=${bindir}"
+EXTRA_OECMAKE ?= "-DRTLSDR=ON -DCMAKE_INSTALL_PREFIX=/usr/bin"
+EXTRA_OECMAKE_arm = "-DRTLSDR=ON ${NEON} -DCMAKE_INSTALL_PREFIX=/usr/bin"
 
 S = "${WORKDIR}/git/sdgradio"
 
@@ -31,5 +31,5 @@ do_configure_prepend() {
 }
 
 do_install_append() {
-	mv ${D}${bindir}/dab-rtlsdr-sdgradio ${D}${bindir}/dab-rtlsdr-sdgradio-pcm
+	mv ${D}/usr/bin/dab-rtlsdr-sdgradio ${D}/usr/bin/dab-rtlsdr-sdgradio-pcm
 }

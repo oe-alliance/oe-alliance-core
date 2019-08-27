@@ -32,20 +32,20 @@ SRC_URI = "file://bootlogo.mvi file://backdrop.mvi file://radio.mvi file://bootl
 
 SRC_URI_append_vuduo2 = "file://lcdbootlogo.png file://bootlogo.py"
 
-FILES_${PN} = "/boot ${datadir} ${sysconfdir}/init.d"
+FILES_${PN} = "/boot /usr/share /etc/init.d"
 
 do_install() {
-    install -d ${D}${datadir}
-    install -m 0644 bootlogo.mvi ${D}${datadir}/bootlogo.mvi
-    install -m 0644 backdrop.mvi ${D}${datadir}/backdrop.mvi
-    install -d ${D}${datadir}/enigma2
-    install -m 0644 radio.mvi ${D}${datadir}/enigma2/radio.mvi
+    install -d ${D}/usr/share
+    install -m 0644 bootlogo.mvi ${D}/usr/share/bootlogo.mvi
+    install -m 0644 backdrop.mvi ${D}/usr/share/backdrop.mvi
+    install -d ${D}/usr/share/enigma2
+    install -m 0644 radio.mvi ${D}/usr/share/enigma2/radio.mvi
     install -d ${D}/${sysconfdir}/init.d
     install -m 0755 bootlogo.sh ${D}/${sysconfdir}/init.d/bootlogo
 }
 
 do_install_append_vuduo2() {
-    install -m 0644 lcdbootlogo.png ${D}${datadir}/lcdbootlogo.png
+    install -m 0644 lcdbootlogo.png ${D}/usr/share/lcdbootlogo.png
     install -m 0644 bootlogo.py ${D}/${sysconfdir}/init.d/bootlogo.py
 }
 

@@ -25,25 +25,25 @@ SRC_URI = " \
     file://gigablue-hubfwupdatercli.zip \
 "
 
-FILES_${PN} = "${bindir}/hubFwUpdaterCLI ${sysconfdir}/init.d"
+FILES_${PN} = "/usr/bin/hubFwUpdaterCLI /etc/init.d"
 
 INSANE_SKIP_${PN} = "already-stripped"
 
 do_install() {
-    install -d ${D}${bindir}/hubFwUpdaterCLI
+    install -d ${D}/usr/bin/hubFwUpdaterCLI
     install -d ${D}/${sysconfdir}/init.d
     install -m 0755 ${S}/hubFwUpdaterCLI.sh ${D}/${sysconfdir}/init.d/hubFwUpdaterCLI
-    install -m 0755 ${S}/hubFwUpdaterCLI ${D}${bindir}/hubFwUpdaterCLI/hubFwUpdaterCLI
-    install -m 0755 ${S}/GLHubIsp.ini ${D}${bindir}/hubFwUpdaterCLI/GLHubIsp.ini
-    install -m 0755 ${S}/FW9303.rom ${D}${bindir}/hubFwUpdaterCLI/FW9303.rom
+    install -m 0755 ${S}/hubFwUpdaterCLI ${D}/usr/bin/hubFwUpdaterCLI/hubFwUpdaterCLI
+    install -m 0755 ${S}/GLHubIsp.ini ${D}/usr/bin/hubFwUpdaterCLI/GLHubIsp.ini
+    install -m 0755 ${S}/FW9303.rom ${D}/usr/bin/hubFwUpdaterCLI/FW9303.rom
 }
 
 pkg_postinst_${PN}_append() {
     if test -z "$D"
     then
         # force update without requiring reboot
-        ${sysconfdir}/init.d/hubFwUpdaterCLI version
-        ${sysconfdir}/init.d/hubFwUpdaterCLI isp
+        /etc/init.d/hubFwUpdaterCLI version
+        /etc/init.d/hubFwUpdaterCLI isp
     fi
     true
 }

@@ -48,8 +48,8 @@ do_install_append() {
     install -d ${D}${sysconfdir}/init.d
     install ${WORKDIR}/lircd.init ${D}${sysconfdir}/init.d/lircd
     rm -rf ${D}/var
-    rm -rf ${D}${bindir}/
-    rm -f ${D}${sbindir}/lircmd
+    rm -rf ${D}/usr/bin/
+    rm -f ${D}/usr/sbin/lircmd
     if [ -e ${WORKDIR}/lircd_${MACHINEBUILD}.conf ]; then
        install -m 0644 ${WORKDIR}/lircd_${MACHINEBUILD}.conf ${D}${sysconfdir}/lircd.conf
     elif [ "${BRAND_OEM}" = "fulan" ]; then

@@ -33,25 +33,25 @@ python populate_packages_prepend () {
 }
 
 do_install() {
-    install -d  ${D}${libdir}/enigma2/python/Plugins/Extensions/AzIPTV
+    install -d  ${D}/usr/lib/enigma2/python/Plugins/Extensions/AzIPTV
     
     install -m 0644 ${S}/*.pyo \
-    ${D}${libdir}/enigma2/python/Plugins/Extensions/AzIPTV
+    ${D}/usr/lib/enigma2/python/Plugins/Extensions/AzIPTV
 
     install -m 0755 ${S}/config \
-    ${D}${libdir}/enigma2/python/Plugins/Extensions/AzIPTV
+    ${D}/usr/lib/enigma2/python/Plugins/Extensions/AzIPTV
 
-        install -d ${D}${libdir}/enigma2/python/Plugins/Extensions/AzIPTV/Picons/
-        install -m 0644 ${S}/Picons/*.png ${D}${libdir}/enigma2/python/Plugins/Extensions/AzIPTV/Picons/
+        install -d ${D}/usr/lib/enigma2/python/Plugins/Extensions/AzIPTV/Picons/
+        install -m 0644 ${S}/Picons/*.png ${D}/usr/lib/enigma2/python/Plugins/Extensions/AzIPTV/Picons/
 
-        install -d ${D}${libdir}/enigma2/python/Plugins/Extensions/AzIPTV/Ico/
-        install -m 0644 ${S}/Ico/*.png ${D}${libdir}/enigma2/python/Plugins/Extensions/AzIPTV/Ico/
+        install -d ${D}/usr/lib/enigma2/python/Plugins/Extensions/AzIPTV/Ico/
+        install -m 0644 ${S}/Ico/*.png ${D}/usr/lib/enigma2/python/Plugins/Extensions/AzIPTV/Ico/
 
-        install -d ${D}${libdir}/enigma2/python/Plugins/Extensions/AzIPTV/Lists/
-        install -m 0755 ${S}/Lists/* ${D}${libdir}/enigma2/python/Plugins/Extensions/AzIPTV/Lists/
+        install -d ${D}/usr/lib/enigma2/python/Plugins/Extensions/AzIPTV/Lists/
+        install -m 0755 ${S}/Lists/* ${D}/usr/lib/enigma2/python/Plugins/Extensions/AzIPTV/Lists/
 }
 
-FILES_{$PN} = "${libdir}/enigma2/python/Plugins/Extensions/AzIPTV"
+FILES_{$PN} = "/usr/lib/enigma2/python/Plugins/Extensions/AzIPTV"
 
 PACKAGES = "enigma2-plugin-extensions-aziptv"
 

@@ -32,7 +32,7 @@ SRC_URI[sha256sum] = "f937631d376216bc830d6ffcd5b4ecb1806afd4012a184849da1a333a7
 
 S = "${WORKDIR}/pyload"
 
-FILES_${PN} = "/usr/pyload/* ${sysconfdir}/*"
+FILES_${PN} = "/usr/pyload/* /etc/*"
 
 INITSCRIPT_NAME = "${PN}"
 INITSCRIPT_PARAMS = "defaults 60 "
@@ -42,7 +42,7 @@ do_compile() {
 }
 
 do_install() {
-    install -d ${D}${sysconfdir}/init.d
+    install -d ${D}/etc/init.d
     install -d ${D}/usr/pyload
 
     cp -r ${S}/icons ${D}/usr/pyload
@@ -54,6 +54,6 @@ do_install() {
     install -m 755 ${S}/systemCheck.py ${D}/usr/pyload
     cp ${WORKDIR}/pyload.tar.gz.defaults ${D}/usr/pyload/pyload-defaults.tar.gz
     
-    install -m 0755 ${WORKDIR}/pyload.init ${D}${sysconfdir}/init.d/pyload
+    install -m 0755 ${WORKDIR}/pyload.init ${D}/etc/init.d/pyload
 }
 

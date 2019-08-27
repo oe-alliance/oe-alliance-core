@@ -19,12 +19,12 @@ PACKAGES =+ " ${PN}-src"
 
 FILES_${PN} = "/usr/*"
 FILES_${PN}-src = "\
-    ${libdir}/enigma2/python/Components/Converter/*.py \
-    ${libdir}/enigma2/python/Components/Renderer/*.py \
-    ${libdir}/enigma2/python/Plugins/Extensions/KravenVB/*.py \
-    ${libdir}/enigma2/python/Plugins/Extensions/KravenVB/*/*.py \
-    ${libdir}/enigma2/python/Plugins/Extensions/KravenVB/*/*/*.py \
-    ${libdir}/enigma2/python/Plugins/Extensions/KravenVB/locale/*/LC_MESSAGES/*.po \
+    /usr/lib/enigma2/python/Components/Converter/*.py \
+    /usr/lib/enigma2/python/Components/Renderer/*.py \
+    /usr/lib/enigma2/python/Plugins/Extensions/KravenVB/*.py \
+    /usr/lib/enigma2/python/Plugins/Extensions/KravenVB/*/*.py \
+    /usr/lib/enigma2/python/Plugins/Extensions/KravenVB/*/*/*.py \
+    /usr/lib/enigma2/python/Plugins/Extensions/KravenVB/locale/*/LC_MESSAGES/*.po \
     "
 
 S = "${WORKDIR}/git"
@@ -33,30 +33,30 @@ do_compile() {
     python -O -m compileall ${S}/usr
     for f in $(find ${S}/locale -name *.po ); do
         l=$(echo ${f%} | sed 's/\.po//' | sed 's/.*locale\///')
-        mkdir -p ${S}${libdir}/enigma2/python/Plugins/Extensions/KravenVB/locale/${l%}/LC_MESSAGES
-        msgfmt -o ${S}${libdir}/enigma2/python/Plugins/Extensions/KravenVB/locale/${l%}/LC_MESSAGES/KravenVB.mo ${S}${libdir}/enigma2/python/Plugins/Extensions/KravenVB/locale/$l.po
+        mkdir -p ${S}/usr/lib/enigma2/python/Plugins/Extensions/KravenVB/locale/${l%}/LC_MESSAGES
+        msgfmt -o ${S}/usr/lib/enigma2/python/Plugins/Extensions/KravenVB/locale/${l%}/LC_MESSAGES/KravenVB.mo ${S}/usr/lib/enigma2/python/Plugins/Extensions/KravenVB/locale/$l.po
     done
 }
 
 do_install() {
-    install -d ${D}${libdir}
-    install -d ${D}${datadir}
-    cp -r --preserve=mode,links ${S}${libdir}/* ${D}${libdir}/
-    cp -r --preserve=mode,links ${S}${datadir}/* ${D}${datadir}/
+    install -d ${D}/usr/lib
+    install -d ${D}/usr/share
+    cp -r --preserve=mode,links ${S}/usr/lib/* ${D}/usr/lib/
+    cp -r --preserve=mode,links ${S}/usr/share/* ${D}/usr/share/
 }
 
 pkg_postinst_${PN} () {
 #!/bin/sh
 if [ -f /tmp/kravenskin ]; then
-    mv -f /tmp/kravenskin ${datadir}/enigma2/KravenVB/skin.xml
+    mv -f /tmp/kravenskin /usr/share/enigma2/KravenVB/skin.xml
 fi
 if [ -d /tmp/graphics ]; then
-    mv -f /tmp/graphics/*.* ${datadir}/enigma2/KravenVB/graphics
+    mv -f /tmp/graphics/*.* /usr/share/enigma2/KravenVB/graphics
 fi
 if [ -f /tmp/skin-user.xml ]; then
-    mv -f /tmp/skin-user.xml ${libdir}/enigma2/python/Plugins/Extensions/KravenVB/data
+    mv -f /tmp/skin-user.xml /usr/lib/enigma2/python/Plugins/Extensions/KravenVB/data
 fi
-if [ -f ${libdir}/enigma2/python/Plugins/Extensions/KravenVB/plugin.py* ]; then
+if [ -f /usr/lib/enigma2/python/Plugins/Extensions/KravenVB/plugin.py* ]; then
     wget -q -O /dev/null 'http://127.0.0.1/web/message?type=1&text=KravenVB%20wurde%20erfolgreich%20installiert.%0A%0AZur%20Nutzung%20rufen%20Sie%20das%20Plugin%20auf,%20speichern%20Ihre%20Einstellungen%0Aund%20starten%20die%20Oberfl%C3%A4che%20neu.&timeout=13' || true
 fi
 echo " .##....##.########.....###....##.....##.########.##....## "
@@ -81,10 +81,10 @@ exit 0
 
 pkg_postrm_${PN} () {
 #!/bin/sh
-rm -rf ${datadir}/enigma2/KravenVB
-rm -rf ${libdir}/enigma2/python/Plugins/Extensions/KravenVB
-rm -rf ${libdir}/enigma2/python/Components/Converter/KravenVB*
-rm -rf ${libdir}/enigma2/python/Components/Renderer/KravenVB*
+rm -rf /usr/share/enigma2/KravenVB
+rm -rf /usr/lib/enigma2/python/Plugins/Extensions/KravenVB
+rm -rf /usr/lib/enigma2/python/Components/Converter/KravenVB*
+rm -rf /usr/lib/enigma2/python/Components/Renderer/KravenVB*
 echo " .##....##.########.....###....##.....##.########.##....## "
 echo " .##...##..##.....##...##.##...##.....##.##.......###...## "
 echo " .##..##...##.....##..##...##..##.....##.##.......####..## "
@@ -116,18 +116,18 @@ pkg_prerm_${PN} () {
 echo "                                                           "
 echo "        The Skin KravenVB is now being removed...          "
 echo "                                                           "
-if [ -e ${datadir}/enigma2/KravenVB/skin.xml ]; then
-    cp ${datadir}/enigma2/KravenVB/skin.xml /tmp/kravenskin
+if [ -e /usr/share/enigma2/KravenVB/skin.xml ]; then
+    cp /usr/share/enigma2/KravenVB/skin.xml /tmp/kravenskin
 fi
-if [ -d ${datadir}/enigma2/KravenVB/graphics ]; then
+if [ -d /usr/share/enigma2/KravenVB/graphics ]; then
     mkdir /tmp/graphics
-    cp ${datadir}/enigma2/KravenVB/graphics/* /tmp/graphics/
+    cp /usr/share/enigma2/KravenVB/graphics/* /tmp/graphics/
 fi
-if [ -f ${libdir}/enigma2/python/Plugins/Extensions/KravenVB/data/skin-user.xml ]; then
-    cp ${libdir}/enigma2/python/Plugins/Extensions/KravenVB/data/skin-user.xml /tmp/
+if [ -f /usr/lib/enigma2/python/Plugins/Extensions/KravenVB/data/skin-user.xml ]; then
+    cp /usr/lib/enigma2/python/Plugins/Extensions/KravenVB/data/skin-user.xml /tmp/
 fi
-if [ -f ${datadir}/enigma2/KravenVB/skin.xml ]; then
-    rm -rf ${datadir}/enigma2/KravenVB/skin.xml
+if [ -f /usr/share/enigma2/KravenVB/skin.xml ]; then
+    rm -rf /usr/share/enigma2/KravenVB/skin.xml
 fi
 exit 0
 }

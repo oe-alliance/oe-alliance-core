@@ -17,14 +17,14 @@ S = "${WORKDIR}"
 PACKAGES = "${PN}"
 
 do_install() {
-    # generate ${sysconfdir}/image-version
-    install -d ${D}${sysconfdir}
-    echo "Creator = OpenBH" > ${D}${sysconfdir}/image-version
-    echo "Version = ${IMAGE_VERSION}" >> ${D}${sysconfdir}/image-version
-    echo "Build = ${BUILD_VERSION}" >> ${D}${sysconfdir}/image-version
-    echo "Type = ${DISTRO_TYPE}" >> ${D}${sysconfdir}/image-version
-    echo "Machine = ${MACHINEBUILD}" >> ${D}${sysconfdir}/image-version
-    echo "URL = ${URL}" >> ${D}${sysconfdir}/image-version
+    # generate /etc/image-version
+    install -d ${D}/etc
+    echo "Creator = OpenBH" > ${D}/etc/image-version
+    echo "Version = ${IMAGE_VERSION}" >> ${D}/etc/image-version
+    echo "Build = ${BUILD_VERSION}" >> ${D}/etc/image-version
+    echo "Type = ${DISTRO_TYPE}" >> ${D}/etc/image-version
+    echo "Machine = ${MACHINEBUILD}" >> ${D}/etc/image-version
+    echo "URL = ${URL}" >> ${D}/etc/image-version
 }
 
-FILES_${PN} = "${sysconfdir}/image-version"
+FILES_${PN} = "/etc/image-version"

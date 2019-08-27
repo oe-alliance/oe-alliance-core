@@ -19,12 +19,12 @@ PACKAGES =+ " ${PN}-src"
 
 FILES_${PN} = "/usr/*"
 FILES_${PN}-src = "\
-    ${libdir}/enigma2/python/Components/Converter/*.py \
-    ${libdir}/enigma2/python/Components/Renderer/*.py \
-    ${libdir}/enigma2/python/Plugins/Extensions/KravenFHD/*.py \
-    ${libdir}/enigma2/python/Plugins/Extensions/KravenFHD/*/*.py \
-    ${libdir}/enigma2/python/Plugins/Extensions/KravenFHD/*/*/*.py \
-    ${libdir}/enigma2/python/Plugins/Extensions/KravenFHD/locale/*/LC_MESSAGES/*.po \
+    /usr/lib/enigma2/python/Components/Converter/*.py \
+    /usr/lib/enigma2/python/Components/Renderer/*.py \
+    /usr/lib/enigma2/python/Plugins/Extensions/KravenFHD/*.py \
+    /usr/lib/enigma2/python/Plugins/Extensions/KravenFHD/*/*.py \
+    /usr/lib/enigma2/python/Plugins/Extensions/KravenFHD/*/*/*.py \
+    /usr/lib/enigma2/python/Plugins/Extensions/KravenFHD/locale/*/LC_MESSAGES/*.po \
     "
 
 S = "${WORKDIR}/git"
@@ -33,31 +33,31 @@ do_compile() {
     python -O -m compileall ${S}/usr
     for f in $(find ${S}/locale -name *.po ); do
         l=$(echo ${f%} | sed 's/\.po//' | sed 's/.*locale\///')
-        #mkdir -p ${S}${libdir}/enigma2/python/Plugins/Extensions/KravenFHD/locale/${l%}/LC_MESSAGES
-        #msgfmt -o ${S}${libdir}/enigma2/python/Plugins/Extensions/KravenFHD/locale/${l%}/LC_MESSAGES/KravenFHD.mo ${S}${libdir}/enigma2$
+        #mkdir -p ${S}/usr/lib/enigma2/python/Plugins/Extensions/KravenFHD/locale/${l%}/LC_MESSAGES
+        #msgfmt -o ${S}/usr/lib/enigma2/python/Plugins/Extensions/KravenFHD/locale/${l%}/LC_MESSAGES/KravenFHD.mo ${S}/usr/lib/enigma2$
     done
 }
 
 do_install() {
     install -d ${D}${libdir}
-    install -d ${D}${datadir}
-    cp -r --preserve=mode,links ${S}${libdir}/* ${D}${libdir}/
-    cp -r --preserve=mode,links ${S}${datadir}/* ${D}${datadir}/
-    chmod -R a+rX ${D}${datadir}/enigma2/
+    install -d ${D}/usr/share
+    cp -r --preserve=mode,links ${S}/usr/lib/* ${D}/usr/lib/
+    cp -r --preserve=mode,links ${S}/usr/share/* ${D}/usr/share/
+    chmod -R a+rX ${D}/usr/share/enigma2/
 }
 
 pkg_postinst_${PN} () {
 #!/bin/sh
 if [ -f /tmp/kravenfhdskin ]; then
-    mv -f /tmp/kravenfhdskin ${datadir}/enigma2/KravenFHD/skin.xml
+    mv -f /tmp/kravenfhdskin /usr/share/enigma2/KravenFHD/skin.xml
 fi
 if [ -d /tmp/graphicsfhd ]; then
-    mv -f /tmp/graphicsfhd/* ${datadir}/enigma2/KravenFHD/graphics/
+    mv -f /tmp/graphicsfhd/* /usr/share/enigma2/KravenFHD/graphics/
 fi
 if [ -f /tmp/fhd-skin-user.xml ]; then
-    mv -f /tmp/fhd-skin-user.xml ${libdir}/enigma2/python/Plugins/Extensions/KravenFHD/data/skin-user.xml
+    mv -f /tmp/fhd-skin-user.xml /usr/lib/enigma2/python/Plugins/Extensions/KravenFHD/data/skin-user.xml
 fi
-if [ -f ${libdir}/enigma2/python/Plugins/Extensions/KravenFHD/plugin.py* ]; then
+if [ -f /usr/lib/enigma2/python/Plugins/Extensions/KravenFHD/plugin.py* ]; then
     wget -q -O /dev/null 'http://127.0.0.1/web/message?type=1&text=KravenFHD%20wurde%20erfolgreich%20installiert.%0A%0AZur%20Nutzung%20rufen%20Sie%20das%20Plugin%20auf,%20speichern%20Ihre%20Einstellungen%0Aund%20starten%20die%20Oberfl%C3%A4che%20neu.&timeout=13' || true
 fi
 echo " .##....##.########.....###....##.....##.########.##....## "
@@ -82,10 +82,10 @@ exit 0
 
 pkg_postrm_${PN} () {
 #!/bin/sh
-rm -rf ${datadir}/enigma2/KravenFHD
-rm -rf ${libdir}/enigma2/python/Plugins/Extensions/KravenFHD
-rm -rf ${libdir}/enigma2/python/Components/Converter/KravenFHD*
-rm -rf ${libdir}/enigma2/python/Components/Renderer/KravenFHD*
+rm -rf /usr/share/enigma2/KravenFHD
+rm -rf /usr/lib/enigma2/python/Plugins/Extensions/KravenFHD
+rm -rf /usr/lib/enigma2/python/Components/Converter/KravenFHD*
+rm -rf /usr/lib/enigma2/python/Components/Renderer/KravenFHD*
 echo " .##....##.########.....###....##.....##.########.##....## "
 echo " .##...##..##.....##...##.##...##.....##.##.......###...## "
 echo " .##..##...##.....##..##...##..##.....##.##.......####..## "
@@ -119,18 +119,18 @@ pkg_prerm_${PN} () {
 echo "                                                           "
 echo "        The Skin KravenFHD is now being removed...         "
 echo "                                                           "
-if [ -e ${datadir}/enigma2/KravenFHD/skin.xml ]; then
-    cp ${datadir}/enigma2/KravenFHD/skin.xml /tmp/kravenfhdskin
+if [ -e /usr/share/enigma2/KravenFHD/skin.xml ]; then
+    cp /usr/share/enigma2/KravenFHD/skin.xml /tmp/kravenfhdskin
 fi
-if [ -d ${datadir}/enigma2/KravenFHD/graphics ]; then
+if [ -d /usr/share/enigma2/KravenFHD/graphics ]; then
     mkdir /tmp/graphicsfhd
-    cp ${datadir}/enigma2/KravenFHD/graphics/* /tmp/graphicsfhd/
+    cp /usr/share/enigma2/KravenFHD/graphics/* /tmp/graphicsfhd/
 fi
-if [ -f ${libdir}/enigma2/python/Plugins/Extensions/KravenFHD/data/skin-user.xml ]; then
-    cp ${libdir}/enigma2/python/Plugins/Extensions/KravenFHD/data/skin-user.xml /tmp/fhd-skin-user.xml
+if [ -f /usr/lib/enigma2/python/Plugins/Extensions/KravenFHD/data/skin-user.xml ]; then
+    cp /usr/lib/enigma2/python/Plugins/Extensions/KravenFHD/data/skin-user.xml /tmp/fhd-skin-user.xml
 fi
-if [ -f ${datadir}/enigma2/KravenFHD/skin.xml ]; then
-    rm -rf ${datadir}/enigma2/KravenFHD/skin.xml
+if [ -f /usr/share/enigma2/KravenFHD/skin.xml ]; then
+    rm -rf /usr/share/enigma2/KravenFHD/skin.xml
 fi
 exit 0
 }

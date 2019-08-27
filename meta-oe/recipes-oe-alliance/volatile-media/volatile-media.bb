@@ -13,7 +13,7 @@ S = "${WORKDIR}"
 
 PACKAGES = "${PN}"
 
-FILES_${PN} = "${sysconfdir}"
+FILES_${PN} = "/etc"
 
 do_compile() {
 }

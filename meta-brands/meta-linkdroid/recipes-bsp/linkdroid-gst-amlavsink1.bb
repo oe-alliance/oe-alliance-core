@@ -41,7 +41,7 @@ do_package_qa() {
 }
 
 INSANE_SKIP_${PN} = "already-stripped dev-so ldflags dev-deps"
-SSTATE_DUPWHITELIST += "${STAGING_DIR}${libdir}/gst-aml-plugins-1.0/libgstamlasink.so"
-SSTATE_DUPWHITELIST += "${STAGING_DIR}${libdir}/gst-aml-plugins-1.0/libgstamlvsink.so"
-SSTATE_DUPWHITELIST += "${STAGING_DIR}${libdir}/gst-aml-plugins-1.0/libgstamladec.so"
-SSTATE_DUPWHITELIST += "${STAGING_DIR}${libdir}/gst-aml-plugins-1.0/libgstamlvdec.so"
+SSTATE_DUPWHITELIST += "${STAGING_DIR}/usr/lib/gst-aml-plugins-1.0/libgstamlasink.so"
+SSTATE_DUPWHITELIST += "${STAGING_DIR}/usr/lib/gst-aml-plugins-1.0/libgstamlvsink.so"
+SSTATE_DUPWHITELIST += "${STAGING_DIR}/usr/lib/gst-aml-plugins-1.0/libgstamladec.so"
+SSTATE_DUPWHITELIST += "${STAGING_DIR}/usr/lib/gst-aml-plugins-1.0/libgstamlvdec.so"

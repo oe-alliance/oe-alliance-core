@@ -11,11 +11,11 @@ PR = "r3"
 ALLOW_EMPTY_${PN} = "1"
 
 do_install() {
-    install -d ${D}${datadir}
-    install -m 0644 ${WORKDIR}/gpt.bin ${D}${datadir}/gpt.bin
+    install -d ${D}/usr/share
+    install -m 0644 ${WORKDIR}/gpt.bin ${D}/usr/share/gpt.bin
 }
 
-FILES_${PN} = "${datadir}"
+FILES_${PN} = "/usr/share"
 
 inherit deploy
 do_deploy() {

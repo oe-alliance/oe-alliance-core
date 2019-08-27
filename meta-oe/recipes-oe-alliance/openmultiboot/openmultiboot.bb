@@ -41,7 +41,7 @@ do_install() {
 
 pkg_preinst_${PN}() {
 #!/bin/sh
-if mountpoint -q ${libdir}/enigma2/python/Plugins/Extensions/OpenMultiboot; then
+if mountpoint -q /usr/lib/enigma2/python/Plugins/Extensions/OpenMultiboot; then
     echo "openMultiBoot will only install on main image."
     echo "Child image is running - canceling installation!"
     sleep 3

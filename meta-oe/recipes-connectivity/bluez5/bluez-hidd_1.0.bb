@@ -20,6 +20,6 @@ S = "${WORKDIR}/bluez-hidd"
 inherit pkgconfig
 
 do_install() {
-    install -d ${D}${bindir}
-    install -m 755 ${S}/hidd ${D}${bindir}/
+    install -d ${D}/usr/bin
+    install -m 755 ${S}/hidd ${D}/usr/bin/
 }

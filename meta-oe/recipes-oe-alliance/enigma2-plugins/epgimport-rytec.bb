@@ -15,9 +15,9 @@ S = "${WORKDIR}"
 DEPENDS = "enigma2-plugin-extensions-epgimport"
 PACKAGES = "${PN}"
 
-FILES_${PN} = "${sysconfdir}/epgimport"
+FILES_${PN} = "/etc/epgimport"
 
 do_install() {
-    install -d ${D}${sysconfdir}/epgimport
-    install -m 644 ${S}/rytec.sources.xml ${D}${sysconfdir}/epgimport/rytec.sources.xml
+    install -d ${D}/etc/epgimport
+    install -m 644 ${S}/rytec.sources.xml ${D}/etc/epgimport/rytec.sources.xml
 }

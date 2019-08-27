@@ -28,6 +28,6 @@ do_compile() {
 do_install() {
 	mkdir -p ${D}/bin/
 	install -m 0755 ${S2}/egamiemud ${D}/bin/emud
-	mkdir -p ${D}${sysconfdir}/init.d
-	install -m 0755 ${S}/egamiemud.sh ${D}${sysconfdir}/init.d/egamiemud
+	mkdir -p ${D}/etc/init.d
+	install -m 0755 ${S}/egamiemud.sh ${D}/etc/init.d/egamiemud
 }

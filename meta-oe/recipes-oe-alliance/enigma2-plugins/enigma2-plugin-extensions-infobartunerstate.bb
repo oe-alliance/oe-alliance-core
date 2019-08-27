@@ -17,9 +17,9 @@ S = "${WORKDIR}/git"
 
 PACKAGES =+ "${PN}-src"
 PACKAGES =+ "${PN}-po"
-FILES_${PN} = "${sysconfdir} ${libdir}"
-FILES_${PN}-src = "${libdir}/enigma2/python/Plugins/Extensions/InfoBarTunerState/*.py"
-FILES_${PN}-po = "${libdir}/enigma2/python/Plugins/Extensions/InfoBarTunerState/locale/*.po"
+FILES_${PN} = "/etc /usr/lib"
+FILES_${PN}-src = "/usr/lib/enigma2/python/Plugins/Extensions/InfoBarTunerState/*.py"
+FILES_${PN}-po = "/usr/lib/enigma2/python/Plugins/Extensions/InfoBarTunerState/locale/*.po"
 
 inherit autotools
 
@@ -33,7 +33,7 @@ EXTRA_OECONF = "\
 
 pkg_postrm_${PN}() {
 #!/bin/sh
-rm -rf ${libdir}/enigma2/python/Plugins/Extensions/InfoBarTunerState/
+rm -rf /usr/lib/enigma2/python/Plugins/Extensions/InfoBarTunerState/
 echo "Plugin removed! You should restart enigma2 now!"
 exit 0
 }

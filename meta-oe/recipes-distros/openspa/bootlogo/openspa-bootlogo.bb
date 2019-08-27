@@ -77,60 +77,60 @@ SRC_URI[dm800sev2.sha256sum] = "af522a5d4dc75507f2cd96582a270236fedade35b8dca74c
 SRC_URI[dm500hdv2.md5sum] = "c0413bfe6c03efc5fa1825b6ad8ac7bd"
 SRC_URI[dm500hdv2.sha256sum] = "005b9e99566fdee4d76ec1532273dc3e29a14b723d0bf6108228988e2a30d013"
 
-FILES_${PN} = "/boot ${datadir} ${sysconfdir}/init.d"
+FILES_${PN} = "/boot /usr/share /etc/init.d"
 
 do_install() {
     ${@bb.utils.contains("MACHINE_FEATURES", "dreamboxv1", "install -d ${D}/boot", "", d)}
     ${@bb.utils.contains("MACHINE_FEATURES", "dreamboxv1", "install -m 0755 ${S}/dreambox-bootlogo_${BINARY_VERSION}_${PRECOMPILED_ARCH}/bootlogo-${PRECOMPILED_ARCH}.elf.gz ${D}/boot/; install -m 0755 ${S}/splash1280.jpg ${D}/boot/bootlogo-${PRECOMPILED_ARCH}.jpg", "", d)}
-    install -d ${D}${datadir}
-    install -m 0644 bootlogo.mvi ${D}${datadir}/bootlogo.mvi
-    ln -sf ${datadir}/bootlogo.mvi ${D}${datadir}/backdrop.mvi
-    install -d ${D}${datadir}/enigma2
-    install -m 0644 radio.mvi ${D}${datadir}/enigma2/radio.mvi
+    install -d ${D}/usr/share
+    install -m 0644 bootlogo.mvi ${D}/usr/share/bootlogo.mvi
+    ln -sf /usr/share/bootlogo.mvi ${D}/usr/share/backdrop.mvi
+    install -d ${D}/usr/share/enigma2
+    install -m 0644 radio.mvi ${D}/usr/share/enigma2/radio.mvi
     install -d ${D}/${sysconfdir}/init.d
     install -m 0755 bootlogo.sh ${D}/${sysconfdir}/init.d/bootlogo
-    ${@bb.utils.contains("MACHINE_FEATURES", "gigabluelcd400", "install -m 0644 lcdwaitkey400.bin ${D}${datadir}/lcdwaitkey.bin" , "", d)}
-    ${@bb.utils.contains("MACHINE_FEATURES", "gigabluelcd400", "install -m 0644 lcdwarning400.bin ${D}${datadir}/lcdwarning.bin" , "", d)}
-    ${@bb.utils.contains("MACHINE_FEATURES", "gigabluelcd220", "install -m 0644 lcdwaitkey220.bin ${D}${datadir}/lcdwaitkey.bin" , "", d)}
-    ${@bb.utils.contains("MACHINE_FEATURES", "gigabluelcd220", "install -m 0644 lcdwarning220.bin ${D}${datadir}/lcdwarning.bin" , "", d)}
+    ${@bb.utils.contains("MACHINE_FEATURES", "gigabluelcd400", "install -m 0644 lcdwaitkey400.bin ${D}/usr/share/lcdwaitkey.bin" , "", d)}
+    ${@bb.utils.contains("MACHINE_FEATURES", "gigabluelcd400", "install -m 0644 lcdwarning400.bin ${D}/usr/share/lcdwarning.bin" , "", d)}
+    ${@bb.utils.contains("MACHINE_FEATURES", "gigabluelcd220", "install -m 0644 lcdwaitkey220.bin ${D}/usr/share/lcdwaitkey.bin" , "", d)}
+    ${@bb.utils.contains("MACHINE_FEATURES", "gigabluelcd220", "install -m 0644 lcdwarning220.bin ${D}/usr/share/lcdwarning.bin" , "", d)}
 }
 
 do_install_append_vuduo2() {
-    install -m 0644 lcdbootlogo.png ${D}${datadir}/lcdbootlogo.png
+    install -m 0644 lcdbootlogo.png ${D}/usr/share/lcdbootlogo.png
     install -m 0644 bootlogo.py ${D}/${sysconfdir}/init.d/bootlogo.py
 }
 
 do_install_append_7100s() {
-    install -d ${D}${datadir}
-    install -m 0644 ${WORKDIR}/7100s/lcdwaitkey220.bin ${D}${datadir}/lcdwaitkey.bin
-    install -m 0644 ${WORKDIR}/7100s/lcdwarning220.bin ${D}${datadir}/lcdwarning.bin
-    install -m 0644 ${WORKDIR}/7100s/lcdcomplete220.bin ${D}${datadir}/lcdcomplete.bin
+    install -d ${D}/usr/share
+    install -m 0644 ${WORKDIR}/7100s/lcdwaitkey220.bin ${D}/usr/share/lcdwaitkey.bin
+    install -m 0644 ${WORKDIR}/7100s/lcdwarning220.bin ${D}/usr/share/lcdwarning.bin
+    install -m 0644 ${WORKDIR}/7100s/lcdcomplete220.bin ${D}/usr/share/lcdcomplete.bin
 }
 
 do_install_append_7210s() {
-    install -d ${D}${datadir}
-    install -m 0644 ${WORKDIR}/7100s/lcdwaitkey220.bin ${D}${datadir}/lcdwaitkey.bin
-    install -m 0644 ${WORKDIR}/7100s/lcdwarning220.bin ${D}${datadir}/lcdwarning.bin
-    install -m 0644 ${WORKDIR}/7100s/lcdcomplete220.bin ${D}${datadir}/lcdcomplete.bin
+    install -d ${D}/usr/share
+    install -m 0644 ${WORKDIR}/7100s/lcdwaitkey220.bin ${D}/usr/share/lcdwaitkey.bin
+    install -m 0644 ${WORKDIR}/7100s/lcdwarning220.bin ${D}/usr/share/lcdwarning.bin
+    install -m 0644 ${WORKDIR}/7100s/lcdcomplete220.bin ${D}/usr/share/lcdcomplete.bin
 }
 
 do_install_append_7105s() {
-    install -d ${D}${datadir}
-    install -m 0644 ${WORKDIR}/7100s/lcdwaitkey220.bin ${D}${datadir}/lcdwaitkey.bin
-    install -m 0644 ${WORKDIR}/7100s/lcdwarning220.bin ${D}${datadir}/lcdwarning.bin
-    install -m 0644 ${WORKDIR}/7100s/lcdcomplete220.bin ${D}${datadir}/lcdcomplete.bin
+    install -d ${D}/usr/share
+    install -m 0644 ${WORKDIR}/7100s/lcdwaitkey220.bin ${D}/usr/share/lcdwaitkey.bin
+    install -m 0644 ${WORKDIR}/7100s/lcdwarning220.bin ${D}/usr/share/lcdwarning.bin
+    install -m 0644 ${WORKDIR}/7100s/lcdcomplete220.bin ${D}/usr/share/lcdcomplete.bin
 }
 
 do_install_append_7215s() {
-    install -d ${D}${datadir}
-    install -m 0644 ${WORKDIR}/7100s/lcdwaitkey220.bin ${D}${datadir}/lcdwaitkey.bin
-    install -m 0644 ${WORKDIR}/7100s/lcdwarning220.bin ${D}${datadir}/lcdwarning.bin
-    install -m 0644 ${WORKDIR}/7100s/lcdcomplete220.bin ${D}${datadir}/lcdcomplete.bin
+    install -d ${D}/usr/share
+    install -m 0644 ${WORKDIR}/7100s/lcdwaitkey220.bin ${D}/usr/share/lcdwaitkey.bin
+    install -m 0644 ${WORKDIR}/7100s/lcdwarning220.bin ${D}/usr/share/lcdwarning.bin
+    install -m 0644 ${WORKDIR}/7100s/lcdcomplete220.bin ${D}/usr/share/lcdcomplete.bin
 }
 
 do_install_append_8100s() {
-    install -d ${D}${datadir}
-    install -m 0644 ${WORKDIR}/7100s/lcdwarning220.bin ${D}${datadir}/lcdflashing.bmp
+    install -d ${D}/usr/share
+    install -m 0644 ${WORKDIR}/7100s/lcdwarning220.bin ${D}/usr/share/lcdflashing.bmp
 }
 
 inherit deploy
@@ -214,4 +214,4 @@ pkg_postrm_${PN}_dreamboxv1() {
 }
 
 PACKAGE_ARCH := "${MACHINE_ARCH}"
-FILES_${PN} = "/boot ${datadir} ${sysconfdir}/init.d"
+FILES_${PN} = "/boot /usr/share /etc/init.d"

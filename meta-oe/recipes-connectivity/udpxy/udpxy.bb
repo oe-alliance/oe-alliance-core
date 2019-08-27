@@ -18,15 +18,15 @@ CFLAGS_append = " -Wno-format-truncation "
 
 S = "${WORKDIR}/git/chipmunk"
 
-FILES_${PN} = "${bindir}/* ${sysconfdir}/init.d/udpxy.sh"
+FILES_${PN} = "${bindir}/* /etc/init.d/udpxy.sh"
 
 do_compile() {
     make -f Makefile udpxy
 }
 
 do_install() {
-    install -d ${D}${sysconfdir}/init.d
-    install -m 755 ${WORKDIR}/udpxy.sh ${D}${sysconfdir}/init.d/
+    install -d ${D}/etc/init.d
+    install -m 755 ${WORKDIR}/udpxy.sh ${D}/etc/init.d/
     install -d ${D}/${bindir}
     install -m 755 ${S}/udpxy ${D}/${bindir}
 }

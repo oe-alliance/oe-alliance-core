@@ -20,6 +20,6 @@ do_compile() {
 }
 
 do_install() {
-    install -d ${D}${sysconfdir}/init.d/
-    install -m 0755 ${WORKDIR}/beyonwiz-libreader-beyonwizv2.sh ${D}${sysconfdir}/init.d/beyonwiz-libreader
+    install -d ${D}/etc/init.d/
+    install -m 0755 ${WORKDIR}/beyonwiz-libreader-beyonwizv2.sh ${D}/etc/init.d/beyonwiz-libreader
 }

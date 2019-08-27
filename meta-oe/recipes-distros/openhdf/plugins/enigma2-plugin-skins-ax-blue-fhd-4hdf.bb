@@ -12,16 +12,16 @@ VER="3.0"
 
 SRC_URI="git://github.com/stein17/AX-Blue-FHD-4HDF.git;protocol=git"
 
-FILES_${PN} = "${datadir} ${libdir}"
+FILES_${PN} = "/usr/share ${libdir}"
 
 S = "${WORKDIR}/git"
 
 do_install() {
-	install -d ${D}${datadir}
+	install -d ${D}/usr/share
 	install -d ${D}${libdir}
-	cp -rp ${S}${datadir}/* ${D}${datadir}/
-	cp -rp ${S}${libdir}/* ${D}${libdir}/
-	chmod -R a+rX ${D}${datadir}/enigma2/
+	cp -rp ${S}/usr/share/* ${D}/usr/share/
+	cp -rp ${S}/usr/lib/* ${D}${libdir}/
+	chmod -R a+rX ${D}/usr/share/enigma2/
 }
 
 pkg_postinst_${PN} () {
@@ -32,8 +32,8 @@ exit 0
 
 pkg_postrm_${PN} () {
 #!/bin/sh
-rm -rf ${datadir}/enigma2/AX_Blue_FHD_4HDF
-rm -rf ${datadir}/enigma2/Spinner/AX_Blue
+rm -rf /usr/share/enigma2/AX_Blue_FHD_4HDF
+rm -rf /usr/share/enigma2/Spinner/AX_Blue
 echo "                                                           "
 echo "               ...Skin successful removed.                 "
 exit 0
