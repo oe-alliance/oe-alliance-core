@@ -14,7 +14,7 @@ RDEPENDS_${PN} = "enigma2-plugin-systemplugins-weathercomponenthandler, enigma2-
 
 SRC_URI="git://github.com/stein17/Skins-for-openATV.git;protocol=git"
 
-FILES_${PN} = "${libdir} ${datadir}"
+FILES_${PN} = "${libdir} /usr/share"
 
 S = "${WORKDIR}/git/AX-Blue-FHD-4ATV"
 
@@ -24,10 +24,10 @@ python -O -m compileall ${S}
 
 do_install() {
     install -d ${D}${libdir}
-    install -d ${D}${datadir}
-    cp -rp ${S}${libdir}/* ${D}${libdir}/
-    cp -rp ${S}${datadir}/* ${D}${datadir}/
-    chmod -R a+rX ${D}${datadir}/enigma2/
+    install -d ${D}/usr/share
+    cp -rp ${S}/usr/lib/* ${D}${libdir}/
+    cp -rp ${S}/usr/share/* ${D}/usr/share/
+    chmod -R a+rX ${D}/usr/share/enigma2/
 }
 
 pkg_postinst_${PN} () {
@@ -38,8 +38,8 @@ exit 0
 
 pkg_postrm_${PN} () {
 #!/bin/sh
-rm -rf ${datadir}/enigma2/AX_Blue_FHD_4ATV
-rm -rf ${datadir}/enigma2/Spinner/AX_Blue
+rm -rf /usr/share/enigma2/AX_Blue_FHD_4ATV
+rm -rf /usr/share/enigma2/Spinner/AX_Blue
 echo "                                                           "
 echo "               ...Skin successful removed.                 "
 exit 0

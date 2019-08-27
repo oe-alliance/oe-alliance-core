@@ -10,5 +10,5 @@ do_install_append() {
 }
 
 PACKAGES =+ "e2fsprogs-e4defrag"
-FILES_e2fsprogs-e4defrag = "${sbindir}/e4defrag"
+FILES_e2fsprogs-e4defrag = "/usr/sbin/e4defrag"
 

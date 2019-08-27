@@ -14,10 +14,10 @@ SRC_URI = "file://bootargs-mmc.bin \
 "
 
 do_install () {
-    install -m 0755 -d ${D}${datadir}
-    install -m 0644 ${WORKDIR}/bootargs-usb.bin ${D}${datadir}/bootargs-usb.bin
-    install -m 0644 ${WORKDIR}/bootargs-nand.bin ${D}${datadir}/bootargs-nand.bin
-    install -m 0644 ${WORKDIR}/bootargs-mmc.bin ${D}${datadir}/bootargs-mmc.bin
+    install -m 0755 -d ${D}/usr/share
+    install -m 0644 ${WORKDIR}/bootargs-usb.bin ${D}/usr/share/bootargs-usb.bin
+    install -m 0644 ${WORKDIR}/bootargs-nand.bin ${D}/usr/share/bootargs-nand.bin
+    install -m 0644 ${WORKDIR}/bootargs-mmc.bin ${D}/usr/share/bootargs-mmc.bin
 }
 
-FILES_${PN} = "${datadir}"
+FILES_${PN} = "/usr/share"

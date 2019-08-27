@@ -19,8 +19,8 @@ do_compile_prepend() {
 }
 
 do_install() {
-    install -d ${D}${bindir}
-    install -m 0755 ${S}/${CAMNAME}.${TARGET_ARCH} ${D}${bindir}/${CAMNAME}
+    install -d ${D}/usr/bin
+    install -m 0755 ${S}/${CAMNAME}.${TARGET_ARCH} ${D}/usr/bin/${CAMNAME}
 }
 
 SRC_URI[md5sum] = "89086f28a5b048512b76c8c24af4f77a"

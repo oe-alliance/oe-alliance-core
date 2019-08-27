@@ -18,7 +18,7 @@ SRC_URI = "git://github.com/openspa/openspa-display-skins.git;protocol=git file:
 
 # note that enigma2-skins is just an empty package to satisfy silly dependencies.
 ALLOW_EMPTY_${PN} = "1"
-FILES_${PN} = "${datadir}/enigma2/display"
+FILES_${PN} = "/usr/share/enigma2/display"
 FILES_${PN}-meta = "${datadir}/meta"
 RDEPENDS_${PN}-meta = ""
 

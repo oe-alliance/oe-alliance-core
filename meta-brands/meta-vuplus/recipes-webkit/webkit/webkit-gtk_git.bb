@@ -76,16 +76,16 @@ do_configure_append() {
 	for makefile in $(find ${B} -name "GNUmakefile") ; do
 		sed -i s:-I/usr/include::g $makefile
 	done
-	# remove hardcoded path to ${bindir}/glib-mkenums
+	# remove hardcoded path to /usr/bin/glib-mkenums
 	for makefile in $(find ${B} -name "GNUmakefile") ; do
-		sed -i s:${bindir}/glib-mkenums:glib-mkenums:g $makefile
+		sed -i s:/usr/bin/glib-mkenums:glib-mkenums:g $makefile
 	done
 }
 
 do_install_append() {
         rmdir ${D}${libexecdir}
-        install -d ${D}${bindir}
-        install -m 0755 ${WORKDIR}/build/Programs/GtkLauncher ${D}${bindir}/webkit.launcher
+        install -d ${D}/usr/bin
+        install -m 0755 ${WORKDIR}/build/Programs/GtkLauncher ${D}/usr/bin/webkit.launcher
 }
 
 PACKAGES =+ "${PN}-webinspector bjavascriptcore"

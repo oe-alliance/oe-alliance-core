@@ -14,7 +14,7 @@ INITSCRIPT_PARAMS = "start 39 0 ."
 inherit pkgconfig update-rc.d
 
 do_install() {
-    install -d ${D}${sysconfdir}/init.d/
-    install -m 0755 ${WORKDIR}/${MACHINE}-shutdown.sh ${D}${sysconfdir}/init.d/odroid-shutdown
+    install -d ${D}/etc/init.d/
+    install -m 0755 ${WORKDIR}/${MACHINE}-shutdown.sh ${D}/etc/init.d/odroid-shutdown
 }
 

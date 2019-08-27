@@ -1,4 +1,4 @@
-DESCRIPTION = "Run local boot script (${sysconfdir}/rc.local)"
+DESCRIPTION = "Run local boot script (/etc/rc.local)"
 
 require conf/license/license-gplv2.inc
 

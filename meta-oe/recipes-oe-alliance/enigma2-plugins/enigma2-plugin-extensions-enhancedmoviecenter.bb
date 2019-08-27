@@ -17,7 +17,7 @@ S = "${WORKDIR}/git"
 
 PACKAGES =+ "${PN}-src"
 PACKAGES =+ "${PN}-po"
-FILES_${PN} = "${sysconfdir} ${libdir}"
+FILES_${PN} = "/etc ${libdir}"
 FILES_${PN}-src = "\
 	${libdir}/enigma2/python/Components/Converter/*.py \
 	${libdir}/enigma2/python/Components/Renderer/*.py \

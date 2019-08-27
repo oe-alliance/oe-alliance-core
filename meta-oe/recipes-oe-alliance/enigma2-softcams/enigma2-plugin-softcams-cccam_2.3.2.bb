@@ -16,15 +16,15 @@ require softcam.inc
 
 INHIBIT_PACKAGE_STRIP = "1"
 
-CONFFILES = "${sysconfdir}/CCcam.cfg ${sysconfdir}/ppanels/CCcam.xml"
+CONFFILES = "/etc/CCcam.cfg /etc/ppanels/CCcam.xml"
 
 do_install() {
-    install -d ${D}${bindir}
-    install -m 0755 ${S}/CCcam.${TARGET_ARCH} ${D}${bindir}/${CAMNAME}
-    install -d ${D}${sysconfdir}
-    install -m 0644 ${S}/CCcam.cfg ${D}${sysconfdir}/CCcam.cfg
-    install -d ${D}${sysconfdir}/ppanels
-    install -m 0644 ${WORKDIR}/CCcam.xml ${D}${sysconfdir}/ppanels/CCcam.xml
+    install -d ${D}/usr/bin
+    install -m 0755 ${S}/CCcam.${TARGET_ARCH} ${D}/usr/bin/${CAMNAME}
+    install -d ${D}/etc
+    install -m 0644 ${S}/CCcam.cfg ${D}/etc/CCcam.cfg
+    install -d ${D}/etc/ppanels
+    install -m 0644 ${WORKDIR}/CCcam.xml ${D}/etc/ppanels/CCcam.xml
 }
 
 SRC_URI[softcam.md5sum] = "042bc8d82075dbc806787270ffa237f6"

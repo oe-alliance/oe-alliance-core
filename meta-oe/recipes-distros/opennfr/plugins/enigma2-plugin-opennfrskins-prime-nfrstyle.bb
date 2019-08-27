@@ -19,19 +19,19 @@ SRC_URI="git://github.com/stein17/Skins-for-openNFR.git"
 
 S = "${WORKDIR}/git/Prime-NFR-Style"
 
-FILES_${PN} = "${libdir} ${datadir}"
+FILES_${PN} = "${libdir} /usr/share"
 
 do_install() {
     install -d ${D}${libdir}
-    install -d ${D}${datadir}
-    cp -rp ${S}${libdir}/* ${D}${libdir}/
-    cp -rp ${S}${datadir}/* ${D}${datadir}/
+    install -d ${D}/usr/share
+    cp -rp ${S}/usr/lib/* ${D}${libdir}/
+    cp -rp ${S}/usr/share/* ${D}/usr/share/
 }
 
 pkg_postrm_${PN} () {
 #!/bin/sh
 TMP=/tmp/.skins
-rm -rf ${datadir}/enigma2/Prime-NFR-Style-by-stein17
+rm -rf /usr/share/enigma2/Prime-NFR-Style-by-stein17
 rm -rf ${libdir}/enigma2/python/Components/Converter/NextEventsPrime.pyo
 rm -rf ${libdir}/enigma2/python/Components/Converter/ReceiverInfoPrime.pyo
 echo "syncing disk"
@@ -66,7 +66,7 @@ exit 0
 
 pkg_preinst_${PN} () {
 #!/bin/sh                                                       
-rm -rf ${datadir}/enigma2/Prime-NFR-Style-by-stein17
+rm -rf /usr/share/enigma2/Prime-NFR-Style-by-stein17
 rm -rf ${libdir}/enigma2/python/Components/Converter/NextEventsPrime.pyo
 rm -rf ${libdir}/enigma2/python/Components/Converter/ReceiverInfoPrime.pyo
 echo "aktualisiere Updatequellen... "opkg update 

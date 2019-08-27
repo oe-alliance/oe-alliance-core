@@ -14,7 +14,7 @@ inherit autotools pkgconfig
 
 ### TODO: code check!
 ### QA Issue: gst-amlavout: The compile log indicates that host include and/or library paths were used.
-### -libplayer issue  warning: library search path "${libdir}/libplayer" need to add it to DEPENDES
+### -libplayer issue  warning: library search path "/usr/lib/libplayer" need to add it to DEPENDES
 ### *.la probably not needed as these are gst-plugins
 
 DEPENDS = "gstreamer linkdroid-gst-amlavsink linkdroid-libamcodec-${MACHINE} linkdroid-libamavutils-${MACHINE} linkdroid-libamplayer-${MACHINE}"

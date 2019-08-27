@@ -21,7 +21,7 @@ SRC_URI = "git://github.com/openatv/skin-parts.git;protocol=git"
 # openatv-skinparts is an empty package, dependencies are avoided by do_split_packages( [...] extra_depends='')
 ALLOW_EMPTY_${PN} = "1"
 
-FILES_${PN} = "${datadir}/enigma2/skinparts"
+FILES_${PN} = "/usr/share/enigma2/skinparts"
 FILES_${PN}-meta = "${datadir}/meta"
 RDEPENDS_${PN}-meta = ""
 

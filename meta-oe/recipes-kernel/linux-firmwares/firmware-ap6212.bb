@@ -26,11 +26,11 @@ do_compile() {
 
 FILES_${PN} = " \
                 ${nonarch_base_libdir} \
-                ${sysconfdir} \
+                /etc \
 "
 
 do_install() {
-    install -d  ${D}${sysconfdir}/firmware/ap6212
+    install -d  ${D}/etc/firmware/ap6212
     install -d  ${D}${nonarch_base_libdir}/firmware/ap6212
     install -m 0655 nvram.txt ${D}${nonarch_base_libdir}/firmware/ap6212
     install -m 0655 ${WORKDIR}/config.txt ${D}${nonarch_base_libdir}/firmware/ap6212
@@ -40,7 +40,7 @@ do_install() {
     install -m 0655 bcm43438a0.hcd ${D}${nonarch_base_libdir}/firmware/ap6212/4343A0.hcd
     
     # Bluetooth
-    install -m 0655 bcm43438a0.hcd ${D}${sysconfdir}/firmware/ap6212/4343A0.hcd
+    install -m 0655 bcm43438a0.hcd ${D}/etc/firmware/ap6212/4343A0.hcd
 
     # Only install the init script when 'sysvinit' is in DISTRO_FEATURES.
     if ${@bb.utils.contains('DISTRO_FEATURES', 'sysvinit', 'true', 'false', d)}; then

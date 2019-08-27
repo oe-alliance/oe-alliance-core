@@ -40,7 +40,7 @@ do_install_append() {
     && ln -sf libgbm.so.1 libgbm.so)
 }
 
-FILES_${PN} = "${libdir}/*"
+FILES_${PN} = "/usr/lib/*"
 FILES_${PN}-dev = "/usr/include/*"
 
 RPROVIDES_${PN} = "virtual/libgles2 virtual/libgles1 virtual/egl virtual/libgbm libnxpl.so libnexus.so libv3ddriver.so libEGL.so.1.4 libEGL.so.1 libEGL.so libGLESv1_CM.so.1.1 libGLESv1_CM.so.1 libGLESv1_CM.so libGLESv2.so.2.0 libGLESv2.so.2 libGLESv2.so libgbm.so libgbm.so.1"

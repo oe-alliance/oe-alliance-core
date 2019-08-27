@@ -40,8 +40,8 @@ do_install() {
     install -m 755 ${S}/llmnr-query ${D}${bindir}
     if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
         install -d ${D}${systemd_system_unitdir}
-        install -m 0644 ${S}${sysconfdir}/llmnrd.service ${D}${systemd_system_unitdir}
-        perl -i -pe 's:${sbindir}:${bindir}:' ${D}${systemd_system_unitdir}/*.service
+        install -m 0644 ${S}/etc/llmnrd.service ${D}${systemd_system_unitdir}
+        perl -i -pe 's:/usr/sbin:${bindir}:' ${D}${systemd_system_unitdir}/*.service
     else
         install -d ${D}${sysconfdir}/init.d
         install -m 755 ${WORKDIR}/llmnrd.sh ${D}${sysconfdir}/init.d/llmnrd

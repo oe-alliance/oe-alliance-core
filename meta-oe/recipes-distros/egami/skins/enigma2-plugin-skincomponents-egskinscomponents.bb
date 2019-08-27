@@ -17,7 +17,7 @@ PROVIDES = "${EPSM}-egskincomponents"
 
 SRC_URI="git://github.com/a4tech/Egami-skins.git;protocol=git"
 
-FILES_${EPSM}-egskincomponents = "${libdir}/*"
+FILES_${EPSM}-egskincomponents = "/usr/lib/*"
 
 S = "${WORKDIR}/git"
 

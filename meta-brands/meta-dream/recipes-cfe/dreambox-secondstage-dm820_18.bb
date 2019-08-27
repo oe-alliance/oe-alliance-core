@@ -20,10 +20,10 @@ SRC_URI = "http://dreamboxupdate.com/download/opendreambox/2.2.0/dreambox-second
 RDEPENDS_${PN} = "flash-scripts"
 
 do_install() {
-    install -d ${D}${datadir}/dreambox-secondstage
-    install -m 0644 ${S}${datadir}/dreambox-secondstage/ssbl.bin ${D}${datadir}/dreambox-secondstage/ssbl.bin
+    install -d ${D}/usr/share/dreambox-secondstage
+    install -m 0644 ${S}/usr/share/dreambox-secondstage/ssbl.bin ${D}/usr/share/dreambox-secondstage/ssbl.bin
 }
 
-FILES_${PN} = "${datadir}/dreambox-secondstage/ssbl.bin"
+FILES_${PN} = "/usr/share/dreambox-secondstage/ssbl.bin"
 
 COMPATIBLE_MACHINE = "^(dm820)$"

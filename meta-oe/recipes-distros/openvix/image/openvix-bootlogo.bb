@@ -38,25 +38,25 @@ SRC_URI_append_dags7362 = "file://tm-splash.bmp file://iqon-splash.bmp file://sp
 SRC_URI_append_dags7252 = "file://tm-splash.bmp file://splash1.bmp file://splash2.bmp file://splash3.bmp"
 SRC_URI_append_7210s = "file://lcdsplash220.bin file://lcdwaitkey220.bin file://lcdwarning220.bin file://lcdcomplete220.bin"
 
-FILES_${PN} = "${datadir} ${datadir}/enigma2 ${sysconfdir}/init.d"
+FILES_${PN} = "/usr/share /usr/share/enigma2 /etc/init.d"
 
 do_install() {
     install -d ${D}/${sysconfdir}/init.d
     install -m 0755 bootlogo.sh ${D}/${sysconfdir}/init.d/bootlogo
-    install -d ${D}${datadir}
-    install -m 0644 bootlogo.mvi ${D}${datadir}/bootlogo.mvi
-    install -m 0644 backdrop.mvi ${D}${datadir}/backdrop.mvi
-    ${@bb.utils.contains("MACHINE_FEATURES", "gigabluelcd400", "install -m 0644 lcdwaitkey400.bin ${D}${datadir}/lcdwaitkey.bin" , "", d)}
-    ${@bb.utils.contains("MACHINE_FEATURES", "gigabluelcd400", "install -m 0644 lcdwarning400.bin ${D}${datadir}/lcdwarning.bin" , "", d)}
-    ${@bb.utils.contains("MACHINE_FEATURES", "gigabluelcd220", "install -m 0644 lcdwaitkey220.bin ${D}${datadir}/lcdwaitkey.bin" , "", d)}
-    ${@bb.utils.contains("MACHINE_FEATURES", "gigabluelcd220", "install -m 0644 lcdwarning220.bin ${D}${datadir}/lcdwarning.bin" , "", d)}
-    install -d ${D}${datadir}/enigma2
-    install -m 0644 radio.mvi ${D}${datadir}/enigma2/radio.mvi
+    install -d ${D}/usr/share
+    install -m 0644 bootlogo.mvi ${D}/usr/share/bootlogo.mvi
+    install -m 0644 backdrop.mvi ${D}/usr/share/backdrop.mvi
+    ${@bb.utils.contains("MACHINE_FEATURES", "gigabluelcd400", "install -m 0644 lcdwaitkey400.bin ${D}/usr/share/lcdwaitkey.bin" , "", d)}
+    ${@bb.utils.contains("MACHINE_FEATURES", "gigabluelcd400", "install -m 0644 lcdwarning400.bin ${D}/usr/share/lcdwarning.bin" , "", d)}
+    ${@bb.utils.contains("MACHINE_FEATURES", "gigabluelcd220", "install -m 0644 lcdwaitkey220.bin ${D}/usr/share/lcdwaitkey.bin" , "", d)}
+    ${@bb.utils.contains("MACHINE_FEATURES", "gigabluelcd220", "install -m 0644 lcdwarning220.bin ${D}/usr/share/lcdwarning.bin" , "", d)}
+    install -d ${D}/usr/share/enigma2
+    install -m 0644 radio.mvi ${D}/usr/share/enigma2/radio.mvi
 }
 
 do_install_append_vuduo2() {
-    install -d ${D}${datadir}
-    install -m 0644 lcdbootlogo.png ${D}${datadir}/lcdbootlogo.png
+    install -d ${D}/usr/share
+    install -m 0644 lcdbootlogo.png ${D}/usr/share/lcdbootlogo.png
     install -m 0644 bootlogo.py ${D}/${sysconfdir}/init.d/bootlogo.py
 }
 

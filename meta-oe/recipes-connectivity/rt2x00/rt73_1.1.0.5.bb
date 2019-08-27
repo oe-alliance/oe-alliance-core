@@ -33,8 +33,8 @@ do_compile () {
 do_install() {
     install -d ${D}${nonarch_base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/net/
     install -m 0644 rt73${KERNEL_OBJECT_SUFFIX} ${D}${nonarch_base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/net/
-    install -d ${D}${sysconfdir}/modutils
-    echo rt73 > ${D}${sysconfdir}/modutils/rt73
+    install -d ${D}/etc/modutils
+    echo rt73 > ${D}/etc/modutils/rt73
 }
 
 SRC_URI[md5sum] = "2f3cdfa8add042dae70a58c9a9138c78"

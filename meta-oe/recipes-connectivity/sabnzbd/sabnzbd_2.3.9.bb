@@ -21,14 +21,14 @@ SRC_URI[sha256sum] = "e5071e66e06e9d10f5d04695cb63aba3e77b0c89deb6dd0f80246218d7
 
 S = "${WORKDIR}/sabnzbd-${PV}"
 
-INSTALLDIR = "${libdir}/${PN}"
+INSTALLDIR = "/usr/lib/${PN}"
 
 PACKAGES = "${PN}-doc ${PN}-src ${PN}"
 
 FILES_${PN}-src = "${INSTALLDIR}/*/*.py ${INSTALLDIR}/*/*/*.py"
 RDEPENDS_${PN}-src = "python"
 FILES_${PN}-doc = "${INSTALLDIR}/*.txt ${INSTALLDIR}/licenses ${INSTALLDIR}/interfaces/*/licenses"
-FILES_${PN} = "${INSTALLDIR} ${sysconfdir}/init.d/sabnzbd ${sysconfdir}/init.d/init-functions ${sysconfdir}/enigma2/sabnzbd.conf"
+FILES_${PN} = "${INSTALLDIR} /etc/init.d/sabnzbd /etc/init.d/init-functions /etc/enigma2/sabnzbd.conf"
 
 inherit update-rc.d
 INITSCRIPT_NAME = "sabnzbd"
@@ -41,9 +41,9 @@ do_compile() {
 do_install() {
     install -d ${D}${INSTALLDIR}
     cp -r . ${D}${INSTALLDIR}/
-    install -d ${D}${sysconfdir}/init.d
-    install -m 755 ${WORKDIR}/sabnzbd ${D}${sysconfdir}/init.d/sabnzbd
-    install -m 755 ${WORKDIR}/init-functions ${D}${sysconfdir}/init.d/init-functions
-    install -d ${D}${sysconfdir}/enigma2
-    install -m 644 ${WORKDIR}/sabnzbd.conf ${D}${sysconfdir}/enigma2/sabnzbd.conf
+    install -d ${D}/etc/init.d
+    install -m 755 ${WORKDIR}/sabnzbd ${D}/etc/init.d/sabnzbd
+    install -m 755 ${WORKDIR}/init-functions ${D}/etc/init.d/init-functions
+    install -d ${D}/etc/enigma2
+    install -m 644 ${WORKDIR}/sabnzbd.conf ${D}/etc/enigma2/sabnzbd.conf
 }

@@ -24,14 +24,14 @@ do_install() {
 	mkdir -p ${D}/usr/script
 	mkdir -p ${D}/usr/uninstall
 
-	install -d ${D}${sysconfdir}
-	install -m 0644 ${WORKDIR}/bpmachine ${D}${sysconfdir}/bpmachine
-	install -m 0644 ${WORKDIR}/bpversion ${D}${sysconfdir}/bpversion
+	install -d ${D}/etc
+	install -m 0644 ${WORKDIR}/bpmachine ${D}/etc/bpmachine
+	install -m 0644 ${WORKDIR}/bpversion ${D}/etc/bpversion
 	
 
-	install -d ${D}${bindir}
+	install -d ${D}/usr/bin
 	for x in /StartBhCam; do
-		install -m 0755 ${WORKDIR}/$x ${D}${bindir}/$x
+		install -m 0755 ${WORKDIR}/$x ${D}/usr/bin/$x
 	done
 	
 
@@ -43,19 +43,19 @@ do_install() {
 		install -m 0755 ${WORKDIR}/$x ${D}/usr/script/$x
 	done
 	
-	install -d ${D}${sysconfdir}/openvpn
+	install -d ${D}/etc/openvpn
 	for x in /openvpn.log; do
-		install -m 0644 ${WORKDIR}/$x ${D}${sysconfdir}/openvpn/$x
+		install -m 0644 ${WORKDIR}/$x ${D}/etc/openvpn/$x
 	done
 	
-	install -d ${D}${sysconfdir}/init.d
-	install -m 0755 ${WORKDIR}/bp_swap ${D}${sysconfdir}/init.d/bp_swap
+	install -d ${D}/etc/init.d
+	install -m 0755 ${WORKDIR}/bp_swap ${D}/etc/init.d/bp_swap
 	
-	install -d ${D}${sysconfdir}/rc3.d
-#	ln -sf ${sysconfdir}/init.d/openvpn ${D}${sysconfdir}/rc3.d/S20openvpn
-	ln -sf ${sysconfdir}/init.d/bp_swap ${D}${sysconfdir}/rc3.d/S40bp_swap
+	install -d ${D}/etc/rc3.d
+#	ln -sf /etc/init.d/openvpn ${D}/etc/rc3.d/S20openvpn
+	ln -sf /etc/init.d/bp_swap ${D}/etc/rc3.d/S40bp_swap
 
-	install -d ${D}${sysconfdir}/rc4.d
-	ln -s ${sysconfdir}/init.d/openvpn ${D}${sysconfdir}/rc4.d/S20openvpn
+	install -d ${D}/etc/rc4.d
+	ln -s /etc/init.d/openvpn ${D}/etc/rc4.d/S20openvpn
 
 }

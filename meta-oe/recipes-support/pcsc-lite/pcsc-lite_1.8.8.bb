@@ -27,8 +27,8 @@ EXTRA_OECONF = " \
 
 do_install() {
     oe_runmake DESTDIR="${D}" install
-    install -d "${D}${sysconfdir}/init.d"
-    install -m 755 "${WORKDIR}/pcscd.init" "${D}${sysconfdir}/init.d/pcscd"
+    install -d "${D}/etc/init.d"
+    install -m 755 "${WORKDIR}/pcscd.init" "${D}/etc/init.d/pcscd"
 }
 
 S = "${WORKDIR}/pcsc-lite-${PV}"

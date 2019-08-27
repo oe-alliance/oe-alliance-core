@@ -26,8 +26,8 @@ if [ -f ${D}/lib/firmware/dvb-demod-drxk-01.fw ]; then
   rm ${D}/lib/firmware/dvb-demod-drxk-01.fw
 fi
 ln -s ${D}/lib/firmware/drxk_a3.mc ${D}/lib/firmware/dvb-demod-drxk-01.fw
-echo "options em28xx cards=89 usb_xfer_mode=0" > ${D}${sysconfdir}/modprobe.d/em28xx.conf
-chmod 0644 ${D}${sysconfdir}/modprobe.d/em28xx.conf
+echo "options em28xx cards=89 usb_xfer_mode=0" > ${D}/etc/modprobe.d/em28xx.conf
+chmod 0644 ${D}/etc/modprobe.d/em28xx.conf
 }
 
 pkg_postrm_${PN} () {
@@ -35,7 +35,7 @@ pkg_postrm_${PN} () {
 if [ -f /lib/firmware/dvb-demod-drxk-01.fw ]; then
   rm /lib/firmware/dvb-demod-drxk-01.fw
 fi
-if [ -f ${sysconfdir}/modprobe.d/em28xx.conf ]; then
-  rm ${sysconfdir}/modprobe.d/em28xx.conf
+if [ -f /etc/modprobe.d/em28xx.conf ]; then
+  rm /etc/modprobe.d/em28xx.conf
 fi
 }

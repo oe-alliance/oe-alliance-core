@@ -18,13 +18,13 @@ ALLOW_EMPTY_${PN} = "1"
 do_configure[nostamp] = "1"
 
 do_install() {
-    install -d ${D}${datadir}
-    install -m 0644 ${S}/bootargs.bin ${D}${datadir}/bootargs.bin
-    install -m 0644 ${S}/fastboot.bin ${D}${datadir}/fastboot.bin
-    install -m 0644 ${S}/apploader.bin ${D}${datadir}/apploader.bin
+    install -d ${D}/usr/share
+    install -m 0644 ${S}/bootargs.bin ${D}/usr/share/bootargs.bin
+    install -m 0644 ${S}/fastboot.bin ${D}/usr/share/fastboot.bin
+    install -m 0644 ${S}/apploader.bin ${D}/usr/share/apploader.bin
 }
 
-FILES_${PN} = "${datadir}"
+FILES_${PN} = "/usr/share"
 
 do_deploy() {
     install -d ${DEPLOY_DIR_IMAGE}/${MACHINE}-partitions

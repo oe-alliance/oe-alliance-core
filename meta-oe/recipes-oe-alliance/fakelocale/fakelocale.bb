@@ -11,7 +11,7 @@ SRC_URI = "file://lctimelocales.tar.gz file://locale.alias file://SYS_LC_MESSAGE
 S = "${WORKDIR}/locales"
 
 LOCALEDIR = "${libdir}/locale"
-LOCALEDIR2 = "${datadir}/locale"
+LOCALEDIR2 = "/usr/share/locale"
 
 LANGUAGES = "ar_AE bg_BG ca_AD cs_CZ da_DK de_DE el_GR en_EN en_GB en_US es_ES et_EE fa_IR fi_FI \
     fr_FR fy_NL he_IL hr_HR hu_HU id_ID is_IS it_IT lt_LT lv_LV nb_NO nl_NL no_NO pl_PL pt_BR pt_PT \

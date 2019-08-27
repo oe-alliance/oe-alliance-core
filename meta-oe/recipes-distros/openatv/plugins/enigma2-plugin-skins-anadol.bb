@@ -26,10 +26,10 @@ python -O -m compileall ${S}
 
 do_install() {
     install -d ${D}${libdir}
-    install -d ${D}${datadir}
-    cp -rp ${S}${libdir}/* ${D}${libdir}/
-    cp -rp ${S}${datadir}/* ${D}${datadir}/
-    chmod -R a+rX ${D}${datadir}/enigma2/
+    install -d ${D}/usr/share
+    cp -rp ${S}/usr/lib/* ${D}${libdir}/
+    cp -rp ${S}/usr/share/* ${D}/usr/share/
+    chmod -R a+rX ${D}/usr/share/enigma2/
 }
 
 pkg_postinst_${PN} () {
@@ -42,7 +42,7 @@ exit 0
 
 pkg_postrm_${PN} () {
 #!/bin/sh
-rm -rf ${datadir}/enigma2/Anadol
+rm -rf /usr/share/enigma2/Anadol
 rm -rf ${libdir}/enigma2/python/Components/Converter/AND*
 rm -rf ${libdir}/enigma2/python/Components/Renderer/AND*
 echo "                                                          "
@@ -53,7 +53,7 @@ exit 0
 
 pkg_preinst_${PN} () {
 #!/bin/sh                                                       
-rm -rf ${datadir}/enigma2/Anadol
+rm -rf /usr/share/enigma2/Anadol
 rm -rf ${libdir}/enigma2/python/Components/Converter/AND*
 rm -rf ${libdir}/enigma2/python/Components/Renderer/AND*
 echo "                                                                           "

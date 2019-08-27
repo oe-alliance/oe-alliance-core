@@ -1,7 +1,7 @@
 SUMMARY = "PLi HD skin"
 MAINTAINER = "littlesat"
 LICENSE = "Proprietary"
-LIC_FILES_CHKSUM = "file:/${datadir}/enigma2/PLi-HD/skin.xml;beginline=3;endline=8;md5=1d560d35b9194281a488eb3a32d9c8bf"
+LIC_FILES_CHKSUM = "file://usr/share/enigma2/PLi-HD/skin.xml;beginline=3;endline=8;md5=1d560d35b9194281a488eb3a32d9c8bf"
 
 inherit gitpkgv
 
@@ -12,7 +12,7 @@ inherit allarch
 
 SRC_URI = "git://github.com/littlesat/skin-PLiHD.git;protocol=git"
 
-FILES_${PN} = "${datadir}/enigma2/"
+FILES_${PN} = "/usr/share/enigma2/"
 
 S = "${WORKDIR}/git"
 
@@ -20,9 +20,9 @@ do_compile() {
 }
 
 do_install() {
-    install -d ${D}${datadir}
-    cp -rp ${S}${datadir}/* ${D}${datadir}/
-    chmod -R a+rX ${D}${datadir}/enigma2/
+    install -d ${D}/usr/share
+    cp -rp ${S}/usr/share/* ${D}/usr/share/
+    chmod -R a+rX ${D}/usr/share/enigma2/
 }
 
 do_package_qa[noexec] = "1"

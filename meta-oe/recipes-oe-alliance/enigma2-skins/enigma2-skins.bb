@@ -24,7 +24,7 @@ SRC_URI_append = " \
 
 # note that enigma2-skins is just an empty package to satisfy silly dependencies.
 ALLOW_EMPTY_${PN} = "1"
-FILES_${PN} = "${datadir}/enigma2 ${datadir}/fonts"
+FILES_${PN} = "/usr/share/enigma2 /usr/share/fonts"
 FILES_${PN}-meta = "${datadir}/meta"
 RDEPENDS_${PN}-meta = ""
 
