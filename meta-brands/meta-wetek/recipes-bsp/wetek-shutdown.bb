@@ -13,8 +13,8 @@ INITSCRIPT_PARAMS = "start 39 0 ."
 inherit pkgconfig update-rc.d
 
 do_install() {
-    install -d ${D}/etc/init.d/
-    install -m 0755 ${WORKDIR}/wetek-shutdown.sh ${D}/etc/init.d/wetek-shutdown
+    install -d ${D}${sysconfdir}/init.d/
+    install -m 0755 ${WORKDIR}/wetek-shutdown.sh ${D}${sysconfdir}/init.d/wetek-shutdown
 }
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"

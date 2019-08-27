@@ -33,4 +33,4 @@ do_package_qa() {
 }
 
 PACKAGES = "${PN}"
-FILES_${PN}="/usr/lib /usr/include"
+FILES_${PN}="${libdir} /usr/include"

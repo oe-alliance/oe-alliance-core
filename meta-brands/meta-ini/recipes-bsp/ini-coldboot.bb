@@ -15,20 +15,20 @@ INITSCRIPT_PARAMS = "start 30 0 ."
 S = "${WORKDIR}"
 
 do_install() {
-    install -d ${D}/etc/init.d ${D}/usr/bin
-    install -m 0755 ${WORKDIR}/coldboot.sh ${D}/etc/init.d/coldboot
-    install -m 0755 ${WORKDIR}/coldboot ${D}/usr/bin/coldboot
+    install -d ${D}${sysconfdir}/init.d ${D}${bindir}
+    install -m 0755 ${WORKDIR}/coldboot.sh ${D}${sysconfdir}/init.d/coldboot
+    install -m 0755 ${WORKDIR}/coldboot ${D}${bindir}/coldboot
 }
 
 pkg_preinst_${PN}_prepend() {
 #!/bin/sh
 if [ -z "$D" ]; then
-    chmod -x $D/etc/init.d/coldboot
+    chmod -x $D${sysconfdir}/init.d/coldboot
 fi
 }
 pkg_postinst_${PN}_append() {
 #!/bin/sh
-chmod 755 $D/etc/init.d/coldboot
+chmod 755 $D${sysconfdir}/init.d/coldboot
 }
 pkg_prerm_${PN}() {
 #!/bin/sh

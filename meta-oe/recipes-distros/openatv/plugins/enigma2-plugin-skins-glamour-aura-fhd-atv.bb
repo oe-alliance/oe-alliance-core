@@ -24,9 +24,9 @@ python -O -m compileall ${S}/usr
 }
 
 do_install() {
-    install -d ${D}/usr/share/enigma2
+    install -d ${D}${datadir}/enigma2
     cp -rp ${S}/usr ${D}/
-    chmod -R a+rX ${D}/usr/share/enigma2/
+    chmod -R a+rX ${D}${datadir}/enigma2/
 }
 
 pkg_postinst_${PN} () {
@@ -39,9 +39,9 @@ exit 0
 
 pkg_postrm_${PN} () {
 #!/bin/sh
-rm -rf /usr/share/enigma2/GlamourAuraFHD-ATV
-rm -rf /usr/lib/enigma2/python/Components/Converter/Glam*
-rm -rf /usr/lib/enigma2/python/Components/Renderer/Glam*
+rm -rf ${datadir}/enigma2/GlamourAuraFHD-ATV
+rm -rf ${libdir}/enigma2/python/Components/Converter/Glam*
+rm -rf ${libdir}/enigma2/python/Components/Renderer/Glam*
 echo "                                                                     "
 echo "Glamour Aura FHD Skin was successfully removed from your receiver    "
 echo "                                                                     "

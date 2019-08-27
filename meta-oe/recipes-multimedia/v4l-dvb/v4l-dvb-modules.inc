@@ -141,14 +141,14 @@ python populate_packages_prepend() {
 
         dvar = d.getVar('PKGD', True)
 
-        # If autoloading is requested, output /etc/modutils/<name> and append
+        # If autoloading is requested, output ${sysconfdir}/modutils/<name> and append
         # appropriate modprobe commands to the postinst
         autoload = d.getVar('module_autoload_%s' % basename, True)
         if not autoload:
             # Also, try canonical name with dashes
             autoload = d.getVar('module_autoload_%s' % basename.replace('_', '-'), True)
         if autoload:
-            name = '%s/etc/modutils/%s' % (dvar, basename)
+            name = '%s${sysconfdir}/modutils/%s' % (dvar, basename)
             f = open(name, 'w')
             for m in autoload.split():
                 f.write('%s\n' % m)
@@ -163,15 +163,15 @@ python populate_packages_prepend() {
         modconf = d.getVar('module_conf_%s' % basename, True)
         if modconf:
             if d.getVar("KERNEL_MAJOR_VERSION", True) == "2.6":
-                name = '%s/etc/modprobe.d/%s.conf' % (dvar, basename)
+                name = '%s${sysconfdir}/modprobe.d/%s.conf' % (dvar, basename)
             else:
-                name = '%s/etc/modutils/%s.conf' % (dvar, basename)
+                name = '%s${sysconfdir}/modutils/%s.conf' % (dvar, basename)
             f = open(name, 'w')
             f.write("%s\n" % modconf)
             f.close()
 
         files = d.getVar('FILES_%s' % pkg, True)
-        files = "%s /etc/modutils/%s /etc/modutils/%s.conf /etc/modprobe.d/%s.conf" % (files, basename, basename, basename)
+        files = "%s ${sysconfdir}/modutils/%s ${sysconfdir}/modutils/%s.conf ${sysconfdir}/modprobe.d/%s.conf" % (files, basename, basename, basename)
         d.setVar('FILES_%s' % pkg, files)
 
         if vals.has_key("description"):

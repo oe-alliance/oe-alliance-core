@@ -19,30 +19,30 @@ SRC_URI = "git://code.vuplus.com/git/filestreamproxy.git;protocol=http;branch=ma
 S = "${WORKDIR}/git"
 
 do_install() {
-    install -d ${D}/usr/bin
-    install -m 0755 ${S}/src/filestreamproxy ${D}/usr/bin
+    install -d ${D}${bindir}
+    install -m 0755 ${S}/src/filestreamproxy ${D}${bindir}
 }
 
 pkg_prerm_${PN}() {
 #!/bin/sh
-grep -vE '^#*\s*8003' /etc/inetd.conf > /tmp/inetd.tmp
-mv /tmp/inetd.tmp /etc/inetd.conf
+grep -vE '^#*\s*8003' ${sysconfdir}/inetd.conf > /tmp/inetd.tmp
+mv /tmp/inetd.tmp ${sysconfdir}/inetd.conf
 
-/etc/init.d/inetd.busybox restart
+${sysconfdir}/init.d/inetd.busybox restart
 }
 
 pkg_preinst_${PN}() {
 #!/bin/sh
-grep -vE '^#*\s*8003' /etc/inetd.conf > /tmp/inetd.tmp
-mv /tmp/inetd.tmp /etc/inetd.conf
+grep -vE '^#*\s*8003' ${sysconfdir}/inetd.conf > /tmp/inetd.tmp
+mv /tmp/inetd.tmp ${sysconfdir}/inetd.conf
 
-/etc/init.d/inetd.busybox restart
+${sysconfdir}/init.d/inetd.busybox restart
 }
 
 pkg_postinst_${PN}() {
 #!/bin/sh
-if ! grep -qE '^#*\s*8003' /etc/inetd.conf; then
-        echo -e "8003\t\tstream\ttcp6\tnowait\troot\t/usr/bin/filestreamproxy\tfilestreamproxy" >> /etc/inetd.conf
-	/etc/init.d/inetd.busybox restart
+if ! grep -qE '^#*\s*8003' ${sysconfdir}/inetd.conf; then
+        echo -e "8003\t\tstream\ttcp6\tnowait\troot\t${bindir}/filestreamproxy\tfilestreamproxy" >> ${sysconfdir}/inetd.conf
+	${sysconfdir}/init.d/inetd.busybox restart
 fi
 }

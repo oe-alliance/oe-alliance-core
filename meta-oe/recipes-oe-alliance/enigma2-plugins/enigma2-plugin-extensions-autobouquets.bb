@@ -25,7 +25,7 @@ SRC_URI="git://github.com/LraiZer/AutoBouquets.git;branch=${AUTOBOUQUETS_BRANCH}
 
 S = "${WORKDIR}/git"
 
-FILES_${PN} = "/usr/lib/enigma2/python/Plugins/Extensions/AutoBouquets"
+FILES_${PN} = "${libdir}/enigma2/python/Plugins/Extensions/AutoBouquets"
 D_FILES_PN = "${D}${FILES_${PN}}"
 
 EXTRA_OECONF = ""

@@ -20,7 +20,7 @@ RDEPENDS_${PN}  = "qtwebkit ${HAVE_GLES} python-netifaces"
 
 S = "${WORKDIR}/git/qtstalker${VER}"
 
-FILES_${PN} =  "${bindir} ${libdir} /usr/share/stalker"
+FILES_${PN} =  "${bindir} ${libdir} ${datadir}/stalker"
 
 do_install(){
 	install -d ${D}${libdir}/enigma2/python/Plugins/Extensions/Stalker
@@ -32,20 +32,20 @@ do_install(){
 
 	cp -rp ${S}/plugin/locale ${D}${libdir}/enigma2/python/Plugins/Extensions/Stalker
 
-	install -d ${D}/usr/share/stalker
-	cp -rp ${S}/usr/share/stalker/* ${D}/usr/share/stalker/
-	chmod -R a+rX ${D}/usr/share/stalker/
+	install -d ${D}${datadir}/stalker
+	cp -rp ${S}${datadir}/stalker/* ${D}${datadir}/stalker/
+	chmod -R a+rX ${D}${datadir}/stalker/
 }
 
 pkg_postinst_ontarget_${PN}(){
 #!/bin/sh
-ln -sf /usr/share/fonts /usr/lib/fonts
+ln -sf ${datadir}/fonts ${libdir}/fonts
 exit 0
 }
 
 pkg_postrm_${PN} () {
 #!/bin/sh
-rm -rf /usr/lib/enigma2/python/Plugins/Extensions/Stalker
+rm -rf ${libdir}/enigma2/python/Plugins/Extensions/Stalker
 exit 0
 }
 

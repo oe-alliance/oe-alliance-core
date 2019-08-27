@@ -17,13 +17,13 @@ SRC_URI="git://github.com/carlo0815/Iflat_Blasser_mod.git"
 
 S = "${WORKDIR}/git"
 
-FILES_${PN} = "${libdir} /usr/share"
+FILES_${PN} = "${libdir} ${datadir}"
 
 do_install() {
     install -d ${D}${libdir}
-    install -d ${D}/usr/share
-    cp -rp ${S}/usr/lib/* ${D}${libdir}/
-    cp -rp ${S}/usr/share/* ${D}/usr/share/
+    install -d ${D}${datadir}
+    cp -rp ${S}${libdir}/* ${D}${libdir}/
+    cp -rp ${S}${datadir}/* ${D}${datadir}/
 }
 
 do_populate_sysroot[noexec] = "1"

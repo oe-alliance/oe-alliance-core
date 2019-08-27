@@ -15,22 +15,22 @@ INITSCRIPT_PARAMS = "start 89 0 ."
 inherit pkgconfig update-rc.d
 
 do_install() {
-    install -d ${D}/etc/init.d/
-    install -m 0755 ${WORKDIR}/vuplus-shutdown.sh ${D}/etc/init.d/vuplus-shutdown
-    install -d ${D}/usr/bin
-    install -m 0755 ${WORKDIR}/turnoff_power ${D}/usr/bin
+    install -d ${D}${sysconfdir}/init.d/
+    install -m 0755 ${WORKDIR}/vuplus-shutdown.sh ${D}${sysconfdir}/init.d/vuplus-shutdown
+    install -d ${D}${bindir}
+    install -m 0755 ${WORKDIR}/turnoff_power ${D}${bindir}
 }
 
 pkg_preinst_${PN}_prepend() {
 #!/bin/sh
 if [ -z "$D" ]; then
-    chmod -x $D/etc/init.d/vuplus-shutdown
+    chmod -x $D${sysconfdir}/init.d/vuplus-shutdown
 fi
 }
 
 pkg_postinst_${PN}_append() {
 #!/bin/sh
-chmod 755 $D/etc/init.d/vuplus-shutdown
+chmod 755 $D${sysconfdir}/init.d/vuplus-shutdown
 }
 
 pkg_prerm_${PN}() {

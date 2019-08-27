@@ -17,6 +17,6 @@ INITSCRIPT_NAME = "ethwol"
 INITSCRIPT_PARAMS = "stop 32 0 ."
 
 do_install() {
-    install -d ${D}/etc/init.d
-    install -m 0755 ${WORKDIR}/ethwol.sh ${D}/etc/init.d/ethwol
+    install -d ${D}${sysconfdir}/init.d
+    install -m 0755 ${WORKDIR}/ethwol.sh ${D}${sysconfdir}/init.d/ethwol
 }

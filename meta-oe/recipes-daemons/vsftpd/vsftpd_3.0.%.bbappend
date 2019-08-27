@@ -19,7 +19,7 @@ do_install_append() {
     mv $D/tmp/vsftpd ${D}${sysconfdir}/pam.d/vsftpd
     fi
     if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
-        rm ${D}/etc/init.d/vsftpd || true
+        rm ${D}${sysconfdir}/init.d/vsftpd || true
     fi
     chown root ${D}${sysconfdir}/vsftpd.conf
 }
@@ -30,17 +30,17 @@ pkg_postinst_${PN}_append() {
 
 if [ -n "$D" ]; then
 	set +e
-	grep -qE '^kids:' $D/etc/passwd
+	grep -qE '^kids:' $D${sysconfdir}/passwd
 	if [[ $? -ne 0 ]] ; then
-		echo 'kids:x:500:500:Linux User,,,:/media:/bin/false' >> $D/etc/passwd
-		echo 'kids:!:16560:0:99999:7:::' >> $D/etc/shadow
+		echo 'kids:x:500:500:Linux User,,,:/media:/bin/false' >> $D${sysconfdir}/passwd
+		echo 'kids:!:16560:0:99999:7:::' >> $D${sysconfdir}/shadow
 	fi
 fi
 
 
 if [ -z "$D" ]; then
 	set +e
-	grep -qE '^kids:' /etc/passwd
+	grep -qE '^kids:' ${sysconfdir}/passwd
 	if [[ $? -ne 0 ]] ; then
 		adduser -h /media -s /bin/false -H -D -u 500 kids 2>/dev/null || adduser -h /media -s /bin/false -H -D kids
 	fi

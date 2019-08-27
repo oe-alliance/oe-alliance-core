@@ -30,6 +30,6 @@ do_install() {
 do_package_qa() {
 }
 
-FILES_${PN} = "/usr/lib/qt5/plugins/egldeviceintegrations/libqeglfs-brcm-nx-integration.so"
+FILES_${PN} = "${libdir}/qt5/plugins/egldeviceintegrations/libqeglfs-brcm-nx-integration.so"
 
 INSANE_SKIP_${PN} += "already-stripped dev-so"

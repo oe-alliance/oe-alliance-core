@@ -23,10 +23,10 @@ libv3ddriver.so \
 libGLESv2.so"
 
 do_install() {
-    install -d ${D}/usr/lib/
-    install -m 0755 ${S}/lib/*.so ${D}/usr/lib/
-    ln -s libv3ddriver.so ${D}/usr/lib/libEGL.so
-    ln -s libv3ddriver.so ${D}/usr/lib/libGLESv2.so
+    install -d ${D}${libdir}/
+    install -m 0755 ${S}/lib/*.so ${D}${libdir}/
+    ln -s libv3ddriver.so ${D}${libdir}/libEGL.so
+    ln -s libv3ddriver.so ${D}${libdir}/libGLESv2.so
     install -d ${D}/usr/include
     cp -a ${S}/include/* ${D}/usr/include/
 }
@@ -34,6 +34,6 @@ do_install() {
 do_package_qa() {
 }
 
-FILES_${PN} = "/usr/lib/*"
+FILES_${PN} = "${libdir}/*"
 FILES_${PN}-dev = "/usr/include/*"
 

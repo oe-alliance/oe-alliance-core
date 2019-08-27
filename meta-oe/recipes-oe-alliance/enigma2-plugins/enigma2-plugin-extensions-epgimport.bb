@@ -2,7 +2,7 @@ SUMMARY = "Imports xmltv files into the EPG cache of enigma2"
 MAINTAINER = "oe-alliance"
 
 LICENSE = "GPLv2"
-LIC_FILES_CHKSUM = "file://../etc/epgimport/readme.txt;startline=1;endline=4;md5=c162054328d930d453543efef81be1d8"
+LIC_FILES_CHKSUM = "file://..${sysconfdir}/epgimport/readme.txt;startline=1;endline=4;md5=c162054328d930d453543efef81be1d8"
 
 inherit gitpkgv pythonnative gettext
 
@@ -24,7 +24,7 @@ PACKAGES = "${PN}-src ${PN}-dbg ${PN}"
 
 PLUGIN = "EPGImport"
 
-FILES_${PN} = "${libdir}/enigma2/python/Plugins/Extensions/${PLUGIN}/ /etc"
+FILES_${PN} = "${libdir}/enigma2/python/Plugins/Extensions/${PLUGIN}/ ${sysconfdir}"
 FILES_${PN}-dbg = "${libdir}/enigma2/python/Plugins/Extensions/${PLUGIN}/.debug /usr/src/debug"
 FILES_${PN}-src = "${libdir}/enigma2/python/Plugins/Extensions/${PLUGIN}/*.py"
 
@@ -34,5 +34,5 @@ install_egg_info() {
 
 do_install_prepend (){
 	install -d ${D}/${sysconfdir}/epgimport
-	install -m 755 ${S}/../etc/epgimport/readme.txt ${D}${sysconfdir}/epgimport/readme.txt
+	install -m 755 ${S}/..${sysconfdir}/epgimport/readme.txt ${D}${sysconfdir}/epgimport/readme.txt
 }

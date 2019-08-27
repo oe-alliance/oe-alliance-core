@@ -15,7 +15,7 @@ RDEPENDS_${PN} = "enigma2-plugin-skincomponents-novum"
 
 SRC_URI = "git://github.com/oe-alliance/oe-alliance-skins.git;protocol=git"
 
-FILES_${PN} = "/usr/share/enigma2/NOVUM_FHD_Light"
+FILES_${PN} = "${datadir}/enigma2/NOVUM_FHD_Light"
 
 
 S = "${WORKDIR}/git"
@@ -25,9 +25,9 @@ do_compile_append() {
 }
 
 do_install() {
-   install -d ${D}/usr/share/enigma2
-   cp -rp ${S}/Nashu/NOVUM_FHD_Light ${D}/usr/share/enigma2/
-   chmod -R a+rX ${D}/usr/share/enigma2/
+   install -d ${D}${datadir}/enigma2
+   cp -rp ${S}/Nashu/NOVUM_FHD_Light ${D}${datadir}/enigma2/
+   chmod -R a+rX ${D}${datadir}/enigma2/
 }
 
 do_package_qa[noexec] = "1"

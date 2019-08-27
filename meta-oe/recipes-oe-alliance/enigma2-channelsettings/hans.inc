@@ -12,11 +12,11 @@ SRC_URI = "git://github.com/haroo/HansSettings.git;protocol=git"
 
 S = "${WORKDIR}/git"
 
-FILES_${PN} = "/etc/enigma2/"
+FILES_${PN} = "${sysconfdir}/enigma2/"
 
 do_install () {
-    install -d ${D}/etc/enigma2
-    cp -r ${S}/${SETTINGS_FILENAME}/* ${D}/etc/enigma2
+    install -d ${D}${sysconfdir}/enigma2
+    cp -r ${S}/${SETTINGS_FILENAME}/* ${D}${sysconfdir}/enigma2
 }
 
 do_prepare_recipe_sysroot[noexec] = "1"

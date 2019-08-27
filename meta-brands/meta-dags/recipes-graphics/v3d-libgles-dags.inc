@@ -36,7 +36,7 @@ do_install() {
 	done
 }
 
-FILES_${PN} = "/usr/lib/*"
+FILES_${PN} = "${libdir}/*"
 FILES_${PN}-dev = "/usr/include/*"
 
 RPROVIDES_${PN} = "virtual/libgles2 virtual/egl libnxpl.so libnexus.so libv3ddriver.so libGLESv2.so libEGL.so libnxclient.so"

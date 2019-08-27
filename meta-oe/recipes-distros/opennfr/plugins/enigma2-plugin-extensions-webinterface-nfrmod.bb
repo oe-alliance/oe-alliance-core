@@ -36,7 +36,7 @@ FILES_${PN}-dbg = "${libdir}/enigma2/python/Plugins/Extensions/WebBouquetEditor/
 FILES_${PN}-src = "${libdir}/enigma2/python/Plugins/Extensions/WebBouquetEditor/*.py"
 FILES_${PN}-dbg = "${libdir}/enigma2/python/Plugins/Extensions/WebAdmin/.debug/"
 FILES_${PN}-src = "${libdir}/enigma2/python/Plugins/Extensions/WebAdmin/*.py"
-FILES_${PN}-doc = "/usr/share/enigma2/README*"
+FILES_${PN}-doc = "${datadir}/enigma2/README*"
 
 pkg_postinst_${PN}() {
 #!/bin/sh

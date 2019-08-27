@@ -18,9 +18,9 @@ S = "${WORKDIR}/git"
 
 PACKAGES =+ "${PN}-src"
 PACKAGES =+ "${PN}-po"
-FILES_${PN} = "/usr/lib /tmp"
-FILES_${PN}-src = "/usr/lib/enigma2/python/Plugins/Extensions/EtPortal/*.py"
-FILES_${PN}-po = "/usr/lib/enigma2/python/Plugins/Extensions/EtPortal/locale/*/*/*.po"
+FILES_${PN} = "${libdir} /tmp"
+FILES_${PN}-src = "${libdir}/enigma2/python/Plugins/Extensions/EtPortal/*.py"
+FILES_${PN}-po = "${libdir}/enigma2/python/Plugins/Extensions/EtPortal/locale/*/*/*.po"
 
 inherit autotools-brokensep
 
@@ -33,10 +33,10 @@ EXTRA_OECONF = "\
 
 pkg_postinst_${PN}() {
 #!/bin/sh 
-if  [ -f /usr/lib/enigma2/python/Plugins/Extensions/EtPortal/adultpassword ] ; then
+if  [ -f ${libdir}/enigma2/python/Plugins/Extensions/EtPortal/adultpassword ] ; then
      echo ""
 else
-     mv -f /tmp/adultpassword /usr/lib/enigma2/python/Plugins/Extensions/EtPortal/adultpassword
+     mv -f /tmp/adultpassword ${libdir}/enigma2/python/Plugins/Extensions/EtPortal/adultpassword
 fi
 echo ""
 echo "EtPortal successfully installed!"
@@ -47,7 +47,7 @@ exit 0
 
 pkg_postrm_${PN}() {
 #!/bin/sh
-rm -r /usr/lib/enigma2/python/Plugins/Extensions/EtPortal
+rm -r ${libdir}/enigma2/python/Plugins/Extensions/EtPortal
 echo " EtPortal removed! You should restart enigma2 now!"
 exit 0
 }

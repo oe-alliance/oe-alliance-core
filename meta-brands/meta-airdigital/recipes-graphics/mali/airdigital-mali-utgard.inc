@@ -39,7 +39,7 @@ do_install_append() {
     && ln -sf libgbm.so.1 libgbm.so)
 }
 
-FILES_${PN} = "/usr/lib/* /etc/udev/rules.d/50-mali.rules"
+FILES_${PN} = "${libdir}/* ${sysconfdir}/udev/rules.d/50-mali.rules"
 FILES_${PN}-dev = "/usr/include/*"
 
 INSANE_SKIP_${PN} += "already-stripped dev-so ldflags"

@@ -36,8 +36,8 @@ inherit image
 
 image_preprocess() {
     # set root password=openspa
-    sed 's%^root:[^:]*:%root:$6$jnyebF6/$ayLqhrLW/R/9eHfhJWkUY3Wzwg2CIQ8p1HgfLDY6D6eDhUS6n.Ke6u6LN2BioDRNJLqf83RLMrT1YSEqzXcx20:%' < ${IMAGE_ROOTFS}/etc/shadow > ${IMAGE_ROOTFS}/etc/shadow.new
-    mv ${IMAGE_ROOTFS}/etc/shadow.new ${IMAGE_ROOTFS}/etc/shadow
+    sed 's%^root:[^:]*:%root:$6$jnyebF6/$ayLqhrLW/R/9eHfhJWkUY3Wzwg2CIQ8p1HgfLDY6D6eDhUS6n.Ke6u6LN2BioDRNJLqf83RLMrT1YSEqzXcx20:%' < ${IMAGE_ROOTFS}${sysconfdir}/shadow > ${IMAGE_ROOTFS}${sysconfdir}/shadow.new
+    mv ${IMAGE_ROOTFS}${sysconfdir}/shadow.new ${IMAGE_ROOTFS}${sysconfdir}/shadow
 }
 
 IMAGE_PREPROCESS_COMMAND += "image_preprocess; "

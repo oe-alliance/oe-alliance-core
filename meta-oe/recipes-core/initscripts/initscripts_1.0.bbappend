@@ -30,21 +30,21 @@ do_install_append() {
 
     install -m 0755    ${WORKDIR}/nocard.sh	${D}${sysconfdir}/init.d/cardserver.None
 
-    # Create the startup links for /etc/init.d/cardserver ...
-    ln -sf cardserver.None ${D}/etc/init.d/cardserver
+    # Create the startup links for ${sysconfdir}/init.d/cardserver ...
+    ln -sf cardserver.None ${D}${sysconfdir}/init.d/cardserver
     update-rc.d -r ${D} cardserver start 95 S .
 
-    # ... but avoid the link /etc/init.d/cardserver becoming a file of this package
-    rm ${D}/etc/init.d/cardserver
+    # ... but avoid the link ${sysconfdir}/init.d/cardserver becoming a file of this package
+    rm ${D}${sysconfdir}/init.d/cardserver
 
     install -m 0755    ${WORKDIR}/nocam.sh	${D}${sysconfdir}/init.d/softcam.None
 
-    # Create the startup links for /etc/init.d/softcam ...
-    ln -sf softcam.None ${D}/etc/init.d/softcam
+    # Create the startup links for ${sysconfdir}/init.d/softcam ...
+    ln -sf softcam.None ${D}${sysconfdir}/init.d/softcam
     update-rc.d -r ${D} softcam defaults 50
 
-    # ... but avoid the link /etc/init.d/softcam becoming a file of this package
-    rm ${D}/etc/init.d/softcam
+    # ... but avoid the link ${sysconfdir}/init.d/softcam becoming a file of this package
+    rm ${D}${sysconfdir}/init.d/softcam
 
 }
 
@@ -54,12 +54,12 @@ do_install_append_u53() {
 }
 
 pkg_postinst_${PN}_append() {
-	if [ ! -e "$D/etc/init.d/cardserver" ]
+	if [ ! -e "$D${sysconfdir}/init.d/cardserver" ]
 	then
-		ln -s cardserver.None $D/etc/init.d/cardserver
+		ln -s cardserver.None $D${sysconfdir}/init.d/cardserver
 	fi
-	if [ ! -e "$D/etc/init.d/softcam" ]
+	if [ ! -e "$D${sysconfdir}/init.d/softcam" ]
 	then
-		ln -s softcam.None $D/etc/init.d/softcam
+		ln -s softcam.None $D${sysconfdir}/init.d/softcam
 	fi
 }

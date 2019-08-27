@@ -13,4 +13,4 @@ SRC_URI = "git://github.com/LudovicRousseau/pcsc-tools.git"
 
 S = "${WORKDIR}/git"
 
-FILES_${PN} += "/usr/share"
+FILES_${PN} += "${datadir}"

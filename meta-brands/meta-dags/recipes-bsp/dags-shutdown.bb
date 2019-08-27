@@ -15,22 +15,22 @@ inherit pkgconfig update-rc.d
 S = "${WORKDIR}"
 
 do_install() {
-    install -d ${D}/etc/init.d/
-    install -m 0755 ${WORKDIR}/dags-shutdown.sh ${D}/etc/init.d/dags-shutdown
-    install -d ${D}/usr/bin
-    install -m 0755 ${WORKDIR}/turnoff_power ${D}/usr/bin
+    install -d ${D}${sysconfdir}/init.d/
+    install -m 0755 ${WORKDIR}/dags-shutdown.sh ${D}${sysconfdir}/init.d/dags-shutdown
+    install -d ${D}${bindir}
+    install -m 0755 ${WORKDIR}/turnoff_power ${D}${bindir}
 }
 
 pkg_preinst_${PN}_prepend() {
 #!/bin/sh
 if [ -z "$D" ]; then
-    chmod -x $D/etc/init.d/dags-shutdown
+    chmod -x $D${sysconfdir}/init.d/dags-shutdown
 fi
 }
 
 pkg_postinst_${PN}_append() {
 #!/bin/sh
-chmod 755 $D/etc/init.d/dags-shutdown
+chmod 755 $D${sysconfdir}/init.d/dags-shutdown
 }
 
 pkg_prerm_${PN}() {

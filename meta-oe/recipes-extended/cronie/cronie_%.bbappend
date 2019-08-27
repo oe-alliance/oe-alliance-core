@@ -1,7 +1,7 @@
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/cronie:"
 
-CONFFILES_${PN} += "/etc/cron.deny /etc/crontab /etc/default/crond"
+CONFFILES_${PN} += "${sysconfdir}/cron.deny ${sysconfdir}/crontab ${sysconfdir}/default/crond"
 
 # Fix Redhat path to Debian
 EXTRA_OECONF_prepend = "SPOOL_DIR=${localstatedir}/spool/cron/crontabs"
@@ -14,7 +14,7 @@ do_install_append() {
 	install -d ${D}${sysconfdir}/default/
 	install -m 0644 ${S}/crond.sysconfig ${D}${sysconfdir}/default/crond
 
-	# Remove /var/spool/cron as it respectively a link to /etc/cron is part of tuxbox-links
+	# Remove /var/spool/cron as it respectively a link to ${sysconfdir}/cron is part of tuxbox-links
 	rm -rf ${D}${localstatedir}/spool/cron 2>/dev/null || true
 
 	# Only install systemd service if we enable systemd
@@ -26,7 +26,7 @@ do_install_append() {
 			-e 's,@SBINDIR@,${sbindir},g' \
 			${D}${systemd_unitdir}/system/crond.service
 		# Fix Redhat path to Debian
-		sed -e 's#/etc/sysconfig/crond#/etc/default/crond#' -i ${D}${systemd_unitdir}/system/crond.service
+		sed -e 's#${sysconfdir}/sysconfig/crond#${sysconfdir}/default/crond#' -i ${D}${systemd_unitdir}/system/crond.service
 	fi
 
 	# Only install SysVinit scripts while we have SysVinit
@@ -34,7 +34,7 @@ do_install_append() {
 		install -d ${D}${sysconfdir}/init.d/
 		install -m 0755 ${WORKDIR}/crond.init ${D}${sysconfdir}/init.d/crond
 		# Fix Redhat path to Debian
-		sed -e 's#CONFIG=/etc/sysconfig/crond#CONFIG=/etc/default/crond#' -i ${D}${sysconfdir}/init.d/crond
+		sed -e 's#CONFIG=${sysconfdir}/sysconfig/crond#CONFIG=${sysconfdir}/default/crond#' -i ${D}${sysconfdir}/init.d/crond
 	fi
 
 	# below are necessary for a complete cron environment

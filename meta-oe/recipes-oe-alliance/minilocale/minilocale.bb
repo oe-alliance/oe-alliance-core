@@ -13,10 +13,10 @@ require conf/license/license-gplv2.inc
 
 SRC_URI = "file://locales.tar.gz file://locale.alias file://c-utf-8.tar.gz file://locale.sh"
 
-S = "${WORKDIR}/usr/lib/locale"
+S = "${WORKDIR}${libdir}/locale"
 
 LOCALEDIR = "${libdir}/locale"
-LOCALEDIR2 = "/usr/share/locale"
+LOCALEDIR2 = "${datadir}/locale"
 
 LANGUAGES = "ar_AE bg_BG ca_AD cs_CZ da_DK de_DE el_GR en_GB en_US es_ES et_EE fa_IR fi_FI fr_FR \
              fy_NL he_IL hr_HR hu_HU id_ID is_IS it_IT lt_LT lv_LV nb_NO nl_NL pl_PL pt_BR pt_PT \

@@ -23,7 +23,7 @@ FILES_${PN} = "/usr/* "
 
 do_install() {
     cp -rp ${S}/usr ${D}/
-    chmod 777 ${D}/usr/bin/snes_run.sh
+    chmod 777 ${D}${bindir}/snes_run.sh
 }
 
 do_package_qa[noexec] = "1"

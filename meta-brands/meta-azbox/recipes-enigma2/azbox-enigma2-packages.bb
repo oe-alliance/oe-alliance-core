@@ -22,19 +22,19 @@ do_compile() {
 }
 
 do_install() {
-    install -d  ${D}/usr/lib/enigma2/python/Plugins/SystemPlugins/RtiSYS
+    install -d  ${D}${libdir}/enigma2/python/Plugins/SystemPlugins/RtiSYS
     
     install -m 0644 ${S}/git/*.pyo \
-    ${D}/usr/lib/enigma2/python/Plugins/SystemPlugins/RtiSYS
+    ${D}${libdir}/enigma2/python/Plugins/SystemPlugins/RtiSYS
 
-    install -d  ${D}/usr/lib/enigma2/python/Plugins/SystemPlugins/VideoSettingsSetup
+    install -d  ${D}${libdir}/enigma2/python/Plugins/SystemPlugins/VideoSettingsSetup
 
     install -m 0644 ${S}/VideoSettingsSetup/* \
-    ${D}/usr/lib/enigma2/python/Plugins/SystemPlugins/VideoSettingsSetup
+    ${D}${libdir}/enigma2/python/Plugins/SystemPlugins/VideoSettingsSetup
 }
 
-FILES_enigma2-plugin-systemplugins-rtisys = "/usr/lib/enigma2/python/Plugins/SystemPlugins/RtiSYS"
-FILES_enigma2-plugin-systemplugins-videosettingssetup = "/usr/lib/enigma2/python/Plugins/SystemPlugins/VideoSettingsSetup"
+FILES_enigma2-plugin-systemplugins-rtisys = "${libdir}/enigma2/python/Plugins/SystemPlugins/RtiSYS"
+FILES_enigma2-plugin-systemplugins-videosettingssetup = "${libdir}/enigma2/python/Plugins/SystemPlugins/VideoSettingsSetup"
 
 PACKAGES = "\
     enigma2-plugin-systemplugins-rtisys \    

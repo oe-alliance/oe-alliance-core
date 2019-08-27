@@ -15,8 +15,8 @@ ALLOW_EMPTY_${PN} = "1"
 do_configure[nostamp] = "1"
 
 do_install() {
-    install -d ${D}/usr/share
-    install -m 0755 ${WORKDIR}/rescue_fastboot_${MACHINE}.bin ${D}/usr/share/fastboot.bin
+    install -d ${D}${datadir}
+    install -m 0755 ${WORKDIR}/rescue_fastboot_${MACHINE}.bin ${D}${datadir}/fastboot.bin
 }
 
 do_deploy() {
@@ -29,4 +29,4 @@ addtask deploy before do_build after do_install
 
 INSANE_SKIP_${PN} += "already-stripped"
 
-FILES_${PN} = "/usr/share"
+FILES_${PN} = "${datadir}"

@@ -12,8 +12,8 @@ INITSCRIPT_PARAMS = "start 31 0 ."
 inherit pkgconfig update-rc.d
 
 do_install() {
-    install -d ${D}/etc/init.d/
-    install -m 0755 ${WORKDIR}/ixuss-shutdown.sh ${D}/etc/init.d/ixuss-shutdown
+    install -d ${D}${sysconfdir}/init.d/
+    install -m 0755 ${WORKDIR}/ixuss-shutdown.sh ${D}${sysconfdir}/init.d/ixuss-shutdown
 }
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"

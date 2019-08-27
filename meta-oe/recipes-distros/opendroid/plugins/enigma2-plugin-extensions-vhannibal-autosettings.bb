@@ -22,5 +22,5 @@ FILES_${PN} = "${libdir}"
 
 do_install() {
     install -d ${D}${libdir}
-    cp -rp ${S}/usr/lib/* ${D}${libdir}/
+    cp -rp ${S}${libdir}/* ${D}${libdir}/
 }

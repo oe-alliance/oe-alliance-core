@@ -4,10 +4,10 @@ do_install_append() {
 		chmod 644 "${f}"
 	done
 
-	# certifi ships its own duplicate of /etc/ssl/certs/ca-certificates.crt
+	# certifi ships its own duplicate of ${sysconfdir}/ssl/certs/ca-certificates.crt
 	# Strip and link to the real thing instead
 	rm ${D}${PYTHON_SITEPACKAGES_DIR}/certifi/cacert.pem
-	ln -s /etc/ssl/certs/ca-certificates.crt ${D}${PYTHON_SITEPACKAGES_DIR}/certifi/cacert.pem
+	ln -s ${sysconfdir}/ssl/certs/ca-certificates.crt ${D}${PYTHON_SITEPACKAGES_DIR}/certifi/cacert.pem
 }
 
 include python-package-split.inc

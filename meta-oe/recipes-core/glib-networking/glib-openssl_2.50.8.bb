@@ -14,7 +14,7 @@ SRC_URI[archive.sha256sum] = "869f08e4e9a719c1df411c2fb5554400f6b24a9db0cb94c435
 
 inherit gnomebase gettext upstream-version-is-even gio-module-cache
 
-EXTRA_OECONF = " --with-ca-certificates=/etc/ssl/certs/ca-certificates.crt "
+EXTRA_OECONF = " --with-ca-certificates=${sysconfdir}/ssl/certs/ca-certificates.crt "
 
 FILES_${PN} += "${libdir}/gio/modules/libgio*.so ${datadir}/dbus-1/services/"
 FILES_${PN}-dev += "${libdir}/gio/modules/libgio*.la"

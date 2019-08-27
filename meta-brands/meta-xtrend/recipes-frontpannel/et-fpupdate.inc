@@ -20,7 +20,7 @@ inherit update-rc.d
 INITSCRIPT_NAME = "fpupdate"
 INITSCRIPT_PARAMS = "start 22 S ."
 
-FILES_${PN} = "/${bindir} /lib/firmware /etc/init.d"
+FILES_${PN} = "/${bindir} /lib/firmware ${sysconfdir}/init.d"
 
 do_install() {
     install -d ${D}/${bindir}
@@ -38,8 +38,8 @@ do_install() {
     echo "fi" >> ${S}/fpupdate.sh
     echo "${bindir}/fpupdate /lib/firmware/avrmain-\$boxtype.hex ${FPVERSION} && rm /lib/firmware/avrmain*.hex" >> ${S}/fpupdate.sh
 
-    install -d ${D}/etc/init.d
-    install -m 0755 ${S}/fpupdate.sh ${D}/etc/init.d/fpupdate
+    install -d ${D}${sysconfdir}/init.d
+    install -m 0755 ${S}/fpupdate.sh ${D}${sysconfdir}/init.d/fpupdate
 }
 
 pkg_postinst_${PN}_append() {
@@ -47,7 +47,7 @@ pkg_postinst_${PN}_append() {
     then
         # force update without requiring reboot
         # (update-rc.d does not restart the script, when it was already installed)
-        /etc/init.d/fpupdate
+        ${sysconfdir}/init.d/fpupdate
     fi
     true
 }

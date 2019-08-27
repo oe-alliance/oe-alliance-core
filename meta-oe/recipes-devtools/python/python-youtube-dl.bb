@@ -29,7 +29,7 @@ do_compile_prepend() {
 }
 
 do_install_append() {
-    mv ${D}${datadir}/etc ${D}${sysconfdir}
+    mv ${D}${datadir}${sysconfdir} ${D}${sysconfdir}
     install -m 0755 -d ${D}${sysconfdir}/bash_completion.d
     install -m 0644 youtube-dl.bash-completion ${D}${sysconfdir}/bash_completion.d
 }
@@ -51,7 +51,7 @@ FILES_${PN}-src = " \
     ${libdir}/${PYTHON_DIR}/site-packages/*/*/*.py \
     ${libdir}/${PYTHON_DIR}/site-packages/*/*/*/*.py \
     ${libdir}/${PYTHON_DIR}/site-packages/*/*/*/*/*.py \
-    ${datadir}/etc/* \
+    ${datadir}${sysconfdir}/* \
     "
 
 FILES_${PN} += "${sysconfdir}"

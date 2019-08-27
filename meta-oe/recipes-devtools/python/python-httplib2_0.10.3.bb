@@ -27,10 +27,10 @@ do_install_append() {
 		chmod 644 "${f}"
 	done
 
-	# httplib2 ships its own (outdated?) duplicate of /etc/ssl/certs/ca-certificates.crt
+	# httplib2 ships its own (outdated?) duplicate of ${sysconfdir}/ssl/certs/ca-certificates.crt
 	# Strip and link to the real thing instead
 	rm ${D}${PYTHON_SITEPACKAGES_DIR}/httplib2/cacerts.txt
-	ln -s /etc/ssl/certs/ca-certificates.crt ${D}${PYTHON_SITEPACKAGES_DIR}/httplib2/cacerts.txt
+	ln -s ${sysconfdir}/ssl/certs/ca-certificates.crt ${D}${PYTHON_SITEPACKAGES_DIR}/httplib2/cacerts.txt
 }
 
 RDEPENDS_${PN} = "ca-certificates"

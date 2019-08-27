@@ -33,7 +33,7 @@ do_install(){
 
 pkg_postinst_${PN}(){
 #!/bin/sh
-ln -sf /usr/share/fonts /usr/lib/fonts
+ln -sf ${datadir}/fonts ${libdir}/fonts
 exit 0
 }
 

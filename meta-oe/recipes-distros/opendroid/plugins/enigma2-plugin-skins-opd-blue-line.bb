@@ -23,10 +23,10 @@ python -O -m compileall ${S}
 
 do_install() {
     install -d ${D}${libdir}
-    install -d ${D}/usr/share
-    cp -rp ${S}/usr/lib/* ${D}${libdir}/
-    cp -rp ${S}/usr/share/* ${D}/usr/share/
-    chmod -R a+rX ${D}/usr/share/enigma2/
+    install -d ${D}${datadir}
+    cp -rp ${S}${libdir}/* ${D}${libdir}/
+    cp -rp ${S}${datadir}/* ${D}${datadir}/
+    chmod -R a+rX ${D}${datadir}/enigma2/
 }
 pkg_postinst_${PN} () {
 #!/bin/sh
@@ -35,7 +35,7 @@ exit 0
 }
 pkg_postrm_${PN} () {
 #!/bin/sh
-rm -rf /usr/share/enigma2/OPD_Blue_Line
+rm -rf ${datadir}/enigma2/OPD_Blue_Line
 echo "                                                           "
 echo "               ...Skin successful removed.                 "
 exit 0

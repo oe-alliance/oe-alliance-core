@@ -20,6 +20,6 @@ do_compile() {
 }
 
 do_install() {
-    install -d ${D}/etc/init.d/
-    install -m 0755 ${WORKDIR}/gigablue-libreader-gbmv200.sh ${D}/etc/init.d/gigablue-libreader
+    install -d ${D}${sysconfdir}/init.d/
+    install -m 0755 ${WORKDIR}/gigablue-libreader-gbmv200.sh ${D}${sysconfdir}/init.d/gigablue-libreader
 }

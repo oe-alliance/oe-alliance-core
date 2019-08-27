@@ -22,7 +22,7 @@ inherit update-rc.d
 INHIBIT_PACKAGE_STRIP = "1"
 
 FILES_${PN} += "${nonarch_base_libdir}/modules/${KV}/extra"
-FILES_${PN} += "/usr/bin/komession"
+FILES_${PN} += "${bindir}/komession"
 FILES_${PN} += "${sysconfdir}/init.d"
 FILES_${PN} += "${sysconfdir}/modules-load.d"
 
@@ -37,10 +37,10 @@ do_package_qa() {
 
 do_install() {
     install -d ${D}${nonarch_base_libdir}/modules/${KV}/extra
-    install -d ${D}/usr/bin
+    install -d ${D}${bindir}
     install -m 0644 ${S}/*.ko ${D}${nonarch_base_libdir}/modules/${KV}/extra
     install -m 0644 ${S}/dvbmodule ${D}${nonarch_base_libdir}/modules/${KV}/extra
-    install -m 0755 ${S}/komession ${D}/usr/bin
+    install -m 0755 ${S}/komession ${D}${bindir}
     install -m 0755  ${S}/load ${D}${nonarch_base_libdir}/modules/${KV}/extra
     install -d ${D}${sysconfdir}/init.d/
     install -m 0755 ${WORKDIR}/loadmodules.sh ${D}${sysconfdir}/init.d/loadmodules

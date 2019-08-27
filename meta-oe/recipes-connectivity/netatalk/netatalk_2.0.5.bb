@@ -25,12 +25,12 @@ PACKAGES = "${PN}-atalkd ${PN}-pap ${PN}-timelord ${PN}-dbg ${PN} ${PN}-doc ${PN
 RRECOMMENDS_${PN}-atalkd = "kernel-module-appletalk"
 
 FILES_${PN}-atalkd += "${sysconfdir}/netatalk/atalkd.conf \
-                       /usr/sbin/atalkd"
-FILES_${PN}-pap +=  "/usr/bin/pap \
+                       ${sbindir}/atalkd"
+FILES_${PN}-pap +=  "${bindir}/pap \
                      ${sysconfdir}/netatalk/papd.conf \
-                     /usr/sbin/papd \
-                     /usr/bin/papstatus"
-FILES_${PN}-timelord += "/usr/sbin/timelord"
+                     ${sbindir}/papd \
+                     ${bindir}/papstatus"
+FILES_${PN}-timelord += "${sbindir}/timelord"
 FILES_${PN}-dbg += "${sysconfdir}/netatalk/uams/.debug"
 
 EXTRA_OECONF += "ac_cv_path_KRB5_CONFIG=no \

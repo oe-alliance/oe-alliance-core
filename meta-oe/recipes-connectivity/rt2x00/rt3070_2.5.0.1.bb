@@ -15,14 +15,14 @@ S = "${WORKDIR}/RT3070_RT3370_RT5370_RT5372"
 do_install() {
     install -d ${D}${nonarch_base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/net/wireless
     install -m 0644 ${S}/os/linux/rt5370sta.ko ${D}${nonarch_base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/net/wireless
-    install -d ${D}/etc/Wireless/RT2870STA
-    install -m 0644 ${S}/RT2870STA.dat ${D}/etc/Wireless/RT2870STA
-    install -d ${D}/etc/modutils
-    echo rt5370sta > ${D}/etc/modutils/rt5370
+    install -d ${D}${sysconfdir}/Wireless/RT2870STA
+    install -m 0644 ${S}/RT2870STA.dat ${D}${sysconfdir}/Wireless/RT2870STA
+    install -d ${D}${sysconfdir}/modutils
+    echo rt5370sta > ${D}${sysconfdir}/modutils/rt5370
 }
 
 PACKAGES =+ "${PN}-firmware"
-FILES_${PN}-firmware = "/etc/Wireless"
+FILES_${PN}-firmware = "${sysconfdir}/Wireless"
 
 RDEPENDS_${PN} = "${PN}-firmware"
 

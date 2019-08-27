@@ -21,12 +21,12 @@ INITSCRIPT_PARAMS = "start 90 S ."
 do_configure[nostamp] = "1"
 
 do_install() {
-    install -d ${D}/usr/share
-    install -m 0644 ${S}/apploader.bin ${D}/usr/share/apploader.bin
+    install -d ${D}${datadir}
+    install -m 0644 ${S}/apploader.bin ${D}${datadir}/apploader.bin
     install -m 0755 -d ${D}${sysconfdir}/init.d
     install -m 0755 ${WORKDIR}/flash-apploader ${D}${sysconfdir}/init.d/flash-apploader
 }
 
-FILES_${PN} = "/usr/share ${sysconfdir}"
+FILES_${PN} = "${datadir} ${sysconfdir}"
 
 INSANE_SKIP_${PN} += "already-stripped"

@@ -168,11 +168,11 @@ python split_kernel_module_packages () {
 
         dvar = d.getVar('PKGD', True)
 
-        # If autoloading is requested, output /etc/modules-load.d/<name>.conf and append
+        # If autoloading is requested, output ${sysconfdir}/modules-load.d/<name>.conf and append
         # appropriate modprobe commands to the postinst
         autoload = d.getVar('module_autoload_%s' % basename, True)
         if autoload:
-            name = '%s/etc/modules-load.d/%s.conf' % (dvar, basename)
+            name = '%s${sysconfdir}/modules-load.d/%s.conf' % (dvar, basename)
             f = open(name, 'w')
             for m in autoload.split():
                 f.write('%s\n' % m)
@@ -186,13 +186,13 @@ python split_kernel_module_packages () {
         # Write out any modconf fragment
         modconf = d.getVar('module_conf_%s' % basename, True)
         if modconf:
-            name = '%s/etc/modprobe.d/%s.conf' % (dvar, basename)
+            name = '%s${sysconfdir}/modprobe.d/%s.conf' % (dvar, basename)
             f = open(name, 'w')
             f.write("%s\n" % modconf)
             f.close()
 
         files = d.getVar('FILES_%s' % pkg, True)
-        files = "%s /etc/modules-load.d/%s.conf /etc/modprobe.d/%s.conf" % (files, basename, basename)
+        files = "%s ${sysconfdir}/modules-load.d/%s.conf ${sysconfdir}/modprobe.d/%s.conf" % (files, basename, basename)
         d.setVar('FILES_%s' % pkg, files)
 
         if "description" in vals:
@@ -221,7 +221,7 @@ python split_kernel_module_packages () {
     # avoid warnings. removedirs only raises an OSError if an empty
     # directory cannot be removed.
     dvar = d.getVar('PKGD', True)
-    for dir in ["%s/etc/modprobe.d" % (dvar), "%s/etc/modules-load.d" % (dvar), "%s/etc" % (dvar)]:
+    for dir in ["%s${sysconfdir}/modprobe.d" % (dvar), "%s${sysconfdir}/modules-load.d" % (dvar), "%s${sysconfdir}" % (dvar)]:
         if len(os.listdir(dir)) == 0:
             os.rmdir(dir)
 }

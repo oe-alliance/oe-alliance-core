@@ -44,7 +44,7 @@ RPROVIDES_${PN}-telnetd += "virtual/telnetd"
 do_install_append() {
     if grep "CONFIG_FEATURE_TELNETD_STANDALONE=y" ${B}/.config; then
 	install -m 0755 ${WORKDIR}/telnetd ${D}${sysconfdir}/init.d/telnetd.${BPN}
-	sed -i "s:/usr/sbin/:${sbindir}/:" ${D}${sysconfdir}/init.d/telnetd.${BPN}
+	sed -i "s:${sbindir}/:${sbindir}/:" ${D}${sysconfdir}/init.d/telnetd.${BPN}
     fi
     rm -rf ${D}${sysconfdir}/mdev
     install -m 0755 ${WORKDIR}/vi.sh ${D}${base_bindir}/vi.sh
@@ -63,9 +63,9 @@ pkg_postrm_${PN}_append () {
 
 pkg_preinst_${PN}-telnetd_prepend () {
 if [ -z "$D" ]; then
-    if [ -e $D/etc/inetd.conf ]; then
-        grep -vE '^#*\s*(23|telnet)' $D/etc/inetd.conf > $D/tmp/inetd.tmp
-        mv $D/tmp/inetd.tmp $D/etc/inetd.conf
+    if [ -e $D${sysconfdir}/inetd.conf ]; then
+        grep -vE '^#*\s*(23|telnet)' $D${sysconfdir}/inetd.conf > $D/tmp/inetd.tmp
+        mv $D/tmp/inetd.tmp $D${sysconfdir}/inetd.conf
     fi
 fi
 }

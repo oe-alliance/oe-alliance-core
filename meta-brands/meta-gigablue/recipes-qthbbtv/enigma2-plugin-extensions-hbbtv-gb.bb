@@ -48,10 +48,10 @@ do_install_append() {
 
 pkg_postinst_${PN}(){
 #!/bin/sh
-ln -sf /usr/share/fonts /usr/lib/fonts
+ln -sf ${datadir}/fonts ${libdir}/fonts
 
 # remove old PLUGINPATH
-# vbcfg.py requires PLUGINROOT = "/usr/lib/enigma2/python/Plugins/Extensions/HbbTV"
+# vbcfg.py requires PLUGINROOT = "${libdir}/enigma2/python/Plugins/Extensions/HbbTV"
 if [ -d ${libdir}/enigma2/python/Plugins/Extensions/Hbbtv ]; then
   rm -rf ${libdir}/enigma2/python/Plugins/Extensions/Hbbtv
 fi
