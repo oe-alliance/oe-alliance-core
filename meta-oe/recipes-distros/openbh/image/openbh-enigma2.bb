@@ -8,7 +8,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r12"
+PR = "r13"
 
 inherit packagegroup
 
@@ -26,6 +26,7 @@ RRECOMMENDS_${PN} = " \
     enigma2-plugin-extensions-autotimer \
     enigma2-plugin-extensions-cutlisteditor \
     enigma2-plugin-extensions-epgimport \
+    enigma2-plugin-extensions-epgrefresh \
     enigma2-plugin-extensions-epgsearch \
     enigma2-plugin-extensions-imdb \
     enigma2-plugin-extensions-mediaplayer \
