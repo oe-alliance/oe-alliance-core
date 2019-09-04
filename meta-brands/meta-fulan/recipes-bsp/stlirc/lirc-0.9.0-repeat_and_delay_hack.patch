@@ -1,8 +1,6 @@
-Index: lirc-0.9.0/daemons/lircd.c
-===================================================================
---- lirc-0.9.0.orig/daemons/lircd.c
-+++ lirc-0.9.0/daemons/lircd.c
-@@ -148,6 +148,7 @@ char *protocol_string[] = {
+--- a/daemons/lircd.c
++++ b/daemons/lircd.c
+@@ -146,6 +146,7 @@ char *protocol_string[] = {
  
  static void log_enable(int enabled);
  static int log_enabled = 1;
@@ -10,7 +8,7 @@ Index: lirc-0.9.0/daemons/lircd.c
  
  #ifndef USE_SYSLOG
  #define HOSTNAME_LEN 128
-@@ -410,6 +411,46 @@ void dosighup(int sig)
+@@ -408,6 +409,46 @@ void dosighup(int sig)
  	}
  }
  
@@ -57,7 +55,7 @@ Index: lirc-0.9.0/daemons/lircd.c
  int setup_uinputfd(const char *name)
  {
  #if defined(__linux__)
-@@ -958,6 +999,7 @@ void start_server(mode_t permission, int
+@@ -956,6 +997,7 @@ void start_server(mode_t permission, int nodaemon)
  
  	if (useuinput) {
  		uinputfd = setup_uinputfd(progname);

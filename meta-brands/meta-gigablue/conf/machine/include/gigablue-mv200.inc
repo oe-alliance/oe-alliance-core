@@ -7,7 +7,6 @@ MTD_BLACK  = "mmcblk0"
 VER = "-gbmv200"
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "\
-    gigablue-dvb-modules-${MACHINE} \
     gigablue-loadmodules-${MACHINE} \ 
     gigablue-opengl-${MACHINE} \
     gigablue-libs-${MACHINE} \

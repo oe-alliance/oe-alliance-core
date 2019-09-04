@@ -22,6 +22,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'gbx3h', 'X3 H' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbquad4k', 'UHD QUAD 4K' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbue4k', 'UHD UE 4K' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbtrio4k', 'UHD TRIO 4K' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbip4k', 'IP 4K' , '', d)}\
 "
 
 MACHINE_BRAND = "\
@@ -43,6 +44,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'gbx3h', 'GigaBlue' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbquad4k', 'GigaBlue' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbue4k', 'GigaBlue' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbtrio4k', 'GigaBlue' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbip4k', 'GigaBlue' , '', d)}\
 "
 
 IMAGEDIR ?= "\
@@ -64,6 +66,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'gbx3h', 'gigablue/x3h' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbquad4k', 'gigablue/quad4k' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbue4k', 'gigablue/ue4k' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbtrio4k', 'gigablue/trio4k' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbip4k', 'gigablue/ip4k' , '', d)}\
 "
 
 MTD_KERNEL = "\
@@ -85,6 +88,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'gbx3h', 'mtd2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbquad4k', 'mmcblk0p4' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbue4k', 'mmcblk0p4' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbtrio4k', 'mmcblk0p12' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbip4k', 'mmcblk0p12' , '', d)}\
 "
 
 MTD_ROOTFS = "\
@@ -106,6 +110,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'gbx3h', 'mtd0' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbquad4k', 'mmcblk0p5' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbue4k', 'mmcblk0p5' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbtrio4k', 'mmcblk0p13' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbip4k', 'mmcblk0p13' , '', d)}\
 "
 
 MACHINE_DRIVER = "\
@@ -126,7 +131,8 @@ ${@bb.utils.contains('MACHINEBUILD', 'gbultraueh', 'gb73625' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbx3h', 'gb73625' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbquad4k', 'gb7252' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbue4k', 'gb7252' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'gbtrio4k', 'gbmv200' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbtrio4k', 'gbtrio4k' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbip4k', 'gbip4k' , '', d)}\
 "
 
 KERNEL_FILE = "\
@@ -148,6 +154,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'gbx3h', 'kernel.bin' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbquad4k', 'kernel.bin' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbue4k', 'kernel.bin' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbtrio4k', 'kernel.bin' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbip4k', 'kernel.bin' , '', d)}\
 "
 
 ROOTFS_FILE = "\
@@ -169,6 +176,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'gbx3h', 'rootfs.bin' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbquad4k', 'rootfs.tar.bz2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbue4k', 'rootfs.tar.bz2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbtrio4k', 'rootfs.tar.bz2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbip4k', 'rootfs.tar.bz2' , '', d)}\
 "
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS += " \
@@ -209,6 +217,7 @@ MACHINE_EXTRA_RDEPENDS += "\
     ${@bb.utils.contains('MACHINE', 'gbmv200', 'enigma2-plugin-systemplugins-remotecontrolcode' , '', d)} \
     ${@bb.utils.contains('MACHINEBUILD', 'gb800solo', 'mtd-utils-jffs2' , '', d)} \
     ${@bb.utils.contains('MACHINEBUILD', 'gbipbox', 'enigma2-plugin-extensions-gbipboxclient' , '', d)} \
+    ${@bb.utils.contains('MACHINEBUILD', 'gbip4k', 'enigma2-plugin-extensions-gbipboxclient' , '', d)} \
 "
 
 include conf/machine/include/autoload-filesystems.inc
@@ -235,6 +244,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'gbultraue', 'YUV RCA' , '', d)} \
 ${@bb.utils.contains('MACHINEBUILD', 'gbultraueh', 'YUV RCA' , '', d)} \
 ${@bb.utils.contains('MACHINEBUILD', 'gbquad4k', 'HDMI-IN-FHD' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbtrio4k', 'AV_JACK' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbip4k', 'AV_JACK' , '', d)}\
 "
 
 BOOTLOGO_FILENAME = "splash.bin"

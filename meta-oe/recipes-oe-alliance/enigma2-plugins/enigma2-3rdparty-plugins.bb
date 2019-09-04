@@ -11,7 +11,7 @@ DEPENDS = "tslib mpfr gmp"
 SRCREV = "${AUTOREV}"
 PV = "${IMAGE_VERSION}+gitr${SRCPV}"
 PKGV = "${IMAGE_VERSION}+gitr${GITPKGV}"
-PR = "r235"
+PR = "r236"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -53,7 +53,6 @@ THIRDPARTY_PLUGINS = " \
     ${@bb.utils.contains("TARGET_ARCH", "sh4", "enigma2-plugin-extensions-isettinge2-3.4.4-oe2.0-all-sh4.ipk" , "", d)} \
     ${@bb.utils.contains("TARGET_ARCH", "mipsel", "enigma2-plugin-extensions-isettinge2-3.4.4-oe2.0-all-mips.ipk" , "", d)} \
     ${@bb.utils.contains("TARGET_ARCH", "arm", "enigma2-plugin-extensions-isettinge2-3.4.4-oe2.0-all-arm.ipk" , "", d)} \
-    enigma2-plugin-extensions-jedimakerxtream_4.22-20190710_all.ipk \
     enigma2-plugin-extensions-livefootball_7.1_all.ipk \
     enigma2-plugin-extensions-mediainfo_3.0.7_all.ipk \
     enigma2-plugin-extensions-mediaportal_all.ipk \
@@ -75,7 +74,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-pzyemail_0.8-20150614_all.ipk \
     enigma2-plugin-extensions-screengrabber_2.5_all.ipk \
     enigma2-plugin-extensions-screensaver_5.7.1_all.ipk \
-    enigma2-plugin-extensions-serienrecorder_3.8.0_all.ipk \
+    enigma2-plugin-extensions-serienrecorder_3.9.0_all.ipk \
     enigma2-plugin-extensions-sherlock_5.01r1_mipsel.ipk \
     enigma2-plugin-extensions-skyrecorder_1.7.2_all.ipk \
     enigma2-plugin-extensions-songs-to_0.1_mips32el.ipk \
