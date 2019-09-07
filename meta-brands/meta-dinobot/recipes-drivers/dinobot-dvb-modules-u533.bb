@@ -1,5 +1,5 @@
 KV = "4.4.35"
-SRCDATE = "20190718"
+SRCDATE = "20190906"
 
 do_install_append() {
 	install -d ${D}/lib/firmware/brcm
@@ -16,5 +16,5 @@ require dinobot-dvb-modules2.inc
 
 SRC_URI += "file://u53x-platform.zip file://dinobot-sdio-wifi.zip"
 
-SRC_URI[md5sum] = "f5f93cbbb4b489aa59902a03c41c868b"
-SRC_URI[sha256sum] = "9875c3598c99049d95886ad0c724970ce07e078a7a8a9264ea8505bfa4fa35de"
+SRC_URI[md5sum] = "713bd8baf854e4e2697e6dae6ef8169b"
+SRC_URI[sha256sum] = "b56a85306a0cfe16744e9955bb24c8b55cd0d331fc018bc4b0d12da3e8a3311d"
