@@ -1,3 +1,4 @@
+inherit upx-compress
 FILESEXTRAPATHS_prepend := "${THISDIR}/${P}:"
 
 # Remove acl, cups etc. support.

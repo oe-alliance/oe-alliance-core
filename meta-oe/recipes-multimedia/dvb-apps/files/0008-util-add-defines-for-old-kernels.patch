@@ -1,0 +1,26 @@
+diff --git a/util/szap/util.c b/util/szap/util.c
+index a1006ba..3746dc7 100644
+--- a/util/szap/util.c
++++ b/util/szap/util.c
+@@ -33,6 +33,21 @@
+ #include <linux/dvb/frontend.h>
+ #include <linux/dvb/dmx.h>
+ 
++#ifndef SYS_DVBC_ANNEX_A
++#define SYS_DVBC_ANNEX_A    1
++#endif
++
++#ifndef SYS_TURBO
++#define SYS_TURBO    17
++#endif
++
++#ifndef SYS_DVBC_ANNEX_C
++#define SYS_DVBC_ANNEX_C    18
++#endif
++
++#ifndef DTV_ENUM_DELSYS
++#define DTV_ENUM_DELSYS     44
++#endif
+ 
+ int set_pesfilter(int dmxfd, int pid, int pes_type, int dvr)
+ {

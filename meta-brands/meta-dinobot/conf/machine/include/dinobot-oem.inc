@@ -14,6 +14,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'dinobot4kse', 'DINOBOT 4KSE' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinobot4kplus', 'DINOBOT 4K Plus' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinobot4kmini', 'DINOBOT 4K mini' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinobot4kpro', 'DINOBOT 4K Pro' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'dinobot4kelite', 'DINOBOT 4K+ Elite' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axashis4kcombo', 'HIS4K Combo' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axashis4kcomboplus', 'HIS4K Combo Plus' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'ferguson4k', 'U5 PVR' , '', d)}\
@@ -21,6 +22,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'dinobotu55', 'DINOBOT U55' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinoboth265', 'DINOBOT H265' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'hitube4k', '4K' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iziboxone4k', 'ONE 4K' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'iziboxx3', 'X3' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axashistwin', 'HIS Twin' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axashisc4k', 'HIS C 4K' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'protek4kx1', '4K X1' , '', d)}\
@@ -29,6 +31,8 @@ ${@bb.utils.contains('MACHINEBUILD', 'spycatminiv2', 'Mini V2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iziboxecohd', 'ECO TWIN HD' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'jdhdduo', 'HD DUO' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'turing', 'TURING' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'arivatwin', 'ARIVA ATV TT' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'arivacombo', 'ARIVA ATV COMBO' , '', d)}\
 "
 
 MACHINE_BRAND = "\
@@ -42,6 +46,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'dinobot4kse', 'Vivant' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinobot4kplus', 'Vivant' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinobot4kmini', 'Vivant' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinobot4kpro', 'Vivant' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'dinobot4kelite', 'Vivant' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axashis4kcombo', 'AXAS' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axashis4kcomboplus', 'AXAS' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'ferguson4k', 'Ferguson' , '', d)}\
@@ -49,6 +54,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'dinobotu55', 'Vivant' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinoboth265', 'Vivant' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'hitube4k', 'HITUBE' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iziboxone4k', 'IZIBOX' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'iziboxx3', 'IZIBOX' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axashistwin', 'AXAS' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axashisc4k', 'AXAS' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'protek4kx1', 'PROTEK' , '', d)}\
@@ -57,6 +63,8 @@ ${@bb.utils.contains('MACHINEBUILD', 'spycatminiv2', 'SPYCAT' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iziboxecohd', 'IZIBOX' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'JamesDonkey', 'HD DUO' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'turing', 'Atto.TV' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'arivatwin', 'Ferguson' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'arivacombo', 'Ferguson' , '', d)}\
 "
 
 MTD_KERNEL = "\
@@ -70,6 +78,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'dinobot4kse', 'mmcblk0p10' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinobot4kplus', 'mmcblk0p10' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinobot4kmini', 'mmcblk0p10' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinobot4kpro', 'mmcblk0p10' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'dinobot4kelite', 'mmcblk0p10' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axashis4kcombo', 'mmcblk0p9' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axashis4kcomboplus', 'mmcblk0p10' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'ferguson4k', 'mmcblk0p10' , '', d)}\
@@ -77,14 +86,17 @@ ${@bb.utils.contains('MACHINEBUILD', 'dinobotu55', 'mtd10' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinoboth265', 'mtd8' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'hitube4k', 'mtd10' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iziboxone4k', 'mtd10' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'iziboxx3', 'mtd10' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axashistwin', 'mtd8' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'axashisc4k', 'mmcblk0p10' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'axashisc4k', 'mmcblk0p9' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'protek4kx1', 'mmcblk0p9' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'anadolprohd5', 'mtd8' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'spycatminiv2', 'mtd8' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iziboxecohd', 'mtd8' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'JamesDonkey', 'mtd8' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'turing', 'mtd8' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'arivatwin', 'mmcblk0p10' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'arivacombo', 'mmcblk0p10' , '', d)}\
 "
 
 MTD_ROOTFS = "\
@@ -98,6 +110,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'dinobot4kse', 'mmcblk0p13' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinobot4kplus', 'mmcblk0p13' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinobot4kmini', 'mmcblk0p13' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinobot4kpro', 'mmcblk0p13' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'dinobot4kelite', 'mmcblk0p13' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axashis4kcombo', 'mmcblk0p10' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axashis4kcomboplus', 'mmcblk0p13' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'ferguson4k', 'mmcblk0p13' , '', d)}\
@@ -105,14 +118,17 @@ ${@bb.utils.contains('MACHINEBUILD', 'dinobotu55', 'mtd11' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinoboth265', 'mtd9' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'hitube4k', 'mtd11' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iziboxone4k', 'mtd11' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'iziboxx3', 'mtd11' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axashistwin', 'mtd9' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'axashisc4k', 'mmcblk0p13' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'axashisc4k', 'mmcblk0p10' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'protek4kx1', 'mmcblk0p10' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'anadolprohd5', 'mtd11' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'spycatminiv2', 'mtd11' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iziboxecohd', 'mtd11' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'JamesDonkey', 'mtd11' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'turing', 'mtd11' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'arivatwin', 'mmcblk0p13' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'arivacombo', 'mmcblk0p13' , '', d)}\
 "
 
 SDCARDIMG = "\
@@ -126,6 +142,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'dinobot4kse', 'no' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinobot4kplus', 'no' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinobot4kmini', 'no' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinobot4kpro', 'no' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'dinobot4kelite', 'no' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axashis4kcombo', 'no' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axashis4kcomboplus', 'no' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'ferguson4k', 'no' , '', d)}\
@@ -133,6 +150,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'dinobotu55', 'no' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinoboth265', 'no' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'hitube4k', 'no' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iziboxone4k', 'no' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'iziboxx3', 'no' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axashistwin', 'no' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axashisc4k', 'no' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'protek4kx1', 'no' , '', d)}\
@@ -141,6 +159,8 @@ ${@bb.utils.contains('MACHINEBUILD', 'spycatminiv2', 'no' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iziboxecohd', 'no' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'JamesDonkey', 'no' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'turing', 'no' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'arivatwin', 'no' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'arivacombo', 'no' , '', d)}\
 "
 
 IMAGEDIR = "\
@@ -154,6 +174,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'dinobot4kse', 'dinobot/${MACHINE}' , '', d
 ${@bb.utils.contains('MACHINEBUILD', 'dinobot4kplus', 'dinobot/${MACHINE}' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinobot4kmini', 'dinobot/${MACHINE}' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinobot4kpro', 'dinobot/${MACHINE}' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'dinobot4kelite', 'dinobot/${MACHINE}' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axashis4kcombo', 'axas/axascombo' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axashis4kcomboplus', 'axas/axascomboplus' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'ferguson4k', 'dinobot/${MACHINE}' , '', d)}\
@@ -161,14 +182,17 @@ ${@bb.utils.contains('MACHINEBUILD', 'dinobotu55', 'dinobot/${MACHINE}' , '', d)
 ${@bb.utils.contains('MACHINEBUILD', 'dinoboth265', 'dinobot/${MACHINE}' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'hitube4k', 'dinobot/${MACHINE}' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iziboxone4k', 'dinobot/${MACHINE}' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'iziboxx3', 'izibox/x3' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axashistwin', 'axas/axashistwin' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axashisc4k', 'axas/axasc4k' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'protek4kx1', 'dinobot/${MACHINE}' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'anadolprohd5', 'dinobot/${MACHINE}' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'spycatminiv2', 'dinobot/${MACHINE}' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'iziboxecohd', 'dinobot/${MACHINE}' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'JamesDonkey', 'dinobot/${MACHINE}' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'turing', 'dinobot/${MACHINE}' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'protek4kx1', 'protek/4kx1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'anadolprohd5', 'anadol/prohd5' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'spycatminiv2', 'spycat/miniv2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'iziboxecohd', 'izibox/ecohd' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'JamesDonkey', 'jamesdonkey/hdduo' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'turing', 'atto/turing' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'arivatwin', 'ferguson/atvtt' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'arivacombo', 'ferguson/atvcombo' , '', d)}\
 "
 
 KERNEL_MODULE_AUTOLOAD += "xhci-plat-hcd"
@@ -181,23 +205,25 @@ MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "\
     kernel-module-xhci-plat-hcd \
     kernel-module-ehci-platform \
     kernel-module-ohci-platform \
-    ${@bb.utils.contains('MACHINE_FEATURES', 'KODI', 'dinobot-opengl-${MACHINE}', '',d)} \
+    ${@bb.utils.contains('MACHINE_FEATURES', 'KODI', 'dinobot-opengl-${SOC_FAMILY}', '',d)} \
+    ${@bb.utils.contains('MACHINE_FEATURES', 'emmc', 'resizerootfs' , '', d)} \
+    dinobot-partitions-${SOC_FAMILY} \
     dinobot-libs-${MACHINE} \
     dinobot-hihalt-${MACHINE} \
     dinobot-pvr \
     dinobot-lib-helper \
 "
 
-MACHINE_FEATURES += "switchoff  hdmicec skins1080 blindscan-tbs emmc mmc alsa hbbtv-browser-webkit qtstalker HDMI \
+MACHINE_FEATURES += "switchoff  hdmicec skins1080 blindscan-tbs alsa hbbtv-browser-webkit qtstalker HDMI \
     ${@bb.utils.contains('MACHINEBUILD', 'anadol4k', '' , ' dvb-c', d)} \
     ${@bb.utils.contains('MACHINEBUILD', 'anadol4kcombo', '' , ' dvb-c', d)} \
     "
 
 PREFERRED_VERSION_linux-dinobot = "4.4.35"
 PREFERRED_VERSION_linux-libc-headers = "4.4"
-PREFERRED_PROVIDER_virtual/egl = "dinobot-opengl-${MACHINE}" 
-PREFERRED_PROVIDER_virtual/libgles1 = "dinobot-opengl-${MACHINE}"
-PREFERRED_PROVIDER_virtual/libgles2 = "dinobot-opengl-${MACHINE}"
+PREFERRED_PROVIDER_virtual/egl = "dinobot-opengl-${SOC_FAMILY}" 
+PREFERRED_PROVIDER_virtual/libgles1 = "dinobot-opengl-${SOC_FAMILY}"
+PREFERRED_PROVIDER_virtual/libgles2 = "dinobot-opengl-${SOC_FAMILY}"
 PREFERRED_PROVIDER_virtual/kodi = "stb-kodi-${MACHINE}"
 PREFERRED_PROVIDER_virtual/blindscan-dvbs = "dinobot-blindscan-${MACHINE}"
 PREFERRED_VERSION_ffmpeg = "3.4.2"
@@ -205,6 +231,7 @@ PREFERRED_VERSION_ffmpeg = "3.4.2"
 MACHINE_EXTRA_RRECOMMENDS += " \
     gstreamer1.0-plugin-dvbmediasink \
     gstreamer1.0-libav \
+    ${@bb.utils.contains('MACHINEBUILD', 'iziboxx3', 'enigma2-plugin-extensions-gbipboxclient' , '', d)} \
     "
 
 DVBPROVIDER = "kernel"

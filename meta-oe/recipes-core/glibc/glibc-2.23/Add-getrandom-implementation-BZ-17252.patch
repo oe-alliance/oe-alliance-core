@@ -1,5 +1,5 @@
 diff --git a/posix/Makefile b/posix/Makefile
-index 5b0e298..68ad2cc 100644
+index f94e023c60..dad8baafe1 100644
 --- a/posix/Makefile
 +++ b/posix/Makefile
 @@ -59,7 +59,8 @@ routines :=								      \
@@ -12,7 +12,7 @@ index 5b0e298..68ad2cc 100644
  
  aux		:= init-posix environ
  tests		:= tstgetopt testfnm runtests runptests	     \
-@@ -90,7 +91,7 @@ tests		:= tstgetopt testfnm runtests runptests	     \
+@@ -87,7 +88,7 @@ tests		:= tstgetopt testfnm runtests runptests	     \
  		   bug-getopt1 bug-getopt2 bug-getopt3 bug-getopt4 \
  		   bug-getopt5 tst-getopt_long1 bug-regex34 bug-regex35 \
  		   tst-pathconf tst-getaddrinfo4 tst-rxspencer-no-utf8 \
@@ -22,7 +22,7 @@ index 5b0e298..68ad2cc 100644
  ifeq (yes,$(build-shared))
  test-srcs	:= globtest
 diff --git a/posix/Versions b/posix/Versions
-index bb481a5..23f2c85 100644
+index bb481a505b..23f2c85eff 100644
 --- a/posix/Versions
 +++ b/posix/Versions
 @@ -134,6 +134,20 @@ libc {
@@ -48,7 +48,7 @@ index bb481a5..23f2c85 100644
    }
 diff --git a/posix/getrandom.c b/posix/getrandom.c
 new file mode 100644
-index 0000000..57d18ac
+index 0000000000..57d18ac9ec
 --- /dev/null
 +++ b/posix/getrandom.c
 @@ -0,0 +1,32 @@
@@ -86,7 +86,7 @@ index 0000000..57d18ac
 +strong_alias (__getrandom, getrandom)
 diff --git a/posix/getrandom_emulation.c b/posix/getrandom_emulation.c
 new file mode 100644
-index 0000000..89886b1
+index 0000000000..89886b1b3a
 --- /dev/null
 +++ b/posix/getrandom_emulation.c
 @@ -0,0 +1,264 @@
@@ -356,7 +356,7 @@ index 0000000..89886b1
 +}
 diff --git a/posix/tst-getrandom.c b/posix/tst-getrandom.c
 new file mode 100644
-index 0000000..11a811c
+index 0000000000..11a811c676
 --- /dev/null
 +++ b/posix/tst-getrandom.c
 @@ -0,0 +1,162 @@
@@ -523,11 +523,11 @@ index 0000000..11a811c
 +#define TEST_FUNCTION do_test ()
 +#include "../test-skeleton.c"
 diff --git a/posix/unistd.h b/posix/unistd.h
-index 625ba77..1360310 100644
+index 405638ce79..a38b798d5d 100644
 --- a/posix/unistd.h
 +++ b/posix/unistd.h
-@@ -1157,6 +1157,16 @@ extern int pthread_atfork (void (*__prepare) (void),
- 			   void (*__child) (void)) __THROW;
+@@ -1145,6 +1145,16 @@ extern void swab (const void *__restrict __from, void *__restrict __to,
+ extern char *ctermid (char *__s) __THROW;
  #endif
  
 +#ifdef __USE_GNU
@@ -545,7 +545,7 @@ index 625ba77..1360310 100644
  #if __USE_FORTIFY_LEVEL > 0 && defined __fortify_function
 diff --git a/sysdeps/unix/sysv/linux/getrandom.c b/sysdeps/unix/sysv/linux/getrandom.c
 new file mode 100644
-index 0000000..3bf6f85
+index 0000000000..3bf6f85119
 --- /dev/null
 +++ b/sysdeps/unix/sysv/linux/getrandom.c
 @@ -0,0 +1,149 @@
@@ -699,10 +699,10 @@ index 0000000..3bf6f85
 +   work.  */
 +strong_alias (__getrandom, getrandom)
 diff --git a/sysdeps/unix/sysv/linux/kernel-features.h b/sysdeps/unix/sysv/linux/kernel-features.h
-index 02c530b..eb41124 100644
+index 9832f41167..cbf9f1fd6b 100644
 --- a/sysdeps/unix/sysv/linux/kernel-features.h
 +++ b/sysdeps/unix/sysv/linux/kernel-features.h
-@@ -151,3 +151,8 @@
+@@ -158,3 +158,8 @@
  #if defined __ASSUME_SENDMMSG_SOCKETCALL || defined __ASSUME_SENDMMSG_SYSCALL
  # define __ASSUME_SENDMMSG	1
  #endif

@@ -9,7 +9,7 @@ require conf/license/license-gplv2.inc
 RDEPENDS_${PN} += "showiframe"
 
 PV = "${IMAGE_VERSION}"
-PR = "r7"
+PR = "r8"
 
 S = "${WORKDIR}"
 
@@ -34,6 +34,7 @@ SRC_URI_append_7105s = "file://lcdsplash220.bin file://7100s/lcdwaitkey220.bin f
 SRC_URI_append_7215s = "file://lcdsplash220.bin file://7100s/lcdwaitkey220.bin file://7100s/lcdwarning220.bin file://7100s/lcdcomplete220.bin"
 SRC_URI_append_8100s = "file://7100s/lcdwarning220.bin"
 SRC_URI_append_h9 = "file://logo.img"
+SRC_URI_append_h9combo = "file://logo.img"
 SRC_URI_append_i55plus = "file://logo.img"
 SRC_URI_append_hd60 = "file://logo.img"
 SRC_URI_append_hd61 = "file://logo.img"
@@ -42,6 +43,7 @@ SRC_URI_append_cc1 = "file://logo.img"
 SRC_URI_append_sf8008 = "file://logo.img"
 SRC_URI_append_ustym4kpro = "file://logo.img"
 SRC_URI_append_gbmv200 = "file://logo.img"
+SRC_URI_append_viper4k = "file://logo.img"
 
 BINARY_VERSION = "1.3"
 

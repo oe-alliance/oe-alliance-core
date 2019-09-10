@@ -11,6 +11,7 @@ HOMEPAGE = "http://www.gnu.org/software/tar/"
 
 
 inherit debian-package
+inherit upx-compress
 require tar.inc
 
 LICENSE = "GPLv3+"

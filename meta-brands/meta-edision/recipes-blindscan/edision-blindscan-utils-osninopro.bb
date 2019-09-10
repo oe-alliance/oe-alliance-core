@@ -14,7 +14,7 @@ PROVIDES += "virtual/blindscan-dvbs virtual/blindscan-dvbc"
 RPROVIDES_edision-blindscan-dvbs-utils-${MACHINE} += "virtual/blindscan-dvbs"
 RPROVIDES_edision-blindscan-dvbc-utils-${MACHINE} += "virtual/blindscan-dvbc"
 
-PV = "20181128"
+PV = "20190805"
 
 SRC_URI = "http://source.mynonpublic.com/edision/edision-blindscan-utils-${MACHINE}-${PV}.zip"
 
@@ -29,8 +29,8 @@ do_install() {
 	install -m 0755 ${S}/blindscan ${D}${bindir}
 }
 
-SRC_URI[md5sum] = "47645273b57731901b2fcfbc5680002c"
-SRC_URI[sha256sum] = "ee753154e60becb94ae00104c6a74e6f8f741720ff224172265bd261e1f47ecd"
+SRC_URI[md5sum] = "3bec04811dac24f181cfeaf412af9a44"
+SRC_URI[sha256sum] = "5715eb813ab203859955491678b982d858815861f15291840bba01379628726d"
 
 do_prepare_recipe_sysroot[noexec] = "1"
 INHIBIT_PACKAGE_STRIP = "1"

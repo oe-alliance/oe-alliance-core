@@ -1,4 +1,4 @@
-PR .= ".5"
+PR .= ".7"
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/${P}:"
 
@@ -32,7 +32,7 @@ do_install_append() {
 
     # Create the startup links for /etc/init.d/cardserver ...
     ln -sf cardserver.None ${D}/etc/init.d/cardserver
-    update-rc.d -r ${D} cardserver start 90 S .
+    update-rc.d -r ${D} cardserver start 95 S .
 
     # ... but avoid the link /etc/init.d/cardserver becoming a file of this package
     rm ${D}/etc/init.d/cardserver
@@ -41,7 +41,7 @@ do_install_append() {
 
     # Create the startup links for /etc/init.d/softcam ...
     ln -sf softcam.None ${D}/etc/init.d/softcam
-    update-rc.d -r ${D} softcam start 95 S .
+    update-rc.d -r ${D} softcam defaults 50
 
     # ... but avoid the link /etc/init.d/softcam becoming a file of this package
     rm ${D}/etc/init.d/softcam

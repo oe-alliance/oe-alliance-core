@@ -45,6 +45,7 @@ RRECOMMENDS_${PN} = "\
     enigma2-locale-th \
     enigma2-locale-tr \
     enigma2-locale-uk \
+    enigma2-locale-vi \
     enigma2-locale-zh \
     enigma2-locale-zh-cn \
     enigma2-locale-zh-hk \
@@ -53,6 +54,7 @@ RRECOMMENDS_${PN} = "\
 ONLY_SMALL = "\
     ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "True", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "BootloaderMax110", "True" , "", d)} \
+    ${@bb.utils.contains_any("FLASHSIZE", "64 96", "True" , "", d)} \
 "
 
 PR = "r0"

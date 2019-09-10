@@ -7,7 +7,6 @@ MTD_BLACK  = "mmcblk0"
 VER = "-gbmv200"
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "\
-    gigablue-dvb-modules-${MACHINE} \
     gigablue-loadmodules-${MACHINE} \ 
     gigablue-opengl-${MACHINE} \
     gigablue-libs-${MACHINE} \
@@ -20,7 +19,7 @@ MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "\
     gptfdisk \
 "
 
-MACHINE_FEATURES += "switchoff 7segment hdmicec textlcd skins1080 emmc mmc blindscan-dvbs kodi alsa hbbtv-browser-webkit qtstalker hisi"
+MACHINE_FEATURES += "switchoff 7segment hdmicec skins1080 emmc mmc blindscan-dvbs kodi alsa hbbtv-browser-webkit qtstalker hisi"
 
 IMAGE_CLASSES  += "gigablue-emmc_image"
 IMAGE_FSTYPES += "gigablueemmc"
