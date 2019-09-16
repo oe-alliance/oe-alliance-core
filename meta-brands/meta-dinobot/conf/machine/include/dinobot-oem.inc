@@ -191,8 +191,8 @@ ${@bb.utils.contains('MACHINEBUILD', 'spycatminiv2', 'spycat/miniv2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iziboxecohd', 'izibox/ecohd' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'JamesDonkey', 'jamesdonkey/hdduo' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'turing', 'atto/turing' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'arivatwin', 'ferguson/atvtt' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'arivacombo', 'ferguson/atvcombo' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'arivatwin', 'e2/update' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'arivacombo', 'e2/update' , '', d)}\
 "
 
 KERNEL_MODULE_AUTOLOAD += "xhci-plat-hcd"
