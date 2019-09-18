@@ -40,10 +40,10 @@ Uptream-status: Backport (upstream commit: 6d5d5dde9adb5acb32e6b8e3dfbf47fff0f30
  4 files changed, 159 insertions(+), 38 deletions(-)
 
 diff --git a/linux-user/ioctls.h b/linux-user/ioctls.h
-index ae8951625f..e6a27ad9d6 100644
+index 586c794..e613d2a 100644
 --- a/linux-user/ioctls.h
 +++ b/linux-user/ioctls.h
-@@ -219,8 +219,25 @@
+@@ -173,8 +173,25 @@
    IOCTL(SIOCGRARP, IOC_R, MK_PTR(MK_STRUCT(STRUCT_arpreq)))
    IOCTL(SIOCGIWNAME, IOC_W | IOC_R, MK_PTR(MK_STRUCT(STRUCT_char_ifreq)))
    IOCTL(SIOCGPGRP, IOC_R, MK_PTR(TYPE_INT)) /* pid_t */
@@ -72,7 +72,7 @@ index ae8951625f..e6a27ad9d6 100644
    IOCTL(RNDGETENTCNT, IOC_R, MK_PTR(TYPE_INT))
    IOCTL(RNDADDTOENTCNT, IOC_W, MK_PTR(TYPE_INT))
 diff --git a/linux-user/syscall.c b/linux-user/syscall.c
-index 96cd4bf86d..6df480e13d 100644
+index e0928e6..937b90f 100644
 --- a/linux-user/syscall.c
 +++ b/linux-user/syscall.c
 @@ -37,6 +37,7 @@
@@ -83,7 +83,7 @@ index 96cd4bf86d..6df480e13d 100644
  #include <sys/un.h>
  #include <sys/uio.h>
  #include <poll.h>
-@@ -1139,8 +1140,9 @@ static inline abi_long copy_from_user_timeval(struct timeval *tv,
+@@ -1391,8 +1392,9 @@ static inline abi_long copy_from_user_timeval(struct timeval *tv,
  {
      struct target_timeval *target_tv;
  
@@ -94,7 +94,7 @@ index 96cd4bf86d..6df480e13d 100644
  
      __get_user(tv->tv_sec, &target_tv->tv_sec);
      __get_user(tv->tv_usec, &target_tv->tv_usec);
-@@ -1155,8 +1157,26 @@ static inline abi_long copy_to_user_timeval(abi_ulong target_tv_addr,
+@@ -1407,8 +1409,26 @@ static inline abi_long copy_to_user_timeval(abi_ulong target_tv_addr,
  {
      struct target_timeval *target_tv;
  
@@ -122,7 +122,7 @@ index 96cd4bf86d..6df480e13d 100644
  
      __put_user(tv->tv_sec, &target_tv->tv_sec);
      __put_user(tv->tv_usec, &target_tv->tv_usec);
-@@ -1166,6 +1186,48 @@ static inline abi_long copy_to_user_timeval(abi_ulong target_tv_addr,
+@@ -1418,6 +1438,48 @@ static inline abi_long copy_to_user_timeval(abi_ulong target_tv_addr,
      return 0;
  }
  
@@ -171,7 +171,7 @@ index 96cd4bf86d..6df480e13d 100644
  static inline abi_long copy_from_user_timezone(struct timezone *tz,
                                                 abi_ulong target_tz_addr)
  {
-@@ -4790,6 +4852,54 @@ static abi_long do_ioctl_kdsigaccept(const IOCTLEntry *ie, uint8_t *buf_temp,
+@@ -5733,6 +5795,54 @@ static abi_long do_ioctl_kdsigaccept(const IOCTLEntry *ie, uint8_t *buf_temp,
      return get_errno(safe_ioctl(fd, ie->host_cmd, sig));
  }
  
@@ -226,7 +226,7 @@ index 96cd4bf86d..6df480e13d 100644
  #ifdef TIOCGPTPEER
  static abi_long do_ioctl_tiocgptpeer(const IOCTLEntry *ie, uint8_t *buf_temp,
                                       int fd, int cmd, abi_long arg)
-@@ -6160,32 +6270,6 @@ static inline abi_long target_ftruncate64(void *cpu_env, abi_long arg1,
+@@ -7106,32 +7216,6 @@ static inline abi_long target_ftruncate64(void *cpu_env, abi_long arg1,
  }
  #endif
  
@@ -260,11 +260,11 @@ index 96cd4bf86d..6df480e13d 100644
                                                   abi_ulong target_addr)
  {
 diff --git a/linux-user/syscall_defs.h b/linux-user/syscall_defs.h
-index 12c8407144..c918419306 100644
+index 40bb60e..a1c8a8c 100644
 --- a/linux-user/syscall_defs.h
 +++ b/linux-user/syscall_defs.h
-@@ -208,16 +208,34 @@ struct target_linger {
-     abi_int l_linger;       /* How long to linger for       */
+@@ -203,16 +203,34 @@ struct target_ip_mreq_source {
+     uint32_t imr_sourceaddr;
  };
  
 +#if defined(TARGET_SPARC64) && !defined(TARGET_ABI32)
@@ -298,7 +298,7 @@ index 12c8407144..c918419306 100644
  struct target_timezone {
      abi_int tz_minuteswest;
      abi_int tz_dsttime;
-@@ -743,8 +761,16 @@ struct target_pollfd {
+@@ -738,8 +756,16 @@ struct target_pollfd {
  #define TARGET_SIOCATMARK      0x8905
  #define TARGET_SIOCGPGRP       0x8904
  #endif
@@ -318,7 +318,7 @@ index 12c8407144..c918419306 100644
  /* Networking ioctls */
  #define TARGET_SIOCADDRT       0x890B          /* add routing table entry */
 diff --git a/linux-user/syscall_types.h b/linux-user/syscall_types.h
-index b98a23b0f1..4e36983826 100644
+index 24631b0..5fc32e2 100644
 --- a/linux-user/syscall_types.h
 +++ b/linux-user/syscall_types.h
 @@ -14,12 +14,6 @@ STRUCT(serial_icounter_struct,
@@ -334,6 +334,3 @@ index b98a23b0f1..4e36983826 100644
  STRUCT(rtentry,
         TYPE_ULONG, MK_STRUCT(STRUCT_sockaddr), MK_STRUCT(STRUCT_sockaddr), MK_STRUCT(STRUCT_sockaddr),
         TYPE_SHORT, TYPE_SHORT, TYPE_ULONG, TYPE_PTRVOID, TYPE_SHORT, TYPE_PTRVOID,
--- 
-2.21.0
-
