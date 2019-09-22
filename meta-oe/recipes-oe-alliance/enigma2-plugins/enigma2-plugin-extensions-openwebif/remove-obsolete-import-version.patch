@@ -1,0 +1,66 @@
+--- a/plugin/controllers/models/info.py
++++ b/plugin/controllers/models/info.py
+@@ -12,7 +12,6 @@
+ import os
+ import sys
+ import time
+-from twisted.web import version
+ from socket import has_ipv6, AF_INET6, AF_INET, inet_ntop, inet_pton, getaddrinfo
+ 
+ import NavigationInstance
+@@ -141,7 +140,7 @@ def getAdapterIPv6(ifname):
+ 	if fileExists('/proc/net/if_inet6'):
+ 		addr = _("IPv4-only Python/Twisted")
+ 
+-		if has_ipv6 and version.major >= 12:
++		if has_ipv6:
+ 			proc = '/proc/net/if_inet6'
+ 			tempaddrs = []
+ 			for line in file(proc).readlines():
+--- a/plugin/httpserver.py
++++ b/plugin/httpserver.py
+@@ -14,7 +14,7 @@ from Screens.MessageBox import MessageBox
+ from Components.config import config
+ from Tools.Directories import fileExists
+ from twisted.internet import reactor, ssl
+-from twisted.web import server, http, resource, version
++from twisted.web import server, http, resource
+ #from twisted.web import server, http, static, resource, error, version
+ from twisted.internet.error import CannotListenError
+ from twisted.internet.protocol import Factory, Protocol
+@@ -39,7 +39,7 @@ def getAllNetworks():
+ 	tempaddrs = []
+ 	# Get all IP networks
+ 	if fileExists('/proc/net/if_inet6'):
+-		if has_ipv6 and version.major >= 12:
++		if has_ipv6:
+ 			proc = '/proc/net/if_inet6'
+ 			for line in file(proc).readlines():
+ 				# Skip localhost
+@@ -179,7 +179,7 @@ def HttpdStart(session):
+ 
+ 		# start http webserver on configured port
+ 		try:
+-			if has_ipv6 and fileExists('/proc/net/if_inet6') and version.major >= 12:
++			if has_ipv6 and fileExists('/proc/net/if_inet6'):
+ 				# use ipv6
+ 				listener.append( reactor.listenTCP(port, site, interface='::') )
+ 			else:
+@@ -234,7 +234,7 @@ def HttpdStart(session):
+ 				sslroot = AuthResource(session, temproot)
+ 				sslsite = server.Site(sslroot)
+ 
+-				if has_ipv6 and fileExists('/proc/net/if_inet6') and version.major >= 12:
++				if has_ipv6 and fileExists('/proc/net/if_inet6'):
+ 					# use ipv6
+ 					listener.append( reactor.listenSSL(httpsPort, sslsite, context, interface='::') )
+ 				else:
+@@ -253,7 +253,7 @@ def HttpdStart(session):
+ 		# Streaming requires listening on 127.0.0.1:80
+ 		if port != 80:
+ 			try:
+-				if has_ipv6 and fileExists('/proc/net/if_inet6') and version.major >= 12:
++				if has_ipv6 and fileExists('/proc/net/if_inet6'):
+ 					# use ipv6
+ 					# Dear Twisted devs: Learning English, lesson 1 - interface != address
+ 					listener.append( reactor.listenTCP(80, site, interface='::1') )
