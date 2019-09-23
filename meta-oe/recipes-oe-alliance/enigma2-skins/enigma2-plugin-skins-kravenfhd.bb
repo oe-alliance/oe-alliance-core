@@ -8,9 +8,9 @@ RDEPENDS_${PN} += "python-imaging python-subprocess python-requests python-lxml 
 inherit gitpkgv allarch gettext
 
 SRCREV = "${AUTOREV}"
-PV = "3.6+git${SRCPV}"
-PKGV = "3.6+git${GITPKGV}"
-VER="3.6"
+PV = "7.x+git${SRCPV}"
+PKGV = "7.x+git${GITPKGV}"
+VER="7.x"
 
 SRC_URI="git://github.com/KravenHD/KravenFHD.git;protocol=git"
 
