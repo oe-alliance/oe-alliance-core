@@ -5,21 +5,25 @@ BRAND_OEM = "xtrend"
 
 MACHINE_NAME = "\
 ${@bb.utils.contains('MACHINEBUILD', 'gi11000', 'ET11000' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'viper4k51', 'VIPER4K51' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'beyonwizu4', 'U4' , '', d)}\
 "
 
 MACHINE_BRAND = "\
 ${@bb.utils.contains('MACHINEBUILD', 'gi11000', 'Galaxy Innovations' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'viper4k51', 'AMIKO' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'beyonwizu4', 'Beyonwiz' , '', d)}\
 "
 
 IMAGEDIR ?= "\
 ${@bb.utils.contains('MACHINEBUILD', 'gi11000', 'et1x000' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'viper4k51', 'et1x000' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'beyonwizu4', 'beyonwiz/u4' , '', d)}\
 "
 
 MACHINE_DRIVER = "\
 ${@bb.utils.contains('MACHINEBUILD', 'gi11000', 'et1x000' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'viper4k51', 'et1x000' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'beyonwizu4', 'beyonwizu4' , '', d)}\
 "
 
