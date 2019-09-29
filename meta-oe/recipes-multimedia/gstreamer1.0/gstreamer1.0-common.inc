@@ -14,7 +14,7 @@ SRCREV_gst_plugins_base = "dff5399e8750bf0f48efd23370f09aeddeb1d7d8"
 SRCREV_gst_plugins_good = "505c88eeb6aa8e7df9dd7596510af6b098b00e74"
 SRCREV_gst_plugins_ugly = "b3f0008b3431f5bd1ef99bfcc35de00be93d865d"
 
-SRCREV_ffmpeg = "1529dfb73a5157dcb8762051ec4c8d8341762478"
+SRCREV_ffmpeg = "6e0cf9a9df4a21df89825427914e38bd4c6216ba"
 
 SRC_URI_append = " git://gitlab.freedesktop.org/gstreamer/common;protocol=https;branch=master;destsuffix=git/common;name=gst_common"
 
