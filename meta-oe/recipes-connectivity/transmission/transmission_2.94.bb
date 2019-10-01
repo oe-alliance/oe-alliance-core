@@ -15,5 +15,6 @@ OE_EXTRACONF = "\
     "
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=0dd9fcdc1416ff123c41c785192a1895"
-SRC_URI[archive.md5sum] = "17a6475d8f54717828222155f4cd4c6d"
-SRC_URI[archive.sha256sum] = "d6a44ce9086b790b2469e2e30c854c2ecbd620ba93aeb394d59fec8c19d671ab"
+SRC_URI[archive.md5sum] = "9c30f390d18c23e1b800a30cf4daf80f"
+SRC_URI[archive.sha256sum] = "440c2fd0f89b1ab59d8a4b79ecd7bffd61bc000e36fb5b6c8e88142a4fadbb1f"
+
