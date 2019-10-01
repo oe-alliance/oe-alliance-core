@@ -8,15 +8,16 @@ inherit gitpkgv
 
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
+PR = "r0"
 
 SRC_URI = "git://github.com/windytan/redsea.git;protocol=http"
 
-SRCREV = "aeed25e6eccd1da1924bbbb4af0c5fb49cfc962a"
+SRCREV = "${AUTOREV}"
 
 S = "${WORKDIR}/git"
 
-DEPENDS = "liquid-dsp"
+DEPENDS = "liquid-dsp virtual/libiconv libsndfile1"
 
-inherit autotools-brokensep
+inherit autotools-brokensep pkgconfig gettext
 
-EXTRA_OECONF += "--disable-tmc --without-sndfile --without-macports"
+EXTRA_OECONF += "--disable-tmc --without-macports"
