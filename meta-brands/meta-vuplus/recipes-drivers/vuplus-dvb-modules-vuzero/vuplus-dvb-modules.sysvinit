@@ -1,0 +1,45 @@
+#!/bin/sh
+
+BCM_CHP_CHECK=/proc/bcm_chp_73625
+MODULES_DIR=/lib/modules/3.13.5/extra
+MODULE_DVB_BCM_7362=$MODULES_DIR/dvb-bcm7362.ko
+MODULE_DVB_BCM_73625=$MODULES_DIR/dvb-bcm73625.ko
+MODULES_NAME_7362="procmk\ndvb-bcm7362\nbrcmfb\nfpga_directc"
+MODULES_NAME_73625="procmk\ndvb-bcm73625\nbrcmfb\nfpga_directc"
+
+load_modules() {
+	if [ -f $MODULE_DVB_BCM_7362 ] && [ -f $MODULE_DVB_BCM_73625 ]; then
+		echo -n "."
+		modprobe bcm_chp
+		sleep 0.05
+		if [ -f $BCM_CHP_CHECK ]; then
+			rm $MODULE_DVB_BCM_7362
+			MODULES_NAME=$MODULES_NAME_73625
+			
+		else
+			rm $MODULE_DVB_BCM_73625
+			MODULES_NAME=$MODULES_NAME_7362
+		fi
+		depmod -A
+		if [ ! -e /etc/modules-load.d ]; then
+			mkdir -p /etc/modules-load.d/
+		fi
+		echo -e "${MODULES_NAME}" > /etc/modules-load.d/vuplus-dvb-modules.conf
+		echo -e "${MODULES_NAME}" > /etc/modules
+		sync
+		echo -n "."
+	fi
+}
+
+case "$1" in
+	start)
+		echo -n "checking vuplus modules..."
+		load_modules
+		echo "done"
+		;;
+	*)
+		exit 1
+		;;
+esac
+
+exit 0
