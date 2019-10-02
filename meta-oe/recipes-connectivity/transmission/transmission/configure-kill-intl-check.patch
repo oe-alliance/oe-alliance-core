@@ -1,7 +1,5 @@
-Index: transmission-2.61/configure.ac
-===================================================================
---- transmission-2.61.orig/configure.ac
-+++ transmission-2.61/configure.ac
+--- a/configure.ac
++++ b/configure.ac
 @@ -398,22 +398,9 @@ dnl a "make check" failure on some syste
  dnl a problem and the old version was working fine for you,
  dnl it should be safe to re-edit 0.40 back down to 0.23
