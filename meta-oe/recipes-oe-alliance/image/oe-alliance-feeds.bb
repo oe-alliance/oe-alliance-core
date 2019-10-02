@@ -154,6 +154,7 @@ RDEPENDS_${PN} = " \
     wakelan \
     wireless-tools \
     zeroconf \
+    zerotier \
     "
 
 GST_BASE_DVD = "${@bb.utils.contains('GST_VERSION', '1.0', ' \
