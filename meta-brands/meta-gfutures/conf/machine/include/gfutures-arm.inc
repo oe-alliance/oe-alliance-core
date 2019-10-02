@@ -1,3 +1,6 @@
+PACKAGECONFIG_GL_pn-qtbase = " "
+PACKAGECONFIG_append_pn-qtbase += " gles2 linuxfb"
+
 #IMAGE_CLASSES += "hdemmc_image_single"
 IMAGE_CLASSES += "hdemmc_image_multiboot"
 
@@ -15,9 +18,6 @@ PREFERRED_PROVIDER_virtual/libgles2 = "hd-v3ddriver-${MACHINE}"
 MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS += "\
     ${@bb.utils.contains('MACHINE_FEATURES', 'emmc', 'resizerootfs' , '', d)} \
     "
-
-# Qt
-PACKAGECONFIG_GL_pn-qtbase = "no-opengl linuxfb"
 
 PREFERRED_VERSION_linux-gfutures = "4.10.12"
 

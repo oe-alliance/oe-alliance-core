@@ -1,3 +1,6 @@
+PACKAGECONFIG_GL_pn-qtbase = " "
+PACKAGECONFIG_append_pn-qtbase += " gles2 linuxfb"
+
 # We know about rtc
 include conf/machine/include/build-extras.inc
 

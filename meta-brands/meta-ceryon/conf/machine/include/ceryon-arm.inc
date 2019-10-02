@@ -1,3 +1,6 @@
+PACKAGECONFIG_GL_pn-qtbase = " "
+PACKAGECONFIG_append_pn-qtbase += " gles2 linuxfb"
+
 IMAGE_CLASSES += "ceryonemmc_image_multiboot"
 
 MACHINE_FEATURES += "qthbbtv qtstalker"
