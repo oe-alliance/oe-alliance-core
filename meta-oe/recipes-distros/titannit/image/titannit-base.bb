@@ -44,6 +44,7 @@ RDEPENDS_${PN} = "\
 	fuse-exfat \
 	glibc-gconv-iso8859-15 \
 	glib-networking \
+	jpeg-tools \
 	kernel-module-ftdi-sio \
 	kernel-module-pl2303 \
 	kernel-module-belkin-sa \
