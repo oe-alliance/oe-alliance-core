@@ -26,3 +26,5 @@ do_install_append() {
 	install -d ${D}/etc/init.d
 	install -m 0755 ${WORKDIR}/zerotier ${D}/etc/init.d/zerotier
 }
+
+INSANE_SKIP_${PN} = "already-stripped"
