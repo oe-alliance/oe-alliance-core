@@ -1,6 +1,6 @@
---- lirc-0.9.0/daemons/ir_remote.c.org	2011-03-25 15:28:18.000000000 -0700
-+++ lirc-0.9.0/daemons/ir_remote.c	2012-01-05 05:59:30.000000000 -0800
-@@ -506,9 +506,17 @@
+--- a/daemons/ir_remote.c
++++ b/daemons/ir_remote.c
+@@ -506,9 +506,17 @@ char *decode_all(struct ir_remote *remotes)
  	lirc_t min_remaining_gap, max_remaining_gap;
  	struct ir_remote *scan;
  	struct ir_ncode *scan_ncode;
@@ -19,7 +19,7 @@
  	while (remote) {
  		LOGPRINTF(1, "trying \"%s\" remote", remote->name);
  
-@@ -556,6 +564,11 @@
+@@ -556,6 +564,11 @@ char *decode_all(struct ir_remote *remotes)
  			}
  		} else {
  			LOGPRINTF(1, "failed \"%s\" remote", remote->name);

@@ -39,6 +39,9 @@ ${@bb.utils.contains('MACHINEBUILD', 'bre2zet2c', 'bre2zet2c' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'alphatriple', 'alphatriple' , '', d)}\
 "
 
+# Broken bootloader can only flash around 100 MB
+FLASHSIZE = "96"
+
 MTD_KERNEL = "mtd1"
 MTD_ROOTFS = "mtd2"
 KERNEL_FILE = "kernel.bin"

@@ -1,6 +1,6 @@
 --- a/configure
 +++ b/configure
-@@ -3291,10 +3291,8 @@ xv_outdev_deps="xlib"
+@@ -3353,10 +3353,8 @@ xv_outdev_deps="xlib"
  # protocols
  async_protocol_deps="threads"
  bluray_protocol_deps="libbluray"
@@ -11,7 +11,7 @@
  ffrtmphttp_protocol_select="http_protocol"
  ftp_protocol_select="tcp_protocol"
  gopher_protocol_select="network"
-@@ -3307,20 +3305,18 @@ https_protocol_suggest="zlib"
+@@ -3369,20 +3367,18 @@ https_protocol_suggest="zlib"
  icecast_protocol_select="http_protocol"
  mmsh_protocol_select="http_protocol"
  mmst_protocol_select="network"
@@ -46,7 +46,7 @@
  sctp_protocol_deps="struct_sctp_event_subscribe struct_msghdr_msg_flags"
 --- a/libavformat/Makefile
 +++ b/libavformat/Makefile
-@@ -593,12 +593,12 @@ OBJS-$(CONFIG_MMSH_PROTOCOL)             += mmsh.o mms.o asf.o
+@@ -599,12 +599,12 @@ OBJS-$(CONFIG_MMSH_PROTOCOL)             += mmsh.o mms.o asf.o
  OBJS-$(CONFIG_MMST_PROTOCOL)             += mmst.o mms.o asf.o
  OBJS-$(CONFIG_PIPE_PROTOCOL)             += file.o
  OBJS-$(CONFIG_PROMPEG_PROTOCOL)          += prompeg.o

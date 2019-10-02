@@ -6,6 +6,8 @@ IMAGE_CLASSES  += "dinobot-emmc_image"
 IMAGE_FSTYPES += "dinobotemmc"
 IMAGE_ROOTFS_SIZE ?= "589824"
 
+MACHINE_FEATURES += "emmc mmc"
+
 IMAGE_CMD_dinobotemmc_append = "\
     mkdir -p ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}; \
     if [ "${SDCARDIMG}" = "yes" ]; then \
