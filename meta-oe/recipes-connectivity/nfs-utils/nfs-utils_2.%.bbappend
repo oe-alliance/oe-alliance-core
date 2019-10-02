@@ -1,7 +1,5 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
-SRC_URI_remove = "file://0001-Don-t-build-tools-with-CC_FOR_BUILD.patch"
-
 CFLAGS_remove_sh4 = "-Wno-error=format-overflow"
 
 RDEPENDS_${PN}-client = "rpcbind"
