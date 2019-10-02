@@ -8,8 +8,8 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=860e4083ceb93ce0939b1a58fcaacb53"
 inherit gitpkgv
 
 SRCREV = "${AUTOREV}"
-PV = "1.3.1+git${SRCPV}"
-PKGV = "1.3.1+git${GITPKGV}"
+PV = "1.3.2+git${SRCPV}"
+PKGV = "1.3.2+git${GITPKGV}"
 
 SRC_URI = "git://github.com/jgaeddert/liquid-dsp.git;protocol=https"
 

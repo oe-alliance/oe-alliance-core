@@ -4,7 +4,7 @@ MAINTAINER = "Oona Räisänen <windyoona@gmail.com>"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=884926124e31c67b8c1bdaa062802dec"
 
-DEPENDS = "liquid-dsp libsndfile1"
+DEPENDS = "liquid-dsp virtual/libiconv libsndfile1"
 
 inherit gitpkgv
 
@@ -16,6 +16,6 @@ SRC_URI = "git://github.com/windytan/redsea.git;protocol=http"
 
 S = "${WORKDIR}/git"
 
-inherit autotools-brokensep
+inherit autotools-brokensep pkgconfig gettext
 
 EXTRA_OECONF += "--disable-tmc --without-macports"
