@@ -1,3 +1,6 @@
+PACKAGECONFIG_GL_pn-qtbase = " "
+PACKAGECONFIG_append_pn-qtbase += " gles2 linuxfb"
+
 MACHINE_FEATURES += "qthbbtv qtstalker"
 
 DISTRO_FEATURES_EXTRA = "opengl"
@@ -10,9 +13,6 @@ PREFERRED_PROVIDER_virtual/libgl ?= "mesa"
 PREFERRED_PROVIDER_virtual/mesa ?= "mesa"
 PREFERRED_PROVIDER_virtual/blindscan-dvbc ?= "gfutures-dvb-modules-${MACHINE}"
 PREFERRED_PROVIDER_virtual/blindscan-dvbs ?= "gfutures-dvb-modules-${MACHINE}"
-
-# Qt
-PACKAGECONFIG_GL_pn-qtbase = "no-opengl linuxfb"
 
 TARGET_ARCH = "arm"
 DEFAULTTUNE = "cortexa15hf-neon-vfpv4"
