@@ -1,10 +1,13 @@
-FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
-
-CFLAGS_remove_sh4 = "-Wno-error=format-overflow"
-
 RDEPENDS_${PN}-client = "rpcbind"
 RDEPENDS_${PN} = "${PN}-client"
 RRECOMMENDS_${PN}-client = "kernel-module-nfs kernel-module-exportfs"
+
+BUILD_CFLAGS_remove = "-march=native"
+BUILD_CXXFLAGS_remove = "-march=native"
+CFLAGS_FOR_BUILD_remove = "-march=native"
+CXXFLAGS_FOR_BUILD_remove = "-march=native"
+
+CFLAGS_remove_sh4 = "-Wno-error=format-overflow"
 
 INITSCRIPT_PARAMS = "defaults 13"
 INITSCRIPT_PARAMS_${PN}-client = "defaults 19 11"
@@ -15,5 +18,3 @@ do_install_append() {
         rm ${D}${sysconfdir}/init.d/nfsserver
     fi
 }
-
-
