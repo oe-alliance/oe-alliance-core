@@ -38,7 +38,6 @@ IMAGE_INSTALL = "\
    	titan-plugins \
 	titan-plugin-filemanager \
 	titan-plugin-imdb \
-	titan-plugin-imdbapi \
 	titan-plugin-mc \
 	titan-plugin-networkbrowser \
 	titan-plugin-readerconfig \
