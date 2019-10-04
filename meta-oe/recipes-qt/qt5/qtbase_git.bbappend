@@ -1,6 +1,7 @@
-FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
+FILESEXTRAPATHS_prepend := "${THISDIR}/qtbase:"
 
-SRC_URI += "file://0001-implement-openssl111.patch"
+SRC_URI_append = "file://mkspecs-fix-build-with-gcc9.patch \
+                file://0001-implement-openssl111.patch"
 
 CPPFLASGS += "-Wno-class-memaccess -Wno-implicit-fallthgrouh -Wno-unused-variable"
 CXXFLASGS += "-Wno-class-memaccess -Wno-implicit-fallthgrouh -Wno-unused-variable"
