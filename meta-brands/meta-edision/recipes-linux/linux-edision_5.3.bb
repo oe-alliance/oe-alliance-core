@@ -26,6 +26,7 @@ RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 
 SRC_URI += "http://source.mynonpublic.com/edision/linux-edision-${PV}.tar.gz \
     file://defconfig \
+    file://disable_stackpointer_gcc9.patch \
     file://findkerneldevice.py \
     "
 
