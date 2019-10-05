@@ -17,13 +17,21 @@ SAMBA4_VFS_MODULES_STATIC="vfs_default,vfs_aio_pthread"
 SAMBA4_MODULES_STATIC="${SAMBA4_AUTH_MODULES_STATIC},${SAMBA4_PDB_MODULES_STATIC},${SAMBA4_VFS_MODULES_STATIC}"
 
 EXTRA_OECONF += " \
+                 --without-cluster-support \
+                 --without-profiling-data \
                  --nopyc \
                  --with-static-modules=${SAMBA4_MODULES_STATIC} \
+                 --disable-iprint \
+                 --without-ad-dc \
+                 --without-quotas \
+                 --disable-python \
                 "
 EXTRA_OECONF_remove = "--with-piddir=/run"
 EXTRA_OECONF_remove = "--with-sockets-dir=/run/samba"
 EXTRA_OECONF_remove = "--with-privatedir=/run/samba"
 EXTRA_OECONF_remove = "--with-logfilebase=/run/samba"
+EXTRA_OECONF_remove = "--with-cluster-support"
+EXTRA_OECONF_remove = "--with-profiling-data"
 
 # Remove unused, add own config, init script
 SRC_URI += " \
