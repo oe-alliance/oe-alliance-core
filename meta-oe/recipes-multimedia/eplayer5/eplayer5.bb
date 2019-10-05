@@ -27,3 +27,4 @@ do_install() {
     install -m 755 ${S}/eplayer5 ${D}/${bindir}
 }
 
+INSANE_SKIP_${PN} += "ldflags"
