@@ -18,7 +18,8 @@ S = "${WORKDIR}/${SRCNAME}-${PV}"
 
 inherit setuptools
 
-SRC_URI[md5sum] = "e7c57465356c22a819ddb3a5b20ac94d"
-SRC_URI[sha256sum] = "b35bc5602fb01c8f8bd05ff18c55f4e861c382d1bd6fb12ce55fc81e9706d1af"
+SRC_URI[md5sum] = "e2ff83d5f66e5798801d142eb7c1a07a"
+SRC_URI[sha256sum] = "4c0549764c5fe50b28042ec21aa2e14fe1a2224e239a1dae77d9e7f3932aa4c6"
+
 
 include python-package-split.inc
