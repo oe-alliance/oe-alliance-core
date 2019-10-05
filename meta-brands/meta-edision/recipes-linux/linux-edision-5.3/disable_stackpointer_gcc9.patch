@@ -1,0 +1,11 @@
+--- a/arch/arm64/Kconfig	2019-10-05 12:52:06.348252893 +0200
++++ a/arch/arm64/Kconfig	2019-10-05 12:53:50.772437887 +0200
+@@ -1511,7 +1511,7 @@
+ 	  core kernel, so branch relocations are always in range.
+ 
+ config CC_HAVE_STACKPROTECTOR_SYSREG
+-	def_bool $(cc-option,-mstack-protector-guard=sysreg -mstack-protector-guard-reg=sp_el0 -mstack-protector-guard-offset=0)
++	def_bool n
+ 
+ config STACKPROTECTOR_PER_TASK
+ 	def_bool y
