@@ -14,7 +14,6 @@ DESCRIPTION = "convert text file line endings between Unix and DOS formats \
 MAINTAINER = "Jari Aalto <jari.aalto@cante.net>"
 SECTION = "console/utils"
 LICENSE = "GPL-2+"
-#DEPENDS = "glibc"
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/debian:"
 
@@ -49,4 +48,4 @@ do_install() {
 	cd ${D}/usr/share/man/man1 && { ln -s flip.1.gz toix.1.gz; ln -s flip.1.gz toms.1.gz; }
 }
 
-#FILES_${PN}-doc = "/usr/share"
+INSANE_SKIP_${PN} += "ldflags"
