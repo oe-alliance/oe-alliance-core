@@ -23,3 +23,5 @@ do_install() {
     install -d ${D}/${sbindir}
     install -m 755 ${S}/wsdd ${D}/${sbindir}
 }
+
+INSANE_SKIP_${PN} += "ldflags"

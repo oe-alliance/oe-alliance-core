@@ -44,4 +44,4 @@ do_install() {
 FILES_${PN} = "/usr/lib/*"
 FILES_${PN}-dev = "/usr/include/*"
 
-INSANE_SKIP_${PN} += "already-stripped dev-so"
+INSANE_SKIP_${PN} += "already-stripped dev-so ldflags"

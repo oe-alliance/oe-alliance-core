@@ -29,3 +29,5 @@ FILES_${PN}  = "${bindir}/libreader"
 
 SRC_URI[md5sum] = "26bf9ec284c455aecc0d8a5685a8de6f"
 SRC_URI[sha256sum] = "917ce440cbcc1086b1713b30e119950a9d37d355a63f5e349093bb1a5cdb0cca"
+
+INSANE_SKIP_${PN} += "already-stripped"

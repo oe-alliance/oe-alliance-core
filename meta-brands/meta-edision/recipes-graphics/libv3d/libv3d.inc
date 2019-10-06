@@ -13,7 +13,7 @@ S = "${WORKDIR}/libv3d-osmio4k-${PV}"
 
 FILES_SOLIBSDEV = ""
 FILES_${PN} += "${libdir}/lib*${SOLIBSDEV}"
-INSANE_SKIP_${PN} = "ldflags dev-so"
+INSANE_SKIP_${PN} += "already-stripped dev-so ldflags"
 
 INHIBIT_PACKAGE_STRIP = "1"
 INHIBIT_SYSROOT_STRIP = "1"

@@ -41,3 +41,5 @@ do_install () {
         install -m 755 ${WORKDIR}/build/${bindir}/mergerfs ${D}${bindir}
         ln -s mergerfs ${D}${bindir}/mount.mergerfs
 }
+
+INSANE_SKIP_${PN} += "ldflags"
