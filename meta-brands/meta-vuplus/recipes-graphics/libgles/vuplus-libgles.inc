@@ -16,7 +16,7 @@ SRC_URI = "http://archive.vuplus.com/download/build_support/vuplus/libgles-${MAC
 
 S = "${WORKDIR}/libgles-${MACHINE}"
 
-INSANE_SKIP_${PN} += "already-stripped"
+INSANE_SKIP_${PN} += "already-stripped dev-so ldflags"
 INHIBIT_PACKAGE_STRIP = "1"
 PRIVATE_LIBS_${PN} = "libEGL.so \
 libv3ddriver.so \

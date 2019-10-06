@@ -28,4 +28,4 @@ RREPLACES_${PN}-dev = "libegl-dev libgles2-dev"
 # until all users were recompiled.
 FILES_${PN} += "${libdir}/lib*${SOLIBSDEV}"
 FILES_SOLIBSDEV = ""
-INSANE_SKIP_${PN} = "dev-so"
+INSANE_SKIP_${PN} += "already-stripped dev-so ldflags"
