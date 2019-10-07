@@ -6,28 +6,31 @@ DESCRIPTION = "Rclone is a command line program to sync files and directories to
     ownCloud pCloud put.io QingStor Rackspace Cloud Files Scaleway SFTP Wasabi WebDAV Yandex Disk The local filesystem"
 HOMEPAGE = "https://rclone.org/"
 LICENSE = "MIT"
-LIC_FILES_CHKSUM = "file://${WORKDIR}/COPYING;md5=bed161b82a1ecab65ff7ba3c3b960439"
+LIC_FILES_CHKSUM = "file://src/${GO_IMPORT}/COPYING;md5=bed161b82a1ecab65ff7ba3c3b960439"
 
 DEPENDS = "go-cross-${TUNE_PKGARCH}"
+
 RDEPENDS_${PN} += "bash"
+RDEPENDS_${PN}-dev += "bash python3-core"
 
-inherit gitpkgv go upx-compress
+inherit gitpkgv
 
-SRCREV = "349112df6b29cade0dc7b1d4d714a0391973c119"
+SRCREV = "${AUTOREV}"
 PV = "1.49-DEV+git${SRCPV}"
 
-SRC_URI = "git://${GO_IMPORT}.git;protocol=http \
-           file://rclonefs \
-           file://COPYING"
+GO_IMPORT = "github.com/rclone/rclone"
+
+SRC_URI = "git://${GO_IMPORT};protocol=https;branch=master \
+           file://0001-Revert-lib-add-plugin-support.patch \
+           file://rclonefs"
+
+inherit go upx-compress
 
 GO_DYNLINK_aarch64 = ""
 GO_DYNLINK_arm = ""
 
-GO_IMPORT = "github.com/rclone/rclone"
-
 do_install_append() {
-    rm -rf ${D}${libdir}
-    rm ${D}${bindir}/test_all
+    rm -rf ${D}${bindir}/test*
     install -m 755 ${WORKDIR}/rclonefs ${D}${bindir}
-    ln -s rclone ${D}${bindir}/mount.rclone
+    ln -sf rclone ${D}${bindir}/mount.rclone
 }
