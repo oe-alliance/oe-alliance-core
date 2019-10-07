@@ -31,7 +31,7 @@ done
 
 # exec rclone
 trans="$trans $remote $mountpoint"
-PATH=$PATH mount.rclone mount $trans &
+PATH=$PATH rclone mount $trans </dev/null >/dev/null 2>/dev/null &
 
 out=`ls -l $dst`
 until [ "$out" != 'total 0' ]; do
