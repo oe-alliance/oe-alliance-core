@@ -1,5 +1,7 @@
 MACHINE_FEATURES += "qthbbtv qtstalker"
 
+DISTRO_FEATURES_EXTRA = "opengl"
+
 PREFERRED_PROVIDER_virtual/egl ?= "airdigital-mali-${HICHIPSET}"
 PREFERRED_PROVIDER_virtual/libgles1 ?= "airdigital-mali-${HICHIPSET}"
 PREFERRED_PROVIDER_virtual/libgles2 ?= "airdigital-mali-${HICHIPSET}"
@@ -10,9 +12,6 @@ PREFERRED_PROVIDER_virtual/mesa ?= "mesa"
 
 PREFERRED_PROVIDER_virtual/blindscan-dvbc = "airdigital-dvb-modules-${MACHINE}"
 PREFERRED_PROVIDER_virtual/blindscan-dvbs = "airdigital-dvb-modules-${MACHINE}"
-
-# Qt
-PACKAGECONFIG_GL_pn-qtbase = "no-opengl linuxfb"
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "\
     ${@bb.utils.contains('MACHINE_FEATURES', 'hisil-${HICHIPSET}', 'airdigital-bootlogo-${HICHIPSET} airdigital-libs-${HICHIPSET} airdigital-param-${HICHIPSET} airdigital-bootargs-${HICHIPSET} airdigital-fastboot-${HICHIPSET}' , '', d)} \
