@@ -23,7 +23,7 @@ LIC_FILES_CHKSUM = "file://COPYING.GPLv2;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
                     file://COPYING.LGPLv2.1;md5=bd7a443320af8c812e4c18d1b79df004 \
                     file://COPYING.LGPLv3;md5=e6a600fd5e1d9cbde2d983680233ad02"
 
-SRCREV = "1529dfb73a5157dcb8762051ec4c8d8341762478"
+SRCREV = "61853f7503530ae11ed407a80463dc7ac2e7362d"
 SRC_URI = "git://github.com/FFmpeg/FFmpeg.git;branch=release/4.2 \
            file://4_mips64_cpu_detection.patch \
            "
