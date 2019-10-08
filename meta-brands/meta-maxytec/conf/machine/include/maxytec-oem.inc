@@ -4,25 +4,21 @@ include conf/machine/include/build-extras.inc
 BRAND_OEM = "maxytec"
 
 MACHINE_NAME = "\
-${@bb.utils.contains('MACHINEBUILD', 'ultrav8plus', 'V8PLUS Combo' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'anadolmulti', 'Multibox' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'maxytecmulti', 'Multibox' , '', d)}\
 "
 
 MACHINE_BRAND = "\
-${@bb.utils.contains('MACHINEBUILD', 'ultrav8plus', 'ULTRA BOX' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'anadolmulti', 'ANADOL' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'maxytecmulti', 'Maxytec' , '', d)}\
 "
 
 IMAGEDIR = "\
-${@bb.utils.contains('MACHINEBUILD', 'ultrav8plus', 'v8plus' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'anadolmulti', 'multibox' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'maxytecmulti', 'multibox' , '', d)}\
 "
 
 MACHINE_DRIVER ?= "\
-${@bb.utils.contains('MACHINEBUILD', 'ultrav8plus', 'v8plus' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'anadolmulti', 'multibox' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'maxytecmulti', 'multibox' , '', d)}\
 "
@@ -49,7 +45,6 @@ require conf/machine/include/soc-family.inc
 require conf/machine/box-hardware.inc
 
 DVBMEDIASINK_CONFIG = "--with-wma --with-wmv --with-pcm --with-dts --with-eac3 \
-    ${@bb.utils.contains('MACHINE', 'v8plus', '--with-h265 --with-vb6 --with-vb8 --with-vb9 --with-spark' , '', d)} \
     ${@bb.utils.contains('MACHINE', 'multibox', '--with-h265 --with-vb6 --with-vb8 --with-vb9 --with-spark' , '', d)} \
 "
 
