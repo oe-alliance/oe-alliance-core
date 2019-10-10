@@ -1,32 +1,5 @@
-gcc/Makefile.in: fix parallel building failure
-
-The gcc-ar.o, gcc-nm.o, gcc-ranlib.o and errors.o included
-config.h which was a generated file. But no explicity rule
-to clarify the dependency. There was potential building
-failure while parallel make.
-
-For gcc-ar.o, gcc-nm.o and gcc-ranlib.o, they were compiled from one C
-source file gcc-ar.c, we add them to ALL_HOST_BACKEND_OBJS, so the
-'$(ALL_HOST_OBJS) : | $(generated_files)' rule could work for these
-objects.
-
-For errors.o, it is part of gengtype, and the gengtype generator program
-is special: Two versions are built. One is for the build machine, and one
-is for the host. We refered what gengtype-parse.o did (which also is part
-of gengtype).
-
-[GCC #61899]
-https://gcc.gnu.org/bugzilla/show_bug.cgi?id=61899
-
-Upstream-Status: Send to gcc-patches@gcc.gnu.org mailing list
-
-Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
----
- gcc/Makefile.in | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
-
 diff --git a/gcc/Makefile.in b/gcc/Makefile.in
-index 6475cba..56e50bb 100644
+index f8b0c0954..1a38b754c 100644
 --- a/gcc/Makefile.in
 +++ b/gcc/Makefile.in
 @@ -1481,13 +1481,16 @@ OBJS-libcommon-target = $(common_out_object_file) prefix.o params.o \
@@ -47,7 +20,7 @@ index 6475cba..56e50bb 100644
  
  # This lists all host object files, whether they are included in this
  # compilation or not.
-@@ -2437,6 +2440,8 @@ gengtype-parse.o: $(CONFIG_H)
+@@ -2439,6 +2442,8 @@ gengtype-parse.o: $(CONFIG_H)
  CFLAGS-build/gengtype-parse.o += -DGENERATOR_FILE
  build/gengtype-parse.o: $(BCONFIG_H)
  
@@ -56,6 +29,3 @@ index 6475cba..56e50bb 100644
  gengtype-state.o build/gengtype-state.o: gengtype-state.c $(SYSTEM_H) \
    gengtype.h errors.h double-int.h version.h $(HASHTAB_H) $(OBSTACK_H) \
    $(XREGEX_H)
--- 
-1.8.1.2
-

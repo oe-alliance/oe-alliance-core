@@ -1,40 +1,8 @@
-From d626297e87e19251a284ea1e9360e831b48999ca Mon Sep 17 00:00:00 2001
-From: mpf <mpf@138bc75d-0d04-0410-961f-82ee72b054a4>
-Date: Thu, 4 Sep 2014 08:32:05 +0000
-Subject: [PATCH] Add target hook to override DWARF2 frame register size
-
-gcc/
-
-	* target.def (TARGET_DWARF_FRAME_REG_MODE): New target hook.
-	* targhooks.c (default_dwarf_frame_reg_mode): New function.
-	* targhooks.h (default_dwarf_frame_reg_mode): New prototype.
-	* doc/tm.texi.in (TARGET_DWARF_FRAME_REG_MODE): Document.
-	* doc/tm.texi: Regenerate.
-	* dwarf2cfi.c (expand_builtin_init_dwarf_reg_sizes): Abstract mode
-	selection logic to default_dwarf_frame_reg_mode.
-
-
-
-git-svn-id: svn+ssh://gcc.gnu.org/svn/gcc/trunk@214898 138bc75d-0d04-0410-961f-82ee72b054a4
-
-Signed-off-by: Khem Raj <raj.khem@gmail.com>
-Upstream-Status: Backport [gcc 5.0]
-
----
- gcc/ChangeLog      | 10 ++++++++++
- gcc/doc/tm.texi    |  7 +++++++
- gcc/doc/tm.texi.in |  2 ++
- gcc/dwarf2cfi.c    |  4 +---
- gcc/target.def     | 11 +++++++++++
- gcc/targhooks.c    | 13 +++++++++++++
- gcc/targhooks.h    |  1 +
- 7 files changed, 45 insertions(+), 3 deletions(-)
-
-Index: gcc-4.9.2/gcc/doc/tm.texi
-===================================================================
---- gcc-4.9.2.orig/gcc/doc/tm.texi
-+++ gcc-4.9.2/gcc/doc/tm.texi
-@@ -9017,6 +9017,13 @@ register in Dwarf.  Otherwise, this hook
+diff --git a/gcc/doc/tm.texi b/gcc/doc/tm.texi
+index 3ad66463e..cb81242fb 100644
+--- a/gcc/doc/tm.texi
++++ b/gcc/doc/tm.texi
+@@ -9019,6 +9019,13 @@ register in Dwarf.  Otherwise, this hook should return @code{NULL_RTX}.
  If not defined, the default is to return @code{NULL_RTX}.
  @end deftypefn
  
@@ -48,11 +16,11 @@ Index: gcc-4.9.2/gcc/doc/tm.texi
  @deftypefn {Target Hook} void TARGET_INIT_DWARF_REG_SIZES_EXTRA (tree @var{address})
  If some registers are represented in Dwarf-2 unwind information in
  multiple pieces, define this hook to fill in information about the
-Index: gcc-4.9.2/gcc/doc/tm.texi.in
-===================================================================
---- gcc-4.9.2.orig/gcc/doc/tm.texi.in
-+++ gcc-4.9.2/gcc/doc/tm.texi.in
-@@ -6745,6 +6745,8 @@ the target supports DWARF 2 frame unwind
+diff --git a/gcc/doc/tm.texi.in b/gcc/doc/tm.texi.in
+index 0c8335d88..fd5b3c03a 100644
+--- a/gcc/doc/tm.texi.in
++++ b/gcc/doc/tm.texi.in
+@@ -6747,6 +6747,8 @@ the target supports DWARF 2 frame unwind information.
  
  @hook TARGET_DWARF_REGISTER_SPAN
  
@@ -61,11 +29,11 @@ Index: gcc-4.9.2/gcc/doc/tm.texi.in
  @hook TARGET_INIT_DWARF_REG_SIZES_EXTRA
  
  @hook TARGET_ASM_TTYPE
-Index: gcc-4.9.2/gcc/dwarf2cfi.c
-===================================================================
---- gcc-4.9.2.orig/gcc/dwarf2cfi.c
-+++ gcc-4.9.2/gcc/dwarf2cfi.c
-@@ -271,11 +271,9 @@ expand_builtin_init_dwarf_reg_sizes (tre
+diff --git a/gcc/dwarf2cfi.c b/gcc/dwarf2cfi.c
+index 60e03085d..da2ca1bce 100644
+--- a/gcc/dwarf2cfi.c
++++ b/gcc/dwarf2cfi.c
+@@ -271,11 +271,9 @@ expand_builtin_init_dwarf_reg_sizes (tree address)
        if (rnum < DWARF_FRAME_REGISTERS)
  	{
  	  HOST_WIDE_INT offset = rnum * GET_MODE_SIZE (mode);
@@ -78,11 +46,11 @@ Index: gcc-4.9.2/gcc/dwarf2cfi.c
  	  if (dnum == DWARF_FRAME_RETURN_COLUMN)
  	    {
  	      if (save_mode == VOIDmode)
-Index: gcc-4.9.2/gcc/target.def
-===================================================================
---- gcc-4.9.2.orig/gcc/target.def
-+++ gcc-4.9.2/gcc/target.def
-@@ -3218,6 +3218,17 @@ If not defined, the default is to return
+diff --git a/gcc/target.def b/gcc/target.def
+index 3a64cd143..d433b7d6b 100644
+--- a/gcc/target.def
++++ b/gcc/target.def
+@@ -3218,6 +3218,17 @@ If not defined, the default is to return @code{NULL_RTX}.",
   rtx, (rtx reg),
   hook_rtx_rtx_null)
  
@@ -100,10 +68,10 @@ Index: gcc-4.9.2/gcc/target.def
  /* If expand_builtin_init_dwarf_reg_sizes needs to fill in table
     entries not corresponding directly to registers below
     FIRST_PSEUDO_REGISTER, this hook should generate the necessary
-Index: gcc-4.9.2/gcc/targhooks.c
-===================================================================
---- gcc-4.9.2.orig/gcc/targhooks.c
-+++ gcc-4.9.2/gcc/targhooks.c
+diff --git a/gcc/targhooks.c b/gcc/targhooks.c
+index 79491c7c5..8176c54fd 100644
+--- a/gcc/targhooks.c
++++ b/gcc/targhooks.c
 @@ -1438,6 +1438,19 @@ default_debug_unwind_info (void)
    return UI_NONE;
  }
@@ -124,11 +92,11 @@ Index: gcc-4.9.2/gcc/targhooks.c
  /* To be used by targets where reg_raw_mode doesn't return the right
     mode for registers used in apply_builtin_return and apply_builtin_arg.  */
  
-Index: gcc-4.9.2/gcc/targhooks.h
-===================================================================
---- gcc-4.9.2.orig/gcc/targhooks.h
-+++ gcc-4.9.2/gcc/targhooks.h
-@@ -194,6 +194,7 @@ extern int default_label_align_max_skip
+diff --git a/gcc/targhooks.h b/gcc/targhooks.h
+index 9dd4c83d6..a7170edb7 100644
+--- a/gcc/targhooks.h
++++ b/gcc/targhooks.h
+@@ -194,6 +194,7 @@ extern int default_label_align_max_skip (rtx);
  extern int default_jump_align_max_skip (rtx);
  extern section * default_function_section(tree decl, enum node_frequency freq,
  					  bool startup, bool exit);

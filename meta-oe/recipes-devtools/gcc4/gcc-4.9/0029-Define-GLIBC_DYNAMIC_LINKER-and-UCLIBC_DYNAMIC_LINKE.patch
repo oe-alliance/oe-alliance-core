@@ -1,39 +1,8 @@
-From 29d12344fb682a053de53eb08b95704cf3b67af2 Mon Sep 17 00:00:00 2001
-From: Khem Raj <raj.khem@gmail.com>
-Date: Fri, 29 Mar 2013 09:24:50 +0400
-Subject: [PATCH 29/35] Define GLIBC_DYNAMIC_LINKER and UCLIBC_DYNAMIC_LINKER
- relative to SYSTEMLIBS_DIR
-
-This patch defines GLIBC_DYNAMIC_LINKER and UCLIBC_DYNAMIC_LINKER
-relative to SYSTEMLIBS_DIR which can be set in generated headers
-This breaks the assumption of hardcoded multilib in gcc
-Change is only for the supported architectures in OE including
-SH, sparc, alpha for possible future support (if any)
-
-Removes the do_headerfix task in metadata
-
-Signed-off-by: Khem Raj <raj.khem@gmail.com>
-
-Upstream-Status: Inappropriate [OE configuration]
----
- gcc/config/alpha/linux-elf.h |    4 ++--
- gcc/config/arm/linux-eabi.h  |    4 ++--
- gcc/config/arm/linux-elf.h   |    2 +-
- gcc/config/i386/linux.h      |    2 +-
- gcc/config/i386/linux64.h    |    6 +++---
- gcc/config/mips/linux.h      |    2 +-
- gcc/config/mips/linux64.h    |    8 ++++----
- gcc/config/rs6000/linux64.h  |    8 ++++----
- gcc/config/sh/linux.h        |    2 +-
- gcc/config/sparc/linux.h     |    2 +-
- gcc/config/sparc/linux64.h   |    4 ++--
- 11 files changed, 22 insertions(+), 22 deletions(-)
-
-Index: gcc-4.9.0/gcc/config/alpha/linux-elf.h
-===================================================================
---- gcc-4.9.0.orig/gcc/config/alpha/linux-elf.h	2014-05-07 16:43:50.609106535 +0000
-+++ gcc-4.9.0/gcc/config/alpha/linux-elf.h	2014-05-07 16:43:50.605106535 +0000
-@@ -23,8 +23,8 @@
+diff --git a/gcc/config/alpha/linux-elf.h b/gcc/config/alpha/linux-elf.h
+index bdefe237f..b60601bef 100644
+--- a/gcc/config/alpha/linux-elf.h
++++ b/gcc/config/alpha/linux-elf.h
+@@ -23,8 +23,8 @@ along with GCC; see the file COPYING3.  If not see
  #define EXTRA_SPECS \
  { "elf_dynamic_linker", ELF_DYNAMIC_LINKER },
  
@@ -44,10 +13,10 @@ Index: gcc-4.9.0/gcc/config/alpha/linux-elf.h
  #if DEFAULT_LIBC == LIBC_UCLIBC
  #define CHOOSE_DYNAMIC_LINKER(G, U) "%{mglibc:" G ";:" U "}"
  #elif DEFAULT_LIBC == LIBC_GLIBC
-Index: gcc-4.9.0/gcc/config/arm/linux-eabi.h
-===================================================================
---- gcc-4.9.0.orig/gcc/config/arm/linux-eabi.h	2014-05-07 16:43:50.609106535 +0000
-+++ gcc-4.9.0/gcc/config/arm/linux-eabi.h	2014-05-07 16:43:50.605106535 +0000
+diff --git a/gcc/config/arm/linux-eabi.h b/gcc/config/arm/linux-eabi.h
+index f1f3448f1..5d9fba75f 100644
+--- a/gcc/config/arm/linux-eabi.h
++++ b/gcc/config/arm/linux-eabi.h
 @@ -68,8 +68,8 @@
     GLIBC_DYNAMIC_LINKER_DEFAULT and TARGET_DEFAULT_FLOAT_ABI.  */
  
@@ -59,11 +28,11 @@ Index: gcc-4.9.0/gcc/config/arm/linux-eabi.h
  #define GLIBC_DYNAMIC_LINKER_DEFAULT GLIBC_DYNAMIC_LINKER_SOFT_FLOAT
  
  #define GLIBC_DYNAMIC_LINKER \
-Index: gcc-4.9.0/gcc/config/arm/linux-elf.h
-===================================================================
---- gcc-4.9.0.orig/gcc/config/arm/linux-elf.h	2014-05-07 16:43:50.609106535 +0000
-+++ gcc-4.9.0/gcc/config/arm/linux-elf.h	2014-05-07 16:43:50.605106535 +0000
-@@ -57,7 +57,7 @@
+diff --git a/gcc/config/arm/linux-elf.h b/gcc/config/arm/linux-elf.h
+index 47e8b46eb..e672089ac 100644
+--- a/gcc/config/arm/linux-elf.h
++++ b/gcc/config/arm/linux-elf.h
+@@ -62,7 +62,7 @@
  
  #define LIBGCC_SPEC "%{mfloat-abi=soft*:-lfloat} -lgcc"
  
@@ -72,21 +41,21 @@ Index: gcc-4.9.0/gcc/config/arm/linux-elf.h
  
  #define LINUX_TARGET_LINK_SPEC  "%{h*} \
     %{static:-Bstatic} \
-Index: gcc-4.9.0/gcc/config/i386/linux.h
-===================================================================
---- gcc-4.9.0.orig/gcc/config/i386/linux.h	2014-05-07 16:43:50.609106535 +0000
-+++ gcc-4.9.0/gcc/config/i386/linux.h	2014-05-07 16:43:50.605106535 +0000
-@@ -20,4 +20,4 @@
+diff --git a/gcc/config/i386/linux.h b/gcc/config/i386/linux.h
+index 1fb1e0321..3124ce095 100644
+--- a/gcc/config/i386/linux.h
++++ b/gcc/config/i386/linux.h
+@@ -20,4 +20,4 @@ along with GCC; see the file COPYING3.  If not see
  <http://www.gnu.org/licenses/>.  */
  
  #define GNU_USER_LINK_EMULATION "elf_i386"
 -#define GLIBC_DYNAMIC_LINKER "/lib/ld-linux.so.2"
 +#define GLIBC_DYNAMIC_LINKER SYSTEMLIBS_DIR "ld-linux.so.2"
-Index: gcc-4.9.0/gcc/config/i386/linux64.h
-===================================================================
---- gcc-4.9.0.orig/gcc/config/i386/linux64.h	2014-05-07 16:43:50.609106535 +0000
-+++ gcc-4.9.0/gcc/config/i386/linux64.h	2014-05-07 16:43:50.605106535 +0000
-@@ -27,6 +27,6 @@
+diff --git a/gcc/config/i386/linux64.h b/gcc/config/i386/linux64.h
+index a90171e8c..c45b5aa5d 100644
+--- a/gcc/config/i386/linux64.h
++++ b/gcc/config/i386/linux64.h
+@@ -27,6 +27,6 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
  #define GNU_USER_LINK_EMULATION64 "elf_x86_64"
  #define GNU_USER_LINK_EMULATIONX32 "elf32_x86_64"
  
@@ -96,11 +65,30 @@ Index: gcc-4.9.0/gcc/config/i386/linux64.h
 +#define GLIBC_DYNAMIC_LINKER32 SYSTEMLIBS_DIR "ld-linux.so.2"
 +#define GLIBC_DYNAMIC_LINKER64 SYSTEMLIBS_DIR "ld-linux-x86-64.so.2"
 +#define GLIBC_DYNAMIC_LINKERX32 SYSTEMLIBS_DIR "ld-linux-x32.so.2"
-Index: gcc-4.9.0/gcc/config/mips/linux.h
-===================================================================
---- gcc-4.9.0.orig/gcc/config/mips/linux.h	2014-05-07 16:43:50.609106535 +0000
-+++ gcc-4.9.0/gcc/config/mips/linux.h	2014-05-07 16:43:50.605106535 +0000
-@@ -18,8 +18,8 @@
+diff --git a/gcc/config/linux.h b/gcc/config/linux.h
+index d38ef81e3..c2a6004bb 100644
+--- a/gcc/config/linux.h
++++ b/gcc/config/linux.h
+@@ -73,10 +73,10 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
+    GLIBC_DYNAMIC_LINKER must be defined for each target using them, or
+    GLIBC_DYNAMIC_LINKER32 and GLIBC_DYNAMIC_LINKER64 for targets
+    supporting both 32-bit and 64-bit compilation.  */
+-#define UCLIBC_DYNAMIC_LINKER "/lib/ld-uClibc.so.0"
+-#define UCLIBC_DYNAMIC_LINKER32 "/lib/ld-uClibc.so.0"
+-#define UCLIBC_DYNAMIC_LINKER64 "/lib/ld64-uClibc.so.0"
+-#define UCLIBC_DYNAMIC_LINKERX32 "/lib/ldx32-uClibc.so.0"
++#define UCLIBC_DYNAMIC_LINKER SYSTEMLIBS_DIR "ld-uClibc.so.0"
++#define UCLIBC_DYNAMIC_LINKER32 SYSTEMLIBS_DIR "ld-uClibc.so.0"
++#define UCLIBC_DYNAMIC_LINKER64 SYSTEMLIBS_DIR "ld64-uClibc.so.0"
++#define UCLIBC_DYNAMIC_LINKERX32 SYSTEMLIBS_DIR "ldx32-uClibc.so.0"
+ #define BIONIC_DYNAMIC_LINKER "/system/bin/linker"
+ #define BIONIC_DYNAMIC_LINKER32 "/system/bin/linker"
+ #define BIONIC_DYNAMIC_LINKER64 "/system/bin/linker64"
+diff --git a/gcc/config/mips/linux.h b/gcc/config/mips/linux.h
+index e539422d4..aca939435 100644
+--- a/gcc/config/mips/linux.h
++++ b/gcc/config/mips/linux.h
+@@ -18,8 +18,8 @@ along with GCC; see the file COPYING3.  If not see
  <http://www.gnu.org/licenses/>.  */
  
  #define GLIBC_DYNAMIC_LINKER \
@@ -111,11 +99,11 @@ Index: gcc-4.9.0/gcc/config/mips/linux.h
  #define UCLIBC_DYNAMIC_LINKER \
 -  "%{mnan=2008:/lib/ld-uClibc-mipsn8.so.0;:/lib/ld-uClibc.so.0}"
 +  "%{mnan=2008:" SYSTEMLIBS_DIR "ld-uClibc-mipsn8.so.0;:" SYSTEMLIBS_DIR "ld-uClibc.so.0}"
-Index: gcc-4.9.0/gcc/config/mips/linux64.h
-===================================================================
---- gcc-4.9.0.orig/gcc/config/mips/linux64.h	2014-05-07 16:43:50.609106535 +0000
-+++ gcc-4.9.0/gcc/config/mips/linux64.h	2014-05-07 16:43:50.605106535 +0000
-@@ -23,20 +23,20 @@
+diff --git a/gcc/config/mips/linux64.h b/gcc/config/mips/linux64.h
+index 7ad3b2af2..eea433f65 100644
+--- a/gcc/config/mips/linux64.h
++++ b/gcc/config/mips/linux64.h
+@@ -23,20 +23,20 @@ along with GCC; see the file COPYING3.  If not see
  #define GNU_USER_LINK_EMULATIONN32 "elf32%{EB:b}%{EL:l}tsmipn32"
  
  #define GLIBC_DYNAMIC_LINKER32 \
@@ -142,11 +130,11 @@ Index: gcc-4.9.0/gcc/config/mips/linux64.h
  
  #define BIONIC_DYNAMIC_LINKERN32 "/system/bin/linker32"
  #define GNU_USER_DYNAMIC_LINKERN32 \
-Index: gcc-4.9.0/gcc/config/rs6000/linux64.h
-===================================================================
---- gcc-4.9.0.orig/gcc/config/rs6000/linux64.h	2014-05-07 16:43:50.609106535 +0000
-+++ gcc-4.9.0/gcc/config/rs6000/linux64.h	2014-05-07 16:43:50.605106535 +0000
-@@ -367,14 +367,14 @@
+diff --git a/gcc/config/rs6000/linux64.h b/gcc/config/rs6000/linux64.h
+index 4394db906..3fc4e9d6d 100644
+--- a/gcc/config/rs6000/linux64.h
++++ b/gcc/config/rs6000/linux64.h
+@@ -363,14 +363,14 @@ extern int dot_symbols;
  #undef	LINK_OS_DEFAULT_SPEC
  #define LINK_OS_DEFAULT_SPEC "%(link_os_linux)"
  
@@ -166,11 +154,11 @@ Index: gcc-4.9.0/gcc/config/rs6000/linux64.h
  #if DEFAULT_LIBC == LIBC_UCLIBC
  #define CHOOSE_DYNAMIC_LINKER(G, U) "%{mglibc:" G ";:" U "}"
  #elif DEFAULT_LIBC == LIBC_GLIBC
-Index: gcc-4.9.0/gcc/config/sh/linux.h
-===================================================================
---- gcc-4.9.0.orig/gcc/config/sh/linux.h	2014-05-07 16:43:50.609106535 +0000
-+++ gcc-4.9.0/gcc/config/sh/linux.h	2014-05-07 16:43:50.605106535 +0000
-@@ -43,7 +43,7 @@
+diff --git a/gcc/config/sh/linux.h b/gcc/config/sh/linux.h
+index c0a4ebd3e..499da11df 100644
+--- a/gcc/config/sh/linux.h
++++ b/gcc/config/sh/linux.h
+@@ -43,7 +43,7 @@ along with GCC; see the file COPYING3.  If not see
  
  #define TARGET_ASM_FILE_END file_end_indicate_exec_stack
  
@@ -179,11 +167,11 @@ Index: gcc-4.9.0/gcc/config/sh/linux.h
  
  #undef SUBTARGET_LINK_EMUL_SUFFIX
  #define SUBTARGET_LINK_EMUL_SUFFIX "_linux"
-Index: gcc-4.9.0/gcc/config/sparc/linux.h
-===================================================================
---- gcc-4.9.0.orig/gcc/config/sparc/linux.h	2014-05-07 16:43:50.609106535 +0000
-+++ gcc-4.9.0/gcc/config/sparc/linux.h	2014-05-07 16:43:50.605106535 +0000
-@@ -83,7 +83,7 @@
+diff --git a/gcc/config/sparc/linux.h b/gcc/config/sparc/linux.h
+index c54ba2cb5..71584162b 100644
+--- a/gcc/config/sparc/linux.h
++++ b/gcc/config/sparc/linux.h
+@@ -83,7 +83,7 @@ extern const char *host_detect_local_cpu (int argc, const char **argv);
     When the -shared link option is used a final link is not being
     done.  */
  
@@ -192,11 +180,11 @@ Index: gcc-4.9.0/gcc/config/sparc/linux.h
  
  #undef  LINK_SPEC
  #define LINK_SPEC "-m elf32_sparc %{shared:-shared} \
-Index: gcc-4.9.0/gcc/config/sparc/linux64.h
-===================================================================
---- gcc-4.9.0.orig/gcc/config/sparc/linux64.h	2014-05-07 16:43:50.609106535 +0000
-+++ gcc-4.9.0/gcc/config/sparc/linux64.h	2014-05-07 16:43:50.605106535 +0000
-@@ -92,8 +92,8 @@
+diff --git a/gcc/config/sparc/linux64.h b/gcc/config/sparc/linux64.h
+index f00fb42ff..915b20f1d 100644
+--- a/gcc/config/sparc/linux64.h
++++ b/gcc/config/sparc/linux64.h
+@@ -92,8 +92,8 @@ along with GCC; see the file COPYING3.  If not see
     When the -shared link option is used a final link is not being
     done.  */
  
@@ -207,22 +195,3 @@ Index: gcc-4.9.0/gcc/config/sparc/linux64.h
  
  #ifdef SPARC_BI_ARCH
  
-Index: gcc-4.9.0/gcc/config/linux.h
-===================================================================
---- gcc-4.9.0.orig/gcc/config/linux.h	2014-05-07 16:43:50.609106535 +0000
-+++ gcc-4.9.0/gcc/config/linux.h	2014-05-07 16:43:50.605106535 +0000
-@@ -73,10 +73,10 @@
-    GLIBC_DYNAMIC_LINKER must be defined for each target using them, or
-    GLIBC_DYNAMIC_LINKER32 and GLIBC_DYNAMIC_LINKER64 for targets
-    supporting both 32-bit and 64-bit compilation.  */
--#define UCLIBC_DYNAMIC_LINKER "/lib/ld-uClibc.so.0"
--#define UCLIBC_DYNAMIC_LINKER32 "/lib/ld-uClibc.so.0"
--#define UCLIBC_DYNAMIC_LINKER64 "/lib/ld64-uClibc.so.0"
--#define UCLIBC_DYNAMIC_LINKERX32 "/lib/ldx32-uClibc.so.0"
-+#define UCLIBC_DYNAMIC_LINKER SYSTEMLIBS_DIR "ld-uClibc.so.0"
-+#define UCLIBC_DYNAMIC_LINKER32 SYSTEMLIBS_DIR "ld-uClibc.so.0"
-+#define UCLIBC_DYNAMIC_LINKER64 SYSTEMLIBS_DIR "ld64-uClibc.so.0"
-+#define UCLIBC_DYNAMIC_LINKERX32 SYSTEMLIBS_DIR "ldx32-uClibc.so.0"
- #define BIONIC_DYNAMIC_LINKER "/system/bin/linker"
- #define BIONIC_DYNAMIC_LINKER32 "/system/bin/linker"
- #define BIONIC_DYNAMIC_LINKER64 "/system/bin/linker64"

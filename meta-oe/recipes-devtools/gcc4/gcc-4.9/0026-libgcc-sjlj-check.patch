@@ -1,26 +1,8 @@
-From 08c2398445e6cac282488f64ae6bf29cbcd8db23 Mon Sep 17 00:00:00 2001
-From: Khem Raj <raj.khem@gmail.com>
-Date: Fri, 29 Mar 2013 09:20:50 +0400
-Subject: [PATCH 26/35] libgcc-sjlj-check
-
-ac_fn_c_try_compile doesnt seem to keep the intermediate files
-which are needed for sjlj test to pass since it greps into the
-generated file. So we run the compiler command using AC_TRY_COMMAND
-which then generates the needed .s file
-
-Signed-off-by: Khem Raj <raj.khem@gmail.com>
-
-Upstream-Status: Pending
----
- libgcc/configure    |   10 ++++++----
- libgcc/configure.ac |   10 ++++------
- 2 files changed, 10 insertions(+), 10 deletions(-)
-
 diff --git a/libgcc/configure b/libgcc/configure
-index 1425df6..d18e3cb 100644
+index 35896deb7..704daddd0 100644
 --- a/libgcc/configure
 +++ b/libgcc/configure
-@@ -4208,17 +4208,19 @@ void foo ()
+@@ -4236,17 +4236,19 @@ void foo ()
  }
  
  _ACEOF
@@ -45,10 +27,10 @@ index 1425df6..d18e3cb 100644
  
  fi
 diff --git a/libgcc/configure.ac b/libgcc/configure.ac
-index 8b7aba5..c7c9644 100644
+index d877d21c0..0edf54f8a 100644
 --- a/libgcc/configure.ac
 +++ b/libgcc/configure.ac
-@@ -216,16 +216,14 @@ void foo ()
+@@ -233,16 +233,14 @@ void foo ()
    bar();
  }
  ])])
@@ -69,6 +51,3 @@ index 8b7aba5..c7c9644 100644
  rm -f conftest*
  ])
  
--- 
-1.7.10.4
-

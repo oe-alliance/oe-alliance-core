@@ -1,7 +1,7 @@
 --- a/sys-utils/rfkill.c
 +++ b/sys-utils/rfkill.c
-@@ -40,19 +40,6 @@
- #include "path.h"
+@@ -39,19 +39,6 @@
+ #include "xalloc.h"
  
  
 -/*
@@ -20,7 +20,7 @@
  struct rfkill_type_str {
  	enum rfkill_type type;	/* ID */
  	const char *name;	/* generic name */
-@@ -68,9 +55,6 @@ static const struct rfkill_type_str rfkill_type_strings[] = {
+@@ -67,9 +54,6 @@ static const struct rfkill_type_str rfkill_type_strings[] = {
  	{ .type = RFKILL_TYPE_UWB,       .name = "ultrawideband" }, /* alias */
  	{ .type = RFKILL_TYPE_WIMAX,     .name = "wimax",        .desc = "WiMAX" },
  	{ .type = RFKILL_TYPE_WWAN,      .name = "wwan",         .desc = "Wireless WAN" },

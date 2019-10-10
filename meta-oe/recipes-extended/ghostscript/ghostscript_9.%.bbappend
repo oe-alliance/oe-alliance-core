@@ -1,1 +1,1 @@
-FILESEXTRAPATHS_append := ":${THISDIR}/ghostscript"
+FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"

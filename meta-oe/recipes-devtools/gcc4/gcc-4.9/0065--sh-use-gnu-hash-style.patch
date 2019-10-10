@@ -1,7 +1,8 @@
-diff -rub gcc-4.7.0-orig/gcc/config/sh/linux.h gcc-4.7.0/gcc/config/sh/linux.h
---- gcc-4.7.0-orig/gcc/config/sh/linux.h	2012-04-10 16:05:00.000000000 +0200
-+++ gcc-4.7.0/gcc/config/sh/linux.h	2012-04-10 16:18:30.000000000 +0200
-@@ -57,6 +57,7 @@
+diff --git a/gcc/config/sh/linux.h b/gcc/config/sh/linux.h
+index 499da11df..ff24edd96 100644
+--- a/gcc/config/sh/linux.h
++++ b/gcc/config/sh/linux.h
+@@ -53,6 +53,7 @@ along with GCC; see the file COPYING3.  If not see
     %{!static: \
       %{rdynamic:-export-dynamic} \
       -dynamic-linker " GNU_USER_DYNAMIC_LINKER "} \

@@ -1,24 +1,6 @@
-From 92a2d5b776d91ed87aa08c4790c1af76c4d2d671 Mon Sep 17 00:00:00 2001
-From: Khem Raj <raj.khem@gmail.com>
-Date: Wed, 18 Mar 2015 00:25:45 +0000
-Subject: [PATCH 12/24] Make ld --version output matching grok gold's output
-
-adapted from from upstream branch roland/gold-vs-libc
-
-Upstream-Status: Backport
-
-Signed-off-by: Khem Raj <raj.khem@gmail.com>
-
----
- configure    | 2 +-
- configure.ac | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/configure b/configure
-index 8fe59377ea..7888a3f072 100755
 --- a/configure
 +++ b/configure
-@@ -4482,7 +4482,7 @@ else
+@@ -4691,7 +4691,7 @@ else
    # Found it, now check the version.
    { $as_echo "$as_me:${as_lineno-$LINENO}: checking version of $LD" >&5
  $as_echo_n "checking version of $LD... " >&6; }
@@ -27,11 +9,9 @@ index 8fe59377ea..7888a3f072 100755
    case $ac_prog_version in
      '') ac_prog_version="v. ?.??, bad"; ac_verc_fail=yes;;
      2.1[0-9][0-9]*|2.2[2-9]*|2.[3-9][0-9]*|[3-9].*|[1-9][0-9]*)
-diff --git a/configure.ac b/configure.ac
-index 3c766b7409..6908a9918f 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -944,7 +944,7 @@ AC_CHECK_PROG_VER(AS, $AS, --version,
+@@ -1066,7 +1066,7 @@ AC_CHECK_PROG_VER(AS, $AS, --version,
  		  [2.1[0-9][0-9]*|2.2[2-9]*|2.[3-9][0-9]*|[3-9].*|[1-9][0-9]*],
  		  AS=: critic_missing="$critic_missing as")
  AC_CHECK_PROG_VER(LD, $LD, --version,

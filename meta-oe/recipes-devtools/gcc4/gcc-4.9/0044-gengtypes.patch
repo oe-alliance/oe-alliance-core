@@ -1,41 +1,8 @@
-gengtype is generated for both the build system and the target. -DGENERATOR_FILE
-was added in the patch http://gcc.gnu.org/ml/gcc-patches/2012-07/msg00273.html
-and was applied to both versions of gengtype.
-
-Unfortunately the presence of this flag triggers the build configuration (bconfig.h) 
-to be included for the target build of gengtype. Compiling gengtype with the target 
-compiler and bconfig.h can result in errors if the build and target systems are 
-dissimilar. An example case this fails is cross compiling gcc on linux for a darwin 
-target system:
-
-In file included from /media/build1/poky/build/tmp/work-shared/gcc-4.8.1-r0/gcc-4.8.1/gcc/gengtype-parse.c:25:0:
-| /media/build1/poky/build/tmp/work-shared/gcc-4.8.1-r0/gcc-4.8.1/gcc/gengtype-parse.c: In function 'void parse_error(const char*, ...)':
-| /media/build1/poky/build/tmp/work-shared/gcc-4.8.1-r0/gcc-4.8.1/gcc/system.h:93:53: error: 'fputc_unlocked' was not declared in this scope
-|  #  define fputc(C, Stream) fputc_unlocked (C, Stream)
-
-which occurs since auto-build.h and auto-host.h have differnet values of
-HAVE_FPUTC_UNLOCKED:
-
-#define HAVE_FPUTC_UNLOCKED 1
-/* #undef HAVE_FPUTS_UNLOCKED */
-
-The obvious fix is to only include the flag on build/ targets which this patch does, however 
-this also leads to compile errors due to const_tree being undefined but used in double_int.h
-
-I added a GENERATOR_FILE2 flag to workaround those in the 
-target case and allow the build to succeed.
-
-Only the build/gengtypes should have the -DGENERATOR_FILE 
-
-RP 22/8/2013
-
-Upstream-Status: Pending
-
-Index: gcc-4.8.1/gcc/Makefile.in
-===================================================================
---- gcc-4.8.1.orig/gcc/Makefile.in	2013-08-19 11:40:36.844014424 +0000
-+++ gcc-4.8.1/gcc/Makefile.in	2013-08-19 11:40:37.784014402 +0000
-@@ -3903,27 +3903,29 @@
+diff --git a/gcc/Makefile.in b/gcc/Makefile.in
+index 4b5e9e63b..f8b0c0954 100644
+--- a/gcc/Makefile.in
++++ b/gcc/Makefile.in
+@@ -2430,27 +2430,29 @@ build/gengenrtl.o : gengenrtl.c $(BCONFIG_H) $(SYSTEM_H) rtl.def
  
  gengtype-lex.o build/gengtype-lex.o : gengtype-lex.c gengtype.h $(SYSTEM_H)
  gengtype-lex.o: $(CONFIG_H) $(BCONFIG_H)
@@ -69,7 +36,7 @@ Index: gcc-4.8.1/gcc/Makefile.in
  build/gengtype.o: $(BCONFIG_H)
  
  build/genmddeps.o: genmddeps.c $(BCONFIG_H) $(SYSTEM_H) coretypes.h	\
-@@ -3988,7 +3990,7 @@
+@@ -2515,7 +2517,7 @@ $(genprog:%=build/gen%$(build_exeext)): build/gen%$(build_exeext): build/gen%.o
  # any system header is included.
  gengtype-lex.c : gengtype-lex.l
  	-$(FLEX) $(FLEXFLAGS) -o$@ $< && { \
@@ -78,11 +45,11 @@ Index: gcc-4.8.1/gcc/Makefile.in
  	  cat $@ >> $@.tmp; \
  	  mv $@.tmp $@; \
  	}
-Index: gcc-4.8.1/gcc/double-int.h
-===================================================================
---- gcc-4.8.1.orig/gcc/double-int.h	2013-01-30 11:04:30.000000000 +0000
-+++ gcc-4.8.1/gcc/double-int.h	2013-08-19 11:41:51.564012719 +0000
-@@ -448,10 +448,12 @@
+diff --git a/gcc/double-int.h b/gcc/double-int.h
+index 5ca9ccf61..923569843 100644
+--- a/gcc/double-int.h
++++ b/gcc/double-int.h
+@@ -429,10 +429,12 @@ double_int::popcount () const
  
  
  #ifndef GENERATOR_FILE
