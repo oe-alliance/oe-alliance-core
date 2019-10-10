@@ -1,0 +1,12 @@
+diff --git a/gcc/config/sh/linux.h b/gcc/config/sh/linux.h
+index 499da11df..ff24edd96 100644
+--- a/gcc/config/sh/linux.h
++++ b/gcc/config/sh/linux.h
+@@ -53,6 +53,7 @@ along with GCC; see the file COPYING3.  If not see
+    %{!static: \
+      %{rdynamic:-export-dynamic} \
+      -dynamic-linker " GNU_USER_DYNAMIC_LINKER "} \
++  --hash-style=gnu \
+    %{static:-static}"
+ 
+ /* Output assembler code to STREAM to call the profiler.  */

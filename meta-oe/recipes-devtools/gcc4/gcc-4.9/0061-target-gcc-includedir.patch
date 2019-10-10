@@ -1,20 +1,8 @@
-Ensure target gcc headers can be included
-
-There are a few headers installed as part of the OpenEmbedded
-gcc-runtime target (omp.h, ssp/*.h). Being installed from a recipe
-built for the target architecture, these are within the target
-sysroot and not cross/nativesdk; thus they weren't able to be
-found by gcc with the existing search paths. Add support for
-picking up these headers under the sysroot supplied on the gcc
-command line in order to resolve this.
-
-Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
-
-Upstream-Status: Pending
-
---- a/gcc/Makefile.in	2014-12-23 11:57:33.327873331 +0000
-+++ b/gcc/Makefile.in	2015-01-21 11:32:35.447305394 +0000
-@@ -587,6 +587,7 @@
+diff --git a/gcc/Makefile.in b/gcc/Makefile.in
+index 1a38b754c..617f5d904 100644
+--- a/gcc/Makefile.in
++++ b/gcc/Makefile.in
+@@ -587,6 +587,7 @@ libexecdir = @libexecdir@
  
  # Directory in which the compiler finds libraries etc.
  libsubdir = $(libdir)/gcc/$(target_noncanonical)/$(version)
@@ -22,7 +10,7 @@ Upstream-Status: Pending
  # Directory in which the compiler finds executables
  libexecsubdir = $(libexecdir)/gcc/$(target_noncanonical)/$(version)
  # Directory in which all plugin resources are installed
-@@ -2534,6 +2535,7 @@
+@@ -2536,6 +2537,7 @@ CFLAGS-intl.o += -DLOCALEDIR=\"$(localedir)\"
  
  PREPROCESSOR_DEFINES = \
    -DGCC_INCLUDE_DIR=\"$(libsubdir)/include\" \
@@ -30,9 +18,11 @@ Upstream-Status: Pending
    -DFIXED_INCLUDE_DIR=\"$(libsubdir)/include-fixed\" \
    -DGPLUSPLUS_INCLUDE_DIR=\"$(gcc_gxx_include_dir)\" \
    -DGPLUSPLUS_INCLUDE_DIR_ADD_SYSROOT=$(gcc_gxx_include_dir_add_sysroot) \
---- a/gcc/cppdefault.c	2015-01-13 17:40:26.131012725 +0000
-+++ b/gcc/cppdefault.c	2015-01-21 11:30:08.928426492 +0000
-@@ -59,6 +59,10 @@
+diff --git a/gcc/cppdefault.c b/gcc/cppdefault.c
+index a4fc35d09..dad69e604 100644
+--- a/gcc/cppdefault.c
++++ b/gcc/cppdefault.c
+@@ -59,6 +59,10 @@ const struct default_include cpp_include_defaults[]
      /* This is the dir for gcc's private headers.  */
      { GCC_INCLUDE_DIR, "GCC", 0, 0, 0, 0 },
  #endif
@@ -44,10 +34,10 @@ Upstream-Status: Pending
      /* /usr/local/include comes before the fixincluded header files.  */
      { LOCAL_INCLUDE_DIR, 0, 0, 1, 1, 2 },
 diff --git a/gcc/defaults.h b/gcc/defaults.h
-index f94ae17..d98b40b 100644
+index 80a798f01..95545d47f 100644
 --- a/gcc/defaults.h
 +++ b/gcc/defaults.h
-@@ -1390,4 +1390,13 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
+@@ -1395,4 +1395,13 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
  
  #endif /* GCC_INSN_FLAGS_H  */
  
@@ -62,10 +52,10 @@ index f94ae17..d98b40b 100644
 +
  #endif  /* ! GCC_DEFAULTS_H */
 diff --git a/gcc/gcc.c b/gcc/gcc.c
-index 9f0b781..174fca8 100644
+index 996fd0de7..5fd3d0a23 100644
 --- a/gcc/gcc.c
 +++ b/gcc/gcc.c
-@@ -1189,13 +1189,6 @@ static const char *gcc_libexec_prefix;
+@@ -1195,13 +1195,6 @@ static const char *gcc_libexec_prefix;
  
  /* Default prefixes to attach to command names.  */
  

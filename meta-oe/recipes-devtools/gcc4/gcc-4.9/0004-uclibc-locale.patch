@@ -1,47 +1,6 @@
-From a55c751a449c2cbf0b3fcc07aab1b86bf9661510 Mon Sep 17 00:00:00 2001
-From: Khem Raj <raj.khem@gmail.com>
-Date: Fri, 29 Mar 2013 08:41:39 +0400
-Subject: [PATCH 04/35] uclibc-locale
-
-Signed-off-by: Khem Raj <raj.khem@gmail.com>
-
-Upstream-Status: Pending
----
- libstdc++-v3/acinclude.m4                          |   37 ++
- .../config/locale/uclibc/c++locale_internal.h      |   63 ++
- libstdc++-v3/config/locale/uclibc/c_locale.cc      |  160 +++++
- libstdc++-v3/config/locale/uclibc/c_locale.h       |  117 ++++
- .../config/locale/uclibc/codecvt_members.cc        |  308 +++++++++
- .../config/locale/uclibc/collate_members.cc        |   80 +++
- libstdc++-v3/config/locale/uclibc/ctype_members.cc |  300 +++++++++
- .../config/locale/uclibc/messages_members.cc       |  100 +++
- .../config/locale/uclibc/messages_members.h        |  118 ++++
- .../config/locale/uclibc/monetary_members.cc       |  692 ++++++++++++++++++++
- .../config/locale/uclibc/numeric_members.cc        |  160 +++++
- libstdc++-v3/config/locale/uclibc/time_members.cc  |  406 ++++++++++++
- libstdc++-v3/config/locale/uclibc/time_members.h   |   68 ++
- libstdc++-v3/configure                             |   75 +++
- libstdc++-v3/include/c_compatibility/wchar.h       |    2 +
- libstdc++-v3/include/c_std/cwchar                  |    2 +
- 16 files changed, 2688 insertions(+)
- create mode 100644 libstdc++-v3/config/locale/uclibc/c++locale_internal.h
- create mode 100644 libstdc++-v3/config/locale/uclibc/c_locale.cc
- create mode 100644 libstdc++-v3/config/locale/uclibc/c_locale.h
- create mode 100644 libstdc++-v3/config/locale/uclibc/codecvt_members.cc
- create mode 100644 libstdc++-v3/config/locale/uclibc/collate_members.cc
- create mode 100644 libstdc++-v3/config/locale/uclibc/ctype_members.cc
- create mode 100644 libstdc++-v3/config/locale/uclibc/messages_members.cc
- create mode 100644 libstdc++-v3/config/locale/uclibc/messages_members.h
- create mode 100644 libstdc++-v3/config/locale/uclibc/monetary_members.cc
- create mode 100644 libstdc++-v3/config/locale/uclibc/numeric_members.cc
- create mode 100644 libstdc++-v3/config/locale/uclibc/time_members.cc
- create mode 100644 libstdc++-v3/config/locale/uclibc/time_members.h
-
-diff --git a/libstdc++-v3/acinclude.m4 b/libstdc++-v3/acinclude.m4
-index 0871a6a..326d7ef 100644
 --- a/libstdc++-v3/acinclude.m4
 +++ b/libstdc++-v3/acinclude.m4
-@@ -1905,6 +1905,9 @@ AC_DEFUN([GLIBCXX_ENABLE_CLOCALE], [
+@@ -2029,6 +2029,9 @@ AC_DEFUN([GLIBCXX_ENABLE_CLOCALE], [
    # Default to "generic".
    if test $enable_clocale_flag = auto; then
      case ${target_os} in
@@ -51,7 +10,7 @@ index 0871a6a..326d7ef 100644
        linux* | gnu* | kfreebsd*-gnu | knetbsd*-gnu)
  	enable_clocale_flag=gnu
  	;;
-@@ -2069,6 +2072,40 @@ AC_DEFUN([GLIBCXX_ENABLE_CLOCALE], [
+@@ -2193,6 +2196,40 @@ AC_DEFUN([GLIBCXX_ENABLE_CLOCALE], [
        CTIME_CC=config/locale/generic/time_members.cc
        CLOCALE_INTERNAL_H=config/locale/generic/c++locale_internal.h
        ;;
@@ -94,7 +53,7 @@ index 0871a6a..326d7ef 100644
    # This is where the testsuite looks for locale catalogs, using the
 diff --git a/libstdc++-v3/config/locale/uclibc/c++locale_internal.h b/libstdc++-v3/config/locale/uclibc/c++locale_internal.h
 new file mode 100644
-index 0000000..2ae3e4a
+index 000000000..2ae3e4aaa
 --- /dev/null
 +++ b/libstdc++-v3/config/locale/uclibc/c++locale_internal.h
 @@ -0,0 +1,63 @@
@@ -163,7 +122,7 @@ index 0000000..2ae3e4a
 +#endif // GLIBC 2.3 and later
 diff --git a/libstdc++-v3/config/locale/uclibc/c_locale.cc b/libstdc++-v3/config/locale/uclibc/c_locale.cc
 new file mode 100644
-index 0000000..5081dc1
+index 000000000..5081dc1cc
 --- /dev/null
 +++ b/libstdc++-v3/config/locale/uclibc/c_locale.cc
 @@ -0,0 +1,160 @@
@@ -329,7 +288,7 @@ index 0000000..5081dc1
 +}  // namespace std
 diff --git a/libstdc++-v3/config/locale/uclibc/c_locale.h b/libstdc++-v3/config/locale/uclibc/c_locale.h
 new file mode 100644
-index 0000000..da07c1f
+index 000000000..da07c1f7d
 --- /dev/null
 +++ b/libstdc++-v3/config/locale/uclibc/c_locale.h
 @@ -0,0 +1,117 @@
@@ -452,7 +411,7 @@ index 0000000..da07c1f
 +#endif
 diff --git a/libstdc++-v3/config/locale/uclibc/codecvt_members.cc b/libstdc++-v3/config/locale/uclibc/codecvt_members.cc
 new file mode 100644
-index 0000000..64aa962
+index 000000000..64aa96253
 --- /dev/null
 +++ b/libstdc++-v3/config/locale/uclibc/codecvt_members.cc
 @@ -0,0 +1,308 @@
@@ -766,7 +725,7 @@ index 0000000..64aa962
 +}
 diff --git a/libstdc++-v3/config/locale/uclibc/collate_members.cc b/libstdc++-v3/config/locale/uclibc/collate_members.cc
 new file mode 100644
-index 0000000..c2664a7
+index 000000000..c2664a77f
 --- /dev/null
 +++ b/libstdc++-v3/config/locale/uclibc/collate_members.cc
 @@ -0,0 +1,80 @@
@@ -852,7 +811,7 @@ index 0000000..c2664a7
 +}
 diff --git a/libstdc++-v3/config/locale/uclibc/ctype_members.cc b/libstdc++-v3/config/locale/uclibc/ctype_members.cc
 new file mode 100644
-index 0000000..7294e3a
+index 000000000..7294e3a84
 --- /dev/null
 +++ b/libstdc++-v3/config/locale/uclibc/ctype_members.cc
 @@ -0,0 +1,300 @@
@@ -1158,7 +1117,7 @@ index 0000000..7294e3a
 +}
 diff --git a/libstdc++-v3/config/locale/uclibc/messages_members.cc b/libstdc++-v3/config/locale/uclibc/messages_members.cc
 new file mode 100644
-index 0000000..13594d9
+index 000000000..13594d9fe
 --- /dev/null
 +++ b/libstdc++-v3/config/locale/uclibc/messages_members.cc
 @@ -0,0 +1,100 @@
@@ -1264,7 +1223,7 @@ index 0000000..13594d9
 +}
 diff --git a/libstdc++-v3/config/locale/uclibc/messages_members.h b/libstdc++-v3/config/locale/uclibc/messages_members.h
 new file mode 100644
-index 0000000..1424078
+index 000000000..142407817
 --- /dev/null
 +++ b/libstdc++-v3/config/locale/uclibc/messages_members.h
 @@ -0,0 +1,118 @@
@@ -1388,7 +1347,7 @@ index 0000000..1424078
 +     }
 diff --git a/libstdc++-v3/config/locale/uclibc/monetary_members.cc b/libstdc++-v3/config/locale/uclibc/monetary_members.cc
 new file mode 100644
-index 0000000..aa52731
+index 000000000..aa5273169
 --- /dev/null
 +++ b/libstdc++-v3/config/locale/uclibc/monetary_members.cc
 @@ -0,0 +1,692 @@
@@ -2086,7 +2045,7 @@ index 0000000..aa52731
 +}
 diff --git a/libstdc++-v3/config/locale/uclibc/numeric_members.cc b/libstdc++-v3/config/locale/uclibc/numeric_members.cc
 new file mode 100644
-index 0000000..883ec1a
+index 000000000..883ec1a1d
 --- /dev/null
 +++ b/libstdc++-v3/config/locale/uclibc/numeric_members.cc
 @@ -0,0 +1,160 @@
@@ -2252,7 +2211,7 @@ index 0000000..883ec1a
 +}
 diff --git a/libstdc++-v3/config/locale/uclibc/time_members.cc b/libstdc++-v3/config/locale/uclibc/time_members.cc
 new file mode 100644
-index 0000000..e0707d7
+index 000000000..e0707d76a
 --- /dev/null
 +++ b/libstdc++-v3/config/locale/uclibc/time_members.cc
 @@ -0,0 +1,406 @@
@@ -2664,7 +2623,7 @@ index 0000000..e0707d7
 +}
 diff --git a/libstdc++-v3/config/locale/uclibc/time_members.h b/libstdc++-v3/config/locale/uclibc/time_members.h
 new file mode 100644
-index 0000000..ba8e858
+index 000000000..ba8e8587c
 --- /dev/null
 +++ b/libstdc++-v3/config/locale/uclibc/time_members.h
 @@ -0,0 +1,68 @@
@@ -2737,10 +2696,10 @@ index 0000000..ba8e858
 +      _S_destroy_c_locale(_M_c_locale_timepunct);
 +    }
 diff --git a/libstdc++-v3/configure b/libstdc++-v3/configure
-index f40ddcf..c57a751 100755
+index bcd2c8cdb..b031aaf8f 100755
 --- a/libstdc++-v3/configure
 +++ b/libstdc++-v3/configure
-@@ -15822,6 +15822,9 @@ fi
+@@ -15843,6 +15843,9 @@ fi
    # Default to "generic".
    if test $enable_clocale_flag = auto; then
      case ${target_os} in
@@ -2750,7 +2709,7 @@ index f40ddcf..c57a751 100755
        linux* | gnu* | kfreebsd*-gnu | knetbsd*-gnu)
  	enable_clocale_flag=gnu
  	;;
-@@ -16079,6 +16082,78 @@ $as_echo "newlib" >&6; }
+@@ -16100,6 +16103,78 @@ $as_echo "newlib" >&6; }
        CTIME_CC=config/locale/generic/time_members.cc
        CLOCALE_INTERNAL_H=config/locale/generic/c++locale_internal.h
        ;;
@@ -2830,7 +2789,7 @@ index f40ddcf..c57a751 100755
  
    # This is where the testsuite looks for locale catalogs, using the
 diff --git a/libstdc++-v3/include/c_compatibility/wchar.h b/libstdc++-v3/include/c_compatibility/wchar.h
-index 580d725..3fe61b8 100644
+index fed87f140..7929d1d90 100644
 --- a/libstdc++-v3/include/c_compatibility/wchar.h
 +++ b/libstdc++-v3/include/c_compatibility/wchar.h
 @@ -101,7 +101,9 @@ using std::wmemcmp;
@@ -2844,7 +2803,7 @@ index 580d725..3fe61b8 100644
  #if _GLIBCXX_USE_C99
  using std::wcstold;
 diff --git a/libstdc++-v3/include/c_std/cwchar b/libstdc++-v3/include/c_std/cwchar
-index 0e6b1fc..405aee2 100644
+index c6f1f23ba..cfde055f2 100644
 --- a/libstdc++-v3/include/c_std/cwchar
 +++ b/libstdc++-v3/include/c_std/cwchar
 @@ -175,7 +175,9 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
@@ -2858,5 +2817,5 @@ index 0e6b1fc..405aee2 100644
    using ::wcsncat;
    using ::wcsncmp;
 -- 
-1.7.10.4
+2.20.1
 
