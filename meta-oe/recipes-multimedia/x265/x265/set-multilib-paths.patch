@@ -1,0 +1,13 @@
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -352,8 +352,8 @@ if(CHECKED_BUILD)
+ endif()
+ 
+ # Build options
+-set(LIB_INSTALL_DIR lib CACHE STRING "Install location of libraries")
+-set(BIN_INSTALL_DIR bin CACHE STRING "Install location of executables")
++set(LIB_INSTALL_DIR $ENV{libdir} CACHE STRING "Install location of libraries")
++set(BIN_INSTALL_DIR $ENV{bindir} CACHE STRING "Install location of executables")
+ set(EXTRA_LIB "" CACHE STRING "Extra libraries to link against")
+ set(EXTRA_LINK_FLAGS "" CACHE STRING "Extra link flags")
+ if(EXTRA_LINK_FLAGS)
