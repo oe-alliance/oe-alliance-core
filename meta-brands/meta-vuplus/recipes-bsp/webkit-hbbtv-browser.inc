@@ -29,3 +29,5 @@ RPROVIDES_${PN} += "webkit-hbbtv-browser"
 PACKAGE_ARCH := "${MACHINE_ARCH}"
 
 FILES_${PN} = "/"
+
+INSANE_SKIP_${PN} = "already-stripped"

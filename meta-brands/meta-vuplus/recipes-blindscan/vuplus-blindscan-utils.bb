@@ -8,7 +8,8 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 LICENSE = "CLOSED"
 require conf/license/license-close.inc
 
-PACKAGES = "vuplus-blindscan-dvbs-utils vuplus-blindscan-dvbc-utils"
+PACKAGES = "vuplus-blindscan-dvbs-utils vuplus-blindscan-dvbc-utils \
+            vuplus-blindscan-dvbs-utils-doc vuplus-blindscan-dvbc-utils-doc"
 
 PROVIDES += "virtual/blindscan-dvbs virtual/blindscan-dvbc"
 RPROVIDES_vuplus-blindscan-dvbs-utils += "virtual/blindscan-dvbs"
@@ -25,14 +26,16 @@ S = "${WORKDIR}/blindscan-utils"
 
 FILES_vuplus-blindscan-dvbs-utils = "${bindir}/*_blindscan"
 FILES_vuplus-blindscan-dvbc-utils = "${bindir}/tda1002x ${bindir}/ssh108* ${bindir}/tt3l10* ${bindir}/tt2l08* ${bindir}/bcm3*"
-
-FILES_${PN}-dev = "/usr/bin/release.txt"
+FILES_vuplus-blindscan-dvbs-utils-doc = "${datadir}/vuplus-blindscan-utils-release.txt"
+FILES_vuplus-blindscan-dvbc-utils-doc = "${datadir}/vuplus-blindscan-utils-release.txt"
 
 do_install() {
-	install -d ${D}/${bindir}/
+	install -d ${D}${bindir}
 	for i in `find ${S} -type f -maxdepth 1`; do
-		install -m 0755 $i ${D}/${bindir}/;
+		install -m 0755 $i ${D}${bindir};
 	done;
+	install -d ${D}${datadir}
+	mv ${D}${bindir}/release.txt ${D}${datadir}/vuplus-blindscan-utils-release.txt
 }
 
 SRC_URI[md5sum] = "b6d485516762453dcb829d914b4e06b3"

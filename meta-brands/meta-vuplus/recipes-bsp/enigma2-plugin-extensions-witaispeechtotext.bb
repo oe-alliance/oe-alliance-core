@@ -25,6 +25,7 @@ do_compile() {
 do_install() {
 	install -d  ${D}${WITAISPEECHTOTEXT_PLUGIN_PATH}
 	cp -rp ${S}/* ${D}${WITAISPEECHTOTEXT_PLUGIN_PATH}
+	chown -R root:root ${D}${WITAISPEECHTOTEXT_PLUGIN_PATH}
 }
 
 FILES_${PN} = "${WITAISPEECHTOTEXT_PLUGIN_PATH}"

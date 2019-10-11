@@ -4,7 +4,7 @@ LICENSE = "CLOSED"
 require conf/license/license-close.inc
 
 DEPENDS = "python-native"
-RDEPENDS_${PN} = "vuplus-bluetooth-util libusb-compat"
+RDEPENDS_${PN} = "vuplus-bluetooth-util libusb-compat libusb1"
 
 PROVIDES += "enigma2-plugin-systemplugins-bluetoothsetup"
 RPROVIDES_${PN} += "enigma2-plugin-systemplugins-bluetoothsetup"
@@ -28,6 +28,7 @@ do_compile() {
 do_install() {
 	install -d  ${D}${BLUETOOTH_PLUGIN_PATH}
 	cp -rp ${S}/* ${D}${BLUETOOTH_PLUGIN_PATH}
+	chown -R root:root ${D}${BLUETOOTH_PLUGIN_PATH}
 }
 
 FILES_${PN} = "${BLUETOOTH_PLUGIN_PATH}"

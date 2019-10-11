@@ -21,3 +21,5 @@ FILES_${PN} += "${libdir}/enigma2/python/Plugins/Extensions/StalkerClient/*"
 
 INHIBIT_PACKAGE_STRIP = "1"
 INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
+
+INSANE_SKIP_${PN} = "already-stripped"
