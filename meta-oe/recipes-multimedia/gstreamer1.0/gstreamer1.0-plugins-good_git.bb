@@ -12,7 +12,7 @@ SRC_URI = "git://gitlab.freedesktop.org/gstreamer/gst-plugins-good;protocol=http
            file://0001-introspection.m4-prefix-pkgconfig-paths-with-PKG_CON.patch \
 "
 
-CFLAGS += "-Wno-maybe-uninitialized -Wno-uninitialized -Wno-incompatible-pointer-types"
+CFLAGS += "-Wno-maybe-uninitialized -Wno-uninitialized -Wno-incompatible-pointer-types -Wno-deprecated-declarations"
 
 RPROVIDES_${PN}-pulseaudio += "${PN}-pulse"
 RPROVIDES_${PN}-soup += "${PN}-souphttpsrc"

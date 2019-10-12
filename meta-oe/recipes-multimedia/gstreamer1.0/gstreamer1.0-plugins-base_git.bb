@@ -13,4 +13,4 @@ SRC_URI = "git://gitlab.freedesktop.org/gstreamer/gst-plugins-base;protocol=http
            file://0003-riff-media-added-fourcc-to-all-ffmpeg-mpeg4-video-caps.patch \
 "
 
-CFLAGS += "-Wno-maybe-uninitialized -Wno-uninitialized"
+CFLAGS += "-Wno-maybe-uninitialized -Wno-uninitialized -Wno-deprecated-declarations"
