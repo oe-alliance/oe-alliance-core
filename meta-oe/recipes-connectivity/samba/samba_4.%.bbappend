@@ -1,4 +1,7 @@
 inherit upx-compress
+
+PR = "r1"
+
 FILESEXTRAPATHS_prepend := "${THISDIR}/${P}:"
 
 # Remove acl, cups etc. support.
@@ -19,19 +22,24 @@ SAMBA4_MODULES_STATIC="${SAMBA4_AUTH_MODULES_STATIC},${SAMBA4_PDB_MODULES_STATIC
 EXTRA_OECONF += " \
                  --without-cluster-support \
                  --without-profiling-data \
-                 --nopyc \
+                 --with-sockets-dir=${localstatedir}/run \
+                 --with-logfilebase=${localstatedir}/log/samba \
                  --with-static-modules=${SAMBA4_MODULES_STATIC} \
+                 --with-pam \
+                 --with-pam_smbpass \
+                 --nopyc \
                  --disable-iprint \
                  --without-ad-dc \
                  --without-quotas \
+                 --without-winbind \
                  --disable-python \
                 "
-EXTRA_OECONF_remove = "--with-piddir=/run"
+EXTRA_OECONF_remove = "--with-cluster-support"
+EXTRA_OECONF_remove = "--with-profiling-data"
 EXTRA_OECONF_remove = "--with-sockets-dir=/run/samba"
 EXTRA_OECONF_remove = "--with-privatedir=/run/samba"
 EXTRA_OECONF_remove = "--with-logfilebase=/run/samba"
-EXTRA_OECONF_remove = "--with-cluster-support"
-EXTRA_OECONF_remove = "--with-profiling-data"
+EXTRA_OECONF_remove = "--with-piddir=/run"
 
 # Remove unused, add own config, init script
 SRC_URI += " \
@@ -47,6 +55,9 @@ SRC_URI += " \
            file://pam.samba \
            file://users.map \
            file://smbpasswd \
+           file://0017-Revert-pam_smbpass-REMOVE-this-PAM-module.patch \
+           file://0018-Revert-source3-wscript-remove-pam_smbpass-option-as-it-was-removed.patch \
+           file://0019-dynamically-create-a-samba-account-if-needed.patch \
            "
 
 do_install_prepend() {
@@ -111,7 +122,11 @@ FILES_${BPN}-common   += "${sysconfdir}/pam.d/samba ${sysconfdir}/samba"
 
 CONFFILES_${BPN}-common = "${sysconfdir}/pam.d/samba ${sysconfdir}/samba/smb-user.conf ${sysconfdir}/samba/private/users.map ${sysconfdir}/samba/private/smbpasswd"
 
-RRECOMMENDS_${PN}-base+= "pam-smbpass wsdd"
+PACKAGES_DYNAMIC += "pam-pluginsmbpass"
+RRECOMMENDS_${PN}-base+= "pam-pluginsmbpass wsdd"
+
+RREPLACES_pam-pluginsmbpass += "pam-smbpass"
+RCONFLICTS_pam-pluginsmbpass += "pam-smbpass"
 
 pkg_postinst_${BPN}-common_append() {
 #!/bin/sh
@@ -157,4 +172,24 @@ fi
 pkg_postrm_${BPN}-common_prepend() {
 #!/bin/sh
 rm $D/etc/samba/distro/smb-vmc.conf 2>/dev/null || true
+}
+
+pkg_prerm_pam-pluginsmbpass_prepend() {
+#!/bin/sh
+grep -v 'pam_smbpass.so' $D/etc/pam.d/common-password > $D/tmp/common-password
+mv $D/tmp/common-password $D/etc/pam.d/common-password
+}
+
+pkg_postinst_pam-pluginsmbpass_append() {
+#!/bin/sh
+if [ -n "$D" ]; then
+set +e
+grep -v 'pam_smbpass.so' $D/etc/pam.d/common-password > $D/tmp/common-password
+mv $D/tmp/common-password $D/etc/pam.d/common-password
+echo -e "password\toptional\t\t\tpam_smbpass.so nullok use_authtok use_first_pass" >> $D/etc/pam.d/common-password
+fi
+}
+
+do_rm_work () {
+	:
 }
