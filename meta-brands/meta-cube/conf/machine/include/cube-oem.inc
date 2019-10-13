@@ -76,7 +76,6 @@ PREFERRED_PROVIDER_virtual/egl = "opengl"
 
 PREFERRED_VERSION_linux-cube = "2.6.34"
 OLDEST_KERNEL = "2.6.34"
-PREFERRED_VERSION_samba = "3.%"
 PREFERRED_VERSION_directfb = "1.7.7"
 
 GLIBC_EXTRA_OECONF = "--with-tls --with-__thread"
