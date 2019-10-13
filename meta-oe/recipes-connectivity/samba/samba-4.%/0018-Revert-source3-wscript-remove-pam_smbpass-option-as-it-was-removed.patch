@@ -1,0 +1,35 @@
+From 42bb046976b61a895a03a503aab503b61fd31bc7 Mon Sep 17 00:00:00 2001
+From: WanWizard <wanwizard@openpli.org>
+Date: Thu, 18 Oct 2018 14:38:40 +0100
+Subject: [PATCH] Revert "source3/wscript: remove pam_smbpass option as it was
+ removed"
+
+This reverts commit 21d0082169bb61417aa7a564050f930808764ac8.
+---
+ source3/wscript | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/source3/wscript b/source3/wscript
+index cf7beb7dc46..47b13432c70 100644
+--- a/source3/wscript
++++ b/source3/wscript
+@@ -46,6 +46,7 @@ def options(opt):
+     opt.SAMBA3_ADD_OPTION('cups', with_name="enable", without_name="disable")
+     opt.SAMBA3_ADD_OPTION('iprint', with_name="enable", without_name="disable")
+     opt.SAMBA3_ADD_OPTION('pam')
++    opt.SAMBA3_ADD_OPTION('pam_smbpass')
+     opt.SAMBA3_ADD_OPTION('quotas')
+     opt.SAMBA3_ADD_OPTION('sendfile-support')
+     opt.SAMBA3_ADD_OPTION('utmp')
+@@ -918,6 +919,9 @@ int i; i = PAM_RADIO_TYPE;
+                        "or headers not found. Use --without-pam to disable "
+                        "PAM support.");
+ 
++    if Options.options.with_pam_smbpass:
++        conf.env.with_pam_smbpass = True
++
+     seteuid = False
+ 
+ #
+-- 
+2.17.1
