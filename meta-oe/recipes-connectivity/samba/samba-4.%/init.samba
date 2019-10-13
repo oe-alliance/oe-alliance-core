@@ -22,11 +22,11 @@ test -x "$wsdd" && WSDD_DISABLED="No"
 case "$1" in
   start)
     echo -n "Starting Samba: smbd"
-    start-stop-daemon --start --quiet --exec $smbd
+    $smbd
     NMBD_DISABLED=`testparm -s --parameter-name='disable netbios' 2>/dev/null || true`
     if [ "$NMBD_DISABLED" != "Yes" ]; then
       echo -n " nmbd"
-      start-stop-daemon --start --quiet --exec $nmbd
+      $nmbd
     fi
     if [ "$WSDD_DISABLED" != "Yes" ]; then
       echo -n " wsdd"
