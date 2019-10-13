@@ -1,0 +1,50 @@
+--- a/netsurf/frontends/framebuffer/gui.c
++++ b/netsurf/frontends/framebuffer/gui.c
+@@ -58,6 +58,14 @@
+ 
+ 
+ #define NSFB_TOOLBAR_DEFAULT_LAYOUT "blfsrutc"
++
++int osk_visible = 0;
++static int fb_leftarrow_click(fbtk_widget_t *widget, fbtk_callback_info *cbi);
++static int fb_rightarrow_click(fbtk_widget_t *widget, fbtk_callback_info *cbi);
++static int fb_localhistory_btn_clik(fbtk_widget_t *widget, fbtk_callback_info *cbi);
++static int fb_osk_click(fbtk_widget_t *widget, fbtk_callback_info *cbi);
++int osk_close(fbtk_widget_t *widget, fbtk_callback_info *cbi);
++static nserror gui_window_set_url(struct gui_window *g, nsurl *url);
+ 
+ fbtk_widget_t *fbtk;
+ 
+@@ -979,6 +987,32 @@
+ 
+ 		case NSFB_KEY_LCTRL:
+ 			modifier &= ~FBTK_MOD_LCTRL;
++			break;
++
++		case NSFB_KEY_F2:
++			gui_window_set_url(gw, "www.");
++			break;
++		case NSFB_KEY_F7:
++			fb_localhistory_btn_clik(widget, cbi);
++			break;
++		case NSFB_KEY_F8:
++			fb_leftarrow_click(widget, cbi);
++			break;
++		case NSFB_KEY_F9:
++			fb_rightarrow_click(widget, cbi);
++			break;
++
++		case NSFB_KEY_F12:
++			if(osk_visible == 0)
++			{
++				fb_osk_click(widget, cbi);
++				osk_visible = 1;
++			}
++			else
++			{
++				osk_close(widget, cbi);
++				osk_visible = 0;
++			}
+ 			break;
+ 
+ 		default:

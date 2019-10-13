@@ -1,0 +1,60 @@
+--- a/netsurf/frontends/framebuffer/fbtk/text.c
++++ b/netsurf/frontends/framebuffer/fbtk/text.c
+@@ -38,6 +38,9 @@
+ #include "framebuffer/image_data.h"
+ 
+ #include "widget.h"
++
++extern int osk_visible;
++int osk_close(fbtk_widget_t *widget, fbtk_callback_info *cbi);
+ 
+ //#define TEXT_WIDGET_BORDER 3 /**< The pixel border round a text widget. */
+ 
+@@ -339,6 +342,31 @@
+ 			modifier &= ~FBTK_MOD_LCTRL;
+ 			break;
+ 
++		case NSFB_KEY_F2:
++			break;
++		case NSFB_KEY_F7:
++			break;
++		case NSFB_KEY_F8:
++			break;
++		case NSFB_KEY_F9:
++			break;
++		case NSFB_KEY_F10:
++			break;
++		case NSFB_KEY_F11:
++			break;
++		case NSFB_KEY_F12:
++			if(osk_visible == 0)
++			{
++				map_osk();
++				osk_visible = 1;
++			}
++			else
++			{
++				osk_close(widget, cbi);
++				osk_visible = 0;
++			}
++			break;
++
+ 		default:
+ 			break;
+ 		}
+@@ -426,6 +454,15 @@
+ 
+ 	case NSFB_KEY_LCTRL:
+ 		modifier |= FBTK_MOD_LCTRL;
++		break;
++
++	case NSFB_KEY_F2:
++	case NSFB_KEY_F7:
++	case NSFB_KEY_F8:
++	case NSFB_KEY_F9:
++	case NSFB_KEY_F10:
++	case NSFB_KEY_F11:
++	case NSFB_KEY_F12:
+ 		break;
+ 
+ 	default:

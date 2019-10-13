@@ -1,0 +1,13 @@
+--- a/netsurf/frontends/framebuffer/Makefile	2019-10-13 22:04:44.000000000 +0200
++++ b/netsurf/frontends/framebuffer/Makefile	2018-08-29 12:32:57.000000000 +0200
+@@ -35,8 +35,8 @@
+ 
+ # freetype is optional but does not use pkg-config
+ ifeq ($(NETSURF_FB_FONTLIB),freetype)
+-  CFLAGS += -DFB_USE_FREETYPE $(shell freetype-config --cflags)
+-  LDFLAGS += $(shell freetype-config --libs)
++  CFLAGS += -DFB_USE_FREETYPE $(shell pkg-config --cflags freetype2)
++  LDFLAGS += $(shell pkg-config --libs freetype2)
+ endif
+ 
+ 

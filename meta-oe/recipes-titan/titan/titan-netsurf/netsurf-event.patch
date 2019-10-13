@@ -1,0 +1,13 @@
+--- a/netsurf/frontends/framebuffer/fbtk/event.c
++++ b/netsurf/frontends/framebuffer/fbtk/event.c
+@@ -276,6 +276,10 @@
+ 	'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', /* 100 - 109 */
+ 	'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', /* 110 - 119 */
+ 	'x', 'y', 'z',  -1,  -1,  -1,  -1,  -1,  -1,  -1, /* 120 - 129 */
++
++	'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', /* 130 - 139 */
++	'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', /* 140 - 149 */
++	'U', 'V', 'W', 'X', 'Y', 'Z',  -1,  -1,  -1,  -1, /* 150 - 159 */
+ };
+ 
+ static int sh_keymap[] = {

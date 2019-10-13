@@ -21,6 +21,7 @@ DEPENDS = " \
 	python-imaging \
 	python-service-identity \
 	rtmpdump \
+	titan-netsurf \
 	"
 
 RDEPENDS_${PN} = "\
