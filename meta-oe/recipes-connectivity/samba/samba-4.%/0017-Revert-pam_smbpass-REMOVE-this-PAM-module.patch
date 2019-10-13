@@ -1,0 +1,2071 @@
+From f4612202789e0cdb83e386a1c99f303dfeb35fe4 Mon Sep 17 00:00:00 2001
+From: WanWizard <wanwizard@openpli.org>
+Date: Thu, 18 Oct 2018 14:33:53 +0100
+Subject: [PATCH] Revert "pam_smbpass: REMOVE this PAM module"
+
+This reverts commit 3c00e8d76a2ef6194a8ce522c15853e5b8e9262b.
+---
+ source3/pam_smbpass/CHANGELOG                 |  31 +
+ source3/pam_smbpass/INSTALL                   |  64 ++
+ source3/pam_smbpass/README                    |  68 ++
+ source3/pam_smbpass/TODO                      |   7 +
+ source3/pam_smbpass/general.h                 | 134 ++++
+ source3/pam_smbpass/pam_smb_acct.c            | 150 ++++
+ source3/pam_smbpass/pam_smb_auth.c            | 264 +++++++
+ source3/pam_smbpass/pam_smb_passwd.c          | 365 +++++++++
+ source3/pam_smbpass/samples/README            |   3 +
+ source3/pam_smbpass/samples/kdc-pdc           |  15 +
+ source3/pam_smbpass/samples/password-mature   |  14 +
+ .../pam_smbpass/samples/password-migration    |  18 +
+ source3/pam_smbpass/samples/password-sync     |  15 +
+ source3/pam_smbpass/support.c                 | 698 ++++++++++++++++++
+ source3/pam_smbpass/support.h                 |  57 ++
+ source3/pam_smbpass/wscript_build             |  16 +
+ source3/wscript_build                         |   1 +
+ 17 files changed, 1920 insertions(+)
+ create mode 100644 source3/pam_smbpass/CHANGELOG
+ create mode 100644 source3/pam_smbpass/INSTALL
+ create mode 100644 source3/pam_smbpass/README
+ create mode 100644 source3/pam_smbpass/TODO
+ create mode 100644 source3/pam_smbpass/general.h
+ create mode 100644 source3/pam_smbpass/pam_smb_acct.c
+ create mode 100644 source3/pam_smbpass/pam_smb_auth.c
+ create mode 100644 source3/pam_smbpass/pam_smb_passwd.c
+ create mode 100644 source3/pam_smbpass/samples/README
+ create mode 100644 source3/pam_smbpass/samples/kdc-pdc
+ create mode 100644 source3/pam_smbpass/samples/password-mature
+ create mode 100644 source3/pam_smbpass/samples/password-migration
+ create mode 100644 source3/pam_smbpass/samples/password-sync
+ create mode 100644 source3/pam_smbpass/support.c
+ create mode 100644 source3/pam_smbpass/support.h
+ create mode 100644 source3/pam_smbpass/wscript_build
+
+diff --git a/source3/pam_smbpass/CHANGELOG b/source3/pam_smbpass/CHANGELOG
+new file mode 100644
+index 00000000000..96ef7840084
+--- /dev/null
++++ b/source3/pam_smbpass/CHANGELOG
+@@ -0,0 +1,31 @@
++version 0.7.5  25 Mar 2001
++   - Use Samba 2.2.0 (alpha) as the target codebase, since it doesn't look
++     like Samba will be offering shared libraries in the near future.
++   - added a Makefile and support scripts to make the build process easier.
++   - imported some Solaris fixes that I've been sitting on.
++
++version 0.7.4  20 Jan 2000
++   - added a 'migrate' option to the authentication code which makes no
++     effort to authenticate the user, or even to ask for a password, but
++     it can be useful for filling in an SMB password db.
++
++version 0.7.3  19 Jan 2000
++   - updated to use the SAMBA_TNG Samba branch, allowing us to dynamically
++     link against Luke's new shared libs (libsamba, libsmb).
++
++version 0.7.2  20 Jul 1999
++   - miscellaneous bugfixes.  Cleanup of legacy pam_pwdb code.
++   - fixed return value of pam_sm_setcred function.
++   - fix to autoconf support
++   - clarified some of the messages being logged
++
++version 0.6,  15 Jul 1999
++   - updated to use the new Samba (2.0) password database API.
++   - added autoconf support. May now theoretically compile on more
++     platforms than PAM itself does.
++   - added support for account management functions (i.e., disabled
++     accounts)
++
++version 0.5,  4 Apr 1998
++   - added support for hashed passwords as input.  Now capable of serving
++     as an authentication agent for encrypted network transactions.
+diff --git a/source3/pam_smbpass/INSTALL b/source3/pam_smbpass/INSTALL
+new file mode 100644
+index 00000000000..ae2ba02bbbc
+--- /dev/null
++++ b/source3/pam_smbpass/INSTALL
+@@ -0,0 +1,64 @@
++
++Because pam_smbpass is derived from the Samba smbpasswd utility, recent
++versions of pam_smbpass require a copy of the Samba source code to be
++available on the build system.  Version 0.7.5 has been tested against
++Samba 2.2.0-alpha3, and this is the recommended version of Samba to use
++for building pam_smbpass.  This only affects /building/ pam_smbpass; you
++can still run any version of the Samba server that you want, although
++clearly it saves some disk space to have only one copy of the source
++code on your system (Samba 2.2.0-alpha3 takes roughly 32MB of disk space
++to build pam_smbpass).
++
++Version 0.7.5 features a new build system to make it easier to build
++pam_smbpass.
++
++
++Using the new build system
++==========================
++
++If you don't have a copy of the Samba source code on your machine, and you
++don't have a preferred Samba version (or mirror site), you can build
++pam_smbpass by just typing 'make'.
++
++If you want to use a version other than 2.2.0-alpha3, or you want to
++download the source code from a faster Samba mirror (see
++<http://us1.samba.org/samba/> for a list of mirror sites), please download
++the source code and unpack it before running make.  The build scripts will
++attempt to autodetect your Samba source directory, and if it can't be
++found automatically, you will be given the opportunity to specify an
++alternate directory for the Samba sources.
++
++Feedback is welcome if you try (or succeed!) to build pam_smbpass with
++other versions of Samba.
++
++
++Options to 'make'
++=================
++
++By default, pam_smbpass will configure the Samba build tree with the
++options
++
++    --with-fhs --with-privatedir=/etc --with-configdir=/etc
++
++This will configure pam_smbpass to look for the smbpasswd file as
++/etc/smbpasswd (or /etc/smbpasswd.tdb), and the smb.conf file as
++/etc/smb.conf.  You can override these options by setting CONFIGOPTS when
++calling make.  E.g., if you have your smb.conf file in /usr/etc and your
++smbpasswd file in /usr/etc/private, you might run
++
++    make CONFIGOPTS="--with-privatedir=/usr/etc/private --with-configdir=/usr/etc"
++
++For a complete list of available configuration options, see
++'./samba/configure --help'
++
++
++Installing the module
++=====================
++
++If all goes well in the build process, the file pam_smbpass.so will be
++created in the current directory.  Simply install the module into your
++system's PAM module directory:
++
++	install -m 755 -s bin/pam_smbpass.so /lib/security
++
++and you're all set.
+diff --git a/source3/pam_smbpass/README b/source3/pam_smbpass/README
+new file mode 100644
+index 00000000000..a5bde2525f4
+--- /dev/null
++++ b/source3/pam_smbpass/README
+@@ -0,0 +1,68 @@
++23 Jan 2015
++
++=== WARNING ===
++
++This PAM module is deprecated and will be removed from the Samba source code
++with the release of Samba 4.3. If you are still using this module please
++migrate to pam_winbind or another suiteable solution.
++
++25 Mar 2001
++
++pam_smbpass is a PAM module which can be used on conforming systems to
++keep the smbpasswd (Samba password) database in sync with the unix
++password file. PAM (Pluggable Authentication Modules) is an API supported
++under some Unices, such as Solaris, HPUX and Linux, that provides a
++generic interface to authentication mechanisms.
++
++For more information on PAM, see http://ftp.kernel.org/pub/linux/libs/pam/
++
++This module authenticates a local smbpasswd user database.  If you require
++support for authenticating against a remote SMB server, or if you're
++concerned about the presence of suid root binaries on your system, it is
++recommended that you use pam_winbind instead.
++
++Options recognized by this module are as follows:
++
++	debug		-	log more debugging info
++	audit		-	like debug, but also logs unknown usernames
++	use_first_pass	-	don't prompt the user for passwords;
++				take them from PAM_ items instead
++	try_first_pass  -	try to get the password from a previous
++				PAM module, fall back to prompting the user
++	use_authtok	-	like try_first_pass, but *fail* if the new
++				PAM_AUTHTOK has not been previously set.
++				(intended for stacking password modules only)
++	not_set_pass    -	don't make passwords used by this module
++				available to other modules.
++	nodelay		-	don't insert ~1 second delays on authentication
++				failure.
++	nullok		-	null passwords are allowed.
++	nonull		-	null passwords are not allowed. Used to
++				override the Samba configuration.
++	migrate		-	only meaningful in an "auth" context;
++				used to update smbpasswd file with a
++				password used for successful authentication.
++	smbconf=<file>	-	specify an alternate path to the smb.conf
++				file.
++
++See the samples/ directory for example PAM configurations using this
++module.
++
++Thanks go to the following people:
++
++* Andrew Morgan <morgan@transmeta.com>, for providing the Linux-PAM
++framework, without which none of this would have happened
++
++* Christian Gafton <gafton@redhat.com> and Andrew Morgan again, for the
++pam_pwdb module upon which pam_smbpass was originally based
++
++* Luke Leighton <lkcl@switchboard.net> for being receptive to the idea,
++and for the occasional good-natured complaint about the project's status
++that keep me working on it :)
++
++* and of course, all the other members of the Samba team 
++<http://www.samba.org/samba/team.html>, for creating a great product 
++and for giving this project a purpose
++
++---------------------
++Stephen Langasek <vorlon@netexpress.net>
+diff --git a/source3/pam_smbpass/TODO b/source3/pam_smbpass/TODO
+new file mode 100644
+index 00000000000..20cf4fb0987
+--- /dev/null
++++ b/source3/pam_smbpass/TODO
+@@ -0,0 +1,7 @@
++This is a tentative TODO file which will probably get much longer before
++it gets much shorter.
++
++- Recognizing (and overriding) debug options in the smb.conf file
++- Support for 'name=value' parameters in the PAM config
++- Compliant handling of unrecognized PAM parameters (i.e., fail on error)
++- 
+diff --git a/source3/pam_smbpass/general.h b/source3/pam_smbpass/general.h
+new file mode 100644
+index 00000000000..c3e4b8bade7
+--- /dev/null
++++ b/source3/pam_smbpass/general.h
+@@ -0,0 +1,134 @@
++#include "../librpc/gen_ndr/samr.h"
++#include "../libcli/auth/pam_errors.h"
++#include "passdb.h"
++
++#ifndef LINUX
++/* This is only needed by modules in the Sun implementation. */
++#if defined(HAVE_SECURITY_PAM_APPL_H)
++#include <security/pam_appl.h>
++#elif defined(HAVE_PAM_PAM_APPL_H)
++#include <pam/pam_appl.h>
++#endif
++#endif  /* LINUX */
++
++#if defined(HAVE_SECURITY_PAM_MODULES_H)
++#include <security/pam_modules.h>
++#elif defined(HAVE_PAM_PAM_MODULES_H)
++#include <pam/pam_modules.h>
++#endif
++
++#ifndef PAM_AUTHTOK_RECOVER_ERR  
++#define PAM_AUTHTOK_RECOVER_ERR PAM_AUTHTOK_RECOVERY_ERR
++#endif
++
++#include "replace.h"
++#include "system/filesys.h"
++#include "system/wait.h"
++#include "system/syslog.h"
++
++/*
++ * here is the string to inform the user that the new passwords they
++ * typed were not the same.
++ */
++
++#define MISTYPED_PASS "Sorry, passwords do not match"
++
++/* type definition for the control options */
++
++typedef struct {
++     const char *token;
++     unsigned int mask;            /* shall assume 32 bits of flags */
++     unsigned int flag;
++} SMB_Ctrls;
++
++#ifndef False
++#define False (0)
++#endif
++
++#ifndef True
++#define True (1)
++#endif
++
++/* macro to determine if a given flag is on */
++#define on(x,ctrl)  (smb_args[x].flag & ctrl)
++
++/* macro to determine that a given flag is NOT on */
++#define off(x,ctrl) (!on(x,ctrl))
++
++/* macro to turn on/off a ctrl flag manually */
++#define set(x,ctrl)   (ctrl = ((ctrl)&smb_args[x].mask)|smb_args[x].flag)
++#define unset(x,ctrl) (ctrl &= ~(smb_args[x].flag))
++
++/* the generic mask */
++#define _ALL_ON_  (~0U)
++
++/* end of macro definitions definitions for the control flags */
++
++/*
++ * These are the options supported by the smb password module, very
++ * similar to the pwdb options
++ */
++
++#define SMB__OLD_PASSWD		 0	/* internal */
++#define SMB__VERIFY_PASSWD	 1	/* internal */
++
++#define SMB_AUDIT		 2	/* print more things than debug..
++					   some information may be sensitive */
++#define SMB_USE_FIRST_PASS	 3
++#define SMB_TRY_FIRST_PASS	 4
++#define SMB_NOT_SET_PASS	 5	/* don't set the AUTHTOK items */
++
++#define SMB__NONULL		 6	/* internal */
++#define SMB__QUIET		 7	/* internal */
++#define SMB_USE_AUTHTOK		 8	/* insist on reading PAM_AUTHTOK */
++#define SMB__NULLOK		 9	/* Null token ok */
++#define SMB_DEBUG		10	/* send more info to syslog(3) */
++#define SMB_NODELAY		11	/* admin does not want a fail-delay */
++#define SMB_MIGRATE		12	/* Does no authentication, just
++					   updates the smb database. */
++#define SMB_CONF_FILE		13	/* Alternate location of smb.conf */
++
++#define SMB_CTRLS_		14	/* number of ctrl arguments defined */
++
++static const SMB_Ctrls smb_args[SMB_CTRLS_] = {
++/* symbol                 token name          ctrl mask      ctrl       *
++ * ------------------     ------------------  -------------- ---------- */
++
++/* SMB__OLD_PASSWD */	 {  NULL,            _ALL_ON_,              01 },
++/* SMB__VERIFY_PASSWD */ {  NULL,            _ALL_ON_,              02 },
++/* SMB_AUDIT */		 { "audit",          _ALL_ON_,              04 },
++/* SMB_USE_FIRST_PASS */ { "use_first_pass", _ALL_ON_^(030),       010 },
++/* SMB_TRY_FIRST_PASS */ { "try_first_pass", _ALL_ON_^(030),       020 },
++/* SMB_NOT_SET_PASS */	 { "not_set_pass",   _ALL_ON_,             040 },
++/* SMB__NONULL */	 {  "nonull",        _ALL_ON_,            0100 },
++/* SMB__QUIET */	 {  NULL,            _ALL_ON_,            0200 },
++/* SMB_USE_AUTHTOK */	 { "use_authtok",    _ALL_ON_,            0400 },
++/* SMB__NULLOK */	 { "nullok",         _ALL_ON_^(0100),        0 },
++/* SMB_DEBUG */		 { "debug",          _ALL_ON_,           01000 },
++/* SMB_NODELAY */	 { "nodelay",        _ALL_ON_,           02000 },
++/* SMB_MIGRATE */	 { "migrate",        _ALL_ON_^(0100),	 04000 },
++/* SMB_CONF_FILE */	 { "smbconf=",       _ALL_ON_,		     0 },
++};
++
++#define SMB_DEFAULTS  (smb_args[SMB__NONULL].flag)
++
++/*
++ * the following is used to keep track of the number of times a user fails
++ * to authenticate themself.
++ */
++
++#define SMB_MAX_RETRIES			3
++
++struct _pam_failed_auth {
++    char *user;                 /* user that's failed to be authenticated */
++    uid_t id;                   /* uid of requested user */
++    char *agent;                /* attempt from user with name */
++    int count;                  /* number of failures so far */
++};
++
++/*
++ * General use functions go here 
++ */
++
++/* from support.c */
++int make_remark(pam_handle_t *, unsigned int, int, const char *);
+diff --git a/source3/pam_smbpass/pam_smb_acct.c b/source3/pam_smbpass/pam_smb_acct.c
+new file mode 100644
+index 00000000000..8dbbf3a20a1
+--- /dev/null
++++ b/source3/pam_smbpass/pam_smb_acct.c
+@@ -0,0 +1,150 @@
++/* Unix NT password database implementation, version 0.7.5.
++ *
++ * This program is free software; you can redistribute it and/or modify it under
++ * the terms of the GNU General Public License as published by the Free
++ * Software Foundation; either version 3 of the License, or (at your option)
++ * any later version.
++ *
++ * This program is distributed in the hope that it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++ * more details.
++ *
++ * You should have received a copy of the GNU General Public License along with
++ * this program; if not, see <http://www.gnu.org/licenses/>.
++*/
++
++/* indicate the following groups are defined */
++#define PAM_SM_ACCT
++
++#include "includes.h"
++
++#ifndef LINUX
++
++/* This is only used in the Sun implementation. */
++#if defined(HAVE_SECURITY_PAM_APPL_H)
++#include <security/pam_appl.h>
++#elif defined(HAVE_PAM_PAM_APPL_H)
++#include <pam/pam_appl.h>
++#endif
++
++#endif  /* LINUX */
++
++#if defined(HAVE_SECURITY_PAM_MODULES_H)
++#include <security/pam_modules.h>
++#elif defined(HAVE_PAM_PAM_MODULES_H)
++#include <pam/pam_modules.h>
++#endif
++
++#include "general.h"
++
++#include "support.h"
++
++
++/*
++ * pam_sm_acct_mgmt() verifies whether or not the account is disabled.
++ *
++ */
++
++int pam_sm_acct_mgmt( pam_handle_t *pamh, int flags,
++                      int argc, const char **argv )
++{
++	unsigned int ctrl;
++	int retval;
++
++	const char *name;
++	struct samu *sampass = NULL;
++	void (*oldsig_handler)(int);
++	TALLOC_CTX *frame = talloc_stackframe();
++
++	/* Samba initialization. */
++
++	ctrl = set_ctrl(pamh, flags, argc, argv );
++
++	/* get the username */
++
++	retval = pam_get_user( pamh, &name, "Username: " );
++	if (retval != PAM_SUCCESS) {
++		if (on( SMB_DEBUG, ctrl )) {
++			_log_err(pamh, LOG_DEBUG, "acct: could not identify user" );
++		}
++		TALLOC_FREE(frame);
++		return retval;
++	}
++	if (on( SMB_DEBUG, ctrl )) {
++		_log_err(pamh, LOG_DEBUG, "acct: username [%s] obtained", name );
++	}
++
++	if (geteuid() != 0) {
++		_log_err(pamh, LOG_DEBUG, "Cannot access samba password database, not running as root.");
++		TALLOC_FREE(frame);
++		return PAM_AUTHINFO_UNAVAIL;
++	}
++
++	/* Getting into places that might use LDAP -- protect the app
++		from a SIGPIPE it's not expecting */
++	oldsig_handler = CatchSignal(SIGPIPE, SIG_IGN);
++	if (!initialize_password_db(True, NULL)) {
++	  _log_err(pamh, LOG_ALERT, "Cannot access samba password database" );
++		CatchSignal(SIGPIPE, oldsig_handler);
++		TALLOC_FREE(frame);
++		return PAM_AUTHINFO_UNAVAIL;
++	}
++
++	/* Get the user's record. */
++
++	if (!(sampass = samu_new( NULL ))) {
++		CatchSignal(SIGPIPE, oldsig_handler);
++		/* malloc fail. */
++		TALLOC_FREE(frame);
++		return nt_status_to_pam(NT_STATUS_NO_MEMORY);
++	}
++
++	if (!pdb_getsampwnam(sampass, name )) {
++		_log_err(pamh, LOG_DEBUG, "acct: could not identify user");
++		CatchSignal(SIGPIPE, oldsig_handler);
++		TALLOC_FREE(frame);
++        	return PAM_USER_UNKNOWN;
++	}
++
++	/* check for lookup failure */
++	if (!strlen(pdb_get_username(sampass)) ) {
++		CatchSignal(SIGPIPE, oldsig_handler);
++		TALLOC_FREE(frame);
++		return PAM_USER_UNKNOWN;
++	}
++
++	if (pdb_get_acct_ctrl(sampass) & ACB_DISABLED) {
++		if (on( SMB_DEBUG, ctrl )) {
++			_log_err(pamh, LOG_DEBUG,
++				 "acct: account %s is administratively disabled", name);
++		}
++		make_remark( pamh, ctrl, PAM_ERROR_MSG
++			, "Your account has been disabled; "
++			"please see your system administrator." );
++
++		CatchSignal(SIGPIPE, oldsig_handler);
++		TALLOC_FREE(frame);
++		return PAM_ACCT_EXPIRED;
++	}
++
++	/* TODO: support for expired passwords. */
++
++	CatchSignal(SIGPIPE, oldsig_handler);
++	TALLOC_FREE(frame);
++	return PAM_SUCCESS;
++}
++
++/* static module data */
++#ifdef PAM_STATIC
++struct pam_module _pam_smbpass_acct_modstruct = {
++     "pam_smbpass",
++     NULL,
++     NULL,
++     pam_sm_acct_mgmt,
++     NULL,
++     NULL,
++     NULL
++};
++#endif
++
+diff --git a/source3/pam_smbpass/pam_smb_auth.c b/source3/pam_smbpass/pam_smb_auth.c
+new file mode 100644
+index 00000000000..06ab8455d5d
+--- /dev/null
++++ b/source3/pam_smbpass/pam_smb_auth.c
+@@ -0,0 +1,264 @@
++/* Unix NT password database implementation, version 0.7.5.
++ *
++ * This program is free software; you can redistribute it and/or modify it under
++ * the terms of the GNU General Public License as published by the Free
++ * Software Foundation; either version 3 of the License, or (at your option)
++ * any later version.
++ *
++ * This program is distributed in the hope that it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++ * more details.
++ *
++ * You should have received a copy of the GNU General Public License along with
++ * this program; if not, see <http://www.gnu.org/licenses/>.
++*/
++
++/* indicate the following groups are defined */
++#define PAM_SM_AUTH
++
++#include "includes.h"
++#include "lib/util/debug.h"
++
++#ifndef LINUX
++
++/* This is only used in the Sun implementation. */
++#if defined(HAVE_SECURITY_PAM_APPL_H)
++#include <security/pam_appl.h>
++#elif defined(HAVE_PAM_PAM_APPL_H)
++#include <pam/pam_appl.h>
++#endif
++
++#endif  /* LINUX */
++
++#if defined(HAVE_SECURITY_PAM_MODULES_H)
++#include <security/pam_modules.h>
++#elif defined(HAVE_PAM_PAM_MODULES_H)
++#include <pam/pam_modules.h>
++#endif
++
++#include "general.h"
++
++#include "support.h"
++
++static void ret_data_cleanup(pam_handle_t *pamh, void *data, int error_status)
++{
++	free(data);
++}
++
++#define AUTH_RETURN						\
++do {								\
++	/* Restore application signal handler */		\
++	CatchSignal(SIGPIPE, oldsig_handler);			\
++	if(ret_data) {						\
++		*ret_data = retval;				\
++		pam_set_data(pamh,				\
++			"smb_setcred_return",			\
++			(void *)ret_data,			\
++			ret_data_cleanup);			\
++	}							\
++	TALLOC_FREE(frame);					\
++	return retval;						\
++} while (0)
++
++static int _smb_add_user(pam_handle_t *pamh, unsigned int ctrl,
++                         const char *name, struct samu *sampass, bool exist);
++
++
++/*
++ * pam_sm_authenticate() authenticates users against the samba password file.
++ *
++ *	First, obtain the password from the user. Then use a
++ *      routine in 'support.c' to authenticate the user.
++ */
++
++#define _SMB_AUTHTOK  "-SMB-PASS"
++
++int pam_sm_authenticate(pam_handle_t *pamh, int flags,
++                        int argc, const char **argv)
++{
++	unsigned int ctrl;
++	int retval, *ret_data = NULL;
++	struct samu *sampass = NULL;
++	const char *name;
++	void (*oldsig_handler)(int) = NULL;
++	bool found;
++	TALLOC_CTX *frame = talloc_stackframe();
++
++	/* Points to memory managed by the PAM library. Do not free. */
++	char *p = NULL;
++
++	/* Samba initialization. */
++
++	ctrl = set_ctrl(pamh, flags, argc, argv);
++
++	/* Get a few bytes so we can pass our return value to
++		pam_sm_setcred(). */
++	ret_data = SMB_MALLOC_P(int);
++
++	/* we need to do this before we call AUTH_RETURN */
++	/* Getting into places that might use LDAP -- protect the app
++	from a SIGPIPE it's not expecting */
++	oldsig_handler = CatchSignal(SIGPIPE, SIG_IGN);
++
++	/* get the username */
++	retval = pam_get_user( pamh, &name, "Username: " );
++	if ( retval != PAM_SUCCESS ) {
++		if (on( SMB_DEBUG, ctrl )) {
++			_log_err(pamh, LOG_DEBUG, "auth: could not identify user");
++		}
++		AUTH_RETURN;
++	}
++	if (on( SMB_DEBUG, ctrl )) {
++		_log_err(pamh, LOG_DEBUG, "username [%s] obtained", name );
++	}
++
++	if (geteuid() != 0) {
++		_log_err(pamh, LOG_DEBUG, "Cannot access samba password database, not running as root.");
++		retval = PAM_AUTHINFO_UNAVAIL;
++		AUTH_RETURN;
++	}
++
++	if (!initialize_password_db(True, NULL)) {
++		_log_err(pamh, LOG_ALERT, "Cannot access samba password database" );
++		retval = PAM_AUTHINFO_UNAVAIL;
++		AUTH_RETURN;
++	}
++
++	sampass = samu_new( NULL );
++    	if (!sampass) {
++		_log_err(pamh, LOG_ALERT, "Cannot talloc a samu struct" );
++		retval = nt_status_to_pam(NT_STATUS_NO_MEMORY);
++		AUTH_RETURN;
++	}
++
++	found = pdb_getsampwnam( sampass, name );
++
++	if (on( SMB_MIGRATE, ctrl )) {
++		retval = _smb_add_user(pamh, ctrl, name, sampass, found);
++		TALLOC_FREE(sampass);
++		AUTH_RETURN;
++	}
++
++	if (!found) {
++		_log_err(pamh, LOG_ALERT, "Failed to find entry for user %s.", name);
++		retval = PAM_USER_UNKNOWN;
++		TALLOC_FREE(sampass);
++		sampass = NULL;
++		AUTH_RETURN;
++	}
++
++	/* if this user does not have a password... */
++
++	if (_smb_blankpasswd( ctrl, sampass )) {
++		TALLOC_FREE(sampass);
++		retval = PAM_SUCCESS;
++		AUTH_RETURN;
++	}
++
++	/* get this user's authentication token */
++
++	retval = _smb_read_password(pamh, ctrl, NULL, "Password: ", NULL, _SMB_AUTHTOK, &p);
++	if (retval != PAM_SUCCESS ) {
++		_log_err(pamh,LOG_CRIT, "auth: no password provided for [%s]", name);
++		TALLOC_FREE(sampass);
++		AUTH_RETURN;
++	}
++
++	/* verify the password of this user */
++
++	retval = _smb_verify_password( pamh, sampass, p, ctrl );
++	TALLOC_FREE(sampass);
++	p = NULL;
++	AUTH_RETURN;
++}
++
++/*
++ * This function is for setting samba credentials.  If anyone comes up
++ * with any credentials they think should be set, let me know.
++ */
++
++int pam_sm_setcred(pam_handle_t *pamh, int flags,
++                   int argc, const char **argv)
++{
++	int retval, *pretval = NULL;
++
++	retval = PAM_SUCCESS;
++
++	_pam_get_data(pamh, "smb_setcred_return", &pretval);
++	if(pretval) {
++		retval = *pretval;
++		SAFE_FREE(pretval);
++	}
++	pam_set_data(pamh, "smb_setcred_return", NULL, NULL);
++
++	return retval;
++}
++
++/* Helper function for adding a user to the db. */
++static int _smb_add_user(pam_handle_t *pamh, unsigned int ctrl,
++                         const char *name, struct samu *sampass, bool exist)
++{
++	char *err_str = NULL;
++	char *msg_str = NULL;
++	const char *pass = NULL;
++	int retval;
++	TALLOC_CTX *frame = talloc_stackframe();
++
++	/* Get the authtok; if we don't have one, silently fail. */
++	retval = _pam_get_item( pamh, PAM_AUTHTOK, &pass );
++
++	if (retval != PAM_SUCCESS) {
++		_log_err(pamh, LOG_ALERT
++			, "pam_get_item returned error to pam_sm_authenticate" );
++		TALLOC_FREE(frame);
++		return PAM_AUTHTOK_RECOVER_ERR;
++	}
++
++	/* Add the user to the db if they aren't already there. */
++	if (!exist) {
++		retval = NT_STATUS_IS_OK(local_password_change(name, LOCAL_ADD_USER|LOCAL_SET_PASSWORD,
++					pass, &err_str, &msg_str));
++		if (!retval && err_str) {
++			make_remark(pamh, ctrl, PAM_ERROR_MSG, err_str );
++		} else if (msg_str) {
++			make_remark(pamh, ctrl, PAM_TEXT_INFO, msg_str );
++		}
++		pass = NULL;
++
++		SAFE_FREE(err_str);
++		SAFE_FREE(msg_str);
++		TALLOC_FREE(frame);
++		return PAM_IGNORE;
++	} else {
++		/* mimick 'update encrypted' as long as the 'no pw req' flag is not set */
++		if ( pdb_get_acct_ctrl(sampass) & ~ACB_PWNOTREQ ) {
++			retval = NT_STATUS_IS_OK(local_password_change(name, LOCAL_SET_PASSWORD,
++					pass, &err_str, &msg_str));
++			if (!retval && err_str) {
++				make_remark(pamh, ctrl, PAM_ERROR_MSG, err_str );
++			} else if (msg_str) {
++				make_remark(pamh, ctrl, PAM_TEXT_INFO, msg_str );
++			}
++		}
++	}
++    
++	SAFE_FREE(err_str);
++	SAFE_FREE(msg_str);
++	pass = NULL;
++	TALLOC_FREE(frame);
++	return PAM_IGNORE;
++}
++
++/* static module data */
++#ifdef PAM_STATIC
++struct pam_module _pam_smbpass_auth_modstruct = {
++	"pam_smbpass",
++	pam_sm_authenticate,
++	pam_sm_setcred,
++	NULL,
++	NULL,
++	NULL,
++	NULL
++};
++#endif
+diff --git a/source3/pam_smbpass/pam_smb_passwd.c b/source3/pam_smbpass/pam_smb_passwd.c
+new file mode 100644
+index 00000000000..1adebe2e898
+--- /dev/null
++++ b/source3/pam_smbpass/pam_smb_passwd.c
+@@ -0,0 +1,365 @@
++/*
++   Unix SMB/CIFS implementation.
++   Use PAM to update user passwords in the local SAM
++   Copyright (C) Steve Langasek		1998-2003
++   
++   This program is free software; you can redistribute it and/or modify
++   it under the terms of the GNU General Public License as published by
++   the Free Software Foundation; either version 3 of the License, or
++   (at your option) any later version.
++   
++   This program is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++   GNU General Public License for more details.
++   
++   You should have received a copy of the GNU General Public License
++   along with this program.  If not, see <http://www.gnu.org/licenses/>.
++
++*/
++
++/* indicate the following groups are defined */
++#define PAM_SM_PASSWORD
++
++#include "includes.h"
++
++/* This is only used in the Sun implementation.  FIXME: we really
++   want a define here that distinguishes between the Solaris PAM
++   and others (including FreeBSD). */
++
++#ifndef LINUX
++#if defined(HAVE_SECURITY_PAM_APPL_H)
++#include <security/pam_appl.h>
++#elif defined(HAVE_PAM_PAM_APPL_H)
++#include <pam/pam_appl.h>
++#endif
++#endif
++
++#if defined(HAVE_SECURITY_PAM_MODULES_H)
++#include <security/pam_modules.h>
++#elif defined(HAVE_PAM_PAM_MODULES_H)
++#include <pam/pam_modules.h>
++#endif
++
++#include "general.h" 
++
++#include "support.h"
++
++static int smb_update_db( pam_handle_t *pamh, int ctrl, const char *user,  const char *pass_new )
++{
++	int retval;
++	char *err_str = NULL;
++	char *msg_str = NULL;
++
++	retval = NT_STATUS_IS_OK(local_password_change(user, LOCAL_SET_PASSWORD, pass_new,
++	                                &err_str,
++	                                &msg_str));
++
++	if (!retval) {
++		if (err_str) {
++			make_remark(pamh, ctrl, PAM_ERROR_MSG, err_str );
++		}
++
++		/* FIXME: what value is appropriate here? */
++		retval = PAM_AUTHTOK_ERR;
++	} else {
++		if (msg_str) {
++			make_remark(pamh, ctrl, PAM_TEXT_INFO, msg_str );
++		}
++		retval = PAM_SUCCESS;
++	}
++
++	SAFE_FREE(err_str);
++	SAFE_FREE(msg_str);
++	return retval;      
++}
++
++
++/* data tokens */
++
++#define _SMB_OLD_AUTHTOK  "-SMB-OLD-PASS"
++#define _SMB_NEW_AUTHTOK  "-SMB-NEW-PASS"
++
++/*
++ * FUNCTION: pam_sm_chauthtok()
++ *
++ * This function is called twice by the PAM library, once with
++ * PAM_PRELIM_CHECK set, and then again with PAM_UPDATE_AUTHTOK set.  With
++ * Linux-PAM, these two passes generally involve first checking the old
++ * token and then changing the token.  This is what we do here.
++ *
++ * Having obtained a new password. The function updates the
++ * SMB_PASSWD_FILE file (normally, $(LIBDIR)/smbpasswd).
++ */
++
++int pam_sm_chauthtok(pam_handle_t *pamh, int flags,
++                     int argc, const char **argv)
++{
++    unsigned int ctrl;
++    int retval;
++
++    struct samu *sampass = NULL;
++    void (*oldsig_handler)(int);
++    const char *user;
++    char *pass_old = NULL;
++    char *pass_new = NULL;
++    TALLOC_CTX *frame = talloc_stackframe();
++
++    /* Samba initialization. */
++
++    ctrl = set_ctrl(pamh, flags, argc, argv);
++
++    /*
++     * First get the name of a user.  No need to do anything if we can't
++     * determine this.
++     */
++
++    retval = pam_get_user( pamh, &user, "Username: " );
++    if (retval != PAM_SUCCESS) {
++        if (on( SMB_DEBUG, ctrl )) {
++            _log_err(pamh, LOG_DEBUG, "password: could not identify user");
++        }
++	TALLOC_FREE(frame);
++        return retval;
++    }
++    if (on( SMB_DEBUG, ctrl )) {
++        _log_err(pamh, LOG_DEBUG, "username [%s] obtained", user);
++    }
++
++    if (geteuid() != 0) {
++	_log_err(pamh, LOG_DEBUG, "Cannot access samba password database, not running as root.");
++	TALLOC_FREE(frame);
++	return PAM_AUTHINFO_UNAVAIL;
++    }
++
++    /* Getting into places that might use LDAP -- protect the app
++       from a SIGPIPE it's not expecting */
++    oldsig_handler = CatchSignal(SIGPIPE, SIG_IGN);
++
++    if (!initialize_password_db(False, NULL)) {
++      _log_err(pamh, LOG_ALERT, "Cannot access samba password database" );
++        CatchSignal(SIGPIPE, oldsig_handler);
++	TALLOC_FREE(frame);
++        return PAM_AUTHINFO_UNAVAIL;
++    }
++
++    /* obtain user record */
++    if ( !(sampass = samu_new( NULL )) ) {
++        CatchSignal(SIGPIPE, oldsig_handler);
++	TALLOC_FREE(frame);
++        return nt_status_to_pam(NT_STATUS_NO_MEMORY);
++    }
++
++    if (!pdb_getsampwnam(sampass,user)) {
++        _log_err(pamh, LOG_ALERT, "Failed to find entry for user %s.", user);
++        CatchSignal(SIGPIPE, oldsig_handler);
++	TALLOC_FREE(frame);
++	return PAM_USER_UNKNOWN;
++    }
++    if (on( SMB_DEBUG, ctrl )) {
++        _log_err(pamh, LOG_DEBUG, "Located account for %s", user);
++    }
++
++    if (flags & PAM_PRELIM_CHECK) {
++        /*
++         * obtain and verify the current password (OLDAUTHTOK) for
++         * the user.
++         */
++
++        char *Announce;
++
++        if (_smb_blankpasswd( ctrl, sampass )) {
++
++            TALLOC_FREE(sampass);
++            CatchSignal(SIGPIPE, oldsig_handler);
++	    TALLOC_FREE(frame);
++            return PAM_SUCCESS;
++        }
++
++	/* Password change by root, or for an expired token, doesn't
++           require authentication.  Is this a good choice? */
++        if (getuid() != 0 && !(flags & PAM_CHANGE_EXPIRED_AUTHTOK)) {
++
++            /* tell user what is happening */
++		if (asprintf(&Announce, "Changing password for %s", user) == -1) {
++			_log_err(pamh, LOG_CRIT, "password: out of memory");
++			TALLOC_FREE(sampass);
++			CatchSignal(SIGPIPE, oldsig_handler);
++			TALLOC_FREE(frame);
++			return PAM_BUF_ERR;
++		}
++
++            set( SMB__OLD_PASSWD, ctrl );
++            retval = _smb_read_password( pamh, ctrl, Announce, "Current SMB password: ",
++                                         NULL, _SMB_OLD_AUTHTOK, &pass_old );
++            SAFE_FREE( Announce );
++
++            if (retval != PAM_SUCCESS) {
++                _log_err(pamh, LOG_NOTICE,
++                         "password - (old) token not obtained");
++                TALLOC_FREE(sampass);
++                CatchSignal(SIGPIPE, oldsig_handler);
++		TALLOC_FREE(frame);
++                return retval;
++            }
++
++            /* verify that this is the password for this user */
++
++            retval = _smb_verify_password( pamh, sampass, pass_old, ctrl );
++
++        } else {
++	    pass_old = NULL;
++            retval = PAM_SUCCESS;           /* root doesn't have to */
++        }
++
++        pass_old = NULL;
++        TALLOC_FREE(sampass);
++        CatchSignal(SIGPIPE, oldsig_handler);
++	TALLOC_FREE(frame);
++        return retval;
++
++    } else if (flags & PAM_UPDATE_AUTHTOK) {
++
++        /*
++         * obtain the proposed password
++         */
++
++        /*
++         * get the old token back. NULL was ok only if root [at this
++         * point we assume that this has already been enforced on a
++         * previous call to this function].
++         */
++
++        if (off( SMB_NOT_SET_PASS, ctrl )) {
++            retval = _pam_get_item( pamh, PAM_OLDAUTHTOK,
++                                   &pass_old );
++        } else {
++            retval = _pam_get_data( pamh, _SMB_OLD_AUTHTOK,
++                                   &pass_old );
++            if (retval == PAM_NO_MODULE_DATA) {
++		pass_old = NULL;
++                retval = PAM_SUCCESS;
++            }
++        }
++
++        if (retval != PAM_SUCCESS) {
++            _log_err(pamh, LOG_NOTICE, "password: user not authenticated");
++            TALLOC_FREE(sampass);
++            CatchSignal(SIGPIPE, oldsig_handler);
++	    TALLOC_FREE(frame);
++            return retval;
++        }
++
++        /*
++         * use_authtok is to force the use of a previously entered
++         * password -- needed for pluggable password strength checking
++	 * or other module stacking
++         */
++
++        if (on( SMB_USE_AUTHTOK, ctrl )) {
++            set( SMB_USE_FIRST_PASS, ctrl );
++        }
++
++        retval = _smb_read_password( pamh, ctrl
++                                      , NULL
++                                      , "Enter new SMB password: "
++                                      , "Retype new SMB password: "
++                                      , _SMB_NEW_AUTHTOK
++                                      , &pass_new );
++
++        if (retval != PAM_SUCCESS) {
++            if (on( SMB_DEBUG, ctrl )) {
++                _log_err(pamh, LOG_ALERT,
++                         "password: new password not obtained");
++            }
++            pass_old = NULL;                               /* tidy up */
++            TALLOC_FREE(sampass);
++            CatchSignal(SIGPIPE, oldsig_handler);
++	    TALLOC_FREE(frame);
++            return retval;
++        }
++
++        /*
++         * At this point we know who the user is and what they
++         * propose as their new password. Verify that the new
++         * password is acceptable.
++         */ 
++
++        if (pass_new[0] == '\0') {     /* "\0" password = NULL */
++            pass_new = NULL;
++        }
++
++        retval = _pam_smb_approve_pass(pamh, ctrl, pass_old, pass_new);
++
++        if (retval != PAM_SUCCESS) {
++            _log_err(pamh, LOG_NOTICE, "new password not acceptable");
++            pass_new = pass_old = NULL;               /* tidy up */
++            TALLOC_FREE(sampass);
++            CatchSignal(SIGPIPE, oldsig_handler);
++	    TALLOC_FREE(frame);
++            return retval;
++        }
++
++        /*
++         * By reaching here we have approved the passwords and must now
++         * rebuild the smb password file.
++         */
++
++        /* update the password database */
++
++        retval = smb_update_db(pamh, ctrl, user, pass_new);
++        if (retval == PAM_SUCCESS) {
++	    uid_t uid;
++	    
++            /* password updated */
++		if (!sid_to_uid(pdb_get_user_sid(sampass), &uid)) {
++			_log_err(pamh, LOG_NOTICE,
++			         "Unable to get uid for user %s",
++				pdb_get_username(sampass));
++			_log_err(pamh, LOG_NOTICE, "password for (%s) changed by (%s/%d)",
++				user, uidtoname(getuid()), getuid());
++		} else {
++			_log_err(pamh, LOG_NOTICE, "password for (%s/%d) changed by (%s/%d)",
++				user, uid, uidtoname(getuid()), getuid());
++		}
++	} else {
++		_log_err(pamh, LOG_ERR, "password change failed for user %s", user);
++	}
++
++        pass_old = pass_new = NULL;
++	if (sampass) {
++		TALLOC_FREE(sampass);
++		sampass = NULL;
++	}
++
++    } else {            /* something has broken with the library */
++
++        _log_err(pamh, LOG_ALERT, "password received unknown request");
++        retval = PAM_ABORT;
++
++    }
++    
++    if (sampass) {
++    	TALLOC_FREE(sampass);
++	sampass = NULL;
++    }
++
++    TALLOC_FREE(sampass);
++    CatchSignal(SIGPIPE, oldsig_handler);
++    TALLOC_FREE(frame);
++    return retval;
++}
++
++/* static module data */
++#ifdef PAM_STATIC
++struct pam_module _pam_smbpass_passwd_modstruct = {
++     "pam_smbpass",
++     NULL,
++     NULL,
++     NULL,
++     NULL,
++     NULL,
++     pam_sm_chauthtok
++};
++#endif
++
+diff --git a/source3/pam_smbpass/samples/README b/source3/pam_smbpass/samples/README
+new file mode 100644
+index 00000000000..d77603306f1
+--- /dev/null
++++ b/source3/pam_smbpass/samples/README
+@@ -0,0 +1,3 @@
++This directory contains example configurations demonstrating various uses
++of pam_smbpass.  These examples use Linux-style /etc/pam.d syntax, and
++must be modified for use on Solaris systems.
+diff --git a/source3/pam_smbpass/samples/kdc-pdc b/source3/pam_smbpass/samples/kdc-pdc
+new file mode 100644
+index 00000000000..70f1998f32a
+--- /dev/null
++++ b/source3/pam_smbpass/samples/kdc-pdc
+@@ -0,0 +1,15 @@
++#%PAM-1.0
++# kdc-pdc
++# 
++# A sample PAM configuration that shows pam_smbpass used together with
++# pam_krb5.  This could be useful on a Samba PDC that is also a member of
++# a Kerberos realm.
++
++auth       requisite        pam_nologin.so
++auth       requisite        pam_krb5.so
++auth       optional         pam_smbpass.so migrate
++account    required         pam_krb5.so
++password   requisite        pam_cracklib.so retry=3
++password   optional         pam_smbpass.so nullok use_authtok try_first_pass
++password   required         pam_krb5.so use_authtok try_first_pass
++session    required         pam_krb5.so
+diff --git a/source3/pam_smbpass/samples/password-mature b/source3/pam_smbpass/samples/password-mature
+new file mode 100644
+index 00000000000..6d73e0906fc
+--- /dev/null
++++ b/source3/pam_smbpass/samples/password-mature
+@@ -0,0 +1,14 @@
++#%PAM-1.0
++# password-mature
++#
++# A sample PAM configuration for a 'mature' smbpasswd installation.
++# private/smbpasswd is fully populated, and we consider it an error if
++# the smbpasswd doesn't exist or doesn't match the Unix password.
++
++auth       requisite        pam_nologin.so
++auth       required         pam_unix.so
++account    required         pam_unix.so
++password   requisite        pam_cracklib.so retry=3
++password   requisite        pam_unix.so shadow md5 use_authtok try_first_pass
++password   required         pam_smbpass.so use_authtok use_first_pass
++session    required         pam_unix.so
+diff --git a/source3/pam_smbpass/samples/password-migration b/source3/pam_smbpass/samples/password-migration
+new file mode 100644
+index 00000000000..305cb53858e
+--- /dev/null
++++ b/source3/pam_smbpass/samples/password-migration
+@@ -0,0 +1,18 @@
++#%PAM-1.0
++# password-migration
++#
++# A sample PAM configuration that shows the use of pam_smbpass to migrate
++# from plaintext to encrypted passwords for Samba.  Unlike other methods,
++# this can be used for users who have never connected to Samba shares:
++# password migration takes place when users ftp in, login using ssh, pop
++# their mail, etc.
++
++auth       requisite        pam_nologin.so
++# pam_smbpass is called IFF pam_unix succeeds.
++auth       requisite        pam_unix.so
++auth       optional         pam_smbpass.so migrate
++account    required         pam_unix.so
++password   requisite        pam_cracklib.so retry=3
++password   requisite        pam_unix.so shadow md5 use_authtok try_first_pass
++password   optional         pam_smbpass.so nullok use_authtok try_first_pass
++session    required         pam_unix.so
+diff --git a/source3/pam_smbpass/samples/password-sync b/source3/pam_smbpass/samples/password-sync
+new file mode 100644
+index 00000000000..0a950dd2e9a
+--- /dev/null
++++ b/source3/pam_smbpass/samples/password-sync
+@@ -0,0 +1,15 @@
++#%PAM-1.0
++# password-sync
++#
++# A sample PAM configuration that shows the use of pam_smbpass to make
++# sure private/smbpasswd is kept in sync when /etc/passwd (/etc/shadow)
++# is changed.  Useful when an expired password might be changed by an
++# application (such as ssh).
++
++auth       requisite        pam_nologin.so
++auth       required         pam_unix.so
++account    required         pam_unix.so
++password   requisite        pam_cracklib.so retry=3
++password   requisite        pam_unix.so shadow md5 use_authtok try_first_pass
++password   required         pam_smbpass.so nullok use_authtok try_first_pass
++session    required         pam_unix.so
+diff --git a/source3/pam_smbpass/support.c b/source3/pam_smbpass/support.c
+new file mode 100644
+index 00000000000..c49c2c525ca
+--- /dev/null
++++ b/source3/pam_smbpass/support.c
+@@ -0,0 +1,698 @@
++/* Unix NT password database implementation, version 0.6.
++ *
++ * This program is free software; you can redistribute it and/or modify it under
++ * the terms of the GNU General Public License as published by the Free
++ * Software Foundation; either version 3 of the License, or (at your option)
++ * any later version.
++ *
++ * This program is distributed in the hope that it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++ * more details.
++ *
++ * You should have received a copy of the GNU General Public License along with
++ * this program; if not, see <http://www.gnu.org/licenses/>.
++ */
++
++#include "config.h"
++#include "includes.h"
++#include "general.h"
++
++#include "support.h"
++#include "secrets.h"
++
++#include "../libcli/auth/libcli_auth.h"
++#if defined(HAVE_SECURITY_PAM_EXT_H)
++#include <security/pam_ext.h>
++#elif defined(HAVE_PAM_PAM_EXT_H)
++#include <pam/pam_ext.h>
++#endif
++
++#if defined(HAVE_SECURITY__PAM_MACROS_H)
++#include <security/_pam_macros.h>
++#elif defined(HAVE_PAM__PAM_MACROS_H)
++#include <pam/_pam_macros.h>
++#endif
++
++#ifdef HAVE_SYSLOG_H
++#include <syslog.h>
++#endif
++
++#define _pam_overwrite(x)        \
++do {                             \
++     register char *__xx__;      \
++     if ((__xx__=(x)))           \
++	  while (*__xx__)        \
++	       *__xx__++ = '\0'; \
++} while (0)
++
++/*
++ * Don't just free it, forget it too.
++ */
++
++#define _pam_drop(X) \
++do {                 \
++    if (X) {         \
++	free(X);     \
++	X=NULL;      \
++    }                \
++} while (0)
++
++#define _pam_drop_reply(/* struct pam_response * */ reply, /* int */ replies) \
++do {                                              \
++    int reply_i;                                  \
++						  \
++    for (reply_i=0; reply_i<replies; ++reply_i) { \
++	if (reply[reply_i].resp) {                \
++	    _pam_overwrite(reply[reply_i].resp);  \
++	    free(reply[reply_i].resp);            \
++	}                                         \
++    }                                             \
++    if (reply)                                    \
++	free(reply);                              \
++} while (0)
++
++
++int converse(pam_handle_t *, int, int, struct pam_message **,
++			 struct pam_response **);
++int make_remark(pam_handle_t *, unsigned int, int, const char *);
++void _cleanup(pam_handle_t *, void *, int);
++char *_pam_delete(register char *);
++
++/* syslogging function for errors and other information */
++#ifdef HAVE_PAM_VSYSLOG
++void _log_err( pam_handle_t *pamh, int err, const char *format, ... )
++{
++	va_list args;
++
++	va_start(args, format);
++	pam_vsyslog(pamh, err, format, args);
++	va_end(args);
++}
++#else
++void _log_err( pam_handle_t *pamh, int err, const char *format, ... )
++{
++	va_list args;
++	char *mod_format;
++
++	if (asprintf(&mod_format, "(pam_smbpass) %s", format) == -1) {
++		/*
++		 * try really, really hard to log something, since
++		 * this may have been a message about a malloc()
++		 * failure...
++		 */
++		va_start(args, format);
++		vsyslog(err | LOG_AUTH, format, args);
++		va_end(args);
++		return;
++	}
++
++	va_start(args, format);
++	vsyslog(err | LOG_AUTH, mod_format, args);
++	va_end(args);
++
++	free(mod_format);
++}
++#endif
++
++/* this is a front-end for module-application conversations */
++
++int converse( pam_handle_t * pamh, int ctrl, int nargs
++	      , struct pam_message **message
++	      , struct pam_response **response )
++{
++	int retval;
++	struct pam_conv *conv = NULL;
++
++	retval = _pam_get_item(pamh, PAM_CONV, &conv);
++	if (retval == PAM_SUCCESS) {
++
++		retval = conv->conv(nargs, (const struct pam_message **) message
++							,response, conv->appdata_ptr);
++
++		if (retval != PAM_SUCCESS && on(SMB_DEBUG, ctrl)) {
++			_log_err(pamh, LOG_DEBUG, "conversation failure [%s]"
++					 ,pam_strerror(pamh, retval));
++		}
++	} else {
++		_log_err(pamh, LOG_ERR, "couldn't obtain coversation function [%s]"
++				 ,pam_strerror(pamh, retval));
++	}
++
++	return retval;				/* propagate error status */
++}
++
++int make_remark( pam_handle_t * pamh, unsigned int ctrl
++		 , int type, const char *text )
++{
++	if (off(SMB__QUIET, ctrl)) {
++		struct pam_message *pmsg[1], msg[1];
++		struct pam_response *resp;
++
++		pmsg[0] = &msg[0];
++		msg[0].msg = discard_const_p(char, text);
++		msg[0].msg_style = type;
++		resp = NULL;
++
++		return converse(pamh, ctrl, 1, pmsg, &resp);
++	}
++	return PAM_SUCCESS;
++}
++
++
++/* set the control flags for the SMB module. */
++
++unsigned int set_ctrl(pam_handle_t *pamh,
++		      int flags,
++		      int argc,
++		      const char **argv)
++{
++    int i = 0;
++    const char *service_file = NULL;
++    unsigned int ctrl;
++    bool ok;
++
++    ctrl = SMB_DEFAULTS;	/* the default selection of options */
++
++    /* set some flags manually */
++
++    /* A good, sane default (matches Samba's behavior). */
++    set( SMB__NONULL, ctrl );
++
++    /* initialize service file location */
++    service_file=get_dyn_CONFIGFILE();
++
++    if (flags & PAM_SILENT) {
++        set( SMB__QUIET, ctrl );
++    }
++
++    /* Run through the arguments once, looking for an alternate smb config
++       file location */
++    while (i < argc) {
++	int j;
++
++	for (j = 0; j < SMB_CTRLS_; ++j) {
++	    if (smb_args[j].token
++	        && !strncmp(argv[i], smb_args[j].token, strlen(smb_args[j].token)))
++	    {
++		break;
++	    }
++	}
++
++	if (j == SMB_CONF_FILE) {
++	    service_file = argv[i] + 8;
++	}
++	i++;
++    }
++
++    /* Read some options from the Samba config. Can be overridden by
++       the PAM config. */
++    if(lp_load_client(service_file) == false) {
++	_log_err(pamh, LOG_ERR, "Error loading service file %s", service_file);
++    }
++
++	ok = secrets_init();
++	if (!ok) {
++		_log_err(pamh, LOG_ERR, "Error loading secrets database");
++	}
++
++    if (lp_null_passwords()) {
++        set( SMB__NULLOK, ctrl );
++    }
++
++    /* now parse the rest of the arguments to this module */
++
++    while (argc-- > 0) {
++        int j;
++
++        for (j = 0; j < SMB_CTRLS_; ++j) {
++            if (smb_args[j].token
++	        && !strncmp(*argv, smb_args[j].token, strlen(smb_args[j].token)))
++            {
++                break;
++            }
++        }
++
++        if (j >= SMB_CTRLS_) {
++            _log_err(pamh, LOG_ERR, "unrecognized option [%s]", *argv);
++        } else {
++            ctrl &= smb_args[j].mask;	/* for turning things off */
++            ctrl |= smb_args[j].flag;	/* for turning things on  */
++        }
++
++        ++argv;				/* step to next argument */
++    }
++
++    /* auditing is a more sensitive version of debug */
++
++    if (on( SMB_AUDIT, ctrl )) {
++        set( SMB_DEBUG, ctrl );
++    }
++    /* return the set of flags */
++
++    return ctrl;
++}
++
++/* use this to free strings. ESPECIALLY password strings */
++
++char * _pam_delete( register char *xx )
++{
++    _pam_overwrite( xx );
++    _pam_drop( xx );
++    return NULL;
++}
++
++void _cleanup( pam_handle_t * pamh, void *x, int error_status )
++{
++    x = _pam_delete( (char *) x );
++}
++
++/* JHT
++ *
++ * Safe duplication of character strings. "Paranoid"; don't leave
++ * evidence of old token around for later stack analysis.
++ *
++ */
++char * smbpXstrDup( pam_handle_t *pamh, const char *x )
++{
++    register char *newstr = NULL;
++
++    if (x != NULL) {
++        register int i;
++
++        for (i = 0; x[i]; ++i); /* length of string */
++        if ((newstr = SMB_MALLOC_ARRAY(char, ++i)) == NULL) {
++            i = 0;
++            _log_err(pamh, LOG_CRIT, "out of memory in smbpXstrDup");
++        } else {
++            while (i-- > 0) {
++                newstr[i] = x[i];
++            }
++        }
++        x = NULL;
++    }
++    return newstr;			/* return the duplicate or NULL on error */
++}
++
++/* ************************************************************** *
++ * Useful non-trivial functions                                   *
++ * ************************************************************** */
++
++void _cleanup_failures( pam_handle_t * pamh, void *fl, int err )
++{
++    int quiet;
++    const char *service = NULL;
++    struct _pam_failed_auth *failure;
++
++#ifdef PAM_DATA_SILENT
++    quiet = err & PAM_DATA_SILENT;	/* should we log something? */
++#else
++    quiet = 0;
++#endif
++#ifdef PAM_DATA_REPLACE
++    err &= PAM_DATA_REPLACE;	/* are we just replacing data? */
++#endif
++    failure = (struct _pam_failed_auth *) fl;
++
++    if (failure != NULL) {
++
++#ifdef PAM_DATA_SILENT
++        if (!quiet && !err) {	/* under advisement from Sun,may go away */
++#else
++        if (!quiet) {	/* under advisement from Sun,may go away */
++#endif
++
++            /* log the number of authentication failures */
++            if (failure->count != 0) {
++                _pam_get_item( pamh, PAM_SERVICE, &service );
++                _log_err(pamh, LOG_NOTICE
++                          , "%d authentication %s "
++                            "from %s for service %s as %s(%d)"
++                          , failure->count
++                          , failure->count == 1 ? "failure" : "failures"
++                          , failure->agent
++                          , service == NULL ? "**unknown**" : service 
++                          , failure->user, failure->id );
++                if (failure->count > SMB_MAX_RETRIES) {
++                    _log_err(pamh, LOG_ALERT
++                              , "service(%s) ignoring max retries; %d > %d"
++                              , service == NULL ? "**unknown**" : service
++                              , failure->count
++                              , SMB_MAX_RETRIES );
++                }
++            }
++        }
++        _pam_delete( failure->agent );	/* tidy up */
++        _pam_delete( failure->user );	/* tidy up */
++	SAFE_FREE( failure );
++    }
++}
++
++int _smb_verify_password( pam_handle_t * pamh, struct samu *sampass,
++			  const char *p, unsigned int ctrl )
++{
++    uchar lm_pw[16];
++    uchar nt_pw[16];
++    int retval = PAM_AUTH_ERR;
++    char *data_name;
++    const char *name;
++
++    if (!sampass)
++        return PAM_ABORT;
++
++    name = pdb_get_username(sampass);
++
++#ifdef HAVE_PAM_FAIL_DELAY
++    if (off( SMB_NODELAY, ctrl )) {
++        (void) pam_fail_delay( pamh, 1000000 );	/* 1 sec delay for on failure */
++    }
++#endif
++
++    if (!pdb_get_nt_passwd(sampass))
++    {
++        _log_err(pamh, LOG_DEBUG, "user %s has null SMB password", name);
++
++        if (off( SMB__NONULL, ctrl )
++            && (pdb_get_acct_ctrl(sampass) & ACB_PWNOTREQ))
++        { /* this means we've succeeded */
++            return PAM_SUCCESS;
++        } else {
++            const char *service = NULL;
++
++            _pam_get_item( pamh, PAM_SERVICE, &service );
++            _log_err(pamh, LOG_NOTICE, "failed auth request by %s for service %s as %s",
++                      uidtoname(getuid()), service ? service : "**unknown**", name);
++            return PAM_AUTH_ERR;
++        }
++    }
++
++    if (asprintf(&data_name, "-SMB-FAIL- %s", name) == -1) {
++        _log_err(pamh, LOG_CRIT, "no memory for data-name" );
++        return PAM_AUTH_ERR;
++    }
++
++    /*
++     * The password we were given wasn't an encrypted password, or it
++     * didn't match the one we have.  We encrypt the password now and try
++     * again.
++     */
++
++    nt_lm_owf_gen(p, nt_pw, lm_pw);
++
++    /* the moment of truth -- do we agree with the password? */
++
++    if (!memcmp( nt_pw, pdb_get_nt_passwd(sampass), 16 )) {
++
++        retval = PAM_SUCCESS;
++        if (data_name) {		/* reset failures */
++            pam_set_data(pamh, data_name, NULL, _cleanup_failures);
++        }
++    } else {
++
++        const char *service = NULL;
++
++        retval = PAM_AUTH_ERR;
++
++        _pam_get_item( pamh, PAM_SERVICE, &service );
++
++        if (data_name != NULL) {
++            struct _pam_failed_auth *newauth = NULL;
++            const struct _pam_failed_auth *old = NULL;
++
++            /* get a failure recorder */
++
++            newauth = SMB_MALLOC_P( struct _pam_failed_auth );
++
++            if (newauth != NULL) {
++
++                /* any previous failures for this user ? */
++                _pam_get_data(pamh, data_name, &old);
++
++                if (old != NULL) {
++                    newauth->count = old->count + 1;
++                    if (newauth->count >= SMB_MAX_RETRIES) {
++                        retval = PAM_MAXTRIES;
++                    }
++                } else {
++                    _log_err(pamh, LOG_NOTICE,
++                      "failed auth request by %s for service %s as %s",
++                      uidtoname(getuid()),
++                      service ? service : "**unknown**", name);
++                    newauth->count = 1;
++                }
++		if (!sid_to_uid(pdb_get_user_sid(sampass), &(newauth->id))) {
++                    _log_err(pamh, LOG_NOTICE,
++                      "failed auth request by %s for service %s as %s",
++                      uidtoname(getuid()),
++                      service ? service : "**unknown**", name);
++		}		
++                newauth->user = smbpXstrDup( pamh, name );
++                newauth->agent = smbpXstrDup( pamh, uidtoname( getuid() ) );
++                pam_set_data( pamh, data_name, newauth, _cleanup_failures );
++
++            } else {
++                _log_err(pamh, LOG_CRIT, "no memory for failure recorder" );
++                _log_err(pamh, LOG_NOTICE,
++                      "failed auth request by %s for service %s as %s(%d)",
++                      uidtoname(getuid()),
++                      service ? service : "**unknown**", name);
++            }
++        }
++        _log_err(pamh, LOG_NOTICE,
++                  "failed auth request by %s for service %s as %s(%d)",
++                  uidtoname(getuid()),
++                  service ? service : "**unknown**", name);
++    }
++
++    _pam_delete( data_name );
++
++    return retval;
++}
++
++
++/*
++ * _smb_blankpasswd() is a quick check for a blank password
++ *
++ * returns TRUE if user does not have a password
++ * - to avoid prompting for one in such cases (CG)
++ */
++
++int _smb_blankpasswd( unsigned int ctrl, struct samu *sampass )
++{
++	int retval;
++
++	/*
++	 * This function does not have to be too smart if something goes
++	 * wrong, return FALSE and let this case to be treated somewhere
++	 * else (CG)
++	 */
++
++	if (on( SMB__NONULL, ctrl ))
++		return 0;		/* will fail but don't let on yet */
++
++	if (!(pdb_get_acct_ctrl(sampass) & ACB_PWNOTREQ))
++		return 0;
++
++	if (pdb_get_nt_passwd(sampass) == NULL)
++		retval = 1;
++	else
++		retval = 0;
++
++	return retval;
++}
++
++/*
++ * obtain a password from the user
++ */
++
++int _smb_read_password( pam_handle_t * pamh, unsigned int ctrl,
++                        const char *comment, const char *prompt1,
++                        const char *prompt2, const char *data_name, char **pass )
++{
++    int authtok_flag;
++    int retval;
++    char *item = NULL;
++    char *token;
++
++    struct pam_message msg[3], *pmsg[3];
++    struct pam_response *resp;
++    int i, expect;
++
++
++    /* make sure nothing inappropriate gets returned */
++
++    *pass = token = NULL;
++
++    /* which authentication token are we getting? */
++
++    authtok_flag = on(SMB__OLD_PASSWD, ctrl) ? PAM_OLDAUTHTOK : PAM_AUTHTOK;
++
++    /* should we obtain the password from a PAM item ? */
++
++    if (on(SMB_TRY_FIRST_PASS, ctrl) || on(SMB_USE_FIRST_PASS, ctrl)) {
++        retval = _pam_get_item( pamh, authtok_flag, &item );
++        if (retval != PAM_SUCCESS) {
++            /* very strange. */
++            _log_err(pamh, LOG_ALERT,
++                     "pam_get_item returned error to smb_read_password");
++            return retval;
++        } else if (item != NULL) {	/* we have a password! */
++            *pass = item;
++            item = NULL;
++            return PAM_SUCCESS;
++        } else if (on( SMB_USE_FIRST_PASS, ctrl )) {
++            return PAM_AUTHTOK_RECOVER_ERR;		/* didn't work */
++        } else if (on( SMB_USE_AUTHTOK, ctrl )
++                   && off( SMB__OLD_PASSWD, ctrl ))
++        {
++            return PAM_AUTHTOK_RECOVER_ERR;
++        }
++    }
++
++    /*
++     * getting here implies we will have to get the password from the
++     * user directly.
++     */
++
++    /* prepare to converse */
++    if (comment != NULL && off(SMB__QUIET, ctrl)) {
++        pmsg[0] = &msg[0];
++        msg[0].msg_style = PAM_TEXT_INFO;
++        msg[0].msg = discard_const_p(char, comment);
++        i = 1;
++    } else {
++        i = 0;
++    }
++
++    pmsg[i] = &msg[i];
++    msg[i].msg_style = PAM_PROMPT_ECHO_OFF;
++    msg[i++].msg = discard_const_p(char, prompt1);
++
++    if (prompt2 != NULL) {
++        pmsg[i] = &msg[i];
++        msg[i].msg_style = PAM_PROMPT_ECHO_OFF;
++        msg[i++].msg = discard_const_p(char, prompt2);
++        expect = 2;
++    } else
++        expect = 1;
++
++    resp = NULL;
++
++    retval = converse( pamh, ctrl, i, pmsg, &resp );
++
++    if (resp != NULL) {
++        int j = comment ? 1 : 0;
++        /* interpret the response */
++
++        if (retval == PAM_SUCCESS) {	/* a good conversation */
++
++            token = smbpXstrDup(pamh, resp[j++].resp);
++            if (token != NULL) {
++                if (expect == 2) {
++                    /* verify that password entered correctly */
++                    if (!resp[j].resp || strcmp( token, resp[j].resp )) {
++                        _pam_delete( token );
++                        retval = PAM_AUTHTOK_RECOVER_ERR;
++                        make_remark( pamh, ctrl, PAM_ERROR_MSG
++                                     , MISTYPED_PASS );
++                    }
++                }
++            } else {
++                _log_err(pamh, LOG_NOTICE,
++		         "could not recover authentication token");
++            }
++        }
++
++        /* tidy up */
++        _pam_drop_reply( resp, expect );
++
++    } else {
++        retval = (retval == PAM_SUCCESS) ? PAM_AUTHTOK_RECOVER_ERR : retval;
++    }
++
++    if (retval != PAM_SUCCESS) {
++        if (on( SMB_DEBUG, ctrl ))
++            _log_err(pamh, LOG_DEBUG, "unable to obtain a password");
++        return retval;
++    }
++    /* 'token' is the entered password */
++
++    if (off( SMB_NOT_SET_PASS, ctrl )) {
++
++        /* we store this password as an item */
++
++        retval = pam_set_item( pamh, authtok_flag, (const void *)token );
++        _pam_delete( token );		/* clean it up */
++        if (retval != PAM_SUCCESS
++            || (retval = _pam_get_item( pamh, authtok_flag
++                            ,&item )) != PAM_SUCCESS)
++        {
++            _log_err(pamh, LOG_CRIT, "error manipulating password");
++            return retval;
++        }
++    } else {
++        /*
++         * then store it as data specific to this module. pam_end()
++         * will arrange to clean it up.
++         */
++
++        retval = pam_set_data( pamh, data_name, (void *) token, _cleanup );
++        if (retval != PAM_SUCCESS
++            || (retval = _pam_get_data( pamh, data_name, &item ))
++                             != PAM_SUCCESS)
++        {
++            _log_err(pamh, LOG_CRIT, "error manipulating password data [%s]",
++                     pam_strerror( pamh, retval ));
++            _pam_delete( token );
++            item = NULL;
++            return retval;
++        }
++        token = NULL;			/* break link to password */
++    }
++
++    *pass = item;
++    item = NULL;			/* break link to password */
++
++    return PAM_SUCCESS;
++}
++
++int _pam_smb_approve_pass(pam_handle_t * pamh,
++		unsigned int ctrl,
++		const char *pass_old,
++		const char *pass_new )
++{
++
++    /* Further checks should be handled through module stacking. -SRL */
++    if (pass_new == NULL || (pass_old && !strcmp( pass_old, pass_new )))
++    {
++	if (on(SMB_DEBUG, ctrl)) {
++	    _log_err(pamh, LOG_DEBUG,
++	             "passwd: bad authentication token (null or unchanged)");
++	}
++	make_remark( pamh, ctrl, PAM_ERROR_MSG, pass_new == NULL ?
++				"No password supplied" : "Password unchanged" );
++	return PAM_AUTHTOK_ERR;
++    }
++
++    return PAM_SUCCESS;
++}
++
++/*
++ * Work around the pam API that has functions with void ** as parameters
++ * These lead to strict aliasing warnings with gcc.
++ */
++int _pam_get_item(const pam_handle_t *pamh,
++		  int item_type,
++		  const void *_item)
++{
++	const void **item = (const void **)_item;
++	return pam_get_item(pamh, item_type, item);
++}
++
++int _pam_get_data(const pam_handle_t *pamh,
++		  const char *module_data_name,
++		  const void *_data)
++{
++	const void **data = (const void **)_data;
++	return pam_get_data(pamh, module_data_name, data);
++}
+diff --git a/source3/pam_smbpass/support.h b/source3/pam_smbpass/support.h
+new file mode 100644
+index 00000000000..832247d9985
+--- /dev/null
++++ b/source3/pam_smbpass/support.h
+@@ -0,0 +1,57 @@
++/* syslogging function for errors and other information */
++extern void _log_err(pam_handle_t *, int, const char *, ...);
++
++/* set the control flags for the UNIX module. */
++extern unsigned int set_ctrl(pam_handle_t *, int, int, const char **);
++
++/* generic function for freeing pam data segments */
++extern void _cleanup(pam_handle_t *, void *, int);
++
++/*
++ * Safe duplication of character strings. "Paranoid"; don't leave
++ * evidence of old token around for later stack analysis.
++ */
++
++extern char *smbpXstrDup(pam_handle_t *,const char *);
++
++/* ************************************************************** *
++ * Useful non-trivial functions                                   *
++ * ************************************************************** */
++
++extern void _cleanup_failures(pam_handle_t *, void *, int);
++
++/* compare 2 strings */
++extern bool strequal(const char *, const char *);
++
++extern struct smb_passwd *
++_my_get_smbpwnam(FILE *, const char *, bool *, bool *, long *);
++
++extern int _smb_verify_password( pam_handle_t *pamh , struct samu *sampass, 
++	const char *p, unsigned int ctrl );
++
++/*
++ * this function obtains the name of the current user and ensures
++ * that the PAM_USER item is set to this value
++ */
++
++extern int _smb_get_user(pam_handle_t *, unsigned int,
++			 const char *, const char **);
++
++/* _smb_blankpasswd() is a quick check for a blank password */
++
++extern int _smb_blankpasswd(unsigned int, struct samu *);
++
++
++/* obtain a password from the user */
++extern int _smb_read_password( pam_handle_t *, unsigned int, const char*,
++				const char *, const char *, const char *, char **);
++
++extern int _pam_smb_approve_pass(pam_handle_t *, unsigned int, const char *,
++				 const char *);
++
++int _pam_get_item(const pam_handle_t *pamh,
++		  int item_type,
++		  const void *_item);
++int _pam_get_data(const pam_handle_t *pamh,
++		  const char *module_data_name,
++		  const void *_data);
+diff --git a/source3/pam_smbpass/wscript_build b/source3/pam_smbpass/wscript_build
+new file mode 100644
+index 00000000000..a4eaa6c2972
+--- /dev/null
++++ b/source3/pam_smbpass/wscript_build
+@@ -0,0 +1,16 @@
++#!/usr/bin/env python
++
++if bld.CONFIG_SET('WITH_PAM_MODULES'):
++    bld.SAMBA3_LIBRARY('pamsmbpass',
++        source='''pam_smb_auth.c
++                  pam_smb_passwd.c
++                  pam_smb_acct.c
++                  support.c''',
++        allow_warnings=True,
++        deps='''tdb talloc pam PAM_ERRORS wbclient cap asn1util pdb
++                LIBTSOCKET''',
++        cflags='-DLOCALEDIR=\"%s/locale\"' % bld.env.DATADIR,
++        realname='pam_smbpass.so',
++        install_path='${PAMMODULESDIR}',
++        enabled=bld.env.with_pam_smbpass
++        )
+diff --git a/source3/wscript_build b/source3/wscript_build
+index 50d675cf3fc..18d0d30d9ae 100644
+--- a/source3/wscript_build
++++ b/source3/wscript_build
+@@ -1343,6 +1343,7 @@ bld.RECURSE('librpc')
+ bld.RECURSE('librpc/idl')
+ bld.RECURSE('libsmb')
+ bld.RECURSE('modules')
++bld.RECURSE('pam_smbpass')
+ bld.RECURSE('param')
+ bld.RECURSE('passdb')
+ bld.RECURSE('rpc_server')
+-- 
+2.17.1
