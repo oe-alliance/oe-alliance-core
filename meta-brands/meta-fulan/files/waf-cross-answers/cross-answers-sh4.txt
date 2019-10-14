@@ -54,6 +54,7 @@ Checking for kernel share modes: OK
 Checking whether blkcnt_t is 32 bit: OK
 Checking whether blkcnt_t is 64 bit: NO
 Checking whether fcntl lock supports open file description locks: OK
+Checking for a 64-bit host to support lmdb: NO
 Checking whether POSIX capabilities are available: OK
 # These four need checking
 Checking if can we convert from CP850 to UCS-2LE: OK
