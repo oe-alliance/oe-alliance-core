@@ -1,0 +1,14 @@
+--- a/lib/replace/replace.h
++++ b/lib/replace/replace.h
+@@ -391,11 +391,6 @@ long long int rep_strtoll(const char *str, char **endptr, int base);
+ #ifndef HAVE_STRTOULL
+ #define strtoull rep_strtoull
+ unsigned long long int rep_strtoull(const char *str, char **endptr, int base);
+-#else
+-#ifdef HAVE_BSD_STRTOLL /* yes, it's not HAVE_BSD_STRTOULL */
+-#define strtoull rep_strtoull
+-unsigned long long int rep_strtoull(const char *str, char **endptr, int base);
+-#endif
+ #endif
+ 
+ #ifndef HAVE_FTRUNCATE
