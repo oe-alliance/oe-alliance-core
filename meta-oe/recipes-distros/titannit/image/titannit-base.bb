@@ -89,6 +89,7 @@ RDEPENDS_${PN} = "\
 	tzdata tzdata-europe tzdata-australia tzdata-asia tzdata-pacific tzdata-africa tzdata-americas \
 	util-linux-blkid \
 	util-linux-sfdisk \
+	util-linux-fsck \
 	volatile-media \
 	vsftpd \
 	wakelan \
