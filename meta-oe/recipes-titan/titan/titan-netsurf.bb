@@ -104,10 +104,7 @@ do_compile() {
 	TARGET=framebuffer \
 	PREFIX=/usr"
 
-#	make ${NETSURF_ENV} clean
 	make ${NETSURF_ENV}
-#	mkdir ${WORKDIR}/image1
-#	make ${NETSURF_ENV} install DESTDIR=${WORKDIR}/image1 
 }
 
 FILES_${PN} = " \
@@ -117,10 +114,11 @@ FILES_${PN} = " \
 
 do_install() {
     install -d ${D}/usr/bin
-    install -m 0755 ${STAGING_DIR_TARGET}/usr/bin/netsurf-fb ${D}/usr/bin/nsfb
+    install -m 0755 ${WORKDIR}/netsurf-all-${PV}/netsurf/nsfb ${D}/usr/bin/nsfb
 
-    install -d ${D}/usr/share/netsurf
-    cp -r ${STAGING_DIR_TARGET}/usr/share/netsurf ${D}/usr/share/netsurf
+    install -d ${D}/usr/share
+    cp -rL ${WORKDIR}/netsurf-all-${PV}/netsurf/frontends/framebuffer/res  ${D}/usr/share/netsurf
+
 }
 
 #do_install[vardepsexclude] += "DATETIME"

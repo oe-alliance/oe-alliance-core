@@ -26,7 +26,7 @@
  SURFACE_HANDLER_$(NSFB_VNC_AVAILABLE) += vnc.c
 --- a/libnsfb/src/surface/linux.c
 +++ b/libnsfb/src/surface/linux.c
-@@ -0,0 +1,756 @@
+@@ -0,0 +1,823 @@
 +/*
 + * Copyright 2012 Vincent Sanders <vince@simtec.co.uk>
 + *
@@ -60,7 +60,8 @@
 +#include "surface.h"
 +#include "cursor.h"
 +
-+
++#define MINMALLOC 4096
++#include <ctype.h>
 +
 +#include <unistd.h>
 +
@@ -138,7 +139,7 @@
 +#define UNUSED(x) ((x) = (x))
 +
 +#define FB_NAME "/dev/fb0"
-+#define RC_NAME "/dev/input/event1"
++#define RC_NAME "/dev/input/event0"
 +
 +struct lnx_priv {
 +    struct fb_fix_screeninfo FixInfo;
@@ -207,12 +208,78 @@
 +    return fmt;
 +}
 +
++char* ostrstr(char* str, char* search)
++{
++	char* ret = NULL;
++
++	if(str == NULL || search == NULL) return NULL;
++	ret = strstr(str, search);
++
++	return ret;
++}
++
++char* readfiletomem(const char* filename, int flag)
++{
++	FILE *fd = NULL;
++	char *fileline = NULL, *buf = NULL, *tmpbuf = NULL;
++	int bufsize = 0, bufoldsize = 0;
++
++	fileline = malloc(MINMALLOC);
++	if(fileline == NULL)
++	{
++//		err("no mem");
++		return NULL;
++	}
++
++	fd = fopen(filename, "r");
++	if(fd == NULL)
++	{
++//		perr("can't open %s", filename);
++		free(fileline);
++		return NULL;
++	}
++
++	while(fgets(fileline, MINMALLOC, fd) != NULL)
++	{
++		if(flag == 1)
++			if(fileline[0] == '#' || fileline[0] == '\n')
++				continue;
++
++		bufoldsize = bufsize;
++		bufsize += strlen(fileline);
++		tmpbuf = buf;	buf = realloc(buf, bufsize + 1);
++		if(buf == NULL)
++		{
++//			err("no mem");
++			free(fileline);
++			free(tmpbuf);
++			fclose(fd);
++			return NULL;
++		}
++
++		sprintf(buf + bufoldsize, "%s", fileline);
++	}
++
++	free(fileline);
++	fclose(fd);
++	return buf;
++}
++
 +static int linux_initialise(nsfb_t *nsfb)
 +{
 +printf("[libnsfb/src/surface/linux.c] initialise start\n");
 +    int iFrameBufferSize;
 +    struct lnx_priv *lstate;
 +    enum nsfb_format_e lformat;
++
++    char* tmpstr = NULL, *rcdev = NULL;
++    tmpstr = readfiletomem("/mnt/config/titan.cfg", 1);
++    if(ostrstr(tmpstr, "/dev/input/event0") != NULL)
++	rcdev = "/dev/input/event0";
++    else if(ostrstr(tmpstr, "/dev/input/event1") != NULL)
++	rcdev = "/dev/input/event1";
++    else if(ostrstr(tmpstr, "/dev/input/event2") != NULL)
++	rcdev = "/dev/input/event2";
 +
 +    if (nsfb->surface_priv != NULL)
 +	return -1;
@@ -230,14 +297,14 @@
 +	//rc
 +	while(lstate->rc < 0 && i < 3)
 +	{
-+		lstate->rc = open("/dev/input/event1", O_RDONLY);
++		lstate->rc = open(rcdev, O_RDONLY);
 +		if(lstate->rc < 0) sleep(1);
 +		i++;
 +	}
 +
 +	if(lstate->rc < 0)
 +	{
-+		printf("[libnsfb/src/surface/linux.c] failed to open /dev/input/event1\n");
++		printf("[libnsfb/src/surface/linux.c] failed to open rcdev\n", rcdev);
 +		return -1;
 +	}
 +
