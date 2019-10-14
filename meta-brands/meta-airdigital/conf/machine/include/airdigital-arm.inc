@@ -3,6 +3,8 @@ IMAGE_CLASSES += "airdigital-emmc_image_multiboot"
 
 MACHINE_FEATURES += "qthbbtv qtstalker linuxwifi"
 
+DISTRO_FEATURES_EXTRA = "opengl"
+
 IMAGE_FSTYPES += "airdigitalemmc"
 IMAGE_ROOTFS_SIZE ?= "589824"
 
@@ -19,9 +21,6 @@ PREFERRED_PROVIDER_virtual/libgl ?= "mesa"
 PREFERRED_PROVIDER_virtual/mesa ?= "mesa"
 PREFERRED_PROVIDER_virtual/blindscan-dvbc ?= "airdigital-dvb-modules-${MACHINE}"
 PREFERRED_PROVIDER_virtual/blindscan-dvbs ?= "airdigital-dvb-modules-${MACHINE}"
-
-# Qt
-PACKAGECONFIG_GL_pn-qtbase = "no-opengl linuxfb"
 
 IMAGE_CMD_airdigitalemmc_append = "\
     mkdir -p ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}; \
