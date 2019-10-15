@@ -2,7 +2,7 @@ SUMMARY = "halt for Gigablue Model ${MACHINE}"
 SECTION = "base"
 PRIORITY = "optional"
 LICENSE = "CLOSED"
-PACKAGE_ARCH = "${MACHINE_ARCH}"
+PACKAGE_ARCH = "${MACHINEBUILD}"
 
 RDEPENDS_${PN} = "harfbuzz"
 
@@ -15,7 +15,7 @@ INITSCRIPT_NAME = "suspend"
 INITSCRIPT_PARAMS = "start 89 0 ."
 inherit update-rc.d
 
-SRC_URI  = "http://source.mynonpublic.com/gigablue/mv200/${MACHINE}-hihalt-${SRCDATE}.tar.gz \
+SRC_URI  = "http://source.mynonpublic.com/gigablue/mv200/${MACHINEBUILD}-hihalt-${SRCDATE}.tar.gz \
     file://suspend.sh \
 "
 
