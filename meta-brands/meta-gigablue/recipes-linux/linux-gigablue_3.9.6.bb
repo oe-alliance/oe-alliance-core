@@ -52,7 +52,9 @@ SRC_URI = "http://source.mynonpublic.com/gigablue/linux/gigablue-linux-${PV}-${S
     file://genksyms_fix_typeof_handling.patch \
     file://0002-cp1emu-do-not-use-bools-for-arithmetic.patch \
     file://0003-log2-give-up-on-gcc-constant-optimizations.patch \
-        "
+    file://add-attributes-fix-modules-compile.patch \
+    file://makefile-silence-warnings.patch \
+"
 
 S = "${WORKDIR}/linux-${KV}"
 B = "${WORKDIR}/build"
