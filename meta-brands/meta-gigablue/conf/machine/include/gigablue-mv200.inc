@@ -10,7 +10,7 @@ MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "\
     gigablue-loadmodules-${MACHINE} \ 
     gigablue-opengl-${MACHINE} \
     gigablue-libs-${MACHINE} \
-    gigablue-hihalt-${MACHINEBUILD} \
+    gigablue-hihalt-${MACHINE} \
     gigablue-reader-${MACHINE} \
     gigablue-libreader-${MACHINE} \
     gigablue-partitions-${MACHINEBUILD} \
