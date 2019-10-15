@@ -33,7 +33,8 @@ SRC_URI += "http://source.mynonpublic.com/download/odin-linux-${PV}.tar.xz \
     file://blindscan2.patch \
     file://0002-makefile-disable-warnings.patch \
     file://0003-cp1emu-do-not-use-bools-for-arithmetic.patch \
-    "
+    file://0004-log2-give-up-on-gcc-constant-optimizations.patch \
+"
 
 S = "${WORKDIR}/linux-${PV}"
 B = "${WORKDIR}/build"
