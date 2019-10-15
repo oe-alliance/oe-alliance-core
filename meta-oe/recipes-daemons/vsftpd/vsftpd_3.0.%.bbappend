@@ -9,8 +9,6 @@ SRC_URI += "file://vsftpd.chroot_list \
 
 CONFFILES_${PN} += "${sysconfdir}/vsftpd.chroot_list"
 
-PR = "r1"
-
 LDFLAGS_append =" -lssl -lcrypto"
 
 do_configure_prepend() {
