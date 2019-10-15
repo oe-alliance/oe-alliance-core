@@ -206,7 +206,3 @@ mv $D/tmp/common-password $D/etc/pam.d/common-password
 echo -e "password\toptional\t\t\tpam_smbpass.so nullok use_authtok use_first_pass" >> $D/etc/pam.d/common-password
 fi
 }
-
-do_rm_work () {
-	:
-}

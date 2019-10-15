@@ -9,6 +9,12 @@ SRC_URI += "file://vsftpd.chroot_list \
 
 CONFFILES_${PN} += "${sysconfdir}/vsftpd.chroot_list"
 
+LDFLAGS_append =" -lssl -lcrypto"
+
+do_configure_prepend() {
+    sed -i 's#undef VSF_BUILD_SSL#define VSF_BUILD_SSL#' ${S}/builddefs.h
+}
+
 do_install_append() {
     rm ${D}${sysconfdir}/vsftpd.user_list
     install -m 600 ${WORKDIR}/vsftpd.chroot_list ${D}${sysconfdir}/vsftpd.chroot_list
