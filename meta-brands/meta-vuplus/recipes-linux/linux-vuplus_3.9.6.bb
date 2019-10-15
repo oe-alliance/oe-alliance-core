@@ -55,6 +55,8 @@ SRC_URI = "http://archive.vuplus.com/download/kernel/stblinux-${KV}.tar.bz2 \
     file://02-10-si2168-Silicon-Labs-Si2168-DVB-T-T2-C-demod-driver.patch \
     file://CONFIG_DVB_SP2.patch \
     file://dvbsky-t330.patch \
+    file://add-attributes-fix-modules-compile.patch \
+    file://makefile-silence-warnings.patch \
 "
 
 SRC_URI_append_vuultimo = "file://fixed_mtd.patch "
