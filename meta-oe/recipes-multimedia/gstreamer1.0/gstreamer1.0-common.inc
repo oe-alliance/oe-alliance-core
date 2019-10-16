@@ -5,16 +5,16 @@ inherit gitpkgv
 PV = "${GST_VERSION_FULL}+git${SRCPV}"
 PKGV = "${GST_VERSION_FULL}+git${GITPKGV}"
 
-SRCREV_gst = "a4d5c95638b0783124e983d5ba063bb38c6f53a3"
+SRCREV_gst = "0dafe6e63971ea89a9a9ff9cf30f5a076f915259"
 SRCREV_gst_common = "f32031c0c1eefb227ab5ce77722a23bf1fe59891"
-SRCREV_gst_libav = "06c249cabb41d5de6394569bfb545758fec07749"
+SRCREV_gst_libav = "f4859ff73df9655517a36d0ef1e4fcd732307ace"
 
-SRCREV_gst_plugins_bad = "2b478d3423f75bb81b1bab2ce44f007701ba5825"
-SRCREV_gst_plugins_base = "e29e57b77cbe785d6fba656f1acf53a385075d96"
-SRCREV_gst_plugins_good = "53dc1da870f5896c94567b432ab484722d3850e1"
-SRCREV_gst_plugins_ugly = "8f5b7a93b43441f18af079dc24a5d5b23b5ad93b"
+SRCREV_gst_plugins_bad = "2af2402880bf75977a2e7313483d68d1d1a76dcc"
+SRCREV_gst_plugins_base = "dff5399e8750bf0f48efd23370f09aeddeb1d7d8"
+SRCREV_gst_plugins_good = "505c88eeb6aa8e7df9dd7596510af6b098b00e74"
+SRCREV_gst_plugins_ugly = "b3f0008b3431f5bd1ef99bfcc35de00be93d865d"
 
-SRCREV_ffmpeg = "370c346d5dfd28d548b7ce6560e1448ce796b7fe"
+SRCREV_ffmpeg = "6e0cf9a9df4a21df89825427914e38bd4c6216ba"
 
 SRC_URI_append = " git://gitlab.freedesktop.org/gstreamer/common;protocol=https;branch=master;destsuffix=git/common;name=gst_common"
 

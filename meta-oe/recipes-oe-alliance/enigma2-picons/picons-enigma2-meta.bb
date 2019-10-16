@@ -6,9 +6,6 @@ inherit packagegroup
 PR = "r0"
 
 DEPENDS = " \
-    enigma2-plugin-picons-sat \
-    enigma2-plugin-picons-ziggo.tvhome \
-    enigma2-plugin-picons-ziggo.casema \
     enigma2-plugin-picons-tv-australia \
     "
 

@@ -6,9 +6,9 @@ require conf/license/license-gplv2.inc
 inherit gitpkgv allarch gettext
 
 SRCREV = "${AUTOREV}"
-PV = "6.6+git${SRCPV}"
-PKGV = "6.6+git${GITPKGV}"
-VER="6.6"
+PV = "7.x+git${SRCPV}"
+PKGV = "7.x+git${GITPKGV}"
+VER="7.x"
 
 DEPENDS_${PN} += "gettext-native"
 RDEPENDS_${PN} += "python-imaging python-subprocess python-requests python-lxml enigma2-plugin-systemplugins-mphelp"

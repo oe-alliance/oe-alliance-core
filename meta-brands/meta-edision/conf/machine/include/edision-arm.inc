@@ -1,5 +1,8 @@
 
-PREFERRED_VERSION_linux-edision = "5.2"
+PACKAGECONFIG_GL_pn-qtbase = "gles2 eglfs linuxfb"
+PACKAGECONFIG_FB_pn-qtbase = " "
+
+PREFERRED_VERSION_linux-edision = "5.3"
 
 
 KERNEL_MODULE_AUTOLOAD += "hci_uart"

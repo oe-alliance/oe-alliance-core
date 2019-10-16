@@ -3,16 +3,16 @@ SECTION = "base"
 PRIORITY = "required"
 LICENSE = "CLOSED"
 require conf/license/license-close.inc
-PACKAGE_ARCH = "${MACHINE_ARCH}"
+PACKAGE_ARCH = "${MACHINEBUILD}"
 
 inherit deploy
 
-SRCDATE = "20190515"
+SRCDATE = "20191015"
 PR = "${SRCDATE}"
 
 S = "${WORKDIR}/patitions"
 
-SRC_URI = "http://source.mynonpublic.com/gigablue/mv200/${MACHINE}-partitions-${SRCDATE}.zip"
+SRC_URI = "http://source.mynonpublic.com/gigablue/mv200/${MACHINEBUILD}-partitions-${SRCDATE}.zip"
 
 ALLOW_EMPTY_${PN} = "1"
 do_configure[nostamp] = "1"
@@ -41,7 +41,7 @@ do_deploy() {
 
 addtask deploy before do_build after do_install
 
-SRC_URI[md5sum] = "e2d3023753924abafa40bb3b2d0a8d77"
-SRC_URI[sha256sum] = "964c2f65c887afe5dca888b1fac9ce61324c884c9bedc6984a1c118b6c3b8966"
+SRC_URI[md5sum] = "e2bf231632c9bff32fac673f51ae9cfd"
+SRC_URI[sha256sum] = "592eafc759e60c44872cc1953218e576bf87d81cca6a48fdb9c86b0e948bf32e"
 
 INSANE_SKIP_${PN} += "already-stripped"

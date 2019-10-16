@@ -11,7 +11,7 @@ DEPENDS = "tslib mpfr gmp"
 SRCREV = "${AUTOREV}"
 PV = "${IMAGE_VERSION}+gitr${SRCPV}"
 PKGV = "${IMAGE_VERSION}+gitr${GITPKGV}"
-PR = "r239"
+PR = "r245"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -53,7 +53,7 @@ THIRDPARTY_PLUGINS = " \
     ${@bb.utils.contains("TARGET_ARCH", "sh4", "enigma2-plugin-extensions-isettinge2-3.4.4-oe2.0-all-sh4.ipk" , "", d)} \
     ${@bb.utils.contains("TARGET_ARCH", "mipsel", "enigma2-plugin-extensions-isettinge2-3.4.4-oe2.0-all-mips.ipk" , "", d)} \
     ${@bb.utils.contains("TARGET_ARCH", "arm", "enigma2-plugin-extensions-isettinge2-3.4.4-oe2.0-all-arm.ipk" , "", d)} \
-    enigma2-plugin-extensions-jedimakerxtream_5.16-20190818_all.ipk \
+    enigma2-plugin-extensions-jedimakerxtream_5.17-20190904_all.ipk \
     enigma2-plugin-extensions-livefootball_7.1_all.ipk \
     enigma2-plugin-extensions-mediainfo_3.0.7_all.ipk \
     enigma2-plugin-extensions-mediaportal_all.ipk \
@@ -91,7 +91,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-tmdb_0.7-r2_all.ipk \
     enigma2-plugin-extensions-translator_1.1rc1_all.ipk \
     enigma2-plugin-extensions-transmission_2.92-r2_all.ipk \
-    enigma2-plugin-extensions-tsmedia_13.1-r1_all.ipk \
+    enigma2-plugin-extensions-tsmedia_14.1_all.ipk \
     enigma2-plugin-extensions-tstube_1.2_all.ipk \
     enigma2-plugin-extensions-tvspielfilm_6.6rc4_all.ipk \
     enigma2-plugin-extensions-verkehrsinfo_1.2rc3_all.ipk \
@@ -102,6 +102,8 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-wikipedia_2.3rc3_all.ipk \
     enigma2-plugin-extensions-wwech_1.03_all.ipk \
     enigma2-plugin-extensions-xbmcwetter_1.4rc1_all.ipk \
+    enigma2-plugin-extensions-xcplugin-iptv-mod-lululla_6.7_all \
+    enigma2-plugin-picons-snp-full.220x132-190x102.light.on.transparent_2019-10-05--13-27-28_all.ipk \
     enigma2-plugin-skins-OverlayHD_1.80_all.ipk \
     enigma2-plugin-systemplugins-bouquetsprotection_0.2-rc1_all.ipk \
     enigma2-plugin-systemplugins-channelselectionnavigator_1.5_mipsel.ipk \

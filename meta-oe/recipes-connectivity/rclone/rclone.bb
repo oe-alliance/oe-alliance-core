@@ -25,31 +25,31 @@ Yandex Disk \
 The local filesystem"
 HOMEPAGE = "https://rclone.org/"
 
-DEPENDS = "go-cross-${TUNE_PKGARCH}"
-RDEPENDS_${PN} += "bash"
-
-# Don't use gitpkgv here ...
-inherit go upx-compress
-
-PR="r1"
-
-# ... because shitquake fails to eval nested variables like PV="git${PKGV}" later ...
-# ... so keep PV updated manually (git rev-list --count <revision>)
-PV = "1.42-DEV-git2446+751bfd4"
-SRCREV = "c2635e39cc462210500bbcbab43147096c8cdd35"
-
 GO_IMPORT = "github.com/rclone/rclone"
 
-SRC_URI = "git://${GO_IMPORT}.git;protocol=https;destsuffix=${BPN}-${PV}/src/${GO_IMPORT} \
-           file://rclonefs \
-           file://COPYING"
+LICENSE = "MIT"
+LIC_FILES_CHKSUM = "file://src/${GO_IMPORT}/COPYING;md5=bed161b82a1ecab65ff7ba3c3b960439"
+
+RDEPENDS_${PN} += "bash"
+RDEPENDS_${PN}-dev += "bash python"
+
+inherit go
+inherit upx-compress
+inherit gitpkgv
+
+SRCREV = "c2635e39cc462210500bbcbab43147096c8cdd35"
+PV = "1.x+git${SRCPV}"
+PKGV = "1.x+git${GITPKGV}"
+
+S = "${WORKDIR}/git"
+
+SRC_URI = "git://${GO_IMPORT}.git;protocol=https;destsuffix=git/src/${GO_IMPORT} \
+    file://rclonefs"
+
+INSANE_SKIP_${PN} = "ldflags"
 
 do_install_append() {
-    rm -rf ${D}${libdir}
-    rm ${D}${bindir}/test_all
+    rm ${D}${bindir}/test*
     install -m 755 ${WORKDIR}/rclonefs ${D}${bindir}
     ln -s rclone ${D}${bindir}/mount.rclone
 }
-
-LICENSE = "MIT"
-LIC_FILES_CHKSUM = "file://${WORKDIR}/COPYING;md5=bed161b82a1ecab65ff7ba3c3b960439"

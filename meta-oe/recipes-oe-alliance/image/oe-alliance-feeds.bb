@@ -136,7 +136,7 @@ RDEPENDS_${PN} = " \
     python-levenshtein \
     python-soco \
     python-pyexecjs \
-    ${@bb.utils.contains("DEFAULTTUNE", "sh4", "" , "rclone", d)} \
+    ${@bb.utils.contains("DEFAULTTUNE", "sh4", "" , "rclone zerotier", d)} \
     rsync \
     rtorrent \
     sabnzbd \

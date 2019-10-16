@@ -185,14 +185,14 @@ ${@bb.utils.contains('MACHINEBUILD', 'iziboxone4k', 'dinobot/${MACHINE}' , '', d
 ${@bb.utils.contains('MACHINEBUILD', 'iziboxx3', 'izibox/x3' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axashistwin', 'axas/axashistwin' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axashisc4k', 'axas/axasc4k' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'protek4kx1', 'protek/4kx1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'protek4kx1', 'e2/update' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'anadolprohd5', 'anadol/prohd5' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'spycatminiv2', 'spycat/miniv2' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'iziboxecohd', 'izibox/ecohd' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'iziboxecohd', 'e2/update' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'JamesDonkey', 'jamesdonkey/hdduo' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'turing', 'atto/turing' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'arivatwin', 'ferguson/atvtt' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'arivacombo', 'ferguson/atvcombo' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'arivatwin', 'e2/update' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'arivacombo', 'e2/update' , '', d)}\
 "
 
 KERNEL_MODULE_AUTOLOAD += "xhci-plat-hcd"
@@ -214,7 +214,7 @@ MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "\
     dinobot-lib-helper \
 "
 
-MACHINE_FEATURES += "switchoff  hdmicec skins1080 blindscan-tbs alsa hbbtv-browser-webkit qtstalker HDMI \
+MACHINE_FEATURES += "switchoff  hdmicec blindscan-tbs alsa hbbtv-browser-webkit qtstalker HDMI \
     ${@bb.utils.contains('MACHINEBUILD', 'anadol4k', '' , ' dvb-c', d)} \
     ${@bb.utils.contains('MACHINEBUILD', 'anadol4kcombo', '' , ' dvb-c', d)} \
     "

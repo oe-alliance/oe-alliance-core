@@ -1,6 +1,6 @@
-SRCDATE = "20190601"
+SRCDATE = "20191011"
 
 require octagon-libs.inc
 
-SRC_URI[md5sum] = "bac4884eda9eadbc1766d1ee961b89ba"
-SRC_URI[sha256sum] = "e78bba01a03a2f97fae45726f11a80acb57cca2292705049076d2a78981def24"
+SRC_URI[md5sum] = "65eca9fa7ed028ce8b6c4f63a838d800"
+SRC_URI[sha256sum] = "942b5edb3c5d85b784b01d9ef080e0449f4ee83d193c9b11e5388c96beeadf00"

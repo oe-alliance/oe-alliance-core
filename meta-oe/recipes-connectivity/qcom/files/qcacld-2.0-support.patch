@@ -1,4 +1,4 @@
-From f804148827b02c93fd8dee12aff04418b0dc9b61 Mon Sep 17 00:00:00 2001
+From 3af7696d68542b8c4d75e7d189eaffd87f2e512e Mon Sep 17 00:00:00 2001
 From: Jaedon Shin <jaedon.shin@gmail.com>
 Date: Tue, 27 Nov 2018 14:21:30 +0900
 Subject: [PATCH] qcacld-2.0: Make driver compatiable with mainline kernel
@@ -25,10 +25,11 @@ Signed-off-by: Jaedon Shin <jaedon.shin@gmail.com>
  CORE/SERVICES/HTC/htc_send.c                  |  6 +++-
  CORE/SVC/src/logging/wlan_logging_sock_svc.c  | 11 +++++++
  CORE/VOSS/inc/vos_cnss.h                      | 15 +++++++++
+ CORE/VOSS/src/vos_api.c                       |  4 +++
  CORE/VOSS/src/vos_packet.c                    | 11 +++++++
  CORE/VOSS/src/vos_timer.c                     | 24 +++++++++++++-
  Kbuild                                        |  5 ++-
- 23 files changed, 189 insertions(+), 35 deletions(-)
+ 24 files changed, 193 insertions(+), 35 deletions(-)
 
 diff --git a/CORE/CLD_TXRX/HTT/htt_rx.c b/CORE/CLD_TXRX/HTT/htt_rx.c
 index adbdeb759383..dc0659bb99b8 100644
@@ -248,10 +249,10 @@ index 1df87224dd03..46b9b563c0b7 100644
      ssr_timer_started = true;
  }
 diff --git a/CORE/HDD/src/wlan_hdd_main.c b/CORE/HDD/src/wlan_hdd_main.c
-index 55a356b68ec8..11c0817c4949 100644
+index a573337cd47d..6465b2b5b9a3 100644
 --- a/CORE/HDD/src/wlan_hdd_main.c
 +++ b/CORE/HDD/src/wlan_hdd_main.c
-@@ -10940,12 +10940,16 @@ static void hdd_set_multicast_list(struct net_device *dev)
+@@ -10943,12 +10943,16 @@ static void hdd_set_multicast_list(struct net_device *dev)
    --------------------------------------------------------------------------*/
  static v_U16_t hdd_select_queue(struct net_device *dev,
                           struct sk_buff *skb
@@ -269,7 +270,7 @@ index 55a356b68ec8..11c0817c4949 100644
  )
  {
     return hdd_wmm_select_queue(dev, skb);
-@@ -13330,13 +13334,13 @@ static void hdd_populate_fils_params(struct cfg80211_connect_resp_params
+@@ -13333,13 +13337,13 @@ static void hdd_populate_fils_params(struct cfg80211_connect_resp_params
                       uint16_t fils_seq_num)
  {
      /* Increament seq number to be used for next FILS */
@@ -290,7 +291,7 @@ index 55a356b68ec8..11c0817c4949 100644
  }
  #else /* CFG80211_FILS_SK_OFFLOAD_SUPPORT */
  static inline void hdd_populate_fils_params(struct cfg80211_connect_resp_params
-@@ -13402,7 +13406,7 @@ static void hdd_connect_done(struct net_device *dev, const u8 *bssid,
+@@ -13405,7 +13409,7 @@ static void hdd_connect_done(struct net_device *dev, const u8 *bssid,
      }
      hddLog(LOG1, "FILS indicate connect status %d seq no %d",
            fils_params.status,
@@ -299,7 +300,7 @@ index 55a356b68ec8..11c0817c4949 100644
  
      cfg80211_connect_done(dev, &fils_params, gfp);
  
-@@ -18519,9 +18523,15 @@ static bool unload_timer_started;
+@@ -18529,9 +18533,15 @@ static bool unload_timer_started;
   *
   * Return: None
   */
@@ -315,7 +316,7 @@ index 55a356b68ec8..11c0817c4949 100644
  }
  
  /**
-@@ -18544,7 +18554,7 @@ static void hdd_unload_timer_del(void)
+@@ -18554,7 +18564,7 @@ static void hdd_unload_timer_del(void)
   *
   * Return: None
   */
@@ -324,7 +325,7 @@ index 55a356b68ec8..11c0817c4949 100644
  {
  	v_CONTEXT_t vos_context = NULL;
  	hdd_context_t *hdd_ctx = NULL;
-@@ -18584,7 +18594,9 @@ static void hdd_unload_timer_start(int msec)
+@@ -18594,7 +18604,9 @@ static void hdd_unload_timer_start(int msec)
  			"%s: Starting unload timer when it's running!",
  			__func__);
  	unload_timer.expires = jiffies + msecs_to_jiffies(msec);
@@ -509,7 +510,7 @@ index 0511191e3175..b6f39f60ee97 100644
  	struct hif_pci_softc *sc = hif_state->sc;
  	u_int32_t idle_ms;
 diff --git a/CORE/SERVICES/HIF/sdio/linux/native_sdio/src/hif.c b/CORE/SERVICES/HIF/sdio/linux/native_sdio/src/hif.c
-index cede8dcc316a..5ff36c000c70 100644
+index f4634d6bd3aa..6bc058777ede 100644
 --- a/CORE/SERVICES/HIF/sdio/linux/native_sdio/src/hif.c
 +++ b/CORE/SERVICES/HIF/sdio/linux/native_sdio/src/hif.c
 @@ -1481,9 +1481,13 @@ static void hif_oob_irq_handler(void *dev_para)
@@ -614,6 +615,22 @@ index 51e1eaf316e4..8539de07eca3 100644
  static inline void vos_get_monotonic_bootime_ts(struct timespec *ts)
  {
  	get_monotonic_boottime(ts);
+diff --git a/CORE/VOSS/src/vos_api.c b/CORE/VOSS/src/vos_api.c
+index 6ddc04f5edbe..68527e7f336b 100644
+--- a/CORE/VOSS/src/vos_api.c
++++ b/CORE/VOSS/src/vos_api.c
+@@ -3250,7 +3250,11 @@ v_U64_t vos_get_monotonic_boottime_ns(void)
+ #if (LINUX_VERSION_CODE > KERNEL_VERSION(3, 10, 0))
+ v_U64_t vos_get_bootbased_boottime_ns(void)
+ {
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(5,3,0))
++	return ktime_get_boottime_ns();
++#else
+ 	return ktime_get_boot_ns();
++#endif
+ }
+ 
+ #else
 diff --git a/CORE/VOSS/src/vos_packet.c b/CORE/VOSS/src/vos_packet.c
 index c0381e89c052..01012a725c80 100644
 --- a/CORE/VOSS/src/vos_packet.c
@@ -694,7 +711,7 @@ index 42654ce65dbd..f87c7bb8c589 100644
  
    \brief vos_timer_get_system_time() - Get the system time in milliseconds
 diff --git a/Kbuild b/Kbuild
-index 3de481b8ba66..ff599306a3ac 100644
+index f67f65850e1a..bc8f1ac13874 100644
 --- a/Kbuild
 +++ b/Kbuild
 @@ -192,7 +192,7 @@ CONFIG_WLAN_FEATURE_SAE := y
@@ -724,5 +741,5 @@ index 3de481b8ba66..ff599306a3ac 100644
  		-DHAL_SELF_STA_PER_BSS=1 \
  		-DWLAN_FEATURE_VOWIFI_11R \
 -- 
-2.22.0
+2.23.0
 
