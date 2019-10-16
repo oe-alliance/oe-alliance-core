@@ -1,6 +1,6 @@
 inherit upx-compress
 
-PR = "r1"
+PR = "r2"
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/${P}:"
 
@@ -54,6 +54,7 @@ SRC_URI += " \
            file://init.samba \
            file://pam.samba \
            file://users.map \
+           file://users-insecure.map \
            file://smbpasswd \
            file://0017-Revert-pam_smbpass-REMOVE-this-PAM-module.patch \
            file://0018-Revert-source3-wscript-remove-pam_smbpass-option-as-it-was-removed.patch \
@@ -88,6 +89,7 @@ do_install_append() {
 	install -m 644 ${WORKDIR}/smb-vmc.samba ${D}${sysconfdir}/samba/distro
 	install -m 644 ${WORKDIR}/smbpasswd ${D}${sysconfdir}/samba/private
 	install -m 644 ${WORKDIR}/users.map ${D}${sysconfdir}/samba/private
+	install -m 644 ${WORKDIR}/users-insecure.map ${D}${sysconfdir}/samba/private
 	install -d ${D}${sysconfdir}/init.d
 	install -m 755 ${WORKDIR}/init.samba ${D}${sysconfdir}/init.d/samba
 
@@ -120,7 +122,7 @@ FILES_${PN}-base      += "${bindir}/smbpasswd ${bindir}/testparm \
                           ${sysconfdir}/init.d/samba"
 FILES_${BPN}-common   += "${sysconfdir}/pam.d/samba ${sysconfdir}/samba"
 
-CONFFILES_${BPN}-common = "${sysconfdir}/pam.d/samba ${sysconfdir}/samba/smb-user.conf ${sysconfdir}/samba/private/users.map ${sysconfdir}/samba/private/smbpasswd"
+CONFFILES_${BPN}-common = "${sysconfdir}/pam.d/samba ${sysconfdir}/samba/smb-user.conf ${sysconfdir}/samba/private/users.map ${sysconfdir}/samba/private/users-insecure.map ${sysconfdir}/samba/private/smbpasswd"
 
 PACKAGES_DYNAMIC += "pam-pluginsmbpass"
 RRECOMMENDS_${PN}-base+= "pam-pluginsmbpass wsdd"
