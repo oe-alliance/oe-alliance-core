@@ -126,7 +126,7 @@ GST_UGLY_RDEPS = "${@bb.utils.contains('GST_VERSION', '1.0', ' \
     gst-plugins-ugly-mpegstream \
     ', d)}"
 
-
+PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 inherit gitpkgv
 
