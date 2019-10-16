@@ -96,9 +96,17 @@
  // output.
  enum PlayFeedback {
 
---- a/src/output.c	2015-01-26 23:49:09.000000000 +0100
-+++ b/src/output.c.patched	2015-01-26 23:48:38.000000000 +0100
-@@ -192,13 +192,20 @@
+--- a/src/output.c	2015-01-21 21:20:01.000000000 +0100
++++ a/src/output.c.patched	2015-01-22 19:50:08.000000000 +0100
+@@ -37,6 +37,7 @@
+ #include "output_module.h"
+ #ifdef HAVE_GST
+ #include "output_gstreamer.h"
++#include <math.h>
+ #endif
+ #include "output.h"
+ 
+@@ -192,13 +193,20 @@
  }
  
  int output_get_volume(float *value) {
@@ -119,7 +127,7 @@
  		return output_module->set_volume(value);
  	}
  	return -1;
-@@ -215,3 +222,118 @@
+@@ -215,3 +223,118 @@
  	}
  	return -1;
  }
