@@ -122,7 +122,7 @@ FILES_${PN}-base      += "${bindir}/smbpasswd ${bindir}/testparm \
                           ${sysconfdir}/init.d/samba"
 FILES_${BPN}-common   += "${sysconfdir}/pam.d/samba ${sysconfdir}/samba"
 
-CONFFILES_${BPN}-common = "${sysconfdir}/pam.d/samba ${sysconfdir}/samba/smb-user.conf ${sysconfdir}/samba/private/users.map ${sysconfdir}/samba/private/users-insecure.map ${sysconfdir}/samba/private/smbpasswd"
+CONFFILES_${BPN}-common = "${sysconfdir}/pam.d/samba ${sysconfdir}/samba/smb-user.conf ${sysconfdir}/samba/private/users.map ${sysconfdir}/samba/private/smbpasswd"
 
 PACKAGES_DYNAMIC += "pam-pluginsmbpass"
 RRECOMMENDS_${PN}-base+= "pam-pluginsmbpass wsdd"
