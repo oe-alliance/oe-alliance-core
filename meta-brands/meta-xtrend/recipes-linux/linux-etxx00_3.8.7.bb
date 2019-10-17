@@ -66,6 +66,8 @@ SRC_URI += "http://source.mynonpublic.com/xtrend/xtrend-linux-${PV}.tar.gz \
     file://genksyms_fix_typeof_handling.patch \
     file://0002-cp1emu-do-not-use-bools-for-arithmetic.patch \
     file://0003-log2-give-up-on-gcc-constant-optimizations.patch \
+    file://add-attributes-fix-modules-compile.patch \
+    file://makefile-silence-warnings.patch \
     "
 
 S = "${WORKDIR}/linux-${PV}"
