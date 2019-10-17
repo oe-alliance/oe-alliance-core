@@ -28,7 +28,7 @@ SRC_URI += " \
 SRC_URI[md5sum] = "cf3e00b98b630d552ae694be52e23c8a"
 SRC_URI[sha256sum] = "eb4864d4459d6f9958dd10a3301c272ea7f5df72667a7db0aad5bc5ae06c0e10"
 
-DEPENDS = "curl expat freetype jpeg libpcap libpng openssl virtual/libiconv bison-native gperf-native"
+DEPENDS = "curl duktape expat freetype jpeg libpcap libpng openssl virtual/libiconv bison-native gperf-native"
 
 S = "${WORKDIR}/netsurf-all-${PV}"
 
@@ -86,7 +86,7 @@ do_compile() {
 	fi
 
 	NETSURF_ENV="\
-	NETSURF_USE_DUKTAPE=NO \
+	NETSURF_USE_DUKTAPE=YES \
 	NETSURF_USE_LIBICONV_PLUG=YES \
 	NETSURF_FB_FONTLIB=freetype \
 	NETSURF_FB_FRONTEND=linux \
