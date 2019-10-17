@@ -56,6 +56,7 @@ SRC_URI += "http://source.mynonpublic.com/download/linux-${PV}.tar.gz \
     file://genksyms_fix_typeof_handling.patch \
     file://0002-makefile-disable-warnings.patch \
     file://0003-cp1emu-do-not-use-bools-for-arithmetic.patch \
+    file://0004-log2-give-up-on-gcc-constant-optimizations.patch \
     "
 
 S = "${WORKDIR}/linux-${PV}"
