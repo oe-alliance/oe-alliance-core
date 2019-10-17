@@ -13,8 +13,6 @@ PV = "${IMAGE_VERSION}+git${SRCPV}"
 PKGV = "${IMAGE_VERSION}+git${GITPKGV}"
 PR = "${@bb.utils.contains("DISTRO_NAME", "openvix", "${IMAGE_BUILD}-${MACHINEBUILD}" , "r${DATE}-${MACHINEBUILD}", d)}"
 
-PR[vardepsexclude] += "DATE"
-
 do_configure[nostamp] = "1"
 
 BRANCH="master"
