@@ -2,11 +2,11 @@ SUMMARY = "Filemanager MoviePlayer Extentions"
 MAINTAINER = "Coolman, Betonme & Swiss-MAD"
 SECTION = "extra"
 PRIORITY = "optional"
-RDEPENDS_${PN} = "${@bb.utils.contains("GST_VERSION", "1.0", "gstreamer1.0-plugins-good-flv gstreamer1.0-plugins-bad-rtmp", "gst-plugins-good-flv gst-plugins-bad-rtmp", d)} python-json python-html python-requests python-mutagen librtmp1"
-
 require conf/license/license-gplv2.inc
 
-inherit gitpkgv pythonnative gettext
+RDEPENDS_${PN} = "${@bb.utils.contains("GST_VERSION", "1.0", "gstreamer1.0-plugins-good-flv gstreamer1.0-plugins-bad-rtmp", "gst-plugins-good-flv gst-plugins-bad-rtmp", d)} python-json python-html python-requests python-mutagen librtmp1"
+
+inherit gitpkgv 
 SRCREV = "${AUTOREV}"
 PV = "4.0.+git${SRCPV}"
 PKGV = "4.0.+git${GITPKGV}"
@@ -15,24 +15,14 @@ SRC_URI="git://github.com/betonme/e2openplugin-EnhancedMovieCenter.git"
 
 S = "${WORKDIR}/git"
 
-PACKAGES =+ "${PN}-po"
-FILES_${PN} = "/etc ${libdir}"
-FILES_${PN}-src = "\
-	${libdir}/enigma2/python/Components/Converter/*.py \
-	${libdir}/enigma2/python/Components/Renderer/*.py \
-	${libdir}/enigma2/python/Components/Sources/*.py \
-	${libdir}/enigma2/python/Plugins/Extensions/EnhancedMovieCenter/*.py \
-	"
-FILES_${PN}-po = "${libdir}/enigma2/python/Plugins/Extensions/EnhancedMovieCenter/locale/*/*/*.po"
-
-inherit autotools-brokensep
-
 EXTRA_OECONF = "\
     BUILD_SYS=${BUILD_SYS} \
     HOST_SYS=${HOST_SYS} \
     STAGING_INCDIR=${STAGING_INCDIR} \
     STAGING_LIBDIR=${STAGING_LIBDIR} \
 "
+
+inherit autotools-brokensep pythonnative gettext
 
 do_configure_prepend_openatv () {
     sed 's/config.EMC.use_orig_skin             = ConfigYesNo(default = True)/config.EMC.use_orig_skin             = ConfigYesNo(default = False)/g' -i ${S}/src/plugin.py
@@ -44,6 +34,16 @@ do_configure_prepend_beyonwiz () {
 }
 
 CONFFILES_${PN} = "${sysconfdir}/enigma2/emc-hide.cfg ${sysconfdir}/enigma2/emc-noscan.cfg ${sysconfdir}/enigma2/emc-permsort.cfg ${sysconfdir}/enigma2/emc-topdir.cfg"
+
+PACKAGES =+ "${PN}-po"
+FILES_${PN} = "${includedir} ${libdir}"
+FILES_${PN}-src = "\
+    ${libdir}/enigma2/python/Components/Converter/*.py \
+    ${libdir}/enigma2/python/Components/Renderer/*.py \
+    ${libdir}/enigma2/python/Components/Sources/*.py \
+    ${libdir}/enigma2/python/Plugins/Extensions/EnhancedMovieCenter/*.py \
+"
+FILES_${PN}-po = "${libdir}/enigma2/python/Plugins/Extensions/EnhancedMovieCenter/locale/*/*/*.po"
 
 do_populate_sysroot[noexec] = "1"
 do_package_qa[noexec] = "1"
