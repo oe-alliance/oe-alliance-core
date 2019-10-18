@@ -28,7 +28,7 @@ SRC_URI += " \
 SRC_URI[md5sum] = "cf3e00b98b630d552ae694be52e23c8a"
 SRC_URI[sha256sum] = "eb4864d4459d6f9958dd10a3301c272ea7f5df72667a7db0aad5bc5ae06c0e10"
 
-DEPENDS = "curl duktape expat freetype jpeg libpcap libpng openssl virtual/libiconv bison-native gperf-native"
+DEPENDS = "libpng curl duktape expat freetype jpeg libpcap openssl virtual/libiconv bison-native gperf-native"
 
 S = "${WORKDIR}/netsurf-all-${PV}"
 
@@ -36,6 +36,7 @@ CFLAGS_append = " \
 	-I${STAGING_DIR_TARGET}/usr \
 	-I${STAGING_DIR_TARGET}/usr/include \
 	-I${STAGING_DIR_TARGET}/usr/include/freetype2 \
+	-I${STAGING_DIR_TARGET}/usr/include/libpng16 \
 	-I${WORKDIR}/netsurf-all-${PV} \
 	-I${WORKDIR}/netsurf-all-${PV}/libcss/include/ \
 	-I${WORKDIR}/netsurf-all-${PV}/libdom/include/ \
