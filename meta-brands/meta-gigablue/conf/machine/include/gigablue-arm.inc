@@ -13,6 +13,7 @@ PREFERRED_PROVIDER_virtual/libgles2 = "gb-v3ddriver-${MACHINE}"
 
 DVBMEDIASINK_CONFIG = "--with-wma --with-wmv --with-amr --with-pcm --with-dts --with-eac3 \
     ${@bb.utils.contains('MACHINE', 'gb7252', '--with-h265 --with-vb6 --with-vb8 --with-vb9 --with-spark' , '', d)} \
+    ${@bb.utils.contains('MACHINE', 'gb72604', '--with-h265 --with-vb9' , '', d)} \
 "
 
 MACHINE_FEATURES += " mmc emmc swap"
@@ -25,7 +26,7 @@ IMAGE_CMD_tar_prepend = "\
     cp ${DEPLOY_DIR_IMAGE}/${MACHINEBUILD}_boot.bin ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/boot.bin; \
     cp ${DEPLOY_DIR_IMAGE}/${MACHINEBUILD}_gpt.bin ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/gpt.bin; \
     cp ${DEPLOY_DIR_IMAGE}/${MACHINEBUILD}_rescue.bin ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/rescue.bin; \
-    cp ${DEPLOY_DIR_IMAGE}/${MACHINEBUILD}_bolt_${SRCDATE_BOLT}.bin ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/bolt_${SRCDATE_BOLT}.bin; \
+    ${@bb.utils.contains("MACHINE_FEATURES", "bolt", "cp ${DEPLOY_DIR_IMAGE}/${MACHINEBUILD}_bolt_${SRCDATE_BOLT}.bin ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/bolt_${SRCDATE_BOLT}.bin;" , "", d)} \
     cp ${DEPLOY_DIR_IMAGE}/zImage ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${KERNEL_FILE}; \
     echo ${DISTRO_NAME}-${DISTRO_VERSION}.${BUILD_VERSION} > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/imageversion; \
     cd ${IMAGE_ROOTFS}; \
