@@ -32,6 +32,7 @@ SRC_URI += "http://source.mynonpublic.com/amiko/amiko-linux-${PV}-${SRCDATE}.tar
     file://0002-log2-give-up-on-gcc-constant-optimizations.patch \
     file://0003-dont-mark-register-as-const.patch \
     file://wifi-linux_4.4.183.patch \
+    file://move-default-dialect-to-SMB3.patch \
 "
 
 S = "${WORKDIR}/linux-${PV}"

@@ -37,6 +37,7 @@ SRC_URI += "http://source.mynonpublic.com/xcore/xcore-linux-${PV}-${SRC}.tar.gz 
     ${@bb.utils.contains('MACHINE_FEATURES', 'emmc', 'file://findkerneldevice.py', '', d)} \
     file://0001-cp1emu-do-not-use-bools-for-arithmetic.patch \
     file://0002-makefile-disable-warnings.patch \
+    file://move-default-dialect-to-SMB3.patch \
     "
 
 S = "${WORKDIR}/linux-brcmstb-${PV}"

@@ -35,6 +35,7 @@ SRC_URI += "http://source.mynonpublic.com/gfutures/linux-${PV}-${ARCH}.tar.gz;na
     file://0001-stv090x-optimized-TS-sync-control.patch \
     file://t230c2.patch \
     file://add-more-devices-rtl8xxxu.patch \
+    file://move-default-dialect-to-SMB3.patch \
     "
 
 SRC_URI_append_arm = " \

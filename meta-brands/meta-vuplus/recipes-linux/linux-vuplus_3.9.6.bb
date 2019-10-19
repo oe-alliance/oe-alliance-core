@@ -57,6 +57,7 @@ SRC_URI = "http://archive.vuplus.com/download/kernel/stblinux-${KV}.tar.bz2 \
     file://dvbsky-t330.patch \
     file://add-attributes-fix-modules-compile.patch \
     file://makefile-silence-warnings.patch \
+    file://move-default-dialect-to-SMB2.patch \
 "
 
 SRC_URI_append_vuultimo = "file://fixed_mtd.patch "

@@ -28,6 +28,7 @@ SRC_URI += "http://source.mynonpublic.com/ax/linux-${PV}-${ARCH}.tar.gz \
     file://blindscan2.patch \
     file://0001-stv090x-optimized-TS-sync-control.patch \
     file://0002-log2-give-up-on-gcc-constant-optimizations.patch \
+    file://move-default-dialect-to-SMB3.patch \
     "
 
 inherit kernel machine_kernel_pr

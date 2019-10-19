@@ -53,6 +53,7 @@ SRC_URI += "http://source.mynonpublic.com/ini/bcm7425-linux-${KV}-${SRCDATE}.tgz
     file://0002-log2-give-up-on-gcc-constant-optimizations.patch \
     file://0003-cp1emu-do-not-use-bools-for-arithmetic.patch  \
     file://0004-makefile-disable-warnings.patch \
+    file://move-default-dialect-to-SMB3.patch \
 "
 
 S = "${WORKDIR}/linux-${PV}"

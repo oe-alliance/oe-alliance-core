@@ -38,6 +38,7 @@ SRC_URI += "http://downloads.mutant-digital.net/linux-${PV}.tar.gz \
         file://0002-log2-give-up-on-gcc-constant-optimizations.patch \
         file://0003-makefile-disable-warnings.patch \
         file://0004-cp1emu-do-not-use-bools-for-arithmetic.patch \
+        file://move-default-dialect-to-SMB3.patch \
         "
 
 S = "${WORKDIR}/linux-${PV}"
