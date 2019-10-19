@@ -36,7 +36,7 @@ do_configure_prepend_beyonwiz () {
 CONFFILES_${PN} = "${sysconfdir}/enigma2/emc-hide.cfg ${sysconfdir}/enigma2/emc-noscan.cfg ${sysconfdir}/enigma2/emc-permsort.cfg ${sysconfdir}/enigma2/emc-topdir.cfg"
 
 PACKAGES =+ "${PN}-po"
-FILES_${PN} = "${includedir} ${libdir}"
+FILES_${PN} = "${sysconfdir} ${libdir}"
 FILES_${PN}-src = "\
     ${libdir}/enigma2/python/Components/Converter/*.py \
     ${libdir}/enigma2/python/Components/Renderer/*.py \
