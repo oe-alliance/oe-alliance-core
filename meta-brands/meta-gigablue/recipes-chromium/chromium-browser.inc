@@ -25,7 +25,7 @@ do_install() {
 	chmod 755 ${D}/usr/local/chromium/bin/chrome-sandbox
 	chmod 755 ${D}/usr/local/chromium/bin/nxconfig
 	install -d ${D}/usr/local/lib
-        ln -s /usr/lib/libv3ddriver.so ${D}/usr/local/lib/libv3ddriver.so
+	ln -s /usr/lib/libv3ddriver.so ${D}/usr/local/lib/libv3ddriver.so
 }
 
 do_package_qa() {
