@@ -18,10 +18,8 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
  gst-libs/ext/libav/configure | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/gst-libs/ext/libav/configure b/gst-libs/ext/libav/configure
-index 4a5e477..727818e 100755
---- a/gst-libs/ext/libav/configure
-+++ b/gst-libs/ext/libav/configure
+--- a/subprojects/FFmpeg/configure
++++ b/subprojects/FFmpeg/configure
 @@ -4659,6 +4659,7 @@
          elif check_arm_arch 6KZ;      then echo armv6zk
          elif check_arm_arch 6ZK;      then echo armv6zk
