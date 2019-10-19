@@ -6,8 +6,8 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda
 ALLOW_EMPTY_${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-PV = "6.8"
-PR = "r7"
+PV = "7.0"
+PR = "r8"
 
 inherit packagegroup
 
@@ -16,7 +16,7 @@ DEPENDS = "opendroid-feeds"
 RRECOMMENDS_${PN} = " \
     opendroid-version-info \
     enigma2-skindefault \
-    enigma2-plugin-skins-opd-blue-line \
+    enigma2-plugin-skins-multibox-fhd-4opd \
     enigma2-plugin-extensions-atilehd \
     enigma2-plugin-extensions-opdboot \
     enigma2-plugin-extensions-autotimer \
