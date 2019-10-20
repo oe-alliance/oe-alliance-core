@@ -6,7 +6,8 @@ require conf/license/license-gplv2.inc
 
 RDEPENDS_${PN} = "${@bb.utils.contains("GST_VERSION", "1.0", "gstreamer1.0-plugins-good-flv gstreamer1.0-plugins-bad-rtmp", "gst-plugins-good-flv gst-plugins-bad-rtmp", d)} python-json python-html python-requests python-mutagen librtmp1"
 
-inherit gitpkgv 
+inherit gitpkgv
+
 SRCREV = "${AUTOREV}"
 PV = "4.0.+git${SRCPV}"
 PKGV = "4.0.+git${GITPKGV}"
@@ -15,7 +16,7 @@ SRC_URI="git://github.com/betonme/e2openplugin-EnhancedMovieCenter.git"
 
 S = "${WORKDIR}/git"
 
-EXTRA_OECONF = "\
+EXTRA_OECONF = " \
     BUILD_SYS=${BUILD_SYS} \
     HOST_SYS=${HOST_SYS} \
     STAGING_INCDIR=${STAGING_INCDIR} \
@@ -71,7 +72,7 @@ exit 0
 
 pkg_postrm_${PN}() {
 #!/bin/sh
-rm -rf ${libdir}/enigma2/python/Plugins/Extensions/EnhancedMovieCenter/
+rm -rf /usr/lib/enigma2/python/Plugins/Extensions/EnhancedMovieCenter/
 echo "Plugin removed! You should restart enigma2 now!"
 exit 0
 }
