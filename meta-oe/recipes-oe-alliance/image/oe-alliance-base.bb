@@ -52,7 +52,8 @@ RDEPENDS_${PN} = "\
     ${@bb.utils.contains("MACHINE_FEATURES", "dreamboxv1", "", "p7zip", d)} \
     packagegroup-base \
     packagegroup-core-boot \
-    tzdata tzdata-europe tzdata-australia tzdata-asia tzdata-pacific tzdata-africa tzdata-americas \
+    tzdata \
+    ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "tzdata-europe", "tzdata-europe tzdata-australia tzdata-asia tzdata-pacific tzdata-africa tzdata-americas", d)} \
     util-linux-sfdisk \
     util-linux-blkid \
     util-linux-flock \

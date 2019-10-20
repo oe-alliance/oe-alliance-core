@@ -39,6 +39,7 @@ SRC_URI += "http://source.mynonpublic.com/formuler/linux-${PV}-${ARCH}.tar.gz \
     file://v3-3-4-media-dvbsky-MyGica-T230C-support.patch \
     file://v3-3-5-media-dvbsky-MyGica-T230C-support.patch \
     file://add-more-devices-rtl8xxxu.patch \
+    file://move-default-dialect-to-SMB3.patch \
     "
 
 S = "${WORKDIR}/linux-${PV}"

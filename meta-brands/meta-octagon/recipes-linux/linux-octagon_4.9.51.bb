@@ -32,6 +32,7 @@ SRC_URI += "http://source.mynonpublic.com/octagon/octagon-linux-${PV}-${SRC}.tar
     file://blindscan2.patch \
     file://0001-stv090x-optimized-TS-sync-control.patch \
     file://0002-makefile-disable-warnings.patch \
+    file://move-default-dialect-to-SMB3.patch \
     "
 
 S = "${WORKDIR}/linux-${PV}"

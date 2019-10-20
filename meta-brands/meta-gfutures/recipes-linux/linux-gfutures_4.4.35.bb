@@ -26,6 +26,7 @@ SRC_URI = "http://source.mynonpublic.com/gfutures/linux-${PV}-${SRCDATE}-${ARCH}
 	file://dvb-usb-linux_4.4.179.patch \
 	file://wifi-linux_4.4.183.patch \
 	file://findkerneldevice.sh \
+        file://move-default-dialect-to-SMB3.patch \
 	"
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels

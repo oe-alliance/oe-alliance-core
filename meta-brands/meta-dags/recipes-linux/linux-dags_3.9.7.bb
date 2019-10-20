@@ -37,6 +37,7 @@ SRC_URI = "http://en3homeftp.net/pub/src/linux-${KV}-${SRCDATE}.tar.gz \
     file://genksyms_fix_typeof_handling.patch \
     file://0002-log2-give-up-on-gcc-constant-optimizations.patch \
     file://0003-cp1emu-do-not-use-bools-for-arithmetic.patch \
+    file://move-default-dialect-to-SMB2.patch \
     "
 
 S = "${WORKDIR}/linux-${KV}"
