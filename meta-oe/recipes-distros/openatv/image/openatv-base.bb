@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda
 ALLOW_EMPTY_${PN} = "1"
 
 PV = "1.0"
-PR = "r31"
+PR = "r32"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
@@ -21,7 +21,6 @@ RDEPENDS_${PN} = "\
     openatv-enigma2 \
     openatv-spinner \
     openssh-sftp-server \
-    packagegroup-base-smbfs-client \
     python-imaging \
     python-service-identity \
     python-requests \
