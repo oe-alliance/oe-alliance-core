@@ -27,7 +27,7 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-skincomponents-mediaportal-smoke-hd-skin \
     enigma2-plugin-skins-glamour-aura-fhd-atv \
     enigma2-plugin-skincomponents-skyrecorder-fhd-skin \
-    enigma2-plugin-skins-opd-blue-line
+    enigma2-plugin-skins-opd-blue-line \
     enigma2-plugin-skins-multibox-fhd-4opd \
     "
 RRECOMMENDS_${PN}_append_gb800solo = "enigma2-plugin-extensions-gbipboxclient"
