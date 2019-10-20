@@ -54,6 +54,7 @@ SRC_URI = "http://source.mynonpublic.com/gigablue/linux/gigablue-linux-${PV}-${S
     file://0003-log2-give-up-on-gcc-constant-optimizations.patch \
     file://add-attributes-fix-modules-compile.patch \
     file://makefile-silence-warnings.patch \
+    file://move-default-dialect-to-SMB2.patch \
 "
 
 S = "${WORKDIR}/linux-${KV}"

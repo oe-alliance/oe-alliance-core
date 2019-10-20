@@ -52,6 +52,7 @@ SRC_URI += "http://archive.vuplus.com/download/kernel/stblinux-${KSRC_VER}.tar.b
     file://0001-stv090x-optimized-TS-sync-control.patch \
     file://0002-log2-give-up-on-gcc-constant-optimizations.patch \
     file://0003-uaccess-dont-mark-register-as-const.patch \
+    file://move-default-dialect-to-SMB3.patch \
     "
 
 S = "${WORKDIR}/linux"

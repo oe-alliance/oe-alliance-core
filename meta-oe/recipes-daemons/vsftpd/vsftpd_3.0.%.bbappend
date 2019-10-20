@@ -1,13 +1,7 @@
 inherit upx-compress
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
-SRC_URI += "file://vsftpd.chroot_list \
-            file://ftp.service \
-            file://login-blank-password.patch \
-            file://fixchroot.patch \
-           "
-
-CONFFILES_${PN} += "${sysconfdir}/vsftpd.chroot_list"
+SRC_URI += "file://ftp.service"
 
 LDFLAGS_append =" -lssl -lcrypto"
 
@@ -17,13 +11,13 @@ do_configure_prepend() {
 
 do_install_append() {
     rm ${D}${sysconfdir}/vsftpd.user_list
-    install -m 600 ${WORKDIR}/vsftpd.chroot_list ${D}${sysconfdir}/vsftpd.chroot_list
     mkdir -p ${D}${sysconfdir}/avahi/services
     install -m 644 ${WORKDIR}/ftp.service ${D}${sysconfdir}/avahi/services
     if ! test -z ${PAMLIB} ; then
     grep -v 'pam_shells.so' ${D}${sysconfdir}/pam.d/vsftpd > $D/tmp/vsftpd
     mv $D/tmp/vsftpd ${D}${sysconfdir}/pam.d/vsftpd
     fi
+    sed -i "s: nullok::" ${D}${sysconfdir}/pam.d/vsftpd
     if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
         rm ${D}/etc/init.d/vsftpd || true
     fi

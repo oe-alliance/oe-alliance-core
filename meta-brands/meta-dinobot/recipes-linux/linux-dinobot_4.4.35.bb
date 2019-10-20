@@ -37,6 +37,7 @@ SRC_URI_u5pvr += "http://source.mynonpublic.com/dinobot/dinobot-linux-${PV}-${SR
     file://0003-uaccess-dont-mark-register-as-const.patch \
     file://0004-makefile-disable-warnings.patch \
     file://0005-kallsyms-allow-bigger-ksym_name_len.patch \
+    file://move-default-dialect-to-SMB3.patch \
 "
 
 SRC_URI = "http://source.mynonpublic.com/dinobot/dinobot-linux-${PV}-${SRCDATE}.tar.gz;name=new \

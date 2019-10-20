@@ -31,6 +31,7 @@ SRC_URI += "http://source.mynonpublic.com/xtrend/linux-${PV}-${SRC}.tar.xz \
     file://0001-STV-Add-SNR-Signal-report-parameters.patch \
     file://blindscan2.patch \
     file://0001-stv090x-optimized-TS-sync-control.patch \
+    file://move-default-dialect-to-SMB3.patch \
     "
 
 S = "${WORKDIR}/linux-${PV}"

@@ -20,7 +20,7 @@ SRC_URI = "git://gitlab.freedesktop.org/gstreamer/gst-libav;protocol=https;branc
             file://mips64_cpu_detection.patch \
             file://0001-configure-check-for-armv7ve-variant.patch \
 "
-SRC_URI_append_hisi3798mv200 = " file://rm-conflicting-pthreads-defs.patch"
+SRC_URI_append_arm = " file://rm-conflicting-pthreads-defs.patch"
 
 inherit pkgconfig
 
@@ -38,6 +38,3 @@ FILES_${PN}-staticdev += "${libdir}/gstreamer-1.0/*.a"
 # http://errors.yoctoproject.org/Errors/Details/20493/
 ARM_INSTRUCTION_SET_armv4 = "arm"
 ARM_INSTRUCTION_SET_armv5 = "arm"
-
-# ffmpeg/libav disables PIC on some platforms (e.g. x86-32)
-INSANE_SKIP_${PN} = "textrel"

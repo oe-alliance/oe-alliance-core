@@ -1,0 +1,37 @@
+[SMB2] Improve security, move default dialect to SMB2 from old CIFS
+Due to recent publicity about security vulnerabilities in the
+much older CIFS dialect, move the default dialect to the
+widely accepted (and quite secure) SMB2.0 dialect from the
+old default of the CIFS dialect.
+
+We do not want to be encouraging use of less secure dialects,
+and both Microsoft and CERT now strongly recommend not using the
+older CIFS dialect (SMB Security Best Practices
+"recommends disabling SMBv1").
+
+SMB2 is both secure and widely available: in Windows Vista and later,
+Samba and Macs.
+
+Users can still choose to explicitly mount with the less secure
+dialect (for old servers) by choosing "vers=1.0" on the cifs
+mount
+
+Signed-off-by: Steve French <smfrench@gmail.com>
+Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
+Modified-for-old-kernel: Ziggy SpaceRat <ziggy.spacerat@gmx.de>
+
+--- a/fs/cifs/connect.c	2019-10-19 09:34:13.448215659 +0200
++++ b/fs/cifs/connect.c	2019-10-19 09:41:22.938494534 +0200
+@@ -1245,9 +1245,9 @@
+ 
+ 	vol->actimeo = CIFS_DEF_ACTIMEO;
+ 
+-	/* FIXME: add autonegotiation -- for now, SMB1 is default */
+-	vol->ops = &smb1_operations;
+-	vol->vals = &smb1_values;
++	/* FIXME: add autonegotiation for SMB2 or later rather than just SMB2 */
++	vol->ops = &smb21_operations; /* both secure and accepted widely */
++	vol->vals = &smb21_values;
+ 
+ 	if (!mountdata)
+ 		goto cifs_parse_mount_err;

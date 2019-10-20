@@ -34,6 +34,7 @@ SRC_URI += "http://source.mynonpublic.com/download/odin-linux-${PV}.tar.xz \
     file://0002-makefile-disable-warnings.patch \
     file://0003-cp1emu-do-not-use-bools-for-arithmetic.patch \
     file://0004-log2-give-up-on-gcc-constant-optimizations.patch \
+    file://move-default-dialect-to-SMB3.patch \
 "
 
 S = "${WORKDIR}/linux-${PV}"

@@ -40,6 +40,7 @@ SRC_URI += "http://source.mynonpublic.com/unibox/linux-${KV}-${SRCDATE}.tar.gz \
     file://genksyms_fix_typeof_handling.patch \
     file://0002-cp1emu-do-not-use-bools-for-arithmetic.patch \
     file://0003-log2-give-up-on-gcc-constant-optimizations.patch \
+    file://move-default-dialect-to-SMB3.patch \
     "
 
 S = "${WORKDIR}/linux-${PV}"

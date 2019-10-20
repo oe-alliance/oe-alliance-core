@@ -40,6 +40,7 @@ SRC_URI += "http://source.mynonpublic.com/tiviar/linux-${PV}-${ARCH}.tar.gz \
     file://v3-3-5-media-dvbsky-MyGica-T230C-support.patch \
     file://0002-makefile-disable-warnings.patch \
     file://0003-cp1emu-do-not-use-bools-for-arithmetic.patch \
+    file://move-default-dialect-to-SMB3.patch \
     "
 
 S = "${WORKDIR}/linux-${PV}"

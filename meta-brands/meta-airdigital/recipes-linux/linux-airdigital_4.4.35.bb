@@ -25,6 +25,7 @@ SRC_URI = "http://source.mynonpublic.com/zgemma/linux-${PV}-${SRCDATE}-${ARCH}.t
     file://wifi-linux_4.4.183.patch \
     file://initramfs-subdirboot.cpio.gz;unpack=0 \
     file://findkerneldevice.sh \
+    file://move-default-dialect-to-SMB3.patch \
 "
 
 SRC_URI_append_h9 += " \
