@@ -1,9 +1,10 @@
-From f4612202789e0cdb83e386a1c99f303dfeb35fe4 Mon Sep 17 00:00:00 2001
+From fd96d3dee05a477afdfb9c8045aafdf7b83006d6 Mon Sep 17 00:00:00 2001
 From: WanWizard <wanwizard@openpli.org>
 Date: Thu, 18 Oct 2018 14:33:53 +0100
 Subject: [PATCH] Revert "pam_smbpass: REMOVE this PAM module"
 
 This reverts commit 3c00e8d76a2ef6194a8ce522c15853e5b8e9262b.
+
 ---
  source3/pam_smbpass/CHANGELOG                 |  31 +
  source3/pam_smbpass/INSTALL                   |  64 ++
@@ -42,7 +43,7 @@ This reverts commit 3c00e8d76a2ef6194a8ce522c15853e5b8e9262b.
 
 diff --git a/source3/pam_smbpass/CHANGELOG b/source3/pam_smbpass/CHANGELOG
 new file mode 100644
-index 00000000000..96ef7840084
+index 0000000..96ef784
 --- /dev/null
 +++ b/source3/pam_smbpass/CHANGELOG
 @@ -0,0 +1,31 @@
@@ -79,7 +80,7 @@ index 00000000000..96ef7840084
 +     as an authentication agent for encrypted network transactions.
 diff --git a/source3/pam_smbpass/INSTALL b/source3/pam_smbpass/INSTALL
 new file mode 100644
-index 00000000000..ae2ba02bbbc
+index 0000000..ae2ba02
 --- /dev/null
 +++ b/source3/pam_smbpass/INSTALL
 @@ -0,0 +1,64 @@
@@ -149,7 +150,7 @@ index 00000000000..ae2ba02bbbc
 +and you're all set.
 diff --git a/source3/pam_smbpass/README b/source3/pam_smbpass/README
 new file mode 100644
-index 00000000000..a5bde2525f4
+index 0000000..a5bde25
 --- /dev/null
 +++ b/source3/pam_smbpass/README
 @@ -0,0 +1,68 @@
@@ -223,7 +224,7 @@ index 00000000000..a5bde2525f4
 +Stephen Langasek <vorlon@netexpress.net>
 diff --git a/source3/pam_smbpass/TODO b/source3/pam_smbpass/TODO
 new file mode 100644
-index 00000000000..20cf4fb0987
+index 0000000..20cf4fb
 --- /dev/null
 +++ b/source3/pam_smbpass/TODO
 @@ -0,0 +1,7 @@
@@ -236,7 +237,7 @@ index 00000000000..20cf4fb0987
 +- 
 diff --git a/source3/pam_smbpass/general.h b/source3/pam_smbpass/general.h
 new file mode 100644
-index 00000000000..c3e4b8bade7
+index 0000000..c3e4b8b
 --- /dev/null
 +++ b/source3/pam_smbpass/general.h
 @@ -0,0 +1,134 @@
@@ -376,7 +377,7 @@ index 00000000000..c3e4b8bade7
 +int make_remark(pam_handle_t *, unsigned int, int, const char *);
 diff --git a/source3/pam_smbpass/pam_smb_acct.c b/source3/pam_smbpass/pam_smb_acct.c
 new file mode 100644
-index 00000000000..8dbbf3a20a1
+index 0000000..8dbbf3a
 --- /dev/null
 +++ b/source3/pam_smbpass/pam_smb_acct.c
 @@ -0,0 +1,150 @@
@@ -532,7 +533,7 @@ index 00000000000..8dbbf3a20a1
 +
 diff --git a/source3/pam_smbpass/pam_smb_auth.c b/source3/pam_smbpass/pam_smb_auth.c
 new file mode 100644
-index 00000000000..06ab8455d5d
+index 0000000..06ab845
 --- /dev/null
 +++ b/source3/pam_smbpass/pam_smb_auth.c
 @@ -0,0 +1,264 @@
@@ -802,7 +803,7 @@ index 00000000000..06ab8455d5d
 +#endif
 diff --git a/source3/pam_smbpass/pam_smb_passwd.c b/source3/pam_smbpass/pam_smb_passwd.c
 new file mode 100644
-index 00000000000..1adebe2e898
+index 0000000..1adebe2
 --- /dev/null
 +++ b/source3/pam_smbpass/pam_smb_passwd.c
 @@ -0,0 +1,365 @@
@@ -1173,7 +1174,7 @@ index 00000000000..1adebe2e898
 +
 diff --git a/source3/pam_smbpass/samples/README b/source3/pam_smbpass/samples/README
 new file mode 100644
-index 00000000000..d77603306f1
+index 0000000..d776033
 --- /dev/null
 +++ b/source3/pam_smbpass/samples/README
 @@ -0,0 +1,3 @@
@@ -1182,7 +1183,7 @@ index 00000000000..d77603306f1
 +must be modified for use on Solaris systems.
 diff --git a/source3/pam_smbpass/samples/kdc-pdc b/source3/pam_smbpass/samples/kdc-pdc
 new file mode 100644
-index 00000000000..70f1998f32a
+index 0000000..70f1998
 --- /dev/null
 +++ b/source3/pam_smbpass/samples/kdc-pdc
 @@ -0,0 +1,15 @@
@@ -1203,7 +1204,7 @@ index 00000000000..70f1998f32a
 +session    required         pam_krb5.so
 diff --git a/source3/pam_smbpass/samples/password-mature b/source3/pam_smbpass/samples/password-mature
 new file mode 100644
-index 00000000000..6d73e0906fc
+index 0000000..6d73e09
 --- /dev/null
 +++ b/source3/pam_smbpass/samples/password-mature
 @@ -0,0 +1,14 @@
@@ -1223,7 +1224,7 @@ index 00000000000..6d73e0906fc
 +session    required         pam_unix.so
 diff --git a/source3/pam_smbpass/samples/password-migration b/source3/pam_smbpass/samples/password-migration
 new file mode 100644
-index 00000000000..305cb53858e
+index 0000000..305cb53
 --- /dev/null
 +++ b/source3/pam_smbpass/samples/password-migration
 @@ -0,0 +1,18 @@
@@ -1247,7 +1248,7 @@ index 00000000000..305cb53858e
 +session    required         pam_unix.so
 diff --git a/source3/pam_smbpass/samples/password-sync b/source3/pam_smbpass/samples/password-sync
 new file mode 100644
-index 00000000000..0a950dd2e9a
+index 0000000..0a950dd
 --- /dev/null
 +++ b/source3/pam_smbpass/samples/password-sync
 @@ -0,0 +1,15 @@
@@ -1268,7 +1269,7 @@ index 00000000000..0a950dd2e9a
 +session    required         pam_unix.so
 diff --git a/source3/pam_smbpass/support.c b/source3/pam_smbpass/support.c
 new file mode 100644
-index 00000000000..c49c2c525ca
+index 0000000..c49c2c5
 --- /dev/null
 +++ b/source3/pam_smbpass/support.c
 @@ -0,0 +1,698 @@
@@ -1972,7 +1973,7 @@ index 00000000000..c49c2c525ca
 +}
 diff --git a/source3/pam_smbpass/support.h b/source3/pam_smbpass/support.h
 new file mode 100644
-index 00000000000..832247d9985
+index 0000000..832247d
 --- /dev/null
 +++ b/source3/pam_smbpass/support.h
 @@ -0,0 +1,57 @@
@@ -2035,7 +2036,7 @@ index 00000000000..832247d9985
 +		  const void *_data);
 diff --git a/source3/pam_smbpass/wscript_build b/source3/pam_smbpass/wscript_build
 new file mode 100644
-index 00000000000..a4eaa6c2972
+index 0000000..48ccb32
 --- /dev/null
 +++ b/source3/pam_smbpass/wscript_build
 @@ -0,0 +1,16 @@
@@ -2056,10 +2057,10 @@ index 00000000000..a4eaa6c2972
 +        enabled=bld.env.with_pam_smbpass
 +        )
 diff --git a/source3/wscript_build b/source3/wscript_build
-index 50d675cf3fc..18d0d30d9ae 100644
+index 26e251f..390f87d 100644
 --- a/source3/wscript_build
 +++ b/source3/wscript_build
-@@ -1343,6 +1343,7 @@ bld.RECURSE('librpc')
+@@ -1353,6 +1353,7 @@ bld.RECURSE('librpc')
  bld.RECURSE('librpc/idl')
  bld.RECURSE('libsmb')
  bld.RECURSE('modules')
@@ -2067,5 +2068,3 @@ index 50d675cf3fc..18d0d30d9ae 100644
  bld.RECURSE('param')
  bld.RECURSE('passdb')
  bld.RECURSE('rpc_server')
--- 
-2.17.1
