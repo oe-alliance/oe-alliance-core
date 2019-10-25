@@ -1,10 +1,10 @@
 --- a/mesonbuild/envconfig.py
 +++ b/mesonbuild/envconfig.py
-@@ -49,6 +49,7 @@ known_cpu_families = (
+@@ -52,6 +52,7 @@ known_cpu_families = (
      'rl78',
      'rx',
      's390x',
 +    'sh4',
      'sparc',
      'sparc64',
-     'x86',
+     'wasm32',
