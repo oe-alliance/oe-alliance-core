@@ -5,13 +5,13 @@ inherit gitpkgv meson gettext
 PV = "${GST_VERSION_FULL}+git${SRCPV}"
 PKGV = "${GST_VERSION_FULL}+git${GITPKGV}"
 
-SRCREV_gst = "35db4a2433fbdf8612cf98b5aab5b14aeb5372f8"
+SRCREV_gst = "487a3f9a30be15c72a98ca6cd744efb9c3d9a68e"
 SRCREV_gst_common = "88e512ca7197a45c4114f7fa993108f23245bf50"
-SRCREV_gst_libav = "ca478e7546c059574e0f134125deb38c8cbc9111"
+SRCREV_gst_libav = "80c8c05457d1a7ba37a15b7150e6797dd4dac8e1"
 
-SRCREV_gst_plugins_bad = "97a4d0cd7de8cfbf983acc7e37ba2f8fb73c3e19"
-SRCREV_gst_plugins_base = "30672ba7d134553e59935ddc875104adba26f25c"
-SRCREV_gst_plugins_good = "8e1c224fbc217d43f5b34cf63b3883c871dcecf2"
+SRCREV_gst_plugins_bad = "351a3934ece34b9873e90cf0260325d3feb8bdcf"
+SRCREV_gst_plugins_base = "2bc1b3882511edf9126c673d6bb3f6dbce22681b"
+SRCREV_gst_plugins_good = "203ad39d534e79ad8233418da42779700dc56e59"
 SRCREV_gst_plugins_ugly = "3cd445a490cc36eb8c64000cb384f78f9ab7e7af"
 
 SRCREV_gst_ffmpeg = "b25fc92ead37b0d087ec5af41d391886b814fef7"
