@@ -16,6 +16,7 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-extensions-cooltvguide \
     enigma2-plugin-extensions-epgimport \
     cdfs \  
+    enigma2-plugin-systemplugins-systemtime \
     enigma2-plugin-extensions-historyzapselector \
     enigma2-plugin-extensions-enhancedmoviecenter \
     enigma2-plugin-skins-octagonhdstyledark \
