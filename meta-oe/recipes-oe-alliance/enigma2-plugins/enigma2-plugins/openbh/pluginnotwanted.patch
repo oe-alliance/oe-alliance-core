@@ -1,8 +1,8 @@
 diff --git a/Makefile.am b/Makefile.am
-index 09343ff..b3a2916 100644
+index 4d95f6f1..c3298275 100644
 --- a/Makefile.am
 +++ b/Makefile.am
-@@ -1,110 +1,59 @@
+@@ -1,111 +1,60 @@
  ACLOCAL_AMFLAGS = -I m4
  
  SUBDIRS = \
@@ -82,6 +82,7 @@ index 09343ff..b3a2916 100644
 -	simplerss \
  	subsdownloader2 \
 -	svdrp \
+ 	systemtime \
  	tageditor \
 -	teletext \
  	toolkit \
