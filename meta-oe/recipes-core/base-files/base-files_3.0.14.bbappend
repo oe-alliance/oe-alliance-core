@@ -1,6 +1,6 @@
 PACKAGE_ARCH = "${MACHINEBUILD}"
 
-PR_append = ".2"
+PR_append = ".3"
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 FILESEXTRAPATHS_prepend := "${THISDIR}/${DISTRO_NAME}:"
@@ -10,6 +10,7 @@ FILESEXTRAPATHS_prepend := "${THISDIR}/${MACHINEBUILD}:"
 SRC_URI += "file://editor.sh"
 SRC_URI += "file://terminfo.sh"
 SRC_URI += "file://mount-helper.sh"
+SRC_URI += "file://filesystems"
 
 hostname = "${MACHINEBUILD}"
 
@@ -27,6 +28,7 @@ do_install_append() {
     install -d ${D}${sysconfdir}/profile.d
     install -m 0644 ${WORKDIR}/editor.sh   ${D}${sysconfdir}/profile.d/editor.sh
     install -m 0644 ${WORKDIR}/terminfo.sh ${D}${sysconfdir}/profile.d/terminfo.sh
+    install -m 0644 ${WORKDIR}/filesystems ${D}${sysconfdir}/filesystems
 
     # Inject machine specific blacklists into mount-helper:
     perl -i -pe 's:(\@BLACKLISTED\@):${MTD_BLACK}:s' ${D}${sysconfdir}/udev/mount-helper.sh
