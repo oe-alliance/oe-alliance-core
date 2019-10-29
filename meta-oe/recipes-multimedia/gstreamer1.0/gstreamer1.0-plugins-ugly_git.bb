@@ -11,9 +11,7 @@ DEPENDS = "gstreamer1.0-plugins-base"
 
 SRCREV_FORMAT = "gst_plugins_ugly"
 
-SRC_URI = "git://gitlab.freedesktop.org/gstreamer/gst-plugins-ugly;protocol=https;branch=master;name=gst_plugins_ugly \
-            file://0001-introspection.m4-prefix-pkgconfig-paths-with-PKG_CON.patch \
-"
+SRC_URI = "git://gitlab.freedesktop.org/gstreamer/gst-plugins-ugly;protocol=https;branch=master;name=gst_plugins_ugly"
 
 PACKAGECONFIG ??= " \
     ${GSTREAMER_ORC} \

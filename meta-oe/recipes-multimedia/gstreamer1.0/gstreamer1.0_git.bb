@@ -18,7 +18,6 @@ inherit pkgconfig gettext
 SRCREV_FORMAT = "gst"
 
 SRC_URI = "git://gitlab.freedesktop.org/gstreamer/gstreamer;protocol=https;branch=master;name=gst \
-           file://0001-introspection.m4-prefix-pkgconfig-paths-with-PKG_CON.patch \
            file://0001-revert-use-new-gst-adapter-get-buffer.patch \
            file://0002-continue-on-nondefined-64bit-atomics.patch \
            file://0001-gst-gstpluginloader.c-when-env-var-is-set-do-not-fal.patch \
@@ -48,14 +47,3 @@ FILES_${PN}-dbg += "${datadir}/gdb ${datadir}/gstreamer-1.0"
 
 RRECOMMENDS_${PN}_qemux86 += "kernel-module-snd-ens1370 kernel-module-snd-rawmidi"
 RRECOMMENDS_${PN}_qemux86-64 += "kernel-module-snd-ens1370 kernel-module-snd-rawmidi"
-
-delete_pkg_m4_file() {
-        # This m4 file is out of date and is missing PKG_CONFIG_SYSROOT_PATH tweaks which we need for introspection
-        rm "${S}/common/m4/pkg.m4" || true
-}
-
-do_configure[prefuncs] += "delete_pkg_m4_file"
-
-do_compile_prepend() {
-        export GIR_EXTRA_LIBS_PATH="${B}/gst/.libs:${B}/libs/gst/base/.libs"
-}

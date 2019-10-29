@@ -17,7 +17,6 @@ SRC_URI += " \
         file://avoid-including-sys-poll.h-directly.patch \
         file://ensure-valid-sentinels-for-gst_structure_get-etc.patch \
         file://0001-rtmp-fix-seeking-and-potential-segfault.patch \
-        file://0001-introspection.m4-prefix-pkgconfig-paths-with-PKG_CON.patch \
         file://0004-rtmp-hls-tsdemux-fix.patch \
         file://dvbapi5-fix-old-kernel.patch \
         file://hls-main-thread-block.patch \
@@ -140,7 +139,3 @@ FILES_${PN}-freeverb += "${datadir}/gstreamer-${LIBV}/presets/GstFreeverb.prs"
 FILES_${PN}-opencv += "${datadir}/gst-plugins-bad/${LIBV}/opencv*"
 FILES_${PN}-voamrwbenc += "${datadir}/gstreamer-${LIBV}/presets/GstVoAmrwbEnc.prs"
 FILES_${PN}-transcode += "${datadir}/gstreamer-${LIBV}/encoding-profiles*"
-
-do_compile_prepend() {
-    export GIR_EXTRA_LIBS_PATH="${B}/gst-libs/gst/allocators/.libs"
-}
