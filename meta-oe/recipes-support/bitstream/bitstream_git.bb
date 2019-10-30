@@ -17,6 +17,8 @@ S = "${WORKDIR}/git"
 
 inherit autotools-brokensep pkgconfig
 
+TARGET_CFLAGS_sh4 += "-std=gnu11"
+
 do_compile_prepend() {
     sed -i 's#/usr/local#/usr#' ${S}/Makefile
 }
