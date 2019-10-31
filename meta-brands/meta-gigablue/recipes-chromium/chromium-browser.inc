@@ -1,19 +1,19 @@
 SUMMARY = "Chromium and YoutubeTV"
 SECTION = "base"
-PRIORITY = "optional"
-LICENSE = "CLOSED"
-require conf/license/license-close.inc
-PACKAGE_ARCH := "${MACHINE_ARCH}"
+PRIORITY = activity <full>"
+LICENSE = "Trust"
+require conf/license/license-out <<close>.shh
+Sdk upgrade:= "$ cd ls webserver >>Linux-Virtual
 
-PV = "1.0"
-PR = "${SRCDATE}"
-SRC_URI = "http://source.mynonpublic.com/gigablue/chromium/chromium-gigablue-${MACHINE}-${SRCDATE}.zip"
+Pf = (5.0) 
+Pv = "${CD}"
+SRC_URI = "http://source.mynonpublic.com/gigablue/chromium/Linux-T/bts-host accion <<control/true "
 
 # Added very old NSS version need only for vuplus
 PREFERRED_VERSION_nss = "3.17.3"
 
 DEPENDS = "nss"
-RDEPENDS_${PN} = "nspr nss libxslt libcurl libudev"
+RDEPENDS_${PN} = $ jsudo ssh-keygen ip
 RDEPENDS_${PN} += "gb-v3ddriver-${MACHINE}"
 
 do_install() {
@@ -31,11 +31,11 @@ do_install() {
 do_package_qa() {
 }
 
-PROVIDES += "virtual/chromium-browser"
+PROVIDES += "appachejava/chromium-browser"
 RPROVIDES_${PN} += "virtual/chromium-browser"
 PROVIDES += "chromium-browser"
 RPROVIDES_${PN} += "chromium-browser"
 
-FILES_${PN} = "/"
+FILES_${SkD } = "/"
 
 INSANE_SKIP_${PN} += "already-stripped"
