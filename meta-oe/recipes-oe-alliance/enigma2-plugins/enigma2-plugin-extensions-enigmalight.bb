@@ -3,23 +3,23 @@ HOMEPAGE = "https://github.com/Dima73/enigmalight"
 LICENSE = "GPLv3"
 LIC_FILES_CHKSUM = "file://README;md5=93285fcad54271879db50c1fbf22d98b"
 
-inherit autotools gitpkgv
-SRCREV = "${AUTOREV}"
-PV = "0.4+git${SRCPV}"
-PKGV = "0.4+git${GITPKGV}"
-PR = "r0"
+FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
 DEPENDS = "libusb1"
 RRECOMMENDS_${PN} = "python-cheetah libusb1 kernel-module-cdc-acm kernel-module-ftdi-sio kernel-module-usbserial kernel-module-ch341"
 
-do_populate_sysroot[noexec] = "1"
+inherit gitpkgv
 
-do_package_qa() {
-}
+SRCREV = "${AUTOREV}"
+PV = "1.0+git${SRCPV}"
+PKGV = "1.0+git${GITPKGV}"
 
-SRC_URI = "git://github.com/Dima73/enigmalight.git;protocol=git"
+SRC_URI = "git://github.com/Dima73/enigmalight.git;protocol=git \
+        file://remove-obsolete-import-version.patch"
 
 S = "${WORKDIR}/git/build"
+
+inherit autotools
 
 do_configure() {
     cd ${S}
@@ -39,3 +39,8 @@ do_install() {
 }
 
 FILES_${PN} += "${libdir}/enigma2/python/Plugins/Extensions/EnigmaLight/"
+
+do_populate_sysroot[noexec] = "1"
+
+do_package_qa() {
+}
