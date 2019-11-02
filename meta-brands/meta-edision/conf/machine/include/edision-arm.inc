@@ -5,14 +5,6 @@ PACKAGECONFIG_FB_pn-qtbase = " "
 PREFERRED_VERSION_linux-edision = "5.3"
 
 
-KERNEL_MODULE_AUTOLOAD += "hci_uart"
-KERNEL_MODULE_AUTOLOAD += "wlan"
-
-MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS += " \
-    kernel-module-btqca \
-    kernel-module-hci-uart \
-    "
-
 # eMMC has 8 GB in total, but one image gets only 2 GB of that (Partitioned eMMC)
 FLASHSIZE = "2048"
 
