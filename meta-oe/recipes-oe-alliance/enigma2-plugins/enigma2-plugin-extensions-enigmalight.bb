@@ -40,6 +40,13 @@ do_install() {
 
 FILES_${PN} += "${libdir}/enigma2/python/Plugins/Extensions/EnigmaLight/"
 
+pkg_postrm_${PN}() {
+#!/bin/sh
+rm -rf ${libdir}/enigma2/python/Plugins/Extensions/EnigmaLight/
+echo "Plugin removed! You should restart enigma2 now!"
+exit 0
+}
+
 do_populate_sysroot[noexec] = "1"
 
 do_package_qa() {
