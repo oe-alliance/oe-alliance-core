@@ -12,8 +12,6 @@ PV = "${IMAGE_VERSION}"
 PR = "r4"
 
 DEPENDS = "enigma2-plugin-drivers-usbserial enigma2-plugin-systemplugins-hrtunerproxy enigma2-plugin-systemplugins-radiotimesemulator"
-RECOMMENDS = "enigma2-plugin-extensions-et-livestream"
-
 
 RDEPENDS_${PN} = " \
     bootlogos-enigma2-meta \
@@ -47,7 +45,7 @@ RDEPENDS_${PN} = " \
     oe-alliance-branding-remote \
     exteplayer3 \
     enigma2-plugin-systemplugins-serviceapp \
-    ${@bb.utils.contains("GST_VERSION", "1.0", "eplayer5", "eplayer4", d)} \
+    eplayer5 \
     ${@bb.utils.contains("MACHINE_FEATURES", "legacykernel", "" , "gdb v4l-utils evtest strace", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "omb", "enigma2-plugin-extensions-openmultiboot openmultiboot", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "kodi", "kodi-addons-meta enigma2-plugin-extensions-kodi", "", d)} \
@@ -156,13 +154,10 @@ RDEPENDS_${PN} = " \
     zeroconf \
     "
 
-GST_BASE_DVD = "${@bb.utils.contains('GST_VERSION', '1.0', ' \
+GST_BASE_DVD = "\
     gstreamer1.0-plugins-bad-videoparsersbad \
     gstreamer1.0-plugins-bad-mpegtsmux \
-    ', ' \
-    gst-plugins-bad-videoparsersbad \
-    gst-plugins-bad-mpegtsmux \
-    ', d)}"
+"
 
 RRECOMMENDS_${PN}_append_vuuno = "enigma2-plugin-extensions-hbbtv"
 RRECOMMENDS_${PN}_append_vuultimo = "enigma2-plugin-extensions-hbbtv"

@@ -9,7 +9,7 @@ LIC_FILES_CHKSUM_beyonwiz = "file://LICENSE;md5=b234ee4d69f5fce4486a80fdaf4a4263
 DEPENDS = " \
     freetype \
     gettext-native \
-    ${@bb.utils.contains("GST_VERSION", "1.0", "gstreamer1.0-plugins-base gstreamer1.0", "gst-plugins-base gstreamer", d)} \
+    gstreamer1.0-plugins-base gstreamer1.0 \
     jpeg \
     libdreamdvd libdvbsi++ fribidi libmad libpng giflib libxml2 libxmlccwrap libsigc++-2.0 \
     openssl avahi libudfread \
@@ -39,12 +39,12 @@ RDEPENDS_${PN} = " \
 RRECOMMENDS_${PN} = " \
     glib-networking \
     glibc-gconv-utf-16 \
-    ${@bb.utils.contains("GST_VERSION", "1.0", "gstreamer1.0-plugin-subsink", "gst-plugin-subsink", d)} \
+    gstreamer1.0-plugin-subsink \
     ${GST_BASE_RDEPS} \
     ${GST_GOOD_RDEPS} \
     ${GST_BAD_RDEPS} \
     ${GST_UGLY_RDEPS} \
-    ${@bb.utils.contains("GST_VERSION", "1.0", "${GST_BAD_OPUS}", "", d)} \
+    ${GST_BAD_OPUS} \
     "
 
 PYTHON_RDEPS = " \
@@ -74,7 +74,7 @@ PYTHON_RDEPS = " \
     python-smtpd \
     "
 
-GST_BASE_RDEPS = "${@bb.utils.contains('GST_VERSION', '1.0', ' \
+GST_BASE_RDEPS = "\
     gstreamer1.0-plugins-base-alsa \
     gstreamer1.0-plugins-base-app \
     gstreamer1.0-plugins-base-audioconvert \
@@ -88,21 +88,9 @@ GST_BASE_RDEPS = "${@bb.utils.contains('GST_VERSION', '1.0', ' \
     gstreamer1.0-plugins-base-typefindfunctions \
     gstreamer1.0-plugins-base-vorbis \
     gstreamer1.0-plugins-base-rawparse \
-    ', ' \
-    gst-plugins-base-alsa \
-    gst-plugins-base-app \
-    gst-plugins-base-audioconvert \
-    gst-plugins-base-audioresample \
-    gst-plugins-base-decodebin \
-    gst-plugins-base-decodebin2 \
-    gst-plugins-base-ogg \
-    gst-plugins-base-playbin \
-    gst-plugins-base-subparse \
-    gst-plugins-base-typefindfunctions \
-    gst-plugins-base-vorbis \
-    ', d)}"
+"
 
-GST_GOOD_RDEPS = "${@bb.utils.contains('GST_VERSION', '1.0', ' \
+GST_GOOD_RDEPS = "\
     gstreamer1.0-plugins-good-apetag \
     gstreamer1.0-plugins-good-audioparsers \
     gstreamer1.0-plugins-good-autodetect \
@@ -120,26 +108,9 @@ GST_GOOD_RDEPS = "${@bb.utils.contains('GST_VERSION', '1.0', ' \
     gstreamer1.0-plugins-good-udp \
     gstreamer1.0-plugins-good-wavparse \
     gstreamer1.0-plugins-good-wavpack \
-    ', ' \
-    gst-plugins-good-apetag \
-    gst-plugins-good-audioparsers \
-    gst-plugins-good-autodetect \
-    gst-plugins-good-avi \
-    gst-plugins-good-flac \
-    gst-plugins-good-flv \
-    gst-plugins-good-icydemux \
-    gst-plugins-good-id3demux \
-    gst-plugins-good-isomp4 \
-    gst-plugins-good-matroska \
-    gst-plugins-good-rtp \
-    gst-plugins-good-rtpmanager \
-    gst-plugins-good-rtsp \
-    gst-plugins-good-souphttpsrc \
-    gst-plugins-good-udp \
-    gst-plugins-good-wavparse \
-    ', d)}"
+"
 
-GST_BAD_RDEPS = "${@bb.utils.contains('GST_VERSION', '1.0', ' \
+GST_BAD_RDEPS = "\
     gstreamer1.0-plugins-bad-dashdemux \
     gstreamer1.0-plugins-bad-mms \
     gstreamer1.0-plugins-bad-mpegpsdemux \
@@ -150,37 +121,20 @@ GST_BAD_RDEPS = "${@bb.utils.contains('GST_VERSION', '1.0', ' \
     gstreamer1.0-plugins-bad-hls \
     gstreamer1.0-plugins-bad-videoparsersbad \
     gstreamer1.0-plugins-bad-autoconvert \
-    ', ' \
-    gst-plugins-bad-cdxaparse \
-    gst-plugins-bad-mms \
-    gst-plugins-bad-mpegdemux \
-    gst-plugins-bad-rtmp \
-    gst-plugins-bad-vcdsrc \
-    gst-plugins-bad-fragmented \
-    gst-plugins-bad-faad \
-    ', d)}"
+"
 
 GST_BAD_OPUS = " \
     ${@bb.utils.contains("TARGET_ARCH", "arm", " gstreamer1.0-plugins-base-opus gstreamer1.0-plugins-bad-opusparse", "", d)} \
     ${@bb.utils.contains("TARGET_ARCH", "aarch64", " gstreamer1.0-plugins-base-opus gstreamer1.0-plugins-bad-opusparse", "", d)} \
     "
 
-GST_UGLY_RDEPS = "${@bb.utils.contains('GST_VERSION', '1.0', ' \
+GST_UGLY_RDEPS = "\
     gstreamer1.0-plugins-ugly-amrnb \
     gstreamer1.0-plugins-ugly-amrwbdec \
     gstreamer1.0-plugins-ugly-asf \
     gstreamer1.0-plugins-ugly-cdio \
     gstreamer1.0-plugins-ugly-dvdsub \
-    ', ' \
-    gst-plugins-ugly-amrnb \
-    gst-plugins-ugly-amrwbdec \
-    gst-plugins-ugly-asf \
-    gst-plugins-ugly-cdio \
-    gst-plugins-ugly-dvdsub \
-    gst-plugins-ugly-mad \
-    gst-plugins-ugly-mpegaudioparse \
-    gst-plugins-ugly-mpegstream \
-    ', d)}"
+"
 
 # DVD playback is integrated, we need the libraries
 RDEPENDS_${PN} += " \
@@ -232,34 +186,8 @@ PKGV = "${IMAGE_VERSION}+git${GITPKGV}"
 
 SRC_URI = "${ENIGMA2_URI}"
 
-SRC_URI_append_azboxhd = " \
-    file://azboxe2.patch \
-    file://lcdchar.patch \
-    file://e2_pcr.patch \
-    file://add_more_timeout.patch \
-    file://pic_show.patch \
-    ${@bb.utils.contains("DISTRO_NAME", "openatv", "file://azboxHDe2py.patch", "", d)} \
-    "
-SRC_URI_append_azboxme = " \
-    file://azboxe2.patch \
-    file://e2_pcr.patch \
-    file://add_more_timeout.patch \
-    file://pic_show.patch \
-    ${@bb.utils.contains("DISTRO_NAME", "openatv", "file://azboxMEe2py.patch", "", d)} \
-    "
-SRC_URI_append_azboxminime = " \
-    file://azboxe2.patch \
-    file://e2_pcr.patch \
-    file://add_more_timeout.patch \
-    file://pic_show.patch \
-    ${@bb.utils.contains("DISTRO_NAME", "openatv", "file://azboxMEe2py.patch", "", d)} \
-    "
 SRC_URI_append_vuduo = " \
     file://duo_VFD.patch \
-    "
-
-SRC_URI_append_egami = " \
-    file://tuxbox_fix_DVB_API_VERSION_check_for_gcc5.patch \
     "
 
 S = "${WORKDIR}/git"
@@ -284,7 +212,7 @@ EXTRA_OECONF = " \
     --with-machinebuild="${MACHINEBUILD}" \
     --with-libsdl=no \
     --enable-dependency-tracking \
-    ${@bb.utils.contains("GST_VERSION", "1.0", "--with-gstversion=1.0", "", d)} \
+    --with-gstversion=1.0 \
     ${@bb.utils.contains("MACHINE_FEATURES", "textlcd", "--with-textlcd" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "colorlcd", "--with-colorlcd" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "colorlcd128", "--with-colorlcd128" , "", d)} \

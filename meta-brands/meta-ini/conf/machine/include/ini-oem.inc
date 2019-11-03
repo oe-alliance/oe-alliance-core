@@ -3,8 +3,6 @@ include conf/machine/include/build-extras.inc
 
 BRAND_OEM = "ini"
 
-GST_VERSION = "1.0"
-
 # Broken bootloader can only flash around 100 MB
 FLASHSIZE = "96"
 
@@ -178,7 +176,7 @@ MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS += "\
     "
 
 MACHINE_EXTRA_RRECOMMENDS += " \
-    ${@bb.utils.contains("GST_VERSION", "1.0", "gstreamer1.0-plugin-dvbmediasink", "gst-plugin-dvbmediasink", d)} \
+    gstreamer1.0-plugin-dvbmediasink \
     "
 
 include conf/machine/include/autoload-filesystems.inc
