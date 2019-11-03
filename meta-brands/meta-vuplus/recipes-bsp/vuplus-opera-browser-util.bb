@@ -4,7 +4,7 @@ PRIORITY = "optional"
 LICENSE = "CLOSED"
 require conf/license/license-close.inc
 
-DEPENDS = "sshpass-native tslib mpfr gmp libcrypto0.9.8 ${@bb.utils.contains("GST_VERSION", "1.0", "gstreamer1.0", "gstreamer", d)}"
+DEPENDS = "sshpass-native tslib mpfr gmp libcrypto0.9.8 gstreamer1.0"
 RDEPENDS_${PN} = "libsysfs2 libgmp10 libmpfr4 vuplus-opera-dumpait libcrypto0.9.8"
 
 SRC_DATE = "20181116_0"
@@ -12,7 +12,7 @@ SRC_URI = ""
 
 PR = "r46_${SRC_DATE}"
 
-GSTVER = "${@bb.utils.contains("GST_VERSION", "1.0", "1.4.5", "0.10.36.1", d)}"
+GSTVER = "1.4.5"
 
 S = "${WORKDIR}/opera-hbbtv"
 

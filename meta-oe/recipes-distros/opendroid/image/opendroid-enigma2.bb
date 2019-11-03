@@ -43,13 +43,10 @@ RRECOMMENDS_${PN} = " \
     ${@bb.utils.contains("MACHINE_FEATURES", "boxmodel", "boxmodel", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "dvd", "bdremux replex mjpegtools dvdauthor dvd+rw-tools cdrkit cdfs cdtextinfo enigma2-plugin-extensions-cdinfo enigma2-plugin-extensions-dvdburn enigma2-plugin-extensions-dvdplayer ${GST_BASE_DVD}", "", d)} \
     "
-GST_BASE_DVD = "${@bb.utils.contains('GST_VERSION', '1.0', ' \
+GST_BASE_DVD = "\
     gstreamer1.0-plugins-bad-videoparsersbad \
     gstreamer1.0-plugins-bad-mpegtsmux \
-    ', ' \
-    gst-plugins-bad-videoparsersbad \
-    gst-plugins-bad-mpegtsmux \
-    ', d)}"
+"
     
 RRECOMMENDS_${PN}_append_dm900 = " enigma2-plugin-systemplugins-fsblupdater"
 RRECOMMENDS_${PN}_append_osmio4k = " enigma2-plugin-extensions-hbbtv-webkit enigma2-plugin-systemplugins-satipclient enigma2-plugin-extensions-simpleumount"
