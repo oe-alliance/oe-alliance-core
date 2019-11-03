@@ -8,7 +8,7 @@ require conf/license/license-gplv2.inc
 
 inherit gitpkgv gettext
 DEPENDS += "gettext-native"
-RDEPENDS_${PN} = "${@bb.utils.contains_any("MACHINE_FEATURES", "smallflash no-cl-svr", "", "enigma2-plugin-skins-metrix-atv-weather-icons", d)}"
+RDEPENDS_${PN} = "${@bb.utils.contains_any("FLASHSIZE", "64 96 128", "", "enigma2-plugin-skins-metrix-atv-weather-icons", d)}"
 
 SRCREV = "${AUTOREV}"
 PV = "3.0+git${SRCPV}"
