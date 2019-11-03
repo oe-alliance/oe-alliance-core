@@ -1,5 +1,5 @@
 SUMMARY = "Enigma2 Skin Metrix HD"
-MAINTAINER = "http://open-store.net "
+MAINTAINER = "https://opena.tv"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"
@@ -8,23 +8,27 @@ require conf/license/license-gplv2.inc
 
 inherit gitpkgv gettext
 DEPENDS += "gettext-native"
+RDEPENDS_${PN} = "${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", "enigma2-plugin-skins-metrix-atv-weather-icons", d)}"
 
 SRCREV = "${AUTOREV}"
-PV = "2.1+git${SRCPV}"
-PKGV = "2.1+git${GITPKGV}"
-VER ="2.1"
-PR = "r7"
+PV = "3.0+git${SRCPV}"
+PKGV = "3.0+git${GITPKGV}"
+VER ="3.0"
+PR = "r0"
 
-PACKAGES =+ "enigma2-plugin-skins-metrix-atv-fhd-icons enigma2-plugin-skins-metrix-atv-uhd-icons ${PN}-src"
-PROVIDES =+ "enigma2-plugin-skins-metrix-atv-fhd-icons enigma2-plugin-skins-metrix-atv-uhd-icons"
+PACKAGES =+ "enigma2-plugin-skins-metrix-atv-fhd-icons enigma2-plugin-skins-metrix-atv-uhd-icons enigma2-plugin-skins-metrix-atv-weather-icons  ${PN}-src"
+PROVIDES =+ "enigma2-plugin-skins-metrix-atv-fhd-icons enigma2-plugin-skins-metrix-atv-uhd-icons enigma2-plugin-skins-metrix-atv-weather-icons"
 RPROVIDES_enigma2-plugin-skins-metrix-atv-fhd-icons += "enigma2-plugin-skins-metrix-atv-fhd-icons"
 RPROVIDES_enigma2-plugin-skins-metrix-atv-uhd-icons += "enigma2-plugin-skins-metrix-atv-uhd-icons"
+RPROVIDES_enigma2-plugin-skins-metrix-atv-weather-icons += "enigma2-plugin-skins-metrix-atv-weather-icons"
 SRC_URI="git://github.com/openatv/MetrixHD.git"
 
 S = "${WORKDIR}/git"
 
 FILES_enigma2-plugin-skins-metrix-atv-fhd-icons = "/usr/share/enigma2/MetrixHD/FHD"
 FILES_enigma2-plugin-skins-metrix-atv-uhd-icons = "/usr/share/enigma2/MetrixHD/UHD"
+FILES_enigma2-plugin-skins-metrix-atv-weather-icons = "/usr/share/enigma2/MetrixHD/animated_weather_icons"
+
 FILES_${PN}-src = "\
     ${libdir}/enigma2/python/Components/Converter/*.py \
     ${libdir}/enigma2/python/Components/Renderer/*.py \
