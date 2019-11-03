@@ -1,5 +1,5 @@
 SUMMARY = "Enigma2 Skin Metrix HD"
-MAINTAINER = "http://open-store.net "
+MAINTAINER = "https://opena.tv"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"
@@ -8,23 +8,27 @@ require conf/license/license-gplv2.inc
 
 inherit gitpkgv gettext
 DEPENDS += "gettext-native"
+RDEPENDS_${PN} = "${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", "enigma2-plugin-skins-metrix-atv-weather-icons", d)}"
 
 SRCREV = "${AUTOREV}"
-PV = "2.1+git${SRCPV}"
-PKGV = "2.1+git${GITPKGV}"
-VER ="2.1"
-PR = "r7"
+PV = "3.0+git${SRCPV}"
+PKGV = "3.0+git${GITPKGV}"
+VER ="3.0"
+PR = "r0"
 
-PACKAGES =+ "enigma2-plugin-skins-metrix-atv-fhd-icons enigma2-plugin-skins-metrix-atv-uhd-icons"
-PROVIDES =+ "enigma2-plugin-skins-metrix-atv-fhd-icons enigma2-plugin-skins-metrix-atv-uhd-icons"
+PACKAGES =+ "enigma2-plugin-skins-metrix-atv-fhd-icons enigma2-plugin-skins-metrix-atv-uhd-icons enigma2-plugin-skins-metrix-atv-weather-icons"
+PROVIDES =+ "enigma2-plugin-skins-metrix-atv-fhd-icons enigma2-plugin-skins-metrix-atv-uhd-icons enigma2-plugin-skins-metrix-atv-weather-icons"
 RPROVIDES_enigma2-plugin-skins-metrix-atv-fhd-icons += "enigma2-plugin-skins-metrix-atv-fhd-icons"
 RPROVIDES_enigma2-plugin-skins-metrix-atv-uhd-icons += "enigma2-plugin-skins-metrix-atv-uhd-icons"
+RPROVIDES_enigma2-plugin-skins-metrix-atv-weather-icons += "enigma2-plugin-skins-metrix-atv-weather-icons"
 SRC_URI="git://github.com/openatv/MetrixHD.git"
 
 S = "${WORKDIR}/git"
 
 FILES_enigma2-plugin-skins-metrix-atv-fhd-icons = "/usr/share/enigma2/MetrixHD/FHD"
 FILES_enigma2-plugin-skins-metrix-atv-uhd-icons = "/usr/share/enigma2/MetrixHD/UHD"
+FILES_enigma2-plugin-skins-metrix-atv-weather-icons = "/usr/share/enigma2/MetrixHD/animated_weather_icons"
+
 FILES_${PN}-src = "\
     ${libdir}/enigma2/python/Components/Converter/*.py \
     ${libdir}/enigma2/python/Components/Renderer/*.py \
@@ -51,48 +55,29 @@ do_install() {
 
 pkg_preinst_${PN}() {
 #!/bin/sh
-echo "Checking for skin.MySkin.xml in the skinfolder"
-if [ -f /usr/share/enigma2/MetrixHD/skin.MySkin.xml ]; then
-    rm -f /usr/share/enigma2/MetrixHD/skin.MySkin.xml
-    echo "skin.MySkin.xml was found and removed"
-else
-    echo "skin.MySkin.xml was not found in the skinfolder"
+echo "remove symlinks ..."
+for f in /usr/share/enigma2/MetrixHD/*
+do
+if [ -L $f ]; then
+    unlink $f
 fi
-echo "Checking for skin_00a_InfoBar.MySkin.xml in the skinfolder"
-if [ -f /usr/share/enigma2/MetrixHD/skin_00a_InfoBar.MySkin.xml ]; then
-    rm -f /usr/share/enigma2/MetrixHD/skin_00a_InfoBar.MySkin.xml
-    echo "skin_00a_InfoBar.MySkin.xml was found and removed"
-else
-    echo "skin_00a_InfoBar.MySkin.xml was not found in the skinfolder"
+done
+echo "... done"
+echo "remove mySkin ..."
+rm -f /usr/share/enigma2/MetrixHD/skinfiles/*.mySkin.xml
+rm -f /usr/share/enigma2/MetrixHD/skin.MySkin.xml
+echo "... done"
+echo "restore skin ..."
+if [ -r /usr/share/enigma2/MetrixHD/skin.xml_original_file_.xml ]; then
+    mv /usr/share/enigma2/MetrixHD/skin.xml_original_file_.xml /usr/share/enigma2/MetrixHD/skin.xml
 fi
-echo "Checking for skin_00b_SecondInfoBar.MySkin.xml in the skinfolder"
-if [ -f /usr/share/enigma2/MetrixHD/skin_00b_SecondInfoBar.MySkin.xml ]; then
-    rm -f /usr/share/enigma2/MetrixHD/skin_00b_SecondInfoBar.MySkin.xml
-    echo "skin_00b_SecondInfoBar.MySkin.xml was found and removed"
-else
-    echo "skin_00b_SecondInfoBar.MySkin.xml was not found in the skinfolder"
+for f in /usr/share/enigma2/MetrixHD/.*_hd;
+do
+if [ -r $f ]; then
+    mv "$f" "$(echo ${f%} | sed 's/\.//' | sed 's/_hd//')"
 fi
-echo "Checking for skin_00c_SecondInfoBarECM.MySkin.xml in the skinfolder"
-if [ -f /usr/share/enigma2/MetrixHD/skin_00c_SecondInfoBarECM.MySkin.xml ]; then
-    rm -f /usr/share/enigma2/MetrixHD/skin_00c_SecondInfoBarECM.MySkin.xml
-    echo "skin_00c_SecondInfoBarECM.MySkin.xml was found and removed"
-else
-    echo "skin_00c_SecondInfoBarECM.MySkin.xml was not found in the skinfolder"
-fi
-echo "Checking for skin_00d_InfoBarLite.MySkin.xml in the skinfolder"
-if [ -f /usr/share/enigma2/MetrixHD/skin_00d_InfoBarLite.MySkin.xml ]; then
-    rm -f /usr/share/enigma2/MetrixHD/skin_00d_InfoBarLite.MySkin.xml
-    echo "skin_00d_InfoBarLite.MySkin.xml was found and removed"
-else
-    echo "skin_00d_InfoBarLite.MySkin.xml was not found in the skinfolder"
-fi
-echo "Checking for skin_00e_ChannelSelection.MySkin.xml in the skinfolder"
-if [ -f /usr/share/enigma2/MetrixHD/skin_00e_ChannelSelection.MySkin.xml ]; then
-    rm -f /usr/share/enigma2/MetrixHD/skin_00e_ChannelSelection.MySkin.xml
-    echo "skin_00e_ChannelSelection.MySkin.xml was found and removed"
-else
-    echo "skin_00e_ChannelSelection.MySkin.xml was not found in the skinfolder"
-fi
+done
+echo "... done"
 echo "Proceeding to installation..."
 exit 0
 }
