@@ -4,7 +4,7 @@ SECTION = "kernel"
 
 MODULE = "linux-4.1.20"
 
-MACHINE_KERNEL_PR_append = "oea4.1-r7"
+MACHINE_KERNEL_PR_append = "oea4.4-r7"
 
 inherit kernel machine_kernel_pr
 
