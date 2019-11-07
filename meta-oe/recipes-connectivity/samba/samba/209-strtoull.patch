@@ -1,0 +1,15 @@
+diff -Nur a/lib/replace/replace.h b/lib/replace/replace.h
+--- a/lib/replace/replace.h	2019-11-02 14:35:36.837722222 +0100
++++ b/lib/replace/replace.h	2019-11-02 15:49:06.346624720 +0100
+@@ -391,11 +391,6 @@
+ #ifndef HAVE_STRTOULL
+ #define strtoull rep_strtoull
+ unsigned long long int rep_strtoull(const char *str, char **endptr, int base);
+-#else
+-#ifdef HAVE_BSD_STRTOLL /* yes, it's not HAVE_BSD_STRTOULL */
+-#define strtoull rep_strtoull
+-unsigned long long int rep_strtoull(const char *str, char **endptr, int base);
+-#endif
+ #endif
+ 
+ #ifndef HAVE_FTRUNCATE

@@ -1,0 +1,12 @@
+--- a/lib/talloc/wscript	2015-04-15 15:27:33.000000000 -0400
++++ b/lib/talloc/wscript	2016-01-13 14:03:35.092525514 -0500
+@@ -47,7 +47,7 @@
+         if conf.CHECK_BUNDLED_SYSTEM_PKG('talloc', minversion=VERSION,
+                                      implied_deps='replace'):
+             conf.define('USING_SYSTEM_TALLOC', 1)
+-        if conf.CHECK_BUNDLED_SYSTEM_PKG('pytalloc-util', minversion=VERSION,
++        if not conf.env.disable_python and conf.CHECK_BUNDLED_SYSTEM_PKG('pytalloc-util', minversion=VERSION,
+                                      implied_deps='talloc replace'):
+             conf.define('USING_SYSTEM_PYTALLOC_UTIL', 1)
+ 
+

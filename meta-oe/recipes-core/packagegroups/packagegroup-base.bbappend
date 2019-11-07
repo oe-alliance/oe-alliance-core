@@ -20,15 +20,15 @@ RDEPENDS_packagegroup-base-smbfs-client = "\
     "
 
 RDEPENDS_packagegroup-base-smbfs-server = "\
-    samba-base \
-    "
-
-RDEPENDS_packagegroup-base-smbfs-utils = "\
     samba \
     "
 
+RDEPENDS_packagegroup-base-smbfs-utils = "\
+    samba-admin \
+    samba-utils \
+    "
+
 RRECOMMENDS_packagegroup-base-samba = "\
-    packagegroup-base-smbfs \
     packagegroup-base-smbfs-client \
     packagegroup-base-smbfs-server \
     packagegroup-base-smbfs-utils \
