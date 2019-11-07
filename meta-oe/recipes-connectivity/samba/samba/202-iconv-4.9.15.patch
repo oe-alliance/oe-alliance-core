@@ -1,0 +1,17 @@
+diff -Nur a/lib/util/charset/wscript_configure b/lib/util/charset/wscript_configure
+--- a/lib/util/charset/wscript_configure	2018-07-12 10:23:36.000000000 +0200
++++ b/lib/util/charset/wscript_configure	2019-11-03 14:04:42.897992340 +0100
+@@ -17,6 +17,8 @@
+     
+     conf.DEFINE('HAVE_NATIVE_ICONV', 1)
+ 
++"""
++[added for 4.7.0, but breaks cross-compilation]
+ conf.CHECK_CODE('''
+                 uint8_t inbuf[2] = { 0x30, 0xdf };
+                 uint8_t outbuf[4] = { 0 };
+@@ -36,3 +38,4 @@
+                 msg='Checking errno of iconv for illegal multibyte sequence',
+                 lib='iconv',
+                 headers='errno.h iconv.h')
++"""

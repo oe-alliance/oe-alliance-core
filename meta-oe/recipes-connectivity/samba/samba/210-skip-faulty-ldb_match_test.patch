@@ -1,0 +1,25 @@
+diff -Nur a/lib/ldb/wscript b/lib/ldb/wscript
+--- a/lib/ldb/wscript	2019-11-03 13:39:43.175734616 +0100
++++ b/lib/ldb/wscript	2019-11-03 15:49:53.312344958 +0100
+@@ -500,11 +500,6 @@
+                          deps='cmocka ldb',
+                          install=False)
+ 
+-        bld.SAMBA_BINARY('ldb_match_test',
+-                         source='tests/ldb_match_test.c',
+-                         deps='cmocka ldb',
+-                         install=False)
+-
+         if bld.CONFIG_SET('HAVE_LMDB'):
+             bld.SAMBA_BINARY('ldb_mdb_mod_op_test',
+                              source='tests/ldb_mod_op_test.c',
+@@ -572,8 +567,7 @@
+                  # we don't want to run ldb_lmdb_size_test (which proves we can
+                  # fit > 4G of data into the DB), it would fill up the disk on
+                  # many of our test instances
+-                 'ldb_mdb_kv_ops_test',
+-                 'ldb_match_test']
++                 'ldb_mdb_kv_ops_test']
+ 
+     for test_exe in test_exes:
+             cmd = os.path.join(Utils.g_module.blddir, test_exe)

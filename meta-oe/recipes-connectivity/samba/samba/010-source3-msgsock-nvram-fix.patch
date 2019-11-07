@@ -1,0 +1,21 @@
+diff -Nur a/source3/lib/messages.c b/source3/lib/messages.c
+--- a/source3/lib/messages.c	2019-01-15 11:07:00.000000000 +0100
++++ b/source3/lib/messages.c	2019-11-02 13:55:12.731966658 +0100
+@@ -507,7 +507,7 @@
+ 		return NT_STATUS_ACCESS_DENIED;
+ 	}
+ 
+-	priv_path = private_path("msg.sock");
++	priv_path = lock_path("msg.sock");
+ 	if (priv_path == NULL) {
+ 		return NT_STATUS_NO_MEMORY;
+ 	}
+@@ -651,7 +651,7 @@
+ 
+ 	msg_ctx->msg_dgm_ref = messaging_dgm_ref(
+ 		msg_ctx, msg_ctx->event_ctx, &msg_ctx->id.unique_id,
+-		private_path("msg.sock"), lck_path,
++		lock_path("msg.sock"), lck_path,
+ 		messaging_recv_cb, msg_ctx, &ret);
+ 
+ 	if (msg_ctx->msg_dgm_ref == NULL) {
