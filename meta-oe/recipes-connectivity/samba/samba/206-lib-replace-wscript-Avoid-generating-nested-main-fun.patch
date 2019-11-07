@@ -1,0 +1,11 @@
+diff -Nur a/lib/replace/wscript b/lib/replace/wscript
+--- a/lib/replace/wscript	2019-11-03 14:04:36.006147351 +0100
++++ b/lib/replace/wscript	2019-11-03 14:11:17.357117394 +0100
+@@ -135,6 +135,7 @@
+                     }
+                     ''',
+                     'HAVE_PRCTL',
++                    addmain=False,
+                     headers='sys/prctl.h',
+                     msg='Checking for prctl syscall')
+ 
