@@ -57,7 +57,7 @@ SRC_URI[sha256sum] = "377102b80b97941bf0d131b828cae8415190e5bdd2928c2e2c954e29f1
 
 UPSTREAM_CHECK_REGEX = "samba\-(?P<pver>4\.9(\.\d+)+).tar.gz"
 
-inherit systemd cpan-base perlnative update-rc.d qemu pythonnative
+inherit systemd cpan-base perlnative update-rc.d qemu pythonnative update-alternatives
 
 # remove default added RDEPENDS on perl
 RDEPENDS_${PN}_remove = "perl"
@@ -335,7 +335,7 @@ do_install() {
 
 PACKAGES =+ "smbclient ${PN}-common \
              ${PN}-admin ${PN}-utils \
-             ldb-tools ${PN}-tdb-tools pdb-tools registry-tools \
+             ${PN}-ldb-tools ${PN}-tdb-tools ${PN}-pdb-tools registry-tools \
              winbind ${PN}-ad-dc ${PN}-ctdb-tests \
              ${PN}-python ${PN}-pidl ${PN}-dsdb-modules ${PN}-testsuite \
             "
@@ -436,23 +436,32 @@ FILES_registry-tools = "${bindir}/regdiff \
                         ${bindir}/regshell \
                         ${bindir}/regtree"
 
-FILES_ldb-tools = "${bindir}/ldbadd \
-                   ${bindir}/ldbdel \
-                   ${bindir}/ldbedit \
-                   ${bindir}/ldbmodify \
-                   ${bindir}/ldbrename \
-                   ${bindir}/ldbsearch \
-                   ${bindir}/oLschema2ldif \
-                  "
+FILES_${PN}-ldb-tools = "${bindir}/ldbadd \
+                         ${bindir}/ldbdel \
+                         ${bindir}/ldbedit \
+                         ${bindir}/ldbmodify \
+                         ${bindir}/ldbrename \
+                         ${bindir}/ldbsearch \
+                         ${bindir}/oLschema2ldif \
+                        "
 
-FILES_pdb-tools = "${bindir}/pdbedit"
+FILES_${PN}-pdb-tools = "${bindir}/pdbedit"
+
+ALTERNATIVE_PRIORITY = "100"
+ALTERNATIVE_${PN}-tdb-tools = "dbwrap_tool tdbbackup tdbdump tdbrestore tdbtool"
+
+ALTERNATIVE_LINK_NAME[dbwrap_tool] = "${bindir}/dbwrap_tool"
+ALTERNATIVE_LINK_NAME[tdbbackup]   = "${bindir}/tdbbackup"
+ALTERNATIVE_LINK_NAME[tdbdump]     = "${bindir}/tdbdump"
+ALTERNATIVE_LINK_NAME[tdbrestore]  = "${bindir}/tdbrestore"
+ALTERNATIVE_LINK_NAME[tdbtool]     = "${bindir}/tdbtool"
 
 FILES_${PN}-tdb-tools = "${bindir}/dbwrap_tool \
-                   ${bindir}/tdbbackup \
-                   ${bindir}/tdbdump \
-                   ${bindir}/tdbrestore \
-                   ${bindir}/tdbtool \
-                  "
+                         ${bindir}/tdbbackup \
+                         ${bindir}/tdbdump \
+                         ${bindir}/tdbrestore \
+                         ${bindir}/tdbtool \
+                        "
 
 FILES_winbind = "${sbindir}/winbindd \
                  ${bindir}/wbinfo \
