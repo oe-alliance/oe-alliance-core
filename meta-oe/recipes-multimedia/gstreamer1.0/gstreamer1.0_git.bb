@@ -18,9 +18,10 @@ inherit pkgconfig gettext
 SRCREV_FORMAT = "gst"
 
 SRC_URI = "git://gitlab.freedesktop.org/gstreamer/gstreamer;protocol=https;branch=master;name=gst \
+           file://0001-meson-build-optimization.patch \
+           file://0002-gst-gstpluginloader.c-when-env-var-is-set-do-not-fal.patch \
            file://0001-revert-use-new-gst-adapter-get-buffer.patch \
            file://0002-continue-on-nondefined-64bit-atomics.patch \
-           file://0001-gst-gstpluginloader.c-when-env-var-is-set-do-not-fal.patch \
 "
 
 PACKAGECONFIG ??= ""

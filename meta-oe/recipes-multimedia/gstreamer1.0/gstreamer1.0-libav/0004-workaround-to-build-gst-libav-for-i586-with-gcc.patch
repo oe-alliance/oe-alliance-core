@@ -1,5 +1,5 @@
 --- a/subprojects/FFmpeg/libavcodec/h264_cabac.c
-+++ b/subprojects/FFmpeg/libavcode/h264_cabac.c
++++ b/subprojects/FFmpeg/libavcodec/h264_cabac.c
 @@ -2020,7 +2020,11 @@ decode_intra_mb:
          // In deblocking, the quantizer is 0
          h->cur_pic.qscale_table[mb_xy] = 0;
