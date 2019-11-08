@@ -9,8 +9,8 @@ DEPENDS = "iso-codes gobject-introspection util-linux zlib"
 SRCREV_FORMAT = "gst_plugins_base"
 
 SRC_URI = "git://gitlab.freedesktop.org/gstreamer/gst-plugins-base;protocol=https;branch=master;name=gst_plugins_base \
-           file://get-caps-from-src-pad-when-query-caps.patch \
-           file://0004-subparse-set-need_segment-after-sink-pad-received-GS.patch \
+           file://0001-get-caps-from-src-pad-when-query-caps.patch \
+           file://0002-subparse-set-need_segment-after-sink-pad-received-GS.patch \
            file://0003-riff-media-added-fourcc-to-all-ffmpeg-mpeg4-video-caps.patch \
 "
 

@@ -13,13 +13,13 @@ SRCREV_FORMAT = "gst_plugins_bad"
 SRC_URI = "git://gitlab.freedesktop.org/gstreamer/gst-plugins-bad;protocol=https;branch=master;name=gst_plugins_bad"
 
 SRC_URI += " \
-        file://fix-maybe-uninitialized-warnings-when-compiling-with-Os.patch \
-        file://avoid-including-sys-poll.h-directly.patch \
-        file://ensure-valid-sentinels-for-gst_structure_get-etc.patch \
-        file://0001-rtmp-fix-seeking-and-potential-segfault.patch \
+        file://0001-fix-maybe-uninitialized-warnings-when-compiling-with-Os.patch \
+        file://0002-avoid-including-sys-poll.h-directly.patch \
+        file://0003-ensure-valid-sentinels-for-gst_structure_get-etc.patch \
         file://0004-rtmp-hls-tsdemux-fix.patch \
-        file://dvbapi5-fix-old-kernel.patch \
-        file://hls-main-thread-block.patch \
+        file://0005-rtmp-fix-seeking-and-potential-segfault.patch \
+        file://0006-dvbapi5-fix-old-kernel.patch \
+        file://0007-hls-main-thread-block.patch \
 "
 
 PACKAGECONFIG ??= " \
