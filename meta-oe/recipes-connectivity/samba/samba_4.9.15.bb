@@ -335,7 +335,7 @@ do_install() {
 
 PACKAGES =+ "smbclient ${PN}-common \
              ${PN}-admin ${PN}-utils \
-             ldb-tools tdb-tools pdb-tools registry-tools \
+             ldb-tools ${PN}-tdb-tools pdb-tools registry-tools \
              winbind ${PN}-ad-dc ${PN}-ctdb-tests \
              ${PN}-python ${PN}-pidl ${PN}-dsdb-modules ${PN}-testsuite \
             "
@@ -447,7 +447,7 @@ FILES_ldb-tools = "${bindir}/ldbadd \
 
 FILES_pdb-tools = "${bindir}/pdbedit"
 
-FILES_tdb-tools = "${bindir}/dbwrap_tool \
+FILES_${PN}-tdb-tools = "${bindir}/dbwrap_tool \
                    ${bindir}/tdbbackup \
                    ${bindir}/tdbdump \
                    ${bindir}/tdbrestore \
