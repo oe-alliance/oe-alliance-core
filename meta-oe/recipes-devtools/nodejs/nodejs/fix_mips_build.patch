@@ -1,0 +1,11 @@
+--- node-v4.4.3/configure	2017-04-13 23:46:06.407834520 +0200
++++ node-v4.4.3_neu/configure	2017-04-13 23:42:36.359333326 +0200
+@@ -235,7 +235,7 @@
+ parser.add_option('--with-mips-arch-variant',
+     action='store',
+     dest='mips_arch_variant',
+-    default='r2',
++    default='r1',
+     choices=valid_mips_arch,
+     help='MIPS arch variant ({0}) [default: %default]'.format(
+         ', '.join(valid_mips_arch)))
