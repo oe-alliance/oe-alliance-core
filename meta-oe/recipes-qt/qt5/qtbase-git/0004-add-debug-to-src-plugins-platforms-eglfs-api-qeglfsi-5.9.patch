@@ -1,0 +1,44 @@
+From 1f41c9e2c6a0e07cd72b443d21e68404f317437d Mon Sep 17 00:00:00 2001
+From: dpeddi <eddi@depieri.net>
+Date: Sat, 25 May 2019 20:24:59 +0000
+Subject: [PATCH 4/4] add debug to
+ src/plugins/platforms/eglfs/api/qeglfsintegration.cpp
+
+---
+ src/plugins/platforms/eglfs/api/qeglfsintegration.cpp | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/src/plugins/platforms/eglfs/api/qeglfsintegration.cpp b/src/plugins/platforms/eglfs/api/qeglfsintegration.cpp
+index 9a0be48..3463bbe 100644
+--- a/src/plugins/platforms/eglfs/api/qeglfsintegration.cpp
++++ b/src/plugins/platforms/eglfs/api/qeglfsintegration.cpp
+@@ -132,16 +132,26 @@ void QEglFSIntegration::removeScreen(QPlatformScreen *screen)
+ 
+ void QEglFSIntegration::initialize()
+ {
++    printf("DEBUG %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
++
+     qt_egl_device_integration()->platformInit();
+ 
++    printf("DEBUG %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
++
+     m_display = qt_egl_device_integration()->createDisplay(nativeDisplay());
++
++    printf("DEBUG %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+     if (Q_UNLIKELY(m_display == EGL_NO_DISPLAY))
+         qFatal("Could not open egl display");
++    printf("DEBUG %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+ 
+     EGLint major, minor;
+     if (Q_UNLIKELY(!eglInitialize(m_display, &major, &minor)))
+         qFatal("Could not initialize egl display");
+ 
++    fprintf(stderr, "%26s ---------------\n", "------ EGL INFO ----------");
++    fprintf(stderr, "%26s v%d.%d\n", "version", major, minor);
++
+     m_inputContext = QPlatformInputContextFactory::create();
+ 
+     m_vtHandler.reset(new QFbVtHandler);
+-- 
+2.7.4
+
