@@ -1,0 +1,57 @@
+diff --git a/src/gui/configure.json b/src/gui/configure.json
+index 1e4e564..a1cbaf9 100644
+--- a/src/gui/configure.json
++++ b/src/gui/configure.json
+@@ -63,6 +63,12 @@
+                 "-lbcm_host"
+             ]
+         },
++        "vupl": {
++            "export": "",
++            "sources": [
++                "-Wl,--no-as-needed -lEGL -lvupl -lnxpl -Wl,--as-needed"
++            ]
++        },
+         "direct2d": {
+             "label": "Direct 2D",
+             "export": "",
+@@ -667,6 +673,18 @@
+             },
+             "use": "egl"
+         },
++        "egl-libvupl": {
++            "label": "EGL Libvupl",
++            "type": "compile",
++            "test": {
++                "include": [ "eglvuplus.h" ],
++                "main": [
++		    "float aspect = 1.0f;",
++		    "VUGLES_InitPlatformAndDefaultDisplay(0, &aspect, 1280, 768);"
++                ]
++            },
++            "use": "vupl"
++        },
+         "egl-mali": {
+             "label": "Mali EGL",
+             "type": "compile",
+@@ -1101,6 +1119,11 @@
+             "condition": "features.eglfs && features.gbm && features.kms",
+             "output": [ "privateFeature" ]
+         },
++        "eglfs_libvupl": {
++            "label": "EGLFS Vuplus",
++            "condition": "features.eglfs && tests.egl-libvupl",
++            "output": [ "privateFeature" ]
++        },
+         "eglfs_mali": {
+             "label": "EGLFS Mali",
+             "condition": "features.eglfs && (tests.egl-mali || tests.egl-mali-2)",
+@@ -1598,7 +1621,7 @@ QMAKE_LIBDIR_OPENGL[_ES2] and QMAKE_LIBS_OPENGL[_ES2] in the mkspec for your pla
+                     "section": "EGLFS details",
+                     "condition": "features.eglfs",
+                     "entries": [
+-                        "eglfs_openwfd", "eglfs_viv", "eglfs_viv_wl", "eglfs_rcar", "eglfs_egldevice", "eglfs_gbm", "eglfs_mali", "eglfs_brcm", "egl_x11"
++                        "eglfs_openwfd", "eglfs_viv", "eglfs_viv_wl", "eglfs_rcar", "eglfs_egldevice", "eglfs_gbm", "eglfs_mali", "eglfs_brcm", "egl_x11", "eglfs_libvupl"
+                     ]
+                 },
+                 "linuxfb", "vnc", "mirclient",
