@@ -13,7 +13,7 @@ PKGV = "1.2.+git${GITPKGV}"
 PR = "r0"
 
 
-SRC_URI="git://github.com/XTAv2/YahooWeather.git"
+SRC_URI="git://github.com/oe-alliance/YahooWeather.git"
 
 S = "${WORKDIR}/git"
 
@@ -23,7 +23,7 @@ FILES_${PN} = "/usr/lib"
 FILES_${PN}-src = "/usr/lib/enigma2/python/Plugins/Extensions/YahooWeather/*.py"
 FILES_${PN}-po = "/usr/lib/enigma2/python/Plugins/Extensions/YahooWeather/locale/*/*/*.po"
 
-inherit autotools
+inherit autotools gettext
 
 EXTRA_OECONF = "\
 	BUILD_SYS=${BUILD_SYS} \
