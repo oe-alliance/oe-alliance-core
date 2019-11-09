@@ -12,9 +12,9 @@
 --- a/mkspecs/common/gcc-base.conf
 +++ b/mkspecs/common/gcc-base.conf
 @@ -44,7 +44,7 @@ QMAKE_CFLAGS_DEBUG         += -g
- QMAKE_CFLAGS_SHLIB         += -fPIC
- QMAKE_CFLAGS_STATIC_LIB    += -fPIC
- QMAKE_CFLAGS_APP           += -fPIC
+ QMAKE_CFLAGS_SHLIB         += $$QMAKE_CFLAGS_PIC
+ QMAKE_CFLAGS_STATIC_LIB    += $$QMAKE_CFLAGS_PIC
+ QMAKE_CFLAGS_APP           += $$QMAKE_CFLAGS_PIC
 -QMAKE_CFLAGS_ISYSTEM        = -isystem
 +QMAKE_CFLAGS_ISYSTEM        = 
  QMAKE_CFLAGS_YACC          += -Wno-unused -Wno-parentheses
@@ -22,10 +22,30 @@
  QMAKE_CFLAGS_EXCEPTIONS_OFF += -fno-exceptions
 --- a/mkspecs/features/qt.prf
 +++ b/mkspecs/features/qt.prf
-@@ -194,8 +194,8 @@ qt_module_deps = $$resolve_depends(qt_module_deps, "QT.")
- # static builds: link qml import plugins into the app.
- contains(qt_module_deps, qml): \
-         qtConfig(static):contains(TEMPLATE, .*app):!host_build:!no_import_scan {
+--- qt.prf.org	2019-11-09 09:36:58.846447930 +0100
++++ qt.prf	2019-11-09 09:38:40.874606532 +0100
+@@ -9,7 +9,7 @@
+    qtConfig(shared) {
+       # this variable is read by qmake in qmake/generators/win32/msvc_vcproj.cpp
+       # function VcprojGenerator::initDeploymentTool()
+-      QMAKE_DLL_PATHS += $$[QT_INSTALL_BINS/get]
++      QMAKE_DLL_PATHS += $$[QT_INSTALL_BINS]
+    }
+ }
+ CONFIG(release, debug|release):DEFINES += QT_NO_DEBUG
+@@ -147,7 +147,7 @@
+         !isEmpty(plug_type) {
+             plug_path = $$eval(QT_PLUGIN.$${plug}.PATH)
+             isEmpty(plug_path): \
+-                plug_path = $$[QT_INSTALL_PLUGINS/get]
++                plug_path = $$[QT_INSTALL_PLUGINS]
+             LIBS += -L$$plug_path/$$plug_type
+         }
+         LIBS += -l$${plug}$$qtPlatformTargetSuffix()
+@@ -298,8 +298,8 @@
+ # static builds: link qml import plugins into the target.
+ contains(all_qt_module_deps, qml): \
+         qtConfig(static):import_plugins:!host_build:!no_import_scan {
 -    exists($$[QT_INSTALL_QML/get]): \
 -        QMLPATHS *= $$[QT_INSTALL_QML/get]
 +    exists($$[QT_INSTALL_QML]): \
@@ -33,15 +53,6 @@
  
      # run qmlimportscanner
      qtPrepareTool(QMLIMPORTSCANNER, qmlimportscanner, , system)
-@@ -366,7 +366,7 @@ for(QT_CURRENT_VERIFY, $$list($$QT_PLUGIN_VERIFY)) {
-             !isEmpty(QT_PLUGINPATH) {
-                 plugpath = $$eval(QT_PLUGIN.$${QTPLUG}.PATH)
-                 isEmpty(plugpath): \
--                    plugpath = $$[QT_INSTALL_PLUGINS/get]
-+                    plugpath = $$[QT_INSTALL_PLUGINS]
-                 LIBS *= -L$$plugpath/$$QT_PLUGINPATH
-             }
-                 LIBS += $$QT_LINKAGE
 --- a/mkspecs/features/toolchain.prf
 +++ b/mkspecs/features/toolchain.prf
 @@ -48,8 +48,8 @@ isEmpty(QMAKE_DEFAULT_INCDIRS):!host_build {
