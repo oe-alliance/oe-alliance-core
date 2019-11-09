@@ -182,6 +182,7 @@ CFLAGS_append = " \
 	-I${STAGING_DIR_TARGET}/usr/include/openssl \
 	-I${STAGING_DIR_TARGET}/usr/include/dreamdvd \
 	-I${STAGING_DIR_TARGET}/usr/include/libdreamdvd \
+	-I${STAGING_DIR_TARGET}/usr/include/curl \
 	-I${WORKDIR}/titan/libdreamdvd \
 	-I${WORKDIR}/titan/titan \
 	-I${WORKDIR}/titan/titan/include \
