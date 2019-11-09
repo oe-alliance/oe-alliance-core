@@ -3,13 +3,9 @@ DESCRIPTION = "Control your receiver with a browser"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://README;firstline=10;lastline=12;md5=9c14f792d0aeb54e15490a28c89087f7"
 
-BRANCH="branding"
-BRANCH_openatv="Theme"
-BRANCH_openhdf="Theme"
-BRANCH_openbh="Theme"
-BRANCH_openvix="Theme"
-BRANCH_openmips="Theme"
-BRANCH_openspa="Theme"
+FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
+
+BRANCH="master"
 
 DEPENDS = "python-cheetah-native"
 RDEPENDS_${PN} = "\
@@ -26,28 +22,31 @@ RDEPENDS_${PN} = "\
 	oe-alliance-branding \
 	"
 
-inherit gitpkgv distutils-openplugins
+inherit gitpkgv distutils-openplugins gettext
 
-DISTUTILS_INSTALL_ARGS = "--root=${D} --install-lib=/usr/lib/enigma2/python/Plugins"
+DISTUTILS_INSTALL_ARGS = "--root=${D} --install-lib=${libdir}/enigma2/python/Plugins"
 
 SRCREV = "${AUTOREV}"
-PV = "1+git${SRCPV}"
-PKGV = "1+git${GITPKGV}"
-PR = "r1"
+PV = "1.3.5+git${SRCPV}"
+PKGV = "1.3.5+git${GITPKGV}"
 
-PACKAGE_ARCH = "all"
-
-SRC_URI = "git://github.com/oe-alliance/e2openplugin-${MODULE}.git;protocol=git;branch=${BRANCH}"
+SRC_URI = "git://github.com/E2OpenPlugins/e2openplugin-${MODULE}.git;protocol=git;branch=${BRANCH} \
+           file://transcoding.py"
 
 S="${WORKDIR}/git"
 
 # Just a quick hack to "compile" it
 do_compile() {
+	cp ${WORKDIR}/transcoding.py ${S}/plugin/controllers/transcoding.py
+	rm -rf ${S}/plugin/public/static/remotes >/dev/null 2>&1 || true
+	find ${S}/plugin/public/ -empty -type d -delete >/dev/null 2>&1 || true
+	find ${S}/plugin/public/images/boxes/ ! -name 'unknown.png' -type f -exec rm -f {} +
+	find ${S}/plugin/public/images/remotes/ ! -name 'ow_remote.png' -type f -exec rm -f {} +
 	cheetah-compile -R --nobackup ${S}/plugin
 	python -O -m compileall ${S}
 }
 
-PLUGINPATH = "/usr/lib/enigma2/python/Plugins/Extensions/${MODULE}"
+PLUGINPATH = "${libdir}/enigma2/python/Plugins/Extensions/${MODULE}"
 do_install_append() {
 	install -d ${D}${PLUGINPATH}
 	cp -r ${S}/plugin/* ${D}${PLUGINPATH}
