@@ -1,8 +1,6 @@
-diff --git a/src/ts_setup.c b/src/ts_setup.c
-index 3610fcd..48ef5bf 100644
 --- a/src/ts_setup.c
 +++ b/src/ts_setup.c
-@@ -79,6 +79,7 @@ static char *scan_devices(void)
+@@ -86,6 +86,7 @@ static char *scan_devices(void)
  		if (fd < 0)
  			continue;
  
@@ -10,11 +8,11 @@ index 3610fcd..48ef5bf 100644
  		if ((ioctl(fd, EVIOCGPROP(sizeof(propbit)), propbit) < 0) ||
  			!(propbit[BIT_WORD(INPUT_PROP_DIRECT)] &
  				  BIT_MASK(INPUT_PROP_DIRECT))) {
-@@ -86,6 +87,7 @@ static char *scan_devices(void)
- 		} else {
- 			have_touchscreen = 1;
+@@ -104,6 +105,7 @@ static char *scan_devices(void)
+ 				i);
+ 			break;
  		}
 +#endif
+ 	}
  
- 		close(fd);
- 		free(namelist[i]);
+ 	for (i = 0; i < ndev; ++i)
