@@ -11,7 +11,7 @@
  QMAKE_CFLAGS_LTCG                = -flto
 --- a/mkspecs/common/gcc-base.conf
 +++ b/mkspecs/common/gcc-base.conf
-@@ -44,7 +44,7 @@ QMAKE_CFLAGS_DEBUG         += -g
+@@ -46,7 +46,7 @@ QMAKE_CFLAGS_DEBUG         += -g
  QMAKE_CFLAGS_SHLIB         += $$QMAKE_CFLAGS_PIC
  QMAKE_CFLAGS_STATIC_LIB    += $$QMAKE_CFLAGS_PIC
  QMAKE_CFLAGS_APP           += $$QMAKE_CFLAGS_PIC
@@ -22,9 +22,7 @@
  QMAKE_CFLAGS_EXCEPTIONS_OFF += -fno-exceptions
 --- a/mkspecs/features/qt.prf
 +++ b/mkspecs/features/qt.prf
---- qt.prf.org	2019-11-09 09:36:58.846447930 +0100
-+++ qt.prf	2019-11-09 09:38:40.874606532 +0100
-@@ -9,7 +9,7 @@
+@@ -9,7 +9,7 @@ win32 {
     qtConfig(shared) {
        # this variable is read by qmake in qmake/generators/win32/msvc_vcproj.cpp
        # function VcprojGenerator::initDeploymentTool()
@@ -33,7 +31,7 @@
     }
  }
  CONFIG(release, debug|release):DEFINES += QT_NO_DEBUG
-@@ -147,7 +147,7 @@
+@@ -147,7 +147,7 @@ import_plugins:qtConfig(static) {
          !isEmpty(plug_type) {
              plug_path = $$eval(QT_PLUGIN.$${plug}.PATH)
              isEmpty(plug_path): \
@@ -42,7 +40,7 @@
              LIBS += -L$$plug_path/$$plug_type
          }
          LIBS += -l$${plug}$$qtPlatformTargetSuffix()
-@@ -298,8 +298,8 @@
+@@ -298,8 +298,8 @@ for(ever) {
  # static builds: link qml import plugins into the target.
  contains(all_qt_module_deps, qml): \
          qtConfig(static):import_plugins:!host_build:!no_import_scan {
@@ -55,7 +53,7 @@
      qtPrepareTool(QMLIMPORTSCANNER, qmlimportscanner, , system)
 --- a/mkspecs/features/toolchain.prf
 +++ b/mkspecs/features/toolchain.prf
-@@ -48,8 +48,8 @@ isEmpty(QMAKE_DEFAULT_INCDIRS):!host_build {
+@@ -152,8 +152,8 @@ isEmpty($${target_prefix}.INCDIRS) {
      }
  
      unix {
@@ -65,4 +63,4 @@
 +        isEmpty(QMAKE_DEFAULT_LIBDIRS) & !cross_compile: QMAKE_DEFAULT_LIBDIRS = /lib /usr/lib
      }
  
-     !isEmpty(QMAKE_DEFAULT_INCDIRS): cache(QMAKE_DEFAULT_INCDIRS, set stash)
+     cache($${target_prefix}.INCDIRS, set stash, QMAKE_DEFAULT_INCDIRS)
