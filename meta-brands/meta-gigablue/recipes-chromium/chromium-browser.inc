@@ -7,7 +7,7 @@ PACKAGE_ARCH := "${MACHINE_ARCH}"
 
 PV = "1.0"
 PR = "${SRCDATE}"
-SRC_URI = "http://source.mynonpublic.com/gigablue/chromium/chromium-gigablue_${MACHINE}_${SRCDATE}.tar.gz"
+SRC_URI = "http://source.mynonpublic.com/gigablue/chromium/chromium-gigablue-${MACHINE}-${SRCDATE}.zip"
 
 # Added very old NSS version need only for vuplus
 PREFERRED_VERSION_nss = "3.17.3"
@@ -25,7 +25,7 @@ do_install() {
 	chmod 755 ${D}/usr/local/chromium/bin/chrome-sandbox
 	chmod 755 ${D}/usr/local/chromium/bin/nxconfig
 	install -d ${D}/usr/local/lib
-        ln -s /usr/lib/libv3ddriver.so ${D}/usr/local/lib/libv3ddriver.so
+	ln -s /usr/lib/libv3ddriver.so ${D}/usr/local/lib/libv3ddriver.so
 }
 
 do_package_qa() {
@@ -39,4 +39,3 @@ RPROVIDES_${PN} += "chromium-browser"
 FILES_${PN} = "/"
 
 INSANE_SKIP_${PN} += "already-stripped"
-

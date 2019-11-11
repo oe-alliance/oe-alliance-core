@@ -5,14 +5,6 @@ PACKAGECONFIG_FB_pn-qtbase = " "
 PREFERRED_VERSION_linux-edision = "5.3"
 
 
-KERNEL_MODULE_AUTOLOAD += "hci_uart"
-KERNEL_MODULE_AUTOLOAD += "wlan"
-
-MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS += " \
-    kernel-module-btqca \
-    kernel-module-hci-uart \
-    "
-
 # eMMC has 8 GB in total, but one image gets only 2 GB of that (Partitioned eMMC)
 FLASHSIZE = "2048"
 
@@ -39,6 +31,7 @@ MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS += "\
 
 MACHINE_EXTRA_RRECOMMENDS += " \
     ${@bb.utils.contains("GST_VERSION", "1.0", "gstreamer1.0-plugin-dvbmediasink", "gst-plugin-dvbmediasink", d)} \
+    ${@bb.utils.contains('MACHINE_FEATURES', 'swap', 'edision-swapcreate', '',d)} \
     gstreamer1.0-libav \
     "
 

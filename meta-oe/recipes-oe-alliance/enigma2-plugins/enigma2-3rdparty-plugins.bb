@@ -11,7 +11,7 @@ DEPENDS = "tslib mpfr gmp"
 SRCREV = "${AUTOREV}"
 PV = "${IMAGE_VERSION}+gitr${SRCPV}"
 PKGV = "${IMAGE_VERSION}+gitr${GITPKGV}"
-PR = "r245"
+PR = "r247"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -33,7 +33,6 @@ S = "${WORKDIR}/git"
 THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-atmolightd_0.7-pre22_all.ipk \
     enigma2-plugin-extensions-blackout-blind_1.3_all.ipk \
-    enigma2-plugin-extensions-bluray_2.0rc1_all.ipk \
     enigma2-plugin-extensions-boblight-enigma2_0.8r8_mips32el.ipk \
     enigma2-plugin-extensions-camofs_9.19_all.ipk \
     enigma2-plugin-extensions-csfd_11-55-20160929_all.ipk \
@@ -44,7 +43,6 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-e2piconizer_1.08_20190708_all.ipk \
     enigma2-plugin-extensions-ehue_0.2-r0_all.ipk \
     enigma2-plugin-extensions-filesearchfs_3.0_all.ipk \
-    enigma2-plugin-extensions-focusonline_1.1rc4_all.ipk \
     enigma2-plugin-extensions-fragmutti_1.0rc2_all.ipk \
     enigma2-plugin-extensions-gmailreader-oe2.0_1.3_all.ipk \
     enigma2-plugin-extensions-googlenewsreader_1.0_mips32el.ipk \
@@ -53,7 +51,7 @@ THIRDPARTY_PLUGINS = " \
     ${@bb.utils.contains("TARGET_ARCH", "sh4", "enigma2-plugin-extensions-isettinge2-3.4.4-oe2.0-all-sh4.ipk" , "", d)} \
     ${@bb.utils.contains("TARGET_ARCH", "mipsel", "enigma2-plugin-extensions-isettinge2-3.4.4-oe2.0-all-mips.ipk" , "", d)} \
     ${@bb.utils.contains("TARGET_ARCH", "arm", "enigma2-plugin-extensions-isettinge2-3.4.4-oe2.0-all-arm.ipk" , "", d)} \
-    enigma2-plugin-extensions-jedimakerxtream_5.17-20190904_all.ipk \
+    enigma2-plugin-extensions-jedimakerxtream_5.21.20191027_all.ipk \
     enigma2-plugin-extensions-livefootball_7.1_all.ipk \
     enigma2-plugin-extensions-mediainfo_3.0.7_all.ipk \
     enigma2-plugin-extensions-mediaportal_all.ipk \
@@ -68,7 +66,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-piconmanager_2.2-20150329-r0_all.ipk \
     enigma2-plugin-extensions-piconsupdater_0.3.7_mips32el.ipk \
     enigma2-plugin-extensions-picturecenterfs_8.38_all.ipk \
-    enigma2-plugin-extensions-planerfs_9.36_all.ipk \
+    enigma2-plugin-extensions-planerfs_9.43_all.ipk \
     enigma2-plugin-extensions-pluginspanel_1.0_r01_all.ipk \
     enigma2-plugin-extensions-pluginupdater_0.1r2_all.ipk \
     enigma2-plugin-extensions-pravoslavietv_0.2_all.ipk \
@@ -98,12 +96,12 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-vcs_2.7_all.ipk \
     enigma2-plugin-extensions-vhannibalautosettings_1.1_mips32el.ipk \
     enigma2-plugin-extensions-vuplusforum_0.8rc2_all.ipk \
-    enigma2-plugin-extensions-webradiofs_18.13_all.ipk \
+    enigma2-plugin-extensions-webradiofs_18.14_all.ipk \
     enigma2-plugin-extensions-wikipedia_2.3rc3_all.ipk \
     enigma2-plugin-extensions-wwech_1.03_all.ipk \
     enigma2-plugin-extensions-xbmcwetter_1.4rc1_all.ipk \
     enigma2-plugin-extensions-xcplugin-iptv-mod-lululla_6.7_all \
-    enigma2-plugin-picons-snp-full.220x132-190x102.light.on.transparent_2019-10-05--13-27-28_all.ipk \
+    enigma2-plugin-picons-snp-full.220x132-190x102.light.on.transparent_2019-10-17--15-29-20_all.ipk \
     enigma2-plugin-skins-OverlayHD_1.80_all.ipk \
     enigma2-plugin-systemplugins-bouquetsprotection_0.2-rc1_all.ipk \
     enigma2-plugin-systemplugins-channelselectionnavigator_1.5_mipsel.ipk \

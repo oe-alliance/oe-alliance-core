@@ -14,7 +14,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'vizyonvita', 'Vita' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mutant11', 'HD11' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mutant51', 'HD51' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mutant60', 'HD60' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'mutant61', 'HD61' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'ax61', 'HD61' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'ax51', 'HD51' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'ax60', 'HD60' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'bre2ze4k', 'BRE2ZE 4K' , '', d)}\
@@ -34,7 +34,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'vizyonvita', 'Vizyon' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mutant11', 'Mut@nt' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mutant51', 'Mut@nt' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mutant60', 'Mut@nt' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'mutant61', 'Mut@nt' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'ax61', 'AX 4KBOX' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'ax51', 'AX 4K' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'ax60', 'AX 4KBOX' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'bre2ze4k', 'WWIO' , '', d)}\
@@ -54,7 +54,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'vizyonvita', 'hd1100' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mutant11', 'hd11' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mutant51', 'hd51' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mutant60', 'hd60' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'mutant61', 'hd61' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'ax61', 'hd61' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'ax51', 'hd51' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'ax60', 'hd60' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'bre2ze4k', 'bre2ze4k' , '', d)}\
@@ -74,7 +74,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'vizyonvita', 'hd1100' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mutant11', 'hd11' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mutant51', 'hd51' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mutant60', 'hd60' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'mutant61', 'hd61' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'ax61', 'hd61' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'ax51', 'hd51' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'ax60', 'hd60' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'bre2ze4k', 'bre2ze4k' , '', d)}\
@@ -94,7 +94,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'vizyonvita', 'mtd1' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mutant11', 'mtd1' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mutant51', 'mmcblk0p2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mutant60', 'mmcblk0p19' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'mutant61', 'mmcblk0p20' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'ax61', 'mmcblk0p20' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'ax51', 'mmcblk0p2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'ax60', 'mmcblk0p19' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'bre2ze4k', 'mmcblk0p2' , '', d)}\
@@ -114,7 +114,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'vizyonvita', 'mtd2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mutant11', 'mtd2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mutant51', 'mmcblk0p3' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mutant60', 'mmcblk0p20' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'mutant61', 'mmcblk0p21' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'ax61', 'mmcblk0p21' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'ax51', 'mmcblk0p3' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'ax60', 'mmcblk0p20' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'bre2ze4k', 'mmcblk0p3' , '', d)}\
