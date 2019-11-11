@@ -23,6 +23,8 @@ EXTRA_OECONF = " \
     STAGING_LIBDIR=${STAGING_LIBDIR} \
 "
 
+PARALLEL_MAKEINST = ""
+
 inherit autotools-brokensep pythonnative gettext
 
 do_configure_prepend_openatv () {
