@@ -189,7 +189,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'protek4kx1', 'e2/update' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'anadolprohd5', 'anadol/prohd5' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'spycatminiv2', 'spycat/miniv2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iziboxecohd', 'e2/update' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'JamesDonkey', 'jamesdonkey/hdduo' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'JamesDonkey', 'jd/duohd' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'turing', 'atto/turing' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'arivatwin', 'e2/update' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'arivacombo', 'e2/update' , '', d)}\
