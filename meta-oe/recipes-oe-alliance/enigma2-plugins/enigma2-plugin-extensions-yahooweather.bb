@@ -22,6 +22,8 @@ EXTRA_OECONF = " \
     STAGING_LIBDIR=${STAGING_LIBDIR} \
 "
 
+PARALLEL_MAKEINST = ""
+
 inherit autotools-brokensep gettext
 
 CONFFILES_${PN} = " \
