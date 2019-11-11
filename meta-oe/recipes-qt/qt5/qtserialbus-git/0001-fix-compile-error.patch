@@ -5,11 +5,13 @@ Subject: [PATCH] Fix error: 'SIOCGSTAMP' was not declared in this scope; did you
 diff --git a/src/plugins/canbus/socketcan/socketcanbackend.cpp b/src/plugins/canbus/socketcan/socketcanbackend.cpp
 --- a/src/plugins/canbus/socketcan/socketcanbackend.cpp
 +++ b/src/plugins/canbus/socketcan/socketcanbackend.cpp
-@@ -49,6 +49,7 @@
+@@ -49,6 +49,9 @@
  #include <net/if.h>
  #include <sys/ioctl.h>
  #include <sys/time.h>
++#ifndef SIOCGSTAMP
 +#include <linux/sockios.h>
++#endif
  
  #ifndef CANFD_MTU
  // CAN FD support was added by Linux kernel 3.6
