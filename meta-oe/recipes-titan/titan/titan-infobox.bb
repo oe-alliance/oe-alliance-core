@@ -28,6 +28,8 @@ CFLAGS_append_sh4 = " -DSH4"
 CFLAGS_append_mipsel = " -DMIPSEL"
 CFLAGS_append_arm = " -DMIPSEL"
 
+CFLAGS_append_arm_sf8008 = " -DEVENT0"
+
 do_compile() {
 	cd ${WORKDIR}/infobox
 	if [ ${TARGET_ARCH} = "sh4" ];then
