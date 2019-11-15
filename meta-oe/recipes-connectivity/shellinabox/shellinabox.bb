@@ -18,7 +18,7 @@ SRC_URI = " \
           "
 
 
-inherit autotools-brokensep update-rc.d systemd
+inherit autotools-brokensep update-rc.d systemd upx-compress
 
 EXTRA_OECONF = "--disable-runtime-loading --disable-utmp"
 

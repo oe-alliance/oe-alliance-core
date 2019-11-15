@@ -1,5 +1,7 @@
 PR .= ".1"
 
+inherit upx-compress
+
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
 DEPENDS += "openssl"
