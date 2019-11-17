@@ -22,8 +22,8 @@ DEPENDS = " \
 	python-service-identity \
 	rtmpdump \
 	titan-netsurf \
-	titan-gmediarender \
 	"
+#	titan-gmediarender
 
 RDEPENDS_${PN} = "\
 	aio-grab \
