@@ -10,8 +10,6 @@ BRAND_OEM = "octagon"
 
 IMAGEDIR = "octagon/${MACHINE}"
 
-MACHINE_NAME = "SF8008 4K UHD"
-
 MACHINE_BRAND = "Octagon"
 
 MTD_KERNEL = "mmcblk0p12"
@@ -26,12 +24,12 @@ VER = "-sf8008"
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "\
     octagon-dvb-modules-${MACHINE} \
-    octagon-loadmodules-${MACHINE} \ 
-    octagon-opengl-${MACHINE} \
+    octagon-loadmodules-${SOC_FAMILY} \ 
+    octagon-opengl-${SOC_FAMILY} \
     octagon-libs-${MACHINE} \
-    octagon-hihalt-${MACHINE} \
+    octagon-hihalt-${SOC_FAMILY} \
     octagon-reader-${MACHINE} \
-    octagon-libreader-${MACHINE} \
+    octagon-libreader-${SOC_FAMILY} \
     octagon-partitions-${MACHINE} \
     octagon-buildimage \
     e2fsprogs-resize2fs \
@@ -52,14 +50,14 @@ PREFERRED_VERSION_linux-libc-headers = "4.4"
 PREFERRED_VERSION_ffmpeg = "3.4.2"
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-octagon"
-PREFERRED_PROVIDER_virtual/egl = "octagon-opengl-${MACHINE}" 
-PREFERRED_PROVIDER_virtual/libgles1 = "octagon-opengl-${MACHINE}"
-PREFERRED_PROVIDER_virtual/libgles2 = "octagon-opengl-${MACHINE}"
+PREFERRED_PROVIDER_virtual/egl = "octagon-opengl-${SOC_FAMILY}" 
+PREFERRED_PROVIDER_virtual/libgles1 = "octagon-opengl-${SOC_FAMILY}"
+PREFERRED_PROVIDER_virtual/libgles2 = "octagon-opengl-${SOC_FAMILY}"
 PREFERRED_PROVIDER_virtual/kodi = "stb-kodi-${MACHINE}"
-PREFERRED_PROVIDER_virtual/blindscan-dvbs = "octagon-blindscan-${MACHINE}"
+PREFERRED_PROVIDER_virtual/blindscan-dvbs = "octagon-blindscan-${SOC_FAMILY}"
 
-PREFERRED_RPROVIDER_showiframe = "octagon-showiframe-${MACHINE}"
-PREFERRED_RPROVIDER_aio-grab = "octagon-grab-${MACHINE}"
+PREFERRED_RPROVIDER_showiframe = "octagon-showiframe-${SOC_FAMILY}"
+PREFERRED_RPROVIDER_aio-grab = "octagon-grab-${SOC_FAMILY}"
 
 require conf/machine/include/tune-cortexa15.inc
 
