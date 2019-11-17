@@ -1,10 +1,10 @@
-SUMMARY = "showiframe for Octagon Model ${MACHINE}"
+SUMMARY = "showiframe for Octagon Model ${SOC_FAMILY}"
 SECTION = "base"
 PRIORITY = "optional"
 LICENSE = "CLOSED"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-COMPATIBLE_MACHINE = "^(sf8008)$"
+COMPATIBLE_MACHINE = "^(sf8008|sf8008m)$"
 
 SRCDATE = "20180301"
 
@@ -15,7 +15,7 @@ RPROVIDES_${PN}  = "showiframe"
 RREPLACES_${PN}  = "showiframe"
 RCONFLICTS_${PN} = "showiframe"
 
-SRC_URI = "http://source.mynonpublic.com/octagon/${MACHINE}-showiframe-${SRCDATE}.tar.gz"
+SRC_URI = "http://source.mynonpublic.com/octagon/${SOC_FAMILY}-showiframe-${SRCDATE}.tar.gz"
 
 S = "${WORKDIR}"
 
