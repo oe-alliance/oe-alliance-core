@@ -64,7 +64,7 @@ RDEPENDS_${PN}_remove = "perl"
 
 DEPENDS += "qemu-native libxslt-native docbook-xsl-stylesheets-native e2fsprogs readline virtual/libiconv zlib popt libpam libtasn1 python"
 
-inherit distro_features_check
+inherit features_check
 REQUIRED_DISTRO_FEATURES = "pam"
 
 DEPENDS_append_libc-musl = " libtirpc"
