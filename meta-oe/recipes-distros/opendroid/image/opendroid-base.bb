@@ -28,6 +28,7 @@ RDEPENDS_${PN} = "\
     rtmpdump \
     unrar \
     curl \
+    openssh-sftp-server \
     packagegroup-base-smbfs-client \
     ${@bb.utils.contains("MACHINE_FEATURES", "dreamboxv1", "", "ofgwrite", d)} \
     ${@bb.utils.contains("TUNE_FEATURES", "armv", "glibc-compat", "", d)} \
