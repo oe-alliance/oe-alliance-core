@@ -26,3 +26,12 @@ IMAGE_LINGUAS = ""
 IMAGE_FEATURES += "package-management"
 
 inherit image
+
+do_package_index[nostamp] = "1"
+do_package_index[depends] += "${PACKAGEINDEXDEPS}"
+
+python do_package_index() {
+    from oe.rootfs import generate_index_files
+    generate_index_files(d)
+}
+addtask do_package_index after do_rootfs before do_image_complete
