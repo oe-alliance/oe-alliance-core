@@ -351,57 +351,57 @@ do_compile() {
 	fi
 
 	CACHEDIR=$(echo ${TMPDIR} | sed "s!builds/${DISTRO_NAME}/${DISTRO_TYPE}/${MACHINE}/tmp!svncache!")
-	echo CACHEDIR ${CACHEDIR}
+	echo "CACHEDIR ${CACHEDIR}"
 
 	KERNELDIR=${TMPDIR}/deploy/images/${MACHINE}/uImage
-	echo KERNELDIR: ${KERNELDIR}
+	echo "KERNELDIR: ${KERNELDIR}"
 
 	ROOTDIR=${TMPDIR}/rootfs/${MACHINE}
-	echo ROOTDIR: ${ROOTDIR}
+	echo "ROOTDIR: ${ROOTDIR}"
 
-	TYPE=${MACHINEBUILD}
-	echo TYPE: ${TYPE}
+	TYPE="${MACHINEBUILD}"
+	echo "TYPE: ${TYPE}"
 
 	BOX=${MACHINEBUILD}
-	echo BOX: ${BOX}
+	echo "BOX: ${BOX}"
 
-	SRCDIR=dummy
-	echo SRCDIR: ${SRCDIR}
+	SRCDIR="dummy"
+	echo "SRCDIR: ${SRCDIR}"
 
-	CPU=${TARGET_ARCH}
-	echo CPU: ${CPU}
+	CPU="${TARGET_ARCH}"
+	echo "CPU: ${CPU}"
 
-	STM=mips360
-	echo STM: ${STM}
+	STM="mips360"
+	echo "STM: ${STM}"
 
-	BOXNAME=${MACHINE}
-	echo BOXNAME: ${BOXNAME}
+	BOXNAME="${MACHINE}"
+	echo "BOXNAME: ${BOXNAME}"
 
-	SWTYPE=titan
-	echo SWTYPE: ${SWTYPE}
+	SWTYPE="titan"
+	echo "SWTYPE: ${SWTYPE}"
 
-	echo IMAGE_NAME: ${IMAGE_NAME}
+	echo "IMAGE_NAME: ${IMAGE_NAME}"
 
-	SVNVERSION=`echo ${WORKDIR} | sed -nr 's/.*svnr([^.*]+)-.*/\1/p'`
-	echo SVNVERSION: ${SVNVERSION}
+	SVNVERSION=$(echo ${WORKDIR} | sed -nr 's/.*svnr([^.*]+)-.*/\1/p')
+	echo "SVNVERSION: ${SVNVERSION}"
 
-	SVNVERSIONHTTP=`svn info http://sbnc.dyndns.tv/svn/titan | grep Revision | sed s/'Revision: '//g`
-	echo SVNVERSIONHTTP: ${SVNVERSIONHTTP}
+	SVNVERSIONHTTP=$(svn info http://sbnc.dyndns.tv/svn/titan | grep Revision | sed s/'Revision: '//g)
+	echo "SVNVERSIONHTTP: ${SVNVERSIONHTTP}"
 
-	GITVERSION=`git --git-dir=${OE-ALLIANCE_BASE}/.git log  --pretty=format:"%s" | wc -l`
-	echo GITVERSION: ${GITVERSION}
+	GITVERSION=$(git --git-dir=${OE-ALLIANCE_BASE}/.git log  --pretty=format:"%s" | wc -l)
+	echo "GITVERSION: ${GITVERSION}"
 
-	MACHINE_BRAND=${MACHINE_BRAND}
-	echo MACHINE_BRAND: ${MACHINE_BRAND}
+	MACHINE_BRAND="${MACHINE_BRAND}"
+	echo "MACHINE_BRAND: ${MACHINE_BRAND}"
 
-	MACHINE_NAME=${MACHINE_NAME}
-	echo MACHINE_NAME: ${MACHINE_NAME}
+	MACHINE_NAME="${MACHINE_NAME}"
+	echo "MACHINE_NAME: ${MACHINE_NAME}"
 
-	DRIVERSDATE=${DRIVERSDATE}
-	echo DRIVERSDATE: ${DRIVERSDATE}
+	DRIVERSDATE="${DRIVERSDATE}"
+	echo "DRIVERSDATE: ${DRIVERSDATE}"
 
-	echo ./oealliance.sh ${CACHEDIR} ${KERNELDIR} ${ROOTDIR} ${TYPE} ${SRCDIR} ${CPU} ${STM} ${BOXNAME} ${DISTRO_NAME} ${DISTRO_TYPE} ${SWTYPE} ${IMAGE_NAME} ${GITVERSION} ${SVNVERSION} ${MACHINE_BRAND} ${MACHINE_NAME} ${DRIVERSDATE}
-	./oealliance.sh ${CACHEDIR} ${KERNELDIR} ${ROOTDIR} ${TYPE} ${SRCDIR} ${CPU} ${STM} ${BOXNAME} ${DISTRO_NAME} ${DISTRO_TYPE} ${SWTYPE} ${IMAGE_NAME} ${GITVERSION} ${SVNVERSION} ${MACHINE_BRAND} ${MACHINE_NAME} ${DRIVERSDATE}
+	echo "./oealliance.sh ${CACHEDIR} ${KERNELDIR} ${ROOTDIR} ${TYPE} ${SRCDIR} ${CPU} ${STM} ${BOXNAME} ${DISTRO_NAME} ${DISTRO_TYPE} ${SWTYPE} ${IMAGE_NAME} ${GITVERSION} ${SVNVERSION} ${MACHINE_BRAND} ${MACHINE_NAME} ${DRIVERSDATE}"
+	./oealliance.sh "${CACHEDIR}" "${KERNELDIR}" "${ROOTDIR}" "${TYPE}" "${SRCDIR}" "${CPU}" "${STM}" "${BOXNAME}" "${DISTRO_NAME}" "${DISTRO_TYPE}" "${SWTYPE}" "${IMAGE_NAME}" "${GITVERSION}" "${SVNVERSION}" "${MACHINE_BRAND}" "${MACHINE_NAME}" "${DRIVERSDATE}"
 
 	cd ${WORKDIR}/titan/titan
 
