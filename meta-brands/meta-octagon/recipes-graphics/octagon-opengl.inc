@@ -1,4 +1,4 @@
-SUMMARY = "libgles for ${MACHINE}"
+SUMMARY = "libgles for ${SOC_FAMILY}"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "CLOSED"
@@ -9,7 +9,7 @@ PR = "r1-${SRCDATE}"
 PROVIDES = "virtual/libgles1 virtual/libgles2 virtual/egl"
 RPROVIDES_${PN} = "virtual/libgles1 virtual/libgles2 virtual/egl libEGL.so libGLESv2.so libmali.so"
 
-SRC_URI = "http://source.mynonpublic.com/octagon/${MACHINE}-opengl-${SRCDATE}.tar.gz"
+SRC_URI = "http://source.mynonpublic.com/octagon/${SOC_FAMILY}-opengl-${SRCDATE}.tar.gz"
 
 S = "${WORKDIR}/usr"
 

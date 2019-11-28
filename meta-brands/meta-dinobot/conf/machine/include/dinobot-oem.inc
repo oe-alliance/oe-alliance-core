@@ -61,7 +61,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'protek4kx1', 'PROTEK' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'anadolprohd5', 'ANADOL' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'spycatminiv2', 'SPYCAT' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iziboxecohd', 'IZIBOX' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'JamesDonkey', 'HD DUO' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'jdhdduo', 'HD DUO' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'turing', 'Atto.TV' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'arivatwin', 'Ferguson' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'arivacombo', 'Ferguson' , '', d)}\
@@ -93,7 +93,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'protek4kx1', 'mmcblk0p9' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'anadolprohd5', 'mtd8' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'spycatminiv2', 'mtd8' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iziboxecohd', 'mtd8' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'JamesDonkey', 'mtd8' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'jdhdduo', 'mtd8' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'turing', 'mtd8' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'arivatwin', 'mmcblk0p10' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'arivacombo', 'mmcblk0p10' , '', d)}\
@@ -125,7 +125,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'protek4kx1', 'mmcblk0p10' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'anadolprohd5', 'mtd11' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'spycatminiv2', 'mtd11' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iziboxecohd', 'mtd11' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'JamesDonkey', 'mtd11' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'jdhdduo', 'mtd11' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'turing', 'mtd11' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'arivatwin', 'mmcblk0p13' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'arivacombo', 'mmcblk0p13' , '', d)}\
@@ -157,7 +157,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'protek4kx1', 'no' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'anadolprohd5', 'no' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'spycatminiv2', 'no' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iziboxecohd', 'no' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'JamesDonkey', 'no' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'jdhdduo', 'no' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'turing', 'no' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'arivatwin', 'no' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'arivacombo', 'no' , '', d)}\
@@ -189,7 +189,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'protek4kx1', 'e2/update' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'anadolprohd5', 'anadol/prohd5' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'spycatminiv2', 'spycat/miniv2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iziboxecohd', 'e2/update' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'JamesDonkey', 'jamesdonkey/hdduo' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'jdhdduo', 'jd/duohd' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'turing', 'atto/turing' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'arivatwin', 'e2/update' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'arivacombo', 'e2/update' , '', d)}\
