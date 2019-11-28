@@ -107,6 +107,7 @@ RDEPENDS_${PN} = "\
 	" \
 	", d)} \
 	${@bb.utils.contains("TARGET_ARCH", "sh4", "alsa-utils-amixer-conf" , "", d)} \
+	${@bb.utils.contains("MACHINE_FEATURES", "dreamboxv1", "", "oe-alliance-wifi", d)}
 	oe-alliance-feeds-configs \
 	openatv-version-info \
 	\
