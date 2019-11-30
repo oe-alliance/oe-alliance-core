@@ -20,6 +20,7 @@ SRC_URI += " \
         file://0004-rtmp-hls-tsdemux-fix.patch \
         file://dvbapi5-fix-old-kernel.patch \
         file://hls-main-thread-block.patch \
+        file://0001-Revert-tsdemux-Limit-the-maximum-PES-payload-size.patch \
         "
 
 EXTRA_OECONF += "--disable-openjpeg"

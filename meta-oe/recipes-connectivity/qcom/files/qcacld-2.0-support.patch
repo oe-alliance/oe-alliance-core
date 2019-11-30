@@ -1,276 +1,73 @@
-From 3af7696d68542b8c4d75e7d189eaffd87f2e512e Mon Sep 17 00:00:00 2001
+From cc1d1ec12ca47ebf60badf3b9cb86d062860767b Mon Sep 17 00:00:00 2001
 From: Jaedon Shin <jaedon.shin@gmail.com>
 Date: Tue, 27 Nov 2018 14:21:30 +0900
 Subject: [PATCH] qcacld-2.0: Make driver compatiable with mainline kernel
 
 Signed-off-by: Jaedon Shin <jaedon.shin@gmail.com>
 ---
- CORE/CLD_TXRX/HTT/htt_rx.c                    |  6 +++-
- CORE/CLD_TXRX/TXRX/ol_tx.c                    | 13 ++++++--
- CORE/CLD_TXRX/TXRX/ol_tx.h                    |  6 ++--
- CORE/CLD_TXRX/TXRX/ol_tx_queue.c              | 16 ++++++++--
- CORE/EPPING/src/epping_txrx.c                 |  6 +++-
- CORE/HDD/inc/wlan_hdd_wmm.h                   |  6 +++-
- CORE/HDD/src/wlan_hdd_early_suspend.c         | 10 +++++-
- CORE/HDD/src/wlan_hdd_main.c                  | 32 +++++++++++++------
- CORE/HDD/src/wlan_hdd_wmm.c                   |  6 +++-
- CORE/SERVICES/COMMON/adf/adf_os_types.h       |  8 ++++-
- .../COMMON/adf/linux/adf_os_timer_pvt.h       |  7 ++++
- CORE/SERVICES/COMMON/adf/linux/qdf_crypto.c   |  6 ++++
- CORE/SERVICES/COMMON/osdep_adf.h              | 10 ++++--
- CORE/SERVICES/HIF/PCIe/copy_engine.c          |  6 +++-
- CORE/SERVICES/HIF/PCIe/hif_pci.c              |  6 +++-
- .../HIF/sdio/linux/native_sdio/src/hif.c      |  6 +++-
- CORE/SERVICES/HTC/htc_internal.h              |  2 +-
- CORE/SERVICES/HTC/htc_send.c                  |  6 +++-
- CORE/SVC/src/logging/wlan_logging_sock_svc.c  | 11 +++++++
- CORE/VOSS/inc/vos_cnss.h                      | 15 +++++++++
- CORE/VOSS/src/vos_api.c                       |  4 +++
- CORE/VOSS/src/vos_packet.c                    | 11 +++++++
- CORE/VOSS/src/vos_timer.c                     | 24 +++++++++++++-
- Kbuild                                        |  5 ++-
- 24 files changed, 193 insertions(+), 35 deletions(-)
+ CORE/CLD_TXRX/TXRX/ol_tx.c                   |  2 +-
+ CORE/HDD/inc/wlan_hdd_wmm.h                  |  7 +++--
+ CORE/HDD/src/wlan_hdd_main.c                 | 23 ++++++++------
+ CORE/HDD/src/wlan_hdd_wmm.c                  |  7 +++--
+ CORE/SERVICES/COMMON/adf/linux/qdf_crypto.c  |  6 ++++
+ CORE/SVC/src/logging/wlan_logging_sock_svc.c | 11 +++++++
+ CORE/VOSS/inc/vos_cnss.h                     | 32 ++++++++++++++++++++
+ CORE/VOSS/src/vos_api.c                      |  4 +++
+ CORE/VOSS/src/vos_packet.c                   | 11 +++++++
+ CORE/VOSS/src/vos_timer.c                    | 11 +++++++
+ Kbuild                                       |  5 ++-
+ 11 files changed, 101 insertions(+), 18 deletions(-)
 
-diff --git a/CORE/CLD_TXRX/HTT/htt_rx.c b/CORE/CLD_TXRX/HTT/htt_rx.c
-index adbdeb759383..dc0659bb99b8 100644
---- a/CORE/CLD_TXRX/HTT/htt_rx.c
-+++ b/CORE/CLD_TXRX/HTT/htt_rx.c
-@@ -205,9 +205,13 @@ htt_rx_ring_fill_level(struct htt_pdev_t *pdev)
- }
- 
- static void
--htt_rx_ring_refill_retry(void *arg)
-+htt_rx_ring_refill_retry(compat_timer_arg_t arg)
- {
-+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4,15,0))
-+    htt_pdev_handle pdev = from_timer(pdev, arg, rx_ring.refill_retry_timer);
-+#else
-     htt_pdev_handle pdev = (htt_pdev_handle)arg;
-+#endif
-     htt_rx_msdu_buff_replenish(pdev);
- }
- 
 diff --git a/CORE/CLD_TXRX/TXRX/ol_tx.c b/CORE/CLD_TXRX/TXRX/ol_tx.c
-index baa2ad5dc967..4c6206f5b782 100644
+index 250bb4af6b8a..0555eeeb8d2d 100644
 --- a/CORE/CLD_TXRX/TXRX/ol_tx.c
 +++ b/CORE/CLD_TXRX/TXRX/ol_tx.c
-@@ -777,10 +777,14 @@ ol_tx_pdev_ll_pause_queue_send_all(struct ol_txrx_pdev_t *pdev)
- }
- #endif
- 
--void ol_tx_vdev_ll_pause_queue_send(void *context)
-+void ol_tx_vdev_ll_pause_queue_send(compat_timer_arg_t context)
+@@ -785,7 +785,7 @@ void ol_tx_vdev_ll_pause_queue_send(void *context)
  {
  #ifdef QCA_SUPPORT_TXRX_VDEV_LL_TXQ
-+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4,15,0))
-+    struct ol_txrx_vdev_t *vdev = from_timer(vdev, context, ll_pause.timer);
-+#else
-     struct ol_txrx_vdev_t *vdev = (struct ol_txrx_vdev_t *) context;
-+#endif
- 
-     if (vdev->pdev->tx_throttle.current_throttle_level != THROTTLE_LEVEL_0 &&
-         vdev->pdev->tx_throttle.current_throttle_phase == THROTTLE_PHASE_OFF) {
-@@ -2118,8 +2122,13 @@ ol_tx_hl_pdev_queue_send_all(struct ol_txrx_pdev_t* pdev)
-  * Return: none
-  */
- void
--ol_tx_hl_vdev_bundle_timer(void *vdev)
-+ol_tx_hl_vdev_bundle_timer(compat_timer_arg_t context)
- {
-+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4,15,0))
-+	struct ol_txrx_vdev_t *vdev = from_timer(vdev, context, bundle_queue.timer);
-+#else
-+	struct ol_txrx_vdev_t *vdev = (struct ol_txrx_vdev_t *)context;
-+#endif
- 	adf_nbuf_t msdu_list;
- 
- 	msdu_list = ol_tx_hl_vdev_queue_send_all(vdev, true);
-diff --git a/CORE/CLD_TXRX/TXRX/ol_tx.h b/CORE/CLD_TXRX/TXRX/ol_tx.h
-index 986efea00ba7..d40683893d58 100644
---- a/CORE/CLD_TXRX/TXRX/ol_tx.h
-+++ b/CORE/CLD_TXRX/TXRX/ol_tx.h
-@@ -126,7 +126,7 @@ void ol_tx_hl_del_ack_queue_flush_all(struct ol_txrx_vdev_t *vdev)
- 
- #ifdef QCA_SUPPORT_TXRX_HL_BUNDLE
- void
--ol_tx_hl_vdev_bundle_timer(void *vdev);
-+ol_tx_hl_vdev_bundle_timer(compat_timer_arg_t vdev);
- 
- 
- void
-@@ -137,7 +137,7 @@ ol_tx_hl_queue(struct ol_txrx_vdev_t* vdev, adf_nbuf_t msdu_list);
- 
+ #if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 15, 0)
+-    struct ol_txrx_vdev_t *vdev = from_timer(vdev, t, bundle_queue.timer);
++    struct ol_txrx_vdev_t *vdev = from_timer(vdev, t, ll_pause.timer);
  #else
- 
--static inline void ol_tx_hl_vdev_bundle_timer(void *vdev)
-+static inline void ol_tx_hl_vdev_bundle_timer(compat_timer_arg_t vdev)
- {
- 	return;
- }
-@@ -162,7 +162,7 @@ ol_tx_hl_queue_flush_all(struct ol_txrx_vdev_t* vdev)
- #define OL_TX_HL ol_tx_hl
+     struct ol_txrx_vdev_t *vdev = (struct ol_txrx_vdev_t *) context;
  #endif
- 
--void ol_tx_vdev_ll_pause_queue_send(void *context);
-+void ol_tx_vdev_ll_pause_queue_send(compat_timer_arg_t context);
- 
- adf_nbuf_t
- ol_tx_non_std_ll(
-diff --git a/CORE/CLD_TXRX/TXRX/ol_tx_queue.c b/CORE/CLD_TXRX/TXRX/ol_tx_queue.c
-index ece6da7ad106..504d48998df0 100644
---- a/CORE/CLD_TXRX/TXRX/ol_tx_queue.c
-+++ b/CORE/CLD_TXRX/TXRX/ol_tx_queue.c
-@@ -1235,7 +1235,11 @@ ol_txrx_vdev_unpause(ol_txrx_vdev_handle vdev, u_int32_t reason)
- #endif
-             if (!vdev->ll_pause.paused_reason) {
-                 adf_os_spin_unlock_bh(&vdev->ll_pause.mutex);
-+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4,15,0))
-+                ol_tx_vdev_ll_pause_queue_send(&vdev->ll_pause.timer);
-+#else
-                 ol_tx_vdev_ll_pause_queue_send(vdev);
-+#endif
-             } else {
-                 adf_os_spin_unlock_bh(&vdev->ll_pause.mutex);
-             }
-@@ -1284,9 +1288,13 @@ u_int8_t ol_tx_pdev_is_target_empty(void)
-     return 1;
- }
- 
--void ol_tx_pdev_throttle_phase_timer(void *context)
-+void ol_tx_pdev_throttle_phase_timer(compat_timer_arg_t context)
- {
-+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4,15,0))
-+    struct ol_txrx_pdev_t *pdev = from_timer(pdev, context, tx_throttle.phase_timer);
-+#else
-     struct ol_txrx_pdev_t *pdev = (struct ol_txrx_pdev_t *)context;
-+#endif
-     int ms = 0;
-     throttle_level cur_level;
-     throttle_phase cur_phase;
-@@ -1337,9 +1345,13 @@ void ol_tx_pdev_throttle_phase_timer(void *context)
- }
- 
- #ifdef QCA_SUPPORT_TXRX_VDEV_LL_TXQ
--void ol_tx_pdev_throttle_tx_timer(void *context)
-+void ol_tx_pdev_throttle_tx_timer(compat_timer_arg_t context)
- {
-+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4,15,0))
-+    struct ol_txrx_pdev_t *pdev = from_timer(pdev, context, tx_throttle.tx_timer);
-+#else
-     struct ol_txrx_pdev_t *pdev = (struct ol_txrx_pdev_t *)context;
-+#endif
-     ol_tx_pdev_ll_pause_queue_send_all(pdev);
- }
- #endif
-diff --git a/CORE/EPPING/src/epping_txrx.c b/CORE/EPPING/src/epping_txrx.c
-index 2b408ce8ebb4..19131398ab26 100644
---- a/CORE/EPPING/src/epping_txrx.c
-+++ b/CORE/EPPING/src/epping_txrx.c
-@@ -64,8 +64,11 @@
- static int epping_start_adapter(epping_adapter_t *pAdapter);
- static void epping_stop_adapter(epping_adapter_t *pAdapter);
- 
--static void epping_timer_expire(void *data)
-+static void epping_timer_expire(compat_timer_arg_t data)
- {
-+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4,15,0))
-+   epping_adapter_t *pAdapter = from_timer(pAdapter, data, epping_timer);
-+#else
-    struct net_device *dev = (struct net_device *) data;
-    epping_adapter_t *pAdapter;
- 
-@@ -76,6 +79,7 @@ static void epping_timer_expire(void *data)
-    }
- 
-    pAdapter = netdev_priv(dev);
-+#endif
-    if (pAdapter == NULL) {
-       EPPING_LOG(VOS_TRACE_LEVEL_FATAL,
-          "%s: adapter = NULL", __func__);
 diff --git a/CORE/HDD/inc/wlan_hdd_wmm.h b/CORE/HDD/inc/wlan_hdd_wmm.h
-index 1634157cf5a0..cf048f0eae06 100644
+index f5fdd866e784..c0f216aad1b7 100644
 --- a/CORE/HDD/inc/wlan_hdd_wmm.h
 +++ b/CORE/HDD/inc/wlan_hdd_wmm.h
-@@ -269,12 +269,16 @@ v_U16_t hdd_wmm_select_queue(struct net_device * dev, struct sk_buff *skb);
+@@ -269,8 +269,11 @@ v_U16_t hdd_wmm_select_queue(struct net_device * dev, struct sk_buff *skb);
    ===========================================================================*/
- 
- v_U16_t hdd_hostapd_select_queue(struct net_device * dev, struct sk_buff *skb
--#if (LINUX_VERSION_CODE >= KERNEL_VERSION(3,13,0))
-+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4,19,0))
-+                                 , struct net_device *sb_dev
-+#elif (LINUX_VERSION_CODE >= KERNEL_VERSION(3,13,0))
-                                  , void *accel_priv
- #endif
+ #if (LINUX_VERSION_CODE >= KERNEL_VERSION(4,19,0))
+ uint16_t hdd_hostapd_select_queue(struct net_device * dev, struct sk_buff *skb,
+-                                  struct net_device *sb_dev,
+-                                  select_queue_fallback_t fallback);
++                                  struct net_device *sb_dev
 +#if (LINUX_VERSION_CODE < KERNEL_VERSION(5,2,0))
- #if (LINUX_VERSION_CODE >= KERNEL_VERSION(3,14,0))
-                                  , select_queue_fallback_t fallback
- #endif
++                                  , select_queue_fallback_t fallback
 +#endif
- );
- 
- /**============================================================================
-diff --git a/CORE/HDD/src/wlan_hdd_early_suspend.c b/CORE/HDD/src/wlan_hdd_early_suspend.c
-index 1df87224dd03..46b9b563c0b7 100644
---- a/CORE/HDD/src/wlan_hdd_early_suspend.c
-+++ b/CORE/HDD/src/wlan_hdd_early_suspend.c
-@@ -1984,9 +1984,15 @@ VOS_STATUS hdd_wlan_reset_initialization(void)
-    return VOS_STATUS_SUCCESS;
- }
- 
-+static void hdd_ssr_timer_cb(compat_timer_arg_t data);
-+
- static void hdd_ssr_timer_init(void)
- {
-+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4,15,0))
-+    timer_setup(&ssr_timer, hdd_ssr_timer_cb, 0);
-+#else
-     init_timer(&ssr_timer);
-+#endif
- }
- 
- static void hdd_ssr_timer_del(void)
-@@ -1995,7 +2001,7 @@ static void hdd_ssr_timer_del(void)
-     ssr_timer_started = false;
- }
- 
--static void hdd_ssr_timer_cb(unsigned long data)
-+static void hdd_ssr_timer_cb(compat_timer_arg_t data)
- {
-     hddLog(VOS_TRACE_LEVEL_FATAL, "%s: HDD SSR timer expired!", __func__);
-     VOS_BUG(0);
-@@ -2009,7 +2015,9 @@ static void hdd_ssr_timer_start(int msec)
-                "it's running!", __func__);
-     }
-     ssr_timer.expires = jiffies + msecs_to_jiffies(msec);
-+#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,15,0))
-     ssr_timer.function = hdd_ssr_timer_cb;
-+#endif
-     add_timer(&ssr_timer);
-     ssr_timer_started = true;
- }
++                                  );
+ #elif (LINUX_VERSION_CODE >= KERNEL_VERSION(3,14,0))
+ uint16_t hdd_hostapd_select_queue(struct net_device * dev, struct sk_buff *skb,
+                                   void *accel_priv,
 diff --git a/CORE/HDD/src/wlan_hdd_main.c b/CORE/HDD/src/wlan_hdd_main.c
-index a573337cd47d..6465b2b5b9a3 100644
+index 91e996be6ead..bdee383d4b6f 100644
 --- a/CORE/HDD/src/wlan_hdd_main.c
 +++ b/CORE/HDD/src/wlan_hdd_main.c
-@@ -10943,12 +10943,16 @@ static void hdd_set_multicast_list(struct net_device *dev)
+@@ -10944,8 +10944,11 @@ static void hdd_set_multicast_list(struct net_device *dev)
    --------------------------------------------------------------------------*/
- static v_U16_t hdd_select_queue(struct net_device *dev,
-                          struct sk_buff *skb
--#if (LINUX_VERSION_CODE >= KERNEL_VERSION(3,13,0))
-+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4,19,0))
-+                         , struct net_device *sb_dev
-+#elif (LINUX_VERSION_CODE >= KERNEL_VERSION(3,13,0))
-                          , void *accel_priv
- #endif
+ #if (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 19, 0))
+ uint16_t hdd_select_queue(struct net_device *dev, struct sk_buff *skb,
+-			  struct net_device *sb_dev,
+-			  select_queue_fallback_t fallback)
++			  struct net_device *sb_dev
 +#if (LINUX_VERSION_CODE < KERNEL_VERSION(5,2,0))
- #if (LINUX_VERSION_CODE >= KERNEL_VERSION(3,14,0))
-                          , select_queue_fallback_t fallback
- #endif
++              , select_queue_fallback_t fallback
 +#endif
- )
- {
-    return hdd_wmm_select_queue(dev, skb);
-@@ -13333,13 +13337,13 @@ static void hdd_populate_fils_params(struct cfg80211_connect_resp_params
++              )
+ #elif (LINUX_VERSION_CODE >= KERNEL_VERSION(3, 14, 0))
+ uint16_t hdd_select_queue(struct net_device *dev, struct sk_buff *skb,
+ 			  void *accel_priv, select_queue_fallback_t fallback)
+@@ -13338,13 +13341,13 @@ static void hdd_populate_fils_params(struct cfg80211_connect_resp_params
                       uint16_t fils_seq_num)
  {
      /* Increament seq number to be used for next FILS */
@@ -291,7 +88,7 @@ index a573337cd47d..6465b2b5b9a3 100644
  }
  #else /* CFG80211_FILS_SK_OFFLOAD_SUPPORT */
  static inline void hdd_populate_fils_params(struct cfg80211_connect_resp_params
-@@ -13405,7 +13409,7 @@ static void hdd_connect_done(struct net_device *dev, const u8 *bssid,
+@@ -13410,7 +13413,7 @@ static void hdd_connect_done(struct net_device *dev, const u8 *bssid,
      }
      hddLog(LOG1, "FILS indicate connect status %d seq no %d",
            fils_params.status,
@@ -300,106 +97,24 @@ index a573337cd47d..6465b2b5b9a3 100644
  
      cfg80211_connect_done(dev, &fils_params, gfp);
  
-@@ -18529,9 +18533,15 @@ static bool unload_timer_started;
-  *
-  * Return: None
-  */
-+static void hdd_unload_timer_cb(compat_timer_arg_t data);
-+
- static void hdd_unload_timer_init(void)
- {
-+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4,15,0))
-+    timer_setup(&unload_timer, hdd_unload_timer_cb, 0);
-+#else
- 	init_timer(&unload_timer);
-+#endif
- }
- 
- /**
-@@ -18554,7 +18564,7 @@ static void hdd_unload_timer_del(void)
-  *
-  * Return: None
-  */
--static void hdd_unload_timer_cb(unsigned long data)
-+static void hdd_unload_timer_cb(compat_timer_arg_t data)
- {
- 	v_CONTEXT_t vos_context = NULL;
- 	hdd_context_t *hdd_ctx = NULL;
-@@ -18594,7 +18604,9 @@ static void hdd_unload_timer_start(int msec)
- 			"%s: Starting unload timer when it's running!",
- 			__func__);
- 	unload_timer.expires = jiffies + msecs_to_jiffies(msec);
-+#if (LINUX_VERSION_CODE < KERNEL_VERSION(4,15,0))
- 	unload_timer.function = hdd_unload_timer_cb;
-+#endif
- 	add_timer(&unload_timer);
- 	unload_timer_started = true;
- }
 diff --git a/CORE/HDD/src/wlan_hdd_wmm.c b/CORE/HDD/src/wlan_hdd_wmm.c
-index f3f32b7d11ca..d83c3ae3cb91 100644
+index 2064904288a3..7c59a0842118 100644
 --- a/CORE/HDD/src/wlan_hdd_wmm.c
 +++ b/CORE/HDD/src/wlan_hdd_wmm.c
-@@ -1838,12 +1838,16 @@ hdd_wmm_classify_pkt(hdd_adapter_t* pAdapter, struct sk_buff *skb,
-   @return         : Qdisc queue index
+@@ -1839,8 +1839,11 @@ hdd_wmm_classify_pkt(hdd_adapter_t* pAdapter, struct sk_buff *skb,
    ===========================================================================*/
- v_U16_t hdd_hostapd_select_queue(struct net_device * dev, struct sk_buff *skb
--#if (LINUX_VERSION_CODE >= KERNEL_VERSION(3,13,0))
-+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4,19,0))
-+                                 , struct net_device *sb_dev
-+#elif (LINUX_VERSION_CODE >= KERNEL_VERSION(3,13,0))
-                                  , void *accel_priv
- #endif
+ #if (LINUX_VERSION_CODE >= KERNEL_VERSION(4,19,0))
+ uint16_t hdd_hostapd_select_queue(struct net_device * dev, struct sk_buff *skb,
+-				  struct net_device *sb_dev,
+-				  select_queue_fallback_t fallback)
++				  struct net_device *sb_dev
 +#if (LINUX_VERSION_CODE < KERNEL_VERSION(5,2,0))
- #if (LINUX_VERSION_CODE >= KERNEL_VERSION(3,14,0))
-                                  , select_queue_fallback_t fallback
- #endif
++              , select_queue_fallback_t fallback
 +#endif
- )
- {
-    WLANTL_ACEnumType ac;
-diff --git a/CORE/SERVICES/COMMON/adf/adf_os_types.h b/CORE/SERVICES/COMMON/adf/adf_os_types.h
-index a1b5ce591c01..5ca432050aef 100644
---- a/CORE/SERVICES/COMMON/adf/adf_os_types.h
-+++ b/CORE/SERVICES/COMMON/adf/adf_os_types.h
-@@ -297,7 +297,13 @@ typedef a_bool_t (*adf_os_irqlocked_func_t)(void *);
- /**
-  * @brief Prototype of timer function
-  */
--typedef void (*adf_os_timer_func_t)(void *);
-+#if (LINUX_VERSION_CODE < KERNEL_VERSION(4, 15, 0)) && !defined(timer_setup)
-+typedef unsigned long compat_timer_arg_t;
-+#else
-+typedef struct timer_list *compat_timer_arg_t;
-+#endif
-+
-+typedef void (*adf_os_timer_func_t)(compat_timer_arg_t);
- 
- /**
-  * @brief Prototype of IRQ function.
-diff --git a/CORE/SERVICES/COMMON/adf/linux/adf_os_timer_pvt.h b/CORE/SERVICES/COMMON/adf/linux/adf_os_timer_pvt.h
-index d12b74a31163..ac63e0b85804 100644
---- a/CORE/SERVICES/COMMON/adf/linux/adf_os_timer_pvt.h
-+++ b/CORE/SERVICES/COMMON/adf/linux/adf_os_timer_pvt.h
-@@ -70,12 +70,19 @@ __adf_os_timer_init(adf_os_handle_t      hdl,
-                     void                *arg,
-                     uint8_t type)
- {
-+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4,15,0))
-+    if (ADF_DEFERRABLE_TIMER == type)
-+        timer_setup(timer, func, TIMER_DEFERRABLE);
-+    else
-+        timer_setup(timer, func, 0);
-+#else
-     if (ADF_DEFERRABLE_TIMER == type)
-         init_timer_deferrable(timer);
-     else
-         init_timer(timer);
-     timer->function = (adf_dummy_timer_func_t)func;
-     timer->data = (unsigned long)arg;
-+#endif
- 
-     return A_STATUS_OK;
- }
++              )
+ #elif (LINUX_VERSION_CODE >= KERNEL_VERSION(3,14,0))
+ uint16_t hdd_hostapd_select_queue(struct net_device * dev, struct sk_buff *skb,
+ 				  void *accel_priv,
 diff --git a/CORE/SERVICES/COMMON/adf/linux/qdf_crypto.c b/CORE/SERVICES/COMMON/adf/linux/qdf_crypto.c
 index 44088838b857..19a17cb4bf6e 100644
 --- a/CORE/SERVICES/COMMON/adf/linux/qdf_crypto.c
@@ -434,132 +149,6 @@ index 44088838b857..19a17cb4bf6e 100644
  
          ret = crypto_shash_init(desc);
          if (ret) {
-diff --git a/CORE/SERVICES/COMMON/osdep_adf.h b/CORE/SERVICES/COMMON/osdep_adf.h
-index 7b2ba62e3aea..adf971081283 100644
---- a/CORE/SERVICES/COMMON/osdep_adf.h
-+++ b/CORE/SERVICES/COMMON/osdep_adf.h
-@@ -445,7 +445,7 @@ typedef struct _NIC_DEV * osdev_t;
- 
- 
- typedef struct timer_list        os_timer_t;
--typedef void (*timer_func)(void *);
-+typedef void (*timer_func)(compat_timer_arg_t);
- 
- typedef struct _os_mesg_t {
-     STAILQ_ENTRY(_os_mesg_t)  mesg_next;
-@@ -638,7 +638,7 @@ typedef dma_addr_t * dma_context_t;
- #define OS_DECLARE_TIMER(_fn)                  void _fn(void *)
- 
- #define OS_TIMER_FUNC(_fn)                     \
--    void _fn(void *timer_arg)
-+    void _fn(compat_timer_arg_t timer_arg)
- 
- #define OS_GET_TIMER_ARG(_arg, _type)          \
-     (_arg) = (_type)(timer_arg)
-@@ -680,9 +680,13 @@ typedef enum _mesgq_event_delivery_type {
-  */
- 
- static INLINE void
--os_mesgq_handler(void *timer_arg)
-+os_mesgq_handler(compat_timer_arg_t timer_arg)
- {
-+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4,15,0))
-+    os_mesg_queue_t    *queue = from_timer(queue, timer_arg, _timer);
-+#else
-     os_mesg_queue_t    *queue = (os_mesg_queue_t*)timer_arg;
-+#endif
-     os_mesg_t          *mesg = NULL;
-     void               *msg;
- 
-diff --git a/CORE/SERVICES/HIF/PCIe/copy_engine.c b/CORE/SERVICES/HIF/PCIe/copy_engine.c
-index ebece13f3e05..ccf1b32a2a06 100644
---- a/CORE/SERVICES/HIF/PCIe/copy_engine.c
-+++ b/CORE/SERVICES/HIF/PCIe/copy_engine.c
-@@ -1305,9 +1305,13 @@ more_watermarks:
- }
- 
- static void
--CE_poll_timeout(void *arg)
-+CE_poll_timeout(compat_timer_arg_t arg)
- {
-+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4,15,0))
-+    struct CE_state *CE_state = from_timer(CE_state, arg, poll_timer);
-+#else
-     struct CE_state *CE_state = (struct CE_state *) arg;
-+#endif
-     if (CE_state->timer_inited) {
-         CE_per_engine_service(CE_state->sc, CE_state->id);
-         adf_os_timer_mod(&CE_state->poll_timer, CE_POLL_TIMEOUT);
-diff --git a/CORE/SERVICES/HIF/PCIe/hif_pci.c b/CORE/SERVICES/HIF/PCIe/hif_pci.c
-index 0511191e3175..b6f39f60ee97 100644
---- a/CORE/SERVICES/HIF/PCIe/hif_pci.c
-+++ b/CORE/SERVICES/HIF/PCIe/hif_pci.c
-@@ -2360,9 +2360,13 @@ HIF_wake_target_cpu(struct hif_pci_softc *sc)
- #define HIF_MIN_SLEEP_INACTIVITY_TIME_MS     50
- #define HIF_SLEEP_INACTIVITY_TIMER_PERIOD_MS 60
- static void
--HIF_sleep_entry(void *arg)
-+HIF_sleep_entry(compat_timer_arg_t arg)
- {
-+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4,15,0))
-+	struct HIF_CE_state *hif_state = from_timer(hif_state, arg, sleep_timer);
-+#else
- 	struct HIF_CE_state *hif_state = (struct HIF_CE_state *)arg;
-+#endif
- 	A_target_id_t pci_addr = TARGID_TO_PCI_ADDR(hif_state->targid);
- 	struct hif_pci_softc *sc = hif_state->sc;
- 	u_int32_t idle_ms;
-diff --git a/CORE/SERVICES/HIF/sdio/linux/native_sdio/src/hif.c b/CORE/SERVICES/HIF/sdio/linux/native_sdio/src/hif.c
-index f4634d6bd3aa..6bc058777ede 100644
---- a/CORE/SERVICES/HIF/sdio/linux/native_sdio/src/hif.c
-+++ b/CORE/SERVICES/HIF/sdio/linux/native_sdio/src/hif.c
-@@ -1481,9 +1481,13 @@ static void hif_oob_irq_handler(void *dev_para)
- 
- #ifdef HIF_MBOX_SLEEP_WAR
- static void
--HIF_sleep_entry(void *arg)
-+HIF_sleep_entry(compat_timer_arg_t arg)
- {
-+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4,15,0))
-+    HIF_DEVICE *device = from_timer(device, arg, sleep_timer);
-+#else
-     HIF_DEVICE *device = (HIF_DEVICE *)arg;
-+#endif
-     A_UINT32 idle_ms;
- 
-     idle_ms = adf_os_ticks_to_msecs(adf_os_ticks()
-diff --git a/CORE/SERVICES/HTC/htc_internal.h b/CORE/SERVICES/HTC/htc_internal.h
-index f6bd7cdd10be..f8c10ed74f83 100644
---- a/CORE/SERVICES/HTC/htc_internal.h
-+++ b/CORE/SERVICES/HTC/htc_internal.h
-@@ -282,7 +282,7 @@ void        HTCProcessCreditRpt(HTC_TARGET        *target,
-                                 int                NumEntries,
-                                 HTC_ENDPOINT_ID    FromEndpoint);
- void        HTCFwEventHandler(void *context, A_STATUS status);
--void        HTCSendCompleteCheckCleanup(void *context);
-+void        HTCSendCompleteCheckCleanup(compat_timer_arg_t context);
- void        HTCTxResumeAllHandler(void *context);
- 
- void htc_credit_record(htc_credit_exchange_type type, A_UINT32 tx_credit,
-diff --git a/CORE/SERVICES/HTC/htc_send.c b/CORE/SERVICES/HTC/htc_send.c
-index d231ce509bc1..e36ec7cf202e 100644
---- a/CORE/SERVICES/HTC/htc_send.c
-+++ b/CORE/SERVICES/HTC/htc_send.c
-@@ -160,9 +160,13 @@ static void SendPacketCompletion(HTC_TARGET *target, HTC_PACKET *pPacket)
- }
- 
- void
--HTCSendCompleteCheckCleanup(void *context)
-+HTCSendCompleteCheckCleanup(compat_timer_arg_t context)
- {
-+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4,15,0))
-+    HTC_ENDPOINT *pEndpoint = from_timer(pEndpoint, context, ul_poll_timer);
-+#else
-     HTC_ENDPOINT *pEndpoint = (HTC_ENDPOINT *) context;
-+#endif
-     HTCSendCompleteCheck(pEndpoint, 1);
- }
- 
 diff --git a/CORE/SVC/src/logging/wlan_logging_sock_svc.c b/CORE/SVC/src/logging/wlan_logging_sock_svc.c
 index 6ed6c0418ea5..5b9b041a58ed 100644
 --- a/CORE/SVC/src/logging/wlan_logging_sock_svc.c
@@ -583,10 +172,34 @@ index 6ed6c0418ea5..5b9b041a58ed 100644
  {
  	/* Add the current time stamp */
 diff --git a/CORE/VOSS/inc/vos_cnss.h b/CORE/VOSS/inc/vos_cnss.h
-index 51e1eaf316e4..8539de07eca3 100644
+index 51e1eaf316e4..498db4f0bdc1 100644
 --- a/CORE/VOSS/inc/vos_cnss.h
 +++ b/CORE/VOSS/inc/vos_cnss.h
-@@ -107,6 +107,14 @@ static inline void vos_pm_wake_lock_release(struct wakeup_source *ws)
+@@ -85,6 +85,23 @@ static inline void vos_flush_delayed_work(void *dwork)
+ 	cancel_delayed_work_sync(dwork);
+ }
+ 
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(5,4,0))
++static void wakeup_source_prepare(struct wakeup_source *ws, const char *name)
++{
++	if (ws) {
++		memset(ws, 0, sizeof(*ws));
++		ws->name = name;
++	}
++}
++
++static inline void wakeup_source_init(struct wakeup_source *ws,
++				      const char *name)
++{
++	wakeup_source_prepare(ws, name);
++	wakeup_source_add(ws);
++}
++#endif
++
+ static inline void vos_pm_wake_lock_init(struct wakeup_source *ws,
+ 					const char *name)
+ {
+@@ -107,6 +124,14 @@ static inline void vos_pm_wake_lock_release(struct wakeup_source *ws)
  	__pm_relax(ws);
  }
  
@@ -601,7 +214,7 @@ index 51e1eaf316e4..8539de07eca3 100644
  static inline void vos_pm_wake_lock_destroy(struct wakeup_source *ws)
  {
  	wakeup_source_trash(ws);
-@@ -119,6 +127,13 @@ static inline int vos_wlan_pm_control(bool vote)
+@@ -119,6 +144,13 @@ static inline int vos_wlan_pm_control(bool vote)
  static inline void vos_lock_pm_sem(void) { return; }
  static inline void vos_release_pm_sem(void) { return; }
  
@@ -654,45 +267,10 @@ index c0381e89c052..01012a725c80 100644
   * vos_pkt_trace_buf_update - Update storage buffer with interested event string
   * @event_string: A string for packet type or outstanding event
 diff --git a/CORE/VOSS/src/vos_timer.c b/CORE/VOSS/src/vos_timer.c
-index 42654ce65dbd..f87c7bb8c589 100644
+index d38fe59e37d0..c077467dc03c 100644
 --- a/CORE/VOSS/src/vos_timer.c
 +++ b/CORE/VOSS/src/vos_timer.c
-@@ -112,9 +112,13 @@ static void tryAllowingSleep( VOS_TIMER_TYPE type )
- 
-   --------------------------------------------------------------------------*/
- 
--static void vos_linux_timer_callback (unsigned long data)
-+static void vos_linux_timer_callback (compat_timer_arg_t data)
- {
-+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4,15,0))
-+   vos_timer_t *timer = from_timer(timer, data, platformInfo.Timer);
-+#else
-    vos_timer_t *timer = ( vos_timer_t *)data;
-+#endif
-    vos_msg_t msg;
-    VOS_STATUS vStatus;
- 
-@@ -471,12 +475,19 @@ VOS_STATUS vos_timer_init( vos_timer_t *timer, VOS_TIMER_TYPE timerType,
-    // set the various members of the timer structure
-    // with arguments passed or with default values
-    adf_os_spinlock_init(&timer->platformInfo.spinlock);
-+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4,15,0))
-+   if (VOS_TIMER_TYPE_SW == timerType)
-+      timer_setup(&(timer->platformInfo.Timer), vos_linux_timer_callback, TIMER_DEFERRABLE);
-+   else
-+      timer_setup(&(timer->platformInfo.Timer), vos_linux_timer_callback, 0);
-+#else
-    if (VOS_TIMER_TYPE_SW == timerType)
-       init_timer_deferrable(&(timer->platformInfo.Timer));
-    else
-       init_timer(&(timer->platformInfo.Timer));
-    timer->platformInfo.Timer.function = vos_linux_timer_callback;
-    timer->platformInfo.Timer.data = (unsigned long)timer;
-+#endif
-    timer->callback = callback;
-    timer->userData = userData;
-    timer->type = timerType;
-@@ -846,6 +857,17 @@ v_TIME_t vos_timer_get_system_ticks( v_VOID_t )
+@@ -854,6 +854,17 @@ v_TIME_t vos_timer_get_system_ticks( v_VOID_t )
  }
  
  
@@ -711,7 +289,7 @@ index 42654ce65dbd..f87c7bb8c589 100644
  
    \brief vos_timer_get_system_time() - Get the system time in milliseconds
 diff --git a/Kbuild b/Kbuild
-index f67f65850e1a..bc8f1ac13874 100644
+index bfc58371add3..8f5a8cd89d32 100644
 --- a/Kbuild
 +++ b/Kbuild
 @@ -192,7 +192,7 @@ CONFIG_WLAN_FEATURE_SAE := y
@@ -741,5 +319,5 @@ index f67f65850e1a..bc8f1ac13874 100644
  		-DHAL_SELF_STA_PER_BSS=1 \
  		-DWLAN_FEATURE_VOWIFI_11R \
 -- 
-2.23.0
+2.21.0 (Apple Git-122)
 
