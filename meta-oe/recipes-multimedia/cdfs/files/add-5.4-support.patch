@@ -1,0 +1,17 @@
+diff --git a/Makefile b/Makefile
+index 715d83439913..eeb3176324e9 100644
+--- a/Makefile
++++ b/Makefile
+@@ -7,10 +7,10 @@ KDIR        := /lib/modules/$(shell uname -r)/build
+ PWD         := $(shell pwd)
+ 
+ all:
+-	$(MAKE) -C $(KDIR) SUBDIRS=$(PWD) modules
++	$(MAKE) -C $(KDIR) M=$(PWD) modules
+ 
+ install:
+-	$(MAKE) -C $(KDIR) SUBDIRS=$(PWD) modules_install
++	$(MAKE) -C $(KDIR) M=$(PWD) modules_install
+ endif
+ 
+ 

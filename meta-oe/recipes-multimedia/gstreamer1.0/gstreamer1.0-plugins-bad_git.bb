@@ -20,6 +20,7 @@ SRC_URI += " \
         file://0005-rtmp-fix-seeking-and-potential-segfault.patch \
         file://0006-dvbapi5-fix-old-kernel.patch \
         file://0007-hls-main-thread-block.patch \
+        file://0001-Revert-tsdemux-Limit-the-maximum-PES-payload-size.patch \
 "
 
 PACKAGECONFIG ??= " \
