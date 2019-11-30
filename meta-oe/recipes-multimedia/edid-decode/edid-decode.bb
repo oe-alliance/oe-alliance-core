@@ -3,8 +3,6 @@ DESCRIPTION = "edid-decode decodes EDID monitor description data in human-readab
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://edid-decode.cpp;beginline=1;endline=8;md5=bff0dd3acca4abcb1cdce2d39db63524"
 
-RDEPENDS_${PN}_remove = "libm6"
-
 inherit gitpkgv
 
 SRCREV = "${AUTOREV}"
@@ -15,5 +13,7 @@ PR = "r2"
 SRC_URI = "git://git.linuxtv.org/cgit.cgi/edid-decode.git;protocol=https"
 
 S = "${WORKDIR}/git"
+
+CFLAGS_sh4 += "-std=c++11"
 
 inherit autotools-brokensep pkgconfig
