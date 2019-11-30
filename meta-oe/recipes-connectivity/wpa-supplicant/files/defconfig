@@ -165,6 +165,3 @@ CONFIG_P2P=y
 # This can be used to enable Wi-Fi Direct extensions for P2P using an external
 # program to control the additional information exchanges in the messages.
 CONFIG_WIFI_DISPLAY=y
-
-# Simultaneous Authentication of Equals (SAE), WPA3-Personal
-CONFIG_SAE=y
