@@ -3,8 +3,6 @@ DESCRIPTION = "edid-decode decodes EDID monitor description data in human-readab
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://edid-decode.cpp;beginline=1;endline=8;md5=bff0dd3acca4abcb1cdce2d39db63524"
 
-FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
-
 inherit gitpkgv
 
 SRCREV = "${AUTOREV}"
@@ -13,8 +11,6 @@ PKGV = "1.0+git${GITPKGV}"
 PR = "r2"
 
 SRC_URI = "git://git.linuxtv.org/cgit.cgi/edid-decode.git;protocol=https"
-
-SRC_URI_append_sh4 = " file://sh4-parse-base-block-compile-fix.patch"
 
 S = "${WORKDIR}/git"
 
