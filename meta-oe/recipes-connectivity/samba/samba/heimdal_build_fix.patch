@@ -1,0 +1,68 @@
+From ad6be60f48281c88b28fbd21c93d9df8fb81cae3 Mon Sep 17 00:00:00 2001
+From: Jones Syue <jonessyue@qnap.com>
+Date: Fri, 12 Apr 2019 13:59:32 +0800
+Subject: [PATCH] s4:heimdal_build: fix --nonshared-binary=smbpasswd failure by
+ rep_closefrom
+
+This fixes a conflict when building with --nonshared-binary=smbpasswd
+
+    [1727/1727] Linking default/source3/utils/smbpasswd
+    default/source4/heimdal/lib/roken/closefrom_1.o: In function `rep_closefrom':
+    closefrom.c:(.text+0x0): multiple definition of `rep_closefrom'
+    default/lib/replace/closefrom_2.o:closefrom.c:(.text+0x26f): first defined here
+    collect2: error: ld returned 1 exit status
+
+And also silences a lot of "... has been redefined" compiler warnings on
+platforms that don't have closefrom
+
+    [188/236] Compiling source4/heimdal/lib/roken/xfree.c
+    In file included from ../../source4/heimdal_build/roken.h:156:0,
+                     from ../../source4/heimdal/lib/roken/xfree.c:36:
+    ../../source4/heimdal/lib/roken/roken.h.in:1081:0: warning: "closefrom" redefined
+     #define closefrom rk_closefrom
+     ^
+    In file included from ../../source4/heimdal_build/config.h:10:0,
+                     from ../../source4/heimdal/lib/roken/xfree.c:34:
+    ../../lib/replace/../replace/replace.h:262:0: note: this is the location of the previous definition
+     #define closefrom rep_closefrom
+     ^
+
+Related to: 3a7ebd0e940e80b185a9240c093e1fee6795fd5b
+
+Signed-off-by: Jones Syue <jonessyue@qnap.com>
+---
+ source4/heimdal/lib/roken/roken.h.in | 1 +
+ source4/heimdal_build/config.h       | 5 -----
+ 2 files changed, 1 insertion(+), 5 deletions(-)
+
+diff --git a/source4/heimdal/lib/roken/roken.h.in b/source4/heimdal/lib/roken/roken.h.in
+index a6299ae..09208b5 100644
+--- a/source4/heimdal/lib/roken/roken.h.in
++++ b/source4/heimdal/lib/roken/roken.h.in
+@@ -1078,6 +1078,7 @@ vis(char *, int, int, int);
+ #endif
+ 
+ #if !defined(HAVE_CLOSEFROM)
++#undef closefrom
+ #define closefrom rk_closefrom
+ ROKEN_LIB_FUNCTION int ROKEN_LIB_CALL
+ closefrom(int);
+diff --git a/source4/heimdal_build/config.h b/source4/heimdal_build/config.h
+index 85ac3ba..045980d 100644
+--- a/source4/heimdal_build/config.h
++++ b/source4/heimdal_build/config.h
+@@ -52,9 +52,4 @@
+ /* lib/replace provides an XSI Compatable strerror_r so use that */
+ #define STRERROR_R_PROTO_COMPATIBLE
+
+-/* lib/replace provides a closefrom */
+-#ifndef HAVE_CLOSEFROM
+-#define HAVE_CLOSEFROM 1
+-#endif
+-
+ #endif
+
+-- 
+2.1.4
+
+
