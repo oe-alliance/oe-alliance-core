@@ -6,7 +6,7 @@ inherit cpan-base perlnative pythonnative
 
 DEPENDS += "qemu-native libxslt-native docbook-xsl-stylesheets-native e2fsprogs readline virtual/libiconv zlib popt libpam python asn1compile-native"
 
-inherit distro_features_check
+inherit features_check
 REQUIRED_DISTRO_FEATURES = "pam"
 
 DEPENDS_append_libc-musl = " libtirpc"
