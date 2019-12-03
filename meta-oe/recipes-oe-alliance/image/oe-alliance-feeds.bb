@@ -95,6 +95,7 @@ RDEPENDS_${PN} = " \
     mtd-utils \
     nano \
     net-snmp \
+    nss \
     ntfs-3g \
     ntp \
     ${@bb.utils.contains("DEFAULTTUNE", "sh4", "" , "nodejs dvb-apps ", d)} \
