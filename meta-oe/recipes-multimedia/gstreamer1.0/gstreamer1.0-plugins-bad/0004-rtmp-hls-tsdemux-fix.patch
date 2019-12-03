@@ -1,4 +1,4 @@
-From c496fdd9874261f29ae485e2907c3f838c95a1d3 Mon Sep 17 00:00:00 2001
+From 6d5e30a0ca5fc2346fc02295ae57706f36c85bd9 Mon Sep 17 00:00:00 2001
 From: captain <openatv@gmail.com>
 Date: Mon, 5 Dec 2016 11:52:55 +0100
 
@@ -7,10 +7,10 @@ Date: Mon, 5 Dec 2016 11:52:55 +0100
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/gst/mpegtsdemux/tsdemux.c b/gst/mpegtsdemux/tsdemux.c
-index b0ff238..b7b423e 100644
+index c50f81179..fb0fe4c6f 100644
 --- a/gst/mpegtsdemux/tsdemux.c
 +++ b/gst/mpegtsdemux/tsdemux.c
-@@ -1761,7 +1761,7 @@ gst_ts_demux_stream_added (MpegTSBase * base, MpegTSBaseStream * bstream,
+@@ -1842,7 +1842,7 @@ gst_ts_demux_stream_added (MpegTSBase * base, MpegTSBaseStream * bstream,
      stream->first_pts = GST_CLOCK_TIME_NONE;
      stream->raw_pts = -1;
      stream->raw_dts = -1;

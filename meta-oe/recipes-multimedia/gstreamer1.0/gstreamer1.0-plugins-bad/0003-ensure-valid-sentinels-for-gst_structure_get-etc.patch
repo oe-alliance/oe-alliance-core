@@ -1,4 +1,4 @@
-From fcd806e86763f00934a76829a28c36d9f85aa144 Mon Sep 17 00:00:00 2001
+From 1caaa67de32915b4689f740804291d9309fbcbb3 Mon Sep 17 00:00:00 2001
 From: Andre McCurdy <armccurdy@gmail.com>
 Date: Tue, 9 Feb 2016 14:00:00 -0800
 Subject: [PATCH] ensure valid sentinals for gst_structure_get() etc
@@ -25,19 +25,19 @@ Signed-off-by: Andre McCurdy <armccurdy@gmail.com>
  3 files changed, 7 insertions(+), 7 deletions(-)
 
 diff --git a/sys/decklink/gstdecklink.cpp b/sys/decklink/gstdecklink.cpp
-index e1f91ba..94b0a24 100644
+index 25493ce2a..37712e6f4 100644
 --- a/sys/decklink/gstdecklink.cpp
 +++ b/sys/decklink/gstdecklink.cpp
-@@ -548,7 +548,7 @@ gst_decklink_mode_get_structure (GstDecklinkModeEnum e, BMDPixelFormat f,
+@@ -631,7 +631,7 @@ gst_decklink_mode_get_generic_structure (GstDecklinkModeEnum e)
        "pixel-aspect-ratio", GST_TYPE_FRACTION, mode->par_n, mode->par_d,
        "interlace-mode", G_TYPE_STRING,
        mode->interlaced ? "interleaved" : "progressive",
 -      "framerate", GST_TYPE_FRACTION, mode->fps_n, mode->fps_d, NULL);
 +      "framerate", GST_TYPE_FRACTION, mode->fps_n, mode->fps_d, (void*)NULL);
  
-   if (input && mode->interlaced) {
-     if (mode->tff)
-@@ -563,16 +563,16 @@ gst_decklink_mode_get_structure (GstDecklinkModeEnum e, BMDPixelFormat f,
+   return s;
+ }
+@@ -656,16 +656,16 @@ gst_decklink_mode_get_structure (GstDecklinkModeEnum e, BMDPixelFormat f,
      case bmdFormat8BitYUV:     /* '2vuy' */
        gst_structure_set (s, "format", G_TYPE_STRING, "UYVY",
            "colorimetry", G_TYPE_STRING, mode->colorimetry,
@@ -59,10 +59,10 @@ index e1f91ba..94b0a24 100644
      case bmdFormat10BitRGB:    /* 'r210' Big-endian RGB 10-bit per component with SMPTE video levels (64-960). Packed as 2:10:10:10 */
      case bmdFormat12BitRGB:    /* 'R12B' Big-endian RGB 12-bit per component with full range (0-4095). Packed as 12-bit per component */
 diff --git a/sys/decklink/gstdecklinkaudiosrc.cpp b/sys/decklink/gstdecklinkaudiosrc.cpp
-index 3abbc50..c71723e 100644
+index 2fef934c8..c47229abf 100644
 --- a/sys/decklink/gstdecklinkaudiosrc.cpp
 +++ b/sys/decklink/gstdecklinkaudiosrc.cpp
-@@ -369,7 +369,7 @@ gst_decklink_audio_src_set_caps (GstBaseSrc * bsrc, GstCaps * caps)
+@@ -379,7 +379,7 @@ gst_decklink_audio_src_start (GstDecklinkAudioSrc * self)
        g_mutex_unlock (&self->input->lock);
  
        if (videosrc) {
@@ -72,10 +72,10 @@ index 3abbc50..c71723e 100644
  
          switch (vconn) {
 diff --git a/sys/decklink/gstdecklinkvideosink.cpp b/sys/decklink/gstdecklinkvideosink.cpp
-index cf8b42c..afc6095 100644
+index 5ddbe0a2a..2f7011804 100644
 --- a/sys/decklink/gstdecklinkvideosink.cpp
 +++ b/sys/decklink/gstdecklinkvideosink.cpp
-@@ -172,7 +172,7 @@ reset_framerate (GstCapsFeatures * features, GstStructure * structure,
+@@ -286,7 +286,7 @@ reset_framerate (GstCapsFeatures * features, GstStructure * structure,
      gpointer user_data)
  {
    gst_structure_set (structure, "framerate", GST_TYPE_FRACTION_RANGE, 0, 1,
