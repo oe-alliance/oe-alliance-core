@@ -1,4 +1,4 @@
-From e141dcb746aabfa268884557b4544e4bfcde0e15 Mon Sep 17 00:00:00 2001
+From 8777ec84e4e1a4becb249a9cfb6bce7c4bf7d2d0 Mon Sep 17 00:00:00 2001
 From: christophecvr <stefansat@telenet.be>
 Date: Fri, 24 Feb 2017 14:34:33 +0100
 Subject: [PATCH] Try-out continu in hls to avoid blocking of main thread.
@@ -18,10 +18,10 @@ Subject: [PATCH] Try-out continu in hls to avoid blocking of main thread.
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/ext/hls/m3u8.c b/ext/hls/m3u8.c
-index 594a963..74f3fd6 100644
+index 679e28876..f5b208fb1 100644
 --- a/ext/hls/m3u8.c
 +++ b/ext/hls/m3u8.c
-@@ -358,9 +358,9 @@ check_media_seqnums (GstM3U8 * self, GList * previous_files)
+@@ -393,9 +393,9 @@ check_media_seqnums (GstM3U8 * self, GList * previous_files)
  
      if (f1->sequence == f2->sequence && !g_str_equal (f1->uri, f2->uri)) {
        /* Same sequence, different URI. This is bad! */
