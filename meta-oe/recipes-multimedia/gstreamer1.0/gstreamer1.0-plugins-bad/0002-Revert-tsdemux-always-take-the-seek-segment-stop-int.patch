@@ -1,0 +1,31 @@
+From d0f991fc37a150ecd4cc0262bd9f82b32d84d74f Mon Sep 17 00:00:00 2001
+From: Betacentauri <betacentauri@arcor.de>
+Date: Wed, 4 Dec 2019 19:48:49 +0100
+Subject: [PATCH 1/2] Revert "tsdemux: always take the seek segment stop into
+ account"
+
+This reverts commit bc4c221be385b0a52ca86ef39d0de6e35685a89e.
+---
+ gst/mpegtsdemux/tsdemux.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+diff --git a/gst/mpegtsdemux/tsdemux.c b/gst/mpegtsdemux/tsdemux.c
+index c72f50c..445520b 100644
+--- a/gst/mpegtsdemux/tsdemux.c
++++ b/gst/mpegtsdemux/tsdemux.c
+@@ -2525,11 +2525,9 @@ calculate_and_push_newsegment (GstTSDemux * demux, TSDemuxStream * stream,
+       GstSegment *seg = &base->out_segment;
+       GstClockTime base =
+           seg->base + seg->position - (seg->start + seg->offset);
+-      GstClockTime stop = seg->stop;
+-
+       gst_segment_init (seg, GST_FORMAT_TIME);
+       seg->start = firstts;
+-      seg->stop = MAX (seg->start, stop);
++      seg->stop = GST_CLOCK_TIME_NONE;
+       seg->position = firstts;
+       seg->time = firstts;
+       seg->rate = demux->rate;
+-- 
+2.7.4
+
