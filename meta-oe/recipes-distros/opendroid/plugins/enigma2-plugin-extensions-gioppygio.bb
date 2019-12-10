@@ -1,4 +1,4 @@
-DESCRIPTION = "enigma2-plugin-extensions-GioppyGio"
+DESCRIPTION = "enigma2-plugins-GioppyGio"
 MAINTAINER = "opendroid-Team"
 SECTION = "base"
 PRIORITY = "required"
@@ -9,10 +9,10 @@ require conf/license/license-gplv2.inc
 
 inherit gitpkgv
 SRCREV = "${AUTOREV}"
-PV = "2.3+git${SRCPV}"
-PKGV = "2.3+git${GITPKGV}"
-VER ="2.3"
-PR = "r5"
+PV = "7.0+git${SRCPV}"
+PKGV = "7.0+git${GITPKGV}"
+VER ="7.0"
+PR = "r6"
 
 SRC_URI="git://github.com/opendroid-Team/gioppygio-settings-and-picons.git"
 
