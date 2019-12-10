@@ -18,25 +18,27 @@ inherit pkgconfig gettext
 SRCREV_FORMAT = "gst"
 
 SRC_URI = "git://gitlab.freedesktop.org/gstreamer/gstreamer;protocol=https;branch=master;name=gst \
-           file://0001-meson-build-optimization.patch \
            file://0002-gst-gstpluginloader.c-when-env-var-is-set-do-not-fal.patch \
            file://0001-revert-use-new-gst-adapter-get-buffer.patch \
            file://0002-continue-on-nondefined-64bit-atomics.patch \
 "
 
-PACKAGECONFIG ??= ""
+PACKAGECONFIG ??= "tools"
 
 PACKAGECONFIG[debug] = "-Ddebug=true,-Ddebug=false"
 PACKAGECONFIG[tests] = "-Dtests=enabled,-Dtests=disabled"
 PACKAGECONFIG[tracer_hooks] = "-Dtracer_hooks=true,-Dtracer_hooks=false,"
 PACKAGECONFIG[unwind] = "-Dlibunwind=enabled,-Dlibunwind=disabled,libunwind"
 PACKAGECONFIG[dw] = "-Dlibdw=enabled,-Dlibdw=disabled,elfutils"
+PACKAGECONFIG[bash-completion] = "-Dbash-completion=enabled,-Dbash-completion=disabled,bash-completion"
+PACKAGECONFIG[tools] = "-Dtools=enabled,-Dtools=disabled"
 
 EXTRA_OEMESON = " \
     -Ddoc=disabled \
     -Dgtk_doc=disabled \
     -Dexamples=disabled \
     --libexecdir=${libdir} \
+    --buildtype=minsize \
 "
 
 PACKAGES += "${PN}-bash-completion"

@@ -1,0 +1,11 @@
+--- a/meson.build
++++ b/meson.build
+@@ -175,7 +175,7 @@ foreach extra_arg : warning_flags
+ endforeach
+ 
+ configinc = include_directories('.')
+-plugins_install_dir = '@0@/gstreamer-1.0'.format(get_option('libdir'))
++plugins_install_dir = '@0@/'.format(get_option('libdir'))
+ 
+ pkgconfig = import('pkgconfig')
+ plugins_pkgconfig_install_dir = join_paths(plugins_install_dir, 'pkgconfig')
