@@ -18,7 +18,7 @@ FILES_${PN} = "/usr/share/enigma2 /usr/lib/enigma2/python/Components"
 S = "${WORKDIR}/git"
 
 do_compile_append() {
-   python -O -m compileall ${S}
+   python2 -O -m compileall ${S}
 }
 
 do_install() {

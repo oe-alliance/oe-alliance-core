@@ -18,7 +18,7 @@ FILES_${PN} = "/"
 S = "${WORKDIR}/git/OPD-Blue-Line"
 
 do_compile_append() {
-python -O -m compileall ${S}
+python2 -O -m compileall ${S}
 }
 
 do_install() {

@@ -21,7 +21,7 @@ FILES_${PN} = "/usr/share/enigma2/NOVUM_FHD_Light"
 S = "${WORKDIR}/git"
 
 do_compile_append() {
-   python -O -m compileall ${S}
+   python2 -O -m compileall ${S}
 }
 
 do_install() {

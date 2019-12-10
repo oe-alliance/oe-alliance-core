@@ -21,7 +21,7 @@ do_install() {
 
 # Just a quick hack to "compile" the python parts.
 do_install_append() {
-    python -O -m compileall ${D}
+    python2 -O -m compileall ${D}
 }
 
 FILES_${PN} = "${PLUGINPATH}/*.pyo"

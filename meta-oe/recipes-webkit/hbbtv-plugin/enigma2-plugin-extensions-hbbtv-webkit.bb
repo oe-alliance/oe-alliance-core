@@ -32,7 +32,7 @@ do_install_append() {
     
     # Python Files
     cp -aRf ${S}/HbbTV/* ${D}${libdir}/${DESTDIR}
-    python -O -m compileall ${D}${libdir}/${DESTDIR}
+    python2 -O -m compileall ${D}${libdir}/${DESTDIR}
     rm -rf ${D}${libdir}/${DESTDIR}/*.py
 }
 

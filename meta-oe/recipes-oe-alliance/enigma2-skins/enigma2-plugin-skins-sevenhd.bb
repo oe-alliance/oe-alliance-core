@@ -20,7 +20,7 @@ FILES_${PN} = "/usr/*"
 S = "${WORKDIR}/git/data"
 
 do_compile_append() {
-python -O -m compileall ${S}
+python2 -O -m compileall ${S}
 }
 
 do_install() {

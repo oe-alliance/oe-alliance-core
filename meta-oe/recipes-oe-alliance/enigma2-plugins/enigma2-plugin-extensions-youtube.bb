@@ -19,7 +19,7 @@ S="${WORKDIR}/git"
 
 # Just a quick hack to "compile" it
 do_compile() {
-    python -O -m compileall ${S}
+    python2 -O -m compileall ${S}
     cd ${S}
     for f in $(find ./po -name *.po ); do
         l=$(echo ${f%} | sed 's/\.po//' | sed 's/.*po\///')

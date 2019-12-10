@@ -27,7 +27,7 @@ FILES_${PN}-src = "\
 S = "${WORKDIR}/git"
 
 do_compile() {
-    python -O -m compileall ${S}/usr
+    python2 -O -m compileall ${S}/usr
     for f in $(find ${S}/locale -name *.po ); do
         l=$(echo ${f%} | sed 's/\.po//' | sed 's/.*locale\///')
         #mkdir -p ${S}/usr/lib/enigma2/python/Plugins/Extensions/KravenFHD/locale/${l%}/LC_MESSAGES

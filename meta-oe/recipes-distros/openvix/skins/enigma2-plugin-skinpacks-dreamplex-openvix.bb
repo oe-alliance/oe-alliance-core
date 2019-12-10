@@ -25,7 +25,7 @@ FILES_${EPSM}-plex-experience = "/usr/lib/enigma2/python/Plugins/Extensions/Drea
 S = "${WORKDIR}/git"
 
 do_compile_append() {
-   python -O -m compileall ${S}
+   python2 -O -m compileall ${S}
 }
 
 do_install() {

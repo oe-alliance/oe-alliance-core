@@ -38,7 +38,7 @@ INITSCRIPT_NAME = "${PN}"
 INITSCRIPT_PARAMS = "defaults 60 "
 
 do_compile() {
-    python -m compileall ${S}
+    python2 -m compileall ${S}
 }
 
 do_install() {

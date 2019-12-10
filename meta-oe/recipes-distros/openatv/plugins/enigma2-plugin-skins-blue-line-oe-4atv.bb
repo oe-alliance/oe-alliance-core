@@ -21,7 +21,7 @@ FILES_${PN} = "/"
 S = "${WORKDIR}/git/Blue-Line-OE-4ATV"
 
 do_compile_append() {
-python -O -m compileall ${S}
+python2 -O -m compileall ${S}
 }
 
 do_install() {

@@ -21,7 +21,7 @@ FILES_${PN}-src = "${PYTHON_SITEPACKAGES_DIR}/process.py"
 RDEPENDS_{PN}-src = "${PN}"
 
 do_compile() {
-    python -O -m compileall ${WORKDIR}/process.py
+    python2 -O -m compileall ${WORKDIR}/process.py
 }
 
 do_install() {

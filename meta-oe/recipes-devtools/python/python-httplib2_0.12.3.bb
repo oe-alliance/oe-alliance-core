@@ -16,7 +16,7 @@ S = "${WORKDIR}/httplib2-${PV}"
 inherit setuptools python-dir
 
 do_compile_append() {
-       python -O -m compileall ${W}/build
+       python2 -O -m compileall ${W}/build
 }
 
 do_install_append() {
