@@ -19,7 +19,7 @@ S = "${WORKDIR}/enigma2-plugin-witaispeechtotext"
 WITAISPEECHTOTEXT_PLUGIN_PATH = "/usr/lib/enigma2/python/Plugins/Extensions/WitAiSpeechToText"
 
 do_compile() {
-	python -O -m compileall ${S}
+	python2 -O -m compileall ${S}
 }
 
 do_install() {

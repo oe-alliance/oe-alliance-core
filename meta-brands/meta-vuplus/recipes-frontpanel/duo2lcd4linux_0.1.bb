@@ -28,7 +28,7 @@ do_install() {
 
 # Just a quick hack to "compile" the python parts.
 do_compile_append() {
-    python -O -m compileall ${S}
+    python2 -O -m compileall ${S}
 }
 
 python populate_packages_prepend() {

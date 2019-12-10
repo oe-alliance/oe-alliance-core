@@ -19,7 +19,7 @@ FILES_${PN} = "${libdir} /usr/share"
 S = "${WORKDIR}/git"
 
 do_compile_append() {
-python -O -m compileall ${S}
+python2 -O -m compileall ${S}
 }
 
 do_install() {

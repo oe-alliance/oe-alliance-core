@@ -20,7 +20,7 @@ FILES_${PN} = "/usr/share/enigma2/NOVUM_HD_Slim"
 S = "${WORKDIR}/git"
 
 do_compile_append() {
-   python -O -m compileall ${S}
+   python2 -O -m compileall ${S}
 }
 
 do_install() {

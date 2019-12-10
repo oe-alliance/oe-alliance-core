@@ -33,7 +33,7 @@ do_compile() {
     echo ${PV} > ${S}/VERSION
     oe_runmake SWIG="swig"
 # Just a quick hack to "compile" the python parts.
-    python -O -m compileall ${S}
+    python2 -O -m compileall ${S}
 }
 
 do_install() {

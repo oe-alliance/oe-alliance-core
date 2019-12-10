@@ -46,7 +46,7 @@ do_compile() {
 	find ${S}/plugin/public/images/boxes/ ! -name 'unknown.png' -type f -exec rm -f {} +
 	find ${S}/plugin/public/images/remotes/ ! -name 'ow_remote.png' -type f -exec rm -f {} +
 	cheetah-compile -R --nobackup ${S}/plugin
-	python -O -m compileall ${S}
+	python2 -O -m compileall ${S}
 }
 
 PLUGINPATH = "${libdir}/enigma2/python/Plugins/Extensions/${MODULE}"
