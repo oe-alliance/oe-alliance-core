@@ -72,7 +72,7 @@ RDEPENDS_${PN} = " \
     dvblast \
     dvbsnoop \
     dvdfs \
-    edid-decode \
+    ${@bb.utils.contains('MACHINE', 'cube', '' , 'edid-decode', d)} \
     exfat-utils \
     fuse-exfat \
     gptfdisk \

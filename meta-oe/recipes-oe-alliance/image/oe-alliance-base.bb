@@ -28,8 +28,8 @@ RDEPENDS_${PN} = "\
     ${@bb.utils.contains("MACHINE_FEATURES", "gbbluetooth", "bluetoothsetup-${MACHINE}", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "recovery", "recovery" , "", d)} \
     ${@bb.utils.contains("DEFAULTTUNE", "sh4", "alsa-utils-amixer-conf" , "", d)} \
-    ${@bb.utils.contains("TARGET_ARCH", "arm", "edid-decode", "", d)} \
-    ${@bb.utils.contains("TARGET_ARCH", "aarch64", "edid-decode", "", d)} \
+    ${@bb.utils.contains("TARGET_ARCH", "arm", "${GETEXTRA}", "", d)} \
+    ${@bb.utils.contains("TARGET_ARCH", "aarch64", "${GETEXTRA}", "", d)} \
     avahi-daemon \
     bash \
     cronie \
@@ -77,3 +77,5 @@ RRECOMMENDS_${PN} = "\
     kernel-module-nls-iso8859-1 \
     kernel-module-nls-iso8859-15 \
     "
+
+GETEXTRA = "${@bb.utils.contains('MACHINE', 'cube', '', 'edid-decode', d)}"
