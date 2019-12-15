@@ -31,7 +31,7 @@ do_install(){
     install -m 0755 ${S}/libnpapihbbtvplugin.so ${D}${libdir}/mozilla/plugins
 }
 
-pkg_postinst_${PN}(){
+pkg_postinst_ontarget_${PN}(){
 #!/bin/sh
 ln -sf /usr/share/fonts /usr/lib/fonts
 exit 0
