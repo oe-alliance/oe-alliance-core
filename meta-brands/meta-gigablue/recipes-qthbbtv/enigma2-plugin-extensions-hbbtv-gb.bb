@@ -46,7 +46,7 @@ do_install_append() {
     python -O -m compileall ${D}
 }
 
-pkg_postinst_${PN}(){
+pkg_postinst_ontarget_${PN}(){
 #!/bin/sh
 ln -sf /usr/share/fonts /usr/lib/fonts
 
