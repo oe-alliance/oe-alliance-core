@@ -1,0 +1,20 @@
+---
+ src/core/content_browser_client_qt.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/core/content_browser_client_qt.cpp b/src/core/content_browser_client_qt.cpp
+index 29b6e09e..2cfddede 100644
+--- a/src/core/content_browser_client_qt.cpp
++++ b/src/core/content_browser_client_qt.cpp
+@@ -878,7 +878,7 @@ bool ContentBrowserClientQt::ShouldUseProcessPerSite(content::BrowserContext* br
+ std::string ContentBrowserClientQt::getUserAgent()
+ {
+     // Mention the Chromium version we're based on to get passed stupid UA-string-based feature detection (several WebRTC demos need this)
+-    return content::BuildUserAgentFromProduct("QtWebEngine/" QTWEBENGINECORE_VERSION_STR " Chrome/" CHROMIUM_VERSION);
++    return content::BuildUserAgentFromProduct("Chrome/" CHROMIUM_VERSION);
+ }
+ 
+ std::string ContentBrowserClientQt::GetProduct()
+-- 
+2.17.1
+
