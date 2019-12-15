@@ -1,0 +1,62 @@
+From c418bd1745410e5ed750d900c3a3457a2c25d3fd Mon Sep 17 00:00:00 2001
+From: "[USER]" <[EMAIL]>
+Date: Thu, 28 Nov 2019 18:48:41 +0100
+Subject: [PATCH] remove unittest
+
+---
+ Makefile.am  | 10 ----------
+ configure.ac | 19 -------------------
+ 2 files changed, 29 deletions(-)
+
+diff --git a/Makefile.am b/Makefile.am
+index 1572736..b6901ae 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -84,14 +84,4 @@ uninstall-hook:
+ 	rm -f $(DESTDIR)$(libdir)/libnss_mdns6.so.2
+ 	rm -f $(DESTDIR)$(libdir)/libnss_mdns6_minimal.so.2
+ 
+-
+-# tests
+-if ENABLE_TESTS
+-TESTS = check_util
+-check_PROGRAMS += check_util
+-check_util_SOURCES = tests/check_util.c src/util.h
+-check_util_CFLAGS = @CHECK_CFLAGS@
+-check_util_LDADD = src/util.o @CHECK_LIBS@
+-endif
+-
+ EXTRA_DIST += tests/check_util.c
+diff --git a/configure.ac b/configure.ac
+index 71c1b44..4f78017 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -32,25 +32,6 @@ AC_USE_SYSTEM_EXTENSIONS
+ 
+ AM_SILENT_RULES([yes])
+ 
+-# Conditionally enable unittests.
+-AC_ARG_ENABLE([tests],
+-  AS_HELP_STRING([--disable-tests],
+-                 [disable building tests]))
+-
+-AS_IF([test "x$enable_tests" != "xno"],
+-      [PKG_CHECK_MODULES([CHECK], [check >= 0.11],
+-                         [have_check=yes], [have_check=no])],
+-      [have_check=no])
+-
+-AS_IF([test "x$have_check" = "xyes"],
+-      [],
+-      [AS_IF([test "x$enable_tests" = "xyes"],
+-           [AC_MSG_ERROR([Cannot enable tests: $CHECK_PKG_ERRORS])
+-    ])
+-])
+-
+-AM_CONDITIONAL([ENABLE_TESTS], [test "x$have_check" = "xyes"])
+-
+ # Options for file locations.
+ AC_ARG_VAR([AVAHI_SOCKET],
+            [Full path to the avahi-daemon socket, overriding default])
+-- 
+2.17.1
+
