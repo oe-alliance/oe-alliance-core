@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://LICENSES;md5=e9a558e243b36d3209f380deb394b213 \
 
 DEPENDS += "gperf-native bison-native make-native"
 
-SRCREV ?= "e742928c1592b43db6809db4f39e67be151cdd27"
+SRCREV ?= "b039fd85db0717aca309b61925d00a5a6547a649"
 
 SRCBRANCH ?= "release/${PV}/master"
 
@@ -35,7 +35,7 @@ SRC_URI = "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \
            file://0017-Remove-bash-dependency-for-nscd-init-script.patch \
            file://0018-eglibc-Cross-building-and-testing-instructions.patch \
            file://0019-eglibc-Help-bootstrap-cross-toolchain.patch \
-           file://0020-eglibc-cherry-picked-from.patch \
+           file://0020-eglibc-2-23-cherry-picked-from.patch \
            file://0021-eglibc-Clear-cache-lines-on-ppc8xx.patch \
            file://0022-eglibc-Resolve-__fpscr_values-on-SH4.patch \
            file://0023-eglibc-Install-PIC-archives.patch \
@@ -43,6 +43,7 @@ SRC_URI = "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \
            file://0026-When-disabling-SSE-make-sure-fpmath-is-not-set-to-us.patch \
            file://0025-Define-DUMMY_LOCALE_T-if-not-defined.patch \
            file://0026-build_local_scope.patch \
+           file://test.patch \
 "
 
 NATIVESDKFIXES ?= ""
