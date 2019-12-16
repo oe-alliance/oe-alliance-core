@@ -1,0 +1,20 @@
+---
+ src/gui/configure.json                                   | 2 +-
+  1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/src/gui/configure.json b/src/gui/configure.json
+index c2793bf236..e5f8d51857 100644
+--- a/src/gui/configure.json
++++ b/src/gui/configure.json
+@@ -1415,7 +1415,7 @@
+         },
+         "eglfs_mali": {
+             "label": "EGLFS Mali",
+-            "condition": "features.eglfs && (tests.egl-mali || tests.egl-mali-2)",
++            "condition": "features.eglfs",
+             "output": [ "privateFeature" ]
+         },
+         "eglfs_viv": {
+-- 
+2.17.1
+
