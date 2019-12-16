@@ -133,7 +133,6 @@ GLIBCVERSION = "2.25"
 OLDEST_KERNEL = "2.6.32"
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-fulan"
-PREFERRED_VERSION_cross-localedef-native = "2.30"
 PREFERRED_VERSION_directfb = "1.7.7"
 PREFERRED_VERSION_rt8812au = "4.3.14"
 PREFERRED_VERSION_mpd = "0.20.22"
