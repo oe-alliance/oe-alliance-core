@@ -1,0 +1,188 @@
+--- a/locale/programs/localedef.c
++++ b/locale/programs/localedef.c
+@@ -90,6 +90,9 @@ static bool replace_archive;
+ /* If true list archive content.  */
+ static bool list_archive;
+ 
++/* If true create hard links to other locales (default).  */
++bool hard_links = true;
++
+ /* Maximum number of retries when opening the locale archive.  */
+ int max_locarchive_open_retry = 10;
+ 
+@@ -108,7 +111,10 @@ void (*argp_program_version_hook) (FILE *, struct argp_state *) = print_version;
+ #define OPT_LIST_ARCHIVE 309
+ #define OPT_LITTLE_ENDIAN 400
+ #define OPT_BIG_ENDIAN 401
+-#define OPT_UINT32_ALIGN 402
++#define OPT_UINT32_ALIGN 405
++#define OPT_NO_WARN 402
++#define OPT_WARN 403
++#define OPT_NO_HARD_LINKS 404
+ 
+ /* Definitions of arguments for argp functions.  */
+ static const struct argp_option options[] =
+@@ -124,6 +130,8 @@ static const struct argp_option options[] =
+   { NULL, 0, NULL, 0, N_("Output control:") },
+   { "force", 'c', NULL, 0,
+     N_("Create output even if warning messages were issued") },
++  { "no-hard-links", OPT_NO_HARD_LINKS, NULL, 0,
++    N_("Do not create hard links between installed locales") },
+   { "prefix", OPT_PREFIX, N_("PATH"), 0, N_("Optional output file prefix") },
+   { "posix", OPT_POSIX, NULL, 0, N_("Strictly conform to POSIX") },
+   { "quiet", OPT_QUIET, NULL, 0,
+@@ -336,6 +344,10 @@ parse_opt (int key, char *arg, struct argp_state *state)
+     case OPT_UINT32_ALIGN:
+       uint32_align_mask = strtol (arg, NULL, 0) - 1;
+       break;
++    case OPT_NO_HARD_LINKS:
++      /* Do not hard link to other locales.  */
++      hard_links = false;
++      break;
+     case 'c':
+       force_output = 1;
+       break;
+--- a/locale/programs/localedef.h
++++ b/locale/programs/localedef.h
+@@ -116,6 +116,7 @@ extern const char *repertoire_global;
+ extern int max_locarchive_open_retry;
+ extern bool no_archive;
+ extern const char *alias_file;
++extern bool hard_links;
+ 
+ 
+ /* Prototypes for a few program-wide used functions.  */
+--- a/locale/programs/locfile.c
++++ b/locale/programs/locfile.c
+@@ -705,7 +705,7 @@ write_locale_data (const char *output_path, int catidx, const char *category,
+   size_t cnt, step, maxiov;
+   int fd;
+   char *fname;
+-  const char **other_paths;
++  const char **other_paths = NULL;
+   uint32_t header[2];
+   size_t n_elem;
+   struct iovec vec[3];
+@@ -832,9 +832,22 @@ failure while writing data for category `%s'"), category));
+ 
+   close (fd);
+ 
+-  /* Compare the file with the locale data files for the same category in
+-     other locales, and see if we can reuse it, to save disk space.  */
+-  other_paths = siblings (output_path);
++  /* Compare the file with the locale data files for the same category
++     in other locales, and see if we can reuse it, to save disk space.
++     If the user specified --no-hard-links to localedef then hard_links
++     is false, other_paths remains NULL and we skip the optimization
++     below.  The use of --no-hard-links is distribution specific since
++     some distros have post-processing hard-link steps and so doing this
++     here is a waste of time.  Worse than a waste of time in rpm-based
++     distributions it can result in build determinism issues from
++     build-to-build since some files may get a hard link in one pass but
++     not in another (if the files happened to be created in parallel).  */
++  if (hard_links)
++    other_paths = siblings (output_path);
++
++  /* If there are other paths, then walk the sibling paths looking for
++     files with the same content so we can hard link and reduce disk
++     space usage.  */
+   if (other_paths != NULL)
+     {
+       struct stat64 fname_stat;
+--- a/localedata/Makefile
++++ b/localedata/Makefile
+@@ -191,20 +191,30 @@ endif
+ 
+ include SUPPORTED
+ 
+-INSTALL-SUPPORTED-LOCALES=$(addprefix install-, $(SUPPORTED-LOCALES))
++INSTALL-SUPPORTED-LOCALE-ARCHIVE=$(addprefix install-archive-, $(SUPPORTED-LOCALES))
++INSTALL-SUPPORTED-LOCALE-FILES=$(addprefix install-files-, $(SUPPORTED-LOCALES))
+ 
+ # Sometimes the whole collection of locale files should be installed.
+ LOCALEDEF=I18NPATH=. GCONV_PATH=$(common-objpfx)iconvdata LC_ALL=C \
+ $(rtld-prefix) $(common-objpfx)locale/localedef
+-install-locales: $(INSTALL-SUPPORTED-LOCALES)
++install-locales: install-locale-archive
++
++# Create and install the locale-archive file.
++install-locale-archive: $(INSTALL-SUPPORTED-LOCALE-ARCHIVE)
++# Create and install the locales individually (no archive).
++install-locale-files: $(INSTALL-SUPPORTED-LOCALE-FILES)
+ 
+ install-locales-dir:
+ 	$(..)./scripts/mkinstalldirs $(inst_complocaledir)
+ 
+-$(INSTALL-SUPPORTED-LOCALES): install-locales-dir
+-	@locale=`echo $@ | sed -e 's/^install-//'`; \
+-	charset=`echo $$locale | sed -e 's,.*/,,'`; \
+-	locale=`echo $$locale | sed -e 's,/[^/]*,,'`; \
++# The SHIFT_JIS and SHIFT_JISX0213 character maps are not ASCII compatible,
++# therefore we have to use --no-warnings=ascii to disable the ASCII check.
++# See localedata/gen-locale.sh for the same logic.
++define build-one-locale
++	locale=`echo $@ | sed -e 's/^install-[a-z]*-//'`; \
++	if [ "$$charset" = 'SHIFT_JIS' ] \
++	   || [ "$$charset" = 'SHIFT_JISX0213' ]; then \
++	   flags="$$flags --no-warnings=ascii"; \
+ 	echo -n `echo $$locale | sed 's/\([^.\@]*\).*/\1/'`; \
+ 	echo -n ".$$charset"; \
+ 	echo -n `echo $$locale | sed 's/\([^\@]*\)\(\@.*\)*/\2/'`; \
+@@ -213,7 +223,16 @@ $(INSTALL-SUPPORTED-LOCALES): install-locales-dir
+ 	$(LOCALEDEF) --alias-file=../intl/locale.alias \
+ 		     -i locales/$$input -c -f charmaps/$$charset \
+ 		     $(addprefix --prefix=,$(install_root)) $$locale \
+-	&& echo ' done'; \
++	&& echo ' done';
++endef
++
++$(INSTALL-SUPPORTED-LOCALE-ARCHIVE): install-locales-dir
++	@flags="-c"; \
++	$(build-one-locale)
++
++$(INSTALL-SUPPORTED-LOCALE-FILES): install-locales-dir
++	@flags="-c --no-archive --no-hard-links"; \
++	$(build-one-locale)
+ 
+ tst-setlocale-ENV = LC_ALL=ja_JP.EUC-JP
+ tst-wctype-ENV = LC_ALL=ja_JP.EUC-JP
+--- a/manual/install.texi
++++ b/manual/install.texi
+@@ -425,13 +425,30 @@ permissions on a pseudoterminal so it can be used by the calling process.
+ If you are using a Linux kernel with the @code{devpts} filesystem enabled
+ and mounted at @file{/dev/pts}, you don't need this program.
+ 
+-After installation you might want to configure the timezone and locale
+-installation of your system.  @Theglibc{} comes with a locale
+-database which gets configured with @code{localedef}.  For example, to
+-set up a German locale with name @code{de_DE}, simply issue the command
+-@samp{localedef -i de_DE -f ISO-8859-1 de_DE}.  To configure all locales
+-that are supported by @theglibc{}, you can issue from your build directory the
+-command @samp{make localedata/install-locales}.
++After installation you should configure the timezone and install locales
++for your system.  The time zone configuration ensures that your system
++time matches the time for your current timezone.  The locales ensure that
++the display of information on your system matches the expectations of
++your language and geographic region.
++
++@Theglibc{} is able to use two kinds of localization information sources, the
++first is a locale database named @file{locale-archive} which is generally
++installed as @file{/usr/lib/locale/locale-archive}.  The locale archive has the
++benefit of taking up less space and being very fast to load, but only if you
++plan to install sixty or more locales.  If you plan to install one or two
++locales you can instead install individual locales into their self-named
++directories e.g.@: @file{/usr/lib/locale/en_US.utf8}.  For example to install
++the German locale using the character set for UTF-8 with name @code{de_DE} into
++the locale archive issue the command @samp{localedef -i de_DE -f UTF-8 de_DE},
++and to install just the one locale issue the command @samp{localedef
++--no-archive -i de_DE -f UTF-8 de_DE}.  To configure all locales that are
++supported by @theglibc{}, you can issue from your build directory the command
++@samp{make localedata/install-locales} to install all locales into the locale
++archive or @samp{make localedata/install-locale-files} to install all locales
++as files in the default configured locale installation directory (derived from
++@samp{--prefix} or @code{--localedir}).  To install into an alternative system
++root use @samp{DESTDIR} e.g.@: @samp{make localedata/install-locale-files
++DESTDIR=/opt/glibc}, but note that this does not change the configured prefix.
+ 
+ To configure the locally used timezone, set the @code{TZ} environment
+ variable.  The script @code{tzselect} helps you to select the right value.

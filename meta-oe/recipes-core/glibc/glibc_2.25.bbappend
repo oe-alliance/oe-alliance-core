@@ -8,7 +8,6 @@ SRC_URI_append_sh4 += "\
     file://0001-misc-Support-fallback-stateless-shells-path-in-absen.patch \
     file://0002-sysdeps-Add-support-for-usr-lib32-as-a-system-librar.patch \
     file://0003-elf-ldconfig-Use-a-stateless-ld.so.conf.patch \
-    file://0005-fix-binutils-2-29-build.patch \
     file://fix-x64-abi.patch \
 "
 

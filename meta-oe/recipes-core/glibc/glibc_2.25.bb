@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://LICENSES;md5=e9a558e243b36d3209f380deb394b213 \
 
 DEPENDS += "gperf-native bison-native make-native"
 
-SRCREV ?= "db0242e3023436757bbc7c488a779e6e3343db04"
+SRCREV ?= "a0408ec51ea862dda102482036c401d2e707e20b"
 
 SRCBRANCH ?= "release/${PV}/master"
 
@@ -45,6 +45,7 @@ SRC_URI = "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \
            file://0027-locale-fix-hard-coded-reference-to-gcc-E.patch \
            file://0028-Rework-fno-omit-frame-pointer-support-on-i386.patch \
            file://0029-bits-siginfo.h-enum-definition-for-TRAP_HWBKPT-is-mi.patch \
+           file://0030-glibc-add-no-hard-links-option.patch \
 "
 
 NATIVESDKFIXES ?= ""
