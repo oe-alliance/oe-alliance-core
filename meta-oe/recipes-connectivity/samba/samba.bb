@@ -1,4 +1,4 @@
-PR = "r1"
+PR = "r2"
 
 require samba-source.inc
 
@@ -131,7 +131,7 @@ do_compile[progress] = "outof:^\[\s*(\d+)/\s*(\d+)\]\s+"
 # Workaround: Use some intermediate directory
 do_compile () {
     # CONFIG_PACKAGE_samba4-server
-    BUILD_TARGETS_SERVER=smbd/smbd,smbpasswd,testparm,smbstatus,smbcontrol
+    BUILD_TARGETS_SERVER=smbd/smbd,smbpasswd,testparm,smbstatus,smbcontrol,pamsmbpass
     # Optional server targets
     if [ "${@bb.utils.contains('PACKAGECONFIG', 'acl', 'yes', 'no', d)}" = "yes" ]; then
         BUILD_TARGETS_SERVER=$BUILD_TARGETS_SERVER,sharesec
