@@ -1,0 +1,21 @@
+---
+ chromium/content/common/user_agent.cc | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/chromium/content/common/user_agent.cc b/chromium/content/common/user_agent.cc
+index 65083a09551..96a107a6e4e 100644
+--- a/chromium/content/common/user_agent.cc
++++ b/chromium/content/common/user_agent.cc
+@@ -117,6 +117,9 @@ std::string BuildOSCpuInfo(bool include_android_build_number) {
+                       android_info_str.c_str()
+ #elif defined(OS_FUCHSIA)
+                       "Fuchsia"
++#elif defined(OS_LINUX)
++                      "CrOS "
++                      "armv7l 12371.75.0"
+ #elif defined(OS_POSIX)
+                       "%s %s",
+                       unixinfo.sysname,  // e.g. Linux
+-- 
+2.17.1
+

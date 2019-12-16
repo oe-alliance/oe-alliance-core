@@ -64,3 +64,4 @@ MACHINEOVERRIDES =. "${@['', '${MACHINEBUILD}:']['${MACHINEBUILD}' != '']}"
 
 BBMASK = "meta-octagon/"
 BBMASK += "meta-fulan/recipes-graphics/"
+BBMASK += "meta-oe/recipes-qt5.14/"
