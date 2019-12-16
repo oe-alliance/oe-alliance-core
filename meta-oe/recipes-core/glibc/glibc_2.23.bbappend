@@ -4,7 +4,6 @@ SRC_URI += " file://0001-ptrace-protect-ptrace_peeksiginfo_args-from-redefint.pa
              file://0002-fix-build-for-old-libcheader.patch \
              file://Add-getrandom-implementation-BZ-17252.patch \
              file://110-sh-fix-gcc6.patch \
-             file://binutils.patch \
              file://sh4-trap.patch \
 "
 
