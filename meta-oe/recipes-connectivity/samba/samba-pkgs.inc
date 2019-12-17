@@ -54,8 +54,7 @@ FILES_${BPN}-common = "${sysconfdir}/default \
                        ${sysconfdir}/tmpfiles.d \
                        ${localstatedir}/lib/samba \
                        ${localstatedir}/spool/samba \
-                       \
-                       /lib/security/pam_smbpass.so \
+                       ${base_libdir}/security/pam_smbpass.so \
                       "
 
 CONFFILES_${BPN}-common = "${sysconfdir}/pam.d/samba \
