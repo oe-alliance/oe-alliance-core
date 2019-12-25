@@ -7,7 +7,7 @@ SRCDATE = "20181224"
 
 inherit kernel machine_kernel_pr
 
-MACHINE_KERNEL_PR_append = "27"
+MACHINE_KERNEL_PR_append = "28"
 
 
 SRC_URI[md5sum] = "ad7eab17a5071a0d5f9ff44eb44e027d"
@@ -33,6 +33,10 @@ SRC_URI += "http://source.mynonpublic.com/octagon/octagon-linux-${PV}-${SRCDATE}
     file://0002-log2-give-up-on-gcc-constant-optimizations.patch \
     file://0003-dont-mark-register-as-const.patch \
     file://wifi-linux_4.4.183.patch \
+"
+
+SRC_URI_append_sf8008m += " \
+	file://fix-index-for-usb.patch \
 "
 
 S = "${WORKDIR}/linux-${PV}"
