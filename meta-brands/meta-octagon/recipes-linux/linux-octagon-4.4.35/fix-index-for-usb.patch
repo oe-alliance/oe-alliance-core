@@ -1,0 +1,121 @@
+--- a/drivers/scsi/sd.c	2019-12-25 17:24:08.245991233 +0800
++++ b/drivers/scsi/sd.c	2019-12-25 17:24:27.254100625 +0800
+@@ -3020,33 +3020,9 @@
+ 	put_device(&sdkp->dev);
+ }
+ 
+-static u32 usb_to_sdcard_index = -1;
+ static u32 usb_30_index = -1;
+ static u32 usb_20_index = -1;
+ 
+-
+-static int is_usb_to_sdcard(struct Scsi_Host *shost) 
+-{ 
+-	struct device	*parent;
+-	const char *bus_id;
+-	
+-	if(shost->shost_gendev.parent)
+-	{ 
+-		parent = shost->shost_gendev.parent;
+-		bus_id = dev_name(parent);
+-		printk("print parent bus[%s], bus_id[%s]\n", parent->bus->name, bus_id); 
+-		if(strcmp(parent->bus->name, "usb") == 0)
+-		{ 
+-			if(strcmp(bus_id, "1-1.3:1.0") == 0 ||\
+-				strcmp(bus_id, "2-1.3:1.0") == 0)
+-			{ 
+-				return 1; 
+-			} 
+-		} 
+-	}
+-	return 0; 
+-}
+-
+ static int is_usb_30(struct Scsi_Host *shost) 
+ { 
+ 	struct device	*parent;
+@@ -3059,8 +3035,7 @@
+ 		printk("print parent bus[%s], bus_id[%s]\n", parent->bus->name, bus_id); 
+ 		if(strcmp(parent->bus->name, "usb") == 0)
+ 		{ 
+-			if(strcmp(bus_id, "3-1:1.0") == 0 ||\
+-				strcmp(bus_id, "4-1:1.0") == 0)
++			if(strcmp(bus_id, "3-1:1.0") == 0)
+ 			{ 
+ 				return 1; 
+ 			} 
+@@ -3081,8 +3056,7 @@
+ 		printk("print parent bus[%s], bus_id[%s]\n", parent->bus->name, bus_id); 
+ 		if(strcmp(parent->bus->name, "usb") == 0)
+ 		{ 
+-			if(strcmp(bus_id, "1-1.2:1.0") == 0 ||\
+-				strcmp(bus_id, "2-1.2:1.0") == 0)
++			if(strcmp(bus_id, "1-1:1.0") == 0)
+ 			{ 
+ 				return 1; 
+ 			} 
+@@ -3148,13 +3122,6 @@
+ 		goto out_put;
+ 	}
+ #else
+-	if(usb_to_sdcard_index != -1 &&\
+-		is_usb_to_sdcard(sdp->host))
+-	{
+-		index = usb_to_sdcard_index;
+-		printk("already got sdcard index %d\n", index);
+-		goto skip;
+-	}
+ 	if(usb_30_index != -1 &&\
+ 		is_usb_30(sdp->host))
+ 	{
+@@ -3184,16 +3151,7 @@
+ 		goto out_put;
+ 	}
+ skip:
+-	if(index == 0)/*keep for usb to sd card*/
+-	{
+-		usb_to_sdcard_index = index;
+-		if(!is_usb_to_sdcard(sdp->host))
+-		{
+-			printk("allocate index %d for non sdcard, try again\n", index);
+-			goto again;
+-		}
+-	}
+-	else if(index == 1)/*keep for usb20*/
++	if(index == 0)/*keep for usb20*/
+ 	{
+ 		usb_20_index = index;
+ 		if(!is_usb_20(sdp->host))
+@@ -3202,7 +3160,7 @@
+ 			goto again;
+ 		}
+ 	}
+-	else if(index == 2)/*keep for usb30*/
++	else if(index == 1)/*keep for usb30*/
+ 	{
+ 		usb_30_index = index;
+ 		if(!is_usb_30(sdp->host))
+@@ -3259,10 +3217,7 @@
+ #else
+ out_free_index:
+    spin_lock(&sd_index_lock);
+-   if(usb_to_sdcard_index == index)
+-   {
+-	   usb_to_sdcard_index = -1;
+-   }
++
+    if(usb_30_index == index)
+    {
+ 	   usb_30_index = -1;
+@@ -3340,10 +3295,7 @@
+ 	spin_unlock(&sd_index_lock);
+ #else
+ 	spin_lock(&sd_index_lock);
+-	if(usb_to_sdcard_index == sdkp->index)
+-	{
+-		usb_to_sdcard_index = -1;
+-	}
++
+ 	if(usb_30_index == sdkp->index)
+ 	{
+ 		usb_30_index = -1;
