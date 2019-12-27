@@ -1,0 +1,11 @@
+--- a/src/Makefile	2017-01-29 17:53:00.000000000 +0100
++++ b/src/Makefile	2017-02-13 16:40:58.000000000 +0100
+@@ -86,7 +86,7 @@
+ 	$($(notdir $@).PRE_LINK_STEP)
+ 	$(strip $(CXXLD) $(call ee,CXXFLAGS) $(call ee,LDFLAGS) -o $@ $(upx_OBJECTS) $(call ee,LDADD) $(call ee,LIBS))
+ 	$($(notdir $@).POST_LINK_STEP)
+-	$(CHECK_WHITESPACE)
++
+ 
+ %.o : %.cpp | ./.depend
+ 	$(strip $(CXX) $(call ee,CPPFLAGS) $(call ee,CXXFLAGS) -o $@ -c $<)

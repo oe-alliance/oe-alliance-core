@@ -59,6 +59,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'lunix34k', 'LUNIX3 4K' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'lunix', 'LUNIX' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'force4', 'FORCE 4' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'lunix4k', 'LUNIX 4K' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'lunixco', 'LUNIX' , '', d)}\
 "
 
 MACHINE_BRAND = "\
@@ -114,6 +115,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'lunix34k', 'qviart' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'lunix', 'qviart' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'force4', 'Iqon' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'lunix4k', 'qviart' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'lunixco', 'qviart' , '', d)}\
 "
 
 IMAGEDIR ?= "\
@@ -169,6 +171,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'lunix34k', 'update/lunix3-4k' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'lunix', 'update/lunix/cfe' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'force4', 'update/force4' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'lunix4k', 'update/lunix4k' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'lunixco', 'update/lunixco/cfe' , '', d)}\
 "
 
 MTD_KERNEL = "\
@@ -224,6 +227,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'lunix34k', 'mmcblk0p1' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'lunix', 'mtd2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'force4', 'mmcblk0p1' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'lunix4k', 'mmcblk0p1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'lunixco', 'mtd2' , '', d)}\
 "
 
 MTD_ROOTFS = "\
@@ -279,6 +283,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'lunix34k', 'mmcblk0p4' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'lunix', 'mtd0' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'force4', 'mmcblk0p4' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'lunix4k', 'mmcblk0p4' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'lunixco', 'mtd0' , '', d)}\
 "
 
 SPLASH1_BMP = "\
@@ -320,6 +325,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'lunix34k', 'splash1_power.bmp' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'lunix', 'splash1_power.bmp' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'force4', 'splash1_power.bmp' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'lunix4k', 'splash1_power.bmp' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'lunixco', 'splash1_power.bmp' , '', d)}\
 "
 
 MACHINE_DRIVER = "\
@@ -375,6 +381,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'lunix34k', 'dags7252-300' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'lunix', 'dags73625' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'force4', 'dags72604' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'lunix4k', 'dags72604' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'lunixco', 'dags73625' , '', d)}\
 "
 
 MACHINE_FEATURES += "3dtv alsa hdmicec switchoff textlcd ci skins1080 HDMI \
@@ -427,6 +434,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'optimussos1', 'RCA' , '', d)} \
 ${@bb.utils.contains('MACHINEBUILD', 'optimussos2', 'YUV RCA' , '', d)} \
 ${@bb.utils.contains('MACHINEBUILD', 'optimussos', 'AV_JACK' , '', d)} \
 ${@bb.utils.contains('MACHINEBUILD', 'mediabox', 'YUV RCA' , '', d)} \
+${@bb.utils.contains('MACHINEBUILD', 'lunixco', 'fastscan dvb-c' , '', d)} \
 "
 
 BOOTLOGO_FILENAME = "splash.bmp"

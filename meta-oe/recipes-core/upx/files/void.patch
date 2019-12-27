@@ -1,0 +1,63 @@
+diff --git a/src/compress_lzma.cpp b/src/compress_lzma.cpp
+index b9af7f0a..237e9b3d 100644
+--- a/src/compress_lzma.cpp
++++ b/src/compress_lzma.cpp
+@@ -43,7 +43,7 @@
+ 
+ void lzma_compress_config_t::reset()
+ {
+-    memset(this, 0, sizeof(*this));
++    memset(static_cast<void*>(this), 0, sizeof(*this));
+ 
+     pos_bits.reset();
+     lit_pos_bits.reset();
+diff --git a/src/compress_zlib.cpp b/src/compress_zlib.cpp
+index 65c34d65..960cafea 100644
+--- a/src/compress_zlib.cpp
++++ b/src/compress_zlib.cpp
+@@ -33,7 +33,7 @@
+ 
+ void zlib_compress_config_t::reset()
+ {
+-    memset(this, 0, sizeof(*this));
++    memset(static_cast<void*>(this), 0, sizeof(*this));
+ 
+     mem_level.reset();
+     window_bits.reset();
+diff --git a/src/main.cpp b/src/main.cpp
+index b2c3d93b..607b844d 100644
+--- a/src/main.cpp
++++ b/src/main.cpp
+@@ -46,7 +46,7 @@ int _crt0_startup_flags = _CRT0_FLAG_UNIX_SBRK;
+ void options_t::reset()
+ {
+     options_t *o = this;
+-    memset(o, 0, sizeof(*o));
++    memset(static_cast<void*>(o), 0, sizeof(*o));
+     o->crp.reset();
+ 
+     o->cmd = CMD_NONE;
+diff --git a/src/packer.cpp b/src/packer.cpp
+index bdc3e63d..363c8c18 100644
+--- a/src/packer.cpp
++++ b/src/packer.cpp
+@@ -47,7 +47,7 @@ Packer::Packer(InputFile *f) :
+     if (fi != NULL)
+         file_size = fi->st_size();
+     uip = new UiPacker(this);
+-    memset(&ph, 0, sizeof(ph));
++    memset(static_cast<void*>(&ph), 0, sizeof(ph));
+ }
+ 
+ 
+@@ -665,7 +665,7 @@ unsigned Packer::getRandomId() const
+ // this is called directly after the constructor from class PackMaster
+ void Packer::initPackHeader()
+ {
+-    memset(&ph, 0, sizeof(ph));
++    memset(static_cast<void*>(&ph), 0, sizeof(ph));
+     ph.version = getVersion();
+     ph.format = getFormat();
+     ph.method = M_NONE;
+
+
