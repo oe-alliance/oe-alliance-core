@@ -18,11 +18,11 @@ PROVIDES += "openvix-softcams-oscam-emu-mipsel"
 RPROVIDES_enigma2-plugin-softcams-oscam-emu += "openvix-softcams-oscam-emu-mipsel"
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/enigma2-plugin-softcams-oscam-emu:"
-PATCHREV = "0dbc62f25d2aa4c6f89df8f105317564a01fc5fe"
+PATCHREV = "f56e693c449222be715f30f7d154dffdcf108c99"
 PR = "r798"
 SRC_URI += "https://raw.githubusercontent.com/oscam-emu/oscam-emu/${PATCHREV}/oscam-emu.patch?${PATCHREV};downloadfilename=oscam-emu.${PATCHREV}.patch;name=emu;striplevel=0"
-SRC_URI[emu.md5sum] = "7d8cb546fbd91b467349b2a6446578fb"
-SRC_URI[emu.sha256sum] = "60c36310ef575b6ed31c58f731dc506fa1a5a83b63c4952cd500037b7be2e748"
+SRC_URI[emu.md5sum] = "557659e64a0e3dfd6e2aee01bde7bd7d"
+SRC_URI[emu.sha256sum] = "2df2505a5b56dd3b73d9be15577ea65cd524cc81598f966b8efc1b3ac1919489"
 
 DEPENDS = "libusb openssl"
 
