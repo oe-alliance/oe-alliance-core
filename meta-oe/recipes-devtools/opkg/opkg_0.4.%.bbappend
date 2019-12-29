@@ -16,4 +16,4 @@ do_install_prepend() {
     install -m 755 ${WORKDIR}/modprobe ${D}${datadir}/opkg/intercept/
 }
 
-PR="r3"
+PR="r4"
