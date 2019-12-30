@@ -5,3 +5,4 @@ SRC_URI += " \
     file://no_deatach_check.patch \
     file://0001-nanddump-Truncate-empty-blocks-FF-from-dump.patch \
     "
+
