@@ -1,6 +1,6 @@
 --- a/ubi-utils/ubiformat.c
 +++ b/ubi-utils/ubiformat.c
-@@ -62,6 +62,7 @@ struct args {
+@@ -63,6 +63,7 @@ struct args {
  	const char *image;
  	const char *node;
  	int node_fd;
@@ -8,7 +8,7 @@
  };
  
  static struct args args =
-@@ -89,6 +90,7 @@ static const char optionsstr[] =
+@@ -92,6 +93,7 @@ static const char optionsstr[] =
  "                             (default is 1)\n"
  "-Q, --image-seq=<num>        32-bit UBI image sequence number to use\n"
  "                             (by default a random number is picked)\n"
@@ -16,34 +16,35 @@
  "-y, --yes                    assume the answer is \"yes\" for all question\n"
  "                             this program would otherwise ask\n"
  "-q, --quiet                  suppress progress percentage information\n"
-@@ -121,6 +123,7 @@ static const struct option long_options[] = {
+@@ -124,6 +126,7 @@ static const struct option long_options[] = {
+ 	{ .name = "ubi-ver",         .has_arg = 1, .flag = NULL, .val = 'x' },
  	{ .name = "help",            .has_arg = 0, .flag = NULL, .val = 'h' },
  	{ .name = "version",         .has_arg = 0, .flag = NULL, .val = 'V' },
- 	{ .name = "image-seq",       .has_arg = 1, .flag = NULL, .val = 'Q' },
 +	{ .name = "no-detach-check", .has_arg = 0, .flag = NULL, .val = 'D' },
  	{ NULL, 0, NULL, 0},
  };
  
-@@ -133,7 +136,7 @@ static int parse_opt(int argc, char * const argv[])
+@@ -136,7 +139,7 @@ static int parse_opt(int argc, char * const argv[])
  		int key, error = 0;
  		unsigned long int image_seq;
  
--		key = getopt_long(argc, argv, "nh?Vyqve:x:s:O:f:S:Q:", long_options, NULL);
-+		key = getopt_long(argc, argv, "nh?Vyqve:x:s:O:f:S:Q:D", long_options, NULL);
+-		key = getopt_long(argc, argv, "nh?Vyqve:x:s:O:f:S:", long_options, NULL);
++		key = getopt_long(argc, argv, "nh?Vyqve:x:s:O:f:S:D", long_options, NULL);
  		if (key == -1)
  			break;
  
-@@ -192,6 +195,9 @@ static int parse_opt(int argc, char * const argv[])
- 			args.image_seq = image_seq;
+@@ -186,6 +189,10 @@ static int parse_opt(int argc, char * const argv[])
+ 			args.quiet = 1;
  			break;
  
 +		case 'D':
 +			args.no_detach_check = 1;
 +			break;
- 
- 		case 'v':
- 			args.verbose = 1;
-@@ -768,16 +774,19 @@ int main(int argc, char * const argv[])
++
+ 		case 'x':
+ 			args.ubi_ver = simple_strtoul(optarg, &error);
+ 			if (error || args.ubi_ver < 0)
+@@ -775,16 +782,19 @@ int main(int argc, char * const argv[])
  	}
  
  	/* Make sure this MTD device is not attached to UBI */
