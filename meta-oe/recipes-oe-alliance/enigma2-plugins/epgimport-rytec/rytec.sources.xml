@@ -332,6 +332,25 @@ The description must be unique for each source, and is displayed on the UI.
 			<url>http://www.vuplus-community.net/rytec/rytecES_SportMovies.xz</url>
 		</source>
 	</sourcecat>
+	
+	<sourcecat sourcecatname="Koala Espana EPG Movistar XMLTV">
+    <source type="gen_xmltv" nocheck="1" channels="http://tropical.jungle-team.online/epg/koala_epg.channels.xml.gz">
+        <description>Koala 3 dias XMLTV</description>
+        <url>http://tropical.jungle-team.online/epg/koala3.xml.gz</url>
+    </source>
+    <source type="gen_xmltv" nocheck="1" channels="http://tropical.jungle-team.online/epg/koala_epg.channels.xml.gz">
+        <description>Koala 7 dias XMLTV</description>
+        <url>http://tropical.jungle-team.online/epg/koala7.xml.gz</url>
+    </source>
+    <source type="gen_xmltv" nocheck="1" channels="http://tropical.jungle-team.online/epg/koala_epg.channels.xml.gz">
+        <description>Koala 15 dias XMLTV</description>
+        <url>http://tropical.jungle-team.online/epg/koala15.xml.gz</url>
+    </source>
+    <source type="gen_xmltv" nocheck="1" channels="http://tropical.jungle-team.online/epg/koala_epg.channels.xml.gz">
+        <description>Koala 30 dias XMLTV</description>
+        <url>http://tropical.jungle-team.online/epg/koala30.xml.gz</url>
+    </source>
+    </sourcecat> 
 
 	<sourcecat sourcecatname="Rytec Italia XMLTV">
 		<source type="gen_xmltv" channels="rytec.channels.xml.xz">
@@ -745,93 +764,115 @@ The description must be unique for each source, and is displayed on the UI.
 		</source>
 	</sourcecat>
 	<sourcecat sourcecatname="Russian XMLTV">
-		<source type="xmltv" nocheck="1" channels="http://epg.openboxfan.com/chan.ntv.xml.gz">
-			<description>EPG openboxfan full by Russia</description>
-			<url>http://epg.openboxfan.com/xmltv-t-sd.xml.gz</url>
-		</source>
-		<source type="gen_xmltv" nocheck="1" channels="http://epg.openboxfan.com/chan.xml.gz">
-			<description>SAT FTA (epg by r.rusya)(gz) network</description>
-			<url>http://epg.openboxfan.com/xmltv-t-sd.xml.gz</url>
-		</source>
-		<source type="gen_xmltv" nocheck="1" channels="http://dortmundez.ucoz.net/epg/channels.xml.gz">
-			<description>TvGuide IPTV/Sat (epg by dortmundez)(gz)</description>
-			<url>http://dortmundez.ucoz.net/epg/epg.xml.gz</url>
-        </source>
-		<source type="gen_xmltv" nocheck="1" channels="http://dortmundez.ucoz.net/epg/channels.xml.xz">
-			<description>TvGuide IPTV/Sat (epg by dortmundez)(xz)</description>
-			<url>http://dortmundez.ucoz.net/epg/epg.xml.xz</url>
-        </source>
-		<source type="gen_xmltv" nocheck="1" channels="http://runigma.com.ua/EPG/SAT/channels-1W.xml.gz">
-			<description>(epg by Igor-K)- Thor 5/6/7 1.0W</description>
-			<url>http://iptvx.one/epg/epg.xml.gz</url>
-		</source>
+		<!-- EPG FROM runigma by kil1970 - -->
 		<source type="gen_xmltv" nocheck="1" channels="http://runigma.com.ua/EPG/SAT/channels-4W.xml.gz">
-		<description>(epg by Igor-K)- AMOS 4.0W</description>
-			<url>http://iptvx.one/epg/epg.xml.gz</url>
+		  <description>(epg by Igor@K-runigma)- AMOS 4.0W </description>
+		  <url>http://runigma.com.ua/EPG/SAT/epg-sat.xml.gz</url>
 		</source>
+
+		<source type="gen_xmltv" nocheck="1" channels="http://runigma.com.ua/EPG/SAT/channels-1W.xml.gz">
+		  <description>(epg by Igor@K-runigma)- Thor 5/6/7 1.0W </description>
+		  <url>http://runigma.com.ua/EPG/SAT/epg-sat.xml.gz</url>
+		</source>
+
 		<source type="gen_xmltv" nocheck="1" channels="http://runigma.com.ua/EPG/SAT/channels-49E.xml.gz">
-			<description>(epg by Igor-K)- SIRIUS 4.9E</description>
-			<url>http://iptvx.one/epg/epg.xml.gz</url>
+		  <description>(epg by Igor@K-runigma)- SIRIUS 4.9E </description>
+		  <url>http://runigma.com.ua/EPG/SAT/epg-sat.xml.gz</url>
 		</source>
+
 		<source type="gen_xmltv" nocheck="1" channels="http://runigma.com.ua/EPG/SAT/channels-90E.xml.gz">
-			<description>(epg by Igor-K)- Eutelsat 9.0E</description>
-			<url>http://iptvx.one/epg/epg.xml.gz</url>
+		  <description>(epg by Igor@K-runigma)- Eutelsat 9.0E </description>
+		  <url>http://runigma.com.ua/EPG/SAT/epg-sat.xml.gz</url>
 		</source>
+
 		<source type="gen_xmltv" nocheck="1" channels="http://runigma.com.ua/EPG/SAT/channels-130E.xml.gz">
-			<description>(epg by Igor-K)- HOTBIRD 13.0E</description>
-			<url>http://iptvx.one/epg/epg.xml.gz</url>
+		  <description>(epg by Igor@K-runigma)- HOTBIRD 13.0E </description>
+		  <url>http://runigma.com.ua/EPG/SAT/epg-sat.xml.gz</url>
 		</source>
+
 		<source type="gen_xmltv" nocheck="1" channels="http://runigma.com.ua/EPG/SAT/channels-190E.xml.gz">
-			<description>(epg by Igor-K)- Astra 19.2E</description>
-			<url>http://iptvx.one/epg/epg.xml.gz</url>
+		  <description>(epg by Igor@K-runigma)- Astra 19.2E </description>
+		  <url>http://runigma.com.ua/EPG/SAT/epg-sat.xml.gz</url>
 		</source>
+
+		<source type="gen_xmltv" nocheck="1" channels="http://runigma.com.ua/EPG/SAT/channels-282E.xml.gz">
+		  <description>(epg by Igor@K-runigma)- Astra 2E/2F/2G 28.2E </description>
+		  <url>http://runigma.com.ua/EPG/SAT/epg-sat.xml.gz</url>
+		</source>
+
 		<source type="gen_xmltv" nocheck="1" channels="http://runigma.com.ua/EPG/SAT/channels-315E.xml.gz">
-			<description>(epg by Igor-K)- Astra 31.5E</description>
-			<url>http://iptvx.one/epg/epg.xml.gz</url>
+		  <description>(epg by Igor@K-runigma)- Astra 31.5E </description>
+		  <url>http://runigma.com.ua/EPG/SAT/epg-sat.xml.gz</url>
 		</source>
+
 		<source type="gen_xmltv" nocheck="1" channels="http://runigma.com.ua/EPG/SAT/channels-360E.xml.gz">
-			<description>(epg by Igor-K)- Eutelsat 36B/36C</description>
-			<url>http://iptvx.one/epg/epg.xml.gz</url>
+		  <description>(epg by Igor@K-runigma)- Eutelsat 36B/36C </description>
+		  <url>http://runigma.com.ua/EPG/SAT/epg-sat.xml.gz</url>
 		</source>
+
 		<source type="gen_xmltv" nocheck="1" channels="http://runigma.com.ua/EPG/SAT/channels-tricolor-360E.xml.gz">
-			<description>(epg by Igor-K)- Tricolor</description>
-			<url>http://iptvx.one/epg/epg.xml.gz</url>
+		  <description>(epg by Igor@K-iptvx)- Tricolor </description>
+		  <url>http://iptvx.one/epg/epg.xml.gz</url>
 		</source>
+
+		<source type="gen_xmltv" nocheck="1" channels="http://runigma.com.ua/EPG/SAT/channels-400E.xml.gz">
+		<description>(epg by Igor@K-runigma)- Express-AM7 40E </description>
+		<url>">http://runigma.com.ua/EPG/SAT/epg-sat.xml.gz</url>
+		</source>
+
 		<source type="gen_xmltv" nocheck="1" channels="http://runigma.com.ua/EPG/SAT/channels-460E.xml.gz">
-			<description>(epg by Igor-K)- AzerSpace 46E </description>
-			<url>http://iptvx.one/epg/epg.xml.gz</url>
+		  <description>(epg by Igor@K-runigma)- AzerSpace 46E </description>
+		  <url>http://runigma.com.ua/EPG/SAT/epg-sat.xml.gz</url>
 		</source>
+
+		<source type="gen_xmltv" nocheck="1" channels="http://runigma.com.ua/EPG/SAT/channels-515E.xml.gz">
+		  <description>(epg by Igor@K-runigma)- Belintersat 1  51.5E</description>
+		  <url>http://runigma.com.ua/EPG/SAT/epg-sat.xml.gz</url>
+		</source>
+
+		<source type="gen_xmltv" nocheck="1" channels="http://runigma.com.ua/EPG/SAT/channels-530E.xml.gz">
+		  <description>(epg by Igor@K-runigma)- Express-AM6 53E</description>
+		  <url>http://runigma.com.ua/EPG/SAT/epg-sat.xml.gz</url>
+		</source>
+
 		<source type="gen_xmltv" nocheck="1" channels="http://runigma.com.ua/EPG/SAT/channels-549E.xml.gz">
-			<description>(epg by Igor-K)- Yamal402 54.9E</description>
-			<url>http://iptvx.one/epg/epg.xml.gz</url>
+		  <description>(epg by Igor@K-runigma)- Yamal402 54.9E </description>
+		  <url>http://runigma.com.ua/EPG/SAT/epg-sat.xml.gz</url>
 		</source>
+
 		<source type="gen_xmltv" nocheck="1" channels="http://runigma.com.ua/EPG/SAT/channels-560E.xml.gz">
-			<description>(epg by Igor-K)- Express-AT1 56E</description>
-			<url>http://iptvx.one/epg/epg.xml.gz</url>
+		  <description>(epg by Igor@K-runigma)- Express-AT1 56E </description>
+		  <url>http://runigma.com.ua/EPG/SAT/epg-sat.xml.gz</url>
 		</source>
+
 		<source type="gen_xmltv" nocheck="1" channels="http://runigma.com.ua/EPG/SAT/channels-600E.xml.gz">
-			<description>(epg by Igor-K)- Intelsat 60E</description>
-			<url>http://iptvx.one/epg/epg.xml.gz</url>
+		  <description>(epg by Igor@K-runigma)- Intelsat 60E </description>
+		  <url>http://runigma.com.ua/EPG/SAT/epg-sat.xml.gz</url>
 		</source>
+
 		<source type="gen_xmltv" nocheck="1" channels="http://runigma.com.ua/EPG/SAT/channels-749E.xml.gz">
-			<description>(epg by Igor-K)- ABS-2/2A 74.9E</description>
-			<url>http://iptvx.one/epg/epg.xml.gz</url>
+		  <description>(epg by Igor@K-runigma)- ABS-2/2A 74.9E </description>
+		  <url>http://runigma.com.ua/EPG/SAT/epg-sat.xml.gz</url>
 		</source>
-		<source type="gen_xmltv" nocheck="1" channels="http://runigma.com.ua/EPG/SAT/channels-801E.xml.gz">
-			<description>(epg by Igor-K)- Express-AM22 80.1E</description>
-			<url>http://iptvx.one/epg/epg.xml.gz</url>
+
+		<source type="gen_xmltv" nocheck="1" channels="http://runigma.com.ua/EPG/SAT/channels-852E.xml.gz">
+		  <description>(epg by Igor@K-runigma)- Intelsat15 85.2E</description>
+		  <url>http://runigma.com.ua/EPG/SAT/epg-sat.xml.gz</url>
 		</source>
+
 		<source type="gen_xmltv" nocheck="1" channels="http://runigma.com.ua/EPG/SAT/channels-900E.xml.gz">
-			<description>(epg by Igor-K)- Yamal 401 90.0E</description>
-			<url>http://iptvx.one/epg/epg.xml.gz</url>
+		  <description>(epg by Igor@K-runigma)- Yamal401 90.0E</description>
+		  <url>http://runigma.com.ua/EPG/SAT/epg-sat.xml.gz</url>
 		</source>
-		<source type="gen_xmltv" nocheck="1" channels="http://runigma.com.ua/EPG/SAT/channels-000E.xml.gz">
-			<description>(epg by Igor-K)- NEW</description>
-			<url>http://runigma.com.ua/EPG/SAT/epg-new.xml.gz</url>
+
+		<source type="gen_xmltv" nocheck="1" channels="http://runigma.com.ua/EPG/SAT/channels-965E.xml.gz">
+		  <description>(epg by Igor@K-runigma)- Express-AM33 96.5E</description>
+		  <url>http://runigma.com.ua/EPG/SAT/epg-sat.xml.gz</url>
 		</source>
+
 		<source type="gen_xmltv" nocheck="1" channels="http://runigma.com.ua/EPG/IPTV/channels-iptv.xml.gz">
-			<description>(epg by Igor-K)- IPTV</description>
-			<url>http://iptvx.one/epg/epg.xml.gz</url>
+		  <description>(epg by Igor@K-runigma)- IPTV </description>
+		  <url>http://runigma.com.ua/EPG/IPTV/epg-iptv.xml.gz</url>
 		</source>
 	</sourcecat>
 </sources>
