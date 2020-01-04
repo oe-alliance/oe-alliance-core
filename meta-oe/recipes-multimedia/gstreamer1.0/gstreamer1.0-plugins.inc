@@ -11,8 +11,6 @@ SRC_URI_append = " file://0001-meson-build-optimization.patch"
 
 inherit pkgconfig
 
-LIBV = "1.0"
-
 # Orc enables runtime JIT compilation of data processing routines from Orc
 # bytecode to SIMD instructions for various architectures (currently SSE, MMX,
 # MIPS, Altivec and NEON are supported).
