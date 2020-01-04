@@ -3,7 +3,7 @@ HOMEPAGE = "http://djmount.sourceforge.net/"
 LICENSE = "GPLv2+"
 DEPENDS = "libupnp1.6 fuse"
 RDEPENDS_${PN} = "fuse"
-PR = "r5"
+PR = "r6"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=eb723b61539feef013de476e68b5c50a"
 
@@ -22,6 +22,7 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/djmount/djmount-0.71.tar.gz \
 	file://002-libupnp-1.6.13.diff \
 	file://003-support-fstab-mounting.diff \
 	file://004-avoid-crash-by-using-size_t.diff \
+	file://005-fix-build-with-gettext-0.20.x.patch \
 	"
 
 SRC_URI[md5sum] = "c922753e706c194bf82a8b6ca77e6a9a"
