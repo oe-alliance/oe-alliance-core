@@ -1,21 +1,27 @@
 PACKAGESPLITFUNCS_prepend = " split_gstreamer10_packages "
-PACKAGESPLITFUNCS_append = " set_metapkg_rdepends "
+PACKAGESPLITFUNCS_append = " set_gstreamer10_metapkg_rdepends "
 
 python split_gstreamer10_packages () {
-    gst_libdir = d.expand('${libdir}/gstreamer-${LIBV}')
+    gst_libdir = d.expand('${libdir}/gstreamer-1.0')
     postinst = d.getVar('plugin_postinst')
     glibdir = d.getVar('libdir')
 
-    do_split_packages(d, glibdir, r'^lib(.*)\.so\.*', 'lib%s', 'gstreamer %s library', extra_depends='', allow_links=True)
-    do_split_packages(d, gst_libdir, r'libgst(.*)\.so$', d.expand('${PN}-%s'), 'GStreamer plugin for %s', postinst=postinst, extra_depends='')
-    do_split_packages(d, glibdir+'/girepository-1.0', r'Gst(.*)-1.0\.typelib$', d.expand('${PN}-%s-typelib'), 'GStreamer typelib file for %s', postinst=postinst, extra_depends='')
-    do_split_packages(d, gst_libdir, r'libgst(.*)\.la$', d.expand('${PN}-%s-dev'), 'GStreamer plugin for %s (development files)', extra_depends='${PN}-dev')
-    do_split_packages(d, gst_libdir, r'libgst(.*)\.a$', d.expand('${PN}-%s-staticdev'), 'GStreamer plugin for %s (static development files)', extra_depends='${PN}-staticdev')
+    # GStreamer libraries
+    do_split_packages(d, glibdir, r'^lib(.*)\.so\.*', 'lib%s', 'GStreamer 1.0 %s library', extra_depends='', allow_links=True)
+    # GStreamer plugin shared objects
+    do_split_packages(d, gst_libdir, r'libgst(.*)\.so$', d.expand('${PN}-%s'), 'GStreamer 1.0 plugin for %s', postinst=postinst, extra_depends='')
+    # GObject introspection files for GStreamer plugins
+    do_split_packages(d, glibdir+'/girepository-1.0', r'Gst(.*)-1.0\.typelib$', d.expand('${PN}-%s-typelib'), 'GStreamer 1.0 typelib file for %s', postinst=postinst, extra_depends='')
+    # Static GStreamer libraries for development
+    do_split_packages(d, gst_libdir, r'libgst(.*)\.a$', d.expand('${PN}-%s-staticdev'), 'GStreamer 1.0 plugin for %s (static development files)', extra_depends='${PN}-staticdev')
 }
 
-python set_metapkg_rdepends () {
+python set_gstreamer10_metapkg_rdepends () {
     import os
     import oe.utils
+
+    # Go through all generated packages (excluding the main package and
+    # the -meta package itself) and add them to the -meta package as RDEPENDS.
 
     pn = d.getVar('PN')
     metapkg =  pn + '-meta'
