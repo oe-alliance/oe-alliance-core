@@ -129,13 +129,14 @@ DEFAULTTUNE = "sh4"
 
 GCCVERSION = "4.9.4"
 
-GLIBCVERSION = "2.25"
+GLIBCVERSION = "2.23"
 OLDEST_KERNEL = "2.6.32"
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-fulan"
 PREFERRED_VERSION_directfb = "1.7.7"
 PREFERRED_VERSION_rt8812au = "4.3.14"
 PREFERRED_VERSION_mpd = "0.20.22"
+PREFERRED_VERSION_samba = "3.6.25"
 
 PREFERRED_PROVIDER_virtual/egl = "libstgles"
 PREFERRED_PROVIDER_virtual/libgles1 = "libstgles"
