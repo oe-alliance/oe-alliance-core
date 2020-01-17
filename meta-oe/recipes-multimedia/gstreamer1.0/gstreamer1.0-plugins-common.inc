@@ -3,6 +3,7 @@ HOMEPAGE = "http://gstreamer.freedesktop.org/"
 BUGTRACKER = "https://bugzilla.gnome.org/enter_bug.cgi?product=Gstreamer"
 SECTION = "multimedia"
 
+require gstreamer1.0-common.inc
 require gstreamer1.0-plugins-packaging.inc
 
 DEPENDS = "gstreamer1.0 glib-2.0-native"
