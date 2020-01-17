@@ -9,8 +9,6 @@ DEPENDS_append = " gstreamer1.0 glib-2.0-native"
 
 inherit pkgconfig
 
-LIBV = "1.0"
-
 # Orc enables runtime JIT compilation of data processing routines from Orc
 # bytecode to SIMD instructions for various architectures (currently SSE, MMX,
 # MIPS, Altivec and NEON are supported).
