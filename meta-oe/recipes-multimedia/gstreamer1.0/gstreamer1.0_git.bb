@@ -13,38 +13,61 @@ require gstreamer1.0-common.inc
 
 DEPENDS = "bison-native flex-native glib-2.0 glib-2.0-native gobject-introspection libxml2 libcap"
 
-inherit pkgconfig gettext
+inherit pkgconfig
 
 SRCREV_FORMAT = "gst"
 
 SRC_URI = "git://gitlab.freedesktop.org/gstreamer/gstreamer;protocol=https;branch=master;name=gst \
-           file://0001-meson-build-optimization.patch \
-           file://0002-gst-gstpluginloader.c-when-env-var-is-set-do-not-fal.patch \
-           file://0001-revert-use-new-gst-adapter-get-buffer.patch \
-           file://0002-continue-on-nondefined-64bit-atomics.patch \
+           file://0001-gst-gstpluginloader.c-when-env-var-is-set-do-not-fal.patch \
+           file://0003-meson-Add-valgrind-feature.patch \
+           file://0004-meson-Add-option-for-installed-tests.patch \
+           file://0005-revert-use-new-gst-adapter-get-buffer.patch \
+           file://0006-continue-on-nondefined-64bit-atomics.patch \
 "
 
-PACKAGECONFIG ??= ""
+PACKAGECONFIG ??= "${@bb.utils.contains('PTEST_ENABLED', '1', 'tests', '', d)} \
+                   check \
+                   debug \
+                   tools"
 
-PACKAGECONFIG[debug] = "-Ddebug=true,-Ddebug=false"
-PACKAGECONFIG[tests] = "-Dtests=enabled,-Dtests=disabled"
-PACKAGECONFIG[tracer_hooks] = "-Dtracer_hooks=true,-Dtracer_hooks=false,"
+PACKAGECONFIG[debug] = "-Dgst_debug=true,-Dgst_debug=false"
+PACKAGECONFIG[tracer-hooks] = "-Dtracer_hooks=true,-Dtracer_hooks=false"
+PACKAGECONFIG[check] = "-Dcheck=enabled,-Dcheck=disabled"
+PACKAGECONFIG[tests] = "-Dtests=enabled -Dinstalled-tests=true,-Dtests=disabled -Dinstalled-tests=false"
+PACKAGECONFIG[valgrind] = "-Dvalgrind=enabled,-Dvalgrind=disabled,valgrind,"
 PACKAGECONFIG[unwind] = "-Dlibunwind=enabled,-Dlibunwind=disabled,libunwind"
 PACKAGECONFIG[dw] = "-Dlibdw=enabled,-Dlibdw=disabled,elfutils"
+PACKAGECONFIG[bash-completion] = "-Dbash-completion=enabled,-Dbash-completion=disabled,bash-completion"
+PACKAGECONFIG[tools] = "-Dtools=enabled,-Dtools=disabled"
 
-EXTRA_OEMESON = " \
-    -Ddoc=disabled \
-    -Dgtk_doc=disabled \
+# TODO: put this in a gettext.bbclass patch
+def gettext_oemeson(d):
+    if d.getVar('USE_NLS') == 'no':
+        return '-Dnls=disabled'
+    # Remove the NLS bits if USE_NLS is no or INHIBIT_DEFAULT_DEPS is set
+    if d.getVar('INHIBIT_DEFAULT_DEPS') and not oe.utils.inherits(d, 'cross-canadian'):
+        return '-Dnls=disabled'
+    return '-Dnls=enabled'
+
+EXTRA_OEMESON += " \
     -Dexamples=disabled \
-    --libexecdir=${libdir} \
+    -Ddbghelp=disabled \
+    ${@gettext_oemeson(d)} \
 "
+
+GTKDOC_MESON_OPTION = "gtk_doc"
+GTKDOC_MESON_ENABLE_FLAG = "enabled"
+GTKDOC_MESON_DISABLE_FLAG = "disabled"
+
+GIR_MESON_ENABLE_FLAG = "enabled"
+GIR_MESON_DISABLE_FLAG = "disabled"
 
 PACKAGES += "${PN}-bash-completion"
 
-FILES_${PN} += "${libdir}/gstreamer-1.0/*.so ${libdir}/gstreamer-1.0/gst-*"
-FILES_${PN}-dev += "${libdir}/gstreamer-1.0/*.la ${libdir}/gstreamer-1.0/*.a ${libdir}/gstreamer-1.0/include"
+# Add the core element plugins to the main package
+FILES_${PN} += "${libdir}/gstreamer-1.0/*.so"
+FILES_${PN}-dev += "${libdir}/gstreamer-1.0/*.a ${libdir}/gstreamer-1.0/include"
 FILES_${PN}-bash-completion += "${datadir}/bash-completion/completions/ ${datadir}/bash-completion/helpers/gst*"
-FILES_${PN}-dbg += "${datadir}/gdb ${datadir}/gstreamer-1.0"
+FILES_${PN}-dbg += "${datadir}/gdb ${datadir}/gstreamer-1.0/gdb"
 
-RRECOMMENDS_${PN}_qemux86 += "kernel-module-snd-ens1370 kernel-module-snd-rawmidi"
-RRECOMMENDS_${PN}_qemux86-64 += "kernel-module-snd-ens1370 kernel-module-snd-rawmidi"
+require gstreamer1.0-ptest.inc

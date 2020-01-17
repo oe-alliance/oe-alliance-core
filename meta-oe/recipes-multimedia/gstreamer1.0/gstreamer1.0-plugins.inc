@@ -7,8 +7,6 @@ require gst-plugins-package.inc
 
 DEPENDS_append = " gstreamer1.0 glib-2.0-native"
 
-SRC_URI_append = " file://0001-meson-build-optimization.patch"
-
 inherit pkgconfig
 
 LIBV = "1.0"
