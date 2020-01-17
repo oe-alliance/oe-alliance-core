@@ -4,7 +4,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=a6f89e2100d9b6cdffcea4f398e37343 \
 "
 
 require gstreamer1.0-common.inc
-require gstreamer1.0-plugins.inc
+require gstreamer1.0-plugins-common.inc
 
 DEPENDS = "gstreamer1.0-plugins-base libcap zlib"
 

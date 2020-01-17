@@ -4,7 +4,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=73a5855a8119deb017f5f13cf327095d \
 "
 
 require gstreamer1.0-common.inc
-require gstreamer1.0-plugins.inc
+require gstreamer1.0-plugins-common.inc
 
 DEPENDS = "gobject-introspection gstreamer1.0-plugins-base libpng libdca"
 
