@@ -1,3 +1,11 @@
+# This .inc file contains functionality for automatically splitting
+# built plugins into individual packages for each plugin. A -meta
+# package is also set up that has no files of its own, but contains
+# the names of all plugin packages in its RDEPENDS list.
+#
+# This is mainly used by the gstreamer1.0-plugins-* plugin set recipes,
+# but can be used in any recipe that produces GStreamer plugins.
+
 PACKAGESPLITFUNCS_prepend = " split_gstreamer10_packages "
 PACKAGESPLITFUNCS_append = " set_gstreamer10_metapkg_rdepends "
 
@@ -32,7 +40,7 @@ python set_gstreamer10_metapkg_rdepends () {
     pkgdest = d.getVar('PKGDEST')
     for pkg in oe.utils.packages_filter_out_system(d):
         if pkg not in blacklist and pkg not in metapkg_rdepends:
-            # See if the package is empty by looking at the contents of its PKGDEST subdirectory. 
+            # See if the package is empty by looking at the contents of its PKGDEST subdirectory.
             # If this subdirectory is empty, then the package is.
             # Empty packages do not get added to the meta package's RDEPENDS
             pkgdir = os.path.join(pkgdest, pkg)

@@ -16,7 +16,6 @@ SRCREV_FORMAT = "gst_libav"
 SRC_URI = "git://gitlab.freedesktop.org/gstreamer/gst-libav;protocol=https;branch=master;name=gst_libav \
             git://gitlab.freedesktop.org/gstreamer/meson-ports/ffmpeg;protocol=https;branch=meson-4.1.4;destsuffix=git/subprojects/FFmpeg;name=gst_ffmpeg \
             file://0001-meson-gst-ffmpeg-wrap.patch \
-            file://0002-meson-build-optimization.patch \
             file://0003-configure-check-for-armv7ve-variant.patch \
             file://0004-workaround-to-build-gst-libav-for-i586-with-gcc.patch \
             file://0005-mips64-cpu-detection.patch \

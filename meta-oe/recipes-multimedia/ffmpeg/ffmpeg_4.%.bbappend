@@ -1,14 +1,14 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
-DEPENDS += "libxml2 librtmp"
+DEPENDS += "libxml2"
 
 PACKAGECONFIG_append = " libass libbluray libfreetype librtmp libvorbis \
-                        mp3lame openjpeg openssl vpx wavpack x265"
+                        mp3lame openjpeg openssl vpx wavpack"
 
 PACKAGECONFIG[libass] = "--enable-libass,--disable-libass,libass"
 PACKAGECONFIG[libbluray] = "--enable-libbluray --enable-protocol=bluray,--disable-libbluray,libbluray"
 PACKAGECONFIG[libfreetype] = "--enable-libfreetype,--disable-libfreetype,freetype"
-PACKAGECONFIG[librtmp] = "--enable-librtmp,--disable-librtmp,rtmpdump"
+PACKAGECONFIG[librtmp] = "--enable-librtmp,--disable-librtmp,librtmp rtmpdump"
 PACKAGECONFIG[openjpeg] = "--enable-libopenjpeg,--disable-libopenjpeg,openjpeg"
 PACKAGECONFIG[wavpack] = "--enable-libwavpack,--disable-libwavpack,wavpack"
 PACKAGECONFIG[x265] = "--enable-libx265,--disable-libx265,x265"
