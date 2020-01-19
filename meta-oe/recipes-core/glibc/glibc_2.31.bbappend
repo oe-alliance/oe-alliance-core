@@ -1,4 +1,4 @@
-FILESEXTRAPATHS_prepend := "${THISDIR}/${P}:"
+FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}-2.31:"
 
 SRC_URI += " file://0001-ptrace-protect-ptrace_peeksiginfo_args-from-redefint.patch \
              file://0002-fix-build-for-old-libcheader.patch \
