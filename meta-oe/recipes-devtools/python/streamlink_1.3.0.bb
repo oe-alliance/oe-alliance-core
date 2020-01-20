@@ -1,6 +1,6 @@
 SUMMARY = "CLI for extracting streams from various websites to a video player of your choosing"
 DESCRIPTION = "Streamlink is a command-line utility that pipes video streams from various services into a video player, such as VLC."
-HOMEPAGE = "https://streamlink.github.io"
+HOMEPAGE = "https://github.com/streamlink/streamlink"
 SECTION = "devel/python"
 LICENSE = "BSD-2-Clause"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=67e73aa1a18a474a727af66319626ed4"
@@ -25,7 +25,7 @@ RDEPENDS_${PN} = "python \
 
 SRC_URI = "git://github.com/streamlink/streamlink.git;protocol=git"
 SRCREV = "${PV}"
-S = "${WORKDIR}/git/"
+S = "${WORKDIR}/git"
 
 do_install_append() {
     rm -rf ${D}${bindir}

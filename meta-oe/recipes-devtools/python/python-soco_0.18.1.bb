@@ -6,10 +6,9 @@ LIC_FILES_CHKSUM = "file://LICENSE.rst;md5=07b0e2ca9ac77cd65cd4edf2e13367ea"
 
 RDEPENDS_${PN} = "python-requests"
 
-SRC_URI = "https://files.pythonhosted.org/packages/60/4b/ecbf9a4fb4c0042fb77e782476d961dfd9c761fa617b9d8883a0a16785ea/soco-${PV}.tar.gz"
-
-SRC_URI[md5sum] = "459c5800f7416cab0e4389b2d574eab5"
-SRC_URI[sha256sum] = "7bed4475e3f134283af1f520a9b2e6ce2a8e69bdc1b58ee68528b3d093972424"
+SRC_URI = "https://files.pythonhosted.org/packages/27/8e/c9d2f3ca469cbcd9f0882e50cadf01176101c7edb92ac739ae3ac5c32298/soco-${PV}.tar.gz"
+SRC_URI[md5sum] = "7a1435bcd55b51440f9b69bc5be29101"
+SRC_URI[sha256sum] = "de033ad69f86a655f50d407648b3aa2dd9647c69fd7bb317e9adfcd38a1adf4b"
 
 S = "${WORKDIR}/soco-${PV}"
 

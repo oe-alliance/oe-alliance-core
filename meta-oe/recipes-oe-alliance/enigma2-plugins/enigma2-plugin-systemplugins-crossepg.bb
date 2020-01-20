@@ -4,7 +4,7 @@ LICENSE = "LGPLv2.1"
 LIC_FILES_CHKSUM = "file://LICENSE.TXT;md5=4fbd65380cdd255951079008b364516c"
 
 DEPENDS += "curl libxml2 python swig-native zlib"
-RDEPENDS_${PN} += "enigma2 libcurl python-core python-compression python-lzma xz"
+RDEPENDS_${PN} += "enigma2 libcurl python-core python-compression python-backports-lzma xz"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
