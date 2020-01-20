@@ -7,11 +7,10 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=68ad62c64cc6c620126241fd429e68fe"
 
 DEPENDS = "python-pycurl"
 
-SRC_URI[md5sum] = "9fcf77af476a69da2718e827ea628c6f"
-SRC_URI[sha256sum] = "53691185e3d462bb0fa8db853a205ee79cdd4089687cddd22cabb8b3d4280142"
-
-SRC_URI = "http://urlgrabber.baseurl.org/download/urlgrabber-${PV}.tar.gz \
+SRC_URI = "https://files.pythonhosted.org/packages/b1/23/61cb4d829138f24bfae2c77af6794ddd67240811dbb4e3e2eb22c4f57742/urlgrabber-${PV}.tar.gz \
         file://urlgrabber-reset.patch"
+SRC_URI[md5sum] = "dc9bf17b007c42814d4a511d47699de7"
+SRC_URI[sha256sum] = "075af8afabae6362482d254e5ac3ffa595d1766117b684e53d9c25c2e937e139"
 
 S = "${WORKDIR}/urlgrabber-${PV}"
 
