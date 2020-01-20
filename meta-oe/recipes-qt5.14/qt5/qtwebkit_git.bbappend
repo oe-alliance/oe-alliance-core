@@ -17,3 +17,6 @@ SRCREV = "ab1bd15209abaf7effc51dbc2f272c5681af7223"
 
 
 INSANE_SKIP_${PN} += "file-rdeps"
+
+#### sets PYTHON_BASEVERSION to "2.7"
+inherit python-dir pythonnative
