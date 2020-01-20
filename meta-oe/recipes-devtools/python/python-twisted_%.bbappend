@@ -1,4 +1,4 @@
-RDEPENDS_${PN}-core += "${PYTHON_PN}-contextlib  ${PYTHON_PN}-service-identity"
+RDEPENDS_${PN}-core += "${PYTHON_PN}-service-identity"
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
