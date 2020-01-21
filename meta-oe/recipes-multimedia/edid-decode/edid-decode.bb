@@ -1,7 +1,7 @@
 SUMMARY = "EDID decoder and conformance tester"
 DESCRIPTION = "edid-decode decodes EDID monitor description data in human-readable format"
 LICENSE = "MIT"
-LIC_FILES_CHKSUM = "file://edid-decode.cpp;beginline=1;endline=8;md5=bff0dd3acca4abcb1cdce2d39db63524"
+LIC_FILES_CHKSUM = "file://edid-decode.cpp;beginline=1;endline=8;md5=2193df34747fd1a150135ed8b90f3b4e"
 
 inherit gitpkgv
 
