@@ -11,7 +11,7 @@ DEPENDS = "tslib mpfr gmp"
 SRCREV = "${AUTOREV}"
 PV = "${IMAGE_VERSION}+gitr${SRCPV}"
 PKGV = "${IMAGE_VERSION}+gitr${GITPKGV}"
-PR = "r254"
+PR = "r255"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -34,7 +34,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-atmolightd_0.7-pre22_all.ipk \
     enigma2-plugin-extensions-blackout-blind_1.3_all.ipk \
     enigma2-plugin-extensions-boblight-enigma2_0.8r8_mips32el.ipk \
-    enigma2-plugin-extensions-camofs_9.19_all.ipk \
+    enigma2-plugin-extensions-camofs_17.14_all.ipk \
     enigma2-plugin-extensions-csfd_11-55-20160929_all.ipk \
     enigma2-plugin-extensions-customsubservices_0.1.3_all.ipk \
     enigma2-plugin-extensions-cyrussettings_1.0.0_all.ipk \
@@ -64,7 +64,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-oscamstatusview_1.0rc1_all.ipk \
     enigma2-plugin-extensions-piconmanager_2.2-20150329-r0_all.ipk \
     enigma2-plugin-extensions-piconsupdater_0.3.7_mips32el.ipk \
-    enigma2-plugin-extensions-picturecenterfs_8.38_all.ipk \
+    enigma2-plugin-extensions-picturecenterfs_8.39_all.ipk \
     enigma2-plugin-extensions-planerfs_9.43_all.ipk \
     enigma2-plugin-extensions-pluginspanel_1.0_r01_all.ipk \
     enigma2-plugin-extensions-pluginupdater_0.1r2_all.ipk \
@@ -94,7 +94,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-vcs_2.7_all.ipk \
     enigma2-plugin-extensions-vhannibalautosettings_1.1_mips32el.ipk \
     enigma2-plugin-extensions-vuplusforum_0.8rc2_all.ipk \
-    enigma2-plugin-extensions-webradiofs_18.14_all.ipk \
+    enigma2-plugin-extensions-webradiofs_18.15_all.ipk \
     enigma2-plugin-extensions-wikipedia_2.3rc3_all.ipk \
     enigma2-plugin-extensions-wwech_1.03_all.ipk \
     enigma2-plugin-extensions-xbmcwetter_1.4rc1_all.ipk \
