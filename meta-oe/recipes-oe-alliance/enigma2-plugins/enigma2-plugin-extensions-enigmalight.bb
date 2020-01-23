@@ -13,9 +13,10 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
+PR = "r1"
 
 SRC_URI = "git://github.com/Dima73/enigmalight.git;protocol=git \
-        file://remove-obsolete-import-version.patch"
+        file://import-version-from-twisted.patch"
 
 S = "${WORKDIR}/git/build"
 
