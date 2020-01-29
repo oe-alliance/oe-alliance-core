@@ -3,12 +3,12 @@ SECTION = "kernel"
 LICENSE = "GPLv2"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-KERNEL_RELEASE = "5.4.1"
+KERNEL_RELEASE = "5.5"
 
 inherit kernel machine_kernel_pr
 
-SRC_URI[md5sum] = "a4ac0b46caf2d00f33f0d0bbb76bb3db"
-SRC_URI[sha256sum] = "3b65a76b64a13e12e1b55ad4b095679c4494e027ccbef9431dc46e13e6662fba"
+SRC_URI[md5sum] = "ac640fefefe3916fc729ddc493e3db3f"
+SRC_URI[sha256sum] = "c52dfb9d9e9768bec6648230d225ac11d16c9a64e7c07a4611b43df80a048310"
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-brcmstb-${PV}/COPYING;md5=bbea815ee2795b2f4230826c0c6b8814"
 

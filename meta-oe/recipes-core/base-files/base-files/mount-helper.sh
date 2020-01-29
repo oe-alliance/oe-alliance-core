@@ -60,7 +60,7 @@ case $ACTION in
 				DEVCHECK=`expr substr $MDEV 1 3`
 				if [ "${DEVCHECK}" == "sda" ] ; then
 					DEVSIZE=`cat /sys/block/sda/sda1/size`
-					if [ $DEVSIZE == "16384" ] ; then
+					if [ $DEVSIZE == "65536" ]  || [ $DEVSIZE == "16384" ]; then
 						BLACKLISTED=`echo ${BLACKLISTED} sda`
 					fi
 				fi
