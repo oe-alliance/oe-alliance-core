@@ -1,4 +1,4 @@
-From cc1d1ec12ca47ebf60badf3b9cb86d062860767b Mon Sep 17 00:00:00 2001
+From 6a80963496797291410a8f5bbaf063d4940609a0 Mon Sep 17 00:00:00 2001
 From: Jaedon Shin <jaedon.shin@gmail.com>
 Date: Tue, 27 Nov 2018 14:21:30 +0900
 Subject: [PATCH] qcacld-2.0: Make driver compatiable with mainline kernel
@@ -9,6 +9,7 @@ Signed-off-by: Jaedon Shin <jaedon.shin@gmail.com>
  CORE/HDD/inc/wlan_hdd_wmm.h                  |  7 +++--
  CORE/HDD/src/wlan_hdd_main.c                 | 23 ++++++++------
  CORE/HDD/src/wlan_hdd_wmm.c                  |  7 +++--
+ CORE/SERVICES/COMMON/adf/adf_nbuf.c          | 11 +++++++
  CORE/SERVICES/COMMON/adf/linux/qdf_crypto.c  |  6 ++++
  CORE/SVC/src/logging/wlan_logging_sock_svc.c | 11 +++++++
  CORE/VOSS/inc/vos_cnss.h                     | 32 ++++++++++++++++++++
@@ -16,7 +17,7 @@ Signed-off-by: Jaedon Shin <jaedon.shin@gmail.com>
  CORE/VOSS/src/vos_packet.c                   | 11 +++++++
  CORE/VOSS/src/vos_timer.c                    | 11 +++++++
  Kbuild                                       |  5 ++-
- 11 files changed, 101 insertions(+), 18 deletions(-)
+ 12 files changed, 112 insertions(+), 18 deletions(-)
 
 diff --git a/CORE/CLD_TXRX/TXRX/ol_tx.c b/CORE/CLD_TXRX/TXRX/ol_tx.c
 index 250bb4af6b8a..0555eeeb8d2d 100644
@@ -50,7 +51,7 @@ index f5fdd866e784..c0f216aad1b7 100644
  uint16_t hdd_hostapd_select_queue(struct net_device * dev, struct sk_buff *skb,
                                    void *accel_priv,
 diff --git a/CORE/HDD/src/wlan_hdd_main.c b/CORE/HDD/src/wlan_hdd_main.c
-index 91e996be6ead..bdee383d4b6f 100644
+index 3738635dbe8e..948a09e73866 100644
 --- a/CORE/HDD/src/wlan_hdd_main.c
 +++ b/CORE/HDD/src/wlan_hdd_main.c
 @@ -10944,8 +10944,11 @@ static void hdd_set_multicast_list(struct net_device *dev)
@@ -67,7 +68,7 @@ index 91e996be6ead..bdee383d4b6f 100644
  #elif (LINUX_VERSION_CODE >= KERNEL_VERSION(3, 14, 0))
  uint16_t hdd_select_queue(struct net_device *dev, struct sk_buff *skb,
  			  void *accel_priv, select_queue_fallback_t fallback)
-@@ -13338,13 +13341,13 @@ static void hdd_populate_fils_params(struct cfg80211_connect_resp_params
+@@ -13350,13 +13353,13 @@ static void hdd_populate_fils_params(struct cfg80211_connect_resp_params
                       uint16_t fils_seq_num)
  {
      /* Increament seq number to be used for next FILS */
@@ -88,7 +89,7 @@ index 91e996be6ead..bdee383d4b6f 100644
  }
  #else /* CFG80211_FILS_SK_OFFLOAD_SUPPORT */
  static inline void hdd_populate_fils_params(struct cfg80211_connect_resp_params
-@@ -13410,7 +13413,7 @@ static void hdd_connect_done(struct net_device *dev, const u8 *bssid,
+@@ -13422,7 +13425,7 @@ static void hdd_connect_done(struct net_device *dev, const u8 *bssid,
      }
      hddLog(LOG1, "FILS indicate connect status %d seq no %d",
            fils_params.status,
@@ -115,6 +116,28 @@ index 2064904288a3..7c59a0842118 100644
  #elif (LINUX_VERSION_CODE >= KERNEL_VERSION(3,14,0))
  uint16_t hdd_hostapd_select_queue(struct net_device * dev, struct sk_buff *skb,
  				  void *accel_priv,
+diff --git a/CORE/SERVICES/COMMON/adf/adf_nbuf.c b/CORE/SERVICES/COMMON/adf/adf_nbuf.c
+index e2c47286d5d2..7e935e3c016a 100644
+--- a/CORE/SERVICES/COMMON/adf/adf_nbuf.c
++++ b/CORE/SERVICES/COMMON/adf/adf_nbuf.c
+@@ -2429,6 +2429,17 @@ uint16_t adf_nbuf_construct_radiotap(
+ 	return rthdr->it_len;
+ }
+ 
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(5,5,0))
++/**
++ * FIELD_SIZEOF - get the size of a struct's field
++ * @t: the target struct
++ * @f: the target struct's field
++ * Return: the size of @f in the struct definition without having a
++ * declared instance of @t.
++ */
++#define FIELD_SIZEOF(t, f) (sizeof(((t*)0)->f))
++#endif
++
+ /**
+  * __adf_nbuf_validate_skb_cb() - validate skb CB
+  *
 diff --git a/CORE/SERVICES/COMMON/adf/linux/qdf_crypto.c b/CORE/SERVICES/COMMON/adf/linux/qdf_crypto.c
 index 44088838b857..19a17cb4bf6e 100644
 --- a/CORE/SERVICES/COMMON/adf/linux/qdf_crypto.c
