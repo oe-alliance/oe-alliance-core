@@ -186,11 +186,11 @@ ${@bb.utils.contains('MACHINEBUILD', 'iziboxx3', 'izibox/x3' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axashistwin', 'axas/axashistwin' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axashisc4k', 'axas/axasc4k' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'protek4kx1', 'e2/update' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'anadolprohd5', 'anadol/prohd5' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'anadolprohd5', 'dinobot/${MACHINE}' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'spycatminiv2', 'dinobot/${MACHINE}' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iziboxecohd', 'dinobot/${MACHINE}' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'jdhdduo', 'jd/duohd' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'turing', 'atto/turing' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'jdhdduo', 'dinobot/${MACHINE}' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'turing', 'dinobot/${MACHINE}' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'arivatwin', 'e2/update' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'arivacombo', 'e2/update' , '', d)}\
 "
