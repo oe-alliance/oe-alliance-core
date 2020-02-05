@@ -1,7 +1,7 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
 
-DEPENDS = "libusb1 python"
-RDEPENDS_${PN} = "libusb1 python"
+DEPENDS += "libusb1 python"
+RDEPENDS_${PN} += "libusb1 python"
 
 SRC_URI_append = " file://pcscd.init"
 
