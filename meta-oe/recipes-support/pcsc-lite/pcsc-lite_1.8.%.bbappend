@@ -12,7 +12,7 @@ RDEPENDS_${PN}-spy +="python"
 
 PACKAGECONFIG = ""
 
-inherit update-rc.d
+inherit perlnative update-rc.d
 
 INITSCRIPT_NAME = "pcscd"
 INITSCRIPT_PARAMS = "defaults"
