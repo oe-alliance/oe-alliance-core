@@ -3,8 +3,6 @@ HOMEPAGE = "http://nodejs.org"
 LICENSE = "MIT & BSD & Artistic-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=fde91d5c5bbd1e0389623e1ac018d9e8"
 
-FILESEXTRAPATHS_prepend := "${THISDIR}/nodejs:"
-
 DEPENDS = "openssl zlib icu"
 
 inherit pkgconfig
@@ -15,10 +13,10 @@ COMPATIBLE_MACHINE_mips64 = "(!.*mips64).*"
 
 SRC_URI = "http://nodejs.org/dist/v${PV}/node-v${PV}.tar.xz \
            file://0001-Disable-running-gyp-files-for-bundled-deps.patch \
-           file://fix_mips_build.patch \
-"
-SRC_URI[md5sum] = "8b3abd033dae96b6fadcb6a872a44d3c"
-SRC_URI[sha256sum] = "5a9dff58016c18fb4bf902d963b124ff058a550ebcd9840c677757387bce419a"
+           file://0002-fix-mips-build.patch"
+
+SRC_URI[md5sum] = "bfc5da493c72ded3a7f43b5662bfc53c"
+SRC_URI[sha256sum] = "968523333947cc3f769d73dedc6c9c60580826d8714bc0e62ca4589de6a7c633"
 
 S = "${WORKDIR}/node-v${PV}"
 
