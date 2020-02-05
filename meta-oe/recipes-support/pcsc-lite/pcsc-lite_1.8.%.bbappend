@@ -1,7 +1,7 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
 
-DEPENDS = "libusb1 python"
-RDEPENDS_${PN} = "libusb1 python"
+DEPENDS += "libusb1 python"
+RDEPENDS_${PN} += "libusb1 python"
 
 SRC_URI_append = " file://pcscd.init"
 
@@ -12,7 +12,7 @@ RDEPENDS_${PN}-spy +="python"
 
 PACKAGECONFIG = ""
 
-inherit perlnative update-rc.d
+inherit update-rc.d
 
 INITSCRIPT_NAME = "pcscd"
 INITSCRIPT_PARAMS = "defaults"
