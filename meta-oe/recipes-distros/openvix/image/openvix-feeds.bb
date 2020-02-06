@@ -16,6 +16,7 @@ inherit packagegroup
 DEPENDS = "\
     enigma2-plugin-extensions-blurayplayer \
     enigma2-skins-openvix \
+    enigma2-plugin-skins-vix-turquoise-hd \
     oe-alliance-skins \
     openvix-bootlogos-meta \
     openvix-softcams-meta \
