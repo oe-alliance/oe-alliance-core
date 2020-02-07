@@ -1,4 +1,8 @@
+PR = "r1"
+
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
+
+SRC_URI += "file://disable-statx-if-using-glibc-emulation.patch"
 
 CFLAGS_remove_sh4 = "-Wno-error=format-overflow"
 
@@ -15,5 +19,3 @@ do_install_append() {
         rm ${D}${sysconfdir}/init.d/nfsserver
     fi
 }
-
-
