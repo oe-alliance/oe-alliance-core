@@ -48,7 +48,7 @@ GST_GOOD_RDEPS = "\
 
 GST_BAD_RDEPS = "\
 	gstreamer${GST_VERSION}-plugins-bad-autoconvert \
-	gstreamer${GST_VERSION}-plugins-bad-dashdemux \
+	gstreamer${GST_VERSION}-plugins-bad-dash \
 	gstreamer${GST_VERSION}-plugins-bad-mms \
 	gstreamer${GST_VERSION}-plugins-bad-mpegpsdemux \
 	gstreamer${GST_VERSION}-plugins-bad-mpegtsdemux \
