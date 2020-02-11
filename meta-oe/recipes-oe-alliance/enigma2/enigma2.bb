@@ -255,6 +255,11 @@ SRC_URI_append_azboxminime = " \
     file://pic_show.patch \
     ${@bb.utils.contains("DISTRO_NAME", "openatv", "file://azboxMEe2py.patch", "", d)} \
     "
+
+SRC_URI_append_sh4 = " \
+    ${@bb.utils.contains("DISTRO_NAME", "openspa", "file://sh4-define-DTV_ENUM_DELSYS.patch" , "", d)} \
+    "
+
 SRC_URI_append_vuduo = " \
     file://duo_VFD.patch \
     "
