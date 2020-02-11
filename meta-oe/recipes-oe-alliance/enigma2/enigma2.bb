@@ -53,6 +53,7 @@ PYTHON_RDEPS = " \
     python-crypt \
     python-fcntl \
     python-lang \
+    python-mmap \
     python-netclient \
     python-netserver \
     python-pickle \
@@ -185,6 +186,10 @@ PV = "${IMAGE_VERSION}+git${SRCPV}"
 PKGV = "${IMAGE_VERSION}+git${GITPKGV}"
 
 SRC_URI = "${ENIGMA2_URI}"
+
+SRC_URI_append_sh4 = " \
+    ${@bb.utils.contains("DISTRO_NAME", "openspa", "file://sh4-define-DTV_ENUM_DELSYS.patch" , "", d)} \
+    "
 
 SRC_URI_append_vuduo = " \
     file://duo_VFD.patch \
