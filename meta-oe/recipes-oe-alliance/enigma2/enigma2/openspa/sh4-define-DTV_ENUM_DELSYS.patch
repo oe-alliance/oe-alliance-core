@@ -1,0 +1,13 @@
+--- a/lib/dvb/dvb.cpp
++++ b/lib/dvb/dvb.cpp
+@@ -21,6 +21,10 @@
+ #include <fcntl.h>
+ #include <sys/ioctl.h>
+ 
++#ifndef DTV_ENUM_DELSYS
++#define DTV_ENUM_DELSYS		44
++#endif
++
+ #define MIN(a,b) (a < b ? a : b)
+ #define MAX(a,b) (a > b ? a : b)
+ 
