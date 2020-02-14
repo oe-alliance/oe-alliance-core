@@ -18,6 +18,8 @@ SRC_URI = "git://code.videolan.org/videolan/dvblast.git;protocol=https"
 
 S = "${WORKDIR}/git"
 
+CFLAGS_sh4 += "-std=gnu99"
+
 inherit autotools-brokensep
 
 do_compile_prepend() {
