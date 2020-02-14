@@ -18,9 +18,9 @@ SRC_URI = "git://code.videolan.org/videolan/dvblast.git;protocol=https"
 
 S = "${WORKDIR}/git"
 
-inherit autotools-brokensep
+CFLAGS_sh4 += "-std=gnu99"
 
-TARGET_CFLAGS_sh4 += "-std=gnu11"
+inherit autotools-brokensep
 
 do_compile_prepend() {
         sed -i 's#/usr/local#/usr#' ${S}/Makefile
