@@ -81,10 +81,14 @@ pkg_postinst_${PN} () {
 # in most time zones in the base package
 
 TZ_PACKAGES = " \
-    tzdata-core tzdata-misc tzdata-posix tzdata-right tzdata-africa \
+    tzdata-core tzdata-misc tzdata-africa \
     tzdata-americas tzdata-antarctica tzdata-arctic tzdata-asia \
     tzdata-atlantic tzdata-australia tzdata-europe tzdata-pacific"
-PACKAGES = "${TZ_PACKAGES} ${PN}"
+
+# to save some space  - posix and right dirs will not be present in rootfs
+# move tzdata-posix and/or tzdata-right to TZ_PACKAGES if there will be need for posix and right
+# directories to be present in rootfs in future
+PACKAGES = "${TZ_PACKAGES} ${PN} tzdata-posix tzdata-right"
 
 FILES_tzdata-africa += "${datadir}/zoneinfo/Africa/*"
 RPROVIDES_tzdata-africa = "tzdata-africa"
