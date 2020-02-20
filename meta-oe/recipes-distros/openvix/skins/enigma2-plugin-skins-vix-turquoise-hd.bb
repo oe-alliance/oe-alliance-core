@@ -25,7 +25,7 @@ EXTRA_OECONF = "\
     "
 
 do_compile() {
-python -O -m compileall ${S}
+python2 -O -m compileall ${S}
 }
 
 do_install() {
