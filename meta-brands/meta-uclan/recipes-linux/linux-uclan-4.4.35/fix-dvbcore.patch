@@ -1,0 +1,110 @@
+diff -uNr a/drivers/media/dvb-core/dmxdev.c b/drivers/media/dvb-core/dmxdev.c
+--- a/drivers/media/dvb-core/dmxdev.c	2020-01-08 15:11:57.106991787 +0800
++++ b/drivers/media/dvb-core/dmxdev.c	2020-01-08 15:13:35.587541188 +0800
+@@ -63,7 +63,7 @@
+ 				      int non_blocking, char __user *buf,
+ 				      size_t count, loff_t *ppos)
+ {
+-	size_t todo;
++	//size_t todo;
+ 	ssize_t avail;
+ 	ssize_t ret = 0;
+ 
+@@ -76,36 +76,32 @@
+ 		return ret;
+ 	}
+ 
+-	for (todo = count; todo > 0; todo -= ret) {
+-		if (non_blocking && dvb_ringbuffer_empty(src)) {
+-			ret = -EWOULDBLOCK;
+-			break;
+-		}
+-
+-		ret = wait_event_interruptible(src->queue,
+-					       !dvb_ringbuffer_empty(src) ||
+-					       (src->error != 0));
+-		if (ret < 0)
+-			break;
+-
+-		if (src->error) {
+-			ret = src->error;
+-			dvb_ringbuffer_flush(src);
+-			break;
+-		}
+-
+-		avail = dvb_ringbuffer_avail(src);
+-		if (avail > todo)
+-			avail = todo;
+-
+-		ret = dvb_ringbuffer_read_user(src, buf, avail);
+-		if (ret < 0)
+-			break;
++	if (non_blocking && dvb_ringbuffer_empty(src)) {
++		ret = -EWOULDBLOCK;
++		return ret;
++	}
+ 
+-		buf += ret;
++	ret = wait_event_interruptible_timeout(src->queue,
++				       !dvb_ringbuffer_empty(src) ||
++				       (src->error != 0),msecs_to_jiffies(100));
++	if (ret < 0)
++		return ret;
++	
++	if (src->error) {
++		ret = src->error;
++		dvb_ringbuffer_flush(src);
++		return ret;
+ 	}
+ 
+-	return (count - todo) ? (count - todo) : ret;
++	avail = dvb_ringbuffer_avail(src);
++	if (avail > count)
++		avail = count;
++
++	ret = dvb_ringbuffer_read_user(src, buf, avail);
++	if (ret < 0)
++		return ret;
++
++	return ret;
+ }
+ 
+ static struct dmx_frontend *get_fe(struct dmx_demux *demux, int type)
+diff -uNr a/drivers/media/dvb-core/dvb_demux.c b/drivers/media/dvb-core/dvb_demux.c
+--- a/drivers/media/dvb-core/dvb_demux.c	2020-01-08 15:11:57.106991787 +0800
++++ b/drivers/media/dvb-core/dvb_demux.c	2020-01-17 15:17:57.721708696 +0800
+@@ -31,6 +31,7 @@
+ #include <linux/crc32.h>
+ #include <asm/uaccess.h>
+ #include <asm/div64.h>
++#include "dmxdev.h"
+ 
+ #include "dvb_demux.h"
+ #include "dvb_ex.h"
+@@ -1301,7 +1302,25 @@
+ 
+ 		}
+ 	}
+-	
++		
++	list_for_each_entry(feed, &dvbdemux->feed_list, list_head) {
++		if (feed->type == DMX_TYPE_TS && (feed->ts_type & TS_PACKET) && 
++			feed->pes_type == DMX_PES_OTHER)
++		{
++			struct dmx_ts_feed *tsfeed = &feed->feed.ts;
++			struct dmxdev_filter *dmxdevfilter = tsfeed->priv;
++			struct dvb_ringbuffer *buffer;
++			
++			if (dmxdevfilter->params.pes.output == DMX_OUT_TSDEMUX_TAP)
++			{
++				buffer = &dmxdevfilter->buffer;
++
++				if (dvb_ringbuffer_free(buffer) < count){
++					return 0;
++				}
++			}
++		}
++	}
+ 	return 1;
+ }
+ static int dvbdmx_write(struct dmx_demux *demux, const char __user *buf, size_t count)
