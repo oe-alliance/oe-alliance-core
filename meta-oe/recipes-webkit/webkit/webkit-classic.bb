@@ -11,7 +11,7 @@ LIC_FILES_CHKSUM = "\
 	"
 
 DEPENDS = "glib-2.0 glib-2.0-native gettext-native enchant2 libsoup-2.4 curl libxml2 cairo libidn2 gnutls gtk+ \
-           gstreamer1.0 gstreamer1.0-plugins-base flex-native bison-native gperf-native sqlite3 icu"
+           gstreamer1.0 gstreamer1.0-plugins-base flex-native bison-native gperf-native sqlite3 pango"
 
 SRCREV = "${AUTOREV}"
 PV = "1.1+git${SRCPV}"
@@ -28,6 +28,7 @@ S = "${WORKDIR}/git"
 EXTRA_OECONF = "\
 	--enable-debug=no \
 	--with-gtk=2.0 \
+	--with-unicode-backend=glib \
 	--disable-spellcheck \
 	--enable-optimizations \
 	--disable-channel-messaging \
@@ -52,6 +53,10 @@ EXTRA_OECONF = "\
 	"
 
 LDFLAGS += "-Wl,--no-keep-memory -lgthread-2.0"
+
+CPPFLAGS += "-I${STAGING_INCDIR}/pango-1.0 \
+            -I${STAGING_LIBDIR}/glib-2.0/include \
+            -I${STAGING_INCDIR}/glib-2.0" 
 
 CXXFLAGS += " -std=gnu++98"
 
