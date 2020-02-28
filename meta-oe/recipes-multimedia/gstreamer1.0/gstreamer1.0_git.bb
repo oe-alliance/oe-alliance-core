@@ -11,9 +11,9 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=6762ed442b3822387a51c92d928ead0d \
 
 require gstreamer1.0-common.inc
 
-DEPENDS = "bison-native flex-native glib-2.0 glib-2.0-native gobject-introspection libxml2 libcap"
+DEPENDS = "bison-native flex-native glib-2.0 glib-2.0-native libxml2 libcap"
 
-inherit pkgconfig
+inherit pkgconfig gobject-introspection
 
 SRCREV_FORMAT = "gst"
 

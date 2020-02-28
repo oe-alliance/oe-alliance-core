@@ -4,19 +4,19 @@ MAINTAINER = "https://github.com/01org/wds"
 LICENSE = "LGPLv2.1"
 LIC_FILES_CHKSUM = "file://COPYING;md5=cb8aedd3bced19bd8026d96a8b6876d7"
 
+DEPENDS = "gstreamer1.0 bison-native"
+RDEPENDS_${PN} = "wpa-supplicant connman"
+
 inherit gitpkgv
 
-PV = "1.0+git${SRCPV}"
-PKGV = "1.0+git${GITPKGV}"
-PR = "r0"
+PV = "1.1.0+git${SRCPV}"
+PKGV = "1.1.0+git${GITPKGV}"
+PR = "r1"
 
-SRC_URI = "git://github.com/01org/wds.git;protocol=http"
+SRC_URI = "git://github.com/01org/wds.git;protocol=https"
 SRCREV = "${AUTOREV}"
 
 S = "${WORKDIR}/git"
-
-DEPENDS = "gstreamer1.0 bison-native"
-RDEPENDS_${PN} = "wpa-supplicant connman"
 
 do_install_append() {
 	install -d ${D}${bindir}
@@ -29,6 +29,8 @@ do_install_append() {
 	install -m 0755 ${B}/mirac_network/gst-test ${D}${bindir}
 }
 
+EXTRA_OECMAKE_append = " -DCMAKE_SKIP_RPATH=ON"
+
 inherit cmake lib_package
 
-EXTRA_OECMAKE_append = " -DCMAKE_SKIP_RPATH=ON"
+FILES_${PN}-dev += "${nonarch_libdir}/pkgconfig/wds.pc"

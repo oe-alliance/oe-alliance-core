@@ -10,7 +10,7 @@ LIC_FILES_CHKSUM = "\
 	file://Source/JavaScriptCore/parser/Parser.h;endline=23;md5=2f3cff0ad0a9c486da5a376928973a90 \
 	"
 
-DEPENDS = "glib-2.0 glib-2.0-native gettext-native enchant2 libsoup-2.4 curl libxml2 cairo libidn gnutls gtk+ \
+DEPENDS = "glib-2.0 glib-2.0-native gettext-native enchant2 libsoup-2.4 curl libxml2 cairo libidn2 gnutls gtk+ \
            gstreamer1.0 gstreamer1.0-plugins-base flex-native bison-native gperf-native sqlite3 icu"
 
 SRCREV = "${AUTOREV}"
