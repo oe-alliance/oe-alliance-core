@@ -28,6 +28,7 @@ SRC_URI_append = " \
 EXTRA_FFCONF = " \
     --prefix=${prefix} \
     --disable-static \
+    --enable-small \
     --disable-runtime-cpudetect \
     --enable-ffprobe \
     --disable-altivec \
