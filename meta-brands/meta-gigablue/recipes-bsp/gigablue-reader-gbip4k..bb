@@ -1,19 +1,19 @@
-SUMMARY = "libreader for Gigablue Model ${MACHINE}"
+SUMMARY = "libreader for Gigablue Model ${MACHINEBUILD}"
 SECTION = "base"
 PRIORITY = "optional"
 LICENSE = "CLOSED"
-PACKAGE_ARCH = "${MACHINE_ARCH}"
+PACKAGE_ARCH = "${MACHINEBUILD}"
 
 RDEPENDS_${PN} = "libsdl"
 
 COMPATIBLE_MACHINE = "^(gbmv200)$"
 
-SRCDATE = "20190907"
+SRCDATE = "20200227"
 
 PV = "${SRCDATE}"
 PR = "r0"
 
-SRC_URI = "http://source.mynonpublic.com/gigablue/mv200/${MACHINE}-libreader-${SRCDATE}.tar.gz"
+SRC_URI = "http://source.mynonpublic.com/gigablue/mv200/${MACHINEBUILD}-libreader-${SRCDATE}.tar.gz"
 
 S = "${WORKDIR}"
 
@@ -27,7 +27,7 @@ do_package_qa() {
 
 FILES_${PN}  = "${bindir}/libreader"
 
-SRC_URI[md5sum] = "ed55ac214c7f4f294db1a15c0a2612d6"
-SRC_URI[sha256sum] = "48d357a723674a1c72f5870f57bea3c9399dde51bf869ad1a553fc53300b1b67"
+SRC_URI[md5sum] = "189c3f60dacd1848bf8622ab0a289d94"
+SRC_URI[sha256sum] = "961f2fae8ca4ff33c3c0308992b6b9c0f75e89e6fd47a1cba631f255b3b50874"
 
 INSANE_SKIP_${PN} += "already-stripped"
