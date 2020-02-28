@@ -13,6 +13,4 @@ SRCREV_gst_plugins_base = "a12f161724835b263d20475dfb074065141eed69"
 SRCREV_gst_plugins_good = "42e7864e90ce40059efc192e375ada9dada15701"
 SRCREV_gst_plugins_ugly = "9273903286b0fe7a9d8a5279c44a5e149e55ff24"
 
-SRCREV_gst_ffmpeg = "bd71f039a349b4a448ae7f0eddb65fd8f923345b"
-
 S = "${WORKDIR}/git"
