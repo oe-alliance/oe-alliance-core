@@ -1,0 +1,177 @@
+From 6fe32d3e3808552820465549046560f9c37af56a Mon Sep 17 00:00:00 2001
+From: Matthias Treydte <mt@waldheinz.de>
+Date: Tue, 27 Nov 2018 21:07:11 +0100
+Subject: [PATCH 08/12] speed-up jpeg scaling
+
+first prototype
+---
+ CMakeLists.txt               |   2 +-
+ xbmc/guilib/JPEGImage.h      | 119 +++++++++++++++++++++++++++++++++++
+ xbmc/guilib/imagefactory.cpp |   7 ++-
+ 3 files changed, 126 insertions(+), 2 deletions(-)
+ create mode 100644 xbmc/guilib/JPEGImage.h
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 28024af9fe9..4ae5ac3ecba 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -330,7 +330,7 @@ else()
+ endif()
+ add_dependencies(${APP_NAME_LC} ${APP_NAME_LC}-libraries export-files pack-skins)
+ whole_archive(_MAIN_LIBRARIES ${core_DEPENDS})
+-target_link_libraries(${APP_NAME_LC} ${_MAIN_LIBRARIES} lib${APP_NAME_LC} ${DEPLIBS})
++target_link_libraries(${APP_NAME_LC} ${_MAIN_LIBRARIES} lib${APP_NAME_LC} ${DEPLIBS} jpeg)
+ unset(_MAIN_LIBRARIES)
+ 
+ if(WIN32)
+diff --git a/xbmc/guilib/JPEGImage.h b/xbmc/guilib/JPEGImage.h
+new file mode 100644
+index 00000000000..830ac6dcc58
+--- /dev/null
++++ b/xbmc/guilib/JPEGImage.h
+@@ -0,0 +1,119 @@
++#pragma once
++
++#include <vector>
++
++#include <jpeglib.h>
++
++#include "iimage.h"
++#include "TextureFormats.h"
++
++#include <iostream>
++
++class JPEGImage : public IImage
++{
++public:
++  JPEGImage()
++  {
++      m_allocated = false;
++  }
++
++  ~JPEGImage() override
++  {
++    if (m_allocated)
++      jpeg_destroy_decompress(&m_mpoinfo);
++    m_allocated = false;
++  }
++
++  bool LoadImageFromMemory(unsigned char* buffer, unsigned int bufSize, unsigned int width, unsigned int height) override
++  {
++    // make a copy of data as we need it at decode time.
++    m_data.resize(bufSize);
++      //std::cerr << "lifm " << this << " sz = " << bufSize << ", ideal w = " << width << std::endl;
++    std::copy(buffer, buffer+bufSize, m_data.begin());
++struct jpeg_error_mgr jerr;
++
++    m_mpoinfo.err = jpeg_std_error(&jerr);
++    jpeg_create_decompress(&m_mpoinfo);
++    //std::cerr << "lifm " << this << " created decomp " <<  std::endl;
++    jpeg_mem_src(&m_mpoinfo, m_data.data(), m_data.size());
++    if (!jpeg_read_header(&m_mpoinfo, true))
++    {
++      jpeg_destroy_decompress(&m_mpoinfo);
++      return false;
++    }
++
++    //std::cerr << "lifm " << this << " header parsed, w =  " << m_mpoinfo.image_width <<  std::endl;
++
++    m_allocated = true;
++    m_originalWidth = m_mpoinfo.image_width;
++    m_originalHeight = m_mpoinfo.image_height;
++
++    m_mpoinfo.scale_denom = std::max(m_mpoinfo.scale_denom,
++      (m_originalWidth * m_mpoinfo.scale_num) / (width * m_mpoinfo.scale_num));
++
++    m_mpoinfo.scale_denom = std::max(m_mpoinfo.scale_denom,
++      (m_originalHeight * m_mpoinfo.scale_num) / (height * m_mpoinfo.scale_num));
++
++    m_mpoinfo.scale_denom = std::min(16u, m_mpoinfo.scale_denom);
++
++    jpeg_calc_output_dimensions(&m_mpoinfo);
++
++    m_width = m_mpoinfo.output_width;
++    m_height = m_mpoinfo.output_height;
++
++    //std::cerr << "lifm " << this << " will scale to " << m_mpoinfo.scale_num << "/" << m_mpoinfo.scale_denom << std::endl;
++
++    return true;
++  }
++
++  bool CreateThumbnailFromSurface(unsigned char*, unsigned int, unsigned int,
++                                    unsigned int, unsigned int, const std::string&,
++                                    unsigned char*&, unsigned int&) override { return false; }
++
++  bool Decode(unsigned char * const pixels, unsigned int width, unsigned int height,
++              unsigned int pitch, unsigned int format) override
++  {
++
++    struct jpeg_error_mgr jerr;
++
++    m_mpoinfo.err = jpeg_std_error(&jerr);
++
++    jpeg_start_decompress(&m_mpoinfo);
++    JSAMPARRAY buffer;
++    int const row_stride = m_mpoinfo.output_width * m_mpoinfo.output_components;
++    buffer = (*m_mpoinfo.mem->alloc_sarray)((j_common_ptr)&m_mpoinfo, JPOOL_IMAGE, row_stride, 1);
++
++    //std::cerr << "deco" << this << "img height = " << m_mpoinfo.image_height << ", height = " << height
++    //  << ", output_height = " << m_mpoinfo.output_height << std::endl;
++
++    int line = 0;
++
++    while (m_mpoinfo.output_scanline < m_mpoinfo.output_height) {
++      size_t nl = jpeg_read_scanlines(&m_mpoinfo, buffer, 1);
++
++
++      // std::cerr << "decode " << this << " output = " << m_mpoinfo.output_scanline << std::endl;
++      unsigned char* dst = pixels + line * pitch;
++
++      for (size_t i = 0; i < row_stride; i += m_mpoinfo.output_components) {
++        *dst++ = buffer[0][i+2];
++        *dst++ = buffer[0][i+1];
++        *dst++ = buffer[0][i];
++        if (format == XB_FMT_A8R8G8B8)
++            *dst++ = 0xff;
++      }
++
++      line += nl;
++    }
++
++    //std::cerr << "decode " << this << " done, pos = " << m_mpoinfo.output_scanline << std::endl;
++    jpeg_finish_decompress(&m_mpoinfo);
++
++    return true;
++  }
++
++private:
++  bool m_allocated = false;
++  jpeg_decompress_struct m_mpoinfo = {};
++  std::vector<unsigned char> m_data;
++};
+diff --git a/xbmc/guilib/imagefactory.cpp b/xbmc/guilib/imagefactory.cpp
+index c4567b298e5..3dd572496a8 100644
+--- a/xbmc/guilib/imagefactory.cpp
++++ b/xbmc/guilib/imagefactory.cpp
+@@ -8,6 +8,7 @@
+ 
+ #include "imagefactory.h"
+ #include "guilib/FFmpegImage.h"
++#include "guilib/JPEGImage.h"
+ #include "addons/ImageDecoder.h"
+ #include "addons/binary-addons/BinaryAddonBase.h"
+ #include "utils/Mime.h"
+@@ -51,5 +52,9 @@ IImage* ImageFactory::CreateLoaderFromMimeType(const std::string& strMimeType)
+     }
+   }
+ 
+-  return new CFFmpegImage(strMimeType);
++  if (strMimeType == "image/jpeg") {
++    return new JPEGImage();
++  } else {
++    return new CFFmpegImage(strMimeType);
++  }
+ }
+-- 
+2.17.1
+

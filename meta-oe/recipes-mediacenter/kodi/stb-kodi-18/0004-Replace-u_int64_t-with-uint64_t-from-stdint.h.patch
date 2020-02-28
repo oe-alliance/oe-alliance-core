@@ -1,0 +1,30 @@
+From 40ec7b5a363a2d71e0e1c801cf353f87daabd594 Mon Sep 17 00:00:00 2001
+From: Andrea Adami <andrea.adami@gmail.com>
+Date: Sun, 2 Dec 2018 02:38:28 +0100
+Subject: [PATCH 04/12] Replace u_int64_t with uint64_t from stdint.h
+
+Fix for:
+/xbmc/platform/linux/storage/UDisks2Provider.h:43:5:
+ error: 'u_int64_t' does not name a type; did you mean 'uint64_t'?
+
+Signed-off-by: Andrea Adami <andrea.adami@gmail.com>
+---
+ xbmc/platform/linux/storage/UDisks2Provider.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/xbmc/platform/linux/storage/UDisks2Provider.h b/xbmc/platform/linux/storage/UDisks2Provider.h
+index c0eb915a348..181c866f500 100644
+--- a/xbmc/platform/linux/storage/UDisks2Provider.h
++++ b/xbmc/platform/linux/storage/UDisks2Provider.h
+@@ -40,7 +40,7 @@ class CUDisks2Provider : public IStorageProvider
+     std::string m_label;
+     std::string m_device;
+     bool m_isSystem = false;
+-    u_int64_t m_size = 0;
++    uint64_t m_size = 0;
+ 
+     explicit Block(const char *object);
+     ~Block() = default;
+-- 
+2.17.1
+

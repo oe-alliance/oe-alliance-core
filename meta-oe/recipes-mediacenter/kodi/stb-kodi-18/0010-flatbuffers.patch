@@ -1,0 +1,58 @@
+From cd9a147e6ca70d5cf495ad5e7e39bfaacde51979 Mon Sep 17 00:00:00 2001
+From: Koen Kooi <koen.kooi@linaro.org>
+Date: Sat, 8 Sep 2018 09:14:10 +0200
+Subject: [PATCH 10/12] flatbuffers.patch
+
+---
+ xbmc/cores/RetroPlayer/messages/savestate.fbs | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/xbmc/cores/RetroPlayer/messages/savestate.fbs b/xbmc/cores/RetroPlayer/messages/savestate.fbs
+index 1d708d61f98..33b07d8dcaf 100644
+--- a/xbmc/cores/RetroPlayer/messages/savestate.fbs
++++ b/xbmc/cores/RetroPlayer/messages/savestate.fbs
+@@ -13,7 +13,7 @@ namespace KODI.RETRO;
+ 
+ file_identifier "SAV_";
+ 
+-enum SaveType : uint8 {
++enum SaveType : ubyte {
+   Unknown,
+   Auto,
+   Manual
+@@ -21,11 +21,11 @@ enum SaveType : uint8 {
+ 
+ table Savestate {
+   // Schema version
+-  version:uint8;
++  version:ubyte;
+ 
+   // Savestate properties
+   type:SaveType;
+-  slot:uint8;
++  slot:ubyte;
+   label:string;
+   created:string; // RFC 1123 date time
+ 
+@@ -33,15 +33,15 @@ table Savestate {
+   game_file_name:string;
+ 
+   // Environment properties
+-  timestamp_frames:uint64;
+-  timestamp_wall_clock_ns:uint64;
++  timestamp_frames:ulong;
++  timestamp_wall_clock_ns:ulong;
+ 
+   // Emulator properties
+   emulator_addon_id:string;
+   emulator_version:string; // Semantic version
+ 
+   // Memory properties
+-  memory_data:[uint8];
++  memory_data:[ubyte];
+ }
+ 
+ root_type Savestate;
+-- 
+2.17.1
+

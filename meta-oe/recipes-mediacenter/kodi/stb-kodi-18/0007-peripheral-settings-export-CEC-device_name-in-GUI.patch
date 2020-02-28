@@ -1,0 +1,46 @@
+From 6fc62cdb67a3602b640f6e00386c9e1f4f05470f Mon Sep 17 00:00:00 2001
+From: Koen Kooi <koen@dominion.thruhere.net>
+Date: Fri, 23 Nov 2018 15:01:36 +0100
+Subject: [PATCH] peripheral settings: export CEC "device_name" in GUI
+
+Having multiple "kodi" entries in the menu is very unhelpful during
+testing.
+
+Signed-off-by: Koen Kooi <koen@dominion.thruhere.net>
+---
+ addons/resource.language.en_gb/resources/strings.po | 5 +++++
+ system/peripherals.xml                              | 2 +-
+ 2 files changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/addons/resource.language.en_gb/resources/strings.po b/addons/resource.language.en_gb/resources/strings.po
+index ebaa166c032..8237124a056 100644
+--- a/addons/resource.language.en_gb/resources/strings.po
++++ b/addons/resource.language.en_gb/resources/strings.po
+@@ -17871,6 +17871,11 @@ msgctxt "#36050"
+ msgid "On start"
+ msgstr ""
+ 
++#: system/peripherals.xml
++msgctxt "#36060"
++msgid "Device name on CEC bus"
++msgstr ""
++
+ #empty strings from id 36051 to 36098
+ 
+ #: system/settings/settings.xml
+diff --git a/system/peripherals.xml b/system/peripherals.xml
+index ff303e99ae6..3b8155ff0cd 100644
+--- a/system/peripherals.xml
++++ b/system/peripherals.xml
+@@ -27,7 +27,7 @@
+     <setting key="power_avr_on_as" type="bool" label="36046" value="0" order="15" />
+ 
+     <setting key="tv_vendor" type="int" value="0" configurable="0" />
+-    <setting key="device_name" type="string" value="Kodi" configurable="0" />
++    <setting key="device_name" type="string" value="Kodi" label="36060" />
+     <setting key="device_type" type="int" value="1" configurable="0" />
+     <setting key="wake_devices_advanced" type="string" value="" configurable="0" />
+     <setting key="standby_devices_advanced" type="string" value="" configurable="0" />
+-- 
+2.11.0
+
