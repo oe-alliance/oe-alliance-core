@@ -50,7 +50,7 @@ RDEPENDS_${PN} = " \
     ${@bb.utils.contains("GST_VERSION", "1.0", "eplayer5", "eplayer4", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "legacykernel", "" , "gdb v4l-utils evtest strace", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "omb", "enigma2-plugin-extensions-openmultiboot openmultiboot", "", d)} \
-    ${@bb.utils.contains("MACHINE_FEATURES", "kodi", "kodi-addons-meta enigma2-plugin-extensions-kodi", "", d)} \
+    ${@bb.utils.contains_any("MACHINE_FEATURES", "kodi kodi18", "kodi-addons-meta enigma2-plugin-extensions-kodi", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "webkithbbtv", "enigma2-plugin-extensions-webkithbbtv", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "qthbbtv", "enigma2-plugin-extensions-hbbtv-qt", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "qtstalker", "enigma2-plugin-extensions-stalker-qt", "", d)} \

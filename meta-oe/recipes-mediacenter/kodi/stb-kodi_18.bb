@@ -256,10 +256,10 @@ RRECOMMENDS_${PN}_append = " libcec \
                              tzdata-pacific \
                              xkeyboard-config \
                              kodi-addon-inputstream-adaptive \
-                             kodi-addon-inputstream-rtmp \
                              alsa-plugins \
                            "
 
+# temp remove missing bb  kodi-addon-inputstream-rtmp
 
 RRECOMMENDS_${PN}_append_libc-glibc = " glibc-charmap-ibm850 \
                                         glibc-gconv-ibm850 \
