@@ -1,0 +1,26 @@
+From 171053c5a914eec6759eaa62cb797417367de5a1 Mon Sep 17 00:00:00 2001
+From: Koen Kooi <koen.kooi@linaro.org>
+Date: Mon, 11 Jun 2018 09:28:33 +0200
+Subject: [PATCH] include sys/time.h to fix musl build
+
+Signed-off-by: Koen Kooi <koen.kooi@linaro.org>
+---
+ include/nfsc/libnfs.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/include/nfsc/libnfs.h b/include/nfsc/libnfs.h
+index 09dcf1c..6780764 100755
+--- a/include/nfsc/libnfs.h
++++ b/include/nfsc/libnfs.h
+@@ -28,7 +28,7 @@
+  || ( defined(__APPLE__) && defined(__MACH__) )
+ #include <sys/time.h>
+ #else
+-#include <time.h>
++#include <sys/time.h>
+ #endif
+ 
+ #ifdef __cplusplus
+-- 
+2.9.5
+

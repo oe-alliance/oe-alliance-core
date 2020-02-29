@@ -1,0 +1,27 @@
+--- a/CMakeLists.txt	2018-12-29 19:26:43.976095315 +0100
++++ b/CMakeLists.txt	2018-12-29 19:27:47.771948341 +0100
+@@ -6,11 +6,11 @@
+ 
+ set(SOVERSION 11.0.0 CACHE STRING "" FORCE)
+ 
+-set(INSTALL_LIB_DIR "${CMAKE_INSTALL_PREFIX}/lib" CACHE PATH "Installation directory for libraries")
++set(INSTALL_LIB_DIR "${CMAKE_INSTALL_PREFIX}/${BASE_LIB_PATH}" CACHE PATH "Installation directory for libraries")
+ set(INSTALL_INC_DIR "${CMAKE_INSTALL_PREFIX}/include" CACHE PATH "Installation directory for headers")
+ set(INSTALL_MAN_DIR "${CMAKE_INSTALL_PREFIX}/share/man" CACHE PATH "Installation directory for manual pages")
+-set(INSTALL_PKGCONFIG_DIR "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" CACHE PATH "Installation directory for pkgconfig (.pc) files")
+-set(INSTALL_CMAKE_DIR "${CMAKE_INSTALL_PREFIX}/lib/cmake/libnfs" CACHE PATH "Installation directory for cmake (.cmake) files")
++set(INSTALL_PKGCONFIG_DIR "${CMAKE_INSTALL_PREFIX}/${BASE_LIB_PATH}/pkgconfig" CACHE PATH "Installation directory for pkgconfig (.pc) files")
++set(INSTALL_CMAKE_DIR "${CMAKE_INSTALL_PREFIX}/${BASE_LIB_PATH}/cmake/libnfs" CACHE PATH "Installation directory for cmake (.cmake) files")
+ 
+ option(BUILD_SHARED_LIBS "Build shared libraries" ON)
+ option(ENABLE_TESTS "Build and run test programs" OFF)
+--- a/lib/CMakeLists.txt	2018-12-29 19:31:50.919381294 +0100
++++ b/lib/CMakeLists.txt	2018-12-29 19:32:30.907287205 +0100
+@@ -17,5 +17,5 @@
+ 
+ install(TARGETS nfs EXPORT nfs
+                     RUNTIME DESTINATION bin
+-                    ARCHIVE DESTINATION lib
+-                    LIBRARY DESTINATION lib)
++                    ARCHIVE DESTINATION ${BASE_LIB_PATH}
++                    LIBRARY DESTINATION ${BASE_LIB_PATH})
