@@ -97,6 +97,7 @@ RDEPENDS_${PN} = " \
     mtd-utils \
     nano \
     net-snmp \
+    nlohmann-json \
     nss \
     ntfs-3g \
     ntp \
