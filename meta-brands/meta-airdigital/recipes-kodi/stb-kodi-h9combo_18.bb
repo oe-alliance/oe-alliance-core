@@ -1,7 +1,7 @@
 require recipes-mediacenter/kodi/stb-kodi_${PV}.bb
 
 SRC_URI_remove = "file://e2player.patch \
-           file://add-gstplayer-support.patch \
+           file://0001-introduce-basic-GstPlayer.patch \
 "
 
 #SRC_URI_append = " file://0001-add-MALI_HIPLAYER.patch \
