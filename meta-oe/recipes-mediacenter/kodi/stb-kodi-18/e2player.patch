@@ -11,7 +11,7 @@ diff -ruN a/cmake/treedata/common/cores.txt b/cmake/treedata/common/cores.txt
 diff -ruN a/system/playercorefactory.xml b/system/playercorefactory.xml
 --- a/system/playercorefactory.xml	2019-08-31 14:05:38.902696598 +0200
 +++ b/system/playercorefactory.xml	2019-11-01 15:46:57.341630777 +0100
-@@ -8,6 +8,14 @@
+@@ -8,9 +8,17 @@
      <player name="VideoPlayer" /> placeholder for MPlayer
      <player name="PAPlayer" audio="true" />
      -->
@@ -25,7 +25,20 @@ diff -ruN a/system/playercorefactory.xml b/system/playercorefactory.xml
 +    </player>
    </players>
  
-   <rules name="system rules">
+-  <rules name="system rules">
++  <rules action="prepend" name="system rules">
+     <rule name="mms/udp" protocols="mms|mmsh|udp" player="GstPlayer" />
+     <rule name="lastfm/shout" protocols="lastfm|shout" player="PAPlayer" />
+     <rule name="rtmp" protocols="rtmp" player="videodefaultplayer" />
+@@ -22,6 +30,8 @@
+     <rule name="streams" internetstream="true">
+       <rule name="aacp/sdp" mimetypes="audio/aacp|application/sdp" player="GstPlayer" />
+       <rule name="mp2" mimetypes="application/octet-stream" filetypes="mp2" player="PAPlayer" />
++     <rule name="widevine1" filetypes="mpd" player="VideoPlayer" />
++     <rule name="netflix" filename="*manifest*"  player="VideoPlayer" />
+     </rule>
+ 
+     <!-- DVDs -->
 diff -ruN a/xbmc/cores/Enigma2Player/CMakeLists.txt b/xbmc/cores/Enigma2Player/CMakeLists.txt
 --- a/xbmc/cores/Enigma2Player/CMakeLists.txt	1970-01-01 01:00:00.000000000 +0100
 +++ b/xbmc/cores/Enigma2Player/CMakeLists.txt	2019-11-01 15:43:52.540647760 +0100
