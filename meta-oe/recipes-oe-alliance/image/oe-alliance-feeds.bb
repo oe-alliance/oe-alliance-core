@@ -139,6 +139,7 @@ RDEPENDS_${PN} = " \
     python-soco \
     python-pyexecjs \
     ${@bb.utils.contains("DEFAULTTUNE", "sh4", "" , "rclone zerotier", d)} \
+    rapidxml \
     rsync \
     rtorrent \
     sabnzbd \
