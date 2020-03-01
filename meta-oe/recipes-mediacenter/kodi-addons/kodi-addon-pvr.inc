@@ -19,7 +19,9 @@ SRCREV_FORMAT = "pvr${KODIADDONPLUGIN}"
 PV = "2.4.9+git${SRCPV}"
 PKGV = "2.4.9+git${GITPKGV}"
 
-PVRGIT = "${@bb.utils.contains("KODIADDONPLUGIN", "mythtv", "janbar", "kodi-pvr", d)}"
+PVRMYTV = "${@bb.utils.contains("KODIADDONPLUGIN", "mythtv", "janbar", "kodi-pvr", d)}"
+
+PVRGIT = "${@bb.utils.contains("MACHINE_FEATURES", "kodi18", "${PVRMYTV}", "kodi-pvr", d)}"
 
 SRC_URI = "git://github.com/${PVRGIT}/pvr.${KODIADDONPLUGIN}.git;destsuffix=pvr.${KODIADDONPLUGIN};name=pvr${KODIADDONPLUGIN};branch=${KODIADDONBRANCH}"
 
