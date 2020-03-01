@@ -69,6 +69,9 @@ DEPENDS += " \
             yajl \
             zlib \
             texturepacker-native \
+            \
+            gstreamer1.0 \
+            gstreamer1.0-plugins-base \
           "
 
 #SRCREV = "ded117bbd636fc88802599a590e26b1d0fd7c609" #18.3
@@ -98,6 +101,7 @@ SRC_URI = "git://github.com/xbmc/xbmc.git;protocol=https;branch=Leia \
            file://stb-support.patch \
            file://stb-settings.patch \
            file://e2player.patch \
+           file://0001-introduce-basic-GstPlayer.patch \
           "
 
 
