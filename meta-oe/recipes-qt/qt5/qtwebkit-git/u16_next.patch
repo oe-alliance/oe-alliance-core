@@ -1,0 +1,42 @@
+From: pure2 
+Date: 1, Mar 2020 0:51:02 -0500
+Subject: [PATCH] implement new ICU compatibility for qt 5.8.0+ OEA version
+
+--- a/Source/WebCore/dom/Document.cpp
++++ b/Source/WebCore/dom/Document.cpp
+@@ -3846,12 +3846,12 @@
+     unsigned i = 0;
+ 
+     UChar32 c;
+-    U16_NEXT(characters, i, length, c)
++    U16_NEXT(characters, i, length, c);
+     if (!isValidNameStart(c))
+         return false;
+ 
+     while (i < length) {
+-        U16_NEXT(characters, i, length, c)
++        U16_NEXT(characters, i, length, c);
+         if (!isValidNamePart(c))
+             return false;
+     }
+@@ -3914,7 +3914,7 @@
+     const UChar* s = qualifiedName.characters();
+     for (unsigned i = 0; i < length;) {
+         UChar32 c;
+-        U16_NEXT(s, i, length, c)
++        U16_NEXT(s, i, length, c);
+         if (c == ':') {
+             if (sawColon) {
+                 ec = NAMESPACE_ERR;
+--- a/Source/WebCore/platform/graphics/SegmentedFontData.cpp
++++ b/Source/WebCore/platform/graphics/SegmentedFontData.cpp
+@@ -61,7 +61,7 @@
+ {
+     UChar32 c;
+     for (int i = 0; i < length; ) {
+-        U16_NEXT(characters, i, length, c)
++        U16_NEXT(characters, i, length, c);
+         if (!containsCharacter(c))
+             return false;
+     }
+
