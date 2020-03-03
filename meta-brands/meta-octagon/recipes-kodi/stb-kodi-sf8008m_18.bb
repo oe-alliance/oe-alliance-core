@@ -4,10 +4,6 @@ FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
 
 SRCDATE = "20190628"
 
-SRC_URI_remove = "file://e2player.patch \
-           file://0001-introduce-basic-GstPlayer.patch \
-"
-
 #SRC_URI_append = "http://source.mynonpublic.com/octagon/hiplayer_gcc8_${SRCDATE}.tar.gz \
 #    file://hiplayer.patch 
 #"
