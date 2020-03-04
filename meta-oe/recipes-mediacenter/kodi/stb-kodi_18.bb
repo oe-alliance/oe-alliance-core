@@ -4,14 +4,13 @@ LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://LICENSE.md;md5=7b423f1c9388eae123332e372451a4f7"
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}-18:"
-FILESPATH =. "${FILE_DIRNAME}/kodi-18:"
 
 PACKAGE_ARCH = "${MACHINE}"
 
-inherit cmake gettext python-dir pythonnative systemd
+inherit cmake gettext python-dir pythonnative
 
 DEPENDS += " \
-            libfmt \
+            fmt \
             flatbuffers flatbuffers-native \
             fstrcmp \
             rapidjson \
@@ -81,7 +80,7 @@ SRCREV = "103415d16038a57f59842cac72d4929389f224a9"
 # 'patch' doesn't support binary diffs
 PATCHTOOL = "git"
 
-PR = "r10"
+PR = "r14"
 
 PV = "18.5-gitr${SRCPV}"
 SRC_URI = "git://github.com/xbmc/xbmc.git;protocol=https;branch=Leia \
@@ -94,6 +93,7 @@ SRC_URI = "git://github.com/xbmc/xbmc.git;protocol=https;branch=Leia \
            file://0007-peripheral-settings-export-CEC-device_name-in-GUI.patch \
            file://0010-flatbuffers.patch \
            file://0011-WIP-windowing-gbm-add-option-to-limit-gui-size.patch \
+           file://0013-fix-compile-against-libfmt-missing-cassert.patch \
            \
            file://PR15286-shader-nopow.patch \
            file://15941.patch \
@@ -101,9 +101,7 @@ SRC_URI = "git://github.com/xbmc/xbmc.git;protocol=https;branch=Leia \
            file://stb-support.patch \
            file://stb-settings.patch \
            file://e2player.patch \
-           file://0001-introduce-basic-GstPlayer.patch \
           "
-
 
 SRC_URI_append_u5 = " file://eglwrapper.patch"
 SRC_URI_append_u51 = " file://eglwrapper.patch"
@@ -121,7 +119,7 @@ SRC_URI_append_libc-musl = " \
 S = "${WORKDIR}/git"
 
 # breaks compilation
-CCACHE = ""
+CCACHE_DISABLE = "1"
 ASNEEDED = ""
 
 ACCEL ?= ""
@@ -131,7 +129,7 @@ ACCEL_x86-64 = "vaapi vdpau"
 # Default to GBM everywhere, sucks to be nvidia
 WINDOWSYSTEM ?= "stb"
 
-PACKAGECONFIG ??= "${ACCEL} ${WINDOWSYSTEM} pulseaudio lcms \
+PACKAGECONFIG ??= "${ACCEL} ${WINDOWSYSTEM} pulseaudio lcms gold lto \
                    ${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'x11', '', d)} \
                    ${@bb.utils.contains('DISTRO_FEATURES', 'opengl', 'opengl', 'openglesv2', d)}"
 
@@ -153,6 +151,11 @@ PACKAGECONFIG[mysql] = "-DENABLE_MYSQLCLIENT=ON,-DENABLE_MYSQLCLIENT=OFF,mysql5"
 PACKAGECONFIG[pulseaudio] = "-DENABLE_PULSEAUDIO=ON,-DENABLE_PULSEAUDIO=OFF,pulseaudio"
 PACKAGECONFIG[lcms] = ",,lcms"
 
+# Compilation tunes
+
+PACKAGECONFIG[gold] = "-DENABLE_LDGOLD=ON,-DENABLE_LDGOLD=OFF"
+PACKAGECONFIG[lto] = "-DUSE_LTO=${@oe.utils.cpu_count()},-DUSE_LTO=OFF"
+
 LDFLAGS += "${TOOLCHAIN_OPTIONS}"
 LDFLAGS_append_mips = " -latomic"
 LDFLAGS_append_mipsel = " -latomic"
@@ -165,20 +168,27 @@ KODI_ARCH_mipsel = "-DWITH_ARCH=${TARGET_ARCH}"
 KODI_ARCH_mips64 = "-DWITH_ARCH=${TARGET_ARCH}"
 KODI_ARCH_mips64el = "-DWITH_ARCH=${TARGET_ARCH}"
 
+KODI_DISABLE_INTERNAL_LIBRARIES = " \
+  -DENABLE_INTERNAL_CROSSGUID=OFF \
+  -DENABLE_INTERNAL_FLATBUFFERS=OFF \
+  -DENABLE_INTERNAL_FMT=OFF \
+  -DENABLE_INTERNAL_FSTRCMP=0 \
+  -DENABLE_INTERNAL_RapidJSON=OFF \
+  -DENABLE_INTERNAL_FFMPEG=OFF \
+"
+
 EXTRA_OECMAKE = " \
     ${KODI_ARCH} \
+    ${KODI_DISABLE_INTERNAL_LIBRARIES} \
     \
     -DNATIVEPREFIX=${STAGING_DIR_NATIVE}${prefix} \
     -DJava_JAVA_EXECUTABLE=/usr/bin/java \
     -DWITH_TEXTUREPACKER=${STAGING_BINDIR_NATIVE}/TexturePacker \
     -DWITH_JSONSCHEMABUILDER=${STAGING_BINDIR_NATIVE}/JsonSchemaBuilder \
-    -DENABLE_INTERNAL_FSTRCMP=0 \
     \
-    -DENABLE_LDGOLD=ON \
     -DCMAKE_NM='${NM}' \
-    -DUSE_LTO=${@oe.utils.cpu_count()} \
     \
-    -DENABLE_INTERNAL_CROSSGUID=OFF \
+    -DFFMPEG_PATH=${STAGING_DIR_TARGET} \
     -DLIBDVD_INCLUDE_DIRS=${STAGING_INCDIR} \
     -DNFS_INCLUDE_DIR=${STAGING_INCDIR} \
     -DSHAIRPLAY_INCLUDE_DIR=${STAGING_INCDIR} \
@@ -190,8 +200,8 @@ EXTRA_OECMAKE = " \
     -DCMAKE_BUILD_TYPE=RelWithDebInfo \
 "
 
-OECMAKE_GENERATOR="Unix Makefiles"
-#PARALLEL_MAKE = " "
+# OECMAKE_GENERATOR="Unix Makefiles"
+# PARALLEL_MAKE = " "
 
 FULL_OPTIMIZATION_armv7a = "-fexpensive-optimizations -fomit-frame-pointer -O3 -ffast-math"
 FULL_OPTIMIZATION_armv7ve = "-fexpensive-optimizations -fomit-frame-pointer -O3 -ffast-math"
