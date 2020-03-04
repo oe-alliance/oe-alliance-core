@@ -9,10 +9,12 @@ DEPENDS += "expat"
 RDEPENDS_${PN} += "ldd"
 RRECOMMENDS_${PN} = "kernel-module-ext2"
 
-SRCREV = "eb5224fbbc6d37c67e7a064b5cb10f4f7a1bc6b5"
+SRCREV = "${AUTOREV}"
 
-PV = "2.3.11+gitr${SRCPV}"
-SRC_URI = "git://github.com/peak3d/inputstream.adaptive.git;protocol=https \
+KODIADDONBRANCH = "Leia"
+
+PV = "2.4.3+gitr${SRCPV}"
+SRC_URI = "git://github.com/peak3d/inputstream.adaptive.git;protocol=https;branch=${KODIADDONBRANCH} \
           "
 
 S = "${WORKDIR}/git"

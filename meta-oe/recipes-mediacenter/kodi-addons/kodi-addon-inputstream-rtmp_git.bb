@@ -9,9 +9,11 @@ DEPENDS += "expat"
 
 SRCREV = "${AUTOREV}"
 
-PV = "2.3.11+gitr${SRCPV}"
+PV = "2.0.9+gitr${SRCPV}"
 
-SRC_URI = "git://github.com/xbmc/inputstream.rtmp.git;protocol=https \
+KODIADDONBRANCH = "Leia"
+
+SRC_URI = "git://github.com/xbmc/inputstream.rtmp.git;protocol=https;branch=${KODIADDONBRANCH} \
          "
 
 S = "${WORKDIR}/git"

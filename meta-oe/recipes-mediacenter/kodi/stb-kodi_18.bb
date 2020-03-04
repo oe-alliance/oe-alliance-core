@@ -76,14 +76,15 @@ DEPENDS += " \
 
 #SRCREV = "ded117bbd636fc88802599a590e26b1d0fd7c609" #18.3
 #SRCREV = "61d162be4091bf7154214c8422abd0fdf6cedc45" #18.4
-SRCREV = "103415d16038a57f59842cac72d4929389f224a9"
+#SRCREV = "103415d16038a57f59842cac72d4929389f224a9" #18.5
+SRCREV = "8e967df9218279618bcbfa8a898d8f80f7b4e449"
 
 # 'patch' doesn't support binary diffs
 PATCHTOOL = "git"
 
 PR = "r10"
 
-PV = "18.5-gitr${SRCPV}"
+PV = "18.6-gitr${SRCPV}"
 SRC_URI = "git://github.com/xbmc/xbmc.git;protocol=https;branch=Leia \
            \
            file://0001-Add-support-for-musl-triplets.patch \
@@ -110,7 +111,11 @@ SRC_URI_append_u51 = " file://eglwrapper.patch"
 SRC_URI_append_u52 = " file://eglwrapper.patch"
 SRC_URI_append_u53 = " file://eglwrapper.patch"
 SRC_URI_append_u54 = " file://eglwrapper.patch"
+SRC_URI_append_u55 = " file://eglwrapper.patch"
+SRC_URI_append_u56 = " file://eglwrapper.patch"
 SRC_URI_append_u5pvr = " file://eglwrapper.patch"
+SRC_URI_append_u532 = " file://eglwrapper.patch"
+SRC_URI_append_u533 = " file://eglwrapper.patch"
 
 
 SRC_URI_append_libc-musl = " \
