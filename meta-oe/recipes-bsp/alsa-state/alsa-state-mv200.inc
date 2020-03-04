@@ -1,1 +1,1 @@
-FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}/MV200:"
+FILESEXTRAPATHS_prepend := "${THISDIR}/alsa-state/MV200:"

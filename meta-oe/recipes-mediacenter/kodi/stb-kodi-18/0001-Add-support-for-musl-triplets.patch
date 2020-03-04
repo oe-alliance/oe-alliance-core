@@ -1,0 +1,133 @@
+From eed9a5cca1d4987ddc6c4dd86fc9b81f0916fe04 Mon Sep 17 00:00:00 2001
+From: Andrea Adami <andrea.adami@gmail.com>
+Date: Mon, 3 Dec 2018 10:40:13 +0100
+Subject: [PATCH 01/12] Add support for musl triplets
+
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+Signed-off-by: Andrea Adami <andrea.adami@gmail.com>
+---
+ tools/depends/configure.ac    | 21 ++++++++++++++++-----
+ tools/depends/m4/xbmc_arch.m4 | 22 +++++++++++-----------
+ 2 files changed, 27 insertions(+), 16 deletions(-)
+
+diff --git a/tools/depends/configure.ac b/tools/depends/configure.ac
+index 979819d7529..b2b5088ef79 100644
+--- a/tools/depends/configure.ac
++++ b/tools/depends/configure.ac
+@@ -173,13 +173,13 @@ platform_cc=gcc
+ platform_cxx=g++
+ 
+ case $build in
+-  arm*-*-linux-gnu*|arm*-*-linux-uclibc*)
++  arm*-*-linux-gnu*|arm*-*-linux-uclibc*|arm*-*-linux-musl*)
+     build_os="linux"
+   ;;
+-  *i686*-linux-gnu*|i*86*-*-linux-uclibc*)
++  *i686*-linux-gnu*|i*86*-*-linux-uclibc*|i*86*-*-linux-musl*)
+     build_os="linux"
+   ;;
+-  x86_64*-linux-gnu*|x86_64-*-linux-uclibc*)
++  x86_64*-linux-gnu*|x86_64-*-linux-uclibc*|x86_64-*-linux-musl*)
+     build_os="linux"
+   ;;
+   *darwin*)
+@@ -233,7 +233,7 @@ case $host in
+     #android builds are always cross
+     cross_compiling="yes"
+   ;;
+-  arm*-*-linux-gnu*|arm*-*-linux-uclibc*|aarch64*-*-linux-gnu*|aarch*-*-linux-be*)
++  arm*-*-linux-gnu*|arm*-*-linux-uclibc*|arm*-*-linux-musl*|aarch64*-*-linux-gnu*|aarch*-*-linux-be*|aarch64*-*-linux-musl*)
+     if test "x$use_cpu" = "xauto"; then
+       use_cpu=$host_cpu
+     fi
+@@ -244,7 +244,18 @@ case $host in
+     platform_cxxflags="$platform_cflags"
+     platform_os="linux"
+   ;;
+-  *i686*-linux-gnu*|i*86*-*-linux-uclibc*|x86_64*-linux-gnu*|x86_64-*-linux-uclibc*)
++  mips*-*-linux-gnu*|mips*-*-linux-uclibc*|mips*-*-linux-musl*)
++    if test "x$use_cpu" = "xauto"; then
++      use_cpu=$host_cpu
++    fi
++    use_toolchain="${use_toolchain:-/usr}"
++    platform_cflags="-fPIC -DPIC"
++    optimize_flags="-O2"
++    platform_ldflags="-Wl,-rpath-link=$prefix/$deps_dir/lib"
++    platform_cxxflags="$platform_cflags"
++    platform_os="linux"
++  ;;
++  *i686*-linux-gnu*|i*86*-*-linux-uclibc*|i*86*-*-linux-musl*|x86_64*-linux-gnu*|x86_64-*-linux-uclibc*|x86_64-*-linux-musl*)
+     use_cpu=$host_cpu
+     use_toolchain="${use_toolchain:-/usr}"
+     platform_cflags="-fPIC -DPIC"
+diff --git a/tools/depends/m4/xbmc_arch.m4 b/tools/depends/m4/xbmc_arch.m4
+index d28f2630028..ff5dc20e7d8 100644
+--- a/tools/depends/m4/xbmc_arch.m4
++++ b/tools/depends/m4/xbmc_arch.m4
+@@ -2,10 +2,10 @@ AC_DEFUN([XBMC_SETUP_ARCH_DEFINES],[
+ 
+ # build detection and setup - this is the native arch
+ case $build in
+-  i*86*-linux-gnu*|i*86*-*-linux-uclibc*)
++  i*86*-linux-gnu*|i*86*-*-linux-uclibc*|i*86*-*-linux-musl*)
+      AC_SUBST(NATIVE_ARCH_DEFINES, "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX")
+      ;;
+-  x86_64-*-linux-gnu*|x86_64-*-linux-uclibc*)
++  x86_64-*-linux-gnu*|x86_64-*-linux-uclibc*|x86_64-*-linux-musl*)
+      AC_SUBST(NATIVE_ARCH_DEFINES, "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX")
+      ;;
+   i386-*-freebsd*)
+@@ -17,13 +17,13 @@ case $build in
+   *86*-apple-darwin*)
+      AC_SUBST(NATIVE_ARCH_DEFINES, "-DTARGET_POSIX -DTARGET_DARWIN -DTARGET_DARWIN_OSX -D_LINUX")
+      ;;
+-  powerpc-*-linux-gnu*|powerpc-*-linux-uclibc*)
++  powerpc-*-linux-gnu*|powerpc-*-linux-uclibc*|powerpc-*-linux-musl*)
+      AC_SUBST(NATIVE_ARCH_DEFINES, "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -D_POWERPC")
+      ;;
+-  powerpc64-*-linux-gnu*|powerpc64-*-linux-uclibc*)
++  powerpc64-*-linux-gnu*|powerpc64-*-linux-uclibc*|powerpc64-*-linux-musl*)
+      AC_SUBST(NATIVE_ARCH_DEFINES, "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -D_POWERPC64")
+      ;;
+-  arm*-*-linux-gnu*|arm*-*-linux-uclibc*)
++  arm*-*-linux-gnu*|arm*-*-linux-uclibc*|arm*-*-linux-musl*)
+      AC_SUBST(NATIVE_ARCH_DEFINES, "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX")
+      ;;
+   *)
+@@ -33,10 +33,10 @@ esac
+ 
+ # host detection and setup - this is the target arch
+ case $host in
+-  i*86*-linux-gnu*|i*86*-*-linux-uclibc*)
++  i*86*-linux-gnu*|i*86*-*-linux-uclibc*|i*86*-*-linux-musl*)
+      AC_SUBST(ARCH_DEFINES, "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX")
+      ;;
+-  x86_64-*-linux-gnu*|x86_64-*-linux-uclibc*)
++  x86_64-*-linux-gnu*|x86_64-*-linux-uclibc*|x86_64-*-linux-musl*)
+      AC_SUBST(ARCH_DEFINES, "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX")
+      ;;
+   i386-*-freebsd*)
+@@ -54,16 +54,16 @@ case $host in
+   powerpc-apple-darwin*)
+      AC_SUBST(ARCH_DEFINES, "-DTARGET_POSIX -DTARGET_DARWIN -DTARGET_DARWIN_OSX -D_LINUX")
+      ;;
+-  powerpc-*-linux-gnu*|powerpc-*-linux-uclibc*)
++  powerpc-*-linux-gnu*|powerpc-*-linux-uclibc*|powerpc-*-linux-musl*)
+      AC_SUBST(ARCH_DEFINES, "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -D_POWERPC")
+      ;;
+-  powerpc64*-*-linux-gnu*|powerpc64*-*-linux-uclibc*)
++  powerpc64*-*-linux-gnu*|powerpc64*-*-linux-uclibc*|powerpc64*-*-linux-musl*)
+      AC_SUBST(ARCH_DEFINES, "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -D_POWERPC64")
+      ;;
+-  arm*-*-linux-gnu*|arm*-*-linux-uclibc*|aarch64*-*-linux-gnu*|aarch64*-*-linux-uclibc*)
++  arm*-*-linux-gnu*|arm*-*-linux-uclibc*|arm*-*-linux-musl*|aarch64*-*-linux-gnu*|aarch64*-*-linux-uclibc*|aarch64*-*-linux-musl*)
+      AC_SUBST(ARCH_DEFINES, "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX")
+      ;;
+-  mips*-*-linux-gnu*|mips*-*-linux-uclibc*)
++  mips*-*-linux-gnu*|mips*-*-linux-uclibc*|mips*-*-linux-musl*)
+      AC_SUBST(ARCH_DEFINES, "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX")
+      ;;
+   *-*linux-android*)
+-- 
+2.17.1
+

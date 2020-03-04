@@ -1,0 +1,20 @@
+--- a/fmt/CMakeLists.txt	2018-12-29 20:09:19.097507664 +0100
++++ b/fmt/CMakeLists.txt	2018-12-29 20:10:37.085310313 +0100
+@@ -50,7 +50,7 @@
+ # Install targets.
+ if (FMT_INSTALL)
+   include(CMakePackageConfigHelpers)
+-  set(FMT_CMAKE_DIR lib/cmake/fmt CACHE STRING
++  set(FMT_CMAKE_DIR ${BASE_LIB_PATH}/cmake/fmt CACHE STRING
+     "Installation directory for cmake files, relative to ${CMAKE_INSTALL_PREFIX}.")
+   set(version_config ${PROJECT_BINARY_DIR}/fmt-config-version.cmake)
+   set(project_config ${PROJECT_BINARY_DIR}/fmt-config.cmake)
+@@ -61,7 +61,7 @@
+     set(INSTALL_TARGETS ${INSTALL_TARGETS} fmt-header-only)
+   endif ()
+ 
+-  set(FMT_LIB_DIR lib CACHE STRING
++  set(FMT_LIB_DIR ${BASE_LIB_PATH} CACHE STRING
+     "Installation directory for libraries, relative to ${CMAKE_INSTALL_PREFIX}.")
+ 
+   # Generate the version, config and target files into the build directory.

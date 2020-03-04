@@ -1,0 +1,22 @@
+diff --git a/Makefile.in b/Makefile.in
+index f8cb3c6..5f36194 100644
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -592,7 +592,7 @@ all: all-bin all-doc
+ 
+ all-bin: bin/fstrcmp$(EXEEXT) bin/test_prelude$(EXEEXT) bin/test_user$(EXEEXT)
+ 
+-all-doc: etc/building.pdf etc/readme.pdf etc/reference.pdf man/cat1/fstrcmp.1 \
++all-doc: man/cat1/fstrcmp.1 \
+ 		man/cat1/fstrcmp_license.1 man/cat3/fmemcmp.3 \
+ 		man/cat3/fmemcmpi.3 man/cat3/fstrcasecmp.3 \
+ 		man/cat3/fstrcasecmpi.3 man/cat3/fstrcmp.3 man/cat3/fstrcmpi.3 \
+@@ -657,7 +657,7 @@ distclean-files:
+ distclean-directories:
+ 	rm -rf bin fstrcmp/.libs lib/.libs lib/ac/.libs test_user/.libs
+ 
+-install: install-bin install-doc install-include install-libdir install-man
++install: install-bin install-include install-libdir install-man
+ 
+ install-bin: $(bindir)/fstrcmp$(EXEEXT)
+ 

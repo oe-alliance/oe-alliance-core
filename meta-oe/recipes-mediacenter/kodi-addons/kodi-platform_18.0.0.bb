@@ -8,11 +8,11 @@ LIC_FILES_CHKSUM = "file://src/util/XMLUtils.cpp;beginline=2;endline=18;md5=dae8
 
 DEPENDS = "libtinyxml virtual/kodi"
 
-PV = "17.2.0"
+PV = "18.0.0"
 
 SRCREV = "e8574b883ffa2131f2eeb96ff3724d60b21130f7"
-SRC_URI = "git://github.com/xbmc/kodi-platform.git \
-           file://0001-fix-cross-compile-badness.patch \
+SRC_URI = "git://github.com/xbmc/kodi-platform.git;protocol=https \
+           file://kodi-platform-01_crosscompile-badness.patch \
            file://kodi-platform-02_no-multi-lib.patch \
           "
 
@@ -20,15 +20,14 @@ S = "${WORKDIR}/git"
 
 inherit cmake pkgconfig
 
-OECMAKE_GENERATOR = "Unix Makefiles"
-
+OECMAKE_GENERATOR="Unix Makefiles"
 EXTRA_OECMAKE = " -DCMAKE_INSTALL_PREFIX_TOOLCHAIN=${STAGING_DIR_HOST}${prefix} \
-                   -DCMAKE_INSTALL_LIBDIR=${libdir} \
-                   -DCMAKE_INSTALL_LIBDIR_NOARCH=${libdir} \
-                   -DKODI_INCLUDE_DIR=${STAGING_INCDIR}/kodi \
-                   -DCMAKE_MODULE_PATH='${STAGING_DIR_HOST}${libdir}/kodi;${STAGING_DIR_HOST}${datadir}/kodi/cmake' \
-                   -DCMAKE_PREFIX_PATH=${STAGING_DIR_HOST}${prefix} \
-                 "
+                  -DCMAKE_INSTALL_LIBDIR=${libdir} \
+                  -DCMAKE_INSTALL_LIBDIR_NOARCH=${libdir} \
+                  -DKODI_INCLUDE_DIR=${STAGING_INCDIR}/kodi \
+                  -DCMAKE_MODULE_PATH='${STAGING_DIR_HOST}${libdir}/kodi;${STAGING_DIR_HOST}${datadir}/kodi/cmake' \
+                  -DCMAKE_PREFIX_PATH=${STAGING_DIR_HOST}${prefix} \
+                "
 
 do_compile_prepend() {
 	sed -i -e 's:I/usr/include:I${STAGING_INCDIR}:g' \

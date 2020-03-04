@@ -48,7 +48,7 @@ RDEPENDS_${PN} = " \
     eplayer5 \
     ${@bb.utils.contains("MACHINE_FEATURES", "legacykernel", "" , "gdb v4l-utils evtest strace", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "omb", "enigma2-plugin-extensions-openmultiboot openmultiboot", "", d)} \
-    ${@bb.utils.contains("MACHINE_FEATURES", "kodi", "kodi-addons-meta enigma2-plugin-extensions-kodi", "", d)} \
+    ${@bb.utils.contains_any("MACHINE_FEATURES", "kodi kodi18", "kodi-addons-meta enigma2-plugin-extensions-kodi", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "webkithbbtv", "enigma2-plugin-extensions-webkithbbtv", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "qthbbtv", "enigma2-plugin-extensions-hbbtv-qt", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "qtstalker", "enigma2-plugin-extensions-stalker-qt", "", d)} \
@@ -95,6 +95,7 @@ RDEPENDS_${PN} = " \
     mtd-utils \
     nano \
     net-snmp \
+    nlohmann-json \
     nss \
     ntfs-3g \
     ntp \
@@ -136,6 +137,7 @@ RDEPENDS_${PN} = " \
     python-soco \
     python-pyexecjs \
     ${@bb.utils.contains("DEFAULTTUNE", "sh4", "" , "rclone zerotier", d)} \
+    rapidxml \
     rsync \
     rtorrent \
     sabnzbd \
