@@ -129,7 +129,7 @@ ACCEL_x86-64 = "vaapi vdpau"
 # Default to GBM everywhere, sucks to be nvidia
 WINDOWSYSTEM ?= "stb"
 
-PACKAGECONFIG ??= "${ACCEL} ${WINDOWSYSTEM} pulseaudio lcms gold lto \
+PACKAGECONFIG ??= "${ACCEL} ${WINDOWSYSTEM} pulseaudio lcms lto \
                    ${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'x11', '', d)} \
                    ${@bb.utils.contains('DISTRO_FEATURES', 'opengl', 'opengl', 'openglesv2', d)}"
 
