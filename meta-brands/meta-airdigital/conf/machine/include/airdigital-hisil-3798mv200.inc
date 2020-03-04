@@ -1,6 +1,3 @@
-PACKAGECONFIG_GL_pn-qtbase = " "
-PACKAGECONFIG_append_pn-qtbase += " gles2 linuxfb"
-
 MACHINE_FEATURES += "qthbbtv qtstalker"
 
 DISTRO_FEATURES_EXTRA = "opengl"
