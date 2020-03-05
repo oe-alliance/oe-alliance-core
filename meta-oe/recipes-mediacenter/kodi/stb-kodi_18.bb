@@ -94,7 +94,6 @@ SRC_URI = "git://github.com/xbmc/xbmc.git;protocol=https;branch=Leia \
            file://0007-peripheral-settings-export-CEC-device_name-in-GUI.patch \
            file://0010-flatbuffers.patch \
            file://0011-WIP-windowing-gbm-add-option-to-limit-gui-size.patch \
-           file://0013-fix-compile-against-libfmt-missing-cassert.patch \
            \
            file://PR15286-shader-nopow.patch \
            file://15941.patch \
