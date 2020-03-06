@@ -1,0 +1,25 @@
+diff --git a/src/pvr2wmc.cpp b/src/pvr2wmc.cpp
+--- a/src/pvr2wmc.cpp
++++ b/src/pvr2wmc.cpp
+@@ -18,7 +18,7 @@
+  *
+  */
+ 
+-#include "util/XMLUtils.h"
++#include "kodi/util/XMLUtils.h"
+ #include "pvr2wmc.h"
+ #include "utilities.h"
+ #include "p8-platform/util/timeutils.h"
+
+diff --git a/src/utilities.cpp b/src/utilities.cpp
+--- a/src/utilities.cpp
++++ b/src/utilities.cpp
+@@ -18,7 +18,7 @@
+  *
+  */
+ 
+-#include "util/XMLUtils.h"
++#include "kodi/util/XMLUtils.h"
+ #include "utilities.h"
+ 
+ #include "client.h"
