@@ -43,6 +43,7 @@ RDEPENDS_${PN} = " \
     enigma2-plugin-extensions-e2m3u2bouquet \
     enigma2-plugin-extensions-xmodem \
     enigma2-plugin-systemplugins-hrtunerproxy \
+    enigma2-plugin-systemplugins-joynescan \
     enigma2-plugin-systemplugins-radiotimesemulator \
     oe-alliance-branding-remote \
     exteplayer3 \
