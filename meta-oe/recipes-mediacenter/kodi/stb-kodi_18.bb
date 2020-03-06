@@ -37,6 +37,7 @@ DEPENDS += " \
             faad2 \
             fontconfig \
             fribidi \
+            glib-2.0 \ 
             giflib \
             libass \
             libcdio \
@@ -101,6 +102,8 @@ SRC_URI = "git://github.com/xbmc/xbmc.git;protocol=https;branch=Leia \
            file://stb-support.patch \
            file://stb-settings.patch \
            file://e2player.patch \
+           file://0001-introduce-basic-GstPlayer.patch \
+           file://0001-add-find-GLIB.patch \
           "
 
 SRC_URI_append_u5 = " file://eglwrapper.patch"
