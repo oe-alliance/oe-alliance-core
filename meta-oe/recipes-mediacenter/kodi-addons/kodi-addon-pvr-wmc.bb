@@ -7,4 +7,5 @@ KODIADDONPLUGIN = "wmc"
 
 require kodi-addon-pvr.inc
 
-SRC_URI_append = " file://0001-Fix-build-pvr-wmc.patch"
+SRC_URI_append = "${@bb.utils.contains("MACHINE_FEATURES", "kodi18", " file://0001-Fix-build-pvr-wmc.patch ", "", d)}"
+
