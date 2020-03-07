@@ -1,7 +1,7 @@
 SUMMARY = "Kodi Media Center PVR plugins"
 
-PV = "4.7.3+git${SRCPV}"
-PKGV = "4.7.3+git${GITPKGV}"
+PV = "${@bb.utils.contains("MACHINE_FEATURES", "kodi18", "4.7.3+git${SRCPV}", "3.4.8+git${SRCPV}", d)}"
+PKGV = "${@bb.utils.contains("MACHINE_FEATURES", "kodi18", "4.7.3+git${GITPKGV}", "3.4.8+git${SRCPV}", d)}"
 
 RDEPENDS_${PN} = "libtinyxml2"
 
