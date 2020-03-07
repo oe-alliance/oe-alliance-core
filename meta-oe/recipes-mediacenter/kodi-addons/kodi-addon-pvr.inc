@@ -16,8 +16,6 @@ PACKAGE_ARCH = "${MACHINE}"
 
 SRCREV_FORMAT = "pvr${KODIADDONPLUGIN}"
 
-PV = "2.4.9+git${SRCPV}"
-PKGV = "2.4.9+git${GITPKGV}"
 
 PVRMYTV = "${@bb.utils.contains("KODIADDONPLUGIN", "mythtv", "janbar", "kodi-pvr", d)}"
 
