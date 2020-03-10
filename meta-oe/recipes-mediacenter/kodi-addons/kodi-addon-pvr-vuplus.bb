@@ -1,7 +1,7 @@
 SUMMARY = "Kodi Media Center PVR plugins"
 
-PV = "3.28.9+git${SRCPV}"
-PKGV = "3.28.9+git${GITPKGV}"
+PV = "${@bb.utils.contains("MACHINE_FEATURES", "kodi18", "3.28.9+git${SRCPV}", "2.4.12+git${SRCPV}", d)}"
+PKGV = "${@bb.utils.contains("MACHINE_FEATURES", "kodi18", "3.28.9+git${GITPKGV}", "2.4.12+git${SRCPV}", d)}"
 
 KODIADDONPLUGIN = "vuplus"
 
