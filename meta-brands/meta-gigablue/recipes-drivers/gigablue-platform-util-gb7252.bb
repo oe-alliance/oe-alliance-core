@@ -1,6 +1,6 @@
 require gigablue-platform-util.inc
 
-SRCDATE = "20191205.r0"
+SRCDATE = "20200310.r0"
 
 KV = "4.1.20"
 
