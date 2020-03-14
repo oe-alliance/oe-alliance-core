@@ -29,8 +29,8 @@ do_install() {
 	install -m 0755 ${S}/blindscan ${D}${bindir}
 }
 
-SRC_URI[md5sum] = "f40ff2e821aee8a40eddff481ed17c5e"
-SRC_URI[sha256sum] = "1ff13cf2a1fe96c50415a50786f61e78eb340da0095308def031d5ec8e2d3af9"
+SRC_URI[md5sum] = "b043f80fa8434fb3eed5f974230684cf"
+SRC_URI[sha256sum] = "deb0d60c00ace9f05a911ce14e9ad3ba525fa6eb0770dc203c648056fbfee432"
 
 do_prepare_recipe_sysroot[noexec] = "1"
 INHIBIT_PACKAGE_STRIP = "1"
