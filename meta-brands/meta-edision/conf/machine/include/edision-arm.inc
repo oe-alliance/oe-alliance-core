@@ -2,7 +2,7 @@
 PACKAGECONFIG_GL_pn-qtbase = "gles2 eglfs linuxfb"
 PACKAGECONFIG_FB_pn-qtbase = " "
 
-PREFERRED_VERSION_linux-edision = "5.5"
+PREFERRED_VERSION_linux-edision = "5.5.9"
 
 
 # eMMC has 8 GB in total, but one image gets only 2 GB of that (Partitioned eMMC)
@@ -43,8 +43,6 @@ PREFERRED_PROVIDER_virtual/blindscan-dvbc = "edision-blindscan-utils-${MACHINE}"
 
 GCCVERSION = "8.%"
 
-KERNEL_IMAGETYPE = "Image.gz"
-KERNEL_OUTPUT = "${KERNEL_IMAGETYPE}"
 KERNEL_CONSOLE = "ttyS0,115200n8"
 
 IMAGE_CLASSES += "osmio4k-emmcimg"
@@ -59,7 +57,7 @@ IMAGE_CMD_emmcimg_append = "\
     tar -cvf ${DEPLOY_DIR_IMAGE}/rootfs.tar -C ${IMAGE_ROOTFS} .; \
     mv ${DEPLOY_DIR_IMAGE}/rootfs.tar ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/rootfs.tar; \
     bzip2 ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/rootfs.tar; \
-    cp ${DEPLOY_DIR_IMAGE}/Image.gz ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${KERNEL_FILE}; \
+    cp ${DEPLOY_DIR_IMAGE}/zImage ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${KERNEL_FILE}; \
     echo ${IMAGE_VER_STRING} > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/imageversion; \
     echo "rename this file to 'force' to force an update without confirmation" > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/noforce; \
     cd ${DEPLOY_DIR_IMAGE}; \
@@ -75,8 +73,12 @@ MACHINE_FEATURES += "alsa 3dtv switchoff hdmicec bootsplash omb blindscan-tbs li
 
 BOOTLOGO_FILENAME = "splash.bin"
 
-DEFAULTTUNE = "aarch64"
-require conf/machine/include/arm/arch-armv8.inc
+TARGET_ARCH = "arm"
+DEFAULTTUNE = "cortexa15hf-neon-vfpv4"
+require conf/machine/include/tune-cortexa15.inc
 require conf/machine/include/soc-family.inc
 require conf/machine/box-hardware.inc
-require conf/machine/multilib.inc
+
+BBMASK = "meta-vuplus/recipes-graphics/"
+BBMASK += "meta-fulan/recipes-graphics/"
+BBMASK += "meta-vuplus/recipes-webkit/"

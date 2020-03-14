@@ -56,6 +56,6 @@ IMAGE_CMD_emmcimg () {
     mcopy -i ${WORKDIR}/boot.img -v ${WORKDIR}/STARTUP_3 ::
     mcopy -i ${WORKDIR}/boot.img -v ${WORKDIR}/STARTUP_4 ::
     dd conv=notrunc if=${WORKDIR}/boot.img of=${EMMC_IMAGE} seek=1 bs=$(expr ${IMAGE_ROOTFS_ALIGNMENT} \* 1024)
-    dd conv=notrunc if=${DEPLOY_DIR_IMAGE}/Image.gz of=${EMMC_IMAGE} seek=1 bs=$(expr ${IMAGE_ROOTFS_ALIGNMENT} \* 1024 + ${BOOT_PARTITION_SIZE} \* 1024)
+    dd conv=notrunc if=${DEPLOY_DIR_IMAGE}/zImage of=${EMMC_IMAGE} seek=1 bs=$(expr ${IMAGE_ROOTFS_ALIGNMENT} \* 1024 + ${BOOT_PARTITION_SIZE} \* 1024)
     dd if=${IMGDEPLOYDIR}/${IMAGE_NAME}.rootfs.ext4 of=${EMMC_IMAGE} seek=1 bs=$(expr ${IMAGE_ROOTFS_ALIGNMENT} \* 1024 + ${BOOT_PARTITION_SIZE} \* 1024 + ${KERNEL_PARTITION_SIZE} \* 1024)
 }
