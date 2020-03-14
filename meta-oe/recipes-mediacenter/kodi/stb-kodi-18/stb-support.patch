@@ -136,7 +136,7 @@ index 0000000..dd62eff
 +  set(CPU cortexa15)
 +  list(APPEND PLATFORM_DEFINES "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_STB_EXTEND -DTARGET_MALI -DHAS_HIPLAYER")
 +  list(APPEND DEPLIBS EGL GLESv2 mali)
-+elseif(WITH_PLATFORM STREQUAL "edision-aarch64")
++elseif(WITH_PLATFORM STREQUAL "edision-cortexa15")
 +  list(APPEND PLATFORM_DEFINES "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_STB_EXTEND -DTARGET_V3D -DTARGET_EDISION")
 +  list(APPEND DEPLIBS EGL GLESv2 v3dplatform)
 +elseif(WITH_PLATFORM STREQUAL "clap-cortexa15")
@@ -2379,7 +2379,7 @@ index 0000000..1ffa32a
 +  list(APPEND SOURCES EGLNativeTypeMali.cpp)
 +  list(APPEND HEADERS EGLNativeTypeMali.h)
 +endif()
-+if (WITH_PLATFORM STREQUAL "edision-aarch64")
++if (WITH_PLATFORM STREQUAL "edision-cortexa15")
 +  list(APPEND SOURCES EGLNativeTypeEdision.cpp)
 +  list(APPEND HEADERS EGLNativeTypeEdision.h)
 +endif()
@@ -4510,10 +4510,10 @@ index 0000000..4151347
 +};
 diff --git a/xbmc/windowing/egl/EGLNativeTypeV3D.cpp b/xbmc/windowing/egl/EGLNativeTypeV3D.cpp
 new file mode 100644
-index 0000000..6ffa4a1
+index 0000000..e517ae8
 --- /dev/null
 +++ b/xbmc/windowing/egl/EGLNativeTypeV3D.cpp
-@@ -0,0 +1,163 @@
+@@ -0,0 +1,174 @@
 +/*
 + *      Copyright (C) 2011-2012 Team XBMC
 + *      http://www.xbmc.org
@@ -4533,6 +4533,8 @@ index 0000000..6ffa4a1
 + *  <http://www.gnu.org/licenses/>.
 + *
 + */
++#include <EGL/egl.h>
++
 +#include "system.h"
 +#include "EGLNativeTypeV3D.h"
 +#include "utils/StringUtils.h"
@@ -4562,11 +4564,20 @@ index 0000000..6ffa4a1
 +
 +bool CEGLNativeTypeV3D::CreateNativeWindow()
 +{
-+  V3D_RegisterDisplayPlatform(&m_platformHandle, NULL);
++  V3D_RegisterDisplayPlatform(&m_platformHandle, m_nativeDisplay);
 +  if (!m_platformHandle)
 +    return false;
 +
 +  V3D_NativeWindowInfo info;
++
++  info.x = 0;
++  info.y = 0;
++  info.width = 1280;
++  info.height = 720;
++  info.stretch = false;
++  info.clientID = 0;
++  info.zOrder = 0;
++
 +  m_nativeWindow = V3D_CreateNativeWindow(&info);
 +  if (!m_nativeWindow)
 +    return false;
