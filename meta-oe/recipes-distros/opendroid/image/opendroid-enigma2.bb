@@ -7,7 +7,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "7.0"
-PR = "r9"
+PR = "r10"
 
 inherit packagegroup
 
@@ -19,6 +19,7 @@ RRECOMMENDS_${PN} = " \
     enigma2-plugin-skins-multibox-fhd-4opd \
     enigma2-plugin-skins-opd-blue-line \
     enigma2-plugin-extensions-atilehd \
+    enigma2-plugin-extensions-Ultimate \
     enigma2-plugin-extensions-opdboot \
     enigma2-plugin-extensions-autotimer \
     enigma2-plugin-extensions-weatherplugin-opd \
