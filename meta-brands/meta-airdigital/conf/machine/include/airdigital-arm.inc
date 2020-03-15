@@ -3,8 +3,6 @@ IMAGE_CLASSES += "airdigital-emmc_image_multiboot"
 
 MACHINE_FEATURES += "qthbbtv qtstalker linuxwifi"
 
-DISTRO_FEATURES_EXTRA = "opengl"
-
 IMAGE_FSTYPES += "airdigitalemmc"
 IMAGE_ROOTFS_SIZE ?= "589824"
 
