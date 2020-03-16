@@ -19,7 +19,7 @@ RRECOMMENDS_${PN} = " \
     enigma2-plugin-skins-multibox-fhd-4opd \
     enigma2-plugin-skins-opd-blue-line \
     enigma2-plugin-extensions-atilehd \
-    enigma2-plugin-extensions-Ultimate \
+    enigma2-plugin-extensions-ultimate \
     enigma2-plugin-extensions-opdboot \
     enigma2-plugin-extensions-autotimer \
     enigma2-plugin-extensions-weatherplugin-opd \
