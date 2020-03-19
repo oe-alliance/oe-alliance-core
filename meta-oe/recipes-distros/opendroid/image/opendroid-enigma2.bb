@@ -17,6 +17,7 @@ RRECOMMENDS_${PN} = " \
     opendroid-version-info \
     enigma2-skindefault \
     enigma2-plugin-skins-multibox-fhd-4opd \
+    enigma2-plugin-skins-ultimate-hd-4opd \
     enigma2-plugin-skins-opd-blue-line \
     enigma2-plugin-extensions-atilehd \
     enigma2-plugin-extensions-ultimate \
