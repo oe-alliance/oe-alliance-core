@@ -47,7 +47,7 @@ rm -rf /usr/share/enigma2/Ultimate
 rm -rf /usr/lib/enigma2/python/Components/Converter/Ultimate*
 rm -rf /usr/lib/enigma2/python/Components/Renderer/Ultimate*
 echo "                                                                 "
-echo "Multibox HD OPD skin was successfully removed from your receiver"
+echo "Ultimate HD OPD skin was successfully removed from your receiver"
 echo "                                                                 "
 echo "The GUI of your receiver is now rebooting....                    "
 exit 0
@@ -69,12 +69,12 @@ if [ -f /usr/share/enigma2/Ultimate/skin.xml ]; then
     rm -rf /usr/lib/enigma2/python/Components/Converter/Ultimate*
     rm -rf /usr/lib/enigma2/python/Components/Renderer/Ultimate*
     echo "                                                   "
-    echo "Previous Multibox HD-OPD skin installation        "
+    echo "Previous Ultimate HD-OPD skin installation        "
     echo "    was found and removed successfully!            "
     echo "                                                   "
 fi
 echo "                                                       "
-echo "Multibox HD OPD skin is now being installed...        "
+echo "Ultimate HD OPD skin is now being installed...        "
 echo "                                                       "
 exit 0
 }
