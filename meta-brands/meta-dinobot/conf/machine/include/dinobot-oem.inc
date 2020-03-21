@@ -33,6 +33,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'jdhdduo', 'HD DUO' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'turing', 'TURING' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'arivatwin', 'ARIVA ATV TT' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'arivacombo', 'ARIVA ATV COMBO' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'vipertwin', 'Viper Twin E2' , '', d)}\
 "
 
 MACHINE_BRAND = "\
@@ -65,6 +66,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'jdhdduo', 'HD DUO' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'turing', 'Atto.TV' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'arivatwin', 'Ferguson' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'arivacombo', 'Ferguson' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'vipertwin', 'AMIKO' , '', d)}\
 "
 
 MTD_KERNEL = "\
@@ -97,6 +99,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'jdhdduo', 'mtd8' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'turing', 'mtd8' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'arivatwin', 'mmcblk0p10' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'arivacombo', 'mmcblk0p10' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'vipertwin', 'mtd8' , '', d)}\
 "
 
 MTD_ROOTFS = "\
@@ -129,6 +132,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'jdhdduo', 'mtd11' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'turing', 'mtd11' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'arivatwin', 'mmcblk0p13' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'arivacombo', 'mmcblk0p13' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'vipertwin', 'mtd11' , '', d)}\
 "
 
 SDCARDIMG = "\
@@ -161,6 +165,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'jdhdduo', 'no' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'turing', 'no' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'arivatwin', 'no' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'arivacombo', 'no' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'vipertwin', 'no' , '', d)}\
 "
 
 IMAGEDIR = "\
@@ -193,6 +198,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'jdhdduo', 'dinobot/${MACHINE}' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'turing', 'atto/turing' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'arivatwin', 'e2/update' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'arivacombo', 'e2/update' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'vipertwin', 'dinobot/${MACHINE}' , '', d)}\
 "
 
 KERNEL_MODULE_AUTOLOAD += "xhci-plat-hcd"
