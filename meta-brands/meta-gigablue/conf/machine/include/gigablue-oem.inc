@@ -25,7 +25,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'gbx3h', 'X3 H' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbquad4k', 'UHD QUAD 4K' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbue4k', 'UHD UE 4K' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbtrio4k', 'UHD TRIO 4K' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'gbip4k', 'IP 4K' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbip4k', 'UHD IP 4K' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbx34k', 'UHD X3 4K' , '', d)}\
 "
 
