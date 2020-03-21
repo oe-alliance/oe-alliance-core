@@ -9,7 +9,7 @@ require conf/license/license-gplv2.inc
 RDEPENDS_${PN} += "showiframe"
 
 PV = "1.0"
-PR = "r4"
+PR = "r5"
 
 S = "${WORKDIR}/"
 
@@ -21,6 +21,8 @@ inherit update-rc.d
 SRC_URI = " file://bootlogo.mvi ${@bb.utils.contains("MACHINE_FEATURES", "bootsplash", "file://splash.bin" , "", d)} file://bootlogo.sh"
 
 SRC_URI_append_7210s = " file://lcdsplash220.bin file://lcdwaitkey220.bin file://lcdwarning220.bin"
+SRC_URI_append_sf8008 = " file://logo.img"
+SRC_URI_append_sf8008m = " file://logo.img"
 
 FILES_${PN} = "/boot /usr/share /etc/init.d"
 
@@ -46,6 +48,9 @@ do_deploy() {
     fi
     if [ -e lcdsplash220.bin ]; then
         install -m 0644 lcdsplash220.bin ${DEPLOYDIR}/lcdsplash220.bin
+    fi
+    if [ -e logo.img ]; then
+        install -m 0644 logo.img ${DEPLOYDIR}/logo-${DISTRO_NAME}.img
     fi
 }
 
