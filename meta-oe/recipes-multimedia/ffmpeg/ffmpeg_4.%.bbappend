@@ -3,7 +3,7 @@ FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 DEPENDS += "libxml2"
 
 PACKAGECONFIG_append = " libass libbluray libfreetype librtmp libvorbis \
-                        mp3lame openjpeg openssl vpx wavpack"
+                        mp3lame openjpeg openssl vpx wavpack fdk-aac"
 
 PACKAGECONFIG[libass] = "--enable-libass,--disable-libass,libass"
 PACKAGECONFIG[libbluray] = "--enable-libbluray --enable-protocol=bluray,--disable-libbluray,libbluray"
@@ -11,7 +11,6 @@ PACKAGECONFIG[libfreetype] = "--enable-libfreetype,--disable-libfreetype,freetyp
 PACKAGECONFIG[librtmp] = "--enable-librtmp,--disable-librtmp,librtmp rtmpdump"
 PACKAGECONFIG[openjpeg] = "--enable-libopenjpeg,--disable-libopenjpeg,openjpeg"
 PACKAGECONFIG[wavpack] = "--enable-libwavpack,--disable-libwavpack,wavpack"
-PACKAGECONFIG[x265] = "--enable-libx265,--disable-libx265,x265"
 
 MIPSFPU = "${@bb.utils.contains('TARGET_FPU', 'soft', '--disable-mipsfpu', '--enable-mipsfpu', d)}"
 
@@ -23,6 +22,8 @@ SRC_URI_append = " \
         file://4_07_increase_buffer_size.patch \
         file://4_08_recheck_discard_flags.patch \
         file://4_09_ffmpeg_fix_edit_list_parsing.patch \
+        file://4_11_rtsp.patch \
+        file://4_11_dxva2.patch \
         "
 
 EXTRA_FFCONF = " \
