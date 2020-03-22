@@ -1,4 +1,4 @@
-FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}/AML905D:"
+FILESEXTRAPATHS_prepend := "${THISDIR}/alsa-state/AML905D:"
 
 SRC_URI_append = " \
   file://SOC-Audio.conf  \

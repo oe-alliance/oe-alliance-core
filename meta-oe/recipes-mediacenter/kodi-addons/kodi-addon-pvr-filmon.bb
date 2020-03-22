@@ -1,7 +1,8 @@
 SUMMARY = "Kodi Media Center PVR plugins"
 
-KODIADDONPLUGIN = "filmon"
+PV = "${@bb.utils.contains("MACHINE_FEATURES", "kodi18", "2.4.5+git${SRCPV}", "1.4.10+git${SRCPV}", d)}"
+PKGV = "${@bb.utils.contains("MACHINE_FEATURES", "kodi18", "2.4.5+git${GITPKGV}", "1.4.10+git${SRCPV}", d)}"
 
-SRCREV_pvr${KODIADDONPLUGIN} = "eba5bc532924789eefc624c57224bcbf14d4bb02"
+KODIADDONPLUGIN = "filmon"
 
 require kodi-addon-pvr.inc

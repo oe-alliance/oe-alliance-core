@@ -1,0 +1,20 @@
+--- a/CMakeLists.txt	2018-12-29 22:08:50.788715023 +0100
++++ b/CMakeLists.txt	2018-12-29 22:07:56.216862095 +0100
+@@ -110,7 +110,7 @@
+ 
+ #add extra search paths for libraries and includes
+ SET(INCLUDE_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/include" CACHE PATH "The directory the headers are installed in")
+-SET(LIB_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/lib" CACHE STRING "Directory where lib will install")
++SET(LIB_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/${BASE_LIB_PATH}" CACHE STRING "Directory where lib will install")
+ SET(DOC_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/share/doc/${PROJECT_NAME}" CACHE PATH "Path to the documentation")
+ 
+ IF(UNIX OR CYGWIN)
+@@ -187,7 +187,7 @@
+     ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake @ONLY)
+ 
+ # ... for the install tree
+-SET( CMAKECONFIG_INSTALL_DIR lib/cmake/${PROJECT_NAME} )
++SET( CMAKECONFIG_INSTALL_DIR ${BASE_LIB_PATH}/cmake/${PROJECT_NAME} )
+ FILE( RELATIVE_PATH REL_INCLUDE_DIR
+     "${CMAKE_INSTALL_PREFIX}/${CMAKECONFIG_INSTALL_DIR}"
+     "${CMAKE_INSTALL_PREFIX}/include" )

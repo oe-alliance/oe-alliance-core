@@ -1,7 +1,8 @@
 SUMMARY = "Kodi Media Center PVR plugins"
 
-KODIADDONPLUGIN = "vdr.vnsi"
+PV = "${@bb.utils.contains("MACHINE_FEATURES", "kodi18", "3.6.3+git${SRCPV}", "2.6.35+git${SRCPV}", d)}"
+PKGV = "${@bb.utils.contains("MACHINE_FEATURES", "kodi18", "3.6.3+git${GITPKGV}", "2.6.35+git${SRCPV}", d)}"
 
-SRCREV_pvr${KODIADDONPLUGIN} = "e5dc3dd62942900dac839be986a11283220e3e38"
+KODIADDONPLUGIN = "vdr.vnsi"
 
 require kodi-addon-pvr.inc

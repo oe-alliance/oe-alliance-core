@@ -14,9 +14,9 @@ do_install_append() {
 PROVIDES_remove = "virtual/libgles1 virtual/libgles2 virtual/egl virtual/libgbm"
 
 REQUIRED_DISTRO_FEATURES = ""
-ANY_OF_DISTRO_FEATURES = ""
+ANY_OF_DISTRO_FEATURES_class-target = ""
 
-PACKAGECONFIG = "opengl egl gles gbm dri"
+PACKAGECONFIG_class-target = "opengl egl gles gbm dri"
 
 RREPLACES_${PN} = "airdigital-mali-utgard-headers airdigital-v3ddriver-headers hd-v3ddriver-headers gfutures-mali-utgard-headers ceryon-v3ddriver-headers xtrend-v3ddriver-headers skylake-v3ddriver-headers formuler-v3ddriver-headers ax-v3ddriver-headers"
 RCONFLICTS_${PN} = "airdigital-mali-utgard-headers airdigital-v3ddriver-headers hd-v3ddriver-headers gfutures-mali-utgard-headers ceryon-v3ddriver-headers xtrend-v3ddriver-headers skylake-v3ddriver-headers formuler-v3ddriver-headers ax-v3ddriver-headers"

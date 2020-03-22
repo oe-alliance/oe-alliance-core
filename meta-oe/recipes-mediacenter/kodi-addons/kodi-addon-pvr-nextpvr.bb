@@ -1,7 +1,8 @@
 SUMMARY = "Kodi Media Center PVR plugins"
 
-KODIADDONPLUGIN = "nextpvr"
+PV = "${@bb.utils.contains("MACHINE_FEATURES", "kodi18", "3.3.16+git${SRCPV}", "2.4.15+git${SRCPV}", d)}"
+PKGV = "${@bb.utils.contains("MACHINE_FEATURES", "kodi18", "3.3.16+git${GITPKGV}", "2.4.15+git${SRCPV}", d)}"
 
-SRCREV_pvr${KODIADDONPLUGIN} = "aba859e2c50bb2c0662f82e31e17958468bbfaef"
+KODIADDONPLUGIN = "nextpvr"
 
 require kodi-addon-pvr.inc

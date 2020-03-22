@@ -1,4 +1,4 @@
-FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}/AMLS905:"
+FILESEXTRAPATHS_prepend := "${THISDIR}/alsa-state/AMLS905:"
 
 SRC_URI_append = " file://alsactl.conf"
 

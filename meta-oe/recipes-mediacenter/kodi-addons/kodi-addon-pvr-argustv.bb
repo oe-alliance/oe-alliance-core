@@ -1,7 +1,8 @@
 SUMMARY = "Kodi Media Center PVR plugins"
 
-KODIADDONPLUGIN = "argustv"
+PV = "${@bb.utils.contains("MACHINE_FEATURES", "kodi18", "3.5.5+git${SRCPV}", "2.5.9+git${SRCPV}", d)}"
+PKGV = "${@bb.utils.contains("MACHINE_FEATURES", "kodi18", "3.5.5+git${GITPKGV}", "2.5.9+git${SRCPV}", d)}"
 
-SRCREV_pvr${KODIADDONPLUGIN} = "ac9cc559cc21b884d3a4df1ad8c8630531bb779b"
+KODIADDONPLUGIN = "argustv"
 
 require kodi-addon-pvr.inc

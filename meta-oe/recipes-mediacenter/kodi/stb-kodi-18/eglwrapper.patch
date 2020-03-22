@@ -1,0 +1,28 @@
+--- git/xbmc/windowing/egl/EGLWrapper.cpp	2018-01-31 15:20:58.786505281 +0800
++++ EGLWrapper-new.cpp	2018-01-31 15:34:01.266523284 +0800
+@@ -225,11 +225,14 @@
+   return m_nativeTypes->GetNativeResolution(res);
+ }
+ 
++bool g_isShow = true;
++
+ bool CEGLWrapper::ShowWindow(bool show)
+ {
+   if (!m_nativeTypes)
+     return false;
+ 
++  g_isShow = show;
+   return m_nativeTypes->ShowWindow(show);
+ }
+ 
+@@ -428,6 +431,10 @@
+ {
+   if ((display == EGL_NO_DISPLAY) || (surface == EGL_NO_SURFACE))
+     return;
++
++  if( !g_isShow )
++    return;
++
+   eglSwapBuffers(display, surface);
+ }
+ 

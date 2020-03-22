@@ -1,0 +1,49 @@
+From 2ce0ca5b28757c01fa39dfd1ce9266607a14aabe Mon Sep 17 00:00:00 2001
+From: Jonas Karlman <jonas@kwiboo.se>
+Date: Sun, 14 Oct 2018 14:20:03 +0200
+Subject: [PATCH 12/12] WIP: Resolution: use desktop screen width in whitelist
+ fallback
+
+TODO: add and use iVideoLayerWidth/Height
+---
+ xbmc/windowing/Resolution.cpp | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
+
+diff --git a/xbmc/windowing/Resolution.cpp b/xbmc/windowing/Resolution.cpp
+index d17caf0f6a8..15dc30ea2aa 100644
+--- a/xbmc/windowing/Resolution.cpp
++++ b/xbmc/windowing/Resolution.cpp
+@@ -134,15 +134,15 @@ void CResolutionUtils::FindResolutionFromWhitelist(float fps, int width, int hei
+ 
+   CLog::Log(LOGDEBUG, "No double refresh rate whitelisted resolution matched, trying current resolution");
+ 
++  const RESOLUTION_INFO desktop_info = CServiceBroker::GetWinSystem()->GetGfxContext().GetResInfo(CDisplaySettings::GetInstance().GetCurrentResolution());
++
+   for (const auto &mode : indexList)
+   {
+     auto i = CDisplaySettings::GetInstance().GetResFromString(mode.asString());
+     const RESOLUTION_INFO info = CServiceBroker::GetWinSystem()->GetGfxContext().GetResInfo(i);
+ 
+-    const RESOLUTION_INFO desktop_info = CServiceBroker::GetWinSystem()->GetGfxContext().GetResInfo(CDisplaySettings::GetInstance().GetCurrentResolution());
+-
+     // allow resolutions that are desktop resolution but have the correct refresh rate
+-    if (info.iScreenWidth == desktop_info.iWidth &&
++    if (info.iScreenWidth == desktop_info.iScreenWidth &&
+         (info.dwFlags & D3DPRESENTFLAG_MODEMASK) == (desktop_info.dwFlags & D3DPRESENTFLAG_MODEMASK) &&
+         MathUtils::FloatEquals(info.fRefreshRate, fps, 0.01f))
+     {
+@@ -159,10 +159,8 @@ void CResolutionUtils::FindResolutionFromWhitelist(float fps, int width, int hei
+     auto i = CDisplaySettings::GetInstance().GetResFromString(mode.asString());
+     const RESOLUTION_INFO info = CServiceBroker::GetWinSystem()->GetGfxContext().GetResInfo(i);
+ 
+-    const RESOLUTION_INFO desktop_info = CServiceBroker::GetWinSystem()->GetGfxContext().GetResInfo(CDisplaySettings::GetInstance().GetCurrentResolution());
+-
+     // allow resolutions that are desktop resolution but have double the refresh rate
+-    if (info.iScreenWidth == desktop_info.iWidth &&
++    if (info.iScreenWidth == desktop_info.iScreenWidth &&
+         (info.dwFlags & D3DPRESENTFLAG_MODEMASK) == (desktop_info.dwFlags & D3DPRESENTFLAG_MODEMASK) &&
+         MathUtils::FloatEquals(info.fRefreshRate, fps * 2, 0.01f))
+     {
+-- 
+2.17.1
+

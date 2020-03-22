@@ -1,0 +1,365 @@
+From 8b854a412ed111678f20edbd662ead4028f19474 Mon Sep 17 00:00:00 2001
+From: Lukas Rusak <lorusak@gmail.com>
+Date: Sat, 19 Jan 2019 18:35:39 -0800
+Subject: [PATCH] CTexture: add new CGBMTexture to allow using GBM buffer
+ objects
+
+This allows us to place a texture directly into gpu memory
+and have it live there for the duration of it's existance.
+This should help with CPU->GPU performance because we don't
+have to use glTexImage2D for the texturing.
+---
+ xbmc/guilib/CMakeLists.txt |   5 ++
+ xbmc/guilib/Texture.cpp    |  19 +++--
+ xbmc/guilib/Texture.h      |  11 ++-
+ xbmc/guilib/TextureGBM.cpp | 149 +++++++++++++++++++++++++++++++++++++
+ xbmc/guilib/TextureGBM.h   |  45 +++++++++++
+ xbmc/guilib/TextureGL.cpp  |   2 +
+ 6 files changed, 224 insertions(+), 7 deletions(-)
+ create mode 100644 xbmc/guilib/TextureGBM.cpp
+ create mode 100644 xbmc/guilib/TextureGBM.h
+
+diff --git a/xbmc/guilib/CMakeLists.txt b/xbmc/guilib/CMakeLists.txt
+index 803cbc638c66..147808c68298 100644
+--- a/xbmc/guilib/CMakeLists.txt
++++ b/xbmc/guilib/CMakeLists.txt
+@@ -180,6 +180,11 @@ if(CORE_PLATFORM_NAME_LC STREQUAL rbpi)
+   list(APPEND HEADERS TexturePi.h)
+ endif()
+ 
++if(CORE_PLATFORM_NAME_LC STREQUAL gbm AND GBM_HAS_BO_MAP)
++  list(APPEND SOURCES TextureGBM.cpp)
++  list(APPEND HEADERS TextureGBM.h)
++endif()
++
+ if(CORE_SYSTEM_NAME STREQUAL windows OR CORE_SYSTEM_NAME STREQUAL windowsstore)
+   list(APPEND SOURCES D3DResource.cpp
+                       DirectXGraphics.cpp
+diff --git a/xbmc/guilib/Texture.cpp b/xbmc/guilib/Texture.cpp
+index 27228bba4baf..683891a2b4f4 100644
+--- a/xbmc/guilib/Texture.cpp
++++ b/xbmc/guilib/Texture.cpp
+@@ -40,8 +40,11 @@ CBaseTexture::CBaseTexture(unsigned int width, unsigned int height, unsigned int
+ 
+ CBaseTexture::~CBaseTexture()
+ {
+-  _aligned_free(m_pixels);
+-  m_pixels = NULL;
++  if (m_pixels)
++  {
++    _aligned_free(m_pixels);
++    m_pixels = NULL;
++  }
+ }
+ 
+ void CBaseTexture::Allocate(unsigned int width, unsigned int height, unsigned int format)
+@@ -94,8 +97,13 @@ void CBaseTexture::Allocate(unsigned int width, unsigned int height, unsigned in
+   CLAMP(m_imageWidth, m_textureWidth);
+   CLAMP(m_imageHeight, m_textureHeight);
+ 
++  GetMemory();
++}
++
++void CBaseTexture::GetMemory()
++{
+   _aligned_free(m_pixels);
+-  m_pixels = NULL;
++  m_pixels = nullptr;
+   if (GetPitch() * GetRows() > 0)
+   {
+     size_t size = GetPitch() * GetRows();
+@@ -123,7 +131,7 @@ void CBaseTexture::Update(unsigned int width, unsigned int height, unsigned int
+ 
+   unsigned int srcPitch = pitch ? pitch : GetPitch(width);
+   unsigned int srcRows = GetRows(height);
+-  unsigned int dstPitch = GetPitch(m_textureWidth);
++  unsigned int dstPitch = GetDestPitch();
+   unsigned int dstRows = GetRows(m_textureHeight);
+ 
+   if (srcPitch == dstPitch)
+@@ -139,6 +147,7 @@ void CBaseTexture::Update(unsigned int width, unsigned int height, unsigned int
+       dst += dstPitch;
+     }
+   }
++
+   ClampToEdge();
+ 
+   if (loadToGPU)
+@@ -152,7 +161,7 @@ void CBaseTexture::ClampToEdge()
+ 
+   unsigned int imagePitch = GetPitch(m_imageWidth);
+   unsigned int imageRows = GetRows(m_imageHeight);
+-  unsigned int texturePitch = GetPitch(m_textureWidth);
++  unsigned int texturePitch = GetDestPitch();
+   unsigned int textureRows = GetRows(m_textureHeight);
+   if (imagePitch < texturePitch)
+   {
+diff --git a/xbmc/guilib/Texture.h b/xbmc/guilib/Texture.h
+index 8a54042fffa3..3c1629c0d386 100644
+--- a/xbmc/guilib/Texture.h
++++ b/xbmc/guilib/Texture.h
+@@ -19,6 +19,7 @@ struct COLOR {unsigned char b,g,r,x;};	// Windows GDI expects 4bytes per color
+ #pragma pack()
+ 
+ class CTexture;
++class CGBMTexture;
+ class CGLTexture;
+ class CPiTexture;
+ class CDXTexture;
+@@ -84,7 +85,7 @@ class CBaseTexture
+   virtual void BindToUnit(unsigned int unit) = 0;
+ 
+   unsigned char* GetPixels() const { return m_pixels; }
+-  unsigned int GetPitch() const { return GetPitch(m_textureWidth); }
++  virtual unsigned int GetPitch() const { return GetPitch(m_textureWidth); }
+   unsigned int GetRows() const { return GetRows(m_textureHeight); }
+   unsigned int GetTextureWidth() const { return m_textureWidth; }
+   unsigned int GetTextureHeight() const { return m_textureHeight; }
+@@ -102,6 +103,8 @@ class CBaseTexture
+   void Allocate(unsigned int width, unsigned int height, unsigned int format);
+   void ClampToEdge();
+ 
++  virtual void GetMemory();
++
+   static unsigned int PadPow2(unsigned int x);
+   static bool SwapBlueRed(unsigned char *pixels, unsigned int height, unsigned int pitch, unsigned int elements = 4, unsigned int offset=0);
+ 
+@@ -115,6 +118,7 @@ class CBaseTexture
+   bool LoadFromFileInternal(const std::string& texturePath, unsigned int maxWidth, unsigned int maxHeight, bool requirePixels, const std::string& strMimeType = "");
+   bool LoadIImage(IImage* pImage, unsigned char* buffer, unsigned int bufSize, unsigned int width, unsigned int height);
+   // helpers for computation of texture parameters for compressed textures
++  virtual unsigned int GetDestPitch() const { return GetPitch(m_textureWidth); }
+   unsigned int GetPitch(unsigned int width) const;
+   unsigned int GetRows(unsigned int height) const;
+   unsigned int GetBlockSize() const;
+@@ -136,7 +140,10 @@ class CBaseTexture
+   bool m_bCacheMemory = false;
+ };
+ 
+-#if defined(TARGET_RASPBERRY_PI)
++#if defined(HAVE_GBM) && defined(HAS_GBM_BO_MAP)
++#include "TextureGBM.h"
++#define CTexture CGBMTexture
++#elif defined(TARGET_RASPBERRY_PI)
+ #include "TexturePi.h"
+ #define CTexture CPiTexture
+ #elif defined(HAS_GL) || defined(HAS_GLES)
+diff --git a/xbmc/guilib/TextureGBM.cpp b/xbmc/guilib/TextureGBM.cpp
+new file mode 100644
+index 000000000000..1c2dee5a95a4
+--- /dev/null
++++ b/xbmc/guilib/TextureGBM.cpp
+@@ -0,0 +1,149 @@
++/*
++ *  Copyright (C) 2013-2018 Team Kodi
++ *  This file is part of Kodi - https://kodi.tv
++ *
++ *  SPDX-License-Identifier: GPL-2.0-or-later
++ *  See LICENSES/README.md for more information.
++ */
++
++#include "TextureGBM.h"
++
++#include "guilib/TextureManager.h"
++#include "ServiceBroker.h"
++#include "rendering/RenderSystem.h"
++#include "windowing/gbm/WinSystemGbmEGLContext.h"
++
++using namespace KODI::WINDOWING::GBM;
++
++CGBMTexture::CGBMTexture(unsigned int width, unsigned int height, unsigned int format) :
++  CBaseTexture(width, height, format)
++{
++  switch(format)
++  {
++  case XB_FMT_A8:
++    m_fourcc = DRM_FORMAT_C8;
++    break;
++  case XB_FMT_RGBA8:
++    m_fourcc = DRM_FORMAT_RGBA8888;
++    break;
++  case XB_FMT_RGB8:
++    m_fourcc = DRM_FORMAT_RGB888;
++    break;
++  case XB_FMT_A8R8G8B8:
++    m_fourcc = DRM_FORMAT_ARGB8888;
++    break;
++  }
++
++  m_buffer.reset(new CGBMBufferObject(m_fourcc));
++  m_eglImage.reset(new CEGLImage(static_cast<CWinSystemGbmEGLContext*>(CServiceBroker::GetWinSystem())->GetEGLDisplay()));
++}
++
++CGBMTexture::~CGBMTexture()
++{
++  ReleaseMemory();
++  DestroyTextureObject();
++}
++
++void CGBMTexture::CreateTextureObject()
++{
++  glGenTextures(1, &m_texture);
++}
++
++void CGBMTexture::DestroyTextureObject()
++{
++  CServiceBroker::GetGUI()->GetTextureManager().ReleaseHwTexture(m_texture);
++}
++
++void CGBMTexture::LoadToGPU()
++{
++  ReleaseMemory();
++
++  if (m_buffer->GetFd() < 0)
++    return;
++
++  if (!glIsTexture(m_texture))
++    CreateTextureObject();
++
++  glBindTexture(GL_TEXTURE_2D, m_texture);
++
++  GLenum filter = (m_scalingMethod == TEXTURE_SCALING::NEAREST ? GL_NEAREST : GL_LINEAR);
++
++  // Set the texture's stretching properties
++  if (IsMipmapped())
++  {
++    GLenum mipmapFilter = (m_scalingMethod == TEXTURE_SCALING::NEAREST ? GL_LINEAR_MIPMAP_NEAREST : GL_LINEAR_MIPMAP_LINEAR);
++    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, mipmapFilter);
++  }
++  else
++  {
++    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter);
++  }
++
++  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter);
++  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
++  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
++
++  std::array<CEGLImage::EglPlane, CEGLImage::MAX_NUM_PLANES> planes;
++  planes[0].fd = m_buffer->GetFd();
++  planes[0].offset = 0;
++  planes[0].pitch = m_buffer->GetStride();
++  planes[0].modifier = m_buffer->GetModifier();
++
++  CEGLImage::EglAttrs attribs;
++
++  attribs.width = m_textureWidth;
++  attribs.height = m_textureHeight;
++  attribs.format = m_fourcc;
++  attribs.planes = planes;
++
++  if (m_eglImage->CreateImage(attribs))
++  {
++    m_eglImage->UploadImage(GL_TEXTURE_2D);
++  }
++
++  m_eglImage->DestroyImage();
++
++  if (IsMipmapped())
++  {
++    glGenerateMipmap(GL_TEXTURE_2D);
++  }
++
++  m_loadedToGPU = true;
++}
++
++void CGBMTexture::BindToUnit(unsigned int unit)
++{
++  glActiveTexture(GL_TEXTURE0 + unit);
++  glBindTexture(GL_TEXTURE_2D, m_texture);
++}
++
++void CGBMTexture::GetMemory()
++{
++  if (m_buffer)
++  {
++    if (m_buffer->CreateBufferObject(m_textureWidth, m_textureHeight))
++    {
++      m_pixels = m_buffer->GetMemory();
++    }
++  }
++}
++
++void CGBMTexture::ReleaseMemory()
++{
++  m_pixels = nullptr;
++
++  if (m_buffer)
++  {
++    m_buffer->ReleaseMemory();
++  }
++}
++
++unsigned int CGBMTexture::GetDestPitch() const
++{
++  if (m_buffer->GetFd() < 0)
++  {
++    return CBaseTexture::GetDestPitch();
++  }
++
++  return m_buffer->GetStride();
++}
+diff --git a/xbmc/guilib/TextureGBM.h b/xbmc/guilib/TextureGBM.h
+new file mode 100644
+index 000000000000..2e221aef4e8b
+--- /dev/null
++++ b/xbmc/guilib/TextureGBM.h
+@@ -0,0 +1,45 @@
++/*
++ *  Copyright (C) 2013-2018 Team Kodi
++ *  This file is part of Kodi - https://kodi.tv
++ *
++ *  SPDX-License-Identifier: GPL-2.0-or-later
++ *  See LICENSES/README.md for more information.
++ */
++
++#pragma once
++
++#include "guilib/Texture.h"
++#include "utils/EGLImage.h"
++#include "utils/GBMBufferObject.h"
++
++#include "system_gl.h"
++
++#include <memory>
++
++class CGBMTexture : public CBaseTexture
++{
++public:
++  CGBMTexture(unsigned int width = 0, unsigned int height = 0, unsigned int format = XB_FMT_A8R8G8B8);
++  ~CGBMTexture() override;
++
++  void CreateTextureObject() override;
++  void DestroyTextureObject() override;
++  void LoadToGPU() override;
++  void BindToUnit(unsigned int unit) override;
++
++  unsigned int GetPitch() const override { return GetDestPitch(); }
++
++  void GetMemory() override;
++
++protected:
++  unsigned int GetDestPitch() const override;
++
++private:
++  void ReleaseMemory();
++
++  std::unique_ptr<CGBMBufferObject> m_buffer;
++  std::unique_ptr<CEGLImage> m_eglImage;
++
++  uint32_t m_fourcc;
++  GLuint m_texture = 0;
++};
+diff --git a/xbmc/guilib/TextureGL.cpp b/xbmc/guilib/TextureGL.cpp
+index 6e8c752878c6..64d3ffc41778 100644
+--- a/xbmc/guilib/TextureGL.cpp
++++ b/xbmc/guilib/TextureGL.cpp
+@@ -6,6 +6,8 @@
+  *  See LICENSES/README.md for more information.
+  */
+ 
++#include "TextureGL.h"
++
+ #include "ServiceBroker.h"
+ #include "Texture.h"
+ #include "rendering/RenderSystem.h"

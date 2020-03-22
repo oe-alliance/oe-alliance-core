@@ -1,0 +1,18 @@
+--- a/CMakeLists.txt	2018-12-29 20:37:07.741694121 +0100
++++ b/CMakeLists.txt	2018-12-29 20:38:30.953493128 +0100
+@@ -238,13 +238,13 @@
+ if(FLATBUFFERS_INSTALL)
+   install(DIRECTORY include/flatbuffers DESTINATION include)
+   if(FLATBUFFERS_BUILD_FLATLIB)
+-    install(TARGETS flatbuffers DESTINATION lib)
++    install(TARGETS flatbuffers DESTINATION ${BASE_LIB_PATH})
+   endif()
+   if(FLATBUFFERS_BUILD_FLATC)
+     install(TARGETS flatc DESTINATION bin)
+   endif()
+   if(FLATBUFFERS_BUILD_SHAREDLIB)
+-    install(TARGETS flatbuffers_shared DESTINATION lib)
++    install(TARGETS flatbuffers_shared DESTINATION ${BASE_LIB_PATH})
+   endif()
+ endif()
+ 

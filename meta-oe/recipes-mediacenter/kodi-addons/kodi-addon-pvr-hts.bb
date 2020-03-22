@@ -1,7 +1,8 @@
 SUMMARY = "Kodi Media Center PVR plugins"
 
-KODIADDONPLUGIN = "hts"
+PV = "${@bb.utils.contains("MACHINE_FEATURES", "kodi18", "4.4.19+git${SRCPV}", "3.4.28+git${SRCPV}", d)}"
+PKGV = "${@bb.utils.contains("MACHINE_FEATURES", "kodi18", "4.4.19+git${GITPKGV}", "3.4.28+git${SRCPV}", d)}"
 
-SRCREV_pvr${KODIADDONPLUGIN} = "3211941dade740ad92581f488402146794798e74"
+KODIADDONPLUGIN = "hts"
 
 require kodi-addon-pvr.inc
