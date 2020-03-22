@@ -23,7 +23,7 @@ SRC_URI_append = " \
         file://4_08_recheck_discard_flags.patch \
         file://4_09_ffmpeg_fix_edit_list_parsing.patch \
         file://4_11_rtsp.patch \
-        file://4_11_dxva2.patch \
+        file://4_12_dxva2.patch \
         "
 
 EXTRA_FFCONF = " \
