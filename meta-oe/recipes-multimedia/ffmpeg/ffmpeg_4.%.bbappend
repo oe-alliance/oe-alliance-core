@@ -7,7 +7,6 @@ PACKAGECONFIG_append = " libass libbluray libfreetype librtmp libvorbis \
 
 PACKAGECONFIG[libass] = "--enable-libass,--disable-libass,libass"
 PACKAGECONFIG[libbluray] = "--enable-libbluray --enable-protocol=bluray,--disable-libbluray,libbluray"
-
 PACKAGECONFIG[libfreetype] = "--enable-libfreetype,--disable-libfreetype,freetype"
 PACKAGECONFIG[librtmp] = "--enable-librtmp,--disable-librtmp,librtmp rtmpdump"
 PACKAGECONFIG[openjpeg] = "--enable-libopenjpeg,--disable-libopenjpeg,openjpeg"
@@ -23,8 +22,8 @@ SRC_URI_append = " \
         file://4_07_increase_buffer_size.patch \
         file://4_08_recheck_discard_flags.patch \
         file://4_09_ffmpeg_fix_edit_list_parsing.patch \
-        file://4_10_rtsp_patch \
-        file://4_11_dxva2_patch \
+        file://4_11_rtsp.patch \
+        file://4_12_dxva2.patch \
         "
 
 EXTRA_FFCONF = " \
