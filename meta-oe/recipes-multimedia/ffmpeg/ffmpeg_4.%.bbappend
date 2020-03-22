@@ -23,6 +23,8 @@ SRC_URI_append = " \
         file://4_07_increase_buffer_size.patch \
         file://4_08_recheck_discard_flags.patch \
         file://4_09_ffmpeg_fix_edit_list_parsing.patch \
+	file://4_10_rtsp_patch \
+	file://4_11_dxva2_patch \
         "
 
 EXTRA_FFCONF = " \
@@ -62,6 +64,8 @@ EXTRA_FFCONF = " \
     --enable-outdevs \
     --enable-filters \
     --disable-doc \
+    --enable-libfdk-aac \
+    --enable-encoder=libfdk_aac \
     --disable-htmlpages \
     --disable-manpages \
     --disable-podpages \
