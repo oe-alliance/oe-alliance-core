@@ -1,5 +1,6 @@
 LICENSE = "GPLv2+"
 require conf/license/license-gplv2.inc
+require ${@bb.utils.contains("MACHINE_FEATURES", "kodi18", "kodi-leia.inc", "kodi-krypton.inc", d)}
 
 DEPENDS += " \
             zip-native \
@@ -15,11 +16,12 @@ PACKAGE_ARCH = "${MACHINE}"
 
 SRCREV_FORMAT = "pvr${KODIADDONPLUGIN}"
 
-PV = "2.4.9+git${SRCPV}"
-PKGV = "2.4.9+git${GITPKGV}"
-KODIADDONBRANCH ?= "Krypton"
 
-SRC_URI = "git://github.com/kodi-pvr/pvr.${KODIADDONPLUGIN}.git;destsuffix=pvr.${KODIADDONPLUGIN};name=pvr${KODIADDONPLUGIN};branch=${KODIADDONBRANCH}"
+PVRMYTV = "${@bb.utils.contains("KODIADDONPLUGIN", "mythtv", "janbar", "kodi-pvr", d)}"
+
+PVRGIT = "${@bb.utils.contains("MACHINE_FEATURES", "kodi18", "${PVRMYTV}", "kodi-pvr", d)}"
+
+SRC_URI = "git://github.com/${PVRGIT}/pvr.${KODIADDONPLUGIN}.git;destsuffix=pvr.${KODIADDONPLUGIN};name=pvr${KODIADDONPLUGIN};branch=${KODIADDONBRANCH}"
 
 inherit cmake pkgconfig gettext gitpkgv
 

@@ -1,7 +1,10 @@
 SUMMARY = "Kodi Media Center PVR plugins"
 
+PV = "${@bb.utils.contains("MACHINE_FEATURES", "kodi18", "2.4.5+git${SRCPV}", "1.4.10+git${SRCPV}", d)}"
+PKGV = "${@bb.utils.contains("MACHINE_FEATURES", "kodi18", "2.4.5+git${GITPKGV}", "1.4.10+git${SRCPV}", d)}"
+
 KODIADDONPLUGIN = "wmc"
 
-SRCREV_pvr${KODIADDONPLUGIN} = "6bf36aadb9313f5df84569c2bc9ceaa7093b7ebf"
-
 require kodi-addon-pvr.inc
+
+SRC_URI_append = "${@bb.utils.contains("MACHINE_FEATURES", "kodi18", " file://0001-Fix-build-pvr-wmc.patch ", "", d)}"

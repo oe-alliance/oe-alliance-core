@@ -1,7 +1,5 @@
 MACHINE_FEATURES += "qthbbtv qtstalker"
 
-DISTRO_FEATURES_EXTRA = "opengl"
-
 PREFERRED_PROVIDER_virtual/egl ?= "airdigital-mali-${HICHIPSET}"
 PREFERRED_PROVIDER_virtual/libgles1 ?= "airdigital-mali-${HICHIPSET}"
 PREFERRED_PROVIDER_virtual/libgles2 ?= "airdigital-mali-${HICHIPSET}"

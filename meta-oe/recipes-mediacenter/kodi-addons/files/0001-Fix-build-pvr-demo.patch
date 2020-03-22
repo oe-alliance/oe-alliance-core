@@ -1,0 +1,13 @@
+diff --git a/src/PVRDemoData.cpp b/src/PVRDemoData.cpp
+--- a/src/PVRDemoData.cpp
++++ b/src/PVRDemoData.cpp
+@@ -19,7 +19,7 @@
+  *
+  */
+ 
+-#include "util/XMLUtils.h"
++#include "kodi/util/XMLUtils.h"
+ #include "PVRDemoData.h"
+ #include "p8-platform/util/StringUtils.h"
+ 
+

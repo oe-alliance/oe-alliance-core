@@ -1,7 +1,8 @@
 SUMMARY = "Kodi Media Center PVR plugins"
 
-KODIADDONPLUGIN = "vbox"
+PV = "${@bb.utils.contains("MACHINE_FEATURES", "kodi18", "4.7.0+git${SRCPV}", "3.6.13+git${SRCPV}", d)}"
+PKGV = "${@bb.utils.contains("MACHINE_FEATURES", "kodi18", "4.7.0+git${GITPKGV}", "3.6.13+git${SRCPV}", d)}"
 
-SRCREV_pvr${KODIADDONPLUGIN} = "35dd90995f22dc3cb854380a659384bcffb0c59c"
+KODIADDONPLUGIN = "vbox"
 
 require kodi-addon-pvr.inc

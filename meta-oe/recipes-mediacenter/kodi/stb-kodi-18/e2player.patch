@@ -1,0 +1,1003 @@
+diff -ruN a/cmake/treedata/common/cores.txt b/cmake/treedata/common/cores.txt
+--- a/cmake/treedata/common/cores.txt	2019-08-31 14:05:38.498693824 +0200
++++ b/cmake/treedata/common/cores.txt	2019-11-01 15:28:10.115620803 +0100
+@@ -4,5 +4,6 @@
+ xbmc/cores/DllLoader/exports           cores/dll-loader/exports
+ xbmc/cores/DllLoader/exports/util      cores/dll-loader/exports/util
+ xbmc/cores/ExternalPlayer              cores/externalplayer
++xbmc/cores/Enigma2Player               cores/enigma2player
+ xbmc/cores/paplayer                    cores/paplayer
+ xbmc/cores/playercorefactory           cores/playercorefactory
+diff --git a/system/playercorefactory.xml b/system/playercorefactory.xml
+index be6b7219ab4..406d20a6d9b 100644
+--- a/system/playercorefactory.xml
++++ b/system/playercorefactory.xml
+@@ -8,9 +8,17 @@
+     <player name="VideoPlayer" /> placeholder for MPlayer
+     <player name="PAPlayer" audio="true" />
+     -->
++    <player name="E2Player" type="Enigma2Player" audio="true" video="true">
++      <filename>kodiext</filename>
++      <args>-U "{1}" -S "{3}" -P "$PPID"</args>
++      <filenamemeta>/tmp/kodiextin.json</filenamemeta>
++      <hidexbmc>true</hidexbmc>
++      <hideconsole>true</hideconsole>
++      <warpcursor>none</warpcursor>
++    </player>
+   </players>
+
+-  <rules name="system rules">
++  <rules action="prepend" name="system rules">
+     <rule name="mms/udp" protocols="mms|mmsh|udp" player="VideoPlayer" />
+     <rule name="lastfm/shout" protocols="lastfm|shout" player="PAPlayer" />
+     <rule name="rtmp" protocols="rtmp" player="videodefaultplayer" />
+@@ -22,6 +30,8 @@
+     <rule name="streams" internetstream="true">
+       <rule name="aacp/sdp" mimetypes="audio/aacp|application/sdp" player="VideoPlayer" />
+       <rule name="mp2" mimetypes="application/octet-stream" filetypes="mp2" player="PAPlayer" />
++      <rule name="widevine1" filetypes="mpd" player="VideoPlayer" />
++      <rule name="netflix" filename="*manifest*"  player="VideoPlayer" />
+     </rule>
+
+     <!-- DVDs -->
+diff -ruN a/xbmc/cores/Enigma2Player/CMakeLists.txt b/xbmc/cores/Enigma2Player/CMakeLists.txt
+--- a/xbmc/cores/Enigma2Player/CMakeLists.txt	1970-01-01 01:00:00.000000000 +0100
++++ b/xbmc/cores/Enigma2Player/CMakeLists.txt	2019-11-01 15:43:52.540647760 +0100
+@@ -0,0 +1,6 @@
++set(SOURCES Enigma2Player.cpp)
++
++set(HEADERS Enigma2Player.h)
++
++core_add_library(enigma2player)
++
+diff -ruN a/xbmc/cores/Enigma2Player/Enigma2Player.cpp b/xbmc/cores/Enigma2Player/Enigma2Player.cpp
+--- a/xbmc/cores/Enigma2Player/Enigma2Player.cpp	1970-01-01 01:00:00.000000000 +0100
++++ b/xbmc/cores/Enigma2Player/Enigma2Player.cpp	2019-11-03 12:57:46.606767168 +0100
+@@ -0,0 +1,793 @@
++/*
++ *  Copyright (C) 2005-2018 Team Kodi
++ *  This file is part of Kodi - https://kodi.tv
++ *
++ *  SPDX-License-Identifier: GPL-2.0-or-later
++ *  See LICENSES/README.md for more information.
++ */
++
++#include "threads/SystemClock.h"
++#include "CompileInfo.h"
++#include "Enigma2Player.h"
++#include "windowing/WinSystem.h"
++#include "dialogs/GUIDialogOK.h"
++#include "guilib/GUIComponent.h"
++#include "guilib/GUIWindowManager.h"
++#include "Application.h"
++#include "filesystem/MusicDatabaseFile.h"
++#include "FileItem.h"
++#include "utils/RegExp.h"
++#include "utils/StringUtils.h"
++#include "utils/URIUtils.h"
++#include "URL.h"
++#include "utils/XMLUtils.h"
++#include "utils/log.h"
++#include "utils/Variant.h"
++#include "video/Bookmark.h"
++#include "ServiceBroker.h"
++#include "cores/AudioEngine/Interfaces/AE.h"
++#include "cores/DataCacheCore.h"
++#if defined(TARGET_WINDOWS)
++  #include "utils/CharsetConverter.h"
++  #include <Windows.h>
++#endif
++#if defined(TARGET_ANDROID)
++  #include "platform/android/activity/XBMCApp.h"
++#endif
++#include "utils/JSONVariantWriter.h"
++#include "utils/JSONVariantParser.h"
++#include "TextureCache.h"
++#include "filesystem/SpecialProtocol.h"
++#include "utils/JobManager.h"
++
++// If the process ends in less than this time (ms), we assume it's a launcher
++// and wait for manual intervention before continuing
++#define LAUNCHER_PROCESS_TIME 2000
++// Time (ms) we give a process we sent a WM_QUIT to close before terminating
++#define PROCESS_GRACE_TIME 3000
++// Default time after which the item's playcount is incremented
++#define DEFAULT_PLAYCOUNT_MIN_TIME 10
++
++using namespace XFILE;
++
++#if defined(TARGET_WINDOWS_DESKTOP)
++extern HWND g_hWnd;
++#endif
++
++CEnigma2Player::CEnigma2Player(IPlayerCallback& callback)
++    : IPlayer(callback),
++      CThread("Enigma2Player")
++{
++  m_bAbortRequest = false;
++  m_bIsPlaying = false;
++  m_playbackStartTime = 0;
++  m_speed = 1;
++  m_time = 0;
++  m_totalTime = 0;
++
++  m_hideconsole = false;
++  m_warpcursor = WARP_NONE;
++  m_hidexbmc = false;
++  m_islauncher = false;
++  m_playCountMinTime = DEFAULT_PLAYCOUNT_MIN_TIME;
++  m_playOneStackItem = false;
++
++  m_dialog = NULL;
++#if defined(TARGET_WINDOWS_DESKTOP)
++  m_xPos = 0;
++  m_yPos = 0;
++
++  memset(&m_processInfo, 0, sizeof(m_processInfo));
++#endif
++}
++
++CEnigma2Player::~CEnigma2Player()
++{
++  CloseFile();
++}
++
++bool CEnigma2Player::OpenFile(const CFileItem& file, const CPlayerOptions &options)
++{
++  try
++  {
++    m_file = file;
++    m_bIsPlaying = true;
++    m_time = 0;
++    m_totalTime = 0;
++    double percent = 0;
++    m_playbackStartTime = XbmcThreads::SystemClockMillis();
++    m_launchFilename = file.GetDynPath();
++    CLog::Log(LOGNOTICE, "%s: %s", __FUNCTION__, m_launchFilename.c_str());
++
++    std::string thumb = CSpecialProtocol::TranslatePath(CTextureCache::GetCachedPath(CTextureCache::GetCacheFile(file.GetArt("thumb")) + ".jpg"));
++
++    CVariant variant;
++    file.Serialize(variant);
++    CVariant playerOptionsVariant;
++    playerOptionsVariant["startPercent"] = options.startpercent;
++    playerOptionsVariant["startTime"] = options.starttime;
++    variant["playerOptions"] = playerOptionsVariant;
++
++    CVariant listItemVariant;
++    listItemVariant["label"] = file.GetLabel();
++    listItemVariant["label2"] = file.GetLabel2();
++    listItemVariant["Fanart"] = file.GetArt();
++    listItemVariant["CacheThumb"] = thumb.c_str();
++    variant["listItem"] = listItemVariant;
++
++    std::string jsonStr;
++    CJSONVariantWriter::Write(variant, jsonStr, false);
++    CLog::Log(LOGNOTICE, "%s json: %s", __FUNCTION__, jsonStr.c_str());
++
++    CFile file;
++    if (file.OpenForWrite(m_filenameMeta, true))
++    {
++        ssize_t ret;
++        if ((ret = file.Write(jsonStr.c_str(), jsonStr.length())) == -1)
++        {
++          CLog::Log(LOGDEBUG, "%s ex write error occurred(json)!", __FUNCTION__);
++        }
++        else if (ret != jsonStr.length())
++        {
++          CLog::Log(LOGDEBUG, "%s write error occurred(json)!", __FUNCTION__);
++        }
++        file.Close();
++    }
++
++    CLog::Log(LOGNOTICE, "%s: %s", __FUNCTION__, m_launchFilename.c_str());
++
++    Create();
++
++    return true;
++  }
++  catch(...)
++  {
++    m_bIsPlaying = false;
++    CLog::Log(LOGERROR,"%s - Exception thrown", __FUNCTION__);
++    return false;
++  }
++}
++
++bool CEnigma2Player::CloseFile(bool reopen)
++{
++  m_bAbortRequest = true;
++
++  if (m_dialog && m_dialog->IsActive()) m_dialog->Close();
++
++#if defined(TARGET_WINDOWS_DESKTOP)
++  if (m_bIsPlaying && m_processInfo.hProcess)
++  {
++    TerminateProcess(m_processInfo.hProcess, 1);
++  }
++#endif
++
++  return true;
++}
++
++bool CEnigma2Player::IsPlaying() const
++{
++  return m_bIsPlaying;
++}
++
++void CEnigma2Player::Process()
++{
++  std::string mainFile = m_launchFilename;
++  std::string archiveContent;
++
++  if (m_args.find("{0}") == std::string::npos)
++  {
++    // Unwind archive names
++    CURL url(m_launchFilename);
++    if (url.IsProtocol("zip") || url.IsProtocol("rar") /* || url.IsProtocol("iso9660") ??*/ || url.IsProtocol("udf"))
++    {
++      mainFile = url.GetHostName();
++      archiveContent = url.GetFileName();
++    }
++    if (url.IsProtocol("musicdb"))
++      mainFile = CMusicDatabaseFile::TranslateUrl(url);
++    if (url.IsProtocol("bluray"))
++    {
++      CURL base(url.GetHostName());
++      if (base.IsProtocol("udf"))
++      {
++        mainFile = base.GetHostName(); /* image file */
++        archiveContent = base.GetFileName();
++      }
++      else
++        mainFile = URIUtils::AddFileToFolder(base.Get(), url.GetFileName());
++    }
++  }
++
++  if (!m_filenameReplacers.empty())
++  {
++    for (unsigned int i = 0; i < m_filenameReplacers.size(); i++)
++    {
++      std::vector<std::string> vecSplit = StringUtils::Split(m_filenameReplacers[i], " , ");
++
++      // something is wrong, go to next substitution
++      if (vecSplit.size() != 4)
++        continue;
++
++      std::string strMatch = vecSplit[0];
++      StringUtils::Replace(strMatch, ",,",",");
++      bool bCaseless = vecSplit[3].find('i') != std::string::npos;
++      CRegExp regExp(bCaseless, CRegExp::autoUtf8);
++
++      if (!regExp.RegComp(strMatch.c_str()))
++      { // invalid regexp - complain in logs
++        CLog::Log(LOGERROR, "%s: Invalid RegExp:'%s'", __FUNCTION__, strMatch.c_str());
++        continue;
++      }
++
++      if (regExp.RegFind(mainFile) > -1)
++      {
++        std::string strPat = vecSplit[1];
++        StringUtils::Replace(strPat, ",,",",");
++
++        if (!regExp.RegComp(strPat.c_str()))
++        { // invalid regexp - complain in logs
++          CLog::Log(LOGERROR, "%s: Invalid RegExp:'%s'", __FUNCTION__, strPat.c_str());
++          continue;
++        }
++
++        std::string strRep = vecSplit[2];
++        StringUtils::Replace(strRep, ",,",",");
++        bool bGlobal = vecSplit[3].find('g') != std::string::npos;
++        bool bStop = vecSplit[3].find('s') != std::string::npos;
++        int iStart = 0;
++        while ((iStart = regExp.RegFind(mainFile, iStart)) > -1)
++        {
++          int iLength = regExp.GetFindLen();
++          mainFile = mainFile.substr(0, iStart) + regExp.GetReplaceString(strRep) + mainFile.substr(iStart + iLength);
++          if (!bGlobal)
++            break;
++        }
++        CLog::Log(LOGINFO, "%s: File matched:'%s' (RE='%s',Rep='%s') new filename:'%s'.", __FUNCTION__, strMatch.c_str(), strPat.c_str(), strRep.c_str(), mainFile.c_str());
++        if (bStop) break;
++      }
++    }
++  }
++
++  CLog::Log(LOGNOTICE, "%s: Player : %s", __FUNCTION__, m_filename.c_str());
++  CLog::Log(LOGNOTICE, "%s: File   : %s", __FUNCTION__, mainFile.c_str());
++  CLog::Log(LOGNOTICE, "%s: Content: %s", __FUNCTION__, archiveContent.c_str());
++  CLog::Log(LOGNOTICE, "%s: Args   : %s", __FUNCTION__, m_args.c_str());
++  CLog::Log(LOGNOTICE, "%s: Start", __FUNCTION__);
++
++  // make sure we surround the arguments with quotes where necessary
++  std::string strFName;
++  std::string strFArgs;
++#if defined(TARGET_WINDOWS_DESKTOP)
++  // W32 batch-file handline
++  if (StringUtils::EndsWith(m_filename, ".bat") || StringUtils::EndsWith(m_filename, ".cmd"))
++  {
++    // MSDN says you just need to do this, but cmd's handing of spaces and
++    // quotes is soo broken it seems to work much better if you just omit
++    // lpApplicationName and enclose the module in lpCommandLine in quotes
++    //strFName = "cmd.exe";
++    //strFArgs = "/c ";
++  }
++  else
++#endif
++    strFName = m_filename;
++
++  strFArgs.append("\"");
++  strFArgs.append(m_filename);
++  strFArgs.append("\" ");
++  strFArgs.append(m_args);
++
++  int nReplaced = StringUtils::Replace(strFArgs, "{0}", mainFile);
++
++  if (!nReplaced)
++    nReplaced = StringUtils::Replace(strFArgs, "{1}", mainFile) + StringUtils::Replace(strFArgs, "{2}", archiveContent);
++
++  if (!nReplaced)
++  {
++    strFArgs.append(" \"");
++    strFArgs.append(mainFile);
++    strFArgs.append("\"");
++  }
++
++#if defined(TARGET_WINDOWS_DESKTOP)
++  if (m_warpcursor)
++  {
++    GetCursorPos(&m_ptCursorpos);
++    int x = 0;
++    int y = 0;
++    switch (m_warpcursor)
++    {
++      case WARP_BOTTOM_RIGHT:
++        x = GetSystemMetrics(SM_CXSCREEN);
++      case WARP_BOTTOM_LEFT:
++        y = GetSystemMetrics(SM_CYSCREEN);
++        break;
++      case WARP_TOP_RIGHT:
++        x = GetSystemMetrics(SM_CXSCREEN);
++        break;
++      case WARP_CENTER:
++        x = GetSystemMetrics(SM_CXSCREEN) / 2;
++        y = GetSystemMetrics(SM_CYSCREEN) / 2;
++        break;
++    }
++    CLog::Log(LOGNOTICE, "%s: Warping cursor to (%d,%d)", __FUNCTION__, x, y);
++    SetCursorPos(x,y);
++  }
++
++  LONG currentStyle = GetWindowLong(g_hWnd, GWL_EXSTYLE);
++#endif
++
++  if (m_hidexbmc && !m_islauncher)
++  {
++    CLog::Log(LOGNOTICE, "%s: Hiding %s window", __FUNCTION__, CCompileInfo::GetAppName());
++    CServiceBroker::GetWinSystem()->Hide();
++  }
++#if defined(TARGET_WINDOWS_DESKTOP)
++  else if (currentStyle & WS_EX_TOPMOST)
++  {
++    CLog::Log(LOGNOTICE, "%s: Lowering %s window", __FUNCTION__, CCompileInfo::GetAppName());
++    SetWindowPos(g_hWnd, HWND_BOTTOM, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOREDRAW | SWP_ASYNCWINDOWPOS);
++  }
++
++  CLog::Log(LOGDEBUG, "%s: Unlocking foreground window", __FUNCTION__);
++  LockSetForegroundWindow(LSFW_UNLOCK);
++#endif
++
++  m_playbackStartTime = XbmcThreads::SystemClockMillis();
++
++  /* Suspend AE temporarily so exclusive or hog-mode sinks */
++  /* don't block external player's access to audio device  */
++  CServiceBroker::GetActiveAE()->Suspend();
++  // wait for AE has completed suspended
++  XbmcThreads::EndTime timer(2000);
++  while (!timer.IsTimePast() && !CServiceBroker::GetActiveAE()->IsSuspended())
++  {
++    Sleep(50);
++  }
++  if (timer.IsTimePast())
++  {
++    CLog::Log(LOGERROR,"%s: AudioEngine did not suspend before launching external player", __FUNCTION__);
++  }
++
++  m_callback.OnPlayBackStarted(m_file);
++  //IPlayerCallback *cb = &m_callback;
++  m_callback.OnAVStarted(m_file);
++
++  bool ret = true;
++#if defined(TARGET_WINDOWS_DESKTOP)
++  ret = ExecuteAppW32(strFName.c_str(),strFArgs.c_str());
++#elif defined(TARGET_ANDROID)
++  ret = ExecuteAppAndroid(m_filename.c_str(), mainFile.c_str());
++#elif defined(TARGET_POSIX) && !defined(TARGET_DARWIN_EMBEDDED)
++  ret = ExecuteAppLinux(strFArgs.c_str());
++#endif
++  int64_t elapsedMillis = XbmcThreads::SystemClockMillis() - m_playbackStartTime;
++
++  if (ret && (m_islauncher || elapsedMillis < LAUNCHER_PROCESS_TIME))
++  {
++    if (m_hidexbmc)
++    {
++      CLog::Log(LOGNOTICE, "%s: %s cannot stay hidden for a launcher process", __FUNCTION__, CCompileInfo::GetAppName());
++      CServiceBroker::GetWinSystem()->Show(false);
++    }
++
++    {
++      m_dialog = CServiceBroker::GetGUI()->GetWindowManager().GetWindow<CGUIDialogOK>(WINDOW_DIALOG_OK);
++      m_dialog->SetHeading(CVariant{23100});
++      m_dialog->SetLine(1, CVariant{23104});
++      m_dialog->SetLine(2, CVariant{23105});
++      m_dialog->SetLine(3, CVariant{23106});
++    }
++
++    if (!m_bAbortRequest)
++      m_dialog->Open();
++  }
++
++  m_bIsPlaying = false;
++  CLog::Log(LOGNOTICE, "%s: Stop", __FUNCTION__);
++
++#if defined(TARGET_WINDOWS_DESKTOP)
++  CServiceBroker::GetWinSystem()->Restore();
++
++  if (currentStyle & WS_EX_TOPMOST)
++  {
++    CLog::Log(LOGNOTICE, "%s: Showing %s window TOPMOST", __FUNCTION__, CCompileInfo::GetAppName());
++    SetWindowPos(g_hWnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW | SWP_ASYNCWINDOWPOS);
++    SetForegroundWindow(g_hWnd);
++  }
++  else
++#endif
++  {
++    CLog::Log(LOGNOTICE, "%s: Showing %s window", __FUNCTION__, CCompileInfo::GetAppName());
++    CServiceBroker::GetWinSystem()->Show();
++  }
++
++#if defined(TARGET_WINDOWS_DESKTOP)
++  if (m_warpcursor)
++  {
++    m_xPos = 0;
++    m_yPos = 0;
++    if (&m_ptCursorpos != 0)
++    {
++      m_xPos = (m_ptCursorpos.x);
++      m_yPos = (m_ptCursorpos.y);
++    }
++    CLog::Log(LOGNOTICE, "%s: Restoring cursor to (%d,%d)", __FUNCTION__, m_xPos, m_yPos);
++    SetCursorPos(m_xPos,m_yPos);
++  }
++#endif
++
++  CLog::Log(LOGNOTICE, "Enigma2Player: terminado a %d segundos",m_time);
++//  IPlayerCallback *cb = &m_callback;
++  if (m_time >= m_playCountMinTime)
++  {
++    CBookmark bookmark;
++    bookmark.totalTimeInSeconds = m_totalTime;
++    bookmark.timeInSeconds = m_time;
++    bookmark.player = m_name;
++/*  CJobManager::GetInstance().Submit([=]() {
++    cb->OnPlayerCloseFile(m_file, bookmark);
++  }, CJob::PRIORITY_NORMAL);*/
++    m_callback.OnPlayerCloseFile(m_file, bookmark);
++    CLog::Log(LOGNOTICE, "Enigma2Player: bookmark a %d segundos",elapsedMillis / 1000);
++  }
++
++  /* Resume AE processing of XBMC native audio */
++  if (!CServiceBroker::GetActiveAE()->Resume())
++  {
++    CLog::Log(LOGFATAL, "%s: Failed to restart AudioEngine after return from external player",__FUNCTION__);
++  }
++
++  // We don't want to come back to an active screensaver
++  g_application.ResetScreenSaver();
++  g_application.WakeUpScreenSaverAndDPMS();
++
++  if (!ret || (m_playOneStackItem && g_application.CurrentFileItem().IsStack()))
++    m_callback.OnPlayBackStopped();
++  else
++    m_callback.OnPlayBackEnded();
++}
++
++#if defined(TARGET_WINDOWS_DESKTOP)
++bool CEnigma2Player::ExecuteAppW32(const char* strPath, const char* strSwitches)
++{
++  CLog::Log(LOGNOTICE, "%s: %s %s", __FUNCTION__, strPath, strSwitches);
++
++  STARTUPINFOW si;
++  memset(&si, 0, sizeof(si));
++  si.cb = sizeof(si);
++  si.dwFlags = STARTF_USESHOWWINDOW;
++  si.wShowWindow = m_hideconsole ? SW_HIDE : SW_SHOW;
++
++  std::wstring WstrPath, WstrSwitches;
++  g_charsetConverter.utf8ToW(strPath, WstrPath, false);
++  g_charsetConverter.utf8ToW(strSwitches, WstrSwitches, false);
++
++  if (m_bAbortRequest) return false;
++
++  BOOL ret = CreateProcessW(WstrPath.empty() ? NULL : WstrPath.c_str(),
++                            (LPWSTR) WstrSwitches.c_str(), NULL, NULL, FALSE, NULL,
++                            NULL, NULL, &si, &m_processInfo);
++
++  if (ret == FALSE)
++  {
++    DWORD lastError = GetLastError();
++    CLog::Log(LOGNOTICE, "%s - Failure: %d", __FUNCTION__, lastError);
++  }
++  else
++  {
++    int res = WaitForSingleObject(m_processInfo.hProcess, INFINITE);
++
++    switch (res)
++    {
++      case WAIT_OBJECT_0:
++        CLog::Log(LOGNOTICE, "%s: WAIT_OBJECT_0", __FUNCTION__);
++        break;
++      case WAIT_ABANDONED:
++        CLog::Log(LOGNOTICE, "%s: WAIT_ABANDONED", __FUNCTION__);
++        break;
++      case WAIT_TIMEOUT:
++        CLog::Log(LOGNOTICE, "%s: WAIT_TIMEOUT", __FUNCTION__);
++        break;
++      case WAIT_FAILED:
++        CLog::Log(LOGNOTICE, "%s: WAIT_FAILED (%d)", __FUNCTION__, GetLastError());
++        ret = FALSE;
++        break;
++    }
++
++    CloseHandle(m_processInfo.hThread);
++    m_processInfo.hThread = 0;
++    CloseHandle(m_processInfo.hProcess);
++    m_processInfo.hProcess = 0;
++  }
++  return (ret == TRUE);
++}
++#endif
++
++#if !defined(TARGET_ANDROID) && !defined(TARGET_DARWIN_EMBEDDED) && defined(TARGET_POSIX)
++bool CEnigma2Player::ExecuteAppLinux(const char* strSwitches)
++{
++  CLog::Log(LOGNOTICE, "%s: %s", __FUNCTION__, strSwitches);
++
++  FILE *f;
++  if ((f = popen(strSwitches, "r")) == NULL)
++  {
++    CLog::Log(LOGNOTICE, "%s: Failure popen: %s", __FUNCTION__, strerror(errno));
++    return false;
++  }
++
++  char line[1024];
++  while (fgets(line, sizeof(line), f) != NULL)
++  {
++    handleAppLinuxOutput(line);
++  }
++  int ret = pclose(f);
++
++  if (ret != 0)
++  {
++    CLog::Log(LOGNOTICE, "%s: Failure: %d", __FUNCTION__, ret);
++  }
++
++  return (ret == 0);
++}
++#endif
++
++#if defined(TARGET_ANDROID)
++bool CEnigma2Player::ExecuteAppAndroid(const char* strSwitches,const char* strPath)
++{
++  CLog::Log(LOGNOTICE, "%s: %s", __FUNCTION__, strSwitches);
++
++  bool ret = CXBMCApp::StartActivity(strSwitches, "android.intent.action.VIEW", "video/*", strPath);
++
++  if (!ret)
++  {
++    CLog::Log(LOGNOTICE, "%s: Failure", __FUNCTION__);
++  }
++
++  return (ret == 0);
++}
++#endif
++
++void CEnigma2Player::Pause()
++{
++}
++
++bool CEnigma2Player::HasVideo() const
++{
++  return true;
++}
++
++bool CEnigma2Player::HasAudio() const
++{
++  return false;
++}
++
++bool CEnigma2Player::CanSeek()
++{
++  return false;
++}
++
++void CEnigma2Player::Seek(bool bPlus, bool bLargeStep, bool bChapterOverride)
++{
++}
++
++void CEnigma2Player::SeekPercentage(float iPercent)
++{
++}
++
++void CEnigma2Player::SetAVDelay(float fValue)
++{
++}
++
++float CEnigma2Player::GetAVDelay()
++{
++  return 0.0f;
++}
++
++void CEnigma2Player::SetSubTitleDelay(float fValue)
++{
++}
++
++float CEnigma2Player::GetSubTitleDelay()
++{
++  return 0.0;
++}
++
++void CEnigma2Player::SeekTime(int64_t iTime)
++{
++}
++
++float CEnigma2Player::GetPercentage()
++{
++  int64_t iTime = GetTime();
++  int64_t iTotalTime = GetTotalTime();
++
++  if (iTotalTime != 0)
++  {
++    CLog::Log(LOGDEBUG, "Percentage is %f", (iTime * 100 / (float)iTotalTime));
++    return iTime * 100 / (float)iTotalTime;
++  }
++
++  return 0.0f;
++}
++
++int64_t CEnigma2Player::GetTime() // in millis
++{
++  return m_time * 1000;
++}
++
++int64_t CEnigma2Player::GetTotalTime() // in milliseconds
++{
++  return (int64_t)m_totalTime * 1000;
++}
++
++void CEnigma2Player::SetSpeed(float speed)
++{
++  m_speed = speed;
++  CDataCacheCore::GetInstance().SetSpeed(1.0, speed);
++}
++
++std::string CEnigma2Player::GetPlayerState()
++{
++  return "";
++}
++
++bool CEnigma2Player::SetPlayerState(const std::string& state)
++{
++  return true;
++}
++
++bool CEnigma2Player::Initialize(TiXmlElement* pConfig)
++{
++  XMLUtils::GetString(pConfig, "filename", m_filename);
++  if (m_filename.length() > 0)
++  {
++    CLog::Log(LOGNOTICE, "Enigma2Player Filename: %s", m_filename.c_str());
++  }
++  else
++  {
++    std::string xml;
++    xml<<*pConfig;
++    CLog::Log(LOGERROR, "Enigma2Player Error: filename element missing from: %s", xml.c_str());
++    return false;
++  }
++
++  XMLUtils::GetString(pConfig, "filenamemeta", m_filenameMeta);
++  if (m_filenameMeta.length() > 0)
++  {
++    CLog::Log(LOGNOTICE, "Enigma2Player FilenameMeta: %s", m_filenameMeta.c_str());
++  }
++
++  XMLUtils::GetString(pConfig, "args", m_args);
++  XMLUtils::GetBoolean(pConfig, "playonestackitem", m_playOneStackItem);
++  XMLUtils::GetBoolean(pConfig, "islauncher", m_islauncher);
++  XMLUtils::GetBoolean(pConfig, "hidexbmc", m_hidexbmc);
++  if (!XMLUtils::GetBoolean(pConfig, "hideconsole", m_hideconsole))
++  {
++#ifdef TARGET_WINDOWS_DESKTOP
++    // Default depends on whether player is a batch file
++    m_hideconsole = StringUtils::EndsWith(m_filename, ".bat");
++#endif
++  }
++
++  bool bHideCursor;
++  if (XMLUtils::GetBoolean(pConfig, "hidecursor", bHideCursor) && bHideCursor)
++    m_warpcursor = WARP_BOTTOM_RIGHT;
++
++  std::string warpCursor;
++  if (XMLUtils::GetString(pConfig, "warpcursor", warpCursor) && !warpCursor.empty())
++  {
++    if (warpCursor == "bottomright") m_warpcursor = WARP_BOTTOM_RIGHT;
++    else if (warpCursor == "bottomleft") m_warpcursor = WARP_BOTTOM_LEFT;
++    else if (warpCursor == "topleft") m_warpcursor = WARP_TOP_LEFT;
++    else if (warpCursor == "topright") m_warpcursor = WARP_TOP_RIGHT;
++    else if (warpCursor == "center") m_warpcursor = WARP_CENTER;
++    else
++    {
++      warpCursor = "none";
++      CLog::Log(LOGWARNING, "Enigma2Player: invalid value for warpcursor: %s", warpCursor.c_str());
++    }
++  }
++
++  XMLUtils::GetInt(pConfig, "playcountminimumtime", m_playCountMinTime, 1, INT_MAX);
++
++  CLog::Log(LOGNOTICE, "Enigma2Player Tweaks: hideconsole (%s), hidexbmc (%s), islauncher (%s), warpcursor (%s)",
++          m_hideconsole ? "true" : "false",
++          m_hidexbmc ? "true" : "false",
++          m_islauncher ? "true" : "false",
++          warpCursor.c_str());
++
++#ifdef TARGET_WINDOWS_DESKTOP
++  m_filenameReplacers.push_back("^smb:// , / , \\\\ , g");
++  m_filenameReplacers.push_back("^smb:\\\\\\\\ , smb:(\\\\\\\\[^\\\\]*\\\\) , \\1 , ");
++#endif
++
++  TiXmlElement* pReplacers = pConfig->FirstChildElement("replacers");
++  while (pReplacers)
++  {
++    GetCustomRegexpReplacers(pReplacers, m_filenameReplacers);
++    pReplacers = pReplacers->NextSiblingElement("replacers");
++  }
++
++  return true;
++}
++
++void CEnigma2Player::GetCustomRegexpReplacers(TiXmlElement *pRootElement,
++                                               std::vector<std::string>& settings)
++{
++  int iAction = 0; // overwrite
++  // for backward compatibility
++  const char* szAppend = pRootElement->Attribute("append");
++  if ((szAppend && stricmp(szAppend, "yes") == 0))
++    iAction = 1;
++  // action takes precedence if both attributes exist
++  const char* szAction = pRootElement->Attribute("action");
++  if (szAction)
++  {
++    iAction = 0; // overwrite
++    if (stricmp(szAction, "append") == 0)
++      iAction = 1; // append
++    else if (stricmp(szAction, "prepend") == 0)
++      iAction = 2; // prepend
++  }
++  if (iAction == 0)
++    settings.clear();
++
++  TiXmlElement* pReplacer = pRootElement->FirstChildElement("replacer");
++  int i = 0;
++  while (pReplacer)
++  {
++    if (pReplacer->FirstChild())
++    {
++      const char* szGlobal = pReplacer->Attribute("global");
++      const char* szStop = pReplacer->Attribute("stop");
++      bool bGlobal = szGlobal && stricmp(szGlobal, "true") == 0;
++      bool bStop = szStop && stricmp(szStop, "true") == 0;
++
++      std::string strMatch;
++      std::string strPat;
++      std::string strRep;
++      XMLUtils::GetString(pReplacer,"match",strMatch);
++      XMLUtils::GetString(pReplacer,"pat",strPat);
++      XMLUtils::GetString(pReplacer,"rep",strRep);
++
++      if (!strPat.empty() && !strRep.empty())
++      {
++        CLog::Log(LOGDEBUG,"  Registering replacer:");
++        CLog::Log(LOGDEBUG,"    Match:[%s] Pattern:[%s] Replacement:[%s]", strMatch.c_str(), strPat.c_str(), strRep.c_str());
++        CLog::Log(LOGDEBUG,"    Global:[%s] Stop:[%s]", bGlobal?"true":"false", bStop?"true":"false");
++        // keep literal commas since we use comma as a separator
++        StringUtils::Replace(strMatch, ",",",,");
++        StringUtils::Replace(strPat, ",",",,");
++        StringUtils::Replace(strRep, ",",",,");
++
++        std::string strReplacer = strMatch + " , " + strPat + " , " + strRep + " , " + (bGlobal ? "g" : "") + (bStop ? "s" : "");
++        if (iAction == 2)
++          settings.insert(settings.begin() + i++, 1, strReplacer);
++        else
++          settings.push_back(strReplacer);
++      }
++      else
++      {
++        // error message about missing tag
++        if (strPat.empty())
++          CLog::Log(LOGERROR,"  Missing <Pat> tag");
++        else
++          CLog::Log(LOGERROR,"  Missing <Rep> tag");
++      }
++    }
++
++    pReplacer = pReplacer->NextSiblingElement("replacer");
++  }
++}
++
++void CEnigma2Player::handleAppLinuxOutput(const std::string& output)
++{
++  CVariant variantOutput; 
++  CJSONVariantParser::Parse((char*)output.c_str(), variantOutput);
++  if (!variantOutput["position"].isNull())
++    m_time = variantOutput["position"].asInteger(0);
++  if (!variantOutput["duration"].isNull())
++    m_totalTime = variantOutput["duration"].asInteger(0);
++  CLog::Log(LOGNOTICE, "%s: position: %d, duration: %d", __FUNCTION__, m_time, m_totalTime);
++}
++
+diff -ruN a/xbmc/cores/Enigma2Player/Enigma2Player.h b/xbmc/cores/Enigma2Player/Enigma2Player.h
+--- a/xbmc/cores/Enigma2Player/Enigma2Player.h	1970-01-01 01:00:00.000000000 +0100
++++ b/xbmc/cores/Enigma2Player/Enigma2Player.h	2019-11-01 17:42:12.829878484 +0100
+@@ -0,0 +1,96 @@
++/*
++ *  Copyright (C) 2005-2018 Team Kodi
++ *  This file is part of Kodi - https://kodi.tv
++ *
++ *  SPDX-License-Identifier: GPL-2.0-or-later
++ *  See LICENSES/README.md for more information.
++ */
++
++#pragma once
++
++#include "FileItem.h"
++#include "cores/IPlayer.h"
++#include "threads/Thread.h"
++
++#include <string>
++#include <vector>
++
++class CGUIDialogOK;
++
++class CEnigma2Player : public IPlayer, public CThread
++{
++public:
++  enum WARP_CURSOR { WARP_NONE = 0, WARP_TOP_LEFT, WARP_TOP_RIGHT, WARP_BOTTOM_RIGHT, WARP_BOTTOM_LEFT, WARP_CENTER };
++
++  explicit CEnigma2Player(IPlayerCallback& callback);
++  ~CEnigma2Player() override;
++  bool Initialize(TiXmlElement* pConfig) override;
++  bool OpenFile(const CFileItem& file, const CPlayerOptions &options) override;
++  bool CloseFile(bool reopen = false) override;
++  bool IsPlaying() const override;
++  void Pause() override;
++  bool HasVideo() const override;
++  bool HasAudio() const override;
++  bool CanSeek() override;
++  void Seek(bool bPlus, bool bLargeStep, bool bChapterOverride) override;
++  void SeekPercentage(float iPercent) override;
++  void SetVolume(float volume) override {}
++  void SetDynamicRangeCompression(long drc) override {}
++  void SetAVDelay(float fValue = 0.0f) override;
++  float GetAVDelay() override;
++
++  void SetSubTitleDelay(float fValue = 0.0f) override;
++  float GetSubTitleDelay() override;
++
++  void SeekTime(int64_t iTime) override;
++  void SetSpeed(float speed) override;
++  void DoAudioWork() override {}
++  int64_t GetTime();
++  int64_t GetTotalTime();
++  float GetPercentage();
++
++  std::string GetPlayerState() override;
++  bool SetPlayerState(const std::string& state) override;
++
++#if defined(TARGET_WINDOWS_DESKTOP)
++  bool ExecuteAppW32(const char* strPath, const char* strSwitches);
++  //static void CALLBACK AppFinished(void* closure, BOOLEAN TimerOrWaitFired);
++#elif defined(TARGET_ANDROID)
++  bool ExecuteAppAndroid(const char* strSwitches,const char* strPath);
++#elif defined(TARGET_POSIX)
++  bool ExecuteAppLinux(const char* strSwitches);
++#endif
++
++private:
++  void GetCustomRegexpReplacers(TiXmlElement *pRootElement, std::vector<std::string>& settings);
++  void Process() override;
++  void handleAppLinuxOutput(const std::string& line);
++
++  bool m_bAbortRequest;
++  bool m_bIsPlaying;
++  int64_t m_playbackStartTime;
++  float m_speed;
++  int m_totalTime;
++  int m_time;
++  std::string m_launchFilename;
++#if defined(TARGET_WINDOWS_DESKTOP)
++  POINT m_ptCursorpos;
++  PROCESS_INFORMATION m_processInfo;
++#endif
++  CGUIDialogOK* m_dialog;
++#if defined(TARGET_WINDOWS_DESKTOP)
++  int m_xPos;
++  int m_yPos;
++#endif
++  std::string m_filename;
++  std::string m_filenameMeta;
++  std::string m_args;
++  bool m_hideconsole;
++  bool m_hidexbmc;
++  bool m_islauncher;
++  bool m_playOneStackItem;
++  WARP_CURSOR m_warpcursor;
++  int m_playCountMinTime;
++  std::vector<std::string> m_filenameReplacers;
++  CFileItem m_file;
++};
+diff -ruN a/xbmc/cores/playercorefactory/PlayerCoreConfig.h b/xbmc/cores/playercorefactory/PlayerCoreConfig.h
+--- a/xbmc/cores/playercorefactory/PlayerCoreConfig.h	2019-08-31 14:05:39.150698302 +0200
++++ b/xbmc/cores/playercorefactory/PlayerCoreConfig.h	2019-11-01 15:25:53.346886975 +0100
+@@ -14,6 +14,7 @@
+ #include "cores/paplayer/PAPlayer.h"
+ #include "cores/RetroPlayer/RetroPlayer.h"
+ #include "cores/ExternalPlayer/ExternalPlayer.h"
++#include "cores/Enigma2Player/Enigma2Player.h"
+ #ifdef HAS_UPNP
+ #include "network/upnp/UPnPPlayer.h"
+ #endif
+@@ -91,6 +92,10 @@
+     {
+       pPlayer = new CExternalPlayer(callback);
+     }
++    else if (m_type.compare("enigma2") == 0)
++    {
++      pPlayer = new CEnigma2Player(callback);
++    }
+ 
+ #if defined(HAS_UPNP)
+     else if (m_type.compare("remote") == 0)
+diff -ruN a/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp b/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp
+--- a/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp	2019-11-01 16:22:48.741154778 +0100
++++ b/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp	2019-11-01 16:24:58.029845348 +0100
+@@ -9,6 +9,7 @@
+ #include "PlayerCoreFactory.h"
+ #include "threads/SingleLock.h"
+ #include "cores/paplayer/PAPlayer.h"
++#include "cores/Enigma2Player/Enigma2Player.h"
+ #include "cores/IPlayerCallback.h"
+ #include "dialogs/GUIDialogContextMenu.h"
+ #include "URL.h"
+@@ -321,6 +322,11 @@
+     VideoPlayer->m_bPlaysVideo = true;
+     m_vecPlayerConfigs.push_back(VideoPlayer);
+ 
++    CPlayerCoreConfig* Enigma2Player = new CPlayerCoreConfig("Enigma2Player", "video", nullptr);
++    VideoPlayer->m_bPlaysAudio = true;
++    VideoPlayer->m_bPlaysVideo = true;
++    m_vecPlayerConfigs.push_back(Enigma2Player);
++
+     CPlayerCoreConfig* paplayer = new CPlayerCoreConfig("PAPlayer", "music", nullptr);
+     paplayer->m_bPlaysAudio = true;
+     m_vecPlayerConfigs.push_back(paplayer);
+@@ -353,6 +359,8 @@
+         internaltype = "music";
+       else if (type == "externalplayer")
+         internaltype = "external";
++      else if (type == "enigma2player")
++        internaltype = "enigma2";
+ 
+       int count = 0;
+       std::string playername = name;

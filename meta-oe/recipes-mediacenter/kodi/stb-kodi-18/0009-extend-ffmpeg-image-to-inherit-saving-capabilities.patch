@@ -1,0 +1,63 @@
+From cd09c86bb690988b37bb2860bba3547701586741 Mon Sep 17 00:00:00 2001
+From: Matthias Treydte <mt@waldheinz.de>
+Date: Tue, 27 Nov 2018 21:27:45 +0100
+Subject: [PATCH 09/12] extend ffmpeg image (to inherit saving capabilities)
+
+---
+ xbmc/guilib/JPEGImage.h      | 9 +++------
+ xbmc/guilib/imagefactory.cpp | 6 ++++--
+ 2 files changed, 7 insertions(+), 8 deletions(-)
+
+diff --git a/xbmc/guilib/JPEGImage.h b/xbmc/guilib/JPEGImage.h
+index 830ac6dcc58..cc6072b052e 100644
+--- a/xbmc/guilib/JPEGImage.h
++++ b/xbmc/guilib/JPEGImage.h
+@@ -5,14 +5,15 @@
+ #include <jpeglib.h>
+ 
+ #include "iimage.h"
++#include "FFmpegImage.h"
+ #include "TextureFormats.h"
+ 
+ #include <iostream>
+ 
+-class JPEGImage : public IImage
++class JPEGImage : public CFFmpegImage
+ {
+ public:
+-  JPEGImage()
++  JPEGImage(std::string const & mime) : CFFmpegImage(mime)
+   {
+       m_allocated = false;
+   }
+@@ -66,10 +67,6 @@ struct jpeg_error_mgr jerr;
+     return true;
+   }
+ 
+-  bool CreateThumbnailFromSurface(unsigned char*, unsigned int, unsigned int,
+-                                    unsigned int, unsigned int, const std::string&,
+-                                    unsigned char*&, unsigned int&) override { return false; }
+-
+   bool Decode(unsigned char * const pixels, unsigned int width, unsigned int height,
+               unsigned int pitch, unsigned int format) override
+   {
+diff --git a/xbmc/guilib/imagefactory.cpp b/xbmc/guilib/imagefactory.cpp
+index 3dd572496a8..460a44ff6bc 100644
+--- a/xbmc/guilib/imagefactory.cpp
++++ b/xbmc/guilib/imagefactory.cpp
+@@ -52,8 +52,10 @@ IImage* ImageFactory::CreateLoaderFromMimeType(const std::string& strMimeType)
+     }
+   }
+ 
+-  if (strMimeType == "image/jpeg") {
+-    return new JPEGImage();
++  //std::cerr << "mime = " << strMimeType << std::endl;
++
++  if (strMimeType == "image/jpeg" || strMimeType == "image/jpg") {
++    return new JPEGImage(strMimeType);
+   } else {
+     return new CFFmpegImage(strMimeType);
+   }
+-- 
+2.17.1
+

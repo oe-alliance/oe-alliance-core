@@ -1,7 +1,8 @@
 SUMMARY = "Kodi Media Center PVR plugins"
 
-KODIADDONPLUGIN = "mythtv"
+PV = "${@bb.utils.contains("MACHINE_FEATURES", "kodi18", "5.10.15+git${SRCPV}", "4.12.17+git${SRCPV}", d)}"
+PKGV = "${@bb.utils.contains("MACHINE_FEATURES", "kodi18", "5.10.15+git${GITPKGV}", "4.12.17+git${SRCPV}", d)}"
 
-SRCREV_pvr${KODIADDONPLUGIN} = "a41fed4cc70cabf1d3b157dca61d7352f2292398"
+KODIADDONPLUGIN = "mythtv"
 
 require kodi-addon-pvr.inc

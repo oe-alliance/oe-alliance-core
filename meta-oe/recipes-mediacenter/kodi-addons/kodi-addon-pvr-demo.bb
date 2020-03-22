@@ -1,7 +1,10 @@
 SUMMARY = "Kodi Media Center PVR plugins"
 
+PV = "${@bb.utils.contains("MACHINE_FEATURES", "kodi18", "3.6.2+git${SRCPV}", "2.4.8+git${SRCPV}", d)}"
+PKGV = "${@bb.utils.contains("MACHINE_FEATURES", "kodi18", "3.6.2+git${GITPKGV}", "2.4.8+git${SRCPV}", d)}"
+
 KODIADDONPLUGIN = "demo"
 
-SRCREV_pvr${KODIADDONPLUGIN} = "07cb80570600e3e9d01af67ca89c871ae81dea3a"
-
 require kodi-addon-pvr.inc
+
+SRC_URI_append = "${@bb.utils.contains("MACHINE_FEATURES", "kodi18", " file://0001-Fix-build-pvr-demo.patch ", "", d)}"

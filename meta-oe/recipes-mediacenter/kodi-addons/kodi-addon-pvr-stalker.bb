@@ -1,7 +1,8 @@
 SUMMARY = "Kodi Media Center PVR plugins"
 
-KODIADDONPLUGIN = "stalker"
+PV = "${@bb.utils.contains("MACHINE_FEATURES", "kodi18", "3.4.10+git${SRCPV}", "2.8.8+git${SRCPV}", d)}"
+PKGV = "${@bb.utils.contains("MACHINE_FEATURES", "kodi18", "3.4.10+git${GITPKGV}", "2.8.8+git${SRCPV}", d)}"
 
-SRCREV_pvr${KODIADDONPLUGIN} = "d01bf4b66d50b9cd8261700ee9f2cc483cfd8faf"
+KODIADDONPLUGIN = "stalker"
 
 require kodi-addon-pvr.inc

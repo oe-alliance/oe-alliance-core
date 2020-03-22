@@ -1,0 +1,26 @@
+diff --git a/src/DvbData.cpp b/src/DvbData.cpp
+--- a/src/DvbData.cpp
++++ b/src/DvbData.cpp
+@@ -2,7 +2,7 @@
+ #include "client.h"
+ #include "LocalizedString.h"
+ 
+-#include "util/XMLUtils.h"
++#include "kodi/util/XMLUtils.h"
+ #include "p8-platform/util/StringUtils.h"
+ 
+ #include <tinyxml.h>
+
+diff --git a/src/Timers.cpp b/src/Timers.cpp
+--- a/src/Timers.cpp
++++ b/src/Timers.cpp
+@@ -7,7 +7,7 @@
+ #include <ctime>
+ 
+ #include "inttypes.h"
+-#include "util/XMLUtils.h"
++#include "kodi/util/XMLUtils.h"
+ #include "p8-platform/util/StringUtils.h"
+ 
+ using namespace dvbviewer;
+

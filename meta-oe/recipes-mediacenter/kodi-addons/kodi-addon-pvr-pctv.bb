@@ -1,7 +1,8 @@
 SUMMARY = "Kodi Media Center PVR plugins"
 
-KODIADDONPLUGIN = "pctv"
+PV = "${@bb.utils.contains("MACHINE_FEATURES", "kodi18", "2.4.6+git${SRCPV}", "1.4.8+git${SRCPV}", d)}"
+PKGV = "${@bb.utils.contains("MACHINE_FEATURES", "kodi18", "2.4.6+git${GITPKGV}", "1.4.8+git${SRCPV}", d)}"
 
-SRCREV_pvr${KODIADDONPLUGIN} = "89438d2972fd9eb7e3290272a07b722fbc73ae42"
+KODIADDONPLUGIN = "pctv"
 
 require kodi-addon-pvr.inc

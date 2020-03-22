@@ -1,0 +1,13 @@
+diff --git a/src/N7Xml.cpp b/src/N7Xml.cpp
+--- a/src/N7Xml.cpp
++++ b/src/N7Xml.cpp
+@@ -4,7 +4,7 @@
+ 
+ #include <p8-platform/util/StringUtils.h>
+ #include "tinyxml.h"
+-#include "util/XMLUtils.h"
++#include "kodi/util/XMLUtils.h"
+ 
+ using namespace ADDON;
+ 
+
