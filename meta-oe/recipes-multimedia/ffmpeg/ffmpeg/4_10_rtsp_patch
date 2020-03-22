@@ -1,0 +1,55 @@
+--- a/libavformat/rtsp.c
++++ b/libavformat/rtsp.c
+@@ -2334,7 +2334,9 @@
+     RTSPStream *rtsp_st;
+     int size, i, err;
+     char *content;
++    const char *p, *sp="", *sources="", *sp2, *sources2;
+     char url[1024];
++    char sources_buf[1024];
+ 
+     if (!ff_network_init())
+         return AVERROR(EIO);
+@@ -2360,6 +2362,16 @@
+     av_freep(&content);
+     if (err) goto fail;
+ 
++    /* Search for sources= tag in original URL for rtp protocol only */
++    if (strncmp(s->url, "rtp://", 6) == 0) {
++        p = strchr(s->url, '?');
++        if (p && av_find_info_tag(sources_buf, sizeof(sources_buf), "sources", p)) {
++            /* av_log(s, AV_LOG_VERBOSE, "sdp_read_header found sources %s\n", sources_buf);  */
++            sp = sources_buf;
++            sources = "&sources=";
++        }
++    }
++
+     /* open each RTP stream */
+     for (i = 0; i < rt->nb_rtsp_streams; i++) {
+         char namebuf[50];
+@@ -2377,12 +2389,22 @@
+                 av_dict_free(&opts);
+                 goto fail;
+             }
++
++            /* Prepare to add sources to the url to be opened.
++               Otherwise the join to the source specific muliticast will be missing */
++            sources2 = sources;
++            sp2 = sp;
++            /* ignore sources from original URL, when sources are already set in rtsp_st */
++            if (rtsp_st->nb_include_source_addrs > 0)
++                sources2 = sp2 = "";
++
+             ff_url_join(url, sizeof(url), "rtp", NULL,
+                         namebuf, rtsp_st->sdp_port,
+-                        "?localport=%d&ttl=%d&connect=%d&write_to_source=%d",
++                        "?localport=%d&ttl=%d&connect=%d&write_to_source=%d%s%s",
+                         rtsp_st->sdp_port, rtsp_st->sdp_ttl,
+                         rt->rtsp_flags & RTSP_FLAG_FILTER_SRC ? 1 : 0,
+-                        rt->rtsp_flags & RTSP_FLAG_RTCP_TO_SOURCE ? 1 : 0);
++                        rt->rtsp_flags & RTSP_FLAG_RTCP_TO_SOURCE ? 1 : 0,
++                        sources2, sp2);
+ 
+             append_source_addrs(url, sizeof(url), "sources",
+                                 rtsp_st->nb_include_source_addrs,
+
