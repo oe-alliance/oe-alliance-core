@@ -22,11 +22,13 @@ RDEPENDS_${PN} += "uclan-opengl-${MACHINE}"
 
 #do_configure_append() {
 #        install -d ${D}${libdir}
+#        install -d ${WORKDIR}/git/xbmc/linux/hisi/
+#        install -d ${WORKDIR}/git/xbmc/cores/hiplayer/
 #        install -m 0755 ${WORKDIR}/hiadp.a      ${WORKDIR}/git/xbmc/linux/hisi/
 #        install -m 0755 ${WORKDIR}/hiplayer.a   ${WORKDIR}/git/xbmc/cores/hiplayer/
 #}
 
-EXTRA_OECONF += " \
-    --with-platform=clap-cortexa15 \
-    --with-ffmpeg=stb \
+EXTRA_OECMAKE += " \
+    -DWITH_PLATFORM=clap-cortexa15 \
+    -DWITH_FFMPEG=stb \
 "
