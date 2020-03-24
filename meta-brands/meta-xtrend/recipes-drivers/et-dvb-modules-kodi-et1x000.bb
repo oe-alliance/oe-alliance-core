@@ -1,0 +1,8 @@
+KV = "4.1.37"
+GCCREV = "6.3.0"
+SRCDATE = "20170918"
+
+require et-dvb-modules-kodi.inc
+
+SRC_URI[md5sum] = "8e817d3bc25088b07180e75d83330091"
+SRC_URI[sha256sum] = "3963d0938541d587fb5eaab9baa68993c30d4ea062151fd4407605027e043d30"
