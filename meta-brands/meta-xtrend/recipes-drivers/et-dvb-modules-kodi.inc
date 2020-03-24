@@ -22,14 +22,20 @@ do_populate_sysroot() {
 do_install() {
     install -d ${D}/lib/modules/${KV}/extra
     install -d ${D}/${sysconfdir}/modules-load.d
-    install -m 0755 ${WORKDIR}/linuxtv.ko ${D}/lib/modules/${KV}/extra/linuxtv-kodi.ko
+    install -m 0755 ${WORKDIR}/tpm.ko ${D}/lib/modules/${KV}/extra/tpm-kodi.ko
+    install -m 0755 ${WORKDIR}/modloader.ko ${D}/lib/modules/${KV}/extra/modloader-kodi.ko
+    install -m 0755 ${WORKDIR}/modloader2.ko ${D}/lib/modules/${KV}/extra/modloader2-kodi.ko
+    install -m 0755 ${WORKDIR}/dvb.ko ${D}/lib/modules/${KV}/extra/dvb-kodi.ko
     touch ${D}/${sysconfdir}/${MACHINE}-kodi
 }
 
 pkg_postinst_${PN}() {
 #!/bin/sh
-if [ -e /lib/modules/${KV}/extra/linuxtv-kodi.ko ]; then
- mv -f /lib/modules/${KV}/extra/linuxtv-kodi.ko /lib/modules/${KV}/extra/linuxtv.ko
+if [ -e /lib/modules/${KV}/extra/tpm-kodi.ko ]; then
+ mv -f /lib/modules/${KV}/extra/tpm-kodi.ko /lib/modules/${KV}/extra/tpm.ko
+ mv -f /lib/modules/${KV}/extra/modloader-kodi.ko /lib/modules/${KV}/extra/modloader.ko
+ mv -f /lib/modules/${KV}/extra/modloader2-kodi.ko /lib/modules/${KV}/extra/modloader2.ko
+ mv -f /lib/modules/${KV}/extra/dvb-kodi.ko /lib/modules/${KV}/extra/dvb.ko
 fi
 exit 0
 }
