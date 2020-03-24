@@ -1,0 +1,8 @@
+SRCDATE = "20170927"
+
+require et-v3ddriver.inc
+
+SRC_URI[md5sum] = "6c48660abb8185a78516d608654465ad"
+SRC_URI[sha256sum] = "ad244bb56fbe55a59501096134ecf42519ac8ce66e4e14ab45b029c3e6a0e32d"
+
+COMPATIBLE_MACHINE = "et1x000"
