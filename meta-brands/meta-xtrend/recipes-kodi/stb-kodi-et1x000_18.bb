@@ -4,7 +4,7 @@ PROVIDES += "virtual/kodi"
 RPROVIDES_${PN} += "virtual/kodi"
 PROVIDES += "kodi"
 RPROVIDES_${PN} += "kodi"
-RDEPENDS_${PN}_append = "nextv-v3ddriver-${MACHINE} platform-util-${MACHINE} et-dvb-modules-kodi-${MACHINE}"
+RDEPENDS_${PN}_append = "et-v3ddriver-${MACHINE} platform-util-${MACHINE} et-dvb-modules-kodi-${MACHINE}"
 
 EXTRA_OECMAKE += " \
     -DWITH_PLATFORM=nextv-cortexa15 \
