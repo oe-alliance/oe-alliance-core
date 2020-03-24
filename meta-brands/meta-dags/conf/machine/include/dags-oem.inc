@@ -59,7 +59,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'lunix34k', 'LUNIX3 4K' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'lunix', 'LUNIX' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'force4', 'FORCE 4' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'lunix4k', 'LUNIX 4K' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'lunixco', 'LUNIX' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'lunixco', 'LUNIX CO' , '', d)}\
 "
 
 MACHINE_BRAND = "\
