@@ -1,0 +1,139 @@
+diff --git a/linux/drivers/media/dvb/dvb-core/dvb_ca_en50221.c b/linux/drivers/media/dvb/dvb-core/dvb_ca_en50221.c
+index 7a8e773..5d81c5d 100644
+--- a/drivers/media/dvb-core/dvb_ca_en50221.c
++++ b/drivers/media/dvb-core/dvb_ca_en50221.c
+@@ -1,6 +1,9 @@
+ /*
+  * dvb_ca.c: generic DVB functions for EN50221 CAM interfaces
+  *
++ *
++ * Copyright (C) 2007 Evgen Bendyak (modification of cam initialization in part of write host buffer size)
++ *
+  * Copyright (C) 2004 Andrew de Quincey
+  *
+  * Parts of this file were based on sources as follows:
+@@ -164,6 +167,7 @@
+ static void dvb_ca_en50221_thread_wakeup(struct dvb_ca_private *ca);
+ static int dvb_ca_en50221_read_data(struct dvb_ca_private *ca, int slot, u8 * ebuf, int ecount);
+ static int dvb_ca_en50221_write_data(struct dvb_ca_private *ca, int slot, u8 * ebuf, int ecount);
++static int dvb_ca_en50221_write_data_with_flag(struct dvb_ca_private *ca, int slot, u8 * ebuf, int ecount,u8 AddFlag);
+ 
+ 
+ /**
+@@ -313,13 +317,13 @@
+ 	ca->slot_info[slot].link_buf_size = 2;
+ 
+ 	/* read the buffer size from the CAM */
+-	if ((ret = ca->pub->write_cam_control(ca->pub, slot, CTRLIF_COMMAND, IRQEN | CMDREG_SR)) != 0)
++	if ((ret = ca->pub->write_cam_control(ca->pub, slot, CTRLIF_COMMAND, CMDREG_SR)) != 0)
+ 		return ret;
+ 	if ((ret = dvb_ca_en50221_wait_if_status(ca, slot, STATUSREG_DA, HZ / 10)) != 0)
+ 		return ret;
+ 	if ((ret = dvb_ca_en50221_read_data(ca, slot, buf, 2)) != 2)
+ 		return -EIO;
+-	if ((ret = ca->pub->write_cam_control(ca->pub, slot, CTRLIF_COMMAND, IRQEN)) != 0)
++	if ((ret = ca->pub->write_cam_control(ca->pub, slot, CTRLIF_COMMAND, 0)) != 0)
+ 		return ret;
+ 
+ 	/* store it, and choose the minimum of our buffer and the CAM's buffer size */
+@@ -332,11 +336,11 @@
+ 	dprintk("Chosen link buffer size of %i\n", buf_size);
+ 
+ 	/* write the buffer size to the CAM */
+-	if ((ret = ca->pub->write_cam_control(ca->pub, slot, CTRLIF_COMMAND, IRQEN | CMDREG_SW)) != 0)
++	if ((ret = ca->pub->write_cam_control(ca->pub, slot, CTRLIF_COMMAND, CMDREG_SW)) != 0)
+ 		return ret;
+ 	if ((ret = dvb_ca_en50221_wait_if_status(ca, slot, STATUSREG_FR, HZ / 10)) != 0)
+ 		return ret;
+-	if ((ret = dvb_ca_en50221_write_data(ca, slot, buf, 2)) != 2)
++	if ((ret = dvb_ca_en50221_write_data_with_flag(ca, slot, buf, 2,CMDREG_SW)) != 2)
+ 		return -EIO;
+ 	if ((ret = ca->pub->write_cam_control(ca->pub, slot, CTRLIF_COMMAND, IRQEN)) != 0)
+ 		return ret;
+@@ -781,6 +785,86 @@
+ exitnowrite:
+ 	return status;
+ }
++/**
++ * This function talks to an EN50221 CAM control interface (but with some additional
++ * bits setuped in CTRLIF_COMMAND register and without IRQEN). Used in setup exchange
++ * buffer size sequence
++ * It writes a buffer of data to a CAM.
++ *
++ * @param ca CA instance.
++ * @param slot Slot to write to.
++ * @param ebuf The data in this buffer is treated as a complete link-level packet to
++ * be written.
++ * @param count Size of ebuf.
++ *
++ * @return Number of bytes written, or < 0 on error.
++ */
++static int dvb_ca_en50221_write_data_with_flag(struct dvb_ca_private *ca, int slot, u8 * buf, int bytes_write,u8 AddFlags)
++{
++       int status;
++       int i;
++
++       dprintk("%s\n", __FUNCTION__);
++
++
++       // sanity check
++       if (bytes_write > ca->slot_info[slot].link_buf_size)
++               return -EINVAL;
++
++       /* check if interface is actually waiting for us to read from it, or if a read is in progress */
++       if ((status = ca->pub->read_cam_control(ca->pub, slot, CTRLIF_STATUS)) < 0)
++               goto exitnowrite;
++       if (status & (STATUSREG_DA | STATUSREG_RE)) {
++               status = -EAGAIN;
++               goto exitnowrite;
++       }
++
++       /* OK, set HC bit */
++       if ((status = ca->pub->write_cam_control(ca->pub, slot, CTRLIF_COMMAND,
++                                                CMDREG_HC | AddFlags)) != 0)
++               goto exit;
++
++       /* check if interface is still free */
++       if ((status = ca->pub->read_cam_control(ca->pub, slot, CTRLIF_STATUS)) <  0)
++               goto exit;
++       if (!(status & STATUSREG_FR)) {
++               /* it wasn't free => try again later */
++               status = -EAGAIN;
++               goto exit;
++       }
++
++       /* send the amount of data */
++       if ((status = ca->pub->write_cam_control(ca->pub, slot, CTRLIF_SIZE_HIGH, bytes_write >> 8)) != 0)
++               goto exit;
++       if ((status = ca->pub->write_cam_control(ca->pub, slot, CTRLIF_SIZE_LOW,
++                                                bytes_write & 0xff)) != 0)
++               goto exit;
++
++       /* send the buffer */
++       for (i = 0; i < bytes_write; i++) {
++               if ((status = ca->pub->write_cam_control(ca->pub, slot, CTRLIF_DATA, buf[i])) != 0)
++                       goto exit;
++       }
++
++       /* check for write error (WE should now be 0) */
++       if ((status = ca->pub->read_cam_control(ca->pub, slot, CTRLIF_STATUS)) < 0)
++               goto exit;
++       if (status & STATUSREG_WE) {
++               ca->slot_info[slot].slot_state = DVB_CA_SLOTSTATE_LINKINIT;
++               status = -EIO;
++               goto exit;
++       }
++       status = bytes_write;
++
++       dprintk("Wrote CA packet for slot %i, connection id 0x%x last_frag:%i size:0x%x\n", slot,
++               buf[0], (buf[1] & 0x80) == 0, bytes_write);
++
++exit:
++       ca->pub->write_cam_control(ca->pub, slot, CTRLIF_COMMAND, AddFlags);
++
++exitnowrite:
++       return status;
++}
+ EXPORT_SYMBOL(dvb_ca_en50221_camchange_irq);
+ 
+ 
