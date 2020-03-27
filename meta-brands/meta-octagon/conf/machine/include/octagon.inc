@@ -21,7 +21,7 @@ MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS += "\
     kernel-module-cdfs \
 	${@bb.utils.contains('MACHINE_FEATURES', 'v3d', 'nextv-v3ddriver-${MACHINE}', '',d)} \
 	${@bb.utils.contains('MACHINE_FEATURES', 'v3d', 'platform-util-${MACHINE}', '',d)} \
-	${@bb.utils.contains('MACHINE_FEATURES', 'kodi', 'mkswapdev-${MACHINE}', '',d)} \
+	${@bb.utils.contains('MACHINE_FEATURES', 'kodi18', 'mkswapdev-${MACHINE}', '',d)} \
     "
 
 MACHINE_EXTRA_RRECOMMENDS += " \
