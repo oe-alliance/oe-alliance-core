@@ -1,4 +1,3 @@
 include python-package-split.inc
+RDEPENDS_${PN}_remove = "dinobot-libs-${MACHINE}"
 
-# Disable anything auto depending
-EXCLUDE_FROM_SHLIBS = "1"
