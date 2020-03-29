@@ -19,6 +19,11 @@ S = "${WORKDIR}/hilib"
 SOLIBS = ".so"
 FILES_SOLIBSDEV = ""
 
+PRIVATE_LIBS_${PN} = "\
+libpng1.6.26.so \
+libjpeg9b.so \
+"
+
 do_configure() {
 }
 
