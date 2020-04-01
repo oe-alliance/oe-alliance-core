@@ -6,10 +6,11 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe"
 inherit gitpkgv
 
 SRCREV = "${AUTOREV}"
-PV = "0.0.6+git${SRCPV}"
-PKGV = "0.0.6+git${GITPKGV}"
+PV = "0.0.7+git${SRCPV}"
+PKGV = "0.0.7+git${GITPKGV}"
 
-SRC_URI = "git://code.videolan.org/videolan/libdca;protocol=https"
+SRC_URI = "git://code.videolan.org/videolan/libdca;protocol=https \
+        file://fix-libdts-link-path.patch"
 
 S = "${WORKDIR}/git"
 
