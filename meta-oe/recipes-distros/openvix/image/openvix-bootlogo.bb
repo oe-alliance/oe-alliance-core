@@ -9,7 +9,7 @@ require conf/license/license-gplv2.inc
 RDEPENDS_${PN} += "showiframe"
 
 PV = "${IMAGE_VERSION}"
-PR = "r20"
+PR = "r21"
 
 S = "${WORKDIR}"
 
@@ -37,6 +37,21 @@ SRC_URI_append_dags7356 = "file://tm-splash.bmp file://iqon-splash.bmp file://sp
 SRC_URI_append_dags7362 = "file://tm-splash.bmp file://iqon-splash.bmp file://splash1_power.bmp file://splash2.bmp file://splash3.bmp"
 SRC_URI_append_dags7252 = "file://tm-splash.bmp file://splash1.bmp file://splash2.bmp file://splash3.bmp"
 SRC_URI_append_7210s = "file://lcdsplash220.bin file://lcdwaitkey220.bin file://lcdwarning220.bin file://lcdcomplete220.bin"
+SRC_URI_append_h9 = "file://logo.img"
+SRC_URI_append_h9combo = "file://logo.img"
+SRC_URI_append_i55plus = "file://logo.img"
+SRC_URI_append_hd60 = "file://logo.img"
+SRC_URI_append_hd61 = "file://logo.img"
+SRC_URI_append_cc1 = "file://logo.img"
+SRC_URI_append_sf8008 = "file://logo.img"
+SRC_URI_append_sf8008m = "file://logo.img"
+SRC_URI_append_ustym4kpro = "file://logo.img"
+SRC_URI_append_v8plus = "file://logo.img"
+SRC_URI_append_multibox = "file://logo.img"
+SRC_URI_append_gbmv200 = "file://logo.img"
+SRC_URI_append_beyonwizv2 = "file://logo.img"
+SRC_URI_append_viper4k = "file://logo.img"
+
 
 FILES_${PN} = "/usr/share /usr/share/enigma2 /etc/init.d"
 
@@ -87,6 +102,9 @@ do_deploy() {
     fi
     if [ -e splash3.bmp ]; then
         install -m 0644 splash3.bmp ${DEPLOYDIR}/splash3.bmp
+    fi
+    if [ -e logo.img ]; then
+        install -m 0644 logo.img ${DEPLOYDIR}/logo-${DISTRO_NAME}.img
     fi
 }
 
