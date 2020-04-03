@@ -5,14 +5,15 @@ inherit gitpkgv meson gettext
 PV = "${GST_VERSION_FULL}+git${SRCPV}"
 PKGV = "${GST_VERSION_FULL}+git${GITPKGV}"
 
-SRCREV_gst = "99901ffab4dbb96f6994c9927b6c0f63df373812"
-SRCREV_gst_libav = "c8b88847919c9cb26205d91111fa11d4d4f44883"
+SRCREV_gst = "606a9acd74f91160a4668e70ebe6acdcfb7128ab"
+SRCREV_gst_libav = "39e6f846e0e867185437925bf766a6ba10e6404f"
 
-SRCREV_gst_plugins_bad = "2e5fee17a3567cc5841b02fe3d8d92334ac97099"
-SRCREV_gst_plugins_base = "82113702813d551b000d6ba4527e7e115af88c1e"
-SRCREV_gst_plugins_good = "818dde2e025dd21cb5152f4e0756ff577ee49a92"
-SRCREV_gst_plugins_ugly = "9b1e183256ec17d641a22d9308bf91cb24199914"
+SRCREV_gst_plugins_bad = "387b6df948a566ca8d6318b58029f66499ffb1c2"
+SRCREV_gst_plugins_base = "fef4717770f4f829ef8d23ffd0f4797f7522eb37"
+SRCREV_gst_plugins_good = "5817c659e67c98f1d32db9d630ea1103ddd2b261"
+SRCREV_gst_plugins_ugly = "15440f2ddc76faf61a7cdbc72e7b34f69b497415"
 
+# ffmpeg versions < 4.2.2
 SRCREV_gst_ffmpeg = "bd71f039a349b4a448ae7f0eddb65fd8f923345b"
 
 S = "${WORKDIR}/git"
