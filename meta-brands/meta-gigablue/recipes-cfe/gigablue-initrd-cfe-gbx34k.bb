@@ -1,6 +1,6 @@
-SRCDATE = "20191015r2"
+SRCDATE = "20200401r0"
 
 require gigablue-initrd-cfe.inc
 
-SRC_URI[md5sum] = "368fa51a49cb07257732abd355c5ad2a"
-SRC_URI[sha256sum] = "6f8bef1c72f699c91719462a7f938cbe45cad6f5b36e137cdccc2f3646ccfd43"
+SRC_URI[md5sum] = "88d24e783945e2226a841de2c9082444"
+SRC_URI[sha256sum] = "c412897170b73d2f80bb96b006c0544713cca39ce6ee9e62460cd29f7275b22d"
