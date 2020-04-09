@@ -12,7 +12,7 @@ PV = "7.x+git${SRCPV}"
 PKGV = "7.x+git${GITPKGV}"
 VER="7.x"
 
-SRC_URI="git://github.com/KravenHD/KravenFHD.git;protocol=git"
+SRC_URI="git://github.com/atvcaptain/KravenFHD.git;protocol=git"
 
 FILES_${PN} = "/usr/*"
 FILES_${PN}-src = "\
