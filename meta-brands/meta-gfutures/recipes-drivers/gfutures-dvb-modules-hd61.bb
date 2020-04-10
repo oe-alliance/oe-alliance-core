@@ -1,5 +1,5 @@
 KV = "4.4.35"
-SRCDATE = "20200406"
+SRCDATE = "20200410"
 
 RDEPENDS_${PN} = "libjpeg-turbo pulseaudio-lib-rtp"
 PROVIDES = "virtual/blindscan-dvbs"
@@ -8,8 +8,8 @@ require gfutures-dvb-modules.inc
 
 SRC_URI_append = " file://suspend.sh"
 
-SRC_URI[md5sum] = "ca5e7fcc8657af0c7c10657209ea2e75"
-SRC_URI[sha256sum] = "2c49e99c639619ff9c2ccc8cfb93fbf3f234aaded09edef65b558b8bbc4c4b1e"
+SRC_URI[md5sum] = "06b77d2ef741eccb1ddaf720449fe677"
+SRC_URI[sha256sum] = "de7a70850efea19d42458e8759cbd04a7476c44ebde602bca269a83d44fafd12"
 
 INITSCRIPT_NAME = "suspend"
 INITSCRIPT_PARAMS = "start 89 0 ."
