@@ -2,7 +2,7 @@
 PACKAGECONFIG_GL_pn-qtbase = "gles2 eglfs linuxfb"
 PACKAGECONFIG_FB_pn-qtbase = " "
 
-PREFERRED_VERSION_linux-edision = "5.5.9"
+PREFERRED_VERSION_linux-edision = "5.5.16"
 
 # eMMC has 8 GB in total, but one image gets only 2 GB of that (Partitioned eMMC)
 FLASHSIZE = "2048"
@@ -46,17 +46,31 @@ IMAGE_CLASSES += "osmio4k-emmcimg"
 IMAGE_FSTYPES ?= "emmcimg"
 IMAGE_OVERHEAD_FACTOR = "1.0"
 
+IMAGEDIRRECOVERY ?= "${MACHINE}-recovery"
+
 IMAGE_CMD_emmcimg_append = "\
+    mkdir -p ${DEPLOY_DIR_IMAGE}/${IMAGEDIRRECOVERY}/${IMAGEDIR}; \
+    cp ${DEPLOY_DIR_IMAGE}/splash.bin ${DEPLOY_DIR_IMAGE}/${IMAGEDIRRECOVERY}/${IMAGEDIR}/splash.bin; \
+    mv ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.emmc ${DEPLOY_DIR_IMAGE}/${IMAGEDIRRECOVERY}/${IMAGEDIR}/emmc.img; \
+    echo "***** ACHTUNG *****" >${DEPLOY_DIR_IMAGE}/${IMAGEDIRRECOVERY}/${IMAGEDIR}/recovery_${MACHINEBUILD}_lies.mich; \
+    echo "Das RECOVERY wird nur benötigt für Neuinstallation der ${MACHINE}" >>${DEPLOY_DIR_IMAGE}/${IMAGEDIRRECOVERY}/${IMAGEDIR}/recovery_${MACHINEBUILD}_lies.mich; \
+    echo "Das ${IMAGE_NAME}_recovery_usb.zip löscht alle Images auch die Multiboot Images" >>${DEPLOY_DIR_IMAGE}/${IMAGEDIRRECOVERY}/${IMAGEDIR}/recovery_${MACHINEBUILD}_lies.mich; \
+    echo "***** ATTENTION *****" >${DEPLOY_DIR_IMAGE}/${IMAGEDIRRECOVERY}/${IMAGEDIR}/recovery_${MACHINEBUILD}_READ.ME; \
+    echo "The RECOVERY is only required for new installation of the ${MACHINE}" >>${DEPLOY_DIR_IMAGE}/${IMAGEDIRRECOVERY}/${IMAGEDIR}/recovery_${MACHINEBUILD}_READ.ME; \
+    echo "The ${IMAGE_NAME}_recovery_usb.zip deletes all images including the multiboot images" >>${DEPLOY_DIR_IMAGE}/${IMAGEDIRRECOVERY}/${IMAGEDIR}/recovery_${MACHINEBUILD}_READ.ME; \
+    echo ${IMAGE_VER_STRING} > ${DEPLOY_DIR_IMAGE}/${IMAGEDIRRECOVERY}/${IMAGEDIR}/imageversion; \
+    echo "rename this file to 'force' to force an update without confirmation" > ${DEPLOY_DIR_IMAGE}/${IMAGEDIRRECOVERY}/${IMAGEDIR}/noforce; \
+    cd ${DEPLOY_DIR_IMAGE}/${IMAGEDIRRECOVERY} ; \
+    zip -r ../${IMAGE_NAME}_recovery_emmc.zip *; \
+    rm -Rf ${DEPLOY_DIR_IMAGE}/${IMAGEDIRRECOVERY}; \
     mkdir -p ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}; \
-    cp ${DEPLOY_DIR_IMAGE}/splash.bin ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/splash.bin; \
-    mv ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.emmc ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/emmc.img; \
     cd ${IMAGE_ROOTFS}; \
     tar -cvf ${DEPLOY_DIR_IMAGE}/rootfs.tar -C ${IMAGE_ROOTFS} .; \
     mv ${DEPLOY_DIR_IMAGE}/rootfs.tar ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/rootfs.tar; \
     bzip2 ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/rootfs.tar; \
     cp ${DEPLOY_DIR_IMAGE}/zImage ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${KERNEL_FILE}; \
     echo ${IMAGE_VER_STRING} > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/imageversion; \
-    echo "rename this file to 'force' to force an update without confirmation" > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/noforce; \
+    echo "FlashOnline Image flash from E2" >> ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/imageversion; \
     cd ${DEPLOY_DIR_IMAGE}; \
     zip ${IMAGE_NAME}_usb.zip ${IMAGEDIR}/*; \
     rm -f ${DEPLOY_DIR_IMAGE}/*.ext4; \
