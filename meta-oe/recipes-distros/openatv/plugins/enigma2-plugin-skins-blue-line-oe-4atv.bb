@@ -6,9 +6,9 @@ require conf/license/license-gplv2.inc
 inherit gitpkgv 
 
 SRCREV = "${AUTOREV}"
-PV = "1.5+git${SRCPV}"
-PKGV = "1.5+git${GITPKGV}"
-VER="1.5"
+PV = "1.8+git${SRCPV}"
+PKGV = "1.8+git${GITPKGV}"
+VER="1.8"
 
 RDEPENDS_${PN} = "enigma2-plugin-systemplugins-weathercomponenthandler, enigma2-plugin-skincomponents-weathercomponent"
 
@@ -35,38 +35,39 @@ do_install() {
 
 pkg_postinst_${PN} () {
 #!/bin/sh
-if grep -qs 'getMachineBrand=Octagon' cat /tmp/boxbranding.cfg  ; then
-	echo "                                 "
-	echo "*********************************"
-	echo "Octagon Box found!"
-	echo "*********************************"
-	echo "                                 "
-	cp /tmp/octagon/*.png /usr/share/enigma2/Blue-Line-OE-4ATV/menu	
-else
-	echo "                                 "
-	echo "*********************************"
-	echo "No Octagon Box found!"
-	echo "*********************************"
-	echo "                                 "
-	cp /tmp/atv/*.png /usr/share/enigma2/Blue-Line-OE-4ATV/menu
-fi
-
-echo " Skin Blue-Line-OE-4ATV installed "
+echo "                                                          "
+echo " ...Blue-Line-OE-4ATV by stein17 successful installed.  "
+echo "                                                          "
 exit 0
 }
 
 pkg_postrm_${PN} () {
 #!/bin/sh
 rm -rf /usr/share/enigma2/Blue-Line-OE-4ATV
-echo "                                                           "
-echo "               ...Skin successful removed.                 "
-exit 0
+rm -rf /usr/lib/enigma2/python/Components/Converter/BL*
+rm -rf /usr/lib/enigma2/python/Components/Renderer/BL*
+echo "                                                          "
+echo " ....Skin removed! You should restart GUI now!                 "
+echo "
 }
 
 pkg_preinst_${PN} () {
-#!/bin/sh
-python ${libdir}/enigma2/python/BoxBrandingTest.pyo | sed 's/<$//' | sed 's/ /_/g' > /tmp/boxbranding.cfg
-echo "        Skin Blue-Line-OE-4ATV will be now installed...            "
+#!/bin/sh                                                       
+rm -rf /usr/share/enigma2/Blue-Line-OE-4ATV
+rm -rf /usr/lib/enigma2/python/Components/Converter/BL
+rm -rf /usr/lib/enigma2/python/Components/Renderer/BL
+echo "aktualisiere Updatequellen... "opkg update 
+echo "                                                                           "
+echo "                                                                           "
+echo "                                                                           "
+echo "                                                                           "
+echo "                                                                           "
+echo "                                                                           "
+echo "                                                                           "
+echo "  Blue-Line-OE-4ATV by stein17 is now being installed...                 "
+echo "                                                                           " 
+echo "                                                                           "
+echo "                                                                           "
 exit 0
 }
 
