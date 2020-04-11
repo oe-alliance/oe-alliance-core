@@ -30,7 +30,6 @@ do_install() {
     cp -rp ${S}/usr/lib/* ${D}${libdir}/
     cp -rp ${S}/usr/share/* ${D}/usr/share/
     chmod -R a+rX ${D}/usr/share/enigma2/
-    cp -rp ${S}/tmp ${D}/
 }
 
 pkg_postinst_${PN} () {
