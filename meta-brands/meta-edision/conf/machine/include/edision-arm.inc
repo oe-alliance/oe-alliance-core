@@ -54,10 +54,10 @@ IMAGE_CMD_emmcimg_append = "\
     mv ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.emmc ${DEPLOY_DIR_IMAGE}/${IMAGEDIRRECOVERY}/${IMAGEDIR}/emmc.img; \
     echo "***** ACHTUNG *****" >${DEPLOY_DIR_IMAGE}/${IMAGEDIRRECOVERY}/${IMAGEDIR}/recovery_${MACHINEBUILD}_lies.mich; \
     echo "Das RECOVERY wird nur benötigt für Neuinstallation der ${MACHINE}" >>${DEPLOY_DIR_IMAGE}/${IMAGEDIRRECOVERY}/${IMAGEDIR}/recovery_${MACHINEBUILD}_lies.mich; \
-    echo "Das ${IMAGE_NAME}_recovery_usb.zip löscht alle Images auch die Multiboot Images" >>${DEPLOY_DIR_IMAGE}/${IMAGEDIRRECOVERY}/${IMAGEDIR}/recovery_${MACHINEBUILD}_lies.mich; \
+    echo "Das ${IMAGE_NAME}_recovery_emmc.zip löscht alle Images auch die Multiboot Images" >>${DEPLOY_DIR_IMAGE}/${IMAGEDIRRECOVERY}/${IMAGEDIR}/recovery_${MACHINEBUILD}_lies.mich; \
     echo "***** ATTENTION *****" >${DEPLOY_DIR_IMAGE}/${IMAGEDIRRECOVERY}/${IMAGEDIR}/recovery_${MACHINEBUILD}_READ.ME; \
     echo "The RECOVERY is only required for new installation of the ${MACHINE}" >>${DEPLOY_DIR_IMAGE}/${IMAGEDIRRECOVERY}/${IMAGEDIR}/recovery_${MACHINEBUILD}_READ.ME; \
-    echo "The ${IMAGE_NAME}_recovery_usb.zip deletes all images including the multiboot images" >>${DEPLOY_DIR_IMAGE}/${IMAGEDIRRECOVERY}/${IMAGEDIR}/recovery_${MACHINEBUILD}_READ.ME; \
+    echo "The ${IMAGE_NAME}_recovery_emmc.zip deletes all images including the multiboot images" >>${DEPLOY_DIR_IMAGE}/${IMAGEDIRRECOVERY}/${IMAGEDIR}/recovery_${MACHINEBUILD}_READ.ME; \
     echo ${IMAGE_VER_STRING} > ${DEPLOY_DIR_IMAGE}/${IMAGEDIRRECOVERY}/${IMAGEDIR}/imageversion; \
     echo "rename this file to 'force' to force an update without confirmation" > ${DEPLOY_DIR_IMAGE}/${IMAGEDIRRECOVERY}/${IMAGEDIR}/noforce; \
     cd ${DEPLOY_DIR_IMAGE}/${IMAGEDIRRECOVERY} ; \
