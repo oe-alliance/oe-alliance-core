@@ -13,7 +13,7 @@ VER="7.x"
 DEPENDS_${PN} += "gettext-native"
 RDEPENDS_${PN} += "python-imaging python-subprocess python-requests python-lxml enigma2-plugin-systemplugins-mphelp"
 
-SRC_URI="git://github.com/KravenHD/KravenVB.git;protocol=git"
+SRC_URI="git://github.com/atvcaptain/KravenVB.git;protocol=git"
 
 PACKAGES =+ " ${PN}-src"
 
