@@ -1,7 +1,7 @@
 KV = "4.4.35"
-SRCDATE = "20190808"
+SRCDATE = "20200415"
 
 require uclan-dvb-modules-hisi.inc
 
-SRC_URI[md5sum] = "1042778c90b7cfb7e5b23b7b71887395"
-SRC_URI[sha256sum] = "502feee99582bb6fae3997515d5caa67129090a0244cc89abb42be298fe269bc"
+SRC_URI[md5sum] = "fc94c4b2a07e9658f0db8f6d210d3215"
+SRC_URI[sha256sum] = "7ae9e270b82daad75a2c4c9d20c2066c30eb33136a84a3293a70ba5f38bd17c1"
