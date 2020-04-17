@@ -116,8 +116,8 @@ ${@bb.utils.contains('MACHINEBUILD', 'gbultraueh', 'mtd0' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbx3h', 'mtd0' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbquad4k', 'mmcblk0p5' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbue4k', 'mmcblk0p5' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'gbtrio4k', 'mmcblk0p13' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'gbip4k', 'mmcblk0p13' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbtrio4k', 'mmcblk0p16' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbip4k', 'mmcblk0p16' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbx34k', 'mmcblk0p5' , '', d)}\
 "
 
