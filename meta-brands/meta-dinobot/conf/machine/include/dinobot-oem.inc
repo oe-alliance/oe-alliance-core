@@ -125,14 +125,14 @@ ${@bb.utils.contains('MACHINEBUILD', 'iziboxx3', 'mtd11' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axashistwin', 'mtd9' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axashisc4k', 'mmcblk0p10' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'protek4kx1', 'mmcblk0p10' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'anadolprohd5', 'mtd11' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'spycatminiv2', 'mtd11' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'iziboxecohd', 'mtd11' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'jdhdduo', 'mtd11' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'turing', 'mtd11' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'anadolprohd5', 'mtd9' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'spycatminiv2', 'mtd9' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'iziboxecohd', 'mtd9' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'jdhdduo', 'mtd9' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'turing', 'mtd9' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'arivatwin', 'mmcblk0p13' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'arivacombo', 'mmcblk0p13' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'vipertwin', 'mtd11' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'vipertwin', 'mtd9' , '', d)}\
 "
 
 SDCARDIMG = "\

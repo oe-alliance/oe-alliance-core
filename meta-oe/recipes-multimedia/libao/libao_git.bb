@@ -14,7 +14,7 @@ PV = "1.2.2+git${SRCPV}"
 PKGV = "1.2.2+git${GITPKGV}"
 PR = "r0"
 
-SRC_URI = "git://git.xiph.org/libao.git;protocol=https"
+SRC_URI = "git://gitlab.xiph.org/xiph/libao.git;protocol=https"
 
 S = "${WORKDIR}/git"
 
