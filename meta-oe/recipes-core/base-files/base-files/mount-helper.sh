@@ -5,7 +5,7 @@
 # (e)udev compatibility
 [[ -z $MDEV ]] && MDEV=$(basename $DEVNAME)
 
-BLACKLISTED="@BLACKLISTED@"cat
+BLACKLISTED="@BLACKLISTED@"
 FIRST_MEDIA="hdd"
 
 ## device information log
@@ -50,7 +50,7 @@ case $ACTION in
 		if [ -e /proc/stb/info/boxtype ]; then
 			stbcheck=`cat /proc/stb/info/boxtype`
 			# detected multiboot sdcard
-			if [ $stbcheck == "viper4k" ] || [ $stbcheck == "sf8008" ] || [ $stbcheck == "sf8008" ] || [ $stbcheck == "ustym4kpro" ] || [ $stbcheck == "beyonwizv2" ] || [ $stbcheck == "gbmv200" ]; then
+			if [ $stbcheck == "viper4k" ] || [ $stbcheck == "sf8008" ] || [ $stbcheck == "sf8008m" ] || [ $stbcheck == "ustym4kpro" ] || [ $stbcheck == "beyonwizv2" ] || [ $stbcheck == "gbmv200" ]; then
 				DEVCHECK=`expr substr $MDEV 1 3`
 				if [ "${DEVCHECK}" == "sda" ] ; then
 					DEVSIZE=`cat /sys/block/sda/sda1/size`
