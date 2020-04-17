@@ -30,6 +30,7 @@ RRECOMMENDS_${PN} = " \
     enigma2-plugin-extensions-epgsearch \
     enigma2-plugin-extensions-imdb \
     enigma2-plugin-extensions-mediaplayer \
+    enigma2-plugin-extensions-socketmmi \
     enigma2-plugin-systemplugins-crossepg \
     enigma2-plugin-systemplugins-hotplug \
     ${@bb.utils.contains("MACHINE_FEATURES", "videoenhancement", "", "enigma2-plugin-systemplugins-videoenhancement", d)} \
