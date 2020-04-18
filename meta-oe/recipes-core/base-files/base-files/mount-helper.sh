@@ -50,17 +50,11 @@ case $ACTION in
 		if [ -e /proc/stb/info/boxtype ]; then
 			stbcheck=`cat /proc/stb/info/boxtype`
 			# detected multiboot sdcard
-			if [ $stbcheck == "viper4k" ] || [ $stbcheck == "sf8008" ] || [ $stbcheck == "cc1" ] || [ $stbcheck == "ustym4kpro" ] || [ $stbcheck == "beyonwizv2" ] || [ $stbcheck == "gbmv200" ]; then
-
-				if [ ${MDEV} == "sda5" ] ; then
-					# mount micro SD userspace as hdd to avoid drama with epg/backup/etc 
-					mkdir -p /media/hdd
-					mount -t ext4 /dev/sda5  /media/hdd
-				fi
+			if [ $stbcheck == "viper4k" ] || [ $stbcheck == "sf8008" ] || [ $stbcheck == "sf8008m" ] || [ $stbcheck == "ustym4kpro" ] || [ $stbcheck == "beyonwizv2" ] || [ $stbcheck == "gbmv200" ]; then
 				DEVCHECK=`expr substr $MDEV 1 3`
 				if [ "${DEVCHECK}" == "sda" ] ; then
 					DEVSIZE=`cat /sys/block/sda/sda1/size`
-					if [ $DEVSIZE == "65536" ]  || [ $DEVSIZE == "16384" ]; then
+					if [ $DEVSIZE -lt "32769" ]; then
 						BLACKLISTED=`echo ${BLACKLISTED} sda`
 					fi
 				fi

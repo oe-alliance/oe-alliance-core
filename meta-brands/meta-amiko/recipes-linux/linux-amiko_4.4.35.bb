@@ -7,7 +7,7 @@ SRCDATE = "20181224"
 
 inherit kernel machine_kernel_pr
 
-MACHINE_KERNEL_PR_append = "27"
+MACHINE_KERNEL_PR_append = "28"
 
 SRC_URI[md5sum] = "ad7eab17a5071a0d5f9ff44eb44e027d"
 SRC_URI[sha256sum] = "0654d5aa21c51eaea46f7203014afe60052ec0990a92b9e289e1ca8a2793907c"
@@ -28,6 +28,7 @@ SRC_URI += "http://source.mynonpublic.com/amiko/amiko-linux-${PV}-${SRCDATE}.tar
     file://HauppaugeWinTV-dualHD.patch \
     file://dib7000-linux_4.4.179.patch \
     file://dvb-usb-linux_4.4.179.patch \
+    file://initramfs-subdirboot.cpio.gz;unpack=0 \
     file://findkerneldevice.py \
     file://0002-log2-give-up-on-gcc-constant-optimizations.patch \
     file://0003-dont-mark-register-as-const.patch \
@@ -49,6 +50,10 @@ FILES_${KERNEL_PACKAGE_NAME}-image = "${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE} /$
 KERNEL_IMAGETYPE = "uImage"
 KERNEL_OUTPUT = "arch/${ARCH}/boot/${KERNEL_IMAGETYPE}"
 
+kernel_do_configure_prepend() {
+	install -d ${B}/usr
+	install -m 0644 ${WORKDIR}/initramfs-subdirboot.cpio.gz ${B}/
+}
 kernel_do_install_append() {
 	install -d ${D}/${KERNEL_IMAGEDEST}
 	install -m 0755 ${KERNEL_OUTPUT} ${D}/${KERNEL_IMAGEDEST}
