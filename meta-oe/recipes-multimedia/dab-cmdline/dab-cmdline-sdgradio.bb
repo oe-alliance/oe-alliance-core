@@ -10,8 +10,8 @@ RDEPENDS_${PN} = "rtl-sdr"
 
 inherit gitpkgv
 
-PV = "1.2+git${SRCPV}"
-PKGV = "1.2+git${GITPKGV}"
+PV = "1.3+git${SRCPV}"
+PKGV = "1.3+git${GITPKGV}"
 PR = "r0"
 
 SRC_URI = "git://github.com/satdreamgr/dab-cmdline.git;branch=sdgradio"
