@@ -6,7 +6,11 @@ do
     partname=`cat /$i/uevent | grep PARTNAME | cut -d '=' -f 2`
     devname=`cat /$i/uevent | grep DEVNAME | cut -d '=' -f 2`
     mkdir -p /dev/block/by-name/
-    ln -sf /dev/$devname /dev/block/by-name/$partname
+    if [ ! -e /dev/block/by-name/$partname ]; then
+      ln -sf /dev/$devname /dev/block/by-name/$partname
+    else
+      ln -sf /dev/$devname /dev/block/by-name/$partname-$devname
+    fi
   fi
 done
 }
