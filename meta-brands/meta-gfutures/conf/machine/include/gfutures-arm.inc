@@ -31,7 +31,8 @@ IMAGE_CMD_hdemmc_append = "\
     cp ${DEPLOY_DIR_IMAGE}/zImage ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${KERNEL_FILE}; \
     echo ${IMAGE_VER_STRING} > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/imageversion; \
     cd ${DEPLOY_DIR_IMAGE}; \
-    zip ${IMAGE_NAME}_usb.zip ${IMAGEDIR}/*; \
+    zip -j ${IMAGE_NAME}_recovery_emmc.zip ${IMAGEDIR}/disk.img ${IMAGEDIR}/imageversion; \
+    zip -j ${IMAGE_NAME}_usb.zip ${IMAGEDIR}/imageversion ${IMAGEDIR}/kernel.bin ${IMAGEDIR}/rootfs.tar.bz2; \
     rm -f ${DEPLOY_DIR_IMAGE}/*.ext4; \
     rm -f ${DEPLOY_DIR_IMAGE}/*.manifest; \
     rm -f ${DEPLOY_DIR_IMAGE}/.ext4; \
