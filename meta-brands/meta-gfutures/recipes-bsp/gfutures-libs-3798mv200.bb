@@ -1,8 +1,8 @@
-SRCDATE = "20190120"
+SRCDATE = "20200422"
 
 require gfutures-libs.inc
 
-SRC_URI[md5sum] = "bc927fbcdb3ac1387c8684cc75cef5d4"
-SRC_URI[sha256sum] = "f21ea8eae58e7d4e3ceb55454bf8128221b08d72fc379b4ca0cf96b42eebcf6d"
+SRC_URI[md5sum] = "926dfdc66c3187327be4754d9837b53a"
+SRC_URI[sha256sum] = "63f9f16a4d96f0014bdc346394d0e575d5d4c0a1658fae79c039f25a9fd93457"
 
 COMPATIBLE_MACHINE = "(hd60|hd61)"
