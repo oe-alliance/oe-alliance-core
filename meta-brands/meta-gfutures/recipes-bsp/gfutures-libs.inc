@@ -3,7 +3,7 @@ SECTION = "base"
 PRIORITY = "required"
 LICENSE = "CLOSED"
 DEPENDS = "zlib libpng freetype curl libxml2 libjpeg-turbo harfbuzz"
-RDEPENDS_${PN} = "libbluray"
+RDEPENDS_${PN} = "libbluray libcrypto-compat"
 PR = "${SRCDATE}"
 LIBSVER ?= "${@bb.utils.contains('TARGET_ARCH', 'aarch64', '64' , '', d)}"
 
