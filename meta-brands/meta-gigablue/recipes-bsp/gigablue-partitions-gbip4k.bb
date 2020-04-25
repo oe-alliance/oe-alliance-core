@@ -7,12 +7,19 @@ PACKAGE_ARCH = "${MACHINEBUILD}"
 
 inherit deploy
 
-SRCDATE = "20200417"
+SRCDATE = "20200423"
 PR = "${SRCDATE}"
 
 S = "${WORKDIR}/patitions"
 
-SRC_URI = "http://source.mynonpublic.com/gigablue/mv200/${MACHINEBUILD}-partitions-${SRCDATE}.zip"
+SRC_URI = "http://source.mynonpublic.com/gigablue/mv200/${MACHINEBUILD}-partitions-${SRCDATE}.zip \
+  file://flash-apploader \
+"
+
+inherit update-rc.d
+
+INITSCRIPT_NAME = "flash-apploader"
+INITSCRIPT_PARAMS = "start 90 S ."
 
 ALLOW_EMPTY_${PN} = "1"
 do_configure[nostamp] = "1"
@@ -22,9 +29,11 @@ do_install() {
     install -m 0644 ${S}/bootargs.bin ${D}/usr/share/bootargs.bin
     install -m 0644 ${S}/fastboot.bin ${D}/usr/share/fastboot.bin
     install -m 0644 ${S}/apploader.bin ${D}/usr/share/apploader.bin
+    install -m 0755 -d ${D}${sysconfdir}/init.d
+    install -m 0755 ${WORKDIR}/flash-apploader ${D}${sysconfdir}/init.d/flash-apploader
 }
 
-FILES_${PN} = "/usr/share"
+FILES_${PN} = "/usr/share ${sysconfdir}"
 
 do_deploy() {
     install -d ${DEPLOY_DIR_IMAGE}/${MACHINEBUILD}-partitions
@@ -41,7 +50,7 @@ do_deploy() {
 
 addtask deploy before do_build after do_install
 
-SRC_URI[md5sum] = "9487fe59c664afdfa0ee954731178f32"
-SRC_URI[sha256sum] = "659bea15f1f61c8987481e3889e11f96f70bebf417f84bc31ab8970830858b5f"
+SRC_URI[md5sum] = "ce5f86de7b575cb143b4470bff05bcc2"
+SRC_URI[sha256sum] = "f588756d0e7f3673a28d6976ec172f5aaa63d78d655b10f9836a755418abf07d"
 
 INSANE_SKIP_${PN} += "already-stripped"
