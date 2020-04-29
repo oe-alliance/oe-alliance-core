@@ -1,0 +1,24 @@
+--- a/drivers/hisilicon/atags/tag-chiptrim.c
++++ b/drivers/hisilicon/atags/tag-chiptrim.c
+@@ -59,7 +59,7 @@ static int __init parse_chiptrim(const struct tag *tag, void *fdt)
+ 	int ix;
+ 	int ret;
+ 	int node;
+-	char buf[12];
++	char buf[20];
+ 
+ 	if (tag->hdr.size <= (sizeof(struct tag_header) >> 2)) {
+ 		pr_err("%s: bad tag format.\n", __func__);
+--- a/drivers/hisilicon/atags/tag-net.c	2020-03-25 11:27:19.138225245 +0000
++++ b/drivers/hisilicon/atags/tag-net.c	2020-03-25 11:27:02.498266476 +0000
+@@ -91,7 +91,7 @@
+ {
+ 	int err;
+ 	int node, index = 0;
+-	char path[16];
++	char path[20];
+ 	char phy_intf[16];
+ 	char *str, *nxt;
+ 	int count;
+-- 
+2.17.1
