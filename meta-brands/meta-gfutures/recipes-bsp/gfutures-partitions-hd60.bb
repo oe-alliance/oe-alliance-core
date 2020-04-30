@@ -1,8 +1,8 @@
-SRCDATE = "20200319"
+SRCDATE = "20191020"
 
 require gfutures-partitions.inc
 
-SRC_URI[md5sum] = "cdb17fe89a47d98b608c15b05e2d8033"
-SRC_URI[sha256sum] = "0a87c7a9708bd801f2cecedb4799f39469dcbd83936dbed3b57dba7883efea0d"
+SRC_URI[md5sum] = "914cb1b361bc070626f2ade5e9943595"
+SRC_URI[sha256sum] = "1df7cc21d085295023cf4348114b4ba3e5fc9fcb3fcadc4ccbd23c6c192ef5da"
 
 COMPATIBLE_MACHINE = "hd60"
