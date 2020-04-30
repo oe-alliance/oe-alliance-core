@@ -9,6 +9,7 @@ DEPENDS = "\
     ${@bb.utils.contains("TARGET_ARCH", "mipsel", "openvix-softcams-evocamd", "", d)} \
     ${@bb.utils.contains("TARGET_ARCH", "mipsel", "openvix-softcams-mgcamd135a", "", d)} \
     ${@bb.utils.contains("TARGET_ARCH", "mipsel", "openvix-softcams-mgcamd138", "", d)} \
+    ${@bb.utils.contains("TARGET_ARCH", "mipsel", "openvix-softcams-mgcamd145c", "", d)} \
     ${@bb.utils.contains("TARGET_ARCH", "mipsel", "openvix-softcams-newcs", "", d)} \
     ${@bb.utils.contains("TARGET_ARCH", "mipsel", "openvix-softcams-oscam-mipsel" , "", d)} \
     ${@bb.utils.contains("TARGET_ARCH", "mipsel", "openvix-softcams-oscam-latest-mipsel" , "openvix-softcams-oscam-latest-arm", d)} \

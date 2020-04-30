@@ -1,8 +1,8 @@
-SRCDATE = "20190603"
+SRCDATE = "20200424"
 
 require maxytec-bootargs.inc
 
-SRC_URI[md5sum] = "c83589f890197a92ee80b8e0d3366b63"
-SRC_URI[sha256sum] = "d475ba7c29899b92fa38947dd9572bc7df5be8167472d8439867a30dbab0a6fd"
+SRC_URI[md5sum] = "5d0aa4c319dd44b4bd2a63bb1e99ca6f"
+SRC_URI[sha256sum] = "50a14ce6f99b0031f1a482d1ea6ebc192a628958bd894818b6ff2ab0e91a0406"
 
 COMPATIBLE_MACHINE = "multibox"
