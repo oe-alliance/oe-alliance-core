@@ -36,6 +36,7 @@ IMAGEDIRRECOVERY ?= "${MACHINE}-recovery"
 IMAGE_CMD_hdfastboot8gb_append = " \
     mkdir -p ${DEPLOY_DIR_IMAGE}/${IMAGEDIRRECOVERY}/${IMAGEDIR}; \
     cp ${IMGDEPLOYDIR}/bootoptions.img ${DEPLOY_DIR_IMAGE}/${IMAGEDIRRECOVERY}/${IMAGEDIR}/bootoptions.img; \
+    cp ${IMGDEPLOYDIR}/misc-boot.img ${DEPLOY_DIR_IMAGE}/${IMAGEDIRRECOVERY}/${IMAGEDIR}/misc-boot.img; \
     cp ${DEPLOY_DIR_IMAGE}/gfutures-partitions-${MACHINE}/fastboot.bin ${DEPLOY_DIR_IMAGE}/${IMAGEDIRRECOVERY}/fastboot.bin; \
     cp ${DEPLOY_DIR_IMAGE}/gfutures-partitions-${MACHINE}/bootargs-8gb.bin ${DEPLOY_DIR_IMAGE}/${IMAGEDIRRECOVERY}/bootargs.bin; \
     cp ${DEPLOY_DIR_IMAGE}/gfutures-partitions-${MACHINE}/${MACHINE}/fastboot.bin ${DEPLOY_DIR_IMAGE}/${IMAGEDIRRECOVERY}/${IMAGEDIR}/fastboot.bin; \
