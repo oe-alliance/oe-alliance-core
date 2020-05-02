@@ -28,7 +28,6 @@ IMAGE_CMD_maxytecfastboot8gb () {
     echo "bootcmd=setenv bootargs \$(bootargs) \$(bootargs_common); mmc read 0 0x1000000 0x3D5000 0x8000; bootm 0x1000000; run bootcmd_fallback" > ${WORKDIR}/STARTUP_LINUX_4
     echo "bootargs=root=/dev/mmcblk0p23 rootsubdir=linuxrootfs4 rootfstype=ext4 kernel=/dev/mmcblk0p22" >> ${WORKDIR}/STARTUP_LINUX_4
     echo "bootcmd=setenv bootargs \$(bootargs_common); mmc read 0 0x1000000 0x1000 0x9000; bootm 0x1000000" > ${WORKDIR}/STARTUP_RECOVERY
-    echo "bootcmd=setenv bootargs \$(bootargs_common); mmc read 0 0x1000000 0x1000 0x9000; bootm 0x1000000" > ${WORKDIR}/STARTUP_ONCE
     echo "imageurl https://raw.githubusercontent.com/oe-alliance/bootmenu/master/${MACHINEBUILD}/images" > ${WORKDIR}/bootmenu.conf
     echo "# " >> ${WORKDIR}/bootmenu.conf
     echo "iface eth0" >> ${WORKDIR}/bootmenu.conf
@@ -41,7 +40,6 @@ IMAGE_CMD_maxytecfastboot8gb () {
     echo "#gateway 192.168.1.1" >> ${WORKDIR}/bootmenu.conf
     echo "#dns 192.168.1.1" >> ${WORKDIR}/bootmenu.conf
     mcopy -i ${WORKDIR}/bootoptions.img -v ${WORKDIR}/STARTUP ::
-    mcopy -i ${WORKDIR}/bootoptions.img -v ${WORKDIR}/STARTUP_ONCE ::
     mcopy -i ${WORKDIR}/bootoptions.img -v ${WORKDIR}/STARTUP_ANDROID ::
     mcopy -i ${WORKDIR}/bootoptions.img -v ${WORKDIR}/STARTUP_ANDROID_DISABLE_LINUXSE ::
     mcopy -i ${WORKDIR}/bootoptions.img -v ${WORKDIR}/STARTUP_LINUX_1 ::
@@ -51,4 +49,6 @@ IMAGE_CMD_maxytecfastboot8gb () {
     mcopy -i ${WORKDIR}/bootoptions.img -v ${WORKDIR}/STARTUP_RECOVERY ::
     mcopy -i ${WORKDIR}/bootoptions.img -v ${WORKDIR}/bootmenu.conf ::
     cp ${WORKDIR}/bootoptions.img ${IMGDEPLOYDIR}/bootoptions.img
+    echo boot-recovery > ${WORKDIR}/misc-boot.img
+    cp ${WORKDIR}/misc-boot.img ${IMGDEPLOYDIR}/misc-boot.img
 }
