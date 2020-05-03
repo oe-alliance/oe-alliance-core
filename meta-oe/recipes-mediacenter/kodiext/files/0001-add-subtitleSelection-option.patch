@@ -1,18 +1,18 @@
-From fa2dd58c1ea4f6d409c0ec748c93e860408c1549 Mon Sep 17 00:00:00 2001
+From c92476eca7d6aa5c19084bbc1444851577abc2f3 Mon Sep 17 00:00:00 2001
 From: openspa <openspateam@gmail.com>
-Date: Sat, 24 Jan 2016 18:40:19 +0100
+Date: Sun, 24 Jan 2016 18:40:19 +0100
 Subject: [PATCH] add subtitleSelection option
 
 ---
- src/plugin/keymap.xml | 45 ++++++++++++++++++++++++++++++++++-----------
- src/plugin/plugin.py  | 16 ++++++++++++----
- 2 files changed, 46 insertions(+), 15 deletions(-)
+ src/plugin/keymap.xml | 42 +++++++++++++++++++++++++++++++-----------
+ src/plugin/plugin.py  | 15 ++++++++++++---
+ 2 files changed, 43 insertions(+), 14 deletions(-)
 
 diff --git a/src/plugin/keymap.xml b/src/plugin/keymap.xml
-index 48696e5..da7e40e 100644
+index 48696e5..f985adc 100644
 --- a/src/plugin/keymap.xml
 +++ b/src/plugin/keymap.xml
-@@ -1,16 +1,39 @@
+@@ -1,16 +1,36 @@
  <keymap>
  
 -<map context="KodiPlayerActions">
@@ -40,9 +40,6 @@ index 48696e5..da7e40e 100644
 +	</map>
 +
 +	<map context="InfobarSeekActions">
-+		<key id="KEY_LEFT" mapto="seekBackManual" flags="m" />
-+		<key id="KEY_RIGHT" mapto="seekFwdManual" flags="m" />
-+
 +		<key id="KEY_PLAYPAUSE" mapto="playpauseService" flags="m" />
 +		<key id="KEY_PAUSE" mapto="pauseService" flags="m" />
 +		<key id="KEY_PLAY" mapto="unPauseService" flags="m" />
@@ -64,7 +61,7 @@ index 48696e5..da7e40e 100644
  </keymap>
  
 diff --git a/src/plugin/plugin.py b/src/plugin/plugin.py
-index c566a71..9073c47 100644
+index bf86818..59ea050 100644
 --- a/src/plugin/plugin.py
 +++ b/src/plugin/plugin.py
 @@ -176,7 +176,6 @@ class KodiVideoPlayer(InfoBarBase, SubsSupportStatus, SubsSupport, InfoBarShowHi
@@ -118,5 +115,5 @@ index c566a71..9073c47 100644
  
  def autoStart(reason, **kwargs):
 -- 
-2.11.1.windows.1
+2.26.2.windows.1
 
