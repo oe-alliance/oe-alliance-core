@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda
 ALLOW_EMPTY_${PN} = "1"
 
 PV = "1.0"
-PR = "r31"
+PR = "r32"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
@@ -26,6 +26,7 @@ RDEPENDS_${PN} = "\
     python-service-identity \
     python-requests \
     rtmpdump \
+    zip \
     ${@bb.utils.contains("TUNE_FEATURES", "armv", "glibc-compat", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "dreamboxv1", "", "ofgwrite", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", " \
@@ -35,6 +36,5 @@ RDEPENDS_${PN} = "\
     ${@bb.utils.contains_any("FLASHSIZE", "64 96", "", " \
         ntfs-3g \
         unrar \
-        zip \
     ", d)} \
     "
