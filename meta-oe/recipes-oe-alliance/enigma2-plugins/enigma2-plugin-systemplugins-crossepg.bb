@@ -11,9 +11,9 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 inherit gitpkgv
 
 SRCREV = "${AUTOREV}"
-PV = "0.8.6+gitr${SRCPV}"
-PKGV = "0.8.6+gitr${GITPKGV}"
-PR = "r1"
+PV = "0.8.7+gitr${SRCPV}"
+PKGV = "0.8.7+gitr${GITPKGV}"
+PR = "r0"
 
 SRC_URI = "git://github.com/oe-alliance/e2openplugin-CrossEPG.git;protocol=git"
 

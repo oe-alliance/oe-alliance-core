@@ -25,6 +25,7 @@ RDEPENDS_${PN} = "\
     python-service-identity \
     python-requests \
     rtmpdump \
+    zip \
     ${@bb.utils.contains("TUNE_FEATURES", "armv", "glibc-compat", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "dreamboxv1", "", "ofgwrite", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", " \
@@ -34,6 +35,5 @@ RDEPENDS_${PN} = "\
     ${@bb.utils.contains_any("FLASHSIZE", "64 96", "", " \
         ntfs-3g \
         unrar \
-        zip \
     ", d)} \
     "
