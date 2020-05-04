@@ -12,32 +12,25 @@ index 8f9c301..28fcc6d 100644
  		<button name="RECORD" pos="65,414" />
  		<button name="PLAY" pos="59,392" />
 diff --git a/BoxBranding/remotes/vu/remote.html b/BoxBranding/remotes/vu/remote.html
-index 10d04b5..836819c 100644
+index 0ece9ce..8267d75 100644
 --- a/BoxBranding/remotes/vu/remote.html
 +++ b/BoxBranding/remotes/vu/remote.html
 @@ -30,13 +30,13 @@
- 	<area shape="circle" coords="40,307,15" id ="115" alt="volume up" onclick="pressMenuRemote('115');">
- 	<area shape="circle" coords="40,338,13" id ="114" alt="volume down" onclick="pressMenuRemote('114');">
- 	<area shape="circle" coords="70,310,15" id ="174" alt="exit" onclick="pressMenuRemote('174');">
--	<area shape="circle" coords="70,334,15" id ="358" alt="epg" onclick="pressMenuRemote('358');">
-+	<area shape="circle" coords="70,334,15" id ="358" alt="epg" onclick="pressMenuRemote('365');">
- 	<area shape="circle" coords="99,307,15" id ="402" alt="channelup" onclick="pressMenuRemote('402');">
- 	<area shape="circle" coords="99,338,15" id ="403" alt="channeldown" onclick="pressMenuRemote('403');">
- 	<area shape="circle" coords="36,362,15" id ="139" alt="menu" onclick="pressMenuRemote('139');">
- 	<area shape="circle" coords="59,362,15" id ="393" alt="videoaltlast" onclick="pressMenuRemote('393');">
- 	<area shape="circle" coords="81,362,15" id ="392" alt="audio" onclick="pressMenuRemote('392');">
--	<area shape="circle" coords="104,362,15" id ="138" alt="help" onclick="pressMenuRemote('138');">
-+	<area shape="circle" coords="104,362,15" id ="138" alt="info" onclick="pressMenuRemote('358');">
- 	<area shape="circle" coords="36,383,15" id ="168" alt="rewind" onclick="pressMenuRemote('168');">
- 	<area shape="circle" coords="59,383,15" id ="207" alt="play" onclick="pressMenuRemote('207');">
- 	<area shape="circle" coords="81,383,15" id ="119" alt="pause" onclick="pressMenuRemote('119');">
-@@ -45,4 +45,4 @@
- 	<area shape="circle" coords="59,405,15" id ="167" alt="record" onclick="pressMenuRemote('167');">
- 	<area shape="circle" coords="81,405,15" id ="128" alt="stop" onclick="pressMenuRemote('128');">
- 	<area shape="circle" coords="104,405,15" id ="385" alt="radio" onclick="pressMenuRemote('385');">
--</map>
-\ No newline at end of file
-+</map>
+ 	<area shape="circle" coords="40,307,15" id ="115" title="volume up" onclick="pressMenuRemote('115');">
+ 	<area shape="circle" coords="40,338,13" id ="114" title="volume down" onclick="pressMenuRemote('114');">
+ 	<area shape="circle" coords="70,310,15" id ="174" title="exit" onclick="pressMenuRemote('174');">
+-	<area shape="circle" coords="70,334,15" id ="358" title="epg" onclick="pressMenuRemote('358');">
++	<area shape="circle" coords="70,334,15" id ="358" title="epg" onclick="pressMenuRemote('365');">
+ 	<area shape="circle" coords="99,307,15" id ="402" title="channelup" onclick="pressMenuRemote('402');">
+ 	<area shape="circle" coords="99,338,15" id ="403" title="channeldown" onclick="pressMenuRemote('403');">
+ 	<area shape="circle" coords="36,362,15" id ="139" title="menu" onclick="pressMenuRemote('139');">
+ 	<area shape="circle" coords="59,362,15" id ="393" title="videoaltlast" onclick="pressMenuRemote('393');">
+ 	<area shape="circle" coords="81,362,15" id ="392" title="audio" onclick="pressMenuRemote('392');">
+-	<area shape="circle" coords="104,362,15" id ="138" title="help" onclick="pressMenuRemote('138');">
++	<area shape="circle" coords="104,362,15" id ="138" title="info" onclick="pressMenuRemote('358');">
+ 	<area shape="circle" coords="36,383,15" id ="168" title="rewind" onclick="pressMenuRemote('168');">
+ 	<area shape="circle" coords="59,383,15" id ="207" title="play" onclick="pressMenuRemote('207');">
+ 	<area shape="circle" coords="81,383,15" id ="119" title="pause" onclick="pressMenuRemote('119');">
 diff --git a/BoxBranding/remotes/vu2/rcpositions.xml b/BoxBranding/remotes/vu2/rcpositions.xml
 index 2c31326..c29307e 100644
 --- a/BoxBranding/remotes/vu2/rcpositions.xml
@@ -52,32 +45,25 @@ index 2c31326..c29307e 100644
  		<button name="RECORD" pos="58,377" />
  		<button name="PLAY" pos="58,362" />
 diff --git a/BoxBranding/remotes/vu2/remote.html b/BoxBranding/remotes/vu2/remote.html
-index 3b383c2..8131f37 100644
+index cacc8de..f29c7c2 100644
 --- a/BoxBranding/remotes/vu2/remote.html
 +++ b/BoxBranding/remotes/vu2/remote.html
 @@ -19,13 +19,13 @@
- 	<area shape="rect" coords="22,234,45,252" alt="volume down" onclick="pressMenuRemote('114');">
- 	<area shape="rect" coords="65,208,81,225" alt="exit" onclick="pressMenuRemote('174');">
- 	<area shape="rect" coords="102,234,122,252" alt="bouquet down" onclick="pressMenuRemote('403');">
--	<area shape="rect" coords="66,236,81,252" alt="epg" onclick="pressMenuRemote('358');">
-+	<area shape="rect" coords="66,236,81,252" alt="epg" onclick="pressMenuRemote('365');">
- 	<area shape="rect" coords="58,102,81,117" alt="up" onclick="pressMenuRemote('103');">
- 	<area shape="rect" coords="18,63,42,70" alt="menu" onclick="pressMenuRemote('139');">
- 	<area shape="rect" coords="29,129,48,170" alt="left" onclick="pressMenuRemote('105');">
- 	<area shape="rect" coords="58,128,90,162" alt="OK" onclick="pressMenuRemote('352');">
- 	<area shape="rect" coords="96,128,114,170" alt="right" onclick="pressMenuRemote('106');">
--	<area shape="rect" coords="103,63,126,69" alt="help" onclick="pressMenuRemote('138');">
-+	<area shape="rect" coords="103,63,126,69" alt="info" onclick="pressMenuRemote('358');">
- 	<area shape="rect" coords="58,171,90,187" alt="down" onclick="pressMenuRemote('108');">
- 	<area shape="rect" coords="45,63,70,70" alt="video" onclick="pressMenuRemote('393');">
- 	<area shape="rect" coords="18,81,42,87" alt="red" onclick="pressMenuRemote('398');">
-@@ -43,4 +43,4 @@
- 	<area shape="rect" coords="75,63,99,69" alt="audio" onclick="pressMenuRemote('392');">
- 	<area shape="rect" coords="75,358,99,364" alt="pause" onclick="pressMenuRemote('119');">
- 	<area shape="rect" coords="47,47,69,81" alt="subtitle" onclick="pressMenuRemote('370');">
--</map>
-\ No newline at end of file
-+</map>
+ 	<area shape="rect" coords="22,234,45,252" title="volume down" onclick="pressMenuRemote('114');">
+ 	<area shape="rect" coords="65,208,81,225" title="exit" onclick="pressMenuRemote('174');">
+ 	<area shape="rect" coords="102,234,122,252" title="bouquet down" onclick="pressMenuRemote('403');">
+-	<area shape="rect" coords="66,236,81,252" title="epg" onclick="pressMenuRemote('358');">
++	<area shape="rect" coords="66,236,81,252" title="epg" onclick="pressMenuRemote('365');">
+ 	<area shape="rect" coords="58,102,81,117" title="up" onclick="pressMenuRemote('103');">
+ 	<area shape="rect" coords="18,63,42,70" title="menu" onclick="pressMenuRemote('139');">
+ 	<area shape="rect" coords="29,129,48,170" title="left" onclick="pressMenuRemote('105');">
+ 	<area shape="rect" coords="58,128,90,162" title="OK" onclick="pressMenuRemote('352');">
+ 	<area shape="rect" coords="96,128,114,170" title="right" onclick="pressMenuRemote('106');">
+-	<area shape="rect" coords="103,63,126,69" title="help" onclick="pressMenuRemote('138');">
++	<area shape="rect" coords="103,63,126,69" title="info" onclick="pressMenuRemote('358');">
+ 	<area shape="rect" coords="58,171,90,187" title="down" onclick="pressMenuRemote('108');">
+ 	<area shape="rect" coords="45,63,70,70" title="video" onclick="pressMenuRemote('393');">
+ 	<area shape="rect" coords="18,81,42,87" title="red" onclick="pressMenuRemote('398');">
 diff --git a/BoxBranding/remotes/vu3/rcpositions.xml b/BoxBranding/remotes/vu3/rcpositions.xml
 index ccbadde..6aa9124 100644
 --- a/BoxBranding/remotes/vu3/rcpositions.xml
@@ -92,25 +78,25 @@ index ccbadde..6aa9124 100644
  		<button name="RED" pos="38,315" />
  		<button name="GREEN" pos="61,315" />
 diff --git a/BoxBranding/remotes/vu3/remote.html b/BoxBranding/remotes/vu3/remote.html
-index d17e94e..e35e9d8 100644
+index f13f361..c4089de 100644
 --- a/BoxBranding/remotes/vu3/remote.html
 +++ b/BoxBranding/remotes/vu3/remote.html
 @@ -27,13 +27,13 @@
- 	<area shape="circle" coords="33,212,15" id ="115" alt="volume up" onclick="pressMenuRemote('115');">
- 	<area shape="circle" coords="33,285,13" id ="114" alt="volume down" onclick="pressMenuRemote('114');">
- 	<area shape="circle" coords="114,180,15" id ="174" alt="exit" onclick="pressMenuRemote('174');">
--	<area shape="circle" coords="40,180,15" id ="358" alt="epg" onclick="pressMenuRemote('358');">
-+	<area shape="circle" coords="40,180,15" id ="358" alt="epg" onclick="pressMenuRemote('365');">
- 	<area shape="circle" coords="119,213,15" id ="402" alt="channelup" onclick="pressMenuRemote('402');">
- 	<area shape="circle" coords="119,285,15" id ="403" alt="channeldown" onclick="pressMenuRemote('403');">
- 	<area shape="circle" coords="77,180,15" id ="139" alt="menu" onclick="pressMenuRemote('139');">
- 	<area shape="circle" coords="112,117,15" id ="393" alt="videoaltlast" onclick="pressMenuRemote('393');">
- 	<area shape="circle" coords="77,141,15" id ="392" alt="audio" onclick="pressMenuRemote('392');">
--	<area shape="circle" coords="77,159,15" id ="138" alt="help" onclick="pressMenuRemote('138');">
-+	<area shape="circle" coords="77,159,15" id ="138" alt="info" onclick="pressMenuRemote('358');">
- 	<area shape="circle" coords="42,94,15" id ="168" alt="rewind" onclick="pressMenuRemote('168');">
- 	<area shape="circle" coords="77,94,15" id ="207" alt="play" onclick="pressMenuRemote('207');">
- 	<area shape="circle" coords="77,94,15" id ="119" alt="pause" onclick="pressMenuRemote('119');">
+ 	<area shape="circle" coords="33,212,15" id ="115" title="volume up" onclick="pressMenuRemote('115');">
+ 	<area shape="circle" coords="33,285,13" id ="114" title="volume down" onclick="pressMenuRemote('114');">
+ 	<area shape="circle" coords="114,180,15" id ="174" title="exit" onclick="pressMenuRemote('174');">
+-	<area shape="circle" coords="40,180,15" id ="358" title="epg" onclick="pressMenuRemote('358');">
++	<area shape="circle" coords="40,180,15" id ="358" title="epg" onclick="pressMenuRemote('365');">
+ 	<area shape="circle" coords="119,213,15" id ="402" title="channelup" onclick="pressMenuRemote('402');">
+ 	<area shape="circle" coords="119,285,15" id ="403" title="channeldown" onclick="pressMenuRemote('403');">
+ 	<area shape="circle" coords="77,180,15" id ="139" title="menu" onclick="pressMenuRemote('139');">
+ 	<area shape="circle" coords="112,117,15" id ="393" title="videoaltlast" onclick="pressMenuRemote('393');">
+ 	<area shape="circle" coords="77,141,15" id ="392" title="audio" onclick="pressMenuRemote('392');">
+-	<area shape="circle" coords="77,159,15" id ="138" title="help" onclick="pressMenuRemote('138');">
++	<area shape="circle" coords="77,159,15" id ="138" title="info" onclick="pressMenuRemote('358');">
+ 	<area shape="circle" coords="42,94,15" id ="168" title="rewind" onclick="pressMenuRemote('168');">
+ 	<area shape="circle" coords="77,94,15" id ="207" title="play" onclick="pressMenuRemote('207');">
+ 	<area shape="circle" coords="77,94,15" id ="119" title="pause" onclick="pressMenuRemote('119');">
 diff --git a/BoxBranding/remotes/vu4/rcpositions.xml b/BoxBranding/remotes/vu4/rcpositions.xml
 index 0914005..6a42b54 100644
 --- a/BoxBranding/remotes/vu4/rcpositions.xml
@@ -125,178 +111,24 @@ index 0914005..6a42b54 100644
  		<button name="2" pos="70,65" />
  		<button name="3" pos="106,65" />
 diff --git a/BoxBranding/remotes/vu4/remote.html b/BoxBranding/remotes/vu4/remote.html
-index 7c66981..7bb248a 100644
+index acf667b..308df95 100644
 --- a/BoxBranding/remotes/vu4/remote.html
 +++ b/BoxBranding/remotes/vu4/remote.html
 @@ -27,7 +27,7 @@
- 	<area shape="rect" coords="21,249,50,274" id ="115" alt="volume up" onclick="pressMenuRemote('115');">
- 	<area shape="rect" coords="21,275,50,300" id ="114" alt="volume down" onclick="pressMenuRemote('114');">
- 	<area shape="rect" coords="91,226,118,236" id ="174" alt="exit" onclick="pressMenuRemote('174');">
--	<area shape="rect" coords="21,226,48,236" id ="358" alt="epg" onclick="pressMenuRemote('358');">
-+	<area shape="rect" coords="21,226,48,236" id ="358" alt="epg" onclick="pressMenuRemote('365');">
- 	<area shape="rect" coords="90,249,119,274" id ="402" alt="channelup" onclick="pressMenuRemote('402');">
- 	<area shape="rect" coords="90,275,119,300" id ="403" alt="channeldown" onclick="pressMenuRemote('403');">
- 	<area shape="rect" coords="91,165,118,236," id ="139" alt="menu" onclick="pressMenuRemote('139');">
+ 	<area shape="rect" coords="21,249,50,274" id ="115" title="volume up" onclick="pressMenuRemote('115');">
+ 	<area shape="rect" coords="21,275,50,300" id ="114" title="volume down" onclick="pressMenuRemote('114');">
+ 	<area shape="rect" coords="91,226,118,236" id ="174" title="exit" onclick="pressMenuRemote('174');">
+-	<area shape="rect" coords="21,226,48,236" id ="358" title="epg" onclick="pressMenuRemote('358');">
++	<area shape="rect" coords="21,226,48,236" id ="358" title="epg" onclick="pressMenuRemote('365');">
+ 	<area shape="rect" coords="90,249,119,274" id ="402" title="channelup" onclick="pressMenuRemote('402');">
+ 	<area shape="rect" coords="90,275,119,300" id ="403" title="channeldown" onclick="pressMenuRemote('403');">
+ 	<area shape="rect" coords="91,165,118,236," id ="139" title="menu" onclick="pressMenuRemote('139');">
 @@ -35,7 +35,7 @@
- 	<area shape="rect" coords="60,249,80,260" id ="392" alt="audio" onclick="pressMenuRemote('392');">
- 	<area shape="rect" coords="60,269,80,280" id="113" alt="mute" onclick="pressMenuRemote('113');">
- 	<area shape="rect" coords="60,290,80,301" id ="176" alt="timer edit" onclick="pressMenuRemote('176');">
--	<area shape="rect" coords="100,40,120,50" id ="138" alt="help" onclick="pressMenuRemote('138');">
-+	<area shape="rect" coords="100,40,120,50" id ="138" alt="info" onclick="pressMenuRemote('358');">
- 	<area shape="rect" coords="21,309,41,319" id ="168" alt="rewind" onclick="pressMenuRemote('168');">
- 	<area shape="rect" coords="47,309,67,319" id ="207" alt="play" onclick="pressMenuRemote('207');">
- 	<area shape="rect" coords="73,309,93,319" id ="119" alt="pause" onclick="pressMenuRemote('119');">
-diff --git a/BoxBranding/remotes/fix_vu_help.patch b/BoxBranding/remotes/fix_vu_help.patch
-new file mode 100644
-index 0000000..6b68fb4
---- /dev/null
-+++ b/BoxBranding/remotes/fix_vu_help.patch
-@@ -0,0 +1,148 @@
-+diff --git a/BoxBranding/remotes/vu/rcpositions.xml b/BoxBranding/remotes/vu/rcpositions.xml
-+index 8f9c301..28fcc6d 100644
-+--- a/BoxBranding/remotes/vu/rcpositions.xml
-++++ b/BoxBranding/remotes/vu/rcpositions.xml
-+@@ -34,7 +34,7 @@
-+ 		<button name="TV" pos="37,414" />
-+ 		<button name="RADIO" pos="105,413" />
-+ 		<button name="TEXT" pos="35,50" />
-+-		<button name="HELP" pos="105,370" />
-++		<button name="INFO" pos="105,370" />
-+ 		<button name="PVR" pos="59,370" />
-+ 		<button name="RECORD" pos="65,414" />
-+ 		<button name="PLAY" pos="59,392" />
-+diff --git a/BoxBranding/remotes/vu/remote.html b/BoxBranding/remotes/vu/remote.html
-+index 10d04b5..836819c 100644
-+--- a/BoxBranding/remotes/vu/remote.html
-++++ b/BoxBranding/remotes/vu/remote.html
-+@@ -30,13 +30,13 @@
-+ 	<area shape="circle" coords="40,307,15" id ="115" alt="volume up" onclick="pressMenuRemote('115');">
-+ 	<area shape="circle" coords="40,338,13" id ="114" alt="volume down" onclick="pressMenuRemote('114');">
-+ 	<area shape="circle" coords="70,310,15" id ="174" alt="exit" onclick="pressMenuRemote('174');">
-+-	<area shape="circle" coords="70,334,15" id ="358" alt="epg" onclick="pressMenuRemote('358');">
-++	<area shape="circle" coords="70,334,15" id ="358" alt="epg" onclick="pressMenuRemote('365');">
-+ 	<area shape="circle" coords="99,307,15" id ="402" alt="channelup" onclick="pressMenuRemote('402');">
-+ 	<area shape="circle" coords="99,338,15" id ="403" alt="channeldown" onclick="pressMenuRemote('403');">
-+ 	<area shape="circle" coords="36,362,15" id ="139" alt="menu" onclick="pressMenuRemote('139');">
-+ 	<area shape="circle" coords="59,362,15" id ="393" alt="videoaltlast" onclick="pressMenuRemote('393');">
-+ 	<area shape="circle" coords="81,362,15" id ="392" alt="audio" onclick="pressMenuRemote('392');">
-+-	<area shape="circle" coords="104,362,15" id ="138" alt="help" onclick="pressMenuRemote('138');">
-++	<area shape="circle" coords="104,362,15" id ="138" alt="info" onclick="pressMenuRemote('358');">
-+ 	<area shape="circle" coords="36,383,15" id ="168" alt="rewind" onclick="pressMenuRemote('168');">
-+ 	<area shape="circle" coords="59,383,15" id ="207" alt="play" onclick="pressMenuRemote('207');">
-+ 	<area shape="circle" coords="81,383,15" id ="119" alt="pause" onclick="pressMenuRemote('119');">
-+@@ -45,4 +45,4 @@
-+ 	<area shape="circle" coords="59,405,15" id ="167" alt="record" onclick="pressMenuRemote('167');">
-+ 	<area shape="circle" coords="81,405,15" id ="128" alt="stop" onclick="pressMenuRemote('128');">
-+ 	<area shape="circle" coords="104,405,15" id ="385" alt="radio" onclick="pressMenuRemote('385');">
-+-</map>
-+\ No newline at end of file
-++</map>
-+diff --git a/BoxBranding/remotes/vu2/rcpositions.xml b/BoxBranding/remotes/vu2/rcpositions.xml
-+index 2c31326..c29307e 100644
-+--- a/BoxBranding/remotes/vu2/rcpositions.xml
-++++ b/BoxBranding/remotes/vu2/rcpositions.xml
-+@@ -34,7 +34,7 @@
-+ 		<button name="TV" pos="30,377" />
-+ 		<button name="RADIO" pos="115,377" />
-+ 		<button name="TEXT" pos="30,50" />
-+-		<button name="HELP" pos="115,66" />
-++		<button name="INFO" pos="115,66" />
-+ 		<button name="PVR" pos="60,66" />
-+ 		<button name="RECORD" pos="58,377" />
-+ 		<button name="PLAY" pos="58,362" />
-+diff --git a/BoxBranding/remotes/vu2/remote.html b/BoxBranding/remotes/vu2/remote.html
-+index 3b383c2..8131f37 100644
-+--- a/BoxBranding/remotes/vu2/remote.html
-++++ b/BoxBranding/remotes/vu2/remote.html
-+@@ -19,13 +19,13 @@
-+ 	<area shape="rect" coords="22,234,45,252" alt="volume down" onclick="pressMenuRemote('114');">
-+ 	<area shape="rect" coords="65,208,81,225" alt="exit" onclick="pressMenuRemote('174');">
-+ 	<area shape="rect" coords="102,234,122,252" alt="bouquet down" onclick="pressMenuRemote('403');">
-+-	<area shape="rect" coords="66,236,81,252" alt="epg" onclick="pressMenuRemote('358');">
-++	<area shape="rect" coords="66,236,81,252" alt="epg" onclick="pressMenuRemote('365');">
-+ 	<area shape="rect" coords="58,102,81,117" alt="up" onclick="pressMenuRemote('103');">
-+ 	<area shape="rect" coords="18,63,42,70" alt="menu" onclick="pressMenuRemote('139');">
-+ 	<area shape="rect" coords="29,129,48,170" alt="left" onclick="pressMenuRemote('105');">
-+ 	<area shape="rect" coords="58,128,90,162" alt="OK" onclick="pressMenuRemote('352');">
-+ 	<area shape="rect" coords="96,128,114,170" alt="right" onclick="pressMenuRemote('106');">
-+-	<area shape="rect" coords="103,63,126,69" alt="help" onclick="pressMenuRemote('138');">
-++	<area shape="rect" coords="103,63,126,69" alt="info" onclick="pressMenuRemote('358');">
-+ 	<area shape="rect" coords="58,171,90,187" alt="down" onclick="pressMenuRemote('108');">
-+ 	<area shape="rect" coords="45,63,70,70" alt="video" onclick="pressMenuRemote('393');">
-+ 	<area shape="rect" coords="18,81,42,87" alt="red" onclick="pressMenuRemote('398');">
-+@@ -43,4 +43,4 @@
-+ 	<area shape="rect" coords="75,63,99,69" alt="audio" onclick="pressMenuRemote('392');">
-+ 	<area shape="rect" coords="75,358,99,364" alt="pause" onclick="pressMenuRemote('119');">
-+ 	<area shape="rect" coords="47,47,69,81" alt="subtitle" onclick="pressMenuRemote('370');">
-+-</map>
-+\ No newline at end of file
-++</map>
-+diff --git a/BoxBranding/remotes/vu3/rcpositions.xml b/BoxBranding/remotes/vu3/rcpositions.xml
-+index ccbadde..6aa9124 100644
-+--- a/BoxBranding/remotes/vu3/rcpositions.xml
-++++ b/BoxBranding/remotes/vu3/rcpositions.xml
-+@@ -26,7 +26,7 @@
-+  		<button name="DOWN" pos="76,276" />
-+ 		<button name="LEFT" pos="46,248" />
-+ 		<button name="RIGHT" pos="101,248" />
-+-		<button name="HELP" pos="76,161" />
-++		<button name="INFO" pos="76,161" />
-+ 		<button name="PVR" pos="111,117" />
-+ 		<button name="RED" pos="38,315" />
-+ 		<button name="GREEN" pos="61,315" />
-+diff --git a/BoxBranding/remotes/vu3/remote.html b/BoxBranding/remotes/vu3/remote.html
-+index d17e94e..e35e9d8 100644
-+--- a/BoxBranding/remotes/vu3/remote.html
-++++ b/BoxBranding/remotes/vu3/remote.html
-+@@ -27,13 +27,13 @@
-+ 	<area shape="circle" coords="33,212,15" id ="115" alt="volume up" onclick="pressMenuRemote('115');">
-+ 	<area shape="circle" coords="33,285,13" id ="114" alt="volume down" onclick="pressMenuRemote('114');">
-+ 	<area shape="circle" coords="114,180,15" id ="174" alt="exit" onclick="pressMenuRemote('174');">
-+-	<area shape="circle" coords="40,180,15" id ="358" alt="epg" onclick="pressMenuRemote('358');">
-++	<area shape="circle" coords="40,180,15" id ="358" alt="epg" onclick="pressMenuRemote('365');">
-+ 	<area shape="circle" coords="119,213,15" id ="402" alt="channelup" onclick="pressMenuRemote('402');">
-+ 	<area shape="circle" coords="119,285,15" id ="403" alt="channeldown" onclick="pressMenuRemote('403');">
-+ 	<area shape="circle" coords="77,180,15" id ="139" alt="menu" onclick="pressMenuRemote('139');">
-+ 	<area shape="circle" coords="112,117,15" id ="393" alt="videoaltlast" onclick="pressMenuRemote('393');">
-+ 	<area shape="circle" coords="77,141,15" id ="392" alt="audio" onclick="pressMenuRemote('392');">
-+-	<area shape="circle" coords="77,159,15" id ="138" alt="help" onclick="pressMenuRemote('138');">
-++	<area shape="circle" coords="77,159,15" id ="138" alt="info" onclick="pressMenuRemote('358');">
-+ 	<area shape="circle" coords="42,94,15" id ="168" alt="rewind" onclick="pressMenuRemote('168');">
-+ 	<area shape="circle" coords="77,94,15" id ="207" alt="play" onclick="pressMenuRemote('207');">
-+ 	<area shape="circle" coords="77,94,15" id ="119" alt="pause" onclick="pressMenuRemote('119');">
-+diff --git a/BoxBranding/remotes/vu4/rcpositions.xml b/BoxBranding/remotes/vu4/rcpositions.xml
-+index 0914005..6a42b54 100644
-+--- a/BoxBranding/remotes/vu4/rcpositions.xml
-++++ b/BoxBranding/remotes/vu4/rcpositions.xml
-+@@ -3,7 +3,7 @@
-+ 		<button name="POWER" pos="107,25" />
-+ 		<button name="TEXT" pos="31,45" />
-+ 		<button name="SUBTITLE" pos="57,45" />
-+-		<button name="HELP" pos="109,45" />
-++		<button name="INFO" pos="109,45" />
-+ 		<button name="1" pos="36,65" />
-+ 		<button name="2" pos="70,65" />
-+ 		<button name="3" pos="106,65" />
-+diff --git a/BoxBranding/remotes/vu4/remote.html b/BoxBranding/remotes/vu4/remote.html
-+index 7c66981..7bb248a 100644
-+--- a/BoxBranding/remotes/vu4/remote.html
-++++ b/BoxBranding/remotes/vu4/remote.html
-+@@ -27,7 +27,7 @@
-+ 	<area shape="rect" coords="21,249,50,274" id ="115" alt="volume up" onclick="pressMenuRemote('115');">
-+ 	<area shape="rect" coords="21,275,50,300" id ="114" alt="volume down" onclick="pressMenuRemote('114');">
-+ 	<area shape="rect" coords="91,226,118,236" id ="174" alt="exit" onclick="pressMenuRemote('174');">
-+-	<area shape="rect" coords="21,226,48,236" id ="358" alt="epg" onclick="pressMenuRemote('358');">
-++	<area shape="rect" coords="21,226,48,236" id ="358" alt="epg" onclick="pressMenuRemote('365');">
-+ 	<area shape="rect" coords="90,249,119,274" id ="402" alt="channelup" onclick="pressMenuRemote('402');">
-+ 	<area shape="rect" coords="90,275,119,300" id ="403" alt="channeldown" onclick="pressMenuRemote('403');">
-+ 	<area shape="rect" coords="91,165,118,236," id ="139" alt="menu" onclick="pressMenuRemote('139');">
-+@@ -35,7 +35,7 @@
-+ 	<area shape="rect" coords="60,249,80,260" id ="392" alt="audio" onclick="pressMenuRemote('392');">
-+ 	<area shape="rect" coords="60,269,80,280" id="113" alt="mute" onclick="pressMenuRemote('113');">
-+ 	<area shape="rect" coords="60,290,80,301" id ="176" alt="timer edit" onclick="pressMenuRemote('176');">
-+-	<area shape="rect" coords="100,40,120,50" id ="138" alt="help" onclick="pressMenuRemote('138');">
-++	<area shape="rect" coords="100,40,120,50" id ="138" alt="info" onclick="pressMenuRemote('358');">
-+ 	<area shape="rect" coords="21,309,41,319" id ="168" alt="rewind" onclick="pressMenuRemote('168');">
-+ 	<area shape="rect" coords="47,309,67,319" id ="207" alt="play" onclick="pressMenuRemote('207');">
-+ 	<area shape="rect" coords="73,309,93,319" id ="119" alt="pause" onclick="pressMenuRemote('119');">
+ 	<area shape="rect" coords="60,249,80,260" id ="392" title="audio" onclick="pressMenuRemote('392');">
+ 	<area shape="rect" coords="60,269,80,280" id="113" title="mute" onclick="pressMenuRemote('113');">
+ 	<area shape="rect" coords="60,290,80,301" id ="176" title="timer edit" onclick="pressMenuRemote('176');">
+-	<area shape="rect" coords="100,40,120,50" id ="138" title="help" onclick="pressMenuRemote('138');">
++	<area shape="rect" coords="100,40,120,50" id ="138" title="info" onclick="pressMenuRemote('358');">
+ 	<area shape="rect" coords="21,309,41,319" id ="168" title="rewind" onclick="pressMenuRemote('168');">
+ 	<area shape="rect" coords="47,309,67,319" id ="207" title="play" onclick="pressMenuRemote('207');">
+ 	<area shape="rect" coords="73,309,93,319" id ="119" title="pause" onclick="pressMenuRemote('119');">
