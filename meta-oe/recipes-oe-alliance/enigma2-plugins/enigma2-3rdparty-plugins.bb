@@ -49,7 +49,7 @@ THIRDPARTY_PLUGINS = " \
     ${@bb.utils.contains("TARGET_ARCH", "sh4", "enigma2-plugin-extensions-isettinge2-3.4.4-oe2.0-all-sh4.ipk" , "", d)} \
     ${@bb.utils.contains("TARGET_ARCH", "mipsel", "enigma2-plugin-extensions-isettinge2-3.4.4-oe2.0-all-mips.ipk" , "", d)} \
     ${@bb.utils.contains("TARGET_ARCH", "arm", "enigma2-plugin-extensions-isettinge2-3.4.4-oe2.0-all-arm.ipk" , "", d)} \
-    enigma2-plugin-extensions-jedimakerxtream_5.29.20200129_all.ipk \
+    enigma2-plugin-extensions-jedimakerxtream_5.30.20200427_all.ipk \
     enigma2-plugin-extensions-livefootball_7.1_all.ipk \
     enigma2-plugin-extensions-mediainfo_3.0.7_all.ipk \
     enigma2-plugin-extensions-mediaportal_all.ipk \
@@ -98,7 +98,8 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-wwech_1.03_all.ipk \
     enigma2-plugin-extensions-xbmcwetter_1.4rc1_all.ipk \
     enigma2-plugin-extensions-xcplugin-iptv-mod-lululla_6.7_all \
-    enigma2-plugin-picons-snp-full.220x132-190x102.light.on.transparent_2020-04-11--01-03-50_all.ipk \
+    enigma2-plugin-extensions-xstreamity_1.29.20200427_all.ipk \	
+    enigma2-plugin-picons-snp-full.220x132-190x102.light.on.transparent_2020-04-29--20-31-15_all.ipk \
     enigma2-plugin-skins-OverlayHD_1.82_all.ipk \
     enigma2-plugin-systemplugins-bouquetsprotection_0.2-rc1_all.ipk \
     enigma2-plugin-systemplugins-channelselectionnavigator_1.5_mipsel.ipk \

@@ -171,9 +171,9 @@ The description must be unique for each source, and is displayed on the UI.
 		</source>
 	</sourcecat>
 
-	<sourcecat sourcecatname="Rytec Bulgariya XMLTV">
+	<sourcecat sourcecatname="Rytec Bulgaria XMLTV">
 		<source type="gen_xmltv" channels="rytec.channels.xml.xz">
-			<description>Bulgariya (xz)</description>
+			<description>Bulgaria</description>
 			<url>http://www.xmltvepg.nl/rytecBG.xz</url>
 			<url>http://epgspot.com/rytec_epg/rytecBG.xz</url>
 			<url>http://rytecepg.wanwizard.eu/rytecBG.xz</url>
@@ -393,7 +393,7 @@ The description must be unique for each source, and is displayed on the UI.
 			<url>http://www.xmltvepg.nl/rytecPL_Misc.xz</url>
 			<url>http://epgspot.com/rytec_epg/rytecPL_Misc.xz</url>
 			<url>http://rytecepg.wanwizard.eu/rytecPL_Misc.xz</url>
-			<url>http://rytecepg.dyndns.tv/epg_data/rrytecPL_Misc.xz</url>
+			<url>http://rytecepg.dyndns.tv/epg_data/rytecPL_Misc.xz</url>
 			<url>http://epg.vuplus-community.net/rytecPL_Misc.xz</url>
 		</source>
 		<source type="gen_xmltv" channels="rytec.channels.xml.xz">
@@ -501,11 +501,11 @@ The description must be unique for each source, and is displayed on the UI.
 		</source>
 		<source type="gen_xmltv" channels="rytec.channels.xml.xz">
 			<description>Hrvatska - Sport/Film (xz)</description>
-			<url>http://www.xmltvepg.nl/rytecExYu_SportMovies.xz</url>
-			<url>http://epgspot.com/rytec_epg/rytecExYu_SportMovies.xz</url>
-			<url>http://rytecepg.wanwizard.eu/rytecExYu_SportMovies.xz</url>
-			<url>http://rytecepg.dyndns.tv/epg_data/rytecExYu_SportMovies.xz</url>
-			<url>http://epg.vuplus-community.net/rytecExYu_SportMovies.xz</url>
+			<url>http://www.xmltvepg.nl/rytecHRV_SportMovies.xz</url>
+			<url>http://epgspot.com/rytec_epg/rytecHRV_SportMovies.xz</url>
+			<url>http://rytecepg.wanwizard.eu/rytecHRV_SportMovies.xz</url>
+			<url>http://rytecepg.dyndns.tv/epg_data/rytecHRV_SportMovies.xz</url>
+			<url>http://epg.vuplus-community.net/rytecHRV_SportMovies.xz</url>
 		</source>
 	</sourcecat>
 
@@ -528,11 +528,11 @@ The description must be unique for each source, and is displayed on the UI.
 		</source>
 		<source type="gen_xmltv" channels="rytec.channels.xml.xz">
 			<description>Srbija/Crna Gora - Sport/Film (xz)</description>
-			<url>http://www.xmltvepg.nl/rytecExYu_SportMovies.xz</url>
-			<url>http://epgspot.com/rytec_epg/rytecExYu_SportMovies.xz</url>
-			<url>http://rytecepg.wanwizard.eu/rytecExYu_SportMovies.xz</url>
-			<url>http://rytecepg.dyndns.tv/epg_data/rytecExYu_SportMovies.xz</url>
-			<url>http://epg.vuplus-community.net/rytecExYu_SportMovies.xz</url>
+			<url>http://www.xmltvepg.nl/rytecHRV_SportMovies.xz</url>
+			<url>http://epgspot.com/rytec_epg/rytecHRV_SportMovies.xz</url>
+			<url>http://rytecepg.wanwizard.eu/rytecHRV_SportMovies.xz</url>
+			<url>http://rytecepg.dyndns.tv/epg_data/rytecHRV_SportMovies.xz</url>
+			<url>http://epg.vuplus-community.net/rytecHRV_SportMovies.xz</url>
 		</source>
 	</sourcecat>
 
@@ -556,11 +556,11 @@ The description must be unique for each source, and is displayed on the UI.
 		</source>
 		<source type="gen_xmltv" channels="rytec.channels.xml.xz">
 			<description>Slovenija - Sport/Film (xz)</description>
-			<url>http://www.xmltvepg.nl/rytecExYu_SportMovies.xz</url>
-			<url>http://epgspot.com/rytec_epg/rytecExYu_SportMovies.xz</url>
-			<url>http://rytecepg.wanwizard.eu/rytecExYu_SportMovies.xz</url>
-			<url>http://rytecepg.dyndns.tv/epg_data/rytecExYu_SportMovies.xz</url>
-			<url>http://epg.vuplus-community.net/rytecExYu_SportMovies.xz</url>
+			<url>http://www.xmltvepg.nl/rytecSVN_SportMovies.xz</url>
+			<url>http://epgspot.com/rytec_epg/rytecSVN_SportMovies.xz</url>
+			<url>http://rytecepg.wanwizard.eu/rytecSVN_SportMovies.xz</url>
+			<url>http://rytecepg.dyndns.tv/epg_data/rytecSVN_SportMovies.xz</url>
+			<url>http://epg.vuplus-community.net/rytecSVN_SportMovies.xz</url>
 		</source>
 	</sourcecat>
 
@@ -763,6 +763,7 @@ The description must be unique for each source, and is displayed on the UI.
 			<url>http://epg.tododream.com/latinmunich_xmltv-movistar-spain_todo.gz</url>
 		</source>
 	</sourcecat>
+
 	<sourcecat sourcecatname="Russian XMLTV">
 		<!-- EPG FROM runigma by kil1970 - -->
 		<source type="gen_xmltv" nocheck="1" channels="http://runigma.com.ua/EPG/SAT/channels-4W.xml.gz">
@@ -875,4 +876,5 @@ The description must be unique for each source, and is displayed on the UI.
 		  <url>http://runigma.com.ua/EPG/IPTV/epg-iptv.xml.gz</url>
 		</source>
 	</sourcecat>
+
 </sources>
