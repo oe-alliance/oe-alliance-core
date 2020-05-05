@@ -1,8 +1,8 @@
-SRCDATE = "20200502"
+SRCDATE = "20200504"
 
 require gfutures-bootargs.inc
 
-SRC_URI[md5sum] = "0ede145d11ac3992dff8d8fc8d7b4446"
-SRC_URI[sha256sum] = "08368ed4614a47eaf3e22c51c3dd2b42910f3e8a46a4b4f7b8c5f4416d235f43"
+SRC_URI[md5sum] = "c28fcee87dc53fe3c4b096684d1a4edb"
+SRC_URI[sha256sum] = "5a6116bb361beea8e11168e3607be4c9d0e936a8f436f61a6fe6b0f08d1476de"
 
 COMPATIBLE_MACHINE = "hd61"
