@@ -14,7 +14,7 @@ SRCREV = "9274bc15bc41bbe490fde847f8422468cc20375d"
 PV = "0.20.22"
 PKGV = "0.20.22"
 
-SRC_URI = "git://github.com/MusicPlayerDaemon/MPD;branch=v0.20.x \
+SRC_URI = "git://github.com/MusicPlayerDaemon/MPD \
         file://mpd.conf \
         file://mpd.init \
         "
