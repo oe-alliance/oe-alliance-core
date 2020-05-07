@@ -1,7 +1,5 @@
 inherit upx-compress
 
-ANY_OF_DISTRO_FEATURES += "${GTK2DISTROFEATURES}"
-
 AVAHI_GTK = "gtk"
 
 do_install_append () {
@@ -11,7 +9,6 @@ do_install_append () {
         rm -rf ${D}${datadir}/applications
         rm -rf ${D}${datadir}/man
 }
-
 
 # for shairplay ...
 PACKAGECONFIG += "libdns_sd"
