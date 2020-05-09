@@ -1,28 +1,28 @@
 diff --git a/src/Makefile.am b/src/Makefile.am
-index 23c4f46..5f3c9f0 100644
+index 41ba5d3..8f6ec8f 100644
 --- a/src/Makefile.am
 +++ b/src/Makefile.am
-@@ -84,15 +84,6 @@ version.c:  $(wget_SOURCES) ../lib/libgnu.a
+@@ -85,15 +85,6 @@ version.c:  $(wget_SOURCES) ../lib/libgnu.a
  	echo '' >> $@
  	echo '#include "version.h"' >> $@
  	echo 'const char *version_string = "@VERSION@";' >> $@
 -	echo 'const char *compilation_string = "'$(COMPILE)'";' \
 -	    | sed -e "s,$(TOOLCHAIN_OPTIONS),,g" \
--	          -e "s,$(DEBUG_PREFIX_MAP),,g" \
+-	          -e "s,$$(echo $(DEBUG_PREFIX_MAP)),,g" \
 -	    | $(ESCAPEQUOTE) >> $@
 -	echo 'const char *link_string = "'$(CCLD) $(AM_CFLAGS) $(CFLAGS) \
 -	$(AM_LDFLAGS) $(LDFLAGS) $(LIBS) $(wget_LDADD)'";' \
 -	    | sed -e "s,$(TOOLCHAIN_OPTIONS),,g" \
--	          -e "s,$(DEBUG_PREFIX_MAP),,g" \
+-	          -e "s,$$(echo $(DEBUG_PREFIX_MAP)),,g" \
 -	    | $(ESCAPEQUOTE) >> $@
  
  css.c: $(srcdir)/css.l
  	$(LEX) $(LFLAGS) -o$@ $^
 diff --git a/src/Makefile.in b/src/Makefile.in
-index d7a66b7..ef1a002 100644
+index a4f021b..6ac6532 100644
 --- a/src/Makefile.in
 +++ b/src/Makefile.in
-@@ -2398,11 +2398,6 @@ version.c:  $(wget_SOURCES) ../lib/libgnu.a
+@@ -2614,11 +2614,6 @@ version.c:  $(wget_SOURCES) ../lib/libgnu.a
  	echo '' >> $@
  	echo '#include "version.h"' >> $@
  	echo 'const char *version_string = "@VERSION@";' >> $@
@@ -35,10 +35,10 @@ index d7a66b7..ef1a002 100644
  css.c: $(srcdir)/css.l
  	$(LEX) $(LFLAGS) -o$@ $^
 diff --git a/src/main.c b/src/main.c
-index d19437e..9b154f3 100644
+index 65b7f3f..94f27e7 100644
 --- a/src/main.c
 +++ b/src/main.c
-@@ -1222,8 +1222,6 @@ print_version (void)
+@@ -1249,8 +1249,6 @@ print_version (void)
  {
    const char *wgetrc_title  = _("Wgetrc: ");
    const char *locale_title  = _("Locale: ");
@@ -47,7 +47,7 @@ index d19437e..9b154f3 100644
    char *env_wgetrc, *user_wgetrc;
    int i;
  
-@@ -1277,18 +1275,6 @@ print_version (void)
+@@ -1304,18 +1302,6 @@ print_version (void)
      exit (WGET_EXIT_IO_FAIL);
  #endif /* def ENABLE_NLS */
  
@@ -67,10 +67,10 @@ index d19437e..9b154f3 100644
      exit (WGET_EXIT_IO_FAIL);
  
 diff --git a/src/version.h b/src/version.h
-index aeae086..7e10850 100644
+index 95ae78a..3356aee 100644
 --- a/src/version.h
 +++ b/src/version.h
-@@ -29,8 +29,6 @@ as that of the covered work.  */
+@@ -32,8 +32,6 @@ as that of the covered work.  */
  
  /* Extern declarations for strings in version.c */
  extern const char *version_string;
