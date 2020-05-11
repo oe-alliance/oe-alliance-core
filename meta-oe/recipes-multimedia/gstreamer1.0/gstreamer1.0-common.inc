@@ -5,12 +5,12 @@ inherit gitpkgv meson gettext
 PV = "${GST_VERSION_FULL}+git${SRCPV}"
 PKGV = "${GST_VERSION_FULL}+git${GITPKGV}"
 
-SRCREV_gst = "c740c104047a94b6b9ebd8f698a8976ba62ac0dc"
-SRCREV_gst_libav = "e727ce548c28e5a0577148069a7a81f67b9ba630"
+SRCREV_gst = "70469b4a4c8095da090cef0b8f7286ec60dd691e"
+SRCREV_gst_libav = "0a985ff67764c50280ea1de121e511299d4823f6"
 
-SRCREV_gst_plugins_bad = "02c8e66ff1d3e5f72436222459b4aecc439fbe73"
-SRCREV_gst_plugins_base = "add3023f09eb70cdf68130dacf4995e219f74bb9"
-SRCREV_gst_plugins_good = "619457ae2635eec4a01b8fcc900a84f5a5ea8ff2"
+SRCREV_gst_plugins_bad = "79e65951a90eebfa496cae35b76b4b9eaa92931e"
+SRCREV_gst_plugins_base = "9280d4b8f512565003bf8e310681394c1611d3c1"
+SRCREV_gst_plugins_good = "d8f0deadc3533ad0f5b3aef8c2da5a3192f658b7"
 SRCREV_gst_plugins_ugly = "8fe8ed3dd2bdcf22097d9886ad5242258b64ee44"
 
 # ffmpeg versions < 4.2.2
