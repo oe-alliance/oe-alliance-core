@@ -1,7 +1,7 @@
 From 1553b610994b399f4d42772f4a9565a4ce2a1245 Mon Sep 17 00:00:00 2001
 From: Athanasios Oikonomou <athoik@gmail.com>
 Date: Sat, 5 Mar 2016 01:34:21 +0200
-Subject: [PATCH] TBS: fixes for 4.0.1 kernel
+Subject: [PATCH] TBS: fixes for 4.3 kernel
 
 Change fe_sec_voltage_t to enum fe_sec_voltage.
 
