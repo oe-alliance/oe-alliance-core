@@ -1,0 +1,46 @@
+diff --git a/drivers/media/dvb-core/dvb-usb-ids.h b/drivers/media/dvb-core/dvb-usb-ids.h
+index 779f4224b63e..ae6005436639 100644
+--- a/drivers/media/dvb-core/dvb-usb-ids.h
++++ b/drivers/media/dvb-core/dvb-usb-ids.h
+@@ -411,6 +411,6 @@
+ #define USB_PID_PCTV_2002E_SE                           0x025d
+ #define USB_PID_SVEON_STV27                             0xd3af
+ #define USB_PID_TURBOX_DTT_2000                         0xd3a4
+-#define USB_PID_WINTV_SOLOHD                            0x0264
+ #define USB_PID_EVOLVEO_XTRATV_STICK                   0xa115
++#define USB_PID_WINTV_SOLOHD                            0x0264
+ #endif
+diff --git a/drivers/media/dvb-frontends/stv090x.c b/drivers/media/dvb-frontends/stv090x.c
+index 7ef469c0c866..b586d2a49737 100644
+--- a/drivers/media/dvb-frontends/stv090x.c
++++ b/drivers/media/dvb-frontends/stv090x.c
+@@ -3692,12 +3692,9 @@ static int stv090x_read_cnr(struct dvb_frontend *fe, u16 *cnr)
+ 			}
+ 			val /= 16;
+ 			last = ARRAY_SIZE(stv090x_s2cn_tab) - 1;
+-			div = stv090x_s2cn_tab[last].real -
+-			      stv090x_s2cn_tab[3].real;
+-			val = stv090x_table_lookup(stv090x_s2cn_tab, last, val);
+-			if (val < 0)
+-				val = 0;
+-			*cnr = val * 0xFFFF / div;
++			div = stv090x_s2cn_tab[0].read -
++			      stv090x_s2cn_tab[last].read;
++			*cnr = 0xFFFF - ((val * 0xFFFF) / div);
+ 		}
+ 		break;
+ 
+@@ -3717,10 +3714,9 @@ static int stv090x_read_cnr(struct dvb_frontend *fe, u16 *cnr)
+ 			}
+ 			val /= 16;
+ 			last = ARRAY_SIZE(stv090x_s1cn_tab) - 1;
+-			div = stv090x_s1cn_tab[last].real -
+-			      stv090x_s1cn_tab[0].real;
+-			val = stv090x_table_lookup(stv090x_s1cn_tab, last, val);
+-			*cnr = val * 0xFFFF / div;
++			div = stv090x_s1cn_tab[0].read -
++			      stv090x_s1cn_tab[last].read;
++			*cnr = 0xFFFF - ((val * 0xFFFF) / div);
+ 		}
+ 		break;
+ 	default:
