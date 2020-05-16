@@ -1,3 +1,6 @@
+PACKAGECONFIG_GL_pn-qtbase = " "
+PACKAGECONFIG_append_pn-qtbase += " gles2 linuxfb"
+
 MACHINE_FEATURES += "qthbbtv qtstalker"
 
 PREFERRED_PROVIDER_virtual/egl ?= "airdigital-mali-${HICHIPSET}"
@@ -16,9 +19,6 @@ MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "\
     ${@bb.utils.contains('MACHINE_FEATURES', 'hisi-recovery', 'airdigital-recovery-${HICHIPSET}' , '', d)} \
     ${@bb.utils.contains('MACHINE_FEATURES', 'SDcard', 'airdigital-bootargs-extra-${MACHINE}' , '', d)} \
     "
-
-DVBPROVIDER = "kernel"
-DVBSKYPROVIDER = "kernel"
 
 MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS += "\
     ${@bb.utils.contains('MACHINE_FEATURES', 'mali', 'airdigital-mali-${HICHIPSET} kernel-module-mali-${HICHIPSET}' , '', d)} \

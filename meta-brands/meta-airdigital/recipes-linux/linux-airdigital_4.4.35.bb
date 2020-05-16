@@ -5,14 +5,14 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
 KERNEL_RELEASE = "4.4.35"
 
-SRCDATE = "20181121"
+SRCDATE = "20200508"
 
 inherit kernel machine_kernel_pr
 
-MACHINE_KERNEL_PR_append = ".28"
+MACHINE_KERNEL_PR_append = "29"
 
-SRC_URI[md5sum] = "ede25f1c2c060f1059529a2896cee5a9"
-SRC_URI[sha256sum] = "ea4ba0433d252c18f38ff2f4dce4b70880e447e1cffdc2066d5a9b5f8098ae7e"
+SRC_URI[arm.md5sum] = "f9e67e2d0ceab518510413f8f4315bc3"
+SRC_URI[arm.sha256sum] = "45ae717b966a74326fd7297d81b3a17fd5b3962b7704170682a615ca7cdec644"
 
 SRC_URI = "http://source.mynonpublic.com/zgemma/linux-${PV}-${SRCDATE}-${ARCH}.tar.gz \
     file://defconfig \
@@ -26,6 +26,10 @@ SRC_URI = "http://source.mynonpublic.com/zgemma/linux-${PV}-${SRCDATE}-${ARCH}.t
     file://initramfs-subdirboot.cpio.gz;unpack=0 \
     file://findkerneldevice.sh \
     file://move-default-dialect-to-SMB3.patch \
+    file://0004-linux-fix-buffer-size-warning-error.patch \
+    file://modules_mark__inittest__exittest_as__maybe_unused.patch \
+    file://includelinuxmodule_h_copy__init__exit_attrs_to_initcleanup_module.patch \
+    file://Backport_minimal_compiler_attributes_h_to_support_GCC_9.patch \
 "
 
 SRC_URI_append_h9 += " \
@@ -56,6 +60,7 @@ KERNEL_EXTRA_ARGS = "EXTRA_CFLAGS=-Wno-attribute-alias"
 
 FILES_${KERNEL_PACKAGE_NAME}-image_h9 = " "
 FILES_${KERNEL_PACKAGE_NAME}-image_i5plus = " "
+FILES_${KERNEL_PACKAGE_NAME}-image_hzero = " "
 FILES_${KERNEL_PACKAGE_NAME}-image = "/${KERNEL_IMAGEDEST}/findkerneldevice.sh"
 
 kernel_do_configure_prepend() {
@@ -84,6 +89,16 @@ pkg_postinst_kernel-image_h9() {
 }
 
 pkg_postinst_kernel-image_i55plus() {
+	if [ "x$D" == "x" ]; then
+		if [ -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE} ] ; then
+			flash_erase /dev/${MTD_KERNEL} 0 0
+			nandwrite -p /dev/${MTD_KERNEL} /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}
+		fi
+	fi
+	true
+}
+
+pkg_postinst_kernel-image_hzero() {
 	if [ "x$D" == "x" ]; then
 		if [ -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE} ] ; then
 			flash_erase /dev/${MTD_KERNEL} 0 0
