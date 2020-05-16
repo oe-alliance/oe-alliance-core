@@ -1,3 +1,6 @@
+PACKAGECONFIG_GL_pn-qtbase = " "
+PACKAGECONFIG_append_pn-qtbase += " gles2 linuxfb"
+
 MTD_KERNEL = "mtd1"
 MTD_ROOTFS = "mtd2"
 KERNEL_FILE = "kernel.bin"
