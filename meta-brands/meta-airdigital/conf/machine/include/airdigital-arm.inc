@@ -1,3 +1,6 @@
+PACKAGECONFIG_GL_pn-qtbase = " "
+PACKAGECONFIG_append_pn-qtbase += " gles2 linuxfb"
+
 #IMAGE_CLASSES += "airdigitalemmc_image_single"
 IMAGE_CLASSES += "airdigital-emmc_image_multiboot"
 
