@@ -30,6 +30,7 @@ IMAGE_CMD_zgemmafastboot8gb () {
 	echo "bootcmd=setenv bootargs \$(bootargs_common); mmc read 0 0x1000000 0x1000 0x9000; bootm 0x1000000" > ${WORKDIR}/STARTUP_RECOVERY
 	echo "bootcmd=setenv bootargs \$(bootargs_common); mmc read 0 0x1000000 0x1000 0x9000; bootm 0x1000000" > ${WORKDIR}/STARTUP_ONCE
 	echo "imageurl https://raw.githubusercontent.com/oe-alliance/bootmenu/master/${MACHINEBUILD}/images" > ${WORKDIR}/bootmenu.conf
+	echo "updateurl http://updateurl.redirectme.net/cgi-bin/index.py" >> ${WORKDIR}/bootmenu.conf
 	echo "# " >> ${WORKDIR}/bootmenu.conf
 	echo "iface eth0" >> ${WORKDIR}/bootmenu.conf
 	echo "dhcp yes" >> ${WORKDIR}/bootmenu.conf

@@ -1,0 +1,51 @@
+From edc966de8725f9186cc9358214da89d335f0e0bd Mon Sep 17 00:00:00 2001
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Fri, 2 Aug 2019 12:37:56 +0200
+Subject: Backport minimal compiler_attributes.h to support GCC 9
+
+This adds support for __copy to v4.9.y so that we can use it in
+init/exit_module to avoid -Werror=missing-attributes errors on GCC 9.
+
+Link: https://lore.kernel.org/lkml/259986242.BvXPX32bHu@devpool35/
+Cc: <stable@vger.kernel.org>
+Suggested-by: Rolf Eike Beer <eb@emlix.com>
+Signed-off-by: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ include/linux/compiler.h | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+
+(limited to 'include/linux')
+
+diff --git a/include/linux/compiler.h b/include/linux/compiler.h
+index ed772311ec1f..5508011cc0c7 100644
+--- a/include/linux/compiler.h
++++ b/include/linux/compiler.h
+@@ -52,6 +52,22 @@ extern void __chk_io_ptr(const volatile void __iomem *);
+ 
+ #ifdef __KERNEL__
+ 
++/*
++ * Minimal backport of compiler_attributes.h to add support for __copy
++ * to v4.9.y so that we can use it in init/exit_module to avoid
++ * -Werror=missing-attributes errors on GCC 9.
++ */
++#ifndef __has_attribute
++# define __has_attribute(x) __GCC4_has_attribute_##x
++# define __GCC4_has_attribute___copy__                0
++#endif
++
++#if __has_attribute(__copy__)
++# define __copy(symbol)                 __attribute__((__copy__(symbol)))
++#else
++# define __copy(symbol)
++#endif
++
+ #ifdef __GNUC__
+ #include <linux/compiler-gcc.h>
+ #endif
+-- 
+cgit 1.2-0.3.lf.el7
+
