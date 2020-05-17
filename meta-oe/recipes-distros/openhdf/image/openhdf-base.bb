@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda
 ALLOW_EMPTY_${PN} = "1"
 
 PV = "1.0"
-PR = "r42"
+PR = "r43"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
@@ -25,6 +25,7 @@ RDEPENDS_${PN} = "\
     python-mutagen \
     python-plistlib \
     python-imaging \
+    python-netifaces \
     python-service-identity \
     unrar \
     ofgwrite \
