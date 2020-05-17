@@ -11,8 +11,8 @@ inherit kernel machine_kernel_pr
 
 MACHINE_KERNEL_PR_append = "29"
 
-SRC_URI[arm.md5sum] = "f9e67e2d0ceab518510413f8f4315bc3"
-SRC_URI[arm.sha256sum] = "45ae717b966a74326fd7297d81b3a17fd5b3962b7704170682a615ca7cdec644"
+SRC_URI[md5sum] = "f9e67e2d0ceab518510413f8f4315bc3"
+SRC_URI[sha256sum] = "45ae717b966a74326fd7297d81b3a17fd5b3962b7704170682a615ca7cdec644"
 
 SRC_URI = "http://source.mynonpublic.com/zgemma/linux-${PV}-${SRCDATE}-${ARCH}.tar.gz \
     file://defconfig \
