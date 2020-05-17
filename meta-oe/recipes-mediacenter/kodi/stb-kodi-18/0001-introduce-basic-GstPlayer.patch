@@ -113,7 +113,7 @@ new file mode 100644
 index 0000000..3a78eb1
 --- /dev/null
 +++ b/xbmc/cores/GstPlayer/GstPlayer.cpp
-@@ -0,0 +1,600 @@
+@@ -0,0 +1,602 @@
 +/*
 + *      Copyright (C) 2005-2015 Team Kodi
 + *      http://kodi.tv
@@ -708,6 +708,8 @@ index 0000000..3a78eb1
 +void CGstPlayer::FrameMove() 
 +{ 
 +	//CLog::Log(LOGNOTICE, "CGstPlayer::%s", __FUNCTION__ );
++	if (m_processInfo)
++		m_processInfo->SetPlayTimes(0, GetTime(), 0, GetTotalTime() );
 +}
 +
 +bool CGstPlayer::IsPlaying() const
