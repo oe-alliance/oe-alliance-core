@@ -13,7 +13,7 @@ SRCREV = "${AUTOREV}"
 
 KODIADDONBRANCH = "Leia"
 
-PV = "2.4.4+gitr${SRCPV}"
+PV = "2.4.5+gitr${SRCPV}"
 SRC_URI = "git://github.com/peak3d/inputstream.adaptive.git;protocol=https;branch=${KODIADDONBRANCH} \
           "
 
