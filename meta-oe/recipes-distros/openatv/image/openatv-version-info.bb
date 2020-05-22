@@ -26,7 +26,7 @@ do_install() {
     echo "machine_name=${MACHINE_NAME}" >> ${D}/etc/image-version
     echo "version=${IMAGE_VERSION}" >> ${D}/etc/image-version
     echo "build=${BUILD_VERSION}" >> ${D}/etc/image-version
-    echo "date=${DATETIME}" >> ${D}/etc/image-version
+    echo "date=${DATE}" >> ${D}/etc/image-version
     echo "comment=openATV" >> ${D}/etc/image-version
     echo "target=9" >> ${D}/etc/image-version
     echo "creator=openATV" >> ${D}/etc/image-version
@@ -68,7 +68,7 @@ do_install() {
     echo "transcoding=${TRANSCODING}" >> ${D}/etc/image-version
     echo "${MACHINE}" > ${D}/etc/model
 }
-do_install[vardepsexclude] += "DATETIME"
+do_install[vardepsexclude] += "DATE"
 
 FILES_${PN} += "/etc/model /etc/image-version /etc/oe-git.log /etc/e2-git.log"
 
