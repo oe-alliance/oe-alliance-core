@@ -28,6 +28,7 @@ SRC_URI += "http://source.mynonpublic.com/ini/bcm7413-linux-${KV}-${SRCDATE}.tar
     file://kernel-add-support-for-gcc7.patch \
     file://kernel-add-support-for-gcc8.patch \
     file://kernel-add-support-for-gcc9.patch \
+    file://kernel-add-support-for-gcc10.patch \
     file://0001-Revert-MIPS-mm-Add-compound-tail-page-_mapcount-when.patch \
     file://0001-Revert-MIPS-Add-fast-get_user_pages.patch \
     file://add-dmx-source-timecode.patch \
