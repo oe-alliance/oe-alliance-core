@@ -197,6 +197,7 @@ SRC_URI = " \
     file://kernel-add-support-for-gcc7.patch \
     file://kernel-add-support-for-gcc8.patch \
     file://kernel-add-support-for-gcc9.patch \
+    file://kernel-add-support-for-gcc10.patch \
     file://timeconst_perl5.patch \
     file://0001-dvb_frontend-backport-multistream-support.patch \
     file://log2.patch \

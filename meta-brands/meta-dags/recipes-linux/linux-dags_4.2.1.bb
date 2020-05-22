@@ -20,6 +20,7 @@ SRC_URI += "http://en3homeftp.net/pub/src/dags-linux-${PV}-${SRCDATE}.tar.gz \
     file://kernel-add-support-for-gcc7.patch \
     file://kernel-add-support-for-gcc8.patch \
     file://kernel-add-support-for-gcc9.patch \
+    file://kernel-add-support-for-gcc10.patch \
     file://0001-Support-TBS-USB-drivers-for-4.2-kernel.patch \
     file://0001-TBS-fixes-for-4.2-kernel.patch \
     file://0001-STV-Add-PLS-support.patch \
