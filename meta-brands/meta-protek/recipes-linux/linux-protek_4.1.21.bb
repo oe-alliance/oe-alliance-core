@@ -13,7 +13,7 @@ SRC_URI[sha256sum] = "88f648e462e9d37c6ed9401b33ee1dd08495e9f66b9c653aefd9fd0a4f
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR_append = ".1"
+MACHINE_KERNEL_PR_append = "2"
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
@@ -25,6 +25,23 @@ RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 
 SRC_URI += "http://source.mynonpublic.com/protek/protek-linux-${PV}-${SRCDATE}.tar.xz \
     file://defconfig \
+    file://0001-regmap-add-regmap_write_bits.patch \
+    file://0002-af9035-fix-device-order-in-ID-list.patch \
+    file://0003-Add-support-for-dvb-usb-stick-Hauppauge-WinTV-soloHD.patch \
+    file://0004-af9035-add-USB-ID-07ca-0337-AVerMedia-HD-Volar-A867.patch \
+    file://0005-Add-support-for-EVOLVEO-XtraTV-stick.patch \
+    file://0006-dib8000-Add-support-for-Mygica-Geniatech-S2870.patch \
+    file://0007-dib0700-add-USB-ID-for-another-STK8096-PVR-ref-desig.patch \
+    file://0008-add-Hama-Hybrid-DVB-T-Stick-support.patch \
+    file://0009-Add-Terratec-H7-Revision-4-to-DVBSky-driver.patch \
+    file://0010-media-Added-support-for-the-TerraTec-T1-DVB-T-USB-tu.patch \
+    file://0011-media-tda18250-support-for-new-silicon-tuner.patch \
+    file://0012-media-dib0700-add-support-for-Xbox-One-Digital-TV-Tu.patch \
+    file://0013-mn88472-Fix-possible-leak-in-mn88472_init.patch \
+    file://0014-staging-media-Remove-unneeded-parentheses.patch \
+    file://0015-staging-media-mn88472-simplify-NULL-tests.patch \
+    file://0016-mn88472-fix-typo.patch \
+    file://0017-mn88472-finalize-driver.patch \
     file://add-dmx-source-timecode.patch \
     file://af9015-output-full-range-SNR.patch \
     file://cxd2820r-output-full-range-SNR.patch \
