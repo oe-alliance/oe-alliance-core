@@ -9,7 +9,7 @@ SRCDATE = "20200508"
 
 inherit kernel machine_kernel_pr
 
-MACHINE_KERNEL_PR_append = "29"
+MACHINE_KERNEL_PR_append = "30"
 
 SRC_URI[md5sum] = "f9e67e2d0ceab518510413f8f4315bc3"
 SRC_URI[sha256sum] = "45ae717b966a74326fd7297d81b3a17fd5b3962b7704170682a615ca7cdec644"
@@ -30,6 +30,10 @@ SRC_URI = "http://source.mynonpublic.com/zgemma/linux-${PV}-${SRCDATE}-${ARCH}.t
     file://modules_mark__inittest__exittest_as__maybe_unused.patch \
     file://includelinuxmodule_h_copy__init__exit_attrs_to_initcleanup_module.patch \
     file://Backport_minimal_compiler_attributes_h_to_support_GCC_9.patch \
+    file://0005-xbox-one-tuner-4.4.patch \
+    file://0006-dvb-media-tda18250-support-for-new-silicon-tuner.patch \
+    file://0007-dvb-mn88472-staging.patch \
+    file://mn88472_reset_stream_ID_reg_if_no_PLP_given.patch \
 "
 
 SRC_URI_append_h9 += " \
