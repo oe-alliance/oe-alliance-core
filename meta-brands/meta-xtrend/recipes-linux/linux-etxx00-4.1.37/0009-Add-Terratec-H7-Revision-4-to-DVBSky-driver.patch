@@ -1,0 +1,44 @@
+From 0cc93914f29cc7cf16202746449c0e101559ed5b Mon Sep 17 00:00:00 2001
+From: Erik Andresen <erik@vontaene.de>
+Date: Sat, 19 Sep 2015 14:30:30 -0300
+Subject: [PATCH 09/17] Add Terratec H7 Revision 4 to DVBSky driver
+
+Adds Terratec H7 Rev. 4 with USB id 0ccd:10a5 to DVBSky driver.
+
+Signed-off-by: Erik Andresen <erik@vontaene.de>
+Signed-off-by: Mauro Carvalho Chehab <mchehab@osg.samsung.com>
+---
+ drivers/media/dvb-core/dvb-usb-ids.h  | 1 +
+ drivers/media/usb/dvb-usb-v2/dvbsky.c | 4 ++++
+ 2 files changed, 5 insertions(+)
+
+diff --git a/drivers/media/dvb-core/dvb-usb-ids.h b/drivers/media/dvb-core/dvb-usb-ids.h
+index 9e91c5e..3169dfd 100644
+--- a/drivers/media/dvb-core/dvb-usb-ids.h
++++ b/drivers/media/dvb-core/dvb-usb-ids.h
+@@ -259,6 +259,7 @@
+ #define USB_PID_TERRATEC_CINERGY_T_XXS_2		0x00ab
+ #define USB_PID_TERRATEC_H7				0x10b4
+ #define USB_PID_TERRATEC_H7_2				0x10a3
++#define USB_PID_TERRATEC_H7_3				0x10a5
+ #define USB_PID_TERRATEC_T3				0x10a0
+ #define USB_PID_TERRATEC_T5				0x10a1
+ #define USB_PID_NOXON_DAB_STICK				0x00b3
+diff --git a/drivers/media/usb/dvb-usb-v2/dvbsky.c b/drivers/media/usb/dvb-usb-v2/dvbsky.c
+index cdf59bc..ef0caf1 100644
+--- a/drivers/media/usb/dvb-usb-v2/dvbsky.c
++++ b/drivers/media/usb/dvb-usb-v2/dvbsky.c
+@@ -841,6 +841,10 @@ static const struct usb_device_id dvbsky_id_table[] = {
+ 		USB_PID_TECHNOTREND_CONNECT_CT2_4650_CI,
+ 		&dvbsky_t680c_props, "TechnoTrend TT-connect CT2-4650 CI",
+ 		RC_MAP_TT_1500) },
++	{ DVB_USB_DEVICE(USB_VID_TERRATEC,
++		USB_PID_TERRATEC_H7_3,
++		&dvbsky_t680c_props, "Terratec H7 Rev.4",
++		RC_MAP_TT_1500) },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(usb, dvbsky_id_table);
+-- 
+2.1.4
+
