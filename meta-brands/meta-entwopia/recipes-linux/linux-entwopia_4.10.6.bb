@@ -12,7 +12,7 @@ SRC_URI[sha256sum] = "a147b639445206ce85a56e155667ada38db1512e1c78fe9d4fd6d4be6f
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}-base/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR_append = ".2"
+MACHINE_KERNEL_PR_append = "3"
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
@@ -36,6 +36,9 @@ SRC_URI += "http://source.mynonpublic.com/entwopia/${MACHINE}/${MACHINE}-linux-$
     file://0001-revert-xhci-plat.patch \
     file://noforce_correct_pointer_usage.patch \
     file://0003-cp1emu-do-not-use-bools-for-arithmetic.patch \
+    file://add-more-devices-rtl8xxxu.patch \
+    file://0005-xbox-one-tuner-4.10.patch \
+    file://0006-dvb-media-tda18250-support-for-new-silicon-tuner.patch \
     "
 
 S = "${WORKDIR}/linux-${PV}-base"

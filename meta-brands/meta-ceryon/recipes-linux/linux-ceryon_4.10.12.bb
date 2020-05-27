@@ -13,7 +13,7 @@ SRC_URI[arm.sha256sum] = "67a3ac98727595a399d5c399d3b66a7fadbe8136ac517e08decba5
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR_append = "oea4.1-r5"
+MACHINE_KERNEL_PR_append = "6"
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
@@ -39,6 +39,9 @@ SRC_URI += "http://source.mynonpublic.com/ceryon/ceryon-linux-${PV}-${ARCH}.tar.
     file://v3-3-4-media-dvbsky-MyGica-T230C-support.patch \
     file://v3-3-5-media-dvbsky-MyGica-T230C-support.patch \
     file://0002-cp1emu-do-not-use-bools-for-arithmetic.patch \
+    file://add-more-devices-rtl8xxxu.patch \
+    file://0005-xbox-one-tuner-4.10.patch \
+    file://0006-dvb-media-tda18250-support-for-new-silicon-tuner.patch \
     "
 
 SRC_URI_append_arm = " \

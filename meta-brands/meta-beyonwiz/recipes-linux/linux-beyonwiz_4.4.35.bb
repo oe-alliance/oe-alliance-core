@@ -7,7 +7,7 @@ SRCDATE = "20181224"
 
 inherit kernel machine_kernel_pr
 
-MACHINE_KERNEL_PR_append = "32"
+MACHINE_KERNEL_PR_append = "33"
 
 
 SRC_URI[md5sum] = "ad7eab17a5071a0d5f9ff44eb44e027d"
@@ -35,6 +35,10 @@ SRC_URI += "http://source.mynonpublic.com/beyonwiz/beyonwiz-linux-${PV}-${SRCDAT
     file://0003-dont-mark-register-as-const.patch \
     file://wifi-linux_4.4.183.patch \
     file://fix-dvbcore.patch \
+    file://0005-xbox-one-tuner-4.4.patch \
+    file://0006-dvb-media-tda18250-support-for-new-silicon-tuner.patch \
+    file://0007-dvb-mn88472-staging.patch \
+    file://mn88472_reset_stream_ID_reg_if_no_PLP_given.patch \
 "
 
 S = "${WORKDIR}/linux-${PV}"

@@ -33,6 +33,8 @@ SRC_URI += "http://source.mynonpublic.com/xp1000/linux-${PV}-${ARCH}.tar.gz \
     file://0001-stv090x-optimized-TS-sync-control.patch \
     file://t230c2.patch \
     file://add-more-devices-rtl8xxxu.patch \
+    file://0005-xbox-one-tuner-4.10.patch \
+    file://0006-dvb-media-tda18250-support-for-new-silicon-tuner.patch \
     "
 
 S = "${WORKDIR}/linux-${PV}"

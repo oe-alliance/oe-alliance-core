@@ -7,7 +7,7 @@ SRCDATE = "20181224"
 
 inherit kernel machine_kernel_pr
 
-MACHINE_KERNEL_PR_append = "31"
+MACHINE_KERNEL_PR_append = "32"
 
 SRC_URI[md5sum] = "ad7eab17a5071a0d5f9ff44eb44e027d"
 SRC_URI[sha256sum] = "0654d5aa21c51eaea46f7203014afe60052ec0990a92b9e289e1ca8a2793907c"
@@ -34,6 +34,10 @@ SRC_URI += "http://source.mynonpublic.com/gigablue/mv200/gigablue-linux-${PV}-${
     file://0003-dont-mark-register-as-const.patch \
     file://wifi-linux_4.4.183.patch \
     file://fix-dvbcore.patch \
+    file://0005-xbox-one-tuner-4.4.patch \
+    file://0006-dvb-media-tda18250-support-for-new-silicon-tuner.patch \
+    file://0007-dvb-mn88472-staging.patch \
+    file://mn88472_reset_stream_ID_reg_if_no_PLP_given.patch \
 "
 
 S = "${WORKDIR}/linux-${PV}"
