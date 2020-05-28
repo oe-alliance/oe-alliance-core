@@ -14,6 +14,7 @@ MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "\
     gigablue-reader-${MACHINEBUILD} \
     gigablue-libreader-${MACHINE} \
     gigablue-partitions-${MACHINEBUILD} \
+    gigablue-tntfs-${HICHIPSET} \
     gigablue-buildimage \
     e2fsprogs-resize2fs \
     gptfdisk \

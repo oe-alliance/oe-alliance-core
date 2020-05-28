@@ -16,8 +16,7 @@ TARGET_ARCH = "arm"
 DEFAULTTUNE = "cortexa15hf-neon-vfpv4"
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "\
-    ${@bb.utils.contains('MACHINE_FEATURES', 'hisil', 'gfutures-libs-${HICHIPSET} gfutures-partitions-${MACHINE} gfutures-bootargs-${MACHINE}' , '', d)} \
-    ${@bb.utils.contains('MACHINE_FEATURES', 'hisi-recovery', 'gfutures-recovery-${MACHINE}' , '', d)} \
+    ${@bb.utils.contains('MACHINE_FEATURES', 'hisil', 'gfutures-libs-${HICHIPSET} gfutures-partitions-${MACHINE} gfutures-bootargs-${MACHINE} gfutures-recovery-${MACHINE} gfutures-tntfs-${HICHIPSET}' , '', d)} \
     "
 
 MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS += "\
