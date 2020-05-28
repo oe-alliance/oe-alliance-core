@@ -31,6 +31,7 @@ MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "\
     octagon-reader-${MACHINE} \
     octagon-libreader-${SOC_FAMILY} \
     octagon-partitions-${MACHINE} \
+    octagon-tntfs-${HICHIPSET} \
     octagon-buildimage \
     e2fsprogs-resize2fs \
     gptfdisk \

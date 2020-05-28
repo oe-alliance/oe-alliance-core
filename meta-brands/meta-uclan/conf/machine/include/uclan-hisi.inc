@@ -33,6 +33,7 @@ MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "\
     uclan-reader-${MACHINE} \
     uclan-libreader-${MACHINE} \
     uclan-partitions-${MACHINE} \
+    uclan-tntfs-${HICHIPSET} \
     uclan-buildimage \
     e2fsprogs-resize2fs \
     gptfdisk \
