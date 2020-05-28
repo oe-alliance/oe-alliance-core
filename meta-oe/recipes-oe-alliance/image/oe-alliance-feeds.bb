@@ -123,6 +123,7 @@ RDEPENDS_${PN} = " \
     python-circuits-bricks \
     python-cfscrape \
     python-cocy \
+    python-future \
     python-futures \
     python-fuzzywuzzy \
     python-ipaddress \
