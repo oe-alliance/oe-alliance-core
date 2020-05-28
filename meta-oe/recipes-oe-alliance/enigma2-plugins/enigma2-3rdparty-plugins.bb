@@ -97,7 +97,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-wwech_1.03_all.ipk \
     enigma2-plugin-extensions-xbmcwetter_1.4rc1_all.ipk \
     enigma2-plugin-extensions-xcplugin-iptv-mod-lululla_6.7_all \
-    enigma2-plugin-extensions-xstreamity_1.31.20200509_all.ipk \	
+    enigma2-plugin-extensions-xstreamity_1.36.20200515_all.ipk \
     enigma2-plugin-picons-snp-full.220x132-190x102.light.on.transparent_2020-04-29--20-31-15_all.ipk \
     enigma2-plugin-skins-OverlayHD_1.82_all.ipk \
     enigma2-plugin-systemplugins-bouquetsprotection_0.2-rc1_all.ipk \
@@ -111,7 +111,7 @@ THIRDPARTY_MACHINE_PLUGINS_vuuno = " \
     "
 THIRDPARTY_MACHINE_PLUGINS_vuultimo = " \
     enigma2-plugin-extensions-sdg-imagedownloader-v0.7-oe-2.0-vu-all.ipk \
-    "	
+    "
 THIRDPARTY_MACHINE_PLUGINS_vusolo = " \
     enigma2-plugin-extensions-sdg-imagedownloader-v0.7-oe-2.0-vu-all.ipk \
     "
@@ -129,7 +129,7 @@ THIRDPARTY_MACHINE_PLUGINS_vusolose = " \
     "
 THIRDPARTY_MACHINE_PLUGINS_vuzero = " \
     enigma2-plugin-extensions-sdg-imagedownloader-v0.7-oe-2.0-vu-all.ipk \
-    "	
+    "
 
 THIRDPARTY_MACHINE_PLUGINS_et8000 = " \
     enigma2-plugin-systemplugins-autorebootET8000_1.3_mipsel.ipk \
