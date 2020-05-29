@@ -1,0 +1,33 @@
+From 07d45a42fa21b54d83e563565699d25bde9f8cbe Mon Sep 17 00:00:00 2001
+From: Olli Salonen <olli.salonen@iki.fi>
+Date: Sun, 30 Jul 2017 08:34:48 -0400
+Subject: media: mn88472: reset stream ID reg if no PLP given
+
+If the PLP given is NO_STREAM_ID_FILTER (~0u) don't try to set that into the PLP register. Set PLP to 0 instead.
+
+Signed-off-by: Olli Salonen <olli.salonen@iki.fi>
+Signed-off-by: Mauro Carvalho Chehab <mchehab@s-opensource.com>
+---
+ drivers/media/dvb-frontends/mn88472.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+(limited to 'drivers/media/dvb-frontends/mn88472.c')
+
+diff --git a/drivers/media/dvb-frontends/mn88472.c b/drivers/media/dvb-frontends/mn88472.c
+index f6938f9607ac..5e8fd63832e9 100644
+--- a/drivers/staging/media/mn88472/mn88472.c
++++ b/drivers/staging/media/mn88472/mn88472.c
+@@ -377,7 +377,9 @@ static int mn88472_set_frontend(struct dvb_frontend *fe)
+ 		ret = regmap_write(dev->regmap[1], 0xf6, 0x05);
+ 		if (ret)
+ 			goto err;
+-		ret = regmap_write(dev->regmap[2], 0x32, c->stream_id);
++		ret = regmap_write(dev->regmap[2], 0x32,
++				(c->stream_id == NO_STREAM_ID_FILTER) ? 0 :
++				c->stream_id );
+ 		if (ret)
+ 			goto err;
+ 		break;
+-- 
+cgit 1.2.3-1.el7
+

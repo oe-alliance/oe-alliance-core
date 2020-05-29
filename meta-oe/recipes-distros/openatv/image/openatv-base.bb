@@ -24,6 +24,7 @@ RDEPENDS_${PN} = "\
     python-imaging \
     python-service-identity \
     python-requests \
+    python-future \
     rtmpdump \
     zip \
     ${@bb.utils.contains("TUNE_FEATURES", "armv", "glibc-compat", "", d)} \

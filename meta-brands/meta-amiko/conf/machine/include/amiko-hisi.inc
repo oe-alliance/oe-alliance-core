@@ -33,6 +33,7 @@ MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "\
     amiko-reader-${MACHINE} \
     amiko-libreader-${MACHINE} \
     amiko-partitions-${MACHINE} \
+    amiko-tntfs-${HICHIPSET} \
     amiko-buildimage \
     e2fsprogs-resize2fs \
     gptfdisk \

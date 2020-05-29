@@ -33,6 +33,7 @@ MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "\
     beyonwiz-reader-${MACHINE} \
     beyonwiz-libreader-${MACHINE} \
     beyonwiz-partitions-${MACHINE} \
+    beyonwiz-tntfs-${HICHIPSET} \
     beyonwiz-buildimage \
     e2fsprogs-resize2fs \
     gptfdisk \
