@@ -17,7 +17,7 @@ SRC_URI = "git://gitlab.freedesktop.org/gstreamer/gst-libav;protocol=https;branc
 
 SRC_URI += " \
 ${@bb.utils.contains('PREFERRED_VERSION_ffmpeg', '3.4.2', ' \
-  git://gitlab.freedesktop.org/gstreamer/meson-ports/ffmpeg;protocol=https;branch=meson-4.1.4;destsuffix=git/subprojects/FFmpeg;name=gst_ffmpeg \
+  git://gitlab.freedesktop.org/gstreamer/meson-ports/ffmpeg;protocol=https;branch=meson-4.1.5;destsuffix=git/subprojects/FFmpeg;name=gst_ffmpeg \
   file://0001-meson-gst-ffmpeg-wrap.patch \
   file://0003-configure-check-for-armv7ve-variant.patch \
   file://0004-workaround-to-build-gst-libav-for-i586-with-gcc.patch \
