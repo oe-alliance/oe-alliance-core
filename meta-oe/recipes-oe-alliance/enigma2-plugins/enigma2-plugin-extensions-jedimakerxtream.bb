@@ -4,7 +4,7 @@ HOMEPAGE = "https://github.com/kiddac/Jedi_Maker_Xtream"
 MAINTAINER = "kiddac"
 PRIORITY = "optional"
 require conf/license/license-gplv2.inc
-DEPENDS += "python-lzma"
+DEPENDS += "python-backports-lzma"
 
 SRCREV="${AUTOREV}"
 
