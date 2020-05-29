@@ -14,6 +14,6 @@ SRCREV_gst_plugins_good = "b94b9988fa0219566274214779887f33644167b3"
 SRCREV_gst_plugins_ugly = "4063a319c5a7a3ffe23047c378ec19b2b9ed2ef5"
 
 # gst ffmpeg meson port v4.1.5
-SRCREV_gst_ffmpeg = "bd71f039a349b4a448ae7f0eddb65fd8f923345b"
+SRCREV_gst_ffmpeg = "5da8bab7d28e41e2ae5bbb3ef7bc8f289a6dd692"
 
 S = "${WORKDIR}/git"
