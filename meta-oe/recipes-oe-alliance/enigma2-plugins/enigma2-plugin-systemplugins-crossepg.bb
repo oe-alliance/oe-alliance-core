@@ -33,7 +33,7 @@ do_compile() {
     echo ${PV} > ${S}/VERSION
     oe_runmake SWIG="swig"
 # Just a quick hack to "compile" the python parts.
-    python2 -O -m compileall ${S}
+    ${@bb.utils.contains("PYTHON_PN", "python", "python2", "python3", d)} -O -m compileall ${S}
 }
 
 do_install() {

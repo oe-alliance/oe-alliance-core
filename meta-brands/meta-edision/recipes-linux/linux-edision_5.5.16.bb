@@ -48,7 +48,7 @@ pkg_postinst_kernel-image () {
     if [ "x$D" == "x" ]; then
         if [ -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION} ] ; then
             if grep -q 'root=/dev/mmcblk' /proc/cmdline ; then
-                python /${KERNEL_IMAGEDEST}/findkerneldevice.py
+                ${PYTHON_PN} /${KERNEL_IMAGEDEST}/findkerneldevice.py
                 dd if=/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE} of=/dev/kernel
             else
                 flash_erase /dev/${MTD_KERNEL} 0 0

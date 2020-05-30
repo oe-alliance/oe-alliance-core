@@ -15,7 +15,7 @@ S = "${WORKDIR}/httplib2-${PV}"
 inherit setuptools ${PYTHON_PN}-dir
 
 do_compile_append() {
-       python2 -O -m compileall ${W}/build
+       ${@bb.utils.contains("PYTHON_PN", "python", "python2", "python3", d)} -O -m compileall ${W}/build
 }
 
 do_install_append() {

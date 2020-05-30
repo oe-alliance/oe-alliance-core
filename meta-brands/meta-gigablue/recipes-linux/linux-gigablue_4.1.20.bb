@@ -82,7 +82,7 @@ kernel_do_compile() {
 pkg_postinst_kernel-image () {
     if [ "x$D" == "x" ]; then
         if [ -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE} ] ; then
-            python /${KERNEL_IMAGEDEST}/gbfindkerneldevice.py
+            ${PYTHON_PN} /${KERNEL_IMAGEDEST}/gbfindkerneldevice.py
             dd if=/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE} of=/dev/kernel
         fi
     fi

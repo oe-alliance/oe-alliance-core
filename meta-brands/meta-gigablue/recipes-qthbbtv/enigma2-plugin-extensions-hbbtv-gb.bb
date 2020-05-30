@@ -42,7 +42,7 @@ do_install(){
 
 # Just a quick hack to "compile" the python parts.
 do_install_append() {
-    python2 -O -m compileall ${D}
+    ${@bb.utils.contains("PYTHON_PN", "python", "python2", "python3", d)} -O -m compileall ${D}
 }
 
 pkg_postinst_ontarget_${PN}(){

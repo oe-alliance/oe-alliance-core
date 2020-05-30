@@ -17,7 +17,7 @@ FILES_${PN} = "/"
 S = "${WORKDIR}/git/Blue-Line-OCT-4HDF"
 
 do_compile_append() {
-python2 -O -m compileall ${S}
+${@bb.utils.contains("PYTHON_PN", "python", "python2", "python3", d)} -O -m compileall ${S}
 }
 
 do_install() {
