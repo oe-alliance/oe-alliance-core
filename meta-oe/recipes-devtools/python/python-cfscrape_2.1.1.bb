@@ -13,6 +13,6 @@ SRC_URI[sha256sum] = "7c5ef94554e0d6ee7de7cd0d42051526e716ce6c0357679ee0b82c49e1
 
 S = "${WORKDIR}/cfscrape-${PV}"
 
-inherit setuptools3
+inherit setuptools
 
 include ${PYTHON_PN}-package-split.inc
