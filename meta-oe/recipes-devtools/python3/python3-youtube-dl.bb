@@ -22,7 +22,7 @@ S = "${WORKDIR}/git"
 
 inherit setuptools3
 
-EXTRA_OEMAKE = "python=${python}"
+EXTRA_OEMAKE = "PYTHON=${PYTHON}"
 
 do_compile_prepend() {
     oe_runmake lazy-extractors youtube-dl.bash-completion
@@ -44,10 +44,10 @@ RDEPENDS_${PN} = " \
 
 RDEPENDS_{PN}-src = "${PN}"
 FILES_${PN}-src = " \
-    ${libdir}/${${PYTHON_PN}_DIR}/site-packages/*/*.py \
-    ${libdir}/${${PYTHON_PN}_DIR}/site-packages/*/*/*.py \
-    ${libdir}/${${PYTHON_PN}_DIR}/site-packages/*/*/*/*.py \
-    ${libdir}/${${PYTHON_PN}_DIR}/site-packages/*/*/*/*/*.py \
+    ${libdir}/${PYTHON_DIR}/site-packages/*/*.py \
+    ${libdir}/${PYTHON_DIR}/site-packages/*/*/*.py \
+    ${libdir}/${PYTHON_DIR}/site-packages/*/*/*/*.py \
+    ${libdir}/${PYTHON_DIR}/site-packages/*/*/*/*/*.py \
     ${datadir}/etc/* \
     "
 

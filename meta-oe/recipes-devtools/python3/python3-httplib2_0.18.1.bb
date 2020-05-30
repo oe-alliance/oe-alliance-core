@@ -12,7 +12,7 @@ SRC_URI[sha256sum] = "8af66c1c52c7ffe1aa5dc4bcd7c769885254b0756e6e69f953c7f0ab49
 
 S = "${WORKDIR}/httplib2-${PV}"
 
-inherit setuptools ${PYTHON_PN}-dir
+inherit setuptools3 ${PYTHON_PN}-dir
 
 do_compile_append() {
        ${@bb.utils.contains("PYTHON_PN", "python", "python2", "python3", d)} -O -m compileall ${W}/build
