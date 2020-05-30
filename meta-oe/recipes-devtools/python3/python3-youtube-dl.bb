@@ -22,7 +22,7 @@ S = "${WORKDIR}/git"
 
 inherit setuptools3
 
-EXTRA_OEMAKE = "python=${python}"
+EXTRA_OEMAKE = "PYTHON=${PYTHON}"
 
 do_compile_prepend() {
     oe_runmake lazy-extractors youtube-dl.bash-completion
@@ -35,20 +35,19 @@ do_install_append() {
 }
 
 RDEPENDS_${PN} = " \
-    ${PYTHON_PN}3-email \
-    ${PYTHON_PN}3-gdata \
-    ${PYTHON_PN}3-subprocess \
-    ${PYTHON_PN}3-unixadmin \
-    ${PYTHON_PN}3-ctypes \
-    ${PYTHON_PN}3-html \
+    ${PYTHON_PN}-email \
+    ${PYTHON_PN}-gdata \
+    ${PYTHON_PN}-unixadmin \
+    ${PYTHON_PN}-ctypes \
+    ${PYTHON_PN}-html \
     "
 
 RDEPENDS_{PN}-src = "${PN}"
 FILES_${PN}-src = " \
-    ${libdir}/${${PYTHON_PN}_DIR}/site-packages/*/*.py \
-    ${libdir}/${${PYTHON_PN}_DIR}/site-packages/*/*/*.py \
-    ${libdir}/${${PYTHON_PN}_DIR}/site-packages/*/*/*/*.py \
-    ${libdir}/${${PYTHON_PN}_DIR}/site-packages/*/*/*/*/*.py \
+    ${libdir}/${PYTHON_DIR}/site-packages/*/*.py \
+    ${libdir}/${PYTHON_DIR}/site-packages/*/*/*.py \
+    ${libdir}/${PYTHON_DIR}/site-packages/*/*/*/*.py \
+    ${libdir}/${PYTHON_DIR}/site-packages/*/*/*/*/*.py \
     ${datadir}/etc/* \
     "
 

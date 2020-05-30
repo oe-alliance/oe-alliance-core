@@ -10,7 +10,7 @@ inherit setuptools
 RDEPENDS_${PN} = "python \
     ${PYTHON_PN}-backports-shutil-which \
     ${PYTHON_PN}-ctypes \
-    ${PYTHON_PN}-futures \
+    ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-futures", "${PYTHON_PN}-futures3", d)} \
     ${PYTHON_PN}-iso3166 \
     ${PYTHON_PN}-iso639 \
     ${PYTHON_PN}-misc \
@@ -19,7 +19,7 @@ RDEPENDS_${PN} = "python \
     ${PYTHON_PN}-requests \
     ${PYTHON_PN}-shell \
     ${PYTHON_PN}-singledispatch \
-    ${PYTHON_PN}-subprocess \
+    ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-subprocess", "", d)} \
     ${PYTHON_PN}-websocket-client \
     "
 

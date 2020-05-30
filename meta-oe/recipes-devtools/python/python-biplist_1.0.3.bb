@@ -10,7 +10,7 @@ require conf/license/license-gplv2.inc
 
 SRCNAME = "biplist"
 
-DEPENDS = "python"
+DEPENDS = "${PYTHON_PN}"
 
 SRC_URI = " https://bitbucket.org/wooster/biplist/downloads/${SRCNAME}-${PV}.tar.gz"
 

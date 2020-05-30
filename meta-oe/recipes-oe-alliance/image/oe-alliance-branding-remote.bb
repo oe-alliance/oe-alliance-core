@@ -2,7 +2,7 @@ DESCRIPTION = "Additional remote control visuals for the OE-A Branding Lib"
 MAINTAINER = "oe-alliance team"
 PACKAGE_ARCH = "${MACHINEBUILD}"
 
-DEPENDS = "python"
+DEPENDS = "${PYTHON_PN}"
 
 require conf/license/license-gplv2.inc
 

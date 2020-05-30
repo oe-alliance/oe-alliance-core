@@ -5,10 +5,10 @@ MAINTAINER = "team@sabnzbd.org"
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYRIGHT.txt;md5=6c2cd2089133de5067e13a6d4f75afef"
 
-DEPENDS = "python"
+DEPENDS = "${PYTHON_PN}"
 RDEPENDS_${PN} = "\
     ${PYTHON_PN}-cheetah ${PYTHON_PN}-compression ${PYTHON_PN}-core ${PYTHON_PN}-crypt ${PYTHON_PN}-ctypes ${PYTHON_PN}-email ${PYTHON_PN}-html \
-    ${PYTHON_PN}-misc ${PYTHON_PN}-multiprocessing ${PYTHON_PN}-sabyenc ${PYTHON_PN}-sqlite3 ${PYTHON_PN}-shell ${PYTHON_PN}-subprocess ${PYTHON_PN}-yenc \
+    ${PYTHON_PN}-misc ${PYTHON_PN}-multiprocessing ${PYTHON_PN}-sqlite3 ${PYTHON_PN}-shell ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-subprocess ${PYTHON_PN}-sabyenc", "${PYTHON_PN}-sabyenc3", d)} ${PYTHON_PN}-yenc \
     "
 RDEPENDS_${PN}-src = "python"
 

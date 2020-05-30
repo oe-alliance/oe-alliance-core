@@ -15,6 +15,6 @@ SRC_URI = "git://github.com/abdelgmartinezl/PythonDaap;protocol=https \
 
 S = "${WORKDIR}/git"
 
-inherit distutils
+inherit distutils3
 
 include ${PYTHON_PN}-package-split.inc

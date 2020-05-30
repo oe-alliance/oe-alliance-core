@@ -2,7 +2,7 @@ DESCRIPTION = "OE-A Branding Lib for OE-A 2.0"
 MAINTAINER = "oe-alliance team"
 PACKAGE_ARCH = "${MACHINEBUILD}"
 
-DEPENDS = "python"
+DEPENDS = "${PYTHON_PN}"
 
 require conf/license/license-gplv2.inc
 

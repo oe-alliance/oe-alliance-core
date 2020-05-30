@@ -27,7 +27,7 @@ RRECOMMENDS_${PN} = " \
         ${PYTHON_PN}-e2icjson \
         ${PYTHON_PN}-json \
         ${PYTHON_PN}-shell \
-        ${PYTHON_PN}-subprocess \
+        ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-subprocess", "", d)} \
         ${PYTHON_PN}-textutils \
         "
 

@@ -17,7 +17,7 @@ SRC_URI="git://github.com/openmips/gbremote-client.git"
 
 S = "${WORKDIR}/git"
 
-DEPENDS = "python"
+DEPENDS = "${PYTHON_PN}"
 
 RDEPENDS_${PN} = "cifs-utils"
 

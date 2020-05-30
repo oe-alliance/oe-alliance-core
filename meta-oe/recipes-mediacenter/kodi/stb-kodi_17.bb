@@ -232,7 +232,7 @@ RRECOMMENDS_${PN}_append = " \
    ${@bb.utils.contains('PACKAGECONFIG', 'x11', 'xrandr xdpyinfo', '', d)} \
    \
     ${PYTHON_PN}-distutils \
-    ${PYTHON_PN}-subprocess \
+    ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-subprocess", "", d)} \
     ${PYTHON_PN}-robotparser \
     ${PYTHON_PN}-mechanize \
     ${PYTHON_PN}-threading \
