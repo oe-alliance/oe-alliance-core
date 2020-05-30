@@ -40,7 +40,6 @@ RDEPENDS_${PN} = " \
     ${PYTHON_PN}3-subprocess \
     ${PYTHON_PN}3-unixadmin \
     ${PYTHON_PN}3-ctypes \
-    ${PYTHON_PN}3-argparse \
     ${PYTHON_PN}3-html \
     "
 

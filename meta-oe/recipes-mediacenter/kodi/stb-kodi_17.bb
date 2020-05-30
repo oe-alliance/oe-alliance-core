@@ -255,7 +255,7 @@ RRECOMMENDS_${PN}_append = " \
     ${PYTHON_PN}-curses \
     ${PYTHON_PN}-pycrypto \
     ${PYTHON_PN}-db \
-    ${PYTHON_PN}-argparse \
+    ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-argparse", "", d)} \
     ${PYTHON_PN}-doctest \
     ${PYTHON_PN}-plistlib\
     ${PYTHON_PN}-mailbox \

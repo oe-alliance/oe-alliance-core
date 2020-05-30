@@ -18,7 +18,7 @@ RCONFLICTS_${PN} = "enigma2-plugin-systemplugins-plexdvrapi"
 RREPLACES_${PN} = "enigma2-plugin-systemplugins-plexdvrapi"
 
 RDEPENDS_${PN} = " \
-    ${PYTHON_PN}-argparse \
+    ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-argparse", "", d)} \
     "
 
 do_install_prepend() {
