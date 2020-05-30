@@ -25,7 +25,7 @@ EXTRA_OECONF = "\
     "
 
 do_compile() {
-python2 -O -m compileall ${S}
+${@bb.utils.contains("PYTHON_PN", "python", "python2", "python3", d)} -O -m compileall ${S}
 }
 
 do_install() {

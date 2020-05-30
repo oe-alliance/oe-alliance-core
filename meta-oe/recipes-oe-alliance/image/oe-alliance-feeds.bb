@@ -115,29 +115,29 @@ RDEPENDS_${PN} = " \
     pcsc-tools \
     procps \
     pyload \
-    python-attr \
-    python-attrs \
-    python-bluetool \
-    python-circuits \
-    python-circuits-bricks \
-    python-cfscrape \
-    python-cocy \
-    python-future \
-    python-futures \
-    python-fuzzywuzzy \
-    python-ipaddress \
-    python-js2py \
-    python-mechanize \
-    python-netifaces \
-    python-pexpect \
-    python-pyasn1-modules \
-    python-requests \
-    python-service-identity \
-    python-ujson \
-    python-singledispatch \
-    python-levenshtein \
-    python-soco \
-    python-pyexecjs \
+    ${PYTHON_PN}-attr \
+    ${PYTHON_PN}-attrs \
+    ${PYTHON_PN}-bluetool \
+    ${PYTHON_PN}-circuits \
+    ${PYTHON_PN}-circuits-bricks \
+    ${PYTHON_PN}-cfscrape \
+    ${PYTHON_PN}-cocy \
+    ${PYTHON_PN}-future \
+    ${PYTHON_PN}-futures \
+    ${PYTHON_PN}-fuzzywuzzy \
+    ${PYTHON_PN}-ipaddress \
+    ${PYTHON_PN}-js2py \
+    ${PYTHON_PN}-mechanize \
+    ${PYTHON_PN}-netifaces \
+    ${PYTHON_PN}-pexpect \
+    ${PYTHON_PN}-pyasn1-modules \
+    ${PYTHON_PN}-requests \
+    ${PYTHON_PN}-service-identity \
+    ${PYTHON_PN}-ujson \
+    ${PYTHON_PN}-singledispatch \
+    ${PYTHON_PN}-levenshtein \
+    ${PYTHON_PN}-soco \
+    ${PYTHON_PN}-pyexecjs \
     ${@bb.utils.contains("DEFAULTTUNE", "sh4", "" , "rclone zerotier", d)} \
     rapidxml \
     rsync \

@@ -7,7 +7,7 @@ FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}-18:"
 
 PACKAGE_ARCH = "${MACHINE}"
 
-inherit cmake gettext python-dir pythonnative
+inherit cmake gettext ${PYTHON_PN}-dir pythonnative
 
 DEPENDS += " \
             fmt \
@@ -252,21 +252,21 @@ RRECOMMENDS_${PN}_append = " libcec \
                              os-release \
                              ${@bb.utils.contains('PACKAGECONFIG', 'x11', 'xdyinfo xrandr xinit mesa-demos', '', d)} \
                              python \
-                             python-ctypes \
-                             python-lang \
-                             python-re \
-                             python-netclient \
-                             python-html \
-                             python-difflib \
-                             python-json \
-                             python-zlib \
-                             python-shell \
-                             python-sqlite3 \
-                             python-compression \
-                             python-xmlrpc \
-                             python-pycryptodomex \
-                             python-mechanize \
-                             python-profile \
+                             ${PYTHON_PN}-ctypes \
+                             ${PYTHON_PN}-lang \
+                             ${PYTHON_PN}-re \
+                             ${PYTHON_PN}-netclient \
+                             ${PYTHON_PN}-html \
+                             ${PYTHON_PN}-difflib \
+                             ${PYTHON_PN}-json \
+                             ${PYTHON_PN}-zlib \
+                             ${PYTHON_PN}-shell \
+                             ${PYTHON_PN}-sqlite3 \
+                             ${PYTHON_PN}-compression \
+                             ${PYTHON_PN}-xmlrpc \
+                             ${PYTHON_PN}-pycryptodomex \
+                             ${PYTHON_PN}-mechanize \
+                             ${PYTHON_PN}-profile \
                              tzdata-africa \
                              tzdata-americas \
                              tzdata-antarctica \

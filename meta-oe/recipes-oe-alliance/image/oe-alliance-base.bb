@@ -60,7 +60,8 @@ RDEPENDS_${PN} = "\
     volatile-media \
     vsftpd \
     wget \
-    python-twisted-protocols python-numbers python-argparse \
+    ${PYTHON_PN}-twisted-protocols ${PYTHON_PN}-numbers \
+    ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-argparse", "", d)} \
     "
 
 # The following RRECOMMENDS ensure that images on boxes with very limited

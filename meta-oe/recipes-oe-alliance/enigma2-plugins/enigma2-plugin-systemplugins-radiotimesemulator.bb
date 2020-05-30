@@ -33,7 +33,7 @@ rm -fr ${libdir}/enigma2/python/Plugins/SystemPlugins/RadiotimesXmltvEmulator > 
 
 # Just a quick hack to "compile" the python parts.
 do_compile_append() {
-    python2 -O -m compileall ${S}
+    ${@bb.utils.contains("PYTHON_PN", "python", "python2", "python3", d)} -O -m compileall ${S}
 }
 
 python populate_packages_prepend() {

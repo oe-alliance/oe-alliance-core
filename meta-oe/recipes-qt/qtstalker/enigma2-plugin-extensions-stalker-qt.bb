@@ -16,7 +16,7 @@ HAVE_GLES ?= "virtual/libgles2"
 
 SRC_URI = "git://github.com/oe-alliance/e2plugins.git;protocol=git"
 
-RDEPENDS_${PN}  = "qtwebkit ${HAVE_GLES} python-netifaces" 
+RDEPENDS_${PN}  = "qtwebkit ${HAVE_GLES} ${PYTHON_PN}-netifaces" 
 
 S = "${WORKDIR}/git/qtstalker${VER}"
 

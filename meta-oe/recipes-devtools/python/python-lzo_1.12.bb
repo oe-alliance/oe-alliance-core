@@ -4,7 +4,7 @@ LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=dfeaf3dc4beef4f5a7bdbc35b197f39e"
 SRCNAME = "lzo"
 
-DEPENDS = "zlib lzo python-pip"
+DEPENDS = "zlib lzo ${PYTHON_PN}-pip"
 
 SRC_URI = "https://files.pythonhosted.org/packages/af/60/41f17f56c920a956f1d4b9f04f9755c045b2b06b9dd933b33cdd37ab9fd7/python-lzo-${PV}.tar.gz"
 
@@ -15,4 +15,4 @@ S = "${WORKDIR}/python-lzo-${PV}"
 
 inherit distutils
 
-include python-package-split.inc
+include ${PYTHON_PN}-package-split.inc

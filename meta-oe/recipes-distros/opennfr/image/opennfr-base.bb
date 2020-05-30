@@ -28,13 +28,13 @@ RDEPENDS_${PN} = "\
     gstplayer \
     ffmpeg \
     enigma2-plugin-systemplugins-serviceapp \ 	
-    python-imaging \
-    python-requests \
-    python-cfscrape \
-    python-js2py \
+    ${PYTHON_PN}-imaging \
+    ${PYTHON_PN}-requests \
+    ${PYTHON_PN}-cfscrape \
+    ${PYTHON_PN}-js2py \
     ofgwrite \
-    python-gdata \
-    python-service-identity \
+    ${PYTHON_PN}-gdata \
+    ${PYTHON_PN}-service-identity \
     libshowiframe \
     libdw \
     libelf \

@@ -11,7 +11,7 @@ PV = "3.6.83+git${SRCPV}"
 PKGV = "3.6.83+git${GITPKGV}"
 VER="3.6.83"
 
-RDEPENDS_${PN} = "python-requests python-subprocess python-imaging enigma2-plugin-systemplugins-mphelp python-lxml"
+RDEPENDS_${PN} = "${PYTHON_PN}-requests ${PYTHON_PN}-subprocess ${PYTHON_PN}-imaging enigma2-plugin-systemplugins-mphelp ${PYTHON_PN}-lxml"
 
 SRC_URI="git://github.com/openatv/SevenHD.git;protocol=git"
 
@@ -20,7 +20,7 @@ FILES_${PN} = "/usr/*"
 S = "${WORKDIR}/git/data"
 
 do_compile_append() {
-python2 -O -m compileall ${S}
+${@bb.utils.contains("PYTHON_PN", "python", "python2", "python3", d)} -O -m compileall ${S}
 }
 
 do_install() {

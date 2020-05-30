@@ -1,4 +1,4 @@
-include python-package-split.inc
+include ${PYTHON_PN}-package-split.inc
 
 # remove full python-twisted and python-click
 RDEPENDS_${PN}_remove += " \

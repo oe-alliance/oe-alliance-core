@@ -4,7 +4,7 @@ LICENSE = "LGPLv2.1"
 LIC_FILES_CHKSUM = "file://LICENSE.TXT;md5=4fbd65380cdd255951079008b364516c"
 
 DEPENDS += "curl libxml2 python swig-native zlib"
-RDEPENDS_${PN} += "enigma2 libcurl python-core python-compression python-backports-lzma xz"
+RDEPENDS_${PN} += "enigma2 libcurl ${PYTHON_PN}-core ${PYTHON_PN}-compression ${PYTHON_PN}-backports-lzma xz"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
@@ -17,7 +17,7 @@ PR = "r0"
 
 SRC_URI = "git://github.com/oe-alliance/e2openplugin-CrossEPG.git;protocol=git"
 
-inherit python-dir
+inherit ${PYTHON_PN}-dir
 
 S = "${WORKDIR}/git"
 
@@ -33,7 +33,7 @@ do_compile() {
     echo ${PV} > ${S}/VERSION
     oe_runmake SWIG="swig"
 # Just a quick hack to "compile" the python parts.
-    python2 -O -m compileall ${S}
+    ${@bb.utils.contains("PYTHON_PN", "python", "python2", "python3", d)} -O -m compileall ${S}
 }
 
 do_install() {
@@ -56,8 +56,8 @@ python populate_packages_prepend() {
 }
 
 ALLOW_EMPTY_${PN} = "1"
-FILES_${PN}_append = " /usr/crossepg ${libdir}/libcrossepg.so ${libdir}/python2.7"
-FILES_${PN}-src_append = " ${libdir}/python2.7/crossepg.py"
+FILES_${PN}_append = " /usr/crossepg ${libdir}/libcrossepg.so ${libdir}/${PYTHON_DIR}"
+FILES_${PN}-src_append = " ${libdir}/${PYTHON_DIR}/crossepg.py"
 FILES_${PN}-dbg_append = " /usr/crossepg/scripts/mhw2epgdownloader/.debug /usr/crossepg/scripts/mhw2epgdownloader/.debug"
 FILES_SOLIBSDEV = ""
 

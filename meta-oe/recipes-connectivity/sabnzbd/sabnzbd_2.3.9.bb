@@ -7,8 +7,8 @@ LIC_FILES_CHKSUM = "file://COPYRIGHT.txt;md5=6c2cd2089133de5067e13a6d4f75afef"
 
 DEPENDS = "python"
 RDEPENDS_${PN} = "\
-    python-cheetah python-compression python-core python-crypt python-ctypes python-email python-html \
-    python-misc python-multiprocessing python-sabyenc python-sqlite3 python-shell python-subprocess python-yenc \
+    ${PYTHON_PN}-cheetah ${PYTHON_PN}-compression ${PYTHON_PN}-core ${PYTHON_PN}-crypt ${PYTHON_PN}-ctypes ${PYTHON_PN}-email ${PYTHON_PN}-html \
+    ${PYTHON_PN}-misc ${PYTHON_PN}-multiprocessing ${PYTHON_PN}-sabyenc ${PYTHON_PN}-sqlite3 ${PYTHON_PN}-shell ${PYTHON_PN}-subprocess ${PYTHON_PN}-yenc \
     "
 RDEPENDS_${PN}-src = "python"
 
@@ -37,7 +37,7 @@ INITSCRIPT_NAME = "sabnzbd"
 INITSCRIPT_PARAMS = "defaults"
 
 do_compile() {
-    python2 -O -m compileall .
+    ${@bb.utils.contains("PYTHON_PN", "python", "python2", "python3", d)} -O -m compileall .
 }
 
 do_install() {

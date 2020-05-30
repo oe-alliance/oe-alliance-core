@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://README;md5=93285fcad54271879db50c1fbf22d98b"
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
 DEPENDS = "libusb1"
-RRECOMMENDS_${PN} = "python-cheetah libusb1 kernel-module-cdc-acm kernel-module-ftdi-sio kernel-module-usbserial kernel-module-ch341"
+RRECOMMENDS_${PN} = "${PYTHON_PN}-cheetah libusb1 kernel-module-cdc-acm kernel-module-ftdi-sio kernel-module-usbserial kernel-module-ch341"
 
 inherit gitpkgv
 

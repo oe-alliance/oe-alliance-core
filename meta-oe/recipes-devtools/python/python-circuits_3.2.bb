@@ -5,7 +5,7 @@ SECTION = "devel/python"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=b209f6edbb40680bdf62b70a7c097101"
 
-DEPENDS = "python-setuptools-scm-native"
+DEPENDS = "${PYTHON_PN}-setuptools-scm-native"
 
 SRC_URI = "https://files.pythonhosted.org/packages/c4/53/0577ec33811bb4657722629f27c53c16439c149e466414f7f7a2789742e7/circuits-${PV}.tar.gz"
 SRC_URI[md5sum] = "26daaca7f386c781820d2a1174d91325"
@@ -15,4 +15,4 @@ S = "${WORKDIR}/circuits-${PV}"
 
 inherit setuptools
 
-include python-package-split.inc
+include ${PYTHON_PN}-package-split.inc

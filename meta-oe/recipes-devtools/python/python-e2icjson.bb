@@ -27,4 +27,4 @@ distutils_do_install_append() {
     rmdir -p --ignore-fail-on-non-empty ${D}${datadir} ${D}/${PYTHON_SITEPACKAGES_DIR} || true
 }
 
-include python-package-split.inc
+include ${PYTHON_PN}-package-split.inc

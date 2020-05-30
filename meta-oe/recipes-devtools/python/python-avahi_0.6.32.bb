@@ -12,7 +12,7 @@ SRC_URI[sha256sum] = "d54991185d514a0aba54ebeb408d7575b60f5818a772e28fa0e18b98bc
 
 S = "${WORKDIR}/avahi-${PV}"
 
-inherit python-dir pythonnative
+inherit ${PYTHON_PN}-dir pythonnative
 
 # we only need the python bindings
 do_install () {
@@ -29,8 +29,8 @@ do_install () {
         ${D}${PYTHON_SITEPACKAGES_DIR}/avahi/avahi-bookmarks
 }
 
-RDEPENDS_${PN} += "python-core python-dbus"
+RDEPENDS_${PN} += "${PYTHON_PN}-core ${PYTHON_PN}-dbus"
 
 FILES_${PN} = "${PYTHON_SITEPACKAGES_DIR}/avahi"
 
-include python-package-split.inc
+include ${PYTHON_PN}-package-split.inc

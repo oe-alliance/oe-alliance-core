@@ -16,7 +16,7 @@ DEPENDS = "openhdf-feeds"
 RRECOMMENDS_${PN} = " \
     openhdf-version-info \
     enigma2-skindefault \
-    python-compression \
+    ${PYTHON_PN}-compression \
     enigma2-plugin-skins-xionhdf \ 
     enigma2-plugin-extensions-autotimer \
     enigma2-plugin-extensions-epgsearch \

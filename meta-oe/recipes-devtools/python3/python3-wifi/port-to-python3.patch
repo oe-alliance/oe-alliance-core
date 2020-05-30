@@ -1,0 +1,89 @@
+diff --git a/pythonwifi/iwlibs.py b/pythonwifi/iwlibs.py
+index 513d310..da5aa8d 100644
+--- a/pythonwifi/iwlibs.py
++++ b/pythonwifi/iwlibs.py
+@@ -32,7 +32,6 @@ import time
+ import re
+ 
+ import pythonwifi.flags
+-from types import StringType, IntType, TupleType
+ 
+ 
+ KILO = 10**3
+@@ -110,7 +109,8 @@ def getConfiguredWNICnames():
+             wifi = Wireless(ifname)
+             try:
+                 result = wifi.getAPaddr()
+-            except IOError, (errno, strerror):
++            except IOError as errno_strerror:
++                (errno, strerror) = errno_strerror
+                 # don't stop on an individual error
+                 pass
+             if result[0] == 0:
+@@ -526,7 +526,7 @@ class Wireless(object):
+         mode = mode.lower()
+         try:
+             wifimode = this_modes.index(mode)
+-        except ValueError, detail:
++        except ValueError as detail:
+             raise ValueError("Invalid mode")
+         datastr = self.iwstruct.pack('I', wifimode)
+         status, result = self.iwstruct.iw_set_ext(self.ifname,
+@@ -1214,7 +1214,7 @@ class Iwpoint(object):
+ 
+     def __init__(self, data=None, flags=0):
+         if data is None:
+-            raise ValueError, "data must be passed to Iwpoint"
++            raise ValueError("data must be passed to Iwpoint")
+         # P pointer to data, H length, H flags
+         self.fmt = 'PHH'
+         self.flags = flags
+@@ -1420,7 +1420,8 @@ class Iwscan(object):
+                 status, result = iwstruct.iw_get_ext(self.ifname,
+                                                 pythonwifi.flags.SIOCGIWSCAN,
+                                                 data=datastr)
+-            except IOError, (error_number, error_string):
++            except IOError as error_number_error_string:
++                (error_number, error_string) = error_number_error_string
+                 if error_number == errno.E2BIG:
+                     # Keep resizing the buffer until it's
+                     #   large enough to hold the scan
+@@ -1486,7 +1487,7 @@ class Iwscan(object):
+             if scanresult.bssid != "00:00:00:00:00:00":
+                 aplist.append(scanresult)
+             else:
+-                raise RuntimeError, 'Attempting to add an AP without a bssid'
++                raise RuntimeError('Attempting to add an AP without a bssid')
+         return aplist
+ 
+ 
+@@ -1568,18 +1569,18 @@ class Iwscanresult(object):
+                               This command is not allowed.")
+ 
+     def display(self):
+-        print "ESSID:", self.essid
+-        print "Access point:", self.bssid
+-        print "Mode:", self.mode
++        print("ESSID:", self.essid)
++        print("Access point:", self.bssid)
++        print("Mode:", self.mode)
+         if len(self.rate) > 0:
+-            print "Highest Bitrate:", self.rate[len(self.rate)-1]
+-        print "Quality: Quality ", self.quality.quality,
+-        print "Signal ", self.quality.getSignallevel(),
+-        print " Noise ", self.quality.getNoiselevel()
+-        print "Encryption:", map(lambda x: hex(ord(x)), self.encode)
++            print("Highest Bitrate:", self.rate[len(self.rate)-1])
++        print("Quality: Quality ", self.quality.quality,)
++        print("Signal ", self.quality.getSignallevel(),)
++        print(" Noise ", self.quality.getNoiselevel())
++        print("Encryption:", map(lambda x: hex(ord(x)), self.encode))
+         # XXX
+-        # print "Frequency:", self.frequency.getFrequency(), "(Channel", self.frequency.getChannel(self.range), ")"
++        # print("Frequency:", self.frequency.getFrequency(), "(Channel", self.frequency.getChannel(self.range), ")")
+         for custom in self.custom:
+-            print "Custom:", custom
+-        print ""
++            print("Custom:", custom_)
++        print("")
+ 

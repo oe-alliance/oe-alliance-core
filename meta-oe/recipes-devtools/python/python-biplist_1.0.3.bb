@@ -22,4 +22,4 @@ SRC_URI[md5sum] = "e2ff83d5f66e5798801d142eb7c1a07a"
 SRC_URI[sha256sum] = "4c0549764c5fe50b28042ec21aa2e14fe1a2224e239a1dae77d9e7f3932aa4c6"
 
 
-include python-package-split.inc
+include ${PYTHON_PN}-package-split.inc

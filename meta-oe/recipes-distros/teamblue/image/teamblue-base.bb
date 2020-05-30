@@ -27,9 +27,11 @@ RDEPENDS_${PN} = "\
     ntfs-3g \
     ntfsprogs \
     hddtemp \
-    python-imaging \
-    python-service-identity \
-    python-netifaces \
+    ${PYTHON_PN}-imaging \
+    ${PYTHON_PN}-service-identity \
+    ${PYTHON_PN}-requests \
+    ${PYTHON_PN}-future \
+    ${PYTHON_PN}-six \
     rtmpdump \
     zip \
     ${@bb.utils.contains("TUNE_FEATURES", "armv", "glibc-compat", "", d)} \

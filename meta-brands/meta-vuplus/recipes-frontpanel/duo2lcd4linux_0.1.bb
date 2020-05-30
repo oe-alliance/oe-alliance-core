@@ -6,8 +6,8 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 SRC_URI = "file://LCD4linux.tar.gz file://wetter.tar.gz file://duo2lcd4linux.patch;patch=1;pnum=1"
 
-DEPENDS = "python python-imaging python-pyusb lcd4linux lcd4linuxsupport"
-RDEPENDS_enigma2-plugin-extensions-lcd4linux-duo2 = "enigma2 python-codecs python-datetime python-imaging python-textutils python-shell python-ctypes python-pyusb lcd4linux lcd4linuxsupport"
+DEPENDS = "python ${PYTHON_PN}-imaging ${PYTHON_PN}-pyusb lcd4linux lcd4linuxsupport"
+RDEPENDS_enigma2-plugin-extensions-lcd4linux-duo2 = "enigma2 ${PYTHON_PN}-codecs ${PYTHON_PN}-datetime ${PYTHON_PN}-imaging ${PYTHON_PN}-textutils ${PYTHON_PN}-shell ${PYTHON_PN}-ctypes ${PYTHON_PN}-pyusb lcd4linux lcd4linuxsupport"
 DESCRIPTION_enigma2-plugin-extensions-lcd4linux-duo2 = "Duo2 LCD support driver and setup."
 
 S = "${WORKDIR}/LCD4linux"
@@ -28,7 +28,7 @@ do_install() {
 
 # Just a quick hack to "compile" the python parts.
 do_compile_append() {
-    python2 -O -m compileall ${S}
+    ${@bb.utils.contains("PYTHON_PN", "python", "python2", "python3", d)} -O -m compileall ${S}
 }
 
 python populate_packages_prepend() {

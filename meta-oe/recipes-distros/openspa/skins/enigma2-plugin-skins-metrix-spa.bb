@@ -35,7 +35,7 @@ FILES_${PN}-src = "\
 FILES_${PN} = "${libdir} /usr/share ${sysconfdir}"
 
 do_compile() {
-	python2 -O -m compileall ${S}/usr
+	${@bb.utils.contains("PYTHON_PN", "python", "python2", "python3", d)} -O -m compileall ${S}/usr
 	for f in $(find ${S}/locale -name *.po ); do
 		l=$(echo ${f%} | sed 's/\.po//' | sed 's/.*locale\///')
 		mkdir -p ${S}/usr/lib/enigma2/python/Plugins/Extensions/MyMetrixLite/locale/${l%}/LC_MESSAGES

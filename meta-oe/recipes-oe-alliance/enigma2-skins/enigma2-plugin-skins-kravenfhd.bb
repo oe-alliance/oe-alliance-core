@@ -3,7 +3,7 @@ MAINTAINER = "Kraven Team"
 require conf/license/license-gplv2.inc
 
 DEPENDS += "gettext-native"
-RDEPENDS_${PN} += "python-imaging python-subprocess python-requests python-lxml enigma2-plugin-systemplugins-mphelp"
+RDEPENDS_${PN} += "${PYTHON_PN}-imaging ${PYTHON_PN}-subprocess ${PYTHON_PN}-requests ${PYTHON_PN}-lxml enigma2-plugin-systemplugins-mphelp"
 
 inherit gitpkgv allarch gettext
 
@@ -27,7 +27,7 @@ FILES_${PN}-src = "\
 S = "${WORKDIR}/git"
 
 do_compile() {
-    python2 -O -m compileall ${S}/usr
+    ${@bb.utils.contains("PYTHON_PN", "python", "python2", "python3", d)} -O -m compileall ${S}/usr
     for f in $(find ${S}/locale -name *.po ); do
         l=$(echo ${f%} | sed 's/\.po//' | sed 's/.*locale\///')
         #mkdir -p ${S}/usr/lib/enigma2/python/Plugins/Extensions/KravenFHD/locale/${l%}/LC_MESSAGES

@@ -13,4 +13,4 @@ S = "${WORKDIR}/PyAMF-${PV}"
 
 inherit setuptools distutils
 
-include python-package-split.inc
+include ${PYTHON_PN}-package-split.inc

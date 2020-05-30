@@ -7,20 +7,20 @@ FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
 BRANCH="master"
 
-DEPENDS = "python-cheetah-native"
+DEPENDS = "${PYTHON_PN}-cheetah-native"
 RDEPENDS_${PN} = "\
 	aio-grab \
-	python-cheetah \
-	python-compression \
-	python-ipaddress \
-	python-json \
-	python-misc \
-	python-numbers \
-	python-pyopenssl \
-	python-pprint \
-	python-shell \
-	python-twisted-web \
-	python-unixadmin \
+	${PYTHON_PN}-cheetah \
+	${PYTHON_PN}-compression \
+	${PYTHON_PN}-ipaddress \
+	${PYTHON_PN}-json \
+	${PYTHON_PN}-misc \
+	${PYTHON_PN}-numbers \
+	${PYTHON_PN}-pyopenssl \
+	${PYTHON_PN}-pprint \
+	${PYTHON_PN}-shell \
+	${PYTHON_PN}-twisted-web \
+	${PYTHON_PN}-unixadmin \
 	oe-alliance-branding \
 	"
 
@@ -45,7 +45,7 @@ do_compile() {
 	find ${S}/plugin/public/images/boxes/ ! -name 'unknown.png' -type f -exec rm -f {} +
 	find ${S}/plugin/public/images/remotes/ ! -name 'ow_remote.png' -type f -exec rm -f {} +
 	cheetah-compile -R --nobackup ${S}/plugin
-	python2 -O -m compileall ${S}
+	${@bb.utils.contains("PYTHON_PN", "python", "python2", "python3", d)} -O -m compileall ${S}
 }
 
 PLUGINPATH = "${libdir}/enigma2/python/Plugins/Extensions/${MODULE}"

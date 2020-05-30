@@ -20,7 +20,7 @@ FILES_${PN} = "/usr/*"
 S = "${WORKDIR}/git"
 
 do_compile_append() {
-python2 -O -m compileall ${S}/usr
+${@bb.utils.contains("PYTHON_PN", "python", "python2", "python3", d)} -O -m compileall ${S}/usr
 }
 
 do_install() {

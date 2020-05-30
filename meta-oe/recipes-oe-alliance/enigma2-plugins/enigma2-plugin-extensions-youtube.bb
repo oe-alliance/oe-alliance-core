@@ -5,7 +5,7 @@ MAINTAINER = "Taapat"
 require conf/license/license-gplv2.inc
 
 DEPENDS = "enigma2"
-RDEPENDS_${PN} = "python-core python-codecs python-json python-netclient python-zlib python-twisted python-twisted-web"
+RDEPENDS_${PN} = "${PYTHON_PN}-core ${PYTHON_PN}-codecs ${PYTHON_PN}-json ${PYTHON_PN}-netclient ${PYTHON_PN}-zlib ${PYTHON_PN}-twisted ${PYTHON_PN}-twisted-web"
 
 inherit gitpkgv pythonnative gettext
 
@@ -19,7 +19,7 @@ S="${WORKDIR}/git"
 
 # Just a quick hack to "compile" it
 do_compile() {
-    python2 -O -m compileall ${S}
+    ${@bb.utils.contains("PYTHON_PN", "python", "python2", "python3", d)} -O -m compileall ${S}
     cd ${S}
     for f in $(find ./po -name *.po ); do
         l=$(echo ${f%} | sed 's/\.po//' | sed 's/.*po\///')

@@ -21,8 +21,8 @@ RDEPENDS_${PN} = " \
     openspa-enigma2 \
     ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", "openssh-sftp-server ", d)} \
     packagegroup-base-smbfs-client \
-    python-imaging \
-    python-service-identity \
+    ${PYTHON_PN}-imaging \
+    ${PYTHON_PN}-service-identity \
     rtmpdump \
     ${@bb.utils.contains("TUNE_FEATURES", "armv", "glibc-compat", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "dreamboxv1", "", "ofgwrite", d)} \

@@ -1,2 +1,2 @@
 inherit setuptools
-require python-pycryptodomex.inc
+require ${PYTHON_PN}-pycryptodomex.inc

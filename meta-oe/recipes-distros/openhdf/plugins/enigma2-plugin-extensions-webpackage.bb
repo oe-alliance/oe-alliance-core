@@ -14,7 +14,7 @@ PR = "r4"
 SRC_URI[md5sum] = "791cde8bfd986b915f88d1838f02ad42"
 SRC_URI[sha256sum] = "a4aa3dff185858e4e558ee93522688da20b18620e7c72eca99b0ddf169374fc5"
 
-RDEPENDS_${PN} = "python-difflib openssl python-pyopenssl"
+RDEPENDS_${PN} = "${PYTHON_PN}-difflib openssl ${PYTHON_PN}-pyopenssl"
 
 SRC_URI = "http://addons.hdfreaks.cc/feeds/*git/enigma2-plugins-web_package_mips32el.tar.gz"
 

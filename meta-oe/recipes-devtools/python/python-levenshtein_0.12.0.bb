@@ -14,4 +14,4 @@ S = "${WORKDIR}/python-Levenshtein-${PV}"
 
 inherit setuptools
 
-include python-package-split.inc
+include ${PYTHON_PN}-package-split.inc

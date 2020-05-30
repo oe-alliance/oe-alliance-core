@@ -1,4 +1,4 @@
-include python-package-split.inc
+include ${PYTHON_PN}-package-split.inc
 
-PROVIDES += "python-beautifulsoup"
-RPROVIDES_${PN} += "python-beautifulsoup"
+PROVIDES += "${PYTHON_PN}-beautifulsoup"
+RPROVIDES_${PN} += "${PYTHON_PN}-beautifulsoup"

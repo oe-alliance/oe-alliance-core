@@ -32,4 +32,4 @@ do_install_append() {
     rm -rf ${D}${datadir}/share
 }
 
-include python-package-split.inc
+include ${PYTHON_PN}-package-split.inc
