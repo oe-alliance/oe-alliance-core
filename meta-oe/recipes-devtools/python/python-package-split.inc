@@ -2,7 +2,7 @@ inherit ${PYTHON_PN}-dir
 
 RDEPENDS_{PN}-src = "${PN}"
 
-SSTATE_DUPWHITELIST += "${STAGING_LIBDIR}/${PYTHONPATHVERSION}/site-packages/tests/__init__.py ${STAGING_LIBDIR}/${PYTHONPATHVERSION}/site-packages/tests/__init__.pyo"
+SSTATE_DUPWHITELIST += "${STAGING_LIBDIR}/${PYTHON_DIR}/site-packages/tests/__init__.py ${STAGING_LIBDIR}/${PYTHON_DIR}/site-packages/tests/__init__.pyo"
 
 FILES_${PN}-test += " \
     ${PYTHON_SITEPACKAGES_DIR}/test \

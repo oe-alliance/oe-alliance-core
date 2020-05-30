@@ -297,7 +297,7 @@ do_install_append() {
     if [ "${base_libdir}" = "/lib64" ] ; then
         install -d ${D}/usr/lib
         ln -s ${libdir}/enigma2 ${D}/usr/lib/enigma2
-        ln -s ${libdir}/python2.7 ${D}/usr/lib/python2.7
+        ln -s ${libdir}/${PYTHON_DIR} ${D}/usr/lib/${PYTHON_DIR}
     fi
 }
 
