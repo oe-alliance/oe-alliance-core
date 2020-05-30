@@ -29,7 +29,9 @@ RDEPENDS_${PN} = "\
     hddtemp \
     ${PYTHON_PN}-imaging \
     ${PYTHON_PN}-service-identity \
-    ${PYTHON_PN}-netifaces \
+    ${PYTHON_PN}-requests \
+    ${PYTHON_PN}-future \
+    ${PYTHON_PN}-six \
     rtmpdump \
     zip \
     ${@bb.utils.contains("TUNE_FEATURES", "armv", "glibc-compat", "", d)} \
