@@ -18,7 +18,7 @@ RCONFLICTS_${PN} = "enigma2-plugin-systemplugins-plexdvrapi"
 RREPLACES_${PN} = "enigma2-plugin-systemplugins-plexdvrapi"
 
 RDEPENDS_${PN} = " \
-    python-argparse \
+    ${PYTHON_PN}-argparse \
     "
 
 do_install_prepend() {

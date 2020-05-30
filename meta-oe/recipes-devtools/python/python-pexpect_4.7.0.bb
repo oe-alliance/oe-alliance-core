@@ -22,4 +22,4 @@ inherit pypi setuptools
 
 BBCLASSEXTEND = "native nativesdk"
 
-include python-package-split.inc
+include ${PYTHON_PN}-package-split.inc

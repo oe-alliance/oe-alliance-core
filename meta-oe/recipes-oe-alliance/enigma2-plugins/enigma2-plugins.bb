@@ -62,15 +62,15 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 S = "${WORKDIR}/git"
 
 DEPENDS = "enigma2 \
-    python-pyopenssl \
-    python-gdata \
+    ${PYTHON_PN}-pyopenssl \
+    ${PYTHON_PN}-gdata \
     streamripper \
-    python-mutagen \
-    python-twisted \
-    python-daap \
-    python-google-api-client \
-    python-httplib2 \
-    python-youtube-dl \
+    ${PYTHON_PN}-mutagen \
+    ${PYTHON_PN}-twisted \
+    ${PYTHON_PN}-daap \
+    ${PYTHON_PN}-google-api-client \
+    ${PYTHON_PN}-httplib2 \
+    ${PYTHON_PN}-youtube-dl \
     dvdbackup \
     libav \
     libshowiframe \
@@ -79,7 +79,7 @@ DEPENDS = "enigma2 \
     nmap \
     "
 
-RDEPENDS_${PN} = "python-ctypes"
+RDEPENDS_${PN} = "${PYTHON_PN}-ctypes"
 
 python populate_packages_prepend() {
     enigma2_plugindir = bb.data.expand('${libdir}/enigma2/python/Plugins', d)
@@ -104,12 +104,12 @@ python populate_packages_prepend() {
         for line in src.split("\n"):
             full_package = package[0] + '-' + package[1] + '-' + package[2] + '-' + package[3]
             if line.startswith('Depends: '):
-                # some plugins still reference twisted-* dependencies, these packages are now called python-twisted-*
+                # some plugins still reference twisted-* dependencies, these packages are now called ${PYTHON_PN}-twisted-*
                 rdepends = []
                 for depend in line[9:].split(','):
                     depend = depend.strip()
                     if depend.startswith('twisted-'):
-                        rdepends.append(depend.replace('twisted-', 'python-twisted-'))
+                        rdepends.append(depend.replace('twisted-', '${PYTHON_PN}-twisted-'))
                     elif depend.startswith('enigma2') and not depend.startswith('enigma2-'):
                         pass # Ignore silly depends on enigma2 with all kinds of misspellings
                     else:

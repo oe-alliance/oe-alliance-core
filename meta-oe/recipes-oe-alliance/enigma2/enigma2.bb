@@ -14,7 +14,7 @@ DEPENDS = " \
     jpeg \
     libdreamdvd libdvbsi++ fribidi libmad libpng giflib libxml2 libxmlccwrap libsigc++-2.0 \
     openssl avahi libudfread \
-    python python-imaging python-twisted python-wifi \
+    python ${PYTHON_PN}-imaging ${PYTHON_PN}-twisted ${PYTHON_PN}-wifi \
     swig-native \
     tuxtxt-enigma2 \
     ${@bb.utils.contains("DISTRO_NAME", "openspa", "uchardet" , "", d)} \
@@ -49,32 +49,32 @@ RRECOMMENDS_${PN} = " \
     "
 
 PYTHON_RDEPS = " \
-    python-codecs \
-    python-core \
-    python-crypt \
-    python-fcntl \
-    python-lang \
-    python-mmap \
-    python-netclient \
-    python-netifaces \
-    python-netserver \
-    python-pickle \
-    python-re \
-    python-shell \
-    python-threading \
-    python-twisted-core \
-    python-twisted-web \
-    python-xml \
-    python-zlib \
-    python-zopeinterface \
-    python-email \
-    python-mime \
-    python-pyusb \
-    python-subprocess \
-    python-process \
-    python-image \
-    python-imaging \
-    python-smtpd \
+    ${PYTHON_PN}-codecs \
+    ${PYTHON_PN}-core \
+    ${PYTHON_PN}-crypt \
+    ${PYTHON_PN}-fcntl \
+    ${PYTHON_PN}-lang \
+    ${PYTHON_PN}-mmap \
+    ${PYTHON_PN}-netclient \
+    ${PYTHON_PN}-netifaces \
+    ${PYTHON_PN}-netserver \
+    ${PYTHON_PN}-pickle \
+    ${PYTHON_PN}-re \
+    ${PYTHON_PN}-shell \
+    ${PYTHON_PN}-threading \
+    ${PYTHON_PN}-twisted-core \
+    ${PYTHON_PN}-twisted-web \
+    ${PYTHON_PN}-xml \
+    ${PYTHON_PN}-zlib \
+    ${PYTHON_PN}-zopeinterface \
+    ${PYTHON_PN}-email \
+    ${PYTHON_PN}-mime \
+    ${PYTHON_PN}-pyusb \
+    ${PYTHON_PN}-subprocess \
+    ${PYTHON_PN}-process \
+    ${PYTHON_PN}-image \
+    ${PYTHON_PN}-imaging \
+    ${PYTHON_PN}-smtpd \
     "
 
 GST_BASE_RDEPS = "\
@@ -166,20 +166,20 @@ DESCRIPTION_append_enigma2-plugin-systemplugins-satelliteequipmentcontrol = "all
 DESCRIPTION_append_enigma2-plugin-systemplugins-satfinder = "helps you to align your dish."
 DESCRIPTION_append_enigma2-plugin-systemplugins-skinselector = "shows a menu with selectable skins."
 DESCRIPTION_append_enigma2-plugin-systemplugins-videomode = "selects advanced video modes"
-RDEPENDS_enigma2-plugin-systemplugins-nfiflash = "python-twisted-web"
-RDEPENDS_enigma2-plugin-systemplugins-softwaremanager = "python-twisted-web"
+RDEPENDS_enigma2-plugin-systemplugins-nfiflash = "${PYTHON_PN}-twisted-web"
+RDEPENDS_enigma2-plugin-systemplugins-softwaremanager = "${PYTHON_PN}-twisted-web"
 DESCRIPTION_append_enigma2-plugin-systemplugins-crashlogautosubmit = "automatically send crashlogs to Dream Multimedia"
-RDEPENDS_enigma2-plugin-systemplugins-crashlogautosubmit = "python-twisted-mail python-twisted-names python-compression python-mime python-email"
+RDEPENDS_enigma2-plugin-systemplugins-crashlogautosubmit = "${PYTHON_PN}-twisted-mail ${PYTHON_PN}-twisted-names ${PYTHON_PN}-compression ${PYTHON_PN}-mime ${PYTHON_PN}-email"
 DESCRIPTION_append_enigma2-plugin-systemplugins-cleanupwizard = "informs you on low internal memory on system startup."
 DESCRIPTION_append_enigma2-plugin-extensions-modem = "opens a menu to connect to internet via builtin modem."
 RDEPENDS_enigma2-plugin-extensions-modem = "dreambox-modem-ppp-scripts"
 DESCRIPTION_append_enigma2-plugin-systemplugins-wirelesslan = "helps you configuring your wireless lan"
-RDEPENDS_enigma2-plugin-systemplugins-wirelesslan = "wpa-supplicant wireless-tools python-wifi"
+RDEPENDS_enigma2-plugin-systemplugins-wirelesslan = "wpa-supplicant wireless-tools ${PYTHON_PN}-wifi"
 DESCRIPTION_append_enigma2-plugin-systemplugins-networkwizard = "provides easy step by step network configuration"
 # Note that these tools lack recipes
-RDEPENDS_enigma2-plugin-extensions-dvdburn = "dvd+rw-tools dvdauthor mjpegtools cdrkit python-imaging ${DEMUXTOOL}"
+RDEPENDS_enigma2-plugin-extensions-dvdburn = "dvd+rw-tools dvdauthor mjpegtools cdrkit ${PYTHON_PN}-imaging ${DEMUXTOOL}"
 RDEPENDS_enigma2-plugin-systemplugins-hotplug = "hotplug-e2-helper"
-RDEPENDS_enigma2-plugin-systemplugins-fsblupdater = "python-distutils"
+RDEPENDS_enigma2-plugin-systemplugins-fsblupdater = "${PYTHON_PN}-distutils"
 DESCRIPTION_enigma2-plugin-font-wqy-microhei = "Font wqy-microhei add support for China EPG"
 
 inherit autotools-brokensep gitpkgv pkgconfig pythonnative upx-compress

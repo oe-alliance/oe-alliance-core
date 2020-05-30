@@ -10,4 +10,4 @@ SRC_URI += " \
             file://0007-Update-setup.py-and-readme.patch \
 "
 
-include python-package-split.inc
+include ${PYTHON_PN}-package-split.inc

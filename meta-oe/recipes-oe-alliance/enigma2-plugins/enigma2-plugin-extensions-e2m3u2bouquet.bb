@@ -7,7 +7,7 @@ PRIORITY = "optional"
 LICENSE = "GPLv2"
 require conf/license/license-gplv2.inc
 
-RDEPENDS_${PN} = "python-image python-imaging python-argparse"
+RDEPENDS_${PN} = "${PYTHON_PN}-image ${PYTHON_PN}-imaging ${PYTHON_PN}-argparse"
 
 inherit gitpkgv
 

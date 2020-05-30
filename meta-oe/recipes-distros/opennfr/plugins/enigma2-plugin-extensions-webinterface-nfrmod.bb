@@ -3,8 +3,8 @@ MAINTAINER = "Carlo0815"
 
 require conf/license/license-gplv2.inc
 
-DEPENDS = "enigma2 python-process"
-RDEPENDS_${PN} = "python-process"
+DEPENDS = "enigma2 ${PYTHON_PN}-process"
+RDEPENDS_${PN} = "${PYTHON_PN}-process"
 
 RREPLACES_${PN} = "settings-autorestore"
 

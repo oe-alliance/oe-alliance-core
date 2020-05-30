@@ -14,4 +14,4 @@ S = "${WORKDIR}/uritemplate-${PV}"
 
 inherit distutils
 
-include python-package-split.inc
+include ${PYTHON_PN}-package-split.inc

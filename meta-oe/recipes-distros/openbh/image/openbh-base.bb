@@ -34,8 +34,8 @@ RDEPENDS_${PN} = "\
     openbh-version-info \
     openssh-sftp-server \
     openvpn \
-    python-imaging \
-    python-service-identity \
+    ${PYTHON_PN}-imaging \
+    ${PYTHON_PN}-service-identity \
     rtmpdump \
     ${@bb.utils.contains("TUNE_FEATURES", "armv", "glibc-compat", "", d)} \
     "

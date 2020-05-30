@@ -5,7 +5,7 @@ PRIORITY = "optional"
 LICENSE = "LGPLv2+"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=68ad62c64cc6c620126241fd429e68fe"
 
-DEPENDS = "python-pycurl"
+DEPENDS = "${PYTHON_PN}-pycurl"
 
 SRC_URI = "https://files.pythonhosted.org/packages/b1/23/61cb4d829138f24bfae2c77af6794ddd67240811dbb4e3e2eb22c4f57742/urlgrabber-${PV}.tar.gz \
         file://urlgrabber-reset.patch"
@@ -16,4 +16,4 @@ S = "${WORKDIR}/urlgrabber-${PV}"
 
 inherit distutils
 
-include python-package-split.inc
+include ${PYTHON_PN}-package-split.inc

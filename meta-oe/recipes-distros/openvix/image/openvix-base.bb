@@ -24,6 +24,6 @@ RDEPENDS_${PN} = "\
     openvix-bootlogo \
     openvix-spinner \
     ${@bb.utils.contains("TUNE_FEATURES", "armv", "glibc-compat", "", d)} \
-    python-service-identity \
+    ${PYTHON_PN}-service-identity \
     "
 

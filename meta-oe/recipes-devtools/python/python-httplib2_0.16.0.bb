@@ -12,7 +12,7 @@ SRC_URI[sha256sum] = "b6a5a3faa31b56d6eaa61b22e328bfa73a877fe4308b02aa98d6d424ff
 
 S = "${WORKDIR}/httplib2-${PV}"
 
-inherit setuptools python-dir
+inherit setuptools ${PYTHON_PN}-dir
 
 do_compile_append() {
        python2 -O -m compileall ${W}/build
@@ -30,4 +30,4 @@ do_install_append() {
     ln -s /etc/ssl/certs/ca-certificates.crt ${D}${PYTHON_SITEPACKAGES_DIR}/httplib2/cacerts.txt
 }
 
-include python-package-split.inc
+include ${PYTHON_PN}-package-split.inc

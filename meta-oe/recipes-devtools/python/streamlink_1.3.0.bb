@@ -8,19 +8,19 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=67e73aa1a18a474a727af66319626ed4"
 inherit setuptools
 
 RDEPENDS_${PN} = "python \
-    python-backports-shutil-which \
-    python-ctypes \
-    python-futures \
-    python-iso3166 \
-    python-iso639 \
-    python-misc \
-    python-pkgutil \
-    python-pycrypto \
-    python-requests \
-    python-shell \
-    python-singledispatch \
-    python-subprocess \
-    python-websocket-client \
+    ${PYTHON_PN}-backports-shutil-which \
+    ${PYTHON_PN}-ctypes \
+    ${PYTHON_PN}-futures \
+    ${PYTHON_PN}-iso3166 \
+    ${PYTHON_PN}-iso639 \
+    ${PYTHON_PN}-misc \
+    ${PYTHON_PN}-pkgutil \
+    ${PYTHON_PN}-pycrypto \
+    ${PYTHON_PN}-requests \
+    ${PYTHON_PN}-shell \
+    ${PYTHON_PN}-singledispatch \
+    ${PYTHON_PN}-subprocess \
+    ${PYTHON_PN}-websocket-client \
     "
 
 SRC_URI = "git://github.com/streamlink/streamlink.git;protocol=git"

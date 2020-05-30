@@ -7,20 +7,20 @@ FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
 BRANCH="master"
 
-DEPENDS = "python-cheetah-native"
+DEPENDS = "${PYTHON_PN}-cheetah-native"
 RDEPENDS_${PN} = "\
 	aio-grab \
-	python-cheetah \
-	python-compression \
-	python-ipaddress \
-	python-json \
-	python-misc \
-	python-numbers \
-	python-pyopenssl \
-	python-pprint \
-	python-shell \
-	python-twisted-web \
-	python-unixadmin \
+	${PYTHON_PN}-cheetah \
+	${PYTHON_PN}-compression \
+	${PYTHON_PN}-ipaddress \
+	${PYTHON_PN}-json \
+	${PYTHON_PN}-misc \
+	${PYTHON_PN}-numbers \
+	${PYTHON_PN}-pyopenssl \
+	${PYTHON_PN}-pprint \
+	${PYTHON_PN}-shell \
+	${PYTHON_PN}-twisted-web \
+	${PYTHON_PN}-unixadmin \
 	oe-alliance-branding \
 	"
 

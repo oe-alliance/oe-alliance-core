@@ -1,1 +1,1 @@
-require python-package-split.inc
+require ${PYTHON_PN}-package-split.inc

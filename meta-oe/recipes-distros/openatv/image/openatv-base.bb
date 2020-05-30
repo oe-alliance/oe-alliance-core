@@ -21,11 +21,11 @@ RDEPENDS_${PN} = "\
     openatv-enigma2 \
     openatv-spinner \
     openssh-sftp-server \
-    python-imaging \
-    python-service-identity \
-    python-requests \
-    python-future \
-    python-six \
+    ${PYTHON_PN}-imaging \
+    ${PYTHON_PN}-service-identity \
+    ${PYTHON_PN}-requests \
+    ${PYTHON_PN}-future \
+    ${PYTHON_PN}-six \
     rtmpdump \
     zip \
     ${@bb.utils.contains("TUNE_FEATURES", "armv", "glibc-compat", "", d)} \

@@ -4,7 +4,7 @@ SECTION = "devel/python"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=038e1390e94fe637991fa5569daa62bc"
 
-RDEPENDS_${PN} = "python-httplib2 python-six python-uritemplate"
+RDEPENDS_${PN} = "${PYTHON_PN}-httplib2 ${PYTHON_PN}-six ${PYTHON_PN}-uritemplate"
 
 SRC_URI = "https://files.pythonhosted.org/packages/a6/7b/17244b1083e8e604bf154cf9b716aecd6388acd656dd01893d0d244c94d9/oauth2client-${PV}.tar.gz"
 
@@ -15,4 +15,4 @@ S = "${WORKDIR}/oauth2client-${PV}"
 
 inherit setuptools
 
-include python-package-split.inc
+include ${PYTHON_PN}-package-split.inc

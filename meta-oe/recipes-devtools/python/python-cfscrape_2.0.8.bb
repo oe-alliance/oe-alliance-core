@@ -5,7 +5,7 @@ AUTHOR = "Anorov <anorov.vorona@gmail.com>"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=93d4804f061e05530be1a85b24185408"
 
-RDEPENDS_${PN} = "python-js2py python-requests"
+RDEPENDS_${PN} = "${PYTHON_PN}-js2py ${PYTHON_PN}-requests"
 
 SRC_URI = "https://files.pythonhosted.org/packages/f9/c2/271fbe5bbe2ca78daed14478cec7b2c1af8242c8960873d9eb841fbcf6c8/cfscrape-${PV}.tar.gz"
 SRC_URI[md5sum] = "653c2347740b3cfca20179f2ddada468"
@@ -15,4 +15,4 @@ S = "${WORKDIR}/cfscrape-${PV}"
 
 inherit setuptools
 
-include python-package-split.inc
+include ${PYTHON_PN}-package-split.inc

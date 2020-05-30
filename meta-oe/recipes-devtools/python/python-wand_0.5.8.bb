@@ -13,4 +13,4 @@ inherit setuptools
 
 BBCLASSEXTEND = "native"
 
-include python-package-split.inc
+include ${PYTHON_PN}-package-split.inc

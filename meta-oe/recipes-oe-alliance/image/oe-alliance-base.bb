@@ -60,7 +60,7 @@ RDEPENDS_${PN} = "\
     volatile-media \
     vsftpd \
     wget \
-    python-twisted-protocols python-numbers python-argparse \
+    ${PYTHON_PN}-twisted-protocols ${PYTHON_PN}-numbers ${PYTHON_PN}-argparse \
     "
 
 # The following RRECOMMENDS ensure that images on boxes with very limited

@@ -9,4 +9,4 @@ fi
     rm -rf ${D}/usr/lib/python2.7/site-packages/simplejson-${PV}*
 }
 
-include python-package-split.inc
+include ${PYTHON_PN}-package-split.inc

@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://README;beginline=56;endline=57;md5=68b329da9893e34099
                     file://examples/iwconfig.py;beginline=1;endline=20;md5=d34accb82b4f998eccccfd4f4eb56f32 \
                     file://pythonwifi/iwlibs.py;beginline=1;endline=22;md5=aa48daae5660dfd2bb23b2cafe2789e1"
 
-RDEPENDS_${PN} = "python-ctypes python-datetime"
+RDEPENDS_${PN} = "${PYTHON_PN}-ctypes ${PYTHON_PN}-datetime"
 
 PR = "r1"
 
@@ -33,4 +33,4 @@ PACKAGES =+ "${PN}-examples"
 
 FILES_${PN}-examples = "${sbindir}"
 
-include python-package-split.inc
+include ${PYTHON_PN}-package-split.inc

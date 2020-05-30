@@ -3,20 +3,20 @@ LICENSE = "GPLv3"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=d4333f07cbfa8fe036e90820f556b2ad"
 HOMEPAGE = "http://pyload.org/"
 RDEPENDS_${PN} = "\
-  python-compression \
-  python-db \
-  python-email \
-  python-html \
-  python-imaging \
-  python-numbers \
-  python-pprint \
-  python-pycrypto \
-  python-pycurl \
-  python-sqlite3 \
-  python-subprocess \
-  python-terminal \
-  python-unixadmin \
-  python-xmlrpc \
+  ${PYTHON_PN}-compression \
+  ${PYTHON_PN}-db \
+  ${PYTHON_PN}-email \
+  ${PYTHON_PN}-html \
+  ${PYTHON_PN}-imaging \
+  ${PYTHON_PN}-numbers \
+  ${PYTHON_PN}-pprint \
+  ${PYTHON_PN}-pycrypto \
+  ${PYTHON_PN}-pycurl \
+  ${PYTHON_PN}-sqlite3 \
+  ${PYTHON_PN}-subprocess \
+  ${PYTHON_PN}-terminal \
+  ${PYTHON_PN}-unixadmin \
+  ${PYTHON_PN}-xmlrpc \
 "
 RRECOMMENDS_${PN} = "unrar"
 

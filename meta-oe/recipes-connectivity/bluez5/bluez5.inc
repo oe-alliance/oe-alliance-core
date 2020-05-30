@@ -130,8 +130,8 @@ def get_noinst_tools_paths (d, bb, tools):
 
 FILES_${PN}-noinst-tools = "${@get_noinst_tools_paths(d, bb, d.getVar('NOINST_TOOLS'))}"
 
-RDEPENDS_${PN}-testtools += "python python-dbus"
-RDEPENDS_${PN}-testtools += "${@bb.utils.contains('GI_DATA_ENABLED', 'True', 'python-pygobject', '', d)}"
+RDEPENDS_${PN}-testtools += "python ${PYTHON_PN}-dbus"
+RDEPENDS_${PN}-testtools += "${@bb.utils.contains('GI_DATA_ENABLED', 'True', '${PYTHON_PN}-pygobject', '', d)}"
 
 SYSTEMD_SERVICE_${PN} = "${@bb.utils.contains('PACKAGECONFIG', 'systemd', 'bluetooth.service', '', d)}"
 INITSCRIPT_PACKAGES = "${PN}"

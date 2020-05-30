@@ -1,0 +1,13 @@
+--- a/netifaces.c	2016-08-23 18:00:14.000000000 +0300
++++ b/netifaces.c	2016-10-28 12:39:49.256575076 +0300
+@@ -117,6 +117,10 @@
+ #    include <linux/dn.h>
+ #  endif
+ 
++#ifndef RTNL_FAMILY_MAX
++#define RTNL_FAMILY_MAX 129
++#endif
++
+ /* Map address families to sizes of sockaddr structs */
+ static int af_to_len(int af) 
+ {

@@ -20,13 +20,13 @@ RDEPENDS_${PN} = "\
     openhdf-spinner \
     curl \
     hddtemp \
-    python-gdata \
-    python-requests \
-    python-mutagen \
-    python-plistlib \
-    python-imaging \
-    python-netifaces \
-    python-service-identity \
+    ${PYTHON_PN}-gdata \
+    ${PYTHON_PN}-requests \
+    ${PYTHON_PN}-mutagen \
+    ${PYTHON_PN}-plistlib \
+    ${PYTHON_PN}-imaging \
+    ${PYTHON_PN}-netifaces \
+    ${PYTHON_PN}-service-identity \
     unrar \
     ofgwrite \
     rtmpdump \

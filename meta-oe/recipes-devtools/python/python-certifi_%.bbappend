@@ -10,4 +10,4 @@ do_install_append() {
     ln -s /etc/ssl/certs/ca-certificates.crt ${D}${PYTHON_SITEPACKAGES_DIR}/certifi/cacert.pem
 }
 
-include python-package-split.inc
+include ${PYTHON_PN}-package-split.inc

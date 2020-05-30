@@ -214,56 +214,56 @@ FILES_${PN}-dbg += "${libdir}/kodi/.debug ${libdir}/kodi/*/.debug ${libdir}/kodi
 RRECOMMENDS_${PN}_append = " \
    libcec \
    python \
-   python-ctypes \
-   python-lang \
-   python-re \
-   python-netclient \
-   python-html \
-   python-difflib \
-   python-json \
-   python-zlib \
-   python-shell \
-   python-sqlite3 \
-   python-compression \
-   python-profile \
-   python-mmap \
+   ${PYTHON_PN}-ctypes \
+   ${PYTHON_PN}-lang \
+   ${PYTHON_PN}-re \
+   ${PYTHON_PN}-netclient \
+   ${PYTHON_PN}-html \
+   ${PYTHON_PN}-difflib \
+   ${PYTHON_PN}-json \
+   ${PYTHON_PN}-zlib \
+   ${PYTHON_PN}-shell \
+   ${PYTHON_PN}-sqlite3 \
+   ${PYTHON_PN}-compression \
+   ${PYTHON_PN}-profile \
+   ${PYTHON_PN}-mmap \
    libcurl \
    os-release \
    ${@bb.utils.contains('PACKAGECONFIG', 'x11', 'xrandr xdpyinfo', '', d)} \
    \
-    python-distutils \
-    python-subprocess \
-    python-robotparser \
-    python-mechanize \
-    python-threading \
-    python-xml \
-    python-netserver \
-    python-misc \
-    python-textutils \
-    python-simplejson \
-    python-xmlrpc   \
-    python-pprint \
-    python-email \
-    python-compile \
-    python-compiler \
-    python-numbers \
-    python-pkgutil \
-    python-pycurl \
-    python-docutils \
-    python-iniparse \
-    python-hotshot \
-    python-curses \
-    python-pycrypto \
-    python-db \
-    python-argparse \
-    python-doctest \
-    python-plistlib\
-    python-mailbox \
-    python-terminal \
-    python-smtpd \
-    python-pydoc \
-    python-syslog \
-    python-resource \
+    ${PYTHON_PN}-distutils \
+    ${PYTHON_PN}-subprocess \
+    ${PYTHON_PN}-robotparser \
+    ${PYTHON_PN}-mechanize \
+    ${PYTHON_PN}-threading \
+    ${PYTHON_PN}-xml \
+    ${PYTHON_PN}-netserver \
+    ${PYTHON_PN}-misc \
+    ${PYTHON_PN}-textutils \
+    ${PYTHON_PN}-simplejson \
+    ${PYTHON_PN}-xmlrpc   \
+    ${PYTHON_PN}-pprint \
+    ${PYTHON_PN}-email \
+    ${PYTHON_PN}-compile \
+    ${PYTHON_PN}-compiler \
+    ${PYTHON_PN}-numbers \
+    ${PYTHON_PN}-pkgutil \
+    ${PYTHON_PN}-pycurl \
+    ${PYTHON_PN}-docutils \
+    ${PYTHON_PN}-iniparse \
+    ${PYTHON_PN}-hotshot \
+    ${PYTHON_PN}-curses \
+    ${PYTHON_PN}-pycrypto \
+    ${PYTHON_PN}-db \
+    ${PYTHON_PN}-argparse \
+    ${PYTHON_PN}-doctest \
+    ${PYTHON_PN}-plistlib\
+    ${PYTHON_PN}-mailbox \
+    ${PYTHON_PN}-terminal \
+    ${PYTHON_PN}-smtpd \
+    ${PYTHON_PN}-pydoc \
+    ${PYTHON_PN}-syslog \
+    ${PYTHON_PN}-resource \
 "
 RRECOMMENDS_${PN}_append_libc-glibc = " \
     glibc-charmap-ibm850 \

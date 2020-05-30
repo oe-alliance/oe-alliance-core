@@ -3,7 +3,7 @@ MAINTAINER = "Kraven Team"
 require conf/license/license-gplv2.inc
 
 DEPENDS += "gettext-native"
-RDEPENDS_${PN} += "python-imaging python-subprocess python-requests python-lxml enigma2-plugin-systemplugins-mphelp"
+RDEPENDS_${PN} += "${PYTHON_PN}-imaging ${PYTHON_PN}-subprocess ${PYTHON_PN}-requests ${PYTHON_PN}-lxml enigma2-plugin-systemplugins-mphelp"
 
 inherit gitpkgv allarch gettext
 

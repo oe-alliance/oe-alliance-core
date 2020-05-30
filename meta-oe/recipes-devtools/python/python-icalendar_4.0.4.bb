@@ -4,8 +4,8 @@ SECTION = "devel/python"
 LICENSE = "BSD"
 LIC_FILES_CHKSUM = "file://LICENSE.rst;md5=1b2957cd26c589d0defcb357be630e80"
 
-DEPENDS = "python-pytz python-dateutil"
-RDEPENDS_${PN} = "python-pytz python-dateutil"
+DEPENDS = "${PYTHON_PN}-pytz ${PYTHON_PN}-dateutil"
+RDEPENDS_${PN} = "${PYTHON_PN}-pytz ${PYTHON_PN}-dateutil"
 
 SRC_URI = "https://files.pythonhosted.org/packages/db/14/b7c29d8d1ba0e04370c302e815bcb626c725ea9cfe72f7ee337872053558/icalendar-${PV}.tar.gz"
 SRC_URI[md5sum] = "cfff9da463e9292d8f6b39bff9b34e4a"
@@ -15,4 +15,4 @@ S = "${WORKDIR}/icalendar-${PV}"
 
 inherit setuptools
 
-include python-package-split.inc
+include ${PYTHON_PN}-package-split.inc

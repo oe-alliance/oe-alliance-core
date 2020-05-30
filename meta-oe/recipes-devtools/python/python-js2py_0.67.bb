@@ -12,4 +12,4 @@ S = "${WORKDIR}/Js2Py-${PV}"
 
 inherit setuptools
 
-include python-package-split.inc
+include ${PYTHON_PN}-package-split.inc

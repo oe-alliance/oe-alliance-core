@@ -4,7 +4,7 @@ LICENSE = "LGPLv2.1"
 LIC_FILES_CHKSUM = "file://LICENSE.TXT;md5=4fbd65380cdd255951079008b364516c"
 
 DEPENDS += "curl libxml2 python swig-native zlib"
-RDEPENDS_${PN} += "enigma2 libcurl python-core python-compression python-backports-lzma xz"
+RDEPENDS_${PN} += "enigma2 libcurl ${PYTHON_PN}-core ${PYTHON_PN}-compression ${PYTHON_PN}-backports-lzma xz"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
@@ -17,7 +17,7 @@ PR = "r0"
 
 SRC_URI = "git://github.com/oe-alliance/e2openplugin-CrossEPG.git;protocol=git"
 
-inherit python-dir
+inherit ${PYTHON_PN}-dir
 
 S = "${WORKDIR}/git"
 

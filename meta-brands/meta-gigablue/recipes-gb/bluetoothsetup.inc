@@ -3,7 +3,7 @@ PRIORITY = "required"
 LICENSE = "CLOSED"
 require conf/license/license-close.inc
 
-DEPENDS = "python-native"
+DEPENDS = "${PYTHON_PN}-native"
 RDEPENDS_${PN} = "libcurl libsqlite3 libssl libcrypto libudev libusb-compat"
 RDEPENDS_${PN} += "gb-bluetooth-util"
 

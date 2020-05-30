@@ -5,7 +5,7 @@ SECTION = "devel/python"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://ntplib.py;beginline=1;endline=23;md5=afa07338a9595257e94c205c3e72224d"
 
-RDEPENDS_${PN} = "python-core"
+RDEPENDS_${PN} = "${PYTHON_PN}-core"
 
 SRC_URI = "https://files.pythonhosted.org/packages/29/8b/85a86e01c510665b0790d3a9fd4532ad98aba9e185a676113a0ae3879350/ntplib-${PV}.tar.gz"
 
@@ -16,4 +16,4 @@ S = "${WORKDIR}/ntplib-${PV}"
 
 inherit allarch distutils
 
-include python-package-split.inc
+include ${PYTHON_PN}-package-split.inc

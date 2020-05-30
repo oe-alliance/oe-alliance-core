@@ -11,7 +11,7 @@ PV = "7.3.0+git${SRCPV}"
 PKGV = "7.3.0+git${GITPKGV}"
 VER="7.3.0"
 
-RDEPENDS_${PN} = "python-requests python-subprocess python-imaging enigma2-plugin-systemplugins-mphelp python-lxml"
+RDEPENDS_${PN} = "${PYTHON_PN}-requests ${PYTHON_PN}-subprocess ${PYTHON_PN}-imaging enigma2-plugin-systemplugins-mphelp ${PYTHON_PN}-lxml"
 
 SRC_URI="git://github.com/openatv/KravenHD.git;protocol=git"
 

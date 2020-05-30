@@ -7,7 +7,7 @@ require conf/license/license-gplv2.inc
 
 inherit allarch
 
-RDEPENDS_${PN} = "python-core streamlink"
+RDEPENDS_${PN} = "${PYTHON_PN}-core streamlink"
 
 inherit gitpkgv
 
