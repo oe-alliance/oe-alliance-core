@@ -9,12 +9,12 @@ PROVIDES = "${PN} \
     enigma2-plugin-extensions-fancontrol2 \
     "
 
-inherit autotools-brokensep gitpkgv pythonnative pkgconfig gettext
+inherit autotools-brokensep gitpkgv pythonnative pkgconfig gettext ${PYTHON_PN}-dir
 
 SRCREV = "${AUTOREV}"
 PV = "${IMAGE_VERSION}+git${SRCPV}"
 PKGV = "${IMAGE_VERSION}+git${GITPKGV}"
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "${ENIGMA2_PLUGINS_URI} file://pluginnotwanted.patch"
 SRC_URI_append_openatv = " file://EPGSearch.patch"
@@ -110,6 +110,10 @@ python populate_packages_prepend() {
                     depend = depend.strip()
                     if depend.startswith('twisted-'):
                         rdepends.append(depend.replace('twisted-', '${PYTHON_PN}-twisted-'))
+                    elif depend.startswith('python-'):
+                        rdepends.append(depend.replace('python-', '${PYTHON_PN}-'))
+                    elif depend.startswith('gst-plugins-'):
+                        rdepends.append(depend.replace('gst-plugins-', 'gstreamer1.0-'))
                     elif depend.startswith('enigma2') and not depend.startswith('enigma2-'):
                         pass # Ignore silly depends on enigma2 with all kinds of misspellings
                     else:

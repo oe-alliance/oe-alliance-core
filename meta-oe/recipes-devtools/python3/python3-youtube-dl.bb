@@ -35,11 +35,11 @@ do_install_append() {
 }
 
 RDEPENDS_${PN} = " \
-    ${PYTHON_PN}3-email \
-    ${PYTHON_PN}3-gdata \
-    ${PYTHON_PN}3-unixadmin \
-    ${PYTHON_PN}3-ctypes \
-    ${PYTHON_PN}3-html \
+    ${PYTHON_PN}-email \
+    ${PYTHON_PN}-gdata \
+    ${PYTHON_PN}-unixadmin \
+    ${PYTHON_PN}-ctypes \
+    ${PYTHON_PN}-html \
     "
 
 RDEPENDS_{PN}-src = "${PN}"
