@@ -11,7 +11,9 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 
 SRC_URI = "git://github.com/abdelgmartinezl/PythonDaap;protocol=https \
-           file://python-daap.patch"
+           file://python-daap.patch \
+           file://0001-The-member-ob_type-is-not-present-in-the-pcapobject-.patch \
+"
 
 S = "${WORKDIR}/git"
 

@@ -1,0 +1,35 @@
+From 259c187e532812c04ba7f2f1ba2e5b8658dcbf5f Mon Sep 17 00:00:00 2001
+From: Captain <captain.onboard@web.de>
+Date: Sat, 30 May 2020 21:04:04 +0200
+Subject: [PATCH] The member "ob_type" is not present in the pcapobject struct.
+ One must use the macro "Py_TYPE(...)" instead.
+
+---
+ md5module.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/md5module.c b/md5module.c
+index 4535d43..c3ca59e 100644
+--- a/md5module.c
++++ b/md5module.c
+@@ -19,7 +19,7 @@ typedef struct {
+ 
+ static PyTypeObject MD5type;
+ 
+-#define is_md5object(v)		((v)->ob_type == &MD5type)
++#define is_md5object(v)		(Py_TYPE(v) == &MD5type)
+ 
+ static md5object *
+ newmd5object(void)
+@@ -259,7 +259,7 @@ initmd5daap(void)
+ {
+ 	PyObject *m, *d;
+ 
+-        MD5type.ob_type = &PyType_Type;
++        Py_TYPE(&MD5type) = &PyType_Type;
+ 	m = Py_InitModule3("md5daap", md5_functions, module_doc);
+ 	d = PyModule_GetDict(m);
+ 	PyDict_SetItemString(d, "MD5Type", (PyObject *)&MD5type);
+-- 
+2.26.2.windows.1
+
