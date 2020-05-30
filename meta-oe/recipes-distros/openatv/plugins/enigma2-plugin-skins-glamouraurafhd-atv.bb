@@ -47,9 +47,6 @@ rm -rf /usr/lib/enigma2/python/Components/Renderer/Glam*
 echo "                                                                      "
 echo "Glamour Aura FHD ATV skin was successfully removed from your receiver."
 echo "                                                                      "
-echo "The GUI of your receiver is now rebooting....                         "
-sleep 2
-init 4 && sleep 2 && init 3
 }
 
 pkg_preinst_${PN} () {
