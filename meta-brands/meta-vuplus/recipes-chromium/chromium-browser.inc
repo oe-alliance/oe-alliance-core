@@ -13,7 +13,7 @@ SRC_URI = "http://code.vuplus.com/download/chromium/chromium-vuplus_${MACHINE}_$
 PREFERRED_VERSION_nss = "3.17.3"
 
 DEPENDS = "nss" 
-RDEPENDS_${PN} = "nspr nss libxslt libcurl libudev ${PYTHON_PN}-subprocess"
+RDEPENDS_${PN} = "nspr nss libxslt libcurl libudev ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-subprocess", "", d)}"
 
 do_install() {
 	install -d ${D}/usr/local/chromium

@@ -16,7 +16,7 @@ S = "${WORKDIR}/git/src"
 
 inherit distutils-openplugins
 
-DEPENDS = "python"
+DEPENDS = "${PYTHON_PN}"
 RDEPENDS_${PN} = "${PYTHON_PN}-compression ${PYTHON_PN}-shell ${PYTHON_PN}-backports-lzma ${PYTHON_PN}-pkgutil"
 RRECOMMENDS_${PN} = "epgimport-rytec"
 

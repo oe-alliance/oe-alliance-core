@@ -83,7 +83,7 @@ do_install_append_class-target() {
 
 PACKAGES =+ "${PN}-npm"
 FILES_${PN}-npm = "${exec_prefix}/lib/node_modules ${bindir}/npm ${bindir}/npx"
-RDEPENDS_${PN}-npm = "bash ${PYTHON_PN}-core ${PYTHON_PN}-shell ${PYTHON_PN}-datetime ${PYTHON_PN}-subprocess ${PYTHON_PN}-textutils \
+RDEPENDS_${PN}-npm = "bash ${PYTHON_PN}-core ${PYTHON_PN}-shell ${PYTHON_PN}-datetime ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-subprocess", "", d)} ${PYTHON_PN}-textutils \
     ${PYTHON_PN}-compiler ${PYTHON_PN}-misc ${PYTHON_PN}-multiprocessing"
 
 PACKAGES =+ "${PN}-systemtap"

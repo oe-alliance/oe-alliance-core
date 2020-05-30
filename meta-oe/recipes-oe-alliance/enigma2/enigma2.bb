@@ -70,7 +70,7 @@ PYTHON_RDEPS = " \
     ${PYTHON_PN}-email \
     ${PYTHON_PN}-mime \
     ${PYTHON_PN}-pyusb \
-    ${PYTHON_PN}-subprocess \
+    ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-subprocess", "", d)} \
     ${PYTHON_PN}-process \
     ${PYTHON_PN}-image \
     ${PYTHON_PN}-imaging \

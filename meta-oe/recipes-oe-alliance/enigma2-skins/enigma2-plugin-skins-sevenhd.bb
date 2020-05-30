@@ -11,7 +11,7 @@ PV = "3.6.83+git${SRCPV}"
 PKGV = "3.6.83+git${GITPKGV}"
 VER="3.6.83"
 
-RDEPENDS_${PN} = "${PYTHON_PN}-requests ${PYTHON_PN}-subprocess ${PYTHON_PN}-imaging enigma2-plugin-systemplugins-mphelp ${PYTHON_PN}-lxml"
+RDEPENDS_${PN} = "${PYTHON_PN}-requests ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-subprocess", "", d)} ${PYTHON_PN}-imaging enigma2-plugin-systemplugins-mphelp ${PYTHON_PN}-lxml"
 
 SRC_URI="git://github.com/openatv/SevenHD.git;protocol=git"
 

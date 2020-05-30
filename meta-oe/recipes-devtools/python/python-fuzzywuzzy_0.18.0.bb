@@ -5,7 +5,7 @@ LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=9eea716ad75a54962b0802f278da3ccb"
 
 inherit pypi setuptools
 
-SRC_URI[md5sum] = "b6d756069739fd5198f9d4c013272535"
-SRC_URI[sha256sum] = "6f49de47db00e1c71d40ad16da42284ac357936fa9b66bea1df63fed07122d62"
+SRC_URI[md5sum] = "29708593c35b1ca67c329f853d9abcd0"
+SRC_URI[sha256sum] = "45016e92264780e58972dca1b3d939ac864b78437422beecebb3095f8efd00e8"
 
 include ${PYTHON_PN}-package-split.inc

@@ -123,7 +123,7 @@ RDEPENDS_${PN} = " \
     ${PYTHON_PN}-cfscrape \
     ${PYTHON_PN}-cocy \
     ${PYTHON_PN}-future \
-    ${PYTHON_PN}-futures \
+    ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-futures", "${PYTHON_PN}-futures3", d)} \
     ${PYTHON_PN}-fuzzywuzzy \
     ${PYTHON_PN}-ipaddress \
     ${PYTHON_PN}-js2py \

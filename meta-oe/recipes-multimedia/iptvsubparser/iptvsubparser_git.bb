@@ -2,7 +2,7 @@ DESCRIPTION = "Python module for text subtitles parsing"
 MAINTAINER = "samsamsam"
 require conf/license/license-gplv2.inc
 
-DEPENDS = "python"
+DEPENDS = "${PYTHON_PN}"
 
 inherit gitpkgv
 

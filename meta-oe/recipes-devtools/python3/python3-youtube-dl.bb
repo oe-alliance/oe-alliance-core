@@ -37,7 +37,6 @@ do_install_append() {
 RDEPENDS_${PN} = " \
     ${PYTHON_PN}3-email \
     ${PYTHON_PN}3-gdata \
-    ${PYTHON_PN}3-subprocess \
     ${PYTHON_PN}3-unixadmin \
     ${PYTHON_PN}3-ctypes \
     ${PYTHON_PN}3-html \

@@ -13,7 +13,7 @@ RDEPENDS_${PN} = "\
   ${PYTHON_PN}-pycrypto \
   ${PYTHON_PN}-pycurl \
   ${PYTHON_PN}-sqlite3 \
-  ${PYTHON_PN}-subprocess \
+  ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-subprocess", "", d)} \
   ${PYTHON_PN}-terminal \
   ${PYTHON_PN}-unixadmin \
   ${PYTHON_PN}-xmlrpc \
