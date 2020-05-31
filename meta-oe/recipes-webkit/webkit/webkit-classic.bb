@@ -21,7 +21,7 @@ PR = "r0"
 
 SRC_URI = "git://github.com/oe-alliance/webkit.org.git;protocol=https;"
 
-inherit autotools lib_package gtk-doc pkgconfig perlnative pythonnative gitpkgv
+inherit autotools lib_package gtk-doc pkgconfig perlnative ${PYTHON_PN}native gitpkgv
 
 S = "${WORKDIR}/git"
 

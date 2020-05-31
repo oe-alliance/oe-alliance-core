@@ -27,7 +27,7 @@ SRC_URI = "git://code.vuplus.com:/git/webkit-r95199-base.git;protocol=http;branc
     file://maketokenizer.patch \
 "
 
-inherit autotools lib_package gtk-doc pkgconfig perlnative pythonnative
+inherit autotools lib_package gtk-doc pkgconfig perlnative ${PYTHON_PN}native
 
 S = "${WORKDIR}/git"
 

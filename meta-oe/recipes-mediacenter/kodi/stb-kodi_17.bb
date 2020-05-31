@@ -119,7 +119,7 @@ SRC_URI_append_libc-musl = " \
            file://0002-Remove-FILEWRAP.patch \
 "
 
-inherit autotools-brokensep gettext gitpkgv pythonnative
+inherit autotools-brokensep gettext gitpkgv ${PYTHON_PN}native
 
 S = "${WORKDIR}/git"
 

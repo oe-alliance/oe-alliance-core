@@ -12,7 +12,7 @@ SRC_URI[sha256sum] = "d54991185d514a0aba54ebeb408d7575b60f5818a772e28fa0e18b98bc
 
 S = "${WORKDIR}/avahi-${PV}"
 
-inherit ${PYTHON_PN}-dir pythonnative
+inherit ${PYTHON_PN}-dir ${PYTHON_PN}native
 
 # we only need the python bindings
 do_install () {

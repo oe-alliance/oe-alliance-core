@@ -7,7 +7,7 @@ require conf/license/license-gplv2.inc
 DEPENDS = "enigma2"
 RDEPENDS_${PN} = "${PYTHON_PN}-core ${PYTHON_PN}-codecs ${PYTHON_PN}-json ${PYTHON_PN}-netclient ${PYTHON_PN}-zlib ${PYTHON_PN}-twisted ${PYTHON_PN}-twisted-web"
 
-inherit gitpkgv pythonnative gettext
+inherit gitpkgv ${PYTHON_PN}native gettext
 
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"

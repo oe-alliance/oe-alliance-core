@@ -25,7 +25,7 @@ EXTRA_OECONF = " \
 
 PARALLEL_MAKEINST = ""
 
-inherit autotools-brokensep pythonnative gettext
+inherit autotools-brokensep ${PYTHON_PN}native gettext
 
 do_configure_prepend_openatv () {
     sed 's/config.EMC.use_orig_skin             = ConfigYesNo(default = True)/config.EMC.use_orig_skin             = ConfigYesNo(default = False)/g' -i ${S}/src/plugin.py

@@ -5,4 +5,4 @@ INSANE_SKIP_${PN} += "file-rdeps"
 INSANE_SKIP_${PN}-tools += "file-rdeps"
 
 #### sets PYTHON_BASEVERSION to "2.7"
-inherit ${PYTHON_PN}-dir pythonnative
+inherit ${PYTHON_PN}-dir ${PYTHON_PN}native

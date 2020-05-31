@@ -7,7 +7,7 @@ FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}-18:"
 
 PACKAGE_ARCH = "${MACHINE}"
 
-inherit cmake gettext ${PYTHON_PN}-dir pythonnative
+inherit cmake gettext ${PYTHON_PN}-dir ${PYTHON_PN}native
 
 DEPENDS += " \
             fmt \

@@ -15,7 +15,7 @@ SRC_URI = " \
 
 S = "${WORKDIR}/git"
 
-inherit autotools gitpkgv pythonnative pkgconfig gettext
+inherit autotools gitpkgv ${PYTHON_PN}native pkgconfig gettext
 
 CXXFLAGS_append = " -std=c++11"
 

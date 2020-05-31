@@ -123,7 +123,7 @@ RDEPENDS_enigma2-plugin-systemplugins-wirelessaccesspoint = "hostapd bridge-util
 DESCRIPTION_enigma2-plugin-extensions-rcuselect = "Change Remote for Wetek"
 DESCRIPTION_enigma2-plugin-extensions-rezap = "ReZap Sync Tool for Wetek"
 
-inherit autotools-brokensep gitpkgv pythonnative gettext
+inherit autotools-brokensep gitpkgv ${PYTHON_PN}native gettext
 
 SRCREV = "${AUTOREV}"
 PV = "${IMAGE_VERSION}+git${SRCPV}"

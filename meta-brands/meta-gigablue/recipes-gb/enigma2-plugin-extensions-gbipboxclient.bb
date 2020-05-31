@@ -5,7 +5,7 @@ LICENSE = "GPLv2"
 
 require conf/license/license-gplv2.inc
 
-inherit gitpkgv pythonnative autotools-brokensep gettext 
+inherit gitpkgv ${PYTHON_PN}native autotools-brokensep gettext 
 
 SRCREV = "${AUTOREV}"
 PV = "1.0+git${SRCPV}"

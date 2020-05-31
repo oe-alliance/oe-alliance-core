@@ -2,7 +2,7 @@ PR = "r3"
 
 require samba-source.inc
 
-inherit cpan-base perlnative pythonnative
+inherit cpan-base perlnative ${PYTHON_PN}native
 
 DEPENDS += "qemu-native libxslt-native docbook-xsl-stylesheets-native e2fsprogs readline virtual/libiconv zlib popt libpam ${PYTHON_PN} asn1compile-native"
 

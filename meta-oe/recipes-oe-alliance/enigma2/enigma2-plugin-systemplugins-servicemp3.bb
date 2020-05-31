@@ -91,7 +91,7 @@ SRCREV = "${AUTOREV}"
 
 S = "${WORKDIR}/git"
 
-inherit autotools gitpkgv pythonnative pkgconfig
+inherit autotools gitpkgv ${PYTHON_PN}native pkgconfig
 
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
