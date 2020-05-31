@@ -254,7 +254,7 @@ RRECOMMENDS_${PN}_append = " libcec \
                              python \
                              ${PYTHON_PN}-ctypes \
                              ${PYTHON_PN}-lang \
-                             ${PYTHON_PN}-re \
+                             ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-re", "", d)} \
                              ${PYTHON_PN}-netclient \
                              ${PYTHON_PN}-html \
                              ${PYTHON_PN}-difflib \
