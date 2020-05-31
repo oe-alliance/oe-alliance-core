@@ -3,7 +3,7 @@ SECTION = "devel/python"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 
-DEPENDS = "python ${PYTHON_PN}-setuptools-scm-native"
+DEPENDS = "${PYTHON_PN} ${PYTHON_PN}-setuptools-scm-native"
 RDEPENDS_${PN} = "${PYTHON_PN}-shell"
 
 SRC_URI = "https://files.pythonhosted.org/packages/aa/fd/ed738775442e3614849fefdf41417d7bff3ccb010d49c8f729432cc3c1e5/mutagen-${PV}.tar.gz"

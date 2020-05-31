@@ -8,7 +8,7 @@ DEPENDS = " \
        jpeg \
        libdvbsi++ \
        openssl \
-       python \
+       ${PYTHON_PN} \
        "
 
 RDEPENDS_${PN} = "\

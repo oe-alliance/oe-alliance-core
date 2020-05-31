@@ -60,7 +60,7 @@ DEPENDS += " \
             libxslt \
             lzo \
             mpeg2dec \
-            python \
+            ${PYTHON_PN} \
             samba \
             sqlite3 \
             taglib \
@@ -251,7 +251,7 @@ RRECOMMENDS_${PN}_append = " libcec \
                              nss \
                              os-release \
                              ${@bb.utils.contains('PACKAGECONFIG', 'x11', 'xdyinfo xrandr xinit mesa-demos', '', d)} \
-                             python \
+                             ${PYTHON_PN} \
                              ${PYTHON_PN}-ctypes \
                              ${PYTHON_PN}-lang \
                              ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-re", "", d)} \

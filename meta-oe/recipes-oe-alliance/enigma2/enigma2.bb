@@ -14,7 +14,7 @@ DEPENDS = " \
     jpeg \
     libdreamdvd libdvbsi++ fribidi libmad libpng giflib libxml2 libxmlccwrap libsigc++-2.0 \
     openssl avahi libudfread \
-    python ${PYTHON_PN}-imaging ${PYTHON_PN}-twisted ${PYTHON_PN}-wifi \
+    ${PYTHON_PN} ${PYTHON_PN}-imaging ${PYTHON_PN}-twisted ${PYTHON_PN}-wifi \
     swig-native \
     tuxtxt-enigma2 \
     ${@bb.utils.contains("DISTRO_NAME", "openspa", "uchardet" , "", d)} \

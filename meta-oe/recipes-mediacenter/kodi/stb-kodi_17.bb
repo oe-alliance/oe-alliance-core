@@ -52,7 +52,7 @@ DEPENDS = " \
             libxslt \
             lzo \
             mpeg2dec \
-            python \
+            ${PYTHON_PN} \
             samba \
             mysql5 \
             sqlite3 \
@@ -213,7 +213,7 @@ FILES_${PN}-dbg += "${libdir}/kodi/.debug ${libdir}/kodi/*/.debug ${libdir}/kodi
 # OpenGL builds need glxinfo, that's in mesa-demos
 RRECOMMENDS_${PN}_append = " \
    libcec \
-   python \
+   ${PYTHON_PN} \
    ${PYTHON_PN}-ctypes \
    ${PYTHON_PN}-lang \
    ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-re", "", d)} \
