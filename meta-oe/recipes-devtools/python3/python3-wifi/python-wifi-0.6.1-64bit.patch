@@ -1,7 +1,8 @@
-diff -Nur python-wifi-0.6.1.orig/pythonwifi/iwlibs.py python-wifi-0.6.1/pythonwifi/iwlibs.py
---- python-wifi-0.6.1.orig/pythonwifi/iwlibs.py	2015-03-22 03:45:50.000000000 +0900
-+++ python-wifi-0.6.1/pythonwifi/iwlibs.py	2018-12-05 14:41:30.000000000 +0900
-@@ -1471,13 +1471,13 @@
+diff --git a/pythonwifi/iwlibs.py b/pythonwifi/iwlibs.py
+index 495f7ed..2d8de8b 100644
+--- a/pythonwifi/iwlibs.py
++++ b/pythonwifi/iwlibs.py
+@@ -1478,13 +1478,13 @@ class Iwscan(object):
                  if scanresult:
                      aplist.append(scanresult)
                  scanresult = Iwscanresult(
@@ -17,3 +18,5 @@ diff -Nur python-wifi-0.6.1.orig/pythonwifi/iwlibs.py python-wifi-0.6.1/pythonwi
              # We're finished with the previous event
              data = data[length:]
  
+-- 
+2.26.2.windows.1
