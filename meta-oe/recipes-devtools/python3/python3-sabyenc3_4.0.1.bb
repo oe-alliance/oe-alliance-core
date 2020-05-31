@@ -8,7 +8,7 @@ SRC_URI = "https://files.pythonhosted.org/packages/b4/87/9a87e95f64ba4d992d25fae
 SRC_URI[md5sum] = "50ff582b092c985809f8cb31f898ef04"
 SRC_URI[sha256sum] = "74249291e6c5623b8b881cb175990c95d928c9d8d0346aa1cf85018d079869fc"
 
-S = "${WORKDIR}/sabyenc-${PV}"
+S = "${WORKDIR}/sabyenc3-${PV}"
 
 inherit setuptools3
 
