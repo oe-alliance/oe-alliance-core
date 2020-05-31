@@ -14,7 +14,7 @@ inherit autotools-brokensep gitpkgv pythonnative pkgconfig gettext ${PYTHON_PN}-
 SRCREV = "${AUTOREV}"
 PV = "${IMAGE_VERSION}+git${SRCPV}"
 PKGV = "${IMAGE_VERSION}+git${GITPKGV}"
-PR = "r1"
+PR = "r3"
 
 SRC_URI = "${ENIGMA2_PLUGINS_URI} file://pluginnotwanted.patch"
 SRC_URI_append_openatv = " file://EPGSearch.patch"
@@ -110,6 +110,8 @@ python populate_packages_prepend() {
                     depend = depend.strip()
                     if depend.startswith('twisted-'):
                         rdepends.append(depend.replace('twisted-', '${PYTHON_PN}-twisted-'))
+                    elif depend == 'python-re' :
+                        pass
                     elif depend.startswith('python-'):
                         rdepends.append(depend.replace('python-', '${PYTHON_PN}-'))
                     elif depend.startswith('gst-plugins-'):

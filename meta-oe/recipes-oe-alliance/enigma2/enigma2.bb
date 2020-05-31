@@ -59,7 +59,7 @@ PYTHON_RDEPS = " \
     ${PYTHON_PN}-netifaces \
     ${PYTHON_PN}-netserver \
     ${PYTHON_PN}-pickle \
-    ${PYTHON_PN}-re \
+    ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-re", "", d)} \
     ${PYTHON_PN}-shell \
     ${PYTHON_PN}-threading \
     ${PYTHON_PN}-twisted-core \
