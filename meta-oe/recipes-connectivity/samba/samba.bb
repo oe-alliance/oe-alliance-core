@@ -2,9 +2,9 @@ PR = "r3"
 
 require samba-source.inc
 
-inherit cpan-base perlnative ${PYTHON_PN}native
+inherit cpan-base perlnative pythonnative
 
-DEPENDS += "qemu-native libxslt-native docbook-xsl-stylesheets-native e2fsprogs readline virtual/libiconv zlib popt libpam ${PYTHON_PN} asn1compile-native"
+DEPENDS += "qemu-native libxslt-native docbook-xsl-stylesheets-native e2fsprogs readline virtual/libiconv zlib popt libpam python asn1compile-native"
 
 inherit features_check
 REQUIRED_DISTRO_FEATURES = "pam"

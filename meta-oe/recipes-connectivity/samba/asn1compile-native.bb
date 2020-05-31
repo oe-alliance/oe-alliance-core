@@ -2,10 +2,10 @@ require samba-source.inc
 
 S = "${WORKDIR}/samba-${PV}"
 
-inherit cpan-base perlnative ${PYTHON_PN}native native
+inherit cpan-base perlnative pythonnative native
 
 #DEPENDS += "libxslt-native docbook-xsl-stylesheets-native e2fsprogs readline virtual/libiconv zlib popt 
-#DEPENDS += "${PYTHON_PN}-native"
+#DEPENDS += "pythonnative"
 
 DEPENDS += "e2fsprogs-native zlib-native readline-native"
 
