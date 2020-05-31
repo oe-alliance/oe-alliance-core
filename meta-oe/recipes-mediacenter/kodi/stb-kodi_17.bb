@@ -215,13 +215,13 @@ RRECOMMENDS_${PN}_append = " \
    libcec \
    ${PYTHON_PN} \
    ${PYTHON_PN}-ctypes \
-   ${PYTHON_PN}-lang \
+   ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-lang", "", d)} \
    ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-re", "", d)} \
    ${PYTHON_PN}-netclient \
    ${PYTHON_PN}-html \
    ${PYTHON_PN}-difflib \
    ${PYTHON_PN}-json \
-   ${PYTHON_PN}-zlib \
+   ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-zlib", "", d)} \
    ${PYTHON_PN}-shell \
    ${PYTHON_PN}-sqlite3 \
    ${PYTHON_PN}-compression \
