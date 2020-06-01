@@ -5,7 +5,7 @@ SECTION = "devel/python"
 LICENSE = "BSD-2-Clause"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=67e73aa1a18a474a727af66319626ed4"
 
-inherit setuptools ${PYTHON_PN}-dir
+inherit ${@bb.utils.contains("PYTHON_PN", "python", "setuptools", "setuptools3", d)} ${PYTHON_PN}-dir
 
 RDEPENDS_${PN} = "${PYTHON_PN} \
     ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-backports-shutil-which", "", d)} \
