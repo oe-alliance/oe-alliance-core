@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://../LICENSE.GPLv2;md5=eb723b61539feef013de476e68b5c50a
 
 DEPENDS = "${PYTHON_PN}"
 
-inherit gitpkgv pythonnative gettext
+inherit gitpkgv ${PYTHON_PN}native gettext
 
 SRCREV = "${AUTOREV}"
 PV = "2.8.4+git${SRCPV}"

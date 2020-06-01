@@ -1,46 +1,6 @@
-From ad81a627a81e045ec342cf9a3ff3e8cdeb409e5a Mon Sep 17 00:00:00 2001
-From: dpeddi <eddi@dpeddi.com>
-Date: Sun, 1 Mar 2020 13:22:14 +0000
-Subject: [PATCH] introduce basic GstPlayer
-
----
- cmake/modules/FindGstreamer.cmake                  |   40 +
- cmake/treedata/common/cores.txt                    |    1 +
- xbmc/cores/CMakeLists.txt                          |    4 +
- xbmc/cores/GstPlayer/CMakeLists.txt                |    9 +
- xbmc/cores/GstPlayer/GstPlayer.cpp                 |  600 ++++++++++
- xbmc/cores/GstPlayer/GstPlayer.h                   |  172 +++
- xbmc/cores/GstPlayer/GstPlayerAudio.cpp            |  135 +++
- xbmc/cores/GstPlayer/GstPlayerAudio.h              |   44 +
- xbmc/cores/GstPlayer/GstPlayerVideo.cpp            | 1180 ++++++++++++++++++++
- xbmc/cores/GstPlayer/GstPlayerVideo.h              |  170 +++
- xbmc/cores/playercorefactory/PlayerCoreConfig.h    |   10 +
- xbmc/cores/playercorefactory/PlayerCoreFactory.cpp |   15 +
- 12 files changed, 2380 insertions(+)
- create mode 100644 cmake/modules/FindGstreamer.cmake
- create mode 100644 xbmc/cores/GstPlayer/CMakeLists.txt
- create mode 100644 xbmc/cores/GstPlayer/GstPlayer.cpp
- create mode 100644 xbmc/cores/GstPlayer/GstPlayer.h
- create mode 100644 xbmc/cores/GstPlayer/GstPlayerAudio.cpp
- create mode 100644 xbmc/cores/GstPlayer/GstPlayerAudio.h
- create mode 100644 xbmc/cores/GstPlayer/GstPlayerVideo.cpp
- create mode 100644 xbmc/cores/GstPlayer/GstPlayerVideo.h
-
-diff --git a/cmake/platform/linux/stb.cmake b/cmake/platform/linux/stb.cmake
-index dd62eff..e27cad1 100644
---- a/cmake/platform/linux/stb.cmake
-+++ b/cmake/platform/linux/stb.cmake
-@@ -1,4 +1,4 @@
--set(PLATFORM_REQUIRED_DEPS EGL LibInput Xkbcommon)
-+set(PLATFORM_REQUIRED_DEPS EGL LibInput Xkbcommon Gstreamer)
- set(PLATFORM_OPTIONAL_DEPS VAAPI)
-
- set(STB_RENDER_SYSTEM "" CACHE STRING "Render system to use with STB: \"gl\" or \"gles\"")
-diff --git a/cmake/modules/FindGstreamer.cmake b/cmake/modules/FindGstreamer.cmake
-new file mode 100644
-index 0000000..760e7d1
---- /dev/null
-+++ b/cmake/modules/FindGstreamer.cmake
+diff -ruN a/cmake/modules/FindGstreamer.cmake b/cmake/modules/FindGstreamer.cmake
+--- a/cmake/modules/FindGstreamer.cmake	1970-01-01 01:00:00.000000000 +0100
++++ b/cmake/modules/FindGstreamer.cmake	2020-04-23 11:05:43.645091286 +0200
 @@ -0,0 +1,40 @@
 +#.rst:
 +# FindGStreamer
@@ -82,22 +42,28 @@ index 0000000..760e7d1
 +endif()
 +
 +mark_as_advanced(GSTREAMER_LIBRARY GSTREAMER_INCLUDE_DIR GSTREAMER_LDFLAGS)
-diff --git a/cmake/treedata/common/cores.txt b/cmake/treedata/common/cores.txt
-index 5e5c6cb..cbde630 100644
---- a/cmake/treedata/common/cores.txt
-+++ b/cmake/treedata/common/cores.txt
-@@ -5,5 +5,6 @@ xbmc/cores/DllLoader/exports           cores/dll-loader/exports
+diff -ruN a/cmake/platform/linux/stb.cmake b/cmake/platform/linux/stb.cmake
+--- a/cmake/platform/linux/stb.cmake	2020-05-21 12:40:21.142526221 +0200
++++ b/cmake/platform/linux/stb.cmake	2020-03-05 00:09:54.300387000 +0100
+@@ -1,4 +1,4 @@
+-set(PLATFORM_REQUIRED_DEPS EGL LibInput Xkbcommon)
++set(PLATFORM_REQUIRED_DEPS EGL LibInput Xkbcommon Gstreamer)
+ set(PLATFORM_OPTIONAL_DEPS VAAPI)
+ 
+ set(STB_RENDER_SYSTEM "" CACHE STRING "Render system to use with STB: \"gl\" or \"gles\"")
+diff -ruN a/cmake/treedata/common/cores.txt b/cmake/treedata/common/cores.txt
+--- a/cmake/treedata/common/cores.txt	2020-05-21 12:41:05.450708667 +0200
++++ b/cmake/treedata/common/cores.txt	2020-03-04 17:38:33.830333000 +0100
+@@ -5,5 +5,6 @@
  xbmc/cores/DllLoader/exports/util      cores/dll-loader/exports/util
  xbmc/cores/ExternalPlayer              cores/externalplayer
  xbmc/cores/Enigma2Player               cores/enigma2player
 +xbmc/cores/GstPlayer                   cores/gstplayer
  xbmc/cores/paplayer                    cores/paplayer
  xbmc/cores/playercorefactory           cores/playercorefactory
-diff --git a/xbmc/cores/GstPlayer/CMakeLists.txt b/xbmc/cores/GstPlayer/CMakeLists.txt
-new file mode 100644
-index 0000000..1b8adfa
---- /dev/null
-+++ b/xbmc/cores/GstPlayer/CMakeLists.txt
+diff -ruN a/xbmc/cores/GstPlayer/CMakeLists.txt b/xbmc/cores/GstPlayer/CMakeLists.txt
+--- a/xbmc/cores/GstPlayer/CMakeLists.txt	1970-01-01 01:00:00.000000000 +0100
++++ b/xbmc/cores/GstPlayer/CMakeLists.txt	2020-03-02 20:06:34.178868000 +0100
 @@ -0,0 +1,9 @@
 +set(SOURCES GstPlayer.cpp
 +            GstPlayerAudio.cpp
@@ -108,12 +74,213 @@ index 0000000..1b8adfa
 +            GstPlayerVideo.h)
 +
 +core_add_library(gstplayer)
-diff --git a/xbmc/cores/GstPlayer/GstPlayer.cpp b/xbmc/cores/GstPlayer/GstPlayer.cpp
-new file mode 100644
-index 0000000..3a78eb1
---- /dev/null
-+++ b/xbmc/cores/GstPlayer/GstPlayer.cpp
-@@ -0,0 +1,602 @@
+diff -ruN a/xbmc/cores/GstPlayer/GstPlayerAudio.cpp b/xbmc/cores/GstPlayer/GstPlayerAudio.cpp
+--- a/xbmc/cores/GstPlayer/GstPlayerAudio.cpp	1970-01-01 01:00:00.000000000 +0100
++++ b/xbmc/cores/GstPlayer/GstPlayerAudio.cpp	2020-04-19 16:05:00.266796127 +0200
+@@ -0,0 +1,151 @@
++/*
++ *      Copyright (C) 2005-2015 Team Kodi
++ *      http://kodi.tv
++ *
++ *  This Program is free software; you can redistribute it and/or modify
++ *  it under the terms of the GNU General Public License as published by
++ *  the Free Software Foundation; either version 2, or (at your option)
++ *  any later version.
++ *
++ *  This Program is distributed in the hope that it will be useful,
++ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++ *  GNU General Public License for more details.
++ *
++ *  You should have received a copy of the GNU General Public License
++ *  along with Kodi; see the file COPYING.  If not, see
++ *  <http://www.gnu.org/licenses/>.
++ *
++ */
++
++#include "threads/SingleLock.h"
++#include "utils/XMLUtils.h"
++
++#include <fcntl.h>
++#include <sys/ioctl.h>
++#include <linux/dvb/audio.h>
++
++#include "system.h"
++#include "GstPlayerAudio.h"
++#include "utils/log.h"
++
++#include "threads/Thread.h"
++#include "threads/SystemClock.h"
++#include "ServiceBroker.h"
++#include "cores/AudioEngine/Engines/ActiveAE/ActiveAE.h"
++
++#define AUDIO_DEV "/dev/dvb/adapter0/audio0"
++
++CGstPlayerAudio::CGstPlayerAudio(CProcessInfo &processInfo): m_processInfo(processInfo)
++{
++	CLog::Log(LOGNOTICE, "CGstPlayerAudio::%s", __FUNCTION__ );
++	// magic value used when omxplayer is playing - want sink to be disabled
++	AEAudioFormat m_format;
++	m_format.m_dataFormat = AE_FMT_RAW;
++	m_format.m_streamInfo.m_type = CAEStreamInfo::STREAM_TYPE_AC3;
++	m_format.m_streamInfo.m_sampleRate = 16000;
++	m_format.m_streamInfo.m_channels = 2;
++	m_format.m_sampleRate = 16000;
++	m_format.m_frameSize = 1;
++	m_pAudioStream = CServiceBroker::GetActiveAE()->MakeStream(m_format);
++
++	m_processInfo.ResetAudioCodecInfo();
++#if 0
++	CServiceBroker::GetActiveAE()->Suspend();
++	/* wait for AE has completed suspended */
++	XbmcThreads::EndTime timer(1000);
++	while (!timer.IsTimePast() && !CServiceBroker::GetActiveAE()->IsSuspended())
++	{
++		usleep(80);
++	}
++	if (timer.IsTimePast())
++	{
++		CLog::Log(LOGERROR,"CGstPlayerAudio::%s: AudioEngine did not suspend before launching player", __FUNCTION__);
++	}
++#endif
++}
++
++CGstPlayerAudio::~CGstPlayerAudio()
++{
++#if 0
++	/* Resume AE processing of XBMC native audio */
++	if (!CServiceBroker::GetActiveAE()->Resume())
++	{
++		CLog::Log(LOGFATAL, "CGstPlayerAudio::%s: Failed to restart AudioEngine after return from player",__FUNCTION__);
++	}
++#endif
++	if (m_pAudioStream)
++		CServiceBroker::GetActiveAE()->FreeStream(m_pAudioStream, true);
++	CLog::Log(LOGNOTICE, "CGstPlayerAudio::%s", __FUNCTION__ );
++}
++
++void CGstPlayerAudio::SetVolume(float volume)
++{
++	int vol = checkVolume(int(volume * 100));
++	audio_mixer_t mixer;
++	
++	vol = 63 - vol * 63 / 100;
++	
++	mixer.volume_left = vol;
++	mixer.volume_right = vol;
++
++	int fd = openMixer();
++	if (fd >= 0)
++	{
++		ioctl(fd, AUDIO_SET_MIXER, &mixer);
++		closeMixer(fd);
++	}
++
++	FILE * stb = fopen("/proc/stb/avs/0/volume", "w");
++	if (stb != NULL)
++	{
++		fprintf(stb, "%d", vol);
++		fclose (stb);
++	}
++
++	CLog::Log(LOGDEBUG, "%s: volume:%f set:%d (-1db)", __FUNCTION__, volume, vol);
++}
++
++void CGstPlayerAudio::SetMute(bool bOnOff)
++{
++	int fd = openMixer();
++	if (fd >= 0)
++	{
++		bool mute = bOnOff; //!m_muted;
++		if (!ioctl(fd, AUDIO_SET_MUTE, mute) == 0)
++			CLog::Log(LOGERROR, "%s: ioctl AUDIO_SET_MUTE failed", __FUNCTION__);
++		
++		closeMixer(fd);
++	}
++	else
++			CLog::Log(LOGERROR, "%s: i/o AUDIO_SET_MUTE failed", __FUNCTION__);
++	
++	FILE * stb = fopen("/proc/stb/audio/j1_mute", "w");
++	if (stb != NULL)
++	{
++		fprintf(stb, "%d", (int) bOnOff);
++		fclose (stb);
++	}
++
++
++	CLog::Log(LOGDEBUG, "%s: bOnOff	:%s", __FUNCTION__, bOnOff == false ? "off":"on" ); 
++}
++
++int CGstPlayerAudio::openMixer()
++{
++	return open(AUDIO_DEV, O_RDWR);
++}
++
++void CGstPlayerAudio::closeMixer(int fd)
++{
++	if (fd >= 0) close(fd);
++}
++
++int CGstPlayerAudio::checkVolume(int vol)
++{
++	if (vol < 0)
++		vol = 0;
++	else if (vol > 100)
++		vol = 100;
++	return vol;
++}
+diff -ruN a/xbmc/cores/GstPlayer/GstPlayerAudio.h b/xbmc/cores/GstPlayer/GstPlayerAudio.h
+--- a/xbmc/cores/GstPlayer/GstPlayerAudio.h	1970-01-01 01:00:00.000000000 +0100
++++ b/xbmc/cores/GstPlayer/GstPlayerAudio.h	2020-03-02 20:07:51.286911000 +0100
+@@ -0,0 +1,44 @@
++#pragma once
++
++/*
++ *      Copyright (C) 2005-2015 Team Kodi
++ *      http://kodi.tv
++ *
++ *  This Program is free software; you can redistribute it and/or modify
++ *  it under the terms of the GNU General Public License as published by
++ *  the Free Software Foundation; either version 2, or (at your option)
++ *  any later version.
++ *
++ *  This Program is distributed in the hope that it will be useful,
++ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++ *  GNU General Public License for more details.
++ *
++ *  You should have received a copy of the GNU General Public License
++ *  along with Kodi; see the file COPYING.  If not, see
++ *  <http://www.gnu.org/licenses/>.
++ *
++ */
++
++#include "threads/Thread.h"
++
++#include "cores/AudioEngine/Interfaces/AEStream.h"
++#include "cores/VideoPlayer/Process/ProcessInfo.h"
++
++class CGstPlayerAudio
++{
++public:
++	CGstPlayerAudio(CProcessInfo &processInfo);
++	~CGstPlayerAudio();
++	void SetVolume(float volume);
++	void SetMute(bool bOnOff);
++
++private:
++	int openMixer();
++	int checkVolume(int vol);
++	void closeMixer(int fd);
++	IAEStream *m_pAudioStream;
++	
++protected:
++	CProcessInfo &m_processInfo;
++};
+diff -ruN a/xbmc/cores/GstPlayer/GstPlayer.cpp b/xbmc/cores/GstPlayer/GstPlayer.cpp
+--- a/xbmc/cores/GstPlayer/GstPlayer.cpp	1970-01-01 01:00:00.000000000 +0100
++++ b/xbmc/cores/GstPlayer/GstPlayer.cpp	2020-05-21 12:34:27.615523154 +0200
+@@ -0,0 +1,685 @@
 +/*
 + *      Copyright (C) 2005-2015 Team Kodi
 + *      http://kodi.tv
@@ -164,6 +331,7 @@ index 0000000..3a78eb1
 +#include "filesystem/MusicDatabaseFile.h"
 +#include "dialogs/GUIDialogBusy.h"
 +#include "pvr/PVRManager.h"
++#include "utils/StreamDetails.h"
 +
 +#include "cores/VideoPlayer/Process/ProcessInfo.h"
 +
@@ -212,7 +380,7 @@ index 0000000..3a78eb1
 +
 +	CServiceBroker::GetWinSystem()->RegisterRenderLoop(this); //From Decompiled
 +
-+	CServiceBroker::GetWinSystem()->Hide();
++//	CServiceBroker::GetWinSystem()->Hide();
 +
 +	CLog::Log(LOGNOTICE, "CGstPlayer::%s", __FUNCTION__ );
 +}
@@ -265,6 +433,7 @@ index 0000000..3a78eb1
 +	m_ready.Reset();
 +	
 +	Create();
++	m_callback.OnPlayBackStarted(file);
 +	
 +	return true;
 +}
@@ -415,11 +584,25 @@ index 0000000..3a78eb1
 +	
 +	CLog::Log(LOGNOTICE, "CGstPlayer%s: m_pInputStream->GetFileName(): %s", __FUNCTION__, hint.filename.c_str());
 +
++	CApplicationMessenger::GetInstance().PostMsg(TMSG_SWITCHTOFULLSCREEN);
++
 +	m_playbackStartTime = XbmcThreads::SystemClockMillis();
 +	m_time = 0;
 +
-+	CApplicationMessenger::GetInstance().PostMsg(TMSG_SWITCHTOFULLSCREEN);
-+	
++	/* Suspend AE temporarily so exclusive or hog-mode sinks */
++	/* don't block external player's access to audio device  */
++	CServiceBroker::GetActiveAE()->Suspend();
++	// wait for AE has completed suspended
++	XbmcThreads::EndTime timer(2000);
++	while (!timer.IsTimePast() && !CServiceBroker::GetActiveAE()->IsSuspended())
++	{
++		Sleep(50);
++	}
++	if (timer.IsTimePast())
++	{
++		CLog::Log(LOGERROR,"%s: AudioEngine did not suspend before launching GstPlayer", __FUNCTION__);
++	}
++
 +	//m_callback.OnPlayBackStarted();
 +
 +	if (m_pInputStream->IsStreamType(DVDSTREAM_TYPE_PVRMANAGER) && 
@@ -427,14 +610,33 @@ index 0000000..3a78eb1
 +	{
 +		hint.filename = "";
 +	}
-+	
++
++	m_bStop = false;
++
 +	m_VideoPlayerVideo->OpenStream(hint, m_item);
-+	
-+	CLog::Log(LOGNOTICE, "CGstPlayer%s: m_bStop: %s", __FUNCTION__, m_bStop == true ? "true" : "false");
 +	
 +	m_bStop = true;
 +	
 +	CLog::Log(LOGNOTICE, "CGstPlayer%s: m_bStop: %s", __FUNCTION__, m_bStop == true ? "true" : "false");
++
++	CLog::Log(LOGNOTICE, "%s: Showing %s window", __FUNCTION__, CCompileInfo::GetAppName());
++	CServiceBroker::GetWinSystem()->Show();
++	m_time = GetTime() / 1000;
++	m_totalTime = GetTotalTime() / 1000;
++	if (m_time >= DEFAULT_PLAYCOUNT_MIN_TIME)
++	{
++		CBookmark bookmark;
++		bookmark.totalTimeInSeconds = m_totalTime;
++		bookmark.timeInSeconds = m_time;
++		bookmark.player = m_name;
++		m_callback.OnPlayerCloseFile(m_item, bookmark);
++	}
++
++	/* Resume AE processing of XBMC native audio */
++	if (!CServiceBroker::GetActiveAE()->Resume())
++	{
++	CLog::Log(LOGFATAL, "%s: Failed to restart AudioEngine after return from Gstplayer",__FUNCTION__);
++	}
 +
 +	// We don't want to come back to an active screensaver
 +	g_application.ResetScreenSaver();
@@ -446,6 +648,7 @@ index 0000000..3a78eb1
 +	else
 +		m_callback.OnPlayBackEnded();
 +}
++
 +
 +void CGstPlayer::Pause()
 +{
@@ -622,6 +825,11 @@ index 0000000..3a78eb1
 +	return m_VideoPlayerVideo->GetAudioStreamCount();
 +}
 +
++void CGstPlayer::SetAudioStream(int iStream)
++{
++	return m_VideoPlayerVideo->SetAudioStream(iStream);
++}
++
 +int CGstPlayer::GetVideoStreamCount()
 +{
 +	return m_VideoPlayerVideo->GetVideoStreamCount();
@@ -637,6 +845,26 @@ index 0000000..3a78eb1
 +	return m_VideoPlayerVideo->GetAudioStream();
 +}
 +
++/*bool CGstPlayer::GetStreamDetails(CStreamDetails &details)
++{
++	return m_VideoPlayerVideo->GetStreamDetails(details);
++}*/
++
++void CGstPlayer::GetVideoStreamInfo(int index, VideoStreamInfo &info)
++{
++	m_VideoPlayerVideo->GetVideoStreamInfo(index, info);
++}
++
++void CGstPlayer::GetAudioStreamInfo(int index, AudioStreamInfo &info)
++{
++	m_VideoPlayerVideo->GetAudioStreamInfo(index, info);
++}
++
++void CGstPlayer::GetSubtitleStreamInfo(int index, SubtitleStreamInfo &info)
++{
++	m_VideoPlayerVideo->GetSubtitleStreamInfo(index, info);
++}
++
 +int CGstPlayer::GetVideoStream()
 +{
 +	return m_VideoPlayerVideo->GetVideoStream();
@@ -647,12 +875,28 @@ index 0000000..3a78eb1
 +	return m_VideoPlayerVideo->GetSubtitle();
 +}
 +
++void CGstPlayer::SetSubtitle(int iStream)
++{
++	m_VideoPlayerVideo->SetSubtitle(iStream);
++}
++
++bool CGstPlayer::GetSubtitleVisible()
++{
++	return m_VideoPlayerVideo->GetSubtitleVisible();
++}
++
++void CGstPlayer::SetSubtitleVisible(bool bVisible)
++{
++	m_VideoPlayerVideo->SetSubtitleVisible(bVisible);
++}
++
++
 +float CGstPlayer::GetRenderAspectRatio()
 +{
 +	return m_VideoPlayerVideo->GetRenderAspectRatio();
 +}
 +
-+void CGstPlayer::OnPlaybackStarted()
++void CGstPlayer::OnPlaybackStarted(const CFileItem& file)
 +{
 +	CLog::Log(LOGNOTICE, "CGstPlayer::%s", __FUNCTION__);
 +	
@@ -685,8 +929,8 @@ index 0000000..3a78eb1
 +			fclose(f);
 +		}
 +	}
-+	m_callback.OnPlayBackStarted(m_item);
-+	m_callback.OnAVStarted(m_item);
++	m_callback.OnPlayBackStarted(file);
++	m_callback.OnAVStarted(file);
 +	//m_ready.Set();
 +}
 +
@@ -716,12 +960,16 @@ index 0000000..3a78eb1
 +{
 +  return !m_bStop;
 +}
-diff --git a/xbmc/cores/GstPlayer/GstPlayer.h b/xbmc/cores/GstPlayer/GstPlayer.h
-new file mode 100644
-index 0000000..3dfa49b
---- /dev/null
-+++ b/xbmc/cores/GstPlayer/GstPlayer.h
-@@ -0,0 +1,172 @@
++
++bool CGstPlayer::IsRenderingVideo()
++{
++	return IsPlaying();
++}
++
+diff -ruN a/xbmc/cores/GstPlayer/GstPlayer.h b/xbmc/cores/GstPlayer/GstPlayer.h
+--- a/xbmc/cores/GstPlayer/GstPlayer.h	1970-01-01 01:00:00.000000000 +0100
++++ b/xbmc/cores/GstPlayer/GstPlayer.h	2020-04-29 16:20:26.950636514 +0200
+@@ -0,0 +1,186 @@
 +
 +/*
 + *      Copyright (C) 2005-2015 Team Kodi
@@ -752,6 +1000,7 @@ index 0000000..3dfa49b
 +#include "GstPlayerVideo.h"
 +#include "cores/IPlayer.h"
 +#include "threads/Thread.h"
++#include "cores/VideoPlayer/VideoRenderers/RenderManager.h"
 +#include "utils/log.h"
 +#include "FileItem.h"
 +#include "guilib/DispResource.h"
@@ -769,7 +1018,7 @@ index 0000000..3dfa49b
 +class IGstPlayerCallback
 +{
 +public:
-+	virtual void OnPlaybackStarted() = 0;
++	virtual void OnPlaybackStarted(const CFileItem& file) = 0;
 +};
 +
 +class CGstPlayer : public IPlayer,
@@ -802,8 +1051,8 @@ index 0000000..3dfa49b
 +	void Seek(bool bPlus, bool bLargeStep, bool bChapterOverride);
 +	void SeekPercentage(float iPercent);
 +	float GetPercentage();
-+	void SetVolume(float volume);
-+	void SetMute(bool bOnOff);
++	void SetVolume(float volume) override;
++	void SetMute(bool bOnOff) override;
 +
 +	bool HasMenu() const { return true; };
 +	void SetDynamicRangeCompression(long drc) {}
@@ -826,7 +1075,7 @@ index 0000000..3dfa49b
 +	float GetRenderAspectRatio();
 +	void TriggerUpdateResolution() { CLog::Log(LOGNOTICE, "%s: ", __FUNCTION__ ); };
 +	
-+	bool IsRenderingVideo() { return true; };
++	bool IsRenderingVideo();
 +	bool IsRenderingGuiLayer() { return true; };
 +	bool IsRenderingVideoLayer() { return true; };
 +	
@@ -845,21 +1094,34 @@ index 0000000..3dfa49b
 +	std::string GetPlayerState();
 +	bool SetPlayerState(const std::string& state);
 +	
-+	int GetAudioStreamCount();
++	int GetAudioStreamCount() override;
 +	int GetVideoStreamCount();
-+	int GetSubtitleCount();
++	int GetSubtitleCount() override;
 +	
-+	int GetAudioStream();
++	int GetAudioStream() override;
 +	int GetVideoStream();
 +	int GetSubtitle();
++  	void SetSubtitle(int iStream) override;
++  	bool GetSubtitleVisible() override;
++  	void SetSubtitleVisible(bool bVisible) override;
++
++
++//	virtual bool GetStreamDetails(CStreamDetails &details);
++
++	void SetAudioStream(int iStream) override;
++	void GetAudioStreamInfo(int index, AudioStreamInfo &info) override;
 +	
++	void GetVideoStreamInfo(int index, VideoStreamInfo &info) override;
++
++	void GetSubtitleStreamInfo(int index, SubtitleStreamInfo &info) override;
++
 +	bool SupportsTempo() { return m_canTempo; };
 +	
-+	void OnPlaybackStarted();
++	void OnPlaybackStarted(const CFileItem& file) override;
 +
 +private:
 +
-+	void Process();
++	void Process() override;
 +	bool OnAction(const CAction &action);
 +	
 +	void CreatePlayers();
@@ -894,203 +1156,10 @@ index 0000000..3dfa49b
 +	std::atomic_bool m_canTempo;
 +	std::shared_ptr<CDVDInputStream> m_pInputStream;  // input stream for current playing file
 +};
-diff --git a/xbmc/cores/GstPlayer/GstPlayerAudio.cpp b/xbmc/cores/GstPlayer/GstPlayerAudio.cpp
-new file mode 100644
-index 0000000..a1eeff0
---- /dev/null
-+++ b/xbmc/cores/GstPlayer/GstPlayerAudio.cpp
-@@ -0,0 +1,135 @@
-+/*
-+ *      Copyright (C) 2005-2015 Team Kodi
-+ *      http://kodi.tv
-+ *
-+ *  This Program is free software; you can redistribute it and/or modify
-+ *  it under the terms of the GNU General Public License as published by
-+ *  the Free Software Foundation; either version 2, or (at your option)
-+ *  any later version.
-+ *
-+ *  This Program is distributed in the hope that it will be useful,
-+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-+ *  GNU General Public License for more details.
-+ *
-+ *  You should have received a copy of the GNU General Public License
-+ *  along with Kodi; see the file COPYING.  If not, see
-+ *  <http://www.gnu.org/licenses/>.
-+ *
-+ */
-+
-+#include "threads/SingleLock.h"
-+#include "utils/XMLUtils.h"
-+
-+#include <fcntl.h>
-+#include <sys/ioctl.h>
-+#include <linux/dvb/audio.h>
-+
-+#include "system.h"
-+#include "GstPlayerAudio.h"
-+#include "utils/log.h"
-+
-+#include "threads/Thread.h"
-+#include "threads/SystemClock.h"
-+#include "ServiceBroker.h"
-+#include "cores/AudioEngine/Engines/ActiveAE/ActiveAE.h"
-+
-+#define AUDIO_DEV "/dev/dvb/adapter0/audio0"
-+
-+CGstPlayerAudio::CGstPlayerAudio(CProcessInfo &processInfo): m_processInfo(processInfo)
-+{
-+	CLog::Log(LOGNOTICE, "CGstPlayerAudio::%s", __FUNCTION__ );
-+	// magic value used when omxplayer is playing - want sink to be disabled
-+	AEAudioFormat m_format;
-+	m_format.m_dataFormat = AE_FMT_RAW;
-+	m_format.m_streamInfo.m_type = CAEStreamInfo::STREAM_TYPE_AC3;
-+	m_format.m_streamInfo.m_sampleRate = 16000;
-+	m_format.m_streamInfo.m_channels = 2;
-+	m_format.m_sampleRate = 16000;
-+	m_format.m_frameSize = 1;
-+	m_pAudioStream = CServiceBroker::GetActiveAE()->MakeStream(m_format);
-+
-+	m_processInfo.ResetAudioCodecInfo();
-+#if 0
-+	CServiceBroker::GetActiveAE()->Suspend();
-+	/* wait for AE has completed suspended */
-+	XbmcThreads::EndTime timer(1000);
-+	while (!timer.IsTimePast() && !CServiceBroker::GetActiveAE()->IsSuspended())
-+	{
-+		usleep(80);
-+	}
-+	if (timer.IsTimePast())
-+	{
-+		CLog::Log(LOGERROR,"CGstPlayerAudio::%s: AudioEngine did not suspend before launching player", __FUNCTION__);
-+	}
-+#endif
-+}
-+
-+CGstPlayerAudio::~CGstPlayerAudio()
-+{
-+#if 0
-+	/* Resume AE processing of XBMC native audio */
-+	if (!CServiceBroker::GetActiveAE()->Resume())
-+	{
-+		CLog::Log(LOGFATAL, "CGstPlayerAudio::%s: Failed to restart AudioEngine after return from player",__FUNCTION__);
-+	}
-+#endif
-+	if (m_pAudioStream)
-+		CServiceBroker::GetActiveAE()->FreeStream(m_pAudioStream, true);
-+	CLog::Log(LOGNOTICE, "CGstPlayerAudio::%s", __FUNCTION__ );
-+}
-+
-+void CGstPlayerAudio::SetVolume(float volume)
-+{
-+	int vol = checkVolume(int(volume * 100));
-+	audio_mixer_t mixer;
-+	
-+	vol = 63 - vol * 63 / 100;
-+	
-+	mixer.volume_left = vol;
-+	mixer.volume_right = vol;
-+
-+	int fd = openMixer();
-+	if (fd >= 0)
-+	{
-+		ioctl(fd, AUDIO_SET_MIXER, &mixer);
-+		closeMixer(fd);
-+	}
-+	CLog::Log(LOGDEBUG, "%s: volume:%f set:%d (-1db)", __FUNCTION__, volume, vol);
-+}
-+
-+void CGstPlayerAudio::SetMute(bool bOnOff)
-+{
-+	int fd = openMixer();
-+	if (fd >= 0)
-+	{
-+		bool mute = bOnOff; //!m_muted;
-+		if (!ioctl(fd, AUDIO_SET_MUTE, mute) == 0)
-+			CLog::Log(LOGERROR, "%s: ioctl AUDIO_SET_MUTE failed", __FUNCTION__);
-+		
-+		closeMixer(fd);
-+	}
-+	else
-+			CLog::Log(LOGERROR, "%s: i/o AUDIO_SET_MUTE failed", __FUNCTION__);
-+	
-+	CLog::Log(LOGDEBUG, "%s: bOnOff	:%s", __FUNCTION__, bOnOff == false ? "off":"on" ); 
-+}
-+
-+int CGstPlayerAudio::openMixer()
-+{
-+	return open(AUDIO_DEV, O_RDWR);
-+}
-+
-+void CGstPlayerAudio::closeMixer(int fd)
-+{
-+	if (fd >= 0) close(fd);
-+}
-+
-+int CGstPlayerAudio::checkVolume(int vol)
-+{
-+	if (vol < 0)
-+		vol = 0;
-+	else if (vol > 100)
-+		vol = 100;
-+	return vol;
-+}
-diff --git a/xbmc/cores/GstPlayer/GstPlayerAudio.h b/xbmc/cores/GstPlayer/GstPlayerAudio.h
-new file mode 100644
-index 0000000..aba8813
---- /dev/null
-+++ b/xbmc/cores/GstPlayer/GstPlayerAudio.h
-@@ -0,0 +1,44 @@
-+#pragma once
-+
-+/*
-+ *      Copyright (C) 2005-2015 Team Kodi
-+ *      http://kodi.tv
-+ *
-+ *  This Program is free software; you can redistribute it and/or modify
-+ *  it under the terms of the GNU General Public License as published by
-+ *  the Free Software Foundation; either version 2, or (at your option)
-+ *  any later version.
-+ *
-+ *  This Program is distributed in the hope that it will be useful,
-+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-+ *  GNU General Public License for more details.
-+ *
-+ *  You should have received a copy of the GNU General Public License
-+ *  along with Kodi; see the file COPYING.  If not, see
-+ *  <http://www.gnu.org/licenses/>.
-+ *
-+ */
-+
-+#include "threads/Thread.h"
-+
-+#include "cores/AudioEngine/Interfaces/AEStream.h"
-+#include "cores/VideoPlayer/Process/ProcessInfo.h"
-+
-+class CGstPlayerAudio
-+{
-+public:
-+	CGstPlayerAudio(CProcessInfo &processInfo);
-+	~CGstPlayerAudio();
-+	void SetVolume(float volume);
-+	void SetMute(bool bOnOff);
-+
-+private:
-+	int openMixer();
-+	int checkVolume(int vol);
-+	void closeMixer(int fd);
-+	IAEStream *m_pAudioStream;
-+	
-+protected:
-+	CProcessInfo &m_processInfo;
-+};
-diff --git a/xbmc/cores/GstPlayer/GstPlayerVideo.cpp b/xbmc/cores/GstPlayer/GstPlayerVideo.cpp
-new file mode 100644
-index 0000000..0364514
---- /dev/null
-+++ b/xbmc/cores/GstPlayer/GstPlayerVideo.cpp
-@@ -0,0 +1,1180 @@
+diff -ruN a/xbmc/cores/GstPlayer/GstPlayerVideo.cpp b/xbmc/cores/GstPlayer/GstPlayerVideo.cpp
+--- a/xbmc/cores/GstPlayer/GstPlayerVideo.cpp	1970-01-01 01:00:00.000000000 +0100
++++ b/xbmc/cores/GstPlayer/GstPlayerVideo.cpp	2020-05-21 16:37:37.046427308 +0200
+@@ -0,0 +1,1405 @@
 +/*
 + *			Copyright (C) 2005-2015 Team Kodi
 + *			http://kodi.tv
@@ -1112,6 +1181,7 @@ index 0000000..0364514
 + */
 +
 +#include <gst/gst.h>
++#include <gst/tag/tag.h>
 +#include <gst/app/gstappsrc.h>
 +#include <gst/pbutils/missing-plugins.h>
 +
@@ -1119,6 +1189,7 @@ index 0000000..0364514
 +#include "system.h"
 +#include "URL.h"
 +#include "Util.h"
++#include "cores/DataCacheCore.h"
 +#include "ServiceBroker.h"
 +#include "filesystem/SpecialProtocol.h"
 +#include "utils/StringUtils.h"
@@ -1129,6 +1200,8 @@ index 0000000..0364514
 +#include "settings/Settings.h"
 +#include "settings/SettingsComponent.h"
 +#include "messaging/ApplicationMessenger.h"
++#include "utils/LangCodeExpander.h"
++#include "LangInfo.h"
 +
 +#define HTTP_TIMEOUT 10
 +
@@ -1160,6 +1233,7 @@ index 0000000..0364514
 +	,m_notify_element_added_handler_id(0)
 +	,m_ignore_buffering_messages(0)
 +	,m_use_prefillbuffer(false)
++	,m_is_sub_visible(false)
 +	,m_is_live(false)
 +	
 +{
@@ -1188,8 +1262,12 @@ index 0000000..0364514
 +{
 +	m_item = file;
 +	m_processInfo.ResetVideoCodecInfo();
++
 +	m_sourceinfo.is_streaming = FALSE;
 +	m_sourceinfo.is_hls = TRUE;
++
++	m_totalTime = 1;
++	m_time = 0;
 +	
 +	if(m_pInputStream)
 +		SAFE_DELETE(m_pInputStream);
@@ -1302,9 +1380,9 @@ index 0000000..0364514
 +
 +bool CGstPlayerVideo::CreateFakePipeline()
 +{
-+	CLog::Log(LOGNOTICE, "CGstPlayerVideo::%s: running pipeline...", __FUNCTION__);
++	CLog::Log(LOGNOTICE, "CGstPlayerVideo::%s: running Fake pipeline...", __FUNCTION__);
 +	
-+	m_callback->OnPlaybackStarted();
++	m_callback->OnPlaybackStarted(m_item);
 +	
 +	m_loop = g_main_loop_new(NULL, FALSE);
 +	g_main_loop_run(m_loop);
@@ -1325,7 +1403,15 @@ index 0000000..0364514
 +		CLog::Log(LOGNOTICE, "CGstPlayerVideo::%s: m_uri: '%s'", __FUNCTION__, m_uri);
 +		CLog::Log(LOGNOTICE, "CGstPlayerVideo::%s: running pipeline...", __FUNCTION__);
 +
-+		int flags = GST_PLAY_FLAG_VIDEO | GST_PLAY_FLAG_AUDIO | GST_PLAY_FLAG_NATIVE_VIDEO;
++		subsink = gst_element_factory_make("subsink", NULL);
++		if(subsink)
++		{
++			gst_object_ref_sink(subsink);
++		}
++		else
++			CLog::Log(LOGNOTICE, "CGstPlayerVideo::%s: subsink NOT created missing plugin subsink",  __FUNCTION__);
++
++		int flags = GST_PLAY_FLAG_VIDEO | GST_PLAY_FLAG_AUDIO | GST_PLAY_FLAG_NATIVE_VIDEO | GST_PLAY_FLAG_TEXT;
 +		if(m_pInputStream)
 +		{
 +			if (m_pInputStream->Open())
@@ -1425,12 +1511,12 @@ index 0000000..0364514
 +			return false;
 +			break;
 +		}
-+		
++
 +		g_main_loop_run(m_loop);
 +		
 +		g_main_loop_unref(m_loop);
 +		m_loop = NULL;
-+		
++
 +		DestroyPipeline();
 +	}
 +	else
@@ -1446,6 +1532,7 @@ index 0000000..0364514
 +	
 +	return true;
 +}
++
 +
 +void CGstPlayerVideo::Pause()
 +{
@@ -1605,61 +1692,71 @@ index 0000000..0364514
 +
 +int64_t CGstPlayerVideo::GetTime() // in milliseconds
 +{
-+	gint64 position;
++	GstState currentState;
++	gst_element_get_state(GST_ELEMENT(m_playbin), &currentState, 0, 0);
++	int time=1000;
++
++	if (currentState == GST_STATE_PLAYING)
++	{
++		gint64 position;
 +	
-+	if (!gst_element_query_position (GST_ELEMENT(m_playbin), GST_FORMAT_TIME, &position))
-+	{
-+		m_time = (int64_t) 1000;
-+		CLog::Log(LOGERROR, "CGstPlayerVideo::%s: Position query failed...", __FUNCTION__);
-+	}
-+	/* no position, seek to 1 second, this could EOS */
-+	if (position == -1)
-+	{
-+		m_time = (int64_t) 1000;
-+		CLog::Log(LOGNOTICE, "CGstPlayerVideo::%s: milliseconds=1000 position=-1", __FUNCTION__);
-+	}
-+	else
-+	{
-+		m_time = (int64_t) GST_TIME_AS_MSECONDS(position);
-+		CLog::Log(LOGNOTICE, "CGstPlayerVideo::%s: milliseconds=%d", __FUNCTION__, (int) m_time);
-+	}
-+	
-+	if(m_pInputStream)
-+	{
-+		m_time = (int64_t) (((GetTotalTime() * 1000) / m_length) * m_offset) / 1000;
-+		CLog::Log(LOGNOTICE, "CGstPlayerVideo::%s: (appsrc) m_offset=%d m_length=%d m_pInputStream->GetLength()=%d", __FUNCTION__, (int) m_offset, (int) m_length, m_pInputStream->GetLength());
-+		CLog::Log(LOGNOTICE, "CGstPlayerVideo::%s: (appsrc) milliseconds=%d", __FUNCTION__, (int) m_time);
++		if (!gst_element_query_position (GST_ELEMENT(m_playbin), GST_FORMAT_TIME, &position))
++		{
++			time = (int64_t) 1000;
++			CLog::Log(LOGERROR, "CGstPlayerVideo::%s: Position query failed...", __FUNCTION__);
++		}
++		/* no position, seek to 1 second, this could EOS */
++		if (position == -1)
++		{
++			time = (int64_t) 1000;
++			CLog::Log(LOGNOTICE, "CGstPlayerVideo::%s: milliseconds=1000 position=-1", __FUNCTION__);
++		}
++		else
++		{
++			time = (int64_t) GST_TIME_AS_MSECONDS(position);
++		}
++		
++		if(m_pInputStream)
++		{
++			m_time = (int64_t) (((GetTotalTime() * 1000) / m_length) * m_offset) / 1000;
++			CLog::Log(LOGNOTICE, "CGstPlayerVideo::%s: (appsrc) m_offset=%d m_length=%d m_pInputStream->GetLength()=%d", __FUNCTION__, (int) m_offset, (int) m_length, m_pInputStream->GetLength());
 +		return m_time;
++		}
 +	}
-+	
++	if (time>1000)
++		m_time = time;	
 +	return m_time;
 +
 +}
 +
 +int64_t CGstPlayerVideo::GetTotalTime() // in milliseconds
 +{
-+	gint64 duration = 0;
-+	
-+	if (!gst_element_query_duration(GST_ELEMENT(m_playbin), GST_FORMAT_TIME, &duration))
-+	{
-+		CLog::Log(LOGERROR, "CGstPlayerVideo::%s: Time duration query failed", __FUNCTION__);
-+		
-+		m_totalTime = 1;
-+	}
-+	else
-+	{
-+		/* no duration, seek to 1 second, this could EOS */
-+		if (duration != -1)
-+			m_totalTime = GST_TIME_AS_MSECONDS(duration)/1000;
-+		else
-+			m_totalTime = 1;
-+		
-+	}
++	GstState currentState;
++	gst_element_get_state(GST_ELEMENT(m_playbin), &currentState, 0, 0);
++	int time = 1;
 +
-+	CLog::Log(LOGNOTICE, "CGstPlayerVideo::%s: %d", __FUNCTION__, m_totalTime * 1000);
++	if (currentState == GST_STATE_PLAYING)
++	{
++		gint64 duration = 0;
 +	
++		if (!gst_element_query_duration(GST_ELEMENT(m_playbin), GST_FORMAT_TIME, &duration))
++		{
++			CLog::Log(LOGERROR, "CGstPlayerVideo::%s: Time duration query failed", __FUNCTION__);
++		
++			time = 1;
++		}
++		else
++		{
++			/* no duration, seek to 1 second, this could EOS */
++			if (duration != -1)
++				time = GST_TIME_AS_MSECONDS(duration)/1000;
++			else
++				time = 1;
++		}
++	}
++	if (time>1)
++		m_totalTime = time;
 +	return (int64_t) m_totalTime * 1000;
-+	
 +}
 +
 +std::string CGstPlayerVideo::GetPlayerState()
@@ -1671,7 +1768,7 @@ index 0000000..0364514
 +
 +void CGstPlayerVideo::OnPipelineStart()
 +{
-+	gint i;
++	gint i, n;
 +	GstTagList *tags;
 +	gchar *str;
 +	guint rate;
@@ -1717,7 +1814,20 @@ index 0000000..0364514
 +				g_free (str);
 +			}
 +			if (gst_tag_list_get_string (tags, GST_TAG_LANGUAGE_CODE, &str)) {
-+				CLog::Log(LOGNOTICE, "	language: %s", (char *)str);
++				CLog::Log(LOGNOTICE, "	language: %s  - %s", g_LangCodeExpander.ConvertToISO6392B((char *)str), (char *)str);
++				const std::shared_ptr<CSettings> settings = CServiceBroker::GetSettingsComponent()->GetSettings();
++				if (!StringUtils::EqualsNoCase(settings->GetString(CSettings::SETTING_LOCALE_AUDIOLANGUAGE), "mediadefault"))
++				{
++					if (!StringUtils::EqualsNoCase(settings->GetString(CSettings::SETTING_LOCALE_AUDIOLANGUAGE), "original"))
++					{
++						std::string audio_language = g_langInfo.GetAudioLanguage();
++						if (g_LangCodeExpander.CompareISO639Codes(audio_language, g_LangCodeExpander.ConvertToISO6392B((char *)str)))
++						{
++							g_object_set (GST_ELEMENT(m_playbin), "current-audio", i, NULL);
++							m_current_audio = i;
++						}
++					}
++				}
 +				g_free (str);
 +			}
 +			if (gst_tag_list_get_uint (tags, GST_TAG_BITRATE, &rate)) {
@@ -1740,8 +1850,33 @@ index 0000000..0364514
 +				CLog::Log(LOGNOTICE, "	language: %s", (char *)str);
 +				g_free (str);
 +			}
++			if (gst_tag_list_get_string (tags, GST_TAG_CODEC, &str)) {
++				CLog::Log(LOGNOTICE, "	Codec: %s", (char *)str);
++				g_free (str);
++			}
 +			gst_tag_list_free (tags);
 +		}
++		if (subsink)
++		{
++//			m_subs_to_pull_handler_id = g_signal_connect (subsink, "new-buffer", G_CALLBACK (gstCBsubtitleAvail), this);
++			g_object_set (subsink, "caps", gst_caps_from_string("text/plain; text/x-plain; text/x-raw; text/x-pango-markup; subpicture/x-dvd; subpicture/x-pgs"), NULL);
++			g_object_set (m_playbin, "text-sink", subsink, NULL);
++			g_object_set (m_playbin, "current-text", m_current_text, NULL);
++			g_object_set (subsink, "sync", FALSE, NULL);
++		}
++
++
++/*		GstPad* pad = 0;
++		g_signal_emit_by_name (m_playbin, "get-text-pad", i, &pad);
++		GstCaps* caps = gst_pad_get_current_caps(pad);
++		gst_object_unref(pad);
++		for (i = 0; i < gst_caps_get_size (caps); i++) {
++			GstStructure *structure = gst_caps_get_structure (caps, i);
++
++			CLog::Log(LOGNOTICE,"     %s", (char *)gst_structure_get_name (structure));
++			gst_structure_foreach (structure, print_field, this);
++		}
++		gst_caps_unref(caps);*/
 +	}
 +	
 +	g_object_get (m_playbin, "current-video", &m_current_video, NULL);
@@ -1753,6 +1888,20 @@ index 0000000..0364514
 +		(int)m_current_video,
 +		(int)m_current_audio,
 +		(int)m_current_text);
++
++	CServiceBroker::GetDataCacheCore().SignalAudioInfoChange();
++	CServiceBroker::GetDataCacheCore().SignalVideoInfoChange();
++	CServiceBroker::GetDataCacheCore().SignalSubtitleInfoChange();
++	CDataCacheCore::GetInstance().SetPlayTimes(0, GetTime(), 0, GetTotalTime());
++
++}
++
++gboolean CGstPlayerVideo::print_field (GQuark field, const GValue * value, gpointer user_data) {
++  gchar *str = gst_value_serialize (value);
++
++  CLog::Log(LOGNOTICE, "       %15s: %s\n", (char *)g_quark_to_string (field), (char *)str);
++  g_free (str);
++  return TRUE;
 +}
 +
 +float CGstPlayerVideo::GetRenderAspectRatio()
@@ -1843,6 +1992,7 @@ index 0000000..0364514
 +		gst_object_unref(source);
 +	}
 +}
++
 +
 +void CGstPlayerVideo::DeepNotifySource(GObject *object, GObject *orig, GParamSpec *pspec, gpointer user_data)
 +{
@@ -1980,6 +2130,150 @@ index 0000000..0364514
 +	return GST_BUS_DROP;
 +}
 +
++void CGstPlayerVideo::SetAudioStream(int iStream)
++{
++	if (iStream != m_current_audio and iStream < m_audio)
++	{
++		SeekTimeRelative(-1000);
++		g_object_set (GST_ELEMENT(m_playbin), "current-audio", iStream, NULL);
++		int current_audio;
++		g_object_get (GST_ELEMENT(m_playbin), "current-audio", &current_audio, NULL);
++		if (current_audio == iStream)
++		{
++			CLog::Log(LOGNOTICE, "CGstPlayerVideo::%s switch to audio %s",__FUNCTION__,iStream);
++			m_current_audio = iStream;
++			CFileItem fileItem(m_item);
++			CServiceBroker::GetDataCacheCore().SignalAudioInfoChange();
++			CServiceBroker::GetDataCacheCore().SignalVideoInfoChange();
++		}
++	}
++}
++
++
++void CGstPlayerVideo::GetVideoStreamInfo(int index, VideoStreamInfo &info)
++{
++	if (index<0)
++		index = m_current_video;
++	GstTagList *tags=NULL;
++	g_signal_emit_by_name (m_playbin, "get-video-tags", index, &tags);
++	if (tags) {
++		gchar *str;
++		gst_tag_list_get_string (tags, GST_TAG_VIDEO_CODEC, &str);
++		info.codecName = (char *)str;
++		g_free (str);
++		gst_tag_list_free (tags);
++	}
++ 	info.valid = true;
++	GstPad* pad = 0;
++	g_signal_emit_by_name (m_playbin, "get-video-pad", index, &pad);
++	GstCaps* caps = gst_pad_get_current_caps(pad);
++	gst_object_unref(pad);
++	GstStructure* str = gst_caps_get_structure(caps, 0);
++	gint width = 0;
++	gint height = 0;
++	gst_structure_get_int (str, "width", &width);
++	gst_structure_get_int (str, "height", &height);
++	info.width = (int) width;
++	info.height = (int) height;
++}
++
++void CGstPlayerVideo::GetAudioStreamInfo(int index, AudioStreamInfo &info)
++{
++	if (index<0)
++		index = m_current_audio;
++	GstTagList *tags=NULL;
++	g_signal_emit_by_name (m_playbin, "get-audio-tags", index, &tags);
++	if (tags) {
++		gchar *str;
++		guint rate;
++		if (gst_tag_list_get_string (tags, GST_TAG_AUDIO_CODEC, &str)) {
++			info.codecName = (char *)str;
++			info.name = (char *)str;
++			g_free (str);
++		}
++		if (gst_tag_list_get_string (tags, GST_TAG_LANGUAGE_CODE, &str)) {
++			info.language = g_LangCodeExpander.ConvertToISO6392B((char *)str);
++			g_free (str);
++		}
++		if (gst_tag_list_get_uint (tags, GST_TAG_BITRATE, &rate)) {
++			info.bitrate = (int)rate;
++		}
++		gst_tag_list_free (tags);
++	}
++	GstPad* pad = 0;
++	g_signal_emit_by_name (m_playbin, "get-audio-pad", index, &pad);
++	GstCaps* caps = gst_pad_get_current_caps(pad);
++	gst_object_unref(pad);
++	GstStructure* str = gst_caps_get_structure(caps, 0);
++	gint ch = 0;
++	if (gst_structure_get_int (str, "channels", &ch)) {
++		CLog::Log(LOGNOTICE, "CGstPlayerVideo::audio: %d Channels: %d", index, (uint16_t) ch);
++		info.channels = (uint16_t) ch;
++		switch (info.channels)
++		{
++		case 2:
++			info.name += " 2.0";
++			break;
++		case 6:
++			info.name += " 5.1";
++			break;
++		case 8:
++			info.name += " 7.1";
++			break;
++		default:
++			break;
++		}
++	}
++	gst_caps_unref(caps);
++ 	info.valid = true;
++}
++
++void CGstPlayerVideo::GetSubtitleStreamInfo(int index, SubtitleStreamInfo &info)
++{
++	if (index<0)
++		index = m_current_text;
++	GstTagList *tags=NULL;
++	g_signal_emit_by_name (m_playbin, "get-text-tags", index, &tags);
++	if (tags) {
++		gchar *str;
++		if (gst_tag_list_get_string (tags, GST_TAG_LANGUAGE_CODE, &str)) {
++			info.language = g_LangCodeExpander.ConvertToISO6392B((char *)str);
++			g_free (str);
++		}
++		gst_tag_list_free (tags);
++	}
++ 	info.valid = true;
++}
++
++void CGstPlayerVideo::SetSubtitle(int iStream)
++{
++	if (iStream != m_current_text and iStream < m_text)
++	{
++		g_object_set (m_playbin, "current-text", -1, NULL);
++		m_current_text = iStream;
++		g_object_set (GST_ELEMENT(m_playbin), "current-text", iStream, NULL);
++		CLog::Log(LOGNOTICE, "CGstPlayerVideo::Set Subtitle track: %d", iStream);
++		CServiceBroker::GetDataCacheCore().SignalAudioInfoChange();
++		CServiceBroker::GetDataCacheCore().SignalVideoInfoChange();
++		CServiceBroker::GetDataCacheCore().SignalSubtitleInfoChange();
++
++	}
++}
++
++bool CGstPlayerVideo::GetSubtitleVisible()
++{
++	return m_is_sub_visible;
++}
++
++void CGstPlayerVideo::SetSubtitleVisible(bool bVisible)
++{
++	m_is_sub_visible = bVisible;
++	if (!bVisible)
++		g_object_set (m_playbin, "current-text", -1, NULL);
++	else
++		g_object_set (m_playbin, "current-text", m_current_text, NULL);
++}
++
 +void CGstPlayerVideo::handleMessage(GstMessage *msg)
 +{
 +	if (!msg)
@@ -2059,7 +2353,6 @@ index 0000000..0364514
 +						m_ignore_buffering_messages = 0;
 +					}
 +				}
-+				
 +			}
 +			break;
 +		}
@@ -2074,7 +2367,7 @@ index 0000000..0364514
 +				new_state == GST_STATE_PLAYING)
 +			{
 +				OnPipelineStart();
-+				m_callback->OnPlaybackStarted();
++				m_callback->OnPlaybackStarted(m_item);
 +			}
 +
 +			g_print("CGstPlayerVideo::%s: Element %s changed state from %s to %s.\n", 
@@ -2271,12 +2564,11 @@ index 0000000..0364514
 +	}
 +	//g_free (sourceName);
 +}
-diff --git a/xbmc/cores/GstPlayer/GstPlayerVideo.h b/xbmc/cores/GstPlayer/GstPlayerVideo.h
-new file mode 100644
-index 0000000..6750406
---- /dev/null
-+++ b/xbmc/cores/GstPlayer/GstPlayerVideo.h
-@@ -0,0 +1,170 @@
++
+diff -ruN a/xbmc/cores/GstPlayer/GstPlayerVideo.h b/xbmc/cores/GstPlayer/GstPlayerVideo.h
+--- a/xbmc/cores/GstPlayer/GstPlayerVideo.h	1970-01-01 01:00:00.000000000 +0100
++++ b/xbmc/cores/GstPlayer/GstPlayerVideo.h	2020-05-21 16:38:05.450542395 +0200
+@@ -0,0 +1,181 @@
 +#pragma once
 +
 +/*
@@ -2367,6 +2659,16 @@ index 0000000..6750406
 +	int GetAudioStream() { CLog::Log(LOGNOTICE, "%s: m_current_audio: %d", __FUNCTION__, m_current_audio); return (int)m_current_audio; };
 +	int GetVideoStream() { CLog::Log(LOGNOTICE, "%s: m_current_video: %d", __FUNCTION__, m_current_video); return (int)m_current_video; };
 +	int GetSubtitle()    { CLog::Log(LOGNOTICE, "%s: m_current_text: %d", __FUNCTION__, m_current_text); return (int)m_current_text; };
++
++	void GetAudioStreamInfo(int index, AudioStreamInfo &info);
++	void SetAudioStream(int iStream);
++
++	void GetVideoStreamInfo(int index, VideoStreamInfo &info);
++
++	void GetSubtitleStreamInfo(int index, SubtitleStreamInfo &info);
++  	void SetSubtitle(int iStream);
++  	bool GetSubtitleVisible();
++  	void SetSubtitleVisible(bool bVisible);
 +	
 +	struct sourceStream
 +	{
@@ -2399,6 +2701,7 @@ index 0000000..6750406
 +	bool CreatePipeline();
 +	void DestroyPipeline();
 +	
++	static gboolean print_field (GQuark field, const GValue * value, gpointer user_data);
 +	static void handleElementAdded(GstBin *bin, GstElement *element, gpointer user_data);
 +	static void NotifySource(GObject *object, GParamSpec *unused, gpointer user_data);
 +	static void DeepNotifySource(GObject *object, GObject *orig, GParamSpec *pspec, gpointer user_data);
@@ -2427,12 +2730,13 @@ index 0000000..6750406
 +	bool m_is_live;
 +	bool m_first_paused;
 +	bool m_paused;
++	bool m_is_sub_visible;
 +	
 +	IGstPlayerCallback *m_callback;
-+	
++
 +	gchar *m_uri;
 +	GMainLoop *m_loop;
-+	GstElement *m_playbin, *m_appsrc;
++	GstElement *m_playbin, *m_appsrc, *subsink;
 +	gint m_aspect, m_width, m_height, m_framerate, m_progressive, m_video, m_audio, m_text, m_current_video, m_current_audio, m_current_text;
 +	gulong m_notify_source_handler_id;
 +	guint m_notify_element_added_handler_id, m_notify_source_id;
@@ -2443,14 +2747,12 @@ index 0000000..6750406
 +protected:
 +	CFileItem m_item;
 +	CProcessInfo &m_processInfo;
-+	//CDVDInputStreamMemory *m_pInputStream;  // input stream for current playing file
 +	CDVDInputStreamFile *m_pInputStream;
 +
 +};
-diff --git a/xbmc/cores/playercorefactory/PlayerCoreConfig.h b/xbmc/cores/playercorefactory/PlayerCoreConfig.h
-index 2821a6f..b045d86 100644
---- a/xbmc/cores/playercorefactory/PlayerCoreConfig.h
-+++ b/xbmc/cores/playercorefactory/PlayerCoreConfig.h
+diff -ruN a/xbmc/cores/playercorefactory/PlayerCoreConfig.h b/xbmc/cores/playercorefactory/PlayerCoreConfig.h
+--- a/xbmc/cores/playercorefactory/PlayerCoreConfig.h	2019-11-01 15:25:53.346886000 +0100
++++ b/xbmc/cores/playercorefactory/PlayerCoreConfig.h	2020-05-21 18:13:05.826682597 +0200
 @@ -21,6 +21,10 @@
  #include "system.h"
  #include "utils/log.h"
@@ -2462,7 +2764,7 @@ index 2821a6f..b045d86 100644
  class CPlayerCoreConfig
  {
  public:
-@@ -88,6 +92,12 @@ public:
+@@ -88,6 +92,12 @@
      {
        pPlayer = new KODI::RETRO::CRetroPlayer(callback);
      }
@@ -2475,10 +2777,9 @@ index 2821a6f..b045d86 100644
      else if (m_type.compare("external") == 0)
      {
        pPlayer = new CExternalPlayer(callback);
-diff --git a/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp b/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp
-index 129299a..bff56dd 100644
---- a/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp
-+++ b/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp
+diff -ruN a/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp b/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp
+--- a/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp	2020-05-21 12:45:19.123213382 +0200
++++ b/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp	2020-03-04 17:44:27.791696000 +0100
 @@ -26,6 +26,10 @@
  #include "utils/XMLUtils.h"
  #include <sstream>
@@ -2490,7 +2791,7 @@ index 129299a..bff56dd 100644
  #define PLAYERCOREFACTORY_XML "playercorefactory.xml"
  
  CPlayerCoreFactory::CPlayerCoreFactory(const CProfileManager &profileManager) :
-@@ -317,6 +321,13 @@ bool CPlayerCoreFactory::LoadConfiguration(const std::string &file, bool clear)
+@@ -317,6 +321,13 @@
      m_vecCoreSelectionRules.clear();
  
      // Builtin players
@@ -2504,7 +2805,7 @@ index 129299a..bff56dd 100644
      CPlayerCoreConfig* VideoPlayer = new CPlayerCoreConfig("VideoPlayer", "video", nullptr);
      VideoPlayer->m_bPlaysAudio = true;
      VideoPlayer->m_bPlaysVideo = true;
-@@ -357,6 +368,10 @@ bool CPlayerCoreFactory::LoadConfiguration(const std::string &file, bool clear)
+@@ -357,6 +368,10 @@
          internaltype = "video";
        else if (type == "paplayer")
          internaltype = "music";
@@ -2515,6 +2816,3 @@ index 129299a..bff56dd 100644
        else if (type == "externalplayer")
          internaltype = "external";
        else if (type == "enigma2player")
--- 
-2.7.4
-

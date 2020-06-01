@@ -20,7 +20,7 @@ SRC_URI = "git://github.com/ytdl-org/youtube-dl.git;protocol=https;branch=master
 
 S = "${WORKDIR}/git"
 
-inherit setuptools3
+inherit setuptools
 
 EXTRA_OEMAKE = "PYTHON=${PYTHON}"
 

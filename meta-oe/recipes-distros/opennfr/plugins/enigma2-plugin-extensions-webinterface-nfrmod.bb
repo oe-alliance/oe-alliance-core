@@ -8,7 +8,7 @@ RDEPENDS_${PN} = "${PYTHON_PN}-process"
 
 RREPLACES_${PN} = "settings-autorestore"
 
-inherit autotools-brokensep gitpkgv pythonnative
+inherit autotools-brokensep gitpkgv ${PYTHON_PN}native
 SRCREV = "${AUTOREV}"
 PV = "3.0+git${SRCPV}"
 PKGV = "3.0+git${GITPKGV}"

@@ -19,7 +19,7 @@ FILES_${PN} = "/usr/*"
 S = "${WORKDIR}/git"
 
 do_compile_append() {
-    python -O -m compileall ${S}/usr
+    ${@bb.utils.contains("PYTHON_PN", "python", "python2", "python3", d)} -O -m compileall ${S}/usr
 }
 
 do_install() {
@@ -47,9 +47,6 @@ rm -rf /usr/lib/enigma2/python/Components/Renderer/Glam*
 echo "                                                                      "
 echo "Glamour Aura FHD ATV skin was successfully removed from your receiver."
 echo "                                                                      "
-echo "The GUI of your receiver is now rebooting....                         "
-sleep 2
-init 4 && sleep 2 && init 3
 }
 
 pkg_preinst_${PN} () {

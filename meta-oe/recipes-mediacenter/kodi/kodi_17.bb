@@ -49,7 +49,7 @@ DEPENDS = " \
     libxslt \
     lzo \
     mpeg2dec \
-    python \
+    ${PYTHON_PN} \
     sqlite3 \
     taglib \
     virtual/egl \
@@ -88,7 +88,7 @@ SRC_URI_append_libc-musl = " \
 SRC_URI[addons.md5sum] = "719614fa764011a18665d08af5c8c92f"
 SRC_URI[addons.sha256sum] = "350da57408c27473eaf40e7f544bc94841bf101dc4346085260c5c4af0adac97"
 
-inherit autotools-brokensep gettext pythonnative features_check
+inherit autotools-brokensep gettext ${PYTHON_PN}native features_check
 
 REQUIRED_DISTRO_FEATURES += "opengl"
 
@@ -187,15 +187,15 @@ FILES_${PN}-dbg += "${libdir}/kodi/.debug ${libdir}/kodi/*/.debug ${libdir}/kodi
 # OpenGL builds need glxinfo, that's in mesa-demos
 RRECOMMENDS_${PN}_append = " \
     libcec \
-    python \
+    ${PYTHON_PN} \
     ${PYTHON_PN}-ctypes \
-    ${PYTHON_PN}-lang \
-    ${PYTHON_PN}-re \
+    ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-lang", "", d)} \
+    ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-re", "", d)} \
     ${PYTHON_PN}-netclient \
     ${PYTHON_PN}-html \
     ${PYTHON_PN}-difflib \
     ${PYTHON_PN}-json \
-    ${PYTHON_PN}-zlib \
+    ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-zlib", "", d)} \
     ${PYTHON_PN}-shell \
     ${PYTHON_PN}-sqlite3 \
     ${PYTHON_PN}-compression \

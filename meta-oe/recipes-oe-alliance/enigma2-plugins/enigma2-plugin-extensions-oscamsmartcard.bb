@@ -6,7 +6,7 @@ inherit allarch
 
 require conf/license/license-gplv2.inc
 
-inherit gitpkgv pythonnative
+inherit gitpkgv ${PYTHON_PN}native
 
 SRCREV = "${AUTOREV}"
 PV = "2.4+git${SRCPV}"

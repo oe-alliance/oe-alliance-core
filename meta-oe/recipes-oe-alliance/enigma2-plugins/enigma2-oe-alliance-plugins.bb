@@ -111,7 +111,7 @@ DESCRIPTION_enigma2-plugin-extensions-ondemand = "Watch on demand TV."
 DESCRIPTION_enigma2-plugin-extensions-fempa = "Norwegian P4 FEM PAA radio show player."
 DESCRIPTION_enigma2-plugin-extensions-lcd4linux = "Web/DPF/Samsung LCD Ansteuerung"
 DEPENDS_enigma2-plugin-extensions-lcd4linux = "lcd4linux png-util"
-RDEPENDS_enigma2-plugin-extensions-lcd4linux = "lcd4linux enigma2-plugin-extensions-lcd4linux-src ${PYTHON_PN}-icalendar ${PYTHON_PN}-pyusb ${PYTHON_PN}-codecs ${PYTHON_PN}-datetime ${PYTHON_PN}-imaging ${PYTHON_PN}-image ${PYTHON_PN}-textutils ${PYTHON_PN}-shell ${PYTHON_PN}-ctypes libusb-0.1-4 ${PYTHON_PN}-mutagen ${PYTHON_PN}-zlib ${PYTHON_PN}-email ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-subprocess", "", d)} ${PYTHON_PN}-simplejson ${PYTHON_PN}-soco"
+RDEPENDS_enigma2-plugin-extensions-lcd4linux = "lcd4linux enigma2-plugin-extensions-lcd4linux-src ${PYTHON_PN}-icalendar ${PYTHON_PN}-pyusb ${PYTHON_PN}-codecs ${PYTHON_PN}-datetime ${PYTHON_PN}-imaging ${PYTHON_PN}-image ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-textutils", "", d)} ${PYTHON_PN}-shell ${PYTHON_PN}-ctypes libusb-0.1-4 ${PYTHON_PN}-mutagen ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-zlib", "", d)} ${PYTHON_PN}-email ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-subprocess", "", d)} ${PYTHON_PN}-simplejson ${PYTHON_PN}-soco"
 RDEPENDS_enigma2-plugin-extensions-lcd4linux_append_vuduo2 = " png-util"
 FILES_enigma2-plugin-extensions-lcd4linux_append = "${libdir}/enigma2/python/Components/Renderer/*.pyo"
 FILES_enigma2-plugin-extensions-lcd4linux-src_append = "${libdir}/enigma2/python/Components/Renderer/*.py"
@@ -123,7 +123,7 @@ RDEPENDS_enigma2-plugin-systemplugins-wirelessaccesspoint = "hostapd bridge-util
 DESCRIPTION_enigma2-plugin-extensions-rcuselect = "Change Remote for Wetek"
 DESCRIPTION_enigma2-plugin-extensions-rezap = "ReZap Sync Tool for Wetek"
 
-inherit autotools-brokensep gitpkgv pythonnative gettext
+inherit autotools-brokensep gitpkgv ${PYTHON_PN}native gettext
 
 SRCREV = "${AUTOREV}"
 PV = "${IMAGE_VERSION}+git${SRCPV}"

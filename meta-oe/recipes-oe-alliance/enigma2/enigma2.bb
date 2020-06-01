@@ -14,7 +14,7 @@ DEPENDS = " \
     jpeg \
     libdreamdvd libdvbsi++ fribidi libmad libpng giflib libxml2 libxmlccwrap libsigc++-2.0 \
     openssl avahi libudfread \
-    python ${PYTHON_PN}-imaging ${PYTHON_PN}-twisted ${PYTHON_PN}-wifi \
+    ${PYTHON_PN} ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-imaging", "${PYTHON_PN}-pillow", d)} ${PYTHON_PN}-twisted ${PYTHON_PN}-wifi \
     swig-native \
     tuxtxt-enigma2 \
     ${@bb.utils.contains("DISTRO_NAME", "openspa", "uchardet" , "", d)} \
@@ -53,19 +53,19 @@ PYTHON_RDEPS = " \
     ${PYTHON_PN}-core \
     ${PYTHON_PN}-crypt \
     ${PYTHON_PN}-fcntl \
-    ${PYTHON_PN}-lang \
+    ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-lang", "", d)} \
     ${PYTHON_PN}-mmap \
     ${PYTHON_PN}-netclient \
     ${PYTHON_PN}-netifaces \
     ${PYTHON_PN}-netserver \
     ${PYTHON_PN}-pickle \
-    ${PYTHON_PN}-re \
+    ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-re", "", d)} \
     ${PYTHON_PN}-shell \
     ${PYTHON_PN}-threading \
     ${PYTHON_PN}-twisted-core \
     ${PYTHON_PN}-twisted-web \
     ${PYTHON_PN}-xml \
-    ${PYTHON_PN}-zlib \
+    ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-zlib", "", d)} \
     ${PYTHON_PN}-zopeinterface \
     ${PYTHON_PN}-email \
     ${PYTHON_PN}-mime \
@@ -73,7 +73,7 @@ PYTHON_RDEPS = " \
     ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-subprocess", "", d)} \
     ${PYTHON_PN}-process \
     ${PYTHON_PN}-image \
-    ${PYTHON_PN}-imaging \
+    ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-imaging", "${PYTHON_PN}-pillow", d)} \
     ${PYTHON_PN}-smtpd \
     "
 
@@ -182,7 +182,7 @@ RDEPENDS_enigma2-plugin-systemplugins-hotplug = "hotplug-e2-helper"
 RDEPENDS_enigma2-plugin-systemplugins-fsblupdater = "${PYTHON_PN}-distutils"
 DESCRIPTION_enigma2-plugin-font-wqy-microhei = "Font wqy-microhei add support for China EPG"
 
-inherit autotools-brokensep gitpkgv pkgconfig pythonnative upx-compress
+inherit autotools-brokensep gitpkgv pkgconfig ${PYTHON_PN}native upx-compress
 
 PV = "${IMAGE_VERSION}+git${SRCPV}"
 PKGV = "${IMAGE_VERSION}+git${GITPKGV}"

@@ -5,7 +5,7 @@ S = "${WORKDIR}/samba-${PV}"
 inherit cpan-base perlnative pythonnative native
 
 #DEPENDS += "libxslt-native docbook-xsl-stylesheets-native e2fsprogs readline virtual/libiconv zlib popt 
-#DEPENDS += "python-native"
+#DEPENDS += "pythonnative"
 
 DEPENDS += "e2fsprogs-native zlib-native readline-native"
 

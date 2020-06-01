@@ -8,7 +8,7 @@ RDEPENDS_${PN} += "enigma2 libcurl ${PYTHON_PN}-core ${PYTHON_PN}-compression ${
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-inherit gitpkgv
+inherit gitpkgv ${PYTHON_PN}-dir
 
 SRCREV = "${AUTOREV}"
 PV = "0.8.7+gitr${SRCPV}"

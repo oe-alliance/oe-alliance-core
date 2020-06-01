@@ -52,7 +52,7 @@ DEPENDS = " \
             libxslt \
             lzo \
             mpeg2dec \
-            python \
+            ${PYTHON_PN} \
             samba \
             mysql5 \
             sqlite3 \
@@ -119,7 +119,7 @@ SRC_URI_append_libc-musl = " \
            file://0002-Remove-FILEWRAP.patch \
 "
 
-inherit autotools-brokensep gettext gitpkgv pythonnative
+inherit autotools-brokensep gettext gitpkgv ${PYTHON_PN}native
 
 S = "${WORKDIR}/git"
 
@@ -213,15 +213,15 @@ FILES_${PN}-dbg += "${libdir}/kodi/.debug ${libdir}/kodi/*/.debug ${libdir}/kodi
 # OpenGL builds need glxinfo, that's in mesa-demos
 RRECOMMENDS_${PN}_append = " \
    libcec \
-   python \
+   ${PYTHON_PN} \
    ${PYTHON_PN}-ctypes \
-   ${PYTHON_PN}-lang \
-   ${PYTHON_PN}-re \
+   ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-lang", "", d)} \
+   ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-re", "", d)} \
    ${PYTHON_PN}-netclient \
    ${PYTHON_PN}-html \
    ${PYTHON_PN}-difflib \
    ${PYTHON_PN}-json \
-   ${PYTHON_PN}-zlib \
+   ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-zlib", "", d)} \
    ${PYTHON_PN}-shell \
    ${PYTHON_PN}-sqlite3 \
    ${PYTHON_PN}-compression \

@@ -7,7 +7,7 @@ FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}-18:"
 
 PACKAGE_ARCH = "${MACHINE}"
 
-inherit cmake gettext ${PYTHON_PN}-dir pythonnative
+inherit cmake gettext ${PYTHON_PN}-dir ${PYTHON_PN}native
 
 DEPENDS += " \
             fmt \
@@ -60,7 +60,7 @@ DEPENDS += " \
             libxslt \
             lzo \
             mpeg2dec \
-            python \
+            ${PYTHON_PN} \
             samba \
             sqlite3 \
             taglib \
@@ -251,15 +251,15 @@ RRECOMMENDS_${PN}_append = " libcec \
                              nss \
                              os-release \
                              ${@bb.utils.contains('PACKAGECONFIG', 'x11', 'xdyinfo xrandr xinit mesa-demos', '', d)} \
-                             python \
+                             ${PYTHON_PN} \
                              ${PYTHON_PN}-ctypes \
-                             ${PYTHON_PN}-lang \
-                             ${PYTHON_PN}-re \
+                             ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-lang", "", d)} \
+                             ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-re", "", d)} \
                              ${PYTHON_PN}-netclient \
                              ${PYTHON_PN}-html \
                              ${PYTHON_PN}-difflib \
                              ${PYTHON_PN}-json \
-                             ${PYTHON_PN}-zlib \
+                             ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-zlib", "", d)} \
                              ${PYTHON_PN}-shell \
                              ${PYTHON_PN}-sqlite3 \
                              ${PYTHON_PN}-compression \

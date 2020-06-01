@@ -12,7 +12,7 @@ RREPLACES_enigma2-plugin-obh-core = "settings-autorestore"
 PROVIDES += "openbh-core"
 RPROVIDES_enigma2-plugin-obh-core += "openbh-core"
 
-inherit autotools-brokensep gitpkgv pythonnative
+inherit autotools-brokensep gitpkgv ${PYTHON_PN}native
 SRCREV = "${AUTOREV}"
 PV = "${IMAGE_VERSION}+git${SRCPV}"
 PKGV = "${IMAGE_VERSION}+git${GITPKGV}"

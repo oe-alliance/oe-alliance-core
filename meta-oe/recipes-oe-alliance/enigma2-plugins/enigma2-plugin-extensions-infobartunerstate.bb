@@ -5,7 +5,7 @@ PRIORITY = "optional"
 
 require conf/license/license-gplv2.inc
 
-inherit gitpkgv pythonnative
+inherit gitpkgv ${PYTHON_PN}native
 SRCREV = "${AUTOREV}"
 PV = "1.1.+git${SRCPV}"
 PKGV = "1.1.+git${GITPKGV}"
