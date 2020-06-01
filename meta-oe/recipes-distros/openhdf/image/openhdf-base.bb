@@ -24,7 +24,7 @@ RDEPENDS_${PN} = "\
     ${PYTHON_PN}-requests \
     ${PYTHON_PN}-mutagen \
     ${PYTHON_PN}-plistlib \
-    ${PYTHON_PN}-imaging \
+    ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-imaging", "${PYTHON_PN}-pillow", d)} \
     ${PYTHON_PN}-netifaces \
     ${PYTHON_PN}-service-identity \
     unrar \

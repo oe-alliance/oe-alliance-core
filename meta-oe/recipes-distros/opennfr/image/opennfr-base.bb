@@ -28,7 +28,7 @@ RDEPENDS_${PN} = "\
     gstplayer \
     ffmpeg \
     enigma2-plugin-systemplugins-serviceapp \ 	
-    ${PYTHON_PN}-imaging \
+    ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-imaging", "${PYTHON_PN}-pillow", d)} \
     ${PYTHON_PN}-requests \
     ${PYTHON_PN}-cfscrape \
     ${PYTHON_PN}-js2py \

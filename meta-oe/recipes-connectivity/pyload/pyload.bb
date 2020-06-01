@@ -7,7 +7,7 @@ RDEPENDS_${PN} = "\
   ${PYTHON_PN}-db \
   ${PYTHON_PN}-email \
   ${PYTHON_PN}-html \
-  ${PYTHON_PN}-imaging \
+  ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-imaging", "${PYTHON_PN}-pillow", d)} \
   ${PYTHON_PN}-numbers \
   ${PYTHON_PN}-pprint \
   ${PYTHON_PN}-pycrypto \
