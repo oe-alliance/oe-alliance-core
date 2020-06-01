@@ -8,7 +8,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=67e73aa1a18a474a727af66319626ed4"
 inherit setuptools ${PYTHON_PN}-dir
 
 RDEPENDS_${PN} = "${PYTHON_PN} \
-    ${PYTHON_PN}-backports-shutil-which \
+    ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-backports-shutil-which", "", d)} \
     ${PYTHON_PN}-ctypes \
     ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-futures", "${PYTHON_PN}-futures3", d)} \
     ${PYTHON_PN}-iso3166 \
