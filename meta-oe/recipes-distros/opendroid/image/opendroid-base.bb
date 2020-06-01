@@ -23,7 +23,7 @@ RDEPENDS_${PN} = "\
     ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", "ntfs-3g ", d)} \
     hddtemp \
     dosfstools \
-    ${PYTHON_PN}-imaging \
+    ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-imaging", "${PYTHON_PN}-pillow", d)} \
     ${PYTHON_PN}-service-identity \
     rtmpdump \
     unrar \

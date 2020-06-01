@@ -21,7 +21,7 @@ RDEPENDS_${PN} = "\
     openatv-enigma2 \
     openatv-spinner \
     openssh-sftp-server \
-    ${PYTHON_PN}-imaging \
+    ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-imaging", "${PYTHON_PN}-pillow", d)} \
     ${PYTHON_PN}-service-identity \
     ${PYTHON_PN}-requests \
     ${PYTHON_PN}-future \
