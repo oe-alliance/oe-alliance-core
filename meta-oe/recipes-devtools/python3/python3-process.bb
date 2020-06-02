@@ -14,10 +14,9 @@ SRC_URI = "file://process.py"
 
 S = "${WORKDIR}"
 
-PACKAGES = "${PN} ${PN}-src"
+PACKAGES = "${PN}"
 
-FILES_${PN}-src = "${PYTHON_SITEPACKAGES_DIR}/process.py"
-RDEPENDS_{PN}-src = "${PN}"
+FILES_${PN} = "${PYTHON_SITEPACKAGES_DIR}/process.py"
 
 do_install() {
     install -d ${D}${PYTHON_SITEPACKAGES_DIR}
