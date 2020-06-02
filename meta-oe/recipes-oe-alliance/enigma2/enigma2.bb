@@ -246,10 +246,6 @@ EXTRA_OECONF = " \
 LDFLAGS_prepend = "${@bb.utils.contains('GST_VERSION', '1.0', ' -lxml2 ', '', d)}"
 SRC_URI_append = "${@bb.utils.contains("MACHINE_FEATURES", "uianimation", " file://use-lv3ddriver.patch" , "", d)}"
 
-# Swig generated 200k enigma.py file has no purpose for end users
-FILES_${PN}-dbg += "\
-    ${libdir}/enigma2/python/enigma.py \
-    "
 
 # some plugins contain so's, their stripped symbols should not end up in the enigma2 package
 FILES_${PN}-dbg += "\
