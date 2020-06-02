@@ -7,13 +7,13 @@ require conf/license/license-gplv2.inc
 DEPENDS = "enigma2"
 RDEPENDS_${PN} = "${PYTHON_PN}-core ${PYTHON_PN}-codecs ${PYTHON_PN}-json ${PYTHON_PN}-netclient ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-zlib", "", d)} ${PYTHON_PN}-twisted ${PYTHON_PN}-twisted-web"
 
-inherit gitpkgv ${PYTHON_PN}native gettext
+inherit ${PYTHON_PN}-dir gitpkgv ${PYTHON_PN}native gettext
 
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
 
-SRC_URI = "git://github.com/Taapat/enigma2-plugin-youtube.git;protocol=git"
+SRC_URI = "git://github.com/oe-mirrors/enigma2-plugin-youtube.git;protocol=git"
 
 S="${WORKDIR}/git"
 
