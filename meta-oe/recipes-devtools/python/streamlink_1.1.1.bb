@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=67e73aa1a18a474a727af66319626ed4"
 
 inherit setuptools
 
-RDEPENDS_${PN} = "python \
+RDEPENDS_${PN} = "python-core \
     python-backports-shutil-which \
     python-ctypes \
     python-futures \
