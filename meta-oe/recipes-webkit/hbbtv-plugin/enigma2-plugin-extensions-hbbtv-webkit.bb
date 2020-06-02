@@ -32,8 +32,6 @@ do_install_append() {
     
     # Python Files
     cp -aRf ${S}/HbbTV/* ${D}${libdir}/${DESTDIR}
-    ${@bb.utils.contains("PYTHON_PN", "python", "python2", "python3", d)} -O -m compileall ${D}${libdir}/${DESTDIR}
-    rm -rf ${D}${libdir}/${DESTDIR}/*.py
 }
 
 FILES_${PN} = "/"

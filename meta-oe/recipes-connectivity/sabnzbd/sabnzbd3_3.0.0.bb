@@ -10,7 +10,6 @@ RDEPENDS_${PN} = "\
     ${PYTHON_PN}-cheetah ${PYTHON_PN}-compression ${PYTHON_PN}-core ${PYTHON_PN}-crypt ${PYTHON_PN}-ctypes ${PYTHON_PN}-email ${PYTHON_PN}-html \
     ${PYTHON_PN}-misc ${PYTHON_PN}-multiprocessing ${PYTHON_PN}-sqlite3 ${PYTHON_PN}-shell ${PYTHON_PN}-sabyenc3 ${PYTHON_PN}-yenc \
     "
-RDEPENDS_${PN}-src = "${PYTHON_PN}"
 
 RRECOMMENDS_${PN} = "par2cmdline unrar"
 
@@ -26,19 +25,14 @@ S = "${WORKDIR}/git"
 
 INSTALLDIR = "${libdir}/${PN}"
 
-PACKAGES = "${PN}-doc ${PN}-src ${PN}"
+PACKAGES = "${PN}-doc ${PN}"
 
-FILES_${PN}-src = "${INSTALLDIR}/*/*.py ${INSTALLDIR}/*/*/*.py"
 FILES_${PN}-doc = "${INSTALLDIR}/*.txt ${INSTALLDIR}/licenses ${INSTALLDIR}/interfaces/*/licenses"
 FILES_${PN} = "${INSTALLDIR} /etc/init.d/sabnzbd /etc/init.d/init-functions /etc/enigma2/sabnzbd.conf"
 
 inherit update-rc.d
 INITSCRIPT_NAME = "sabnzbd"
 INITSCRIPT_PARAMS = "defaults"
-
-do_compile() {
-    ${@bb.utils.contains("PYTHON_PN", "python", "python2", "python3", d)} -O -m compileall .
-}
 
 do_install() {
     install -d ${D}${INSTALLDIR}

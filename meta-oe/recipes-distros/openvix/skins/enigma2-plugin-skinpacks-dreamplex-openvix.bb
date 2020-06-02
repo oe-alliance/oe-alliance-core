@@ -24,10 +24,6 @@ FILES_${EPSM}-plex-experience = "/usr/lib/enigma2/python/Plugins/Extensions/Drea
 
 S = "${WORKDIR}/git"
 
-do_compile_append() {
-   ${@bb.utils.contains("PYTHON_PN", "python", "python2", "python3", d)} -O -m compileall ${S}
-}
-
 do_install() {
     install -d ${D}/usr/lib/enigma2/python/Plugins/Extensions/DreamPlex/skins/
     cp -rp ${S}/* ${D}/usr/lib/enigma2/python/Plugins/Extensions/DreamPlex/skins/

@@ -18,10 +18,6 @@ FILES_${PN} = "${libdir} /usr/share"
 
 S = "${WORKDIR}/git"
 
-do_compile_append() {
-${@bb.utils.contains("PYTHON_PN", "python", "python2", "python3", d)} -O -m compileall ${S}
-}
-
 do_install() {
     install -d ${D}${libdir}
     install -d ${D}/usr/share

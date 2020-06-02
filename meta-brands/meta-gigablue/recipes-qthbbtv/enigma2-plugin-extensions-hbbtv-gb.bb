@@ -24,7 +24,6 @@ S = "${WORKDIR}"
 PLUGINPATH = "${libdir}/enigma2/python/Plugins/Extensions/HbbTV"
 
 FILES_${PN} = "${bindir} ${libdir}/mozilla/plugins/libhbbtvbrowserplugin.so ${PLUGINPATH}/*.pyo"
-FILES_${PN}-src = "${PLUGINPATH}/*.py"
 
 do_configure_prepend () {
     sed 's/reader.doDump()/#reader.doDump()/g' -i ${S}/plugin/plugin.py
@@ -40,10 +39,6 @@ do_install(){
     install -m 0755 ${S}/libhbbtvbrowserplugin.so ${D}${libdir}/mozilla/plugins
 }
 
-# Just a quick hack to "compile" the python parts.
-do_install_append() {
-    ${@bb.utils.contains("PYTHON_PN", "python", "python2", "python3", d)} -O -m compileall ${D}
-}
 
 pkg_postinst_ontarget_${PN}(){
 #!/bin/sh

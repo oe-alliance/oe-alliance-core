@@ -15,19 +15,11 @@ VER="7.x"
 SRC_URI="git://github.com/atvcaptain/KravenFHD.git;protocol=git"
 
 FILES_${PN} = "/usr/*"
-FILES_${PN}-src = "\
-    /usr/lib/enigma2/python/Components/Converter/*.py \
-    /usr/lib/enigma2/python/Components/Renderer/*.py \
-    /usr/lib/enigma2/python/Plugins/Extensions/KravenFHD/*.py \
-    /usr/lib/enigma2/python/Plugins/Extensions/KravenFHD/*/*.py \
-    /usr/lib/enigma2/python/Plugins/Extensions/KravenFHD/*/*/*.py \
-    /usr/lib/enigma2/python/Plugins/Extensions/KravenFHD/locale/*/LC_MESSAGES/*.po \
-    "
+
 
 S = "${WORKDIR}/git"
 
 do_compile() {
-    ${@bb.utils.contains("PYTHON_PN", "python", "python2", "python3", d)} -O -m compileall ${S}/usr
     for f in $(find ${S}/locale -name *.po ); do
         l=$(echo ${f%} | sed 's/\.po//' | sed 's/.*locale\///')
         #mkdir -p ${S}/usr/lib/enigma2/python/Plugins/Extensions/KravenFHD/locale/${l%}/LC_MESSAGES

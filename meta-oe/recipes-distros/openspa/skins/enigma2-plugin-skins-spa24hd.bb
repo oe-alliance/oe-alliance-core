@@ -17,12 +17,7 @@ FILES_${PN} = "/usr/share/enigma2 /usr/lib/enigma2/python/Components"
 
 S = "${WORKDIR}/git"
 
-do_compile_append() {
-   ${@bb.utils.contains("PYTHON_PN", "python", "python2", "python3", d)} -O -m compileall ${S}
-}
-
 do_install() {
-   find ${S}/Components/ -name "*.py" -exec rm -rf {} \;
    install -d ${D}/usr/share/enigma2
    cp -rp ${S}/Spa24HD ${D}/usr/share/enigma2/
    chmod -R a+rX ${D}/usr/share/enigma2/

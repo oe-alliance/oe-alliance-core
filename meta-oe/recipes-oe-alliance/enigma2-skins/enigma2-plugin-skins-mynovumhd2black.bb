@@ -19,10 +19,6 @@ FILES_${PN} = "/usr/share/enigma2/myNOVUM_HD2_Black"
 
 S = "${WORKDIR}/git"
 
-do_compile_append() {
-   ${@bb.utils.contains("PYTHON_PN", "python", "python2", "python3", d)} -O -m compileall ${S}
-}
-
 do_install() {
     install -d ${D}/usr/share/enigma2
     cp -rp ${S}/Nashu/myNOVUM_HD2_Black ${D}/usr/share/enigma2/

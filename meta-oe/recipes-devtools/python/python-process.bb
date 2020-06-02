@@ -14,18 +14,11 @@ SRC_URI = "file://process.py"
 
 S = "${WORKDIR}"
 
-PACKAGES = "${PN} ${PN}-src"
+PACKAGES = "${PN}"
 
-FILES_${PN} = "${PYTHON_SITEPACKAGES_DIR}/process.pyo"
-FILES_${PN}-src = "${PYTHON_SITEPACKAGES_DIR}/process.py"
-RDEPENDS_{PN}-src = "${PN}"
-
-do_compile() {
-    ${@bb.utils.contains("PYTHON_PN", "python", "python2", "python3", d)} -O -m compileall ${WORKDIR}/process.py
-}
+FILES_${PN} = "${PYTHON_SITEPACKAGES_DIR}/process.py"
 
 do_install() {
     install -d ${D}${PYTHON_SITEPACKAGES_DIR}
     install -m 644 ${S}/process.py ${D}${PYTHON_SITEPACKAGES_DIR}/
-    install -m 644 ${S}/process.pyo ${D}${PYTHON_SITEPACKAGES_DIR}/
 }

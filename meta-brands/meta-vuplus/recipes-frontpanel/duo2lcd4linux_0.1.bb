@@ -26,15 +26,10 @@ do_install() {
     install -m 0600 ${S}/wetter/* ${D}${PLUGINPATH}/wetter
 }
 
-# Just a quick hack to "compile" the python parts.
-do_compile_append() {
-    ${@bb.utils.contains("PYTHON_PN", "python", "python2", "python3", d)} -O -m compileall ${S}
-}
 
 python populate_packages_prepend() {
     enigma2_plugindir = bb.data.expand('${libdir}/enigma2/python/Plugins', d)
     do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/[a-zA-Z0-9_]+.*$', 'enigma2-plugin-%s-duo2', '%s', recursive=True, match_path=True, prepend=True, extra_depends="enigma2")
-    do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/.*\.py$', 'enigma2-plugin-%s-duo2-src', '%s (source files)', recursive=True, match_path=True, prepend=True)
     do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/.*\.la$', 'enigma2-plugin-%s-duo2-dev', '%s (development)', recursive=True, match_path=True, prepend=True)
     do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/.*\.a$', 'enigma2-plugin-%s-duo2-staticdev', '%s (static development)', recursive=True, match_path=True, prepend=True)
     do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/(.*/)?\.debug/.*$', 'enigma2-plugin-%s-duo2-dbg', '%s (debug)', recursive=True, match_path=True, prepend=True)

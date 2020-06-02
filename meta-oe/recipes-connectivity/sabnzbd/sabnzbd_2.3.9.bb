@@ -10,7 +10,6 @@ RDEPENDS_${PN} = "\
     ${PYTHON_PN}-cheetah ${PYTHON_PN}-compression ${PYTHON_PN}-core ${PYTHON_PN}-crypt ${PYTHON_PN}-ctypes ${PYTHON_PN}-email ${PYTHON_PN}-html \
     ${PYTHON_PN}-misc ${PYTHON_PN}-multiprocessing ${PYTHON_PN}-sqlite3 ${PYTHON_PN}-shell ${PYTHON_PN}-subprocess ${PYTHON_PN}-sabyenc ${PYTHON_PN}-yenc \
     "
-RDEPENDS_${PN}-src = "python"
 
 RRECOMMENDS_${PN} = "par2cmdline unrar"
 
@@ -26,9 +25,8 @@ S = "${WORKDIR}/git"
 
 INSTALLDIR = "${libdir}/${PN}"
 
-PACKAGES = "${PN}-doc ${PN}-src ${PN}"
+PACKAGES = "${PN}-doc ${PN}"
 
-FILES_${PN}-src = "${INSTALLDIR}/*/*.py ${INSTALLDIR}/*/*/*.py"
 FILES_${PN}-doc = "${INSTALLDIR}/*.txt ${INSTALLDIR}/licenses ${INSTALLDIR}/interfaces/*/licenses"
 FILES_${PN} = "${INSTALLDIR} /etc/init.d/sabnzbd /etc/init.d/init-functions /etc/enigma2/sabnzbd.conf"
 
