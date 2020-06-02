@@ -142,7 +142,7 @@ RDEPENDS_${PN} = " \
     rapidxml \
     rsync \
     rtorrent \
-    sabnzbd \
+    ${@bb.utils.contains("PYTHON_PN", "python", "sabnzbd", "sabnzbd3", d)} \
     screen \
     smartmontools \
     smbnetfs \

@@ -3,20 +3,20 @@ DESCRIPTION = "SABnzbd is an Open Source Binary Newsreader written in Python."
 HOMEPAGE = "https://sabnzbd.org"
 MAINTAINER = "team@sabnzbd.org"
 LICENSE = "GPLv2+"
-LIC_FILES_CHKSUM = "file://COPYRIGHT.txt;md5=6c2cd2089133de5067e13a6d4f75afef"
+LIC_FILES_CHKSUM = "file://COPYRIGHT.txt;md5=89ab8b59b2fb10979c6e6d151ae0d2e7"
 
 DEPENDS = "${PYTHON_PN}"
 RDEPENDS_${PN} = "\
     ${PYTHON_PN}-cheetah ${PYTHON_PN}-compression ${PYTHON_PN}-core ${PYTHON_PN}-crypt ${PYTHON_PN}-ctypes ${PYTHON_PN}-email ${PYTHON_PN}-html \
-    ${PYTHON_PN}-misc ${PYTHON_PN}-multiprocessing ${PYTHON_PN}-sqlite3 ${PYTHON_PN}-shell ${PYTHON_PN}-subprocess ${PYTHON_PN}-sabyenc ${PYTHON_PN}-yenc \
+    ${PYTHON_PN}-misc ${PYTHON_PN}-multiprocessing ${PYTHON_PN}-sqlite3 ${PYTHON_PN}-shell ${PYTHON_PN}-sabyenc3 ${PYTHON_PN}-yenc \
     "
-RDEPENDS_${PN}-src = "python"
+RDEPENDS_${PN}-src = "${PYTHON_PN}"
 
 RRECOMMENDS_${PN} = "par2cmdline unrar"
 
-SRCREV = "8f21533e76d64a3bc26643394d5e98dc01ece63e"
+SRCREV = "b58d26354d5784cd2893d721e6ac8cf1d6cd5ace"
 
-SRC_URI = "git://github.com/sabnzbd/sabnzbd.git \
+SRC_URI = "git://github.com/sabnzbd/sabnzbd.git;branch=develop \
     file://sabnzbd \
     file://sabnzbd.conf \
     file://init-functions \
