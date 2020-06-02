@@ -28,7 +28,7 @@ RRECOMMENDS_${PN} = " \
         ${PYTHON_PN}-json \
         ${PYTHON_PN}-shell \
         ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-subprocess", "", d)} \
-        ${PYTHON_PN}-textutils \
+        ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-textutils", "", d)} \
         "
 
 deltask package_qa

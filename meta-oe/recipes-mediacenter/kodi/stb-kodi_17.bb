@@ -239,7 +239,7 @@ RRECOMMENDS_${PN}_append = " \
     ${PYTHON_PN}-xml \
     ${PYTHON_PN}-netserver \
     ${PYTHON_PN}-misc \
-    ${PYTHON_PN}-textutils \
+    ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-textutils", "", d)} \
     ${PYTHON_PN}-simplejson \
     ${PYTHON_PN}-xmlrpc   \
     ${PYTHON_PN}-pprint \
