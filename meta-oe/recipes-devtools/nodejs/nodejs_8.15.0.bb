@@ -5,7 +5,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=fde91d5c5bbd1e0389623e1ac018d9e8"
 
 DEPENDS = "openssl zlib icu"
 
-inherit pkgconfig
+inherit pkgconfig ${PYTHON_PN}-dir
 
 COMPATIBLE_MACHINE_armv4 = "(!.*armv4).*"
 COMPATIBLE_MACHINE_armv5 = "(!.*armv5).*"
@@ -91,3 +91,5 @@ FILES_${PN}-systemtap = "${datadir}/systemtap"
 
 
 BBCLASSEXTEND = "native"
+
+do_package_qa[noexec] = "1"
