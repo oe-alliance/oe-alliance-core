@@ -54,5 +54,5 @@ do_install_append () {
    rm -fr ${D}/${libdir}
 }
 
-RDEPENDS_${PN} = "python"
+RDEPENDS_${PN} = "python-core"
 RDEPENDS_${PN}-db = "nmap"
