@@ -14,7 +14,7 @@ SRC_URI = "git://github.com/oe-alliance/XMLTV-Import.git;protocol=git"
 
 S = "${WORKDIR}/git/src"
 
-inherit distutils-openplugins
+inherit ${@bb.utils.contains("PYTHON_PN", "python", "distutils-openplugins", "distutils3-openplugins", d)}
 
 DEPENDS = "${PYTHON_PN}"
 RDEPENDS_${PN} = "${PYTHON_PN}-compression ${PYTHON_PN}-shell ${PYTHON_PN}-backports-lzma ${PYTHON_PN}-pkgutil"
@@ -26,7 +26,6 @@ PLUGIN = "EPGImport"
 
 FILES_${PN} = "${libdir}/enigma2/python/Plugins/Extensions/${PLUGIN}/ /etc"
 FILES_${PN}-dbg = "${libdir}/enigma2/python/Plugins/Extensions/${PLUGIN}/.debug /usr/src/debug"
-FILES_${PN}-src = "${libdir}/enigma2/python/Plugins/Extensions/${PLUGIN}/*.py"
 
 # skip this!
 install_egg_info() {

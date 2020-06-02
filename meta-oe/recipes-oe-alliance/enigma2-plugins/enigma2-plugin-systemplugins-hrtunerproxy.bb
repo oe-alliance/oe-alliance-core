@@ -4,7 +4,7 @@ MAINTAINER = "OpenViX"
 LICENSE = "Proprietary"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=a23a74b3f4caf9616230789d94217acb"
 
-inherit gitpkgv distutils-openplugins gettext
+inherit gitpkgv ${@bb.utils.contains("PYTHON_PN", "python", "distutils-openplugins", "distutils3-openplugins", d)} gettext
 
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
@@ -27,6 +27,5 @@ do_install_prepend() {
 
 python populate_packages_prepend() {
     e2_pdir = bb.data.expand('${libdir}/enigma2/python/Plugins', d)
-    do_split_packages(d, e2_pdir, '^(\w+/\w+)/.*\.py$', 'enigma2-plugin-%s-src', '%s (source files)', recursive=True, match_path=True, prepend=True)
     do_split_packages(d, e2_pdir, '^(\w+/\w+)/.*\/.*\.po$', 'enigma2-plugin-%s-po', '%s (translations)', recursive=True, match_path=True, prepend=True)
 }

@@ -10,7 +10,7 @@ inherit gitpkgv
 PV = "1+git${SRCPV}"
 PKGV = "1+git${GITPKGV}"
 
-inherit distutils-openplugins
+inherit ${@bb.utils.contains("PYTHON_PN", "python", "distutils-openplugins", "distutils3-openplugins", d)}
 
 RDEPENDS_${PN} = " \
 	iptables \

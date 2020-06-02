@@ -24,7 +24,7 @@ RDEPENDS_${PN} = "\
 	oe-alliance-branding \
 	"
 
-inherit gitpkgv distutils-openplugins gettext
+inherit gitpkgv ${@bb.utils.contains("PYTHON_PN", "python", "distutils-openplugins", "distutils3-openplugins", d)} gettext
 
 DISTUTILS_INSTALL_ARGS = "--root=${D} --install-lib=${libdir}/enigma2/python/Plugins"
 

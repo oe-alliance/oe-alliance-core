@@ -16,7 +16,7 @@ SRC_URI = "git://github.com/Taapat/enigma2-plugin-blurayplayer.git;branch=${BRAN
 
 S = "${WORKDIR}/git"
 
-inherit distutils-openplugins
+inherit ${@bb.utils.contains("PYTHON_PN", "python", "distutils-openplugins", "distutils3-openplugins", d)}
 
 DEPENDS = "python libbluray libudfread"
 RDEPENDS_${PN} = "libbluray"

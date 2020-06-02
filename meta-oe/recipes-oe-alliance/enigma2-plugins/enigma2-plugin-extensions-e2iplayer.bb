@@ -16,7 +16,7 @@ PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
 PR = "r2"
 
-inherit distutils-openplugins gettext
+inherit ${@bb.utils.contains("PYTHON_PN", "python", "distutils-openplugins", "distutils3-openplugins", d)} gettext
 
 DEPENDS = "gettext-native python"
 RRECOMMENDS_${PN} = " \
@@ -29,17 +29,6 @@ RRECOMMENDS_${PN} = " \
         ${PYTHON_PN}-shell \
         ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-subprocess", "", d)} \
         ${PYTHON_PN}-textutils \
-        "
-
-RDEPENDS_{PN}-src = "${PN}"
-FILES_${PN}-src = " \
-        ${libdir}/enigma2/python/Plugins/*/*.py \
-        ${libdir}/enigma2/python/Plugins/*/*/*.py \
-        ${libdir}/enigma2/python/Plugins/*/*/*/*.py \
-        ${libdir}/enigma2/python/Plugins/*/*/*/*/*.py \
-        ${libdir}/enigma2/python/Plugins/*/*/*/*/*/*.py \
-        ${libdir}/enigma2/python/Plugins/*-py2.7.egg-info/* \
-        ${libdir}/enigma2/python/Plugins/*/locale/*/LC_MESSAGES/*.po \
         "
 
 deltask package_qa
