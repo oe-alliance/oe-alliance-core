@@ -7,7 +7,7 @@ DEPENDS = "enigma2"
 RDEPENDS_${PN} = "enigma2"
 
 SRCREV = "${AUTOREV}"
-SRC_URI = "git://github.com/zgemma-star/servicehisilicon.git;branch=master"
+SRC_URI = "git://github.com/oe-mirrors/servicehisilicon.git;branch=master"
 
 S = "${WORKDIR}/git"
 
@@ -24,11 +24,10 @@ EXTRA_OECONF = " \
 	"
 
 FILES_${PN} = "\
-	${libdir}/enigma2/python/Plugins/SystemPlugins/ServiceHisilicon/*.pyo \
+	${libdir}/enigma2/python/Plugins/SystemPlugins/ServiceHisilicon/*.py \
 	${libdir}/enigma2/python/Plugins/SystemPlugins/ServiceHisilicon/servicehisilicon.so \
 	"
 
 FILES_${PN}-dev = "\
-	${libdir}/enigma2/python/Plugins/SystemPlugins/ServiceHisilicon/*.py \
 	${libdir}/enigma2/python/Plugins/SystemPlugins/ServiceHisilicon/servicehisilicon.la \
 	"
