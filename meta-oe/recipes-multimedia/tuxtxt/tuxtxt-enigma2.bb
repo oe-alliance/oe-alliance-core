@@ -73,6 +73,6 @@ do_install_append() {
 }
 
 PACKAGES = "${PN}-src ${PN}-dbg ${PN}-dev ${PN}"
-FILES_${PN}-src = "/usr/src ${libdir}/enigma2/python/Plugins/Extensions/Tuxtxt/*.py"
-FILES_${PN} = "${libdir}/libtuxtxt32bpp.so.* /usr/share/fonts ${libdir}/enigma2/python/Plugins/Extensions/Tuxtxt/*.pyo /etc/tuxtxt"
+FILES_${PN}-src = "/usr/src"
+FILES_${PN} = "${libdir}/libtuxtxt32bpp.so.* /usr/share/fonts ${libdir}/enigma2/python/Plugins/Extensions/Tuxtxt/*.py /etc/tuxtxt"
 CONFFILES_${PN} = "/etc/tuxtxt/tuxtxt2.conf"
