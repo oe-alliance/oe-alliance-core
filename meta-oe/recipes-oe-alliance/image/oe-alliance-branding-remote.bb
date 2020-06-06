@@ -2,7 +2,7 @@ DESCRIPTION = "Additional remote control visuals for the OE-A Branding Lib"
 MAINTAINER = "oe-alliance team"
 PACKAGE_ARCH = "${MACHINEBUILD}"
 
-DEPENDS = "${PYTHON_PN}"
+DEPENDS = "${PYTHON_PN} ${PYTHON_PN}-six-native"
 
 require conf/license/license-gplv2.inc
 
@@ -17,7 +17,7 @@ BRANCH="master"
 do_configure[nostamp] = "1"
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
-SRC_URI="git://github.com/oe-alliance/branding-module.git;protocol=git;branch=${BRANCH}"
+SRC_URI="git://github.com/oe-mirrors/branding-module.git;protocol=git;branch=${BRANCH}"
 #SRC_URI_append_openatv=" \
 #	file://openatv_mappings.patch \
 #"
