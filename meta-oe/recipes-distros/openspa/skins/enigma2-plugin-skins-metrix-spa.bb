@@ -26,16 +26,11 @@ S = "${WORKDIR}/git"
 
 FILES_enigma2-plugin-skins-metrix-spa-fhd-icons = "/usr/share/enigma2/MetrixHD/FHD"
 FILES_enigma2-plugin-skins-metrix-spa-uhd-icons = "/usr/share/enigma2/MetrixHD/UHD"
-FILES_${PN}-src = "\
-    ${libdir}/enigma2/python/Components/Converter/*.py \
-    ${libdir}/enigma2/python/Components/Renderer/*.py \
-    ${libdir}/enigma2/python/Plugins/Extensions/MyMetrixLite/*.py \
-    "
+
 
 FILES_${PN} = "${libdir} /usr/share ${sysconfdir}"
 
 do_compile() {
-	${@bb.utils.contains("PYTHON_PN", "python", "python2", "python3", d)} -O -m compileall ${S}/usr
 	for f in $(find ${S}/locale -name *.po ); do
 		l=$(echo ${f%} | sed 's/\.po//' | sed 's/.*locale\///')
 		mkdir -p ${S}/usr/lib/enigma2/python/Plugins/Extensions/MyMetrixLite/locale/${l%}/LC_MESSAGES

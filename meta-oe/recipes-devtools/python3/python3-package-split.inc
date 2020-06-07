@@ -20,25 +20,6 @@ FILES_${PN}-test += " \
     ${PYTHON_SITEPACKAGES_DIR}/*/*/Tests \
 "
 
-FILES_${PN}-src = " \
-    ${PYTHON_SITEPACKAGES_DIR}/*.py \
-    ${PYTHON_SITEPACKAGES_DIR}/*/*.py \
-    ${PYTHON_SITEPACKAGES_DIR}/*/*/*.py \
-    ${PYTHON_SITEPACKAGES_DIR}/*/*/*/*.py \
-    ${PYTHON_SITEPACKAGES_DIR}/*/*/*/*/*.py \
-    ${PYTHON_SITEPACKAGES_DIR}/*/*/*/*/*/*.py \
-    ${PYTHON_SITEPACKAGES_DIR}/*.c \
-    ${PYTHON_SITEPACKAGES_DIR}/*/*.c \
-    ${PYTHON_SITEPACKAGES_DIR}/*/*/*.c \
-    ${PYTHON_SITEPACKAGES_DIR}/*/*/*/*.c \
-    ${PYTHON_SITEPACKAGES_DIR}/*/*/*/*/*.c \
-    ${PYTHON_SITEPACKAGES_DIR}/*.h \
-    ${PYTHON_SITEPACKAGES_DIR}/*/*.h \
-    ${PYTHON_SITEPACKAGES_DIR}/*/*/*.h \
-    ${PYTHON_SITEPACKAGES_DIR}/*/*/*/*.h \
-    ${PYTHON_SITEPACKAGES_DIR}/*/*/*/*/*.h \
-    "
-
 # some txt files which should go into -doc
 FILES_${PN}-doc += " \
     ${PYTHON_SITEPACKAGES_DIR}/*-info \

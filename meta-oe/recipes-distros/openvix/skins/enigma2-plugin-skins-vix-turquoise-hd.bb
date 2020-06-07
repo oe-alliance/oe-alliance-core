@@ -24,25 +24,14 @@ EXTRA_OECONF = "\
     STAGING_LIBDIR=${STAGING_LIBDIR} \
     "
 
-do_compile() {
-${@bb.utils.contains("PYTHON_PN", "python", "python2", "python3", d)} -O -m compileall ${S}
-}
 
 do_install() {
-        find ${S}/usr/lib/enigma2/python/Components/ -name "*.py" -exec rm -rf {} \;
+	find ${S}/usr/lib/enigma2/python/Components/ -name "*.py" -exec rm -rf {} \;
 	install -d ${D}/usr/share
 	cp -r --preserve=mode,links ${S}/usr/share/* ${D}/usr/share/
 	chmod -R a+rX ${D}/usr/share/enigma2/
-        install -d ${D}${libdir}/enigma2/python/Components
-        cp -rp ${S}/usr/lib/enigma2/python/Components/* ${D}${libdir}/enigma2/python/Components
+	install -d ${D}${libdir}/enigma2/python/Components
+	cp -rp ${S}/usr/lib/enigma2/python/Components/* ${D}${libdir}/enigma2/python/Components
 }
-
-FILES_${PN}-src = "\
-    ${libdir}/enigma2/python/*.py \
-    ${libdir}/enigma2/python/*/*.py \
-    ${libdir}/enigma2/python/*/*/*.py \
-    ${libdir}/enigma2/python/*/*/*/*.py \
-    ${libdir}/enigma2/python/*/*/*/*/*.py \
-    "
 
 do_package_qa[noexec] = "1"

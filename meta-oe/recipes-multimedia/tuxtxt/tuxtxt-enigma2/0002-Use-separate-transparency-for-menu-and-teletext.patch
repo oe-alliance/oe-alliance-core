@@ -48,7 +48,7 @@ index 1bb9a38..5284053 100644
  
 +	def setOSDAlpha(self,configElement):
 +		if SystemInfo["CanChangeOsdAlpha"]:
-+			print 'Tuxtxt setting OSD alpha:', str(configElement.value)
++			#print 'Tuxtxt setting OSD alpha:', str(configElement.value)
 +			config.av.osd_alpha.setValue(configElement.value)
 +			f = open("/proc/stb/video/alpha", "w")
 +			f.write(str(configElement.value))

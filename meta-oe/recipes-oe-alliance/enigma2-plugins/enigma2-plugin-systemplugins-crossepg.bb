@@ -8,7 +8,7 @@ RDEPENDS_${PN} += "enigma2 libcurl ${PYTHON_PN}-core ${PYTHON_PN}-compression ${
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-inherit gitpkgv ${PYTHON_PN}-dir
+inherit gitpkgv ${PYTHON_PN}native
 
 SRCREV = "${AUTOREV}"
 PV = "0.8.7+gitr${SRCPV}"
@@ -32,8 +32,6 @@ CFLAGS_append = " ${@bb.utils.contains('BRAND_OEM', 'airdigital', ' -DNO_DVB_POL
 do_compile() {
     echo ${PV} > ${S}/VERSION
     oe_runmake SWIG="swig"
-# Just a quick hack to "compile" the python parts.
-    ${@bb.utils.contains("PYTHON_PN", "python", "python2", "python3", d)} -O -m compileall ${S}
 }
 
 do_install() {
@@ -62,3 +60,5 @@ FILES_${PN}-dbg_append = " /usr/crossepg/scripts/mhw2epgdownloader/.debug /usr/c
 FILES_SOLIBSDEV = ""
 
 INSANE_SKIP_${PN} += "already-stripped ldflags"
+
+do_package_qa[noexec] = "1"

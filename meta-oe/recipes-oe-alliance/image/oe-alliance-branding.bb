@@ -2,7 +2,7 @@ DESCRIPTION = "OE-A Branding Lib for OE-A 2.0"
 MAINTAINER = "oe-alliance team"
 PACKAGE_ARCH = "${MACHINEBUILD}"
 
-DEPENDS = "${PYTHON_PN}"
+DEPENDS = "${PYTHON_PN} ${PYTHON_PN}-six-native"
 
 require conf/license/license-gplv2.inc
 
@@ -18,7 +18,7 @@ do_configure[nostamp] = "1"
 BRANCH="master"
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
-SRC_URI="git://github.com/oe-alliance/branding-module.git;protocol=git;branch=${BRANCH}"
+SRC_URI="git://github.com/oe-mirrors/branding-module.git;protocol=git;branch=${BRANCH}"
 #SRC_URI_append_openatv=" \
 #	file://openatv_mappings.patch \
 #"
@@ -254,8 +254,8 @@ do_install_append() {
     ln -sf /usr/share/enigma2/rc_models ${D}${libdir}/enigma2/python/Plugins/Extensions/OpenWebif/public/static/remotes
 }
 
-FILES_${PN}-src = "${libdir}/enigma2/python/Components/*.py"
-FILES_${PN} = "${libdir}/enigma2/python/*.so /usr/share ${libdir}/enigma2/python/Components/*.pyo ${libdir}/enigma2/python/Plugins"
+
+FILES_${PN} = "${libdir}/enigma2/python/*.so /usr/share ${libdir}/enigma2/python/Components/*.py ${libdir}/enigma2/python/Plugins"
 FILES_${PN}-dev += "${libdir}/enigma2/python/*.la"
 FILES_${PN}-staticdev += "${libdir}/enigma2/python/*.a"
 FILES_${PN}-dbg += "${libdir}/enigma2/python/.debug"

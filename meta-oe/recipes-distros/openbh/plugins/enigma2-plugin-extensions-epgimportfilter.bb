@@ -8,7 +8,7 @@ RDEPENDS_${PN} = "\
 	${PYTHON_PN}-shell \
 	"
 
-inherit distutils-openplugins gitpkgv
+inherit ${@bb.utils.contains("PYTHON_PN", "python", "distutils-openplugins", "distutils3-openplugins", d)} gitpkgv
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
 

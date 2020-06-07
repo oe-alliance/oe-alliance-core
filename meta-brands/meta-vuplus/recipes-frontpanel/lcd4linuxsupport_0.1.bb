@@ -19,10 +19,5 @@ do_install() {
     touch ${D}${PLUGINPATH}/__init__.py
 }
 
-# Just a quick hack to "compile" the python parts.
-do_install_append() {
-    ${@bb.utils.contains("PYTHON_PN", "python", "python2", "python3", d)} -O -m compileall ${D}
-}
-
 FILES_${PN} = "${PLUGINPATH}/*.pyo"
-FILES_${PN}-src = "${PLUGINPATH}/*.py"
+

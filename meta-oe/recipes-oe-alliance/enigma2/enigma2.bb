@@ -246,10 +246,6 @@ EXTRA_OECONF = " \
 LDFLAGS_prepend = "${@bb.utils.contains('GST_VERSION', '1.0', ' -lxml2 ', '', d)}"
 SRC_URI_append = "${@bb.utils.contains("MACHINE_FEATURES", "uianimation", " file://use-lv3ddriver.patch" , "", d)}"
 
-# Swig generated 200k enigma.py file has no purpose for end users
-FILES_${PN}-dbg += "\
-    ${libdir}/enigma2/python/enigma.py \
-    "
 
 # some plugins contain so's, their stripped symbols should not end up in the enigma2 package
 FILES_${PN}-dbg += "\
@@ -258,26 +254,6 @@ FILES_${PN}-dbg += "\
     ${libdir}/enigma2/python/*/*/*/.debug \
     ${libdir}/enigma2/python/*/*/*/*/.debug \
     ${libdir}/enigma2/python/Plugins/*/*/.debug \
-    "
-
-# Save some space by not installing sources (mytest.py must remain)
-FILES_${PN}-src = "\
-    ${libdir}/enigma2/python/GlobalActions.py \
-    ${libdir}/enigma2/python/Navigation.py \
-    ${libdir}/enigma2/python/NavigationInstance.py \
-    ${libdir}/enigma2/python/RecordTimer.py \
-    ${libdir}/enigma2/python/ServiceReference.py \
-    ${libdir}/enigma2/python/SleepTimer.py \
-    ${libdir}/enigma2/python/e2reactor.py \
-    ${libdir}/enigma2/python/keyids.py \
-    ${libdir}/enigma2/python/keymapparser.py \
-    ${libdir}/enigma2/python/skin.py \
-    ${libdir}/enigma2/python/timer.py \
-    ${libdir}/enigma2/python/upgrade.py \
-    ${libdir}/enigma2/python/PowerTimer.py \
-    ${libdir}/enigma2/python/*/*.py \
-    ${libdir}/enigma2/python/*/*/*.py \
-    ${libdir}/enigma2/python/*/*/*/*.py \
     "
 
 FILES_${PN} += " \
@@ -305,7 +281,6 @@ do_install_append() {
 python populate_packages_prepend() {
     enigma2_plugindir = bb.data.expand('${libdir}/enigma2/python/Plugins', d)
     do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/[a-zA-Z0-9_]+.*$', 'enigma2-plugin-%s', '%s', recursive=True, match_path=True, prepend=True, extra_depends="enigma2")
-    do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/.*\.py$', 'enigma2-plugin-%s-src', '%s (source files)', recursive=True, match_path=True, prepend=True)
     do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/.*\.la$', 'enigma2-plugin-%s-dev', '%s (development)', recursive=True, match_path=True, prepend=True)
     do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/.*\.a$', 'enigma2-plugin-%s-staticdev', '%s (static development)', recursive=True, match_path=True, prepend=True)
     do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/(.*/)?\.debug/.*$', 'enigma2-plugin-%s-dbg', '%s (debug)', recursive=True, match_path=True, prepend=True)

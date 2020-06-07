@@ -20,9 +20,6 @@ FILES_${PN} = "/"
 
 S = "${WORKDIR}/git/Blue-Line-OE-4ATV"
 
-do_compile_append() {
-${@bb.utils.contains("PYTHON_PN", "python", "python2", "python3", d)} -O -m compileall ${S}
-}
 
 do_install() {
     install -d ${D}${libdir}
