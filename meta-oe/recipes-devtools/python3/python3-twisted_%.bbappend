@@ -8,9 +8,11 @@ SRC_URI += " \
            file://0001-Revert-Prevent-CRLF-injections-described-in-CVE-2019.patch \
 "
 
-PR = "r3"
+PR = "r4"
 
 FILES_${PN}-dbg += " \
     ${libdir}/${PYTHON_DIR}/site-packages/twisted/*.egg-info \
     ${libdir}/${PYTHON_DIR}/site-packages/twisted/*/*/test \
 "
+
+FILES_${PN}-src = " "
