@@ -10,7 +10,7 @@ FILESEXTRAPATHS_prepend := "${THISDIR}/enigma2-plugin-softcams-oscam:"
 
 SRCREV = "${AUTOREV}"
 PV = "svn${SRCPV}"
-SRC_URI = "svn://www.streamboard.tv/svn/oscam;protocol=http;module=trunk;scmdata=keep"
+SRC_URI = "svn://svn.streamboard.tv/oscam;protocol=https;module=trunk;scmdata=keep"
 
 PR = "r1"
 
