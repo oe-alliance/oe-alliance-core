@@ -9,7 +9,7 @@ RDEPENDS_${PN} = "${PYTHON_PN}-ctypes ${PYTHON_PN}-datetime"
 
 SRC_URI = "git://github.com/oe-mirrors/python3-wifi.git"
 
-SRCREV ?= "fcfd5a75d6ec03369d0906c9dd953d6d5a0aecaf"
+SRCREV ?= "aa169d7af8060f0612553f0e41888c83910e876b"
 
 SRC_URI_append_aarch64 += " file://python-wifi-0.6.1-64bit.patch"
 
