@@ -40,12 +40,7 @@ CONFFILES_${PN} = "${sysconfdir}/enigma2/emc-hide.cfg ${sysconfdir}/enigma2/emc-
 
 PACKAGES =+ "${PN}-po"
 FILES_${PN} = "${sysconfdir} ${libdir}"
-FILES_${PN}-src = "\
-    ${libdir}/enigma2/python/Components/Converter/*.py \
-    ${libdir}/enigma2/python/Components/Renderer/*.py \
-    ${libdir}/enigma2/python/Components/Sources/*.py \
-    ${libdir}/enigma2/python/Plugins/Extensions/EnhancedMovieCenter/*.py \
-"
+
 FILES_${PN}-po = "${libdir}/enigma2/python/Plugins/Extensions/EnhancedMovieCenter/locale/*/*/*.po"
 
 do_populate_sysroot[noexec] = "1"
