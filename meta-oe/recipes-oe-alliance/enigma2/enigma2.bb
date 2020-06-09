@@ -265,9 +265,8 @@ FILES_${PN}-po = "${datadir}/enigma2/po/*.po ${datadir}/enigma2/po/*.pot"
 
 do_install_append() {
     install -d ${D}/usr/share/keymaps
-    find ${D}${libdir}/enigma2/python/ -name '*.pyc' -exec rm {} \;
-    ln -s ${libdir}/enigma2/python/Tools/StbHardware.pyo ${D}${libdir}/enigma2/python/Tools/DreamboxHardware.pyo
-    ln -s ${libdir}/enigma2/python/Components/PackageInfo.pyo ${D}${libdir}/enigma2/python/Components/DreamboxInfoHandler.pyo
+    ln -s ${libdir}/enigma2/python/Tools/StbHardware.py ${D}${libdir}/enigma2/python/Tools/DreamboxHardware.py
+    ln -s ${libdir}/enigma2/python/Components/PackageInfo.py ${D}${libdir}/enigma2/python/Components/DreamboxInfoHandler.py
     install -d ${D}${sysconfdir}
     git --git-dir=${S}/.git log --no-merges --since=10.weeks --pretty=format:"%s" > ${D}${sysconfdir}/e2-git.log
     git --git-dir=${OE-ALLIANCE_BASE}/.git log --no-merges --since=10.weeks --pretty=format:"%s" > ${D}${sysconfdir}/oe-git.log
