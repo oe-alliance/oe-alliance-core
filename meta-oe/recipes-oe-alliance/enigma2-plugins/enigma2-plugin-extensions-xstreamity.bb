@@ -4,7 +4,7 @@ HOMEPAGE = "https://www.linuxsat-support.com"
 MAINTAINER = "kiddac"
 PRIORITY = "optional"
 require conf/license/license-gplv2.inc
-DEPENDS += "python-image python-imaging python-argparse python-requests python-multiprocessing"
+RDEPENDS_${PN} = "python-image python-imaging python-argparse python-requests python-multiprocessing"
 
 SRCREV="${AUTOREV}"
 
