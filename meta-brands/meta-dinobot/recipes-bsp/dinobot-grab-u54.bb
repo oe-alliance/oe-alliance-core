@@ -29,5 +29,5 @@ do_package_qa() {
 
 FILES_${PN}  = "${bindir}/grab"
 
-SRC_URI[md5sum] = "9ce64324f751c0e63e547c4510065d38"
-SRC_URI[sha256sum] = "87927b5703cd8174f436532bb969999340a3efedcddb9adbedc864ddef1b68a5"
+SRC_URI[md5sum] = "dca1ad78af90d0c1b4fd872d1d4ae1c4"
+SRC_URI[sha256sum] = "2ba777ac71a14a1a74fc2db9262c64b3e8f703e6fe896d7ded8423be7c1aeb8a"
