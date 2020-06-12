@@ -98,7 +98,7 @@ python populate_packages_prepend() {
                     depend = depend.strip()
                     if depend.startswith('twisted-'):
                         rdepends.append(depend.replace('twisted-', '${PYTHON_PN}-twisted-'))
-                    elif depend == 'python-re' :
+                    elif depend == 'python-re' or depend == 'python-lang':
                         pass
                     elif depend.startswith('python-'):
                         rdepends.append(depend.replace('python-', '${PYTHON_PN}-'))
