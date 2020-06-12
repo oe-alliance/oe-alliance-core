@@ -75,6 +75,7 @@ PYTHON_RDEPS = " \
     python-image \
     python-imaging \
     python-smtpd \
+    python-six \
     "
 
 GST_BASE_RDEPS = "\
