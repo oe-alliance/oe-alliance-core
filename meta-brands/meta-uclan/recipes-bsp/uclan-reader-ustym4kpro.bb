@@ -8,7 +8,7 @@ RDEPENDS_${PN} = "libsdl"
 
 COMPATIBLE_MACHINE = "^(ustym4kpro)$"
 
-SRCDATE = "20200415"
+SRCDATE = "20200612"
 
 PV = "${SRCDATE}"
 PR = "r0"
@@ -27,5 +27,5 @@ do_package_qa() {
 
 FILES_${PN}  = "${bindir}/libreader"
 
-SRC_URI[md5sum] = "dd6a53f18e59bd53f23166e5d3c4231f"
-SRC_URI[sha256sum] = "bc34683446e1440644b5a5d7c5ff31a3d73a0a25d089b5fc189ef24fcb827c91"
+SRC_URI[md5sum] = "0e80dd43a1974018f1244faba71103d5"
+SRC_URI[sha256sum] = "893a57a22d2edb445382054e893c52e9330bd51c95c3312e749c25b69741e57c"
