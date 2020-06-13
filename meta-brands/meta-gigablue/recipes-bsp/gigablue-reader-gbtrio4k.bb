@@ -27,6 +27,6 @@ do_package_qa() {
 
 FILES_${PN}  = "${bindir}/libreader"
 
-SRC_URI[md5sum] = "11dbf058f6f816ca55f9b2f08e4f47ef"
-SRC_URI[sha256sum] = "662244a49e58e26b2914d0a2db0b16a5cb2826ef98d6448e8424d1247862a4ee"
+SRC_URI[md5sum] = "979968a04bc0a04b856dfa13c6735bd7"
+SRC_URI[sha256sum] = "22711ee3d0e0956665becee8527dc2ea2ac7728ab909feded518ae38faa76bf4"
 

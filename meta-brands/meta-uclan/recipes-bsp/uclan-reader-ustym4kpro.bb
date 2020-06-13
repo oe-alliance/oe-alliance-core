@@ -17,6 +17,8 @@ SRC_URI = "http://source.mynonpublic.com/uclan/${MACHINE}-libreader-${SRCDATE}.z
 
 S = "${WORKDIR}"
 
+INSANE_SKIP_${PN} += "already-stripped"
+
 do_install() {
     install -d ${D}${bindir}
     install -m 0755 ${S}/libreader ${D}/${bindir}
@@ -27,7 +29,5 @@ do_package_qa() {
 
 FILES_${PN}  = "${bindir}/libreader"
 
-SRC_URI[md5sum] = "f61a3c50053d51fb0e444eabdd5d08a5"
-SRC_URI[sha256sum] = "853c03f957a7dea5858253099169a6f5819ced92dde3fad6b382bc4e6a59e88a"
-
-INSANE_SKIP_${PN} += "already-stripped"
+SRC_URI[md5sum] = "0e80dd43a1974018f1244faba71103d5"
+SRC_URI[sha256sum] = "893a57a22d2edb445382054e893c52e9330bd51c95c3312e749c25b69741e57c"

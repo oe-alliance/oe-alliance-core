@@ -27,7 +27,7 @@ do_package_qa() {
 
 FILES_${PN}  = "${bindir}/libreader"
 
-SRC_URI[md5sum] = "8de8f5a4d5901863e9190fac8c93fdff"
-SRC_URI[sha256sum] = "6abb2b1573376e5018683357a899100edbfb316c209ba713f1b88f1a260ae523"
+SRC_URI[md5sum] = "ae16a0d383d9ebb318f3609d75a9705f"
+SRC_URI[sha256sum] = "6da9920cfcbed6893cb81e8cd5137d374ce36fe41146a05a53ff0e3ac10d8574"
 
 INSANE_SKIP_${PN} += "already-stripped"
