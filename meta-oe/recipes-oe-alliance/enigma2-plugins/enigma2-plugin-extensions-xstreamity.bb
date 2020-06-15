@@ -46,9 +46,6 @@ fi
 
 pkg_postrm_${PN} () {
 #!/bin/sh
-rm -rf /usr/lib/enigma2/python/Plugins/Extensions/XStreamity > /dev/null 2>&1
-rm -f /usr/lib/enigma2/python/Components/Renderer/xRunningText.py* > /dev/null 2>&1
-rm -f /usr/lib/enigma2/python/Components/Converter/xServiceInfo.py* > /dev/null 2>&1
 rm -rf /etc/enigma2/X-Streamity
 rm -rf /etc/enigma2/xstreamity
 
