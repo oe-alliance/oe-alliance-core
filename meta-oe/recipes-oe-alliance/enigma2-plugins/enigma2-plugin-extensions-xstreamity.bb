@@ -22,6 +22,12 @@ FILES_${PN} = " ${libdir}/enigma2/python/Components/Converter/* \
                 ${libdir}/enigma2/python/Components/Renderer/* \
                 ${libdir}/enigma2/python/Plugins/Extensions/XStreamity/*"
 
+do_patch[noexec] = "1"
+
+do_configure[noexec] = "1"
+
+do_compile[noexec] = "1"
+
 do_install() {
 install -d ${D}${libdir}/enigma2/python/Components/Converter
 install -d ${D}${libdir}/enigma2/python/Components/Renderer
