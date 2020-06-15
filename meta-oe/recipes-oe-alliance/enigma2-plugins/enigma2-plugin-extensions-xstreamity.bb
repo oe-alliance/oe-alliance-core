@@ -1,4 +1,4 @@
-DESCRIPTION = "IPTV Xtream Codes playlists player by KiddaC"
+SUMMARY = "IPTV Xtream Codes playlists player by KiddaC"
 HOMEPAGE = "https://www.linuxsat-support.com"
 MAINTAINER = "kiddac"
 PRIORITY = "optional"
