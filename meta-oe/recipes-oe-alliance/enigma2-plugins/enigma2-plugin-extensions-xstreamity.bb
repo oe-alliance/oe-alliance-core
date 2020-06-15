@@ -43,11 +43,3 @@ if [ -f "/etc/enigma2/xstreamity/playlists.json" ]
     rm -f /etc/enigma2/xstreamity/playlists.json > /dev/null 2>&1
 fi
 }
-
-pkg_postrm_${PN} () {
-#!/bin/sh
-rm -rf /etc/enigma2/X-Streamity
-rm -rf /etc/enigma2/xstreamity
-
-echo "Restart GUI to finish uninstall!"
-}
