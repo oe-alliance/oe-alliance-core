@@ -44,17 +44,6 @@ if [ -f "/etc/enigma2/xstreamity/playlists.json" ]
 fi
 }
 
-pkg_postinst_${PN}() {
-#!/bin/sh
-echo "*********************************************************"
-echo "*                                                       *"
-echo "* XStreamity                                            *"
-echo "* by KiddaC (c) 2020                                    *"
-echo "*                                                       *"
-echo "* Restart Enigma-2 GUI to add plugin into plugin list   *"
-echo "*********************************************************"
-}
-
 pkg_postrm_${PN} () {
 #!/bin/sh
 rm -rf /usr/lib/enigma2/python/Plugins/Extensions/XStreamity > /dev/null 2>&1
