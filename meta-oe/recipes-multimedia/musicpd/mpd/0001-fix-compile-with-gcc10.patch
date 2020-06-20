@@ -1,0 +1,30 @@
+--- a/src/LocateUri.cxx
++++ b/src/LocateUri.cxx
+@@ -24,6 +24,7 @@
+ #include "ls.hxx"
+ #include "util/UriUtil.hxx"
+ #include "util/ASCII.hxx"
++#include <stdexcept>
+ 
+ #ifdef ENABLE_DATABASE
+ #include "storage/StorageInterface.hxx"
+--- a/src/pcm/PcmConvert.cxx
++++ b/src/pcm/PcmConvert.cxx
+@@ -23,6 +23,7 @@
+ #include "util/ConstBuffer.hxx"
+ 
+ #include <assert.h>
++#include <stdexcept>
+ 
+ void
+ pcm_convert_global_init()
+--- a/src/util/StringBuffer.hxx
++++ b/src/util/StringBuffer.hxx
+@@ -31,6 +31,7 @@
+ #define STRING_BUFFER_HPP
+ 
+ #include <array>
++#include <cstddef>
+ 
+ /**
+  * A statically allocated string buffer.

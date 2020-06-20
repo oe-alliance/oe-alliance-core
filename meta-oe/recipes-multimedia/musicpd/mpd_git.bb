@@ -15,6 +15,7 @@ PV = "0.21.10+git${SRCPV}"
 PKGV = "0.21.10+git${GITPKGV}"
 
 SRC_URI = "git://github.com/MusicPlayerDaemon/MPD \
+        file://0001-fix-compile-with-gcc10.patch \
         file://mpd.conf \
         file://mpd.init \
         "
