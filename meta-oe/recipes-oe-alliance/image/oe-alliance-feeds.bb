@@ -11,7 +11,19 @@ PACKAGES = "${PN}"
 PV = "${IMAGE_VERSION}"
 PR = "r4"
 
-DEPENDS = "enigma2-plugin-drivers-usbserial enigma2-plugin-systemplugins-hrtunerproxy enigma2-plugin-systemplugins-radiotimesemulator"
+DEPENDS = "enigma2-plugin-drivers-usbserial "
+#DEPENDS = "enigma2-plugin-drivers-usbserial enigma2-plugin-systemplugins-hrtunerproxy enigma2-plugin-systemplugins-radiotimesemulator"
+
+#disbale addons not python3 ready
+#    packagegroup-openplugins 
+#    enigma2-plugin-extensions-moviemanager 
+#    enigma2-plugin-extensions-e2iplayer 
+#    enigma2-plugin-extensions-e2iplayer-deps 
+#    enigma2-plugin-extensions-xmodem 
+#    enigma2-plugin-extensions-xstreamity 
+#    enigma2-plugin-systemplugins-hrtunerproxy 
+#    enigma2-plugin-systemplugins-radiotimesemulator 
+#    enigma2-plugin-systemplugins-serviceapp 
 
 RDEPENDS_${PN} = " \
     bootlogos-enigma2-meta \
@@ -19,7 +31,6 @@ RDEPENDS_${PN} = " \
     network-usb-drivers-meta \
     channelsettings-enigma2-meta \
     picons-enigma2-meta \
-    packagegroup-openplugins \
     meta-enigma2-dvdburn \
     enigma2-plugins \
     enigma2-plugin-drivers-ntfs-3g \
@@ -31,22 +42,14 @@ RDEPENDS_${PN} = " \
     enigma2-plugin-extensions-dreamplex \
     enigma2-plugin-extensions-et-portal \
     enigma2-plugin-extensions-moviearchiver \
-    enigma2-plugin-extensions-moviemanager \
     enigma2-plugin-extensions-yahooweather \
     enigma2-plugin-extensions-youtube \
     enigma2-plugin-extensions-autobouquets \
-    enigma2-plugin-extensions-e2iplayer \
-    enigma2-plugin-extensions-e2iplayer-deps \
     enigma2-plugin-extensions-e2m3u2bouquet \
     enigma2-plugin-extensions-jedimakerxtream \
-    enigma2-plugin-extensions-xmodem \
-    enigma2-plugin-extensions-xstreamity \
-    enigma2-plugin-systemplugins-hrtunerproxy \
     enigma2-plugin-systemplugins-joynescan \
-    enigma2-plugin-systemplugins-radiotimesemulator \
     oe-alliance-branding-remote \
     exteplayer3 \
-    enigma2-plugin-systemplugins-serviceapp \
     eplayer5 \
     ${@bb.utils.contains("MACHINE_FEATURES", "legacykernel", "" , "gdb v4l-utils evtest strace", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "omb", "enigma2-plugin-extensions-openmultiboot openmultiboot", "", d)} \
