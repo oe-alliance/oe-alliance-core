@@ -18,7 +18,8 @@ PKGV = "1.4.6+git${GITPKGV}"
 
 SRC_URI = "git://github.com/zerotier/ZeroTierOne.git;protocol=https \
         file://zerotier \
-        file://accept-external-ldflags.patch \
+        file://0001-accept-external-ldflags.patch \
+        file://0002-fix-compile-with-gcc10.patch \
 "
 
 S = "${WORKDIR}/git"
