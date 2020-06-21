@@ -14,7 +14,6 @@ UBI_VOLNAME = "rootfs"
 CMDLINE ?= "console=ttyAMA0,115200n8"
 
 PREFERRED_VERSION_linux-airdigital = "4.4.35"
-PREFERRED_VERSION_ffmpeg = "3.4.2"
 
 IMAGE_CMD_ubi_append = " \
     mkdir -p ${DEPLOY_DIR_IMAGE}/${MACHINE}/${IMAGEDIR}; \
