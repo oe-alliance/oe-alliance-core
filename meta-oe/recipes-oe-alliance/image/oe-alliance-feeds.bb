@@ -11,8 +11,8 @@ PACKAGES = "${PN}"
 PV = "${IMAGE_VERSION}"
 PR = "r4"
 
-DEPENDS = "enigma2-plugin-drivers-usbserial "
-#DEPENDS = "enigma2-plugin-drivers-usbserial enigma2-plugin-systemplugins-hrtunerproxy enigma2-plugin-systemplugins-radiotimesemulator"
+DEPENDS = "enigma2-plugin-drivers-usbserial enigma2-plugin-systemplugins-radiotimesemulator"
+#DEPENDS = "enigma2-plugin-drivers-usbserial enigma2-plugin-systemplugins-hrtunerproxy"
 
 #disbale addons not python3 ready
 #    packagegroup-openplugins 
@@ -22,7 +22,6 @@ DEPENDS = "enigma2-plugin-drivers-usbserial "
 #    enigma2-plugin-extensions-xmodem 
 #    enigma2-plugin-extensions-xstreamity 
 #    enigma2-plugin-systemplugins-hrtunerproxy 
-#    enigma2-plugin-systemplugins-radiotimesemulator 
 #    enigma2-plugin-systemplugins-serviceapp 
 
 RDEPENDS_${PN} = " \
@@ -48,6 +47,7 @@ RDEPENDS_${PN} = " \
     enigma2-plugin-extensions-e2m3u2bouquet \
     enigma2-plugin-extensions-jedimakerxtream \
     enigma2-plugin-systemplugins-joynescan \
+    enigma2-plugin-systemplugins-radiotimesemulator \
     oe-alliance-branding-remote \
     exteplayer3 \
     eplayer5 \
