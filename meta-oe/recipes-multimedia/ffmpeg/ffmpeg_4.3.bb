@@ -23,8 +23,8 @@ LIC_FILES_CHKSUM = "file://COPYING.GPLv2;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
                     file://COPYING.LGPLv2.1;md5=bd7a443320af8c812e4c18d1b79df004 \
                     file://COPYING.LGPLv3;md5=e6a600fd5e1d9cbde2d983680233ad02"
 
-SRCREV = "6e0cf9a9df4a21df89825427914e38bd4c6216ba"
-SRC_URI = "git://github.com/FFmpeg/FFmpeg.git;branch=release/4.1 \
+SRCREV = "8e12af29d1a3f95c9e952d78354e3c8b1c0431a8"
+SRC_URI = "git://github.com/FFmpeg/FFmpeg.git;branch=release/4.3 \
            file://4_mips64_cpu_detection.patch \
            "
 
@@ -33,15 +33,19 @@ ARM_INSTRUCTION_SET_armv4 = "arm"
 ARM_INSTRUCTION_SET_armv5 = "arm"
 ARM_INSTRUCTION_SET_armv6 = "arm"
 
-DEPENDS = "alsa-lib zlib libogg nasm-native"
+# Should be API compatible with libav (which was a fork of ffmpeg)
+# libpostproc was previously packaged from a separate recipe
+PROVIDES = "libav libpostproc"
+
+DEPENDS = "nasm-native"
 
 S = "${WORKDIR}/git"
 
 inherit autotools pkgconfig
 
 PACKAGECONFIG ??= "avdevice avfilter avcodec avformat swresample swscale postproc avresample \
-                   bzlib gpl lzma theora x264 \
-                   ${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'xv', '', d)}"
+                   alsa bzlib gpl lzma theora x264 zlib \
+                   ${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'xv xcb', '', d)}"
 
 # libraries to build in addition to avutil
 PACKAGECONFIG[avdevice] = "--enable-avdevice,--disable-avdevice"
@@ -54,22 +58,28 @@ PACKAGECONFIG[postproc] = "--enable-postproc,--disable-postproc"
 PACKAGECONFIG[avresample] = "--enable-avresample,--disable-avresample"
 
 # features to support
+PACKAGECONFIG[alsa] = "--enable-alsa,--disable-alsa,alsa-lib"
 PACKAGECONFIG[bzlib] = "--enable-bzlib,--disable-bzlib,bzip2"
+PACKAGECONFIG[fdk-aac] = "--enable-libfdk-aac --enable-nonfree,--disable-libfdk-aac,fdk-aac"
 PACKAGECONFIG[gpl] = "--enable-gpl,--disable-gpl"
 PACKAGECONFIG[gsm] = "--enable-libgsm,--disable-libgsm,libgsm"
 PACKAGECONFIG[jack] = "--enable-indev=jack,--disable-indev=jack,jack"
 PACKAGECONFIG[libvorbis] = "--enable-libvorbis,--disable-libvorbis,libvorbis"
 PACKAGECONFIG[lzma] = "--enable-lzma,--disable-lzma,xz"
+PACKAGECONFIG[mfx] = "--enable-libmfx,--disable-libmfx,intel-mediasdk"
 PACKAGECONFIG[mp3lame] = "--enable-libmp3lame,--disable-libmp3lame,lame"
 PACKAGECONFIG[openssl] = "--enable-openssl,--disable-openssl,openssl"
 PACKAGECONFIG[sdl2] = "--enable-sdl2,--disable-sdl2,virtual/libsdl2"
 PACKAGECONFIG[speex] = "--enable-libspeex,--disable-libspeex,speex"
-PACKAGECONFIG[theora] = "--enable-libtheora,--disable-libtheora,libtheora"
+PACKAGECONFIG[theora] = "--enable-libtheora,--disable-libtheora,libtheora libogg"
 PACKAGECONFIG[vaapi] = "--enable-vaapi,--disable-vaapi,libva"
 PACKAGECONFIG[vdpau] = "--enable-vdpau,--disable-vdpau,libvdpau"
 PACKAGECONFIG[vpx] = "--enable-libvpx,--disable-libvpx,libvpx"
 PACKAGECONFIG[x264] = "--enable-libx264,--disable-libx264,x264"
+PACKAGECONFIG[x265] = "--enable-libx265,--disable-libx265,x265"
+PACKAGECONFIG[xcb] = "--enable-libxcb,--disable-libxcb,libxcb"
 PACKAGECONFIG[xv] = "--enable-outdev=xv,--disable-outdev=xv,libxv"
+PACKAGECONFIG[zlib] = "--enable-zlib,--disable-zlib,zlib"
 
 # Check codecs that require --enable-nonfree
 USE_NONFREE = "${@bb.utils.contains_any('PACKAGECONFIG', [ 'openssl' ], 'yes', '', d)}"
@@ -81,30 +91,13 @@ def cpu(d):
     return 'generic'
 
 EXTRA_OECONF = " \
-    --extra-version="kodi-4.1.4-Leia" \
     --disable-stripping \
-    --disable-ffmpeg \
     --enable-pic \
     --enable-shared \
     --enable-pthreads \
-    --disable-libxcb \
-    --disable-libxcb-shm \
-    --disable-libxcb-xfixes \
-    --disable-libxcb-shape \
     ${@bb.utils.contains('USE_NONFREE', 'yes', '--enable-nonfree', '', d)} \
     \
     --cross-prefix=${TARGET_PREFIX} \
-    \
-    --enable-muxer=spdif \
-    --enable-muxer=adts \
-    --enable-muxer=asf \
-    --enable-muxer=ipod \
-    --enable-encoder=ac3 \
-    --enable-encoder=aac \
-    --enable-encoder=wmav2 \
-    --enable-protocol=http \
-    --enable-encoder=png \
-    --enable-encoder=mjpeg \
     \
     --ld="${CCLD}" \
     --cc="${CC}" \
@@ -112,10 +105,9 @@ EXTRA_OECONF = " \
     --arch=${TARGET_ARCH} \
     --target-os="linux" \
     --enable-cross-compile \
-    --extra-cflags="${TARGET_CFLAGS} ${HOST_CC_ARCH}${TOOLCHAIN_OPTIONS}" \
-    --extra-ldflags="${TARGET_LDFLAGS}" \
+    --extra-cflags="${CFLAGS} ${HOST_CC_ARCH}${TOOLCHAIN_OPTIONS}" \
+    --extra-ldflags="${LDFLAGS}" \
     --sysroot="${STAGING_DIR_TARGET}" \
-    --enable-hardcoded-tables \
     ${EXTRA_FFCONF} \
     --libdir=${libdir} \
     --shlibdir=${libdir} \
@@ -135,33 +127,33 @@ do_configure() {
     ${S}/configure ${EXTRA_OECONF}
 }
 
-PACKAGES =+ "libavcodec-kodi \
-             libavdevice-kodi \
-             libavfilter-kodi \
-             libavformat-kodi \
-             libavresample-kodi \
-             libavutil-kodi \
-             libpostproc-kodi \
-             libswresample-kodi \
-             libswscale-kodi"
+PACKAGES =+ "libavcodec \
+             libavdevice \
+             libavfilter \
+             libavformat \
+             libavresample \
+             libavutil \
+             libpostproc \
+             libswresample \
+             libswscale"
 
-FILES_libavcodec-kodi = "${libdir}/libavcodec${SOLIBS}"
-FILES_libavdevice-kodi = "${libdir}/libavdevice${SOLIBS}"
-FILES_libavfilter-kodi = "${libdir}/libavfilter${SOLIBS}"
-FILES_libavformat-kodi = "${libdir}/libavformat${SOLIBS}"
-FILES_libavresample-kodi = "${libdir}/libavresample${SOLIBS}"
-FILES_libavutil-kodi = "${libdir}/libavutil${SOLIBS}"
-FILES_libpostproc-kodi = "${libdir}/libpostproc${SOLIBS}"
-FILES_libswresample-kodi = "${libdir}/libswresample${SOLIBS}"
-FILES_libswscale-kodi = "${libdir}/libswscale${SOLIBS}"
+FILES_libavcodec = "${libdir}/libavcodec${SOLIBS}"
+FILES_libavdevice = "${libdir}/libavdevice${SOLIBS}"
+FILES_libavfilter = "${libdir}/libavfilter${SOLIBS}"
+FILES_libavformat = "${libdir}/libavformat${SOLIBS}"
+FILES_libavresample = "${libdir}/libavresample${SOLIBS}"
+FILES_libavutil = "${libdir}/libavutil${SOLIBS}"
+FILES_libpostproc = "${libdir}/libpostproc${SOLIBS}"
+FILES_libswresample = "${libdir}/libswresample${SOLIBS}"
+FILES_libswscale = "${libdir}/libswscale${SOLIBS}"
 
 # ffmpeg disables PIC on some platforms (e.g. x86-32)
-INSANE_SKIP_${MLPREFIX}libavcodec-kodi = "textrel"
-INSANE_SKIP_${MLPREFIX}libavdevice-kodi = "textrel"
-INSANE_SKIP_${MLPREFIX}libavfilter-kodi = "textrel"
-INSANE_SKIP_${MLPREFIX}libavformat-kodi = "textrel"
-INSANE_SKIP_${MLPREFIX}libavutil-kodi = "textrel"
-INSANE_SKIP_${MLPREFIX}libavresample-kodi = "textrel"
-INSANE_SKIP_${MLPREFIX}libswscale-kodi = "textrel"
-INSANE_SKIP_${MLPREFIX}libswresample-kodi = "textrel"
-INSANE_SKIP_${MLPREFIX}libpostproc-kodi = "textrel"
+INSANE_SKIP_${MLPREFIX}libavcodec = "textrel"
+INSANE_SKIP_${MLPREFIX}libavdevice = "textrel"
+INSANE_SKIP_${MLPREFIX}libavfilter = "textrel"
+INSANE_SKIP_${MLPREFIX}libavformat = "textrel"
+INSANE_SKIP_${MLPREFIX}libavutil = "textrel"
+INSANE_SKIP_${MLPREFIX}libavresample = "textrel"
+INSANE_SKIP_${MLPREFIX}libswscale = "textrel"
+INSANE_SKIP_${MLPREFIX}libswresample = "textrel"
+INSANE_SKIP_${MLPREFIX}libpostproc = "textrel"

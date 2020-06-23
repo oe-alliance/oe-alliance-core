@@ -49,7 +49,6 @@ TARGET_ARCH = "arm"
 DEFAULTTUNE = "cortexa15hf-neon-vfpv4"
 
 PREFERRED_VERSION_linux-beyonwiz = "4.4.35"
-PREFERRED_VERSION_ffmpeg = "3.4.2"
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-beyonwiz"
 PREFERRED_PROVIDER_virtual/egl = "beyonwiz-opengl-${MACHINE}" 

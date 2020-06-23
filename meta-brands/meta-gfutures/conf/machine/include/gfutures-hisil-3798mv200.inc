@@ -28,7 +28,6 @@ CMDLINE ?= "console=ttyAMA0,115200n8"
 KERNEL_MODULE_AUTOLOAD += "mali"
 
 PREFERRED_VERSION_linux-gfutures = "4.4.35"
-PREFERRED_VERSION_ffmpeg = "3.4.2"
 
 IMAGEDIRRECOVERY ?= "${MACHINE}-recovery"
 

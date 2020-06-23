@@ -12,7 +12,10 @@ PACKAGES = "${PN}"
 PV = "${IMAGE_VERSION}"
 PR = "r1"
 
-DEPENDS = "enigma2 enigma2-locale-meta enigma2-plugins enigma2-oe-alliance-plugins oe-alliance-feeds enigma2-3rdparty-plugins oe-alliance-wifi"
+#DEPENDS = "enigma2 enigma2-locale-meta enigma2-plugins enigma2-oe-alliance-plugins oe-alliance-feeds enigma2-3rdparty-plugins oe-alliance-wifi"
+DEPENDS = "enigma2 enigma2-locale-meta enigma2-plugins enigma2-oe-alliance-plugins oe-alliance-feeds oe-alliance-wifi"
+
+
 
 RDEPENDS_${PN} = "\
     enigma2-locale-meta \
@@ -24,6 +27,7 @@ RDEPENDS_${PN} = "\
     mtd-utils \
     mtd-utils-ubifs \
     ${@bb.utils.contains('MACHINE_FEATURES', 'emmc', 'bzip2 rsync', '', d)} \
+    ${@bb.utils.contains("PYTHON_PN", "python3", "${PYTHON_PN}-compat2", "", d)} \
     procps \
     parted \
     "

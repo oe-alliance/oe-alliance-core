@@ -1,19 +1,16 @@
-GST_VERSION_FULL = "1.17.0.1"
+GST_VERSION_FULL = "1.17.1.1"
 
 inherit gitpkgv meson gettext
 
 PV = "${GST_VERSION_FULL}+git${SRCPV}"
 PKGV = "${GST_VERSION_FULL}+git${GITPKGV}"
 
-SRCREV_gst = "0cccf63fa048c2b03397a76ff3eee4e02b7b5a7a"
-SRCREV_gst_libav = "a5850215babe4359a032fcb7d2e614a6209fa1f6"
+SRCREV_gst = "74d29ca77117580bbc63cf8fd3af9e68d9bb9dbf"
+SRCREV_gst_libav = "e2c4828699911d906640fde09c185693f3848e7b"
 
-SRCREV_gst_plugins_bad = "00caf46e3fd5e517c0f2272b809dea949de550bf"
-SRCREV_gst_plugins_base = "9a94b4cbc12a2995bdcc7d967d2d3be4012ba468"
-SRCREV_gst_plugins_good = "b94b9988fa0219566274214779887f33644167b3"
-SRCREV_gst_plugins_ugly = "4063a319c5a7a3ffe23047c378ec19b2b9ed2ef5"
-
-# gst ffmpeg meson port v4.1.5
-SRCREV_gst_ffmpeg = "5da8bab7d28e41e2ae5bbb3ef7bc8f289a6dd692"
+SRCREV_gst_plugins_bad = "b5f7f8174f4d7efc12ff0ec33b660063e4a8fb4a"
+SRCREV_gst_plugins_base = "8768efde64b996b8e1db5efa70a13114e6895a65"
+SRCREV_gst_plugins_good = "9e0cdc6ff7aac0a0c8dec1cc111834107a3b476b"
+SRCREV_gst_plugins_ugly = "83e97119730ea08963c17ac55fc95ff184dd0fe9"
 
 S = "${WORKDIR}/git"
