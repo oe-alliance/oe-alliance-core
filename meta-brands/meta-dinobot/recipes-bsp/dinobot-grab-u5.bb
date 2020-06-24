@@ -6,7 +6,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 COMPATIBLE_MACHINE = "^(u5)$"
 
-SRCDATE = "20200610"
+SRCDATE = "20200624"
 
 PV = "${SRCDATE}"
 PR = "r0"
@@ -29,5 +29,5 @@ do_package_qa() {
 
 FILES_${PN}  = "${bindir}/grab"
 
-SRC_URI[md5sum] = "9e9792b46f7795e0fedac225334620ed"
-SRC_URI[sha256sum] = "9676e98d03915178d361c91c362bf7135f8e009258942cf9cb43628e79e5d0db"
+SRC_URI[md5sum] = "2dcbf70e61a1644953a2499f0c5dc1d2"
+SRC_URI[sha256sum] = "b02ef06028bdcd95cabbe78f6e43d4b3d153cef25623747b1063a0332a5d6258"
