@@ -7,7 +7,7 @@ RDEPENDS_${PN} = "libjpeg-turbo"
 
 COMPATIBLE_MACHINE = "^(u41)$"
 
-SRCDATE = "20200529"
+SRCDATE = "20200624"
 
 PV = "${SRCDATE}"
 PR = "r0"
@@ -30,5 +30,5 @@ do_package_qa() {
 
 FILES_${PN}  = "${bindir}/showiframe"
 
-SRC_URI[md5sum] = "81864d7da7ccd28f5aeabb063e671a87"
-SRC_URI[sha256sum] = "7bed73a16edf5756f0d6f44b833a715b1470f0dc818b4cb5fa075c31012ea65d"
+SRC_URI[md5sum] = "92d2c0aaf4fcfd9d665d5b40e0e675e6"
+SRC_URI[sha256sum] = "3e39e9cc25cf68545a34c336a5da65bd1502035fdb96b54993513be069d3abc2"
