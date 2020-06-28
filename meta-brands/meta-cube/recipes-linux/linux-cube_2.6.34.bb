@@ -202,6 +202,7 @@ SRC_URI = " \
     file://log2.patch \
     file://makefile-remove-wall.patch \
     file://uaccess-dont-mark-register-as-const.patch \
+    file://compiler-gcc-h-handle-uninitialized-var.patch \
     "
 
 S = "${WORKDIR}/linux-${PV}"
