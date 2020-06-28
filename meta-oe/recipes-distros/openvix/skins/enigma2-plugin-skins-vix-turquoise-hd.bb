@@ -15,7 +15,7 @@ PR = "r0"
 SRC_URI = "git://github.com/norhap/Turquoise-HD.git"
 S = "${WORKDIR}/git"
 
-FILES_${PN} += " ${datadir}/enigma2 ${libdir}/enigma2/python/Components/Converter/BTVInfo.pyo ${libdir}/enigma2/python/Components/Converter/BTVDevicesInfo.pyo ${libdir}/enigma2/python/Components/Converter/BTVCpuUsage.pyo ${libdir}/enigma2/python/Components/Converter/BTVRunning14Events.pyo ${libdir}/enigma2/python/Components/Renderer/DRRunningText.pyo"
+FILES_${PN} += " ${datadir}/enigma2 ${libdir}/enigma2/python/Components/Converter/BTVInfo.pyo ${libdir}/enigma2/python/Components/Converter/BTVDevicesInfo.pyo ${libdir}/enigma2/python/Components/Converter/BTVCpuUsage.pyo ${libdir}/enigma2/python/Components/Converter/BTVRunning14Events.pyo ${libdir}/enigma2/python/Components/Renderer/DRRunningText.pyo ${libdir}/enigma2/python/Components/Renderer/poster.pyo"
 
 EXTRA_OECONF = "\
     BUILD_SYS=${BUILD_SYS} \
