@@ -1,30 +1,22 @@
-From 9b29b94cc58a091df0af523dec9eda315a08151d Mon Sep 17 00:00:00 2001
-From: =?UTF-8?q?Jo=CC=88rg=20Bleyel?= <jbleyel@gmx.net>
-Date: Sun, 28 Jun 2020 21:27:24 +0200
-Subject: [PATCH] Remove time from log output
-
----
- src/twisted/python/log.py | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
-
-diff --git a/src/twisted/python/log.py b/src/twisted/python/log.py
-index bcd5059..c94810c 100644
 --- a/src/twisted/python/log.py
 +++ b/src/twisted/python/log.py
-@@ -552,12 +552,7 @@ class FileLogObserver(_GlobalStartStopMixIn):
+@@ -551,15 +551,16 @@
+         text = textFromEventDict(eventDict)
          if text is None:
              return
- 
--        timeStr = self.formatTime(eventDict["time"])
--        fmtDict = {
--            "system": eventDict["system"],
--            "text": text.replace("\n", "\n\t")
--        }
+-
+         timeStr = self.formatTime(eventDict["time"])
+         fmtDict = {
+             "system": eventDict["system"],
+             "text": text.replace("\n", "\n\t")
+         }
 -        msgStr = _safeFormat("[%(system)s] %(text)s\n", fmtDict)
++        #msgStr = _safeFormat("[%(system)s] %(text)s\n", fmtDict)
 +        msgStr = _safeFormat("%s\n", text.replace("\n", "\n\t"))
  
-         util.untilConcludes(self.write, timeStr + " " + msgStr)
+-        util.untilConcludes(self.write, timeStr + " " + msgStr)
++        #util.untilConcludes(self.write, timeStr + " " + msgStr)
++        util.untilConcludes(self.write, msgStr)
          util.untilConcludes(self.flush)  # Hoorj!
--- 
-2.10.1
-
+ 
+ 
