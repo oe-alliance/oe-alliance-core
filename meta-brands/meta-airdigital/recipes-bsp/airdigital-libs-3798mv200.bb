@@ -1,8 +1,8 @@
-SRCDATE = "20200525"
+SRCDATE = "20200625"
 
 require airdigital-libs.inc
 
-SRC_URI[md5sum] = "fecee428973024ec2abba9f910e96ee4"
-SRC_URI[sha256sum] = "14194402ce933f5c5ba507ce26aade5a85e11f257a3161bdd5692b574694bec0"
+SRC_URI[md5sum] = "869fb177bcdac42ad2020674015330b7"
+SRC_URI[sha256sum] = "0688f48de6ab3bb39ee1729043404bbd6c83e6a12bf251b9d758a86b2dffa6ee"
 
 COMPATIBLE_MACHINE = "^h9$|^h9combo$|^h10$|^i55plus$"
