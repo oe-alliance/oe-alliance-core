@@ -1,4 +1,4 @@
-From b8b52ac137fda5f5e1dbdf13434629431120ea05 Mon Sep 17 00:00:00 2001
+From 40fc8a48598fb62b7f5515859b7e74814450ec64 Mon Sep 17 00:00:00 2001
 From: Andy Blackburn <andrew.blackburn644@btinternet.com>
 Date: Fri, 12 Apr 2013 19:34:25 +0100
 
@@ -7,17 +7,18 @@ Date: Fri, 12 Apr 2013 19:34:25 +0100
  1 file changed, 4 deletions(-)
 
 diff --git a/Makefile.am b/Makefile.am
-index 3f62601e..4e67b8c1 100644
+index a07af8b0..429e042c 100644
 --- a/Makefile.am
 +++ b/Makefile.am
-@@ -21,6 +21,5 @@ SUBDIRS = \
+@@ -21,7 +21,6 @@ SUBDIRS = \
  	dreamirc \
  	dreammediathek \
  	dvdbackup \
 -	easyinfo \
  	ecasa \
  	eibox \
-@@ -59,13 +58,11 @@ SUBDIRS = \
+ 	emailclient \
+@@ -58,13 +57,11 @@ SUBDIRS = \
  	ofdb \
  	orfat \
  	orfteletext \
@@ -31,7 +32,7 @@ index 3f62601e..4e67b8c1 100644
  	reconstructapsc \
  	reftopiconname \
  	remotetimer \
-@@ -130,7 +127,6 @@ SUBDIRS += \
+@@ -127,7 +124,6 @@ SUBDIRS += \
  	mytube \
  	yttrailer \
  	webinterface \

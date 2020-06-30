@@ -1,4 +1,4 @@
-From 786488ce550dd42c3329a3e2887381c083d58c38 Mon Sep 17 00:00:00 2001
+From fb3d9b99cec1e7052497839ebd5e1205bcbb37bc Mon Sep 17 00:00:00 2001
 From: OpenEmbedded <oe.patch@oe>
 Date: Sun, 25 Mar 2018 00:10:59 +0100
 
@@ -7,10 +7,10 @@ Date: Sun, 25 Mar 2018 00:10:59 +0100
  1 file changed, 26 insertions(+)
 
 diff --git a/epgsearch/src/EPGSearch.py b/epgsearch/src/EPGSearch.py
-index 7c60d70a..724b7eaa 100644
+index ba2fbc37..b98452cc 100644
 --- a/epgsearch/src/EPGSearch.py
 +++ b/epgsearch/src/EPGSearch.py
-@@ -52,6 +52,32 @@ except ImportError:
+@@ -62,6 +62,32 @@ except ImportError:
  rootbouquet_tv = '1:7:1:0:0:0:0:0:0:0:FROM BOUQUET "bouquets.tv" ORDER BY bouquet'
  rootbouquet_radio = '1:7:1:0:0:0:0:0:0:0:FROM BOUQUET "bouquets.radio" ORDER BY bouquet'
  
