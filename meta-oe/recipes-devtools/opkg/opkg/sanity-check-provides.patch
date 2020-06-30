@@ -1,8 +1,8 @@
 diff --git a/libopkg/pkg.c b/libopkg/pkg.c
-index 11a9cf6..89b4ce7 100644
+index 31abdd1..cec07fa 100644
 --- a/libopkg/pkg.c
 +++ b/libopkg/pkg.c
-@@ -689,6 +689,7 @@ static void pkg_formatted_field(FILE * fp, pkg_t * pkg, const char *field)
+@@ -706,6 +706,7 @@ static void pkg_formatted_field(FILE * fp, pkg_t * pkg, const char *field, const
              if (pkg->provides_count > 1) {
                  fprintf(fp, "Provides:");
                  for (i = 1; i < pkg->provides_count; i++) {

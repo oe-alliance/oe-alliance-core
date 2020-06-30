@@ -1,0 +1,22 @@
+--- a/src/twisted/python/log.py
++++ b/src/twisted/python/log.py
+@@ -551,15 +551,16 @@
+         text = textFromEventDict(eventDict)
+         if text is None:
+             return
+-
+         timeStr = self.formatTime(eventDict["time"])
+         fmtDict = {
+             "system": eventDict["system"],
+             "text": text.replace("\n", "\n\t")
+         }
+-        msgStr = _safeFormat("[%(system)s] %(text)s\n", fmtDict)
++        #msgStr = _safeFormat("[%(system)s] %(text)s\n", fmtDict)
++        msgStr = _safeFormat("%s\n", text.replace("\n", "\n\t"))
+ 
+-        util.untilConcludes(self.write, timeStr + " " + msgStr)
++        #util.untilConcludes(self.write, timeStr + " " + msgStr)
++        util.untilConcludes(self.write, msgStr)
+         util.untilConcludes(self.flush)  # Hoorj!
+ 
+ 

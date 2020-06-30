@@ -1,8 +1,8 @@
 diff --git a/libopkg/opkg_install.c b/libopkg/opkg_install.c
-index 70b6710..769c67f 100644
+index 666609f..997d469 100644
 --- a/libopkg/opkg_install.c
 +++ b/libopkg/opkg_install.c
-@@ -226,7 +226,15 @@ static int prerm_upgrade_old_pkg(pkg_t * pkg, pkg_t * old_pkg)
+@@ -228,7 +228,15 @@ static int prerm_upgrade_old_pkg(pkg_t * pkg, pkg_t * old_pkg)
  
      sprintf_alloc(&script_args, "upgrade %s", new_version);
      free(new_version);
@@ -19,7 +19,7 @@ index 70b6710..769c67f 100644
      free(script_args);
      if (err != 0) {
          opkg_msg(NOTICE, "prerm script for package \"%s\" failed\n",
-@@ -637,7 +645,15 @@ static int postrm_upgrade_old_pkg(pkg_t * pkg, pkg_t * old_pkg)
+@@ -663,7 +671,15 @@ static int postrm_upgrade_old_pkg(pkg_t * pkg, pkg_t * old_pkg)
  
      sprintf_alloc(&script_args, "upgrade %s", new_version);
      free(new_version);

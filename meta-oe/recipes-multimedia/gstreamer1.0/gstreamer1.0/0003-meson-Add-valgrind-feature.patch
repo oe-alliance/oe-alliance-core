@@ -1,4 +1,4 @@
-From f6c7973c03d9ba7dab60c496e768c5e6c4ee824c Mon Sep 17 00:00:00 2001
+From 2de9705b5e8e4708a7953b33666736c2f4e0bebd Mon Sep 17 00:00:00 2001
 From: Carlos Rafael Giani <crg7475@mailbox.org>
 Date: Sun, 20 Oct 2019 10:36:44 +0200
 Subject: [PATCH] meson: Add valgrind feature
@@ -11,24 +11,25 @@ add more Valgrind specific configure log output.
 Upstream-Status: Pending
 
 Signed-off-by: Carlos Rafael Giani <crg7475@mailbox.org>
+
 ---
  meson.build       | 23 ++++++++++++++++++++++-
  meson_options.txt |  1 +
  2 files changed, 23 insertions(+), 1 deletion(-)
 
 diff --git a/meson.build b/meson.build
-index b55ecc5..4751761 100644
+index 255de1306..404cce0fd 100644
 --- a/meson.build
 +++ b/meson.build
-@@ -199,7 +199,6 @@ check_headers = [
+@@ -200,7 +200,6 @@ check_headers = [
    'sys/wait.h',
    'ucontext.h',
    'unistd.h',
 -  'valgrind/valgrind.h',
    'sys/resource.h',
+   'sys/uio.h',
  ]
- 
-@@ -214,6 +213,28 @@ foreach h : check_headers
+@@ -216,6 +215,28 @@ foreach h : check_headers
    endif
  endforeach
  
@@ -58,10 +59,10 @@ index b55ecc5..4751761 100644
    cdata.set('HAVE_TM_GMTOFF', 1)
  endif
 diff --git a/meson_options.txt b/meson_options.txt
-index e7ff7ba..8afde39 100644
+index 72c3997e2..e78a3ca6e 100644
 --- a/meson_options.txt
 +++ b/meson_options.txt
-@@ -19,6 +19,7 @@ option('memory-alignment', type: 'combo',
+@@ -18,6 +18,7 @@ option('memory-alignment', type: 'combo',
  
  # Feature options
  option('check', type : 'feature', value : 'auto', description : 'Build unit test libraries')
@@ -69,6 +70,3 @@ index e7ff7ba..8afde39 100644
  option('libunwind', type : 'feature', value : 'auto', description : 'Use libunwind to generate backtraces')
  option('libdw', type : 'feature', value : 'auto', description : 'Use libdw to generate better backtraces from libunwind')
  option('dbghelp', type : 'feature', value : 'auto', description : 'Use dbghelp to generate backtraces')
--- 
-2.17.1
-

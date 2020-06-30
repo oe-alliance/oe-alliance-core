@@ -1,6 +1,6 @@
---- a/libopkg/pkg_depends.c	2015-09-26 21:34:07.324075015 +0200
-+++ b/libopkg/pkg_depends.c	2015-09-26 21:35:37.840073464 +0200
-@@ -943,15 +943,15 @@
+--- a/libopkg/pkg_depends.c
++++ b/libopkg/pkg_depends.c
+@@ -410,15 +410,15 @@ version_constraint_t str_to_constraint(const char **str)
      /* should these be here to support deprecated designations; dpkg does */
      else if (strncmp(*str, "<", 1) == 0) {
          *str += 1;

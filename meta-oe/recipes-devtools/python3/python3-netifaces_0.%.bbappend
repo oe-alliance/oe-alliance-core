@@ -1,9 +1,7 @@
-FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
+FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
-SRC_URI_append += "\
-	${@bb.utils.contains("MACHINE_FEATURES", "legacykernel", "file://define-RTNL_FAMILY_MAX.patch", "", d)} \
-	"
-
-SRC_URI_append_sh4 += "file://define-RTNL_FAMILY_MAX.patch"
+SRC_URI_append = " \
+        ${@bb.utils.contains("MACHINE_FEATURES", "legacykernel", "file://define-RTNL_FAMILY_MAX.patch", "", d)} \
+"
 
 include ${PYTHON_PN}-package-split.inc

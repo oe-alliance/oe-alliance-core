@@ -1,0 +1,15 @@
+diff --git a/dbrandom.c b/dbrandom.c
+index d7340a3..4882b52 100644
+--- a/dbrandom.c
++++ b/dbrandom.c
+@@ -29,6 +29,10 @@
+ #include "dbrandom.h"
+ #include "runopts.h"
+ 
++#ifndef GRND_NONBLOCK
++#define GRND_NONBLOCK	0x0001
++#endif
++
+ /* this is used to generate unique output from the same hashpool */
+ static uint32_t counter = 0;
+ /* the max value for the counter, so it won't integer overflow */
