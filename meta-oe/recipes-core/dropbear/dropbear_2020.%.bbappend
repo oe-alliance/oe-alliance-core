@@ -1,7 +1,9 @@
 inherit upx-compress
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
-SRC_URI += "file://localoptions.h"
+SRC_URI_append = " file://localoptions.h \
+        ${@bb.utils.contains("MACHINE_FEATURES", "legacykernel", "file://add-missing-GRND-NONBLOCK-def.patch", "",d)} \
+"
 
 do_configure_prepend() {
     # Apply custom configuration
