@@ -1,16 +1,16 @@
 diff --git a/sysdeps/unix/sysv/linux/bits/ptrace-shared.h b/sysdeps/unix/sysv/linux/bits/ptrace-shared.h
-index 960b101f94..81358ad607 100644
+index eafbbbc6fc..f5aaaff46a 100644
 --- a/sysdeps/unix/sysv/linux/bits/ptrace-shared.h
 +++ b/sysdeps/unix/sysv/linux/bits/ptrace-shared.h
-@@ -52,6 +52,7 @@ enum __ptrace_eventcodes
-   PTRACE_EVENT_STOP	= 128
+@@ -61,6 +61,7 @@ enum __ptrace_get_syscall_info_op
+   PTRACE_SYSCALL_INFO_SECCOMP = 3
  };
  
 +#ifndef PTRACE_PEEKSIGINFO
  /* Arguments for PTRACE_PEEKSIGINFO.  */
  struct __ptrace_peeksiginfo_args
  {
-@@ -59,6 +60,7 @@ struct __ptrace_peeksiginfo_args
+@@ -68,6 +69,7 @@ struct __ptrace_peeksiginfo_args
    __uint32_t flags;	/* Flags for peeksiginfo.  */
    __int32_t nr;		/* How many siginfos to take.  */
  };
