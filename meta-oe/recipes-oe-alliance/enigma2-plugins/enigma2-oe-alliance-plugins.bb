@@ -31,7 +31,7 @@ PROVIDES += " \
     enigma2-plugin-extensions-openuitzendinggemist \
     enigma2-plugin-systemplugins-satipclient \
     enigma2-plugin-systemplugins-terrestrialscan \
-    enigma2-plugin-systemplugins-gigabluebluetoothsetup \
+    enigma2-plugin-systemplugins-bluetoothsetup \
     enigma2-plugin-extensions-chromium \
     enigma2-plugin-extensions-tunerserver \
     ${@bb.utils.contains('MACHINE_FEATURES', 'operahbbtv', 'enigma2-plugin-extensions-hbbtv ' , ' ', d)} \
@@ -68,7 +68,10 @@ DEPENDS = "\
     bluez-alsa \
     ${@bb.utils.contains('MACHINE_FEATURES', 'legacykernel', '' , 'hostapd bridge-utils', d)} \
     wvdial wvstreams \
+    ${@bb.utils.contains("MACHINE_FEATURES", "chromiumos", "chromium-browser", "", d)} \
     "
+
+
 
 DESCRIPTION_enigma2-plugin-systemplugins-audioeffect = "Audio Effect setup"
 DESCRIPTION_enigma2-plugin-extensions-btdevicesmanager = "this is bt devices manger to pair e.x keyboard or mouse"
@@ -127,8 +130,8 @@ DESCRIPTION_enigma2-plugin-extensions-rcuselect = "Change Remote for Wetek"
 DESCRIPTION_enigma2-plugin-extensions-rezap = "ReZap Sync Tool for Wetek"
 DESCRIPTION_enigma2-plugin-extensions-piconsupdater = "Download and install new Picons for your current bouquet channels. PiconsUpdater coded by svox and jbleyel, idea by arn354 and picons by mike99"
 RDEPENDS_enigma2-plugin-extensions-piconsupdater = "${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-imaging ${PYTHON_PN}-textutils", "${PYTHON_PN}-pillow", d)} ${PYTHON_PN}-io ${PYTHON_PN}-compression pngquant"
-DESCRIPTION_enigma2-plugin-systemplugins-gigabluebluetoothsetup = "GigaBlue bluetooth plugin"
-RDEPENDS_enigma2-plugin-systemplugins-gigabluebluetoothsetup = "libcurl libsqlite3 libssl libcrypto libudev libusb-compat gb-bluetooth-util"
+DESCRIPTION_enigma2-plugin-systemplugins-bluetoothsetup = "GigaBlue bluetooth plugin"
+RDEPENDS_enigma2-plugin-systemplugins-bluetoothsetup = "libcurl libsqlite3 libssl libcrypto libudev libusb-compat gb-bluetooth-util"
 DESCRIPTION_enigma2-plugin-extensions-chromium = "E2 Chromium Plugin"
 RDEPENDS_enigma2-plugin-extensions-chromium = "chromium-browser"
 
