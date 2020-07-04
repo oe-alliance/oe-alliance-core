@@ -35,7 +35,7 @@ do_install_append() {
 PACKAGES = "${PN}"
 
 FILES_${PN} = " \
-    ${libdir}/${PYTHON_DIR}/site-packages/streamlink/*.pyo \
-    ${libdir}/${PYTHON_DIR}/site-packages/streamlink/*/*.pyo \
-    ${libdir}/${PYTHON_DIR}/site-packages/streamlink/*/*/*.pyo \
+    ${libdir}/${PYTHON_DIR}/site-packages/streamlink/*.py \
+    ${libdir}/${PYTHON_DIR}/site-packages/streamlink/*/*.py \
+    ${libdir}/${PYTHON_DIR}/site-packages/streamlink/*/*/*.py \
     "
