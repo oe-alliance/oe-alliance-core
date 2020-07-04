@@ -30,6 +30,10 @@ EXTRA_OECONF = "\
     STAGING_LIBDIR=${STAGING_LIBDIR} \
 "
 
+do_configure_prepend() {
+sed -i 's/python/python2/g' ${S}/xml2po.py
+}
+
 pkg_postinst_${PN}() {
 #!/bin/sh 
 if  [ -f /usr/lib/enigma2/python/Plugins/Extensions/EtPortal/adultpassword ] ; then
