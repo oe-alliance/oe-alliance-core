@@ -28,6 +28,7 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-extensions-gbipboxclient \
     enigma2-plugin-extensions-blurayplayer \
     enigma2-plugin-extensions-sdgradio \
+    enigma2-plugin-extensions-epgimport \
     enigma2-plugin-systemplugins-autobouquetsmaker \
     enigma2-plugin-skincomponents-bmediacenter-ax-blue-skin \
     enigma2-plugin-skincomponents-mediaportal-ax-blue-skin \
@@ -46,7 +47,6 @@ RRECOMMENDS_${PN} = "\
 #disble addons not python3 ready
 #    oe-alliance-skins 
 #    enigma2-skins 
-#    enigma2-plugin-extensions-epgimport 
 #    enigma2-plugin-skins-glamouraurafhd-atv 
 #    enigma2-plugin-skincomponents-mediaportal-atv-metrix-style 
 # remove close cant update to py3
