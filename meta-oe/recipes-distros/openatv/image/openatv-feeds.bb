@@ -13,13 +13,14 @@ inherit packagegroup
 
 RRECOMMENDS_${PN} = "\
     enigma2-pliplugins \
-    enigma2-plugin-extensions-project-valerie \
+    enigma2-display-skins \
+    openatv-skinparts \
+    openatv-picons-meta \
     enigma2-plugin-systemplugins-crossepg \
     curlftpfs \
     cdfs \
     openssl-old \
     enigma2-plugin-extensions-enhancedmoviecenter \
-    enigma2-plugin-extensions-cooltvguide \
     enigma2-plugin-extensions-bmediacenter \
     enigma2-plugin-skins-dmcconcinnityhd \
     enigma2-plugin-settings-defaultsat \
@@ -36,15 +37,11 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-skins-multibox-fhd-4atv \
     enigma2-plugin-skins-ultimate-hd-4atv \
     enigma2-plugin-skins-anadol \
-    ${@bb.utils.contains("MACHINE_BRAND", "AZBOX", "enigma2-plugin-extensions-azplay enigma2-plugin-extensions-aziptv", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "skins1080", "hd-skins-meta", "", d)} \
     "
 
 #disble addons not python3 ready
 #    oe-alliance-skins 
-#    enigma2-display-skins 
-#    openatv-picons-meta 
-#    openatv-skinparts 
 #    enigma2-skins 
 #    enigma2-plugin-extensions-epgimport 
 #    enigma2-plugin-extensions-sdgradio 
@@ -52,6 +49,9 @@ RRECOMMENDS_${PN} = "\
 #    enigma2-plugin-skins-glamouraurafhd-atv 
 #    enigma2-plugin-skincomponents-mediaportal-atv-metrix-style 
 #    enigma2-plugin-extensions-blurayplayer 
+# remove close cant update to py3
+#    enigma2-plugin-extensions-cooltvguide
+#    enigma2-plugin-extensions-project-valerie
 
 RRECOMMENDS_${PN}_append_gb800solo = "enigma2-plugin-extensions-gbipboxclient"
 RRECOMMENDS_${PN}_append_gb7325 = "enigma2-plugin-extensions-gbipboxclient"
