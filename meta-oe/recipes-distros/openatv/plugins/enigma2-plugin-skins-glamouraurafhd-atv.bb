@@ -12,7 +12,7 @@ VER = "14.x"
 
 RRECOMMENDS_${PN} = "enigma2-plugin-extensions-weather_msn enigma2-plugin-extensions-bitrate"
 
-SRC_URI = "git://github.com/MCelliotG/GlamourAuraFHD-ATV-skin.git;protocol=git"
+SRC_URI = "git://github.com/oe-mirrors/GlamourAuraFHD-ATV-skin.git;protocol=git;branch=python3"
 
 FILES_${PN} = "/usr/*"
 
