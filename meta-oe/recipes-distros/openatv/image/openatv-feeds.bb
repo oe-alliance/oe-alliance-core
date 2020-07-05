@@ -26,6 +26,7 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-settings-defaultsat \
     enigma2-plugin-extensions-specialjump \
     enigma2-plugin-extensions-gbipboxclient \
+    enigma2-plugin-extensions-blurayplayer  \
     enigma2-plugin-systemplugins-autobouquetsmaker \
     enigma2-plugin-skincomponents-bmediacenter-ax-blue-skin \
     enigma2-plugin-skincomponents-mediaportal-ax-blue-skin \
@@ -37,6 +38,7 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-skins-multibox-fhd-4atv \
     enigma2-plugin-skins-ultimate-hd-4atv \
     enigma2-plugin-skins-anadol \
+    enigma2-plugin-skins-iflatfhd \
     ${@bb.utils.contains("MACHINE_FEATURES", "skins1080", "hd-skins-meta", "", d)} \
     "
 
@@ -45,10 +47,8 @@ RRECOMMENDS_${PN} = "\
 #    enigma2-skins 
 #    enigma2-plugin-extensions-epgimport 
 #    enigma2-plugin-extensions-sdgradio 
-#    enigma2-plugin-skins-iflatfhd 
 #    enigma2-plugin-skins-glamouraurafhd-atv 
 #    enigma2-plugin-skincomponents-mediaportal-atv-metrix-style 
-#    enigma2-plugin-extensions-blurayplayer 
 # remove close cant update to py3
 #    enigma2-plugin-extensions-cooltvguide
 #    enigma2-plugin-extensions-project-valerie
