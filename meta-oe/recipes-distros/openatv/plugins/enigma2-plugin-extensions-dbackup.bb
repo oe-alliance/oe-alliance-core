@@ -13,7 +13,7 @@ PKGV = "0.65+git${GITPKGV}"
 VER ="0.65"
 PR = "r0"
 
-SRC_URI="git://github.com/openatv/enigma2-plugin-extensions-dbackup.git"
+SRC_URI="git://github.com/openatv/enigma2-plugin-extensions-dbackup.git;branch=python3"
 
 S = "${WORKDIR}/git"
 
