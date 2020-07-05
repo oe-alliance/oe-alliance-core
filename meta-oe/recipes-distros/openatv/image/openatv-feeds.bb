@@ -26,6 +26,16 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-extensions-specialjump \
     enigma2-plugin-extensions-gbipboxclient \
     enigma2-plugin-systemplugins-autobouquetsmaker \
+    enigma2-plugin-skincomponents-bmediacenter-ax-blue-skin \
+    enigma2-plugin-skincomponents-mediaportal-ax-blue-skin \
+    enigma2-plugin-skincomponents-mediaportal-blue-line-skin \
+    enigma2-plugin-skincomponents-mediaportal-smoke-hd-skin \
+    enigma2-plugin-skincomponents-skyrecorder-fhd-skin \
+    enigma2-plugin-skins-ax-blue-fhd-4atv \
+    enigma2-plugin-skins-blue-line-oe-4atv \
+    enigma2-plugin-skins-multibox-fhd-4atv \
+    enigma2-plugin-skins-ultimate-hd-4atv \
+    enigma2-plugin-skins-anadol \
     ${@bb.utils.contains("MACHINE_BRAND", "AZBOX", "enigma2-plugin-extensions-azplay enigma2-plugin-extensions-aziptv", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "skins1080", "hd-skins-meta", "", d)} \
     "
@@ -39,18 +49,8 @@ RRECOMMENDS_${PN} = "\
 #    enigma2-plugin-extensions-epgimport 
 #    enigma2-plugin-extensions-sdgradio 
 #    enigma2-plugin-skins-iflatfhd 
-#    enigma2-plugin-skins-ax-blue-fhd-4atv 
-#    enigma2-plugin-skins-blue-line-oe-4atv 
-#    enigma2-plugin-skins-multibox-fhd-4atv 
-#    enigma2-plugin-skins-ultimate-hd-4atv 
-#    enigma2-plugin-skins-anadol 
 #    enigma2-plugin-skins-glamouraurafhd-atv 
-#    enigma2-plugin-skincomponents-bmediacenter-ax-blue-skin 
-#    enigma2-plugin-skincomponents-mediaportal-ax-blue-skin 
-#    enigma2-plugin-skincomponents-mediaportal-blue-line-skin 
 #    enigma2-plugin-skincomponents-mediaportal-atv-metrix-style 
-#    enigma2-plugin-skincomponents-mediaportal-smoke-hd-skin 
-#    enigma2-plugin-skincomponents-skyrecorder-fhd-skin 
 #    enigma2-plugin-extensions-blurayplayer 
 
 RRECOMMENDS_${PN}_append_gb800solo = "enigma2-plugin-extensions-gbipboxclient"
