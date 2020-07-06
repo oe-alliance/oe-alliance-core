@@ -1,0 +1,12 @@
+diff -uNr a/arch/arm/include/asm/memory.h b/arch/arm/include/asm/memory.h
+--- a/arch/arm/include/asm/memory.h	2020-07-06 11:29:13.594922543 +0800
++++ b/arch/arm/include/asm/memory.h	2020-07-06 15:55:14.653901007 +0800
+@@ -50,7 +50,7 @@
+  * and PAGE_OFFSET - it must be within 32MB of the kernel text.
+  */
+ #ifndef CONFIG_THUMB2_KERNEL
+-#define MODULES_VADDR		(PAGE_OFFSET - 20*1024*1024)
++#define MODULES_VADDR		(PAGE_OFFSET - 24*1024*1024)
+ #else
+ /* smaller range for Thumb-2 symbols relocation (2^24)*/
+ #define MODULES_VADDR		(PAGE_OFFSET - SZ_8M)
