@@ -49,7 +49,6 @@ SRC_URI = "http://source.mynonpublic.com/dinobot/dinobot-linux-${PV}-${SRCDATE}.
     file://0004-makefile-disable-warnings.patch \
     file://0005-kallsyms-allow-bigger-ksym_name_len.patch \
     file://cmav2.patch \
-    file://extend_modules_space.patch \
 "
 
 S = "${WORKDIR}/linux-${PV}"
