@@ -15,7 +15,7 @@ DEPENDS = "enigma2-plugin-drivers-usbserial enigma2-plugin-systemplugins-radioti
 #DEPENDS = "enigma2-plugin-drivers-usbserial enigma2-plugin-systemplugins-hrtunerproxy"
 
 #disbale addons not python3 ready
-#    packagegroup-openplugins 
+ 
 #    enigma2-plugin-extensions-moviemanager 
 #    enigma2-plugin-extensions-e2iplayer 
 #    enigma2-plugin-extensions-e2iplayer-deps 
@@ -25,6 +25,7 @@ DEPENDS = "enigma2-plugin-drivers-usbserial enigma2-plugin-systemplugins-radioti
 #    enigma2-plugin-systemplugins-serviceapp 
 
 RDEPENDS_${PN} = " \
+    packagegroup-openplugins \
     bootlogos-enigma2-meta \
     dvb-usb-drivers-meta \
     network-usb-drivers-meta \

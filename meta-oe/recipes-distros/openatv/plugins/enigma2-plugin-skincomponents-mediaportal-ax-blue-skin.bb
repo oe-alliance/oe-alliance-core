@@ -13,7 +13,7 @@ PKGV = "3.0"
 VER ="3.0"
 PR = "r3"
 
-SRC_URI="git://github.com/stein17/Skins-for-Plugins-by-stein17.git"
+SRC_URI="git://github.com/stein17/Skins-for-Plugins-by-stein17.git;branch=python3"
 
 S = "${WORKDIR}/git/Mediaportal-AX-Blue-Skin"
 

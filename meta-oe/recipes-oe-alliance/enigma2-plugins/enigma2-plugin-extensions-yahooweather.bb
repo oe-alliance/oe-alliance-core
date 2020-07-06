@@ -22,6 +22,11 @@ EXTRA_OECONF = " \
     STAGING_LIBDIR=${STAGING_LIBDIR} \
 "
 
+do_configure_prepend() {
+sed -i 's/python/python2/g' ${S}/xml2po.py
+}
+
+
 PARALLEL_MAKEINST = ""
 
 inherit autotools-brokensep gettext
