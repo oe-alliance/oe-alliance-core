@@ -134,9 +134,6 @@ PR = "r1"
 
 SRC_URI = "${OEA_PLUGINS_URI}"
 
-SRC_URI_append = " \
-    file://0001-osmio4k-osmio4kplus-osmini4k-switch-to-a7-build.patch \
-    "
 
 EXTRA_OECONF = " \
     BUILD_SYS=${BUILD_SYS} \
