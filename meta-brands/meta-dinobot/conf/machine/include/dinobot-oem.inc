@@ -238,6 +238,9 @@ MACHINE_EXTRA_RRECOMMENDS += " \
     gstreamer1.0-plugin-dvbmediasink \
     gstreamer1.0-libav \
     ${@bb.utils.contains('MACHINEBUILD', 'iziboxx3', 'enigma2-plugin-extensions-gbipboxclient' , '', d)} \
+    ${@bb.utils.contains('MACHINE', 'u41', 'dinobot-cpu-scaling' , '', d)} \
+    ${@bb.utils.contains('MACHINE', 'u42', 'dinobot-cpu-scaling' , '', d)} \
+    ${@bb.utils.contains('MACHINE', 'u43', 'dinobot-cpu-scaling' , '', d)} \
     "
 
 DVBPROVIDER = "kernel"
