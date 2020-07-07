@@ -60,12 +60,8 @@ pkg_postinst_${PN} () {
 	if [ -e ${src} ] ; then
 		tz=$(sed -e 's:#.*::' -e 's:[[:space:]]*::g' -e '/^$/d' "${src}")
 	fi
-	
-	if [ -z "${tz}" ] ; then
-		exit 0
-	fi
-	
-	if [ ! -e "$D${datadir}/zoneinfo/${tz}" ] ; then
+
+	if [ ! -z "${tz}" -a ! -e "$D${datadir}/zoneinfo/${tz}" ] ; then
 		echo "You have an invalid TIMEZONE setting in ${src}"
 		echo "Your ${etc_lt} has been reset to Universal; enjoy!"
 		tz="Universal"
@@ -81,14 +77,10 @@ pkg_postinst_${PN} () {
 # in most time zones in the base package
 
 TZ_PACKAGES = " \
-    tzdata-core tzdata-misc tzdata-africa \
+    tzdata-core tzdata-misc tzdata-posix tzdata-right tzdata-africa \
     tzdata-americas tzdata-antarctica tzdata-arctic tzdata-asia \
     tzdata-atlantic tzdata-australia tzdata-europe tzdata-pacific"
-
-# to save some space  - posix and right dirs will not be present in rootfs
-# move tzdata-posix and/or tzdata-right to TZ_PACKAGES if there will be need for posix and right
-# directories to be present in rootfs in future
-PACKAGES = "${TZ_PACKAGES} ${PN} tzdata-posix tzdata-right"
+PACKAGES = "${TZ_PACKAGES} ${PN}"
 
 FILES_tzdata-africa += "${datadir}/zoneinfo/Africa/*"
 RPROVIDES_tzdata-africa = "tzdata-africa"
