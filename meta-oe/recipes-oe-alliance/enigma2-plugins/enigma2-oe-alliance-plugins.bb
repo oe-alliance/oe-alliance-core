@@ -34,6 +34,7 @@ PROVIDES += " \
     enigma2-plugin-systemplugins-bluetoothsetup \
     enigma2-plugin-extensions-chromium \
     enigma2-plugin-extensions-tunerserver \
+    enigma2-plugin-extensions-libvupldemo \
     ${@bb.utils.contains('MACHINE_FEATURES', 'operahbbtv', 'enigma2-plugin-extensions-hbbtv ' , ' ', d)} \
     enigma2-plugin-systemplugins-transcodingsetup \
     enigma2-plugin-systemplugins-micomupgrade \
@@ -134,6 +135,8 @@ DESCRIPTION_enigma2-plugin-systemplugins-bluetoothsetup = "GigaBlue bluetooth pl
 RDEPENDS_enigma2-plugin-systemplugins-bluetoothsetup = "libcurl libsqlite3 libssl libcrypto libudev libusb-compat gb-bluetooth-util"
 DESCRIPTION_enigma2-plugin-extensions-chromium = "E2 Chromium Plugin"
 RDEPENDS_enigma2-plugin-extensions-chromium = "chromium-browser"
+DESCRIPTION_enigma2-plugin-extensions-libvupldemo = "Plugin for libvupl Demo"
+RDEPENDS_enigma2-plugin-extensions-libvupldemo = "libvupl-example-cube"
 
 inherit autotools-brokensep gitpkgv ${PYTHON_PN}native gettext
 
