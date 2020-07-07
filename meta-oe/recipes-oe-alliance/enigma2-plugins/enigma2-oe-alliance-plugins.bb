@@ -73,6 +73,8 @@ DEPENDS = "\
     wvdial wvstreams \
     ${@bb.utils.contains("MACHINE_FEATURES", "chromiumos", "chromium-browser", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "gbbluetooth", "gb-bluetooth-util", "", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "hbbtv-browser-webkit", "vuplus-webkithbbtv-dumpait webkit-hbbtv-browser", "", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "vuglesdemo", "libvupl-example-cube", "", d)} \
     "
 
 
