@@ -14,7 +14,7 @@ PR = "r2"
 VER ?= ""
 HAVE_GLES ?= "virtual/libgles2"
 
-SRC_URI = "git://github.com/oe-alliance/e2plugins.git;protocol=git"
+SRC_URI = "git://github.com/oe-alliance/e2plugins.git;protocol=git;branch=python3"
 
 RDEPENDS_${PN}  = "qtwebkit ${HAVE_GLES} ${PYTHON_PN}-netifaces" 
 
