@@ -73,6 +73,7 @@ DEPENDS = "\
     wvdial wvstreams \
     ${@bb.utils.contains("MACHINE_FEATURES", "chromiumos", "chromium-browser", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "gbbluetooth", "gb-bluetooth-util", "", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "vubluetooth", "vuplus-bluetooth-util", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "webkithbbtv", "vuplus-webkithbbtv-dumpait webkit-hbbtv-browser", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "vuglesdemo", "libvupl-example-cube", "", d)} \
     "
@@ -135,8 +136,8 @@ DESCRIPTION_enigma2-plugin-extensions-rcuselect = "Change Remote for Wetek"
 DESCRIPTION_enigma2-plugin-extensions-rezap = "ReZap Sync Tool for Wetek"
 DESCRIPTION_enigma2-plugin-extensions-piconsupdater = "Download and install new Picons for your current bouquet channels. PiconsUpdater coded by svox and jbleyel, idea by arn354 and picons by mike99"
 RDEPENDS_enigma2-plugin-extensions-piconsupdater = "${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-imaging ${PYTHON_PN}-textutils", "${PYTHON_PN}-pillow", d)} ${PYTHON_PN}-io ${PYTHON_PN}-compression pngquant"
-DESCRIPTION_enigma2-plugin-systemplugins-bluetoothsetup = "GigaBlue bluetooth plugin"
-RDEPENDS_enigma2-plugin-systemplugins-bluetoothsetup = "libcurl libsqlite3 libssl libcrypto libudev libusb-compat gb-bluetooth-util"
+DESCRIPTION_enigma2-plugin-systemplugins-bluetoothsetup = "E2 bluetooth plugin"
+RDEPENDS_enigma2-plugin-systemplugins-bluetoothsetup = "libcurl libsqlite3 libssl libcrypto libudev libusb-compat libusb1 ${@bb.utils.contains("MACHINE_FEATURES", "vubluetooth", "vuplus-bluetooth-util", "", d)} ${@bb.utils.contains("MACHINE_FEATURES", "gbbluetooth", "gb-bluetooth-util", "", d)} "
 DESCRIPTION_enigma2-plugin-extensions-chromium = "E2 Chromium Plugin"
 RDEPENDS_enigma2-plugin-extensions-chromium = "chromium-browser"
 DESCRIPTION_enigma2-plugin-extensions-libvupldemo = "Plugin for libvupl Demo"
