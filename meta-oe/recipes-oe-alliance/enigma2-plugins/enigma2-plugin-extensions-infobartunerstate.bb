@@ -2,25 +2,22 @@ SUMMARY = "InfoBarTunerState Extentions"
 MAINTAINER = "Betonme"
 SECTION = "extra"
 PRIORITY = "optional"
-
+DEPENDS = "${PYTHON_PN}-six-native"
 require conf/license/license-gplv2.inc
 
-inherit gitpkgv ${PYTHON_PN}native
+inherit autotools gitpkgv ${PYTHON_PN}native
 SRCREV = "${AUTOREV}"
 PV = "1.1.+git${SRCPV}"
 PKGV = "1.1.+git${GITPKGV}"
 PR = "r0"
 
-SRC_URI="git://github.com/betonme/e2openplugin-InfoBarTunerState.git"
+SRC_URI="git://github.com/betonme/e2openplugin-InfoBarTunerState.git;branch=python3"
 
 S = "${WORKDIR}/git"
 
 PACKAGES =+ "${PN}-po"
 FILES_${PN} = "/etc /usr/lib"
-FILES_${PN}-src = "/usr/lib/enigma2/python/Plugins/Extensions/InfoBarTunerState/*.py"
 FILES_${PN}-po = "/usr/lib/enigma2/python/Plugins/Extensions/InfoBarTunerState/locale/*.po"
-
-inherit autotools
 
 EXTRA_OECONF = "\
     --with-libsdl=no --with-boxtype=${MACHINE} --with-po \
