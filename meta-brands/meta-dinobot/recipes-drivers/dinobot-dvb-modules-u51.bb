@@ -1,5 +1,5 @@
 KV = "4.4.35"
-SRCDATE = "2020710"
+SRCDATE = "20200710"
 
 require dinobot-dvb-modules2.inc
 
