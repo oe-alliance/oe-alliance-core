@@ -1,4 +1,4 @@
-SRCDATE = "2020710"
+SRCDATE = "20200710"
 
 require dinobot-libs2.inc
 
