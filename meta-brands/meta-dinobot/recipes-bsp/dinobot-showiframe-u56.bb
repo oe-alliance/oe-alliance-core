@@ -7,7 +7,7 @@ RDEPENDS_${PN} = "libjpeg-turbo"
 
 COMPATIBLE_MACHINE = "^(u56)$"
 
-SRCDATE = "2020710"
+SRCDATE = "20200710"
 
 PV = "${SRCDATE}"
 PR = "r0"
