@@ -10,7 +10,7 @@ PV = "14.x+git${SRCPV}"
 PKGV = "14.x+git${GITPKGV}"
 VER = "14.x"
 
-RRECOMMENDS_${PN} = "enigma2-plugin-extensions-weather_msn enigma2-plugin-extensions-bitrate"
+RDEPENDS_${PN} = "enigma2-plugin-extensions-weathermsn enigma2-plugin-extensions-bitrate"
 
 SRC_URI = "git://github.com/MCelliotG/GlamourAuraFHD-ATV-skin.git;protocol=git"
 
