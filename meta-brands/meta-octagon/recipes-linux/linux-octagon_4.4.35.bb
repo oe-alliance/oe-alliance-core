@@ -39,7 +39,6 @@ SRC_URI += "http://source.mynonpublic.com/octagon/octagon-linux-${PV}-${SRCDATE}
     file://0006-dvb-media-tda18250-support-for-new-silicon-tuner.patch \
     file://0007-dvb-mn88472-staging.patch \
     file://mn88472_reset_stream_ID_reg_if_no_PLP_given.patch \
-    file://extend_modules_space.patch \
 "
 
 SRC_URI_append_sf8008m += " \
