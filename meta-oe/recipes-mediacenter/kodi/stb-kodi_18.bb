@@ -74,6 +74,9 @@ DEPENDS += " \
             gstreamer1.0-plugins-base \
           "
 
+# fixme config add python2 we must find a solution
+RDEPENDS_${PN}_remove = "libpython2"
+
 #SRCREV = "ded117bbd636fc88802599a590e26b1d0fd7c609" #18.3
 #SRCREV = "61d162be4091bf7154214c8422abd0fdf6cedc45" #18.4
 #SRCREV = "103415d16038a57f59842cac72d4929389f224a9" #18.5
