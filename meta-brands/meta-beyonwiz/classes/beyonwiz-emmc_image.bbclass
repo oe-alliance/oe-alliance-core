@@ -10,7 +10,7 @@ do_image_beyonwizemmc[depends] = " \
     beyonwiz-buildimage-native:do_populate_sysroot \
     "
 
-IMAGE_CMD_beyonwiznemmc () {
+IMAGE_CMD_beyonwizemmc () {
     mkdir -p ${IMGDEPLOYDIR}/userdata
     mkdir -p ${IMGDEPLOYDIR}/userdata/linuxrootfs1
     mkdir -p ${IMGDEPLOYDIR}/userdata/linuxrootfs2
