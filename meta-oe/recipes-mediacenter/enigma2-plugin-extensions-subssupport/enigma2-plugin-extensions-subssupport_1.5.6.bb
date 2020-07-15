@@ -6,7 +6,12 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 
 RDEPENDS_${PN} = "${PYTHON_PN}-xmlrpc ${PYTHON_PN}-compression ${PYTHON_PN}-codecs ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-zlib", "", d)} ${PYTHON_PN}-difflib unrar"
 
-SRCREV = "98526225480d922e796e5de3d8c88cdb10739506"
+inherit gitpkgv
+
+SRCREV = "${AUTOREV}"
+PV = "1.5.6+git${SRCPV}"
+PKGV = "1.5.6+git${GITPKGV}"
+VER = "1.5.6"
 SRC_URI = "git://github.com/oe-mirrors/subssupport;protocol=git;branch=master"
 
 S = "${WORKDIR}/git"
