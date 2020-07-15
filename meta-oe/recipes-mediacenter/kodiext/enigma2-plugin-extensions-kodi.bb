@@ -9,7 +9,7 @@ RDEPENDS_${PN} += "virtual/kodi"
 
 RRECOMMENDS_${PN} = "${@bb.utils.contains("MACHINE_FEATURES", "no-subssupport", "" , "enigma2-plugin-extensions-subssupport", d)}"
 
-SRCREV = "241a5aabf50aa21ed06c8180e854a65ebec47790"
+SRCREV = "b67afcbb9a5dde260eb25d6e7b15168d3c922ade"
 SRC_URI = "git://github.com/oe-mirrors/kodiext;protocol=git;branch=master \
         file://0001-add-subtitleSelection-option.patch \
         file://advancedsettings.xml \

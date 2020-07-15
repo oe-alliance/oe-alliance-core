@@ -86,7 +86,7 @@ SRCREV = "0442d7060875ff5da7d028dea918054b28d6c80a"
 # 'patch' doesn't support binary diffs
 PATCHTOOL = "git"
 
-PR = "r14"
+PR = "r15"
 
 PV = "18.7-gitr${SRCPV}"
 SRC_URI = "git://github.com/xbmc/xbmc.git;protocol=https;branch=Leia \
@@ -223,7 +223,7 @@ export HOST_SYS
 export BUILD_SYS
 export STAGING_LIBDIR
 export STAGING_INCDIR
-export PYTHON_DIR
+export ${PYTHON_DIR}
 
 export TARGET_PREFIX
 
