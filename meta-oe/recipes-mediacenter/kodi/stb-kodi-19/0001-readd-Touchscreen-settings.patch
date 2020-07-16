@@ -1,0 +1,64 @@
+From ba828b5b1b7c170bebde2ea771f2d16086b9c4b9 Mon Sep 17 00:00:00 2001
+From: Captain <captain.onboard@web.de>
+Date: Wed, 15 Jul 2020 20:34:38 +0200
+Subject: [PATCH] readd Touchscreen settings
+
+---
+ xbmc/settings/AdvancedSettings.cpp | 16 ++++++++++++++++
+ xbmc/settings/AdvancedSettings.h   |  6 ++++++
+ 2 files changed, 22 insertions(+)
+
+diff --git a/xbmc/settings/AdvancedSettings.cpp b/xbmc/settings/AdvancedSettings.cpp
+index ab678b9c44..4a120e1143 100644
+--- a/xbmc/settings/AdvancedSettings.cpp
++++ b/xbmc/settings/AdvancedSettings.cpp
+@@ -331,6 +331,12 @@ void CAdvancedSettings::Initialize()
+   m_iEdlCommBreakAutowait = 0;             // Off by default
+   m_iEdlCommBreakAutowind = 0;             // Off by default
+ 
++  // Touchscreen  default values if no adjustment is necessary
++  m_screenAlign_xOffset = 0;
++  m_screenAlign_yOffset= 0;
++  m_screenAlign_xStretchFactor = 1.0;
++  m_screenAlign_yStretchFactor = 1.0;
++
+   m_curlconnecttimeout = 30;
+   m_curllowspeedtime = 20;
+   m_curlretries = 2;
+@@ -925,6 +931,16 @@ void CAdvancedSettings::ParseSettingsFile(const std::string &file)
+     XMLUtils::GetInt(pElement, "commbreakautowind", m_iEdlCommBreakAutowind, -60, 60);        // Between -60 and 60 seconds
+   }
+ 
++  // Touchscreen
++  pElement = pRootElement->FirstChildElement("touchscreen");
++  if (pElement)
++  {
++    XMLUtils::GetInt(pElement, "x_offset", m_screenAlign_xOffset );
++    XMLUtils::GetInt(pElement, "y_offset", m_screenAlign_yOffset );
++    XMLUtils::GetFloat(pElement, "x_stretch_factor", m_screenAlign_xStretchFactor );
++    XMLUtils::GetFloat(pElement, "y_stretch_factor", m_screenAlign_yStretchFactor );
++  }
++
+   // picture exclude regexps
+   TiXmlElement* pPictureExcludes = pRootElement->FirstChildElement("pictureexcludes");
+   if (pPictureExcludes)
+diff --git a/xbmc/settings/AdvancedSettings.h b/xbmc/settings/AdvancedSettings.h
+index dd6e98e65a..b6cb9f8cd9 100644
+--- a/xbmc/settings/AdvancedSettings.h
++++ b/xbmc/settings/AdvancedSettings.h
+@@ -304,6 +304,12 @@ class CAdvancedSettings : public ISettingCallback, public ISettingsHandler
+     std::string m_cpuTempCmd;
+     std::string m_gpuTempCmd;
+ 
++    // Touchscreen
++    int m_screenAlign_xOffset;
++    int m_screenAlign_yOffset;
++    float m_screenAlign_xStretchFactor;
++    float m_screenAlign_yStretchFactor;
++
+     /* PVR/TV related advanced settings */
+     int m_iPVRTimeCorrection;     /*!< @brief correct all times (epg tags, timer tags, recording tags) by this amount of minutes. defaults to 0. */
+     int m_iPVRInfoToggleInterval; /*!< @brief if there are more than 1 pvr gui info item available (e.g. multiple recordings active at the same time), use this toggle delay in milliseconds. defaults to 3000. */
+-- 
+2.27.0.windows.1
+
