@@ -8,6 +8,8 @@ require conf/license/license-gplv2.inc
 
 PV = "${IMAGE_VERSION}"
 PR = "${BUILD_VERSION}"
+BB_HASH_IGNORE_MISMATCH = "1"
+
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 do_rootfs[deptask] = "do_rm_work"
