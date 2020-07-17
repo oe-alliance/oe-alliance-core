@@ -2,7 +2,7 @@ SECTION = "graphical"
 SUMMARY = "Graphviz - Graph Visualization Software"
 HOMEPAGE = "http://www.graphviz.org"
 LICENSE = "EPL-1.0"
-DEPENDS = "cairo pango expat intltool-native gtk-doc gettext-native python libtool"
+DEPENDS = "cairo pango expat intltool-native gtk-doc gettext-native ${PYTHON_PN} libtool"
 
 SRC_URI = " \
     http://www.graphviz.org/pub/graphviz/stable/SOURCES/graphviz-${PV}.tar.gz \
