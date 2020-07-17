@@ -1,5 +1,0 @@
-RDEPENDS_${PN} += "python"
-RDEPENDS_${PN}-tools += "python"
-RDEPENDS_${PN}_remove = "python3-core"
-RDEPENDS_python3-libcec += "python"
-RDEPENDS_python3-libcec_remove = "python3-core"
