@@ -1,0 +1,511 @@
+From dc8e0cb55f9e10f27a620f0241b6c0fd950e009d Mon Sep 17 00:00:00 2001
+From: Captain <captain.onboard@web.de>
+Date: Wed, 15 Jul 2020 18:07:08 +0200
+Subject: [PATCH] stb-settings-19
+
+---
+ addons/skin.estouchy/xml/Home.xml          |  2 +-
+ addons/skin.estuary/xml/Home.xml           |  2 +-
+ cmake/modules/FindFFMPEG.cmake             | 43 +++++++++-----
+ cmake/platform/linux/stb.cmake             | 69 ++++++++++++++++++++++
+ cmake/scripts/linux/ArchSetup.cmake        |  4 ++
+ cmake/treedata/common/stb.txt              |  1 +
+ system/settings/settings.xml               | 14 ++---
+ tools/Linux/kodi.sh.in                     | 46 ++++++++++++---
+ tools/depends/target/ffmpeg/CMakeLists.txt | 30 ++++++++++
+ tools/depends/target/libdvdcss/Makefile    |  4 +-
+ tools/depends/target/libdvdnav/Makefile    |  4 +-
+ tools/depends/target/libdvdread/Makefile   |  5 +-
+ xbmc/guilib/guiinfo/SystemGUIInfo.cpp      |  5 ++
+ xbmc/input/InputManager.cpp                | 12 ++++
+ xbmc/view/ViewStateSettings.cpp            |  2 +-
+ 15 files changed, 201 insertions(+), 42 deletions(-)
+ create mode 100644 cmake/platform/linux/stb.cmake
+ create mode 100644 cmake/treedata/common/stb.txt
+
+diff --git a/addons/skin.estouchy/xml/Home.xml b/addons/skin.estouchy/xml/Home.xml
+index 9979e08a59..f19bf8e412 100644
+--- a/addons/skin.estouchy/xml/Home.xml
++++ b/addons/skin.estouchy/xml/Home.xml
+@@ -183,7 +183,7 @@
+ 				<content>
+ 					<item>
+ 						<label>13012</label>
+-						<onclick>Shutdown</onclick>
++						<onclick>XBMC.Quit()</onclick>
+ 						<icon>icon_button_shutdown.png</icon>
+ 					</item>
+ 					<item>
+diff --git a/addons/skin.estuary/xml/Home.xml b/addons/skin.estuary/xml/Home.xml
+index 2fe691a119..4d16ead468 100644
+--- a/addons/skin.estuary/xml/Home.xml
++++ b/addons/skin.estuary/xml/Home.xml
+@@ -1022,7 +1022,7 @@
+ 					<align>justify</align>
+ 					<include content="IconButton">
+ 						<param name="control_id" value="804" />
+-						<param name="onclick" value="ActivateWindow(shutdownmenu)" />
++						<param name="onclick" value="XBMC.Quit()" />
+ 						<param name="icon" value="icons/power.png" />
+ 						<param name="label" value="$LOCALIZE[33060]" />
+ 					</include>
+diff --git a/cmake/modules/FindFFMPEG.cmake b/cmake/modules/FindFFMPEG.cmake
+index 81d26979e3..356a009b23 100644
+--- a/cmake/modules/FindFFMPEG.cmake
++++ b/cmake/modules/FindFFMPEG.cmake
+@@ -46,16 +46,22 @@ set(_postproc_ver ">=55.7.100")
+ # Allows building with external ffmpeg not found in system paths,
+ # without library version checks
+ if(WITH_FFMPEG)
+-  set(FFMPEG_PATH ${WITH_FFMPEG})
+-  message(STATUS "Warning: FFmpeg version checking disabled")
+-  set(REQUIRED_FFMPEG_VERSION undef)
+-  unset(_avcodec_ver)
+-  unset(_avfilter_ver)
+-  unset(_avformat_ver)
+-  unset(_avutil_ver)
+-  unset(_swscale_ver)
+-  unset(_swresample_ver)
+-  unset(_postproc_ver)
++  if(WITH_FFMPEG STREQUAL stb)
++    set(FFMPEG_TARGET ${WITH_FFMPEG})
++    set(ENABLE_INTERNAL_FFMPEG ON)
++  else()
++    set(FFMPEG_TARGET "")
++    set(FFMPEG_PATH ${WITH_FFMPEG})
++    message(STATUS "Warning: FFmpeg version checking disabled")
++    set(REQUIRED_FFMPEG_VERSION undef)
++    unset(_avcodec_ver)
++    unset(_avfilter_ver)
++    unset(_avformat_ver)
++    unset(_avutil_ver)
++    unset(_swscale_ver)
++    unset(_swresample_ver)
++    unset(_postproc_ver)
++  endif()
+ endif()
+ 
+ # Allows building with external ffmpeg not found in system paths,
+@@ -240,6 +246,12 @@ if(NOT FFMPEG_FOUND)
+                      -DENABLE_DAV1D=${DAV1D_FOUND}
+                      -DEXTRA_FLAGS=${FFMPEG_EXTRA_FLAGS})
+ 
++  if(WITH_FFMPEG STREQUAL stb)
++    list(APPEND FFMPEG_OPTIONS -DFFMPEG_TARGET=${FFMPEG_TARGET})
++  endif()
++
++
++
+   if(KODI_DEPENDSBUILD)
+     set(CROSS_ARGS -DDEPENDS_PATH=${DEPENDS_PATH}
+                    -DPKG_CONFIG_EXECUTABLE=${PKG_CONFIG_EXECUTABLE}
+@@ -283,12 +295,12 @@ if(NOT FFMPEG_FOUND)
+     add_dependencies(ffmpeg dav1d)
+   endif()
+ 
+-  find_program(BASH_COMMAND bash)
+-  if(NOT BASH_COMMAND)
+-    message(FATAL_ERROR "Internal FFmpeg requires bash.")
+-  endif()
++#  find_program(BASH_COMMAND bash)
++#  if(NOT BASH_COMMAND)
++#    message(FATAL_ERROR "Internal FFmpeg requires bash.")
++#  endif()
+   file(WRITE ${CMAKE_BINARY_DIR}/${CORE_BUILD_DIR}/ffmpeg/ffmpeg-link-wrapper
+-"#!${BASH_COMMAND}
++"#!/bin/bash
+ if [[ $@ == *${APP_NAME_LC}.bin* || $@ == *${APP_NAME_LC}${APP_BINARY_SUFFIX}* || $@ == *${APP_NAME_LC}.so* || $@ == *${APP_NAME_LC}-test* ]]
+ then
+   avformat=`PKG_CONFIG_PATH=${CMAKE_BINARY_DIR}/${CORE_BUILD_DIR}/lib/pkgconfig ${PKG_CONFIG_EXECUTABLE} --libs --static libavcodec`
+@@ -302,6 +314,7 @@ then
+ else
+   $@
+ fi")
++
+   file(COPY ${CMAKE_BINARY_DIR}/${CORE_BUILD_DIR}/ffmpeg/ffmpeg-link-wrapper
+        DESTINATION ${CMAKE_BINARY_DIR}/${CORE_BUILD_DIR}
+        FILE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE)
+diff --git a/cmake/platform/linux/stb.cmake b/cmake/platform/linux/stb.cmake
+new file mode 100644
+index 0000000000..e1fe54a13d
+--- /dev/null
++++ b/cmake/platform/linux/stb.cmake
+@@ -0,0 +1,69 @@
++set(PLATFORM_REQUIRED_DEPS EGL LibInput Xkbcommon)
++set(PLATFORM_OPTIONAL_DEPS VAAPI)
++
++set(STB_RENDER_SYSTEM "" CACHE STRING "Render system to use with STB: \"gl\" or \"gles\"")
++
++if(ENABLE_OPENGL STREQUAL "ON")
++  list(APPEND PLATFORM_REQUIRED_DEPS OpenGl)
++  set(APP_RENDER_SYSTEM gl)
++  message(STATUS "STB_RENDER_SYSTEM=GL")
++elseif(ENABLE_GLES STREQUAL "ON")
++  list(APPEND PLATFORM_REQUIRED_DEPS OpenGLES)
++  set(APP_RENDER_SYSTEM gles)
++  message(STATUS "STB_RENDER_SYSTEM=GLES")
++else()
++  message(SEND_ERROR "You need to decide whether you want to use GL- or GLES-based rendering in combination with the STB windowing system. Please set STB_RENDER_SYSTEM to either \"gl\" or \"gles\". For normal desktop systems, you will usually want to use \"gl\".")
++endif()
++
++if(WITH_PLATFORM STREQUAL "GB-cortexa15")
++  set(CPU cortexa15)
++  list(APPEND PLATFORM_DEFINES "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_STB_EXTEND -DTARGET_V3D -DTARGET_GB")
++  list(APPEND DEPLIBS ${CMAKE_SOURCE_DIR}/xbmc/windowing/egl/gles_init.a EGL GLESv2 nxpl nexus nxclient)
++elseif(WITH_PLATFORM STREQUAL "dags-cortexa15")
++  set(CPU cortexa15)
++  list(APPEND PLATFORM_DEFINES "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_STB_EXTEND -DTARGET_V3D -DTARGET_DAGS")
++  list(APPEND DEPLIBS EGL GLESv2 nxpl nexus nxclient)
++elseif(WITH_PLATFORM STREQUAL "dreambox-cortexa15")
++  set(CPU cortexa15)
++  list(APPEND PLATFORM_DEFINES "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_STB_EXTEND -DTARGET_V3D -DTARGET_DREAMBOX")
++elseif(WITH_PLATFORM STREQUAL "dreambox-mipsel")
++  list(APPEND PLATFORM_DEFINES "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_STB_EXTEND -DTARGET_V3D -DTARGET_DREAMBOX")
++elseif(WITH_PLATFORM STREQUAL "vuplus-cortexa15")
++  set(CPU cortexa15)
++  list(APPEND PLATFORM_DEFINES "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_STB_EXTEND -DTARGET_V3D -DTARGET_VUPLUS -DTARGET_VUPLUS_ARM")
++  list(APPEND DEPLIBS EGL GLESv2 KodiGLESPL dvb_base nxpl dvb_client)
++elseif(WITH_PLATFORM STREQUAL "vuplus-mipsel")
++  list(APPEND PLATFORM_DEFINES "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_STB_EXTEND -DTARGET_V3D -DTARGET_VUPLUS -DTARGET_VUPLUS_MIPSEL")
++  list(APPEND DEPLIBS ${CMAKE_SOURCE_DIR}/xbmc/windowing/egl/gles_init.a EGL GLESv2 dvb_base nxpl xbmc_base dvb_client)
++  list(APPEND SYSTEM_LDFLAGS -L${CMAKE_SOURCE_DIR}/../xbmc-support)
++elseif(WITH_PLATFORM STREQUAL "v3d-cortexa15")
++  set(CPU cortexa15)
++  list(APPEND PLATFORM_DEFINES "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_STB_EXTEND -DTARGET_V3D -DTARGET_V3DNXPL")
++  list(APPEND DEPLIBS EGL GLESv2 nxpl nexus)
++elseif(WITH_PLATFORM STREQUAL "v3d-mipsel")
++  list(APPEND PLATFORM_DEFINES "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_STB_EXTEND -DTARGET_V3D -DTARGET_V3DNXPL")
++  list(APPEND DEPLIBS EGL GLESv2 nxpl nexus)
++elseif(WITH_PLATFORM STREQUAL "xcore-mipsel")
++  list(APPEND PLATFORM_DEFINES "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_STB_EXTEND -DTARGET_V3D -DTARGET_XCORE")
++  list(APPEND DEPLIBS EGL GLESv2 v3dplatform)
++elseif(WITH_PLATFORM STREQUAL "nextv-cortexa15")
++  set(CPU cortexa15)
++  list(APPEND PLATFORM_DEFINES "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_STB_EXTEND -DTARGET_V3D -DTARGET_NEXTV")
++  list(APPEND DEPLIBS EGL GLESv2 nxpl nexus nxclient)
++elseif(WITH_PLATFORM STREQUAL "mali-cortexa15")
++  set(CPU cortexa15)
++  list(APPEND PLATFORM_DEFINES "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_STB_EXTEND -DTARGET_MALI -DHAS_HIPLAYER")
++  list(APPEND DEPLIBS EGL GLESv2 mali)
++elseif(WITH_PLATFORM STREQUAL "edision-cortexa15")
++  list(APPEND PLATFORM_DEFINES "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_STB_EXTEND -DTARGET_V3D -DTARGET_EDISION")
++  list(APPEND DEPLIBS EGL GLESv2 v3dplatform)
++elseif(WITH_PLATFORM STREQUAL "clap-cortexa15")
++  list(APPEND PLATFORM_DEFINES "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_MALI -DUSE_HIPLAYER")
++#  list(APPEND DEPLIBS ${CMAKE_SOURCE_DIR}xbmc/cores/hiplayer/hiplayer.a ${CMAKE_SOURCE_DIR}xbmc/linux/hisi/hiadp.a)
++#  list(APPEND DEPLIBS EGL GLESv2 jpeg hi_common hi_msp)
++  list(APPEND DEPLIBS EGL GLESv2 jpeg)
++endif()
++
++
++
++list(APPEND PLATFORM_DEFINES -DMESA_EGL_NO_X11_HEADERS)
+diff --git a/cmake/scripts/linux/ArchSetup.cmake b/cmake/scripts/linux/ArchSetup.cmake
+index 04fc6e3ffd..9fccf28e01 100644
+--- a/cmake/scripts/linux/ArchSetup.cmake
++++ b/cmake/scripts/linux/ArchSetup.cmake
+@@ -32,6 +32,10 @@ else()
+   elseif(CPU MATCHES aarch64 OR CPU MATCHES arm64)
+     set(ARCH aarch64)
+     set(NEON True)
++  elseif(CPU MATCHES "cortexa15")
++    set(ARCH arm)
++    set(NEON True)
++    set(NEON_FLAGS "-Wno-psabi -Wa,-march=armv7ve -mtune=cortex-a15 -mfpu=neon-vfpv4 -mvectorize-with-neon-quad -fPIC -mcpu=cortex-a15 -mfloat-abi=hard")
+   else()
+     message(SEND_ERROR "Unknown CPU: ${CPU}")
+   endif()
+diff --git a/cmake/treedata/common/stb.txt b/cmake/treedata/common/stb.txt
+new file mode 100644
+index 0000000000..2606a0f999
+--- /dev/null
++++ b/cmake/treedata/common/stb.txt
+@@ -0,0 +1 @@
++xbmc/windowing/egl   windowing/egl    # STB
+diff --git a/system/settings/settings.xml b/system/settings/settings.xml
+index def3740936..c1ecb21ada 100755
+--- a/system/settings/settings.xml
++++ b/system/settings/settings.xml
+@@ -503,7 +503,7 @@
+           <control type="spinner" format="integer" delayed="true"/>
+         </setting>
+         <setting id="subtitles.font" type="string" label="14089" help="36185">
+-          <level>1</level>
++          <level>3</level>
+           <default>arial.ttf</default>
+           <constraints>
+             <options>fonts</options>
+@@ -511,7 +511,7 @@
+           <control type="list" format="string" />
+         </setting>
+         <setting id="subtitles.charset" type="string" parent="subtitles.font" label="735" help="36189">
+-          <level>1</level>
++          <level>3</level>
+           <default>DEFAULT</default>
+           <constraints>
+             <options>charsets</options>
+@@ -2500,7 +2500,7 @@
+         <setting id="audiooutput.processquality" type="integer" label="13505" help="36169">
+           <requirement>HAS_AE_QUALITY_LEVELS</requirement>
+           <level>2</level>
+-          <default>30</default> <!-- AE_QUALITY_MID -->
++          <default>20</default> <!-- AE_QUALITY_MID -->
+           <constraints>
+             <options>aequalitylevels</options>
+           </constraints>
+@@ -2518,7 +2518,7 @@
+         </setting>
+         <setting id="audiooutput.samplerate" type="integer" label="458" help="36523">
+           <level>2</level>
+-          <default>48000</default>
++          <default>44100</default>
+           <dependencies>
+             <dependency type="visible">
+               <and>
+@@ -2530,10 +2530,6 @@
+           <constraints>
+             <options>
+               <option label="34124">44100</option>
+-              <option label="34125">48000</option>
+-              <option label="34126">88200</option>
+-              <option label="34127">96000</option>
+-              <option label="34128">192000</option>
+               <option label="34129">352800</option>
+               <option label="34130">384000</option>
+             </options>
+@@ -3308,7 +3304,7 @@
+       <group id="2" label="14270">
+         <setting id="locale.country" type="string" label="14271" help="36115">
+           <level>0</level>
+-          <default>USA (12h)</default>
++          <default>Central Europe</default>
+           <constraints>
+             <options>regions</options>
+           </constraints>
+diff --git a/tools/Linux/kodi.sh.in b/tools/Linux/kodi.sh.in
+index 73d8c9be81..0309e4ce46 100644
+--- a/tools/Linux/kodi.sh.in
++++ b/tools/Linux/kodi.sh.in
+@@ -26,16 +26,44 @@ exec_prefix="@exec_prefix@"
+ datarootdir="@datarootdir@"
+ LIBDIR="@libdir@"
+ APP_BINARY=$LIBDIR/${bin_name}/@APP_BINARY@
+-CRASHLOG_DIR=${CRASHLOG_DIR:-$HOME}
+-KODI_DATA=${KODI_DATA:-"${HOME}/.${bin_name}"} # mapped to special://home/
++#CRASHLOG_DIR=${CRASHLOG_DIR:-$HOME}
++#KODI_DATA=${KODI_DATA:-"${HOME}/.${bin_name}"} # mapped to special://home/
+ WINDOWING=${WINDOWING:-"auto"}
+ 
++export KODI_TEMP="/tmp/kodi"
++CRASHLOG_DIR=${CRASHLOG_DIR:-$KODI_TEMP}
++
+ # Workaround for high CPU load with nvidia GFX
+ export __GL_YIELD=USLEEP
+ 
+ # Fix wasting RAM due to fragmentation
+ export MALLOC_MMAP_THRESHOLD_=131072
+ 
++check_media_hdd() {
++    [ -e /proc/mounts ] || return 0
++
++    exec 9<&0 < /proc/mounts
++    while read DEV MTPT REST; do
++        case $DEV in
++            /dev/sd[a-z][0-9])
++            if [ "$MTPT" == "/media/hdd" ]; then
++                export HOME="$MTPT"
++                break
++            fi
++            ;;
++	    /dev/mmcblk[0-9]p[0-9])
++            if [ "$MTPT" == "/media/mmc" ]; then
++            	export HOME="$MTPT"
++            fi
++	    ;;
++        esac
++    done
++    exec 0<&9 9<&-
++}
++
++check_media_hdd
++KODI_DATA="${HOME}/.${bin_name}"
++
+ # Check for some options used by this script
+ while [ "$#" -gt "0" ]
+ do
+@@ -217,13 +245,13 @@ do
+   CHILD=$!
+   wait "${CHILD}"
+   RET=$?
+-  if [ $(( $RET == 65 )) = "1" ]
+-  then # User requested to restart app
+-    LOOP=1
+-  elif [ $(( ($RET >= 131 && $RET <= 136) || $RET == 139 )) = "1" ]
+-  then # Crashed with core dump
+-    print_crash_report
+-  fi
++#  if [ $(( $RET == 65 )) = "1" ]
++#  then # User requested to restart app
++#    LOOP=1
++#  elif [ $(( ($RET >= 131 && $RET <= 136) || $RET == 139 )) = "1" ]
++#  then # Crashed with core dump
++#    print_crash_report
++#  fi
+ done
+ 
+ exit $RET
+diff --git a/tools/depends/target/ffmpeg/CMakeLists.txt b/tools/depends/target/ffmpeg/CMakeLists.txt
+index 3ebd65cf13..2f29ab3ebc 100644
+--- a/tools/depends/target/ffmpeg/CMakeLists.txt
++++ b/tools/depends/target/ffmpeg/CMakeLists.txt
+@@ -10,6 +10,36 @@ else()
+   set(ffmpeg_conf --cc=${CMAKE_C_COMPILER} --cxx=${CMAKE_CXX_COMPILER})
+ endif()
+ 
++if(FFMPEG_TARGET STREQUAL "stb")
++  set(pkgconf "PKG_CONFIG_LIBDIR=${CMAKE_BINARY_DIR}/lib/pkgconfig")
++  list(APPEND ffmpeg_conf --pkg-config=${CMAKE_BINARY_DIR}/lib/pkgconfig --pkg-config-flags=--static)
++  list(APPEND ffmpeg_conf --enable-cross-compile --arch=generic --target-os=linux)
++  list(APPEND ffmpeg_conf --pkgconfigdir=${CMAKE_BINARY_DIR}/lib/pkgconfig) 
++  list(APPEND ffmpeg_conf --bindir=${CMAKE_INSTALL_PREFIX}/ffmpeg/bin --libdir=${CMAKE_INSTALL_PREFIX}/ffmpeg/lib --incdir=${CMAKE_INSTALL_PREFIX}/ffmpeg/include --datadir=${CMAKE_INSTALL_PREFIX}/ffmpeg/share/)
++  if(WITH_PLATFORM STREQUAL "GB-cortexa15")
++    set(CPU cortex-a15)
++    list(APPEND ffmpeg_conf --cpu=${CPU})
++  elseif(WITH_PLATFORM STREQUAL "dags-cortexa15")
++    set(CPU cortex-a15)
++    list(APPEND ffmpeg_conf --cpu=${CPU})
++  elseif(WITH_PLATFORM STREQUAL "dreambox-cortexa15")
++    set(CPU cortex-a15)
++    list(APPEND ffmpeg_conf --cpu=${CPU})
++  elseif(WITH_PLATFORM STREQUAL "vuplus-cortexa15")
++    set(CPU cortex-a15)
++    list(APPEND ffmpeg_conf --cpu=${CPU})
++  elseif(WITH_PLATFORM STREQUAL "v3d-cortexa15")
++    set(CPU cortex-a15)
++    list(APPEND ffmpeg_conf --cpu=${CPU})
++  elseif(WITH_PLATFORM STREQUAL "nextv-cortexa15")
++    set(CPU cortex-a15)
++    list(APPEND ffmpeg_conf --cpu=${CPU})
++  elseif(WITH_PLATFORM STREQUAL "mali-cortexa15")
++    set(CPU cortex-a15)
++    list(APPEND ffmpeg_conf --cpu=${CPU})
++  endif()
++endif()
++
+ if(CROSSCOMPILING)
+   set(pkgconf "PKG_CONFIG_LIBDIR=${DEPENDS_PATH}/lib/pkgconfig")
+   list(APPEND ffmpeg_conf --pkg-config=${PKG_CONFIG_EXECUTABLE} --pkg-config-flags=--static)
+diff --git a/tools/depends/target/libdvdcss/Makefile b/tools/depends/target/libdvdcss/Makefile
+index a5026227c2..c7b103117a 100644
+--- a/tools/depends/target/libdvdcss/Makefile
++++ b/tools/depends/target/libdvdcss/Makefile
+@@ -3,7 +3,7 @@ include DVDCSS-VERSION
+ DEPS= DVDCSS-VERSION Makefile
+ 
+ ifeq ($(CROSS_COMPILING), yes)
+-  DEPS += ../../Makefile.include
++#  DEPS += ../../Makefile.include
+ else
+   ROOT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
+   PREFIX := $(ROOT_DIR)/dvdcss-install
+@@ -19,7 +19,7 @@ RETRIEVE_TOOL := curl -Ls --create-dirs --retry 10 --retry-delay 3
+ ARCHIVE_TOOL := tar --strip-components=1 -xf
+ 
+ # configuration settings
+-config = --prefix=$(PREFIX) --disable-shared --enable-static --with-pic
++config = --build=$(BUILD_SYS) --host=$(HOST_SYS) --prefix=$(PREFIX) --disable-shared --enable-static --with-pic
+ 
+ GITREV=$(shell git ls-remote $(BASE_URL) $(VERSION) | awk '{print $$1}')
+ ifeq ($(GITREV),)
+diff --git a/tools/depends/target/libdvdnav/Makefile b/tools/depends/target/libdvdnav/Makefile
+index eada58a160..38f9be520d 100644
+--- a/tools/depends/target/libdvdnav/Makefile
++++ b/tools/depends/target/libdvdnav/Makefile
+@@ -3,11 +3,11 @@ include DVDNAV-VERSION
+ DEPS = DVDNAV-VERSION Makefile
+ 
+ # configuration settings
+-config = --prefix=$(PREFIX) --disable-shared --enable-static --with-pic
++config = --build=$(BUILD_SYS) --host=$(HOST_SYS) --prefix=$(PREFIX) --disable-shared --enable-static --with-pic
+ EXTRA_CFLAGS = -D_XBMC -DHAVE_DVDCSS_DVDCSS_H
+ 
+ ifeq ($(CROSS_COMPILING), yes)
+-  DEPS += ../../Makefile.include
++#  DEPS += ../../Makefile.include
+ else
+   ROOT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
+   PREFIX := $(ROOT_DIR)/dvdnav-install
+diff --git a/tools/depends/target/libdvdread/Makefile b/tools/depends/target/libdvdread/Makefile
+index d240953fe4..2c9100f84e 100644
+--- a/tools/depends/target/libdvdread/Makefile
++++ b/tools/depends/target/libdvdread/Makefile
+@@ -3,11 +3,12 @@ include DVDREAD-VERSION
+ DEPS = DVDREAD-VERSION Makefile
+ 
+ # configuration settings
+-config = --prefix=$(PREFIX) --disable-shared --enable-static --with-pic --with-libdvdcss
++#config = --prefix=$(PREFIX) --disable-shared --enable-static --with-pic --with-libdvdcss
++config = --build=$(BUILD_SYS) --host=$(HOST_SYS) --prefix=$(PREFIX) --disable-shared --enable-static --with-pic
+ EXTRA_CFLAGS = -D_XBMC -DHAVE_DVDCSS_DVDCSS_H
+ 
+ ifeq ($(CROSS_COMPILING), yes)
+-  DEPS += ../../Makefile.include
++#  DEPS += ../../Makefile.include
+ else
+   ROOT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
+   PREFIX := $(ROOT_DIR)/dvdread-install
+diff --git a/xbmc/guilib/guiinfo/SystemGUIInfo.cpp b/xbmc/guilib/guiinfo/SystemGUIInfo.cpp
+index 8fbe6fefe2..56d23ff1d6 100644
+--- a/xbmc/guilib/guiinfo/SystemGUIInfo.cpp
++++ b/xbmc/guilib/guiinfo/SystemGUIInfo.cpp
+@@ -57,6 +57,11 @@ std::string CSystemGUIInfo::GetSystemHeatInfo(int info) const
+ #if defined(TARGET_POSIX)
+     CServiceBroker::GetCPUInfo()->GetTemperature(m_cpuTemp);
+     m_gpuTemp = GetGPUTemperature();
++#if defined(TARGET_STB_EXTEND)
++    m_gpuTemp = m_cpuTemp;
++#else
++     m_gpuTemp = GetGPUTemperature();
++#endif
+ #endif
+   }
+ 
+diff --git a/xbmc/input/InputManager.cpp b/xbmc/input/InputManager.cpp
+index 49c9b9f7c9..cd5a1ee989 100644
+--- a/xbmc/input/InputManager.cpp
++++ b/xbmc/input/InputManager.cpp
+@@ -580,6 +580,18 @@ bool CInputManager::HandleKey(const CKey& key)
+           useKeyboard = true;
+       }
+     }
++#if defined(TARGET_STB)
++    switch(key.GetVKey()) {
++      case 0x0d:
++      case 0x80:
++      case 0x81:
++      case 0x82:
++      case 0x83:
++        if (iWin == WINDOW_DIALOG_KEYBOARD)
++          useKeyboard = false;
++        break;
++    }
++#endif
+     if (useKeyboard)
+     {
+       // use the virtualkeyboard section of the keymap, and send keyboard-specific or navigation
+diff --git a/xbmc/view/ViewStateSettings.cpp b/xbmc/view/ViewStateSettings.cpp
+index a92bd1e834..79faef8162 100644
+--- a/xbmc/view/ViewStateSettings.cpp
++++ b/xbmc/view/ViewStateSettings.cpp
+@@ -114,7 +114,7 @@ bool CViewStateSettings::Load(const TiXmlNode *settings)
+     if (XMLUtils::GetInt(pElement, XML_SETTINGLEVEL, settingLevel, static_cast<int>(SettingLevel::Basic), static_cast<int>(SettingLevel::Expert)))
+       m_settingLevel = (SettingLevel)settingLevel;
+     else
+-      m_settingLevel = SettingLevel::Standard;
++      m_settingLevel = SettingLevel::Expert;
+ 
+     const TiXmlNode* pEventLogNode = pElement->FirstChild(XML_EVENTLOG);
+     if (pEventLogNode != NULL)
+-- 
+2.27.0.windows.1
+

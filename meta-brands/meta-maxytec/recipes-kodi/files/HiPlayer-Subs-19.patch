@@ -1,0 +1,254 @@
+From 5d8983a7bd2224c39344d917fc573b2608043534 Mon Sep 17 00:00:00 2001
+From: Captain <captain.onboard@web.de>
+Date: Thu, 16 Jul 2020 10:04:58 +0200
+Subject: [PATCH] HiPlayer-Subs-19
+
+---
+ xbmc/guilib/GUIWindowManager.cpp    |  11 +++
+ xbmc/windows/CMakeLists.txt         |   6 +-
+ xbmc/windows/GUIWindowSubtitles.cpp | 145 ++++++++++++++++++++++++++++
+ xbmc/windows/GUIWindowSubtitles.h   |  21 ++++
+ 4 files changed, 181 insertions(+), 2 deletions(-)
+ create mode 100644 xbmc/windows/GUIWindowSubtitles.cpp
+ create mode 100644 xbmc/windows/GUIWindowSubtitles.h
+
+diff --git a/xbmc/guilib/GUIWindowManager.cpp b/xbmc/guilib/GUIWindowManager.cpp
+index 350fbdd089..3f1531a3ac 100644
+--- a/xbmc/guilib/GUIWindowManager.cpp
++++ b/xbmc/guilib/GUIWindowManager.cpp
+@@ -58,6 +58,9 @@
+ #include "windows/GUIWindowSplash.h"
+ #include "windows/GUIWindowStartup.h"
+ #include "windows/GUIWindowSystemInfo.h"
++#ifdef HAS_HIPLAYER
++#include "windows/GUIWindowSubtitles.h"
++#endif
+ 
+ // Dialog includes
+ #include "music/dialogs/GUIDialogMusicOSD.h"
+@@ -299,6 +302,10 @@ void CGUIWindowManager::CreateWindows()
+   Add(new GAME::CDialogGameAdvancedSettings);
+   Add(new GAME::CDialogGameVideoRotation);
+   Add(new RETRO::CGameWindowFullScreen);
++
++#ifdef HAS_HIPLAYER
++  Add(new CGUIWindowSubtitles); /* subtitle renderer */
++#endif
+ }
+ 
+ bool CGUIWindowManager::DestroyWindows()
+@@ -429,6 +436,10 @@ bool CGUIWindowManager::DestroyWindows()
+ 
+     DestroyWindow(WINDOW_DIALOG_PERIPHERALS);
+     DestroyWindow(WINDOW_DIALOG_PERIPHERAL_SETTINGS);
++
++#ifdef HAS_HIPLAYER
++    DestroyWindow(12666); /* subtitle renderer */
++#endif
+   }
+   catch (...)
+   {
+diff --git a/xbmc/windows/CMakeLists.txt b/xbmc/windows/CMakeLists.txt
+index 2fe465fcc2..f44fd3f751 100644
+--- a/xbmc/windows/CMakeLists.txt
++++ b/xbmc/windows/CMakeLists.txt
+@@ -8,7 +8,8 @@ set(SOURCES GUIMediaWindow.cpp
+             GUIWindowScreensaverDim.cpp
+             GUIWindowSplash.cpp
+             GUIWindowStartup.cpp
+-            GUIWindowSystemInfo.cpp)
++            GUIWindowSystemInfo.cpp
++            GUIWindowSubtitles.cpp)
+ 
+ set(HEADERS GUIMediaWindow.h
+             GUIWindowDebugInfo.h
+@@ -20,6 +21,7 @@ set(HEADERS GUIMediaWindow.h
+             GUIWindowScreensaverDim.h
+             GUIWindowSplash.h
+             GUIWindowStartup.h
+-            GUIWindowSystemInfo.h)
++            GUIWindowSystemInfo.h
++            GUIWindowSubtitles.h)
+ 
+ core_add_library(windows)
+diff --git a/xbmc/windows/GUIWindowSubtitles.cpp b/xbmc/windows/GUIWindowSubtitles.cpp
+new file mode 100644
+index 0000000000..429b3ad531
+--- /dev/null
++++ b/xbmc/windows/GUIWindowSubtitles.cpp
+@@ -0,0 +1,145 @@
++#include "GUIWindowSubtitles.h"
++#include "Util.h"
++#include "utils/log.h"
++#include "guilib/GUIFontManager.h"
++#include "guilib/GUITextLayout.h"
++#include "guilib/GUIWindowManager.h"
++#include "guilib/GUIComponent.h"
++#include "settings/Settings.h"
++#include "settings/SettingsComponent.h"
++#include "utils/StringUtils.h"
++
++//#include <inttypes.h>
++
++static UTILS::Color colors[8] = { UTILS::COLOR::YELLOW,
++                                  UTILS::COLOR::WHITE,
++                                  UTILS::COLOR::BLUE,
++                                  UTILS::COLOR::BRIGHTGREEN,
++                                  UTILS::COLOR::YELLOWGREEN,
++                                  UTILS::COLOR::CYAN,
++                                  UTILS::COLOR::LIGHTGREY,
++                                  UTILS::COLOR::GREY };
++//UTILS::COLOR::DARKGREY
++//UTILS::COLOR::NONE
++//UTILS::COLOR::BLACK
++
++CGUIWindowSubtitles::CGUIWindowSubtitles(void)
++  : CGUIDialog(12666, "", DialogModalityType::MODELESS)
++{
++	m_needsScaling = false;
++	m_layout = nullptr;
++	m_renderOrder = RENDER_ORDER_WINDOW_DEBUG;
++}
++
++CGUIWindowSubtitles::~CGUIWindowSubtitles(void) = default;
++
++void CGUIWindowSubtitles::UpdateVisibility()
++{
++	Open();
++}
++
++bool CGUIWindowSubtitles::OnMessage(CGUIMessage &message)
++{
++	if (message.GetMessage() == GUI_MSG_WINDOW_DEINIT)
++	{
++		delete m_layout;
++		m_layout = nullptr;
++	}
++
++	if (message.GetMessage() == GUI_MSG_SET_TEXT)
++	{
++		m_text = message.GetLabel();
++
++		// Avoid additional line breaks
++		StringUtils::RemoveCRLF(m_text);
++
++		// Remove HTML-like tags from the subtitles until
++		StringUtils::Replace(m_text, "\\r", "");
++		StringUtils::Replace(m_text, "\r", "");
++		StringUtils::Replace(m_text, "\\n", "[CR]");
++		StringUtils::Replace(m_text, "\n", "[CR]");
++		StringUtils::Replace(m_text, "<br>", "[CR]");
++		StringUtils::Replace(m_text, "\\N", "[CR]");
++		StringUtils::Replace(m_text, "<i>", "[I]");
++		StringUtils::Replace(m_text, "</i>", "[/I]");
++		StringUtils::Replace(m_text, "<b>", "[B]");
++		StringUtils::Replace(m_text, "</b>", "[/B]");
++		StringUtils::Replace(m_text, "<u>", "");
++		StringUtils::Replace(m_text, "<p>", "");
++		StringUtils::Replace(m_text, "<P>", "");
++		StringUtils::Replace(m_text, "&nbsp;", "");
++		StringUtils::Replace(m_text, "</u>", "");
++		StringUtils::Replace(m_text, "</i", "[/I]"); // handle tags which aren't closed properly (happens).
++		StringUtils::Replace(m_text, "</b", "[/B]");
++		StringUtils::Replace(m_text, "</u", "");
++
++		delete m_layout;
++		m_layout = nullptr;
++	}
++
++	else if (message.GetMessage() == GUI_MSG_REFRESH_TIMER)
++		MarkDirtyRegion();
++
++	return CGUIDialog::OnMessage(message);
++}
++
++void CGUIWindowSubtitles::Process(unsigned int currentTime, CDirtyRegionList &dirtyregions)
++{
++	const std::shared_ptr<CSettings> settings = CServiceBroker::GetSettingsComponent()->GetSettings();
++	if (CUtil::IsUsingTTFSubtitles())
++	{
++		RESOLUTION_INFO pal(720, 576, 0);
++		CGUIFont *subtitle_font = g_fontManager.LoadTTF(StringUtils::Format("__subs%d%x%x%s__",
++			settings->GetInt(CSettings::SETTING_SUBTITLES_HEIGHT),
++			settings->GetInt(CSettings::SETTING_SUBTITLES_COLOR),
++			settings->GetInt(CSettings::SETTING_SUBTITLES_STYLE),
++			settings->GetString(CSettings::SETTING_SUBTITLES_FONT))
++			, settings->GetString(CSettings::SETTING_SUBTITLES_FONT)
++			, colors[settings->GetInt(CSettings::SETTING_SUBTITLES_COLOR)]
++			, 0
++			, settings->GetInt(CSettings::SETTING_SUBTITLES_HEIGHT)
++			, settings->GetInt(CSettings::SETTING_SUBTITLES_STYLE)
++			, false, 1.0f, 1.0f, &pal, true);
++		CGUIFont *border_font   = g_fontManager.LoadTTF(StringUtils::Format("__subsborder%d%x%x%s__",
++			settings->GetInt(CSettings::SETTING_SUBTITLES_HEIGHT),
++			settings->GetInt(CSettings::SETTING_SUBTITLES_COLOR),
++			settings->GetInt(CSettings::SETTING_SUBTITLES_STYLE),
++			settings->GetString(CSettings::SETTING_SUBTITLES_FONT))
++			, settings->GetString(CSettings::SETTING_SUBTITLES_FONT)
++			, 0xFF000000
++			, 0
++			, settings->GetInt(CSettings::SETTING_SUBTITLES_HEIGHT)
++			, settings->GetInt(CSettings::SETTING_SUBTITLES_STYLE)
++			, true, 1.0f, 1.0f, &pal, true);
++		if (subtitle_font && border_font)
++			m_layout = new CGUITextLayout(subtitle_font, true, 0, border_font);
++	}
++	if (!m_layout)
++		return;
++
++	if (CServiceBroker::GetGUI()->GetWindowManager().GetActiveWindow() != WINDOW_FULLSCREEN_VIDEO)
++	{
++		m_text.clear();
++	}
++
++	RESOLUTION_INFO res = CServiceBroker::GetWinSystem()->GetGfxContext().GetResInfo();
++	float width_max = (float)res.Overscan.right - res.Overscan.left;
++	float w, h;
++	if (m_layout->Update(m_text, width_max * 0.9f, false, true))
++		MarkDirtyRegion();
++	m_layout->GetTextExtent(w, h);
++
++	float y = (float)res.iSubtitles - h;
++	m_renderRegion.SetRect((CServiceBroker::GetWinSystem()->GetGfxContext().GetWidth() / 2), y, (CServiceBroker::GetWinSystem()->GetGfxContext().GetWidth() / 2) + w, y + h);
++}
++
++void CGUIWindowSubtitles::Render()
++{
++	CServiceBroker::GetWinSystem()->GetGfxContext().SetRenderingResolution(CServiceBroker::GetWinSystem()->GetGfxContext().GetResInfo(), false);
++	if (m_layout)
++	{
++		RESOLUTION_INFO res = CServiceBroker::GetWinSystem()->GetGfxContext().GetResInfo();
++		float width_max = (float)res.Overscan.right - res.Overscan.left;
++		m_layout->RenderOutline(m_renderRegion.x1, m_renderRegion.y1, 0xffffffff, 0xff000000, XBFONT_CENTER_X, width_max);
++	}
++}
+diff --git a/xbmc/windows/GUIWindowSubtitles.h b/xbmc/windows/GUIWindowSubtitles.h
+new file mode 100644
+index 0000000000..4f9cef1100
+--- /dev/null
++++ b/xbmc/windows/GUIWindowSubtitles.h
+@@ -0,0 +1,21 @@
++#pragma once
++
++#include "guilib/GUIDialog.h"
++#include "guilib/GUIFont.h"
++
++class CGUITextLayout;
++
++class CGUIWindowSubtitles : public CGUIDialog
++{
++public:
++	CGUIWindowSubtitles();
++	~CGUIWindowSubtitles() override;
++	void Process(unsigned int currentTime, CDirtyRegionList &dirtyregions) override;
++	void Render() override;
++	bool OnMessage(CGUIMessage &message) override;
++protected:
++	void UpdateVisibility() override;
++private:
++	CGUITextLayout *m_layout;
++	std::string m_text;
++};
+-- 
+2.27.0.windows.1
+

@@ -1,6 +1,6 @@
 LICENSE = "GPLv2+"
 require conf/license/license-gplv2.inc
-require ${@bb.utils.contains("MACHINE_FEATURES", "kodi18", "kodi-leia.inc", "kodi-krypton.inc", d)}
+require ${@bb.utils.contains("MACHINE_FEATURES", "kodi18", "kodi-leia.inc", "", d)} ${@bb.utils.contains("MACHINE_FEATURES", "kodi19", "kodi-matrix.inc", "", d)}
 
 DEPENDS += " \
             zip-native \
@@ -9,6 +9,7 @@ DEPENDS += " \
             libtinyxml2 \
             jsoncpp \
             jsonrpc \
+            boost \
             virtual/kodi \
           "
 
@@ -16,10 +17,7 @@ PACKAGE_ARCH = "${MACHINE}"
 
 SRCREV_FORMAT = "pvr${KODIADDONPLUGIN}"
 
-
-PVRMYTV = "${@bb.utils.contains("KODIADDONPLUGIN", "mythtv", "janbar", "kodi-pvr", d)}"
-
-PVRGIT = "${@bb.utils.contains("MACHINE_FEATURES", "kodi18", "${PVRMYTV}", "kodi-pvr", d)}"
+PVRGIT = "${@bb.utils.contains_any("MACHINE_FEATURES", "kodi18 kodi19", "janbar", "kodi-pvr", d)}"
 
 SRC_URI = "git://github.com/${PVRGIT}/pvr.${KODIADDONPLUGIN}.git;destsuffix=pvr.${KODIADDONPLUGIN};name=pvr${KODIADDONPLUGIN};branch=${KODIADDONBRANCH}"
 

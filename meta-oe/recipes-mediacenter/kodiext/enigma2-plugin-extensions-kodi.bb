@@ -6,9 +6,9 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 inherit gitpkgv autotools ${PYTHON_PN}native
 
 SRCREV = "${AUTOREV}"
-PV = "${@bb.utils.contains("MACHINE_FEATURES", "kodi18", "18", "17", d)}+git${SRCPV}"
-PKGV = "${@bb.utils.contains("MACHINE_FEATURES", "kodi18", "18", "17", d)}+git${GITPKGV}"
-VER = "${@bb.utils.contains("MACHINE_FEATURES", "kodi18", "18", "17", d)}"
+PV = "19+git${SRCPV}"
+PKGV = "19+git${GITPKGV}"
+VER = "19"
 
 RDEPENDS_${PN} += "virtual/kodi"
 
