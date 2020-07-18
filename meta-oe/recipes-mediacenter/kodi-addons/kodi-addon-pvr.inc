@@ -17,7 +17,9 @@ PACKAGE_ARCH = "${MACHINE}"
 
 SRCREV_FORMAT = "pvr${KODIADDONPLUGIN}"
 
-PVRGIT = "${@bb.utils.contains_any("MACHINE_FEATURES", "kodi18 kodi19", "janbar", "kodi-pvr", d)}"
+PVRMYTV = "${@bb.utils.contains("KODIADDONPLUGIN", "mythtv", "janbar", "kodi-pvr", d)}"
+
+PVRGIT = "${@bb.utils.contains_any("MACHINE_FEATURES", "kodi18 kodi19", "${PVRMYTV}", "kodi-pvr", d)}"
 
 SRC_URI = "git://github.com/${PVRGIT}/pvr.${KODIADDONPLUGIN}.git;destsuffix=pvr.${KODIADDONPLUGIN};name=pvr${KODIADDONPLUGIN};branch=${KODIADDONBRANCH}"
 
