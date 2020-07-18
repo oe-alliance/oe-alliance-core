@@ -13,6 +13,11 @@ PACKAGES = "${PN}"
 PV = "${IMAGE_VERSION}"
 PR = "r0"
 
+#fixme need updates from vendor
+#${@bb.utils.contains("MACHINE_FEATURES", "vubluetooth", "enigma2-plugin-systemplugins-bluetoothsetup enigma2-plugin-extensions-witaispeechtotext", "", d)}
+#${@bb.utils.contains("MACHINE_FEATURES", "gbbluetooth", "enigma2-plugin-systemplugins-bluetoothsetup", "", d)}
+
+
 RDEPENDS_${PN} = "\
     oe-alliance-enigma2 \
     oe-alliance-branding \
@@ -24,8 +29,6 @@ RDEPENDS_${PN} = "\
     ${@bb.utils.contains("MACHINE_FEATURES", "no-nmap", "" , "nmap", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "emmc", "dosfstools mtools e2fsprogs-resize2fs partitions-by-name" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "fastboot", "dosfstools mtools android-tools" , "", d)} \
-    ${@bb.utils.contains("MACHINE_FEATURES", "vubluetooth", "enigma2-plugin-systemplugins-bluetoothsetup enigma2-plugin-extensions-witaispeechtotext", "", d)} \
-    ${@bb.utils.contains("MACHINE_FEATURES", "gbbluetooth", "enigma2-plugin-systemplugins-bluetoothsetup", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "recovery", "recovery" , "", d)} \
     ${@bb.utils.contains("DEFAULTTUNE", "sh4", "alsa-utils-amixer-conf" , "", d)} \
     ${@bb.utils.contains("TARGET_ARCH", "arm", "${GETEXTRA}", "", d)} \
