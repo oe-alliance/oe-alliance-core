@@ -1,10 +1,9 @@
-From dc8e0cb55f9e10f27a620f0241b6c0fd950e009d Mon Sep 17 00:00:00 2001
+From 939bd660a25634b2dd024635daeac1f84bacfb26 Mon Sep 17 00:00:00 2001
 From: Captain <captain.onboard@web.de>
 Date: Wed, 15 Jul 2020 18:07:08 +0200
 Subject: [PATCH] stb-settings-19
 
 ---
- addons/skin.estouchy/xml/Home.xml          |  2 +-
  addons/skin.estuary/xml/Home.xml           |  2 +-
  cmake/modules/FindFFMPEG.cmake             | 43 +++++++++-----
  cmake/platform/linux/stb.cmake             | 69 ++++++++++++++++++++++
@@ -19,25 +18,12 @@ Subject: [PATCH] stb-settings-19
  xbmc/guilib/guiinfo/SystemGUIInfo.cpp      |  5 ++
  xbmc/input/InputManager.cpp                | 12 ++++
  xbmc/view/ViewStateSettings.cpp            |  2 +-
- 15 files changed, 201 insertions(+), 42 deletions(-)
+ 14 files changed, 200 insertions(+), 41 deletions(-)
  create mode 100644 cmake/platform/linux/stb.cmake
  create mode 100644 cmake/treedata/common/stb.txt
 
-diff --git a/addons/skin.estouchy/xml/Home.xml b/addons/skin.estouchy/xml/Home.xml
-index 9979e08a59..f19bf8e412 100644
---- a/addons/skin.estouchy/xml/Home.xml
-+++ b/addons/skin.estouchy/xml/Home.xml
-@@ -183,7 +183,7 @@
- 				<content>
- 					<item>
- 						<label>13012</label>
--						<onclick>Shutdown</onclick>
-+						<onclick>XBMC.Quit()</onclick>
- 						<icon>icon_button_shutdown.png</icon>
- 					</item>
- 					<item>
 diff --git a/addons/skin.estuary/xml/Home.xml b/addons/skin.estuary/xml/Home.xml
-index 2fe691a119..4d16ead468 100644
+index 2fe691a119..61b72ad47f 100644
 --- a/addons/skin.estuary/xml/Home.xml
 +++ b/addons/skin.estuary/xml/Home.xml
 @@ -1022,7 +1022,7 @@
@@ -45,7 +31,7 @@ index 2fe691a119..4d16ead468 100644
  					<include content="IconButton">
  						<param name="control_id" value="804" />
 -						<param name="onclick" value="ActivateWindow(shutdownmenu)" />
-+						<param name="onclick" value="XBMC.Quit()" />
++						<param name="onclick" value="Shutdown" />
  						<param name="icon" value="icons/power.png" />
  						<param name="label" value="$LOCALIZE[33060]" />
  					</include>
