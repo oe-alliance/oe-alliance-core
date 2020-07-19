@@ -1,19 +1,18 @@
 require recipes-mediacenter/kodi/stb-kodi_${PV}.bb
 
-DEPENDS += "kodiegl"
-RDEPENDS_${PN} += "kodiegl"
-
-SRC_URI_append = " file://vuplus-fix-exception-duo4k.patch"
-
 PROVIDES += "virtual/kodi"
 RPROVIDES_${PN} += "virtual/kodi"
 PROVIDES += "kodi"
 RPROVIDES_${PN} += "kodi"
+RDEPENDS_${PN} += "v3d-libgles-${MACHINE}"
 
-INSANE_SKIP_${PN} += "file-rdeps"
+SRC_URI_append = " \
+	file://not_implementation_pcm_alsa19.patch \
+"
 
 EXTRA_OECMAKE += " \
-    -DWITH_PLATFORM=vuplus-cortexa15 \
+    -DWITH_PLATFORM=dags-cortexa15 \
     -DWITH_FFMPEG=stb \
 "
 
+INSANE_SKIP_${PN} += "file-rdeps"

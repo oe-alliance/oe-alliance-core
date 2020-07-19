@@ -13,7 +13,7 @@ SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
 
-SRC_URI = "git://github.com/oe-mirrors/enigma2-plugin-youtube.git;protocol=git"
+SRC_URI = "git://github.com/Taapat/enigma2-plugin-youtube.git;protocol=git"
 
 S="${WORKDIR}/git"
 
@@ -33,7 +33,12 @@ do_install_append() {
     install -d ${D}${PLUGINPATH}
     cp -rp ${S}/src/* ${D}${PLUGINPATH}
     cp -rp ${S}/po/* ${D}${PLUGINPATH}/locale
+	install -d ${D}/etc/enigma2
+	install -m 0644 ${S}/YouTube.key ${D}/etc/enigma2/YouTube.key
 }
+
+CONFFILES = "/etc/enigma2/YouTube.key"
+
 
 python populate_packages_prepend() {
     enigma2_plugindir = bb.data.expand('${libdir}/enigma2/python/Plugins', d)

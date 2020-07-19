@@ -11,14 +11,14 @@ SRCDATE = "20200415"
 #SRC_URI[md5sum] = "0a041ed3501bc5ff7f6c8cb67422e5be"
 #SRC_URI[sha256sum] = "152d0b2d21a909fbe1c4ab23c95973460c6c2bfa687dcb45313c5b95580980c0"
 
-DEPENDS += "octagon-libs-${MACHINE}"
+DEPENDS += "uclan-libs-${MACHINE}"
 PROVIDES += "virtual/kodi"
 RPROVIDES_${PN} += "virtual/kodi"
 PROVIDES += "kodi"
 RPROVIDES_${PN} += "kodi"
 
-RDEPENDS_${PN} += "octagon-libs-${MACHINE}"
-RDEPENDS_${PN} += "octagon-opengl-${SOC_FAMILY}"
+RDEPENDS_${PN} += "uclan-libs-${MACHINE}"
+RDEPENDS_${PN} += "uclan-opengl-${MACHINE}"
 
 #do_configure_append() {
 #        install -d ${D}${libdir}
@@ -32,4 +32,3 @@ EXTRA_OECMAKE += " \
     -DWITH_PLATFORM=clap-cortexa15 \
     -DWITH_FFMPEG=stb \
 "
-

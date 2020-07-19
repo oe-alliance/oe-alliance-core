@@ -1,0 +1,874 @@
+From 4e41a960b8257a84d753ec092abef0009aa84145 Mon Sep 17 00:00:00 2001
+From: Captain <captain.onboard@web.de>
+Date: Thu, 16 Jul 2020 06:19:26 +0200
+Subject: [PATCH] hiplayer-19
+
+---
+ .../resources/strings.po                      |  11 ++
+ cmake/platform/linux/stb.cmake                |   5 +-
+ system/settings/settings.xml                  |   6 +
+ xbmc/Application.cpp                          |  16 ++
+ xbmc/cores/VideoPlayer/VideoPlayer.cpp        | 116 +++++++++++-
+ xbmc/cores/VideoPlayer/VideoPlayer.h          |   7 +
+ .../VideoRenderers/HwDecRender/CMakeLists.txt |   3 +
+ .../HwDecRender/RendererHisi.cpp              | 165 ++++++++++++++++++
+ .../VideoRenderers/HwDecRender/RendererHisi.h |  56 ++++++
+ xbmc/cores/hiplayer/HiPlayerAudio.h           | 113 ++++++++++++
+ xbmc/cores/hiplayer/HiPlayerVideo.h           | 136 +++++++++++++++
+ xbmc/platform/posix/PlatformDefs.h            |   1 +
+ xbmc/settings/SettingConditions.cpp           |   3 +
+ xbmc/settings/Settings.cpp                    |   1 +
+ xbmc/settings/Settings.h                      |   1 +
+ xbmc/windowing/egl/WinSystemSTBContext.cpp    |   3 +
+ 16 files changed, 639 insertions(+), 4 deletions(-)
+ create mode 100644 xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/RendererHisi.cpp
+ create mode 100644 xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/RendererHisi.h
+ create mode 100644 xbmc/cores/hiplayer/HiPlayerAudio.h
+ create mode 100644 xbmc/cores/hiplayer/HiPlayerVideo.h
+
+diff --git a/addons/resource.language.en_gb/resources/strings.po b/addons/resource.language.en_gb/resources/strings.po
+index 64432e7700..f3e7981581 100644
+--- a/addons/resource.language.en_gb/resources/strings.po
++++ b/addons/resource.language.en_gb/resources/strings.po
+@@ -7230,6 +7230,17 @@ msgstr ""
+ 
+ #empty strings from id 13458 to 13459
+ 
++#: system/settings/settings.xml
++msgctxt "#13460"
++msgid "Allow hardware acceleration - HiPlayer"
++msgstr ""
++
++#. Description of setting with label #13457 "Allow hardware acceleration (HiPlayer)"
++#: system/settings/settings.xml
++msgctxt "#13461"
++msgid "Use HiPlayer for decoding of video files."
++msgstr ""
++
+ #: system/settings/settings.xml
+ msgctxt "#13460"
+ msgid "Use HEVC VAAPI"
+diff --git a/cmake/platform/linux/stb.cmake b/cmake/platform/linux/stb.cmake
+index e1fe54a13d..6816fb2246 100644
+--- a/cmake/platform/linux/stb.cmake
++++ b/cmake/platform/linux/stb.cmake
+@@ -59,9 +59,8 @@ elseif(WITH_PLATFORM STREQUAL "edision-cortexa15")
+   list(APPEND DEPLIBS EGL GLESv2 v3dplatform)
+ elseif(WITH_PLATFORM STREQUAL "clap-cortexa15")
+   list(APPEND PLATFORM_DEFINES "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_MALI -DUSE_HIPLAYER")
+-#  list(APPEND DEPLIBS ${CMAKE_SOURCE_DIR}xbmc/cores/hiplayer/hiplayer.a ${CMAKE_SOURCE_DIR}xbmc/linux/hisi/hiadp.a)
+-#  list(APPEND DEPLIBS EGL GLESv2 jpeg hi_common hi_msp)
+-  list(APPEND DEPLIBS EGL GLESv2 jpeg)
++  list(APPEND DEPLIBS ${CMAKE_SOURCE_DIR}/xbmc/cores/hiplayer/hiplayer.a ${CMAKE_SOURCE_DIR}/xbmc/linux/hisi/hiadp.a)
++  list(APPEND DEPLIBS EGL GLESv2 jpeg hi_common hi_msp)
+ endif()
+ 
+ 
+diff --git a/system/settings/settings.xml b/system/settings/settings.xml
+index c1ecb21ada..7ff43f0e41 100755
+--- a/system/settings/settings.xml
++++ b/system/settings/settings.xml
+@@ -137,6 +137,12 @@
+           <default>true</default>
+           <control type="toggle" />
+         </setting>
++	<setting id="videoplayer.usehiplayer" type="boolean" label="13460" help="13461">
++          <requirement>USE_HIPLAYER</requirement>
++          <level>2</level>
++          <default>true</default>
++          <control type="toggle" />
++        </setting>
+         <setting id="videoplayer.usevtb" type="boolean" label="13429" help="36160">
+           <requirement>HasVTB</requirement>
+           <level>2</level>
+diff --git a/xbmc/Application.cpp b/xbmc/Application.cpp
+index ed44da24ed..8cd8070fe8 100644
+--- a/xbmc/Application.cpp
++++ b/xbmc/Application.cpp
+@@ -520,6 +520,11 @@ bool CApplication::Create(const CAppParamParser &params)
+             extready ? "ok" : "nok");
+ #endif
+ 
++  std::string cmd("echo \"0\" > /proc/stb/vmpeg/0/enable");
++  system(cmd.c_str());
++  CLog::Log(LOGNOTICE,  "Hisi Clear Video backgroud: %s",cmd.c_str());
++  
++
+ #if defined(__arm__) || defined(__aarch64__)
+   if (CServiceBroker::GetCPUInfo()->GetCPUFeatures() & CPU_FEATURE_NEON)
+     CLog::Log(LOGINFO, "ARM Features: Neon enabled");
+@@ -4466,6 +4471,17 @@ void CApplication::VolumeChanged()
+   // if player has volume control, set it.
+   m_appPlayer.SetVolume(m_volumeLevel);
+   m_appPlayer.SetMute(m_muted);
++  
++  
++  int vol = m_muted?0:(int)(m_volumeLevel*100);
++  std::ostringstream sstreamer;
++  sstreamer << "echo ";
++  sstreamer << vol;
++  sstreamer << " > /proc/stb/avs/0/volume";
++  std::string cmd(sstreamer.str());
++  system(cmd.c_str());
++  
++  CLog::Log(LOGNOTICE, "Vol %d", vol);
+ }
+ 
+ int CApplication::GetSubtitleDelay()
+diff --git a/xbmc/cores/VideoPlayer/VideoPlayer.cpp b/xbmc/cores/VideoPlayer/VideoPlayer.cpp
+index c00d388abb..2224db4e7b 100644
+--- a/xbmc/cores/VideoPlayer/VideoPlayer.cpp
++++ b/xbmc/cores/VideoPlayer/VideoPlayer.cpp
+@@ -65,6 +65,11 @@
+ #include "LangInfo.h"
+ #include "URL.h"
+ 
++#ifdef USE_HIPLAYER
++#include "cores/hiplayer/HiPlayerVideo.h"
++#include "cores/hiplayer/HiPlayerAudio.h"
++#endif
++
+ #include "VideoPlayerAudio.h"
+ #include "windowing/WinSystem.h"
+ #include "DVDCodecs/DVDCodecUtils.h"
+@@ -566,11 +571,34 @@ int CSelectionStreams::CountType(StreamType type) const
+ 
+ void CVideoPlayer::CreatePlayers()
+ {
++#ifdef USE_HIPLAYER
++  if (m_hiplayer_mode && m_player_recreate)
++  {
++    DestroyPlayers();
++    m_player_recreate = false;
++  }
++#endif
++
+   if (m_players_created)
++  {
++    CLog::Log(LOGNOTICE, "m_players_created return back");
+     return;
+-
++  }
++#ifdef USE_HIPLAYER
++  if(m_hiplayer_mode && m_use_hicodec)
++  {
++    CLog::Log(LOGNOTICE, "CreatePlayers create hiplayer");
++    m_VideoPlayerVideo = new CHiPlayerVideo(&m_clock, &m_overlayContainer, m_messenger, m_renderManager, *m_processInfo);
++    m_VideoPlayerAudio = new CHiPlayerAudio(&m_clock, m_messenger, *m_processInfo);
++  }
++  else
++  {
++#endif
+   m_VideoPlayerVideo = new CVideoPlayerVideo(&m_clock, &m_overlayContainer, m_messenger, m_renderManager, *m_processInfo);
+   m_VideoPlayerAudio = new CVideoPlayerAudio(&m_clock, m_messenger, *m_processInfo);
++#ifdef USE_HIPLAYER
++  }
++#endif
+   m_VideoPlayerSubtitle = new CVideoPlayerSubtitle(&m_overlayContainer, *m_processInfo);
+   m_VideoPlayerTeletext = new CDVDTeletextData(*m_processInfo);
+   m_VideoPlayerRadioRDS = new CDVDRadioRDSData(*m_processInfo);
+@@ -623,6 +651,14 @@ CVideoPlayer::CVideoPlayer(IPlayerCallback& callback)
+ 
+   memset(&m_SpeedState, 0, sizeof(m_SpeedState));
+ 
++#ifdef USE_HIPLAYER
++  m_hiplayer_mode = CServiceBroker::GetSettingsComponent()->GetSettings()->GetBool(CSettings::SETTING_VIDEOPLAYER_USEHIPLAYER);
++  m_use_hicodec = m_hiplayer_mode;
++  m_player_recreate = false;
++#else
++  m_hiplayer_mode = false;
++#endif
++
+   m_SkipCommercials = true;
+ 
+   m_processInfo.reset(CProcessInfo::CreateInstance());
+@@ -657,6 +693,75 @@ bool CVideoPlayer::OpenFile(const CFileItem& file, const CPlayerOptions &options
+ {
+   CLog::Log(LOGINFO, "VideoPlayer::OpenFile: %s", CURL::GetRedacted(file.GetPath()).c_str());
+ 
++#ifdef USE_HIPLAYER
++  if(m_hiplayer_mode)
++  {
++    CLog::Log(LOGNOTICE, "VideoPlayer hiplayer checking decoder switch");
++    if(m_use_hicodec &&
++      !(file.IsType(".dts") ||file.IsType(".mp3")||file.IsType(".wav")||file.IsType(".wave")||file.IsType(".oga")
++      ||file.IsType(".ogg")||file.IsType(".flac")||file.IsType(".m4a")||file.IsType(".mp2")||file.IsType(".m2a")
++      ||file.IsType(".ac3")||file.IsType(".mka")||file.IsType(".aac")||file.IsType(".ape")||file.IsType(".alac")
++      ||file.IsType(".mpg")||file.IsType(".vob")||file.IsType(".m4v")||file.IsType(".mkv")||file.IsType(".avi")
++      ||file.IsType(".divx")||file.IsType(".dat")||file.IsType(".flv")||file.IsType(".mp4")||file.IsType(".mov")
++      ||file.IsType(".wmv")||file.IsType(".rm")||file.IsType(".rmvb")||file.IsType(".ogm")||file.IsType(".ogv")
++      ||file.IsType(".stream")||file.IsType(".amr")||file.IsType(".au")||file.IsType(".mid")||file.IsType(".wv")
++      ||file.IsType(".pva")||file.IsType(".wtv")||file.IsType(".ts")||file.IsType(".m2ts")
++      ))
++    {
++      CLog::Log(LOGNOTICE, "find drm use, switch to default player");
++
++      m_use_hicodec = false;
++
++      if (!IsRunning())
++      {
++        if(m_VideoPlayerVideo) delete m_VideoPlayerVideo;
++        if(m_VideoPlayerAudio) delete m_VideoPlayerAudio;
++
++        m_renderManager.UnInit();
++        m_renderManager.PreInit();
++
++        m_VideoPlayerVideo = new CVideoPlayerVideo(&m_clock, &m_overlayContainer, m_messenger, m_renderManager, *m_processInfo);
++        m_VideoPlayerAudio = new CVideoPlayerAudio(&m_clock, m_messenger, *m_processInfo);
++      }
++      else
++      {
++        m_player_recreate = true;
++      }
++    }
++    else if( !m_use_hicodec &&
++      (file.IsType(".dts") ||file.IsType(".mp3")||file.IsType(".wav")||file.IsType(".wave")||file.IsType(".oga")
++      ||file.IsType(".ogg")||file.IsType(".flac")||file.IsType(".m4a")||file.IsType(".mp2")||file.IsType(".m2a")
++      ||file.IsType(".ac3")||file.IsType(".mka")||file.IsType(".aac")||file.IsType(".ape")||file.IsType(".alac")
++      ||file.IsType(".mpg")||file.IsType(".vob")||file.IsType(".m4v")||file.IsType(".mkv")||file.IsType(".avi")
++      ||file.IsType(".divx")||file.IsType(".dat")||file.IsType(".flv")||file.IsType(".mp4")||file.IsType(".mov")
++      ||file.IsType(".wmv")||file.IsType(".rm")||file.IsType(".rmvb")||file.IsType(".ogm")||file.IsType(".ogv")
++      ||file.IsType(".stream")||file.IsType(".amr")||file.IsType(".au")||file.IsType(".mid")||file.IsType(".wv")
++      ||file.IsType(".pva")||file.IsType(".wtv")||file.IsType(".ts")||file.IsType(".m2ts")
++      ))
++    {
++      CLog::Log(LOGNOTICE, "find no drm use, switch to hicodec");
++
++      m_use_hicodec = true;
++
++      if (!IsRunning())
++      {
++        if(m_VideoPlayerVideo) delete m_VideoPlayerVideo;
++        if(m_VideoPlayerAudio) delete m_VideoPlayerAudio;
++
++        m_renderManager.UnInit();
++        m_renderManager.PreInit();
++
++        m_VideoPlayerVideo = new CHiPlayerVideo(&m_clock, &m_overlayContainer, m_messenger, m_renderManager, *m_processInfo);
++        m_VideoPlayerAudio = new CHiPlayerAudio(&m_clock, m_messenger, *m_processInfo);
++      }
++      else
++      {
++        m_player_recreate = true;
++      }
++    }
++  }
++#endif
++
+   if (IsRunning())
+   {
+     CDVDMsgOpenFile::FileParams params;
+@@ -2504,6 +2609,15 @@ void CVideoPlayer::HandleMessages()
+ 
+       FlushBuffers(DVD_NOPTS_VALUE, true, true);
+       m_renderManager.Flush(false, false);
++
++#ifdef USE_HIPLAYER
++      if(m_hiplayer_mode && m_player_recreate)
++      {
++          m_renderManager.UnInit();
++          m_renderManager.PreInit();
++      }
++#endif
++
+       SAFE_DELETE(m_pDemuxer);
+       m_pSubtitleDemuxer.reset();
+       m_subtitleDemuxerMap.clear();
+diff --git a/xbmc/cores/VideoPlayer/VideoPlayer.h b/xbmc/cores/VideoPlayer/VideoPlayer.h
+index 8661a172c1..788027a09b 100644
+--- a/xbmc/cores/VideoPlayer/VideoPlayer.h
++++ b/xbmc/cores/VideoPlayer/VideoPlayer.h
+@@ -538,4 +538,11 @@ protected:
+   bool m_UpdateStreamDetails;
+ 
+   std::atomic<bool> m_displayLost;
++  bool m_hiplayer_mode; // using hiplayer acceleration
++#ifdef USE_HIPLAYER
++  bool m_use_hicodec;
++  bool m_player_recreate;
++  friend class CHiPlayerVideo;
++  friend class CHiPlayerAudio;
++#endif
+ };
+diff --git a/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/CMakeLists.txt b/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/CMakeLists.txt
+index 6184affccf..164cd43aac 100644
+--- a/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/CMakeLists.txt
++++ b/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/CMakeLists.txt
+@@ -57,6 +57,9 @@ if(CORE_PLATFORM_NAME_LC STREQUAL gbm)
+   endif()
+ endif()
+ 
++list(APPEND SOURCES RendererHisi.cpp)
++list(APPEND HEADERS RendererHisi.h)
++
+ # we might want to build on linux systems
+ # with ENABLE_VDPAU=OFF and ENABLE_VAAPI=OFF
+ if(SOURCES)
+diff --git a/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/RendererHisi.cpp b/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/RendererHisi.cpp
+new file mode 100644
+index 0000000000..a8bef7fe0f
+--- /dev/null
++++ b/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/RendererHisi.cpp
+@@ -0,0 +1,165 @@
++/*
++ *  Copyright (C) 2007-2018 Team Kodi
++ *  This file is part of Kodi - https://kodi.tv
++ *
++ *  SPDX-License-Identifier: GPL-2.0-or-later
++ *  See LICENSES/README.md for more information.
++ */
++
++#include "RendererHisi.h"
++
++#include "utils/log.h"
++#include "platform/linux/SysfsPath.h"
++#include "settings/MediaSettings.h"
++#include "cores/VideoPlayer/VideoRenderers/RenderCapture.h"
++#include "cores/VideoPlayer/VideoRenderers/RenderFactory.h"
++#include "cores/VideoPlayer/VideoRenderers/RenderFlags.h"
++#include "cores/VideoPlayer/Buffers/VideoBuffer.h"
++#include "cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodec.h"
++#include "settings/AdvancedSettings.h"
++
++class CVideoBufferHisi;
++
++CRendererHisi::CRendererHisi()
++ : m_prevVPts(-1)
++ , m_bConfigured(false)
++{
++  CLog::Log(LOGNOTICE, "Constructing CRendererHisi");
++}
++
++CRendererHisi::~CRendererHisi()
++{
++  Reset();
++}
++
++CBaseRenderer* CRendererHisi::Create(CVideoBuffer *buffer)
++{
++  if(buffer)
++  {
++      CLog::Log(LOGNOTICE, "CRendererHisi::Create in, buffer:");
++      CLog::Log(LOGNOTICE, "format: %s", buffer->GetFormat());
++      CLog::Log(LOGNOTICE, "id: %d", buffer->GetId());
++      if( AV_PIX_FMT_NONE != buffer->GetFormat())
++        return nullptr;
++  }
++
++  return new CRendererHisi();
++}
++
++bool CRendererHisi::Register()
++{
++  CLog::Log(LOGNOTICE, "CRendererHisi::Register");
++  VIDEOPLAYER::CRendererFactory::RegisterRenderer("hisi", CRendererHisi::Create);
++  return true;
++}
++
++bool CRendererHisi::Configure(const VideoPicture &picture, float fps, unsigned int orientation)
++{
++    CLog::Log(LOGNOTICE, "CRendererHisi::Configure");
++
++  m_sourceWidth = picture.iWidth;
++  m_sourceHeight = picture.iHeight;
++  m_renderOrientation = orientation;
++
++  m_iFlags = GetFlagsChromaPosition(picture.chroma_position) |
++             GetFlagsColorMatrix(picture.color_space, picture.iWidth, picture.iHeight) |
++             GetFlagsColorPrimaries(picture.color_primaries) |
++             GetFlagsStereoMode(picture.stereoMode);
++
++  // Calculate the input frame aspect ratio.
++  CalculateFrameAspectRatio(picture.iDisplayWidth, picture.iDisplayHeight);
++  SetViewMode(m_videoSettings.m_ViewMode);
++  ManageRenderArea();
++
++  m_bConfigured = true;
++
++  return true;
++}
++
++CRenderInfo CRendererHisi::GetRenderInfo()
++{
++  CRenderInfo info;
++  info.max_buffer_size = m_numRenderBuffers;
++  info.optimal_buffer_size = m_numRenderBuffers;
++  info.opaque_pointer = (void *)this;
++  return info;
++}
++
++bool CRendererHisi::RenderCapture(CRenderCapture* capture)
++{
++  capture->BeginRender();
++  capture->EndRender();
++  //CScreenshotAML::CaptureVideoFrame((unsigned char *)capture->GetRenderBuffer(), capture->GetWidth(), capture->GetHeight());
++  return true;
++}
++
++void CRendererHisi::AddVideoPicture(const VideoPicture &picture, int index)
++{
++
++  ReleaseBuffer(index);
++
++  BUFFER &buf(m_buffers[index]);
++  if (picture.videoBuffer)
++  {
++    buf.videoBuffer = picture.videoBuffer;
++    buf.videoBuffer->Acquire();
++  }
++}
++
++void CRendererHisi::ReleaseBuffer(int idx)
++{
++  BUFFER &buf(m_buffers[idx]);
++  if (buf.videoBuffer)
++  {
++    buf.videoBuffer->Release();
++    buf.videoBuffer = nullptr;
++  }
++}
++
++bool CRendererHisi::Supports(ERENDERFEATURE feature)
++{
++  if (feature == RENDERFEATURE_ZOOM ||
++      feature == RENDERFEATURE_CONTRAST ||
++      feature == RENDERFEATURE_BRIGHTNESS ||
++      feature == RENDERFEATURE_NONLINSTRETCH ||
++      feature == RENDERFEATURE_VERTICAL_SHIFT ||
++      feature == RENDERFEATURE_STRETCH ||
++      feature == RENDERFEATURE_PIXEL_RATIO ||
++      feature == RENDERFEATURE_ROTATION)
++    return true;
++
++  return false;
++}
++
++void CRendererHisi::Reset()
++{
++  m_prevVPts = -1;
++  for (int i = 0 ; i < m_numRenderBuffers ; ++i)
++  {
++    if (m_buffers[i].videoBuffer)
++    {
++      m_buffers[i].videoBuffer->Release();
++      m_buffers[i].videoBuffer = nullptr;
++    }
++  }
++}
++
++void CRendererHisi::RenderUpdate(int index, int index2, bool clear, unsigned int flags, unsigned int alpha)
++{
++  ManageRenderArea();
++
++/*
++  CVideoBufferHisi *amli = dynamic_cast<CVideoBufferHisi *>(m_buffers[index].videoBuffer);
++  if(amli && amli->m_amlCodec)
++  {
++    int pts = amli->m_omxPts;
++    if (pts != m_prevVPts)
++    {
++      amli->m_amlCodec->ReleaseFrame(amli->m_bufferIndex);
++      amli->m_amlCodec->SetVideoRect(m_sourceRect, m_destRect);
++      amli->m_amlCodec = nullptr; //Mark frame as processed
++      m_prevVPts = pts;
++    }
++  }
++  CAMLCodec::PollFrame();*/
++}
+diff --git a/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/RendererHisi.h b/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/RendererHisi.h
+new file mode 100644
+index 0000000000..c0f3ad1d52
+--- /dev/null
++++ b/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/RendererHisi.h
+@@ -0,0 +1,56 @@
++/*
++ *  Copyright (C) 2007-2018 Team Kodi
++ *  This file is part of Kodi - https://kodi.tv
++ *
++ *  SPDX-License-Identifier: GPL-2.0-or-later
++ *  See LICENSES/README.md for more information.
++ */
++
++#pragma once
++
++#include "cores/VideoPlayer/VideoRenderers/BaseRenderer.h"
++
++class CRendererHisi : public CBaseRenderer
++{
++public:
++  CRendererHisi();
++  virtual ~CRendererHisi();
++
++  // Registration
++  static CBaseRenderer* Create(CVideoBuffer *buffer);
++  static bool Register();
++
++  virtual bool RenderCapture(CRenderCapture* capture) override;
++  virtual void AddVideoPicture(const VideoPicture &picture, int index) override;
++  virtual void ReleaseBuffer(int idx) override;
++  virtual bool Configure(const VideoPicture &picture, float fps, unsigned int orientation) override;
++  virtual bool IsConfigured() override { return m_bConfigured; };
++  virtual bool ConfigChanged(const VideoPicture &picture) { return false; };
++  virtual CRenderInfo GetRenderInfo() override;
++  virtual void UnInit() override {};
++  virtual void Update() override {};
++  virtual void RenderUpdate(int index, int index2, bool clear, unsigned int flags, unsigned int alpha) override;
++  virtual bool SupportsMultiPassRendering()override { return false; };
++
++  // Player functions
++  virtual bool IsGuiLayer() override { return false; };
++
++  // Feature support
++  virtual bool Supports(ESCALINGMETHOD method) override { return false; };
++  virtual bool Supports(ERENDERFEATURE feature) override;
++
++private:
++  void Reset();
++
++  static const int m_numRenderBuffers = 4;
++
++  struct BUFFER
++  {
++    BUFFER() : videoBuffer(nullptr) {};
++    CVideoBuffer *videoBuffer;
++    int duration;
++  } m_buffers[m_numRenderBuffers];
++
++  int m_prevVPts;
++  bool m_bConfigured;
++};
+diff --git a/xbmc/cores/hiplayer/HiPlayerAudio.h b/xbmc/cores/hiplayer/HiPlayerAudio.h
+new file mode 100644
+index 0000000000..64504d8d7a
+--- /dev/null
++++ b/xbmc/cores/hiplayer/HiPlayerAudio.h
+@@ -0,0 +1,113 @@
++#pragma once
++
++/*
++ *      Copyright (C) 2005-2015 Team Kodi
++ *      http://kodi.tv
++ *
++ *  This Program is free software; you can redistribute it and/or modify
++ *  it under the terms of the GNU General Public License as published by
++ *  the Free Software Foundation; either version 2, or (at your option)
++ *  any later version.
++ *
++ *  This Program is distributed in the hope that it will be useful,
++ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++ *  GNU General Public License for more details.
++ *
++ *  You should have received a copy of the GNU General Public License
++ *  along with Kodi; see the file COPYING.  If not, see
++ *  <http://www.gnu.org/licenses/>.
++ *
++ */
++
++#include <deque>
++#include <sys/types.h>
++
++#include "DVDStreamInfo.h"
++#include "threads/Thread.h"
++#include "IVideoPlayer.h"
++#include "DVDDemuxers/DVDDemux.h"
++#include "DVDMessageQueue.h"
++#include "utils/BitstreamStats.h"
++#include "cores/AudioEngine/Utils/AEAudioFormat.h"
++
++class CHiAudio;
++class CDVDAudioCodecHisi;
++
++class CHiPlayerAudio : public CThread, public IDVDStreamPlayerAudio
++{
++protected:
++  CDVDMessageQueue      m_messageQueue;
++  CDVDMessageQueue      &m_messageParent;
++
++  CDVDStreamInfo            m_hints_current;
++  CDVDStreamInfo            m_hints;
++  CDVDClock                 *m_av_clock;
++  CHiAudio                  *m_hisiAudio;
++  std::string               m_codec_name;
++  bool                      m_passthrough;
++  AEAudioFormat             m_format;
++  CDVDAudioCodecHisi        *m_pAudioCodec;
++  int                       m_speed;
++  bool                      m_silence;
++  double                    m_audioClock;
++  double                    m_start_pts ;
++
++  bool                      m_stalled;
++  IDVDStreamPlayer::ESyncState m_syncState;
++
++  BitstreamStats            m_audioStats;
++
++  bool                      m_buffer_empty;
++  bool                      m_flush;
++  bool                      m_DecoderOpen;
++
++  bool                      m_bad_state;
++  bool                      m_eos;
++  std::atomic_bool          m_bAbortOutput;
++	
++  virtual void OnStartup();
++  virtual void OnExit();
++  virtual void Process();
++  void OpenStream(CDVDStreamInfo &hints, CDVDAudioCodecHisi *codec);
++private:
++public:
++  CHiPlayerAudio(CDVDClock *av_clock, CDVDMessageQueue& parent, CProcessInfo &processInfo);
++  ~CHiPlayerAudio();
++  bool OpenStream(CDVDStreamInfo hints);
++  void SendMessage(CDVDMsg* pMsg, int priority = 0) { m_messageQueue.Put(pMsg, priority); }
++  void FlushMessages()                              { m_messageQueue.Flush(); }
++  bool AcceptsData() const                          { return !m_messageQueue.IsFull(); }
++  bool HasData() const                              ;
++  bool IsInited() const                             { return m_messageQueue.IsInited(); }
++  int  GetLevel() const                             { return m_messageQueue.GetLevel(); }
++  bool IsStalled() const                            { return m_stalled;  }
++  bool IsEOS();
++  void WaitForBuffers();
++  void CloseStream(bool bWaitForBuffers);
++  bool CodecChange();
++  bool Decode(DemuxPacket *pkt, bool bDropPacket, bool bTrickPlay);
++  void Flush(bool sync);
++  AEAudioFormat GetDataFormat(CDVDStreamInfo hints);
++  bool IsPassthrough() const;
++  bool OpenDecoder();
++  void CloseDecoder();
++  double GetDelay();
++  double GetCacheTime();
++  double GetCacheTotal();
++  double GetCurrentPts() { return m_audioClock; };
++  void SubmitEOS();
++
++  void SetDynamicRangeCompression(long drc)              {   }
++  float GetDynamicRangeAmplification() const             { return 0.0f; }
++  void SetSpeed(int iSpeed);
++  int  GetAudioBitrate();
++  int GetAudioChannels();
++  std::string GetPlayerInfo();
++
++  void SetVolume(float fVolume);
++  void SetMute(bool bOnOff);
++  
++  bool BadState() { return m_bad_state; }
++};
++
+diff --git a/xbmc/cores/hiplayer/HiPlayerVideo.h b/xbmc/cores/hiplayer/HiPlayerVideo.h
+new file mode 100644
+index 0000000000..924192e558
+--- /dev/null
++++ b/xbmc/cores/hiplayer/HiPlayerVideo.h
+@@ -0,0 +1,136 @@
++#pragma once
++
++/*
++ *      Copyright (C) 2005-2013 Team XBMC
++ *      http://xbmc.org
++ *
++ *  This Program is free software; you can redistribute it and/or modify
++ *  it under the terms of the GNU General Public License as published by
++ *  the Free Software Foundation; either version 2, or (at your option)
++ *  any later version.
++ *
++ *  This Program is distributed in the hope that it will be useful,
++ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++ *  GNU General Public License for more details.
++ *
++ *  You should have received a copy of the GNU General Public License
++ *  along with XBMC; see the file COPYING.  If not, see
++ *  <http://www.gnu.org/licenses/>.
++ *
++ */
++
++#include "threads/Thread.h"
++#include "IVideoPlayer.h"
++#include "DVDMessageQueue.h"
++#include "DVDStreamInfo.h"
++#include "DVDCodecs/Video/DVDVideoCodec.h"
++#include "DVDClock.h"
++#include "DVDOverlayContainer.h"
++//#include "DVDTSCorrection.h"
++#include "rendering/RenderSystem.h"
++#include "cores/VideoPlayer/VideoRenderers/RenderManager.h"
++#include "utils/BitstreamStats.h"
++#include "utils/BitstreamConverter.h"
++#include "utils/Geometry.h"
++#include <atomic>
++
++
++class CVideoBufferPoolHisi;
++class CDVDVideoCodecHisi;
++
++class CHiPlayerVideo : public CThread, public IDVDStreamPlayerVideo
++{
++public:
++  CHiPlayerVideo(CDVDClock* pClock
++                 ,CDVDOverlayContainer* pOverlayContainer
++                 ,CDVDMessageQueue& parent
++                 ,CRenderManager& renderManager,
++                 CProcessInfo &processInfo);
++  
++  virtual ~CHiPlayerVideo();
++
++  bool OpenStream(CDVDStreamInfo hint);
++  void CloseStream(bool bWaitForBuffers);
++
++  void Flush(bool sync);
++  bool AcceptsData() const { return !m_messageQueue.IsFull(); }
++  bool HasData() const ;
++  int  GetLevel() const { return m_messageQueue.GetLevel(); }
++  bool IsInited() const { return m_messageQueue.IsInited(); }
++  void SendMessage(CDVDMsg* pMsg, int priority = 0) { m_messageQueue.Put(pMsg, priority); }
++  void FlushMessages() { m_messageQueue.Flush(); }
++
++  void EnableSubtitle(bool bEnable) { m_bRenderSubs = bEnable; }
++  bool IsSubtitleEnabled() { return m_bRenderSubs; }
++  void EnableFullscreen(bool bEnable) { m_bAllowFullscreen = bEnable; }
++  double GetSubtitleDelay() { return m_iSubtitleDelay; }
++  void SetSubtitleDelay(double delay) { m_iSubtitleDelay = delay; }
++  bool IsStalled() const override { return m_stalled; }
++  bool IsRewindStalled() const override { return m_rewindStalled; }
++  double GetCurrentPts();
++  double GetOutputDelay(); /* returns the expected delay, from that a packet is put in queue */
++  int GetDecoderFreeSpace() { return 0; }
++  std::string GetPlayerInfo();
++  int GetVideoBitrate();
++  std::string GetStereoMode();
++  void SetSpeed(int iSpeed);
++	void	SubmitEOS();
++
++protected:
++  virtual void OnStartup();
++  virtual void OnExit();
++  virtual void Process();
++
++	
++	void OpenStream(CDVDStreamInfo &hint, CDVDVideoCodecHisi* codec);
++  void ProcessOverlays(double pts);
++	void ResolutionUpdateCallBack();
++	void Output(double pts, bool bDropPacket);
++	void SetVideoRect(const CRect &InSrcRect, const CRect &InDestRect);
++
++  CDVDStreamInfo m_hints;
++
++  std::shared_ptr<CVideoBufferPoolHisi> m_videoBufferPool;
++
++  int m_speed;
++
++  bool m_bRenderSubs;
++  bool m_bAllowFullscreen;
++  bool m_paused;
++  bool m_bFpsInvalid;        // needed to ignore fps (e.g. dvd stills)
++
++  float m_fForcedAspectRatio;
++	
++  double m_fFrameRate;       //framerate of the video currently playing
++  double m_iSubtitleDelay;
++
++  bool m_stalled;
++  std::atomic_bool m_rewindStalled;
++  std::atomic_bool m_bAbortOutput;
++	
++  BitstreamStats m_videoStats;
++	
++  CDVDMessageQueue  m_messageQueue;
++  CDVDMessageQueue& m_messageParent;
++  
++  CRenderManager& m_renderManager;
++
++  CDVDOverlayContainer  *m_pOverlayContainer;
++	
++	CBitstreamConverter *m_bitstream;
++
++  IDVDStreamPlayer::ESyncState m_syncState;
++
++	CDVDVideoCodecHisi * m_pVideoCodec;
++	
++  CRect                     m_src_rect;
++  CRect                     m_dst_rect;
++  RENDER_STEREO_MODE        m_video_stereo_mode;
++  RENDER_STEREO_MODE        m_display_stereo_mode;
++  bool                      m_StereoInvert;
++  double                    m_start_pts;
++
++  VideoPicture m_picture;
++};
++
+diff --git a/xbmc/platform/posix/PlatformDefs.h b/xbmc/platform/posix/PlatformDefs.h
+index e6e59fe4cc..4377221e45 100644
+--- a/xbmc/platform/posix/PlatformDefs.h
++++ b/xbmc/platform/posix/PlatformDefs.h
+@@ -65,6 +65,7 @@ typedef void* HINSTANCE;
+ typedef void* HMODULE;
+ 
+ typedef unsigned int  DWORD;
++typedef unsigned char BYTE;
+ #define INVALID_HANDLE_VALUE     ((HANDLE)~0U)
+ 
+ #define MAXWORD   0xffff
+diff --git a/xbmc/settings/SettingConditions.cpp b/xbmc/settings/SettingConditions.cpp
+index ebf3318107..4063030591 100644
+--- a/xbmc/settings/SettingConditions.cpp
++++ b/xbmc/settings/SettingConditions.cpp
+@@ -288,6 +288,9 @@ void CSettingConditions::Initialize()
+ #ifdef HAS_ZEROCONF
+   m_simpleConditions.insert("has_zeroconf");
+ #endif
++#ifdef USE_HIPLAYER
++  m_simpleConditions.insert("use_hiplayer");
++#endif
+ #ifdef HAVE_LIBVA
+   m_simpleConditions.insert("have_libva");
+ #endif
+diff --git a/xbmc/settings/Settings.cpp b/xbmc/settings/Settings.cpp
+index 77e31ba1af..5c51e0fea8 100644
+--- a/xbmc/settings/Settings.cpp
++++ b/xbmc/settings/Settings.cpp
+@@ -141,6 +141,7 @@ const std::string CSettings::SETTING_VIDEOPLAYER_USEVDPAUMPEG2 = "videoplayer.us
+ const std::string CSettings::SETTING_VIDEOPLAYER_USEVDPAUMPEG4 = "videoplayer.usevdpaumpeg4";
+ const std::string CSettings::SETTING_VIDEOPLAYER_USEVDPAUVC1 = "videoplayer.usevdpauvc1";
+ const std::string CSettings::SETTING_VIDEOPLAYER_USEDXVA2 = "videoplayer.usedxva2";
++const std::string CSettings::SETTING_VIDEOPLAYER_USEHIPLAYER = "videoplayer.usehiplayer";
+ const std::string CSettings::SETTING_VIDEOPLAYER_USEVTB = "videoplayer.usevtb";
+ const std::string CSettings::SETTING_VIDEOPLAYER_USEMMAL = "videoplayer.usemmal";
+ const std::string CSettings::SETTING_VIDEOPLAYER_USEPRIMEDECODER = "videoplayer.useprimedecoder";
+diff --git a/xbmc/settings/Settings.h b/xbmc/settings/Settings.h
+index f56ebe9a40..54bcfa0f59 100644
+--- a/xbmc/settings/Settings.h
++++ b/xbmc/settings/Settings.h
+@@ -106,6 +106,7 @@ public:
+   static const std::string SETTING_VIDEOPLAYER_USEVDPAUMPEG4;
+   static const std::string SETTING_VIDEOPLAYER_USEVDPAUVC1;
+   static const std::string SETTING_VIDEOPLAYER_USEDXVA2;
++  static const std::string SETTING_VIDEOPLAYER_USEHIPLAYER;
+   static const std::string SETTING_VIDEOPLAYER_USEVTB;
+   static const std::string SETTING_VIDEOPLAYER_USEMMAL;
+   static const std::string SETTING_VIDEOPLAYER_USEPRIMEDECODER;
+diff --git a/xbmc/windowing/egl/WinSystemSTBContext.cpp b/xbmc/windowing/egl/WinSystemSTBContext.cpp
+index 623de92cc6..a9329ba049 100644
+--- a/xbmc/windowing/egl/WinSystemSTBContext.cpp
++++ b/xbmc/windowing/egl/WinSystemSTBContext.cpp
+@@ -21,6 +21,8 @@
+ #include "cores/VideoPlayer/VideoRenderers/LinuxRendererGL.h"
+ #endif
+ 
++#include "cores/VideoPlayer/VideoRenderers/HwDecRender/RendererHisi.h"
++
+ #include "cores/VideoPlayer/VideoRenderers/RenderFactory.h"
+ #include "guilib/GUIComponent.h"
+ #include "guilib/GUIWindowManager.h"
+@@ -46,6 +48,7 @@ bool CWinSystemSTBContext::InitWindowSystem()
+   VIDEOPLAYER::CRendererFactory::ClearRenderer();
+ #ifdef HAS_GLES
+   CLinuxRendererGLES::Register();
++  CRendererHisi::Register();
+   RETRO::CRPProcessInfo::RegisterRendererFactory(new RETRO::CRendererFactoryOpenGLES);
+ #else
+   CLinuxRendererGL::Register();
+-- 
+2.27.0.windows.1
+

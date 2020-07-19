@@ -89,24 +89,9 @@ SRC_URI = "git://github.com/xbmc/xbmc.git;protocol=https;branch=master \
            file://shader-nopow-19.patch \
            file://stb-support-19.patch \
            file://stb-settings-19.patch \
+           ${@bb.utils.contains_any('MACHINE_FEATURES', 'hisil-3798mv200 hisi', '' , 'file://e2-player.patch', d)} \
+           ${@bb.utils.contains_any('MACHINE_FEATURES', 'hisil-3798mv200 hisi', '' , 'file://gst-player.patch', d)} \
           "
-
-#SRC_URI_append_u5 = " file://eglwrapper.patch"
-#SRC_URI_append_u51 = " file://eglwrapper.patch"
-#SRC_URI_append_u52 = " file://eglwrapper.patch"
-#SRC_URI_append_u53 = " file://eglwrapper.patch"
-#SRC_URI_append_u54 = " file://eglwrapper.patch"
-#SRC_URI_append_u55 = " file://eglwrapper.patch"
-#SRC_URI_append_u56 = " file://eglwrapper.patch"
-#SRC_URI_append_u5pvr = " file://eglwrapper.patch"
-#SRC_URI_append_u532 = " file://eglwrapper.patch"
-#SRC_URI_append_u533 = " file://eglwrapper.patch"
-
-
-#SRC_URI_append_libc-musl = " \
-#           file://0002-Fix-file_Emu-on-musl.patch \
-#           file://0003-Remove-FILEWRAP.patch \
-#"
 
 S = "${WORKDIR}/git"
 
