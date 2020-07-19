@@ -8,6 +8,8 @@ DEPENDS = "libgcrypt libgpg-error bison-native"
 inherit gitpkgv
 
 SRCREV = "${AUTOREV}"
+SRCREV_sh4 = "d21f488eb8c8c23ed693f4551e1428e4622ec25b"
+
 PV = "0.9.0+git${SRCPV}"
 PKGV = "0.9.0+git${GITPKGV}"
 
