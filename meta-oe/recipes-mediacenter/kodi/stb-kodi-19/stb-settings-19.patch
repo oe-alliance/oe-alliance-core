@@ -1,4 +1,4 @@
-From 939bd660a25634b2dd024635daeac1f84bacfb26 Mon Sep 17 00:00:00 2001
+From e85b3800bb80892e096a6438693ac11f8eed2635 Mon Sep 17 00:00:00 2001
 From: Captain <captain.onboard@web.de>
 Date: Wed, 15 Jul 2020 18:07:08 +0200
 Subject: [PATCH] stb-settings-19
@@ -441,7 +441,7 @@ index d240953fe4..2c9100f84e 100644
    ROOT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
    PREFIX := $(ROOT_DIR)/dvdread-install
 diff --git a/xbmc/guilib/guiinfo/SystemGUIInfo.cpp b/xbmc/guilib/guiinfo/SystemGUIInfo.cpp
-index 8fbe6fefe2..56d23ff1d6 100644
+index 8fbe6fefe2..ad6d270c35 100644
 --- a/xbmc/guilib/guiinfo/SystemGUIInfo.cpp
 +++ b/xbmc/guilib/guiinfo/SystemGUIInfo.cpp
 @@ -57,6 +57,11 @@ std::string CSystemGUIInfo::GetSystemHeatInfo(int info) const
@@ -451,7 +451,7 @@ index 8fbe6fefe2..56d23ff1d6 100644
 +#if defined(TARGET_STB_EXTEND)
 +    m_gpuTemp = m_cpuTemp;
 +#else
-+     m_gpuTemp = GetGPUTemperature();
++    m_gpuTemp = GetGPUTemperature();
 +#endif
  #endif
    }
