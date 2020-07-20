@@ -1,0 +1,24 @@
+diff --git a/src/devtools/read_file.h b/src/devtools/read_file.h
+index 953b2ef..28fa684 100644
+--- a/src/devtools/read_file.h
++++ b/src/devtools/read_file.h
+@@ -17,6 +17,7 @@
+  * <http://www.gnu.org/licenses/>.
+  */
+ 
++#include <sys/types.h>
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <errno.h>
+diff --git a/src/devtools/uk_dump.c b/src/devtools/uk_dump.c
+index 2c91bdd..62e632d 100644
+--- a/src/devtools/uk_dump.c
++++ b/src/devtools/uk_dump.c
+@@ -21,6 +21,7 @@
+ #include "util/macro.h"
+ #include "libaacs/unit_key.h"
+ 
++#include <stddef.h>
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
