@@ -8,11 +8,13 @@ DEPENDS = "libgcrypt libgpg-error bison-native"
 inherit gitpkgv
 
 SRCREV = "${AUTOREV}"
-PV = "0.9.0+git${SRCPV}"
-PKGV = "0.9.0+git${GITPKGV}"
+PV = "0.10.0+git${SRCPV}"
+PKGV = "0.10.0+git${GITPKGV}"
 
 SRC_URI = "git://code.videolan.org/videolan/${BPN}.git;protocol=https \
         file://libgcrypt-gpg-error-use-pkgconfig.patch"
+
+SRC_URI_append_sh4 = " file://add-missing-includes-for-gcc-4-9-4.patch"
 
 S = "${WORKDIR}/git"
 
