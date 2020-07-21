@@ -8,8 +8,8 @@ require airdigital-dvb-modules.inc
 
 SRC_URI_append = " file://suspend.sh"
 
-SRC_URI[md5sum] = "8d57ff67bd460460c77afbec44c28e7d"
-SRC_URI[sha256sum] = "af65bc6ee3cc5e9189a292a6e0868edd32b5eac060cc557beb253340dba0928a"
+SRC_URI[md5sum] = "bbdb3563ee384e92774ca9976d57e970"
+SRC_URI[sha256sum] = "0ef0b4cfd04ef5e08f4e06b801ed8225a2f5d70ffaf1fea482c8336640d6bd63"
 
 INITSCRIPT_NAME = "suspend"
 INITSCRIPT_PARAMS = "start 89 0 ."
