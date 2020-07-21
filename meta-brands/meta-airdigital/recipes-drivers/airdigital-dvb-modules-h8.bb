@@ -8,8 +8,8 @@ require airdigital-dvb-modules.inc
 
 SRC_URI_append = " file://suspend.sh"
 
-SRC_URI[md5sum] = "6e9e3e266a0cd28809d6bbf2813a7743"
-SRC_URI[sha256sum] = "c0cd66021497542beae321744a72132ac3737de92ff31f4d07314bd553c9dbd4"
+SRC_URI[md5sum] = "bbdb3563ee384e92774ca9976d57e970"
+SRC_URI[sha256sum] = "0ef0b4cfd04ef5e08f4e06b801ed8225a2f5d70ffaf1fea482c8336640d6bd63"
 
 INITSCRIPT_NAME = "suspend"
 INITSCRIPT_PARAMS = "start 89 0 ."
@@ -24,6 +24,7 @@ do_install_append() {
 
 do_package_qa() {
 }
+
 
 FILES_${PN} += " ${bindir} ${sysconfdir}/init.d"
 
