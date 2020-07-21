@@ -1,7 +1,7 @@
-SRCDATE = "20191015.r0"
+SRCDATE = "20200401.r0"
 
 require gb-v3ddriver.inc
 
-SRC_URI[md5sum] = "27a19d7d5ea3712f365b08f08291adc0"
-SRC_URI[sha256sum] = "3c95f5c3abaddfa679afec4af9f3e002d95aa99b8121cfbcd375ce03fc2e4443"
+SRC_URI[md5sum] = "293909d72f450145f59a2430ebe0577e"
+SRC_URI[sha256sum] = "6043fc4bb0989c48a07deefdde08acafca7f5d76f5b8df650cd2a9d9a3727c4b"
 COMPATIBLE_MACHINE = "gb72604"
