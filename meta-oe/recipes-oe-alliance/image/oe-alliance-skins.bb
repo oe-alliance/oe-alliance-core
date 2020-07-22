@@ -7,7 +7,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r0"
+PR = "r1"
 
 inherit packagegroup
 
@@ -22,4 +22,6 @@ RDEPENDS_${PN} = "\
 	enigma2-plugin-skins-kravenfhd \
 	enigma2-plugin-skins-kravenvb \
 	enigma2-plugin-skins-pli-hd-fullnight \
+	enigma2-plugin-skins-kiddac-1080-slyk-q \
+	enigma2-plugin-skins-kiddac-1080-slyk-r19 \
 	"
