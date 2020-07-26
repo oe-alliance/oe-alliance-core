@@ -10,7 +10,7 @@ PV = "7.6.x+git${SRCPV}"
 PKGV = "7.6.x+git${GITPKGV}"
 VER="7.6.x"
 
-DEPENDS_${PN} += "gettext-native"
+DEPENDS += "gettext-native"
 RDEPENDS_${PN} += "python-imaging python-subprocess python-requests python-lxml enigma2-plugin-systemplugins-mphelp"
 RCONFLICTS_${PN} += "enigma2-plugin-skins-kravenfhd enigma2-plugin-skins-kravenvb"
 RREPLACES_${PN} += "enigma2-plugin-skins-kravenfhd enigma2-plugin-skins-kravenvb"
