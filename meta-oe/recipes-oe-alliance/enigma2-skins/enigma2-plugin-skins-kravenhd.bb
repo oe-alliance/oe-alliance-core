@@ -10,14 +10,13 @@ PV = "7.6.x+git${SRCPV}"
 PKGV = "7.6.x+git${GITPKGV}"
 VER="7.6.x"
 
-DEPENDS_${PN} += "gettext-native"
+DEPENDS += "gettext-native"
 RDEPENDS_${PN} = "${PYTHON_PN}-requests ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-subprocess", "", d)} ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-imaging", "${PYTHON_PN}-pillow", d)} enigma2-plugin-systemplugins-mphelp ${PYTHON_PN}-lxml"
 RCONFLICTS_${PN} += "enigma2-plugin-skins-kravenfhd enigma2-plugin-skins-kravenvb"
 RREPLACES_${PN} += "enigma2-plugin-skins-kravenfhd enigma2-plugin-skins-kravenvb"
 RPROVIDES_${PN} += "enigma2-plugin-skins-kravenfhd enigma2-plugin-skins-kravenvb"
 
-
-SRC_URI="git://github.com/KravenHD/KravenHD.git;protocol=git"
+SRC_URI="git://github.com/oerlgrey/KravenHD.git;protocol=git"
 
 FILES_${PN} = "/usr/*"
 
