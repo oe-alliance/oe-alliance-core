@@ -18,8 +18,6 @@ RPROVIDES_${PN} += "enigma2-plugin-skins-kravenfhd enigma2-plugin-skins-kravenvb
 
 SRC_URI="git://github.com/oerlgrey/KravenHD.git;protocol=git"
 
-PACKAGES =+ " ${PN}-src"
-
 FILES_${PN} = "/usr/*"
 FILES_${PN}-src = "\
     /usr/lib/enigma2/python/Components/Converter/*.py \
