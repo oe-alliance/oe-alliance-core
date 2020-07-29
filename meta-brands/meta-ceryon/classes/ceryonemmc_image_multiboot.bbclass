@@ -50,9 +50,9 @@ IMAGE_CMD_ceryonemmc () {
     mkfs.msdos -S 512 ${WORKDIR}/boot.img
     echo "boot emmcflash0.linuxkernel 'brcm_cma=504M@264M brcm_cma=192M@768M brcm_cma=1024M@2048M root=/dev/mmcblk0p3 rootsubdir=linuxrootfs1 kernel=/dev/mmcblk0p2 rw rootwait ${MACHINE}_4.boxmode=5'" > ${WORKDIR}/STARTUP
     echo "boot emmcflash0.linuxkernel 'brcm_cma=504M@264M brcm_cma=192M@768M brcm_cma=1024M@2048M root=/dev/mmcblk0p3 rootsubdir=linuxrootfs1 kernel=/dev/mmcblk0p2 rw rootwait ${MACHINE}_4.boxmode=5'" > ${WORKDIR}/STARTUP_1
-    echo "boot emmcflash0.linuxkernel2 'brcm_cma=504M@264M brcm_cma=192M@768M brcm_cma=1024M@2048M root=/dev/mmcblk0p7 rootsubdir=linuxrootfs2 kernel=/dev/mmcblk0p4 rw rootwait ${MACHINE}_4.boxmode=5'" > ${WORKDIR}/STARTUP_2
-    echo "boot emmcflash0.linuxkernel3 'brcm_cma=504M@264M brcm_cma=192M@768M brcm_cma=1024M@2048M root=/dev/mmcblk0p7 rootsubdir=linuxrootfs3 kernel=/dev/mmcblk0p5 rw rootwait ${MACHINE}_4.boxmode=5'" > ${WORKDIR}/STARTUP_3
-    echo "boot emmcflash0.linuxkernel4 'brcm_cma=504M@264M brcm_cma=192M@768M brcm_cma=1024M@2048M root=/dev/mmcblk0p7 rootsubdir=linuxrootfs4 kernel=/dev/mmcblk0p6 rw rootwait ${MACHINE}_4.boxmode=5'" > ${WORKDIR}/STARTUP_4
+    echo "boot emmcflash0.linuxkernel2 'brcm_cma=504M@264M brcm_cma=192M@768M brcm_cma=1024M@2048M root=/dev/mmcblk0p8 rootsubdir=linuxrootfs2 kernel=/dev/mmcblk0p4 rw rootwait ${MACHINE}_4.boxmode=5'" > ${WORKDIR}/STARTUP_2
+    echo "boot emmcflash0.linuxkernel3 'brcm_cma=504M@264M brcm_cma=192M@768M brcm_cma=1024M@2048M root=/dev/mmcblk0p8 rootsubdir=linuxrootfs3 kernel=/dev/mmcblk0p5 rw rootwait ${MACHINE}_4.boxmode=5'" > ${WORKDIR}/STARTUP_3
+    echo "boot emmcflash0.linuxkernel4 'brcm_cma=504M@264M brcm_cma=192M@768M brcm_cma=1024M@2048M root=/dev/mmcblk0p8 rootsubdir=linuxrootfs4 kernel=/dev/mmcblk0p6 rw rootwait ${MACHINE}_4.boxmode=5'" > ${WORKDIR}/STARTUP_4
     mcopy -i ${WORKDIR}/boot.img -v ${WORKDIR}/STARTUP ::
     mcopy -i ${WORKDIR}/boot.img -v ${WORKDIR}/STARTUP_1 ::
     mcopy -i ${WORKDIR}/boot.img -v ${WORKDIR}/STARTUP_2 ::
