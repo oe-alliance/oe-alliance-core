@@ -15,7 +15,7 @@ RDEPENDS_${PN}-dev += "bash python3-core"
 
 inherit gitpkgv
 
-SRCREV = "ddfde6814073a136584aa06d4a3fce5fbb518fb0"
+SRCREV = "${AUTOREV}"
 PV = "1.52-DEV+git${SRCPV}"
 
 GO_IMPORT = "github.com/rclone/rclone"
@@ -24,7 +24,7 @@ SRC_URI = "git://${GO_IMPORT};protocol=https;branch=master \
            file://0001-Revert-lib-add-plugin-support.patch \
            file://rclonefs"
 
-inherit go upx-compress
+inherit go-mod upx-compress
 
 GO_DYNLINK_aarch64 = ""
 GO_DYNLINK_arm = ""
@@ -33,4 +33,10 @@ do_install_append() {
     rm -rf ${D}${bindir}/test*
     install -m 755 ${WORKDIR}/rclonefs ${D}${bindir}
     ln -sf rclone ${D}${bindir}/mount.rclone
+}
+
+# module cloud.google.com contains test files for various arches
+# which are causing false positives at do_package_qa
+
+do_package_qa() {
 }

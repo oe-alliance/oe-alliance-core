@@ -1,6 +1,6 @@
 --- a/src/github.com/rclone/rclone/CONTRIBUTING.md
 +++ b/src/github.com/rclone/rclone/CONTRIBUTING.md
-@@ -390,37 +390,3 @@ alphabetical order of full name of remote (eg `drive` is ordered as
+@@ -379,37 +379,3 @@ alphabetical order of full name of remote (eg `drive` is ordered as
  
  Once you've written the docs, run `make serve` and check they look OK
  in the web browser and the links (internal and external) all work.
@@ -59,8 +59,9 @@
 -// about "no buildable Go source files".
 --- a/src/github.com/rclone/rclone/lib/plugin/plugin.go
 +++ /dev/null
-@@ -1,41 +0,0 @@
+@@ -1,42 +0,0 @@
 -// +build darwin linux
+-// +build !gccgo
 -
 -package plugin
 -

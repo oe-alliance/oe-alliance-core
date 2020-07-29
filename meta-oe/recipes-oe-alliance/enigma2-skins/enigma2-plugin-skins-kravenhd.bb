@@ -1,69 +1,63 @@
-SUMMARY = "KravenHD Skin for Enigma2 by Kraven"
-MAINTAINER = "Kraven"
-inherit allarch
+SUMMARY = "KravenHD Skin for Enigma2 by Team Kraven"
+MAINTAINER = "Team Kraven"
 
 require conf/license/license-gplv2.inc
 
-inherit gitpkgv
+inherit gitpkgv allarch gettext
 
 SRCREV = "${AUTOREV}"
-PV = "7.3.0+git${SRCPV}"
-PKGV = "7.3.0+git${GITPKGV}"
-VER="7.3.0"
+PV = "7.6.x+git${SRCPV}"
+PKGV = "7.6.x+git${GITPKGV}"
+VER="7.6.x"
 
+DEPENDS += "gettext-native"
 RDEPENDS_${PN} = "${PYTHON_PN}-requests ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-subprocess", "", d)} ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-imaging", "${PYTHON_PN}-pillow", d)} enigma2-plugin-systemplugins-mphelp ${PYTHON_PN}-lxml"
+RCONFLICTS_${PN} += "enigma2-plugin-skins-kravenfhd enigma2-plugin-skins-kravenvb"
+RREPLACES_${PN} += "enigma2-plugin-skins-kravenfhd enigma2-plugin-skins-kravenvb"
+RPROVIDES_${PN} += "enigma2-plugin-skins-kravenfhd enigma2-plugin-skins-kravenvb"
 
-SRC_URI="git://github.com/openatv/KravenHD.git;protocol=git"
+SRC_URI="git://github.com/oerlgrey/KravenHD.git;protocol=git"
 
 FILES_${PN} = "/usr/*"
 
 S = "${WORKDIR}/git"
 
+do_compile() {
+    python -O -m compileall ${S}/usr
+    for f in $(find ${S}/locale -name *.po ); do
+        l=$(echo ${f%} | sed 's/\.po//' | sed 's/.*locale\///')
+        #mkdir -p ${S}/usr/lib/enigma2/python/Plugins/Extensions/KravenHD/locale/${l%}/LC_MESSAGES
+        #msgfmt -o ${S}/usr/lib/enigma2/python/Plugins/Extensions/KravenHD/locale/${l%}/LC_MESSAGES/KravenHD.mo ${S}/usr/lib/enigma2$
+    done
+}
+
 do_install() {
-    install -d ${D}/usr/share/enigma2
-    cp -rp ${S}/usr ${D}/
+    install -d ${D}${libdir}
+    install -d ${D}/usr/share
+    cp -r --preserve=mode,links ${S}/usr/lib/* ${D}/usr/lib/
+    cp -r --preserve=mode,links ${S}/usr/share/* ${D}/usr/share/
     chmod -R a+rX ${D}/usr/share/enigma2/
 }
 
 pkg_postinst_${PN} () {
 #!/bin/sh
-if [ -f /tmp/ibar.png ]; then
-    mv -f /tmp/ibar.png /usr/share/enigma2/KravenHD
+if [ -f /tmp/kravenhdskin ]; then
+    mv -f /tmp/kravenhdskin /usr/share/enigma2/KravenHD/skin.xml
 fi
-if [ -f /tmp/ibaro.png ]; then
-    mv -f /tmp/ibaro.png /usr/share/enigma2/KravenHD
+if [ -d /tmp/graphicshd ]; then
+    mv -f /tmp/graphicshd/* /usr/share/enigma2/KravenHD/graphics/
 fi
-if [ -f /tmp/ibaro2.png ]; then
-    mv -f /tmp/ibaro2.png /usr/share/enigma2/KravenHD
+if [ -f /tmp/skin-user-hd.xml ]; then
+    mv -f /tmp/skin-user-hd.xml /usr/lib/enigma2/python/Plugins/Extensions/KravenHD/data/HD/skin-user.xml
 fi
-if [ -f /tmp/ibaro3.png ]; then
-    mv -f /tmp/ibaro3.png /usr/share/enigma2/KravenHD
+if [ -f /tmp/skin-user-fhd.xml ]; then
+    mv -f /tmp/skin-user-fhd.xml /usr/lib/enigma2/python/Plugins/Extensions/KravenHD/data/FHD/skin-user.xml
 fi
-if [ -f /tmp/backg.png ]; then
-    mv -f /tmp/backg.png /usr/share/enigma2/KravenHD
+if [ -f /tmp/icon1.png ]; then
+    mv -f /tmp/icon1.png /usr/share/enigma2/KravenHD/buttons/icon1.png
 fi
-if [ -f /tmp/header-kraven/ibar_000000.png ]; then
-    mkdir /usr/share/enigma2/KravenHD/header-kraven
-    mv -f /tmp/header-kraven/*.* /usr/share/enigma2/KravenHD/header-kraven
-fi
-if [ -f /tmp/skin-user.xml ]; then
-    mv -f /tmp/skin-user.xml /usr/lib/enigma2/python/Plugins/Extensions/KravenHD/data
-fi
-if [ -f /tmp/icons-dark/icons/key_ok.png ]; then
-	mkdir /usr/share/enigma2/KravenHD/icons-dark/icons
-	mkdir /usr/share/enigma2/KravenHD/icons-dark/infobar
-	mkdir /usr/share/enigma2/KravenHD/icons-dark/message
-	mv -f /tmp/icons-dark/icons/*.* /usr/share/enigma2/KravenHD/icons-dark/icons
-	mv -f /tmp/icons-dark/infobar/*.* /usr/share/enigma2/KravenHD/icons-dark/infobar
-	mv -f /tmp/icons-dark/message/*.* /usr/share/enigma2/KravenHD/icons-dark/message
-	rm -rf /tmp/icons-dark
-	mkdir /usr/share/enigma2/KravenHD/icons-light/icons
-	mkdir /usr/share/enigma2/KravenHD/icons-light/infobar
-	mkdir /usr/share/enigma2/KravenHD/icons-light/message
-	mv -f /tmp/icons-light/icons/*.* /usr/share/enigma2/KravenHD/icons-light/icons
-	mv -f /tmp/icons-light/infobar/*.* /usr/share/enigma2/KravenHD/icons-light/infobar
-	mv -f /tmp/icons-light/message/*.* /usr/share/enigma2/KravenHD/icons-light/message
-	rm -rf /tmp/icons-light
+if [ -f /usr/lib/enigma2/python/Plugins/Extensions/KravenHD/plugin.py* ]; then
+    wget -q -O /dev/null 'http://127.0.0.1/web/message?type=1&text=KravenHD%20wurde%20erfolgreich%20installiert.%0A%0AZur%20Nutzung%20rufen%20Sie%20das%20Plugin%20auf,%20speichern%20Ihre%20Einstellungen%0Aund%20starten%20die%20Oberfl%C3%A4che%20neu.&timeout=13' || true
 fi
 echo " .##....##.########.....###....##.....##.########.##....## "
 echo " .##...##..##.....##...##.##...##.....##.##.......###...## "
@@ -73,15 +67,15 @@ echo " .##..##...##...##...#########..##...##..##.......##..#### "
 echo " .##...##..##....##..##.....##...##.##...##.......##...### "
 echo " .##....##.##.....##.##.....##....###....########.##....## "
 echo " .........................................................."
-echo "                    .##.....##.########.                   "
-echo "                    .##.....##.##.....##                   "
-echo "                    .##.....##.##.....##                   "
-echo "                    .#########.##.....##                   "
-echo "                    .##.....##.##.....##                   "
-echo "                    .##.....##.##.....##                   "
-echo "                    .##.....##.########.                   "
+echo "                    .##....##..#######...                  "
+echo "                    .##....##..##....##..                  "
+echo "                    .##....##..##.....##.                  "
+echo "                    .########..##.....##.                  "
+echo "                    .##....##..##.....##.                  "
+echo "                    .##....##..##....##..                  "
+echo "                    .##....##..#######...                  "
 echo "                                                           "
-echo "              ...Skin successful installed.                "
+echo "               ...Skin successful installed.               "
 exit 0
 }
 
@@ -99,13 +93,13 @@ echo " .##..##...##...##...#########..##...##..##.......##..#### "
 echo " .##...##..##....##..##.....##...##.##...##.......##...### "
 echo " .##....##.##.....##.##.....##....###....########.##....## "
 echo " .........................................................."
-echo "                    .##.....##.########.                   "
-echo "                    .##.....##.##.....##                   "
-echo "                    .##.....##.##.....##                   "
-echo "                    .#########.##.....##                   "
-echo "                    .##.....##.##.....##                   "
-echo "                    .##.....##.##.....##                   "
-echo "                    .##.....##.########.                   "
+echo "                    .##....##..#######...                  "
+echo "                    .##....##..##....##..                  "
+echo "                    .##....##..##.....##.                  "
+echo "                    .########..##.....##.                  "
+echo "                    .##....##..##.....##.                  "
+echo "                    .##....##..##....##..                  "
+echo "                    .##....##..#######...                  "
 echo "                                                           "
 echo "               ...Skin successful removed.                 "
 exit 0
@@ -113,61 +107,36 @@ exit 0
 
 pkg_preinst_${PN} () {
 #!/bin/sh
-echo "Checking for obsolete KravenHD Plugin"
-if [ -f /usr/share/enigma2/KravenHD/ibar.png ]; then
-    cp /usr/share/enigma2/KravenHD/ibar.png /tmp
-fi
-if [ -f /usr/share/enigma2/KravenHD/ibaro.png ]; then
-    cp /usr/share/enigma2/KravenHD/ibaro.png /tmp
-fi
-if [ -f /usr/share/enigma2/KravenHD/ibaro2.png ]; then
-    cp /usr/share/enigma2/KravenHD/ibaro2.png /tmp
-fi
-if [ -f /usr/share/enigma2/KravenHD/ibaro3.png ]; then
-    cp /usr/share/enigma2/KravenHD/ibaro3.png /tmp
-fi
-if [ -f /usr/share/enigma2/KravenHD/backg.png ]; then
-    cp /usr/share/enigma2/KravenHD/backg.png /tmp
-fi
-if [ -f /etc/kraven_profile_1 ]; then
-    mv /etc/kraven_profile_* /etc/enigma2
-fi
-if [ -f /etc/kraven_default_1 ]; then
-    cp /etc/kraven_default_* /etc/enigma2
-fi
-if [ -f /usr/share/enigma2/KravenHD/header-kraven/ibar_000000.png ]; then
-    mkdir /tmp/header-kraven
-	cp /usr/share/enigma2/KravenHD/header-kraven/*.* /tmp/header-kraven
-fi
-if [ -f /usr/share/enigma2/KravenHD/icons-dark/icons/key_ok.png ]; then
-    mkdir /tmp/icons-dark
-    mkdir /tmp/icons-dark/icons
-    mkdir /tmp/icons-dark/infobar
-    mkdir /tmp/icons-dark/message
-	cp /usr/share/enigma2/KravenHD/icons-dark/icons/*.* /tmp/icons-dark/icons
-	cp /usr/share/enigma2/KravenHD/icons-dark/infobar/*.* /tmp/icons-dark/infobar
-	cp /usr/share/enigma2/KravenHD/icons-dark/message/*.* /tmp/icons-dark/message
-    mkdir /tmp/icons-light
-    mkdir /tmp/icons-light/icons
-    mkdir /tmp/icons-light/infobar
-    mkdir /tmp/icons-light/message
-	cp /usr/share/enigma2/KravenHD/icons-light/icons/*.* /tmp/icons-light/icons
-	cp /usr/share/enigma2/KravenHD/icons-light/infobar/*.* /tmp/icons-light/infobar
-	cp /usr/share/enigma2/KravenHD/icons-light/message/*.* /tmp/icons-light/message
-fi
-if [ -f /usr/lib/enigma2/python/Plugins/Extensions/KravenHD/data/skin-user.xml ]; then
-    cp /usr/lib/enigma2/python/Plugins/Extensions/KravenHD/data/skin-user.xml /tmp
-fi
-if [ -f /usr/share/enigma2/KravenHD/skin.xml ]; then
-    rm -rf /usr/share/enigma2/KravenHD/skin.xml
-fi
-echo "KravenHD Skin will be now installed..."
-exit 0
+echo "                                                           "
+echo "        The Skin KravenHD is now being installed...        "
+echo "                                                           "
+exit 0                                                           
 }
 
 pkg_prerm_${PN} () {
 #!/bin/sh
-echo "KravenHD Skin will be now removed..."
+echo "                                                           "
+echo "        The Skin KravenHD is now being removed...          "
+echo "                                                           "
+if [ -e /usr/share/enigma2/KravenHD/skin.xml ]; then
+    cp /usr/share/enigma2/KravenHD/skin.xml /tmp/kravenhdskin
+fi
+if [ -d /usr/share/enigma2/KravenHD/graphics ]; then
+    mkdir /tmp/graphicshd
+    cp /usr/share/enigma2/KravenHD/graphics/* /tmp/graphicshd/
+fi
+if [ -f /usr/lib/enigma2/python/Plugins/Extensions/KravenHD/data/HD/skin-user.xml ]; then
+    cp /usr/lib/enigma2/python/Plugins/Extensions/KravenHD/data/HD/skin-user.xml /tmp/skin-user-hd.xml
+fi
+if [ -f /usr/lib/enigma2/python/Plugins/Extensions/KravenHD/data/FHD/skin-user.xml ]; then
+    cp /usr/lib/enigma2/python/Plugins/Extensions/KravenHD/data/FHD/skin-user.xml /tmp/skin-user-fhd.xml
+fi
+if [ -f /usr/share/enigma2/KravenHD/buttons/icon1.png ]; then
+    cp /usr/share/enigma2/KravenHD/buttons/icon1.png /tmp/icon1.png
+fi
+if [ -f /usr/share/enigma2/KravenHD/skin.xml ]; then
+    rm -rf /usr/share/enigma2/KravenHD/skin.xml
+fi
 exit 0
 }
 

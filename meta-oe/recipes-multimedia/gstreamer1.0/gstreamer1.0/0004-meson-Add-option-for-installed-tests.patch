@@ -23,7 +23,7 @@ Signed-off-by: Carlos Rafael Giani <crg7475@mailbox.org>
 
 diff --git a/build-aux/gen-installed-test-desc.py b/build-aux/gen-installed-test-desc.py
 new file mode 100644
-index 0000000..69e8a0f
+index 0000000000..69e8a0faf6
 --- /dev/null
 +++ b/build-aux/gen-installed-test-desc.py
 @@ -0,0 +1,18 @@
@@ -47,7 +47,7 @@ index 0000000..69e8a0f
 +write_template(args.output, build_template(args.test_execdir, args.testname))
 diff --git a/build-aux/gen-installed-test-shscript.py b/build-aux/gen-installed-test-shscript.py
 new file mode 100644
-index 0000000..5da86fb
+index 0000000000..5da86fb377
 --- /dev/null
 +++ b/build-aux/gen-installed-test-shscript.py
 @@ -0,0 +1,25 @@
@@ -77,10 +77,10 @@ index 0000000..5da86fb
 +write_template(args.output, build_template(args.test_execdir, args.testname))
 +os.chmod(args.output, 0o755)
 diff --git a/meson_options.txt b/meson_options.txt
-index 8afde39..8884dcc 100644
+index e78a3ca6e0..f440d90a06 100644
 --- a/meson_options.txt
 +++ b/meson_options.txt
-@@ -16,6 +16,8 @@ option('poisoning', type : 'boolean', value : false, description : 'Enable poiso
+@@ -15,6 +15,8 @@ option('poisoning', type : 'boolean', value : false, description : 'Enable poiso
  option('memory-alignment', type: 'combo',
         choices : ['1', '2', '4', '8', '16', '32', '64', '128', '256', '512', '1024', '2048', '4096', '8192', 'malloc', 'pagesize'],
         value: 'malloc')
@@ -90,10 +90,10 @@ index 8afde39..8884dcc 100644
  # Feature options
  option('check', type : 'feature', value : 'auto', description : 'Build unit test libraries')
 diff --git a/tests/check/meson.build b/tests/check/meson.build
-index 04da83f..2db7f76 100644
+index 372ea41805..cd32e3cae2 100644
 --- a/tests/check/meson.build
 +++ b/tests/check/meson.build
-@@ -118,11 +118,17 @@ if add_languages('cpp', required : false)
+@@ -120,11 +120,18 @@ if add_languages('cpp', native: false, required: false)
    ]
  endif
  
@@ -109,10 +109,11 @@ index 04da83f..2db7f76 100644
    '-DGST_CHECK_TEST_ENVIRONMENT_BEACON="GST_STATE_IGNORE_ELEMENTS"',
 -  '-DTESTFILE="' + meson.current_source_dir() + '/meson.build"',
 +  '-DTESTFILE="@0@"'.format(test_files_path + '/testfile'),
-   '-DGST_USE_UNSTABLE_API',
++  '-DGST_USE_UNSTABLE_API',
    '-DGST_DISABLE_DEPRECATED',
  ]
-@@ -137,6 +143,14 @@ endif
+ 
+@@ -138,6 +145,14 @@ endif
  glib_deps = [gio_dep, gobject_dep, gmodule_dep, glib_dep]
  gst_deps = [gst_dep, gst_base_dep, gst_check_dep, gst_net_dep, gst_controller_dep]
  
@@ -127,7 +128,7 @@ index 04da83f..2db7f76 100644
  foreach t : core_tests
    fname = t[0]
    test_name = fname.split('.')[0].underscorify()
-@@ -150,8 +164,38 @@ foreach t : core_tests
+@@ -151,8 +166,38 @@ foreach t : core_tests
          include_directories : [configinc],
          link_with : link_with_libs,
          dependencies : test_deps + glib_deps + gst_deps,
@@ -168,7 +169,7 @@ index 04da83f..2db7f76 100644
      env.set('GST_PLUGIN_SYSTEM_PATH_1_0', '')
 diff --git a/tests/files/testfile b/tests/files/testfile
 new file mode 100644
-index 0000000..89954e0
+index 0000000000..89954e0e2f
 --- /dev/null
 +++ b/tests/files/testfile
 @@ -0,0 +1,80 @@
@@ -252,6 +253,3 @@ index 0000000..89954e0
 +................................................................................
 +................................................................................
 +................................................................................
--- 
-2.17.1
-
