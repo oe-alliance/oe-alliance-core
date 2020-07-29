@@ -22,7 +22,6 @@ SRC_URI = "git://gitlab.freedesktop.org/gstreamer/gstreamer;protocol=https;branc
            file://0003-meson-Add-valgrind-feature.patch \
            file://0004-meson-Add-option-for-installed-tests.patch \
            file://0005-revert-use-new-gst-adapter-get-buffer.patch \
-           file://0006-continue-on-nondefined-64bit-atomics.patch \
 "
 
 PACKAGECONFIG ??= "${@bb.utils.contains('PTEST_ENABLED', '1', 'tests', '', d)} \
