@@ -1,0 +1,45 @@
+--- a/cmake/modules/FindCrossGUID.cmake
++++ b/cmake/modules/FindCrossGUID.cmake
+@@ -46,10 +46,10 @@ if(ENABLE_INTERNAL_CROSSGUID)
+   set(CROSSGUID_LIBRARIES ${CROSSGUID_LIBRARY})
+   set(CROSSGUID_INCLUDE_DIRS ${CROSSGUID_INCLUDE_DIR})
+ else()
+-  find_path(CROSSGUID_INCLUDE_DIR NAMES guid.hpp guid.h)
++  find_path(CROSSGUID_INCLUDE_DIR NAMES Guid.hpp guid.h)
+ 
+-  find_library(CROSSGUID_LIBRARY_RELEASE NAMES crossguid)
+-  find_library(CROSSGUID_LIBRARY_DEBUG NAMES crossguidd)
++  find_library(CROSSGUID_LIBRARY_RELEASE NAMES xg)
++  find_library(CROSSGUID_LIBRARY_DEBUG NAMES xg)
+ 
+   include(SelectLibraryConfigurations)
+   select_library_configurations(CROSSGUID)
+@@ -62,7 +62,7 @@ else()
+     set(CROSSGUID_LIBRARIES ${CROSSGUID_LIBRARY})
+     set(CROSSGUID_INCLUDE_DIRS ${CROSSGUID_INCLUDE_DIR})
+ 
+-    if(EXISTS "${CROSSGUID_INCLUDE_DIR}/guid.hpp")
++    if(EXISTS "${CROSSGUID_INCLUDE_DIR}/Guid.hpp")
+       set(CROSSGUID_DEFINITIONS -DHAVE_NEW_CROSSGUID)
+     endif()
+ 
+--- a/xbmc/utils/StringUtils.cpp
++++ b/xbmc/utils/StringUtils.cpp
+@@ -17,7 +17,7 @@
+ //------------------------------------------------------------------------
+ 
+ #ifdef HAVE_NEW_CROSSGUID
+-#include <guid.hpp>
++#include <Guid.hpp>
+ #else
+ #include <guid.h>
+ #endif
+@@ -1659,7 +1659,7 @@ std::string StringUtils::CreateUUID()
+   return xg::newGuid().str();
+ #else
+   static GuidGenerator guidGenerator;
+-  auto guid = guidGenerator.newGuid();
++  auto guid = xg::newGuid();
+ 
+   std::stringstream strGuid; strGuid << guid;
+   return strGuid.str();
