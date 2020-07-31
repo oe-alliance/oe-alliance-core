@@ -20,7 +20,7 @@ MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "\
     gptfdisk \
 "
 
-MACHINE_FEATURES += "switchoff 7segment hdmicec skins1080 emmc mmc blindscan-dvbs kodi19 alsa hbbtv-browser-webkit qtstalker hisi qtnetflix"
+MACHINE_FEATURES += "hisil switchoff 7segment hdmicec skins1080 emmc mmc blindscan-dvbs kodi19 alsa hbbtv-browser-webkit qtstalker hisi qtnetflix"
 
 IMAGE_CLASSES  += "gigablue-emmc_image"
 IMAGE_FSTYPES += "gigablueemmc"
