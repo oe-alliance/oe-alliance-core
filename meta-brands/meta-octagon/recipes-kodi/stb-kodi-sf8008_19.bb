@@ -22,9 +22,9 @@ RDEPENDS_${PN} += "octagon-opengl-${SOC_FAMILY}"
 
 do_configure_append() {
         install -d ${D}${libdir}
-        install -d ${WORKDIR}/git/xbmc/linux/hisi/
+        install -d ${WORKDIR}/git/xbmc/platform/linux/hisi/
         install -d ${WORKDIR}/git/xbmc/cores/hiplayer/
-        install -m 0755 ${WORKDIR}/hiadp.a      ${WORKDIR}/git/xbmc/linux/hisi/
+        install -m 0755 ${WORKDIR}/hiadp.a      ${WORKDIR}/git/xbmc/platform/linux/hisi/
         install -m 0755 ${WORKDIR}/hiplayer.a   ${WORKDIR}/git/xbmc/cores/hiplayer/
 }
 
