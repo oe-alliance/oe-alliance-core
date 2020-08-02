@@ -1,0 +1,13 @@
+diff --git a/tools/Makefile.am b/tools/Makefile.am
+index 0add479..2926af4 100644
+--- a/tools/Makefile.am
++++ b/tools/Makefile.am
+@@ -4,7 +4,7 @@ BUILT_SOURCES =
+ if HAVE_INSCRIPT
+ BUILT_SOURCES += mkscript$(BUILD_EXEEXT)
+ mkscript$(BUILD_EXEEXT): mkscript.c
+-	$(AM_V_GEN)$(CC_FOR_BUILD) $(WARN_CFLAGS) $(LUA_CFLAGS) $(CFLAGS) \
++	$(AM_V_GEN)$(CC_FOR_BUILD) $(WARN_CFLAGS) $(LUA_CFLAGS) $(CFLAGS_FOR_BUILD) \
+ 	    -o $@ $(srcdir)/mkscript.c
+ endif
+ 

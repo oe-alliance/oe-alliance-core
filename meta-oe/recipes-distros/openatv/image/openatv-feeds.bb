@@ -16,6 +16,8 @@ RRECOMMENDS_${PN} = "\
     enigma2-display-skins \
     openatv-skinparts \
     openatv-picons-meta \
+    oe-alliance-skins \
+    enigma2-skins \
     enigma2-plugin-systemplugins-crossepg \
     curlftpfs \
     cdfs \
@@ -46,9 +48,6 @@ RRECOMMENDS_${PN} = "\
     ${@bb.utils.contains("MACHINE_FEATURES", "skins1080", "hd-skins-meta", "", d)} \
     "
 
-#disble addons not python3 ready
-#    oe-alliance-skins 
-#    enigma2-skins 
 # remove close cant update to py3
 #    enigma2-plugin-extensions-cooltvguide
 #    enigma2-plugin-extensions-project-valerie

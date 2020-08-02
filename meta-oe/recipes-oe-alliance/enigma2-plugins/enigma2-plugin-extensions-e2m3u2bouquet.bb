@@ -19,7 +19,7 @@ PR = "r0"
 
 INSANE_SKIP_${PN} += "already-stripped ldflags"
 
-SRC_URI="git://github.com/DougMac/e2m3u2bouquet-plugin.git"
+SRC_URI="git://github.com/oe-mirrors/e2m3u2bouquet-plugin.git"
 
 S = "${WORKDIR}/git"
 
