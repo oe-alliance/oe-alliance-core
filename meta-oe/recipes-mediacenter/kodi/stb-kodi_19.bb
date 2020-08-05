@@ -86,6 +86,7 @@ PV = "19.0-gitr${SRCPV}"
 SRC_URI = "git://github.com/xbmc/xbmc.git;protocol=https;branch=master \
            file://0001-flatbuffers-19.patch \
            file://0001-readd-Touchscreen-settings.patch \
+           file://crossguid-0.2.patch \
            file://shader-nopow-19.patch \
            file://stb-support-19.patch \
            file://stb-settings-19.patch \

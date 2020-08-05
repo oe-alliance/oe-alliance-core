@@ -1,29 +1,25 @@
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -234,7 +234,7 @@ target_include_directories(fmt-header-only INTERFACE
+@@ -247,7 +247,7 @@ target_include_directories(fmt-header-only INTERFACE
+ # Install targets.
  if (FMT_INSTALL)
-   include(GNUInstallDirs)
    include(CMakePackageConfigHelpers)
 -  set_verbose(FMT_CMAKE_DIR ${CMAKE_INSTALL_LIBDIR}/cmake/fmt CACHE STRING
 +  set_verbose(FMT_CMAKE_DIR ${BASE_LIB_PATH}/cmake/fmt CACHE STRING
-               "Installation directory for cmake files, relative to "
-               "${CMAKE_INSTALL_PREFIX}.")
+               "Installation directory for cmake files, a relative path "
+               "that will be joined to ${CMAKE_INSTALL_PREFIX}, or an arbitrary absolute path.")
    set(version_config ${PROJECT_BINARY_DIR}/fmt-config-version.cmake)
-@@ -247,7 +247,7 @@ if (FMT_INSTALL)
-     set(INSTALL_TARGETS ${INSTALL_TARGETS} fmt-header-only)
-   endif ()
+@@ -255,11 +255,11 @@ if (FMT_INSTALL)
+   set(pkgconfig ${PROJECT_BINARY_DIR}/fmt.pc)
+   set(targets_export_name fmt-targets)
  
 -  set_verbose(FMT_LIB_DIR ${CMAKE_INSTALL_LIBDIR} CACHE STRING
 +  set_verbose(FMT_LIB_DIR ${BASE_LIB_PATH} CACHE STRING
-               "Installation directory for libraries, relative to "
-               "${CMAKE_INSTALL_PREFIX}.")
- 
-@@ -255,7 +255,7 @@ if (FMT_INSTALL)
-               "Installation directory for include files, relative to "
-               "${CMAKE_INSTALL_PREFIX}.")
+               "Installation directory for libraries, a relative path "
+               "that will be joined to ${CMAKE_INSTALL_PREFIX}, or an arbitrary absolute path.")
  
 -  set_verbose(FMT_PKGCONFIG_DIR ${CMAKE_INSTALL_LIBDIR}/pkgconfig CACHE PATH
 +  set_verbose(FMT_PKGCONFIG_DIR ${BASE_LIB_PATH}/pkgconfig CACHE PATH
-               "Installation directory for pkgconfig (.pc) files, relative to "
-               "${CMAKE_INSTALL_PREFIX}.")
+               "Installation directory for pkgconfig (.pc) files, a relative path "
+               "that will be joined to ${CMAKE_INSTALL_PREFIX}, or an arbitrary absolute path.")
  
