@@ -342,7 +342,7 @@ diff -uNr git/xbmc/cores/hiplayer/HiPlayerVideo.h unlib/xbmc/cores/hiplayer/HiPl
 +
 diff -uNr git/xbmc/cores/VideoPlayer/VideoPlayer.cpp unlib/xbmc/cores/VideoPlayer/VideoPlayer.cpp
 --- git/xbmc/cores/VideoPlayer/VideoPlayer.cpp	2020-03-24 22:21:05.725432574 +0800
-+++ unlib/xbmc/cores/VideoPlayer/VideoPlayer.cpp	2020-03-25 10:32:03.621283325 +0800
++++ unlib/xbmc/cores/VideoPlayer/VideoPlayer.cpp	2020-04-15 17:46:37.710441514 +0800
 @@ -70,6 +70,12 @@
  #include "cores/omxplayer/OMXPlayerVideo.h"
  #include "cores/omxplayer/OMXHelper.h"
@@ -356,13 +356,35 @@ diff -uNr git/xbmc/cores/VideoPlayer/VideoPlayer.cpp unlib/xbmc/cores/VideoPlaye
  #include "VideoPlayerAudio.h"
  #include "windowing/WinSystem.h"
  #include "DVDCodecs/DVDCodecUtils.h"
-@@ -589,6 +595,13 @@
+@@ -579,8 +585,20 @@
+     m_omxplayer_mode = omx_suitable;
+   }
+ #endif
++
++#ifdef USE_HIPLAYER
++  if (m_hiplayer_mode && m_player_recreate)
++  {
++    DestroyPlayers();
++    m_player_recreate = false;
++  }
++#endif
++
+   if (m_players_created)
++  {
++    CLog::Log(LOGNOTICE, "m_players_created return back");
+     return;
++  }
+ 
+   if (m_omxplayer_mode)
+   {
+@@ -589,6 +607,14 @@
      m_VideoPlayerAudio = new OMXPlayerAudio(&m_OmxPlayerState.av_clock, m_messenger, *m_processInfo);
  #endif
    }
 +#ifdef USE_HIPLAYER
-+  else if(m_hiplayer_mode)
++  else if(m_hiplayer_mode && m_use_hicodec)
 +  {
++    CLog::Log(LOGNOTICE, "CreatePlayers create hiplayer");
 +	  m_VideoPlayerVideo = new CHiPlayerVideo(&m_clock, &m_overlayContainer, m_messenger, m_renderManager, *m_processInfo);
 +	  m_VideoPlayerAudio = new CHiPlayerAudio(&m_clock, m_messenger, *m_processInfo);
 +  }
@@ -370,12 +392,14 @@ diff -uNr git/xbmc/cores/VideoPlayer/VideoPlayer.cpp unlib/xbmc/cores/VideoPlaye
    else
    {
      m_VideoPlayerVideo = new CVideoPlayerVideo(&m_clock, &m_overlayContainer, m_messenger, m_renderManager, *m_processInfo);
-@@ -660,6 +673,12 @@
+@@ -660,6 +686,14 @@
    m_omxplayer_mode                     = false;
  #endif
  
 +#ifdef USE_HIPLAYER
 +  m_hiplayer_mode                     = CServiceBroker::GetSettingsComponent()->GetSettings()->GetBool(CSettings::SETTING_VIDEOPLAYER_USEHIPLAYER);
++	m_use_hicodec 											= m_hiplayer_mode;
++	m_player_recreate										= false;
 +#else
 +  m_hiplayer_mode                     = false;
 +#endif
@@ -383,51 +407,102 @@ diff -uNr git/xbmc/cores/VideoPlayer/VideoPlayer.cpp unlib/xbmc/cores/VideoPlaye
    m_SkipCommercials = true;
  
    m_processInfo.reset(CProcessInfo::CreateInstance());
-@@ -693,6 +712,24 @@
+@@ -693,6 +727,75 @@
  {
    CLog::Log(LOGNOTICE, "VideoPlayer::OpenFile: %s", CURL::GetRedacted(file.GetPath()).c_str());
  
 +#ifdef USE_HIPLAYER
-+  if(m_hiplayer_mode && file.GetPath().rfind("plugin://plugin.video.netflix/", 0) == 0)
-+  {
-+    CLog::Log(LOGNOTICE, "find drm use, switch to default player");
++	if(m_hiplayer_mode)
++	{
++	  CLog::Log(LOGNOTICE, "VideoPlayer hiplayer checking decoder switch");
++	  if(m_use_hicodec &&
++	      !(file.IsType(".dts") ||file.IsType(".mp3")||file.IsType(".wav")||file.IsType(".wave")||file.IsType(".oga")
++	      ||file.IsType(".ogg")||file.IsType(".flac")||file.IsType(".m4a")||file.IsType(".mp2")||file.IsType(".m2a")
++	      ||file.IsType(".ac3")||file.IsType(".mka")||file.IsType(".aac")||file.IsType(".ape")||file.IsType(".alac")
++	      ||file.IsType(".mpg")||file.IsType(".vob")||file.IsType(".m4v")||file.IsType(".mkv")||file.IsType(".avi")
++	      ||file.IsType(".divx")||file.IsType(".dat")||file.IsType(".flv")||file.IsType(".mp4")||file.IsType(".mov")
++	      ||file.IsType(".wmv")||file.IsType(".rm")||file.IsType(".rmvb")||file.IsType(".ogm")||file.IsType(".ogv")
++	      ||file.IsType(".stream")||file.IsType(".amr")||file.IsType(".au")||file.IsType(".mid")||file.IsType(".wv")
++	      ||file.IsType(".pva")||file.IsType(".wtv")||file.IsType(".ts")||file.IsType(".m2ts")
++	      ))
++	  {		
++	    CLog::Log(LOGNOTICE, "find drm use, switch to default player");
 +
-+    m_hiplayer_mode = false;
++	    m_use_hicodec = false;
 +
-+	  if(m_VideoPlayerVideo) delete m_VideoPlayerVideo;
-+	  if(m_VideoPlayerAudio) delete m_VideoPlayerAudio;
-+        
-+    m_renderManager.UnInit();
-+    m_renderManager.PreInit();
-+    
-+    m_VideoPlayerVideo = new CVideoPlayerVideo(&m_clock, &m_overlayContainer, m_messenger, m_renderManager, *m_processInfo);
-+    m_VideoPlayerAudio = new CVideoPlayerAudio(&m_clock, m_messenger, *m_processInfo);
-+  }
++      if (!IsRunning())
++      {
++        if(m_VideoPlayerVideo) delete m_VideoPlayerVideo;
++        if(m_VideoPlayerAudio) delete m_VideoPlayerAudio;
++          
++        m_renderManager.UnInit();
++        m_renderManager.PreInit();
++      
++        m_VideoPlayerVideo = new CVideoPlayerVideo(&m_clock, &m_overlayContainer, m_messenger, m_renderManager, *m_processInfo);
++        m_VideoPlayerAudio = new CVideoPlayerAudio(&m_clock, m_messenger, *m_processInfo);
++      }
++      else
++      {
++        m_player_recreate = true;
++      }
++	  }
++	  else if( !m_use_hicodec &&
++				  	(file.IsType(".dts") ||file.IsType(".mp3")||file.IsType(".wav")||file.IsType(".wave")||file.IsType(".oga")
++				      ||file.IsType(".ogg")||file.IsType(".flac")||file.IsType(".m4a")||file.IsType(".mp2")||file.IsType(".m2a")
++				      ||file.IsType(".ac3")||file.IsType(".mka")||file.IsType(".aac")||file.IsType(".ape")||file.IsType(".alac")
++				      ||file.IsType(".mpg")||file.IsType(".vob")||file.IsType(".m4v")||file.IsType(".mkv")||file.IsType(".avi")
++				      ||file.IsType(".divx")||file.IsType(".dat")||file.IsType(".flv")||file.IsType(".mp4")||file.IsType(".mov")
++				      ||file.IsType(".wmv")||file.IsType(".rm")||file.IsType(".rmvb")||file.IsType(".ogm")||file.IsType(".ogv")
++				      ||file.IsType(".stream")||file.IsType(".amr")||file.IsType(".au")||file.IsType(".mid")||file.IsType(".wv")
++				      ||file.IsType(".pva")||file.IsType(".wtv")||file.IsType(".ts")||file.IsType(".m2ts")
++				      ))
++	  {
++	  	CLog::Log(LOGNOTICE, "find no drm use, switch to hicodec");
++				
++	    m_use_hicodec = true;
++
++      if (!IsRunning())
++      {
++        if(m_VideoPlayerVideo) delete m_VideoPlayerVideo;
++        if(m_VideoPlayerAudio) delete m_VideoPlayerAudio;
++          
++        m_renderManager.UnInit();
++        m_renderManager.PreInit();
++      
++        m_VideoPlayerVideo = new CHiPlayerVideo(&m_clock, &m_overlayContainer, m_messenger, m_renderManager, *m_processInfo);
++        m_VideoPlayerAudio = new CHiPlayerAudio(&m_clock, m_messenger, *m_processInfo);
++      }
++      else
++      {
++        m_player_recreate = true;
++      }
++	  }
++	}
 +#endif
 +
    if (m_omxplayer_mode && IsRunning())
      CloseFile();
  
-@@ -4858,13 +4895,13 @@
+@@ -2604,6 +2707,15 @@
  
- void CVideoPlayer::SetVolume(float nVolume)
- {
--  if (m_omxplayer_mode)
-+  if (m_omxplayer_mode || m_hiplayer_mode)
-     m_VideoPlayerAudio->SetVolume(nVolume);
- }
- 
- void CVideoPlayer::SetMute(bool bOnOff)
- {
--  if (m_omxplayer_mode)
-+  if (m_omxplayer_mode || m_hiplayer_mode)
-     m_VideoPlayerAudio->SetMute(bOnOff);
- }
- 
+       FlushBuffers(DVD_NOPTS_VALUE, true, true);
+       m_renderManager.Flush(false, false);
++
++#ifdef USE_HIPLAYER
++      if(m_hiplayer_mode && m_player_recreate)
++      {
++          m_renderManager.UnInit();
++          m_renderManager.PreInit();
++      }
++#endif
++
+       SAFE_DELETE(m_pDemuxer);
+       m_pSubtitleDemuxer.reset();
+       m_subtitleDemuxerMap.clear();
 diff -uNr git/xbmc/cores/VideoPlayer/VideoPlayer.h unlib/xbmc/cores/VideoPlayer/VideoPlayer.h
 --- git/xbmc/cores/VideoPlayer/VideoPlayer.h	2020-03-24 22:21:05.725432574 +0800
-+++ unlib/xbmc/cores/VideoPlayer/VideoPlayer.h	2020-03-25 10:32:03.621283325 +0800
-@@ -587,8 +587,13 @@
++++ unlib/xbmc/cores/VideoPlayer/VideoPlayer.h	2020-04-15 11:35:54.829207675 +0800
+@@ -587,8 +587,15 @@
    // omxplayer variables
    struct SOmxPlayerState m_OmxPlayerState;
    bool m_omxplayer_mode;            // using omxplayer acceleration
@@ -437,6 +512,8 @@ diff -uNr git/xbmc/cores/VideoPlayer/VideoPlayer.h unlib/xbmc/cores/VideoPlayer/
    friend class OMXPlayerAudio;
  #endif
 +#ifdef USE_HIPLAYER
++  bool m_use_hicodec;
++	bool m_player_recreate;
 +  friend class CHiPlayerVideo;
 +  friend class CHiPlayerAudio;
 +#endif
@@ -456,8 +533,8 @@ diff -uNr git/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/CMakeLists.txt u
  if(SOURCES)
 diff -uNr git/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/RendererHisi.cpp unlib/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/RendererHisi.cpp
 --- git/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/RendererHisi.cpp	1970-01-01 08:00:00.000000000 +0800
-+++ unlib/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/RendererHisi.cpp	2020-03-25 10:32:03.641283126 +0800
-@@ -0,0 +1,166 @@
++++ unlib/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/RendererHisi.cpp	2020-04-14 18:51:06.378604379 +0800
+@@ -0,0 +1,165 @@
 +/*
 + *  Copyright (C) 2007-2018 Team Kodi
 + *  This file is part of Kodi - https://kodi.tv
@@ -496,9 +573,9 @@ diff -uNr git/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/RendererHisi.cpp
 +{
 +  if(buffer)
 +  {
-+      CLog::Log(LOGNOTICE, "CRendererHisi::Create in, buffer:");
-+      CLog::Log(LOGNOTICE, "format: %s", buffer->GetFormat());
-+      CLog::Log(LOGNOTICE, "id: %d", buffer->GetId());
++      CLog::Log(LOGNOTICE, "CRendererHisi::Create in");
++      //CLog::Log(LOGNOTICE, "format: %s", buffer->GetFormat());
++      //CLog::Log(LOGNOTICE, "id: %d", buffer->GetId());
 +      if( AV_PIX_FMT_NONE != buffer->GetFormat())
 +        return nullptr;
 +  }
@@ -555,7 +632,6 @@ diff -uNr git/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/RendererHisi.cpp
 +
 +void CRendererHisi::AddVideoPicture(const VideoPicture &picture, int index)
 +{
-+  CLog::Log(LOGNOTICE, "CRendererHisi::AddVideoPicture");
 +
 +  ReleaseBuffer(index);
 +
