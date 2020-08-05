@@ -2,17 +2,17 @@ require recipes-mediacenter/kodi/stb-kodi_${PV}.bb
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
 
-SRCDATE = "20200415"
+SRCDATE = "20200805"
 SRC_URI_remove = " file://0001-add-find-GLIB.patch \
            file://e2player.patch \
            file://0001-introduce-basic-GstPlayer.patch \
 "
-SRC_URI_append = " http://source.mynonpublic.com/kodi/hiplayer_kodi_186_${SRCDATE}.tar.gz \
+SRC_URI_append = " http://source.mynonpublic.com/kodi/hiplayer_kodi_188_${SRCDATE}.tar.gz \
                 file://hiplayer.patch \
 "
 
-SRC_URI[md5sum] = "0a041ed3501bc5ff7f6c8cb67422e5be"
-SRC_URI[sha256sum] = "152d0b2d21a909fbe1c4ab23c95973460c6c2bfa687dcb45313c5b95580980c0"
+SRC_URI[md5sum] = "67d90c410b819db5bf0e6b91760954b3"
+SRC_URI[sha256sum] = "1c86a4b032311d32d6fcc6f70a353b9b2ed5128ef5c02953b01e03bf6737a3da"
 
 DEPENDS += "gigablue-libs-${MACHINE}"
 PROVIDES += "virtual/kodi"

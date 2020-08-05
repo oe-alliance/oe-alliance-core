@@ -84,7 +84,7 @@ SRCREV = "45686bddb1f308ec580f97eb4b228b8a6606b320"
 # 'patch' doesn't support binary diffs
 PATCHTOOL = "git"
 
-PR = "r14"
+PR = "r15"
 
 PV = "18.8-gitr${SRCPV}"
 SRC_URI = "git://github.com/xbmc/xbmc.git;protocol=https;branch=Leia \

@@ -573,9 +573,9 @@ diff -uNr git/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/RendererHisi.cpp
 +{
 +  if(buffer)
 +  {
-+      CLog::Log(LOGNOTICE, "CRendererHisi::Create in, buffer:");
-+      CLog::Log(LOGNOTICE, "format: %s", buffer->GetFormat());
-+      CLog::Log(LOGNOTICE, "id: %d", buffer->GetId());
++      CLog::Log(LOGNOTICE, "CRendererHisi::Create in");
++      //CLog::Log(LOGNOTICE, "format: %s", buffer->GetFormat());
++      //CLog::Log(LOGNOTICE, "id: %d", buffer->GetId());
 +      if( AV_PIX_FMT_NONE != buffer->GetFormat())
 +        return nullptr;
 +  }
