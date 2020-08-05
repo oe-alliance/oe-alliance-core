@@ -12,9 +12,15 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/pupnp/libupnp-${PV}.tar.bz2 \
            file://sepbuildfix.patch \
 "
 
-SRC_URI[md5sum] = "513adadb07fa039a8aeb0ceb7b7b0f6e"
-SRC_URI[sha256sum] = "af3f3c0846a1d75baeadae4aa5a2bda427567e2a1fb4559bf73ccff0a4f9a39b"
+SRC_URI[md5sum] = "4d2c1e1efe0a19edeef233e14a93f04c"
+SRC_URI[sha256sum] = "c5a300b86775435c076d58a79cc0d5a977d76027d2a7d721590729b7f369fa43"
 
 S = "${WORKDIR}/libupnp-${PV}"
 
-inherit autotools
+inherit autotools pkgconfig
+
+EXTRA_OECONF += "--enable-reuseaddr"
+
+# Enable LFS support ( for samples )
+CFLAGS += "-D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64"
+CXXFLAGS += "-D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64"
