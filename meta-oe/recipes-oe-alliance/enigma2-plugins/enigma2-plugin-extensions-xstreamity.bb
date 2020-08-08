@@ -4,13 +4,15 @@ MAINTAINER = "kiddac"
 PRIORITY = "optional"
 require conf/license/license-gplv2.inc
 
-RDEPENDS_${PN} = "python-argparse python-image python-imaging python-multiprocessing python-requests"
+RDEPENDS_${PN} = "${PYTHON_PN}-imaging ${PYTHON_PN}-multiprocessing ${PYTHON_PN}-requests \
+    ${@bb.utils.contains("PYTHON_PN", "python", "python-image", "", d)} \
+    "
 
 SRCREV = "${AUTOREV}"
 
-PV = "2.25+git${SRCPV}"
-PKGV = "2.25+git${GITPKGV}"
-PR = "r1"
+PV = "2.26+git${SRCPV}"
+PKGV = "2.26+git${GITPKGV}"
+PR = "r0"
 
 inherit gitpkgv allarch
 
