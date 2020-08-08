@@ -1,6 +1,6 @@
 diff -uNr git/addons/resource.language.en_gb/resources/strings.po unlib/addons/resource.language.en_gb/resources/strings.po
---- git/addons/resource.language.en_gb/resources/strings.po	2020-07-30 17:37:01.318180165 +0800
-+++ unlib/addons/resource.language.en_gb/resources/strings.po	2020-07-30 18:27:34.141598361 +0800
+--- git/addons/resource.language.en_gb/resources/strings.po	2020-08-06 18:16:41.775398539 +0800
++++ unlib/addons/resource.language.en_gb/resources/strings.po	2020-08-07 17:30:39.698672960 +0800
 @@ -7231,6 +7231,17 @@
  #empty strings from id 13458 to 13459
  
@@ -20,8 +20,8 @@ diff -uNr git/addons/resource.language.en_gb/resources/strings.po unlib/addons/r
  msgid "Use HEVC VAAPI"
  msgstr ""
 diff -uNr git/cmake/platform/linux/stb.cmake unlib/cmake/platform/linux/stb.cmake
---- git/cmake/platform/linux/stb.cmake	2020-07-30 17:37:01.206181790 +0800
-+++ unlib/cmake/platform/linux/stb.cmake	2020-07-31 10:07:59.770811634 +0800
+--- git/cmake/platform/linux/stb.cmake	2020-08-06 18:16:42.127346297 +0800
++++ unlib/cmake/platform/linux/stb.cmake	2020-08-07 17:31:10.186069876 +0800
 @@ -59,9 +59,8 @@
    list(APPEND DEPLIBS EGL GLESv2 v3dplatform)
  elseif(WITH_PLATFORM STREQUAL "clap-cortexa15")
@@ -35,8 +35,8 @@ diff -uNr git/cmake/platform/linux/stb.cmake unlib/cmake/platform/linux/stb.cmak
  
  
 diff -uNr git/system/playercorefactory.xml unlib/system/playercorefactory.xml
---- git/system/playercorefactory.xml	2020-07-30 17:37:02.030169836 +0800
-+++ unlib/system/playercorefactory.xml	2020-07-30 18:26:07.105339971 +0800
+--- git/system/playercorefactory.xml	2020-08-06 18:16:42.363311339 +0800
++++ unlib/system/playercorefactory.xml	2020-08-07 17:31:32.909730746 +0800
 @@ -22,6 +22,8 @@
      <rule name="streams" internetstream="true">
        <rule name="aacp/sdp" mimetypes="audio/aacp|application/sdp" player="VideoPlayer" />
@@ -47,8 +47,8 @@ diff -uNr git/system/playercorefactory.xml unlib/system/playercorefactory.xml
  
      <!-- DVDs -->
 diff -uNr git/system/settings/settings.xml unlib/system/settings/settings.xml
---- git/system/settings/settings.xml	2020-07-30 17:37:02.074169198 +0800
-+++ unlib/system/settings/settings.xml	2020-07-30 18:25:49.737747425 +0800
+--- git/system/settings/settings.xml	2020-08-06 18:16:42.367310744 +0800
++++ unlib/system/settings/settings.xml	2020-08-07 17:34:28.905675558 +0800
 @@ -143,6 +143,12 @@
            <default>true</default>
            <control type="toggle" />
@@ -63,8 +63,8 @@ diff -uNr git/system/settings/settings.xml unlib/system/settings/settings.xml
            <dependencies>
              <dependency type="visible">
 diff -uNr git/xbmc/Application.cpp unlib/xbmc/Application.cpp
---- git/xbmc/Application.cpp	2020-07-30 17:37:02.266166413 +0800
-+++ unlib/xbmc/Application.cpp	2020-07-30 18:21:43.076435829 +0800
+--- git/xbmc/Application.cpp	2020-08-06 18:16:42.475294747 +0800
++++ unlib/xbmc/Application.cpp	2020-08-07 17:37:57.328517999 +0800
 @@ -520,6 +520,11 @@
              extready ? "ok" : "nok");
  #endif
@@ -353,8 +353,8 @@ diff -uNr git/xbmc/cores/hiplayer/HiPlayerVideo.h unlib/xbmc/cores/hiplayer/HiPl
 +};
 +
 diff -uNr git/xbmc/cores/VideoPlayer/VideoPlayer.cpp unlib/xbmc/cores/VideoPlayer/VideoPlayer.cpp
---- git/xbmc/cores/VideoPlayer/VideoPlayer.cpp	2020-07-30 17:37:02.354165136 +0800
-+++ unlib/xbmc/cores/VideoPlayer/VideoPlayer.cpp	2020-07-30 18:25:23.169407437 +0800
+--- git/xbmc/cores/VideoPlayer/VideoPlayer.cpp	2020-08-06 18:16:42.591277564 +0800
++++ unlib/xbmc/cores/VideoPlayer/VideoPlayer.cpp	2020-08-07 17:37:39.982602697 +0800
 @@ -64,6 +64,10 @@
  #include "Util.h"
  #include "LangInfo.h"
@@ -519,8 +519,8 @@ diff -uNr git/xbmc/cores/VideoPlayer/VideoPlayer.cpp unlib/xbmc/cores/VideoPlaye
        m_pSubtitleDemuxer.reset();
        m_subtitleDemuxerMap.clear();
 diff -uNr git/xbmc/cores/VideoPlayer/VideoPlayer.h unlib/xbmc/cores/VideoPlayer/VideoPlayer.h
---- git/xbmc/cores/VideoPlayer/VideoPlayer.h	2020-07-30 17:37:02.354165136 +0800
-+++ unlib/xbmc/cores/VideoPlayer/VideoPlayer.h	2020-07-30 18:25:28.658432685 +0800
+--- git/xbmc/cores/VideoPlayer/VideoPlayer.h	2020-08-06 18:16:42.591277564 +0800
++++ unlib/xbmc/cores/VideoPlayer/VideoPlayer.h	2020-08-07 17:37:46.693037034 +0800
 @@ -538,4 +538,11 @@
    bool m_UpdateStreamDetails;
  
@@ -534,8 +534,8 @@ diff -uNr git/xbmc/cores/VideoPlayer/VideoPlayer.h unlib/xbmc/cores/VideoPlayer/
 +#endif
  };
 diff -uNr git/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/CMakeLists.txt unlib/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/CMakeLists.txt
---- git/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/CMakeLists.txt	2020-07-30 17:37:02.390164614 +0800
-+++ unlib/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/CMakeLists.txt	2020-07-30 18:26:44.611476423 +0800
+--- git/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/CMakeLists.txt	2020-08-06 18:16:42.599276378 +0800
++++ unlib/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/CMakeLists.txt	2020-08-07 17:37:22.623354563 +0800
 @@ -57,6 +57,9 @@
    endif()
  endif()
@@ -776,8 +776,8 @@ diff -uNr git/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/RendererHisi.h u
 +  bool m_bConfigured;
 +};
 diff -uNr git/xbmc/platform/posix/PlatformDefs.h unlib/xbmc/platform/posix/PlatformDefs.h
---- git/xbmc/platform/posix/PlatformDefs.h	2020-07-30 17:37:02.550162293 +0800
-+++ unlib/xbmc/platform/posix/PlatformDefs.h	2020-07-30 18:26:54.390604305 +0800
+--- git/xbmc/platform/posix/PlatformDefs.h	2020-08-06 18:16:42.943225423 +0800
++++ unlib/xbmc/platform/posix/PlatformDefs.h	2020-08-07 17:51:16.348453060 +0800
 @@ -151,3 +151,5 @@
  
  #define FILE_READ_DATA   ( 0x0001 )
@@ -786,8 +786,8 @@ diff -uNr git/xbmc/platform/posix/PlatformDefs.h unlib/xbmc/platform/posix/Platf
 +typedef unsigned char BYTE;
 \ 文件尾没有 newline 字符
 diff -uNr git/xbmc/settings/SettingConditions.cpp unlib/xbmc/settings/SettingConditions.cpp
---- git/xbmc/settings/SettingConditions.cpp	2020-07-30 17:37:02.606161480 +0800
-+++ unlib/xbmc/settings/SettingConditions.cpp	2020-07-30 18:27:01.529424230 +0800
+--- git/xbmc/settings/SettingConditions.cpp	2020-08-06 18:16:42.463296526 +0800
++++ unlib/xbmc/settings/SettingConditions.cpp	2020-08-07 17:51:04.238598696 +0800
 @@ -288,6 +288,9 @@
  #ifdef HAS_ZEROCONF
    m_simpleConditions.insert("has_zeroconf");
@@ -799,8 +799,8 @@ diff -uNr git/xbmc/settings/SettingConditions.cpp unlib/xbmc/settings/SettingCon
    m_simpleConditions.insert("have_libva");
  #endif
 diff -uNr git/xbmc/settings/Settings.cpp unlib/xbmc/settings/Settings.cpp
---- git/xbmc/settings/Settings.cpp	2020-07-30 17:37:02.606161480 +0800
-+++ unlib/xbmc/settings/Settings.cpp	2020-07-30 18:27:07.068087040 +0800
+--- git/xbmc/settings/Settings.cpp	2020-08-06 18:16:42.467295931 +0800
++++ unlib/xbmc/settings/Settings.cpp	2020-08-07 17:50:58.276956747 +0800
 @@ -141,6 +141,7 @@
  const std::string CSettings::SETTING_VIDEOPLAYER_USEVDPAUMPEG4 = "videoplayer.usevdpaumpeg4";
  const std::string CSettings::SETTING_VIDEOPLAYER_USEVDPAUVC1 = "videoplayer.usevdpauvc1";
@@ -810,8 +810,8 @@ diff -uNr git/xbmc/settings/Settings.cpp unlib/xbmc/settings/Settings.cpp
  const std::string CSettings::SETTING_VIDEOPLAYER_USEMMAL = "videoplayer.usemmal";
  const std::string CSettings::SETTING_VIDEOPLAYER_USEPRIMEDECODER = "videoplayer.useprimedecoder";
 diff -uNr git/xbmc/settings/Settings.h unlib/xbmc/settings/Settings.h
---- git/xbmc/settings/Settings.h	2020-07-30 17:37:02.606161480 +0800
-+++ unlib/xbmc/settings/Settings.h	2020-07-30 18:27:12.354582673 +0800
+--- git/xbmc/settings/Settings.h	2020-08-06 18:16:42.467295931 +0800
++++ unlib/xbmc/settings/Settings.h	2020-08-07 17:50:50.657671569 +0800
 @@ -106,6 +106,7 @@
    static const std::string SETTING_VIDEOPLAYER_USEVDPAUMPEG4;
    static const std::string SETTING_VIDEOPLAYER_USEVDPAUVC1;
@@ -821,8 +821,8 @@ diff -uNr git/xbmc/settings/Settings.h unlib/xbmc/settings/Settings.h
    static const std::string SETTING_VIDEOPLAYER_USEMMAL;
    static const std::string SETTING_VIDEOPLAYER_USEPRIMEDECODER;
 diff -uNr git/xbmc/windowing/egl/WinSystemSTBContext.cpp unlib/xbmc/windowing/egl/WinSystemSTBContext.cpp
---- git/xbmc/windowing/egl/WinSystemSTBContext.cpp	2020-07-30 17:37:02.734159623 +0800
-+++ unlib/xbmc/windowing/egl/WinSystemSTBContext.cpp	2020-07-30 18:27:20.902635163 +0800
+--- git/xbmc/windowing/egl/WinSystemSTBContext.cpp	2020-08-06 18:16:42.963222462 +0800
++++ unlib/xbmc/windowing/egl/WinSystemSTBContext.cpp	2020-08-07 17:51:31.664784877 +0800
 @@ -21,6 +21,8 @@
  #include "cores/VideoPlayer/VideoRenderers/LinuxRendererGL.h"
  #endif
