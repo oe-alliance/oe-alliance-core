@@ -4,8 +4,9 @@ MAINTAINER = "kiddac"
 PRIORITY = "optional"
 require conf/license/license-gplv2.inc
 
-RDEPENDS_${PN} = "${PYTHON_PN}-imaging ${PYTHON_PN}-multiprocessing ${PYTHON_PN}-requests"
-RDEPENDS_${PN} += ${@bb.utils.contains("PYTHON_PN", "python", "python-image", "", d)}
+RDEPENDS_${PN} = "${PYTHON_PN}-imaging ${PYTHON_PN}-multiprocessing ${PYTHON_PN}-requests \
+    ${@bb.utils.contains("PYTHON_PN", "python", "python-image", "", d)} \
+    "
 
 SRCREV = "${AUTOREV}"
 
