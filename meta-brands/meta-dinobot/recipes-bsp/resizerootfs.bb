@@ -1,7 +1,7 @@
 DESCRIPTION = "Resize Rootfs"
 require conf/license/license-gplv2.inc
 
-COMPATIBLE_MACHINE = "^(u5|u51|u52|u53|u54|u56|u532|u533|u5pvr)$"
+COMPATIBLE_MACHINE = "^(u5|u51|u52|u53|u54|u56|u57|u532|u533|u5pvr)$"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 RDEPENDS_${PN} = "e2fsprogs-resize2fs"
