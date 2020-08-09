@@ -13,9 +13,9 @@ RDEPENDS_${PN} = "\
 
 RRECOMMENDS_${PN} = "par2cmdline unrar"
 
-SRCREV = "b58d26354d5784cd2893d721e6ac8cf1d6cd5ace"
+SRCREV = "050b925f7bebcc7388f7f075299d3a1ca10e65bd"
 
-SRC_URI = "git://github.com/sabnzbd/sabnzbd.git;branch=develop \
+SRC_URI = "git://github.com/sabnzbd/sabnzbd.git;branch=3.0.x \
     file://sabnzbd \
     file://sabnzbd.conf \
     file://init-functions \
