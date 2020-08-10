@@ -1,5 +1,5 @@
-KV = "5.5.16"
-SRCDATE = "20200802"
+KV = "5.8.0"
+SRCDATE = "20200810"
 KOFILES = "brcmstb-${MACHINE} ci si2183 avl6862 avl6261"
 
 require edision-dvb-modules.inc

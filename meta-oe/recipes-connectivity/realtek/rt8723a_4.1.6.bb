@@ -16,6 +16,7 @@ SRC_URI = "http://source.mynonpublic.com/ini/rtl8723A_WiFi_linux_v4.1.6_7336.201
     file://0001-add-kernel-4.19-support.patch \
     file://0001-add-kernel-5.1-support.patch \
     file://0001-add-kernel-5.2-support.patch \
+    file://0001-add-kernel-5.8-support.patch \
     "
 
 inherit module
