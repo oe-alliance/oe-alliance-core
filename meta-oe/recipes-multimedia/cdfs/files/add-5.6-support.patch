@@ -1,0 +1,85 @@
+diff --git a/cdfs.h b/cdfs.h
+index d95c048f06f2..964204217a9d 100644
+--- a/cdfs.h
++++ b/cdfs.h
+@@ -127,7 +127,11 @@ typedef struct _track_info {
+   unsigned type;                              /* audio, data of boot */
+   char name[99];
+   unsigned inode;
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(5,6,0))
++  time64_t time;                                /* only for data tracks */
++#else
+   time_t time;                                /* only for data tracks */
++#endif
+   struct iso_primary_descriptor * iso_info;   /* only for data tracks */
+   int xa_data_size;                           /* only for xa data tracks */
+   int xa_data_offset;                         /* only for xa data tracks */
+@@ -173,7 +177,11 @@ extern struct address_space_operations cdfs_cdhfs_aops;
+ 
+ int cdfs_toc_read(struct super_block *sb);
+ int cdfs_toc_read_full(struct super_block *sb);
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(5,6,0))
++time64_t cdfs_constructtime(char * time);
++#else
+ time_t cdfs_constructtime(char * time);
++#endif
+ unsigned cdfs_constructsize(char * size);
+ void cdfs_constructMSFsize(char * result, unsigned length);
+ int cdfs_ioctl(struct super_block *s, int cmd, unsigned long arg);
+diff --git a/root.c b/root.c
+index 41ab1ab5a10e..bf38d13555e9 100644
+--- a/root.c
++++ b/root.c
+@@ -101,6 +101,14 @@ cdfs_release(struct inode *inode_p, struct file *file_p) {
+  * CDFS high-level file operations table                                      *
+  ******************************************************************************/
+ 
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(5,6,0))
++struct proc_ops proc_cdfs_operations = {
++    .proc_lseek	= seq_lseek,
++    .proc_read	= seq_read,
++    .proc_open	= cdfs_open,
++    .proc_release	= cdfs_release,
++};
++#else
+ struct file_operations proc_cdfs_operations = {
+     .owner	= THIS_MODULE,
+     .llseek	= seq_lseek,
+@@ -108,6 +116,7 @@ struct file_operations proc_cdfs_operations = {
+     .open	= cdfs_open,
+     .release	= cdfs_release,
+ };
++#endif
+ 
+ 
+ /********************************************************************/
+diff --git a/utils.c b/utils.c
+index 21d033c0bc83..a145fa3b4e41 100644
+--- a/utils.c
++++ b/utils.c
+@@ -28,7 +28,12 @@
+ 
+ /* convert YYYYMMDDHHMMSS to time_t (seconds since 1/1/1970) */
+ 
+-time_t cdfs_constructtime(char * time){
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(5,6,0))
++time64_t cdfs_constructtime(char * time)
++#else
++time_t cdfs_constructtime(char * time)
++#endif
++{
+   
+   unsigned year,month,day,hour,min,sec;
+ 
+@@ -47,7 +52,11 @@ time_t cdfs_constructtime(char * time){
+     min   = 10*(time[10]-'0') + (time[11]-'0');
+     sec   = 10*(time[12]-'0') + (time[13]-'0');
+ 
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(5,6,0))
++    return mktime64(year, month, day, hour, min, sec);
++#else
+     return mktime(year, month, day, hour, min, sec);
++#endif
+   }
+ }
+ 

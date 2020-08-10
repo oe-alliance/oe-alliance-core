@@ -1,0 +1,121 @@
+diff --git a/os_dep/linux/ioctl_cfg80211.c b/os_dep/linux/ioctl_cfg80211.c
+index c47fd42..851b299 100644
+--- a/os_dep/linux/ioctl_cfg80211.c
++++ b/os_dep/linux/ioctl_cfg80211.c
+@@ -345,7 +345,12 @@ rtw_cfg80211_default_mgmt_stypes[NUM_NL80211_IFTYPES] = {
+ };
+ #endif
+ 
+-#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4,20,0))
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(5,6,0))
++static inline void get_monotonic_boottime(struct timespec64 *ts)
++{
++	*ts = ktime_to_timespec64(ktime_get_boottime());
++}
++#elif (LINUX_VERSION_CODE >= KERNEL_VERSION(4,20,0))
+ static inline void get_monotonic_boottime(struct timespec *ts)
+ {
+ 	*ts = ktime_to_timespec(ktime_get_boottime());
+@@ -354,7 +359,11 @@ static inline void get_monotonic_boottime(struct timespec *ts)
+ 
+ static u64 rtw_get_systime_us(void)
+ {
+-#if (LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,39))
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(5,6,0))
++	struct timespec64 ts;
++	get_monotonic_boottime(&ts);
++	return ((u64)ts.tv_sec*1000000) + ts.tv_nsec / 1000;
++#elif (LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,39))
+ 	struct timespec ts;
+ 	get_monotonic_boottime(&ts);
+ 	return ((u64)ts.tv_sec*1000000) + ts.tv_nsec / 1000;
+diff --git a/os_dep/linux/rtw_proc.c b/os_dep/linux/rtw_proc.c
+index 8fd05d1..ae517d3 100755
+--- a/os_dep/linux/rtw_proc.c
++++ b/os_dep/linux/rtw_proc.c
+@@ -69,7 +69,12 @@ inline struct proc_dir_entry *rtw_proc_create_dir(const char *name, struct proc_
+ }
+ 
+ inline struct proc_dir_entry *rtw_proc_create_entry(const char *name, struct proc_dir_entry *parent, 
+-	const struct file_operations *fops, void * data)
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(5,6,0))
++	const struct proc_ops *fops,
++#else
++	const struct file_operations *fops,
++#endif
++	void * data)
+ {
+ 	struct proc_dir_entry *entry;
+ 
+@@ -202,6 +207,15 @@ static ssize_t rtw_drv_proc_write(struct file *file, const char __user *buffer,
+ 	return -EROFS;
+ }
+ 
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(5,6,0))
++static const struct proc_ops rtw_drv_proc_fops = {
++	.proc_open = rtw_drv_proc_open,
++	.proc_read = seq_read,
++	.proc_lseek = seq_lseek,
++	.proc_release = single_release,
++	.proc_write = rtw_drv_proc_write,
++};
++#else
+ static const struct file_operations rtw_drv_proc_fops = {
+ 	.owner = THIS_MODULE,
+ 	.open = rtw_drv_proc_open,
+@@ -210,6 +224,7 @@ static const struct file_operations rtw_drv_proc_fops = {
+ 	.release = single_release,
+ 	.write = rtw_drv_proc_write,
+ };
++#endif
+ 
+ int rtw_drv_proc_init(void)
+ {
+@@ -1693,6 +1708,15 @@ static ssize_t rtw_adapter_proc_write(struct file *file, const char __user *buff
+ 	return -EROFS;
+ }
+ 
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(5,6,0))
++static const struct proc_ops rtw_adapter_proc_fops = {
++	.proc_open = rtw_adapter_proc_open,
++	.proc_read = seq_read,
++	.proc_lseek = seq_lseek,
++	.proc_release = single_release,
++	.proc_write = rtw_adapter_proc_write,
++};
++#else
+ static const struct file_operations rtw_adapter_proc_fops = {
+ 	.owner = THIS_MODULE,
+ 	.open = rtw_adapter_proc_open,
+@@ -1701,6 +1725,7 @@ static const struct file_operations rtw_adapter_proc_fops = {
+ 	.release = single_release,
+ 	.write = rtw_adapter_proc_write,
+ };
++#endif
+ 
+ int proc_get_odm_dbg_comp(struct seq_file *m, void *v)
+ {
+@@ -1967,6 +1992,15 @@ static ssize_t rtw_odm_proc_write(struct file *file, const char __user *buffer,
+ 	return -EROFS;
+ }
+ 
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(5,6,0))
++static const struct proc_ops rtw_odm_proc_fops = {
++	.proc_open = rtw_odm_proc_open,
++	.proc_read = seq_read,
++	.proc_lseek = seq_lseek,
++	.proc_release = single_release,
++	.proc_write = rtw_odm_proc_write,
++};
++#else
+ static const struct file_operations rtw_odm_proc_fops = {
+ 	.owner = THIS_MODULE,
+ 	.open = rtw_odm_proc_open,
+@@ -1975,6 +2009,7 @@ static const struct file_operations rtw_odm_proc_fops = {
+ 	.release = single_release,
+ 	.write = rtw_odm_proc_write,
+ };
++#endif
+ 
+ struct proc_dir_entry *rtw_odm_proc_init(struct net_device *dev)
+ {

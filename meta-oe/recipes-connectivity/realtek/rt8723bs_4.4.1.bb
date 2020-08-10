@@ -6,7 +6,9 @@ require conf/license/license-gplv2.inc
 
 PR = "r3"
 
-SRC_URI = "https://github.com/anthonywong/rtl8723bs/archive/v4.4.1.tar.gz \
+SRCREV = "7708383b086b31703d5b50b8ffa45991531cbe1c"
+
+SRC_URI = "git://github.com/anthonywong/rtl8723bs.git \
     file://0001-makefile-disable-POWER_SAVING.patch \
     file://rt8723bs-makefile.patch \
     file://rt8723bs-remove-debug.patch \
@@ -21,12 +23,14 @@ SRC_URI = "https://github.com/anthonywong/rtl8723bs/archive/v4.4.1.tar.gz \
     file://rt8723bs-add-5.0-support.patch \
     file://rt8723bs-add-5.1-support.patch \
     file://rt8723bs-add-5.2-support.patch \
+    file://rt8723bs-add-5.6-support.patch \
+    file://rt8723bs-add-5.8-support.patch \
     "
 
 SRC_URI_append_sh4 = "file://rt8723bs_sh4.patch;patch=1 \
     "
 
-S = "${WORKDIR}/rtl8723bs-${PV}"
+S = "${WORKDIR}/git"
 
 inherit module
 
@@ -39,8 +43,3 @@ python do_package_prepend() {
     d.appendVar('PKGV', '-')
     d.appendVar('PKGV', d.getVar("KERNEL_VERSION", True).split("-")[0])
 }
-
-SRC_URI[md5sum] = "6003f12a873946bc56f495391705e729"
-SRC_URI[sha256sum] = "6a66855c3aec845e531e77efca06364b3bbc4d052eb527a002f8c801c9106b40"
-
-
