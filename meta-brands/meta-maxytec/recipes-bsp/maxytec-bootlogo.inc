@@ -7,7 +7,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 inherit deploy
 
-SRC_URI = "http://source.mynonpublic.com/maxytec/${MACHINE}-bootlogo-${SRCDATE}.zip"
+SRC_URI = "http://source.mynonpublic.com/maxytec/${HICHIPSET}-bootlogo-${SRCDATE}.zip"
 
 S = "${WORKDIR}"
 
