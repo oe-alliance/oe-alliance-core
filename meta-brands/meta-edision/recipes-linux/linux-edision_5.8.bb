@@ -60,10 +60,6 @@ pkg_postinst_kernel-image () {
     true
 }
 
-do_shared_workdir_prepend() {
-    cp ${B}/vmlinux.symvers ${B}/Module.symvers
-}
-
 pkg_postrm_kernel-image () {
 }
 
