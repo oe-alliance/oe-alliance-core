@@ -24,6 +24,8 @@ SRC_URI = " \
         file://add-4.12-support.patch \
         file://add-5.0-support.patch\
         file://add-5.4-support.patch\
+        file://add-5.6-support.patch\
+        file://add-5.8-support.patch\
 "
 SRC_URI[md5sum] = "ac64c014a90e3c488394832ea29605b3"
 SRC_URI[sha256sum] = "d034f6c6d9578fe2addfaeceaa101584a4a1fc9f27d825c340baebd345d8d724"
