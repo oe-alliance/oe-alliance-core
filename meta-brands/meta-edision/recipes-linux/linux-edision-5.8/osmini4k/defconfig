@@ -655,6 +655,7 @@ CONFIG_ARCH_HAS_GCOV_PROFILE_ALL=y
 # end of GCOV-based kernel profiling
 
 CONFIG_HAVE_GCC_PLUGINS=y
+# CONFIG_GCC_PLUGINS is not set
 # end of General architecture-dependent options
 
 CONFIG_RT_MUTEXES=y
@@ -1300,7 +1301,7 @@ CONFIG_PCI_QUIRKS=y
 # CONFIG_PCIE_XILINX is not set
 # CONFIG_PCI_V3_SEMI is not set
 # CONFIG_PCIE_ALTERA is not set
-CONFIG_PCIE_BRCMSTB=y
+# CONFIG_PCIE_BRCMSTB is not set
 
 #
 # DesignWare PCI Core Support
