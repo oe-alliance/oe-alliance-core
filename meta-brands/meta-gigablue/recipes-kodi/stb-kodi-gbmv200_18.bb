@@ -11,8 +11,8 @@ SRC_URI_append = " http://source.mynonpublic.com/kodi/hiplayer_kodi_188_gcc8_${S
                 file://hiplayer.patch \
 "
 
-SRC_URI[md5sum] = "67d90c410b819db5bf0e6b91760954b3"
-SRC_URI[sha256sum] = "1c86a4b032311d32d6fcc6f70a353b9b2ed5128ef5c02953b01e03bf6737a3da"
+SRC_URI[md5sum] = "86fe045fbfe374d2b3708b1f6ad8e7c9"
+SRC_URI[sha256sum] = "b57a98b7382c801c14c7121952f80a6506f8286ba54be44a38e20d205d725049"
 
 DEPENDS += "gigablue-libs-${MACHINE}"
 PROVIDES += "virtual/kodi"
