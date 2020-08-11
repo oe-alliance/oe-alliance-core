@@ -1,7 +1,7 @@
 DESCRIPTION = "Resize Rootfs"
 require conf/license/license-gplv2.inc
 
-COMPATIBLE_MACHINE = "v8plus|multibox"
+COMPATIBLE_MACHINE = "v8plus|multibox|plus"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 RDEPENDS_${PN} = "e2fsprogs-resize2fs"
