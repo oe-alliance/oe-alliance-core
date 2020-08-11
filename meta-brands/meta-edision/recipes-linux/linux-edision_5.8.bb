@@ -14,7 +14,7 @@ LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-brcmstb-${PV}/COPYING;md5=6bc538ed5b
 
 DEPENDS += "flex-native bison-native openssl-native coreutils-native"
 
-MACHINE_KERNEL_PR_append = "2"
+MACHINE_KERNEL_PR_append = "3"
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
