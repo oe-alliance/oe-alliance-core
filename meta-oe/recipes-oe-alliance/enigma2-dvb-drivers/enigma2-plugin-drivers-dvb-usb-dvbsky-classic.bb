@@ -23,6 +23,6 @@ RRECOMMENDS_${PN} = " \
     ", d)}"
 
 PV = "2.0"
-PR = "r0"
+PR = "r1"
 
 ALLOW_EMPTY_${PN} = "1"
