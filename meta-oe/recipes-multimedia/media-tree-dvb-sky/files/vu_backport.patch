@@ -1,31 +1,6 @@
 diff -Naur media_build-bst.orig/linux/drivers/media/dvb-frontends/sit2_mod.c media_build-bst/linux/drivers/media/dvb-frontends/sit2_mod.c
 --- media_build-bst.orig/linux/drivers/media/dvb-frontends/sit2_mod.c	2014-11-06 07:17:41.000000000 +0100
 +++ media_build-bst/linux/drivers/media/dvb-frontends/sit2_mod.c	2015-10-21 15:19:44.000000000 +0200
-@@ -1,16 +1,16 @@
- /*+++ *******************************************************************\ 
- *     SIT2  - DVB-T2/T/C demodulator and tuner
- *
--*     --------------------------------------------------------------- 
--*     This software is provided "AS IS" without warranty of any kind, 
--*     either expressed or implied, including but not limited to the 
--*     implied warranties of noninfringement, merchantability and/or 
--*     fitness for a particular purpose.
--*     --------------------------------------------------------------- 
--*   
-+*     --------------------------------------------------------------- 
-+*     This software is provided "AS IS" without warranty of any kind, 
-+*     either expressed or implied, including but not limited to the 
-+*     implied warranties of noninfringement, merchantability and/or 
-+*     fitness for a particular purpose.
-+*     --------------------------------------------------------------- 
-+*   
- *     Copyright (c) 2013 ShenZhen Bestunar Ltd,Inc.
- *     All rights reserved. 
--*     Max Nibble <nibble.max@gmail.com>
-+*     Max Nibble <nibble.max@gmail.com>
- *
- *
- \******************************************************************* ---*/ 
 @@ -20,9 +20,7 @@
  #include <linux/kernel.h>
  #include <linux/module.h>
