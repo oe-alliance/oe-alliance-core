@@ -1,0 +1,24 @@
+--- a/src/core/child.c
++++ b/src/core/child.c
+@@ -468,7 +468,7 @@ void asc_child_close(asc_child_t *child)
+             {
+                 const int signum = WTERMSIG(status);
+                 asc_log_debug(MSG("caught signal %d (%s)")
+-                              , signum, sys_siglist[signum]);
++                              , signum, strsignal(signum));
+ 
+                 status = 128 + signum;
+             }
+--- a/src/core/spawn.c
++++ b/src/core/spawn.c
+@@ -150,8 +150,8 @@ static
+ void perror_s(const char *s)
+ {
+     const char *msg = "Unknown error";
+-    if (errno < sys_nerr && sys_errlist[errno] != NULL)
+-        msg = sys_errlist[errno];
++    if (strerrordesc_np(errno) != NULL)
++        msg = strerror(errno);
+ 
+     size_t slen;
+     if (s != NULL && (slen = strlen_s(s)))
