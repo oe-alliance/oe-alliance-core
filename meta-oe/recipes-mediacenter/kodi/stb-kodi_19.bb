@@ -75,7 +75,7 @@ DEPENDS += " \
             gstreamer1.0-plugins-base \
           "
 
-SRCREV = "d302cb32ff5e652005fe89e6a47912f95d15ca97"
+SRCREV = "cae41cdd2c74e8c75a153852a21a665f87a75777"
 
 # 'patch' doesn't support binary diffs
 PATCHTOOL = "git"

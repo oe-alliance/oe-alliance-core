@@ -20,7 +20,6 @@ DEPENDS = "enigma2-plugin-drivers-usbserial enigma2-plugin-systemplugins-radioti
 #    enigma2-plugin-extensions-e2iplayer 
 #    enigma2-plugin-extensions-e2iplayer-deps 
 #    enigma2-plugin-extensions-xmodem 
-#    enigma2-plugin-extensions-xstreamity 
 #    enigma2-plugin-systemplugins-hrtunerproxy 
 #    enigma2-plugin-systemplugins-serviceapp 
 
@@ -50,6 +49,7 @@ RDEPENDS_${PN} = " \
     enigma2-plugin-systemplugins-joynescan \
     enigma2-plugin-systemplugins-radiotimesemulator \
     enigma2-plugin-extensions-subssupport \
+    enigma2-plugin-extensions-xstreamity \
     oe-alliance-branding-remote \
     exteplayer3 \
     eplayer5 \
