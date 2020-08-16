@@ -10,9 +10,9 @@ RDEPENDS_${PN} = "tar pigz xz"
 
 inherit gitpkgv
 SRCREV = "${AUTOREV}"
-PV = "2.7+git${SRCPV}"
-PKGV = "2.7+git${GITPKGV}"
-VER ="2.7"
+PV = "2.8+git${SRCPV}"
+PKGV = "2.8+git${GITPKGV}"
+VER ="2.8"
 PR = "r0"
 
 SRC_URI="git://github.com/openatv/enigma2-plugin-extensions-dbackup.git;branch=python3"
