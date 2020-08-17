@@ -26,6 +26,11 @@ PREFERRED_PROVIDER_virtual/blindscan-dvbs ?= "airdigital-dvb-modules-${MACHINE}"
 # Qt
 PACKAGECONFIG_GL_pn-qtbase = "no-opengl linuxfb"
 
+IMAGE_CMD_airdigitalemmc_prepend = " \
+    rm -f ${DEPLOY_DIR_IMAGE}/*.ext4; \
+    rm -f ${DEPLOY_DIR_IMAGE}/*.manifest; \
+    "
+
 IMAGE_CMD_airdigitalemmc_append = "\
     mkdir -p ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}; \
     mv ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.emmc.img ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/disk.img; \
