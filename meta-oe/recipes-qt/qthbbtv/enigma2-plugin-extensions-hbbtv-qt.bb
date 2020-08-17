@@ -16,7 +16,7 @@ PKGV = "1.0+git${GITPKGV}"
 SRCREV = "${AUTOREV}"
 VER ?= "${@bb.utils.contains('MACHINE_FEATURES', 'hisil', '-v2', '', d)}"
 
-RDEPENDS_${PN}  = "qtwebkit virtual/libgles2"
+RDEPENDS_${PN}  = "qtwebkit ${@bb.utils.contains('MACHINE_FEATURES', 'noopengl', '' , 'virtual/libgles2', d)}"
 
 S = "${WORKDIR}/git/qthbbtv${VER}"
 
