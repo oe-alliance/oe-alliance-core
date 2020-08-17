@@ -1,6 +1,6 @@
-SRCDATE = "20190716"
+SRCDATE = "20200817"
 
-SRC_URI[md5sum] = "20363ec258cd283cb89908cbd132809e"
-SRC_URI[sha256sum] = "0f68f71dd3abbc2df8169900bc87165b768bd17bbf2b9871de76d534b2d5752b"
+SRC_URI[md5sum] = "764c79e6cfdce40d3a329b337ebac674"
+SRC_URI[sha256sum] = "d225ed2cba3eb15242cf63c9a35b6860bab5ef99d60e13dca5e0d1fae10d9447"
 
 require dinobot-partitions.inc
