@@ -7,7 +7,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 inherit deploy
 
-SRC_URI = "http://www.zgemma.org/downloads/zgemma-bootargs-${HICHIPSET}-${SRCDATE}.zip"
+SRC_URI = "http://source.mynonpublic.com/zgemma/zgemma-bootargs-${HICHIPSET}-${SRCDATE}.zip"
 
 S = "${WORKDIR}"
 
