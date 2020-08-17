@@ -2,7 +2,7 @@ PACKAGECONFIG_GL_pn-qtbase = " "
 PACKAGECONFIG_append_pn-qtbase += " linuxfb no-opengl"
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "\
-    ${@bb.utils.contains('MACHINE_FEATURES', 'hisil-${HICHIPSET}', 'airdigital-bootlogo-${HICHIPSET} airdigital-libs-${HICHIPSET} airdigital-param-${HICHIPSET} airdigital-bootargs-${HICHIPSET} airdigital-fastboot-${HICHIPSET}' , '', d)} \
+    ${@bb.utils.contains('MACHINE_FEATURES', 'hisil-${HICHIPSET}', 'airdigital-bootlogo-${HICHIPSET} airdigital-libs-${HICHIPSET} airdigital-param-${HICHIPSET} airdigital-bootargs-${HICHIPSET} airdigital-fastboot-${HICHIPSET} airdigital-tntfs-${HICHIPSET}' , '', d)} \
     "
 
 TARGET_ARCH = "arm"
