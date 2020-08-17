@@ -61,6 +61,8 @@ RDEPENDS_${PN} = "\
     ${@bb.utils.contains("MACHINE", "sf8008", "enigma2-plugin-drivers-network-usb-rtl8192eu kernel-module-mt7601u firmware-mt7601u", "", d)} \
     ${@bb.utils.contains("MACHINE", "sf8008m", "enigma2-plugin-drivers-network-usb-rtl8192eu kernel-module-mt7601u firmware-mt7601u", "", d)} \
     ${@bb.utils.contains("MACHINE", "h9", "enigma2-plugin-drivers-network-usb-rtl8192eu kernel-module-mt7601u firmware-mt7601u", "", d)} \
+    ${@bb.utils.contains("MACHINE", "h8", "enigma2-plugin-drivers-network-usb-rtl8192eu kernel-module-mt7601u firmware-mt7601u", "", d)} \
+    ${@bb.utils.contains("MACHINE", "hzero", "enigma2-plugin-drivers-network-usb-rtl8192eu kernel-module-mt7601u firmware-mt7601u", "", d)} \
     ${@bb.utils.contains("MACHINE", "h9combo", "enigma2-plugin-drivers-network-usb-rtl8192eu kernel-module-mt7601u firmware-mt7601u", "", d)} \
     ${@bb.utils.contains("MACHINE", "h10", "enigma2-plugin-drivers-network-usb-rtl8192eu kernel-module-mt7601u firmware-mt7601u enigma2-plugin-drivers-network-usb-rtl8822bu", "", d)} \
     ${@bb.utils.contains("MACHINE", "i55plus", "enigma2-plugin-drivers-network-usb-rtl8192eu kernel-module-mt7601u firmware-mt7601u", "", d)} \
