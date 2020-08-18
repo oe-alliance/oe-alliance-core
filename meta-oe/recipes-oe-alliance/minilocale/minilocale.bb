@@ -4,8 +4,6 @@ LICENSE = "GPLv2"
 SECTION = "base"
 PRIORITY = "required"
 
-# Use machine architecture to avoid "prefer arch over version" to do anything bad
-PACKAGE_ARCH = "${DEFAULTTUNE}"
 PKGV = "0.12"
 #PR = "r0"
 
