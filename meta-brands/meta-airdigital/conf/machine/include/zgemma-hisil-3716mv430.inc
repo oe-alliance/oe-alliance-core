@@ -8,7 +8,7 @@ MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "\
     "
 
 TARGET_ARCH = "arm"
-DEFAULTTUNE = "cortexa7thf"
+DEFAULTTUNE = "cortexa7hf"
 
 MKUBIFS_ARGS = "-m 4096 -e 253952 -c 2048"
 UBINIZE_ARGS = "-m 4096 -p 256KiB -s 4096"
