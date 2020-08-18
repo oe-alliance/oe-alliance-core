@@ -1,7 +1,7 @@
 KV = "4.8.17"
-SRCDATE = "20200806"
+SRCDATE = "20200818"
 KOFILES = "linuxdvb"
 
 require edision-dvb-modules.inc
-SRC_URI[md5sum] = "f20bba7ba6f39b6583d67227085a99f7"
-SRC_URI[sha256sum] = "79cb199890103907c545103efc08d6895df2739e65198104235d5c70c2d95da5"
+SRC_URI[md5sum] = "f28e583ddc59a09a0b597dee1dca9283"
+SRC_URI[sha256sum] = "1a6145d17ee1af8a3741621d93ae51d250d1f9ed0e764a62e28ac2a88f1fa3f5"
