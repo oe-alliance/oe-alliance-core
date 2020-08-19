@@ -15,7 +15,7 @@ RDEPENDS_${PN} = "${PYTHON_PN}-core \
     ${PYTHON_PN}-iso639 \
     ${PYTHON_PN}-misc \
     ${PYTHON_PN}-pkgutil \
-    ${PYTHON_PN}-pycrypto \
+    ${PYTHON_PN}-pycryptodome \
     ${PYTHON_PN}-requests \
     ${PYTHON_PN}-shell \
     ${PYTHON_PN}-singledispatch \

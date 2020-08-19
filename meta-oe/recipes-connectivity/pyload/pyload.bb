@@ -10,7 +10,7 @@ RDEPENDS_${PN} = "\
   ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-imaging", "${PYTHON_PN}-pillow", d)} \
   ${PYTHON_PN}-numbers \
   ${PYTHON_PN}-pprint \
-  ${PYTHON_PN}-pycrypto \
+  ${PYTHON_PN}-pycryptodome \
   ${PYTHON_PN}-pycurl \
   ${PYTHON_PN}-sqlite3 \
   ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-subprocess", "", d)} \
