@@ -11,6 +11,7 @@ PV = "1.4.0"
 
 SRCREV = "2725b4e8a0301aedb267d3db5850ab62586e6148"
 SRC_URI = "git://github.com/Arkq/bluez-alsa.git;protocol=https;branch=master \
+           file://fix-build-with-fno-common.patch \
            file://bluez-alsa.service \
            file://init \
 "
