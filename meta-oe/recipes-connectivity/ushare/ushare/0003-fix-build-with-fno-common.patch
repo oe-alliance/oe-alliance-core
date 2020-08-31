@@ -1,0 +1,10 @@
+--- a/src/http.h
++++ b/src/http.h
+@@ -25,6 +25,6 @@
+ #include <upnp/upnp.h>
+ #include <upnp/upnptools.h>
+ 
+-struct UpnpVirtualDirCallbacks virtual_dir_callbacks;
++extern struct UpnpVirtualDirCallbacks virtual_dir_callbacks;
+ 
+ #endif /* _HTTP_H_ */
