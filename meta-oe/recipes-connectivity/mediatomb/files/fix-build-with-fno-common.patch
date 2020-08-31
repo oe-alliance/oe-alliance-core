@@ -1,0 +1,60 @@
+--- a/tombupnp/upnp/src/gena/gena_device.c
++++ b/tombupnp/upnp/src/gena/gena_device.c
+@@ -70,6 +70,8 @@
+ 
+ #include "unixutil.h"
+ 
++membuffer gUserHTTPHeaders;
++
+ /************************************************************************
+ * Function : genaUnregisterDevice
+ *																	
+--- a/tombupnp/upnp/src/genlib/net/http/webserver.c
++++ b/tombupnp/upnp/src/genlib/net/http/webserver.c
+@@ -80,6 +80,9 @@
+ #include "ithread.h"
+ #include "unixutil.h"
+ 
++virtualDirList *pVirtualDirList;
++userHTTPHeaderList *pUserHTTPHeaderList;
++
+ /*
+    Response Types 
+  */
+--- a/tombupnp/upnp/src/genlib/net/sock.c
++++ b/tombupnp/upnp/src/genlib/net/sock.c
+@@ -84,6 +84,9 @@
+  #define MSG_NOSIGNAL 0
+ #endif
+ 
++int gUpnpSdkShutdown;
++int gMaxHTTPTimeoutRetries;
++
+ /************************************************************************
+ *	Function :	sock_init
+ *
+--- a/tombupnp/upnp/src/inc/upnpapi.h
++++ b/tombupnp/upnp/src/inc/upnpapi.h
+@@ -192,17 +192,17 @@ void UpnpThreadDistribution(struct UpnpNonblockParam * Param);
+ void AutoAdvertise(void *input); 
+ int getlocalhostname(char *out);
+ 
+-virtualDirList *pVirtualDirList;
+-userHTTPHeaderList *pUserHTTPHeaderList;
++//virtualDirList *pVirtualDirList;
++extern userHTTPHeaderList *pUserHTTPHeaderList;
+ // concatenated list of custom http headers
+-membuffer gUserHTTPHeaders;
++extern membuffer gUserHTTPHeaders;
+ 
+ 
+ extern WebServerState bWebServerState;
+ 
+-int gUpnpSdkShutdown;
++extern int gUpnpSdkShutdown;
+ 
+-int gMaxHTTPTimeoutRetries;
++extern int gMaxHTTPTimeoutRetries;
+ #endif
+ 
+ 
