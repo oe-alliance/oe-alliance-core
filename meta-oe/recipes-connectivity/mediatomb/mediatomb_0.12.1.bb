@@ -17,6 +17,7 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/mediatomb/mediatomb-${PV}.tar.gz \
         file://config.xml \
         file://init \
         file://fix_hash_compile_errors.patch \
+        file://fix-build-with-fno-common.patch \
         "
 
 SRC_URI_append_aarch64 = " file://mediatomb_aarch64.patch "

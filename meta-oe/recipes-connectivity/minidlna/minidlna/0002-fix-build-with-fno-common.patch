@@ -1,0 +1,11 @@
+--- a/metadata.c
++++ b/metadata.c
+@@ -478,7 +478,7 @@ GetAudioMetadata(const char *path, char *name)
+ }
+ 
+ /* For libjpeg error handling */
+-jmp_buf setjmp_buffer;
++extern jmp_buf setjmp_buffer;
+ static void
+ libjpeg_error_handler(j_common_ptr cinfo)
+ {

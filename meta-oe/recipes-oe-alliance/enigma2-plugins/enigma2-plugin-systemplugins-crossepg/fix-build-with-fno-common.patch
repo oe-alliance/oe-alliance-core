@@ -1,0 +1,22 @@
+--- a/src/common/opentv/huffman.c
++++ b/src/common/opentv/huffman.c
+@@ -10,6 +10,8 @@
+ 
+ #define HUFFMAN_MAX_SIZE	4096
+ 
++type_huffman_node        huffman_root;
++
+ bool huffman_read_dictionary (char *file)
+ {
+ 	FILE *fd;
+--- a/src/common/opentv/huffman.h
++++ b/src/common/opentv/huffman.h
+@@ -8,7 +8,7 @@ typedef struct struct_huffman_node
+ 	struct struct_huffman_node	*p1;
+ } type_huffman_node;
+ 
+-type_huffman_node	huffman_root;
++extern type_huffman_node	huffman_root;
+ 
+ bool huffman_read_dictionary (char *file);
+ void huffman_free_dictionary ();

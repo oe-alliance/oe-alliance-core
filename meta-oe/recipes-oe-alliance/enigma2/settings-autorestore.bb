@@ -1,12 +1,14 @@
-PV = "20111105"
-PR = "r0"
-SRC_URI = "file://*"
 SUMMARY = "Autorecover settings and install packages at first boot from /media/*/backup"
 PACKAGES = "${PN}"
 MAINTAINER = "MiLo"
+require conf/license/license-gplv2.inc
+
 inherit allarch
 
-require conf/license/license-gplv2.inc
+PV = "20111105"
+PR = "r0"
+
+SRC_URI = "file://shell-scripts/"
 
 # Need to tell bitbake that we have extra files installed
 FILES_${PN} = "/etc"

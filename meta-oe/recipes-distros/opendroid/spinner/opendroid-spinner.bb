@@ -2,16 +2,16 @@ SUMMARY = "opendroid-spinner"
 MAINTAINER = "OpenDroid Team"
 SECTION = "base"
 LICENSE = "proprietary"
-inherit allarch
-
 require conf/license/license-gplv2.inc
+
+inherit allarch
 
 PV = "6.8"
 PR = "r4"
 
-SRC_URI="file://wait*.png" 
-        
-S = "${WORKDIR}"        
+SRC_URI = "file://spinners/"
+
+S = "${WORKDIR}"
 
 do_install() {
     install -d ${D}${datadir}/enigma2/spinner

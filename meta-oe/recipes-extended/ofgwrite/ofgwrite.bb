@@ -11,6 +11,7 @@ PV = "4.x+git${SRCPV}"
 
 SRC_URI = "git://github.com/oe-alliance/ofgwrite.git \
     file://fix_glibc_major.patch \
+    file://fix-build-with-fno-common.patch \
 "
 
 inherit autotools-brokensep pkgconfig

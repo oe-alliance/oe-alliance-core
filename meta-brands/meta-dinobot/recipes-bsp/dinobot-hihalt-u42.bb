@@ -1,6 +1,6 @@
-SRCDATE = "20200710"
+SRCDATE = "20200828"
 
-SRC_URI[md5sum] = "c71ab84d89194c214e7004b416468d73"
-SRC_URI[sha256sum] = "ecc9ae144d691acb235fac93f6cf7d00bc4158cc73600b299f2bf1a7adc30f17"
+SRC_URI[md5sum] = "a793dd48c6b01b294ac2eb265c7cc216"
+SRC_URI[sha256sum] = "6760ab02d8fade77575ae6f9e7b5a7a84626a22b634ed2dbc68218e3dd9829b7"
 
 require dinobot-hihalt.inc

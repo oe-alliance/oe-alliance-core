@@ -1,0 +1,11 @@
+--- a/src/dav_fuse.c
++++ b/src/dav_fuse.c
+@@ -84,7 +84,7 @@ static char *buf;
+ static uint64_t root;
+ 
+ /* Send debug messages to syslog if != 0. */
+-int debug;
++extern int debug;
+ 
+ 
+ /* Private function prototypes */

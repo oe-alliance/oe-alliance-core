@@ -1,0 +1,22 @@
+--- a/src/bluez-a2dp.h
++++ b/src/bluez-a2dp.h
+@@ -58,6 +58,6 @@ struct bluez_a2dp_codec {
+ };
+ 
+ /* NULL-terminated list of available A2DP codecs */
+-const struct bluez_a2dp_codec **bluez_a2dp_codecs;
++extern const struct bluez_a2dp_codec **bluez_a2dp_codecs;
+ 
+ #endif
+--- a/src/bluez-iface.h
++++ b/src/bluez-iface.h
+@@ -27,7 +27,7 @@
+ #define BLUEZ_TRANSPORT_STATE_PENDING "pending"
+ #define BLUEZ_TRANSPORT_STATE_ACTIVE  "active"
+ 
+-const GDBusInterfaceInfo bluez_iface_endpoint;
+-const GDBusInterfaceInfo bluez_iface_profile;
++extern const GDBusInterfaceInfo bluez_iface_endpoint;
++extern const GDBusInterfaceInfo bluez_iface_profile;
+ 
+ #endif

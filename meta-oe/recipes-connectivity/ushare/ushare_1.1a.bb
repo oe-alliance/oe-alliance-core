@@ -9,6 +9,7 @@ SRC_URI = "http://ushare.geexbox.org/releases/ushare-${PV}.tar.bz2 \
         file://remove-lsb-dependency.patch \
         file://0002-ushare-fix-building-with-gcc-5.x.patch \
         file://0001-update-for-libupnp-1.6.19-or-newer.patch \
+        file://0003-fix-build-with-fno-common.patch \
         file://ushare.conf \
         file://init"
 
