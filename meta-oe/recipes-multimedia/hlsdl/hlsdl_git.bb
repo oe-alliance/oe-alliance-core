@@ -7,12 +7,14 @@ DEPENDS = "curl openssl zlib ffmpeg"
 
 inherit gitpkgv
 
+SRCREV = "${AUTOREV}"
+
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
 PR = "r0"
 
-SRC_URI = "git://github.com/e2iplayer/hlsdl.git;protocol=git"
-SRCREV = "${AUTOREV}"
+SRC_URI = "git://github.com/e2iplayer/hlsdl.git;protocol=git \
+        file://fix-build-with-fno-common.patch"
 
 S = "${WORKDIR}/git/"
 

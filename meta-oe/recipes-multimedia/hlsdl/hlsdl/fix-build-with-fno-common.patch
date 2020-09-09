@@ -1,0 +1,22 @@
+--- a/src/misc.c
++++ b/src/misc.c
+@@ -14,6 +14,8 @@
+ #include "misc.h"
+ #include "msg.h"
+ 
++struct hls_args hls_args;
++
+ static void print_help(const char *filename)
+ {
+     printf("hlsdl v0.26\n");
+--- a/src/misc.h
++++ b/src/misc.h
+@@ -49,7 +49,7 @@ struct hls_args {
+     bool accept_partial_content;
+ };
+ 
+-struct hls_args hls_args;
++extern struct hls_args hls_args;
+ 
+ int str_to_bin(uint8_t *data, char *hexstring, int len);
+ int parse_argv(int argc, char * const argv[]);
