@@ -4,12 +4,12 @@ MAINTAINER = "kiddac"
 PRIORITY = "optional"
 require conf/license/license-gplv2.inc
 
-RDEPENDS_${PN} = "python-argparse python-image python-imaging python-multiprocessing python-requests"
+RDEPENDS_${PN} = "python-argparse python-image python-imaging python-lzma python-multiprocessing python-requests"
 
 SRCREV = "${AUTOREV}"
 
-PV = "2.25+git${SRCPV}"
-PKGV = "2.25+git${GITPKGV}"
+PV = "2.30+git${SRCPV}"
+PKGV = "2.30+git${GITPKGV}"
 PR = "r1"
 
 inherit gitpkgv allarch
