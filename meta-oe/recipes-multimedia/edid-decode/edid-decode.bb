@@ -8,9 +8,9 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
-PR = "r2"
+PR = "r3"
 
-SRC_URI = "git://git.linuxtv.org/cgit.cgi/edid-decode.git;protocol=https"
+SRC_URI = "git://git.linuxtv.org/edid-decode.git;protocol=https"
 
 S = "${WORKDIR}/git"
 
