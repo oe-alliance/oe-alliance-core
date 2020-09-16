@@ -11,7 +11,7 @@ DEPENDS = "tslib mpfr gmp"
 SRCREV = "${AUTOREV}"
 PV = "${IMAGE_VERSION}+gitr${SRCPV}"
 PKGV = "${IMAGE_VERSION}+gitr${GITPKGV}"
-PR = "r269"
+PR = "r270"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -31,15 +31,13 @@ S = "${WORKDIR}/git"
 # Info: enigma2-plugin-extensions-transmission_2.92-r2_all.ipk  have update depends dont merge to old oe-a versions
 
 THIRDPARTY_PLUGINS = " \
-    enigma2-plugin-extensions-atmolightd_0.7-pre22_all.ipk \
     enigma2-plugin-extensions-blackout-blind_1.3_all.ipk \
-    enigma2-plugin-extensions-boblight-enigma2_0.8r8_mips32el.ipk \
     enigma2-plugin-extensions-camofs_17.14_all.ipk \
     enigma2-plugin-extensions-csfd_11-55-20160929_all.ipk \
     enigma2-plugin-extensions-customsubservices_0.1.3_all.ipk \
     enigma2-plugin-extensions-cyrussettings_1.0.0_all.ipk \
     enigma2-plugin-extensions-dvrproviderplayer_2.06_all.ipk \
-    enigma2-plugin-extensions-e2piconizer_1.08_20190708_all.ipk \
+    enigma2-plugin-extensions-e2piconizer_1.12.20200815_all.ipk \
     enigma2-plugin-extensions-ehue_0.2-r0_all.ipk \
     enigma2-plugin-extensions-filesearchfs_3.0_all.ipk \
     enigma2-plugin-extensions-gmailreader-oe2.0_1.3_all.ipk \
@@ -76,7 +74,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-songs-to_0.1_mips32el.ipk \
     enigma2-plugin-extensions-spinnerselector_2.3_all.ipk \
     enigma2-plugin-extensions-sport1ticker_1.3_all.ipk \
-    enigma2-plugin-extensions-sundtekcontrolcenter_20180605-2_all.ipk \
+    enigma2-plugin-extensions-sundtekcontrolcenter_20200915-2_all.ipk \
     enigma2-plugin-extensions-tectimetv_3.1_all.ipk \
     enigma2-plugin-extensions-thetvdb_0.7-20120607-r3_mips32el.ipk \
     enigma2-plugin-extensions-timfs_2.32_all.ipk \
@@ -97,7 +95,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-wwech_1.03_all.ipk \
     enigma2-plugin-extensions-xbmcwetter_1.4rc1_all.ipk \
     enigma2-plugin-extensions-xcplugin-iptv-mod-lululla_6.7_all \
-    enigma2-plugin-picons-snp-full.220x132-190x102.light.on.transparent_2020-04-29--20-31-15_all.ipk \
+    enigma2-plugin-picons-snp-full.220x132-190x102.light.on.transparent_2020-09-09--13-35-35_all.ipk \
     enigma2-plugin-skins-OverlayHD_1.82_all.ipk \
     enigma2-plugin-systemplugins-bouquetsprotection_0.2-rc1_all.ipk \
     enigma2-plugin-systemplugins-channelselectionnavigator_1.5_mipsel.ipk \
