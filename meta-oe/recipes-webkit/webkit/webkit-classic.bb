@@ -58,7 +58,7 @@ CPPFLAGS += "-I${STAGING_INCDIR}/pango-1.0 \
             -I${STAGING_LIBDIR}/glib-2.0/include \
             -I${STAGING_INCDIR}/glib-2.0" 
 
-CXXFLAGS += " -std=gnu++98"
+CXXFLAGS += " -std=gnu++98 -Wno-expansion-to-defined -Wno-deprecated-copy -Wno-class-memaccess -Wno-unused-local-typedefs -Wno-cast-align -Wno-c++11-compat"
 
 OECMAKE_GENERATOR = "Unix Makefiles"
 
