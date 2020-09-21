@@ -1,0 +1,61 @@
+--- a/Source/WebCore/GNUmakefile.am
++++ b/Source/WebCore/GNUmakefile.am
+@@ -400,12 +400,6 @@ $(GENSOURCES_WEBCORE)/XPathGrammar.h: $(GENSOURCES_WEBCORE)/XPathGrammar.cpp
+ $(GENSOURCES_WEBCORE)/XPathGrammar.cpp: $(WebCore)/xml/XPathGrammar.y
+ 	rm -f $(GENSOURCES_WEBCORE)/XPathGrammar.cpp.h $(GENSOURCES_WEBCORE)/XPathGrammar.hpp
+ 	$(BISON) -d -p xpathyy $< -o $(GENSOURCES_WEBCORE)/XPathGrammar.cpp
+-	touch $(GENSOURCES_WEBCORE)/XPathGrammar.cpp.h $(GENSOURCES_WEBCORE)/XPathGrammar.hpp
+-	echo '#ifndef XPathGrammar_h' > $(GENSOURCES_WEBCORE)/XPathGrammar.h
+-	echo '#define XPathGrammar_h' >> $(GENSOURCES_WEBCORE)/XPathGrammar.h
+-	cat $(GENSOURCES_WEBCORE)/XPathGrammar.cpp.h $(GENSOURCES_WEBCORE)/XPathGrammar.hpp >> $(GENSOURCES_WEBCORE)/XPathGrammar.h
+-	echo '#endif' >> $(GENSOURCES_WEBCORE)/XPathGrammar.h
+-	rm -f $(GENSOURCES_WEBCORE)/XPathGrammar.cpp.h $(GENSOURCES_WEBCORE)/XPathGrammar.hpp
+ endif # END ENABLE_XPATH
+ 
+ # ----
+@@ -635,12 +629,7 @@ DerivedSources/WebCore/CSSGrammar.h: $(GENSOURCES_WEBCORE)/CSSGrammar.cpp
+ DerivedSources/WebCore/CSSGrammar.cpp: $(WebCore)/css/CSSGrammar.y
+ 	rm -f $(GENSOURCES_WEBCORE)/CSSGrammar.cpp.h $(GENSOURCES_WEBCORE)/CSSGrammar.hpp
+ 	$(BISON) -d -p cssyy $< -o $(GENSOURCES_WEBCORE)/CSSGrammar.cpp
+-	touch $(GENSOURCES_WEBCORE)/CSSGrammar.cpp.h $(GENSOURCES_WEBCORE)/CSSGrammar.hpp
+-	echo '#ifndef CSSGrammar_h' > $(GENSOURCES_WEBCORE)/CSSGrammar.h
+-	echo '#define CSSGrammar_h' >> $(GENSOURCES_WEBCORE)/CSSGrammar.h
+-	cat $(GENSOURCES_WEBCORE)/CSSGrammar.cpp.h $(GENSOURCES_WEBCORE)/CSSGrammar.hpp >> $(GENSOURCES_WEBCORE)/CSSGrammar.h
+-	echo '#endif' >> $(GENSOURCES_WEBCORE)/CSSGrammar.h
+-	rm -f $(GENSOURCES_WEBCORE)/CSSGrammar.cpp.h $(GENSOURCES_WEBCORE)/CSSGrammar.hpp
++	$(BISON) --defines=CSSGrammar.h -p cssyy $< -o $(GENSOURCES_WEBCORE)/CSSGrammar.cpp
+ 
+ # user agent style sheets
+ USER_AGENT_STYLE_SHEETS = \
+--- a/Source/WebCore/WebCore.gyp/scripts/rule_bison.py
++++ b/Source/WebCore/WebCore.gyp/scripts/rule_bison.py
+@@ -89,7 +89,6 @@ assert outputHTmp != None
+ outputHFile = open(outputHTmp)
+ outputHContents = outputHFile.read()
+ outputHFile.close()
+-os.unlink(outputHTmp)
+ 
+ # Rewrite the generated header with #include guards.
+ outputH = os.path.join(outputDir, inputRoot + '.h')
+--- a/Source/WebCore/css/CSSGrammar.y
++++ b/Source/WebCore/css/CSSGrammar.y
+@@ -55,7 +55,7 @@ using namespace HTMLNames;
+ 
+ %}
+ 
+-%pure-parser
++%define api.pure
+ 
+ %parse-param { CSSParser* parser }
+ %lex-param { CSSParser* parser }
+--- a/Source/WebCore/xml/XPathGrammar.y
++++ b/Source/WebCore/xml/XPathGrammar.y
+@@ -53,7 +53,7 @@ using namespace XPath;
+ 
+ %}
+ 
+-%pure-parser
++%define api.pure
+ %parse-param { WebCore::XPath::Parser* parser }
+ 
+ %union
