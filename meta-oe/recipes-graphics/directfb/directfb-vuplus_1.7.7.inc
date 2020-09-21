@@ -29,6 +29,10 @@ GFXPR_vuduo4k = "20181109.r1"
 SRC_URI[gfxdriver.vuduo4k.md5sum] = "12db83b5a9ffb534be5d05b3a9ddcf5b"
 SRC_URI[gfxdriver.vuduo4k.sha256sum] = "50eb0bc6ff45236e1ec7970ee93834a98f9fe255adf5ed850a861d0e1e870eaf"
 
+GFXPR_vuduo4kse = "20200319.r1"
+SRC_URI[gfxdriver.vuduo4kse.md5sum] = "cfe2e69648d6da8f75e4475d812012d3"
+SRC_URI[gfxdriver.vuduo4kse.sha256sum] = "a1ee8bd434a6aff051503dfe9fdfa784fe1e0c3038a8abdf088bd20c7dba2769"
+
 GFX_FILE = "directfb_1.7-7_gfxdriver_${MACHINE}_${GFXPR}.tar.gz"
 
 DEPENDS_append_class-target += "vuplus-libgles-${MACHINE}"
