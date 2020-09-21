@@ -9,7 +9,7 @@ FILESEXTRAPATHS_prepend := "${THISDIR}/${BPN}:"
 
 DEPENDS = "yasm"
 
-SRC_URI = "https://ftp.fau.de/videolan/x265/downloads/x265_${PV}.tar.gz \
+SRC_URI = "https://ftp.fau.de/videolan/x265/x265_${PV}.tar.gz \
         file://set-multilib-paths.patch"
 SRC_URI[md5sum] = "374e6359a00d17fd82195c02c341c861"
 SRC_URI[sha256sum] = "364d79bcd56116a9e070fdeb1d9d2aaef1a786b4970163fb56ff0991a183133b"
