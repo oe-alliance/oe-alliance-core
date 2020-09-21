@@ -28,6 +28,7 @@ EXTRA_OECONF_vuultimo4k += " --enable-ext-pid "
 EXTRA_OECONF_vuuno4k += " --enable-ext-pid "
 EXTRA_OECONF_vuuno4kse += " --enable-ext-pid "
 EXTRA_OECONF_vuduo4k += " --enable-ext-pid "
+EXTRA_OECONF_vuduo4kse += " --enable-ext-pid "
 EXTRA_OECONF_dags7252 += " --enable-ext-pid "
 
 S = "${WORKDIR}/git"
