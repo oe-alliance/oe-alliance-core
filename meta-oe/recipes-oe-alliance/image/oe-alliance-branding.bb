@@ -71,7 +71,7 @@ EXTRA_OECONF = " \
     "
 
 do_configure_prepend() {
-    if [ "${MACHINE}" = "vusolo4k" -o "${MACHINE}" = "vusolo2" -o "${MACHINE}" = "vusolose" -o "${MACHINE}" = "vuduo2" -o "${MACHINE}" = "vuuno4k" -o "${MACHINE}" = "vuuno4kse" -o "${MACHINE}" = "vuultimo4k" -o "${MACHINE}" = "vuzero4k" -o "${MACHINE}" = "vuduo4k" ]; then
+    if [ "${MACHINE}" = "vusolo4k" -o "${MACHINE}" = "vusolo2" -o "${MACHINE}" = "vusolose" -o "${MACHINE}" = "vuduo2" -o "${MACHINE}" = "vuuno4k" -o "${MACHINE}" = "vuuno4kse" -o "${MACHINE}" = "vuultimo4k" -o "${MACHINE}" = "vuzero4k" -o "${MACHINE}" = "vuduo4k" -o "${MACHINE}" = "vuduo4kse" ]; then
         DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-VUPLUS-BASE}/recipes-drivers/vuplus-dvb-proxy-${MACHINE}.bb | cut -b 12-19`
     elif [ "${BRAND_OEM}" = "vuplus" ]; then
         DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-VUPLUS-BASE}/recipes-drivers/vuplus-dvb-modules-${MACHINE}.bb | cut -b 12-19`
@@ -224,12 +224,12 @@ do_install_append() {
         install -m 0644 ${S}/BoxBranding/boxes/et7100.png ${D}/usr/share/enigma2/et7100.png
         ln -sf /usr/share/enigma2/et7100.png ${D}${libdir}/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/et7100.png
         install -m 0644 ${S}/BoxBranding/boxes/et7500.png ${D}/usr/share/enigma2/et7500.png
-        ln -sf /usr/share/enigma2/et7500.png ${D}${libdir}/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/et7500.png 
+        ln -sf /usr/share/enigma2/et7500.png ${D}${libdir}/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/et7500.png
     elif [ ${MACHINEBUILD} = "twinboxlcd" ]; then
         install -m 0644 ${S}/BoxBranding/boxes/twinboxlcdci.png ${D}/usr/share/enigma2/twinboxlcdci.png
         ln -sf /usr/share/enigma2/twinboxlcdci.png ${D}${libdir}/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/twinboxlcdci.png
         install -m 0644 ${S}/BoxBranding/boxes/twinboxlcd.png ${D}/usr/share/enigma2/twinboxlcd.png
-        ln -sf /usr/share/enigma2/twinboxlcd.png ${D}${libdir}/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/twinboxlcd.png 
+        ln -sf /usr/share/enigma2/twinboxlcd.png ${D}${libdir}/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/twinboxlcd.png
     elif [ ${MACHINEBUILD} = "dm520" ]; then
         install -m 0644 ${S}/BoxBranding/boxes/dm520.png ${D}/usr/share/enigma2/dm520.png
         ln -sf /usr/share/enigma2/dm520.png ${D}${libdir}/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/dm520.png
