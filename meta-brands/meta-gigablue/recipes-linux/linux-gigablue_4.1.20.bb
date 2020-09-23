@@ -53,6 +53,7 @@ SRC_URI += "http://source.mynonpublic.com/gigablue/linux/gigablue-linux-${PV}-20
     file://0003-uaccess-dont-mark-register-as-const.patch \
     file://add-partition-specific-uevent-callbacks-for-partition-info.patch \
     file://move-default-dialect-to-SMB3.patch \
+    file://fix-multiple-defs-yyloc.patch \
 "
 
 S = "${WORKDIR}/linux-${PV}"
