@@ -8,7 +8,7 @@ PV = "1.0"
 PR = "20170324_r0"
 SRC_URI = "http://code.vuplus.com/download/chromium/e2plugin-chromium-vuplus_${PR}.tar.gz"
 
-COMPATIBLE_MACHINE = "^(vusolo4k|vuuno4k|vuuno4kse|vuultimo4k|vuzero4k|vuduo4k)$"
+COMPATIBLE_MACHINE = "^(vusolo4k|vuuno4k|vuuno4kse|vuultimo4k|vuzero4k|vuduo4k|vuduo4kse)$"
 
 DEPENDS = "chromium-browser"
 RDEPENDS_${PN} = "chromium-browser"
