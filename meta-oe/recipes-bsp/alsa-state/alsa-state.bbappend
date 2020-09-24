@@ -1,10 +1,11 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
-PR_append = ".6"
+PR_append = ".7"
 PACKAGE_ARCH := "${MACHINE_ARCH}"
 
 EXTRA_ALSA ?= "empty"
 EXTRA_ALSA_vuduo4k = "vuplus"
+EXTRA_ALSA_vuduo4kse = "vuplus"
 EXTRA_ALSA_vusolo4k = "vuplus"
 EXTRA_ALSA_vuultimo4k = "vuplus"
 EXTRA_ALSA_vuuno4k = "vuplus"
