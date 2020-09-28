@@ -6,6 +6,7 @@ DEPENDS += " libwebp"
 SRC_URI += " \
     file://0001-Qtwebkit-platform-setting.patch \
     file://0002-Qtwebkit-without-x11.patch \
+    file://0003-fix-build-with-bison-3.7.patch \
 "
 
 PACKAGECONFIG = " "
