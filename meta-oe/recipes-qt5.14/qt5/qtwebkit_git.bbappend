@@ -16,8 +16,8 @@ FILESEXTRAPATHS_prepend := "${THISDIR}/qtwebkit-git:"
 SRCREV = "ab1bd15209abaf7effc51dbc2f272c5681af7223"
 #SRCREV = "beaeeb99881184fd368c121fcbb1a31c78b794a3"
 
+CXXFLAGS_append_osmini4k = " -Wno-deprecated-copy -DBROADCOM_PLATFORM"
 
 INSANE_SKIP_${PN} += "file-rdeps"
 
-#### sets PYTHON_BASEVERSION to "2.7"
 inherit ${PYTHON_PN}-dir ${PYTHON_PN}native
