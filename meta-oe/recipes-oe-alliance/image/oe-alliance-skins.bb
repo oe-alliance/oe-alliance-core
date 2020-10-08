@@ -21,6 +21,7 @@ RDEPENDS_${PN} = "\
 	enigma2-plugin-skins-army-moodblue-hd \
 	enigma2-plugin-skins-kravenhd \
 	enigma2-plugin-skins-pli-hd-fullnight \
+	enigma2-plugin-skins-kiddac-1080-onyx \
 	enigma2-plugin-skins-kiddac-1080-slyk-q \
 	enigma2-plugin-skins-kiddac-1080-slyk-r19 \
 	"
