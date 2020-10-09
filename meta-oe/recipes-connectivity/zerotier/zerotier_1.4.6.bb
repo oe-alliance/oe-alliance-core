@@ -12,7 +12,7 @@ RDEPENDS_${PN} = "kernel-module-tun"
 
 inherit gitpkgv
 
-SRCREV = "${AUTOREV}"
+SRCREV = "97801b3b566f7ab032f1291fc23e34f2e86295aa"
 PV = "1.4.6+git${SRCPV}"
 PKGV = "1.4.6+git${GITPKGV}"
 
