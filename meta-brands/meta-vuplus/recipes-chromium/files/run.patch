@@ -1,0 +1,11 @@
+--- run.sh	2017-12-26 01:33:14.000000000 +0000
++++ run.sh	2020-10-09 19:00:21.423410000 +0100
+@@ -55,6 +55,8 @@
+ export XDG_CONFIG_HOME=$TOP/config
+ export XDG_CACHE_HOME=/tmp/config/.cache
+
++export WEBKITGL_USER_AGENT="SMART-TV; Tizen 4.0"
++
+ HDD_MOUNT_POINT="$(grep '/media/hdd' /proc/mounts)"
+ if [ "$HDD_MOUNT_POINT" != "" ]; then
+ 	export VDG_DOWNLOAD_DIR="/media/hdd/chromium/Downloads"

@@ -1,0 +1,30 @@
+--- a/node/AES.hpp
++++ b/node/AES.hpp
+@@ -23,9 +23,6 @@
+ #if !defined(ZT_AES_NO_ACCEL) && defined(ZT_ARCH_X64)
+ #define ZT_AES_AESNI 1
+ #endif
+-#if !defined(ZT_AES_NO_ACCEL) && defined(ZT_ARCH_ARM_HAS_NEON)
+-#define ZT_AES_NEON 1
+-#endif
+ 
+ #ifndef ZT_INLINE
+ #define ZT_INLINE inline
+--- a/node/Utils.cpp
++++ b/node/Utils.cpp
+@@ -74,15 +74,6 @@ Utils::ARMCapabilities::ARMCapabilities() noexcept
+ 		this->pmull = (hwcaps2 & HWCAP2_PMULL) != 0;
+ 		this->sha1 = (hwcaps2 & HWCAP2_SHA1) != 0;
+ 		this->sha2 = (hwcaps2 & HWCAP2_SHA2) != 0;
+-	} else {
+-#endif
+-		const long hwcaps = getauxval(AT_HWCAP);
+-		this->aes = (hwcaps & HWCAP_AES) != 0;
+-		this->crc32 = (hwcaps & HWCAP_CRC32) != 0;
+-		this->pmull = (hwcaps & HWCAP_PMULL) != 0;
+-		this->sha1 = (hwcaps & HWCAP_SHA1) != 0;
+-		this->sha2 = (hwcaps & HWCAP_SHA2) != 0;
+-#ifdef HWCAP2_AES
+ 	}
+ #endif
+ #endif // TARGET_OS_IPHONE
