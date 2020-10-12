@@ -9,7 +9,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r5"
+PR = "r6"
 
 DEPENDS = "enigma2-plugin-drivers-usbserial enigma2-plugin-systemplugins-radiotimesemulator"
 #DEPENDS = "enigma2-plugin-drivers-usbserial enigma2-plugin-systemplugins-hrtunerproxy"
@@ -52,6 +52,7 @@ RDEPENDS_${PN} = " \
     enigma2-plugin-systemplugins-radiotimesemulator \
     enigma2-plugin-extensions-subssupport \
     enigma2-plugin-extensions-xstreamity \
+    enigma2-plugin-systemplugins-terrestrialscan \
     oe-alliance-branding-remote \
     exteplayer3 \
     eplayer5 \

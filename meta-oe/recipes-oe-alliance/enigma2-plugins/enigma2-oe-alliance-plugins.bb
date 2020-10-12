@@ -30,7 +30,6 @@ PROVIDES += " \
     enigma2-plugin-extensions-webbrowser \
     enigma2-plugin-extensions-openuitzendinggemist \
     enigma2-plugin-systemplugins-satipclient \
-    enigma2-plugin-systemplugins-terrestrialscan \
     enigma2-plugin-systemplugins-bluetoothsetup \
     enigma2-plugin-extensions-chromium \
     enigma2-plugin-extensions-tunerserver \
@@ -97,7 +96,6 @@ DESCRIPTION_enigma2-plugin-systemplugins-vfdcontrol = "vfd controller"
 DESCRIPTION_enigma2-plugin-extensions-streamtv = "iptv player"
 RDEPENDS_enigma2-plugin-extensions-streamtv = "librtmp1"
 DESCRIPTION_enigma2-plugin-systemplugins-tempfancontrol = "Control your internal system fan."
-DESCRIPTION_enigma2-plugin-systemplugins-terrestrialscan = "Selects the strongest transponders where there are duplicates and allows filtering by network id."
 DESCRIPTION_enigma2-plugin-systemplugins-channelsimporter = "Imports a copy of the channel list from a remote receiver and loads it on the local receiver."
 DESCRIPTION_enigma2-plugin-systemplugins-abmcustommiximporter = "Imports ABM CustomMix files from Github."
 DESCRIPTION_enigma2-plugin-systemplugins-fancontrol = "Control your internal system fan."
