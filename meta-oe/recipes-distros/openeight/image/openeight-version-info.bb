@@ -13,6 +13,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 URL = "http://www.octagon-germany.de/"
 
 S = "${WORKDIR}"
+B = "${S}"
 
 PACKAGES = "${PN}"
 
