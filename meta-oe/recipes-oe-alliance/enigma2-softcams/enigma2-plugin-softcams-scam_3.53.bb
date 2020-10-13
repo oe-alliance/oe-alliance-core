@@ -8,7 +8,7 @@ PR = "r0"
 
 SRC_URI = "http://downloads.pli-images.org/softcams/scam_v${PV}.zip"
 
-S = "${WORKDIR}/scam_v${PV}/"
+S = "${WORKDIR}/scam_v${PV}"
 
 INHIBIT_PACKAGE_STRIP = "1"
 

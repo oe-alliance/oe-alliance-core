@@ -13,7 +13,7 @@ SRC_URI = "http://source.mynonpublic.com/rpi-rtl8188eu-20092013.tar.gz"
 
 EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR} KDIR=${STAGING_KERNEL_DIR}"
 
-S = "${WORKDIR}/rpi-rtl8188eu/"
+S = "${WORKDIR}/rpi-rtl8188eu"
 
 do_install() {
     install -d ${D}${nonarch_base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/net/wireless

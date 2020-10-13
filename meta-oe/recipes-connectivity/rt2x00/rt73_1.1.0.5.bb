@@ -14,7 +14,7 @@ SRC_URI = "http://source.mynonpublic.com/gigablue/wlan/RT73.tar.gz \
 
 inherit module
  
-S = "${WORKDIR}/RT73/Module/"
+S = "${WORKDIR}/RT73/Module"
  
 EXTRA_OEMAKE = "KERNDIR=${STAGING_KERNEL_DIR} KDIR=${STAGING_KERNEL_DIR}"
 

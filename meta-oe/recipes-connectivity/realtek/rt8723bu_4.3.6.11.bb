@@ -14,7 +14,7 @@ SRC_URI = "http://source.mynonpublic.com/rtl8723bu_v4.3.6.11_12942.20141204_BTCO
 "
 
 EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR} KDIR=${STAGING_KERNEL_DIR}"
-S = "${WORKDIR}/"
+S = "${WORKDIR}"
 
 do_compile () {
     unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS CC LD CPP

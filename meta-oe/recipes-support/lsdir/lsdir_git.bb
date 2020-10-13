@@ -12,7 +12,7 @@ PR = "r0"
 SRC_URI = "git://github.com/atvcaptain/lsdir.git;protocol=git"
 SRCREV = "${AUTOREV}"
 
-S = "${WORKDIR}/git/"
+S = "${WORKDIR}/git"
 
 SOURCE_FILES = "src/lsdir.c"
 

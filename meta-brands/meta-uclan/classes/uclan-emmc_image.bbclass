@@ -16,7 +16,7 @@ IMAGE_CMD_uclanemmc () {
     mkdir -p ${IMGDEPLOYDIR}/userdata/linuxrootfs2
     mkdir -p ${IMGDEPLOYDIR}/userdata/linuxrootfs3
     mkdir -p ${IMGDEPLOYDIR}/userdata/linuxrootfs4
-    cp -fR --no-dereference --preserve=mode,links ${IMAGE_ROOTFS}/* ${IMGDEPLOYDIR}/userdata/linuxrootfs1/
+    cp -fR --preserve=mode,links ${IMAGE_ROOTFS}/* ${IMGDEPLOYDIR}/userdata/linuxrootfs1/
     eval local COUNT=\"0\"
     eval local MIN_COUNT=\"60\"
     if [ $ROOTFS_SIZE -lt $MIN_COUNT ]; then

@@ -14,7 +14,7 @@ SRC_URI = "http://source.mynonpublic.com/DPO_MT7601U_LinuxSTA_3.0.0.4_20130913c.
 
 EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR} KDIR=${STAGING_KERNEL_DIR}"
 
-S = "${WORKDIR}/MT7601U/"
+S = "${WORKDIR}/MT7601U"
 
 do_install() {
     install -d ${D}${nonarch_base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/net/wireless

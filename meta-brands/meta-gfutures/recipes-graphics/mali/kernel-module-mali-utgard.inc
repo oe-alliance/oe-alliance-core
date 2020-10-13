@@ -8,7 +8,7 @@ LIC_FILES_CHKSUM = "file://driver/src/devicedrv/mali/readme.txt;md5=92d15b487d20
 
 EXTRA_OEMAKE ?= ""
 
-S = "${WORKDIR}/${MALI_PACKAGE_NAME}/"
+S = "${WORKDIR}/${MALI_PACKAGE_NAME}"
 
 do_compile() {
     oe_runmake -C ${STAGING_KERNEL_DIR} \

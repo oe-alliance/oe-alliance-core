@@ -17,7 +17,7 @@ PR = "r1"
 SRCREV = "${AUTOREV}"
 SRC_URI = "git://github.com/e2iplayer/exteplayer3.git;branch=master"
 
-S = "${WORKDIR}/git/"
+S = "${WORKDIR}/git"
 
 SOURCE_FILES = "main/exteplayer.c"
 SOURCE_FILES =+ "container/container.c"

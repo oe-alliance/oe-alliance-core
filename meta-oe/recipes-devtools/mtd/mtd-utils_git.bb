@@ -20,7 +20,7 @@ SRC_URI = "git://git.infradead.org/mtd-utils.git \
            file://010-fix-rpmatch.patch \
 "
 
-S = "${WORKDIR}/git/"
+S = "${WORKDIR}/git"
 
 # xattr support creates an additional compile-time dependency on acl because
 # the sys/acl.h header is needed. libacl is not needed and thus enabling xattr

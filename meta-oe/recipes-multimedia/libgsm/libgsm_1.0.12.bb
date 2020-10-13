@@ -14,7 +14,7 @@ SRC_URI = "http://user.cs.tu-berlin.de/~jutta/gsm/gsm-${PV}.tar.gz \
     file://05_compiler_warnings.patch;patch=1 \
     "
 
-S = "${WORKDIR}/gsm-1.0-pl12/"
+S = "${WORKDIR}/gsm-1.0-pl12"
 
 CFLAGS += "-c -g -fPIC -Wall -D_GNU_SOURCE -D_REENTRANT -DNeedFunctionPrototypes=1 -DWAV49 -I./inc"
 
