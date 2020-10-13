@@ -14,7 +14,7 @@ PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
 PR = "r0"
 
-SRC_URI = "git://github.com/oe-alliance/enigma2-display-skins.git;protocol=git file://skinsnotwanted"
+SRC_URI = "git://github.com/oe-alliance/enigma2-display-skins.git;protocol=git;branch=python3 file://skinsnotwanted"
 
 # note that enigma2-skins is just an empty package to satisfy silly dependencies.
 ALLOW_EMPTY_${PN} = "1"
