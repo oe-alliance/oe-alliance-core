@@ -12,7 +12,7 @@ SRC_URI = "http://source.mynonpublic.com/ini/rt5572_2.6.1.4.tar.gz \
 
 EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR} KDIR=${STAGING_KERNEL_DIR}"
 
-S = "${WORKDIR}/RT5572/"
+S = "${WORKDIR}/RT5572"
 
 do_install() {
     install -d ${D}${nonarch_base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/net/wireless

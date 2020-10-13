@@ -5,7 +5,7 @@ PR = "r0"
 
 SRC_URI = "http://downloads.pli-images.org/softcams/${CAMNAME}-${PV}-binaries.tar.gz"
 
-S = "${WORKDIR}/"
+S = "${WORKDIR}"
 
 INHIBIT_PACKAGE_STRIP = "1"
 

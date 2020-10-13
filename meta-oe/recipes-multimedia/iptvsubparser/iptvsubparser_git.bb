@@ -13,7 +13,7 @@ PR = "r0"
 SRC_URI = "git://github.com/e2iplayer/e2isubparser.git;protocol=git"
 SRCREV = "${AUTOREV}"
 
-S = "${WORKDIR}/git/"
+S = "${WORKDIR}/git"
 
 SOURCE_FILES = "src/subparsermodule.c"
 SOURCE_FILES =+ "src/vlc/src/subtitle.c"

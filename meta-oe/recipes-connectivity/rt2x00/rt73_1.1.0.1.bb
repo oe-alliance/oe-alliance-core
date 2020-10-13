@@ -15,7 +15,7 @@ SRC_URI = "http://downloads.pli-images.org/misc/2008_0506_RT73_Linux_STA_Drv1.1.
 
 inherit module
  
-S = "${WORKDIR}/2008_0506_RT73_Linux_STA_Drv1.1.0.1/Module/"
+S = "${WORKDIR}/2008_0506_RT73_Linux_STA_Drv1.1.0.1/Module"
  
 EXTRA_OEMAKE = "KERNDIR=${STAGING_KERNEL_DIR} KDIR=${STAGING_KERNEL_DIR}"
 

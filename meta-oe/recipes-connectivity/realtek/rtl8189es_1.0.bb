@@ -12,7 +12,7 @@ SRC_URI = "http://source.mynonpublic.com/rtl8189es-driver-1.0-20180522.zip"
 
 EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR} KDIR=${STAGING_KERNEL_DIR} KSRC=${STAGING_KERNEL_DIR}"
 
-S = "${WORKDIR}/rtl8189ES_linux/"
+S = "${WORKDIR}/rtl8189ES_linux"
 
 do_compile () {
     unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS CC LD CPP

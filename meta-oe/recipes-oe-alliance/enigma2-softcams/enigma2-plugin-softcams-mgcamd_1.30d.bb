@@ -9,7 +9,7 @@ PR = "r0"
 SRC_URI = "http://downloads.pli-images.org/softcams/mgcamd${PV}.zip \
     http://downloads.pli-images.org/softcams/newcamd.conf;name=conf"
 
-S = "${WORKDIR}/"
+S = "${WORKDIR}"
 
 INHIBIT_PACKAGE_STRIP = "1"
 

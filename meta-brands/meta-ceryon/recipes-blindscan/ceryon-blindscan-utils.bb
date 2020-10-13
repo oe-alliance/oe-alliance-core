@@ -19,7 +19,7 @@ SRC_URI = "file://ceryon_blindscan file://tda1002x"
 PV = "1.0"
 PR = "r1"
 
-S = "${WORKDIR}/"
+S = "${WORKDIR}"
 
 FILES_ceryon-blindscan-dvbs-utils = "${bindir}/ceryon_blindscan"
 FILES_ceryon-blindscan-dvbc-utils = "${bindir}/tda1002x"
