@@ -6,9 +6,9 @@ require conf/license/license-gplv2.inc
 inherit gitpkgv allarch gettext
 
 SRCREV = "${AUTOREV}"
-PV = "7.6.x+git${SRCPV}"
-PKGV = "7.6.x+git${GITPKGV}"
-VER="7.6.x"
+PV = "7.8.x+git${SRCPV}"
+PKGV = "7.8.x+git${GITPKGV}"
+VER = "7.8.x"
 
 DEPENDS += "gettext-native"
 RDEPENDS_${PN} += "python-imaging python-subprocess python-requests python-lxml enigma2-plugin-systemplugins-mphelp"
@@ -16,7 +16,7 @@ RCONFLICTS_${PN} += "enigma2-plugin-skins-kravenfhd enigma2-plugin-skins-kravenv
 RREPLACES_${PN} += "enigma2-plugin-skins-kravenfhd enigma2-plugin-skins-kravenvb"
 RPROVIDES_${PN} += "enigma2-plugin-skins-kravenfhd enigma2-plugin-skins-kravenvb"
 
-SRC_URI="git://github.com/oerlgrey/KravenHD.git;protocol=git"
+SRC_URI = "git://github.com/oerlgrey/KravenHD.git;protocol=git"
 
 FILES_${PN} = "/usr/*"
 FILES_${PN}-src = "\
@@ -149,4 +149,3 @@ exit 0
 }
 
 do_package_qa[noexec] = "1"
-
