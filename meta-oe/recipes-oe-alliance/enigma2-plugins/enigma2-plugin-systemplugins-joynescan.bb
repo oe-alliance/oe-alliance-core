@@ -11,6 +11,8 @@ PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
 PR = "r0"
 
+DEPENDS = "python"
+
 SRC_URI = "git://github.com/Huevos/JoyneScan.git;protocol=git"
 
 EXTRA_OECONF = " \
@@ -21,10 +23,6 @@ EXTRA_OECONF = " \
     "
 
 S = "${WORKDIR}/git"
-
-# does not build without this DEPENDS 
-DEPENDS = "enigma2"
-RDEPENDS_${PN} = "enigma2"
 
 INSANE_SKIP_${PN} += "already-stripped ldflags"
 

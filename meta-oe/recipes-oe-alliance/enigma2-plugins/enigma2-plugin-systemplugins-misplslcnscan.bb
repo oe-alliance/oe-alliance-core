@@ -13,6 +13,8 @@ PV = "${IMAGE_VERSION}+git${SRCPV}"
 PKGV = "${IMAGE_VERSION}+git${GITPKGV}"
 PR = "r1"
 
+DEPENDS = "python"
+
 SRC_URI = "git://github.com/oe-alliance/MisPlsLcnScan.git;protocol=git"
 
 EXTRA_OECONF = " \
@@ -23,10 +25,6 @@ EXTRA_OECONF = " \
     "
 
 S = "${WORKDIR}/git"
-
-# does not build without this DEPENDS 
-DEPENDS = "enigma2"
-RDEPENDS_${PN} = "enigma2"
 
 INSANE_SKIP_${PN} += "already-stripped ldflags"
 
