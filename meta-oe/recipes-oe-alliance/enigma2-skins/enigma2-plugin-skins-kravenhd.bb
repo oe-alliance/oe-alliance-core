@@ -6,9 +6,9 @@ require conf/license/license-gplv2.inc
 inherit gitpkgv allarch gettext
 
 SRCREV = "${AUTOREV}"
-PV = "7.6.x+git${SRCPV}"
-PKGV = "7.6.x+git${GITPKGV}"
-VER="7.6.x"
+PV = "7.8.x+git${SRCPV}"
+PKGV = "7.8.x+git${GITPKGV}"
+VER = "7.8.x"
 
 DEPENDS += "gettext-native"
 RDEPENDS_${PN} = "${PYTHON_PN}-requests ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-subprocess", "", d)} ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-imaging", "${PYTHON_PN}-pillow", d)} enigma2-plugin-systemplugins-mphelp ${PYTHON_PN}-lxml"
@@ -16,7 +16,7 @@ RCONFLICTS_${PN} += "enigma2-plugin-skins-kravenfhd enigma2-plugin-skins-kravenv
 RREPLACES_${PN} += "enigma2-plugin-skins-kravenfhd enigma2-plugin-skins-kravenvb"
 RPROVIDES_${PN} += "enigma2-plugin-skins-kravenfhd enigma2-plugin-skins-kravenvb"
 
-SRC_URI="git://github.com/oerlgrey/KravenHD.git;protocol=git"
+SRC_URI = "git://github.com/oerlgrey/KravenHD.git;protocol=git;branch=python3"
 
 FILES_${PN} = "/usr/*"
 
@@ -141,4 +141,3 @@ exit 0
 }
 
 do_package_qa[noexec] = "1"
-
