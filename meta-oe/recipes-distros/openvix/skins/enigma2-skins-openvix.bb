@@ -85,7 +85,7 @@ inherit autotools-brokensep
 S = "${WORKDIR}/git"
 
 EXTRA_OECONF += "\
-    ${@bb.utils.contains("MACHINE_FEATURES", "skins1080", "--with-skins1080" , "", d)} \
+   ${@bb.utils.contains("MACHINE_FEATURES", "skins1080", "--with-skins1080" , "", d)} \
     "
 
 python populate_packages_prepend() {
