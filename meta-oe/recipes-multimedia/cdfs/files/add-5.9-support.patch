@@ -1,0 +1,14 @@
+diff --git a/utils.c b/utils.c
+index 7b597276fa6f..fba41976bcbc 100644
+--- a/utils.c
++++ b/utils.c
+@@ -25,6 +25,9 @@
+ 
+ #include "cdfs.h"
+ 
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(5,9,0))
++#include <linux/blkdev.h>
++#endif
+ 
+ /* convert YYYYMMDDHHMMSS to time_t (seconds since 1/1/1970) */
+ 
