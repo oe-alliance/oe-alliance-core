@@ -23,6 +23,8 @@ RDEPENDS_${PN} = "\
     openvix-enigma2 \
     openvix-bootlogo \
     openvix-spinner \
+    python-future \
+    python-six \
     ${@bb.utils.contains("TUNE_FEATURES", "armv", "glibc-compat", "", d)} \
     python-service-identity \
     "
