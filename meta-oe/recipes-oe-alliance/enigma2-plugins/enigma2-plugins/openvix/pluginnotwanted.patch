@@ -1,66 +1,23 @@
+From b8b52ac137fda5f5e1dbdf13434629431120ea05 Mon Sep 17 00:00:00 2001
+From: Andy Blackburn <andrew.blackburn644@btinternet.com>
+Date: Fri, 12 Apr 2013 19:34:25 +0100
+
+---
+ Makefile.am | 4 ----
+ 1 file changed, 4 deletions(-)
+
 diff --git a/Makefile.am b/Makefile.am
-index 09343ff1..b3a2916a 100644
+index 3f62601e..4e67b8c1 100644
 --- a/Makefile.am
 +++ b/Makefile.am
-@@ -1,110 +1,59 @@
- ACLOCAL_AMFLAGS = -I m4
- 
- SUBDIRS = \
--	advhdmi \
--	aihdcontroler \
- 	antiscrollbar \
--	aspectratioswitch \
--	audiorestart \
- 	audiosync \
--	automaticcleanup \
- 	automaticvolumeadjustment \
- 	autoresolution \
- 	autotimer \
--	babelzapper \
--	birthdayreminder \
- 	bonjour \
- 	cdinfo \
--	channelselectionshorttitle \
--	curlytx \
- 	dreamexplorer \
--	dreamirc \
+@@ -21,6 +21,5 @@ SUBDIRS = \
+ 	dreamirc \
  	dreammediathek \
  	dvdbackup \
 -	easyinfo \
--	easymedia \
--	ecasa \
--	eibox \
- 	emailclient \
- 	emission \
--	eparted \
- 	epgrefresh \
--	eurotictv \
--	eventlist \
--	eventposition \
- 	filebrowser \
- 	flashexpander \
- 	fritzcall \
--	fstabeditor \
- 	ftpbrowser \
- 	googlemaps \
--	growlee \
- 	imdb \
- 	infobartunerstate \
- 	kiddytimer \
--	letterbox \
- 	mediadownloader \
--	merlinepg \
--	merlinepgcenter \
- 	merlinmusicplayer \
--	mosaic \
- 	moviecut \
--	movieretitle \
- 	moviesearch \
--	movietagger \
- 	mphelp \
--	multirc \
--	ncidclient \
- 	netcaster \
+ 	ecasa \
+ 	eibox \
+@@ -59,13 +58,11 @@ SUBDIRS = \
  	ofdb \
  	orfat \
  	orfteletext \
@@ -68,50 +25,17 @@ index 09343ff1..b3a2916a 100644
  	permanentclock \
  	pipservicerelation \
  	podcast \
--	porncenter \
+ 	porncenter \
  	pushservice \
- 	quickbutton \
+-	quickbutton \
  	reconstructapsc \
--	reftopiconname \
+ 	reftopiconname \
  	remotetimer \
--	rsdownloader \
- 	seriesplugin \
--	setpasswd \
- 	shoutcast \
- 	showclock \
--	simplerss \
- 	subsdownloader2 \
--	svdrp \
- 	tageditor \
--	teletext \
- 	toolkit \
--	tvcharts \
--	unwetterinfo \
--	valixdcontrol \
--	videocolorspace \
--	vlcplayer \
- 	vps \
- 	weatherplugin \
- 	weathercomponent \
- 	weathercomponenthandler \
--	webadmin \
--	webbouqueteditor \
- 	webcamviewer \
--	werbezapper \
--	zaphistorybrowser \
- 	zapstatistic \
--	zdfmediathek \
--	esame \
--	schiffe \
--	sudoku \
--	vierg \
--	bmediacenter \
--	advancedmovieselection
-+	zdfmediathek
- 
- if DREAMBOX
--SUBDIRS +=  fancontrol2 letterbox logomanager movielistpreview genuinedreambox
-+SUBDIRS +=  fancontrol2 logomanager genuinedreambox
+@@ -130,7 +127,6 @@ SUBDIRS += \
+ 	mytube \
+ 	yttrailer \
+ 	webinterface \
+-	menusort \
+ 	pluginhider \
+ 	pluginsort 
  endif
- 
- if VUSOLO2
