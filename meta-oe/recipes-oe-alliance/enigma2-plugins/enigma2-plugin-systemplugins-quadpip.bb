@@ -10,4 +10,4 @@ PKGV = "git${GITPKGV}"
 PR = "r5"
 
 S = "${WORKDIR}/git"
-SRC_URI = "git://github.com/OpenPLi/enigma2-plugin-systemplugins-quadpip.git;protocol=http"
+SRC_URI = "git://github.com/TwolDE2/enigma2-plugin-systemplugins-quadpip.git;protocol=http"

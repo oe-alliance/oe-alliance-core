@@ -16,9 +16,9 @@ inherit autotools-brokensep gitpkgv ${PYTHON_PN}native
 SRCREV = "${AUTOREV}"
 PV = "${IMAGE_VERSION}+git${SRCPV}"
 PKGV = "${IMAGE_VERSION}+git${GITPKGV}"
-PR = "r3"
+PR = "r5"
 
-SRC_URI="git://github.com/OpenViX/vix-core.git;protocol=git"
+SRC_URI="git://github.com/TwolDE/vix-core.git;protocol=git;branch=master"
 
 S = "${WORKDIR}/git"
 
@@ -30,8 +30,7 @@ EXTRA_OECONF = "\
     "
 
 PACKAGES =+ "enigma2-plugin-vix-core"
-PACKAGES =+ "enigma2-plugin-vix-core-src"
-PACKAGES =+ "enigma2-plugin-vix-core-po"
+
 CONFFILES_enigma2-plugin-vix-core += "${sysconfdir}/exports"
 FILES_enigma2-plugin-vix-core = "/etc ${libdir}"
 FILES_enigma2-plugin-vix-core-dbg = "${libdir}/enigma2/python/Plugins/SystemPlugins/ViX/.debug/"
@@ -39,8 +38,4 @@ FILES_enigma2-plugin-vix-core-src = "${libdir}/enigma2/python/Plugins/SystemPlug
 FILES_enigma2-plugin-vix-core-po = "${libdir}/enigma2/python/Plugins/SystemPlugins/ViX/locale/*.po"
 FILES_enigma2-plugin-vix-core-doc = "/usr/share/enigma2/README*"
 
-do_install_append() {
-    if [ -f ${DEPLOY_DIR_IMAGE}/burn.bat ]; then
-        install -m 755 ${DEPLOY_DIR_IMAGE}/burn.bat ${D}${libdir}/enigma2/python/Plugins/SystemPlugins/ViX/burn.bat
-    fi
-}
+

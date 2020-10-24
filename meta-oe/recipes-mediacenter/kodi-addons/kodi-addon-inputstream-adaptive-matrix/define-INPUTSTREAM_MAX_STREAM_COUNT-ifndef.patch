@@ -1,0 +1,13 @@
+--- a/src/main.cpp
++++ b/src/main.cpp
+@@ -52,6 +52,10 @@
+ #undef CreateDirectory
+ #endif
+ 
++#ifndef INPUTSTREAM_MAX_STREAM_COUNT
++#define INPUTSTREAM_MAX_STREAM_COUNT 256
++#endif
++
+ #define DVD_TIME_BASE 1000000
+ 
+ #define SAFE_DELETE(p) \
