@@ -12,12 +12,11 @@ DEPENDS = "libxml2 bash-completion"
 inherit gitpkgv
 
 SRCREV = "${AUTOREV}"
-PE = "1"
-PV = "git${SRCPV}"
-PKGV = "${GITPKGVTAG}"
-PR = "r1"
+PV = "2020.09.20+git${SRCPV}"
+PKGV = "2020.09.20+git${GITPKGV}"
+PR = "r2"
 
-SRC_URI = "git://github.com/ytdl-org/youtube-dl.git;protocol=https;branch=master"
+SRC_URI = "git://source.netsyms.com/Mirrors/youtube-dl;protocol=https;branch=master"
 
 S = "${WORKDIR}/git"
 
