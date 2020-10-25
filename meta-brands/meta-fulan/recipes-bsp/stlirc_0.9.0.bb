@@ -3,13 +3,13 @@ SECTION = "base"
 PRIORITY = "optional"
 HOMEPAGE = "http://www.lirc.org"
 LICENSE = "GPLv2"
-DEPENDS = "virtual/kernel libusb1"
+DEPENDS = "virtual/kernel libusb-compat"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 RCONFLICTS_${PN} = "lirc"
 RREPLACES_${PN} = "lirc"
 
-PR = "r8"
+PR = "r9"
 
 SRC_URI = "https://downloads.sourceforge.net/project/lirc/LIRC/0.9.0/lirc-${PV}.tar.bz2 \
     file://lirc-0.9.0-neutrino-uinput-hack.diff;patch=1 \
