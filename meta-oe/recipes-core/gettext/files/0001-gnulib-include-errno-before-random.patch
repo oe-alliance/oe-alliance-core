@@ -1,0 +1,16 @@
+--- a/gettext-tools/gnulib-lib/getrandom.c
++++ b/gettext-tools/gnulib-lib/getrandom.c
+@@ -19,12 +19,11 @@
+ 
+ #include <config.h>
+ 
+-#include <sys/random.h>
+-
+ #include <errno.h>
+ #include <fcntl.h>
+ #include <stdbool.h>
+ #include <unistd.h>
++#include <sys/random.h>
+ 
+ #if defined _WIN32 && ! defined __CYGWIN__
+ # define WIN32_LEAN_AND_MEAN
