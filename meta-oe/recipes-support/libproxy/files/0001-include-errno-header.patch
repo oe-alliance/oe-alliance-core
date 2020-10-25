@@ -1,0 +1,10 @@
+--- a/libproxy/url.cpp
++++ b/libproxy/url.cpp
+@@ -34,6 +34,7 @@
+ #include <sys/stat.h> // For stat()
+ #include <algorithm> // For transform()
+ #include <unistd.h>  // For read() close()
++#include <errno.h>
+ 
+ #ifdef WIN32
+ #include <io.h>
