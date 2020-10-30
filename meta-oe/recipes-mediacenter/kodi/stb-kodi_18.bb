@@ -79,14 +79,15 @@ DEPENDS += " \
 #SRCREV = "103415d16038a57f59842cac72d4929389f224a9" #18.5
 #SRCREV = "8e967df9218279618bcbfa8a898d8f80f7b4e449" #18.6
 #SRCREV = "0442d7060875ff5da7d028dea918054b28d6c80a" #18.7
-SRCREV = "45686bddb1f308ec580f97eb4b228b8a6606b320"
+#SRCREV = "45686bddb1f308ec580f97eb4b228b8a6606b320" #18.8
+SRCREV ="0655c2c71821567e4c21c1c5a508a39ab72f0ef1"
 
 # 'patch' doesn't support binary diffs
 PATCHTOOL = "git"
 
 PR = "r11"
 
-PV = "18.8-gitr${SRCPV}"
+PV = "18.9-gitr${SRCPV}"
 SRC_URI = "git://github.com/xbmc/xbmc.git;protocol=https;branch=Leia \
            \
            file://0001-Add-support-for-musl-triplets.patch \
