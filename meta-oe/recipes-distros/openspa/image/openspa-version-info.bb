@@ -15,7 +15,6 @@ URL = "https://openspa.info"
 do_configure[nostamp] = "1"
 
 S = "${WORKDIR}"
-B = "${S}"
 
 PACKAGES = "${PN}"
 

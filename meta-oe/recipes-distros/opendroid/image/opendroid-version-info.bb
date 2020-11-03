@@ -13,7 +13,6 @@ PACKAGE_ARCH = "${MACHINEBUILD}"
 URL = "https://www.droidsat.org"
 
 S = "${WORKDIR}"
-B = "${S}"
 
 PACKAGES = "${PN}"
 

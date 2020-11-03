@@ -13,7 +13,6 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 URL = "http://www.world-of-satellite.com"
 
 S = "${WORKDIR}"
-B = "${S}"
 
 PACKAGES = "${PN}"
 

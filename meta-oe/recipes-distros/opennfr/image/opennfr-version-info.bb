@@ -13,7 +13,6 @@ PACKAGE_ARCH = "${MACHINEBUILD}"
 URL = "http://www.nachtfalke.biz"
 
 S = "${WORKDIR}"
-B = "${S}"
 
 PACKAGES = "${PN}"
 
