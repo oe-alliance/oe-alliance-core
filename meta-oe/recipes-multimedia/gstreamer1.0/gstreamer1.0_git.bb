@@ -19,9 +19,8 @@ SRCREV_FORMAT = "gst"
 
 SRC_URI = "git://gitlab.freedesktop.org/gstreamer/gstreamer;protocol=https;branch=master;name=gst \
            file://0001-gst-gstpluginloader.c-when-env-var-is-set-do-not-fal.patch \
-           file://0003-meson-Add-valgrind-feature.patch \
-           file://0004-meson-Add-option-for-installed-tests.patch \
-           file://0005-revert-use-new-gst-adapter-get-buffer.patch \
+           file://0002-meson-Add-option-for-installed-tests.patch \
+           file://0003-revert-use-new-gst-adapter-get-buffer.patch \
 "
 
 PACKAGECONFIG ??= "${@bb.utils.contains('PTEST_ENABLED', '1', 'tests', '', d)} \
@@ -33,7 +32,6 @@ PACKAGECONFIG[debug] = "-Dgst_debug=true,-Dgst_debug=false"
 PACKAGECONFIG[tracer-hooks] = "-Dtracer_hooks=true,-Dtracer_hooks=false"
 PACKAGECONFIG[check] = "-Dcheck=enabled,-Dcheck=disabled"
 PACKAGECONFIG[tests] = "-Dtests=enabled -Dinstalled-tests=true,-Dtests=disabled -Dinstalled-tests=false"
-PACKAGECONFIG[valgrind] = "-Dvalgrind=enabled,-Dvalgrind=disabled,valgrind,"
 PACKAGECONFIG[unwind] = "-Dlibunwind=enabled,-Dlibunwind=disabled,libunwind"
 PACKAGECONFIG[dw] = "-Dlibdw=enabled,-Dlibdw=disabled,elfutils"
 PACKAGECONFIG[bash-completion] = "-Dbash-completion=enabled,-Dbash-completion=disabled,bash-completion"
@@ -49,14 +47,11 @@ def gettext_oemeson(d):
     return '-Dnls=enabled'
 
 EXTRA_OEMESON += " \
+    -Ddoc=disabled \
     -Dexamples=disabled \
     -Ddbghelp=disabled \
     ${@gettext_oemeson(d)} \
 "
-
-GTKDOC_MESON_OPTION = "gtk_doc"
-GTKDOC_MESON_ENABLE_FLAG = "enabled"
-GTKDOC_MESON_DISABLE_FLAG = "disabled"
 
 GIR_MESON_ENABLE_FLAG = "enabled"
 GIR_MESON_DISABLE_FLAG = "disabled"
