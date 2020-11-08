@@ -13,7 +13,7 @@ inherit gitpkgv
 
 SRCREV = "${AUTOREV}"
 PV = "2020.11.01+git${SRCPV}"
-PKGV = "2020.11.ß1+git${GITPKGV}"
+PKGV = "2020.11.01+git${GITPKGV}"
 PR = "r2"
 
 SRC_URI = "git://source.netsyms.com/Mirrors/l1ving_youtube-dl;protocol=https;branch=master"
