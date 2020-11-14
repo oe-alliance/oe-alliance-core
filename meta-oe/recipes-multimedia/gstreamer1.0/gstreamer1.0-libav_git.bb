@@ -27,7 +27,7 @@ SRC_URI = " \
 
 LIBAV_INCLUDED_EXLUCED = "--disable-everything \
         --enable-decoder=wmalossless --enable-decoder=wmapro --enable-decoder=wmav1 --enable-decoder=wmav2 --enable-decoder=wmavoice \
-        --enable-decoder=truehd --enable-decoder=dca --enable-decoder=mlp"
+        --enable-decoder=dca"
 
 LIBAV_EXTRA_CONFIGURE_COMMON_ARG = "--target-os=linux \
         --cc='${CC}' --as='${CC}' --ld='${CC}' --nm='${NM}' --ar='${AR}' \
