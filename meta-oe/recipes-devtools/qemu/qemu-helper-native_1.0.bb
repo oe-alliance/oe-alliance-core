@@ -3,7 +3,7 @@ LICENSE = "GPLv2"
 RDEPENDS_${PN} = "qemu-system-native"
 PR = "r1"
 
-LIC_FILES_CHKSUM = "file://${WORKDIR}/tunctl.c;endline=4;md5=5c51de126857f0b459affe89ace67e0d"
+LIC_FILES_CHKSUM = "file://${WORKDIR}/tunctl.c;endline=4;md5=ff3a09996bc5fff6bc5d4e0b4c28f999"
 
 SRC_URI = "\
     file://tunctl.c \
