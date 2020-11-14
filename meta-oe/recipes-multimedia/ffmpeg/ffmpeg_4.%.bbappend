@@ -72,6 +72,8 @@ EXTRA_FFCONF = " \
     --enable-encoder=jpeg2000 \
     --enable-encoder=jpegls \
     --enable-encoder=rawvideo \
+    --disable-decoder=truehd \
+    --disable-decoder=mlp \
     \
     --disable-debug \
     --disable-doc \
