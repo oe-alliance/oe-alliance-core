@@ -5,7 +5,7 @@ PRIORITY = "optional"
 
 require conf/license/license-gplv2.inc
 
-inherit autotools-brokensep gitpkgv
+inherit autotools-brokensep gitpkgv pythonnative
 
 SRCREV = "${AUTOREV}"
 PV = "1.2.+git${SRCPV}"
