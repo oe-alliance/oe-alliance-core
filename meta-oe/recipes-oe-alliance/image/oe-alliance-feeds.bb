@@ -90,6 +90,7 @@ RDEPENDS_${PN} = " \
     lighttpd \
     livestreamersrv \
     streamlink \
+    satpi \
     llmnr-query \
     mc \
     mergerfs \
