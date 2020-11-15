@@ -26,7 +26,7 @@ FILES_${PN}-src = "\
 	"
 FILES_${PN}-po = "${libdir}/enigma2/python/Plugins/Extensions/EnhancedMovieCenter/locale/*/*/*.po"
 
-inherit autotools-brokensep
+inherit autotools-brokensep pythonnative
 
 EXTRA_OECONF = "\
     BUILD_SYS=${BUILD_SYS} \
