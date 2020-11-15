@@ -14,5 +14,6 @@ EXTRA_QTBASE_vuuno4k = "vuplus"
 EXTRA_QTBASE_vuuno4kse = "vuplus"
 EXTRA_QTBASE_vuzero4k = "vuplus"
 EXTRA_QTBASE_vuduo4k = "vuplus"
+EXTRA_QTBASE_vuduo4kse = "vuplus"
 
 require qtbase-${EXTRA_QTBASE}_git.inc
