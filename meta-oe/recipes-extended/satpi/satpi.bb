@@ -21,11 +21,9 @@ BUILD = "${WORKDIR}/git"
 inherit autotools-brokensep update-rc.d
 
 INITSCRIPT_NAME = "satpi"
-EXTRA_OECONF = "LIBDVBCSA=yes debug "
+EXTRA_OECONF = "LIBDVBCSA=yes ENIGMA=yes debug "
 
 INITSCRIPT_PARAMS = "defaults 80"
-
-EXTRA_OECONF = "ENIGMA=yes"
 
 CXXFLAGS = " -std=c++11"
 
