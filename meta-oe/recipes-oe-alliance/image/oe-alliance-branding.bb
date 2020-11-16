@@ -247,6 +247,13 @@ do_install_append() {
         ln -sf /usr/share/enigma2/sf8008s.png ${D}${libdir}/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/sf8008s.png
         install -m 0644 ${S}/BoxBranding/boxes/sf8008t.png ${D}/usr/share/enigma2/sf8008t.png
         ln -sf /usr/share/enigma2/sf8008t.png ${D}${libdir}/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/sf8008t.png
+    elif [ ${MACHINEBUILD} = "ustym4kpro" ]; then
+        install -m 0644 ${S}/BoxBranding/boxes/ustym4kpro.png ${D}/usr/share/enigma2/ustym4kpro.png
+        ln -sf /usr/share/enigma2/ustym4kpro.png ${D}${libdir}/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/ustym4kpro.png
+        install -m 0644 ${S}/BoxBranding/boxes/ustym4kprosingle.png ${D}/usr/share/enigma2/ustym4kprosingle.png
+        ln -sf /usr/share/enigma2/ustym4kprosingle.png ${D}${libdir}/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/ustym4kprosingle.png
+        install -m 0644 ${S}/BoxBranding/boxes/ustym4kprotwin.png ${D}/usr/share/enigma2/ustym4kprotwin.png
+        ln -sf /usr/share/enigma2/ustym4kprotwin.png ${D}${libdir}/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/ustym4kprotwin.png
     else
         install -m 0644 ${S}/BoxBranding/boxes/${MACHINEBUILD}.png ${D}/usr/share/enigma2/${MACHINEBUILD}.png
         ln -sf /usr/share/enigma2/${MACHINEBUILD}.png ${D}${libdir}/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/${MACHINEBUILD}.png
