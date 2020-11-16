@@ -1,11 +1,13 @@
---- a/Makefile	2019-06-14 19:10:00.689989294 +0200
-+++ b/Makefile	2019-06-14 19:10:16.574013912 +0200
+diff --git a/Makefile b/Makefile
+index d7400fc..e670126 100755
+--- a/Makefile
++++ b/Makefile
 @@ -3,7 +3,7 @@
  ###############################################################################
- 
+
  # Set the compiler being used.
 -CXX = $(CXXPREFIX)g++$(CXXSUFFIX)
 +#CXX = $(CXXPREFIX)g++$(CXXSUFFIX)
- 
- # Includes needed for proper compilation
- INCLUDES +=
+
+ # Check compiler support for some functions
+ RESULT_HAS_NP_FUNCTIONS := $(shell $(CXX) -o npfunc checks/npfunc.cpp -pthread 2> /dev/null ; echo $$? ; rm -rf npfunc)
