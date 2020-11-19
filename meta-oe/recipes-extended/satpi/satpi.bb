@@ -9,23 +9,34 @@ RDEPENDS_${PN} = "libdvbcsa openssl"
 
 SRC_URI = "git://github.com/Barracuda09/SATPI.git;protocol=http \
     file://makefile.patch \
+    file://satpi.init \
 "
 
-SRCREV = "9173f5412bd036178ead4343feda5be04d86bff8"
+SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 
 S = "${WORKDIR}/git"
 BUILD = "${WORKDIR}/git"
 
-inherit autotools-brokensep
+inherit autotools-brokensep update-rc.d
 
+INITSCRIPT_NAME = "satpi"
+EXTRA_OECONF = "LIBDVBCSA=yes ENIGMA=yes debug "
 
-EXTRA_OECONF = "ENIGMA=yes"
+INITSCRIPT_PARAMS = "defaults 80"
 
 CXXFLAGS = " -std=c++11"
 
+do_configure_prepend () {
+}
 
 do_install () {
     install -d -m 0755 ${D}/${bindir}
     install -m 0755 ${S}/satpi ${D}/${bindir}/
+    install -d -m 0755 ${D}/etc/init.d
+    install -d ${D}/${datadir}/${PN}
+    install -m 0755 ${S}/satpi ${D}/${bindir}/
+    install -m 0755 ${WORKDIR}/satpi.init ${D}/etc/init.d/satpi
+    cp -r --preserve=timestamps ${S}/web ${D}/${datadir}/${PN}
+    cp -r --preserve=timestamps ${S}/mapping.m3u ${D}/${bindir}
 }

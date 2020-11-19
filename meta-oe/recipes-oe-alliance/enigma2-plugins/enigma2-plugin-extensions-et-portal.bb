@@ -5,7 +5,7 @@ PRIORITY = "optional"
 
 require conf/license/license-gplv2.inc
 
-inherit gitpkgv ${PYTHON_PN}native gettext
+inherit gitpkgv ${PYTHON_PN}native gettext autotools-brokensep
 SRCREV = "${AUTOREV}"
 PV = "inofficial-3.2.+git${SRCPV}"
 PKGV = "inofficial-3.2.+git${GITPKGV}"
@@ -20,8 +20,6 @@ PACKAGES =+ "${PN}-po"
 FILES_${PN} = "/usr/lib /tmp"
 FILES_${PN}-src = "/usr/lib/enigma2/python/Plugins/Extensions/EtPortal/*.py"
 FILES_${PN}-po = "/usr/lib/enigma2/python/Plugins/Extensions/EtPortal/locale/*/*/*.po"
-
-inherit autotools-brokensep
 
 EXTRA_OECONF = "\
     BUILD_SYS=${BUILD_SYS} \

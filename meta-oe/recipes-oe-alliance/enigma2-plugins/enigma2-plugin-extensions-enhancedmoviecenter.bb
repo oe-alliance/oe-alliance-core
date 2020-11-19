@@ -7,7 +7,7 @@ require conf/license/license-gplv2.inc
 DEPENDS = "${PYTHON_PN}-six-native"
 RDEPENDS_${PN} = "gstreamer1.0-plugins-good-flv gstreamer1.0-plugins-bad-rtmp ${PYTHON_PN}-json ${PYTHON_PN}-html ${PYTHON_PN}-requests ${PYTHON_PN}-mutagen librtmp1"
 
-inherit gitpkgv ${PYTHON_PN}native
+inherit gitpkgv ${PYTHON_PN}native autotools-brokensep gettext
 
 SRCREV = "${AUTOREV}"
 PV = "4.0.+git${SRCPV}"
@@ -25,8 +25,6 @@ EXTRA_OECONF = " \
 "
 
 PARALLEL_MAKEINST = ""
-
-inherit autotools-brokensep ${PYTHON_PN}native gettext
 
 do_configure_prepend_openatv () {
     sed 's/config.EMC.use_orig_skin             = ConfigYesNo(default = True)/config.EMC.use_orig_skin             = ConfigYesNo(default = False)/g' -i ${S}/src/plugin.py

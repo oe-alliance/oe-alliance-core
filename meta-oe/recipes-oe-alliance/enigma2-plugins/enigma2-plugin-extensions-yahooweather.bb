@@ -4,7 +4,7 @@ SECTION = "extra"
 PRIORITY = "optional"
 require conf/license/license-gplv2.inc
 
-inherit gitpkgv
+inherit gitpkgv ${PYTHON_PN}native autotools-brokensep gettext
 
 SRCREV = "${AUTOREV}"
 PV = "1.2.+git${SRCPV}"
@@ -28,8 +28,6 @@ sed -i 's/python/python2/g' ${S}/xml2po.py
 
 
 PARALLEL_MAKEINST = ""
-
-inherit autotools-brokensep gettext
 
 CONFFILES_${PN} = " \
     ${libdir}/enigma2/python/Plugins/Extensions/YahooWeather/Config/Location_id \
