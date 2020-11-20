@@ -92,7 +92,7 @@ static const char wsd_types[] = ":Types>";
 
 struct st_interface
 {
-	char iface_name[IF_NAMESIZE];
+	char iface_name[IF_NAMESIZE + 1];
 	struct sockaddr_storage *ipv4;
 	struct sockaddr_storage *ipv6;
 	struct sockaddr_storage *ipv6_link_local;
@@ -1101,15 +1101,15 @@ int main(int argc, char *argv[])
 			break;
 
 		case 'i':
-			strncpy(iface, optarg, sizeof(iface));
+			strncpy(iface, optarg, sizeof(iface) - 1);
 			break;
 
 		case 'n':
-			strncpy(cd_name, optarg, sizeof(cd_name));
+			strncpy(cd_name, optarg, sizeof(cd_name) - 1);
 			break;
 
 		case 'w':
-			strncpy(cd_workgroup, optarg, sizeof(cd_workgroup));
+			strncpy(cd_workgroup, optarg, sizeof(cd_workgroup) - 1);
 			break;
 
 		case '4':
