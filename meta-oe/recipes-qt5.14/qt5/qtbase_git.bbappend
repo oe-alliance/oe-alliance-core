@@ -15,7 +15,10 @@ SRC_URI += " \
 PACKAGECONFIG_GL = " "
 PACKAGECONFIG_OPENSSL = "openssl"
 PACKAGECONFIG_remove = "tests"
-PACKAGECONFIG_append = " eglfs gles2 linuxfb"
+PACKAGECONFIG_append += " \
+    ${@bb.utils.contains('MACHINE_FEATURES', 'noopengl', '', 'gles2 eglfs', d)} \
+    linuxfb \
+"
 
 SET_QT_QPA_DEFAULT_PLATFORM = "${@bb.utils.contains('MACHINE_FEATURES', 'qteglfs', 'eglfs', '', d)}"
 SET_QT_QPA_EGLFS_INTEGRATION = "${@bb.utils.contains('MACHINE_FEATURES', 'mali', 'eglfs_mali', '', d)}"
