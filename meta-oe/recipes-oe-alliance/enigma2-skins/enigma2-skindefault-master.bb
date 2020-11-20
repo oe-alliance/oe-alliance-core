@@ -18,6 +18,7 @@ do_populate_sysroot[noexec] = "1"
 
 SRC_URI = "git://github.com/oe-alliance/oe-alliance-e2-skindefault.git;protocol=git"
 SRC_URI_openspa = "git://github.com/openspa/oe-alliance-e2-skindefault.git;protocol=git"
+SRC_URI_openvix = "git://github.com/oe-alliance/oe-alliance-e2-skindefault.git;protocol=git;branch=scalable"
 
 S = "${WORKDIR}/git"
 
