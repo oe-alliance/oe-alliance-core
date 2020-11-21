@@ -5,12 +5,12 @@ inherit gitpkgv meson gettext
 PV = "${GST_VERSION_FULL}+git${SRCPV}"
 PKGV = "${GST_VERSION_FULL}+git${GITPKGV}"
 
-SRCREV_gst = "e74040b41e724c527610cc53e295abe91b99d615"
-SRCREV_gst_libav = "b6acd99239247aeb3dbb433508316ba709f550bb"
+SRCREV_gst = "12bc72880530748b34bd414473db25c6bdf8e74a"
+SRCREV_gst_libav = "f29e9dfe9cc46e4e3b6340c782a1a0a479f9a400"
 
-SRCREV_gst_plugins_bad = "d1f397e7546f2c63069993f55966a43464976e3f"
-SRCREV_gst_plugins_base = "660b5e4a9864b843c3bc26cd6cdf7b42192f1f36"
-SRCREV_gst_plugins_good = "aa264e6b073b612feae3289699c61c5327b8a458"
-SRCREV_gst_plugins_ugly = "a798b7d6a023e8e8a6dd452653bbcba1e4d39b77"
+SRCREV_gst_plugins_bad = "d1e72901091b12e7cc5a4efe7406af04fe0477f8"
+SRCREV_gst_plugins_base = "0dc419197f95d8e1b7f8f5685d07fdeb21da3ea7"
+SRCREV_gst_plugins_good = "2c76f03fe28d7b03df96cd65b29a20aa5025d51c"
+SRCREV_gst_plugins_ugly = "a9105ad1e1fb8cbcf787c2a967697707eea405ed"
 
 S = "${WORKDIR}/git"

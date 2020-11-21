@@ -92,7 +92,7 @@ static const char wsd_types[] = ":Types>";
 
 struct st_interface
 {
-	char iface_name[IF_NAMESIZE];
+	char iface_name[IF_NAMESIZE + 1];
 	struct sockaddr_storage *ipv4;
 	struct sockaddr_storage *ipv6;
 	struct sockaddr_storage *ipv6_link_local;
@@ -693,10 +693,10 @@ int create_hello_bye_message(const char* action, int* out_len)
 	return -1;
 }
 
-int udp_send_all(const char* action, int socket, char* iface, struct sockaddr_in6 wsd_mcast6, struct sockaddr_in wsd_mcast)
+int udp_send_all(const char* action, int socket, char* iface, struct sockaddr_in6 wsd_mcast6, struct sockaddr_in wsd_mcast, int tries)
 {
 	struct sockaddr* from;
-	int i;
+	int i, count;
 	int rc = 0;
 	int out_len;
 
@@ -705,15 +705,29 @@ int udp_send_all(const char* action, int socket, char* iface, struct sockaddr_in
 	{
 		if (strlen(g_interfaces[i].iface_name) == 0)
 			continue;
-
+		wsdd_log(LOG_INFO, "udp_send_all: interface: %d", i+1);
 		// send ipv4 message
 		if (g_interfaces[i].ipv4)
 		{
 			from = (struct sockaddr*)g_interfaces[i].ipv4;
 			if (create_hello_bye_message(action, &out_len) != -1)
 			{
-				if (udp_send(socket, from, 0, (struct sockaddr*)&wsd_mcast, sizeof(wsd_mcast), out_len) == -1)
+				//send may fail if network is not fully up -> retry
+				count = 0;
+				do
+				{
+					if (udp_send(socket, from, 0, (struct sockaddr*)&wsd_mcast, sizeof(wsd_mcast), out_len) == -1)
+						count++;
+					else
+						break;
+					wsdd_log(LOG_DEBUG, "udp_send_all: udp_send failed -> retry");
+					sleep(1);
+				} while (count < tries);
+				if (count >= tries)
+				{
 					rc = -1;
+					wsdd_log(LOG_ERR, "udp_send_all: All transmission tries failed\n");
+				}
 			}
 			else
 				rc = -1;
@@ -724,8 +738,22 @@ int udp_send_all(const char* action, int socket, char* iface, struct sockaddr_in
 			from = (struct sockaddr*)g_interfaces[i].ipv6;
 			if (create_hello_bye_message(action, &out_len) != -1)
 			{
-				if (udp_send(socket, from, i + 1, (struct sockaddr*)&wsd_mcast6, sizeof(wsd_mcast6), out_len) == -1)
+				//send may fail if network is not fully up -> retry
+				count = 0;
+				do
+				{
+					if (udp_send(socket, from, i + 1, (struct sockaddr*)&wsd_mcast6, sizeof(wsd_mcast6), out_len) == -1)
+						count++;
+					else
+						break;
+					wsdd_log(LOG_DEBUG, "udp_send_all: udp_send failed -> retry");
+					sleep(1);
+				} while (count < tries);
+				if (count >= tries)
+				{
 					rc = -1;
+					wsdd_log(LOG_ERR, "udp_send_all: All transmission tries failed\n");
+				}
 			}
 			else
 				rc = -1;
@@ -1101,15 +1129,15 @@ int main(int argc, char *argv[])
 			break;
 
 		case 'i':
-			strncpy(iface, optarg, sizeof(iface));
+			strncpy(iface, optarg, sizeof(iface) - 1);
 			break;
 
 		case 'n':
-			strncpy(cd_name, optarg, sizeof(cd_name));
+			strncpy(cd_name, optarg, sizeof(cd_name) - 1);
 			break;
 
 		case 'w':
-			strncpy(cd_workgroup, optarg, sizeof(cd_workgroup));
+			strncpy(cd_workgroup, optarg, sizeof(cd_workgroup) - 1);
 			break;
 
 		case '4':
@@ -1273,9 +1301,9 @@ int main(int argc, char *argv[])
 	}
 
 	/* Send hello message */
-	if (udp_send_all(wsd_act_hello, fds[WSD_UDP_SOCK].fd, iface, wsd_mcast6, wsd_mcast) == -1)
+	if (udp_send_all(wsd_act_hello, fds[WSD_UDP_SOCK].fd, iface, wsd_mcast6, wsd_mcast, 7) == -1)
 	{
-		wsdd_log(LOG_ERR, "Failed to send hello with %s", strerror(errno));
+		wsdd_log(LOG_ERR, "Failed to send hello with %s\n", strerror(errno));
 		retval = EXIT_FAILURE;
 		goto wsd_http_close;
 	}
@@ -1361,9 +1389,9 @@ int main(int argc, char *argv[])
 	}
 
 	/* Send bye message */
-	if (udp_send_all(wsd_act_bye, fds[WSD_UDP_SOCK].fd, iface, wsd_mcast6, wsd_mcast) == -1)
+	if (udp_send_all(wsd_act_bye, fds[WSD_UDP_SOCK].fd, iface, wsd_mcast6, wsd_mcast, 1) == -1)
 	{
-		wsdd_log(LOG_ERR, "Failed to send bye with %s", strerror(errno));
+		wsdd_log(LOG_ERR, "Failed to send bye with %s\n", strerror(errno));
 		retval = EXIT_FAILURE;
 	}
 
