@@ -1,4 +1,4 @@
-From 3d38c7ecb1461d8a59e71b23276e2bc764de4af3 Mon Sep 17 00:00:00 2001
+From 49450456d935b8a4ceea87abe1b287a4a45c074e Mon Sep 17 00:00:00 2001
 From: Captain <captain.onboard@web.de>
 Date: Wed, 15 Jul 2020 18:02:31 +0200
 Subject: [PATCH] stb-support-19
@@ -20,9 +20,9 @@ Subject: [PATCH] stb-support-19
  xbmc/utils/GLUtils.cpp                        |    6 +-
  xbmc/windowing/egl/CMakeLists.txt             |   62 +
  xbmc/windowing/egl/EGLNativeType.h            |  152 ++
- xbmc/windowing/egl/EGLNativeTypeDags.cpp      |  336 ++++
+ xbmc/windowing/egl/EGLNativeTypeDags.cpp      |  337 ++++
  xbmc/windowing/egl/EGLNativeTypeDags.h        |  199 +++
- xbmc/windowing/egl/EGLNativeTypeDreambox.cpp  |  192 ++
+ xbmc/windowing/egl/EGLNativeTypeDreambox.cpp  |  196 ++
  xbmc/windowing/egl/EGLNativeTypeDreambox.h    |   61 +
  xbmc/windowing/egl/EGLNativeTypeEdision.cpp   |  174 ++
  xbmc/windowing/egl/EGLNativeTypeEdision.h     |   61 +
@@ -47,7 +47,7 @@ Subject: [PATCH] stb-support-19
  xbmc/windowing/egl/WinSystemSTBContext.h      |   43 +
  xbmc/windowing/egl/WinSystemstb.cpp           |  541 ++++++
  xbmc/windowing/egl/WinSystemstb.h             |   79 +
- 43 files changed, 6308 insertions(+), 8 deletions(-)
+ 43 files changed, 6313 insertions(+), 8 deletions(-)
  create mode 100644 xbmc/platform/linux/input/Keymap.h
  create mode 100644 xbmc/platform/linux/input/LinuxInputDevices.cpp
  create mode 100644 xbmc/platform/linux/input/LinuxInputDevices.h
@@ -2416,10 +2416,10 @@ index 0000000000..48987ada45
 +};
 diff --git a/xbmc/windowing/egl/EGLNativeTypeDags.cpp b/xbmc/windowing/egl/EGLNativeTypeDags.cpp
 new file mode 100644
-index 0000000000..1701b54b83
+index 0000000000..8065f181c6
 --- /dev/null
 +++ b/xbmc/windowing/egl/EGLNativeTypeDags.cpp
-@@ -0,0 +1,336 @@
+@@ -0,0 +1,337 @@
 +/*
 + *      Copyright (C) 2011-2012 Team XBMC
 + *      http://www.xbmc.org
@@ -2552,7 +2552,8 @@ index 0000000000..1701b54b83
 +{
 +        int tmp_resolution = 0;
 +        std::string mode;
-+        SysfsUtils::GetString("/proc/stb/video/videomode", mode);
++        CSysfsPath videomode{"/proc/stb/video/videomode"};
++        mode = videomode.Get<std::string>();
 +
 +        std::string fromMode = mode;        
 +        StringUtils::Trim(fromMode);
@@ -2963,10 +2964,10 @@ index 0000000000..9d2176a942
 +};
 diff --git a/xbmc/windowing/egl/EGLNativeTypeDreambox.cpp b/xbmc/windowing/egl/EGLNativeTypeDreambox.cpp
 new file mode 100644
-index 0000000000..3bdd4be4be
+index 0000000000..3ae4254c04
 --- /dev/null
 +++ b/xbmc/windowing/egl/EGLNativeTypeDreambox.cpp
-@@ -0,0 +1,192 @@
+@@ -0,0 +1,196 @@
 +/*
 + *      Copyright (C) 2011-2013 Team XBMC
 + *      http://xbmc.org
@@ -3011,8 +3012,8 @@ index 0000000000..3bdd4be4be
 +
 +bool CEGLNativeTypeDreambox::CheckCompatibility()
 +{
-+  std::string name;
-+  SysfsUtils::GetString("/proc/stb/info/model", name);
++  CSysfsPath model{"/proc/stb/info/model"};
++  name = model.Get<std::string>();
 +  return name == "dm820" || name == "dm900" || name == "dm920" || name == "dm7080";
 +}
 +
@@ -3069,7 +3070,8 @@ index 0000000000..3bdd4be4be
 +bool CEGLNativeTypeDreambox::GetNativeResolution(RESOLUTION_INFO *res) const
 +{
 +  std::string mode;
-+  SysfsUtils::GetString("/proc/stb/video/videomode", mode);
++  CSysfsPath videomode{"/proc/stb/video/videomode"};
++  mode = videomode.Get<std::string>();
 +  return dreambox_mode_to_resolution(mode.c_str(), res);
 +}
 +
@@ -3077,7 +3079,8 @@ index 0000000000..3bdd4be4be
 +{
 +  // Don't set the same mode as current
 +  std::string mode;
-+  SysfsUtils::GetString("/proc/stb/video/videomode", mode);
++  CSysfsPath videomode{"/proc/stb/video/videomode"};
++  mode = videomode.Get<std::string>();
 +  if (res.strId == mode)
 +    return false;
 +
@@ -3087,7 +3090,8 @@ index 0000000000..3bdd4be4be
 +bool CEGLNativeTypeDreambox::ProbeResolutions(std::vector<RESOLUTION_INFO> &resolutions)
 +{
 +  std::string valstr;
-+  SysfsUtils::GetString("/proc/stb/video/videomode_choices", valstr);
++  CSysfsPath videomode_choices{"/proc/stb/video/videomode_choices"};
++  valstr = videomode_choices.Get<std::string>();
 +  std::vector<std::string> probe_str = StringUtils::Split(valstr, " ");
 +
 +  resolutions.clear();
@@ -3122,7 +3126,8 @@ index 0000000000..3bdd4be4be
 +bool CEGLNativeTypeDreambox::SetDisplayResolution(const char *mode)
 +{
 +  // switch display resolution
-+  SysfsUtils::SetString("/proc/stb/video/videomode", mode);
++  CSysfsPath videomode{"/proc/stb/video/videomode"};
++  mode = videomode.Get<std::string>();
 +
 +  RESOLUTION_INFO res;
 +  dreambox_mode_to_resolution(mode, &res);
@@ -6759,5 +6764,5 @@ index 0000000000..2ed66ba9ba
 +  std::unique_ptr<CLibInputHandler> m_libinput;
 +};
 -- 
-2.27.0.windows.1
+2.29.2.windows.2
 
