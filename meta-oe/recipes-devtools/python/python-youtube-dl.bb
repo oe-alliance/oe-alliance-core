@@ -5,19 +5,19 @@ from YouTube.com and a few more sites. It requires the Python interpreter \
 HOMEPAGE = "http://rg3.github.io/youtube-dl/"
 SECTION = "devel/python"
 LICENSE = "LGPLv2.1"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=9936da26f04f6454c738c5f4fda24799"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=7246f848faa4e9c9fc0ea91122d6e680"
 
 DEPENDS = "libxml2 bash-completion"
 
 inherit gitpkgv
 
 SRCREV = "${AUTOREV}"
-PE = "1"
+PE = "2"
 PV = "git${SRCPV}"
 PKGV = "${GITPKGVTAG}"
 PR = "r2"
 
-SRC_URI = "git://github.com/l1ving/youtube-dl.git;protocol=https;branch=master"
+SRC_URI = "git://github.com/ytdl-org/youtube-dl.git;protocol=https;branch=master"
 
 S = "${WORKDIR}/git"
 
