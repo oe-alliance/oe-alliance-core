@@ -1,11 +1,10 @@
-SUMMARY = "WiFi devices for Realtek 8192EU chipsets."
+SUMMARY = "WiFi devices for Realtek 8192FU chipsets."
 inherit allarch
 
 require conf/license/license-gplv2.inc
 
 RRECOMMENDS_${PN} = " \
-    ${@bb.utils.contains("MACHINE_FEATURES", "linuxwifi", "kernel-module-rtl8xxxu", "rtl8192eu", d)} \
-    firmware-rtl8192eu \
+    rtl8192fu \
     "
 
 PV = "1.0"

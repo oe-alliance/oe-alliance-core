@@ -1,16 +1,25 @@
 inherit image_types
 
+IMAGE_ROOTFS = "${WORKDIR}/rootfs/linuxrootfs1"
 BOOTOPTIONS_PARTITION_SIZE = "2048"
-
+IMAGE_ROOTFS_SIZE = "614400"
 do_image_zgemmafastboot8gb[vardepsexclude] = "DATETIME"
 
 do_image_zgemmafastboot8gb[depends] = " \
 	e2fsprogs-native:do_populate_sysroot \
+	android-tools-native:do_populate_sysroot \
 	dosfstools-native:do_populate_sysroot \
 	mtools-native:do_populate_sysroot \
 "
 
 IMAGE_CMD_zgemmafastboot8gb () {
+	eval local COUNT=\"0\"
+	eval local MIN_COUNT=\"60\"
+	if [ $ROOTFS_SIZE -lt $MIN_COUNT ]; then
+		eval COUNT=\"$MIN_COUNT\"
+	fi
+	dd if=/dev/zero of=${IMGDEPLOYDIR}/${IMAGE_NAME}${IMAGE_NAME_SUFFIX}.ext4 seek=${IMAGE_ROOTFS_SIZE} count=$COUNT bs=1024
+	mkfs.ext4 -F ${IMGDEPLOYDIR}/${IMAGE_NAME}${IMAGE_NAME_SUFFIX}.ext4 -d ${WORKDIR}/rootfs
 	dd if=/dev/zero of=${WORKDIR}/bootoptions.img bs=1024 count=${BOOTOPTIONS_PARTITION_SIZE}
 	mkfs.msdos -S 512 ${WORKDIR}/bootoptions.img
 	echo "bootcmd=setenv bootargs \$(bootargs) \$(bootargs_common); mmc read 0 0x1000000 0x3BD000 0x8000; bootm 0x1000000; run bootcmd_fallback" > ${WORKDIR}/STARTUP
@@ -28,7 +37,6 @@ IMAGE_CMD_zgemmafastboot8gb () {
 	echo "bootcmd=setenv bootargs \$(bootargs) \$(bootargs_common); mmc read 0 0x1000000 0x3D5000 0x8000; bootm 0x1000000; run bootcmd_fallback" > ${WORKDIR}/STARTUP_LINUX_4
 	echo "bootargs=root=/dev/mmcblk0p23 rootsubdir=linuxrootfs4 rootfstype=ext4 kernel=/dev/mmcblk0p22" >> ${WORKDIR}/STARTUP_LINUX_4
 	echo "bootcmd=setenv bootargs \$(bootargs_common); mmc read 0 0x1000000 0x1000 0x9000; bootm 0x1000000" > ${WORKDIR}/STARTUP_RECOVERY
-	echo "bootcmd=setenv bootargs \$(bootargs_common); mmc read 0 0x1000000 0x1000 0x9000; bootm 0x1000000" > ${WORKDIR}/STARTUP_ONCE
 	echo "imageurl https://raw.githubusercontent.com/oe-alliance/bootmenu/master/${MACHINEBUILD}/images" > ${WORKDIR}/bootmenu.conf
 	echo "updateurl http://updateurl.redirectme.net/cgi-bin/index.py" >> ${WORKDIR}/bootmenu.conf
 	echo "# " >> ${WORKDIR}/bootmenu.conf
@@ -42,7 +50,6 @@ IMAGE_CMD_zgemmafastboot8gb () {
 	echo "#gateway 192.168.1.1" >> ${WORKDIR}/bootmenu.conf
 	echo "#dns 192.168.1.1" >> ${WORKDIR}/bootmenu.conf
 	mcopy -i ${WORKDIR}/bootoptions.img -v ${WORKDIR}/STARTUP ::
-	mcopy -i ${WORKDIR}/bootoptions.img -v ${WORKDIR}/STARTUP_ONCE ::
 	mcopy -i ${WORKDIR}/bootoptions.img -v ${WORKDIR}/STARTUP_ANDROID ::
 	mcopy -i ${WORKDIR}/bootoptions.img -v ${WORKDIR}/STARTUP_ANDROID_DISABLE_LINUXSE ::
 	mcopy -i ${WORKDIR}/bootoptions.img -v ${WORKDIR}/STARTUP_LINUX_1 ::
@@ -52,4 +59,7 @@ IMAGE_CMD_zgemmafastboot8gb () {
 	mcopy -i ${WORKDIR}/bootoptions.img -v ${WORKDIR}/STARTUP_RECOVERY ::
 	mcopy -i ${WORKDIR}/bootoptions.img -v ${WORKDIR}/bootmenu.conf ::
 	cp ${WORKDIR}/bootoptions.img ${IMGDEPLOYDIR}/bootoptions.img
+	echo boot-recovery > ${WORKDIR}/misc-boot.img
+	cp ${WORKDIR}/misc-boot.img ${IMGDEPLOYDIR}/misc-boot.img
+	ext2simg ${IMGDEPLOYDIR}/${IMAGE_NAME}${IMAGE_NAME_SUFFIX}.ext4 ${IMGDEPLOYDIR}/${IMAGE_NAME}${IMAGE_NAME_SUFFIX}.userdata.ext4
 }
