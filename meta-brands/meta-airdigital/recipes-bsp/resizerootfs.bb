@@ -1,7 +1,7 @@
 DESCRIPTION = "Resize Rootfs"
 require conf/license/license-gplv2.inc
 
-COMPATIBLE_MACHINE = "^(h9combo|h7|h9|h10|i55plus)$"
+COMPATIBLE_MACHINE = "^h7$|^h9$|^h9se$|^h9combo$|^h9combose$|^h10$|^i55se$|^i55plus$"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 RDEPENDS_${PN} = "e2fsprogs-resize2fs"
