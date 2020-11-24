@@ -21,6 +21,6 @@ FILES_${PN} = "${libdir} ${datadir}"
 do_install() {
     install -d ${D}${libdir}
     install -d ${D}${datadir}
-    cp -rp ${S}${libdir}/* ${D}${libdir}/
-    cp -rp ${S}${datadir}/* ${D}${datadir}/
+    cp -rf ${S}${libdir}/* ${D}${libdir}/
+    cp -rf ${S}${datadir}/* ${D}${datadir}/
 }
