@@ -1,4 +1,3 @@
-steampunk-hd-skin-4nfr
 SUMMARY = "Enigma2 Skin OpenNFR-Skin"
 MAINTAINER = "opennfr"
 SECTION = "base"
