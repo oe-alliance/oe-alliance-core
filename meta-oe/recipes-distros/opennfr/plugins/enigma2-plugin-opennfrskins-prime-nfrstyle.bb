@@ -15,7 +15,7 @@ PR = "r2"
 
 RDEPENDS_${PN} = "enigma2-plugin-skincomponents-weathercomponent, enigma2-plugin-systemplugins-weathercomponenthandler"
 
-SRC_URI="git://github.com/stein17/Skins-for-openNFR.git"
+SRC_URI="git://github.com/stein17/Skins-for-openNFR.git;protocol=git;branch=6.5"
 
 S = "${WORKDIR}/git/Prime-NFR-Style"
 
