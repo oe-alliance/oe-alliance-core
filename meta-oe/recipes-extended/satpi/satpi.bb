@@ -8,7 +8,6 @@ DEPENDS = "libdvbcsa openssl"
 RDEPENDS_${PN} = "libdvbcsa openssl"
 
 SRC_URI = "git://github.com/Barracuda09/SATPI.git;protocol=http \
-    file://makefile.patch \
     file://satpi.init \
 "
 
