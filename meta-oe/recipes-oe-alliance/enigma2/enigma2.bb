@@ -30,6 +30,7 @@ RDEPENDS_${PN} = " \
     glibc-gconv-cp1250 \
     hotplug-e2-helper \
     ${PYTHON_RDEPS} \
+    ${@bb.utils.contains("DISTRO_NAME", "openvix", "image-identifier" , "", d)} \
     ${@bb.utils.contains("DISTRO_NAME", "openatv", "openatv-autorestore" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "uianimation", "vuplus-libgles-${MACHINE} libvugles2" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "hiaccel", "dinobot-libs-${MACHINE}" , "", d)} \
