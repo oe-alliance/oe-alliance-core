@@ -12,6 +12,8 @@ deltask patch
 deltask prepare_recipe_sysroot
 deltask configure
 deltask compile
+deltask taskhash
+
 
 PV = "${IMAGE_VERSION}"
 PR = "${BUILD_VERSION}"
