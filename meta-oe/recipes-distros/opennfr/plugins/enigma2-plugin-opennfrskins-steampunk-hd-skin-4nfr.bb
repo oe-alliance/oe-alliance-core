@@ -11,11 +11,11 @@ SRCREV = "${AUTOREV}"
 PV = "2.1+git${SRCPV}"
 PKGV = "2.1+git${GITPKGV}"
 VER ="2.1"
-PR = "r7"
+PR = "r4"
 
-SRC_URI="git://github.com/carlo0815/openNFR-skin.git;branch=6.5"
+SRC_URI="git://github.com/stein17/Skins-for-openNFR.git;protocol=git;branch=6.5"
 
-S = "${WORKDIR}/git"
+S = "${WORKDIR}/git/Steampunk-HD-Skin-4NFR"
 
 FILES_${PN} = "${libdir} /usr/share"
 
