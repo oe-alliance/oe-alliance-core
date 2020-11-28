@@ -1,4 +1,4 @@
-PR .= ".3"
+PR .= ".4"
 SRC_URI += " \
             file://mount_single_uuid.patch \
             file://use_ipv6_when_ipv4_unroutable.patch \
@@ -10,6 +10,7 @@ SRC_URI += " \
             file://0001-Prevent-telnet-connections-from-the-internet-to-the-.patch \
             file://0002-Extended-network-interfaces-support.patch \
             file://0003-Revert-ip-fix-ip-oneline-a.patch \
+            file://0004-libbb-make-unicode-printable.patch \
             "
 
 # we do not really depend on mtd-utils, but as mtd-utils replaces 
