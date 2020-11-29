@@ -15,11 +15,12 @@ PACKAGES += " \
 PROVIDES += " \
     enigma2-plugin-extensions-autotimer \
     enigma2-plugin-extensions-btdevicesmanager \
+    enigma2-plugin-systemplugins-abmcustommiximporter \
+    enigma2-plugin-systemplugins-aboutboxbranding \
     enigma2-plugin-systemplugins-blindscan \
     enigma2-plugin-systemplugins-channelsimporter \
     enigma2-plugin-extensions-dlnabrowser \
     enigma2-plugin-extensions-dlnaserver \
-    enigma2-plugin-systemplugins-abmcustommiximporter \
     enigma2-plugin-systemplugins-firmwareupgrade \
     enigma2-plugin-systemplugins-fpgaupgrade \
     enigma2-plugin-systemplugins-vfdcontrol \
@@ -67,6 +68,7 @@ DEPENDS = "\
     "
 
 DESCRIPTION_enigma2-plugin-systemplugins-audioeffect = "Audio Effect setup"
+DESCRIPTION_enigma2-plugin-systemplugins-aboutboxbranding = "View Boxbranding data from the GUI"
 DESCRIPTION_enigma2-plugin-extensions-btdevicesmanager = "this is bt devices manger to pair e.x keyboard or mouse"
 RDEPENDS_enigma2-plugin-extensions-btdevicesmanager = "bluez5-testtools bluez5 bluez-hcidump bluez-conf bluez-hidd bluez-alsa alsa-utils-aplay python-pexpect"
 DESCRIPTION_enigma2-plugin-systemplugins-blindscan = "blindscan..."
