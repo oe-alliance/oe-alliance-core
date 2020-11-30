@@ -68,7 +68,7 @@ do_install() {
     echo "transcoding=${TRANSCODING}" >> ${D}/etc/image-version
     echo "${MACHINE}" > ${D}/etc/model
 }
+
 do_install[vardepsexclude] += "DATE"
 
-FILES_${PN} += "/etc/model /etc/image-version /etc/oe-git.log /etc/e2-git.log"
-
+FILES_${PN} += "${sysconfdir}/image-version ${sysconfdir}/model"
