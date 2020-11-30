@@ -81,4 +81,6 @@ do_install() {
     printf "${MACHINE}\n" > ${D}${sysconfdir}/model
 }
 
+do_install[vardepsexclude] += "DATE"
+
 FILES_${PN} += "${sysconfdir}/image-version ${sysconfdir}/model"
