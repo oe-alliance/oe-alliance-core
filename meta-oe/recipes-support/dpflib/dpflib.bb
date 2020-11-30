@@ -2,9 +2,12 @@ DESCRIPTION = "Tools for managing memory technology devices."
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://${S}/README;md5=42a667e310028ad2cc31da2ae54d8f16"
 
+FILESEXTRAPATHSDIR_prepend := "${THISDIR}/${PN}:"
+
 DEPENDS = "libusb-compat libusb1 python3"
 
-SRC_URI="git://github.com/atvcaptain/dpf-ax.git;branch=dreamlayers"
+SRC_URI="git://github.com/atvcaptain/dpf-ax.git;branch=dreamlayers \
+        file://makefile-use-lpython-3.9.patch"
 
 S = "${WORKDIR}/git"
 
