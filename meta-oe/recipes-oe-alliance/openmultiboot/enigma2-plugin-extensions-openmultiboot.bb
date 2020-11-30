@@ -4,7 +4,7 @@ MAINTAINER = "oe-alliance"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 
-inherit gitpkgv ${PYTHON_PN}native gettext
+inherit gitpkgv ${PYTHON_PN}native gettext ${@bb.utils.contains("PYTHON_PN", "python3", "python3targetconfig", "", d)}
 
 SRCREV = "${AUTOREV}"
 PV = "1.0+git${SRCPV}"
