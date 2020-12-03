@@ -41,7 +41,7 @@ do_install() {
     printf "date=${DATE}\n" >> ${D}${sysconfdir}/image-version
     printf "comment=openATV\n" >> ${D}${sysconfdir}/image-version
     printf "target=9\n" >> ${D}${sysconfdir}/image-version
-    printf "creator=openATV" >> ${D}${sysconfdir}/image-version
+    printf "creator=openATV\n" >> ${D}${sysconfdir}/image-version
     printf "url=${URL}\n" >> ${D}${sysconfdir}/image-version
     printf "catalog=${URL}\n" >> ${D}${sysconfdir}/image-version
     printf "oever=${OE_VER}\n" >> ${D}${sysconfdir}/image-version
