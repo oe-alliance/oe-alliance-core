@@ -7,7 +7,7 @@ LICENSE = "proprietary"
 require conf/license/license-gplv2.inc
 
 PV = "${IMAGE_VERSION}"
-PR = "${BUILD_VERSION}"
+PR = "${BUILD_VERSION}-${DEVELOPER_BUILD_VERSION}"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 URL = "http://www.world-of-satellite.com"
