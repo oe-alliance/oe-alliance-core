@@ -25,7 +25,7 @@ GLIBC_EXTRA_OECONF = "--with-tls \
     ${@bb.utils.contains('MACHINE', 'gb73625', '--with-__thread' , '', d)} \
 "
 
-IMAGE_CMD_ubi_prepend = " \
+IMAGE_CMD_ubifs_prepend = " \
     rm -rf ${IMAGE_ROOTFS}/boot/*; \
     rm -rf ${IMAGE_ROOTFS}/tmp/*; \
     "

@@ -56,7 +56,7 @@ KERNEL_CONSOLE = "ttyS0,115200n8"
 
 IMAGE_FSTYPES ?= "ubi"
 
-IMAGE_CMD_ubi_prepend = " \
+IMAGE_CMD_ubifs_prepend = " \
     rm -rf ${IMAGE_ROOTFS}/boot/*; \
     rm -rf ${IMAGE_ROOTFS}/tmp/*; \
     "
