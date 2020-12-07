@@ -71,27 +71,35 @@ FILES_localedef = "${bindir}/localedef"
 
 LOCALETREESRC = "${COMPONENTS_DIR}/${PACKAGE_ARCH}/glibc-stash-locale"
 
-do_install () {
-        mkdir -p ${D}${bindir} ${D}${datadir} ${D}${libdir}
-        if [ -n "$(ls ${LOCALETREESRC}/${bindir})" ]; then
-                cp -R --no-dereference --preserve=mode,links ${LOCALETREESRC}/${bindir}/* ${D}${bindir}
-        fi
-        if [ -n "$(ls ${LOCALETREESRC}/${localedir})" ]; then
-                mkdir -p ${D}${localedir}
-                cp -R --no-dereference --preserve=mode,links ${LOCALETREESRC}/${localedir}/* ${D}${localedir}
-        fi
-        if [ -e ${LOCALETREESRC}/${libdir}/gconv ]; then
-                cp -R --no-dereference --preserve=mode,links ${LOCALETREESRC}/${libdir}/gconv ${D}${libdir}
-        fi
-        if [ -e ${LOCALETREESRC}/${datadir}/i18n ]; then
-                cp -R --no-dereference --preserve=mode,links ${LOCALETREESRC}/${datadir}/i18n ${D}${datadir}
-        fi
-        if [ -e ${LOCALETREESRC}/${datadir}/locale ]; then
-                cp -R --no-dereference --preserve=mode,links ${LOCALETREESRC}/${datadir}/locale ${D}${datadir}
-        fi
-        cp -R --no-dereference --preserve=mode,links ${LOCALETREESRC}/SUPPORTED ${WORKDIR}
+copy_locale_files() {
+	local dir=$1 mode=$2
+
+	[ -e "${LOCALETREESRC}$dir" ] || return 0
+
+	for d in . $(find "${LOCALETREESRC}$dir" -type d -printf '%P '); do
+		install -d ${D}$dir/$d
+		find "${LOCALETREESRC}$dir/$d" -maxdepth 1 -type f \
+			-exec install -m $mode -t "${D}$dir/$d" {} \;
+	done
+}
+
+do_install() {
+	copy_locale_files ${bindir} 0755
+	copy_locale_files ${localedir} 0644
+	if [ ${PACKAGE_NO_GCONV} -eq 0 ]; then
+		copy_locale_files ${libdir}/gconv 0755
+		copy_locale_files ${datadir}/i18n 0644
+	else
+		# Remove the libdir if it is empty when gconv is not copied
+		find ${D}${libdir} -type d -empty -delete
+	fi
+	copy_locale_files ${datadir}/locale 0644
+	install -m 0644 ${LOCALETREESRC}/SUPPORTED ${WORKDIR}/SUPPORTED
 }
 
 inherit libc-package
 
 BBCLASSEXTEND = "nativesdk"
+
+# Don't scan for CVEs as glibc will be scanned
+CVE_PRODUCT = ""

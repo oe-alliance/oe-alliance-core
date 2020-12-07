@@ -47,6 +47,7 @@ FILES_${PN}-pic = "${libdir}/*_pic.a ${libdir}/*_pic.map ${libdir}/libc_pic/*.o"
 FILES_libsotruss = "${libdir}/audit/sotruss-lib.so"
 FILES_SOLIBSDEV = "${libdir}/lib*${SOLIBSDEV}"
 FILES_${PN}-dev += "${libdir}/*_nonshared.a ${base_libdir}/*_nonshared.a ${base_libdir}/*.o ${datadir}/aclocal"
+RDEPENDS_${PN}-dev = "linux-libc-headers-dev"
 FILES_${PN}-staticdev += "${libdir}/*.a ${base_libdir}/*.a"
 FILES_nscd = "${sbindir}/nscd* ${sysconfdir}/init.d/nscd ${systemd_unitdir}/system/nscd* ${sysconfdir}/tmpfiles.d/nscd.conf \
               ${sysconfdir}/nscd.conf ${sysconfdir}/default/volatiles/98_nscd ${localstatedir}/db/nscd"
@@ -89,7 +90,6 @@ do_install() {
 	rm -rf ${D}${libexecdir}/getconf
 
 	rm -f ${D}${sysconfdir}/localtime
-	rm -rf ${D}${localstatedir}
 
 	# remove empty glibc dir
 	if [ -d ${D}${libexecdir} ]; then
@@ -155,27 +155,33 @@ bashscripts = "mtrace sotruss xtrace"
 
 do_stash_locale () {
 	dest=${LOCALESTASH}
-	install -d ${dest}${base_libdir} ${dest}${bindir} ${dest}${libdir} ${dest}${datadir}
-	if [ "${base_libdir}" != "${libdir}" ]; then
-		cp -fpPR ${D}${base_libdir}/* ${dest}${base_libdir}
-	fi
+	install -d $dest${base_libdir} $dest${bindir} $dest${libdir} $dest${datadir}
+	# Hide away the locale data from the deployment
 	if [ -e ${D}${bindir}/localedef ]; then
-		mv -f ${D}${bindir}/localedef ${dest}${bindir}
+		cp -a ${D}${bindir}/localedef $dest${bindir}
 	fi
 	if [ -e ${D}${libdir}/gconv ]; then
-		mv -f ${D}${libdir}/gconv ${dest}${libdir}
-	fi
-	if [ -e ${D}${exec_prefix}/lib ]; then
-		cp -fpPR ${D}${exec_prefix}/lib ${dest}${exec_prefix}
+		cp -a ${D}${libdir}/gconv $dest${libdir}
 	fi
 	if [ -e ${D}${datadir}/i18n ]; then
-		mv ${D}${datadir}/i18n ${dest}${datadir}
+		cp -a  ${D}${datadir}/i18n $dest${datadir}
 	fi
-	cp -fpPR ${D}${datadir}/* ${dest}${datadir}
-	rm -rf ${D}${datadir}/locale/
-	cp -fpPR ${WORKDIR}/SUPPORTED ${dest}
 
-	target=${dest}/scripts
+	# Make a copy of all the libraries into the locale stash
+	cp -fpPR ${D}${libdir}/* $dest${libdir}
+	if [ "${base_libdir}" != "${libdir}" ]; then
+		cp -fpPR ${D}${base_libdir}/* $dest${base_libdir}
+	fi
+	if [ -e ${D}${exec_prefix}/lib ]; then
+		if [ ${exec_prefix}/lib != ${base_libdir} ] && [ ${exec_prefix}/lib != ${libdir} ]; then
+			cp -fpPR ${D}${exec_prefix}/lib $dest${exec_prefix}
+		fi
+	fi
+
+	cp -fpPR ${D}${datadir}/* $dest${datadir}
+	cp -fpPR ${WORKDIR}/SUPPORTED $dest
+
+	target=$dest/scripts
 	mkdir -p $target
 	for i in ${bashscripts}; do
 		if [ -f ${D}${bindir}/$i ]; then
@@ -197,24 +203,39 @@ python do_stash_locale_setscene () {
 }
 addtask do_stash_locale_setscene
 
-do_poststash_install_cleanup () {
-        # Remove all files which do_stash_locale would remove (mv)
-        # since that task could have come from sstate and not get run.
-        for i in ${bashscripts}; do
-            rm -f ${D}${bindir}/$i
-        done
-        rm -f ${D}${bindir}/localedef
-        rm -rf ${D}${datadir}/i18n
-        rm -rf ${D}${libdir}/gconv
-        rm -rf ${D}/${localedir}
-        rm -rf ${D}${datadir}/locale
-        if [ "${libdir}" != "${exec_prefix}/lib" ]; then
-                if [ -d ${D}${exec_prefix}/lib/locale ] ; then
-                        rm -rf ${D}${exec_prefix}/lib/locale
-                        # error out if directory isn't empty
-                        rm -f ${D}${exec_prefix}/lib
-                fi
-        fi
+PACKAGE_PREPROCESS_FUNCS += "stash_locale_package_cleanup"
+SYSROOT_PREPROCESS_FUNCS += "stash_locale_sysroot_cleanup"
+stash_locale_cleanup () {
+	cleanupdir=$1
+	# Remove all files which do_stash_locale() copies
+	for i in ${bashscripts}; do
+		rm -f $cleanupdir${bindir}/$i
+	done
+	rm -f $cleanupdir${bindir}/localedef
+	rm -rf $cleanupdir${datadir}/i18n
+	rm -rf $cleanupdir${libdir}/gconv
+	rm -rf $cleanupdir${localedir}
+	rm -rf $cleanupdir${datadir}/locale
+	rm -rf $cleanupdir${datadir}
+
+	if [ "${libdir}" != "${exec_prefix}/lib" ] && [ "${root_prefix}/lib" != "${exec_prefix}/lib" ]; then
+		if [ -d "$cleanupdir${exec_prefix}/lib" ]; then
+			if [ -z "${ARCH_DYNAMIC_LOADER}" -o \
+			     ! -e "$cleanupdir${exec_prefix}/lib/${ARCH_DYNAMIC_LOADER}" ]; then
+				# error out if directory isn't empty
+				# this dir should only contain locale dir
+				# which has been deleted in the previous step
+				rmdir $cleanupdir${exec_prefix}/lib
+			fi
+		fi
+	fi
+}
+
+stash_locale_sysroot_cleanup() {
+	stash_locale_cleanup ${SYSROOT_DESTDIR}
+}
+stash_locale_package_cleanup() {
+	stash_locale_cleanup ${PKGD}
 }
 
 python populate_packages_prepend () {
@@ -235,8 +256,6 @@ python populate_packages_prepend () {
         d.appendVar('RCONFLICTS_' + libcprefix + 'dbg', ' ' + prefix + 'libc-dbg')
         d.appendVar('RREPLACES_' + libcprefix + 'dbg', ' ' + prefix + 'libc-dbg')
 }
-
-addtask do_poststash_install_cleanup after do_stash_locale do_install before do_populate_sysroot do_package
 
 pkg_postinst_nscd () {
 	if [ -z "$D" ]; then
