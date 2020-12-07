@@ -47,7 +47,7 @@ IMAGE_FSTYPES ?= "ubi"
 
 IMAGEDIR ?= "${MACHINE}"
 
-IMAGE_CMD_ubi_prepend = " \
+IMAGE_CMD_ubifs_prepend = " \
     rm -rf ${IMAGE_ROOTFS}/boot/*; \
     rm -rf ${IMAGE_ROOTFS}/tmp/*; \
     "
