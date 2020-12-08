@@ -1,7 +1,7 @@
 KV = "4.4.35"
-SRCDATE = "20200828"
+SRCDATE = "20201126"
 
 require dinobot-dvb-modules2.inc
 
-SRC_URI[md5sum] = "b7e8b344e1285b3f9a72d6d55db25d0a"
-SRC_URI[sha256sum] = "8980ee9c564a419c246ad863c6c4103d2b24a66b837794de686c80bbda9cec5b"
+SRC_URI[md5sum] = "315f210b550893999db08e55e3340406"
+SRC_URI[sha256sum] = "643e352f827ae4411e737047e2791dd2ac4f9e24a52a9da321cebe8b6b16dedc"
