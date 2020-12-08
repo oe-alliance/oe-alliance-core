@@ -1,0 +1,5358 @@
+diff -ruN a/lib/service/cJSON.cpp b/lib/service/cJSON.cpp
+--- a/lib/service/cJSON.cpp	1970-01-01 08:00:00.000000000 +0800
++++ b/lib/service/cJSON.cpp	2020-11-16 16:22:07.000000000 +0800
+@@ -0,0 +1,3159 @@
++/*
++  Copyright (c) 2009-2017 Dave Gamble and cJSON contributors
++
++  Permission is hereby granted, free of charge, to any person obtaining a copy
++  of this software and associated documentation files (the "Software"), to deal
++  in the Software without restriction, including without limitation the rights
++  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
++  copies of the Software, and to permit persons to whom the Software is
++  furnished to do so, subject to the following conditions:
++
++  The above copyright notice and this permission notice shall be included in
++  all copies or substantial portions of the Software.
++
++  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
++  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
++  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
++  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
++  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
++  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
++  THE SOFTWARE.
++*/
++
++/* cJSON */
++/* JSON parser in C. */
++
++/* disable warnings about old C89 functions in MSVC */
++#if !defined(_CRT_SECURE_NO_DEPRECATE) && defined(_MSC_VER)
++#define _CRT_SECURE_NO_DEPRECATE
++#endif
++
++#ifdef __GNUC__
++#pragma GCC visibility push(default)
++#endif
++#if defined(_MSC_VER)
++#pragma warning (push)
++/* disable warning about single line comments in system headers */
++#pragma warning (disable : 4001)
++#endif
++
++#include <string.h>
++#include <stdio.h>
++#include <math.h>
++#include <stdlib.h>
++#include <limits.h>
++#include <ctype.h>
++#include <float.h>
++
++#ifdef ENABLE_LOCALES
++#include <locale.h>
++#endif
++
++#if defined(_MSC_VER)
++#pragma warning (pop)
++#endif
++#ifdef __GNUC__
++#pragma GCC visibility pop
++#endif
++
++#include "cJSON.h"
++
++/* define our own boolean type */
++#ifdef true
++#undef true
++#endif
++#define true ((cJSON_bool)1)
++
++#ifdef false
++#undef false
++#endif
++#define false ((cJSON_bool)0)
++
++/* define isnan and isinf for ANSI C, if in C99 or above, isnan and isinf has been defined in math.h */
++#ifndef isinf
++#define isinf(d) (isnan((d - d)) && !isnan(d))
++#endif
++#ifndef isnan
++#define isnan(d) (d != d)
++#endif
++
++#ifndef NAN
++#define NAN 0.0/0.0
++#endif
++
++typedef struct {
++    const unsigned char *json;
++    size_t position;
++} error;
++static error global_error = { NULL, 0 };
++
++CJSON_PUBLIC(const char *) cJSON_GetErrorPtr(void)
++{
++    return (const char*) (global_error.json + global_error.position);
++}
++
++CJSON_PUBLIC(char *) cJSON_GetStringValue(const cJSON * const item) 
++{
++    if (!cJSON_IsString(item)) 
++    {
++        return NULL;
++    }
++
++    return item->valuestring;
++}
++
++CJSON_PUBLIC(double) cJSON_GetNumberValue(const cJSON * const item) 
++{
++    if (!cJSON_IsNumber(item)) 
++    {
++        return (double) NAN;
++    }
++
++    return item->valuedouble;
++}
++
++/* This is a safeguard to prevent copy-pasters from using incompatible C and header files */
++#if (CJSON_VERSION_MAJOR != 1) || (CJSON_VERSION_MINOR != 7) || (CJSON_VERSION_PATCH != 14)
++    #error cJSON.h and cJSON.c have different versions. Make sure that both have the same.
++#endif
++
++CJSON_PUBLIC(const char*) cJSON_Version(void)
++{
++    static char version[15];
++    sprintf(version, "%i.%i.%i", CJSON_VERSION_MAJOR, CJSON_VERSION_MINOR, CJSON_VERSION_PATCH);
++
++    return version;
++}
++
++/* Case insensitive string comparison, doesn't consider two NULL pointers equal though */
++static int case_insensitive_strcmp(const unsigned char *string1, const unsigned char *string2)
++{
++    if ((string1 == NULL) || (string2 == NULL))
++    {
++        return 1;
++    }
++
++    if (string1 == string2)
++    {
++        return 0;
++    }
++
++    for(; tolower(*string1) == tolower(*string2); (void)string1++, string2++)
++    {
++        if (*string1 == '\0')
++        {
++            return 0;
++        }
++    }
++
++    return tolower(*string1) - tolower(*string2);
++}
++
++typedef struct internal_hooks
++{
++    void *(CJSON_CDECL *allocate)(size_t size);
++    void (CJSON_CDECL *deallocate)(void *pointer);
++    void *(CJSON_CDECL *reallocate)(void *pointer, size_t size);
++} internal_hooks;
++
++#if defined(_MSC_VER)
++/* work around MSVC error C2322: '...' address of dllimport '...' is not static */
++static void * CJSON_CDECL internal_malloc(size_t size)
++{
++    return malloc(size);
++}
++static void CJSON_CDECL internal_free(void *pointer)
++{
++    free(pointer);
++}
++static void * CJSON_CDECL internal_realloc(void *pointer, size_t size)
++{
++    return realloc(pointer, size);
++}
++#else
++#define internal_malloc malloc
++#define internal_free free
++#define internal_realloc realloc
++#endif
++
++/* strlen of character literals resolved at compile time */
++#define static_strlen(string_literal) (sizeof(string_literal) - sizeof(""))
++
++static internal_hooks global_hooks = { internal_malloc, internal_free, internal_realloc };
++
++static unsigned char* cJSON_strdup(const unsigned char* string, const internal_hooks * const hooks)
++{
++    size_t length = 0;
++    unsigned char *copy = NULL;
++
++    if (string == NULL)
++    {
++        return NULL;
++    }
++
++    length = strlen((const char*)string) + sizeof("");
++    copy = (unsigned char*)hooks->allocate(length);
++    if (copy == NULL)
++    {
++        return NULL;
++    }
++    memcpy(copy, string, length);
++
++    return copy;
++}
++
++CJSON_PUBLIC(void) cJSON_InitHooks(cJSON_Hooks* hooks)
++{
++    if (hooks == NULL)
++    {
++        /* Reset hooks */
++        global_hooks.allocate = malloc;
++        global_hooks.deallocate = free;
++        global_hooks.reallocate = realloc;
++        return;
++    }
++
++    global_hooks.allocate = malloc;
++    if (hooks->malloc_fn != NULL)
++    {
++        global_hooks.allocate = hooks->malloc_fn;
++    }
++
++    global_hooks.deallocate = free;
++    if (hooks->free_fn != NULL)
++    {
++        global_hooks.deallocate = hooks->free_fn;
++    }
++
++    /* use realloc only if both free and malloc are used */
++    global_hooks.reallocate = NULL;
++    if ((global_hooks.allocate == malloc) && (global_hooks.deallocate == free))
++    {
++        global_hooks.reallocate = realloc;
++    }
++}
++
++/* Internal constructor. */
++static cJSON *cJSON_New_Item(const internal_hooks * const hooks)
++{
++    cJSON* node = (cJSON*)hooks->allocate(sizeof(cJSON));
++    if (node)
++    {
++        memset(node, '\0', sizeof(cJSON));
++    }
++
++    return node;
++}
++
++/* Delete a cJSON structure. */
++CJSON_PUBLIC(void) cJSON_Delete(cJSON *item)
++{
++    cJSON *next = NULL;
++    while (item != NULL)
++    {
++        next = item->next;
++        if (!(item->type & cJSON_IsReference) && (item->child != NULL))
++        {
++            cJSON_Delete(item->child);
++        }
++        if (!(item->type & cJSON_IsReference) && (item->valuestring != NULL))
++        {
++            global_hooks.deallocate(item->valuestring);
++        }
++        if (!(item->type & cJSON_StringIsConst) && (item->string != NULL))
++        {
++            global_hooks.deallocate(item->string);
++        }
++        global_hooks.deallocate(item);
++        item = next;
++    }
++}
++
++/* get the decimal point character of the current locale */
++static unsigned char get_decimal_point(void)
++{
++#ifdef ENABLE_LOCALES
++    struct lconv *lconv = localeconv();
++    return (unsigned char) lconv->decimal_point[0];
++#else
++    return '.';
++#endif
++}
++
++typedef struct
++{
++    const unsigned char *content;
++    size_t length;
++    size_t offset;
++    size_t depth; /* How deeply nested (in arrays/objects) is the input at the current offset. */
++    internal_hooks hooks;
++} parse_buffer;
++
++/* check if the given size is left to read in a given parse buffer (starting with 1) */
++#define can_read(buffer, size) ((buffer != NULL) && (((buffer)->offset + size) <= (buffer)->length))
++/* check if the buffer can be accessed at the given index (starting with 0) */
++#define can_access_at_index(buffer, index) ((buffer != NULL) && (((buffer)->offset + index) < (buffer)->length))
++#define cannot_access_at_index(buffer, index) (!can_access_at_index(buffer, index))
++/* get a pointer to the buffer at the position */
++#define buffer_at_offset(buffer) ((buffer)->content + (buffer)->offset)
++
++/* Parse the input text to generate a number, and populate the result into item. */
++/*
++static cJSON_bool parse_number_64(cJSON * const item, parse_buffer * const input_buffer)
++{
++    long long number = 0;
++    unsigned char *after_end = NULL;
++    unsigned char number_c_string[64];
++    unsigned char decimal_point = get_decimal_point();
++    size_t i = 0;
++
++    if ((input_buffer == NULL) || (input_buffer->content == NULL))
++    {
++        return false;
++    }
++
++    // copy the number into a temporary buffer and replace '.' with the decimal point
++    // of the current locale (for strtod)
++    // This also takes care of '\0' not necessarily being available for marking the end of the input 
++    for (i = 0; (i < (sizeof(number_c_string) - 1)) && can_access_at_index(input_buffer, i); i++)
++    {
++        switch (buffer_at_offset(input_buffer)[i])
++        {
++            case '0':
++            case '1':
++            case '2':
++            case '3':
++            case '4':
++            case '5':
++            case '6':
++            case '7':
++            case '8':
++            case '9':
++            case '+':
++            case '-':
++            case 'e':
++            case 'E':
++                number_c_string[i] = buffer_at_offset(input_buffer)[i];
++                break;
++
++            case '.':
++                number_c_string[i] = decimal_point;
++                break;
++
++            default:
++                goto loop_end;
++        }
++    }
++loop_end:
++    number_c_string[i] = '\0';
++
++    number = strtoll((const char*)number_c_string, (char**)&after_end);
++    if (number_c_string == after_end)
++    {
++        return false; // parse_error 
++    }
++
++    item->value64 = number;
++
++    item->type = cJSON_Number64;
++
++    input_buffer->offset += (size_t)(after_end - number_c_string);
++    return true;
++}
++*/
++static cJSON_bool parse_number(cJSON * const item, parse_buffer * const input_buffer)
++{
++    double number = 0;
++    unsigned char *after_end = NULL;
++    unsigned char number_c_string[64];
++    unsigned char decimal_point = get_decimal_point();
++    size_t i = 0;
++
++    if ((input_buffer == NULL) || (input_buffer->content == NULL))
++    {
++        return false;
++    }
++
++    /* copy the number into a temporary buffer and replace '.' with the decimal point
++     * of the current locale (for strtod)
++     * This also takes care of '\0' not necessarily being available for marking the end of the input */
++    for (i = 0; (i < (sizeof(number_c_string) - 1)) && can_access_at_index(input_buffer, i); i++)
++    {
++        switch (buffer_at_offset(input_buffer)[i])
++        {
++            case '0':
++            case '1':
++            case '2':
++            case '3':
++            case '4':
++            case '5':
++            case '6':
++            case '7':
++            case '8':
++            case '9':
++            case '+':
++            case '-':
++            case 'e':
++            case 'E':
++                number_c_string[i] = buffer_at_offset(input_buffer)[i];
++                break;
++
++            case '.':
++                number_c_string[i] = decimal_point;
++                break;
++
++            default:
++                goto loop_end;
++        }
++    }
++loop_end:
++    number_c_string[i] = '\0';
++
++    number = strtod((const char*)number_c_string, (char**)&after_end);
++    if (number_c_string == after_end)
++    {
++        return false; /* parse_error */
++    }
++
++    item->valuedouble = number;
++
++    /* use saturation in case of overflow */
++    if (number >= INT_MAX)
++    {
++        item->valueint = INT_MAX;
++    }
++    else if (number <= (double)INT_MIN)
++    {
++        item->valueint = INT_MIN;
++    }
++    else
++    {
++        item->valueint = (int)number;
++    }
++
++    item->type = cJSON_Number;
++
++    input_buffer->offset += (size_t)(after_end - number_c_string);
++    return true;
++}
++
++/* don't ask me, but the original cJSON_SetNumberValue returns an integer or double */
++CJSON_PUBLIC(double) cJSON_SetNumberHelper(cJSON *object, double number)
++{
++    if (number >= INT_MAX)
++    {
++        object->valueint = INT_MAX;
++    }
++    else if (number <= (double)INT_MIN)
++    {
++        object->valueint = INT_MIN;
++    }
++    else
++    {
++        object->valueint = (int)number;
++    }
++
++    return object->valuedouble = number;
++}
++
++CJSON_PUBLIC(char*) cJSON_SetValuestring(cJSON *object, const char *valuestring)
++{
++    char *copy = NULL;
++    /* if object's type is not cJSON_String or is cJSON_IsReference, it should not set valuestring */
++    if (!(object->type & cJSON_String) || (object->type & cJSON_IsReference))
++    {
++        return NULL;
++    }
++    if (strlen(valuestring) <= strlen(object->valuestring))
++    {
++        strcpy(object->valuestring, valuestring);
++        return object->valuestring;
++    }
++    copy = (char*) cJSON_strdup((const unsigned char*)valuestring, &global_hooks);
++    if (copy == NULL)
++    {
++        return NULL;
++    }
++    if (object->valuestring != NULL)
++    {
++        cJSON_free(object->valuestring);
++    }
++    object->valuestring = copy;
++
++    return copy;
++}
++
++typedef struct
++{
++    unsigned char *buffer;
++    size_t length;
++    size_t offset;
++    size_t depth; /* current nesting depth (for formatted printing) */
++    cJSON_bool noalloc;
++    cJSON_bool format; /* is this print a formatted print */
++    internal_hooks hooks;
++} printbuffer;
++
++/* realloc printbuffer if necessary to have at least "needed" bytes more */
++static unsigned char* ensure(printbuffer * const p, size_t needed)
++{
++    unsigned char *newbuffer = NULL;
++    size_t newsize = 0;
++
++    if ((p == NULL) || (p->buffer == NULL))
++    {
++        return NULL;
++    }
++
++    if ((p->length > 0) && (p->offset >= p->length))
++    {
++        /* make sure that offset is valid */
++        return NULL;
++    }
++
++    if (needed > INT_MAX)
++    {
++        /* sizes bigger than INT_MAX are currently not supported */
++        return NULL;
++    }
++
++    needed += p->offset + 1;
++    if (needed <= p->length)
++    {
++        return p->buffer + p->offset;
++    }
++
++    if (p->noalloc) {
++        return NULL;
++    }
++
++    /* calculate new buffer size */
++    if (needed > (INT_MAX / 2))
++    {
++        /* overflow of int, use INT_MAX if possible */
++        if (needed <= INT_MAX)
++        {
++            newsize = INT_MAX;
++        }
++        else
++        {
++            return NULL;
++        }
++    }
++    else
++    {
++        newsize = needed * 2;
++    }
++
++    if (p->hooks.reallocate != NULL)
++    {
++        /* reallocate with realloc if available */
++        newbuffer = (unsigned char*)p->hooks.reallocate(p->buffer, newsize);
++        if (newbuffer == NULL)
++        {
++            p->hooks.deallocate(p->buffer);
++            p->length = 0;
++            p->buffer = NULL;
++
++            return NULL;
++        }
++    }
++    else
++    {
++        /* otherwise reallocate manually */
++        newbuffer = (unsigned char*)p->hooks.allocate(newsize);
++        if (!newbuffer)
++        {
++            p->hooks.deallocate(p->buffer);
++            p->length = 0;
++            p->buffer = NULL;
++
++            return NULL;
++        }
++        if (newbuffer)
++        {
++            memcpy(newbuffer, p->buffer, p->offset + 1);
++        }
++        p->hooks.deallocate(p->buffer);
++    }
++    p->length = newsize;
++    p->buffer = newbuffer;
++
++    return newbuffer + p->offset;
++}
++
++/* calculate the new length of the string in a printbuffer and update the offset */
++static void update_offset(printbuffer * const buffer)
++{
++    const unsigned char *buffer_pointer = NULL;
++    if ((buffer == NULL) || (buffer->buffer == NULL))
++    {
++        return;
++    }
++    buffer_pointer = buffer->buffer + buffer->offset;
++
++    buffer->offset += strlen((const char*)buffer_pointer);
++}
++
++/* securely comparison of floating-point variables */
++static cJSON_bool compare_double(double a, double b)
++{
++    double maxVal = fabs(a) > fabs(b) ? fabs(a) : fabs(b);
++    return (fabs(a - b) <= maxVal * DBL_EPSILON);
++}
++
++/* Render the number nicely from the given item into a string. */
++static cJSON_bool print_number(const cJSON * const item, printbuffer * const output_buffer)
++{
++    unsigned char *output_pointer = NULL;
++    double d = item->valuedouble;
++    int length = 0;
++    size_t i = 0;
++    unsigned char number_buffer[26] = {0}; /* temporary buffer to print the number into */
++    unsigned char decimal_point = get_decimal_point();
++    double test = 0.0;
++
++    if (output_buffer == NULL)
++    {
++        return false;
++    }
++
++    /* This checks for NaN and Infinity */
++    if (isnan(d) || isinf(d))
++    {
++        length = sprintf((char*)number_buffer, "null");
++    }
++    else
++    {
++        /* Try 15 decimal places of precision to avoid nonsignificant nonzero digits */
++        length = sprintf((char*)number_buffer, "%1.15g", d);
++
++        /* Check whether the original double can be recovered */
++        if ((sscanf((char*)number_buffer, "%lg", &test) != 1) || !compare_double((double)test, d))
++        {
++            /* If not, print with 17 decimal places of precision */
++            length = sprintf((char*)number_buffer, "%1.17g", d);
++        }
++    }
++
++    /* sprintf failed or buffer overrun occurred */
++    if ((length < 0) || (length > (int)(sizeof(number_buffer) - 1)))
++    {
++        return false;
++    }
++
++    /* reserve appropriate space in the output */
++    output_pointer = ensure(output_buffer, (size_t)length + sizeof(""));
++    if (output_pointer == NULL)
++    {
++        return false;
++    }
++
++    /* copy the printed number to the output and replace locale
++     * dependent decimal point with '.' */
++    for (i = 0; i < ((size_t)length); i++)
++    {
++        if (number_buffer[i] == decimal_point)
++        {
++            output_pointer[i] = '.';
++            continue;
++        }
++
++        output_pointer[i] = number_buffer[i];
++    }
++    output_pointer[i] = '\0';
++
++    output_buffer->offset += (size_t)length;
++
++    return true;
++}
++
++/* parse 4 digit hexadecimal number */
++static unsigned parse_hex4(const unsigned char * const input)
++{
++    unsigned int h = 0;
++    size_t i = 0;
++
++    for (i = 0; i < 4; i++)
++    {
++        /* parse digit */
++        if ((input[i] >= '0') && (input[i] <= '9'))
++        {
++            h += (unsigned int) input[i] - '0';
++        }
++        else if ((input[i] >= 'A') && (input[i] <= 'F'))
++        {
++            h += (unsigned int) 10 + input[i] - 'A';
++        }
++        else if ((input[i] >= 'a') && (input[i] <= 'f'))
++        {
++            h += (unsigned int) 10 + input[i] - 'a';
++        }
++        else /* invalid */
++        {
++            return 0;
++        }
++
++        if (i < 3)
++        {
++            /* shift left to make place for the next nibble */
++            h = h << 4;
++        }
++    }
++
++    return h;
++}
++
++/* converts a UTF-16 literal to UTF-8
++ * A literal can be one or two sequences of the form \uXXXX */
++static unsigned char utf16_literal_to_utf8(const unsigned char * const input_pointer, const unsigned char * const input_end, unsigned char **output_pointer)
++{
++    long unsigned int codepoint = 0;
++    unsigned int first_code = 0;
++    const unsigned char *first_sequence = input_pointer;
++    unsigned char utf8_length = 0;
++    unsigned char utf8_position = 0;
++    unsigned char sequence_length = 0;
++    unsigned char first_byte_mark = 0;
++
++    if ((input_end - first_sequence) < 6)
++    {
++        /* input ends unexpectedly */
++        goto fail;
++    }
++
++    /* get the first utf16 sequence */
++    first_code = parse_hex4(first_sequence + 2);
++
++    /* check that the code is valid */
++    if (((first_code >= 0xDC00) && (first_code <= 0xDFFF)))
++    {
++        goto fail;
++    }
++
++    /* UTF16 surrogate pair */
++    if ((first_code >= 0xD800) && (first_code <= 0xDBFF))
++    {
++        const unsigned char *second_sequence = first_sequence + 6;
++        unsigned int second_code = 0;
++        sequence_length = 12; /* \uXXXX\uXXXX */
++
++        if ((input_end - second_sequence) < 6)
++        {
++            /* input ends unexpectedly */
++            goto fail;
++        }
++
++        if ((second_sequence[0] != '\\') || (second_sequence[1] != 'u'))
++        {
++            /* missing second half of the surrogate pair */
++            goto fail;
++        }
++
++        /* get the second utf16 sequence */
++        second_code = parse_hex4(second_sequence + 2);
++        /* check that the code is valid */
++        if ((second_code < 0xDC00) || (second_code > 0xDFFF))
++        {
++            /* invalid second half of the surrogate pair */
++            goto fail;
++        }
++
++
++        /* calculate the unicode codepoint from the surrogate pair */
++        codepoint = 0x10000 + (((first_code & 0x3FF) << 10) | (second_code & 0x3FF));
++    }
++    else
++    {
++        sequence_length = 6; /* \uXXXX */
++        codepoint = first_code;
++    }
++
++    /* encode as UTF-8
++     * takes at maximum 4 bytes to encode:
++     * 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx */
++    if (codepoint < 0x80)
++    {
++        /* normal ascii, encoding 0xxxxxxx */
++        utf8_length = 1;
++    }
++    else if (codepoint < 0x800)
++    {
++        /* two bytes, encoding 110xxxxx 10xxxxxx */
++        utf8_length = 2;
++        first_byte_mark = 0xC0; /* 11000000 */
++    }
++    else if (codepoint < 0x10000)
++    {
++        /* three bytes, encoding 1110xxxx 10xxxxxx 10xxxxxx */
++        utf8_length = 3;
++        first_byte_mark = 0xE0; /* 11100000 */
++    }
++    else if (codepoint <= 0x10FFFF)
++    {
++        /* four bytes, encoding 1110xxxx 10xxxxxx 10xxxxxx 10xxxxxx */
++        utf8_length = 4;
++        first_byte_mark = 0xF0; /* 11110000 */
++    }
++    else
++    {
++        /* invalid unicode codepoint */
++        goto fail;
++    }
++
++    /* encode as utf8 */
++    for (utf8_position = (unsigned char)(utf8_length - 1); utf8_position > 0; utf8_position--)
++    {
++        /* 10xxxxxx */
++        (*output_pointer)[utf8_position] = (unsigned char)((codepoint | 0x80) & 0xBF);
++        codepoint >>= 6;
++    }
++    /* encode first byte */
++    if (utf8_length > 1)
++    {
++        (*output_pointer)[0] = (unsigned char)((codepoint | first_byte_mark) & 0xFF);
++    }
++    else
++    {
++        (*output_pointer)[0] = (unsigned char)(codepoint & 0x7F);
++    }
++
++    *output_pointer += utf8_length;
++
++    return sequence_length;
++
++fail:
++    return 0;
++}
++
++/* Parse the input text into an unescaped cinput, and populate item. */
++static cJSON_bool parse_string(cJSON * const item, parse_buffer * const input_buffer)
++{
++    const unsigned char *input_pointer = buffer_at_offset(input_buffer) + 1;
++    const unsigned char *input_end = buffer_at_offset(input_buffer) + 1;
++    unsigned char *output_pointer = NULL;
++    unsigned char *output = NULL;
++
++    /* not a string */
++    if (buffer_at_offset(input_buffer)[0] != '\"')
++    {
++        goto fail;
++    }
++
++    {
++        /* calculate approximate size of the output (overestimate) */
++        size_t allocation_length = 0;
++        size_t skipped_bytes = 0;
++        while (((size_t)(input_end - input_buffer->content) < input_buffer->length) && (*input_end != '\"'))
++        {
++            /* is escape sequence */
++            if (input_end[0] == '\\')
++            {
++                if ((size_t)(input_end + 1 - input_buffer->content) >= input_buffer->length)
++                {
++                    /* prevent buffer overflow when last input character is a backslash */
++                    goto fail;
++                }
++                skipped_bytes++;
++                input_end++;
++            }
++            input_end++;
++        }
++        if (((size_t)(input_end - input_buffer->content) >= input_buffer->length) || (*input_end != '\"'))
++        {
++            goto fail; /* string ended unexpectedly */
++        }
++
++        /* This is at most how much we need for the output */
++        allocation_length = (size_t) (input_end - buffer_at_offset(input_buffer)) - skipped_bytes;
++        output = (unsigned char*)input_buffer->hooks.allocate(allocation_length + sizeof(""));
++        if (output == NULL)
++        {
++            goto fail; /* allocation failure */
++        }
++    }
++
++    output_pointer = output;
++    /* loop through the string literal */
++    while (input_pointer < input_end)
++    {
++        if (*input_pointer != '\\')
++        {
++            *output_pointer++ = *input_pointer++;
++        }
++        /* escape sequence */
++        else
++        {
++            unsigned char sequence_length = 2;
++            if ((input_end - input_pointer) < 1)
++            {
++                goto fail;
++            }
++
++            switch (input_pointer[1])
++            {
++                case 'b':
++                    *output_pointer++ = '\b';
++                    break;
++                case 'f':
++                    *output_pointer++ = '\f';
++                    break;
++                case 'n':
++                    *output_pointer++ = '\n';
++                    break;
++                case 'r':
++                    *output_pointer++ = '\r';
++                    break;
++                case 't':
++                    *output_pointer++ = '\t';
++                    break;
++                case '\"':
++                case '\\':
++                case '/':
++                    *output_pointer++ = input_pointer[1];
++                    break;
++
++                /* UTF-16 literal */
++                case 'u':
++                    sequence_length = utf16_literal_to_utf8(input_pointer, input_end, &output_pointer);
++                    if (sequence_length == 0)
++                    {
++                        /* failed to convert UTF16-literal to UTF-8 */
++                        goto fail;
++                    }
++                    break;
++
++                default:
++                    goto fail;
++            }
++            input_pointer += sequence_length;
++        }
++    }
++
++    /* zero terminate the output */
++    *output_pointer = '\0';
++
++    item->type = cJSON_String;
++    item->valuestring = (char*)output;
++
++    input_buffer->offset = (size_t) (input_end - input_buffer->content);
++    input_buffer->offset++;
++
++    return true;
++
++fail:
++    if (output != NULL)
++    {
++        input_buffer->hooks.deallocate(output);
++    }
++
++    if (input_pointer != NULL)
++    {
++        input_buffer->offset = (size_t)(input_pointer - input_buffer->content);
++    }
++
++    return false;
++}
++
++/* Render the cstring provided to an escaped version that can be printed. */
++static cJSON_bool print_string_ptr(const unsigned char * const input, printbuffer * const output_buffer)
++{
++    const unsigned char *input_pointer = NULL;
++    unsigned char *output = NULL;
++    unsigned char *output_pointer = NULL;
++    size_t output_length = 0;
++    /* numbers of additional characters needed for escaping */
++    size_t escape_characters = 0;
++
++    if (output_buffer == NULL)
++    {
++        return false;
++    }
++
++    /* empty string */
++    if (input == NULL)
++    {
++        output = ensure(output_buffer, sizeof("\"\""));
++        if (output == NULL)
++        {
++            return false;
++        }
++        strcpy((char*)output, "\"\"");
++
++        return true;
++    }
++
++    /* set "flag" to 1 if something needs to be escaped */
++    for (input_pointer = input; *input_pointer; input_pointer++)
++    {
++        switch (*input_pointer)
++        {
++            case '\"':
++            case '\\':
++            case '\b':
++            case '\f':
++            case '\n':
++            case '\r':
++            case '\t':
++                /* one character escape sequence */
++                escape_characters++;
++                break;
++            default:
++                if (*input_pointer < 32)
++                {
++                    /* UTF-16 escape sequence uXXXX */
++                    escape_characters += 5;
++                }
++                break;
++        }
++    }
++    output_length = (size_t)(input_pointer - input) + escape_characters;
++
++    output = ensure(output_buffer, output_length + sizeof("\"\""));
++    if (output == NULL)
++    {
++        return false;
++    }
++
++    /* no characters have to be escaped */
++    if (escape_characters == 0)
++    {
++        output[0] = '\"';
++        memcpy(output + 1, input, output_length);
++        output[output_length + 1] = '\"';
++        output[output_length + 2] = '\0';
++
++        return true;
++    }
++
++    output[0] = '\"';
++    output_pointer = output + 1;
++    /* copy the string */
++    for (input_pointer = input; *input_pointer != '\0'; (void)input_pointer++, output_pointer++)
++    {
++        if ((*input_pointer > 31) && (*input_pointer != '\"') && (*input_pointer != '\\'))
++        {
++            /* normal character, copy */
++            *output_pointer = *input_pointer;
++        }
++        else
++        {
++            /* character needs to be escaped */
++            *output_pointer++ = '\\';
++            switch (*input_pointer)
++            {
++                case '\\':
++                    *output_pointer = '\\';
++                    break;
++                case '\"':
++                    *output_pointer = '\"';
++                    break;
++                case '\b':
++                    *output_pointer = 'b';
++                    break;
++                case '\f':
++                    *output_pointer = 'f';
++                    break;
++                case '\n':
++                    *output_pointer = 'n';
++                    break;
++                case '\r':
++                    *output_pointer = 'r';
++                    break;
++                case '\t':
++                    *output_pointer = 't';
++                    break;
++                default:
++                    /* escape and print as unicode codepoint */
++                    sprintf((char*)output_pointer, "u%04x", *input_pointer);
++                    output_pointer += 4;
++                    break;
++            }
++        }
++    }
++    output[output_length + 1] = '\"';
++    output[output_length + 2] = '\0';
++
++    return true;
++}
++
++/* Invoke print_string_ptr (which is useful) on an item. */
++static cJSON_bool print_string(const cJSON * const item, printbuffer * const p)
++{
++    return print_string_ptr((unsigned char*)item->valuestring, p);
++}
++
++/* Predeclare these prototypes. */
++static cJSON_bool parse_value(cJSON * const item, parse_buffer * const input_buffer);
++static cJSON_bool print_value(const cJSON * const item, printbuffer * const output_buffer);
++static cJSON_bool parse_array(cJSON * const item, parse_buffer * const input_buffer);
++static cJSON_bool print_array(const cJSON * const item, printbuffer * const output_buffer);
++static cJSON_bool parse_object(cJSON * const item, parse_buffer * const input_buffer);
++static cJSON_bool print_object(const cJSON * const item, printbuffer * const output_buffer);
++
++/* Utility to jump whitespace and cr/lf */
++static parse_buffer *buffer_skip_whitespace(parse_buffer * const buffer)
++{
++    if ((buffer == NULL) || (buffer->content == NULL))
++    {
++        return NULL;
++    }
++
++    if (cannot_access_at_index(buffer, 0))
++    {
++        return buffer;
++    }
++
++    while (can_access_at_index(buffer, 0) && (buffer_at_offset(buffer)[0] <= 32))
++    {
++       buffer->offset++;
++    }
++
++    if (buffer->offset == buffer->length)
++    {
++        buffer->offset--;
++    }
++
++    return buffer;
++}
++
++/* skip the UTF-8 BOM (byte order mark) if it is at the beginning of a buffer */
++static parse_buffer *skip_utf8_bom(parse_buffer * const buffer)
++{
++    if ((buffer == NULL) || (buffer->content == NULL) || (buffer->offset != 0))
++    {
++        return NULL;
++    }
++
++    if (can_access_at_index(buffer, 4) && (strncmp((const char*)buffer_at_offset(buffer), "\xEF\xBB\xBF", 3) == 0))
++    {
++        buffer->offset += 3;
++    }
++
++    return buffer;
++}
++
++CJSON_PUBLIC(cJSON *) cJSON_ParseWithOpts(const char *value, const char **return_parse_end, cJSON_bool require_null_terminated)
++{
++    size_t buffer_length;
++
++    if (NULL == value)
++    {
++        return NULL;
++    }
++
++    /* Adding null character size due to require_null_terminated. */
++    buffer_length = strlen(value) + sizeof("");
++
++    return cJSON_ParseWithLengthOpts(value, buffer_length, return_parse_end, require_null_terminated);
++}
++
++/* Parse an object - create a new root, and populate. */
++CJSON_PUBLIC(cJSON *) cJSON_ParseWithLengthOpts(const char *value, size_t buffer_length, const char **return_parse_end, cJSON_bool require_null_terminated)
++{
++    parse_buffer buffer = { 0, 0, 0, 0, { 0, 0, 0 } };
++    cJSON *item = NULL;
++
++    /* reset error position */
++    global_error.json = NULL;
++    global_error.position = 0;
++
++    if (value == NULL || 0 == buffer_length)
++    {
++        goto fail;
++    }
++
++    buffer.content = (const unsigned char*)value;
++    buffer.length = buffer_length; 
++    buffer.offset = 0;
++    buffer.hooks = global_hooks;
++
++    item = cJSON_New_Item(&global_hooks);
++    if (item == NULL) /* memory fail */
++    {
++        goto fail;
++    }
++
++    if (!parse_value(item, buffer_skip_whitespace(skip_utf8_bom(&buffer))))
++    {
++        /* parse failure. ep is set. */
++        goto fail;
++    }
++
++    /* if we require null-terminated JSON without appended garbage, skip and then check for a null terminator */
++    if (require_null_terminated)
++    {
++        buffer_skip_whitespace(&buffer);
++        if ((buffer.offset >= buffer.length) || buffer_at_offset(&buffer)[0] != '\0')
++        {
++            goto fail;
++        }
++    }
++    if (return_parse_end)
++    {
++        *return_parse_end = (const char*)buffer_at_offset(&buffer);
++    }
++
++    return item;
++
++fail:
++    if (item != NULL)
++    {
++        cJSON_Delete(item);
++    }
++
++    if (value != NULL)
++    {
++        error local_error;
++        local_error.json = (const unsigned char*)value;
++        local_error.position = 0;
++
++        if (buffer.offset < buffer.length)
++        {
++            local_error.position = buffer.offset;
++        }
++        else if (buffer.length > 0)
++        {
++            local_error.position = buffer.length - 1;
++        }
++
++        if (return_parse_end != NULL)
++        {
++            *return_parse_end = (const char*)local_error.json + local_error.position;
++        }
++
++        global_error = local_error;
++    }
++
++    return NULL;
++}
++
++/* Default options for cJSON_Parse */
++CJSON_PUBLIC(cJSON *) cJSON_Parse(const char *value)
++{
++    return cJSON_ParseWithOpts(value, 0, 0);
++}
++
++CJSON_PUBLIC(cJSON *) cJSON_ParseWithLength(const char *value, size_t buffer_length)
++{
++    return cJSON_ParseWithLengthOpts(value, buffer_length, 0, 0);
++}
++
++#define cjson_min(a, b) (((a) < (b)) ? (a) : (b))
++
++static unsigned char *print(const cJSON * const item, cJSON_bool format, const internal_hooks * const hooks)
++{
++    static const size_t default_buffer_size = 256;
++    printbuffer buffer[1];
++    unsigned char *printed = NULL;
++
++    memset(buffer, 0, sizeof(buffer));
++
++    /* create buffer */
++    buffer->buffer = (unsigned char*) hooks->allocate(default_buffer_size);
++    buffer->length = default_buffer_size;
++    buffer->format = format;
++    buffer->hooks = *hooks;
++    if (buffer->buffer == NULL)
++    {
++        goto fail;
++    }
++
++    /* print the value */
++    if (!print_value(item, buffer))
++    {
++        goto fail;
++    }
++    update_offset(buffer);
++
++    /* check if reallocate is available */
++    if (hooks->reallocate != NULL)
++    {
++        printed = (unsigned char*) hooks->reallocate(buffer->buffer, buffer->offset + 1);
++        if (printed == NULL) {
++            goto fail;
++        }
++        buffer->buffer = NULL;
++    }
++    else /* otherwise copy the JSON over to a new buffer */
++    {
++        printed = (unsigned char*) hooks->allocate(buffer->offset + 1);
++        if (printed == NULL)
++        {
++            goto fail;
++        }
++        memcpy(printed, buffer->buffer, cjson_min(buffer->length, buffer->offset + 1));
++        printed[buffer->offset] = '\0'; /* just to be sure */
++
++        /* free the buffer */
++        hooks->deallocate(buffer->buffer);
++    }
++
++    return printed;
++
++fail:
++    if (buffer->buffer != NULL)
++    {
++        hooks->deallocate(buffer->buffer);
++    }
++
++    if (printed != NULL)
++    {
++        hooks->deallocate(printed);
++    }
++
++    return NULL;
++}
++
++/* Render a cJSON item/entity/structure to text. */
++CJSON_PUBLIC(char *) cJSON_Print(const cJSON *item)
++{
++    return (char*)print(item, true, &global_hooks);
++}
++
++CJSON_PUBLIC(char *) cJSON_PrintUnformatted(const cJSON *item)
++{
++    return (char*)print(item, false, &global_hooks);
++}
++
++CJSON_PUBLIC(char *) cJSON_PrintBuffered(const cJSON *item, int prebuffer, cJSON_bool fmt)
++{
++    printbuffer p = { 0, 0, 0, 0, 0, 0, { 0, 0, 0 } };
++
++    if (prebuffer < 0)
++    {
++        return NULL;
++    }
++
++    p.buffer = (unsigned char*)global_hooks.allocate((size_t)prebuffer);
++    if (!p.buffer)
++    {
++        return NULL;
++    }
++
++    p.length = (size_t)prebuffer;
++    p.offset = 0;
++    p.noalloc = false;
++    p.format = fmt;
++    p.hooks = global_hooks;
++
++    if (!print_value(item, &p))
++    {
++        global_hooks.deallocate(p.buffer);
++        return NULL;
++    }
++
++    return (char*)p.buffer;
++}
++
++CJSON_PUBLIC(cJSON_bool) cJSON_PrintPreallocated(cJSON *item, char *buffer, const int length, const cJSON_bool format)
++{
++    printbuffer p = { 0, 0, 0, 0, 0, 0, { 0, 0, 0 } };
++
++    if ((length < 0) || (buffer == NULL))
++    {
++        return false;
++    }
++
++    p.buffer = (unsigned char*)buffer;
++    p.length = (size_t)length;
++    p.offset = 0;
++    p.noalloc = true;
++    p.format = format;
++    p.hooks = global_hooks;
++
++    return print_value(item, &p);
++}
++
++/* Parser core - when encountering text, process appropriately. */
++static cJSON_bool parse_value(cJSON * const item, parse_buffer * const input_buffer)
++{
++    if ((input_buffer == NULL) || (input_buffer->content == NULL))
++    {
++        return false; /* no input */
++    }
++
++    /* parse the different types of values */
++    /* null */
++    if (can_read(input_buffer, 4) && (strncmp((const char*)buffer_at_offset(input_buffer), "null", 4) == 0))
++    {
++        item->type = cJSON_NULL;
++        input_buffer->offset += 4;
++        return true;
++    }
++    /* false */
++    if (can_read(input_buffer, 5) && (strncmp((const char*)buffer_at_offset(input_buffer), "false", 5) == 0))
++    {
++        item->type = cJSON_False;
++        input_buffer->offset += 5;
++        return true;
++    }
++    /* true */
++    if (can_read(input_buffer, 4) && (strncmp((const char*)buffer_at_offset(input_buffer), "true", 4) == 0))
++    {
++        item->type = cJSON_True;
++        item->valueint = 1;
++        input_buffer->offset += 4;
++        return true;
++    }
++    /* string */
++    if (can_access_at_index(input_buffer, 0) && (buffer_at_offset(input_buffer)[0] == '\"'))
++    {
++        return parse_string(item, input_buffer);
++    }
++    /* number */
++    if (can_access_at_index(input_buffer, 0) && ((buffer_at_offset(input_buffer)[0] == '-') || ((buffer_at_offset(input_buffer)[0] >= '0') && (buffer_at_offset(input_buffer)[0] <= '9'))))
++    {
++        //parse_number_64(item,input_buffer);
++        return parse_number(item, input_buffer);
++    }
++    /* array */
++    if (can_access_at_index(input_buffer, 0) && (buffer_at_offset(input_buffer)[0] == '['))
++    {
++        return parse_array(item, input_buffer);
++    }
++    /* object */
++    if (can_access_at_index(input_buffer, 0) && (buffer_at_offset(input_buffer)[0] == '{'))
++    {
++        return parse_object(item, input_buffer);
++    }
++
++    return false;
++}
++
++/* Render a value to text. */
++static cJSON_bool print_value(const cJSON * const item, printbuffer * const output_buffer)
++{
++    unsigned char *output = NULL;
++
++    if ((item == NULL) || (output_buffer == NULL))
++    {
++        return false;
++    }
++
++    switch ((item->type) & 0xFF)
++    {
++        case cJSON_NULL:
++            output = ensure(output_buffer, 5);
++            if (output == NULL)
++            {
++                return false;
++            }
++            strcpy((char*)output, "null");
++            return true;
++
++        case cJSON_False:
++            output = ensure(output_buffer, 6);
++            if (output == NULL)
++            {
++                return false;
++            }
++            strcpy((char*)output, "false");
++            return true;
++
++        case cJSON_True:
++            output = ensure(output_buffer, 5);
++            if (output == NULL)
++            {
++                return false;
++            }
++            strcpy((char*)output, "true");
++            return true;
++
++        case cJSON_Number:
++            return print_number(item, output_buffer);
++
++        case cJSON_Raw:
++        {
++            size_t raw_length = 0;
++            if (item->valuestring == NULL)
++            {
++                return false;
++            }
++
++            raw_length = strlen(item->valuestring) + sizeof("");
++            output = ensure(output_buffer, raw_length);
++            if (output == NULL)
++            {
++                return false;
++            }
++            memcpy(output, item->valuestring, raw_length);
++            return true;
++        }
++
++        case cJSON_String:
++            return print_string(item, output_buffer);
++
++        case cJSON_Array:
++            return print_array(item, output_buffer);
++
++        case cJSON_Object:
++            return print_object(item, output_buffer);
++
++        default:
++            return false;
++    }
++}
++
++/* Build an array from input text. */
++static cJSON_bool parse_array(cJSON * const item, parse_buffer * const input_buffer)
++{
++    cJSON *head = NULL; /* head of the linked list */
++    cJSON *current_item = NULL;
++
++    if (input_buffer->depth >= CJSON_NESTING_LIMIT)
++    {
++        return false; /* to deeply nested */
++    }
++    input_buffer->depth++;
++
++    if (buffer_at_offset(input_buffer)[0] != '[')
++    {
++        /* not an array */
++        goto fail;
++    }
++
++    input_buffer->offset++;
++    buffer_skip_whitespace(input_buffer);
++    if (can_access_at_index(input_buffer, 0) && (buffer_at_offset(input_buffer)[0] == ']'))
++    {
++        /* empty array */
++        goto success;
++    }
++
++    /* check if we skipped to the end of the buffer */
++    if (cannot_access_at_index(input_buffer, 0))
++    {
++        input_buffer->offset--;
++        goto fail;
++    }
++
++    /* step back to character in front of the first element */
++    input_buffer->offset--;
++    /* loop through the comma separated array elements */
++    do
++    {
++        /* allocate next item */
++        cJSON *new_item = cJSON_New_Item(&(input_buffer->hooks));
++        if (new_item == NULL)
++        {
++            goto fail; /* allocation failure */
++        }
++
++        /* attach next item to list */
++        if (head == NULL)
++        {
++            /* start the linked list */
++            current_item = head = new_item;
++        }
++        else
++        {
++            /* add to the end and advance */
++            current_item->next = new_item;
++            new_item->prev = current_item;
++            current_item = new_item;
++        }
++
++        /* parse next value */
++        input_buffer->offset++;
++        buffer_skip_whitespace(input_buffer);
++        if (!parse_value(current_item, input_buffer))
++        {
++            goto fail; /* failed to parse value */
++        }
++        buffer_skip_whitespace(input_buffer);
++    }
++    while (can_access_at_index(input_buffer, 0) && (buffer_at_offset(input_buffer)[0] == ','));
++
++    if (cannot_access_at_index(input_buffer, 0) || buffer_at_offset(input_buffer)[0] != ']')
++    {
++        goto fail; /* expected end of array */
++    }
++
++success:
++    input_buffer->depth--;
++
++    if (head != NULL) {
++        head->prev = current_item;
++    }
++
++    item->type = cJSON_Array;
++    item->child = head;
++
++    input_buffer->offset++;
++
++    return true;
++
++fail:
++    if (head != NULL)
++    {
++        cJSON_Delete(head);
++    }
++
++    return false;
++}
++
++/* Render an array to text */
++static cJSON_bool print_array(const cJSON * const item, printbuffer * const output_buffer)
++{
++    unsigned char *output_pointer = NULL;
++    size_t length = 0;
++    cJSON *current_element = item->child;
++
++    if (output_buffer == NULL)
++    {
++        return false;
++    }
++
++    /* Compose the output array. */
++    /* opening square bracket */
++    output_pointer = ensure(output_buffer, 1);
++    if (output_pointer == NULL)
++    {
++        return false;
++    }
++
++    *output_pointer = '[';
++    output_buffer->offset++;
++    output_buffer->depth++;
++
++    while (current_element != NULL)
++    {
++        if (!print_value(current_element, output_buffer))
++        {
++            return false;
++        }
++        update_offset(output_buffer);
++        if (current_element->next)
++        {
++            length = (size_t) (output_buffer->format ? 2 : 1);
++            output_pointer = ensure(output_buffer, length + 1);
++            if (output_pointer == NULL)
++            {
++                return false;
++            }
++            *output_pointer++ = ',';
++            if(output_buffer->format)
++            {
++                *output_pointer++ = ' ';
++            }
++            *output_pointer = '\0';
++            output_buffer->offset += length;
++        }
++        current_element = current_element->next;
++    }
++
++    output_pointer = ensure(output_buffer, 2);
++    if (output_pointer == NULL)
++    {
++        return false;
++    }
++    *output_pointer++ = ']';
++    *output_pointer = '\0';
++    output_buffer->depth--;
++
++    return true;
++}
++
++/* Build an object from the text. */
++static cJSON_bool parse_object(cJSON * const item, parse_buffer * const input_buffer)
++{
++    cJSON *head = NULL; /* linked list head */
++    cJSON *current_item = NULL;
++
++    if (input_buffer->depth >= CJSON_NESTING_LIMIT)
++    {
++        return false; /* to deeply nested */
++    }
++    input_buffer->depth++;
++
++    if (cannot_access_at_index(input_buffer, 0) || (buffer_at_offset(input_buffer)[0] != '{'))
++    {
++        goto fail; /* not an object */
++    }
++
++    input_buffer->offset++;
++    buffer_skip_whitespace(input_buffer);
++    if (can_access_at_index(input_buffer, 0) && (buffer_at_offset(input_buffer)[0] == '}'))
++    {
++        goto success; /* empty object */
++    }
++
++    /* check if we skipped to the end of the buffer */
++    if (cannot_access_at_index(input_buffer, 0))
++    {
++        input_buffer->offset--;
++        goto fail;
++    }
++
++    /* step back to character in front of the first element */
++    input_buffer->offset--;
++    /* loop through the comma separated array elements */
++    do
++    {
++        /* allocate next item */
++        cJSON *new_item = cJSON_New_Item(&(input_buffer->hooks));
++        if (new_item == NULL)
++        {
++            goto fail; /* allocation failure */
++        }
++
++        /* attach next item to list */
++        if (head == NULL)
++        {
++            /* start the linked list */
++            current_item = head = new_item;
++        }
++        else
++        {
++            /* add to the end and advance */
++            current_item->next = new_item;
++            new_item->prev = current_item;
++            current_item = new_item;
++        }
++
++        /* parse the name of the child */
++        input_buffer->offset++;
++        buffer_skip_whitespace(input_buffer);
++        if (!parse_string(current_item, input_buffer))
++        {
++            goto fail; /* failed to parse name */
++        }
++        buffer_skip_whitespace(input_buffer);
++
++        /* swap valuestring and string, because we parsed the name */
++        current_item->string = current_item->valuestring;
++        current_item->valuestring = NULL;
++
++        if (cannot_access_at_index(input_buffer, 0) || (buffer_at_offset(input_buffer)[0] != ':'))
++        {
++            goto fail; /* invalid object */
++        }
++
++        /* parse the value */
++        input_buffer->offset++;
++        buffer_skip_whitespace(input_buffer);
++        if (!parse_value(current_item, input_buffer))
++        {
++            goto fail; /* failed to parse value */
++        }
++        buffer_skip_whitespace(input_buffer);
++    }
++    while (can_access_at_index(input_buffer, 0) && (buffer_at_offset(input_buffer)[0] == ','));
++
++    if (cannot_access_at_index(input_buffer, 0) || (buffer_at_offset(input_buffer)[0] != '}'))
++    {
++        goto fail; /* expected end of object */
++    }
++
++success:
++    input_buffer->depth--;
++
++    if (head != NULL) {
++        head->prev = current_item;
++    }
++
++    item->type = cJSON_Object;
++    item->child = head;
++
++    input_buffer->offset++;
++    return true;
++
++fail:
++    if (head != NULL)
++    {
++        cJSON_Delete(head);
++    }
++
++    return false;
++}
++
++/* Render an object to text. */
++static cJSON_bool print_object(const cJSON * const item, printbuffer * const output_buffer)
++{
++    unsigned char *output_pointer = NULL;
++    size_t length = 0;
++    cJSON *current_item = item->child;
++
++    if (output_buffer == NULL)
++    {
++        return false;
++    }
++
++    /* Compose the output: */
++    length = (size_t) (output_buffer->format ? 2 : 1); /* fmt: {\n */
++    output_pointer = ensure(output_buffer, length + 1);
++    if (output_pointer == NULL)
++    {
++        return false;
++    }
++
++    *output_pointer++ = '{';
++    output_buffer->depth++;
++    if (output_buffer->format)
++    {
++        *output_pointer++ = '\n';
++    }
++    output_buffer->offset += length;
++
++    while (current_item)
++    {
++        if (output_buffer->format)
++        {
++            size_t i;
++            output_pointer = ensure(output_buffer, output_buffer->depth);
++            if (output_pointer == NULL)
++            {
++                return false;
++            }
++            for (i = 0; i < output_buffer->depth; i++)
++            {
++                *output_pointer++ = '\t';
++            }
++            output_buffer->offset += output_buffer->depth;
++        }
++
++        /* print key */
++        if (!print_string_ptr((unsigned char*)current_item->string, output_buffer))
++        {
++            return false;
++        }
++        update_offset(output_buffer);
++
++        length = (size_t) (output_buffer->format ? 2 : 1);
++        output_pointer = ensure(output_buffer, length);
++        if (output_pointer == NULL)
++        {
++            return false;
++        }
++        *output_pointer++ = ':';
++        if (output_buffer->format)
++        {
++            *output_pointer++ = '\t';
++        }
++        output_buffer->offset += length;
++
++        /* print value */
++        if (!print_value(current_item, output_buffer))
++        {
++            return false;
++        }
++        update_offset(output_buffer);
++
++        /* print comma if not last */
++        length = ((size_t)(output_buffer->format ? 1 : 0) + (size_t)(current_item->next ? 1 : 0));
++        output_pointer = ensure(output_buffer, length + 1);
++        if (output_pointer == NULL)
++        {
++            return false;
++        }
++        if (current_item->next)
++        {
++            *output_pointer++ = ',';
++        }
++
++        if (output_buffer->format)
++        {
++            *output_pointer++ = '\n';
++        }
++        *output_pointer = '\0';
++        output_buffer->offset += length;
++
++        current_item = current_item->next;
++    }
++
++    output_pointer = ensure(output_buffer, output_buffer->format ? (output_buffer->depth + 1) : 2);
++    if (output_pointer == NULL)
++    {
++        return false;
++    }
++    if (output_buffer->format)
++    {
++        size_t i;
++        for (i = 0; i < (output_buffer->depth - 1); i++)
++        {
++            *output_pointer++ = '\t';
++        }
++    }
++    *output_pointer++ = '}';
++    *output_pointer = '\0';
++    output_buffer->depth--;
++
++    return true;
++}
++
++/* Get Array size/item / object item. */
++CJSON_PUBLIC(int) cJSON_GetArraySize(const cJSON *array)
++{
++    cJSON *child = NULL;
++    size_t size = 0;
++
++    if (array == NULL)
++    {
++        return 0;
++    }
++
++    child = array->child;
++
++    while(child != NULL)
++    {
++        size++;
++        child = child->next;
++    }
++
++    /* FIXME: Can overflow here. Cannot be fixed without breaking the API */
++
++    return (int)size;
++}
++
++static cJSON* get_array_item(const cJSON *array, size_t index)
++{
++    cJSON *current_child = NULL;
++
++    if (array == NULL)
++    {
++        return NULL;
++    }
++
++    current_child = array->child;
++    while ((current_child != NULL) && (index > 0))
++    {
++        index--;
++        current_child = current_child->next;
++    }
++
++    return current_child;
++}
++
++CJSON_PUBLIC(cJSON *) cJSON_GetArrayItem(const cJSON *array, int index)
++{
++    if (index < 0)
++    {
++        return NULL;
++    }
++
++    return get_array_item(array, (size_t)index);
++}
++
++static cJSON *get_object_item(const cJSON * const object, const char * const name, const cJSON_bool case_sensitive)
++{
++    cJSON *current_element = NULL;
++
++    if ((object == NULL) || (name == NULL))
++    {
++        return NULL;
++    }
++
++    current_element = object->child;
++    if (case_sensitive)
++    {
++        while ((current_element != NULL) && (current_element->string != NULL) && (strcmp(name, current_element->string) != 0))
++        {
++            current_element = current_element->next;
++        }
++    }
++    else
++    {
++        while ((current_element != NULL) && (case_insensitive_strcmp((const unsigned char*)name, (const unsigned char*)(current_element->string)) != 0))
++        {
++            current_element = current_element->next;
++        }
++    }
++
++    if ((current_element == NULL) || (current_element->string == NULL)) {
++        return NULL;
++    }
++
++    return current_element;
++}
++
++CJSON_PUBLIC(cJSON *) cJSON_GetObjectItem(const cJSON * const object, const char * const string)
++{
++    return get_object_item(object, string, false);
++}
++
++CJSON_PUBLIC(cJSON *) cJSON_GetObjectItemCaseSensitive(const cJSON * const object, const char * const string)
++{
++    return get_object_item(object, string, true);
++}
++
++CJSON_PUBLIC(cJSON_bool) cJSON_HasObjectItem(const cJSON *object, const char *string)
++{
++    return cJSON_GetObjectItem(object, string) ? 1 : 0;
++}
++
++/* Utility for array list handling. */
++static void suffix_object(cJSON *prev, cJSON *item)
++{
++    prev->next = item;
++    item->prev = prev;
++}
++
++/* Utility for handling references. */
++static cJSON *create_reference(const cJSON *item, const internal_hooks * const hooks)
++{
++    cJSON *reference = NULL;
++    if (item == NULL)
++    {
++        return NULL;
++    }
++
++    reference = cJSON_New_Item(hooks);
++    if (reference == NULL)
++    {
++        return NULL;
++    }
++
++    memcpy(reference, item, sizeof(cJSON));
++    reference->string = NULL;
++    reference->type |= cJSON_IsReference;
++    reference->next = reference->prev = NULL;
++    return reference;
++}
++
++static cJSON_bool add_item_to_array(cJSON *array, cJSON *item)
++{
++    cJSON *child = NULL;
++
++    if ((item == NULL) || (array == NULL) || (array == item))
++    {
++        return false;
++    }
++
++    child = array->child;
++    /*
++     * To find the last item in array quickly, we use prev in array
++     */
++    if (child == NULL)
++    {
++        /* list is empty, start new one */
++        array->child = item;
++        item->prev = item;
++        item->next = NULL;
++    }
++    else
++    {
++        /* append to the end */
++        if (child->prev)
++        {
++            suffix_object(child->prev, item);
++            array->child->prev = item;
++        }
++    }
++
++    return true;
++}
++
++/* Add item to array/object. */
++CJSON_PUBLIC(cJSON_bool) cJSON_AddItemToArray(cJSON *array, cJSON *item)
++{
++    return add_item_to_array(array, item);
++}
++
++#if defined(__clang__) || (defined(__GNUC__)  && ((__GNUC__ > 4) || ((__GNUC__ == 4) && (__GNUC_MINOR__ > 5))))
++    #pragma GCC diagnostic push
++#endif
++#ifdef __GNUC__
++#pragma GCC diagnostic ignored "-Wcast-qual"
++#endif
++/* helper function to cast away const */
++static void* cast_away_const(const void* string)
++{
++    return (void*)string;
++}
++#if defined(__clang__) || (defined(__GNUC__)  && ((__GNUC__ > 4) || ((__GNUC__ == 4) && (__GNUC_MINOR__ > 5))))
++    #pragma GCC diagnostic pop
++#endif
++
++
++static cJSON_bool add_item_to_object(cJSON * const object, const char * const string, cJSON * const item, const internal_hooks * const hooks, const cJSON_bool constant_key)
++{
++    char *new_key = NULL;
++    int new_type = cJSON_Invalid;
++
++    if ((object == NULL) || (string == NULL) || (item == NULL) || (object == item))
++    {
++        return false;
++    }
++
++    if (constant_key)
++    {
++        new_key = (char*)cast_away_const(string);
++        new_type = item->type | cJSON_StringIsConst;
++    }
++    else
++    {
++        new_key = (char*)cJSON_strdup((const unsigned char*)string, hooks);
++        if (new_key == NULL)
++        {
++            return false;
++        }
++
++        new_type = item->type & ~cJSON_StringIsConst;
++    }
++
++    if (!(item->type & cJSON_StringIsConst) && (item->string != NULL))
++    {
++        hooks->deallocate(item->string);
++    }
++
++    item->string = new_key;
++    item->type = new_type;
++
++    return add_item_to_array(object, item);
++}
++
++CJSON_PUBLIC(cJSON_bool) cJSON_AddItemToObject(cJSON *object, const char *string, cJSON *item)
++{
++    return add_item_to_object(object, string, item, &global_hooks, false);
++}
++
++/* Add an item to an object with constant string as key */
++CJSON_PUBLIC(cJSON_bool) cJSON_AddItemToObjectCS(cJSON *object, const char *string, cJSON *item)
++{
++    return add_item_to_object(object, string, item, &global_hooks, true);
++}
++
++CJSON_PUBLIC(cJSON_bool) cJSON_AddItemReferenceToArray(cJSON *array, cJSON *item)
++{
++    if (array == NULL)
++    {
++        return false;
++    }
++
++    return add_item_to_array(array, create_reference(item, &global_hooks));
++}
++
++CJSON_PUBLIC(cJSON_bool) cJSON_AddItemReferenceToObject(cJSON *object, const char *string, cJSON *item)
++{
++    if ((object == NULL) || (string == NULL))
++    {
++        return false;
++    }
++
++    return add_item_to_object(object, string, create_reference(item, &global_hooks), &global_hooks, false);
++}
++
++CJSON_PUBLIC(cJSON*) cJSON_AddNullToObject(cJSON * const object, const char * const name)
++{
++    cJSON *null = cJSON_CreateNull();
++    if (add_item_to_object(object, name, null, &global_hooks, false))
++    {
++        return null;
++    }
++
++    cJSON_Delete(null);
++    return NULL;
++}
++
++CJSON_PUBLIC(cJSON*) cJSON_AddTrueToObject(cJSON * const object, const char * const name)
++{
++    cJSON *true_item = cJSON_CreateTrue();
++    if (add_item_to_object(object, name, true_item, &global_hooks, false))
++    {
++        return true_item;
++    }
++
++    cJSON_Delete(true_item);
++    return NULL;
++}
++
++CJSON_PUBLIC(cJSON*) cJSON_AddFalseToObject(cJSON * const object, const char * const name)
++{
++    cJSON *false_item = cJSON_CreateFalse();
++    if (add_item_to_object(object, name, false_item, &global_hooks, false))
++    {
++        return false_item;
++    }
++
++    cJSON_Delete(false_item);
++    return NULL;
++}
++
++CJSON_PUBLIC(cJSON*) cJSON_AddBoolToObject(cJSON * const object, const char * const name, const cJSON_bool boolean)
++{
++    cJSON *bool_item = cJSON_CreateBool(boolean);
++    if (add_item_to_object(object, name, bool_item, &global_hooks, false))
++    {
++        return bool_item;
++    }
++
++    cJSON_Delete(bool_item);
++    return NULL;
++}
++
++CJSON_PUBLIC(cJSON*) cJSON_AddNumberToObject(cJSON * const object, const char * const name, const double number)
++{
++    cJSON *number_item = cJSON_CreateNumber(number);
++    if (add_item_to_object(object, name, number_item, &global_hooks, false))
++    {
++        return number_item;
++    }
++
++    cJSON_Delete(number_item);
++    return NULL;
++}
++
++CJSON_PUBLIC(cJSON*) cJSON_AddStringToObject(cJSON * const object, const char * const name, const char * const string)
++{
++    cJSON *string_item = cJSON_CreateString(string);
++    if (add_item_to_object(object, name, string_item, &global_hooks, false))
++    {
++        return string_item;
++    }
++
++    cJSON_Delete(string_item);
++    return NULL;
++}
++
++CJSON_PUBLIC(cJSON*) cJSON_AddRawToObject(cJSON * const object, const char * const name, const char * const raw)
++{
++    cJSON *raw_item = cJSON_CreateRaw(raw);
++    if (add_item_to_object(object, name, raw_item, &global_hooks, false))
++    {
++        return raw_item;
++    }
++
++    cJSON_Delete(raw_item);
++    return NULL;
++}
++
++CJSON_PUBLIC(cJSON*) cJSON_AddObjectToObject(cJSON * const object, const char * const name)
++{
++    cJSON *object_item = cJSON_CreateObject();
++    if (add_item_to_object(object, name, object_item, &global_hooks, false))
++    {
++        return object_item;
++    }
++
++    cJSON_Delete(object_item);
++    return NULL;
++}
++
++CJSON_PUBLIC(cJSON*) cJSON_AddArrayToObject(cJSON * const object, const char * const name)
++{
++    cJSON *array = cJSON_CreateArray();
++    if (add_item_to_object(object, name, array, &global_hooks, false))
++    {
++        return array;
++    }
++
++    cJSON_Delete(array);
++    return NULL;
++}
++
++CJSON_PUBLIC(cJSON *) cJSON_DetachItemViaPointer(cJSON *parent, cJSON * const item)
++{
++    if ((parent == NULL) || (item == NULL))
++    {
++        return NULL;
++    }
++
++    if (item != parent->child)
++    {
++        /* not the first element */
++        item->prev->next = item->next;
++    }
++    if (item->next != NULL)
++    {
++        /* not the last element */
++        item->next->prev = item->prev;
++    }
++
++    if (item == parent->child)
++    {
++        /* first element */
++        parent->child = item->next;
++    }
++    else if (item->next == NULL)
++    {
++        /* last element */
++        parent->child->prev = item->prev;
++    }
++
++    /* make sure the detached item doesn't point anywhere anymore */
++    item->prev = NULL;
++    item->next = NULL;
++
++    return item;
++}
++
++CJSON_PUBLIC(cJSON *) cJSON_DetachItemFromArray(cJSON *array, int which)
++{
++    if (which < 0)
++    {
++        return NULL;
++    }
++
++    return cJSON_DetachItemViaPointer(array, get_array_item(array, (size_t)which));
++}
++
++CJSON_PUBLIC(void) cJSON_DeleteItemFromArray(cJSON *array, int which)
++{
++    cJSON_Delete(cJSON_DetachItemFromArray(array, which));
++}
++
++CJSON_PUBLIC(cJSON *) cJSON_DetachItemFromObject(cJSON *object, const char *string)
++{
++    cJSON *to_detach = cJSON_GetObjectItem(object, string);
++
++    return cJSON_DetachItemViaPointer(object, to_detach);
++}
++
++CJSON_PUBLIC(cJSON *) cJSON_DetachItemFromObjectCaseSensitive(cJSON *object, const char *string)
++{
++    cJSON *to_detach = cJSON_GetObjectItemCaseSensitive(object, string);
++
++    return cJSON_DetachItemViaPointer(object, to_detach);
++}
++
++CJSON_PUBLIC(void) cJSON_DeleteItemFromObject(cJSON *object, const char *string)
++{
++    cJSON_Delete(cJSON_DetachItemFromObject(object, string));
++}
++
++CJSON_PUBLIC(void) cJSON_DeleteItemFromObjectCaseSensitive(cJSON *object, const char *string)
++{
++    cJSON_Delete(cJSON_DetachItemFromObjectCaseSensitive(object, string));
++}
++
++/* Replace array/object items with new ones. */
++CJSON_PUBLIC(cJSON_bool) cJSON_InsertItemInArray(cJSON *array, int which, cJSON *newitem)
++{
++    cJSON *after_inserted = NULL;
++
++    if (which < 0)
++    {
++        return false;
++    }
++
++    after_inserted = get_array_item(array, (size_t)which);
++    if (after_inserted == NULL)
++    {
++        return add_item_to_array(array, newitem);
++    }
++
++    newitem->next = after_inserted;
++    newitem->prev = after_inserted->prev;
++    after_inserted->prev = newitem;
++    if (after_inserted == array->child)
++    {
++        array->child = newitem;
++    }
++    else
++    {
++        newitem->prev->next = newitem;
++    }
++    return true;
++}
++
++CJSON_PUBLIC(cJSON_bool) cJSON_ReplaceItemViaPointer(cJSON * const parent, cJSON * const item, cJSON * replacement)
++{
++    if ((parent == NULL) || (replacement == NULL) || (item == NULL))
++    {
++        return false;
++    }
++
++    if (replacement == item)
++    {
++        return true;
++    }
++
++    replacement->next = item->next;
++    replacement->prev = item->prev;
++
++    if (replacement->next != NULL)
++    {
++        replacement->next->prev = replacement;
++    }
++    if (parent->child == item)
++    {
++        if (parent->child->prev == parent->child)
++        {
++            replacement->prev = replacement;
++        }
++        parent->child = replacement;
++    }
++    else
++    {   /*
++         * To find the last item in array quickly, we use prev in array.
++         * We can't modify the last item's next pointer where this item was the parent's child
++         */
++        if (replacement->prev != NULL)
++        {
++            replacement->prev->next = replacement;
++        }
++        if (replacement->next == NULL)
++        {
++            parent->child->prev = replacement;
++        }
++    }
++
++    item->next = NULL;
++    item->prev = NULL;
++    cJSON_Delete(item);
++
++    return true;
++}
++
++CJSON_PUBLIC(cJSON_bool) cJSON_ReplaceItemInArray(cJSON *array, int which, cJSON *newitem)
++{
++    if (which < 0)
++    {
++        return false;
++    }
++
++    return cJSON_ReplaceItemViaPointer(array, get_array_item(array, (size_t)which), newitem);
++}
++
++static cJSON_bool replace_item_in_object(cJSON *object, const char *string, cJSON *replacement, cJSON_bool case_sensitive)
++{
++    if ((replacement == NULL) || (string == NULL))
++    {
++        return false;
++    }
++
++    /* replace the name in the replacement */
++    if (!(replacement->type & cJSON_StringIsConst) && (replacement->string != NULL))
++    {
++        cJSON_free(replacement->string);
++    }
++    replacement->string = (char*)cJSON_strdup((const unsigned char*)string, &global_hooks);
++    replacement->type &= ~cJSON_StringIsConst;
++
++    return cJSON_ReplaceItemViaPointer(object, get_object_item(object, string, case_sensitive), replacement);
++}
++
++CJSON_PUBLIC(cJSON_bool) cJSON_ReplaceItemInObject(cJSON *object, const char *string, cJSON *newitem)
++{
++    return replace_item_in_object(object, string, newitem, false);
++}
++
++CJSON_PUBLIC(cJSON_bool) cJSON_ReplaceItemInObjectCaseSensitive(cJSON *object, const char *string, cJSON *newitem)
++{
++    return replace_item_in_object(object, string, newitem, true);
++}
++
++/* Create basic types: */
++CJSON_PUBLIC(cJSON *) cJSON_CreateNull(void)
++{
++    cJSON *item = cJSON_New_Item(&global_hooks);
++    if(item)
++    {
++        item->type = cJSON_NULL;
++    }
++
++    return item;
++}
++
++CJSON_PUBLIC(cJSON *) cJSON_CreateTrue(void)
++{
++    cJSON *item = cJSON_New_Item(&global_hooks);
++    if(item)
++    {
++        item->type = cJSON_True;
++    }
++
++    return item;
++}
++
++CJSON_PUBLIC(cJSON *) cJSON_CreateFalse(void)
++{
++    cJSON *item = cJSON_New_Item(&global_hooks);
++    if(item)
++    {
++        item->type = cJSON_False;
++    }
++
++    return item;
++}
++
++CJSON_PUBLIC(cJSON *) cJSON_CreateBool(cJSON_bool boolean)
++{
++    cJSON *item = cJSON_New_Item(&global_hooks);
++    if(item)
++    {
++        item->type = boolean ? cJSON_True : cJSON_False;
++    }
++
++    return item;
++}
++
++CJSON_PUBLIC(cJSON *) cJSON_CreateNumber(double num)
++{
++    cJSON *item = cJSON_New_Item(&global_hooks);
++    if(item)
++    {
++        item->type = cJSON_Number;
++        item->valuedouble = num;
++
++        /* use saturation in case of overflow */
++        if (num >= INT_MAX)
++        {
++            item->valueint = INT_MAX;
++        }
++        else if (num <= (double)INT_MIN)
++        {
++            item->valueint = INT_MIN;
++        }
++        else
++        {
++            item->valueint = (int)num;
++        }
++    }
++
++    return item;
++}
++
++CJSON_PUBLIC(cJSON *) cJSON_CreateString(const char *string)
++{
++    cJSON *item = cJSON_New_Item(&global_hooks);
++    if(item)
++    {
++        item->type = cJSON_String;
++        item->valuestring = (char*)cJSON_strdup((const unsigned char*)string, &global_hooks);
++        if(!item->valuestring)
++        {
++            cJSON_Delete(item);
++            return NULL;
++        }
++    }
++
++    return item;
++}
++
++CJSON_PUBLIC(cJSON *) cJSON_CreateStringReference(const char *string)
++{
++    cJSON *item = cJSON_New_Item(&global_hooks);
++    if (item != NULL)
++    {
++        item->type = cJSON_String | cJSON_IsReference;
++        item->valuestring = (char*)cast_away_const(string);
++    }
++
++    return item;
++}
++
++CJSON_PUBLIC(cJSON *) cJSON_CreateObjectReference(const cJSON *child)
++{
++    cJSON *item = cJSON_New_Item(&global_hooks);
++    if (item != NULL) {
++        item->type = cJSON_Object | cJSON_IsReference;
++        item->child = (cJSON*)cast_away_const(child);
++    }
++
++    return item;
++}
++
++CJSON_PUBLIC(cJSON *) cJSON_CreateArrayReference(const cJSON *child) {
++    cJSON *item = cJSON_New_Item(&global_hooks);
++    if (item != NULL) {
++        item->type = cJSON_Array | cJSON_IsReference;
++        item->child = (cJSON*)cast_away_const(child);
++    }
++
++    return item;
++}
++
++CJSON_PUBLIC(cJSON *) cJSON_CreateRaw(const char *raw)
++{
++    cJSON *item = cJSON_New_Item(&global_hooks);
++    if(item)
++    {
++        item->type = cJSON_Raw;
++        item->valuestring = (char*)cJSON_strdup((const unsigned char*)raw, &global_hooks);
++        if(!item->valuestring)
++        {
++            cJSON_Delete(item);
++            return NULL;
++        }
++    }
++
++    return item;
++}
++
++CJSON_PUBLIC(cJSON *) cJSON_CreateArray(void)
++{
++    cJSON *item = cJSON_New_Item(&global_hooks);
++    if(item)
++    {
++        item->type=cJSON_Array;
++    }
++
++    return item;
++}
++
++CJSON_PUBLIC(cJSON *) cJSON_CreateObject(void)
++{
++    cJSON *item = cJSON_New_Item(&global_hooks);
++    if (item)
++    {
++        item->type = cJSON_Object;
++    }
++
++    return item;
++}
++
++/* Create Arrays: */
++CJSON_PUBLIC(cJSON *) cJSON_CreateIntArray(const int *numbers, int count)
++{
++    size_t i = 0;
++    cJSON *n = NULL;
++    cJSON *p = NULL;
++    cJSON *a = NULL;
++
++    if ((count < 0) || (numbers == NULL))
++    {
++        return NULL;
++    }
++
++    a = cJSON_CreateArray();
++    for(i = 0; a && (i < (size_t)count); i++)
++    {
++        n = cJSON_CreateNumber(numbers[i]);
++        if (!n)
++        {
++            cJSON_Delete(a);
++            return NULL;
++        }
++        if(!i)
++        {
++            a->child = n;
++        }
++        else
++        {
++            suffix_object(p, n);
++        }
++        p = n;
++    }
++    a->child->prev = n;
++
++    return a;
++}
++
++CJSON_PUBLIC(cJSON *) cJSON_CreateFloatArray(const float *numbers, int count)
++{
++    size_t i = 0;
++    cJSON *n = NULL;
++    cJSON *p = NULL;
++    cJSON *a = NULL;
++
++    if ((count < 0) || (numbers == NULL))
++    {
++        return NULL;
++    }
++
++    a = cJSON_CreateArray();
++
++    for(i = 0; a && (i < (size_t)count); i++)
++    {
++        n = cJSON_CreateNumber((double)numbers[i]);
++        if(!n)
++        {
++            cJSON_Delete(a);
++            return NULL;
++        }
++        if(!i)
++        {
++            a->child = n;
++        }
++        else
++        {
++            suffix_object(p, n);
++        }
++        p = n;
++    }
++    a->child->prev = n;
++
++    return a;
++}
++
++CJSON_PUBLIC(cJSON *) cJSON_CreateDoubleArray(const double *numbers, int count)
++{
++    size_t i = 0;
++    cJSON *n = NULL;
++    cJSON *p = NULL;
++    cJSON *a = NULL;
++
++    if ((count < 0) || (numbers == NULL))
++    {
++        return NULL;
++    }
++
++    a = cJSON_CreateArray();
++
++    for(i = 0;a && (i < (size_t)count); i++)
++    {
++        n = cJSON_CreateNumber(numbers[i]);
++        if(!n)
++        {
++            cJSON_Delete(a);
++            return NULL;
++        }
++        if(!i)
++        {
++            a->child = n;
++        }
++        else
++        {
++            suffix_object(p, n);
++        }
++        p = n;
++    }
++    a->child->prev = n;
++
++    return a;
++}
++
++CJSON_PUBLIC(cJSON *) cJSON_CreateStringArray(const char *const *strings, int count)
++{
++    size_t i = 0;
++    cJSON *n = NULL;
++    cJSON *p = NULL;
++    cJSON *a = NULL;
++
++    if ((count < 0) || (strings == NULL))
++    {
++        return NULL;
++    }
++
++    a = cJSON_CreateArray();
++
++    for (i = 0; a && (i < (size_t)count); i++)
++    {
++        n = cJSON_CreateString(strings[i]);
++        if(!n)
++        {
++            cJSON_Delete(a);
++            return NULL;
++        }
++        if(!i)
++        {
++            a->child = n;
++        }
++        else
++        {
++            suffix_object(p,n);
++        }
++        p = n;
++    }
++    a->child->prev = n;
++
++    return a;
++}
++
++/* Duplication */
++CJSON_PUBLIC(cJSON *) cJSON_Duplicate(const cJSON *item, cJSON_bool recurse)
++{
++    cJSON *newitem = NULL;
++    cJSON *child = NULL;
++    cJSON *next = NULL;
++    cJSON *newchild = NULL;
++
++    /* Bail on bad ptr */
++    if (!item)
++    {
++        goto fail;
++    }
++    /* Create new item */
++    newitem = cJSON_New_Item(&global_hooks);
++    if (!newitem)
++    {
++        goto fail;
++    }
++    /* Copy over all vars */
++    newitem->type = item->type & (~cJSON_IsReference);
++    newitem->valueint = item->valueint;
++    newitem->valuedouble = item->valuedouble;
++    if (item->valuestring)
++    {
++        newitem->valuestring = (char*)cJSON_strdup((unsigned char*)item->valuestring, &global_hooks);
++        if (!newitem->valuestring)
++        {
++            goto fail;
++        }
++    }
++    if (item->string)
++    {
++        newitem->string = (item->type&cJSON_StringIsConst) ? item->string : (char*)cJSON_strdup((unsigned char*)item->string, &global_hooks);
++        if (!newitem->string)
++        {
++            goto fail;
++        }
++    }
++    /* If non-recursive, then we're done! */
++    if (!recurse)
++    {
++        return newitem;
++    }
++    /* Walk the ->next chain for the child. */
++    child = item->child;
++    while (child != NULL)
++    {
++        newchild = cJSON_Duplicate(child, true); /* Duplicate (with recurse) each item in the ->next chain */
++        if (!newchild)
++        {
++            goto fail;
++        }
++        if (next != NULL)
++        {
++            /* If newitem->child already set, then crosswire ->prev and ->next and move on */
++            next->next = newchild;
++            newchild->prev = next;
++            next = newchild;
++        }
++        else
++        {
++            /* Set newitem->child and move to it */
++            newitem->child = newchild;
++            next = newchild;
++        }
++        child = child->next;
++    }
++    if (newitem && newitem->child)
++    {
++        newitem->child->prev = newchild;
++    }
++
++    return newitem;
++
++fail:
++    if (newitem != NULL)
++    {
++        cJSON_Delete(newitem);
++    }
++
++    return NULL;
++}
++
++static void skip_oneline_comment(char **input)
++{
++    *input += static_strlen("//");
++
++    for (; (*input)[0] != '\0'; ++(*input))
++    {
++        if ((*input)[0] == '\n') {
++            *input += static_strlen("\n");
++            return;
++        }
++    }
++}
++
++static void skip_multiline_comment(char **input)
++{
++    *input += static_strlen("/*");
++
++    for (; (*input)[0] != '\0'; ++(*input))
++    {
++        if (((*input)[0] == '*') && ((*input)[1] == '/'))
++        {
++            *input += static_strlen("*/");
++            return;
++        }
++    }
++}
++
++static void minify_string(char **input, char **output) {
++    (*output)[0] = (*input)[0];
++    *input += static_strlen("\"");
++    *output += static_strlen("\"");
++
++
++    for (; (*input)[0] != '\0'; (void)++(*input), ++(*output)) {
++        (*output)[0] = (*input)[0];
++
++        if ((*input)[0] == '\"') {
++            (*output)[0] = '\"';
++            *input += static_strlen("\"");
++            *output += static_strlen("\"");
++            return;
++        } else if (((*input)[0] == '\\') && ((*input)[1] == '\"')) {
++            (*output)[1] = (*input)[1];
++            *input += static_strlen("\"");
++            *output += static_strlen("\"");
++        }
++    }
++}
++
++CJSON_PUBLIC(void) cJSON_Minify(char *json)
++{
++    char *into = json;
++
++    if (json == NULL)
++    {
++        return;
++    }
++
++    while (json[0] != '\0')
++    {
++        switch (json[0])
++        {
++            case ' ':
++            case '\t':
++            case '\r':
++            case '\n':
++                json++;
++                break;
++
++            case '/':
++                if (json[1] == '/')
++                {
++                    skip_oneline_comment(&json);
++                }
++                else if (json[1] == '*')
++                {
++                    skip_multiline_comment(&json);
++                } else {
++                    json++;
++                }
++                break;
++
++            case '\"':
++                minify_string(&json, (char**)&into);
++                break;
++
++            default:
++                into[0] = json[0];
++                json++;
++                into++;
++        }
++    }
++
++    /* and null-terminate. */
++    *into = '\0';
++}
++
++CJSON_PUBLIC(cJSON_bool) cJSON_IsInvalid(const cJSON * const item)
++{
++    if (item == NULL)
++    {
++        return false;
++    }
++
++    return (item->type & 0xFF) == cJSON_Invalid;
++}
++
++CJSON_PUBLIC(cJSON_bool) cJSON_IsFalse(const cJSON * const item)
++{
++    if (item == NULL)
++    {
++        return false;
++    }
++
++    return (item->type & 0xFF) == cJSON_False;
++}
++
++CJSON_PUBLIC(cJSON_bool) cJSON_IsTrue(const cJSON * const item)
++{
++    if (item == NULL)
++    {
++        return false;
++    }
++
++    return (item->type & 0xff) == cJSON_True;
++}
++
++
++CJSON_PUBLIC(cJSON_bool) cJSON_IsBool(const cJSON * const item)
++{
++    if (item == NULL)
++    {
++        return false;
++    }
++
++    return (item->type & (cJSON_True | cJSON_False)) != 0;
++}
++CJSON_PUBLIC(cJSON_bool) cJSON_IsNull(const cJSON * const item)
++{
++    if (item == NULL)
++    {
++        return false;
++    }
++
++    return (item->type & 0xFF) == cJSON_NULL;
++}
++
++CJSON_PUBLIC(cJSON_bool) cJSON_IsNumber(const cJSON * const item)
++{
++    if (item == NULL)
++    {
++        return false;
++    }
++
++    return (item->type & 0xFF) == cJSON_Number;
++}
++
++CJSON_PUBLIC(cJSON_bool) cJSON_IsString(const cJSON * const item)
++{
++    if (item == NULL)
++    {
++        return false;
++    }
++
++    return (item->type & 0xFF) == cJSON_String;
++}
++
++CJSON_PUBLIC(cJSON_bool) cJSON_IsArray(const cJSON * const item)
++{
++    if (item == NULL)
++    {
++        return false;
++    }
++
++    return (item->type & 0xFF) == cJSON_Array;
++}
++
++CJSON_PUBLIC(cJSON_bool) cJSON_IsObject(const cJSON * const item)
++{
++    if (item == NULL)
++    {
++        return false;
++    }
++
++    return (item->type & 0xFF) == cJSON_Object;
++}
++
++CJSON_PUBLIC(cJSON_bool) cJSON_IsRaw(const cJSON * const item)
++{
++    if (item == NULL)
++    {
++        return false;
++    }
++
++    return (item->type & 0xFF) == cJSON_Raw;
++}
++
++CJSON_PUBLIC(cJSON_bool) cJSON_Compare(const cJSON * const a, const cJSON * const b, const cJSON_bool case_sensitive)
++{
++    if ((a == NULL) || (b == NULL) || ((a->type & 0xFF) != (b->type & 0xFF)) || cJSON_IsInvalid(a))
++    {
++        return false;
++    }
++
++    /* check if type is valid */
++    switch (a->type & 0xFF)
++    {
++        case cJSON_False:
++        case cJSON_True:
++        case cJSON_NULL:
++        case cJSON_Number:
++        case cJSON_String:
++        case cJSON_Raw:
++        case cJSON_Array:
++        case cJSON_Object:
++            break;
++
++        default:
++            return false;
++    }
++
++    /* identical objects are equal */
++    if (a == b)
++    {
++        return true;
++    }
++
++    switch (a->type & 0xFF)
++    {
++        /* in these cases and equal type is enough */
++        case cJSON_False:
++        case cJSON_True:
++        case cJSON_NULL:
++            return true;
++
++        case cJSON_Number:
++            if (compare_double(a->valuedouble, b->valuedouble))
++            {
++                return true;
++            }
++            return false;
++
++        case cJSON_String:
++        case cJSON_Raw:
++            if ((a->valuestring == NULL) || (b->valuestring == NULL))
++            {
++                return false;
++            }
++            if (strcmp(a->valuestring, b->valuestring) == 0)
++            {
++                return true;
++            }
++
++            return false;
++
++        case cJSON_Array:
++        {
++            cJSON *a_element = a->child;
++            cJSON *b_element = b->child;
++
++            for (; (a_element != NULL) && (b_element != NULL);)
++            {
++                if (!cJSON_Compare(a_element, b_element, case_sensitive))
++                {
++                    return false;
++                }
++
++                a_element = a_element->next;
++                b_element = b_element->next;
++            }
++
++            /* one of the arrays is longer than the other */
++            if (a_element != b_element) {
++                return false;
++            }
++
++            return true;
++        }
++
++        case cJSON_Object:
++        {
++            cJSON *a_element = NULL;
++            cJSON *b_element = NULL;
++            cJSON_ArrayForEach(a_element, a)
++            {
++                /* TODO This has O(n^2) runtime, which is horrible! */
++                b_element = get_object_item(b, a_element->string, case_sensitive);
++                if (b_element == NULL)
++                {
++                    return false;
++                }
++
++                if (!cJSON_Compare(a_element, b_element, case_sensitive))
++                {
++                    return false;
++                }
++            }
++
++            /* doing this twice, once on a and b to prevent true comparison if a subset of b
++             * TODO: Do this the proper way, this is just a fix for now */
++            cJSON_ArrayForEach(b_element, b)
++            {
++                a_element = get_object_item(a, b_element->string, case_sensitive);
++                if (a_element == NULL)
++                {
++                    return false;
++                }
++
++                if (!cJSON_Compare(b_element, a_element, case_sensitive))
++                {
++                    return false;
++                }
++            }
++
++            return true;
++        }
++
++        default:
++            return false;
++    }
++}
++
++CJSON_PUBLIC(void *) cJSON_malloc(size_t size)
++{
++    return global_hooks.allocate(size);
++}
++
++CJSON_PUBLIC(void) cJSON_free(void *object)
++{
++    global_hooks.deallocate(object);
++}
+diff -ruN a/lib/service/cJSON.h b/lib/service/cJSON.h
+--- a/lib/service/cJSON.h	1970-01-01 08:00:00.000000000 +0800
++++ b/lib/service/cJSON.h	2020-11-16 16:22:20.000000000 +0800
+@@ -0,0 +1,295 @@
++/*
++  Copyright (c) 2009-2017 Dave Gamble and cJSON contributors
++
++  Permission is hereby granted, free of charge, to any person obtaining a copy
++  of this software and associated documentation files (the "Software"), to deal
++  in the Software without restriction, including without limitation the rights
++  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
++  copies of the Software, and to permit persons to whom the Software is
++  furnished to do so, subject to the following conditions:
++
++  The above copyright notice and this permission notice shall be included in
++  all copies or substantial portions of the Software.
++
++  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
++  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
++  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
++  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
++  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
++  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
++  THE SOFTWARE.
++*/
++
++#ifndef cJSON__h
++#define cJSON__h
++
++#ifdef __cplusplus
++extern "C"
++{
++#endif
++
++#if !defined(__WINDOWS__) && (defined(WIN32) || defined(WIN64) || defined(_MSC_VER) || defined(_WIN32))
++#define __WINDOWS__
++#endif
++
++#ifdef __WINDOWS__
++
++/* When compiling for windows, we specify a specific calling convention to avoid issues where we are being called from a project with a different default calling convention.  For windows you have 3 define options:
++
++CJSON_HIDE_SYMBOLS - Define this in the case where you don't want to ever dllexport symbols
++CJSON_EXPORT_SYMBOLS - Define this on library build when you want to dllexport symbols (default)
++CJSON_IMPORT_SYMBOLS - Define this if you want to dllimport symbol
++
++For *nix builds that support visibility attribute, you can define similar behavior by
++
++setting default visibility to hidden by adding
++-fvisibility=hidden (for gcc)
++or
++-xldscope=hidden (for sun cc)
++to CFLAGS
++
++then using the CJSON_API_VISIBILITY flag to "export" the same symbols the way CJSON_EXPORT_SYMBOLS does
++
++*/
++
++#define CJSON_CDECL __cdecl
++#define CJSON_STDCALL __stdcall
++
++/* export symbols by default, this is necessary for copy pasting the C and header file */
++#if !defined(CJSON_HIDE_SYMBOLS) && !defined(CJSON_IMPORT_SYMBOLS) && !defined(CJSON_EXPORT_SYMBOLS)
++#define CJSON_EXPORT_SYMBOLS
++#endif
++
++#if defined(CJSON_HIDE_SYMBOLS)
++#define CJSON_PUBLIC(type)   type CJSON_STDCALL
++#elif defined(CJSON_EXPORT_SYMBOLS)
++#define CJSON_PUBLIC(type)   __declspec(dllexport) type CJSON_STDCALL
++#elif defined(CJSON_IMPORT_SYMBOLS)
++#define CJSON_PUBLIC(type)   __declspec(dllimport) type CJSON_STDCALL
++#endif
++#else /* !__WINDOWS__ */
++#define CJSON_CDECL
++#define CJSON_STDCALL
++
++#if (defined(__GNUC__) || defined(__SUNPRO_CC) || defined (__SUNPRO_C)) && defined(CJSON_API_VISIBILITY)
++#define CJSON_PUBLIC(type)   __attribute__((visibility("default"))) type
++#else
++#define CJSON_PUBLIC(type) type
++#endif
++#endif
++
++/* project version */
++#define CJSON_VERSION_MAJOR 1
++#define CJSON_VERSION_MINOR 7
++#define CJSON_VERSION_PATCH 14
++
++#include <stddef.h>
++
++/* cJSON Types: */
++#define cJSON_Invalid (0)
++#define cJSON_False  (1 << 0)
++#define cJSON_True   (1 << 1)
++#define cJSON_NULL   (1 << 2)
++#define cJSON_Number (1 << 3)
++#define cJSON_String (1 << 4)
++#define cJSON_Array  (1 << 5)
++#define cJSON_Object (1 << 6)
++#define cJSON_Raw    (1 << 7) /* raw json */
++#define cJSON_Number64 (1 << 8)
++
++#define cJSON_IsReference 256
++#define cJSON_StringIsConst 512
++
++/* The cJSON structure: */
++typedef struct cJSON
++{
++    /* next/prev allow you to walk array/object chains. Alternatively, use GetArraySize/GetArrayItem/GetObjectItem */
++    struct cJSON *next;
++    struct cJSON *prev;
++    /* An array or object item will have a child pointer pointing to a chain of the items in the array/object. */
++    struct cJSON *child;
++
++    /* The type of the item, as above. */
++    int type;
++
++    /* The item's string, if type==cJSON_String  and type == cJSON_Raw */
++    char *valuestring;
++    /* writing to valueint is DEPRECATED, use cJSON_SetNumberValue instead */
++    int valueint;
++    //long long value64;
++    /* The item's number, if type==cJSON_Number */
++    double valuedouble;
++
++    /* The item's name string, if this item is the child of, or is in the list of subitems of an object. */
++    char *string;
++} cJSON;
++
++typedef struct cJSON_Hooks
++{
++      /* malloc/free are CDECL on Windows regardless of the default calling convention of the compiler, so ensure the hooks allow passing those functions directly. */
++      void *(CJSON_CDECL *malloc_fn)(size_t sz);
++      void (CJSON_CDECL *free_fn)(void *ptr);
++} cJSON_Hooks;
++
++typedef int cJSON_bool;
++
++/* Limits how deeply nested arrays/objects can be before cJSON rejects to parse them.
++ * This is to prevent stack overflows. */
++#ifndef CJSON_NESTING_LIMIT
++#define CJSON_NESTING_LIMIT 1000
++#endif
++
++/* returns the version of cJSON as a string */
++CJSON_PUBLIC(const char*) cJSON_Version(void);
++
++/* Supply malloc, realloc and free functions to cJSON */
++CJSON_PUBLIC(void) cJSON_InitHooks(cJSON_Hooks* hooks);
++
++/* Memory Management: the caller is always responsible to free the results from all variants of cJSON_Parse (with cJSON_Delete) and cJSON_Print (with stdlib free, cJSON_Hooks.free_fn, or cJSON_free as appropriate). The exception is cJSON_PrintPreallocated, where the caller has full responsibility of the buffer. */
++/* Supply a block of JSON, and this returns a cJSON object you can interrogate. */
++CJSON_PUBLIC(cJSON *) cJSON_Parse(const char *value);
++CJSON_PUBLIC(cJSON *) cJSON_ParseWithLength(const char *value, size_t buffer_length);
++/* ParseWithOpts allows you to require (and check) that the JSON is null terminated, and to retrieve the pointer to the final byte parsed. */
++/* If you supply a ptr in return_parse_end and parsing fails, then return_parse_end will contain a pointer to the error so will match cJSON_GetErrorPtr(). */
++CJSON_PUBLIC(cJSON *) cJSON_ParseWithOpts(const char *value, const char **return_parse_end, cJSON_bool require_null_terminated);
++CJSON_PUBLIC(cJSON *) cJSON_ParseWithLengthOpts(const char *value, size_t buffer_length, const char **return_parse_end, cJSON_bool require_null_terminated);
++
++/* Render a cJSON entity to text for transfer/storage. */
++CJSON_PUBLIC(char *) cJSON_Print(const cJSON *item);
++/* Render a cJSON entity to text for transfer/storage without any formatting. */
++CJSON_PUBLIC(char *) cJSON_PrintUnformatted(const cJSON *item);
++/* Render a cJSON entity to text using a buffered strategy. prebuffer is a guess at the final size. guessing well reduces reallocation. fmt=0 gives unformatted, =1 gives formatted */
++CJSON_PUBLIC(char *) cJSON_PrintBuffered(const cJSON *item, int prebuffer, cJSON_bool fmt);
++/* Render a cJSON entity to text using a buffer already allocated in memory with given length. Returns 1 on success and 0 on failure. */
++/* NOTE: cJSON is not always 100% accurate in estimating how much memory it will use, so to be safe allocate 5 bytes more than you actually need */
++CJSON_PUBLIC(cJSON_bool) cJSON_PrintPreallocated(cJSON *item, char *buffer, const int length, const cJSON_bool format);
++/* Delete a cJSON entity and all subentities. */
++CJSON_PUBLIC(void) cJSON_Delete(cJSON *item);
++
++/* Returns the number of items in an array (or object). */
++CJSON_PUBLIC(int) cJSON_GetArraySize(const cJSON *array);
++/* Retrieve item number "index" from array "array". Returns NULL if unsuccessful. */
++CJSON_PUBLIC(cJSON *) cJSON_GetArrayItem(const cJSON *array, int index);
++/* Get item "string" from object. Case insensitive. */
++CJSON_PUBLIC(cJSON *) cJSON_GetObjectItem(const cJSON * const object, const char * const string);
++CJSON_PUBLIC(cJSON *) cJSON_GetObjectItemCaseSensitive(const cJSON * const object, const char * const string);
++CJSON_PUBLIC(cJSON_bool) cJSON_HasObjectItem(const cJSON *object, const char *string);
++/* For analysing failed parses. This returns a pointer to the parse error. You'll probably need to look a few chars back to make sense of it. Defined when cJSON_Parse() returns 0. 0 when cJSON_Parse() succeeds. */
++CJSON_PUBLIC(const char *) cJSON_GetErrorPtr(void);
++
++/* Check item type and return its value */
++CJSON_PUBLIC(char *) cJSON_GetStringValue(const cJSON * const item);
++CJSON_PUBLIC(double) cJSON_GetNumberValue(const cJSON * const item);
++
++/* These functions check the type of an item */
++CJSON_PUBLIC(cJSON_bool) cJSON_IsInvalid(const cJSON * const item);
++CJSON_PUBLIC(cJSON_bool) cJSON_IsFalse(const cJSON * const item);
++CJSON_PUBLIC(cJSON_bool) cJSON_IsTrue(const cJSON * const item);
++CJSON_PUBLIC(cJSON_bool) cJSON_IsBool(const cJSON * const item);
++CJSON_PUBLIC(cJSON_bool) cJSON_IsNull(const cJSON * const item);
++CJSON_PUBLIC(cJSON_bool) cJSON_IsNumber(const cJSON * const item);
++CJSON_PUBLIC(cJSON_bool) cJSON_IsString(const cJSON * const item);
++CJSON_PUBLIC(cJSON_bool) cJSON_IsArray(const cJSON * const item);
++CJSON_PUBLIC(cJSON_bool) cJSON_IsObject(const cJSON * const item);
++CJSON_PUBLIC(cJSON_bool) cJSON_IsRaw(const cJSON * const item);
++
++/* These calls create a cJSON item of the appropriate type. */
++CJSON_PUBLIC(cJSON *) cJSON_CreateNull(void);
++CJSON_PUBLIC(cJSON *) cJSON_CreateTrue(void);
++CJSON_PUBLIC(cJSON *) cJSON_CreateFalse(void);
++CJSON_PUBLIC(cJSON *) cJSON_CreateBool(cJSON_bool boolean);
++CJSON_PUBLIC(cJSON *) cJSON_CreateNumber(double num);
++CJSON_PUBLIC(cJSON *) cJSON_CreateString(const char *string);
++/* raw json */
++CJSON_PUBLIC(cJSON *) cJSON_CreateRaw(const char *raw);
++CJSON_PUBLIC(cJSON *) cJSON_CreateArray(void);
++CJSON_PUBLIC(cJSON *) cJSON_CreateObject(void);
++
++/* Create a string where valuestring references a string so
++ * it will not be freed by cJSON_Delete */
++CJSON_PUBLIC(cJSON *) cJSON_CreateStringReference(const char *string);
++/* Create an object/array that only references it's elements so
++ * they will not be freed by cJSON_Delete */
++CJSON_PUBLIC(cJSON *) cJSON_CreateObjectReference(const cJSON *child);
++CJSON_PUBLIC(cJSON *) cJSON_CreateArrayReference(const cJSON *child);
++
++/* These utilities create an Array of count items.
++ * The parameter count cannot be greater than the number of elements in the number array, otherwise array access will be out of bounds.*/
++CJSON_PUBLIC(cJSON *) cJSON_CreateIntArray(const int *numbers, int count);
++CJSON_PUBLIC(cJSON *) cJSON_CreateFloatArray(const float *numbers, int count);
++CJSON_PUBLIC(cJSON *) cJSON_CreateDoubleArray(const double *numbers, int count);
++CJSON_PUBLIC(cJSON *) cJSON_CreateStringArray(const char *const *strings, int count);
++
++/* Append item to the specified array/object. */
++CJSON_PUBLIC(cJSON_bool) cJSON_AddItemToArray(cJSON *array, cJSON *item);
++CJSON_PUBLIC(cJSON_bool) cJSON_AddItemToObject(cJSON *object, const char *string, cJSON *item);
++/* Use this when string is definitely const (i.e. a literal, or as good as), and will definitely survive the cJSON object.
++ * WARNING: When this function was used, make sure to always check that (item->type & cJSON_StringIsConst) is zero before
++ * writing to `item->string` */
++CJSON_PUBLIC(cJSON_bool) cJSON_AddItemToObjectCS(cJSON *object, const char *string, cJSON *item);
++/* Append reference to item to the specified array/object. Use this when you want to add an existing cJSON to a new cJSON, but don't want to corrupt your existing cJSON. */
++CJSON_PUBLIC(cJSON_bool) cJSON_AddItemReferenceToArray(cJSON *array, cJSON *item);
++CJSON_PUBLIC(cJSON_bool) cJSON_AddItemReferenceToObject(cJSON *object, const char *string, cJSON *item);
++
++/* Remove/Detach items from Arrays/Objects. */
++CJSON_PUBLIC(cJSON *) cJSON_DetachItemViaPointer(cJSON *parent, cJSON * const item);
++CJSON_PUBLIC(cJSON *) cJSON_DetachItemFromArray(cJSON *array, int which);
++CJSON_PUBLIC(void) cJSON_DeleteItemFromArray(cJSON *array, int which);
++CJSON_PUBLIC(cJSON *) cJSON_DetachItemFromObject(cJSON *object, const char *string);
++CJSON_PUBLIC(cJSON *) cJSON_DetachItemFromObjectCaseSensitive(cJSON *object, const char *string);
++CJSON_PUBLIC(void) cJSON_DeleteItemFromObject(cJSON *object, const char *string);
++CJSON_PUBLIC(void) cJSON_DeleteItemFromObjectCaseSensitive(cJSON *object, const char *string);
++
++/* Update array items. */
++CJSON_PUBLIC(cJSON_bool) cJSON_InsertItemInArray(cJSON *array, int which, cJSON *newitem); /* Shifts pre-existing items to the right. */
++CJSON_PUBLIC(cJSON_bool) cJSON_ReplaceItemViaPointer(cJSON * const parent, cJSON * const item, cJSON * replacement);
++CJSON_PUBLIC(cJSON_bool) cJSON_ReplaceItemInArray(cJSON *array, int which, cJSON *newitem);
++CJSON_PUBLIC(cJSON_bool) cJSON_ReplaceItemInObject(cJSON *object,const char *string,cJSON *newitem);
++CJSON_PUBLIC(cJSON_bool) cJSON_ReplaceItemInObjectCaseSensitive(cJSON *object,const char *string,cJSON *newitem);
++
++/* Duplicate a cJSON item */
++CJSON_PUBLIC(cJSON *) cJSON_Duplicate(const cJSON *item, cJSON_bool recurse);
++/* Duplicate will create a new, identical cJSON item to the one you pass, in new memory that will
++ * need to be released. With recurse!=0, it will duplicate any children connected to the item.
++ * The item->next and ->prev pointers are always zero on return from Duplicate. */
++/* Recursively compare two cJSON items for equality. If either a or b is NULL or invalid, they will be considered unequal.
++ * case_sensitive determines if object keys are treated case sensitive (1) or case insensitive (0) */
++CJSON_PUBLIC(cJSON_bool) cJSON_Compare(const cJSON * const a, const cJSON * const b, const cJSON_bool case_sensitive);
++
++/* Minify a strings, remove blank characters(such as ' ', '\t', '\r', '\n') from strings.
++ * The input pointer json cannot point to a read-only address area, such as a string constant, 
++ * but should point to a readable and writable adress area. */
++CJSON_PUBLIC(void) cJSON_Minify(char *json);
++
++/* Helper functions for creating and adding items to an object at the same time.
++ * They return the added item or NULL on failure. */
++CJSON_PUBLIC(cJSON*) cJSON_AddNullToObject(cJSON * const object, const char * const name);
++CJSON_PUBLIC(cJSON*) cJSON_AddTrueToObject(cJSON * const object, const char * const name);
++CJSON_PUBLIC(cJSON*) cJSON_AddFalseToObject(cJSON * const object, const char * const name);
++CJSON_PUBLIC(cJSON*) cJSON_AddBoolToObject(cJSON * const object, const char * const name, const cJSON_bool boolean);
++CJSON_PUBLIC(cJSON*) cJSON_AddNumberToObject(cJSON * const object, const char * const name, const double number);
++CJSON_PUBLIC(cJSON*) cJSON_AddStringToObject(cJSON * const object, const char * const name, const char * const string);
++CJSON_PUBLIC(cJSON*) cJSON_AddRawToObject(cJSON * const object, const char * const name, const char * const raw);
++CJSON_PUBLIC(cJSON*) cJSON_AddObjectToObject(cJSON * const object, const char * const name);
++CJSON_PUBLIC(cJSON*) cJSON_AddArrayToObject(cJSON * const object, const char * const name);
++
++/* When assigning an integer value, it needs to be propagated to valuedouble too. */
++#define cJSON_SetIntValue(object, number) ((object) ? (object)->valueint = (object)->valuedouble = (number) : (number))
++/* helper for the cJSON_SetNumberValue macro */
++CJSON_PUBLIC(double) cJSON_SetNumberHelper(cJSON *object, double number);
++#define cJSON_SetNumberValue(object, number) ((object != NULL) ? cJSON_SetNumberHelper(object, (double)number) : (number))
++/* Change the valuestring of a cJSON_String object, only takes effect when type of object is cJSON_String */
++CJSON_PUBLIC(char*) cJSON_SetValuestring(cJSON *object, const char *valuestring);
++
++/* Macro for iterating over an array or object */
++#define cJSON_ArrayForEach(element, array) for(element = (array != NULL) ? (array)->child : NULL; element != NULL; element = element->next)
++
++/* malloc/free objects using the malloc/free functions that have been set with cJSON_InitHooks */
++CJSON_PUBLIC(void *) cJSON_malloc(size_t size);
++CJSON_PUBLIC(void) cJSON_free(void *object);
++
++#ifdef __cplusplus
++}
++#endif
++
++#endif
+diff -ruN a/lib/service/Makefile.inc b/lib/service/Makefile.inc
+--- a/lib/service/Makefile.inc	2020-11-20 11:33:47.485099000 +0800
++++ b/lib/service/Makefile.inc	2020-11-16 16:19:08.000000000 +0800
+@@ -17,7 +17,8 @@
+ 	service/servicehdmi.cpp \
+ 	service/servicepeer.cpp \
+ 	service/servicets.cpp \
+-	service/servicewebts.cpp
++	service/servicewebts.cpp \
++	service/cJSON.cpp
+ 
+ serviceincludedir = $(pkgincludedir)/lib/service
+ serviceinclude_HEADERS = \
+@@ -35,7 +36,8 @@
+ 	service/servicehdmi.h \
+ 	service/servicepeer.h \
+ 	service/servicets.h \
+-	service/servicewebts.h
++	service/servicewebts.h \
++	service/cJSON.h
+ 
+ if HAVE_LIBXINE
+ service_libenigma_service_a_SOURCES += \
+diff -ruN a/lib/service/servicemp3.cpp b/lib/service/servicemp3.cpp
+--- a/lib/service/servicemp3.cpp	2020-11-20 11:33:47.489099000 +0800
++++ b/lib/service/servicemp3.cpp	2020-11-20 16:01:36.000000000 +0800
+@@ -23,6 +23,8 @@
+ 
+ #include <sys/time.h>
+ 
++#include "cJSON.h"
++
+ #if HAVE_ALIEN5
+ extern "C" {
+ #include <codec.h>
+@@ -214,7 +216,20 @@
+ 		create_gstreamer_sinks();
+ 	}
+ 	eDebug("[eServiceFactoryMP3] ****new play service total services played is %d****", m_eServicemp3_counter);
+-	ptr = new eServiceMP3(ref);
++	eDebug("[eServiceFactoryMP3] ****new play service total services ref.path %s****", ref.path.c_str());
++	std::string pathsubstr = ref.path.substr(ref.path.length() - 6);
++	size_t pos = pathsubstr.find('.');
++	if (pos == std::string::npos && (ref.path.compare(0, 4, "http") == 0 || ref.path.compare(0, 5, "https") == 0))
++	{
++	    eDebug("[eServiceFactoryMP3] ****new play service eServiceMP3_dinobotplayer****");
++		ptr = new eServiceMP3_dinobotplayer( ref );
++	}
++	else
++	{
++	    eDebug("[eServiceFactoryMP3] ****new play service eServiceMP3****");
++        ptr = new eServiceMP3(ref);
++	}
++	
+ 	return 0;
+ }
+ 
+@@ -2972,7 +2987,7 @@
+ 	}
+ }
+ 
+-eAutoInitPtr<eServiceFactoryMP3> init_eServiceFactoryMP3(eAutoInitNumbers::service+1, "eServiceFactoryMP3");
++//eAutoInitPtr<eServiceFactoryMP3> init_eServiceFactoryMP3(eAutoInitNumbers::service+1, "eServiceFactoryMP3");
+ 
+ void eServiceMP3::gstCBsubtitleAvail(GstElement *subsink, GstBuffer *buffer, gpointer user_data)
+ {
+@@ -3632,3 +3647,1572 @@
+ 	}
+ 	m_cuesheet_changed = 0;
+ }
++
++std::string g_server_address = "/tmp/udp_tmp";
++std::string g_cli_address = "/tmp/udp_cli";
++
++int initLocalService()
++{
++	int ret;
++	int local_sockfd;
++	int local_len;
++	
++	//create server socket
++	unlink(g_cli_address.c_str());
++	local_sockfd = socket(AF_UNIX, SOCK_DGRAM, 0);
++	if(local_sockfd<0)
++	{
++		printf("socket error\n");
++		return -1;
++	}
++ 
++	//name the socket
++    struct sockaddr_un local_address;
++	local_address.sun_family = AF_UNIX;
++	strcpy(local_address.sun_path, g_cli_address.c_str());
++	local_len = sizeof(local_address);
++	bind(local_sockfd, (struct sockaddr *)&local_address, local_len);
++
++    ::fcntl(local_sockfd, F_SETFL, O_NONBLOCK);
++    return local_sockfd;
++}
++
++// eServiceMP3_dinobotplayer
++int eServiceMP3_dinobotplayer::ac3_delay = 0,
++    eServiceMP3_dinobotplayer::pcm_delay = 0;
++
++eServiceMP3_dinobotplayer::eServiceMP3_dinobotplayer(eServiceReference ref):
++	m_nownext_timer(eTimer::create(eApp)),
++	m_cuesheet_changed(0),
++	m_cutlist_enabled(1),
++	m_ref(ref)
++{
++	m_currentAudioStream = -1;
++	m_currentSubtitleStream = -1;
++	m_cachedSubtitleStream = 0; /* report the first subtitle stream to be 'cached'. TODO: use an actual cache. */
++	m_subtitle_widget = 0;
++	m_subtitle_visible = false;
++	m_currentTrickRatio = 1.0;
++	m_buffer_size = 5LL * 1024LL * 1024LL;
++	m_ignore_buffering_messages = 0;
++	m_is_live = false;
++	m_use_prefillbuffer = false;
++	m_paused = false;
++	m_first_paused = false;
++	m_cuesheet_loaded = false; /* cuesheet CVR */
++	m_audiosink_not_running = false;
++
++	m_use_chapter_entries = false; /* TOC chapter support CVR */
++	m_last_seek_count = -10;
++	m_seeking_or_paused = false;
++	m_to_paused = false;
++	m_last_seek_pos = 0;
++	m_media_lenght = 0;
++
++	m_useragent = "Enigma2 HbbTV/1.1.1 (+PVR+RTSP+DL;openATV;;;)";
++	m_extra_headers = "";
++	m_download_buffer_path = "";
++	m_prev_decoder_time = -1;
++	m_decoder_time_valid_state = 0;
++	m_errorInfo.missing_codec = "";
++
++	CONNECT(m_nownext_timer->timeout, eServiceMP3_dinobotplayer::updateEpgCacheNowNext);
++	m_aspect = m_width = m_height = m_framerate = m_progressive = m_gamma = -1;
++
++	m_state = stIdle;
++	m_coverart = false;
++	m_subtitles_paused = false;
++
++	const char *filename;
++	std::string filename_str;
++	size_t pos = m_ref.path.find('#');
++	if (pos != std::string::npos && (m_ref.path.compare(0, 4, "http") == 0 || m_ref.path.compare(0, 4, "rtsp") == 0))
++	{
++		filename_str = m_ref.path.substr(0, pos);
++		filename = filename_str.c_str();
++		m_extra_headers = m_ref.path.substr(pos + 1);
++
++		pos = m_extra_headers.find("User-Agent=");
++		if (pos != std::string::npos)
++		{
++			size_t hpos_start = pos + 11;
++			size_t hpos_end = m_extra_headers.find('&', hpos_start);
++			if (hpos_end != std::string::npos)
++				m_useragent = m_extra_headers.substr(hpos_start, hpos_end - hpos_start);
++			else
++				m_useragent = m_extra_headers.substr(hpos_start);
++		}
++	}
++	else
++		filename = m_ref.path.c_str();
++	const char *ext = strrchr(filename, '.');
++	if (!ext)
++		ext = filename + strlen(filename);
++
++	m_sourceinfo.is_video = FALSE;
++	m_sourceinfo.audiotype = atUnknown;
++	if ( (strcasecmp(ext, ".mpeg") && strcasecmp(ext, ".mpg") && strcasecmp(ext, ".vob") && strcasecmp(ext, ".bin") && strcasecmp(ext, ".dat") ) == 0 )
++	{
++		m_sourceinfo.containertype = ctMPEGPS;
++		m_sourceinfo.is_video = TRUE;
++	}
++	else if ( strcasecmp(ext, ".ts") == 0 )
++	{
++		m_sourceinfo.containertype = ctMPEGTS;
++		m_sourceinfo.is_video = TRUE;
++	}
++	else if ( strcasecmp(ext, ".mkv") == 0 )
++	{
++		m_sourceinfo.containertype = ctMKV;
++		m_sourceinfo.is_video = TRUE;
++	}
++	else if ( strcasecmp(ext, ".ogm") == 0 || strcasecmp(ext, ".ogv") == 0)
++	{
++		m_sourceinfo.containertype = ctOGG;
++		m_sourceinfo.is_video = TRUE;
++	}
++	else if ( strcasecmp(ext, ".avi") == 0 || strcasecmp(ext, ".divx") == 0)
++	{
++		m_sourceinfo.containertype = ctAVI;
++		m_sourceinfo.is_video = TRUE;
++	}
++	else if ( strcasecmp(ext, ".mp4") == 0 || strcasecmp(ext, ".mov") == 0 || strcasecmp(ext, ".m4v") == 0 || strcasecmp(ext, ".3gp") == 0 || strcasecmp(ext, ".3g2") == 0)
++	{
++		m_sourceinfo.containertype = ctMP4;
++		m_sourceinfo.is_video = TRUE;
++	}
++	else if ( strcasecmp(ext, ".asf") == 0 || strcasecmp(ext, ".wmv") == 0)
++	{
++		m_sourceinfo.containertype = ctASF;
++		m_sourceinfo.is_video = TRUE;
++	}
++	else if ( strcasecmp(ext, ".webm") == 0)
++	{
++		m_sourceinfo.containertype = ctMKV;
++		m_sourceinfo.is_video = TRUE;
++	}
++	else if ( strcasecmp(ext, ".m4a") == 0 )
++	{
++		m_sourceinfo.containertype = ctMP4;
++		m_sourceinfo.audiotype = atAAC;
++	}
++	else if ( strcasecmp(ext, ".dra") == 0 )
++	{
++		m_sourceinfo.containertype = ctDRA;
++		m_sourceinfo.audiotype = atDRA;
++	}
++	else if ( strcasecmp(ext, ".m3u8") == 0 )
++		m_sourceinfo.is_hls = TRUE;
++	else if ( strcasecmp(ext, ".mp3") == 0 )
++	{
++		m_sourceinfo.audiotype = atMP3;
++		m_sourceinfo.is_audio = TRUE;
++	}
++	else if ( strcasecmp(ext, ".wma") == 0 )
++	{
++		m_sourceinfo.audiotype = atWMA;
++		m_sourceinfo.is_audio = TRUE;
++	}
++	else if ( strcasecmp(ext, ".wav") == 0 )
++	{
++		m_sourceinfo.audiotype = atPCM;
++		m_sourceinfo.is_audio = TRUE;
++	}
++	else if ( strcasecmp(ext, ".dts") == 0 )
++	{
++		m_sourceinfo.audiotype = atDTS;
++		m_sourceinfo.is_audio = TRUE;
++	}
++	else if ( strcasecmp(ext, ".flac") == 0 )
++	{
++		m_sourceinfo.audiotype = atFLAC;
++		m_sourceinfo.is_audio = TRUE;
++	}
++	else if ( strcasecmp(ext, ".cda") == 0)
++		m_sourceinfo.containertype = ctCDA;
++	if ( strcasecmp(ext, ".dat") == 0 )
++	{
++		m_sourceinfo.containertype = ctVCD;
++		m_sourceinfo.is_video = TRUE;
++	}
++	if ( strstr(filename, "://") )
++		m_sourceinfo.is_streaming = TRUE;
++
++	gchar *uri;
++	gchar *suburi = NULL;
++
++	pos = m_ref.path.find("&suburi=");
++	if (pos != std::string::npos)
++	{
++		filename_str = filename;
++
++		std::string suburi_str = filename_str.substr(pos + 8);
++		filename = suburi_str.c_str();
++		suburi = g_strdup_printf ("%s", filename);
++
++		filename_str = filename_str.substr(0, pos);
++		filename = filename_str.c_str();
++	}
++
++	if ( m_sourceinfo.is_streaming )
++	{
++		if (eConfigManager::getConfigBoolValue("config.mediaplayer.useAlternateUserAgent"))
++			m_useragent = eConfigManager::getConfigValue("config.mediaplayer.alternateUserAgent");
++
++		uri = g_strdup_printf ("%s", filename);
++
++		if ( m_ref.getData(7) & BUFFERING_ENABLED )
++		{
++			m_use_prefillbuffer = true;
++			if ( m_ref.getData(7) & PROGRESSIVE_DOWNLOAD )
++			{
++				/* progressive download buffering */
++				if (::access("/hdd/movie", X_OK) >= 0)
++				{
++					/* It looks like /hdd points to a valid mount, so we can store a download buffer on it */
++					m_download_buffer_path = "/hdd/gstreamer_XXXXXXXXXX";
++				}
++			}
++		}
++	}
++	else if ( m_sourceinfo.containertype == ctCDA )
++	{
++		int i_track = atoi(filename+(strlen(filename) - 6));
++		uri = g_strdup_printf ("cdda://%i", i_track);
++	}
++	else if ( m_sourceinfo.containertype == ctVCD )
++	{
++		int ret = -1;
++		int fd = open(filename,O_RDONLY);
++		if (fd >= 0)
++		{
++			char* tmp = new char[128*1024];
++			ret = read(fd, tmp, 128*1024);
++			close(fd);
++			delete [] tmp;
++		}
++		if ( ret == -1 ) // this is a "REAL" VCD
++			uri = g_strdup_printf ("vcd://");
++		else
++			uri = g_filename_to_uri(filename, NULL, NULL);
++	}
++	else
++		uri = g_filename_to_uri(filename, NULL, NULL);
++
++	m_uri = filename;
++
++	//eDebug("[eServiceMP3_dinobotplayer] playbin m_uri=%s uri=%s, filename=%s", m_uri.c_str(), uri, filename);
++	if (suburi != NULL)
++		eDebug("[eServiceMP3_dinobotplayer] playbin suburi=%s", suburi);
++
++	g_free(uri);
++	if (suburi != NULL)
++		g_free(suburi);
++
++    m_local_fd = -1;
++	m_local_fd = initLocalService();
++	//printf("[%s:%d] initLocalService\n",__FUNCTION__,__LINE__);
++
++	m_local_sn = eSocketNotifier::create(eApp, m_local_fd, eSocketNotifier::Read|eSocketNotifier::Priority|eSocketNotifier::Hungup);
++	CONNECT(m_local_sn->activated, eServiceMP3_dinobotplayer::do_recv_dinobotplayer_response);
++	m_local_sn->start();
++}
++
++template<typename OutputIt>
++static OutputIt SplitTo(OutputIt d_first, const std::string& input, const std::string& delimiter, unsigned int iMaxStrings = 0)
++{
++	OutputIt dest = d_first;
++
++	if (input.empty())
++		return dest;
++	if (delimiter.empty())
++	{
++		*d_first++ = input;
++		return dest;
++	}
++
++	const size_t delimLen = delimiter.length();
++	size_t nextDelim;
++	size_t textPos = 0;
++	do
++	{
++		if (--iMaxStrings == 0)
++		{
++		*dest++ = input.substr(textPos);
++		break;
++		}
++		nextDelim = input.find(delimiter, textPos);
++		*dest++ = input.substr(textPos, nextDelim - textPos);
++		textPos = nextDelim + delimLen;
++	} while (nextDelim != std::string::npos);
++
++	return dest;
++}
++
++std::vector<std::string> Split(const std::string& input, const std::string& delimiter, unsigned int iMaxStrings = 0)
++{
++  std::vector<std::string> result;
++  SplitTo(std::back_inserter(result), input, delimiter, iMaxStrings);
++  return result;
++}
++
++bool hasItem( cJSON *root, const std::string &name )
++{
++	return cJSON_GetObjectItem( root, name.c_str() ) != 0 ? true : false;
++}
++
++int sendMsg( int fd, char *cmd )
++{
++	struct sockaddr_un server_address;
++	server_address.sun_family = AF_UNIX;
++	strcpy(server_address.sun_path, g_server_address.c_str());
++	int server_len = sizeof(server_address);
++
++	int ret = sendto(fd, cmd, strlen(cmd), 0, (struct sockaddr*)&server_address, sizeof(struct sockaddr_un));
++	return ret;
++}
++
++void eServiceMP3_dinobotplayer::do_recv_dinobotplayer_response(int what)
++{
++	bool hungup = what & eSocketNotifier::Hungup;
++	if (what & (eSocketNotifier::Priority|eSocketNotifier::Read))
++	{
++		char readerrorbuf[1024] = {0};
++		struct sockaddr_un server_address;
++		server_address.sun_family = AF_UNIX;
++		strcpy(server_address.sun_path, g_server_address.c_str());
++		int server_len = sizeof(server_address);
++
++		int rd;
++        while((rd = recvfrom(m_local_fd, readerrorbuf, sizeof(readerrorbuf), 0, (struct sockaddr *)&server_address, (socklen_t *)&server_len)) > 0)
++		{
++			std::string msg(readerrorbuf);
++			//printf("[%s:%d] recvfrom msg %s\n",__FUNCTION__,__LINE__,msg.c_str());
++			std::vector<std::string> msgsplited = Split(msg,"\n");
++
++			for( std::vector<std::string>::iterator iter = msgsplited.begin(); iter != msgsplited.end(); ++iter )
++			{
++				//printf("[%s:%d] msgsplited data %s\n", __FUNCTION__,__LINE__,(*iter).c_str());
++				cJSON *root = cJSON_Parse((*iter).c_str());
++
++				if(  root != 0 )
++				{
++					//printf("stderror json data frist %s\n",(*iter).first.c_str());
++					if( hasItem( root, "PLAYBACK_PLAY" ) )
++					{
++						m_state = stRunning;
++                                               m_event((iPlayableService*)this, evStart);
++					}
++					else if( hasItem( root, "PLAYBACK_LENGTH" ) )
++					{
++						cJSON *lengthObj = cJSON_GetObjectItem( root, "PLAYBACK_LENGTH" );
++						//printf("[%s:%d] length %d\n",__FUNCTION__,__LINE__,cJSON_GetObjectItem( lengthObj, "length" )->valueint);
++						if( cJSON_GetObjectItem( lengthObj, "sts" )->valueint == 0 )
++						{
++							m_media_lenght = cJSON_GetObjectItem( lengthObj, "length" )->valueint * 1000 * 90;
++						}
++					}
++					else if(hasItem( root, "J" ) )
++					{
++						cJSON *JObj = cJSON_GetObjectItem( root, "J" );
++						if( ( long long )( cJSON_GetObjectItem( JObj, "ms")->valuedouble ) > 0 )
++						{
++							long long curMs = cJSON_GetObjectItem( JObj, "ms")->valuedouble;
++							m_last_seek_pos = curMs * 90;
++							#if 1
++							if (m_subtitle_visible && !m_subDatas.empty())
++							{	
++								while(curMs > m_subDatas[0].end)
++								{
++									m_subDatas.erase(m_subDatas.begin());
++									if( m_subDatas.empty() )
++										break;
++								}
++							
++								if( !m_subDatas.empty() )
++								{
++									if( !(curMs < m_subDatas[0].begin) && !(curMs > m_subDatas[0].end) )
++									{
++										ePangoSubtitlePage pango_page;
++										gRGB rgbcol(0xD0,0xD0,0xD0);
++
++										pango_page.m_elements.push_back(ePangoSubtitlePageElement(rgbcol, m_subDatas[0].sub.c_str()));
++										pango_page.m_show_pts = m_subDatas[0].begin * 90;			// actually completely unused by widget!
++										if (!m_subtitles_paused)
++											pango_page.m_timeout = m_subDatas[0].end - curMs;		// take late start into account
++										else
++											pango_page.m_timeout = 60000;	//paused, subs must stay on (60s for now), avoid timeout in lib/gui/esubtitle.cpp: m_hide_subtitles_timer->start(m_pango_page.m_timeout, true);
++
++                                        printf("[%s:%d] pango_page.m_timeout %llu\n",__FUNCTION__,__LINE__,pango_page.m_timeout);
++										m_subtitle_widget->setPage(pango_page);
++										m_subDatas.erase(m_subDatas.begin());
++									}
++								}
++							}
++							else
++							{
++								if( !m_subDatas.empty() )
++								{
++									while(curMs > m_subDatas[0].end)
++									{
++										m_subDatas.erase(m_subDatas.begin());
++									    if( m_subDatas.empty() )
++											break;
++									}
++								}
++							}
++							#endif
++						}
++					}
++					else if( hasItem( root, "PLAYBACK_STOP") )
++					{
++						m_local_sn->stop();
++						break;
++					}
++					else if(hasItem( root, "v_c" ) )
++					{
++						cJSON *vcObj = cJSON_GetObjectItem( root, "v_c" );
++						
++						m_width = cJSON_GetObjectItem( vcObj, "w")->valueint;
++
++						//info.id = (*iter).second["id"].asInteger32();
++						//info.width = (*iter).second["w"].asInteger32();
++						m_height = cJSON_GetObjectItem( vcObj, "h")->valueint;
++						m_framerate = cJSON_GetObjectItem( vcObj, "h")->valueint / 1000;
++						//info.encode = (*iter).second["e"].asString();
++
++						//m_curVideo = info;
++						//m_current_video = 0;
++						//m_videoInfos.push_back(info);
++						
++					}
++					else if(hasItem( root, "a_l") )
++					{
++						m_audioInfos.clear();
++						cJSON *alsObj = cJSON_GetObjectItem( root, "a_l" );
++						int alsCount = cJSON_GetArraySize( alsObj );
++
++						for( int i = 0; i < alsCount; ++i )
++						{
++							SAudioStreamInfo asi;
++							cJSON *alItem = cJSON_GetArrayItem( alsObj, i );
++
++							asi.id = cJSON_GetObjectItem( alItem, "id")->valueint;
++							asi.encode = cJSON_GetObjectItem( alItem, "e")->valuestring;
++							asi.language = cJSON_GetObjectItem( alItem, "n")->valuestring;
++
++							m_audioInfos.push_back(asi);
++						}
++					}
++					else if(hasItem( root, "a_c") )
++					{
++						if( m_sourceinfo.is_video || m_sourceinfo.is_audio )
++						{
++							cJSON *acObj = cJSON_GetObjectItem( root, "a_c" );
++							m_curAudio.id = cJSON_GetObjectItem( acObj, "id")->valueint;
++							m_curAudio.encode = cJSON_GetObjectItem( acObj, "e")->valuestring;
++							m_curAudio.language = cJSON_GetObjectItem( acObj, "n")->valuestring;
++
++							int index = 0;
++							m_currentAudioStream = index;
++							for( std::vector<SAudioStreamInfo>::iterator iter = m_audioInfos.begin(); iter != m_audioInfos.end(); ++iter )
++							{
++								if( m_curAudio.id == (*iter).id )
++								{
++									m_currentAudioStream = index;
++									break;
++								}
++
++								++index;
++							}
++						}
++					}
++					else if(hasItem( root, "s_l"))
++					{
++						cJSON *slObj = cJSON_GetObjectItem(root, "s_l");
++						int slCount = cJSON_GetArraySize( slObj );
++
++						for( int i = 0; i < slCount; ++i )
++						{
++							SSubStreamInfo ssi;
++
++                            cJSON *arrItem = cJSON_GetArrayItem( slObj, i );
++
++							ssi.id = cJSON_GetObjectItem( arrItem,"id")->valueint;
++							ssi.encode = cJSON_GetObjectItem( arrItem,"e")->valuestring;
++							ssi.language = cJSON_GetObjectItem( arrItem,"n")->valuestring;
++
++							printf("[%s:%d] sub.id %d sub.encode : %s sub.language : %s\n",__FUNCTION__,__LINE__,ssi.id,ssi.encode.c_str(),ssi.language.c_str());
++							m_subInfos.push_back(ssi);							
++						}
++					}
++					else if(hasItem( root, "s_c" ))
++					{
++						cJSON *scObj = cJSON_GetObjectItem(root, "s_c");
++						m_curSub.id = cJSON_GetObjectItem( scObj,"id")->valueint;
++						m_curSub.encode = cJSON_GetObjectItem( scObj,"e")->valuestring;
++						m_curSub.language = cJSON_GetObjectItem( scObj,"n")->valuestring;
++
++						int index = 0;
++						for( std::vector<SSubStreamInfo>::iterator iter = m_subInfos.begin(); iter != m_subInfos.end(); ++iter )
++						{
++							if( m_curSub.id == (*iter).id )
++							{
++								m_currentSubtitleStream = index;
++								break;
++							}
++
++							++index;
++						}
++					}
++					else if(hasItem( root, "s_a"))
++					{
++						if( m_subtitle_visible )
++						{
++							cJSON *saObj = cJSON_GetObjectItem( root, "s_a" );
++				
++							SSubData sd;
++							sd.begin = cJSON_GetObjectItem( saObj, "s")->valuedouble;
++							sd.end = cJSON_GetObjectItem( saObj, "e")->valuedouble;
++							sd.sub = cJSON_GetObjectItem( saObj, "t")->valuestring;
++							sd.id = cJSON_GetObjectItem( saObj, "id")->valueint;
++							//printf("[%s:%d] id : %d begin : %llu end : %llu text : %s\n",__FUNCTION__,__LINE__,sd.id,sd.begin,sd.end,sd.sub.c_str());
++
++							m_subDatas.push_back( sd );
++						}
++					}
++				}
++			}
++			memset(readerrorbuf,0,sizeof(readerrorbuf));
++		}
++	}
++}
++
++eServiceMP3_dinobotplayer::~eServiceMP3_dinobotplayer()
++{
++	if (m_subtitle_widget)
++		disableSubtitles();
++
++	stop();
++
++	m_ref.path.clear();
++	m_ref.name.clear();
++
++	m_media_lenght = 0;
++
++	m_last_seek_pos = 0;
++	m_last_seek_count = -10;
++	m_seeking_or_paused = false;
++	m_to_paused = false;
++
++	eDebug("[eServiceMP3_dinobotplayer] **** PIPELINE DESTRUCTED ****");
++
++	if( m_local_fd > -1 )
++	    close(m_local_fd);
++}
++
++void eServiceMP3_dinobotplayer::updateEpgCacheNowNext()
++{
++	bool update = false;
++	ePtr<eServiceEvent> next = 0;
++	ePtr<eServiceEvent> ptr = 0;
++	eServiceReference ref(m_ref);
++	ref.type = eServiceFactoryMP3::id;
++	ref.path.clear();
++	if (eEPGCache::getInstance() && eEPGCache::getInstance()->lookupEventTime(ref, -1, ptr) >= 0)
++	{
++		ePtr<eServiceEvent> current = m_event_now;
++		if (!current || !ptr || current->getEventId() != ptr->getEventId())
++		{
++			update = true;
++			m_event_now = ptr;
++			time_t next_time = ptr->getBeginTime() + ptr->getDuration();
++			if (eEPGCache::getInstance()->lookupEventTime(ref, next_time, ptr) >= 0)
++			{
++				next = ptr;
++				m_event_next = ptr;
++			}
++		}
++	}
++
++	int refreshtime = 60;
++	if (!next)
++	{
++		next = m_event_next;
++	}
++	if (next)
++	{
++		time_t now = eDVBLocalTimeHandler::getInstance()->nowTime();
++		refreshtime = (int)(next->getBeginTime() - now) + 3;
++		if (refreshtime <= 0 || refreshtime > 60)
++		{
++			refreshtime = 60;
++		}
++	}
++	m_nownext_timer->startLongTimer(refreshtime);
++	if (update)
++	{
++		m_event((iPlayableService*)this, evUpdatedEventInfo);
++	}
++}
++
++DEFINE_REF(eServiceMP3_dinobotplayer);
++
++RESULT eServiceMP3_dinobotplayer::connectEvent(const sigc::slot2<void,iPlayableService*,int> &event, ePtr<eConnection> &connection)
++{
++	connection = new eConnection((iPlayableService*)this, m_event.connect(event));
++	return 0;
++}
++
++RESULT eServiceMP3_dinobotplayer::start()
++{
++	ASSERT(m_state == stIdle);
++
++	m_subtitles_paused = false;
++	eDebug("[eServiceMP3_dinobotplayer] *** starting pipeline ****");
++
++	char cmd[256] = {0};
++	struct sockaddr_un server_showiframe;
++	server_showiframe.sun_family = AF_UNIX;
++	strcpy(server_showiframe.sun_path, "/tmp/showiframe_pipe");
++	sprintf(cmd,"\"%s\"", m_uri.c_str());
++	sendto(m_local_fd, cmd, strlen(cmd), 0, (struct sockaddr*)&server_showiframe, sizeof(struct sockaddr_un));
++
++	return 0;
++}
++
++RESULT eServiceMP3_dinobotplayer::stop()
++{
++	if (m_state == stStopped)
++		return -1;
++
++	eDebug("[eServiceMP3_dinobotplayer] stop %s", m_ref.path.c_str());
++	m_state = stStopped;
++
++	sendMsg( m_local_fd, "q\n");
++	sleep(1);
++
++	return 0;
++}
++
++RESULT eServiceMP3_dinobotplayer::pause(ePtr<iPauseableService> &ptr)
++{
++	ptr=this;
++	
++	eDebug("[eServiceMP3_dinobotplayer] pause(ePtr<iPauseableService> &ptr)");
++	return 0;
++}
++
++RESULT eServiceMP3_dinobotplayer::setSlowMotion(int ratio)
++{
++	if (!ratio)
++		return 0;
++	eDebug("[eServiceMP3_dinobotplayer] setSlowMotion ratio=%.1f",1.0/(gdouble)ratio);
++	return trickSeek(1.0/(gdouble)ratio);
++}
++
++RESULT eServiceMP3_dinobotplayer::setFastForward(int ratio)
++{
++	eDebug("[eServiceMP3_dinobotplayer] setFastForward ratio=%.1f",(gdouble)ratio);
++	return trickSeek(ratio);
++}
++
++// iPausableService
++RESULT eServiceMP3_dinobotplayer::pause()
++{
++	if (m_state != stRunning)
++		return -1;
++
++	m_subtitles_paused = true;
++	//m_subtitle_sync_timer->start(1, true);
++	eDebug("[eServiceMP3_dinobotplayer] pause");
++	sendMsg(m_local_fd, "p\n");
++
++	return 0;
++}
++
++RESULT eServiceMP3_dinobotplayer::unpause()
++{
++	if (m_state != stRunning)
++		return -1;
++
++    m_subtitles_paused = false;  
++	eDebug("[eServiceMP3_dinobotplayer] unpause");
++	sendMsg(m_local_fd, "c\n");
++
++	return 0;
++}
++
++	/* iSeekableService */
++RESULT eServiceMP3_dinobotplayer::seek(ePtr<iSeekableService> &ptr)
++{
++	ptr = this;
++	return 0;
++}
++
++RESULT eServiceMP3_dinobotplayer::getLength(pts_t &pts)
++{
++	if (/*!m_gst_playbin || */m_state != stRunning || ( !m_sourceinfo.is_video && !m_sourceinfo.is_audio ) )
++		return -1;
++
++    sendMsg( m_local_fd, "l\n");
++	sendMsg( m_local_fd, "j\n");
++    //printf("[%s:%d] m_media_lenght %llu\n", __FUNCTION__,__LINE__,m_media_lenght);
++	pts = m_media_lenght;
++
++	return 0;
++}
++
++RESULT eServiceMP3_dinobotplayer::seekToImpl(pts_t to)
++{
++	//eDebug("[eServiceMP3_dinobotplayer] seekToImpl pts_t to %" G_GINT64_FORMAT, (gint64)to);
++    long topos = to / 90;
++	char cmdseek[15] = {0};
++	sprintf(cmdseek,"kc%d\n",topos);
++	sendMsg(m_local_fd, cmdseek);
++
++	return 0;
++}
++
++RESULT eServiceMP3_dinobotplayer::seekTo(pts_t to)
++{
++	RESULT ret = -1;
++
++	m_prev_decoder_time = -1;
++	m_decoder_time_valid_state = 0;
++
++	m_seeking_or_paused = true;
++
++	ret = seekToImpl(to);
++
++	return ret;
++}
++
++
++RESULT eServiceMP3_dinobotplayer::trickSeek(gdouble ratio)
++{
++	int pos_ret = -1;
++	pts_t pts;
++
++	if (ratio > -0.01 && ratio < 0.01)
++	{
++		pos_ret = getPlayPosition(pts);
++		m_to_paused = true;
++
++		if ( pos_ret >= 0)
++			seekTo(pts);
++
++		return 0;
++	}
++
++	bool unpause = (m_currentTrickRatio == 1.0 && ratio == 1.0);
++
++	m_currentTrickRatio = ratio;
++
++	bool validposition = false;
++	gint64 pos = 0;
++
++	if (m_last_seek_pos > 0)
++	{
++		validposition = true;
++		pos = m_last_seek_pos * 11111LL;
++	}
++	else if (getPlayPosition(pts) >= 0)
++	{
++		validposition = true;
++		pos = pts * 11111LL;
++	}
++
++	m_prev_decoder_time = -1;
++	m_decoder_time_valid_state = 0;
++	return 0;
++}
++
++
++RESULT eServiceMP3_dinobotplayer::seekRelative(int direction, pts_t to)
++{
++	//eDebug("[eServiceMP3_dinobotplayer]  seekRelative direction %d, pts_t to %" G_GINT64_FORMAT, direction, (gint64)to);
++	pts_t ppos = 0;
++
++	if (direction > 0)
++	{
++		if (getPlayPosition(ppos) < 0)
++			return -1;
++		ppos += to;
++		m_seeking_or_paused = true;
++		return seekTo(ppos);
++	}
++	else
++	{
++		if (getPlayPosition(ppos) < 0)
++			return -1;
++		ppos -= to;
++		if (ppos < 0)
++			ppos = 0;
++		m_seeking_or_paused = true;
++		return seekTo(ppos);
++	}
++}
++
++RESULT eServiceMP3_dinobotplayer::getPlayPosition(pts_t &pts)
++{
++	gint64 pos = 0;
++
++	if (m_state != stRunning)
++		return -1;
++	
++	pts = m_last_seek_pos;
++	return 0;
++}
++
++RESULT eServiceMP3_dinobotplayer::setTrickmode(int trick)
++{
++		/* trickmode is not yet supported by our dvbmediasinks. */
++	return -1;
++}
++
++RESULT eServiceMP3_dinobotplayer::isCurrentlySeekable()
++{
++	int ret = 3; /* just assume that seeking and fast/slow winding are possible */
++
++	return ret;
++}
++
++RESULT eServiceMP3_dinobotplayer::info(ePtr<iServiceInformation>&i)
++{
++	i = this;
++	return 0;
++}
++
++RESULT eServiceMP3_dinobotplayer::getName(std::string &name)
++{
++	std::string title = m_ref.getName();
++	if (title.empty())
++	{
++		name = m_ref.path;
++		size_t n = name.rfind('/');
++		if (n != std::string::npos)
++			name = name.substr(n + 1);
++	}
++	else
++		name = title;
++	return 0;
++}
++
++RESULT eServiceMP3_dinobotplayer::getEvent(ePtr<eServiceEvent> &evt, int nownext)
++{
++	evt = nownext ? m_event_next : m_event_now;
++	if (!evt)
++		return -1;
++	return 0;
++}
++
++int eServiceMP3_dinobotplayer::getInfo(int w)
++{
++	const gchar *tag = 0;
++
++	switch (w)
++	{
++	case sServiceref: return m_ref;
++	case sVideoHeight: return m_height;
++	case sVideoWidth: return m_width;
++	case sFrameRate: return m_framerate;
++	case sProgressive: return m_progressive;
++	case sGamma: return m_gamma;
++	case sAspect: return m_aspect;
++	case sTagTitle:
++	case sTagArtist:
++	case sTagAlbum:
++	case sTagTitleSortname:
++	case sTagArtistSortname:
++	case sTagAlbumSortname:
++	case sTagDate:
++	case sTagComposer:
++	case sTagGenre:
++	case sTagComment:
++	case sTagExtendedComment:
++	case sTagLocation:
++	case sTagHomepage:
++	case sTagDescription:
++	case sTagVersion:
++	case sTagISRC:
++	case sTagOrganization:
++	case sTagCopyright:
++	case sTagCopyrightURI:
++	case sTagContact:
++	case sTagLicense:
++	case sTagLicenseURI:
++	case sTagCodec:
++	case sTagAudioCodec:
++	case sTagVideoCodec:
++	case sTagEncoder:
++	case sTagLanguageCode:
++	case sTagKeywords:
++	case sTagChannelMode:
++	case sUser+12:
++		return resIsString;
++	case sTagTrackGain:
++	case sTagTrackPeak:
++	case sTagAlbumGain:
++	case sTagAlbumPeak:
++	case sTagReferenceLevel:
++	case sTagBeatsPerMinute:
++	case sTagImage:
++	case sTagPreviewImage:
++	case sTagAttachment:
++		return resIsPyObject;
++	case sTagTrackNumber:
++		tag = GST_TAG_TRACK_NUMBER;
++		break;
++	case sTagTrackCount:
++		tag = GST_TAG_TRACK_COUNT;
++		break;
++	case sTagAlbumVolumeNumber:
++		tag = GST_TAG_ALBUM_VOLUME_NUMBER;
++		break;
++	case sTagAlbumVolumeCount:
++		tag = GST_TAG_ALBUM_VOLUME_COUNT;
++		break;
++	case sTagBitrate:
++		tag = GST_TAG_BITRATE;
++		break;
++	case sTagNominalBitrate:
++		tag = GST_TAG_NOMINAL_BITRATE;
++		break;
++	case sTagMinimumBitrate:
++		tag = GST_TAG_MINIMUM_BITRATE;
++		break;
++	case sTagMaximumBitrate:
++		tag = GST_TAG_MAXIMUM_BITRATE;
++		break;
++	case sTagSerial:
++		tag = GST_TAG_SERIAL;
++		break;
++	case sTagEncoderVersion:
++		tag = GST_TAG_ENCODER_VERSION;
++		break;
++	case sTagCRC:
++		tag = "has-crc";
++		break;
++	case sBuffer: return m_bufferInfo.bufferPercent;
++	case sVideoType:
++	{
++		guint64 v = -1;
++		return (int) v;
++		break;
++	}
++	case sSID: return m_ref.getData(1);
++	default:
++		return resNA;
++	}
++
++	return 0;
++}
++
++std::string eServiceMP3_dinobotplayer::getInfoString(int w)
++{
++	if ( m_sourceinfo.is_streaming )
++	{
++		switch (w)
++		{
++		case sProvider:
++			return "IPTV";
++		case sServiceref:
++		{
++			return m_ref.toString();
++		}
++		default:
++			break;
++		}
++	}
++
++	const gchar *tag = 0;
++	switch (w)
++	{
++	case sTagTitle:
++		tag = GST_TAG_TITLE;
++		break;
++	case sTagArtist:
++		tag = GST_TAG_ARTIST;
++		break;
++	case sTagAlbum:
++		tag = GST_TAG_ALBUM;
++		break;
++	case sTagTitleSortname:
++		tag = GST_TAG_TITLE_SORTNAME;
++		break;
++	case sTagArtistSortname:
++		tag = GST_TAG_ARTIST_SORTNAME;
++		break;
++	case sTagAlbumSortname:
++		tag = GST_TAG_ALBUM_SORTNAME;
++		break;
++	case sTagDate:
++		break;
++	case sTagComposer:
++		tag = GST_TAG_COMPOSER;
++		break;
++	case sTagGenre:
++		tag = GST_TAG_GENRE;
++		break;
++	case sTagComment:
++		tag = GST_TAG_COMMENT;
++		break;
++	case sTagExtendedComment:
++		tag = GST_TAG_EXTENDED_COMMENT;
++		break;
++	case sTagLocation:
++		tag = GST_TAG_LOCATION;
++		break;
++	case sTagHomepage:
++		tag = GST_TAG_HOMEPAGE;
++		break;
++	case sTagDescription:
++		tag = GST_TAG_DESCRIPTION;
++		break;
++	case sTagVersion:
++		tag = GST_TAG_VERSION;
++		break;
++	case sTagISRC:
++		tag = GST_TAG_ISRC;
++		break;
++	case sTagOrganization:
++		tag = GST_TAG_ORGANIZATION;
++		break;
++	case sTagCopyright:
++		tag = GST_TAG_COPYRIGHT;
++		break;
++	case sTagCopyrightURI:
++		tag = GST_TAG_COPYRIGHT_URI;
++		break;
++	case sTagContact:
++		tag = GST_TAG_CONTACT;
++		break;
++	case sTagLicense:
++		tag = GST_TAG_LICENSE;
++		break;
++	case sTagLicenseURI:
++		tag = GST_TAG_LICENSE_URI;
++		break;
++	case sTagCodec:
++		tag = GST_TAG_CODEC;
++		break;
++	case sTagAudioCodec:
++		tag = GST_TAG_AUDIO_CODEC;
++		break;
++	case sTagVideoCodec:
++		tag = GST_TAG_VIDEO_CODEC;
++		break;
++	case sTagEncoder:
++		tag = GST_TAG_ENCODER;
++		break;
++	case sTagLanguageCode:
++		tag = GST_TAG_LANGUAGE_CODE;
++		break;
++	case sTagKeywords:
++		tag = GST_TAG_KEYWORDS;
++		break;
++	case sTagChannelMode:
++		tag = "channel-mode";
++		break;
++	case sUser+12:
++		return m_errorInfo.error_message;
++	default:
++		return "";
++	}
++	if ( !tag )
++		return "";
++
++	return "";
++}
++
++ePtr<iServiceInfoContainer> eServiceMP3_dinobotplayer::getInfoObject(int w)
++{
++	eServiceMP3InfoContainer *container = new eServiceMP3InfoContainer;
++	ePtr<iServiceInfoContainer> retval = container;
++	const gchar *tag = 0;
++	bool isBuffer = false;
++	switch (w)
++	{
++		case sTagTrackGain:
++			tag = GST_TAG_TRACK_GAIN;
++			break;
++		case sTagTrackPeak:
++			tag = GST_TAG_TRACK_PEAK;
++			break;
++		case sTagAlbumGain:
++			tag = GST_TAG_ALBUM_GAIN;
++			break;
++		case sTagAlbumPeak:
++			tag = GST_TAG_ALBUM_PEAK;
++			break;
++		case sTagReferenceLevel:
++			tag = GST_TAG_REFERENCE_LEVEL;
++			break;
++		case sTagBeatsPerMinute:
++			tag = GST_TAG_BEATS_PER_MINUTE;
++			break;
++		case sTagImage:
++			tag = GST_TAG_IMAGE;
++			isBuffer = true;
++			break;
++		case sTagPreviewImage:
++			tag = GST_TAG_PREVIEW_IMAGE;
++			isBuffer = true;
++			break;
++		case sTagAttachment:
++			tag = GST_TAG_ATTACHMENT;
++			isBuffer = true;
++			break;
++		default:
++			break;
++	}
++
++	return retval;
++}
++
++RESULT eServiceMP3_dinobotplayer::audioChannel(ePtr<iAudioChannelSelection> &ptr)
++{
++	ptr = this;
++	return 0;
++}
++
++RESULT eServiceMP3_dinobotplayer::audioTracks(ePtr<iAudioTrackSelection> &ptr)
++{
++	ptr = this;
++	return 0;
++}
++
++RESULT eServiceMP3_dinobotplayer::cueSheet(ePtr<iCueSheet> &ptr)
++{
++	ptr = this;
++	return 0;
++}
++
++RESULT eServiceMP3_dinobotplayer::subtitle(ePtr<iSubtitleOutput> &ptr)
++{
++	ptr = this;
++	return 0;
++}
++
++RESULT eServiceMP3_dinobotplayer::audioDelay(ePtr<iAudioDelay> &ptr)
++{
++	ptr = this;
++	return 0;
++}
++
++int eServiceMP3_dinobotplayer::getNumberOfTracks()
++{
++ 	return m_audioInfos.size();
++}
++
++int eServiceMP3_dinobotplayer::getCurrentTrack()
++{
++	return m_currentAudioStream;
++}
++
++RESULT eServiceMP3_dinobotplayer::selectTrack(unsigned int i)
++{
++	m_currentAudioStream = getCurrentTrack();
++	if(m_currentAudioStream == (int)i)
++		return m_currentAudioStream;
++	eDebug("[eServiceMP3_dinobotplayer selectTrack %d", i);
++
++	bool validposition = false;
++	pts_t ppos = 0;
++	if (getPlayPosition(ppos) >= 0)
++	{
++		validposition = true;
++		ppos -= 90000;
++		if (ppos < 0)
++			ppos = 0;
++	}
++	if (validposition)
++	{
++		//flush
++		seekTo(ppos);
++	}
++	return selectAudioStream(i);
++}
++
++int eServiceMP3_dinobotplayer::selectAudioStream(int i)
++{
++   if( i > m_audioInfos.size() - 1)
++       return -1;
++
++	char cmdsa[15] = {0};
++	sprintf(cmdsa,"a%d\n",m_audioInfos[i].id);
++	sendMsg(m_local_fd,cmdsa);
++	sendMsg(m_local_fd,"ac\n");
++
++	return -1;
++}
++
++int eServiceMP3_dinobotplayer::getCurrentChannel()
++{
++	return STEREO;
++}
++
++RESULT eServiceMP3_dinobotplayer::selectChannel(int i)
++{
++	eDebug("[eServiceMP3_dinobotplayer] selectChannel(%i)",i);
++	return 0;
++}
++
++RESULT eServiceMP3_dinobotplayer::getTrackInfo(struct iAudioTrackInfo &info, unsigned int i)
++{
++	if (i >= m_audioInfos.size())
++	{
++		return -2;
++	}
++
++	info.m_description = m_audioInfos[i].encode;
++
++	if (info.m_language.empty())
++	{
++		info.m_language = m_audioInfos[i].language;
++	}
++
++	return 0;
++}
++
++eAutoInitPtr<eServiceFactoryMP3> init_eServiceFactoryMP3(eAutoInitNumbers::service+1, "eServiceFactoryMP3");
++
++RESULT eServiceMP3_dinobotplayer::enableSubtitles(iSubtitleUser *user, struct SubtitleTrack &track)
++{
++	if( track.pid > m_subInfos.size() - 1)
++       return -1;
++
++	if (m_currentSubtitleStream != track.pid)
++	{
++		m_cachedSubtitleStream = -1;
++		m_subDatas.clear();
++		m_currentSubtitleStream = track.pid;
++		m_cachedSubtitleStream = m_currentSubtitleStream;
++
++		m_subtitle_widget = user;
++		m_subtitle_visible = true;
++
++		sendMsg( m_local_fd, "c\n");
++		char cmd[15] = {0};
++		sprintf(cmd,"s%d\n",m_subInfos[track.pid].id);
++		sendMsg(m_local_fd, cmd);
++		sendMsg(m_local_fd,"sc\n");
++		eDebug ("[eServiceMP3_dinobotplayer] eServiceMP3_dinobotplayer::switched to subtitle stream %i", m_currentSubtitleStream);
++	}
++
++	return 0;
++}
++
++RESULT eServiceMP3_dinobotplayer::disableSubtitles()
++{
++	eDebug("[eServiceMP3_dinobotplayer] disableSubtitles");
++	m_currentSubtitleStream = -1;
++	m_cachedSubtitleStream = m_currentSubtitleStream;
++	
++	m_subDatas.clear();
++	m_prev_decoder_time = -1;
++	m_decoder_time_valid_state = 0;
++	if (m_subtitle_widget) m_subtitle_widget->destroy();
++	m_subtitle_widget = 0;
++	m_subtitle_visible = false;
++	sendMsg(m_local_fd,"s-1\n");
++
++	return 0;
++}
++
++RESULT eServiceMP3_dinobotplayer::getCachedSubtitle(struct SubtitleTrack &track)
++{
++
++	bool autoturnon = eConfigManager::getConfigBoolValue("config.subtitles.pango_autoturnon", true);
++	if (!autoturnon)
++		return -1;
++
++	if (m_cachedSubtitleStream >= 0 && m_cachedSubtitleStream < (int)m_subInfos.size())
++	{
++		track.type = 2;
++		track.pid = m_cachedSubtitleStream;
++		track.page_number = 1;
++		track.magazine_number = 0;
++		return 0;
++	}
++
++	return -1;
++}
++
++RESULT eServiceMP3_dinobotplayer::getSubtitleList(std::vector<struct SubtitleTrack> &subtitlelist)
++{
++	int stream_idx = 0;
++
++	for (std::vector<SSubStreamInfo>::iterator IterSubtitleStream(m_subInfos.begin()); IterSubtitleStream != m_subInfos.end(); ++IterSubtitleStream)
++	{
++		struct SubtitleTrack track;
++		track.type = 2;
++		track.pid = stream_idx;
++		track.page_number = 1;
++		track.magazine_number = 0;
++		track.language_code = IterSubtitleStream->language;
++		subtitlelist.push_back(track);
++
++		stream_idx++;
++	}
++
++	return 0;
++}
++
++RESULT eServiceMP3_dinobotplayer::streamed(ePtr<iStreamedService> &ptr)
++{
++	ptr = this;
++	return 0;
++}
++
++ePtr<iStreamBufferInfo> eServiceMP3_dinobotplayer::getBufferCharge()
++{
++	return new eStreamBufferInfo(m_bufferInfo.bufferPercent, m_bufferInfo.avgInRate, m_bufferInfo.avgOutRate, m_bufferInfo.bufferingLeft, m_buffer_size);
++}
++/* cuesheet CVR */
++PyObject *eServiceMP3_dinobotplayer::getCutList()
++{
++	ePyObject list = PyList_New(0);
++
++	for (std::multiset<struct cueEntry>::iterator i(m_cue_entries.begin()); i != m_cue_entries.end(); ++i)
++	{
++		ePyObject tuple = PyTuple_New(2);
++		PyTuple_SET_ITEM(tuple, 0, PyLong_FromLongLong(i->where));
++		PyTuple_SET_ITEM(tuple, 1, PyInt_FromLong(i->what));
++		PyList_Append(list, tuple);
++		Py_DECREF(tuple);
++	}
++
++	return list;
++}
++/* cuesheet CVR */
++void eServiceMP3_dinobotplayer::setCutList(ePyObject list)
++{
++	if (!PyList_Check(list))
++		return;
++	int size = PyList_Size(list);
++	int i;
++
++	m_cue_entries.clear();
++
++	for (i=0; i<size; ++i)
++	{
++		ePyObject tuple = PyList_GET_ITEM(list, i);
++		if (!PyTuple_Check(tuple))
++		{
++			eDebug("[eServiceMP3_dinobotplayer] non-tuple in cutlist");
++			continue;
++		}
++		if (PyTuple_Size(tuple) != 2)
++		{
++			eDebug("[eServiceMP3_dinobotplayer] cutlist entries need to be a 2-tuple");
++			continue;
++		}
++		ePyObject ppts = PyTuple_GET_ITEM(tuple, 0), ptype = PyTuple_GET_ITEM(tuple, 1);
++		if (!(PyLong_Check(ppts) && PyInt_Check(ptype)))
++		{
++			eDebug("[eServiceMP3_dinobotplayer] cutlist entries need to be (pts, type)-tuples (%d %d)", PyLong_Check(ppts), PyInt_Check(ptype));
++			continue;
++		}
++		pts_t pts = PyLong_AsLongLong(ppts);
++		int type = PyInt_AsLong(ptype);
++		m_cue_entries.insert(cueEntry(pts, type));
++		eDebug("[eServiceMP3_dinobotplayer] adding %" G_GINT64_FORMAT " type %d", (gint64)pts, type);
++	}
++	m_cuesheet_changed = 1;
++	m_event((iPlayableService*)this, evCuesheetChanged);
++}
++
++void eServiceMP3_dinobotplayer::setCutListEnable(int enable)
++{
++	m_cutlist_enabled = enable;
++}
++
++int eServiceMP3_dinobotplayer::setBufferSize(int size)
++{
++	m_buffer_size = size;
++	
++	return 0;
++}
++
++int eServiceMP3_dinobotplayer::getAC3Delay()
++{
++	return ac3_delay;
++}
++
++int eServiceMP3_dinobotplayer::getPCMDelay()
++{
++	return pcm_delay;
++}
++
++void eServiceMP3_dinobotplayer::setAC3Delay(int delay)
++{
++	ac3_delay = delay;
++	if (m_state != stRunning)
++		return;
++	else
++	{
++		int config_delay_int = delay;
++		/*
++		 * NOTE: We only look for dvbmediasinks.
++		 * If either the video or audio sink is of a different type,
++		 * we have no chance to get them synced anyway.
++		 */
++		// eDebug("[eServiceMP3_dinobotplayer]dont apply ac3 delay when no video is running!");
++		config_delay_int = 0;
++	}
++}
++
++void eServiceMP3_dinobotplayer::setPCMDelay(int delay)
++{
++	pcm_delay = delay;
++	if (m_state != stRunning)
++		return;
++	else
++	{
++		int config_delay_int = delay;
++		/*
++		 * NOTE: We only look for dvbmediasinks.
++		 * If either the video or audio sink is of a different type,
++		 * we have no chance to get them synced anyway.
++		 */
++		// eDebug("[eServiceMP3_dinobotplayer] dont apply pcm delay when no video is running!");
++		config_delay_int = 0;
++	}
++}
++/* cuesheet CVR */
++void eServiceMP3_dinobotplayer::loadCuesheet()
++{
++	if (!m_cuesheet_loaded)
++	{
++		eDebug("[eServiceMP3_dinobotplayer] loading cuesheet");
++		m_cuesheet_loaded = true;
++	}
++	else
++	{
++		//eDebug("[eServiceMP3_dinobotplayer] skip loading cuesheet multiple times");
++		return;
++	}
++ 
++	m_cue_entries.clear();
++
++	std::string filename = m_ref.path + ".cuts";
++
++	FILE *f = fopen(filename.c_str(), "rb");
++
++	if (f)
++	{
++		while (1)
++		{
++			unsigned long long where;
++			unsigned int what;
++
++			if (!fread(&where, sizeof(where), 1, f))
++				break;
++			if (!fread(&what, sizeof(what), 1, f))
++				break;
++
++			where = be64toh(where);
++			what = ntohl(what);
++
++			if (what < 4)
++				m_cue_entries.insert(cueEntry(where, what));
++
++			//if (m_cuesheet_changed == 2)
++			//	eDebug("[eServiceMP3_dinobotplayer] reloading cuts: %" G_GINT64_FORMAT " type %d", (gint64)where, what);
++
++		}
++		fclose(f);
++		eDebug("[eServiceMP3_dinobotplayer] cuts file has %zd entries", m_cue_entries.size());
++	}
++	else
++		eDebug("[eServiceMP3_dinobotplayer] cutfile not found!");
++
++	m_cuesheet_changed = 0;
++	m_event((iPlayableService*)this, evCuesheetChanged);
++}
++/* cuesheet */
++void eServiceMP3_dinobotplayer::saveCuesheet()
++{
++	std::string filename = m_ref.path;
++
++	if (::access(filename.c_str(), R_OK) < 0)
++		return;
++
++	filename.append(".cuts");
++
++	struct stat s;
++	bool removefile = false;
++	bool use_videocuesheet = eConfigManager::getConfigBoolValue("config.usage.useVideoCuesheet"); 
++	bool use_audiocuesheet = eConfigManager::getConfigBoolValue("config.usage.useAudioCuesheet");
++	bool exist_cuesheetfile = (stat(filename.c_str(), &s) == 0);
++
++	if (!exist_cuesheetfile && m_cue_entries.size() == 0)
++		return;
++	else if ((use_videocuesheet && !m_sourceinfo.is_audio) || (m_sourceinfo.is_audio && use_audiocuesheet))
++	{
++		if (m_cue_entries.size() == 0)
++		{
++			m_cuesheet_loaded = false;
++			//m_cuesheet_changed = 2;
++			loadCuesheet();
++			if (m_cue_entries.size() != 0)
++			{
++				eDebug("[eServiceMP3_dinobotplayer] *** NO NEW CUTS TO WRITE CUTS FILE ***");
++				return;
++			}
++			else
++			{
++				eDebug("[eServiceMP3_dinobotplayer] *** REMOVING EXISTING CUTS FILE NO LAST PLAY NO MANUAL CUTS ***");
++				removefile = true;
++			}
++		}
++		else
++			eDebug("[eServiceMP3_dinobotplayer] *** WRITE CUTS TO CUTS FILE ***");
++	}
++	else if (exist_cuesheetfile)
++	{
++		eDebug("[eServiceMP3_dinobotplayer] *** REMOVING EXISTING CUTS FILE ***");
++		removefile = true;
++	}
++	else
++		return;
++
++	FILE *f = fopen(filename.c_str(), "wb");
++
++	if (f)
++	{
++		if (removefile)
++		{
++			fclose(f);
++			remove(filename.c_str());
++			eDebug("[eServiceMP3_dinobotplayer] cuts file has been removed");
++			return;
++		}
++
++		signed long long where = 0;
++		guint what = 0;
++
++		for (std::multiset<cueEntry>::iterator i(m_cue_entries.begin()); i != m_cue_entries.end(); ++i)
++		{
++			if (where == i->where && what == i->what)
++				/* ignore double entries */
++				continue;
++			else
++			{
++				where = htobe64(i->where);
++				what = htonl(i->what);
++				fwrite(&where, sizeof(where), 1, f);
++				fwrite(&what, sizeof(what), 1, f);
++				/* temorary save for comparing */
++				where = i->where;
++				what = i->what;
++			}
++		}
++		fclose(f);
++		eDebug("[eServiceMP3_dinobotplayer] cuts file has been write");
++	}
++	m_cuesheet_changed = 0;
++}
++
+diff -ruN a/lib/service/servicemp3.h b/lib/service/servicemp3.h
+--- a/lib/service/servicemp3.h	2020-11-20 11:33:47.489099000 +0800
++++ b/lib/service/servicemp3.h	2020-11-20 16:01:45.000000000 +0800
+@@ -397,4 +397,253 @@
+ 	ePtr<iTSMPEGDecoder> m_decoder; // for showSinglePic when radio
+ };
+ 
++class eServiceMP3_dinobotplayer: public iPlayableService, public iPauseableService,
++	public iServiceInformation, public iSeekableService, public iAudioTrackSelection, public iAudioChannelSelection,
++	public iSubtitleOutput, public iStreamedService, public iAudioDelay, public sigc::trackable, public iCueSheet
++{
++	DECLARE_REF(eServiceMP3_dinobotplayer);
++public:
++	virtual ~eServiceMP3_dinobotplayer();
++
++		// iPlayableService
++	RESULT connectEvent(const sigc::slot2<void,iPlayableService*,int> &event, ePtr<eConnection> &connection);
++	RESULT start();
++	RESULT stop();
++
++	RESULT pause(ePtr<iPauseableService> &ptr);
++	RESULT setSlowMotion(int ratio);
++	RESULT setFastForward(int ratio);
++
++	RESULT seek(ePtr<iSeekableService> &ptr);
++	RESULT audioTracks(ePtr<iAudioTrackSelection> &ptr);
++	RESULT audioChannel(ePtr<iAudioChannelSelection> &ptr);
++	RESULT subtitle(ePtr<iSubtitleOutput> &ptr);
++	RESULT audioDelay(ePtr<iAudioDelay> &ptr);
++	RESULT cueSheet(ePtr<iCueSheet> &ptr);
++
++		// not implemented (yet)
++	RESULT setTarget(int target, bool noaudio = false) { return -1; }
++	RESULT frontendInfo(ePtr<iFrontendInformation> &ptr) { ptr = 0; return -1; }
++	RESULT subServices(ePtr<iSubserviceList> &ptr) { ptr = 0; return -1; }
++	RESULT timeshift(ePtr<iTimeshiftService> &ptr) { ptr = 0; return -1; }
++//	RESULT cueSheet(ePtr<iCueSheet> &ptr) { ptr = 0; return -1; }
++
++		// iCueSheet
++	PyObject *getCutList();
++	void setCutList(SWIG_PYOBJECT(ePyObject));
++	void setCutListEnable(int enable);
++
++	RESULT rdsDecoder(ePtr<iRdsDecoder> &ptr) { ptr = 0; return -1; }
++	RESULT keys(ePtr<iServiceKeys> &ptr) { ptr = 0; return -1; }
++	RESULT stream(ePtr<iStreamableService> &ptr) { ptr = 0; return -1; }
++
++	void setQpipMode(bool value, bool audio) { }
++
++		// iPausableService
++	RESULT pause();
++	RESULT unpause();
++
++	RESULT info(ePtr<iServiceInformation>&);
++
++		// iSeekableService
++	RESULT getLength(pts_t &SWIG_OUTPUT);
++	RESULT seekTo(pts_t to);
++	RESULT seekRelative(int direction, pts_t to);
++	RESULT getPlayPosition(pts_t &SWIG_OUTPUT);
++	RESULT setTrickmode(int trick);
++	RESULT isCurrentlySeekable();
++
++		// iServiceInformation
++	RESULT getName(std::string &name);
++	RESULT getEvent(ePtr<eServiceEvent> &evt, int nownext);
++	int getInfo(int w);
++	std::string getInfoString(int w);
++	ePtr<iServiceInfoContainer> getInfoObject(int w);
++
++		// iAudioTrackSelection
++	int getNumberOfTracks();
++	RESULT selectTrack(unsigned int i);
++	RESULT getTrackInfo(struct iAudioTrackInfo &, unsigned int n);
++	int getCurrentTrack();
++
++		// iAudioChannelSelection
++	int getCurrentChannel();
++	RESULT selectChannel(int i);
++
++		// iSubtitleOutput
++	RESULT enableSubtitles(iSubtitleUser *user, SubtitleTrack &track);
++	RESULT disableSubtitles();
++	RESULT getSubtitleList(std::vector<SubtitleTrack> &sublist);
++	RESULT getCachedSubtitle(SubtitleTrack &track);
++
++		// iStreamedService
++	RESULT streamed(ePtr<iStreamedService> &ptr);
++	ePtr<iStreamBufferInfo> getBufferCharge();
++	int setBufferSize(int size);
++
++		// iAudioDelay
++	int getAC3Delay();
++	int getPCMDelay();
++	void setAC3Delay(int);
++	void setPCMDelay(int);
++
++	struct sourceStream
++	{
++		audiotype_t audiotype;
++		containertype_t containertype;
++		gboolean is_audio;
++		gboolean is_video;
++		gboolean is_streaming;
++		gboolean is_hls;
++		sourceStream()
++			:audiotype(atUnknown), containertype(ctNone), is_audio(FALSE), is_video(FALSE), is_streaming(FALSE), is_hls(FALSE)
++		{
++		}
++	};
++	struct bufferInfo
++	{
++		gint bufferPercent;
++		gint avgInRate;
++		gint avgOutRate;
++		gint64 bufferingLeft;
++		bufferInfo()
++			:bufferPercent(0), avgInRate(0), avgOutRate(0), bufferingLeft(-1)
++		{
++		}
++	};
++	struct errorInfo
++	{
++		std::string error_message;
++		std::string missing_codec;
++	};
++	typedef struct _SAudioStreamInfo {
++		int id;
++		std::string language;
++		std::string encode;
++	} SAudioStreamInfo;
++	typedef struct _SSubStreamInfo {
++		int id;
++		std::string language;
++		std::string encode;
++	} SSubStreamInfo;
++	typedef struct _SSubData {
++        long long begin;
++		long long end;
++		std::string sub;
++		int id;
++	} SSubData;
++
++protected:
++	ePtr<eTimer> m_nownext_timer;
++	ePtr<eServiceEvent> m_event_now, m_event_next;
++	void updateEpgCacheNowNext();
++
++		/* cuesheet */
++	struct cueEntry
++	{
++		pts_t where;
++		unsigned int what;
++
++		bool operator < (const struct cueEntry &o) const
++		{
++			return where < o.where;
++		}
++		cueEntry(const pts_t &where, unsigned int what) :
++			where(where), what(what)
++		{
++		}
++	};
++
++	std::multiset<cueEntry> m_cue_entries;
++	int m_cuesheet_changed, m_cutlist_enabled;
++	void loadCuesheet();
++	void saveCuesheet();
++private:
++	static int pcm_delay;
++	static int ac3_delay;
++	int m_currentAudioStream;
++	int m_currentSubtitleStream;
++	int m_cachedSubtitleStream;
++	int selectAudioStream(int i);
++
++	std::vector<SAudioStreamInfo> m_audioInfos;
++	SAudioStreamInfo m_curAudio;
++
++	std::vector<SSubStreamInfo> m_subInfos;
++	SSubStreamInfo   m_curSub;
++	std::vector<SSubData> m_subDatas;
++	iSubtitleUser *m_subtitle_widget;
++	gdouble m_currentTrickRatio;
++	friend class eServiceFactoryMP3;
++	eServiceReference m_ref;
++	int m_buffer_size;
++	int m_ignore_buffering_messages;
++	bool m_is_live;
++	bool m_subtitles_paused;
++	bool m_use_prefillbuffer;
++	bool m_paused;
++	bool m_first_paused;
++	/* cuesheet load check */
++	bool m_cuesheet_loaded;
++	bool m_audiosink_not_running;
++	bool m_subtitle_visible;
++	/* servicemMP3 chapter TOC support CVR */
++
++	bool m_use_chapter_entries;
++	/* last used seek position gst-1 only */
++	gint64 m_last_seek_pos;
++	pts_t m_media_lenght;
++
++	gint m_last_seek_count;
++	bool m_seeking_or_paused;
++	bool m_to_paused;
++
++	bufferInfo m_bufferInfo;
++	errorInfo m_errorInfo;
++	std::string m_download_buffer_path;
++	eServiceMP3_dinobotplayer(eServiceReference ref);
++	sigc::signal2<void,iPlayableService*,int> m_event;
++	enum
++	{
++		stIdle, stRunning, stStopped,
++	};
++	int m_state;
++	bool m_coverart;
++
++	void do_recv_dinobotplayer_response(int what);
++
++/* TOC processing CVR */
++
++	struct subtitle_page_t
++	{
++		uint32_t start_ms;
++		uint32_t end_ms;
++		std::string text;
++
++		subtitle_page_t(uint32_t start_ms_in, uint32_t end_ms_in, const std::string& text_in)
++			: start_ms(start_ms_in), end_ms(end_ms_in), text(text_in)
++		{
++		}
++	};
++
++	pts_t m_prev_decoder_time;
++	int m_decoder_time_valid_state;
++
++	void sourceTimeout();
++	sourceStream m_sourceinfo;
++
++	RESULT seekToImpl(pts_t to);
++
++	gint m_aspect, m_width, m_height, m_framerate, m_progressive, m_gamma;
++	std::string m_useragent;
++	std::string m_extra_headers;
++	RESULT trickSeek(gdouble ratio);
++
++private:
++    int m_local_fd;
++	ePtr<eSocketNotifier> m_local_sn;
++	std::string m_uri;
++};
++
++
+ #endif
