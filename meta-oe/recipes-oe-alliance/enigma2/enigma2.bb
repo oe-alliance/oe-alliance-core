@@ -235,6 +235,10 @@ PKGV = "${IMAGE_VERSION}+git${GITPKGV}"
 
 SRC_URI = "${ENIGMA2_URI}"
 
+SRC_URI_append_u42 = " \
+    file://enigma2-dinobotplayer.patch \
+    "
+
 SRC_URI_append_azboxhd = " \
     file://azboxe2.patch \
     file://lcdchar.patch \
