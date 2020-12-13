@@ -37,7 +37,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-customsubservices_0.1.3_all.ipk \
     enigma2-plugin-extensions-cyrussettings_1.0.0_all.ipk \
     enigma2-plugin-extensions-dvrproviderplayer_2.06_all.ipk \
-    enigma2-plugin-extensions-e2piconizer_1.13.20201122_all.ipk \
+    enigma2-plugin-extensions-e2piconizer_1.14.20201213_all.ipk \
     enigma2-plugin-extensions-ehue_0.2-r0_all.ipk \
     enigma2-plugin-extensions-filesearchfs_3.0_all.ipk \
     enigma2-plugin-extensions-gmailreader-oe2.0_1.3_all.ipk \
@@ -96,7 +96,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-xbmcwetter_1.4rc1_all.ipk \
     enigma2-plugin-extensions-xcplugin-forever_1.3a_all.ipk \
     enigma2-plugin-extensions-xcplugin-iptv-mod-lululla_6.7_all \
-    enigma2-plugin-picons-snp-full.220x132-190x102.light.on.transparent_2020-12-05--21-21-28_all.ipk \
+    enigma2-plugin-picons-snp-full.220x132-190x102.light.on.transparent_2020-12-12--15-20-03_all.ipk \
     enigma2-plugin-skins-OverlayHD_1.82_all.ipk \
     enigma2-plugin-systemplugins-bouquetsprotection_0.2-rc1_all.ipk \
     enigma2-plugin-systemplugins-channelselectionnavigator_1.5_mipsel.ipk \
