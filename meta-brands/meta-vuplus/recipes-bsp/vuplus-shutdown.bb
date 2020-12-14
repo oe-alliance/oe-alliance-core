@@ -40,4 +40,4 @@ exit 0
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-INSANE_SKIP_${PN} = "already-stripped"
+INSANE_SKIP_${PN} = "already-stripped ldflags"

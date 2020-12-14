@@ -51,3 +51,5 @@ SRC_URI[binfw.sha256sum] = "b39f0b38684c44a13dd62ac4286a4a73bcf74fd25a881ecfe97d
 
 SRC_URI[binfw_arm.md5sum] = "dd0a349eb062af2ff0d23078c4911f61"
 SRC_URI[binfw_arm.sha256sum] = "dd7e4f54957bedcac1f9a25bb31037a16b6c210916e6527cb4547298c237bdc8"
+
+INSANE_SKIP_${PN} = "ldflags"

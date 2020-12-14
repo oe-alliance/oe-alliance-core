@@ -26,3 +26,5 @@ INITSCRIPT_NAME = "pau.sh"
 INITSCRIPT_PARAMS = "start 99 2 3 4 5 ."
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
+
+INSANE_SKIP_${PN} = "ldflags"
