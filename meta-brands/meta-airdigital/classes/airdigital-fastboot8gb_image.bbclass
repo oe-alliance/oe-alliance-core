@@ -2,7 +2,7 @@ inherit image_types
 
 IMAGE_ROOTFS = "${WORKDIR}/rootfs/linuxrootfs1"
 BOOTOPTIONS_PARTITION_SIZE = "2048"
-IMAGE_ROOTFS_SIZE = "614400"
+IMAGE_ROOTFS_SIZE = "716800"
 do_image_zgemmafastboot8gb[vardepsexclude] = "DATETIME"
 
 do_image_zgemmafastboot8gb[depends] = " \
