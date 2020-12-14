@@ -16,7 +16,8 @@ PKGV = "0.8.7+gitr${GITPKGV}"
 PR = "r0"
 
 SRC_URI = "git://github.com/oe-alliance/e2openplugin-CrossEPG.git;protocol=git;branch=dev \
-        file://fix-build-with-fno-common.patch"
+        file://fix-build-with-fno-common.patch \
+        file://use-python-3.9-path.patch"
 
 inherit ${PYTHON_PN}-dir
 
