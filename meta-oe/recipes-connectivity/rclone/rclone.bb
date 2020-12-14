@@ -16,7 +16,7 @@ RDEPENDS_${PN}-dev += "bash python3-core"
 inherit gitpkgv
 
 SRCREV = "${AUTOREV}"
-PV = "1.52-DEV+git${SRCPV}"
+PV = "1.53-DEV+git${SRCPV}"
 
 GO_IMPORT = "github.com/rclone/rclone"
 
@@ -40,3 +40,5 @@ do_install_append() {
 
 do_package_qa() {
 }
+
+INSANE_SKIP_${PN} = "already-stripped"
