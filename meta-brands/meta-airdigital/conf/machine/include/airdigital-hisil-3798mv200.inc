@@ -107,7 +107,7 @@ IMAGE_CMD_zgemmafastboot8gb_append = " \
     echo "A small change can destroy all your install images. So we can better leave it and not install it if it's not need." >>${DEPLOY_DIR_IMAGE}/${IMAGEDIRRECOVERY}/recovery_${MACHINEBUILD}_READ.ME; \
     cd ${DEPLOY_DIR_IMAGE}/${IMAGEDIRRECOVERY} ; \
     zip -r ../${IMAGE_NAME}_recovery_emmc.zip *; \
-    cp ${IMGDEPLOYDIR}/${IMAGE_NAME}${IMAGE_NAME_SUFFIX}.userdata.ext4 ${DEPLOY_DIR_IMAGE}/${IMAGEDIRRECOVERY}/${IMAGEDIR}/userdata.ext4; \
+    cp ${IMGDEPLOYDIR}/${IMAGE_NAME}${IMAGE_NAME_SUFFIX}.ext4 ${DEPLOY_DIR_IMAGE}/${IMAGEDIRRECOVERY}/${IMAGEDIR}/userdata.ext4; \
     cp ${DEPLOY_DIR_IMAGE}/uImage ${DEPLOY_DIR_IMAGE}/${IMAGEDIRRECOVERY}/${IMAGEDIR}/uImage; \
     zip -r ../${IMAGE_NAME}_full_recovery_emmc.zip *; \
     rm -Rf ${DEPLOY_DIR_IMAGE}/${IMAGEDIRRECOVERY}; \
