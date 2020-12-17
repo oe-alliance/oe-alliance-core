@@ -1,7 +1,6 @@
-diff -ruN a/include/SDL_keycode.h b/include/SDL_keycode.h
---- a/include/SDL_keycode.h	2020-03-11 04:36:18.000000000 +0300
-+++ b/include/SDL_keycode.h	2020-04-09 22:25:17.168864162 +0300
-@@ -282,12 +282,12 @@
+--- a/include/SDL_keycode.h
++++ b/include/SDL_keycode.h
+@@ -282,12 +282,12 @@ typedef enum
      SDLK_RALT = SDL_SCANCODE_TO_KEYCODE(SDL_SCANCODE_RALT),
      SDLK_RGUI = SDL_SCANCODE_TO_KEYCODE(SDL_SCANCODE_RGUI),
  
@@ -16,7 +15,7 @@ diff -ruN a/include/SDL_keycode.h b/include/SDL_keycode.h
      SDLK_AUDIOMUTE = SDL_SCANCODE_TO_KEYCODE(SDL_SCANCODE_AUDIOMUTE),
      SDLK_MEDIASELECT = SDL_SCANCODE_TO_KEYCODE(SDL_SCANCODE_MEDIASELECT),
      SDLK_WWW = SDL_SCANCODE_TO_KEYCODE(SDL_SCANCODE_WWW),
-@@ -315,8 +315,50 @@
+@@ -315,8 +315,50 @@ typedef enum
      SDLK_APP1 = SDL_SCANCODE_TO_KEYCODE(SDL_SCANCODE_APP1),
      SDLK_APP2 = SDL_SCANCODE_TO_KEYCODE(SDL_SCANCODE_APP2),
  
@@ -69,10 +68,9 @@ diff -ruN a/include/SDL_keycode.h b/include/SDL_keycode.h
  } SDL_KeyCode;
  
  /**
-diff -ruN a/include/SDL_scancode.h b/include/SDL_scancode.h
---- a/include/SDL_scancode.h	2020-03-11 04:36:18.000000000 +0300
-+++ b/include/SDL_scancode.h	2020-04-09 22:09:35.705645072 +0300
-@@ -334,7 +334,7 @@
+--- a/include/SDL_scancode.h
++++ b/include/SDL_scancode.h
+@@ -334,7 +334,7 @@ typedef enum
      SDL_SCANCODE_RALT = 230, /**< alt gr, option */
      SDL_SCANCODE_RGUI = 231, /**< windows, command (apple), meta */
  
@@ -81,7 +79,7 @@ diff -ruN a/include/SDL_scancode.h b/include/SDL_scancode.h
                                   *   by any of the above, but since there's a
                                   *   special KMOD_MODE for it I'm adding it here
                                   */
-@@ -351,7 +351,7 @@
+@@ -351,7 +351,7 @@ typedef enum
      SDL_SCANCODE_AUDIONEXT = 258,
      SDL_SCANCODE_AUDIOPREV = 259,
      SDL_SCANCODE_AUDIOSTOP = 260,
@@ -90,7 +88,7 @@ diff -ruN a/include/SDL_scancode.h b/include/SDL_scancode.h
      SDL_SCANCODE_AUDIOMUTE = 262,
      SDL_SCANCODE_MEDIASELECT = 263,
      SDL_SCANCODE_WWW = 264,
-@@ -397,13 +397,55 @@
+@@ -397,13 +397,55 @@ typedef enum
       */
      /* @{ */
  
@@ -148,9 +146,130 @@ diff -ruN a/include/SDL_scancode.h b/include/SDL_scancode.h
      SDL_NUM_SCANCODES = 512 /**< not a key, just marks the number of scancodes
                                   for array bounds */
  } SDL_Scancode;
-diff -ruN a/src/events/scancodes_linux.h b/src/events/scancodes_linux.h
---- a/src/events/scancodes_linux.h	2020-03-11 04:36:18.000000000 +0300
-+++ b/src/events/scancodes_linux.h	2020-04-09 22:09:35.393645342 +0300
+--- a/src/events/SDL_keyboard.c
++++ b/src/events/SDL_keyboard.c
+@@ -251,7 +251,7 @@ static const SDL_Keycode SDL_default_keymap[SDL_NUM_SCANCODES] = {
+     SDLK_AUDIONEXT,
+     SDLK_AUDIOPREV,
+     SDLK_AUDIOSTOP,
+-    SDLK_AUDIOPLAY,
++    SDLK_PLAYPAUSE,
+     SDLK_AUDIOMUTE,
+     SDLK_MEDIASELECT,
+     SDLK_WWW,
+@@ -275,8 +275,48 @@ static const SDL_Keycode SDL_default_keymap[SDL_NUM_SCANCODES] = {
+     SDLK_SLEEP,
+     SDLK_APP1,
+     SDLK_APP2,
+-    SDLK_AUDIOREWIND,
+-    SDLK_AUDIOFASTFORWARD,
++    SDLK_REWIND,
++    SDLK_FASTFORWARD,
++    /* Added by Marc Serdeliuc -- Missing keys for VU Solo4K remote control -- 12 Jan 2020 */
++    SDLK_RECORD,
++    SDLK_EXIT,
++    SDLK_PLAY,
++    SDLK_OK,
++    SDLK_INFO,
++    SDLK_SUBTITLE,
++    SDLK_TV,
++    SDLK_RADIO,
++    SDLK_TEXT,
++    SDLK_AUDIO,
++    SDLK_VIDEO,
++    SDLK_RED,
++    SDLK_GREEN,
++    SDLK_YELLOW,
++    SDLK_BLUE,
++    SDLK_CHANNELUP,
++    SDLK_CHANNELDOWN,
++    SDLK_NEXT,
++    SDLK_PREVIOUS,
++    SDLK_RELX,
++    SDLK_FILE,
++    SDLK_EMAIL,
++    SDLK_MEDIA,
++    SDLK_OPTION,
++    SDLK_TIME,
++    SDLK_ARCHIVE,
++    SDLK_PROGRAM,
++    SDLK_FAVORITES,
++    SDLK_EPG,
++    SDLK_PVR,
++    SDLK_MODE,
++    SDLK_SCREEN,
++    SDLK_SAT,
++    SDLK_AUX,
++    SDLK_DIRECTORY,
++    SDLK_LIST,
++    SDLK_LAST,
++    SDLK_RESTART,
++    SDLK_CONTEXTMENU,
+ };
+ 
+ static const char *SDL_scancode_names[SDL_NUM_SCANCODES] = {
+@@ -487,7 +527,7 @@ static const char *SDL_scancode_names[SDL_NUM_SCANCODES] = {
+     "AudioNext",
+     "AudioPrev",
+     "AudioStop",
+-    "AudioPlay",
++    "PlayPause",
+     "AudioMute",
+     "MediaSelect",
+     "WWW",
+@@ -511,8 +551,48 @@ static const char *SDL_scancode_names[SDL_NUM_SCANCODES] = {
+     "Sleep",
+     "App1",
+     "App2",
+-    "AudioRewind",
+-    "AudioFastForward",
++    "Rewind",
++    "FastForward",
++    /*    Added by Marc Serdeliuc -- Missing keys for VU Solo4K remote control -- 12 Jan 2020 */
++    "Record",
++    "Exit",
++    "Play",
++    "Ok",
++    "Info",
++    "Subtitle",
++    "Tv",
++    "Radio",
++    "Text",
++    "Audio",
++    "Video",
++    "Red",
++    "Green",
++    "Yellow",
++    "Blue",
++    "Channelup",
++    "Channeldown",
++    "Next",
++    "Previous",
++    "Relx",
++    "File",
++    "Email",
++    "Media",
++    "Option",
++    "Time",
++    "Archive",
++    "Program",
++    "Favorites",
++    "Epg",
++    "Pvr",
++    "Mode",
++    "Screen",
++    "Sat",
++    "Aux",
++    "Directory",
++    "List",
++    "Last",
++    "Restart",
++    "Contextmenu",
+ };
+ 
+ /* Taken from SDL_iconv() */
+--- a/src/events/scancodes_linux.h
++++ b/src/events/scancodes_linux.h
 @@ -26,7 +26,7 @@
  */
  /* *INDENT-OFF* */
@@ -160,7 +279,7 @@ diff -ruN a/src/events/scancodes_linux.h b/src/events/scancodes_linux.h
      /*  1 */    SDL_SCANCODE_ESCAPE,
      /*  2 */    SDL_SCANCODE_1,
      /*  3 */    SDL_SCANCODE_2,
-@@ -170,7 +170,7 @@
+@@ -170,7 +170,7 @@ static SDL_Scancode const linux_scancode_table[] = {
      /*  141 */    SDL_SCANCODE_UNKNOWN, /* KEY_SETUP */
      /*  142 */    SDL_SCANCODE_SLEEP,
      /*  143 */    SDL_SCANCODE_UNKNOWN, /* KEY_WAKEUP */
@@ -169,7 +288,7 @@ diff -ruN a/src/events/scancodes_linux.h b/src/events/scancodes_linux.h
      /*  145 */    SDL_SCANCODE_UNKNOWN, /* KEY_SENDFILE */
      /*  146 */    SDL_SCANCODE_UNKNOWN, /* KEY_DELETEFILE */
      /*  147 */    SDL_SCANCODE_UNKNOWN, /* KEY_XFER */
-@@ -190,17 +190,19 @@
+@@ -190,17 +190,19 @@ static SDL_Scancode const linux_scancode_table[] = {
      /*  161 */    SDL_SCANCODE_EJECT, /* KEY_EJECTCD */
      /*  162 */    SDL_SCANCODE_UNKNOWN, /* KEY_EJECTCLOSECD */
      /*  163 */    SDL_SCANCODE_AUDIONEXT, /* KEY_NEXTSONG */
@@ -193,7 +312,7 @@ diff -ruN a/src/events/scancodes_linux.h b/src/events/scancodes_linux.h
      /*  175 */    SDL_SCANCODE_UNKNOWN, /* KEY_MOVE */
      /*  176 */    SDL_SCANCODE_UNKNOWN, /* KEY_EDIT */
      /*  177 */    SDL_SCANCODE_UNKNOWN, /* KEY_SCROLLUP */
-@@ -229,15 +231,15 @@
+@@ -229,15 +231,15 @@ static SDL_Scancode const linux_scancode_table[] = {
      0,
      /*  205 */    SDL_SCANCODE_UNKNOWN, /* KEY_SUSPEND */
      /*  206 */    SDL_SCANCODE_UNKNOWN, /* KEY_CLOSE */
@@ -212,7 +331,7 @@ diff -ruN a/src/events/scancodes_linux.h b/src/events/scancodes_linux.h
      /*  216 */    SDL_SCANCODE_UNKNOWN, /* KEY_CHAT */
      /*  217 */    SDL_SCANCODE_AC_SEARCH,
      /*  218 */    SDL_SCANCODE_UNKNOWN, /* KEY_CONNECT */
-@@ -248,7 +250,7 @@
+@@ -248,7 +250,7 @@ static SDL_Scancode const linux_scancode_table[] = {
      /*  223 */    SDL_SCANCODE_CANCEL,
      /*  224 */    SDL_SCANCODE_BRIGHTNESSDOWN,
      /*  225 */    SDL_SCANCODE_BRIGHTNESSUP,
@@ -221,7 +340,7 @@ diff -ruN a/src/events/scancodes_linux.h b/src/events/scancodes_linux.h
      /*  227 */    SDL_SCANCODE_DISPLAYSWITCH, /* KEY_SWITCHVIDEOMODE */
      /*  228 */    SDL_SCANCODE_KBDILLUMTOGGLE,
      /*  229 */    SDL_SCANCODE_KBDILLUMDOWN,
-@@ -259,5 +261,71 @@
+@@ -259,5 +261,71 @@ static SDL_Scancode const linux_scancode_table[] = {
      /*  234 */    SDL_SCANCODE_UNKNOWN, /* KEY_SAVE */
      /*  235 */    SDL_SCANCODE_UNKNOWN, /* KEY_DOCUMENTS */
      /*  236 */    SDL_SCANCODE_UNKNOWN, /* KEY_BATTERY */
@@ -293,10 +412,9 @@ diff -ruN a/src/events/scancodes_linux.h b/src/events/scancodes_linux.h
 +
  };
  /* *INDENT-ON* */
-diff -ruN a/src/events/scancodes_xfree86.h b/src/events/scancodes_xfree86.h
---- a/src/events/scancodes_xfree86.h	2020-03-11 04:36:18.000000000 +0300
-+++ b/src/events/scancodes_xfree86.h	2020-04-09 22:38:35.225221226 +0300
-@@ -345,11 +345,11 @@
+--- a/src/events/scancodes_xfree86.h
++++ b/src/events/scancodes_xfree86.h
+@@ -345,11 +345,11 @@ static const SDL_Scancode xfree86_scancode_table2[] = {
      /* 161 */   SDL_SCANCODE_EJECT,
      /* 162 */   SDL_SCANCODE_EJECT,
      /* 163 */   SDL_SCANCODE_AUDIONEXT,
@@ -310,7 +428,7 @@ diff -ruN a/src/events/scancodes_xfree86.h b/src/events/scancodes_xfree86.h
      /* 169 */   SDL_SCANCODE_UNKNOWN,   /* XF86Phone */
      /* 170 */   SDL_SCANCODE_UNKNOWN,
      /* 171 */   SDL_SCANCODE_F13,       /* XF86Tools */
-@@ -381,15 +381,15 @@
+@@ -381,15 +381,15 @@ static const SDL_Scancode xfree86_scancode_table2[] = {
      /* 197 */   SDL_SCANCODE_UNKNOWN,
      /* 198 */   SDL_SCANCODE_UNKNOWN,
      /* 199 */   SDL_SCANCODE_UNKNOWN,
@@ -329,142 +447,3 @@ diff -ruN a/src/events/scancodes_xfree86.h b/src/events/scancodes_xfree86.h
      /* 209 */   SDL_SCANCODE_UNKNOWN,
      /* 210 */   SDL_SCANCODE_PRINTSCREEN,
      /* 211 */   SDL_SCANCODE_UNKNOWN,
-diff -ruN a/src/events/SDL_keyboard.c b/src/events/SDL_keyboard.c
---- a/src/events/SDL_keyboard.c	2020-03-11 04:36:18.000000000 +0300
-+++ b/src/events/SDL_keyboard.c	2020-04-09 21:49:00.150769555 +0300
-@@ -251,7 +251,7 @@
-     SDLK_AUDIONEXT,
-     SDLK_AUDIOPREV,
-     SDLK_AUDIOSTOP,
--    SDLK_AUDIOPLAY,
-+    SDLK_PLAYPAUSE,
-     SDLK_AUDIOMUTE,
-     SDLK_MEDIASELECT,
-     SDLK_WWW,
-@@ -275,8 +275,48 @@
-     SDLK_SLEEP,
-     SDLK_APP1,
-     SDLK_APP2,
--    SDLK_AUDIOREWIND,
--    SDLK_AUDIOFASTFORWARD,
-+    SDLK_REWIND,
-+    SDLK_FASTFORWARD,
-+    /* Added by Marc Serdeliuc -- Missing keys for VU Solo4K remote control -- 12 Jan 2020 */
-+    SDLK_RECORD,
-+    SDLK_EXIT,
-+    SDLK_PLAY,
-+    SDLK_OK,
-+    SDLK_INFO,
-+    SDLK_SUBTITLE,
-+    SDLK_TV,
-+    SDLK_RADIO,
-+    SDLK_TEXT,
-+    SDLK_AUDIO,
-+    SDLK_VIDEO,
-+    SDLK_RED,
-+    SDLK_GREEN,
-+    SDLK_YELLOW,
-+    SDLK_BLUE,
-+    SDLK_CHANNELUP,
-+    SDLK_CHANNELDOWN,
-+    SDLK_NEXT,
-+    SDLK_PREVIOUS,
-+    SDLK_RELX,
-+    SDLK_FILE,
-+    SDLK_EMAIL,
-+    SDLK_MEDIA,
-+    SDLK_OPTION,
-+    SDLK_TIME,
-+    SDLK_ARCHIVE,
-+    SDLK_PROGRAM,
-+    SDLK_FAVORITES,
-+    SDLK_EPG,
-+    SDLK_PVR,
-+    SDLK_MODE,
-+    SDLK_SCREEN,
-+    SDLK_SAT,
-+    SDLK_AUX,
-+    SDLK_DIRECTORY,
-+    SDLK_LIST,
-+    SDLK_LAST,
-+    SDLK_RESTART,
-+    SDLK_CONTEXTMENU,
- };
- 
- static const char *SDL_scancode_names[SDL_NUM_SCANCODES] = {
-@@ -487,7 +527,7 @@
-     "AudioNext",
-     "AudioPrev",
-     "AudioStop",
--    "AudioPlay",
-+    "PlayPause",
-     "AudioMute",
-     "MediaSelect",
-     "WWW",
-@@ -511,8 +551,48 @@
-     "Sleep",
-     "App1",
-     "App2",
--    "AudioRewind",
--    "AudioFastForward",
-+    "Rewind",
-+    "FastForward",
-+    /*    Added by Marc Serdeliuc -- Missing keys for VU Solo4K remote control -- 12 Jan 2020 */
-+    "Record",
-+    "Exit",
-+    "Play",
-+    "Ok",
-+    "Info",
-+    "Subtitle",
-+    "Tv",
-+    "Radio",
-+    "Text",
-+    "Audio",
-+    "Video",
-+    "Red",
-+    "Green",
-+    "Yellow",
-+    "Blue",
-+    "Channelup",
-+    "Channeldown",
-+    "Next",
-+    "Previous",
-+    "Relx",
-+    "File",
-+    "Email",
-+    "Media",
-+    "Option",
-+    "Time",
-+    "Archive",
-+    "Program",
-+    "Favorites",
-+    "Epg",
-+    "Pvr",
-+    "Mode",
-+    "Screen",
-+    "Sat",
-+    "Aux",
-+    "Directory",
-+    "List",
-+    "Last",
-+    "Restart",
-+    "Contextmenu",
- };
- 
- /* Taken from SDL_iconv() */
-diff -ruN a/src/video/directfb/SDL_DirectFB_render.c b/src/video/directfb/SDL_DirectFB_render.c
---- a/src/video/directfb/SDL_DirectFB_render.c	2020-03-11 04:36:18.000000000 +0300
-+++ b/src/video/directfb/SDL_DirectFB_render.c	2020-04-09 23:07:51.677342673 +0300
-@@ -198,11 +198,10 @@
-             SDL_DFB_CHECK(destsurf->SetDstBlendFunction(destsurf, DSBF_SRCCOLOR));
- 
-             break;
--        }
-         case SDL_BLENDMODE_MUL:
-             data->blitFlags = DSBLIT_BLEND_ALPHACHANNEL;
-             data->drawFlags = DSDRAW_BLEND;
--            SDL_DFB_CHECK(destsurf->SetSrcBlendFunction(destsurf, DSBF_DSTCOLOR));
-+            SDL_DFB_CHECK(destsurf->SetSrcBlendFunction(destsurf, DSBF_DESTCOLOR));
-             SDL_DFB_CHECK(destsurf->SetDstBlendFunction(destsurf, DSBF_INVSRCALPHA));
- 
-             break;
