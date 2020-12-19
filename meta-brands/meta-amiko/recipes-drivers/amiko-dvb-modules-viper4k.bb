@@ -1,8 +1,8 @@
 KV = "4.4.35"
-SRCDATE = "20201119"
+SRCDATE = "20201218"
 
 require amiko-dvb-modules-hisi.inc
 
-SRC_URI[md5sum] = "14bf9d94cc347f535cea27a31a4bc6e1"
-SRC_URI[sha256sum] = "5cc29dcc131c7496067e7c293f17b44b36237094bf565db52c83c6e42019fb2f"
+SRC_URI[md5sum] = "59612ecd1bdd879014e64a9249afe0e5"
+SRC_URI[sha256sum] = "934edbc91267b24e45ca339b68586f361f41b8dc42dc202e36242e7038a721ff"
 
