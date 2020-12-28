@@ -4,7 +4,7 @@ LICENSE = "LGPLv2.1"
 LIC_FILES_CHKSUM = "file://LICENSE.TXT;md5=4fbd65380cdd255951079008b364516c"
 
 DEPENDS += "curl libxml2 ${PYTHON_PN} swig-native zlib"
-RDEPENDS_${PN} += "enigma2 libcurl ${PYTHON_PN}-core ${PYTHON_PN}-compression ${PYTHON_PN}-backports-lzma xz"
+RDEPENDS_${PN} += "enigma2 libcurl ${PYTHON_PN}-core ${PYTHON_PN}-compression ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-backports-lzma", "", d)} xz"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
@@ -13,7 +13,7 @@ inherit gitpkgv ${PYTHON_PN}native
 SRCREV = "${AUTOREV}"
 PV = "0.8.7+gitr${SRCPV}"
 PKGV = "0.8.7+gitr${GITPKGV}"
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "git://github.com/oe-alliance/e2openplugin-CrossEPG.git;protocol=git;branch=dev \
         file://fix-build-with-fno-common.patch"
