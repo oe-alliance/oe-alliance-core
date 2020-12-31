@@ -5,7 +5,6 @@ COMPATIBLE_MACHINE = "^(vuduo4k)$"
 PV="18.1"
 SRCDATE = "20201228"
 SRCDATE_PR = "r0"
-PR_append = ".0"
 
 do_install_append() {
 	install -d ${D}${sysconfdir}/udev

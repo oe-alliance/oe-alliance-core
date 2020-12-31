@@ -5,7 +5,6 @@ COMPATIBLE_MACHINE = "^(vuduo4kse)$"
 PV="17.1"
 SRCDATE = "20201228"
 SRCDATE_PR = "r0"
-PR_append = ".0"
 
 inherit update-rc.d
 
