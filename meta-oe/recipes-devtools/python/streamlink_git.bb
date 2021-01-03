@@ -3,9 +3,9 @@ DESCRIPTION = "Streamlink is a command-line utility that pipes video streams fro
 HOMEPAGE = "https://github.com/streamlink/streamlink"
 SECTION = "devel/python"
 LICENSE = "BSD-2-Clause"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=67e73aa1a18a474a727af66319626ed4"
+LIC_FILES_CHKSUM = "${@bb.utils.contains("PYTHON_PN", "python", "file://LICENSE;md5=67e73aa1a18a474a727af66319626ed4", "file://LICENSE;md5=7c0be52291b7252b878da806d185b1d1", d)}"
 
-inherit ${@bb.utils.contains("PYTHON_PN", "python", "setuptools", "setuptools3", d)} ${PYTHON_PN}-dir
+inherit ${@bb.utils.contains("PYTHON_PN", "python", "setuptools", "setuptools3", d)} ${PYTHON_PN}-dir ${@bb.utils.contains("PYTHON_PN", "python", "", "gitpkgv", d)}
 
 RDEPENDS_${PN} = "${PYTHON_PN}-core \
     ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-backports-shutil-which", "", d)} \
@@ -24,7 +24,10 @@ RDEPENDS_${PN} = "${PYTHON_PN}-core \
     "
 
 SRC_URI = "git://github.com/streamlink/streamlink.git;protocol=git"
-SRCREV = "${PV}"
+SRCREV = "${@bb.utils.contains("PYTHON_PN", "python", "1.3.0", "${AUTOREV}", d)}"
+PV = "${@bb.utils.contains("PYTHON_PN", "python", "1.3.0", "2.0.0+git${SRCPV}", d)}"
+PKGV = "${@bb.utils.contains("PYTHON_PN", "python", "1.3.0", "2.0.0+git${GITPKGV}", d)}"
+
 S = "${WORKDIR}/git"
 
 do_install_append() {
