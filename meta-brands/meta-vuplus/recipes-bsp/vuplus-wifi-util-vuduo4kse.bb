@@ -3,7 +3,7 @@ require vuplus-wifi-util.inc
 COMPATIBLE_MACHINE = "^(vuduo4kse)$"
 
 PV="17.1"
-SRCDATE = "20200909"
+SRCDATE = "20201228"
 SRCDATE_PR = "r0"
 
 inherit update-rc.d
@@ -16,5 +16,5 @@ do_install_append() {
 	install -m 0755 ${S}/${INITSCRIPT_NAME} ${D}${INIT_D_DIR}/${INITSCRIPT_NAME}
 }
 
-SRC_URI[md5sum] = "381337f41987e8e5761d2f683641f86d"
-SRC_URI[sha256sum] = "ced69322119be2606adb6aba1e5d2c5fcbb76969ef8b75ca20389058e121948c"
+SRC_URI[md5sum] = "df509ddc241fe1cc5b44ed3c58375ad5"
+SRC_URI[sha256sum] = "0ed3daa8883f21000b7e2d935e5bf27a13471dbc5df0444baa9fac4328d7f666"
