@@ -1,0 +1,48 @@
+From b8c231c0e7ca3859476a4451d19afdae65721154 Mon Sep 17 00:00:00 2001
+From: Jaedon Shin <jaedon.shin@gmail.com>
+Date: Mon, 24 Aug 2020 16:23:46 +0900
+Subject: [PATCH] Replace hbbtv responses with application/xhtml+xml
+
+---
+ .../net/url_request/url_request_http_job.cc   | 25 +++++++++++++++++++
+ 1 file changed, 25 insertions(+)
+
+diff --git a/chromium/net/url_request/url_request_http_job.cc b/chromium/net/url_request/url_request_http_job.cc
+index 199798882a74..cc898dbb825b 100644
+--- a/chromium/net/url_request/url_request_http_job.cc
++++ b/chromium/net/url_request/url_request_http_job.cc
+@@ -922,6 +922,31 @@ void URLRequestHttpJob::OnStartCompleted(int result) {
+       }
+     }
+ 
++    HttpResponseHeaders* new_response_headers =
++        new HttpResponseHeaders(GetResponseHeaders()->raw_headers());
++
++    std::string mime_type;
++    new_response_headers->GetMimeType(&mime_type);
++    if (mime_type.find("application/vnd.hbbtv.xhtml+xml") != std::string::npos ||
++        mime_type.find("application/ce-html+xml") != std::string::npos ||
++        mime_type.find("application/x-ce-html+xml") != std::string::npos ||
++        mime_type.find("application/vnd.ohtv") != std::string::npos ||
++        mime_type.find("text/X-arib-bml") != std::string::npos ||
++        mime_type.find("atsc-http-attributes") != std::string::npos) {
++        new_response_headers->RemoveHeader("Content-Type");
++        new_response_headers->AddHeader("Content-Type: application/xhtml+xml");
++    }
++    if (new_response_headers->HasHeader("Content-Security-Policy")) {
++        new_response_headers->RemoveHeader("Content-Security-Policy");
++        //new_response_headers->AddHeader("Content-Security-Policy: TODO");
++    }
++    if (new_response_headers->HasHeader("Access-Control-Allow-Origin")) {
++        new_response_headers->RemoveHeader("Access-Control-Allow-Origin");
++        new_response_headers->AddHeader("Access-Control-Allow-Origin: *");
++    }
++
++    override_response_headers_ = new_response_headers;
++
+     SaveCookiesAndNotifyHeadersComplete(OK);
+   } else if (IsCertificateError(result)) {
+     // We encountered an SSL certificate error.
+-- 
+2.28.0
+
