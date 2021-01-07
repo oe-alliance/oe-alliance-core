@@ -1,0 +1,301 @@
+From 0093723bb9e248dcd26205a4c0eed0f5eecac9fc Mon Sep 17 00:00:00 2001
+From: Jaedon Shin <jaedon.shin@gmail.com>
+Date: Fri, 19 Jun 2020 14:37:50 +0900
+Subject: [PATCH] Add initial support for V4L2 mem2mem decoder
+
+---
+ chromium/media/base/video_frame_pool.cc       | 90 ++++++++++++++++++
+ chromium/media/base/video_frame_pool.h        | 12 +++
+ .../media/filters/ffmpeg_video_decoder.cc     | 94 ++++++++++++++++++-
+ chromium/media/filters/ffmpeg_video_decoder.h |  4 +
+ 4 files changed, 198 insertions(+), 2 deletions(-)
+
+diff --git a/chromium/media/base/video_frame_pool.cc b/chromium/media/base/video_frame_pool.cc
+index 16156e9ff6cb..2760a8c31855 100644
+--- a/chromium/media/base/video_frame_pool.cc
++++ b/chromium/media/base/video_frame_pool.cc
+@@ -27,6 +27,18 @@ class VideoFramePool::PoolImpl
+                                         const gfx::Size& natural_size,
+                                         base::TimeDelta timestamp);
+ 
++  scoped_refptr<VideoFrame> CreateFrame(VideoPixelFormat format,
++                                        const gfx::Size& coded_size,
++                                        const gfx::Rect& visible_rect,
++                                        const gfx::Size& natural_size,
++                                        int32_t y_stride,
++                                        int32_t u_stride,
++                                        int32_t v_stride,
++                                        uint8_t* y_data,
++                                        uint8_t* u_data,
++                                        uint8_t* v_data,
++                                        base::TimeDelta timestamp);
++
+   // Shuts down the frame pool and releases all frames in |frames_|.
+   // Once this is called frames will no longer be inserted back into
+   // |frames_|.
+@@ -117,6 +129,62 @@ scoped_refptr<VideoFrame> VideoFramePool::PoolImpl::CreateFrame(
+   return wrapped_frame;
+ }
+ 
++scoped_refptr<VideoFrame> VideoFramePool::PoolImpl::CreateFrame(
++    VideoPixelFormat format,
++    const gfx::Size& coded_size,
++    const gfx::Rect& visible_rect,
++    const gfx::Size& natural_size,
++    int32_t y_stride,
++    int32_t u_stride,
++    int32_t v_stride,
++    uint8_t* y_data,
++    uint8_t* u_data,
++    uint8_t* v_data,
++    base::TimeDelta timestamp) {
++  base::AutoLock auto_lock(lock_);
++  DCHECK(!is_shutdown_);
++
++  scoped_refptr<VideoFrame> frame;
++  while (!frame && !frames_.empty()) {
++    scoped_refptr<VideoFrame> pool_frame = std::move(frames_.back().frame);
++    frames_.pop_back();
++
++    if (false &&
++        pool_frame->format() == format &&
++        pool_frame->coded_size() == coded_size &&
++        pool_frame->visible_rect() == visible_rect &&
++        pool_frame->natural_size() == natural_size) {
++      frame = pool_frame;
++      frame->set_timestamp(timestamp);
++      frame->metadata()->Clear();
++      break;
++    }
++  }
++
++  if (!frame) {
++    frame = VideoFrame::WrapExternalYuvData(
++        format, coded_size, visible_rect, natural_size,
++        y_stride,
++        u_stride,
++        v_stride,
++        y_data,
++        u_data,
++        v_data,
++        timestamp);
++    // This can happen if the arguments are not valid.
++    if (!frame) {
++      LOG(ERROR) << "Failed to create a video frame";
++      return nullptr;
++    }
++  }
++
++  scoped_refptr<VideoFrame> wrapped_frame = VideoFrame::WrapVideoFrame(
++      *frame, frame->format(), frame->visible_rect(), frame->natural_size());
++  wrapped_frame->AddDestructionObserver(base::Bind(
++      &VideoFramePool::PoolImpl::FrameReleased, this, std::move(frame)));
++  return wrapped_frame;
++}
++
+ void VideoFramePool::PoolImpl::Shutdown() {
+   base::AutoLock auto_lock(lock_);
+   is_shutdown_ = true;
+@@ -160,6 +228,28 @@ scoped_refptr<VideoFrame> VideoFramePool::CreateFrame(
+                             timestamp);
+ }
+ 
++scoped_refptr<VideoFrame> VideoFramePool::CreateFrame(
++    VideoPixelFormat format,
++    const gfx::Size& coded_size,
++    const gfx::Rect& visible_rect,
++    const gfx::Size& natural_size,
++    int32_t y_stride,
++    int32_t u_stride,
++    int32_t v_stride,
++    uint8_t* y_data,
++    uint8_t* u_data,
++    uint8_t* v_data,
++    base::TimeDelta timestamp) {
++  return pool_->CreateFrame(format, coded_size, visible_rect, natural_size,
++                            y_stride,
++                            u_stride,
++                            v_stride,
++                            y_data,
++                            u_data,
++                            v_data,
++                            timestamp);
++}
++
+ size_t VideoFramePool::GetPoolSizeForTesting() const {
+   return pool_->get_pool_size_for_testing();
+ }
+diff --git a/chromium/media/base/video_frame_pool.h b/chromium/media/base/video_frame_pool.h
+index e6532b4bf41f..46309342ee7d 100644
+--- a/chromium/media/base/video_frame_pool.h
++++ b/chromium/media/base/video_frame_pool.h
+@@ -41,6 +41,18 @@ class MEDIA_EXPORT VideoFramePool {
+                                         const gfx::Size& natural_size,
+                                         base::TimeDelta timestamp);
+ 
++  scoped_refptr<VideoFrame> CreateFrame(VideoPixelFormat format,
++                                        const gfx::Size& coded_size,
++                                        const gfx::Rect& visible_rect,
++                                        const gfx::Size& natural_size,
++                                        int32_t y_stride,
++                                        int32_t u_stride,
++                                        int32_t v_stride,
++                                        uint8_t* y_data,
++                                        uint8_t* u_data,
++                                        uint8_t* v_data,
++                                        base::TimeDelta timestamp);
++
+  protected:
+   friend class VideoFramePoolTest;
+ 
+diff --git a/chromium/media/filters/ffmpeg_video_decoder.cc b/chromium/media/filters/ffmpeg_video_decoder.cc
+index 7a474b07f40b..dcfbace7e738 100644
+--- a/chromium/media/filters/ffmpeg_video_decoder.cc
++++ b/chromium/media/filters/ffmpeg_video_decoder.cc
+@@ -86,7 +86,7 @@ bool FFmpegVideoDecoder::IsCodecSupported(VideoCodec codec) {
+ }
+ 
+ FFmpegVideoDecoder::FFmpegVideoDecoder(MediaLog* media_log)
+-    : media_log_(media_log), state_(kUninitialized), decode_nalus_(false) {
++    : media_log_(media_log), state_(kUninitialized), decode_nalus_(false), decoder_v4l2m2m_(false) {
+   DVLOG(1) << __func__;
+   thread_checker_.DetachFromThread();
+ }
+@@ -325,6 +325,10 @@ bool FFmpegVideoDecoder::FFmpegDecode(const DecoderBuffer& buffer) {
+ 
+     // Let FFmpeg handle presentation timestamp reordering.
+     codec_context_->reordered_opaque = buffer.timestamp().InMicroseconds();
++    if (decoder_v4l2m2m_) {
++      packet.pts = codec_context_->reordered_opaque;
++      packet.dts = codec_context_->reordered_opaque;
++    }
+   }
+ 
+   switch (decoding_loop_->DecodePacket(
+@@ -361,6 +365,72 @@ bool FFmpegVideoDecoder::OnNewFrame(AVFrame* frame) {
+     return false;
+   }
+ 
++  if (decoder_v4l2m2m_) {
++    const VideoPixelFormat format =
++        AVPixelFormatToVideoPixelFormat(codec_context_->pix_fmt);
++
++    gfx::Size size(frame->width, frame->height);
++    const int ret = av_image_check_size(size.width(), size.height(), 0, NULL);
++    if (ret < 0)
++      return false;
++
++    gfx::Size natural_size;
++    if (codec_context_->sample_aspect_ratio.num > 0) {
++      natural_size = GetNaturalSize(size,
++                                    codec_context_->sample_aspect_ratio.num,
++                                    codec_context_->sample_aspect_ratio.den);
++    } else {
++      natural_size =
++          GetNaturalSize(gfx::Rect(size), config_.GetPixelAspectRatio());
++    }
++
++    scoped_refptr<VideoFrame> video_frame = frame_pool_.CreateFrame(
++        format, size, gfx::Rect(size), natural_size,
++        frame->linesize[VideoFrame::kYPlane],
++        frame->linesize[VideoFrame::kUPlane],
++        frame->linesize[VideoFrame::kVPlane],
++        frame->data[VideoFrame::kYPlane],
++        frame->data[VideoFrame::kUPlane],
++        frame->data[VideoFrame::kVPlane],
++        kNoTimestamp);
++
++    if (!video_frame)
++      return false;
++
++    VideoColorSpace color_space = AVColorSpaceToColorSpace(
++        codec_context_->colorspace, codec_context_->color_range);
++    if (!color_space.IsSpecified())
++      color_space = config_.color_space_info();
++    video_frame->set_color_space(color_space.ToGfxColorSpace());
++
++    if (codec_context_->codec_id == AV_CODEC_ID_VP8 &&
++        codec_context_->color_primaries == AVCOL_PRI_UNSPECIFIED &&
++        codec_context_->color_trc == AVCOL_TRC_UNSPECIFIED &&
++        codec_context_->colorspace == AVCOL_SPC_BT470BG) {
++      if (codec_context_->color_range == AVCOL_RANGE_JPEG) {
++        video_frame->set_color_space(gfx::ColorSpace::CreateJpeg());
++      }
++    } else if (codec_context_->color_primaries != AVCOL_PRI_UNSPECIFIED ||
++              codec_context_->color_trc != AVCOL_TRC_UNSPECIFIED ||
++              codec_context_->colorspace != AVCOL_SPC_UNSPECIFIED) {
++      media::VideoColorSpace video_color_space = media::VideoColorSpace(
++          codec_context_->color_primaries, codec_context_->color_trc,
++          codec_context_->colorspace,
++          codec_context_->color_range != AVCOL_RANGE_MPEG
++              ? gfx::ColorSpace::RangeID::FULL
++              : gfx::ColorSpace::RangeID::LIMITED);
++      video_frame->set_color_space(video_color_space.ToGfxColorSpace());
++    }
++
++    VideoFrame* opaque = video_frame.get();
++    opaque->AddRef();
++
++    video_frame->set_timestamp(
++        base::TimeDelta::FromMicroseconds(frame->pts + decoder_v4l2m2m_sync_delay_));
++    video_frame->metadata()->SetBoolean(VideoFrameMetadata::POWER_EFFICIENT,
++                                        false);
++    output_cb_.Run(video_frame);
++  } else {
+   scoped_refptr<VideoFrame> video_frame =
+       reinterpret_cast<VideoFrame*>(av_buffer_get_opaque(frame->buf[0]));
+   video_frame->set_timestamp(
+@@ -368,6 +438,7 @@ bool FFmpegVideoDecoder::OnNewFrame(AVFrame* frame) {
+   video_frame->metadata()->SetBoolean(VideoFrameMetadata::POWER_EFFICIENT,
+                                       false);
+   output_cb_.Run(video_frame);
++  }
+   return true;
+ }
+ 
+@@ -397,7 +468,26 @@ bool FFmpegVideoDecoder::ConfigureDecoder(const VideoDecoderConfig& config,
+   if (decode_nalus_)
+     codec_context_->flags2 |= AV_CODEC_FLAG2_CHUNKS;
+ 
+-  AVCodec* codec = avcodec_find_decoder(codec_context_->codec_id);
++  AVCodec* codec = NULL;
++  if (codec_context_->codec_id == AV_CODEC_ID_H264)
++    codec = avcodec_find_decoder_by_name("h264_v4l2m2m");
++  else if (codec_context_->codec_id == AV_CODEC_ID_VP9)
++    codec = avcodec_find_decoder_by_name("vp9_v4l2m2m");
++  else if (codec_context_->codec_id == AV_CODEC_ID_HEVC)
++    codec = avcodec_find_decoder_by_name("hevc_v4l2m2m");
++  if (codec) {
++    decoder_v4l2m2m_ = true;
++    decoder_v4l2m2m_sync_delay_ = 300 * 1000; // TODO option
++    codec_context_->thread_count = 1;
++    codec_context_->thread_type = 3;
++    codec_context_->get_buffer2 = NULL;
++    codec_context_->time_base.num = 1;
++    codec_context_->time_base.den = base::Time::kMicrosecondsPerSecond;
++    codec_context_->pkt_timebase.num = 1;
++    codec_context_->pkt_timebase.den = base::Time::kMicrosecondsPerSecond;
++  }
++  if (!codec)
++    codec = avcodec_find_decoder(codec_context_->codec_id);
+   if (!codec || avcodec_open2(codec_context_.get(), codec, NULL) < 0) {
+     ReleaseFFmpegResources();
+     return false;
+diff --git a/chromium/media/filters/ffmpeg_video_decoder.h b/chromium/media/filters/ffmpeg_video_decoder.h
+index f13ce417f8bc..f97607003d87 100644
+--- a/chromium/media/filters/ffmpeg_video_decoder.h
++++ b/chromium/media/filters/ffmpeg_video_decoder.h
+@@ -91,6 +91,10 @@ class MEDIA_EXPORT FFmpegVideoDecoder : public VideoDecoder {
+ 
+   bool decode_nalus_;
+ 
++  bool decoder_v4l2m2m_;
++
++  int64_t decoder_v4l2m2m_sync_delay_;
++
+   std::unique_ptr<FFmpegDecodingLoop> decoding_loop_;
+ 
+   DISALLOW_COPY_AND_ASSIGN(FFmpegVideoDecoder);
+-- 
+2.28.0
+
