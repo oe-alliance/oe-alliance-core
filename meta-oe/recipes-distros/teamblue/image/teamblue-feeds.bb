@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda
 ALLOW_EMPTY_${PN} = "1"
 
 PV = "${IMAGE_VERSION}"
-PR = "r2"
+PR = "r4"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
@@ -25,6 +25,8 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-skins-gb-fhd \
     enigma2-plugin-skins-gbuniverse \
     enigma2-plugin-skins-pax-fhd \
+    enigma2-plugin-skins-pax \
+    enigma2-plugin-skins-teambluehd \
     enigma2-plugin-skins-pli-hd \
     enigma2-plugin-systemplugins-autobouquetsmaker \
     enigma2-skins \
