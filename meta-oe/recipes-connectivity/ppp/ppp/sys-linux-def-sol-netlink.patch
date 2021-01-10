@@ -1,0 +1,13 @@
+--- a/pppd/sys-linux.c
++++ b/pppd/sys-linux.c
+@@ -93,6 +93,10 @@
+ #include <termios.h>
+ #include <unistd.h>
+ 
++#ifndef SOL_NETLINK
++#define SOL_NETLINK	270
++#endif
++
+ /* This is in netdevice.h. However, this compile will fail miserably if
+    you attempt to include netdevice.h because it has so many references
+    to __memcpy functions which it should not attempt to do. So, since I
