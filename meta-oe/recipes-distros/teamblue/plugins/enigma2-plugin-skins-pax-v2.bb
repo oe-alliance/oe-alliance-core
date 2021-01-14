@@ -19,7 +19,7 @@ RDEPENDS_${PN} = "python-requests \
                   python-lxml\
 "
 
-SRC_URI="git://github.com/teamblue-e2/skin.git;protocol=git;branch=nextp3"
+SRC_URI="git://github.com/teamblue-e2/skin.git;protocol=git;branch=master"
 
 S = "${WORKDIR}/git"
 
