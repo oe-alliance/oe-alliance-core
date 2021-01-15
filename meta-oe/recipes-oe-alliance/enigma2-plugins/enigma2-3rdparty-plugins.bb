@@ -11,7 +11,7 @@ DEPENDS = "tslib mpfr gmp"
 SRCREV = "${AUTOREV}"
 PV = "${IMAGE_VERSION}+gitr${SRCPV}"
 PKGV = "${IMAGE_VERSION}+gitr${GITPKGV}"
-PR = "r275"
+PR = "r276"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
 
@@ -79,7 +79,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-thetvdb_0.7-20120607-r3_mips32el.ipk \
     enigma2-plugin-extensions-timfs_2.32_all.ipk \
     enigma2-plugin-extensions-theweather_5.0r05_all.ipk \
-    enigma2-plugin-extensions-tmbd_8.4_all.ipk \
+    enigma2-plugin-extensions-tmbd_8.6_all.ipk \
     enigma2-plugin-extensions-tmdb_0.7-r2_all.ipk \
     enigma2-plugin-extensions-translator_1.4rc2-fhd-edition_all.ipk \
     enigma2-plugin-extensions-transmission_2.92-r2_all.ipk \
