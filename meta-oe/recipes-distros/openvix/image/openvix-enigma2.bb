@@ -26,7 +26,6 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-extensions-autotimer \
     enigma2-plugin-extensions-epgimport \
     enigma2-plugin-extensions-epgsearch \
-    enigma2-plugin-extensions-epgrefresh \
     enigma2-plugin-extensions-openwebif-webtv \
     enigma2-plugin-extensions-imdb \
     enigma2-plugin-extensions-openwebif-themes \
@@ -36,6 +35,7 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-skins-openvix-vix-day-hd \
     enigma2-plugin-skins-openvix-youvix-blue \
     enigma2-plugin-systemplugins-aboutboxbranding \
+    enigma2-plugin-systemplugins-opentvzapper \
     enigma2-plugin-systemplugins-xmlupdate \
     ${@bb.utils.contains("MACHINE_FEATURES", "uianimation", "enigma2-plugin-systemplugins-animationsetup" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "osdanimation", "enigma2-plugin-systemplugins-animationsetup" , "", d)} \
