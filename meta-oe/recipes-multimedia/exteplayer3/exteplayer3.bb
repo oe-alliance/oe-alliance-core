@@ -14,10 +14,10 @@ PKGV = "67+gitr${GITPKGV}"
 
 PR = "r1"
 
-SRCREV = "${AUTOREV}"
-SRC_URI = "git://github.com/e2iplayer/exteplayer3.git;branch=master"
+SRCREV = "52666caaf08543122ad735e300acb2c2009c83d5"
+SRC_URI = "git://github.com/e2iplayer/www;branch=master"
 
-S = "${WORKDIR}/git/"
+S = "${WORKDIR}/git"
 
 SOURCE_FILES = "main/exteplayer.c"
 SOURCE_FILES =+ "container/container.c"
