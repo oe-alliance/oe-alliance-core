@@ -3,6 +3,6 @@
 @@ -1,4 +1,4 @@
 -SUBDIRS = doc src
 +SUBDIRS = src
- 
- noinst_DATA = dvdauthor.spec
+ ACLOCAL_AMFLAGS = -I m4
+ # as per recommendation at <https://www.gnu.org/software/libtool/manual/html_node/Invoking-libtoolize.html>
  
