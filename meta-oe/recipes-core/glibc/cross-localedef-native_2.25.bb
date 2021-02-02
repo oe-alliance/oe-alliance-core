@@ -19,8 +19,8 @@ GLIBC_GIT_URI ?= "git://sourceware.org/git/glibc.git"
 #
 AUTOTOOLS_SCRIPT_PATH = "${S}/localedef"
 
-inherit native
 inherit autotools
+inherit native
 
 FILESEXTRAPATHS =. "${FILE_DIRNAME}/${PN}:${FILE_DIRNAME}/glibc:"
 

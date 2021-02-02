@@ -10,4 +10,4 @@ SRC_URI = "git://github.com/mx3L/JsonSchemaBuilder;protocol=git;branch=master"
 
 S = "${WORKDIR}/git"
 
-inherit native autotools
+inherit autotools native
