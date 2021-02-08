@@ -22,34 +22,6 @@ The description must be unique for each source, and is displayed on the UI.
 			<url>http://rytecepg.dyndns.tv/epg_data/rytec.channels.xml.xz</url>
 			<url>http://epg.vuplus-community.net/rytec.channels.xml.xz</url>
 		</channel>
-		<channel name="NewCaledonia.channels.xml.xz">
-			<url>http://www.xmltvepg.nl/NewCaledonia.channels.xml.xz</url>
-			<url>http://epgspot.com/rytec_epg/NewCaledonia.channels.xml.xz</url>
-			<url>http://rytecepg.wanwizard.eu/NewCaledonia.channels.xml.xz</url>
-			<url>http://rytecepg.dyndns.tv/epg_data/NewCaledonia.channels.xml.xz</url>
-			<url>http://epg.vuplus-community.net/NewCaledonia.channels.xml.xz</url>
-		</channel>
-		<channel name="CsatCarabean.channels.xml.xz">
-			<url>http://www.xmltvepg.nl/CsatCarabean.channels.xml.xz</url>
-			<url>http://epgspot.com/rytec_epg/CsatCarabean.channels.xml.xz</url>
-			<url>http://rytecepg.wanwizard.eu/CsatCarabean.channels.xml.xz</url>
-			<url>http://rytecepg.dyndns.tv/epg_data/CsatCarabean.channels.xml.xz</url>
-			<url>http://epg.vuplus-community.net/CsatCarabean.channels.xml.xz</url>
-		</channel>
-		<channel name="Reunion.channels.xml.xz">
-			<url>http://www.xmltvepg.nl/Reunion.channels.xml.xz</url>
-			<url>http://epgspot.com/rytec_epg/Reunion.channels.xml.xz</url>
-			<url>http://rytecepg.wanwizard.eu/Reunion.channels.xml.xz</url>
-			<url>http://rytecepg.dyndns.tv/epg_data/Reunion.channels.xml.xz</url>
-			<url>http://epg.vuplus-community.net/Reunion.channels.xml.xz</url>
-		</channel>
-		<channel name="Horizons.channels.xml.xz">
-			<url>http://www.xmltvepg.nl/Horizons.channels.xml.xz</url>
-			<url>http://epgspot.com/rytec_epg/Horizons.channels.xml.xz</url>
-			<url>http://rytecepg.wanwizard.eu/Horizons.channels.xml.xz</url>
-			<url>http://rytecepg.dyndns.tv/epg_data/Horizons.channels.xml.xz</url>
-			<url>http://epg.vuplus-community.net/Horizons.channels.xml.xz</url>
-		</channel>
 	</mappings>
 
 
@@ -334,23 +306,31 @@ The description must be unique for each source, and is displayed on the UI.
 	</sourcecat>
 
 	<sourcecat sourcecatname="Koala Espana EPG Movistar XMLTV">
-    <source type="gen_xmltv" nocheck="1" channels="http://tropical.jungle-team.online/epg/koala_epg.channels.xml.gz">
-        <description>Koala 3 dias XMLTV</description>
-        <url>http://tropical.jungle-team.online/epg/koala3.xml.gz</url>
-    </source>
-    <source type="gen_xmltv" nocheck="1" channels="http://tropical.jungle-team.online/epg/koala_epg.channels.xml.gz">
-        <description>Koala 7 dias XMLTV</description>
-        <url>http://tropical.jungle-team.online/epg/koala7.xml.gz</url>
-    </source>
-    <source type="gen_xmltv" nocheck="1" channels="http://tropical.jungle-team.online/epg/koala_epg.channels.xml.gz">
-        <description>Koala 15 dias XMLTV</description>
-        <url>http://tropical.jungle-team.online/epg/koala15.xml.gz</url>
-    </source>
-    <source type="gen_xmltv" nocheck="1" channels="http://tropical.jungle-team.online/epg/koala_epg.channels.xml.gz">
-        <description>Koala 30 dias XMLTV</description>
-        <url>http://tropical.jungle-team.online/epg/koala30.xml.gz</url>
-    </source>
-    </sourcecat>
+		<source type="gen_xmltv" nocheck="1" channels="http://tropical.jungle-team.online/epg/koala_epg.channels.xml.gz">
+			<description>Koala 3 dias XMLTV</description>
+			<url>http://tropical.jungle-team.online/epg/koala3.xml.gz</url>
+		</source>
+		<source type="gen_xmltv" nocheck="1" channels="http://tropical.jungle-team.online/epg/koala_epg.channels.xml.gz">
+			<description>Koala 7 dias XMLTV</description>
+			<url>http://tropical.jungle-team.online/epg/koala7.xml.gz</url>
+		</source>
+		<source type="gen_xmltv" nocheck="1" channels="http://tropical.jungle-team.online/epg/koala_epg.channels.xml.gz">
+			<description>Koala_subtitulo 7 dias XMLTV </description>
+			<url>http://tropical.jungle-team.online/epg/koala7_2.xml.gz</url>
+		</source>
+		<source type="gen_xmltv" nocheck="1" channels="http://tropical.jungle-team.online/epg/koala_epg.channels.xml.gz">
+			<description>Koala 15 dias XMLTV</description>
+			<url>http://tropical.jungle-team.online/epg/koala15.xml.gz</url>
+		</source>
+		<source type="gen_xmltv" nocheck="1" channels="http://tropical.jungle-team.online/epg/koala_epg.channels.xml.gz">
+			<description>Koala 30 dias XMLTV</description>
+			<url>http://tropical.jungle-team.online/epg/koala30.xml.gz</url>
+		</source>
+		<source type="gen_xmltv" nocheck="1" channels="http://tropical.jungle-team.online/epg/koala_epg.channels.xml.gz">
+			<description>LaQuay TDT Channels XMLTV</description>
+			<url>http://raw.githubusercontent.com/HelmerLuzo/TDTChannels_EPG/master/TDTChannels_EPG.xml.gz</url>
+		</source>
+	</sourcecat>
 
 	<sourcecat sourcecatname="Rytec Italia XMLTV">
 		<source type="gen_xmltv" channels="rytec.channels.xml.xz">
@@ -536,7 +516,6 @@ The description must be unique for each source, and is displayed on the UI.
 		</source>
 	</sourcecat>
 
-
 	<sourcecat sourcecatname="Rytec Slovenia XMLTV">
 		<source type="gen_xmltv" channels="rytec.channels.xml.xz">
 			<description>Slovenija - Podlaga (xz)</description>
@@ -618,82 +597,6 @@ The description must be unique for each source, and is displayed on the UI.
 		</source>
 	</sourcecat>
 
-	<sourcecat sourcecatname="Rytec Csat Africa XMLTV">
-		<source type="gen_xmltv" channels="Horizons.channels.xml.xz">
-			<description>Csat Africa - Base (xz)</description>
-			<url>http://www.xmltvepg.nl/rytecSEN_Basic.xz</url>
-			<url>http://epgspot.com/rytec_epg/rytecSEN_Basic.xz</url>
-			<url>http://rytecepg.wanwizard.eu/rytecSEN_Basic.xz</url>
-			<url>http://rytecepg.dyndns.tv/epg_data/rytecSEN_Basic.xz</url>
-			<url>http://epg.vuplus-community.net/rytecSEN_Basic.xz</url>
-		</source>
-		<source type="gen_xmltv" channels="Horizons.channels.xml.xz">
-			<description>Csat Africa - Sport/Cinema (xz)</description>
-			<url>http://www.xmltvepg.nl/rytecFRO_SportMovies.xz</url>
-			<url>http://epgspot.com/rytec_epg/rytecFRO_SportMovies.xz</url>
-			<url>http://rytecepg.wanwizard.eu/rytecFRO_SportMovies.xz</url>
-			<url>http://rytecepg.dyndns.tv/epg_data/rytecFRO_SportMovies.xz</url>
-			<url>http://epg.vuplus-community.net/rytecFRO_SportMovies.xz</url>
-		</source>
-	</sourcecat>
-
-	<sourcecat sourcecatname="Rytec Reunion XMLTV">
-		<source type="gen_xmltv" channels="Reunion.channels.xml.xz">
-			<description>Reunion - Base (xz)</description>
-			<url>http://www.xmltvepg.nl/rytecREU_Basic.xz (xz)</url>
-			<url>http://epgspot.com/rytec_epg/rytecREU_Basic.xz</url>
-			<url>http://rytecepg.wanwizard.eu/rytecREU_Basic.xz</url>
-			<url>http://rytecepg.dyndns.tv/epg_data/rytecREU_Basic.xz</url>
-			<url>http://epg.vuplus-community.net/rytecREU_Basic.xz</url>
-		</source>
-		<source type="gen_xmltv" channels="Reunion.channels.xml.xz">
-			<description>Reunion - Sport/Cinema (xz)</description>
-			<url>http://www.xmltvepg.nl/rytecFRO_SportMovies.xz</url>
-			<url>http://epgspot.com/rytec_epg/rytecFRO_SportMovies.xz</url>
-			<url>http://rytecepg.wanwizard.eu/rytecFRO_SportMovies.xz</url>
-			<url>http://rytecepg.dyndns.tv/epg_data/rytecFRO_SportMovies.xz</url>
-			<url>http://epg.vuplus-community.net/rytecFRO_SportMovies.xz</url>
-		</source>
-	</sourcecat>
-
-	<sourcecat sourcecatname="Rytec Csat Carabean XMLTV">
-		<source type="gen_xmltv" channels="CsatCarabean.channels.xml.xz">
-			<description>Caraibes - Base (xz)</description>
-			<url>http://www.xmltvepg.nl/rytecMTQ_Basic.xz</url>
-			<url>http://epgspot.com/rytec_epg/rytecMTQ_Basic.xz</url>
-			<url>http://rytecepg.wanwizard.eu/rytecMTQ_Basic.xz</url>
-			<url>http://rytecepg.dyndns.tv/epg_data/rytecMTQ_Basic.xz</url>
-			<url>http://epg.vuplus-community.net/rytecMTQ_Basic.xz</url>
-		</source>
-		<source type="gen_xmltv" channels="CsatCarabean.channels.xml.xz">
-			<description>Caraibes - Sport/Cinema (xz)</description>
-			<url>http://www.xmltvepg.nl/rytecFRO_SportMovies.xz</url>
-			<url>http://epgspot.com/rytec_epg/rytecFRO_SportMovies.xz</url>
-			<url>http://rytecepg.wanwizard.eu/rytecFRO_SportMovies.xz</url>
-			<url>http://rytecepg.dyndns.tv/epg_data/rytecFRO_SportMovies.xz</url>
-			<url>http://epg.vuplus-community.net/rytecFRO_SportMovies.xz</url>
-		</source>
-	</sourcecat>
-
-	<sourcecat sourcecatname="Rytec New Caledonia XMLTV">
-		<source type="gen_xmltv" channels="NewCaledonia.channels.xml.xz">
-			<description>Nouvelle Caledonie - Base (xz)</description>
-			<url>http://www.xmltvepg.nl/rytecNCL_Basic.xz</url>
-			<url>http://epgspot.com/rytec_epg/rytecNCL_Basic.xz</url>
-			<url>http://rytecepg.wanwizard.eu/rytecNCL_Basic.xz</url>
-			<url>http://rytecepg.dyndns.tv/epg_data/rytecNCL_Basic.xz</url>
-			<url>http://epg.vuplus-community.net/rytecNCL_Basic.xz</url>
-		</source>
-		<source type="gen_xmltv" channels="NewCaledonia.channels.xml.xz">
-			<description>Nouvelle Caledonie - Sport/Cinema (xz)</description>
-			<url>http://www.xmltvepg.nl/rytecFRO_SportMovies.xz</url>
-			<url>http://epgspot.com/rytec_epg/rytecFRO_SportMovies.xz</url>
-			<url>http://rytecepg.wanwizard.eu/rytecFRO_SportMovies.xz</url>
-			<url>http://rytecepg.dyndns.tv/epg_data/rytecFRO_SportMovies.xz</url>
-			<url>http://epg.vuplus-community.net/rytecFRO_SportMovies.xz</url>
-		</source>
-	</sourcecat>
-
 	<sourcecat sourcecatname="Rytec UK Sat/Virgin XMLTV">
 		<source type="gen_xmltv" channels="rytec.channels.xml.xz">
 			<description>UK/Ireland - FreeSat (xz)</description>
@@ -765,6 +668,7 @@ The description must be unique for each source, and is displayed on the UI.
 	</sourcecat>
 
 	<sourcecat sourcecatname="Russian XMLTV">
+
 		<!-- EPG FROM runigma by kil1970 - -->
 		<source type="gen_xmltv" nocheck="1" channels="http://runigma.com.ua/EPG/SAT/channels-4W.xml.gz">
 		  <description>(epg by Igor@K-runigma)- AMOS 4.0W </description>
@@ -878,3 +782,4 @@ The description must be unique for each source, and is displayed on the UI.
 	</sourcecat>
 
 </sources>
+
