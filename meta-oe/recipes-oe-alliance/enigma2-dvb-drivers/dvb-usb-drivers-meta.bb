@@ -30,20 +30,20 @@ DEPENDS = "\
     enigma2-plugin-drivers-ct2-dvb-usb-dualhd \
     ${@bb.utils.contains("DEFAULTTUNE", "sh4", "" , "enigma2-plugin-drivers-dvb-usb-dvbsky-classic", d)} \
     ${@bb.utils.contains("MACHINE", "vuduo", "enigma2-plugin-drivers-dvb-usb-turbo", "", d)} \
-    ${@bb.utils.contains("MACHINE", "vuduo2", "enigma2-plugin-drivers-dvb-usb-turbo", "", d)} \
+    ${@bb.utils.contains("MACHINE", "vuduo2", "enigma2-plugin-drivers-dvb-usb-turbo enigma2-plugin-drivers-dvb-usb-turbo2", "", d)} \
     ${@bb.utils.contains("MACHINE", "vusolo", "enigma2-plugin-drivers-dvb-usb-turbo", "", d)} \
-    ${@bb.utils.contains("MACHINE", "vusolo2", "enigma2-plugin-drivers-dvb-usb-turbo", "", d)} \
-    ${@bb.utils.contains("MACHINE", "vusolose", "enigma2-plugin-drivers-dvb-usb-turbo", "", d)} \
+    ${@bb.utils.contains("MACHINE", "vusolo2", "enigma2-plugin-drivers-dvb-usb-turbo enigma2-plugin-drivers-dvb-usb-turbo2", "", d)} \
+    ${@bb.utils.contains("MACHINE", "vusolose", "enigma2-plugin-drivers-dvb-usb-turbo enigma2-plugin-drivers-dvb-usb-turbo2", "", d)} \
     ${@bb.utils.contains("MACHINE", "vuultimo", "enigma2-plugin-drivers-dvb-usb-turbo", "", d)} \
     ${@bb.utils.contains("MACHINE", "vuuno", "enigma2-plugin-drivers-dvb-usb-turbo", "", d)} \
-    ${@bb.utils.contains("MACHINE", "vuzero", "enigma2-plugin-drivers-dvb-usb-turbo", "", d)} \
-    ${@bb.utils.contains("MACHINE", "vusolo4k", "enigma2-plugin-drivers-dvb-usb-turbo", "", d)} \
-    ${@bb.utils.contains("MACHINE", "vuuno4k", "enigma2-plugin-drivers-dvb-usb-turbo", "", d)} \
-    ${@bb.utils.contains("MACHINE", "vuuno4kse", "enigma2-plugin-drivers-dvb-usb-turbo", "", d)} \
-    ${@bb.utils.contains("MACHINE", "vuultimo4k", "enigma2-plugin-drivers-dvb-usb-turbo", "", d)} \
-    ${@bb.utils.contains("MACHINE", "vuzero4k", "enigma2-plugin-drivers-dvb-usb-turbo", "", d)} \
-    ${@bb.utils.contains("MACHINE", "vuduo4k", "enigma2-plugin-drivers-dvb-usb-turbo", "", d)} \
-    ${@bb.utils.contains("MACHINE", "vuduo4kse", "enigma2-plugin-drivers-dvb-usb-turbo", "", d)} \
+    ${@bb.utils.contains("MACHINE", "vuzero", "enigma2-plugin-drivers-dvb-usb-turbo enigma2-plugin-drivers-dvb-usb-turbo2", "", d)} \
+    ${@bb.utils.contains("MACHINE", "vusolo4k", "enigma2-plugin-drivers-dvb-usb-turbo enigma2-plugin-drivers-dvb-usb-turbo2", "", d)} \
+    ${@bb.utils.contains("MACHINE", "vuuno4k", "enigma2-plugin-drivers-dvb-usb-turbo enigma2-plugin-drivers-dvb-usb-turbo2", "", d)} \
+    ${@bb.utils.contains("MACHINE", "vuuno4kse", "enigma2-plugin-drivers-dvb-usb-turbo enigma2-plugin-drivers-dvb-usb-turbo2", "", d)} \
+    ${@bb.utils.contains("MACHINE", "vuultimo4k", "enigma2-plugin-drivers-dvb-usb-turbo enigma2-plugin-drivers-dvb-usb-turbo2", "", d)} \
+    ${@bb.utils.contains("MACHINE", "vuzero4k", "enigma2-plugin-drivers-dvb-usb-turbo enigma2-plugin-drivers-dvb-usb-turbo2", "", d)} \
+    ${@bb.utils.contains("MACHINE", "vuduo4k", "enigma2-plugin-drivers-dvb-usb-turbo enigma2-plugin-drivers-dvb-usb-turbo2", "", d)} \
+    ${@bb.utils.contains("MACHINE", "vuduo4kse", "enigma2-plugin-drivers-dvb-usb-turbo enigma2-plugin-drivers-dvb-usb-turbo2", "", d)} \
     ${@bb.utils.contains("MACHINE", "xc7346", "enigma2-plugin-drivers-dvb-edicombo", "", d)} \
     ${@bb.utils.contains("MACHINE", "xc7362", "enigma2-plugin-drivers-dvb-edicombo", "", d)} \
     ${@bb.utils.contains("MACHINE", "dags7335", "enigma2-plugin-drivers-dvb-edicombo", "", d)} \
