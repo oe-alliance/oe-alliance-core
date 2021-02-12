@@ -8,8 +8,8 @@ DEPENDS += "python-lzma"
 
 SRCREV="${AUTOREV}"
 
-PV = "git${SRCPV}"
-PKGV = "git${GITPKGV}"
+PV = "6.12+git${SRCPV}"
+PKGV = "6.12+git${GITPKGV}"
 PR = "r0"
 inherit gitpkgv allarch
 
