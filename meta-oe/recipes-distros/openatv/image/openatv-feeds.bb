@@ -47,6 +47,7 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-settings-defaultsat \
     enigma2-plugin-extensions-specialjump \
     enigma2-plugin-extensions-blurayplayer \
+    enigma2-plugin-extensions-chocholousek-picons \
     enigma2-plugin-extensions-gbipboxclient \
     enigma2-plugin-systemplugins-autobouquetsmaker \
     ${@bb.utils.contains("MACHINE_BRAND", "AZBOX", "enigma2-plugin-extensions-azplay enigma2-plugin-extensions-aziptv", "", d)} \
