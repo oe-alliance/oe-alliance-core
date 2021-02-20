@@ -9,7 +9,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'maxytecmulti', 'Multibox Combo' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axmulticombo', 'Multibox Combo' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axmultitwin', 'Multibox TWIN' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'anadolmultitwin', 'Multibox TWIN' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'maxytecmultise', 'Multibox Plus' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'maxytecmultise', 'Multibox SE' , '', d)}\
 "
 
 MACHINE_BRAND = "\
