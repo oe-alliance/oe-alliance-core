@@ -4,43 +4,39 @@ include conf/machine/include/build-extras.inc
 BRAND_OEM = "maxytec"
 
 MACHINE_NAME = "\
-${@bb.utils.contains('MACHINEBUILD', 'ultrav8plus', 'V8PLUS Combo' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'anadolmulti', 'Multibox Combo' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'maxytecmulti', 'Multibox Combo' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axmulticombo', 'Multibox Combo' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axmultitwin', 'Multibox TWIN' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'anadolmultitwin', 'Multibox TWIN' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'maxytecmultiplus', 'Multibox Plus' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'maxytecmultise', 'Multibox Plus' , '', d)}\
 "
 
 MACHINE_BRAND = "\
-${@bb.utils.contains('MACHINEBUILD', 'ultrav8plus', 'ULTRA BOX' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'anadolmulti', 'ANADOL' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'maxytecmulti', 'Maxytec' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axmulticombo', 'AX' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axmultitwin', 'AX' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'anadolmultitwin', 'ANADOL' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'maxytecmultiplus', 'Maxytec' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'maxytecmultise', 'Maxytec' , '', d)}\
 "
 
 IMAGEDIR = "\
-${@bb.utils.contains('MACHINEBUILD', 'ultrav8plus', 'v8plus' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'anadolmulti', 'multibox' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'maxytecmulti', 'multibox' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axmulticombo', 'multibox' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axmultitwin', 'multibox' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'anadolmultitwin', 'multibox' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'maxytecmultiplus', 'plus' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'maxytecmultise', 'multiboxse' , '', d)}\
 "
 
 MACHINE_DRIVER ?= "\
-${@bb.utils.contains('MACHINEBUILD', 'ultrav8plus', 'v8plus' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'anadolmulti', 'multibox' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'maxytecmulti', 'multibox' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axmulticombo', 'multibox' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axmultitwin', 'multibox' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'anadolmultitwin', 'multibox' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'maxytecmultiplus', 'plus' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'maxytecmultise', 'multiboxse' , '', d)}\
 "
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "\
