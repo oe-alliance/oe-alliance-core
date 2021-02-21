@@ -9,8 +9,6 @@ PV = "${KV}"
 PR = "${SRCDATE}"
 
 SRC_URI = " \
-#	http://archive.vuplus.com/download/usb/tuner/turbo/vuplus_tuner_turbo2_driver_${PV}_${TARGET_ARCH}_${SRCDATE}.tar.gz;name=driver \
-#	http://archive.vuplus.com/download/usb/tuner/turbo/vuplus_tuner_turbo2_bin_fw_${TARGET_ARCH}_${FW_SRCDATE}.tar.gz;name=binfw \
 	http://source.mynonpublic.com/vuplus/vuplus_tuner_turbo2_driver_${PV}_${TARGET_ARCH}_${SRCDATE}.tar.gz;name=driver \
 	http://source.mynonpublic.com/vuplus/vuplus_tuner_turbo2_bin_fw_${TARGET_ARCH}_${FW_SRCDATE}.tar.gz;name=binfw \
 "
