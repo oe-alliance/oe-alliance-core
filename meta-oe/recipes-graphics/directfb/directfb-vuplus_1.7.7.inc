@@ -41,7 +41,6 @@ SRC_URI_append_class-target += " \
 	file://vuplus-conf.patch \
 	file://vuplus-prevent-VT.patch \
 	file://disable_linux_input_patch.diff \
-	#http://archive.vuplus.com/download/build_support/vuplus/${GFX_FILE};name=gfxdriver.${MACHINE} \
 	http://source.mynonpublic.com/vuplus/${GFX_FILE};name=gfxdriver.${MACHINE} \
 "
 
