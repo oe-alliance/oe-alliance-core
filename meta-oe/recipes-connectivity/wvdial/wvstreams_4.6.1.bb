@@ -18,8 +18,8 @@ SRC_URI = "http://${BPN}.googlecode.com/files/${BP}.tar.gz \
 	  file://wvstreams-4.6.1-bool.patch \
           "
 
-SRC_URI[md5sum] = "2760dac31a43d452a19a3147bfde571c"
-SRC_URI[sha256sum] = "8403f5fbf83aa9ac0c6ce15d97fd85607488152aa84e007b7d0621b8ebc07633"
+SRC_URI[md5sum] = "d4a0e7f4375aead34e6569edb9ad6d1e"
+SRC_URI[sha256sum] = "864596d93013c9608b48f16fc9f976addf7186926d36f783979b79bebb3ac704"
 
 inherit autotools-brokensep pkgconfig
 
