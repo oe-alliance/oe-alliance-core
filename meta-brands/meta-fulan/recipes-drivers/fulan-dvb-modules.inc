@@ -26,6 +26,7 @@ FILESEXTRAPATHS_prepend := "${THISDIR}/fulan-dvb-modules:"
 SRC_URI = " \
     git://github.com/Duckbox-Developers/driver.git;protocol=git \
     file://aotom_spark_procfs.patch;patch=1 \
+    file://multicom-embx-osinterface-elselock.patch;patch=1 \
     file://ddbootup \
     file://sh4booster \
     file://modules.conf \

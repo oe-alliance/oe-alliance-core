@@ -1,0 +1,12 @@
+--- a/multicom/include/embx_osinterface.h
++++ b/multicom/include/embx_osinterface.h
+@@ -385,7 +385,8 @@ EMBX_VOID EMBX_OS_PurgeCache(EMBX_VOID *ptr, EMBX_UINT sz);
+ #else
+ #if __STDC_VERSION__ >= 199901L
+ #define EMBX_INLINE inline
+-#elselock->n[cpuID].marker
++#else
++#lock->n[cpuID].marker
+ #define EMBX_INLINE
+ #endif
+ #endif
