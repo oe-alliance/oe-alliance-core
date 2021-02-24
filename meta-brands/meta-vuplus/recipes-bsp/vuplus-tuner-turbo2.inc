@@ -42,3 +42,4 @@ FILES_${PN} = "/"
 SRC_URI[binfw.md5sum] = "aa1be089011f3bdc15d88d7f70dd4c7e"
 SRC_URI[binfw.sha256sum] = "9a130ee3a67994029eec37366a4cce67031d6d5e8bfda0ed8b6ce59983bbb376"
 
+INSANE_SKIP_${PN} = "ldflags"
