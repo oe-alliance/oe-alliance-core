@@ -1,0 +1,24 @@
+--- a/lib/getrandom.c
++++ b/lib/getrandom.c
+@@ -110,7 +110,7 @@ initialize (void)
+    Return the number of bytes written (> 0).
+    Upon error, return -1 and set errno.  */
+ ssize_t
+-getrandom (void *buffer, size_t length, unsigned int flags)
++__getrandom (void *buffer, size_t length, unsigned int flags)
+ #undef getrandom
+ {
+ #if defined _WIN32 && ! defined __CYGWIN__
+--- a/lib/sys_random.in.h
++++ b/lib/sys_random.in.h
+@@ -65,8 +65,8 @@
+ /* Fill a buffer with random bytes.  */
+ # if @REPLACE_GETRANDOM@
+ #  if !(defined __cplusplus && defined GNULIB_NAMESPACE)
+-#   undef getrandom
+-#   define getrandom rpl_getrandom
++#   undef __getrandom
++#   define __getrandom rpl_getrandom
+ #  endif
+ _GL_FUNCDECL_RPL (getrandom, ssize_t,
+                   (void *buffer, size_t length, unsigned int flags)
