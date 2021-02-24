@@ -24,3 +24,8 @@ fi
 if [ -d "/sys/block/sda" ]; then
     search "/sys/block/sda/sda*"
 fi
+if [ -e "/dev/block/by-name/flag" ]; then
+    if [ ! -e /dev/block/by-name/bootoptions ]; then
+      ln -sf /boot/ /dev/block/by-name/bootoptions
+    fi
+fi

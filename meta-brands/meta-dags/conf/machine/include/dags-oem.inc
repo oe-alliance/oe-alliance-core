@@ -60,6 +60,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'lunix', 'LUNIX' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'force4', 'FORCE 4' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'lunix4k', 'LUNIX 4K' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'lunixco', 'LUNIX CO' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'dual', 'DUAL 4K UHD', '', d)}\
 "
 
 MACHINE_BRAND = "\
@@ -116,6 +117,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'lunix', 'qviart' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'force4', 'Iqon' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'lunix4k', 'qviart' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'lunixco', 'qviart' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'dual', 'qviart', '', d)}\
 "
 
 IMAGEDIR ?= "\
@@ -172,6 +174,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'lunix', 'update/lunix/cfe' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'force4', 'update/force4' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'lunix4k', 'update/lunix4k' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'lunixco', 'update/lunixco/cfe' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'dual', 'dual', '',d)}\
 "
 
 MTD_KERNEL = "\
@@ -228,6 +231,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'lunix', 'mtd2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'force4', 'mmcblk0p1' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'lunix4k', 'mmcblk0p1' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'lunixco', 'mtd2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'dual','mmcblk0p12', '',d)}\
 "
 
 MTD_ROOTFS = "\
@@ -284,6 +288,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'lunix', 'mtd0' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'force4', 'mmcblk0p4' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'lunix4k', 'mmcblk0p4' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'lunixco', 'mtd0' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'dual', 'mmcblk0p13', '', d)}\
 "
 
 SPLASH1_BMP = "\
@@ -382,6 +387,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'lunix', 'dags73625' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'force4', 'dags72604' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'lunix4k', 'dags72604' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'lunixco', 'dags73625' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'dual', 'dagsmv200', '', d)}\
 "
 
 MACHINE_FEATURES += "3dtv alsa hdmicec switchoff textlcd ci skins1080 HDMI \
@@ -445,7 +451,7 @@ DVBSKYPROVIDER = "kernel"
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS += " \
     dags-dvb-modules-${MACHINE_DRIVER} \
     ${@bb.utils.contains("MACHINE_FEATURES", "proxy", "platform-util-${MACHINE}", "", d)} \
-    dags-shutdown \
+    ${@bb.utils.contains('SOC_FAMILY', 'hisi3798mv200', 'hisi3798mv200-shutdown' , 'dags-shutdown', d)} \
     "
 
 MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS += "\
@@ -462,10 +468,11 @@ MACHINE_EXTRA_RRECOMMENDS += " \
 include conf/machine/include/autoload-filesystems.inc
 
 GLIBC_EXTRA_OECONF = "--with-tls"
-DVBMEDIASINK_CONFIG = "--with-dags --with-pcm --with-eac3 --with-amr --with-wmv \
+DVBMEDIASINK_CONFIG = "--with-pcm --with-eac3 --with-amr --with-wmv \
     ${@bb.utils.contains('MACHINE', 'dags73625', '--with-h265 --with-vb6 --with-vb8 --with-spark' , '', d)} \
     ${@bb.utils.contains('MACHINE', 'dags7252', '--with-h265 --with-vb6 --with-vb8 --with-vb9 --with-spark' , '', d)} \
     ${@bb.utils.contains('MACHINE', 'dags72604', '--with-h265 --with-vb9' , '', d)} \
+    ${@bb.utils.contains('MACHINE', 'dagsmv200', '--with-h265 --with-vb8 --with-vb9 --with-spark --with-dts' , ' --with-dags', d)} \
 "
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-dags"
@@ -474,8 +481,6 @@ PREFERRED_PROVIDER_virtual/blindscan-dvbs_dags72604 = "dags-blindscan-utils"
 PREFERRED_PROVIDER_virtual/blindscan-dvbc = "vuplus-blindscan-utils"
 PREFERRED_PROVIDER_virtual/transtreamproxy = "vuplus-transtreamproxy"
 
-PREFERRED_PROVIDER_virtual/egl = "v3d-libgles-${MACHINE}" 
-PREFERRED_PROVIDER_virtual/libgles2 = "v3d-libgles-${MACHINE}"
 PREFERRED_PROVIDER_virtual/kodi = "stb-kodi-${MACHINE}"
 
 require conf/machine/include/soc-family.inc
