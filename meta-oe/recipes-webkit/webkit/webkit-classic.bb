@@ -63,7 +63,7 @@ CXXFLAGS += " -std=gnu++98 -Wno-expansion-to-defined -Wno-deprecated-copy -Wno-c
 
 OECMAKE_GENERATOR = "Unix Makefiles"
 
-EXTRA_AUTORECONF = " -I Source/autotools "
+EXTRA_AUTORECONF += " -I Source/autotools "
 
 ARM_INSTRUCTION_SET = "arm"
 
