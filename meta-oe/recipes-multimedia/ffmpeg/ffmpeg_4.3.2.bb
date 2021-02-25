@@ -23,9 +23,10 @@ LIC_FILES_CHKSUM = "file://COPYING.GPLv2;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
                     file://COPYING.LGPLv2.1;md5=bd7a443320af8c812e4c18d1b79df004 \
                     file://COPYING.LGPLv3;md5=e6a600fd5e1d9cbde2d983680233ad02"
 
-SRCREV = "d08bcbffffee13b4e3663598a1d8f805a095688d"
+SRCREV = "f719f869907764e6412a6af6e178c46e5f915d25"
 SRC_URI = "git://github.com/FFmpeg/FFmpeg.git;branch=release/4.3 \
            file://4_mips64_cpu_detection.patch \
+           file://0001-libavutil-include-assembly-with-full-path-from-sourc.patch \
            "
 
 # Build fails when thumb is enabled: https://bugzilla.yoctoproject.org/show_bug.cgi?id=7717
@@ -44,7 +45,8 @@ S = "${WORKDIR}/git"
 inherit autotools pkgconfig
 
 PACKAGECONFIG ??= "avdevice avfilter avcodec avformat swresample swscale postproc avresample \
-                   alsa bzlib gpl lzma theora x264 zlib \
+                   alsa bzlib gpl lzma pic pthreads shared theora x264 zlib \
+                   ${@bb.utils.contains('AVAILTUNES', 'mips32r2', 'mips32r2', '', d)} \
                    ${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'xv xcb', '', d)}"
 
 # libraries to build in addition to avutil
@@ -83,6 +85,13 @@ PACKAGECONFIG[xcb] = "--enable-libxcb,--disable-libxcb,libxcb"
 PACKAGECONFIG[xv] = "--enable-outdev=xv,--disable-outdev=xv,libxv"
 PACKAGECONFIG[zlib] = "--enable-zlib,--disable-zlib,zlib"
 
+# other configuration options
+PACKAGECONFIG[mips32r2] = ",--disable-mipsdsp --disable-mipsdspr2"
+PACKAGECONFIG[pic] = "--enable-pic"
+PACKAGECONFIG[pthreads] = "--enable-pthreads,--disable-pthreads"
+PACKAGECONFIG[shared] = "--enable-shared"
+PACKAGECONFIG[strip] = ",--disable-stripping"
+
 # Check codecs that require --enable-nonfree
 USE_NONFREE = "${@bb.utils.contains_any('PACKAGECONFIG', [ 'openssl' ], 'yes', '', d)}"
 
@@ -93,10 +102,6 @@ def cpu(d):
     return 'generic'
 
 EXTRA_OECONF = " \
-    --disable-stripping \
-    --enable-pic \
-    --enable-shared \
-    --enable-pthreads \
     ${@bb.utils.contains('USE_NONFREE', 'yes', '--enable-nonfree', '', d)} \
     \
     --cross-prefix=${TARGET_PREFIX} \
@@ -114,7 +119,6 @@ EXTRA_OECONF = " \
     --libdir=${libdir} \
     --shlibdir=${libdir} \
     --datadir=${datadir}/ffmpeg \
-    ${@bb.utils.contains('AVAILTUNES', 'mips32r2', '', '--disable-mipsdsp --disable-mipsdspr2', d)} \
     --cpu=${@cpu(d)} \
     --pkg-config=pkg-config \
 "
