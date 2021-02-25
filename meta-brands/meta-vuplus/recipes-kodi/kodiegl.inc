@@ -7,7 +7,7 @@ PR = "${PKGDATE}"
 PROVIDES += "kodiegl"
 RPROVIDES_${PN} += "kodiegl"
 
-SRC_URI = "http://archive.vuplus.com/download/build_support/kodi/KodiGLESPL_${MACHINE}_${PKGDATE}.tar.gz"
+SRC_URI = "http://code.vuplus.com/download/release/kodi/KodiGLESPL_${MACHINE}_${PKGDATE}.tar.gz"
 
 S = "${WORKDIR}/KodiGLESPL_${MACHINE}"
 

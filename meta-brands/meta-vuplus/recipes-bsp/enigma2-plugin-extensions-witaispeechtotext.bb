@@ -11,7 +11,7 @@ SRCDATE_PR = "r0"
 PR="${SRCDATE}.${SRCDATE_PR}"
 
 SRC_URI = " \
-    http://archive.vuplus.com/download/build_support/vuplus/enigma2-plugin-witaispeechtotext-${PR}.tar.gz \
+    http://code.vuplus.com/download/release/plugin/enigma2-plugin-witaispeechtotext-${PR}.tar.gz \
 "
 
 S = "${WORKDIR}/enigma2-plugin-witaispeechtotext"

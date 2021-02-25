@@ -8,7 +8,7 @@ RDEPENDS_${PN} = "vuplus-webkithbbtv-dumpait webkit-hbbtv-browser libupnp1.6"
 
 PV = "1.1"
 PR = "20170105.r0"
-SRC_URI = "http://archive.vuplus.com/download/build_support/webkit-hbbtv-plugin_${PR}.tar.gz"
+SRC_URI = "http://code.vuplus.com/download/release/webkit-hbbtv-plugin_${PR}.tar.gz"
 
 S = "${WORKDIR}"
 

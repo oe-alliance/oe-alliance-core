@@ -14,7 +14,7 @@ LIC_FILES_CHKSUM = "file://${WORKDIR}/linux/COPYING;md5=d7810fab7487fb0aad327b76
 
 MACHINE_KERNEL_PR_append = "oea4.1-r2"
 
-SRC_URI = "http://archive.vuplus.com/download/kernel/stblinux-${KV}.tar.bz2 \
+SRC_URI = "http://code.vuplus.com/download/release/kernel/stblinux-${KV}.tar.bz2 \
     file://defconfig \
     file://add-dmx-source-timecode.patch \
     file://af9015-output-full-range-SNR.patch \

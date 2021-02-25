@@ -7,7 +7,7 @@ PR = "r1"
 
 RDEPENDS_${PN} = "libvupl-example-cube"
 
-SRC_URI = "http://archive.vuplus.com/download/build_support/enigma2-plugin-demoplugins-libvupldemo.${PR}.tar.gz"
+SRC_URI = "http://code.vuplus.com/download/release/support/enigma2-plugin-demoplugins-libvupldemo.${PR}.tar.gz"
 
 do_install_append() {
 	install -d ${D}/usr/lib/enigma2/python/Plugins/Extensions/libvupldemo

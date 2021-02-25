@@ -12,7 +12,7 @@ INITSCRIPT_PARAMS = "start 03 S ."
 INITSCRIPT_NAME = "vuplus-dvb-modules"
 
 SRC_URI = " \
-	http://archive.vuplus.com/download/drivers/vuplus-dvb-modules-${MACHINE}-${PV}-${SRCDATE}.tar.gz \
+	http://code.vuplus.com/download/release/vuplus-dvb-modules/vuplus-dvb-modules-${MACHINE}-${PV}-${SRCDATE}.tar.gz \
 	file://${INITSCRIPT_NAME}.sysvinit \
 "
 
