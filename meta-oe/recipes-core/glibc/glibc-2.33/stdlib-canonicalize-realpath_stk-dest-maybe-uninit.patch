@@ -1,0 +1,10 @@
+--- a/stdlib/canonicalize.c
++++ b/stdlib/canonicalize.c
+@@ -413,6 +413,7 @@ error_nomem:
+       return failed ? NULL : resolved;
+     }
+ 
++#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+   return scratch_buffer_dupfree (rname_buf, dest - rname);
+ }
+ 
