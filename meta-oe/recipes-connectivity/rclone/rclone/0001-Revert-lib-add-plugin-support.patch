@@ -1,6 +1,6 @@
 --- a/src/github.com/rclone/rclone/CONTRIBUTING.md
 +++ b/src/github.com/rclone/rclone/CONTRIBUTING.md
-@@ -379,37 +379,3 @@ alphabetical order of full name of remote (eg `drive` is ordered as
+@@ -379,37 +379,3 @@ alphabetical order of full name of remote (e.g. `drive` is ordered as
  
  Once you've written the docs, run `make serve` and check they look OK
  in the web browser and the links (internal and external) all work.
@@ -25,7 +25,7 @@
 -   - If this variable doesn't exist, plugin support is disabled.
 -   - Plugins must be compiled against the exact version of rclone to work.
 -     (The rclone used during building the plugin must be the same as the source of rclone)
--     
+-
 -Building
 -
 -To turn your existing additions into a Go plugin, move them to an external repository
