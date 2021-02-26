@@ -22,6 +22,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'ferguson4k', 'U5 PVR' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinobotu55', 'DINOBOT U55' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinoboth265', 'DINOBOT H265' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'hitube4k', '4K' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'hitube4kpro', '4K Pro' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iziboxone4k', 'ONE 4K' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iziboxelite4k', 'Elite 4K' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iziboxx3', 'X3' , '', d)}\
@@ -60,6 +61,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'ferguson4k', 'Ferguson' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinobotu55', 'Vivant' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinoboth265', 'Vivant' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'hitube4k', 'HITUBE' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'hitube4kpro', 'HITUBE' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iziboxone4k', 'IZIBOX' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iziboxelite4k', 'IZIBOX' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iziboxx3', 'IZIBOX' , '', d)}\
@@ -98,6 +100,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'ferguson4k', 'mmcblk0p10' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinobotu55', 'mtd10' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinoboth265', 'mtd8' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'hitube4k', 'mtd10' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'hitube4kpro', 'mmcblk0p9' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iziboxone4k', 'mtd10' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iziboxelite4k', 'mmcblk0p9' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iziboxx3', 'mtd10' , '', d)}\
@@ -136,6 +139,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'ferguson4k', 'mmcblk0p13' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinobotu55', 'mtd11' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinoboth265', 'mtd9' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'hitube4k', 'mtd11' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'hitube4kpro', 'mmcblk0p10' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iziboxone4k', 'mtd11' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iziboxelite4k', 'mmcblk0p10' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iziboxx3', 'mtd11' , '', d)}\
@@ -174,6 +178,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'ferguson4k', 'no' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinobotu55', 'no' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinoboth265', 'no' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'hitube4k', 'no' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'hitube4kpro', 'no' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iziboxone4k', 'no' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iziboxelite4k', 'no' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iziboxx3', 'no' , '', d)}\
@@ -212,6 +217,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'ferguson4k', 'dinobot/${MACHINE}' , '', d)
 ${@bb.utils.contains('MACHINEBUILD', 'dinobotu55', 'dinobot/${MACHINE}' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinoboth265', 'dinobot/${MACHINE}' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'hitube4k', 'dinobot/${MACHINE}' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'hitube4kpro', 'dinobot/${MACHINE}' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iziboxone4k', 'dinobot/${MACHINE}' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iziboxelite4k', 'izibox/${MACHINE}' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iziboxx3', 'izibox/x3' , '', d)}\
