@@ -8,7 +8,7 @@ PV = "${KV}"
 PR = "r1"
 
 DOWNLOADMACHINE ?= "${MACHINE}"
-SRC_URI = "http://archive.vuplus.com/download/drivers/vuplus-dvb-modules-${DOWNLOADMACHINE}-${PV}-${SRCDATE}.tar.gz"
+SRC_URI = "http://code.vuplus.com/download/release/vuplus-dvb-modules/vuplus-dvb-modules-${DOWNLOADMACHINE}-${PV}-${SRCDATE}.tar.gz"
 
 S = "${WORKDIR}"
 

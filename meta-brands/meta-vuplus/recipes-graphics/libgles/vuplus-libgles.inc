@@ -12,7 +12,7 @@ PROVIDES = "virtual/libgles2 virtual/egl"
 PROVIDES += "libgles"
 RPROVIDES_${PN} += "libgles"
 
-SRC_URI = "http://archive.vuplus.com/download/build_support/vuplus/libgles-${MACHINE}-${PV}-${PR}.tar.gz"
+SRC_URI = "http://code.vuplus.com/download/release/libgles/libgles-${MACHINE}-${PV}-${PR}.tar.gz"
 
 S = "${WORKDIR}/libgles-${MACHINE}"
 

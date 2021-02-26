@@ -6,7 +6,7 @@ require conf/license/license-close.inc
 
 PV = "1.0"
 PR = "${SRCDATE}"
-SRC_URI = "http://archive.vuplus.com/download/build_support/webkit-hbbtv-browser_${MACHINE}_${SRCDATE}.tar.gz"
+SRC_URI = "http://code.vuplus.com/download/release/support/webkit-hbbtv-browser_${MACHINE}_${SRCDATE}.tar.gz"
 
 RDEPENDS_${PN} = "webkit-gtk"
 

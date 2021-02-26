@@ -9,15 +9,15 @@ PV = "${KV}"
 PR = "${SRCDATE}"
 
 SRC_URI = " \
-    http://archive.vuplus.com/download/usb/tuner/turbo/vuplus_tuner_turbo_driver_${PV}_${SRCDATE}.tar.gz;name=driver \
-    http://archive.vuplus.com/download/usb/tuner/turbo/vuplus_tuner_turbo_bin_fw_${FW_SRCDATE}.tar.gz;name=binfw \
+    http://code.vuplus.com/download/release/turbo/vuplus_tuner_turbo_driver_${PV}_${SRCDATE}.tar.gz;name=driver \
+    http://code.vuplus.com/download/release/turbo/vuplus_tuner_turbo_bin_fw_${FW_SRCDATE}.tar.gz;name=binfw \
 "
 
 SRCDATE_arm = "20151104"
 FW_SRCDATE_arm = "20151104"
 SRC_URI_arm = " \
-    	http://archive.vuplus.com/download/usb/tuner/turbo/vuplus_tuner_turbo_driver_${PV}_${TARGET_ARCH}_${SRCDATE}.tar.gz;name=driver \
-    	http://archive.vuplus.com/download/usb/tuner/turbo/vuplus_tuner_turbo_bin_fw_${TARGET_ARCH}_${FW_SRCDATE}.tar.gz;name=binfw_arm \
+    http://code.vuplus.com/download/release/turbo/vuplus_tuner_turbo_driver_${PV}_${TARGET_ARCH}_${SRCDATE}.tar.gz;name=driver \
+    http://code.vuplus.com/download/release/turbo/vuplus_tuner_turbo_bin_fw_${TARGET_ARCH}_${FW_SRCDATE}.tar.gz;name=binfw_arm \
 "
 
 DEPENDS += "virtual/kernel module-init-tools"

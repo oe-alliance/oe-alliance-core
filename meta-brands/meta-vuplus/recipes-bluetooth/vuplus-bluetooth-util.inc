@@ -8,7 +8,7 @@ RPROVIDES_${PN} += "vuplus-bluetooth-util"
 PR="${SRCDATE}.${SRCDATE_PR}"
 
 SRC_URI = " \
-    http://archive.vuplus.com/download/build_support/vuplus/vuplus-bluetooth-util-${MACHINE}-${PR}.tar.gz \
+    http://code.vuplus.com/download/release/bt/vuplus-bluetooth-util-${MACHINE}-${PR}.tar.gz \
 "
 
 S="${WORKDIR}/vuplus-bluetooth-util-${MACHINE}"
