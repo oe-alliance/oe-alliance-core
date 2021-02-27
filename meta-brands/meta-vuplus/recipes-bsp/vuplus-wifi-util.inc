@@ -9,7 +9,7 @@ PV="16.1"
 PR="${SRCDATE}.${SRCDATE_PR}"
 
 SRC_URI = " \
-    http://archive.vuplus.com/download/build_support/vuplus/vuplus-wifi-util-${MACHINE}-${PV}-${PR}.tar.gz \
+    http://code.vuplus.com/download/release/wifi/vuplus-wifi-util-${MACHINE}-${PV}-${PR}.tar.gz \
 "
 
 S="${WORKDIR}/vuplus-wifi-util-${MACHINE}"

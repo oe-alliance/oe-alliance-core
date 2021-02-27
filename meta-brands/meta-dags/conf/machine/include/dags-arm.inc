@@ -31,3 +31,6 @@ IMAGE_CMD_tar_prepend = "\
 
 EXTRA_IMAGEDEPENDS = "\
     dags-initrd-cfe-${MACHINEBUILD}"
+
+PREFERRED_PROVIDER_virtual/egl = "v3d-libgles-${MACHINE}" 
+PREFERRED_PROVIDER_virtual/libgles2 = "v3d-libgles-${MACHINE}"

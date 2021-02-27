@@ -11,7 +11,7 @@ RPROVIDES_${PN} += "libvupl"
 
 PR = "${SRCDATE}.${SRCDATE_PR}"
 
-SRC_URI = "http://archive.vuplus.com/download/build_support/vuplus/libvupl-${PV}-${MACHINE}-${PR}.tar.gz"
+SRC_URI = "http://code.vuplus.com/download/release/libvupl/libvupl-${PV}-${MACHINE}-${PR}.tar.gz"
 
 INSANE_SKIP_${PN} += "already-stripped dev-so"
 INHIBIT_PACKAGE_STRIP = "1"

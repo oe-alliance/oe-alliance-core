@@ -1,0 +1,35 @@
+diff --git a/arch/arm/include/asm/elf.h b/arch/arm/include/asm/elf.h
+index f13ae153..0c5790e7 100644
+--- a/arch/arm/include/asm/elf.h
++++ b/arch/arm/include/asm/elf.h
+@@ -113,7 +113,7 @@ int dump_task_regs(struct task_struct *t, elf_gregset_t *elfregs);
+ #define ELF_EXEC_PAGESIZE	4096
+ 
+ /* This is the base location for PIE (ET_DYN with INTERP) loads. */
+-#define ELF_ET_DYN_BASE		0x400000UL
++#define ELF_ET_DYN_BASE		(TASK_SIZE / 3 * 2)
+ 
+ /* When the program starts, a1 contains a pointer to a function to be 
+    registered with atexit, as per the SVR4 ABI.  A value of 0 means we 
+diff --git a/arch/arm/include/asm/memory.h b/arch/arm/include/asm/memory.h
+index c79b57bf..1b23cb9f 100644
+--- a/arch/arm/include/asm/memory.h
++++ b/arch/arm/include/asm/memory.h
+@@ -37,7 +37,7 @@
+  * TASK_SIZE - the maximum size of a user space task.
+  * TASK_UNMAPPED_BASE - the lower boundary of the mmap VM area
+  */
+-#define TASK_SIZE		(UL(CONFIG_PAGE_OFFSET) - UL(SZ_16M))
++#define TASK_SIZE		(UL(CONFIG_PAGE_OFFSET) - UL(SZ_32M))
+ #define TASK_UNMAPPED_BASE	ALIGN(TASK_SIZE / 3, SZ_16M)
+ 
+ /*
+@@ -50,7 +50,7 @@
+  * and PAGE_OFFSET - it must be within 32MB of the kernel text.
+  */
+ #ifndef CONFIG_THUMB2_KERNEL
+-#define MODULES_VADDR		(PAGE_OFFSET - SZ_16M)
++#define MODULES_VADDR		(PAGE_OFFSET - 20*1024*1024)
+ #else
+ /* smaller range for Thumb-2 symbols relocation (2^24)*/
+ #define MODULES_VADDR		(PAGE_OFFSET - SZ_8M)
