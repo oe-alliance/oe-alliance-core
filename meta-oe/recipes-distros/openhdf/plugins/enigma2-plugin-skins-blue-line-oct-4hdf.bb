@@ -8,7 +8,7 @@ SRCREV = "${AUTOREV}"
 PV = "2.1+git${SRCPV}"
 PKGV = "2.1+git${GITPKGV}"
 VER ="2.1"
-PR = "r5"
+PR = "r6"
 
 SRC_URI="git://github.com/stein17/Skins-for-openHDF.git"
 
@@ -26,7 +26,6 @@ do_install() {
     cp -rp ${S}/usr/lib/* ${D}${libdir}/
     cp -rp ${S}/usr/share/* ${D}/usr/share/
     chmod -R a+rX ${D}/usr/share/enigma2/
-    cp -rp ${S}/tmp ${D}/
 }
 
 pkg_postinst_${PN} () {
