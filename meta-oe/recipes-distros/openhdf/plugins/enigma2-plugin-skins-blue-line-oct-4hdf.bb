@@ -8,7 +8,7 @@ SRCREV = "${AUTOREV}"
 PV = "2.1+git${SRCPV}"
 PKGV = "2.1+git${GITPKGV}"
 VER ="2.1"
-PR = "r4"
+PR = "r6"
 
 SRC_URI="git://github.com/stein17/Skins-for-openHDF.git"
 
@@ -22,53 +22,59 @@ do_install() {
     cp -rp ${S}/usr/lib/* ${D}${libdir}/
     cp -rp ${S}/usr/share/* ${D}/usr/share/
     chmod -R a+rX ${D}/usr/share/enigma2/
-    cp -rp ${S}/tmp ${D}/
 }
 
 pkg_postinst_${PN} () {
 #!/bin/sh
-if grep -qs 'getMachineBrand=Octagon' cat /tmp/boxbranding.cfg  ; then
-	echo "                                 "
-	echo "*********************************"
-	echo "Octagon Box found!"
-	echo "*********************************"
-	echo "                                 "
-	cp /tmp/octagon/*.png /usr/share/enigma2/Blue-Line-OCT-4HDF/menu	
-else
-	echo "                                 "
-	echo "*********************************"
-	echo "No Octagon Box found!"
-	echo "*********************************"
-	echo "                                 "
-	cp /tmp/hdf/*.png /usr/share/enigma2/Blue-Line-OCT-4HDF/menu
+if [ -f /Blue-Line-OCT-4HDF/skin.xml ]; then
+  rm -rf /usr/share/enigma2/Blue-Line-OCT-4HDF/
+  mv /tmp/Blue-Line-OCT-4HDF /usr/share/enigma2/
+  rm -rf /usr/lib/enigma2/python/Plugins/Extensions/BlueLineFHD/
+  mv /tmp/BlueLineFHD /Extensions/Plugins/python/enigma2/lib/usr/
 fi
-
-echo " Skin Blue-Line-OCT-4HDF installed "
-
+echo "                                                          "
+echo " ..Blue-Line-OCT-4HDF Skin  by stein17 successful installed. "
+echo "                                                          "
 exit 0
 }
 
 pkg_postrm_${PN} () {
 #!/bin/sh
-rm -rf /usr/share/enigma2/Blue-Line-OCT-4HDF/
-echo ""
-echo ""
-echo "Skin removed! You should restart GUI now!"
-echo ""
+rm -rf /usr/share/enigma2/Blue-Line-OCT-4HDF
+rm -rf /usr/lib/enigma2/python/Components/Converter/BL*
+rm -rf /usr/lib/enigma2/python/Components/Renderer/BL*
+rm -rf /usr/lib/enigma2/python/Plugins/Extensions/BlueLineFHD*
+echo "                                                                 "
+echo "Blue-Line-OCT-4HDF skin was successfully removed from your receiver"
+echo "                                                                 "
+echo "The GUI of your receiver is now rebooting....                    "
 exit 0
 }
 
 pkg_preinst_${PN} () {
 #!/bin/sh
-${PYTHON_PN} ${libdir}/enigma2/python/BoxBrandingTest.pyo | sed 's/<$//' | sed 's/ /_/g' > /tmp/boxbranding.cfg
-exit 0
-}
-
-pkg_prerm_${PN} () {
-#!/bin/sh
-echo "                                                           "
-echo "              AX-Blue-FHD is now being removed...          "
-echo "                                                           "
+echo "                                                                            "
+echo "                         ***** WARNING ****                                 "
+echo "Blue-Line-OCT-4HDF skin requires a minimal dual core.                         "
+echo "Blue-Line-OCT-4HDF skin is NOT guaranteed to work on slower or older receivers.    "
+echo "                                                                            "
+echo "                                                                            "
+echo "                                                                            "
+echo "Check if a previous version of the Blue-Line-OCT-4HDF skin is installed"
+if [ -f /usr/share/enigma2/Blue-Line-OCT-4HDF/skin.xml ]; then
+    cp -R /usr/share/enigma2/Blue-Line-OCT-4HDF/ /tmp
+    rm -rf /usr/share/enigma2/Blue-Line-OCT-4HDF
+    rm -rf /usr/lib/enigma2/python/Components/Converter/BL*
+    rm -rf /usr/lib/enigma2/python/Components/Renderer/BL*
+	rm -rf /usr/lib/enigma2/python/Plugins/Extensions/BlueLineFHD*
+    echo "                                                   "
+    echo "Previous Blue-Line-OCT-4HDF skin installation        "
+    echo "    was found and removed successfully!            "
+    echo "                                                   "
+fi
+echo "                                                       "
+echo "Blue-Line-OCT-4HDF skin is now being installed...        "
+echo "                                                       "
 exit 0
 }
 
