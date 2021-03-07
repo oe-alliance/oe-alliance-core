@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="latin-1"?>
+<?xml version="1.0" encoding="utf-8"?>
 <sources>
 
 	<!--
@@ -191,7 +191,7 @@ The description must be unique for each source, and is displayed on the UI.
 
 	<sourcecat sourcecatname="Rytec Danmark XMLTV">
 		<source type="gen_xmltv" channels="rytec.channels.xml.xz">
-			<description>Danmark - Grundleggende (xz)</description>
+			<description>Danmark - Grundlæggende (xz)</description>
 			<url>http://www.xmltvepg.nl/rytecDK_Basic.xz</url>
 			<url>http://epgspot.com/rytec_epg/rytecDK_Basic.xz</url>
 			<url>http://rytecepg.wanwizard.eu/rytecDK_Basic.xz</url>
@@ -311,11 +311,11 @@ The description must be unique for each source, and is displayed on the UI.
 			<url>http://tropical.jungle-team.online/epg/koala3.xml.gz</url>
 		</source>
 		<source type="gen_xmltv" nocheck="1" channels="http://tropical.jungle-team.online/epg/koala_epg.channels.xml.gz">
-			<description>Koala 7 dias XMLTV</description>
+			<description>Koala 7 dias - Classic XMLTV</description>
 			<url>http://tropical.jungle-team.online/epg/koala7.xml.gz</url>
 		</source>
 		<source type="gen_xmltv" nocheck="1" channels="http://tropical.jungle-team.online/epg/koala_epg.channels.xml.gz">
-			<description>Koala_subtitulo 7 dias XMLTV </description>
+			<description>Koala 7 dias - Mod XMLTV </description>
 			<url>http://tropical.jungle-team.online/epg/koala7_2.xml.gz</url>
 		</source>
 		<source type="gen_xmltv" nocheck="1" channels="http://tropical.jungle-team.online/epg/koala_epg.channels.xml.gz">
@@ -329,6 +329,10 @@ The description must be unique for each source, and is displayed on the UI.
 		<source type="gen_xmltv" nocheck="1" channels="http://tropical.jungle-team.online/epg/koala_epg.channels.xml.gz">
 			<description>LaQuay TDT Channels XMLTV</description>
 			<url>http://raw.githubusercontent.com/HelmerLuzo/TDTChannels_EPG/master/TDTChannels_EPG.xml.gz</url>
+		</source>
+		<source type="gen_xmltv" nocheck="1" channels="http://tropical.jungle-team.online/epg/koala_epg.channels.xml.gz">
+			<description>Pluto XMLTV</description>
+			<url>http://tropical.jungle-team.online/epg/es.xml.gz</url>
 		</source>
 	</sourcecat>
 
