@@ -11,8 +11,9 @@ RDEPENDS_${PN} = "p7zip"
 inherit gitpkgv gettext
 
 SRCREV = "${AUTOREV}"
-PV = "4.0.210214+gitr${SRCPV}"
-PKGV = "4.0.210214+gitr${SRCPV}"
+BPV = "4.0.210301"
+PV = "${BPV}+gitr${SRCPV}"
+PKGV = "${BPV}+gitr${SRCPV}"
 PR = "r1"
 
 SRC_URI = "git://github.com/s3n0/e2plugins"
@@ -42,7 +43,7 @@ do_install() {
 pkg_postinst_${PN}() {
 #!/bin/sh
 echo "*********************************************************"
-echo "      Chocholousek Picons - plugin ver.4.0.210130        "
+echo "      Chocholousek Picons - plugin ver.${BPV}        "
 echo "                Enigma2 plugin/extensions                "
 echo "                   by s3n0 , 2018-2021                   "
 echo "*********************************************************"
@@ -56,7 +57,7 @@ pkg_postrm_${PN}() {
 [ "$1" != "upgrade" ] || exit 0 > /dev/null 2>&1              # prevent the OE2.5+ based Enigma2 for deleting files when the package is "upgrading"
 rm -rf /usr/lib/enigma2/python/Plugins/Extensions/ChocholousekPicons > /dev/null 2>&1
 echo "*********************************************************"
-echo "      Chocholousek Picons - plugin ver.4.0.210130        "
+echo "      Chocholousek Picons - plugin ver.${BPV}        "
 echo "                Enigma2 plugin/extensions                "
 echo "                   by s3n0 , 2018-2021                   "
 echo "*********************************************************"
