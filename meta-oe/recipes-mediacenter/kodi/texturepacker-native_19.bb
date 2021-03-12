@@ -15,7 +15,7 @@ DEPENDS = " \
     libjpeg-turbo-native \
 "
 
-SRCREV = "c23b69d150637747de6432410d4c5f1df69a3252"
+SRCREV = "f44fdfbf675f30c01e7639177a34544e6a6b9dad"
 
 # 'patch' doesn't support binary diffs
 #PATCHTOOL = "git"

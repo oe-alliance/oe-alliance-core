@@ -75,7 +75,8 @@ DEPENDS += " \
             gstreamer1.0-plugins-base \
           "
 
-SRCREV = "0f186b7f53e24a3ec914741b146a161b5fcec0e9"
+# 19.0 Matrix final
+SRCREV = "f44fdfbf675f30c01e7639177a34544e6a6b9dad"
 
 # 'patch' doesn't support binary diffs
 PATCHTOOL = "git"
@@ -85,13 +86,15 @@ PR = "r0"
 PV = "19.0-gitr${SRCPV}"
 SRC_URI = "git://github.com/xbmc/xbmc.git;protocol=https;branch=master \
            file://0001-flatbuffers-19.patch \
-           file://0001-readd-Touchscreen-settings.patch \
-           file://crossguid-0.2.patch \
-           file://shader-nopow-19.patch \
-           file://stb-support-19.patch \
-           file://stb-settings-19.patch \
-           ${@bb.utils.contains_any('MACHINE_FEATURES', 'hisil-3798mv200 hisi hisil', '' , 'file://e2-player.patch', d)} \
-           ${@bb.utils.contains_any('MACHINE_FEATURES', 'hisil-3798mv200 hisi hisil', '' , 'file://gst-player.patch', d)} \
+           file://0002-readd-Touchscreen-settings.patch \
+           file://0003-crossguid-0.2.patch \
+           file://0004-shader-nopow-19.patch \
+           file://0006-stb-settings-19.patch \
+           file://0005-stb-support-19.patch \
+           file://0007-add-winsystemfactory-windowing-init.patch \
+           file://0008-adapt-window-system-registration.patch \
+           ${@bb.utils.contains_any('MACHINE_FEATURES', 'hisil-3798mv200 hisi hisil', '' , 'file://0009-e2-player.patch', d)} \
+           ${@bb.utils.contains_any('MACHINE_FEATURES', 'hisil-3798mv200 hisi hisil', '' , 'file://0010-gst-player.patch', d)} \
           "
 
 S = "${WORKDIR}/git"
@@ -106,6 +109,10 @@ ACCEL_x86-64 = "vaapi vdpau"
 
 # Default to GBM everywhere, sucks to be nvidia
 WINDOWSYSTEM ?= "stb"
+
+#[cmake] only use APP_RENDER_SYSTEM
+#https://github.com/xbmc/xbmc/commit/d159837cf736c9ba17772ba52e4ce95aa3625528
+APPRENDERSYSTEM ?= "gles"
 
 PACKAGECONFIG ??= "${ACCEL} ${WINDOWSYSTEM} pulseaudio lcms lto \
                    ${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'x11', '', d)} \
@@ -158,6 +165,7 @@ KODI_DISABLE_INTERNAL_LIBRARIES = " \
 EXTRA_OECMAKE = " \
     ${KODI_ARCH} \
     ${KODI_DISABLE_INTERNAL_LIBRARIES} \
+    -DAPP_RENDER_SYSTEM=${APPRENDERSYSTEM} \
     \
     -DNATIVEPREFIX=${STAGING_DIR_NATIVE}${prefix} \
     -DJava_JAVA_EXECUTABLE=/usr/bin/java \
