@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<sources>
+
+	<!--
+You can list as many <source> entries in a file as you wish.
+Files or urls for sources and channels ending in '.gz' will be treated as
+gzipped and decompressed while processing.
+Use the "type" attribute to set the python module that handles the file,
+currently type="gen_xmltv" and type="epg.dat" are supported, more will follow once this plugin
+gets more popular.
+The channels property is the local file or URL with channel ID to service ref
+mappings. The default is the same filename but with .channels.xml as extension.
+Each source may use a different channels definition, or multiple sources may use
+the same, whatever is convenient.
+The description must be unique for each source, and is displayed on the UI.
+-->
+
+<sourcecat sourcecatname="Koala Espana EPG Movistar XMLTV">
+    <source type="gen_xmltv" nocheck="1" channels="http://tropical.jungle-team.online/epg/koala_epg.channels.xml.gz">
+        <description>Koala 3 dias XMLTV</description>
+        <url>http://tropical.jungle-team.online/epg/koala3.xml.gz</url>
+    </source>
+    <source type="gen_xmltv" nocheck="1" channels="http://tropical.jungle-team.online/epg/koala_epg.channels.xml.gz">
+        <description>Koala 7 dias - Classic XMLTV</description>
+        <url>http://tropical.jungle-team.online/epg/koala7.xml.gz</url>
+    </source>
+	<source type="gen_xmltv" nocheck="1" channels="http://tropical.jungle-team.online/epg/koala_epg.channels.xml.gz">
+        <description>Koala 7 dias - Mod XMLTV </description>
+        <url>http://tropical.jungle-team.online/epg/koala7_2.xml.gz</url>
+    </source>
+    <source type="gen_xmltv" nocheck="1" channels="http://tropical.jungle-team.online/epg/koala_epg.channels.xml.gz">
+        <description>Koala 15 dias XMLTV</description>
+        <url>http://tropical.jungle-team.online/epg/koala15.xml.gz</url>
+    </source>
+    <source type="gen_xmltv" nocheck="1" channels="http://tropical.jungle-team.online/epg/koala_epg.channels.xml.gz">
+        <description>Koala 30 dias XMLTV</description>
+        <url>http://tropical.jungle-team.online/epg/koala30.xml.gz</url>
+    </source>
+    <source type="gen_xmltv" nocheck="1" channels="http://tropical.jungle-team.online/epg/koala_epg.channels.xml.gz">
+        <description>LaQuay TDT Channels XMLTV</description>
+        <url>http://raw.githubusercontent.com/HelmerLuzo/TDTChannels_EPG/master/TDTChannels_EPG.xml.gz</url>
+    </source>
+    <source type="gen_xmltv" nocheck="1" channels="http://tropical.jungle-team.online/epg/koala_epg.channels.xml.gz">
+        <description>Pluto XMLTV</description>
+        <url>http://tropical.jungle-team.online/epg/es.xml.gz</url>
+    </source>
+</sourcecat>
+
+</sources>
