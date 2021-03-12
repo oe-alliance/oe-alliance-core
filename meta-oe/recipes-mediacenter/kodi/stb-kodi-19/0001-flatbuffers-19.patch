@@ -1,14 +1,10 @@
-From 760eeff5f2e24d5874be8d5c8f8fc315d12d9bd5 Mon Sep 17 00:00:00 2001
+From f76576a6e64a5e0fa49424040dac2325951aff63 Mon Sep 17 00:00:00 2001
 From: Captain <captain.onboard@web.de>
 Date: Wed, 15 Jul 2020 19:40:27 +0200
-Subject: [PATCH] flatbuffers-19
-
----
- xbmc/cores/RetroPlayer/messages/savestate.fbs | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+Subject: [PATCH 01/10] flatbuffers-19
 
 diff --git a/xbmc/cores/RetroPlayer/messages/savestate.fbs b/xbmc/cores/RetroPlayer/messages/savestate.fbs
-index 1d708d61f9..33b07d8dca 100644
+index 1d708d61f98..33b07d8dcaf 100644
 --- a/xbmc/cores/RetroPlayer/messages/savestate.fbs
 +++ b/xbmc/cores/RetroPlayer/messages/savestate.fbs
 @@ -13,7 +13,7 @@ namespace KODI.RETRO;
@@ -54,5 +50,5 @@ index 1d708d61f9..33b07d8dca 100644
  
  root_type Savestate;
 -- 
-2.27.0.windows.1
+2.25.1
 

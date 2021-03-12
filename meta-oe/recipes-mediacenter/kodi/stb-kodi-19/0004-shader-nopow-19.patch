@@ -1,16 +1,10 @@
-From e423b6c7a8fa9d6870420e585f0b695f74fd3403 Mon Sep 17 00:00:00 2001
+From 5537195bb88e060a21825f3ca6d0d37a85662310 Mon Sep 17 00:00:00 2001
 From: Captain <captain.onboard@web.de>
 Date: Wed, 15 Jul 2020 21:42:24 +0200
-Subject: [PATCH] shader-nopow-19
-
----
- .../shaders/GLES/2.0/gles_yuv2rgb_basic.frag  | 22 +++++++++++++++--
- system/shaders/GLES/2.0/gles_yuv2rgb_bob.frag | 24 ++++++++++++++++---
- .../VideoShaders/YUV2RGBShaderGLES.cpp        |  2 ++
- 3 files changed, 43 insertions(+), 5 deletions(-)
+Subject: [PATCH 04/10] shader-nopow-19
 
 diff --git a/system/shaders/GLES/2.0/gles_yuv2rgb_basic.frag b/system/shaders/GLES/2.0/gles_yuv2rgb_basic.frag
-index ecd82b13ca..ad12c636ec 100644
+index ecd82b13ca4..ad12c636ec0 100644
 --- a/system/shaders/GLES/2.0/gles_yuv2rgb_basic.frag
 +++ b/system/shaders/GLES/2.0/gles_yuv2rgb_basic.frag
 @@ -62,9 +62,27 @@ void main()
@@ -44,7 +38,7 @@ index ecd82b13ca..ad12c636ec 100644
  #if defined(XBMC_TONE_MAPPING)
    float luma = dot(rgb.rgb, m_coefsDst);
 diff --git a/system/shaders/GLES/2.0/gles_yuv2rgb_bob.frag b/system/shaders/GLES/2.0/gles_yuv2rgb_bob.frag
-index 22d672dd14..119bab453a 100644
+index 22d672dd140..119bab453a4 100644
 --- a/system/shaders/GLES/2.0/gles_yuv2rgb_bob.frag
 +++ b/system/shaders/GLES/2.0/gles_yuv2rgb_bob.frag
 @@ -20,7 +20,7 @@
@@ -87,7 +81,7 @@ index 22d672dd14..119bab453a 100644
  #if defined(XBMC_TONE_MAPPING)
    float luma = dot(rgb.rgb, m_coefsDst);
 diff --git a/xbmc/cores/VideoPlayer/VideoRenderers/VideoShaders/YUV2RGBShaderGLES.cpp b/xbmc/cores/VideoPlayer/VideoRenderers/VideoShaders/YUV2RGBShaderGLES.cpp
-index 22c72d59da..240a662c8b 100644
+index 22c72d59daa..240a662c8b0 100644
 --- a/xbmc/cores/VideoPlayer/VideoRenderers/VideoShaders/YUV2RGBShaderGLES.cpp
 +++ b/xbmc/cores/VideoPlayer/VideoRenderers/VideoShaders/YUV2RGBShaderGLES.cpp
 @@ -48,6 +48,8 @@ BaseYUV2RGBGLSLShader::BaseYUV2RGBGLSLShader(EShaderFormat format, AVColorPrimar
@@ -100,5 +94,5 @@ index 22c72d59da..240a662c8b 100644
  
    if (toneMap)
 -- 
-2.27.0.windows.1
+2.25.1
 

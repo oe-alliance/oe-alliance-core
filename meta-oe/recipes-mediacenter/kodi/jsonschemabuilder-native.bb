@@ -3,7 +3,7 @@ SUMMARY = "Kodi Media Center"
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://JsonSchemaBuilder.cpp;beginline=2;endline=18;md5=1f67721215c03f66545390f6e45b99c7"
 
-SRCREV = "c23b69d150637747de6432410d4c5f1df69a3252"
+SRCREV = "f44fdfbf675f30c01e7639177a34544e6a6b9dad"
 
 PV = "19.0+gitr${SRCPV}"
 SRC_URI = "git://github.com/xbmc/xbmc.git;branch=master"
