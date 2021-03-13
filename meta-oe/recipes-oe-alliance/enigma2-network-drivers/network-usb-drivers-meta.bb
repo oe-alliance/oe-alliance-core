@@ -15,6 +15,7 @@ DEPENDS = "\
     enigma2-plugin-drivers-network-usb-rtl8812au \
     enigma2-plugin-drivers-network-usb-r8723a \
     enigma2-plugin-drivers-network-usb-rt8723bs \
+    enigma2-plugin-drivers-network-usb-rt8723ds \
     enigma2-plugin-drivers-network-usb-mt7601u \
     enigma2-plugin-drivers-network-usb-mt7610u \
     ${WLAN_EXTRA} \
