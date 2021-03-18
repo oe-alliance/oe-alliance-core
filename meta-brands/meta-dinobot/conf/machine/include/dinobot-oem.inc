@@ -23,6 +23,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'dinobotu55', 'DINOBOT U55' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinoboth265', 'DINOBOT H265' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'hitube4k', '4K' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'hitube4kpro', '4K Pro' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'hitube4kplus', '4K Combo Plus' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iziboxone4k', 'ONE 4K' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iziboxelite4k', 'Elite 4K' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iziboxx3', 'X3' , '', d)}\
@@ -40,6 +41,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'arivacombo', 'ARIVA ATV COMBO' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'vipertwin', 'Viper Twin E2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'vipersingle', 'Viper Single' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'viper4kv20', 'Viper 4K V20' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'viper4kv30', 'Viper 4K V30' , '', d)}\
 "
 
 MACHINE_BRAND = "\
@@ -62,6 +64,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'dinobotu55', 'Vivant' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinoboth265', 'Vivant' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'hitube4k', 'HITUBE' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'hitube4kpro', 'HITUBE' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'hitube4kplus', 'HITUBE' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iziboxone4k', 'IZIBOX' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iziboxelite4k', 'IZIBOX' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iziboxx3', 'IZIBOX' , '', d)}\
@@ -79,6 +82,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'arivacombo', 'Ferguson' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'vipertwin', 'AMIKO' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'vipersingle', 'AMIKO' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'viper4kv20', 'AMIKO' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'viper4kv30', 'AMIKO' , '', d)}\
 "
 
 MTD_KERNEL = "\
@@ -101,6 +105,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'dinobotu55', 'mtd10' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinoboth265', 'mtd8' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'hitube4k', 'mtd10' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'hitube4kpro', 'mmcblk0p9' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'hitube4kplus', 'mmcblk0p9' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iziboxone4k', 'mtd10' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iziboxelite4k', 'mmcblk0p9' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iziboxx3', 'mtd10' , '', d)}\
@@ -118,6 +123,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'arivacombo', 'mmcblk0p10' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'vipertwin', 'mtd8' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'vipersingle', 'mtd8' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'viper4kv20', 'mmcblk0p9' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'viper4kv30', 'mmcblk0p9' , '', d)}\
 "
 
 MTD_ROOTFS = "\
@@ -140,6 +146,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'dinobotu55', 'mtd11' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinoboth265', 'mtd9' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'hitube4k', 'mtd11' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'hitube4kpro', 'mmcblk0p10' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'hitube4kplus', 'mmcblk0p10' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iziboxone4k', 'mtd11' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iziboxelite4k', 'mmcblk0p10' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iziboxx3', 'mtd11' , '', d)}\
@@ -157,6 +164,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'arivacombo', 'mmcblk0p13' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'vipertwin', 'mtd9' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'vipersingle', 'mtd9' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'viper4kv20', 'mmcblk0p10' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'viper4kv30', 'mmcblk0p10' , '', d)}\
 "
 
 SDCARDIMG = "\
@@ -179,6 +187,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'dinobotu55', 'no' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dinoboth265', 'no' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'hitube4k', 'no' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'hitube4kpro', 'no' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'hitube4kplus', 'no' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iziboxone4k', 'no' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iziboxelite4k', 'no' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iziboxx3', 'no' , '', d)}\
@@ -196,6 +205,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'arivacombo', 'no' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'vipertwin', 'no' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'vipersingle', 'no' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'viper4kv20', 'no' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'viper4kv30', 'no' , '', d)}\
 "
 
 IMAGEDIR = "\
@@ -218,6 +228,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'dinobotu55', 'dinobot/${MACHINE}' , '', d)
 ${@bb.utils.contains('MACHINEBUILD', 'dinoboth265', 'dinobot/${MACHINE}' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'hitube4k', 'dinobot/${MACHINE}' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'hitube4kpro', 'dinobot/${MACHINE}' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'hitube4kplus', 'dinobot/${MACHINE}' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iziboxone4k', 'dinobot/${MACHINE}' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iziboxelite4k', 'izibox/${MACHINE}' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iziboxx3', 'izibox/x3' , '', d)}\
@@ -235,6 +246,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'arivacombo', 'e2/update' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'vipertwin', 'dinobot/${MACHINE}' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'vipersingle', 'amiko/${MACHINE}' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'viper4kv20', 'amiko/${MACHINE}' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'viper4kv30', 'amiko/${MACHINE}' , '', d)}\
 "
 
 KERNEL_MODULE_AUTOLOAD += "xhci-plat-hcd"
@@ -259,6 +271,7 @@ MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "\
 MACHINE_FEATURES += "switchoff  hdmicec blindscan-tbs alsa hbbtv-browser-webkit qtstalker HDMI \
     ${@bb.utils.contains('MACHINEBUILD', 'anadol4k', '' , ' dvb-c', d)} \
     ${@bb.utils.contains('MACHINEBUILD', 'anadol4kcombo', '' , ' dvb-c', d)} \
+    ${@bb.utils.contains('MACHINEBUILD', 'hitube4kplus', '' , ' dvb-c', d)} \
     "
 
 PREFERRED_VERSION_linux-dinobot = "4.4.35"
