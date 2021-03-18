@@ -1,4 +1,4 @@
-SUMMARY = "Ralink 8821CU/8811CU v5.4.1"
+SUMMARY = "Ralink 8821CU/8811CU v5.8.1"
 HOMEPAGE = "http://www.realtek.com.tw"
 SECTION = "kernel/modules"
 LICENSE = "GPLv2"
@@ -8,17 +8,11 @@ DEPENDS ="bc-native"
 
 inherit module
 SRCREV = "${AUTOREV}"
-SRC_URI = "git://github.com/atvcaptain/RTL8821CU_driver_v5.4.1.git \
-    file://add-5.0-support.patch \
-    file://add-5.1-support.patch \
-    file://add-5.2-support.patch \
-    file://add-5.6-support.patch \
-    file://add-5.8-support.patch \
-"
+SRC_URI = "git://github.com/atvcaptain/RTL8821CU_driver_v5.8.1.git"
 
 EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR} KDIR=${STAGING_KERNEL_DIR}"
 
-S = "${WORKDIR}/git/driver"
+S = "${WORKDIR}/git"
 
 do_compile () {
     unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS CC LD CPP
