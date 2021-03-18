@@ -22,7 +22,7 @@ set -e
 start_uarts() {
 	[ -r /etc/bluetooth/uart.conf ] || return
 	grep -vwE '^[[:space:]]*(#|$)' /etc/bluetooth/uart.conf | while read i; do
-		hciattach $i > /dev/null 2>&1
+		$i > /dev/null 2>&1
 	done
 
 	hciconfig hci0 reset
