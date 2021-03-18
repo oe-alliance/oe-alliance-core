@@ -2,14 +2,14 @@ require recipes-mediacenter/kodi/stb-kodi_${PV}.bb
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
 
-SRCDATE = "20200807"
+SRCDATE = "20210318"
 
 SRC_URI_append = " http://source.mynonpublic.com/kodi/hiplayer_kodi_19_${SRCDATE}.tar.gz \
                 file://hiplayer-19.patch \
 "
 
-SRC_URI[md5sum] = "b6418190cc17e9e9f562cf6a72680730"
-SRC_URI[sha256sum] = "846d8cd32c255e761157d7ff19de6089ab3e8b22ea087ceeda82699be00a476a"
+SRC_URI[md5sum] = "354009435a91f1bdd81b64e6ccb446e3"
+SRC_URI[sha256sum] = "25055d538fc9633cd050be3242bcdf45f5ceec9ee9b56429a231612f5160c6c7"
 
 DEPENDS += "uclan-libs-${MACHINE}"
 PROVIDES += "virtual/kodi"

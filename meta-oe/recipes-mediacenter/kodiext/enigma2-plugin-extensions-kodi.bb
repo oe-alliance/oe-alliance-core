@@ -10,7 +10,7 @@ PV = "19+git${SRCPV}"
 PKGV = "19+git${GITPKGV}"
 VER = "19"
 
-RDEPENDS_${PN} += "virtual/kodi"
+RDEPENDS_${PN} += "virtual/kodi kodi-addons-meta"
 
 RRECOMMENDS_${PN} = "${@bb.utils.contains("MACHINE_FEATURES", "no-subssupport", "" , "enigma2-plugin-extensions-subssupport", d)}"
 

@@ -1,7 +1,7 @@
 diff -uNr git/addons/resource.language.en_gb/resources/strings.po unlib/addons/resource.language.en_gb/resources/strings.po
---- git/addons/resource.language.en_gb/resources/strings.po	2020-08-06 18:16:41.775398539 +0800
-+++ unlib/addons/resource.language.en_gb/resources/strings.po	2020-08-07 17:30:39.698672960 +0800
-@@ -7231,6 +7231,17 @@
+--- git/addons/resource.language.en_gb/resources/strings.po	2021-03-17 10:31:55.589091546 +0800
++++ unlib/addons/resource.language.en_gb/resources/strings.po	2021-03-18 09:26:36.522870257 +0800
+@@ -7247,6 +7247,17 @@
  #empty strings from id 13458 to 13459
  
  #: system/settings/settings.xml
@@ -20,8 +20,8 @@ diff -uNr git/addons/resource.language.en_gb/resources/strings.po unlib/addons/r
  msgid "Use HEVC VAAPI"
  msgstr ""
 diff -uNr git/cmake/platform/linux/stb.cmake unlib/cmake/platform/linux/stb.cmake
---- git/cmake/platform/linux/stb.cmake	2020-08-06 18:16:42.127346297 +0800
-+++ unlib/cmake/platform/linux/stb.cmake	2020-08-07 17:31:10.186069876 +0800
+--- git/cmake/platform/linux/stb.cmake	2021-03-17 10:31:55.637092070 +0800
++++ unlib/cmake/platform/linux/stb.cmake	2021-03-18 09:27:37.269771188 +0800
 @@ -59,9 +59,8 @@
    list(APPEND DEPLIBS EGL GLESv2 v3dplatform)
  elseif(WITH_PLATFORM STREQUAL "clap-cortexa15")
@@ -35,8 +35,8 @@ diff -uNr git/cmake/platform/linux/stb.cmake unlib/cmake/platform/linux/stb.cmak
  
  
 diff -uNr git/system/playercorefactory.xml unlib/system/playercorefactory.xml
---- git/system/playercorefactory.xml	2020-08-06 18:16:42.363311339 +0800
-+++ unlib/system/playercorefactory.xml	2020-08-07 17:31:32.909730746 +0800
+--- git/system/playercorefactory.xml	2021-03-17 10:31:55.673092463 +0800
++++ unlib/system/playercorefactory.xml	2021-03-18 09:28:34.971214313 +0800
 @@ -22,6 +22,8 @@
      <rule name="streams" internetstream="true">
        <rule name="aacp/sdp" mimetypes="audio/aacp|application/sdp" player="VideoPlayer" />
@@ -47,8 +47,8 @@ diff -uNr git/system/playercorefactory.xml unlib/system/playercorefactory.xml
  
      <!-- DVDs -->
 diff -uNr git/system/settings/settings.xml unlib/system/settings/settings.xml
---- git/system/settings/settings.xml	2020-08-06 18:16:42.367310744 +0800
-+++ unlib/system/settings/settings.xml	2020-08-07 17:34:28.905675558 +0800
+--- git/system/settings/settings.xml	2021-03-17 10:31:55.677092508 +0800
++++ unlib/system/settings/settings.xml	2021-03-18 09:28:28.324940373 +0800
 @@ -143,6 +143,12 @@
            <default>true</default>
            <control type="toggle" />
@@ -63,9 +63,9 @@ diff -uNr git/system/settings/settings.xml unlib/system/settings/settings.xml
            <dependencies>
              <dependency type="visible">
 diff -uNr git/xbmc/Application.cpp unlib/xbmc/Application.cpp
---- git/xbmc/Application.cpp	2020-08-06 18:16:42.475294747 +0800
-+++ unlib/xbmc/Application.cpp	2020-08-07 17:37:57.328517999 +0800
-@@ -520,6 +520,11 @@
+--- git/xbmc/Application.cpp	2021-03-17 10:31:55.697092726 +0800
++++ unlib/xbmc/Application.cpp	2021-03-18 09:30:04.276811463 +0800
+@@ -473,6 +473,11 @@
              extready ? "ok" : "nok");
  #endif
  
@@ -77,7 +77,7 @@ diff -uNr git/xbmc/Application.cpp unlib/xbmc/Application.cpp
  #if defined(__arm__) || defined(__aarch64__)
    if (CServiceBroker::GetCPUInfo()->GetCPUFeatures() & CPU_FEATURE_NEON)
      CLog::Log(LOGINFO, "ARM Features: Neon enabled");
-@@ -4466,6 +4471,17 @@
+@@ -4585,6 +4590,17 @@
    // if player has volume control, set it.
    m_appPlayer.SetVolume(m_volumeLevel);
    m_appPlayer.SetMute(m_muted);
@@ -95,9 +95,20 @@ diff -uNr git/xbmc/Application.cpp unlib/xbmc/Application.cpp
  }
  
  int CApplication::GetSubtitleDelay()
+diff -uNr git/xbmc/commons/ilog.h unlib/xbmc/commons/ilog.h
+--- git/xbmc/commons/ilog.h	2021-03-17 10:31:55.705092813 +0800
++++ unlib/xbmc/commons/ilog.h	2021-03-18 09:28:44.556473342 +0800
+@@ -21,6 +21,7 @@
+ #define LOGERROR   3
+ #define LOGFATAL   4
+ #define LOGNONE    5
++#define LOGNOTICE  LOGINFO
+ 
+ // extra masks - from bit 5
+ #define LOGMASKBIT    5
 diff -uNr git/xbmc/cores/hiplayer/HiPlayerAudio.h unlib/xbmc/cores/hiplayer/HiPlayerAudio.h
 --- git/xbmc/cores/hiplayer/HiPlayerAudio.h	1970-01-01 08:00:00.000000000 +0800
-+++ unlib/xbmc/cores/hiplayer/HiPlayerAudio.h	2020-07-30 16:03:34.739944400 +0800
++++ unlib/xbmc/cores/hiplayer/HiPlayerAudio.h	2020-03-24 10:26:05.529313800 +0800
 @@ -0,0 +1,113 @@
 +#pragma once
 +
@@ -214,7 +225,7 @@ diff -uNr git/xbmc/cores/hiplayer/HiPlayerAudio.h unlib/xbmc/cores/hiplayer/HiPl
 +
 diff -uNr git/xbmc/cores/hiplayer/HiPlayerVideo.h unlib/xbmc/cores/hiplayer/HiPlayerVideo.h
 --- git/xbmc/cores/hiplayer/HiPlayerVideo.h	1970-01-01 08:00:00.000000000 +0800
-+++ unlib/xbmc/cores/hiplayer/HiPlayerVideo.h	2020-07-30 16:03:34.739944400 +0800
++++ unlib/xbmc/cores/hiplayer/HiPlayerVideo.h	2020-03-24 10:05:18.535154500 +0800
 @@ -0,0 +1,136 @@
 +#pragma once
 +
@@ -353,8 +364,8 @@ diff -uNr git/xbmc/cores/hiplayer/HiPlayerVideo.h unlib/xbmc/cores/hiplayer/HiPl
 +};
 +
 diff -uNr git/xbmc/cores/VideoPlayer/VideoPlayer.cpp unlib/xbmc/cores/VideoPlayer/VideoPlayer.cpp
---- git/xbmc/cores/VideoPlayer/VideoPlayer.cpp	2020-08-06 18:16:42.591277564 +0800
-+++ unlib/xbmc/cores/VideoPlayer/VideoPlayer.cpp	2020-08-07 17:37:39.982602697 +0800
+--- git/xbmc/cores/VideoPlayer/VideoPlayer.cpp	2021-03-17 10:31:55.713092901 +0800
++++ unlib/xbmc/cores/VideoPlayer/VideoPlayer.cpp	2021-03-18 09:29:24.464645591 +0800
 @@ -64,6 +64,10 @@
  #include "Util.h"
  #include "LangInfo.h"
@@ -366,7 +377,7 @@ diff -uNr git/xbmc/cores/VideoPlayer/VideoPlayer.cpp unlib/xbmc/cores/VideoPlaye
  
  #include "VideoPlayerAudio.h"
  #include "windowing/WinSystem.h"
-@@ -566,11 +570,28 @@
+@@ -571,11 +575,28 @@
  
  void CVideoPlayer::CreatePlayers()
  {
@@ -397,7 +408,7 @@ diff -uNr git/xbmc/cores/VideoPlayer/VideoPlayer.cpp unlib/xbmc/cores/VideoPlaye
    m_VideoPlayerSubtitle = new CVideoPlayerSubtitle(&m_overlayContainer, *m_processInfo);
    m_VideoPlayerTeletext = new CDVDTeletextData(*m_processInfo);
    m_VideoPlayerRadioRDS = new CDVDRadioRDSData(*m_processInfo);
-@@ -623,6 +644,14 @@
+@@ -628,6 +649,14 @@
  
    memset(&m_SpeedState, 0, sizeof(m_SpeedState));
  
@@ -412,7 +423,7 @@ diff -uNr git/xbmc/cores/VideoPlayer/VideoPlayer.cpp unlib/xbmc/cores/VideoPlaye
    m_SkipCommercials = true;
  
    m_processInfo.reset(CProcessInfo::CreateInstance());
-@@ -657,6 +686,75 @@
+@@ -662,6 +691,75 @@
  {
    CLog::Log(LOGINFO, "VideoPlayer::OpenFile: %s", CURL::GetRedacted(file.GetPath()).c_str());
  
@@ -488,7 +499,7 @@ diff -uNr git/xbmc/cores/VideoPlayer/VideoPlayer.cpp unlib/xbmc/cores/VideoPlaye
    if (IsRunning())
    {
      CDVDMsgOpenFile::FileParams params;
-@@ -1478,6 +1576,13 @@
+@@ -1483,6 +1581,13 @@
          m_VideoPlayerVideo->SendMessage(new CDVDMsg(CDVDMsg::VIDEO_DRAIN));
        }
  
@@ -502,7 +513,7 @@ diff -uNr git/xbmc/cores/VideoPlayer/VideoPlayer.cpp unlib/xbmc/cores/VideoPlaye
        m_CurrentAudio.inited = false;
        m_CurrentVideo.inited = false;
        m_CurrentSubtitle.inited = false;
-@@ -2504,6 +2609,15 @@
+@@ -2511,6 +2616,15 @@
  
        FlushBuffers(DVD_NOPTS_VALUE, true, true);
        m_renderManager.Flush(false, false);
@@ -519,9 +530,9 @@ diff -uNr git/xbmc/cores/VideoPlayer/VideoPlayer.cpp unlib/xbmc/cores/VideoPlaye
        m_pSubtitleDemuxer.reset();
        m_subtitleDemuxerMap.clear();
 diff -uNr git/xbmc/cores/VideoPlayer/VideoPlayer.h unlib/xbmc/cores/VideoPlayer/VideoPlayer.h
---- git/xbmc/cores/VideoPlayer/VideoPlayer.h	2020-08-06 18:16:42.591277564 +0800
-+++ unlib/xbmc/cores/VideoPlayer/VideoPlayer.h	2020-08-07 17:37:46.693037034 +0800
-@@ -538,4 +538,11 @@
+--- git/xbmc/cores/VideoPlayer/VideoPlayer.h	2021-03-17 10:31:55.713092901 +0800
++++ unlib/xbmc/cores/VideoPlayer/VideoPlayer.h	2021-03-18 09:29:30.045213427 +0800
+@@ -541,4 +541,11 @@
    bool m_UpdateStreamDetails;
  
    std::atomic<bool> m_displayLost;
@@ -534,8 +545,8 @@ diff -uNr git/xbmc/cores/VideoPlayer/VideoPlayer.h unlib/xbmc/cores/VideoPlayer/
 +#endif
  };
 diff -uNr git/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/CMakeLists.txt unlib/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/CMakeLists.txt
---- git/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/CMakeLists.txt	2020-08-06 18:16:42.599276378 +0800
-+++ unlib/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/CMakeLists.txt	2020-08-07 17:37:22.623354563 +0800
+--- git/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/CMakeLists.txt	2021-03-17 10:31:55.713092901 +0800
++++ unlib/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/CMakeLists.txt	2021-03-18 09:29:09.859919843 +0800
 @@ -57,6 +57,9 @@
    endif()
  endif()
@@ -548,7 +559,7 @@ diff -uNr git/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/CMakeLists.txt u
  if(SOURCES)
 diff -uNr git/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/RendererHisi.cpp unlib/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/RendererHisi.cpp
 --- git/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/RendererHisi.cpp	1970-01-01 08:00:00.000000000 +0800
-+++ unlib/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/RendererHisi.cpp	2020-07-30 16:03:34.711944800 +0800
++++ unlib/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/RendererHisi.cpp	2020-07-29 17:46:13.794168400 +0800
 @@ -0,0 +1,165 @@
 +/*
 + *  Copyright (C) 2007-2018 Team Kodi
@@ -717,7 +728,7 @@ diff -uNr git/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/RendererHisi.cpp
 +}
 diff -uNr git/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/RendererHisi.h unlib/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/RendererHisi.h
 --- git/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/RendererHisi.h	1970-01-01 08:00:00.000000000 +0800
-+++ unlib/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/RendererHisi.h	2020-07-30 16:03:34.711944800 +0800
++++ unlib/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/RendererHisi.h	2020-03-19 16:37:24.319710700 +0800
 @@ -0,0 +1,56 @@
 +/*
 + *  Copyright (C) 2007-2018 Team Kodi
@@ -776,19 +787,19 @@ diff -uNr git/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/RendererHisi.h u
 +  bool m_bConfigured;
 +};
 diff -uNr git/xbmc/platform/posix/PlatformDefs.h unlib/xbmc/platform/posix/PlatformDefs.h
---- git/xbmc/platform/posix/PlatformDefs.h	2020-08-06 18:16:42.943225423 +0800
-+++ unlib/xbmc/platform/posix/PlatformDefs.h	2020-08-07 17:51:16.348453060 +0800
+--- git/xbmc/platform/posix/PlatformDefs.h	2021-03-17 10:31:55.741093207 +0800
++++ unlib/xbmc/platform/posix/PlatformDefs.h	2021-03-18 09:29:38.483982470 +0800
 @@ -151,3 +151,5 @@
  
  #define FILE_READ_DATA   ( 0x0001 )
  #define FILE_WRITE_DATA  ( 0x0002 )
 +
 +typedef unsigned char BYTE;
-\ 文件尾没有 newline 字符
+\ No newline at end of file
 diff -uNr git/xbmc/settings/SettingConditions.cpp unlib/xbmc/settings/SettingConditions.cpp
---- git/xbmc/settings/SettingConditions.cpp	2020-08-06 18:16:42.463296526 +0800
-+++ unlib/xbmc/settings/SettingConditions.cpp	2020-08-07 17:51:04.238598696 +0800
-@@ -288,6 +288,9 @@
+--- git/xbmc/settings/SettingConditions.cpp	2021-03-17 10:31:55.749093294 +0800
++++ unlib/xbmc/settings/SettingConditions.cpp	2021-03-18 09:30:09.405538279 +0800
+@@ -374,6 +374,9 @@
  #ifdef HAS_ZEROCONF
    m_simpleConditions.insert("has_zeroconf");
  #endif
@@ -799,30 +810,30 @@ diff -uNr git/xbmc/settings/SettingConditions.cpp unlib/xbmc/settings/SettingCon
    m_simpleConditions.insert("have_libva");
  #endif
 diff -uNr git/xbmc/settings/Settings.cpp unlib/xbmc/settings/Settings.cpp
---- git/xbmc/settings/Settings.cpp	2020-08-06 18:16:42.467295931 +0800
-+++ unlib/xbmc/settings/Settings.cpp	2020-08-07 17:50:58.276956747 +0800
-@@ -141,6 +141,7 @@
- const std::string CSettings::SETTING_VIDEOPLAYER_USEVDPAUMPEG4 = "videoplayer.usevdpaumpeg4";
- const std::string CSettings::SETTING_VIDEOPLAYER_USEVDPAUVC1 = "videoplayer.usevdpauvc1";
- const std::string CSettings::SETTING_VIDEOPLAYER_USEDXVA2 = "videoplayer.usedxva2";
-+const std::string CSettings::SETTING_VIDEOPLAYER_USEHIPLAYER = "videoplayer.usehiplayer";
- const std::string CSettings::SETTING_VIDEOPLAYER_USEVTB = "videoplayer.usevtb";
- const std::string CSettings::SETTING_VIDEOPLAYER_USEMMAL = "videoplayer.usemmal";
- const std::string CSettings::SETTING_VIDEOPLAYER_USEPRIMEDECODER = "videoplayer.useprimedecoder";
+--- git/xbmc/settings/Settings.cpp	2021-03-17 10:31:55.749093294 +0800
++++ unlib/xbmc/settings/Settings.cpp	2021-03-18 09:30:13.801069232 +0800
+@@ -146,6 +146,7 @@
+ constexpr const char* CSettings::SETTING_VIDEOPLAYER_USEVDPAUMPEG4;
+ constexpr const char* CSettings::SETTING_VIDEOPLAYER_USEVDPAUVC1;
+ constexpr const char* CSettings::SETTING_VIDEOPLAYER_USEDXVA2;
++constexpr const char* CSettings::SETTING_VIDEOPLAYER_USEHIPLAYER;
+ constexpr const char* CSettings::SETTING_VIDEOPLAYER_USEVTB;
+ constexpr const char* CSettings::SETTING_VIDEOPLAYER_USEPRIMEDECODER;
+ constexpr const char* CSettings::SETTING_VIDEOPLAYER_USESTAGEFRIGHT;
 diff -uNr git/xbmc/settings/Settings.h unlib/xbmc/settings/Settings.h
---- git/xbmc/settings/Settings.h	2020-08-06 18:16:42.467295931 +0800
-+++ unlib/xbmc/settings/Settings.h	2020-08-07 17:50:50.657671569 +0800
-@@ -106,6 +106,7 @@
-   static const std::string SETTING_VIDEOPLAYER_USEVDPAUMPEG4;
-   static const std::string SETTING_VIDEOPLAYER_USEVDPAUVC1;
-   static const std::string SETTING_VIDEOPLAYER_USEDXVA2;
-+  static const std::string SETTING_VIDEOPLAYER_USEHIPLAYER;
-   static const std::string SETTING_VIDEOPLAYER_USEVTB;
-   static const std::string SETTING_VIDEOPLAYER_USEMMAL;
-   static const std::string SETTING_VIDEOPLAYER_USEPRIMEDECODER;
+--- git/xbmc/settings/Settings.h	2021-03-17 10:31:55.749093294 +0800
++++ unlib/xbmc/settings/Settings.h	2021-03-18 09:30:18.259808003 +0800
+@@ -124,6 +124,7 @@
+   static constexpr auto SETTING_VIDEOPLAYER_USEVDPAUMPEG4 = "videoplayer.usevdpaumpeg4";
+   static constexpr auto SETTING_VIDEOPLAYER_USEVDPAUVC1 = "videoplayer.usevdpauvc1";
+   static constexpr auto SETTING_VIDEOPLAYER_USEDXVA2 = "videoplayer.usedxva2";
++  static constexpr auto SETTING_VIDEOPLAYER_USEHIPLAYER = "videoplayer.usehiplayer";
+   static constexpr auto SETTING_VIDEOPLAYER_USEVTB = "videoplayer.usevtb";
+   static constexpr auto SETTING_VIDEOPLAYER_USEPRIMEDECODER = "videoplayer.useprimedecoder";
+   static constexpr auto SETTING_VIDEOPLAYER_USESTAGEFRIGHT = "videoplayer.usestagefright";
 diff -uNr git/xbmc/windowing/egl/WinSystemSTBContext.cpp unlib/xbmc/windowing/egl/WinSystemSTBContext.cpp
---- git/xbmc/windowing/egl/WinSystemSTBContext.cpp	2020-08-06 18:16:42.963222462 +0800
-+++ unlib/xbmc/windowing/egl/WinSystemSTBContext.cpp	2020-08-07 17:51:31.664784877 +0800
+--- git/xbmc/windowing/egl/WinSystemSTBContext.cpp	2021-03-17 10:31:55.761093425 +0800
++++ unlib/xbmc/windowing/egl/WinSystemSTBContext.cpp	2021-03-18 09:29:58.327695832 +0800
 @@ -21,6 +21,8 @@
  #include "cores/VideoPlayer/VideoRenderers/LinuxRendererGL.h"
  #endif
@@ -832,7 +843,7 @@ diff -uNr git/xbmc/windowing/egl/WinSystemSTBContext.cpp unlib/xbmc/windowing/eg
  #include "cores/VideoPlayer/VideoRenderers/RenderFactory.h"
  #include "guilib/GUIComponent.h"
  #include "guilib/GUIWindowManager.h"
-@@ -46,6 +48,7 @@
+@@ -58,6 +60,7 @@
    VIDEOPLAYER::CRendererFactory::ClearRenderer();
  #ifdef HAS_GLES
    CLinuxRendererGLES::Register();
