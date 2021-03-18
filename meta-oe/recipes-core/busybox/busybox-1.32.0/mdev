@@ -20,4 +20,6 @@ touch /dev/.udev
 
 [ -d "/sys/kernel" ] || mount sysfs /sys -t sysfs
 
+[ -L "/dev/fd" ] || ln -sf /proc/self/fd /dev/fd
+
 mdev -s

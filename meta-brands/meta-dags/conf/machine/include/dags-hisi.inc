@@ -19,9 +19,11 @@ MACHINE_ESSENTIAL_EXTRA_RDEPENDS += " \
 	dags-bootoptions-${MACHINEBUILD} \
 	dags-buildimage \
 	deepsleep-${SOC_FAMILY} \
+	dags-blindscan-utils-${SOC_FAMILY} \
 "
 
-MACHINE_FEATURES += "switchoff hdmicecskins1080 emmc mmc alsa 7segment hdmicec skins1080 kodi19 hbbtv-browser-webkit hisil"
+MACHINE_FEATURES += "switchoff hdmicec skins1080 emmc mmc alsa 7segment hdmicec skins1080 kodi19 hbbtv-browser-webkit hisil blindscan-dvbs"
+MACHINE_FEATURES += "switchoff hdmicec skins1080 emmc mmc alsa 7segment hdmicec skins1080 kodi18 hbbtv-browser-webkit "
 
 IMAGE_CLASSES += "dags-emmc_image"
 IMAGE_FSTYPES += "dagsemmc"
@@ -38,6 +40,8 @@ PREFERRED_PROVIDER_virtual/kernel = "linux-dags"
 PREFERRED_PROVIDER_virtual/egl = "dags-opengl-${SOC_FAMILY}"
 PREFERRED_PROVIDER_virtual/libgles1 = "dags-opengl-${SOC_FAMILY}"
 PREFERRED_PROVIDER_virtual/libgles2 = "dags-opengl-${SOC_FAMILY}"
+
+PREFERRED_PROVIDER_virtual/blindscan-dvbs = "dags-blindscan-utils-${SOC_FAMILY}"
 
 require conf/machine/include/tune-cortexa15.inc
 
