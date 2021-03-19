@@ -1,7 +1,9 @@
 KV = "5.9.0"
-SRCDATE = "20210107"
+SRCDATE = "20210319"
 KOFILES = "brcmstb-${MACHINE} ci si2183 avl6862 avl6261"
 
 require edision-dvb-modules.inc
-SRC_URI[md5sum] = "c429c83a53073e9709bbb9d90090e943"
-SRC_URI[sha256sum] = "2b2c8d08705bd59efec7ee2338a4d4e1f8a18843666949b77c221d1207b8a9e3"
+SRC_URI[md5sum] = "deec2046200f2ee3d162865ba44b5559"
+SRC_URI[sha256sum] = "7bbbeea714ac2b92d1c7cae7ecc45e3c67cbb218945b86fa83a11b780f813b9b"
+
+RRECOMMENDS_${PN} = "linux-firmware-dvb-fe-avl62x1 linux-firmware-dvb-fe-avl68x2"
