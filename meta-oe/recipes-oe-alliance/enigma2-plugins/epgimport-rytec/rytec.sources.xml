@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <sources>
+<!--
+Version: 19-03-2021
+-->
 
-	<!--
+<!--
 You can list as many <source> entries in a file as you wish.
 Files or urls for sources and channels ending in '.gz' will be treated as
 gzipped and decompressed while processing.
@@ -191,7 +194,7 @@ The description must be unique for each source, and is displayed on the UI.
 
 	<sourcecat sourcecatname="Rytec Danmark XMLTV">
 		<source type="gen_xmltv" channels="rytec.channels.xml.xz">
-			<description>Danmark - Grundlæggende (xz)</description>
+			<description>Danmark - Grundleggende (xz)</description>
 			<url>http://www.xmltvepg.nl/rytecDK_Basic.xz</url>
 			<url>http://epgspot.com/rytec_epg/rytecDK_Basic.xz</url>
 			<url>http://rytecepg.wanwizard.eu/rytecDK_Basic.xz</url>
