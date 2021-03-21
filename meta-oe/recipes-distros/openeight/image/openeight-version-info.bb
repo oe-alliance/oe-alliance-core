@@ -38,6 +38,9 @@ do_install() {
     echo "url=${URL}" >> ${D}/etc/image-version
     echo "catalog=${URL}" >> ${D}/etc/image-version
     echo "${MACHINE}" > ${D}/etc/model
+    echo "distro=${DISTRO_NAME}" >> ${D}/etc/image-version
+    echo "compile-date=${DATE}" >> ${D}/etc/image-version
+    echo "compile-datetime=${DATETIME}" >> ${D}/etc/image-version
 }
 
 FILES_${PN} += "/etc"

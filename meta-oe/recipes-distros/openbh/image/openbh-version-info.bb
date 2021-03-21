@@ -25,6 +25,9 @@ do_install() {
     echo "Type = ${DISTRO_TYPE}" >> ${D}/etc/image-version
     echo "Machine = ${MACHINEBUILD}" >> ${D}/etc/image-version
     echo "URL = ${URL}" >> ${D}/etc/image-version
+    echo "distro=${DISTRO_NAME}" >> ${D}/etc/image-version
+    echo "compile-date=${DATE}" >> ${D}/etc/image-version
+    echo "compile-datetime=${DATETIME}" >> ${D}/etc/image-version
 }
 
 FILES_${PN} = "/etc/image-version"
