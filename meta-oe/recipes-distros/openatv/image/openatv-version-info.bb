@@ -71,6 +71,6 @@ do_install() {
     echo "compile-datetime=${DATETIME}" >> ${D}/etc/image-version
 }
 
-do_install[vardepsexclude] += "DATE"
+do_install[vardepsexclude] += "DATE DATETIME"
 
 FILES_${PN} += "${sysconfdir}/image-version ${sysconfdir}/model"

@@ -30,5 +30,6 @@ do_install() {
     echo "compile-date=${DATE}" >> ${D}/etc/image-version
     echo "compile-datetime=${DATETIME}" >> ${D}/etc/image-version	
 }
+do_install[vardepsexclude] += "DATE DATETIME"
 
 FILES_${PN} = "/etc/image-version"
