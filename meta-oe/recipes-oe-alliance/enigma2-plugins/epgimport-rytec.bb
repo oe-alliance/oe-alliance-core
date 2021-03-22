@@ -5,7 +5,7 @@ LICENSE = "WTFPL"
 
 require conf/license/license-gplv2.inc
 
-PV = "20210305"
+PV = "20210319"
 PR = "r0"
 SRC_URI = "file://rytec.sources.xml file://russian.sources.xml file://spainKoala.sources.xml \
     "
