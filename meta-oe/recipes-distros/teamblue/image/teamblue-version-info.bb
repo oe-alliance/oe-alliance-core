@@ -74,8 +74,10 @@ do_install() {
     echo "ci=${HAVE_CI}" >> ${D}/etc/image-version
     echo "transcoding=${TRANSCODING}" >> ${D}/etc/image-version
     echo "${MACHINE}" > ${D}/etc/model
+    echo "compile-date=${DATE}" >> ${D}/etc/image-version
+    echo "compile-datetime=${DATETIME}" >> ${D}/etc/image-version
 }
-do_install[vardepsexclude] += "DATETIME"
+do_install[vardepsexclude] += "DATE DATETIME"
 
 FILES_${PN} += "/etc/model /etc/image-version"
 
