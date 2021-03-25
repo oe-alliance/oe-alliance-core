@@ -6,7 +6,7 @@ KERNEL_RELEASE = "4.4.35"
 
 inherit kernel machine_kernel_pr
 
-MACHINE_KERNEL_PR_append = "1"
+MACHINE_KERNEL_PR_append = "2"
 
 SRC_URI[md5sum] = "4c8f204781ac5a4a83918d5527fbcab0"
 SRC_URI[sha256sum] = "ce63b433241890fc64df4a21c8fa0dea9d10c4f7100e47485cf687727c1f708d"
@@ -30,6 +30,7 @@ SRC_URI += "http://en3homeftp.net/pub/down/linux-4.4.35.tar.xz \
 	file://0003-dont-mark-register-as-const.patch \
 	file://vmap.patch \
 	file://move-default-dialect-to-SMB3.patch \
+	file://0004_swifthooking.patch \
 	"
 
 S = "${WORKDIR}/linux-${PV}"
