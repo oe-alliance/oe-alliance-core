@@ -1,0 +1,29 @@
+--- a/drivers/media/dvb-core/dvb_demux.c
++++ b/drivers/media/dvb-core/dvb_demux.c
+@@ -60,6 +60,10 @@ MODULE_PARM_DESC(dvb_demux_feed_err_pkts,
+ 			printk(x);                              \
+ 	} while (0)
+ 
++/* iqon, 2021-0318, add swfilter hook function, ts file data writing... */
++int (*dmx_swfilter_hook)(struct dvb_demux *dvbdmx, const u8 *buffer, size_t length) = NULL;
++EXPORT_SYMBOL(dmx_swfilter_hook);
++
+ /******************************************************************************
+  * static inlined helper functions
+  ******************************************************************************/
+@@ -571,6 +575,15 @@ bailout:
+ 
+ void dvb_dmx_swfilter(struct dvb_demux *demux, const u8 *buf, size_t count)
+ {
++	/* iqon, 2021-0318, check hook function exist */
++	if(dmx_swfilter_hook)
++	{
++		/* hook function check ram port 0 t sbuffer status and send signal if ts buffer is remained small */
++		if(dmx_swfilter_hook(demux, buf, count) > 0)	
++		{
++			return;
++		}
++	}
+ 	_dvb_dmx_swfilter(demux, buf, count, 188);
+ }
+ EXPORT_SYMBOL(dvb_dmx_swfilter);
