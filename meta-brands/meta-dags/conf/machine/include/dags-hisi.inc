@@ -23,7 +23,6 @@ MACHINE_ESSENTIAL_EXTRA_RDEPENDS += " \
 "
 
 MACHINE_FEATURES += "switchoff hdmicec skins1080 emmc mmc alsa 7segment hdmicec skins1080 kodi19 hbbtv-browser-webkit hisil blindscan-dvbs"
-MACHINE_FEATURES += "switchoff hdmicec skins1080 emmc mmc alsa 7segment hdmicec skins1080 kodi18 hbbtv-browser-webkit "
 
 IMAGE_CLASSES += "dags-emmc_image"
 IMAGE_FSTYPES += "dagsemmc"
