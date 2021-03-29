@@ -25,7 +25,7 @@ DEPENDS = "virtual/${TARGET_PREFIX}gcc"
 RDEPENDS_${KERNEL_PACKAGE_NAME}-image = "updateubivolume"
 
 SRC_URI = " \
-    ${KERNELORG_MIRROR}/linux/kernel/v${PV}/linux-${PV}.tar.bz2;name=kernel \
+    http://source.mynonpublic.com/cube/linux-${PV}.tar.bz2;name=kernel \
     file://defconfig \
     file://100-arm-linux.patch \
     file://101-apollo_stb.patch \
