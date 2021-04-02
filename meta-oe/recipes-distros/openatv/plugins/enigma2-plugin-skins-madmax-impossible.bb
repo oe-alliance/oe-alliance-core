@@ -40,12 +40,18 @@ exit 0
 
 pkg_postrm_${PN} () {
 #!/bin/sh
-rm -rf /usr/share/enigma2/MadMax
-rm -rf /usr/lib/enigma2/python/Components/Converter/MM*
-rm -rf /usr/lib/enigma2/python/Components/Renderer/MM*
+if [ -d /usr/lib/enigma2/python/Plugins/Extensions/MadMax ]; then
+  rm -rf /usr/lib/enigma2/python/Plugins/Extensions/MadMax
+fi;
+if [ -d /usr/share/enigma2/MadMax ]; then
+  rm -rf /usr/share/enigma2/MadMax
+  rm -rf /usr/lib/enigma2/python/Components/Converter/MM*
+  rm -rf /usr/lib/enigma2/python/Components/Renderer/MM*
+fi;
 echo "                                                          "
 echo "                Skin successful removed.                  "
 echo "                                                          "
+exit 0
 }
 
 pkg_preinst_${PN} () {
@@ -61,6 +67,7 @@ pkg_prerm_${PN} () {
 echo "                                                          "
 echo "           MadMax Skin is now being removed...            "
 echo "                                                          "
+exit 0
 }
 
 do_package_qa[noexec] = "1"
