@@ -31,7 +31,7 @@ SRCREV = "${AUTOREV}"
 PV = "1.27.2.1+git${SRCPV}"
 PKGV = "1.27.2.1+git${GITPKGV}"
 
-SRC_URI = "git://github.com/streamlink/streamlink.git;protocol=https"
+SRC_URI = "git://github.com/Billy2011/streamlink-27;protocol=https"
 
 S = "${WORKDIR}/git"
 
