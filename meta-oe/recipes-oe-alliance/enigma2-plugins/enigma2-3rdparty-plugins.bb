@@ -30,7 +30,7 @@ S = "${WORKDIR}/git"
 
 THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-e2piconizer_1.13.20201122_all.ipk \
-    enigma2-plugin-extensions-netspeedtest_1.0rc2_all.ipk
+    enigma2-plugin-extensions-netspeedtest_1.0rc2_all.ipk \
     enigma2-plugin-extensions-xcplugin-forever_1.5_all.ipk \
     "
 
