@@ -1,21 +1,23 @@
-SUMMARY = "CLI for extracting streams from various websites to a video player of your choosing"
-DESCRIPTION = "Streamlink is a command-line utility that pipes video streams from various services into a video player, such as VLC."
-HOMEPAGE = "https://streamlink.github.io"
+SUMMARY = "Streamlink[-27] is a fork of the Streamlink project which continues to support python 2.7"
+DESCRIPTION = "The project extension [-27] indicates that this project continues to support python 2.7, \
+                as the streamlink project has discontinued python 2.7 support as of version 1.7.0"
+HOMEPAGE = "https://billy2011.github.io/streamlink-27"
 SECTION = "devel/python"
 LICENSE = "BSD-2-Clause"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=67e73aa1a18a474a727af66319626ed4"
-
-inherit setuptools
+LIC_FILES_CHKSUM = "file://LICENSE;md5=7c0be52291b7252b878da806d185b1d1"
 
 RDEPENDS_${PN} = "python-core \
     python-backports-shutil-which \
+    python-backports-shutil-get-terminal-size \
     python-ctypes \
     python-futures \
+    python-isodate \
     python-iso3166 \
     python-iso639 \
     python-misc \
     python-pkgutil \
-    python-pycrypto \
+    python-pycryptodome \
+    python-pysocks \
     python-requests \
     python-shell \
     python-singledispatch \
@@ -23,9 +25,15 @@ RDEPENDS_${PN} = "python-core \
     python-websocket-client \
     "
 
-SRC_URI = "git://github.com/streamlink/streamlink.git;protocol=git"
-SRCREV = "${PV}"
-S = "${WORKDIR}/git/"
+inherit gitpkgv setuptools
+
+SRCREV = "${AUTOREV}"
+PV = "1.27.2.1+git${SRCPV}"
+PKGV = "1.27.2.1+git${GITPKGV}"
+
+SRC_URI = "git://github.com/streamlink/streamlink.git;protocol=https"
+
+S = "${WORKDIR}/git"
 
 do_install_append() {
     rm -rf ${D}${bindir}
@@ -41,7 +49,8 @@ FILES_${PN} = " \
     "
 
 FILES_${PN}-src = " \
-    ${libdir}/${PYTHON_DIR}/site-packages/streamlink-${PV}-*.egg-info/* \
+    ${libdir}/${PYTHON_DIR}/site-packages/streamlink-*.egg-info/* \
+    ${libdir}/${PYTHON_DIR}/site-packages/streamlink/plugins/.removed \
     ${libdir}/${PYTHON_DIR}/site-packages/streamlink/*.py \
     ${libdir}/${PYTHON_DIR}/site-packages/streamlink/*/*.py \
     ${libdir}/${PYTHON_DIR}/site-packages/streamlink/*/*/*.py \
