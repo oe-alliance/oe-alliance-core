@@ -22,8 +22,6 @@ MACHINE_ESSENTIAL_EXTRA_RDEPENDS += " \
 	dags-blindscan-utils-${SOC_FAMILY} \
 "
 
-MACHINE_FEATURES += "switchoff hdmicec skins1080 emmc mmc alsa 7segment hdmicec skins1080 kodi18 hbbtv-browser-webkit blindscan-dvbs"
-
 IMAGE_CLASSES += "dags-emmc_image"
 IMAGE_FSTYPES += "dagsemmc"
 IMAGE_ROOTFS_SIZE ?= "524288"

@@ -390,7 +390,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'lunixco', 'dags73625' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'dual', 'dagsmv200', '', d)}\
 "
 
-MACHINE_FEATURES += "3dtv alsa hdmicec switchoff textlcd ci skins1080 HDMI \
+MACHINE_FEATURES += "3dtv alsa hdmicec switchoff ci skins1080 HDMI \
 ${@bb.utils.contains('MACHINEBUILD', 'fusionhd', 'fastscan dvb-c' , '', d)} \
 ${@bb.utils.contains('MACHINEBUILD', 'fusionhdse', 'fastscan dvb-c' , '', d)} \
 ${@bb.utils.contains('MACHINEBUILD', 'purehd', 'fastscan dvb-c' , '', d)} \
