@@ -7,8 +7,9 @@ LICENSE = "BSD-2-Clause"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=7c0be52291b7252b878da806d185b1d1"
 
 RDEPENDS_${PN} = "python-core \
-    python-backports-shutil-which \
+    python-backports-functools-lru-cache \
     python-backports-shutil-get-terminal-size \
+    python-backports-shutil-which \
     python-ctypes \
     python-futures \
     python-isodate \
@@ -31,7 +32,7 @@ SRCREV = "${AUTOREV}"
 PV = "1.27.2.1+git${SRCPV}"
 PKGV = "1.27.2.1+git${GITPKGV}"
 
-SRC_URI = "git://github.com/Billy2011/streamlink-27;protocol=https"
+SRC_URI = "git://github.com/oe-mirrors/streamlink-27;protocol=https"
 
 S = "${WORKDIR}/git"
 
