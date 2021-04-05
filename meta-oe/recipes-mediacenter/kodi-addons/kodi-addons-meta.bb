@@ -15,13 +15,13 @@ RDEPENDS_${PN} = " \
     kodi-addon-pvr-vbox \
     kodi-addon-pvr-vdr.vnsi \
     kodi-addon-pvr-wmc \
-    ${@bb.utils.contains("MACHINE_FEATURES", "kodi18", "kodi-addon-inputstream-adaptive kodi-addon-inputstream-rtmp", "", d)} \
+    kodi-addon-pvr-vuplus \
+    kodi-addon-pvr-iptvsimple \
+    kodi-addon-pvr-nextpvr \
+    kodi-addon-pvr-dvbviewer \
     "
+
 # fixme
-#    kodi-addon-pvr-vuplus
 #    kodi-addon-pvr-stalker
-#    kodi-addon-pvr-iptvsimple
 #    kodi-addon-pvr-filmon
 #    kodi-addon-pvr-pctv
-#    kodi-addon-pvr-nextpvr
-#    kodi-addon-pvr-dvbviewer
