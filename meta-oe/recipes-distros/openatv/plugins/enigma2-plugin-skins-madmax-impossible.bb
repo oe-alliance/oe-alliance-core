@@ -12,9 +12,15 @@ VER="1.6"
 
 RDEPENDS_${PN} = "enigma2-plugin-systemplugins-weathercomponenthandler, enigma2-plugin-skincomponents-weathercomponent, enigma2-plugin-extensions-weatherplugin"
 
-SRC_URI="git://github.com/m4dhouse/MadMax-Atv.git;protocol=git"
+SRC_URI="git://github.com/m4dhouse/MadMax-Atv.git;protocol=git;branch=main"
 
 FILES_${PN} = "${libdir} /usr/share"
+
+FILES_${PN}-src = "\
+    ${libdir}/enigma2/python/Components/Converter/*.py \
+    ${libdir}/enigma2/python/Components/Renderer/*.py \
+    ${libdir}/enigma2/python/Plugins/Extensions/MadMax/*.py \
+    "
 
 S = "${WORKDIR}/git/MadMax-Impossible-Skin"
 
