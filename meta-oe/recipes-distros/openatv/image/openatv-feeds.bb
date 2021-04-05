@@ -7,7 +7,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "1.0"
-PR = "r45"
+PR = "r46"
 
 inherit packagegroup
 
@@ -46,6 +46,7 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-skins-anadol \
     enigma2-plugin-skins-iflatfhd \
     enigma2-plugin-skins-glamouraurafhd-atv \
+    enigma2-plugin-skins-madmax-impossible \
     enigma2-plugin-skincomponents-mediaportal-atv-metrix-style \
     enigma2-plugin-extensions-chocholousek-picons \
     ${@bb.utils.contains("MACHINE_FEATURES", "skins1080", "hd-skins-meta", "", d)} \
