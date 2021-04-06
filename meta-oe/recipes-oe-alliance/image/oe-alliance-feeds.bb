@@ -96,6 +96,7 @@ RDEPENDS_${PN} = " \
     joe \
     lighttpd \
     livestreamersrv \
+    streamlinksrv \
     streamlink \
     satpi \
     llmnr-query \

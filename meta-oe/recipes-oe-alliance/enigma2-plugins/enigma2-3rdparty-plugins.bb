@@ -32,7 +32,6 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-e2piconizer_1.13.20201122_all.ipk \
     enigma2-plugin-extensions-netspeedtest_1.0rc2_all.ipk \
     enigma2-plugin-extensions-xcplugin-forever_1.5_all.ipk \
-    streamlinksrv_1.6.0_all.ipk \
     "
 
 python populate_packages_prepend () {
