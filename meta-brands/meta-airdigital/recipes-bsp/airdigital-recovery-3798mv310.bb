@@ -1,0 +1,8 @@
+SRCDATE = "20210120"
+
+require airdigital-recovery.inc
+
+SRC_URI[md5sum] = "ae1297193461d50b4ab205511a0afc42"
+SRC_URI[sha256sum] = "b5e3aeb56dabab7b500d557f00a9dc8595b4708ad3146cc214771275956f8322"
+
+COMPATIBLE_MACHINE = "^h11$"

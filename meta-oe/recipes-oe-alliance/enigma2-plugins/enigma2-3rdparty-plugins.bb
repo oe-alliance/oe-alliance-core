@@ -11,7 +11,7 @@ DEPENDS = "tslib mpfr gmp"
 SRCREV = "${AUTOREV}"
 PV = "${IMAGE_VERSION}+gitr${SRCPV}"
 PKGV = "${IMAGE_VERSION}+gitr${GITPKGV}"
-PR = "r2"
+PR = "r4"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins-python3.git;branch=main"
 
@@ -30,6 +30,7 @@ S = "${WORKDIR}/git"
 
 THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-e2piconizer_1.13.20201122_all.ipk \
+    enigma2-plugin-extensions-netspeedtest_1.0rc2_all.ipk \
     enigma2-plugin-extensions-xcplugin-forever_1.5_all.ipk \
     "
 

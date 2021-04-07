@@ -47,6 +47,7 @@ PROVIDES += " \
     enigma2-plugin-extensions-lcd4linux \
     enigma2-plugin-extensions-piconsupdater \
     enigma2-plugin-extensions-remotechannelstreamconverter \
+    enigma2-plugin-extensions-tmdb \
     ${@bb.utils.contains('MACHINE_FEATURES', 'legacykernel', '' , 'enigma2-plugin-systemplugins-wirelessaccesspoint', d)} \
     ${@bb.utils.contains('MACHINE', 'spark7162', 'enigma2-plugin-systemplugins-uniontunertype ' , ' ', d)} \
     ${@bb.utils.contains('MACHINE_FEATURES', 'sh4booster', 'enigma2-plugin-systemplugins-sh4boostercontrol' , ' ', d)} \
@@ -132,6 +133,8 @@ FILES_enigma2-plugin-extensions-lcd4linux_append = "${libdir}/enigma2/python/Com
 DESCRIPTION_enigma2-plugin-extensions-remotechannelstreamconverter = "Fetch channels from remote bouquets and make them available locally"
 RDEPENDS_enigma2-plugin-extensions-remotechannelstreamconverter = "${PYTHON_PN}-shell"
 RREPLACES_enigma2-plugin-extensions-remotechannelstreamconverter = "enigma2-plugin-extensions-remotestreamconvert"
+DESCRIPTION_enigma2-plugin-extensions-tmdb = "Show TMDb information"
+RDEPENDS_enigma2-plugin-extensions-tmdb = "${PYTHON_PN}-json ${PYTHON_PN}-requests"
 DESCRIPTION_enigma2-plugin-systemplugins-wirelessaccesspoint = "Using a Wireless module as AP."
 RDEPENDS_enigma2-plugin-systemplugins-wirelessaccesspoint = "hostapd bridge-utils"
 DESCRIPTION_enigma2-plugin-extensions-rcuselect = "Change Remote for Wetek"

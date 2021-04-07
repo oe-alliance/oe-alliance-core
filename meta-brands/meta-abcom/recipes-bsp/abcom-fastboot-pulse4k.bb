@@ -1,0 +1,6 @@
+SRCDATE = "20210312"
+
+require abcom-fastboot.inc
+
+SRC_URI[md5sum] = "3529671c7497e66591f5a753788fc359"
+SRC_URI[sha256sum] = "c80d883b8a275c0af79e60e2181b46d3ec9e1139a55161962cc7c5ff95fada19"

@@ -3,19 +3,14 @@ AUTHOR = "Maroš Ondrášek <mx3ldev@gmail.com>"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 
-inherit gitpkgv autotools ${PYTHON_PN}native
-
-SRCREV = "${AUTOREV}"
-PV = "19+git${SRCPV}"
-PKGV = "19+git${GITPKGV}"
-VER = "19"
+PV = "19"
 
 RDEPENDS_${PN} += "virtual/kodi kodi-addons-meta"
 
 RRECOMMENDS_${PN} = "${@bb.utils.contains("MACHINE_FEATURES", "no-subssupport", "" , "enigma2-plugin-extensions-subssupport", d)}"
 
-SRC_URI = "git://github.com/oe-mirrors/kodiext;protocol=git;branch=master \
-        file://0001-add-subtitleSelection-option.patch \
+SRCREV = "fb3546a8e5496ff3d8d9035eb10a876ef1e4b807"
+SRC_URI = "git://github.com/oe-alliance/kodiext.git;protocol=https;branch=python3 \
         file://advancedsettings.xml \
         "
 
@@ -32,4 +27,5 @@ FILES_${PN} = " \
     /usr/share/kodi/system \
     "
 
+inherit autotools
 INSANE_SKIP += "file-deps"

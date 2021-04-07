@@ -18,20 +18,6 @@ index a07af8b0..429e042c 100644
  	ecasa \
  	eibox \
  	emailclient \
-@@ -58,13 +57,11 @@ SUBDIRS = \
- 	ofdb \
- 	orfat \
- 	orfteletext \
--	partnerbox \
- 	permanentclock \
- 	pipservicerelation \
- 	podcast \
- 	porncenter \
- 	pushservice \
--	quickbutton \
- 	reconstructapsc \
- 	reftopiconname \
- 	remotetimer \
 @@ -127,7 +124,6 @@ SUBDIRS += \
  	mytube \
  	yttrailer \

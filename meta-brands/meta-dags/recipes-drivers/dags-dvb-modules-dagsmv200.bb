@@ -1,7 +1,7 @@
 KV = "4.4.35"
-SRCDATE = "20210324"
+SRCDATE = "20210326"
 
 require dags-dvb-modules-hisi.inc
 
-SRC_URI[md5sum] = "954ab9111f6a9511584886afe1fd7d16"
-SRC_URI[sha256sum] = "c69016bd8dc6d5290bdbc2ef5613afde9465ae87ee8fa621dfea743e0ab298ba"
+SRC_URI[md5sum] = "9c86e0e37c9df0b62467381d37254975"
+SRC_URI[sha256sum] = "044a7f53288ee6b4dfdde2060bf703459b96eb83ed2002b6ec15763e7477f34a"

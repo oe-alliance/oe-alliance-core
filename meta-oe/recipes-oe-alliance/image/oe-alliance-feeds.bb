@@ -9,19 +9,15 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r6"
+PR = "r8"
 
 DEPENDS = "enigma2-plugin-drivers-usbserial enigma2-plugin-systemplugins-radiotimesemulator"
 #DEPENDS = "enigma2-plugin-drivers-usbserial enigma2-plugin-systemplugins-hrtunerproxy"
 
 #disbale addons not python3 ready
  
-#    enigma2-plugin-extensions-moviemanager 
 #    enigma2-plugin-extensions-e2iplayer 
 #    enigma2-plugin-extensions-e2iplayer-deps 
-#    enigma2-plugin-extensions-xmodem 
-#    enigma2-plugin-systemplugins-hrtunerproxy 
-#    enigma2-plugin-systemplugins-serviceapp 
 
 RDEPENDS_${PN} = " \
     packagegroup-openplugins \
@@ -56,6 +52,10 @@ RDEPENDS_${PN} = " \
     oe-alliance-branding-remote \
     exteplayer3 \
     eplayer5 \
+    enigma2-plugin-systemplugins-serviceapp \
+    enigma2-plugin-extensions-moviemanager \
+    enigma2-plugin-systemplugins-hrtunerproxy  \
+    enigma2-plugin-extensions-xmodem  \
     ${@bb.utils.contains("MACHINE_FEATURES", "legacykernel", "" , "gdb v4l-utils evtest strace", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "omb", "enigma2-plugin-extensions-openmultiboot openmultiboot", "", d)} \
     ${@bb.utils.contains_any("MACHINE_FEATURES", "kodi18 kodi19", "kodi-addons-meta enigma2-plugin-extensions-kodi", "", d)} \
@@ -96,6 +96,7 @@ RDEPENDS_${PN} = " \
     joe \
     lighttpd \
     livestreamersrv \
+    streamlinksrv \
     streamlink \
     satpi \
     llmnr-query \

@@ -1,0 +1,8 @@
+SRCDATE = "20210120"
+
+require airdigital-bootlogo.inc
+
+SRC_URI[md5sum] = "927e1aef23a1ea629990e09bc702ab73"
+SRC_URI[sha256sum] = "0fdc434867fd2a0ac0812de64a812350020bc63f31d3d9841f653cf621040f67"
+
+COMPATIBLE_MACHINE = "^h11$"

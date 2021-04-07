@@ -44,6 +44,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'zgemmah102s', 'H102S' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah102h', 'H102H' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmahzeros', 'Hzero S' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah82h', 'H82H' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmah11', 'H11' , '', d)}\
 "
 
 MACHINE_BRAND = "\
@@ -87,6 +88,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'zgemmah102s', 'Zgemma' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah102h', 'Zgemma' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmahzeros', 'Zgemma' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmahz82H', 'Zgemma' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmah11', 'Zgemma' , '', d)}\
 "
 
 IMAGEDIR ?= "\
@@ -130,6 +132,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'zgemmah102s', 'h10' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah102h', 'h10' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmahzeros', 'hzero' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmahz82H', 'h8' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmah11', 'h11' , '', d)}\
 "
 
 MACHINE_DRIVER = "\
@@ -173,6 +176,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'zgemmah102s', 'h10' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah102h', 'h10' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmahzeros', 'hzero' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmahz82H', 'h8' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmah11', 'h11' , '', d)}\
 "
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "\
@@ -209,6 +213,7 @@ DVBMEDIASINK_CONFIG = "--with-wma --with-wmv --with-pcm --with-dts --with-eac3 \
     ${@bb.utils.contains('MACHINE', 'i55plus', '--with-h265 --with-vb6 --with-vb8 --with-vb9 --with-spark' , '', d)} \
     ${@bb.utils.contains('MACHINE', 'i55se', '--with-h265 --with-vb6 --with-vb8 --with-vb9 --with-spark' , '', d)} \
     ${@bb.utils.contains('MACHINE', 'h10', '--with-h265 --with-vb6 --with-vb8 --with-vb9 --with-spark' , '', d)} \
+    ${@bb.utils.contains('MACHINE', 'h11', '--with-h265 --with-vb6 --with-vb8 --with-vb9 --with-spark' , '', d)} \
     ${@bb.utils.contains('MACHINE', 'hzero', '--with-h265 --with-vb6 --with-vb8 -with-spark' , '', d)} \
     ${@bb.utils.contains('MACHINE', 'h8', '--with-h265 --with-vb6 --with-vb8 -with-spark' , '', d)} \
     "

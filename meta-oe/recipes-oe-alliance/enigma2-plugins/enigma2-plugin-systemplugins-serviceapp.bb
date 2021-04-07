@@ -9,12 +9,8 @@ RCONFLICTS_${PN} = "enigma2-plugin-extensions-serviceapp"
 RREPLACES_${PN} = "enigma2-plugin-extensions-serviceapp"
 
 SRCREV = "${AUTOREV}"
-SRCREV_openatv = "02956ea6b05a0186667582f9f25491f18334d31b"
-SRCREV_openeight = "02956ea6b05a0186667582f9f25491f18334d31b"
-SRCREV_opendroid = "02956ea6b05a0186667582f9f25491f18334d31b"
-SRC_URI = " \
-    git://github.com/mx3L/serviceapp.git;branch=develop \
-    "
+SRC_URI = "git://github.com/oe-mirrors/serviceapp.git;branch=develop"
+
 
 S = "${WORKDIR}/git"
 
@@ -37,13 +33,12 @@ EXTRA_OECONF = "\
 PACKAGES = "${PN} ${PN}-src ${PN}-dbg"
 
 FILES_${PN} = "\
-    ${libdir}/enigma2/python/Plugins/SystemPlugins/ServiceApp/*.pyo \
+    ${libdir}/enigma2/python/Plugins/SystemPlugins/ServiceApp/*.py \
     ${libdir}/enigma2/python/Plugins/SystemPlugins/ServiceApp/serviceapp.so \
     ${libdir}/enigma2/python/Plugins/SystemPlugins/ServiceApp/locale/*/*/*.mo \
     "
 
 FILES_${PN}-src = "\
-    ${libdir}/enigma2/python/Plugins/SystemPlugins/ServiceApp/*.py \
     ${libdir}/enigma2/python/Plugins/SystemPlugins/ServiceApp/locale/*/LC_MESSAGES/*.mo \
     /usr/src/debug/* \
     "

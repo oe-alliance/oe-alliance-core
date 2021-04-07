@@ -4,6 +4,6 @@ PKGV = "${PV}"
 
 KODIADDONPLUGIN = "iptvsimple"
 
-DEPENDS_append = "${@bb.utils.contains("MACHINE_FEATURES", "kodi18", "rapidxml", "", d)}"
+DEPENDS_append = "pugixml"
 
 require kodi-addon-pvr.inc
