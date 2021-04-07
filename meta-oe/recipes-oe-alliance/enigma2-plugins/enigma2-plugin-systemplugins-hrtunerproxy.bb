@@ -21,9 +21,9 @@ RDEPENDS_${PN} = " \
     ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-argparse", "", d)} \
     "
 
-do_install_prepend() {
-    echo ${GITPKGVTAG} | awk -F"-" '{print $1}'> ${S}/build/lib/SystemPlugins/HRTunerProxy/PLUGIN_VERSION
-}
+#do_install_prepend() {
+#    echo ${GITPKGVTAG} | awk -F"-" '{print $1 )}'> ${S}/build/lib/SystemPlugins/HRTunerProxy/PLUGIN_VERSION
+#}
 
 python populate_packages_prepend() {
     e2_pdir = bb.data.expand('${libdir}/enigma2/python/Plugins', d)
