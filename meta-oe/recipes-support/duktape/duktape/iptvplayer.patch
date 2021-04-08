@@ -47,7 +47,7 @@ index b55ec66..54705fe 100644
   *  Misc helpers
   */
 +static void print_ver_for_iptv(void) {
-+	printf("VER_FOR_IPTV: 3\n");
++	printf("VER_FOR_IPTV: 6\n");
 +}
  
  static void print_greet_line(void) {
