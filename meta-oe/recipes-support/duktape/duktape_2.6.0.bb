@@ -2,6 +2,8 @@ DESCRIPTION = "Duktape is an embeddable Javascript engine, with a focus on porta
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=c83446610de1f63c7ca60cfcc82dec9d"
 
+PR = "r1"
+
 SRC_URI = " \
 	http://duktape.org/duktape-${PV}.tar.xz \
 	file://iptvplayer.patch \
