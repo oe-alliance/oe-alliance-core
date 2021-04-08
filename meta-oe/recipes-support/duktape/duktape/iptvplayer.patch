@@ -1,0 +1,184 @@
+diff --git a/Makefile.cmdline b/Makefile.cmdline
+index a5fffb7..d92cd48 100644
+--- a/Makefile.cmdline
++++ b/Makefile.cmdline
+@@ -8,7 +8,8 @@ DUKTAPE_SOURCES = src/duktape.c
+ CMDLINE_SOURCES = \
+ 	examples/cmdline/duk_cmdline.c
+ 
+-CC = gcc
++# Let bitbake specify CC and LDFLAGS
++# CC	= gcc
+ CCOPTS = -Os -pedantic -std=c99 -Wall -fstrict-aliasing -fomit-frame-pointer
+ CCOPTS += -I./examples/cmdline -I./src   # duktape.h and duk_config.h must be in include path
+ CCLIBS = -lm
+@@ -22,12 +23,12 @@ CCOPTS += -DDUK_CMDLINE_CONSOLE_SUPPORT -I./extras/console
+ CMDLINE_SOURCES += extras/console/duk_console.c
+ 
+ # Enable Duktape.Logger for command line.
+-CCOPTS += -DDUK_CMDLINE_LOGGING_SUPPORT -I./extras/logging
+-CMDLINE_SOURCES += extras/logging/duk_logging.c
++#CCOPTS += -DDUK_CMDLINE_LOGGING_SUPPORT -I./extras/logging
++#CMDLINE_SOURCES += extras/logging/duk_logging.c
+ 
+ # Enable Duktape 1.x module loading for command line.
+-CCOPTS += -DDUK_CMDLINE_MODULE_SUPPORT -I./extras/module-duktape
+-CMDLINE_SOURCES += extras/module-duktape/duk_module_duktape.c
++#CCOPTS += -DDUK_CMDLINE_MODULE_SUPPORT -I./extras/module-duktape
++#CMDLINE_SOURCES += extras/module-duktape/duk_module_duktape.c
+ 
+ # If you want linenoise, you can enable these.  At the moment linenoise
+ # will cause some harmless compilation warnings.
+@@ -40,7 +41,7 @@ CMDLINE_SOURCES += extras/module-duktape/duk_module_duktape.c
+ # http://wiki.duktape.org/Configuring.html
+ 
+ duk: $(DUKTAPE_SOURCES) $(CMDLINE_SOURCES)
+-	$(CC) -o $@ $(DEFINES) $(CCOPTS) $(DUKTAPE_SOURCES) $(CMDLINE_SOURCES) $(CCLIBS)
++	$(CC) -o $@ $(DEFINES) $(CCOPTS) $(DUKTAPE_SOURCES) $(CMDLINE_SOURCES) $(CCLIBS) $(LDFLAGS)
+ 
+ linenoise/linenoise.c: linenoise
+ linenoise:
+diff --git a/examples/cmdline/duk_cmdline.c b/examples/cmdline/duk_cmdline.c
+index b55ec66..54705fe 100644
+--- a/examples/cmdline/duk_cmdline.c
++++ b/examples/cmdline/duk_cmdline.c
+@@ -109,8 +109,12 @@ static int debugger_reattach = 0;
+ /*
+  *  Misc helpers
+  */
++static void print_ver_for_iptv(void) {
++	printf("VER_FOR_IPTV: 3\n");
++}
+ 
+ static void print_greet_line(void) {
++	print_ver_for_iptv();
+ 	printf("((o) Duktape%s %d.%d.%d (%s)\n",
+ #if defined(DUK_CMDLINE_LINENOISE)
+ 	       " [linenoise]",
+@@ -1255,6 +1259,57 @@ static void destroy_duktape_heap(duk_context *ctx, int alloc_provider) {
+ /*
+  *  Main
+  */
++ 
++#include <sys/time.h>
++#include <sys/resource.h>
++#include <signal.h>
++
++static void timer_handler (int signum)
++{
++    perror("Time limit exceeded!\n");
++    raise(SIGSTOP);
++}
++
++static void set_limits_exec_time(int timeSec)
++{
++    struct itimerval it_val;
++
++    if (signal(SIGALRM, (void (*)(int)) timer_handler) == SIG_ERR)
++    {
++        perror("Unable to catch SIGALRM");
++        exit(1);
++    }
++    
++    it_val.it_value.tv_sec  = timeSec;
++    it_val.it_value.tv_usec = 0;
++    it_val.it_interval = it_val.it_value;
++    
++    if (setitimer(ITIMER_REAL, &it_val, NULL) == -1)
++    {
++        perror("error calling setitimer()");
++        exit(1);
++    }
++}
++
++static void set_limits(int timeSec, int memMB)
++{
++    struct rlimit rl;
++    if (memMB > 0)
++    {
++        rl.rlim_cur = (rlim_t )(memMB * 1024 * 1024);
++        rl.rlim_max = (rlim_t )(memMB * 1024 * 1024);
++        setrlimit(RLIMIT_AS, &rl);
++    }
++    
++    if (timeSec > 0)
++    {
++        rl.rlim_cur = (rlim_t )(timeSec);
++        rl.rlim_max = (rlim_t )(timeSec);
++        setrlimit(RLIMIT_CPU, &rl);
++        
++        set_limits_exec_time(timeSec);
++    }
++}
+ 
+ int main(int argc, char *argv[]) {
+ 	duk_context *ctx = NULL;
+@@ -1272,6 +1327,8 @@ int main(int argc, char *argv[]) {
+ 	int run_stdin = 0;
+ 	const char *compile_filename = NULL;
+ 	int i;
++	int timeSec = 3;
++	int memMB   = 10;
+ 
+ 	main_argc = argc;
+ 	main_argv = (char **) argv;
+@@ -1358,6 +1415,18 @@ int main(int argc, char *argv[]) {
+ 			}
+ 			i++;
+ 			compile_filename = argv[i];
++		} else if (strcmp(arg, "-m") == 0) {
++			if (i == argc - 1) {
++				goto usage;
++			}
++			i++;
++			memMB = atoi(argv[i]);
++		} else if (strcmp(arg, "-t") == 0) {
++			if (i == argc - 1) {
++				goto usage;
++			}
++			i++;
++			timeSec = atoi(argv[i]);
+ 		} else if (strcmp(arg, "-e") == 0) {
+ 			have_eval = 1;
+ 			if (i == argc - 1) {
+@@ -1401,17 +1470,9 @@ int main(int argc, char *argv[]) {
+ 	}
+ 
+ 	/*
+-	 *  Memory limit
++	 *  Set memory limit and time limits
+ 	 */
+-
+-#if defined(DUK_CMDLINE_RLIMIT)
+-	set_resource_limits(memlimit_high ? MEM_LIMIT_HIGH : MEM_LIMIT_NORMAL);
+-#else
+-	if (memlimit_high == 0) {
+-		fprintf(stderr, "Warning: option --restrict-memory ignored, no rlimit support\n");
+-		fflush(stderr);
+-	}
+-#endif
++	set_limits(timeSec, memMB);
+ 
+ 	/*
+ 	 *  Create heap
+@@ -1442,6 +1503,12 @@ int main(int argc, char *argv[]) {
+ 		} else if (strlen(arg) == 2 && strcmp(arg, "-c") == 0) {
+ 			i++;  /* skip filename */
+ 			continue;
++		} else if (strlen(arg) == 2 && strcmp(arg, "-m") == 0) {
++			i++;
++			continue;
++		} else if (strlen(arg) == 2 && strcmp(arg, "-t") == 0) {
++			i++;
++			continue;
+ 		} else if (strlen(arg) >= 1 && arg[0] == '-') {
+ 			continue;
+ 		}
+@@ -1525,6 +1592,7 @@ int main(int argc, char *argv[]) {
+ 	 */
+ 
+  usage:
++	print_greet_line();
+ 	fprintf(stderr, "Usage: duk [options] [<filenames>]\n"
+ 	                "\n"
+ 	                "   -i                 enter interactive mode after executing argument file(s) / eval code\n"
