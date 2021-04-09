@@ -53,7 +53,7 @@ DEPENDS = "\
     ${@bb.utils.contains('MACHINE_FEATURES', 'transcoding', 'virtual/transtreamproxy' , '', d)} \
     python-dnspython python-beautifulsoup4 python-lxml python-simplejson python-pyamf python-icalendar python-pyusb \
     djmount \
-    librtmp \
+    rtmpdump \
     minidlna \
     hddtemp \
     ppp \
@@ -82,7 +82,7 @@ DESCRIPTION_enigma2-plugin-systemplugins-firmwareupgrade = "Upgrade your system 
 DESCRIPTION_enigma2-plugin-systemplugins-fpgaupgrade = "Upgrade your system FPGA"
 DESCRIPTION_enigma2-plugin-systemplugins-vfdcontrol = "vfd controller"
 DESCRIPTION_enigma2-plugin-extensions-streamtv = "iptv player"
-RDEPENDS_enigma2-plugin-extensions-streamtv = "librtmp1"
+RDEPENDS_enigma2-plugin-extensions-streamtv = "rtmpdump"
 DESCRIPTION_enigma2-plugin-systemplugins-tempfancontrol = "Control your internal system fan."
 DESCRIPTION_enigma2-plugin-systemplugins-channelsimporter = "Imports a copy of the channel list from a remote receiver and loads it on the local receiver."
 DESCRIPTION_enigma2-plugin-systemplugins-abmcustommiximporter = "Imports ABM CustomMix files from Github."
