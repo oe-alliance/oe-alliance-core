@@ -5,7 +5,7 @@ PRIORITY = "optional"
 require conf/license/license-gplv2.inc
 
 DEPENDS = "${PYTHON_PN}-six-native"
-RDEPENDS_${PN} = "gstreamer1.0-plugins-good-flv gstreamer1.0-plugins-bad-rtmp ${PYTHON_PN}-json ${PYTHON_PN}-html ${PYTHON_PN}-requests ${PYTHON_PN}-mutagen librtmp1"
+RDEPENDS_${PN} = "gstreamer1.0-plugins-good-flv gstreamer1.0-plugins-bad-rtmp ${PYTHON_PN}-json ${PYTHON_PN}-html ${PYTHON_PN}-requests ${PYTHON_PN}-mutagen rtmpdump"
 
 inherit gitpkgv ${PYTHON_PN}native autotools-brokensep gettext
 

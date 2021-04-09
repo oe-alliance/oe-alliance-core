@@ -61,7 +61,7 @@ DEPENDS = "\
     ${PYTHON_PN}-dnspython ${PYTHON_PN}-beautifulsoup4 ${PYTHON_PN}-lxml ${PYTHON_PN}-simplejson ${PYTHON_PN}-pyamf ${PYTHON_PN}-icalendar ${PYTHON_PN}-pyusb ${PYTHON_PN}-six-native \
     djmount \
     dpflib \
-    librtmp \
+    rtmpdump \
     minidlna \
     hddtemp \
     ppp \
@@ -97,7 +97,7 @@ DESCRIPTION_enigma2-plugin-systemplugins-firmwareupgrade = "Upgrade your system 
 DESCRIPTION_enigma2-plugin-systemplugins-fpgaupgrade = "Upgrade your system FPGA"
 DESCRIPTION_enigma2-plugin-systemplugins-vfdcontrol = "vfd controller"
 DESCRIPTION_enigma2-plugin-extensions-streamtv = "iptv player"
-RDEPENDS_enigma2-plugin-extensions-streamtv = "librtmp1"
+RDEPENDS_enigma2-plugin-extensions-streamtv = "rtmpdump"
 DESCRIPTION_enigma2-plugin-systemplugins-tempfancontrol = "Control your internal system fan."
 DESCRIPTION_enigma2-plugin-systemplugins-channelsimporter = "Imports a copy of the channel list from a remote receiver and loads it on the local receiver."
 DESCRIPTION_enigma2-plugin-systemplugins-abmcustommiximporter = "Imports ABM CustomMix files from Github."

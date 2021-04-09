@@ -1,0 +1,28 @@
+From 1befde12361495131e76bace20db3bd04e223171 Mon Sep 17 00:00:00 2001
+From: Captain <captain.onboard@web.de>
+Date: Thu, 8 Apr 2021 13:49:55 +0200
+Subject: [PATCH 3/3] add-movecast-thx-testi
+
+---
+ librtmp/rtmp.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/librtmp/rtmp.c b/librtmp/rtmp.c
+index 269ac55..7d3cbff 100644
+--- a/librtmp/rtmp.c
++++ b/librtmp/rtmp.c
+@@ -3252,6 +3252,11 @@ HandleInvoke(RTMP *r, const char *body, unsigned int nBodySize)
+ 
+               RTMP_SendCreateStream(r);
+             }
++         else if (strstr(pageUrl, "movecast.tv"))
++            {
++              SendCommand(r, "trebaDaSmenamSecurity", TRUE);
++              RTMP_SendCreateStream(r);
++            }
+           else if ((strstr(host, "highwebmedia.com") || strstr(pageUrl, "chaturbate.com"))
+                    && (!strstr(host, "origin")))
+             {
+-- 
+2.31.1.windows.1
+
