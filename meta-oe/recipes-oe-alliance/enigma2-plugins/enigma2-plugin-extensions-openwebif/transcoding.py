@@ -20,14 +20,14 @@ def get_transcoding_features(encoder=0):
 		"framerate": "framerate",
 		"resolution": "display_format",
 		"aspectratio": "aspectratio",
-		"audiocodec" : "audio_codec",
-		"videocodec" : "video_codec",
-		"gopframeb" : "gop_frameb",
-		"gopframep" :"gop_framep",
-		"level" : "level",
-		"profile" : "profile",
-		"width" : "width", # not in use
-		"height" : "height", # not in use
+		"audiocodec": "audio_codec",
+		"videocodec": "video_codec",
+		"gopframeb": "gop_frameb",
+		"gopframep":"gop_framep",
+		"level": "level",
+		"profile": "profile",
+		"width": "width", # not in use
+		"height": "height", # not in use
 	}
 	encoder_features = {}
 	for feature in features:

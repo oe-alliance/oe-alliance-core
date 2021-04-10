@@ -16,7 +16,7 @@ except ImportError:
     from urllib.parse import urlunparse as _urlunparse
 
     def urlunparse(parts):
-        result = _urlunparse(tuple([ p.decode('charmap') for p in parts ]))
+        result = _urlunparse(tuple([p.decode('charmap') for p in parts]))
         return result.encode('charmap')
 
 
@@ -1016,7 +1016,7 @@ class HTTPConnectionPool(object):
             del self._timeouts[connection]
             if connection.state == 'QUIESCENT':
                 if self.retryAutomatically:
-                    newConnection = lambda : self._newConnection(key, endpoint)
+                    newConnection = lambda: self._newConnection(key, endpoint)
                     connection = _RetryingHTTP11ClientProtocol(connection, newConnection)
                 return defer.succeed(connection)
 
@@ -1480,7 +1480,7 @@ class ContentDecoderAgent(object):
     def __init__(self, agent, decoders):
         self._agent = agent
         self._decoders = dict(decoders)
-        self._supported = ','.join([ decoder[0] for decoder in decoders ])
+        self._supported = ','.join([decoder[0] for decoder in decoders])
 
     def request(self, method, uri, headers=None, bodyProducer=None):
         """

@@ -90,7 +90,7 @@ def updateBrightness(hell, _min, _max):
 	try:
 		if _min == _max:
 			return
-		hell = int( 255*hell/(_max - _min) )
+		hell = int(255*hell/(_max - _min))
 		if hell >= 250:
 			hell = 255
 		global old_hell
@@ -115,7 +115,7 @@ class pngUtilTimer:
 		self.oldPluginVer = False
 
 	def startUpdateTimer(self):
-		if self.pngutilconnect :
+		if self.pngutilconnect:
 			self.updateTimer.start(1000, True)
 
 	def updateLCD(self):
