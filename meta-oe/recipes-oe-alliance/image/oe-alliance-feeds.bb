@@ -40,6 +40,7 @@ RDEPENDS_${PN} = " \
     enigma2-plugin-extensions-e2iplayer-deps \
     enigma2-plugin-extensions-e2m3u2bouquet \
     enigma2-plugin-extensions-jedimakerxtream \
+    enigma2-plugin-extensions-jediepgxtream \
     enigma2-plugin-extensions-xmodem \
     enigma2-plugin-extensions-xstreamity \
     enigma2-plugin-systemplugins-hrtunerproxy \
