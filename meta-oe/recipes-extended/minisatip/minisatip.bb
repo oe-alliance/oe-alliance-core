@@ -11,7 +11,7 @@ SRC_URI = " \
     file://minisatip.init \
     "
 
-SRCREV = "7ba80e07884466dfa63d97b50396b336eb9372af"
+SRCREV = "${AUTOREV}"
 UPSTREAMVERSION = "1.0d"
 PV = "${UPSTREAMVERSION}+git${SRCPV}"
 
