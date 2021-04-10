@@ -8,7 +8,7 @@ class Process(object):
 		"""Make a new Process object"""
 		self.proc = "/proc/%d" % pid
 		f = open(os.path.join(self.proc, "stat"))
-		pid,command,state,parent_pid = f.read().strip().split()[:4]
+		pid, command, state, parent_pid = f.read().strip().split()[:4]
 		f.close()
 		command = command[1:-1]
 		self.pid = int(pid)

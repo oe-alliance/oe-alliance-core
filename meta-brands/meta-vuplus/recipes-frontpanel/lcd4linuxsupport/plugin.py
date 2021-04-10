@@ -20,30 +20,30 @@ from Plugins.Extensions.LCD4linux import plugin
 def getResolution(t, r="0"):
 	if t[:1] == "5":
 		ttt = LCD4linux.xmlLCDType.value.split("x")
-		MAX_W,MAX_H = int(ttt[0]),int(ttt[1])
+		MAX_W, MAX_H = int(ttt[0]), int(ttt[1])
 	elif t[1:] == "1":
-		MAX_W,MAX_H = 320,240
+		MAX_W, MAX_H = 320, 240
 	elif t[1:] == "2":
-		MAX_W,MAX_H = 240,320
-	elif t[1:] in ["3","4","5","10"]:
-		MAX_W,MAX_H = 800,480
-	elif t[1:] in ["6","9","11","12"]:
-		MAX_W,MAX_H = 800,600
-	elif t[1:] in ["7","8","13"]:
-		MAX_W,MAX_H = 1024,600
+		MAX_W, MAX_H = 240, 320
+	elif t[1:] in ["3", "4", "5", "10"]:
+		MAX_W, MAX_H = 800, 480
+	elif t[1:] in ["6", "9", "11", "12"]:
+		MAX_W, MAX_H = 800, 600
+	elif t[1:] in ["7", "8", "13"]:
+		MAX_W, MAX_H = 1024, 600
 	elif t[1:] == "17":
-		MAX_W,MAX_H = 220,176
+		MAX_W, MAX_H = 220, 176
 	elif t[1:] == "18":
-		MAX_W,MAX_H = 255,64
+		MAX_W, MAX_H = 255, 64
 	elif t[1:] == "30":
-		MAX_W,MAX_H = 400,240
+		MAX_W, MAX_H = 400, 240
 	elif t[1:] == "20":
-		MAX_W,MAX_H = LCD4linux.SizeW.value,LCD4linux.SizeH.value
+		MAX_W, MAX_H = LCD4linux.SizeW.value, LCD4linux.SizeH.value
 	elif t[1:] == "50": # vuduo2
-		MAX_W,MAX_H = 400,240
-	if r in ["90","270"]:
-		MAX_W,MAX_H = MAX_H,MAX_W
-	return MAX_W,MAX_H
+		MAX_W, MAX_H = 400, 240
+	if r in ["90", "270"]:
+		MAX_W, MAX_H = MAX_H, MAX_W
+	return MAX_W, MAX_H
 
 plugin_writeHelligkeit = None
 g_min = 0
@@ -59,7 +59,7 @@ def writeHelligkeit_lver(hell):
 			g_min, g_max = getHellRange(plugin.config.plugins.LCD4linux.Helligkeit)
 		updateBrightness(int(hell), g_min, g_max)
 
-def writeHelligkeit(hell,hell2,hell3,STOP=False):
+def writeHelligkeit(hell, hell2, hell3, STOP=False):
 	global g_min
 	global g_max
 	global old_hell
@@ -81,9 +81,9 @@ def getHellRange(ins):
 		elif isinstance(ins, ConfigSlider):
 			return (ins.min, ins.max)
 		else:
-			return (0,10)
+			return (0, 10)
 	except:
-		return (0,10)
+		return (0, 10)
 
 old_hell = 40
 def updateBrightness(hell, _min, _max):
@@ -98,8 +98,8 @@ def updateBrightness(hell, _min, _max):
 			return
 		else:
 			old_hell = hell
-		print "[LCD4linux Support] update Brightness : ",hell
-		led_fd = open("/dev/lcd2",'rw')
+		print "[LCD4linux Support] update Brightness : ", hell
+		led_fd = open("/dev/lcd2", 'rw')
 		ioctl(led_fd, 0x10, hell)
 		led_fd.close()
 	except:

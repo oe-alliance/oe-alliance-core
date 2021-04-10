@@ -37,9 +37,9 @@ Q flags
 
 def _make_fmt(name, format, extras=[]):
 	type_and_name = [l.split(None, 1) for l in format.strip().splitlines()]
-	fmt = ''.join(t for (t,n) in type_and_name)
+	fmt = ''.join(t for (t, n) in type_and_name)
 	fmt = '<' + fmt
-	tupletype = collections.namedtuple(name, [n for (t,n) in type_and_name if n != '_'] + extras)
+	tupletype = collections.namedtuple(name, [n for (t, n) in type_and_name if n != '_'] + extras)
 	return (fmt, tupletype)
 
 class GPTError(Exception):

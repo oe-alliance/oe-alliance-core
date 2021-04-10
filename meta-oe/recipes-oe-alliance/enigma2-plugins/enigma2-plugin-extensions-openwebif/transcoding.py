@@ -23,7 +23,7 @@ def get_transcoding_features(encoder=0):
 		"audiocodec": "audio_codec",
 		"videocodec": "video_codec",
 		"gopframeb": "gop_frameb",
-		"gopframep":"gop_framep",
+		"gopframep": "gop_framep",
 		"level": "level",
 		"profile": "profile",
 		"width": "width", # not in use
