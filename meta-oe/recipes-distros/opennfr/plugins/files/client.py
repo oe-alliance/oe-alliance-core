@@ -205,7 +205,7 @@ class HTTPPageGetter(http.HTTPClient):
 class HTTPPageDownloader(HTTPPageGetter):
     transmittingPage = 0
 
-    def handleStatus_200(self, partialContent = 0):
+    def handleStatus_200(self, partialContent=0):
         HTTPPageGetter.handleStatus_200(self)
         self.transmittingPage = 1
         self.factory.pageStart(partialContent)
@@ -282,7 +282,7 @@ class HTTPClientFactory(protocol.ClientFactory):
     port = None
     path = None
 
-    def __init__(self, url, method = 'GET', postdata = None, headers = None, agent = 'Twisted PageGetter', timeout = 0, cookies = None, followRedirect = True, redirectLimit = 20, afterFoundGet = False):
+    def __init__(self, url, method='GET', postdata=None, headers=None, agent='Twisted PageGetter', timeout=0, cookies=None, followRedirect=True, redirectLimit=20, afterFoundGet=False):
         self.followRedirect = followRedirect
         self.redirectLimit = redirectLimit
         self._redirectCount = 0
@@ -385,7 +385,7 @@ class HTTPDownloader(HTTPClientFactory):
     protocol = HTTPPageDownloader
     value = None
 
-    def __init__(self, url, fileOrName, method = 'GET', postdata = None, headers = None, agent = 'Twisted client', supportPartial = 0, timeout = 0, cookies = None, followRedirect = 1, redirectLimit = 20, afterFoundGet = False):
+    def __init__(self, url, fileOrName, method='GET', postdata=None, headers=None, agent='Twisted client', supportPartial=0, timeout=0, cookies=None, followRedirect=1, redirectLimit=20, afterFoundGet=False):
         self.requestedPartial = 0
         if isinstance(fileOrName, types.StringTypes):
             self.fileName = fileOrName
@@ -557,7 +557,7 @@ class _URI(object):
         self.fragment = fragment
 
     @classmethod
-    def fromBytes(cls, uri, defaultPort = None):
+    def fromBytes(cls, uri, defaultPort=None):
         """
         Parse the given URI into a L{_URI}.
         
@@ -649,7 +649,7 @@ def _urljoin(base, url):
     return urljoin(url, '#' + (urlFrag or baseFrag))
 
 
-def _makeGetterFactory(url, factoryFactory, contextFactory = None, *args, **kwargs):
+def _makeGetterFactory(url, factoryFactory, contextFactory=None, *args, **kwargs):
     """
     Create and connect an HTTP page getting factory.
     
@@ -676,7 +676,7 @@ def _makeGetterFactory(url, factoryFactory, contextFactory = None, *args, **kwar
     return factory
 
 
-def getPage(url, contextFactory = None, *args, **kwargs):
+def getPage(url, contextFactory=None, *args, **kwargs):
     """
     Download a web page as a string.
     
@@ -688,7 +688,7 @@ def getPage(url, contextFactory = None, *args, **kwargs):
     return _makeGetterFactory(url, HTTPClientFactory, contextFactory=contextFactory, *args, **kwargs).deferred
 
 
-def downloadPage(url, file, contextFactory = None, *args, **kwargs):
+def downloadPage(url, file, contextFactory=None, *args, **kwargs):
     """
     Download a web page to a file.
     
@@ -783,7 +783,7 @@ class FileBodyProducer(object):
     @ivar _readSize: The number of bytes to read from C{_inputFile} at a time.
     """
 
-    def __init__(self, inputFile, cooperator = task, readSize = 65536):
+    def __init__(self, inputFile, cooperator=task, readSize=65536):
         self._inputFile = inputFile
         self._cooperate = cooperator.cooperate
         self._readSize = readSize
@@ -982,7 +982,7 @@ class HTTPConnectionPool(object):
     cachedConnectionTimeout = 240
     retryAutomatically = True
 
-    def __init__(self, reactor, persistent = True):
+    def __init__(self, reactor, persistent=True):
         self._reactor = reactor
         self.persistent = persistent
         self._connections = {}
@@ -1152,7 +1152,7 @@ class Agent(_AgentBase):
     @since: 9.0
     """
 
-    def __init__(self, reactor, contextFactory = WebClientContextFactory(), connectTimeout = None, bindAddress = None, pool = None):
+    def __init__(self, reactor, contextFactory=WebClientContextFactory(), connectTimeout=None, bindAddress=None, pool=None):
         _AgentBase.__init__(self, reactor, pool)
         self._contextFactory = contextFactory
         self._connectTimeout = connectTimeout
@@ -1204,7 +1204,7 @@ class Agent(_AgentBase):
             raise SchemeNotSupported('Unsupported scheme: %r' % (scheme,))
             return
 
-    def request(self, method, uri, headers = None, bodyProducer = None):
+    def request(self, method, uri, headers=None, bodyProducer=None):
         """
         Issue a request to the server indicated by the given C{uri}.
         
@@ -1235,14 +1235,14 @@ class ProxyAgent(_AgentBase):
     @since: 11.1
     """
 
-    def __init__(self, endpoint, reactor = None, pool = None):
+    def __init__(self, endpoint, reactor=None, pool=None):
         if reactor is None:
             from twisted.internet import reactor
         _AgentBase.__init__(self, reactor, pool)
         self._proxyEndpoint = endpoint
         return
 
-    def request(self, method, uri, headers = None, bodyProducer = None):
+    def request(self, method, uri, headers=None, bodyProducer=None):
         """
         Issue a new request via the configured proxy.
         """
@@ -1286,7 +1286,7 @@ class _FakeUrllib2Request(object):
     def get_full_url(self):
         return self.uri
 
-    def get_header(self, name, default = None):
+    def get_header(self, name, default=None):
         headers = self.headers.getRawHeaders(name, default)
         if headers is not None:
             return headers[0]
@@ -1351,7 +1351,7 @@ class CookieAgent(object):
         self._agent = agent
         self.cookieJar = cookieJar
 
-    def request(self, method, uri, headers = None, bodyProducer = None):
+    def request(self, method, uri, headers=None, bodyProducer=None):
         """
         Issue a new request to the wrapped L{Agent}.
         
@@ -1482,7 +1482,7 @@ class ContentDecoderAgent(object):
         self._decoders = dict(decoders)
         self._supported = ','.join([ decoder[0] for decoder in decoders ])
 
-    def request(self, method, uri, headers = None, bodyProducer = None):
+    def request(self, method, uri, headers=None, bodyProducer=None):
         """
         Send a client request which declares supporting compressed content.
         
@@ -1544,11 +1544,11 @@ class RedirectAgent(object):
     _redirectResponses = [http.MOVED_PERMANENTLY, http.FOUND, http.TEMPORARY_REDIRECT]
     _seeOtherResponses = [http.SEE_OTHER]
 
-    def __init__(self, agent, redirectLimit = 20):
+    def __init__(self, agent, redirectLimit=20):
         self._agent = agent
         self._redirectLimit = redirectLimit
 
-    def request(self, method, uri, headers = None, bodyProducer = None):
+    def request(self, method, uri, headers=None, bodyProducer=None):
         """
         Send a client request following HTTP redirects.
         

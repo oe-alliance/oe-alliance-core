@@ -13,7 +13,7 @@ from twisted.web import resource
 from Components.config import config
 
 
-def get_transcoding_features(encoder = 0):
+def get_transcoding_features(encoder=0):
 	features = {
 		"automode": "automode",
 		"bitrate": "bitrate",

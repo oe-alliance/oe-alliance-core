@@ -21,7 +21,7 @@ class Process(object):
 		self.parent = None
 		self.children = []
 
-	def kill(self, sig = signal.SIGTERM):
+	def kill(self, sig=signal.SIGTERM):
 		"""Kill this process with SIGTERM by default"""
 		os.kill(self.pid, sig)
 

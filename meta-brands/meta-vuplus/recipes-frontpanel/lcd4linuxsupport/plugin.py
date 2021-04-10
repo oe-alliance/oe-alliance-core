@@ -59,7 +59,7 @@ def writeHelligkeit_lver(hell):
 			g_min, g_max = getHellRange(plugin.config.plugins.LCD4linux.Helligkeit)
 		updateBrightness(int(hell), g_min, g_max)
 
-def writeHelligkeit(hell,hell2,hell3,STOP = False):
+def writeHelligkeit(hell,hell2,hell3,STOP=False):
 	global g_min
 	global g_max
 	global old_hell
@@ -143,18 +143,18 @@ class pngUtilTimer:
 				global LCDType1_id_lver
 				self.oldPluginVer = True
 				lcdtype.append((LCDType1_id_lver, _("Vu+ Duo2 LCD 400x240")))
-				plugin.config.plugins.LCD4linux.LCDType1 = ConfigSelection(choices = lcdtype, default=LCDType1_id_lver)
-				plugin.config.plugins.LCD4linux.Standby = ConfigSelection(choices = [("0", _("off")), ("1", _("on"))], default="0")
-				plugin.config.plugins.LCD4linux.Thread = ConfigYesNo(default = True)
-				plugin.config.plugins.LCD4linux.Helligkeit = ConfigSlider(default = 1,  limits = (0, 7))
+				plugin.config.plugins.LCD4linux.LCDType1 = ConfigSelection(choices=lcdtype, default=LCDType1_id_lver)
+				plugin.config.plugins.LCD4linux.Standby = ConfigSelection(choices=[("0", _("off")), ("1", _("on"))], default="0")
+				plugin.config.plugins.LCD4linux.Thread = ConfigYesNo(default=True)
+				plugin.config.plugins.LCD4linux.Helligkeit = ConfigSlider(default=1,  limits=(0, 7))
 				plugin_writeHelligkeit = plugin.writeHelligkeit
 				plugin.writeHelligkeit = writeHelligkeit_lver
 			else:
 				global LCDType1_id
 				lcdtype.append((LCDType1_id, _("Vu+ Duo2 LCD 400x240")))
-				plugin.LCD4linux.LCDType1 = ConfigSelection(choices = lcdtype, default=LCDType1_id)
-				plugin.LCD4linux.Standby = ConfigSelection(choices = [("0", _("off")), ("1", _("on"))], default="0")
-				plugin.LCD4linux.Helligkeit = ConfigSelectionNumber(0, 10, 1, default = 2)
+				plugin.LCD4linux.LCDType1 = ConfigSelection(choices=lcdtype, default=LCDType1_id)
+				plugin.LCD4linux.Standby = ConfigSelection(choices=[("0", _("off")), ("1", _("on"))], default="0")
+				plugin.LCD4linux.Helligkeit = ConfigSelectionNumber(0, 10, 1, default=2)
 				plugin_writeHelligkeit = plugin.writeHelligkeit
 				plugin.writeHelligkeit = writeHelligkeit
 			plugin.getResolution = getResolution
@@ -176,7 +176,7 @@ def Plugins(**kwargs):
 		list.append(
 			PluginDescriptor(name="LCD4linuxSupport",
 			description="LCD4linuxSupport",
-			where = [PluginDescriptor.WHERE_SESSIONSTART],
-			fnc = lcdtimer))
+			where=[PluginDescriptor.WHERE_SESSIONSTART],
+			fnc=lcdtimer))
 	return list
 
