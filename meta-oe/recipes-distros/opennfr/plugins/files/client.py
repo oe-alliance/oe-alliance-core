@@ -36,6 +36,7 @@ from twisted.web import error
 from twisted.web.iweb import UNKNOWN_LENGTH, IAgent, IBodyProducer, IResponse
 from twisted.web.http_headers import Headers
 
+
 class PartialDownloadError(error.Error):
     """
     Page was only partially downloaded, we got disconnected in middle.
@@ -476,6 +477,7 @@ class HTTPDownloader(HTTPClientFactory):
 
         self.deferred.callback(self.value)
 
+
 def _parse(url, defaultPort=None):
     """
     Split the given URL into the scheme, host, port, and path.
@@ -513,6 +515,7 @@ def _parse(url, defaultPort=None):
         path = '/'
 
     return scheme, host, port, path
+
 
 class _URI(object):
     """
@@ -760,7 +763,6 @@ class _WebToNormalContextFactory(object):
 
 
 @implementer(IBodyProducer)
-
 class FileBodyProducer(object):
     """
     L{FileBodyProducer} produces bytes from an input file object incrementally
@@ -1131,7 +1133,6 @@ class _AgentBase(object):
 
 
 @implementer(IAgent)
-
 class Agent(_AgentBase):
     """
     L{Agent} is a very basic HTTP client.  It supports I{HTTP} and I{HTTPS}
@@ -1225,7 +1226,6 @@ class Agent(_AgentBase):
 
 
 @implementer(IAgent)
-
 class ProxyAgent(_AgentBase):
     """
     An HTTP agent able to cross HTTP proxies.
@@ -1327,7 +1327,6 @@ class _FakeUrllib2Response(object):
 
 
 @implementer(IAgent)
-
 class CookieAgent(object):
     """
     L{CookieAgent} extends the basic L{Agent} to add RFC-compliant
@@ -1459,7 +1458,6 @@ class _GzipProtocol(proxyForInterface(IProtocol)):
 
 
 @implementer(IAgent)
-
 class ContentDecoderAgent(object):
     """
     An L{Agent} wrapper to handle encoded content.
@@ -1519,7 +1517,6 @@ class ContentDecoderAgent(object):
 
 
 @implementer(IAgent)
-
 class RedirectAgent(object):
     """
     An L{Agent} wrapper which handles HTTP redirects.

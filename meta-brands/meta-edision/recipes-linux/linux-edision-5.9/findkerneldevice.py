@@ -35,6 +35,7 @@ Q flags
 72s name
 """
 
+
 def _make_fmt(name, format, extras=[]):
 	type_and_name = [l.split(None, 1) for l in format.strip().splitlines()]
 	fmt = ''.join(t for (t, n) in type_and_name)
@@ -42,8 +43,10 @@ def _make_fmt(name, format, extras=[]):
 	tupletype = collections.namedtuple(name, [n for (t, n) in type_and_name if n != '_'] + extras)
 	return (fmt, tupletype)
 
+
 class GPTError(Exception):
 	pass
+
 
 def read_header(fp, lba_size=512):
 	# skip MBR
@@ -62,6 +65,7 @@ def read_header(fp, lba_size=512):
 		)
 	return header
 
+
 def read_partitions(fp, header, lba_size=512):
 	fp.seek(header.part_entry_start_lba * lba_size)
 	fmt, GPTPartition = _make_fmt('GPTPartition', GPT_PARTITION_FORMAT, extras=['index'])
@@ -79,6 +83,7 @@ def read_partitions(fp, header, lba_size=512):
 			)
 		yield part
 
+
 def find_kernel_device_udevadm(kernelpartition):
 	try:
 		for partition in os.listdir('/sys/block/mmcblk1'):
@@ -89,6 +94,7 @@ def find_kernel_device_udevadm(kernelpartition):
 		return ''
 	except:
 		return ''
+
 
 def find_kernel_device_gpt(kernelpartition):
 	try:
@@ -101,6 +107,7 @@ def find_kernel_device_gpt(kernelpartition):
 		return ''
 	except:
 		return ''
+
 
 try:
 	kerneldev = open('/sys/firmware/devicetree/base/chosen/kerneldev', 'r').readline().split('.')

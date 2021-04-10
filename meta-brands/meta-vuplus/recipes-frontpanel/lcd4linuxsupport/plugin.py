@@ -17,6 +17,7 @@ LCDType1_id = "350"
 
 from Plugins.Extensions.LCD4linux import plugin
 
+
 def getResolution(t, r="0"):
 	if t[:1] == "5":
 		ttt = LCD4linux.xmlLCDType.value.split("x")
@@ -45,9 +46,12 @@ def getResolution(t, r="0"):
 		MAX_W, MAX_H = MAX_H, MAX_W
 	return MAX_W, MAX_H
 
+
 plugin_writeHelligkeit = None
 g_min = 0
 g_max = None
+
+
 def writeHelligkeit_lver(hell):
 	global g_min
 	global g_max
@@ -58,6 +62,7 @@ def writeHelligkeit_lver(hell):
 		if g_max is None:
 			g_min, g_max = getHellRange(plugin.config.plugins.LCD4linux.Helligkeit)
 		updateBrightness(int(hell), g_min, g_max)
+
 
 def writeHelligkeit(hell, hell2, hell3, STOP=False):
 	global g_min
@@ -70,6 +75,7 @@ def writeHelligkeit(hell, hell2, hell3, STOP=False):
 		if g_max is None:
 			g_min, g_max = getHellRange(plugin.LCD4linux.Helligkeit)
 		updateBrightness(int(hell), g_min, g_max)
+
 
 def getHellRange(ins):
 	try:
@@ -85,7 +91,10 @@ def getHellRange(ins):
 	except:
 		return (0, 10)
 
+
 old_hell = 40
+
+
 def updateBrightness(hell, _min, _max):
 	try:
 		if _min == _max:
@@ -104,6 +113,7 @@ def updateBrightness(hell, _min, _max):
 		led_fd.close()
 	except:
 		pass
+
 
 class pngUtilTimer:
 	def __init__(self):
@@ -163,11 +173,14 @@ class pngUtilTimer:
 		except:
 			return False
 
+
 pngutiltimer = pngUtilTimer()
+
 
 def lcdtimer(reason, **kwargs):
 	if pngutiltimer.setLcd4linuxDuo2():
 		pngutiltimer.startUpdateTimer()
+
 
 def Plugins(**kwargs):
 	list = []

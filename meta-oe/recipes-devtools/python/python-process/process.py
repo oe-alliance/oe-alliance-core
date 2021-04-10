@@ -1,6 +1,7 @@
 import os
 import signal
 
+
 class Process(object):
 	"""Represents a process"""
 
@@ -34,6 +35,7 @@ class Process(object):
 			return os.readlink(os.path.join(self.proc, "cwd"))
 		except OSError:
 			return None
+
 
 class ProcessList(object):
 	"""Represents a list of processes"""

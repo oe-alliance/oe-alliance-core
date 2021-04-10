@@ -23,6 +23,7 @@ import sys as _sys
 import textwrap as _textwrap
 from gettext import gettext as _
 
+
 def _callable(obj):
     return hasattr(obj, '__call__') or hasattr(obj, '__bases__')
 
@@ -34,6 +35,7 @@ ONE_OR_MORE = '+'
 PARSER = 'A...'
 REMAINDER = '...'
 _UNRECOGNIZED_ARGS_ATTR = '_unrecognized_args'
+
 
 class _AttributeHolder(object):
 
