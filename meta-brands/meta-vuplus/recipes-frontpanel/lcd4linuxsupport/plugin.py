@@ -192,4 +192,3 @@ def Plugins(**kwargs):
 			where=[PluginDescriptor.WHERE_SESSIONSTART],
 			fnc=lcdtimer))
 	return list
-
