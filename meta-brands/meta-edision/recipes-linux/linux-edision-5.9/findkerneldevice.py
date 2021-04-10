@@ -38,8 +38,8 @@ Q flags
 def _make_fmt(name, format, extras=[]):
 	type_and_name = [l.split(None, 1) for l in format.strip().splitlines()]
 	fmt = ''.join(t for (t,n) in type_and_name)
-	fmt = '<'+fmt
-	tupletype = collections.namedtuple(name, [n for (t,n) in type_and_name if n!='_']+extras)
+	fmt = '<' + fmt
+	tupletype = collections.namedtuple(name, [n for (t,n) in type_and_name if n != '_'] + extras)
 	return (fmt, tupletype)
 
 class GPTError(Exception):
@@ -47,7 +47,7 @@ class GPTError(Exception):
 
 def read_header(fp, lba_size=512):
 	# skip MBR
-	fp.seek(1*lba_size)
+	fp.seek(1 * lba_size)
 	fmt, GPTHeader = _make_fmt('GPTHeader', GPT_HEADER_FORMAT)
 	data = fp.read(struct.calcsize(fmt))
 	header = GPTHeader._make(struct.unpack(fmt, data))
@@ -65,12 +65,12 @@ def read_header(fp, lba_size=512):
 def read_partitions(fp, header, lba_size=512):
 	fp.seek(header.part_entry_start_lba * lba_size)
 	fmt, GPTPartition = _make_fmt('GPTPartition', GPT_PARTITION_FORMAT, extras=['index'])
-	for idx in xrange(1, 1+header.num_part_entries):
+	for idx in xrange(1, 1 + header.num_part_entries):
 		data = fp.read(header.part_entry_size)
 		if len(data) < struct.calcsize(fmt):
 			raise GPTError('Short partition entry')
 		part = GPTPartition._make(struct.unpack(fmt, data) + (idx,))
-		if part.type == 16*'\x00':
+		if part.type == 16 * '\x00':
 			continue
 		part = part._replace(
 			type=str(uuid.UUID(bytes_le=part.type)),

@@ -90,7 +90,7 @@ def updateBrightness(hell, _min, _max):
 	try:
 		if _min == _max:
 			return
-		hell = int(255*hell/(_max - _min))
+		hell = int(255 * hell / (_max - _min))
 		if hell >= 250:
 			hell = 255
 		global old_hell
@@ -138,7 +138,7 @@ class pngUtilTimer:
 		global plugin_writeHelligkeit
 		try:
 			lcdtype = plugin.LCDType
-			print "[LCD4linux Support] set LCD4linux for DUO2 (ver %s)"%plugin.Version
+			print "[LCD4linux Support] set LCD4linux for DUO2 (ver %s)" % plugin.Version
 			if plugin.Version == "V0.8r3":
 				global LCDType1_id_lver
 				self.oldPluginVer = True
@@ -146,7 +146,7 @@ class pngUtilTimer:
 				plugin.config.plugins.LCD4linux.LCDType1 = ConfigSelection(choices=lcdtype, default=LCDType1_id_lver)
 				plugin.config.plugins.LCD4linux.Standby = ConfigSelection(choices=[("0", _("off")), ("1", _("on"))], default="0")
 				plugin.config.plugins.LCD4linux.Thread = ConfigYesNo(default=True)
-				plugin.config.plugins.LCD4linux.Helligkeit = ConfigSlider(default=1,  limits=(0, 7))
+				plugin.config.plugins.LCD4linux.Helligkeit = ConfigSlider(default=1, limits=(0, 7))
 				plugin_writeHelligkeit = plugin.writeHelligkeit
 				plugin.writeHelligkeit = writeHelligkeit_lver
 			else:
@@ -158,7 +158,7 @@ class pngUtilTimer:
 				plugin_writeHelligkeit = plugin.writeHelligkeit
 				plugin.writeHelligkeit = writeHelligkeit
 			plugin.getResolution = getResolution
-			self.PIC = plugin.PIC+".png"
+			self.PIC = plugin.PIC + ".png"
 			return True
 		except:
 			return False
@@ -172,7 +172,7 @@ def lcdtimer(reason, **kwargs):
 def Plugins(**kwargs):
 	list = []
 	global lcd4linuxPluginPath
-	if os.path.exists(lcd4linuxPluginPath+"/plugin.pyo"):
+	if os.path.exists(lcd4linuxPluginPath + "/plugin.pyo"):
 		list.append(
 			PluginDescriptor(name="LCD4linuxSupport",
 			description="LCD4linuxSupport",

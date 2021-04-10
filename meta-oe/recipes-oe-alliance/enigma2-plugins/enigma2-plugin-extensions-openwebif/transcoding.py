@@ -69,7 +69,7 @@ class TranscodingController(resource.Resource):
 					numencoders += enc + ", "
 				numencoders = numencoders.rstrip(', ')
 				new_encoder = int(request.args["encoder"][0])
-				if new_encoder > len(encoders)-1:
+				if new_encoder > len(encoders) - 1:
 					return '<?xml version="1.0" encoding="UTF-8" ?><e2simplexmlresult><e2encoder>%s</e2encoder><e2configchoices>%s</e2configchoices><e2error>choosen encoder is not available</error></e2simplexmlresult>' % (new_encoder, numencoders)
 				if new_encoder != numencoder.value:
 					numencoder.setValue(new_encoder)
