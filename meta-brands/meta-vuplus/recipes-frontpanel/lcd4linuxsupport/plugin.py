@@ -88,7 +88,8 @@ def getHellRange(ins):
 old_hell = 40
 def updateBrightness(hell, _min, _max):
 	try:
-		if _min == _max: return
+		if _min == _max:
+			return
 		hell = int( 255*hell/(_max - _min) )
 		if hell >= 250:
 			hell = 255
