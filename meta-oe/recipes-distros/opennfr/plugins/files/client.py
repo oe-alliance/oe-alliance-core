@@ -6,7 +6,8 @@
 HTTP client.
 """
 from __future__ import division, absolute_import
-import os, types
+import os
+import types
 try:
     from urlparse import urlunparse, urljoin, urldefrag
     from urllib import splithost, splittype
