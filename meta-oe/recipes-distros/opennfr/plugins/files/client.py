@@ -6,7 +6,8 @@
 HTTP client.
 """
 from __future__ import division, absolute_import
-import os, types
+import os
+import types
 try:
     from urlparse import urlunparse, urljoin, urldefrag
     from urllib import splithost, splittype
@@ -15,7 +16,7 @@ except ImportError:
     from urllib.parse import urlunparse as _urlunparse
 
     def urlunparse(parts):
-        result = _urlunparse(tuple([ p.decode('charmap') for p in parts ]))
+        result = _urlunparse(tuple([p.decode('charmap') for p in parts]))
         return result.encode('charmap')
 
 
@@ -35,10 +36,11 @@ from twisted.web import error
 from twisted.web.iweb import UNKNOWN_LENGTH, IAgent, IBodyProducer, IResponse
 from twisted.web.http_headers import Headers
 
+
 class PartialDownloadError(error.Error):
     """
     Page was only partially downloaded, we got disconnected in middle.
-    
+
     @ivar response: All of the response body which was downloaded.
     """
     pass
@@ -47,11 +49,11 @@ class PartialDownloadError(error.Error):
 class HTTPPageGetter(http.HTTPClient):
     """
     Gets a resource via HTTP, then quits.
-    
+
     Typically used with L{HTTPClientFactory}.  Note that this class does not, by
     itself, do anything with the response.  If you want to download a resource
     into a file, use L{HTTPPageDownloader} instead.
-    
+
     @ivar _completelyDone: A boolean indicating whether any further requests are
         necessary after this one completes in order to provide a result to
         C{self.factory.deferred}.  If it is C{False}, then a redirect is going
@@ -101,10 +103,10 @@ class HTTPPageGetter(http.HTTPClient):
         """
         Called every time a header is received. Stores the header information
         as key-value pairs in the C{headers} attribute.
-        
+
         @type key: C{str}
         @param key: An HTTP header field name.
-        
+
         @type value: C{str}
         @param value: An HTTP header field value.
         """
@@ -204,7 +206,7 @@ class HTTPPageGetter(http.HTTPClient):
 class HTTPPageDownloader(HTTPPageGetter):
     transmittingPage = 0
 
-    def handleStatus_200(self, partialContent = 0):
+    def handleStatus_200(self, partialContent=0):
         HTTPPageGetter.handleStatus_200(self)
         self.transmittingPage = 1
         self.factory.pageStart(partialContent)
@@ -231,43 +233,43 @@ class HTTPPageDownloader(HTTPPageGetter):
 
 class HTTPClientFactory(protocol.ClientFactory):
     """Download a given URL.
-    
+
     @type deferred: Deferred
     @ivar deferred: A Deferred that will fire when the content has
           been retrieved. Once this is fired, the ivars `status', `version',
           and `message' will be set.
-    
+
     @type status: bytes
     @ivar status: The status of the response.
-    
+
     @type version: bytes
     @ivar version: The version of the response.
-    
+
     @type message: bytes
     @ivar message: The text message returned with the status.
-    
+
     @type response_headers: dict
     @ivar response_headers: The headers that were specified in the
           response from the server.
-    
+
     @type method: bytes
     @ivar method: The HTTP method to use in the request.  This should be one of
         OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, or CONNECT (case
         matters).  Other values may be specified if the server being contacted
         supports them.
-    
+
     @type redirectLimit: int
     @ivar redirectLimit: The maximum number of HTTP redirects that can occur
           before it is assumed that the redirection is endless.
-    
+
     @type afterFoundGet: C{bool}
     @ivar afterFoundGet: Deviate from the HTTP 1.1 RFC by handling redirects
         the same way as most web browsers; if the request method is POST and a
         302 status is encountered, the redirect is followed with a GET method
-    
+
     @type _redirectCount: int
     @ivar _redirectCount: The current number of HTTP redirects encountered.
-    
+
     @ivar _disconnectedDeferred: A L{Deferred} which only fires after the last
         connection associated with the request (redirects may cause multiple
         connections to be required) has closed.  The result Deferred will only
@@ -281,7 +283,7 @@ class HTTPClientFactory(protocol.ClientFactory):
     port = None
     path = None
 
-    def __init__(self, url, method = 'GET', postdata = None, headers = None, agent = 'Twisted PageGetter', timeout = 0, cookies = None, followRedirect = True, redirectLimit = 20, afterFoundGet = False):
+    def __init__(self, url, method='GET', postdata=None, headers=None, agent='Twisted PageGetter', timeout=0, cookies=None, followRedirect=True, redirectLimit=20, afterFoundGet=False):
         self.followRedirect = followRedirect
         self.redirectLimit = redirectLimit
         self._redirectCount = 0
@@ -384,7 +386,7 @@ class HTTPDownloader(HTTPClientFactory):
     protocol = HTTPPageDownloader
     value = None
 
-    def __init__(self, url, fileOrName, method = 'GET', postdata = None, headers = None, agent = 'Twisted client', supportPartial = 0, timeout = 0, cookies = None, followRedirect = 1, redirectLimit = 20, afterFoundGet = False):
+    def __init__(self, url, fileOrName, method='GET', postdata=None, headers=None, agent='Twisted client', supportPartial=0, timeout=0, cookies=None, followRedirect=1, redirectLimit=20, afterFoundGet=False):
         self.requestedPartial = 0
         if isinstance(fileOrName, types.StringTypes):
             self.fileName = fileOrName
@@ -423,7 +425,7 @@ class HTTPDownloader(HTTPClientFactory):
 
     def pageStart(self, partialContent):
         """Called on page download start.
-        
+
         @param partialContent: tells us if the download is partial download we requested.
         """
         if partialContent and not self.requestedPartial:
@@ -475,6 +477,7 @@ class HTTPDownloader(HTTPClientFactory):
 
         self.deferred.callback(self.value)
 
+
 def _parse(url, defaultPort=None):
     """
     Split the given URL into the scheme, host, port, and path.
@@ -513,10 +516,11 @@ def _parse(url, defaultPort=None):
 
     return scheme, host, port, path
 
+
 class _URI(object):
     """
     A URI object.
-    
+
     @see: U{https://tools.ietf.org/html/draft-ietf-httpbis-p1-messaging-21}
     """
 
@@ -524,25 +528,25 @@ class _URI(object):
         """
         @type scheme: L{bytes}
         @param scheme: URI scheme specifier.
-        
+
         @type netloc: L{bytes}
         @param netloc: Network location component.
-        
+
         @type host: L{bytes}
         @param host: Host name.
-        
+
         @type port: L{int}
         @param port: Port number.
-        
+
         @type path: L{bytes}
         @param path: Hierarchical path.
-        
+
         @type params: L{bytes}
         @param params: Parameters for last path segment.
-        
+
         @type query: L{bytes}
         @param query: Query string.
-        
+
         @type fragment: L{bytes}
         @param fragment: Fragment identifier.
         """
@@ -556,17 +560,17 @@ class _URI(object):
         self.fragment = fragment
 
     @classmethod
-    def fromBytes(cls, uri, defaultPort = None):
+    def fromBytes(cls, uri, defaultPort=None):
         """
         Parse the given URI into a L{_URI}.
-        
+
         @type uri: C{bytes}
         @param uri: URI to parse.
-        
+
         @type defaultPort: C{int} or C{None}
         @param defaultPort: An alternate value to use as the port if the URI
             does not include one.
-        
+
         @rtype: L{_URI}
         @return: Parsed URI instance.
         """
@@ -590,7 +594,7 @@ class _URI(object):
     def toBytes(self):
         """
         Assemble the individual parts of the I{URI} into a fully formed I{URI}.
-        
+
         @rtype: C{bytes}
         @return: A fully formed I{URI}.
         """
@@ -606,7 +610,7 @@ class _URI(object):
         """
         The absolute I{URI} path including I{URI} parameters, query string and
         fragment identifier.
-        
+
         @see: U{https://tools.ietf.org/html/draft-ietf-httpbis-p1-messaging-21#section-5.3}
         """
         path = urlunparse(('',
@@ -626,21 +630,21 @@ def _urljoin(base, url):
     URL. Informally, this uses components of the base URL, in particular the
     addressing scheme, the network location and (part of) the path, to provide
     missing components in the relative URL.
-    
+
     Additionally, the fragment identifier is preserved according to the HTTP
     1.1 bis draft.
-    
+
     @type base: C{bytes}
     @param base: Base URL.
-    
+
     @type url: C{bytes}
     @param url: URL to combine with C{base}.
-    
+
     @return: An absolute URL resulting from the combination of C{base} and
         C{url}.
-    
+
     @see: L{urlparse.urljoin}
-    
+
     @see: U{https://tools.ietf.org/html/draft-ietf-httpbis-p2-semantics-22#section-7.1.2}
     """
     base, baseFrag = urldefrag(base)
@@ -648,19 +652,19 @@ def _urljoin(base, url):
     return urljoin(url, '#' + (urlFrag or baseFrag))
 
 
-def _makeGetterFactory(url, factoryFactory, contextFactory = None, *args, **kwargs):
+def _makeGetterFactory(url, factoryFactory, contextFactory=None, *args, **kwargs):
     """
     Create and connect an HTTP page getting factory.
-    
+
     Any additional positional or keyword arguments are used when calling
     C{factoryFactory}.
-    
+
     @param factoryFactory: Factory factory that is called with C{url}, C{args}
         and C{kwargs} to produce the getter
-    
+
     @param contextFactory: Context factory to use when creating a secure
         connection, defaulting to C{None}
-    
+
     @return: The factory created by C{factoryFactory}
     """
     uri = _URI.fromBytes(url)
@@ -675,24 +679,24 @@ def _makeGetterFactory(url, factoryFactory, contextFactory = None, *args, **kwar
     return factory
 
 
-def getPage(url, contextFactory = None, *args, **kwargs):
+def getPage(url, contextFactory=None, *args, **kwargs):
     """
     Download a web page as a string.
-    
+
     Download a page. Return a deferred, which will callback with a
     page (as a string) or errback with a description of the error.
-    
+
     See L{HTTPClientFactory} to see what extra arguments can be passed.
     """
     return _makeGetterFactory(url, HTTPClientFactory, contextFactory=contextFactory, *args, **kwargs).deferred
 
 
-def downloadPage(url, file, contextFactory = None, *args, **kwargs):
+def downloadPage(url, file, contextFactory=None, *args, **kwargs):
     """
     Download a web page to a file.
-    
+
     @param file: path to file on filesystem, or file-like object.
-    
+
     See HTTPDownloader to see what extra args can be passed.
     """
     factoryFactory = lambda url, *a, **kw: HTTPDownloader(url, file, *a, **kw)
@@ -734,13 +738,13 @@ else:
 class _WebToNormalContextFactory(object):
     """
     Adapt a web context factory to a normal context factory.
-    
+
     @ivar _webContext: A web context factory which accepts a hostname and port
         number to its C{getContext} method.
-    
+
     @ivar _hostname: The hostname which will be passed to
         C{_webContext.getContext}.
-    
+
     @ivar _port: The port number which will be passed to
         C{_webContext.getContext}.
     """
@@ -759,30 +763,29 @@ class _WebToNormalContextFactory(object):
 
 
 @implementer(IBodyProducer)
-
 class FileBodyProducer(object):
     """
     L{FileBodyProducer} produces bytes from an input file object incrementally
     and writes them to a consumer.
-    
+
     Since file-like objects cannot be read from in an event-driven manner,
     L{FileBodyProducer} uses a L{Cooperator} instance to schedule reads from
     the file.  This process is also paused and resumed based on notifications
     from the L{IConsumer} provider being written to.
-    
+
     The file is closed after it has been read, or if the producer is stopped
     early.
-    
+
     @ivar _inputFile: Any file-like object, bytes read from which will be
         written to a consumer.
-    
+
     @ivar _cooperate: A method like L{Cooperator.cooperate} which is used to
         schedule all reads.
-    
+
     @ivar _readSize: The number of bytes to read from C{_inputFile} at a time.
     """
 
-    def __init__(self, inputFile, cooperator = task, readSize = 65536):
+    def __init__(self, inputFile, cooperator=task, readSize=65536):
         self._inputFile = inputFile
         self._cooperate = cooperator.cooperate
         self._readSize = readSize
@@ -819,7 +822,7 @@ class FileBodyProducer(object):
         Start a cooperative task which will read bytes from the input file and
         write them to C{consumer}.  Return a L{Deferred} which fires after all
         bytes have been written.
-        
+
         @param consumer: Any L{IConsumer} provider
         """
         self._task = self._cooperate(self._writeloop(consumer))
@@ -866,10 +869,10 @@ class FileBodyProducer(object):
 class _HTTP11ClientFactory(protocol.Factory):
     """
     A factory for L{HTTP11ClientProtocol}, used by L{HTTPConnectionPool}.
-    
+
     @ivar _quiescentCallback: The quiescent callback to be passed to protocol
         instances, used to return them to the connection pool.
-    
+
     @since: 11.1
     """
 
@@ -883,9 +886,9 @@ class _HTTP11ClientFactory(protocol.Factory):
 class _RetryingHTTP11ClientProtocol(object):
     """
     A wrapper for L{HTTP11ClientProtocol} that automatically retries requests.
-    
+
     @ivar _clientProtocol: The underlying L{HTTP11ClientProtocol}.
-    
+
     @ivar _newConnection: A callable that creates a new connection for a
         retry.
     """
@@ -897,7 +900,7 @@ class _RetryingHTTP11ClientProtocol(object):
     def _shouldRetry(self, method, exception, bodyProducer):
         """
         Indicate whether request should be retried.
-        
+
         Only returns C{True} if method is idempotent, no response was
         received, the reason for the failed request was not due to
         user-requested cancellation, and no body was sent. The latter
@@ -922,7 +925,7 @@ class _RetryingHTTP11ClientProtocol(object):
         """
         Do a request, and retry once (with a new connection) it it fails in
         a retryable manner.
-        
+
         @param request: A L{Request} instance that will be requested using the
             wrapped protocol.
         """
@@ -941,39 +944,39 @@ class _RetryingHTTP11ClientProtocol(object):
 class HTTPConnectionPool(object):
     """
     A pool of persistent HTTP connections.
-    
+
     Features:
      - Cached connections will eventually time out.
      - Limits on maximum number of persistent connections.
-    
+
     Connections are stored using keys, which should be chosen such that any
     connections stored under a given key can be used interchangeably.
-    
+
     Failed requests done using previously cached connections will be retried
     once if they use an idempotent method (e.g. GET), in case the HTTP server
     timed them out.
-    
+
     @ivar persistent: Boolean indicating whether connections should be
         persistent. Connections are persistent by default.
-    
+
     @ivar maxPersistentPerHost: The maximum number of cached persistent
         connections for a C{host:port} destination.
     @type maxPersistentPerHost: C{int}
-    
+
     @ivar cachedConnectionTimeout: Number of seconds a cached persistent
         connection will stay open before disconnecting.
-    
+
     @ivar retryAutomatically: C{boolean} indicating whether idempotent
         requests should be retried once if no response was received.
-    
+
     @ivar _factory: The factory used to connect to the proxy.
-    
+
     @ivar _connections: Map (scheme, host, port) to lists of
         L{HTTP11ClientProtocol} instances.
-    
+
     @ivar _timeouts: Map L{HTTP11ClientProtocol} instances to a
         C{IDelayedCall} instance of their timeout.
-    
+
     @since: 12.1
     """
     _factory = _HTTP11ClientFactory
@@ -981,7 +984,7 @@ class HTTPConnectionPool(object):
     cachedConnectionTimeout = 240
     retryAutomatically = True
 
-    def __init__(self, reactor, persistent = True):
+    def __init__(self, reactor, persistent=True):
         self._reactor = reactor
         self.persistent = persistent
         self._connections = {}
@@ -991,20 +994,20 @@ class HTTPConnectionPool(object):
         """
         Supply a connection, newly created or retrieved from the pool, to be
         used for one HTTP request.
-        
+
         The connection will remain out of the pool (not available to be
         returned from future calls to this method) until one HTTP request has
         been completed over it.
-        
+
         Afterwards, if the connection is still open, it will automatically be
         added to the pool.
-        
+
         @param key: A unique key identifying connections that can be used
             interchangeably.
-        
+
         @param endpoint: An endpoint that can be used to open a new connection
             if no cached connection is available.
-        
+
         @return: A C{Deferred} that will fire with a L{HTTP11ClientProtocol}
            (or a wrapper) that can be used to send a single HTTP request.
         """
@@ -1015,7 +1018,7 @@ class HTTPConnectionPool(object):
             del self._timeouts[connection]
             if connection.state == 'QUIESCENT':
                 if self.retryAutomatically:
-                    newConnection = lambda : self._newConnection(key, endpoint)
+                    newConnection = lambda: self._newConnection(key, endpoint)
                     connection = _RetryingHTTP11ClientProtocol(connection, newConnection)
                 return defer.succeed(connection)
 
@@ -1024,7 +1027,7 @@ class HTTPConnectionPool(object):
     def _newConnection(self, key, endpoint):
         """
         Create a new connection.
-        
+
         This implements the new connection code path for L{getConnection}.
         """
 
@@ -1067,7 +1070,7 @@ class HTTPConnectionPool(object):
     def closeCachedConnections(self):
         """
         Close all persistent connections and remove them from the pool.
-        
+
         @return: L{defer.Deferred} that fires when all connections have been
             closed.
         """
@@ -1087,10 +1090,10 @@ class HTTPConnectionPool(object):
 class _AgentBase(object):
     """
     Base class offering common facilities for L{Agent}-type classes.
-    
+
     @ivar _reactor: The C{IReactorTime} implementation which will be used by
         the pool, and perhaps by subclasses as well.
-    
+
     @ivar _pool: The L{HTTPConnectionPool} used to manage HTTP connections.
     """
 
@@ -1130,28 +1133,27 @@ class _AgentBase(object):
 
 
 @implementer(IAgent)
-
 class Agent(_AgentBase):
     """
     L{Agent} is a very basic HTTP client.  It supports I{HTTP} and I{HTTPS}
     scheme URIs (but performs no certificate checking by default).
-    
+
     @param pool: A L{HTTPConnectionPool} instance, or C{None}, in which case a
         non-persistent L{HTTPConnectionPool} instance will be created.
-    
+
     @ivar _contextFactory: A web context factory which will be used to create
         SSL context objects for any SSL connections the agent needs to make.
-    
+
     @ivar _connectTimeout: If not C{None}, the timeout passed to C{connectTCP}
         or C{connectSSL} for specifying the connection timeout.
-    
+
     @ivar _bindAddress: If not C{None}, the address passed to C{connectTCP} or
         C{connectSSL} for specifying the local address to bind to.
-    
+
     @since: 9.0
     """
 
-    def __init__(self, reactor, contextFactory = WebClientContextFactory(), connectTimeout = None, bindAddress = None, pool = None):
+    def __init__(self, reactor, contextFactory=WebClientContextFactory(), connectTimeout=None, bindAddress=None, pool=None):
         _AgentBase.__init__(self, reactor, pool)
         self._contextFactory = contextFactory
         self._connectTimeout = connectTimeout
@@ -1162,13 +1164,13 @@ class Agent(_AgentBase):
         Create and return a normal context factory wrapped around
         C{self._contextFactory} in such a way that C{self._contextFactory} will
         have the host and port information passed to it.
-        
+
         @param host: A C{str} giving the hostname which will be connected to in
             order to issue a request.
-        
+
         @param port: An C{int} giving the port number the connection will be
             on.
-        
+
         @return: A context factory suitable to be passed to
             C{reactor.connectSSL}.
         """
@@ -1178,17 +1180,17 @@ class Agent(_AgentBase):
         """
         Get an endpoint for the given host and port, using a transport
         selected based on scheme.
-        
+
         @param scheme: A string like C{'http'} or C{'https'} (the only two
             supported values) to use to determine how to establish the
             connection.
-        
+
         @param host: A C{str} giving the hostname which will be connected to in
             order to issue a request.
-        
+
         @param port: An C{int} giving the port number the connection will be
             on.
-        
+
         @return: An endpoint which can be used to connect to given address.
         """
         kwargs = {}
@@ -1203,14 +1205,14 @@ class Agent(_AgentBase):
             raise SchemeNotSupported('Unsupported scheme: %r' % (scheme,))
             return
 
-    def request(self, method, uri, headers = None, bodyProducer = None):
+    def request(self, method, uri, headers=None, bodyProducer=None):
         """
         Issue a request to the server indicated by the given C{uri}.
-        
+
         An existing connection from the connection pool may be used or a new one may be created.
-        
+
         I{HTTP} and I{HTTPS} schemes are supported in C{uri}.
-        
+
         @see: L{twisted.web.iweb.IAgent.request}
         """
         parsedURI = _URI.fromBytes(uri)
@@ -1224,24 +1226,23 @@ class Agent(_AgentBase):
 
 
 @implementer(IAgent)
-
 class ProxyAgent(_AgentBase):
     """
     An HTTP agent able to cross HTTP proxies.
-    
+
     @ivar _proxyEndpoint: The endpoint used to connect to the proxy.
-    
+
     @since: 11.1
     """
 
-    def __init__(self, endpoint, reactor = None, pool = None):
+    def __init__(self, endpoint, reactor=None, pool=None):
         if reactor is None:
             from twisted.internet import reactor
         _AgentBase.__init__(self, reactor, pool)
         self._proxyEndpoint = endpoint
         return
 
-    def request(self, method, uri, headers = None, bodyProducer = None):
+    def request(self, method, uri, headers=None, bodyProducer=None):
         """
         Issue a new request via the configured proxy.
         """
@@ -1252,21 +1253,21 @@ class ProxyAgent(_AgentBase):
 class _FakeUrllib2Request(object):
     """
     A fake C{urllib2.Request} object for C{cookielib} to work with.
-    
+
     @see: U{http://docs.python.org/library/urllib2.html#request-objects}
-    
+
     @type uri: C{str}
     @ivar uri: Request URI.
-    
+
     @type headers: L{twisted.web.http_headers.Headers}
     @ivar headers: Request headers.
-    
+
     @type type: C{str}
     @ivar type: The scheme of the URI.
-    
+
     @type host: C{str}
     @ivar host: The host[:port] of the URI.
-    
+
     @since: 11.1
     """
 
@@ -1285,7 +1286,7 @@ class _FakeUrllib2Request(object):
     def get_full_url(self):
         return self.uri
 
-    def get_header(self, name, default = None):
+    def get_header(self, name, default=None):
         headers = self.headers.getRawHeaders(name, default)
         if headers is not None:
             return headers[0]
@@ -1305,10 +1306,10 @@ class _FakeUrllib2Request(object):
 class _FakeUrllib2Response(object):
     """
     A fake C{urllib2.Response} object for C{cookielib} to work with.
-    
+
     @type response: C{twisted.web.iweb.IResponse}
     @ivar response: Underlying Twisted Web response.
-    
+
     @since: 11.1
     """
 
@@ -1326,23 +1327,22 @@ class _FakeUrllib2Response(object):
 
 
 @implementer(IAgent)
-
 class CookieAgent(object):
     """
     L{CookieAgent} extends the basic L{Agent} to add RFC-compliant
     handling of HTTP cookies.  Cookies are written to and extracted
     from a C{cookielib.CookieJar} instance.
-    
+
     The same cookie jar instance will be used for any requests through this
     agent, mutating it whenever a I{Set-Cookie} header appears in a response.
-    
+
     @type _agent: L{twisted.web.client.Agent}
     @ivar _agent: Underlying Twisted Web agent to issue requests through.
-    
+
     @type cookieJar: C{cookielib.CookieJar}
     @ivar cookieJar: Initialized cookie jar to read cookies from and store
         cookies to.
-    
+
     @since: 11.1
     """
 
@@ -1350,17 +1350,17 @@ class CookieAgent(object):
         self._agent = agent
         self.cookieJar = cookieJar
 
-    def request(self, method, uri, headers = None, bodyProducer = None):
+    def request(self, method, uri, headers=None, bodyProducer=None):
         """
         Issue a new request to the wrapped L{Agent}.
-        
+
         Send a I{Cookie} header if a cookie for C{uri} is stored in
         L{CookieAgent.cookieJar}. Cookies are automatically extracted and
         stored from requests.
-        
+
         If a C{'cookie'} header appears in C{headers} it will override the
         automatic cookie header obtained from the cookie jar.
-        
+
         @see: L{Agent.request}
         """
         if headers is None:
@@ -1379,10 +1379,10 @@ class CookieAgent(object):
     def _extractCookies(self, response, request):
         """
         Extract response cookies and store them in the cookie jar.
-        
+
         @type response: L{twisted.web.iweb.IResponse}
         @param response: Twisted Web response.
-        
+
         @param request: A urllib2 compatible request object.
         """
         resp = _FakeUrllib2Response(response)
@@ -1393,9 +1393,9 @@ class CookieAgent(object):
 class GzipDecoder(proxyForInterface(IResponse)):
     """
     A wrapper for a L{Response} instance which handles gzip'ed body.
-    
+
     @ivar original: The original L{Response} object.
-    
+
     @since: 11.1
     """
 
@@ -1415,12 +1415,12 @@ class _GzipProtocol(proxyForInterface(IProtocol)):
     """
     A L{Protocol} implementation which wraps another one, transparently
     decompressing received data.
-    
+
     @ivar _zlibDecompress: A zlib decompress object used to decompress the data
         stream.
-    
+
     @ivar _response: A reference to the original response, in case of errors.
-    
+
     @since: 11.1
     """
 
@@ -1458,33 +1458,32 @@ class _GzipProtocol(proxyForInterface(IProtocol)):
 
 
 @implementer(IAgent)
-
 class ContentDecoderAgent(object):
     """
     An L{Agent} wrapper to handle encoded content.
-    
+
     It takes care of declaring the support for content in the
     I{Accept-Encoding} header, and automatically decompresses the received data
     if it's effectively using compression.
-    
+
     @param decoders: A list or tuple of (name, decoder) objects. The name
         declares which decoding the decoder supports, and the decoder must
         return a response object when called/instantiated. For example,
         C{(('gzip', GzipDecoder))}. The order determines how the decoders are
         going to be advertized to the server.
-    
+
     @since: 11.1
     """
 
     def __init__(self, agent, decoders):
         self._agent = agent
         self._decoders = dict(decoders)
-        self._supported = ','.join([ decoder[0] for decoder in decoders ])
+        self._supported = ','.join([decoder[0] for decoder in decoders])
 
-    def request(self, method, uri, headers = None, bodyProducer = None):
+    def request(self, method, uri, headers=None, bodyProducer=None):
         """
         Send a client request which declares supporting compressed content.
-        
+
         @see: L{Agent.request}.
         """
         if headers is None:
@@ -1518,39 +1517,38 @@ class ContentDecoderAgent(object):
 
 
 @implementer(IAgent)
-
 class RedirectAgent(object):
     """
     An L{Agent} wrapper which handles HTTP redirects.
-    
+
     The implementation is rather strict: 301 and 302 behaves like 307, not
     redirecting automatically on methods different from I{GET} and I{HEAD}.
-    
+
     See L{BrowserLikeRedirectAgent} for a redirecting Agent that behaves more
     like a web browser.
-    
+
     @param redirectLimit: The maximum number of times the agent is allowed to
         follow redirects before failing with a L{error.InfiniteRedirection}.
-    
+
     @cvar _redirectResponses: A L{list} of HTTP status codes to be redirected
         for I{GET} and I{HEAD} methods.
-    
+
     @cvar _seeOtherResponses: A L{list} of HTTP status codes to be redirected
         for any method and the method altered to I{GET}.
-    
+
     @since: 11.1
     """
     _redirectResponses = [http.MOVED_PERMANENTLY, http.FOUND, http.TEMPORARY_REDIRECT]
     _seeOtherResponses = [http.SEE_OTHER]
 
-    def __init__(self, agent, redirectLimit = 20):
+    def __init__(self, agent, redirectLimit=20):
         self._agent = agent
         self._redirectLimit = redirectLimit
 
-    def request(self, method, uri, headers = None, bodyProducer = None):
+    def request(self, method, uri, headers=None, bodyProducer=None):
         """
         Send a client request following HTTP redirects.
-        
+
         @see: L{Agent.request}.
         """
         deferred = self._agent.request(method, uri, headers, bodyProducer)
@@ -1559,13 +1557,13 @@ class RedirectAgent(object):
     def _resolveLocation(self, requestURI, location):
         """
         Resolve the redirect location against the request I{URI}.
-        
+
         @type requestURI: C{bytes}
         @param requestURI: The request I{URI}.
-        
+
         @type location: C{bytes}
         @param location: The redirect location.
-        
+
         @rtype: C{bytes}
         @return: Final resolved I{URI}.
         """
@@ -1611,13 +1609,13 @@ class BrowserLikeRedirectAgent(RedirectAgent):
     """
     An L{Agent} wrapper which handles HTTP redirects in the same fashion as web
     browsers.
-    
+
     Unlike L{RedirectAgent}, the implementation is more relaxed: 301 and 302
     behave like 303, redirecting automatically on any method and altering the
     redirect request to a I{GET}.
-    
+
     @see: L{RedirectAgent}
-    
+
     @since: 13.1
     """
     _redirectResponses = [http.TEMPORARY_REDIRECT]
@@ -1627,14 +1625,14 @@ class BrowserLikeRedirectAgent(RedirectAgent):
 class _ReadBodyProtocol(protocol.Protocol):
     """
     Protocol that collects data sent to it.
-    
+
     This is a helper for L{IResponse.deliverBody}, which collects the body and
     fires a deferred with it.
-    
+
     @ivar deferred: See L{__init__}.
     @ivar status: See L{__init__}.
     @ivar message: See L{__init__}.
-    
+
     @ivar dataBuffer: list of byte-strings received
     @type dataBuffer: L{list} of L{bytes}
     """
@@ -1643,10 +1641,10 @@ class _ReadBodyProtocol(protocol.Protocol):
         """
         @param status: Status of L{IResponse}
         @ivar status: L{int}
-        
+
         @param message: Message of L{IResponse}
         @type message: L{bytes}
-        
+
         @param deferred: deferred to fire when response is complete
         @type deferred: L{Deferred} firing with L{bytes}
         """
@@ -1677,13 +1675,13 @@ class _ReadBodyProtocol(protocol.Protocol):
 def readBody(response):
     """
     Get the body of an L{IResponse} and return it as a byte string.
-    
+
     This is a helper function for clients that don't want to incrementally
     receive the body of an HTTP response.
-    
+
     @param response: The HTTP response for which the body will be read.
     @type response: L{IResponse} provider
-    
+
     @return: A L{Deferred} which will fire with the body of the response.
     """
     d = defer.Deferred()
