@@ -1,6 +1,6 @@
 --- util-linux-2.30/lib/randutils.c	2017-11-08 13:57:35.457762331 +0100
 +++ util-linux-2.30/lib/randutils.c	2017-11-08 13:57:56.168194589 +0100
-@@ -26,7 +26,7 @@
+@@ -27,7 +27,7 @@
  #endif
  
  #ifdef HAVE_GETRANDOM
