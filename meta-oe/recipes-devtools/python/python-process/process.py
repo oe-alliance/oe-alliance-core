@@ -1,6 +1,7 @@
 import os
 import signal
 
+
 class Process(object):
 	"""Represents a process"""
 
@@ -8,7 +9,7 @@ class Process(object):
 		"""Make a new Process object"""
 		self.proc = "/proc/%d" % pid
 		f = open(os.path.join(self.proc, "stat"))
-		pid,command,state,parent_pid = f.read().strip().split()[:4]
+		pid, command, state, parent_pid = f.read().strip().split()[:4]
 		f.close()
 		command = command[1:-1]
 		self.pid = int(pid)
@@ -21,7 +22,7 @@ class Process(object):
 		self.parent = None
 		self.children = []
 
-	def kill(self, sig = signal.SIGTERM):
+	def kill(self, sig=signal.SIGTERM):
 		"""Kill this process with SIGTERM by default"""
 		os.kill(self.pid, sig)
 
@@ -34,6 +35,7 @@ class Process(object):
 			return os.readlink(os.path.join(self.proc, "cwd"))
 		except OSError:
 			return None
+
 
 class ProcessList(object):
 	"""Represents a list of processes"""
