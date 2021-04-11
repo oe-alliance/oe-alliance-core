@@ -5,7 +5,7 @@ require conf/license/license-close.inc
 inherit allarch
 
 inherit gitpkgv
-SRCREV = "08373d533f71bda1142790b2dc992ec38e1f5354"
+SRCREV = "${AUTOREV}"
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
 
