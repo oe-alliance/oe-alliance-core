@@ -15,7 +15,7 @@ SRC_URI_openvix = "git://github.com/OpenViX/serviceapp.git;branch=develop"
 
 S = "${WORKDIR}/git"
 
-inherit autotools gitpkgv ${PYTHON_PN}native pkgconfig gettext
+inherit autotools gitpkgv ${PYTHON_PN}native pkgconfig gettext ${@bb.utils.contains("PYTHON_PN", "python3", "python3targetconfig", "", d)}
 
 CXXFLAGS_append = " -std=c++11"
 
