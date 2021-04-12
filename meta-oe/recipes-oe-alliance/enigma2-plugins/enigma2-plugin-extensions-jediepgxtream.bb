@@ -6,7 +6,12 @@ LICENSE = "GPLv3"
 SECTION = "misc"
 PRIORITY = "optional"
 
-inherit allarch gitpkgv
+PYTHONV = "python"
+#PYTHONV = "python3"
+
+inherit allarch gitpkgv ${PYTHONV}native gettext
+
+DEPENDS = "gettext-native"
 
 SRCREV = "${AUTOREV}"
 PV = "1.15-git${SRCPV}"
@@ -18,9 +23,10 @@ SRC_URI = "git://github.com/kiddac/Jedi-EPG-XStream.git;protocol=git;branch=main
 SYSCONFDIR = "${sysconfdir}/enigma2/jediepgxtream"
 LIBDIR = "${libdir}/enigma2/python/Plugins/Extensions/JediEPGXtream"
 
-FILES_${PN} = "${SYSCONFDIR}/* ${LIBDIR}/*"
+FILES_${PN} = "${SYSCONFDIR}/* ${LIBDIR}/*.pyo ${LIBDIR}/*.pyc ${LIBDIR}/fonts/* ${LIBDIR}/icons ${LIBDIR}/locale/*/*/*.mo"
+FILES_${PN}-src = "${LIBDIR}/*.py ${LIBDIR}/locale/*/*/*.po ${LIBDIR}/locale/*.pot"
 
-PACKAGES = "${PN}"
+PACKAGES = "${PN}-src ${PN}"
 
 
 S = "${WORKDIR}/git/JediEPGXtream"
@@ -29,15 +35,18 @@ do_patch[noexec] = "1"
 
 do_configure[noexec] = "1"
 
-do_compile[noexec] = "1"
+#do_compile[noexec] = "1"
+do_compile() {
+	test ${PYTHON_PN} == "python" && ${PYTHON_PN} -OO -m compileall -f ${S}
+	test ${PYTHON_PN} == "python3" && ${PYTHON_PN} -OO -m compileall -f -b ${S}
+	find ${S}/${LIBDIR} -name *.po -execdir msgfmt -o "{}".mo "{}".po ";"
+}
 
 do_install() {
     install -d ${D}/${SYSCONFDIR}
     install -d ${D}/${LIBDIR}
     cp -rf ${S}/${SYSCONFDIR}/* ${D}/${SYSCONFDIR}/
     cp -rf ${S}/${LIBDIR}/* ${D}/${LIBDIR}/
-    rm -rf ${D}/${LIBDIR}/__pycache__
-    find ${D} -name *.po -execdir rm -f "{}" "+"
 }
 
 pkg_preinst_${PN}() {
