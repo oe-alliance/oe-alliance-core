@@ -11,8 +11,8 @@ DEPENDS += "expat"
 RDEPENDS_${PN} += "ldd"
 RRECOMMENDS_${PN} = "kernel-module-ext2"
 
-SRCREV = "7b0ade1e0bc61743bcd1c36aa2412230ee6e03cd"
-PV = "2.6.8+gitr${SRCPV}"
+SRCREV = "2070f52fd5988155fac76989cec62b53d9985291"
+PV = "2.6.13+gitr${SRCPV}"
 
 KODIADDONBRANCH = "Matrix"
 
