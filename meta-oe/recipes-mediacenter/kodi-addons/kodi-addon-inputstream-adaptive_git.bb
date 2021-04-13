@@ -14,7 +14,7 @@ SRCREV = "${AUTOREV}"
 KODIADDONBRANCH = "Leia"
 
 PV = "2.4.7+gitr${SRCPV}"
-SRC_URI = "git://github.com/peak3d/inputstream.adaptive.git;protocol=https;branch=${KODIADDONBRANCH} \
+SRC_URI = "git://github.com/xbmc/inputstream.adaptive.git;protocol=https;branch=${KODIADDONBRANCH} \
           "
 
 S = "${WORKDIR}/git"
