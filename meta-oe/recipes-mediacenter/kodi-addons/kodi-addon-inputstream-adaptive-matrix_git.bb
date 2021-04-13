@@ -11,12 +11,12 @@ DEPENDS += "expat"
 RDEPENDS_${PN} += "ldd"
 RRECOMMENDS_${PN} = "kernel-module-ext2"
 
-SRCREV = "2070f52fd5988155fac76989cec62b53d9985291"
+SRCREV = "713900e762547d2d4c32adee9652f8010cbcd83f"
 PV = "2.6.13+gitr${SRCPV}"
 
 KODIADDONBRANCH = "Matrix"
 
-SRC_URI = "git://github.com/peak3d/inputstream.adaptive.git;protocol=https;branch=${KODIADDONBRANCH} \
+SRC_URI = "git://github.com/xbmc/inputstream.adaptive.git;protocol=https;branch=${KODIADDONBRANCH} \
         file://define-INPUTSTREAM_MAX_STREAM_COUNT-ifndef.patch"
 
 S = "${WORKDIR}/git"
