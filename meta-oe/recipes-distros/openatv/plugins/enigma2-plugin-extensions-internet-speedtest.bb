@@ -40,17 +40,24 @@ echo "*            Restart Enigma2            *"
 echo "*****************************************"
 sleep 2
 killall -9 enigma2
-rm -r /control > /dev/null 2>&1
-rm -r /var/volatile/tmp/*.ipk > /dev/null 2>&1
 exit 0
+}
+
+pkg_postrm_${PN} () {
+#!/bin/sh
+rm -rf /usr/lib/enigma2/python/Plugins/Extensions/InternetSpeedTest > /dev/null 2>&1
+rm -rf /usr/lib/enigma2/python/Components/Converter/SP* > /dev/null 2>&1
+echo "*****************************************"
+echo "*    Restart GUI to finish uninstall!   *"
+echo "*****************************************"
+sleep 6
+exit 0                                                         "
 }
 
 pkg_preinst_${PN} () {
 #!/bin/sh
-if [ -d /usr/lib/enigma2/python/Plugins/Extensions/InternetSpeedTest ]; then
-  rm -rf /usr/lib/enigma2/python/Plugins/Extensions/InternetSpeedTest
-  rm -rf /usr/lib/enigma2/python/Components/Converter/SP*
-fi;
+rm -rf /usr/lib/enigma2/python/Plugins/Extensions/InternetSpeedTest > /dev/null 2>&1
+rm -rf /usr/lib/enigma2/python/Components/Converter/SP* > /dev/null 2>&1
 exit 0
 }
 
