@@ -8,7 +8,7 @@ RDEPENDS_${PN} = "libsdl"
 
 COMPATIBLE_MACHINE = "^(force5|dual)$"
 
-SRCDATE = "20210312"
+SRCDATE = "20210415"
 
 PV = "${SRCDATE}"
 PR = "r0"
@@ -30,7 +30,7 @@ do_package_qa() {
 
 FILES_${PN}  = "${bindir}/app_init"
 
-SRC_URI[md5sum] = "0a2b311348d5c460af09b10b43fd2ffb"
-SRC_URI[sha256sum] = "1c15df936d5766e397cb4792eee3ff1279ba09530de23e720b9907d2ae6c1d9f"
+SRC_URI[md5sum] = "07bd099537120cbc4dfaf6adf2808dda"
+SRC_URI[sha256sum] = "90fa98322b7e7480214ab05ff1e4df56ebd15111cfb31ec7271a7db7f2cdceda"
 
 INSANE_SKIP_${PN} += "already-stripped"
