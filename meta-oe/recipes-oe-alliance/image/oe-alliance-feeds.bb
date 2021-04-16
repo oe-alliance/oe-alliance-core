@@ -125,6 +125,7 @@ RDEPENDS_${PN} = " \
     pyload \
     ${PYTHON_PN}-attr \
     ${PYTHON_PN}-attrs \
+    ${PYTHON_PN}-autobahn \
     ${PYTHON_PN}-bluetool \
     ${PYTHON_PN}-circuits \
     ${PYTHON_PN}-circuits-bricks \
