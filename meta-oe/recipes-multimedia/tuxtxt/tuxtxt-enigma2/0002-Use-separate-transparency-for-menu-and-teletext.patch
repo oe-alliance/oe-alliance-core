@@ -4,7 +4,7 @@ Date: Fri, 16 Apr 2021 17:35:06 +0200
 Subject: [PATCH] Use separate transparency for menu and teletext
 
 ---
- tuxtxt/plugin/plugin.py | 18 ++++++++++++++++++
+ plugin/plugin.py | 18 ++++++++++++++++++
  1 file changed, 18 insertions(+)
 
 diff --git a/plugin/plugin.py b/plugin/plugin.py
