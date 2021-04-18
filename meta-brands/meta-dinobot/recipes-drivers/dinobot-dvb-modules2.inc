@@ -6,7 +6,7 @@ require conf/license/license-close.inc
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "${KV}+${SRCDATE}"
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "http://source.mynonpublic.com/dinobot/${MACHINE}-drivers-${KV}-${SRCDATE}.tar.gz \
     file://loadmodules.sh \
@@ -15,7 +15,7 @@ SRC_URI = "http://source.mynonpublic.com/dinobot/${MACHINE}-drivers-${KV}-${SRCD
 S = "${WORKDIR}/hiko"
 
 INITSCRIPT_NAME = "loadmodules"
-INITSCRIPT_PARAMS = "start 01 S ."
+INITSCRIPT_PARAMS = "start 05 S ."
 
 inherit update-rc.d
 
