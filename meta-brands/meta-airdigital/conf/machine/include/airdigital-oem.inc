@@ -44,7 +44,8 @@ ${@bb.utils.contains('MACHINEBUILD', 'zgemmah102s', 'H102S' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah102h', 'H102H' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmahzeros', 'Hzero S' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah82h', 'H82H' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'zgemmah11', 'H11' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmah11s', 'H11S' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmah112h', 'H112H' , '', d)}\
 "
 
 MACHINE_BRAND = "\
@@ -88,7 +89,8 @@ ${@bb.utils.contains('MACHINEBUILD', 'zgemmah102s', 'Zgemma' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah102h', 'Zgemma' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmahzeros', 'Zgemma' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmahz82H', 'Zgemma' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'zgemmah11', 'Zgemma' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmah11s', 'Zgemma' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmah112h', 'Zgemma' , '', d)}\
 "
 
 IMAGEDIR ?= "\
@@ -132,7 +134,8 @@ ${@bb.utils.contains('MACHINEBUILD', 'zgemmah102s', 'h10' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah102h', 'h10' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmahzeros', 'hzero' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmahz82H', 'h8' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'zgemmah11', 'h11' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmah11s', 'h11' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmah112h', 'h11' , '', d)}\
 "
 
 MACHINE_DRIVER = "\
@@ -176,7 +179,8 @@ ${@bb.utils.contains('MACHINEBUILD', 'zgemmah102s', 'h10' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah102h', 'h10' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmahzeros', 'hzero' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmahz82H', 'h8' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'zgemmah11', 'h11' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmah11s', 'h11' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmah112h', 'h11' , '', d)}\
 "
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "\

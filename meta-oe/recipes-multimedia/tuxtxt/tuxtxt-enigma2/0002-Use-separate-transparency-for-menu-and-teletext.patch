@@ -1,6 +1,6 @@
-From c16d030ab008d8efe8bc1760141f7d9666cd613e Mon Sep 17 00:00:00 2001
-From: betacentauri <betacentauri@arcor.de>
-Date: Sun, 18 May 2014 14:01:38 +0200
+From 6e9fddabdadc97e1d39d1928707332f1e68d2bf5 Mon Sep 17 00:00:00 2001
+From: Huevos <rowland@moralet.com>
+Date: Fri, 16 Apr 2021 17:35:06 +0200
 Subject: [PATCH] Use separate transparency for menu and teletext
 
 ---
@@ -8,7 +8,7 @@ Subject: [PATCH] Use separate transparency for menu and teletext
  1 file changed, 18 insertions(+)
 
 diff --git a/plugin/plugin.py b/plugin/plugin.py
-index 1bb9a38..5284053 100644
+index c1b2adf..aaa6bfb 100644
 --- a/plugin/plugin.py
 +++ b/plugin/plugin.py
 @@ -3,6 +3,8 @@ from Screens.Screen import Screen
@@ -18,12 +18,12 @@ index 1bb9a38..5284053 100644
 +from Components.SystemInfo import SystemInfo
 +from Components.config import config
  
+ 
  class RcCode:
- 	RC_0 = 0x00
-@@ -38,6 +40,10 @@ class ShellStarter(Screen):
+@@ -40,6 +42,10 @@ class ShellStarter(Screen):
  		</screen>"""
  
- 	def __init__(self, session, args = None):
+ 	def __init__(self, session, args=None):
 +		try: # new config.osd.alpha_teletext may not be available everywhere
 +			self.setOSDAlpha(config.osd.alpha_teletext)
 +		except:
@@ -31,7 +31,7 @@ index 1bb9a38..5284053 100644
  		self.skin = ShellStarter.skin
  		Screen.__init__(self, session)
  		self.session = session
-@@ -81,6 +87,10 @@ class ShellStarter(Screen):
+@@ -83,6 +89,10 @@ class ShellStarter(Screen):
  		PipPigMode(False)
  		if hasattr(self.session, "pip"):
  			self.session.pip.relocate()
@@ -42,7 +42,7 @@ index 1bb9a38..5284053 100644
  		self.close()
  
  	def handleNumberKey(self, key):
-@@ -131,6 +141,14 @@ class ShellStarter(Screen):
+@@ -133,6 +143,14 @@ class ShellStarter(Screen):
  	def handleKeyExit(self):
  		eTuxtxtApp.getInstance().handleKey(RcCode.RC_HOME)
  
@@ -54,9 +54,9 @@ index 1bb9a38..5284053 100644
 +			f.write(str(configElement.value))
 +			f.close()
 +
+ 
  def main(session, **kwargs):
  	session.open(ShellStarter)
- 
 -- 
-1.8.4.GIT
+2.19.1.windows.1
 

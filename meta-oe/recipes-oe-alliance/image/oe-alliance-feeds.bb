@@ -9,15 +9,9 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r8"
+PR = "r9"
 
-DEPENDS = "enigma2-plugin-drivers-usbserial enigma2-plugin-systemplugins-radiotimesemulator"
-#DEPENDS = "enigma2-plugin-drivers-usbserial enigma2-plugin-systemplugins-hrtunerproxy"
-
-#disbale addons not python3 ready
- 
-#    enigma2-plugin-extensions-e2iplayer 
-#    enigma2-plugin-extensions-e2iplayer-deps 
+DEPENDS = "enigma2-plugin-drivers-usbserial enigma2-plugin-systemplugins-radiotimesemulator enigma2-plugin-systemplugins-hrtunerproxy"
 
 RDEPENDS_${PN} = " \
     packagegroup-openplugins \
@@ -56,6 +50,8 @@ RDEPENDS_${PN} = " \
     enigma2-plugin-extensions-moviemanager \
     enigma2-plugin-systemplugins-hrtunerproxy  \
     enigma2-plugin-extensions-xmodem  \
+    enigma2-plugin-extensions-e2iplayer \
+    enigma2-plugin-extensions-e2iplayer-deps \
     ${@bb.utils.contains("MACHINE_FEATURES", "legacykernel", "" , "gdb v4l-utils evtest strace", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "omb", "enigma2-plugin-extensions-openmultiboot openmultiboot", "", d)} \
     ${@bb.utils.contains_any("MACHINE_FEATURES", "kodi18 kodi19", "kodi-addons-meta enigma2-plugin-extensions-kodi", "", d)} \
@@ -129,6 +125,7 @@ RDEPENDS_${PN} = " \
     pyload \
     ${PYTHON_PN}-attr \
     ${PYTHON_PN}-attrs \
+    ${PYTHON_PN}-autobahn \
     ${PYTHON_PN}-bluetool \
     ${PYTHON_PN}-circuits \
     ${PYTHON_PN}-circuits-bricks \
