@@ -1,0 +1,10 @@
+--- a/meson.build
++++ b/meson.build
+@@ -111,7 +111,6 @@ elif cc.get_id() == 'gcc' or cc.get_id() == 'clang'
+     '-Werror=return-type',
+     '-Werror=sequence-point',
+     '-Werror=trigraphs',
+-    '-Werror=undef',
+     '-Werror=write-strings',
+   ]
+ else
