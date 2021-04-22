@@ -37,6 +37,7 @@ RDEPENDS_${PN} = " \
     enigma2-plugin-extensions-autobouquets \
     enigma2-plugin-extensions-e2m3u2bouquet \
     enigma2-plugin-extensions-jedimakerxtream \
+    enigma2-plugin-extensions-serienrecorder \
     enigma2-plugin-systemplugins-joynescan \
     enigma2-plugin-systemplugins-misplslcnscan \
     enigma2-plugin-systemplugins-radiotimesemulator \
