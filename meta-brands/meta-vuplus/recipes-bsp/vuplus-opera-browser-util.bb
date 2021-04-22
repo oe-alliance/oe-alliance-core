@@ -10,7 +10,7 @@ RDEPENDS_${PN} = "libsysfs2 libgmp10 libmpfr4 vuplus-opera-dumpait libcrypto0.9.
 SRC_DATE = "20181116_0"
 SRC_URI = ""
 
-PR = "r46_${SRC_DATE}"
+PR = "r47_${SRC_DATE}"
 
 GSTVER = "1.4.5"
 
