@@ -57,3 +57,4 @@ do_install() {
     install -m 0755 ${WORKDIR}/pyload.init ${D}/etc/init.d/pyload
 }
 
+INSANE_SKIP_${PN} = "build-deps"
