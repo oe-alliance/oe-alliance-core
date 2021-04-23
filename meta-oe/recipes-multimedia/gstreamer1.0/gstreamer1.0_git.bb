@@ -18,9 +18,8 @@ inherit pkgconfig gobject-introspection
 SRCREV_FORMAT = "gst"
 
 SRC_URI = "git://gitlab.freedesktop.org/gstreamer/gstreamer;protocol=https;branch=master;name=gst \
-           file://0001-gst-gstpluginloader.c-when-env-var-is-set-do-not-fal.patch \
-           file://0002-meson-Add-option-for-installed-tests.patch \
-           file://0003-revert-use-new-gst-adapter-get-buffer.patch \
+           file://0001-meson-Add-option-for-installed-tests.patch \
+           file://0002-revert-use-new-gst-adapter-get-buffer.patch \
 "
 
 PACKAGECONFIG ??= "${@bb.utils.contains('PTEST_ENABLED', '1', 'tests', '', d)} \
