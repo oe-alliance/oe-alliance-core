@@ -88,7 +88,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'zgemmah10combo', 'Zgemma' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah102s', 'Zgemma' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah102h', 'Zgemma' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmahzeros', 'Zgemma' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'zgemmahz82H', 'Zgemma' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmah82H', 'Zgemma' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah11s', 'Zgemma' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah112h', 'Zgemma' , '', d)}\
 "
@@ -133,7 +133,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'zgemmah10combo', 'h10' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah102s', 'h10' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah102h', 'h10' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmahzeros', 'hzero' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'zgemmahz82H', 'h8' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmah82H', 'h8' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah11s', 'h11' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah112h', 'h11' , '', d)}\
 "
@@ -178,7 +178,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'zgemmah10combo', 'h10' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah102s', 'h10' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah102h', 'h10' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmahzeros', 'hzero' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'zgemmahz82H', 'h8' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmah82H', 'h8' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah11s', 'h11' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah112h', 'h11' , '', d)}\
 "
