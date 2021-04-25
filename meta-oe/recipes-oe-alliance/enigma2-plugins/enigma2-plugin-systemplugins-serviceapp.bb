@@ -13,6 +13,7 @@ SRCREV_openatv = "02956ea6b05a0186667582f9f25491f18334d31b"
 SRCREV_openeight = "02956ea6b05a0186667582f9f25491f18334d31b"
 SRCREV_opendroid = "02956ea6b05a0186667582f9f25491f18334d31b"
 SRCREV_openspa = "02956ea6b05a0186667582f9f25491f18334d31b"
+SRCREV_opennfr = "02956ea6b05a0186667582f9f25491f18334d31b"
 SRC_URI = " \
     git://github.com/mx3L/serviceapp.git;branch=develop \
     "
