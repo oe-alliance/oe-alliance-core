@@ -1,0 +1,48 @@
+--- a/nss/lib/certdb/certdb.c
++++ b/nss/lib/certdb/certdb.c
+@@ -2890,7 +2890,9 @@ CERT_UnlockCertRefCount(CERTCertificate *cert)
+ {
+     PORT_Assert(certRefCountLock != NULL);
+     PRStatus prstat = PZ_Unlock(certRefCountLock);
+-    PORT_AssertArg(prstat == PR_SUCCESS);
++    if (prstat != PR_SUCCESS) {
++        PORT_Assert(prstat == PR_SUCCESS);
++    }
+ }
+ 
+ static PZLock *certTrustLock = NULL;
+@@ -3006,7 +3008,9 @@ CERT_UnlockCertTrust(const CERTCertificate *cert)
+ {
+     PORT_Assert(certTrustLock != NULL);
+     PRStatus prstat = PZ_Unlock(certTrustLock);
+-    PORT_AssertArg(prstat == PR_SUCCESS);
++    if (prstat != PR_SUCCESS) {
++        PORT_Assert(prstat == PR_SUCCESS);
++    }
+ }
+ 
+ /*
+@@ -3017,7 +3021,9 @@ CERT_UnlockCertTempPerm(const CERTCertificate *cert)
+ {
+     PORT_Assert(certTempPermCertLock != NULL);
+     PRStatus prstat = PZ_Unlock(certTempPermCertLock);
+-    PORT_AssertArg(prstat == PR_SUCCESS);
++    if (prstat != PR_SUCCESS) {
++        PORT_Assert(prstat == PR_SUCCESS);
++    }
+ }
+ 
+ void
+--- a/nss/lib/util/secport.h
++++ b/nss/lib/util/secport.h
+@@ -121,10 +121,6 @@ extern char *PORT_ArenaStrdup(PLArenaPool *arena, const char *str);
+ SEC_END_PROTOS
+ 
+ #define PORT_Assert PR_ASSERT
+-/* This is a variation of PORT_Assert where the arguments will be always
+- * used either in Debug or not. But, in optimized mode the result will be
+- * ignored. See more details in Bug 1588015. */
+-#define PORT_AssertArg PR_ASSERT_ARG
+ 
+ /* Assert the current location can't be reached, passing a reason-string. */
+ #define PORT_AssertNotReached(reasonStr) PR_NOT_REACHED(reasonStr)
