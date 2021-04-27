@@ -2,9 +2,9 @@ require vuplus-libgles.inc
 
 COMPATIBLE_MACHINE = "^(vuuno4kse)$"
 
-SRCDATE = "20190424"
+SRCDATE = "20210407"
 SRCDATE_PR = "r0"
 PV="17.1"
 
-SRC_URI[md5sum] = "2a4c2ca22f220b1c3d82dc9f0e0daaae"
-SRC_URI[sha256sum] = "94f182380d7a8d76fe7897ccc201914e3b03af336b465949f71eeeafd744cb4f"
+SRC_URI[md5sum] = "42cb6edf92d949a242a2964308bbdc91"
+SRC_URI[sha256sum] = "8452195d20f0bbcd8f4b6074d5a69e5e744c8cd4175c898d3804b8638cefeeba"
