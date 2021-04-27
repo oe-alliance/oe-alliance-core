@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=ffa10f40b98be2c2bc9608f56827ed23"
 
 inherit module
 
-PR = "r3"
+PR = "r4"
 
 SRC_URI = "http://source.mynonpublic.com/rtl8822bu-driver-1.0.0.9-20180511a.zip \
     file://add-linux-4.19-support.patch \
@@ -16,6 +16,7 @@ SRC_URI = "http://source.mynonpublic.com/rtl8822bu-driver-1.0.0.9-20180511a.zip 
     file://add-linux-5.2-support.patch \
     file://add-linux-5.6-support.patch \
     file://add-linux-5.8-support.patch \
+    file://add-linux-5.12-support.patch \
 "
 
 SRC_URI_append_sh4 = " file://fix_sh4_build.patch"
