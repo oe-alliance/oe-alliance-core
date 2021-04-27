@@ -1,28 +1,33 @@
-From 11302e4ae3ef94048f1f73c1cd8d9d95d58a20ce Mon Sep 17 00:00:00 2001
+From f494bd6c38cd4c4c1a03c8b586cc321d491cbf37 Mon Sep 17 00:00:00 2001
 From: Jaedon Shin <jaedon.shin@gmail.com>
 Date: Mon, 13 Apr 2020 12:38:41 +0900
 Subject: [PATCH] qcacld-2.0: Make driver compatiable with mainline kernel
 
 Signed-off-by: Jaedon Shin <jaedon.shin@gmail.com>
 ---
- CORE/EPPING/src/epping_txrx.c                |  4 ++++
- CORE/HDD/inc/wlan_hdd_softap_tx_rx.h         |  4 ++++
- CORE/HDD/inc/wlan_hdd_tx_rx.h                |  4 ++++
- CORE/HDD/src/wlan_hdd_memdump.c              |  6 ++++++
- CORE/HDD/src/wlan_hdd_softap_tx_rx.c         |  4 ++++
- CORE/HDD/src/wlan_hdd_tx_rx.c                |  4 ++++
- CORE/SERVICES/COMMON/adf/adf_nbuf.c          |  4 ++++
- CORE/SERVICES/COMMON/adf/adf_os_time.h       |  4 ++++
- CORE/SERVICES/HIF/ath_procfs.c               |  7 +++++++
- CORE/SVC/src/logging/wlan_logging_sock_svc.c |  8 ++++++++
- CORE/UTILS/PKTLOG/linux_ac.c                 |  8 ++++++++
- CORE/VOSS/inc/vos_cnss.h                     | 20 ++++++++++++++++++++
- CORE/VOSS/inc/vos_timer.h                    |  4 ++++
- CORE/VOSS/src/vos_api.c                      |  7 +++++++
- CORE/VOSS/src/vos_packet.c                   |  8 ++++++++
- CORE/VOSS/src/vos_timer.c                    | 20 ++++++++++++++++++++
- Kbuild                                       |  5 ++---
- 17 files changed, 118 insertions(+), 3 deletions(-)
+ CORE/EPPING/src/epping_txrx.c                 |  4 ++++
+ CORE/HDD/inc/wlan_hdd_softap_tx_rx.h          |  4 ++++
+ CORE/HDD/inc/wlan_hdd_tx_rx.h                 |  4 ++++
+ CORE/HDD/src/wlan_hdd_cfg80211.c              |  6 ++++++
+ CORE/HDD/src/wlan_hdd_memdump.c               |  6 ++++++
+ CORE/HDD/src/wlan_hdd_softap_tx_rx.c          |  4 ++++
+ CORE/HDD/src/wlan_hdd_tx_rx.c                 |  4 ++++
+ CORE/SERVICES/BMI/ol_fw.c                     |  7 +++++++
+ CORE/SERVICES/COMMON/adf/adf_nbuf.c           |  4 ++++
+ CORE/SERVICES/COMMON/adf/adf_os_time.h        |  4 ++++
+ .../COMMON/adf/linux/adf_os_dma_pvt.h         |  5 +++++
+ CORE/SERVICES/COMMON/adf/qdf_crypto.h         |  5 +++++
+ CORE/SERVICES/HIF/ath_procfs.c                |  7 +++++++
+ CORE/SVC/src/logging/wlan_logging_sock_svc.c  |  8 ++++++++
+ CORE/UTILS/PKTLOG/linux_ac.c                  |  8 ++++++++
+ CORE/VOSS/inc/vos_cnss.h                      | 20 +++++++++++++++++++
+ CORE/VOSS/inc/vos_timer.h                     |  4 ++++
+ CORE/VOSS/src/vos_api.c                       |  7 +++++++
+ CORE/VOSS/src/vos_packet.c                    |  8 ++++++++
+ CORE/VOSS/src/vos_timer.c                     | 20 +++++++++++++++++++
+ CORE/VOSS/src/vos_utils.c                     |  7 +++++++
+ Kbuild                                        |  5 ++---
+ 22 files changed, 148 insertions(+), 3 deletions(-)
 
 diff --git a/CORE/EPPING/src/epping_txrx.c b/CORE/EPPING/src/epping_txrx.c
 index d63a4cd8e7d3..10c1c35cb4db 100644
@@ -72,6 +77,26 @@ index 2fd820c5886e..cb86442001b9 100644
  
  /**============================================================================
    @brief hdd_stats() - Function registered with the Linux OS for
+diff --git a/CORE/HDD/src/wlan_hdd_cfg80211.c b/CORE/HDD/src/wlan_hdd_cfg80211.c
+index fd59a2e248a0..b6c1a9b61e72 100644
+--- a/CORE/HDD/src/wlan_hdd_cfg80211.c
++++ b/CORE/HDD/src/wlan_hdd_cfg80211.c
+@@ -5224,9 +5224,15 @@ static int hdd_extscan_passpoint_fill_network_list(
+ 			hddLog(LOGE, FL("attr realm failed"));
+ 			return -EINVAL;
+ 		}
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(5, 11, 0)
++		len = nla_strscpy(req_msg->networks[index].realm,
++				  network[PARAM_REALM],
++				  SIR_PASSPOINT_REALM_LEN);
++#else
+ 		len = nla_strlcpy(req_msg->networks[index].realm,
+ 				  network[PARAM_REALM],
+ 				  SIR_PASSPOINT_REALM_LEN);
++#endif
+ 		/* Don't send partial realm to firmware */
+ 		if (len >= SIR_PASSPOINT_REALM_LEN) {
+ 			hddLog(LOGE, FL("user passed invalid realm, len:%zu"),
 diff --git a/CORE/HDD/src/wlan_hdd_memdump.c b/CORE/HDD/src/wlan_hdd_memdump.c
 index 09deb2e6105c..0e93b494e6e0 100644
 --- a/CORE/HDD/src/wlan_hdd_memdump.c
@@ -124,6 +149,24 @@ index 5fa42f629b60..677452b82f51 100644
  {
  	vos_ssr_protect(__func__);
  	__hdd_tx_timeout(dev);
+diff --git a/CORE/SERVICES/BMI/ol_fw.c b/CORE/SERVICES/BMI/ol_fw.c
+index d7bcf7b24d89..07a6221aaffe 100644
+--- a/CORE/SERVICES/BMI/ol_fw.c
++++ b/CORE/SERVICES/BMI/ol_fw.c
+@@ -67,6 +67,13 @@
+ #include <linux/uaccess.h> /* for copy_to_user */
+ #endif
+ 
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(5, 11, 0)
++#ifdef CONFIG_ARM64
++#define get_fs()	((mm_segment_t) { 0 })
++#define set_fs(val)	do {} while (0)
++#endif
++#endif
++
+ #ifdef FEATURE_SECURE_FIRMWARE
+ static struct hash_fw fw_hash;
+ #endif
 diff --git a/CORE/SERVICES/COMMON/adf/adf_nbuf.c b/CORE/SERVICES/COMMON/adf/adf_nbuf.c
 index e2c47286d5d2..fdfa67d4100e 100644
 --- a/CORE/SERVICES/COMMON/adf/adf_nbuf.c
@@ -154,6 +197,46 @@ index 6c92692a5bf3..e1dd4313803d 100644
 +#endif
  
     vos_get_boottime_ts(&ts);
+ 
+diff --git a/CORE/SERVICES/COMMON/adf/linux/adf_os_dma_pvt.h b/CORE/SERVICES/COMMON/adf/linux/adf_os_dma_pvt.h
+index 6a5bcda733c9..74b298b4b9d6 100644
+--- a/CORE/SERVICES/COMMON/adf/linux/adf_os_dma_pvt.h
++++ b/CORE/SERVICES/COMMON/adf/linux/adf_os_dma_pvt.h
+@@ -42,6 +42,10 @@
+ #include <adf_os_types.h>
+ #include <adf_os_util.h>
+ 
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(5, 10, 0)
++#define __adf_os_dma_alloc_noncoherent(dev, size, daddr, flag, attr) dma_alloc_noncoherent(dev, size, daddr, DMA_BIDIRECTIONAL, flag)
++#define __adf_os_dma_free_noncoherent(dev, size, vddr, daddr, attr) dma_free_noncoherent(dev, size, vddr, daddr, DMA_BIDIRECTIONAL)
++#else
+ #if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 12, 0)
+ #define __adf_os_dma_alloc_noncoherent(dev, size, daddr, flag, attr) dma_alloc_attrs(dev, size, daddr, flag, attr)
+ #define __adf_os_dma_free_noncoherent(dev, size, vddr, daddr, attr) dma_free_attrs(dev, size, vddr, daddr, attr)
+@@ -49,6 +53,7 @@
+ #define __adf_os_dma_alloc_noncoherent(dev, size, daddr, flag, attr) dma_alloc_noncoherent(dev, size, daddr, flag)
+ #define __adf_os_dma_free_noncoherent(dev, size, vddr, daddr, attr) dma_free_noncoherent(dev, size, vddr, daddr)
+ #endif
++#endif
+ /**
+  * XXX:error handling
+  *
+diff --git a/CORE/SERVICES/COMMON/adf/qdf_crypto.h b/CORE/SERVICES/COMMON/adf/qdf_crypto.h
+index 617ccb01de8e..668f424f5c76 100644
+--- a/CORE/SERVICES/COMMON/adf/qdf_crypto.h
++++ b/CORE/SERVICES/COMMON/adf/qdf_crypto.h
+@@ -30,7 +30,12 @@
+ #include <crypto/hash.h>
+ #include <crypto/aes.h>
+ #include <crypto/skcipher.h>
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(5, 11, 0)
++#include <crypto/sha1.h>
++#include <crypto/sha2.h>
++#else
+ #include <crypto/sha.h>
++#endif
+ 
+ /* Preprocessor definitions and constants */
  
 diff --git a/CORE/SERVICES/HIF/ath_procfs.c b/CORE/SERVICES/HIF/ath_procfs.c
 index 66c7374dc5c2..a9bd0e6b0543 100644
@@ -409,6 +492,28 @@ index 3adf1427b6cc..514747a9ab72 100644
         snprintf(tbuf, len,
                 "[%02d:%02d:%02d.%06lu] ",
                 tm.tm_hour, tm.tm_min, tm.tm_sec, tv.tv_usec);
+diff --git a/CORE/VOSS/src/vos_utils.c b/CORE/VOSS/src/vos_utils.c
+index d6c4e7e92055..235011509354 100644
+--- a/CORE/VOSS/src/vos_utils.c
++++ b/CORE/VOSS/src/vos_utils.c
+@@ -70,6 +70,9 @@
+ #include <linux/scatterlist.h>
+ #include <linux/completion.h>
+ #include <linux/ieee80211.h>
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(5,12,0))
++#include <crypto/internal/cipher.h>
++#endif
+ #include <crypto/hash.h>
+ #include <crypto/aes.h>
+ #include <wcnss_api.h>
+@@ -1094,3 +1097,7 @@ int vos_status_to_os_return(VOS_STATUS status)
+ 		return -EPERM;
+ 	}
+ }
++
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(5,12,0))
++MODULE_IMPORT_NS(CRYPTO_INTERNAL);
++#endif
 diff --git a/Kbuild b/Kbuild
 index a3be8a3b5eaf..c3fbd1705f17 100644
 --- a/Kbuild
@@ -440,5 +545,5 @@ index a3be8a3b5eaf..c3fbd1705f17 100644
  		-DHAL_SELF_STA_PER_BSS=1 \
  		-DWLAN_FEATURE_VOWIFI_11R \
 -- 
-2.27.0
+2.31.1
 

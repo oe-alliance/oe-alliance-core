@@ -1,7 +1,7 @@
 DESCRIPTION = "qcacld-2.0 module.bbclass mechanism."
 LICENSE = "BSD"
 LIC_FILES_CHKSUM = "file://Android.mk;md5=235cc8d87e0fb1c956be4af0d07074fb"
-CAF_MIRROR = "https://www.codeaurora.org/cgit/external/wlan"
+CAF_MIRROR = "https://source.codeaurora.org/external/wlan"
 
 inherit module
 
@@ -27,5 +27,5 @@ python do_package_prepend() {
     d.appendVar('PKGV', d.getVar("KERNEL_VERSION", True).split("-")[0])
 }
 
-SRC_URI[md5sum] = "90a83aacaffc48e6a3eefbe70ef7ebd1"
-SRC_URI[sha256sum] = "b7ed5214c7be2229b69c8925de415437d07796ec9d7c9a15b85337da6e023dc0"
+SRC_URI[md5sum] = "3b5146b9fd104d1e8e109f37cb244ce2"
+SRC_URI[sha256sum] = "69069b42bd64624efec64e35c32f80139aa36685eef4c2b1603b6d9f836b3408"
