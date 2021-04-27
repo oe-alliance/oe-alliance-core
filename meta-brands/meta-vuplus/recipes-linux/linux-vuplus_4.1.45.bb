@@ -4,7 +4,7 @@ SECTION = "kernel"
 
 MODULE = "linux-4.1.45"
 
-MACHINE_KERNEL_PR_append = "oea4.2-r5"
+MACHINE_KERNEL_PR_append = "oea4.2-r6"
 
 inherit kernel machine_kernel_pr
 
@@ -53,6 +53,8 @@ SRC_URI += "http://code.vuplus.com/download/release/kernel/stblinux-${KSRC_VER}.
     file://0002-log2-give-up-on-gcc-constant-optimizations.patch \
     file://0003-uaccess-dont-mark-register-as-const.patch \
     file://move-default-dialect-to-SMB3.patch \
+    file://v3-1-2-em28xx-Ignore-errors-while-reading-from-eeprom.patch \
+    file://v3-2-2-em28xx-add-support-for-new-of-Terratec-H6.patch \
     "
 
 S = "${WORKDIR}/linux"
