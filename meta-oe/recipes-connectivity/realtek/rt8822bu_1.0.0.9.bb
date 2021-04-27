@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=ffa10f40b98be2c2bc9608f56827ed23"
 
 inherit module
 SRCREV = "${AUTOREV}"
-SRC_URI = "git://github.com/atvcaptain/rtl8822bu.git;branch=main \
+SRC_URI = "git://github.com/atvcaptain/rtl8822bu.git;branch=main"
 
 SRC_URI_append_sh4 = " file://fix_sh4_build.patch"
 
