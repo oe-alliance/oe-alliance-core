@@ -4,7 +4,7 @@ SRCDATE = "20201118"
 RDEPENDS_${PN} = "libjpeg-turbo pulseaudio-lib-rtp"
 PROVIDES += " virtual/blindscan-dvbc virtual/blindscan-dvbs"
 
-require airdigital-dvb-himodules.inc
+require airdigital-dvb-modules.inc
 
 SRC_URI_append = " file://suspend.sh"
 
