@@ -14,11 +14,8 @@ PR = "r0"
 
 SRC_URI[md5sum] = "c533bff63bb37096c039fa6d614f9e09"
 SRC_URI[sha256sum] = "089f7d31acf19164476880fbf1e54c3330956acca85c46da9dc107b6243fca7b"
-SRC_URI[openspa.md5sum] = "c8c3a1ecf2ff7aa3aa052259ae4c09e8"
-SRC_URI[openspa.sha256sum] = "3728da01ddbd85626a332864d0fab92b73cf14e8afc05219ff75bc517754e0c2"
 
 SRC_URI = "http://en3homeftp.net/release/images/oedrivers/bcmlinuxdvb_72604-${KV}-${SRCDATE}.tar.gz"
-SRC_URI_openspa = "http://en3homeftp.net/release/images/oedrivers/openspa_bcmlinuxdvb_72604-${KV}-${SRCDATE}.tar.gz;name=openspa"
 
 S = "${WORKDIR}"
 
