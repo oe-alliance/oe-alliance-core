@@ -3,12 +3,12 @@ SECTION = "kernel"
 LICENSE = "GPLv2"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-KERNEL_RELEASE = "5.9"
+KERNEL_RELEASE = "5.12"
 
 inherit kernel machine_kernel_pr
 
-SRC_URI[md5sum] = "9f1b0dbe0731b8e581df3060884512e8"
-SRC_URI[sha256sum] = "5f7dc720af496b9a17865180b47abad2a8fcc5cc9c31305f84351da339598341"
+SRC_URI[md5sum] = "47e0b2c86e65868fe137d2f6cbe036b5"
+SRC_URI[sha256sum] = "fa6472f2111774ce70fcd151f67e43d19a8e8c6c9348f6d42264306a08a8faec"
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-brcmstb-${PV}/COPYING;md5=6bc538ed5bd9a7fc9398086aedcd7e46"
 
@@ -42,6 +42,16 @@ kernel_do_install_append () {
     install -d ${D}/${KERNEL_IMAGEDEST}
     install -m 0644 ${KERNEL_OUTPUT_DIR}/${KERNEL_IMAGETYPE} ${D}/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}
     install -m 0644 ${WORKDIR}/findkerneldevice.py ${D}/${KERNEL_IMAGEDEST}
+}
+
+do_compile_kernelmodules_append() {
+    # openembedded-core 0fc66a0b64953aae38d0124b57615fffaec8de52
+    if (grep -q -i -e '^CONFIG_MODULES=y$' ${B}/.config); then
+        # 5.10+ kernels have module.lds that we need to copy for external module builds
+        if [ -e "${B}/scripts/module.lds" ]; then
+            install -Dm 0644 ${B}/scripts/module.lds ${STAGING_KERNEL_BUILDDIR}/scripts/module.lds
+        fi
+    fi
 }
 
 pkg_postinst_kernel-image () {

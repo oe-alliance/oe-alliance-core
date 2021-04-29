@@ -114,3 +114,26 @@
  )
  
  func main() {
+--- a/src/github.com/rclone/rclone/librclone/gomobile/gomobile.go
++++ b/src/github.com/rclone/rclone/librclone/gomobile/gomobile.go
+@@ -5,7 +5,7 @@ import (
+ 	"github.com/rclone/rclone/librclone/librclone"
+ 
+ 	_ "github.com/rclone/rclone/backend/all" // import all backends
+-	_ "github.com/rclone/rclone/lib/plugin"  // import plugins
++//	_ "github.com/rclone/rclone/lib/plugin"  // import plugins
+ )
+ 
+ // RcloneInitialize initializes rclone as a library
+--- a/src/github.com/rclone/rclone/librclone/librclone.go
++++ b/src/github.com/rclone/rclone/librclone/librclone.go
+@@ -31,7 +31,7 @@ import (
+ 	"github.com/rclone/rclone/librclone/librclone"
+ 
+ 	_ "github.com/rclone/rclone/backend/all" // import all backends
+-	_ "github.com/rclone/rclone/lib/plugin"  // import plugins
++//	_ "github.com/rclone/rclone/lib/plugin"  // import plugins
+ )
+ 
+ // RcloneInitialize initializes rclone as a library
+

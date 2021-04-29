@@ -2,27 +2,17 @@ SUMMARY = "Ralink 88x2BU v1.0.0.9"
 HOMEPAGE = "http://www.realtek.com.tw"
 SECTION = "kernel/modules"
 LICENSE = "GPLv2"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=ffa10f40b98be2c2bc9608f56827ed23"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 
 inherit module
-
-PR = "r3"
-
-SRC_URI = "http://source.mynonpublic.com/rtl8822bu-driver-1.0.0.9-20180511a.zip \
-    file://add-linux-4.19-support.patch \
-    file://add-linux-4.20-support.patch \
-    file://add-linux-5.0-support.patch \
-    file://add-linux-5.1-support.patch \
-    file://add-linux-5.2-support.patch \
-    file://add-linux-5.6-support.patch \
-    file://add-linux-5.8-support.patch \
-"
+SRCREV = "${AUTOREV}"
+SRC_URI = "git://github.com/atvcaptain/rtl8822bu.git;branch=main"
 
 SRC_URI_append_sh4 = " file://fix_sh4_build.patch"
 
 EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR} KDIR=${STAGING_KERNEL_DIR}"
 
-S = "${WORKDIR}/rtl8822bu"
+S = "${WORKDIR}/git"
 
 do_compile () {
     unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS CC LD CPP
@@ -46,6 +36,3 @@ do_install() {
 
 do_package_qa() {
 }
-
-SRC_URI[md5sum] = "b5c5427f41422f0195b4947f28e877f8"
-SRC_URI[sha256sum] = "09e600076691d792c2827886972c509996007c5f6dc1afe92dd66fb9ee798864"

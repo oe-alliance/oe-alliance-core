@@ -1,0 +1,45 @@
+diff --git a/root.c b/root.c
+index bf38d13..ea4939d 100644
+--- a/root.c
++++ b/root.c
+@@ -278,7 +278,11 @@ static int cdfs_fill_super(struct super_block *sb, void *data, int silent){
+ 	no_audio++;
+ 	this_cd->track[i].iso_info    = NULL;
+ 	this_cd->track[i].type        = AUDIO;
+-	this_cd->track[i].time        = get_seconds();
++#if LINUX_VERSION_CODE < KERNEL_VERSION(5,11,0)
++        this_cd->track[i].time        = get_seconds();
++#else
++        this_cd->track[i].time        = ktime_get_real_seconds();
++#endif
+ 	this_cd->track[i].iso_size    = 0;
+ 	this_cd->track[i].track_size  = this_cd->track[i].track_size * CD_FRAMESIZE_RAW + ((this_cd->raw_audio==0)?WAV_HEADER_SIZE:0);
+ 	this_cd->track[i].size        = this_cd->track[i].track_size;
+diff --git a/toc.c b/toc.c
+index 6ffdb89..6eaff8a 100644
+--- a/toc.c
++++ b/toc.c
+@@ -156,7 +156,11 @@ int cdfs_toc_read_full( struct super_block *sb )
+ 	    {
+ 	        /* This is a true track descriptor */
+ 		this_cd->track[cur_track].type = ( track->adr_control & 0x04 ) ? DATA : AUDIO;
++#if LINUX_VERSION_CODE < KERNEL_VERSION(5,11,0)
+ 		this_cd->track[cur_track].time = get_seconds();
++#else
++		this_cd->track[cur_track].time = ktime_get_real_seconds();
++#endif
+ 		this_cd->track[cur_track].start_lba = TIME2LBA( track->pmin, track->psec, track->pframe ) - 150;
+ 		this_cd->track[cur_track-1].stop_lba = this_cd->track[cur_track].start_lba - 1;
+                 PRINT("Start[%d]: %d\n", cur_track, this_cd->track[cur_track].start_lba);
+@@ -217,7 +221,11 @@ int cdfs_toc_read( struct super_block *sb )
+         if ( t != this_cd->tracks )	/* all tracks but the LEADOUT */
+ 	{
+             this_cd->track[i].type = ( entry.cdte_ctrl & CDROM_DATA_TRACK ) ? DATA : AUDIO;
++#if LINUX_VERSION_CODE < KERNEL_VERSION(5,11,0)
+             this_cd->track[i].time = get_seconds();
++#else
++            this_cd->track[i].time = ktime_get_real_seconds();
++#endif
+         }
+     }
+ 

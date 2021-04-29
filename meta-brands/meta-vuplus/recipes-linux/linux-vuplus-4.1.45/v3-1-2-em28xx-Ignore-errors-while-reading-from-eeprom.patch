@@ -1,0 +1,10 @@
+--- a/drivers/media/usb/em28xx/em28xx-i2c.c
++++ b/drivers/media/usb/em28xx/em28xx-i2c.c
+@@ -965,7 +965,6 @@
+ 			em28xx_errdev("%s: em28xx_i2_eeprom failed! retval [%d]\n",
+ 				      __func__, retval);
+ 
+-			return retval;
+ 		}
+ 	}
+ 
