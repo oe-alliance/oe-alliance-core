@@ -15,7 +15,7 @@ PR = "r0"
 SRC_URI[md5sum] = "c533bff63bb37096c039fa6d614f9e09"
 SRC_URI[sha256sum] = "089f7d31acf19164476880fbf1e54c3330956acca85c46da9dc107b6243fca7b"
 
-SRC_URI = "http://en3homeftp.net/release/images/oedrivers/bcmlinuxdvb_72604-${KV}-${SRCDATE}.tar.gz"
+SRC_URI = "http://en3homeftp.net/release/images/iqon/bcmlinuxdvb_72604-${KV}-${SRCDATE}.tar.gz"
 
 S = "${WORKDIR}"
 

@@ -15,7 +15,7 @@ PR = "r0"
 SRC_URI[md5sum] = "08497ecac0dc87214a5059bfa5ec1767"
 SRC_URI[sha256sum] = "fe8fbe9084cc82a517226f99f736ad874269478ce52c13e6988bbd2213a94baf"
 
-SRC_URI = "http://en3homeftp.net/release/images/oedrivers/bcmlinuxdvb_7252S-300mm-${KV}-${SRCDATE}.tar.gz"
+SRC_URI = "http://en3homeftp.net/release/images/iqon/bcmlinuxdvb_7252S-300mm-${KV}-${SRCDATE}.tar.gz"
 
 S = "${WORKDIR}"
 
