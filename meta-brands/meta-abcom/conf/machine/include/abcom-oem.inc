@@ -1,5 +1,5 @@
 
-MACHINE_FEATURES += " hisil mali emmc skins1080 multitranscoding kodi18 himedia no-subssupport blindscan-dvbs gfwol ci fastboot mountboot
+MACHINE_FEATURES += " hisil mali emmc skins1080 multitranscoding kodi18 himedia no-subssupport blindscan-dvbs gfwol ci fastboot mountboot \
 ${@bb.utils.contains('MACHINEBUILD', 'abpulse4k', ' 7segment dvb-c' , '', d)}\
 "
 
