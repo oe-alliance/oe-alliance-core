@@ -30,7 +30,7 @@ IMAGE_CMD_abfastboot8gb () {
     echo "bootcmd=setenv bootargs \$(bootargs) \$(bootargs_common); mmc read 0 0x1000000 0x3D5000 0x8000; bootm 0x1000000; run bootcmd_fallback" > ${WORKDIR}/STARTUP_LINUX_4
     echo "bootargs=root=/dev/mmcblk0p23 rootsubdir=linuxrootfs4 rootfstype=ext4 kernel=/dev/mmcblk0p22" >> ${WORKDIR}/STARTUP_LINUX_4
     echo "bootcmd=setenv bootargs \$(bootargs_common); mmc read 0 0x1000000 0x1000 0x9000; bootm 0x1000000" > ${WORKDIR}/STARTUP_RECOVERY
-    echo "imageurl https://raw.githubusercontent.com/oe-alliance/bootmenu/master/${MACHINE}/images" > ${WORKDIR}/bootmenu.conf
+    echo "imageurl https://raw.githubusercontent.com/oe-alliance/bootmenu/master/${MACHINEBUILD}/images" > ${WORKDIR}/bootmenu.conf
     echo "updateurl http://updateurl.ddns.net/cgi-bin/index.py" >> ${WORKDIR}/bootmenu.conf
     echo "# " >> ${WORKDIR}/bootmenu.conf
     echo "iface eth0" >> ${WORKDIR}/bootmenu.conf

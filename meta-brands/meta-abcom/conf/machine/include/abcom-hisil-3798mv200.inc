@@ -1,3 +1,4 @@
+require conf/machine/include/abcom-oem.inc
 include conf/machine/include/autoload-filesystems.inc
 require conf/machine/include/soc-family.inc
 require conf/machine/box-hardware.inc
@@ -97,7 +98,7 @@ IMAGE_CMD_abfastboot8gb_append = " \
     echo "This RECOVERY only need when you have issue access the MULTIBOOT MENU" >>${DEPLOY_DIR_IMAGE}/${IMAGEDIRRECOVERY}/recovery_${MACHINEBUILD}_READ.ME; \
     echo "The ${IMAGE_NAME}_recovery_usb.zip should been install normally once (or if there is an update.)" >>${DEPLOY_DIR_IMAGE}/${IMAGEDIRRECOVERY}/recovery_${MACHINEBUILD}_READ.ME; \
     echo "This is needed for avoid images conflicts as the partition layout (bootargs) is of huge essential." >>${DEPLOY_DIR_IMAGE}/${IMAGEDIRRECOVERY}/recovery_${MACHINEBUILD}_READ.ME; \
-    echo "A small change can destroy all your install images. So we can better leave it and not install it if it's not need." >>${DEPLOY_DIR_IMAGE}/${IMAGEDIRRECOVERY}/recovery_${MACHINE}_READ.ME; \
+    echo "A small change can destroy all your install images. So we can better leave it and not install it if it's not need." >>${DEPLOY_DIR_IMAGE}/${IMAGEDIRRECOVERY}/recovery_${MACHINEBUILD}_READ.ME; \
     cd ${DEPLOY_DIR_IMAGE}/${IMAGEDIRRECOVERY} ; \
     zip -r ../${IMAGE_NAME}_recovery_emmc.zip *; \
     rm -Rf ${DEPLOY_DIR_IMAGE}/${IMAGEDIRRECOVERY}; \
