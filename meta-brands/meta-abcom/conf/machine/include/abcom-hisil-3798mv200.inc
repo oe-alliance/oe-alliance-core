@@ -1,3 +1,4 @@
+require conf/machine/include/abcom-oem.inc
 include conf/machine/include/autoload-filesystems.inc
 require conf/machine/include/soc-family.inc
 require conf/machine/box-hardware.inc
