@@ -1,0 +1,13 @@
+diff --git a/scripts/dtc/dtc-parser.tab.c_shipped b/scripts/dtc/dtc-parser.tab.c_shipped
+index ee1d8c3..a7be9f6 100644
+--- a/scripts/dtc/dtc-parser.tab.c_shipped
++++ b/scripts/dtc/dtc-parser.tab.c_shipped
+@@ -73,7 +73,7 @@
+ #include "dtc.h"
+ #include "srcpos.h"
+ 
+-YYLTYPE yylloc;
++extern YYLTYPE yylloc;
+
+ extern int yylex(void);
+ extern void print_error(char const *fmt, ...);
