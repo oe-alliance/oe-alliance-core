@@ -19,6 +19,7 @@ RDEPENDS_${PN} += "virtual/inetd"
 
 SRC_URI = "git://code.vuplus.com/git/filestreamproxy.git;protocol=http;branch=transtreamproxy \
     file://gcc6.patch \
+    file://shm-ordered-comparison-of-pointer-zero.patch \
     "
 
 inherit autotools
@@ -30,6 +31,8 @@ EXTRA_OECONF_vuuno4kse += " --enable-ext-pid "
 EXTRA_OECONF_vuduo4k += " --enable-ext-pid "
 EXTRA_OECONF_vuduo4kse += " --enable-ext-pid "
 EXTRA_OECONF_dags7252 += " --enable-ext-pid "
+
+CXXFLAGS += "-std=gnu++11"
 
 S = "${WORKDIR}/git"
 
