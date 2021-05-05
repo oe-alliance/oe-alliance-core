@@ -49,6 +49,7 @@ SRC_URI += "http://source.mynonpublic.com/ini/bcm7358-linux-${KV}-${SRCDATE}.tgz
     file://kernel-add-support-for-gcc8.patch \
     file://kernel-add-support-for-gcc9.patch \
     file://kernel-add-support-for-gcc10.patch \
+    file://kernel-add-support-for-gcc11.patch \
     file://0001-Support-TBS-USB-drivers.patch \
     file://0001-STV-Add-PLS-support.patch \
     file://0001-STV-Add-SNR-Signal-report-parameters.patch \

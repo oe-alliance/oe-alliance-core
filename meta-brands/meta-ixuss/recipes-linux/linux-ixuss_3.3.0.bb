@@ -27,6 +27,7 @@ SRC_URI += "http://source.mynonpublic.com/stblinux-3.3.0-20130404.tgz \
     file://kernel-add-support-for-gcc8.patch \
     file://kernel-add-support-for-gcc9.patch \
     file://kernel-add-support-for-gcc10.patch \
+    file://kernel-add-support-for-gcc11.patch \
     file://fix-proc-cputype.patch \
     file://fixme-hardfloat.patch \
     file://0001-Revert-MIPS-Add-fast-get_user_pages.patch \

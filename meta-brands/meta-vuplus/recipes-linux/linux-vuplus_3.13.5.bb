@@ -22,6 +22,7 @@ SRC_URI = "http://code.vuplus.com/download/release/kernel/stblinux-${KV}.tar.bz2
     file://kernel-add-support-for-gcc8.patch \
     file://kernel-add-support-for-gcc9.patch \
     file://kernel-add-support-for-gcc10.patch \
+    file://kernel-add-support-for-gcc11.patch \
     file://rt2800usb_fix_warn_tx_status_timeout_to_dbg.patch \
     file://add-dmx-source-timecode.patch \
     file://af9015-output-full-range-SNR.patch \
