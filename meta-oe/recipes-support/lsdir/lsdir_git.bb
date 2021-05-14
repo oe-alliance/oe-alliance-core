@@ -1,5 +1,5 @@
 DESCRIPTION = "Allows to list directory"
-MAINTAINER = "samsamsam"
+MAINTAINER = "oe-a"
 
 require conf/license/license-gplv2.inc
 
@@ -9,10 +9,10 @@ PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
 PR = "r0"
 
-SRC_URI = "git://github.com/atvcaptain/lsdir.git;protocol=git"
+SRC_URI = "git://github.com/oe-mirrors/e2iplayer-deps.git;protocol=git"
 SRCREV = "${AUTOREV}"
 
-S = "${WORKDIR}/git/"
+S = "${WORKDIR}/git/lsdir"
 
 SOURCE_FILES = "src/lsdir.c"
 
