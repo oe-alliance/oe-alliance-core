@@ -38,6 +38,7 @@ SRC_URI_append_dags7362 = "file://tm-splash.bmp file://iqon-splash.bmp file://sp
 SRC_URI_append_dags7252 = "file://tm-splash.bmp file://splash1.bmp file://splash2.bmp file://splash3.bmp"
 SRC_URI_append_7210s = "file://lcdsplash220.bin file://lcdwaitkey220.bin file://lcdwarning220.bin file://lcdcomplete220.bin"
 SRC_URI_append_h9 = "file://logo.img"
+SRC_URI_append_h9se = "file://logo.img"
 SRC_URI_append_h9combo = "file://logo.img"
 SRC_URI_append_i55plus = "file://logo.img"
 SRC_URI_append_hd60 = "file://logo.img"
