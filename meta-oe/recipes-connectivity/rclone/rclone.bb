@@ -6,39 +6,30 @@ DESCRIPTION = "Rclone is a command line program to sync files and directories to
     ownCloud pCloud put.io QingStor Rackspace Cloud Files Scaleway SFTP Wasabi WebDAV Yandex Disk The local filesystem"
 HOMEPAGE = "https://rclone.org/"
 LICENSE = "MIT"
-LIC_FILES_CHKSUM = "file://src/${GO_IMPORT}/COPYING;md5=bed161b82a1ecab65ff7ba3c3b960439"
+LIC_FILES_CHKSUM = "file://COPYING;md5=bed161b82a1ecab65ff7ba3c3b960439"
 
-DEPENDS = "go-cross-${TUNE_PKGARCH}"
+DEPENDS += "go-cross-${TUNE_PKGARCH}"
 
 RDEPENDS_${PN} += "bash"
-RDEPENDS_${PN}-dev += "bash python3-core"
+RDEPENDS_${PN}-dev += "bash ${PYTHON_PN}-core"
 
-inherit gitpkgv
+inherit gitpkgv upx-compress
 
 SRCREV = "${AUTOREV}"
-PV = "1.54-DEV+git${SRCPV}"
+PV = "1.55-DEV+git${SRCPV}"
 
-GO_IMPORT = "github.com/rclone/rclone"
-
-SRC_URI = "git://${GO_IMPORT};protocol=https;branch=master \
-           file://0001-Revert-lib-add-plugin-support.patch \
+SRC_URI = "git://github.com/rclone/rclone;protocol=https;branch=master \
            file://rclonefs"
 
-inherit go-mod upx-compress
+S = "${WORKDIR}/git"
 
-GO_DYNLINK_aarch64 = ""
-GO_DYNLINK_arm = ""
+do_compile() {
+    ${TARGET_PREFIX}go build
+}
 
-do_install_append() {
-    rm -rf ${D}${bindir}/test*
+do_install() {
+    install -d ${D}${bindir}
+    install -m 755 ${S}/rclone ${D}${bindir}
     install -m 755 ${WORKDIR}/rclonefs ${D}${bindir}
     ln -sf rclone ${D}${bindir}/mount.rclone
 }
-
-# module cloud.google.com contains test files for various arches
-# which are causing false positives at do_package_qa
-
-do_package_qa() {
-}
-
-INSANE_SKIP_${PN} = "already-stripped"
