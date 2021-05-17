@@ -48,6 +48,7 @@ PROVIDES += " \
     enigma2-plugin-extensions-piconsupdater \
     enigma2-plugin-extensions-remotechannelstreamconverter \
     enigma2-plugin-extensions-tmdb \
+    enigma2-plugin-extensions-tvspielfilm \
     ${@bb.utils.contains('MACHINE_FEATURES', 'legacykernel', '' , 'enigma2-plugin-systemplugins-wirelessaccesspoint', d)} \
     ${@bb.utils.contains('MACHINE', 'spark7162', 'enigma2-plugin-systemplugins-uniontunertype ' , ' ', d)} \
     ${@bb.utils.contains('MACHINE_FEATURES', 'sh4booster', 'enigma2-plugin-systemplugins-sh4boostercontrol' , ' ', d)} \
@@ -152,6 +153,7 @@ RDEPENDS_enigma2-plugin-extensions-witaispeechtotext = "${PYTHON_PN}-requests"
 DESCRIPTION_enigma2-plugin-extensions-webkithbbtv = "E2 HbbTV Plugin"
 RDEPENDS_enigma2-plugin-extensions-webkithbbtv = "vuplus-webkithbbtv-dumpait webkit-hbbtv-browser libupnp1.6"
 DESCRIPTION_enigma2-plugin-extensions-stalkerclient = "E2 Staker Client Plugin"
+DESCRIPTION_enigma2-plugin-extensions-tvspielfilm = "TVSpielfilm Plugin"
 
 inherit autotools-brokensep gitpkgv ${PYTHON_PN}native gettext
 

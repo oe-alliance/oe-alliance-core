@@ -264,7 +264,9 @@ do_install_append() {
 }
 
 
-FILES_${PN} = "${libdir}/enigma2/python/*.so /usr/share ${libdir}/enigma2/python/Components/*.py ${libdir}/enigma2/python/Plugins"
+FILES_${PN} = "${libdir}/enigma2/python/*.so /usr/share \
+    ${libdir}/enigma2/python/Components/*.py ${libdir}/enigma2/python/Plugins \
+    ${libdir}/enigma2/python/Components/*/*.pyc ${libdir}/enigma2/python/Plugins"
 FILES_${PN}-dev += "${libdir}/enigma2/python/*.la"
 FILES_${PN}-staticdev += "${libdir}/enigma2/python/*.a"
 FILES_${PN}-dbg += "${libdir}/enigma2/python/.debug"
