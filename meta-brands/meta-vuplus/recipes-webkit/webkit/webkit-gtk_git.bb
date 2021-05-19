@@ -24,6 +24,7 @@ SRC_URI = "git://code.vuplus.com:/git/webkit-r95199-base.git;protocol=http;branc
     file://0001-fix-build-with-gcc-6.20.patch \
     file://0001-fix-build-issue-with-cglib-2.2.4.patch \
     file://0001-fix-build-with-bison-3.7.patch \
+    file://0002-fix-build-with-gcc11.patch \
     file://webkit-gtk_fixed_crash_error.patch \
     file://maketokenizer.patch \
 "
@@ -65,7 +66,7 @@ CPPFLAGS += "-I${STAGING_INCDIR}/pango-1.0 \
             -I${STAGING_LIBDIR}/glib-2.0/include \
             -I${STAGING_INCDIR}/glib-2.0"
 
-CXXFLAGS += " -std=gnu++98"
+CXXFLAGS += " -std=gnu++98 -Wno-expansion-to-defined -Wno-deprecated-copy -Wno-class-memaccess -Wno-unused-local-typedefs -Wno-cast-align -Wno-c++11-compat"
 
 OECMAKE_GENERATOR = "Unix Makefiles"
 
