@@ -49,6 +49,7 @@ SRC_URI += "http://code.vuplus.com/download/release/kernel/${KERNELSRC};name=${M
     file://0005-uaccess-dont-mark-register-as-const.patch \
     file://0006-makefile-disable-warnings.patch \
     file://move-default-dialect-to-SMB3.patch \
+    file://fix-multiple-defs-yyloc.patch \
     "
 
 SRC_URI_append_vuuno4k = " file://linux_prevent_usb_dma_from_bmem.patch"
