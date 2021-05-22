@@ -7,6 +7,7 @@ LIC_FILES_CHKSUM_openatv = "file://LICENSE;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 LIC_FILES_CHKSUM_openvix = "file://LICENSE;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 LIC_FILES_CHKSUM_beyonwiz = "file://LICENSE;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 LIC_FILES_CHKSUM_openeight = "file://LICENSE;md5=b234ee4d69f5fce4486a80fdaf4a4263"
+LIC_FILES_CHKSUM_opendroid = "file://LICENSE;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 
 DEPENDS = " \
     freetype \
