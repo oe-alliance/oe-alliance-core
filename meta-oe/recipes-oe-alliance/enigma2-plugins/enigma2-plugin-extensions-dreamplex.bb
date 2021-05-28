@@ -10,7 +10,7 @@ PV = "2.1.3+git${SRCPV}"
 PKGV = "2.1.3+git${GITPKGV}"
 PR = "r0"
 
-DEPENDS = "enigma2 python"
+DEPENDS = "enigma2 ${PYTHON_PN}"
 RDEPENDS_${PN} = "gstreamer1.0-plugins-bad-hls curl mjpegtools ${PYTHON_PN}-ctypes libshowiframe0"
 
 SRC_URI = "git://github.com/DonDavici/DreamPlex.git;protocol=git"

@@ -1,0 +1,27 @@
+diff --git a/setup.py b/setup.py
+index 99b87a4..f697524 100644
+--- a/setup.py
++++ b/setup.py
+@@ -10,11 +10,11 @@ if __name__ == "__main__":
+ 	import sys,os, string
+ 	from distutils.sysconfig import *
+ 	from distutils.core import setup
+-	
++	from distutils.command.install_data import install_data
+ 	# don't want to use import because there might be an installed version 
+ 	# and current path is often not in import directories, whereas we *know*
+ 	# the file is right next to setup.py in the source archive.
+-	execfile( 'version.py', globals())
++	exec(compile(open("version.py").read(), "version.py", 'exec'))
+ 
+ 	##############
+ 	## Following is from Pete Shinners,
+@@ -22,7 +22,7 @@ if __name__ == "__main__":
+ 	## some unix machines where the data files are copied
+ 	## to weird locations if the user's configuration options
+ 	## were entered during the wrong phase of the moon :) .
+-	from distutils.command.install_data import install_data
++
+ 	class smart_install_data(install_data):
+ 		def run(self):
+ 			#need to change self.install_dir to the library dir

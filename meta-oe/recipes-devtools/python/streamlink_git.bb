@@ -3,14 +3,13 @@ DESCRIPTION = "Streamlink is a command-line utility that pipes video streams fro
 HOMEPAGE = "https://github.com/streamlink/streamlink"
 SECTION = "devel/python"
 LICENSE = "BSD-2-Clause"
-LIC_FILES_CHKSUM = "${@bb.utils.contains("PYTHON_PN", "python", "file://LICENSE;md5=7c0be52291b7252b878da806d185b1d1", "file://LICENSE;md5=7c0be52291b7252b878da806d185b1d1", d)}"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=7c0be52291b7252b878da806d185b1d1"
 
-inherit ${@bb.utils.contains("PYTHON_PN", "python", "setuptools", "setuptools3", d)} ${PYTHON_PN}-dir gitpkgv
+inherit setuptools3 ${PYTHON_PN}-dir gitpkgv
 
 RDEPENDS_${PN} = "${PYTHON_PN}-core \
-    ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-backports-functools-lru-cache ${PYTHON_PN}-backports-shutil-get-terminal-size ${PYTHON_PN}-backports-shutil-which", "", d)} \
     ${PYTHON_PN}-ctypes \
-    ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-futures", "${PYTHON_PN}-futures3", d)} \
+    ${PYTHON_PN}-futures3 \
     ${PYTHON_PN}-isodate \
     ${PYTHON_PN}-iso3166 \
     ${PYTHON_PN}-iso639 \
@@ -21,15 +20,14 @@ RDEPENDS_${PN} = "${PYTHON_PN}-core \
     ${PYTHON_PN}-requests \
     ${PYTHON_PN}-shell \
     ${PYTHON_PN}-singledispatch \
-    ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-subprocess", "", d)} \
     ${PYTHON_PN}-websocket-client \
     "
 
 SRCREV = "${AUTOREV}"
-PV = "${@bb.utils.contains("PYTHON_PN", "python", "1.27.2.1+git${SRCPV}", "2.1.1+git${SRCPV}", d)}"
-PKGV = "${@bb.utils.contains("PYTHON_PN", "python", "1.27.2.1+git${GITPKGV}", "2.1.1+git${GITPKGV}", d)}"
+PV = "2.1.1+git${SRCPV}"
+PKGV = "2.1.1+git${GITPKGV}"
 
-SRC_URI = "${@bb.utils.contains("PYTHON_PN", "python", "git://github.com/oe-mirrors/streamlink-27;protocol=https", "git://github.com/streamlink/streamlink.git;protocol=https", d)}"
+SRC_URI = "git://github.com/streamlink/streamlink.git;protocol=https"
 
 S = "${WORKDIR}/git"
 

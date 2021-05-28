@@ -16,9 +16,9 @@ SRC_URI = "git://github.com/oe-mirrors/enigma2-plugin-blurayplayer.git;branch=${
 
 S = "${WORKDIR}/git"
 
-inherit ${@bb.utils.contains("PYTHON_PN", "python", "distutils-openplugins", "distutils3-openplugins", d)}
+inherit distutils3-openplugins
 
-DEPENDS = "python libbluray libudfread"
+DEPENDS = "${PYTHON_PN}  libbluray libudfread"
 RDEPENDS_${PN} = "libbluray"
 
 FILES_${PN}-dbg += "/usr/lib/enigma2/python/Plugins/Extensions/BlurayPlayer/.debug"
