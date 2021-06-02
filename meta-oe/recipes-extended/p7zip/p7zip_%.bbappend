@@ -1,7 +1,3 @@
-FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
-
-SRC_URI_append = " file://0001-WimHandler-numMethods-bool-to-unsigned.patch"
-
 inherit upx-compress
 
 EXTRA_OEMAKE = "all3"
