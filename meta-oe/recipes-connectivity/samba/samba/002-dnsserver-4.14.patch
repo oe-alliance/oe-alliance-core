@@ -1,7 +1,8 @@
-diff -Nur a/source4/dns_server/wscript_build b/source4/dns_server/wscript_build
---- a/source4/dns_server/wscript_build	2019-01-15 11:07:00.000000000 +0100
-+++ b/source4/dns_server/wscript_build	2019-11-02 13:54:17.521204963 +0100
-@@ -4,7 +4,7 @@
+diff --git a/source4/dns_server/wscript_build b/source4/dns_server/wscript_build
+index e97c85d..a49fbb9 100644
+--- a/source4/dns_server/wscript_build
++++ b/source4/dns_server/wscript_build
+@@ -4,7 +4,7 @@ bld.SAMBA_LIBRARY('dnsserver_common',
          source='dnsserver_common.c',
          deps='samba-util samba-errors ldbsamba clidns',
          private_library=True,

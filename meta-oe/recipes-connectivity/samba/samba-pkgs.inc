@@ -4,7 +4,7 @@ PACKAGES =+ "smbclient ${PN}-common \
              ${PN}-admin ${PN}-utils \
              ${PN}-ldb-tools ${PN}-tdb-tools ${PN}-pdb-tools registry-tools \
              winbind ${PN}-ad-dc ${PN}-ctdb-tests \
-             ${PN}-python ${PN}-pidl ${PN}-dsdb-modules ${PN}-testsuite \
+             ${PN}-python3 ${PN}-pidl ${PN}-dsdb-modules ${PN}-testsuite \
             "
 
 # remove default added RDEPENDS on perl
@@ -80,6 +80,7 @@ FILES_${PN} = " \
                ${libdir}/charset/*.so \
                ${libdir}/*.dat \
                ${libdir}/auth/*.so \
+               ${libdir}/vfs/widelinks.so \
                ${bindir}/smbpasswd \
                ${bindir}/testparm \
                \
@@ -94,6 +95,13 @@ FILES_${PN}-admin = "${bindir}/net \
                      ${bindir}/sharesec \
                      ${bindir}/smbcacls \
                      ${bindir}/smbcquotas \
+                     ${bindir}/dumpmscat \
+                     ${bindir}/dbwrap_tool \
+                     ${bindir}/tdbbackup \
+                     ${bindir}/tdbdump \
+                     ${bindir}/tdbrestore \
+                     ${bindir}/mdfind \
+                     ${bindir}/tdbtool \
                      ${sbindir}/eventlogadm \
                     "
 
@@ -110,7 +118,8 @@ FILES_${PN}-utils = "${bindir}/cifsdd \
 FILES_${PN}-ad-dc = "${sbindir}/samba \
                      ${systemd_system_unitdir}/samba.service \
                      ${libdir}/krb5/plugins/kdb/samba.so \
-"
+                    "
+
 RDEPENDS_${PN}-ad-dc += "samba krb5-kdc"
 
 FILES_registry-tools = "${bindir}/regdiff \
@@ -125,6 +134,7 @@ FILES_${PN}-ldb-tools = "${bindir}/ldbadd \
                          ${bindir}/ldbrename \
                          ${bindir}/ldbsearch \
                          ${bindir}/oLschema2ldif \
+                         ${libdir}/ldb/*.so \
                         "
 
 FILES_${PN}-pdb-tools = "${bindir}/pdbedit"
@@ -134,8 +144,8 @@ FILES_winbind = "${sbindir}/winbindd \
                  ${bindir}/ntlm_auth \
                  ${libdir}/samba/idmap \
                  ${libdir}/samba/nss_info \
-                 ${libdir}/samba/krb5/winbind_krb5_locator.so \
-                 ${libdir}/samba/krb5/winbind_krb5_localauth.so \
+                 ${libdir}/krb5/winbind_krb5_locator.so \
+                 ${libdir}/krb5/async_dns_krb5_locator.so \
                  ${sysconfdir}/init.d/winbind \
                  ${systemd_system_unitdir}/winbind.service \
                 "
@@ -156,7 +166,7 @@ FILES_${PN}-testsuite = "${bindir}/gentest \
                          ${bindir}/ndrdump \
                          ${bindir}/smbtorture"
 
-FILES_${PN}-python = "${PYTHON_SITEPACKAGES_DIR}"
+FILES_${PN}-python3 = "${PYTHON_SITEPACKAGES_DIR}"
 
 RDEPENDS_${PN}-pidl_append = " perl"
 FILES_${PN}-pidl = "${bindir}/pidl ${datadir}/perl5/Parse"

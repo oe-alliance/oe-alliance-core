@@ -1,6 +1,7 @@
-diff -Nur a/lib/replace/test/testsuite.c b/lib/replace/test/testsuite.c
---- a/lib/replace/test/testsuite.c	2019-11-02 14:35:36.837722222 +0100
-+++ b/lib/replace/test/testsuite.c	2019-11-02 15:42:04.368135541 +0100
+diff --git a/lib/replace/tests/testsuite.c b/lib/replace/tests/testsuite.c
+index 2ece953..fa6999b 100644
+--- a/lib/replace/tests/testsuite.c
++++ b/lib/replace/tests/testsuite.c
 @@ -31,9 +31,9 @@
    we include all the system/ include files here so that libreplace tests
    them in the build farm

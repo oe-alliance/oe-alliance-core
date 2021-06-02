@@ -25,6 +25,9 @@ export WAF_NO_PREFORK="yes"
 # to help generate the cross answer when adding new board support.
 CROSS_METHOD ?= "answer"
 
+export COMPILE_ET="${STAGING_DIR_NATIVE}${bindir}/compile_et"
+export ASN1_COMPILE="${STAGING_DIR_NATIVE}${bindir}/asn1_compile"
+
 do_configure() {
     perl -i -pe 's#lp_private_dir#lp_pid_directory#' ${S}/source3/lib/messages.c
 
@@ -57,8 +60,8 @@ do_configure() {
     export STAGING_INCDIR=${STAGING_INCDIR}
     export PYTHONPATH=${STAGING_DIR_HOST}${PYTHON_SITEPACKAGES_DIR}
 
-#    CONFIG_CMD="./configure ${CONFIGUREOPTS} ${EXTRA_OECONF} --cross-compile"
-    CONFIG_CMD="./buildtools/bin/waf configure ${CONFIGUREOPTS} ${EXTRA_OECONF} --cross-compile"
+    CONFIG_CMD="./configure ${CONFIGUREOPTS} ${EXTRA_OECONF} --cross-compile"
+#    CONFIG_CMD="./buildtools/bin/waf configure ${CONFIGUREOPTS} ${EXTRA_OECONF} --cross-compile"
     if [ "${CROSS_METHOD}" = "answer" ]; then
         ${CONFIG_CMD} --cross-answers="${CROSS_ANSWERS}"
     elif [ "${CROSS_METHOD}" = "exec" ]; then

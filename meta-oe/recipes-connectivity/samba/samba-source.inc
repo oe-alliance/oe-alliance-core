@@ -1,4 +1,4 @@
-PV="4.9.15"
+PV = "4.14.4"
 HOMEPAGE = "https://www.samba.org/"
 SECTION = "console/network"
 
@@ -14,26 +14,26 @@ ${SAMBA_MIRROR}    http://www.mirrorservice.org/sites/ftp.samba.org \n \
 "
 
 FILESEXTRAPATHS_prepend := "${THISDIR}/samba:"
-
 SRC_URI = "${SAMBA_MIRROR}/stable/samba-${PV}.tar.gz \
-           file://001-samba-4.9.15-pam.patch \
-           file://002-dnsserver-4.9.15.patch \
+           file://001-samba-4.14-pam.patch \
+           file://002-dnsserver-4.14.patch \
            file://010-source3-msgsock-nvram-fix.patch \
            file://011-source4-msgsock-nvram-fix.patch \
            file://101-do-not-check-xsltproc-manpages.patch \
-           file://102-samba-4.9.15-unbundle-libbsd.patch \
+           file://102-samba-4.14-unbundle-libbsd.patch \
            file://103-tmsize-overflow-fix.patch \
            file://201-add-config-option-without-valgrind.patch \
-           file://202-iconv-4.9.15.patch \
-           file://203-netdb_defines.patch \
-           file://206-lib-replace-wscript-Avoid-generating-nested-main-fun.patch \
+           file://202-samba-4.14-unbundle-icu.patch \
+           file://203-netdb-defines.patch \
            file://207-glibc_only.patch \
            file://208-talloc_old_kernel_fix.patch \
-           file://210-skip-faulty-ldb_match_test.patch \
            file://300-Revert-pam_smbpass-REMOVE-this-PAM-module.patch \
            file://301-Revert-source3-wscript-remove-pam_smbpass-option-as-it-was-removed.patch \
            file://302-dynamically-create-a-samba-account-if-needed.patch \
-           file://heimdal_build_fix.patch \
+           file://400-samba-4.14-remove-getpwent_r.patch \
+           file://401-cmocka-uintptr_t.patch \
+           file://402-samba-fix-musl-lib-without-innetgr.patch \
+           file://404-fix-finding-tools-heimdal-embedded.patch \
            file://smb.conf \
            file://smb-user.conf \
            file://smb-branding.conf \
@@ -46,17 +46,12 @@ SRC_URI = "${SAMBA_MIRROR}/stable/samba-${PV}.tar.gz \
            file://smbpasswd \
            file://volatiles.03_samba \
            "
-SRC_URI_append_libc-musl = " \
-           file://400-samba-4.10.10-remove-getpwent_r.patch \
-           file://401-cmocka-uintptr_t.patch \
-           file://402-samba-fix-musl-lib-without-innetgr.patch \
-          "
 
 SRC_URI_append_sh4 = " \
            file://209-strtoull.patch \
           "
 
-SRC_URI[md5sum] = "57510c96714fa8ad0dc9f25fa458c7d1"
-SRC_URI[sha256sum] = "377102b80b97941bf0d131b828cae8415190e5bdd2928c2e2c954e29f1904496"
+SRC_URI[md5sum] = "171629ad42b4b303107e8b0fff942a1f"
+SRC_URI[sha256sum] = "89af092a0b00f5354ed287f0aa37b8c2cf9ba2ce67ea6464192e2c18528f89b9"
 
-UPSTREAM_CHECK_REGEX = "samba\-(?P<pver>4\.9(\.\d+)+).tar.gz"
+UPSTREAM_CHECK_REGEX = "samba\-(?P<pver>4\.14(\.\d+)+).tar.gz"

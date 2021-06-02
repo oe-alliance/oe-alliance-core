@@ -12,18 +12,18 @@ This reverts commit 21d0082169bb61417aa7a564050f930808764ac8.
  1 file changed, 4 insertions(+)
 
 diff --git a/source3/wscript b/source3/wscript
-index e8a1a1a..b9915e4 100644
+index fee8135..ef709ff 100644
 --- a/source3/wscript
 +++ b/source3/wscript
-@@ -43,6 +43,7 @@ def set_options(opt):
-     opt.SAMBA3_ADD_OPTION('cups', with_name="enable", without_name="disable")
-     opt.SAMBA3_ADD_OPTION('iprint', with_name="enable", without_name="disable")
-     opt.SAMBA3_ADD_OPTION('pam')
-+    opt.SAMBA3_ADD_OPTION('pam_smbpass')
-     opt.SAMBA3_ADD_OPTION('quotas')
-     opt.SAMBA3_ADD_OPTION('sendfile-support')
-     opt.SAMBA3_ADD_OPTION('utmp')
-@@ -931,6 +932,9 @@ int i; i = PAM_RADIO_TYPE;
+@@ -67,6 +67,7 @@ def options(opt):
+     opt.samba_add_onoff_option('cups', with_name="enable", without_name="disable")
+     opt.samba_add_onoff_option('iprint', with_name="enable", without_name="disable")
+     opt.samba_add_onoff_option('pam')
++    opt.samba_add_onoff_option('pam_smbpass')
+     opt.samba_add_onoff_option('quotas', default=None)
+     opt.samba_add_onoff_option('sendfile-support', default=None)
+     opt.samba_add_onoff_option('utmp')
+@@ -973,6 +974,9 @@ int i; i = PAM_RADIO_TYPE;
          conf.undefine('HAVE_PAM_PAM_APPL_H')
  
  

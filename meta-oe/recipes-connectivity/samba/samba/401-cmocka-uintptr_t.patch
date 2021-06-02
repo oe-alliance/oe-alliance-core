@@ -21,10 +21,11 @@ Signed-off-by: Andrea Adami <andrea.adami@gmail.com>
  third_party/cmocka/cmocka.h | 7 +++----
  1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff -Nur a/third_party/cmocka/cmocka.h b/third_party/cmocka/cmocka.h
---- a/third_party/cmocka/cmocka.h	2019-11-02 14:35:37.109716122 +0100
-+++ b/third_party/cmocka/cmocka.h	2019-11-02 14:50:45.561341705 +0100
-@@ -111,7 +111,7 @@
+diff --git a/third_party/cmocka/cmocka.h b/third_party/cmocka/cmocka.h
+index e6861c8..238201d 100644
+--- a/third_party/cmocka/cmocka.h
++++ b/third_party/cmocka/cmocka.h
+@@ -111,7 +111,7 @@ typedef uintmax_t LargestIntegralType;
      ((LargestIntegralType)(value))
  
  /* Smallest integral type capable of holding a pointer. */
@@ -33,7 +34,7 @@ diff -Nur a/third_party/cmocka/cmocka.h b/third_party/cmocka/cmocka.h
  # if defined(_WIN32)
      /* WIN32 is an ILP32 platform */
      typedef unsigned int uintptr_t;
-@@ -135,9 +135,8 @@
+@@ -135,9 +135,8 @@ typedef uintmax_t LargestIntegralType;
  #  endif /* __WORDSIZE */
  # endif /* _WIN32 */
  

@@ -11,10 +11,11 @@ Signed-off-by: Changqing Li <changqing.li@windriver.com>
  source3/auth/user_util.c | 2 +-
  2 file changed, 2 insertion(+), 2 deletion(-)
 
-diff -Nur a/lib/util/access.c b/lib/util/access.c
---- a/lib/util/access.c	2019-11-02 14:35:36.849721952 +0100
-+++ b/lib/util/access.c	2019-11-02 14:52:14.567345111 +0100
-@@ -112,7 +112,7 @@
+diff --git a/lib/util/access.c b/lib/util/access.c
+index e02117f..be2158e 100644
+--- a/lib/util/access.c
++++ b/lib/util/access.c
+@@ -119,7 +119,7 @@ static bool string_match(const char *tok,const char *s)
  			return true;
  		}
  	} else if (tok[0] == '@') { /* netgroup: look it up */
@@ -23,10 +24,11 @@ diff -Nur a/lib/util/access.c b/lib/util/access.c
  		DATA_BLOB tmp;
  		char *mydomain = NULL;
  		char *hostname = NULL;
-diff -Nur a/source3/auth/user_util.c b/source3/auth/user_util.c
---- a/source3/auth/user_util.c	2019-11-02 14:35:36.865721594 +0100
-+++ b/source3/auth/user_util.c	2019-11-02 14:52:14.567345111 +0100
-@@ -148,7 +148,7 @@
+diff --git a/source3/auth/user_util.c b/source3/auth/user_util.c
+index f4bdd2d..a891ac3 100644
+--- a/source3/auth/user_util.c
++++ b/source3/auth/user_util.c
+@@ -148,7 +148,7 @@ static void store_map_in_gencache(TALLOC_CTX *ctx, const char *from, const char
  
  bool user_in_netgroup(TALLOC_CTX *ctx, const char *user, const char *ngname)
  {

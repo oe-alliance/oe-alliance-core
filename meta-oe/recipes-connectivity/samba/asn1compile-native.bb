@@ -2,12 +2,12 @@ require samba-source.inc
 
 S = "${WORKDIR}/samba-${PV}"
 
-inherit cpan-base perlnative pythonnative native
+inherit cpan-base perlnative python3native native
 
-#DEPENDS += "libxslt-native docbook-xsl-stylesheets-native e2fsprogs readline virtual/libiconv zlib popt 
-#DEPENDS += "pythonnative"
+#DEPENDS += "libxslt-native docbook-xsl-stylesheets-native e2fsprogs readline virtual/libiconv zlib popt"
+#DEPENDS += "python3native"
 
-DEPENDS += "e2fsprogs-native zlib-native readline-native"
+DEPENDS += "zlib-native readline-native gnutls-native perl-parse-yapp-native bison-native icu-native libtasn1-native"
 
 DEPENDS_append_libc-musl = " libtirpc"
 CFLAGS_append_libc-musl = " -I${STAGING_INCDIR}/tirpc"
@@ -42,11 +42,10 @@ EXTRA_OECONF += "--disable-cups \
                  --without-json \
                  --without-libarchive \
                  --disable-python --nopyc --nopyo \
-                 --disable-gnutls \
                  --without-dnsupdate \
                  --without-ads \
                  --without-ldap \
-                 --nonshared-binary=asn1_compile \
+                 --nonshared-binary=asn1_compile,compile_et \
                  --builtin-libraries=replace \
                  --with-static-modules=!DEFAULT,!FORCED \
                  --with-shared-modules=!DEFAULT,!FORCED \
@@ -86,10 +85,11 @@ do_configure() {
 }
 
 do_compile () {
-    ./buildtools/bin/waf build --targets=asn1_compile
+    ./buildtools/bin/waf build --targets=asn1_compile,compile_et
 }
 
 do_install() {
     install -d ${D}${bindir}
-    install -m 0755 ${S}/bin/default/source4/heimdal_build/asn1_compile ${D}${bindir}
+    install -m 0755 ${S}/bin/default/source4/heimdal_build/asn1_compile ${D}${bindir}/asn1_compile
+    install -m 0755 ${S}/bin/default/source4/heimdal_build/compile_et ${D}${bindir}/compile_et
 }

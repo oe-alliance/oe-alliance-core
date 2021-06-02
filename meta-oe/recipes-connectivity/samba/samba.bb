@@ -1,10 +1,10 @@
-PR = "r3"
+PR = "r1"
 
 require samba-source.inc
 
-inherit cpan-base perlnative pythonnative
+inherit cpan-base perlnative python3native
 
-DEPENDS += "qemu-native libxslt-native docbook-xsl-stylesheets-native e2fsprogs readline virtual/libiconv zlib popt libpam python asn1compile-native"
+DEPENDS += "asn1compile-native perl-parse-yapp-native qemu-native libxslt-native docbook-xsl-stylesheets-native e2fsprogs readline zlib popt gnutls libtalloc libtasn1"
 
 inherit features_check
 REQUIRED_DISTRO_FEATURES = "pam"
@@ -13,22 +13,23 @@ DEPENDS_append_libc-musl = " libtirpc"
 CFLAGS_append_libc-musl = " -I${STAGING_INCDIR}/tirpc"
 LDFLAGS_append_libc-musl = " -ltirpc"
 
-PACKAGECONFIG ??= "${@bb.utils.filter('DISTRO_FEATURES', 'systemd zeroconf', d)} netbios"
+PACKAGECONFIG ?= "${@bb.utils.filter('DISTRO_FEATURES', 'systemd zeroconf', d)} netbios"
 
 # with ad-dc:
 #    --bundled-libraries=talloc,tevent,tevent-util,texpect,tdb,ldb,tdr,cmocka,replace,pytalloc-util,pyldb-util,roken,wind,hx509,asn1,heimbase,hcrypto,krb5,gssapi,heimntlm,hdb,kdc,NONE 
 
 PACKAGECONFIG[ad-dc] = " \
-    --enable-gnutls --with-dnsupdate --with-ads --with-ldap \
+    -with-dnsupdate --with-ads --with-ldap \
     , \
     --without-ad-dc --without-json --without-libarchive --disable-python --nopyc --nopyo \
-    --disable-gnutls --without-dnsupdate --without-ads --without-ldap \
+    --without-dnsupdate --without-ads --without-ldap \
     , \
     gnutls libarchive openldap \
    "
 
 #without ad-dc:
 #    --bundled-libraries=talloc,tevent,tevent-util,texpect,tdb,ldb,tdr,cmocka,replace,roken,wind,hx509,asn1,heimbase,hcrypto,krb5,gssapi,heimntlm,hdb,kdc,NONE
+
 PACKAGECONFIG[acl] = "--with-acl-support,--without-acl-support,acl"
 PACKAGECONFIG[systemd] = "--with-systemd,--without-systemd,systemd"
 PACKAGECONFIG[zeroconf] = "--enable-avahi,--disable-avahi,avahi"
@@ -37,24 +38,21 @@ PACKAGECONFIG[winbind] = "--with-winbind,--without-winbind,"
 PACKAGECONFIG[valgrind] = ",--without-valgrind,valgrind"
 PACKAGECONFIG[libunwind] = ", , libunwind"
 PACKAGECONFIG[lmdb] = ",--without-ldb-lmdb,lmdb,"
+PACKAGECONFIG[netbios] = " , , "
 
-SAMBA4_AUTH_MODULES=""
-SAMBA4_IDMAP_MODULES=""
-SAMBA4_PDB_MODULES=""
-SAMBA4_VFS_MODULES=""
-SAMBA4_MODULES="${SAMBA4_AUTH_MODULES},${SAMBA4_IDMAP_MODULES},${SAMBA4_PDB_MODULES}"
-
-SAMBA4_AUTH_MODULES_STATIC="auth_builtin,auth_sam,auth_unix,auth_script"
-SAMBA4_IDMAP_MODULES_STATIC=""
+SAMBA4_AUTH_MODULES_STATIC="auth_builtin,auth_sam,auth_unix"
+SAMBA4_AUTH_MODULES_SHARED="auth_script"
 SAMBA4_PDB_MODULES_STATIC="pdb_smbpasswd,pdb_tdbsam"
 SAMBA4_VFS_MODULES_STATIC="vfs_default"
+SAMBA4_VFS_MODULES_SHARED="vfs_widelinks"
 SAMBA4_MODULES_STATIC="${SAMBA4_AUTH_MODULES_STATIC},${SAMBA4_PDB_MODULES_STATIC},${SAMBA4_VFS_MODULES_STATIC}"
+SAMBA4_MODULES_SHARED="${SAMBA4_AUTH_MODULES_SHARED},${SAMBA4_VFS_MODULES_SHARED}"
 
 # These libraries are supposed to replace others supplied by packages, but decorate the names of
 # .so files so there will not be a conflict.  This is not done consistantly, so be very careful
 # when adding to this list.
 #
-#SAMBA4_LIBS="talloc,tevent,tevent-util,texpect,tdb,ldb,tdr,cmocka,replace,roken,wind,hx509,asn1,heimbase,hcrypto,krb5,gssapi,heimntlm,hdb,kdc,NONE"
+#SAMBA4_LIBS="tevent,tevent-util,texpect,tdb,ldb,tdr,cmocka,replace,roken,wind,hx509,asn1,heimbase,hcrypto,krb5,gssapi,heimntlm,hdb,kdc,NONE"
 
 EXTRA_OECONF += "--disable-cups \
                  --disable-iprint \
@@ -64,9 +62,9 @@ EXTRA_OECONF += "--disable-cups \
                  --disable-rpath \
                  --disable-rpath-install \
                  --disable-rpath-private-install \
+                 --disable-spotlight \
                  --enable-fhs \
                  --without-automount \
-                 --without-iconv \
                  --without-lttng \
                  --without-ntvfs-fileserver \
                  --without-utmp \
@@ -75,28 +73,26 @@ EXTRA_OECONF += "--disable-cups \
                  --without-gettext \
                  --without-regedit \
                  --without-gpgme \
+                 --without-pie \
                  --with-configdir=${sysconfdir}/samba \
                  --with-privatedir=${sysconfdir}/samba/private \
                  --with-piddir=${localstatedir}/run \
                  --with-lockdir=${localstatedir}/lib/samba \
                  --with-cachedir=${localstatedir}/lib/samba \
-                 --with-sockets-dir=${localstatedir}/run \
+                 --with-sockets-dir=${localstatedir}/run/samba \
                  --with-logfilebase=${localstatedir}/log/samba \
                  --with-modulesdir=${libdir} \
-                 --bundled-libraries=talloc,tevent,tevent-util,texpect,tdb,ldb,tdr,cmocka,replace,roken,wind,hx509,asn1,heimbase,hcrypto,krb5,gssapi,heimntlm,hdb,kdc,NONE \
                  --with-static-modules=${SAMBA4_MODULES_STATIC},!DEFAULT,!FORCED \
-                 --with-shared-modules=!DEFAULT,!FORCED \
-                 --builtin-libraries=talloc,tevent,tevent-util,texpect,tdb,ldb,tdr,cmocka \
-                 --private-libraries=talloc,tevent,tevent-util,texpect,tdb,ldb,tdr,cmocka,replace \
+                 --with-shared-modules=${SAMBA4_MODULES_SHARED},!DEFAULT,!FORCED \
+                 --bundled-libraries=NONE,tevent,tevent-util,texpect,tdb,ldb,tdr,cmocka,replace,roken,wind,hx509,asn1,heimbase,hcrypto,krb5,gssapi,heimntlm,hdb,kdc,!asn1_compile,!compile_et \
+                 --private-libraries=tevent,tevent-util,texpect,tdb,ldb,tdr,cmocka,replace \
                  --with-pam --with-pammodulesdir=${base_libdir}/security \
                  --with-pam_smbpass \
                  --accel-aes=none \
+                 --nopyc --nopyo \
                 "
 
 LDFLAGS += "-Wl,-z,relro,-z,now ${@bb.utils.contains('DISTRO_FEATURES', 'ld-is-gold', ' -fuse-ld=bfd ', '', d)}"
-
-# avoids build breaks when using no-static-libs.inc
-#DISABLE_STATIC = ""
 
 CONFIGUREOPTS = " --prefix=${prefix} \
                   --bindir=${bindir} \
@@ -123,13 +119,11 @@ do_configure_prepend () {
     sed '/"iso8601":/d' ${S}/third_party/wscript
 }
 
-
 do_compile[progress] = "outof:^\[\s*(\d+)/\s*(\d+)\]\s+"
-# BUG: We need to use "waf install --targets=" otherwise a "make install" or "waf install" will retrigger a full recompile of all possible targets!
 
-# Yocto BUG: Yocto doesn't know D during compile and it kills it before do_install anyways
-# Workaround: Use some intermediate directory
-do_compile () {
+do_compile() {
+    sed -e '/#define HAVE_ICU_I18N 1/d' -e '/#define HAVE_LIBICUI.* 1/d' -i ${S}/bin/default/include/config.h
+
     # CONFIG_PACKAGE_samba4-server
     BUILD_TARGETS_SERVER=smbd/smbd,smbpasswd,testparm,smbstatus,smbcontrol,pamsmbpass
     # Optional server targets
@@ -152,22 +146,21 @@ do_compile () {
     # CONFIG_PACKAGE_samba4-utils
     BUILD_TARGETS_UTILS=smbtree,smbget,mvxattr,nmblookup,pdbedit
 
-    TARGETS=${SAMBA4_MODULES_STATIC},${SAMBA4_MODULES},$BUILD_TARGETS_SERVER,$BUILD_TARGETS_CLIENT,$BUILD_TARGETS_UTILS,$BUILD_TARGETS_ADMIN
+    TARGETS=$SAMBA4_MODULES_STATIC,$SAMBA4_MODULES,$BUILD_TARGETS_SERVER,$BUILD_TARGETS_CLIENT,$BUILD_TARGETS_UTILS,$BUILD_TARGETS_ADMIN
 
     # BUG: waf can not handle ",," in targets
     TARGETS=$(echo $TARGETS | sed s/,,*/,/g)
+    # remove leading comma
+    TARGETS=$(echo $TARGETS | sed 's/^,//')
 
-    rm -rf ${S}/../compiled || true
-    mkdir -p ${S}/../compiled || true
-    ./buildtools/bin/waf install ${@oe.utils.parallel_make_argument(d, '--jobs=%d', limit=64)} --destdir=${S}/../compiled --targets=$TARGETS
+    ./buildtools/bin/waf --targets=$TARGETS ${@oe.utils.parallel_make_argument(d, '--jobs=%d', limit=64)}
 }
 
 do_install() {
-    mkdir -p ${D}
-    cp -R --no-dereference --preserve=mode,timestamps,links,xattr ${S}/../compiled/* ${D}/ || true
+    oe_runmake install DESTDIR=${D}
 
     [[ -e ${D}/${libdir}/samba ]] && mv ${D}/${libdir}/samba/* ${D}/${libdir}/
-    [[ -e ${D}/${libdir}/samba ]] && rm -r ${D}/${libdir}/samba
+    [[ -e ${D}/${libdir}/samba ]] && rm -rf ${D}/${libdir}/samba
 
     for section in 1 5 7; do
         install -d ${D}${mandir}/man$section
@@ -196,7 +189,7 @@ do_install() {
     fi
 
     rm -rf ${D}/run ${D}${localstatedir}/run ${D}${localstatedir}/log
-    
+
     install -d ${D}${sysconfdir}/pam.d
     install -m 644 ${WORKDIR}/pam.samba ${D}${sysconfdir}/pam.d/samba
 
@@ -220,13 +213,13 @@ do_install() {
         if ${@bb.utils.contains('DISTRO_FEATURES_BACKFILL_CONSIDERED','sysvinit','true','false',d)}; then
             :
         else
-            rm ${D}${systemd_system_unitdir}/smb.service
-            rm ${D}${systemd_system_unitdir}/nmb.service
-            rm ${D}${systemd_system_unitdir}/samba.service
+            rm -f ${D}${systemd_system_unitdir}/smb.service
+            rm -f ${D}${systemd_system_unitdir}/nmb.service
+            rm -f ${D}${systemd_system_unitdir}/samba.service
         fi
     fi 
-    rm ${D}${sbindir}/samba-gpupdate || true
-    rm ${D}${bindir}/findsmb || true
+    rm -f ${D}${sbindir}/samba-gpupdate || true
+    rm -f ${D}${bindir}/findsmb || true
     rm -rf ${D}/var/lib/samba/bind-dns || true
 }
 

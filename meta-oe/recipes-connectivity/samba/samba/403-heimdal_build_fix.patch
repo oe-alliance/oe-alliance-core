@@ -47,22 +47,3 @@ index a6299ae..09208b5 100644
  #define closefrom rk_closefrom
  ROKEN_LIB_FUNCTION int ROKEN_LIB_CALL
  closefrom(int);
-diff --git a/source4/heimdal_build/config.h b/source4/heimdal_build/config.h
-index 85ac3ba..045980d 100644
---- a/source4/heimdal_build/config.h
-+++ b/source4/heimdal_build/config.h
-@@ -52,9 +52,4 @@
- /* lib/replace provides an XSI Compatable strerror_r so use that */
- #define STRERROR_R_PROTO_COMPATIBLE
-
--/* lib/replace provides a closefrom */
--#ifndef HAVE_CLOSEFROM
--#define HAVE_CLOSEFROM 1
--#endif
--
- #endif
-
--- 
-2.1.4
-
-

@@ -8,10 +8,11 @@ Signed-off-by: Changqing Li <changqing.li@windriver.com>
  ctdb/tests/src/test_mutex_raw.c | 2 ++
  1 file changed, 2 insertions(+)
 
-diff -Nur a/ctdb/tests/src/test_mutex_raw.c b/ctdb/tests/src/test_mutex_raw.c
---- a/ctdb/tests/src/test_mutex_raw.c	2019-11-02 14:35:36.949719710 +0100
-+++ b/ctdb/tests/src/test_mutex_raw.c	2019-11-02 14:53:43.697345661 +0100
-@@ -291,8 +291,10 @@
+diff --git a/ctdb/tests/src/test_mutex_raw.c b/ctdb/tests/src/test_mutex_raw.c
+index 926a525..814343f 100644
+--- a/ctdb/tests/src/test_mutex_raw.c
++++ b/ctdb/tests/src/test_mutex_raw.c
+@@ -291,8 +291,10 @@ int main(int argc, const char **argv)
  					"failed\n");
  				exit (EXIT_FAILURE);
  			}
