@@ -11,12 +11,12 @@ SRCREV = "${AUTOREV}"
 
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
-PR = "r0"
+PR = "r1"
 
-SRC_URI = "git://github.com/e2iplayer/hlsdl.git;protocol=git \
+SRC_URI = "git://github.com/oe-mirrors/e2iplayer-deps.git;protocol=git \
         file://fix-build-with-fno-common.patch"
 
-S = "${WORKDIR}/git"
+S = "${WORKDIR}/git/hlsdl"
 
 SOURCE_FILES = "src/main.c"
 SOURCE_FILES =+ "src/aes_openssl.c"
