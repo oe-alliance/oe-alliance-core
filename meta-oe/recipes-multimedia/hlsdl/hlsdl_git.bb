@@ -13,8 +13,7 @@ PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
 PR = "r1"
 
-SRC_URI = "git://github.com/oe-mirrors/e2iplayer-deps.git;protocol=git \
-        file://fix-build-with-fno-common.patch"
+SRC_URI = "git://github.com/oe-mirrors/e2iplayer-deps.git;protocol=git"
 
 S = "${WORKDIR}/git/hlsdl"
 
