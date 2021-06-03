@@ -5,6 +5,6 @@ BBCLASSEXTEND = "native"
 RDPEPENDS_${PN} += " iptables "
 SRC_URI = "git://github.com/fail2ban/fail2ban.git;branch=master"
 S = "${WORKDIR}/git"
-inherit setuptools
+inherit setuptools3
 
 FILES_${PN} += "${sysconfdir}/* ${localstatedir}/* "
