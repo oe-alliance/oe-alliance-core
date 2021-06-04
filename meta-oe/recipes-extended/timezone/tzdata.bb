@@ -21,11 +21,11 @@ TZONES= "africa antarctica asia australasia europe northamerica southamerica  \
 
 do_compile () {
         for zone in ${TZONES}; do \
-            ${STAGING_BINDIR_NATIVE}/zic -d ${WORKDIR}${datadir}/zoneinfo -L /dev/null \
+            ${STAGING_BINDIR_NATIVE}/zic -b fat -d ${WORKDIR}${datadir}/zoneinfo -L /dev/null \
                 ${S}/${zone} ; \
-            ${STAGING_BINDIR_NATIVE}/zic -d ${WORKDIR}${datadir}/zoneinfo/posix -L /dev/null \
+            ${STAGING_BINDIR_NATIVE}/zic -b fat -d ${WORKDIR}${datadir}/zoneinfo/posix -L /dev/null \
                 ${S}/${zone} ; \
-            ${STAGING_BINDIR_NATIVE}/zic -d ${WORKDIR}${datadir}/zoneinfo/right -L ${S}/leapseconds \
+            ${STAGING_BINDIR_NATIVE}/zic -b fat -d ${WORKDIR}${datadir}/zoneinfo/right -L ${S}/leapseconds \
                 ${S}/${zone} ; \
         done
 }
