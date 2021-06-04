@@ -34,6 +34,7 @@ SOURCE_FILES1 =+ "src/expat-2.2.0/xmltok.c"
 SOURCE_FILES1 =+ "src/expat-2.2.0/xmltok_impl.c"
 SOURCE_FILES1 =+ "src/expat-2.2.0/xmltok_ns.c"
 SOURCE_FILES1 =+ "src/ttml/src/ttmlparser.c"
+SOURCE_FILES1 =+ "src/html/src/htmlcleaner.c"
 
 S2 = "${WORKDIR}/git/hlsdl"
 SOURCE_FILES2 = "src/main.c"
@@ -52,7 +53,7 @@ SOURCE_FILES4 = "src/cmdwrap.c"
 
 do_compile() {
     cd ${S1}
-    ${CC} ${SOURCE_FILES1} -shared -pipe -D_FILE_OFFSET_BITS=64 -D_LARGEFILE64_SOURCE -D_LARGEFILE_SOURCE -D_GNU_SOURCE=1 -DNDEBUG -Os -shared -Wall -Wstrict-prototypes -fPIC -DMAJOR_VERSION=0 -DMINOR_VERSION=2 -DHAVE_EXPAT_CONFIG_H -I${S1}/src -I${S1}/src/vlc/include -I${S1}/src/ffmpeg/include -I${S1}/src/expat-2.2.0 -I${S1}/src/ttml/include -I${D}/${libdir} -I${D}/${includedir} -I${STAGING_DIR_TARGET}/${includedir}/${PYTHON_DIR} -lm -l${PYTHON_DIR} -o _subparser.so -Wl,--gc-sections ${LDFLAGS}
+    ${CC} ${SOURCE_FILES1} -shared -pipe -D_FILE_OFFSET_BITS=64 -D_LARGEFILE64_SOURCE -D_LARGEFILE_SOURCE -D_GNU_SOURCE=1 -DNDEBUG -Os -shared -Wall -Wstrict-prototypes -fPIC -DMAJOR_VERSION=0 -DMINOR_VERSION=2 -DHAVE_EXPAT_CONFIG_H -I${S1}/src -I${S1}/src/vlc/include -I${S1}/src/ffmpeg/include -I${S1}/src/expat-2.2.0 -I${S1}/src/ttml/include -I${S1}/src/html/include -I${D}/${libdir} -I${D}/${includedir} -I${STAGING_DIR_TARGET}/${includedir}/${PYTHON_DIR} -lm -l${PYTHON_DIR} -o _subparser.so -Wl,--gc-sections ${LDFLAGS}
     cd ${S2}
     ${CC} ${SOURCE_FILES2} -D_FILE_OFFSET_BITS=64 -D_LARGEFILE64_SOURCE -D_LARGEFILE_SOURCE -D_GNU_SOURCE=1 -DWITH_FFMPEG -Wall -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -Wno-deprecated-declarations -Wshadow -Wpointer-arith -Wcast-qual -Wsign-compare -DPREFIX="/usr" -std=gnu99 -I${S2}/src -I${D}/${libdir} -I${D}/${includedir} -lrt -lpthread -lz -lssl -lcrypto -lcurl -lavcodec -lavformat -lavutil -o hlsdl ${LDFLAGS}
     cd ${S3}
