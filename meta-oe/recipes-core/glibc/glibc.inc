@@ -14,7 +14,7 @@ python () {
     if opt_effective == "-O0":
         bb.fatal("%s can't be built with %s, try -O1 instead" % (d.getVar('PN'), opt_effective))
     if opt_effective in ("-O", "-O1", "-Os"):
-        bb.note("%s doesn't build cleanly with %s, adding -Wno-error to SELECTED_OPTIMIZATION" % (d.getVar('PN'), opt_effective))
+        # bb.note("%s doesn't build cleanly with %s, adding -Wno-error to SELECTED_OPTIMIZATION" % (d.getVar('PN'), opt_effective))
         d.appendVar("SELECTED_OPTIMIZATION", " -Wno-error")
 }
 
