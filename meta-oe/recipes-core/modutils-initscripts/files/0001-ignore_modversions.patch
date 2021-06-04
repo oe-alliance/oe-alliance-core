@@ -7,5 +7,5 @@
 -LOAD_MODULE=modprobe
 +LOAD_MODULE="modprobe --force-modversion"
  [ -f /proc/modules ] || exit 0
+ [ -d /lib/modules/`uname -r` ] || exit 0
  
- # Test if modules.dep exists and has a size greater than zero
