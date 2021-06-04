@@ -36,9 +36,9 @@ case "$1" in
     ;;
   stop)
     echo -n "Stopping Samba: smbd"
-    start-stop-daemon --stop --quiet --pidfile /var/run/samba/smbd.pid
+    start-stop-daemon --stop --quiet --pidfile /var/run/smbd.pid
     echo -n " nmbd"
-    start-stop-daemon --stop --quiet --pidfile /var/run/samba/nmbd.pid
+    start-stop-daemon --stop --quiet --pidfile /var/run/nmbd.pid
     echo -n " wsdd"
     start-stop-daemon --stop --quiet --pidfile /var/run/wsdd.pid
     echo "."
@@ -56,9 +56,9 @@ case "$1" in
     ;;
   restart)
     echo -n "Stopping Samba: smbd"
-    start-stop-daemon --stop --quiet --pidfile /var/run/samba/smbd.pid
+    start-stop-daemon --stop --quiet --pidfile /var/run/smbd.pid
     echo -n " nmbd"
-    start-stop-daemon --stop --quiet --pidfile /var/run/samba/nmbd.pid
+    start-stop-daemon --stop --quiet --pidfile /var/run/nmbd.pid
     echo -n " wsdd"
     start-stop-daemon --stop --quiet --pidfile /var/run/wsdd.pid
     echo ""
