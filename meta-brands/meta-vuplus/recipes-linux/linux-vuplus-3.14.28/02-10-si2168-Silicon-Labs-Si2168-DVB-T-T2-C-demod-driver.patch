@@ -1,8 +1,8 @@
 diff --git a/drivers/media/dvb-frontends/Kconfig b/drivers/media/dvb-frontends/Kconfig
-index 025fc54..1469d44 100644
+index dd12a1eb..40dddccb 100644
 --- a/drivers/media/dvb-frontends/Kconfig
 +++ b/drivers/media/dvb-frontends/Kconfig
-@@ -446,5 +446,13 @@ config DVB_RTL2832
+@@ -446,6 +446,14 @@ config DVB_RTL2832
  	help
  	  Say Y when you want to support this frontend.
  
@@ -16,8 +16,9 @@ index 025fc54..1469d44 100644
 +
  comment "DVB-C (cable) frontends"
  	depends on DVB_CORE
+ 
 diff --git a/drivers/media/dvb-frontends/Makefile b/drivers/media/dvb-frontends/Makefile
-index 282aba2..dda0bee 100644
+index 0c75a6aa..dc848337 100644
 --- a/drivers/media/dvb-frontends/Makefile
 +++ b/drivers/media/dvb-frontends/Makefile
 @@ -78,6 +78,7 @@ obj-$(CONFIG_DVB_AF9013) += af9013.o
@@ -30,7 +31,7 @@ index 282aba2..dda0bee 100644
  obj-$(CONFIG_DVB_S921) += s921.o
 diff --git a/drivers/media/dvb-frontends/si2168.c b/drivers/media/dvb-frontends/si2168.c
 new file mode 100644
-index 0000000..eef4e45
+index 00000000..9f44331c
 --- /dev/null
 +++ b/drivers/media/dvb-frontends/si2168.c
 @@ -0,0 +1,728 @@
@@ -764,7 +765,7 @@ index 0000000..eef4e45
 +MODULE_FIRMWARE(SI2168_B40_FIRMWARE);
 diff --git a/drivers/media/dvb-frontends/si2168.h b/drivers/media/dvb-frontends/si2168.h
 new file mode 100644
-index 0000000..5a801aa
+index 00000000..12d47fd2
 --- /dev/null
 +++ b/drivers/media/dvb-frontends/si2168.h
 @@ -0,0 +1,33 @@
@@ -803,7 +804,7 @@ index 0000000..5a801aa
 +#endif
 diff --git a/drivers/media/dvb-frontends/si2168_priv.h b/drivers/media/dvb-frontends/si2168_priv.h
 new file mode 100644
-index 0000000..3646324
+index 00000000..fc7e07a1
 --- /dev/null
 +++ b/drivers/media/dvb-frontends/si2168_priv.h
 @@ -0,0 +1,36 @@

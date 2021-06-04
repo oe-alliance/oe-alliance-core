@@ -1,8 +1,8 @@
 diff --git a/drivers/media/tuners/Kconfig b/drivers/media/tuners/Kconfig
-index a128488..22b6b8b 100644
+index ff517a9e..1dd601ff 100644
 --- a/drivers/media/tuners/Kconfig
 +++ b/drivers/media/tuners/Kconfig
-@@ -222,6 +222,13 @@ config MEDIA_TUNER_TUA9001
+@@ -236,6 +236,13 @@ config MEDIA_TUNER_TUA9001
  	help
  	  Infineon TUA 9001 silicon tuner driver.
  
@@ -17,19 +17,20 @@ index a128488..22b6b8b 100644
  	tristate "ITE Tech IT913x silicon tuner"
  	depends on MEDIA_SUPPORT && I2C
 diff --git a/drivers/media/tuners/Makefile b/drivers/media/tuners/Makefile
-index efe82a9..a6ff0c6 100644
+index 1c142545..869740ba 100644
 --- a/drivers/media/tuners/Makefile
 +++ b/drivers/media/tuners/Makefile
-@@ -31,5 +31,6 @@ obj-$(CONFIG_MEDIA_TUNER_TDA18212) += tda18212.o
+@@ -32,6 +32,7 @@ obj-$(CONFIG_MEDIA_TUNER_TDA18212) += tda18212.o
  obj-$(CONFIG_MEDIA_TUNER_E4000) += e4000.o
  obj-$(CONFIG_MEDIA_TUNER_FC2580) += fc2580.o
  obj-$(CONFIG_MEDIA_TUNER_TUA9001) += tua9001.o
 +obj-$(CONFIG_MEDIA_TUNER_SI2157) += si2157.o
  obj-$(CONFIG_MEDIA_TUNER_M88TS2022) += m88ts2022.o
  obj-$(CONFIG_MEDIA_TUNER_FC0011) += fc0011.o
+ obj-$(CONFIG_MEDIA_TUNER_FC0012) += fc0012.o
 diff --git a/drivers/media/tuners/si2157.c b/drivers/media/tuners/si2157.c
 new file mode 100644
-index 0000000..953f2e3
+index 00000000..952dfd31
 --- /dev/null
 +++ b/drivers/media/tuners/si2157.c
 @@ -0,0 +1,401 @@
@@ -436,7 +437,7 @@ index 0000000..953f2e3
 +MODULE_FIRMWARE(SI2158_A20_FIRMWARE);
 diff --git a/drivers/media/tuners/si2157.h b/drivers/media/tuners/si2157.h
 new file mode 100644
-index 0000000..5de47d4
+index 00000000..1a8a7a90
 --- /dev/null
 +++ b/drivers/media/tuners/si2157.h
 @@ -0,0 +1,39 @@
@@ -481,7 +482,7 @@ index 0000000..5de47d4
 +#endif
 diff --git a/drivers/media/tuners/si2157_priv.h b/drivers/media/tuners/si2157_priv.h
 new file mode 100644
-index 0000000..6018851
+index 00000000..6d2aac45
 --- /dev/null
 +++ b/drivers/media/tuners/si2157_priv.h
 @@ -0,0 +1,43 @@

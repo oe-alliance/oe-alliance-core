@@ -1,8 +1,8 @@
 diff --git a/drivers/media/dvb-core/dvb-usb-ids.h b/drivers/media/dvb-core/dvb-usb-ids.h
-index e07a84e..80ab8d0 100644
+index cc0970fa..abfab2cc 100644
 --- a/drivers/media/dvb-core/dvb-usb-ids.h
 +++ b/drivers/media/dvb-core/dvb-usb-ids.h
-@@ -348,6 +348,8 @@
+@@ -354,6 +354,8 @@
  #define USB_PID_MSI_DIGI_VOX_MINI_III                   0x8807
  #define USB_PID_SONY_PLAYTV				0x0003
  #define USB_PID_MYGICA_D689				0xd811
@@ -12,23 +12,19 @@ index e07a84e..80ab8d0 100644
  #define USB_PID_ELGATO_EYETV_DTT			0x0021
  #define USB_PID_ELGATO_EYETV_DTT_2			0x003f
 diff --git a/drivers/media/usb/dvb-usb/cxusb.c b/drivers/media/usb/dvb-usb/cxusb.c
-index 356abb3..083714b 100644
+index a1c641e1..65a3e1ea 100644
 --- a/drivers/media/usb/dvb-usb/cxusb.c
 +++ b/drivers/media/usb/dvb-usb/cxusb.c
-@@ -40,8 +40,10 @@
- #include "max2165.h"
- #include "dib7000p.h"
+@@ -42,6 +42,8 @@
  #include "dib0070.h"
  #include "lgs8gxx.h"
  #include "atbm8830.h"
 +#include "si2168.h"
 +#include "si2157.h"
-
+ 
  /* Max transfer size done by I2C transfer functions */
  #define MAX_XFER_SIZE  64
---- a/drivers/media/usb/dvb-usb/cxusb.c
-+++ b/drivers/media/usb/dvb-usb/cxusb.c
-@@ -1270,4 +1270,74 @@ static int cxusb_mygica_d689_frontend_attach(struct dvb_usb_adapter *adap)
+@@ -1286,6 +1288,76 @@ static int cxusb_mygica_d689_frontend_attach(struct dvb_usb_adapter *adap)
  	return 0;
  }
  
@@ -103,27 +99,34 @@ index 356abb3..083714b 100644
 +}
 +
  /*
-@@ -1356,5 +1356,6 @@
+  * DViCO has shipped two devices with the same USB ID, but only one of them
+  * needs a firmware download.  Check the device class details to see if they
+@@ -1367,6 +1439,7 @@ static struct dvb_usb_device_properties cxusb_bluebird_nano2_needsfirmware_prope
  static struct dvb_usb_device_properties cxusb_aver_a868r_properties;
  static struct dvb_usb_device_properties cxusb_d680_dmb_properties;
  static struct dvb_usb_device_properties cxusb_mygica_d689_properties;
 +static struct dvb_usb_device_properties cxusb_mygica_t230_properties;
  
  static int cxusb_probe(struct usb_interface *intf,
-@@ -1386,4 +1386,6 @@ static int cxusb_probe(struct usb_interface *intf,
+ 		       const struct usb_device_id *id)
+@@ -1397,6 +1470,8 @@ static int cxusb_probe(struct usb_interface *intf,
  				     THIS_MODULE, NULL, adapter_nr) ||
  	    0 == dvb_usb_device_init(intf, &cxusb_mygica_d689_properties,
  				     THIS_MODULE, NULL, adapter_nr) ||
 +	    0 == dvb_usb_device_init(intf, &cxusb_mygica_t230_properties,
 +				     THIS_MODULE, NULL, adapter_nr) ||
  	    0)
-@@ -1415,4 +1415,5 @@ static struct usb_device_id cxusb_table [] = {
+ 		return 0;
+ 
+@@ -1424,6 +1499,7 @@ static struct usb_device_id cxusb_table [] = {
+ 	{ USB_DEVICE(USB_VID_DVICO, USB_PID_DVICO_BLUEBIRD_DUAL_4_REV_2) },
+ 	{ USB_DEVICE(USB_VID_CONEXANT, USB_PID_CONEXANT_D680_DMB) },
  	{ USB_DEVICE(USB_VID_CONEXANT, USB_PID_MYGICA_D689) },
 +	{ USB_DEVICE(USB_VID_CONEXANT, USB_PID_MYGICA_T230) },
  	{}		/* Terminating entry */
  };
  MODULE_DEVICE_TABLE (usb, cxusb_table);
-@@ -2059,6 +2059,59 @@ static struct dvb_usb_device_properties cxusb_mygica_d689_properties = {
+@@ -2070,6 +2146,59 @@ static struct dvb_usb_device_properties cxusb_mygica_d689_properties = {
  	}
  };
  
@@ -183,6 +186,8 @@ index 356abb3..083714b 100644
  static struct usb_driver cxusb_driver = {
  	.name		= "dvb_usb_cxusb",
  	.probe		= cxusb_probe,
+diff --git a/drivers/media/usb/dvb-usb/cxusb.h b/drivers/media/usb/dvb-usb/cxusb.h
+index 1a51eafd..527ff790 100644
 --- a/drivers/media/usb/dvb-usb/cxusb.h
 +++ b/drivers/media/usb/dvb-usb/cxusb.h
 @@ -30,6 +30,8 @@
