@@ -1,4 +1,4 @@
-PR = "r1"
+PR = "r2"
 
 require samba-source.inc
 
@@ -79,7 +79,7 @@ EXTRA_OECONF += "--disable-cups \
                  --with-piddir=${localstatedir}/run \
                  --with-lockdir=${localstatedir}/lib/samba \
                  --with-cachedir=${localstatedir}/lib/samba \
-                 --with-sockets-dir=${localstatedir}/run/samba \
+                 --with-sockets-dir=${localstatedir}/run \
                  --with-logfilebase=${localstatedir}/log/samba \
                  --with-modulesdir=${libdir} \
                  --with-static-modules=${SAMBA4_MODULES_STATIC},!DEFAULT,!FORCED \
