@@ -53,6 +53,7 @@ SRC_URI += "http://code.vuplus.com/download/release/kernel/stblinux-4.1-${KERNEL
     file://0002-log2-give-up-on-gcc-constant-optimizations.patch \
     file://0003-uaccess-dont-mark-register-as-const.patch \
     file://move-default-dialect-to-SMB3.patch \
+    file://fix-multiple-defs-yyloc.patch \
     "
 
 SRC_URI_append = "${@bb.utils.contains("MACHINE_FEATURES", "dvbproxy", " file://linux_dvb_adapter.patch;patch=1;pnum=1", "", d)}"
