@@ -91,7 +91,6 @@ RDEPENDS_${PN} = " \
     joe \
     lighttpd \
     livestreamersrv \
-    streamlink-27 \
     satpi \
     llmnr-query \
     mc \
@@ -153,6 +152,8 @@ RDEPENDS_${PN} = " \
     smartmontools \
     smbnetfs \
     sshpass \
+    streamlink-27 \
+    streamlinksrv \
     streamproxy \
     strongswan \
     tcpdump \

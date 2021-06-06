@@ -29,8 +29,8 @@ RDEPENDS_${PN} = "python-core \
 inherit gitpkgv setuptools
 
 SRCREV = "${AUTOREV}"
-PV = "1.27.2.1+git${SRCPV}"
-PKGV = "1.27.2.1+git${GITPKGV}"
+PV = "1.27.4.0+git${SRCPV}"
+PKGV = "1.27.4.0+git${GITPKGV}"
 
 SRC_URI = "git://github.com/oe-mirrors/streamlink-27;protocol=https"
 
