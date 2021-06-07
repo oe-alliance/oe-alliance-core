@@ -24,8 +24,8 @@ RDEPENDS_${PN} = "${PYTHON_PN}-core \
     "
 
 SRCREV = "${AUTOREV}"
-PV = "2.1.1+git${SRCPV}"
-PKGV = "2.1.1+git${GITPKGV}"
+PV = "2.1.2+git${SRCPV}"
+PKGV = "2.1.2+git${GITPKGV}"
 
 SRC_URI = "git://github.com/streamlink/streamlink.git;protocol=https"
 
@@ -34,7 +34,7 @@ S = "${WORKDIR}/git"
 do_install_append() {
     rm -rf ${D}${bindir}
     rm -rf ${D}${libdir}/${PYTHON_DIR}/site-packages/streamlink_cli
-    rm -rf ${D}${libdir}/${PYTHON_DIR}/site-packages/streamlink-*.egg-info/*
+    rm -rf ${D}${libdir}/${PYTHON_DIR}/site-packages/*.egg-info
     rm -rf ${D}${libdir}/${PYTHON_DIR}/site-packages/streamlink/plugins/.removed
 }
 
