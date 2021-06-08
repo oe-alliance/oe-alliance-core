@@ -1,4 +1,4 @@
-SUMMARY = "Skin MadMax Fhd"
+SUMMARY = "MadMax Fhd by Madhouse & StixMax"
 MAINTAINER = "madhouse"
 
 require conf/license/license-gplv2.inc
@@ -6,9 +6,9 @@ require conf/license/license-gplv2.inc
 inherit gitpkgv
 
 SRCREV = "${AUTOREV}"
-PV = "1.6+git${SRCPV}"
-PKGV = "1.6+git${GITPKGV}"
-VER="1.6"
+PV = "1.8+git${SRCPV}"
+PKGV = "1.8+git${GITPKGV}"
+VER="1.8"
 
 RDEPENDS_${PN} = "enigma2-plugin-systemplugins-weathercomponenthandler, enigma2-plugin-skincomponents-weathercomponent, enigma2-plugin-extensions-weatherplugin"
 
