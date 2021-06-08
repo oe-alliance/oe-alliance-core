@@ -1,6 +1,6 @@
-SRCDATE = "20201218"
+SRCDATE = "20210604"
 
 require dinobot-libs2.inc
 
-SRC_URI[md5sum] = "cbf15a05dfcf9fd89c5e254715be3e83"
-SRC_URI[sha256sum] = "adbb8ea89ec48fb518f46e0ed716ef47c6646641e05e02597d82c847fb757851"
+SRC_URI[md5sum] = "9df65c8e981cdd82704f26067da73d6a"
+SRC_URI[sha256sum] = "bdf5b1ae03f3d73c850603237861171bb39d5b0d09ee94fa5f294a1508b4e009"
