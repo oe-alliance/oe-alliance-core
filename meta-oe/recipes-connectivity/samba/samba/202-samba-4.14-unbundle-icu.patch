@@ -1,10 +1,8 @@
-diff --git a/lib/util/charset/wscript_configure b/lib/util/charset/wscript_configure
-index 9c27fc6..60522ab 100644
 --- a/lib/util/charset/wscript_configure
 +++ b/lib/util/charset/wscript_configure
-@@ -37,15 +37,15 @@ conf.CHECK_CODE('''
-                 lib='iconv',
+@@ -40,15 +40,15 @@ conf.CHECK_CODE('''
                  headers='errno.h iconv.h')
+ """
  
 -if conf.CHECK_CFG(package='icu-i18n',
 -               args='--cflags --libs',

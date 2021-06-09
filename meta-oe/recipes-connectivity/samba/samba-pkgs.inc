@@ -38,9 +38,9 @@ python samba_populate_packages() {
     pkglibdir = d.getVar('libdir')
     do_split_packages(d, pkglibdir, '^lib(.*)\.so\..*$', 'lib%s', 'Samba %s library', allow_links=True, extra_depends='${PN}-common', prepend=True)
     do_split_packages(d, pkglibdir, '^lib(.*)\.so$', 'lib%s', 'Samba %s library', allow_links=True, extra_depends='${PN}-common', prepend=True)
-    moduledir = '%s/samba/auth' % pkglibdir
+    moduledir = '%s/auth' % pkglibdir
     do_split_packages(d, moduledir, '^(.*)\.so$', 'samba-auth-%s', 'Samba %s authentication backend', hook=module_hook, extra_depends='', prepend=False)
-    moduledir = '%s/samba/pdb' % pkglibdir
+    moduledir = '%s/pdb' % pkglibdir
     do_split_packages(d, moduledir, '^(.*)\.so$', 'samba-pdb-%s', 'Samba %s password backend', hook=module_hook, extra_depends='', prepend=False)
 }
 

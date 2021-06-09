@@ -1,10 +1,10 @@
-PR = "r2"
+PR = "r3"
 
 require samba-source.inc
 
 inherit cpan-base perlnative python3native
 
-DEPENDS += "asn1compile-native perl-parse-yapp-native qemu-native libxslt-native docbook-xsl-stylesheets-native e2fsprogs readline zlib popt gnutls libtalloc libtasn1"
+DEPENDS += "asn1compile-native libparse-yapp-perl-native qemu-native libxslt-native docbook-xsl-stylesheets-native e2fsprogs readline zlib popt gnutls libtalloc libtasn1"
 
 inherit features_check
 REQUIRED_DISTRO_FEATURES = "pam"
@@ -16,29 +16,29 @@ LDFLAGS_append_libc-musl = " -ltirpc"
 PACKAGECONFIG ?= "${@bb.utils.filter('DISTRO_FEATURES', 'systemd zeroconf', d)} netbios"
 
 # with ad-dc:
-#    --bundled-libraries=talloc,tevent,tevent-util,texpect,tdb,ldb,tdr,cmocka,replace,pytalloc-util,pyldb-util,roken,wind,hx509,asn1,heimbase,hcrypto,krb5,gssapi,heimntlm,hdb,kdc,NONE 
+#    --bundled-libraries=talloc,tevent,tevent-util,texpect,tdb,ldb,tdr,cmocka,replace,pytalloc-util,pyldb-util,roken,wind,hx509,asn1,heimbase,hcrypto,krb5,gssapi,heimntlm,hdb,kdc,NONE
 
-PACKAGECONFIG[ad-dc] = " \
-    -with-dnsupdate --with-ads --with-ldap \
-    , \
-    --without-ad-dc --without-json --without-libarchive --disable-python --nopyc --nopyo \
-    --without-dnsupdate --without-ads --without-ldap \
-    , \
-    gnutls libarchive openldap \
-   "
-
-#without ad-dc:
+# without ad-dc:
 #    --bundled-libraries=talloc,tevent,tevent-util,texpect,tdb,ldb,tdr,cmocka,replace,roken,wind,hx509,asn1,heimbase,hcrypto,krb5,gssapi,heimntlm,hdb,kdc,NONE
 
 PACKAGECONFIG[acl] = "--with-acl-support,--without-acl-support,acl"
+PACKAGECONFIG[fam] = "--with-fam,--without-fam,gamin"
+PACKAGECONFIG[cups] = "--enable-cups,--disable-cups,cups"
+PACKAGECONFIG[ldap] = "--with-ldap,--without-ldap,openldap"
+PACKAGECONFIG[sasl] = ",,cyrus-sasl"
 PACKAGECONFIG[systemd] = "--with-systemd,--without-systemd,systemd"
+PACKAGECONFIG[dmapi] = "--with-dmapi,--without-dmapi,dmapi"
 PACKAGECONFIG[zeroconf] = "--enable-avahi,--disable-avahi,avahi"
-PACKAGECONFIG[quotas] = "--with-quotas,--without-quotas,"
-PACKAGECONFIG[winbind] = "--with-winbind,--without-winbind,"
-PACKAGECONFIG[valgrind] = ",--without-valgrind,valgrind"
+PACKAGECONFIG[valgrind] = ",--without-valgrind,valgrind,"
+PACKAGECONFIG[lttng] = "--with-lttng, --without-lttng,lttng-ust"
+PACKAGECONFIG[archive] = "--with-libarchive, --without-libarchive, libarchive"
 PACKAGECONFIG[libunwind] = ", , libunwind"
+PACKAGECONFIG[gpgme] = ",--without-gpgme,,"
 PACKAGECONFIG[lmdb] = ",--without-ldb-lmdb,lmdb,"
-PACKAGECONFIG[netbios] = " , , "
+PACKAGECONFIG[libbsd] = "--with-libbsd, --without-libbsd, libbsd"
+PACKAGECONFIG[ad-dc] = "--with-experimental-mit-ad-dc,--without-ad-dc --without-ads --without-json --disable-python --nopyc --nopyo,python3-markdown python3-dnspython,"
+PACKAGECONFIG[mitkrb5] = "--with-system-mitkrb5 --with-system-mitkdc=/usr/sbin/krb5kdc,,krb5,"
+PACKAGECONFIG[netbios] = " "
 
 SAMBA4_AUTH_MODULES_STATIC="auth_builtin,auth_sam,auth_unix"
 SAMBA4_AUTH_MODULES_SHARED="auth_script"
@@ -89,7 +89,6 @@ EXTRA_OECONF += "--disable-cups \
                  --with-pam --with-pammodulesdir=${base_libdir}/security \
                  --with-pam_smbpass \
                  --accel-aes=none \
-                 --nopyc --nopyo \
                 "
 
 LDFLAGS += "-Wl,-z,relro,-z,now ${@bb.utils.contains('DISTRO_FEATURES', 'ld-is-gold', ' -fuse-ld=bfd ', '', d)}"

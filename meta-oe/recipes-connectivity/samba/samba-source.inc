@@ -1,4 +1,4 @@
-PV = "4.14.4"
+PV = "4.14.5"
 HOMEPAGE = "https://www.samba.org/"
 SECTION = "console/network"
 
@@ -20,8 +20,12 @@ SRC_URI = "${SAMBA_MIRROR}/stable/samba-${PV}.tar.gz \
            file://010-source3-msgsock-nvram-fix.patch \
            file://011-source4-msgsock-nvram-fix.patch \
            file://101-do-not-check-xsltproc-manpages.patch \
-           file://102-samba-4.14-unbundle-libbsd.patch \
+           file://102-add-options-to-configure-the-use-of-libbsd.patch \
            file://103-tmsize-overflow-fix.patch \
+           file://104-samba-defeat-iconv-test.patch \
+           file://105-wscript_configure_system_gnutls-disable-check-gnutls.patch \
+           file://106-source3-wscript-disable-check-fcntl-F_OWNER_EX.patch \
+           file://107-source3-wscript-disable-check-fcntl-RW_HINTS.patch \
            file://201-add-config-option-without-valgrind.patch \
            file://202-samba-4.14-unbundle-icu.patch \
            file://203-netdb-defines.patch \
@@ -51,7 +55,7 @@ SRC_URI_append_sh4 = " \
            file://209-strtoull.patch \
           "
 
-SRC_URI[md5sum] = "171629ad42b4b303107e8b0fff942a1f"
-SRC_URI[sha256sum] = "89af092a0b00f5354ed287f0aa37b8c2cf9ba2ce67ea6464192e2c18528f89b9"
+SRC_URI[md5sum] = "96d275e31387e6c403d6c16465d15b7e"
+SRC_URI[sha256sum] = "bb6ef5d2f16b85288d823578abc453d9a80514c42e5a2ea2c4e3c60dc42335c3"
 
 UPSTREAM_CHECK_REGEX = "samba\-(?P<pver>4\.14(\.\d+)+).tar.gz"

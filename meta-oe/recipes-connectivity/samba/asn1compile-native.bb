@@ -7,7 +7,7 @@ inherit cpan-base perlnative python3native native
 #DEPENDS += "libxslt-native docbook-xsl-stylesheets-native e2fsprogs readline virtual/libiconv zlib popt"
 #DEPENDS += "python3native"
 
-DEPENDS += "zlib-native readline-native gnutls-native perl-parse-yapp-native bison-native icu-native libtasn1-native"
+DEPENDS += "zlib-native readline-native gnutls-native libparse-yapp-perl-native bison-native icu-native libtasn1-native"
 
 DEPENDS_append_libc-musl = " libtirpc"
 CFLAGS_append_libc-musl = " -I${STAGING_INCDIR}/tirpc"
