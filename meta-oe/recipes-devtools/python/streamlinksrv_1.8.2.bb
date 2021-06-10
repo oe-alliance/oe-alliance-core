@@ -14,8 +14,8 @@ S = "${WORKDIR}/git"
 
 inherit gitpkgv
 SRCREV = "${AUTOREV}"
-PV = "1.7.0+git${SRCPV}"
-PKGV = "1.7.0+git${GITPKGV}"
+PV = "1.8.2+git${SRCPV}"
+PKGV = "1.8.2+git${GITPKGV}"
 
 PACKAGES = "${PN}"
 
