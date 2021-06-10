@@ -3,7 +3,15 @@ LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=59530bdf33659b29e73d4adb9f9f6552"
 SRCREV = "d9396c07f1ddfcbacec70350604fea0d3ccae821"
 
-inherit autotools schwerkraft-git
+inherit autotools gitpkgv
+
+S = "${WORKDIR}/git"
+
+VERSION := "${PV}"
+PV = "${VERSION}+git${SRCPV}"
+PKGV = "${VERSION}+git${GITPKGV}"
+
+SRC_URI="git://github.com/oe-mirrors/streamproxy.git"
 
 pkg_postinst_${PN}() {
 #!/bin/sh
