@@ -1,0 +1,55 @@
+From a7cb3756eb3053d33675d3e1fb90aa4e17528221 Mon Sep 17 00:00:00 2001
+From: NickerSK <nickersk@gmail.com>
+Date: Wed, 10 Mar 2021 09:45:23 +0000
+Subject: [PATCH] adapt window system registration
+
+d8cb6f7147a platform/linux: add CPlatformLinux to register window systems
+
+---
+ xbmc/platform/linux/PlatformLinux.cpp | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+diff --git a/xbmc/platform/linux/PlatformLinux.cpp b/xbmc/platform/linux/PlatformLinux.cpp
+index 74a22fff5b..842bf93e23 100644
+--- a/xbmc/platform/linux/PlatformLinux.cpp
++++ b/xbmc/platform/linux/PlatformLinux.cpp
+@@ -20,6 +20,9 @@
+ #if defined(HAVE_X11)
+ #include "windowing/X11/WinSystemX11GLESContext.h"
+ #endif
++#if defined(TARGET_STB)
++#include "windowing/egl/WinSystemSTBContext.h"
++#endif
+ #if defined(HAVE_GBM)
+ #include "windowing/gbm/WinSystemGbmGLESContext.h"
+ #endif
+@@ -32,6 +35,9 @@
+ #if defined(HAVE_X11)
+ #include "windowing/X11/WinSystemX11GLContext.h"
+ #endif
++#if defined(TARGET_STB)
++#include "windowing/egl/WinSystemSTBContext.h"
++#endif
+ #if defined(HAVE_GBM)
+ #include "windowing/gbm/WinSystemGbmGLContext.h"
+ #endif
+@@ -59,6 +65,9 @@ bool CPlatformLinux::InitStageOne()
+ #if defined(HAVE_X11)
+   KODI::WINDOWING::X11::CWinSystemX11GLESContext::Register();
+ #endif
++#if defined(TARGET_STB)
++  KODI::WINDOWING::STB::CWinSystemSTBContext::Register();
++#endif
+ #if defined(HAVE_GBM)
+   KODI::WINDOWING::GBM::CWinSystemGbmGLESContext::Register();
+ #endif
+@@ -71,6 +80,9 @@ bool CPlatformLinux::InitStageOne()
+ #if defined(HAVE_X11)
+   KODI::WINDOWING::X11::CWinSystemX11GLContext::Register();
+ #endif
++#if defined(TARGET_STB)
++  KODI::WINDOWING::STB::CWinSystemSTBContext::Register();
++#endif
+ #if defined(HAVE_GBM)
+   KODI::WINDOWING::GBM::CWinSystemGbmGLContext::Register();
+ #endif

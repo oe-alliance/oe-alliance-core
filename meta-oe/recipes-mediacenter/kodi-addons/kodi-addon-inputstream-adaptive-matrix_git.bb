@@ -22,3 +22,5 @@ SRC_URI = "git://github.com/xbmc/inputstream.adaptive.git;protocol=https;branch=
 S = "${WORKDIR}/git"
 
 KODIADDONNAME = "inputstream.adaptive"
+
+INSANE_SKIP_${PN} = "libdir dev-so"
