@@ -68,4 +68,4 @@ IMAGE_CMD_dagsemmc_append = "\
 BBMASK = "meta-vuplus/recipes-graphics/"
 BBMASK += "meta-fulan/recipes-graphics/"
 BBMASK += "meta-vuplus/recipes-webkit/"
-BBMASK += "meta-oe/recipes-qt5.14/"
+BBMASK += "meta-oe/recipes-qt5.14/ meta-oe/recipes-qt5.15/"

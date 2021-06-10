@@ -1,0 +1,284 @@
+---
+ src/gui/configure.json                        |  7 +-
+ .../deviceintegration/deviceintegration.pro   |  1 +
+ .../eglfs_nxpl/eglfs_nxpl.json                |  3 +
+ .../eglfs_nxpl/eglfs_nxpl.pro                 | 22 ++++++
+ .../eglfs/deviceintegration/eglfs_nxpl/nxpl.h | 70 +++++++++++++++++++
+ .../eglfs_nxpl/qeglfsnxplintegration.cpp      | 59 ++++++++++++++++
+ .../eglfs_nxpl/qeglfsnxplintegration.h        | 19 +++++
+ .../eglfs_nxpl/qeglfsnxplmain.cpp             | 17 +++++
+ 8 files changed, 197 insertions(+), 1 deletion(-)
+ create mode 100644 src/plugins/platforms/eglfs/deviceintegration/eglfs_nxpl/eglfs_nxpl.json
+ create mode 100644 src/plugins/platforms/eglfs/deviceintegration/eglfs_nxpl/eglfs_nxpl.pro
+ create mode 100644 src/plugins/platforms/eglfs/deviceintegration/eglfs_nxpl/nxpl.h
+ create mode 100644 src/plugins/platforms/eglfs/deviceintegration/eglfs_nxpl/qeglfsnxplintegration.cpp
+ create mode 100644 src/plugins/platforms/eglfs/deviceintegration/eglfs_nxpl/qeglfsnxplintegration.h
+ create mode 100644 src/plugins/platforms/eglfs/deviceintegration/eglfs_nxpl/qeglfsnxplmain.cpp
+
+diff --git a/src/gui/configure.json b/src/gui/configure.json
+index 19312d245d..f399a4a177 100644
+--- a/src/gui/configure.json
++++ b/src/gui/configure.json
+@@ -1439,6 +1439,11 @@
+             "condition": "features.eglfs && features.xcb-xlib && features.egl_x11",
+             "output": [ "privateFeature" ]
+         },
++        "eglfs_nxpl": {
++            "label": "EGLFS NXPL",
++            "condition": "features.eglfs",
++            "output": [ "privateFeature" ]
++        },
+         "gif": {
+             "label": "GIF",
+             "condition": "features.imageformatplugin",
+@@ -1966,7 +1971,7 @@ QMAKE_LIBDIR_OPENGL[_ES2] and QMAKE_LIBS_OPENGL[_ES2] in the mkspec for your pla
+                     "section": "EGLFS details",
+                     "condition": "features.eglfs",
+                     "entries": [
+-                        "eglfs_openwfd", "eglfs_viv", "eglfs_viv_wl", "eglfs_rcar", "eglfs_egldevice", "eglfs_gbm", "eglfs_vsp2", "eglfs_mali", "eglfs_brcm", "eglfs_x11"
++                        "eglfs_openwfd", "eglfs_viv", "eglfs_viv_wl", "eglfs_rcar", "eglfs_egldevice", "eglfs_gbm", "eglfs_vsp2", "eglfs_mali", "eglfs_brcm", "eglfs_x11", "eglfs_nxpl"
+                     ]
+                 },
+                 "linuxfb", "vnc",
+diff --git a/src/plugins/platforms/eglfs/deviceintegration/deviceintegration.pro b/src/plugins/platforms/eglfs/deviceintegration/deviceintegration.pro
+index 360536d22f..75e5160374 100644
+--- a/src/plugins/platforms/eglfs/deviceintegration/deviceintegration.pro
++++ b/src/plugins/platforms/eglfs/deviceintegration/deviceintegration.pro
+@@ -11,6 +11,7 @@ qtConfig(eglfs_viv): SUBDIRS += eglfs_viv
+ qtConfig(eglfs_rcar): SUBDIRS += eglfs_rcar
+ qtConfig(eglfs_viv_wl): SUBDIRS += eglfs_viv_wl
+ qtConfig(eglfs_openwfd): SUBDIRS += eglfs_openwfd
++qtConfig(eglfs_nxpl): SUBDIRS += eglfs_nxpl
+ qtConfig(opengl): SUBDIRS += eglfs_emu
+ 
+ eglfs_kms_egldevice.depends = eglfs_kms_support
+diff --git a/src/plugins/platforms/eglfs/deviceintegration/eglfs_nxpl/eglfs_nxpl.json b/src/plugins/platforms/eglfs/deviceintegration/eglfs_nxpl/eglfs_nxpl.json
+new file mode 100644
+index 0000000000..96da4fdb6a
+--- /dev/null
++++ b/src/plugins/platforms/eglfs/deviceintegration/eglfs_nxpl/eglfs_nxpl.json
+@@ -0,0 +1,3 @@
++{
++    "Keys": [ "eglfs_nxpl" ]
++}
+\ No newline at end of file
+diff --git a/src/plugins/platforms/eglfs/deviceintegration/eglfs_nxpl/eglfs_nxpl.pro b/src/plugins/platforms/eglfs/deviceintegration/eglfs_nxpl/eglfs_nxpl.pro
+new file mode 100644
+index 0000000000..fac3d0a30b
+--- /dev/null
++++ b/src/plugins/platforms/eglfs/deviceintegration/eglfs_nxpl/eglfs_nxpl.pro
+@@ -0,0 +1,22 @@
++TARGET = qeglfs-nxpl-integration
++
++QT += core-private gui-private eglfsdeviceintegration-private
++
++INCLUDEPATH += $$PWD/../../api
++CONFIG += egl
++
++LIBS += -lnxpl -lnexus
++
++# Avoid X11 header collision, use generic EGL native types
++DEFINES += QT_EGL_NO_X11
++
++SOURCES += $$PWD/qeglfsnxplmain.cpp \
++           $$PWD/qeglfsnxplintegration.cpp
++
++HEADERS += $$PWD/qeglfsnxplintegration.h
++
++OTHER_FILES += $$PWD/eglfs_nxpl.json
++
++PLUGIN_TYPE = egldeviceintegrations
++PLUGIN_CLASS_NAME = QEglFSNXPLIntegrationPlugin
++load(qt_plugin)
+diff --git a/src/plugins/platforms/eglfs/deviceintegration/eglfs_nxpl/nxpl.h b/src/plugins/platforms/eglfs/deviceintegration/eglfs_nxpl/nxpl.h
+new file mode 100644
+index 0000000000..fc32aa1a73
+--- /dev/null
++++ b/src/plugins/platforms/eglfs/deviceintegration/eglfs_nxpl/nxpl.h
+@@ -0,0 +1,70 @@
++#ifndef _nxpl_h
++#define _nxpl_h
++
++#define NEXUS_DISPLAYHANDLE void*
++
++#ifdef __cplusplus
++extern "C" {
++#endif
++
++typedef void *NXPL_PlatformHandle;
++
++typedef enum NEXUS_BlendFactor
++{
++    NEXUS_BlendFactor_eZero
++} NEXUS_BlendFactor;
++
++typedef struct NEXUS_BlendEquation
++{
++    NEXUS_BlendFactor a;
++    NEXUS_BlendFactor b;
++    bool              subtract_cd;
++    NEXUS_BlendFactor c;
++    NEXUS_BlendFactor d;
++    bool              subtract_e;
++    NEXUS_BlendFactor e;
++} NEXUS_BlendEquation;
++
++typedef struct
++{
++   uint32_t             width;
++   uint32_t             height;
++   uint32_t             x;
++   uint32_t             y;
++   bool                 stretch;
++   uint32_t             clientID;
++   uint32_t             zOrder;
++   NEXUS_BlendEquation  colorBlend;
++   NEXUS_BlendEquation  alphaBlend;
++   uint32_t             magic;
++} NXPL_NativeWindowInfoEXT;
++
++/* Register a display for exclusive use. The client application should not use the display until
++ * calling NXPL_UnregisterNexusDisplayPlatform.
++ * It will register its own memory, h/w and display APIs suitable for basic exclusive mode rendering on
++ * a Nexus display.
++ * Fills in the NXPL platform handle, which must be passed back into the unregister function.
++ */
++void NXPL_RegisterNexusDisplayPlatform(NXPL_PlatformHandle *handle, NEXUS_DISPLAYHANDLE display);
++
++/* Unregister a display for exclusive use. The client application can the use the Nexus display again. */
++void NXPL_UnregisterNexusDisplayPlatform(NXPL_PlatformHandle handle);
++
++/* Generate a default NXPL_NativeWindowInfoEXT */
++void NXPL_GetDefaultNativeWindowInfoEXT(NXPL_NativeWindowInfoEXT *info);
++
++/* Create a 'native window' of the given size. This is really just a small structure that holds the size
++ * of the window that EGL will write into. */
++void *NXPL_CreateNativeWindowEXT(const NXPL_NativeWindowInfoEXT *info);
++
++/* Destroy a 'native window' */
++void NXPL_DestroyNativeWindow(void *nativeWin);
++
++int NEXUS_Platform_AuthenticatedJoin(const void *settings);
++#define NEXUS_Platform_Join() NEXUS_Platform_AuthenticatedJoin(NULL)
++
++#ifdef __cplusplus
++}
++#endif
++
++#endif /* _nxpl_h */
+diff --git a/src/plugins/platforms/eglfs/deviceintegration/eglfs_nxpl/qeglfsnxplintegration.cpp b/src/plugins/platforms/eglfs/deviceintegration/eglfs_nxpl/qeglfsnxplintegration.cpp
+new file mode 100644
+index 0000000000..ac51869892
+--- /dev/null
++++ b/src/plugins/platforms/eglfs/deviceintegration/eglfs_nxpl/qeglfsnxplintegration.cpp
+@@ -0,0 +1,59 @@
++#include "qeglfsnxplintegration.h"
++#include "nxpl.h"
++
++QT_BEGIN_NAMESPACE
++
++static NXPL_PlatformHandle nxpl_handle = 0;
++static NEXUS_DISPLAYHANDLE  nexus_display = 0;
++
++static void InitPlatform()
++{
++	NEXUS_Platform_Join();
++}
++
++static void TermPlatform(NEXUS_DISPLAYHANDLE handle)
++{
++	Q_UNUSED(handle)
++}
++
++void QEglFSNXPLIntegration::platformInit()
++{
++	InitPlatform();
++
++	/* Register with the platform layer */
++	NXPL_RegisterNexusDisplayPlatform(&nxpl_handle, nexus_display);
++}
++
++void QEglFSNXPLIntegration::platformDestroy()
++{
++	NXPL_UnregisterNexusDisplayPlatform(nxpl_handle);
++
++	TermPlatform(nexus_display);
++}
++
++EGLNativeWindowType QEglFSNXPLIntegration::createNativeWindow(QPlatformWindow *window, const QSize &size, const QSurfaceFormat &format)
++{
++	Q_UNUSED(window)
++	Q_UNUSED(format)
++
++	NXPL_NativeWindowInfoEXT win_info;
++
++	NXPL_GetDefaultNativeWindowInfoEXT(&win_info);
++
++	win_info.x = 0;
++	win_info.y = 0;
++	win_info.width = size.width();
++	win_info.height = size.height();
++	win_info.stretch = false;
++	win_info.clientID = 0;
++	win_info.zOrder = 0;
++
++	return (EGLNativeWindowType)NXPL_CreateNativeWindowEXT(&win_info);
++}
++
++void QEglFSNXPLIntegration::destroyNativeWindow(EGLNativeWindowType window)
++{
++	NXPL_DestroyNativeWindow((void*)window);
++}
++
++QT_END_NAMESPACE
+diff --git a/src/plugins/platforms/eglfs/deviceintegration/eglfs_nxpl/qeglfsnxplintegration.h b/src/plugins/platforms/eglfs/deviceintegration/eglfs_nxpl/qeglfsnxplintegration.h
+new file mode 100644
+index 0000000000..449ba85d1f
+--- /dev/null
++++ b/src/plugins/platforms/eglfs/deviceintegration/eglfs_nxpl/qeglfsnxplintegration.h
+@@ -0,0 +1,19 @@
++#ifndef QEGLFSNXPLINTEGRATION_H
++#define QEGLFSNXPLINTEGRATION_H
++
++#include "private/qeglfsdeviceintegration_p.h"
++
++QT_BEGIN_NAMESPACE
++
++class QEglFSNXPLIntegration : public QEglFSDeviceIntegration
++{
++public:
++	void platformInit() override;
++	void platformDestroy() override;
++	EGLNativeWindowType createNativeWindow(QPlatformWindow *window, const QSize &size, const QSurfaceFormat &format) override;
++	void destroyNativeWindow(EGLNativeWindowType window) override;
++};
++
++QT_END_NAMESPACE
++
++#endif
+diff --git a/src/plugins/platforms/eglfs/deviceintegration/eglfs_nxpl/qeglfsnxplmain.cpp b/src/plugins/platforms/eglfs/deviceintegration/eglfs_nxpl/qeglfsnxplmain.cpp
+new file mode 100644
+index 0000000000..820c43eda3
+--- /dev/null
++++ b/src/plugins/platforms/eglfs/deviceintegration/eglfs_nxpl/qeglfsnxplmain.cpp
+@@ -0,0 +1,17 @@
++#include "private/qeglfsdeviceintegration_p.h"
++#include "qeglfsnxplintegration.h"
++
++QT_BEGIN_NAMESPACE
++
++class QEglFSNXPLIntegrationPlugin : public QEglFSDeviceIntegrationPlugin
++{
++	Q_OBJECT
++	Q_PLUGIN_METADATA(IID QEglFSDeviceIntegrationFactoryInterface_iid FILE "eglfs_nxpl.json")
++
++public:
++	QEglFSDeviceIntegration *create() override { return new QEglFSNXPLIntegration; }
++};
++
++QT_END_NAMESPACE
++
++#include "qeglfsnxplmain.moc"
+-- 
+2.17.1
+

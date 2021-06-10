@@ -1,0 +1,29 @@
+---
+ chromium/media/media_options.gni | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/chromium/media/media_options.gni b/chromium/media/media_options.gni
+index faf94788091..c52b99a5e2a 100644
+--- a/chromium/media/media_options.gni
++++ b/chromium/media/media_options.gni
+@@ -214,7 +214,7 @@ if (enable_mojo_media) {
+   }
+ 
+   if (enable_library_cdms) {
+-    _default_mojo_media_services += [ "cdm" ]
++    _default_mojo_media_services = [ "cdm" ]
+ 
+     # Having a CDM running means it could require a CdmProxy running in the GPU
+     # process.
+@@ -222,7 +222,7 @@ if (enable_mojo_media) {
+         _default_mojo_media_host == "none" || _default_mojo_media_host == "gpu",
+         "For now, mojo_media_host should not overwrite it with a different " +
+             "value if it has been set.")
+-    _default_mojo_media_host = "gpu"
++    _default_mojo_media_host = "gpu"
+   }
+ }
+ 
+-- 
+2.17.1
+

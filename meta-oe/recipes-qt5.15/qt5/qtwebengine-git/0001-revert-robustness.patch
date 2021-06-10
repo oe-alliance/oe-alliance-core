@@ -1,0 +1,71 @@
+---
+ src/core/ozone/gl_context_qt.cpp     | 11 +----------
+ src/core/ozone/gl_context_qt.h       |  1 -
+ src/core/ozone/gl_surface_egl_qt.cpp |  2 +-
+ src/core/ozone/gl_surface_glx_qt.cpp |  2 +-
+ 4 files changed, 3 insertions(+), 13 deletions(-)
+
+diff --git a/src/core/ozone/gl_context_qt.cpp b/src/core/ozone/gl_context_qt.cpp
+index 9813a325..85793d20 100644
+--- a/src/core/ozone/gl_context_qt.cpp
++++ b/src/core/ozone/gl_context_qt.cpp
+@@ -163,17 +163,8 @@ QFunctionPointer GLContextHelper::getEglGetProcAddress()
+     return get_proc_address;
+ }
+ 
+-bool GLContextHelper::isCreateContextRobustnessSupported()
+-{
+-#if QT_CONFIG(opengl)
+-    if (QGuiApplication::platformName() == QLatin1String("offscreen"))
+-        return false;
+ 
+-    if (QOpenGLContext *context = qt_gl_global_share_context())
+-        return context->format().testOption(QSurfaceFormat::ResetNotification);
+-#endif
+-    return false;
+-}
++
+ QT_END_NAMESPACE
+ 
+ #if defined(OS_WIN)
+diff --git a/src/core/ozone/gl_context_qt.h b/src/core/ozone/gl_context_qt.h
+index 8559af31..eeb96914 100644
+--- a/src/core/ozone/gl_context_qt.h
++++ b/src/core/ozone/gl_context_qt.h
+@@ -64,7 +64,6 @@ public:
+     static void* getNativeDisplay();
+     static QFunctionPointer getGlXGetProcAddress();
+     static QFunctionPointer getEglGetProcAddress();
+-    static bool isCreateContextRobustnessSupported();
+ 
+ private:
+     Q_INVOKABLE bool initializeContextOnBrowserThread(gl::GLContext* context, gl::GLSurface* surface, gl::GLContextAttribs attribs);
+diff --git a/src/core/ozone/gl_surface_egl_qt.cpp b/src/core/ozone/gl_surface_egl_qt.cpp
+index a6988bbf..e5b69194 100644
+--- a/src/core/ozone/gl_surface_egl_qt.cpp
++++ b/src/core/ozone/gl_surface_egl_qt.cpp
+@@ -128,7 +128,7 @@ EGLDisplay GLSurfaceEGL::GetHardwareDisplay()
+ 
+ bool GLSurfaceEGL::IsCreateContextRobustnessSupported()
+ {
+-    return GLContextHelper::isCreateContextRobustnessSupported() && HasEGLExtension("EGL_EXT_create_context_robustness");
++    return false;
+ }
+ 
+ bool GLSurfaceEGL::IsCreateContextBindGeneratesResourceSupported()
+diff --git a/src/core/ozone/gl_surface_glx_qt.cpp b/src/core/ozone/gl_surface_glx_qt.cpp
+index e150c940..61d08627 100644
+--- a/src/core/ozone/gl_surface_glx_qt.cpp
++++ b/src/core/ozone/gl_surface_glx_qt.cpp
+@@ -68,7 +68,7 @@ bool GLSurfaceGLX::IsCreateContextSupported()
+ 
+ bool GLSurfaceGLX::IsCreateContextRobustnessSupported()
+ {
+-    return GLContextHelper::isCreateContextRobustnessSupported() && HasGLXExtension("GLX_ARB_create_context_robustness");
++    return false;
+ }
+ 
+ bool GLSurfaceGLX::IsEXTSwapControlSupported()
+-- 
+2.17.1
+

@@ -1,0 +1,383 @@
+From b6364bd2ca2669ac3109951978c31e6ed435a607 Mon Sep 17 00:00:00 2001
+From: Jaedon Shin <jaedon.shin@gmail.com>
+Date: Fri, 20 Mar 2020 11:37:07 +0900
+Subject: [PATCH] Add eglfs-brcmstb support for INTEGRITY
+
+---
+ src/gui/configure.json                        |   7 +-
+ .../deviceintegration/deviceintegration.pro   |   1 +
+ .../eglfs_brcmstb/eglfs_brcmstb.json          |   3 +
+ .../eglfs_brcmstb/eglfs_brcmstb.pro           |  22 +++
+ .../qeglfsbrcmstbintegration.cpp              | 144 ++++++++++++++++++
+ .../eglfs_brcmstb/qeglfsbrcmstbintegration.h  |  68 +++++++++
+ .../eglfs_brcmstb/qeglfsbrcmstbmain.cpp       |  56 +++++++
+ 7 files changed, 300 insertions(+), 1 deletion(-)
+ create mode 100644 src/plugins/platforms/eglfs/deviceintegration/eglfs_brcmstb/eglfs_brcmstb.json
+ create mode 100644 src/plugins/platforms/eglfs/deviceintegration/eglfs_brcmstb/eglfs_brcmstb.pro
+ create mode 100644 src/plugins/platforms/eglfs/deviceintegration/eglfs_brcmstb/qeglfsbrcmstbintegration.cpp
+ create mode 100644 src/plugins/platforms/eglfs/deviceintegration/eglfs_brcmstb/qeglfsbrcmstbintegration.h
+ create mode 100644 src/plugins/platforms/eglfs/deviceintegration/eglfs_brcmstb/qeglfsbrcmstbmain.cpp
+
+diff --git a/src/gui/configure.json b/src/gui/configure.json
+index 19312d245de6..2ba7881854da 100644
+--- a/src/gui/configure.json
++++ b/src/gui/configure.json
+@@ -1439,6 +1439,11 @@
+             "condition": "features.eglfs && features.xcb-xlib && features.egl_x11",
+             "output": [ "privateFeature" ]
+         },
++        "eglfs_brcmstb": {
++            "label": "EGLFS Broadcom STB",
++            "condition": "features.eglfs",
++            "output": [ "privateFeature" ]
++        },
+         "gif": {
+             "label": "GIF",
+             "condition": "features.imageformatplugin",
+@@ -1966,7 +1971,7 @@ QMAKE_LIBDIR_OPENGL[_ES2] and QMAKE_LIBS_OPENGL[_ES2] in the mkspec for your pla
+                     "section": "EGLFS details",
+                     "condition": "features.eglfs",
+                     "entries": [
+-                        "eglfs_openwfd", "eglfs_viv", "eglfs_viv_wl", "eglfs_rcar", "eglfs_egldevice", "eglfs_gbm", "eglfs_vsp2", "eglfs_mali", "eglfs_brcm", "eglfs_x11"
++                        "eglfs_openwfd", "eglfs_viv", "eglfs_viv_wl", "eglfs_rcar", "eglfs_egldevice", "eglfs_gbm", "eglfs_vsp2", "eglfs_mali", "eglfs_brcm", "eglfs_x11", "eglfs_brcmstb"
+                     ]
+                 },
+                 "linuxfb", "vnc",
+diff --git a/src/plugins/platforms/eglfs/deviceintegration/deviceintegration.pro b/src/plugins/platforms/eglfs/deviceintegration/deviceintegration.pro
+index 360536d22f30..caad6285995f 100644
+--- a/src/plugins/platforms/eglfs/deviceintegration/deviceintegration.pro
++++ b/src/plugins/platforms/eglfs/deviceintegration/deviceintegration.pro
+@@ -11,6 +11,7 @@ qtConfig(eglfs_viv): SUBDIRS += eglfs_viv
+ qtConfig(eglfs_rcar): SUBDIRS += eglfs_rcar
+ qtConfig(eglfs_viv_wl): SUBDIRS += eglfs_viv_wl
+ qtConfig(eglfs_openwfd): SUBDIRS += eglfs_openwfd
++qtConfig(eglfs_brcmstb): SUBDIRS += eglfs_brcmstb
+ qtConfig(opengl): SUBDIRS += eglfs_emu
+ 
+ eglfs_kms_egldevice.depends = eglfs_kms_support
+diff --git a/src/plugins/platforms/eglfs/deviceintegration/eglfs_brcmstb/eglfs_brcmstb.json b/src/plugins/platforms/eglfs/deviceintegration/eglfs_brcmstb/eglfs_brcmstb.json
+new file mode 100644
+index 000000000000..9cda8f02bbac
+--- /dev/null
++++ b/src/plugins/platforms/eglfs/deviceintegration/eglfs_brcmstb/eglfs_brcmstb.json
+@@ -0,0 +1,3 @@
++{
++    "Keys": [ "eglfs_brcmstb" ]
++}
+diff --git a/src/plugins/platforms/eglfs/deviceintegration/eglfs_brcmstb/eglfs_brcmstb.pro b/src/plugins/platforms/eglfs/deviceintegration/eglfs_brcmstb/eglfs_brcmstb.pro
+new file mode 100644
+index 000000000000..cd3f1561b527
+--- /dev/null
++++ b/src/plugins/platforms/eglfs/deviceintegration/eglfs_brcmstb/eglfs_brcmstb.pro
+@@ -0,0 +1,22 @@
++TARGET = qeglfs-brcmstb-integration
++
++QT += core-private gui-private eglfsdeviceintegration-private
++
++INCLUDEPATH += $$PWD/../../api
++CONFIG += egl
++
++LIBS += -lv3dplatform
++
++# Avoid X11 header collision, use generic EGL native types
++DEFINES += QT_EGL_NO_X11
++
++SOURCES += $$PWD/qeglfsbrcmstbmain.cpp \
++           $$PWD/qeglfsbrcmstbintegration.cpp
++
++HEADERS += $$PWD/qeglfsbrcmstbintegration.h
++
++OTHER_FILES += $$PWD/eglfs_brcmstb.json
++
++PLUGIN_TYPE = egldeviceintegrations
++PLUGIN_CLASS_NAME = QEglFSBrcmSTBIntegrationPlugin
++load(qt_plugin)
+diff --git a/src/plugins/platforms/eglfs/deviceintegration/eglfs_brcmstb/qeglfsbrcmstbintegration.cpp b/src/plugins/platforms/eglfs/deviceintegration/eglfs_brcmstb/qeglfsbrcmstbintegration.cpp
+new file mode 100644
+index 000000000000..34379e14a45c
+--- /dev/null
++++ b/src/plugins/platforms/eglfs/deviceintegration/eglfs_brcmstb/qeglfsbrcmstbintegration.cpp
+@@ -0,0 +1,144 @@
++/****************************************************************************
++**
++** Copyright (C) 2016 The Qt Company Ltd.
++** Contact: https://www.qt.io/licensing/
++**
++** This file is part of the plugins of the Qt Toolkit.
++**
++** $QT_BEGIN_LICENSE:LGPL$
++** Commercial License Usage
++** Licensees holding valid commercial Qt licenses may use this file in
++** accordance with the commercial license agreement provided with the
++** Software or, alternatively, in accordance with the terms contained in
++** a written agreement between you and The Qt Company. For licensing terms
++** and conditions see https://www.qt.io/terms-conditions. For further
++** information use the contact form at https://www.qt.io/contact-us.
++**
++** GNU Lesser General Public License Usage
++** Alternatively, this file may be used under the terms of the GNU Lesser
++** General Public License version 3 as published by the Free Software
++** Foundation and appearing in the file LICENSE.LGPL3 included in the
++** packaging of this file. Please review the following information to
++** ensure the GNU Lesser General Public License version 3 requirements
++** will be met: https://www.gnu.org/licenses/lgpl-3.0.html.
++**
++** GNU General Public License Usage
++** Alternatively, this file may be used under the terms of the GNU
++** General Public License version 2.0 or (at your option) the GNU General
++** Public license version 3 or any later version approved by the KDE Free
++** Qt Foundation. The licenses are as published by the Free Software
++** Foundation and appearing in the file LICENSE.GPL2 and LICENSE.GPL3
++** included in the packaging of this file. Please review the following
++** information to ensure the GNU General Public License requirements will
++** be met: https://www.gnu.org/licenses/gpl-2.0.html and
++** https://www.gnu.org/licenses/gpl-3.0.html.
++**
++** $QT_END_LICENSE$
++**
++****************************************************************************/
++
++#include "qeglfsbrcmstbintegration.h"
++#include <v3dplatform.h>
++#include <fcntl.h>
++#include <unistd.h>
++#include <linux/fb.h>
++#include <sys/ioctl.h>
++#include <private/qcore_unix_p.h>
++
++QT_BEGIN_NAMESPACE
++
++static V3D_PlatformHandle s_platformHandle = 0;
++
++void QEglFSBrcmSTBIntegration::platformInit()
++{
++    QEglFSDeviceIntegration::platformInit();
++
++    V3D_RegisterDisplayPlatform(&s_platformHandle, EGL_DEFAULT_DISPLAY);
++
++    struct fb_var_screeninfo vinfo;
++    int xres = 1280;
++    int yres = 720;
++    int bits_per_pixel = 32;
++    int fd = qt_safe_open("/dev/fb0", O_RDWR, 0);
++    if (fd != -1) {
++        if (ioctl(fd, FBIOGET_VSCREENINFO, &vinfo) == -1) {
++            qWarning("eglconvenience: Could not read screen info");
++        } else {
++            xres = vinfo.xres;
++            yres = vinfo.yres;
++            bits_per_pixel = vinfo.bits_per_pixel;
++        }
++    }
++    qt_safe_close(fd);
++    mScreenSize.setWidth(xres);
++    mScreenSize.setHeight(yres);
++    mScreenDepth = bits_per_pixel;
++}
++
++EGLNativeDisplayType QEglFSBrcmSTBIntegration::platformDisplay() const
++{
++    return EGL_DEFAULT_DISPLAY;
++}
++
++void QEglFSBrcmSTBIntegration::platformDestroy()
++{
++    V3D_UnregisterDisplayPlatform(s_platformHandle);
++}
++
++QSize QEglFSBrcmSTBIntegration::screenSize() const
++{
++    return mScreenSize;
++}
++
++int QEglFSBrcmSTBIntegration::screenDepth() const
++{
++    return mScreenDepth;
++}
++
++QImage::Format QEglFSBrcmSTBIntegration::screenFormat() const
++{
++    return mScreenDepth == 32 ? QImage::Format_ARGB32 : QImage::Format_RGB16;
++}
++
++qreal QEglFSBrcmSTBIntegration::refreshRate() const
++{
++    return 50;
++}
++
++QSurfaceFormat QEglFSBrcmSTBIntegration::surfaceFormatFor(const QSurfaceFormat &inputFormat) const
++{
++    QSurfaceFormat format = inputFormat;
++    if (mScreenDepth == 32) {
++        format.setAlphaBufferSize(8);
++        format.setRedBufferSize(8);
++        format.setGreenBufferSize(8);
++        format.setBlueBufferSize(8);
++    }
++    return format;
++}
++
++EGLNativeWindowType QEglFSBrcmSTBIntegration::createNativeWindow(QPlatformWindow *window, const QSize &size, const QSurfaceFormat &format)
++{
++    Q_UNUSED(window)
++    Q_UNUSED(size)
++    Q_UNUSED(format)
++
++    V3D_NativeWindowInfo info;
++
++    info.x = 0;
++    info.y = 0;
++    info.width = mScreenSize.width();
++    info.height = mScreenSize.height();
++    info.stretch = false;
++    info.clientID = 0;
++    info.zOrder = 0;
++
++    return V3D_CreateNativeWindow(&info);
++}
++
++void QEglFSBrcmSTBIntegration::destroyNativeWindow(EGLNativeWindowType window)
++{
++    V3D_DestroyNativeWindow(window);
++}
++
++QT_END_NAMESPACE
+diff --git a/src/plugins/platforms/eglfs/deviceintegration/eglfs_brcmstb/qeglfsbrcmstbintegration.h b/src/plugins/platforms/eglfs/deviceintegration/eglfs_brcmstb/qeglfsbrcmstbintegration.h
+new file mode 100644
+index 000000000000..34e8bbf3f97d
+--- /dev/null
++++ b/src/plugins/platforms/eglfs/deviceintegration/eglfs_brcmstb/qeglfsbrcmstbintegration.h
+@@ -0,0 +1,68 @@
++/****************************************************************************
++**
++** Copyright (C) 2016 The Qt Company Ltd.
++** Contact: https://www.qt.io/licensing/
++**
++** This file is part of the plugins of the Qt Toolkit.
++**
++** $QT_BEGIN_LICENSE:LGPL$
++** Commercial License Usage
++** Licensees holding valid commercial Qt licenses may use this file in
++** accordance with the commercial license agreement provided with the
++** Software or, alternatively, in accordance with the terms contained in
++** a written agreement between you and The Qt Company. For licensing terms
++** and conditions see https://www.qt.io/terms-conditions. For further
++** information use the contact form at https://www.qt.io/contact-us.
++**
++** GNU Lesser General Public License Usage
++** Alternatively, this file may be used under the terms of the GNU Lesser
++** General Public License version 3 as published by the Free Software
++** Foundation and appearing in the file LICENSE.LGPL3 included in the
++** packaging of this file. Please review the following information to
++** ensure the GNU Lesser General Public License version 3 requirements
++** will be met: https://www.gnu.org/licenses/lgpl-3.0.html.
++**
++** GNU General Public License Usage
++** Alternatively, this file may be used under the terms of the GNU
++** General Public License version 2.0 or (at your option) the GNU General
++** Public license version 3 or any later version approved by the KDE Free
++** Qt Foundation. The licenses are as published by the Free Software
++** Foundation and appearing in the file LICENSE.GPL2 and LICENSE.GPL3
++** included in the packaging of this file. Please review the following
++** information to ensure the GNU General Public License requirements will
++** be met: https://www.gnu.org/licenses/gpl-2.0.html and
++** https://www.gnu.org/licenses/gpl-3.0.html.
++**
++** $QT_END_LICENSE$
++**
++****************************************************************************/
++
++#ifndef QEGLFSBRCMINTEGRATION_H
++#define QEGLFSBRCMINTEGRATION_H
++
++#include "private/qeglfsdeviceintegration_p.h"
++
++QT_BEGIN_NAMESPACE
++
++class QEglFSBrcmSTBIntegration : public QEglFSDeviceIntegration
++{
++public:
++    void platformInit() override;
++    void platformDestroy() override;
++    EGLNativeDisplayType platformDisplay() const override;
++    QSize screenSize() const override;
++    int screenDepth() const override;
++    QImage::Format screenFormat() const override;
++    qreal refreshRate() const override;
++    QSurfaceFormat surfaceFormatFor(const QSurfaceFormat &inputFormat) const override;
++    EGLNativeWindowType createNativeWindow(QPlatformWindow *window, const QSize &size, const QSurfaceFormat &format) override;
++    void destroyNativeWindow(EGLNativeWindowType window) override;
++
++private:
++    QSize mScreenSize;
++    int mScreenDepth;
++};
++
++QT_END_NAMESPACE
++
++#endif
+diff --git a/src/plugins/platforms/eglfs/deviceintegration/eglfs_brcmstb/qeglfsbrcmstbmain.cpp b/src/plugins/platforms/eglfs/deviceintegration/eglfs_brcmstb/qeglfsbrcmstbmain.cpp
+new file mode 100644
+index 000000000000..ec22470ee02a
+--- /dev/null
++++ b/src/plugins/platforms/eglfs/deviceintegration/eglfs_brcmstb/qeglfsbrcmstbmain.cpp
+@@ -0,0 +1,56 @@
++/****************************************************************************
++**
++** Copyright (C) 2016 The Qt Company Ltd.
++** Contact: https://www.qt.io/licensing/
++**
++** This file is part of the plugins of the Qt Toolkit.
++**
++** $QT_BEGIN_LICENSE:LGPL$
++** Commercial License Usage
++** Licensees holding valid commercial Qt licenses may use this file in
++** accordance with the commercial license agreement provided with the
++** Software or, alternatively, in accordance with the terms contained in
++** a written agreement between you and The Qt Company. For licensing terms
++** and conditions see https://www.qt.io/terms-conditions. For further
++** information use the contact form at https://www.qt.io/contact-us.
++**
++** GNU Lesser General Public License Usage
++** Alternatively, this file may be used under the terms of the GNU Lesser
++** General Public License version 3 as published by the Free Software
++** Foundation and appearing in the file LICENSE.LGPL3 included in the
++** packaging of this file. Please review the following information to
++** ensure the GNU Lesser General Public License version 3 requirements
++** will be met: https://www.gnu.org/licenses/lgpl-3.0.html.
++**
++** GNU General Public License Usage
++** Alternatively, this file may be used under the terms of the GNU
++** General Public License version 2.0 or (at your option) the GNU General
++** Public license version 3 or any later version approved by the KDE Free
++** Qt Foundation. The licenses are as published by the Free Software
++** Foundation and appearing in the file LICENSE.GPL2 and LICENSE.GPL3
++** included in the packaging of this file. Please review the following
++** information to ensure the GNU General Public License requirements will
++** be met: https://www.gnu.org/licenses/gpl-2.0.html and
++** https://www.gnu.org/licenses/gpl-3.0.html.
++**
++** $QT_END_LICENSE$
++**
++****************************************************************************/
++
++#include "private/qeglfsdeviceintegration_p.h"
++#include "qeglfsbrcmstbintegration.h"
++
++QT_BEGIN_NAMESPACE
++
++class QEglFSBrcmSTBIntegrationPlugin : public QEglFSDeviceIntegrationPlugin
++{
++    Q_OBJECT
++    Q_PLUGIN_METADATA(IID QEglFSDeviceIntegrationFactoryInterface_iid FILE "eglfs_brcmstb.json")
++
++public:
++    QEglFSDeviceIntegration *create() Q_DECL_OVERRIDE { return new QEglFSBrcmSTBIntegration; }
++};
++
++QT_END_NAMESPACE
++
++#include "qeglfsbrcmstbmain.moc"
+-- 
+2.24.1 (Apple Git-126)
+

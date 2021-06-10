@@ -1,0 +1,20 @@
+---
+ chromium/third_party/ffmpeg/configure | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/chromium/third_party/ffmpeg/configure b/chromium/third_party/ffmpeg/configure
+index ae1cd2d8f18..cbf1709b964 100755
+--- a/chromium/third_party/ffmpeg/configure
++++ b/chromium/third_party/ffmpeg/configure
+@@ -332,7 +332,7 @@ External library support:
+   --enable-mmal            enable Broadcom Multi-Media Abstraction Layer (Raspberry Pi) via MMAL [no]
+   --disable-nvdec          disable Nvidia video decoding acceleration (via hwaccel) [autodetect]
+   --disable-nvenc          disable Nvidia video encoding code [autodetect]
+-  --enable-omx             enable OpenMAX IL code [no]
++  --enable-omx             enable OpenMAX IL code [yes]
+   --enable-omx-rpi         enable OpenMAX IL code for Raspberry Pi [no]
+   --enable-rkmpp           enable Rockchip Media Process Platform code [no]
+   --disable-v4l2-m2m       disable V4L2 mem2mem code [autodetect]
+-- 
+2.17.1
+

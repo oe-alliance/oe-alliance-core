@@ -1,0 +1,33 @@
+---
+ chromium/third_party/widevine/cdm/BUILD.gn | 3 +++
+ chromium/third_party/widevine/cdm/widevine_cdm_version.h | 2 ++
+ 2 file changed, 5 insertions(+)
+
+diff --git a/chromium/third_party/widevine/cdm/BUILD.gn b/chromium/third_party/widevine/cdm/BUILD.gn
+index 27b3e915083..f1bbb5f0a35 100644
+--- a/chromium/third_party/widevine/cdm/BUILD.gn
++++ b/chromium/third_party/widevine/cdm/BUILD.gn
+@@ -37,6 +37,9 @@ if (bundle_widevine_cdm) {
+   } else if (is_desktop_linux) {
+     widevine_cdm_version_h_file = "linux/$widevine_arch/widevine_cdm_version.h"
+     widevine_cdm_binary_files = [ "linux/$widevine_arch/libwidevinecdm.so" ]
++  } else if (is_linux) {
++    widevine_cdm_version_h_file = "linux/$widevine_arch/widevine_cdm_version.h"
++    widevine_cdm_binary_files = [ "linux/$widevine_arch/libwidevinecdm.so" ]
+   } else if (is_win) {
+     widevine_cdm_version_h_file = "win/$widevine_arch/widevine_cdm_version.h"
+     widevine_cdm_binary_files = [ "win/$widevine_arch/widevinecdm.dll" ]
+diff --git a/chromium/third_party/widevine/cdm/widevine_cdm_version.h b/chromium/third_party/widevine/cdm/widevine_cdm_version.h
+index dd6efed0264..d13b8d6aa5b 100644
+--- a/chromium/third_party/widevine/cdm/widevine_cdm_version.h
++++ b/chromium/third_party/widevine/cdm/widevine_cdm_version.h
+@@ -12,4 +12,6 @@
+ //  - WIDEVINE_CDM_VERSION_STRING (with the version of the CDM that's available
+ //    as a string, e.g., "1.0.123.456").
+ 
++#define WIDEVINE_CDM_VERSION_STRING "4.10.1503.4"
++
+ #endif  // WIDEVINE_CDM_VERSION_H_
+-- 
+2.17.1
+

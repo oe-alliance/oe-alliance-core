@@ -1,0 +1,20 @@
+---
+ src/mainwindow.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/mainwindow.cpp b/src/mainwindow.cpp
+index 3e8071d..b4b1436 100644
+--- a/src/mainwindow.cpp
++++ b/src/mainwindow.cpp
+@@ -94,7 +94,7 @@ MainWindow::MainWindow(QWidget *parent)
+   keyCtrlF5->setKey(Qt::CTRL + Qt::Key_F5); // Set the key code
+   connect(keyCtrlF5, SIGNAL(activated()), this, SLOT(slotShortcutCtrlF5()));
+ 
+-  this->webview->page()->profile()->setHttpUserAgent("Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101 Firefox/68.0");
++  this->webview->page()->profile()->setHttpUserAgent("Mozilla/5.0 (X11; CrOS armv7l 11895.95.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36");
+ 
+   // Connect finished loading boolean
+   connect(webview, &QWebEngineView::loadFinished, this,
+-- 
+2.17.1
+
