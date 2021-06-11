@@ -76,4 +76,4 @@ OEM_ARCH = "${MACHINEBUILD}"
 BBMASK = "meta-vuplus/recipes-graphics/"
 BBMASK += "meta-fulan/recipes-graphics/"
 BBMASK += "meta-vuplus/recipes-webkit/"
-BBMASK += "meta-oe/recipes-qt5.14/ meta-oe/recipes-qt5.15/"
+
