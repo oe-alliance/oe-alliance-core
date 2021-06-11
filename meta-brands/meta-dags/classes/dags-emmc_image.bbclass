@@ -22,7 +22,7 @@ IMAGE_CMD_dagsemmc () {
     mkdir -p ${IMGDEPLOYDIR}/rootfs/linuxrootfs3
     mkdir -p ${IMGDEPLOYDIR}/rootfs/linuxrootfs4
     mkdir -p ${IMGDEPLOYDIR}/rootfs/lost+found
-    cp -a ${IMAGE_ROOTFS}/* ${IMGDEPLOYDIR}/rootfs/linuxrootfs1/
+    cp -fR --preserve=mode,links ${IMAGE_ROOTFS}/* ${IMGDEPLOYDIR}/rootfs/linuxrootfs1/
 
     eval local COUNT=\"0\"
     eval local MIN_COUNT=\"60\"
