@@ -9,7 +9,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r10"
+PR = "r11"
 
 DEPENDS = "enigma2-plugin-drivers-usbserial enigma2-plugin-systemplugins-radiotimesemulator enigma2-plugin-systemplugins-hrtunerproxy"
 
@@ -72,6 +72,7 @@ RDEPENDS_${PN} = " \
     ${@bb.utils.contains("DISTRO_FEATURES", "directfb", "avahi-ui", "", d)} \
     astra-sm \
     binutils \
+    chrpath \
     ctorrent \
     cups \
     davfs2 \
@@ -119,6 +120,7 @@ RDEPENDS_${PN} = " \
     p7zip \
     packagegroup-base-samba \
     parted \
+    patchelf \
     pngquant \
     pcsc-lite \
     pcsc-tools \
