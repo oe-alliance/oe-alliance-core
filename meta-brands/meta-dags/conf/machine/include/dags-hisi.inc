@@ -30,7 +30,6 @@ TARGET_ARCH = "arm"
 DEFAULTTUNE = "cortexa15hf-neon-vfpv4"
 
 PREFERRED_VERSION_linux-dags = "4.4.35"
-PREFERRED_VERSION_ffmpeg = "3.4.2"
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-dags"
 
