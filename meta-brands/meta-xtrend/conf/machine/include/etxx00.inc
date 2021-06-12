@@ -21,6 +21,7 @@ MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS += "\
 
 MACHINE_EXTRA_RRECOMMENDS += " \
     gstreamer1.0-plugin-dvbmediasink \
+    ${@bb.utils.contains('MACHINE_FEATURES', 'v3d-nxpl', 'xtrend-v3ddriver-${MACHINE}' , '', d)} \
     "
 
 include conf/machine/include/autoload-filesystems.inc
@@ -33,11 +34,16 @@ DVBMEDIASINK_CONFIG = "--with-wma --with-wmv --with-pcm --with-dts --with-eac3 -
 TARGET_ARCH = "mipsel"
 DEFAULTTUNE = "mips32el"
 
+PREFERRED_PROVIDER_virtual/egl ?= "xtrend-v3ddriver-${MACHINE}" 
+PREFERRED_PROVIDER_virtual/libgles1 ?= "xtrend-v3ddriver-${MACHINE}"
+PREFERRED_PROVIDER_virtual/libgles2 ?= "xtrend-v3ddriver-${MACHINE}"
+PREFERRED_PROVIDER_virtual/libgbm ?= "xtrend-v3ddriver-${MACHINE}"
+PREFERRED_PROVIDER_virtual/libgl ?= "mesa"
+PREFERRED_PROVIDER_virtual/mesa ?= "mesa"
+
 PREFERRED_PROVIDER_virtual/kernel = "linux-etxx00"
 PREFERRED_PROVIDER_virtual/blindscan-dvbs = "et-blindscan-dvbs-utils"
 PREFERRED_PROVIDER_virtual/blindscan-dvbc = "et-blindscan-dvbc-utils-${MACHINE}"
-PREFERRED_PROVIDER_virtual/egl = "xtrend-v3ddriver-${MACHINE}" 
-PREFERRED_PROVIDER_virtual/libgles2 = "xtrend-v3ddriver-${MACHINE}"
 PREFERRED_PROVIDER_virtual/kodi = "stb-kodi-${MACHINE}"
 
 KERNEL_IMAGETYPE = "vmlinux"

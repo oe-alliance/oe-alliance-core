@@ -10,13 +10,18 @@ SRC_URI += " \
 	${@bb.utils.contains('MACHINE_FEATURES', 'mali', 'file://0001-eglfs-mali-platform.patch' , '', d)} \
 	${@bb.utils.contains('MACHINE_FEATURES', 'v3d-nxpl', 'file://0002-eglfs-brcm-nexus-platform.patch' , '', d)} \
 	${@bb.utils.contains('MACHINE_FEATURES', 'v3d-eglfs', 'file://0001-Add-eglfs-brcmstb-support-for-INTEGRITY.patch' , '', d)} \
+	${@bb.utils.contains('MACHINE_FEATURES', 'vu-eglfs', 'file://0001-Add-eglfs-libvupl-support-for-INTEGRITY.patch' , '', d)} \
 "
+
+DEPENDS_append_class-target = "${@bb.utils.contains('MACHINE_FEATURES', 'vu-eglfs', 'libvupl libgles' , '', d)}"
+RDEPENDS_${PN}_append_class-target = "${@bb.utils.contains('MACHINE_FEATURES', 'vu-eglfs', 'libvupl libgles' , '', d)}"
 
 PACKAGECONFIG_GL = " "
 PACKAGECONFIG_OPENSSL = "openssl"
-PACKAGECONFIG_remove = "tests"
+PACKAGECONFIG_remove = "tests ${@bb.utils.contains('MACHINE_FEATURES', 'vu-eglfs', 'gl' , '', d)}"
 PACKAGECONFIG_append += " \
-    ${@bb.utils.contains('MACHINE_FEATURES', 'noopengl', '', 'gles2 eglfs', d)} \
+    ${@bb.utils.contains('MACHINE_FEATURES', 'noopengl', '', ' gles2 eglfs ', d)} \
+    ${@bb.utils.contains('MACHINE_FEATURES', 'vu-eglfs', ' accessibility examples ' , '', d)} \
     linuxfb \
 "
 

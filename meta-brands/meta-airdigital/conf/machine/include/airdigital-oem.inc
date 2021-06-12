@@ -192,10 +192,10 @@ DVBSKYPROVIDER = "kernel"
 
 MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS += "\
     kernel-module-cdfs \
-    ${@bb.utils.contains('MACHINE_FEATURES', 'qtegls', 'airdigital-qteglfs-platform', '',d)} \
     ${@bb.utils.contains('MACHINE_FEATURES', 'swap', 'airdigital-swapcreate', '',d)} \
     ${@bb.utils.contains('MACHINE_FEATURES', 'emmc', 'resizerootfs' , '', d)} \
     ${@bb.utils.contains('MACHINE_FEATURES', 'adwol', 'airdigital-ethwol' , '', d)} \
+    ${@bb.utils.contains('MACHINE_FEATURES', 'v3d-nxpl', 'airdigital-v3ddriver-${MACHINE}' , '', d)} \
     "
 
 MACHINE_EXTRA_RRECOMMENDS += " \

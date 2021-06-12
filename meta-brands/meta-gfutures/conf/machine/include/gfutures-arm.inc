@@ -12,8 +12,13 @@ IMAGE_ROOTFS_SIZE ?= "589824"
 TARGET_ARCH = "arm"
 DEFAULTTUNE = "cortexa15hf-neon-vfpv4"
 
-PREFERRED_PROVIDER_virtual/egl = "hd-v3ddriver-${MACHINE}" 
-PREFERRED_PROVIDER_virtual/libgles2 = "hd-v3ddriver-${MACHINE}"
+PREFERRED_PROVIDER_virtual/egl ?= "hd-v3ddriver-${MACHINE}"
+PREFERRED_PROVIDER_virtual/libgles1 ?= "hd-v3ddriver-${MACHINE}"
+PREFERRED_PROVIDER_virtual/libgles2 ?= "hd-v3ddriver-${MACHINE}"
+PREFERRED_PROVIDER_virtual/libgbm ?= "hd-v3ddriver-${MACHINE}"
+PREFERRED_PROVIDER_virtual/libgl ?= "mesa"
+PREFERRED_PROVIDER_virtual/mesa ?= "mesa"
+
 
 MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS += "\
     ${@bb.utils.contains('MACHINE_FEATURES', 'emmc', 'resizerootfs' , '', d)} \

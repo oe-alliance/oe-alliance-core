@@ -180,6 +180,7 @@ DVBSKYPROVIDER = "kernel"
 
 MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS += " \
     kernel-module-cdfs \
+    ${@bb.utils.contains('MACHINE_FEATURES', 'v3d-nxpl', 'ceryon-v3ddriver-${MACHINE}' , '', d)} \
     "
 
 MACHINE_EXTRA_RRECOMMENDS += " \
@@ -201,9 +202,13 @@ DVBMEDIASINK_CONFIG = "--with-wma --with-wmv --with-pcm --with-dts --with-eac3 \
     ${@bb.utils.contains('MACHINE', '8100s', '--with-h265 --with-vb6 --with-vb8 --with-vb9 --with-spark' , '', d)} \
 "
 
+PREFERRED_PROVIDER_virtual/egl ?= "ceryon-v3ddriver-${MACHINE}" 
+PREFERRED_PROVIDER_virtual/libgles1 ?= "ceryon-v3ddriver-${MACHINE}"
+PREFERRED_PROVIDER_virtual/libgles2 ?= "ceryon-v3ddriver-${MACHINE}"
+PREFERRED_PROVIDER_virtual/libgbm ?= "ceryon-v3ddriver-${MACHINE}"
+PREFERRED_PROVIDER_virtual/libgl ?= "mesa"
+PREFERRED_PROVIDER_virtual/mesa ?= "mesa"
 PREFERRED_PROVIDER_virtual/kernel = "linux-ceryon"
-PREFERRED_PROVIDER_virtual/egl = "ceryon-v3ddriver-${MACHINE}" 
-PREFERRED_PROVIDER_virtual/libgles2 = "ceryon-v3ddriver-${MACHINE}"
 PREFERRED_PROVIDER_virtual/kodi = "stb-kodi-${MACHINE}"
 
 PREFERRED_PROVIDER_virtual/blindscan-dvbs = "ceryon-blindscan-utils"
