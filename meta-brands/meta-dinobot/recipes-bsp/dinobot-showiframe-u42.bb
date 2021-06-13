@@ -10,7 +10,7 @@ COMPATIBLE_MACHINE = "^(u42)$"
 SRCDATE = "20210607"
 
 PV = "${SRCDATE}"
-PR = "r0"
+PR = "r1"
 
 RPROVIDES_${PN}  = "showiframe"
 RREPLACES_${PN}  = "showiframe"
@@ -23,7 +23,9 @@ S = "${WORKDIR}"
 do_install() {
     install -d ${D}${bindir}
     install -m 0755 ${S}/showiframe ${D}/${bindir}
-    install -m 0755 ${S}/dinobotplayer ${D}/${bindir}
+    if [ -e ${S}/dinobotplayer ]; then
+        install -m 0755 ${S}/dinobotplayer ${D}/${bindir}
+    fi
 }
 
 do_package_qa() {
