@@ -9,7 +9,7 @@ PROVIDES += "virtual/kodi"
 RPROVIDES_${PN} += "virtual/kodi"
 PROVIDES += "kodi"
 RPROVIDES_${PN} += "kodi"
-RDEPENDS_${PN} += "maxytec-mali-${HICHIPSET}"
+RDEPENDS_${PN} += "gfutures-mali-${HICHIPSET}"
 
 EXTRA_OECMAKE += " \
     -DWITH_PLATFORM=mali-cortexa15 \
