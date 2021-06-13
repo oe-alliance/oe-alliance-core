@@ -1,16 +1,17 @@
 DESCRIPTION = "Transmission is a BitTorrent client w/ a built-in Ajax-Powered Webif GUI."
 SECTION = "network"
 HOMEPAGE = "www.transmissionbt.com/"
-LICENSE = "GPLv2 & GPLv3"
-LIC_FILES_CHKSUM = "file://COPYING;md5=0dd9fcdc1416ff123c41c785192a1895"
+LICENSE = "GPL-2.0"
+LIC_FILES_CHKSUM = "file://COPYING;md5=73f535ddffcf2a0d3af4f381f84f9b33"
 
-DEPENDS = "gnutls openssl gettext libtool intltool-native curl glib-2.0-native libevent librtmp"
+DEPENDS = "curl libevent gnutls openssl libtool intltool-native glib-2.0-native"
 
-SRCREV = "d8e60ee44f4295935bd98bf741f85ed19f5a7dfb"
+# Transmission release 3.00
+SRCREV = "bb6b5a062ee594dfd4b7a12a6b6e860c43849bfd"
+PV = "3.00"
 
-SRC_URI = "git://github.com/transmission/transmission.git;name=archive \
+SRC_URI = "gitsm://github.com/transmission/transmission;protocol=https \
         file://configure-kill-intl-check.patch \
-        file://allow_the_rpc_server_to_listen_on_an_ipv6_address.patch \
         file://configure-allow-local-network.patch \
         file://init \
         file://config\
@@ -19,22 +20,23 @@ SRC_URI = "git://github.com/transmission/transmission.git;name=archive \
 INITSCRIPT_NAME = "transmission-daemon"
 INITSCRIPT_PARAMS = "defaults 60 "
 
-# add --disable-nls to configure options this way because of def in gettext.class
-USE_NLS = "no"
+S = "${WORKDIR}/git"
 
-EXTRA_OECONF = "\
-    --without-gtk \
+inherit autotools-brokensep gettext update-rc.d systemd mime-xdg
+
+PACKAGECONFIG = "${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'gtk', '', d)} \
+                 ${@bb.utils.contains('DISTRO_FEATURES','systemd','systemd','',d)}"
+
+PACKAGECONFIG[gtk] = " --with-gtk,--without-gtk,gtk+3,"
+PACKAGECONFIG[systemd] = "--with-systemd,--without-systemd,systemd,"
+
+EXTRA_OECONF += " \
     --disable-cli \
     --disable-mac \
     --enable-lightweight \
     --enable-daemon \
     CPPFLAGS=-DTR_EMBEDDED \
 "
-
-inherit autotools update-rc.d gettext
-
-S = "${WORKDIR}/git"
-B = "${S}"
 
 do_configure_prepend() {
     sed -i /AM_GLIB_GNU_GETTEXT/d ${S}/configure.ac

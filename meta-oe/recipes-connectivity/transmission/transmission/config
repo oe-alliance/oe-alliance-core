@@ -1,7 +1,7 @@
 # Default values for transmission daemon
 # please fill in and enable service.
 # Username and password for the RPC interface
-USER="root"
+USERNAME="root"
 PASSWORD="enigma2"
 RPC_PORT=9091
 
