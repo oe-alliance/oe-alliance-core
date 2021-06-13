@@ -193,9 +193,9 @@ PKGV = "${IMAGE_VERSION}+git${GITPKGV}"
 
 SRC_URI = "${ENIGMA2_URI}"
 
-SRC_URI_append_spycatminiv2 = " \
-    file://enigma2-dinobotplayer.patch \
-    "
+#SRC_URI_append_spycatminiv2 = " \
+#    file://enigma2-dinobotplayer.patch \
+#    "
 
 SRC_URI_append_sh4 = " \
     ${@bb.utils.contains("DISTRO_NAME", "openspa", "file://sh4-define-DTV_ENUM_DELSYS.patch" , "", d)} \
