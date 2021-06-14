@@ -14,6 +14,7 @@ SRC_URI = "gitsm://github.com/transmission/transmission;protocol=https \
         file://configure-kill-intl-check.patch \
         file://configure-allow-local-network.patch \
         file://init \
+        file://service \
         file://config \
 "
 
