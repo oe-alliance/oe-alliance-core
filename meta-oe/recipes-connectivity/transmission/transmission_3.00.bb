@@ -14,7 +14,7 @@ SRC_URI = "gitsm://github.com/transmission/transmission;protocol=https \
         file://configure-kill-intl-check.patch \
         file://configure-allow-local-network.patch \
         file://init \
-        file://config\
+        file://config \
 "
 
 INITSCRIPT_NAME = "transmission-daemon"
@@ -22,15 +22,14 @@ INITSCRIPT_PARAMS = "defaults 60 "
 
 S = "${WORKDIR}/git"
 
-inherit autotools-brokensep gettext update-rc.d systemd mime-xdg
+inherit autotools-brokensep gettext update-rc.d systemd
 
-PACKAGECONFIG = "${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'gtk', '', d)} \
-                 ${@bb.utils.contains('DISTRO_FEATURES','systemd','systemd','',d)}"
+PACKAGECONFIG = "${@bb.utils.contains('DISTRO_FEATURES','systemd','systemd','',d)}"
 
-PACKAGECONFIG[gtk] = " --with-gtk,--without-gtk,gtk+3,"
 PACKAGECONFIG[systemd] = "--with-systemd,--without-systemd,systemd,"
 
 EXTRA_OECONF += " \
+    --without-gtk \
     --disable-cli \
     --disable-mac \
     --enable-lightweight \
@@ -46,11 +45,19 @@ do_configure_prepend() {
 }
 
 do_install_append() {
-    install -d ${D}${sysconfdir}/init.d
-    install -m 0755 ${WORKDIR}/init ${D}${sysconfdir}/init.d/transmission-daemon
     install -d ${D}${sysconfdir}/default
     install -m 0755 ${WORKDIR}/config ${D}${sysconfdir}/default/transmission-daemon
-    install -d ${D}${localstatedir}/lib/transmission-daemon
+
+    if ${@bb.utils.contains('DISTRO_FEATURES', 'sysvinit', 'true', 'false', d)}; then
+        install -d ${D}${sysconfdir}/init.d
+        install -m 0755 ${WORKDIR}/init ${D}${sysconfdir}/init.d/transmission-daemon
+        install -d ${D}${localstatedir}/lib/transmission-daemon
+    fi
+
+    if ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'true', 'false', d)}; then
+        install -d ${D}${systemd_unitdir}/system
+        install -m 0644 ${WORKDIR}/service ${D}${systemd_unitdir}/system/transmission-daemon.service
+    fi
 }
 
 PACKAGES += "${PN}-gui ${PN}-client"
@@ -59,3 +66,5 @@ FILES_${PN} = "${bindir}/transmission-daemon ${datadir}/transmission ${sysconfdi
 FILES_${PN}-client = "${bindir}/transmission-remote ${bindir}/transmission-cli ${bindir}/transmission-create ${bindir}/transmission-show ${bindir}/transmission-edit"
 FILES_${PN}-gui += "${bindir}/transmission-gtk ${datadir}/icons ${datadir}/applications ${datadir}/pixmaps"
 CONFFILES_${PN} = "${sysconfdir}/default/transmission-daemon"
+
+SYSTEMD_SERVICE_${PN} = "transmission-daemon.service"
