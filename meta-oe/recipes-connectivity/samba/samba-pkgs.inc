@@ -176,7 +176,9 @@ pkg_postinst_${BPN}-common_append() {
 
 set +e
 grep -v 'pam_smbpass.so' $D/etc/pam.d/common-password > $D/tmp/common-password
-mv $D/tmp/common-password $D/etc/pam.d/common-password
+if [ -e $D/tmp/common-password ]; then
+    mv $D/tmp/common-password $D/etc/pam.d/common-password
+fi
 echo -e "password\toptional\t\t\tpam_smbpass.so use_authtok use_first_pass" >> $D/etc/pam.d/common-password
 
 grep -qE '^kids:' $D/etc/passwd
