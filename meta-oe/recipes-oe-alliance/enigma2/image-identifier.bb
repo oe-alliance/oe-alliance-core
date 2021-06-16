@@ -8,13 +8,14 @@ require conf/license/license-gplv2.inc
 
 PV = "${IMAGE_VERSION}"
 PR = "r${DATE}-${BUILD_VERSION}-${MACHINEBUILD}"
-PR[vardepsxeclude] += " DATE DATETIME"
+PR[vardepsxeclude] += "DATE"
 PACKAGE_ARCH = "${MACHINEBUILD}"
 WORKDIR = "${TMPDIR}/work/${MULTIMACH_TARGET_SYS}/${PN}/${EXTENDPE}${PV}"
 do_configure[nostamp] = "1"
-do_configure[vardepsexclude] += " DATE DATETIME"
-do_install[vardepsexclude] += " DATE"
-
+do_configure[vardepsexclude] += "DATE"
+do_install[vardepsexclude] += "DATE"
+do_populate_lic[vardepsexclude] += "DATE"
+do_rm_work[vardepsexclude] += "DATE"
 S = "${WORKDIR}"
 
 PACKAGES = "${PN}"
