@@ -9,9 +9,7 @@ SRCREV = "${AUTOREV}"
 PKGV = "4.x+git${GITPKGV}"
 PV = "4.x+git${SRCPV}"
 
-SRC_URI = "git://github.com/oe-alliance/ofgwrite.git \
-    file://fix_glibc_major.patch \
-"
+SRC_URI = "git://github.com/oe-alliance/ofgwrite.git"
 
 inherit autotools-brokensep pkgconfig
 
