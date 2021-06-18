@@ -1,4 +1,4 @@
-SUMMARY = "MadMax Fhd by Madhouse & StixMax"
+SUMMARY = "MadMax Fhd Poster by Madhouse & StixMax"
 MAINTAINER = "madhouse"
 
 require conf/license/license-gplv2.inc
@@ -6,9 +6,9 @@ require conf/license/license-gplv2.inc
 inherit gitpkgv
 
 SRCREV = "${AUTOREV}"
-PV = "1.8+git${SRCPV}"
-PKGV = "1.8+git${GITPKGV}"
-VER="1.8"
+PV = "2.1+git${SRCPV}"
+PKGV = "2.1+git${GITPKGV}"
+VER="2.1"
 
 RDEPENDS_${PN} = "enigma2-plugin-systemplugins-weathercomponenthandler, enigma2-plugin-skincomponents-weathercomponent, enigma2-plugin-extensions-weatherplugin"
 
@@ -48,6 +48,12 @@ pkg_postrm_${PN} () {
 #!/bin/sh
 if [ -d /usr/lib/enigma2/python/Plugins/Extensions/MadMax ]; then
   rm -rf /usr/lib/enigma2/python/Plugins/Extensions/MadMax
+fi;
+if [ -d /usr/share/enigma2/MadMax-Poster ]; then
+  rm -rf /usr/share/enigma2/MadMax-Poster
+fi;
+if [ -d /usr/share/enigma2/MadMax-Dual-Poster ]; then
+  rm -rf /usr/share/enigma2/MadMax-Dual-Poster
 fi;
 if [ -d /usr/share/enigma2/MadMax ]; then
   rm -rf /usr/share/enigma2/MadMax
