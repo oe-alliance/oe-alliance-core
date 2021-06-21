@@ -26,11 +26,11 @@ RDEPENDS_${PN} = "python-core \
     python-websocket-client \
     "
 
-inherit gitpkgv setuptools
+inherit gittag setuptools python-dir
 
 SRCREV = "${AUTOREV}"
-PV = "1.27.4.0+git${SRCPV}"
-PKGV = "1.27.4.0+git${GITPKGV}"
+PV = "git${SRCPV}"
+PKGV = "${GITPKGVTAG}"
 
 SRC_URI = "git://github.com/oe-mirrors/streamlink-27;protocol=https"
 
