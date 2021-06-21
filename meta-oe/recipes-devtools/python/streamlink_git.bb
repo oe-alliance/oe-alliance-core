@@ -23,13 +23,26 @@ RDEPENDS_${PN} = "${PYTHON_PN}-core \
     ${PYTHON_PN}-websocket-client \
     "
 
-SRCREV = "${AUTOREV}"
-PV = "2.1.2+git${SRCPV}"
-PKGV = "2.1.2+git${GITPKGV}"
+PV = "2.2.x+git${SRCPV}"
+PKGV = "2.2.x+git${GITPKGV}"
 
-SRC_URI = "git://github.com/streamlink/streamlink.git;protocol=https"
+SRCREV_streamlink = "${AUTOREV}"
+SRCREV_plugins = "${AUTOREV}"
+
+SRCREV_FORMAT = "streamlink_plugins"
+
+SRC_URI = "git://github.com/streamlink/streamlink.git;protocol=https;name=streamlink \
+           git://github.com/oe-mirrors/streamlink-plugins;protocol=https;name=plugins;destsuffix=additional-plugins"
 
 S = "${WORKDIR}/git"
+
+do_unpack_append() {
+    bb.build.exec_func('do_prepare_plugins_dir', d)
+}
+
+do_prepare_plugins_dir() {
+    cp -f ${WORKDIR}/additional-plugins/*.py ${S}/src/streamlink/plugins
+}
 
 do_install_append() {
     rm -rf ${D}${bindir}
