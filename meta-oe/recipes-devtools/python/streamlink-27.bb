@@ -26,7 +26,7 @@ RDEPENDS_${PN} = "python-core \
     python-websocket-client \
     "
 
-inherit gittag setuptools python-dir
+inherit gittag setuptools
 
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
