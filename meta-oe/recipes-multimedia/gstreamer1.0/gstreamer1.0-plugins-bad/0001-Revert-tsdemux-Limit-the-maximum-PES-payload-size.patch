@@ -6,12 +6,9 @@ Subject: [PATCH] Revert "tsdemux: Limit the maximum PES payload size"
 This commit causes audio/video asynchrony on some streams.
 
 Reverts commit eaf918df0366975c05003b4c2a98e077b0106483.
----
- gst/mpegtsdemux/tsdemux.c | 36 +++++++++---------------------------
- 1 file changed, 9 insertions(+), 27 deletions(-)
 
 diff --git a/gst/mpegtsdemux/tsdemux.c b/gst/mpegtsdemux/tsdemux.c
-index c50f811..ea584a6 100644
+index f27a624..8eb95d8 100644
 --- a/gst/mpegtsdemux/tsdemux.c
 +++ b/gst/mpegtsdemux/tsdemux.c
 @@ -75,13 +75,6 @@
@@ -28,7 +25,7 @@ index c50f811..ea584a6 100644
  GST_DEBUG_CATEGORY_STATIC (ts_demux_debug);
  #define GST_CAT_DEFAULT ts_demux_debug
  
-@@ -2474,7 +2467,7 @@ gst_ts_demux_queue_data (GstTSDemux * demux, TSDemuxStream * stream,
+@@ -2534,7 +2527,7 @@ gst_ts_demux_queue_data (GstTSDemux * demux, TSDemuxStream * stream,
        if (G_UNLIKELY (stream->current_size + size > stream->allocated_size)) {
          GST_LOG ("resizing buffer");
          do {
@@ -37,7 +34,7 @@ index c50f811..ea584a6 100644
          } while (stream->current_size + size > stream->allocated_size);
          stream->data = g_realloc (stream->data, stream->allocated_size);
        }
-@@ -3168,17 +3161,11 @@ gst_ts_demux_push_pending_data (GstTSDemux * demux, TSDemuxStream * stream,
+@@ -3321,17 +3314,11 @@ gst_ts_demux_push_pending_data (GstTSDemux * demux, TSDemuxStream * stream,
    }
  
  beach:
@@ -59,7 +56,7 @@ index c50f811..ea584a6 100644
    stream->current_size = 0;
  
    return res;
-@@ -3195,23 +3182,18 @@ gst_ts_demux_handle_packet (GstTSDemux * demux, TSDemuxStream * stream,
+@@ -3348,26 +3335,18 @@ gst_ts_demux_handle_packet (GstTSDemux * demux, TSDemuxStream * stream,
        FLAGS_CONTINUITY_COUNTER (packet->scram_afc_cc), packet->payload);
  
    if (G_UNLIKELY (packet->payload_unit_start_indicator) &&
@@ -67,8 +64,11 @@ index c50f811..ea584a6 100644
 +      FLAGS_HAS_PAYLOAD (packet->scram_afc_cc))
      /* Flush previous data */
      res = gst_ts_demux_push_pending_data (demux, stream, NULL);
--    /* Tell the data collecting to expect this header */
--    stream->state = PENDING_PACKET_HEADER;
+-    if (res != GST_FLOW_REWINDING) {
+-      /* Tell the data collecting to expect this header. We don't do this when
+-       * rewinding since the states will have been resetted accordingly */
+-      stream->state = PENDING_PACKET_HEADER;
+-    }
 -  }
  
    if (packet->payload && (res == GST_FLOW_OK || res == GST_FLOW_NOT_LINKED)
@@ -87,6 +87,3 @@ index c50f811..ea584a6 100644
        res = gst_ts_demux_push_pending_data (demux, stream, NULL);
      }
    }
--- 
-2.7.4
-
