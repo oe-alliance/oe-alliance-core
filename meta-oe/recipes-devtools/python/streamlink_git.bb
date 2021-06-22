@@ -5,7 +5,7 @@ SECTION = "devel/python"
 LICENSE = "BSD-2-Clause"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=7c0be52291b7252b878da806d185b1d1"
 
-inherit setuptools3 ${PYTHON_PN}-dir gitpkgv
+inherit setuptools3 ${PYTHON_PN}-dir gittag
 
 RDEPENDS_${PN} = "${PYTHON_PN}-core \
     ${PYTHON_PN}-ctypes \
@@ -23,8 +23,9 @@ RDEPENDS_${PN} = "${PYTHON_PN}-core \
     ${PYTHON_PN}-websocket-client \
     "
 
-PV = "2.2.x+git${SRCPV}"
-PKGV = "2.2.x+git${GITPKGV}"
+SRCREV = "${AUTOREV}"
+PV = "git${SRCPV}"
+PKGV = "${GITPKGVTAG}"
 
 SRCREV_streamlink = "${AUTOREV}"
 SRCREV_plugins = "${AUTOREV}"

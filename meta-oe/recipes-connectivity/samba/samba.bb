@@ -77,7 +77,7 @@ EXTRA_OECONF += "--disable-cups \
                  --with-configdir=${sysconfdir}/samba \
                  --with-privatedir=${sysconfdir}/samba/private \
                  --with-piddir=${localstatedir}/run \
-                 --with-lockdir=${localstatedir}/lib/samba \
+                 --with-lockdir=${@bb.utils.contains('IMAGE_FSTYPES','jffs2','${localstatedir}/run/samba','${localstatedir}/lib/samba',d)} \
                  --with-cachedir=${localstatedir}/lib/samba \
                  --with-sockets-dir=${localstatedir}/run \
                  --with-logfilebase=${localstatedir}/log/samba \
@@ -185,6 +185,10 @@ do_install() {
     # fix file-rdeps qa warning
     if [ -f ${D}${bindir}/onnode ]; then
         sed -i 's:\(#!/bin/\)bash:\1sh:' ${D}${bindir}/onnode
+    fi
+
+    if ${@bb.utils.contains('IMAGE_FSTYPES','jffs2','true','false',d)}; then
+		rm -rf ${D}${localstatedir}/run/samba
     fi
 
     rm -rf ${D}/run ${D}${localstatedir}/run ${D}${localstatedir}/log
