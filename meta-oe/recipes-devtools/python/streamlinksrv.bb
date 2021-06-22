@@ -12,10 +12,10 @@ RDEPENDS_${PN} = "python-core streamlink-27"
 SRC_URI = "git://github.com/athoik/livestreamersrv.git"
 S = "${WORKDIR}/git"
 
-inherit gitpkgv
+inherit gittag
 SRCREV = "${AUTOREV}"
-PV = "1.8.2+git${SRCPV}"
-PKGV = "1.8.2+git${GITPKGV}"
+PV = "git${SRCPV}"
+PKGV = "${GITPKGVTAG}"
 
 PACKAGES = "${PN}"
 
