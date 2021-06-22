@@ -5,7 +5,7 @@ SECTION = "devel/python"
 LICENSE = "BSD-2-Clause"
 LIC_FILES_CHKSUM = "${@bb.utils.contains("PYTHON_PN", "python", "file://LICENSE;md5=7c0be52291b7252b878da806d185b1d1", "file://LICENSE;md5=7c0be52291b7252b878da806d185b1d1", d)}"
 
-inherit ${@bb.utils.contains("PYTHON_PN", "python", "setuptools", "setuptools3", d)} ${PYTHON_PN}-dir gitpkgv
+inherit ${@bb.utils.contains("PYTHON_PN", "python", "setuptools", "setuptools3", d)} ${PYTHON_PN}-dir gittag
 
 RDEPENDS_${PN} = "${PYTHON_PN}-core \
     ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-backports-functools-lru-cache ${PYTHON_PN}-backports-shutil-get-terminal-size ${PYTHON_PN}-backports-shutil-which", "", d)} \
@@ -26,8 +26,8 @@ RDEPENDS_${PN} = "${PYTHON_PN}-core \
     "
 
 SRCREV = "${AUTOREV}"
-PV = "${@bb.utils.contains("PYTHON_PN", "python", "1.27.2.1+git${SRCPV}", "2.1.1+git${SRCPV}", d)}"
-PKGV = "${@bb.utils.contains("PYTHON_PN", "python", "1.27.2.1+git${GITPKGV}", "2.1.1+git${GITPKGV}", d)}"
+PV = "git${SRCPV}"
+PKGV = "${GITPKGVTAG}"
 
 SRC_URI = "${@bb.utils.contains("PYTHON_PN", "python", "git://github.com/oe-mirrors/streamlink-27;protocol=https", "git://github.com/streamlink/streamlink.git;protocol=https", d)}"
 
