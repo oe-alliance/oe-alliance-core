@@ -1,8 +1,8 @@
 require recipes-mediacenter/kodi/stb-kodi_${PV}.bb
 
-SRC_URI_append = " file://HiPlayer-for-kodi-19.patch \
-           file://HiPlayer-defaultplayer-19.patch \
-           file://HiPlayer-Subs-19.patch \
+SRC_URI_append = " file://HiPlayer-for-kodi-20.patch \
+           file://HiPlayer-defaultplayer-20.patch \
+           file://HiPlayer-Subs-20.patch \
 "
 
 PROVIDES += "virtual/kodi"

@@ -81,8 +81,37 @@ diff -uNr git/system/settings/settings.xml modify/system/settings/settings.xml
              <dependency type="visible">
 diff -uNr git/xbmc/Application.cpp modify/xbmc/Application.cpp
 --- git/xbmc/Application.cpp	2021-06-17 17:24:23.861161793 +0800
-+++ modify/xbmc/Application.cpp	2021-06-21 16:52:40.091165436 +0800
-@@ -4409,6 +4409,18 @@
++++ modify/xbmc/Application.cpp	2021-06-23 17:51:37.560096672 +0800
+@@ -95,6 +95,7 @@
+ #include "windowing/WindowSystemFactory.h"
+ 
+ #include <cmath>
++#include <fstream>
+ 
+ #ifdef HAS_UPNP
+ #include "network/upnp/UPnP.h"
+@@ -371,6 +372,9 @@
+   // Init our DllLoaders emu env
+   init_emu_environ();
+ 
++  std::string cmd("echo \"0\" > /proc/stb/vmpeg/0/enable");
++  system(cmd.c_str());
++  CLog::Log(LOGNOTICE,  "Hisi Clear Video backgroud: {}",cmd.c_str());
+   PrintStartupLog();
+ 
+   std::string strExecutablePath = CUtil::GetHomePath();
+@@ -2462,6 +2466,10 @@
+   CLog::Log(LOGINFO, "Stopping player");
+   m_appPlayer.ClosePlayer();
+ 
++  std::string cmd("echo \"1\" > /proc/stb/vmpeg/0/enable");
++  system(cmd.c_str());
++  CLog::Log(LOGNOTICE,  "Hisi Clear Video backgroud: {}",cmd.c_str());
++  
+   {
+     // close inbound port
+     CServiceBroker::UnregisterAppPort();
+@@ -4409,6 +4417,18 @@
    // if player has volume control, set it.
    m_appPlayer.SetVolume(m_volumeLevel);
    m_appPlayer.SetMute(m_muted);
