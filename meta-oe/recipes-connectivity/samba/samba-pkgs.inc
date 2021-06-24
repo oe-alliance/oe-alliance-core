@@ -29,23 +29,25 @@ RDEPENDS_${PN}-ctdb-tests += "bash util-linux-getopt"
 python samba_populate_packages() {
     def module_hook(file, pkg, pattern, format, basename):
         pn = d.getVar('PN')
+        d.appendVar('RRECOMMENDS_%s' % pn, ' %s' % pkg)
 
     mlprefix = d.getVar('MLPREFIX') or ''
     pam_libdir = d.expand('${base_libdir}/security')
     pam_pkgname = mlprefix + 'pam-plugin%s'
-    do_split_packages(d, pam_libdir, '^pam_(.*)\.so$', pam_pkgname, 'PAM plugin for %s', extra_depends='', prepend=False)
+    do_split_packages(d, pam_libdir, '^pam_(.*)\.so$', pam_pkgname, 'PAM plugin for %s', extra_depends='', prepend=True)
 
-    pkglibdir = d.getVar('libdir')
-    do_split_packages(d, pkglibdir, '^lib(.*)\.so\..*$', 'lib%s', 'Samba %s library', allow_links=True, extra_depends='${PN}-common', prepend=True)
-    do_split_packages(d, pkglibdir, '^lib(.*)\.so$', 'lib%s', 'Samba %s library', allow_links=True, extra_depends='${PN}-common', prepend=True)
-    moduledir = '%s/auth' % pkglibdir
-    do_split_packages(d, moduledir, '^(.*)\.so$', 'samba-auth-%s', 'Samba %s authentication backend', hook=module_hook, extra_depends='', prepend=False)
-    moduledir = '%s/pdb' % pkglibdir
-    do_split_packages(d, moduledir, '^(.*)\.so$', 'samba-pdb-%s', 'Samba %s password backend', hook=module_hook, extra_depends='', prepend=False)
+    libdir = d.getVar('libdir')
+    do_split_packages(d, libdir, '^lib(.*)\.so\..*$', 'lib%s', 'Samba %s library', extra_depends='${PN}-common', prepend=True, allow_links=True)
+    pkglibdir = '%s' % libdir
+    do_split_packages(d, pkglibdir, '^lib(.*)\.so$', 'lib%s', 'Samba %s library', extra_depends='${PN}-common', prepend=True)
+    moduledir = '%s/auth' % libdir
+    do_split_packages(d, moduledir, '^(.*)\.so$', 'samba-auth-%s', 'Samba %s authentication backend', hook=module_hook, extra_depends='', prepend=True)
+    moduledir = '%s/pdb' % libdir
+    do_split_packages(d, moduledir, '^(.*)\.so$', 'samba-pdb-%s', 'Samba %s password backend', hook=module_hook, extra_depends='', prepend=True)
 }
 
 PACKAGESPLITFUNCS_prepend = "samba_populate_packages "
-PACKAGES_DYNAMIC = "samba-auth-.* samba-pdb-.*"
+PACKAGES_DYNAMIC = "pam-pluginsmbpass samba-auth-.* samba-pdb-.*"
 
 # Common to client and server installation
 FILES_${BPN}-common = "${sysconfdir}/default \
@@ -54,7 +56,6 @@ FILES_${BPN}-common = "${sysconfdir}/default \
                        ${sysconfdir}/tmpfiles.d \
                        ${localstatedir}/lib/samba \
                        ${localstatedir}/spool/samba \
-                       ${base_libdir}/security/pam_smbpass.so \
                       "
 
 CONFFILES_${BPN}-common = "${sysconfdir}/pam.d/samba \
@@ -62,6 +63,7 @@ CONFFILES_${BPN}-common = "${sysconfdir}/pam.d/samba \
                            ${sysconfdir}/samba/private/users.map \
                            ${sysconfdir}/samba/private/smbpasswd \
                           "
+RRECOMMENDS_${BPN}-common += "pam-pluginsmbpass"
 INSANE_SKIP_${BPN}-common += "dev-so"
 
 # The Samba client
