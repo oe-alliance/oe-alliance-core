@@ -1,5 +1,8 @@
 include conf/machine/include/dags-oem.inc
 
+PACKAGECONFIG_GL_pn-qtbase = "gles2 eglfs linuxfb"
+PACKAGECONFIG_FB_pn-qtbase = " "
+
 KERNEL_FILE = "oe_kernel.bin"
 ROOTFS_FILE = "rootfs.tar.bz2"
 MTD_BLACK  = "mmcblk0"

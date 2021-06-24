@@ -1,0 +1,24 @@
+diff -uNr openhbbtvbrowser/main.cpp modify/main.cpp
+--- openhbbtvbrowser/main.cpp	2021-06-23 14:43:23.855618711 +0800
++++ modify/main.cpp	2021-06-23 16:36:16.712976824 +0800
+@@ -128,7 +128,6 @@
+ 
+     auto window = new BrowserWindow();
+ #if defined(EMBEDDED_BUILD)
+-    window->showFullScreen();
+     window->setWindowFlags(Qt::FramelessWindowHint);
+     window->setAttribute(Qt::WA_TranslucentBackground);
+     window->setStyleSheet("background: transparent;");
+@@ -142,7 +141,12 @@
+     window->webView()->setLanguage(QStringLiteral("DEU")); // TODO:
+     window->webView()->setScriptDebugging(scriptDebugging ? QStringLiteral("true") : QStringLiteral("false"));
+     window->webView()->setUrl(url);
++
++#if defined(EMBEDDED_BUILD)
++	window->showFullScreen();
++#else
+     window->show();
++#endif
+ 
+ #if defined(EMBEDDED_BUILD)
+     auto remote = new RemoteController();

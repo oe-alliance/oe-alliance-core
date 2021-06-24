@@ -2,6 +2,8 @@ include conf/machine/include/dags-oem.inc
 
 DISTRO_FEATURES_remove = "x11 wayland"
 
+PACKAGECONFIG_GL_pn-qtbase = " "
+PACKAGECONFIG_append_pn-qtbase += " gles2 linuxfb"
 KERNEL_FILE = "kernel.bin"
 ROOTFS_FILE = "rootfs.tar.bz2"
 MTD_BLACK  = "mmcblk0"
@@ -36,6 +38,9 @@ PREFERRED_PROVIDER_virtual/kernel = "linux-dags"
 PREFERRED_PROVIDER_virtual/egl = "dags-opengl-${SOC_FAMILY}"
 PREFERRED_PROVIDER_virtual/libgles1 = "dags-opengl-${SOC_FAMILY}"
 PREFERRED_PROVIDER_virtual/libgles2 = "dags-opengl-${SOC_FAMILY}"
+PREFERRED_PROVIDER_virtual/libgbm ?= "dags-opengl-${SOC_FAMILY}"
+PREFERRED_PROVIDER_virtual/libgl ?= "mesa"
+PREFERRED_PROVIDER_virtual/mesa ?= "mesa"
 
 PREFERRED_PROVIDER_virtual/blindscan-dvbs = "dags-blindscan-utils-${SOC_FAMILY}"
 
