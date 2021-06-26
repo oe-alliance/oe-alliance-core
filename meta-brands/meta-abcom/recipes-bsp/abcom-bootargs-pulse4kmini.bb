@@ -1,0 +1,6 @@
+SRCDATE = "20210624"
+
+require abcom-bootargs.inc
+
+SRC_URI[md5sum] = "19aa5e4a0aa9634b862a311829d260d3"
+SRC_URI[sha256sum] = "de4658c5bc7436189f76166ac1a5588e0902824d859c23e255635a6ffa31756f"

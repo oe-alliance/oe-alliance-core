@@ -1,4 +1,3 @@
-require conf/machine/include/abcom-oem.inc
 include conf/machine/include/autoload-filesystems.inc
 require conf/machine/include/soc-family.inc
 require conf/machine/box-hardware.inc
@@ -13,10 +12,10 @@ MACHINE_FEATURES += "3dtv alsa hdmicec switchoff blindscan-tbs HDMI qthbbtv qtst
 
 DVBMEDIASINK_CONFIG = "--with-wma --with-wmv --with-pcm --with-dts --with-eac3 --with-h265 --with-vb6 --with-vb8 --with-vb9 --with-spark"
 
-PREFERRED_PROVIDER_virtual/egl ?= "abcom-mali-${MACHINE}"
-PREFERRED_PROVIDER_virtual/libgles1 ?= "abcom-mali-${MACHINE}"
-PREFERRED_PROVIDER_virtual/libgles2 ?= "abcom-mali-${MACHINE}"
-PREFERRED_PROVIDER_virtual/libgbm ?= "abcom-mali-${MACHINE}"
+PREFERRED_PROVIDER_virtual/egl ?= "abcom-mali-${HICHIPSET}"
+PREFERRED_PROVIDER_virtual/libgles1 ?= "abcom-mali-${HICHIPSET}"
+PREFERRED_PROVIDER_virtual/libgles2 ?= "abcom-mali-${HICHIPSET}"
+PREFERRED_PROVIDER_virtual/libgbm ?= "abcom-mali-${HICHIPSET}"
 PREFERRED_PROVIDER_virtual/libgl ?= "mesa"
 PREFERRED_PROVIDER_virtual/mesa ?= "mesa"
 PREFERRED_PROVIDER_virtual/blindscan-dvbc ?= "abcom-dvb-modules-${MACHINE}"
@@ -30,7 +29,7 @@ DVBPROVIDER = "kernel"
 DVBSKYPROVIDER = "kernel"
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "\
-    abcom-libs-${MACHINE} \
+    abcom-libs-${HICHIPSET} \
 	abcom-fastboot-${MACHINE} \
 	abcom-param-${MACHINE} \
 	abcom-bootlogo-${MACHINE} \
@@ -38,7 +37,7 @@ MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "\
 	abcom-recovery-${MACHINE} \
 	abcom-tntfs-${HICHIPSET} \
     abcom-dvb-modules-${MACHINE} \
-	kernel-module-mali-${MACHINE} \
+	kernel-module-mali-${HICHIPSET} \
     "
 
 MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS += "\

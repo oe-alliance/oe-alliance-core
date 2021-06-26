@@ -1,4 +1,4 @@
-DESCRIPTION = "${MACHINE} libraries"
+DESCRIPTION = "${HICHIPSET} libraries"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "CLOSED"
@@ -6,7 +6,7 @@ DEPENDS = "zlib libpng freetype curl libxml2 libjpeg-turbo harfbuzz"
 RDEPENDS_${PN} = "libbluray"
 PR = "${SRCDATE}"
 
-SRC_URI = "http://source.mynonpublic.com/abcom/${MACHINE}-libs-${SRCDATE}.zip"
+SRC_URI = "http://source.mynonpublic.com/abcom/${HICHIPSET}-libs-${SRCDATE}.zip"
 
 S = "${WORKDIR}"
 
