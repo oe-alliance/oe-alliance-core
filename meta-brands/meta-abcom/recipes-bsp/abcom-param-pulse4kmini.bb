@@ -1,0 +1,6 @@
+SRCDATE = "20210624"
+
+require abcom-param.inc
+
+SRC_URI[md5sum] = "2eb74755693125f5cd6b593a6dab2f17"
+SRC_URI[sha256sum] = "f7d5b0eb18b4f6f262415564e8ecbda72911a01a1d3c86084cc728b603794281"
