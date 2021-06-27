@@ -27,6 +27,7 @@ HAVE_AV_JACK = "${@bb.utils.contains('MACHINE_FEATURES', 'AV_JACK', 'True' , 'Fa
 HAVE_SCART = "${@bb.utils.contains('MACHINE_FEATURES', 'SCART', 'True' , 'False', d)}"
 HAVE_SCART_YUV = "${@bb.utils.contains('MACHINE_FEATURES', 'SCART-YUV', 'True' , 'False', d)}"
 HAVE_DVI = "${@bb.utils.contains('MACHINE_FEATURES', 'DVI', 'True' , 'False', d)}"
+HAVE_SVIDEO = "${@bb.utils.contains("MACHINE_FEATURES", "SVIDEO", "True", "False", d)}"
 
 #Extra Features
 HAVE_MINITV = "${@bb.utils.contains('MACHINE_FEATURES', 'MINITV', 'True' , 'False', d)}"
@@ -35,8 +36,28 @@ HAVE_HDMI_IN_FHD = "${@bb.utils.contains('MACHINE_FEATURES', 'HDMI-IN-FHD', 'Tru
 HAVE_WOL = "${@bb.utils.contains('MACHINE_FEATURES', 'WOL', 'True' , 'False', d)}"
 HAVE_WWOL = "${@bb.utils.contains('MACHINE_FEATURES', 'WWOL', 'True' , 'False', d)}"
 HAVE_CI = "${@bb.utils.contains('MACHINE_FEATURES', 'ci', 'True' , 'False', d)}"
+HAVE_TRANSCODING = "${@bb.utils.contains('MACHINE_FEATURES', 'transcoding', 'True' , 'False', d)}"
+HAVE_MULTITRANSCODING = "${@bb.utils.contains('MACHINE_FEATURES', 'multitranscoding', 'True' , 'False', d)}"
+HAVE_FHDSKIN = "${@bb.utils.contains('MACHINE_FEATURES', 'skins1080', 'True' , 'False', d)}"
+HAVE_SMALLFLASH = "${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "True", "False", d)}"
+HAVE_MIDDLEFLASH = "${@bb.utils.contains("MACHINE_FEATURES", "middleflash", "True", "False", d)}"
+HAVE_MULTILIB = "${@bb.utils.contains("MACHINE_FEATURES", "multilib", "True", "False", d)}"
+HAVE_VFDSYMBOL = "${@bb.utils.contains("MACHINE_FEATURES", "vfdsymbol", "True", "False", d)}"
 
+#deprecated setting
 TRANSCODING = "\
 ${@bb.utils.contains('MACHINE_FEATURES', 'transcoding', 'transcoding' , '', d)}\
 ${@bb.utils.contains('MACHINE_FEATURES', 'multitranscoding', 'multitranscoding' , '', d)}\
 "
+
+#not use with oe-a
+LANGUAGE ?= "N/A"
+STB_PLATFORM ?= "N/A"
+MEDIASERVICE ?= "N/A"
+BLINDSCAN_BINARY ?= "N/A"
+RCTYPE ?= "N/A"
+RCNAME ?= "N/A"
+RCIDNUM ?= "N/A"
+FORCE ?= "N/A"
+SUPPORT_DBOXLCD ?= "N/A"
+DEVELOPER_NAME ?= "${DISTRO_NAME}"
