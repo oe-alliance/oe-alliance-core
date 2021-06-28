@@ -9,7 +9,7 @@ PROVIDES += "virtual/kodi"
 RPROVIDES_${PN} += "virtual/kodi"
 PROVIDES += "kodi"
 RPROVIDES_${PN} += "kodi"
-RDEPENDS_${PN} += "abcom-mali-${MACHINE}"
+RDEPENDS_${PN} += "abcom-mali-${HICHIPSET}"
 
 EXTRA_OECMAKE += " \
     -DWITH_PLATFORM=mali-cortexa15 \
