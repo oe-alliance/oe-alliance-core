@@ -1,10 +1,10 @@
 diff --git a/tuxtxt_common.h b/tuxtxt_common.h
-index 871e8ce..bcafdf1 100644
+index 9e58fe3..3348311 100644
 --- a/tuxtxt_common.h
 +++ b/tuxtxt_common.h
-@@ -23,6 +23,10 @@
+@@ -25,6 +25,10 @@
  
- #include <linux/input.h>
+ void writeproc(const char* dest, const char *value);
  
 +#ifndef FB_DEV
 +# define FB_DEV "/dev/fb/0"
@@ -13,7 +13,7 @@ index 871e8ce..bcafdf1 100644
  const char *ObjectSource[] =
  {
  	"(illegal)",
-@@ -4067,6 +4071,11 @@ int tuxtxt_RenderChar(unsigned char *lfb, // pointer to render buffer, min. font
+@@ -4069,6 +4073,11 @@ int tuxtxt_RenderChar(unsigned char *lfb, // pointer to render buffer, min. font
  #define PIG "/dev/v4l/video0"
  #endif
  
@@ -25,7 +25,7 @@ index 871e8ce..bcafdf1 100644
  #define TOPMENUSTARTX TV43STARTX+2
  #define TOPMENUENDX TVENDX
  #define TOPMENUSTARTY renderinfo->StartY
-@@ -4079,12 +4088,12 @@ int tuxtxt_RenderChar(unsigned char *lfb, // pointer to render buffer, min. font
+@@ -4081,12 +4090,12 @@ int tuxtxt_RenderChar(unsigned char *lfb, // pointer to render buffer, min. font
  #define TOPMENUSPC 0
  #define TOPMENUCHARS (TOPMENUINDENTDEF+12+TOPMENUSPC+4)
  
@@ -42,7 +42,7 @@ index 871e8ce..bcafdf1 100644
  #define TV43STARTY (TVENDY - TV43HEIGHT)
  #define TV169FULLSTARTY renderinfo->sy
  #define TV169FULLWIDTH  (renderinfo->ex - renderinfo->sx)/2
-@@ -4092,9 +4101,11 @@ int tuxtxt_RenderChar(unsigned char *lfb, // pointer to render buffer, min. font
+@@ -4094,9 +4103,11 @@ int tuxtxt_RenderChar(unsigned char *lfb, // pointer to render buffer, min. font
  
  /* fonts */
  #define TUXTXTTTF FONTDIR "/tuxtxt.ttf"
@@ -54,7 +54,7 @@ index 871e8ce..bcafdf1 100644
  #define TUXTXTOTBVAR "/var/tuxtxt/tuxtxt.otb"
  
  int tuxtxt_toptext_getnext(int startpage, int up, int findgroup)
-@@ -4547,10 +4558,10 @@ void tuxtxt_SwitchScreenMode(tstRenderInfo* renderinfo,int newscreenmode)
+@@ -4582,10 +4593,10 @@ void tuxtxt_SwitchScreenMode(tstRenderInfo* renderinfo,int newscreenmode)
  			int val = 0;
  			switch (i)
  			{
@@ -69,7 +69,7 @@ index 871e8ce..bcafdf1 100644
  			case 4: val = 1; break;
  			}
  			fprintf(f, "%08x\n", val);
-@@ -5393,6 +5404,9 @@ void tuxtxt_SetRenderingDefaults(tstRenderInfo* renderinfo)
+@@ -5428,6 +5439,9 @@ void tuxtxt_SetRenderingDefaults(tstRenderInfo* renderinfo)
  	renderinfo->showflof        = 1;
  	renderinfo->show39          = 1;
  	renderinfo->showl25         = 1;
@@ -79,7 +79,7 @@ index 871e8ce..bcafdf1 100644
  	renderinfo->TTFWidthFactor16  = 28;
  	renderinfo->TTFHeightFactor16 = 15;
  	renderinfo->color_mode   = 10;
-@@ -5476,10 +5490,10 @@ int tuxtxt_InitRendering(tstRenderInfo* renderinfo,int setTVFormat)
+@@ -5511,10 +5525,10 @@ int tuxtxt_InitRendering(tstRenderInfo* renderinfo,int setTVFormat)
  	if (renderinfo->usettf)
  	{
  #if ((defined(FREETYPE_MAJOR)) && (((FREETYPE_MAJOR == 2) && (((FREETYPE_MINOR == 1) && (FREETYPE_PATCH >= 9)) || (FREETYPE_MINOR > 1))) || (FREETYPE_MAJOR > 2)))
@@ -92,7 +92,7 @@ index 871e8ce..bcafdf1 100644
  		renderinfo->typettf.font.pix_height = (FT_UShort) renderinfo->fontheight * renderinfo->TTFHeightFactor16 / 16;
  #endif
  	}
-@@ -5500,14 +5514,14 @@ int tuxtxt_InitRendering(tstRenderInfo* renderinfo,int setTVFormat)
+@@ -5535,14 +5549,14 @@ int tuxtxt_InitRendering(tstRenderInfo* renderinfo,int setTVFormat)
  	renderinfo->typettf.flags = FT_LOAD_MONOCHROME;
  	if ((error = FTC_Manager_LookupFace(renderinfo->manager, renderinfo->typettf.face_id, &renderinfo->face)))
  	{
@@ -109,7 +109,7 @@ index 871e8ce..bcafdf1 100644
  		if ((error = FTC_Manager_Lookup_Face(renderinfo->manager, renderinfo->typettf.font.face_id, &renderinfo->face)))
  		{
  #endif
-@@ -5534,10 +5548,60 @@ int tuxtxt_InitRendering(tstRenderInfo* renderinfo,int setTVFormat)
+@@ -5569,10 +5583,60 @@ int tuxtxt_InitRendering(tstRenderInfo* renderinfo,int setTVFormat)
  	}
  
  	/* change to PAL resolution */
@@ -173,7 +173,7 @@ index 871e8ce..bcafdf1 100644
  	}
  
  	/* set variable screeninfo for double buffering */
-@@ -5646,6 +5710,53 @@ void tuxtxt_EndRendering(tstRenderInfo* renderinfo)
+@@ -5681,6 +5745,53 @@ void tuxtxt_EndRendering(tstRenderInfo* renderinfo)
  	/* unmap framebuffer */
  	msync(renderinfo->lfb, renderinfo->fix_screeninfo.smem_len, MS_SYNC);
  	munmap(renderinfo->lfb, renderinfo->fix_screeninfo.smem_len);
