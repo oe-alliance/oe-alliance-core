@@ -24,10 +24,18 @@ LINUX_WIFI_mt7106u = " \
     ${@bb.utils.contains("MACHINE", "h11", "kernel-module-mt7601u", "", d)} \
     ${@bb.utils.contains("MACHINE", "i55plus", "kernel-module-mt7601u", "", d)} \
     ${@bb.utils.contains("MACHINE", "i55se", "kernel-module-mt7601u", "", d)} \
+    ${@bb.utils.contains("MACHINE", "hd60", "kernel-module-mt7601u", "", d)} \
+    ${@bb.utils.contains("MACHINE", "hd61", "kernel-module-mt7601u", "", d)} \
+    ${@bb.utils.contains("MACHINE", "multibox", "kernel-module-mt7601u", "", d)} \
+    ${@bb.utils.contains("MACHINE", "multiboxse", "kernel-module-mt7601u", "", d)} \
+    ${@bb.utils.contains("MACHINE", "pulse4k", "kernel-module-mt7601u", "", d)} \
+    ${@bb.utils.contains("MACHINE", "pulse4kmini", "kernel-module-mt7601u", "", d)} \
+    ${@bb.utils.contains("MACHINE", "viper4k", "kernel-module-mt7601u", "", d)} \
+    ${@bb.utils.contains("MACHINE", "dagsmv200", "kernel-module-mt7601u", "", d)} \
     "
 
 PV = "1.0"
-PR = "r1"
+PR = "r2"
 
 ALLOW_EMPTY_${PN} = "1"
 
