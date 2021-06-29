@@ -3,6 +3,9 @@ include conf/machine/include/build-extras.inc
 
 BRAND_OEM = "gfutures"
 
+RCTYPE ?= "16"
+RCNAME ?= "hd1100"
+
 MACHINE_NAME = "\
 ${@bb.utils.contains('MACHINEBUILD', 'mutant1100', 'HD1100' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mutant1265', 'HD1265' , '', d)}\

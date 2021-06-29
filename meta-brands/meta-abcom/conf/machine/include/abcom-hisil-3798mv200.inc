@@ -23,6 +23,9 @@ PREFERRED_PROVIDER_virtual/blindscan-dvbs ?= "abcom-dvb-modules-${MACHINE}"
 PREFERRED_PROVIDER_virtual/kernel = "linux-abcom"
 PREFERRED_PROVIDER_virtual/kodi = "stb-kodi-${MACHINE}"
 
+RCTYPE = "30"
+RCNAME = "abcom"
+
 TARGET_ARCH = "arm"
 DEFAULTTUNE = "cortexa15hf-neon-vfpv4"
 DVBPROVIDER = "kernel"

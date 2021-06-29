@@ -44,6 +44,10 @@ HAVE_MIDDLEFLASH = "${@bb.utils.contains("MACHINE_FEATURES", "middleflash", "Tru
 HAVE_MULTILIB = "${@bb.utils.contains("MACHINE_FEATURES", "multilib", "True", "False", d)}"
 HAVE_VFDSYMBOL = "${@bb.utils.contains("MACHINE_FEATURES", "vfdsymbol", "True", "False", d)}"
 
+RCTYPE ??= "0"
+RCNAME ??= "N/A"
+RCIDNUM ??= "2"
+
 #deprecated setting
 TRANSCODING = "\
 ${@bb.utils.contains('MACHINE_FEATURES', 'transcoding', 'transcoding' , '', d)}\
@@ -55,9 +59,6 @@ LANGUAGE ?= "N/A"
 STB_PLATFORM ?= "N/A"
 MEDIASERVICE ?= "N/A"
 BLINDSCAN_BINARY ?= "N/A"
-RCTYPE ?= "N/A"
-RCNAME ?= "N/A"
-RCIDNUM ?= "N/A"
 FORCE ?= "N/A"
 SUPPORT_DBOXLCD ?= "N/A"
 DEVELOPER_NAME ?= "${DISTRO_NAME}"

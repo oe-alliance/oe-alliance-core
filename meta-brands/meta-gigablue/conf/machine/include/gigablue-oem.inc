@@ -6,6 +6,9 @@ include conf/machine/include/build-extras.inc
 
 BRAND_OEM = "gigablue"
 
+RCTYPE = "502"
+RCNAME = "gb1"
+
 MACHINE_NAME = "\
 ${@bb.utils.contains('MACHINEBUILD', 'gb800se', '800 SE' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gb800seplus', '800 SE Plus' , '', d)}\

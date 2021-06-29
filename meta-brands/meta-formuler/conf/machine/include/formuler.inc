@@ -4,6 +4,9 @@ include conf/machine/include/build-extras.inc
 BRAND_OEM = "formuler"
 MACHINE_BRAND = "Formuler"
 
+RCTYPE = "18"
+RCNAME = "formuler1"
+
 MTD_KERNEL = "mtd1"
 MTD_ROOTFS = "mtd2"
 KERNEL_FILE = "kernel.bin"
