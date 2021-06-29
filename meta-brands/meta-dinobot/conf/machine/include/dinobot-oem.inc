@@ -265,7 +265,7 @@ MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "\
     kernel-module-xhci-plat-hcd \
     kernel-module-ehci-platform \
     kernel-module-ohci-platform \
-    ${@bb.utils.contains('MACHINE_FEATURES', 'kodi18', 'dinobot-opengl-${SOC_FAMILY}', '',d)} \
+    ${@bb.utils.contains('MACHINE_FEATURES', 'kodi19', 'dinobot-opengl-${SOC_FAMILY}', '',d)} \
     ${@bb.utils.contains('MACHINE_FEATURES', 'emmc', 'resizerootfs' , '', d)} \
     dinobot-partitions-${SOC_FAMILY} \
     dinobot-libs-${MACHINE} \
