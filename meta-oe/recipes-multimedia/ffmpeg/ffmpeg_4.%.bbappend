@@ -2,9 +2,10 @@ FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 
 DEPENDS += "libxml2"
 
-PACKAGECONFIG_append = " libbluray libfreetype librtmp openssl"
+PACKAGECONFIG_append = " libbluray libdav1d libfreetype librtmp openssl"
 
 PACKAGECONFIG[libbluray] = "--enable-libbluray --enable-protocol=bluray,--disable-libbluray,libbluray"
+PACKAGECONFIG[libdav1d] = "--enable-libdav1d,--disable-libdav1d,libdav1d"
 PACKAGECONFIG[libfreetype] = "--enable-libfreetype,--disable-libfreetype,freetype"
 PACKAGECONFIG[librtmp] = "--enable-librtmp,--disable-librtmp,librtmp rtmpdump"
 PACKAGECONFIG[libv4l2] = "--enable-libv4l2,--disable-libv4l2,v4l-utils"
@@ -51,6 +52,7 @@ EXTRA_FFCONF = " \
     --enable-protocol=http \
     \
     --disable-muxers \
+    --enable-muxer=adts \
     --enable-muxer=mpeg1video \
     --enable-muxer=h264 \
     --enable-muxer=mp4 \
@@ -63,15 +65,21 @@ EXTRA_FFCONF = " \
     --enable-muxer=image2pipe \
     --enable-muxer=apng \
     --enable-muxer=mpegts \
+    --enable-muxer=asf \
+    --enable-muxer=spdif \
     --disable-encoders \
+    --enable-encoder=ac3 \
+    --enable-encoder=aac \
     --enable-encoder=mpeg1video \
-    --enable-encoder=png \
     --enable-encoder=libx264 \
     --enable-encoder=ljpeg \
+    --enable-encoder=mjpeg \
     --enable-encoder=mpeg4 \
     --enable-encoder=jpeg2000 \
     --enable-encoder=jpegls \
+    --enable-encoder=png \
     --enable-encoder=rawvideo \
+    --enable-encoder=wmav2 \
     --disable-decoder=truehd \
     --disable-decoder=mlp \
     \
