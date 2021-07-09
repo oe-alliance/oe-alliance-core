@@ -55,6 +55,7 @@ SRC_URI = " \
     file://0013-cp1emu-do-not-use-bools-for-arithmetic.patch \
     file://0014-makefile-silence-packed-not-aligned-warn.patch \
     file://0015-fcrypt-fix-bitoperation-for-gcc.patch \
+    file://devinitdata-gcc11.patch \
 "
 
 PACKAGES_DYNAMIC = "kernel-*"
