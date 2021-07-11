@@ -23,6 +23,7 @@ RDEPENDS_${PN} = "\
     "
 
 RRECOMMENDS_${PN} = "\
+    enigma-kernel-module \
     enigma2-plugin-extensions-autotimer \
     enigma2-plugin-extensions-epgimport \
     enigma2-plugin-extensions-epgsearch \
