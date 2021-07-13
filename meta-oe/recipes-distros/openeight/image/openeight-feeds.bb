@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda
 ALLOW_EMPTY_${PN} = "1"
 
 PV = "1.0"
-PR = "r7"
+PR = "r8"
 
 inherit packagegroup
 
@@ -21,7 +21,6 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-skins-octagonhdstyledark \
     enigma2-plugin-skins-octagonhdstyleblack \
     enigma2-plugin-skins-pli-hd \
-    enigma2-plugin-skins-octagon-blue-line \
     enigma2-plugin-skins-octagoneightfhd \
     enigma2-plugin-skins-octagoneightsd \
     enigma2-plugin-skincomponents-mediaportal-blue-line-skin \
