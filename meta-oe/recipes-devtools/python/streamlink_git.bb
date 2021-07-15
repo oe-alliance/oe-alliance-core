@@ -22,6 +22,7 @@ RDEPENDS_${PN} = "${PYTHON_PN}-core \
     ${PYTHON_PN}-shell \
     ${PYTHON_PN}-singledispatch \
     ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-subprocess", "", d)} \
+    ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-typing", "", d)} \
     ${PYTHON_PN}-websocket-client \
     "
 
