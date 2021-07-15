@@ -10,5 +10,4 @@ inherit pypi setuptools
 
 RDEPENDS_${PN} = "\
     ${PYTHON_PN}-six \
-    ${PYTHON_PN}-backports-ssl \
 "
