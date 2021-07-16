@@ -278,7 +278,7 @@ MACHINE_FEATURES += "switchoff  hdmicec blindscan-tbs alsa hbbtv-browser-webkit 
     ${@bb.utils.contains('MACHINEBUILD', 'anadol4k', '' , ' dvb-c', d)} \
     ${@bb.utils.contains('MACHINEBUILD', 'anadol4kcombo', '' , ' dvb-c', d)} \
     ${@bb.utils.contains('MACHINEBUILD', 'hitube4kplus', '' , ' dvb-c', d)} \
-    ${@bb.utils.contains('SOC_FAMILY', 'hisi3798mv200', 'openhbbtv' , '', d)} \
+    ${@bb.utils.contains_any('SOC_FAMILY', 'hisi3798mv200 hisi3716mv410', 'openhbbtv' , '', d)} \
     "
 
 PREFERRED_VERSION_linux-dinobot = "4.4.35"
