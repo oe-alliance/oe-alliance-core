@@ -3431,7 +3431,7 @@ CONFIG_SMS_SIANO_MDTV=m
 #
 # MMC/SDIO DVB adapters
 #
-# CONFIG_SMS_SDIO_DRV is not set
+CONFIG_SMS_SDIO_DRV=m
 # CONFIG_V4L_TEST_DRIVERS is not set
 # CONFIG_DVB_TEST_DRIVERS is not set
 # end of Media drivers
