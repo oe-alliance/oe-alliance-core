@@ -8,7 +8,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r7"
+PR = "r8"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
@@ -19,8 +19,8 @@ DEPENDS = "openbh-version-info"
 RDEPENDS_${PN} = "\
     blackhole-base \
     blackholesocker \
-    ca-certificates \  
-    curl \  
+    ca-certificates \
+    curl \
     dvbsnoop \
     hddtemp \
     inadyn-mt \
@@ -35,7 +35,11 @@ RDEPENDS_${PN} = "\
     openssh-sftp-server \
     openvpn \
     ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-imaging", "${PYTHON_PN}-pillow", d)} \
-    ${PYTHON_PN}-service-identity \
-    rtmpdump \
     ${@bb.utils.contains("TUNE_FEATURES", "armv", "glibc-compat", "", d)} \
+    ${PYTHON_PN}-service-identity \
+    ${PYTHON_PN}-requests \
+    ${PYTHON_PN}-future \
+    ${PYTHON_PN}-six \
+    rtmpdump \
+    zip \
     "
