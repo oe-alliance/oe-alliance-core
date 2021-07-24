@@ -3,25 +3,28 @@ DESCRIPTION = "SABnzbd is an Open Source Binary Newsreader written in Python."
 HOMEPAGE = "https://sabnzbd.org"
 MAINTAINER = "team@sabnzbd.org"
 LICENSE = "GPLv2+"
-LIC_FILES_CHKSUM = "file://COPYRIGHT.txt;md5=6c2cd2089133de5067e13a6d4f75afef"
+LIC_FILES_CHKSUM = "file://COPYRIGHT.txt;md5=d4bfc20f13bd0e7363c57525136734ee"
 
 DEPENDS = "${PYTHON_PN}"
 RDEPENDS_${PN} = "\
     ${PYTHON_PN}-cheetah ${PYTHON_PN}-compression ${PYTHON_PN}-core ${PYTHON_PN}-crypt ${PYTHON_PN}-ctypes ${PYTHON_PN}-email ${PYTHON_PN}-html \
-    ${PYTHON_PN}-misc ${PYTHON_PN}-multiprocessing ${PYTHON_PN}-sqlite3 ${PYTHON_PN}-shell ${PYTHON_PN}-subprocess ${PYTHON_PN}-sabyenc ${PYTHON_PN}-yenc \
+    ${PYTHON_PN}-misc ${PYTHON_PN}-multiprocessing ${PYTHON_PN}-sqlite3 ${PYTHON_PN}-shell ${PYTHON_PN}-sabyenc3 ${PYTHON_PN}-configobj \
+    ${PYTHON_PN}-cryptography ${PYTHON_PN}-feedparser ${PYTHON_PN}-cheroot ${PYTHON_PN}-cherrypy ${PYTHON_PN}-portend ${PYTHON_PN}-chardet \
+    ${PYTHON_PN}-notify2 ${PYTHON_PN}-puremagic ${PYTHON_PN}-guessit ${PYTHON_PN}-sgmllib3k ${PYTHON_PN}-more-itertools ${PYTHON_PN}-modules \
     "
 
-RRECOMMENDS_${PN} = "par2cmdline unrar"
+RRECOMMENDS_${PN} = "par2cmdline unrar p7zip-full"
 
-SRCREV = "8f21533e76d64a3bc26643394d5e98dc01ece63e"
-
-SRC_URI = "git://github.com/sabnzbd/sabnzbd.git \
+SRC_URI = "https://github.com/sabnzbd/sabnzbd/releases/download/3.3.1/SABnzbd-3.3.1-src.tar.gz \
     file://sabnzbd \
     file://sabnzbd.conf \
     file://init-functions \
     "
 
-S = "${WORKDIR}/git"
+SRC_URI[md5sum] = "62483a336ea4a1241e4e122e67f2f217"
+SRC_URI[sha256sum] = "4ca22408e2f4f88880c8d0fb480c231c0b51d144eb871d01870dcb9b14199ec3"
+
+S = "${WORKDIR}/SABnzbd-${PV}"
 
 INSTALLDIR = "${libdir}/${PN}"
 
@@ -33,10 +36,6 @@ FILES_${PN} = "${INSTALLDIR} /etc/init.d/sabnzbd /etc/init.d/init-functions /etc
 inherit update-rc.d
 INITSCRIPT_NAME = "sabnzbd"
 INITSCRIPT_PARAMS = "defaults"
-
-do_compile() {
-    ${@bb.utils.contains("PYTHON_PN", "python", "python2", "python3", d)} -O -m compileall .
-}
 
 do_install() {
     install -d ${D}${INSTALLDIR}
