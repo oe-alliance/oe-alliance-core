@@ -17,7 +17,7 @@ Subject: [PATCH] e2-player
  create mode 100644 xbmc/cores/Enigma2Player/Enigma2Player.h
 
 diff --git a/cmake/treedata/common/cores.txt b/cmake/treedata/common/cores.txt
-index d23939d314..5e5c6cbf80 100644
+index d23939d314e..5e5c6cbf80c 100644
 --- a/cmake/treedata/common/cores.txt
 +++ b/cmake/treedata/common/cores.txt
 @@ -4,5 +4,6 @@ xbmc/cores/DllLoader                   cores/dll-loader
@@ -28,7 +28,7 @@ index d23939d314..5e5c6cbf80 100644
  xbmc/cores/paplayer                    cores/paplayer
  xbmc/cores/playercorefactory           cores/playercorefactory
 diff --git a/system/playercorefactory.xml b/system/playercorefactory.xml
-index f928311cf0..8e2502143e 100644
+index f928311cf0b..8e2502143eb 100644
 --- a/system/playercorefactory.xml
 +++ b/system/playercorefactory.xml
 @@ -8,9 +8,17 @@
@@ -61,7 +61,7 @@ index f928311cf0..8e2502143e 100644
      <!-- DVDs -->
 diff --git a/xbmc/cores/Enigma2Player/CMakeLists.txt b/xbmc/cores/Enigma2Player/CMakeLists.txt
 new file mode 100644
-index 0000000000..fc672758ff
+index 00000000000..fc672758ff9
 --- /dev/null
 +++ b/xbmc/cores/Enigma2Player/CMakeLists.txt
 @@ -0,0 +1,6 @@
@@ -73,10 +73,10 @@ index 0000000000..fc672758ff
 +
 diff --git a/xbmc/cores/Enigma2Player/Enigma2Player.cpp b/xbmc/cores/Enigma2Player/Enigma2Player.cpp
 new file mode 100644
-index 0000000000..b538b9c852
+index 00000000000..24f7556f020
 --- /dev/null
 +++ b/xbmc/cores/Enigma2Player/Enigma2Player.cpp
-@@ -0,0 +1,794 @@
+@@ -0,0 +1,795 @@
 +/*
 + *  Copyright (C) 2005-2018 Team Kodi
 + *  This file is part of Kodi - https://kodi.tv
@@ -128,6 +128,7 @@ index 0000000000..b538b9c852
 +#define DEFAULT_PLAYCOUNT_MIN_TIME 10
 +
 +using namespace XFILE;
++using namespace std::chrono_literals;
 +
 +#if defined(TARGET_WINDOWS_DESKTOP)
 +extern HWND g_hWnd;
@@ -176,7 +177,7 @@ index 0000000000..b538b9c852
 +    double percent = 0;
 +    m_playbackStartTime = std::chrono::steady_clock::now();
 +    m_launchFilename = file.GetDynPath();
-+    CLog::Log(LOGINFO, "%s: %s", __FUNCTION__, m_launchFilename.c_str());
++    CLog::Log(LOGINFO, "{}: {}", __FUNCTION__, m_launchFilename.c_str());
 +
 +    std::string thumb = CSpecialProtocol::TranslatePath(CTextureCache::GetCachedPath(CTextureCache::GetCacheFile(file.GetArt("thumb")) + ".jpg"));
 +
@@ -196,7 +197,7 @@ index 0000000000..b538b9c852
 +
 +    std::string jsonStr;
 +    CJSONVariantWriter::Write(variant, jsonStr, false);
-+    CLog::Log(LOGINFO, "%s json: %s", __FUNCTION__, jsonStr.c_str());
++    CLog::Log(LOGINFO, "{} json: {}", __FUNCTION__, jsonStr.c_str());
 +
 +    CFile file;
 +    if (file.OpenForWrite(m_filenameMeta, true))
@@ -204,16 +205,16 @@ index 0000000000..b538b9c852
 +        ssize_t ret;
 +        if ((ret = file.Write(jsonStr.c_str(), jsonStr.length())) == -1)
 +        {
-+          CLog::Log(LOGDEBUG, "%s ex write error occurred(json)!", __FUNCTION__);
++          CLog::Log(LOGDEBUG, "{} ex write error occurred(json)!", __FUNCTION__);
 +        }
 +        else if (ret != jsonStr.length())
 +        {
-+          CLog::Log(LOGDEBUG, "%s write error occurred(json)!", __FUNCTION__);
++          CLog::Log(LOGDEBUG, "{} write error occurred(json)!", __FUNCTION__);
 +        }
 +        file.Close();
 +    }
 +
-+    CLog::Log(LOGINFO, "%s: %s", __FUNCTION__, m_launchFilename.c_str());
++    CLog::Log(LOGINFO, "{}: {}", __FUNCTION__, m_launchFilename.c_str());
 +
 +    Create();
 +
@@ -222,7 +223,7 @@ index 0000000000..b538b9c852
 +  catch(...)
 +  {
 +    m_bIsPlaying = false;
-+    CLog::Log(LOGERROR,"%s - Exception thrown", __FUNCTION__);
++    CLog::Log(LOGERROR,"{} - Exception thrown", __FUNCTION__);
 +    return false;
 +  }
 +}
@@ -294,7 +295,7 @@ index 0000000000..b538b9c852
 +
 +      if (!regExp.RegComp(strMatch.c_str()))
 +      { // invalid regexp - complain in logs
-+        CLog::Log(LOGERROR, "%s: Invalid RegExp:'%s'", __FUNCTION__, strMatch.c_str());
++        CLog::Log(LOGERROR, "{}: Invalid RegExp:'{}'", __FUNCTION__, strMatch.c_str());
 +        continue;
 +      }
 +
@@ -305,7 +306,7 @@ index 0000000000..b538b9c852
 +
 +        if (!regExp.RegComp(strPat.c_str()))
 +        { // invalid regexp - complain in logs
-+          CLog::Log(LOGERROR, "%s: Invalid RegExp:'%s'", __FUNCTION__, strPat.c_str());
++          CLog::Log(LOGERROR, "{}: Invalid RegExp:'{}'", __FUNCTION__, strPat.c_str());
 +          continue;
 +        }
 +
@@ -321,17 +322,17 @@ index 0000000000..b538b9c852
 +          if (!bGlobal)
 +            break;
 +        }
-+        CLog::Log(LOGINFO, "%s: File matched:'%s' (RE='%s',Rep='%s') new filename:'%s'.", __FUNCTION__, strMatch.c_str(), strPat.c_str(), strRep.c_str(), mainFile.c_str());
++        CLog::Log(LOGINFO, "{}: File matched:'{}' (RE='{}',Rep='{}') new filename:'{}'.", __FUNCTION__, strMatch.c_str(), strPat.c_str(), strRep.c_str(), mainFile.c_str());
 +        if (bStop) break;
 +      }
 +    }
 +  }
 +
-+  CLog::Log(LOGINFO, "%s: Player : %s", __FUNCTION__, m_filename.c_str());
-+  CLog::Log(LOGINFO, "%s: File   : %s", __FUNCTION__, mainFile.c_str());
-+  CLog::Log(LOGINFO, "%s: Content: %s", __FUNCTION__, archiveContent.c_str());
-+  CLog::Log(LOGINFO, "%s: Args   : %s", __FUNCTION__, m_args.c_str());
-+  CLog::Log(LOGINFO, "%s: Start", __FUNCTION__);
++  CLog::Log(LOGINFO, "{}: Player : {}", __FUNCTION__, m_filename.c_str());
++  CLog::Log(LOGINFO, "{}: File   : {}", __FUNCTION__, mainFile.c_str());
++  CLog::Log(LOGINFO, "{}: Content: {}", __FUNCTION__, archiveContent.c_str());
++  CLog::Log(LOGINFO, "{}: Args   : {}", __FUNCTION__, m_args.c_str());
++  CLog::Log(LOGINFO, "{}: Start", __FUNCTION__);
 +
 +  // make sure we surround the arguments with quotes where necessary
 +  std::string strFName;
@@ -388,7 +389,7 @@ index 0000000000..b538b9c852
 +        y = GetSystemMetrics(SM_CYSCREEN) / 2;
 +        break;
 +    }
-+    CLog::Log(LOGINFO, "%s: Warping cursor to (%d,%d)", __FUNCTION__, x, y);
++    CLog::Log(LOGINFO, "{}: Warping cursor to ({:d},{:d})", __FUNCTION__, x, y);
 +    SetCursorPos(x,y);
 +  }
 +
@@ -397,17 +398,17 @@ index 0000000000..b538b9c852
 +
 +  if (m_hidexbmc && !m_islauncher)
 +  {
-+    CLog::Log(LOGINFO, "%s: Hiding %s window", __FUNCTION__, CCompileInfo::GetAppName());
++    CLog::Log(LOGINFO, "{}: Hiding {} window", __FUNCTION__, CCompileInfo::GetAppName());
 +    CServiceBroker::GetWinSystem()->Hide();
 +  }
 +#if defined(TARGET_WINDOWS_DESKTOP)
 +  else if (currentStyle & WS_EX_TOPMOST)
 +  {
-+    CLog::Log(LOGINFO, "%s: Lowering %s window", __FUNCTION__, CCompileInfo::GetAppName());
++    CLog::Log(LOGINFO, "{}: Lowering {} window", __FUNCTION__, CCompileInfo::GetAppName());
 +    SetWindowPos(g_hWnd, HWND_BOTTOM, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOREDRAW | SWP_ASYNCWINDOWPOS);
 +  }
 +
-+  CLog::Log(LOGDEBUG, "%s: Unlocking foreground window", __FUNCTION__);
++  CLog::Log(LOGDEBUG, "{}: Unlocking foreground window", __FUNCTION__);
 +  LockSetForegroundWindow(LSFW_UNLOCK);
 +#endif
 +
@@ -420,11 +421,11 @@ index 0000000000..b538b9c852
 +  XbmcThreads::EndTime timer(2000);
 +  while (!timer.IsTimePast() && !CServiceBroker::GetActiveAE()->IsSuspended())
 +  {
-+    CThread::Sleep(50);
++    CThread::Sleep(50ms);
 +  }
 +  if (timer.IsTimePast())
 +  {
-+    CLog::Log(LOGERROR,"%s: AudioEngine did not suspend before launching external player", __FUNCTION__);
++    CLog::Log(LOGERROR,"{}: AudioEngine did not suspend before launching external player", __FUNCTION__);
 +  }
 +
 +  m_callback.OnPlayBackStarted(m_file);
@@ -446,7 +447,7 @@ index 0000000000..b538b9c852
 +  {
 +    if (m_hidexbmc)
 +    {
-+      CLog::Log(LOGINFO, "%s: %s cannot stay hidden for a launcher process", __FUNCTION__, CCompileInfo::GetAppName());
++      CLog::Log(LOGINFO, "{}: {} cannot stay hidden for a launcher process", __FUNCTION__, CCompileInfo::GetAppName());
 +      CServiceBroker::GetWinSystem()->Show(false);
 +    }
 +
@@ -463,21 +464,21 @@ index 0000000000..b538b9c852
 +  }
 +
 +  m_bIsPlaying = false;
-+  CLog::Log(LOGINFO, "%s: Stop", __FUNCTION__);
++  CLog::Log(LOGINFO, "{}: Stop", __FUNCTION__);
 +
 +#if defined(TARGET_WINDOWS_DESKTOP)
 +  CServiceBroker::GetWinSystem()->Restore();
 +
 +  if (currentStyle & WS_EX_TOPMOST)
 +  {
-+    CLog::Log(LOGINFO, "%s: Showing %s window TOPMOST", __FUNCTION__, CCompileInfo::GetAppName());
++    CLog::Log(LOGINFO, "{}: Showing {} window TOPMOST", __FUNCTION__, CCompileInfo::GetAppName());
 +    SetWindowPos(g_hWnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW | SWP_ASYNCWINDOWPOS);
 +    SetForegroundWindow(g_hWnd);
 +  }
 +  else
 +#endif
 +  {
-+    CLog::Log(LOGINFO, "%s: Showing %s window", __FUNCTION__, CCompileInfo::GetAppName());
++    CLog::Log(LOGINFO, "{}: Showing {} window", __FUNCTION__, CCompileInfo::GetAppName());
 +    CServiceBroker::GetWinSystem()->Show();
 +  }
 +
@@ -491,12 +492,12 @@ index 0000000000..b538b9c852
 +      m_xPos = (m_ptCursorpos.x);
 +      m_yPos = (m_ptCursorpos.y);
 +    }
-+    CLog::Log(LOGINFO, "%s: Restoring cursor to (%d,%d)", __FUNCTION__, m_xPos, m_yPos);
++    CLog::Log(LOGINFO, "{}: Restoring cursor to ({:d},{:d})", __FUNCTION__, m_xPos, m_yPos);
 +    SetCursorPos(m_xPos,m_yPos);
 +  }
 +#endif
 +
-+  CLog::Log(LOGINFO, "Enigma2Player: terminado a %d segundos",m_time);
++  CLog::Log(LOGINFO, "Enigma2Player: terminado a {:d} segundos",m_time);
 +//  IPlayerCallback *cb = &m_callback;
 +  if (m_time >= m_playCountMinTime)
 +  {
@@ -508,13 +509,13 @@ index 0000000000..b538b9c852
 +    cb->OnPlayerCloseFile(m_file, bookmark);
 +  }, CJob::PRIORITY_NORMAL);*/
 +    m_callback.OnPlayerCloseFile(m_file, bookmark);
-+    CLog::Log(LOGINFO, "Enigma2Player: bookmark a %d segundos",duration.count() / 1000);
++    CLog::Log(LOGINFO, "Enigma2Player: bookmark a {:d} segundos",duration.count() / 1000);
 +  }
 +
 +  /* Resume AE processing of XBMC native audio */
 +  if (!CServiceBroker::GetActiveAE()->Resume())
 +  {
-+    CLog::Log(LOGFATAL, "%s: Failed to restart AudioEngine after return from external player",__FUNCTION__);
++    CLog::Log(LOGFATAL, "{}: Failed to restart AudioEngine after return from external player",__FUNCTION__);
 +  }
 +
 +  // We don't want to come back to an active screensaver
@@ -530,7 +531,7 @@ index 0000000000..b538b9c852
 +#if defined(TARGET_WINDOWS_DESKTOP)
 +bool CEnigma2Player::ExecuteAppW32(const char* strPath, const char* strSwitches)
 +{
-+  CLog::Log(LOGINFO, "%s: %s %s", __FUNCTION__, strPath, strSwitches);
++  CLog::Log(LOGINFO, "{}: {} {}", __FUNCTION__, strPath, strSwitches);
 +
 +  STARTUPINFOW si;
 +  memset(&si, 0, sizeof(si));
@@ -551,7 +552,7 @@ index 0000000000..b538b9c852
 +  if (ret == FALSE)
 +  {
 +    DWORD lastError = GetLastError();
-+    CLog::Log(LOGINFO, "%s - Failure: %d", __FUNCTION__, lastError);
++    CLog::Log(LOGINFO, "{} - Failure: {:d}", __FUNCTION__, lastError);
 +  }
 +  else
 +  {
@@ -560,16 +561,16 @@ index 0000000000..b538b9c852
 +    switch (res)
 +    {
 +      case WAIT_OBJECT_0:
-+        CLog::Log(LOGINFO, "%s: WAIT_OBJECT_0", __FUNCTION__);
++        CLog::Log(LOGINFO, "{}: WAIT_OBJECT_0", __FUNCTION__);
 +        break;
 +      case WAIT_ABANDONED:
-+        CLog::Log(LOGINFO, "%s: WAIT_ABANDONED", __FUNCTION__);
++        CLog::Log(LOGINFO, "{}: WAIT_ABANDONED", __FUNCTION__);
 +        break;
 +      case WAIT_TIMEOUT:
-+        CLog::Log(LOGINFO, "%s: WAIT_TIMEOUT", __FUNCTION__);
++        CLog::Log(LOGINFO, "{}: WAIT_TIMEOUT", __FUNCTION__);
 +        break;
 +      case WAIT_FAILED:
-+        CLog::Log(LOGINFO, "%s: WAIT_FAILED (%d)", __FUNCTION__, GetLastError());
++        CLog::Log(LOGINFO, "{}: WAIT_FAILED ({:d})", __FUNCTION__, GetLastError());
 +        ret = FALSE;
 +        break;
 +    }
@@ -586,12 +587,12 @@ index 0000000000..b538b9c852
 +#if !defined(TARGET_ANDROID) && !defined(TARGET_DARWIN_EMBEDDED) && defined(TARGET_POSIX)
 +bool CEnigma2Player::ExecuteAppLinux(const char* strSwitches)
 +{
-+  CLog::Log(LOGINFO, "%s: %s", __FUNCTION__, strSwitches);
++  CLog::Log(LOGINFO, "{}: {}", __FUNCTION__, strSwitches);
 +
 +  FILE *f;
 +  if ((f = popen(strSwitches, "r")) == NULL)
 +  {
-+    CLog::Log(LOGINFO, "%s: Failure popen: %s", __FUNCTION__, strerror(errno));
++    CLog::Log(LOGINFO, "{}: Failure popen: {}", __FUNCTION__, strerror(errno));
 +    return false;
 +  }
 +
@@ -604,7 +605,7 @@ index 0000000000..b538b9c852
 +
 +  if (ret != 0)
 +  {
-+    CLog::Log(LOGINFO, "%s: Failure: %d", __FUNCTION__, ret);
++    CLog::Log(LOGINFO, "{}: Failure: {:d}", __FUNCTION__, ret);
 +  }
 +
 +  return (ret == 0);
@@ -614,13 +615,13 @@ index 0000000000..b538b9c852
 +#if defined(TARGET_ANDROID)
 +bool CEnigma2Player::ExecuteAppAndroid(const char* strSwitches,const char* strPath)
 +{
-+  CLog::Log(LOGINFO, "%s: %s", __FUNCTION__, strSwitches);
++  CLog::Log(LOGINFO, "{}: {}", __FUNCTION__, strSwitches);
 +
 +  bool ret = CXBMCApp::StartActivity(strSwitches, "android.intent.action.VIEW", "video/*", strPath);
 +
 +  if (!ret)
 +  {
-+    CLog::Log(LOGINFO, "%s: Failure", __FUNCTION__);
++    CLog::Log(LOGINFO, "{}: Failure", __FUNCTION__);
 +  }
 +
 +  return (ret == 0);
@@ -683,7 +684,7 @@ index 0000000000..b538b9c852
 +
 +  if (iTotalTime != 0)
 +  {
-+    CLog::Log(LOGDEBUG, "Percentage is %f", (iTime * 100 / (float)iTotalTime));
++    CLog::Log(LOGDEBUG, "Percentage is {:f}", (iTime * 100 / (float)iTotalTime));
 +    return iTime * 100 / (float)iTotalTime;
 +  }
 +
@@ -721,20 +722,20 @@ index 0000000000..b538b9c852
 +  XMLUtils::GetString(pConfig, "filename", m_filename);
 +  if (m_filename.length() > 0)
 +  {
-+    CLog::Log(LOGINFO, "Enigma2Player Filename: %s", m_filename.c_str());
++    CLog::Log(LOGINFO, "Enigma2Player Filename: {}", m_filename.c_str());
 +  }
 +  else
 +  {
 +    std::string xml;
 +    xml<<*pConfig;
-+    CLog::Log(LOGERROR, "Enigma2Player Error: filename element missing from: %s", xml.c_str());
++    CLog::Log(LOGERROR, "Enigma2Player Error: filename element missing from: {}", xml.c_str());
 +    return false;
 +  }
 +
 +  XMLUtils::GetString(pConfig, "filenamemeta", m_filenameMeta);
 +  if (m_filenameMeta.length() > 0)
 +  {
-+    CLog::Log(LOGINFO, "Enigma2Player FilenameMeta: %s", m_filenameMeta.c_str());
++    CLog::Log(LOGINFO, "Enigma2Player FilenameMeta: {}", m_filenameMeta.c_str());
 +  }
 +
 +  XMLUtils::GetString(pConfig, "args", m_args);
@@ -764,13 +765,13 @@ index 0000000000..b538b9c852
 +    else
 +    {
 +      warpCursor = "none";
-+      CLog::Log(LOGWARNING, "Enigma2Player: invalid value for warpcursor: %s", warpCursor.c_str());
++      CLog::Log(LOGWARNING, "Enigma2Player: invalid value for warpcursor: {}", warpCursor.c_str());
 +    }
 +  }
 +
 +  XMLUtils::GetInt(pConfig, "playcountminimumtime", m_playCountMinTime, 1, INT_MAX);
 +
-+  CLog::Log(LOGINFO, "Enigma2Player Tweaks: hideconsole (%s), hidexbmc (%s), islauncher (%s), warpcursor (%s)",
++  CLog::Log(LOGINFO, "Enigma2Player Tweaks: hideconsole ({}), hidexbmc ({}), islauncher ({}), warpcursor ({})",
 +          m_hideconsole ? "true" : "false",
 +          m_hidexbmc ? "true" : "false",
 +          m_islauncher ? "true" : "false",
@@ -833,8 +834,8 @@ index 0000000000..b538b9c852
 +      if (!strPat.empty() && !strRep.empty())
 +      {
 +        CLog::Log(LOGDEBUG,"  Registering replacer:");
-+        CLog::Log(LOGDEBUG,"    Match:[%s] Pattern:[%s] Replacement:[%s]", strMatch.c_str(), strPat.c_str(), strRep.c_str());
-+        CLog::Log(LOGDEBUG,"    Global:[%s] Stop:[%s]", bGlobal?"true":"false", bStop?"true":"false");
++        CLog::Log(LOGDEBUG,"    Match:[{}] Pattern:[{}] Replacement:[{}]", strMatch.c_str(), strPat.c_str(), strRep.c_str());
++        CLog::Log(LOGDEBUG,"    Global:[{}] Stop:[{}]", bGlobal?"true":"false", bStop?"true":"false");
 +        // keep literal commas since we use comma as a separator
 +        StringUtils::Replace(strMatch, ",",",,");
 +        StringUtils::Replace(strPat, ",",",,");
@@ -868,12 +869,12 @@ index 0000000000..b538b9c852
 +    m_time = variantOutput["position"].asInteger(0);
 +  if (!variantOutput["duration"].isNull())
 +    m_totalTime = variantOutput["duration"].asInteger(0);
-+  CLog::Log(LOGINFO, "%s: position: %d, duration: %d", __FUNCTION__, m_time, m_totalTime);
++  CLog::Log(LOGINFO, "{}: position: {:d}, duration: {:d}", __FUNCTION__, m_time, m_totalTime);
 +}
 +
 diff --git a/xbmc/cores/Enigma2Player/Enigma2Player.h b/xbmc/cores/Enigma2Player/Enigma2Player.h
 new file mode 100644
-index 0000000000..59249cd214
+index 00000000000..59249cd214b
 --- /dev/null
 +++ b/xbmc/cores/Enigma2Player/Enigma2Player.h
 @@ -0,0 +1,96 @@
@@ -974,7 +975,7 @@ index 0000000000..59249cd214
 +  CFileItem m_file;
 +};
 diff --git a/xbmc/cores/playercorefactory/PlayerCoreConfig.h b/xbmc/cores/playercorefactory/PlayerCoreConfig.h
-index 5af08c2d77..fc605c7d87 100644
+index 5af08c2d771..fc605c7d87d 100644
 --- a/xbmc/cores/playercorefactory/PlayerCoreConfig.h
 +++ b/xbmc/cores/playercorefactory/PlayerCoreConfig.h
 @@ -13,6 +13,7 @@
@@ -997,7 +998,7 @@ index 5af08c2d77..fc605c7d87 100644
  #if defined(HAS_UPNP)
      else if (m_type.compare("remote") == 0)
 diff --git a/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp b/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp
-index e4e5d42a0a..c776ff0825 100644
+index e4e5d42a0a4..c776ff0825f 100644
 --- a/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp
 +++ b/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp
 @@ -14,6 +14,7 @@

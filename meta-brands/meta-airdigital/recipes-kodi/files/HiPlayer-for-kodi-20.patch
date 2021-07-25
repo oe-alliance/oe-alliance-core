@@ -83,7 +83,7 @@ index 0000000000..3659f501d5
 +#include "settings/MediaSettings.h"
 +#include "storage/MediaManager.h"
 +
-+
++using namespace std::chrono_literals;
 +// Default time after which the item's playcount is incremented
 +#define DEFAULT_PLAYCOUNT_MIN_TIME 10
 +
@@ -137,7 +137,7 @@ index 0000000000..3659f501d5
 +
 +	DestroyPlayers();
 +
-+	CLog::Log(LOGINFO, "CHiPlayer::%s", __FUNCTION__ );
++	CLog::Log(LOGINFO, "CHiPlayer::{}", __FUNCTION__ );
 +}
 +
 +bool CHiPlayer::OpenFile(const CFileItem& file, const CPlayerOptions &options)
@@ -171,7 +171,7 @@ index 0000000000..3659f501d5
 +	/* wait for the thread to terminate */
 +	StopThread(true);
 +	
-+	CLog::Log(LOGINFO, "CHiPlayer::%s: reopen=%s", __FUNCTION__, reopen == true ? "true":"false");
++	CLog::Log(LOGINFO, "CHiPlayer::{}: reopen={}", __FUNCTION__, reopen == true ? "true":"false");
 +
 +	return true;
 +}
@@ -195,13 +195,13 @@ index 0000000000..3659f501d5
 +	m_pInputStream = CDVDFactoryInputStream::CreateInputStream(this, m_item, true);
 +	if(m_pInputStream == nullptr)
 +	{
-+		CLog::Log(LOGERROR, "CHiPlayer%s: - unable to create input stream for [%s]", __FUNCTION__, CURL::GetRedacted(m_item.GetPath()).c_str());
++		CLog::Log(LOGERROR, "CHiPlayer{}: - unable to create input stream for [{}]", __FUNCTION__, CURL::GetRedacted(m_item.GetPath()).c_str());
 +		return false;
 +	}
 +
 +	if (!m_pInputStream->Open())
 +	{
-+		CLog::Log(LOGERROR, "CHiPlayer%s: - error opening [%s]", __FUNCTION__, CURL::GetRedacted(m_item.GetPath()).c_str());
++		CLog::Log(LOGERROR, "CHiPlayer{}: - error opening [{}]", __FUNCTION__, CURL::GetRedacted(m_item.GetPath()).c_str());
 +		return false;
 +	}
 +
@@ -227,7 +227,7 @@ index 0000000000..3659f501d5
 +				std::string strSubFile;
 +				if ( CUtil::FindVobSubPair( filenames, filenames[i], strSubFile ) )
 +				{
-+					CLog::Log(LOGINFO, "CHiPlayer%s: - AddSubtitleFile", __FUNCTION__);
++					CLog::Log(LOGINFO, "CHiPlayer{}: - AddSubtitleFile", __FUNCTION__);
 +					m_VideoPlayerVideo->AddSubtitleFile(strSubFile);
 +				}
 +			}
@@ -235,7 +235,7 @@ index 0000000000..3659f501d5
 +			{
 +				if ( !CUtil::IsVobSub(filenames, filenames[i] ) )
 +				{
-+					CLog::Log(LOGINFO, "CHiPlayer%s: - AddSubtitleFile", __FUNCTION__);
++					CLog::Log(LOGINFO, "CHiPlayer{}: - AddSubtitleFile", __FUNCTION__);
 +					m_VideoPlayerVideo->AddSubtitleFile(filenames[i]);
 +				}
 +			}
@@ -246,33 +246,33 @@ index 0000000000..3659f501d5
 +	SetSubTitleDelay(m_processInfo->GetVideoSettings().m_SubtitleDelay);
 +	
 +	if (m_pInputStream->IsStreamType(DVDSTREAM_TYPE_FILE))
-+		CLog::Log(LOGINFO, "CHiPlayer%s: DVDSTREAM_TYPE_FILE", __FUNCTION__);
++		CLog::Log(LOGINFO, "CHiPlayer{}: DVDSTREAM_TYPE_FILE", __FUNCTION__);
 +	else if (m_pInputStream->IsStreamType(DVDSTREAM_TYPE_DVD))
-+		CLog::Log(LOGINFO, "CHiPlayer%s: DVDSTREAM_TYPE_DVD", __FUNCTION__);
++		CLog::Log(LOGINFO, "CHiPlayer{}: DVDSTREAM_TYPE_DVD", __FUNCTION__);
 +	else if (m_pInputStream->IsStreamType(DVDSTREAM_TYPE_HTTP))
-+		CLog::Log(LOGINFO, "CHiPlayer%s: DVDSTREAM_TYPE_HTTP", __FUNCTION__);
++		CLog::Log(LOGINFO, "CHiPlayer{}: DVDSTREAM_TYPE_HTTP", __FUNCTION__);
 +	else if (m_pInputStream->IsStreamType(DVDSTREAM_TYPE_MEMORY))
-+		CLog::Log(LOGINFO, "CHiPlayer%s: DVDSTREAM_TYPE_MEMORY", __FUNCTION__);
++		CLog::Log(LOGINFO, "CHiPlayer{}: DVDSTREAM_TYPE_MEMORY", __FUNCTION__);
 +	else if (m_pInputStream->IsStreamType(DVDSTREAM_TYPE_FFMPEG))
-+		CLog::Log(LOGINFO, "CHiPlayer%s: DVDSTREAM_TYPE_FFMPEG", __FUNCTION__);
++		CLog::Log(LOGINFO, "CHiPlayer{}: DVDSTREAM_TYPE_FFMPEG", __FUNCTION__);
 +	else if (m_pInputStream->IsStreamType(DVDSTREAM_TYPE_TV))
-+		CLog::Log(LOGINFO, "CHiPlayer%s: DVDSTREAM_TYPE_TV", __FUNCTION__);
++		CLog::Log(LOGINFO, "CHiPlayer{}: DVDSTREAM_TYPE_TV", __FUNCTION__);
 +	else if (m_pInputStream->IsStreamType(DVDSTREAM_TYPE_MPLS))
-+		CLog::Log(LOGINFO, "CHiPlayer%s: DVDSTREAM_TYPE_MPLS", __FUNCTION__);
++		CLog::Log(LOGINFO, "CHiPlayer{}: DVDSTREAM_TYPE_MPLS", __FUNCTION__);
 +	else if (m_pInputStream->IsStreamType(DVDSTREAM_TYPE_BLURAY))
-+		CLog::Log(LOGINFO, "CHiPlayer%s: DVDSTREAM_TYPE_BLURAY", __FUNCTION__);
++		CLog::Log(LOGINFO, "CHiPlayer{}: DVDSTREAM_TYPE_BLURAY", __FUNCTION__);
 +	else if (m_pInputStream->IsStreamType(DVDSTREAM_TYPE_PVRMANAGER))
-+		CLog::Log(LOGINFO, "CHiPlayer%s: DVDSTREAM_TYPE_PVRMANAGER", __FUNCTION__);
++		CLog::Log(LOGINFO, "CHiPlayer{}: DVDSTREAM_TYPE_PVRMANAGER", __FUNCTION__);
 +	else if (m_pInputStream->IsStreamType(DVDSTREAM_TYPE_MULTIFILES))
-+		CLog::Log(LOGINFO, "CHiPlayer%s: DVDSTREAM_TYPE_MULTIFILES", __FUNCTION__);
++		CLog::Log(LOGINFO, "CHiPlayer{}: DVDSTREAM_TYPE_MULTIFILES", __FUNCTION__);
 +	else if (m_pInputStream->IsStreamType(DVDSTREAM_TYPE_ADDON))
-+		CLog::Log(LOGINFO, "CHiPlayer%s: DVDSTREAM_TYPE_ADDON", __FUNCTION__);
++		CLog::Log(LOGINFO, "CHiPlayer{}: DVDSTREAM_TYPE_ADDON", __FUNCTION__);
 +	else if (m_pInputStream->IsStreamType(DVDSTREAM_TYPE_NONE))
-+		CLog::Log(LOGINFO, "CHiPlayer%s: DVDSTREAM_TYPE_NONE", __FUNCTION__);
++		CLog::Log(LOGINFO, "CHiPlayer{}: DVDSTREAM_TYPE_NONE", __FUNCTION__);
 +	else
-+		CLog::Log(LOGINFO, "CHiPlayer%s: DVDSTREAM_TYPE_UNKNOWN", __FUNCTION__);
++		CLog::Log(LOGINFO, "CHiPlayer{}: DVDSTREAM_TYPE_UNKNOWN", __FUNCTION__);
 +	
-+	CLog::Log(LOGINFO, "CHiPlayer%s: m_ready.Set()", __FUNCTION__);
++	CLog::Log(LOGINFO, "CHiPlayer{}: m_ready.Set()", __FUNCTION__);
 +	m_ready.Set();
 +
 +	if (CServiceBroker::GetSettingsComponent()->GetSettings()->GetBool(CSettings::SETTING_VIDEOPLAYER_USEDISPLAYASCLOCK) &&
@@ -296,7 +296,7 @@ index 0000000000..3659f501d5
 +
 +	XbmcThreads::EndTime timer(2000);
 +	while (!timer.IsTimePast() && !CServiceBroker::GetActiveAE()->IsSuspended())
-+		Sleep(50);
++		CThread::Sleep(50ms);
 +
 +	CDVDStreamInfo hint;
 +	
@@ -305,7 +305,7 @@ index 0000000000..3659f501d5
 +	
 +	CURL Url(hint.filename);
 +	
-+	CLog::Log(LOGINFO, "CHiPlayer%s: m_pInputStream->GetFileName(): %s", __FUNCTION__, hint.filename.c_str());
++	CLog::Log(LOGINFO, "CHiPlayer{}: m_pInputStream->GetFileName(): {}", __FUNCTION__, hint.filename.c_str());
 +
 +	KODI::MESSAGING::CApplicationMessenger::GetInstance().PostMsg(TMSG_SWITCHTOFULLSCREEN);
 +
@@ -327,11 +327,11 @@ index 0000000000..3659f501d5
 +
 +	m_VideoPlayerVideo->OpenStream(hint, m_item);
 +	
-+	CLog::Log(LOGINFO, "CHiPlayer%s: m_bStop: %s", __FUNCTION__, m_bStop == true ? "true" : "false");
++	CLog::Log(LOGINFO, "CHiPlayer{}: m_bStop: {}", __FUNCTION__, m_bStop == true ? "true" : "false");
 +	
 +	m_bStop = true;
 +	
-+	CLog::Log(LOGINFO, "CHiPlayer%s: m_bStop: %s", __FUNCTION__, m_bStop == true ? "true" : "false");
++	CLog::Log(LOGINFO, "CHiPlayer{}: m_bStop: {}", __FUNCTION__, m_bStop == true ? "true" : "false");
 +
 +	CServiceBroker::GetActiveAE()->Resume();
 +
@@ -459,30 +459,30 @@ index 0000000000..3659f501d5
 +
 +void CHiPlayer::SetSpeed(float iSpeed)
 +{
-+	CLog::Log(LOGINFO, "CHiPlayer::%s: %f", __FUNCTION__, iSpeed);
++	CLog::Log(LOGINFO, "CHiPlayer::{}: %f", __FUNCTION__, iSpeed);
 +	m_VideoPlayerVideo->SetSpeed(iSpeed);
 +}
 +
 +void CHiPlayer::ShowOSD(bool bOnoff)
 +{
-+	CLog::Log(LOGINFO, "CHiPlayer::%s: %s", __FUNCTION__, bOnoff == false ? "false":"true" );
++	CLog::Log(LOGINFO, "CHiPlayer::{}: {}", __FUNCTION__, bOnoff == false ? "false":"true" );
 +}
 +
 +std::string CHiPlayer::GetPlayerState()
 +{
-+	CLog::Log(LOGINFO, "CHiPlayer::%s", __FUNCTION__);
++	CLog::Log(LOGINFO, "CHiPlayer::{}", __FUNCTION__);
 +	return "";
 +}
 +
 +bool CHiPlayer::SetPlayerState(const std::string& state)
 +{
-+	CLog::Log(LOGINFO, "CHiPlayer::%s: state:%s", __FUNCTION__, state.c_str());
++	CLog::Log(LOGINFO, "CHiPlayer::{}: state:{}", __FUNCTION__, state.c_str());
 +	return true;
 +}
 +
 +bool CHiPlayer::Initialize(TiXmlElement* pConfig)
 +{
-+	CLog::Log(LOGINFO, "CHiPlayer::%s", __FUNCTION__);
++	CLog::Log(LOGINFO, "CHiPlayer::{}", __FUNCTION__);
 +	return true;
 +}
 +
@@ -492,7 +492,7 @@ index 0000000000..3659f501d5
 +
 +void CHiPlayer::ToggleOSD()
 +{
-+	CLog::Log(LOGINFO, "CHiPlayer::%s:", __FUNCTION__);
++	CLog::Log(LOGINFO, "CHiPlayer::{}:", __FUNCTION__);
 +}
 +
 +void CHiPlayer::SetVolume(float volume)
@@ -562,11 +562,11 @@ index 0000000000..3659f501d5
 +
 +void CHiPlayer::OnPlaybackStarted(const CFileItem& file)
 +{
-+	CLog::Log(LOGINFO, "CHiPlayer::%s", __FUNCTION__);
++	CLog::Log(LOGINFO, "CHiPlayer::{}", __FUNCTION__);
 +	
 +	CURL Url(m_pInputStream->GetFileName());
 +	
-+	CLog::Log(LOGINFO, "CHiPlayer::%s: startpercent=%f starttime=%f", __FUNCTION__, m_PlayerOptions.startpercent, m_PlayerOptions.starttime);
++	CLog::Log(LOGINFO, "CHiPlayer::{}: startpercent=%f starttime=%f", __FUNCTION__, m_PlayerOptions.startpercent, m_PlayerOptions.starttime);
 +	
 +	if (m_PlayerOptions.startpercent > 0)
 +	{
@@ -585,14 +585,14 @@ index 0000000000..3659f501d5
 +
 +bool CHiPlayer::OnAction(const CAction &action)
 +{
-+	CLog::Log(LOGINFO, "CHiPlayer::%s: id=%d", __FUNCTION__, action.GetID());
++	CLog::Log(LOGINFO, "CHiPlayer::{}: id={:d}", __FUNCTION__, action.GetID());
 +	return false;
 +}
 +
 +void CHiPlayer::GetVideoResolution(unsigned int &width, unsigned int &height)
 +{
 +	m_VideoPlayerVideo->GetVideoResolution(width, height);
-+	CLog::Log(LOGINFO, "CHiPlayer::%s: width=%d height=%d", __FUNCTION__, width, height);
++	CLog::Log(LOGINFO, "CHiPlayer::{}: width={:d} height={:d}", __FUNCTION__, width, height);
 +}
 +
 +void CHiPlayer::FrameMove() 
@@ -645,7 +645,7 @@ index 0000000000..3659f501d5
 +
 +void CHiPlayer::SetRenderViewMode(int mode, float zoom, float par, float shift, bool stretch)
 +{
-+	CLog::Log(LOGINFO, "CHiPlayer::%s %d", __FUNCTION__, mode);
++	CLog::Log(LOGINFO, "CHiPlayer::{} {:d}", __FUNCTION__, mode);
 +	m_VideoPlayerVideo->SetRenderViewMode(mode, zoom, par, shift, stretch);
 +}
 +
@@ -723,11 +723,11 @@ index 0000000000..d794cb748f
 +	
 +	virtual void FrameMove();
 +	virtual void Render(bool clear, uint32_t alpha, bool gui);
-+	virtual void FlushRenderer() { CLog::Log(LOGINFO, "%s: ", __FUNCTION__ ); };
++	virtual void FlushRenderer() { CLog::Log(LOGINFO, "{}: ", __FUNCTION__ ); };
 +	
 +	virtual void SetRenderViewMode(int mode, float zoom, float par, float shift, bool stretch);
 +	virtual float GetRenderAspectRatio();
-+	virtual void TriggerUpdateResolution() { CLog::Log(LOGINFO, "%s: ", __FUNCTION__ ); };
++	virtual void TriggerUpdateResolution() { CLog::Log(LOGINFO, "{}: ", __FUNCTION__ ); };
 +	
 +	virtual bool IsRenderingVideo();
 +
@@ -853,7 +853,7 @@ index 0000000000..c312f71e8f
 +		ioctl(fd, AUDIO_SET_MIXER, &mixer);
 +		closeMixer(fd);
 +	}
-+	CLog::Log(LOGDEBUG, "%s: volume:%f set:%d (-1db)", __FUNCTION__, volume, vol);
++	CLog::Log(LOGDEBUG, "{}: volume:%f set:{:d} (-1db)", __FUNCTION__, volume, vol);
 +}
 +
 +void CHiPlayerAudio::SetMute(bool bOnOff)
@@ -863,14 +863,14 @@ index 0000000000..c312f71e8f
 +	{
 +		bool mute = bOnOff;
 +		if (!ioctl(fd, AUDIO_SET_MUTE, mute) == 0)
-+			CLog::Log(LOGERROR, "%s: ioctl AUDIO_SET_MUTE failed", __FUNCTION__);
++			CLog::Log(LOGERROR, "{}: ioctl AUDIO_SET_MUTE failed", __FUNCTION__);
 +		
 +		closeMixer(fd);
 +	}
 +	else
-+			CLog::Log(LOGERROR, "%s: i/o AUDIO_SET_MUTE failed", __FUNCTION__);
++			CLog::Log(LOGERROR, "{}: i/o AUDIO_SET_MUTE failed", __FUNCTION__);
 +	
-+	CLog::Log(LOGDEBUG, "%s: bOnOff	:%s", __FUNCTION__, bOnOff == false ? "off":"on" ); 
++	CLog::Log(LOGDEBUG, "{}: bOnOff	:{}", __FUNCTION__, bOnOff == false ? "off":"on" ); 
 +}
 +
 +int CHiPlayerAudio::openMixer()
@@ -1040,7 +1040,7 @@ index 0000000000..227c933e26
 +	}
 +	free(fileinfo.pastProgramInfo);
 +
-+	CLog::Log(LOGINFO, "CHiPlayerVideo::%s", __FUNCTION__ );
++	CLog::Log(LOGINFO, "CHiPlayerVideo::{}", __FUNCTION__ );
 +}
 +
 +int Select(int maxfd, fd_set *readfds, fd_set *writefds, fd_set *exceptfds, struct timeval *timeout)
@@ -1351,7 +1351,7 @@ index 0000000000..227c933e26
 +									m_processInfo.SetAudioChannels("7.1");
 +									break;
 +								default:
-+									snprintf(buffer, sizeof(buffer), "%d channels", pstAudStream->u16Channels);
++									snprintf(buffer, sizeof(buffer), "{:d} channels", pstAudStream->u16Channels);
 +									m_processInfo.SetAudioChannels(buffer);
 +									break;
 +								}
@@ -1625,7 +1625,7 @@ index 0000000000..227c933e26
 +		seekTarget = (int64_t)(GetTotalTime()*(current + percent)/100);
 +	}
 +
-+	CLog::Log(LOGINFO, "CHiPlayerVideo::%s: seekTarget=%lld", __FUNCTION__, seekTarget);
++	CLog::Log(LOGINFO, "CHiPlayerVideo::{}: seekTarget={:11d}", __FUNCTION__, seekTarget);
 +
 +	SeekTime(seekTarget);
 +}
@@ -1634,7 +1634,7 @@ index 0000000000..227c933e26
 +{
 +	int val = (int) GetTotalTime() * iPercent;
 +
-+	CLog::Log(LOGINFO, "CHiPlayerVideo::%s: iPercent=%f seek to %d milliseconds", __FUNCTION__, iPercent, val);
++	CLog::Log(LOGINFO, "CHiPlayerVideo::{}: iPercent=%f seek to {:d} milliseconds", __FUNCTION__, iPercent, val);
 +
 +	if(val<0)
 +		return;
@@ -1650,7 +1650,7 @@ index 0000000000..227c933e26
 +
 +void CHiPlayerVideo::SetAVDelay(float fValue)
 +{
-+	CLog::Log(LOGINFO, "CHiPlayerVideo::%s", __FUNCTION__ );
++	CLog::Log(LOGINFO, "CHiPlayerVideo::{}", __FUNCTION__ );
 +}
 +
 +float CHiPlayerVideo::GetAVDelay()
@@ -1660,7 +1660,7 @@ index 0000000000..227c933e26
 +
 +void CHiPlayerVideo::SetSubTitleDelay(float fValue)
 +{
-+	CLog::Log(LOGINFO, "CHiPlayerVideo::%s", __FUNCTION__ );
++	CLog::Log(LOGINFO, "CHiPlayerVideo::{}", __FUNCTION__ );
 +}
 +
 +float CHiPlayerVideo::GetSubTitleDelay()
@@ -2126,7 +2126,7 @@ index 0000000000..227c933e26
 +
 +void CHiPlayerVideo::SeekTime(int64_t iTime)
 +{
-+	CLog::Log(LOGINFO, "CHiPlayerVideo::%s: iTime=%lld", __FUNCTION__, iTime);
++	CLog::Log(LOGINFO, "CHiPlayerVideo::{}: iTime={:11d}", __FUNCTION__, iTime);
 +
 +	if (iTime >= 0)
 +	{
@@ -2145,7 +2145,7 @@ index 0000000000..227c933e26
 +{
 +	int64_t abstime = GetTime() + iTime;
 +	
-+	CLog::Log(LOGINFO, "CHiPlayerVideo::%s: iTime=%lld abstime=%d", __FUNCTION__, iTime, abstime);
++	CLog::Log(LOGINFO, "CHiPlayerVideo::{}: iTime={:11d} abstime={:d}", __FUNCTION__, iTime, abstime);
 +
 +	if (abstime >= 0)
 +	{
@@ -2187,8 +2187,8 @@ index 0000000000..227c933e26
 +	if (m_pInputStream)
 +	{
 +		m_time = (int64_t) (((GetTotalTime() * 1000) / m_length) * m_offset) / 1000;
-+		CLog::Log(LOGINFO, "CGstPlayerVideo::%s: (appsrc) m_offset=%d m_length=%d m_pInputStream->GetLength()=%d", __FUNCTION__, (int) m_offset, (int) m_length, m_pInputStream->GetLength());
-+		CLog::Log(LOGINFO, "CGstPlayerVideo::%s: (appsrc) milliseconds=%d", __FUNCTION__, (int) m_time);
++		CLog::Log(LOGINFO, "CGstPlayerVideo::{}: (appsrc) m_offset={:d} m_length={:d} m_pInputStream->GetLength()={:d}", __FUNCTION__, (int) m_offset, (int) m_length, m_pInputStream->GetLength());
++		CLog::Log(LOGINFO, "CGstPlayerVideo::{}: (appsrc) milliseconds={:d}", __FUNCTION__, (int) m_time);
 +		return m_time;
 +	}
 +	return m_time;
@@ -2203,14 +2203,14 @@ index 0000000000..227c933e26
 +
 +std::string CHiPlayerVideo::GetPlayerState()
 +{
-+	CLog::Log(LOGINFO, "CHiPlayerVideo::%s", __FUNCTION__);
++	CLog::Log(LOGINFO, "CHiPlayerVideo::{}", __FUNCTION__);
 +
 +	return "";
 +}
 +
 +float CHiPlayerVideo::GetRenderAspectRatio()
 +{
-+	CLog::Log(LOGINFO, "%s: m_aspect: %d.0f", __FUNCTION__, (int)m_aspect); 
++	CLog::Log(LOGINFO, "{}: m_aspect: {:d}.0f", __FUNCTION__, (int)m_aspect); 
 +	return 0.01 * (float)m_aspect;
 +}
 +
@@ -2297,34 +2297,34 @@ index 0000000000..227c933e26
 +	switch (mode)
 +	{
 +	case ViewModeNormal:
-+		fprintf(policy, "%s", "panscan");
++		fprintf(policy, "{}", "panscan");
 +		break;
 +	case ViewModeZoom:
-+		fprintf(policy, "%s", "bestfit");
++		fprintf(policy, "{}", "bestfit");
 +		break;
 +	case ViewModeStretch4x3:
-+		fprintf(policy, "%s", "letterbox");
++		fprintf(policy, "{}", "letterbox");
 +		break;
 +	case ViewModeWideZoom:
-+		fprintf(policy, "%s", "bestfit");
++		fprintf(policy, "{}", "bestfit");
 +		break;
 +	case ViewModeStretch16x9:
-+		fprintf(policy, "%s", "panscan");
++		fprintf(policy, "{}", "panscan");
 +		break;
 +	case ViewModeOriginal:
-+		fprintf(policy, "%s", "full");
++		fprintf(policy, "{}", "full");
 +		break;
 +	case ViewModeCustom:
-+		fprintf(policy, "%s", "auto");
++		fprintf(policy, "{}", "auto");
 +		break;
 +	case ViewModeStretch16x9Nonlin:
-+		fprintf(policy, "%s", "auto");
++		fprintf(policy, "{}", "auto");
 +		break;
 +	case ViewModeZoom120Width:
-+		fprintf(policy, "%s", "auto");
++		fprintf(policy, "{}", "auto");
 +		break;
 +	case ViewModeZoom110Width:
-+		fprintf(policy, "%s", "auto");
++		fprintf(policy, "{}", "auto");
 +		break;
 +	}
 +	fclose(policy);
@@ -2399,13 +2399,13 @@ index 0000000000..4b4a2f321f
 +
 +	void GetVideoResolution(unsigned int &width, unsigned int &height);
 +
-+	int GetAudioStreamCount() { CLog::Log(LOGINFO, "%s: m_audio: %d", __FUNCTION__, m_audio); return (int)m_audio; };
-+	int GetVideoStreamCount() { CLog::Log(LOGINFO, "%s: m_video: %d", __FUNCTION__, m_video); return (int)m_video; };
-+	int GetSubtitleCount()    { /*CLog::Log(LOGINFO, "%s: m_text: %d", __FUNCTION__, m_text);*/ return (int)m_text; };
++	int GetAudioStreamCount() { CLog::Log(LOGINFO, "{}: m_audio: {:d}", __FUNCTION__, m_audio); return (int)m_audio; };
++	int GetVideoStreamCount() { CLog::Log(LOGINFO, "{}: m_video: {:d}", __FUNCTION__, m_video); return (int)m_video; };
++	int GetSubtitleCount()    { /*CLog::Log(LOGINFO, "{}: m_text: {:d}", __FUNCTION__, m_text);*/ return (int)m_text; };
 +	
-+	int GetAudioStream() { CLog::Log(LOGINFO, "%s: m_current_audio: %d", __FUNCTION__, m_current_audio); return (int)m_current_audio; };
-+	int GetVideoStream() { CLog::Log(LOGINFO, "%s: m_current_video: %d", __FUNCTION__, m_current_video); return (int)m_current_video; };
-+	int GetSubtitle()    { CLog::Log(LOGINFO, "%s: m_current_text: %d", __FUNCTION__, m_current_text); return (int)m_current_text; };
++	int GetAudioStream() { CLog::Log(LOGINFO, "{}: m_current_audio: {:d}", __FUNCTION__, m_current_audio); return (int)m_current_audio; };
++	int GetVideoStream() { CLog::Log(LOGINFO, "{}: m_current_video: {:d}", __FUNCTION__, m_current_video); return (int)m_current_video; };
++	int GetSubtitle()    { CLog::Log(LOGINFO, "{}: m_current_text: {:d}", __FUNCTION__, m_current_text); return (int)m_current_text; };
 +
 +	void SetSubtitle(int iStream);
 +	bool GetSubtitleVisible();

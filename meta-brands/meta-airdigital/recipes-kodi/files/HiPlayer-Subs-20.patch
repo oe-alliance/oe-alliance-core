@@ -168,7 +168,7 @@ index 0000000000..429b3ad531
 +	if (CUtil::IsUsingTTFSubtitles())
 +	{
 +		RESOLUTION_INFO pal(720, 576, 0);
-+		CGUIFont *subtitle_font = g_fontManager.LoadTTF(StringUtils::Format("__subs%d%x%x%s__",
++		CGUIFont *subtitle_font = g_fontManager.LoadTTF(StringUtils::Format("__subs{:d}{:x}{:x}{}__",
 +			settings->GetInt(CSettings::SETTING_SUBTITLES_HEIGHT),
 +			settings->GetInt(CSettings::SETTING_SUBTITLES_COLOR),
 +			settings->GetInt(CSettings::SETTING_SUBTITLES_STYLE),
@@ -179,7 +179,7 @@ index 0000000000..429b3ad531
 +			, settings->GetInt(CSettings::SETTING_SUBTITLES_HEIGHT)
 +			, settings->GetInt(CSettings::SETTING_SUBTITLES_STYLE)
 +			, false, 1.0f, 1.0f, &pal, true);
-+		CGUIFont *border_font   = g_fontManager.LoadTTF(StringUtils::Format("__subsborder%d%x%x%s__",
++		CGUIFont *border_font   = g_fontManager.LoadTTF(StringUtils::Format("__subsborder{:d}{:x}{:x}{}__",
 +			settings->GetInt(CSettings::SETTING_SUBTITLES_HEIGHT),
 +			settings->GetInt(CSettings::SETTING_SUBTITLES_COLOR),
 +			settings->GetInt(CSettings::SETTING_SUBTITLES_STYLE),
