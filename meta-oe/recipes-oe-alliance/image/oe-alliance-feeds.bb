@@ -9,7 +9,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r11"
+PR = "r12"
 
 DEPENDS = "enigma2-plugin-drivers-usbserial enigma2-plugin-systemplugins-radiotimesemulator enigma2-plugin-systemplugins-hrtunerproxy"
 
@@ -142,6 +142,7 @@ RDEPENDS_${PN} = " \
     ${PYTHON_PN}-mechanize \
     ${PYTHON_PN}-netifaces \
     ${PYTHON_PN}-pexpect \
+    ${PYTHON_PN}-psutil \
     ${PYTHON_PN}-pyasn1-modules \
     ${PYTHON_PN}-requests \
     ${PYTHON_PN}-service-identity \
