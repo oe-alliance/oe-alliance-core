@@ -10,7 +10,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r11"
+PR = "r12"
 
 OPTIONAL_WIFIDRIVERS = "${@bb.utils.contains("MACHINE_FEATURES", "wifiusblegacy", "enigma2-plugin-drivers-network-usb-rt3070", " \
     enigma2-plugin-drivers-network-usb-ath9k-htc \
@@ -73,6 +73,8 @@ RDEPENDS_${PN} = "\
     ${@bb.utils.contains("MACHINE", "ustym4kpro", "enigma2-plugin-drivers-network-usb-rtl8192eu enigma2-plugin-drivers-network-usb-rtl8822cu", "", d)} \
     ${@bb.utils.contains("MACHINEBUILD", "osmio4k", "enigma2-plugin-drivers-network-usb-qca6174", "", d)} \
     ${@bb.utils.contains("MACHINEBUILD", "osmio4kplus", "enigma2-plugin-drivers-network-usb-qca6174", "", d)} \
+    ${@bb.utils.contains("MACHINEBUILD", "formuler1", "enigma2-plugin-drivers-network-usb-rtl8822bu", "", d)} \
+    ${@bb.utils.contains("MACHINEBUILD", "hd51", "enigma2-plugin-drivers-network-usb-rtl8822bu", "", d)} \
     "
 
 RDEPENDS_${PN}_remove_odroidc2 = "enigma2-plugin-drivers-network-usb-rtl8192cu"
