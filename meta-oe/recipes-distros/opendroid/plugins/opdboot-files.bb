@@ -19,7 +19,7 @@ S="${WORKDIR}/git/files"
 
 do_install() {
 	install -d ${D}/usr
-	mkdir -p ${D}/usr/softcams
+	mkdir -p ${D}${libdir}
 }
 
 do_install_append_mipsel() {

@@ -20,7 +20,6 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-extensions-epgimport \
     enigma2-plugin-extensions-vhannibal-autosettings \
     enigma2-plugin-systemplugins-crossepg \
-    enigma2-plugin-skins-opendroid \
     enigma2-plugin-skincomponents-bmediacenter-ax-blue-skin \
     enigma2-plugin-skincomponents-mediaportal-ax-blue-skin \
     enigma2-plugin-skincomponents-mediaportal-blue-line-skin \
@@ -29,6 +28,8 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-skincomponents-skyrecorder-fhd-skin \
     enigma2-plugin-skins-opd-blue-line \
     enigma2-plugin-skins-multibox-fhd-4opd \
+    enigma2-plugin-skins-opd-steampunk \
+    enigma2-plugin-skins-Ultimate-hd-Skin-4opd \
     "
 RRECOMMENDS_${PN}_append_gb800solo = "enigma2-plugin-extensions-gbipboxclient"
 RRECOMMENDS_${PN}_append_gb7325 = "enigma2-plugin-extensions-gbipboxclient"

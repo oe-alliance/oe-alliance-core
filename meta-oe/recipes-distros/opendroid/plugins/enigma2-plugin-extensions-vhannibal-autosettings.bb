@@ -1,5 +1,5 @@
 DESCRIPTION = "vhannibal autosettings plugin"
-MAINTAINER = "opendroid"
+MAINTAINER = "opendroid-Team"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"
@@ -24,3 +24,6 @@ do_install() {
     install -d ${D}${libdir}
     cp -rp ${S}/usr/lib/* ${D}${libdir}/
 }
+
+do_populate_sysroot[noexec] = "1"
+do_package_qa[noexec] = "1"

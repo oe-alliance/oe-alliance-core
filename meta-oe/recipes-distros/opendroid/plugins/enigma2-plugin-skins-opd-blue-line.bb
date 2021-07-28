@@ -5,13 +5,13 @@ require conf/license/license-gplv2.inc
 
 inherit gitpkgv
 SRCREV = "${AUTOREV}"
-PV = "1.6+git${SRCPV}"
-PKGV = "1.6+git${GITPKGV}"
-VER="1.6"
-PR = "r5"
+PV = "1.8+git${SRCPV}"
+PKGV = "1.8+git${GITPKGV}"
+VER="1.8"
 
+RDEPENDS_${PN} = "enigma2-plugin-systemplugins-weathercomponenthandler, enigma2-plugin-skincomponents-weathercomponent"
 
-SRC_URI="git://github.com/opendroid-Team/Skins-for-openOPD.git;protocol=git"
+SRC_URI="git://github.com/stein17/Skins-for-openOPD.git;protocol=git;branch=python3"
 
 FILES_${PN} = "/"
 
@@ -26,19 +26,39 @@ do_install() {
 }
 pkg_postinst_${PN} () {
 #!/bin/sh
-echo "              ...Skin successful installed.                "
+echo "                                                          "
+echo " ...OPD-Blue-Line by stein17 successful installed.  "
+echo "                                                          "
 exit 0
 }
+
 pkg_postrm_${PN} () {
 #!/bin/sh
-rm -rf /usr/share/enigma2/OPD_Blue_Line
-echo "                                                           "
-echo "               ...Skin successful removed.                 "
-exit 0
+rm -rf /usr/share/enigma2/OPD-Blue-Line
+rm -rf /usr/lib/enigma2/python/Components/Converter/OPD*
+rm -rf /usr/lib/enigma2/python/Components/Renderer/OPD*
+echo "                                                          "
+echo " ....Skin removed! You should restart GUI now!                 "
+echo "
 }
+
 pkg_preinst_${PN} () {
-#!/bin/sh
-echo "        OPD-Blue-Line Skin will be now installed...            "
+#!/bin/sh                                                       
+rm -rf /usr/share/enigma2/OPD-Blue-Line
+rm -rf /usr/lib/enigma2/python/Components/Converter/OPD
+rm -rf /usr/lib/enigma2/python/Components/Renderer/OPD
+echo "aktualisiere Updatequellen... "opkg update 
+echo "                                                                           "
+echo "                                                                           "
+echo "                                                                           "
+echo "                                                                           "
+echo "                                                                           "
+echo "                                                                           "
+echo "                                                                           "
+echo "  OPD-Blue-Line by stein17 is now being installed...                 "
+echo "                                                                           " 
+echo "                                                                           "
+echo "                                                                           "
 exit 0
 }
 pkg_prerm_${PN} () {

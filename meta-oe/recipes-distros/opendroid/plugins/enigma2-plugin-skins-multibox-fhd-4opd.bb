@@ -6,12 +6,13 @@ require conf/license/license-gplv2.inc
 inherit gitpkgv
 
 SRCREV = "${AUTOREV}"
-PV = "0.0.6+git${SRCPV}"
-PKGV = "0.0.6+git${GITPKGV}"
-VER="0.0.6"
+PV = "1.1+git${SRCPV}"
+PKGV = "1.1+git${GITPKGV}"
+VER="1.1"
 
+RDEPENDS_${PN} = "enigma2-plugin-systemplugins-weathercomponenthandler, enigma2-plugin-skincomponents-weathercomponent"
 
-SRC_URI="git://github.com/stein17/Skins-for-openOPD.git;protocol=git"
+SRC_URI="git://github.com/stein17/Skins-for-openOPD.git;protocol=git;branch=python3"
 
 FILES_${PN} = "${libdir} /usr/share"
 
