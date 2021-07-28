@@ -17,7 +17,7 @@ RPROVIDES_${PN} += "virtual/transtreamproxy"
 DEPENDS = "boost virtual/inetd"
 RDEPENDS_${PN} += "virtual/inetd"
 
-SRC_URI = "git://code.vuplus.com/git/filestreamproxy.git;protocol=http;branch=transtreamproxy \
+SRC_URI = "git://code.vuplus.com/git/filestreamproxy.git;protocol=http;branch=transtreamproxy_dev \
     file://gcc6.patch \
     file://shm-ordered-comparison-of-pointer-zero.patch \
     "
