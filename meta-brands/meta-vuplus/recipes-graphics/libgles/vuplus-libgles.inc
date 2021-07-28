@@ -8,9 +8,8 @@ require conf/license/license-close.inc
 PV="15.1"
 PR="${SRCDATE}.${SRCDATE_PR}"
 
-PROVIDES = "virtual/libgles2 virtual/egl"
-PROVIDES += "libgles"
-RPROVIDES_${PN} += "libgles"
+PROVIDES = "virtual/libgles1 virtual/libgles2 virtual/egl libgles"
+RPROVIDES_${PN} = "virtual/libgles1 virtual/libgles2 virtual/egl libEGL.so libGLESv2.so libgles"
 
 SRC_URI = "http://code.vuplus.com/download/release/libgles/libgles-${MACHINE}-${PV}-${PR}.tar.gz"
 

@@ -1,0 +1,34 @@
+From 8282fc7786feb9ba651f5523630d919b25d8e197 Mon Sep 17 00:00:00 2001
+From: Captain <captain.onboard@web.de>
+Date: Mon, 26 Jul 2021 09:50:48 +0200
+Subject: [PATCH] force alsa
+
+---
+ src/core/config/linux.pri | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/core/config/linux.pri b/src/core/config/linux.pri
+index 26d0dcf7..c2010ee8 100644
+--- a/src/core/config/linux.pri
++++ b/src/core/config/linux.pri
+@@ -9,7 +9,7 @@ qtConfig(webengine-embedded-build) {
+ 
+ 
+     qtConfig(webengine-pulseaudio) {
+-        gn_args += use_pulseaudio=true
++        gn_args += use_pulseaudio=false
+     } else {
+         gn_args += use_pulseaudio=false
+     }
+@@ -17,7 +17,7 @@ qtConfig(webengine-embedded-build) {
+     qtConfig(webengine-alsa) {
+         gn_args += use_alsa=true
+     } else {
+-        gn_args += use_alsa=false
++        gn_args += use_alsa=true
+     }
+ 
+     !packagesExist(libpci): gn_args += use_libpci=false
+-- 
+2.32.0.windows.2
+

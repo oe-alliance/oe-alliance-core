@@ -13,9 +13,6 @@ PR = "${SRCDATE}.${SRCDATE_PR}"
 
 SRC_URI = "http://code.vuplus.com/download/release/libvupl/libvupl-${PV}-${MACHINE}-${PR}.tar.gz"
 
-INSANE_SKIP_${PN} += "already-stripped dev-so"
-INHIBIT_PACKAGE_STRIP = "1"
-
 S = "${WORKDIR}/libvupl-${PV}-${MACHINE}"
 
 inherit pkgconfig
@@ -29,8 +26,9 @@ do_install() {
 	cp -r ${S}/lib/pkgconfig/*.pc ${D}${libdir}/pkgconfig/
 }
 
-do_package_qa() {
-}
+INHIBIT_PACKAGE_STRIP = "1"
+INHIBIT_SYSROOT_STRIP = "1"
+INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
 
-PACKAGES = "${PN}"
-FILES_${PN}="/usr/lib /usr/include"
+SOLIBS = ".so"
+FILES_SOLIBSDEV = ""
