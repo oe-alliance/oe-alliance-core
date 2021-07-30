@@ -171,6 +171,27 @@ ${@bb.utils.contains('MACHINEBUILD', 'e4hdultra', 'e4hd' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'protek4k', 'protek4k' , '', d)}\
 "
 
+RCNAME = "\
+${@bb.utils.contains('MACHINEBUILD', 'twinboxlcd', 'red1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'twinboxlcdci5', 'red2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mbmicro', 'miraclebox' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mbmicrov2', 'miraclebox' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'odin2hybrid', 'ax1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'odinplus', 'ax1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'e4hd', 'e4hd' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'e4hdhybrid', 'e4hd' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'e4hdcombo', 'e4hdcombo' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'singleboxlcd', 'red2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'sf208', 'sf2x8' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'sf228', 'sf2x8' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'sf238', 'sf2x8' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', '9910lx', 'protek2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', '9911lx', 'protek2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', '9920lx', 'protek2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'e4hdultra', 'e4hdcombo' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'protek4k', 'protek3' , '', d)}\
+"
+
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS += " \
     ceryon-dvb-modules-${MACHINE_DRIVER} \
     "

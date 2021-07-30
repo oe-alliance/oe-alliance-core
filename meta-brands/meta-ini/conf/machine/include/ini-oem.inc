@@ -162,6 +162,32 @@ ${@bb.utils.contains('MACHINEBUILD', 'bwidowx2', 'yhgd2580-7362' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'opticumtt', 'ini-435oc' , '', d)}\
 "
 
+RCNAME = "\
+${@bb.utils.contains('MACHINEBUILD', 'ventonhdx', 'ini0' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'sezam1000hd', 'ini2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'sezam5000hd', 'ini2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'sezammarvel', 'ini4' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'xpeedlx', 'ini4' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'xpeedlx3', 'ini4' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'evoslim', 'evo8' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mbmini', 'ini3' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mbminiplus', 'ini4' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mbhybrid', 'ini3' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mbtwin', 'ini3' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mbultra', 'ini3' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'atemio5x00', 'ini4' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'atemio6000', 'ini4' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'atemio6100', 'ini4' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'atemio6200', 'ini4' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'atemionemesis', 'ini4' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'beyonwizt2', 'ini7' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'beyonwizt3', 'ini5' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'beyonwizt4', 'ini7' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'bwidowx', 'ini6' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'bwidowx2', 'ini6' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'opticumtt', 'ini8' , '', d)}\
+"
+
 KERNEL_FILE = "kernel.bin"
 ROOTFS_FILE = "rootfs.bin"
 

@@ -68,6 +68,19 @@ ${@bb.utils.contains('MACHINEBUILD', 'vipercombohdd', 'mtd0' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'viperslim', 'mtd0' , '', d)}\
 "
 
+RCNAME = "\
+${@bb.utils.contains('MACHINEBUILD', 'enfinity', 'evo1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'marvel1', 'visionnet' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'x2plus', 'evo2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'bre2ze', 'wwio1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'evomini', 'evo5' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'evominiplus', 'evo5' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'vipert2c', 'amiko2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'vipercombo', 'amiko2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'vipercombohdd', 'amiko1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'viperslim', 'amiko2' , '', d)}\
+"
+
 KERNEL_FILE = "kernel.bin"
 ROOTFS_FILE = "rootfs.bin"
 

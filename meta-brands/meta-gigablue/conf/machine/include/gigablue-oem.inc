@@ -193,6 +193,29 @@ ${@bb.utils.contains('MACHINEBUILD', 'gbip4k', 'rootfs.tar.bz2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbx34k', 'rootfs.tar.bz2' , '', d)}\
 "
 
+RCNAME = "\
+${@bb.utils.contains('MACHINEBUILD', 'gb800se', 'gb0' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gb800seplus', 'gb0' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gb800solo', 'gb0' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gb800ue', 'gb0' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gb800ueplus', 'gb0' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbipbox', 'gb0' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbquad', 'gb0' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbquadplus', 'gb1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbultrase', 'gb0' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbultraue', 'gb0' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbx1', 'gb0' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbx3', 'gb0' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbx2', 'gb2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbultraueh', 'gb2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbx3h', 'gb2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbquad4k', 'gb3' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbue4k', 'gb3' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbtrio4k', 'gb3' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbip4k', 'gb3' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbx34k', 'gb3' , '', d)}\
+"
+
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS += " \
     ${@bb.utils.contains("MACHINE_FEATURES", "nexusplatform", "gigablue-platform-util-${MACHINE_DRIVER}", "gigablue-dvb-modules-${MACHINE_DRIVER}", d)} \
     gigablue-ddbootup \

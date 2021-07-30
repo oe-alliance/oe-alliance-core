@@ -2,6 +2,7 @@
 include conf/machine/include/build-extras.inc
 
 BRAND_OEM = "ixuss"
+RCNAME = "ixuss"
 MACHINE_BRAND = "IXUSS"
 KERNEL_FILE = "kernel.bin"
 ROOTFS_FILE = "rootfs.bin"

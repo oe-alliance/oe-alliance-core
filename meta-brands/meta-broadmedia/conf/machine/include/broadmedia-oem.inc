@@ -39,6 +39,24 @@ ${@bb.utils.contains('MACHINEBUILD', 'bre2zet2c', 'bre2zet2c' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'alphatriple', 'alphatriple' , '', d)}\
 "
 
+RCNAME = "\
+${@bb.utils.contains('MACHINEBUILD', 'mbtwinplus', 'miraclebox' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'sf3038', 'sf3038' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'sf128', 'sf3038' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'sf138', 'sf3038' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'bre2zet2c', 'wwio1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'alphatriple', 'sab1' , '', d)}\
+"
+
+RCTYPE = "\
+${@bb.utils.contains('MACHINEBUILD', 'mbtwinplus', '503' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'sf3038', '503' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'sf128', '501' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'sf138', '500' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'bre2zet2c', '500' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'alphatriple', '503' , '', d)}\
+"
+
 # Broken bootloader can only flash around 100 MB
 FLASHSIZE = "96"
 

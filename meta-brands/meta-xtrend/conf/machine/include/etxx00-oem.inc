@@ -4,6 +4,8 @@ PACKAGECONFIG_FB_pn-qtbase = " "
 include conf/machine/include/build-extras.inc
 
 BRAND_OEM = "xtrend"
+RCTYPE = "507"
+RCNAME = "beyonwiz1"
 
 MACHINE_NAME = "\
 ${@bb.utils.contains('MACHINEBUILD', 'gi11000', 'ET11000' , '', d)}\
@@ -28,6 +30,18 @@ ${@bb.utils.contains('MACHINEBUILD', 'gi11000', 'et1x000' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'viper4k51', 'et1x000' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'beyonwizu4', 'beyonwizu4' , '', d)}\
 "
+
+RCNAME = "\
+${@bb.utils.contains('MACHINEBUILD', 'gi11000', 'et7x00mini' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'viper4k51', 'amiko5' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'beyonwizu4', 'beyonwiz1' , '', d)}\
+"
+RCTYPE = "\
+${@bb.utils.contains('MACHINEBUILD', 'gi11000', '504' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'viper4k51', '504' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'beyonwizu4', '507' , '', d)}\
+"
+
 
 MTD_ROOTFS = "mmcblk0p4"
 MTD_KERNEL = "mmcblk0p3"

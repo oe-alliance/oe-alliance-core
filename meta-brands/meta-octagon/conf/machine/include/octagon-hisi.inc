@@ -7,6 +7,7 @@ include conf/machine/include/build-extras.inc
 DISTRO_FEATURES_remove = "x11 wayland"
 
 BRAND_OEM = "octagon"
+RCNAME = "sf8008"
 
 IMAGEDIR = "octagon/${MACHINE}"
 

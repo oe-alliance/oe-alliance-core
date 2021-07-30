@@ -440,6 +440,63 @@ ${@bb.utils.contains('MACHINEBUILD', 'mediabox', 'YUV RCA' , '', d)} \
 ${@bb.utils.contains('MACHINEBUILD', 'lunixco', 'fastscan dvb-c' , '', d)} \
 "
 
+RCNAME = "\
+${@bb.utils.contains('MACHINEBUILD', 'tm2t', 'tm1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'tmnano', 'tm2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'tmnano2t', 'tm2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'tmnano3t', 'tm2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'tmnano2super', 'tm2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'tmsingle', 'tm2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'tmtwin', 'tm1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'tmtwin4k', 'tm6' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'tmnanose', 'tm3' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'tmnanoseplus', 'tm4' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'tmnanosem2', 'tm4' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'tmnanom3', 'tm5' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'tmnanosem2plus', 'tm4' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'tmnanosecombo', 'tm3' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'iqonios100hd', 'iqon1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'iqonios200hd', 'iqon1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'iqonios300hd', 'iqon1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'iqonios300hdv2', 'iqon1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'force1', 'iqon2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'force1plus', 'iqon2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'megaforce1plus', 'megasat2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'force2', 'iqon1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'force2plus', 'iqon1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'force2nano', 'iqon1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'force2se', 'iqon1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'megaforce2', 'megasat1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'worldvisionf1', 'iqon2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'worldvisionf1plus', 'iqon2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'roxxs200hd', 'iqon1 , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mediaart200hd', 'iqon1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'optimussos1plus', 'optimuss1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'optimussos2plus', 'optimuss1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'optimussos3plus', 'optimuss2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'optimussos1', 'optimuss1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'optimussos2', 'optimuss1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'optimussos', 'optimuss1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mediabox', 'mediabox' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'fusionhd', 'fusionhd' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'fusionhdse', 'fusionhd' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'purehd', 'fusionhd' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'purehdse', 'fusionhd' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'force2plushv', 'iqon1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'force3uhdplus', 'iqon3' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'force3uhd', 'iqon3' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'revo4k', 'revo' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'galaxy4k', 'revo' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'tm4ksuper', 'tm6' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'valalinux', 'vala' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'lunix34k', 'qviart1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'lunix', 'qviart1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'force4', 'iqon1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'lunix4k', 'qviart3' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'lunixco', 'qviart4' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'dual', 'qviart5', '', d)}\
+"
+
 BOOTLOGO_FILENAME = "splash.bmp"
 
 DVBPROVIDER = "kernel"

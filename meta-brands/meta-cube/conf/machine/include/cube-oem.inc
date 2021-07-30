@@ -2,6 +2,7 @@
 include conf/machine/include/build-extras.inc
 
 BRAND_OEM = "cube"
+RCNAME = "cube"
 
 MACHINE_NAME = "\
 ${@bb.utils.contains('MACHINEBUILD', 'dcube', 'R2' , '', d)}\

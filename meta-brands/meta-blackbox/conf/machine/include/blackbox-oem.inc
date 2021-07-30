@@ -23,6 +23,11 @@ ${@bb.utils.contains('MACHINEBUILD', 'sogno8800hd', '-m 2048 -e 126976 -c 4096 -
 ${@bb.utils.contains('MACHINEBUILD', 'uniboxhde', '-m 2048 -e 126976 -c 8160 -F' , '', d)}\
 "
 
+RCNAME = "\
+${@bb.utils.contains('MACHINEBUILD', 'sogno8800hd', 'sogno' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'uniboxhde', 'uniboxhde' , '', d)}\
+"
+
 MTD_ROOTFS = "mtd6"
 MTD_KERNEL = "mtd7"
 KERNEL_FILE = "kernel.bin"

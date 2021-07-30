@@ -3,9 +3,6 @@ include conf/machine/include/build-extras.inc
 
 BRAND_OEM = "gfutures"
 
-RCTYPE ?= "16"
-RCNAME ?= "hd1100"
-
 MACHINE_NAME = "\
 ${@bb.utils.contains('MACHINEBUILD', 'mutant1100', 'HD1100' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mutant1265', 'HD1265' , '', d)}\
@@ -124,6 +121,46 @@ ${@bb.utils.contains('MACHINEBUILD', 'bre2ze4k', 'mmcblk0p3' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axultra', 'mmcblk0p3' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'vimastec1000', 'mtd2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'vimastec1500', 'mmcblk0p3' , '', d)}\
+"
+
+RCNAME = "\
+${@bb.utils.contains('MACHINEBUILD', 'mutant1100', 'hd1100' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mutant1265', 'hd1100' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mutant1500', 'hd1100' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mutant500c', 'hd1100' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mutant530c', 'hd1100' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mutant1200', 'hd1100' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'vizyonvita', 'hd1100' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mutant11', 'hd1100' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mutant51', 'hd1100' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mutant60', 'hd60' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'ax61', 'ax4' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'ax51', 'ax51' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'ax60', 'ax51' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'bre2ze4k', 'wwio1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'axultra', 'ax51' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'vimastec1000', 'hd1100' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'vimastec1500', 'hd1100' , '', d)}\
+"
+
+RCTYPE = "\
+${@bb.utils.contains('MACHINEBUILD', 'mutant1100', '16' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mutant1265', '16' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mutant1500', '16' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mutant500c', '16' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mutant530c', '16' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mutant1200', '16' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'vizyonvita', '16' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mutant11', '16' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mutant51', '16' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mutant60', '27' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'ax61', '26' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'ax51', '16' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'ax60', '16' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'bre2ze4k', '23' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'axultra', '16' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'vimastec1000', '16' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'vimastec1500', '16' , '', d)}\
 "
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "\

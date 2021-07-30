@@ -93,6 +93,21 @@ ${@bb.utils.contains('MACHINEBUILD', 'axase3c', 'e3hd' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'maram9', 'odinm9' , '', d)}\
 "
 
+MACHINE_NAME = "\
+${@bb.utils.contains('MACHINEBUILD', 'classm', 'odinm7' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'axodin', 'odinm7' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'axodinc', 'odinm7' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'starsatlx', 'odinm7' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'genius', 'odinm7' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'evo', 'odinm7' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'galaxym6', 'odinm7' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'geniuse3hd', 'e3hd' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'evoe3hd', 'e3hd' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'axase3', 'e3hd' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'axase3c', 'e3hd' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'maram9', 'odinm9' , '', d)}\
+"
+
 KERNEL_FILE = "kernel.bin"
 ROOTFS_FILE = "rootfs.bin"
 

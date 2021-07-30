@@ -2,6 +2,7 @@
 include conf/machine/include/build-extras.inc
 
 BRAND_OEM = "fulan"
+RCNAME = "spark"
 
 MACHINE_NAME = "\
 ${@bb.utils.contains('MACHINEBUILD', 'amiko8900', 'SHD-8900 Alien' , '', d)}\

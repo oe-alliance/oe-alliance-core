@@ -2,6 +2,7 @@
 include conf/machine/include/build-extras.inc
 
 BRAND_OEM = "ultramini"
+RCTYPE = "504"
 
 MACHINE_NAME = "\
 ${@bb.utils.contains('MACHINEBUILD', 'xpeedlxcs2', 'XPEED LX CLASS S2' , '', d)}\
@@ -37,6 +38,12 @@ MACHINE_DRIVER = "\
 ${@bb.utils.contains('MACHINEBUILD', 'xpeedlxcs2', 'xpeedc' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'xpeedlxcc', 'xpeedc' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'et7x00mini', 'et7000mini' , '', d)}\
+"
+
+MACHINE_NAME = "\
+${@bb.utils.contains('MACHINEBUILD', 'xpeedlxcs2', 'gi1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'xpeedlxcc', 'gi1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'et7x00mini', 'et7x00mini' , '', d)}\
 "
 
 KERNEL_FILE = "kernel.bin"

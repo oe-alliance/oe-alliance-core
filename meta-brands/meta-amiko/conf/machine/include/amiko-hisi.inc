@@ -13,6 +13,7 @@ IMAGEDIR = "amiko/${MACHINE}"
 MACHINE_NAME = "4K UHD Combo"
 
 MACHINE_BRAND = "AMIKO"
+RCNAME = "amiko4"
 
 MTD_KERNEL = "mmcblk0p12"
 

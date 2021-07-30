@@ -83,6 +83,16 @@ ${@bb.utils.contains('MACHINEBUILD', 'osminiplus', 'rootfs.bin' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'osmega', 'rootfs.bin' , '', d)}\
 "
 
+RCNAME = "\
+${@bb.utils.contains('MACHINEBUILD', 'spycat', 'xcore1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'spycatmini', 'xcore1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'spycatminiplus', 'xcore1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'spycat4kmini', 'xcore1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'osmini', 'xcore3' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'osminiplus', 'xcore3' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'osmega', 'xcore3' , '', d)}\
+"
+
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "\
     xcore-dvb-modules-${MACHINE_DRIVER} \
     "

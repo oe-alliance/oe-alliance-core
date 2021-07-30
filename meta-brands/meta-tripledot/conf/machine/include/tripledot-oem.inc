@@ -68,6 +68,19 @@ ${@bb.utils.contains('MACHINEBUILD', 'evoslimse', 'mtd0' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'evoslimt2c', 'mtd0' , '', d)}\
 "
 
+RCNAME = "\
+${@bb.utils.contains('MACHINEBUILD', 'enibox', 'hdbox' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mago', 'relook' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'tyrant', 'tyrant' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'xcombo', 'evo3' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'x1plus', 'evo3' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'sf108', 'sf108' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 't2cable', 'evo4' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'sf98', 'sf98' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'evoslimse', 'evo8' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'evoslimt2c', 'evo8' , '', d)}\
+"
+
 KERNEL_FILE = "kernel.bin"
 ROOTFS_FILE = "rootfs.bin"
 

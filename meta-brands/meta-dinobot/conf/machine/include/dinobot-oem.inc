@@ -267,6 +267,50 @@ ${@bb.utils.contains('MACHINEBUILD', 'viper4kv30', 'amiko/${MACHINE}' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'viper4kv40', 'amiko/${MACHINE}' , '', d)}\
 "
 
+RCNAME = "\
+${@bb.utils.contains('MACHINEBUILD', 'anadol4kcombo', 'anadol1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'anadol4kv2', 'anadol1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'anadol4k', 'anadol1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'dinobot4kl', 'dinobot1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'dinobot4k', 'dinobot1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mediabox4k', 'mediabox4k' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'dinobot4kse', 'dinobot1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'dinobot4kplus', 'dinobot1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'dinobot4kmini', 'dinobot1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'dinobot4kpro', 'dinobot1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'dinobot4kelite', 'dinobot1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'dinobot4ktwin', 'dinobot2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'axashis4kcombo', 'axas1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'axashis4kcomboplus', 'axas1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'ferguson4k', 'dinobot1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'dinobotu55', 'dinobot1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'dinoboth265', 'dinobot1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'hitube4k', 'hitube1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'hitube4kpro', 'hitube2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'hitube4kplus', 'hitube2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'iziboxone4k', 'izibox1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'iziboxone4kplus', 'izibox2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'iziboxelite4k', 'izibox2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'iziboxx3', 'izibox1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'axashistwin', 'axas3' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'axashistwinplus', 'axas4' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'axashisc4k', 'axas2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'protek4kx1', 'protek3' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'protek4kx2', 'protek3' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'anadolprohd5', 'anadol3' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'spycatminiv2', 'spycat1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'iziboxecohd', 'izibox2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'jdhdduo', 'jd1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'turing', 'turing' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'arivatwin', 'ariva' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'arivacombo', 'ariva' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'vipertwin', 'amiko6' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'vipersingle', 'amiko6' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'viper4kv20', 'amiko6' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'viper4kv30', 'amiko6' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'viper4kv40', 'amiko6' , '', d)}\
+"
+
 KERNEL_MODULE_AUTOLOAD += "xhci-plat-hcd"
 KERNEL_MODULE_AUTOLOAD += "ehci-platform"
 KERNEL_MODULE_AUTOLOAD += "ohci-platform"
