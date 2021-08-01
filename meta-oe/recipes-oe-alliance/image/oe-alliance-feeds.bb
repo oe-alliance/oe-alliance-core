@@ -9,7 +9,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r12"
+PR = "r13"
 
 DEPENDS = "enigma2-plugin-drivers-usbserial enigma2-plugin-systemplugins-radiotimesemulator enigma2-plugin-systemplugins-hrtunerproxy"
 
@@ -18,7 +18,6 @@ RDEPENDS_${PN} = " \
     bootlogos-enigma2-meta \
     dvb-usb-drivers-meta \
     network-usb-drivers-meta \
-    channelsettings-enigma2-meta \
     picons-enigma2-meta \
     meta-enigma2-dvdburn \
     enigma2-plugins \
