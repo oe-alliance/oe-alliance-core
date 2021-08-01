@@ -7,7 +7,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "1.0"
-PR = "r47"
+PR = "r48"
 
 inherit packagegroup
 
@@ -15,7 +15,6 @@ RRECOMMENDS_${PN} = "\
     enigma2-pliplugins \
     enigma2-display-skins \
     openatv-skinparts \
-    openatv-picons-meta \
     oe-alliance-skins \
     enigma2-skins \
     enigma2-plugin-systemplugins-crossepg \
