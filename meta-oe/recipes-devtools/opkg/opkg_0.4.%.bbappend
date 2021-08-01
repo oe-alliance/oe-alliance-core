@@ -9,9 +9,9 @@ SRC_URI += "file://sanity-check-provides.patch \
     file://0002-symlinks-can-be-valid-directories-too.patch \
     "
 
-FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 
-do_install_prepend() {
+do_install:prepend() {
     install -d ${D}${datadir}/opkg/intercept
     install -m 755 ${WORKDIR}/modprobe ${D}${datadir}/opkg/intercept/
 }

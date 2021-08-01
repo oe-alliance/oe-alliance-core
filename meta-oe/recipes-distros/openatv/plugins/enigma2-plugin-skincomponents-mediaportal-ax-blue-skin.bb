@@ -17,7 +17,7 @@ SRC_URI="git://github.com/stein17/Skins-for-Plugins-by-stein17.git;branch=python
 
 S = "${WORKDIR}/git/Mediaportal-AX-Blue-Skin"
 
-FILES_${PN} = "${libdir}"
+FILES:${PN} = "${libdir}"
 
 do_install() {
     install -d ${D}${libdir}

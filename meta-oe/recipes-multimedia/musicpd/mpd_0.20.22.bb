@@ -73,11 +73,11 @@ EXTRA_OECONF = "\
         --disable-pulse \
         "
 
-do_compile_prepend() {
+do_compile:prepend() {
     find -name Makefile | xargs sed -i 's~-I/usr/include~-I${STAGING_INCDIR}~g'
 }
 
-do_install_append() {
+do_install:append() {
     install -d ${D}/var/lib/mpd/playlists
     install -d ${D}${sysconfdir}/init.d
     install -m 755 ${WORKDIR}/mpd.init ${D}${sysconfdir}/init.d/mpd

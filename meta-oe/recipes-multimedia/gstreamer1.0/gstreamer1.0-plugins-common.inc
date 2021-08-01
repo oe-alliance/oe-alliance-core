@@ -41,8 +41,8 @@ EXTRA_OEMESON += " \
 GIR_MESON_ENABLE_FLAG = "enabled"
 GIR_MESON_DISABLE_FLAG = "disabled"
 
-CFLAGS_append = " -Wno-deprecated-declarations"
-CFLAGS_append_sh4 = " -std=gnu99"
+CFLAGS:append = " -Wno-deprecated-declarations"
+CFLAGS:append:sh4 = " -std=gnu99"
 
 # Dynamically generate packages for all enabled plugins
 PACKAGES_DYNAMIC = "^${PN}-.*"

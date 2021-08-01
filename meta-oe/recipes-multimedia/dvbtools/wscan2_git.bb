@@ -17,4 +17,4 @@ S = "${WORKDIR}/git"
 
 inherit autotools
 
-FILES_${PN} += "${datadir}"
+FILES:${PN} += "${datadir}"

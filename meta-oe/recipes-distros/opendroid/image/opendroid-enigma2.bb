@@ -3,7 +3,7 @@ LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda2f7b4f302 \
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 
-ALLOW_EMPTY_${PN} = "1"
+ALLOW_EMPTY:${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "7.1"
@@ -13,7 +13,7 @@ inherit packagegroup
 
 DEPENDS = "opendroid-feeds"
 
-RRECOMMENDS_${PN} = " \
+RRECOMMENDS:${PN} = " \
     opendroid-version-info \
     enigma2-skindefault \
     enigma2-plugin-skins-opd-steampunk \
@@ -50,9 +50,9 @@ GST_BASE_DVD = "\
     gstreamer1.0-plugins-bad-mpegtsmux \
 "
 
-RRECOMMENDS_${PN}_append_dm900 = " enigma2-plugin-systemplugins-fsblupdater"
-RRECOMMENDS_${PN}_append_dm920 = " enigma2-plugin-systemplugins-fsblupdater"
-RRECOMMENDS_${PN}_append_osmio4k = " enigma2-plugin-systemplugins-satipclient enigma2-plugin-extensions-simpleumount"
-RRECOMMENDS_${PN}_append_osmio4kplus = " enigma2-plugin-systemplugins-satipclient enigma2-plugin-extensions-simpleumount"
-RRECOMMENDS_${PN}_append_osmini4k = " enigma2-plugin-systemplugins-satipclient enigma2-plugin-extensions-simpleumount"
+RRECOMMENDS:${PN}:append_dm900 = " enigma2-plugin-systemplugins-fsblupdater"
+RRECOMMENDS:${PN}:append_dm920 = " enigma2-plugin-systemplugins-fsblupdater"
+RRECOMMENDS:${PN}:append_osmio4k = " enigma2-plugin-systemplugins-satipclient enigma2-plugin-extensions-simpleumount"
+RRECOMMENDS:${PN}:append_osmio4kplus = " enigma2-plugin-systemplugins-satipclient enigma2-plugin-extensions-simpleumount"
+RRECOMMENDS:${PN}:append_osmini4k = " enigma2-plugin-systemplugins-satipclient enigma2-plugin-extensions-simpleumount"
 

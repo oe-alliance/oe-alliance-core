@@ -1,6 +1,6 @@
 
 # DEPENDS = "fuse"
-# RDEPENDS_${PN} = "fuse"
+# RDEPENDS:${PN} = "fuse"
 
 inherit scons
 
@@ -11,11 +11,11 @@ SRC_URI = "http://www.jabawok.net/gentoo/distfiles/${BPN}-${PV}.tar.gz file://ex
 PACKAGES =+ "exfat-mkfs exfat-label exfat-fsck exfat-dump"
 
 # utils is a meta package that installs them all
-RDEPENDS_${PN} = "exfat-mkfs exfat-label exfat-fsck exfat-dump"
-FILES_exfat-mkfs = "${sbindir}/mkexfatfs"
-FILES_exfat-label = "${sbindir}/exfatlabel"
-FILES_exfat-fsck = "${sbindir}/exfatfsck"
-FILES_exfat-dump = "${sbindir}/dumpexfat"
+RDEPENDS:${PN} = "exfat-mkfs exfat-label exfat-fsck exfat-dump"
+FILES:exfat-mkfs = "${sbindir}/mkexfatfs"
+FILES:exfat-label = "${sbindir}/exfatlabel"
+FILES:exfat-fsck = "${sbindir}/exfatfsck"
+FILES:exfat-dump = "${sbindir}/dumpexfat"
 
 do_install() {
     install -d ${D}/${sbindir}

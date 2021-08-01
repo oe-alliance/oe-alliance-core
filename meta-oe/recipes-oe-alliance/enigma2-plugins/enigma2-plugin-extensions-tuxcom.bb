@@ -25,6 +25,6 @@ do_install() {
     install -m 0644 ${S}/python/plugin.py ${D}/usr/lib/enigma2/python/Plugins/Extensions/Tuxcom/plugin.py
 }
 
-FILES_${PN}-dbg += "/usr/plugins/.debug"
+FILES:${PN}-dbg += "/usr/plugins/.debug"
 
-FILES_${PN} = "/usr/plugins /usr/share/fonts /usr/lib/enigma2/python/Plugins/Extensions/Tuxcom"
+FILES:${PN} = "/usr/plugins /usr/share/fonts /usr/lib/enigma2/python/Plugins/Extensions/Tuxcom"

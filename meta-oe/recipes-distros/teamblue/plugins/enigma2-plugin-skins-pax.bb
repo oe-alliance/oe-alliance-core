@@ -18,7 +18,7 @@ SRC_URI="${@bb.utils.contains("DISTRO_TYPE", "release", "git://github.com/teambl
 
 S = "${WORKDIR}/git"
 
-FILES_${PN} = "/usr/*"
+FILES:${PN} = "/usr/*"
 
 do_install() {
     cp -rp ${S}/usr ${D}/

@@ -23,6 +23,6 @@ do_install() {
     install -m 0755 ${S}/src/dumpait ${D}${libdir}/${DESTDIR}
 }
 
-FILES_${PN} = "${libdir}/${DESTDIR}/dumpait"
-FILES_${PN}-dbg = "${libdir}/${DESTDIR}/.debug"
-FILES_${PN}-src = "/usr/src"
+FILES:${PN} = "${libdir}/${DESTDIR}/dumpait"
+FILES:${PN}-dbg = "${libdir}/${DESTDIR}/.debug"
+FILES:${PN}-src = "/usr/src"

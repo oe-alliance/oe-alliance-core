@@ -14,7 +14,7 @@ do_install() {
 }
 
 PACKAGES = "${PN}"
-FILES_${PN} += "${nonarch_base_libdir}/firmware"
-RDEPENDS_${PN} = "firmware-rt2870"
+FILES:${PN} += "${nonarch_base_libdir}/firmware"
+RDEPENDS:${PN} = "firmware-rt2870"
 
 inherit allarch

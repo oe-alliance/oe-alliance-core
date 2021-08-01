@@ -6,7 +6,7 @@ LICENSE = "GPLv2"
 
 require conf/license/license-gplv2.inc
 
-RDEPENDS_${PN} = "p7zip"
+RDEPENDS:${PN} = "p7zip"
 
 inherit gitpkgv gettext
 
@@ -26,8 +26,8 @@ do_compile() {
 }
 
 PACKAGES =+ "${PN}-po"
-FILES_${PN}-po = "${libdir}/enigma2/python/Plugins/Extensions/ChocholousekPicons/locale/*/*/*.po"
-FILES_${PN} = "${libdir}/enigma2/python/Plugins/Extensions/ChocholousekPicons"
+FILES:${PN}-po = "${libdir}/enigma2/python/Plugins/Extensions/ChocholousekPicons/locale/*/*/*.po"
+FILES:${PN} = "${libdir}/enigma2/python/Plugins/Extensions/ChocholousekPicons"
 D_FILES_PN = "${D}${FILES_${PN}}"
 
 do_install() {
@@ -40,7 +40,7 @@ do_install() {
     cp -rf ${S}/locale ${D_FILES_PN}
 }
 
-pkg_postinst_${PN}() {
+pkg_postinst:${PN}() {
 #!/bin/sh
 echo "*********************************************************"
 echo "      Chocholousek Picons - plugin ver.${BPV}        "
@@ -52,7 +52,7 @@ echo "*********************************************************"
 exit 0
 }
 
-pkg_postrm_${PN}() {
+pkg_postrm:${PN}() {
 #!/bin/sh
 [ "$1" != "upgrade" ] || exit 0 > /dev/null 2>&1              # prevent the OE2.5+ based Enigma2 for deleting files when the package is "upgrading"
 rm -rf /usr/lib/enigma2/python/Plugins/Extensions/ChocholousekPicons > /dev/null 2>&1

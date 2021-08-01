@@ -19,7 +19,7 @@ SRC_URI = "git://github.com/emulatorE2/snes_init.git"
 
 S = "${WORKDIR}/git"
 
-FILES_${PN} = "${bindir}/*"
+FILES:${PN} = "${bindir}/*"
 
 do_compile() {
     make -f Makefile snes_init

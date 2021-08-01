@@ -3,14 +3,14 @@ SUMMARY = "Compatibility for packages that link to hardfloat ld-linux lib to emu
 require conf/license/license-gplv2.inc
 
 inherit allarch
-RDEPENDS_${PN} = "glibc"
+RDEPENDS:${PN} = "glibc"
 
-RREPLACES_${PN} = "libcrypto0.9.8 libssl0.9.8"
-RCONFLICTS_${PN} = "libcrypto0.9.8 libssl0.9.8"
+RREPLACES:${PN} = "libcrypto0.9.8 libssl0.9.8"
+RCONFLICTS:${PN} = "libcrypto0.9.8 libssl0.9.8"
 
 do_install () {
     install -d ${D}/lib
     ln -sf ld-${PV}.so ${D}/lib/ld-linux.so.3
 }
 
-FILES_${PN} = "/lib"
+FILES:${PN} = "/lib"

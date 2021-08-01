@@ -17,13 +17,13 @@ require tar.inc
 LICENSE = "GPLv3+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 
-FILESPATH_append = ":${COREBASE}/meta/recipes-extended/tar/tar"
+FILESPATH:append = ":${COREBASE}/meta/recipes-extended/tar/tar"
 SRC_URI += "file://musl_dirent.patch"
 
 inherit autotools gettext texinfo
 
 PACKAGECONFIG ??= ""
-PACKAGECONFIG_append_class-target = " ${@bb.utils.filter('DISTRO_FEATURES', 'acl', d)}"
+PACKAGECONFIG:append:class-target = " ${@bb.utils.filter('DISTRO_FEATURES', 'acl', d)}"
 
 PACKAGECONFIG[acl] = "--with-posix-acls, --without-posix-acls, acl,"
 
@@ -35,11 +35,11 @@ EXTRA_OECONF += "DEFAULT_RMT_DIR=${base_sbindir}"
 # directory.
 acpaths = "-I ./m4"
 
-do_install_append () {
+do_install:append () {
 	ln -s tar ${D}${bindir}/gtar
 }
 
-do_install_append_class-target() {
+do_install:append:class-target() {
 	if [ "${base_bindir}" != "${bindir}" ]; then
 		install -d ${D}${base_bindir}
 		mv ${D}${bindir}/tar ${D}${base_bindir}/tar
@@ -48,28 +48,28 @@ do_install_append_class-target() {
 	fi
 }
 
-do_install_append_libc-musl() {
+do_install:append:libc-musl() {
 	rm -f ${D}${libdir}/charset.alias
 	rmdir ${D}${libdir}
 }
 
 PACKAGES =+ "${PN}-rmt"
 
-FILES_${PN}-rmt = "${base_sbindir}/rmt*"
+FILES:${PN}-rmt = "${base_sbindir}/rmt*"
 
 inherit update-alternatives
 
 ALTERNATIVE_PRIORITY = "100"
 
-ALTERNATIVE_${PN} = "tar"
-ALTERNATIVE_${PN}-rmt = "rmt"
-ALTERNATIVE_${PN}_class-nativesdk = ""
-ALTERNATIVE_${PN}-rmt_class-nativesdk = ""
+ALTERNATIVE:${PN} = "tar"
+ALTERNATIVE:${PN}-rmt = "rmt"
+ALTERNATIVE:${PN}:class-nativesdk = ""
+ALTERNATIVE:${PN}-rmt:class-nativesdk = ""
 
 ALTERNATIVE_LINK_NAME[tar] = "${base_bindir}/tar"
 ALTERNATIVE_LINK_NAME[rmt] = "${base_sbindir}/rmt"
 
-PROVIDES_append_class-native = " tar-replacement-native"
+PROVIDES:append:class-native = " tar-replacement-native"
 NATIVE_PACKAGE_PATH_SUFFIX = "/${PN}"
 
 BBCLASSEXTEND = "native nativesdk"

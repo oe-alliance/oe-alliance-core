@@ -7,7 +7,7 @@ SRC_URI = "file://firmware-mt7601u.zip"
 S = "${WORKDIR}"
 
 PACKAGES = "${PN}"
-FILES_${PN} += "${nonarch_base_libdir}/firmware"
+FILES:${PN} += "${nonarch_base_libdir}/firmware"
 
 
 do_install() {

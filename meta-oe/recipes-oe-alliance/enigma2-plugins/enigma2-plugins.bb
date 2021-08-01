@@ -17,7 +17,7 @@ PKGV = "${IMAGE_VERSION}+git${GITPKGV}"
 PR = "r3"
 
 SRC_URI = "${ENIGMA2_PLUGINS_URI} file://pluginnotwanted.patch"
-SRC_URI_append_openatv = " file://EPGSearch.patch"
+SRC_URI:append_openatv = " file://EPGSearch.patch"
 
 EXTRA_OECONF = " \
     BUILD_SYS=${BUILD_SYS} \
@@ -37,18 +37,18 @@ CFLAGS += "-I${STAGING_INCDIR}/tirpc"
 LDFLAGS += "-ltirpc"
 CXXFLAGS = " -std=c++11"
 
-RREPLACES_enigma2-plugin-skincomponents-eventlist = "enigma2-plugin-components-eventlist"
-RCONFLICTS_enigma2-plugin-skincomponents-eventlist = "enigma2-plugin-components-eventlist"
+RREPLACES:enigma2-plugin-skincomponents-eventlist = "enigma2-plugin-components-eventlist"
+RCONFLICTS:enigma2-plugin-skincomponents-eventlist = "enigma2-plugin-components-eventlist"
 
-CONFFILES_${PN} += "${sysconfdir}/enigma2/movietags"
-FILES_${PN} += " /usr/share/enigma2 /usr/share/fonts "
-FILES_${PN}-meta = "${datadir}/meta"
-FILES_enigma2-plugin-extensions-bmediacenter += " ${libdir}/enigma2/python/Components/Renderer/LizWatches.py ${libdir}/enigma2/python/Components/Converter/LizExtraNumText.py"
-FILES_enigma2-plugin-skincomponents-channelselectionshorttitle += " ${libdir}/enigma2/python/Components/Converter/ChannelSelectionShortTitle.py"
-FILES_enigma2-plugin-skincomponents-eventlist += " ${libdir}/enigma2/python/Components/Renderer/EventListDisplay.py ${libdir}/enigma2/python/Components/Converter/EventList.py"
-FILES_enigma2-plugin-skincomponents-eventposition += " ${libdir}/enigma2/python/Components/Converter/EventPosition.py"
-FILES_enigma2-plugin-skincomponents-weathercomponent += " ${libdir}/enigma2/python/Components/WeatherMSN.py ${libdir}/enigma2/python/Components/Converter/MSNWeather.py ${libdir}/enigma2/python/Components/Sources/MSNWeather.py ${libdir}/enigma2/python/Components/Renderer/MSNWeatherPixmap.py"
-FILES_enigma2-plugin-skincomponents-reftopiconname += " ${libdir}/enigma2/python/Components/Converter/RefToPiconName.py"
+CONFFILES:${PN} += "${sysconfdir}/enigma2/movietags"
+FILES:${PN} += " /usr/share/enigma2 /usr/share/fonts "
+FILES:${PN}-meta = "${datadir}/meta"
+FILES:enigma2-plugin-extensions-bmediacenter += " ${libdir}/enigma2/python/Components/Renderer/LizWatches.py ${libdir}/enigma2/python/Components/Converter/LizExtraNumText.py"
+FILES:enigma2-plugin-skincomponents-channelselectionshorttitle += " ${libdir}/enigma2/python/Components/Converter/ChannelSelectionShortTitle.py"
+FILES:enigma2-plugin-skincomponents-eventlist += " ${libdir}/enigma2/python/Components/Renderer/EventListDisplay.py ${libdir}/enigma2/python/Components/Converter/EventList.py"
+FILES:enigma2-plugin-skincomponents-eventposition += " ${libdir}/enigma2/python/Components/Converter/EventPosition.py"
+FILES:enigma2-plugin-skincomponents-weathercomponent += " ${libdir}/enigma2/python/Components/WeatherMSN.py ${libdir}/enigma2/python/Components/Converter/MSNWeather.py ${libdir}/enigma2/python/Components/Sources/MSNWeather.py ${libdir}/enigma2/python/Components/Renderer/MSNWeatherPixmap.py"
+FILES:enigma2-plugin-skincomponents-reftopiconname += " ${libdir}/enigma2/python/Components/Converter/RefToPiconName.py"
 
 PACKAGES += "${PN}-meta ${PN}-build-dependencies "
 PACKAGE_ARCH = "${MACHINE_ARCH}"
@@ -74,9 +74,9 @@ DEPENDS = "enigma2 \
     nmap \
     "
 
-RDEPENDS_${PN} = "${PYTHON_PN}-ctypes"
+RDEPENDS:${PN} = "${PYTHON_PN}-ctypes"
 
-python populate_packages_prepend() {
+python populate_packages:prepend() {
     enigma2_plugindir = bb.data.expand('${libdir}/enigma2/python/Plugins', d)
     do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/[a-zA-Z0-9_]+.*$', 'enigma2-plugin-%s', '%s', recursive=True, match_path=True, prepend=True)
     do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/.*\.la$', 'enigma2-plugin-%s-dev', '%s (development)', recursive=True, match_path=True, prepend=True)
@@ -115,15 +115,15 @@ python populate_packages_prepend() {
                     else:
                         rdepends.append(depend)
                 rdepends = ' '.join(rdepends)
-                d.setVar('RDEPENDS_' + full_package, rdepends)
+                d.setVar('RDEPENDS:' + full_package, rdepends)
             elif line.startswith('Recommends: '):
-                d.setVar('RRECOMMENDS_' + full_package, line[12:])
+                d.setVar('RRECOMMENDS:' + full_package, line[12:])
             elif line.startswith('Description: '):
-                d.setVar('DESCRIPTION_' + full_package, line[13:])
+                d.setVar('DESCRIPTION:' + full_package, line[13:])
             elif line.startswith('Replaces: '):
-                d.setVar('RREPLACES_' + full_package, ' '.join(line[10:].split(', ')))
+                d.setVar('RREPLACES:' + full_package, ' '.join(line[10:].split(', ')))
             elif line.startswith('Conflicts: '):
-                d.setVar('RCONFLICTS_' + full_package, ' '.join(line[11:].split(', ')))
+                d.setVar('RCONFLICTS:' + full_package, ' '.join(line[11:].split(', ')))
             elif line.startswith('Maintainer: '):
                 d.setVar('MAINTAINER_' + full_package, line[12:])
 
@@ -132,7 +132,7 @@ python populate_packages_prepend() {
         getControlLines(mydir, d, package.split('-'))
 }
 
-pkg_preinst_enigma2-plugin-extensions-webinterface() {
+pkg_preinst:enigma2-plugin-extensions-webinterface() {
 #!/bin/sh
 rm -rf /usr/lib/enigma2/python/Plugins/Extensions/WebInterface
 exit 0

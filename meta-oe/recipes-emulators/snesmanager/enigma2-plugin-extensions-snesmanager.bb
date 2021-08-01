@@ -4,7 +4,7 @@ SECTION = "base"
 LICENSE = "proprietary"
 inherit allarch
 
-RDEPENDS_${PN} += "directfb libsdl snes9x-sdl snes-init"
+RDEPENDS:${PN} += "directfb libsdl snes9x-sdl snes-init"
 
 require conf/license/license-gplv2.inc
 
@@ -18,7 +18,7 @@ SRC_URI="git://github.com/emulatorE2/snes_manager.git"
 
 S = "${WORKDIR}/git/src"
 
-FILES_${PN} = "/usr/* "
+FILES:${PN} = "/usr/* "
 
 
 do_install() {

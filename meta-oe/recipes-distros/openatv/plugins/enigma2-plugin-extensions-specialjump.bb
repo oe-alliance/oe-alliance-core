@@ -16,16 +16,16 @@ SRC_URI="git://github.com/openatv/SpecialJump.git;branch=python3"
 
 S = "${WORKDIR}/git"
 
-FILES_${PN} = "${libdir}"
+FILES:${PN} = "${libdir}"
 
-CONFFILES_${PN} = "/usr/lib/enigma2/python/Plugins/Extensions/SpecialJump/keymap_user.xml"
+CONFFILES:${PN} = "/usr/lib/enigma2/python/Plugins/Extensions/SpecialJump/keymap_user.xml"
 
 do_install() {
     install -d ${D}${libdir}
     cp -rp ${S}/usr/lib/* ${D}${libdir}/
 }
 
-pkg_postrm_${PN}() {
+pkg_postrm:${PN}() {
 #!/bin/sh
 #
 # cleanup script, executed after removing plugin

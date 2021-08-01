@@ -10,11 +10,11 @@ PV = "1.1+git${SRCPV}"
 PKGV = "1.1+git${GITPKGV}"
 VER="1.1"
 
-RDEPENDS_${PN} = "enigma2-plugin-systemplugins-weathercomponenthandler, enigma2-plugin-skincomponents-weathercomponent"
+RDEPENDS:${PN} = "enigma2-plugin-systemplugins-weathercomponenthandler, enigma2-plugin-skincomponents-weathercomponent"
 
 SRC_URI="git://github.com/stein17/Skins-for-openOPD.git;protocol=git;branch=python3"
 
-FILES_${PN} = "${libdir} /usr/share"
+FILES:${PN} = "${libdir} /usr/share"
 
 S = "${WORKDIR}/git/Multibox-FHD-Skin-4OPD"
 
@@ -26,7 +26,7 @@ do_install() {
     chmod -R a+rX ${D}/usr/share/enigma2/
 }
 
-pkg_postinst_${PN} () {
+pkg_postinst:${PN} () {
 #!/bin/sh
 if [ -f /Multibox/skin.xml ]; then
   rm -rf /usr/share/enigma2/Multibox/
@@ -38,7 +38,7 @@ echo "                                                          "
 exit 0
 }
 
-pkg_postrm_${PN} () {
+pkg_postrm:${PN} () {
 #!/bin/sh
 rm -rf /usr/share/enigma2/Multibox
 rm -rf /usr/lib/enigma2/python/Components/Converter/AMB*
@@ -50,7 +50,7 @@ echo "The GUI of your receiver is now rebooting....                    "
 exit 0
 }
 
-pkg_preinst_${PN} () {
+pkg_preinst:${PN} () {
 #!/bin/sh
 echo "                                                                            "
 echo "                         ***** WARNING ****                                 "
@@ -76,7 +76,7 @@ echo "                                                       "
 exit 0
 }
 
-pkg_prerm_${PN} () {
+pkg_prerm:${PN} () {
 #!/bin/sh
 echo "                                                                           "
 echo "Multibox Skin Full HD by stein17 is now being removed from your receiver..."

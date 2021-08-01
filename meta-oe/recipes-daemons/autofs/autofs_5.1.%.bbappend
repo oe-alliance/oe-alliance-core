@@ -2,7 +2,7 @@ B = "${S}"
 
 INITSCRIPT_PARAMS = "defaults 17"
 
-FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 
 SRC_URI += " file://volatiles.99_autofs file://auto.network file://autofs.default"
 
@@ -10,7 +10,7 @@ EXTRA_OECONF += "--with-confdir=/etc/default --with-mapdir=/etc"
 
 # Remove bash scripting from init script (meaning, remove "function"
 # from each shell function)
-do_configure_prepend () {
+do_configure:prepend () {
 	for bashfile in redhat/autofs.init.in samples/rc.autofs.in
 	do
 		sed -i 's.#!/bin/bash.#!/bin/sh.' $bashfile
@@ -19,7 +19,7 @@ do_configure_prepend () {
 }
 
 # Remove and change configuration files
-do_install_append() {
+do_install:append() {
     echo "/media/autofs  /etc/auto.network  --ghost" > ${D}/etc/auto.master
     rm -f ${D}/etc/auto.smb ${D}/etc/auto.misc ${D}/etc/autofs_ldap_auth.conf
     if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
@@ -34,4 +34,4 @@ do_install_append() {
     install -m 644 ${WORKDIR}/autofs.default ${D}/etc/default/autofs
 }
 
-CONFFILES_${PN} = "/etc/auto.network"
+CONFFILES:${PN} = "/etc/auto.network"

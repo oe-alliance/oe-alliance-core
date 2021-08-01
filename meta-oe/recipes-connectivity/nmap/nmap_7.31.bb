@@ -32,14 +32,14 @@ EXTRA_OECONF = "--with-libdnet=included --with-liblinear=included --without-subv
 
 PACKAGES = "${PN} ${PN}-dbg ${PN}-doc ${PN}-db"
 
-FILES_${PN} = "${bindir}/nmap ${datadir}/nmap/nmap.xsl"
-FILES_${PN}-db = "${datadir}/nmap/*"
-DESCRIPTION_${PN}-db = "Databases for translation of numeric values into friendly descriptions"
+FILES:${PN} = "${bindir}/nmap ${datadir}/nmap/nmap.xsl"
+FILES:${PN}-db = "${datadir}/nmap/*"
+DESCRIPTION:${PN}-db = "Databases for translation of numeric values into friendly descriptions"
 
 # append packages if enabled
-FILES_${PN} += "${@bb.utils.contains("PACKAGECONFIG", "ncat", "${bindir}/ncat ${target_datadir}/ncat", "", d)}"
-FILES_${PN} += "${@bb.utils.contains("PACKAGECONFIG", "nping", "${bindir}/nping", "", d)}"
-FILES_${PN} += "${@bb.utils.contains("PACKAGECONFIG", "ndiff", "${bindir}/ndiff ${bindir}/uninstall_ndiff ${libdir}/python${PYTHON_BASEVERSION}/site-packages/ndiff.py*", "", d)}"
+FILES:${PN} += "${@bb.utils.contains("PACKAGECONFIG", "ncat", "${bindir}/ncat ${target_datadir}/ncat", "", d)}"
+FILES:${PN} += "${@bb.utils.contains("PACKAGECONFIG", "nping", "${bindir}/nping", "", d)}"
+FILES:${PN} += "${@bb.utils.contains("PACKAGECONFIG", "ndiff", "${bindir}/ndiff ${bindir}/uninstall_ndiff ${libdir}/python${PYTHON_BASEVERSION}/site-packages/ndiff.py*", "", d)}"
 
 do_configure() {
     # strip hard coded python2#
@@ -49,10 +49,10 @@ do_configure() {
     oe_runconf
 }
 
-do_install_append () {
+do_install:append () {
    # remove python dir, its not used or installed
    rm -fr ${D}/${libdir}
 }
 
-RDEPENDS_${PN} = "${PYTHON_PN}-core"
-RDEPENDS_${PN}-db = "nmap"
+RDEPENDS:${PN} = "${PYTHON_PN}-core"
+RDEPENDS:${PN}-db = "nmap"

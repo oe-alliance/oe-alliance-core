@@ -20,11 +20,11 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/mediatomb/mediatomb-${PV}.tar.gz \
         file://fix-build-with-fno-common.patch \
         "
 
-SRC_URI_append_aarch64 = " file://mediatomb_aarch64.patch "
+SRC_URI:append:aarch64 = " file://mediatomb_aarch64.patch "
 
 S = "${WORKDIR}/mediatomb-${PV}"
 
-CONFFILES_${PN} = "${sysconfdir}/mediatomb/config.xml"
+CONFFILES:${PN} = "${sysconfdir}/mediatomb/config.xml"
 
 INITSCRIPT_NAME = "mediatomb"
 INITSCRIPT_PARAMS = "defaults 90"

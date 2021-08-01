@@ -8,18 +8,18 @@ SECTION = "libs/network"
 LICENSE = "openssl"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=f475368924827d06d4b416111c8bdb77"
 
-FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 DEPENDS = "hostperl-runtime-native"
-DEPENDS_append_class-target = " openssl-native"
+DEPENDS:append:class-target = " openssl-native"
 
 PROVIDES += "libcrypto libssl openssl-conf openssl"
-RPROVIDES_libcrypto10 ="libcrypto"
-RPROVIDES_libssl10 ="libssl"
-RPROVIDES_openssl-conf10 ="openssl-conf"
-RPROVIDES_${PN} ="openssl"
+RPROVIDES:libcrypto10 ="libcrypto"
+RPROVIDES:libssl10 ="libssl"
+RPROVIDES:openssl-conf10 ="openssl-conf"
+RPROVIDES:${PN} ="openssl"
 
 SRC_URI = "http://www.openssl.org/source/openssl-${PV}.tar.gz \
            file://run-ptest \
@@ -56,12 +56,12 @@ SRC_URI = "http://www.openssl.org/source/openssl-${PV}.tar.gz \
            file://fix_openssl_100_version_jethro.patch \
            "
 
-SRC_URI_append_class-target = " \
+SRC_URI:append:class-target = " \
            file://reproducible-cflags.patch \
            file://reproducible-mkbuildinf.patch \
            "
 
-SRC_URI_append_class-nativesdk = " \
+SRC_URI:append:class-nativesdk = " \
            file://environment.d-openssl.sh \
            "
 
@@ -75,8 +75,8 @@ UPSTREAM_CHECK_REGEX = "openssl-(?P<pver>1\.0.+)\.tar"
 inherit pkgconfig siteinfo lib_package multilib_header ptest manpages upx-compress
 
 PACKAGECONFIG ?= "cryptodev-linux"
-PACKAGECONFIG_class-native = ""
-PACKAGECONFIG_class-nativesdk = ""
+PACKAGECONFIG:class-native = ""
+PACKAGECONFIG:class-nativesdk = ""
 
 PACKAGECONFIG[disable-weak-ciphers] = "no-des no-ec no-ecdh no-ecdsa no-md2 no-mdc2,,,"
 PACKAGECONFIG[cryptodev-linux] = "-DHAVE_CRYPTODEV -DUSE_CRYPTODEV_DIGESTS,,cryptodev-linux"
@@ -92,8 +92,8 @@ EXTRA_OEMAKE = "${@bb.utils.contains('PACKAGECONFIG', 'manpages', '', 'OE_DISABL
 export OE_LDFLAGS = "${LDFLAGS}"
 
 TERMIO ?= "-DTERMIO"
-TERMIO_libc-musl = "-DTERMIOS"
-EXTRA_OECONF_append_libc-musl_powerpc64 = " no-asm"
+TERMIO:libc-musl = "-DTERMIOS"
+EXTRA_OECONF:append:libc-musl:powerpc64 = " no-asm"
 
 CFLAG = "${@oe.utils.conditional('SITEINFO_ENDIANNESS', 'le', '-DL_ENDIAN', '-DB_ENDIAN', d)} \
          ${TERMIO} ${CFLAGS} -Wall"
@@ -102,7 +102,7 @@ CFLAG = "${@oe.utils.conditional('SITEINFO_ENDIANNESS', 'le', '-DL_ENDIAN', '-DB
 # (and it causes issues with SELinux)
 CFLAG += "-Wa,--noexecstack"
 
-CFLAG_append_class-native = " -fPIC"
+CFLAG:append:class-native = " -fPIC"
 
 do_configure () {
 	# The crypto_use_bigint patch means that perl's bignum module needs to be
@@ -213,7 +213,7 @@ do_compile () {
 	oe_runmake
 }
 
-do_compile_class-target () {
+do_compile:class-target () {
 	sed -i 's/\((OPENSSL=\)".*"/\1"openssl"/' Makefile
 	oe_runmake depend
 	cc_sanitized=$(echo "${CC} ${CFLAG}" | sed -e 's,--sysroot=${STAGING_DIR_TARGET},,g' -e 's|${DEBUG_PREFIX_MAP}||g' -e 's/[ \t]\+/ /g')
@@ -273,7 +273,7 @@ do_install () {
 	done
 }
 
-do_install_append_class-native () {
+do_install:append:class-native () {
 	create_wrapper ${D}${bindir}/openssl \
 	    OPENSSL_CONF=${libdir}/ssl/openssl.cnf \
 	    SSL_CERT_DIR=${libdir}/ssl/certs \
@@ -281,7 +281,7 @@ do_install_append_class-native () {
 	    OPENSSL_ENGINES=${libdir}/ssl/engines
 }
 
-do_install_append_class-nativesdk () {
+do_install:append:class-nativesdk () {
 	mkdir -p ${D}${SDKPATHNATIVE}/environment-setup.d
 	install -m 644 ${WORKDIR}/environment.d-openssl.sh ${D}${SDKPATHNATIVE}/environment-setup.d/openssl.sh
 }
@@ -341,19 +341,19 @@ do_install_ptest () {
 
 PACKAGES =+ "libcrypto10 libssl10 openssl10-conf ${PN}-engines ${PN}-misc"
 
-FILES_libcrypto10 = "${libdir}/libcrypto${SOLIBS}"
-FILES_libssl10 = "${libdir}/libssl${SOLIBS}"
-FILES_openssl10-conf = "${sysconfdir}/ssl/openssl.cnf"
-FILES_${PN}-engines = "${libdir}/ssl/engines/*.so ${libdir}/engines"
-FILES_${PN}-misc = "${libdir}/ssl/misc"
-FILES_${PN} =+ "${libdir}/ssl/*"
-FILES_${PN}_append_class-nativesdk = " ${SDKPATHNATIVE}/environment-setup.d/openssl.sh"
+FILES:libcrypto10 = "${libdir}/libcrypto${SOLIBS}"
+FILES:libssl10 = "${libdir}/libssl${SOLIBS}"
+FILES:openssl10-conf = "${sysconfdir}/ssl/openssl.cnf"
+FILES:${PN}-engines = "${libdir}/ssl/engines/*.so ${libdir}/engines"
+FILES:${PN}-misc = "${libdir}/ssl/misc"
+FILES:${PN} =+ "${libdir}/ssl/*"
+FILES:${PN}:append:class-nativesdk = " ${SDKPATHNATIVE}/environment-setup.d/openssl.sh"
 
-CONFFILES_openssl10-conf = "${sysconfdir}/ssl/openssl.cnf"
+CONFFILES:openssl10-conf = "${sysconfdir}/ssl/openssl.cnf"
 
-RRECOMMENDS_libcrypto10 += "openssl10-conf"
-RDEPENDS_${PN}-misc = "${@bb.utils.filter('PACKAGECONFIG', 'perl', d)}"
-RDEPENDS_${PN}-ptest += "${PN}-misc make perl perl-module-filehandle bc"
+RRECOMMENDS:libcrypto10 += "openssl10-conf"
+RDEPENDS:${PN}-misc = "${@bb.utils.filter('PACKAGECONFIG', 'perl', d)}"
+RDEPENDS:${PN}-ptest += "${PN}-misc make perl perl-module-filehandle bc"
 
 BBCLASSEXTEND = "native nativesdk"
 PACKAGE_PREPROCESS_FUNCS += "openssl_package_preprocess"

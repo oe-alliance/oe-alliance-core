@@ -5,10 +5,10 @@ SRC_URI += " \
     file://chromium/0002-Replace-hbbtv-responses-with-application-xhtml-xml.patch;patchdir=src/3rdparty \
     ${@bb.utils.contains('MACHINE_FEATURES', 'vu-eglfs', 'file://0001-force-alsa.patch' , '', d)} \
 "
-SRC_URI_append_osmio4k = " \
+SRC_URI:append_osmio4k = " \
     file://chromium/0001-Add-initial-support-for-V4L2-mem2mem-decoder.patch;patchdir=src/3rdparty \
 "
-SRC_URI_append_osmio4kplus = " \
+SRC_URI:append_osmio4kplus = " \
     file://chromium/0001-Add-initial-support-for-V4L2-mem2mem-decoder.patch;patchdir=src/3rdparty \
 "
 
@@ -18,8 +18,8 @@ DEPENDS += " \
     libwebp-native \
 "
 
-FILESEXTRAPATHS_prepend := "${THISDIR}/qtwebengine-git:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/qtwebengine-git:"
 
-PACKAGECONFIG_append = " libwebp ffmpeg opus libvpx proprietary-codecs pepper-plugins webrtc"
+PACKAGECONFIG:append = " libwebp ffmpeg opus libvpx proprietary-codecs pepper-plugins webrtc"
 
-INSANE_SKIP_${PN} += "file-rdeps"
+INSANE_SKIP:${PN} += "file-rdeps"

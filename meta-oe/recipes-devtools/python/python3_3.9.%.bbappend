@@ -1,1 +1,1 @@
-CFLAGS_append_sh4 = " -std=gnu11"
+CFLAGS:append:sh4 = " -std=gnu11"

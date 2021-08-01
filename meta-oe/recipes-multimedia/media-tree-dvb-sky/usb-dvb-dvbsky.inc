@@ -36,15 +36,15 @@ do_install() {
 }
 
 PACKAGES = "dvb-sky-modules-dvbs ${PN}-tests"
-FILES_${PN} = ""
-ALLOW_EMPTY_${PN} = "1"
+FILES:${PN} = ""
+ALLOW_EMPTY:${PN} = "1"
 
-FILES_${PN}-tests += " \
+FILES:${PN}-tests += " \
     ${nonarch_base_libdir}/firmware/* \
     ${nonarch_base_libdir}/modules/*/modules.* \
     "
 
-pkg_postinst_modules() {
+pkg_postinst:modules() {
 #!/bin/sh
 if [ -z "$D" ]; then
 	depmod -a ${KERNEL_VERSION}
@@ -55,7 +55,7 @@ else
 fi
 }
 
-pkg_postrm_modules () {
+pkg_postrm:modules () {
 #!/bin/sh
 if [ -z "$D" ]; then
 	depmod -a ${KERNEL_VERSION}
@@ -177,11 +177,11 @@ python split_kernel_module_packages () {
             for m in autoload.split():
                 f.write('%s\n' % m)
             f.close()
-            postinst = d.getVar('pkg_postinst_%s' % pkg, True)
+            postinst = d.getVar('pkg_postinst:%s' % pkg, True)
             if not postinst:
-                bb.fatal("pkg_postinst_%s not defined" % pkg)
+                bb.fatal("pkg_postinst:%s not defined" % pkg)
             postinst += d.getVar('autoload_postinst_fragment', True) % autoload
-            d.setVar('pkg_postinst_%s' % pkg, postinst)
+            d.setVar('pkg_postinst:%s' % pkg, postinst)
 
         # Write out any modconf fragment
         modconf = d.getVar('module_conf_%s' % basename, True)
@@ -191,31 +191,31 @@ python split_kernel_module_packages () {
             f.write("%s\n" % modconf)
             f.close()
 
-        files = d.getVar('FILES_%s' % pkg, True)
+        files = d.getVar('FILES:%s' % pkg, True)
         files = "%s /etc/modules-load.d/%s.conf /etc/modprobe.d/%s.conf" % (files, basename, basename)
-        d.setVar('FILES_%s' % pkg, files)
+        d.setVar('FILES:%s' % pkg, files)
 
         if "description" in vals:
-            old_desc = d.getVar('DESCRIPTION_' + pkg, True) or ""
-            d.setVar('DESCRIPTION_' + pkg, old_desc + "; " + vals["description"])
+            old_desc = d.getVar('DESCRIPTION:' + pkg, True) or ""
+            d.setVar('DESCRIPTION:' + pkg, old_desc + "; " + vals["description"])
 
-        rdepends = bb.utils.explode_dep_versions2(d.getVar('RDEPENDS_' + pkg, True) or "")
+        rdepends = bb.utils.explode_dep_versions2(d.getVar('RDEPENDS:' + pkg, True) or "")
         for dep in get_dependencies(file, pattern, format):
             if not dep in rdepends:
                 rdepends[dep] = []
-        d.setVar('RDEPENDS_' + pkg, bb.utils.join_deps(rdepends, commasep=False))
+        d.setVar('RDEPENDS:' + pkg, bb.utils.join_deps(rdepends, commasep=False))
 
     module_deps = parse_depmod()
     module_regex = '^(.*)\.k?o$'
     module_pattern = 'dvb-sky-module-%s'
 
-    postinst = d.getVar('pkg_postinst_modules', True)
-    postrm = d.getVar('pkg_postrm_modules', True)
+    postinst = d.getVar('pkg_postinst:modules', True)
+    postrm = d.getVar('pkg_postrm:modules', True)
 
     modules = do_split_packages(d, root='/lib/modules', file_regex=module_regex, output_pattern=module_pattern, description='%s kernel module', postinst=postinst, postrm=postrm, recursive=True, hook=frob_metadata, extra_depends='kernel-%s' % (d.getVar("KERNEL_VERSION", True)))
     if modules:
         metapkg = d.getVar('KERNEL_MODULES_META_PACKAGE', True)
-        d.appendVar('RDEPENDS_' + metapkg, ' '+' '.join(modules))
+        d.appendVar('RDEPENDS:' + metapkg, ' '+' '.join(modules))
 
     # If modules-load.d and modprobe.d are empty at this point, remove them to
     # avoid warnings. removedirs only raises an OSError if an empty

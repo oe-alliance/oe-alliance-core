@@ -6,7 +6,7 @@ require conf/license/license-gplv2.inc
 SRCREV = "${AUTOREV}"
 
 DEPENDS = "fftw libusb1 faad2 zlib rtl-sdr"
-RDEPENDS_${PN} = "rtl-sdr"
+RDEPENDS:${PN} = "rtl-sdr"
 
 inherit gitpkgv
 
@@ -22,6 +22,6 @@ S = "${WORKDIR}/git/sdgradio"
 
 inherit cmake pkgconfig
 
-do_configure_prepend() {
+do_configure:prepend() {
 	sed -i -e 's:librtlsdr.so:librtlsdr.so.0:g' ${WORKDIR}/git/devices/rtlsdr-handler/rtlsdr-handler.cpp
 }

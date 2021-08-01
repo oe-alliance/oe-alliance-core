@@ -3,10 +3,10 @@ HOMEPAGE = "http://sites.google.com/site/fullycapable/"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-FILESEXTRAPATHS_append := "${THISDIR}/files:"
+FILESEXTRAPATHS:append := "${THISDIR}/files:"
 
-SRC_URI_append_sh4 = " \
+SRC_URI:append:sh4 = " \
     file://libcap_old_kernel_fix.patch;patch=1 \
     "
 
-CFLAGS_append_sh4 = " -std=gnu11"
+CFLAGS:append:sh4 = " -std=gnu11"

@@ -17,7 +17,7 @@ SRC_URI = "git://github.com/kiddac/Jedi_Maker_Xtream.git;protocol=http"
 
 S = "${WORKDIR}/git"
 
-FILES_${PN} = " ${sysconfdir}/enigma2/jediplaylists/* \
+FILES:${PN} = " ${sysconfdir}/enigma2/jediplaylists/* \
                 ${libdir}/enigma2/python/Plugins/Extensions/JediMakerXtream/*"
 
 do_install () {
@@ -27,7 +27,7 @@ do_install () {
     cp -rf ${S}/JediMakerXtream/usr/lib/enigma2/python/Plugins/Extensions/JediMakerXtream/* ${D}/${libdir}/enigma2/python/Plugins/Extensions/JediMakerXtream/
 }
 
-pkg_preinst_${PN} () {
+pkg_preinst:${PN} () {
 #!/bin/sh
         rm -rf /etc/enigma2/jediplaylists/playlist_all.json > /dev/null 2>&1
         rm -rf /usr/lib/enigma2/python/Plugins/Extensions/JediMakerXtream > /dev/null 2>&1
@@ -36,7 +36,7 @@ pkg_preinst_${PN} () {
         sed -i '/jmx/d' /etc/enigma2/bouquets.tv
 }
 
-pkg_postrm_${PN} () {
+pkg_postrm:${PN} () {
 #!/bin/sh
         rm -rf /etc/enigma2/jediplaylists/playlist_all.json > /dev/null 2>&1
         rm -rf /usr/lib/enigma2/python/Plugins/Extensions/JediMakerXtream > /dev/null 2>&1

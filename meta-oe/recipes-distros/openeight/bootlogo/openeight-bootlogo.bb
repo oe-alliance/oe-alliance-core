@@ -6,7 +6,7 @@ MAINTAINER = "openeight"
 
 require conf/license/license-gplv2.inc
 
-RDEPENDS_${PN} += "showiframe"
+RDEPENDS:${PN} += "showiframe"
 
 PV = "1.0"
 PR = "r5"
@@ -20,11 +20,11 @@ inherit update-rc.d
 
 SRC_URI = " file://bootlogo.mvi ${@bb.utils.contains("MACHINE_FEATURES", "bootsplash", "file://splash.bin" , "", d)} file://bootlogo.sh"
 
-SRC_URI_append_7210s = " file://lcdsplash220.bin file://lcdwaitkey220.bin file://lcdwarning220.bin"
-SRC_URI_append_sf8008 = " file://logo.img"
-SRC_URI_append_sf8008m = " file://logo.img"
+SRC_URI:append_7210s = " file://lcdsplash220.bin file://lcdwaitkey220.bin file://lcdwarning220.bin"
+SRC_URI:append_sf8008 = " file://logo.img"
+SRC_URI:append_sf8008m = " file://logo.img"
 
-FILES_${PN} = "/boot /usr/share /etc/init.d"
+FILES:${PN} = "/boot /usr/share /etc/init.d"
 
 do_install() {
     install -d ${D}/usr/share
@@ -34,7 +34,7 @@ do_install() {
     install -m 0755 ${S}/bootlogo.sh ${D}/${sysconfdir}/init.d/bootlogo
 }
 
-do_install_append_7210s() {
+do_install:append_7210s() {
     install -d ${D}/usr/share
     install -m 0644 ${WORKDIR}/lcdsplash220.bin ${D}/usr/share/lcdsplash.bin
     install -m 0644 ${WORKDIR}/lcdwaitkey220.bin ${D}/usr/share/lcdwaitkey.bin
@@ -58,5 +58,5 @@ addtask deploy before do_build after do_install
 
 
 PACKAGE_ARCH := "${MACHINE_ARCH}"
-FILES_${PN} = "/boot /usr/share /etc/init.d"
+FILES:${PN} = "/boot /usr/share /etc/init.d"
 

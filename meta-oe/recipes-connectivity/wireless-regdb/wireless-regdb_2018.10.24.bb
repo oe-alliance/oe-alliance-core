@@ -24,19 +24,19 @@ do_install() {
 # This requires Linux kernel >= v4.15.
 # For kernel <= v4.14, inherit the kernel_wireless_regdb.bbclass in kernel's recipe.
 PACKAGES =+ "${PN}-static"
-RCONFLICTS_${PN} = "${PN}-static"
+RCONFLICTS:${PN} = "${PN}-static"
 
-FILES_${PN}-static = " \
+FILES:${PN}-static = " \
     ${nonarch_base_libdir}/firmware/regulatory.db \
     ${nonarch_base_libdir}/firmware/regulatory.db.p7s \
 "
 
 # Native users might want to use the source of regulatory DB.
 # This is for example used by Linux kernel <= v4.14 and kernel_wireless_regdb.bbclass.
-do_install_append_class-native() {
+do_install:append:class-native() {
     install -m 0644 -D db.txt ${D}${libdir}/crda/db.txt
 }
 
-RSUGGESTS_${PN} = "crda"
+RSUGGESTS:${PN} = "crda"
 
 BBCLASSEXTEND = "native"

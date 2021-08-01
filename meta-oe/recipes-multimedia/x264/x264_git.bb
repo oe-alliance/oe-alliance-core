@@ -23,11 +23,11 @@ S = "${WORKDIR}/git"
 inherit lib_package pkgconfig perlnative
 
 X264_DISABLE_ASM = "--disable-asm"
-X264_DISABLE_ASM_aarch64 = ""
-X264_DISABLE_ASM_armv4 = "--disable-asm"
-X264_DISABLE_ASM_armv5 = "--disable-asm"
-X264_DISABLE_ASM_powerpc = "${@bb.utils.contains("TUNE_FEATURES", "spe", "--disable-asm", "", d)}"
-X264_DISABLE_ASM_mipsarch = "${@bb.utils.contains("TUNE_FEATURES", "r6", "", "--disable-asm", d)}"
+X264_DISABLE_ASM:aarch64 = ""
+X264_DISABLE_ASM:armv4 = "--disable-asm"
+X264_DISABLE_ASM:armv5 = "--disable-asm"
+X264_DISABLE_ASM:powerpc = "${@bb.utils.contains("TUNE_FEATURES", "spe", "--disable-asm", "", d)}"
+X264_DISABLE_ASM:mipsarch = "${@bb.utils.contains("TUNE_FEATURES", "r6", "", "--disable-asm", d)}"
 
 EXTRA_OECONF = '--prefix=${prefix} \
                 --host=${HOST_SYS} \

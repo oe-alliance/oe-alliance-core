@@ -40,7 +40,7 @@ do_install() {
 #    fi
 }
 
-pkg_postinst_${PN}_prepend () {
+pkg_postinst:${PN}:prepend () {
 #!/bin/sh
 if [ -n "$D" ]; then
         [[ -f $D/etc/fake-hwclock.data ]] || date -u '+%Y-%m-%d %H:%M:%S' > $D/etc/fake-hwclock.data

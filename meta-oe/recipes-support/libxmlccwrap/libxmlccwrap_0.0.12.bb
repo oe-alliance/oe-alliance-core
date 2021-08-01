@@ -17,7 +17,7 @@ SRC_URI[sha256sum] = "38fb5f75f8b7dad1c8d535cc7b18ea9f1603e14a8b9256a2f60cf72151
 
 inherit autotools
 
-CXXFLAGS_append = " -I=${includedir}/libxml2 "
+CXXFLAGS:append = " -I=${includedir}/libxml2 "
 
-FILES_${PN} = "${libdir}/${P}${SOLIBSDEV}"
-FILES_${PN}-dev = "${includedir} ${libdir}/${PN}${SOLIBSDEV} ${libdir}/*.la"
+FILES:${PN} = "${libdir}/${P}${SOLIBSDEV}"
+FILES:${PN}-dev = "${includedir} ${libdir}/${PN}${SOLIBSDEV} ${libdir}/*.la"

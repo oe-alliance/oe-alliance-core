@@ -1,3 +1,3 @@
-FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
 
-SRC_URI_append_sh4 = " file://0001-gnulib-include-errno-before-random.patch"
+SRC_URI:append:sh4 = " file://0001-gnulib-include-errno-before-random.patch"

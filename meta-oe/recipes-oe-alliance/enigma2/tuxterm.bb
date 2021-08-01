@@ -15,6 +15,6 @@ S = "${WORKDIR}/git"
 
 inherit autotools
 
-FILES_${PN} = "/"
+FILES:${PN} = "/"
 
 EXTRA_OECONF = "${@bb.utils.contains("MACHINE_FEATURES", "32bpp", "--with-bpp=32" , "--with-bpp=8", d)}"

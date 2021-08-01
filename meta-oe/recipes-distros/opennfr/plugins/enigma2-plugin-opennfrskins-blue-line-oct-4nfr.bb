@@ -17,7 +17,7 @@ SRC_URI="git://github.com/stein17/Skins-for-openNFR.git;protocol=git;branch=6.5"
 
 S = "${WORKDIR}/git/Blue-Line-OCT-4NFR"
 
-FILES_${PN} = "/tmp ${libdir} /usr/share"
+FILES:${PN} = "/tmp ${libdir} /usr/share"
 
 do_install() {
 	install -d ${D}${libdir}
@@ -26,13 +26,13 @@ do_install() {
     cp -rp ${S}/usr/share/* ${D}/usr/share/
 }
 
-pkg_postinst_${PN} () {
+pkg_postinst:${PN} () {
 #!/bin/sh
 echo " Skin Blue-Line-OCT-4NFR installed "
 exit 0
 }
 
-pkg_postrm_${PN} () {
+pkg_postrm:${PN} () {
 #!/bin/sh
 rm -rf /usr/share/enigma2/Blue-Line-OCT-4NFR/
 echo ""
@@ -42,7 +42,7 @@ echo ""
 exit 0
 }
 
-pkg_preinst_${PN} () {
+pkg_preinst:${PN} () {
 #!/bin/sh
 
 ${PYTHON_PN} ${libdir}/enigma2/python/BoxBrandingTest.pyo | sed 's/<$//' | sed 's/ /_/g' > /tmp/boxbranding.cfg
@@ -50,7 +50,7 @@ ${PYTHON_PN} ${libdir}/enigma2/python/BoxBrandingTest.pyo | sed 's/<$//' | sed '
 exit 0
 }
 
-pkg_prerm_${PN} () {
+pkg_prerm:${PN} () {
 #!/bin/sh
 echo "                                                           "
 echo "              AX-Blue-FHD is now being removed...          "

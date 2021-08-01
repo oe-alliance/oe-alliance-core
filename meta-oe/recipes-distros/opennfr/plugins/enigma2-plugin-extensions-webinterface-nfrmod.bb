@@ -4,9 +4,9 @@ MAINTAINER = "Carlo0815"
 require conf/license/license-gplv2.inc
 
 DEPENDS = "enigma2 ${PYTHON_PN}-process"
-RDEPENDS_${PN} = "${PYTHON_PN}-process"
+RDEPENDS:${PN} = "${PYTHON_PN}-process"
 
-RREPLACES_${PN} = "settings-autorestore"
+RREPLACES:${PN} = "settings-autorestore"
 
 inherit autotools-brokensep gitpkgv ${PYTHON_PN}native
 SRCREV = "${AUTOREV}"
@@ -27,17 +27,17 @@ EXTRA_OECONF = "\
     --with-libsdl=no \
     "
 
-CONFFILES_${PN} += "${sysconfdir}/exports"
-FILES_${PN} = "${libdir}"
-FILES_${PN}-dbg = "${libdir}/enigma2/python/Plugins/Extensions/WebInterface/.debug/"
-FILES_${PN}-src = "${libdir}/enigma2/python/Plugins/Extensions/WebInterface/*.py"
-FILES_${PN}-dbg = "${libdir}/enigma2/python/Plugins/Extensions/WebBouquetEditor/.debug/"
-FILES_${PN}-src = "${libdir}/enigma2/python/Plugins/Extensions/WebBouquetEditor/*.py"
-FILES_${PN}-dbg = "${libdir}/enigma2/python/Plugins/Extensions/WebAdmin/.debug/"
-FILES_${PN}-src = "${libdir}/enigma2/python/Plugins/Extensions/WebAdmin/*.py"
-FILES_${PN}-doc = "/usr/share/enigma2/README*"
+CONFFILES:${PN} += "${sysconfdir}/exports"
+FILES:${PN} = "${libdir}"
+FILES:${PN}-dbg = "${libdir}/enigma2/python/Plugins/Extensions/WebInterface/.debug/"
+FILES:${PN}-src = "${libdir}/enigma2/python/Plugins/Extensions/WebInterface/*.py"
+FILES:${PN}-dbg = "${libdir}/enigma2/python/Plugins/Extensions/WebBouquetEditor/.debug/"
+FILES:${PN}-src = "${libdir}/enigma2/python/Plugins/Extensions/WebBouquetEditor/*.py"
+FILES:${PN}-dbg = "${libdir}/enigma2/python/Plugins/Extensions/WebAdmin/.debug/"
+FILES:${PN}-src = "${libdir}/enigma2/python/Plugins/Extensions/WebAdmin/*.py"
+FILES:${PN}-doc = "/usr/share/enigma2/README*"
 
-pkg_postinst_${PN}() {
+pkg_postinst:${PN}() {
 #!/bin/sh
 echo "Restarting Enigma2 to load Webinterface Plugin ..."
 init 4
@@ -46,5 +46,5 @@ init 3
 exit 0
 }
 
-do_install_append() {
+do_install:append() {
 }

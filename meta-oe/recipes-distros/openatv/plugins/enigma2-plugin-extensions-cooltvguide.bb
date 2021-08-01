@@ -17,7 +17,7 @@ SRC_URI="git://github.com/openatv/enigma2-plugin-extensions-cooltvguide.git"
 
 S = "${WORKDIR}/git"
 
-FILES_${PN} = "${libdir}"
+FILES:${PN} = "${libdir}"
 
 
 do_install() {

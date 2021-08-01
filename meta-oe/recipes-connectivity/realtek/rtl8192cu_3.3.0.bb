@@ -4,7 +4,7 @@ LICENSE = "GPLv2"
 
 LIC_FILES_CHKSUM = "file://hal/hal_init.c;beginline=1;endline=19;md5=f8d10a6bd2fdfa240c0634a7c660c57f"
 
-RREPLACES_${PN} = "kernel-module-rtl8192cu"
+RREPLACES:${PN} = "kernel-module-rtl8192cu"
 
 
 inherit module

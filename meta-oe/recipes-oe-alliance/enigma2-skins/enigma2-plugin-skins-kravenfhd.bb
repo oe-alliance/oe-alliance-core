@@ -3,7 +3,7 @@ MAINTAINER = "Kraven Team"
 require conf/license/license-gplv2.inc
 
 DEPENDS += "gettext-native"
-RDEPENDS_${PN} += "${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-imaging", "${PYTHON_PN}-pillow", d)} ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-subprocess", "", d)} ${PYTHON_PN}-requests ${PYTHON_PN}-lxml enigma2-plugin-systemplugins-mphelp"
+RDEPENDS:${PN} += "${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-imaging", "${PYTHON_PN}-pillow", d)} ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-subprocess", "", d)} ${PYTHON_PN}-requests ${PYTHON_PN}-lxml enigma2-plugin-systemplugins-mphelp"
 
 inherit gitpkgv allarch gettext
 
@@ -14,7 +14,7 @@ VER="7.x"
 
 SRC_URI="git://github.com/atvcaptain/KravenFHD.git;protocol=git"
 
-FILES_${PN} = "/usr/*"
+FILES:${PN} = "/usr/*"
 
 
 S = "${WORKDIR}/git"
@@ -35,7 +35,7 @@ do_install() {
     chmod -R a+rX ${D}/usr/share/enigma2/
 }
 
-pkg_postinst_${PN} () {
+pkg_postinst:${PN} () {
 #!/bin/sh
 if [ -f /tmp/kravenfhdskin ]; then
     mv -f /tmp/kravenfhdskin /usr/share/enigma2/KravenFHD/skin.xml
@@ -69,7 +69,7 @@ echo "              ...Skin successful installed.                "
 exit 0
 }
 
-pkg_postrm_${PN} () {
+pkg_postrm:${PN} () {
 #!/bin/sh
 rm -rf /usr/share/enigma2/KravenFHD
 rm -rf /usr/lib/enigma2/python/Plugins/Extensions/KravenFHD
@@ -95,7 +95,7 @@ echo "              ...Skin successful removed.                  "
 exit 0
 }
 
-pkg_preinst_${PN} () {
+pkg_preinst:${PN} () {
 #!/bin/sh
 echo "                                                           "
 echo "        The Skin KravenFHD is now being installed...       "
@@ -103,7 +103,7 @@ echo "                                                           "
 exit 0                                                           
 }
 
-pkg_prerm_${PN} () {
+pkg_prerm:${PN} () {
 #!/bin/sh
 echo "                                                           "
 echo "        The Skin KravenFHD is now being removed...         "

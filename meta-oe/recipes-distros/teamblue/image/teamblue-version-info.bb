@@ -79,5 +79,5 @@ do_install() {
 }
 do_install[vardepsexclude] += "DATE DATETIME"
 
-FILES_${PN} += "/etc/model /etc/image-version"
+FILES:${PN} += "/etc/model /etc/image-version"
 

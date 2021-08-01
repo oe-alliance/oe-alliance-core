@@ -31,11 +31,11 @@ S = "${WORKDIR}/git"
 INITSCRIPT_NAME = "shellinabox"
 SYSTEMD_SERVICE = "shellinabox.service"
 
-do_configure_prepend() {
+do_configure:prepend() {
 	cp ${WORKDIR}/styles.css ${S}/shellinabox/styles.css
 }
 
-do_install_append() {
+do_install:append() {
     if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
         install -d ${D}${systemd_unitdir}/system/
         install -m 0644 ${WORKDIR}/shellinabox.service ${D}${systemd_unitdir}/system/

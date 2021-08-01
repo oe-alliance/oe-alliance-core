@@ -24,7 +24,7 @@ EXTRA_OECONF = "\
         --with-ssl-incl-dir=${STAGING_INCDIR} \
         "
 
-do_install_append() {
+do_install:append() {
         install -d ${D}${sysconfdir}/init.d/
         install -m 755 ${WORKDIR}/init ${D}${sysconfdir}/init.d/monit
         sed -i 's:# set daemon  120:set daemon  120:' ${S}/monitrc
@@ -33,4 +33,4 @@ do_install_append() {
         install -m 700 -d ${D}${sysconfdir}/monit.d/
 }
 
-CONFFILES_${PN} += "${sysconfdir}/monitrc"
+CONFFILES:${PN} += "${sysconfdir}/monitrc"

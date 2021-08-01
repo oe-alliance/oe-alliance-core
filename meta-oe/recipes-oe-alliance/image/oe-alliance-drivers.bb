@@ -9,9 +9,9 @@ inherit packagegroup
 PV = "${IMAGE_VERSION}"
 PR = "r0"
 
-ALLOW_EMPTY_${PN} = "1"
+ALLOW_EMPTY:${PN} = "1"
 
 DEPENDS = "enigma2 network-usb-drivers-meta"
 
-RDEPENDS_${PN}_gbquad = "enigma2-plugin-drivers-network-usb-smsc75xx"
-RDEPENDS_${PN}_gbquadplus = "enigma2-plugin-drivers-network-usb-smsc75xx"
+RDEPENDS:${PN}_gbquad = "enigma2-plugin-drivers-network-usb-smsc75xx"
+RDEPENDS:${PN}_gbquadplus = "enigma2-plugin-drivers-network-usb-smsc75xx"

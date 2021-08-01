@@ -20,11 +20,11 @@ LANGUAGES = "ar_AE bg_BG ca_AD cs_CZ da_DK de_DE el_GR en_GB en_US es_ES et_EE f
              fy_NL he_IL hr_HR hu_HU id_ID is_IS it_IT lt_LT lv_LV nb_NO nl_NL pl_PL pt_BR pt_PT \
              ru_RU sk_SK sl_SI sr_RS sv_SE th_TH tr_TR uk_UA zh_CN zh_HK"
 
-RPROVIDES_${PN}  = "${@" ".join(map(lambda s: "virtual-locale-%s" % s, d.getVar('LANGUAGES').split())).lower().replace('_','-')}"
-RPROVIDES_${PN} += "${@" ".join("virtual-locale-%s" % p.split('_')[0] for p in d.getVar('LANGUAGES').split())}"
-RPROVIDES_${PN} += "${@" ".join(map(lambda s: "locale-base-%s" % s, d.getVar('LANGUAGES').split())).lower().replace('_','-')}"
-RCONFLICTS_${PN} = "${@" ".join(map(lambda s: "locale-base-%s" % s, d.getVar('LANGUAGES').split())).lower().replace('_','-')}"
-RREPLACES_${PN}  = "${@" ".join(map(lambda s: "locale-base-%s" % s, d.getVar('LANGUAGES').split())).lower().replace('_','-')}"
+RPROVIDES:${PN}  = "${@" ".join(map(lambda s: "virtual-locale-%s" % s, d.getVar('LANGUAGES').split())).lower().replace('_','-')}"
+RPROVIDES:${PN} += "${@" ".join("virtual-locale-%s" % p.split('_')[0] for p in d.getVar('LANGUAGES').split())}"
+RPROVIDES:${PN} += "${@" ".join(map(lambda s: "locale-base-%s" % s, d.getVar('LANGUAGES').split())).lower().replace('_','-')}"
+RCONFLICTS:${PN} = "${@" ".join(map(lambda s: "locale-base-%s" % s, d.getVar('LANGUAGES').split())).lower().replace('_','-')}"
+RREPLACES:${PN}  = "${@" ".join(map(lambda s: "locale-base-%s" % s, d.getVar('LANGUAGES').split())).lower().replace('_','-')}"
 
 do_install() {
 	install -d ${D}${sysconfdir}/profile.d
@@ -58,6 +58,6 @@ do_install() {
 	ln -s sr_RS ${D}${LOCALEDIR}/sr_YU
 }
 
-FILES_${PN} = "${LOCALEDIR} ${LOCALEDIR2} ${sysconfdir}/profile.d"
+FILES:${PN} = "${LOCALEDIR} ${LOCALEDIR2} ${sysconfdir}/profile.d"
 
 do_package_qa[noexec] = "1"

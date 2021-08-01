@@ -11,8 +11,8 @@ SRC_URI = "http://core.fluendo.com/gstreamer/src/${BPN}/${BPN}-${PV}.tar.bz2 \
     file://gst-fluendo-mpegdemux-0.10.72-mpegtsdemux.h.patch \
 "
 
-FILES_${PN} += "${libdir}/gstreamer-0.10/*.so"
-FILES_${PN}-dbg += "${libdir}/gstreamer-0.10/.debug"
-FILES_${PN}-dev += "${libdir}/gstreamer-0.10/*.la ${libdir}/gstreamer-0.10/*.a"
+FILES:${PN} += "${libdir}/gstreamer-0.10/*.so"
+FILES:${PN}-dbg += "${libdir}/gstreamer-0.10/.debug"
+FILES:${PN}-dev += "${libdir}/gstreamer-0.10/*.la ${libdir}/gstreamer-0.10/*.a"
 
 EXTRA_OECONF = "--disable-valgrind"

@@ -8,7 +8,7 @@ inherit module
 SRCREV = "${AUTOREV}"
 SRC_URI = "git://github.com/atvcaptain/rtl8822bu.git;branch=main"
 
-SRC_URI_append_sh4 = " file://fix_sh4_build.patch"
+SRC_URI:append:sh4 = " file://fix_sh4_build.patch"
 
 EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR} KDIR=${STAGING_KERNEL_DIR}"
 

@@ -1,15 +1,15 @@
-FILESEXTRAPATHS_append := "${THISDIR}/wget"
+FILESEXTRAPATHS:append := "${THISDIR}/wget"
 
-SRC_URI_append = " \
+SRC_URI:append = " \
            file://0002-Strip-long-version-output.patch \
           "
-SRC_URI_append_sh4 = " file://sh4-getrandom.patch"
+SRC_URI:append:sh4 = " file://sh4-getrandom.patch"
 
-DEPENDS_remove = "gnutls"
-DEPENDS_append = " openssl"
-EXTRA_OECONF_remove = "--with-ssl=gnutls"
-EXTRA_OECONF_append = " --with-ssl=openssl"
+DEPENDS:remove = "gnutls"
+DEPENDS:append = " openssl"
+EXTRA_OECONF:remove = "--with-ssl=gnutls"
+EXTRA_OECONF:append = " --with-ssl=openssl"
 
-CFLAGS_append_sh4 = " -std=gnu11"
+CFLAGS:append:sh4 = " -std=gnu11"
 
 inherit upx-compress

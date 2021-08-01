@@ -18,7 +18,7 @@ do_install() {
         install -m 0755 ${WORKDIR}/sshpass-${PV}/sshpass ${D}${bindir}/sshpass
 }
 
-FILES_${PN} = "${bindir}/sshpass"
+FILES:${PN} = "${bindir}/sshpass"
 
 SRC_URI[md5sum] = "f59695e3b9761fb51be7d795819421f9"
 SRC_URI[sha256sum] = "c6324fcee608b99a58f9870157dfa754837f8c48be3df0f5e2f3accf145dee60"

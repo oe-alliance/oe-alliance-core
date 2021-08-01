@@ -3,7 +3,7 @@ DESCRIPTION = "EPGImport Filter"
 
 require conf/license/license-gplv2.inc
 
-RDEPENDS_${PN} = "\
+RDEPENDS:${PN} = "\
 	${PYTHON_PN}-difflib \
 	${PYTHON_PN}-shell \
 	"

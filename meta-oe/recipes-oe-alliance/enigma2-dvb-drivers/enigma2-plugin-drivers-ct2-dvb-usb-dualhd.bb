@@ -5,7 +5,7 @@ require conf/license/license-gplv2.inc
 
 DVBPROVIDER ?= "kernel"
 
-RRECOMMENDS_${PN} = " \
+RRECOMMENDS:${PN} = " \
     ${DVBPROVIDER}-module-si2168 \
     ${DVBPROVIDER}-module-si2157 \
     ${DVBPROVIDER}-module-em28xx-dvb \
@@ -17,4 +17,4 @@ RRECOMMENDS_${PN} = " \
 PV = "1.0"
 PR = "r0"
 
-ALLOW_EMPTY_${PN} = "1"
+ALLOW_EMPTY:${PN} = "1"

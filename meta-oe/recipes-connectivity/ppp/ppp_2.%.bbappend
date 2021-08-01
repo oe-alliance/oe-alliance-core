@@ -1,3 +1,3 @@
-FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 
-SRC_URI_append_sh4 = " file://sys-linux-def-sol-netlink.patch"
+SRC_URI:append:sh4 = " file://sys-linux-def-sol-netlink.patch"

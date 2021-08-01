@@ -20,4 +20,4 @@ do_install() {
     cp -a * ${D}${nonarch_base_libdir}/firmware/
 }
 
-FILES_${PN} += "${nonarch_base_libdir}/firmware/*"
+FILES:${PN} += "${nonarch_base_libdir}/firmware/*"

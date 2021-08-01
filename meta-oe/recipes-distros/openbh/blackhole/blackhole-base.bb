@@ -10,7 +10,7 @@ SRC_URI = "file://Ncam_Ci.sh file://StartBhCam file://Delete_all_Crashlogs.sh fi
 
 PR = "r11"
 
-FILES_${PN} = "/"
+FILES:${PN} = "/"
 
 do_compile() {
 	echo "${MACHINE}" > ${WORKDIR}/bhmachine

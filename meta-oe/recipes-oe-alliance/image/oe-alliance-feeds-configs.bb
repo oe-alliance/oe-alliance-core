@@ -2,8 +2,8 @@ SUMMARY = "Configuration files for online package repositories aka feeds"
 
 require conf/license/license-gplv2.inc
 
-RCONFLICTS_${PN} = "distro-feed-configs"
-RREPLACES_${PN} = "distro-feed-configs"
+RCONFLICTS:${PN} = "distro-feed-configs"
+RREPLACES:${PN} = "distro-feed-configs"
 PACKAGE_ARCH = "${MACHINEBUILD}"
 PR = "r0"
 
@@ -18,4 +18,4 @@ do_install () {
         install -m 0644 ${S}/${sysconfdir}/opkg/* ${D}${sysconfdir}/opkg/
 }
 
-CONFFILES_${PN} += '${@ " ".join( [ ( "${sysconfdir}/opkg/%s-feed.conf" % feed ) for feed in "all ${PACKAGE_EXTRA_ARCHS} ${MACHINE_ARCH} 3rdparty ${MACHINE}_3rdparty  ocram".split() ] ) }'
+CONFFILES:${PN} += '${@ " ".join( [ ( "${sysconfdir}/opkg/%s-feed.conf" % feed ) for feed in "all ${PACKAGE_EXTRA_ARCHS} ${MACHINE_ARCH} 3rdparty ${MACHINE}_3rdparty  ocram".split() ] ) }'

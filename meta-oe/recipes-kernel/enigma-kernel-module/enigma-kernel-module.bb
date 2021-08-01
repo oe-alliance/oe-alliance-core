@@ -18,7 +18,7 @@ inherit python3-dir module gitpkgv deploy
 
 EXTRA_OEMAKE = "KSRC=${STAGING_KERNEL_BUILDDIR}"
 
-do_configure_prepend(){
+do_configure:prepend(){
 	find ${S}/ -type f -name "*.c" | xargs -r -L1 sed -i "s|@MACHINE@|${MACHINE}|g"
 	find ${S}/ -type f -name "*.c" | xargs -r -L1 sed -i "s|@DISPLAY_MODEL@|${MACHINE_NAME}|g"
 	find ${S}/ -type f -name "*.c" | xargs -r -L1 sed -i "s|@BOX_BRAND@|${BRAND_OEM}|g"
@@ -104,7 +104,7 @@ do_install() {
 	echo "enigma" > ${D}${sysconfdir}/modules-load.d/zzzzenigma.conf
 }
 
-FILES_${PN} += "${sysconfdir} ${libdir}"
+FILES:${PN} += "${sysconfdir} ${libdir}"
 
 export KCFLAGS = "-Wno-error"
 

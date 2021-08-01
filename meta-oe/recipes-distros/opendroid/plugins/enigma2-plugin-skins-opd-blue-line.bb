@@ -9,11 +9,11 @@ PV = "1.8+git${SRCPV}"
 PKGV = "1.8+git${GITPKGV}"
 VER="1.8"
 
-RDEPENDS_${PN} = "enigma2-plugin-systemplugins-weathercomponenthandler, enigma2-plugin-skincomponents-weathercomponent"
+RDEPENDS:${PN} = "enigma2-plugin-systemplugins-weathercomponenthandler, enigma2-plugin-skincomponents-weathercomponent"
 
 SRC_URI="git://github.com/stein17/Skins-for-openOPD.git;protocol=git;branch=python3"
 
-FILES_${PN} = "/"
+FILES:${PN} = "/"
 
 S = "${WORKDIR}/git/OPD-Blue-Line"
 
@@ -24,7 +24,7 @@ do_install() {
     cp -rp ${S}/usr/share/* ${D}/usr/share/
     chmod -R a+rX ${D}/usr/share/enigma2/
 }
-pkg_postinst_${PN} () {
+pkg_postinst:${PN} () {
 #!/bin/sh
 echo "                                                          "
 echo " ...OPD-Blue-Line by stein17 successful installed.  "
@@ -32,7 +32,7 @@ echo "                                                          "
 exit 0
 }
 
-pkg_postrm_${PN} () {
+pkg_postrm:${PN} () {
 #!/bin/sh
 rm -rf /usr/share/enigma2/OPD-Blue-Line
 rm -rf /usr/lib/enigma2/python/Components/Converter/OPD*
@@ -42,7 +42,7 @@ echo " ....Skin removed! You should restart GUI now!                 "
 echo "
 }
 
-pkg_preinst_${PN} () {
+pkg_preinst:${PN} () {
 #!/bin/sh                                                       
 rm -rf /usr/share/enigma2/OPD-Blue-Line
 rm -rf /usr/lib/enigma2/python/Components/Converter/OPD
@@ -61,7 +61,7 @@ echo "                                                                          
 echo "                                                                           "
 exit 0
 }
-pkg_prerm_${PN} () {
+pkg_prerm:${PN} () {
 #!/bin/sh
 echo "                                                           "
 echo "              OPD-Blue-Line is now being removed...        "

@@ -19,60 +19,60 @@ INHIBIT_SYSROOT_STRIP = "1"
 PACKAGES = "${PN}-dbg catchsegv sln nscd ldconfig ldd tzcode glibc-thread-db ${PN}-pic libcidn libmemusage libsegfault ${PN}-pcprofile libsotruss ${PN} ${PN}-utils glibc-extra-nss ${PN}-dev ${PN}-staticdev ${PN}-doc"
 
 # The ld.so in this glibc supports the GNU_HASH
-RPROVIDES_${PN} = "eglibc rtld(GNU_HASH)"
-RPROVIDES_${PN}-utils = "eglibc-utils"
-RPROVIDES_${PN}-mtrace = "eglibc-mtrace libc-mtrace"
-RPROVIDES_${PN}-pic = "eglibc-pic"
-RPROVIDES_${PN}-dev = "eglibc-dev libc6-dev virtual-libc-dev"
-RPROVIDES_${PN}-staticdev = "eglibc-staticdev"
-RPROVIDES_${PN}-doc = "eglibc-doc"
-RPROVIDES_glibc-extra-nss = "eglibc-extra-nss"
-RPROVIDES_glibc-thread-db = "eglibc-thread-db"
-RPROVIDES_${PN}-pcprofile = "eglibc-pcprofile"
-RPROVIDES_${PN}-dbg = "eglibc-dbg"
+RPROVIDES:${PN} = "eglibc rtld(GNU_HASH)"
+RPROVIDES:${PN}-utils = "eglibc-utils"
+RPROVIDES:${PN}-mtrace = "eglibc-mtrace libc-mtrace"
+RPROVIDES:${PN}-pic = "eglibc-pic"
+RPROVIDES:${PN}-dev = "eglibc-dev libc6-dev virtual-libc-dev"
+RPROVIDES:${PN}-staticdev = "eglibc-staticdev"
+RPROVIDES:${PN}-doc = "eglibc-doc"
+RPROVIDES:glibc-extra-nss = "eglibc-extra-nss"
+RPROVIDES:glibc-thread-db = "eglibc-thread-db"
+RPROVIDES:${PN}-pcprofile = "eglibc-pcprofile"
+RPROVIDES:${PN}-dbg = "eglibc-dbg"
 libc_baselibs = "${base_libdir}/libcrypt*.so.* ${base_libdir}/libcrypt-*.so ${base_libdir}/libc.so.* ${base_libdir}/libc-*.so ${base_libdir}/libm*.so.* ${base_libdir}/libm-*.so ${base_libdir}/libmvec-*.so ${base_libdir}/ld*.so.* ${base_libdir}/ld-*.so ${base_libdir}/libpthread*.so.* ${base_libdir}/libpthread-*.so ${base_libdir}/libresolv*.so.* ${base_libdir}/libresolv-*.so ${base_libdir}/librt*.so.* ${base_libdir}/librt-*.so ${base_libdir}/libutil*.so.* ${base_libdir}/libutil-*.so ${base_libdir}/libnsl*.so.* ${base_libdir}/libnsl-*.so ${base_libdir}/libnss_files*.so.* ${base_libdir}/libnss_files-*.so ${base_libdir}/libnss_compat*.so.* ${base_libdir}/libnss_compat-*.so ${base_libdir}/libnss_dns*.so.* ${base_libdir}/libnss_dns-*.so ${base_libdir}/libdl*.so.* ${base_libdir}/libdl-*.so ${base_libdir}/libanl*.so.* ${base_libdir}/libanl-*.so ${base_libdir}/libBrokenLocale*.so.* ${base_libdir}/libBrokenLocale-*.so"
-libc_baselibs_append_aarch64 = " /lib/ld-linux-aarch64*.so.1"
-INSANE_SKIP_${PN}_append_aarch64 = " libdir"
+libc_baselibs:append:aarch64 = " /lib/ld-linux-aarch64*.so.1"
+INSANE_SKIP:${PN}:append:aarch64 = " libdir"
 
-FILES_${PN} = "${libc_baselibs} ${libexecdir}/*"
-RRECOMMENDS_${PN} = "${@bb.utils.filter('DISTRO_FEATURES', 'ldconfig', d)}"
-FILES_ldconfig = "${base_sbindir}/ldconfig ${sysconfdir}/ld.so.conf"
-FILES_ldd = "${bindir}/ldd"
-FILES_libsegfault = "${base_libdir}/libSegFault*"
-FILES_libcidn = "${base_libdir}/libcidn-*.so ${base_libdir}/libcidn.so.*"
-FILES_libmemusage = "${base_libdir}/libmemusage.so"
-FILES_glibc-extra-nss = "${base_libdir}/libnss_*-*.so ${base_libdir}/libnss_*.so.*"
-FILES_sln = "${base_sbindir}/sln"
-FILES_${PN}-pic = "${libdir}/*_pic.a ${libdir}/*_pic.map ${libdir}/libc_pic/*.o"
-FILES_libsotruss = "${libdir}/audit/sotruss-lib.so"
+FILES:${PN} = "${libc_baselibs} ${libexecdir}/*"
+RRECOMMENDS:${PN} = "${@bb.utils.filter('DISTRO_FEATURES', 'ldconfig', d)}"
+FILES:ldconfig = "${base_sbindir}/ldconfig ${sysconfdir}/ld.so.conf"
+FILES:ldd = "${bindir}/ldd"
+FILES:libsegfault = "${base_libdir}/libSegFault*"
+FILES:libcidn = "${base_libdir}/libcidn-*.so ${base_libdir}/libcidn.so.*"
+FILES:libmemusage = "${base_libdir}/libmemusage.so"
+FILES:glibc-extra-nss = "${base_libdir}/libnss_*-*.so ${base_libdir}/libnss_*.so.*"
+FILES:sln = "${base_sbindir}/sln"
+FILES:${PN}-pic = "${libdir}/*_pic.a ${libdir}/*_pic.map ${libdir}/libc_pic/*.o"
+FILES:libsotruss = "${libdir}/audit/sotruss-lib.so"
 FILES_SOLIBSDEV = "${libdir}/lib*${SOLIBSDEV}"
-FILES_${PN}-dev += "${libdir}/*_nonshared.a ${base_libdir}/*_nonshared.a ${base_libdir}/*.o ${datadir}/aclocal"
-RDEPENDS_${PN}-dev = "linux-libc-headers-dev"
-FILES_${PN}-staticdev += "${libdir}/*.a ${base_libdir}/*.a"
-FILES_nscd = "${sbindir}/nscd* ${sysconfdir}/init.d/nscd ${systemd_unitdir}/system/nscd* ${sysconfdir}/tmpfiles.d/nscd.conf \
+FILES:${PN}-dev += "${libdir}/*_nonshared.a ${base_libdir}/*_nonshared.a ${base_libdir}/*.o ${datadir}/aclocal"
+RDEPENDS:${PN}-dev = "linux-libc-headers-dev"
+FILES:${PN}-staticdev += "${libdir}/*.a ${base_libdir}/*.a"
+FILES:nscd = "${sbindir}/nscd* ${sysconfdir}/init.d/nscd ${systemd_unitdir}/system/nscd* ${sysconfdir}/tmpfiles.d/nscd.conf \
               ${sysconfdir}/nscd.conf ${sysconfdir}/default/volatiles/98_nscd ${localstatedir}/db/nscd"
-FILES_${PN}-mtrace = "${bindir}/mtrace"
-FILES_tzcode = "${bindir}/tzselect ${sbindir}/zic ${sbindir}/zdump"
-FILES_${PN}-utils = "${bindir}/* ${sbindir}/*"
-FILES_catchsegv = "${bindir}/catchsegv"
-RDEPENDS_catchsegv = "libsegfault"
-FILES_${PN}-pcprofile = "${base_libdir}/libpcprofile.so"
-FILES_glibc-thread-db = "${base_libdir}/libthread_db.so.* ${base_libdir}/libthread_db-*.so"
-RPROVIDES_${PN}-dev += "libc-dev"
-RPROVIDES_${PN}-staticdev += "libc-staticdev"
+FILES:${PN}-mtrace = "${bindir}/mtrace"
+FILES:tzcode = "${bindir}/tzselect ${sbindir}/zic ${sbindir}/zdump"
+FILES:${PN}-utils = "${bindir}/* ${sbindir}/*"
+FILES:catchsegv = "${bindir}/catchsegv"
+RDEPENDS:catchsegv = "libsegfault"
+FILES:${PN}-pcprofile = "${base_libdir}/libpcprofile.so"
+FILES:glibc-thread-db = "${base_libdir}/libthread_db.so.* ${base_libdir}/libthread_db-*.so"
+RPROVIDES:${PN}-dev += "libc-dev"
+RPROVIDES:${PN}-staticdev += "libc-staticdev"
 
-SUMMARY_sln = "The static ln"
-DESCRIPTION_sln = "Similar to the 'ln' utility, but statically linked.  sln is useful to make symbolic links to dynamic libraries if the dynamic linking system, for some reason, is not functional."
-SUMMARY_nscd = "Name service cache daemon"
-DESCRIPTION_nscd = "nscd, name service cache daemon, caches name service lookups for the passwd, group and hosts information.  It can damatically improvide performance with remote, such as NIS or NIS+, name services."
-SUMMARY_glibc-extra-nss = "hesiod, NIS and NIS+ nss libraries"
-DESCRIPTION_glibc-extra-nss = "glibc: nis, nisplus and hesiod search services."
-SUMMARY_ldd = "print shared library dependencies"
-DESCRIPTION_ldd = "${bindir}/ldd prints shared library dependencies for each program or shared library specified on the command line."
-SUMMARY_${PN}-utils = "Miscellaneous utilities provided by glibc"
-DESCRIPTION_${PN}-utils = "Miscellaneous utilities including getconf, iconv, locale, gencat, ..."
-DESCRIPTION_libsotruss = "Library to support sotruss which traces calls through PLTs"
-DESCRIPTION_tzcode = "tzcode, timezone zoneinfo utils -- zic, zdump, tzselect"
+SUMMARY:sln = "The static ln"
+DESCRIPTION:sln = "Similar to the 'ln' utility, but statically linked.  sln is useful to make symbolic links to dynamic libraries if the dynamic linking system, for some reason, is not functional."
+SUMMARY:nscd = "Name service cache daemon"
+DESCRIPTION:nscd = "nscd, name service cache daemon, caches name service lookups for the passwd, group and hosts information.  It can damatically improvide performance with remote, such as NIS or NIS+, name services."
+SUMMARY:glibc-extra-nss = "hesiod, NIS and NIS+ nss libraries"
+DESCRIPTION:glibc-extra-nss = "glibc: nis, nisplus and hesiod search services."
+SUMMARY:ldd = "print shared library dependencies"
+DESCRIPTION:ldd = "${bindir}/ldd prints shared library dependencies for each program or shared library specified on the command line."
+SUMMARY:${PN}-utils = "Miscellaneous utilities provided by glibc"
+DESCRIPTION:${PN}-utils = "Miscellaneous utilities including getconf, iconv, locale, gencat, ..."
+DESCRIPTION:libsotruss = "Library to support sotruss which traces calls through PLTs"
+DESCRIPTION:tzcode = "tzcode, timezone zoneinfo utils -- zic, zdump, tzselect"
 
 inherit multilib_header
 
@@ -136,7 +136,7 @@ def get_libc_fpu_setting(bb, d):
         return "--without-fp"
     return ""
 
-do_install_append_aarch64 () {
+do_install:append:aarch64 () {
         if [ "${base_libdir}" != "${nonarch_base_libdir}" ]; then
                 # The aarch64 ABI says the dynamic linker -must- be /lib/ld-linux-aarch64[_be].so.1
                 install -d ${D}${nonarch_base_libdir}
@@ -238,26 +238,26 @@ stash_locale_package_cleanup() {
 	stash_locale_cleanup ${PKGD}
 }
 
-python populate_packages_prepend () {
+python populate_packages:prepend () {
     if d.getVar('DEBIAN_NAMES'):
         pkgs = d.getVar('PACKAGES').split()
         bpn = d.getVar('BPN')
         prefix = d.getVar('MLPREFIX') or ""
         # Set the base package...
-        d.setVar('PKG_' + prefix + bpn, prefix + 'libc6')
+        d.setVar('PKG:' + prefix + bpn, prefix + 'libc6')
         libcprefix = prefix + bpn + '-'
         for p in pkgs:
             # And all the subpackages.
             if p.startswith(libcprefix):
                 renamed = p.replace(bpn, 'libc6', 1)
-                d.setVar('PKG_' + p, renamed)
+                d.setVar('PKG:' + p, renamed)
         # For backward compatibility with old -dbg package
-        d.appendVar('RPROVIDES_' + libcprefix + 'dbg', ' ' + prefix + 'libc-dbg')
-        d.appendVar('RCONFLICTS_' + libcprefix + 'dbg', ' ' + prefix + 'libc-dbg')
-        d.appendVar('RREPLACES_' + libcprefix + 'dbg', ' ' + prefix + 'libc-dbg')
+        d.appendVar('RPROVIDES:' + libcprefix + 'dbg', ' ' + prefix + 'libc-dbg')
+        d.appendVar('RCONFLICTS:' + libcprefix + 'dbg', ' ' + prefix + 'libc-dbg')
+        d.appendVar('RREPLACES:' + libcprefix + 'dbg', ' ' + prefix + 'libc-dbg')
 }
 
-pkg_postinst_nscd () {
+pkg_postinst:nscd () {
 	if [ -z "$D" ]; then
 		if command -v systemd-tmpfiles >/dev/null; then
 			systemd-tmpfiles --create ${sysconfdir}/tmpfiles.d/nscd.conf
@@ -266,7 +266,7 @@ pkg_postinst_nscd () {
 		fi
 	fi
 }
-CONFFILES_nscd="${sysconfdir}/nscd.conf"
+CONFFILES:nscd="${sysconfdir}/nscd.conf"
 
 SYSTEMD_PACKAGES = "nscd"
-SYSTEMD_SERVICE_nscd = "nscd.service"
+SYSTEMD_SERVICE:nscd = "nscd.service"

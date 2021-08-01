@@ -4,6 +4,6 @@ PKGV = "${PV}"
 
 KODIADDONPLUGIN = "iptvsimple"
 
-DEPENDS_append = "pugixml"
+DEPENDS:append = "pugixml"
 
 require kodi-addon-pvr.inc

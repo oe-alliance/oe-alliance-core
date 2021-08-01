@@ -5,7 +5,7 @@ LICENSE = "GPLv2"
 LIC_FILES_CHKSUM="file://COPYING;md5=435ed639f84d4585d93824e7da3d85da"
 
 DEPENDS = "freetype libaacs libdca libdvdcss libxml2"
-RDEPENDS_${PN} = "libaacs libdca libdvdcss"
+RDEPENDS:${PN} = "libaacs libdca libdvdcss"
 
 inherit gitpkgv
 SRCREV = "${AUTOREV}"
@@ -26,7 +26,7 @@ EXTRA_OECONF = " \
 
 inherit autotools-brokensep pkgconfig
 
-FILES_${PN} = "/"
+FILES:${PN} = "/"
 
 do_package_qa() {
 }

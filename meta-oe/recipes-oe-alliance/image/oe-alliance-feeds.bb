@@ -5,7 +5,7 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 inherit packagegroup
 
-ALLOW_EMPTY_${PN} = "1"
+ALLOW_EMPTY:${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
@@ -13,7 +13,7 @@ PR = "r13"
 
 DEPENDS = "enigma2-plugin-drivers-usbserial enigma2-plugin-systemplugins-radiotimesemulator enigma2-plugin-systemplugins-hrtunerproxy"
 
-RDEPENDS_${PN} = " \
+RDEPENDS:${PN} = " \
     packagegroup-openplugins \
     bootlogos-enigma2-meta \
     dvb-usb-drivers-meta \
@@ -176,11 +176,11 @@ GST_BASE_DVD = "\
     gstreamer1.0-plugins-bad-mpegtsmux \
 "
 
-RRECOMMENDS_${PN}_append_vuuno = "enigma2-plugin-extensions-hbbtv"
-RRECOMMENDS_${PN}_append_vuultimo = "enigma2-plugin-extensions-hbbtv"
-RRECOMMENDS_${PN}_append_vusolo = "enigma2-plugin-extensions-hbbtv"
-RRECOMMENDS_${PN}_append_vusolo2 = "enigma2-plugin-extensions-hbbtv"
-RRECOMMENDS_${PN}_append_vuduo = "enigma2-plugin-extensions-hbbtv"
-RRECOMMENDS_${PN}_append_vuduo2 = "enigma2-plugin-extensions-hbbtv"
-RRECOMMENDS_${PN}_append_vuzero = "enigma2-plugin-extensions-hbbtv"
+RRECOMMENDS:${PN}:append_vuuno = "enigma2-plugin-extensions-hbbtv"
+RRECOMMENDS:${PN}:append_vuultimo = "enigma2-plugin-extensions-hbbtv"
+RRECOMMENDS:${PN}:append_vusolo = "enigma2-plugin-extensions-hbbtv"
+RRECOMMENDS:${PN}:append_vusolo2 = "enigma2-plugin-extensions-hbbtv"
+RRECOMMENDS:${PN}:append_vuduo = "enigma2-plugin-extensions-hbbtv"
+RRECOMMENDS:${PN}:append_vuduo2 = "enigma2-plugin-extensions-hbbtv"
+RRECOMMENDS:${PN}:append_vuzero = "enigma2-plugin-extensions-hbbtv"
 

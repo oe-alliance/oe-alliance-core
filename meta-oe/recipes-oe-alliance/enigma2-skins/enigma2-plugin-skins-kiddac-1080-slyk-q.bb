@@ -3,7 +3,7 @@ MAINTAINER = "Kiddac"
 PRIORITY = "optional"
 require conf/license/license-gplv2.inc
 
-RDEPENDS_${PN} = "enigma2-plugin-skincomponents-kiddac-shared-skin"
+RDEPENDS:${PN} = "enigma2-plugin-skincomponents-kiddac-shared-skin"
 
 inherit gitpkgv
 
@@ -17,7 +17,7 @@ SRC_URI="git://github.com/kiddac/Enigma2_Skins.git;protocol=git;branch=master"
 
 S = "${WORKDIR}/git/1080_Skins/Slyk_Q_1080/Slyk_Q_1080"
 
-FILES_${PN} = "${datadir}"
+FILES:${PN} = "${datadir}"
 
 do_install() {
     install -d ${D}${datadir}

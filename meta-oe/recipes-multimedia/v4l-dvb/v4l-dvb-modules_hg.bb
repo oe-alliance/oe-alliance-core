@@ -1,5 +1,5 @@
 DEPENDS += "module-init-tools"
-RDEPENDS_${PN} += "module-init-tools-depmod"
+RDEPENDS:${PN} += "module-init-tools-depmod"
 SRCDATE = "20100904"
 PV = "0.0+hg${SRCDATE}"
 

@@ -5,7 +5,7 @@ SRC_URI = "file://dvb-usb-af9035-02.fw-30092013.tar.gz"
 S = "${WORKDIR}"
 
 PACKAGES = "${PN}"
-FILES_${PN} += "${nonarch_base_libdir}/firmware"
+FILES:${PN} += "${nonarch_base_libdir}/firmware"
 
 inherit allarch
 

@@ -21,7 +21,7 @@ SRC_URI="git://github.com/openhdf/hdftoolbox.git"
 
 S = "${WORKDIR}/git"
 
-FILES_${PN} = "${libdir}"
+FILES:${PN} = "${libdir}"
 
 do_install() {
     install -d ${D}${libdir}

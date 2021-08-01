@@ -17,7 +17,7 @@ S = "${WORKDIR}/git"
 
 inherit autotools lib_package pkgconfig
 
-do_install_append() {
+do_install:append() {
     install -d ${D}${includedir}/dvbcsa/
     install -d ${D}${libdir}/pkgconfig
     install -m 0644 ${S}/src/dvbcsa/dvbcsa.h ${D}${includedir}/dvbcsa/

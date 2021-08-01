@@ -22,7 +22,7 @@ require gcc-configure-common.inc
 LINKER_HASH_STYLE ?= "sysv"
 
 EXTRA_OECONF += "--enable-poison-system-directories"
-EXTRA_OECONF_append_sh4 = " \
+EXTRA_OECONF:append:sh4 = " \
     --with-multilib-list= \
     --enable-incomplete-targets \
 "
@@ -32,9 +32,9 @@ EXTRA_OECONF += "\
     --with-system-zlib \
 "
 
-DEPENDS_remove_libc-baremetal := "virtual/${TARGET_PREFIX}libc-for-gcc"
-EXTRA_OECONF_append_libc-baremetal = " --without-headers"
-EXTRA_OECONF_remove_libc-baremetal = "--enable-threads=posix"
+DEPENDS:remove:libc-baremetal := "virtual/${TARGET_PREFIX}libc-for-gcc"
+EXTRA_OECONF:append:libc-baremetal = " --without-headers"
+EXTRA_OECONF:remove:libc-baremetal = "--enable-threads=posix"
 
 EXTRA_OECONF_PATHS = "\
     --with-gxx-include-dir=/not/exist${target_includedir}/c++/${BINV} \

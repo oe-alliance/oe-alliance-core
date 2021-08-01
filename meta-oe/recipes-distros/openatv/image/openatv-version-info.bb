@@ -85,4 +85,4 @@ do_install() {
 
 do_install[vardepsexclude] += "DATE DATETIME"
 
-FILES_${PN} += "${sysconfdir}/image-version ${sysconfdir}/model"
+FILES:${PN} += "${sysconfdir}/image-version ${sysconfdir}/model"

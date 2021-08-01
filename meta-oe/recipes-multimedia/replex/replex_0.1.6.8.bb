@@ -19,4 +19,4 @@ do_install() {
   install -m 0755 ${S}/replex ${D}/${bindir}
 }
 
-FILES_${PN} = "${bindir}/replex"
+FILES:${PN} = "${bindir}/replex"

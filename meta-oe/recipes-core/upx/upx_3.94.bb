@@ -25,7 +25,7 @@ do_compile() {
     oe_runmake UPX_LZMA_VERSION=0x465 UPX_LZMADIR="${WORKDIR}/lzma-465" all
 }
 
-do_install_append() {
+do_install:append() {
     install -d ${D}${bindir}
     install -m 755 ${B}/src/upx.out ${D}${bindir}/upx
 }

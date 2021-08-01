@@ -12,7 +12,7 @@ SRC_URI = " \
     http://source.mynonpublic.com/edicombo/edicombo-firmware_${FW_SRCDATE}.zip;name=binfw \
 "
 DEPENDS += "virtual/kernel module-init-tools"
-RDEPENDS_${PN} += "module-init-tools-depmod"
+RDEPENDS:${PN} += "module-init-tools-depmod"
 
 S = "${WORKDIR}"
 
@@ -25,14 +25,14 @@ do_install() {
     install -m 0644 ${S}/edicombo_usb_dvb.fw ${D}${nonarch_base_libdir}/firmware/edicombo_usb_dvb.fw
 }
 
-pkg_postinst_${PN} () {
+pkg_postinst:${PN} () {
     if [ -d /proc/stb ]; then
        depmod -a
     fi
     true
 }
 
-FILES_${PN} = "/"
+FILES:${PN} = "/"
 
 SRC_URI[binfw.md5sum] = "a7c7960bdae473e4b7166d79a61bb3bb"
 SRC_URI[binfw.sha256sum] = "138813f83cfc5c17ddeedbc658b07c501d59009e552fd96b256cdb04de987a08"

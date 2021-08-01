@@ -3,7 +3,7 @@ SUMMARY = "linux iptables firewall"
 require conf/license/license-gplv2.inc
 
 DEPENDS = "iptables virtual/kernel"
-RRECOMMENDS_${PN} = "\
+RRECOMMENDS:${PN} = "\
  iptables \
  kernel-module-nf-nat-masquerade-ipv4 \
  kernel-module-nf-nat-ipv4 \
@@ -69,4 +69,4 @@ do_install() {
     echo nf_defrag_ipv4 >> ${D}/${sysconfdir}/modules-load.d/firewall.conf
 }
 
-FILES_${PN} += "${sysconfdir}/modules-load.d/firewall.conf"
+FILES:${PN} += "${sysconfdir}/modules-load.d/firewall.conf"

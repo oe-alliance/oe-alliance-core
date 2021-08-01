@@ -18,7 +18,7 @@ SRC_URI="git://github.com/openmips/ru_infinity_hd.git;protocol=git"
 
 S = "${WORKDIR}/git"
 
-FILES_${PN} = "/usr/*"
+FILES:${PN} = "/usr/*"
 
 do_install() {
     cp -rp ${S}/usr ${D}/

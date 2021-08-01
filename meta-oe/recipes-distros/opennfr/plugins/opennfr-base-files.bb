@@ -9,14 +9,14 @@ SRCREV = "${AUTOREV}"
 
 SRC_URI = ""
 
-SRC_URI_append_mipsel = "git://github.com/carlo0815/openNFR-base.git" 
-SRC_URI_append_sh4 = "git://github.com/carlo0815/openNFR-base.git;protocol=git;branch=sh4" 
+SRC_URI:append:mipsel = "git://github.com/carlo0815/openNFR-base.git" 
+SRC_URI:append:sh4 = "git://github.com/carlo0815/openNFR-base.git;protocol=git;branch=sh4" 
 
-FILES_${PN} = "/*"
+FILES:${PN} = "/*"
 
 INHIBIT_PACKAGE_STRIP = "1"
  
-ALLOW_EMPTY_${PN} = "1"
+ALLOW_EMPTY:${PN} = "1"
 
 PR = "r12"
 
@@ -25,7 +25,7 @@ S="${WORKDIR}/git/files"
 do_install() {
 }
 
-do_install_append_mipsel() {
+do_install:append:mipsel() {
     install -d ${D}/media
     mkdir -p ${D}/media/hdd
     mkdir -p ${D}/media/usb
@@ -39,7 +39,7 @@ do_install_append_mipsel() {
     mv ${D}${libdir}/enigma2/python/Components/Converter/bitratecalc.so_mips ${D}${libdir}/enigma2/python/Components/Converter/bitratecalc.so
 }
 
-do_install_append_sh4() {
+do_install:append:sh4() {
     install -d ${D}/media
     mkdir -p ${D}/media/hdd
     mkdir -p ${D}/media/usb

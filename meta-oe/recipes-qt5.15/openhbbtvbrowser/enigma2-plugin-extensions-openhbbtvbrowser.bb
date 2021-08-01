@@ -5,7 +5,7 @@ LIC_FILES_CHKSUM = " \
 file://__init__.py;md5=d41d8cd98f00b204e9800998ecf8427e \
 "
 
-RDEPENDS_${PN} = "openhbbtvbrowser"
+RDEPENDS:${PN} = "openhbbtvbrowser"
 
 inherit gitpkgv
 SRCREV = "${AUTOREV}"
@@ -25,4 +25,4 @@ do_install(){
     install -m 0755 ${S}/*.py ${D}${libdir}/enigma2/python/Plugins/Extensions/HbbTV
 }
 
-FILES_${PN} = "${libdir}"
+FILES:${PN} = "${libdir}"

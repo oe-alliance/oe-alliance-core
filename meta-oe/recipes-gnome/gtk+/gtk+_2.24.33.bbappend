@@ -1,4 +1,4 @@
-PR_append = ".2"
+PR:append = ".2"
 PACKAGE_ARCH := "${MACHINE_ARCH}"
 
 THISDIR := "${@os.path.dirname(d.getVar('FILE', True))}"

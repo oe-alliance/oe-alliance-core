@@ -66,7 +66,7 @@ PACKAGECONFIG[vorbis] = "-Dvorbis=enabled,-Dvorbis=disabled,libvorbis libogg"
 PACKAGECONFIG[wavpack] = "-Dwavpack=enabled,-Dwavpack=disabled,wavpack"
 PACKAGECONFIG[zlib] = "-Dzlib=enabled,-Dzlib=disabled,zlib"
 
-do_install_append() {
+do_install:append() {
     install -d ${D}/var/lib/mpd/playlists
     install -d ${D}${sysconfdir}/init.d
     install -m 755 ${WORKDIR}/mpd.init ${D}${sysconfdir}/init.d/mpd

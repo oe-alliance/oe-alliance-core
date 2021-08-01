@@ -1,19 +1,19 @@
 PR .= ".7"
 
-FILESEXTRAPATHS_prepend := "${THISDIR}/${P}:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/${P}:"
 
-RDEPENDS_${PN}_append = " sdparm bash"
-RPROVIDES_${BPN} += "softcam-support cardserver-support"
-RREPLACES_${BPN} += "softcam-support cardserver-support"
-RCONFLICTS_${BPN} += "softcam-support cardserver-support"
-RRECOMMENDS_${PN} = ""
+RDEPENDS:${PN}:append = " sdparm bash"
+RPROVIDES:${BPN} += "softcam-support cardserver-support"
+RREPLACES:${BPN} += "softcam-support cardserver-support"
+RCONFLICTS:${BPN} += "softcam-support cardserver-support"
+RRECOMMENDS:${PN} = ""
 
 SRC_URI += "file://hotplug.sh \
             file://nocam.sh \
             file://nocard.sh \
 "
 
-do_install_append() {
+do_install:append() {
     # umountnfs should run before network stops (which is at K40)
     ln -sf        ../init.d/umountnfs.sh    ${D}${sysconfdir}/rc6.d/K31umountnfs.sh
     ln -sf        ../init.d/umountnfs.sh    ${D}${sysconfdir}/rc0.d/K31umountnfs.sh
@@ -48,12 +48,12 @@ do_install_append() {
 
 }
 
-do_install_append_u53() {
+do_install:append_u53() {
     ln -sf        ../init.d/networking      ${D}${sysconfdir}/rc3.d/S90networking
 
 }
 
-pkg_postinst_${PN}_append() {
+pkg_postinst:${PN}:append() {
 	if [ ! -e "$D/etc/init.d/cardserver" ]
 	then
 		ln -s cardserver.None $D/etc/init.d/cardserver

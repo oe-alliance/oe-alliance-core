@@ -4,7 +4,7 @@ HOMEPAGE = "https://service-identity.readthedocs.io/en/stable"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=8a0f079f4e6a215d6bd6f9d97cab4d5f"
 
-RDEPENDS_${PN} = "${PYTHON_PN}-attrs ${PYTHON_PN}-idna ${PYTHON_PN}-pyasn1 ${PYTHON_PN}-pyasn1-modules ${PYTHON_PN}-pyopenssl"
+RDEPENDS:${PN} = "${PYTHON_PN}-attrs ${PYTHON_PN}-idna ${PYTHON_PN}-pyasn1 ${PYTHON_PN}-pyasn1-modules ${PYTHON_PN}-pyopenssl"
 
 PYPI_PACKAGE = "service_identity"
 

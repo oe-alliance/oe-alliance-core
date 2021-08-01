@@ -4,10 +4,10 @@ SECTION = "kernel/modules"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://../../COPYING;md5=94d55d512a9ba36caa9b7df079bae19f"
 
-RREPLACES_${PN} = "rt73-k2wrlz"
-RCONFLICTS_${PN} = "rt73-k2wrlz"
+RREPLACES:${PN} = "rt73-k2wrlz"
+RCONFLICTS:${PN} = "rt73-k2wrlz"
 
-MACHINE_KERNEL_PR_append = ".2"
+MACHINE_KERNEL_PR:append = ".2"
 
 SRC_URI = "http://source.mynonpublic.com/gigablue/wlan/RT73.tar.gz \
            file://COPYING"

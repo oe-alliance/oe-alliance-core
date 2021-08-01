@@ -13,13 +13,13 @@ PKGV = "2.1+git${GITPKGV}"
 VER ="2.1"
 PR = "r2"
 
-RDEPENDS_${PN} = "enigma2-plugin-skincomponents-weathercomponent, enigma2-plugin-systemplugins-weathercomponenthandler"
+RDEPENDS:${PN} = "enigma2-plugin-skincomponents-weathercomponent, enigma2-plugin-systemplugins-weathercomponenthandler"
 
 SRC_URI="git://github.com/stein17/Skins-for-openNFR.git;protocol=git;branch=6.5"
 
 S = "${WORKDIR}/git/Prime-NFR-Style"
 
-FILES_${PN} = "${libdir} /usr/share"
+FILES:${PN} = "${libdir} /usr/share"
 
 do_install() {
     install -d ${D}${libdir}
@@ -28,7 +28,7 @@ do_install() {
     cp -rp ${S}/usr/share/* ${D}/usr/share/
 }
 
-pkg_postrm_${PN} () {
+pkg_postrm:${PN} () {
 #!/bin/sh
 TMP=/tmp/.skins
 rm -rf /usr/share/enigma2/Prime-NFR-Style-by-stein17
@@ -64,7 +64,7 @@ echo ""
 exit 0
 }
 
-pkg_preinst_${PN} () {
+pkg_preinst:${PN} () {
 #!/bin/sh                                                       
 rm -rf /usr/share/enigma2/Prime-NFR-Style-by-stein17
 rm -rf ${libdir}/enigma2/python/Components/Converter/NextEventsPrime.pyo
@@ -98,7 +98,7 @@ echo "                                                                          
 exit 0
 }
 
-pkg_prerm_${PN} () {
+pkg_prerm:${PN} () {
 #!/bin/sh
 echo "                                                                           "
 echo "                                                                           "

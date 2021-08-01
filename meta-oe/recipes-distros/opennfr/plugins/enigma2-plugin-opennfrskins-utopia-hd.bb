@@ -19,7 +19,7 @@ SRC_URI="git://github.com/carlo0815/openNFR-skin.git;branch=6.5"
 
 S = "${WORKDIR}/git"
 
-FILES_${PN} = "${libdir} /usr/share"
+FILES:${PN} = "${libdir} /usr/share"
 
 do_install() {
     install -d ${D}${libdir}

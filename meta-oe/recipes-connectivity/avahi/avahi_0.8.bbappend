@@ -2,7 +2,7 @@ inherit upx-compress
 
 AVAHI_GTK = "gtk"
 
-do_install_append () {
+do_install:append () {
         rm -rf ${D}${libdir}/libavahi-ui.so*
         rm -rf ${D}${bindir}/b*
         rm -rf ${D}${datadir}/avahi/interfaces

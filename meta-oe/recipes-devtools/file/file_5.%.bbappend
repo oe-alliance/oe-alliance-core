@@ -1,1 +1,1 @@
-CFLAGS_sh4 += "-std=gnu11"
+CFLAGS:sh4 += "-std=gnu11"

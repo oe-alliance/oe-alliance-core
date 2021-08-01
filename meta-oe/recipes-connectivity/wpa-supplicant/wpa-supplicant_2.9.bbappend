@@ -2,7 +2,7 @@ PR .= ".1"
 
 inherit upx-compress
 
-FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 
 DEPENDS += "openssl"
 
@@ -15,11 +15,11 @@ SRC_URI += " \
         file://fix-build-openssl102q.patch \
 "
 
-do_configure_append() {
+do_configure:append() {
         sed -e '/^CONFIG_TLS = gnutls/d' -i wpa_supplicant/.config
         echo "CONFIG_DEBUG_SYSLOG=y" >> wpa_supplicant/.config
 }
-do_install_append() {
+do_install:append() {
         rm -rf ${D}${sysconfdir}/network/if-*.d
 
         install -d ${D}${sysconfdir}/wpa_supplicant

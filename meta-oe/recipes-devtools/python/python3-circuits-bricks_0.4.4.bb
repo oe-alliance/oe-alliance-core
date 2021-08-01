@@ -5,7 +5,7 @@ SECTION = "devel/python"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://setup.py;md5=2441ef22beb15a56ac3abd5a7a9a3af2"
 
-RDEPENDS_${PN} = "${PYTHON_PN}-circuits"
+RDEPENDS:${PN} = "${PYTHON_PN}-circuits"
 
 SRC_URI = "https://files.pythonhosted.org/packages/93/bd/a5400ce8f393b921bd471e6816fdea1abb5be3b50adc07dd8fe1810743fe/circuits-bricks-${PV}.tar.gz"
 SRC_URI[md5sum] = "8bcf94ba15fd2340ab6025fa80f3a8e6"

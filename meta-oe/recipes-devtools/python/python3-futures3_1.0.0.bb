@@ -6,7 +6,7 @@ HOMEPAGE = "https://github.com/mihaiparvu/futures3"
 DEPENDS = "${PYTHON_PN}"
 
 PROVIDES += "python3-futures"
-RPROVIDES_${PN} += "python3-futures"
+RPROVIDES:${PN} += "python3-futures"
 
 SRC_URI[md5sum] = "897f50d198bd4bc0f60415dea4b5bb56"
 SRC_URI[sha256sum] = "12750f871ad31eba4deeac6c087963be72638cc6f570b90f927678a718574734"

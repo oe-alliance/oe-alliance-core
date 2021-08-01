@@ -17,4 +17,4 @@ inherit autotools pkgconfig
 
 EXTRA_AUTORECONF = "--exclude=autoheader"
 
-FILES_${PN}-dev += "${libdir}/sigc++-*/"
+FILES:${PN}-dev += "${libdir}/sigc++-*/"

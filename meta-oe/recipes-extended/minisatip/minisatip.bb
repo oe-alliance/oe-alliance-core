@@ -4,7 +4,7 @@ require conf/license/license-gplv2.inc
 
 HOMEPAGE = "https://minisatip.org/"
 DEPENDS = "libdvbcsa openssl"
-RDEPENDS_${PN} = "libdvbcsa openssl"
+RDEPENDS:${PN} = "libdvbcsa openssl"
 
 SRC_URI = " \
     git://github.com/catalinii/minisatip.git;protocol=http \
@@ -23,7 +23,7 @@ inherit autotools-brokensep
 INITSCRIPT_NAME = "minisatip"
 EXTRA_OECONF = "--enable-enigma --disable-netcv"
 
-do_configure_prepend () {
+do_configure:prepend () {
 }
 
 do_install () {

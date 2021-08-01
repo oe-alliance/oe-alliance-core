@@ -16,4 +16,4 @@ do_install() {
     install -m 0644 8821CU/rtl8821cu_fw ${D}${nonarch_base_libdir}/firmware/
 }
 
-FILES_${PN} += "${nonarch_base_libdir}/firmware"
+FILES:${PN} += "${nonarch_base_libdir}/firmware"

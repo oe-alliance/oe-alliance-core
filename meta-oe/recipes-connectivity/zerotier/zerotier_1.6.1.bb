@@ -8,7 +8,7 @@ LICENSE = "GPLv3+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=11bbae9cacaf61dd7fc10035f6f5c68e"
 
 DEPENDS = "miniupnpd"
-RDEPENDS_${PN} = "kernel-module-tun"
+RDEPENDS:${PN} = "kernel-module-tun"
 
 inherit gitpkgv
 
@@ -29,9 +29,9 @@ INITSCRIPT_NAME = "zerotier"
 
 inherit autotools-brokensep update-rc.d systemd
 
-do_install_append() {
+do_install:append() {
     install -d ${D}${sysconfdir}/init.d
     install -m 0755 ${WORKDIR}/zerotier ${D}${sysconfdir}/init.d/zerotier
 }
 
-INSANE_SKIP_${PN} = "already-stripped"
+INSANE_SKIP:${PN} = "already-stripped"

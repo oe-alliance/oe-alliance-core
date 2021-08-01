@@ -16,7 +16,7 @@ SRC_URI = "git://github.com/Arkq/bluez-alsa.git;protocol=https;branch=master \
            file://init \
 "
 
-FILESEXTRAPATHS_append := "${THISDIR}/files:"
+FILESEXTRAPATHS:append := "${THISDIR}/files:"
 
 S = "${WORKDIR}/git"
 
@@ -31,12 +31,12 @@ do_install () {
 }
 
 INITSCRIPT_PACKAGES = "${PN}"
-INITSCRIPT_NAME_${PN} = "bluealsa"
-INITSCRIPT_PARAMS_${PN} = "defaults 80"
+INITSCRIPT_NAME:${PN} = "bluealsa"
+INITSCRIPT_PARAMS:${PN} = "defaults 80"
 
-FILES_${PN} += "${libdir}/alsa-lib/lib*.so ${datadir}/alsa"
-FILES_${PN}-dev += "${libdir}/alsa-lib/*.la"
-FILES_${PN}-staticdev += "${libdir}/alsa-lib/lib*.a"
-FILES_${PN}-dbg += "${libdir}/alsa-lib/.debug/*.so"
+FILES:${PN} += "${libdir}/alsa-lib/lib*.so ${datadir}/alsa"
+FILES:${PN}-dev += "${libdir}/alsa-lib/*.la"
+FILES:${PN}-staticdev += "${libdir}/alsa-lib/lib*.a"
+FILES:${PN}-dbg += "${libdir}/alsa-lib/.debug/*.so"
 
 #SYSTEMD_SERVICE_${PN} = "bluez-alsa.service"

@@ -5,7 +5,7 @@ SRC_URI = "file://firmware_rtlwifi.zip"
 S = "${WORKDIR}"
 
 PACKAGES = "${PN}"
-FILES_${PN} += "${base_libdir}/firmware"
+FILES:${PN} += "${base_libdir}/firmware"
 
 SUMMARY = "Firmware for rtl8723bs"
 

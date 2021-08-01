@@ -1,1 +1,1 @@
-RPROVIDES_${PN} =+ " libmpfr4"
+RPROVIDES:${PN} =+ " libmpfr4"

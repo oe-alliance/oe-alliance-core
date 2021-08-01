@@ -5,7 +5,7 @@ LICENSE = "LGPLv2"
 LIC_FILES_CHKSUM = "file://COPYING.LIB;md5=55ca817ccb7d5b5b66355690e9abc605"
 
 DEPENDS = "wvstreams virtual/crypt"
-RDEPENDS_${PN} = "ppp"
+RDEPENDS:${PN} = "ppp"
 
 inherit pkgconfig
 

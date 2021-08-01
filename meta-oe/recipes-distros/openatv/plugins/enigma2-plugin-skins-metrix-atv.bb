@@ -8,7 +8,7 @@ require conf/license/license-gplv2.inc
 
 inherit gitpkgv gettext
 DEPENDS += "gettext-native"
-RDEPENDS_${PN} = "${@bb.utils.contains_any("FLASHSIZE", "64 96 128", "", "enigma2-plugin-skins-metrix-atv-weather-icons", d)}"
+RDEPENDS:${PN} = "${@bb.utils.contains_any("FLASHSIZE", "64 96 128", "", "enigma2-plugin-skins-metrix-atv-weather-icons", d)}"
 
 SRCREV = "${AUTOREV}"
 PV = "3.0+git${SRCPV}"
@@ -18,19 +18,19 @@ PR = "r0"
 
 PACKAGES =+ "enigma2-plugin-skins-metrix-atv-fhd-icons enigma2-plugin-skins-metrix-atv-uhd-icons enigma2-plugin-skins-metrix-atv-weather-icons"
 PROVIDES =+ "enigma2-plugin-skins-metrix-atv-fhd-icons enigma2-plugin-skins-metrix-atv-uhd-icons enigma2-plugin-skins-metrix-atv-weather-icons"
-RPROVIDES_enigma2-plugin-skins-metrix-atv-fhd-icons += "enigma2-plugin-skins-metrix-atv-fhd-icons"
-RPROVIDES_enigma2-plugin-skins-metrix-atv-uhd-icons += "enigma2-plugin-skins-metrix-atv-uhd-icons"
-RPROVIDES_enigma2-plugin-skins-metrix-atv-weather-icons += "enigma2-plugin-skins-metrix-atv-weather-icons"
+RPROVIDES:enigma2-plugin-skins-metrix-atv-fhd-icons += "enigma2-plugin-skins-metrix-atv-fhd-icons"
+RPROVIDES:enigma2-plugin-skins-metrix-atv-uhd-icons += "enigma2-plugin-skins-metrix-atv-uhd-icons"
+RPROVIDES:enigma2-plugin-skins-metrix-atv-weather-icons += "enigma2-plugin-skins-metrix-atv-weather-icons"
 SRC_URI="git://github.com/openatv/MetrixHD.git;branch=dev"
 
 S = "${WORKDIR}/git"
 
-FILES_enigma2-plugin-skins-metrix-atv-fhd-icons = "/usr/share/enigma2/MetrixHD/FHD"
-FILES_enigma2-plugin-skins-metrix-atv-uhd-icons = "/usr/share/enigma2/MetrixHD/UHD"
-FILES_enigma2-plugin-skins-metrix-atv-weather-icons = "/usr/share/enigma2/MetrixHD/animated_weather_icons"
+FILES:enigma2-plugin-skins-metrix-atv-fhd-icons = "/usr/share/enigma2/MetrixHD/FHD"
+FILES:enigma2-plugin-skins-metrix-atv-uhd-icons = "/usr/share/enigma2/MetrixHD/UHD"
+FILES:enigma2-plugin-skins-metrix-atv-weather-icons = "/usr/share/enigma2/MetrixHD/animated_weather_icons"
 
 
-FILES_${PN} = "${libdir} /usr/share"
+FILES:${PN} = "${libdir} /usr/share"
 
 do_compile() {
 	for f in $(find ${S}/locale -name *.po ); do
@@ -47,7 +47,7 @@ do_install() {
     cp -r --preserve=mode,links ${S}/usr/share/* ${D}/usr/share/
 }
 
-pkg_preinst_${PN}() {
+pkg_preinst:${PN}() {
 #!/bin/sh
 echo "remove symlinks ..."
 for f in /usr/share/enigma2/MetrixHD/*
@@ -76,7 +76,7 @@ echo "Proceeding to installation..."
 exit 0
 }
 
-pkg_postinst_${PN} () {
+pkg_postinst:${PN} () {
 #!/bin/sh
 echo "Checking for obsolete MyMetrixLiteColors"
 if [ -d ${libdir}/enigma2/python/Plugins/Extensions/MyMetrixLiteColors ]; then

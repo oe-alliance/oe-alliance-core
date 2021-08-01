@@ -7,7 +7,7 @@ require conf/license/license-gplv2.inc
 
 inherit allarch
 
-RDEPENDS_${PN} = "${PYTHON_PN}-core streamlink"
+RDEPENDS:${PN} = "${PYTHON_PN}-core streamlink"
 
 inherit ${PYTHON_PN}-dir gitpkgv
 
@@ -17,7 +17,7 @@ SRC_URI = "git://github.com/oe-mirrors/livestreamersrv;protocol=https"
 
 S = "${WORKDIR}/git"
 
-do_install_append() {
+do_install:append() {
     install -d ${D}${sbindir}
     install -d ${D}${datadir}
     install -d ${D}${sysconfdir}/init.d
@@ -30,6 +30,6 @@ do_install_append() {
     ln -sf ../init.d/livestreamersrv ${D}${sysconfdir}/rc4.d/S50livestreamersrv
 }
 
-FILES_${PN} = "/"
+FILES:${PN} = "/"
 
 do_package_qa[noexec] = "1"

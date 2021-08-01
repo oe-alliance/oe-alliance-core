@@ -5,7 +5,7 @@ require conf/license/license-gplv2.inc
 
 DVBPROVIDER ?= "kernel"
 
-RRECOMMENDS_${PN} = " \
+RRECOMMENDS:${PN} = " \
     ${DVBPROVIDER}-module-dvb-usb-dib0700 \
     ${DVBPROVIDER}-module-dvb-usb-dibusb-common \
     ${DVBPROVIDER}-module-dvb-usb-dibusb-mc \
@@ -36,4 +36,4 @@ RRECOMMENDS_${PN} = " \
 PV = "1.0"
 PR = "r1"
 
-ALLOW_EMPTY_${PN} = "1"
+ALLOW_EMPTY:${PN} = "1"

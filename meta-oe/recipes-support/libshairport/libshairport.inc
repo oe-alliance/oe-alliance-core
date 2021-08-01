@@ -24,4 +24,4 @@ inherit autotools package
 do_package_qa() {
 }
 
-FILES_${PN} = "/"
+FILES:${PN} = "/"

@@ -13,7 +13,7 @@ PR = "r1"
 
 SRC_URI = "git://github.com/OpenSPA/openspa-enigma2-skins.git;protocol=git"
 
-FILES_${PN} = "/usr/share/enigma2 /usr/lib/enigma2/python/Components"
+FILES:${PN} = "/usr/share/enigma2 /usr/lib/enigma2/python/Components"
 
 S = "${WORKDIR}/git"
 

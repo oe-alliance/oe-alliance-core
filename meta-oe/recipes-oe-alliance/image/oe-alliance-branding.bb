@@ -17,7 +17,7 @@ do_configure[nostamp] = "1"
 
 BRANCH="master"
 
-FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
 SRC_URI="git://github.com/oe-mirrors/branding-module.git;protocol=git;branch=${BRANCH}"
 #SRC_URI_append_openatv=" \
 #	file://openatv_mappings.patch \
@@ -70,7 +70,7 @@ EXTRA_OECONF = " \
     --with-transcoding="${TRANSCODING}" \
     "
 
-do_configure_prepend() {
+do_configure:prepend() {
     if [ "${MACHINE}" = "vusolo4k" -o "${MACHINE}" = "vusolo2" -o "${MACHINE}" = "vusolose" -o "${MACHINE}" = "vuduo2" -o "${MACHINE}" = "vuuno4k" -o "${MACHINE}" = "vuuno4kse" -o "${MACHINE}" = "vuultimo4k" -o "${MACHINE}" = "vuzero4k" -o "${MACHINE}" = "vuduo4k" -o "${MACHINE}" = "vuduo4kse" ]; then
         DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-VUPLUS-BASE}/recipes-drivers/vuplus-dvb-proxy-${MACHINE}.bb | cut -b 12-19`
     elif [ "${BRAND_OEM}" = "vuplus" ]; then
@@ -182,7 +182,7 @@ do_configure_prepend() {
     fi
 }
 
-do_install_append() {
+do_install:append() {
     install -d ${D}/usr/share/enigma2
     install -d ${D}${libdir}/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes
     install -d ${D}${libdir}/enigma2/python/Plugins/Extensions/OpenWebif/public/static
@@ -264,10 +264,10 @@ do_install_append() {
 }
 
 
-FILES_${PN} = "${libdir}/enigma2/python/*.so /usr/share \
+FILES:${PN} = "${libdir}/enigma2/python/*.so /usr/share \
     ${libdir}/enigma2/python/Components/*.py ${libdir}/enigma2/python/Plugins \
     ${libdir}/enigma2/python/Components/*/*.pyc ${libdir}/enigma2/python/Plugins"
-FILES_${PN}-dev += "${libdir}/enigma2/python/*.la"
-FILES_${PN}-staticdev += "${libdir}/enigma2/python/*.a"
-FILES_${PN}-dbg += "${libdir}/enigma2/python/.debug"
+FILES:${PN}-dev += "${libdir}/enigma2/python/*.la"
+FILES:${PN}-staticdev += "${libdir}/enigma2/python/*.a"
+FILES:${PN}-dbg += "${libdir}/enigma2/python/.debug"
 

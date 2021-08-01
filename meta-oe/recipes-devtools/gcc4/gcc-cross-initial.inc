@@ -6,11 +6,11 @@ INHIBIT_AUTOTOOLS_DEPS = "1"
 INHIBIT_DEFAULT_DEPS = "1"
 
 # We still need gnu-config-native
-DEPENDS_prepend = "gnu-config-native autoconf-native "
+DEPENDS:prepend = "gnu-config-native autoconf-native "
 
 PN = "gcc-cross-initial-${TARGET_ARCH}"
 
-CROSS_TARGET_SYS_DIR_append = ".${PN}"
+CROSS_TARGET_SYS_DIR:append = ".${PN}"
 
 # This is intended to be a -very- basic config
 # sysroot is needed in case we use libc-initial

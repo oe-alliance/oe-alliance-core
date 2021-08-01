@@ -13,7 +13,7 @@ ${SAMBA_MIRROR}    http://mirror.internode.on.net/pub/samba \n \
 ${SAMBA_MIRROR}    http://www.mirrorservice.org/sites/ftp.samba.org \n \
 "
 
-FILESEXTRAPATHS_prepend := "${THISDIR}/samba:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/samba:"
 SRC_URI = "${SAMBA_MIRROR}/stable/samba-${PV}.tar.gz \
            file://001-samba-4.14-pam.patch \
            file://002-dnsserver-4.14.patch \
@@ -51,7 +51,7 @@ SRC_URI = "${SAMBA_MIRROR}/stable/samba-${PV}.tar.gz \
            file://volatiles.03_samba \
            "
 
-SRC_URI_append_sh4 = " \
+SRC_URI:append:sh4 = " \
            file://209-strtoull.patch \
           "
 

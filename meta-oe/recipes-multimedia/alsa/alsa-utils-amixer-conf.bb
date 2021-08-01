@@ -4,7 +4,7 @@ BUGTRACKER = "https://bugtrack.alsa-project.org/alsa-bug/login_page.php"
 SECTION = "console/utils"
 LICENSE = "GPLv2+"
 require conf/license/license-gplv2.inc
-RDEPENDS_${PN} = "alsa-utils-amixer"
+RDEPENDS:${PN} = "alsa-utils-amixer"
 
 SRC_URI = " file://alsa-mixer-conf"
 

@@ -4,7 +4,7 @@ SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"
 
-RDEPENDS_${PN} = "dreambox-buildimage"
+RDEPENDS:${PN} = "dreambox-buildimage"
 
 require conf/license/license-gplv2.inc
 
@@ -19,7 +19,7 @@ SRC_URI="git://github.com/openatv/enigma2-plugin-extensions-dflash.git;branch=py
 
 S = "${WORKDIR}/git"
 
-FILES_${PN} = "${libdir} /usr/sbin"
+FILES:${PN} = "${libdir} /usr/sbin"
 
 do_install() {
     install -d ${D}${libdir}
@@ -29,7 +29,7 @@ do_install() {
     install -m 0755 ${S}/bin/nfiwrite ${D}/usr/sbin/nfiwrite
 }
 
-pkg_postrm_${PN}() {
+pkg_postrm:${PN}() {
 #!/bin/sh
 rm ${libdir}/enigma2/python/Plugins/Extensions/WebInterface/web-data/img/dflash.png > /dev/null 2>&1
 rm ${libdir}/enigma2/python/Plugins/Extensions/WebInterface/web-data/img/ring.png > /dev/null 2>&1

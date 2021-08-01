@@ -19,7 +19,7 @@ SRC_URI = "http://addons.hdfreaks.cc/feeds/*git/enigma2-plugins-extensions-Devic
 
 S = "${WORKDIR}"
 
-FILES_${PN} = "${libdir} "
+FILES:${PN} = "${libdir} "
 
 do_install() {
 	install -d ${D}${libdir}

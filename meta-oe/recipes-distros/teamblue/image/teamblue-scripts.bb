@@ -11,8 +11,8 @@ SRC_URI = " \
     file://Standby.sh \
     "
 
-FILES_${PN} = "/"
-CONFFILES_${PN} = "/usr/script/Standby.sh"
+FILES:${PN} = "/"
+CONFFILES:${PN} = "/usr/script/Standby.sh"
 
 S = "${WORKDIR}"
 

@@ -8,7 +8,7 @@ require gstreamer1.0-plugins-packaging.inc
 
 DEPENDS = "gstreamer1.0 glib-2.0-native"
 
-SRC_URI_append = " file://0001-meson-build-optimization.patch"
+SRC_URI:append = " file://0001-meson-build-optimization.patch"
 
 inherit pkgconfig
 
@@ -28,7 +28,7 @@ EXTRA_OEMESON = " \
     -Dexamples=disabled \
 "
 
-CFLAGS_append = " -Wno-deprecated-declarations"
-TARGET_CFLAGS_append_sh4 = " -std=gnu99"
+CFLAGS:append = " -Wno-deprecated-declarations"
+TARGET_CFLAGS:append:sh4 = " -std=gnu99"
 
 PACKAGES_DYNAMIC = "^${PN}-.*"

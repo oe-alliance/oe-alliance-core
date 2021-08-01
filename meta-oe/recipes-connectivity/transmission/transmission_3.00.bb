@@ -38,14 +38,14 @@ EXTRA_OECONF += " \
     CPPFLAGS=-DTR_EMBEDDED \
 "
 
-do_configure_prepend() {
+do_configure:prepend() {
     sed -i /AM_GLIB_GNU_GETTEXT/d ${S}/configure.ac
     cd ${S}
     ./update-version-h.sh
     intltoolize --copy --force --automake
 }
 
-do_install_append() {
+do_install:append() {
     install -d ${D}${sysconfdir}/default
     install -m 0755 ${WORKDIR}/config ${D}${sysconfdir}/default/transmission-daemon
 
@@ -63,9 +63,9 @@ do_install_append() {
 
 PACKAGES += "${PN}-gui ${PN}-client"
 
-FILES_${PN} = "${bindir}/transmission-daemon ${datadir}/transmission ${sysconfdir} ${localstatedir}/lib/${PN}-daemon"
-FILES_${PN}-client = "${bindir}/transmission-remote ${bindir}/transmission-cli ${bindir}/transmission-create ${bindir}/transmission-show ${bindir}/transmission-edit"
-FILES_${PN}-gui += "${bindir}/transmission-gtk ${datadir}/icons ${datadir}/applications ${datadir}/pixmaps"
-CONFFILES_${PN} = "${sysconfdir}/default/transmission-daemon"
+FILES:${PN} = "${bindir}/transmission-daemon ${datadir}/transmission ${sysconfdir} ${localstatedir}/lib/${PN}-daemon"
+FILES:${PN}-client = "${bindir}/transmission-remote ${bindir}/transmission-cli ${bindir}/transmission-create ${bindir}/transmission-show ${bindir}/transmission-edit"
+FILES:${PN}-gui += "${bindir}/transmission-gtk ${datadir}/icons ${datadir}/applications ${datadir}/pixmaps"
+CONFFILES:${PN} = "${sysconfdir}/default/transmission-daemon"
 
-SYSTEMD_SERVICE_${PN} = "transmission-daemon.service"
+SYSTEMD_SERVICE:${PN} = "transmission-daemon.service"

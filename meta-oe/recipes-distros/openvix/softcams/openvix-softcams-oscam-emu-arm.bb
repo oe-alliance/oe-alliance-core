@@ -13,9 +13,9 @@ PR = "r1"
 PACKAGES = "enigma2-plugin-softcams-oscam-emu"
 
 PROVIDES += "openvix-softcams-oscam-emu-arm"
-RPROVIDES_enigma2-plugin-softcams-oscam-emu += "openvix-softcams-oscam-emu-arm"
+RPROVIDES:enigma2-plugin-softcams-oscam-emu += "openvix-softcams-oscam-emu-arm"
 
-FILESEXTRAPATHS_prepend := "${THISDIR}/enigma2-plugin-softcams-oscam-emu:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/enigma2-plugin-softcams-oscam-emu:"
 PATCHREV = "58a7b142f89857f3ef732a44ce20fa290ff64dee"
 PR = "r798"
 SRC_URI += "https://raw.githubusercontent.com/oscam-emu/oscam-emu/${PATCHREV}/oscam-emu.patch;downloadfilename=oscam-emu.${PATCHREV}.patch;name=emu;striplevel=0"
@@ -42,5 +42,5 @@ do_install() {
     install -m 0755 ${WORKDIR}/build/oscam ${D}/usr/softcams/oscam-emu
 }
 
-FILES_enigma2-plugin-softcams-oscam-emu = "/usr"
-INSANE_SKIP_${PN} = "already-stripped"
+FILES:enigma2-plugin-softcams-oscam-emu = "/usr"
+INSANE_SKIP:${PN} = "already-stripped"

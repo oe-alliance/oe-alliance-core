@@ -1,12 +1,12 @@
 
-FILESEXTRAPATHS_prepend := "${THISDIR}/cronie:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/cronie:"
 
-CONFFILES_${PN} += "/etc/cron.deny /etc/crontab /etc/default/crond"
+CONFFILES:${PN} += "/etc/cron.deny /etc/crontab /etc/default/crond"
 
 # Fix Redhat path to Debian
-EXTRA_OECONF_prepend = "SPOOL_DIR=${localstatedir}/spool/cron/crontabs"
+EXTRA_OECONF:prepend = "SPOOL_DIR=${localstatedir}/spool/cron/crontabs"
 
-do_install_append() {
+do_install:append() {
 	# Delete RedHat crap
 	rm -rf ${D}${sysconfdir}/sysconfig 2>/dev/null || true
 

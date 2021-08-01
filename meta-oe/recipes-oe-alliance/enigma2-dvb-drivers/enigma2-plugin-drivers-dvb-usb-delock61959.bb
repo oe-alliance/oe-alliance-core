@@ -5,7 +5,7 @@ require conf/license/license-gplv2.inc
 
 DVBPROVIDER ?= "kernel"
 
-RRECOMMENDS_${PN} = " \
+RRECOMMENDS:${PN} = " \
 ${DVBPROVIDER}-module-em28xx \
 ${DVBPROVIDER}-module-em28xx-dvb \
 ${DVBPROVIDER}-module-em28xx-alsa \
@@ -20,7 +20,7 @@ PR = "r0"
 
 PACKAGES = "${PN}"
 
-pkg_postinst_${PN} () {
+pkg_postinst:${PN} () {
 #!/bin/sh
 if [ -f ${D}/lib/firmware/dvb-demod-drxk-01.fw ]; then
   rm ${D}/lib/firmware/dvb-demod-drxk-01.fw
@@ -30,7 +30,7 @@ echo "options em28xx cards=89 usb_xfer_mode=0" > ${D}/etc/modprobe.d/em28xx.conf
 chmod 0644 ${D}/etc/modprobe.d/em28xx.conf
 }
 
-pkg_postrm_${PN} () {
+pkg_postrm:${PN} () {
 #!/bin/sh
 if [ -f /lib/firmware/dvb-demod-drxk-01.fw ]; then
   rm /lib/firmware/dvb-demod-drxk-01.fw

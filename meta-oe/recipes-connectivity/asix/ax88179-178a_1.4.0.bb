@@ -10,25 +10,25 @@ LIC_FILES_CHKSUM = "file://readme;endline=19;md5=f87a675da5e11ab9def922704bdda58
 
 SRC_URI = "http://source.mynonpublic.com/ini/AX88179_178A_LINUX_DRIVER_v1.4.1_SOURCE.tar.gz"
 
-SRC_URI_append_dm500hd = " \
+SRC_URI:append_dm500hd = " \
             file://dreambox.patch \
             "
-SRC_URI_append_dm8000 = " \
+SRC_URI:append_dm8000 = " \
             file://dreambox.patch \
             "
-SRC_URI_append_dm7020hd = " \
+SRC_URI:append_dm7020hd = " \
             file://dreambox.patch \
             "
-SRC_URI_append_dm7020hdv2 = " \
+SRC_URI:append_dm7020hdv2 = " \
             file://dreambox.patch \
             "
-SRC_URI_append_dm800se = " \
+SRC_URI:append_dm800se = " \
             file://dreambox.patch \
             "
-SRC_URI_append_dm500hdv2 = " \
+SRC_URI:append_dm500hdv2 = " \
             file://dreambox.patch \
             "
-SRC_URI_append_dm800sev2 = " \
+SRC_URI:append_dm800sev2 = " \
             file://dreambox.patch \
             "
 S = "${WORKDIR}/AX88179_178A_LINUX_DRIVER_v1.4.1_SOURCE"

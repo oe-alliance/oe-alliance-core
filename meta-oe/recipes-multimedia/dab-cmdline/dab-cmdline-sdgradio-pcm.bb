@@ -6,7 +6,7 @@ require conf/license/license-gplv2.inc
 SRCREV = "${AUTOREV}"
 
 DEPENDS = "fftw libusb1 faad2 zlib rtl-sdr"
-RDEPENDS_${PN} = "rtl-sdr"
+RDEPENDS:${PN} = "rtl-sdr"
 
 inherit gitpkgv
 
@@ -20,16 +20,16 @@ NEON_cube =" "
 NEON = "-DNEON_AVAILABLE=ON"
 
 EXTRA_OECMAKE ?= "-DRTLSDR=ON -DCMAKE_INSTALL_PREFIX=/usr/bin"
-EXTRA_OECMAKE_arm = "-DRTLSDR=ON ${NEON} -DCMAKE_INSTALL_PREFIX=/usr/bin"
+EXTRA_OECMAKE:arm = "-DRTLSDR=ON ${NEON} -DCMAKE_INSTALL_PREFIX=/usr/bin"
 
 S = "${WORKDIR}/git/sdgradio"
 
 inherit cmake pkgconfig
 
-do_configure_prepend() {
+do_configure:prepend() {
 	sed -i -e 's:librtlsdr.so:librtlsdr.so.0:g' ${WORKDIR}/git/devices/rtlsdr-handler/rtlsdr-handler.cpp
 }
 
-do_install_append() {
+do_install:append() {
 	mv ${D}/usr/bin/dab-rtlsdr-sdgradio ${D}/usr/bin/dab-rtlsdr-sdgradio-pcm
 }

@@ -12,7 +12,7 @@ inherit allarch
 
 SRC_URI = "git://github.com/littlesat/skin-PLiHD.git;protocol=git"
 
-FILES_${PN} = "/usr/share/enigma2/"
+FILES:${PN} = "/usr/share/enigma2/"
 
 S = "${WORKDIR}/git"
 

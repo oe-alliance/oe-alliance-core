@@ -16,7 +16,7 @@ S = "${WORKDIR}"
 
 PACKAGES = "${PN}"
 
-FILES_${PN} = "${PYTHON_SITEPACKAGES_DIR}/process.py"
+FILES:${PN} = "${PYTHON_SITEPACKAGES_DIR}/process.py"
 
 do_install() {
     install -d ${D}${PYTHON_SITEPACKAGES_DIR}

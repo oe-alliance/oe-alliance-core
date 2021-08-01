@@ -4,6 +4,6 @@ PKGV = "${PV}"
 
 KODIADDONPLUGIN = "vuplus"
 
-DEPENDS_append = "nlohmann-json"
+DEPENDS:append = "nlohmann-json"
 
 require kodi-addon-pvr.inc

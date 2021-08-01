@@ -16,11 +16,11 @@ PKGV = "1.0+git${GITPKGV}"
 SRCREV = "${AUTOREV}"
 VER ?= "${@bb.utils.contains('MACHINE_FEATURES', 'hisil', '-v2', '', d)}"
 
-RDEPENDS_${PN}  = "qtwebkit"
+RDEPENDS:${PN}  = "qtwebkit"
 
 S = "${WORKDIR}/git/qthbbtv${VER}"
 
-FILES_${PN} =  "${bindir} ${libdir}"
+FILES:${PN} =  "${bindir} ${libdir}"
 
 do_install(){
     install -d ${D}${libdir}/enigma2/python/Plugins/Extensions/QtHbbtv
@@ -31,7 +31,7 @@ do_install(){
     install -m 0755 ${S}/libnpapihbbtvplugin.so ${D}${libdir}/mozilla/plugins
 }
 
-pkg_postinst_ontarget_${PN}(){
+pkg_postinst_ontarget:${PN}(){
 #!/bin/sh
 ln -sf /usr/share/fonts /usr/lib/fonts
 exit 0
@@ -40,4 +40,4 @@ exit 0
 INHIBIT_PACKAGE_STRIP = "1"
 INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
 
-INSANE_SKIP_${PN} += "already-stripped file-rdeps ldflags"
+INSANE_SKIP:${PN} += "already-stripped file-rdeps ldflags"

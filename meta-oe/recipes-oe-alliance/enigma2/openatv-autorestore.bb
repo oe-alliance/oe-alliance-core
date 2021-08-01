@@ -5,7 +5,7 @@ inherit allarch gitpkgv
 
 require conf/license/license-gplv2.inc
 
-FILES_${PN} = "/etc"
+FILES:${PN} = "/etc"
 
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
@@ -14,7 +14,7 @@ PKGV = "git${GITPKGV}"
 SRC_URI = "git://github.com/openatv/autorestore.git;protocol=git"
 S = "${WORKDIR}/git/src"
 
-RDEPENDS_${PN} += "bash"
+RDEPENDS:${PN} += "bash"
 
 do_install() {
 	install -d ${D}/etc/init.d

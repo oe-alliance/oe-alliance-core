@@ -14,12 +14,12 @@ inherit update-rc.d
 INITSCRIPT_NAME = "rc.local"
 INITSCRIPT_PARAMS = "start 99 2 3 4 5 ."
 
-SYSTEMD_SERVICE_${PN} = "rc-local.service"
+SYSTEMD_SERVICE:${PN} = "rc-local.service"
 SYSTEMD_AUTO_ENABLE = "enable"
 
-CONFFILES_${PN} = "${sysconfdir}/rc.local"
+CONFFILES:${PN} = "${sysconfdir}/rc.local"
 
-FILES_${PN} = "${sysconfdir} ${systemd_unitdir}"
+FILES:${PN} = "${sysconfdir} ${systemd_unitdir}"
 
 do_install () {
     install -d ${D}/${sysconfdir}/init.d

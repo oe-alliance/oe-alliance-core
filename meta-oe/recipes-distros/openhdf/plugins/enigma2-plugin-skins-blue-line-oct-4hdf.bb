@@ -12,7 +12,7 @@ PR = "r6"
 
 SRC_URI="git://github.com/stein17/Skins-for-openHDF.git"
 
-FILES_${PN} = "/"
+FILES:${PN} = "/"
 
 S = "${WORKDIR}/git/Blue-Line-OCT-4HDF"
 
@@ -24,7 +24,7 @@ do_install() {
     chmod -R a+rX ${D}/usr/share/enigma2/
 }
 
-pkg_postinst_${PN} () {
+pkg_postinst:${PN} () {
 #!/bin/sh
 if [ -f /Blue-Line-OCT-4HDF/skin.xml ]; then
   rm -rf /usr/share/enigma2/Blue-Line-OCT-4HDF/
@@ -38,7 +38,7 @@ echo "                                                          "
 exit 0
 }
 
-pkg_postrm_${PN} () {
+pkg_postrm:${PN} () {
 #!/bin/sh
 rm -rf /usr/share/enigma2/Blue-Line-OCT-4HDF
 rm -rf /usr/lib/enigma2/python/Components/Converter/BL*
@@ -51,7 +51,7 @@ echo "The GUI of your receiver is now rebooting....                    "
 exit 0
 }
 
-pkg_preinst_${PN} () {
+pkg_preinst:${PN} () {
 #!/bin/sh
 echo "                                                                            "
 echo "                         ***** WARNING ****                                 "

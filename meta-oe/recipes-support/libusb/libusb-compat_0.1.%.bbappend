@@ -1,1 +1,1 @@
-RPROVIDES_${PN} += " libusb-0.1-4"
+RPROVIDES:${PN} += " libusb-0.1-4"

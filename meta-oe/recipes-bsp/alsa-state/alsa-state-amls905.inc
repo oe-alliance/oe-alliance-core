@@ -1,10 +1,10 @@
-FILESEXTRAPATHS_prepend := "${THISDIR}/alsa-state/AMLS905:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/alsa-state/AMLS905:"
 
-SRC_URI_append = " file://alsactl.conf"
+SRC_URI:append = " file://alsactl.conf"
 
-do_install_append() {
+do_install:append() {
     install -d ${D}${sysconfdir}/
     install -m 0644 ${WORKDIR}/alsactl.conf ${D}${sysconfdir}/
 }
 
-FILES_${PN}_append = " ${sysconfdir}/ "
+FILES:${PN}:append = " ${sysconfdir}/ "

@@ -9,11 +9,11 @@ SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "${GITPKGVTAG}"
 
-RDEPENDS_${PN} = "enigma2-plugin-systemplugins-weathercomponenthandler, enigma2-plugin-skincomponents-weathercomponent, enigma2-plugin-extensions-weatherplugin"
+RDEPENDS:${PN} = "enigma2-plugin-systemplugins-weathercomponenthandler, enigma2-plugin-skincomponents-weathercomponent, enigma2-plugin-extensions-weatherplugin"
 
 SRC_URI="git://github.com/m4dhouse/MadMax-Atv.git;protocol=git;branch=main"
 
-FILES_${PN} = "${libdir} /usr/share"
+FILES:${PN} = "${libdir} /usr/share"
 
 S = "${WORKDIR}/git/MadMax-Impossible-Skin"
 
@@ -25,7 +25,7 @@ do_install() {
     chmod -R a+rX ${D}/usr/share/enigma2/
 }
 
-pkg_postinst_${PN} () {
+pkg_postinst:${PN} () {
 #!/bin/sh
 echo "                                                          "
 echo "                  Skin MadMax Installed                   "
@@ -33,7 +33,7 @@ echo "                                                          "
 exit 0
 }
 
-pkg_postrm_${PN} () {
+pkg_postrm:${PN} () {
 #!/bin/sh
 if [ -d /usr/lib/enigma2/python/Plugins/Extensions/MadMax ]; then
   rm -rf /usr/lib/enigma2/python/Plugins/Extensions/MadMax
@@ -55,7 +55,7 @@ echo "                                                          "
 exit 0
 }
 
-pkg_preinst_${PN} () {
+pkg_preinst:${PN} () {
 #!/bin/sh
 echo "                                                          "
 echo "          MadMax Skin is now being installed...           "
@@ -63,7 +63,7 @@ echo "                                                          "
 exit 0
 }
 
-pkg_prerm_${PN} () {
+pkg_prerm:${PN} () {
 #!/bin/sh
 echo "                                                          "
 echo "           MadMax Skin is now being removed...            "

@@ -1,6 +1,6 @@
 SUMMARY = "Inittab for sysvinit"
 
-FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 
 require conf/license/license-gplv2.inc
 

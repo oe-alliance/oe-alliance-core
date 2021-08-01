@@ -27,7 +27,7 @@ FATPAYLOAD ?= ""
 
 IMAGEDATESTAMP = "${@time.strftime('%Y.%m.%d',time.gmtime())}"
 
-IMAGE_CMD_spark-updt  () {
+IMAGE_CMD:spark-updt  () {
     # Initialize sdcard image file
     dd if=/dev/zero of=${UPDATEIMG} bs=1 count=0 seek=$(expr 1000 \* 1000 \* ${UPDATEIMG_SIZE})
 

@@ -4,7 +4,7 @@ inherit bash-completion systemd pkgconfig
 
 DEPENDS = "libmnl"
 
-do_compile_prepend () {
+do_compile:prepend () {
     cd ${S}/tools
 }
 
@@ -18,7 +18,7 @@ do_install () {
         install
 }
 
-FILES_${PN} = " \
+FILES:${PN} = " \
     ${sysconfdir} \
     ${systemd_unitdir} \
     ${bindir} \
@@ -26,4 +26,4 @@ FILES_${PN} = " \
 # Get the kernel version for this image, we need it to build conditionally on kernel version
 export KERNEL_VERSION = "${@oe.utils.read_file('${PKGDATA_DIR}/kernel-depmod/kernel-abiversion')}"
 
-RDEPENDS_${PN} = "${@ 'wireguard-module' if ("${KERNEL_VERSION}" and bb.utils.vercmp_string("${KERNEL_VERSION}", '5.6') < 0) else 'kernel-module-wireguard' } bash"
+RDEPENDS:${PN} = "${@ 'wireguard-module' if ("${KERNEL_VERSION}" and bb.utils.vercmp_string("${KERNEL_VERSION}", '5.6') < 0) else 'kernel-module-wireguard' } bash"

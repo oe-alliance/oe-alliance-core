@@ -12,9 +12,9 @@ inherit autotools pkgconfig
 
 PACKAGES = "${PN}-dbg ${PN} ${PN}-doc ${PN}-dev"
 
-INSANE_SKIP_${PN} = "dev-so"
+INSANE_SKIP:${PN} = "dev-so"
 
-RRECOMMENDS_${PN} = "kernel-module-appletalk"
+RRECOMMENDS:${PN} = "kernel-module-appletalk"
 
 SSTATE_DUPWHITELIST += "${STAGING_INCDIR}/netatalk/at.h"
 
@@ -29,7 +29,7 @@ EXTRA_OECONF += "ac_cv_path_KRB5_CONFIG=no \
                 --with-init-style=debian"
 LDFLAGS += "-lpthread -L${STAGING_LIBDIR}"
 
-do_install_append() {
+do_install:append() {
     install -D -m 0644 ${WORKDIR}/afp.conf ${D}${sysconfdir}/afp.conf
     install -D -m 0644 ${WORKDIR}/afpd.service ${D}${sysconfdir}/avahi/services/afpd.service
 }

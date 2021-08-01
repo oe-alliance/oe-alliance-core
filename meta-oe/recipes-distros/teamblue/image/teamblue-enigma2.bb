@@ -3,7 +3,7 @@ LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda2f7b4f302 \
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 
-ALLOW_EMPTY_${PN} = "1"
+ALLOW_EMPTY:${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "${IMAGE_VERSION}"
@@ -13,7 +13,7 @@ inherit packagegroup
 
 DEPENDS = "teamblue-feeds"
 
-RRECOMMENDS_${PN} = "\
+RRECOMMENDS:${PN} = "\
     teamblue-version-info \
     enigma2-plugin-drivers-usbserial \
     enigma2-plugin-extensions-autotimer \

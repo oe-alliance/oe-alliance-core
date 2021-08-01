@@ -1,7 +1,7 @@
 BBCLASSEXTEND = "native"
 PACKAGE_ARCH := "${MACHINE_ARCH}"
 
-FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}-${PV}:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}-${PV}:"
 
 EXTRA_DIRECTFB ?= "empty"
 EXTRA_DIRECTFB_vusolo4k = "vuplus"

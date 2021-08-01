@@ -23,7 +23,7 @@ EXTRA_OECONF = " \
         ac_cv_prog_GMAGICKCONFIG= \
 "
 
-do_configure_prepend() {
+do_configure:prepend() {
 # fix config.rpath file not found, create if it does not exist (in case of rebuilding without rm_work
 if [ ! -f autotools/config.rpath ]; then
     mkdir -p autotools

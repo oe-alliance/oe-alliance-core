@@ -10,11 +10,11 @@ PV = "14.x+git${SRCPV}"
 PKGV = "14.x+git${GITPKGV}"
 VER = "14.x"
 
-RRECOMMENDS_${PN} = "enigma2-plugin-extensions-weathermsn enigma2-plugin-extensions-bitrate"
+RRECOMMENDS:${PN} = "enigma2-plugin-extensions-weathermsn enigma2-plugin-extensions-bitrate"
 
 SRC_URI = "git://github.com/MCelliotG/GlamourAuraFHD-ATV-skin.git;protocol=git;branch=master"
 
-FILES_${PN} = "/usr/*"
+FILES:${PN} = "/usr/*"
 
 S = "${WORKDIR}/git"
 
@@ -24,7 +24,7 @@ do_install() {
     chmod -R a+rX ${D}/usr/share/enigma2/
 }
 
-pkg_postinst_${PN} () {
+pkg_postinst:${PN} () {
 #!/bin/sh
 if [ -f /tmp/GlamourAuraFHD-ATV/skin.xml ]; then
     rm -rf /usr/share/enigma2/GlamourAuraFHD-ATV/
@@ -35,7 +35,7 @@ echo "Glamour Aura FHD ATV skin is now successfully installed on your receiver"
 echo "                       Enjoy!!!                                         "
 }
 
-pkg_postrm_${PN} () {
+pkg_postrm:${PN} () {
 #!/bin/sh
 rm -rf /usr/share/enigma2/GlamourAuraFHD-ATV
 rm -rf /usr/lib/enigma2/python/Components/Converter/Glam*
@@ -45,7 +45,7 @@ echo "Glamour Aura FHD ATV skin was successfully removed from your receiver."
 echo "                                                                      "
 }
 
-pkg_preinst_${PN} () {
+pkg_preinst:${PN} () {
 #!/bin/sh
 echo "                        *******                             "
 echo "                  ******       *****                        "
@@ -78,7 +78,7 @@ echo "Glamour Aura FHD ATV skin is now being installed..."
 echo "                                                   "
 }
 
-pkg_prerm_${PN} () {
+pkg_prerm:${PN} () {
 #!/bin/sh
 echo "                                                                  "
 echo "Glamour Aura FHD ATV skin is now being removed from your receiver."

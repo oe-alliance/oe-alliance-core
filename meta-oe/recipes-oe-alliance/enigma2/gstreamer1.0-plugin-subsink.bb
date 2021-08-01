@@ -19,16 +19,16 @@ PR = "r0"
 
 EXTRA_OECONF = "--with-gstversion=${GSTVERSION}"
 
-do_configure_prepend() {
+do_configure:prepend() {
         sed -i 's/AC_INIT.*$/AC_INIT(gst-plugin-subsink, 1.0.0, @pli4)/' ${S}/configure.ac
         sed -i 's/AM_INIT_AUTOMAKE.*$/AM_INIT_AUTOMAKE([foreign subdir-objects])/' ${S}/configure.ac
 }
 
 inherit autotools pkgconfig
 
-FILES_${PN} = "${libdir}/gstreamer-${GSTVERSION}/*.so*"
-FILES_${PN}-dev += "${libdir}/gstreamer-${GSTVERSION}/*.la"
-FILES_${PN}-staticdev += "${libdir}/gstreamer-${GSTVERSION}/*.a"
-FILES_${PN}-dbg += "${libdir}/gstreamer-${GSTVERSION}/.debug"
+FILES:${PN} = "${libdir}/gstreamer-${GSTVERSION}/*.so*"
+FILES:${PN}-dev += "${libdir}/gstreamer-${GSTVERSION}/*.la"
+FILES:${PN}-staticdev += "${libdir}/gstreamer-${GSTVERSION}/*.a"
+FILES:${PN}-dbg += "${libdir}/gstreamer-${GSTVERSION}/.debug"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"

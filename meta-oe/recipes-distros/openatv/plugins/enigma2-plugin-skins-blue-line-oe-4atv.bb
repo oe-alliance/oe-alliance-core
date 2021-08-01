@@ -10,11 +10,11 @@ PV = "1.8+git${SRCPV}"
 PKGV = "1.8+git${GITPKGV}"
 VER="1.8"
 
-RDEPENDS_${PN} = "enigma2-plugin-systemplugins-weathercomponenthandler, enigma2-plugin-skincomponents-weathercomponent"
+RDEPENDS:${PN} = "enigma2-plugin-systemplugins-weathercomponenthandler, enigma2-plugin-skincomponents-weathercomponent"
 
 SRC_URI="git://github.com/stein17/Skins-for-openATV.git;protocol=git;branch=python3"
 
-FILES_${PN} = "/"
+FILES:${PN} = "/"
 
 
 
@@ -29,7 +29,7 @@ do_install() {
     chmod -R a+rX ${D}/usr/share/enigma2/
 }
 
-pkg_postinst_${PN} () {
+pkg_postinst:${PN} () {
 #!/bin/sh
 echo "                                                          "
 echo " ...Blue-Line-OE-4ATV by stein17 successful installed.  "
@@ -37,7 +37,7 @@ echo "                                                          "
 exit 0
 }
 
-pkg_postrm_${PN} () {
+pkg_postrm:${PN} () {
 #!/bin/sh
 rm -rf /usr/share/enigma2/Blue-Line-OE-4ATV
 rm -rf /usr/lib/enigma2/python/Components/Converter/BL*
@@ -47,7 +47,7 @@ echo " ....Skin removed! You should restart GUI now!                 "
 echo "
 }
 
-pkg_preinst_${PN} () {
+pkg_preinst:${PN} () {
 #!/bin/sh                                                       
 rm -rf /usr/share/enigma2/Blue-Line-OE-4ATV
 rm -rf /usr/lib/enigma2/python/Components/Converter/BL
@@ -67,7 +67,7 @@ echo "                                                                          
 exit 0
 }
 
-pkg_prerm_${PN} () {
+pkg_prerm:${PN} () {
 #!/bin/sh
 echo "                                                           "
 echo "              Skin is now being removed...                 "

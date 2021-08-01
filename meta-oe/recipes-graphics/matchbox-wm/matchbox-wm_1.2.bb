@@ -15,7 +15,7 @@ S = "${WORKDIR}/matchbox-window-manager-${PV}"
 
 inherit autotools pkgconfig
 
-FILES_${PN} = "${bindir}/* \
+FILES:${PN} = "${bindir}/* \
 	       ${datadir}/matchbox \
 	       ${sysconfdir}/matchbox \
 	       ${datadir}/themes/blondie/matchbox \
@@ -29,10 +29,10 @@ EXTRA_OECONF = " --enable-startup-notification \
                  --with-expat-includes=${STAGING_INCDIR}"
 
 
-do_configure_prepend () {
+do_configure:prepend () {
         cp ${WORKDIR}/gconf-2.m4 ${S}/
 }
 
-do_install_prepend() {
+do_install:prepend() {
 	install ${WORKDIR}/kbdconfig ${S}/data/kbdconfig
 }

@@ -1,1 +1,1 @@
-RPROVIDES_${PN} =+ " libgmp10"
+RPROVIDES:${PN} =+ " libgmp10"

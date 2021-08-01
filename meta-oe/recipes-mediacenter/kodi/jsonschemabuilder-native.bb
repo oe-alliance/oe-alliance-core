@@ -12,7 +12,7 @@ inherit autotools-brokensep gettext native
 
 S = "${WORKDIR}/git/tools/depends/native/JsonSchemaBuilder/src"
 
-do_compile_prepend() {
+do_compile:prepend() {
     for i in $(find . -name "Makefile") ; do
         sed -i -e 's:I/usr/include:I${STAGING_INCDIR}:g' $i
     done

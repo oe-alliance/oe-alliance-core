@@ -1,1 +1,1 @@
-B_pn-libmusicbrainz = "${WORKDIR}/git"
+B:pn-libmusicbrainz = "${WORKDIR}/git"

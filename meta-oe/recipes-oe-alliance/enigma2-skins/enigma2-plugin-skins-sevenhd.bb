@@ -11,11 +11,11 @@ PV = "3.6.83+git${SRCPV}"
 PKGV = "3.6.83+git${GITPKGV}"
 VER="3.6.83"
 
-RDEPENDS_${PN} = "${PYTHON_PN}-requests ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-subprocess", "", d)} ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-imaging", "${PYTHON_PN}-pillow", d)} enigma2-plugin-systemplugins-mphelp ${PYTHON_PN}-lxml"
+RDEPENDS:${PN} = "${PYTHON_PN}-requests ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-subprocess", "", d)} ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-imaging", "${PYTHON_PN}-pillow", d)} enigma2-plugin-systemplugins-mphelp ${PYTHON_PN}-lxml"
 
 SRC_URI="git://github.com/openatv/SevenHD.git;protocol=git"
 
-FILES_${PN} = "/usr/*"
+FILES:${PN} = "/usr/*"
 
 S = "${WORKDIR}/git/data"
 
@@ -25,7 +25,7 @@ do_install() {
     chmod -R a+rX ${D}/usr/share/enigma2/
 }
 
-pkg_postinst_${PN} () {
+pkg_postinst:${PN} () {
 #!/bin/sh
 if [ -d /tmp/user ]; then
     cp -r /tmp/user/* /usr/lib/enigma2/python/Plugins/Extensions/SevenHD/user
@@ -41,7 +41,7 @@ echo "                                                          "
 exit 0
 }
 
-pkg_postrm_${PN} () {
+pkg_postrm:${PN} () {
 #!/bin/sh
 rm -rf /usr/share/enigma2/SevenHD
 rm -rf /usr/lib/enigma2/python/Plugins/Extensions/SevenHD
@@ -53,7 +53,7 @@ echo " "
 exit 0
 }
 
-pkg_preinst_${PN} () {
+pkg_preinst:${PN} () {
 #!/bin/sh
 echo "Checking for previous installations..."
 if [ -d /usr/lib/enigma2/python/Plugins/Extensions/SevenHD/user ]; then
@@ -81,7 +81,7 @@ echo "                                                           "
 exit 0
 }
 
-pkg_prerm_${PN} () {
+pkg_prerm:${PN} () {
 #!/bin/sh
 echo " "
 echo " The Skin SevenHD is now being removed... "

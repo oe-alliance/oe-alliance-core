@@ -35,27 +35,27 @@ SRC_URI[gfxdriver.vuduo4kse.sha256sum] = "a1ee8bd434a6aff051503dfe9fdfa784fe1e0c
 
 GFX_FILE = "directfb_1.7-7_gfxdriver_${MACHINE}_${GFXPR}.tar.gz"
 
-DEPENDS_append_class-target += "vuplus-libgles-${MACHINE}"
+DEPENDS:append:class-target += "vuplus-libgles-${MACHINE}"
 
-SRC_URI_append_class-target += " \
+SRC_URI:append:class-target += " \
 	file://vuplus-conf.patch \
 	file://vuplus-prevent-VT.patch \
 	file://disable_linux_input_patch.diff \
 	http://code.vuplus.com/download/release/directfb/${GFX_FILE};name=gfxdriver.${MACHINE} \
 "
 
-EXTRA_OECONF_append_class-target += "\
+EXTRA_OECONF:append:class-target += "\
 	--with-inputdrivers=linuxinput \
 	--disable-devmem \
 	--disable-video4linux \
 	--without-tools \
 "
 
-PRIVATE_LIBS_${PN}_append_class-target = "\
+PRIVATE_LIBS:${PN}:append:class-target = "\
 	${@bb.utils.contains("MACHINE_FEATURES", "dvbproxy", "libinit.so", "", d)} \
 "
 
-do_install_append_class-target() {
+do_install:append:class-target() {
 	install -d ${D}/etc
 	install -d ${D}/usr/lib/directfb-${RV}/systems
 	install -d ${D}/usr/lib/directfb-${RV}/gfxdrivers
@@ -72,16 +72,16 @@ do_install_append_class-target() {
 do_package_qa() {
 }
 
-INSANE_SKIP_${PN}_append_class-target += "dev-so"
+INSANE_SKIP:${PN}:append:class-target += "dev-so"
 
-FILES_${PN}_append_class-target += "\
+FILES:${PN}:append:class-target += "\
 	/etc/directfbrc \
 	/usr/lib/libinit* \
 	/usr/lib/directfb-${RV}/systems/libdirectfb_dvb_proxy_sys* \
 	/usr/lib/directfb-${RV}/gfxdrivers/* \
 "
 
-FILES_${PN}-dbg_append_class-target += "\
+FILES:${PN}-dbg:append:class-target += "\
 	/usr/lib/.debug/libinit* \
 	/usr/lib/directfb-${RV}/systems/.debug/* \
 	/usr/lib/directfb-${RV}/gfxdrivers/.debug/* \

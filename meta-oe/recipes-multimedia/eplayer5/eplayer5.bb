@@ -16,7 +16,7 @@ SRC_URI = "file://eplayer5.c file://Makefile"
 
 S = "${WORKDIR}"
 
-FILES_${PN} = "${bindir}/*"
+FILES:${PN} = "${bindir}/*"
 
 do_compile() {
     make -f Makefile eplayer5
@@ -27,4 +27,4 @@ do_install() {
     install -m 755 ${S}/eplayer5 ${D}/${bindir}
 }
 
-INSANE_SKIP_${PN} += "ldflags"
+INSANE_SKIP:${PN} += "ldflags"

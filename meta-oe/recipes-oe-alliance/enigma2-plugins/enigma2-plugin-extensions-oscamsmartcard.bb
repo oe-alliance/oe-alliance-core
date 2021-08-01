@@ -18,13 +18,13 @@ SRC_URI="git://github.com/gigablue-support-org/oscamsmartcard.git"
 
 S = "${WORKDIR}/git"
 
-FILES_${PN} = "/usr/*"
+FILES:${PN} = "/usr/*"
 
 do_install() {
     cp -rp ${S}/usr ${D}/
 }
 
-pkg_postrm_${PN}() {
+pkg_postrm:${PN}() {
 #!/bin/sh
 rm -rf /usr/lib/enigma2/python/Plugins/Extensions/OscamSmartcard 2>/dev/null
 echo "**************************************************"

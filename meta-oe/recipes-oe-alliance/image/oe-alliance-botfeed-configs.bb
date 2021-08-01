@@ -17,4 +17,4 @@ do_install () {
         install -m 0644 ${S}/${sysconfdir}/opkg/* ${D}${sysconfdir}/opkg/
 }
 
-CONFFILES_${PN} += '${@ " ".join( [ ( "${sysconfdir}/opkg/%s-feed.conf" % feed ) for feed in "${FEEDS}".split() ] ) }'
+CONFFILES:${PN} += '${@ " ".join( [ ( "${sysconfdir}/opkg/%s-feed.conf" % feed ) for feed in "${FEEDS}".split() ] ) }'

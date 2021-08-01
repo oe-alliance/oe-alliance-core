@@ -18,9 +18,9 @@ EXTRA_OEMESON = "-Ddoc=disabled"
 
 CFLAGS += "-Wno-implicit-function-declaration -Wno-stringop-overflow"
 
-CFLAGS_remove_sh4 = "-Wno-stringop-overflow"
-CFLAGS_append_sh4 = " -std=gnu99"
+CFLAGS:remove:sh4 = "-Wno-stringop-overflow"
+CFLAGS:append:sh4 = " -std=gnu99"
 
-FILES_${PN} += "${libdir}/gstreamer-1.0/*.so"
-FILES_${PN}-dev += "${libdir}/gstreamer-1.0/*.la"
-FILES_${PN}-staticdev += "${libdir}/gstreamer-1.0/*.a"
+FILES:${PN} += "${libdir}/gstreamer-1.0/*.so"
+FILES:${PN}-dev += "${libdir}/gstreamer-1.0/*.la"
+FILES:${PN}-staticdev += "${libdir}/gstreamer-1.0/*.a"

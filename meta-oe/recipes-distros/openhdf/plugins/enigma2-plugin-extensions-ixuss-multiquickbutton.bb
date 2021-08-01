@@ -19,7 +19,7 @@ SRC_URI = "http://addons.hdfreaks.cc/feeds/*git/enigma2-plugins-update-MultiQuic
 
 S = "${WORKDIR}"
 
-FILES_${PN} = "${libdir} /etc/*"
+FILES:${PN} = "${libdir} /etc/*"
 
 do_install() {
 	install -d ${D}${libdir}

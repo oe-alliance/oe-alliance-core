@@ -28,4 +28,4 @@ do_install() {
     install -m 0644 ${S}/RT2870STA.dat ${D}${sysconfdir}/Wireless/RT2870STA
 }
 
-FILES_${PN}_append = "${sysconfdir}/Wireless"
+FILES:${PN}:append = "${sysconfdir}/Wireless"

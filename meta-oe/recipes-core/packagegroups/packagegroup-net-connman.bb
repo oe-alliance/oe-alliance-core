@@ -4,8 +4,8 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda
 
 inherit packagegroup
 
-RDEPENDS_${PN} += "connman"
-RRECOMMENDS_${PN} += "connman-client"
+RDEPENDS:${PN} += "connman"
+RRECOMMENDS:${PN} += "connman-client"
 
-RPROVIDES_${PN} += "packagegroup-net"
-RCONFLICTS_${PN} += "packagegroup-net"
+RPROVIDES:${PN} += "packagegroup-net"
+RCONFLICTS:${PN} += "packagegroup-net"

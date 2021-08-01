@@ -17,7 +17,7 @@ SRC_URI="git://github.com/carlo0815/bundesliga-hd-opennfr-mod.git"
 
 S = "${WORKDIR}/git"
 
-FILES_${PN} = "${libdir} /usr/share"
+FILES:${PN} = "${libdir} /usr/share"
 
 do_install() {
     install -d ${D}${libdir}

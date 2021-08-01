@@ -9,7 +9,7 @@ PACKAGES = "${PN}"
 SRC_URI = "file://sysctl.conf"
 
 # Users may chose to edit or create their own
-CONFFILES_${PN} = "/etc/sysctl.conf"
+CONFFILES:${PN} = "/etc/sysctl.conf"
 
 do_install() {
     install -d ${D}/etc

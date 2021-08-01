@@ -5,7 +5,7 @@ PACKAGES = ""
 PACKAGES_DYNAMIC = ""
 
 STAGINGCC = "gcc-cross-initial-${TARGET_ARCH}"
-STAGINGCC_class-nativesdk = "gcc-crosssdk-initial-${SDK_SYS}"
+STAGINGCC:class-nativesdk = "gcc-crosssdk-initial-${SDK_SYS}"
 
 do_configure () {
 	(cd ${S} && gnu-configize) || die "failure in running gnu-configize"

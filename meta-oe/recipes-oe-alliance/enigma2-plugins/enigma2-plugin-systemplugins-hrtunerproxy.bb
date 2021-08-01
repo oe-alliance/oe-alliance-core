@@ -14,10 +14,10 @@ SRC_URI = "git://github.com/oe-mirrors/HRTunerProxy.git;protocol=git"
 
 S = "${WORKDIR}/git"
 
-RCONFLICTS_${PN} = "enigma2-plugin-systemplugins-plexdvrapi"
-RREPLACES_${PN} = "enigma2-plugin-systemplugins-plexdvrapi"
+RCONFLICTS:${PN} = "enigma2-plugin-systemplugins-plexdvrapi"
+RREPLACES:${PN} = "enigma2-plugin-systemplugins-plexdvrapi"
 
-RDEPENDS_${PN} = " \
+RDEPENDS:${PN} = " \
     ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-argparse", "", d)} \
     "
 
@@ -25,7 +25,7 @@ RDEPENDS_${PN} = " \
 #    echo ${GITPKGVTAG} | awk -F"-" '{print $1 )}'> ${S}/build/lib/SystemPlugins/HRTunerProxy/PLUGIN_VERSION
 #}
 
-python populate_packages_prepend() {
+python populate_packages:prepend() {
     e2_pdir = bb.data.expand('${libdir}/enigma2/python/Plugins', d)
     do_split_packages(d, e2_pdir, '^(\w+/\w+)/.*\/.*\.po$', 'enigma2-plugin-%s-po', '%s (translations)', recursive=True, match_path=True, prepend=True)
 }

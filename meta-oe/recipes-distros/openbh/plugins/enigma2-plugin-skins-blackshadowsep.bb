@@ -18,7 +18,7 @@ SRC_URI="git://github.com/BlackHole/skins.git"
 
 S = "${WORKDIR}/git/BlackShadowSE_P"
 
-FILES_${PN} = "/usr/*"
+FILES:${PN} = "/usr/*"
 
 do_install() {
     cp -rp ${S}/usr ${D}/

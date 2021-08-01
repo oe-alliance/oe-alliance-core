@@ -16,7 +16,7 @@ python __anonymous() {
         d.appendVar("DEPENDS", " xinetd")
 }
 
-do_install_append() {
+do_install:append() {
 	if ${@['false', 'true'][xinetd_enabled(d)]}; then
 		install -d ${D}${sysconfdir}/xinetd.d
 		for srcfile in ${WORKDIR}/*.xinetd.in; do
@@ -43,7 +43,7 @@ python xinetd_populate_packages() {
             val = (d.getVar(var, True) or "").strip()
         return val
 
-    def package_append_script(pkg, script_type, shell_function):
+    def package:append_script(pkg, script_type, shell_function):
         script = package_get_var(pkg, 'pkg_%s' % script_type) or '#!/bin/sh\n'
         if not script.endswith('\n'):
             script += '\n'
@@ -60,19 +60,19 @@ python xinetd_populate_packages() {
     def xinetd_add_rrecommends(pkg):
         bb.note("adding xinetd dependency to %s" % pkg)
 
-        rrecommends = (d.getVar('RRECOMMENDS_%s' % pkg, True) or "").split()
+        rrecommends = (d.getVar('RRECOMMENDS:%s' % pkg, True) or "").split()
         if not 'xinetd' in rrecommends:
             rrecommends.append('xinetd')
-        d.setVar('RRECOMMENDS_%s' % pkg, ' '.join(rrecommends))
+        d.setVar('RRECOMMENDS:%s' % pkg, ' '.join(rrecommends))
 
     def xinetd_generate_package_scripts(pkg):
         bb.note('adding xinetd postinst and postrm scripts to %s' % pkg)
-        package_append_script(pkg, 'postinst', 'xinetd_reload')
-        package_append_script(pkg, 'postrm', 'xinetd_reload')
+        package:append_script(pkg, 'postinst', 'xinetd_reload')
+        package:append_script(pkg, 'postrm', 'xinetd_reload')
 
     def xinetd_append_file(pkg, file_append):
         if os.path.exists(oe.path.join(d.getVar("D", True), file_append)):
-            var_name = 'FILES_%s' % pkg
+            var_name = 'FILES:%s' % pkg
             files = (d.getVar(var_name, False) or "").split()
             if file_append not in files:
                 files.append(file_append)
@@ -85,7 +85,7 @@ python xinetd_populate_packages() {
             if len(services) == 0:
                 services.append(pkg)
             for service in services:
-                xinetd_append_file(pkg, oe.path.join(path, service))
+                xinetd:append_file(pkg, oe.path.join(path, service))
 
     # run all modifications once when creating package
     if os.path.exists(d.getVar("D", True)):
@@ -96,4 +96,4 @@ python xinetd_populate_packages() {
         xinetd_check_services()
 }
 
-PACKAGESPLITFUNCS_prepend = "xinetd_populate_packages "
+PACKAGESPLITFUNCS:prepend = "xinetd_populate_packages "

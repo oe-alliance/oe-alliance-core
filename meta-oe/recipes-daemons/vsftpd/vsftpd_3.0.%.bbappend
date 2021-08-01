@@ -1,15 +1,15 @@
 inherit upx-compress
 
-FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
 SRC_URI += "file://ftp.service"
 
-LDFLAGS_append =" -lssl -lcrypto"
+LDFLAGS:append =" -lssl -lcrypto"
 
-do_configure_prepend() {
+do_configure:prepend() {
     sed -i 's#undef VSF_BUILD_SSL#define VSF_BUILD_SSL#' ${S}/builddefs.h
 }
 
-do_install_append() {
+do_install:append() {
     rm ${D}${sysconfdir}/vsftpd.user_list
     mkdir -p ${D}${sysconfdir}/avahi/services
     install -m 644 ${WORKDIR}/ftp.service ${D}${sysconfdir}/avahi/services
@@ -25,7 +25,7 @@ do_install_append() {
 }
 
 
-pkg_postinst_${PN}_append() {
+pkg_postinst:${PN}:append() {
 #!/bin/sh
 
 if [ -n "$D" ]; then

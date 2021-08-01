@@ -11,7 +11,7 @@ PR = "r0"
 SRC_URI = "file://shell-scripts/"
 
 # Need to tell bitbake that we have extra files installed
-FILES_${PN} = "/etc"
+FILES:${PN} = "/etc"
 
 S = "${WORKDIR}"
 
@@ -27,7 +27,7 @@ do_install() {
 }
 
 # Safeguard: Don't activate on a running image
-pkg_postinst_${PN}() {
+pkg_postinst:${PN}() {
     if [ "x$D" != "x" ]
     then
         ln -sf ../init.d/settings-restore.sh $D/etc/rcS.d/S31settingsrestore

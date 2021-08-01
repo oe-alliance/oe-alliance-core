@@ -27,7 +27,7 @@ SRC_URI = "git://github.com/anthonywong/rtl8723bs.git \
     file://rt8723bs-add-5.8-support.patch \
     "
 
-SRC_URI_append_sh4 = "file://rt8723bs_sh4.patch;patch=1 \
+SRC_URI:append:sh4 = "file://rt8723bs_sh4.patch;patch=1 \
     "
 
 S = "${WORKDIR}/git"
@@ -39,7 +39,7 @@ do_install() {
     install -m 0644 ${S}/r8723bs.ko ${D}${nonarch_base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/staging/rtl8723bs
 }
 
-python do_package_prepend() {
+python do_package:prepend() {
     d.appendVar('PKGV', '-')
     d.appendVar('PKGV', d.getVar("KERNEL_VERSION", True).split("-")[0])
 }

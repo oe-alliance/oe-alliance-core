@@ -13,7 +13,7 @@ PKGV = "1.0+git${GITPKGV}"
 SRC_URI = "git://github.com/mirakels/libdreamdvd.git \
         file://fix-build-with-fno-common.patch"
 
-SRC_URI_append_sh4 = "\
+SRC_URI:append:sh4 = "\
     file://libdreamdvd-1.0-support_sh4.patch;patch=1 \
 "
 

@@ -1,1 +1,1 @@
-TARGET_LDFLAGS_sh4 += "-pthread"
+TARGET_LDFLAGS:sh4 += "-pthread"

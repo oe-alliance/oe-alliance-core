@@ -9,11 +9,11 @@ SRCREV = "${AUTOREV}"
 
 SRC_URI = "git://github.com/opendroid-Team/OPD-boot-files.git"
 
-FILES_${PN} += "${libdir}/*"
+FILES:${PN} += "${libdir}/*"
 
 INHIBIT_PACKAGE_STRIP = "1"
 
-ALLOW_EMPTY_${PN} = "1"
+ALLOW_EMPTY:${PN} = "1"
 
 S="${WORKDIR}/git/files"
 
@@ -22,7 +22,7 @@ do_install() {
 	mkdir -p ${D}${libdir}
 }
 
-do_install_append_mipsel() {
+do_install:append:mipsel() {
 	mkdir -p ${D}/${libdir}/enigma2/python/Plugins/Extensions/OPDBoot/bin/
 	cp -a ${S}/mipsel/fbclear_mipsel ${D}/${libdir}/enigma2/python/Plugins/Extensions/OPDBoot/bin/fbclear
 	cp -a ${S}/mipsel/nfidump_mipsel ${D}/${libdir}/enigma2/python/Plugins/Extensions/OPDBoot/bin/nfidump
@@ -31,7 +31,7 @@ do_install_append_mipsel() {
 	cp -a ${S}/mipsel/lzo_mipsel.so ${D}/${libdir}/enigma2/python/Plugins/Extensions/OPDBoot/ubi_reader/ubifs/lzo.so
 }
 
-do_install_append_arm() {
+do_install:append:arm() {
 	mkdir -p ${D}/${libdir}/enigma2/python/Plugins/Extensions/OPDBoot/bin/
 	cp -a ${S}/arm/fbclear_arm ${D}/${libdir}/enigma2/python/Plugins/Extensions/OPDBoot/bin/fbclear
 }

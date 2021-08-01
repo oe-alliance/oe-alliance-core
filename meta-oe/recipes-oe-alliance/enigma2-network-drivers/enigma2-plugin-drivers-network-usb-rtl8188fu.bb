@@ -3,7 +3,7 @@ inherit allarch
 
 require conf/license/license-gplv2.inc
 
-RRECOMMENDS_${PN} = " \
+RRECOMMENDS:${PN} = " \
         rt8188fu \
         firmware-rt8188fu \
 "
@@ -11,4 +11,4 @@ RRECOMMENDS_${PN} = " \
 PV = "1.0"
 PR = "r1"
 
-ALLOW_EMPTY_${PN} = "1"
+ALLOW_EMPTY:${PN} = "1"

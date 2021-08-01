@@ -1,3 +1,3 @@
-SRC_URI_remove_sh4 = "\
+SRC_URI:remove:sh4 = "\
     file://kernel-headers.patch \
 "

@@ -21,6 +21,6 @@ do_install() {
     install -m 0755 ${S}/duk ${D}${bindir}/
 }
 
-FILES_${PN} = "${bindir}"
+FILES:${PN} = "${bindir}"
 
-INSANE_SKIP_${PN} += "ldflags"
+INSANE_SKIP:${PN} += "ldflags"

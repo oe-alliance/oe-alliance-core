@@ -17,7 +17,7 @@ SRC_URI="git://github.com/openatv/enigma2-plugin-settings-defaultsat.git"
 
 S = "${WORKDIR}/git"
 
-FILES_${PN} = "/etc/defaultsat.tar.gz"
+FILES:${PN} = "/etc/defaultsat.tar.gz"
 
 
 do_install() {

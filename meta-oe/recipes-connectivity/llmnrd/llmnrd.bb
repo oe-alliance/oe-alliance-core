@@ -15,7 +15,7 @@ SRC_URI = "git://github.com/tklauser/llmnrd.git \
 "
 
 PACKAGES =+ "llmnr-query"
-FILES_llmnr-query = "${bindir}/llmnr-query"
+FILES:llmnr-query = "${bindir}/llmnr-query"
 
 S = "${WORKDIR}/git"
 
@@ -24,7 +24,7 @@ inherit pkgconfig update-rc.d systemd
 INITSCRIPT_NAME = "llmnrd"
 
 SYSTEMD_PACKAGES = "${PN}"
-SYSTEMD_SERVICE_${PN} = "llmnrd.service"
+SYSTEMD_SERVICE:${PN} = "llmnrd.service"
 
 EXTRA_OEMAKE = " \
     'CC=${CC}' \

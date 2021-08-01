@@ -39,4 +39,4 @@ do_install() {
     printf "def getImageBuildDate(): return '${DATE}'
 " >> ${D}/usr/lib/enigma2/python/ImageIdentifier.py
 }
-FILES_${PN} += "/usr/lib/enigma2/python/ImageIdentifier.py"
+FILES:${PN} += "/usr/lib/enigma2/python/ImageIdentifier.py"

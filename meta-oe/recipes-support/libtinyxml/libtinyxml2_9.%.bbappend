@@ -1,1 +1,1 @@
-CXXFLAGS_mipsel_append = " -fPIC"
+CXXFLAGS:mipsel:append = " -fPIC"

@@ -4,9 +4,9 @@ PRIORITY = "optional"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://license.txt;md5=c6f330cac7a286df5a2a7617fdda815f"
 
-FILESEXTRAPATHS_prepend := "${THISDIR}/twistedsnmp:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/twistedsnmp:"
 
-RDEPENDS_${PN} = "${PYTHON_PN}-pysnmp-se"
+RDEPENDS:${PN} = "${PYTHON_PN}-pysnmp-se"
 
 SRCNAME = "TwistedSNMP"
 SRC_URI = "${SOURCEFORGE_MIRROR}/${BPN}/${SRCNAME}-${PV}.tar.gz \

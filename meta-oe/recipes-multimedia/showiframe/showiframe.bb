@@ -9,7 +9,7 @@ PV = "1.4"
 
 SRC_URI = "file://showiframe.c"
 
-SRC_URI_append_sh4 = " \
+SRC_URI:append:sh4 = " \
     file://showiframe-sh4.patch \
 "
 
@@ -24,4 +24,4 @@ do_install() {
     install -m 0755 ${S}/showiframe ${D}/${bindir}/
 }
 
-INSANE_SKIP_${PN} += "ldflags"
+INSANE_SKIP:${PN} += "ldflags"

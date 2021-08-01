@@ -20,7 +20,7 @@ SRC_URI="git://github.com/teamblue/skin-pax-fhd.git;protocol=git"
 
 S = "${WORKDIR}/git"
 
-FILES_${PN} = "/usr/*"
+FILES:${PN} = "/usr/*"
 
 do_install() {
     cp -rp ${S}/usr ${D}/

@@ -11,7 +11,7 @@ PROVIDES = "font-valis-hd"
 
 SRC_URI="file://hd.ttf file://hdi.ttf"
 
-FILES_font-valis-hd = "/usr/*"
+FILES:font-valis-hd = "/usr/*"
 
 S = "${WORKDIR}"
 

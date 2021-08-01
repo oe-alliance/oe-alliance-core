@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=7c0be52291b7252b878da806d185b1d1"
 
 inherit setuptools3 ${PYTHON_PN}-dir gittag
 
-RDEPENDS_${PN} = "${PYTHON_PN}-core \
+RDEPENDS:${PN} = "${PYTHON_PN}-core \
     ${PYTHON_PN}-ctypes \
     ${PYTHON_PN}-futures3 \
     ${PYTHON_PN}-isodate \
@@ -37,7 +37,7 @@ SRC_URI = "git://github.com/streamlink/streamlink.git;protocol=https;name=stream
 
 S = "${WORKDIR}/git"
 
-do_unpack_append() {
+do_unpack:append() {
     bb.build.exec_func('do_prepare_plugins_dir', d)
 }
 
@@ -45,7 +45,7 @@ do_prepare_plugins_dir() {
     cp -f ${WORKDIR}/additional-plugins/*.py ${S}/src/streamlink/plugins
 }
 
-do_install_append() {
+do_install:append() {
     rm -rf ${D}${bindir}
     rm -rf ${D}${libdir}/${PYTHON_DIR}/site-packages/streamlink_cli
     rm -rf ${D}${libdir}/${PYTHON_DIR}/site-packages/*.egg-info
@@ -54,7 +54,7 @@ do_install_append() {
 
 PACKAGES = "${PN}"
 
-FILES_${PN} = " \
+FILES:${PN} = " \
     ${libdir}/${PYTHON_DIR}/site-packages/streamlink/*.py \
     ${libdir}/${PYTHON_DIR}/site-packages/streamlink/*/*.py \
     ${libdir}/${PYTHON_DIR}/site-packages/streamlink/*/*/*.py \

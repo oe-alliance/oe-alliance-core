@@ -15,7 +15,7 @@ S = "${WORKDIR}"
 DEPENDS = "enigma2-plugin-extensions-epgimport"
 PACKAGES = "${PN}"
 
-FILES_${PN} = "/etc/epgimport"
+FILES:${PN} = "/etc/epgimport"
 
 do_install() {
     install -d ${D}/etc/epgimport

@@ -1,7 +1,7 @@
 require conf/license/license-gplv2.inc
 inherit allarch
 
-RDEPENDS_${PN} += "showiframe"
+RDEPENDS:${PN} += "showiframe"
 
 INHIBIT_PACKAGE_STRIP = "1"
 
@@ -14,4 +14,4 @@ do_install() {
     install -m 0644 radio.mvi ${D}/etc/enigma2/radio.mvi
 }
 
-FILES_${PN} = "/etc"
+FILES:${PN} = "/etc"

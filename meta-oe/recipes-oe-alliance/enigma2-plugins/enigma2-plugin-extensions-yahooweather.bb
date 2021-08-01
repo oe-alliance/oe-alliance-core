@@ -22,23 +22,23 @@ EXTRA_OECONF = " \
     STAGING_LIBDIR=${STAGING_LIBDIR} \
 "
 
-do_configure_prepend() {
+do_configure:prepend() {
 sed -i 's/python/python2/g' ${S}/xml2po.py
 }
 
 
 PARALLEL_MAKEINST = ""
 
-CONFFILES_${PN} = " \
+CONFFILES:${PN} = " \
     ${libdir}/enigma2/python/Plugins/Extensions/YahooWeather/Config/Location_id \
     ${libdir}/enigma2/python/Plugins/Extensions/YahooWeather/Config/Region_id "
 
 PACKAGES =+ "${PN}-po"
-FILES_${PN} = "${libdir}"
-FILES_${PN}-src = "${libdir}/enigma2/python/Plugins/Extensions/YahooWeather/*.py"
-FILES_${PN}-po = "${libdir}/enigma2/python/Plugins/Extensions/YahooWeather/locale/*/*/*.po"
+FILES:${PN} = "${libdir}"
+FILES:${PN}-src = "${libdir}/enigma2/python/Plugins/Extensions/YahooWeather/*.py"
+FILES:${PN}-po = "${libdir}/enigma2/python/Plugins/Extensions/YahooWeather/locale/*/*/*.po"
 
-pkg_postinst_${PN}() {
+pkg_postinst:${PN}() {
 #!/bin/sh
 echo ""
 echo "YahooWeather successfully installed!"
@@ -47,7 +47,7 @@ echo ""
 exit 0
 }
 
-pkg_postrm_${PN}() {
+pkg_postrm:${PN}() {
 #!/bin/sh
 rm -r /usr/lib/enigma2/python/Plugins/Extensions/YahooWeather
 echo " YahooWeather removed! You should restart enigma2 now!"

@@ -6,7 +6,7 @@ PACKAGE_ARCH = "${MACHINEBUILD}"
 
 require conf/license/license-gplv2.inc
 
-RDEPENDS_${PN} += "showiframe"
+RDEPENDS:${PN} += "showiframe"
 
 PV = "${IMAGE_VERSION}"
 PR = "r21"
@@ -15,14 +15,14 @@ S = "${WORKDIR}"
 
 INITSCRIPT_NAME = "bootlogo"
 INITSCRIPT_PARAMS = "start 06 S ."
-INITSCRIPT_PARAMS_vuduo2 = "start 70 S ."
-INITSCRIPT_PARAMS_vusolo2 = "start 70 S ."
-INITSCRIPT_PARAMS_vusolose = "start 70 S ."
-INITSCRIPT_PARAMS_vusolo4k = "start 70 S ."
-INITSCRIPT_PARAMS_vuuno4k = "start 70 S ."
-INITSCRIPT_PARAMS_vuuno4kse = "start 70 S ."
-INITSCRIPT_PARAMS_vuultimo4k = "start 70 S ."
-INITSCRIPT_PARAMS_vuzero4k = "start 70 S ."
+INITSCRIPT_PARAMS:vuduo2 = "start 70 S ."
+INITSCRIPT_PARAMS:vusolo2 = "start 70 S ."
+INITSCRIPT_PARAMS:vusolose = "start 70 S ."
+INITSCRIPT_PARAMS:vusolo4k = "start 70 S ."
+INITSCRIPT_PARAMS:vuuno4k = "start 70 S ."
+INITSCRIPT_PARAMS:vuuno4kse = "start 70 S ."
+INITSCRIPT_PARAMS:vuultimo4k = "start 70 S ."
+INITSCRIPT_PARAMS:vuzero4k = "start 70 S ."
 
 inherit update-rc.d
 
@@ -31,30 +31,30 @@ SRC_URI = "file://bootlogo.mvi file://backdrop.mvi file://radio.mvi file://bootl
     ${@bb.utils.contains("MACHINE_FEATURES", "gigabluelcd400", "file://lcdsplash400.bin file://lcdwaitkey400.bin file://lcdwarning400.bin" , "", d)} \
 "
 
-SRC_URI_append_vuduo2 = "file://lcdbootlogo.png file://bootlogo.py"
-SRC_URI_append_dags7335 = "file://tm-splash.bmp file://iqon-splash.bmp file://splash1.bmp file://splash2.bmp file://splash3.bmp"
-SRC_URI_append_dags7356 = "file://tm-splash.bmp file://iqon-splash.bmp file://splash1.bmp file://splash2.bmp file://splash3.bmp"
-SRC_URI_append_dags7362 = "file://tm-splash.bmp file://iqon-splash.bmp file://splash1_power.bmp file://splash2.bmp file://splash3.bmp"
-SRC_URI_append_dags7252 = "file://tm-splash.bmp file://splash1.bmp file://splash2.bmp file://splash3.bmp"
-SRC_URI_append_7210s = "file://lcdsplash220.bin file://lcdwaitkey220.bin file://lcdwarning220.bin file://lcdcomplete220.bin"
-SRC_URI_append_h9 = "file://logo.img"
-SRC_URI_append_h9se = "file://logo.img"
-SRC_URI_append_h9combo = "file://logo.img"
-SRC_URI_append_i55plus = "file://logo.img"
-SRC_URI_append_hd60 = "file://logo.img"
-SRC_URI_append_hd61 = "file://logo.img"
-SRC_URI_append_cc1 = "file://logo.img"
-SRC_URI_append_sf8008 = "file://logo.img"
-SRC_URI_append_sf8008m = "file://logo.img"
-SRC_URI_append_ustym4kpro = "file://logo.img"
-SRC_URI_append_v8plus = "file://logo.img"
-SRC_URI_append_multibox = "file://logo.img"
-SRC_URI_append_gbmv200 = "file://logo.img"
-SRC_URI_append_beyonwizv2 = "file://logo.img"
-SRC_URI_append_viper4k = "file://logo.img"
+SRC_URI:append_vuduo2 = "file://lcdbootlogo.png file://bootlogo.py"
+SRC_URI:append_dags7335 = "file://tm-splash.bmp file://iqon-splash.bmp file://splash1.bmp file://splash2.bmp file://splash3.bmp"
+SRC_URI:append_dags7356 = "file://tm-splash.bmp file://iqon-splash.bmp file://splash1.bmp file://splash2.bmp file://splash3.bmp"
+SRC_URI:append_dags7362 = "file://tm-splash.bmp file://iqon-splash.bmp file://splash1_power.bmp file://splash2.bmp file://splash3.bmp"
+SRC_URI:append_dags7252 = "file://tm-splash.bmp file://splash1.bmp file://splash2.bmp file://splash3.bmp"
+SRC_URI:append_7210s = "file://lcdsplash220.bin file://lcdwaitkey220.bin file://lcdwarning220.bin file://lcdcomplete220.bin"
+SRC_URI:append_h9 = "file://logo.img"
+SRC_URI:append_h9se = "file://logo.img"
+SRC_URI:append_h9combo = "file://logo.img"
+SRC_URI:append_i55plus = "file://logo.img"
+SRC_URI:append_hd60 = "file://logo.img"
+SRC_URI:append_hd61 = "file://logo.img"
+SRC_URI:append_cc1 = "file://logo.img"
+SRC_URI:append_sf8008 = "file://logo.img"
+SRC_URI:append_sf8008m = "file://logo.img"
+SRC_URI:append_ustym4kpro = "file://logo.img"
+SRC_URI:append_v8plus = "file://logo.img"
+SRC_URI:append_multibox = "file://logo.img"
+SRC_URI:append_gbmv200 = "file://logo.img"
+SRC_URI:append_beyonwizv2 = "file://logo.img"
+SRC_URI:append_viper4k = "file://logo.img"
 
 
-FILES_${PN} = "/usr/share /usr/share/enigma2 /etc/init.d"
+FILES:${PN} = "/usr/share /usr/share/enigma2 /etc/init.d"
 
 do_install() {
     install -d ${D}/${sysconfdir}/init.d
@@ -70,7 +70,7 @@ do_install() {
     install -m 0644 radio.mvi ${D}/usr/share/enigma2/radio.mvi
 }
 
-do_install_append_vuduo2() {
+do_install:append_vuduo2() {
     install -d ${D}/usr/share
     install -m 0644 lcdbootlogo.png ${D}/usr/share/lcdbootlogo.png
     install -m 0644 bootlogo.py ${D}/${sysconfdir}/init.d/bootlogo.py

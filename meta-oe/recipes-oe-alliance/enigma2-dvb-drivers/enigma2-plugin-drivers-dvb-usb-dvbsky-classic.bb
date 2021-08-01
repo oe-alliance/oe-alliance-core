@@ -5,7 +5,7 @@ require conf/license/license-gplv2.inc
 
 DVBSKYPROVIDER ?= "dvb-sky"
 
-RRECOMMENDS_${PN} = " \
+RRECOMMENDS:${PN} = " \
     ${@bb.utils.contains("MACHINE_FEATURES", "legacykernel", "", " \
     ${DVBSKYPROVIDER}-module-dvb-usb-dvbsky \
     ${DVBSKYPROVIDER}-module-dvb-usb-v2 \
@@ -25,4 +25,4 @@ RRECOMMENDS_${PN} = " \
 PV = "2.0"
 PR = "r1"
 
-ALLOW_EMPTY_${PN} = "1"
+ALLOW_EMPTY:${PN} = "1"

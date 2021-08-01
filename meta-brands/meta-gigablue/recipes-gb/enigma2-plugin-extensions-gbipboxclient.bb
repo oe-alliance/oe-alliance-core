@@ -19,7 +19,7 @@ S = "${WORKDIR}/git"
 
 DEPENDS = "${PYTHON_PN}"
 
-RDEPENDS_${PN} = "cifs-utils"
+RDEPENDS:${PN} = "cifs-utils"
 
 EXTRA_OECONF = "\
     --with-po \
@@ -29,7 +29,7 @@ EXTRA_OECONF = "\
     STAGING_LIBDIR=${STAGING_LIBDIR} \
     "
 
-do_install_append() {
+do_install:append() {
     # remove unused .pyc files
     find ${D}/usr/lib/enigma2/python/Plugins/Extensions/${PLUGIN}/ -name '*.pyc' -exec rm {} \;
     
@@ -41,14 +41,14 @@ do_install_append() {
 install_egg_info() {
 }
 
-do_configure_prepend() {
+do_configure:prepend() {
     touch ${S}/NEWS
     touch ${S}/README
     touch ${S}/AUTHORS
     touch ${S}/ChangeLog
 }
 
-python populate_packages_prepend() {
+python populate_packages:prepend() {
     enigma2_plugindir = bb.data.expand('${libdir}/enigma2/python/Plugins', d)
     do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/[a-zA-Z0-9_]+.*$', 'enigma2-plugin-%s', '%s', recursive=True, match_path=True, prepend=True, extra_depends="enigma2")
     do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/(?!.*helper\.py).*\.py$', 'enigma2-plugin-%s-src', '%s (source files)', recursive=True, match_path=True, prepend=True)

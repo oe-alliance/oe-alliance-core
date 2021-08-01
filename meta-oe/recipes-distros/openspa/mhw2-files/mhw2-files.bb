@@ -23,4 +23,4 @@ do_install() {
     install -m 0644 ${WORKDIR}/mhw_Log.epg ${D}${sysconfdir}/mhw_Log.epg
 }
 
-FILES_${PN} = "${sysconfdir}"
+FILES:${PN} = "${sysconfdir}"

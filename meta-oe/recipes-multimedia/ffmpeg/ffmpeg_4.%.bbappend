@@ -1,8 +1,8 @@
-FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 
 DEPENDS += "libxml2"
 
-PACKAGECONFIG_append = " libbluray libdav1d libfreetype librtmp openssl"
+PACKAGECONFIG:append = " libbluray libdav1d libfreetype librtmp openssl"
 
 PACKAGECONFIG[libbluray] = "--enable-libbluray --enable-protocol=bluray,--disable-libbluray,libbluray"
 PACKAGECONFIG[libdav1d] = "--enable-libdav1d,--disable-libdav1d,libdav1d"
@@ -12,7 +12,7 @@ PACKAGECONFIG[libv4l2] = "--enable-libv4l2,--disable-libv4l2,v4l-utils"
 
 MIPSFPU = "${@bb.utils.contains('TARGET_FPU', 'soft', '--disable-mipsfpu', '--enable-mipsfpu', d)}"
 
-SRC_URI_append = " \
+SRC_URI:append = " \
         file://4_02_fix_mpegts.patch \
         file://4_03_allow_to_choose_rtmp_impl_at_runtime.patch \
         file://4_04_hls_replace_key_uri.patch \

@@ -8,28 +8,28 @@ PACKAGES =+ "smbclient ${PN}-common \
             "
 
 # remove default added RDEPENDS on perl
-RDEPENDS_${PN}_remove = "perl"
+RDEPENDS:${PN}:remove = "perl"
 
 INITSCRIPT_PACKAGES = "${PN}"
-INITSCRIPT_NAME_${PN} = "samba"
-INITSCRIPT_PARAMS_${PN} = "defaults"
+INITSCRIPT_NAME:${PN} = "samba"
+INITSCRIPT_PARAMS:${PN} = "defaults"
 
 SYSTEMD_PACKAGES = "${PN} ${PN}-ad-dc winbind"
-SYSTEMD_SERVICE_${PN} = "${@bb.utils.contains('DISTRO_FEATURES_BACKFILL_CONSIDERED', 'sysvinit', 'nmb.service smb.service', '', d)}"
-SYSTEMD_SERVICE_${PN}-ad-dc = "${@bb.utils.contains('PACKAGECONFIG', 'ad-dc', 'samba.service', '', d)}"
-SYSTEMD_SERVICE_winbind = "winbind.service"
+SYSTEMD_SERVICE:${PN} = "${@bb.utils.contains('DISTRO_FEATURES_BACKFILL_CONSIDERED', 'sysvinit', 'nmb.service smb.service', '', d)}"
+SYSTEMD_SERVICE:${PN}-ad-dc = "${@bb.utils.contains('PACKAGECONFIG', 'ad-dc', 'samba.service', '', d)}"
+SYSTEMD_SERVICE:winbind = "winbind.service"
 
 # There are prerequisite settings to enable ad-dc, so disable the service by default.
 # Reference:
 # https://wiki.samba.org/index.php/Setting_up_Samba_as_an_Active_Directory_Domain_Controller
-SYSTEMD_AUTO_ENABLE_${PN}-ad-dc = "disable"
+SYSTEMD_AUTO_ENABLE:${PN}-ad-dc = "disable"
 
-RDEPENDS_${PN}-ctdb-tests += "bash util-linux-getopt"
+RDEPENDS:${PN}-ctdb-tests += "bash util-linux-getopt"
 
 python samba_populate_packages() {
     def module_hook(file, pkg, pattern, format, basename):
         pn = d.getVar('PN')
-        d.appendVar('RRECOMMENDS_%s' % pn, ' %s' % pkg)
+        d.appendVar('RRECOMMENDS:%s' % pn, ' %s' % pkg)
 
     mlprefix = d.getVar('MLPREFIX') or ''
     pam_libdir = d.expand('${base_libdir}/security')
@@ -46,11 +46,11 @@ python samba_populate_packages() {
     do_split_packages(d, moduledir, '^(.*)\.so$', 'samba-pdb-%s', 'Samba %s password backend', hook=module_hook, extra_depends='', prepend=True)
 }
 
-PACKAGESPLITFUNCS_prepend = "samba_populate_packages "
+PACKAGESPLITFUNCS:prepend = "samba_populate_packages "
 PACKAGES_DYNAMIC = "pam-pluginsmbpass samba-auth-.* samba-pdb-.*"
 
 # Common to client and server installation
-FILES_${BPN}-common = "${sysconfdir}/default \
+FILES:${BPN}-common = "${sysconfdir}/default \
                        ${sysconfdir}/pam.d/samba \
                        ${sysconfdir}/samba \
                        ${sysconfdir}/tmpfiles.d \
@@ -58,20 +58,20 @@ FILES_${BPN}-common = "${sysconfdir}/default \
                        ${localstatedir}/spool/samba \
                       "
 
-CONFFILES_${BPN}-common = "${sysconfdir}/pam.d/samba \
+CONFFILES:${BPN}-common = "${sysconfdir}/pam.d/samba \
                            ${sysconfdir}/samba/smb-user.conf \
                            ${sysconfdir}/samba/private/users.map \
                            ${sysconfdir}/samba/private/smbpasswd \
                           "
-RRECOMMENDS_${BPN}-common += "pam-pluginsmbpass"
-INSANE_SKIP_${BPN}-common += "dev-so"
+RRECOMMENDS:${BPN}-common += "pam-pluginsmbpass"
+INSANE_SKIP:${BPN}-common += "dev-so"
 
 # The Samba client
-FILES_smbclient = "${bindir}/smbclient"
-RDEPENDS_smbclient += "${BPN}-common"
+FILES:smbclient = "${bindir}/smbclient"
+RDEPENDS:smbclient += "${BPN}-common"
 
 # The Samba server
-FILES_${PN} = " \
+FILES:${PN} = " \
                ${sbindir}/smbd \
                ${sbindir}/nmbd \
                ${bindir}/smbcontrol \
@@ -87,11 +87,11 @@ FILES_${PN} = " \
                ${bindir}/testparm \
                \
               "
-RDEPENDS_${PN} += "${BPN}-common wsdd"
-INSANE_SKIP_${PN} += "dev-so"
+RDEPENDS:${PN} += "${BPN}-common wsdd"
+INSANE_SKIP:${PN} += "dev-so"
 
 # Server admin tools that are not needed in our image
-FILES_${PN}-admin = "${bindir}/net \
+FILES:${PN}-admin = "${bindir}/net \
                      ${bindir}/profiles \
                      ${bindir}/rpcclient \
                      ${bindir}/sharesec \
@@ -108,7 +108,7 @@ FILES_${PN}-admin = "${bindir}/net \
                     "
 
 # Advanced utilities, generally not needed in our image
-FILES_${PN}-utils = "${bindir}/cifsdd \
+FILES:${PN}-utils = "${bindir}/cifsdd \
                      ${bindir}/smbtree \
                      ${bindir}/smbget \
                      ${bindir}/smbspool \
@@ -117,19 +117,19 @@ FILES_${PN}-utils = "${bindir}/cifsdd \
                      ${bindir}/nmblookup \
                     "
 
-FILES_${PN}-ad-dc = "${sbindir}/samba \
+FILES:${PN}-ad-dc = "${sbindir}/samba \
                      ${systemd_system_unitdir}/samba.service \
                      ${libdir}/krb5/plugins/kdb/samba.so \
                     "
 
-RDEPENDS_${PN}-ad-dc += "samba krb5-kdc"
+RDEPENDS:${PN}-ad-dc += "samba krb5-kdc"
 
-FILES_registry-tools = "${bindir}/regdiff \
+FILES:registry-tools = "${bindir}/regdiff \
                         ${bindir}/regpatch \
                         ${bindir}/regshell \
                         ${bindir}/regtree"
 
-FILES_${PN}-ldb-tools = "${bindir}/ldbadd \
+FILES:${PN}-ldb-tools = "${bindir}/ldbadd \
                          ${bindir}/ldbdel \
                          ${bindir}/ldbedit \
                          ${bindir}/ldbmodify \
@@ -139,9 +139,9 @@ FILES_${PN}-ldb-tools = "${bindir}/ldbadd \
                          ${libdir}/ldb/*.so \
                         "
 
-FILES_${PN}-pdb-tools = "${bindir}/pdbedit"
+FILES:${PN}-pdb-tools = "${bindir}/pdbedit"
 
-FILES_winbind = "${sbindir}/winbindd \
+FILES:winbind = "${sbindir}/winbindd \
                  ${bindir}/wbinfo \
                  ${bindir}/ntlm_auth \
                  ${libdir}/samba/idmap \
@@ -152,7 +152,7 @@ FILES_winbind = "${sbindir}/winbindd \
                  ${systemd_system_unitdir}/winbind.service \
                 "
 
-FILES_${PN}-ctdb-tests = "${bindir}/ctdb_run_tests \
+FILES:${PN}-ctdb-tests = "${bindir}/ctdb_run_tests \
                           ${bindir}/ctdb_run_cluster_tests \
                           ${sysconfdir}/ctdb/nodes \
                           ${datadir}/ctdb-tests \
@@ -160,20 +160,20 @@ FILES_${PN}-ctdb-tests = "${bindir}/ctdb_run_tests \
                           ${localstatedir}/lib/ctdb \
                          "
 
-FILES_${PN}-dsdb-modules = "${libdir}/samba/ldb"
+FILES:${PN}-dsdb-modules = "${libdir}/samba/ldb"
 
-FILES_${PN}-testsuite = "${bindir}/gentest \
+FILES:${PN}-testsuite = "${bindir}/gentest \
                          ${bindir}/locktest \
                          ${bindir}/masktest \
                          ${bindir}/ndrdump \
                          ${bindir}/smbtorture"
 
-FILES_${PN}-python3 = "${PYTHON_SITEPACKAGES_DIR}"
+FILES:${PN}-python3 = "${PYTHON_SITEPACKAGES_DIR}"
 
-RDEPENDS_${PN}-pidl_append = " perl"
-FILES_${PN}-pidl = "${bindir}/pidl ${datadir}/perl5/Parse"
+RDEPENDS:${PN}-pidl:append = " perl"
+FILES:${PN}-pidl = "${bindir}/pidl ${datadir}/perl5/Parse"
 
-pkg_postinst_${BPN}-common_append() {
+pkg_postinst:${BPN}-common:append() {
 #!/bin/sh
 
 set +e
@@ -218,13 +218,13 @@ if [ -z "$D" ]; then
 fi
 }
 
-pkg_prerm_${BPN}-common_prepend() {
+pkg_prerm:${BPN}-common:prepend() {
 #!/bin/sh
 grep -v 'pam_smbpass.so' $D/etc/pam.d/common-password > $D/tmp/common-password
 mv $D/tmp/common-password $D/etc/pam.d/common-password
 }
 
-pkg_postrm_${BPN}-common_prepend() {
+pkg_postrm:${BPN}-common:prepend() {
 #!/bin/sh
 rm $D/etc/samba/distro/smb-vmc.conf 2>/dev/null || true
 }

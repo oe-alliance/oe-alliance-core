@@ -18,7 +18,7 @@ PR = "r0"
 inherit ${@bb.utils.contains("PYTHON_PN", "python", "distutils-openplugins", "distutils3-openplugins", d)} gettext
 
 DEPENDS = "gettext-native ${PYTHON_PN}-future-native ${PYTHON_PN}"
-RRECOMMENDS_${PN} = " \
+RRECOMMENDS:${PN} = " \
         enigma2-plugin-extensions-e2iplayer-deps \
         ${PYTHON_PN}-compression \
         ${PYTHON_PN}-core \

@@ -1,6 +1,6 @@
-FILESEXTRAPATHS_prepend := "${THISDIR}/${P}:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/${P}:"
 
-SRC_URI_append_sh4 += "\
+SRC_URI:append:sh4 += "\
     file://glibc-fix-with-old-kernel.patch \
     file://sh4-trap.patch \
     file://0001-ldd-Force-correct-RTLDLIST-for-Solus.patch \
@@ -11,10 +11,10 @@ SRC_URI_append_sh4 += "\
     file://fix-x64-abi.patch \
 "
 
-SRC_URI_append_dm800 += " file://0001_signalfd_and_evendfd.patch"
+SRC_URI:append_dm800 += " file://0001_signalfd_and_evendfd.patch"
 
 #remove obsolete conflicting files
-do_install_append() {
+do_install:append() {
     rm -f ${D}${nonarch_base_libdir}/libcrypt-2.25.so
     rm -f ${D}${nonarch_base_libdir}/libcrypt.so.1
     rm -f ${D}${nonarch_base_libdir}/libcrypt.so

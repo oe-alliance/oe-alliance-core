@@ -15,8 +15,8 @@ SRC_URI="git://github.com/kiddac/Enigma2_Skins.git;protocol=git;branch=master"
 
 S = "${WORKDIR}/git/1080_Skins/kiddac-shared-skin-components/kiddac-shared-skin-components"
 
-FILES_${PN}-src = "${datadir}/enigma2/slyk-common/*.txt"
-FILES_${PN} = "${libdir} ${datadir}"
+FILES:${PN}-src = "${datadir}/enigma2/slyk-common/*.txt"
+FILES:${PN} = "${libdir} ${datadir}"
 
 do_install() {
     install -d ${D}${libdir}

@@ -5,7 +5,7 @@ PRIORITY = "optional"
 require conf/license/license-gplv2.inc
 
 DEPENDS = "${PYTHON_PN}-six-native"
-RDEPENDS_${PN} = "gstreamer1.0-plugins-good-flv gstreamer1.0-plugins-bad-rtmp ${PYTHON_PN}-json ${PYTHON_PN}-html ${PYTHON_PN}-requests ${PYTHON_PN}-mutagen rtmpdump"
+RDEPENDS:${PN} = "gstreamer1.0-plugins-good-flv gstreamer1.0-plugins-bad-rtmp ${PYTHON_PN}-json ${PYTHON_PN}-html ${PYTHON_PN}-requests ${PYTHON_PN}-mutagen rtmpdump"
 
 inherit gitpkgv ${PYTHON_PN}native autotools-brokensep gettext
 
@@ -26,26 +26,26 @@ EXTRA_OECONF = " \
 
 PARALLEL_MAKEINST = ""
 
-do_configure_prepend_openatv () {
+do_configure:prepend_openatv () {
     sed 's/config.EMC.use_orig_skin             = ConfigYesNo(default = True)/config.EMC.use_orig_skin             = ConfigYesNo(default = False)/g' -i ${S}/src/plugin.py
     sed 's/config.EMC.movie_date_format         = ConfigSelection(default = "%d.%m.%Y %H:%M", choices = date_choices)/config.EMC.movie_date_format         = ConfigSelection(default = "%d.%m.%Y", choices = date_choices)/g' -i ${S}/src/plugin.py
 }
 
-do_configure_prepend_beyonwiz () {
+do_configure:prepend_beyonwiz () {
     sed 's/config.EMC.use_orig_skin             = ConfigYesNo(default = True)/config.EMC.use_orig_skin             = ConfigYesNo(default = False)/g' -i ${S}/src/plugin.py
 }
 
-CONFFILES_${PN} = "${sysconfdir}/enigma2/emc-hide.cfg ${sysconfdir}/enigma2/emc-noscan.cfg ${sysconfdir}/enigma2/emc-permsort.cfg ${sysconfdir}/enigma2/emc-topdir.cfg"
+CONFFILES:${PN} = "${sysconfdir}/enigma2/emc-hide.cfg ${sysconfdir}/enigma2/emc-noscan.cfg ${sysconfdir}/enigma2/emc-permsort.cfg ${sysconfdir}/enigma2/emc-topdir.cfg"
 
 PACKAGES =+ "${PN}-po"
-FILES_${PN} = "${sysconfdir} ${libdir}"
+FILES:${PN} = "${sysconfdir} ${libdir}"
 
-FILES_${PN}-po = "${libdir}/enigma2/python/Plugins/Extensions/EnhancedMovieCenter/locale/*/*/*.po"
+FILES:${PN}-po = "${libdir}/enigma2/python/Plugins/Extensions/EnhancedMovieCenter/locale/*/*/*.po"
 
 do_populate_sysroot[noexec] = "1"
 do_package_qa[noexec] = "1"
 
-pkg_postinst_${PN}() {
+pkg_postinst:${PN}() {
 #!/bin/sh
 echo ""
 echo ""
@@ -66,7 +66,7 @@ echo ""
 exit 0
 }
 
-pkg_postrm_${PN}() {
+pkg_postrm:${PN}() {
 #!/bin/sh
 rm -rf /usr/lib/enigma2/python/Plugins/Extensions/EnhancedMovieCenter/
 echo "Plugin removed! You should restart enigma2 now!"

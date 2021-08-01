@@ -18,6 +18,6 @@ EOF
 }
 
 PACKAGES =+ "${PN}-full"
-FILES_${PN}-full = "${bindir}/7z ${bindir}/7z.bin ${bindir}/7z.so ${bindir}/7zr ${bindir}/*.sfx ${bindir}/Codecs"
+FILES:${PN}-full = "${bindir}/7z ${bindir}/7z.bin ${bindir}/7z.so ${bindir}/7zr ${bindir}/*.sfx ${bindir}/Codecs"
 
-RRECOMMENDS_${PN}-full += "${BPN}"
+RRECOMMENDS:${PN}-full += "${BPN}"

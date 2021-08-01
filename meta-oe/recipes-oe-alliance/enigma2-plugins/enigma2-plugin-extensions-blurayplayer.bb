@@ -19,6 +19,6 @@ S = "${WORKDIR}/git"
 inherit distutils3-openplugins
 
 DEPENDS = "${PYTHON_PN}  libbluray libudfread"
-RDEPENDS_${PN} = "libbluray"
+RDEPENDS:${PN} = "libbluray"
 
-FILES_${PN}-dbg += "/usr/lib/enigma2/python/Plugins/Extensions/BlurayPlayer/.debug"
+FILES:${PN}-dbg += "/usr/lib/enigma2/python/Plugins/Extensions/BlurayPlayer/.debug"

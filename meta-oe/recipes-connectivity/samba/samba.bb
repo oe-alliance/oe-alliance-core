@@ -9,9 +9,9 @@ DEPENDS += "asn1compile-native libparse-yapp-perl-native qemu-native libxslt-nat
 inherit features_check
 REQUIRED_DISTRO_FEATURES = "pam"
 
-DEPENDS_append_libc-musl = " libtirpc"
-CFLAGS_append_libc-musl = " -I${STAGING_INCDIR}/tirpc"
-LDFLAGS_append_libc-musl = " -ltirpc"
+DEPENDS:append:libc-musl = " libtirpc"
+CFLAGS:append:libc-musl = " -I${STAGING_INCDIR}/tirpc"
+LDFLAGS:append:libc-musl = " -ltirpc"
 
 PACKAGECONFIG ?= "${@bb.utils.filter('DISTRO_FEATURES', 'systemd zeroconf', d)} netbios"
 
@@ -111,7 +111,7 @@ CONFIGUREOPTS = " --prefix=${prefix} \
 
 require samba-waf.inc
 
-do_configure_prepend () {
+do_configure:prepend () {
     # un-bundle dnspython
     sed '/"dns.resolver":/d' ${S}/third_party/wscript
     # unbundle iso8601

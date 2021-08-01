@@ -3,7 +3,7 @@ SECTION = "network"
 PRIORITY = "optional"
 HOMEPAGE = "http://dav.sourceforge.net"
 DEPENDS = "gettext-native neon"
-RRECOMMENDS_${PN} = "kernel-module-coda"
+RRECOMMENDS:${PN} = "kernel-module-coda"
 LICENSE = "GPLv3"
 LIC_FILES_CHKSUM = "file://COPYING;md5=8f0e2cd40e05189ec81232da84bd6e1a"
 
@@ -19,7 +19,7 @@ SRC_URI = "http://download.savannah.nongnu.org/releases/davfs2/${BP}.tar.gz \
 inherit autotools pkgconfig useradd
 
 USERADD_PACKAGES = "davfs2"
-USERADD_PARAM_davfs2 = "--system --home /var/run/mount.davfs \
+USERADD_PARAM:davfs2 = "--system --home /var/run/mount.davfs \
                         --no-create-home --shell /bin/false \
                         --user-group davfs2"
 
@@ -27,14 +27,14 @@ EXTRA_OECONF = "--with-neon \
                 ac_cv_path_NEON_CONFIG=${WORKDIR}/neon-config"
 
 
-CONFFILES_${PN} = "${sysconfdir}/davfs2/davfs2.conf ${sysconfdir}/davfs2/secrets"
+CONFFILES:${PN} = "${sysconfdir}/davfs2/davfs2.conf ${sysconfdir}/davfs2/secrets"
 
-do_install_prepend () {
+do_install:prepend () {
 	cp ${WORKDIR}/davfs2-${PV}/etc/davfs2.conf ${WORKDIR}/build/etc
 	cp ${WORKDIR}/davfs2-${PV}/etc/secrets ${WORKDIR}/build/etc
 }
 
-do_install_append () {
+do_install:append () {
         mkdir -p ${D}${sysconfdir}/default/volatiles
         install -m 644 ${WORKDIR}/volatiles ${D}${sysconfdir}/default/volatiles/10_davfs2
         rm -rf ${D}/usr/share/davfs2

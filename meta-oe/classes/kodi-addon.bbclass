@@ -22,15 +22,15 @@ EXTRA_OECMAKE = " \
         "
 
 # Make zip package for manual installation
-do_install_append() {
+do_install:append() {
 	install -d ${D}${datadir}/kodi/addons/packages/
 	( cd ${D}${datadir}/kodi/addons
 	  zip -r ${D}${datadir}/kodi/addons/packages/${KODIADDONNAME}-${PV}.zip ${KODIADDONNAME} -x '*.debug*' )
 }
 
 # Doesn't get added automagically, dlopen()?
-RDEPENDS_${PN} = "libkodiplatform"
+RDEPENDS:${PN} = "libkodiplatform"
 
-INSANE_SKIP_${PN} = "dev-so"
-FILES_${PN} += "${datadir}/kodi"
-FILES_${PN}-dbg += "${datadir}/kodi/addons/*/.debug/"
+INSANE_SKIP:${PN} = "dev-so"
+FILES:${PN} += "${datadir}/kodi"
+FILES:${PN}-dbg += "${datadir}/kodi/addons/*/.debug/"

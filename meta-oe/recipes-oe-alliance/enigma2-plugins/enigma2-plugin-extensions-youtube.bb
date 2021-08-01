@@ -5,7 +5,7 @@ MAINTAINER = "Taapat"
 require conf/license/license-gplv2.inc
 
 DEPENDS = "enigma2"
-RDEPENDS_${PN} = "${PYTHON_PN}-core ${PYTHON_PN}-codecs ${PYTHON_PN}-json ${PYTHON_PN}-netclient ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-zlib", "", d)} ${PYTHON_PN}-twisted ${PYTHON_PN}-twisted-web"
+RDEPENDS:${PN} = "${PYTHON_PN}-core ${PYTHON_PN}-codecs ${PYTHON_PN}-json ${PYTHON_PN}-netclient ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-zlib", "", d)} ${PYTHON_PN}-twisted ${PYTHON_PN}-twisted-web"
 
 inherit ${PYTHON_PN}-dir gitpkgv ${PYTHON_PN}native gettext
 
@@ -29,7 +29,7 @@ do_compile() {
 }
 
 PLUGINPATH = "${libdir}/enigma2/python/Plugins/Extensions/${MODULE}"
-do_install_append() {
+do_install:append() {
     install -d ${D}${PLUGINPATH}
     cp -rp ${S}/src/* ${D}${PLUGINPATH}
     cp -rp ${S}/po/* ${D}${PLUGINPATH}/locale
@@ -40,7 +40,7 @@ do_install_append() {
 CONFFILES = "/etc/enigma2/YouTube.key"
 
 
-python populate_packages_prepend() {
+python populate_packages:prepend() {
     enigma2_plugindir = bb.data.expand('${libdir}/enigma2/python/Plugins', d)
     do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/[a-zA-Z0-9_]+.*$', 'enigma2-plugin-%s', '%s', recursive=True, match_path=True, prepend=True, extra_depends="enigma2")
     do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/.*\.la$', 'enigma2-plugin-%s-dev', '%s (development)', recursive=True, match_path=True, prepend=True)

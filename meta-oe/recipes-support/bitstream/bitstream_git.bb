@@ -15,14 +15,14 @@ SRC_URI = "git://code.videolan.org/videolan/bitstream.git;protocol=https"
 
 S = "${WORKDIR}/git"
 
-CFLAGS_sh4 += "-std=gnu99"
+CFLAGS:sh4 += "-std=gnu99"
 
 inherit autotools-brokensep pkgconfig
 
-do_compile_prepend() {
+do_compile:prepend() {
     sed -i 's#/usr/local#/usr#' ${S}/Makefile
 }
 
-do_install_append() {
+do_install:append() {
     install -d ${D}${includedir}
 }

@@ -1,16 +1,16 @@
 inherit upx-compress
 
-FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
-SRC_URI_append = " file://localoptions.h \
+FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
+SRC_URI:append = " file://localoptions.h \
         ${@bb.utils.contains("MACHINE_FEATURES", "legacykernel", "file://add-missing-GRND-NONBLOCK-def.patch", "",d)} \
 "
 
-do_configure_prepend() {
+do_configure:prepend() {
     # Apply custom configuration
     cp "${WORKDIR}/localoptions.h" "${B}"
 }
 
-do_install_append() {
+do_install:append() {
     echo 'DROPBEAR_EXTRA_ARGS="-R"' > ${WORKDIR}/dropbeardefaults
     echo 'DROPBEAR_RSAKEY_ARGS="-s 2048"' >> ${WORKDIR}/dropbeardefaults
     echo 'DROPBEAR_ECDSAKEY_ARGS="-s 521"' >> ${WORKDIR}/dropbeardefaults
@@ -21,5 +21,5 @@ do_install_append() {
 }
 
 # add /etc/default/dropbear as configuration file
-CONFFILES_${PN} = "/etc/default/dropbear"
+CONFFILES:${PN} = "/etc/default/dropbear"
 

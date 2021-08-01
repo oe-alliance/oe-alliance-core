@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda
 
 inherit packagegroup
 
-ALLOW_EMPTY_${PN} = "1"
+ALLOW_EMPTY:${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
@@ -14,7 +14,7 @@ PR = "r2"
 
 DEPENDS = "enigma2 enigma2-locale-meta enigma2-plugins enigma2-oe-alliance-plugins oe-alliance-feeds enigma2-3rdparty-plugins oe-alliance-wifi"
 
-RDEPENDS_${PN} = "\
+RDEPENDS:${PN} = "\
     enigma2-locale-meta \
     oe-alliance-feeds-configs \
     oe-alliance-botfeed-configs \
@@ -30,7 +30,7 @@ RDEPENDS_${PN} = "\
     parted \
     "
 
-RRECOMMENDS_${PN} = "\
+RRECOMMENDS:${PN} = "\
     ${@bb.utils.contains("DISTRO_FEATURES", "no-autobouquetsmaker", "" , "enigma2-plugin-systemplugins-autobouquetsmaker", d)} \
     enigma2-plugin-systemplugins-hotplug \
     enigma2-plugin-extensions-mediascanner \

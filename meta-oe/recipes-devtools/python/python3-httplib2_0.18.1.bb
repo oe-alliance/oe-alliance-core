@@ -4,7 +4,7 @@ SECTION = "devel/python"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://PKG-INFO;md5=7e04d1303d64a7b62421751ecb490dc2"
 
-RDEPENDS_${PN} = "ca-certificates"
+RDEPENDS:${PN} = "ca-certificates"
 
 SRC_URI = "https://files.pythonhosted.org/packages/98/3f/0769a851fbb0ecc458260055da67d550d3015ebe6b8b861c79ad00147bb9/httplib2-0.18.1.tar.gz"
 SRC_URI[md5sum] = "0b331f96cdb2ae0e0342d4ea0f5f0502"
@@ -14,7 +14,7 @@ S = "${WORKDIR}/httplib2-${PV}"
 
 inherit setuptools3 ${PYTHON_PN}-dir
 
-do_install_append() {
+do_install:append() {
     perm_files=`find "${D}${PYTHON_SITEPACKAGES_DIR}/" -name "top_level.txt"`
     for f in $perm_files; do
         chmod 644 "${f}"

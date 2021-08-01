@@ -19,20 +19,20 @@ EXTRA_OECONF = "--libdir=${base_libdir} --disable-lynx"
 
 # suppress warning, but don't bother with autonamer
 LEAD_SONAME = "libnss_llmnr.so"
-DEBIANNAME_${PN} = "libnss-llmnr"
+DEBIANNAME:${PN} = "libnss-llmnr"
 
 
-do_configure_prepend() {
+do_configure:prepend() {
 	sed -e 's/SUBDIRS=src doc/SUBDIRS\=src/' -i ${S}/Makefile.am
 }
 
-pkg_postinst_${PN} () {
+pkg_postinst:${PN} () {
 	sed -e '/^hosts:/s/\s*\<llmnr\>//' \
 		-e 's/\(^hosts:.*\)\(\<files\>\)\(.*\)\(\<dns\>\)\(.*\)/\1\2 llmnr_minimal [NOTFOUND=return]\3\4 llmnr\5/' \
 		-i $D${sysconfdir}/nsswitch.conf
 }
 
-pkg_prerm_${PN} () {
+pkg_prerm:${PN} () {
 	sed -e '/^hosts:/s/\s*\<llmnr\>//' \
 		-e '/^hosts:/s/\s*llmnr_minimal\s\+\[NOTFOUND=return\]//' \
 		-i $D${sysconfdir}/nsswitch.conf

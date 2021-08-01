@@ -68,11 +68,11 @@ EXTRA_AUTORECONF += " -I Source/autotools "
 
 ARM_INSTRUCTION_SET = "arm"
 
-COMPATIBLE_HOST_mips64n32 = "null"
+COMPATIBLE_HOST:mips64n32 = "null"
 
 CONFIGUREOPT_DEPTRACK = ""
 
-do_configure_append() {
+do_configure:append() {
 	# somethings wrong with icu, fix it up manually
 	for makefile in $(find ${B} -name "GNUmakefile") ; do
 		sed -i s:-I/usr/include::g $makefile
@@ -83,16 +83,16 @@ do_configure_append() {
 	done
 }
 
-do_install_append() {
+do_install:append() {
         rmdir ${D}${libexecdir}
         install -d ${D}/usr/bin
         install -m 0755 ${WORKDIR}/build/Programs/GtkLauncher ${D}/usr/bin/browser
 }
 
 PACKAGES =+ "${PN}-webinspector ${PN}-browser bjavascriptcore"
-FILES_libjavascriptcore = "${libdir}/libjavascriptcoregtk-1.0.so.*"
-FILES_${PN}-webinspector = "${datadir}/webkitgtk-*/webinspector/"
-FILES_${PN}-browser = "/usr/bin/browser"
-FILES_${PN} += "${datadir}/webkitgtk-*/resources/error.html \
+FILES:libjavascriptcore = "${libdir}/libjavascriptcoregtk-1.0.so.*"
+FILES:${PN}-webinspector = "${datadir}/webkitgtk-*/webinspector/"
+FILES:${PN}-browser = "/usr/bin/browser"
+FILES:${PN} += "${datadir}/webkitgtk-*/resources/error.html \
                 ${datadir}/webkitgtk-*/images \
                 ${datadir}/glib-2.0/schemas"

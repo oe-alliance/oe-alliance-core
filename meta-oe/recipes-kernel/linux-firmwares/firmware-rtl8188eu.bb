@@ -5,7 +5,7 @@ SRC_URI = "file://rtl8188eufw.bin"
 S = "${WORKDIR}"
 
 PACKAGES = "${PN}"
-FILES_${PN} += "${nonarch_base_libdir}/firmware"
+FILES:${PN} += "${nonarch_base_libdir}/firmware"
 
 inherit allarch
 

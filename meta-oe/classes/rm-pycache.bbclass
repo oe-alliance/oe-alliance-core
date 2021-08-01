@@ -9,6 +9,6 @@ python rm_pycache (){
 
 
 do_install[postfuncs] += "${RMPYCACHE} "
-RMPYCACHE_class-target = " rm_pycache "
-RMPYCACHE_class-nativesdk = " rm_pycache "
+RMPYCACHE:class-target = " rm_pycache "
+RMPYCACHE:class-nativesdk = " rm_pycache "
 RMPYCACHE = ""

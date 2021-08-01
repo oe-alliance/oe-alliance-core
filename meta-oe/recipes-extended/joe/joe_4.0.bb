@@ -10,11 +10,11 @@ SRC_URI[sha256sum] = "c556adff77fd97bf1b86198de6cb82e0b92cda18579c4fef6c83b608d2
 
 inherit autotools update-alternatives
 
-RDEPENDS_${PN} = "ncurses-terminfo"
+RDEPENDS:${PN} = "ncurses-terminfo"
 
-EXTRA_OECONF_prepend="--bindir=/bin"
+EXTRA_OECONF:prepend="--bindir=/bin"
 
-ALTERNATIVE_${PN} = "editor"
+ALTERNATIVE:${PN} = "editor"
 ALTERNATIVE_LINK_NAME[editor] = "${base_bindir}/editor"
 ALTERNATIVE_TARGET[editor] = "${base_bindir}/joe"
 ALTERNATIVE_PRIORITY = "125"

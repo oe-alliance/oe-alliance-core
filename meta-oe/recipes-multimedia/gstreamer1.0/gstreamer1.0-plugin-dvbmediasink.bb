@@ -20,11 +20,11 @@ PKGV = "${GSTVERSION}+git${GITPKGV}"
 
 # added to have al m4 macro's into build when using bitbake with -b option.
 # Then proceeding to full image build or at least package build with recipes parsing is not needed.
-do_configure_prepend() {
+do_configure:prepend() {
     ln -sf ${STAGING_DATADIR_NATIVE}/aclocal/*.m4 ${S}/m4/
 }
 
-do_configure_prepend() {
+do_configure:prepend() {
     sed -i 's/AC_INIT.*$/AC_INIT(gst-plugin-dvbmediasink, 1.0.0, @pli4)/' ${S}/configure.ac
     sed -i 's/AM_INIT_AUTOMAKE.*$/AM_INIT_AUTOMAKE([foreign])/' ${S}/configure.ac
     touch ${S}/NEWS
@@ -35,14 +35,14 @@ do_configure_prepend() {
 
 inherit autotools pkgconfig
 
-FILES_${PN} = "${libdir}/gstreamer-${GSTVERSION}/*.so* ${sysconfdir}/gstreamer/aactranscode"
-FILES_${PN}-dev += "${libdir}/gstreamer-${GSTVERSION}/*.la"
-FILES_${PN}-staticdev += "${libdir}/gstreamer-${GSTVERSION}/*.a"
-FILES_${PN}-dbg += "${libdir}/gstreamer-${GSTVERSION}/.debug"
+FILES:${PN} = "${libdir}/gstreamer-${GSTVERSION}/*.so* ${sysconfdir}/gstreamer/aactranscode"
+FILES:${PN}-dev += "${libdir}/gstreamer-${GSTVERSION}/*.la"
+FILES:${PN}-staticdev += "${libdir}/gstreamer-${GSTVERSION}/*.a"
+FILES:${PN}-dbg += "${libdir}/gstreamer-${GSTVERSION}/.debug"
 
 EXTRA_OECONF = "${DVBMEDIASINK_CONFIG} --with-gstversion=${GSTVERSION} --with-machine=${MACHINE}"
 
-pkg_preinst_${PN}_prepend () {
+pkg_preinst:${PN}:prepend () {
 	if [ -d "/.cache/gstreamer-1.0" ]
 	then
 		rm -rf "/.cache/gstreamer-1.0"

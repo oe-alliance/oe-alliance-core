@@ -4,7 +4,7 @@ LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda2f7b4f302 \
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 
-ALLOW_EMPTY_${PN} = "1"
+ALLOW_EMPTY:${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
@@ -12,17 +12,17 @@ PR = "r22"
 
 inherit packagegroup
 
-RCONFLICTS_${PN} = "enigma2-plugin-extensions-permanenttimeshift enigma2-plugin-systemplugins-skinselector"
-RREPLACES_${PN} = "enigma2-plugin-extensions-permanenttimeshift enigma2-plugin-systemplugins-skinselector"
+RCONFLICTS:${PN} = "enigma2-plugin-extensions-permanenttimeshift enigma2-plugin-systemplugins-skinselector"
+RREPLACES:${PN} = "enigma2-plugin-extensions-permanenttimeshift enigma2-plugin-systemplugins-skinselector"
 
 DEPENDS = "openvix-feeds"
 
-RDEPENDS_${PN} = "\
+RDEPENDS:${PN} = "\
     enigma2-skindefault \
     openvix-core \
     "
 
-RRECOMMENDS_${PN} = "\
+RRECOMMENDS:${PN} = "\
     enigma-kernel-module \
     enigma2-plugin-extensions-autotimer \
     enigma2-plugin-extensions-epgimport \
@@ -44,11 +44,11 @@ RRECOMMENDS_${PN} = "\
     ${@bb.utils.contains("MACHINE_FEATURES", "quadpip", "enigma2-plugin-systemplugins-quadpip", "", d)} \
     "
 
-RRECOMMENDS_${PN}_append_et8500 = " enigma2-plugin-extensions-yahooweather"
-RRECOMMENDS_${PN}_append_tmnanoseplus = " enigma2-plugin-systemplugins-tempfancontrol"
-RRECOMMENDS_${PN}_append_tmnanosem2 = " enigma2-plugin-systemplugins-tempfancontrol"
-RRECOMMENDS_${PN}_append_tmnanosem2plus = " enigma2-plugin-systemplugins-tempfancontrol"
-RRECOMMENDS_${PN}_append_tmtwin4k = " enigma2-plugin-systemplugins-tempfancontrol"
-RRECOMMENDS_${PN}_append_osmio4k = " enigma2-plugin-extensions-hbbtv-webkit"
-RRECOMMENDS_${PN}_append_osmio4kplus = " enigma2-plugin-extensions-hbbtv-webkit"
-RRECOMMENDS_${PN}_append_osmini4k = " enigma2-plugin-extensions-hbbtv-webkit"
+RRECOMMENDS:${PN}:append_et8500 = " enigma2-plugin-extensions-yahooweather"
+RRECOMMENDS:${PN}:append_tmnanoseplus = " enigma2-plugin-systemplugins-tempfancontrol"
+RRECOMMENDS:${PN}:append_tmnanosem2 = " enigma2-plugin-systemplugins-tempfancontrol"
+RRECOMMENDS:${PN}:append_tmnanosem2plus = " enigma2-plugin-systemplugins-tempfancontrol"
+RRECOMMENDS:${PN}:append_tmtwin4k = " enigma2-plugin-systemplugins-tempfancontrol"
+RRECOMMENDS:${PN}:append_osmio4k = " enigma2-plugin-extensions-hbbtv-webkit"
+RRECOMMENDS:${PN}:append_osmio4kplus = " enigma2-plugin-extensions-hbbtv-webkit"
+RRECOMMENDS:${PN}:append_osmini4k = " enigma2-plugin-extensions-hbbtv-webkit"

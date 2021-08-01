@@ -14,4 +14,4 @@ S = "${WORKDIR}/w_scan-${PV}"
 
 inherit autotools
 
-FILES_${PN} += "${datadir}"
+FILES:${PN} += "${datadir}"

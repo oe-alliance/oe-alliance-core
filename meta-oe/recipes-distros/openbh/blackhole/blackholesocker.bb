@@ -22,7 +22,7 @@ inherit autotools update-rc.d
 INITSCRIPT_NAME = "${PN}"
 INITSCRIPT_PARAMS = "defaults 60"
 
-FILES_${PN} = "/"
+FILES:${PN} = "/"
 
 do_install() {
 

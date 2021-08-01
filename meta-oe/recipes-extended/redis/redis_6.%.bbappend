@@ -1,1 +1,1 @@
-FINAL_LIBS_mipsel = "-latomic"
+FINAL_LIBS:mipsel = "-latomic"

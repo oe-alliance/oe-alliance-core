@@ -18,9 +18,9 @@ SRC_URI="git://github.com/teamblue/skin-universe.git;protocol=git;branch=master"
 
 S = "${WORKDIR}/git"
 
-FILES_${PN} = "/usr/*"
+FILES:${PN} = "/usr/*"
 
-CONFFILES_${PN} = " \
+CONFFILES:${PN} = " \
     /usr/share/enigma2/GBUniverseHD/construct/backgrounds/background-infobar.png \
     /usr/share/enigma2/GBUniverseHD/construct/backgrounds/background-symbol.png \
     /usr/share/enigma2/GBUniverseHD/construct/backgrounds/background-window.png \

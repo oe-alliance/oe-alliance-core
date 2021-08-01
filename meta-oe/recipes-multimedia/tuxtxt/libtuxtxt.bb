@@ -18,16 +18,16 @@ SRC_URI = "git://github.com/OpenPLi/tuxtxt.git;protocol=git \
     file://0001-fix-secfault-w-use-wrong-line_length.patch \
 "
 
-SRC_URI_append = " \
+SRC_URI:append = " \
     ${@bb.utils.contains('DISTRO_FEATURES', 'tuxtxtfhd', 'file://libtuxtxt_FHD.patch', '', d)} \
     "
 
 
-SRC_URI_append_sh4 = " \
+SRC_URI:append:sh4 = " \
     file://tuxtxtlib_sh4_fix.patch;patch=1 \
 "
 
-SRC_URI_append_xc7362 = " \
+SRC_URI:append_xc7362 = " \
     file://tuxtxt_clear_screen.patch \
 "
 
@@ -37,12 +37,12 @@ EXTRA_OECONF = "--with-boxtype=generic"
 
 inherit autotools pkgconfig
 
-do_configure_prepend() {
+do_configure:prepend() {
     touch ${S}/NEWS
     touch ${S}/README
     touch ${S}/AUTHORS
     touch ${S}/ChangeLog
 }
 
-FILES_${PN} = "${libdir}/libtuxtxt.so.*"
-FILES_${PN}-dev = "/usr/include/ ${libdir}/libtuxtxt.la ${libdir}/libtuxtxt.so ${libdir}/pkgconfig/tuxbox-tuxtxt.pc"
+FILES:${PN} = "${libdir}/libtuxtxt.so.*"
+FILES:${PN}-dev = "/usr/include/ ${libdir}/libtuxtxt.la ${libdir}/libtuxtxt.so ${libdir}/pkgconfig/tuxbox-tuxtxt.pc"

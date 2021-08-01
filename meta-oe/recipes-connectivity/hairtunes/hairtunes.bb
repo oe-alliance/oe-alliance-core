@@ -16,7 +16,7 @@ SRC_URI = "git://github.com/skaman/shairport.git;protocol=git"
 
 S = "${WORKDIR}/git"
 
-FILES_${PN} = "${bindir}/*"
+FILES:${PN} = "${bindir}/*"
 
 do_compile() {
     make -f Makefile.alsa hairtunes
@@ -28,5 +28,5 @@ do_install() {
     install -m 755 ${S}/hairtunes ${D}/${bindir}
 }
 
-INSANE_SKIP_${PN} += "already-stripped ldflags"
+INSANE_SKIP:${PN} += "already-stripped ldflags"
 

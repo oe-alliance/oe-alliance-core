@@ -13,7 +13,7 @@ PKGV = "${VERSION}+git${GITPKGV}"
 
 SRC_URI="git://github.com/oe-mirrors/streamproxy.git"
 
-pkg_postinst_${PN}() {
+pkg_postinst:${PN}() {
 #!/bin/sh
 LINE='8001\t\tstream\ttcp6\tnowait\troot\t/usr/bin/streamproxy\t\tstreamproxy'
 
@@ -36,7 +36,7 @@ if [ -z "$D" -a -f "/etc/init.d/inetd.busybox" ]; then
 fi
 }
 
-pkg_prerm_${PN}() {
+pkg_prerm:${PN}() {
 #!/bin/sh
 if grep -q '^[#\s]*8001' $D/etc/inetd.conf; then
 	grep -v '^[#\s]*8001' $D/etc/inetd.conf > $D/etc/inetd.tmp

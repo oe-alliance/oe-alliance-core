@@ -18,4 +18,4 @@ do_install () {
     ln -s /etc/tuxbox/scce ${D}/var/
 }
 
-FILES_${PN} = "/"
+FILES:${PN} = "/"

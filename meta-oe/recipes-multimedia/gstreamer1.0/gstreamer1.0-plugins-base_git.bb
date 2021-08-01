@@ -66,14 +66,14 @@ PACKAGECONFIG[gbm]          = ",,virtual/libgbm libgudev libdrm"
 PACKAGECONFIG[wayland]      = ",,wayland-native wayland wayland-protocols libdrm"
 PACKAGECONFIG[dispmanx]     = ",,virtual/libomxil"
 
-OPENGL_WINSYS_append = "${@bb.utils.contains('PACKAGECONFIG', 'x11', ' x11', '', d)}"
-OPENGL_WINSYS_append = "${@bb.utils.contains('PACKAGECONFIG', 'gbm', ' gbm', '', d)}"
-OPENGL_WINSYS_append = "${@bb.utils.contains('PACKAGECONFIG', 'wayland', ' wayland', '', d)}"
-OPENGL_WINSYS_append = "${@bb.utils.contains('PACKAGECONFIG', 'dispmanx', ' dispmanx', '', d)}"
-OPENGL_WINSYS_append = "${@bb.utils.contains('PACKAGECONFIG', 'egl', ' egl', '', d)}"
+OPENGL_WINSYS:append = "${@bb.utils.contains('PACKAGECONFIG', 'x11', ' x11', '', d)}"
+OPENGL_WINSYS:append = "${@bb.utils.contains('PACKAGECONFIG', 'gbm', ' gbm', '', d)}"
+OPENGL_WINSYS:append = "${@bb.utils.contains('PACKAGECONFIG', 'wayland', ' wayland', '', d)}"
+OPENGL_WINSYS:append = "${@bb.utils.contains('PACKAGECONFIG', 'dispmanx', ' dispmanx', '', d)}"
+OPENGL_WINSYS:append = "${@bb.utils.contains('PACKAGECONFIG', 'egl', ' egl', '', d)}"
 
-FILES_${PN}-dev += "${libdir}/gstreamer-1.0/include/gst/gl/gstglconfig.h"
-FILES_${MLPREFIX}libgsttag-1.0 += "${datadir}/gst-plugins-base/1.0/license-translations.dict"
+FILES:${PN}-dev += "${libdir}/gstreamer-1.0/include/gst/gl/gstglconfig.h"
+FILES:${MLPREFIX}libgsttag-1.0 += "${datadir}/gst-plugins-base/1.0/license-translations.dict"
 
 EXTRA_OEMESON += " \
     -Ddoc=disabled \
@@ -84,7 +84,7 @@ EXTRA_OEMESON += " \
 "
 
 # files installed by both gstreamer1.0-plugins-base and kodi
-do_install_append() {
+do_install:append() {
         rm -f ${D}${includedir}/KHR/khrplatform.h
         rm -f ${D}${includedir}/GL/glext.h
 }

@@ -42,7 +42,7 @@ do_install () {
 }
 
 INHIBIT_DEFAULT_DEPS = "1"
-ALLOW_EMPTY_${PN} = "1"
+ALLOW_EMPTY:${PN} = "1"
 DEPENDS = "gcc-runtime virtual/${TARGET_PREFIX}gcc"
 
 BBCLASSEXTEND = "nativesdk"
@@ -52,17 +52,17 @@ PACKAGES += "libasan libubsan liblsan libtsan"
 PACKAGES += "libasan-dev libubsan-dev liblsan-dev libtsan-dev"
 PACKAGES += "libasan-staticdev libubsan-staticdev liblsan-staticdev libtsan-staticdev"
 
-RDEPENDS_libasan += "libstdc++"
-RDEPENDS_libubsan += "libstdc++"
-RDEPENDS_liblsan += "libstdc++"
-RDEPENDS_libtsan += "libstdc++"
-RDEPENDS_libasan-dev += "${PN}"
-RDEPENDS_libubsan-dev += "${PN}"
-RDEPENDS_liblsan-dev += "${PN}"
-RDEPENDS_libtsan-dev += "${PN}"
-RRECOMMENDS_${PN} += "libasan libubsan"
-RRECOMMENDS_${PN}_append_x86-64 = " liblsan libtsan"
-RRECOMMENDS_${PN}_append_x86 = " liblsan"
+RDEPENDS:libasan += "libstdc++"
+RDEPENDS:libubsan += "libstdc++"
+RDEPENDS:liblsan += "libstdc++"
+RDEPENDS:libtsan += "libstdc++"
+RDEPENDS:libasan-dev += "${PN}"
+RDEPENDS:libubsan-dev += "${PN}"
+RDEPENDS:liblsan-dev += "${PN}"
+RDEPENDS:libtsan-dev += "${PN}"
+RRECOMMENDS:${PN} += "libasan libubsan"
+RRECOMMENDS:${PN}:append:x86-64 = " liblsan libtsan"
+RRECOMMENDS:${PN}:append:x86 = " liblsan"
 
 do_package_write_ipk[depends] += "virtual/${MLPREFIX}${TARGET_PREFIX}compilerlibs:do_packagedata"
 do_package_write_deb[depends] += "virtual/${MLPREFIX}${TARGET_PREFIX}compilerlibs:do_packagedata"
@@ -71,33 +71,33 @@ do_package_write_rpm[depends] += "virtual/${MLPREFIX}${TARGET_PREFIX}compilerlib
 # MIPS, aarch64, and SPARC are broken.
 COMPATIBLE_HOST = '(x86_64|i.86|powerpc|arm).*-linux'
 
-FILES_libasan += "${libdir}/libasan.so.*"
-FILES_libasan-dev += "\
+FILES:libasan += "${libdir}/libasan.so.*"
+FILES:libasan-dev += "\
     ${libdir}/libasan_preinit.o \
     ${libdir}/libasan.so \
     ${libdir}/libasan.la \
 "
-FILES_libasan-staticdev += "${libdir}/libasan.a"
+FILES:libasan-staticdev += "${libdir}/libasan.a"
 
-FILES_libubsan += "${libdir}/libubsan.so.*"
-FILES_libubsan-dev += "\
+FILES:libubsan += "${libdir}/libubsan.so.*"
+FILES:libubsan-dev += "\
     ${libdir}/libubsan.so \
     ${libdir}/libubsan.la \
 "
-FILES_libubsan-staticdev += "${libdir}/libubsan.a"
+FILES:libubsan-staticdev += "${libdir}/libubsan.a"
 
-FILES_liblsan += "${libdir}/liblsan.so.*"
-FILES_liblsan-dev += "\
+FILES:liblsan += "${libdir}/liblsan.so.*"
+FILES:liblsan-dev += "\
     ${libdir}/liblsan.so \
     ${libdir}/liblsan.la \
 "
-FILES_liblsan-staticdev += "${libdir}/liblsan.a"
+FILES:liblsan-staticdev += "${libdir}/liblsan.a"
 
-FILES_libtsan += "${libdir}/libtsan.so.*"
-FILES_libtsan-dev += "\
+FILES:libtsan += "${libdir}/libtsan.so.*"
+FILES:libtsan-dev += "\
     ${libdir}/libtsan.so \
     ${libdir}/libtsan.la \
 "
-FILES_libtsan-staticdev += "${libdir}/libtsan.a"
+FILES:libtsan-staticdev += "${libdir}/libtsan.a"
 
-FILES_${PN} = "${libdir}/*.spec ${libdir}/gcc/${TARGET_SYS}/${BINV}/include/sanitizer/*.h"
+FILES:${PN} = "${libdir}/*.spec ${libdir}/gcc/${TARGET_SYS}/${BINV}/include/sanitizer/*.h"

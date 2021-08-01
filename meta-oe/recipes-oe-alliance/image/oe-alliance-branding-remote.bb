@@ -16,7 +16,7 @@ BRANCH="master"
 
 do_configure[nostamp] = "1"
 
-FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
 SRC_URI="git://github.com/oe-mirrors/branding-module.git;protocol=git;branch=${BRANCH}"
 #SRC_URI_append_openatv=" \
 #	file://openatv_mappings.patch \
@@ -54,7 +54,7 @@ EXTRA_OECONF = " \
     --with-arch="${DEFAULTTUNE}" \
     "
 
-do_configure_prepend() {
+do_configure:prepend() {
     if [ ! -e ${S}/BoxBranding/remotes/Makefile.in ]; then
         cp ${S}/BoxBranding/remotes/Makefile.am ${S}/BoxBranding/remotes/Makefile.1
         cp ${S}/BoxBranding/remotes/Makefile.am ${S}/BoxBranding/remotes/Makefile.2
@@ -74,14 +74,14 @@ do_configure_prepend() {
     fi
 }
 
-do_install_append() {
+do_install:append() {
     rm -rf ${D}/${libdir}
     rm ${D}/usr/share/enigma2/*.png 2>/dev/null || true
     rm ${D}/usr/share/enigma2/*.jpg 2>/dev/null || true
     install -d ${D}/usr/share/enigma2
 }
 
-python populate_packages_prepend() {
+python populate_packages:prepend() {
     enigma2_remotesdir = '/usr/share/enigma2/rc_models'
     do_split_packages(d, enigma2_remotesdir, '^(\w+)/.*$', 'oe-alliance-branding-remote-%s', '%s (Additional remote for enigma2)', recursive=True, match_path=True, prepend=True, extra_depends='')
 }

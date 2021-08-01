@@ -1,6 +1,6 @@
-RDEPENDS_${PN}-core += "${PYTHON_PN}-service-identity"
+RDEPENDS:${PN}-core += "${PYTHON_PN}-service-identity"
 
-FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 
 SRC_URI += " \
            file://fix-writing-after-channel-is-closed.patch \
@@ -8,9 +8,9 @@ SRC_URI += " \
 
 PR = "r6"
 
-FILES_${PN}-dbg += " \
+FILES:${PN}-dbg += " \
     ${libdir}/${PYTHON_DIR}/site-packages/twisted/*.egg-info \
     ${libdir}/${PYTHON_DIR}/site-packages/twisted/*/*/test \
 "
 
-FILES_${PN}-src = ""
+FILES:${PN}-src = ""

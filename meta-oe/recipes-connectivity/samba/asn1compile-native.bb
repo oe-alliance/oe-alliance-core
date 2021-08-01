@@ -9,9 +9,9 @@ inherit cpan-base perlnative python3native native
 
 DEPENDS += "zlib-native readline-native gnutls-native libparse-yapp-perl-native bison-native icu-native libtasn1-native"
 
-DEPENDS_append_libc-musl = " libtirpc"
-CFLAGS_append_libc-musl = " -I${STAGING_INCDIR}/tirpc"
-LDFLAGS_append_libc-musl = " -ltirpc"
+DEPENDS:append:libc-musl = " libtirpc"
+CFLAGS:append:libc-musl = " -I${STAGING_INCDIR}/tirpc"
+LDFLAGS:append:libc-musl = " -ltirpc"
 
 EXTRA_OECONF += "--disable-cups \
                  --disable-iprint \

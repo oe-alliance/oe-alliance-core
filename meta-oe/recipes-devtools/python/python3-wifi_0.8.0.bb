@@ -4,7 +4,7 @@ SECTION = "devel/python"
 LICENSE = "LGPLv2+ & GPLv2+"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=96054b336a7ea61f1acd5c14acdda526"
 
-RDEPENDS_${PN} = "${PYTHON_PN}-pbkdf2"
+RDEPENDS:${PN} = "${PYTHON_PN}-pbkdf2"
 
 SRC_URI = "git://github.com/oe-mirrors/wifi.git"
 

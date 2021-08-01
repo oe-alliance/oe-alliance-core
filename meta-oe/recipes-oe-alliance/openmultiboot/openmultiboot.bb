@@ -39,7 +39,7 @@ do_install() {
     install -m 644 ${S}/contrib/open-multiboot-branding-helper.py ${D}/sbin
 }
 
-pkg_preinst_${PN}() {
+pkg_preinst:${PN}() {
 #!/bin/sh
 if mountpoint -q /usr/lib/enigma2/python/Plugins/Extensions/OpenMultiboot; then
     echo "openMultiBoot will only install on main image."
@@ -52,15 +52,15 @@ else
 fi
 }
 
-pkg_postinst_ontarget_${PN}() {
+pkg_postinst_ontarget:${PN}() {
 rm /sbin/init
 ln -s /sbin/open_multiboot /sbin/init
 }
 
-pkg_postinst_${PN}_openbh() {
+pkg_postinst:${PN}_openbh() {
 }
 
-pkg_postrm_${PN}() {
+pkg_postrm:${PN}() {
 rm /sbin/init
 ln -s /sbin/init.sysvinit /sbin/init
 }

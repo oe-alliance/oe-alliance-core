@@ -10,9 +10,9 @@ PV = "1.0.0+gitr${SRCPV}"
 PKGV = "1.0.0+gitr${GITPKGV}"
 PR = "r0"
 
-ALLOW_EMPTY_${PN} = "1"
+ALLOW_EMPTY:${PN} = "1"
 
-INSANE_SKIP_${PN} += "already-stripped ldflags build-deps"
+INSANE_SKIP:${PN} += "already-stripped ldflags build-deps"
 
 SRC_URI = "git://github.com/LraiZer/RadiotimesXmltvEmulator.git;branch=gui-plugin;protocol=git"
 
@@ -27,11 +27,11 @@ do_install() {
     oe_runmake 'D=${D}' install-plugin
 }
 
-pkg_postrm_${PN}() {
+pkg_postrm:${PN}() {
 rm -fr ${libdir}/enigma2/python/Plugins/SystemPlugins/RadiotimesXmltvEmulator > /dev/null 2>&1
 }
 
-python populate_packages_prepend() {
+python populate_packages:prepend() {
     enigma2_plugindir = bb.data.expand('${libdir}/enigma2/python/Plugins', d)
     do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/[a-zA-Z0-9_]+.*$', 'enigma2-plugin-%s', '%s', recursive=True, match_path=True, prepend=True, extra_depends="enigma2")
     do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/.*\.la$', 'enigma2-plugin-%s-dev', '%s (development)', recursive=True, match_path=True, prepend=True)
@@ -40,4 +40,4 @@ python populate_packages_prepend() {
     do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/.*\/.*\.po$', 'enigma2-plugin-%s-po', '%s (translations)', recursive=True, match_path=True, prepend=True)
 }
 
-FILES_${PN}_append = " /usr"
+FILES:${PN}:append = " /usr"

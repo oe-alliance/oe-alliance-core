@@ -1,4 +1,4 @@
-do_compile_append () {
+do_compile:append () {
 	# now generate script to drive testing
 	echo "#!/usr/bin/env sh" >${B}/${HOST_PREFIX}testglibc
 	set >> ${B}/${HOST_PREFIX}testglibc

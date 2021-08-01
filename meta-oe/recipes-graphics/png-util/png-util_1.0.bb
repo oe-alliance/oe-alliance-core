@@ -28,4 +28,4 @@ do_install() {
     install -m 0755 ${S}/_png_util.so ${D}/${PYTHON_SITEPACKAGES_DIR}/pngutil
 }
 
-FILES_${PN} = "${PYTHON_SITEPACKAGES_DIR}/pngutil"
+FILES:${PN} = "${PYTHON_SITEPACKAGES_DIR}/pngutil"

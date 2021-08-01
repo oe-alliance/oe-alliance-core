@@ -19,13 +19,13 @@ PV = "2.2+git${SRCPV}"
 PKGV = "2.2+git${GITPKGV}"
 PR = "r0"
 
-INSANE_SKIP_${PN} += "already-stripped ldflags"
+INSANE_SKIP:${PN} += "already-stripped ldflags"
 
 SRC_URI="git://github.com/LraiZer/AutoBouquets.git;branch=${AUTOBOUQUETS_BRANCH}"
 
 S = "${WORKDIR}/git"
 
-FILES_${PN} = "/usr/lib/enigma2/python/Plugins/Extensions/AutoBouquets"
+FILES:${PN} = "/usr/lib/enigma2/python/Plugins/Extensions/AutoBouquets"
 D_FILES_PN = "${D}${FILES_${PN}}"
 
 EXTRA_OECONF = ""
@@ -46,7 +46,7 @@ do_install() {
     install -m 644 ${S}/locale/ru/LC_MESSAGES/*.* ${D_FILES_PN}/locale/ru/LC_MESSAGES
 }
 
-pkg_preinst_${PN}() {
+pkg_preinst:${PN}() {
 #!/bin/sh
 
 echo "Checking for an older version of ${PN}"
@@ -64,7 +64,7 @@ exit 0
 
 }
 
-pkg_postinst_${PN}() {
+pkg_postinst:${PN}() {
 #!/bin/sh
 
 echo "*                               *"
@@ -77,7 +77,7 @@ exit 0
 
 }
 
-pkg_postrm_${PN}() {
+pkg_postrm:${PN}() {
 #!/bin/sh
 
 echo "Removing ${PN}"

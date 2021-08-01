@@ -26,7 +26,7 @@ EXTRA_OECONF = " \
     --libdir=${libdir} \
 "
 
-EXTRA_OECONF_append_sh4 = " \
+EXTRA_OECONF:append:sh4 = " \
     --enable-optimize=-O2 \
 "
 
@@ -36,5 +36,5 @@ do_configure() {
 }
 
 PACKAGES =+ "lib${PN}"
-FILES_lib${PN} += "${libdir}/lib*.so"
-FILES_${PN}-dev += "${bindir}/js17-config"
+FILES:lib${PN} += "${libdir}/lib*.so"
+FILES:${PN}-dev += "${bindir}/js17-config"

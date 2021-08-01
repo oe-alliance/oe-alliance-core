@@ -19,7 +19,7 @@ SRC_URI="git://github.com/KravenHD/XionHDF.git"
 
 S = "${WORKDIR}/git"
 
-FILES_${PN} = "/usr/share ${libdir}"
+FILES:${PN} = "/usr/share ${libdir}"
 
 do_install() {
 	install -d ${D}${libdir}
@@ -28,7 +28,7 @@ do_install() {
 	cp -rp ${S}/usr/share/* ${D}/usr/share
 }
 
-pkg_preinst_${PN}() {
+pkg_preinst:${PN}() {
 #!/bin/sh
 echo "Checking for previous installations..."
 if [ -f /usr/share/enigma2/XionHDF/skin.xml ]; then
@@ -58,7 +58,7 @@ echo "                                                           "
 exit 0
 }
 
-pkg_postinst_${PN} () {
+pkg_postinst:${PN} () {
 #!/bin/sh
 if [ -f /tmp/XionHDF/skin.xml ]; then
 	cp -R /usr/share/enigma2/XionHDF/buttonsets/ /tmp/XionHDF/
@@ -71,7 +71,7 @@ echo "                                                          "
 exit 0
 }
 
-pkg_prerm_${PN} () {
+pkg_prerm:${PN} () {
 #!/bin/sh
 echo "                                                           "
 echo "         The Skin XionHDF is now being removed...          "
@@ -79,7 +79,7 @@ echo "                                                           "
 exit 0
 }
 
-pkg_postrm_${PN} () {
+pkg_postrm:${PN} () {
 #!/bin/sh
 rm -rf /usr/share/enigma2/XionHDF
 rm -rf /usr/${libdir}/enigma2/python/Plugins/Extensions/XionHDF

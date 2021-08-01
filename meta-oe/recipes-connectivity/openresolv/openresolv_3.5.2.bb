@@ -40,18 +40,18 @@ do_install() {
         install -m 0755 ${WORKDIR}/000resolvconf.ppp.ip-up ${D}${sysconfdir}/ppp/ip-up.d/000resolvconf
 }
 
-RPROVIDES_${PN} = "resolvconf"
+RPROVIDES:${PN} = "resolvconf"
 
-RCONFLICTS_${PN} = "resolvconf"
+RCONFLICTS:${PN} = "resolvconf"
 
-FILES_${PN} += "/lib/resolvconf"
+FILES:${PN} += "/lib/resolvconf"
 
-pkg_postinst_${PN}() {
+pkg_postinst:${PN}() {
 if [ -z "$D" -a -x ${sysconfdir}/init.d/populate-volatile.sh ]; then
     ${sysconfdir}/init.d/populate-volatile.sh update
 fi
 }
-pkg_postrm_${PN}() {
+pkg_postrm:${PN}() {
 if [ -z "$D" -a -x ${sysconfdir}/init.d/populate-volatile.sh ]; then
     ${sysconfdir}/init.d/populate-volatile.sh update
 fi

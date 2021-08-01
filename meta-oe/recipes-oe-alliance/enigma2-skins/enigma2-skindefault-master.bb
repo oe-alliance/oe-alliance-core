@@ -22,14 +22,14 @@ SRC_URI_openvix = "git://github.com/oe-alliance/oe-alliance-e2-skindefault.git;p
 
 S = "${WORKDIR}/git"
 
-DESCRIPTION_font-roboto-enigma = "Roboto enigma font"
+DESCRIPTION:font-roboto-enigma = "Roboto enigma font"
 
 PACKAGES =+ " font-roboto-enigma"
 PROVIDES =+ " font-roboto-enigma"
-FILES_font-roboto-enigma = "${datadir}/fonts"
-FILES_enigma2-skindefault = "${datadir}/enigma2"
+FILES:font-roboto-enigma = "${datadir}/fonts"
+FILES:enigma2-skindefault = "${datadir}/enigma2"
 
-RDEPENDS_enigma2-skindefault = "font-roboto-enigma"
+RDEPENDS:enigma2-skindefault = "font-roboto-enigma"
 
 EXTRA_OECONF = "\
     BUILD_SYS=${BUILD_SYS} \

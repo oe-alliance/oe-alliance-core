@@ -9,7 +9,7 @@ PV = "0.0+cvs${SRCDATE}"
 SRC_URI = "cvs://anonymous@dvbtools.cvs.sourceforge.net/cvsroot/dvbtools;module=dvbstream"
 S = "${WORKDIR}/dvbstream"
 
-CFLAGS_append = " ${LDFLAGS} -D_GNU_SOURCE"
+CFLAGS:append = " ${LDFLAGS} -D_GNU_SOURCE"
 
 do_install() {
     mkdir -p ${D}${bindir}

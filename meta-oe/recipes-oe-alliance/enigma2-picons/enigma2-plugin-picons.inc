@@ -15,7 +15,7 @@ do_install() {
 
 RESIZE_COMMAND = ""
 
-python populate_packages_prepend() {
+python populate_packages:prepend() {
     import os
     import shutil
     import re
@@ -61,8 +61,8 @@ python populate_packages_prepend() {
                     os.system("pngcrush -q -reduce '%s' '%s'" % (fn, dn))
                 files.append("/picon/" + file)
 
-        d.setVar('FILES_' + packagename, " ".join(files))
-        d.setVar('DESCRIPTION_' + packagename, "TV picon set")
+        d.setVar('FILES:' + packagename, " ".join(files))
+        d.setVar('DESCRIPTION:' + packagename, "TV picon set")
         piconpackages.append(packagename)
         try:
             packagename = createPackageName('radio', sat)
@@ -71,8 +71,8 @@ python populate_packages_prepend() {
                 if file.endswith(".png"):
                     os.system("cp -a \"" + sdir + "/" + sat + "/radio/" + file + "\" " + dir + "/picon/")
                     files.append("/picon/" + file)
-            d.setVar('FILES_' + packagename, " ".join(files))
-            d.setVar('DESCRIPTION_' + packagename, "Radio picon set")
+            d.setVar('FILES:' + packagename, " ".join(files))
+            d.setVar('DESCRIPTION:' + packagename, "Radio picon set")
             piconpackages.append(packagename)
         except:
             pass

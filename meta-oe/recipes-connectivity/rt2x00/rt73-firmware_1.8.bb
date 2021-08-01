@@ -11,7 +11,7 @@ do_install() {
     install -m 0644 rt73.bin ${D}${nonarch_base_libdir}/firmware/
 }
 
-FILES_${PN} = "${nonarch_base_libdir}/firmware/"
+FILES:${PN} = "${nonarch_base_libdir}/firmware/"
 
 inherit allarch
 

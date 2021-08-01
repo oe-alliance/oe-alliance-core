@@ -18,13 +18,13 @@ SRC_URI="git://github.com/oerlgrey/TeamBlueHD.git;protocol=git"
 
 S = "${WORKDIR}/git"
 
-FILES_${PN} = "/usr/*"
+FILES:${PN} = "/usr/*"
 
 do_install() {
     cp -rp ${S}/usr ${D}/
 }
 
-pkg_prerm_${PN} () {
+pkg_prerm:${PN} () {
 #!/bin/sh
 if [ -f /usr/lib/enigma2/python/Components/Converter/TeamBlueHDClockToText.pyo ]; then
     rm /usr/lib/enigma2/python/Components/Converter/TeamBlueHDClockToText.pyo

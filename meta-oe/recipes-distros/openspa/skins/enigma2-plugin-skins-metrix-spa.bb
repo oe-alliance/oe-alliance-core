@@ -17,18 +17,18 @@ PR = "r0"
 
 PACKAGES =+ "enigma2-plugin-skins-metrix-spa-fhd-icons enigma2-plugin-skins-metrix-spa-uhd-icons"
 PROVIDES =+ "enigma2-plugin-skins-metrix-spa-fhd-icons enigma2-plugin-skins-metrix-spa-uhd-icons"
-RPROVIDES_enigma2-plugin-skins-metrix-spa-fhd-icons += "enigma2-plugin-skins-metrix-spa-fhd-icons"
-RPROVIDES_enigma2-plugin-skins-metrix-spa-uhd-icons += "enigma2-plugin-skins-metrix-spa-uhd-icons"
+RPROVIDES:enigma2-plugin-skins-metrix-spa-fhd-icons += "enigma2-plugin-skins-metrix-spa-fhd-icons"
+RPROVIDES:enigma2-plugin-skins-metrix-spa-uhd-icons += "enigma2-plugin-skins-metrix-spa-uhd-icons"
 
 SRC_URI="git://github.com/openspa/MetrixHD.git"
 
 S = "${WORKDIR}/git"
 
-FILES_enigma2-plugin-skins-metrix-spa-fhd-icons = "/usr/share/enigma2/MetrixHD/FHD"
-FILES_enigma2-plugin-skins-metrix-spa-uhd-icons = "/usr/share/enigma2/MetrixHD/UHD"
+FILES:enigma2-plugin-skins-metrix-spa-fhd-icons = "/usr/share/enigma2/MetrixHD/FHD"
+FILES:enigma2-plugin-skins-metrix-spa-uhd-icons = "/usr/share/enigma2/MetrixHD/UHD"
 
 
-FILES_${PN} = "${libdir} /usr/share ${sysconfdir}"
+FILES:${PN} = "${libdir} /usr/share ${sysconfdir}"
 
 do_compile() {
 	for f in $(find ${S}/locale -name *.po ); do
@@ -47,7 +47,7 @@ do_install() {
     cp -r --preserve=mode,links ${S}/etc/enigma2/* ${D}/etc/enigma2/
 }
 
-pkg_preinst_${PN}() {
+pkg_preinst:${PN}() {
 #!/bin/sh
 echo "Checking for skin.MySkin.xml in the skinfolder"
 if [ -f /usr/share/enigma2/MetrixHD/skin.MySkin.xml ]; then
@@ -95,7 +95,7 @@ echo "Proceeding to installation..."
 exit 0
 }
 
-pkg_postinst_${PN} () {
+pkg_postinst:${PN} () {
 #!/bin/sh
 echo "Checking for obsolete MyMetrixLiteColors"
 if [ -d ${libdir}/enigma2/python/Plugins/Extensions/MyMetrixLiteColors ]; then

@@ -26,4 +26,4 @@ do_install() {
 	install -m 0644 ${S}/xml/dmm1.xml ${D}${datadir}/enigma2/rc
 }
 
-FILES_${PN} = "${datadir}/enigma2 ${datadir}/enigma2/rc"
+FILES:${PN} = "${datadir}/enigma2 ${datadir}/enigma2/rc"

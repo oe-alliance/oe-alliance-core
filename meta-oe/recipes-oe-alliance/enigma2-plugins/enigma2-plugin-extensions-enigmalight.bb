@@ -4,7 +4,7 @@ LICENSE = "GPLv3"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=156f94b2a67a05ad45ff99bec65b2c81"
 
 DEPENDS = "libusb1"
-RRECOMMENDS_${PN} = "${PYTHON_PN}-cheetah libusb1 kernel-module-cdc-acm kernel-module-ftdi-sio kernel-module-usbserial kernel-module-ch341"
+RRECOMMENDS:${PN} = "${PYTHON_PN}-cheetah libusb1 kernel-module-cdc-acm kernel-module-ftdi-sio kernel-module-usbserial kernel-module-ch341"
 
 inherit gitpkgv
 SRCREV = "${AUTOREV}"
@@ -18,7 +18,7 @@ S = "${WORKDIR}/git"
 
 inherit autotools-brokensep pkgconfig
 
-do_install_append() {
+do_install:append() {
     cd ${S}
     install -d ${D}${libdir}/enigma2/python/Plugins/Extensions
     cp -R ${S}/python/plugin/EnigmaLight ${D}${libdir}/enigma2/python/Plugins/Extensions
@@ -34,10 +34,10 @@ do_install_append() {
     cp -R ${WORKDIR}/git/elight-addons/config_samples ${D}/home/elight-addons/wifilight
 }
 
-FILES_${PN} += "${libdir}/enigma2/python/Plugins/Extensions/EnigmaLight/ \
+FILES:${PN} += "${libdir}/enigma2/python/Plugins/Extensions/EnigmaLight/ \
                 /home/elight-addons"
 
-pkg_preinst_${PN}() {
+pkg_preinst:${PN}() {
 #/bin/sh
 
 FILE=/etc/enigmalight.conf
@@ -91,7 +91,7 @@ else
 fi
 }
 
-pkg_postinst_${PN}() {
+pkg_postinst:${PN}() {
 #!/bin/sh
 
 FILE=/home/elight-addons/enigmalight.conf
@@ -134,7 +134,7 @@ echo "###################################################################"
 echo
 }
 
-pkg_postrm_${PN}() {
+pkg_postrm:${PN}() {
 
 #!/bin/sh
 echo ""

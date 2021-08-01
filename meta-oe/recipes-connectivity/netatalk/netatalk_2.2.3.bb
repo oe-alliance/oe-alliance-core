@@ -4,7 +4,7 @@ require conf/license/license-gplv2.inc
 
 DEPENDS = "cups db openssl libgcrypt tcp-wrappers acl"
 
-RDEPENDS_${PN} = "perl"
+RDEPENDS:${PN} = "perl"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/project/netatalk/netatalk/${PV}/netatalk-${PV}.tar.gz;name=src \
         file://netatalk.conf \
@@ -20,23 +20,23 @@ INITSCRIPT_PARAMS = "defaults 20"
 
 PACKAGES = "${PN}-atalkd ${PN}-pap ${PN}-timelord ${PN}-dbg ${PN} ${PN}-doc ${PN}-dev ${PN}-staticdev"
 
-INSANE_SKIP_${PN} = "dev-so"
+INSANE_SKIP:${PN} = "dev-so"
 
-RRECOMMENDS_${PN}-atalkd = "kernel-module-appletalk"
+RRECOMMENDS:${PN}-atalkd = "kernel-module-appletalk"
 
 SSTATE_DUPWHITELIST += "${STAGING_INCDIR}/netatalk/at.h"
 
-FILES_${PN}-atalkd += "${sysconfdir}/netatalk/atalkd.conf \
+FILES:${PN}-atalkd += "${sysconfdir}/netatalk/atalkd.conf \
                     /usr/sbin/atalkd"
-FILES_${PN}-pap +=    "/usr/bin/pap \
+FILES:${PN}-pap +=    "/usr/bin/pap \
                     ${sysconfdir}/netatalk/papd.conf \
                     /usr/sbin/papd \
                     /usr/bin/papstatus"
-FILES_${PN}-timelord += "/usr/sbin/timelord"
-FILES_${PN}-dbg += "${sysconfdir}/netatalk/uams/.debug"
-FILES_${PN}-staticdev += "${libdir}/*.a"
+FILES:${PN}-timelord += "/usr/sbin/timelord"
+FILES:${PN}-dbg += "${sysconfdir}/netatalk/uams/.debug"
+FILES:${PN}-staticdev += "${libdir}/*.a"
 
-# FILES_${PN} += "${sysconfdir}/netatalk/uams/uams_clrtxt.so \
+# FILES:${PN} += "${sysconfdir}/netatalk/uams/uams_clrtxt.so \
 #                 ${sysconfdir}/netatalk/uams/uams_dhx2.so \
 #                 ${sysconfdir}/netatalk/uams/uams_dhx.so \
 #                 "
@@ -53,7 +53,7 @@ EXTRA_OECONF += "ac_cv_path_KRB5_CONFIG=no \
 "
 LDFLAGS += "-lpthread -L${STAGING_LIBDIR}"
 
-do_install_append() {
+do_install:append() {
     perl -i -pe 's:#!.+/perl$:#!/usr/bin/perl:g' ${D}${bindir}/apple_dump
     perl -i -pe 's:#!.+/perl$:#!/usr/bin/perl:g' ${D}${bindir}/asip-status.pl
     perl -i -pe 's:#!.+/perl$:#!/usr/bin/perl:g' ${D}${bindir}/cnid2_create

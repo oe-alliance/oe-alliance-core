@@ -12,7 +12,7 @@ inherit packagegroup
 
 DEPENDS = "enigma2-pliplugins openatv-feeds"
 
-RRECOMMENDS_${PN} = " \
+RRECOMMENDS:${PN} = " \
     enigma2-skindefault \
     openatv-version-info \
     enigma-kernel-module \
@@ -57,12 +57,12 @@ GST_BASE_DVD = "\
     gstreamer1.0-plugins-bad-mpegtsmux \
 "
 
-RRECOMMENDS_${PN}_append_bre2zet2c = " enigma2-plugin-systemplugins-satipclient"
-RRECOMMENDS_${PN}_append_bre2ze4k = " enigma2-plugin-systemplugins-satipclient"
-RRECOMMENDS_${PN}_append_bre2ze = " enigma2-plugin-systemplugins-satipclient"
-RRECOMMENDS_${PN}_append_dm900 = " enigma2-plugin-systemplugins-fsblupdater"
-RRECOMMENDS_${PN}_append_dm920 = " enigma2-plugin-systemplugins-fsblupdater"
-RRECOMMENDS_${PN}_append_osmio4k = " enigma2-plugin-systemplugins-satipclient enigma2-plugin-extensions-simpleumount"
-RRECOMMENDS_${PN}_append_osmio4kplus = " enigma2-plugin-systemplugins-satipclient enigma2-plugin-extensions-simpleumount"
-RRECOMMENDS_${PN}_append_osmini4k = " enigma2-plugin-systemplugins-satipclient enigma2-plugin-extensions-simpleumount"
+RRECOMMENDS:${PN}:append_bre2zet2c = " enigma2-plugin-systemplugins-satipclient"
+RRECOMMENDS:${PN}:append_bre2ze4k = " enigma2-plugin-systemplugins-satipclient"
+RRECOMMENDS:${PN}:append_bre2ze = " enigma2-plugin-systemplugins-satipclient"
+RRECOMMENDS:${PN}:append_dm900 = " enigma2-plugin-systemplugins-fsblupdater"
+RRECOMMENDS:${PN}:append_dm920 = " enigma2-plugin-systemplugins-fsblupdater"
+RRECOMMENDS:${PN}:append_osmio4k = " enigma2-plugin-systemplugins-satipclient enigma2-plugin-extensions-simpleumount"
+RRECOMMENDS:${PN}:append_osmio4kplus = " enigma2-plugin-systemplugins-satipclient enigma2-plugin-extensions-simpleumount"
+RRECOMMENDS:${PN}:append_osmini4k = " enigma2-plugin-systemplugins-satipclient enigma2-plugin-extensions-simpleumount"
 

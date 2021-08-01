@@ -17,4 +17,4 @@ S = "${WORKDIR}/git/gst-ifdsrc/gst-ifdsrc"
 
 inherit autotools pkgconfig
 
-FILES_${PN} += "${libdir}/gstreamer-1.0"
+FILES:${PN} += "${libdir}/gstreamer-1.0"

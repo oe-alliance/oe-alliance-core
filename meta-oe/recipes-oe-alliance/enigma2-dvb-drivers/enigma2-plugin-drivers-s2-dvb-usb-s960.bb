@@ -3,7 +3,7 @@ inherit allarch
 
 require conf/license/license-gplv2.inc
 
-RRECOMMENDS_${PN} = " \
+RRECOMMENDS:${PN} = " \
     kernel-module-dvb-usb-dvbsky \
     kernel-module-ts2020 \
     firmware-dvb-fe-ds3000 \
@@ -14,4 +14,4 @@ RRECOMMENDS_${PN} = " \
 PV = "1.0"
 PR = "r0"
 
-ALLOW_EMPTY_${PN} = "1"
+ALLOW_EMPTY:${PN} = "1"

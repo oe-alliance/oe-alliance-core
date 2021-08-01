@@ -28,6 +28,6 @@ do_install(){
     install -m 0755 ${B}/openhbbtvbrowser ${D}${bindir}
 }
 
-FILES_${PN} = "${bindir}"
+FILES:${PN} = "${bindir}"
 
-INSANE_SKIP_${PN} += "file-rdeps"
+INSANE_SKIP:${PN} += "file-rdeps"

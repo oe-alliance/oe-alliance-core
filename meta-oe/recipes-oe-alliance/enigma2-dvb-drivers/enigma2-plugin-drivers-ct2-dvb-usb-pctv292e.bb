@@ -3,7 +3,7 @@ inherit allarch
 
 require conf/license/license-gplv2.inc
 
-RRECOMMENDS_${PN} = " \
+RRECOMMENDS:${PN} = " \
     kernel-module-em28xx \
     kernel-module-em28xx-dvb \
     kernel-module-em28xx-rc \
@@ -15,4 +15,4 @@ RRECOMMENDS_${PN} = " \
 PV = "2.0"
 PR = "r0"
 
-ALLOW_EMPTY_${PN} = "1"
+ALLOW_EMPTY:${PN} = "1"

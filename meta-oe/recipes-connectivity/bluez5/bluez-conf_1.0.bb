@@ -13,22 +13,22 @@ do_install () {
     install -m 0644 ${S}/uart.conf ${D}${sysconfdir}/bluetooth/uart.conf
 }
 
-do_install_append_osnino() {
+do_install:append_osnino() {
     echo "rtk_hciattach ttyS2 rtk_h5" >> ${D}${sysconfdir}/bluetooth/uart.conf
 }
 
-do_install_append_osninoplus() {
+do_install:append_osninoplus() {
     echo "rtk_hciattach ttyS2 rtk_h5" >> ${D}${sysconfdir}/bluetooth/uart.conf
 }
 
-do_install_append_osninopro() {
+do_install:append_osninopro() {
     echo "rtk_hciattach ttyS2 rtk_h5" >> ${D}${sysconfdir}/bluetooth/uart.conf
 }
 
-do_install_append_xc7362() {
+do_install:append_xc7362() {
     echo "hciattach ttyS2 rtk_h5" >> ${D}${sysconfdir}/bluetooth/uart.conf
 }
 
-do_install_append_xc7346() {
+do_install:append_xc7346() {
     echo "hciattach ttyS1 rtk_h5" >> ${D}${sysconfdir}/bluetooth/uart.conf
 }

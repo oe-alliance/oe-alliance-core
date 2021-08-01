@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PROVIDES += "virtual/enigma2-mediaservice"
-RPROVIDES_${PN} += "virtual/enigma2-mediaservice"
+RPROVIDES:${PN} += "virtual/enigma2-mediaservice"
 
 GST_BASE_RDEPS = "\
 	gstreamer${GST_VERSION}-plugins-base-alsa \
@@ -73,11 +73,11 @@ DEPENDS = "\
 	gstreamer${GST_VERSION}-plugins-base gstreamer${GST_VERSION} \
 	"
 
-RDEPENDS_${PN} = "\
+RDEPENDS:${PN} = "\
 	enigma2 \
 	"
 
-RRECOMMENDS_${PN} = "\
+RRECOMMENDS:${PN} = "\
 	glib-networking \
 	gstreamer${GST_VERSION}-plugin-subsink \
 	${GST_BASE_RDEPS} \
@@ -105,10 +105,10 @@ EXTRA_OECONF = "\
 	STAGING_LIBDIR=${STAGING_LIBDIR} \
 	"
 
-FILES_${PN} = "\
+FILES:${PN} = "\
 	${libdir}/enigma2/python/Plugins/SystemPlugins/ServiceMP3/*.pyo \
 	${libdir}/enigma2/python/Plugins/SystemPlugins/ServiceMP3/servicemp3.so"
 
-FILES_${PN}-dev = "\
+FILES:${PN}-dev = "\
 	${libdir}/enigma2/python/Plugins/SystemPlugins/ServiceMP3/*.py \
 	${libdir}/enigma2/python/Plugins/SystemPlugins/ServiceMP3/servicemp3.la"

@@ -19,7 +19,7 @@ S = "${WORKDIR}/${BPN}.${PV}"
 inherit autotools-brokensep update-rc.d
 
 INITSCRIPT_NAME = "inadyn-mt"
-CONFFILES_${PN} = "/etc/inadyn.conf"
+CONFFILES:${PN} = "/etc/inadyn.conf"
 
 do_compile() {
     make -f makefile-deprecated
@@ -34,4 +34,4 @@ do_install() {
     install -m 755 ${WORKDIR}/inadyn-mt.sh ${D}/etc/init.d/inadyn-mt
 }
 
-INSANE_SKIP_${PN} += "ldflags"
+INSANE_SKIP:${PN} += "ldflags"

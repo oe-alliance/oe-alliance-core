@@ -7,13 +7,13 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda
 
 inherit packagegroup
 
-ALLOW_EMPTY_${PN} = "1"
+ALLOW_EMPTY:${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
 PR = "r2"
 
-RDEPENDS_${PN} = "\
+RDEPENDS:${PN} = "\
     oe-alliance-enigma2 \
     oe-alliance-branding \
     oe-alliance-remote \
@@ -69,7 +69,7 @@ RDEPENDS_${PN} = "\
 # kernel space behave identical to those that have these options built-in
 # by including the corresponding kernel modules.
 # So far these are xfs and vfat and their dependencies
-RRECOMMENDS_${PN} = "\
+RRECOMMENDS:${PN} = "\
     kernel-module-xfs \
     kernel-module-exportfs \
     kernel-module-fat \

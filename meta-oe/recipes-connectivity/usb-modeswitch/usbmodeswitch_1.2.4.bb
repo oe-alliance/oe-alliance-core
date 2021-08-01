@@ -3,7 +3,7 @@ require conf/license/license-gplv2.inc
 
 LICENSE = "GPLv3"
 DEPENDS = "libusb"
-RDEPENDS_${PN} = "tcl"
+RDEPENDS:${PN} = "tcl"
 
 SRC_URI[md5sum] = "dbd4ce7966d7b4a5a0604a8280f7164d"
 SRC_URI[sha256sum] = "d772b7438bb2efb524ab4c612198e4f4d4505e25b809d1d1ed4232a37ed78972"

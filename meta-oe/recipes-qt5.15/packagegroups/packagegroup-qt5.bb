@@ -7,7 +7,7 @@ PR = "r0"
 
 inherit packagegroup
 
-RDEPENDS_${PN} = " \
+RDEPENDS:${PN} = " \
 	qtbase \
 	qtbase-plugins \
 	qtbase-tools \

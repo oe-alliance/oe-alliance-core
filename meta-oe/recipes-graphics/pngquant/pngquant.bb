@@ -23,5 +23,5 @@ do_install() {
     install -m 0755 ${S}/pngquant ${D}/usr/bin/pngquant
 }
 
-FILES_${PN} = "/usr/bin/pngquant"
+FILES:${PN} = "/usr/bin/pngquant"
 

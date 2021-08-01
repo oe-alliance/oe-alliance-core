@@ -12,7 +12,7 @@ SRC_URI = " \
     file://satipclient.sh \
 "
 
-SRC_URI_arm = " \
+SRC_URI:arm = " \
     git://github.com/oe-alliance/satip-client.git;protocol=git;branch=mis \
     file://satipclient.sh \
     file://0001-auto-detect-and-avoid-ioctl-conflicts.patch \
@@ -25,7 +25,7 @@ inherit gitpkgv autotools update-rc.d
 INITSCRIPT_NAME = "satipclient"
 INITSCRIPT_PARAMS = "defaults"
 
-do_install_append() {
+do_install:append() {
     install -d ${D}/etc/init.d
     install -m 0755 ${WORKDIR}/satipclient.sh ${D}/etc/init.d/satipclient
 }

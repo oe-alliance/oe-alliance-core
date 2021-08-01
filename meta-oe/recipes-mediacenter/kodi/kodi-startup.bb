@@ -15,6 +15,6 @@ do_install() {
 }
 
 SYSTEMD_PACKAGES = "${PN}"
-SYSTEMD_SERVICE_${PN} = "kodi.service"
+SYSTEMD_SERVICE:${PN} = "kodi.service"
 
-RDEPENDS_${PN} += "xinit kodi"
+RDEPENDS:${PN} += "xinit kodi"

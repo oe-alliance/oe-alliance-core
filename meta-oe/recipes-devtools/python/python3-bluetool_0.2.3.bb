@@ -4,7 +4,7 @@ HOMEPAGE = "https://github.com/emlid/bluetool"
 LICENSE = "GPLv3"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=4fe869ee987a340198fb0d54c55c47f1"
 
-RDEPENDS_${PN} = "${PYTHON_PN}-dbus ${PYTHON_PN}-tcpbridge ${PYTHON_PN}-pygobject"
+RDEPENDS:${PN} = "${PYTHON_PN}-dbus ${PYTHON_PN}-tcpbridge ${PYTHON_PN}-pygobject"
 
 inherit pypi setuptools3
 

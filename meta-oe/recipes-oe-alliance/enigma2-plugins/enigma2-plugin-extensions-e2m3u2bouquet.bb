@@ -7,7 +7,7 @@ PRIORITY = "optional"
 LICENSE = "GPLv2"
 require conf/license/license-gplv2.inc
 
-RDEPENDS_${PN} = "${PYTHON_PN}-image ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-imaging", "${PYTHON_PN}-pillow", d)} ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-argparse", "", d)}"
+RDEPENDS:${PN} = "${PYTHON_PN}-image ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-imaging", "${PYTHON_PN}-pillow", d)} ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-argparse", "", d)}"
 
 inherit gitpkgv
 
@@ -17,13 +17,13 @@ PV = "0.8.5+git${SRCPV}"
 PKGV = "0.8.5+git${GITPKGV}"
 PR = "r0"
 
-INSANE_SKIP_${PN} += "already-stripped ldflags"
+INSANE_SKIP:${PN} += "already-stripped ldflags"
 
 SRC_URI="git://github.com/oe-mirrors/e2m3u2bouquet-plugin.git"
 
 S = "${WORKDIR}/git"
 
-FILES_${PN} = "/usr/lib/enigma2/python/Plugins/Extensions/E2m3u2bouquet"
+FILES:${PN} = "/usr/lib/enigma2/python/Plugins/Extensions/E2m3u2bouquet"
 D_FILES_PN = "${D}${FILES_${PN}}"
 
 EXTRA_OECONF = ""
@@ -36,7 +36,7 @@ do_install() {
     install -m 644 ${S}/LICENSE ${D_FILES_PN}
 }
 
-pkg_preinst_${PN}() {
+pkg_preinst:${PN}() {
 #!/bin/sh
 
 echo
@@ -56,7 +56,7 @@ fi
 exit 0
 }
 
-pkg_postinst_${PN}() {
+pkg_postinst:${PN}() {
 #!/bin/sh
 
 echo "*                               *"
@@ -67,7 +67,7 @@ echo "*                               *"
 exit 0
 }
 
-pkg_postrm_${PN}() {
+pkg_postrm:${PN}() {
 #!/bin/sh
 
 echo "********************************************"

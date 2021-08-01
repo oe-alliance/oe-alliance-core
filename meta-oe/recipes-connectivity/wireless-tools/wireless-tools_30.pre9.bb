@@ -41,10 +41,10 @@ do_install() {
 
 PACKAGES = "libiw libiw-dev libiw-doc ifrename-doc ifrename ${PN} ${PN}-doc ${PN}-dbg"
 
-FILES_libiw = "${libdir}/*.so.*"
-FILES_libiw-dev = "${libdir}/*.a ${libdir}/*.so ${includedir}"
-FILES_libiw-doc = "${mandir}/man7"
-FILES_ifrename = "${sbindir}/ifrename"
-FILES_ifrename-doc = "${mandir}/man8/ifrename.8 ${mandir}/man5/iftab.5"
-FILES_${PN} = "${bindir} ${sbindir}/iw* ${base_sbindir} ${base_bindir} ${sysconfdir}/network"
-FILES_${PN}-doc = "${mandir}"
+FILES:libiw = "${libdir}/*.so.*"
+FILES:libiw-dev = "${libdir}/*.a ${libdir}/*.so ${includedir}"
+FILES:libiw-doc = "${mandir}/man7"
+FILES:ifrename = "${sbindir}/ifrename"
+FILES:ifrename-doc = "${mandir}/man8/ifrename.8 ${mandir}/man5/iftab.5"
+FILES:${PN} = "${bindir} ${sbindir}/iw* ${base_sbindir} ${base_bindir} ${sysconfdir}/network"
+FILES:${PN}-doc = "${mandir}"

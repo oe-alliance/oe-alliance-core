@@ -17,9 +17,9 @@ SRC_URI="git://github.com/MovieArchiver/enigma2-plugin-extensions-moviearchiver.
 S = "${WORKDIR}/git"
 
 PACKAGES =+ "${PN}-po"
-FILES_${PN} = "/etc ${libdir}"
-FILES_${PN}-src = "${libdir}/enigma2/python/Plugins/Extensions/MovieArchiver/*.py"
-FILES_${PN}-po = "${libdir}/enigma2/python/Plugins/Extensions/MovieArchiver/locale/*/*/*.po"
+FILES:${PN} = "/etc ${libdir}"
+FILES:${PN}-src = "${libdir}/enigma2/python/Plugins/Extensions/MovieArchiver/*.py"
+FILES:${PN}-po = "${libdir}/enigma2/python/Plugins/Extensions/MovieArchiver/locale/*/*/*.po"
 
 inherit autotools-brokensep
 
@@ -31,7 +31,7 @@ EXTRA_OECONF = "\
 "
 
 
-pkg_postinst_${PN}() {
+pkg_postinst:${PN}() {
 #!/bin/sh
 echo "                                                    "
 echo "                                                    "
@@ -49,7 +49,7 @@ echo "                                                    "
 exit 0
 }
 
-pkg_postrm_${PN}() {
+pkg_postrm:${PN}() {
 #!/bin/sh
 rm -rf ${libdir}/enigma2/python/Plugins/Extensions/MovieArchiver
 echo "                                                          "
@@ -58,7 +58,7 @@ echo "             Please restart enigma2 now.		            "
 exit 0
 }
 
-pkg_prerm_${PN}() {
+pkg_prerm:${PN}() {
 #!/bin/sh
 echo "                                                          "
 echo "                                                          "
@@ -68,7 +68,7 @@ echo "                                                          "
 echo "                                                          "
 }
 
-pkg_preinst_${PN}() {
+pkg_preinst:${PN}() {
 #!/bin/sh
 rm -rf ${libdir}/enigma2/python/Plugins/Extensions/MovieArchiver
 echo "                                                    "

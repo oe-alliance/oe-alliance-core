@@ -10,7 +10,7 @@ S = "${WORKDIR}"
 
 SRC_URI="file://valis_enigma.ttf"
 
-FILES_${PN} = "/usr/*"
+FILES:${PN} = "/usr/*"
 
 do_install() {
     install -d ${D}/usr/share/fonts

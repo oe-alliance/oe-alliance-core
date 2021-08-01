@@ -9,7 +9,7 @@ file://LICENSE.FDL;md5=6d9f2a9af4c8b8c3c769f6cc1b6aaf7e \
 "
 
 DEPENDS = " qtwebengine upower qtwidevine qtflashplayer"
-RDEPENDS_${PN} = "qtquickcontrols qtquickcontrols2 qtgraphicaleffects qtvirtualkeyboard upower qtwidevine qtflashplayer"
+RDEPENDS:${PN} = "qtquickcontrols qtquickcontrols2 qtgraphicaleffects qtvirtualkeyboard upower qtwidevine qtflashplayer"
 PACKAGES += "${PN}-examples"
 
 PR = "r1"
@@ -33,5 +33,5 @@ cp -R --no-dereference --preserve=mode,links ${S}/* ${D}${datadir}/examples/webe
 }
 
 
-FILES_${PN} += "${bindir}/qtwebbrowser"
-FILES_${PN}-examples += "${datadir}/examples/webengine/webbrowser/*"
+FILES:${PN} += "${bindir}/qtwebbrowser"
+FILES:${PN}-examples += "${datadir}/examples/webengine/webbrowser/*"

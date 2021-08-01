@@ -3,12 +3,12 @@ DESCRIPTION = "Control your receiver with a browser"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://README;firstline=10;lastline=12;md5=26abba37d1c2fcbf96a087ceb8e1db86"
 
-FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 
 BRANCH="master"
 
 DEPENDS = "${PYTHON_PN}-cheetah-native"
-RDEPENDS_${PN} = "\
+RDEPENDS:${PN} = "\
 	aio-grab \
 	${PYTHON_PN}-cheetah \
 	${PYTHON_PN}-compression \
@@ -48,13 +48,13 @@ do_compile() {
 }
 
 PLUGINPATH = "${libdir}/enigma2/python/Plugins/Extensions/${MODULE}"
-do_install_append() {
+do_install:append() {
 	install -d ${D}${PLUGINPATH}
 	cp -r ${S}/plugin/* ${D}${PLUGINPATH}
 	chmod a+rX ${D}${PLUGINPATH}
 }
 
-python populate_packages_prepend() {
+python populate_packages:prepend() {
     enigma2_plugindir = bb.data.expand('${libdir}/enigma2/python/Plugins', d)
     do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/public/themes/.*$', 'enigma2-plugin-%s-themes', '%s (Additional themes for OpenWebif)', recursive=True, match_path=True, prepend=True, extra_depends="${PN}")
     do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/public/webtv/.*$', 'enigma2-plugin-%s-webtv', '%s (WebTV for OpenWebif)', recursive=True, match_path=True, prepend=True, extra_depends="${PN}")
@@ -67,15 +67,15 @@ python populate_packages_prepend() {
     do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/.*\/.*\.po$', 'enigma2-plugin-%s-po', '%s (translations)', recursive=True, match_path=True, prepend=True)
 }
 
-INSANE_SKIP_${PN} += "build-deps"
-INSANE_SKIP_${PN}-terminal += "build-deps"
-INSANE_SKIP_${PN}-vxg += "build-deps"
+INSANE_SKIP:${PN} += "build-deps"
+INSANE_SKIP:${PN}-terminal += "build-deps"
+INSANE_SKIP:${PN}-vxg += "build-deps"
 
 # Required empty packages for build compatibility with distros still using OWIF 0.x.y - 1.0.z
 PACKAGES =+ "${PN}-terminal ${PN}-themes ${PN}-webtv"
-RDEPENDS_${PN}-terminal = "${PN} shellinabox"
-RDEPENDS_${PN}-themes = "${PN}"
-RDEPENDS_${PN}-webtv = "${PN}"
-ALLOW_EMPTY_${PN}-terminal = "1"
-ALLOW_EMPTY_${PN}-themes = "1"
-ALLOW_EMPTY_${PN}-webtv = "1"
+RDEPENDS:${PN}-terminal = "${PN} shellinabox"
+RDEPENDS:${PN}-themes = "${PN}"
+RDEPENDS:${PN}-webtv = "${PN}"
+ALLOW_EMPTY:${PN}-terminal = "1"
+ALLOW_EMPTY:${PN}-themes = "1"
+ALLOW_EMPTY:${PN}-webtv = "1"

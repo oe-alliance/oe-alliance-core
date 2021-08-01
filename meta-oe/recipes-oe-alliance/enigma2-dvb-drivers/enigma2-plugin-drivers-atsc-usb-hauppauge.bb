@@ -5,7 +5,7 @@ require conf/license/license-gplv2.inc
 
 DVBPROVIDER ?= "kernel"
 
-RRECOMMENDS_${PN} = " \
+RRECOMMENDS:${PN} = " \
 	${DVBPROVIDER}-module-au0828 \
 	${DVBPROVIDER}-module-au8522 \
 	${DVBPROVIDER}-module-au8522-common \
@@ -26,4 +26,4 @@ RRECOMMENDS_${PN} = " \
 
 PV = "1.1"
 
-ALLOW_EMPTY_${PN} = "1"
+ALLOW_EMPTY:${PN} = "1"

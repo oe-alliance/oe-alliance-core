@@ -13,8 +13,8 @@ SRC_URI = "git://gitlab.freedesktop.org/gstreamer/gst-plugins-good;protocol=http
            file://0001-gstrtpmp4gpay-set-dafault-value-for-MPEG4-without-co.patch \
 "
 
-RPROVIDES_${PN}-pulseaudio += "${PN}-pulse"
-RPROVIDES_${PN}-soup += "${PN}-souphttpsrc"
+RPROVIDES:${PN}-pulseaudio += "${PN}-pulse"
+RPROVIDES:${PN}-soup += "${PN}-souphttpsrc"
 
 PACKAGECONFIG ??= " \
     ${GSTREAMER_ORC} \
@@ -69,4 +69,4 @@ EXTRA_OEMESON += " \
     -Dwaveform=disabled \
 "
 
-FILES_${PN}-equalizer += "${datadir}/gstreamer-1.0/presets/*.prs"
+FILES:${PN}-equalizer += "${datadir}/gstreamer-1.0/presets/*.prs"

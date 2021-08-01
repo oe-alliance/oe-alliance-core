@@ -17,7 +17,7 @@ SRC_URI="git://github.com/pixbox-hdf/MediaPortalSkins.git"
 
 S = "${WORKDIR}/git/MetrixHD"
 
-FILES_${PN} = "${libdir}"
+FILES:${PN} = "${libdir}"
 
 do_install() {
     install -d ${D}${libdir}

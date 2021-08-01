@@ -17,4 +17,4 @@ do_install(){
     install -m 0644 ${FONTS} ${D}${libdir}/fonts
 }
 
-FILES_${PN} = "${libdir}/fonts"
+FILES:${PN} = "${libdir}/fonts"

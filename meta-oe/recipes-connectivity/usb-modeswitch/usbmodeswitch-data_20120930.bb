@@ -28,4 +28,4 @@ do_install() {
     install -m 0755 ${S}/usb_modeswitch.d/* ${D}/usr/share/usb_modeswitch/
 }
 
-FILES_${PN} += "/etc /lib /usr"
+FILES:${PN} += "/etc /lib /usr"

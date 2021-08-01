@@ -1,1 +1,1 @@
-DEPENDS_append_sh4 = " stlirc"
+DEPENDS:append:sh4 = " stlirc"

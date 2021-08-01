@@ -25,17 +25,17 @@ do_install() {
 }
 
 PACKAGES = "v4l-dvb-modules"
-FILES_${PN} = ""
-ALLOW_EMPTY_${PN} = "1"
+FILES:${PN} = ""
+ALLOW_EMPTY:${PN} = "1"
 
-pkg_postinst_modules() {
+pkg_postinst:modules() {
 if [ -z "$D" ]; then
     depmod -a
     update-modules || true
 fi
 }
 
-pkg_postrm_modules() {
+pkg_postrm:modules() {
 update-modules || true
 }
 
@@ -45,7 +45,7 @@ if [ x"$D" = "x" ]; then
 fi
 }
 
-python populate_packages_prepend() {
+python populate_packages:prepend() {
     import os
     def extract_modinfo(file):
         import tempfile, re
@@ -153,11 +153,11 @@ python populate_packages_prepend() {
             for m in autoload.split():
                 f.write('%s\n' % m)
             f.close()
-            postinst = d.getVar('pkg_postinst_%s' % pkg, True)
+            postinst = d.getVar('pkg_postinst:%s' % pkg, True)
             if not postinst:
-                bb.fatal("pkg_postinst_%s not defined" % pkg)
+                bb.fatal("pkg_postinst:%s not defined" % pkg)
             postinst += d.getVar('autoload_postinst_fragment', True) % autoload
-            d.setVar('pkg_postinst_%s' % pkg, postinst)
+            d.setVar('pkg_postinst:%s' % pkg, postinst)
 
         # Write out any modconf fragment
         modconf = d.getVar('module_conf_%s' % basename, True)
@@ -170,28 +170,28 @@ python populate_packages_prepend() {
             f.write("%s\n" % modconf)
             f.close()
 
-        files = d.getVar('FILES_%s' % pkg, True)
+        files = d.getVar('FILES:%s' % pkg, True)
         files = "%s /etc/modutils/%s /etc/modutils/%s.conf /etc/modprobe.d/%s.conf" % (files, basename, basename, basename)
-        d.setVar('FILES_%s' % pkg, files)
+        d.setVar('FILES:%s' % pkg, files)
 
         if vals.has_key("description"):
-            old_desc = d.getVar('DESCRIPTION_' + pkg, True) or ""
-            d.setVar('DESCRIPTION_' + pkg, old_desc + "; " + vals["description"])
+            old_desc = d.getVar('DESCRIPTION:' + pkg, True) or ""
+            d.setVar('DESCRIPTION:' + pkg, old_desc + "; " + vals["description"])
 
-        rdepends_str = d.getVar('RDEPENDS_' + pkg, True)
+        rdepends_str = d.getVar('RDEPENDS:' + pkg, True)
         if rdepends_str:
             rdepends = rdepends_str.split()
         else:
             rdepends = []
         rdepends.extend(get_dependencies(file, pattern, format))
-        d.setVar('RDEPENDS_' + pkg, ' '.join(rdepends))
+        d.setVar('RDEPENDS:' + pkg, ' '.join(rdepends))
 
     module_deps = parse_depmod()
     module_regex = '^(.*)\.k?o$'
     module_pattern = 'v4l-dvb-module-%s'
 
-    postinst = d.getVar('pkg_postinst_modules', True)
-    postrm = d.getVar('pkg_postrm_modules', True)
+    postinst = d.getVar('pkg_postinst:modules', True)
+    postrm = d.getVar('pkg_postrm:modules', True)
 
     maybe_update_modules = "update-modules "
     if d.getVar("ONLINE_PACKAGE_MANAGEMENT", True) == "none":
@@ -203,8 +203,8 @@ python populate_packages_prepend() {
 
     import re
     metapkg = d.getVar('PN', True)
-    d.setVar('ALLOW_EMPTY_' + metapkg, "1")
-    d.setVar('FILES_' + metapkg, "")
+    d.setVar('ALLOW_EMPTY:' + metapkg, "1")
+    d.setVar('FILES:' + metapkg, "")
     blacklist = []
     for l in module_deps.values():
         for i in l:
@@ -218,8 +218,8 @@ python populate_packages_prepend() {
         p = pkg.find('v4l-dvb-module')
         if p != -1:
             name = pkg.split('-')[-1]
-            d.setVar('RREPLACES_' + pkg, 'kernel-module-' + name)
-            d.setVar('RCONFLICTS_' + pkg, 'kernel-module-' + name)
-    d.setVar('RDEPENDS_' + metapkg, ' '.join(metapkg_rdepends))
-    d.setVar('DESCRIPTION_' + metapkg, 'v4l-dvb modules meta package')
+            d.setVar('RREPLACES:' + pkg, 'kernel-module-' + name)
+            d.setVar('RCONFLICTS:' + pkg, 'kernel-module-' + name)
+    d.setVar('RDEPENDS:' + metapkg, ' '.join(metapkg_rdepends))
+    d.setVar('DESCRIPTION:' + metapkg, 'v4l-dvb modules meta package')
 }

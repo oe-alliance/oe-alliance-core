@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=b1a795ac1a06805cf8fd74920bc46b5c"
 DEPENDS = "libexif libjpeg-turbo libid3tag flac libvorbis sqlite3 ffmpeg util-linux virtual/libiconv"
 
 # NLS causes autoconfigure problems - we don't need the extra languages anyway, so disable nls
-EXTRA_OECONF_append = " --disable-nls "
+EXTRA_OECONF:append = " --disable-nls "
 
 
 SRC_URI = "https://mirrors.omniosce.org/minidlna//minidlna-${PV}.tar.gz  \
@@ -25,25 +25,25 @@ inherit autotools-brokensep gettext update-rc.d
 
 PACKAGES =+ "${PN}-utils"
 
-FILES_${PN}-utils = "${bindir}/test*"
+FILES:${PN}-utils = "${bindir}/test*"
 
-CONFFILES_${PN} = "${sysconfdir}/minidlna.conf"
+CONFFILES:${PN} = "${sysconfdir}/minidlna.conf"
 
 INITSCRIPT_NAME = "minidlna"
 
-do_install_append() {
+do_install:append() {
 	install -d ${D}${sysconfdir} ${D}${sysconfdir}/init.d/
 	install -m 644 ${WORKDIR}/minidlna.conf ${D}${sysconfdir}/minidlna.conf
 	install -m 755 ${WORKDIR}/init ${D}${sysconfdir}/init.d/${PN}
 }
 
-pkg_preinst_${PN} () {
+pkg_preinst:${PN} () {
 	if [ -f /etc/minidlna.conf ];then
 		mv /etc/minidlna.conf /etc/minidlna.conf.orig
 	fi
 }
 
-pkg_postinst_${PN} () {
+pkg_postinst:${PN} () {
 if [ -f /etc/minidlna.conf.orig ];then
 		mv /etc/minidlna.conf.orig /etc/minidlna.conf
 	fi

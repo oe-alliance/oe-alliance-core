@@ -17,7 +17,7 @@ SRC_URI = "http://directfb.org/downloads/Core/DirectFB-1.4/DirectFB-${PV}.tar.gz
 
 S = "${WORKDIR}/DirectFB-${PV}"
 
-LDFLAGS_append =" -lts -lm"
+LDFLAGS:append =" -lts -lm"
 
 inherit autotools binconfig pkgconfig
 
@@ -34,7 +34,7 @@ EXTRA_OECONF = "\
 
 #PACKAGES_DYNAMIC = "directfb-inputdrivers-*"
 #
-#python populate_packages_prepend () {
+#python populate_packages:prepend () {
 #    import os.path
 #    inputdrivers_libdir = d.expand('${libdir}/directfb-${RV}/inputdrivers')
 #    do_split_packages(d, inputdrivers_libdir, '*.so$', 'directfb-inputdrivers-%s', 'Directfb plugin for %s')
@@ -44,12 +44,12 @@ EXTRA_OECONF = "\
 
 
 
-FILES_${PN}-dbg += "\
+FILES:${PN}-dbg += "\
   ${libdir}/directfb-${RV}/*/*/.debug/*.so \
   ${libdir}/directfb-${RV}/*/.debug/*.so \
 "
 
-FILES_${PN}-dev += "\
+FILES:${PN}-dev += "\
   ${bindir}/directfb-config \
   ${libdir}/directfb-${RV}/systems/*.la \
   ${libdir}/directfb-${RV}/inputdrivers/*.la \
@@ -57,7 +57,7 @@ FILES_${PN}-dev += "\
   ${libdir}/directfb-${RV}/wm/*.la \
 "
 
-FILES_${PN} += "\
+FILES:${PN} += "\
   ${libdir}/directfb-${RV}/systems/*.so \
   ${libdir}/directfb-${RV}/inputdrivers/*.so \
   ${libdir}/directfb-${RV}/interfaces/*/*.so \

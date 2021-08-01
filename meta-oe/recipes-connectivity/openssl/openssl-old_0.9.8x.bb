@@ -25,7 +25,7 @@ CFLAG = "${@oe.utils.conditional('SITEINFO_ENDIANNESS', 'le', '-DL_ENDIAN', '-DB
 
 # Avoid binaries being marked as requiring an executable stack (which causes 
 # issues with SELinux on the host)
-CFLAG_append_virtclass-native = " -Wa,--noexecstack"
+CFLAG:append_virtclass-native = " -Wa,--noexecstack"
 
 # -02 does not work on mipsel: ssh hangs when it tries to read /dev/urandom
 CFLAG_mtx-1 := "${@'${CFLAG}'.replace('-O2', '')}"
@@ -38,22 +38,22 @@ export AS = "${CC} -c"
 inherit pkgconfig siteinfo
 
 PACKAGES =+ "libcrypto-old libssl-old"
-FILES_libcrypto-old = "${base_libdir}/libcrypto${SOLIBS}"
-FILES_libssl-old = "${libdir}/libssl.so.*"
-FILES_${PN}-dev += "${base_libdir}/libcrypto${SOLIBSDEV}"
+FILES:libcrypto-old = "${base_libdir}/libcrypto${SOLIBS}"
+FILES:libssl-old = "${libdir}/libssl.so.*"
+FILES:${PN}-dev += "${base_libdir}/libcrypto${SOLIBSDEV}"
 
-INSANE_SKIP_libcrypto-old += "ldflags"
-INSANE_SKIP_libssl-old += "ldflags"
+INSANE_SKIP:libcrypto-old += "ldflags"
+INSANE_SKIP:libssl-old += "ldflags"
 
 PROVIDES =+ " libcrypto0.9.8 libssl0.9.8"
-RPROVIDES_libcrypto-old = "libcrypto0.9.8"
-RPROVIDES_libssl-old = "libssl0.9.8"
+RPROVIDES:libcrypto-old = "libcrypto0.9.8"
+RPROVIDES:libssl-old = "libssl0.9.8"
 
-do_configure_prepend() {
+do_configure:prepend() {
   cp ${WORKDIR}/find.pl ${S}/util/find.pl
 }
 
-do_configure_prepend_darwin () {
+do_configure:prepend:darwin () {
 	sed -i -e '/version-script=openssl\.ld/d' Configure
 }
 
@@ -191,4 +191,4 @@ EXTRA_OECONF += "no-idea no-mdc2 no-rc5"
 
 PARALLEL_MAKEINST = ""
 
-INSANE_SKIP_${PN} += "ldflags"
+INSANE_SKIP:${PN} += "ldflags"

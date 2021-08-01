@@ -2,11 +2,11 @@ SUMMARY = "Compatibility for packages that link to libcrypto or libssl 1.0.0"
 
 require conf/license/license-gplv2.inc
 
-RDEPENDS_${PN} = "libcrypto libssl"
+RDEPENDS:${PN} = "libcrypto libssl"
 PV = "1.1"
 
-RREPLACES_${PN} = "libcrypto1.0.0 libssl1.0.0"
-RCONFLICTS_${PN} = "libcrypto1.0.0 libssl1.0.0"
+RREPLACES:${PN} = "libcrypto1.0.0 libssl1.0.0"
+RCONFLICTS:${PN} = "libcrypto1.0.0 libssl1.0.0"
 
 do_install () {
     install -d ${D}${libdir}
@@ -14,6 +14,6 @@ do_install () {
     ln -sf libssl.so.1.0.2 ${D}${libdir}/libssl.so.1.0.0
 }
 
-FILES_${PN} = "${libdir}"
+FILES:${PN} = "${libdir}"
 
-RPROVIDES_${PN} += "libcrypto1.0.0 libssl1.0.0"
+RPROVIDES:${PN} += "libcrypto1.0.0 libssl1.0.0"

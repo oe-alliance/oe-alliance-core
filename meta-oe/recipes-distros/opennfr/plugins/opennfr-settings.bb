@@ -9,11 +9,11 @@ SRCREV = "${AUTOREV}"
 
 SRC_URI = "git://github.com/carlo0815/openNFR-settings.git"
 
-FILES_${PN} = "/etc/* /etc/init.d/*"
+FILES:${PN} = "/etc/* /etc/init.d/*"
 
 INHIBIT_PACKAGE_STRIP = "1"
  
-ALLOW_EMPTY_${PN} = "1"
+ALLOW_EMPTY:${PN} = "1"
 
 PR = "r1"
 

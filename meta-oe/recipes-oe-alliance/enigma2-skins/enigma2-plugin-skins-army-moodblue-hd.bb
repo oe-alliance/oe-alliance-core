@@ -13,7 +13,7 @@ PR = "r0"
 
 SRC_URI="git://github.com/Taykun345/skin-PLi-Army-MoodBlueHD-mod.git;protocol=git"
 
-FILES_${PN} = "/usr/share/enigma2/Army_MoodBlue_mod"
+FILES:${PN} = "/usr/share/enigma2/Army_MoodBlue_mod"
 
 S = "${WORKDIR}/git"
 

@@ -15,11 +15,11 @@ VER ?= ""
 
 SRC_URI = "git://github.com/oe-alliance/e2plugins.git;protocol=git;branch=python3"
 
-RDEPENDS_${PN}  = "qtwebkit ${PYTHON_PN}-netifaces" 
+RDEPENDS:${PN}  = "qtwebkit ${PYTHON_PN}-netifaces" 
 
 S = "${WORKDIR}/git/qtstalker${VER}"
 
-FILES_${PN} =  "${bindir} ${libdir} /usr/share/stalker"
+FILES:${PN} =  "${bindir} ${libdir} /usr/share/stalker"
 
 do_install(){
 	install -d ${D}${libdir}/enigma2/python/Plugins/Extensions/Stalker
@@ -36,13 +36,13 @@ do_install(){
 	chmod -R a+rX ${D}/usr/share/stalker/
 }
 
-pkg_postinst_ontarget_${PN}(){
+pkg_postinst_ontarget:${PN}(){
 #!/bin/sh
 ln -sf /usr/share/fonts /usr/lib/fonts
 exit 0
 }
 
-pkg_postrm_${PN} () {
+pkg_postrm:${PN} () {
 #!/bin/sh
 rm -rf /usr/lib/enigma2/python/Plugins/Extensions/Stalker
 exit 0
@@ -52,4 +52,4 @@ INHIBIT_PACKAGE_STRIP = "1"
 INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
 do_package_qa[noexec] = "1"
 
-INSANE_SKIP_${PN} += "already-stripped"
+INSANE_SKIP:${PN} += "already-stripped"

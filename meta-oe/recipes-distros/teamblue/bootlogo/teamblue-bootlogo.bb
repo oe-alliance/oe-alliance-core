@@ -7,7 +7,7 @@ PACKAGE_ARCH = "${MACHINEBUILD}"
 
 require conf/license/license-gplv2.inc
 
-RDEPENDS_${PN} += "showiframe"
+RDEPENDS:${PN} += "showiframe"
 
 PV = "${IMAGE_VERSION}"
 PR = "r4"
@@ -16,8 +16,8 @@ S = "${WORKDIR}"
 
 INITSCRIPT_NAME = "bootlogo"
 INITSCRIPT_PARAMS = "start 06 S ."
-INITSCRIPT_PARAMS_gb7252 = "start 70 S ."
-INITSCRIPT_PARAMS_gb72604 = "start 70 S ."
+INITSCRIPT_PARAMS:gb7252 = "start 70 S ."
+INITSCRIPT_PARAMS:gb72604 = "start 70 S ."
 
 inherit update-rc.d
 
@@ -29,11 +29,11 @@ SRC_URI = "file://bootlogo.mvi file://bootlogo.sh \
     ${@bb.utils.contains("MACHINE_FEATURES", "gigabluearmbootvideo", "file://bootvideo.mp4 file://bootvideo-arm" , "", d)} \
 "
 
-SRC_URI_append_gbmv200 = "file://logo.img"
+SRC_URI:append_gbmv200 = "file://logo.img"
 
-FILES_${PN} = "/boot /usr/share /usr/bin /etc/init.d"
+FILES:${PN} = "/boot /usr/share /usr/bin /etc/init.d"
 
-INSANE_SKIP_${PN} = "already-stripped"
+INSANE_SKIP:${PN} = "already-stripped"
 
 do_install() {
     install -d ${D}/usr/share

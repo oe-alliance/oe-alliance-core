@@ -1,11 +1,11 @@
 PACKAGE_ARCH = "${MACHINEBUILD}"
 
-PR_append = ".5"
+PR:append = ".5"
 
-FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
-FILESEXTRAPATHS_prepend := "${THISDIR}/${DISTRO_NAME}:"
-FILESEXTRAPATHS_prepend := "${THISDIR}/${MACHINE}:"
-FILESEXTRAPATHS_prepend := "${THISDIR}/${MACHINEBUILD}:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/${DISTRO_NAME}:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/${MACHINE}:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/${MACHINEBUILD}:"
 
 SRC_URI += "file://editor.sh"
 SRC_URI += "file://terminfo.sh"
@@ -14,7 +14,7 @@ SRC_URI += "file://filesystems"
 
 hostname = "${MACHINEBUILD}"
 
-do_install_append() {
+do_install:append() {
     rm -rf ${D}/autofs
     rm -rf ${D}/mnt
     rm -rf ${D}/hdd
@@ -58,8 +58,8 @@ do_install_append() {
 }
 
 # For Classic Dreambox Inject the /boot partition into /etc/fstab. At image creation time,
-# this is done by IMAGE_CMD_ubi.nfi (image_types_nfi.bbclass).
-pkg_postinst_${PN}_dreamboxv1() {
+# this is done by IMAGE_CMD:ubi.nfi (image_types_nfi.bbclass).
+pkg_postinst:${PN}_dreamboxv1() {
 if [ -z "$D" ]; then
 	ROOT='\<root=ubi0:rootfs\>'
 	if grep -q $ROOT /proc/cmdline && ! grep -q '\s\+/boot\s\+' /etc/fstab; then

@@ -19,7 +19,7 @@ S = "${WORKDIR}/git"
 
 PACKAGES = "${PN}"
 
-FILES_${PN} = "/picon/* /piconlcd/*"
+FILES:${PN} = "/picon/* /piconlcd/*"
 
 do_install() {
     cp -rp ${S}/picon ${D}/

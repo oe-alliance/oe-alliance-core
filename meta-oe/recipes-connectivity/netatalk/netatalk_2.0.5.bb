@@ -22,16 +22,16 @@ INITSCRIPT_PARAMS = "defaults 20"
 
 PACKAGES = "${PN}-atalkd ${PN}-pap ${PN}-timelord ${PN}-dbg ${PN} ${PN}-doc ${PN}-dev"
 
-RRECOMMENDS_${PN}-atalkd = "kernel-module-appletalk"
+RRECOMMENDS:${PN}-atalkd = "kernel-module-appletalk"
 
-FILES_${PN}-atalkd += "${sysconfdir}/netatalk/atalkd.conf \
+FILES:${PN}-atalkd += "${sysconfdir}/netatalk/atalkd.conf \
                        /usr/sbin/atalkd"
-FILES_${PN}-pap +=  "/usr/bin/pap \
+FILES:${PN}-pap +=  "/usr/bin/pap \
                      ${sysconfdir}/netatalk/papd.conf \
                      /usr/sbin/papd \
                      /usr/bin/papstatus"
-FILES_${PN}-timelord += "/usr/sbin/timelord"
-FILES_${PN}-dbg += "${sysconfdir}/netatalk/uams/.debug"
+FILES:${PN}-timelord += "/usr/sbin/timelord"
+FILES:${PN}-dbg += "${sysconfdir}/netatalk/uams/.debug"
 
 EXTRA_OECONF += "ac_cv_path_KRB5_CONFIG=no \
                  ac_cv_header_rpcsvc_rquota_h=no \
@@ -44,7 +44,7 @@ EXTRA_OECONF += "ac_cv_path_KRB5_CONFIG=no \
                  --with-ssl-dir=${STAGING_DIR_TARGET}${layout_exec_prefix}"
 LDFLAGS += "-lpthread -L${STAGING_LIBDIR}"
 
-do_install_append() {
+do_install:append() {
     install -D -m 0755 ${WORKDIR}/init ${D}${sysconfdir}/init.d/atalk
     install -D -m 0644 ${WORKDIR}/netatalk.conf ${D}${sysconfdir}/netatalk/netatalk.conf
     install -D -m 0644 ${WORKDIR}/AppleVolumes.default ${D}${sysconfdir}/netatalk/AppleVolumes.default

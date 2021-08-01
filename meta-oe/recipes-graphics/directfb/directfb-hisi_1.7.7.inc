@@ -1,3 +1,3 @@
-EXTRA_OECONF_append_class-target += "\
+EXTRA_OECONF:append:class-target += "\
 	--with-inputdrivers=linuxinput \
 "

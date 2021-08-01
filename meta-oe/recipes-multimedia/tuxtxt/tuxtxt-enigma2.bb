@@ -24,11 +24,11 @@ SRC_URI = "git://github.com/OpenPLi/tuxtxt.git;protocol=git \
            ', '', d)} \
 "
 
-SRC_URI_append_AML8726 = " file://0001-add-HBGIC-for-wetek.patch"
-SRC_URI_append_AMLS905 = " file://0001-add-HBGIC-for-wetek.patch"
-SRC_URI_append_AML905D = " file://0001-add-HBGIC-for-wetek.patch"
+SRC_URI:append_AML8726 = " file://0001-add-HBGIC-for-wetek.patch"
+SRC_URI:append_AMLS905 = " file://0001-add-HBGIC-for-wetek.patch"
+SRC_URI:append_AML905D = " file://0001-add-HBGIC-for-wetek.patch"
 
-SRC_URI_append = " \
+SRC_URI:append = " \
     ${@bb.utils.contains('DISTRO_FEATURES', 'tuxtxtfhd', 'file://tuxtxt_FHD.patch', '', d)} \
     "
 
@@ -40,7 +40,7 @@ EXTRA_OECONF = "--with-boxtype=generic --with-configdir=/etc \
     ${@bb.utils.contains("MACHINE_FEATURES", "textlcd", "--with-textlcd" , "", d)} \
      "
 
-do_configure_prepend() {
+do_configure:prepend() {
     touch ${S}/NEWS
     touch ${S}/README
     touch ${S}/AUTHORS
@@ -52,7 +52,7 @@ do_configure_prepend() {
     fi
 }
 
-do_configure_prepend_openvix () {
+do_configure:prepend_openvix () {
     sed 's/UseTTF 0/UseTTF 1/g' -i ${S}/data/tuxtxt2.conf
     sed 's/TTFWidthFactor16 28/TTFWidthFactor16 26/g' -i ${S}/data/tuxtxt2.conf
     sed 's/TTFHeightFactor16 16/TTFHeightFactor16 14/g' -i ${S}/data/tuxtxt2.conf
@@ -62,7 +62,7 @@ do_configure_prepend_openvix () {
     touch ${S}/ChangeLog
 }
 
-do_install_append() {
+do_install:append() {
     if ${@bb.utils.contains('DISTRO_FEATURES', 'tuxtxtfhd', 'true', 'false', d)}; then
         install -d ${D}/usr/share/fonts
         rm -f ${D}/usr/share/fonts/tuxtxt.ttf
@@ -73,6 +73,6 @@ do_install_append() {
 }
 
 PACKAGES = "${PN}-src ${PN}-dbg ${PN}-dev ${PN}"
-FILES_${PN}-src = "/usr/src"
-FILES_${PN} = "${libdir}/libtuxtxt32bpp.so.* /usr/share/fonts ${libdir}/enigma2/python/Plugins/Extensions/Tuxtxt/*.py /etc/tuxtxt"
-CONFFILES_${PN} = "/etc/tuxtxt/tuxtxt2.conf"
+FILES:${PN}-src = "/usr/src"
+FILES:${PN} = "${libdir}/libtuxtxt32bpp.so.* /usr/share/fonts ${libdir}/enigma2/python/Plugins/Extensions/Tuxtxt/*.py /etc/tuxtxt"
+CONFFILES:${PN} = "/etc/tuxtxt/tuxtxt2.conf"

@@ -10,7 +10,7 @@ SRC_URI = "file://firmware-ap6210.zip"
 S = "${WORKDIR}"
 
 PACKAGES = "${PN}"
-FILES_${PN} += "${nonarch_base_libdir}/firmware/brcm"
+FILES:${PN} += "${nonarch_base_libdir}/firmware/brcm"
 
 do_install() {
     install -d ${D}${nonarch_base_libdir}/firmware/brcm

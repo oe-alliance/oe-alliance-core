@@ -47,5 +47,5 @@ do_install() {
 }
 
 FILES_SOLIBSDEV = ""
-FILES_${PN} = "${libdir}/lib*.so"
+FILES:${PN} = "${libdir}/lib*.so"
 

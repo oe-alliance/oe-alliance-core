@@ -1,14 +1,14 @@
-FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
 
 DEPENDS += "libusb1 ${PYTHON_PN}"
-RDEPENDS_${PN} += "libusb1 ${PYTHON_PN}"
+RDEPENDS:${PN} += "libusb1 ${PYTHON_PN}"
 
-SRC_URI_append = " file://pcscd.init"
+SRC_URI:append = " file://pcscd.init"
 
 # if PYTHON_PN is python2
-SRC_URI_remove = "${@bb.utils.contains("PYTHON_PN", "python", "0001-pcsc-spy-use-python3-only.patch", "", d)}"
-RDEPENDS_${PN}-spy_remove = "${@bb.utils.contains("PYTHON_PN", "python", "python3", "", d)}"
-RDEPENDS_${PN}-spy += "${PYTHON_PN}"
+SRC_URI:remove = "${@bb.utils.contains("PYTHON_PN", "python", "0001-pcsc-spy-use-python3-only.patch", "", d)}"
+RDEPENDS:${PN}-spy:remove = "${@bb.utils.contains("PYTHON_PN", "python", "python3", "", d)}"
+RDEPENDS:${PN}-spy += "${PYTHON_PN}"
 
 PACKAGECONFIG = ""
 
@@ -28,4 +28,4 @@ do_install() {
     install -m 755 ${WORKDIR}/pcscd.init ${D}/${sysconfdir}/init.d/pcscd
 }
 
-FILES_${PN} =+ "${sysconfdir}/*"
+FILES:${PN} =+ "${sysconfdir}/*"

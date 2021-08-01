@@ -1,5 +1,5 @@
 DEPENDS = "virtual/kernel module-init-tools"
-RDEPENDS_${PN} += "kmod"
+RDEPENDS:${PN} += "kmod"
 LIC_FILES_CHKSUM = "file://COPYING;md5=eb723b61539feef013de476e68b5c50a"
 
 do_configure[depends] += "virtual/kernel:do_shared_workdir"
@@ -12,9 +12,9 @@ SRC_URI = "http://www.dvbsky.net/download/linux/media_build-bst-14-141106.tar.gz
            file://defconfig \
 "
 
-SRC_URI_append_mipsel = "file://sit2_op.o "
+SRC_URI:append:mipsel = "file://sit2_op.o "
 
-SRC_URI_append_arm = " file://vu_backport.patch \
+SRC_URI:append:arm = " file://vu_backport.patch \
                        file://sit2_op.o_150322_arm \
 "
 
@@ -26,14 +26,14 @@ EXTRA_OEMAKE = "KDIR=${STAGING_KERNEL_DIR} SRCDIR=${STAGING_KERNEL_DIR} OUTDIR=$
 
 do_populate_sysroot[noexec] = "1"
 
-do_configure_prepend_mipsel() {
+do_configure:prepend:mipsel() {
     CUR=`pwd`
     cp ${WORKDIR}/sit2_op.o ${S}/v4l/sit2_op.o
     make DIR=${STAGING_KERNEL_BUILDDIR} allyesconfig
     cd $CUR
 }
 
-do_configure_prepend_arm() {
+do_configure:prepend:arm() {
     CUR=`pwd`
     cp ${WORKDIR}/sit2_op.o_150322_arm ${S}/v4l/sit2_op.o
     make DIR=${STAGING_KERNEL_BUILDDIR} allyesconfig

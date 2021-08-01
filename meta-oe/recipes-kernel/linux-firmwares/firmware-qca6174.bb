@@ -10,7 +10,7 @@ S = "${WORKDIR}"
 PR = "r1"
 
 PACKAGES = "${PN}"
-FILES_${PN} += "${nonarch_base_libdir}/firmware"
+FILES:${PN} += "${nonarch_base_libdir}/firmware"
 
 do_install() {
     install -d ${D}${nonarch_base_libdir}/firmware

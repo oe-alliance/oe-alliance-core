@@ -42,7 +42,7 @@ EXTRA_OECMAKE = " \
     -DXLOCALE_NOT_USED=1 \
 "
 
-do_compile_prepend() {
+do_compile:prepend() {
 	sed -i -e 's:I/usr/include:I${STAGING_INCDIR}:g' \
 	       -e 's:-pipe:${HOST_CC_ARCH} ${TOOLCHAIN_OPTIONS} -pipe:g' \
 		   -e 's:/recipe-sysroot-native/usr/include:/recipe-sysroot/usr/include:g' \
@@ -53,18 +53,18 @@ do_compile_prepend() {
 
 
 # Make zip package for manual installation
-do_install_append() {
+do_install:append() {
 	install -d ${D}${datadir}/kodi/addons/packages/
 	( cd ${D}${datadir}/kodi/addons
 	  zip -r ${D}${datadir}/kodi/addons/packages/pvr.${KODIADDONPLUGIN}-${PV}.zip pvr.${KODIADDONPLUGIN} -x '*.debug*' )
 }
 
 # Doesn't get added automagically, dlopen()?
-RDEPENDS_${PN} += "libkodiplatform"
+RDEPENDS:${PN} += "libkodiplatform"
 
-INSANE_SKIP_${PN} = "dev-so file-rdeps"
-FILES_${PN} += "${datadir}/kodi"
-FILES_${PN}-dbg += "${datadir}/kodi/addons/*/.debug/"
+INSANE_SKIP:${PN} = "dev-so file-rdeps"
+FILES:${PN} += "${datadir}/kodi"
+FILES:${PN}-dbg += "${datadir}/kodi/addons/*/.debug/"
 
 do_qa_staging() {
 }

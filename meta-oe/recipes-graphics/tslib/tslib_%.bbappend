@@ -1,13 +1,13 @@
-FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 
 BBCLASSEXTEND = "native"
 
-PACKAGES_remove = "tslib-conf"
+PACKAGES:remove = "tslib-conf"
 
-RDEPENDS_${PN}_remove = "tslib-conf"
+RDEPENDS:${PN}:remove = "tslib-conf"
 
-SRC_URI_append = " \
+SRC_URI:append = " \
     file://disable_EVIOCGPROP_call_if_unavailable.patch \
 "
 
-FILES_${PN} =+ "${sysconfdir}/ts.conf ${sysconfdir}/profile.d/tslib.sh ${datadir}/tslib"
+FILES:${PN} =+ "${sysconfdir}/ts.conf ${sysconfdir}/profile.d/tslib.sh ${datadir}/tslib"

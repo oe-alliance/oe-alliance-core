@@ -1,4 +1,4 @@
-do_install_append() {
+do_install:append() {
 	rm -fR ${D}${sysconfdir}/systemd/system/getty.target.wants
 	rm -fR ${D}/lib/systemd/system/multi-user.target.wants/getty.target
 	rm -fR ${D}/lib/systemd/system/sysinit.target.wants/systemd-udev-trigger.service

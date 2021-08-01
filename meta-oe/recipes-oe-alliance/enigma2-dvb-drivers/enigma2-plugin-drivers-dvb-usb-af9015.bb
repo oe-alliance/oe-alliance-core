@@ -5,7 +5,7 @@ require conf/license/license-gplv2.inc
 
 DVBPROVIDER ?= "kernel"
 
-RRECOMMENDS_${PN} = " \
+RRECOMMENDS:${PN} = " \
     ${DVBPROVIDER}-module-dvb-usb-af9015 \
     ${DVBPROVIDER}-module-af9013 \
     ${DVBPROVIDER}-module-dvb-pll \
@@ -24,4 +24,4 @@ RRECOMMENDS_${PN} = " \
 PV = "1.0"
 PR = "r0"
 
-ALLOW_EMPTY_${PN} = "1"
+ALLOW_EMPTY:${PN} = "1"

@@ -11,11 +11,11 @@ PV = "0.60rc2+git${SRCPV}"
 PKGV = "0.60rc2+git${GITPKGV}"
 VER="0.60rc2"
 
-RDEPENDS_${PN} = "enigma2-plugin-systemplugins-extnumberzap"
+RDEPENDS:${PN} = "enigma2-plugin-systemplugins-extnumberzap"
 
 SRC_URI="git://github.com/DeadEyE-OpenATV/BlackSpirit.HD.git;protocol=git"
 
-FILES_${PN} = "/usr/*"
+FILES:${PN} = "/usr/*"
 
 S = "${WORKDIR}/git"
 
@@ -27,7 +27,7 @@ do_install() {
     ln -s ${D}/usr/share/enigma2/BlackSpirit.HD/img ${D}/usr/share/enigma2/BlackSpirit.HD/buttons
 }
 
-pkg_postinst_${PN}() {
+pkg_postinst:${PN}() {
 #!/bin/sh
 if [ -f /tmp/skin.xml ]; then
     mv /tmp/skin.xml /usr/share/enigma2/BlackSpirit.HD
@@ -38,7 +38,7 @@ echo "                                                          "
 exit 0
 }
 
-pkg_postrm_${PN}() {
+pkg_postrm:${PN}() {
 #!/bin/sh
 rm -rf /usr/share/enigma2/BlackSpirit.HD
 rm -rf /usr/lib/enigma2/python/Plugins/Extensions/BlackSpiritHD
@@ -50,7 +50,7 @@ echo "                                                          "
 exit 0
 }
 
-pkg_preinst_${PN}() {
+pkg_preinst:${PN}() {
 #!/bin/sh
 echo "Checking for previous installations..."
 if [ -f /usr/share/enigma2/BlackSpirit.HD/skin.xml ]; then
@@ -75,7 +75,7 @@ echo "                                                           "
 exit 0
 }
 
-pkg_prerm_${PN}() {
+pkg_prerm:${PN}() {
 #!/bin/sh
 echo "                                                           "
 echo "             BlackSpirit.HD is now being removed...        "

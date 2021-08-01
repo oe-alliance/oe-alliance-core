@@ -32,4 +32,4 @@ do_install() {
 }
 do_install[vardepsexclude] += "DATE DATETIME"
 
-FILES_${PN} = "/etc/image-version"
+FILES:${PN} = "/etc/image-version"

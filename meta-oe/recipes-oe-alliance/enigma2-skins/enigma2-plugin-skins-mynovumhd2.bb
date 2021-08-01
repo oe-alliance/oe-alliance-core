@@ -11,11 +11,11 @@ PV = "19.2+git${SRCPV}"
 PKGV = "19.2+git${GITPKGV}"
 PR = "r0"
 
-RDEPENDS_${PN} = "enigma2-plugin-skincomponents-novum enigma2-plugin-systemplugins-weathercomponenthandler"
+RDEPENDS:${PN} = "enigma2-plugin-skincomponents-novum enigma2-plugin-systemplugins-weathercomponenthandler"
 
 SRC_URI = "git://github.com/oe-alliance/oe-alliance-skins.git;protocol=git"
 
-FILES_${PN} = "/usr/share/enigma2/myNOVUM_HD2"
+FILES:${PN} = "/usr/share/enigma2/myNOVUM_HD2"
 
 
 S = "${WORKDIR}/git"

@@ -17,7 +17,7 @@ inherit autotools pkgconfig
 
 S = "${WORKDIR}/streamripper-1.64.6"
 
-do_configure_prepend() {
+do_configure:prepend() {
     touch ${S}/NEWS
     touch ${S}/AUTHORS
     touch ${S}/ChangeLog

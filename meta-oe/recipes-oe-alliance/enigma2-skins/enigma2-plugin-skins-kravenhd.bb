@@ -11,14 +11,14 @@ PKGV = "7.8.x+git${GITPKGV}"
 VER = "7.8.x"
 
 DEPENDS += "gettext-native"
-RDEPENDS_${PN} = "${PYTHON_PN}-requests ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-subprocess", "", d)} ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-imaging", "${PYTHON_PN}-pillow", d)} enigma2-plugin-systemplugins-mphelp ${PYTHON_PN}-lxml"
-RCONFLICTS_${PN} += "enigma2-plugin-skins-kravenfhd enigma2-plugin-skins-kravenvb"
-RREPLACES_${PN} += "enigma2-plugin-skins-kravenfhd enigma2-plugin-skins-kravenvb"
-RPROVIDES_${PN} += "enigma2-plugin-skins-kravenfhd enigma2-plugin-skins-kravenvb"
+RDEPENDS:${PN} = "${PYTHON_PN}-requests ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-subprocess", "", d)} ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-imaging", "${PYTHON_PN}-pillow", d)} enigma2-plugin-systemplugins-mphelp ${PYTHON_PN}-lxml"
+RCONFLICTS:${PN} += "enigma2-plugin-skins-kravenfhd enigma2-plugin-skins-kravenvb"
+RREPLACES:${PN} += "enigma2-plugin-skins-kravenfhd enigma2-plugin-skins-kravenvb"
+RPROVIDES:${PN} += "enigma2-plugin-skins-kravenfhd enigma2-plugin-skins-kravenvb"
 
 SRC_URI = "git://github.com/oerlgrey/KravenHD.git;protocol=git;branch=python3"
 
-FILES_${PN} = "/usr/*"
+FILES:${PN} = "/usr/*"
 
 S = "${WORKDIR}/git"
 
@@ -39,7 +39,7 @@ do_install() {
     chmod -R a+rX ${D}/usr/share/enigma2/
 }
 
-pkg_postinst_${PN} () {
+pkg_postinst:${PN} () {
 #!/bin/sh
 if [ -f /tmp/kravenhdskin ]; then
     mv -f /tmp/kravenhdskin /usr/share/enigma2/KravenHD/skin.xml
@@ -79,7 +79,7 @@ echo "               ...Skin successful installed.               "
 exit 0
 }
 
-pkg_postrm_${PN} () {
+pkg_postrm:${PN} () {
 #!/bin/sh
 rm -rf /usr/share/enigma2/KravenHD
 rm -rf /usr/lib/enigma2/python/Plugins/Extensions/KravenHD
@@ -105,7 +105,7 @@ echo "               ...Skin successful removed.                 "
 exit 0
 }
 
-pkg_preinst_${PN} () {
+pkg_preinst:${PN} () {
 #!/bin/sh
 echo "                                                           "
 echo "        The Skin KravenHD is now being installed...        "
@@ -113,7 +113,7 @@ echo "                                                           "
 exit 0                                                           
 }
 
-pkg_prerm_${PN} () {
+pkg_prerm:${PN} () {
 #!/bin/sh
 echo "                                                           "
 echo "        The Skin KravenHD is now being removed...          "

@@ -11,7 +11,7 @@ do_install () {
         install -m 0755 ${WORKDIR}/${BPN}-${PV}/wakelan ${D}${bindir}/wakelan
 }
 
-FILES_${PN} = "${bindir}/wakelan"
+FILES:${PN} = "${bindir}/wakelan"
 
 INHIBIT_AUTO_STAGE = "1"
 

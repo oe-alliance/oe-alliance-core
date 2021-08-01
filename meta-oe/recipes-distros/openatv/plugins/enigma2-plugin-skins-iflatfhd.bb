@@ -10,11 +10,11 @@ PV = "5.9+git${SRCPV}"
 PKGV = "5.9+git${GITPKGV}"
 VER="5.9"
 
-RDEPENDS_${PN} = "enigma2-plugin-systemplugins-weathercomponenthandler, enigma2-plugin-skincomponents-weathercomponent"
+RDEPENDS:${PN} = "enigma2-plugin-systemplugins-weathercomponenthandler, enigma2-plugin-skincomponents-weathercomponent"
 
 SRC_URI="git://github.com/openatv/iflat.git;protocol=git"
 
-FILES_${PN} = "${libdir} /usr/share"
+FILES:${PN} = "${libdir} /usr/share"
 
 S = "${WORKDIR}/git"
 
@@ -26,7 +26,7 @@ do_install() {
     chmod -R a+rX ${D}/usr/share/enigma2/
 }
 
-pkg_postinst_${PN} () {
+pkg_postinst:${PN} () {
 #!/bin/sh
 
 echo "********************************************************"
@@ -81,7 +81,7 @@ echo "              ...Skin successful installed.                "
 exit 0
 }
 
-pkg_postrm_${PN} () {
+pkg_postrm:${PN} () {
 #!/bin/sh
 rm -rf /usr/share/enigma2/iFlatFHD
 
@@ -108,13 +108,13 @@ echo "               ...Skin successful removed.                 "
 exit 0
 }
 
-pkg_preinst_${PN} () {
+pkg_preinst:${PN} () {
 #!/bin/sh
 echo "        iFlatFHD Skin will be now installed...            "
 exit 0
 }
 
-pkg_prerm_${PN} () {
+pkg_prerm:${PN} () {
 #!/bin/sh
 echo "                                                           "
 echo "              iFlatFHD is now being removed...             "

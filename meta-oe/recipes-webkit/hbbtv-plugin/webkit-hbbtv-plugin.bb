@@ -4,7 +4,7 @@ PRIORITY = "required"
 LICENSE = "CLOSED"
 require conf/license/license-close.inc
 
-RDEPENDS_${PN} = "\
+RDEPENDS:${PN} = "\
     webkit-classic \
     webkit-classic-browser \
     libupnp1.6 \
@@ -64,7 +64,7 @@ PV = "${PKGVERSION}-${SRCPV}"
 PKGV = "${PKGVERSION}-${GITPKGV}"
 PR = "r0"
 
-INSANE_SKIP_${PN} += "already-stripped arch"
+INSANE_SKIP:${PN} += "already-stripped arch"
 
 SRC_URI = "git://github.com/oe-alliance/enigma2-plugin-extensions-hbbtv-webkit.git;protocol=https"
 
@@ -73,7 +73,7 @@ S = "${WORKDIR}/git"
 do_package_qa() {
 }
 
-do_install_append() {
+do_install:append() {
     install -d ${D}${bindir}
     install -d ${D}/home/root
     install -d ${D}/etc
@@ -91,4 +91,4 @@ do_install_append() {
     install -m 0755 ${S}/libhbbtvplugin.so ${D}/usr/lib/mozilla/plugins/
 }
 
-FILES_${PN} = "/"
+FILES:${PN} = "/"

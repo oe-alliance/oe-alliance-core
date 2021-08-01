@@ -12,10 +12,10 @@ SRC_URI = "svn://svn.streamboard.tv/oscam;protocol=https;module=trunk;scmdata=ke
 PACKAGES = "enigma2-plugin-softcams-oscam-pcscd-latest"
 
 PROVIDES += "openvix-softcams-oscam-pcscd-latest-arm"
-RPROVIDES_enigma2-plugin-softcams-oscam-pcscd-latest += "openvix-softcams-oscam-pcscd-latest-arm"
+RPROVIDES:enigma2-plugin-softcams-oscam-pcscd-latest += "openvix-softcams-oscam-pcscd-latest-arm"
 
 DEPENDS = "libusb openssl pcsc-lite"
-RDEPENDS_enigma2-plugin-softcams-oscam-pcscd-latest = "pcsc-lite"
+RDEPENDS:enigma2-plugin-softcams-oscam-pcscd-latest = "pcsc-lite"
 
 S = "${WORKDIR}/trunk"
 
@@ -34,5 +34,5 @@ do_install() {
     install -m 0755 ${WORKDIR}/build/oscam ${D}/usr/softcams/oscam-pcsc-latest
 }
 
-FILES_enigma2-plugin-softcams-oscam-pcscd-latest= "/usr"
-INSANE_SKIP_${PN} = "already-stripped"
+FILES:enigma2-plugin-softcams-oscam-pcscd-latest= "/usr"
+INSANE_SKIP:${PN} = "already-stripped"

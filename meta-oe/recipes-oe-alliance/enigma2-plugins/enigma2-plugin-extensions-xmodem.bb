@@ -15,7 +15,7 @@ PKGV = "1+git${GITPKGV}"
 
 inherit ${@bb.utils.contains("PYTHON_PN", "python", "distutils-openplugins", "distutils3-openplugins", d)}
 
-RDEPENDS_${PN} = " \
+RDEPENDS:${PN} = " \
 	iptables \
 	usb-modeswitch \
 	usb-modeswitch-data \

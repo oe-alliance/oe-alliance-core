@@ -15,8 +15,8 @@ SRC_URI = "file://mt7610u_wifi_sta_v3002_dpo_20130916.tar.bz2 \
 	file://buildfix.patch;patch=1 \
 	"
 
-SRC_URI_append_dm900 = " file://fix_build_arm.patch;patch=1"
-SRC_URI_append_dm920 = " file://fix_build_arm.patch;patch=1"
+SRC_URI:append_dm900 = " file://fix_build_arm.patch;patch=1"
+SRC_URI:append_dm920 = " file://fix_build_arm.patch;patch=1"
 
 S = "${WORKDIR}/mt7610u_wifi_sta_v3002_dpo_20130916"
 
@@ -36,5 +36,5 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 SRC_URI[md5sum] = "2b552aff1bbd4effe94185e222eb761e"
 SRC_URI[sha256sum] = "c0061b9010b80c1fc09d78786317957044bde43e2a127ecefd66d4faa12d2906"
 
-FILES_${PN} += "${sysconfdir}/Wireless/mt7610uSTA/mt7610uSTACard.dat ${sysconfdir}/Wireless/mt7610uSTA/mt7610uSTA.dat ${sysconfdir}/Wireless/mt7610uSTA/SingleSKU.dat"
+FILES:${PN} += "${sysconfdir}/Wireless/mt7610uSTA/mt7610uSTACard.dat ${sysconfdir}/Wireless/mt7610uSTA/mt7610uSTA.dat ${sysconfdir}/Wireless/mt7610uSTA/SingleSKU.dat"
 

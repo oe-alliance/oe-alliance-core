@@ -5,7 +5,7 @@ SECTION = "console/network"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=e944ef975ef9d0312e63c9ee80df17fc"
 DEPENDS = "lzo openssl libpam"
-RDEPENDS_{PN} = "openssl"
+RDEPENDS:{PN} = "openssl"
 
 inherit autotools
 

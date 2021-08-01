@@ -76,5 +76,5 @@ do_install() {
 }
 do_install[vardepsexclude] += "DATE DATETIME"
 
-FILES_${PN} += "/etc/model /etc/image-version /etc/oe-git.log /etc/e2-git.log"
+FILES:${PN} += "/etc/model /etc/image-version /etc/oe-git.log /etc/e2-git.log"
 

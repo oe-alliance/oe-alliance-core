@@ -25,7 +25,7 @@ DEPENDS = " \
     ${@bb.utils.contains("MACHINE_FEATURES", "hiaccel", "dinobot-libs-${MACHINE}" , "", d)} \
     "
 
-RDEPENDS_${PN} = " \
+RDEPENDS:${PN} = " \
     alsa-conf \
     enigma2-fonts \
     ethtool \
@@ -41,7 +41,7 @@ RDEPENDS_${PN} = " \
     oe-alliance-branding \
     "
 
-RRECOMMENDS_${PN} = " \
+RRECOMMENDS:${PN} = " \
     glib-networking \
     glibc-gconv-utf-16 \
     gstreamer1.0-plugin-subsink \
@@ -145,47 +145,47 @@ GST_UGLY_RDEPS = "\
 "
 
 # DVD playback is integrated, we need the libraries
-RDEPENDS_${PN} += " \
+RDEPENDS:${PN} += " \
     libdreamdvd \
     "
 
-RRECOMMENDS_${PN} += "libdvdcss"
+RRECOMMENDS:${PN} += "libdvdcss"
 
 # We depend on the font which we use for TXT subtitles (defined in skin_subtitles.xml)
-RDEPENDS_${PN} += "font-valis-enigma"
+RDEPENDS:${PN} += "font-valis-enigma"
 
-RDEPENDS_${PN} += "${@bb.utils.contains("MACHINE_FEATURES", "blindscan-dvbc", "virtual/blindscan-dvbc" , "", d)}"
+RDEPENDS:${PN} += "${@bb.utils.contains("MACHINE_FEATURES", "blindscan-dvbc", "virtual/blindscan-dvbc" , "", d)}"
 
 #make sure default skin is installed.
-RDEPENDS_${PN} += "${E2DEFAULTSKIN} "
+RDEPENDS:${PN} += "${E2DEFAULTSKIN} "
 
 DEMUXTOOL ?= "replex"
 
-DESCRIPTION_append_enigma2-plugin-extensions-cutlisteditor = "enables you to cut your movies."
-RDEPENDS_enigma2-plugin-extensions-cutlisteditor = "aio-grab"
-DESCRIPTION_append_enigma2-plugin-extensions-graphmultiepg = "shows a graphical timeline EPG."
-DESCRIPTION_append_enigma2-plugin-extensions-pictureplayer = "displays photos on the TV."
-DESCRIPTION_append_enigma2-plugin-systemplugins-frontprocessorupdate = "keeps your frontprocessor up to date."
-DESCRIPTION_append_enigma2-plugin-systemplugins-positionersetup = "helps you installing a motorized dish."
-DESCRIPTION_append_enigma2-plugin-systemplugins-satelliteequipmentcontrol = "allows you to fine-tune DiSEqC-settings."
-DESCRIPTION_append_enigma2-plugin-systemplugins-satfinder = "helps you to align your dish."
-DESCRIPTION_append_enigma2-plugin-systemplugins-skinselector = "shows a menu with selectable skins."
-DESCRIPTION_append_enigma2-plugin-systemplugins-videomode = "selects advanced video modes"
-RDEPENDS_enigma2-plugin-systemplugins-nfiflash = "${PYTHON_PN}-twisted-web"
-RDEPENDS_enigma2-plugin-systemplugins-softwaremanager = "${PYTHON_PN}-twisted-web"
-DESCRIPTION_append_enigma2-plugin-systemplugins-crashlogautosubmit = "automatically send crashlogs to Dream Multimedia"
-RDEPENDS_enigma2-plugin-systemplugins-crashlogautosubmit = "${PYTHON_PN}-twisted-mail ${PYTHON_PN}-twisted-names ${PYTHON_PN}-compression ${PYTHON_PN}-mime ${PYTHON_PN}-email"
-DESCRIPTION_append_enigma2-plugin-systemplugins-cleanupwizard = "informs you on low internal memory on system startup."
-DESCRIPTION_append_enigma2-plugin-extensions-modem = "opens a menu to connect to internet via builtin modem."
-RDEPENDS_enigma2-plugin-extensions-modem = "dreambox-modem-ppp-scripts"
-DESCRIPTION_append_enigma2-plugin-systemplugins-wirelesslan = "helps you configuring your wireless lan"
-RDEPENDS_enigma2-plugin-systemplugins-wirelesslan = "wpa-supplicant wireless-tools ${PYTHON_PN}-wifi"
-DESCRIPTION_append_enigma2-plugin-systemplugins-networkwizard = "provides easy step by step network configuration"
+DESCRIPTION:append_enigma2-plugin-extensions-cutlisteditor = "enables you to cut your movies."
+RDEPENDS:enigma2-plugin-extensions-cutlisteditor = "aio-grab"
+DESCRIPTION:append_enigma2-plugin-extensions-graphmultiepg = "shows a graphical timeline EPG."
+DESCRIPTION:append_enigma2-plugin-extensions-pictureplayer = "displays photos on the TV."
+DESCRIPTION:append_enigma2-plugin-systemplugins-frontprocessorupdate = "keeps your frontprocessor up to date."
+DESCRIPTION:append_enigma2-plugin-systemplugins-positionersetup = "helps you installing a motorized dish."
+DESCRIPTION:append_enigma2-plugin-systemplugins-satelliteequipmentcontrol = "allows you to fine-tune DiSEqC-settings."
+DESCRIPTION:append_enigma2-plugin-systemplugins-satfinder = "helps you to align your dish."
+DESCRIPTION:append_enigma2-plugin-systemplugins-skinselector = "shows a menu with selectable skins."
+DESCRIPTION:append_enigma2-plugin-systemplugins-videomode = "selects advanced video modes"
+RDEPENDS:enigma2-plugin-systemplugins-nfiflash = "${PYTHON_PN}-twisted-web"
+RDEPENDS:enigma2-plugin-systemplugins-softwaremanager = "${PYTHON_PN}-twisted-web"
+DESCRIPTION:append_enigma2-plugin-systemplugins-crashlogautosubmit = "automatically send crashlogs to Dream Multimedia"
+RDEPENDS:enigma2-plugin-systemplugins-crashlogautosubmit = "${PYTHON_PN}-twisted-mail ${PYTHON_PN}-twisted-names ${PYTHON_PN}-compression ${PYTHON_PN}-mime ${PYTHON_PN}-email"
+DESCRIPTION:append_enigma2-plugin-systemplugins-cleanupwizard = "informs you on low internal memory on system startup."
+DESCRIPTION:append_enigma2-plugin-extensions-modem = "opens a menu to connect to internet via builtin modem."
+RDEPENDS:enigma2-plugin-extensions-modem = "dreambox-modem-ppp-scripts"
+DESCRIPTION:append_enigma2-plugin-systemplugins-wirelesslan = "helps you configuring your wireless lan"
+RDEPENDS:enigma2-plugin-systemplugins-wirelesslan = "wpa-supplicant wireless-tools ${PYTHON_PN}-wifi"
+DESCRIPTION:append_enigma2-plugin-systemplugins-networkwizard = "provides easy step by step network configuration"
 # Note that these tools lack recipes
-RDEPENDS_enigma2-plugin-extensions-dvdburn = "dvd+rw-tools dvdauthor mjpegtools genisoimage ${PYTHON_PN}-imaging ${DEMUXTOOL}"
-RDEPENDS_enigma2-plugin-systemplugins-hotplug = "hotplug-e2-helper"
-RDEPENDS_enigma2-plugin-systemplugins-fsblupdater = "${PYTHON_PN}-distutils"
-DESCRIPTION_enigma2-plugin-font-wqy-microhei = "Font wqy-microhei add support for China EPG"
+RDEPENDS:enigma2-plugin-extensions-dvdburn = "dvd+rw-tools dvdauthor mjpegtools genisoimage ${PYTHON_PN}-imaging ${DEMUXTOOL}"
+RDEPENDS:enigma2-plugin-systemplugins-hotplug = "hotplug-e2-helper"
+RDEPENDS:enigma2-plugin-systemplugins-fsblupdater = "${PYTHON_PN}-distutils"
+DESCRIPTION:enigma2-plugin-font-wqy-microhei = "Font wqy-microhei add support for China EPG"
 
 inherit autotools-brokensep gitpkgv pkgconfig ${PYTHON_PN}native ${@bb.utils.contains("PYTHON_PN", "python3", "python3targetconfig", "", d)} upx-compress
 
@@ -198,26 +198,26 @@ SRC_URI = "${ENIGMA2_URI}"
 #    file://enigma2-dinobotplayer.patch \
 #    "
 
-SRC_URI_append_sh4 = " \
+SRC_URI:append:sh4 = " \
     ${@bb.utils.contains("DISTRO_NAME", "openspa", "file://sh4-define-DTV_ENUM_DELSYS.patch" , "", d)} \
     "
 
-SRC_URI_append_vuduo = " \
+SRC_URI:append_vuduo = " \
     file://duo_VFD.patch \
     "
 
 S = "${WORKDIR}/git"
 
-FILES_${PN} += "${datadir}/keymaps"
-FILES_${PN}-meta = "${datadir}/meta"
+FILES:${PN} += "${datadir}/keymaps"
+FILES:${PN}-meta = "${datadir}/meta"
 PACKAGES += "${PN}-meta"
 PACKAGE_ARCH = "${MACHINEBUILD}"
 
 PACKAGES =+ "enigma2-plugin-font-wqy-microhei enigma2-fonts"
-FILES_enigma2-plugin-font-wqy-microhei = "${datadir}/fonts/wqy-microhei.ttc ${datadir}/fonts/fallback.font"
-FILES_enigma2-fonts = "${datadir}/fonts"
+FILES:enigma2-plugin-font-wqy-microhei = "${datadir}/fonts/wqy-microhei.ttc ${datadir}/fonts/fallback.font"
+FILES:enigma2-fonts = "${datadir}/fonts"
 
-ALLOW_EMPTY_enigma2-plugin-font-wqy-microhei = "1"
+ALLOW_EMPTY:enigma2-plugin-font-wqy-microhei = "1"
 
 EXTRA_OECONF = " \
     BUILD_SYS=${BUILD_SYS} \
@@ -251,12 +251,12 @@ EXTRA_OECONF = " \
     ${@bb.utils.contains("MACHINE_FEATURES", "hiaccel", "--with-libhiaccel" , "", d)} \
     "
 
-LDFLAGS_prepend = "${@bb.utils.contains('GST_VERSION', '1.0', ' -lxml2 ', '', d)}"
-SRC_URI_append = "${@bb.utils.contains("MACHINE_FEATURES", "uianimation", " file://use-lv3ddriver.patch" , "", d)}"
+LDFLAGS:prepend = "${@bb.utils.contains('GST_VERSION', '1.0', ' -lxml2 ', '', d)}"
+SRC_URI:append = "${@bb.utils.contains("MACHINE_FEATURES", "uianimation", " file://use-lv3ddriver.patch" , "", d)}"
 
 
 # some plugins contain so's, their stripped symbols should not end up in the enigma2 package
-FILES_${PN}-dbg += "\
+FILES:${PN}-dbg += "\
     ${libdir}/enigma2/python/*/.debug \
     ${libdir}/enigma2/python/*/*/*.debug \
     ${libdir}/enigma2/python/*/*/*/.debug \
@@ -264,14 +264,14 @@ FILES_${PN}-dbg += "\
     ${libdir}/enigma2/python/Plugins/*/*/.debug \
     "
 
-FILES_${PN} += " \
+FILES:${PN} += " \
     ${bindir} ${sysconfdir}/e2-git.log /usr/lib"
 
 # Save po files
 PACKAGES =+ "${PN}-po"
-FILES_${PN}-po = "${datadir}/enigma2/po/*.po ${datadir}/enigma2/po/*.pot"
+FILES:${PN}-po = "${datadir}/enigma2/po/*.po ${datadir}/enigma2/po/*.pot"
 
-do_install_append() {
+do_install:append() {
     install -d ${D}/usr/share/keymaps
     ln -s ${libdir}/enigma2/python/Tools/StbHardware.py ${D}${libdir}/enigma2/python/Tools/DreamboxHardware.py
     ln -s ${libdir}/enigma2/python/Components/PackageInfo.py ${D}${libdir}/enigma2/python/Components/DreamboxInfoHandler.py
@@ -285,7 +285,7 @@ do_install_append() {
     fi
 }
 
-python populate_packages_prepend() {
+python populate_packages:prepend() {
     enigma2_plugindir = bb.data.expand('${libdir}/enigma2/python/Plugins', d)
     do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/[a-zA-Z0-9_]+.*$', 'enigma2-plugin-%s', '%s', recursive=True, match_path=True, prepend=True, extra_depends="enigma2")
     do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/.*\.la$', 'enigma2-plugin-%s-dev', '%s (development)', recursive=True, match_path=True, prepend=True)

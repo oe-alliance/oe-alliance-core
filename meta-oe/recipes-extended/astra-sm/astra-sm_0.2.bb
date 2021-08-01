@@ -18,23 +18,23 @@ SRC_URI = "git://gitlab.com/berdyansk/astra-sm.git;protocol=http \
 	file://replace-sys-siglist.patch \
 	"
 
-SRC_URI_remove_sh4 = "file://replace-sys-siglist.patch"
+SRC_URI:remove:sh4 = "file://replace-sys-siglist.patch"
 
 S = "${WORKDIR}/git"
 
 inherit autotools-brokensep pkgconfig gettext
 
-do_install_append() {
+do_install:append() {
 	install -m 0755 ${S}/tests/t2mi_decap ${D}${bindir}/t2mi_decap
 	install -d ${D}${sysconfdir}/init.d
 	install -m 0755 ${WORKDIR}/astra-sm ${D}${sysconfdir}/init.d/
 	install -m 0644 ${WORKDIR}/astra.conf ${D}${sysconfdir}/astra/
 }
 
-FILES_${PN} += "${sysconfdir}/init.d/"
-FILES_${PN}-dev += "${datadir}"
+FILES:${PN} += "${sysconfdir}/init.d/"
+FILES:${PN}-dev += "${datadir}"
 
-CONFFILES_${PN} = "${sysconfdir}/astra/astra.conf"
+CONFFILES:${PN} = "${sysconfdir}/astra/astra.conf"
 
 INITSCRIPT_NAME = "astra-sm"
 INITSCRIPT_PARAMS = "defaults"

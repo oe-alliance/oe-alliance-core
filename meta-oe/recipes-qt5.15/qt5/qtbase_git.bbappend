@@ -1,7 +1,7 @@
 # package is machine specific
 PACKAGE_ARCH := "${MACHINE_ARCH}"
 
-FILESEXTRAPATHS_prepend := "${THISDIR}/qtbase-git:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/qtbase-git:"
 
 SET_QT_QPA_DEFAULT_PLATFORM ?= "linuxfb"
 SET_QT_QPA_EGLFS_INTEGRATION ?= "eglfs_emu"
@@ -13,13 +13,13 @@ SRC_URI += " \
 	${@bb.utils.contains('MACHINE_FEATURES', 'vu-eglfs', 'file://0001-Add-eglfs-libvupl-support-for-INTEGRITY.patch' , '', d)} \
 "
 
-DEPENDS_append = "${@bb.utils.contains('MACHINE_FEATURES', 'vu-eglfs', 'libvupl libgles' , '', d)}"
-RDEPENDS_${PN}_append = "${@bb.utils.contains('MACHINE_FEATURES', 'vu-eglfs', 'libvupl libgles' , '', d)}"
+DEPENDS:append = "${@bb.utils.contains('MACHINE_FEATURES', 'vu-eglfs', 'libvupl libgles' , '', d)}"
+RDEPENDS:${PN}:append = "${@bb.utils.contains('MACHINE_FEATURES', 'vu-eglfs', 'libvupl libgles' , '', d)}"
 
 PACKAGECONFIG_GL = " "
 PACKAGECONFIG_OPENSSL = "openssl"
-PACKAGECONFIG_remove = "tests ${@bb.utils.contains('MACHINE_FEATURES', 'vu-eglfs', 'gl' , '', d)}"
-PACKAGECONFIG_append += " \
+PACKAGECONFIG:remove = "tests ${@bb.utils.contains('MACHINE_FEATURES', 'vu-eglfs', 'gl' , '', d)}"
+PACKAGECONFIG:append += " \
     ${@bb.utils.contains('MACHINE_FEATURES', 'noopengl', '', ' gles2 eglfs ', d)} \
     linuxfb \
 "
@@ -29,7 +29,7 @@ SET_QT_QPA_EGLFS_INTEGRATION = "${@bb.utils.contains('MACHINE_FEATURES', 'mali',
 SET_QT_QPA_EGLFS_INTEGRATION = "${@bb.utils.contains('MACHINE_FEATURES', 'v3d-nxpl', 'eglfs_nxpl', '', d)}"
 SET_QT_QPA_EGLFS_INTEGRATION = "${@bb.utils.contains('MACHINE_FEATURES', 'vu-eglfs', 'eglfs_libvupl', '', d)}"
 
-do_configure_prepend() {
+do_configure:prepend() {
 cat >> ${S}/mkspecs/oe-device-extra.pri <<EOF
 QT_QPA_DEFAULT_PLATFORM = ${SET_QT_QPA_DEFAULT_PLATFORM}
 EGLFS_DEVICE_INTEGRATION = ${SET_QT_QPA_EGLFS_INTEGRATION}
@@ -37,5 +37,5 @@ QT_QPA_EGLFS_INTEGRATION = ${SET_QT_QPA_EGLFS_INTEGRATION}
 EOF
 }
 
-INSANE_SKIP_${PN} += "file-rdeps"
-INSANE_SKIP_${PN}-plugins += "file-rdeps"
+INSANE_SKIP:${PN} += "file-rdeps"
+INSANE_SKIP:${PN}-plugins += "file-rdeps"

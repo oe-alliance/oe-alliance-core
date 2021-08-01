@@ -1,8 +1,8 @@
-FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 
-RRECOMMENDS_${PN}_append = " libasound-module-ctl-oss libasound-module-pcm-oss"
+RRECOMMENDS:${PN}:append = " libasound-module-ctl-oss libasound-module-pcm-oss"
 
-PR_append = ".8"
+PR:append = ".8"
 PACKAGE_ARCH := "${MACHINE_ARCH}"
 
 EXTRA_ALSA ?= "empty"

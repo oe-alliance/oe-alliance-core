@@ -1,4 +1,4 @@
-FILESEXTRAPATHS_prepend := "${THISDIR}/${P}:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/${P}:"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 EXTRA_OECONF = "--disable-static --enable-cdrom --enable-threads --enable-timers \
@@ -17,7 +17,7 @@ EXTRA_OECONF = "--disable-static --enable-cdrom --enable-threads --enable-timers
                 --disable-pulseaudio \
 "
 
-SRC_URI_append = " \
+SRC_URI:append = " \
            file://Add_key_symbols.patch \
 "
 

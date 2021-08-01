@@ -5,7 +5,7 @@ LICENSE = "GPL-2.0"
 LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/GPL-2.0-only;md5=801f80980d171dd6425610833a22dbe6"
 
 DEPENDS = "ffmpeg libbluray"
-RDEPENDS_${PN} = "ffmpeg libbluray"
+RDEPENDS:${PN} = "ffmpeg libbluray"
 
 inherit gitpkgv upx-compress
 
@@ -88,4 +88,4 @@ do_install() {
     install -m 0755 ${S}/exteplayer3 ${D}${bindir}
 }
 
-INSANE_SKIP_${PN} += "ldflags"
+INSANE_SKIP:${PN} += "ldflags"

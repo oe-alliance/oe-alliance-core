@@ -6,7 +6,7 @@ SRC_URI = "file://dvb-usb-tbsqbox-id5925.zip"
 S = "${WORKDIR}"
 
 PACKAGES = "${PN}"
-FILES_${PN} += "${nonarch_base_libdir}/firmware"
+FILES:${PN} += "${nonarch_base_libdir}/firmware"
 
 inherit allarch
 

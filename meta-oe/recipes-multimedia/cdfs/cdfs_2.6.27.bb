@@ -4,7 +4,7 @@ SECTION = "kernel/modules"
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYING;md5=8ca43cbc842c2336e835926c2166c28b"
 
-MACHINE_KERNEL_PR_append = ".7"
+MACHINE_KERNEL_PR:append = ".7"
 
 SRC_URI = " \
         http://users.elis.ugent.be/~mronsse/cdfs/download/${BP}.tar.bz2 \

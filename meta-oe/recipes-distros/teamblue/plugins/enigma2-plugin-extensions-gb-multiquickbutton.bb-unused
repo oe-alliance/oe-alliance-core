@@ -4,8 +4,8 @@ SECTION = "extra"
 PRIORITY = "optional"
 LICENSE = "GPLv2"
 
-RCONFLICTS_${PN} = "gb-multiquickbutton"
-RREPLACES_${PN} = "gb-multiquickbutton"
+RCONFLICTS:${PN} = "gb-multiquickbutton"
+RREPLACES:${PN} = "gb-multiquickbutton"
 
 DEPENDS = "enigma2"
 
@@ -23,9 +23,9 @@ S = "${WORKDIR}/git"
 require conf/license/license-gplv2.inc
 
 PACKAGES =+ "${PN}-po"
-FILES_${PN} = "/tmp /etc /usr/lib"
-FILES_${PN}-src = "/usr/lib/enigma2/python/Plugins/Extensions/MultiQuickButton/*.py"
-FILES_${PN}-po = "/usr/lib/enigma2/python/Plugins/Extensions/MultiQuickButton/locale/*.po"
+FILES:${PN} = "/tmp /etc /usr/lib"
+FILES:${PN}-src = "/usr/lib/enigma2/python/Plugins/Extensions/MultiQuickButton/*.py"
+FILES:${PN}-po = "/usr/lib/enigma2/python/Plugins/Extensions/MultiQuickButton/locale/*.po"
 
 inherit autotools-brokensep
 
@@ -38,11 +38,11 @@ EXTRA_OECONF = "\
 "
 
 # remove unused .pyc files
-do_install_append() {
+do_install:append() {
     find ${D}/usr/lib/enigma2/python/Plugins/Extensions/MultiQuickButton/ -name '*.pyc' -exec rm {} \;
 }
 
-pkg_postinst_${PN}() {
+pkg_postinst:${PN}() {
 #!/bin/sh
 
 if ! test -d /etc/MultiQuickButton; then
@@ -81,7 +81,7 @@ echo "Please restart your STB to load Menu Gigablue Multi QuickButton Plugin ...
 exit 0
 }
 
-pkg_postrm_${PN}() {
+pkg_postrm:${PN}() {
 #!/bin/sh
 echo "... Restore flags in /usr/share/enigma2/keymap.xml..."
 sed -ie s!"<key id=\"KEY_TEXT\" mapto=\"startTeletext\" flags=\"b\" />"!"<key id=\"KEY_TEXT\" mapto=\"startTeletext\" flags=\"m\" />"!g "/usr/share/enigma2/keymap.xml"

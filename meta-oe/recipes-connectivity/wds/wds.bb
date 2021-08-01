@@ -5,7 +5,7 @@ LICENSE = "LGPLv2.1"
 LIC_FILES_CHKSUM = "file://COPYING;md5=cb8aedd3bced19bd8026d96a8b6876d7"
 
 DEPENDS = "gstreamer1.0 bison-native"
-RDEPENDS_${PN} = "wpa-supplicant connman"
+RDEPENDS:${PN} = "wpa-supplicant connman"
 
 inherit gitpkgv
 
@@ -18,7 +18,7 @@ SRCREV = "${AUTOREV}"
 
 S = "${WORKDIR}/git"
 
-do_install_append() {
+do_install:append() {
 	install -d ${D}${bindir}
 	install -m 0755 ${B}/desktop_source/desktop-source-test ${D}${bindir}
 	install -m 0755 ${B}/libwds/rtsp/tests/test-wds ${D}${bindir}
@@ -29,8 +29,8 @@ do_install_append() {
 	install -m 0755 ${B}/mirac_network/gst-test ${D}${bindir}
 }
 
-EXTRA_OECMAKE_append = " -DCMAKE_SKIP_RPATH=ON"
+EXTRA_OECMAKE:append = " -DCMAKE_SKIP_RPATH=ON"
 
 inherit cmake lib_package
 
-FILES_${PN}-dev += "${nonarch_libdir}/pkgconfig/wds.pc"
+FILES:${PN}-dev += "${nonarch_libdir}/pkgconfig/wds.pc"

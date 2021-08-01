@@ -6,7 +6,7 @@ LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe"
 
 PROVIDES += "librtmp librtmp1"
-RPROVIDES_${PN} += "librtmp librtmp1"
+RPROVIDES:${PN} += "librtmp librtmp1"
 
 DEPENDS = "gnutls zlib openssl"
 
@@ -28,4 +28,4 @@ EXTRA_OEMAKE = " \
     SYS=posix INC=-I=/usr/include DESTDIR=${D} CRYPTO=GNUTLS \
     prefix=${prefix} libdir=${libdir} incdir=${includedir}/librtmp bindir=${bindir} mandir=${mandir}"
 
-INSANE_SKIP_${PN} += "ldflags"
+INSANE_SKIP:${PN} += "ldflags"

@@ -1,4 +1,4 @@
-FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 PR .= ".1"
 
 PACKAGE_ARCH := "${MACHINE_ARCH}"
@@ -8,7 +8,7 @@ SRC_URI += " \
     file://92_sata-hddown.dpatch \
 "
 
-do_install_append() {
+do_install:append() {
     rm ${D}${sysconfdir}/rc*.d/*bootlogd
 }
 

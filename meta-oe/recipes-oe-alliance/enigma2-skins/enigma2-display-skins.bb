@@ -17,10 +17,10 @@ PR = "r0"
 SRC_URI = "git://github.com/oe-alliance/enigma2-display-skins.git;protocol=git;branch=python3 file://skinsnotwanted"
 
 # note that enigma2-skins is just an empty package to satisfy silly dependencies.
-ALLOW_EMPTY_${PN} = "1"
-FILES_${PN} = "/usr/share/enigma2/display"
-FILES_${PN}-meta = "${datadir}/meta"
-RDEPENDS_${PN}-meta = ""
+ALLOW_EMPTY:${PN} = "1"
+FILES:${PN} = "/usr/share/enigma2/display"
+FILES:${PN}-meta = "${datadir}/meta"
+RDEPENDS:${PN}-meta = ""
 
 inherit autotools-brokensep
 
@@ -42,7 +42,7 @@ EXTRA_OECONF += "\
     ${@bb.utils.contains("MACHINE_FEATURES", "bwlcd255", "--with-bwlcd255" , "", d)} \
     "
 
-python populate_packages_prepend () {
+python populate_packages:prepend () {
     if bb.data.expand('${REL_MINOR}', d) != "4":
         enigma2_skindir = bb.data.expand('${datadir}/enigma2/display', d)
         do_split_packages(d, enigma2_skindir, '(.*?)/.*', 'enigma2-plugin-display-%s', 'Enigma2 Display Skin: %s', recursive=True, match_path=True, prepend=True)

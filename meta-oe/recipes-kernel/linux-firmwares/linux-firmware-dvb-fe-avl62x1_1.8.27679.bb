@@ -16,4 +16,4 @@ do_install() {
     install -m 0644 availink/dvb-fe-avl62x1.fw ${D}${nonarch_base_libdir}/firmware/availink/
 }
 
-FILES_${PN} += "${nonarch_base_libdir}/firmware"
+FILES:${PN} += "${nonarch_base_libdir}/firmware"

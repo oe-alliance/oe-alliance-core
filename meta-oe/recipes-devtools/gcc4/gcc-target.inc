@@ -7,7 +7,7 @@ EXTRA_OECONF_PATHS = "\
     --with-gxx-include-dir=${includedir}/c++/${BINV} \
 "
 
-EXTRA_OECONF_append_linuxstdbase = " --enable-clocale=gnu"
+EXTRA_OECONF:append:linuxstdbase = " --enable-clocale=gnu"
 
 # libcc1 requres gcc_cv_objdump when cross build, but gcc_cv_objdump is
 # set in subdir gcc, so subdir libcc1 can't use it, export it here to
@@ -28,7 +28,7 @@ PACKAGES = "\
     ${PN}-dbg \
 "
 
-FILES_${PN} = "\
+FILES:${PN} = "\
     ${bindir}/${TARGET_PREFIX}gcc* \
     ${libexecdir}/gcc/${TARGET_SYS}/${BINV}/collect2* \
     ${libexecdir}/gcc/${TARGET_SYS}/${BINV}/cc* \
@@ -41,84 +41,84 @@ FILES_${PN} = "\
     ${gcclibdir}/${TARGET_SYS}/${BINV}/include \
     ${gcclibdir}/${TARGET_SYS}/${BINV}/include-fixed \
 "
-INSANE_SKIP_${PN} += "dev-so"
-RRECOMMENDS_${PN} += "\
+INSANE_SKIP:${PN} += "dev-so"
+RRECOMMENDS:${PN} += "\
     libssp \
     libssp-dev \
 "
 
-FILES_${PN}-dev = "\
+FILES:${PN}-dev = "\
     ${gcclibdir}/${TARGET_SYS}/${BINV}/lib*${SOLIBSDEV} \
     ${libexecdir}/gcc/${TARGET_SYS}/${BINV}/lib*${SOLIBSDEV} \
     ${gcclibdir}/${TARGET_SYS}/${BINV}/plugin/include/ \
     ${libexecdir}/gcc/${TARGET_SYS}/${BINV}/plugin/gengtype \
     ${gcclibdir}/${TARGET_SYS}/${BINV}/plugin/gtype.state \
 "
-FILES_${PN}-symlinks = "\
+FILES:${PN}-symlinks = "\
     ${bindir}/cc \
     ${bindir}/gcc \
     ${bindir}/gccbug \
 "
 
-FILES_${PN}-plugins = "\
+FILES:${PN}-plugins = "\
     ${gcclibdir}/${TARGET_SYS}/${BINV}/plugin \
 "
-ALLOW_EMPTY_${PN}-plugins = "1"
+ALLOW_EMPTY:${PN}-plugins = "1"
 
-FILES_g77 = "\
+FILES:g77 = "\
     ${bindir}/${TARGET_PREFIX}g77 \
     ${libexecdir}/gcc/${TARGET_SYS}/${BINV}/f771 \
 "
-FILES_g77-symlinks = "\
+FILES:g77-symlinks = "\
     ${bindir}/g77 \
     ${bindir}/f77 \
 "
-RRECOMMENDS_g77 = "\
+RRECOMMENDS:g77 = "\
     libg2c \
     libg2c-dev \
 "
 
-FILES_gfortran = "\
+FILES:gfortran = "\
     ${bindir}/${TARGET_PREFIX}gfortran \
     ${libexecdir}/gcc/${TARGET_SYS}/${BINV}/f951 \
 "
-RRECOMMENDS_gfortran = "\
+RRECOMMENDS:gfortran = "\
     libquadmath \
     libquadmath-dev \
 "
-FILES_gfortran-symlinks = "\
+FILES:gfortran-symlinks = "\
     ${bindir}/gfortran \
     ${bindir}/f95"
 
-FILES_cpp = "\
+FILES:cpp = "\
     ${bindir}/${TARGET_PREFIX}cpp* \
     ${base_libdir}/cpp \
     ${libexecdir}/gcc/${TARGET_SYS}/${BINV}/cc1"
-FILES_cpp-symlinks = "${bindir}/cpp"
+FILES:cpp-symlinks = "${bindir}/cpp"
 
-FILES_gcov = "${bindir}/${TARGET_PREFIX}gcov* \
+FILES:gcov = "${bindir}/${TARGET_PREFIX}gcov* \
     ${bindir}/${TARGET_PREFIX}gcov-tool* \
 "
-FILES_gcov-symlinks = "${bindir}/gcov \
+FILES:gcov-symlinks = "${bindir}/gcov \
     ${bindir}/gcov-tool \
 "
 
-FILES_g++ = "\
+FILES:g++ = "\
     ${bindir}/${TARGET_PREFIX}g++* \
     ${libexecdir}/gcc/${TARGET_SYS}/${BINV}/cc1plus \
 "
-FILES_g++-symlinks = "\
+FILES:g++-symlinks = "\
     ${bindir}/c++ \
     ${bindir}/g++ \
 "
-RRECOMMENDS_g++ = "\
+RRECOMMENDS:g++ = "\
     libstdc++ \
     libstdc++-dev \
     libatomic \
     libatomic-dev \
 "
 
-FILES_${PN}-doc = "\
+FILES:${PN}-doc = "\
     ${infodir} \
     ${mandir} \
     ${gcclibdir}/${TARGET_SYS}/${BINV}/include/README \
@@ -187,7 +187,7 @@ do_install () {
 	chown -R root:root ${D}
 }
 
-do_install_append () {
+do_install:append () {
         #
         # Thefixinc.sh script, run on the gcc's compile phase, looks into sysroot header
         # files and places the modified files into

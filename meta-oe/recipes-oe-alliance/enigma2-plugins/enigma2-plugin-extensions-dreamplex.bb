@@ -11,7 +11,7 @@ PKGV = "2.1.3+git${GITPKGV}"
 PR = "r0"
 
 DEPENDS = "enigma2 ${PYTHON_PN}"
-RDEPENDS_${PN} = "gstreamer1.0-plugins-bad-hls curl mjpegtools ${PYTHON_PN}-ctypes libshowiframe0"
+RDEPENDS:${PN} = "gstreamer1.0-plugins-bad-hls curl mjpegtools ${PYTHON_PN}-ctypes libshowiframe0"
 
 SRC_URI = "git://github.com/DonDavici/DreamPlex.git;protocol=git"
 
@@ -23,11 +23,11 @@ EXTRA_OECONF = " \
     "
 
 PACKAGES += "enigma2-plugin-extensions-dreamplex-meta"
-FILES_enigma2-plugin-extensions-dreamplex-meta = "${datadir}/meta"
+FILES:enigma2-plugin-extensions-dreamplex-meta = "${datadir}/meta"
 
 S = "${WORKDIR}/git"
 
-python populate_packages_prepend() {
+python populate_packages:prepend() {
     enigma2_plugindir = bb.data.expand('${libdir}/enigma2/python/Plugins', d)
     do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/[a-zA-Z0-9_]+.*$', 'enigma2-plugin-%s', '%s', recursive=True, match_path=True, prepend=True, extra_depends="enigma2")
     do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/.*\.py$', 'enigma2-plugin-%s-src', '%s (source files)', recursive=True, match_path=True, prepend=True)

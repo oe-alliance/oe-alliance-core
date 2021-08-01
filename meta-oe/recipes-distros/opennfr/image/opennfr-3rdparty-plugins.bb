@@ -20,7 +20,7 @@ EXTRA_OECONF = " \
     --with-boxtype=${MACHINEBUILD} \
 "
 
-ALLOW_EMPTY_${PN} = "1"
+ALLOW_EMPTY:${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 S = "${WORKDIR}/git"
@@ -33,7 +33,7 @@ do_install() {
 do_deploy() {
 }
 
-do_deploy_append() {    
+do_deploy:append() {    
     install -d 0755 ${DEPLOY_DIR_IPK}/3rdparty
     install -d 0755 ${DEPLOY_DIR_IPK}/${MACHINE}_3rdparty
     if [ "${TARGET_ARCH}" = "mipsel" ]; then

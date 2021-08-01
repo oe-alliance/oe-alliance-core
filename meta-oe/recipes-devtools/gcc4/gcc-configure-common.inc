@@ -7,9 +7,9 @@ require gcc-shared-source.inc
 
 # Java (gcj doesn't work on all architectures)
 JAVA ?= ",java"
-JAVA_arm ?= ""
-JAVA_armeb ?= ""
-JAVA_mipsel ?= ""
+JAVA:arm ?= ""
+JAVA:armeb ?= ""
+JAVA:mipsel ?= ""
 JAVA_sh3 ?= ""
 # gcc 3.x expects 'f77', 4.0 expects 'f95', 4.1 and 4.2 expect 'fortran'
 FORTRAN ?= ",f77"
@@ -46,7 +46,7 @@ EXTRA_OECONF = "\
 
 # Set this here since GCC configure won't auto-detect and enable
 # initfini-arry when cross compiling.
-EXTRA_OECONF_append = " --enable-initfini-array"
+EXTRA_OECONF:append = " --enable-initfini-array"
 
 export gcc_cv_collect2_libs = 'none required'
 # We need to set gcc_cv_collect2_libs else there is cross-compilation badness
@@ -54,25 +54,25 @@ export gcc_cv_collect2_libs = 'none required'
 # hence being missed by the insane do_configure check).
 
 # Build uclibc compilers without cxa_atexit support
-EXTRA_OECONF_append_linux = " --enable-__cxa_atexit"
-EXTRA_OECONF_append_libc-uclibc = " --enable-__cxa_atexit"
+EXTRA_OECONF:append_linux = " --enable-__cxa_atexit"
+EXTRA_OECONF:append_libc-uclibc = " --enable-__cxa_atexit"
 
-EXTRA_OECONF_append_mips64 = " --with-abi=64 --with-arch-64=mips64 --with-tune-64=mips64"
-EXTRA_OECONF_append_mips64el = " --with-abi=64 --with-arch-64=mips64 --with-tune-64=mips64"
-EXTRA_OECONF_append_mips64n32 = " --with-abi=64 --with-arch-64=mips64 --with-tune-64=mips64"
-EXTRA_OECONF_append_mips64eln32 = " --with-abi=64 --with-arch-64=mips64 --with-tune-64=mips64"
-EXTRA_OECONF_append_mipsisa32r6el = " --with-abi=32 --with-arch=mips32r6"
-EXTRA_OECONF_append_mipsisa32r6 = " --with-abi=32 --with-arch=mips32r6"
-EXTRA_OECONF_append_mipsisa64r6el = " --with-abi=64 --with-arch-64=mips64r6"
-EXTRA_OECONF_append_mipsisa64r6 = " --with-abi=64 --with-arch-64=mips64r6"
+EXTRA_OECONF:append:mips64 = " --with-abi=64 --with-arch-64=mips64 --with-tune-64=mips64"
+EXTRA_OECONF:append:mips64el = " --with-abi=64 --with-arch-64=mips64 --with-tune-64=mips64"
+EXTRA_OECONF:append:mips64n32 = " --with-abi=64 --with-arch-64=mips64 --with-tune-64=mips64"
+EXTRA_OECONF:append:mips64eln32 = " --with-abi=64 --with-arch-64=mips64 --with-tune-64=mips64"
+EXTRA_OECONF:append:mipsisa32r6el = " --with-abi=32 --with-arch=mips32r6"
+EXTRA_OECONF:append:mipsisa32r6 = " --with-abi=32 --with-arch=mips32r6"
+EXTRA_OECONF:append:mipsisa64r6el = " --with-abi=64 --with-arch-64=mips64r6"
+EXTRA_OECONF:append:mipsisa64r6 = " --with-abi=64 --with-arch-64=mips64r6"
 
 # ARMv6+ adds atomic instructions that affect the ABI in libraries built
 # with TUNE_CCARGS in gcc-runtime.  Make the compiler default to a
 # compatible architecture.  armv6 and armv7a cover the minimum tune
 # features used in OE.
-EXTRA_OECONF_append_armv6 = " --with-arch=armv6"
-EXTRA_OECONF_append_armv7a = " --with-arch=armv7-a"
-EXTRA_OECONF_append_armv7ve = " --with-arch=armv7-a"
+EXTRA_OECONF:append:armv6 = " --with-arch=armv6"
+EXTRA_OECONF:append:armv7a = " --with-arch=armv7-a"
+EXTRA_OECONF:append:armv7ve = " --with-arch=armv7-a"
 
 EXTRA_OECONF_GCC_FLOAT ??= ""
 CPPFLAGS = ""
@@ -81,7 +81,7 @@ SYSTEMHEADERS = "${target_includedir}"
 SYSTEMLIBS = "${target_base_libdir}/"
 SYSTEMLIBS1 = "${target_libdir}/"
 
-do_configure_prepend () {
+do_configure:prepend () {
 	# teach gcc to find correct target includedir when checking libc ssp support
 	mkdir -p ${B}/gcc
 	echo "NATIVE_SYSTEM_HEADER_DIR = ${SYSTEMHEADERS}" > ${B}/gcc/t-oe

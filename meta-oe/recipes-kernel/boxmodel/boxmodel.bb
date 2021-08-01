@@ -28,4 +28,4 @@ do_install () {
     echo boxmodel >> ${D}/${sysconfdir}/modules-load.d/zzboxmodel.conf
 }
 
-FILES_${PN} += "${sysconfdir}/modules-load.d/zzboxmodel.conf"
+FILES:${PN} += "${sysconfdir}/modules-load.d/zzboxmodel.conf"

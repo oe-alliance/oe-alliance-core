@@ -22,7 +22,7 @@ EXTRA_OECONF = " \
     STAGING_LIBDIR=${STAGING_LIBDIR} \
 "
 
-ALLOW_EMPTY_${PN} = "1"
+ALLOW_EMPTY:${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 S = "${WORKDIR}/git"
@@ -35,7 +35,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-xcplugin-forever_1.6_all.ipk \
     "
 
-python populate_packages_prepend () {
+python populate_packages:prepend () {
     pkg  = ""
     pkgs = ""
     plugins = d.getVar('THIRDPARTY_PLUGINS', True)
@@ -48,7 +48,7 @@ python populate_packages_prepend () {
         for package in plugins.split():
             pkg = package.split('_')[0]
             pkgs += pkg + " "
-            d.setVar('ALLOW_EMPTY_' + pkg, '1')
+            d.setVar('ALLOW_EMPTY:' + pkg, '1')
 
     d.setVar('PACKAGES', pkgs)
 }

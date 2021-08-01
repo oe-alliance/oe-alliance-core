@@ -20,9 +20,9 @@ S = "${WORKDIR}/git"
 require conf/license/license-gplv2.inc
 
 PACKAGES =+ "${PN}-po"
-FILES_${PN} = "/etc /usr/lib"
-FILES_${PN}-src = "/usr/lib/enigma2/python/Plugins/Extensions/MultiQuickButton/*.py"
-FILES_${PN}-po = "/usr/lib/enigma2/python/Plugins/Extensions/MultiQuickButton/locale/*.po"
+FILES:${PN} = "/etc /usr/lib"
+FILES:${PN}-src = "/usr/lib/enigma2/python/Plugins/Extensions/MultiQuickButton/*.py"
+FILES:${PN}-po = "/usr/lib/enigma2/python/Plugins/Extensions/MultiQuickButton/locale/*.po"
 
 inherit autotools
 
@@ -35,7 +35,7 @@ EXTRA_OECONF = "\
 "
 
 # remove unused .pyc files
-do_install_append() {
+do_install:append() {
     find ${D}/usr/lib/enigma2/python/Plugins/Extensions/MultiQuickButton/ -name '*.pyc' -exec rm {} \;
     install -d ${D}/etc
     install -d ${D}/etc/MultiQuickButton

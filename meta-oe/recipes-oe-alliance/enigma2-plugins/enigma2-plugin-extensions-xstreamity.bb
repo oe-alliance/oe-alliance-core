@@ -4,7 +4,7 @@ MAINTAINER = "kiddac"
 PRIORITY = "optional"
 require conf/license/license-gplv2.inc
 
-RDEPENDS_${PN} = "${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-imaging python-image", "${PYTHON_PN}-pillow", d)} ${PYTHON_PN}-multiprocessing ${PYTHON_PN}-requests"
+RDEPENDS:${PN} = "${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-imaging python-image", "${PYTHON_PN}-pillow", d)} ${PYTHON_PN}-multiprocessing ${PYTHON_PN}-requests"
 
 SRCREV = "${AUTOREV}"
 
@@ -18,7 +18,7 @@ SRC_URI = "git://github.com/kiddac/XStreamity.git;protocol=http"
 
 S = "${WORKDIR}/git"
 
-FILES_${PN} = " ${libdir}/enigma2/python/Components/Converter/* \
+FILES:${PN} = " ${libdir}/enigma2/python/Components/Converter/* \
                 ${libdir}/enigma2/python/Components/Renderer/* \
                 ${libdir}/enigma2/python/Plugins/Extensions/XStreamity/*"
 
@@ -37,7 +37,7 @@ cp -rf ${S}/XStreamity/usr/lib/enigma2/python/Components/Renderer/*.py ${D}${lib
 cp -rf ${S}/XStreamity/usr/lib/enigma2/python/Plugins/Extensions/XStreamity/* ${D}${libdir}/enigma2/python/Plugins/Extensions/XStreamity/
 }
 
-pkg_preinst_${PN}() {
+pkg_preinst:${PN}() {
 #!/bin/sh
 if [ -f "/etc/enigma2/X-Streamity/playlists.json" ]
 	then

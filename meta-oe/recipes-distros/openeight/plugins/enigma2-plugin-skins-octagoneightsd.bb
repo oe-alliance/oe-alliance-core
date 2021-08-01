@@ -18,7 +18,7 @@ SRC_URI="git://github.com/Openeight/OctagonEightSD.git"
 
 S = "${WORKDIR}/git"
 
-FILES_${PN} = "/usr"
+FILES:${PN} = "/usr"
 
 do_package_qa[noexec] = "1"
 

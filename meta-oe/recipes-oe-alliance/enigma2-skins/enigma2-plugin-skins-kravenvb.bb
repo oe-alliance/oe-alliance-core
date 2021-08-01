@@ -3,7 +3,7 @@ MAINTAINER = "Kraven Team"
 require conf/license/license-gplv2.inc
 
 DEPENDS += "gettext-native"
-RDEPENDS_${PN} += "${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-imaging", "${PYTHON_PN}-pillow", d)} ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-subprocess", "", d)} ${PYTHON_PN}-requests ${PYTHON_PN}-lxml enigma2-plugin-systemplugins-mphelp"
+RDEPENDS:${PN} += "${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-imaging", "${PYTHON_PN}-pillow", d)} ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-subprocess", "", d)} ${PYTHON_PN}-requests ${PYTHON_PN}-lxml enigma2-plugin-systemplugins-mphelp"
 
 inherit gitpkgv allarch gettext
 
@@ -14,7 +14,7 @@ VER="7.x"
 
 SRC_URI="git://github.com/atvcaptain/KravenVB.git;protocol=git"
 
-FILES_${PN} = "/usr/*"
+FILES:${PN} = "/usr/*"
 
 S = "${WORKDIR}/git"
 
@@ -33,7 +33,7 @@ do_install() {
     cp -r --preserve=mode,links ${S}/usr/share/* ${D}/usr/share/
 }
 
-pkg_postinst_${PN} () {
+pkg_postinst:${PN} () {
 #!/bin/sh
 if [ -f /tmp/kravenskin ]; then
     mv -f /tmp/kravenskin /usr/share/enigma2/KravenVB/skin.xml
@@ -67,7 +67,7 @@ echo "              ...Skin successful installed.                "
 exit 0
 }
 
-pkg_postrm_${PN} () {
+pkg_postrm:${PN} () {
 #!/bin/sh
 rm -rf /usr/share/enigma2/KravenVB
 rm -rf /usr/lib/enigma2/python/Plugins/Extensions/KravenVB
@@ -93,13 +93,13 @@ echo "               ...Skin successful removed.                 "
 exit 0
 }
 
-pkg_preinst_${PN} () {
+pkg_preinst:${PN} () {
 #!/bin/sh
 echo "KravenVB Skin will be now installed..."
 exit 0
 }
 
-pkg_prerm_${PN} () {
+pkg_prerm:${PN} () {
 #!/bin/sh
 echo "                                                           "
 echo "        The Skin KravenVB is now being removed...          "

@@ -5,7 +5,7 @@ AUTHOR = "Anorov <anorov.vorona@gmail.com>"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=93d4804f061e05530be1a85b24185408"
 
-RDEPENDS_${PN} = "${PYTHON_PN}-js2py ${PYTHON_PN}-requests"
+RDEPENDS:${PN} = "${PYTHON_PN}-js2py ${PYTHON_PN}-requests"
 
 SRC_URI = "https://files.pythonhosted.org/packages/a6/3d/12044a9a927559b2fe09d60b1cd6cd4ed1e062b7a28f15c91367b9ec78f1/cfscrape-2.1.1.tar.gz"
 SRC_URI[md5sum] = "545068ac44efdf087ba39ee08b124a99"

@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda
 
 inherit packagegroup
 
-ALLOW_EMPTY_${PN} = "1"
+ALLOW_EMPTY:${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
@@ -27,7 +27,7 @@ OPTIONAL_WIFIDRIVERS = "${@bb.utils.contains("MACHINE_FEATURES", "wifiusblegacy"
 
 DEPENDS = "enigma2 enigma2-plugins enigma2-oe-alliance-plugins network-usb-drivers-meta"
 
-RDEPENDS_${PN} = "\
+RDEPENDS:${PN} = "\
     enigma2-plugin-systemplugins-wirelesslan \
     ${@bb.utils.contains("MACHINE", "vuduo2", "enigma2-plugin-drivers-network-usb-rt3070", "", d)} \
     ${@bb.utils.contains("MACHINE", "inihdp", "enigma2-plugin-drivers-network-usb-rt3070 enigma2-plugin-drivers-network-usb-r8723a", "", d)} \
@@ -77,7 +77,7 @@ RDEPENDS_${PN} = "\
     ${@bb.utils.contains("MACHINEBUILD", "hd51", "enigma2-plugin-drivers-network-usb-rtl8822bu", "", d)} \
     "
 
-RDEPENDS_${PN}_remove_odroidc2 = "enigma2-plugin-drivers-network-usb-rtl8192cu"
-RDEPENDS_${PN}_remove_odroidc2 = "enigma2-plugin-drivers-network-usb-rtl8192cu-rev2"
-RDEPENDS_${PN}_remove_cube = "enigma2-plugin-drivers-network-usb-rtl8812au"
+RDEPENDS:${PN}:remove_odroidc2 = "enigma2-plugin-drivers-network-usb-rtl8192cu"
+RDEPENDS:${PN}:remove_odroidc2 = "enigma2-plugin-drivers-network-usb-rtl8192cu-rev2"
+RDEPENDS:${PN}:remove_cube = "enigma2-plugin-drivers-network-usb-rtl8812au"
 

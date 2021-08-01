@@ -4,7 +4,7 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
-ALLOW_EMPTY_${PN} = "1"
+ALLOW_EMPTY:${PN} = "1"
 
 PV = "1.0"
 PR = "r3"
@@ -59,7 +59,7 @@ E2_LANGUAGES = "\
     enigma2-locale-zh-hk \
     "
 
-RRECOMMENDS_${PN} = "\
+RRECOMMENDS:${PN} = "\
     openeight-version-info \
     enigma2-plugin-pli-softcamsetup \
     enigma2-plugin-extensions-mediaplayer \

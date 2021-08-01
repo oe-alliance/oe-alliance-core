@@ -17,32 +17,32 @@ SRC_URI += " \
 # include/mtd/* we cannot build in parallel with mtd-utils
 DEPENDS += "mtd-utils"
 
-INITSCRIPT_PARAMS_${PN}-mdev = "start 04 S ."
+INITSCRIPT_PARAMS:${PN}-mdev = "start 04 S ."
 
-RDEPENDS_${PN} += "odhcp6c"
+RDEPENDS:${PN} += "odhcp6c"
 
-RRECOMMENDS_${PN} += "${PN}-inetd"
-RRECOMMENDS_${PN} += "${PN}-telnetd"
+RRECOMMENDS:${PN} += "${PN}-inetd"
+RRECOMMENDS:${PN} += "${PN}-telnetd"
 
 PACKAGES =+ "${PN}-inetd"
 INITSCRIPT_PACKAGES += "${PN}-inetd"
-INITSCRIPT_NAME_${PN}-inetd = "inetd.${BPN}" 
-CONFFILES_${PN}-inetd = "${sysconfdir}/inetd.conf"
-FILES_${PN}-inetd = "${sysconfdir}/init.d/inetd.${BPN} ${sysconfdir}/inetd.conf"
-RDEPENDS_${PN}-inetd += "${PN}"
+INITSCRIPT_NAME:${PN}-inetd = "inetd.${BPN}" 
+CONFFILES:${PN}-inetd = "${sysconfdir}/inetd.conf"
+FILES:${PN}-inetd = "${sysconfdir}/init.d/inetd.${BPN} ${sysconfdir}/inetd.conf"
+RDEPENDS:${PN}-inetd += "${PN}"
 PROVIDES += "virtual/inetd"
-RPROVIDES_${PN}-inetd += "virtual/inetd"
-RCONFLICTS_${PN}-inetd += "xinetd"
+RPROVIDES:${PN}-inetd += "virtual/inetd"
+RCONFLICTS:${PN}-inetd += "xinetd"
 
 PACKAGES =+ "${PN}-telnetd"
 INITSCRIPT_PACKAGES += "${PN}-telnetd"
-INITSCRIPT_NAME_${PN}-telnetd = "telnetd.${BPN}" 
-FILES_${PN}-telnetd = "${sysconfdir}/init.d/telnetd.${BPN}"
-RDEPENDS_${PN}-telnetd += "${PN}"
+INITSCRIPT_NAME:${PN}-telnetd = "telnetd.${BPN}" 
+FILES:${PN}-telnetd = "${sysconfdir}/init.d/telnetd.${BPN}"
+RDEPENDS:${PN}-telnetd += "${PN}"
 PROVIDES += "virtual/telnetd"
-RPROVIDES_${PN}-telnetd += "virtual/telnetd"
+RPROVIDES:${PN}-telnetd += "virtual/telnetd"
 
-do_install_append() {
+do_install:append() {
     if grep "CONFIG_FEATURE_TELNETD_STANDALONE=y" ${B}/.config; then
 	install -m 0755 ${WORKDIR}/telnetd ${D}${sysconfdir}/init.d/telnetd.${BPN}
 	sed -i "s:/usr/sbin/:${sbindir}/:" ${D}${sysconfdir}/init.d/telnetd.${BPN}
@@ -52,17 +52,17 @@ do_install_append() {
     install -m 0755 ${WORKDIR}/ntp.script ${D}${sysconfdir}/udhcpc.d/55ntp
 }
 
-FILESEXTRAPATHS_prepend := "${THISDIR}/${P}:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/${P}:"
 
-pkg_postinst_${PN}_append () {
+pkg_postinst:${PN}:append () {
     update-alternatives --install /bin/editor editor /bin/vi.sh 50
 }
 
-pkg_postrm_${PN}_append () {
+pkg_postrm:${PN}:append () {
     update-alternatives --remove editor /bin/vi.sh
 }
 
-pkg_preinst_${PN}-telnetd_prepend () {
+pkg_preinst:${PN}-telnetd:prepend () {
 if [ -z "$D" ]; then
     if [ -e $D/etc/inetd.conf ]; then
         grep -vE '^#*\s*(23|telnet)' $D/etc/inetd.conf > $D/tmp/inetd.tmp

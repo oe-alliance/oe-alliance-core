@@ -14,7 +14,7 @@ SRCREV = "${AUTOREV}"
 
 SRC_URI = "git://github.com/littlesat/PLi-HD-FullNight.git"
 
-FILES_${PN} = "/usr/share/enigma2/"
+FILES:${PN} = "/usr/share/enigma2/"
 
 S = "${WORKDIR}/git"
 

@@ -14,7 +14,7 @@ SRC_URI[sha256sum] = "ca5218fade0204d59947126c38439f432853543b0818d9d728c589dfe7
 
 PR = "r1"
 
-FILES_${PN}-dev += " \
+FILES:${PN}-dev += " \
     /usr/lib/graphviz/*.so \
 "
 

@@ -1,5 +1,5 @@
-FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 
-PR_append = ".2"
+PR:append = ".2"
 
-INITSCRIPT_PARAMS_${PN}_openbh = "disable"
+INITSCRIPT_PARAMS:${PN}_openbh = "disable"

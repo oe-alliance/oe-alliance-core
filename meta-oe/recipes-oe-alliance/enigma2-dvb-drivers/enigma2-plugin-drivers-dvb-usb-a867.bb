@@ -5,7 +5,7 @@ require conf/license/license-gplv2.inc
 
 DVBPROVIDER ?= "kernel"
 
-RRECOMMENDS_${PN} = " \
+RRECOMMENDS:${PN} = " \
     ${DVBPROVIDER}-module-dvb-usb-a867 \
     firmware-dvb-usb-af9035-02 \
     "
@@ -13,4 +13,4 @@ RRECOMMENDS_${PN} = " \
 PV = "1.0"
 PR = "r0"
 
-ALLOW_EMPTY_${PN} = "1"
+ALLOW_EMPTY:${PN} = "1"

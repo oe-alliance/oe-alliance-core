@@ -11,9 +11,9 @@ require conf/license/license-gplv2.inc
 SRC_URI = "http://www.alhem.net/Sockets/Sockets-2.3.9.7.tar.gz"
 
 S = "${WORKDIR}/Sockets-2.3.9.7"
-FILES_${PN} = "${libdir}/*"
+FILES:${PN} = "${libdir}/*"
 
-CXXFLAGS_append = " -O2 -Wall -g -MD -D_VERSION='"2.3.9.7"' -O2 -DLINUX -fPIC"
+CXXFLAGS:append = " -O2 -Wall -g -MD -D_VERSION='"2.3.9.7"' -O2 -DLINUX -fPIC"
 export LDFLAGSSO = " -L${STAGING_LIBDIR} -shared \
                      -Wl,-lssl \
                      -Wl,-lcrypto \

@@ -23,12 +23,12 @@ inherit autotools-brokensep pkgconfig gitpkgv
 
 PACKAGES += "libcdparanoia libcdparanoia-dev libcdparanoia-static"
 
-FILES_${PN} = "${bindir}/*"
-FILES_${PN}-dev = ""
-FILES_${PN}-static = ""
-FILES_libcdparanoia = "${libdir}/lib*${SOLIBS}"
-FILES_libcdparanoia-dev = "${includedir} ${libdir}/lib*${SOLIBSDEV} ${libdir}/pkgconfig"
-FILES_libcdparanoia-static = "${libdir}/*.a"
+FILES:${PN} = "${bindir}/*"
+FILES:${PN}-dev = ""
+FILES:${PN}-static = ""
+FILES:libcdparanoia = "${libdir}/lib*${SOLIBS}"
+FILES:libcdparanoia-dev = "${includedir} ${libdir}/lib*${SOLIBSDEV} ${libdir}/pkgconfig"
+FILES:libcdparanoia-static = "${libdir}/*.a"
 
 do_install() {
     oe_runmake BINDIR="${D}${bindir}" MANDIR="${D}${datadir}/man/" \

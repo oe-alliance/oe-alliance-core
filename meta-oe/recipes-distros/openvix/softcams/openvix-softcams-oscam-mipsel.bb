@@ -5,7 +5,7 @@ SUMMARY = "OScam ${PV} Open Source Softcam"
 LICENSE = "GPLv3"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 
-FILESEXTRAPATHS_prepend := "${THISDIR}/openvix-softcams-oscam:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/openvix-softcams-oscam:"
 
 PV = "1.20+svn${SRCPV}"
 SRCREV = "11517"
@@ -16,14 +16,14 @@ PR = "r1"
 PACKAGES = "enigma2-plugin-softcams-oscam"
 
 PROVIDES += "openvix-softcams-oscam-mipsel"
-RPROVIDES_enigma2-plugin-softcams-oscam += "openvix-softcams-oscam-mipsel"
+RPROVIDES:enigma2-plugin-softcams-oscam += "openvix-softcams-oscam-mipsel"
 
 DEPENDS = "libusb openssl"
-RCONFLICTS_enigma2-plugin-softcams-oscam = "oscam oscam-stable oscam-unstable oscam-experimental oscam-util-list-smargo"
-RCONFLICTS_enigma2-plugin-softcams-oscam += "enigma2-plugin-softcams-oscam-cs"
-RCONFLICTS_enigma2-plugin-softcams-oscam += "enigma2-plugin-softcams-oscam-stable-cs enigma2-plugin-softcams-oscam-unstable-cs enigma2-plugin-softcams-oscam-experimental-cs"
-RCONFLICTS_enigma2-plugin-softcams-oscam += "enigma2-plugin-softcams-oscam-stable    enigma2-plugin-softcams-oscam-unstable    enigma2-plugin-softcams-oscam-experimental"
-RREPLACES_enigma2-plugin-softcams-oscam = "${RCONFLICTS_${PN}}"
+RCONFLICTS:enigma2-plugin-softcams-oscam = "oscam oscam-stable oscam-unstable oscam-experimental oscam-util-list-smargo"
+RCONFLICTS:enigma2-plugin-softcams-oscam += "enigma2-plugin-softcams-oscam-cs"
+RCONFLICTS:enigma2-plugin-softcams-oscam += "enigma2-plugin-softcams-oscam-stable-cs enigma2-plugin-softcams-oscam-unstable-cs enigma2-plugin-softcams-oscam-experimental-cs"
+RCONFLICTS:enigma2-plugin-softcams-oscam += "enigma2-plugin-softcams-oscam-stable    enigma2-plugin-softcams-oscam-unstable    enigma2-plugin-softcams-oscam-experimental"
+RREPLACES:enigma2-plugin-softcams-oscam = "${RCONFLICTS_${PN}}"
 
 S = "${WORKDIR}/trunk"
 
@@ -43,5 +43,5 @@ do_install() {
     install -m 0755 ${WORKDIR}/build/oscam ${D}/usr/softcams/oscam
 }
 
-FILES_enigma2-plugin-softcams-oscam = "/usr"
-INSANE_SKIP_${PN} = "already-stripped"
+FILES:enigma2-plugin-softcams-oscam = "/usr"
+INSANE_SKIP:${PN} = "already-stripped"

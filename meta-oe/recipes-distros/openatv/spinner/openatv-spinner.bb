@@ -27,4 +27,4 @@ do_install() {
     install -m 0644 ${S}/*.png ${D}${datadir}/enigma2/spinner
 }
 
-FILES_${PN} = "${datadir}/enigma2"
+FILES:${PN} = "${datadir}/enigma2"

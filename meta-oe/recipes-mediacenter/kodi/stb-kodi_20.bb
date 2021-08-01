@@ -3,7 +3,7 @@ SUMMARY = "Kodi Media Center"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://LICENSE.md;md5=7b423f1c9388eae123332e372451a4f7"
 
-FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}-20:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}-20:"
 
 PACKAGE_ARCH = "${MACHINE}"
 
@@ -105,8 +105,8 @@ CCACHE_DISABLE = "1"
 ASNEEDED = ""
 
 ACCEL ?= ""
-ACCEL_x86 = "vaapi vdpau"
-ACCEL_x86-64 = "vaapi vdpau"
+ACCEL:x86 = "vaapi vdpau"
+ACCEL:x86-64 = "vaapi vdpau"
 
 # Default to GBM everywhere, sucks to be nvidia
 WINDOWSYSTEM ?= "stb"
@@ -143,16 +143,16 @@ PACKAGECONFIG[gold] = "-DENABLE_LDGOLD=ON,-DENABLE_LDGOLD=OFF"
 PACKAGECONFIG[lto] = "-DUSE_LTO=${@oe.utils.cpu_count()},-DUSE_LTO=OFF"
 
 LDFLAGS += "${TOOLCHAIN_OPTIONS}"
-LDFLAGS_append_mips = " -latomic"
-LDFLAGS_append_mipsel = " -latomic"
-LDFLAGS_append_mips64 = " -latomic"
-LDFLAGS_append_mips64el = " -latomic"
+LDFLAGS:append:mips = " -latomic"
+LDFLAGS:append:mipsel = " -latomic"
+LDFLAGS:append:mips64 = " -latomic"
+LDFLAGS:append:mips64el = " -latomic"
 
 KODI_ARCH = ""
-KODI_ARCH_mips = "-DWITH_ARCH=${TARGET_ARCH}"
-KODI_ARCH_mipsel = "-DWITH_ARCH=${TARGET_ARCH}"
-KODI_ARCH_mips64 = "-DWITH_ARCH=${TARGET_ARCH}"
-KODI_ARCH_mips64el = "-DWITH_ARCH=${TARGET_ARCH}"
+KODI_ARCH:mips = "-DWITH_ARCH=${TARGET_ARCH}"
+KODI_ARCH:mipsel = "-DWITH_ARCH=${TARGET_ARCH}"
+KODI_ARCH:mips64 = "-DWITH_ARCH=${TARGET_ARCH}"
+KODI_ARCH:mips64el = "-DWITH_ARCH=${TARGET_ARCH}"
 
 KODI_DISABLE_INTERNAL_LIBRARIES = " \
   -DENABLE_INTERNAL_CROSSGUID=OFF \
@@ -190,8 +190,8 @@ EXTRA_OECMAKE = " \
 # OECMAKE_GENERATOR="Unix Makefiles"
 # PARALLEL_MAKE = " "
 
-FULL_OPTIMIZATION_armv7a = "-fexpensive-optimizations -fomit-frame-pointer -O3 -ffast-math"
-FULL_OPTIMIZATION_armv7ve = "-fexpensive-optimizations -fomit-frame-pointer -O3 -ffast-math"
+FULL_OPTIMIZATION:armv7a = "-fexpensive-optimizations -fomit-frame-pointer -O3 -ffast-math"
+FULL_OPTIMIZATION:armv7ve = "-fexpensive-optimizations -fomit-frame-pointer -O3 -ffast-math"
 BUILD_OPTIMIZATION = "${FULL_OPTIMIZATION}"
 
 # for python modules
@@ -203,7 +203,7 @@ export ${PYTHON_DIR}
 
 export TARGET_PREFIX
 
-do_configure_prepend() {
+do_configure:prepend() {
     # Ensure 'nm' can find the lto plugins 
     liblto=$(find ${STAGING_DIR_NATIVE} -name "liblto_plugin.so.0.0.0")
     mkdir -p ${STAGING_LIBDIR_NATIVE}/bfd-plugins
@@ -212,19 +212,19 @@ do_configure_prepend() {
     sed -i -e 's:CMAKE_NM}:}${TARGET_PREFIX}gcc-nm:' ${S}/xbmc/cores/DllLoader/exports/CMakeLists.txt
 }
 
-INSANE_SKIP_${PN} = "rpaths already-stripped"
+INSANE_SKIP:${PN} = "rpaths already-stripped"
 
-FILES_${PN} = "${libdir}/kodi ${libdir}/xbmc"
-FILES_${PN} += "${bindir}/kodi ${bindir}/xbmc"
-FILES_${PN} += "${datadir}/icons ${datadir}/kodi ${datadir}/xbmc ${datadir}/applications"
-FILES_${PN} += "${bindir}/kodi-standalone ${bindir}/xbmc-standalone ${datadir}/xsessions"
-FILES_${PN} += "${libdir}/firewalld"
-FILES_${PN}-dev = "${includedir}"
-FILES_${PN}-dbg += "${libdir}/kodi/.debug ${libdir}/kodi/*/.debug ${libdir}/kodi/*/*/.debug ${libdir}/kodi/*/*/*/.debug"
+FILES:${PN} = "${libdir}/kodi ${libdir}/xbmc"
+FILES:${PN} += "${bindir}/kodi ${bindir}/xbmc"
+FILES:${PN} += "${datadir}/icons ${datadir}/kodi ${datadir}/xbmc ${datadir}/applications"
+FILES:${PN} += "${bindir}/kodi-standalone ${bindir}/xbmc-standalone ${datadir}/xsessions"
+FILES:${PN} += "${libdir}/firewalld"
+FILES:${PN}-dev = "${includedir}"
+FILES:${PN}-dbg += "${libdir}/kodi/.debug ${libdir}/kodi/*/.debug ${libdir}/kodi/*/*/.debug ${libdir}/kodi/*/*/*/.debug"
 
 # kodi uses some kind of dlopen() method for libcec so we need to add it manually
 # OpenGL builds need glxinfo, that's in mesa-demos
-RRECOMMENDS_${PN}_append = " libcec \
+RRECOMMENDS:${PN}:append = " libcec \
                              libcurl \
                              libnfs \
                              nss \
@@ -261,7 +261,7 @@ RRECOMMENDS_${PN}_append = " libcec \
                              alsa-plugins \
                            "
 
-RRECOMMENDS_${PN}_append_libc-glibc = " glibc-charmap-ibm850 \
+RRECOMMENDS:${PN}:append:libc-glibc = " glibc-charmap-ibm850 \
                                         glibc-gconv-ibm850 \
                                         glibc-charmap-ibm437 \
                                         glibc-gconv-ibm437 \

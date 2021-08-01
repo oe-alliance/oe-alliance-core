@@ -20,4 +20,4 @@ do_install() {
 do_package_qa() {
 }
 
-FILES_${PN} += " ${sysconfdir}/init.d"
+FILES:${PN} += " ${sysconfdir}/init.d"

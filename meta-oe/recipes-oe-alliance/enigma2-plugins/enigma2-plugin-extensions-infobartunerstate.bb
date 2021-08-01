@@ -16,8 +16,8 @@ SRC_URI="git://github.com/betonme/e2openplugin-InfoBarTunerState.git;branch=pyth
 S = "${WORKDIR}/git"
 
 PACKAGES =+ "${PN}-po"
-FILES_${PN} = "/etc /usr/lib"
-FILES_${PN}-po = "/usr/lib/enigma2/python/Plugins/Extensions/InfoBarTunerState/locale/*.po"
+FILES:${PN} = "/etc /usr/lib"
+FILES:${PN}-po = "/usr/lib/enigma2/python/Plugins/Extensions/InfoBarTunerState/locale/*.po"
 
 EXTRA_OECONF = "\
     --with-libsdl=no --with-boxtype=${MACHINE} --with-po \
@@ -27,7 +27,7 @@ EXTRA_OECONF = "\
     STAGING_LIBDIR=${STAGING_LIBDIR} \
 "
 
-pkg_postrm_${PN}() {
+pkg_postrm:${PN}() {
 #!/bin/sh
 rm -rf /usr/lib/enigma2/python/Plugins/Extensions/InfoBarTunerState/
 echo "Plugin removed! You should restart enigma2 now!"

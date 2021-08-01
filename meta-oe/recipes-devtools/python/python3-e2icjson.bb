@@ -22,7 +22,7 @@ DISTUTILS_INSTALL_ARGS = "\
     "
 
 # Remove "egg-info" files. If datadir or site-packages dir is empty, remove it.
-distutils3_do_install_append() {
+distutils3_do_install:append() {
     rm -f ${D}${libdir}/enigma2/python/Plugins/Extensions/IPTVPlayer/libs/e2icjson/*.egg-info
     rmdir -p --ignore-fail-on-non-empty ${D}${datadir} ${D}/${PYTHON_SITEPACKAGES_DIR} || true
 }

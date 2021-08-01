@@ -28,7 +28,7 @@ EXTRA_OECONF = "--disable-vala"
 # and will therefore become subject to renaming by debian.bbclass. Prevent
 # renaming in order to keep the package name consistent regardless of whether
 # gnome support is enabled or disabled.
-DEBIAN_NOAUTONAME_${PN} = "1"
+DEBIAN_NOAUTONAME:${PN} = "1"
 
 # glib-networking is needed for SSL, proxies, etc.
-RRECOMMENDS_${PN} = "glib-networking"
+RRECOMMENDS:${PN} = "glib-networking"

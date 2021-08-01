@@ -15,7 +15,7 @@ MAINTAINER = "Jari Aalto <jari.aalto@cante.net>"
 SECTION = "console/utils"
 LICENSE = "GPL-2+"
 
-FILESEXTRAPATHS_prepend := "${THISDIR}/debian:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/debian:"
 
 LIC_FILES_CHKSUM = "file://../copyright;md5=b6e7f553d5b9c366d42bfceaf296636f"
 
@@ -48,4 +48,4 @@ do_install() {
 	cd ${D}/usr/share/man/man1 && { ln -s flip.1.gz toix.1.gz; ln -s flip.1.gz toms.1.gz; }
 }
 
-INSANE_SKIP_${PN} += "ldflags"
+INSANE_SKIP:${PN} += "ldflags"

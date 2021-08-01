@@ -1,22 +1,22 @@
-FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
 
 PACKAGECONFIG = ""
 
 SRC_URI += "file://smbnetfs.common.conf file://smbnetfs.user.conf file://init file://smbclient.pc"
 
-do_configure_prepend() {
+do_configure:prepend() {
     if [ ! -e ${STAGING_LIBDIR}/pkgconfig/smbclient.pc ]; then
     cp ${WORKDIR}/smbclient.pc ${STAGING_LIBDIR}/pkgconfig/
     fi
 }
 
-FILES_${PN} += "${sysconfdir}/*.conf ${sysconfdir}/init.d"
-CONFFILES_${PN} = "${sysconfdir}/smbnetfs.user.conf"
+FILES:${PN} += "${sysconfdir}/*.conf ${sysconfdir}/init.d"
+CONFFILES:${PN} = "${sysconfdir}/smbnetfs.user.conf"
 inherit update-rc.d
 
 INITSCRIPT_NAME = "${PN}.sh"
 
-do_install_append() {
+do_install:append() {
     install -d ${D}${sysconfdir}
     install -m 600 ${WORKDIR}/smbnetfs.common.conf ${D}${sysconfdir}/
     install -m 600 ${WORKDIR}/smbnetfs.user.conf ${D}${sysconfdir}/

@@ -2,7 +2,7 @@ SUMMARY = "pyLoad is a fast, lightweight and full featured download manager for 
 LICENSE = "GPLv3"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=d4333f07cbfa8fe036e90820f556b2ad"
 HOMEPAGE = "http://pyload.org/"
-RDEPENDS_${PN} = "\
+RDEPENDS:${PN} = "\
   ${PYTHON_PN}-compression \
   ${PYTHON_PN}-db \
   ${PYTHON_PN}-email \
@@ -18,7 +18,7 @@ RDEPENDS_${PN} = "\
   ${PYTHON_PN}-unixadmin \
   ${PYTHON_PN}-xmlrpc \
 "
-RRECOMMENDS_${PN} = "unrar"
+RRECOMMENDS:${PN} = "unrar"
 
 PV = "0.4.9"
 
@@ -32,7 +32,7 @@ SRC_URI[sha256sum] = "f937631d376216bc830d6ffcd5b4ecb1806afd4012a184849da1a333a7
 
 S = "${WORKDIR}/pyload"
 
-FILES_${PN} = "/usr/pyload/* /etc/*"
+FILES:${PN} = "/usr/pyload/* /etc/*"
 
 INITSCRIPT_NAME = "${PN}"
 INITSCRIPT_PARAMS = "defaults 60 "
@@ -57,4 +57,4 @@ do_install() {
     install -m 0755 ${WORKDIR}/pyload.init ${D}/etc/init.d/pyload
 }
 
-INSANE_SKIP_${PN} = "build-deps"
+INSANE_SKIP:${PN} = "build-deps"

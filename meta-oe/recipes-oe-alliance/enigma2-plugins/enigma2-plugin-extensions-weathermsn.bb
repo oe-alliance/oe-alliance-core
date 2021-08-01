@@ -13,7 +13,7 @@ PKGV = "1.3.+git${GITPKGV}"
 
 SRC_URI = "git://github.com/oe-mirrors/enigma2-plugins.git;protocol=https"
 
-FILES_${PN} = "/usr/lib/enigma2/"
+FILES:${PN} = "/usr/lib/enigma2/"
 
 S = "${WORKDIR}/git"
 

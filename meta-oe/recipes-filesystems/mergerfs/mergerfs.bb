@@ -42,4 +42,4 @@ do_install () {
         ln -s mergerfs ${D}${bindir}/mount.mergerfs
 }
 
-INSANE_SKIP_${PN} += "ldflags"
+INSANE_SKIP:${PN} += "ldflags"

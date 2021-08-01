@@ -24,7 +24,7 @@ do_compile() {
     :
 }
 
-FILES_${PN} = " \
+FILES:${PN} = " \
                 ${nonarch_base_libdir} \
                 /etc \
 "

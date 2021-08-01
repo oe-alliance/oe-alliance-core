@@ -14,7 +14,7 @@ do_fetch[depends] += "openvix-softcams-oscam-mipsel:do_fetch"
 PACKAGES = "enigma2-plugin-softcams-oscam-latest"
 
 PROVIDES += "openvix-softcams-oscam-latest-mipsel"
-RPROVIDES_enigma2-plugin-softcams-oscam-latest += "openvix-softcams-oscam-latest-mipsel"
+RPROVIDES:enigma2-plugin-softcams-oscam-latest += "openvix-softcams-oscam-latest-mipsel"
 
 DEPENDS = "libusb openssl"
 
@@ -36,5 +36,5 @@ do_install() {
     install -m 0755 ${WORKDIR}/build/oscam ${D}/usr/softcams/oscam-latest
 }
 
-FILES_enigma2-plugin-softcams-oscam-latest = "/usr"
-INSANE_SKIP_${PN} = "already-stripped"
+FILES:enigma2-plugin-softcams-oscam-latest = "/usr"
+INSANE_SKIP:${PN} = "already-stripped"

@@ -17,9 +17,9 @@ SRC_URI="git://github.com/e2plugins/etportal-inofficial.git"
 S = "${WORKDIR}/git"
 
 PACKAGES =+ "${PN}-po"
-FILES_${PN} = "/usr/lib /tmp"
-FILES_${PN}-src = "/usr/lib/enigma2/python/Plugins/Extensions/EtPortal/*.py"
-FILES_${PN}-po = "/usr/lib/enigma2/python/Plugins/Extensions/EtPortal/locale/*/*/*.po"
+FILES:${PN} = "/usr/lib /tmp"
+FILES:${PN}-src = "/usr/lib/enigma2/python/Plugins/Extensions/EtPortal/*.py"
+FILES:${PN}-po = "/usr/lib/enigma2/python/Plugins/Extensions/EtPortal/locale/*/*/*.po"
 
 EXTRA_OECONF = "\
     BUILD_SYS=${BUILD_SYS} \
@@ -28,11 +28,11 @@ EXTRA_OECONF = "\
     STAGING_LIBDIR=${STAGING_LIBDIR} \
 "
 
-do_configure_prepend() {
+do_configure:prepend() {
 sed -i 's/python/python2/g' ${S}/xml2po.py
 }
 
-pkg_postinst_${PN}() {
+pkg_postinst:${PN}() {
 #!/bin/sh 
 if  [ -f /usr/lib/enigma2/python/Plugins/Extensions/EtPortal/adultpassword ] ; then
      echo ""
@@ -46,7 +46,7 @@ echo ""
 exit 0
 }
 
-pkg_postrm_${PN}() {
+pkg_postrm:${PN}() {
 #!/bin/sh
 rm -r /usr/lib/enigma2/python/Plugins/Extensions/EtPortal
 echo " EtPortal removed! You should restart enigma2 now!"

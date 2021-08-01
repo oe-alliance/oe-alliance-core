@@ -26,11 +26,11 @@ inherit autotools
 
 # suppress warning, but don't bother with autonamer
 LEAD_SONAME = "libnss_mdns.so"
-DEBIANNAME_${PN} = "libnss-mdns"
+DEBIANNAME:${PN} = "libnss-mdns"
 
-RDEPENDS_${PN} = "avahi-daemon"
+RDEPENDS:${PN} = "avahi-daemon"
 
-pkg_postinst_${PN} () {
+pkg_postinst:${PN} () {
 	sed '
 		/^hosts:/ !b
 		/\<mdns\(4\|6\)\?\(_minimal\)\?\>/ b
@@ -38,7 +38,7 @@ pkg_postinst_${PN} () {
 		' -i $D${sysconfdir}/nsswitch.conf
 }
 
-pkg_prerm_${PN} () {
+pkg_prerm:${PN} () {
 	sed '
 		/^hosts:/ !b
 		s/[[:blank:]]\+mdns\(4\|6\)\?\(_minimal\( \[NOTFOUND=return\]\)\?\)\?//g

@@ -20,9 +20,9 @@ SRC_URI = "git://github.com/oe-alliance/e2openplugin-MultiQuickButton.git;protoc
 S = "${WORKDIR}/git"
 
 PACKAGES =+ "${PN}-po"
-FILES_${PN} = "/tmp /etc ${libdir}"
-FILES_${PN}-src = "${libdir}/enigma2/python/Plugins/Extensions/MultiQuickButton/*.py"
-FILES_${PN}-po = "${libdir}/enigma2/python/Plugins/Extensions/MultiQuickButton/locale/*.po"
+FILES:${PN} = "/tmp /etc ${libdir}"
+FILES:${PN}-src = "${libdir}/enigma2/python/Plugins/Extensions/MultiQuickButton/*.py"
+FILES:${PN}-po = "${libdir}/enigma2/python/Plugins/Extensions/MultiQuickButton/locale/*.po"
 
 inherit autotools-brokensep
 
@@ -33,7 +33,7 @@ EXTRA_OECONF = "\
     STAGING_LIBDIR=${STAGING_LIBDIR} \
 "
 
-pkg_postinst_${PN}() {
+pkg_postinst:${PN}() {
 #!/bin/sh
 if ! test -d /etc/MultiQuickButton; then
     mkdir /etc/MultiQuickButton
@@ -54,7 +54,7 @@ echo "Please restart your STB to load Menu Multi QuickButton Plugin ..."
 exit 0
 }
 
-pkg_postrm_${PN}() {
+pkg_postrm:${PN}() {
 #!/bin/sh
 echo "... Restore flags in /usr/share/enigma2/keymap.xml..."
 sed -ie s!"<key id=\"KEY_TEXT\" mapto=\"startTeletext\" flags=\"b\" />"!"<key id=\"KEY_TEXT\" mapto=\"startTeletext\" flags=\"m\" />"!g "/usr/share/enigma2/keymap.xml"

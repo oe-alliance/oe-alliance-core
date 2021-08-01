@@ -12,7 +12,7 @@ VER="3.0"
 
 SRC_URI="git://github.com/stein17/AX-Blue-FHD-4HDF.git;protocol=git"
 
-FILES_${PN} = "/usr/share ${libdir}"
+FILES:${PN} = "/usr/share ${libdir}"
 
 S = "${WORKDIR}/git"
 
@@ -24,13 +24,13 @@ do_install() {
 	chmod -R a+rX ${D}/usr/share/enigma2/
 }
 
-pkg_postinst_${PN} () {
+pkg_postinst:${PN} () {
 #!/bin/sh
 echo "              ...Skin successful installed.                "
 exit 0
 }
 
-pkg_postrm_${PN} () {
+pkg_postrm:${PN} () {
 #!/bin/sh
 rm -rf /usr/share/enigma2/AX_Blue_FHD_4HDF
 rm -rf /usr/share/enigma2/Spinner/AX_Blue
@@ -39,13 +39,13 @@ echo "               ...Skin successful removed.                 "
 exit 0
 }
 
-pkg_preinst_${PN} () {
+pkg_preinst:${PN} () {
 #!/bin/sh
 echo "        AX-Blue-FHD Skin will be now installed...            "
 exit 0
 }
 
-pkg_prerm_${PN} () {
+pkg_prerm:${PN} () {
 #!/bin/sh
 echo "                                                           "
 echo "              AX-Blue-FHD is now being removed...          "

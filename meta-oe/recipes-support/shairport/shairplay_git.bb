@@ -19,9 +19,9 @@ inherit autotools pkgconfig
 # needed for configure to find dns_sd header in nonstandard includes path
 CFLAGS += "-I${STAGING_INCDIR}/avahi-compat-libdns_sd"
 
-do_install_append(){
+do_install:append(){
     install -d ${D}/${includedir}/shairplay
     install -m 0644 ${S}/include/shairplay/*.h ${D}/${includedir}/shairplay/
 }
 
-FILES_${PN} += "${libdir}/*.so ${includedir}/shairplay/*.h"
+FILES:${PN} += "${libdir}/*.so ${includedir}/shairplay/*.h"

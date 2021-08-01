@@ -5,7 +5,7 @@ require conf/license/license-gplv2.inc
 inherit gitpkgv ${PYTHON_PN}-dir
 
 DEPENDS = "${PYTHON_PN} curl ffmpeg"
-RRECOMMENDS_${PN} = " \
+RRECOMMENDS:${PN} = " \
     ffmpeg \
     exteplayer3 \
     gstplayer \
@@ -71,4 +71,4 @@ do_install() {
     install -m 0755 ${S4}/cmdwrap ${D}${bindir}/
 }
 
-FILES_${PN} = "${libdir}/enigma2/python/Plugins/Extensions/IPTVPlayer/libs/iptvsubparser ${bindir}"
+FILES:${PN} = "${libdir}/enigma2/python/Plugins/Extensions/IPTVPlayer/libs/iptvsubparser ${bindir}"

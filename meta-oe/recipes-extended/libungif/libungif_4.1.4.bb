@@ -11,6 +11,6 @@ inherit autotools lib_package
 
 PACKAGES =+ "${PN}-utils"
 
-FILES_${PN}-utils = "${bindir}/*"
+FILES:${PN}-utils = "${bindir}/*"
 
 BBCLASSEXTEND = "native"
