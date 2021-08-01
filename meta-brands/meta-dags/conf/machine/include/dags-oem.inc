@@ -469,7 +469,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'force2se', 'iqon1' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'megaforce2', 'megasat1' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'worldvisionf1', 'iqon2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'worldvisionf1plus', 'iqon2' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'roxxs200hd', 'iqon1 , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'roxxs200hd', 'iqon1' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mediaart200hd', 'iqon1' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'optimussos1plus', 'optimuss1' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'optimussos2plus', 'optimuss1' , '', d)}\
