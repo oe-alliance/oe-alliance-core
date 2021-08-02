@@ -16,7 +16,7 @@ inherit autotools-brokensep gitpkgv pythonnative
 SRCREV = "${AUTOREV}"
 PV = "${IMAGE_VERSION}+git${SRCPV}"
 PKGV = "${IMAGE_VERSION}+git${GITPKGV}"
-PR = "r4"
+PR = "r5"
 
 SRC_URI="git://github.com/BlackHole/obh-core.git;protocol=git"
 
