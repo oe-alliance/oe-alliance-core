@@ -11,7 +11,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r1"
+PR = "r2"
 
 RDEPENDS_${PN} = "\
     oe-alliance-enigma2 \
