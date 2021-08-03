@@ -1,0 +1,47 @@
+--- a/obexd/client/sync.c
++++ b/obexd/client/sync.c
+@@ -222,7 +222,7 @@ static void sync_remove(struct obc_session *session)
+ 	g_dbus_unregister_interface(conn, path, SYNC_INTERFACE);
+ }
+ 
+-static struct obc_driver sync = {
++static struct obc_driver a_sync = {
+ 	.service = "SYNC",
+ 	.uuid = SYNC_UUID,
+ 	.target = OBEX_SYNC_UUID,
+@@ -241,7 +241,7 @@ int sync_init(void)
+ 	if (!conn)
+ 		return -EIO;
+ 
+-	err = obc_driver_register(&sync);
++	err = obc_driver_register(&a_sync);
+ 	if (err < 0) {
+ 		dbus_connection_unref(conn);
+ 		conn = NULL;
+@@ -258,5 +258,5 @@ void sync_exit(void)
+ 	dbus_connection_unref(conn);
+ 	conn = NULL;
+ 
+-	obc_driver_unregister(&sync);
++	obc_driver_unregister(&a_sync);
+ }
+--- a/profiles/audio/media.c
++++ b/profiles/audio/media.c
+@@ -1238,7 +1238,7 @@ static bool stop(void *user_data)
+ 	return media_player_send(mp, "Stop");
+ }
+ 
+-static bool pause(void *user_data)
++static bool apause(void *user_data)
+ {
+ 	struct media_player *mp = user_data;
+ 
+@@ -1288,7 +1288,7 @@ static struct avrcp_player_cb player_cb = {
+ 	.set_volume = set_volume,
+ 	.play = play,
+ 	.stop = stop,
+-	.pause = pause,
++	.pause = apause,
+ 	.next = next,
+ 	.previous = previous,
+ };

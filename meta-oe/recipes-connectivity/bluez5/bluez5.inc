@@ -51,6 +51,7 @@ SRC_URI = "\
     file://0001-Allow-using-obexd-without-systemd-in-the-user-sessio.patch \
     file://0001-tests-add-a-target-for-building-tests-without-runnin.patch \
     file://0001-test-gatt-Fix-hung-issue.patch \
+    file://fix-build-with-glibc-2.34.patch \
 "
 S = "${WORKDIR}/bluez-${PV}"
 
