@@ -9,10 +9,10 @@ inherit gitpkgv pythonnative gettext
 SRCREV = "${AUTOREV}"
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
-PR = "r0"
+PR = "r1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-SRC_URI = "git://github.com/oe-alliance/openmultibootmanager.git;protocol=git"
+SRC_URI = "git://github.com/oe-alliance/openmultibootmanager.git;protocol=git;branch=dev"
 S = "${WORKDIR}/git"
 
 inherit autotools-brokensep
@@ -37,7 +37,7 @@ EXTRA_OECONF = "\
 do_install_append() {
     # remove unused .pyc files
     find ${D}${libdir}/enigma2/python/Plugins/Extensions/${PLUGIN}/ -name '*.pyc' -exec rm {} \;
-    
+
     # remove helper .pyo file
     find ${D}${libdir}/enigma2/python/Plugins/Extensions/${PLUGIN}/ -name '*helper.pyo' -exec rm {} \;
 }
