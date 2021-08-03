@@ -10,6 +10,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=b3190d5244e08e78e4c8ee78544f4863"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/pupnp/libupnp-${PV}.tar.bz2 \
            file://sepbuildfix.patch \
+           file://0001-ithread-Use-pthread_mutexattr_gettype-pthread_mutexa.patch \
 "
 
 SRC_URI[md5sum] = "4d2c1e1efe0a19edeef233e14a93f04c"
@@ -22,5 +23,5 @@ inherit autotools pkgconfig
 EXTRA_OECONF += "--enable-reuseaddr"
 
 # Enable LFS support ( for samples )
-CFLAGS += "-D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64"
-CXXFLAGS += "-D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64"
+CFLAGS += "-D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE"
+CXXFLAGS += "-D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE"

@@ -1,0 +1,39 @@
+From 5b45cff9d6b3180e5a63f427dd2b981ecf81abf7 Mon Sep 17 00:00:00 2001
+From: Khem Raj <raj.khem@gmail.com>
+Date: Sun, 9 May 2021 15:38:43 -0700
+Subject: [PATCH] ithread: Use
+ pthread_mutexattr_gettype/pthread_mutexattr_settype on linux
+
+_np variants are not recommended anymore, and glibc 2.34+ will have
+these removed
+
+Upstream-Status: Pending
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+
+diff --git a/threadutil/inc/ithread.h b/threadutil/inc/ithread.h
+index 9e09091..ebc4080 100644
+--- a/threadutil/inc/ithread.h
++++ b/threadutil/inc/ithread.h
+@@ -319,7 +319,8 @@ static UPNP_INLINE int ithread_cleanup_thread(void) {
+  *      Returns EINVAL if the kind is not supported.
+  *      See man page for pthread_mutexattr_setkind_np
+  *****************************************************************************/
+-#if defined(PTHREAD_MUTEX_RECURSIVE) || defined(__DragonFly__)
++#if defined(PTHREAD_MUTEX_RECURSIVE) || defined(__DragonFly__) \
++    || defined (__linux__)
+ 	#define ithread_mutexattr_setkind_np pthread_mutexattr_settype
+ #else
+ 	#define ithread_mutexattr_setkind_np pthread_mutexattr_setkind_np
+@@ -344,7 +345,8 @@ static UPNP_INLINE int ithread_cleanup_thread(void) {
+  *      Always returns 0.
+  *      See man page for pthread_mutexattr_getkind_np
+  *****************************************************************************/
+-#if defined(PTHREAD_MUTEX_RECURSIVE) || defined(__DragonFly__)
++#if defined(PTHREAD_MUTEX_RECURSIVE) || defined(__DragonFly__) \
++    || defined (__linux__)
+ 	#define ithread_mutexattr_getkind_np pthread_mutexattr_gettype
+ #else
+ 	#define ithread_mutexattr_getkind_np pthread_mutexattr_getkind_np
+-- 
+2.25.1
+
