@@ -7,9 +7,9 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 inherit gitpkgv
 
 SRCREV = "${AUTOREV}"
-PV = "1.0+git${SRCPV}"
-PKGV = "1.0+git${GITPKGV}"
-PR = "r2"
+PV = "1.3+git${SRCPV}"
+PKGV = "1.3+git${GITPKGV}"
+PR = "r0"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 DEPENDS = "freetype json-c"
