@@ -9,10 +9,10 @@ inherit gitpkgv pythonnative gettext
 SRCREV = "${AUTOREV}"
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
-PR = "r1"
+PR = "r2"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-SRC_URI = "git://github.com/oe-alliance/openmultibootmanager.git;protocol=git;branch=dev"
+SRC_URI = "git://github.com/oe-alliance/openmultibootmanager.git;protocol=git;branch=dev-bootmenu-helper"
 S = "${WORKDIR}/git"
 
 inherit autotools-brokensep
