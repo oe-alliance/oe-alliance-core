@@ -7,14 +7,14 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 inherit gitpkgv
 
 SRCREV = "${AUTOREV}"
-PV = "1.0+git${SRCPV}"
-PKGV = "1.0+git${GITPKGV}"
-PR = "r1"
+PV = "1.3+git${SRCPV}"
+PKGV = "1.3+git${GITPKGV}"
+PR = "r0"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-DEPENDS = "freetype"
+DEPENDS = "freetype json-c"
 
-SRC_URI = "git://github.com/oe-alliance/openmultiboot.git;protocol=git;branch=dev"
+SRC_URI = "git://github.com/oe-alliance/openmultiboot.git;protocol=git;branch=dev-bootmenu-helper"
 
 inherit autotools-brokensep pkgconfig
 

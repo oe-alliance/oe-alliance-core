@@ -7,12 +7,12 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 inherit gitpkgv ${PYTHON_PN}native gettext ${@bb.utils.contains("PYTHON_PN", "python3", "python3targetconfig", "", d)}
 
 SRCREV = "${AUTOREV}"
-PV = "1.0+git${SRCPV}"
-PKGV = "1.0+git${GITPKGV}"
+PV = "1.3+git${SRCPV}"
+PKGV = "1.3+git${GITPKGV}"
 PR = "r0"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-SRC_URI = "git://github.com/oe-alliance/openmultibootmanager.git;protocol=git;branch=dev"
+SRC_URI = "git://github.com/oe-alliance/openmultibootmanager.git;protocol=git;branch=dev-bootmenu-helper"
 S = "${WORKDIR}/git"
 
 inherit autotools-brokensep
@@ -34,6 +34,10 @@ EXTRA_OECONF = "\
     --with-arch=${TARGET_ARCH} \
     "
 
+do_install_append() {
+    chmod 755 ${D}/usr/lib/enigma2/python/Plugins/Extensions/OpenMultiboot/open-multiboot-branding-helper.py
+    chmod 755 ${D}/usr/lib/enigma2/python/Plugins/Extensions/OpenMultiboot/open-multiboot-menu-helper.py
+}
 
 # skip this!
 install_egg_info() {
