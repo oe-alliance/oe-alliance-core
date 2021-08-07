@@ -21,9 +21,9 @@ DEPENDS = "${PYTHON_PN} lzo"
 
 RDEPENDS:${PN} = "kernel-module-nandsim openmultiboot enigma2 lzo"
 
-RDEPENDS:${PN}_gb800solo = "kernel-module-block2mtd openmultiboot"
-RDEPENDS:${PN}_spark7162 = "kernel-module-block2mtd openmultiboot unjffs2"
-RDEPENDS:${PN}_spark = "kernel-module-block2mtd openmultiboot unjffs2"
+RDEPENDS:${PN}:gb800solo = "kernel-module-block2mtd openmultiboot"
+RDEPENDS:${PN}:spark7162 = "kernel-module-block2mtd openmultiboot unjffs2"
+RDEPENDS:${PN}:spark = "kernel-module-block2mtd openmultiboot unjffs2"
 
 EXTRA_OECONF = "\
     --with-po \
@@ -34,7 +34,7 @@ EXTRA_OECONF = "\
     --with-arch=${TARGET_ARCH} \
     "
 
-do_install_append() {
+do_install:append() {
     chmod 755 ${D}/usr/lib/enigma2/python/Plugins/Extensions/OpenMultiboot/open-multiboot-branding-helper.py
     chmod 755 ${D}/usr/lib/enigma2/python/Plugins/Extensions/OpenMultiboot/open-multiboot-menu-helper.py
 }
