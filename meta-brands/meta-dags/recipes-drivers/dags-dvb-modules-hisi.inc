@@ -8,7 +8,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 PV = "${KV}+${SRCDATE}"
 PR = "r1"
 
-SRC_URI = "http://en3homeftp.net/release/images/oedrivers/${MACHINEBUILD}-hiko-${SRCDATE}.tar.gz \
+SRC_URI = "http://en3homeftp.net/pub/down/${MACHINEBUILD}-hiko-${SRCDATE}.tar.gz \
 	file://modules"
 
 S = "${WORKDIR}/lib/modules/${KV}/extra"
