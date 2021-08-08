@@ -1,0 +1,32 @@
+From 91556ddb3dc7657a563cdc93703242a07b24619c Mon Sep 17 00:00:00 2001
+From: Captain <captain.onboard@web.de>
+Date: Sat, 18 Jul 2020 11:10:57 +0200
+Subject: [PATCH] not_implementation_pcm_alsa19
+
+---
+ xbmc/cores/AudioEngine/Engines/ActiveAE/ActiveAESink.cpp | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/xbmc/cores/AudioEngine/Engines/ActiveAE/ActiveAESink.cpp b/xbmc/cores/AudioEngine/Engines/ActiveAE/ActiveAESink.cpp
+index cde2e84d69..3aeb65994c 100644
+--- a/xbmc/cores/AudioEngine/Engines/ActiveAE/ActiveAESink.cpp
++++ b/xbmc/cores/AudioEngine/Engines/ActiveAE/ActiveAESink.cpp
+@@ -704,6 +704,7 @@ void CActiveAESink::EnumerateSinkList(bool force, std::string driver)
+   }
+ 
+   CAESinkFactory::EnumerateEx(m_sinkInfoList, false, driver);
++#if !defined(TARGET_DAGS)
+   while (m_sinkInfoList.empty() && c_retry > 0)
+   {
+     CLog::Log(LOGINFO, "No Devices found - retry: %d", c_retry);
+@@ -712,6 +713,7 @@ void CActiveAESink::EnumerateSinkList(bool force, std::string driver)
+     // retry the enumeration
+     CAESinkFactory::EnumerateEx(m_sinkInfoList, true, driver);
+   }
++#endif
+   CLog::Log(LOGINFO, "Found %lu Lists of Devices", m_sinkInfoList.size());
+   PrintSinks(driver);
+ }
+-- 
+2.27.0.windows.1
+

@@ -1,0 +1,98 @@
+From b7f80f6fc228650d23dd2cfa748d38e19de32ae4 Mon Sep 17 00:00:00 2001
+From: Jaedon Shin <jaedon.shin@gmail.com>
+Date: Fri, 19 Jun 2020 14:38:15 +0900
+Subject: [PATCH] Add initial support for V4L2 mem2mem decoder
+
+---
+ .../DVDCodecs/Video/DVDVideoCodecFFmpeg.cpp   | 27 ++++++++++++++++++-
+ .../DVDCodecs/Video/DVDVideoCodecFFmpeg.h     |  1 +
+ 2 files changed, 27 insertions(+), 1 deletion(-)
+
+diff --git a/xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecFFmpeg.cpp b/xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecFFmpeg.cpp
+index 8d3f86f8c11c..ee28e395c00c 100644
+--- a/xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecFFmpeg.cpp
++++ b/xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecFFmpeg.cpp
+@@ -324,7 +324,7 @@ bool CDVDVideoCodecFFmpeg::Open(CDVDStreamInfo &hints, CDVDCodecOptions &options
+   m_hints = hints;
+   m_options = options;
+ 
+-  AVCodec* pCodec;
++  AVCodec* pCodec = NULL;
+ 
+   m_iOrientation = hints.orientation;
+ 
+@@ -334,6 +334,17 @@ bool CDVDVideoCodecFFmpeg::Open(CDVDStreamInfo &hints, CDVDCodecOptions &options
+   m_processInfo.SetSwDeinterlacingMethods();
+   m_processInfo.SetVideoInterlaced(false);
+ 
++  if (hints.codecOptions & CODEC_ALLOW_FALLBACK) {
++    if (hints.codec == AV_CODEC_ID_H264)
++      pCodec = avcodec_find_decoder_by_name("h264_v4l2m2m");
++    else if (hints.codec == AV_CODEC_ID_VP9)
++      pCodec = avcodec_find_decoder_by_name("vp9_v4l2m2m");
++    else if (hints.codec == AV_CODEC_ID_HEVC)
++      pCodec = avcodec_find_decoder_by_name("hevc_v4l2m2m");
++    if (pCodec)
++      m_decoderV4l2m2m = true;
++  }
++  if(pCodec == NULL)
+   pCodec = avcodec_find_decoder(hints.codec);
+ 
+   if(pCodec == NULL)
+@@ -354,6 +365,12 @@ bool CDVDVideoCodecFFmpeg::Open(CDVDStreamInfo &hints, CDVDCodecOptions &options
+   m_pCodecContext->workaround_bugs = FF_BUG_AUTODETECT;
+   m_pCodecContext->get_format = GetFormat;
+   m_pCodecContext->codec_tag = hints.codec_tag;
++  if (m_decoderV4l2m2m) {
++    m_pCodecContext->time_base.num = 1;
++    m_pCodecContext->time_base.den = DVD_TIME_BASE;
++    m_pCodecContext->pkt_timebase.num = 1;
++    m_pCodecContext->pkt_timebase.den = DVD_TIME_BASE;
++  }
+ 
+   // setup threading model
+   if (!(hints.codecOptions & CODEC_FORCE_SOFTWARE))
+@@ -379,6 +396,10 @@ bool CDVDVideoCodecFFmpeg::Open(CDVDStreamInfo &hints, CDVDCodecOptions &options
+   m_pCodecContext->coded_height = hints.height;
+   m_pCodecContext->coded_width = hints.width;
+   m_pCodecContext->bits_per_coded_sample = hints.bitsperpixel;
++  if (m_decoderV4l2m2m) {
++    m_pCodecContext->coded_height = std::min(1080, hints.height);
++    m_pCodecContext->coded_width = std::min(1920, hints.width);
++  }
+ 
+   if( hints.extradata && hints.extrasize > 0 )
+   {
+@@ -720,6 +741,8 @@ CDVDVideoCodec::VCReturn CDVDVideoCodecFFmpeg::GetPicture(VideoPicture* pVideoPi
+ 
+   // here we got a frame
+   int64_t framePTS = m_pDecodedFrame->best_effort_timestamp;
++  if (m_decoderV4l2m2m)
++    framePTS = m_pDecodedFrame->pts;
+ 
+   if (m_pCodecContext->skip_frame > AVDISCARD_DEFAULT)
+   {
+@@ -1017,6 +1040,8 @@ bool CDVDVideoCodecFFmpeg::GetPictureCommon(VideoPicture* pVideoPicture)
+   m_dts = DVD_NOPTS_VALUE;
+ 
+   int64_t bpts = m_pFrame->best_effort_timestamp;
++  if (m_decoderV4l2m2m)
++    bpts = m_pFrame->pts;
+   if (bpts != AV_NOPTS_VALUE)
+   {
+     pVideoPicture->pts = (double)bpts * DVD_TIME_BASE / AV_TIME_BASE;
+diff --git a/xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecFFmpeg.h b/xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecFFmpeg.h
+index 4f2407c0a3d3..d846f735fd76 100644
+--- a/xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecFFmpeg.h
++++ b/xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecFFmpeg.h
+@@ -98,6 +98,7 @@ protected:
+   double m_DAR = 1.0;
+   CDVDStreamInfo m_hints;
+   CDVDCodecOptions m_options;
++  bool m_decoderV4l2m2m = false;
+ 
+   struct CDropControl
+   {
+-- 
+2.28.0
+

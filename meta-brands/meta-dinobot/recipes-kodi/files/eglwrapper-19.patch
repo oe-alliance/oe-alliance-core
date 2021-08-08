@@ -1,0 +1,42 @@
+From 1b64ff5e86f2e7b97a96ff1e5adc4f7e4be400be Mon Sep 17 00:00:00 2001
+From: Captain <captain.onboard@web.de>
+Date: Sat, 18 Jul 2020 22:31:14 +0200
+Subject: [PATCH] eglwrapper-19
+
+---
+ xbmc/windowing/egl/EGLWrapper.cpp | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/xbmc/windowing/egl/EGLWrapper.cpp b/xbmc/windowing/egl/EGLWrapper.cpp
+index 4ff33d5f44..5b75264739 100644
+--- a/xbmc/windowing/egl/EGLWrapper.cpp
++++ b/xbmc/windowing/egl/EGLWrapper.cpp
+@@ -216,11 +216,14 @@ bool CEGLWrapper::GetNativeResolution(RESOLUTION_INFO *res)
+   return m_nativeTypes->GetNativeResolution(res);
+ }
+ 
++bool g_isShow = true;
++
+ bool CEGLWrapper::ShowWindow(bool show)
+ {
+   if (!m_nativeTypes)
+     return false;
+ 
++  g_isShow = show;
+   return m_nativeTypes->ShowWindow(show);
+ }
+ 
+@@ -419,6 +422,10 @@ void CEGLWrapper::SwapBuffers(EGLDisplay display, EGLSurface surface)
+ {
+   if ((display == EGL_NO_DISPLAY) || (surface == EGL_NO_SURFACE))
+     return;
++
++  if( !g_isShow )
++    return;
++
+   eglSwapBuffers(display, surface);
+ }
+ 
+-- 
+2.27.0.windows.1
+

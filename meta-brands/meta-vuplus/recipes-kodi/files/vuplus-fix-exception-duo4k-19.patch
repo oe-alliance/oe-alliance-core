@@ -1,0 +1,34 @@
+From 2f292dfbc783a416672d943fa1677552aa3febf0 Mon Sep 17 00:00:00 2001
+From: Captain <captain.onboard@web.de>
+Date: Sat, 18 Jul 2020 19:19:32 +0200
+Subject: [PATCH] vuplus-fix-exception-duo4k-19
+
+---
+ xbmc/utils/StringUtils.cpp | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/xbmc/utils/StringUtils.cpp b/xbmc/utils/StringUtils.cpp
+index 4195b18ae5..2a1212a379 100644
+--- a/xbmc/utils/StringUtils.cpp
++++ b/xbmc/utils/StringUtils.cpp
+@@ -1032,6 +1032,7 @@ int64_t StringUtils::AlphaNumericCompare(const wchar_t* left, const wchar_t* rig
+   const wchar_t *ld, *rd;
+   wchar_t lc, rc;
+   int64_t lnum, rnum;
++try {
+   bool lsym, rsym;
+   while (*l != 0 && *r != 0)
+   {
+@@ -1124,6 +1125,9 @@ int64_t StringUtils::AlphaNumericCompare(const wchar_t* left, const wchar_t* rig
+     }
+     l++; r++;
+   }
++} catch (const std::exception &e) {
++  return 0;
++}
+   if (*r)
+   { // r is longer
+     return -1;
+-- 
+2.27.0.windows.1
+

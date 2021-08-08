@@ -1,0 +1,2848 @@
+From 1b04d6cf0b3573a6a0bea8b9586defdd2f2157a3 Mon Sep 17 00:00:00 2001
+From: Captain <captain.onboard@web.de>
+Date: Mon, 22 Mar 2021 06:20:02 +0100
+Subject: [PATCH] HiPlayer-for-kodi
+
+---
+ cmake/treedata/common/cores.txt               |    1 +
+ xbmc/cores/HiPlayer/CMakeLists.txt            |    9 +
+ xbmc/cores/HiPlayer/HiPlayer.cpp              |  592 +++++++
+ xbmc/cores/HiPlayer/HiPlayer.h                |  151 ++
+ xbmc/cores/HiPlayer/HiPlayerAudio.cpp         |   79 +
+ xbmc/cores/HiPlayer/HiPlayerAudio.h           |   23 +
+ xbmc/cores/HiPlayer/HiPlayerVideo.cpp         | 1422 +++++++++++++++++
+ xbmc/cores/HiPlayer/HiPlayerVideo.h           |  117 ++
+ xbmc/cores/HiPlayer/Makefile                  |    8 +
+ xbmc/cores/HiPlayer/hisilicon.h               |  287 ++++
+ .../playercorefactory/PlayerCoreConfig.h      |   10 +
+ .../playercorefactory/PlayerCoreFactory.cpp   |   12 +
+ 12 files changed, 2711 insertions(+)
+ create mode 100644 xbmc/cores/HiPlayer/CMakeLists.txt
+ create mode 100644 xbmc/cores/HiPlayer/HiPlayer.cpp
+ create mode 100644 xbmc/cores/HiPlayer/HiPlayer.h
+ create mode 100644 xbmc/cores/HiPlayer/HiPlayerAudio.cpp
+ create mode 100644 xbmc/cores/HiPlayer/HiPlayerAudio.h
+ create mode 100644 xbmc/cores/HiPlayer/HiPlayerVideo.cpp
+ create mode 100644 xbmc/cores/HiPlayer/HiPlayerVideo.h
+ create mode 100644 xbmc/cores/HiPlayer/Makefile
+ create mode 100644 xbmc/cores/HiPlayer/hisilicon.h
+
+diff --git a/cmake/treedata/common/cores.txt b/cmake/treedata/common/cores.txt
+index d23939d314..599b76ce4b 100644
+--- a/cmake/treedata/common/cores.txt
++++ b/cmake/treedata/common/cores.txt
+@@ -6,3 +6,4 @@ xbmc/cores/DllLoader/exports/util      cores/dll-loader/exports/util
+ xbmc/cores/ExternalPlayer              cores/externalplayer
+ xbmc/cores/paplayer                    cores/paplayer
+ xbmc/cores/playercorefactory           cores/playercorefactory
++xbmc/cores/HiPlayer                    cores/hiplayer
+diff --git a/xbmc/cores/HiPlayer/CMakeLists.txt b/xbmc/cores/HiPlayer/CMakeLists.txt
+new file mode 100644
+index 0000000000..07a825340e
+--- /dev/null
++++ b/xbmc/cores/HiPlayer/CMakeLists.txt
+@@ -0,0 +1,9 @@
++set(SOURCES HiPlayer.cpp
++            HiPlayerAudio.cpp
++            HiPlayerVideo.cpp)
++
++set(HEADERS HiPlayer.h
++            HiPlayerAudio.h
++            HiPlayerVideo.h)
++
++core_add_library(hiplayer)
+diff --git a/xbmc/cores/HiPlayer/HiPlayer.cpp b/xbmc/cores/HiPlayer/HiPlayer.cpp
+new file mode 100644
+index 0000000000..3659f501d5
+--- /dev/null
++++ b/xbmc/cores/HiPlayer/HiPlayer.cpp
+@@ -0,0 +1,592 @@
++#include "HiPlayer.h"
++#include "HiPlayerVideo.h"
++#include "HiPlayerAudio.h"
++
++#include "Util.h"
++#include "Application.h"
++#include "ServiceBroker.h"
++#include "utils/StringUtils.h"
++#include "utils/URIUtils.h"
++#include "utils/log.h"
++#include "cores/DataCacheCore.h"
++#include "input/InputManager.h"
++#include "settings/Settings.h"
++#include "settings/SettingsComponent.h"
++#include "settings/AdvancedSettings.h"
++#include "guilib/GUIWindowManager.h"
++#include "dialogs/GUIDialogBusy.h"
++#include "pvr/PVRManager.h"
++#include "messaging/ApplicationMessenger.h"
++
++#include "cores/VideoPlayer/DVDInputStreams/DVDFactoryInputStream.h"
++#include "cores/AudioEngine/Interfaces/AE.h"
++
++#include "settings/MediaSettings.h"
++#include "storage/MediaManager.h"
++
++
++// Default time after which the item's playcount is incremented
++#define DEFAULT_PLAYCOUNT_MIN_TIME 10
++
++CHiPlayer::CHiPlayer(IPlayerCallback& callback)
++	: IPlayer(callback)
++	,CThread("HiPlayer")
++	,m_bAbortRequest(false)
++	,m_isRecording(false)
++	,m_playbackStartTime(0)
++	,m_playCountMinTime(DEFAULT_PLAYCOUNT_MIN_TIME)
++	,m_totalTime(1)
++	,m_time(0)
++	,m_ready(true)
++{
++	m_pInputStream = nullptr;
++	m_canTempo = false;
++	m_processInfo.reset(CProcessInfo::CreateInstance());
++
++	m_processInfo->SetDataCache(&CServiceBroker::GetDataCacheCore());
++	m_processInfo->SetSpeed(1.0);
++	m_processInfo->SetTempo(1.0);
++	m_processInfo->SetVideoRender(true);
++
++	CreatePlayers();
++
++	CServiceBroker::GetWinSystem()->Register(this);
++	CServiceBroker::GetWinSystem()->RegisterRenderLoop(this);
++	CServiceBroker::GetWinSystem()->Hide();
++}
++
++void CHiPlayer::CreatePlayers()
++{
++	m_VideoPlayerAudio = new CHiPlayerAudio(*m_processInfo);
++	m_VideoPlayerVideo = new CHiPlayerVideo(this, *m_processInfo);
++}
++
++void CHiPlayer::DestroyPlayers()
++{
++	delete m_VideoPlayerVideo;
++	delete m_VideoPlayerAudio;
++}
++
++CHiPlayer::~CHiPlayer()
++{
++	CServiceBroker::GetWinSystem()->UnregisterRenderLoop(this);
++	CServiceBroker::GetWinSystem()->Unregister(this);
++
++	CloseFile();
++
++	m_pInputStream.reset();
++
++	DestroyPlayers();
++
++	CLog::Log(LOGINFO, "CHiPlayer::%s", __FUNCTION__ );
++}
++
++bool CHiPlayer::OpenFile(const CFileItem& file, const CPlayerOptions &options)
++{
++	if (IsPlaying())
++		CloseFile();
++	
++	m_bAbortRequest = false;
++	m_processInfo->SetSpeed(1.0);
++	m_processInfo->SetTempo(1.0);
++	m_PlayerOptions = options;
++	m_item = file;
++	// Try to resolve the correct mime type
++	m_item.SetMimeTypeForInternetFile();
++	m_ready.Reset();
++	
++	Create();
++
++	return true;
++}
++
++bool CHiPlayer::CloseFile(bool reopen)
++{
++	m_bAbortRequest = true;
++
++	m_VideoPlayerVideo->CloseStream();
++	
++	if(m_pInputStream)
++		m_pInputStream->Abort();
++	
++	/* wait for the thread to terminate */
++	StopThread(true);
++	
++	CLog::Log(LOGINFO, "CHiPlayer::%s: reopen=%s", __FUNCTION__, reopen == true ? "true":"false");
++
++	return true;
++}
++
++bool CHiPlayer::OpenInputStream()
++{
++	if (m_pInputStream.use_count() > 1)
++		throw std::runtime_error("m_pInputStream reference count is greater than 1");
++	m_pInputStream.reset();
++
++	CLog::Log(LOGINFO, "Creating InputStream");
++
++	// correct the filename if needed
++	std::string filename(m_item.GetPath());
++	if (URIUtils::IsProtocol(filename, "dvd") ||
++			StringUtils::EqualsNoCase(filename, "iso9660://video_ts/video_ts.ifo"))
++	{
++		m_item.SetPath(CServiceBroker::GetMediaManager().TranslateDevicePath(""));
++	}
++
++	m_pInputStream = CDVDFactoryInputStream::CreateInputStream(this, m_item, true);
++	if(m_pInputStream == nullptr)
++	{
++		CLog::Log(LOGERROR, "CHiPlayer%s: - unable to create input stream for [%s]", __FUNCTION__, CURL::GetRedacted(m_item.GetPath()).c_str());
++		return false;
++	}
++
++	if (!m_pInputStream->Open())
++	{
++		CLog::Log(LOGERROR, "CHiPlayer%s: - error opening [%s]", __FUNCTION__, CURL::GetRedacted(m_item.GetPath()).c_str());
++		return false;
++	}
++
++	// find any available external subtitles for non dvd files
++	if (!m_pInputStream->IsStreamType(DVDSTREAM_TYPE_DVD)
++	&&	!m_pInputStream->IsStreamType(DVDSTREAM_TYPE_PVRMANAGER)
++	&&	!m_pInputStream->IsStreamType(DVDSTREAM_TYPE_TV))
++	{
++		// find any available external subtitles
++		std::vector<std::string> filenames;
++		CUtil::ScanForExternalSubtitles(m_item.GetPath(), filenames);
++
++		// load any subtitles from file item
++		std::string key("subtitle:1");
++		for(unsigned s = 1; m_item.HasProperty(key); key = StringUtils::Format("subtitle:%u", ++s))
++			filenames.push_back(m_item.GetProperty(key).asString());
++
++		for(unsigned int i=0;i<filenames.size();i++)
++		{
++			// if vobsub subtitle:
++			if (URIUtils::HasExtension(filenames[i], ".idx"))
++			{
++				std::string strSubFile;
++				if ( CUtil::FindVobSubPair( filenames, filenames[i], strSubFile ) )
++				{
++					CLog::Log(LOGINFO, "CHiPlayer%s: - AddSubtitleFile", __FUNCTION__);
++					m_VideoPlayerVideo->AddSubtitleFile(strSubFile);
++				}
++			}
++			else
++			{
++				if ( !CUtil::IsVobSub(filenames, filenames[i] ) )
++				{
++					CLog::Log(LOGINFO, "CHiPlayer%s: - AddSubtitleFile", __FUNCTION__);
++					m_VideoPlayerVideo->AddSubtitleFile(filenames[i]);
++				}
++			}
++		} // end loop over all subtitle files
++	}
++
++	SetAVDelay(m_processInfo->GetVideoSettings().m_AudioDelay);
++	SetSubTitleDelay(m_processInfo->GetVideoSettings().m_SubtitleDelay);
++	
++	if (m_pInputStream->IsStreamType(DVDSTREAM_TYPE_FILE))
++		CLog::Log(LOGINFO, "CHiPlayer%s: DVDSTREAM_TYPE_FILE", __FUNCTION__);
++	else if (m_pInputStream->IsStreamType(DVDSTREAM_TYPE_DVD))
++		CLog::Log(LOGINFO, "CHiPlayer%s: DVDSTREAM_TYPE_DVD", __FUNCTION__);
++	else if (m_pInputStream->IsStreamType(DVDSTREAM_TYPE_HTTP))
++		CLog::Log(LOGINFO, "CHiPlayer%s: DVDSTREAM_TYPE_HTTP", __FUNCTION__);
++	else if (m_pInputStream->IsStreamType(DVDSTREAM_TYPE_MEMORY))
++		CLog::Log(LOGINFO, "CHiPlayer%s: DVDSTREAM_TYPE_MEMORY", __FUNCTION__);
++	else if (m_pInputStream->IsStreamType(DVDSTREAM_TYPE_FFMPEG))
++		CLog::Log(LOGINFO, "CHiPlayer%s: DVDSTREAM_TYPE_FFMPEG", __FUNCTION__);
++	else if (m_pInputStream->IsStreamType(DVDSTREAM_TYPE_TV))
++		CLog::Log(LOGINFO, "CHiPlayer%s: DVDSTREAM_TYPE_TV", __FUNCTION__);
++	else if (m_pInputStream->IsStreamType(DVDSTREAM_TYPE_MPLS))
++		CLog::Log(LOGINFO, "CHiPlayer%s: DVDSTREAM_TYPE_MPLS", __FUNCTION__);
++	else if (m_pInputStream->IsStreamType(DVDSTREAM_TYPE_BLURAY))
++		CLog::Log(LOGINFO, "CHiPlayer%s: DVDSTREAM_TYPE_BLURAY", __FUNCTION__);
++	else if (m_pInputStream->IsStreamType(DVDSTREAM_TYPE_PVRMANAGER))
++		CLog::Log(LOGINFO, "CHiPlayer%s: DVDSTREAM_TYPE_PVRMANAGER", __FUNCTION__);
++	else if (m_pInputStream->IsStreamType(DVDSTREAM_TYPE_MULTIFILES))
++		CLog::Log(LOGINFO, "CHiPlayer%s: DVDSTREAM_TYPE_MULTIFILES", __FUNCTION__);
++	else if (m_pInputStream->IsStreamType(DVDSTREAM_TYPE_ADDON))
++		CLog::Log(LOGINFO, "CHiPlayer%s: DVDSTREAM_TYPE_ADDON", __FUNCTION__);
++	else if (m_pInputStream->IsStreamType(DVDSTREAM_TYPE_NONE))
++		CLog::Log(LOGINFO, "CHiPlayer%s: DVDSTREAM_TYPE_NONE", __FUNCTION__);
++	else
++		CLog::Log(LOGINFO, "CHiPlayer%s: DVDSTREAM_TYPE_UNKNOWN", __FUNCTION__);
++	
++	CLog::Log(LOGINFO, "CHiPlayer%s: m_ready.Set()", __FUNCTION__);
++	m_ready.Set();
++
++	if (CServiceBroker::GetSettingsComponent()->GetSettings()->GetBool(CSettings::SETTING_VIDEOPLAYER_USEDISPLAYASCLOCK) &&
++			!m_pInputStream->IsRealtime())
++		m_canTempo = true;
++	else
++		m_canTempo = false;
++
++	return true;
++}
++
++void CHiPlayer::Process()
++{
++	if (!OpenInputStream())
++	{
++		m_bAbortRequest = true;
++		return;
++	}
++
++	CServiceBroker::GetActiveAE()->Suspend();
++
++	XbmcThreads::EndTime timer(2000);
++	while (!timer.IsTimePast() && !CServiceBroker::GetActiveAE()->IsSuspended())
++		Sleep(50);
++
++	CDVDStreamInfo hint;
++	
++	hint.Clear();
++	hint.filename = m_pInputStream->GetFileName();
++	
++	CURL Url(hint.filename);
++	
++	CLog::Log(LOGINFO, "CHiPlayer%s: m_pInputStream->GetFileName(): %s", __FUNCTION__, hint.filename.c_str());
++
++	KODI::MESSAGING::CApplicationMessenger::GetInstance().PostMsg(TMSG_SWITCHTOFULLSCREEN);
++
++	m_playbackStartTime = XbmcThreads::SystemClockMillis();
++	m_time = 0;
++	
++	if (m_pInputStream->IsStreamType(DVDSTREAM_TYPE_PVRMANAGER) && 
++		Url.IsLocalHost())
++	{
++		hint.filename = "";
++	}
++
++	StringUtils::Replace(hint.filename, "%3a", ":");
++	StringUtils::Replace(hint.filename, "%2f", "/");
++	StringUtils::Replace(hint.filename, "%253a", ":");
++	StringUtils::Replace(hint.filename, "%252f", "/");
++
++	m_bStop = false;
++
++	m_VideoPlayerVideo->OpenStream(hint, m_item);
++	
++	CLog::Log(LOGINFO, "CHiPlayer%s: m_bStop: %s", __FUNCTION__, m_bStop == true ? "true" : "false");
++	
++	m_bStop = true;
++	
++	CLog::Log(LOGINFO, "CHiPlayer%s: m_bStop: %s", __FUNCTION__, m_bStop == true ? "true" : "false");
++
++	CServiceBroker::GetActiveAE()->Resume();
++
++	// We don't want to come back to an active screensaver
++	g_application.ResetScreenSaver();
++	g_application.WakeUpScreenSaverAndDPMS();
++
++	if (g_application.CurrentFileItem().IsStack() || 
++			m_pInputStream->IsStreamType(DVDSTREAM_TYPE_PVRMANAGER))
++		m_callback.OnPlayBackStopped();
++	else
++		m_callback.OnPlayBackEnded();
++}
++
++void CHiPlayer::Pause()
++{
++	m_VideoPlayerVideo->Pause();
++}
++
++bool CHiPlayer::HasVideo() const
++{
++	return true;
++}
++
++bool CHiPlayer::HasAudio() const
++{
++	return false;
++}
++
++void CHiPlayer::SetSubtitle(int iStream)
++{
++	m_VideoPlayerVideo->SetSubtitle(iStream);
++}
++
++bool CHiPlayer::GetSubtitleVisible()
++{
++	return m_VideoPlayerVideo->GetSubtitleVisible();
++}
++
++void CHiPlayer::SetSubtitleVisible(bool bVisible)
++{
++	m_VideoPlayerVideo->SetSubtitleVisible(bVisible);
++}
++
++void CHiPlayer::SetAudioStream(int iStream)
++{
++	m_VideoPlayerVideo->SetAudioStream(iStream);
++}
++
++bool CHiPlayer::CanSeek()
++{
++	return m_VideoPlayerVideo->CanSeek();
++}
++
++void CHiPlayer::Seek(bool bPlus, bool bLargeStep, bool bChapterOverride)
++{
++	m_VideoPlayerVideo->Seek(bPlus, bLargeStep, bChapterOverride);
++}
++
++void CHiPlayer::SeekPercentage(float iPercent)
++{
++	m_VideoPlayerVideo->SeekPercentage(iPercent);
++}
++
++void CHiPlayer::SetAVDelay(float fValue)
++{
++	m_VideoPlayerVideo->SetAVDelay(fValue);
++}
++
++float CHiPlayer::GetAVDelay()
++{
++	return m_VideoPlayerVideo->GetAVDelay();
++}
++
++void CHiPlayer::SetSubTitleDelay(float fValue)
++{
++	m_VideoPlayerVideo->SetSubTitleDelay(fValue);
++}
++
++float CHiPlayer::GetSubTitleDelay()
++{
++	return m_VideoPlayerVideo->GetSubTitleDelay();
++}
++
++void CHiPlayer::SeekTime(int64_t iTime)
++{
++	int seekOffset = (int)(iTime - GetTime());
++	
++	m_VideoPlayerVideo->SeekTime(iTime);
++	m_callback.OnPlayBackSeek((int)iTime, seekOffset);
++}
++
++bool CHiPlayer::SeekTimeRelative(int64_t iTime)
++{
++	bool res = m_VideoPlayerVideo->SeekTimeRelative(iTime);
++	
++	if(res)
++	{
++		int64_t abstime = GetTime() + iTime;
++		m_callback.OnPlayBackSeek((int)abstime, iTime);
++	}
++	
++	return res;
++}
++
++int64_t CHiPlayer::GetTime()
++{
++	return m_VideoPlayerVideo->GetTime();
++}
++
++int64_t CHiPlayer::GetTotalTime()
++{
++	return m_VideoPlayerVideo->GetTotalTime();
++}
++
++bool CHiPlayer::CanRecord()
++{
++	return false;
++}
++
++bool CHiPlayer::IsRecording()
++{
++	return false;
++}
++
++void CHiPlayer::SetSpeed(float iSpeed)
++{
++	CLog::Log(LOGINFO, "CHiPlayer::%s: %f", __FUNCTION__, iSpeed);
++	m_VideoPlayerVideo->SetSpeed(iSpeed);
++}
++
++void CHiPlayer::ShowOSD(bool bOnoff)
++{
++	CLog::Log(LOGINFO, "CHiPlayer::%s: %s", __FUNCTION__, bOnoff == false ? "false":"true" );
++}
++
++std::string CHiPlayer::GetPlayerState()
++{
++	CLog::Log(LOGINFO, "CHiPlayer::%s", __FUNCTION__);
++	return "";
++}
++
++bool CHiPlayer::SetPlayerState(const std::string& state)
++{
++	CLog::Log(LOGINFO, "CHiPlayer::%s: state:%s", __FUNCTION__, state.c_str());
++	return true;
++}
++
++bool CHiPlayer::Initialize(TiXmlElement* pConfig)
++{
++	CLog::Log(LOGINFO, "CHiPlayer::%s", __FUNCTION__);
++	return true;
++}
++
++void CHiPlayer::Render(bool clear, uint32_t alpha, bool gui)
++{
++}
++
++void CHiPlayer::ToggleOSD()
++{
++	CLog::Log(LOGINFO, "CHiPlayer::%s:", __FUNCTION__);
++}
++
++void CHiPlayer::SetVolume(float volume)
++{
++	m_VideoPlayerAudio->SetVolume(volume);
++}
++
++void CHiPlayer::SetMute(bool bOnOff)
++{
++	m_VideoPlayerAudio->SetMute(bOnOff);
++}
++
++int CHiPlayer::GetAudioStreamCount()
++{
++	return m_VideoPlayerVideo->GetAudioStreamCount();
++}
++
++int CHiPlayer::GetVideoStreamCount()
++{
++	return m_VideoPlayerVideo->GetVideoStreamCount();
++}
++
++int CHiPlayer::GetSubtitleCount()
++{
++	return m_VideoPlayerVideo->GetSubtitleCount();
++}
++
++void CHiPlayer::GetVideoStreamInfo(int index, VideoStreamInfo &info)
++{
++	return m_VideoPlayerVideo->GetVideoStreamInfo(index, info);
++}
++
++void CHiPlayer::GetAudioStreamInfo(int index, AudioStreamInfo &info)
++{
++	return m_VideoPlayerVideo->GetAudioStreamInfo(index, info);
++}
++
++void CHiPlayer::GetSubtitleStreamInfo(int index, SubtitleStreamInfo &info)
++{
++	return m_VideoPlayerVideo->GetSubtitleStreamInfo(index, info);
++}
++
++int CHiPlayer::GetAudioStream()
++{
++	return m_VideoPlayerVideo->GetAudioStream();
++}
++
++int CHiPlayer::GetVideoStream()
++{
++	return m_VideoPlayerVideo->GetVideoStream();
++}
++
++int CHiPlayer::GetSubtitle()
++{
++	return m_VideoPlayerVideo->GetSubtitle();
++}
++
++float CHiPlayer::GetRenderAspectRatio()
++{
++	return m_VideoPlayerVideo->GetRenderAspectRatio();
++}
++
++bool CHiPlayer::GetStreamDetails(CStreamDetails &details)
++{
++	return m_VideoPlayerVideo->GetStreamDetails(details);
++}
++
++void CHiPlayer::OnPlaybackStarted(const CFileItem& file)
++{
++	CLog::Log(LOGINFO, "CHiPlayer::%s", __FUNCTION__);
++	
++	CURL Url(m_pInputStream->GetFileName());
++	
++	CLog::Log(LOGINFO, "CHiPlayer::%s: startpercent=%f starttime=%f", __FUNCTION__, m_PlayerOptions.startpercent, m_PlayerOptions.starttime);
++	
++	if (m_PlayerOptions.startpercent > 0)
++	{
++		m_VideoPlayerVideo->SeekPercentage(m_PlayerOptions.startpercent/(float) 100);
++		m_PlayerOptions.startpercent = 0.0f;
++	}
++	else if (m_PlayerOptions.starttime > 0)
++	{
++		m_VideoPlayerVideo->SeekTimeRelative((int64_t) m_PlayerOptions.starttime * 1000);
++		m_PlayerOptions.starttime = 0.0f;
++	}
++
++	m_callback.OnPlayBackStarted(file);
++	m_callback.OnAVStarted(file);
++}
++
++bool CHiPlayer::OnAction(const CAction &action)
++{
++	CLog::Log(LOGINFO, "CHiPlayer::%s: id=%d", __FUNCTION__, action.GetID());
++	return false;
++}
++
++void CHiPlayer::GetVideoResolution(unsigned int &width, unsigned int &height)
++{
++	m_VideoPlayerVideo->GetVideoResolution(width, height);
++	CLog::Log(LOGINFO, "CHiPlayer::%s: width=%d height=%d", __FUNCTION__, width, height);
++}
++
++void CHiPlayer::FrameMove() 
++{ 
++}
++
++bool CHiPlayer::IsPlaying() const
++{
++	return !m_bStop;
++}
++
++bool CHiPlayer::IsRenderingVideo()
++{
++	return IsPlaying();
++}
++
++bool CHiPlayer::Supports(ERENDERFEATURE feature)
++{
++	if(feature == RENDERFEATURE_BRIGHTNESS)
++	{
++		return false;
++	}
++	
++	if(feature == RENDERFEATURE_CONTRAST)
++	{
++		return false;
++	}
++
++	if(feature == RENDERFEATURE_GAMMA)
++		return false;
++	
++	if(feature == RENDERFEATURE_NOISE)
++		return false;
++
++	if(feature == RENDERFEATURE_SHARPNESS)
++	{
++		return false;
++	}
++
++	if (feature == RENDERFEATURE_NONLINSTRETCH)
++	{
++		return false;
++	}
++
++	if (feature == RENDERFEATURE_STRETCH)
++		return true;
++
++  return false;
++}
++
++void CHiPlayer::SetRenderViewMode(int mode, float zoom, float par, float shift, bool stretch)
++{
++	CLog::Log(LOGINFO, "CHiPlayer::%s %d", __FUNCTION__, mode);
++	m_VideoPlayerVideo->SetRenderViewMode(mode, zoom, par, shift, stretch);
++}
++
+diff --git a/xbmc/cores/HiPlayer/HiPlayer.h b/xbmc/cores/HiPlayer/HiPlayer.h
+new file mode 100644
+index 0000000000..d794cb748f
+--- /dev/null
++++ b/xbmc/cores/HiPlayer/HiPlayer.h
+@@ -0,0 +1,151 @@
++#pragma once
++
++#include <string>
++#include "system.h"
++
++#include "HiPlayerAudio.h"
++#include "HiPlayerVideo.h"
++#include "cores/IPlayer.h"
++#include "threads/Thread.h"
++#include "utils/log.h"
++#include "FileItem.h"
++#include "guilib/DispResource.h"
++
++#include "cores/VideoPlayer/IVideoPlayer.h"
++#include "cores/VideoPlayer/DVDInputStreams/DVDInputStream.h"
++
++class CProcessInfo;
++class CHiPlayerAudio;
++class CHiPlayerVideo;
++class CInputStreamPVRManager;
++
++using namespace PVR;
++
++class IHiPlayerCallback
++{
++public:
++	virtual void OnPlaybackStarted(const CFileItem& file) = 0;
++};
++
++class CHiPlayer : public IPlayer, public CThread, public IVideoPlayer, public IDispResource, public IRenderLoop, public IHiPlayerCallback
++{
++public:
++
++	int OnDiscNavResult(void* pData, int iMessage) { return 0; };
++	virtual void GetVideoResolution(unsigned int &width, unsigned int &height);
++	
++	CHiPlayer(IPlayerCallback& callback);
++	virtual ~CHiPlayer();
++	virtual bool Initialize(TiXmlElement* pConfig);
++	virtual bool OpenFile(const CFileItem& file, const CPlayerOptions &options);
++	virtual bool CloseFile(bool reopen = false);
++	
++	//virtual bool IsPlaying() const { return m_isPlaying; };
++	virtual bool IsPlaying() const;
++	virtual void Pause() override;
++	virtual bool HasVideo() const;
++	virtual bool HasAudio() const;
++	virtual void ToggleOSD();
++	virtual bool CanSeek();
++	virtual void Seek(bool bPlus, bool bLargeStep, bool bChapterOverride);
++	virtual void SeekPercentage(float iPercent);
++	virtual void SetVolume(float volume);
++	virtual void SetMute(bool bOnOff);
++
++	virtual bool HasMenu() const { return true; };
++	virtual void SetDynamicRangeCompression(long drc) {}
++	virtual void SetContrast(bool bPlus) {}
++	virtual void SetBrightness(bool bPlus) {}
++	virtual void SetHue(bool bPlus) {}
++	virtual void SetSaturation(bool bPlus) {}
++	virtual bool CanRecord();
++	virtual bool IsRecording();
++	virtual bool Record(bool bOnOff) { return false; }
++	virtual void SetAVDelay(float fValue = 0.0f);
++	virtual float GetAVDelay();
++	
++	virtual void FrameMove();
++	virtual void Render(bool clear, uint32_t alpha, bool gui);
++	virtual void FlushRenderer() { CLog::Log(LOGINFO, "%s: ", __FUNCTION__ ); };
++	
++	virtual void SetRenderViewMode(int mode, float zoom, float par, float shift, bool stretch);
++	virtual float GetRenderAspectRatio();
++	virtual void TriggerUpdateResolution() { CLog::Log(LOGINFO, "%s: ", __FUNCTION__ ); };
++	
++	virtual bool IsRenderingVideo();
++
++	virtual void SetSubTitleDelay(float fValue = 0.0f);
++	virtual float GetSubTitleDelay();
++
++	virtual void SeekTime(int64_t iTime);
++	virtual bool SeekTimeRelative(int64_t iTime);
++
++	virtual void SetSpeed(float iSpeed) override;
++	virtual void ShowOSD(bool bOnoff);
++	virtual void DoAudioWork() {};
++	
++	virtual std::string GetPlayerState();
++	virtual bool SetPlayerState(const std::string& state);
++	
++	virtual int GetAudioStreamCount();
++	virtual int GetVideoStreamCount();
++	virtual int GetSubtitleCount();
++
++	virtual void SetSubtitle(int iStream);
++	virtual bool GetSubtitleVisible();
++	virtual void SetSubtitleVisible(bool bVisible);
++
++	virtual void SetAudioStream(int iStream);
++
++	virtual void GetVideoStreamInfo(int streamId, VideoStreamInfo &info);
++	virtual void GetAudioStreamInfo(int index, AudioStreamInfo &info);
++	virtual void GetSubtitleStreamInfo(int index, SubtitleStreamInfo &info);
++
++	virtual int GetAudioStream();
++	virtual int GetVideoStream();
++	virtual int GetSubtitle();
++
++	virtual bool GetStreamDetails(CStreamDetails &details);
++
++	virtual bool SupportsTempo() { return m_canTempo; };
++	virtual bool Supports(ERENDERFEATURE feature);
++	
++	void OnPlaybackStarted(const CFileItem& file) override;
++
++private:
++
++	virtual void Process();
++	virtual bool OnAction(const CAction &action);
++	
++	void CreatePlayers();
++	void DestroyPlayers();
++
++	int64_t GetTime();
++	int64_t GetTotalTime();
++
++	bool m_bAbortRequest;
++	bool m_isPlaying;
++	bool m_isRecording;
++	
++	int64_t m_playbackStartTime;
++	int m_totalTime;
++	int m_time;
++	int m_playCountMinTime;
++	
++	CPlayerOptions m_PlayerOptions;
++	std::unique_ptr<CProcessInfo> m_processInfo;
++	
++	CHiPlayerAudio *m_VideoPlayerAudio;
++	CHiPlayerVideo *m_VideoPlayerVideo;
++	
++	CEvent m_ready;
++	
++protected:
++	bool OpenInputStream();
++	
++	friend class CSelectionStreams;
++	
++	CFileItem m_item;
++	std::atomic_bool m_canTempo;
++	std::shared_ptr<CDVDInputStream> m_pInputStream;
++};
+diff --git a/xbmc/cores/HiPlayer/HiPlayerAudio.cpp b/xbmc/cores/HiPlayer/HiPlayerAudio.cpp
+new file mode 100644
+index 0000000000..c312f71e8f
+--- /dev/null
++++ b/xbmc/cores/HiPlayer/HiPlayerAudio.cpp
+@@ -0,0 +1,79 @@
++#include "threads/SingleLock.h"
++#include "utils/XMLUtils.h"
++
++#include <fcntl.h>
++#include <sys/ioctl.h>
++#include <linux/dvb/audio.h>
++
++#include "system.h"
++#include "HiPlayerAudio.h"
++#include "utils/log.h"
++
++#include "threads/Thread.h"
++#include "threads/SystemClock.h"
++
++#define AUDIO_DEV "/dev/dvb/adapter0/audio0"
++
++CHiPlayerAudio::CHiPlayerAudio(CProcessInfo &processInfo): m_processInfo(processInfo)
++{
++	m_processInfo.ResetAudioCodecInfo();
++}
++
++CHiPlayerAudio::~CHiPlayerAudio()
++{
++}
++
++void CHiPlayerAudio::SetVolume(float volume)
++{
++	int vol = checkVolume(int(volume * 100));
++	audio_mixer_t mixer;
++	
++	vol = 63 - vol * 63 / 100;
++	
++	mixer.volume_left = vol;
++	mixer.volume_right = vol;
++
++	int fd = openMixer();
++	if (fd >= 0)
++	{
++		ioctl(fd, AUDIO_SET_MIXER, &mixer);
++		closeMixer(fd);
++	}
++	CLog::Log(LOGDEBUG, "%s: volume:%f set:%d (-1db)", __FUNCTION__, volume, vol);
++}
++
++void CHiPlayerAudio::SetMute(bool bOnOff)
++{
++	int fd = openMixer();
++	if (fd >= 0)
++	{
++		bool mute = bOnOff;
++		if (!ioctl(fd, AUDIO_SET_MUTE, mute) == 0)
++			CLog::Log(LOGERROR, "%s: ioctl AUDIO_SET_MUTE failed", __FUNCTION__);
++		
++		closeMixer(fd);
++	}
++	else
++			CLog::Log(LOGERROR, "%s: i/o AUDIO_SET_MUTE failed", __FUNCTION__);
++	
++	CLog::Log(LOGDEBUG, "%s: bOnOff	:%s", __FUNCTION__, bOnOff == false ? "off":"on" ); 
++}
++
++int CHiPlayerAudio::openMixer()
++{
++	return open(AUDIO_DEV, O_RDWR);
++}
++
++void CHiPlayerAudio::closeMixer(int fd)
++{
++	if (fd >= 0) close(fd);
++}
++
++int CHiPlayerAudio::checkVolume(int vol)
++{
++	if (vol < 0)
++		vol = 0;
++	else if (vol > 100)
++		vol = 100;
++	return vol;
++}
+diff --git a/xbmc/cores/HiPlayer/HiPlayerAudio.h b/xbmc/cores/HiPlayer/HiPlayerAudio.h
+new file mode 100644
+index 0000000000..a03dafb1fa
+--- /dev/null
++++ b/xbmc/cores/HiPlayer/HiPlayerAudio.h
+@@ -0,0 +1,23 @@
++#pragma once
++
++#include "threads/Thread.h"
++
++
++#include "cores/VideoPlayer/Process/ProcessInfo.h"
++
++class CHiPlayerAudio
++{
++public:
++	CHiPlayerAudio(CProcessInfo &processInfo);
++	~CHiPlayerAudio();
++	void SetVolume(float volume);
++	void SetMute(bool bOnOff);
++
++private:
++	int openMixer();
++	int checkVolume(int vol);
++	void closeMixer(int fd);
++	
++protected:
++	CProcessInfo &m_processInfo;
++};
+diff --git a/xbmc/cores/HiPlayer/HiPlayerVideo.cpp b/xbmc/cores/HiPlayer/HiPlayerVideo.cpp
+new file mode 100644
+index 0000000000..227c933e26
+--- /dev/null
++++ b/xbmc/cores/HiPlayer/HiPlayerVideo.cpp
+@@ -0,0 +1,1422 @@
++#include "HiPlayerVideo.h"
++#include "system.h"
++#include "URL.h"
++#include "Util.h"
++#include "filesystem/SpecialProtocol.h"
++#include "utils/StringUtils.h"
++#include "utils/StreamDetails.h"
++#include "utils/URIUtils.h"
++#include "utils/XMLUtils.h"
++#include "utils/log.h"
++#include "settings/AdvancedSettings.h"
++#include "messaging/ApplicationMessenger.h"
++#include "guilib/GUIComponent.h"
++#include "guilib/GUIWindowManager.h"
++#include "settings/Settings.h"
++#include "settings/SettingsComponent.h"
++#include "settings/MediaSettings.h"
++#include "GUIInfoManager.h"
++
++#include "cores/DataCacheCore.h"
++#include "ServiceBroker.h"
++
++#include <unistd.h>
++#include <fcntl.h>
++#include <sys/ioctl.h>
++#include <sys/types.h>
++#include <sys/stat.h>
++#include <errno.h>
++#include <string>
++#include <sys/socket.h>
++#include <linux/netlink.h>
++
++#include <linux/dvb/audio.h>
++#include <linux/dvb/video.h>
++
++#define MAX_PAYLOAD 4096
++
++CHiPlayerVideo::CHiPlayerVideo(IHiPlayerCallback *callback, CProcessInfo &processInfo): m_callback(callback)
++	,m_processInfo(processInfo)
++	,m_aspect(0)
++	,m_width(0)
++	,m_height(0)
++	,m_offset(0)
++	,m_length(0)
++	,m_framerate(0)
++	,m_progressive(0)
++	,m_time(0)
++	,m_video(0)
++	,m_audio(0)
++	,m_text(0)
++	,m_totalTime(1)
++	,m_pInputStream(NULL)
++{
++	m_subtitle_visible = false;
++	m_started = false;
++	m_stop = false;
++	m_paused = false;
++	m_player_state = 0;
++	m_seekable = 0;
++	m_firstpts = 0;
++
++	memset(&fileinfo, 0, sizeof(fileinfo));
++	memset(&streamid, 0, sizeof(streamid));
++
++	struct sockaddr_nl src_addr;
++	memset(&src_addr, 0, sizeof(src_addr));
++	src_addr.nl_family = AF_NETLINK;
++	src_addr.nl_pid = getpid(); /* self pid */
++	netlink_socket = socket(PF_NETLINK, SOCK_RAW, 30);
++	bind(netlink_socket, (struct sockaddr*)&src_addr, sizeof(src_addr));
++
++	nlh = (struct nlmsghdr *)malloc(NLMSG_SPACE(MAX_PAYLOAD));
++
++	m_audio_fd = ::open("/dev/dvb/adapter0/audio0", O_RDWR | O_CLOEXEC);
++	m_video_fd = ::open("/dev/dvb/adapter0/video0", O_RDWR | O_CLOEXEC);
++}
++
++CHiPlayerVideo::~CHiPlayerVideo()
++{
++	CloseStream();
++
++	if(m_pInputStream)
++		SAFE_DELETE(m_pInputStream);
++
++	if (netlink_socket >= 0)
++	{
++		::close(netlink_socket);
++		netlink_socket = -1;
++	}
++	if (nlh)
++	{
++		free(nlh);
++		nlh = NULL;
++	}
++	if (m_audio_fd >= 0)
++	{
++		::close(m_audio_fd);
++		m_audio_fd = -1;
++	}
++	if (m_video_fd >= 0)
++	{
++		::close(m_video_fd);
++		m_video_fd = -1;
++	}
++
++	unsigned int i;
++	for (i = 0; i < fileinfo.u32ProgramNum; i++)
++	{
++		free(fileinfo.pastProgramInfo[i].pastVidStream);
++		free(fileinfo.pastProgramInfo[i].pastAudStream);
++		free(fileinfo.pastProgramInfo[i].pastSubStream);
++	}
++	free(fileinfo.pastProgramInfo);
++
++	CLog::Log(LOGINFO, "CHiPlayerVideo::%s", __FUNCTION__ );
++}
++
++int Select(int maxfd, fd_set *readfds, fd_set *writefds, fd_set *exceptfds, struct timeval *timeout)
++{
++	int retval;
++	fd_set rset, wset, xset;
++	timeval interval;
++	timerclear(&interval);
++	
++	/* make a backup of all fd_set's and timeval struct */
++	if (readfds) rset = *readfds;
++	if (writefds) wset = *writefds;
++	if (exceptfds) xset = *exceptfds;
++	if (timeout) interval = *timeout;
++	
++	while (1)
++	{
++		retval = select(maxfd, readfds, writefds, exceptfds, timeout);
++		
++		if (retval < 0)
++		{
++			/* restore the backup before we continue */
++			if (readfds) *readfds = rset;
++			if (writefds) *writefds = wset;
++			if (exceptfds) *exceptfds = xset;
++			if (timeout) *timeout = interval;
++			if (errno == EINTR || errno == EAGAIN) continue;
++			break;
++		}
++		
++		break;
++	}
++	return retval;
++}
++
++void CHiPlayerVideo::send_netlink_message(int index, int command, unsigned char *data, int count, unsigned char *data2, int count2)
++{
++	int retval;
++	struct msghdr msg = {0};
++	struct nlmsghdr nlhdr = {0};
++	struct iovec iov[4] = {0};
++	struct sockaddr_nl dest_addr = {0};
++	uint32_t cmd = (index << 24) | command;
++
++	dest_addr.nl_family = AF_NETLINK;
++	dest_addr.nl_pid = 0; /* For Linux Kernel */
++	dest_addr.nl_groups = 0; /* unicast */
++
++	nlhdr.nlmsg_len = NLMSG_LENGTH(sizeof(cmd) + count + count2);
++	nlhdr.nlmsg_pid = getpid();
++	nlhdr.nlmsg_flags = 0;
++
++	msg.msg_name = (void *)&dest_addr;
++	msg.msg_namelen = sizeof(dest_addr);
++	msg.msg_iov = iov;
++	msg.msg_iovlen = 2;
++	iov[0].iov_base = (void *)&nlhdr;
++	iov[0].iov_len = sizeof(nlhdr);
++	iov[1].iov_base = (void *)&cmd;
++	iov[1].iov_len = sizeof(cmd);
++	if (data && count)
++	{
++		iov[2].iov_base = (void *)data;
++		iov[2].iov_len = count;
++		msg.msg_iovlen++;
++		if (data2 && count2)
++		{
++			iov[3].iov_base = (void *)data2;
++			iov[3].iov_len = count2;
++			msg.msg_iovlen++;
++		}
++	}
++	sendmsg(netlink_socket, &msg, 0);
++}
++
++int CHiPlayerVideo::receive_netlink_message(void)
++{
++	struct msghdr msg;
++	struct iovec iov;
++	struct sockaddr_nl dest_addr;
++	memset(&dest_addr, 0, sizeof(dest_addr));
++	dest_addr.nl_family = AF_NETLINK;
++	dest_addr.nl_pid = 0; /* For Linux Kernel */
++	dest_addr.nl_groups = 0; /* unicast */
++
++	memset(nlh, 0, NLMSG_SPACE(MAX_PAYLOAD));
++	nlh->nlmsg_len = NLMSG_SPACE(MAX_PAYLOAD);
++	nlh->nlmsg_pid = getpid();
++	nlh->nlmsg_flags = 0;
++
++	iov.iov_base = (void *)nlh;
++	iov.iov_len = nlh->nlmsg_len;
++	msg.msg_name = (void *)&dest_addr;
++	msg.msg_namelen = sizeof(dest_addr);
++	msg.msg_iov = &iov;
++	msg.msg_iovlen = 1;
++	if (recvmsg(netlink_socket, &msg, 0) <= 0)
++	{
++		return 0;
++	}
++	return NLMSG_PAYLOAD(nlh, 0);
++}
++
++bool CHiPlayerVideo::OpenStream(CDVDStreamInfo &hints, const CFileItem &file)
++{
++	m_item = file;
++	m_processInfo.ResetVideoCodecInfo();
++	m_processInfo.ResetAudioCodecInfo();
++	m_processInfo.SetVideoDecoderName("HiPlayer", true);
++	m_processInfo.SetAudioDecoderName("HiPlayer");
++
++	m_stop = false;
++
++	if(m_pInputStream)
++		SAFE_DELETE(m_pInputStream);
++
++	if (m_video_fd >= 0)
++	{
++		struct video_command cmd = {0};
++		struct argdata
++		{
++			uint32_t size;
++			void *arg;
++		} *argdata = (struct argdata*)cmd.raw.data;
++		cmd.cmd = 101; /* set url */
++		argdata->arg = (void*)hints.filename.c_str();
++		argdata->size = hints.filename.length() + 1;
++		::ioctl(m_video_fd, VIDEO_COMMAND, &cmd);
++
++		std::string m_useragent = "";
++		cmd.cmd = 102; /* set useragent */
++		argdata->arg = (void*)CServiceBroker::GetSettingsComponent()->GetAdvancedSettings()->m_userAgent.c_str();
++		argdata->size = CServiceBroker::GetSettingsComponent()->GetAdvancedSettings()->m_userAgent.length() + 1;
++		::ioctl(m_video_fd, VIDEO_COMMAND, &cmd);
++	}
++
++	send_netlink_message(0, 100, NULL, 0, NULL, 0);
++
++	CServiceBroker::GetDataCacheCore().SetVideoDecoderName("HiPlayer", true);
++
++	if (m_video_fd >= 0)
++	{
++		::ioctl(m_video_fd, VIDEO_FAST_FORWARD, 0);
++		::ioctl(m_video_fd, VIDEO_SLOWMOTION, 0);
++		::ioctl(m_video_fd, VIDEO_PLAY);
++		::ioctl(m_video_fd, VIDEO_CONTINUE);
++	}
++	if (m_audio_fd >= 0)
++	{
++		::ioctl(m_audio_fd, AUDIO_PLAY);
++		::ioctl(m_audio_fd, AUDIO_CONTINUE);
++	}
++
++	while (!m_stop)
++	{
++		fd_set rset, xset;
++		struct timeval timeout = {0, 200000};
++		int retval;
++		int maxfd = -1;
++		FD_ZERO(&rset);
++		FD_ZERO(&xset);
++		FD_SET(netlink_socket, &rset);
++		if (netlink_socket > maxfd) maxfd = netlink_socket;
++		FD_SET(m_video_fd, &xset);
++		if (m_video_fd > maxfd) maxfd = m_video_fd;
++		retval = ::Select(maxfd + 1, &rset, NULL, &xset, &timeout);
++		if (retval > 0)
++		{
++			if (m_video_fd >= 0 && FD_ISSET(m_video_fd, &xset))
++			{
++				struct video_event evt;
++				if (::ioctl(m_video_fd, VIDEO_GET_EVENT, &evt) >= 0)
++				{
++					if (evt.type == VIDEO_EVENT_SIZE_CHANGED)
++					{
++						switch (evt.u.size.aspect_ratio)
++						{
++						case VIDEO_FORMAT_221_1:
++							m_aspect = 221;
++							break;
++						case VIDEO_FORMAT_16_9:
++							m_aspect = 178;
++							break;
++						case VIDEO_FORMAT_4_3:
++							m_aspect = 133;
++							break;
++						}
++						m_height = evt.u.size.h;
++						m_width = evt.u.size.w;
++					}
++					else if (evt.type == VIDEO_EVENT_FRAME_RATE_CHANGED)
++					{
++						m_framerate = evt.u.frame_rate;
++					}
++					else if (evt.type == 16 /*VIDEO_EVENT_PROGRESSIVE_CHANGED*/)
++					{
++						m_progressive = evt.u.frame_rate;
++					}
++					m_processInfo.SetVideoDimensions((int)m_width, (int)m_height);
++					m_processInfo.SetVideoDAR(0.01 * (float)m_aspect);
++					m_processInfo.SetVideoFps((float)m_framerate * 0.001f);
++
++					CServiceBroker::GetDataCacheCore().SignalVideoInfoChange();
++				}
++			}
++			if (netlink_socket >= 0 && FD_ISSET(netlink_socket, &rset))
++			{
++				int readlen = receive_netlink_message();
++				if (readlen > 0)
++				{
++					int decoder = *((uint32_t*)NLMSG_DATA(nlh)) >> 24;
++					int msgtype = *((uint32_t*)NLMSG_DATA(nlh)) & 0xffffff;
++					switch (msgtype)
++					{
++					case 2: /* subtitle data */
++						if (m_subtitle_visible && !m_paused)
++						{
++							struct subtitleheader
++							{
++								uint64_t pts;
++								uint32_t duration;
++								uint32_t datasize;
++							} header;
++							memcpy(&header, (unsigned char*)NLMSG_DATA(nlh) + sizeof(uint32_t), sizeof(header));
++							
++							CGUIMessage msg(GUI_MSG_SET_TEXT, 12666, 999);
++							msg.SetLabel((const char*)NLMSG_DATA(nlh) + sizeof(uint32_t) + sizeof(header));
++							CServiceBroker::GetGUI()->GetWindowManager().SendMessage(msg);
++
++						}
++						break;
++					case 3: /* clear subtitles */
++						{
++							CGUIMessage msg(GUI_MSG_SET_TEXT, 12666, 999);
++							msg.SetLabel("");
++							CServiceBroker::GetGUI()->GetWindowManager().SendMessage(msg);
++						}
++						break;
++					case 4: /* file info */
++						memcpy(&fileinfo, (unsigned char*)NLMSG_DATA(nlh) + sizeof(uint32_t), sizeof(fileinfo));
++						fileinfo.pastProgramInfo = (HI_FORMAT_PROGRAM_INFO_S*)malloc(fileinfo.u32ProgramNum * sizeof(HI_FORMAT_PROGRAM_INFO_S));
++						fileinfo.u32ProgramNum = 0;
++						break;
++					case 5: /* program info */
++						memcpy(&fileinfo.pastProgramInfo[fileinfo.u32ProgramNum], (unsigned char*)NLMSG_DATA(nlh) + sizeof(uint32_t), sizeof(HI_FORMAT_PROGRAM_INFO_S));
++						fileinfo.pastProgramInfo[fileinfo.u32ProgramNum].pastVidStream = (HI_FORMAT_VID_INFO_S*)malloc(fileinfo.pastProgramInfo[fileinfo.u32ProgramNum].u32VidStreamNum * sizeof(HI_FORMAT_VID_INFO_S));
++						fileinfo.pastProgramInfo[fileinfo.u32ProgramNum].u32VidStreamNum = 0;
++						fileinfo.pastProgramInfo[fileinfo.u32ProgramNum].pastAudStream = (HI_FORMAT_AUD_INFO_S*)malloc(fileinfo.pastProgramInfo[fileinfo.u32ProgramNum].u32AudStreamNum * sizeof(HI_FORMAT_AUD_INFO_S));
++						fileinfo.pastProgramInfo[fileinfo.u32ProgramNum].u32AudStreamNum = 0;
++						fileinfo.pastProgramInfo[fileinfo.u32ProgramNum].pastSubStream = (HI_FORMAT_SUB_INFO_S*)malloc(fileinfo.pastProgramInfo[fileinfo.u32ProgramNum].u32SubStreamNum * sizeof(HI_FORMAT_SUB_INFO_S));
++						fileinfo.pastProgramInfo[fileinfo.u32ProgramNum].u32SubStreamNum = 0;
++						fileinfo.u32ProgramNum++;
++						break;
++					case 6: /* video stream */
++						memcpy(&fileinfo.pastProgramInfo[fileinfo.u32ProgramNum - 1].pastVidStream[fileinfo.pastProgramInfo[fileinfo.u32ProgramNum - 1].u32VidStreamNum], (unsigned char*)NLMSG_DATA(nlh) + sizeof(uint32_t), sizeof(HI_FORMAT_VID_INFO_S));
++						fileinfo.pastProgramInfo[fileinfo.u32ProgramNum - 1].u32VidStreamNum++;
++						m_video = fileinfo.pastProgramInfo[fileinfo.u32ProgramNum - 1].u32VidStreamNum;
++						break;
++					case 7: /* audio stream */
++						memcpy(&fileinfo.pastProgramInfo[fileinfo.u32ProgramNum - 1].pastAudStream[fileinfo.pastProgramInfo[fileinfo.u32ProgramNum - 1].u32AudStreamNum], (unsigned char*)NLMSG_DATA(nlh) + sizeof(uint32_t), sizeof(HI_FORMAT_AUD_INFO_S));
++						fileinfo.pastProgramInfo[fileinfo.u32ProgramNum - 1].u32AudStreamNum++;
++						m_audio = fileinfo.pastProgramInfo[fileinfo.u32ProgramNum - 1].u32AudStreamNum;
++						break;
++					case 8: /* subtitle stream */
++						memcpy(&fileinfo.pastProgramInfo[fileinfo.u32ProgramNum - 1].pastSubStream[fileinfo.pastProgramInfo[fileinfo.u32ProgramNum - 1].u32SubStreamNum], (unsigned char*)NLMSG_DATA(nlh) + sizeof(uint32_t), sizeof(HI_FORMAT_SUB_INFO_S));
++						fileinfo.pastProgramInfo[fileinfo.u32ProgramNum - 1].u32SubStreamNum++;
++						m_text = fileinfo.pastProgramInfo[fileinfo.u32ProgramNum - 1].u32SubStreamNum;
++						break;
++					case 9: /* stream id */
++						memcpy(&streamid, (unsigned char*)NLMSG_DATA(nlh) + sizeof(uint32_t), sizeof(streamid));
++						m_current_video = streamid.videostreamid;
++						m_current_audio = streamid.audiostreamid;
++						m_current_text = streamid.subtitlestreamid;
++						{
++							HI_FORMAT_VID_INFO_S *pstVidStream = NULL;
++							HI_FORMAT_AUD_INFO_S *pstAudStream = NULL;
++							if (fileinfo.u32ProgramNum > 0 && streamid.programid < fileinfo.u32ProgramNum)
++							{
++								if (streamid.videostreamid >= 0 && fileinfo.pastProgramInfo[streamid.programid].u32VidStreamNum > streamid.videostreamid)
++								{
++									pstVidStream = &fileinfo.pastProgramInfo[streamid.programid].pastVidStream[streamid.videostreamid];
++								}
++								if (streamid.audiostreamid >= 0 && fileinfo.pastProgramInfo[streamid.programid].u32AudStreamNum > streamid.audiostreamid)
++								{
++									pstAudStream = &fileinfo.pastProgramInfo[streamid.programid].pastAudStream[streamid.audiostreamid];
++								}
++							}
++
++							if (pstVidStream)
++							{
++								m_processInfo.SetVideoDecoderName(getVidFormatStr(pstVidStream->u32Format), true);
++							}
++							if (pstAudStream)
++							{
++								char buffer[64];
++								m_processInfo.SetAudioDecoderName(getAudFormatStr(pstAudStream->u32Format));
++								m_processInfo.SetAudioBitsPerSample(pstAudStream->u16BitPerSample);
++								m_processInfo.SetAudioSampleRate(pstAudStream->u32SampleRate);
++								switch (pstAudStream->u16Channels)
++								{
++								case 2:
++									m_processInfo.SetAudioChannels("2.0");
++									break;
++								case 6:
++									m_processInfo.SetAudioChannels("5.1");
++									break;
++								case 8:
++									m_processInfo.SetAudioChannels("7.1");
++									break;
++								default:
++									snprintf(buffer, sizeof(buffer), "%d channels", pstAudStream->u16Channels);
++									m_processInfo.SetAudioChannels(buffer);
++									break;
++								}
++							}
++							CServiceBroker::GetDataCacheCore().SignalAudioInfoChange();
++							CServiceBroker::GetDataCacheCore().SignalVideoInfoChange();
++						}
++						break;
++					case 10: /* player state */
++						{
++							int32_t state;
++							memcpy(&state, (unsigned char*)NLMSG_DATA(nlh) + sizeof(uint32_t), sizeof(state));
++							switch (state)
++							{
++							case 0: /* init */
++								break;
++							case 1: /* deinit */
++								break;
++							case 2: /* play */
++								if (!m_started)
++								{
++									getPlayPosition(m_firstpts);
++									CDataCacheCore::GetInstance().SetPlayTimes(0, GetTime(), 0, GetTotalTime());
++									m_started = true;
++									m_callback->OnPlaybackStarted(file);
++								}
++								break;
++							case 3: /* fast forward */
++								break;
++							case 4: /* rewind */
++								break;
++							case 5: /* pause */
++								break;
++							case 6: /* stop */
++								break;
++							case 7: /* preparing */
++								break;
++							}
++							m_player_state = state;
++						}
++						break;
++					case 11: /* error */
++						{
++							int32_t error;
++							memcpy(&error, (unsigned char*)NLMSG_DATA(nlh) + sizeof(uint32_t), sizeof(error));
++							switch (error)
++							{
++							case 0: /* no error */
++								break;
++							case 1: /* video playback failed */
++								break;
++							case 2: /* audio playback failed */
++								break;
++							case 3: /* subtitle playback failed */
++								break;
++							case 4: /* media playback failed */
++								break;
++							case 5: /* timeout */
++								break;
++							case 6: /* file format not supported */
++								break;
++							case 7: /* unknown error */
++								break;
++							case 8: /* I-frame decoding error */
++								break;
++							}
++						}
++						break;
++					case 12: /* buffering */
++						{
++							struct bufferinfo
++							{
++								uint32_t status;
++								uint32_t percentage;
++							} info;
++							memcpy(&info, (unsigned char*)NLMSG_DATA(nlh) + sizeof(uint32_t), sizeof(info));
++							switch (info.status)
++							{
++							case 0: /* empty */
++							case 1: /* insufficient */
++								/* TODO: pause? */
++								break;
++							case 2: /* enough */
++							case 3: /* full */
++								/* TODO: resume? */
++								break;
++							default:
++								break;
++							}
++						}
++						break;
++					case 13: /* network info */
++						{
++							struct networkinfo
++							{
++								uint32_t status;
++								int32_t errorcode;
++							} info;
++							memcpy(&info, (unsigned char*)NLMSG_DATA(nlh) + sizeof(uint32_t), sizeof(info));
++							switch (info.status)
++							{
++							case 0: /* network: unknown error */
++								break;
++							case 1: /* network: failed to connect */
++								break;
++							case 2: /* network: timeout */
++								break;
++							case 3: /* network: disconnected */
++								break;
++							case 4: /* network: file not found */
++								break;
++							case 5: /* network: status ok */
++								break;
++							case 6: /* network: http errorcode */
++								break;
++							case 7: /* network: bitrate adjusted */
++								break;
++							}
++						}
++						break;
++					case 14: /* event */
++						{
++							int32_t event;
++							memcpy(&event, (unsigned char*)NLMSG_DATA(nlh) + sizeof(uint32_t), sizeof(event));
++							switch (event)
++							{
++							case 0: /* SOF */
++								/* reached SOF while rewinding */
++								break;
++							case 1: /* EOF */
++								CloseStream();
++								break;
++							}
++						}
++						break;
++					case 15: /* seekable */
++						memcpy(&m_seekable, (unsigned char*)NLMSG_DATA(nlh) + sizeof(uint32_t), sizeof(m_seekable));
++						break;
++					case 16: /* download progress */
++						break;
++					default:
++						break;
++					}
++				}
++			}
++		}
++		else
++		{
++			if (m_started)
++			{
++				CDataCacheCore::GetInstance().SetPlayTimes(0, GetTime(), 0, GetTotalTime());
++			}
++		}
++	}
++
++	return true;
++}
++
++void CHiPlayerVideo::CloseStream()
++{
++	if (m_video_fd >= 0)
++	{
++		::ioctl(m_video_fd, VIDEO_STOP);
++	}
++	if (m_audio_fd >= 0)
++	{
++		::ioctl(m_audio_fd, AUDIO_STOP);
++	}
++
++	if(m_pInputStream)
++	{
++		m_pInputStream->Close();
++		SAFE_DELETE(m_pInputStream);
++	}
++	m_stop = true;
++}
++
++void CHiPlayerVideo::Pause()
++{
++	if (m_paused)
++	{
++		if (m_video_fd >= 0)
++		{
++			::ioctl(m_video_fd, VIDEO_FAST_FORWARD, 0);
++			::ioctl(m_video_fd, VIDEO_SLOWMOTION, 0);
++			::ioctl(m_video_fd, VIDEO_CONTINUE);
++		}
++		if (m_audio_fd >= 0)
++		{
++			::ioctl(m_audio_fd, AUDIO_CONTINUE);
++		}
++	}
++	else
++	{
++		if (m_video_fd >= 0)
++		{
++			::ioctl(m_video_fd, VIDEO_FREEZE);
++		}
++		if (m_audio_fd >= 0)
++		{
++			::ioctl(m_audio_fd, AUDIO_PAUSE);
++		}
++	}
++	m_paused = !m_paused;
++}
++
++void CHiPlayerVideo::SetSubtitle(int iStream)
++{
++	if (m_video_fd >= 0)
++	{
++		struct video_command cmd = {0};
++		cmd.cmd = 106; /* set subtitle streamid */
++		cmd.raw.data[0] = iStream;
++		::ioctl(m_video_fd, VIDEO_COMMAND, &cmd);
++	}
++}
++
++bool CHiPlayerVideo::GetSubtitleVisible()
++{
++	return m_subtitle_visible;
++}
++
++void CHiPlayerVideo::SetSubtitleVisible(bool bVisible)
++{
++	m_subtitle_visible = bVisible;
++}
++
++void CHiPlayerVideo::SetAudioStream(int iStream)
++{
++	if (m_video_fd >= 0)
++	{
++		struct video_command cmd = {0};
++		cmd.cmd = 105; /* set audio streamid */
++		cmd.raw.data[0] = iStream;
++		::ioctl(m_video_fd, VIDEO_COMMAND, &cmd);
++	}
++}
++
++bool CHiPlayerVideo::CanSeek()
++{
++	if(m_pInputStream)
++		return false;
++	return m_seekable;
++}
++
++void CHiPlayerVideo::Seek(bool bPlus, bool bLargeStep, bool bChapterOverride)
++{
++	int64_t seekTarget;
++	if (!m_seekable || !GetTotalTime()) return;
++
++	const std::shared_ptr<CAdvancedSettings> advancedSettings = CServiceBroker::GetSettingsComponent()->GetAdvancedSettings();
++	if (advancedSettings->m_videoUseTimeSeeking && GetTotalTime() > 2000*advancedSettings->m_videoTimeSeekForwardBig)
++	{
++		if (bLargeStep)
++			seekTarget = bPlus ? advancedSettings->m_videoTimeSeekForwardBig :
++							   advancedSettings->m_videoTimeSeekBackwardBig;
++		else
++			seekTarget = bPlus ? advancedSettings->m_videoTimeSeekForward :
++							   advancedSettings->m_videoTimeSeekBackward;
++		seekTarget *= 1000;
++		seekTarget += GetTime();
++	}
++	else
++	{
++		int current = GetTime() * 100 / GetTotalTime();
++		int percent;
++		if (bLargeStep)
++			percent = bPlus ? advancedSettings->m_videoPercentSeekForwardBig : advancedSettings->m_videoPercentSeekBackwardBig;
++		else
++			percent = bPlus ? advancedSettings->m_videoPercentSeekForward : advancedSettings->m_videoPercentSeekBackward;
++		seekTarget = (int64_t)(GetTotalTime()*(current + percent)/100);
++	}
++
++	CLog::Log(LOGINFO, "CHiPlayerVideo::%s: seekTarget=%lld", __FUNCTION__, seekTarget);
++
++	SeekTime(seekTarget);
++}
++
++void CHiPlayerVideo::SeekPercentage(float iPercent)
++{
++	int val = (int) GetTotalTime() * iPercent;
++
++	CLog::Log(LOGINFO, "CHiPlayerVideo::%s: iPercent=%f seek to %d milliseconds", __FUNCTION__, iPercent, val);
++
++	if(val<0)
++		return;
++
++	if (m_video_fd >= 0)
++	{
++		struct video_command cmd = {0};
++		cmd.cmd = 100; /* seek */
++		cmd.stop.pts = m_firstpts + val * 90LL;
++		::ioctl(m_video_fd, VIDEO_COMMAND, &cmd);
++	}
++}
++
++void CHiPlayerVideo::SetAVDelay(float fValue)
++{
++	CLog::Log(LOGINFO, "CHiPlayerVideo::%s", __FUNCTION__ );
++}
++
++float CHiPlayerVideo::GetAVDelay()
++{
++	return 0.0f;
++}
++
++void CHiPlayerVideo::SetSubTitleDelay(float fValue)
++{
++	CLog::Log(LOGINFO, "CHiPlayerVideo::%s", __FUNCTION__ );
++}
++
++float CHiPlayerVideo::GetSubTitleDelay()
++{
++	return 0.0f;
++}
++
++const char *CHiPlayerVideo::getVidFormatStr(uint32_t format)
++{
++	switch (format)
++	{
++	case HI_FORMAT_VIDEO_MPEG2:
++		return "mpeg2";
++		break;
++
++	case HI_FORMAT_VIDEO_MPEG4:
++		return "mpeg4";
++		break;
++
++	case HI_FORMAT_VIDEO_AVS:
++		return "avs";
++		break;
++
++	case HI_FORMAT_VIDEO_H263:
++		return "h263";
++		break;
++
++	case HI_FORMAT_VIDEO_H264:
++		return "h264";
++		break;
++
++	case HI_FORMAT_VIDEO_REAL8:
++		return "real8";
++		break;
++
++	case HI_FORMAT_VIDEO_REAL9:
++		return "real9";
++		break;
++
++	case HI_FORMAT_VIDEO_VC1:
++		return "vc1";
++		break;
++
++	case HI_FORMAT_VIDEO_VP6:
++		return "vp6";
++		break;
++
++	case HI_FORMAT_VIDEO_DIVX3:
++		return "divx3";
++		break;
++
++	case HI_FORMAT_VIDEO_RAW:
++		return "raw";
++		break;
++
++	case HI_FORMAT_VIDEO_JPEG:
++		return "jpeg";
++		break;
++
++	case HI_FORMAT_VIDEO_MJPEG:
++		return "mjpeg";
++		break;
++	case HI_FORMAT_VIDEO_MJPEGB:
++		return "mjpegb";
++		break;
++	case HI_FORMAT_VIDEO_SORENSON:
++		return "sorenson";
++		break;
++
++	case HI_FORMAT_VIDEO_VP6F:
++		return "vp6f";
++		break;
++
++	case HI_FORMAT_VIDEO_VP6A:
++		return "vp6a";
++		break;
++
++	case HI_FORMAT_VIDEO_VP8:
++		return "vp8";
++		break;
++	case HI_FORMAT_VIDEO_MVC:
++		return "mvc";
++		break;
++	case HI_FORMAT_VIDEO_SVQ1:
++		return "sorenson1";
++		break;
++	case HI_FORMAT_VIDEO_SVQ3:
++		return "sorenson3";
++		break;
++	case HI_FORMAT_VIDEO_DV:
++		return "dv";
++		break;
++	case HI_FORMAT_VIDEO_WMV1:
++		return "wmv1";
++		break;
++	case HI_FORMAT_VIDEO_WMV2:
++		return "wmv2";
++		break;
++	case HI_FORMAT_VIDEO_WMV3:
++		return "wmv3";
++		break;
++	case HI_FORMAT_VIDEO_MSMPEG4V1:
++		return "microsoft mpeg4v1";
++		break;
++	case HI_FORMAT_VIDEO_MSMPEG4V2:
++		return "microsoft mpeg4v2";
++		break;
++	case HI_FORMAT_VIDEO_CINEPAK:
++		return "cinepack";
++		break;
++	case HI_FORMAT_VIDEO_RV10:
++		return "rv10";
++		break;
++	case HI_FORMAT_VIDEO_RV20:
++		return "rv20";
++		break;
++	case HI_FORMAT_VIDEO_INDEO4:
++		return "indeo4";
++		break;
++	case HI_FORMAT_VIDEO_INDEO5:
++		return "indeo5";
++		break;
++	case HI_FORMAT_VIDEO_HEVC:
++		return "hevc";
++	case HI_FORMAT_VIDEO_VP9:
++		return "vp9";
++	default:
++		return "unknown";
++		break;
++	}
++
++	return "unknown";
++}
++
++const char *CHiPlayerVideo::getAudFormatStr(uint32_t format)
++{
++	switch (format)
++	{
++	case HI_FORMAT_AUDIO_MP2:
++		return "mp2";
++		break;
++	case HI_FORMAT_AUDIO_MP3:
++		return "mp3";
++		break;
++	case HI_FORMAT_AUDIO_AAC:
++		return "aac";
++		break;
++	case HI_FORMAT_AUDIO_AC3:
++		return "ac3";
++		break;
++	case HI_FORMAT_AUDIO_DTS:
++		return "dts";
++		break;
++	case HI_FORMAT_AUDIO_VORBIS:
++		return "vorbis";
++		break;
++	case HI_FORMAT_AUDIO_DVAUDIO:
++		return "dvaudio";
++		break;
++	case HI_FORMAT_AUDIO_WMAV1:
++		return "wmav1";
++		break;
++	case HI_FORMAT_AUDIO_WMAV2:
++		return "wmav2";
++		break;
++	case HI_FORMAT_AUDIO_MACE3:
++		return "mace3";
++		break;
++	case HI_FORMAT_AUDIO_MACE6:
++		return "mace6";
++		break;
++	case HI_FORMAT_AUDIO_VMDAUDIO:
++		return "vmdaudio";
++		break;
++	case HI_FORMAT_AUDIO_SONIC:
++		return "sonic";
++		break;
++	case HI_FORMAT_AUDIO_SONIC_LS:
++		return "sonic_ls";
++		break;
++	case HI_FORMAT_AUDIO_FLAC:
++		return "flac";
++		break;
++	case HI_FORMAT_AUDIO_MP3ADU:
++		return "mp3adu";
++		break;
++	case HI_FORMAT_AUDIO_MP3ON4:
++		return "mp3on4";
++		break;
++	case HI_FORMAT_AUDIO_SHORTEN:
++		return "shorten";
++		break;
++	case HI_FORMAT_AUDIO_ALAC:
++		return "alac";
++		break;
++	case HI_FORMAT_AUDIO_WESTWOOD_SND1:
++		return "westwood_snd1";
++		break;
++	case HI_FORMAT_AUDIO_GSM:
++		return "gsm";
++		break;
++	case HI_FORMAT_AUDIO_QDM2:
++		return "qdm2";
++		break;
++	case HI_FORMAT_AUDIO_COOK:
++		return "cook";
++		break;
++	case HI_FORMAT_AUDIO_TRUESPEECH:
++		return "truespeech";
++		break;
++	case HI_FORMAT_AUDIO_TTA:
++		return "tta";
++		break;
++	case HI_FORMAT_AUDIO_SMACKAUDIO:
++		return "smackaudio";
++		break;
++	case HI_FORMAT_AUDIO_QCELP:
++		return "qcelp";
++		break;
++	case HI_FORMAT_AUDIO_WAVPACK:
++		return "wavpack";
++		break;
++	case HI_FORMAT_AUDIO_DSICINAUDIO:
++		return "dsicinaudio";
++		break;
++	case HI_FORMAT_AUDIO_IMC:
++		return "imc";
++		break;
++	case HI_FORMAT_AUDIO_MUSEPACK7:
++		return "musepack7";
++		break;
++	case HI_FORMAT_AUDIO_MLP:
++		return "mlp";
++		break;
++	case HI_FORMAT_AUDIO_GSM_MS:
++		return "gsm_ms";
++		break;
++	case HI_FORMAT_AUDIO_ATRAC3:
++		return "atrac3";
++		break;
++	case HI_FORMAT_AUDIO_VOXWARE:
++		return "voxware";
++		break;
++	case HI_FORMAT_AUDIO_APE:
++		return "ape";
++		break;
++	case HI_FORMAT_AUDIO_NELLYMOSER:
++		return "nellymoser";
++		break;
++	case HI_FORMAT_AUDIO_MUSEPACK8:
++		return "musepack8";
++		break;
++	case HI_FORMAT_AUDIO_SPEEX:
++		return "speex";
++		break;
++	case HI_FORMAT_AUDIO_WMAVOICE:
++		return "wmavoice";
++		break;
++	case HI_FORMAT_AUDIO_WMAPRO:
++		return "wmapro";
++		break;
++	case HI_FORMAT_AUDIO_WMALOSSLESS:
++		return "wmalossless";
++		break;
++	case HI_FORMAT_AUDIO_ATRAC3P:
++		return "atrac3p";
++		break;
++	case HI_FORMAT_AUDIO_EAC3:
++		return "eac3";
++		break;
++	case HI_FORMAT_AUDIO_SIPR:
++		return "spir";
++		break;
++	case HI_FORMAT_AUDIO_MP1:
++		return "mp1";
++		break;
++	case HI_FORMAT_AUDIO_TWINVQ:
++		return "twinvq";
++		break;
++	case HI_FORMAT_AUDIO_TRUEHD:
++		return "truehd";
++		break;
++	case HI_FORMAT_AUDIO_MP4ALS:
++		return "mp4als";
++		break;
++	case HI_FORMAT_AUDIO_ATRAC1:
++		return "atrac1";
++		break;
++	case HI_FORMAT_AUDIO_BINKAUDIO_RDFT:
++		return "binkaudio_rdft";
++		break;
++	case HI_FORMAT_AUDIO_BINKAUDIO_DCT:
++		return "binkaudio_dct";
++		break;
++	case HI_FORMAT_AUDIO_DRA:
++		return "dra";
++		break;
++
++	case HI_FORMAT_AUDIO_PCM: /* various PCM "codecs" */
++		return "pcm";
++		break;
++
++	case HI_FORMAT_AUDIO_ADPCM: /* various ADPCM codecs */
++		return "adpcm";
++		break;
++
++	case HI_FORMAT_AUDIO_AMR_NB: /* AMR */
++		return "amr_nb";
++		break;
++	case HI_FORMAT_AUDIO_AMR_WB:
++		return "amr_wb";
++		break;
++	case HI_FORMAT_AUDIO_AMR_AWB:
++		return "amr_awb";
++		break;
++
++	case HI_FORMAT_AUDIO_RA_144: /* RealAudio codecs*/
++		return "ra_144";
++		break;
++	case HI_FORMAT_AUDIO_RA_288:
++		return "ra_288";
++		break;
++
++	case HI_FORMAT_AUDIO_DPCM: /* various DPCM codecs */
++		return "dpcm";
++		break;
++
++	case HI_FORMAT_AUDIO_G711:  /* various G.7xx codecs */
++		return "g711";
++		break;
++	case HI_FORMAT_AUDIO_G722:
++		return "g722";
++		break;
++	case HI_FORMAT_AUDIO_G7231:
++		return "g7231";
++		break;
++	case HI_FORMAT_AUDIO_G726:
++		return "g726";
++		break;
++	case HI_FORMAT_AUDIO_G728:
++		return "g728";
++		break;
++	case HI_FORMAT_AUDIO_G729AB:
++		return "g729AB";
++		break;
++	case HI_FORMAT_AUDIO_PCM_BLURAY:
++		return "pcm_blueray";
++		break;
++	default:
++		break;
++	}
++
++	return "unknown";
++}
++
++void CHiPlayerVideo::GetVideoStreamInfo(int index, VideoStreamInfo &info)
++{
++	HI_FORMAT_VID_INFO_S *pstVidStream = NULL;
++	if (index < 0)
++	{
++		index = 0;
++	}
++	if (fileinfo.u32ProgramNum > 0 && streamid.programid < fileinfo.u32ProgramNum)
++	{
++		if (index >= 0 && fileinfo.pastProgramInfo[streamid.programid].u32VidStreamNum > index)
++		{
++			pstVidStream = &fileinfo.pastProgramInfo[streamid.programid].pastVidStream[index];
++		}
++	}
++
++	if (pstVidStream)
++	{
++		info.valid = true;
++		info.width = pstVidStream->u16Width;
++		info.height = pstVidStream->u16Height;
++		info.bitrate = pstVidStream->u32Bitrate;
++		info.videoAspectRatio = 0.01 * m_aspect;
++		info.codecName = getVidFormatStr(pstVidStream->u32Format);
++	}
++}
++
++void CHiPlayerVideo::GetAudioStreamInfo(int index, AudioStreamInfo &info)
++{
++	HI_FORMAT_AUD_INFO_S *pstAudStream = NULL;
++	if (index < 0)
++	{
++		index = 0;
++	}
++	if (fileinfo.u32ProgramNum > 0 && streamid.programid < fileinfo.u32ProgramNum)
++	{
++		if (index >= 0 && (int)fileinfo.pastProgramInfo[streamid.programid].u32AudStreamNum > index)
++		{
++			pstAudStream = &fileinfo.pastProgramInfo[streamid.programid].pastAudStream[index];
++		}
++	}
++
++	if (pstAudStream)
++	{
++		info.valid = true;
++		info.bitrate = pstAudStream->u32Bitrate;
++		info.samplerate = pstAudStream->u32SampleRate;
++		info.bitspersample = pstAudStream->u16BitPerSample;
++		if (info.bitspersample == 0)
++		{
++			info.bitspersample = 32; /* assume 32bit */
++		}
++		info.channels = pstAudStream->u16Channels;
++		info.language = pstAudStream->aszLanguage;
++		info.codecName = getAudFormatStr(pstAudStream->u32Format);
++	}
++}
++
++void CHiPlayerVideo::GetSubtitleStreamInfo(int index, SubtitleStreamInfo &info)
++{
++	if (fileinfo.u32ProgramNum > 0 && streamid.programid < fileinfo.u32ProgramNum)
++	{
++		if (index >= 0 && index < (int)fileinfo.pastProgramInfo[streamid.programid].u32SubStreamNum)
++		{
++			switch (fileinfo.pastProgramInfo[streamid.programid].pastSubStream[index].u32Format)
++			{
++			case HI_FORMAT_SUBTITLE_ASS:
++				break;
++			case HI_FORMAT_SUBTITLE_SRT:
++				break;
++			case HI_FORMAT_SUBTITLE_HDMV_PGS:
++				break;
++			case HI_FORMAT_SUBTITLE_DVD_SUB:
++				break;
++			case HI_FORMAT_SUBTITLE_DVB_SUB: /* should not happen in ES media */
++			case HI_FORMAT_SUBTITLE_LRC:
++			case HI_FORMAT_SUBTITLE_SMI:
++			case HI_FORMAT_SUBTITLE_SUB:
++			case HI_FORMAT_SUBTITLE_TXT:
++			default:
++				break;
++			}
++			info.language = (const char*)fileinfo.pastProgramInfo[streamid.programid].pastSubStream[index].paszLanguage;
++			info.name = (const char*)fileinfo.pastProgramInfo[streamid.programid].pastSubStream[index].paszFileName;
++		}
++	}
++}
++
++int CHiPlayerVideo::getPlayPosition(int64_t &pts)
++{
++	pts = 0;
++
++	if (m_video_fd >= 0)
++	{
++		if (::ioctl(m_video_fd, VIDEO_GET_PTS, &pts) >= 0)
++		{
++			return 0;
++		}
++	}
++	if (m_audio_fd >= 0)
++	{
++		if (::ioctl(m_audio_fd, AUDIO_GET_PTS, &pts) >= 0)
++		{
++			return 0;
++		}
++	}
++	return 0;
++}
++
++void CHiPlayerVideo::SeekTime(int64_t iTime)
++{
++	CLog::Log(LOGINFO, "CHiPlayerVideo::%s: iTime=%lld", __FUNCTION__, iTime);
++
++	if (iTime >= 0)
++	{
++		if (m_video_fd >= 0)
++		{
++			struct video_command cmd = {0};
++			cmd.cmd = 100; /* seek */
++			cmd.stop.pts = m_firstpts + iTime * 90LL;
++			::ioctl(m_video_fd, VIDEO_COMMAND, &cmd);
++		}
++	}
++	CServiceBroker::GetGUI()->GetInfoManager().GetInfoProviders().GetPlayerInfoProvider().SetDisplayAfterSeek();
++}
++
++bool CHiPlayerVideo::SeekTimeRelative(int64_t iTime)
++{
++	int64_t abstime = GetTime() + iTime;
++	
++	CLog::Log(LOGINFO, "CHiPlayerVideo::%s: iTime=%lld abstime=%d", __FUNCTION__, iTime, abstime);
++
++	if (abstime >= 0)
++	{
++		SeekTime(abstime);
++	}
++	return true;
++}
++
++void CHiPlayerVideo::SetSpeed(float iSpeed)
++{
++	if (iSpeed < -1.0 || iSpeed > 1.0)
++	{
++		int ratio = (int)iSpeed;
++		if (m_video_fd >= 0)
++		{
++			::ioctl(m_video_fd, VIDEO_SLOWMOTION, 0);
++			::ioctl(m_video_fd, VIDEO_FAST_FORWARD, ratio);
++			::ioctl(m_video_fd, VIDEO_CONTINUE);
++		}
++	}
++	else
++	{
++		int ratio = (int)(1.0 / iSpeed);
++		if (m_video_fd >= 0)
++		{
++			::ioctl(m_video_fd, VIDEO_SLOWMOTION, ratio);
++			::ioctl(m_video_fd, VIDEO_FAST_FORWARD, 0);
++			::ioctl(m_video_fd, VIDEO_CONTINUE);
++		}
++	}
++	CServiceBroker::GetGUI()->GetInfoManager().GetInfoProviders().GetPlayerInfoProvider().SetDisplayAfterSeek();
++}
++
++int64_t CHiPlayerVideo::GetTime()
++{
++	int64_t pts;
++	getPlayPosition(pts);
++	m_time = (pts - m_firstpts) / 90LL;
++	if (m_pInputStream)
++	{
++		m_time = (int64_t) (((GetTotalTime() * 1000) / m_length) * m_offset) / 1000;
++		CLog::Log(LOGINFO, "CGstPlayerVideo::%s: (appsrc) m_offset=%d m_length=%d m_pInputStream->GetLength()=%d", __FUNCTION__, (int) m_offset, (int) m_length, m_pInputStream->GetLength());
++		CLog::Log(LOGINFO, "CGstPlayerVideo::%s: (appsrc) milliseconds=%d", __FUNCTION__, (int) m_time);
++		return m_time;
++	}
++	return m_time;
++
++}
++
++int64_t CHiPlayerVideo::GetTotalTime()
++{
++	m_totalTime = fileinfo.s64Duration;
++	return m_totalTime;
++}
++
++std::string CHiPlayerVideo::GetPlayerState()
++{
++	CLog::Log(LOGINFO, "CHiPlayerVideo::%s", __FUNCTION__);
++
++	return "";
++}
++
++float CHiPlayerVideo::GetRenderAspectRatio()
++{
++	CLog::Log(LOGINFO, "%s: m_aspect: %d.0f", __FUNCTION__, (int)m_aspect); 
++	return 0.01 * (float)m_aspect;
++}
++
++void CHiPlayerVideo::GetVideoResolution(unsigned int &width, unsigned int &height)
++{
++	width = m_width;
++	height = m_height;
++}
++
++bool CHiPlayerVideo::GetStreamDetails(CStreamDetails &details)
++{
++	if (fileinfo.u32ProgramNum > 0 && streamid.programid < fileinfo.u32ProgramNum)
++	{
++		int i;
++		for (i = 0; i < fileinfo.pastProgramInfo[streamid.programid].u32SubStreamNum; i++)
++		{
++			switch (fileinfo.pastProgramInfo[streamid.programid].pastSubStream[i].u32Format)
++			{
++			case HI_FORMAT_SUBTITLE_ASS:
++				break;
++			case HI_FORMAT_SUBTITLE_SRT:
++				break;
++			case HI_FORMAT_SUBTITLE_HDMV_PGS:
++				break;
++			case HI_FORMAT_SUBTITLE_DVD_SUB:
++				break;
++			case HI_FORMAT_SUBTITLE_DVB_SUB: /* should not happen in ES media */
++			case HI_FORMAT_SUBTITLE_LRC:
++			case HI_FORMAT_SUBTITLE_SMI:
++			case HI_FORMAT_SUBTITLE_SUB:
++			case HI_FORMAT_SUBTITLE_TXT:
++			default:
++				break;
++			}
++			CStreamDetailSubtitle *p = new CStreamDetailSubtitle();
++			p->m_strLanguage = (const char*)fileinfo.pastProgramInfo[streamid.programid].pastSubStream[i].paszLanguage;
++			details.AddStream(p);
++		}
++
++		for (i = 0; i < fileinfo.pastProgramInfo[streamid.programid].u32VidStreamNum; i++)
++		{
++			HI_FORMAT_VID_INFO_S *pstVidStream = &fileinfo.pastProgramInfo[streamid.programid].pastVidStream[i];
++			CStreamDetailVideo *p = new CStreamDetailVideo();
++			p->m_iWidth = pstVidStream->u16Width;
++			p->m_iHeight = pstVidStream->u16Height;
++			p->m_fAspect = (float)p->m_iWidth / p->m_iHeight;
++			p->m_strCodec = getVidFormatStr(pstVidStream->u32Format);
++			p->m_iDuration = pstVidStream->s64Duration;
++			p->m_strStereoMode = "";
++			p->m_strLanguage = "";
++			if (i == streamid.videostreamid)
++			{
++				p->m_fAspect = 0.01 * (float)m_aspect; /* use current aspect ratio */
++				p->m_iDuration = fileinfo.s64Duration;
++			}
++			details.AddStream(p);
++		}
++		for (i = 0; i < fileinfo.pastProgramInfo[streamid.programid].u32AudStreamNum; i++)
++		{
++			HI_FORMAT_AUD_INFO_S *pstAudStream = &fileinfo.pastProgramInfo[streamid.programid].pastAudStream[i];
++			CStreamDetailAudio *p = new CStreamDetailAudio();
++			p->m_iChannels = pstAudStream->u16Channels;
++			p->m_strLanguage = pstAudStream->aszLanguage;
++			p->m_strCodec = getAudFormatStr(pstAudStream->u32Format);
++			details.AddStream(p);
++		}
++		return true;
++	}
++	return false;
++}
++
++void CHiPlayerVideo::SetRenderViewMode(int mode, float zoom, float par, float shift, bool stretch)
++{
++	FILE *policy;
++	if (m_aspect < 178)
++	{
++		policy = fopen("/proc/stb/video/policy", "w");
++	}
++	else
++	{
++		policy = fopen("/proc/stb/video/policy2", "w");
++	}
++
++	switch (mode)
++	{
++	case ViewModeNormal:
++		fprintf(policy, "%s", "panscan");
++		break;
++	case ViewModeZoom:
++		fprintf(policy, "%s", "bestfit");
++		break;
++	case ViewModeStretch4x3:
++		fprintf(policy, "%s", "letterbox");
++		break;
++	case ViewModeWideZoom:
++		fprintf(policy, "%s", "bestfit");
++		break;
++	case ViewModeStretch16x9:
++		fprintf(policy, "%s", "panscan");
++		break;
++	case ViewModeOriginal:
++		fprintf(policy, "%s", "full");
++		break;
++	case ViewModeCustom:
++		fprintf(policy, "%s", "auto");
++		break;
++	case ViewModeStretch16x9Nonlin:
++		fprintf(policy, "%s", "auto");
++		break;
++	case ViewModeZoom120Width:
++		fprintf(policy, "%s", "auto");
++		break;
++	case ViewModeZoom110Width:
++		fprintf(policy, "%s", "auto");
++		break;
++	}
++	fclose(policy);
++
++	m_processInfo.UpdateVideoSettings().SetViewMode(mode, zoom, par, shift, stretch);
++}
++
++void CHiPlayerVideo::AddSubtitleFile(const std::string &filename)
++{
++	if (m_video_fd >= 0)
++	{
++		struct video_command cmd = {0};
++		struct argdata
++		{
++			uint32_t size;
++			void *arg;
++		} *argdata = (struct argdata*)cmd.raw.data;
++		cmd.cmd = 107; /* set external subtitle */
++		argdata->arg = (void*)filename.c_str();
++		argdata->size = filename.length() + 1;
++		::ioctl(m_video_fd, VIDEO_COMMAND, &cmd);
++	}
++}
+diff --git a/xbmc/cores/HiPlayer/HiPlayerVideo.h b/xbmc/cores/HiPlayer/HiPlayerVideo.h
+new file mode 100644
+index 0000000000..4b4a2f321f
+--- /dev/null
++++ b/xbmc/cores/HiPlayer/HiPlayerVideo.h
+@@ -0,0 +1,117 @@
++#pragma once
++
++#include <string>
++#include <vector>
++
++#include "HiPlayerAudio.h"
++#include "utils/log.h"
++#include "cores/IPlayer.h"
++#include "HiPlayer.h"
++#include "cores/VideoPlayer/Process/ProcessInfo.h"
++#include "cores/VideoPlayer/DVDInputStreams/DVDInputStreamFile.h"
++#include "cores/VideoPlayer/DVDInputStreams/DVDInputStream.h"
++
++#include "DVDStreamInfo.h"
++
++#include "hisilicon.h"
++
++class CProcessInfo;
++class IHiPlayerCallback;
++
++class CHiPlayerVideo
++{
++public:
++	CHiPlayerVideo(IHiPlayerCallback *callback, CProcessInfo &processInfo);
++	~CHiPlayerVideo();
++	bool OpenStream(CDVDStreamInfo &hints, const CFileItem& file);
++	void CloseStream();
++	void Pause();
++	bool CanSeek();
++	void Seek(bool bPlus, bool bLargeStep, bool bChapterOverride);
++	void SeekPercentage(float iPercent);
++	void SetAVDelay(float fValue);
++	float GetAVDelay();
++	void SetSubTitleDelay(float fValue);
++	float GetSubTitleDelay();
++	void SeekTime(int64_t iTime);
++	bool SeekTimeRelative(int64_t iTime);
++	void SetSpeed(float iSpeed);
++	int64_t GetTime();
++	int64_t GetTotalTime();
++	std::string GetPlayerState();
++	float GetRenderAspectRatio();
++
++	void GetVideoResolution(unsigned int &width, unsigned int &height);
++
++	int GetAudioStreamCount() { CLog::Log(LOGINFO, "%s: m_audio: %d", __FUNCTION__, m_audio); return (int)m_audio; };
++	int GetVideoStreamCount() { CLog::Log(LOGINFO, "%s: m_video: %d", __FUNCTION__, m_video); return (int)m_video; };
++	int GetSubtitleCount()    { /*CLog::Log(LOGINFO, "%s: m_text: %d", __FUNCTION__, m_text);*/ return (int)m_text; };
++	
++	int GetAudioStream() { CLog::Log(LOGINFO, "%s: m_current_audio: %d", __FUNCTION__, m_current_audio); return (int)m_current_audio; };
++	int GetVideoStream() { CLog::Log(LOGINFO, "%s: m_current_video: %d", __FUNCTION__, m_current_video); return (int)m_current_video; };
++	int GetSubtitle()    { CLog::Log(LOGINFO, "%s: m_current_text: %d", __FUNCTION__, m_current_text); return (int)m_current_text; };
++
++	void SetSubtitle(int iStream);
++	bool GetSubtitleVisible();
++	void SetSubtitleVisible(bool bVisible);
++
++	void SetAudioStream(int iStream);
++
++	void GetVideoStreamInfo(int streamId, VideoStreamInfo &info);
++	void GetSubtitleStreamInfo(int index, SubtitleStreamInfo &info);
++	void GetAudioStreamInfo(int index, AudioStreamInfo &info);
++
++	bool GetStreamDetails(CStreamDetails &details);
++	void SetRenderViewMode(int mode, float zoom, float par, float shift, bool stretch);
++
++	void AddSubtitleFile(const std::string &file);
++
++private:
++
++	int64_t m_totalTime;
++	int64_t m_time;
++	int m_playCountMinTime;
++
++	int m_aspect, m_width, m_height, m_framerate, m_progressive, m_video, m_audio, m_text, m_current_video, m_current_audio, m_current_text;
++	bool m_paused;
++	size_t m_length;
++
++	uint64_t m_offset;
++
++	int netlink_socket;
++	struct nlmsghdr *nlh;
++	int m_audio_fd, m_video_fd;
++
++	bool m_started;
++	bool m_stop;
++	bool m_subtitle_visible;
++
++	struct streamid
++	{
++		uint16_t programid;
++		uint16_t videostreamid;
++		uint16_t audiostreamid;
++		uint16_t subtitlestreamid;
++	} streamid;
++
++	HI_FORMAT_FILE_INFO_S fileinfo;
++	int m_player_state;
++	uint32_t m_seekable;
++
++	int64_t m_firstpts;
++
++	IHiPlayerCallback *m_callback;
++
++	int getPlayPosition(int64_t &pts);
++	const char *getVidFormatStr(uint32_t format);
++	const char *getAudFormatStr(uint32_t format);
++	void send_netlink_message(int index, int command, unsigned char *data, int count, unsigned char *data2, int count2);
++	int receive_netlink_message(void);
++
++
++protected:
++	CFileItem m_item;
++	CProcessInfo &m_processInfo;
++	CDVDInputStreamFile *m_pInputStream;
++
++};
+diff --git a/xbmc/cores/HiPlayer/Makefile b/xbmc/cores/HiPlayer/Makefile
+new file mode 100644
+index 0000000000..9a5d658f02
+--- /dev/null
++++ b/xbmc/cores/HiPlayer/Makefile
+@@ -0,0 +1,8 @@
++SRCS=HiPlayer.cpp
++SRCS+=HiPlayerAudio.cpp
++SRCS+=HiPlayerVideo.cpp
++
++LIB=HiPlayer.a
++
++include ../../../Makefile.include
++-include $(patsubst %.cpp,%.P,$(patsubst %.c,%.P,$(SRCS)))
+diff --git a/xbmc/cores/HiPlayer/hisilicon.h b/xbmc/cores/HiPlayer/hisilicon.h
+new file mode 100644
+index 0000000000..6563348f92
+--- /dev/null
++++ b/xbmc/cores/HiPlayer/hisilicon.h
+@@ -0,0 +1,287 @@
++#ifndef _hisilicon_h
++#define _hisilicon_h
++
++#define HI_FORMAT_MAX_URL_LEN               (2048)
++#define HI_FORMAT_MAX_FILE_NAME_LEN         (512)
++#define HI_FORMAT_TITLE_MAX_LEN             (512)
++#define HI_FORMAT_LANG_LEN                  (64)
++#define HI_FORMAT_MAX_LANGUAGE_NUM          (4)
++#define HI_FORMAT_SERVICE_DESCRIPT_LEN      (64)
++
++typedef uint8_t           HI_U8;
++typedef uint16_t          HI_U16;
++typedef uint32_t            HI_U32;
++typedef int8_t             HI_S8;
++typedef int16_t                   HI_S16;
++typedef int32_t                     HI_S32;
++typedef uint64_t      HI_U64;
++typedef int64_t               HI_S64;
++typedef void HI_VOID;
++typedef char HI_CHAR;
++
++typedef enum
++{
++	HI_FALSE    = 0,
++	HI_TRUE     = 1,
++} HI_BOOL;
++
++typedef enum hiFORMAT_SUBTITLE_TYPE_E
++{
++	HI_FORMAT_SUBTITLE_ASS = 0x0,    /**< ASS subtitle */
++	HI_FORMAT_SUBTITLE_LRC,       /**< LRC subtitle */
++	HI_FORMAT_SUBTITLE_SRT,       /**< SRT subtitle */
++	HI_FORMAT_SUBTITLE_SMI,       /**< SMI subtitle */
++	HI_FORMAT_SUBTITLE_SUB,       /**< SUB subtitle */
++	HI_FORMAT_SUBTITLE_TXT,       /**< RAW UTF8 subtitle */
++	HI_FORMAT_SUBTITLE_HDMV_PGS,      /**< pgs subtitle */
++	HI_FORMAT_SUBTITLE_DVB_SUB,       /**< DVB subtitle */
++	HI_FORMAT_SUBTITLE_DVD_SUB,       /**< DVD subtitle */
++	HI_FORMAT_SUBTITLE_TTML,          /**< TTML subtitle */
++	HI_FORMAT_SUBTITLE_WEBVTT,
++	HI_FORMAT_SUBTITLE_BUTT
++} HI_FORMAT_SUBTITLE_TYPE_E;
++
++typedef enum hiFORMAT_AUDIO_TYPE_E
++{
++	HI_FORMAT_AUDIO_MP2 = 0x000,  /**< MPEG audio layer 1, 2.*/
++	HI_FORMAT_AUDIO_MP3,          /**< MPEG audio layer 1, 2, 3.*/
++	HI_FORMAT_AUDIO_AAC,
++	HI_FORMAT_AUDIO_AC3,
++	HI_FORMAT_AUDIO_DTS,
++	HI_FORMAT_AUDIO_VORBIS,
++	HI_FORMAT_AUDIO_DVAUDIO,
++	HI_FORMAT_AUDIO_WMAV1,
++	HI_FORMAT_AUDIO_WMAV2,
++	HI_FORMAT_AUDIO_MACE3,
++	HI_FORMAT_AUDIO_MACE6,
++	HI_FORMAT_AUDIO_VMDAUDIO,
++	HI_FORMAT_AUDIO_SONIC,
++	HI_FORMAT_AUDIO_SONIC_LS,
++	HI_FORMAT_AUDIO_FLAC,
++	HI_FORMAT_AUDIO_MP3ADU,
++	HI_FORMAT_AUDIO_MP3ON4,
++	HI_FORMAT_AUDIO_SHORTEN,
++	HI_FORMAT_AUDIO_ALAC,
++	HI_FORMAT_AUDIO_WESTWOOD_SND1,
++	HI_FORMAT_AUDIO_GSM,
++	HI_FORMAT_AUDIO_QDM2,
++	HI_FORMAT_AUDIO_COOK,
++	HI_FORMAT_AUDIO_TRUESPEECH,
++	HI_FORMAT_AUDIO_TTA,
++	HI_FORMAT_AUDIO_SMACKAUDIO,
++	HI_FORMAT_AUDIO_QCELP,
++	HI_FORMAT_AUDIO_WAVPACK,
++	HI_FORMAT_AUDIO_DSICINAUDIO,
++	HI_FORMAT_AUDIO_IMC,
++	HI_FORMAT_AUDIO_MUSEPACK7,
++	HI_FORMAT_AUDIO_MLP,
++	HI_FORMAT_AUDIO_GSM_MS, /**< as found in WAV.*/
++	HI_FORMAT_AUDIO_ATRAC3,
++	HI_FORMAT_AUDIO_VOXWARE,
++	HI_FORMAT_AUDIO_APE,
++	HI_FORMAT_AUDIO_NELLYMOSER,
++	HI_FORMAT_AUDIO_MUSEPACK8,
++	HI_FORMAT_AUDIO_SPEEX,
++	HI_FORMAT_AUDIO_WMAVOICE,
++	HI_FORMAT_AUDIO_WMAPRO,
++	HI_FORMAT_AUDIO_WMALOSSLESS,
++	HI_FORMAT_AUDIO_ATRAC3P,
++	HI_FORMAT_AUDIO_EAC3,
++	HI_FORMAT_AUDIO_SIPR,
++	HI_FORMAT_AUDIO_MP1,
++	HI_FORMAT_AUDIO_TWINVQ,
++	HI_FORMAT_AUDIO_TRUEHD,
++	HI_FORMAT_AUDIO_MP4ALS,
++	HI_FORMAT_AUDIO_ATRAC1,
++	HI_FORMAT_AUDIO_BINKAUDIO_RDFT,
++	HI_FORMAT_AUDIO_BINKAUDIO_DCT,
++	HI_FORMAT_AUDIO_DRA,
++	HI_FORMAT_AUDIO_DTS_EXPRESS,
++
++	HI_FORMAT_AUDIO_PCM = 0x100,   /**< various PCM codecs. */
++	HI_FORMAT_AUDIO_PCM_BLURAY = 0x121,
++
++	HI_FORMAT_AUDIO_ADPCM = 0x130, /**< various ADPCM codecs. */
++
++	HI_FORMAT_AUDIO_AMR_NB = 0x160,/**< various AMR codecs. */
++	HI_FORMAT_AUDIO_AMR_WB,
++	HI_FORMAT_AUDIO_AMR_AWB,
++
++	HI_FORMAT_AUDIO_RA_144 = 0x170, /**< RealAudio codecs. */
++	HI_FORMAT_AUDIO_RA_288,
++
++	HI_FORMAT_AUDIO_DPCM = 0x180, /**< various DPCM codecs. */
++
++	HI_FORMAT_AUDIO_G711 = 0x190, /**< various G.7xx codecs. */
++	HI_FORMAT_AUDIO_G722,
++	HI_FORMAT_AUDIO_G7231,
++	HI_FORMAT_AUDIO_G726,
++	HI_FORMAT_AUDIO_G728,
++	HI_FORMAT_AUDIO_G729AB,
++
++	HI_FORMAT_AUDIO_MULTI = 0x1f0, /**< support multi codecs. */
++
++	HI_FORMAT_AUDIO_BUTT = 0x1ff,
++} HI_FORMAT_AUDIO_TYPE_E;
++
++typedef enum hiFORMAT_VIDEO_TYPE_E
++{
++	HI_FORMAT_VIDEO_MPEG2 = 0x0, /**< MPEG2*/
++	HI_FORMAT_VIDEO_MPEG4,       /**< MPEG4 DIVX4 DIVX5*/
++	HI_FORMAT_VIDEO_AVS,         /**< AVS*/
++	HI_FORMAT_VIDEO_H263,        /**< H263*/
++	HI_FORMAT_VIDEO_H264,        /**< H264*/
++	HI_FORMAT_VIDEO_REAL8,       /**< REAL*/
++	HI_FORMAT_VIDEO_REAL9,       /**< REAL*/
++	HI_FORMAT_VIDEO_VC1,         /**< VC-1*/
++	HI_FORMAT_VIDEO_VP6,         /**< VP6*/
++	HI_FORMAT_VIDEO_VP6F,        /**< VP6F*/
++	HI_FORMAT_VIDEO_VP6A,        /**< VP6A*/
++	HI_FORMAT_VIDEO_MJPEG,       /**< MJPEG*/
++	HI_FORMAT_VIDEO_SORENSON,    /**< SORENSON SPARK*/
++	HI_FORMAT_VIDEO_DIVX3,       /**< DIVX3, not supported*/
++	HI_FORMAT_VIDEO_RAW,         /**< RAW*/
++	HI_FORMAT_VIDEO_JPEG,        /**< JPEG added for VENC*/
++	HI_FORMAT_VIDEO_VP8,         /**<VP8*/
++	HI_FORMAT_VIDEO_MSMPEG4V1,   /**< MS private MPEG4 */
++	HI_FORMAT_VIDEO_MSMPEG4V2,
++	HI_FORMAT_VIDEO_MSVIDEO1,    /**< MS video */
++	HI_FORMAT_VIDEO_WMV1,
++	HI_FORMAT_VIDEO_WMV2,
++	HI_FORMAT_VIDEO_RV10,
++	HI_FORMAT_VIDEO_RV20,
++	HI_FORMAT_VIDEO_SVQ1,        /**< Apple video */
++	HI_FORMAT_VIDEO_SVQ3,        /**< Apple video */
++	HI_FORMAT_VIDEO_H261,
++	HI_FORMAT_VIDEO_VP3,
++	HI_FORMAT_VIDEO_VP5,
++	HI_FORMAT_VIDEO_CINEPAK,
++	HI_FORMAT_VIDEO_INDEO2,
++	HI_FORMAT_VIDEO_INDEO3,
++	HI_FORMAT_VIDEO_INDEO4,
++	HI_FORMAT_VIDEO_INDEO5,
++	HI_FORMAT_VIDEO_MJPEGB,
++	HI_FORMAT_VIDEO_MVC,
++	HI_FORMAT_VIDEO_HEVC,        /**< HEVC(H265)*/
++	HI_FORMAT_VIDEO_DV,
++	HI_FORMAT_VIDEO_HUFFYUV,
++	HI_FORMAT_VIDEO_DIVX,           /**< DIVX,not supported*/
++	HI_FORMAT_VIDEO_REALMAGICMPEG4, /**< REALMAGIC MPEG4,not supported*/
++	HI_FORMAT_VIDEO_VP9,         /**<VP9*/
++	HI_FORMAT_VIDEO_WMV3,
++	HI_FORMAT_VIDEO_AVS2,
++	HI_FORMAT_VIDEO_BUTT
++} HI_FORMAT_VIDEO_TYPE_E;
++
++typedef enum hiFORMAT_SOURCE_TYPE_E
++{
++	HI_FORMAT_SOURCE_LOCAL = 0x0,   /**< Local file */
++	HI_FORMAT_SOURCE_NET_VOD,       /**< Net VOD file */
++	HI_FORMAT_SOURCE_NET_LIVE,      /**< Net Live stream */
++	HI_FORMAT_SOURCE_BUTT
++} HI_FORMAT_SOURCE_TYPE_E;
++
++typedef enum hiFORMAT_STREAM_TYPE_E
++{
++	HI_FORMAT_STREAM_ES = 0x0,    /**< Element stream (ES) file */
++	HI_FORMAT_STREAM_TS,          /**< TS file */
++	HI_FORMAT_STREAM_BUTT
++} HI_FORMAT_STREAM_TYPE_E;
++
++typedef struct hiFORMAT_AUD_INFO_S
++{
++	HI_S32 s32StreamIndex;                   /**< Stream index. The invalid value is ::HI_FORMAT_INVALID_STREAM_ID. */
++	HI_U32 u32Format;                        /**< Audio encoding format. For details about the value definition, see ::HI_FORMAT_AUDIO_TYPE_E. */
++	HI_U32 u32Profile;                       /**< Audio encoding version, such as 0x160(WMAV1) and 0x161 (WMAV2). It is valid only for WMA encoding. */
++	HI_U32 u32SampleRate;                    /**< 8000,11025,441000,... */
++	HI_U16 u16BitPerSample;                  /**< Number of bits occupied by each audio sampling point such as 8 bits or 16 bits. */
++	HI_U16 u16Channels;                      /**< Number of channels, 1 or 2. *//**< CNcomment:ÉùµÀÊý, 1 or 2 */
++	HI_S32 s32SubStreamID;                   /**< Sub audio stream ID */
++	HI_U32 u32BlockAlign;                    /**< Number of bytes contained in a packet */
++	HI_U32 u32Bitrate;                       /**< Audio bit rate, in the unit of bit/s. */
++	HI_BOOL bBigEndian;                      /**< Big endian or little endian. It is valid only for the PCM format */
++	HI_CHAR aszLanguage[HI_FORMAT_LANG_LEN]; /**< Audio stream language */
++	HI_U32 u32ExtradataSize;                 /**< Length of the extended data */
++	HI_U8*  pu8Extradata;                    /**< Extended data */
++	HI_VOID*  pCodecContext;                 /**< Audio decode context */
++	HI_U32 u32Role;                          /**< Role descriptor value of mpeg dash. the most 8 bits is scheme value(refer to HI_FORMAT_ROLE_SCHEME_E), the left 24 bits is descriptor value, the descriptor value may be the bitwise '|' result of value define in HI_FORMAT_ROLE_VALUE_E*/
++	HI_U32 u32Accessibility;                 /**<  Accessbilitydescriptor value of mpeg dash. the most 8 bits is scheme value(refer to HI_FORMAT_ROLE_SCHEME_E), the left 24 bits is descriptor value, the descriptor value type is number*/
++	HI_S64 s64Duration;                      /**< Duration of audio stream, in the unit of ms. */
++	HI_U32 u32CodecTag; /**< Codec tag of audio stream format, fourcc (LSB first, so "ABCD" -> ('D'<<24) + ('C'<<16) + ('B'<<8) + 'A'). */
++} HI_FORMAT_AUD_INFO_S;
++
++typedef struct hiFORMAT_VID_INFO_S
++{
++	HI_S32 s32StreamIndex;                  /**< Stream index. The invalid value is ::HI_FORMAT_INVALID_STREAM_ID. */
++	HI_U32 u32Format;                       /**< Video encoding format. For details about the value definition, see ::HI_FORMAT_VIDEO_TYPE_E. */
++	HI_U16 u16RefFrameNum;                  /**< Number of reference frames. */
++	HI_U16 u16Profile;                      /**< Profile level. */
++	HI_U16 u16Width;                        /**< Width, in the unit of pixel. */
++	HI_U16 u16Height;                       /**< Height, in the unit of pixel. */
++	HI_U16 u16FpsInteger;                   /**< Integer part of the frame rate */
++	HI_U16 u16FpsDecimal;                   /**< Decimal part of the frame rate */
++	HI_U32 u32Bitrate;                      /**< Video bit rate, in the unit of bit/s. */
++	HI_U32 u32CodecVersion;                 /**< Version of codec. */
++	HI_U32 u32Rotate;                       /**< Video rotation angle, value is 90/180/270, default value is 0 */
++	HI_U32 u32Reversed;
++	HI_BOOL bEnableTVP;
++	HI_U32 u32ExtradataSize;                /**< Length of the extended data */
++	HI_U8*  pu8Extradata;                   /**< Extended data */
++	HI_VOID*  pCodecContext;                /**< video decode context */
++	HI_U32 u32Role;                         /**< Role descriptor value of mpeg dash. the most 8 bits is scheme value(refer to HI_FORMAT_ROLE_SCHEME_E), the left 24 bits is descriptor value, the descriptor value may be the bitwise '|' result of value define in HI_FORMAT_ROLE_VALUE_E*/
++	HI_U32 u32Accessibility;                /**<  Accessbilitydescriptor value of mpeg dash. the most 8 bits is scheme value(refer to HI_FORMAT_ROLE_SCHEME_E), the left 24 bits is descriptor value, the descriptor value type is number*/
++	HI_S64 s64Duration;                     /**< Duration of video stream, in the unit of ms. */
++	HI_BOOL bNoPts;                         /**<this stream has no pts info or pts is invalid> */
++} HI_FORMAT_VID_INFO_S;
++
++typedef struct hiFORMAT_SUB_INFO_S
++{
++	HI_S32  s32StreamIndex;                            /**< Stream index. The invalid value is ::HI_FORMAT_INVALID_STREAM_ID. */
++	HI_U32  u32Format;                                 /**< Subtitle format, For details about the value definition, see::HI_FORMAT_SUBTITLE_TYPE_E */
++	HI_U32  u32CharSet;                                /**< Encoding type of the subtitle, the value range is as follows:
++															1. The default value is 0.
++															2. The value of the u32CharSet is the identified byte encoding value if the IdentStream byte encoding function (for details about the definition, see hi_charset_common.h) is set.
++															3. If the ConvStream function (for details about the definition, see hi_charset_common.h) is set and the invoke interface is called to set the encoding type to be converted by implementing HI_FORMAT_INVOKE_SET_SOURCE_CODETYPE, the value of the u32CharSet is the configured encoding type */
++	HI_BOOL bExtSub;                                  /**< Whether subtitles are external subtitles. When bExtSub is HI_TRUE, the subtitles are external. When bExtSub is HI_FALSE, the subtitles are internal. */
++	HI_U32  u32StreamNum;                             /**< contains stream number */
++	HI_CHAR paszLanguage[HI_FORMAT_MAX_LANGUAGE_NUM][HI_FORMAT_LANG_LEN]; /**< Subtitle language */
++	HI_U16  u16OriginalFrameWidth;                     /**< Width of the original image */
++	HI_U16  u16OriginalFrameHeight;                    /**< Height of the original image */
++	HI_U32  u32ExtradataSize;                          /**< Length of the extended data */
++	HI_U8*   pu8Extradata;                             /**< Extended data */
++	HI_VOID*  pCodecContext;                           /**< Audio decode context */
++	HI_U32 u32Role;                                    /**< Role descriptor value of mpeg dash. the most 8 bits is scheme value(refer to HI_FORMAT_ROLE_SCHEME_E), the left 24 bits is descriptor value, the descriptor value may be the bitwise '|' result of value define in HI_FORMAT_ROLE_VALUE_E*/
++	HI_U32 u32Accessibility;                           /**<  Accessibility descriptor value of mpeg dash. the most 8 bits is scheme value(refer to HI_FORMAT_ROLE_SCHEME_E), the left 24 bits is descriptor value, value type is number*/
++	HI_CHAR paszFileName[HI_FORMAT_MAX_URL_LEN];       /**< File name of external subtitle. */
++} HI_FORMAT_SUB_INFO_S;
++
++typedef struct hiFORMAT_PROGRAM_INFO_S
++{
++	HI_U32 u32VidStreamNum;                /**< Number of video streams */
++	HI_FORMAT_VID_INFO_S* pastVidStream;   /**< Video stream information */
++	HI_U32 u32AudStreamNum;                /**< Number of audio streams */
++	HI_FORMAT_AUD_INFO_S* pastAudStream;   /**< Audio stream information */
++	HI_U32 u32SubStreamNum;                /**< Number of subtitles */
++	HI_FORMAT_SUB_INFO_S* pastSubStream;   /**< Subtitle information */
++	HI_CHAR aszServiceName[HI_FORMAT_SERVICE_DESCRIPT_LEN];       /**< Program service name info */
++	HI_CHAR aszServiceProvider[HI_FORMAT_SERVICE_DESCRIPT_LEN];   /**<  Program service provider info */
++	HI_S64  s64ProgramDuration;
++	HI_S64  s64ProgramStartTime;
++} HI_FORMAT_PROGRAM_INFO_S;
++
++typedef struct hiFORMAT_FILE_INFO_S
++{
++	HI_FORMAT_SOURCE_TYPE_E eSourceType;    /**< File source type */
++	HI_FORMAT_STREAM_TYPE_E eStreamType;    /**< File stream type */
++	HI_S64  s64FileSize;                    /**< File size, in the unit of byte. */
++	HI_S64  s64StartTime;                   /**< Start time of playing a file, in the unit is ms. */
++	HI_S64  s64Duration;                    /**< Total duration of a file, in the unit of ms. */
++	HI_U32  u32Bitrate;                     /**< File bit rate, in the unit of bit/s. */
++	HI_CHAR aszFileFormat[HI_FORMAT_TITLE_MAX_LEN];   /**< File demuxer info .Not used now*/
++	HI_U32  u32ProgramNum;                  /**< Actual number of programs */
++	HI_FORMAT_PROGRAM_INFO_S* pastProgramInfo; /**< Program information */
++	HI_BOOL bIsDivx;                        /**< If the stream is DIVX restricted stream,HI_TRUE yes,HI_FALSE no */
++	HI_BOOL bIsDrmFile;
++} HI_FORMAT_FILE_INFO_S;
++
++#endif
+diff --git a/xbmc/cores/playercorefactory/PlayerCoreConfig.h b/xbmc/cores/playercorefactory/PlayerCoreConfig.h
+index 92742cdcd5..1646194d74 100644
+--- a/xbmc/cores/playercorefactory/PlayerCoreConfig.h
++++ b/xbmc/cores/playercorefactory/PlayerCoreConfig.h
+@@ -23,6 +23,10 @@
+ 
+ #include "system.h"
+ 
++#if defined(HAS_HIPLAYER)
++  #include "cores/HiPlayer/HiPlayer.h"
++#endif
++
+ class CPlayerCoreConfig
+ {
+ public:
+@@ -90,6 +94,12 @@ public:
+     {
+       pPlayer = new KODI::RETRO::CRetroPlayer(callback);
+     }
++#if defined(HAS_HIPLAYER)
++    else if (m_type.compare("hiplayer") == 0)
++    {
++      pPlayer = new CHiPlayer(callback);
++    }
++#endif
+     else if (m_type.compare("external") == 0)
+     {
+       pPlayer = new CExternalPlayer(callback);
+diff --git a/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp b/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp
+index 28ad4303a4..975344b89d 100644
+--- a/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp
++++ b/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp
+@@ -27,6 +27,10 @@
+ 
+ #include <sstream>
+ 
++#if defined(HAS_HIPLAYER)
++  #include "cores/HiPlayer/HiPlayer.h"
++#endif
++
+ #define PLAYERCOREFACTORY_XML "playercorefactory.xml"
+ 
+ CPlayerCoreFactory::CPlayerCoreFactory(const CProfileManager &profileManager) :
+@@ -318,6 +322,12 @@ bool CPlayerCoreFactory::LoadConfiguration(const std::string &file, bool clear)
+     m_vecCoreSelectionRules.clear();
+ 
+     // Builtin players
++#if defined(HAS_HIPLAYER)
++    CPlayerCoreConfig* HiPlayer = new CPlayerCoreConfig("HiPlayer", "hiplayer", nullptr);
++    HiPlayer->m_bPlaysAudio = true;
++    HiPlayer->m_bPlaysVideo = true;
++    m_vecPlayerConfigs.push_back(HiPlayer);
++#endif
+     CPlayerCoreConfig* VideoPlayer = new CPlayerCoreConfig("VideoPlayer", "video", nullptr);
+     VideoPlayer->m_bPlaysAudio = true;
+     VideoPlayer->m_bPlaysVideo = true;
+@@ -353,6 +363,8 @@ bool CPlayerCoreFactory::LoadConfiguration(const std::string &file, bool clear)
+         internaltype = "video";
+       else if (type == "paplayer")
+         internaltype = "music";
++      else if (type == "hiplayer")
++        internaltype = "hiplayer";
+       else if (type == "externalplayer")
+         internaltype = "external";
+ 
+-- 
+2.31.0.windows.1
+
