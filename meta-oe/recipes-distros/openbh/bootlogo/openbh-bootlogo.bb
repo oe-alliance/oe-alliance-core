@@ -30,7 +30,7 @@ inherit update-rc.d
 SRC_URI = "file://bootlogo.mvi file://backdrop.mvi file://radio.mvi file://bootlogo.sh file://splash576.bmp file://splash480.bmp \
 "
 
-SRC_URI:append_vuduo2 = "file://lcdbootlogo.png file://bootlogo.py"
+SRC_URI:append:vuduo2 = "file://lcdbootlogo.png file://bootlogo.py"
 
 FILES:${PN} = "/boot /usr/share /etc/init.d"
 
@@ -44,7 +44,7 @@ do_install() {
     install -m 0755 bootlogo.sh ${D}/${sysconfdir}/init.d/bootlogo
 }
 
-do_install:append_vuduo2() {
+do_install:append:vuduo2() {
     install -m 0644 lcdbootlogo.png ${D}/usr/share/lcdbootlogo.png
     install -m 0644 bootlogo.py ${D}/${sysconfdir}/init.d/bootlogo.py
 }

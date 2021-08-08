@@ -5,7 +5,7 @@ SRC_URI:append:sh4 = " \
     file://util-linux-sh4.patch \
 "
 
-SRC_URI:append_cube = " \
+SRC_URI:append:cube = " \
     file://util-linux-random.patch \
 "
 

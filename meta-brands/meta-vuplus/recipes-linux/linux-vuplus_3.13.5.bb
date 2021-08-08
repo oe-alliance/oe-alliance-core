@@ -57,13 +57,13 @@ SRC_URI = "http://code.vuplus.com/download/release/kernel/stblinux-${KV}.tar.bz2
     file://move-default-dialect-to-SMB3.patch \
     "
 
-SRC_URI:append_vuduo2 = "file://brcm_s3_wol.patch;patch=1;pnum=1 "
-SRC_URI:append_vusolose = "file://brcm_s3_wol.patch;patch=1;pnum=1 \
+SRC_URI:append:vuduo2 = "file://brcm_s3_wol.patch;patch=1;pnum=1 "
+SRC_URI:append:vusolose = "file://brcm_s3_wol.patch;patch=1;pnum=1 \
                           file://linux_mtd_bbt_maxblock.patch"
 
-SRC_URI:append_vusolo2 = "file://linux-bcm_ethernet.patch;patch=1;pnum=1 "
+SRC_URI:append:vusolo2 = "file://linux-bcm_ethernet.patch;patch=1;pnum=1 "
 
-SRC_URI:append_vuzero = "file://linux_nand_bcm.patch "
+SRC_URI:append:vuzero = "file://linux_nand_bcm.patch "
 
 S = "${WORKDIR}/linux"
 B = "${WORKDIR}/build"

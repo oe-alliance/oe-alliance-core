@@ -39,13 +39,13 @@ RDEPENDS:${PN} = " \
     pigz \
     util-linux-mount \
 "
-RDEPENDS:${PN}:append_bcm7435 = " \
+RDEPENDS:${PN}:append:bcm7435 = " \
     ${EMMCRDEPENDS_recovery} \
 "
-RDEPENDS:${PN}:append_bcm7252s = " \
+RDEPENDS:${PN}:append:bcm7252s = " \
     ${EMMCRDEPENDS_recovery} \
 "
-RDEPENDS:${PN}:append_bcm73625 = " \
+RDEPENDS:${PN}:append:bcm73625 = " \
     ${NANDRDEPENDS_recovery} \
 "
 
@@ -53,14 +53,14 @@ RDEPENDS:flash-scripts = " \
     coreutils-realpath \
     tpm-ca \
 "
-RDEPENDS:flash-scripts:append_bcm7435 = " \
+RDEPENDS:flash-scripts:append:bcm7435 = " \
     ${EMMCRDEPENDS_flash-scripts} \
     ${FASTBOOTRDEPENDS_flash-scripts} \
 "
-RDEPENDS:flash-scripts:append_bcm7252s = " \
+RDEPENDS:flash-scripts:append:bcm7252s = " \
     ${EMMCRDEPENDS_flash-scripts} \
 "
-RDEPENDS:flash-scripts:append_bcm73625 = " \
+RDEPENDS:flash-scripts:append:bcm73625 = " \
     ${NANDRDEPENDS_flash-scripts} \
 "
 

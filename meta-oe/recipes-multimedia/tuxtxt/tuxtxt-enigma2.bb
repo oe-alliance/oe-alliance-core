@@ -24,9 +24,9 @@ SRC_URI = "git://github.com/OpenPLi/tuxtxt.git;protocol=git \
            ', '', d)} \
 "
 
-SRC_URI:append_AML8726 = " file://0001-add-HBGIC-for-wetek.patch"
-SRC_URI:append_AMLS905 = " file://0001-add-HBGIC-for-wetek.patch"
-SRC_URI:append_AML905D = " file://0001-add-HBGIC-for-wetek.patch"
+SRC_URI:append:AML8726 = " file://0001-add-HBGIC-for-wetek.patch"
+SRC_URI:append:AMLS905 = " file://0001-add-HBGIC-for-wetek.patch"
+SRC_URI:append:AML905D = " file://0001-add-HBGIC-for-wetek.patch"
 
 SRC_URI:append = " \
     ${@bb.utils.contains('DISTRO_FEATURES', 'tuxtxtfhd', 'file://tuxtxt_FHD.patch', '', d)} \
@@ -52,7 +52,7 @@ do_configure:prepend() {
     fi
 }
 
-do_configure:prepend_openvix () {
+do_configure:prepend:openvix () {
     sed 's/UseTTF 0/UseTTF 1/g' -i ${S}/data/tuxtxt2.conf
     sed 's/TTFWidthFactor16 28/TTFWidthFactor16 26/g' -i ${S}/data/tuxtxt2.conf
     sed 's/TTFHeightFactor16 16/TTFHeightFactor16 14/g' -i ${S}/data/tuxtxt2.conf

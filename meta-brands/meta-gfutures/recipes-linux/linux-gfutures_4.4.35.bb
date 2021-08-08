@@ -65,7 +65,7 @@ kernel_do_configure:prepend() {
     install -m 0644 ${WORKDIR}/initramfs-subdirboot.cpio.gz ${B}/
 }
 
-kernel_do_install:append_hd41() {
+kernel_do_install:append:hd41() {
 }
 
 kernel_do_install:append() {

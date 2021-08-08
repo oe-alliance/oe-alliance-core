@@ -36,16 +36,16 @@ SRC_URI = "http://source.mynonpublic.com/zgemma/linux-${PV}-${SRCDATE}-${ARCH}.t
     file://mn88472_reset_stream_ID_reg_if_no_PLP_given.patch \
 "
 
-SRC_URI:append_h9 += " \
+SRC_URI:append:h9 += " \
 	file://0001-mmc-switch-1.8V.patch \
 "
-SRC_URI:append_h9se += " \
+SRC_URI:append:h9se += " \
 	file://0001-mmc-switch-1.8V.patch \
 "
-SRC_URI:append_i55plus += " \
+SRC_URI:append:i55plus += " \
 	file://0001-mmc-switch-1.8V.patch \
 "
-SRC_URI:append_i55se += " \
+SRC_URI:append:i55se += " \
 	file://0001-mmc-switch-1.8V.patch \
 "
 
@@ -79,27 +79,27 @@ kernel_do_configure:prepend() {
 	install -m 0644 ${WORKDIR}/initramfs-subdirboot.cpio.gz ${B}/
 }
 
-kernel_do_install:append_h9se() {
+kernel_do_install:append:h9se() {
 	install -d ${D}${KERNEL_IMAGEDEST}
 	install -m 0755 ${WORKDIR}/findkerneldevice.sh ${D}${KERNEL_IMAGEDEST}
 }
 
-kernel_do_install:append_h9combo() {
+kernel_do_install:append:h9combo() {
 	install -d ${D}${KERNEL_IMAGEDEST}
 	install -m 0755 ${WORKDIR}/findkerneldevice.sh ${D}${KERNEL_IMAGEDEST}
 }
 
-kernel_do_install:append_h9combose() {
+kernel_do_install:append:h9combose() {
 	install -d ${D}${KERNEL_IMAGEDEST}
 	install -m 0755 ${WORKDIR}/findkerneldevice.sh ${D}${KERNEL_IMAGEDEST}
 }
 
-kernel_do_install:append_h10() {
+kernel_do_install:append:h10() {
 	install -d ${D}${KERNEL_IMAGEDEST}
 	install -m 0755 ${WORKDIR}/findkerneldevice.sh ${D}${KERNEL_IMAGEDEST}
 }
 
-kernel_do_install:append_i55se() {
+kernel_do_install:append:i55se() {
 	install -d ${D}${KERNEL_IMAGEDEST}
 	install -m 0755 ${WORKDIR}/findkerneldevice.sh ${D}${KERNEL_IMAGEDEST}
 }

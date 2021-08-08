@@ -161,26 +161,26 @@ RDEPENDS:${PN} += "${E2DEFAULTSKIN} "
 
 DEMUXTOOL ?= "replex"
 
-DESCRIPTION:append_enigma2-plugin-extensions-cutlisteditor = "enables you to cut your movies."
+DESCRIPTION:append:enigma2-plugin-extensions-cutlisteditor = "enables you to cut your movies."
 RDEPENDS:enigma2-plugin-extensions-cutlisteditor = "aio-grab"
-DESCRIPTION:append_enigma2-plugin-extensions-graphmultiepg = "shows a graphical timeline EPG."
-DESCRIPTION:append_enigma2-plugin-extensions-pictureplayer = "displays photos on the TV."
-DESCRIPTION:append_enigma2-plugin-systemplugins-frontprocessorupdate = "keeps your frontprocessor up to date."
-DESCRIPTION:append_enigma2-plugin-systemplugins-positionersetup = "helps you installing a motorized dish."
-DESCRIPTION:append_enigma2-plugin-systemplugins-satelliteequipmentcontrol = "allows you to fine-tune DiSEqC-settings."
-DESCRIPTION:append_enigma2-plugin-systemplugins-satfinder = "helps you to align your dish."
-DESCRIPTION:append_enigma2-plugin-systemplugins-skinselector = "shows a menu with selectable skins."
-DESCRIPTION:append_enigma2-plugin-systemplugins-videomode = "selects advanced video modes"
+DESCRIPTION:append:enigma2-plugin-extensions-graphmultiepg = "shows a graphical timeline EPG."
+DESCRIPTION:append:enigma2-plugin-extensions-pictureplayer = "displays photos on the TV."
+DESCRIPTION:append:enigma2-plugin-systemplugins-frontprocessorupdate = "keeps your frontprocessor up to date."
+DESCRIPTION:append:enigma2-plugin-systemplugins-positionersetup = "helps you installing a motorized dish."
+DESCRIPTION:append:enigma2-plugin-systemplugins-satelliteequipmentcontrol = "allows you to fine-tune DiSEqC-settings."
+DESCRIPTION:append:enigma2-plugin-systemplugins-satfinder = "helps you to align your dish."
+DESCRIPTION:append:enigma2-plugin-systemplugins-skinselector = "shows a menu with selectable skins."
+DESCRIPTION:append:enigma2-plugin-systemplugins-videomode = "selects advanced video modes"
 RDEPENDS:enigma2-plugin-systemplugins-nfiflash = "${PYTHON_PN}-twisted-web"
 RDEPENDS:enigma2-plugin-systemplugins-softwaremanager = "${PYTHON_PN}-twisted-web"
-DESCRIPTION:append_enigma2-plugin-systemplugins-crashlogautosubmit = "automatically send crashlogs to Dream Multimedia"
+DESCRIPTION:append:enigma2-plugin-systemplugins-crashlogautosubmit = "automatically send crashlogs to Dream Multimedia"
 RDEPENDS:enigma2-plugin-systemplugins-crashlogautosubmit = "${PYTHON_PN}-twisted-mail ${PYTHON_PN}-twisted-names ${PYTHON_PN}-compression ${PYTHON_PN}-mime ${PYTHON_PN}-email"
-DESCRIPTION:append_enigma2-plugin-systemplugins-cleanupwizard = "informs you on low internal memory on system startup."
-DESCRIPTION:append_enigma2-plugin-extensions-modem = "opens a menu to connect to internet via builtin modem."
+DESCRIPTION:append:enigma2-plugin-systemplugins-cleanupwizard = "informs you on low internal memory on system startup."
+DESCRIPTION:append:enigma2-plugin-extensions-modem = "opens a menu to connect to internet via builtin modem."
 RDEPENDS:enigma2-plugin-extensions-modem = "dreambox-modem-ppp-scripts"
-DESCRIPTION:append_enigma2-plugin-systemplugins-wirelesslan = "helps you configuring your wireless lan"
+DESCRIPTION:append:enigma2-plugin-systemplugins-wirelesslan = "helps you configuring your wireless lan"
 RDEPENDS:enigma2-plugin-systemplugins-wirelesslan = "wpa-supplicant wireless-tools ${PYTHON_PN}-wifi"
-DESCRIPTION:append_enigma2-plugin-systemplugins-networkwizard = "provides easy step by step network configuration"
+DESCRIPTION:append:enigma2-plugin-systemplugins-networkwizard = "provides easy step by step network configuration"
 # Note that these tools lack recipes
 RDEPENDS:enigma2-plugin-extensions-dvdburn = "dvd+rw-tools dvdauthor mjpegtools genisoimage ${PYTHON_PN}-imaging ${DEMUXTOOL}"
 RDEPENDS:enigma2-plugin-systemplugins-hotplug = "hotplug-e2-helper"
@@ -202,7 +202,7 @@ SRC_URI:append:sh4 = " \
     ${@bb.utils.contains("DISTRO_NAME", "openspa", "file://sh4-define-DTV_ENUM_DELSYS.patch" , "", d)} \
     "
 
-SRC_URI:append_vuduo = " \
+SRC_URI:append:vuduo = " \
     file://duo_VFD.patch \
     "
 

@@ -26,12 +26,12 @@ EXTRA_OECONF = " \
 
 PARALLEL_MAKEINST = ""
 
-do_configure:prepend_openatv () {
+do_configure:prepend:openatv () {
     sed 's/config.EMC.use_orig_skin             = ConfigYesNo(default = True)/config.EMC.use_orig_skin             = ConfigYesNo(default = False)/g' -i ${S}/src/plugin.py
     sed 's/config.EMC.movie_date_format         = ConfigSelection(default = "%d.%m.%Y %H:%M", choices = date_choices)/config.EMC.movie_date_format         = ConfigSelection(default = "%d.%m.%Y", choices = date_choices)/g' -i ${S}/src/plugin.py
 }
 
-do_configure:prepend_beyonwiz () {
+do_configure:prepend:beyonwiz () {
     sed 's/config.EMC.use_orig_skin             = ConfigYesNo(default = True)/config.EMC.use_orig_skin             = ConfigYesNo(default = False)/g' -i ${S}/src/plugin.py
 }
 

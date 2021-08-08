@@ -31,10 +31,10 @@ RRECOMMENDS:${PN} = "\
     ${@bb.utils.contains("MACHINE_BRAND", "AZBOX", "enigma2-plugin-extensions-azplay enigma2-plugin-extensions-aziptv", "", d)} \
     "
 
-RRECOMMENDS:${PN}:append_gb800solo = "enigma2-plugin-extensions-gbipboxclient"
-RRECOMMENDS:${PN}:append_gb7325 = "enigma2-plugin-extensions-gbipboxclient"
-RRECOMMENDS:${PN}:append_gb7358 = "enigma2-plugin-extensions-gbipboxclient"
-RRECOMMENDS:${PN}:append_gb7362 = "enigma2-plugin-extensions-gbipboxclient"
-RRECOMMENDS:${PN}:append_gb73625 = "enigma2-plugin-extensions-gbipboxclient"
-RRECOMMENDS:${PN}:append_gb7356 = "enigma2-plugin-extensions-gbipboxclient"
-RRECOMMENDS:${PN}:append_gb7252 = "enigma2-plugin-extensions-gbipboxclient"
+RRECOMMENDS:${PN}:append:gb800solo = "enigma2-plugin-extensions-gbipboxclient"
+RRECOMMENDS:${PN}:append:gb7325 = "enigma2-plugin-extensions-gbipboxclient"
+RRECOMMENDS:${PN}:append:gb7358 = "enigma2-plugin-extensions-gbipboxclient"
+RRECOMMENDS:${PN}:append:gb7362 = "enigma2-plugin-extensions-gbipboxclient"
+RRECOMMENDS:${PN}:append:gb73625 = "enigma2-plugin-extensions-gbipboxclient"
+RRECOMMENDS:${PN}:append:gb7356 = "enigma2-plugin-extensions-gbipboxclient"
+RRECOMMENDS:${PN}:append:gb7252 = "enigma2-plugin-extensions-gbipboxclient"

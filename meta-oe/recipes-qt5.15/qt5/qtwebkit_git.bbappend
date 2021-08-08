@@ -21,6 +21,6 @@ SRCREV = "ac8ebc6c3a56064f88f5506e5e3783ab7bee2456"
 
 PACKAGECONFIG = " "
 
-CXXFLAGS:append_osmini4k = " -Wno-deprecated-copy -DBROADCOM_PLATFORM"
+CXXFLAGS:append:osmini4k = " -Wno-deprecated-copy -DBROADCOM_PLATFORM"
 
 INSANE_SKIP:${PN} += "file-rdeps"

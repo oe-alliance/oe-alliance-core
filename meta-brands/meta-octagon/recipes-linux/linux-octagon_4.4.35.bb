@@ -42,7 +42,7 @@ SRC_URI += "http://source.mynonpublic.com/octagon/octagon-linux-${PV}-${SRCDATE}
     file://fix-multiple-defs-yyloc.patch \
 "
 
-SRC_URI:append_sf8008m += " \
+SRC_URI:append:sf8008m += " \
 	file://fix-index-for-usb.patch \
 "
 

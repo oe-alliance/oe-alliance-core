@@ -20,9 +20,9 @@ inherit update-rc.d
 
 SRC_URI = " file://bootlogo.mvi ${@bb.utils.contains("MACHINE_FEATURES", "bootsplash", "file://splash.bin" , "", d)} file://bootlogo.sh"
 
-SRC_URI:append_7210s = " file://lcdsplash220.bin file://lcdwaitkey220.bin file://lcdwarning220.bin"
-SRC_URI:append_sf8008 = " file://logo.img"
-SRC_URI:append_sf8008m = " file://logo.img"
+SRC_URI:append:7210s = " file://lcdsplash220.bin file://lcdwaitkey220.bin file://lcdwarning220.bin"
+SRC_URI:append:sf8008 = " file://logo.img"
+SRC_URI:append:sf8008m = " file://logo.img"
 
 FILES:${PN} = "/boot /usr/share /etc/init.d"
 
@@ -34,7 +34,7 @@ do_install() {
     install -m 0755 ${S}/bootlogo.sh ${D}/${sysconfdir}/init.d/bootlogo
 }
 
-do_install:append_7210s() {
+do_install:append:7210s() {
     install -d ${D}/usr/share
     install -m 0644 ${WORKDIR}/lcdsplash220.bin ${D}/usr/share/lcdsplash.bin
     install -m 0644 ${WORKDIR}/lcdwaitkey220.bin ${D}/usr/share/lcdwaitkey.bin

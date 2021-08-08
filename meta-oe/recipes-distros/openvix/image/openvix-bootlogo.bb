@@ -31,27 +31,27 @@ SRC_URI = "file://bootlogo.mvi file://backdrop.mvi file://radio.mvi file://bootl
     ${@bb.utils.contains("MACHINE_FEATURES", "gigabluelcd400", "file://lcdsplash400.bin file://lcdwaitkey400.bin file://lcdwarning400.bin" , "", d)} \
 "
 
-SRC_URI:append_vuduo2 = "file://lcdbootlogo.png file://bootlogo.py"
-SRC_URI:append_dags7335 = "file://tm-splash.bmp file://iqon-splash.bmp file://splash1.bmp file://splash2.bmp file://splash3.bmp"
-SRC_URI:append_dags7356 = "file://tm-splash.bmp file://iqon-splash.bmp file://splash1.bmp file://splash2.bmp file://splash3.bmp"
-SRC_URI:append_dags7362 = "file://tm-splash.bmp file://iqon-splash.bmp file://splash1_power.bmp file://splash2.bmp file://splash3.bmp"
-SRC_URI:append_dags7252 = "file://tm-splash.bmp file://splash1.bmp file://splash2.bmp file://splash3.bmp"
-SRC_URI:append_7210s = "file://lcdsplash220.bin file://lcdwaitkey220.bin file://lcdwarning220.bin file://lcdcomplete220.bin"
-SRC_URI:append_h9 = "file://logo.img"
-SRC_URI:append_h9se = "file://logo.img"
-SRC_URI:append_h9combo = "file://logo.img"
-SRC_URI:append_i55plus = "file://logo.img"
-SRC_URI:append_hd60 = "file://logo.img"
-SRC_URI:append_hd61 = "file://logo.img"
-SRC_URI:append_cc1 = "file://logo.img"
-SRC_URI:append_sf8008 = "file://logo.img"
-SRC_URI:append_sf8008m = "file://logo.img"
-SRC_URI:append_ustym4kpro = "file://logo.img"
-SRC_URI:append_v8plus = "file://logo.img"
-SRC_URI:append_multibox = "file://logo.img"
-SRC_URI:append_gbmv200 = "file://logo.img"
-SRC_URI:append_beyonwizv2 = "file://logo.img"
-SRC_URI:append_viper4k = "file://logo.img"
+SRC_URI:append:vuduo2 = "file://lcdbootlogo.png file://bootlogo.py"
+SRC_URI:append:dags7335 = "file://tm-splash.bmp file://iqon-splash.bmp file://splash1.bmp file://splash2.bmp file://splash3.bmp"
+SRC_URI:append:dags7356 = "file://tm-splash.bmp file://iqon-splash.bmp file://splash1.bmp file://splash2.bmp file://splash3.bmp"
+SRC_URI:append:dags7362 = "file://tm-splash.bmp file://iqon-splash.bmp file://splash1_power.bmp file://splash2.bmp file://splash3.bmp"
+SRC_URI:append:dags7252 = "file://tm-splash.bmp file://splash1.bmp file://splash2.bmp file://splash3.bmp"
+SRC_URI:append:7210s = "file://lcdsplash220.bin file://lcdwaitkey220.bin file://lcdwarning220.bin file://lcdcomplete220.bin"
+SRC_URI:append:h9 = "file://logo.img"
+SRC_URI:append:h9se = "file://logo.img"
+SRC_URI:append:h9combo = "file://logo.img"
+SRC_URI:append:i55plus = "file://logo.img"
+SRC_URI:append:hd60 = "file://logo.img"
+SRC_URI:append:hd61 = "file://logo.img"
+SRC_URI:append:cc1 = "file://logo.img"
+SRC_URI:append:sf8008 = "file://logo.img"
+SRC_URI:append:sf8008m = "file://logo.img"
+SRC_URI:append:ustym4kpro = "file://logo.img"
+SRC_URI:append:v8plus = "file://logo.img"
+SRC_URI:append:multibox = "file://logo.img"
+SRC_URI:append:gbmv200 = "file://logo.img"
+SRC_URI:append:beyonwizv2 = "file://logo.img"
+SRC_URI:append:viper4k = "file://logo.img"
 
 
 FILES:${PN} = "/usr/share /usr/share/enigma2 /etc/init.d"
@@ -70,7 +70,7 @@ do_install() {
     install -m 0644 radio.mvi ${D}/usr/share/enigma2/radio.mvi
 }
 
-do_install:append_vuduo2() {
+do_install:append:vuduo2() {
     install -d ${D}/usr/share
     install -m 0644 lcdbootlogo.png ${D}/usr/share/lcdbootlogo.png
     install -m 0644 bootlogo.py ${D}/${sysconfdir}/init.d/bootlogo.py

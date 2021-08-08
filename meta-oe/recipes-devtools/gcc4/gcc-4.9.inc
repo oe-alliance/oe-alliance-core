@@ -114,7 +114,7 @@ EXTRA_OECONF_INITIAL = "\
     --enable-decimal-float=no \
 "
 
-EXTRA_OECONF:append_libc-uclibc = " --disable-decimal-float "
+EXTRA_OECONF:append:libc-uclibc = " --disable-decimal-float "
 
 EXTRA_OECONF_PATHS = "\ 
     --with-gxx-include-dir=${STAGING_DIR_TARGET}${target_includedir}/c++/${BINV} \ 

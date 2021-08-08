@@ -12,11 +12,11 @@ MACHINE_KERNEL_PR:append = ".9"
 
 inherit kernel machine_kernel_pr
 
-DEPENDS:append_spark7162 = " \
+DEPENDS:append:spark7162 = " \
   stlinux24-sh4-stx7105-fdma-firmware \
 "
 
-DEPENDS:append_spark = " \
+DEPENDS:append:spark = " \
   stlinux24-sh4-stx7111-fdma-firmware \
 "
 
@@ -65,11 +65,11 @@ SRC_URI = "git://github.com/Duckbox-Developers/linux-sh4-2.6.32.71.git;protocol=
     file://taskstats.patch;patch=1 \
 "
 
-SRC_URI:append_spark7162 = " \
+SRC_URI:append:spark7162 = " \
     file://linux-sh4-spark7162_setup_stm24_${STM_PATCH_STR}.patch;patch=1 \
 "
 
-SRC_URI:append_spark = " \
+SRC_URI:append:spark = " \
     file://linux-sh4-spark_setup_stm24_${STM_PATCH_STR}.patch;patch=1 \
     file://linux-sh4-lirc_stm_stm24_${STM_PATCH_STR}.patch;patch=1 \
     file://linux-sh4-spark-af901x-NXP-TDA18218.patch;patch=1 \

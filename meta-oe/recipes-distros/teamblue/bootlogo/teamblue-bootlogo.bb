@@ -29,7 +29,7 @@ SRC_URI = "file://bootlogo.mvi file://bootlogo.sh \
     ${@bb.utils.contains("MACHINE_FEATURES", "gigabluearmbootvideo", "file://bootvideo.mp4 file://bootvideo-arm" , "", d)} \
 "
 
-SRC_URI:append_gbmv200 = "file://logo.img"
+SRC_URI:append:gbmv200 = "file://logo.img"
 
 FILES:${PN} = "/boot /usr/share /usr/bin /etc/init.d"
 

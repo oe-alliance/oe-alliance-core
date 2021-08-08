@@ -77,7 +77,7 @@ RDEPENDS:${PN} = "\
     ${@bb.utils.contains("MACHINEBUILD", "hd51", "enigma2-plugin-drivers-network-usb-rtl8822bu", "", d)} \
     "
 
-RDEPENDS:${PN}:remove_odroidc2 = "enigma2-plugin-drivers-network-usb-rtl8192cu"
-RDEPENDS:${PN}:remove_odroidc2 = "enigma2-plugin-drivers-network-usb-rtl8192cu-rev2"
-RDEPENDS:${PN}:remove_cube = "enigma2-plugin-drivers-network-usb-rtl8812au"
+RDEPENDS:${PN}:remove:odroidc2 = "enigma2-plugin-drivers-network-usb-rtl8192cu"
+RDEPENDS:${PN}:remove:odroidc2 = "enigma2-plugin-drivers-network-usb-rtl8192cu-rev2"
+RDEPENDS:${PN}:remove:cube = "enigma2-plugin-drivers-network-usb-rtl8812au"
 

@@ -50,9 +50,9 @@ GST_BASE_DVD = "\
     gstreamer1.0-plugins-bad-mpegtsmux \
 "
 
-RRECOMMENDS:${PN}:append_dm900 = " enigma2-plugin-systemplugins-fsblupdater"
-RRECOMMENDS:${PN}:append_dm920 = " enigma2-plugin-systemplugins-fsblupdater"
-RRECOMMENDS:${PN}:append_osmio4k = " enigma2-plugin-systemplugins-satipclient enigma2-plugin-extensions-simpleumount"
-RRECOMMENDS:${PN}:append_osmio4kplus = " enigma2-plugin-systemplugins-satipclient enigma2-plugin-extensions-simpleumount"
-RRECOMMENDS:${PN}:append_osmini4k = " enigma2-plugin-systemplugins-satipclient enigma2-plugin-extensions-simpleumount"
+RRECOMMENDS:${PN}:append:dm900 = " enigma2-plugin-systemplugins-fsblupdater"
+RRECOMMENDS:${PN}:append:dm920 = " enigma2-plugin-systemplugins-fsblupdater"
+RRECOMMENDS:${PN}:append:osmio4k = " enigma2-plugin-systemplugins-satipclient enigma2-plugin-extensions-simpleumount"
+RRECOMMENDS:${PN}:append:osmio4kplus = " enigma2-plugin-systemplugins-satipclient enigma2-plugin-extensions-simpleumount"
+RRECOMMENDS:${PN}:append:osmini4k = " enigma2-plugin-systemplugins-satipclient enigma2-plugin-extensions-simpleumount"
 

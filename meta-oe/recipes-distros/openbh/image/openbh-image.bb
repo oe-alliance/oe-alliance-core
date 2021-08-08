@@ -28,7 +28,7 @@ IMAGE_FEATURES += "package-management"
 
 inherit image
 
-do_package:remove_unused_ipk () {
+do_package:remove:unused_ipk () {
     set -x
 
     ipkgarchs="${ALL_MULTILIB_PACKAGE_ARCHS} ${SDK_PACKAGE_ARCHS}"
@@ -56,4 +56,4 @@ do_package:remove_unused_ipk () {
         fi
     done
 }
-# addtask package:remove_unused_ipk before do_rootfs
+# addtask package:remove:unused_ipk before do_rootfs

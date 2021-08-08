@@ -11,7 +11,7 @@ SRC_URI:append:sh4 += "\
     file://fix-x64-abi.patch \
 "
 
-SRC_URI:append_dm800 += " file://0001_signalfd_and_evendfd.patch"
+SRC_URI:append:dm800 += " file://0001_signalfd_and_evendfd.patch"
 
 #remove obsolete conflicting files
 do_install:append() {

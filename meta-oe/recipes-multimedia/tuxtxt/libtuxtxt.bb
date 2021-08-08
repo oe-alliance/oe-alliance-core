@@ -27,7 +27,7 @@ SRC_URI:append:sh4 = " \
     file://tuxtxtlib_sh4_fix.patch;patch=1 \
 "
 
-SRC_URI:append_xc7362 = " \
+SRC_URI:append:xc7362 = " \
     file://tuxtxt_clear_screen.patch \
 "
 

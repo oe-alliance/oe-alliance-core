@@ -176,11 +176,11 @@ GST_BASE_DVD = "\
     gstreamer1.0-plugins-bad-mpegtsmux \
 "
 
-RRECOMMENDS:${PN}:append_vuuno = "enigma2-plugin-extensions-hbbtv"
-RRECOMMENDS:${PN}:append_vuultimo = "enigma2-plugin-extensions-hbbtv"
-RRECOMMENDS:${PN}:append_vusolo = "enigma2-plugin-extensions-hbbtv"
-RRECOMMENDS:${PN}:append_vusolo2 = "enigma2-plugin-extensions-hbbtv"
-RRECOMMENDS:${PN}:append_vuduo = "enigma2-plugin-extensions-hbbtv"
-RRECOMMENDS:${PN}:append_vuduo2 = "enigma2-plugin-extensions-hbbtv"
-RRECOMMENDS:${PN}:append_vuzero = "enigma2-plugin-extensions-hbbtv"
+RRECOMMENDS:${PN}:append:vuuno = "enigma2-plugin-extensions-hbbtv"
+RRECOMMENDS:${PN}:append:vuultimo = "enigma2-plugin-extensions-hbbtv"
+RRECOMMENDS:${PN}:append:vusolo = "enigma2-plugin-extensions-hbbtv"
+RRECOMMENDS:${PN}:append:vusolo2 = "enigma2-plugin-extensions-hbbtv"
+RRECOMMENDS:${PN}:append:vuduo = "enigma2-plugin-extensions-hbbtv"
+RRECOMMENDS:${PN}:append:vuduo2 = "enigma2-plugin-extensions-hbbtv"
+RRECOMMENDS:${PN}:append:vuzero = "enigma2-plugin-extensions-hbbtv"
 

@@ -62,7 +62,7 @@ SRC_URI = "http://code.vuplus.com/download/release/kernel/stblinux-${KV}.tar.bz2
     file://move-default-dialect-to-SMB2.patch \
 "
 
-SRC_URI:append_vuultimo = "file://fixed_mtd.patch "
+SRC_URI:append:vuultimo = "file://fixed_mtd.patch "
 
 S = "${WORKDIR}/linux"
 B = "${WORKDIR}/build"
