@@ -28,7 +28,7 @@ do_compile() {
 PACKAGES =+ "${PN}-po"
 FILES:${PN}-po = "${libdir}/enigma2/python/Plugins/Extensions/ChocholousekPicons/locale/*/*/*.po"
 FILES:${PN} = "${libdir}/enigma2/python/Plugins/Extensions/ChocholousekPicons"
-D_FILES_PN = "${D}${FILES_${PN}}"
+D_FILES_PN = "${D}${FILES:${PN}}"
 
 do_install() {
     install -d ${D_FILES_PN}
