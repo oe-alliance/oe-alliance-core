@@ -52,7 +52,7 @@ else
 fi
 }
 
-pkg_postinst_${PN}() {
+pkg_postinst_ontarget_${PN}() {
 rm /sbin/init
 ln -s /sbin/open_multiboot /sbin/init
 }
