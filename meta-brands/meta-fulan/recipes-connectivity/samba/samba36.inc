@@ -55,7 +55,7 @@ SRC_URI[md5sum] = "76da2fa64edd94a0188531e7ecb27c4e"
 SRC_URI[sha256sum] = "8f2c8a7f2bd89b0dfd228ed917815852f7c625b2bc0936304ac3ed63aaf83751"
 
 SAMBAMMAP = "no"
-SAMBAMMAP_libc-glibc = "yes"
+SAMBAMMAP:libc-glibc = "yes"
 
 # The file system settings --foodir=dirfoo and overridden unconditionally
 # in the samba config by --with-foodir=dirfoo - even if the --with is not

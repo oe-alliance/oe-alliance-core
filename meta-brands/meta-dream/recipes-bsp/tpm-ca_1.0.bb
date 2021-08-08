@@ -12,4 +12,4 @@ do_install() {
         oe_runmake install DESTDIR=${D}
 }
 
-RDEPENDS_${PN} = "tpmd"
+RDEPENDS:${PN} = "tpmd"

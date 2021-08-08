@@ -1,5 +1,5 @@
-PACKAGECONFIG_GL_pn-qtbase = " "
-PACKAGECONFIG_append_pn-qtbase += " gles2 linuxfb"
+PACKAGECONFIG_GL:pn-qtbase = " "
+PACKAGECONFIG:append:pn-qtbase += " gles2 linuxfb"
 
 #IMAGE_CLASSES += "airdigitalemmc_image_single"
 IMAGE_CLASSES += "airdigital-emmc_image_multiboot"
@@ -23,12 +23,12 @@ PREFERRED_PROVIDER_virtual/mesa ?= "mesa"
 PREFERRED_PROVIDER_virtual/blindscan-dvbc ?= "airdigital-dvb-modules-${MACHINE}"
 PREFERRED_PROVIDER_virtual/blindscan-dvbs ?= "airdigital-dvb-modules-${MACHINE}"
 
-IMAGE_CMD_airdigitalemmc_prepend = " \
+IMAGE_CMD:airdigitalemmc:prepend = " \
     rm -f ${DEPLOY_DIR_IMAGE}/*.ext4; \
     rm -f ${DEPLOY_DIR_IMAGE}/*.manifest; \
     "
 
-IMAGE_CMD_airdigitalemmc_append = "\
+IMAGE_CMD:airdigitalemmc:append = "\
     mkdir -p ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}; \
     mv ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.emmc.img ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/disk.img; \
     cd ${IMAGE_ROOTFS}; \

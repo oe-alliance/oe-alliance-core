@@ -11,9 +11,9 @@ SRCDATE = "20210607"
 PV = "${SRCDATE}"
 PR = "r0"
 
-RPROVIDES_${PN}  = "aio-grab"
-RREPLACES_${PN}  = "aio-grab"
-RCONFLICTS_${PN} = "aio-grab"
+RPROVIDES:${PN}  = "aio-grab"
+RREPLACES:${PN}  = "aio-grab"
+RCONFLICTS:${PN} = "aio-grab"
 
 SRC_URI = "http://source.mynonpublic.com/dinobot/${MACHINE}-grab-${SRCDATE}.tar.gz"
 
@@ -27,7 +27,7 @@ do_install() {
 do_package_qa() {
 }
 
-FILES_${PN}  = "${bindir}/grab"
+FILES:${PN}  = "${bindir}/grab"
 
 SRC_URI[md5sum] = "af22b7f5d29ecd57f8374475bbc53d4b"
 SRC_URI[sha256sum] = "2bbd33c6059a823ce7b11de6662a2d0d2feb745ab07822773546c57f19c35cc6"

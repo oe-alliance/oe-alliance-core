@@ -24,11 +24,11 @@ do_install() {
 do_package_qa() {
 }
 
-FILES_${PN}="/"
+FILES:${PN}="/"
 
 inherit update-rc.d
 
 INITSCRIPT_PARAMS = "start 65 S . stop 90 0 ."
 INITSCRIPT_NAME = "dags-platform-util"
 
-INSANE_SKIP_${PN} += "already-stripped"
+INSANE_SKIP:${PN} += "already-stripped"

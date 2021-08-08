@@ -28,4 +28,4 @@ do_install() {
 	fi
 }
 
-FILES_${PN} += "${INIT_D_DIR}/${INITSCRIPT_NAME}"
+FILES:${PN} += "${INIT_D_DIR}/${INITSCRIPT_NAME}"

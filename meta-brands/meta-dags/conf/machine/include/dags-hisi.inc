@@ -1,9 +1,9 @@
 include conf/machine/include/dags-oem.inc
 
-DISTRO_FEATURES_remove = "x11 wayland"
+DISTRO_FEATURES:remove = "x11 wayland"
 
-PACKAGECONFIG_GL_pn-qtbase = " "
-PACKAGECONFIG_append_pn-qtbase += " gles2 linuxfb"
+PACKAGECONFIG_GL:pn-qtbase = " "
+PACKAGECONFIG:append:pn-qtbase += " gles2 linuxfb"
 KERNEL_FILE = "kernel.bin"
 ROOTFS_FILE = "rootfs.tar.bz2"
 MTD_BLACK  = "mmcblk0"
@@ -46,7 +46,7 @@ PREFERRED_PROVIDER_virtual/blindscan-dvbs = "dags-blindscan-utils-${SOC_FAMILY}"
 
 require conf/machine/include/tune-cortexa15.inc
 
-IMAGE_CMD_dagsemmc_append = "\
+IMAGE_CMD:dagsemmc:append = "\
     mkdir -p ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}; \
     mkdir -p ${DEPLOY_DIR_IMAGE}/release/${IMAGEDIR}; \
     cp ${DEPLOY_DIR_IMAGE}/uImage ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${KERNEL_FILE}; \

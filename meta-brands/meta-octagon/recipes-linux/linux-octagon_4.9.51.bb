@@ -13,15 +13,15 @@ SRC_URI[sha256sum] = "91a363188077ddbae2337910ea070c9e7a54d2cf3a4793507706d4b469
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR_append = ".0"
+MACHINE_KERNEL_PR:append = ".0"
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
 # package names instead, to allow only one kernel to be installed.
-PKG_${KERNEL_PACKAGE_NAME}-base = "kernel-base"
-PKG_${KERNEL_PACKAGE_NAME}-image = "kernel-image"
-RPROVIDES_${KERNEL_PACKAGE_NAME}-base = "kernel-${KERNEL_VERSION}"
-RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
+PKG:${KERNEL_PACKAGE_NAME}-base = "kernel-base"
+PKG:${KERNEL_PACKAGE_NAME}-image = "kernel-image"
+RPROVIDES:${KERNEL_PACKAGE_NAME}-base = "kernel-${KERNEL_VERSION}"
+RPROVIDES:kernel-image = "kernel-image-${KERNEL_VERSION}"
 
 SRC_URI += "http://source.mynonpublic.com/octagon/octagon-linux-${PV}-${SRC}.tar.xz \
     file://defconfig \
@@ -44,9 +44,9 @@ KERNEL_OBJECT_SUFFIX = "ko"
 KERNEL_IMAGEDEST = "tmp"
 KERNEL_OUTPUT = "arch/${ARCH}/boot/${KERNEL_IMAGETYPE}"
 
-FILES_${KERNEL_PACKAGE_NAME}-image = "/${KERNEL_IMAGEDEST}/zImage"
+FILES:${KERNEL_PACKAGE_NAME}-image = "/${KERNEL_IMAGEDEST}/zImage"
 
-kernel_do_install_append() {
+kernel_do_install:append() {
         install -d ${D}/${KERNEL_IMAGEDEST}
         install -m 0755 ${KERNEL_OUTPUT} ${D}/${KERNEL_IMAGEDEST}
 }
@@ -59,7 +59,7 @@ kernel_do_compile() {
         fi
 }
 
-pkg_postinst_kernel-image () {
+pkg_postinst:kernel-image () {
         if [ -d /proc/stb ] ; then
                 dd if=/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE} of=/dev/mmcblk0p3
         fi
@@ -67,10 +67,10 @@ pkg_postinst_kernel-image () {
         true
 }
 
-pkg_postrm_kernel-image () {
+pkg_postrm:kernel-image () {
 }
 
-FILESEXTRAPATHS_prepend := "${THISDIR}/linux-etxx00-${KV}:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/linux-etxx00-${KV}:"
 
 do_rm_work() {
 }

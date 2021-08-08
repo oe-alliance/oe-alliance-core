@@ -5,7 +5,7 @@ LICENSE = "CLOSED"
 require conf/license/license-close.inc
 
 DEPENDS = "sshpass-native tslib mpfr gmp libcrypto0.9.8 gstreamer1.0"
-RDEPENDS_${PN} = "libsysfs2 libgmp10 libmpfr4 vuplus-opera-dumpait libcrypto0.9.8"
+RDEPENDS:${PN} = "libsysfs2 libgmp10 libmpfr4 vuplus-opera-dumpait libcrypto0.9.8"
 
 SRC_DATE = "20181116_0"
 SRC_URI = ""
@@ -17,7 +17,7 @@ GSTVER = "1.4.5"
 S = "${WORKDIR}/opera-hbbtv"
 
 INHIBIT_PACKAGE_STRIP = "1"
-PRIVATE_LIBS_${PN} = "libopera_hbbtv.so \
+PRIVATE_LIBS:${PN} = "libopera_hbbtv.so \
 libdsmcc.so \
 libdirect-1.4.so.6 \
 libdirectfb-1.4.so.6 \
@@ -67,7 +67,7 @@ do_install() {
     fi
 }
 
-package_do_shlibs_append() {
+package_do_shlibs:append() {
     deps = "${PKGDEST}/${PN}.shlibdeps"
     tmp = "/tmp/.${PN}.shlibdeps"
     os.system("sed -e '/vbrowser/d' %s > %s" % (deps, tmp))
@@ -80,4 +80,4 @@ do_package_qa() {
 sysroot_stage_all() {
 }
 
-FILES_${PN} = "/usr/*"
+FILES:${PN} = "/usr/*"

@@ -19,4 +19,4 @@ do_install () {
     install -m 0644 ${WORKDIR}/bootargs-mmc.bin ${D}/usr/share/bootargs-mmc.bin
 }
 
-FILES_${PN} = "/usr/share"
+FILES:${PN} = "/usr/share"

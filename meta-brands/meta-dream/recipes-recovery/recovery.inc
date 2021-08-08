@@ -5,7 +5,7 @@ DEPENDS = "coreutils-native udev"
 
 inherit pkgconfig update-rc.d
 
-SRC_URI_append = ";branch=${BRANCH}"
+SRC_URI:append = ";branch=${BRANCH}"
 
 do_install() {
     oe_runmake install DESTDIR=${D}
@@ -33,38 +33,38 @@ FASTBOOTRDEPENDS_flash-scripts = " \
     mkbootblob \
 "
 
-RDEPENDS_${PN} = " \
+RDEPENDS:${PN} = " \
     flash-scripts \
     gpgv \
     pigz \
     util-linux-mount \
 "
-RDEPENDS_${PN}_append_bcm7435 = " \
+RDEPENDS:${PN}:append_bcm7435 = " \
     ${EMMCRDEPENDS_recovery} \
 "
-RDEPENDS_${PN}_append_bcm7252s = " \
+RDEPENDS:${PN}:append_bcm7252s = " \
     ${EMMCRDEPENDS_recovery} \
 "
-RDEPENDS_${PN}_append_bcm73625 = " \
+RDEPENDS:${PN}:append_bcm73625 = " \
     ${NANDRDEPENDS_recovery} \
 "
 
-RDEPENDS_flash-scripts = " \
+RDEPENDS:flash-scripts = " \
     coreutils-realpath \
     tpm-ca \
 "
-RDEPENDS_flash-scripts_append_bcm7435 = " \
+RDEPENDS:flash-scripts:append_bcm7435 = " \
     ${EMMCRDEPENDS_flash-scripts} \
     ${FASTBOOTRDEPENDS_flash-scripts} \
 "
-RDEPENDS_flash-scripts_append_bcm7252s = " \
+RDEPENDS:flash-scripts:append_bcm7252s = " \
     ${EMMCRDEPENDS_flash-scripts} \
 "
-RDEPENDS_flash-scripts_append_bcm73625 = " \
+RDEPENDS:flash-scripts:append_bcm73625 = " \
     ${NANDRDEPENDS_flash-scripts} \
 "
 
-FILES_flash-scripts = " \
+FILES:flash-scripts = " \
     ${sbindir}/flash-fsbl \
     ${sbindir}/flash-rescue \
     ${sbindir}/flash-kernel \

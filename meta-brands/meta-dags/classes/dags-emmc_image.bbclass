@@ -1,6 +1,6 @@
 inherit image_types
 
-IMAGE_TYPEDEP_dagsemmc = "ext4"
+IMAGE_TYPEDEP:dagsemmc = "ext4"
 
 do_image_dagsemmc[depends] = " \
     parted-native:do_populate_sysroot \
@@ -11,7 +11,7 @@ do_image_dagsemmc[depends] = " \
     dags-buildimage-native:do_populate_sysroot \
     "
 
-IMAGE_CMD_dagsemmc () {
+IMAGE_CMD:dagsemmc () {
     rm -rf ${IMGDEPLOYDIR}/rootfs
     rm -rf ${IMGDEPLOYDIR}/rootfs_sub
     rm -rf ${IMGDEPLOYDIR}/rootfs_sub.ext4

@@ -1,6 +1,6 @@
 inherit image_types
 
-IMAGE_TYPEDEP_emmcimg = "ext4"
+IMAGE_TYPEDEP:emmcimg = "ext4"
 
 BOOTDD_VOLUME_ID ?= "boot"
 
@@ -29,7 +29,7 @@ SWAP_PARTITION_OFFSET = "$(expr ${ROOTFS4_PARTITION_OFFSET} + ${ROOTFS_PARTITION
 EMMC_IMAGE = "${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.emmc"
 EMMC_IMAGE_SIZE = "7634944"
 
-IMAGE_CMD_emmcimg () {
+IMAGE_CMD:emmcimg () {
     dd if=/dev/zero of=${EMMC_IMAGE} bs=1 count=0 seek=$(expr ${EMMC_IMAGE_SIZE} \* 1024)
     parted -s ${EMMC_IMAGE} mklabel gpt
     parted -s ${EMMC_IMAGE} unit KiB mkpart boot fat16 ${IMAGE_ROOTFS_ALIGNMENT} $(expr ${IMAGE_ROOTFS_ALIGNMENT} + ${BOOT_PARTITION_SIZE})

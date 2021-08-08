@@ -33,4 +33,4 @@ do_install() {
     done
 }
 
-FILES_${PN} += "/lib/firmware ${sysconfdir}/modules-load.d/_${DRIVERMACHINE}.conf /lib/modules/${KV}/extra"
+FILES:${PN} += "/lib/firmware ${sysconfdir}/modules-load.d/_${DRIVERMACHINE}.conf /lib/modules/${KV}/extra"

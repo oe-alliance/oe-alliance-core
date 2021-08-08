@@ -1,5 +1,5 @@
-PACKAGECONFIG_GL_pn-qtbase = "gles2 eglfs linuxfb"
-PACKAGECONFIG_FB_pn-qtbase = " "
+PACKAGECONFIG_GL:pn-qtbase = "gles2 eglfs linuxfb"
+PACKAGECONFIG_FB:pn-qtbase = " "
 
 # We know about rtc
 include conf/machine/include/build-extras.inc
@@ -50,7 +50,7 @@ EXTRA_IMAGECMD_COMPAT = "--eraseblock=0x20000 -n -l"
 
 IMAGEDIR ?= "vuplus/${UPDATE_DIR}"
 
-IMAGE_CMD_ubifs_prepend = " \
+IMAGE_CMD:ubifs:prepend = " \
     rm -rf ${IMAGE_ROOTFS}/boot/*; \
     rm -rf ${IMAGE_ROOTFS}/tmp/*; \
     "

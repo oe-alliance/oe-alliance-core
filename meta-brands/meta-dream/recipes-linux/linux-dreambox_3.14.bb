@@ -1,6 +1,6 @@
 inherit kernel machine_kernel_pr
 
-MACHINE_KERNEL_PR_append = ".26"
+MACHINE_KERNEL_PR:append = ".26"
 
 PATCHREV = "6fa88d2001194cbff63ad94cb713b6cd5ea02739"
 PATCHLEVEL = "79"

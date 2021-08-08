@@ -14,14 +14,14 @@ SRC_URI = "http://source.mynonpublic.com/gigablue/hbbtv/gb-hbbtv-qt-${SRCDATE}.z
 SRC_URI[md5sum] = "fb71d97af77211e46e5dbfcf0ae2e61d"
 SRC_URI[sha256sum] = "8ce7d977174d5c317211e3a42c911c3cc06a20a3a585fb695183b074d5e90071"
 
-RDEPENDS_${PN}  = "qtwebkit virtual/libgles2"
-RDEPENDS_${PN} += "gb-v3ddriver-${MACHINE}"
+RDEPENDS:${PN}  = "qtwebkit virtual/libgles2"
+RDEPENDS:${PN} += "gb-v3ddriver-${MACHINE}"
 
 S = "${WORKDIR}"
 
 PLUGINPATH = "${libdir}/enigma2/python/Plugins/Extensions/HbbTV"
 
-FILES_${PN} = "${bindir} ${libdir}/mozilla/plugins/libhbbtvbrowserplugin.so ${PLUGINPATH}/*.py"
+FILES:${PN} = "${bindir} ${libdir}/mozilla/plugins/libhbbtvbrowserplugin.so ${PLUGINPATH}/*.py"
 
 do_install(){
     install -d ${D}${PLUGINPATH}
@@ -34,7 +34,7 @@ do_install(){
 }
 
 
-pkg_postinst_ontarget_${PN}(){
+pkg_postinst_ontarget:${PN}(){
 #!/bin/sh
 ln -sf /usr/share/fonts /usr/lib/fonts
 
@@ -50,4 +50,4 @@ exit 0
 INHIBIT_PACKAGE_STRIP = "1"
 INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
 
-INSANE_SKIP_${PN} += "already-stripped file-rdeps ldflags"
+INSANE_SKIP:${PN} += "already-stripped file-rdeps ldflags"

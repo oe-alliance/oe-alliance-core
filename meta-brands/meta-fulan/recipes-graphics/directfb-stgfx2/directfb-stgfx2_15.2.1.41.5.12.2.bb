@@ -12,22 +12,22 @@ SRCREV = "${AUTOREV}"
 
 S = "${WORKDIR}/git"
 
-do_configure_append() {
+do_configure:append() {
 	cp -r ${S}/linux/kernel ${B}/linux/
 }
 
 # Kernel files are not compatble with 2.6.32
-# do_compile_append() {
+# do_compile:append() {
 #	make -C "${STAGING_KERNEL_DIR}" M="${B}/linux/kernel" STM_BLITTER_TOPDIR="${B}/linux/kernel" modules
 # }
 
-# MACHINE_KERNEL_PR_append = ".1"
+# MACHINE_KERNEL_PR:append = ".1"
 # EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR}"
 
-FILES_${PN} += "\
+FILES:${PN} += "\
   ${libdir}/directfb-1.7-7/gfxdrivers/*.so \
 "
 
-FILES_${PN}-dev += "\
+FILES:${PN}-dev += "\
   ${libdir}/directfb-1.7-7/gfxdrivers/*.la \
 "

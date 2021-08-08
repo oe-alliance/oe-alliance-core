@@ -11,7 +11,7 @@ SRC_URI = "http://source.mynonpublic.com/gfutures/${MACHINE}-partitions-${SRCDAT
 
 S = "${WORKDIR}"
 
-ALLOW_EMPTY_${PN} = "1"
+ALLOW_EMPTY:${PN} = "1"
 do_configure[nostamp] = "1"
 
 do_install() {
@@ -30,6 +30,6 @@ do_deploy() {
 
 addtask deploy before do_build after do_install
 
-INSANE_SKIP_${PN} += "already-stripped"
+INSANE_SKIP:${PN} += "already-stripped"
 
-FILES_${PN} = "/usr/share"
+FILES:${PN} = "/usr/share"

@@ -24,4 +24,4 @@ do_install() {
     ${@bb.utils.contains("MACHINE", "gb7252", "ln -sf ../init.d/ddbootup ${D}${sysconfdir}/rcS.d/S66ddbootup" , "ln -sf ../init.d/ddbootup ${D}${sysconfdir}/rcS.d/S39ddbootup", d)}
 }
 
-FILES_${PN} += "${sysconfdir}"
+FILES:${PN} += "${sysconfdir}"

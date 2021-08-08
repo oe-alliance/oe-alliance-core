@@ -3,7 +3,7 @@ LICENSE = "GPLv2"
 SECTION = "kernel"
 
 KV = "3.14.28"
-MACHINE_KERNEL_PR_append = "11"
+MACHINE_KERNEL_PR:append = "11"
 
 inherit kernel machine_kernel_pr
 
@@ -50,14 +50,14 @@ KERNEL_OUTPUT = "arch/${ARCH}/boot/${KERNEL_IMAGETYPE}"
 
 KERNEL_EXTRA_ARGS = "EXTRA_CFLAGS=-Wno-attribute-alias"
 
-FILES_${KERNEL_PACKAGE_NAME}-image = "/${KERNEL_IMAGEDEST}/zImage"
+FILES:${KERNEL_PACKAGE_NAME}-image = "/${KERNEL_IMAGEDEST}/zImage"
 
-kernel_do_install_append() {
+kernel_do_install:append() {
         install -d ${D}/${KERNEL_IMAGEDEST}
         install -m 0755 ${KERNEL_OUTPUT} ${D}/${KERNEL_IMAGEDEST}
 }
 
-pkg_postinst_kernel-image () {
+pkg_postinst:kernel-image () {
         if [ -d /proc/stb ] ; then
                 dd if=/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE} of=/dev/mmcblk0p1
         fi
@@ -65,10 +65,10 @@ pkg_postinst_kernel-image () {
         true
 }
 
-pkg_postrm_kernel-image () {
+pkg_postrm:kernel-image () {
 }
 
-FILESEXTRAPATHS_prepend := "${THISDIR}/linux-dags-${KV}:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/linux-dags-${KV}:"
 
 do_rm_work() {
 }

@@ -9,8 +9,8 @@ PR = "r2"
 PACKAGES = "odin-blindscan-dvbs-utils-${MACHINE} odin-blindscan-dvbc-utils-${MACHINE}"
 
 PROVIDES += "virtual/blindscan-dvbc virtual/blindscan-dvbs"
-RPROVIDES_odin-blindscan-dvbc-utils-${MACHINE} += "virtual/blindscan-dvbc"
-RPROVIDES_odin-blindscan-dvbs-utils-${MACHINE} += "virtual/blindscan-dvbs"
+RPROVIDES:odin-blindscan-dvbc-utils-${MACHINE} += "virtual/blindscan-dvbc"
+RPROVIDES:odin-blindscan-dvbs-utils-${MACHINE} += "virtual/blindscan-dvbs"
 
 SRC_URI = "http://source.mynonpublic.com/download/odin-blindscan-utils-${MACHINE}-${PV}-${SRC}.tar.gz"
 
@@ -22,8 +22,8 @@ do_install() {
     install -m 0755 "${S}/odin_blindscan" "${D}/${bindir}"    
 }
 
-FILES_odin-blindscan-dvbc-utils-${MACHINE} = "${bindir}/tda1002x"
-FILES_odin-blindscan-dvbs-utils-${MACHINE} = "${bindir}/odin_blindscan"
+FILES:odin-blindscan-dvbc-utils-${MACHINE} = "${bindir}/tda1002x"
+FILES:odin-blindscan-dvbs-utils-${MACHINE} = "${bindir}/odin_blindscan"
 
 do_prepare_recipe_sysroot[noexec] = "1"
 INHIBIT_PACKAGE_STRIP = "1"

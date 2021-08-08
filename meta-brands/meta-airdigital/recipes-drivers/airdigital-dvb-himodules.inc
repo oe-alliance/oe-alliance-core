@@ -15,7 +15,7 @@ INHIBIT_PACKAGE_STRIP = "1"
 
 inherit module
 
-FILES_${PN} += "${sysconfdir}/modprobe.d/_${MACHINEBUILD}.conf ${sysconfdir}/modules-load.d/_${MACHINEBUILD}.conf"
+FILES:${PN} += "${sysconfdir}/modprobe.d/_${MACHINEBUILD}.conf ${sysconfdir}/modules-load.d/_${MACHINEBUILD}.conf"
 
 do_compile() {
 }
@@ -31,7 +31,7 @@ do_install() {
 	done
 }
 
-pkg_prerm_${PN}() {
+pkg_prerm:${PN}() {
 	if [ "x$D" == "x" ]; then
 		if [ -f /lib/modules/${KV}/extra/hi_play.ko ] ; then
 			rm -f /lib/modules/${KV}/extra/hi_play.ko;
@@ -39,5 +39,5 @@ pkg_prerm_${PN}() {
 	fi
 }
 
-RREPLACES_${PN} = "kernel-module-hi-play-4.4.35"
-RCONFLICTS_${PN} = "kernel-module-hi-play-4.4.35"
+RREPLACES:${PN} = "kernel-module-hi-play-4.4.35"
+RCONFLICTS:${PN} = "kernel-module-hi-play-4.4.35"

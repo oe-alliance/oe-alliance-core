@@ -3,7 +3,7 @@ SRCDATE = "20180412"
 
 SRC_URI = "http://source.mynonpublic.com/xtrend/${MACHINE}-drivers-${KV}-${SRCDATE}.zip"
 
-RDEPENDS_${PN} += "et-fpupdate-${MACHINE}"
+RDEPENDS:${PN} += "et-fpupdate-${MACHINE}"
 
 require et-dvb-modules.inc
 

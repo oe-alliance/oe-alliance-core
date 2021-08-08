@@ -3,7 +3,7 @@ SECTION = "base"
 PRIORITY = "optional"
 LICENSE = "CLOSED"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
-RDEPENDS_${PN} = "libjpeg-turbo"
+RDEPENDS:${PN} = "libjpeg-turbo"
 
 COMPATIBLE_MACHINE = "^(u5pvr)$"
 
@@ -12,9 +12,9 @@ SRCDATE = "20180510"
 PV = "${SRCDATE}"
 PR = "r0"
 
-RPROVIDES_${PN}  = "showiframe"
-RREPLACES_${PN}  = "showiframe"
-RCONFLICTS_${PN} = "showiframe"
+RPROVIDES:${PN}  = "showiframe"
+RREPLACES:${PN}  = "showiframe"
+RCONFLICTS:${PN} = "showiframe"
 
 SRC_URI = "http://source.mynonpublic.com/dinobot/${MACHINE}-showiframe-${SRCDATE}.tar.gz"
 
@@ -28,7 +28,7 @@ do_install() {
 do_package_qa() {
 }
 
-FILES_${PN}  = "${bindir}/showiframe"
+FILES:${PN}  = "${bindir}/showiframe"
 
 SRC_URI[md5sum] = "2bec00ffb447ed1a31ab54d5054907ec"
 SRC_URI[sha256sum] = "643813b005f446bd582d1391e8ce0f4d3dae7ed71a1279008add259b3c978e40"

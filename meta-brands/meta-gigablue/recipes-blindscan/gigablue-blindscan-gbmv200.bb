@@ -5,7 +5,7 @@ LICENSE = "CLOSED"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PROVIDES += "virtual/blindscan-dvbs"
-RPROVIDES_${PN} += "virtual/blindscan-dvbs"
+RPROVIDES:${PN} += "virtual/blindscan-dvbs"
 
 SRCDATE = "20190307"
 
@@ -24,7 +24,7 @@ do_install() {
 do_package_qa() {
 }
 
-FILES_${PN}  = "${bindir}/gigablue_blindscan"
+FILES:${PN}  = "${bindir}/gigablue_blindscan"
 
 SRC_URI[md5sum] = "b71bd793f450cd5e492e9171575475a4"
 SRC_URI[sha256sum] = "bb55956f8b7b32bb483040151f374cd84162cdff6f12f3943504e432c3f16311"

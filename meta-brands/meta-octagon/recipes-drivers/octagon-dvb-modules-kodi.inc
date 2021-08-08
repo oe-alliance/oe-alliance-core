@@ -26,7 +26,7 @@ do_install() {
     touch ${D}/${sysconfdir}/${MACHINE}-kodi
 }
 
-pkg_postinst_${PN}() {
+pkg_postinst:${PN}() {
 #!/bin/sh
 if [ -e /lib/modules/${KV}/extra/linuxtv-kodi.ko ]; then
  mv -f /lib/modules/${KV}/extra/linuxtv-kodi.ko /lib/modules/${KV}/extra/linuxtv.ko
@@ -34,4 +34,4 @@ fi
 exit 0
 }
 
-FILES_${PN} += "${sysconfdir}/${MACHINE}-kodi /lib/modules/${KV}/extra"
+FILES:${PN} += "${sysconfdir}/${MACHINE}-kodi /lib/modules/${KV}/extra"

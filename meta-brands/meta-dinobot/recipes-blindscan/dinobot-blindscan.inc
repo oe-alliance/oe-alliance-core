@@ -4,7 +4,7 @@ PRIORITY = "optional"
 LICENSE = "CLOSED"
 
 PROVIDES += "virtual/blindscan-dvbs"
-RPROVIDES_${PN} += "virtual/blindscan-dvbs"
+RPROVIDES:${PN} += "virtual/blindscan-dvbs"
 
 PV = "${SRCDATE}"
 PR = "r0"
@@ -21,7 +21,7 @@ do_install() {
 do_package_qa() {
 }
 
-FILES_${PN}  = "${bindir}/dinobot-blindscan"
+FILES:${PN}  = "${bindir}/dinobot-blindscan"
 
 do_prepare_recipe_sysroot[noexec] = "1"
 INHIBIT_PACKAGE_STRIP = "1"

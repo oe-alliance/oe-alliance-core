@@ -13,7 +13,7 @@ S = "${WORKDIR}"
 do_compile() {
 }
 
-do_install_append() {
+do_install:append() {
 	install -d ${D}/${includedir}
 	for d in EGL GLES GLES2 GLES3 KHR; do
 		install -d ${D}${includedir}/$d
@@ -23,4 +23,4 @@ do_install_append() {
 	done
 }
 
-FILES_${PN}-dev = "/usr/include/*"
+FILES:${PN}-dev = "/usr/include/*"

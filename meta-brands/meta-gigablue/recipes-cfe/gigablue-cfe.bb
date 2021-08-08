@@ -18,7 +18,7 @@ SRC_URI = "file://warning.bin \
     ${@bb.utils.contains("MACHINE_FEATURES", "gigabluelcd400", "file://lcdwaitkey400.bin file://lcdwarning400.bin" , "", d)} \
 "
 
-ALLOW_EMPTY_${PN} = "1"
+ALLOW_EMPTY:${PN} = "1"
 
 do_deploy() {
     if [ -e burn.bat ]; then

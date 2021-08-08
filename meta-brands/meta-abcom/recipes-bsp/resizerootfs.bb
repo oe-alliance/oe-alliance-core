@@ -4,7 +4,7 @@ require conf/license/license-gplv2.inc
 COMPATIBLE_MACHINE = "^pulse4k$|^pulse4kmini$"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-RDEPENDS_${PN} = "e2fsprogs-resize2fs"
+RDEPENDS:${PN} = "e2fsprogs-resize2fs"
 PV = "1.0"
 PR = "r1"
 

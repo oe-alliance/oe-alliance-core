@@ -4,15 +4,15 @@ require stb-kodi-gigablue.inc
 require recipes-mediacenter/kodi/stb-kodi_${PV}.bb
 
 PROVIDES += "virtual/kodi"
-RPROVIDES_${PN} += "virtual/kodi"
+RPROVIDES:${PN} += "virtual/kodi"
 PROVIDES += "kodi"
-RPROVIDES_${PN} += "kodi"
-RDEPENDS_${PN} += "gb-v3ddriver-${MACHINE}"
-RDEPENDS_${PN} += "glibc-gconv-iso8859-1"
+RPROVIDES:${PN} += "kodi"
+RDEPENDS:${PN} += "gb-v3ddriver-${MACHINE}"
+RDEPENDS:${PN} += "glibc-gconv-iso8859-1"
 
-FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 
-SRC_URI_append += " \
+SRC_URI:append += " \
      http://source.mynonpublic.com/gigablue/v3ddriver/xbmc-support_${MACHINE}_${GLPR}.tar.gz;name=xbmc-support \
 "
 

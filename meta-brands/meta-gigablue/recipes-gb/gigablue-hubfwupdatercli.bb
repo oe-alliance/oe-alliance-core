@@ -25,9 +25,9 @@ SRC_URI = " \
     file://gigablue-hubfwupdatercli.zip \
 "
 
-FILES_${PN} = "/usr/bin/hubFwUpdaterCLI /etc/init.d"
+FILES:${PN} = "/usr/bin/hubFwUpdaterCLI /etc/init.d"
 
-INSANE_SKIP_${PN} = "already-stripped"
+INSANE_SKIP:${PN} = "already-stripped"
 
 do_install() {
     install -d ${D}/usr/bin/hubFwUpdaterCLI
@@ -38,7 +38,7 @@ do_install() {
     install -m 0755 ${S}/FW9303.rom ${D}/usr/bin/hubFwUpdaterCLI/FW9303.rom
 }
 
-pkg_postinst_${PN}_append() {
+pkg_postinst:${PN}:append() {
     if test -z "$D"
     then
         # force update without requiring reboot

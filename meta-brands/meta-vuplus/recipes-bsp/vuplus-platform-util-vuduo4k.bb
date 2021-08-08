@@ -2,16 +2,16 @@ require vuplus-platform-util.inc
 
 COMPATIBLE_MACHINE = "^(vuduo4k)$"
 
-RDEPENDS_${PN} += "mmc-utils"
+RDEPENDS:${PN} += "mmc-utils"
 
 PV="18.1"
 SRCDATE = "20191218"
 SRCDATE_PR = "r0"
-PR_append = ".2"
+PR:append = ".2"
 
 SRC_URI += "file://bp3flash.py"
 
-do_install_append() {
+do_install:append() {
 	install -m 0755 ${WORKDIR}/bp3flash.py ${D}${bindir}
 }
 

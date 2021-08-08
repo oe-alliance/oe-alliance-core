@@ -8,7 +8,7 @@ PRECOMPILED_ARCH_dm7020hdv2 = "dm7020hd"
 
 inherit kernel machine_kernel_pr
 
-MACHINE_KERNEL_PR_append = ".7"
+MACHINE_KERNEL_PR:append = ".7"
 
 PATCHREV = "3c7230bc0819495db75407c365f4d1db70008044"
 PATCHLEVEL = "68"
@@ -79,10 +79,10 @@ KERNEL_BUILTIN_MODULES_dm8000 = "\
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
 # package names instead, to allow only one kernel to be installed.
-PKG_${KERNEL_PACKAGE_NAME}-base = "kernel-base"
-PKG_${KERNEL_PACKAGE_NAME}-image = "kernel-image"
-RPROVIDES_${KERNEL_PACKAGE_NAME}-base = "kernel-${KERNEL_VERSION}"
-RPROVIDES_${KERNEL_PACKAGE_NAME}-image = "kernel-image-${KERNEL_VERSION} ${KERNEL_BUILTIN_MODULES}"
+PKG:${KERNEL_PACKAGE_NAME}-base = "kernel-base"
+PKG:${KERNEL_PACKAGE_NAME}-image = "kernel-image"
+RPROVIDES:${KERNEL_PACKAGE_NAME}-base = "kernel-${KERNEL_VERSION}"
+RPROVIDES:${KERNEL_PACKAGE_NAME}-image = "kernel-image-${KERNEL_VERSION} ${KERNEL_BUILTIN_MODULES}"
 
 SRC_URI[kernel.md5sum] = "364066fa18767ec0ae5f4e4abcf9dc51"
 SRC_URI[kernel.sha256sum] = "dd96ed02b53fb5d57762e4b1f573460909de472ca588f81ec6660e4a172e7ba7"
@@ -102,9 +102,9 @@ KERNEL_OUTPUT = "vmlinux"
 KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_IMAGEDEST = "boot"
 
-FILES_${KERNEL_PACKAGE_NAME}-image = "${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz"
+FILES:${KERNEL_PACKAGE_NAME}-image = "${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz"
 
-do_install_append() {
+do_install:append() {
         ${STRIP} ${D}/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}
         gzip -9 ${D}/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}
         echo "/boot/bootlogo-${PRECOMPILED_ARCH}.elf.gz filename=/boot/bootlogo-${PRECOMPILED_ARCH}.jpg" > ${D}/${KERNEL_IMAGEDEST}/autoexec.bat
@@ -113,14 +113,14 @@ do_install_append() {
         echo "/boot/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}.gz ${CMDLINE}"  >> ${D}/${KERNEL_IMAGEDEST}/autoexec_${MACHINE}.bat
 }
 
-FILES_${KERNEL_PACKAGE_NAME}-image += "/${KERNEL_IMAGEDEST}/autoexec*.bat"
-FILES_${KERNEL_PACKAGE_NAME}-vmlinux = "/boot/vmlinux-${KERNEL_VERSION}*"
+FILES:${KERNEL_PACKAGE_NAME}-image += "/${KERNEL_IMAGEDEST}/autoexec*.bat"
+FILES:${KERNEL_PACKAGE_NAME}-vmlinux = "/boot/vmlinux-${KERNEL_VERSION}*"
 
-do_configure_prepend() {
+do_configure:prepend() {
         sed -e "/^SUBLEVEL = /d" -i ${S}/Makefile
 }
 
-pkg_preinst_kernel-image() {
+pkg_preinst:kernel-image() {
     if [ -z "$D" ]
     then
         if mountpoint -q /${KERNEL_IMAGEDEST}
@@ -131,7 +131,7 @@ pkg_preinst_kernel-image() {
         fi
     fi
 }
-pkg_prerm_kernel-image() {
+pkg_prerm:kernel-image() {
     if [ -z "$D" ]
     then
         if mountpoint -q /${KERNEL_IMAGEDEST}
@@ -142,7 +142,7 @@ pkg_prerm_kernel-image() {
         fi
     fi
 }
-pkg_postinst_kernel-image() {
+pkg_postinst:kernel-image() {
         if [ -z "$D" ] && mountpoint -q /${KERNEL_IMAGEDEST}; then
                 if grep -q '\<root=/dev/mtdblock3\>' /proc/cmdline && grep -q '\<root=ubi0:rootfs\>' /boot/autoexec.bat; then
                         sed -ie 's!${CMDLINE_UBI}!${CMDLINE_JFFS2}!' /boot/autoexec.bat;
@@ -150,7 +150,7 @@ pkg_postinst_kernel-image() {
                 umount /${KERNEL_IMAGEDEST};
         fi
 }
-pkg_postrm_kernel-image() {
+pkg_postrm:kernel-image() {
     if [ -z "$D" ]
     then
         umount /${KERNEL_IMAGEDEST}
@@ -158,9 +158,9 @@ pkg_postrm_kernel-image() {
 }
 
 # Do not use update-alternatives!
-pkg_postinst_kernel () {
+pkg_postinst:kernel () {
 }
-pkg_postrm_kernel () {
+pkg_postrm:kernel () {
 }
 
 CMDLINE_JFFS2 = "root=/dev/mtdblock3 rootfstype=jffs2 rw ${CMDLINE_CONSOLE}"

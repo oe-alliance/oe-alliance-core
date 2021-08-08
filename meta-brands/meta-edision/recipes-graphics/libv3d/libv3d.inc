@@ -11,12 +11,12 @@ SRC_URI = "http://source.mynonpublic.com/edision/edision-libv3d-${PV}.tar.xz"
 
 S = "${WORKDIR}/edision-libv3d-${PV}"
 
-ARCH_DIR_aarch64 = "lib64"
-ARCH_DIR_arm = "lib"
+ARCH_DIR:aarch64 = "lib64"
+ARCH_DIR:arm = "lib"
 
 FILES_SOLIBSDEV = ""
-FILES_${PN} += "${libdir}/lib*${SOLIBSDEV}"
-INSANE_SKIP_${PN} += "already-stripped dev-so ldflags"
+FILES:${PN} += "${libdir}/lib*${SOLIBSDEV}"
+INSANE_SKIP:${PN} += "already-stripped dev-so ldflags"
 
 INHIBIT_PACKAGE_STRIP = "1"
 INHIBIT_SYSROOT_STRIP = "1"

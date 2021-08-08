@@ -11,7 +11,7 @@ DEPENDS = " \
        ${PYTHON_PN} \
        "
 
-RDEPENDS_${PN} = "\
+RDEPENDS:${PN} = "\
        jpeg \
        libdvbsi++ \
        libssl \
@@ -26,7 +26,7 @@ do_install() {
         install -d ${D}${libdir}
 }
 
-pkg_postinst_${PN}() {
+pkg_postinst:${PN}() {
 #!/bin/sh
 if [ ! -e $D${libdir}/libdvbsi++.so.0     ]; then if [ -e $D${libdir}/libdvbsi++.so.1     ]; then ln -sf libdvbsi++.so.1     $D${libdir}/libdvbsi++.so.0     ; fi; fi  
 if [ ! -e $D${libdir}/libjpeg.so.62       ]; then if [ -e $D${libdir}/libjpeg.so.8        ]; then ln -sf libjpeg.so.8        $D${libdir}/libjpeg.so.62       ; fi; fi  

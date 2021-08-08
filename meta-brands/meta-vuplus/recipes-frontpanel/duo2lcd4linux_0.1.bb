@@ -7,8 +7,8 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 SRC_URI = "file://LCD4linux.tar.gz file://wetter.tar.gz file://duo2lcd4linux.patch;patch=1;pnum=1"
 
 DEPENDS = "${PYTHON_PN} ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-imaging", "${PYTHON_PN}-pillow", d)} ${PYTHON_PN}-pyusb lcd4linux lcd4linuxsupport"
-RDEPENDS_enigma2-plugin-extensions-lcd4linux-duo2 = "enigma2 ${PYTHON_PN}-codecs ${PYTHON_PN}-datetime ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-imaging", "${PYTHON_PN}-pillow", d)} ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-textutils", "", d)} \ ${PYTHON_PN}-shell ${PYTHON_PN}-ctypes ${PYTHON_PN}-pyusb lcd4linux lcd4linuxsupport"
-DESCRIPTION_enigma2-plugin-extensions-lcd4linux-duo2 = "Duo2 LCD support driver and setup."
+RDEPENDS:enigma2-plugin-extensions-lcd4linux-duo2 = "enigma2 ${PYTHON_PN}-codecs ${PYTHON_PN}-datetime ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-imaging", "${PYTHON_PN}-pillow", d)} ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-textutils", "", d)} \ ${PYTHON_PN}-shell ${PYTHON_PN}-ctypes ${PYTHON_PN}-pyusb lcd4linux lcd4linuxsupport"
+DESCRIPTION:enigma2-plugin-extensions-lcd4linux-duo2 = "Duo2 LCD support driver and setup."
 
 S = "${WORKDIR}/LCD4linux"
 
@@ -27,7 +27,7 @@ do_install() {
 }
 
 
-python populate_packages_prepend() {
+python populate_packages:prepend() {
     enigma2_plugindir = bb.data.expand('${libdir}/enigma2/python/Plugins', d)
     do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/[a-zA-Z0-9_]+.*$', 'enigma2-plugin-%s-duo2', '%s', recursive=True, match_path=True, prepend=True, extra_depends="enigma2")
     do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/.*\.la$', 'enigma2-plugin-%s-duo2-dev', '%s (development)', recursive=True, match_path=True, prepend=True)

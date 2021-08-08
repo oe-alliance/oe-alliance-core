@@ -2,7 +2,7 @@ SUMMARY = "Dreambox second stage bootloader"
 SECTION = "base"
 LICENSE = "CLOSED"
 PROVIDES += "virtual/bootloader"
-RPROVIDES_${PN} += "dreambox-secondstage"
+RPROVIDES:${PN} += "dreambox-secondstage"
 PRIORITY = "required"
 INC_PR = "r22"
 require conf/license/license-close.inc
@@ -25,11 +25,11 @@ DEPENDS = "dreambox-buildimage-native"
 do_configure[nostamp] = "1"
 
 # busybox nandwrite requires oob patch and is not working in every box
-RDEPENDS_${PN} = "mtd-utils"
+RDEPENDS:${PN} = "mtd-utils"
 
-FILES_${PN} = "/tmp/secondstage-${PRECOMPILED_ARCH}.bin"
+FILES:${PN} = "/tmp/secondstage-${PRECOMPILED_ARCH}.bin"
 
-pkg_postinst_${PN}() {
+pkg_postinst:${PN}() {
 	if [ -z "$D" ] && grep -q '\<${PRECOMPILED_ARCH}\>' /proc/stb/info/model; then
 		if [ -f /tmp/secondstage-${PRECOMPILED_ARCH}.bin ]; then
 			flash_erase /dev/mtd1 0 0 2>/dev/null

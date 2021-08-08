@@ -1,10 +1,10 @@
 require recipes-mediacenter/kodi/stb-kodi_${PV}.bb
 
-FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
 
 SRCDATE = "20210318"
 
-SRC_URI_append = " http://source.mynonpublic.com/kodi/hiplayer_kodi_19_${SRCDATE}.tar.gz \
+SRC_URI:append = " http://source.mynonpublic.com/kodi/hiplayer_kodi_19_${SRCDATE}.tar.gz \
                 file://hiplayer-19.patch \
 "
 
@@ -13,14 +13,14 @@ SRC_URI[sha256sum] = "25055d538fc9633cd050be3242bcdf45f5ceec9ee9b56429a231612f51
 
 DEPENDS += "dags-libs-${SOC_FAMILY}"
 PROVIDES += "virtual/kodi"
-RPROVIDES_${PN} += "virtual/kodi"
+RPROVIDES:${PN} += "virtual/kodi"
 PROVIDES += "kodi"
-RPROVIDES_${PN} += "kodi"
+RPROVIDES:${PN} += "kodi"
 
-RDEPENDS_${PN} += "dags-libs-${SOC_FAMILY}"
-RDEPENDS_${PN} += "dags-opengl-${SOC_FAMILY}"
+RDEPENDS:${PN} += "dags-libs-${SOC_FAMILY}"
+RDEPENDS:${PN} += "dags-opengl-${SOC_FAMILY}"
 
-do_configure_append() {
+do_configure:append() {
         install -d ${D}${libdir}
         install -d ${WORKDIR}/git/xbmc/platform/linux/hisi/
         install -d ${WORKDIR}/git/xbmc/cores/hiplayer/

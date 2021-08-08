@@ -21,7 +21,7 @@ kernel_conf_variable() {
 
 DEFCONFIG_IN_SRC_URI = "${@bb.utils.contains('SRC_URI', 'file://defconfig', 'true', 'false', d)}"
 
-do_configure_prepend() {
+do_configure:prepend() {
     if [ -n "${DEFCONFIG}" ] && ! ${DEFCONFIG_IN_SRC_URI}; then
         yes '' | oe_runmake -C ${S} O=${B} ${DEFCONFIG}_defconfig
         mv ${B}/.config ${WORKDIR}/defconfig
@@ -73,17 +73,17 @@ do_configure_prepend() {
     yes '' | oe_runmake -C ${S} O=${B} oldconfig
 }
 
-do_configure_append() {
+do_configure:append() {
     if test -e scripts/Makefile.fwinst ; then
         sed -i -e "s:-m0644:-m 0644:g" scripts/Makefile.fwinst
     fi
 }
 
-do_install_append() {
+do_install:append() {
     oe_runmake headers_install INSTALL_HDR_PATH=${D}${exec_prefix}/src/linux-${KERNEL_VERSION} ARCH=$ARCH
 }
 
 PACKAGES =+ "kernel-headers"
-FILES_kernel-headers = "${exec_prefix}/src/linux*"
+FILES:kernel-headers = "${exec_prefix}/src/linux*"
 
 KERNEL_MODULE_AUTOLOAD += "nfsd"

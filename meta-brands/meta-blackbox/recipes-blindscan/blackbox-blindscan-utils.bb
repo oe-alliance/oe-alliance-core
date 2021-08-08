@@ -1,7 +1,7 @@
 SUMMARY = "Utilities for transponder & dvb-c/s blindscan"
 SECTION = "base"
 PRIORITY = "optional"
-RDEPENDS_${PN} = "ncurses"
+RDEPENDS:${PN} = "ncurses"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
@@ -11,8 +11,8 @@ require conf/license/license-close.inc
 PACKAGES = "blackbox-blindscan-dvbs-utils blackbox-blindscan-dvbc-utils"
 
 PROVIDES += "virtual/blindscan-dvbs virtual/blindscan-dvbc"
-RPROVIDES_blackbox-blindscan-dvbs-utils += "virtual/blindscan-dvbs"
-RPROVIDES_blackbox-blindscan-dvbc-utils += "virtual/blindscan-dvbc"
+RPROVIDES:blackbox-blindscan-dvbs-utils += "virtual/blindscan-dvbs"
+RPROVIDES:blackbox-blindscan-dvbc-utils += "virtual/blindscan-dvbc"
 
 SRC_URI = "file://tda1002x file://blackbox_blindscan"
 
@@ -21,8 +21,8 @@ PR = "r6"
 
 S = "${WORKDIR}"
 
-FILES_blackbox-blindscan-dvbs-utils = "${bindir}/*_blindscan"
-FILES_blackbox-blindscan-dvbc-utils = "${bindir}/tda1002x"
+FILES:blackbox-blindscan-dvbs-utils = "${bindir}/*_blindscan"
+FILES:blackbox-blindscan-dvbc-utils = "${bindir}/tda1002x"
 
 do_install() {
     install -d ${D}/${bindir}/

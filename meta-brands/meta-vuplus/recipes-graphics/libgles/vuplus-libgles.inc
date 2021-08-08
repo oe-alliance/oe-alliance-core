@@ -9,15 +9,15 @@ PV="15.1"
 PR="${SRCDATE}.${SRCDATE_PR}"
 
 PROVIDES = "virtual/libgles1 virtual/libgles2 virtual/egl libgles"
-RPROVIDES_${PN} = "virtual/libgles1 virtual/libgles2 virtual/egl libEGL.so libGLESv2.so libgles"
+RPROVIDES:${PN} = "virtual/libgles1 virtual/libgles2 virtual/egl libEGL.so libGLESv2.so libgles"
 
 SRC_URI = "http://code.vuplus.com/download/release/libgles/libgles-${MACHINE}-${PV}-${PR}.tar.gz"
 
 S = "${WORKDIR}/libgles-${MACHINE}"
 
-INSANE_SKIP_${PN} += "already-stripped dev-so ldflags"
+INSANE_SKIP:${PN} += "already-stripped dev-so ldflags"
 INHIBIT_PACKAGE_STRIP = "1"
-PRIVATE_LIBS_${PN} = "libEGL.so \
+PRIVATE_LIBS:${PN} = "libEGL.so \
 libv3ddriver.so \
 libGLESv2.so"
 
@@ -33,5 +33,5 @@ do_install() {
 do_package_qa() {
 }
 
-FILES_${PN} = "/usr/lib/*"
-FILES_${PN}-dev = "/usr/include/*"
+FILES:${PN} = "/usr/lib/*"
+FILES:${PN}-dev = "/usr/include/*"

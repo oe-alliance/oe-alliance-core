@@ -36,9 +36,9 @@ do_install() {
 	done
 }
 
-FILES_${PN} = "/usr/lib/*"
-FILES_${PN}-dev = "/usr/include/*"
+FILES:${PN} = "/usr/lib/*"
+FILES:${PN}-dev = "/usr/include/*"
 
-RPROVIDES_${PN} = "virtual/libgles2 virtual/egl libnxpl.so libnexus.so libv3ddriver.so libGLESv2.so libEGL.so libnxclient.so"
+RPROVIDES:${PN} = "virtual/libgles2 virtual/egl libnxpl.so libnexus.so libv3ddriver.so libGLESv2.so libEGL.so libnxclient.so"
 
-INSANE_SKIP_${PN} += "already-stripped dev-so ldflags"
+INSANE_SKIP:${PN} += "already-stripped dev-so ldflags"

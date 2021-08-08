@@ -20,7 +20,7 @@ inherit update-rc.d
 INITSCRIPT_NAME = "fpupdate"
 INITSCRIPT_PARAMS = "start 22 S ."
 
-FILES_${PN} = "/${bindir} /lib/firmware /etc/init.d"
+FILES:${PN} = "/${bindir} /lib/firmware /etc/init.d"
 
 do_install() {
     install -d ${D}/${bindir}
@@ -42,7 +42,7 @@ do_install() {
     install -m 0755 ${S}/fpupdate.sh ${D}/etc/init.d/fpupdate
 }
 
-pkg_postinst_${PN}_append() {
+pkg_postinst:${PN}:append() {
     if test -z "$D"
     then
         # force update without requiring reboot

@@ -7,7 +7,7 @@ PACKAGE_ARCH := "${MACHINE_ARCH}"
 PR = "r4-${SRCDATE}"
 
 PROVIDES = "virtual/libgles1 virtual/libgles2 virtual/egl"
-RPROVIDES_${PN} = "virtual/libgles1 virtual/libgles2 virtual/egl libEGL.so libGLESv2.so libmali.so"
+RPROVIDES:${PN} = "virtual/libgles1 virtual/libgles2 virtual/egl libEGL.so libGLESv2.so libmali.so"
 
 SRC_URI = "http://source.mynonpublic.com/dinobot/${SOC_FAMILY}-opengl-armhf-${SRCDATE}.zip \
  file://libm-2.27.so.zip \
@@ -21,7 +21,7 @@ FILES_SOLIBSDEV = ""
 # Disable anything auto depending
 EXCLUDE_FROM_SHLIBS = "1"
 
-PRIVATE_LIBS_${PN} = "libm-2.27.so"
+PRIVATE_LIBS:${PN} = "libm-2.27.so"
 
 do_configure() {
 }
@@ -57,7 +57,7 @@ do_install() {
     ln -s /lib/libm-2.27.so  ${D}/lib/libm.so
 }
 
-FILES_${PN} = "/usr/lib/* /lib"
-FILES_${PN}-dev = "/usr/include/*"
+FILES:${PN} = "/usr/lib/* /lib"
+FILES:${PN}-dev = "/usr/include/*"
 
-INSANE_SKIP_${PN} += "already-stripped dev-so"
+INSANE_SKIP:${PN} += "already-stripped dev-so"

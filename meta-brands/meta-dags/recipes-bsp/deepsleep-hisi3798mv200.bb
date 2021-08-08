@@ -4,7 +4,7 @@ PRIORITY = "optional"
 LICENSE = "CLOSED"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-RDEPENDS_${PN} = "harfbuzz"
+RDEPENDS:${PN} = "harfbuzz"
 
 PR = "r0"
 
@@ -28,4 +28,4 @@ do_install() {
 do_package_qa() {
 }
 
-FILES_${PN}  = "${bindir}/deepsleep ${sysconfdir}/init.d"
+FILES:${PN}  = "${bindir}/deepsleep ${sysconfdir}/init.d"

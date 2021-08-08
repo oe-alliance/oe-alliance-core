@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=7c01ce978e205f99897d26c061b2c09a"
 PR = "r1"
 
 DEPENDS = "libvupl libgles"
-RDEPENDS_${PN} = "libvupl libgles"
+RDEPENDS:${PN} = "libvupl libgles"
 
 SRC_URI = "http://code.vuplus.com/download/release/support/${PN}-${PV}.${PR}.tar.gz"
 

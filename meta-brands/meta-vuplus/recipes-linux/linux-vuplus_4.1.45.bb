@@ -4,7 +4,7 @@ SECTION = "kernel"
 
 MODULE = "linux-4.1.45"
 
-MACHINE_KERNEL_PR_append = "oea4.2-r6"
+MACHINE_KERNEL_PR:append = "oea4.2-r6"
 
 inherit kernel machine_kernel_pr
 
@@ -68,9 +68,9 @@ KERNEL_OBJECT_SUFFIX = "ko"
 KERNEL_IMAGEDEST = "tmp"
 KERNEL_OUTPUT = "arch/${ARCH}/boot/${KERNEL_IMAGETYPE}"
 
-FILES_${KERNEL_PACKAGE_NAME}-image = "/${KERNEL_IMAGEDEST}/zImage"
+FILES:${KERNEL_PACKAGE_NAME}-image = "/${KERNEL_IMAGEDEST}/zImage"
 
-kernel_do_install_append() {
+kernel_do_install:append() {
         install -d ${D}/${KERNEL_IMAGEDEST}
         install -m 0755 ${KERNEL_OUTPUT} ${D}/${KERNEL_IMAGEDEST}
 }
@@ -83,7 +83,7 @@ kernel_do_compile() {
         fi
 }
 
-pkg_postinst_kernel-image () {
+pkg_postinst:kernel-image () {
         if [ -d /proc/stb ] ; then
                 dd if=/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE} of=/dev/${MTD_KERNEL}
         fi
@@ -91,10 +91,10 @@ pkg_postinst_kernel-image () {
         true
 }
 
-pkg_postrm_kernel-image () {
+pkg_postrm:kernel-image () {
 }
 
-FILESEXTRAPATHS_prepend := "${THISDIR}/linux-vuplus-${KV}:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/linux-vuplus-${KV}:"
 
 do_rm_work() {
 }

@@ -17,4 +17,4 @@ do_install() {
     install -m 0644 rtlbt/rtl8723d_fw ${D}${nonarch_base_libdir}/firmware/rtlbt/
 }
 
-FILES_${PN} += "${nonarch_base_libdir}/firmware"
+FILES:${PN} += "${nonarch_base_libdir}/firmware"

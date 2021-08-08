@@ -19,10 +19,10 @@ inherit update-rc.d
 
 INHIBIT_PACKAGE_STRIP = "1"
 
-FILES_${PN} += "${sysconfdir}/modules-load.d/_${MACHINE}.conf"
-FILES_${PN} += "/lib/modules/${KV}/extra"
-FILES_${PN} += "/usr/bin/komession"
-FILES_${PN} += "${sysconfdir}/init.d"
+FILES:${PN} += "${sysconfdir}/modules-load.d/_${MACHINE}.conf"
+FILES:${PN} += "/lib/modules/${KV}/extra"
+FILES:${PN} += "/usr/bin/komession"
+FILES:${PN} += "${sysconfdir}/init.d"
 
 do_compile() {
 }
@@ -55,4 +55,4 @@ do_install() {
 	install -m 0755 ${S}/zload-dinobot ${D}${sysconfdir}/init.d
 }
 
-INSANE_SKIP_${PN} += "already-stripped ldflags"
+INSANE_SKIP:${PN} += "already-stripped ldflags"

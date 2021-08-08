@@ -2,12 +2,12 @@ require vuplus-platform-util.inc
 
 COMPATIBLE_MACHINE = "^(vuduo4kse)$"
 
-RDEPENDS_${PN} += "mmc-utils"
+RDEPENDS:${PN} += "mmc-utils"
 
 PV="17.1"
 SRCDATE = "20210527"
 SRCDATE_PR = "r0"
-PR_append = ".0"
+PR:append = ".0"
 
 S="${WORKDIR}/platform-util-vuduo4kse"
 

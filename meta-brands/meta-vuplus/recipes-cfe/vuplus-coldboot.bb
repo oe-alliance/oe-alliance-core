@@ -20,19 +20,19 @@ do_install() {
     install -m 0755 ${WORKDIR}/coldboot ${D}/usr/bin/coldboot
 }
 
-pkg_preinst_${PN}_prepend() {
+pkg_preinst:${PN}:prepend() {
 #!/bin/sh
 if [ -z "$D" ]; then
 	chmod -x $D/etc/init.d/coldboot
 fi
 }
 
-pkg_postinst_${PN}_append() {
+pkg_postinst:${PN}:append() {
 #!/bin/sh
 chmod 755 $D/etc/init.d/coldboot
 }
 
-pkg_prerm_${PN}() {
+pkg_prerm:${PN}() {
 #!/bin/sh
 exit 0
 }

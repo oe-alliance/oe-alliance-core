@@ -11,7 +11,7 @@ inherit update-rc.d
 INITSCRIPT_PARAMS = "start 60 S ."
 INITSCRIPT_NAME = "vuplus-wifi-init.sh"
 
-do_install_append() {
+do_install:append() {
 	install -d ${D}${INIT_D_DIR}
 	install -m 0755 ${S}/${INITSCRIPT_NAME} ${D}${INIT_D_DIR}/${INITSCRIPT_NAME}
 }

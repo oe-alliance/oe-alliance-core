@@ -13,8 +13,8 @@ PR = "r13"
 PACKAGES = "gigablue-blindscan-dvbs-utils-${MACHINE} gigablue-blindscan-dvbc-utils-${MACHINE}"
 
 PROVIDES += "virtual/blindscan-dvbc virtual/blindscan-dvbs"
-RPROVIDES_gigablue-blindscan-dvbc-utils-${MACHINE} += "virtual/blindscan-dvbc"
-RPROVIDES_gigablue-blindscan-dvbs-utils-${MACHINE} += "virtual/blindscan-dvbs"
+RPROVIDES:gigablue-blindscan-dvbc-utils-${MACHINE} += "virtual/blindscan-dvbc"
+RPROVIDES:gigablue-blindscan-dvbs-utils-${MACHINE} += "virtual/blindscan-dvbs"
 
 S = "${WORKDIR}/blindscan-utils"
 
@@ -24,8 +24,8 @@ do_install() {
     install -m 0755 "${S}/gigablue_blindscan" "${D}/${bindir}"
 }
 
-FILES_gigablue-blindscan-dvbc-utils-${MACHINE} = "${bindir}/tda1002x"
-FILES_gigablue-blindscan-dvbs-utils-${MACHINE} = "${bindir}/gigablue_blindscan"
+FILES:gigablue-blindscan-dvbc-utils-${MACHINE} = "${bindir}/tda1002x"
+FILES:gigablue-blindscan-dvbs-utils-${MACHINE} = "${bindir}/gigablue_blindscan"
 
 do_prepare_recipe_sysroot[noexec] = "1"
 INHIBIT_PACKAGE_STRIP = "1"

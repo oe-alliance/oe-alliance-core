@@ -5,8 +5,8 @@ require conf/machine/include/tune-cortexa15.inc
 # We know about rtc
 include conf/machine/include/build-extras.inc
 
-PACKAGECONFIG_GL_pn-qtbase = " "
-PACKAGECONFIG_append_pn-qtbase += " gles2 linuxfb"
+PACKAGECONFIG_GL:pn-qtbase = " "
+PACKAGECONFIG:append:pn-qtbase += " gles2 linuxfb"
 
 MACHINE_FEATURES += "3dtv alsa hdmicec switchoff blindscan-tbs HDMI qthbbtv qtstalker openhbbtv hbbtv-browser-webkit qtevent1"
 
@@ -72,7 +72,7 @@ PREFERRED_VERSION_linux-abcom = "4.4.35"
 
 IMAGEDIRRECOVERY ?= "${MACHINE}-recovery"
 
-IMAGE_CMD_abfastboot8gb_append = " \
+IMAGE_CMD:abfastboot8gb:append = " \
     mkdir -p ${DEPLOY_DIR_IMAGE}/${IMAGEDIRRECOVERY}/${IMAGEDIR}; \
     cp ${IMGDEPLOYDIR}/bootoptions.img ${DEPLOY_DIR_IMAGE}/${IMAGEDIRRECOVERY}/${IMAGEDIR}/bootoptions.img; \
     cp ${IMGDEPLOYDIR}/misc-boot.img ${DEPLOY_DIR_IMAGE}/${IMAGEDIRRECOVERY}/${IMAGEDIR}/misc-boot.img; \

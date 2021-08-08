@@ -1,7 +1,7 @@
 include conf/machine/include/dags-oem.inc
 
-PACKAGECONFIG_GL_pn-qtbase = "gles2 eglfs linuxfb"
-PACKAGECONFIG_FB_pn-qtbase = " "
+PACKAGECONFIG_GL:pn-qtbase = "gles2 eglfs linuxfb"
+PACKAGECONFIG_FB:pn-qtbase = " "
 
 KERNEL_FILE = "oe_kernel.bin"
 ROOTFS_FILE = "oe_rootfs.bin"
@@ -19,12 +19,12 @@ UBI_VOLNAME = "rootfs"
 MKUBIFS_ARGS = "-m 2048 -e 126976 -c 4096 -F"
 UBINIZE_ARGS = "-m 2048 -p 128KiB"
 
-IMAGE_CMD_ubifs_prepend = " \
+IMAGE_CMD:ubifs:prepend = " \
     rm -rf ${IMAGE_ROOTFS}/boot/*; \
     rm -rf ${IMAGE_ROOTFS}/tmp/*; \
     "
 
-IMAGE_CMD_ubi_append = "\
+IMAGE_CMD:ubi:append = "\
     mkdir -p ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}; \
     ${@bb.utils.contains("MACHINE_FEATURES", "bootsplash", "cp ${DEPLOY_DIR_IMAGE}/${BOOTLOGO_FILENAME} ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${BOOTLOGO_FILENAME};" , "", d)} \
     ${@bb.utils.contains("MACHINE", "dags7356", "cp ${DEPLOY_DIR_IMAGE}/${SPLASH1_BMP} ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/splash1.bmp;" , "", d)} \

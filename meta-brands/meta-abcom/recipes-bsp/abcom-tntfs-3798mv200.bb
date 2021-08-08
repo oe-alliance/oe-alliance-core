@@ -28,4 +28,4 @@ do_install() {
     echo tntfs >> ${D}/${sysconfdir}/modules-load.d/tntfs.conf
 }
 
-FILES_${PN} += "${sysconfdir}/modules-load.d/tntfs.conf /lib/modules/${KV}/extra"
+FILES:${PN} += "${sysconfdir}/modules-load.d/tntfs.conf /lib/modules/${KV}/extra"

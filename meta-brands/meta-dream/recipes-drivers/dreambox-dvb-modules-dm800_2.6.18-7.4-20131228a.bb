@@ -30,13 +30,13 @@ do_install() {
 
 PACKAGES = "${PN}"
 
-RDEPENDS_${PN} += "dreambox-secondstage-${MACHINE} kernel-${DM_LOCALVERSION}"
+RDEPENDS:${PN} += "dreambox-secondstage-${MACHINE} kernel-${DM_LOCALVERSION}"
 
 # We don't use KERNEL_VERSION in this recipe, because the
 # precompiled modules depend on a specific version.
 DM_LOCALVERSION = "${@'-'.join('${PV}'.split('-')[:-1])}-${MACHINE}"
 DRIVERDATE = "${@'${PV}'.split('-')[-1]}"
 
-FILESEXTRAPATHS_prepend := "${THISDIR}/dreambox-dvb-modules:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/dreambox-dvb-modules:"
 
-FILES_${PN} += "${sysconfdir}/modules-load.d/${PN}.conf"
+FILES:${PN} += "${sysconfdir}/modules-load.d/${PN}.conf"

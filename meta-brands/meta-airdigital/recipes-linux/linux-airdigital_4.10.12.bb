@@ -13,15 +13,15 @@ SRC_URI[arm.sha256sum] = "67a3ac98727595a399d5c399d3b66a7fadbe8136ac517e08decba5
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR_append = "16"
+MACHINE_KERNEL_PR:append = "16"
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
 # package names instead, to allow only one kernel to be installed.
-PKG_${KERNEL_PACKAGE_NAME}-base = "kernel-base"
-PKG_${KERNEL_PACKAGE_NAME}-image = "kernel-image"
-RPROVIDES_${KERNEL_PACKAGE_NAME}-base = "kernel-${KERNEL_VERSION}"
-RPROVIDES_${KERNEL_PACKAGE_NAME}-image = "kernel-image-${KERNEL_VERSION}"
+PKG:${KERNEL_PACKAGE_NAME}-base = "kernel-base"
+PKG:${KERNEL_PACKAGE_NAME}-image = "kernel-image"
+RPROVIDES:${KERNEL_PACKAGE_NAME}-base = "kernel-${KERNEL_VERSION}"
+RPROVIDES:${KERNEL_PACKAGE_NAME}-image = "kernel-image-${KERNEL_VERSION}"
 
 SRC_URI += "http://source.mynonpublic.com/zgemma/linux-${PV}-${ARCH}.tar.gz;name=${ARCH} \
     file://defconfig \
@@ -43,13 +43,13 @@ SRC_URI += "http://source.mynonpublic.com/zgemma/linux-${PV}-${ARCH}.tar.gz;name
     file://0006-dvb-media-tda18250-support-for-new-silicon-tuner.patch \
     "
 
-SRC_URI_append_mipsel = " \
+SRC_URI:append:mipsel = " \
     file://0001-add-dmx-source-timecode.patch \
     file://0002-nand-ecc-strength-and-bitflip.patch \
     file://sdio-pinmux.patch \
     "
 
-SRC_URI_append_arm = " \
+SRC_URI:append:arm = " \
     file://export_pmpoweroffprepare.patch \
     file://findkerneldevice.sh \
     file://reserve_dvb_adapter_0.patch \
@@ -68,11 +68,11 @@ KERNEL_EXTRA_ARGS = "EXTRA_CFLAGS=-Wno-attribute-alias"
 
 # Linux MIPS Models
 
-KERNEL_OUTPUT_mips = "vmlinux.gz"
-KERNEL_OUTPUT_DIR_mips = "."
-KERNEL_IMAGETYPE_mips = "vmlinux.gz"
+KERNEL_OUTPUT:mips = "vmlinux.gz"
+KERNEL_OUTPUT_DIR:mips = "."
+KERNEL_IMAGETYPE:mips = "vmlinux.gz"
 
-pkg_postinst_kernel-image_mips () {
+pkg_postinst:kernel-image:mips () {
 	if [ "x$D" == "x" ]; then
 		if [ -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE} ] ; then
 			flash_erase /dev/${MTD_KERNEL} 0 0
@@ -84,21 +84,21 @@ pkg_postinst_kernel-image_mips () {
 
 # Linux ARM Models
 
-KERNEL_OUTPUT_arm = "arch/${ARCH}/boot/${KERNEL_IMAGETYPE}"
-KERNEL_IMAGETYPE_arm = "zImage"
-FILES_${KERNEL_PACKAGE_NAME}-image_arm = "/${KERNEL_IMAGEDEST}/findkerneldevice.sh"
+KERNEL_OUTPUT:arm = "arch/${ARCH}/boot/${KERNEL_IMAGETYPE}"
+KERNEL_IMAGETYPE:arm = "zImage"
+FILES:${KERNEL_PACKAGE_NAME}-image:arm = "/${KERNEL_IMAGEDEST}/findkerneldevice.sh"
 
-kernel_do_configure_prepend_arm() {
+kernel_do_configure:prepend:arm() {
 	install -d ${B}/usr
 	install -m 0644 ${WORKDIR}/initramfs-subdirboot.cpio.gz ${B}/
 }
 
-kernel_do_install_append_arm() {
+kernel_do_install:append:arm() {
         install -d ${D}/${KERNEL_IMAGEDEST}
         install -m 0755 ${WORKDIR}/findkerneldevice.sh ${D}/${KERNEL_IMAGEDEST}
 }
 
-pkg_postinst_kernel-image_arm () {
+pkg_postinst:kernel-image:arm () {
     if [ "x$D" == "x" ]; then
         if [ -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE} ] ; then
             /${KERNEL_IMAGEDEST}/./findkerneldevice.sh

@@ -2,7 +2,7 @@ SUMMARY = "Dreambox TPM Daemon"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "CLOSED"
-RDEPENDS_${PN} = "dreambox-compat wdog libssl0.9.8"
+RDEPENDS:${PN} = "dreambox-compat wdog libssl0.9.8"
 PR = "r6"
 require conf/license/license-close.inc
 
@@ -20,7 +20,7 @@ INITSCRIPT_NAME = "${PN}"
 INHIBIT_PACKAGE_STRIP = "1"
 INITSCRIPT_PARAMS = "start 60 S ."
 
-INSANE_SKIP_${PN} += "file-rdeps"
+INSANE_SKIP:${PN} += "file-rdeps"
 
 inherit update-rc.d
 

@@ -5,7 +5,7 @@ require conf/license/license-close.inc
 PR = "${PKGDATE}"
 
 PROVIDES += "kodiegl"
-RPROVIDES_${PN} += "kodiegl"
+RPROVIDES:${PN} += "kodiegl"
 
 SRC_URI = "http://code.vuplus.com/download/release/kodi/KodiGLESPL_${MACHINE}_${PKGDATE}.tar.gz"
 
@@ -25,10 +25,10 @@ do_install() {
 do_package_qa() {
 }
 
-INSANE_SKIP_${PN} += "already-stripped"
+INSANE_SKIP:${PN} += "already-stripped"
 INHIBIT_PACKAGE_STRIP = "1"
 
-FILES_${PN}="${libdir} ${bindir}"
-FILES_${PN}-dev = "${includedir}"
+FILES:${PN}="${libdir} ${bindir}"
+FILES:${PN}-dev = "${includedir}"
 
 PACKAGE_ARCH = "${MACHINE}"

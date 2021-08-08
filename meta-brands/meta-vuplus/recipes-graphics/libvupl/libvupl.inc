@@ -4,10 +4,10 @@ LICENSE = "CLOSED"
 require conf/license/license-close.inc
 PACKAGE_ARCH := "${MACHINE_ARCH}"
 
-RDEPENDS_${PN} = "vuplus-libgles-${MACHINE}"
+RDEPENDS:${PN} = "vuplus-libgles-${MACHINE}"
 
 PROVIDES += "libvupl"
-RPROVIDES_${PN} += "libvupl"
+RPROVIDES:${PN} += "libvupl"
 
 PR = "${SRCDATE}.${SRCDATE_PR}"
 

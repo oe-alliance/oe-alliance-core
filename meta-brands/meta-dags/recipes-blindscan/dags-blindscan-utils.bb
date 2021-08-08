@@ -1,7 +1,7 @@
 SUMMARY = "Utilities for transponder & dvb-s blindscan"
 SECTION = "base"
 PRIORITY = "optional"
-RDEPENDS_${PN} = "ncurses"
+RDEPENDS:${PN} = "ncurses"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
@@ -11,7 +11,7 @@ require conf/license/license-close.inc
 PACKAGES = "dags-blindscan-dvbs-utils"
 
 PROVIDES += "virtual/blindscan-dvbs"
-RPROVIDES_dags-blindscan-dvbs-utils += "virtual/blindscan-dvbs"
+RPROVIDES:dags-blindscan-dvbs-utils += "virtual/blindscan-dvbs"
 
 SRC_URI = "file://dags_blindscan"
 
@@ -20,7 +20,7 @@ PR = "r0"
 
 S = "${WORKDIR}"
 
-FILES_dags-blindscan-dvbs-utils = "${bindir}/*_blindscan"
+FILES:dags-blindscan-dvbs-utils = "${bindir}/*_blindscan"
 
 do_install() {
     install -d ${D}/${bindir}/

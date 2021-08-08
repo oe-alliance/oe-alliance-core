@@ -8,7 +8,7 @@ PACKAGE_ARCH := "${MACHINEBUILD}"
 require conf/license/license-gplv2.inc
 
 PR = "r1"
-ALLOW_EMPTY_${PN} = "1"
+ALLOW_EMPTY:${PN} = "1"
 
 DOWNLOADNAME ?= "${MACHINEBUILD}"
 CHIPNAME ?= "7439b0"

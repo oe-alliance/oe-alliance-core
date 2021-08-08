@@ -128,9 +128,9 @@ KERNEL_MODULE_PACKAGE_SUFFIX = ""
 TARGET_ARCH = "sh4"
 DEFAULTTUNE = "sh4"
 
-GCCVERSION_sh4 = "4.9.4"
+GCCVERSION:sh4 = "4.9.4"
 
-GLIBCVERSION_sh4 = "2.23"
+GLIBCVERSION:sh4 = "2.23"
 OLDEST_KERNEL = "2.6.32"
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-fulan"
@@ -175,7 +175,7 @@ KERNEL_IMAGETYPE = "uImage"
 
 JFFS2_ERASEBLOCK = "0x20000"
 JFFS2_ENDIANNESS = "${@oe.utils.conditional('SITEINFO_ENDIANNESS', 'le', '--little-endian', '--big-endian', d)}"
-EXTRA_IMAGECMD_jffs2 = "--pad ${JFFS2_ENDIANNESS} --eraseblock=${JFFS2_ERASEBLOCK} --no-cleanmarkers"
+EXTRA_IMAGECMD:jffs2 = "--pad ${JFFS2_ENDIANNESS} --eraseblock=${JFFS2_ERASEBLOCK} --no-cleanmarkers"
 MKUBIFS_ARGS = "--pad ${JFFS2_ENDIANNESS} --eraseblock=${JFFS2_ERASEBLOCK} --no-cleanmarkers"
 
 IMAGE_FSTYPES ?= "jffs2"
@@ -188,11 +188,11 @@ IMAGE_FSTYPES ?= "jffs2"
 IMAGE_CLASSES += "usb_image-spark71xx"
 INITRAMFS_FSTYPES = "ext2.gz"
 
-IMAGE_CMD_jffs2_prepend = " \
+IMAGE_CMD:jffs2:prepend = " \
     rm -rf ${IMAGE_ROOTFS}/tmp/*; \
     "
 
-IMAGE_CMD_jffs2_append = "; \
+IMAGE_CMD:jffs2:append = "; \
     mkdir -p ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}; \
     mv ${IMGDEPLOYDIR}/${IMAGE_NAME}.rootfs.jffs2 ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${ROOTFS_FILE}; \
     cp ${DEPLOY_DIR_IMAGE}/uImage ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${KERNEL_FILE}; \

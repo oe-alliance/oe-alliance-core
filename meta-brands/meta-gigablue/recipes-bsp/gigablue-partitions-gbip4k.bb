@@ -21,7 +21,7 @@ inherit update-rc.d
 INITSCRIPT_NAME = "flash-apploader"
 INITSCRIPT_PARAMS = "start 90 S ."
 
-ALLOW_EMPTY_${PN} = "1"
+ALLOW_EMPTY:${PN} = "1"
 do_configure[nostamp] = "1"
 
 do_install() {
@@ -33,7 +33,7 @@ do_install() {
     install -m 0755 ${WORKDIR}/flash-apploader ${D}${sysconfdir}/init.d/flash-apploader
 }
 
-FILES_${PN} = "/usr/share ${sysconfdir}"
+FILES:${PN} = "/usr/share ${sysconfdir}"
 
 do_deploy() {
     install -d ${DEPLOY_DIR_IMAGE}/${MACHINEBUILD}-partitions
@@ -53,4 +53,4 @@ addtask deploy before do_build after do_install
 SRC_URI[md5sum] = "5b743758e616c08f214eed0c12a42b7e"
 SRC_URI[sha256sum] = "9e3b0b94930455a757611fd4dddea620d6a1fae9e76bc1744c177e96aeb580d3"
 
-INSANE_SKIP_${PN} += "already-stripped"
+INSANE_SKIP:${PN} += "already-stripped"

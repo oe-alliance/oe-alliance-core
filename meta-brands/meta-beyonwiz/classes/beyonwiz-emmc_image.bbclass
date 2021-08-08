@@ -1,6 +1,6 @@
 inherit image_types
 
-IMAGE_TYPEDEP_beyonwizemmc = "ext4"
+IMAGE_TYPEDEP:beyonwizemmc = "ext4"
 
 do_image_beyonwizemmc[depends] = " \
     parted-native:do_populate_sysroot \
@@ -10,7 +10,7 @@ do_image_beyonwizemmc[depends] = " \
     beyonwiz-buildimage-native:do_populate_sysroot \
     "
 
-IMAGE_CMD_beyonwizemmc () {
+IMAGE_CMD:beyonwizemmc () {
     mkdir -p ${IMGDEPLOYDIR}/userdata
     mkdir -p ${IMGDEPLOYDIR}/userdata/linuxrootfs1
     mkdir -p ${IMGDEPLOYDIR}/userdata/linuxrootfs2

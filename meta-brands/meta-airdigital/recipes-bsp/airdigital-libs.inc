@@ -3,7 +3,7 @@ SECTION = "base"
 PRIORITY = "required"
 LICENSE = "CLOSED"
 DEPENDS = "zlib libpng freetype curl libxml2 libjpeg-turbo harfbuzz"
-RDEPENDS_${PN} = "libbluray"
+RDEPENDS:${PN} = "libbluray"
 PR = "${SRCDATE}"
 
 SRC_URI = "http://source.mynonpublic.com/zgemma/zgemma-libs-${HICHIPSET}-${SRCDATE}.zip"
@@ -31,6 +31,6 @@ do_install() {
 do_package_qa() {
 }
 
-FILES_${PN} = "${libdir}/hisilicon/*"
+FILES:${PN} = "${libdir}/hisilicon/*"
 
-INSANE_SKIP_${PN} += "ldflags already-stripped dev-so"
+INSANE_SKIP:${PN} += "ldflags already-stripped dev-so"

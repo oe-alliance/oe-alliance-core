@@ -21,7 +21,7 @@ do_configure[noexec] = "1"
 do_package_qa() {
 }
 
-do_install_append() {
+do_install:append() {
     install -d ${D}${libdir}
     install -m 0755 ${S}/libnxpl.so ${D}${libdir}/
     install -m 0755 ${S}/libnexus.so ${D}${libdir}/
@@ -39,15 +39,15 @@ do_install_append() {
     && ln -sf libgbm.so.1 libgbm.so)
 }
 
-FILES_${PN} = "/usr/lib/*"
-FILES_${PN}-dev = "/usr/include/*"
+FILES:${PN} = "/usr/lib/*"
+FILES:${PN}-dev = "/usr/include/*"
 
-RPROVIDES_${PN} = "virtual/libgles2 virtual/libgles1 virtual/egl virtual/libgbm libnxpl.so libnexus.so libv3ddriver.so libEGL.so.1.4 libEGL.so.1 libEGL.so libGLESv1_CM.so.1.1 libGLESv1_CM.so.1 libGLESv1_CM.so libGLESv2.so.2.0 libGLESv2.so.2 libGLESv2.so libgbm.so libgbm.so.1"
+RPROVIDES:${PN} = "virtual/libgles2 virtual/libgles1 virtual/egl virtual/libgbm libnxpl.so libnexus.so libv3ddriver.so libEGL.so.1.4 libEGL.so.1 libEGL.so libGLESv1_CM.so.1.1 libGLESv1_CM.so.1 libGLESv1_CM.so libGLESv2.so.2.0 libGLESv2.so.2 libGLESv2.so libgbm.so libgbm.so.1"
 
-INSANE_SKIP_${PN} += "already-stripped dev-so ldflags"
+INSANE_SKIP:${PN} += "already-stripped dev-so ldflags"
 
 # The driver is missing EGL/GLES headers and pkgconfig files. Handle
 # the conflicts as mesa and the driver are both providing the same shared libraries.
-RREPLACES_${PN} = "libegl libegl1 libgles1 libglesv1-cm1 libgles2 libglesv2-2 libgbm"
-RPROVIDES_${PN} += "libegl libegl1 libgles1 libglesv1-cm1 libgles2 libglesv2-2 libgbm"
-RCONFLICTS_${PN} = "libegl libegl1 libgles1 libglesv1-cm1 libgles2 libglesv2-2 libgbm"
+RREPLACES:${PN} = "libegl libegl1 libgles1 libglesv1-cm1 libgles2 libglesv2-2 libgbm"
+RPROVIDES:${PN} += "libegl libegl1 libgles1 libglesv1-cm1 libgles2 libglesv2-2 libgbm"
+RCONFLICTS:${PN} = "libegl libegl1 libgles1 libglesv1-cm1 libgles2 libglesv2-2 libgbm"

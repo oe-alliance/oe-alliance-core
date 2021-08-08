@@ -8,7 +8,7 @@ PACKAGE_ARCH := "${MACHINE_ARCH}"
 require conf/license/license-gplv2.inc
 
 PR = "r0"
-ALLOW_EMPTY_${PN} = "1"
+ALLOW_EMPTY:${PN} = "1"
 
 SRC_URI = "http://source.mynonpublic.com/octagon/vmlinuz-initrd-${MACHINE}-${SRCDATE}.zip"
 

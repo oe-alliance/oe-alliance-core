@@ -4,7 +4,7 @@ require conf/license/license-gplv2.inc
 COMPATIBLE_MACHINE = "^(u5|u51|u52|u53|u54|u56|u57|u571|u532|u533|u5pvr)$"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-RDEPENDS_${PN} = "e2fsprogs-resize2fs"
+RDEPENDS:${PN} = "e2fsprogs-resize2fs"
 PV = "1.0"
 PR = "r0"
 

@@ -4,7 +4,7 @@ PRIORITY = "optional"
 LICENSE = "CLOSED"
 PACKAGE_ARCH = "${MACHINEBUILD}"
 
-RDEPENDS_${PN} = "libsdl"
+RDEPENDS:${PN} = "libsdl"
 
 COMPATIBLE_MACHINE = "^(gbmv200)$"
 
@@ -25,7 +25,7 @@ do_install() {
 do_package_qa() {
 }
 
-FILES_${PN}  = "${bindir}/libreader"
+FILES:${PN}  = "${bindir}/libreader"
 
 SRC_URI[md5sum] = "979968a04bc0a04b856dfa13c6735bd7"
 SRC_URI[sha256sum] = "22711ee3d0e0956665becee8527dc2ea2ac7728ab909feded518ae38faa76bf4"

@@ -3,7 +3,7 @@ LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://${COREBASE}/meta/files/common-licenses/GPL-2.0;md5=801f80980d171dd6425610833a22dbe6"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
-RDEPENDS_${PN} = "enigma2 png-util"
+RDEPENDS:${PN} = "enigma2 png-util"
 
 SRC_URI = "file://plugin.py"
 
@@ -19,5 +19,5 @@ do_install() {
     touch ${D}${PLUGINPATH}/__init__.py
 }
 
-FILES_${PN} = "${PLUGINPATH}/*.pyo"
+FILES:${PN} = "${PLUGINPATH}/*.pyo"
 

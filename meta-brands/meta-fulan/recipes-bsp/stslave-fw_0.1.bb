@@ -5,7 +5,7 @@ inherit allarch
 require conf/license/license-close.inc
 
 # fix architecture mismatch QA error
-INSANE_SKIP_${PN} = "arch"
+INSANE_SKIP:${PN} = "arch"
 
 PR = "r7"
 
@@ -15,7 +15,7 @@ SRC_URI = "file://${BINARY_STSLAVE_FW_PATH}/${MACHINE}/audio.elf \
     file://${BINARY_STSLAVE_FW_PATH}/${MACHINE}/video.elf \
 "
 
-FILES_${PN} += "/boot"
+FILES:${PN} += "/boot"
 
 do_install () {
     install -d ${D}/boot

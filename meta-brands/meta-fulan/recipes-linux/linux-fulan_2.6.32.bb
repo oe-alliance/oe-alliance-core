@@ -8,25 +8,25 @@ SRCDATE = "20160701"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR_append = ".9"
+MACHINE_KERNEL_PR:append = ".9"
 
 inherit kernel machine_kernel_pr
 
-DEPENDS_append_spark7162 = " \
+DEPENDS:append_spark7162 = " \
   stlinux24-sh4-stx7105-fdma-firmware \
 "
 
-DEPENDS_append_spark = " \
+DEPENDS:append_spark = " \
   stlinux24-sh4-stx7111-fdma-firmware \
 "
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
 # package names instead, to allow only one kernel to be installed.
-PKG_${KERNEL_PACKAGE_NAME}-base = "kernel-base"
-PKG_${KERNEL_PACKAGE_NAME}-image = "kernel-image"
-RPROVIDES_${KERNEL_PACKAGE_NAME}-base = "kernel-${KERNEL_VERSION}"
-RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
+PKG:${KERNEL_PACKAGE_NAME}-base = "kernel-base"
+PKG:${KERNEL_PACKAGE_NAME}-image = "kernel-image"
+RPROVIDES:${KERNEL_PACKAGE_NAME}-base = "kernel-${KERNEL_VERSION}"
+RPROVIDES:kernel-image = "kernel-image-${KERNEL_VERSION}"
 
 STM_PATCH_STR = "0217"
 LINUX_VERSION = "2.6.32.71"
@@ -65,11 +65,11 @@ SRC_URI = "git://github.com/Duckbox-Developers/linux-sh4-2.6.32.71.git;protocol=
     file://taskstats.patch;patch=1 \
 "
 
-SRC_URI_append_spark7162 = " \
+SRC_URI:append_spark7162 = " \
     file://linux-sh4-spark7162_setup_stm24_${STM_PATCH_STR}.patch;patch=1 \
 "
 
-SRC_URI_append_spark = " \
+SRC_URI:append_spark = " \
     file://linux-sh4-spark_setup_stm24_${STM_PATCH_STR}.patch;patch=1 \
     file://linux-sh4-lirc_stm_stm24_${STM_PATCH_STR}.patch;patch=1 \
     file://linux-sh4-spark-af901x-NXP-TDA18218.patch;patch=1 \
@@ -88,27 +88,27 @@ PARALLEL_MAKEINST = ""
 
 # bitbake.conf only prepends PARALLEL make in tasks called do_compile, which isn't the case for compile_modules
 # So explicitly enable it for that in here
-EXTRA_OEMAKE_prepend = " ${PARALLEL_MAKE} "
+EXTRA_OEMAKE:prepend = " ${PARALLEL_MAKE} "
 
 PACKAGES =+ "kernel-headers"
-FILES_kernel-headers = "${exec_prefix}/src/linux*"
-FILES_${KERNEL_PACKAGE_NAME}-dev += "${includedir}/linux"
-FILES_${KERNEL_PACKAGE_NAME}-image = "/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}"
+FILES:kernel-headers = "${exec_prefix}/src/linux*"
+FILES:${KERNEL_PACKAGE_NAME}-dev += "${includedir}/linux"
+FILES:${KERNEL_PACKAGE_NAME}-image = "/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}"
 
 KERNEL_CONFIG_COMMAND = "oe_runmake -C ${S} O=${B} oldconfig"
 
-do_configure_prepend() {
+do_configure:prepend() {
     oe_machinstall -m 0644 ${WORKDIR}/defconfig ${B}/.config
     sed -i "s#^\(CONFIG_EXTRA_FIRMWARE_DIR=\).*#\1\"${STAGING_DIR_HOST}/lib/firmware\"#" ${B}/.config;
 }
 
-do_shared_workdir_prepend() {
+do_shared_workdir:prepend() {
     # Workaround for missing dir required in latest oe
     mkdir -p ${B}/include/generated
     touch ${B}/include/generated/null
 }
 
-do_shared_workdir_append() {
+do_shared_workdir:append() {
     kerneldir=${STAGING_KERNEL_BUILDDIR}
     if [ -f include/linux/bounds.h ]; then
         mkdir -p $kerneldir/include/linux
@@ -125,7 +125,7 @@ do_shared_workdir_append() {
     fi
 }
 
-do_install_append() {
+do_install:append() {
     install -d ${D}${includedir}/linux	
     install -m 644 ${WORKDIR}/st-coprocessor.h ${D}${includedir}/linux
     oe_runmake headers_install INSTALL_HDR_PATH=${D}${exec_prefix}/src/linux-${KERNEL_VERSION} ARCH=$ARCH
@@ -138,7 +138,7 @@ do_uboot_mkimage() {
     :
 }
 
-pkg_postinst_kernel-image() {
+pkg_postinst:kernel-image() {
     if [ "x$D" == "x" ]; then
         if [ -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE} ] ; then
             if grep -q root=/dev/mtdblock6 /proc/cmdline; then

@@ -25,12 +25,12 @@ GLIBC_EXTRA_OECONF = "--with-tls \
     ${@bb.utils.contains('MACHINE', 'gb73625', '--with-__thread' , '', d)} \
 "
 
-IMAGE_CMD_ubifs_prepend = " \
+IMAGE_CMD:ubifs:prepend = " \
     rm -rf ${IMAGE_ROOTFS}/boot/*; \
     rm -rf ${IMAGE_ROOTFS}/tmp/*; \
     "
 
-IMAGE_CMD_ubi_append = "\
+IMAGE_CMD:ubi:append = "\
     mkdir -p ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}; \
     ${@bb.utils.contains("MACHINE_FEATURES", "gigabluelcd220", "cp ${DEPLOY_DIR_IMAGE}/lcdsplash220.bin ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/lcdsplash.bin;" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "gigabluelcd220", "cp ${DEPLOY_DIR_IMAGE}/lcdwarning220.bin ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/lcdwarning.bin;" , "", d)} \
@@ -54,12 +54,12 @@ IMAGE_CMD_ubi_append = "\
     rm -rf ${DEPLOY_DIR_IMAGE}/gigablue; \
     "
 
-IMAGE_CMD_jffs2_prepend = " \
+IMAGE_CMD:jffs2:prepend = " \
     rm -rf ${IMAGE_ROOTFS}/boot/*; \
     rm -rf ${IMAGE_ROOTFS}/tmp/*; \
     "
 
-IMAGE_CMD_jffs2_append = "; \
+IMAGE_CMD:jffs2:append = "; \
     mkdir -p ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}; \
     cp ${DEPLOY_DIR_IMAGE}/splash.bin ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/splash.bin; \
     mv ${IMGDEPLOYDIR}/${IMAGE_NAME}.rootfs.jffs2 ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${ROOTFS_FILE}; \

@@ -4,11 +4,11 @@ require conf/license/license-close.inc
 
 PR = "r3"
 
-RDEPENDS_${PN} = "ustslave"
+RDEPENDS:${PN} = "ustslave"
 
 SRC_URI = "file://init.sh4"
 
-FILES_${PN} = "/bin/devinit"
+FILES:${PN} = "/bin/devinit"
 
 do_install () {
     install -d ${D}/bin

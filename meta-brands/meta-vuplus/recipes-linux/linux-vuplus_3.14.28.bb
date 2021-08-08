@@ -4,7 +4,7 @@ SECTION = "kernel"
 
 MODULE = "linux-3.14.28"
 
-MACHINE_KERNEL_PR_append = "oea4.2-r4"
+MACHINE_KERNEL_PR:append = "oea4.2-r4"
 
 inherit kernel machine_kernel_pr
 
@@ -52,11 +52,11 @@ SRC_URI += "http://code.vuplus.com/download/release/kernel/${KERNELSRC};name=${M
     file://fix-multiple-defs-yyloc.patch \
     "
 
-SRC_URI_append_vuuno4k = " file://linux_prevent_usb_dma_from_bmem.patch"
-SRC_URI_append_vusolo4k = " file://linux_rpmb_not_alloc.patch file://fix_mmc_3.14.28-1.10.patch"
-SRC_URI_append_vuultimo4k = " file://bcmsysport_3.14.28-1.12.patch file://linux_prevent_usb_dma_from_bmem.patch"
+SRC_URI:append_vuuno4k = " file://linux_prevent_usb_dma_from_bmem.patch"
+SRC_URI:append_vusolo4k = " file://linux_rpmb_not_alloc.patch file://fix_mmc_3.14.28-1.10.patch"
+SRC_URI:append_vuultimo4k = " file://bcmsysport_3.14.28-1.12.patch file://linux_prevent_usb_dma_from_bmem.patch"
 
-SRC_URI_append = "${@bb.utils.contains("MACHINE_FEATURES", "dvbproxy", " file://linux_dvb_adapter.patch;patch=1;pnum=1", "", d)}"
+SRC_URI:append = "${@bb.utils.contains("MACHINE_FEATURES", "dvbproxy", " file://linux_dvb_adapter.patch;patch=1;pnum=1", "", d)}"
 
 S = "${WORKDIR}/linux"
 B = "${WORKDIR}/build"
@@ -67,9 +67,9 @@ KERNEL_OBJECT_SUFFIX = "ko"
 KERNEL_IMAGEDEST = "tmp"
 KERNEL_OUTPUT = "arch/${ARCH}/boot/${KERNEL_IMAGETYPE}"
 
-FILES_${KERNEL_PACKAGE_NAME}-image = "/${KERNEL_IMAGEDEST}/zImage"
+FILES:${KERNEL_PACKAGE_NAME}-image = "/${KERNEL_IMAGEDEST}/zImage"
 
-kernel_do_install_append() {
+kernel_do_install:append() {
         install -d ${D}/${KERNEL_IMAGEDEST}
         install -m 0755 ${KERNEL_OUTPUT} ${D}/${KERNEL_IMAGEDEST}
 }
@@ -82,7 +82,7 @@ kernel_do_compile() {
         fi
 }
 
-pkg_postinst_kernel-image () {
+pkg_postinst:kernel-image () {
         if [ -d /proc/stb ] ; then
                 dd if=/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE} of=/dev/mmcblk0p1
         fi
@@ -90,10 +90,10 @@ pkg_postinst_kernel-image () {
         true
 }
 
-pkg_postrm_kernel-image () {
+pkg_postrm:kernel-image () {
 }
 
-FILESEXTRAPATHS_prepend := "${THISDIR}/linux-vuplus-${KV}:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/linux-vuplus-${KV}:"
 
 do_rm_work() {
 }

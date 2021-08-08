@@ -1,7 +1,7 @@
 KV = "4.4.35"
 SRCDATE = "20191212"
 
-do_install_append() {
+do_install:append() {
 	install -d ${D}/lib/firmware/brcm
 	install -d ${D}/${sysconfdir}/modules-load.d
 	install -m 0644 ${WORKDIR}/brcmfmac43455-sdio.bin ${D}/lib/firmware/brcm
@@ -10,7 +10,7 @@ do_install_append() {
 	install -m 0644 ${WORKDIR}/*.conf ${D}/${sysconfdir}/modules-load.d
 }
 
-FILES_${PN} += "/lib/firmware/brcm"
+FILES:${PN} += "/lib/firmware/brcm"
 
 require dinobot-dvb-modules2.inc
 

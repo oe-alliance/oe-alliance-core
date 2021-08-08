@@ -6,7 +6,7 @@ PV="18.1"
 SRCDATE = "20210428"
 SRCDATE_PR = "r0"
 
-do_install_append() {
+do_install:append() {
 	install -d ${D}${sysconfdir}/udev
 	install -m 0755 ${S}/bcmwifi_firmware.sh ${D}${sysconfdir}/udev/
 	install -m 0755 ${S}/bcmwifi_drv.sh ${D}${sysconfdir}/udev/

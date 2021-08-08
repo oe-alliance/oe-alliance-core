@@ -5,7 +5,7 @@ do_install() {
 	install -m 0755 "${S}/dags_blindscan_${SOC_FAMILY}" "${D}/${bindir}/dags_blindscan"
 }
 
-FILES_dags-blindscan-utils-${SOC_FAMILY} = " \
+FILES:dags-blindscan-utils-${SOC_FAMILY} = " \
 	${bindir}/dags_blindscan \
 "
 

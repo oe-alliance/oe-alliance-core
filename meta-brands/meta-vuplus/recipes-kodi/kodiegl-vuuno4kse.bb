@@ -3,7 +3,7 @@ require kodiegl.inc
 COMPATIBLE_MACHINE = "^(vuuno4kse)$"
 
 PV = "1.0"
-PR_append = ".r0"
+PR:append = ".r0"
  
 PKGDATE="20190124p1"
 SRC_URI[md5sum]="10b6be8ee355ecc6f7c4a8f9971aed60"

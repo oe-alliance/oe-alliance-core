@@ -20,7 +20,7 @@ MACHINE_FEATURES += " mmc emmc swap"
 
 GLIBC_EXTRA_OECONF = "--with-tls --with-__thread"
 
-IMAGE_CMD_tar_prepend = "\
+IMAGE_CMD:tar:prepend = "\
     mkdir -p ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}; \
     ${@bb.utils.contains("MACHINE_FEATURES", "bootsplash", "cp ${DEPLOY_DIR_IMAGE}/${BOOTLOGO_FILENAME} ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${BOOTLOGO_FILENAME};" , "", d)} \
     cp ${DEPLOY_DIR_IMAGE}/${MACHINEBUILD}_boot.bin ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/boot.bin; \

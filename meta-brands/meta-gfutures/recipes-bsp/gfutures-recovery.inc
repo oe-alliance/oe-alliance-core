@@ -11,7 +11,7 @@ SRC_URI = "http://downloads.mutant-digital.net/${MACHINE}/${MACHINE}-recovery-${
 
 S = "${WORKDIR}"
 
-ALLOW_EMPTY_${PN} = "1"
+ALLOW_EMPTY:${PN} = "1"
 do_configure[nostamp] = "1"
 
 do_deploy() {
@@ -21,4 +21,4 @@ do_deploy() {
 
 addtask deploy before do_build after do_install
 
-INSANE_SKIP_${PN} += "already-stripped"
+INSANE_SKIP:${PN} += "already-stripped"

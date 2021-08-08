@@ -15,7 +15,7 @@ SRC_URI = "http://code.vuplus.com/download/chromium/chromium-vuplus_${MACHINE}_$
 PREFERRED_VERSION_nss = "3.17.3"
 
 DEPENDS = "nss" 
-RDEPENDS_${PN} = "nspr nss libxslt libcurl libudev ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-subprocess", "", d)}"
+RDEPENDS:${PN} = "nspr nss libxslt libcurl libudev ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-subprocess", "", d)}"
 
 S = "${WORKDIR}/chromium"
 
@@ -33,10 +33,10 @@ do_package_qa() {
 }
 
 PROVIDES += "virtual/chromium-browser"
-RPROVIDES_${PN} += "virtual/chromium-browser"
+RPROVIDES:${PN} += "virtual/chromium-browser"
 PROVIDES += "chromium-browser"
-RPROVIDES_${PN} += "chromium-browser"
+RPROVIDES:${PN} += "chromium-browser"
 
-FILES_${PN} = "/"
+FILES:${PN} = "/"
 
-INSANE_SKIP_${PN} += "already-stripped"
+INSANE_SKIP:${PN} += "already-stripped"

@@ -1,6 +1,6 @@
 inherit image_types
 
-IMAGE_TYPEDEP_uclanemmc = "ext4"
+IMAGE_TYPEDEP:uclanemmc = "ext4"
 
 do_image_uclanemmc[depends] = " \
     parted-native:do_populate_sysroot \
@@ -10,7 +10,7 @@ do_image_uclanemmc[depends] = " \
     uclan-buildimage-native:do_populate_sysroot \
     "
 
-IMAGE_CMD_uclanemmc () {
+IMAGE_CMD:uclanemmc () {
     mkdir -p ${IMGDEPLOYDIR}/userdata
     mkdir -p ${IMGDEPLOYDIR}/userdata/linuxrootfs1
     mkdir -p ${IMGDEPLOYDIR}/userdata/linuxrootfs2

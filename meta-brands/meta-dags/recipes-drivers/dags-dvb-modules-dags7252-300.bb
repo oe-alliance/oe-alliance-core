@@ -35,4 +35,4 @@ do_install() {
     echo bcmlinuxdvb_${MACHINEBUILD} _hwtype=\$hwtypenum >> ${D}/${sysconfdir}/modules-load.d/_${MACHINEBUILD}.conf
 }
 
-FILES_${PN} += "${sysconfdir}/modules-load.d/_${MACHINEBUILD}.conf"
+FILES:${PN} += "${sysconfdir}/modules-load.d/_${MACHINEBUILD}.conf"

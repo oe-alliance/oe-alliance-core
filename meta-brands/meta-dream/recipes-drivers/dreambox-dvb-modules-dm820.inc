@@ -14,14 +14,14 @@ S = "${WORKDIR}/dreambox-dvb-modules_${KV}-${MACHINE}-${DRIVERDATE}_${MACHINE}"
 INHIBIT_PACKAGE_STRIP = "1"
 INHIBIT_SYSROOT_STRIP = "1"
 
-INSANE_SKIP_${PN}_append = " already-stripped"
+INSANE_SKIP:${PN}:append = " already-stripped"
 
 do_install() {
     find . -depth -not -path "./patches*" -not -path "./.pc*" -print0 | cpio --null -pdlu ${D}
     chown -hR root:root ${D}
 }
 
-do_install_append() {
+do_install:append() {
     install -d ${D}${sysconfdir}/modules-load.d
     echo stb-core > ${D}${sysconfdir}/modules-load.d/01-${BPN}-stb-core.conf
     chmod 0644 ${D}${sysconfdir}/modules-load.d/01-${BPN}-stb-core.conf
@@ -39,17 +39,17 @@ do_install_append() {
 
 PACKAGES =+ "${PN}-lcd ${PN}-stb-core"
 
-RDEPENDS_${PN} = "dreambox-secondstage-${MACHINE} kernel-${DM_LOCALVERSION} ${PN}-stb-core"
-RDEPENDS_${PN}-lcd = "${PN}-stb-core"
-RRECOMMENDS_${PN} = "${PN}-lcd"
+RDEPENDS:${PN} = "dreambox-secondstage-${MACHINE} kernel-${DM_LOCALVERSION} ${PN}-stb-core"
+RDEPENDS:${PN}-lcd = "${PN}-stb-core"
+RRECOMMENDS:${PN} = "${PN}-lcd"
 
-FILES_${PN} = "${sysconfdir}/modules-load.d/10-${BPN}.conf \
+FILES:${PN} = "${sysconfdir}/modules-load.d/10-${BPN}.conf \
                /lib/modules/${DM_LOCALVERSION}/extra/"
 
-FILES_${PN}-lcd = "${sysconfdir}/modules-load.d/02-${BPN}-lcd.conf \
+FILES:${PN}-lcd = "${sysconfdir}/modules-load.d/02-${BPN}-lcd.conf \
                    /lib/modules/${DM_LOCALVERSION}/extra/lcd.ko"
 
-FILES_${PN}-stb-core = "${sysconfdir}/modules-load.d/01-${BPN}-stb-core.conf \
+FILES:${PN}-stb-core = "${sysconfdir}/modules-load.d/01-${BPN}-stb-core.conf \
                         /lib/modules/${DM_LOCALVERSION}/extra/stb-core.ko"
 
 # We don't use KERNEL_VERSION in this recipe, because the
@@ -58,17 +58,17 @@ DM_LOCALVERSION = "${@'-'.join('${PV}'.split('-')[:-1])}-${MACHINE}"
 DRIVERDATE = "${@'${PV}'.split('-')[-1]}"
 MD5SUM = "${@d.getVarFlag('SRC_URI', 'dm820.md5sum', True)}"
 
-pkg_postinst_${PN} () {
+pkg_postinst:${PN} () {
 if [ -z "$D" ]; then
 	depmod -a ${DM_LOCALVERSION}
 fi
 }
-pkg_postinst_${PN}-lcd () {
+pkg_postinst:${PN}-lcd () {
 if [ -z "$D" ]; then
 	depmod -a ${DM_LOCALVERSION}
 fi
 }
-pkg_postinst_${PN}-stb-core () {
+pkg_postinst:${PN}-stb-core () {
 if [ -z "$D" ]; then
 	depmod -a ${DM_LOCALVERSION}
 fi

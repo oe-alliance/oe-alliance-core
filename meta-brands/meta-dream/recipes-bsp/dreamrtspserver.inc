@@ -6,7 +6,7 @@ DEPENDS = "gstreamer1.0 gstreamer1.0-plugins-base gstreamer1.0-plugins-bad gstre
 
 inherit autotools pkgconfig systemd
 
-RDEPENDS_${PN} = "gst-plugin-dreamsource \
+RDEPENDS:${PN} = "gst-plugin-dreamsource \
                   gstreamer1.0-plugins-bad-fragmented \
                   gstreamer1.0-plugins-bad-mpegtsmux \
                   gstreamer1.0-plugins-bad-videoparsersbad \
@@ -18,9 +18,9 @@ RDEPENDS_${PN} = "gst-plugin-dreamsource \
                   gstreamer1.0-plugins-good-rtpmanager \
                   gstreamer1.0-plugins-good-udp"
 
-SYSTEMD_SERVICE_${PN} = "dreamrtspserver.service"
+SYSTEMD_SERVICE:${PN} = "dreamrtspserver.service"
 
-pkg_postinst_${PN} () {
+pkg_postinst:${PN} () {
 if [ -z "$D" ]; then
     systemctl reload dbus
 fi

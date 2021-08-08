@@ -6,7 +6,7 @@ MODULE = "linux-4.1.20"
 
 inherit kernel machine_kernel_pr
 
-MACHINE_KERNEL_PR_append = "r11"
+MACHINE_KERNEL_PR:append = "r11"
 
 SRC_URI[md5sum] = "6036c5d722071e72d5d66dbf7ee74992"
 SRC_URI[sha256sum] = "eff7eecf55dd75ecb44bd8b8fe16f588d19c1eac92125eaed2b6834348d12def"
@@ -66,9 +66,9 @@ KERNEL_OBJECT_SUFFIX = "ko"
 KERNEL_IMAGEDEST = "tmp"
 KERNEL_OUTPUT = "arch/${ARCH}/boot/${KERNEL_IMAGETYPE}"
 
-FILES_${KERNEL_PACKAGE_NAME}-image = "/${KERNEL_IMAGEDEST}/zImage /${KERNEL_IMAGEDEST}/gbfindkerneldevice.py"
+FILES:${KERNEL_PACKAGE_NAME}-image = "/${KERNEL_IMAGEDEST}/zImage /${KERNEL_IMAGEDEST}/gbfindkerneldevice.py"
 
-kernel_do_install_append() {
+kernel_do_install:append() {
         install -d ${D}/${KERNEL_IMAGEDEST}
         install -m 0755 ${KERNEL_OUTPUT} ${D}/${KERNEL_IMAGEDEST}
         install -m 0755 ${WORKDIR}/gbfindkerneldevice.py ${D}/${KERNEL_IMAGEDEST}
@@ -82,7 +82,7 @@ kernel_do_compile() {
         fi
 }
 
-pkg_postinst_kernel-image () {
+pkg_postinst:kernel-image () {
     if [ "x$D" == "x" ]; then
         if [ -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE} ] ; then
             ${PYTHON_PN} /${KERNEL_IMAGEDEST}/gbfindkerneldevice.py
@@ -93,10 +93,10 @@ pkg_postinst_kernel-image () {
     true
 }
 
-pkg_postrm_kernel-image () {
+pkg_postrm:kernel-image () {
 }
 
-FILESEXTRAPATHS_prepend := "${THISDIR}/linux-gigablue-${KV}:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/linux-gigablue-${KV}:"
 
 do_rm_work() {
 }

@@ -32,4 +32,4 @@ do_install() {
     cp -Rf ${WORKDIR}/lib/modules/${KV}/extra/*.ko ${D}/lib/modules/${KV}/extra/
 }
 
-FILES_${PN} += "/lib/modules/${KV}/extra"
+FILES:${PN} += "/lib/modules/${KV}/extra"

@@ -16,7 +16,7 @@ SRC_URI += "file://smb.conf \
            file://smbpasswd \
 "
 
-do_install_append() {
+do_install:append() {
     rm -rf ${D}${localstatedir}/lock
     rm -rf ${D}${localstatedir}/run
     rm -rf ${D}${localstatedir}

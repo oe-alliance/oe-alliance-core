@@ -4,15 +4,15 @@ require stb-kodi-vuplus.inc
 require recipes-mediacenter/kodi/stb-kodi_${PV}.bb
 
 PROVIDES += "virtual/kodi"
-RPROVIDES_${PN} += "virtual/kodi"
+RPROVIDES:${PN} += "virtual/kodi"
 PROVIDES += "kodi"
-RPROVIDES_${PN} += "kodi"
+RPROVIDES:${PN} += "kodi"
 
-FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 
-INSANE_SKIP_${PN} += "file-rdeps ldflags"
+INSANE_SKIP:${PN} += "file-rdeps ldflags"
 
-SRC_URI_append += " \
+SRC_URI:append += " \
     http://code.vuplus.com/download/release/kodi/xbmc-support_${MACHINE}_${GLPR}.tar.gz;name=xbmc-support \
 "
 

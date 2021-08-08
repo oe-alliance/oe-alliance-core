@@ -12,7 +12,7 @@ do_image_zgemmafastboot8gb[depends] = " \
 	mtools-native:do_populate_sysroot \
 "
 
-IMAGE_CMD_zgemmafastboot8gb () {
+IMAGE_CMD:zgemmafastboot8gb () {
 	eval local COUNT=\"0\"
 	eval local MIN_COUNT=\"60\"
 	if [ $ROOTFS_SIZE -lt $MIN_COUNT ]; then

@@ -3,7 +3,7 @@ require conf/license/license-gplv2.inc
 
 COMPATIBLE_MACHINE = "^(osmio4k|osmio4kplus|osmini4k)$"
 
-RDEPENDS_${PN} = "e2fsprogs-resize2fs"
+RDEPENDS:${PN} = "e2fsprogs-resize2fs"
 PV = "1.0"
 PR = "r1"
 
@@ -24,4 +24,4 @@ do_install () {
     install -m 0755 ${WORKDIR}/8gb.sh ${D}${bindir}/8gb.sh
 }
 
-FILES_${PN} = "${bindir} ${sysconfdir}"
+FILES:${PN} = "${bindir} ${sysconfdir}"

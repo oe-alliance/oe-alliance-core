@@ -16,7 +16,7 @@ SRC_URI = "file://lcdwaitkey220.bin \
            file://lcdwarning220.bin \
 "
 
-ALLOW_EMPTY_${PN} = "1"
+ALLOW_EMPTY:${PN} = "1"
 
 do_deploy() {
     install -m 0644 ${WORKDIR}/lcdwaitkey220.bin ${DEPLOYDIR}/lcdwaitkey220.bin

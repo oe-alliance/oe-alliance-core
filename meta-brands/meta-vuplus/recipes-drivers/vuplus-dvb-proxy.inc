@@ -24,4 +24,4 @@ do_install() {
     done
 }
 
-FILES_${PN} += "/lib/modules/${KV}/extra"
+FILES:${PN} += "/lib/modules/${KV}/extra"

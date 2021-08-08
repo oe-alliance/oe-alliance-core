@@ -26,4 +26,4 @@ do_install() {
     install -d ${D}/etc/rcS.d
 }
 
-FILES_${PN} += "${sysconfdir}/modules-load.d/dvbdrive.conf /lib/modules/${KV}/extra"
+FILES:${PN} += "${sysconfdir}/modules-load.d/dvbdrive.conf /lib/modules/${KV}/extra"

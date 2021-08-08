@@ -5,7 +5,7 @@ LICENSE = "CLOSED"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-RDEPENDS_${PN} = "curl"
+RDEPENDS:${PN} = "curl"
 
 PV = "${SRCDATE}"
 PR = "r1"
@@ -35,6 +35,6 @@ do_install() {
 do_package_qa() {
 }
 
-FILES_${PN} += "${libdir}/*"
+FILES:${PN} += "${libdir}/*"
 
-INSANE_SKIP_${PN} = "already-stripped dev-so"
+INSANE_SKIP:${PN} = "already-stripped dev-so"

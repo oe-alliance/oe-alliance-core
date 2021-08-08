@@ -9,7 +9,7 @@ PR = "r3"
 SRC_URI = "file://skin_box.xml"
 
 PACKAGES = "${PN}"
-FILES_${PN} = "/usr/share/enigma2"
+FILES:${PN} = "/usr/share/enigma2"
 inherit allarch
 S = "${WORKDIR}"
 

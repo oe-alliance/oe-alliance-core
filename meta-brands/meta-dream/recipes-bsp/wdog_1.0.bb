@@ -2,7 +2,7 @@ SUMMARY = "Dreambox watchdog to automatically restart binaries"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "CLOSED"
-RDEPENDS_${PN} = "dreambox-compat"
+RDEPENDS:${PN} = "dreambox-compat"
 PR = "r3"
 require conf/license/license-close.inc
 

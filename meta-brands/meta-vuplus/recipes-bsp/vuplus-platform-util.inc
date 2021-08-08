@@ -5,7 +5,7 @@ LICENSE = "CLOSED"
 PACKAGE_ARCH := "${MACHINE_ARCH}"
 require conf/license/license-close.inc
 
-RDEPENDS_${PN} += "gptfdisk"
+RDEPENDS:${PN} += "gptfdisk"
 
 PR="${SRCDATE}.${SRCDATE_PR}"
 
@@ -26,11 +26,11 @@ do_install() {
 do_package_qa() {
 }
 
-FILES_${PN}="/"
+FILES:${PN}="/"
 
 inherit update-rc.d
 
 INITSCRIPT_PARAMS = "start 65 S . stop 90 0 ."
 INITSCRIPT_NAME = "vuplus-platform-util"
 
-INSANE_SKIP_${PN} += "already-stripped"
+INSANE_SKIP:${PN} += "already-stripped"

@@ -1,5 +1,5 @@
-PACKAGECONFIG_GL_pn-qtbase = " "
-PACKAGECONFIG_append_pn-qtbase += " gles2 linuxfb"
+PACKAGECONFIG_GL:pn-qtbase = " "
+PACKAGECONFIG:append:pn-qtbase += " gles2 linuxfb"
 
 #IMAGE_CLASSES += "hdemmc_image_single"
 IMAGE_CLASSES += "hdemmc_image_multiboot"
@@ -26,12 +26,12 @@ MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS += "\
 
 PREFERRED_VERSION_linux-gfutures = "4.10.12"
 
-IMAGE_CMD_hdemmc_prepend = " \
+IMAGE_CMD:hdemmc:prepend = " \
     rm -f ${DEPLOY_DIR_IMAGE}/*.ext4; \
     rm -f ${DEPLOY_DIR_IMAGE}/*.manifest; \
     "
 
-IMAGE_CMD_hdemmc_append = "\
+IMAGE_CMD:hdemmc:append = "\
     mkdir -p ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}; \
     mv ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.emmc.img ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/disk.img; \
     cd ${IMAGE_ROOTFS}; \

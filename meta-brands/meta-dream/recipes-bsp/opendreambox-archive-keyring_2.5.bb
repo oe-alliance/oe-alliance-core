@@ -13,5 +13,5 @@ do_install() {
     install -m 644 ${WORKDIR}/opendreambox-krogoth.gpg ${D}${sysconfdir}/apt/trusted.gpg.d
 }
 
-RDEPENDS_${PN} = "gpgv"
-RRECOMMENDS_${PN} = "gnupg"
+RDEPENDS:${PN} = "gpgv"
+RRECOMMENDS:${PN} = "gnupg"

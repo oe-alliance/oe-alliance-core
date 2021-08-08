@@ -15,8 +15,8 @@ S = "${WORKDIR}/lib/modules/${KV}/extra"
 
 INHIBIT_PACKAGE_STRIP = "1"
 
-FILES_${PN} += "${sysconfdir}/modules-load.d/_${MACHINEBUILD}.conf"
-FILES_${PN} += "/lib/modules/${KV}/extra"
+FILES:${PN} += "${sysconfdir}/modules-load.d/_${MACHINEBUILD}.conf"
+FILES:${PN} += "/lib/modules/${KV}/extra"
 
 do_compile() {
 }

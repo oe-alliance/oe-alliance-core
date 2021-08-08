@@ -8,7 +8,7 @@ do_image_zgemmaubi[depends] = " \
 	mtools-native:do_populate_sysroot \
 "
 
-IMAGE_CMD_zgemmaubi () {
+IMAGE_CMD:zgemmaubi () {
 	dd if=/dev/zero of=${WORKDIR}/bootoptions.img bs=1024 count=${BOOTOPTIONS_PARTITION_SIZE}
 	mkfs.msdos -S 512 ${WORKDIR}/bootoptions.img
 	echo "bootcmd=nand read 0x1FFFFC0 0x2000000 0x800000;bootm 0x1FFFFC0" >> ${WORKDIR}/STARTUP

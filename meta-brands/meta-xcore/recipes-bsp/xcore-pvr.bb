@@ -3,9 +3,9 @@ require conf/license/license-gplv2.inc
 PV = "1.0"
 PR = "r2"
 
-ALLOW_EMPTY_${PN} = "1"
+ALLOW_EMPTY:${PN} = "1"
 
-pkg_postinst_${PN}() {
+pkg_postinst:${PN}() {
 #!/bin/sh
 rm -rf /etc/init.d/xcore-zapper.sh > /dev/null 2>&1
 rm -rf /etc/rcS.d/S39xcore-zapper > /dev/null 2>&1

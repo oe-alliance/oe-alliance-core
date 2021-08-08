@@ -1,6 +1,6 @@
 
-PACKAGECONFIG_GL_pn-qtbase = "gles2 eglfs linuxfb"
-PACKAGECONFIG_FB_pn-qtbase = " "
+PACKAGECONFIG_GL:pn-qtbase = "gles2 eglfs linuxfb"
+PACKAGECONFIG_FB:pn-qtbase = " "
 
 PREFERRED_VERSION_linux-edision = "5.13"
 
@@ -48,7 +48,7 @@ IMAGE_OVERHEAD_FACTOR = "1.0"
 
 IMAGEDIRRECOVERY ?= "${MACHINE}-recovery"
 
-IMAGE_CMD_emmcimg_append = "\
+IMAGE_CMD:emmcimg:append = "\
     mkdir -p ${DEPLOY_DIR_IMAGE}/${IMAGEDIRRECOVERY}/${IMAGEDIR}; \
     cp ${DEPLOY_DIR_IMAGE}/splash.bin ${DEPLOY_DIR_IMAGE}/${IMAGEDIRRECOVERY}/${IMAGEDIR}/splash.bin; \
     mv ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.emmc ${DEPLOY_DIR_IMAGE}/${IMAGEDIRRECOVERY}/${IMAGEDIR}/emmc.img; \

@@ -16,13 +16,13 @@ SRC_URI[kernel.sha256sum] = "fa395fec7de633df1cb85b6248b8f35af98380ed128a8bc465f
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
 # package names instead, to allow only one kernel to be installed.
-PKG_${KERNEL_PACKAGE_NAME}-base = "kernel-base"
-PKG_${KERNEL_PACKAGE_NAME}-image = "kernel-image"
-RPROVIDES_${KERNEL_PACKAGE_NAME}-base = "kernel-${KERNEL_VERSION}"
-RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
+PKG:${KERNEL_PACKAGE_NAME}-base = "kernel-base"
+PKG:${KERNEL_PACKAGE_NAME}-image = "kernel-image"
+RPROVIDES:${KERNEL_PACKAGE_NAME}-base = "kernel-${KERNEL_VERSION}"
+RPROVIDES:kernel-image = "kernel-image-${KERNEL_VERSION}"
 
 DEPENDS = "virtual/${TARGET_PREFIX}gcc"
-RDEPENDS_${KERNEL_PACKAGE_NAME}-image = "updateubivolume"
+RDEPENDS:${KERNEL_PACKAGE_NAME}-image = "updateubivolume"
 
 SRC_URI = " \
     ${KERNELORG_MIRROR}/linux/kernel/v${PV}/linux-${PV}.tar.bz2;name=kernel \
@@ -88,7 +88,7 @@ SRC_URI = " \
     file://159-apollo_onfi_nand_support.patch \
     file://160-apollo_usb_reset_fix.patch \
     file://161-apollo_sfc_macronix_dma.patch \
-    file://162-apollo_arm_errata.patch \
+    file://162-apollo:arm_errata.patch \
     file://163-apollo_nand_onfi_chipsize.patch \
     file://164-kronos_nand.patch \
     file://165-kronos_sdio.patch \
@@ -136,7 +136,7 @@ SRC_URI = " \
     file://209-i2c_locking.patch \
     file://210-kronos_sddata4_7_pins_disable.patch \
     file://211-nand_oob_write.patch \
-    file://212-kronos-krome_detect_arm_freq.patch \
+    file://212-kronos-krome_detect:arm_freq.patch \
     file://213-kronos-krome_nand_224oob.patch \
     file://214-kronos-krome_vmalloc_increase.patch \
     file://215-kronos_active_standby_fix.patch \
@@ -150,7 +150,7 @@ SRC_URI = " \
     file://223-apollo_sata_coherency_issue_fix.patch \
     file://224-kronosrevb_krome_splash.patch \
     file://225-krome-balboa.patch \
-    file://226-krome_print_arm_freq.patch \
+    file://226-krome_print:arm_freq.patch \
     file://227-sd_fallback_normalspeed.patch \
     file://228-kronos-krome_8k_nand.patch \
     file://229-splashlogo_sfc_mx_spi.patch \
@@ -218,18 +218,18 @@ KERNEL_OUTPUT = "zImage"
 
 KERNEL_CONFIG_COMMAND = "oe_runmake_call -C ${S} CC="${KERNEL_CC}" O=${B} oldconfig"
 
-#FILES_${KERNEL_PACKAGE_NAME}-image = "${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}"
+#FILES:${KERNEL_PACKAGE_NAME}-image = "${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}"
 
-kernel_do_install_append() {
+kernel_do_install:append() {
     install -d ${D}/${KERNEL_IMAGEDEST}
     install -m 0755 ${KERNEL_OUTPUT_DIR}/${KERNEL_OUTPUT} ${D}/${KERNEL_IMAGEDEST}
 }
 
-do_shared_workdir_prepend() {
+do_shared_workdir:prepend() {
     mkdir -p ${B}/include/generated/
 }
 
-pkg_postinst_kernel-image() {
+pkg_postinst:kernel-image() {
     if [ -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION} ]; then
         IMAGENAME=""
         set -- $(cat /proc/cmdline)

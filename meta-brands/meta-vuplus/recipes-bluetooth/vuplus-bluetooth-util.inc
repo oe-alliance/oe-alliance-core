@@ -3,7 +3,7 @@ LICENSE = "CLOSED"
 require conf/license/license-close.inc
 
 PROVIDES += "vuplus-bluetooth-util"
-RPROVIDES_${PN} += "vuplus-bluetooth-util"
+RPROVIDES:${PN} += "vuplus-bluetooth-util"
 
 PR="${SRCDATE}.${SRCDATE_PR}"
 
@@ -22,7 +22,7 @@ do_package_qa() {
 }
 
 PACKAGE_ARCH := "${MACHINE_ARCH}"
-FILES_${PN}="/"
+FILES:${PN}="/"
 
 do_install() {
 	install -d ${D}${bindir}
@@ -38,4 +38,4 @@ do_install() {
 	fi
 }
 
-INSANE_SKIP_${PN} = "already-stripped"
+INSANE_SKIP:${PN} = "already-stripped"

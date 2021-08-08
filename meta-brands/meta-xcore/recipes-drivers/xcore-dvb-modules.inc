@@ -5,7 +5,7 @@ LICENSE = "CLOSED"
 require conf/license/license-close.inc
 PACKAGE_ARCH = "${MACHINEBUILD}"
 
-RDEPENDS_${PN} += "firmware-mn8847x"
+RDEPENDS:${PN} += "firmware-mn8847x"
 
 PV = "${KV}+${SRCDATE}"
 PR = "r2"
@@ -30,4 +30,4 @@ do_install() {
     done
 }
 
-FILES_${PN} += "${sysconfdir}/modules-load.d/_${MACHINEBUILD}.conf /lib/modules/${KV}/extra"
+FILES:${PN} += "${sysconfdir}/modules-load.d/_${MACHINEBUILD}.conf /lib/modules/${KV}/extra"

@@ -26,4 +26,4 @@ do_install() {
     echo linuxtv >> ${D}/${sysconfdir}/modules-load.d/_${MACHINE}.conf
 }
 
-FILES_${PN} += "${sysconfdir}/modules-load.d/_${MACHINE}.conf /lib/modules/${KV}/extra"
+FILES:${PN} += "${sysconfdir}/modules-load.d/_${MACHINE}.conf /lib/modules/${KV}/extra"

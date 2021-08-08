@@ -5,7 +5,7 @@ KV = "3.13.5"
 
 inherit kernel machine_kernel_pr
 
-MACHINE_KERNEL_PR_append = "oea4.3-r5"
+MACHINE_KERNEL_PR:append = "oea4.3-r5"
 
 SRC_URI[md5sum] = "19e9956653437b99b4fa6ec3e16a3e99"
 SRC_URI[sha256sum] = "ef7fb307582ff243aacff8a13025fe028634aaf650ada309991ae03622962f61"
@@ -57,13 +57,13 @@ SRC_URI = "http://code.vuplus.com/download/release/kernel/stblinux-${KV}.tar.bz2
     file://move-default-dialect-to-SMB3.patch \
     "
 
-SRC_URI_append_vuduo2 = "file://brcm_s3_wol.patch;patch=1;pnum=1 "
-SRC_URI_append_vusolose = "file://brcm_s3_wol.patch;patch=1;pnum=1 \
+SRC_URI:append_vuduo2 = "file://brcm_s3_wol.patch;patch=1;pnum=1 "
+SRC_URI:append_vusolose = "file://brcm_s3_wol.patch;patch=1;pnum=1 \
                           file://linux_mtd_bbt_maxblock.patch"
 
-SRC_URI_append_vusolo2 = "file://linux-bcm_ethernet.patch;patch=1;pnum=1 "
+SRC_URI:append_vusolo2 = "file://linux-bcm_ethernet.patch;patch=1;pnum=1 "
 
-SRC_URI_append_vuzero = "file://linux_nand_bcm.patch "
+SRC_URI:append_vuzero = "file://linux_nand_bcm.patch "
 
 S = "${WORKDIR}/linux"
 B = "${WORKDIR}/build"
@@ -76,21 +76,21 @@ KERNEL_IMAGEDEST = "tmp"
 
 KERNEL_EXTRA_ARGS = "EXTRA_CFLAGS=-Wno-attribute-alias"
 
-FILES_${KERNEL_PACKAGE_NAME}-image = "/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz"
+FILES:${KERNEL_PACKAGE_NAME}-image = "/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz"
 
-do_configure_prepend() {
+do_configure:prepend() {
     if [ -e ${WORKDIR}/defconfig_proxy ]; then
     mv ${WORKDIR}/defconfig_proxy ${WORKDIR}/defconfig
     fi
 }
 
-kernel_do_install_append() {
+kernel_do_install:append() {
     ${STRIP} ${D}/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}
     gzip -9c ${D}/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION} > ${D}/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz
     rm ${D}/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}
 }
 
-pkg_postinst_kernel-image () {
+pkg_postinst:kernel-image () {
     if [ "x$D" == "x" ]; then
         if [ -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz ] ; then
             flash_erase  /dev/${MTD_KERNEL} 0 0

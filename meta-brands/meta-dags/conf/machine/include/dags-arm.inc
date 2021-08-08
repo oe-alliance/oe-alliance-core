@@ -1,7 +1,7 @@
 include conf/machine/include/dags-oem.inc
 
-PACKAGECONFIG_GL_pn-qtbase = "gles2 eglfs linuxfb"
-PACKAGECONFIG_FB_pn-qtbase = " "
+PACKAGECONFIG_GL:pn-qtbase = "gles2 eglfs linuxfb"
+PACKAGECONFIG_FB:pn-qtbase = " "
 
 KERNEL_FILE = "oe_kernel.bin"
 ROOTFS_FILE = "rootfs.tar.bz2"
@@ -13,7 +13,7 @@ IMAGE_FSTYPES =+ "tar.bz2"
 
 require conf/machine/include/tune-cortexa15.inc
 
-IMAGE_CMD_tar_prepend = "\
+IMAGE_CMD:tar:prepend = "\
     mkdir -p ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}; \
     ${@bb.utils.contains("MACHINE_FEATURES", "bootsplash", "cp ${DEPLOY_DIR_IMAGE}/${BOOTLOGO_FILENAME} ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${BOOTLOGO_FILENAME};" , "", d)} \
     cp ${DEPLOY_DIR_IMAGE}/${MACHINEBUILD}_initrd_run.bin ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/initrd_run.bin; \

@@ -8,14 +8,14 @@ PACKAGE_ARCH := "${MACHINEBUILD}"
 require conf/license/license-gplv2.inc
 
 PR = "r3"
-ALLOW_EMPTY_${PN} = "1"
+ALLOW_EMPTY:${PN} = "1"
 
 do_install() {
     install -d ${D}/usr/share
     install -m 0644 ${WORKDIR}/gpt.bin ${D}/usr/share/gpt.bin
 }
 
-FILES_${PN} = "/usr/share"
+FILES:${PN} = "/usr/share"
 
 inherit deploy
 do_deploy() {

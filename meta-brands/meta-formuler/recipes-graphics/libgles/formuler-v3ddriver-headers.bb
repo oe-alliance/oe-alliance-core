@@ -13,7 +13,7 @@ S = "${WORKDIR}"
 do_compile() {
 }
 
-do_install_append() {
+do_install:append() {
 	install -d ${D}/${includedir}
 	install -m 0644 ${S}/v3dplatform.h ${D}${includedir}/
 	for d in EGL GLES GLES2 GLES3 KHR; do
@@ -24,4 +24,4 @@ do_install_append() {
 	done
 }
 
-FILES_${PN}-dev = "/usr/include/*"
+FILES:${PN}-dev = "/usr/include/*"

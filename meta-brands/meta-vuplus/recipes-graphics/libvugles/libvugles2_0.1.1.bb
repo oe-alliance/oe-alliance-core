@@ -23,8 +23,8 @@ do_install() {
 }
 
 PACKAGES = "${PN}"
-FILES_${PN} = "/usr/include /usr/lib"
+FILES:${PN} = "/usr/include /usr/lib"
 
 COMPATIBLE_MACHINE = "^(vusolose|vusolo2|vuduo2|vusolo4k|vuuno4k|vuuno4kse|vuultimo4k|vuzero4k|vuduo4k|vuduo4kse)$"
 
-INSANE_SKIP_${PN} += "already-stripped dev-so file-rdeps"
+INSANE_SKIP:${PN} += "already-stripped dev-so file-rdeps"

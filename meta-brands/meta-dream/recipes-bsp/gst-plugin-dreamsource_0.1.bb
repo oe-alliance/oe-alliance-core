@@ -7,10 +7,10 @@ SRCREV = "2ca36504b47bde9ba7414fb361f669ad344ec151"
 
 inherit autotools opendreambox-git pkgconfig
 
-do_install_append() {
+do_install:append() {
         rm -f ${D}${libdir}/gstreamer-1.0/*.a
         rm -f ${D}${libdir}/gstreamer-1.0/*.la
 }
 
-FILES_${PN} = "${libdir}/gstreamer-1.0/*.so"
-FILES_${PN}-dbg += "${libdir}/gstreamer-1.0/.debug"
+FILES:${PN} = "${libdir}/gstreamer-1.0/*.so"
+FILES:${PN}-dbg += "${libdir}/gstreamer-1.0/.debug"

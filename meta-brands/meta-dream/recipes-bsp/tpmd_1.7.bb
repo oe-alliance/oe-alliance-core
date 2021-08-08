@@ -12,4 +12,4 @@ INITSCRIPT_NAME = "${PN}"
 INHIBIT_PACKAGE_STRIP = "1"
 INITSCRIPT_PARAMS = "start 60 S ."
 
-INSANE_SKIP_${PN} += "file-rdeps"
+INSANE_SKIP:${PN} += "file-rdeps"

@@ -1,7 +1,7 @@
 SUMMARY = "Utilities for transponder & dvb-c blindscan"
 SECTION = "base"
 PRIORITY = "optional"
-RDEPENDS_${PN} = "ncurses"
+RDEPENDS:${PN} = "ncurses"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
@@ -11,7 +11,7 @@ require conf/license/license-close.inc
 PACKAGES = "broadmedia-blindscan-dvbc-utils"
 
 PROVIDES += "virtual/blindscan-dvbc"
-RPROVIDES_broadmedia-blindscan-dvbc-utils += "virtual/blindscan-dvbc"
+RPROVIDES:broadmedia-blindscan-dvbc-utils += "virtual/blindscan-dvbc"
 
 SRC_URI = "http://source.mynonpublic.com/broadmedia/broadmedia-dvbc-blindscan-1.1.zip"
 
@@ -20,7 +20,7 @@ PR = "r1"
 
 S = "${WORKDIR}"
 
-FILES_broadmedia-blindscan-dvbc-utils = "${bindir}/tda1002x"
+FILES:broadmedia-blindscan-dvbc-utils = "${bindir}/tda1002x"
 
 do_install() {
     install -d ${D}/${bindir}/

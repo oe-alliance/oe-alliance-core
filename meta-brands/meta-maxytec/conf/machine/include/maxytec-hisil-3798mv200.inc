@@ -1,5 +1,5 @@
-PACKAGECONFIG_GL_pn-qtbase = " "
-PACKAGECONFIG_append_pn-qtbase += " gles2 linuxfb"
+PACKAGECONFIG_GL:pn-qtbase = " "
+PACKAGECONFIG:append:pn-qtbase += " gles2 linuxfb"
 
 MACHINE_FEATURES += "qthbbtv qtstalker openhbbtv qtevent1"
 
@@ -50,7 +50,7 @@ IMAGE_FSTYPES += " maxytecfastboot8gb"
 
 IMAGEDIRRECOVERY ?= "${MACHINE}-recovery"
 
-IMAGE_CMD_maxytecfastboot8gb_append = " \
+IMAGE_CMD:maxytecfastboot8gb:append = " \
     mkdir -p ${DEPLOY_DIR_IMAGE}/${IMAGEDIRRECOVERY}/${IMAGEDIR}; \
     cp ${IMGDEPLOYDIR}/bootoptions.img ${DEPLOY_DIR_IMAGE}/${IMAGEDIRRECOVERY}/${IMAGEDIR}/bootoptions.img; \
     cp ${IMGDEPLOYDIR}/misc-boot.img ${DEPLOY_DIR_IMAGE}/${IMAGEDIRRECOVERY}/${IMAGEDIR}/misc-boot.img; \

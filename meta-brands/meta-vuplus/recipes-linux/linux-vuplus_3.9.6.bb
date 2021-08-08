@@ -12,7 +12,7 @@ SRC_URI[sha256sum] = "47799db9e2658906e532981ec8111a915426b8453762561029733f2406
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR_append = "oea4.1-r2"
+MACHINE_KERNEL_PR:append = "oea4.1-r2"
 
 SRC_URI = "http://code.vuplus.com/download/release/kernel/stblinux-${KV}.tar.bz2 \
     file://defconfig \
@@ -62,7 +62,7 @@ SRC_URI = "http://code.vuplus.com/download/release/kernel/stblinux-${KV}.tar.bz2
     file://move-default-dialect-to-SMB2.patch \
 "
 
-SRC_URI_append_vuultimo = "file://fixed_mtd.patch "
+SRC_URI:append_vuultimo = "file://fixed_mtd.patch "
 
 S = "${WORKDIR}/linux"
 B = "${WORKDIR}/build"
@@ -73,15 +73,15 @@ KERNEL_OUTPUT = "vmlinux"
 KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_IMAGEDEST = "tmp"
 
-FILES_${KERNEL_PACKAGE_NAME}-image = "/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz"
+FILES:${KERNEL_PACKAGE_NAME}-image = "/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz"
 
-kernel_do_install_append() {
+kernel_do_install:append() {
     ${STRIP} ${D}/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}
     gzip -9c ${D}/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION} > ${D}/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz
     rm ${D}/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}
 }
 
-pkg_postinst_kernel-image () {
+pkg_postinst:kernel-image () {
     if [ "x$D" == "x" ]; then
         if [ -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz ] ; then
             flash_erase  /dev/${MTD_KERNEL} 0 0

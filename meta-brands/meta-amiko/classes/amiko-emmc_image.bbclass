@@ -1,6 +1,6 @@
 inherit image_types
 
-IMAGE_TYPEDEP_amikoemmc = "ext4"
+IMAGE_TYPEDEP:amikoemmc = "ext4"
 
 do_image_amikoemmc[depends] = " \
     parted-native:do_populate_sysroot \
@@ -10,7 +10,7 @@ do_image_amikoemmc[depends] = " \
     amiko-buildimage-native:do_populate_sysroot \
     "
 
-IMAGE_CMD_amikoemmc () {
+IMAGE_CMD:amikoemmc () {
     mkdir -p ${IMGDEPLOYDIR}/userdata
     mkdir -p ${IMGDEPLOYDIR}/userdata/linuxrootfs1
     mkdir -p ${IMGDEPLOYDIR}/userdata/linuxrootfs2

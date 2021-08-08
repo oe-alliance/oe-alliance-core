@@ -5,7 +5,7 @@ LICENSE = "CLOSED"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-RDEPENDS_${PN} = "curl"
+RDEPENDS:${PN} = "curl"
 
 PV = "${SRCDATE}"
 PR = "r2"
@@ -19,7 +19,7 @@ S = "${WORKDIR}/hilib"
 SOLIBS = ".so"
 FILES_SOLIBSDEV = ""
 
-PRIVATE_LIBS_${PN} = "\
+PRIVATE_LIBS:${PN} = "\
 libpng1.6.26.so \
 libjpeg9b.so \
 "
@@ -76,6 +76,6 @@ INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
 do_package_qa() {
 }
 
-FILES_${PN} += "${libdir}/*"
+FILES:${PN} += "${libdir}/*"
 
-INSANE_SKIP_${PN} = "already-stripped dev-so ldflags dev-deps"
+INSANE_SKIP:${PN} = "already-stripped dev-so ldflags dev-deps"

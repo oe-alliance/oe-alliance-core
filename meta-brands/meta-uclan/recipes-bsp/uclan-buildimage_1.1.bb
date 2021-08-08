@@ -11,4 +11,4 @@ do_install () {
         install -m 775 ${S}/mkupdate ${D}/${sbindir}
 }
 
-INSANE_SKIP_${PN} += "ldflags"
+INSANE_SKIP:${PN} += "ldflags"

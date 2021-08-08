@@ -12,9 +12,9 @@ PKGV = "1.0+git${GITPKGV}"
 PR = "r4"
 
 PROVIDES += "virtual/transtreamproxy"
-RPROVIDES_${PN} += "virtual/transtreamproxy"
+RPROVIDES:${PN} += "virtual/transtreamproxy"
 DEPENDS = "boost virtual/inetd"
-RDEPENDS_${PN} += "virtual/inetd"
+RDEPENDS:${PN} += "virtual/inetd"
 
 SRC_URI = "git://code.vuplus.com/git/filestreamproxy.git;protocol=http;branch=transtreamproxy \
     file://gcc6.patch \
@@ -33,7 +33,7 @@ do_install() {
     install -m 0755 ${WORKDIR}/build/src/transtreamproxy ${D}/usr/bin/transtreamproxy
 }
 
-pkg_prerm_${PN}() {
+pkg_prerm:${PN}() {
 #!/bin/sh
 grep -vE '^#*\s*8002' $D/etc/inetd.conf > $D/tmp/inetd.tmp
 mv $D/tmp/inetd.tmp $D/etc/inetd.conf
@@ -43,7 +43,7 @@ if [ -z "$D" -a -f "/etc/init.d/inetd.busybox" ]; then
 fi
 }
 
-pkg_preinst_${PN}() {
+pkg_preinst:${PN}() {
 #!/bin/sh
 if [ -z "$D" ]; then
     grep -vE '^#*\s*8002' $D/etc/inetd.conf > $D/tmp/inetd.tmp
@@ -55,7 +55,7 @@ if [ -z "$D" -a -f "/etc/init.d/inetd.busybox" ]; then
 fi
 }
 
-pkg_postinst_${PN}() {
+pkg_postinst:${PN}() {
 #!/bin/sh
 if ! grep -qE '^#*\s*8002' $D/etc/inetd.conf; then
     if grep -qE "^#*\s*8003" $D/etc/inetd.conf; then

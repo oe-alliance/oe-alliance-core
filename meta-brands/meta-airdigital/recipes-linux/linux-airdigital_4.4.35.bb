@@ -9,7 +9,7 @@ SRCDATE = "20200508"
 
 inherit kernel machine_kernel_pr
 
-MACHINE_KERNEL_PR_append = "34"
+MACHINE_KERNEL_PR:append = "34"
 
 SRC_URI[md5sum] = "f9e67e2d0ceab518510413f8f4315bc3"
 SRC_URI[sha256sum] = "45ae717b966a74326fd7297d81b3a17fd5b3962b7704170682a615ca7cdec644"
@@ -36,26 +36,26 @@ SRC_URI = "http://source.mynonpublic.com/zgemma/linux-${PV}-${SRCDATE}-${ARCH}.t
     file://mn88472_reset_stream_ID_reg_if_no_PLP_given.patch \
 "
 
-SRC_URI_append_h9 += " \
+SRC_URI:append_h9 += " \
 	file://0001-mmc-switch-1.8V.patch \
 "
-SRC_URI_append_h9se += " \
+SRC_URI:append_h9se += " \
 	file://0001-mmc-switch-1.8V.patch \
 "
-SRC_URI_append_i55plus += " \
+SRC_URI:append_i55plus += " \
 	file://0001-mmc-switch-1.8V.patch \
 "
-SRC_URI_append_i55se += " \
+SRC_URI:append_i55se += " \
 	file://0001-mmc-switch-1.8V.patch \
 "
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
 # package names instead, to allow only one kernel to be installed.
-PKG_${KERNEL_PACKAGE_NAME}-base = "kernel-base"
-PKG_${KERNEL_PACKAGE_NAME}-image = "kernel-image"
-RPROVIDES_${KERNEL_PACKAGE_NAME}-base = "kernel-${KERNEL_VERSION}"
-RPROVIDES_${KERNEL_PACKAGE_NAME}-image = "kernel-image-${KERNEL_VERSION}"
+PKG:${KERNEL_PACKAGE_NAME}-base = "kernel-base"
+PKG:${KERNEL_PACKAGE_NAME}-image = "kernel-image"
+RPROVIDES:${KERNEL_PACKAGE_NAME}-base = "kernel-${KERNEL_VERSION}"
+RPROVIDES:${KERNEL_PACKAGE_NAME}-image = "kernel-image-${KERNEL_VERSION}"
 
 S = "${WORKDIR}/linux-${PV}"
 B = "${WORKDIR}/build"
@@ -68,43 +68,43 @@ KERNEL_OUTPUT = "arch/${ARCH}/boot/${KERNEL_IMAGETYPE}"
 
 KERNEL_EXTRA_ARGS = "EXTRA_CFLAGS=-Wno-attribute-alias"
 
-FILES_${KERNEL_PACKAGE_NAME}-image_h9 = " "
-FILES_${KERNEL_PACKAGE_NAME}-image_i5plus = " "
-FILES_${KERNEL_PACKAGE_NAME}-image_hzero = " "
-FILES_${KERNEL_PACKAGE_NAME}-image_h8 = " "
-FILES_${KERNEL_PACKAGE_NAME}-image = "/${KERNEL_IMAGEDEST}/findkerneldevice.sh"
+FILES:${KERNEL_PACKAGE_NAME}-image_h9 = " "
+FILES:${KERNEL_PACKAGE_NAME}-image_i5plus = " "
+FILES:${KERNEL_PACKAGE_NAME}-image_hzero = " "
+FILES:${KERNEL_PACKAGE_NAME}-image_h8 = " "
+FILES:${KERNEL_PACKAGE_NAME}-image = "/${KERNEL_IMAGEDEST}/findkerneldevice.sh"
 
-kernel_do_configure_prepend() {
+kernel_do_configure:prepend() {
 	install -d ${B}/usr
 	install -m 0644 ${WORKDIR}/initramfs-subdirboot.cpio.gz ${B}/
 }
 
-kernel_do_install_append_h9se() {
+kernel_do_install:append_h9se() {
 	install -d ${D}${KERNEL_IMAGEDEST}
 	install -m 0755 ${WORKDIR}/findkerneldevice.sh ${D}${KERNEL_IMAGEDEST}
 }
 
-kernel_do_install_append_h9combo() {
+kernel_do_install:append_h9combo() {
 	install -d ${D}${KERNEL_IMAGEDEST}
 	install -m 0755 ${WORKDIR}/findkerneldevice.sh ${D}${KERNEL_IMAGEDEST}
 }
 
-kernel_do_install_append_h9combose() {
+kernel_do_install:append_h9combose() {
 	install -d ${D}${KERNEL_IMAGEDEST}
 	install -m 0755 ${WORKDIR}/findkerneldevice.sh ${D}${KERNEL_IMAGEDEST}
 }
 
-kernel_do_install_append_h10() {
+kernel_do_install:append_h10() {
 	install -d ${D}${KERNEL_IMAGEDEST}
 	install -m 0755 ${WORKDIR}/findkerneldevice.sh ${D}${KERNEL_IMAGEDEST}
 }
 
-kernel_do_install_append_i55se() {
+kernel_do_install:append_i55se() {
 	install -d ${D}${KERNEL_IMAGEDEST}
 	install -m 0755 ${WORKDIR}/findkerneldevice.sh ${D}${KERNEL_IMAGEDEST}
 }
 
-pkg_postinst_kernel-image_h9() {
+pkg_postinst:kernel-image_h9() {
 	if [ "x$D" == "x" ]; then
 		if [ -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE} ] ; then
 			flash_erase /dev/${MTD_KERNEL} 0 0
@@ -114,7 +114,7 @@ pkg_postinst_kernel-image_h9() {
 	true
 }
 
-pkg_postinst_kernel-image_i55plus() {
+pkg_postinst:kernel-image_i55plus() {
 	if [ "x$D" == "x" ]; then
 		if [ -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE} ] ; then
 			flash_erase /dev/${MTD_KERNEL} 0 0
@@ -124,7 +124,7 @@ pkg_postinst_kernel-image_i55plus() {
 	true
 }
 
-pkg_postinst_kernel-image_hzero() {
+pkg_postinst:kernel-image_hzero() {
 	if [ "x$D" == "x" ]; then
 		if [ -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE} ] ; then
 			flash_erase /dev/${MTD_KERNEL} 0 0
@@ -134,7 +134,7 @@ pkg_postinst_kernel-image_hzero() {
 	true
 }
 
-pkg_postinst_kernel-image_h8() {
+pkg_postinst:kernel-image_h8() {
 	if [ "x$D" == "x" ]; then
 		if [ -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE} ] ; then
 			flash_erase /dev/${MTD_KERNEL} 0 0
@@ -144,7 +144,7 @@ pkg_postinst_kernel-image_h8() {
 	true
 }
 
-pkg_postinst_kernel-image() {
+pkg_postinst:kernel-image() {
 	if [ "x$D" == "x" ]; then
 		if [ -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE} ] ; then
 			/${KERNEL_IMAGEDEST}/./findkerneldevice.sh

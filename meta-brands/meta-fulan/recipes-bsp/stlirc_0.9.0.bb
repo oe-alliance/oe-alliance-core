@@ -6,8 +6,8 @@ LICENSE = "GPLv2"
 DEPENDS = "virtual/kernel libusb-compat"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-RCONFLICTS_${PN} = "lirc"
-RREPLACES_${PN} = "lirc"
+RCONFLICTS:${PN} = "lirc"
+RREPLACES:${PN} = "lirc"
 
 PR = "r9"
 
@@ -32,7 +32,7 @@ S = "${WORKDIR}/lirc-${PV}"
 
 PARALLEL_MAKE = ""
 
-CFLAGS_append = " -DUINPUT_NEUTRINO_HACK "
+CFLAGS:append = " -DUINPUT_NEUTRINO_HACK "
 
 EXTRA_OECONF += "--with-kerneldir=${STAGING_KERNEL_BUILDDIR} ${DRIVER} --without-x --with-driver=none --with-driver=userspace "
 
@@ -44,7 +44,7 @@ INITSCRIPT_PARAMS = "defaults 20"
 
 EXTRA_OEMAKE = 'SUBDIRS="daemons tools"'
 
-do_install_append() {
+do_install:append() {
     install -d ${D}${sysconfdir}/init.d
     install ${WORKDIR}/lircd.init ${D}${sysconfdir}/init.d/lircd
     rm -rf ${D}/var

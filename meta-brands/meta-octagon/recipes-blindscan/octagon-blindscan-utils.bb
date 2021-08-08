@@ -1,7 +1,7 @@
 SUMMARY = "Utilities for transponder & dvb-c blindscan"
 SECTION = "base"
 PRIORITY = "optional"
-RDEPENDS_${PN} = "ncurses"
+RDEPENDS:${PN} = "ncurses"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
@@ -11,7 +11,7 @@ require conf/license/license-close.inc
 PACKAGES = "octagon-blindscan-dvbc-utils"
 
 PROVIDES += "virtual/blindscan-dvbc"
-RPROVIDES_octagon-blindscan-dvbc-utils += "virtual/blindscan-dvbc"
+RPROVIDES:octagon-blindscan-dvbc-utils += "virtual/blindscan-dvbc"
 
 SRC_URI = "http://source.mynonpublic.com/octagon/octagon-dvbc-blindscan-1.1.zip"
 
@@ -20,7 +20,7 @@ PR = "r1"
 
 S = "${WORKDIR}"
 
-FILES_octagon-blindscan-dvbc-utils = "${bindir}/tda1002x"
+FILES:octagon-blindscan-dvbc-utils = "${bindir}/tda1002x"
 
 do_install() {
     install -d ${D}/${bindir}/

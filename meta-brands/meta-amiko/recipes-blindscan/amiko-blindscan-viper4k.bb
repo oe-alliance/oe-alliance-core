@@ -5,7 +5,7 @@ LICENSE = "CLOSED"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PROVIDES += "virtual/blindscan-dvbs"
-RPROVIDES_${PN} += "virtual/blindscan-dvbs"
+RPROVIDES:${PN} += "virtual/blindscan-dvbs"
 
 SRCDATE = "20190306"
 
@@ -24,7 +24,7 @@ do_install() {
 do_package_qa() {
 }
 
-FILES_${PN}  = "${bindir}/amiko-blindscan"
+FILES:${PN}  = "${bindir}/amiko-blindscan"
 
 SRC_URI[md5sum] = "c1f286a12791e0e5461f73ee7aae0712"
 SRC_URI[sha256sum] = "2da5f797ee4147a0f9f35c9c72dfa958258deb492a074c7cf60a7a3bf467dea9"

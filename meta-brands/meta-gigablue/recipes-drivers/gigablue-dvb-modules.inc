@@ -28,4 +28,4 @@ do_install() {
     done
 }
 
-FILES_${PN} += "${sysconfdir} /lib/modules/${KV}/extra"
+FILES:${PN} += "${sysconfdir} /lib/modules/${KV}/extra"

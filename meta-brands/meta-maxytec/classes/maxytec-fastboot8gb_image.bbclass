@@ -1,6 +1,6 @@
 inherit image_types
 
-IMAGE_TYPEDEP_maxytecfastboot8gb = "ext4 tar"
+IMAGE_TYPEDEP:maxytecfastboot8gb = "ext4 tar"
 BOOTOPTIONS_PARTITION_SIZE = "2048"
 
 do_image_maxytecfastboot8gb[depends] = " \
@@ -10,7 +10,7 @@ do_image_maxytecfastboot8gb[depends] = " \
 	mtools-native:do_populate_sysroot \
 	"
 
-IMAGE_CMD_maxytecfastboot8gb () {
+IMAGE_CMD:maxytecfastboot8gb () {
     dd if=/dev/zero of=${WORKDIR}/bootoptions.img bs=1024 count=${BOOTOPTIONS_PARTITION_SIZE}
     mkfs.msdos -S 512 ${WORKDIR}/bootoptions.img
     echo "bootcmd=setenv bootargs \$(bootargs) \$(bootargs_common); mmc read 0 0x1000000 0x3BD000 0x8000; bootm 0x1000000; run bootcmd_fallback" > ${WORKDIR}/STARTUP

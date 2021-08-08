@@ -1,6 +1,6 @@
 inherit image_types
 
-IMAGE_TYPEDEP_airdigitalemmc = "ext4"
+IMAGE_TYPEDEP:airdigitalemmc = "ext4"
 
 
 do_image_airdigitalemmc[depends] = " \
@@ -40,7 +40,7 @@ SWAP_PARTITION_OFFSET = "$(expr ${FOURTH_ROOTFS_PARTITION_OFFSET} \+ ${ROOTFS_PA
 EMMC_IMAGE = "${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.emmc.img"
 EMMC_IMAGE_SIZE = "3817472"
 
-IMAGE_CMD_airdigitalemmc () {
+IMAGE_CMD:airdigitalemmc () {
     dd if=/dev/zero of=${EMMC_IMAGE} bs=${BLOCK_SIZE} count=0 seek=$(expr ${EMMC_IMAGE_SIZE} \* ${BLOCK_SECTOR})
     parted -s ${EMMC_IMAGE} mklabel gpt
     parted -s ${EMMC_IMAGE} unit KiB mkpart boot fat16 ${BOOT_PARTITION_OFFSET} $(expr ${BOOT_PARTITION_OFFSET} \+ ${BOOT_PARTITION_SIZE})

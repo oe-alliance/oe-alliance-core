@@ -3,7 +3,7 @@ LICENSE = "CLOSED"
 require conf/license/license-close.inc
 
 PROVIDES += "gb-bluetooth-util"
-RPROVIDES_${PN} += "gb-bluetooth-util"
+RPROVIDES:${PN} += "gb-bluetooth-util"
 
 PR="${SRCDATE}.${SRCDATE_PR}"
 
@@ -17,7 +17,7 @@ do_package_qa() {
 }
 
 PACKAGE_ARCH := "${MACHINE_ARCH}"
-FILES_${PN}="/"
+FILES:${PN}="/"
 
 do_install() {
 	install -d ${D}/usr/local/bin
@@ -29,4 +29,4 @@ do_install() {
 	install -m 0644 ${S}/bthid.ko ${D}/usr/local/lib/modules/bthid.ko
 }
 
-INSANE_SKIP_${PN} = "already-stripped"
+INSANE_SKIP:${PN} = "already-stripped"

@@ -7,7 +7,7 @@ PRIORITY = "required"
 LICENSE = " GPLv2"
 LIC_FILES_CHKSUM = "file://${WORKDIR}/COPYING;md5=751419260aa954499f7abaabaa882bbe"
 
-RDEPENDS_${PN} = "stinit"
+RDEPENDS:${PN} = "stinit"
 
 KV = "2.6.32.71-stm24-0217"
 SRCREV = "275789899034e6bef5b81a0c4b44407908137ac2"
@@ -21,7 +21,7 @@ PV = "${KV}+${SRCDATE}"
 
 PTI_NP_PATH ?= "/data/pti_np"
 
-FILESEXTRAPATHS_prepend := "${THISDIR}/fulan-dvb-modules:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/fulan-dvb-modules:"
 
 SRC_URI = " \
     git://github.com/Duckbox-Developers/driver.git;protocol=git \
@@ -35,7 +35,7 @@ SRC_URI = " \
     file://Compcache.patch \
 " 
 
-FILES_${PN} = "${sysconfdir}/init.d ${sysconfdir}/rcS.d ${sysconfdir}/modules-load.d ${sysconfdir}/modprobe.d"
+FILES:${PN} = "${sysconfdir}/init.d ${sysconfdir}/rcS.d ${sysconfdir}/modules-load.d ${sysconfdir}/modprobe.d"
 FILES = ""
 
 S = "${WORKDIR}/git"
@@ -44,7 +44,7 @@ EXTRA_OEMAKE = "-e MAKEFLAGS="
 
 CLEANBROKEN = "1"
 
-do_configure_prepend () {
+do_configure:prepend () {
     # if a custom pti source is present, add it to the sources
     if [ -e ${PTI_NP_PATH}/Makefile ]; then
         echo "Found custom pti sources.."
@@ -131,11 +131,11 @@ do_install() {
     find ${D} -name stmcore-display-sti7106.ko | xargs -r rm # we don't have a 7106 chip
 }
 
-PACKAGESPLITFUNCS_append = " handle_driver_rename "
+PACKAGESPLITFUNCS:append = " handle_driver_rename "
 
 python handle_driver_rename () {
-    d.setVar("RPROVIDES_fulan-dvb-modules-${MACHINE}", "fulan-dvb-modules")
-    d.setVar("RREPLACES_fulan-dvb-modules-${MACHINE}", "fulan-dvb-modules")
-    d.setVar("RCONFLICTS_fulan-dvb-modules-${MACHINE}", "fulan-dvb-modules")
+    d.setVar("RPROVIDES:fulan-dvb-modules-${MACHINE}", "fulan-dvb-modules")
+    d.setVar("RREPLACES:fulan-dvb-modules-${MACHINE}", "fulan-dvb-modules")
+    d.setVar("RCONFLICTS:fulan-dvb-modules-${MACHINE}", "fulan-dvb-modules")
 }
-FILES_${PN}-dev += "${includedir}"
+FILES:${PN}-dev += "${includedir}"

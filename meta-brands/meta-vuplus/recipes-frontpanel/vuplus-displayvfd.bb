@@ -20,9 +20,9 @@ do_install() {
     
 }
 
-FILES_${PN} = "${bindir}"
+FILES:${PN} = "${bindir}"
 
-do_configure_prepend() {
+do_configure:prepend() {
     touch ${S}/NEWS
     touch ${S}/AUTHORS
     touch ${S}/ChangeLog

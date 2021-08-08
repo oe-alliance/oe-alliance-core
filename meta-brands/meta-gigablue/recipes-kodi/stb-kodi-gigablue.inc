@@ -1,8 +1,8 @@
-do_configure_prepend() {
+do_configure:prepend() {
     cp -av ${WORKDIR}/xbmc-support/gles_init.* ${S}/xbmc/windowing/egl/
 }
 
-do_install_append(){
+do_install:append(){
 }
 
-FILES_${PN}_append = ""
+FILES:${PN}:append = ""

@@ -7,7 +7,7 @@ PACKAGE_ARCH := "${MACHINE_ARCH}"
 PR = "r1-${SRCDATE}"
 
 PROVIDES = "virtual/libgles1 virtual/libgles2 virtual/egl"
-RPROVIDES_${PN} = "virtual/libgles1 virtual/libgles2 virtual/egl libEGL.so libGLESv2.so libmali.so"
+RPROVIDES:${PN} = "virtual/libgles1 virtual/libgles2 virtual/egl libEGL.so libGLESv2.so libmali.so"
 
 SRC_URI = "http://source.mynonpublic.com/gigablue/mv200/${MACHINE}-opengl-${SRCDATE}.tar.gz"
 
@@ -41,7 +41,7 @@ do_install() {
     done
 }
 
-FILES_${PN} = "/usr/lib/*"
-FILES_${PN}-dev = "/usr/include/*"
+FILES:${PN} = "/usr/lib/*"
+FILES:${PN}-dev = "/usr/include/*"
 
-INSANE_SKIP_${PN} += "already-stripped dev-so ldflags"
+INSANE_SKIP:${PN} += "already-stripped dev-so ldflags"

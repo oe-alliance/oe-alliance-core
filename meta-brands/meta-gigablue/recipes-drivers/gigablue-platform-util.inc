@@ -30,11 +30,11 @@ do_package_qa() {
 do_populate_sysroot() {
 }
 
-FILES_${PN}="/home/root/platform /etc/init.d"
+FILES:${PN}="/home/root/platform /etc/init.d"
 
 inherit update-rc.d
 
 INITSCRIPT_PARAMS = "start 65 S . stop 90 0 ."
 INITSCRIPT_NAME = "gigablue-platform-util"
 
-INSANE_SKIP_${PN} += "already-stripped"
+INSANE_SKIP:${PN} += "already-stripped"

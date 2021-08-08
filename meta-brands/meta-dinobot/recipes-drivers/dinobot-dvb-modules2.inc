@@ -21,10 +21,10 @@ inherit update-rc.d
 
 INHIBIT_PACKAGE_STRIP = "1"
 
-FILES_${PN} += "${nonarch_base_libdir}/modules/${KV}/extra"
-FILES_${PN} += "/usr/bin/komession"
-FILES_${PN} += "${sysconfdir}/init.d"
-FILES_${PN} += "${sysconfdir}/modules-load.d"
+FILES:${PN} += "${nonarch_base_libdir}/modules/${KV}/extra"
+FILES:${PN} += "/usr/bin/komession"
+FILES:${PN} += "${sysconfdir}/init.d"
+FILES:${PN} += "${sysconfdir}/modules-load.d"
 
 do_compile() {
 }
@@ -45,4 +45,4 @@ do_install() {
     install -m 0755 ${WORKDIR}/loadmodules.sh ${D}${sysconfdir}/init.d/loadmodules
 }
 
-INSANE_SKIP_${PN} += "already-stripped ldflags"
+INSANE_SKIP:${PN} += "already-stripped ldflags"

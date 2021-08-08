@@ -3,7 +3,7 @@ SECTION = "base"
 LICENSE = "CLOSED"
 PRIORITY = "required"
 PROVIDES = "virtual/bootloader"
-RPROVIDES_${PN} += "dreambox-secondstage"
+RPROVIDES:${PN} += "dreambox-secondstage"
 MD5SUM = "${@d.getVarFlag('SRC_URI', '%s.md5sum' % MACHINE, True)}"
 PACKAGE_ARCH := "${MACHINE_ARCH}"
 require conf/license/license-close.inc
@@ -17,11 +17,11 @@ SRC_URI[dm7080.sha256sum] = "c50354e66d6f247ab533a518b9df42c2067f6711cd210f9e259
 
 SRC_URI = "http://dreamboxupdate.com/download/opendreambox/2.2.0/dreambox-secondstage/${PV}/${MACHINE}/${MD5SUM}/dreambox-secondstage_${PV}_${MACHINE}.tar.xz;name=${MACHINE}"
 
-RDEPENDS_${PN} = "flash-scripts"
+RDEPENDS:${PN} = "flash-scripts"
 
 do_install() {
     install -d ${D}/usr/share/dreambox-secondstage
     install -m 0644 ${S}/usr/share/dreambox-secondstage/ssbl.bin ${D}/usr/share/dreambox-secondstage/ssbl.bin
 }
 
-FILES_${PN} = "/usr/share/dreambox-secondstage/ssbl.bin"
+FILES:${PN} = "/usr/share/dreambox-secondstage/ssbl.bin"

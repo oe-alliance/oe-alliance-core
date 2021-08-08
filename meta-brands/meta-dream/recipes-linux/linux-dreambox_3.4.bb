@@ -1,6 +1,6 @@
 inherit kernel machine_kernel_pr
 
-MACHINE_KERNEL_PR_append = ".14"
+MACHINE_KERNEL_PR:append = ".14"
 
 PATCHREV = "30070c78a23d461935d9db0b6ce03afc70a10c51"
 PATCHLEVEL = "113"
@@ -34,7 +34,7 @@ SRC_URI[dream-patch.sha256sum] = "5ed3938ec088a868bcd344fd03adedbcefc5198c5255bd
 S = "${WORKDIR}/linux-${PV}"
 B = "${WORKDIR}/build"
 
-do_configure_prepend() {
+do_configure:prepend() {
     rm -rf ${STAGING_KERNEL_DIR}/.config
     rm -rf ${STAGING_KERNEL_DIR}/.config.old
     sed -e "/^SUBLEVEL = /d" -i ${S}/Makefile
@@ -56,9 +56,9 @@ KERNEL_IMAGETYPES = "${@bb.utils.contains('MACHINE', 'dm520', '', 'vmlinux.gz', 
 
 KERNEL_ENABLE_CGROUPS = "1"
 
-RDEPENDS_${KERNEL_PACKAGE_NAME}-image = "flash-scripts"
+RDEPENDS:${KERNEL_PACKAGE_NAME}-image = "flash-scripts"
 
-pkg_postinst_kernel-image () {
+pkg_postinst:kernel-image () {
 #!/bin/sh
 if [ -z "$D" ]; then
     flash-kernel /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${LINUX_VERSION}

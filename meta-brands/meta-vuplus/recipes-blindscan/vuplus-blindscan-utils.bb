@@ -1,7 +1,7 @@
 SUMMARY = "Utilities for transponder & dvb-s blindscan"
 SECTION = "base"
 PRIORITY = "optional"
-RDEPENDS_${PN} = "ncurses"
+RDEPENDS:${PN} = "ncurses"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
@@ -12,22 +12,22 @@ PACKAGES = "vuplus-blindscan-dvbs-utils vuplus-blindscan-dvbc-utils \
             vuplus-blindscan-dvbs-utils-doc vuplus-blindscan-dvbc-utils-doc"
 
 PROVIDES += "virtual/blindscan-dvbs virtual/blindscan-dvbc"
-RPROVIDES_vuplus-blindscan-dvbs-utils += "virtual/blindscan-dvbs"
-RPROVIDES_vuplus-blindscan-dvbc-utils += "virtual/blindscan-dvbc"
+RPROVIDES:vuplus-blindscan-dvbs-utils += "virtual/blindscan-dvbs"
+RPROVIDES:vuplus-blindscan-dvbc-utils += "virtual/blindscan-dvbc"
 
 SRC_URI = "http://code.vuplus.com/download/release/utils/vuplus-blindscan-utils-${PV}.tar.bz2"
-SRC_URI_arm = "http://code.vuplus.com/download/release/utils/vuplus-blindscan-utils-${PV}_arm.tar.bz2;name=arm"
+SRC_URI:arm = "http://code.vuplus.com/download/release/utils/vuplus-blindscan-utils-${PV}:arm.tar.bz2;name=arm"
 
 PV = "4.4"
-PV_arm = "5.1"
+PV:arm = "5.1"
 PR = "r11"
 
 S = "${WORKDIR}/blindscan-utils"
 
-FILES_vuplus-blindscan-dvbs-utils = "${bindir}/*_blindscan"
-FILES_vuplus-blindscan-dvbc-utils = "${bindir}/tda1002x ${bindir}/ssh108* ${bindir}/tt3l10* ${bindir}/tt2l08* ${bindir}/bcm3*"
-FILES_vuplus-blindscan-dvbs-utils-doc = "${datadir}/vuplus-blindscan-utils-release.txt"
-FILES_vuplus-blindscan-dvbc-utils-doc = "${datadir}/vuplus-blindscan-utils-release.txt"
+FILES:vuplus-blindscan-dvbs-utils = "${bindir}/*_blindscan"
+FILES:vuplus-blindscan-dvbc-utils = "${bindir}/tda1002x ${bindir}/ssh108* ${bindir}/tt3l10* ${bindir}/tt2l08* ${bindir}/bcm3*"
+FILES:vuplus-blindscan-dvbs-utils-doc = "${datadir}/vuplus-blindscan-utils-release.txt"
+FILES:vuplus-blindscan-dvbc-utils-doc = "${datadir}/vuplus-blindscan-utils-release.txt"
 
 do_install() {
 	install -d ${D}${bindir}
@@ -50,5 +50,5 @@ INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
 do_compile[noexec] = "1"
 deltask do_populate_sysroot
 
-INSANE_SKIP_vuplus-blindscan-dvbs-utils = "ldflags"
-INSANE_SKIP_vuplus-blindscan-dvbc-utils = "ldflags"
+INSANE_SKIP:vuplus-blindscan-dvbs-utils = "ldflags"
+INSANE_SKIP:vuplus-blindscan-dvbc-utils = "ldflags"

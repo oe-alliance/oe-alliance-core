@@ -2,7 +2,7 @@ require vuplus-tuner-turbo2.inc
 
 COMPATIBLE_MACHINE = "^(vusolo4k)$"
 
-SRCDATE_arm = "20201207"
+SRCDATE:arm = "20201207"
 
 KV = "3.14.28"
 

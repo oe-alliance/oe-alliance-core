@@ -20,7 +20,7 @@ do_configure() {
 do_compile() {
 }
 
-do_install_append() {
+do_install:append() {
 	install -d ${D}${libdir}
 	install -m 0755 ${S}/v3ddriver/libnxpl.so ${D}${libdir}/
 	install -m 0755 ${S}/v3ddriver/libv3ddriver.so ${D}${libdir}/
@@ -30,9 +30,9 @@ do_install_append() {
 	ln -s libv3ddriver.so ${D}${libdir}/libGLESv2.so
 }
 
-FILES_${PN} = "/usr/lib/*"
-FILES_${PN}-dev = "/usr/include/*"
+FILES:${PN} = "/usr/lib/*"
+FILES:${PN}-dev = "/usr/include/*"
 
-RPROVIDES_${PN} = "virtual/libgles2 virtual/egl libnexus.so libnxclient.so libnxpl.so libv3ddriver.so libGLESv2.so libEGL.so"
+RPROVIDES:${PN} = "virtual/libgles2 virtual/egl libnexus.so libnxclient.so libnxpl.so libv3ddriver.so libGLESv2.so libEGL.so"
 
-INSANE_SKIP_${PN} += "already-stripped dev-so ldflags"
+INSANE_SKIP:${PN} += "already-stripped dev-so ldflags"

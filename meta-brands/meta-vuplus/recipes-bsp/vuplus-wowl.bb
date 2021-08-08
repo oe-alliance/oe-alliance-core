@@ -20,4 +20,4 @@ do_install() {
 }
 
 INHIBIT_PACKAGE_STRIP = "1"
-FILES_${PN} = "/"
+FILES:${PN} = "/"

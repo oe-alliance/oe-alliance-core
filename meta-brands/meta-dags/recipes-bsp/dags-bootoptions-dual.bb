@@ -22,10 +22,10 @@ do_install() {
 do_package_qa() {
 }
 
-INSANE_SKIP_${PN} += "already-stripped"
+INSANE_SKIP:${PN} += "already-stripped"
 INHIBIT_PACKAGE_STRIP = "1"
 
 SRC_URI[md5sum] = "d57d0b2472f31b65c8b03592a5bbbbd8"
 SRC_URI[sha256sum] = "0a65d449eb415771ca564a001b3ea55edc844fa435e04cbb5a38c69fdf5ff5d2"
 
-FILES_${PN} += "/boot/"
+FILES:${PN} += "/boot/"

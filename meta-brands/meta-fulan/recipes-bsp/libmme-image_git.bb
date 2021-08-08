@@ -5,7 +5,7 @@ require ddt-apps.inc
 DEPENDS += "jpeg"
 PR = "r2"
 
-FILES_${PN} += "${libdir}/libmmeimage.so"
-FILES_${PN}-dev = "${includedir}/libmmeimage ${libdir}/libmmeimage.la"
+FILES:${PN} += "${libdir}/libmmeimage.so"
+FILES:${PN}-dev = "${includedir}/libmmeimage ${libdir}/libmmeimage.la"
 
-INSANE_SKIP_${PN} += "dev-so"
+INSANE_SKIP:${PN} += "dev-so"
