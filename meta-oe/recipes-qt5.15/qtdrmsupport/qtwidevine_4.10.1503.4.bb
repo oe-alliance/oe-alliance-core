@@ -4,7 +4,7 @@ LICENSE = "CLOSED"
 DEPENDS = "qtwebengine"
 PACKAGE_ARCH := "${MACHINE_ARCH}"
 
-SRC_URI = "file://libwidevinecdm-${PV}:armhf.zip"
+SRC_URI = "file://libwidevinecdm-${PV}_armhf.zip"
 
 S = "${WORKDIR}"
 

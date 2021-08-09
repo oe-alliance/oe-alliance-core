@@ -37,8 +37,8 @@ python populate_packages:prepend () {
     do_split_packages(d, enigma2_plugindir, '(.*?/.*?)/.*', 'enigma2-plugin-%s', '%s ', recursive=True, match_path=True, prepend=True, extra_depends = "enigma2")
 
     # we have to perform some tricks to get non-standard files in the plugin packages,
-    # unfortunately FILES:append doesn't work
-    def files:append(pn, newfiles):
+    # unfortunately FILES_append doesn't work
+    def files_append(pn, newfiles):
         files = d.getVar('FILES:' + pn, d, True)
         if files:
             files += " " + newfiles + " "

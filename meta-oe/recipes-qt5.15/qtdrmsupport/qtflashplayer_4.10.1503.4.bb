@@ -4,7 +4,7 @@ LICENSE = "CLOSED"
 DEPENDS = "qtwebengine"
 PACKAGE_ARCH := "${MACHINE_ARCH}"
 
-SRC_URI = "file://libflashplayer-${PV}:armhf.zip"
+SRC_URI = "file://libflashplayer-${PV}_armhf.zip"
 
 S = "${WORKDIR}"
 
