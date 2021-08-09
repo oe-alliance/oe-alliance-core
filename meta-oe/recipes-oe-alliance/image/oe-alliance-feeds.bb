@@ -42,7 +42,6 @@ RDEPENDS_${PN} = " \
     enigma2-plugin-extensions-xmodem \
     enigma2-plugin-extensions-xstreamity \
     enigma2-plugin-systemplugins-hrtunerproxy \
-    enigma2-plugin-systemplugins-joynescan \
     enigma2-plugin-systemplugins-misplslcnscan \
     enigma2-plugin-systemplugins-radiotimesemulator \
     enigma2-plugin-systemplugins-terrestrialscan \
