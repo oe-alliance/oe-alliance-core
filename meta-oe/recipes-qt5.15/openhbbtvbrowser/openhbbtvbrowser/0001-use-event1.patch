@@ -1,0 +1,25 @@
+From 9b864e6416533e7e0099844a679da7326a085c64 Mon Sep 17 00:00:00 2001
+From: Captain <captain.onboard@web.de>
+Date: Mon, 9 Aug 2021 19:00:29 +0200
+Subject: [PATCH] use event1
+
+---
+ browsercontrol.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/browsercontrol.h b/browsercontrol.h
+index 5e86dbd..b85785f 100644
+--- a/browsercontrol.h
++++ b/browsercontrol.h
+@@ -56,7 +56,7 @@ class RemoteController : public QObject
+     Q_OBJECT
+ 
+ public:
+-    RemoteController(const QString &device = QString("/dev/input/event0"));
++    RemoteController(const QString &device = QString("/dev/input/event1"));
+     ~RemoteController();
+ 
+ Q_SIGNALS:
+-- 
+2.32.0.windows.2
+
