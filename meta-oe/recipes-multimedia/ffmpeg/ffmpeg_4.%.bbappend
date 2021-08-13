@@ -2,7 +2,24 @@ FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 
 DEPENDS += "libxml2"
 
-PACKAGECONFIG:append = " libbluray libdav1d libfreetype librtmp openssl"
+SRCREV = "bf87bdd3f65569e562341843965f0e810f7a2d1f"
+SRC_URI = "git://github.com/FFmpeg/FFmpeg.git;branch=release/4.4 \
+           file://0001-libavutil-include-assembly-with-full-path-from-sourc.patch \
+           file://0002-fix-mpegts.patch \
+           file://0003-allow-to-choose-rtmp-impl-at-runtime.patch \
+           file://0004-hls-replace-key-uri.patch \
+           file://0005-mips64-cpu-detection.patch \
+           file://0006-optimize-aac.patch \
+           file://0007-increase-buffer-size.patch \
+           file://0008-recheck-discard-flags.patch \
+           file://0009-ffmpeg-fix-edit-list-parsing.patch \
+           file://0011-rtsp.patch \
+           file://0012-dxva2.patch \
+           "
+
+S = "${WORKDIR}/git"
+
+PACKAGECONFIG:append = " gpl libbluray libdav1d libfreetype librtmp openssl x264"
 
 PACKAGECONFIG[libbluray] = "--enable-libbluray --enable-protocol=bluray,--disable-libbluray,libbluray"
 PACKAGECONFIG[libdav1d] = "--enable-libdav1d,--disable-libdav1d,libdav1d"
@@ -11,18 +28,6 @@ PACKAGECONFIG[librtmp] = "--enable-librtmp,--disable-librtmp,librtmp rtmpdump"
 PACKAGECONFIG[libv4l2] = "--enable-libv4l2,--disable-libv4l2,v4l-utils"
 
 MIPSFPU = "${@bb.utils.contains('TARGET_FPU', 'soft', '--disable-mipsfpu', '--enable-mipsfpu', d)}"
-
-SRC_URI:append = " \
-        file://4_02_fix_mpegts.patch \
-        file://4_03_allow_to_choose_rtmp_impl_at_runtime.patch \
-        file://4_04_hls_replace_key_uri.patch \
-        file://4_06_optimize_aac.patch \
-        file://4_07_increase_buffer_size.patch \
-        file://4_08_recheck_discard_flags.patch \
-        file://4_09_ffmpeg_fix_edit_list_parsing.patch \
-        file://4_11_rtsp.patch \
-        file://4_12_dxva2.patch \
-        "
 
 EXTRA_FFCONF = " \
     --prefix=${prefix} \
@@ -89,9 +94,8 @@ EXTRA_FFCONF = " \
     --disable-manpages \
     --disable-podpages \
     --disable-txtpages \
-    ${@bb.utils.contains("TARGET_ARCH", "mipsel", "${MIPSFPU} --disable-mmi --disable-vfp --disable-neon --disable-mipsdsp --disable-mipsdspr2", "", d)} \
+    ${@bb.utils.contains("TARGET_ARCH", "mipsel", "${MIPSFPU} --extra-libs=-latomic --disable-mips32r5 --disable-mipsdsp --disable-mipsdspr2 \
+                             --disable-loongson2 --disable-loongson3 --disable-mmi --disable-msa --disable-msa2", "", d)} \
     ${@bb.utils.contains("TARGET_ARCH", "arm", "--enable-armv6 --enable-armv6t2 --enable-vfp --enable-neon", "", d)} \
     ${@bb.utils.contains("TUNE_FEATURES", "aarch64", "--enable-armv8 --enable-vfp --enable-neon", "", d)} \
-    --extra-cflags="${TARGET_CFLAGS} ${HOST_CC_ARCH}${TOOLCHAIN_OPTIONS} -ffunction-sections -fdata-sections -fno-aggressive-loop-optimizations" \
-    --extra-ldflags="${TARGET_LDFLAGS},--gc-sections -Wl,--print-gc-sections,-lrt" \
 "
