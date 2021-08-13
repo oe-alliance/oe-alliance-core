@@ -180,6 +180,11 @@ do_install() {
         rm -f ${D}${systemd_system_unitdir}/samba.service
     fi
 
+    install -d ${D}${sysconfdir}/tmpfiles.d
+    install -m644 packaging/systemd/samba.conf.tmp ${D}${sysconfdir}/tmpfiles.d/samba.conf
+    echo "d ${localstatedir}/log/samba 0755 root root -" \
+        >> ${D}${sysconfdir}/tmpfiles.d/samba.conf
+
     install -D -m 644 ${WORKDIR}/volatiles.03_samba ${D}${sysconfdir}/default/volatiles/03_samba
 
     # fix file-rdeps qa warning
@@ -188,7 +193,7 @@ do_install() {
     fi
 
     if ${@bb.utils.contains('IMAGE_FSTYPES','jffs2','true','false',d)}; then
-		rm -rf ${D}${localstatedir}/run/samba
+        rm -rf ${D}${localstatedir}/run/samba
     fi
 
     rm -rf ${D}/run ${D}${localstatedir}/run ${D}${localstatedir}/log
