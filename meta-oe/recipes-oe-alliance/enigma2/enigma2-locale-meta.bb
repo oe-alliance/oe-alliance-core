@@ -32,7 +32,7 @@ RRECOMMENDS_${PN} = "\
     enigma2-locale-lv \
     enigma2-locale-nb \
     enigma2-locale-nl \
-    enigma2-locale-no \
+    enigma2-locale-nn \
     enigma2-locale-pl \
     enigma2-locale-pt \
     enigma2-locale-pt-br \
@@ -57,6 +57,9 @@ ONLY_SMALL = "\
     ${@bb.utils.contains_any("FLASHSIZE", "64 96", "True" , "", d)} \
 "
 
-PR = "r0"
+RCONFLICTS_enigma2-locale-nn = "enigma2-locale-no"
+RREPLACES_enigma2-locale-nn = "enigma2-locale-no"
+
+PR = "r1"
 
 ALLOW_EMPTY_${PN} = "1"
