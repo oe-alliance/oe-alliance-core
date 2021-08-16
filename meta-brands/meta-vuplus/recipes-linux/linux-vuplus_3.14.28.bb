@@ -9,7 +9,7 @@ MACHINE_KERNEL_PR:append = "oea4.2-r4"
 inherit kernel machine_kernel_pr
 
 KERNELSRC = "stblinux-3.14-1.12.tar.bz2"
-KERNELSRC_vusolo4k = "stblinux-3.14-1.8.tar.bz2"
+KERNELSRC:vusolo4k = "stblinux-3.14-1.8.tar.bz2"
 
 SRC_URI[vusolo4k.md5sum] = "1a62540fdd7f23aa2c1ebf119ca71e91"
 SRC_URI[vusolo4k.sha256sum] = "a464515d14dda772047ddba7900858f535057294903341e2c1774009eaf95005"
