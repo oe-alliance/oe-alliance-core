@@ -9,8 +9,6 @@ PV = "1.20+svn${SRCPV}"
 SRCREV = "${AUTOREV}"
 SRC_URI = "svn://svn.streamboard.tv/oscam;protocol=https;module=trunk;scmdata=keep;externals=nowarn"
 
-do_fetch[depends] += "openvix-softcams-oscam-mipsel:do_fetch"
-
 PACKAGES = "enigma2-plugin-softcams-oscam-pcscd-latest"
 
 PROVIDES += "openvix-softcams-oscam-pcscd-latest-mipsel"
