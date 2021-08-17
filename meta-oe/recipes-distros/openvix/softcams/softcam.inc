@@ -8,12 +8,12 @@
 #   CAMSTOP: Command to stop the softcam, default to killall ${CAMNAME}
 # Instead of CAMSTART/CAMSTOP, you can create an init.d script called init.${CAMNAME}
 
-FILES_${PN} = "/usr /etc"
+FILES:${PN} = "/usr /etc"
 
 # no docs, locales etc.
 PACKAGES = "${PN}"
 
-RDEPENDS_${PN} += "softcam-support"
+RDEPENDS:${PN} += "softcam-support"
 
 CAMLINK = "/etc/init.d/softcam"
 CAMPATH = "/etc/init.d/softcam.${CAMNAME}"
@@ -21,11 +21,11 @@ CAMPATH = "/etc/init.d/softcam.${CAMNAME}"
 CAMSTART ?= "exec start-stop-daemon -S -x /usr/softcams/${CAMNAME}"
 CAMSTOP  ?= "exec start-stop-daemon -K -R 2 -x /usr/softcams/${CAMNAME}"
 
-#RRECOMMENDS_${PN} += "softcam-feed-universal"
+#RRECOMMENDS:${PN} += "softcam-feed-universal"
 
 # Generate a simplistic standard init script
 # (sorry for the sleep 1, but start-stop-daemon -R does not work as advertised)
-do_compile_append () {
+do_compile:append () {
 	if [ ! -f init.${CAMNAME} ]
 	then
 		cat > init.${CAMNAME} << EOF
@@ -61,14 +61,14 @@ EOF
 }
 
 # Install routine, should be ok for most cams.
-do_install_append () {
+do_install:append () {
 	install -d ${D}/etc/init.d
 	install -m 755 ${S}/init.${CAMNAME} ${D}/etc/init.d/softcam.${CAMNAME}
 }
 
 # If no cam selected yet, install and start this cam (and don't start it on the build host).
 #	[ "x$D" == "x" ] && [ -e "${CAMLINK}" ] && ${CAMLINK} stop 2>/dev/null || true
-pkg_postinst_${PN}_append () {
+pkg_postinst:${PN}:append () {
 	if [ ! -e "$D${CAMLINK}" ] || [ "$D${CAMLINK}.None" == "`readlink -f $D${CAMLINK}`" ]
 	then
 		rm -f "$D${CAMLINK}" 2>/dev/null
@@ -89,7 +89,7 @@ pkg_postinst_${PN}_append () {
 }
 
 # Stop this cam (if running), and move softlink to None if we're the current cam
-pkg_prerm_${PN}_prepend () {
+pkg_prerm:${PN}:prepend () {
 	if [ "x$D" == "x" ]; then
 		${CAMPATH} stop 2>/dev/null || true
 	fi
@@ -103,4 +103,4 @@ pkg_prerm_${PN}_prepend () {
 	exit 0
 }
 
-INSANE_SKIP_${PN} += "already-stripped build-deps"
+INSANE_SKIP:${PN} += "already-stripped build-deps"

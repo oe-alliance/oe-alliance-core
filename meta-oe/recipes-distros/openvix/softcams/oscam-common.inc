@@ -3,7 +3,7 @@
 require softcam.inc
 inherit cmake
 
-FILESEXTRAPATHS_prepend := "${THISDIR}/enigma2-plugin-softcams-oscam:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/enigma2-plugin-softcams-oscam:"
 
 SRC_URI += " \
             file://OSCAM-LICENSE \
@@ -14,7 +14,7 @@ SRC_URI += " \
 LICENSE="GPLv3"
 LIC_FILES_CHKSUM = "file://../OSCAM-LICENSE;md5=d32239bcb673463ab874e80d47fae504"
 
-CONFFILES_${PN} ?= "/etc/tuxbox/config/${CAMNAME}"
+CONFFILES:${PN} ?= "/etc/tuxbox/config/${CAMNAME}"
 
 PACKAGE_ARCH = "${DEFAULTTUNE}"
 
@@ -34,7 +34,7 @@ EXTRA_OECMAKE += "\
     	-DMODULE_CONSTCW=1 \	
 "
 
-do_configure_prepend () {
+do_configure:prepend () {
 	cp ${S}/../init.oscam-generic ${S}/init.${CAMNAME}
 	perl -i -pe 's:DEFAULT_HTTP_PORT[ \t]*?8888:DEFAULT_HTTP_PORT 83:g' ${S}/oscam-config-global.c
 }
