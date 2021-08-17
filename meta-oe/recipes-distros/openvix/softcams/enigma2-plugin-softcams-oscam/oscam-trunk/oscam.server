@@ -1,0 +1,341 @@
+[reader]
+label                         = reader0_sky_v13
+enable                        = 0
+protocol                      = internal
+device                        = /dev/sci0
+caid                          = 09C4
+boxid                         = 596C3056
+detect                        = cd
+group                         = 1
+emmcache                      = 1,3,2
+blockemm-unknown              = 1
+blockemm-u                    = 1
+blockemm-s                    = 1
+blockemm-g                    = 1
+saveemm-u                     = 1
+disablecrccws                 = 1
+
+[reader]
+label                         = reader0_sky_v14
+enable                        = 0
+protocol                      = internal
+device                        = /dev/sci0
+caid                          = 098C
+boxid                         = 12345678
+detect                        = cd
+group                         = 1
+emmcache                      = 1,3,2
+blockemm-unknown              = 1
+blockemm-u                    = 1
+blockemm-s                    = 1
+blockemm-g                    = 1
+saveemm-u                     = 1
+disablecrccws                 = 1
+
+[reader]
+label                         = reader0_sky_v15
+enable                        = 0
+protocol                      = internal
+device                        = /dev/sci0
+caid                          = 098D
+boxid 		              = 12345678
+ins7e11                       = 14
+detect                        = cd
+group                         = 1
+emmcache                      = 1,3,2
+blockemm-unknown              = 1
+blockemm-u                    = 1
+blockemm-s                    = 1
+blockemm-g                    = 1
+saveemm-u                     = 1
+disablecrccws                 = 1
+
+[reader]
+label                         = reader0_hd+_hd01
+enable                        = 0
+protocol                      = internal
+device                        = /dev/sci0
+caid                          = 1830
+boxkey                        = A7642F57BC96D37C
+rsakey                        = BF358B5461863130686FC933FB541FFCED682F3680F09DBC1A23829FB3B2F766B9DD1BF3B3ECC9AD6661B753DCC3A9624156F9EB64E8168EF09E4D9C5CCA4DD5
+detect                        = cd
+mhz                           = 368
+cardmhz                       = 368
+group                         = 1
+emmcache                      = 1,3,2
+
+[reader]
+label                         = reader0_hd+_hd02
+enable                        = 0
+protocol                      = internal
+device                        = /dev/sci0
+caid                          = 1843
+boxkey                        = A7642F57BC96D37C
+rsakey                        = BF358B5461863130686FC933FB541FFCED682F3680F09DBC1A23829FB3B2F766B9DD1BF3B3ECC9AD6661B753DCC3A9624156F9EB64E8168EF09E4D9C5CCA4DD5
+detect                        = cd
+mhz                           = 368
+cardmhz                       = 368
+group                         = 1
+emmcache                      = 1,3,2
+
+[reader]
+label                         = reader0_hd+_hd03
+protocol                      = internal
+device                        = /dev/sci0
+caid                          = 1860
+boxkey                        = A7642F57BC96D37C
+rsakey                        = 901E595152E67DFD5B134E1D195C4141B3BB1394A8AF4D6BF1D1085DCC4D9CBA5C73A06ED21FC3556B685498030BB1185766117565E39995EFBF72135C2817B7
+mod1                          = 9DF5D60B66A6F839CDA448C9AC59E5AFE9FFA6BFB2AB141003FADD94D47F2EB047764FCE1A62F32B51F1E892171894558B63F55C0096FA36D4210B634358A3C11323A322DC3BC6040E09E579466CF384598C357945FE32C7711D1F59EBA9C44194EC02DF561C1782B14A6F043BA81E63
+data50                        = B6711C868C3EE72533A4E08C1364B83AEEFDEBE9FB54156A8776D872CBC41FF2E5EA2CBAF4F26A58C521EC53E310FC494354E49ECE6CD0F9631B724FAB0C8BAEC1F66C346AD2DB1CB3871AF44C1E1592
+mod50                         = DB9E1F1BD23C6153444E444D8E6C471E162EC63C599D44F476E0D40C3840E0FDB7B63D174DD73B575543983F2F2DFB94E3644958AE642C91636A6BE55528478EB7A422479598C68E6F1FC9D647BBC4D5
+key60                         = 99E9252B4079E3459FD42FCC177FCC9A5B52E1AB1595EF83953FF2866C3A90B7F5868BD32AB27C5AB765A728D24D765CD0B133CF16F32C1E223D1E78DF22E3D6BAB81FF1B8071E44A55773109ADEC08A149E6BC12CE35B23ACF6D043825825EB
+exp60                         = 26A6A008EE962D76EC9E52AA843439E3818F9CD06409552ECC2A54F360F68C254669556FE047166789AAE381A2DE851C8155713C79A9CA7293EF7A21B82631145A1588876EC574D40DD057996511B8E9ECFA44087385A46EC49AB7180D1B1421
+nuid                          = 843E941E
+cwekey                        = 1BCAE16F9F8CE642FCF4F31DE4DEA9C6
+detect                        = cd
+nagra_read                    = 2
+detect_seca_nagra_tunneled_card= 0
+mhz                           = 500
+group                         = 1
+emmcache                      = 1,3,15,0
+
+[reader]
+label                         = reader0_hd+_hd04
+protocol                      = internal
+device                        = /dev/sci0
+caid                          = 186A
+mod1                          = 9DF5D60B66A6F839CDA448C9AC59E5AFE9FFA6BFB2AB141003FADD94D47F2EB047764FCE1A62F32B51F1E892171894558B63F55C0096FA36D4210B634358A3C11323A322DC3BC6040E09E579466CF384598C357945FE32C7711D1F59EBA9C44194EC02DF561C1782B14A6F043BA81E63
+data50                        = B6711C868C3EE72533A4E08C1364B83AEEFDEBE9FB54156A8776D872CBC41FF2E5EA2CBAF4F26A58C521EC53E310FC494354E49ECE6CD0F9631B724FAB0C8BAEC1F66C346AD2DB1CB3871AF44C1E1592
+mod50                         = DB9E1F1BD23C6153444E444D8E6C471E162EC63C599D44F476E0D40C3840E0FDB7B63D174DD73B575543983F2F2DFB94E3644958AE642C91636A6BE55528478EB7A422479598C68E6F1FC9D647BBC4D5
+key60                         = 99E9252B4079E3459FD42FCC177FCC9A5B52E1AB1595EF83953FF2866C3A90B7F5868BD32AB27C5AB765A728D24D765CD0B133CF16F32C1E223D1E78DF22E3D6BAB81FF1B8071E44A55773109ADEC08A149E6BC12CE35B23ACF6D043825825EB
+exp60                         = 26A6A008EE962D76EC9E52AA843439E3818F9CD06409552ECC2A54F360F68C254669556FE047166789AAE381A2DE851C8155713C79A9CA7293EF7A21B82631145A1588876EC574D40DD057996511B8E9ECFA44087385A46EC49AB7180D1B1421
+nuid                          = 843E941E
+cwekey                        = 1BCAE16F9F8CE642FCF4F31DE4DEA9C6
+detect                        = cd
+nagra_read                    = 2
+detect_seca_nagra_tunneled_card= 0
+mhz                           = 500
+group                         = 1
+emmcache                      = 1,3,15,0
+
+[reader]
+label                         = reader0_srg_via
+enable                        = 0
+protocol                      = internal
+device                        = /dev/sci0
+caid                          = 0500
+detect                        = cd
+group                         = 1
+emmcache                      = 1,3,2
+
+[reader]
+label                         = reader0_orf_0d95
+enable                        = 0
+protocol                      = internal
+device                        = /dev/sci0
+caid                          = 0D95
+detect                        = cd
+group                         = 1
+emmcache                      = 1,3,2
+
+[reader]
+label                         = reader0_orf_0d98
+enable                        = 0
+protocol                      = internal
+device                        = /dev/sci0
+caid                          = 0D98
+detect                        = cd
+group                         = 1
+emmcache                      = 1,3,2
+blockemm-g                    = 1
+needsglobalfirst              = 1
+
+[reader]
+label                         = reader1_sky_v13
+enable                        = 0
+protocol                      = internal
+device                        = /dev/sci1
+caid                          = 09C4
+boxid                         = 596C3056
+detect                        = cd
+group                         = 1
+emmcache                      = 1,3,2
+blockemm-unknown              = 1
+blockemm-u                    = 1
+blockemm-s                    = 1
+blockemm-g                    = 1
+saveemm-u                     = 1
+disablecrccws                 = 1
+
+[reader]
+label                         = reader1_sky_v14
+enable                        = 0
+protocol                      = internal
+device                        = /dev/sci1
+caid                          = 098C
+boxid                         = 12345678
+detect                        = cd
+group                         = 1
+emmcache                      = 1,3,2
+blockemm-unknown              = 1
+blockemm-u                    = 1
+blockemm-s                    = 1
+blockemm-g                    = 1
+saveemm-u                     = 1
+disablecrccws                 = 1
+
+[reader]
+label                         = reader1_sky_v15
+enable                        = 0
+protocol                      = internal
+device                        = /dev/sci1
+caid                          = 098D
+boxid 		              = 12345678
+ins7e11                       = 14
+detect                        = cd
+group                         = 1
+emmcache                      = 1,3,2
+blockemm-unknown              = 1
+blockemm-u                    = 1
+blockemm-s                    = 1
+blockemm-g                    = 1
+saveemm-u                     = 1
+disablecrccws                 = 1
+
+[reader]
+label                         = reader1_hd+_hd01
+enable                        = 0
+protocol                      = internal
+device                        = /dev/sci1
+caid                          = 1830
+boxkey                        = A7642F57BC96D37C
+rsakey                        = BF358B5461863130686FC933FB541FFCED682F3680F09DBC1A23829FB3B2F766B9DD1BF3B3ECC9AD6661B753DCC3A9624156F9EB64E8168EF09E4D9C5CCA4DD5
+detect                        = cd
+mhz                           = 368
+cardmhz                       = 368
+group                         = 1
+emmcache                      = 1,3,2
+
+[reader]
+label                         = reader1_hd+_hd02
+enable                        = 0
+protocol                      = internal
+device                        = /dev/sci1
+caid                          = 1843
+boxkey                        = A7642F57BC96D37C
+rsakey                        = BF358B5461863130686FC933FB541FFCED682F3680F09DBC1A23829FB3B2F766B9DD1BF3B3ECC9AD6661B753DCC3A9624156F9EB64E8168EF09E4D9C5CCA4DD5
+detect                        = cd
+mhz                           = 368
+cardmhz                       = 368
+group                         = 1
+emmcache                      = 1,3,2
+
+[reader]
+label                         = reader1_hd+_hd03
+protocol                      = internal
+device                        = /dev/sci1
+caid                          = 1860
+boxkey                        = A7642F57BC96D37C
+rsakey                        = 901E595152E67DFD5B134E1D195C4141B3BB1394A8AF4D6BF1D1085DCC4D9CBA5C73A06ED21FC3556B685498030BB1185766117565E39995EFBF72135C2817B7
+mod1                          = 9DF5D60B66A6F839CDA448C9AC59E5AFE9FFA6BFB2AB141003FADD94D47F2EB047764FCE1A62F32B51F1E892171894558B63F55C0096FA36D4210B634358A3C11323A322DC3BC6040E09E579466CF384598C357945FE32C7711D1F59EBA9C44194EC02DF561C1782B14A6F043BA81E63
+data50                        = B6711C868C3EE72533A4E08C1364B83AEEFDEBE9FB54156A8776D872CBC41FF2E5EA2CBAF4F26A58C521EC53E310FC494354E49ECE6CD0F9631B724FAB0C8BAEC1F66C346AD2DB1CB3871AF44C1E1592
+mod50                         = DB9E1F1BD23C6153444E444D8E6C471E162EC63C599D44F476E0D40C3840E0FDB7B63D174DD73B575543983F2F2DFB94E3644958AE642C91636A6BE55528478EB7A422479598C68E6F1FC9D647BBC4D5
+key60                         = 99E9252B4079E3459FD42FCC177FCC9A5B52E1AB1595EF83953FF2866C3A90B7F5868BD32AB27C5AB765A728D24D765CD0B133CF16F32C1E223D1E78DF22E3D6BAB81FF1B8071E44A55773109ADEC08A149E6BC12CE35B23ACF6D043825825EB
+exp60                         = 26A6A008EE962D76EC9E52AA843439E3818F9CD06409552ECC2A54F360F68C254669556FE047166789AAE381A2DE851C8155713C79A9CA7293EF7A21B82631145A1588876EC574D40DD057996511B8E9ECFA44087385A46EC49AB7180D1B1421
+nuid                          = 843E941E
+cwekey                        = 1BCAE16F9F8CE642FCF4F31DE4DEA9C6
+detect                        = cd
+nagra_read                    = 2
+detect_seca_nagra_tunneled_card= 0
+mhz                           = 500
+group                         = 1
+emmcache                      = 1,3,15,0
+
+[reader]
+label                         = reader1_hd+_hd04
+protocol                      = internal
+device                        = /dev/sci1
+caid                          = 186A
+mod1                          = 9DF5D60B66A6F839CDA448C9AC59E5AFE9FFA6BFB2AB141003FADD94D47F2EB047764FCE1A62F32B51F1E892171894558B63F55C0096FA36D4210B634358A3C11323A322DC3BC6040E09E579466CF384598C357945FE32C7711D1F59EBA9C44194EC02DF561C1782B14A6F043BA81E63
+data50                        = B6711C868C3EE72533A4E08C1364B83AEEFDEBE9FB54156A8776D872CBC41FF2E5EA2CBAF4F26A58C521EC53E310FC494354E49ECE6CD0F9631B724FAB0C8BAEC1F66C346AD2DB1CB3871AF44C1E1592
+mod50                         = DB9E1F1BD23C6153444E444D8E6C471E162EC63C599D44F476E0D40C3840E0FDB7B63D174DD73B575543983F2F2DFB94E3644958AE642C91636A6BE55528478EB7A422479598C68E6F1FC9D647BBC4D5
+key60                         = 99E9252B4079E3459FD42FCC177FCC9A5B52E1AB1595EF83953FF2866C3A90B7F5868BD32AB27C5AB765A728D24D765CD0B133CF16F32C1E223D1E78DF22E3D6BAB81FF1B8071E44A55773109ADEC08A149E6BC12CE35B23ACF6D043825825EB
+exp60                         = 26A6A008EE962D76EC9E52AA843439E3818F9CD06409552ECC2A54F360F68C254669556FE047166789AAE381A2DE851C8155713C79A9CA7293EF7A21B82631145A1588876EC574D40DD057996511B8E9ECFA44087385A46EC49AB7180D1B1421
+nuid                          = 843E941E
+cwekey                        = 1BCAE16F9F8CE642FCF4F31DE4DEA9C6
+detect                        = cd
+nagra_read                    = 2
+detect_seca_nagra_tunneled_card= 0
+mhz                           = 500
+group                         = 1
+emmcache                      = 1,3,15,0
+
+[reader]
+label                         = reader1_srg_via
+enable                        = 0
+protocol                      = internal
+device                        = /dev/sci1
+caid                          = 0500
+detect                        = cd
+group                         = 1
+emmcache                      = 1,3,2
+
+[reader]
+label                         = reader1_orf_0d95
+enable                        = 0
+protocol                      = internal
+device                        = /dev/sci1
+caid                          = 0D95
+detect                        = cd
+group                         = 1
+emmcache                      = 1,3,2
+
+[reader]
+label                         = reader1_orf_0d98
+enable                        = 0
+protocol                      = internal
+device                        = /dev/sci1
+caid                          = 0D98
+detect                        = cd
+group                         = 1
+emmcache                      = 1,3,2
+blockemm-g                    = 1
+needsglobalfirst              = 1
+
+[reader]
+label                         = line_cccam
+enable			      = 0
+protocol                      = cccam
+device                        = 192.168.0.5,12000
+user                          = user
+password                      = pass
+fallback                      = 1
+group                         = 1
+ccckeepalive                  = 1
+
+[reader]
+label                         = line_camd3
+enable                        = 0
+protocol                      = cs357x
+device                        = 192.168.0.5,35000
+user                          = user
+password                      = password
+group                         = 1
+
+[reader]
+label                         = line_newcamd
+enable                        = 0
+protocol                      = newcamd
+device                        = 192.168.0.5,35000
+key                           = 0102030405060708091011121314
+user                          = user
+password                      = password
+fallback                      = 1
+group                         = 1
+
+[reader]
+label                         = keyfile
+enable                        = 0
+protocol                      = constcw
+device                        = /etc/tuxbox/config/constant.cw
+group                         = 1
