@@ -24,13 +24,13 @@ SRC_URI = "git://code.vuplus.com/git/filestreamproxy.git;protocol=http;branch=tr
 
 inherit autotools
 
-EXTRA_OECONF_vusolo4k += " --enable-ext-pid "
-EXTRA_OECONF_vuultimo4k += " --enable-ext-pid "
-EXTRA_OECONF_vuuno4k += " --enable-ext-pid "
-EXTRA_OECONF_vuuno4kse += " --enable-ext-pid "
-EXTRA_OECONF_vuduo4k += " --enable-ext-pid "
-EXTRA_OECONF_vuduo4kse += " --enable-ext-pid "
-EXTRA_OECONF_dags7252 += " --enable-ext-pid "
+EXTRA_OECONF:vusolo4k += " --enable-ext-pid "
+EXTRA_OECONF:vuultimo4k += " --enable-ext-pid "
+EXTRA_OECONF:vuuno4k += " --enable-ext-pid "
+EXTRA_OECONF:vuuno4kse += " --enable-ext-pid "
+EXTRA_OECONF:vuduo4k += " --enable-ext-pid "
+EXTRA_OECONF:vuduo4kse += " --enable-ext-pid "
+EXTRA_OECONF:dags7252 += " --enable-ext-pid "
 
 CXXFLAGS += "-std=gnu++11"
 
