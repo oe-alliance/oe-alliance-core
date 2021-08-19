@@ -49,7 +49,7 @@ IMAGE_CMD:ubi:append = "\
     rm -Rf update; \
     "
 
-require conf/machine/include/tune-mips32.inc
+require conf/machine/include/mips/tune-mips32.inc
 
 PREFERRED_PROVIDER_virtual/egl = "v3d-libgles-${MACHINE}" 
 PREFERRED_PROVIDER_virtual/libgles2 = "v3d-libgles-${MACHINE}"

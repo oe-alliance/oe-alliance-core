@@ -76,4 +76,4 @@ IMAGE_CMD:jffs2:append = "; \
     rm -rf ${DEPLOY_DIR_IMAGE}/gigablue; \
     "
 
-require conf/machine/include/tune-mips32.inc
+require conf/machine/include/mips/tune-mips32.inc

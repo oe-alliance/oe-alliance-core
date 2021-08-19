@@ -40,4 +40,4 @@ IMAGE_CMD:ubi:append = "\
 
 MACHINE_FEATURES += "feature1 feature2 blindscan-dvbs blindscan-dvbc omb bootsplash"
 
-require conf/machine/include/tune-mips32.inc
+require conf/machine/include/mips/tune-mips32.inc

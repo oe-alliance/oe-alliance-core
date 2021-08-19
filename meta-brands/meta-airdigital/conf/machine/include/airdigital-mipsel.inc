@@ -52,5 +52,5 @@ MACHINE_FEATURES += " bootsplash omb boxmodel feature1 linuxwifi"
 
 BOOTLOGO_FILENAME = "splash.bin"
 
-require conf/machine/include/tune-mips32.inc
+require conf/machine/include/mips/tune-mips32.inc
 require conf/machine/include/airdigital-oem.inc

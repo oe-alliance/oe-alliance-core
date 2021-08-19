@@ -8,7 +8,7 @@ KERNEL_FILE = "kernel.bin"
 ROOTFS_FILE = "rootfs.bin"
 
 require conf/machine/include/dreambox.inc
-require conf/machine/include/tune-mips32.inc
+require conf/machine/include/mips/tune-mips32.inc
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "\
     dreambox-dvb-modules-${MACHINE} \

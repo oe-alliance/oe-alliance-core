@@ -37,5 +37,5 @@ MACHINE_FEATURES += " bootsplash omb boxmodel feature1"
 
 BOOTLOGO_FILENAME = "splash.bin"
 
-require conf/machine/include/tune-mips32.inc
+require conf/machine/include/mips/tune-mips32.inc
 require conf/machine/include/gfutures-oem.inc

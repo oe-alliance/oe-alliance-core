@@ -151,7 +151,7 @@ MACHINE_FEATURES += "3dtv alsa hdmicec switchoff bootsplash omb feature1 feature
 
 BOOTLOGO_FILENAME = "splash.bin"
 
-require conf/machine/include/tune-mips32.inc
+require conf/machine/include/mips/tune-mips32.inc
 require conf/machine/include/soc-family.inc
 
 OEM_ARCH = "${MACHINEBUILD}"
