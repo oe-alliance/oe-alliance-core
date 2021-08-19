@@ -47,5 +47,5 @@ IMAGE_CMD:airdigitalemmc:append = "\
     rm -Rf ${IMAGEDIR}; \
     "
 
-require conf/machine/include/tune-cortexa15.inc
+require conf/machine/include/arm/armv7a/tune-cortexa15.inc
 require conf/machine/include/airdigital-oem.inc

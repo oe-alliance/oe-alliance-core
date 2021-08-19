@@ -49,7 +49,7 @@ MACHINE_FEATURES += "alsa 3dtv switchoff hdmicec omb blindscan-tbs blindscan-dvb
 
 BOOTLOGO_FILENAME = "splash.bin"
 
-require conf/machine/include/tune-cortexa15.inc
+require conf/machine/include/arm/armv7a/tune-cortexa15.inc
 require conf/machine/include/soc-family.inc
 require conf/machine/box-hardware.inc
 

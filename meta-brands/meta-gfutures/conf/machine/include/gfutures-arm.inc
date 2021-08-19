@@ -50,5 +50,5 @@ IMAGE_CMD:hdemmc:append = "\
     rm -Rf ${IMAGEDIR}; \
     "
 
-require conf/machine/include/tune-cortexa15.inc
+require conf/machine/include/arm/armv7a/tune-cortexa15.inc
 require conf/machine/include/gfutures-oem.inc

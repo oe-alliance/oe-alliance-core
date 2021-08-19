@@ -98,5 +98,5 @@ IMAGE_CMD:maxytecfastboot8gb:append = " \
     rm -Rf ${DEPLOY_DIR_IMAGE}/${MACHINE}; \
     "
 
-require conf/machine/include/tune-cortexa15.inc
+require conf/machine/include/arm/armv7a/tune-cortexa15.inc
 require conf/machine/include/maxytec-oem.inc
