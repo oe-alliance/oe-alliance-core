@@ -85,7 +85,7 @@ SOC_FAMILY = "pnx8471"
 TARGET_ARCH = "arm"
 DEFAULTTUNE = "armv7a"
 TUNE_FEATURES = "cortexa9 vfp"
-include conf/machine/include/tune-cortexa9.inc
+include conf/machine/include/arm/armv7a/tune-cortexa9.inc
 require conf/machine/include/soc-family.inc
 require conf/machine/box-hardware.inc
 

@@ -44,5 +44,5 @@ IMAGE_CMD:ubi:append = " \
     rm -Rf ${DEPLOY_DIR_IMAGE}/${MACHINE}; \
     "
 
-require conf/machine/include/tune-cortexa7.inc
+require conf/machine/include/arm/armv7a/tune-cortexa7.inc
 require conf/machine/include/airdigital-oem.inc
