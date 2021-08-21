@@ -27,7 +27,7 @@ INITSCRIPT_PARAMS:vuduo4k = "start 70 S ."
 INITSCRIPT_PARAMS:gb7252 = "start 70 S ."
 INITSCRIPT_PARAMS:gb72604 = "start 70 S ."
 PRECOMPILED_ARCH = "${MACHINE}"
-PRECOMPILED_ARCH_dm7020hdv2 = "dm7020hd"
+PRECOMPILED_ARCH:dm7020hdv2 = "dm7020hd"
 
 inherit update-rc.d
 
