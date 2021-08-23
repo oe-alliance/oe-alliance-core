@@ -13,6 +13,7 @@ RRECOMMENDS:${PN} = "\
     enigma2-locale-de \
     enigma2-locale-el \
     enigma2-locale-en \
+    enigma2-locale-en-au \
     enigma2-locale-en-gb \
     enigma2-locale-es \
     enigma2-locale-et \
