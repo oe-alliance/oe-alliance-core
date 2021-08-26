@@ -10,9 +10,9 @@ EXTRA_IMAGEDEPENDS += "dreambox-secondstage-${MACHINE}"
 GLIBC_EXTRA_OECONF = "--with-tls --with-__thread"
 
 DVBMEDIASINK_CONFIG = "--with-dreambox --with-pcm --with-wma --with-wmv --with-dtsdownmix --with-eac3 --with-dts"
-DVBMEDIASINK_CONFIG_dm7080 = "--with-dreambox --with-pcm --with-wma --with-wmv --with-dtsdownmix --with-eac3 --with-dts --with-vb6 --with-vb8 --with-spark"
-DVBMEDIASINK_CONFIG_dm820 = "--with-dreambox --with-pcm --with-wma --with-wmv --with-dtsdownmix --with-eac3 --with-dts --with-vb6 --with-vb8 --with-spark"
-DVBMEDIASINK_CONFIG_dm520 = "--with-dreambox --with-pcm --with-wma --with-wmv --with-dtsdownmix --with-eac3 --with-dts --with-vb6 --with-vb8 --with-spark --with-h265"
+DVBMEDIASINK_CONFIG:dm7080 = "--with-dreambox --with-pcm --with-wma --with-wmv --with-dtsdownmix --with-eac3 --with-dts --with-vb6 --with-vb8 --with-spark"
+DVBMEDIASINK_CONFIG:dm820 = "--with-dreambox --with-pcm --with-wma --with-wmv --with-dtsdownmix --with-eac3 --with-dts --with-vb6 --with-vb8 --with-spark"
+DVBMEDIASINK_CONFIG:dm520 = "--with-dreambox --with-pcm --with-wma --with-wmv --with-dtsdownmix --with-eac3 --with-dts --with-vb6 --with-vb8 --with-spark --with-h265"
 
 include conf/machine/include/autoload-filesystems.inc
 require conf/machine/include/soc-family.inc
@@ -49,7 +49,7 @@ PREFERRED_PROVIDER_virtual/blindscan-dvbc = "dreambox-blindscan-utils"
 PREFERRED_VERSION_linux-dreambox ?= "3.2"
 
 # Build old Dreambox with GCC10 
-GCCVERSION_dreambox = "10.%"
+GCCVERSION:dreambox = "10.%"
 
 PREFERRED_VERSION_rt8812au = "4.3.14"
 
