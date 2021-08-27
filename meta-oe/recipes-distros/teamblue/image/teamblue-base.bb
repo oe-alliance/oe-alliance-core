@@ -13,6 +13,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 inherit packagegroup
 
 RDEPENDS:${PN} = "\
+    autofs \
     ca-certificates \
     ${@bb.utils.contains_any("FLASHSIZE", "64 96 128", "", \
     " \
@@ -48,4 +49,5 @@ RDEPENDS:${PN} = "\
     ", d)} \
     packagegroup-base-smbfs-client \
     ofgwrite \
+    wireless-tools \
     "

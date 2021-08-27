@@ -11,7 +11,7 @@ PR = "r3"
 
 inherit packagegroup
 
-DEPENDS = "enigma2-pliplugins openeight-feeds"
+DEPENDS = "enigma2-pliplugins"
 
 E2_LANGUAGES = "\
     enigma2-locale-ar \

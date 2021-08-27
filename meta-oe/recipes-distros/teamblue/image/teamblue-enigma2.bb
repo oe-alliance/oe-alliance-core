@@ -11,8 +11,6 @@ PR = "r3"
 
 inherit packagegroup
 
-DEPENDS = "teamblue-feeds"
-
 RRECOMMENDS:${PN} = "\
     teamblue-version-info \
     enigma2-plugin-drivers-usbserial \

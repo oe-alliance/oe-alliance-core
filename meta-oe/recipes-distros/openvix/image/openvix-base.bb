@@ -17,6 +17,7 @@ inherit packagegroup
 DEPENDS = "openvix-version-info"
 
 RDEPENDS:${PN} = "\
+    autofs \
     ca-certificates \
     oe-alliance-base \
     openvix-version-info \
@@ -30,5 +31,6 @@ RDEPENDS:${PN} = "\
     ${PYTHON_PN}-future \
     ${PYTHON_PN}-six \
     rtmpdump \
+    wireless-tools \
     zip \
     "

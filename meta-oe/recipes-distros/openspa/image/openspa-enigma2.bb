@@ -10,8 +10,6 @@ PR = "r5"
 
 inherit packagegroup
 
-DEPENDS = "openspa-feeds"
-
 RRECOMMENDS:${PN} = " \
     enigma2-skindefault \
     openspa-version-info \

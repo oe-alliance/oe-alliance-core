@@ -13,6 +13,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 inherit packagegroup
 
 RDEPENDS:${PN} = " \
+    autofs \
     ca-certificates \
     flip \
     hddtemp \
@@ -30,4 +31,5 @@ RDEPENDS:${PN} = " \
     ${@bb.utils.contains_any("FLASHSIZE", "64 96", "", "ntfs-3g unrar zip", d)} \
     openvpn-script \
     mhw2-files \
+    wireless-tools \
     "

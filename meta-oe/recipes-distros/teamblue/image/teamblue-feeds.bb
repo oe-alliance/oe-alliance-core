@@ -12,6 +12,8 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 inherit packagegroup
 
+DEPENDS += "oe-alliance-feeds enigma2-3rdparty-plugins"
+
 RRECOMMENDS:${PN} = "\
     astra-sm \
     curlftpfs \

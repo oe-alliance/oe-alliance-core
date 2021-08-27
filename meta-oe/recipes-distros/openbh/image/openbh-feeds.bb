@@ -13,6 +13,8 @@ PR = "r5"
 
 inherit packagegroup
 
+DEPENDS += "oe-alliance-feeds enigma2-3rdparty-plugins"
+
 RRECOMMENDS:${PN} = "\
     cdfs \
     curlftpfs \

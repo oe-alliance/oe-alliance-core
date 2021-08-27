@@ -17,6 +17,7 @@ inherit packagegroup
 DEPENDS = "openbh-version-info"
 
 RDEPENDS:${PN} = "\
+    autofs \
     blackhole-base \
     blackholesocker \
     ca-certificates \
@@ -41,5 +42,6 @@ RDEPENDS:${PN} = "\
     ${PYTHON_PN}-future \
     ${PYTHON_PN}-six \
     rtmpdump \
+    wireless-tools \
     zip \
     "

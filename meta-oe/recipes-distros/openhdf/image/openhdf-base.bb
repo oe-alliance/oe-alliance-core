@@ -13,6 +13,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 inherit packagegroup
 
 RDEPENDS:${PN} = "\
+    autofs \
     oe-alliance-base \
     ca-certificates \
     openhdf-enigma2 \
@@ -52,4 +53,5 @@ RDEPENDS:${PN} = "\
     packagegroup-base-nfs \
     ", d)} \
     packagegroup-base-smbfs-client \
+    wireless-tools \
     "

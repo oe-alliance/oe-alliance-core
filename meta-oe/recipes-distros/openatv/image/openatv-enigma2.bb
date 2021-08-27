@@ -10,7 +10,7 @@ PR = "r70"
 
 inherit packagegroup
 
-DEPENDS = "enigma2-pliplugins openatv-feeds"
+DEPENDS = "enigma2-pliplugins"
 
 RRECOMMENDS:${PN} = " \
     enigma2-skindefault \

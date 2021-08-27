@@ -11,6 +11,8 @@ PR = "r48"
 
 inherit packagegroup
 
+DEPENDS += "oe-alliance-feeds enigma2-3rdparty-plugins"
+
 RRECOMMENDS:${PN} = "\
     enigma2-pliplugins \
     enigma2-display-skins \

@@ -10,6 +10,7 @@ PV = "1.0"
 PR = "r03"
 
 inherit packagegroup
+DEPENDS += "oe-alliance-feeds opennfr-3rdparty-plugins enigma2-3rdparty-plugins"
 
 RRECOMMENDS:${PN} = "\
     curlftpfs \

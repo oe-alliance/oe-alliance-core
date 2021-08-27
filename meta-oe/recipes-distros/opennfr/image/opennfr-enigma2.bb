@@ -11,7 +11,7 @@ PR = "r40"
 
 inherit packagegroup
 
-DEPENDS = "opennfr-feeds opennfr-3rdparty-plugins 3rd-party-feed-configs"
+DEPENDS = "3rd-party-feed-configs"
 
 RDEPENDS:${PN} = "\
     enigma2-plugin-extensions-autotimer \

@@ -11,8 +11,6 @@ PR = "r89"
 
 inherit packagegroup
 
-DEPENDS = "openhdf-feeds"
-
 RRECOMMENDS:${PN} = " \
     openhdf-version-info \
     enigma2-skindefault \

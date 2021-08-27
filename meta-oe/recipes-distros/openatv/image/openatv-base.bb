@@ -13,6 +13,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 inherit packagegroup
 
 RDEPENDS:${PN} = "\
+    autofs \
     ca-certificates \
     flip \
     hddtemp \
@@ -38,4 +39,5 @@ RDEPENDS:${PN} = "\
         ntfs-3g \
         unrar \
     ", d)} \
+    wireless-tools \
     "

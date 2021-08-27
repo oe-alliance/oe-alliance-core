@@ -9,6 +9,7 @@ PR = "r1"
 inherit packagegroup
 
 RDEPENDS:${PN} = "\
+    autofs \
     oe-alliance-base \
     openeight-enigma2 \
     openeight-bootlogo \
@@ -22,4 +23,5 @@ RDEPENDS:${PN} = "\
     ofgwrite \
     enigma2-plugin-drivers-dvb-usb-af9035 \
     ca-certificates \
+    wireless-tools \
     "

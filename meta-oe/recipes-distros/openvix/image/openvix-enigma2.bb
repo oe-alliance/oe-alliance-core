@@ -15,8 +15,6 @@ inherit packagegroup
 RCONFLICTS:${PN} = "enigma2-plugin-extensions-permanenttimeshift enigma2-plugin-systemplugins-skinselector"
 RREPLACES:${PN} = "enigma2-plugin-extensions-permanenttimeshift enigma2-plugin-systemplugins-skinselector"
 
-DEPENDS = "openvix-feeds"
-
 RDEPENDS:${PN} = "\
     enigma2-skindefault \
     openvix-core \

@@ -13,6 +13,8 @@ PR = "r4"
 
 inherit packagegroup
 
+DEPENDS += "oe-alliance-feeds enigma2-3rdparty-plugins"
+
 DEPENDS = "\
     enigma2-plugin-extensions-blurayplayer \
     enigma2-skins-openvix \

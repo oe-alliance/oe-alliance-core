@@ -11,6 +11,7 @@ PR = "r21"
 inherit packagegroup
 
 RDEPENDS:${PN} = "\
+    autofs \
     ca-certificates \
     oe-alliance-base \
     opennfr-enigma2 \
@@ -40,5 +41,6 @@ RDEPENDS:${PN} = "\
     libelf \
     dvbsnoop \
     ${@bb.utils.contains("TUNE_FEATURES", "armv", "glibc-compat", "", d)} \
-    enigma2-plugin-drivers-usbserial \ 
+    enigma2-plugin-drivers-usbserial \
+    wireless-tools \
     "

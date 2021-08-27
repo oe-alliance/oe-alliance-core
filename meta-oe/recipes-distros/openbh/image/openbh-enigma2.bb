@@ -15,7 +15,7 @@ inherit packagegroup
 RCONFLICTS:${PN} = "enigma2-plugin-extensions-permanenttimeshift enigma2-plugin-systemplugins-skinselector"
 RREPLACES:${PN} = "enigma2-plugin-extensions-permanenttimeshift enigma2-plugin-systemplugins-skinselector"
 
-DEPENDS = "enigma2-pliplugins openbh-feeds"
+DEPENDS = "enigma2-pliplugins"
 
 RDEPENDS:${PN} = "\
     enigma2-skindefault \
