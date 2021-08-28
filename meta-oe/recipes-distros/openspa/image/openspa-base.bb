@@ -31,5 +31,6 @@ RDEPENDS:${PN} = " \
     ${@bb.utils.contains_any("FLASHSIZE", "64 96", "", "ntfs-3g unrar zip", d)} \
     openvpn-script \
     mhw2-files \
+    ${PYTHON_PN}-pexpect \
     wireless-tools \
     "

@@ -32,6 +32,7 @@ RDEPENDS:${PN} = "\
     ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-imaging", "${PYTHON_PN}-pillow", d)} \
     ${PYTHON_PN}-requests \
     ${PYTHON_PN}-cfscrape \
+    ${PYTHON_PN}-pexpect \
     ${PYTHON_PN}-js2py \
     ofgwrite \
     ${PYTHON_PN}-gdata \

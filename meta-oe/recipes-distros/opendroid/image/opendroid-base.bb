@@ -28,6 +28,7 @@ RDEPENDS:${PN} = "\
     ${PYTHON_PN}-service-identity \
     ${PYTHON_PN}-requests \
     ${PYTHON_PN}-future \
+    ${PYTHON_PN}-pexpect \
     ${PYTHON_PN}-six \
     ${PYTHON_PN}-beautifulsoup4 \
     rtmpdump \
