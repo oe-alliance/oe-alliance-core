@@ -3,7 +3,7 @@ oe-alliance-core 5.0
 
 The openembedded alliance core.
 
-Supportet DISTRO
+Supported DISTRO
 
 openatv   Support: https://www.opena.tv/
 openbh    Support: https://vuplus-community.net
@@ -16,9 +16,9 @@ openvix   Support: https://www.world-of-satellite.com
 teamblue  Support: https://www.gigablue-support.org
 
 
-Supportet Vendors and Models  with openATV
+Supported Vendors and Models  with openATV
 
-AirDigital  
+### AirDigital  
 
 Zgemma-Star 2S          MACHINE:  zgemmas2s
 Zgemma-Star H1          MACHINE:  zgemmash1
@@ -54,7 +54,7 @@ Zgemma H9S SE           MACHINE:  zgemmah9sse
 Zgemma H11S             MACHINE:  zgemmah11s
 Zgemma H10 COMBO        MACHINE:  zgemmah10combo
 
-Amiko
+### Amiko
 
 Viper SLIM              MACHINE:  viperslim 
 Viper T2/C              MACHINE:  vipert2c 
@@ -67,7 +67,7 @@ Viper 4K V20            MACHINE:  viper4kv20
 Viper 4K V30            MACHINE:  viper4kv30
 Viper Single            MACHINE:  vipersingle
 
-Anadol
+### Anadol
 
 ANADOL 4K               MACHINE:  anadol4k
 ANADOL 4K V2            MACHINE:  anadol4kv2
@@ -75,7 +75,7 @@ ANADOL 4K COMBO         MACHINE:  anadol4kcombo
 ANADOL MULTIBOX Combo   MACHINE:  anadolmulti
 ANADOL MULTIBOX Twin    MACHINE:  anadolmultitwin
 
-Atemio
+### Atemio
 
 Atemio AM 5200          MACHINE:  atemio5x00
 Atemio AM 6000          MACHINE:  atemio6000
@@ -83,11 +83,11 @@ Atemio AM 6100          MACHINE:  atemio6100
 Atemio AM 6200          MACHINE:  atemio6200
 Atemio NEMESIS          MACHINE:  atemionemesis 
 
-Atto
+### Atto
 
 atto turing             MACHINE:  turing
 
-AX
+### AX
 
 AX-Quadbox HD 2400      MACHINE:  quadbox2400
 Triplex                 MACHINE:  triplex
@@ -97,7 +97,7 @@ AX 4K HD61              MACHINE:  ax61
 AX MULTIBOX Combo       MACHINE:  axmulticombo
 AX MULTIBOX Twin        MACHINE:  axmultitwin
 
-Axas
+### Axas
 
 CLASS M                 MACHINE:  classm
 E3HD                    MACHINE:  axase3
@@ -112,7 +112,7 @@ HIS TWIN                MACHINE:  axashistwin
 HIS C 4K                MACHINE:  axashisc4k
 HIS TWIN +              MACHINE:  axashistwinplus
 
-Beyonwiz
+### Beyonwiz
 
 T2                      MACHINE:  beyonwizt2
 T3                      MACHINE:  beyonwizt3
@@ -120,7 +120,7 @@ T4                      MACHINE:  beyonwizt4
 U4                      MACHINE:  beyonwizu4
 V2                      MACHINE:  beyonwizv2
 
-Dinobot
+### Dinobot
 
 DINOBOT 4K              MACHINE:  dinobot4k
 DINOBOT 4K SE           MACHINE:  dinobot4kse
@@ -128,7 +128,7 @@ DINOBOT 4K plus         MACHINE:  dinobot4kplus
 DINOBOT 4K mini         MACHINE:  dinobot4kmini
 DINOBOT 4K TWIN         MACHINE:  dinobot4ktwin
 
-Dreambox
+### Dreambox
 
 DM500HDV2               MACHINE:  dm500hdv2
 DM800SEV2               MACHINE:  dm800sev2
@@ -142,7 +142,7 @@ DM7080                  MACHINE:  dm7080
 DM900 Ultra HD          MACHINE:  dm900
 DM920 Ultra HD          MACHINE:  dm920
 
-Edision
+### Edision
 
 Optimuss OS1            MACHINE:  optimussos1
 Optimuss OS2            MACHINE:  optimussos2
@@ -159,7 +159,7 @@ OS mio4k                MACHINE:  osmio4k
 OS mio + 4k             MACHINE:  osmio4kplus
 OS mini4k               MACHINE:  osmini4k
 
-EVO
+### EVO
 
 ENfinity                MACHINE:  enfinity
 ENfinity X1 +           MACHINE:  x1plus
@@ -174,13 +174,13 @@ SLIM                    MACHINE:  evoslim
 SLIM SE                 MACHINE:  evoslimse
 SLIM T2/C               MACHINE:  evoslimt2c
 
-Ferguson
+### Ferguson
 
 U5Pvr                   MACHINE:  ferguson4k
 Ariva combo             MACHINE:  arivacombo
 Ariva twin              MACHINE:  arivatwin
 
-Formuler
+### Formuler
 
 F1                      MACHINE:  formuler1
 F1 transcoding          MACHINE:  formuler1tc
@@ -190,12 +190,12 @@ F4                      MACHINE:  formuler4
 F4 iptv improved        MACHINE:  formuler4ip
 F4 TURBO                MACHINE:  formuler4turbo
 
-Galaxy-Innovations
+### Galaxy-Innovations
 
 GI ET-7000 Mini         MACHINE:  et7x00mini
 GI ET-11000             MACHINE:  gi11000
 
-Gigablue
+### Gigablue
 
 GB800SE                 MACHINE:  gb800se
 GB800SOLO               MACHINE:  gb800solo
@@ -216,7 +216,7 @@ GB TRIO 4K              MACHINE:  gbtrio4k
 GB X3 4K                MACHINE:  gbx34k
 GB IP 4K                MACHINE:  gbip4k
 
-GoldenInterstar
+### GoldenInterstar
 
 XPEED LX1               MACHINE:  xpeedlx
 XPEED LX2               MACHINE:  xpeedlx
@@ -224,20 +224,20 @@ XPEED LX3               MACHINE:  xpeedlx3
 XPEED LX CLASS S2       MACHINE:  xpeedlxcs2
 XPEED LX CLASS C        MACHINE:  xpeedlxcc
 
-HDBox
+### HDBox
 
 ENIBOX                  MACHINE:  enibox
 
-HITUBE
+### HITUBE
 
 HITUBE 4K combo         MACHINE:  hitube4k
 HITUBE 4K PRO           MACHINE:  hitube4kpro
 
-amesdonkey
+### Jamesdonkey
 
 HD Duo                  MACHINE:  jdhdduo
 
-IQON
+### IQON
 
 IQON100HD               MACHINE:  iqonios100hd
 IQON200HD               MACHINE:  iqonios200hd
@@ -252,41 +252,41 @@ Force 2 nano            MACHINE:  force2nano
 Force 3 UHD             MACHINE:  force3uhd
 Force 3 UHD Plus        MACHINE:  force3uhdplus
 
-IZIBOX
+### IZIBOX
 
 IZIBOX ONE 4K           MACHINE:  iziboxone4k
 IZIBOX ECO TWIN HD      MACHINE:  iziboxecohd
 IZIBOX X3               MACHINE:  iziboxx3
 IZIBOX Elite 4K         MACHINE:  iziboxelite4k
 
-jepssen
+### Jepssen
 
 Mediabox HD LX          MACHINE:  mediabox
 
-Maxdigital
+### Maxdigital
 
 XP1000                  MACHINE:  xp1000max
 
-Medialink
+### Medialink
 
 IxussOne                MACHINE:  ixussone
 IxussZero               MACHINE:  ixusszero
 
-MaXytec
+### MaXytec
 
 MaXytec Multi 4K        MACHINE:  maxytecmulti
 MaXytec Multi SE 4K     MACHINE:  maxytecmultise
 
-MediaArt
+### MediaArt
 
 Mediaart200HD           MACHINE:  mediaart200hd
 
-Megasat
+### Megasat
 
 Force 2                 MACHINE:  megaforce2
 Force 1 +               MACHINE:  megaforce1plus
 
-Miraclebox
+### Miraclebox
 
 Premium Twin HD         MACHINE:  mbtwin
 Pemium Mini HD          MACHINE:  mbmini
@@ -297,11 +297,11 @@ Premium Micro V2        MACHINE:  mbmicrov2
 Premium Twin Plus       MACHINE:  mbtwinplus
 Premium Mini Hybrid     MACHINE:  mbhybrid
 
-MK Digital
+### MK Digital
 
 XP1000                  MACHINE:  xp1000mk
 
-Mut@nt
+### Mut@nt
 
 HD2400                  MACHINE:  mutant2400
 HD1500                  MACHINE:  mutant1500
@@ -314,11 +314,11 @@ HD51                    MACHINE:  mutant51
 HD11                    MACHINE:  mutant11
 HD60                    MACHINE:  mutant60
 
-Novaler
+### Novaler
 
 Multibox 4K             MACHINE:  novaler4k
 
-Octagon
+### Octagon
 
 SF8 HD                  MACHINE:  sf8
 XP1000 +                MACHINE:  xp1000plus
@@ -334,16 +334,16 @@ SF4008 4K E2            MACHINE:  sf4008
 SF8008 4K UHD           MACHINE:  sf8008
 SF8008 MINI 4K UHD      MACHINE:  sf8008m
 
-Odin
+### Odin
 
 MARAM9                  MACHINE:  maram9
 
-Optibox
+###Optibox
 
 EVO                     MACHINE:  evo
 E3 HD                   MACHINE:  evoe3hd 
 
-Opticum
+### Opticum
 
 AX-Odin                 MACHINE:  axodin
 AX-Odin Cable           MACHINE:  axodinc
@@ -351,7 +351,7 @@ Odin Twin               MACHINE:  opticumtt
 AX ODIN Hybrid DVB-C-T2 MACHINE:  odin2hybrid
 AX ODIN Plus            MACHINE:  odinplus
 
-Protek
+### Protek
 
 9900 LX                 MACHINE:  9900lx
 9910 LX                 MACHINE:  9910lx
@@ -361,32 +361,32 @@ Protek 4K               MACHINE:  protek4k
 Protek 4K X1            MACHINE:  protek4kx1
 Protek 4K X2            MACHINE:  protek4kx2
 
-PULSe
+### PULSe
 
 PULSe 4K                MACHINE:  pulse4k
 PULSe 4K MINI           MACHINE:  pulse4kmini
 
-Qviart
+### Qviart
 
 Lunix                   MACHINE:  lunix
 Lunix 4K                MACHINE:  lunix4k
 Lunix3 4K               MACHINE:  lunix34k
 Lunix CO                MACHINE:  lunixco
 
-RedEagle
+### RedEagle
 
 Twin Box LCD            MACHINE:  twinboxlcd
 SINGLE Box LCD          MACHINE:  singleboxlcd
 
-RELOOK
+### RELOOK
 
 MAGO                    MACHINE:  mago
 
-ROXXS
+### ROXXS
 
 Roxxs200HD              MACHINE:  roxxs200hd
 
-SAB
+### SAB
 
 SAB Alpha Triple        MACHINE:  alphatriple
 
@@ -394,24 +394,24 @@ Sezam 1000HD            MACHINE:  sezam1000hd
 Sezam 5000HD            MACHINE:  sezam5000hd
 Sezam Marvel            MACHINE:  sezammarvel
 
-SOGNO
+### SOGNO
 
 Sogno 8800HD            MACHINE:  sogno8800hd
 Sogno Spark Revolution  MACHINE:  sognorevolution
 Sogno Spark Triple      MACHINE:  sognotriple
 
-SPACE
+### SPACE
 
 Black Widow-X           MACHINE:  bwidowx
 
-SPYCAT
+### SPYCAT
 
 SPYCAT                  MACHINE:  spycat
 SPYCAT mini             MACHINE:  spycatmini
 SPYCAT mini plus        MACHINE:  spycatminiplus
 SPYCAT mini V2          MACHINE:  spycatminiv2
 
-Technomate
+### Technomate
 
 TMTWIN                  MACHINE:  tmtwin
 TM2T                    MACHINE:  tm2t
@@ -427,38 +427,38 @@ TMNANOSE M2 Plus        MACHINE:  tmnanosem2plus
 TMNANO M3               MACHINE:  tmnanom3
 TMTWIN 4K               MACHINE:  tmtwin4k
 
-TELESTAR
+### TELESTAR
 
 STARSAT LX              MACHINE:  starsatlx
 
-TIVIAR
+### TIVIAR
 
 mini plus               MACHINE:  tiviarmin
 Alpha plus              MACHINE:  tiviaraplus
 
-T-rex
+### T-rex
 
 GalaxyM6                MACHINE:  galaxym6
 
-uClan
+###uClan
 
 Ustym 4K PRO            MACHINE:  ustym4kpro
 
-Venton Unibox
+### Venton Unibox
 
 VENTONHDX               MACHINE:  ventonhdx
 UniBox ECO              MACHINE:  uniboxhde
 
-Vimastec
+### Vimastec
 
 VS1000                  MACHINE:  vimastec1000
 VS1500                  MACHINE:  vimastec1500
 
-VisionNet
+### VisionNet
 
 Marvel 1                MACHINE:  marvel1
 
-VU+
+### VU+
 
 VUSOLO                  MACHINE:  vusolo
 VUDUO                   MACHINE:  vuduo
@@ -477,22 +477,22 @@ VU ZERO4K               MACHINE:  vuzero4k
 VU DUO4K                MACHINE:  vuduo4k
 VU DUO4KSE              MACHINE:  vuduo4kse
 
-World Vision
+### World Vision
 
 force 1                 MACHINE:  worldvisionf1
 force 1 Plus            MACHINE:  worldvisionf1plus
 
-Vizyon
+### Vizyon
 
 Vizyon Vita             MACHINE:  vizyonvita
 
-WWIO
+### WWIO
 
 WWIO bre2ze             MACHINE:  bre2ze
 WWIO bre2ze T2/C        MACHINE:  bre2zet2c
 WWIO bre2ze 4K          MACHINE:  bre2ze4k
 
-XSARIUS
+### XSARIUS
 
 FUSION HD               MACHINE:  fusionhd
 FUSION HD SE            MACHINE:  fusionhdse
@@ -501,7 +501,7 @@ PURE HD SE              MACHINE:  purehdse
 REVO 4K                 MACHINE:  revo4k
 GALAXY 4K               MACHINE:  galaxy4k
 
-XTrend
+### XTrend
 
 ET4000                  MACHINE:  et4x00
 ET5000                  MACHINE:  et5x00
