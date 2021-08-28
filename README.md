@@ -3,20 +3,29 @@ oe-alliance-core 5.0
 
 The openembedded alliance core.
 
-Supported DISTRO
+# Supported DISTRO
 
-openatv   Support: https://www.opena.tv/
-openbh    Support: https://vuplus-community.net
-opendroid Support: https://droidsat.org
-openeight Support: http://www.openeight.de/
-openhdf   Support: https://www.hdfreaks.cc/
-opennfr   Support: https://www.nachtfalke.biz
-openspa   Support: https://openspa.info/
-openvix   Support: https://www.world-of-satellite.com
-teamblue  Support: https://www.gigablue-support.org
+openatv   Support: [https://www.opena.tv/](https://www.opena.tv/)
+
+openbh    Support: [https://vuplus-community.net](https://vuplus-community.net)
+
+opendroid Support: [https://droidsat.org](https://droidsat.org)
+
+openeight Support: [http://www.openeight.de/](http://www.openeight.de/)
+
+openhdf   Support: [https://www.hdfreaks.cc/](https://www.hdfreaks.cc/)
+
+opennfr   Support: [https://www.nachtfalke.biz](https://www.nachtfalke.biz)
+
+openspa   Support: [https://openspa.info/](https://openspa.info/)
+
+openvix   Support: [https://www.world-of-satellite.com](https://www.world-of-satellite.com)
+
+teamblue  Support: [https://www.gigablue-support.org](https://www.gigablue-support.org)
 
 
-Supported Vendors and Models  with openATV
+
+# Supported Vendors and Models  with openATV
 
 ### AirDigital  
 
