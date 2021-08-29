@@ -8,8 +8,8 @@ DEPENDS += "${PYTHON_PN}-backports-lzma"
 
 SRCREV="${AUTOREV}"
 
-PV = "6.12+git${SRCPV}"
-PKGV = "6.12+git${GITPKGV}"
+PV = "6.18+git${SRCPV}"
+PKGV = "6.18+git${GITPKGV}"
 PR = "r0"
 inherit gitpkgv allarch
 

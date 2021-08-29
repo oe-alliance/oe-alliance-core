@@ -8,8 +8,8 @@ RRECOMMENDS:${PN} = "${PYTHON_PN}-cheetah libusb1 kernel-module-cdc-acm kernel-m
 
 inherit gitpkgv
 SRCREV = "${AUTOREV}"
-PV = "1.0+git${SRCPV}"
-PKGV = "1.0+git${GITPKGV}"
+PV = "1.42+git${SRCPV}"
+PKGV = "1.42+git${GITPKGV}"
 PR = "r11"
 
 SRC_URI = "git://github.com/nickersk/enigmalight.git;protocol=https;branch=4.4"
