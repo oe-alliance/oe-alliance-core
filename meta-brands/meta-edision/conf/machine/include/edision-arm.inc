@@ -2,7 +2,7 @@
 PACKAGECONFIG_GL:pn-qtbase = "gles2 eglfs linuxfb"
 PACKAGECONFIG_FB:pn-qtbase = " "
 
-PREFERRED_VERSION_linux-edision = "5.13"
+PREFERRED_VERSION_linux-edision = "5.14"
 
 # eMMC has 8 GB in total, but one image gets only 2 GB of that (Partitioned eMMC)
 FLASHSIZE = "2048"

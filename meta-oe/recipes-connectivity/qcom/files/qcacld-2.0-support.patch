@@ -1,4 +1,4 @@
-From f494bd6c38cd4c4c1a03c8b586cc321d491cbf37 Mon Sep 17 00:00:00 2001
+From 362dcb01b73bda17d40b6f092811369136197902 Mon Sep 17 00:00:00 2001
 From: Jaedon Shin <jaedon.shin@gmail.com>
 Date: Mon, 13 Apr 2020 12:38:41 +0900
 Subject: [PATCH] qcacld-2.0: Make driver compatiable with mainline kernel
@@ -78,7 +78,7 @@ index 2fd820c5886e..cb86442001b9 100644
  /**============================================================================
    @brief hdd_stats() - Function registered with the Linux OS for
 diff --git a/CORE/HDD/src/wlan_hdd_cfg80211.c b/CORE/HDD/src/wlan_hdd_cfg80211.c
-index fd59a2e248a0..b6c1a9b61e72 100644
+index db43f61aaaac..e5b44cd03ec9 100644
 --- a/CORE/HDD/src/wlan_hdd_cfg80211.c
 +++ b/CORE/HDD/src/wlan_hdd_cfg80211.c
 @@ -5224,9 +5224,15 @@ static int hdd_extscan_passpoint_fill_network_list(
@@ -118,7 +118,7 @@ index 09deb2e6105c..0e93b494e6e0 100644
  /**
   * hdd_driver_memdump_procfs_init() - Initialize procfs for driver memory dump
 diff --git a/CORE/HDD/src/wlan_hdd_softap_tx_rx.c b/CORE/HDD/src/wlan_hdd_softap_tx_rx.c
-index f0c069482f9c..d2d499276b9c 100644
+index ba3293318589..71bc0e2f433e 100644
 --- a/CORE/HDD/src/wlan_hdd_softap_tx_rx.c
 +++ b/CORE/HDD/src/wlan_hdd_softap_tx_rx.c
 @@ -562,7 +562,11 @@ static void __hdd_softap_tx_timeout(struct net_device *dev)
@@ -168,10 +168,10 @@ index d7bcf7b24d89..07a6221aaffe 100644
  static struct hash_fw fw_hash;
  #endif
 diff --git a/CORE/SERVICES/COMMON/adf/adf_nbuf.c b/CORE/SERVICES/COMMON/adf/adf_nbuf.c
-index e2c47286d5d2..fdfa67d4100e 100644
+index 4a348112b145..f700a5ed5858 100644
 --- a/CORE/SERVICES/COMMON/adf/adf_nbuf.c
 +++ b/CORE/SERVICES/COMMON/adf/adf_nbuf.c
-@@ -2437,6 +2437,10 @@ uint16_t adf_nbuf_construct_radiotap(
+@@ -2446,6 +2446,10 @@ uint16_t adf_nbuf_construct_radiotap(
   *
   * Return: none
   */
@@ -515,10 +515,10 @@ index d6c4e7e92055..235011509354 100644
 +MODULE_IMPORT_NS(CRYPTO_INTERNAL);
 +#endif
 diff --git a/Kbuild b/Kbuild
-index a3be8a3b5eaf..c3fbd1705f17 100644
+index 47b2733e16b8..e379fb64f1b5 100644
 --- a/Kbuild
 +++ b/Kbuild
-@@ -192,7 +192,7 @@ CONFIG_WLAN_FEATURE_SAE := y
+@@ -195,7 +195,7 @@ CONFIG_WLAN_FEATURE_SAE := y
  # Feature flags which are not (currently) configurable via Kconfig
  
  #Whether to build debug version
@@ -527,7 +527,7 @@ index a3be8a3b5eaf..c3fbd1705f17 100644
  
  #Enable this flag to build driver in diag version
  BUILD_DIAG_VERSION := 1
-@@ -981,7 +981,7 @@ WDI_INC :=	$(WDI_CP_INC) \
+@@ -984,7 +984,7 @@ WDI_INC :=	$(WDI_CP_INC) \
  
  WCNSS_INC :=	-I$(WLAN_ROOT)/wcnss/inc
  
@@ -536,7 +536,7 @@ index a3be8a3b5eaf..c3fbd1705f17 100644
  
  INCS :=		$(HDD_INC) \
  		$(EPPING_INC) \
-@@ -1057,7 +1057,6 @@ CDEFINES :=	-DANI_LITTLE_BYTE_ENDIAN \
+@@ -1060,7 +1060,6 @@ CDEFINES :=	-DANI_LITTLE_BYTE_ENDIAN \
  		-DWLAN_PERF \
  		-DPTT_SOCK_SVC_ENABLE \
  		-Wall\
@@ -545,5 +545,5 @@ index a3be8a3b5eaf..c3fbd1705f17 100644
  		-DHAL_SELF_STA_PER_BSS=1 \
  		-DWLAN_FEATURE_VOWIFI_11R \
 -- 
-2.31.1
+2.33.0
 
