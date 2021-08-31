@@ -79,10 +79,9 @@ pkg_postinst:${PN}:append () {
 	if [ "x$D" == "x" ]; then
 		if [ "${CAMPATH}" == "`readlink -f ${CAMLINK}`" ]
 		then
-			echo "Softcam is selected as default, (re)starting ${CAMNAME}"
-			${CAMPATH} stop 2>/dev/null || true
-			sleep 2
-			${CAMPATH} start || true
+			echo "${CAMNAME} was selected, now selecting None as softcam"
+			rm -f "$D${CAMLINK}"
+			ln -s "softcam.None" "$D${CAMLINK}"
 		fi
 	fi
 	exit 0
