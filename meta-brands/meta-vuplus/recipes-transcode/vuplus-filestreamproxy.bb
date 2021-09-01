@@ -8,7 +8,7 @@ inherit autotools gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
-PR = "r4"
+PR = "r5"
 
 PROVIDES += "virtual/filestreamproxy"
 RPROVIDES:${PN} += "virtual/filestreamproxy"
