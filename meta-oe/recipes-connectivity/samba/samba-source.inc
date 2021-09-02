@@ -1,4 +1,4 @@
-PV = "4.14.5"
+PV = "4.14.7"
 HOMEPAGE = "https://www.samba.org/"
 SECTION = "console/network"
 
@@ -51,11 +51,15 @@ SRC_URI = "${SAMBA_MIRROR}/stable/samba-${PV}.tar.gz \
            file://volatiles.03_samba \
            "
 
+SRC_URI:append:arm = " \
+           file://500-arm-status-segfault-fix.patch \
+          "
+
 SRC_URI:append:sh4 = " \
            file://209-strtoull.patch \
           "
 
-SRC_URI[md5sum] = "96d275e31387e6c403d6c16465d15b7e"
-SRC_URI[sha256sum] = "bb6ef5d2f16b85288d823578abc453d9a80514c42e5a2ea2c4e3c60dc42335c3"
+SRC_URI[md5sum] = "f0db8302944bb861b31f4163fd302f66"
+SRC_URI[sha256sum] = "6f50353f9602aa20245eb18ceb00e7e5ec793df0974aebd5254c38f16d8f1906"
 
 UPSTREAM_CHECK_REGEX = "samba\-(?P<pver>4\.14(\.\d+)+).tar.gz"
