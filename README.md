@@ -73,6 +73,8 @@ Zgemma H7C              MACHINE:  zgemmah7
 
 Zgemma H7 AC            MACHINE:  zgemmah7
 
+Zgemma H8.2H            MACHINE:  zgemmah82h
+
 Zgemma H9S              MACHINE:  zgemmah9s
 
 Zgemma H9T              MACHINE:  zgemmah9t
