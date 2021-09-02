@@ -7,9 +7,9 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 inherit gitpkgv
 SRCREV = "${AUTOREV}"
-PV = "1.0+git${SRCPV}"
-PKGV = "1.0+git${GITPKGV}"
-PR = "r18"
+PV = "1.1+git${SRCPV}"
+PKGV = "1.1+git${GITPKGV}"
+PR = "r0"
 
 PROVIDES += "virtual/transtreamproxy"
 RPROVIDES:${PN} += "virtual/transtreamproxy"
@@ -17,10 +17,7 @@ RPROVIDES:${PN} += "virtual/transtreamproxy"
 DEPENDS = "boost virtual/inetd"
 RDEPENDS:${PN} += "virtual/inetd"
 
-SRC_URI = "git://code.vuplus.com/git/filestreamproxy.git;protocol=http;branch=transtreamproxy \
-    file://gcc6.patch \
-    file://shm-ordered-comparison-of-pointer-zero.patch \
-    "
+SRC_URI = “git://github.com/oe-mirrors/filestreamproxy.git;protocol=http;branch=transtreamproxy”
 
 inherit autotools
 
