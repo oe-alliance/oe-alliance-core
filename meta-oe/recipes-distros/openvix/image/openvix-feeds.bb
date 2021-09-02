@@ -15,7 +15,7 @@ inherit packagegroup
 
 DEPENDS += "oe-alliance-feeds enigma2-3rdparty-plugins"
 
-DEPENDS = "\
+RRECOMMENDS:${PN} = "\
     enigma2-plugin-extensions-blurayplayer \
     enigma2-skins-openvix \
     enigma2-plugin-skins-vix-turquoise-hd \
