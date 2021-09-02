@@ -16,7 +16,7 @@ RPROVIDES:${PN} += "virtual/transtreamproxy"
 DEPENDS = "boost virtual/inetd"
 RDEPENDS:${PN} += "virtual/inetd"
 
-SRC_URI = “git://github.com/oe-mirrors/filestreamproxy.git;protocol=http;branch=transtreamproxy”
+SRC_URI = "git://github.com/oe-mirrors/filestreamproxy.git;protocol=http;branch=transtreamproxy"
 
 inherit autotools
 
