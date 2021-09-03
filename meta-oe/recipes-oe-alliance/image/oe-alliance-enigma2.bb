@@ -10,7 +10,7 @@ ALLOW_EMPTY:${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r2"
+PR = "r3"
 
 DEPENDS = "enigma2 enigma2-locale-meta enigma2-plugins enigma2-oe-alliance-plugins oe-alliance-wifi"
 
@@ -36,14 +36,14 @@ RRECOMMENDS:${PN} = "\
     enigma2-plugin-extensions-mediascanner \
     enigma2-plugin-extensions-pictureplayer \
     enigma2-plugin-extensions-openwebif \
-    enigma2-plugin-systemplugins-networkbrowser \
+    ${@bb.utils.contains_any("FLASHSIZE", "64", "", "enigma2-plugin-systemplugins-networkbrowser", d)} \
     enigma2-plugin-systemplugins-networkwizard \
     \
     ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", "oe-alliance-drivers", d)} \
     \
     enigma2-plugin-systemplugins-satfinder \
     ${@bb.utils.contains("MACHINE_FEATURES", "dvbc-only", "", "enigma2-plugin-systemplugins-positionersetup", d)} \
-    ${@bb.utils.contains("MACHINE_FEATURES", "blindscan-dvbs", "enigma2-plugin-systemplugins-blindscan" , "", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "blindscan-dvbs", "${BLINDSCAN}" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "hdmicec", "enigma2-plugin-systemplugins-hdmicec" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "nowifi", "", "oe-alliance-wifi", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "dvb-c", "enigma2-plugin-systemplugins-cablescan" , "", d)} \
@@ -60,3 +60,5 @@ RRECOMMENDS:${PN} = "\
     ${@bb.utils.contains("MACHINE_FEATURES", "fcc", "enigma2-plugin-systemplugins-fastchannelchange" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "himedia", "enigma2-plugin-systemplugins-servicehisilicon" , "", d)} \
     "
+
+BLINDSCAN = "${@bb.utils.contains_any("FLASHSIZE", "64", "", "enigma2-plugin-systemplugins-blindscan", d)}"

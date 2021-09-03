@@ -39,6 +39,6 @@ RDEPENDS:${PN} = "\
     ${@bb.utils.contains_any("FLASHSIZE", "64 96", "", " \
         ntfs-3g \
         unrar \
+        wireless-tools \
     ", d)} \
-    wireless-tools \
     "

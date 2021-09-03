@@ -154,7 +154,8 @@ RRECOMMENDS:${PN} += "libdvdcss"
 # We depend on the font which we use for TXT subtitles (defined in skin_subtitles.xml)
 RDEPENDS:${PN} += "font-valis-enigma"
 
-RDEPENDS:${PN} += "${@bb.utils.contains("MACHINE_FEATURES", "blindscan-dvbc", "virtual/blindscan-dvbc" , "", d)}"
+RDEPENDS:${PN} += "${@bb.utils.contains("MACHINE_FEATURES", "blindscan-dvbc", "${BLINDSCAN}" , "", d)}"
+BLINDSCAN = "${@bb.utils.contains_any("FLASHSIZE", "64", "", "virtual/blindscan-dvbc", d)}"
 
 #make sure default skin is installed.
 RDEPENDS:${PN} += "${E2DEFAULTSKIN} "
