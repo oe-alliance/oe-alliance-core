@@ -7,7 +7,7 @@ do_image_zgemmayaffs[depends] = " \
 	mkyaffs2utils-native:do_populate_sysroot \
 "
 
-IMAGE_CMD_zgemmayaffs () {
+IMAGE_CMD:zgemmayaffs () {
 	mkdir -p ${WORKDIR}/bootoptions
 	echo "imageurl https://raw.githubusercontent.com/oe-alliance/bootmenu/raw/master/${MACHINEBUILD}/images" > ${WORKDIR}/bootoptions/bootmenu.conf
 	echo "# " >> ${WORKDIR}/bootoptions/bootmenu.conf

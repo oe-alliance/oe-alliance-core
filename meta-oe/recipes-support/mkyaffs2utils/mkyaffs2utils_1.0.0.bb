@@ -20,7 +20,7 @@ do_compile() {
     cd mkyaffs2image && oe_runmake
 }
 
-FILES_${PN} += "${bindir}"
+FILES:${PN} += "${bindir}"
 
 do_install() {
 	install -d ${D}${bindir}
