@@ -97,6 +97,10 @@ Zgemma H11S             MACHINE:  zgemmah11s
 
 Zgemma H10 COMBO        MACHINE:  zgemmah10combo
 
+Zgemma H9 COMBO SE      MACHINE:  zgemmah9combose
+
+Zgemma H9 TWIN SE       MACHINE:  zgemmah9twinse
+
 
 ### Amiko
 
