@@ -13,6 +13,7 @@ RDEPENDS:${PN} = "${PYTHON_PN}-core \
     ${PYTHON_PN}-isodate \
     ${PYTHON_PN}-iso3166 \
     ${PYTHON_PN}-iso639 \
+    ${PYTHON_PN}-lxml \
     ${PYTHON_PN}-misc \
     ${PYTHON_PN}-pkgutil \
     ${PYTHON_PN}-pycryptodome \
