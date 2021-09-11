@@ -13,13 +13,13 @@ DOWNLOAD_DIR="${DIRECTORY}/download"
 CONFIG_DIR="${DIRECTORY}/config"
 WATCH_DIR="${DIRECTORY}/watch"
 RPC_PORT=9091
-USER="root"
+USERNAME="root"
 PASSWORD="enigma2"
 ALLOWED="*.*.*.*,*:*:*:*:*:*:*:*"
 [ -f /etc/default/transmission-daemon ] && . /etc/default/transmission-daemon
 NAME="transmission-daemon"
 DAEMON="/bin/nice -n 9 /usr/bin/transmission-daemon"
-ARGS="-c $WATCH_DIR -g $CONFIG_DIR -r :: -a $ALLOWED -w $DOWNLOAD_DIR -p $RPC_PORT -t -u $USER -v $PASSWORD"
+ARGS="-c $WATCH_DIR -g $CONFIG_DIR -r :: -a $ALLOWED -w $DOWNLOAD_DIR -p $RPC_PORT -t -u $USERNAME -v $PASSWORD"
 
 [ -z "$DAEMON_USER" ] || SSDOPTIONS="--chuid $DAEMON_USER:$DAEMON_GROUP"
 

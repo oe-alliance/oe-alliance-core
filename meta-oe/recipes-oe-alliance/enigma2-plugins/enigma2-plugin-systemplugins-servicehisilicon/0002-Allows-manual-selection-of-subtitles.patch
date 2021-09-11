@@ -1,0 +1,106 @@
+From c4b53be1b9054a568279249d5a1c10f782219c0a Mon Sep 17 00:00:00 2001
+From: kueken <ohnemailadresse@arcor.de>
+Date: Mon, 7 Jun 2021 23:12:23 +0200
+Subject: [PATCH] Allows manual selection of subtitles. Not perfect yet, but it
+ works.
+
+---
+ servicehisilicon/servicehisilicon.cpp | 19 +++++++++++--------
+ servicehisilicon/servicehisilicon.h   | 20 ++++++++++++++++++++
+ 2 files changed, 31 insertions(+), 8 deletions(-)
+
+diff --git a/servicehisilicon/servicehisilicon.cpp b/servicehisilicon/servicehisilicon.cpp
+index b0e7bfb..ac0537f 100644
+--- a/servicehisilicon/servicehisilicon.cpp
++++ b/servicehisilicon/servicehisilicon.cpp
+@@ -1940,13 +1940,13 @@ RESULT eServiceHisilicon::disableSubtitles()
+ 
+ RESULT eServiceHisilicon::getCachedSubtitle(struct SubtitleTrack &track)
+ {
+-	std::vector<struct SubtitleTrack> subtitlelist;
+-	getSubtitleList(subtitlelist);
++
+ 	bool autoturnon = eConfigManager::getConfigBoolValue("config.subtitles.pango_autoturnon", true);
++	int m_subtitleStreams_size = (int)m_subtitleStreams.size();
+ 	if (!autoturnon)
+ 		return -1;
+ 
+-	if (m_cachedSubtitleStream == -2 && subtitlelist.size())
++	if (m_cachedSubtitleStream == -2 && m_subtitleStreams_size)
+ 	{
+ 		m_cachedSubtitleStream = 0;
+ 		int autosub_level = 5;
+@@ -1964,14 +1964,14 @@ RESULT eServiceHisilicon::getCachedSubtitle(struct SubtitleTrack &track)
+ 		configvalue = eConfigManager::getConfigValue("config.autolanguage.subtitle_autoselect4");
+ 		if (configvalue != "" && configvalue != "None")
+ 			autosub_languages.push_back(configvalue);
+-		for (unsigned int i = 0; i < subtitlelist.size(); i++)
++		for (int i = 0; i < m_subtitleStreams_size; i++)
+ 		{
+-			if (!subtitlelist[i].language_code.empty())
++			if (!m_subtitleStreams[i].language_code.empty())
+ 			{
+ 				int x = 1;
+ 				for (std::vector<std::string>::iterator it2 = autosub_languages.begin(); x < autosub_level && it2 != autosub_languages.end(); x++, it2++)
+ 				{
+-					if ((*it2).find(subtitlelist[i].language_code) != std::string::npos)
++					if ((*it2).find(m_subtitleStreams[i].language_code) != std::string::npos)
+ 					{
+ 						autosub_level = x;
+ 						m_cachedSubtitleStream = i;
+@@ -1982,9 +1982,12 @@ RESULT eServiceHisilicon::getCachedSubtitle(struct SubtitleTrack &track)
+ 		}
+ 	}
+ 
+-	if (m_cachedSubtitleStream >= 0 && m_cachedSubtitleStream < (int)subtitlelist.size())
++	if (m_cachedSubtitleStream >= 0 && m_cachedSubtitleStream < m_subtitleStreams_size)
+ 	{
+-		track = subtitlelist[m_cachedSubtitleStream];
++		track.type = 2;
++		track.pid = m_cachedSubtitleStream;
++		track.page_number = int(m_subtitleStreams[m_cachedSubtitleStream].type);
++		track.magazine_number = 0;
+ 		return 0;
+ 	}
+ 	return -1;
+diff --git a/servicehisilicon/servicehisilicon.h b/servicehisilicon/servicehisilicon.h
+index f0a844e..c2fd3b3 100644
+--- a/servicehisilicon/servicehisilicon.h
++++ b/servicehisilicon/servicehisilicon.h
+@@ -172,6 +172,24 @@ public:
+ 	void setAC3Delay(int);
+ 	void setPCMDelay(int);
+ 
++	struct audioStream
++	{
++		int type;
++		int pid;
++		std::string language_code; /* iso-639, if available. */
++		audioStream()
++		{
++		}
++	};
++	struct subtitleStream
++	{
++		int type;
++		std::string language_code; /* iso-639, if available. */
++		int id;
++		subtitleStream()
++		{
++		}
++	};
+ 	struct bufferInfo
+ 	{
+ 		int bufferPercent;
+@@ -221,6 +239,8 @@ private:
+ 	int m_currentSubtitleStream;
+ 	int m_cachedSubtitleStream;
+ 	int selectAudioStream(int i);
++	std::vector<audioStream> m_audioStreams;
++	std::vector<subtitleStream> m_subtitleStreams;
+ 	iSubtitleUser *m_subtitle_widget;
+ 	friend class eServiceFactoryHisilicon;
+ 	eServiceReference m_ref;
+-- 
+2.25.1
+

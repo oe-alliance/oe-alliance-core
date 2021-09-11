@@ -12,6 +12,11 @@ SRC_URI += "file://hotplug.sh \
             file://nocam.sh \
             file://nocard.sh \
 "
+SRC_URI_append_sh4 += "\
+    file://sh4_initscripts.patch \
+"
+
+FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
 
 do_install_append() {
     # umountnfs should run before network stops (which is at K40)

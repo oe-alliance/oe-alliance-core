@@ -1,0 +1,39 @@
+From c0529367157abdaa58cbe5abecaa4b82f9036d0f Mon Sep 17 00:00:00 2001
+From: kueken <ohnemailadresse@arcor.de>
+Date: Sun, 30 May 2021 12:51:11 +0200
+Subject: [PATCH] tryfix missing Handling eit-Subtitle
+
+---
+ servicehisilicon/servicehisilicon.cpp | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+
+diff --git a/servicehisilicon/servicehisilicon.cpp b/servicehisilicon/servicehisilicon.cpp
+index b0e7bfb..156a636 100644
+--- a/servicehisilicon/servicehisilicon.cpp
++++ b/servicehisilicon/servicehisilicon.cpp
+@@ -273,6 +273,22 @@ RESULT eStaticServiceHisiliconInfo::getEvent(const eServiceReference &ref, ePtr<
+ 		equivalentref.path.clear();
+ 		return eEPGCache::getInstance()->lookupEventTime(equivalentref, start_time, evt);
+ 	}
++	else // try to read .eit file
++	{
++		size_t pos;
++		ePtr<eServiceEvent> event = new eServiceEvent;
++		std::string filename = ref.path;
++		if ( (pos = filename.rfind('.')) != std::string::npos)
++		{
++			filename.erase(pos + 1);
++			filename += "eit";
++			if (!event->parseFrom(filename, 0))
++			{
++				evt = event;
++				return 0;
++			}
++		}
++	}
+ 	evt = 0;
+ 	return -1;
+ }
+-- 
+2.25.1
+

@@ -32,7 +32,7 @@ S = "${WORKDIR}/lirc-${PV}"
 
 PARALLEL_MAKE = ""
 
-CFLAGS_append = " -DUINPUT_NEUTRINO_HACK "
+CFLAGS_append = " -DUINPUT_NEUTRINO_HACK -std=gnu11 "
 
 EXTRA_OECONF += "--with-kerneldir=${STAGING_KERNEL_BUILDDIR} ${DRIVER} --without-x --with-driver=none --with-driver=userspace "
 

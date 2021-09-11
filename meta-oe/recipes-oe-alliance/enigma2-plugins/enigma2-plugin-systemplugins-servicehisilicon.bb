@@ -7,7 +7,10 @@ DEPENDS = "enigma2"
 RDEPENDS_${PN} = "enigma2"
 
 SRCREV = "${AUTOREV}"
-SRC_URI = "git://github.com/zgemma-star/servicehisilicon.git;branch=master"
+SRC_URI = "git://github.com/zgemma-star/servicehisilicon.git;branch=master \
+		file://0002-Allows-manual-selection-of-subtitles.patch \
+		file://0001-tryfix-missing-Handling-eit-Subtitle.patch \
+"
 
 S = "${WORKDIR}/git"
 

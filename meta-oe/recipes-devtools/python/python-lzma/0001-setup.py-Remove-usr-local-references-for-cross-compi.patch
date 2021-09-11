@@ -34,3 +34,6 @@ index d7ab0c4..24670c7 100644
                      )]
  
  descr = "Backport of Python 3.3's 'lzma' module for XZ/LZMA compressed files."
+-- 
+2.7.4
+

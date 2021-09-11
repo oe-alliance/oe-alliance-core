@@ -1,0 +1,108 @@
+--- a/libavcodec/dxva2.c
++++ b/libavcodec/dxva2.c
+@@ -771,16 +771,18 @@
+ #if CONFIG_D3D11VA
+     if (avctx->pix_fmt == AV_PIX_FMT_D3D11)
+         return (intptr_t)frame->data[1];
+-    if (avctx->pix_fmt == AV_PIX_FMT_D3D11VA_VLD) {
++    if (avctx->pix_fmt == AV_PIX_FMT_D3D11VA_VLD && surface) {
+         D3D11_VIDEO_DECODER_OUTPUT_VIEW_DESC viewDesc;
+         ID3D11VideoDecoderOutputView_GetDesc((ID3D11VideoDecoderOutputView*) surface, &viewDesc);
+         return viewDesc.Texture2D.ArraySlice;
+     }
+ #endif
+ #if CONFIG_DXVA2
+-    for (i = 0; i < DXVA_CONTEXT_COUNT(avctx, ctx); i++) {
+-        if (avctx->pix_fmt == AV_PIX_FMT_DXVA2_VLD && ctx->dxva2.surface[i] == surface)
+-            return i;
++    if (avctx->pix_fmt == AV_PIX_FMT_DXVA2_VLD) {
++        for (i = 0; i < DXVA_CONTEXT_COUNT(avctx, ctx); i++) {
++            if (ctx->dxva2.surface[i] == surface)
++                return i;
++        }
+     }
+ #endif
+ 
+--- a/libavcodec/dxva2_h264.c
++++ b/libavcodec/dxva2_h264.c
+@@ -504,6 +504,14 @@
+ 
+     if (ctx_pic->slice_count <= 0 || ctx_pic->bitstream_size <= 0)
+         return -1;
++
++    // Wait for an I-frame before start decoding. Workaround for ATI UVD and UVD+ GPUs
++    if (!h->got_first_iframe) {
++        if (!(ctx_pic->pp.wBitFields & (1 << 15)))
++            return -1;
++        h->got_first_iframe = 1;
++    }
++
+     ret = ff_dxva2_common_end_frame(avctx, h->cur_pic_ptr->f,
+                                     &ctx_pic->pp, sizeof(ctx_pic->pp),
+                                     &ctx_pic->qm, sizeof(ctx_pic->qm),
+--- a/h264_slice.c
++++ b/libavcodec/h264_slice.c
+@@ -936,6 +936,7 @@
+ 
+     h->first_field           = 0;
+     h->prev_interlaced_frame = 1;
++    h->got_first_iframe = 0;
+ 
+     init_scan_tables(h);
+     ret = ff_h264_alloc_tables(h);
+--- a/libavcodec/h264dec.c
++++ b/libavcodec/h264dec.c
+@@ -486,6 +486,7 @@
+ 
+     h->next_outputed_poc = INT_MIN;
+     h->prev_interlaced_frame = 1;
++    h->got_first_iframe = 0;
+     idr(h);
+ 
+     h->poc.prev_frame_num = -1;
+--- a/libavcodec/h264dec.h
++++ b/libavcodec/h264dec.h
+@@ -533,6 +533,8 @@
+      * slices) anymore */
+     int setup_finished;
+ 
++    int got_first_iframe;
++
+     int cur_chroma_format_idc;
+     int cur_bit_depth_luma;
+     int16_t slice_row[MAX_SLICES]; ///< to detect when MAX_SLICES is too low
+--- a/libavcodec/vaapi_h264.c
++++ b/libavcodec/vaapi_h264.c
+@@ -314,6 +314,11 @@
+     H264SliceContext *sl = &h->slice_ctx[0];
+     int ret;
+ 
++    if (pic->nb_slices == 0) {
++        ret = AVERROR_INVALIDDATA;
++        goto finish;
++    }
++
+     ret = ff_vaapi_decode_issue(avctx, pic);
+     if (ret < 0)
+         goto finish;
+--- a/libavformat/bintext.c
++++ b/libavformat/bintext.c
+@@ -149,7 +149,7 @@
+             return AVPROBE_SCORE_EXTENSION + 1;
+ 
+         predict_width(&par, p->buf_size, got_width);
+-        if (par.width < 8)
++        if (par.width <= 0)
+             return 0;
+         calculate_height(&par, p->buf_size);
+         if (par.height <= 0)
+@@ -195,8 +195,6 @@
+             next_tag_read(s, &bin->fsize);
+         if (!bin->width) {
+             predict_width(st->codecpar, bin->fsize, got_width);
+-            if (st->codecpar->width < 8)
+-                return AVERROR_INVALIDDATA;
+             calculate_height(st->codecpar, bin->fsize);
+         }
+         avio_seek(pb, 0, SEEK_SET);
+

@@ -11,8 +11,8 @@ BINV = "4.9.4"
 
 FILESEXTRAPATHS =. "${FILE_DIRNAME}/gcc-4.9:"
 
-DEPENDS =+ "mpfr gmp libmpc zlib"
-NATIVEDEPS = "mpfr-native gmp-native libmpc-native zlib-native"
+DEPENDS =+ "mpfr gmp libmpc zlib flex-native"
+NATIVEDEPS = "mpfr-native gmp-native libmpc-native zlib-native flex-native"
 
 LICENSE = "GPL-3.0-with-GCC-exception & GPLv3"
 
@@ -44,18 +44,25 @@ SRC_URI = "\
     file://0018-gcc-4.3.3-SYSROOT_CFLAGS_FOR_TARGET.patch \
     file://0019-64-bit-multilib-hack.patch \
     file://0020-optional-libstdc.patch \
+    file://0021-Don-t-search-host-directory-during-relink-if-inst_pr.patch \
     file://0021-gcc-disable-MASK_RELAX_PIC_CALLS-bit.patch \
     file://0022-COLLECT_GCC_OPTIONS.patch \
     file://0023-Use-the-defaults.h-in-B-instead-of-S-and-t-oe-in-B.patch \
     file://0025-fortran-cross-compile-hack.patch \
+    file://0025-handle-sysroot-support-for-nativesdk-gcc.patch \
+    file://0026-Search-target-sysroot-gcc-version-specific-dirs-with.patch \
+    file://0027-Fix-various-_FOR_BUILD-and-related-variables.patch \
     file://0026-libgcc-sjlj-check.patch \
     file://0027-cpp-honor-sysroot.patch \
     file://0028-MIPS64-Default-to-N64-ABI.patch \
     file://0029-Define-GLIBC_DYNAMIC_LINKER-and-UCLIBC_DYNAMIC_LINKE.patch \
     file://0030-gcc-Fix-argument-list-too-long-error.patch \
+    file://0030-libgcc-Add-knob-to-use-ldbl-128-on-ppc.patch \
+    file://0031-Link-libgcc-using-LDFLAGS-not-just-SHLIB_LDFLAGS.patch \
     file://0031-Disable-sdt.patch \
     file://0032-libtool.patch \
     file://0033-gcc-armv4-pass-fix-v4bx-to-linker-to-support-EABI.patch \
+    file://0034-Use-the-multilib-config-files-from-B-instead-of-usin.patch \
     file://0040-fix-g++-sysroot.patch \
     file://0041-libtool-avoid-libdir.patch \
     file://0043-cpp.patch \
@@ -78,6 +85,7 @@ SRC_URI = "\
     file://0063-Use-SYSTEMLIBS_DIR-replacement-instead-of-hardcoding.patch \
     file://0064-fix-cross-compiling.patch \
     file://0065--sh-use-gnu-hash-style.patch \
+    file://pthreat.patch \
 "
 SRC_URI[md5sum] = "87c24a4090c1577ba817ec6882602491"
 SRC_URI[sha256sum] = "6c11d292cd01b294f9f84c9a59c230d80e9e4a47e5c6355f046bb36d4f358092"

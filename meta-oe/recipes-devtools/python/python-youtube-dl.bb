@@ -22,6 +22,7 @@ S = "${WORKDIR}/git"
 EXTRA_OEMAKE = "PYTHON=${PYTHON}"
 
 do_compile_prepend() {
+    cd ${S}
     oe_runmake lazy-extractors youtube-dl.bash-completion
 }
 

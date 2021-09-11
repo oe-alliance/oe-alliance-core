@@ -1,0 +1,35 @@
+From 8777ec84e4e1a4becb249a9cfb6bce7c4bf7d2d0 Mon Sep 17 00:00:00 2001
+From: christophecvr <stefansat@telenet.be>
+Date: Fri, 24 Feb 2017 14:34:33 +0100
+Subject: [PATCH] Try-out continu in hls to avoid blocking of main thread.
+
+ Looks like the error self was false,
+ If we just continue it retries,and
+ the media just continues to play ok.
+ The main advantage is that we avoid a
+ main e2 thread blocked with stb freeze
+ as result. Even if the media would stop,
+ We do not have a frozen stb.
+
+	modified:   ext/hls/m3u8.c
+
+---
+ ext/hls/m3u8.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/ext/hls/m3u8.c b/ext/hls/m3u8.c
+index 679e28876..f5b208fb1 100644
+--- a/ext/hls/m3u8.c
++++ b/ext/hls/m3u8.c
+@@ -393,9 +393,9 @@ check_media_seqnums (GstM3U8 * self, GList * previous_files)
+ 
+     if (f1->sequence == f2->sequence && !g_str_equal (f1->uri, f2->uri)) {
+       /* Same sequence, different URI. This is bad! */
+-      GST_ERROR ("Media URIs inconsistent (sequence %" G_GINT64_FORMAT
++      GST_ERROR ("Media URIs inconsistent, but try anyway (sequence %" G_GINT64_FORMAT
+           "): had '%s', got '%s'", f1->sequence, f2->uri, f1->uri);
+-      return FALSE;
++      //return FALSE;
+     } else if (f1->sequence < f2->sequence) {
+       /* Not same sequence but by construction sequence must be higher in the
+        * new one. All good in that case, if it isn't then this means that

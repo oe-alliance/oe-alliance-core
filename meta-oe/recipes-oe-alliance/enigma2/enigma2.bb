@@ -116,7 +116,7 @@ GST_GOOD_RDEPS = "\
 "
 
 GST_BAD_RDEPS = "\
-    gstreamer1.0-plugins-bad-dashdemux \
+    gstreamer1.0-plugins-bad-dash \
     gstreamer1.0-plugins-bad-mms \
     gstreamer1.0-plugins-bad-mpegpsdemux \
     gstreamer1.0-plugins-bad-mpegtsdemux \

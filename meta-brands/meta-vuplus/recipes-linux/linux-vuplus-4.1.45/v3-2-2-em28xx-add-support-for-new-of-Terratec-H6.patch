@@ -55,6 +55,6 @@ index e8d97d5ec161..88084f24f033 100644
  #define EM28178_BOARD_TERRATEC_T2_STICK_HD        96
  #define EM2884_BOARD_ELGATO_EYETV_HYBRID_2008     97
 +#define EM2884_BOARD_TERRATEC_H6		  98
+ #define EM28174_BOARD_HAUPPAUGE_WINTV_DUALHD_DVB  99
  
  /* Limits minimum and default number of buffers */
- #define EM28XX_MIN_BUF 4

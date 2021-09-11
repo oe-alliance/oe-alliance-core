@@ -16,7 +16,6 @@ DEPENDS += " \
             rapidjson \
             crossguid \
             libdvdnav libdvdcss libdvdread \
-            ${@bb.utils.contains('PREFERRED_VERSION_ffmpeg', '3.4.2', 'ffmpeg-kodi-18', 'ffmpeg', d)} \
             git-native \
             curl-native \
             gperf-native \
@@ -35,6 +34,7 @@ DEPENDS += " \
             enca \
             expat \
             faad2 \
+            ffmpeg \
             fontconfig \
             fribidi \
             glib-2.0 \ 
@@ -141,7 +141,7 @@ ACCEL_x86-64 = "vaapi vdpau"
 # Default to GBM everywhere, sucks to be nvidia
 WINDOWSYSTEM ?= "stb"
 
-PACKAGECONFIG ??= "${ACCEL} ${WINDOWSYSTEM} pulseaudio lcms lto \
+PACKAGECONFIG ??= "${ACCEL} ${WINDOWSYSTEM} pulseaudio lcms lto ${@bb.utils.contains("TARGET_ARCH", "arm", "gold", "", d)} \
                    ${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'x11', '', d)} \
                    ${@bb.utils.contains('DISTRO_FEATURES', 'opengl', 'opengl', 'openglesv2', d)}"
 
@@ -262,13 +262,13 @@ RRECOMMENDS_${PN}_append = " libcec \
                              python-netclient \
                              python-html \
                              python-difflib \
+                             python-pycryptodome \
                              python-json \
                              python-zlib \
                              python-shell \
                              python-sqlite3 \
                              python-compression \
                              python-xmlrpc \
-                             python-pycryptodomex \
                              python-mechanize \
                              python-profile \
                              tzdata-africa \

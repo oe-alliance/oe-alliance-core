@@ -8,7 +8,7 @@ LIC_FILES_CHKSUM = "file://COPYRIGHT.txt;md5=6c2cd2089133de5067e13a6d4f75afef"
 DEPENDS = "python"
 RDEPENDS_${PN} = "\
     python-cheetah python-compression python-core python-crypt python-ctypes python-email python-html \
-    python-misc python-multiprocessing python-sabyenc python-sqlite3 python-shell python-subprocess python-yenc \
+    python-misc python-multiprocessing python-sabyenc python-sqlite3 python-shell python-subprocess \
     "
 RDEPENDS_${PN}-src = "python"
 

@@ -113,6 +113,7 @@ RDEPENDS_${PN} = " \
     p7zip \
     packagegroup-base-samba \
     parted \
+    perl \
     pngquant \
     pcsc-lite \
     pcsc-tools \

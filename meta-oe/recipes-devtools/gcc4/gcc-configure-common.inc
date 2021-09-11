@@ -24,10 +24,15 @@ GCCTHREADS ?= "posix"
 
 EXTRA_OECONF = "\
     ${@['--enable-clocale=generic', ''][d.getVar('USE_NLS') != 'no']} \
+	--disable-sjlj-exceptions \
+	--without-ppl \
     --with-gnu-ld \
     --enable-shared \
     --enable-languages=${LANGUAGES} \
     --enable-threads=${GCCTHREADS} \
+	--enable-nls \
+	--disable-multi-sysroot \
+	--with-multilib-list=m4-nofpu \
     ${GCCMULTILIB} \
     --enable-c99 \
     --enable-long-long \

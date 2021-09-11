@@ -1,0 +1,53 @@
+--- a/libavformat/rtsp.c
++++ b/libavformat/rtsp.c
+@@ -2380,6 +2380,8 @@ static int sdp_read_header(AVFormatContext *s)
+     int size, i, err;
+     char *content;
+     char url[MAX_URL_SIZE];
++    const char *p, *sp="", *sources="", *sp2, *sources2;
++    char sources_buf[1024];
+ 
+     if (!ff_network_init())
+         return AVERROR(EIO);
+@@ -2408,6 +2410,16 @@ static int sdp_read_header(AVFormatContext *s)
+     av_freep(&content);
+     if (err) goto fail;
+ 
++    /* Search for sources= tag in original URL for rtp protocol only */
++    if (strncmp(s->url, "rtp://", 6) == 0) {
++        p = strchr(s->url, '?');
++        if (p && av_find_info_tag(sources_buf, sizeof(sources_buf), "sources", p)) {
++            /* av_log(s, AV_LOG_VERBOSE, "sdp_read_header found sources %s\n", sources_buf);  */
++            sp = sources_buf;
++            sources = "&sources=";
++        }
++    }
++
+     /* open each RTP stream */
+     for (i = 0; i < rt->nb_rtsp_streams; i++) {
+         char namebuf[50];
+@@ -2425,12 +2437,22 @@ static int sdp_read_header(AVFormatContext *s)
+                 av_dict_free(&opts);
+                 goto fail;
+             }
++
++            /* Prepare to add sources to the url to be opened.
++               Otherwise the join to the source specific muliticast will be missing */
++            sources2 = sources;
++            sp2 = sp;
++            /* ignore sources from original URL, when sources are already set in rtsp_st */
++            if (rtsp_st->nb_include_source_addrs > 0)
++                sources2 = sp2 = "";
++
+             ff_url_join(url, sizeof(url), "rtp", NULL,
+                         namebuf, rtsp_st->sdp_port,
+-                        "?localport=%d&ttl=%d&connect=%d&write_to_source=%d",
++                        "?localport=%d&ttl=%d&connect=%d&write_to_source=%d%s%s",
+                         rtsp_st->sdp_port, rtsp_st->sdp_ttl,
+                         rt->rtsp_flags & RTSP_FLAG_FILTER_SRC ? 1 : 0,
+-                        rt->rtsp_flags & RTSP_FLAG_RTCP_TO_SOURCE ? 1 : 0);
++                        rt->rtsp_flags & RTSP_FLAG_RTCP_TO_SOURCE ? 1 : 0,
++                        sources2, sp2);
+ 
+             append_source_addrs(url, sizeof(url), "sources",
+                                 rtsp_st->nb_include_source_addrs,

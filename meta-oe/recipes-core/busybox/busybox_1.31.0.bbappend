@@ -42,6 +42,10 @@ RDEPENDS_${PN}-telnetd += "${PN}"
 PROVIDES += "virtual/telnetd"
 RPROVIDES_${PN}-telnetd += "virtual/telnetd"
 
+do_configure_prepend_sh4 () {
+	sed -i 's/^# CONFIG_FEATURE_SWAPON_PRI is not set/CONFIG_FEATURE_SWAPON_PRI=y/g' ${WORKDIR}/defconfig
+}
+
 do_install_append() {
     if grep "CONFIG_FEATURE_TELNETD_STANDALONE=y" ${B}/.config; then
 	install -m 0755 ${WORKDIR}/telnetd ${D}${sysconfdir}/init.d/telnetd.${BPN}

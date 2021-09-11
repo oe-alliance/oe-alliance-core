@@ -9,7 +9,7 @@ This reverts commit b4a298c80e1c24a74910e096d08c7f6678d8938b.
  1 file changed, 44 insertions(+), 61 deletions(-)
 
 diff --git a/gst/mpegtsdemux/tsdemux.c b/gst/mpegtsdemux/tsdemux.c
-index 445520b..78a234d 100644
+index 6057f4247..e2a4fbaf3 100644
 --- a/gst/mpegtsdemux/tsdemux.c
 +++ b/gst/mpegtsdemux/tsdemux.c
 @@ -853,14 +853,14 @@ gst_ts_demux_do_seek (MpegTSBase * base, GstEvent * event)
@@ -53,7 +53,7 @@ index 445520b..78a234d 100644
 -
 -  /* If the position actually changed, update == TRUE */
 -  if (update) {
--    GstClockTime target = base->out_segment.start;
+-    GstClockTime target = seeksegment.start;
 -    if (target >= SEEK_TIMESTAMP_OFFSET)
 -      target -= SEEK_TIMESTAMP_OFFSET;
 -    else
@@ -145,7 +145,7 @@ index 445520b..78a234d 100644
  done:
    return res;
  }
-@@ -2523,8 +2510,7 @@ calculate_and_push_newsegment (GstTSDemux * demux, TSDemuxStream * stream,
+@@ -2534,8 +2521,7 @@ calculate_and_push_newsegment (GstTSDemux * demux, TSDemuxStream * stream,
      } else {
        /* Start from the first ts/pts */
        GstSegment *seg = &base->out_segment;
@@ -155,7 +155,7 @@ index 445520b..78a234d 100644
        gst_segment_init (seg, GST_FORMAT_TIME);
        seg->start = firstts;
        seg->stop = GST_CLOCK_TIME_NONE;
-@@ -2544,9 +2530,6 @@ calculate_and_push_newsegment (GstTSDemux * demux, TSDemuxStream * stream,
+@@ -2555,9 +2541,6 @@ calculate_and_push_newsegment (GstTSDemux * demux, TSDemuxStream * stream,
      }
    }
  
@@ -165,6 +165,3 @@ index 445520b..78a234d 100644
    if (!demux->segment_event) {
      demux->segment_event = gst_event_new_segment (&base->out_segment);
  
--- 
-2.7.4
-

@@ -1,0 +1,33 @@
+--- a/modutils.sh	2016-01-07 20:08:00.424807185 +0200
++++ b/modutils.sh	2016-01-10 10:15:03.431318040 +0200
+@@ -34,8 +34,11 @@
+ 		esac
+ 		[ -n "$(echo $loaded_modules | grep " $module ")" ] && continue
+ 		[ "$VERBOSE" != no ] && echo -n "$module "
++		# [ "$module" == "cec" ] && [ ! `grep 'hdmicec.enabled=true' /etc/enigma2/settings` ] && args="activemode=1" # Load cec in activemode if disabled in enigma2
+ 		eval "$LOAD_MODULE $module $args >/dev/null 2>&1"
+ 		loaded_modules="${loaded_modules}${module} "
++		[ "$module" == "stmfb" ] && echo "LOAD" > /dev/dbox/oled0
++		[ "$module" == "zram" ] && echo "16777216" > /sys/block/zram0/disksize # Use 16Mb for swap in ram
+ 	done
+ }
+ 
+@@ -49,4 +52,18 @@
+ done
+ [ "$VERBOSE" != no ] && echo
+ 
++echo "1" > /proc/sys/kernel/printk #for more log change level or remake line
++
++# Enable swap in ram
++if [ -e /dev/zram0 ]; then
++	[ "$VERBOSE" != no ] && echo "Enable swap in ram"
++	mkswap /dev/zram0
++	swapon -p 100 /dev/zram0
++fi
++
++# Unload cec if disabled in enigma2
++# if [ ! `grep 'hdmicec.enabled=true' /etc/enigma2/settings` ]; then
++#	rmmod cec
++# fi
++
+ exit 0

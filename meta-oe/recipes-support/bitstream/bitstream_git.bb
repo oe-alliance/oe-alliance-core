@@ -15,7 +15,7 @@ SRC_URI = "git://code.videolan.org/videolan/bitstream.git;protocol=https"
 
 S = "${WORKDIR}/git"
 
-CFLAGS_sh4 += "-std=gnu99"
+CFLAGS_append_sh4 += "-std=gnu99"
 
 inherit autotools-brokensep pkgconfig
 

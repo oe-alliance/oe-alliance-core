@@ -15,7 +15,6 @@ RDEPENDS_${PN} = "python-core \
     python-isodate \
     python-iso3166 \
     python-iso639 \
-    python-lxml \
     python-misc \
     python-pkgutil \
     python-pycryptodome \
