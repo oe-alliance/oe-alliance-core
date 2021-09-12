@@ -54,7 +54,8 @@ EXTRA_OECONF = "\
 	--enable-offline-web-applications \
 	"
 
-LDFLAGS += "-Wl,--no-keep-memory -lgthread-2.0"
+LDFLAGS += "-Wl,--no-keep-memory -lgthread-2.0 \
+        ${@bb.utils.contains('DISTRO_FEATURES', 'ld-is-gold', ' -fuse-ld=bfd ', '', d)}"
 
 CPPFLAGS += "-I${STAGING_INCDIR}/pango-1.0 \
             -I${STAGING_LIBDIR}/glib-2.0/include \
