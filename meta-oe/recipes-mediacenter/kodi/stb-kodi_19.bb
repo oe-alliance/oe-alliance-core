@@ -78,7 +78,7 @@ DEPENDS += " \
 # 19.0 Matrix final
 #SRCREV = "f44fdfbf675f30c01e7639177a34544e6a6b9dad"
 # 19.1 Matrix release
-SRCREV = "6234ab30becc68ac1582655dbb23c93fe6dc3152"
+SRCREV = "86093ca4119513c99fbe6bc32e0818f2d2e41fe9"
 
 # 'patch' doesn't support binary diffs
 PATCHTOOL = "git"
