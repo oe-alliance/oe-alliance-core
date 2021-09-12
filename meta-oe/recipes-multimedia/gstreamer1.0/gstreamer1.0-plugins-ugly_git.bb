@@ -12,7 +12,7 @@ GST_PLUGIN_SET_HAS_EXAMPLES = "0"
 
 SRCREV_FORMAT = "gst_plugins_ugly"
 
-SRC_URI = "git://gitlab.freedesktop.org/gstreamer/gst-plugins-ugly;protocol=https;branch=master;name=gst_plugins_ugly"
+SRC_URI = "git://gitlab.freedesktop.org/gstreamer/gst-plugins-ugly;protocol=https;branch=1.18;name=gst_plugins_ugly"
 
 PACKAGECONFIG ??= " \
     ${GSTREAMER_ORC} \

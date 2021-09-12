@@ -1,0 +1,28 @@
+From f6e06dbe9b9f26e8cce8dc7274d4bf60396d500c Mon Sep 17 00:00:00 2001
+From: NickerSK <nickersk@gmail.com>
+Date: Sun, 12 Sep 2021 15:11:13 +0200
+Subject: [PATCH] Revert "souphttpsrc: Always use the content decoder but set
+ `Accept-Encoding: identity` if no compression should be used"
+
+This reverts commit f484e87c65de9ed5a6a47029835a4e9e04c7739a.
+
+diff --git a/ext/soup/gstsouphttpsrc.c b/ext/soup/gstsouphttpsrc.c
+index ab3155efe..a89922293 100644
+--- a/ext/soup/gstsouphttpsrc.c
++++ b/ext/soup/gstsouphttpsrc.c
+@@ -1509,10 +1509,8 @@ gst_soup_http_src_build_message (GstSoupHTTPSrc * src, const gchar * method)
+     soup_message_disable_feature (src->msg, SOUP_TYPE_COOKIE_JAR);
+   }
+ 
+-  if (!src->compress) {
+-    soup_message_headers_append (src->msg->request_headers, "Accept-Encoding",
+-        "identity");
+-  }
++  if (!src->compress)
++    soup_message_disable_feature (src->msg, SOUP_TYPE_CONTENT_DECODER);
+ 
+   soup_message_set_flags (src->msg, SOUP_MESSAGE_OVERWRITE_CHUNKS |
+       (src->automatic_redirect ? 0 : SOUP_MESSAGE_NO_REDIRECT));
+-- 
+2.25.1
+

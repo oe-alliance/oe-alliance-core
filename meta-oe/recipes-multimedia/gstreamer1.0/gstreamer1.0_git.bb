@@ -5,7 +5,7 @@ HOMEPAGE = "http://gstreamer.freedesktop.org/"
 BUGTRACKER = "https://bugzilla.gnome.org/enter_bug.cgi?product=Gstreamer"
 SECTION = "multimedia"
 LICENSE = "LGPLv2.1+"
-LIC_FILES_CHKSUM = "file://COPYING;md5=69333daa044cb77e486cc36129f7a770 \
+LIC_FILES_CHKSUM = "file://COPYING;md5=6762ed442b3822387a51c92d928ead0d \
                     file://gst/gst.h;beginline=1;endline=21;md5=e059138481205ee2c6fc1c079c016d0d \
                     "
 
@@ -17,7 +17,7 @@ inherit pkgconfig gobject-introspection
 
 SRCREV_FORMAT = "gst"
 
-SRC_URI = "git://gitlab.freedesktop.org/gstreamer/gstreamer;protocol=https;branch=master;name=gst \
+SRC_URI = "git://gitlab.freedesktop.org/gstreamer/gstreamer;protocol=https;branch=1.18;name=gst \
            file://0001-meson-Add-option-for-installed-tests.patch \
            file://0002-revert-use-new-gst-adapter-get-buffer.patch \
 "

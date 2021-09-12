@@ -1,5 +1,5 @@
 LICENSE = "GPLv2+ & LGPLv2.1+"
-LIC_FILES_CHKSUM = "file://COPYING;md5=69333daa044cb77e486cc36129f7a770"
+LIC_FILES_CHKSUM = "file://COPYING;md5=6762ed442b3822387a51c92d928ead0d"
 
 require gstreamer1.0-plugins-common.inc
 
@@ -9,7 +9,7 @@ inherit gobject-introspection
 
 SRCREV_FORMAT = "gst_plugins_base"
 
-SRC_URI = "git://gitlab.freedesktop.org/gstreamer/gst-plugins-base;protocol=https;branch=master;name=gst_plugins_base \
+SRC_URI = "git://gitlab.freedesktop.org/gstreamer/gst-plugins-base;protocol=https;branch=1.18;name=gst_plugins_base \
            file://0001-get-caps-from-src-pad-when-query-caps.patch \
            file://0003-ssaparse-enhance-SSA-text-lines-parsing.patch \
            file://0005-viv-fb-Make-sure-config.h-is-included.patch \
