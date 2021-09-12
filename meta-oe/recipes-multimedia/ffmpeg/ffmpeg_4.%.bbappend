@@ -2,7 +2,9 @@ FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 
 DEPENDS += "libxml2"
 
-SRCREV = "bf87bdd3f65569e562341843965f0e810f7a2d1f"
+PV = "4.4.1"
+
+SRCREV = "5e61fce832f7bb5c33103ca09501e195a912fd26"
 SRC_URI = "git://github.com/FFmpeg/FFmpeg.git;branch=release/4.4 \
            file://0001-libavutil-include-assembly-with-full-path-from-sourc.patch \
            file://0002-fix-mpegts.patch \
