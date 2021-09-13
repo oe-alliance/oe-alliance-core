@@ -11,7 +11,6 @@ RPROVIDES:${PN} += "kodi"
 RDEPENDS:${PN} += "uclan-libs-${MACHINE}"
 RDEPENDS:${PN} += "uclan-opengl-${MACHINE}"
 
-
 EXTRA_OECMAKE += " \
     -DWITH_PLATFORM=clap-cortexa15 \
     -DWITH_FFMPEG=stb \
