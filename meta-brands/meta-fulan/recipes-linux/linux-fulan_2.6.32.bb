@@ -10,7 +10,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
 MACHINE_KERNEL_PR:append = ".9"
 
-inherit kernel machine_kernel_pr
+inherit kernel machine_kernel_pr machinstall
 
 DEPENDS:append:spark7162 = " \
   stlinux24-sh4-stx7105-fdma-firmware \
