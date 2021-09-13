@@ -4,7 +4,7 @@ LICENSE = "GPLv2"
 
 inherit kernel machine_kernel_pr
 
-MACHINE_KERNEL_PR:append = ".1"
+MACHINE_KERNEL_PR:append = "2"
 KERNEL_RELEASE = "3.8.7"
 
 SRC_URI[md5sum] = "5f6aaac90a4587df34e418bedd7d40eb"
@@ -22,6 +22,7 @@ RPROVIDES:kernel-image = "kernel-image-${KERNEL_VERSION}"
 
 SRC_URI += "http://source.mynonpublic.com/xtrend/xtrend-linux-${PV}.tar.gz \
     file://defconfig \
+    file://Kernelupdate13.patch \
     file://0001-kernel-add-support-for-gcc-5.patch \
     file://0001-Revert-default-authentication-needs-to-be-at-least-n.patch \
     file://0001-Revert-MIPS-mm-Add-compound-tail-page-_mapcount-when.patch \
