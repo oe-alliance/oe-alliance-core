@@ -26,6 +26,7 @@ LIC_FILES_CHKSUM = "\
 
 SRC_URI = "\
     ${GNU_MIRROR}/gcc/gcc-${PV}/gcc-${PV}.tar.bz2 \
+    file://0001-gcc-4.3.1-ARCH_FLAGS_FOR_TARGET.patch \
     file://0002-uclibc-conf.patch \
     file://0003-gcc-uclibc-locale-ctype_touplow_t.patch \
     file://0004-uclibc-locale.patch \

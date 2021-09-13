@@ -14,6 +14,8 @@ SRC_URI = "https://github.com/${BPN}/${BPN}/releases/download/${PV}/${BPN}-${PV}
            "
 SRC_URI[sha256sum] = "6ad11d653347bd25d8317589df4e431a2de372c0cf9be3543368e07ec23bb8e7"
 
+CFLAGS_append_sh4 += "-std=gnu11"
+
 inherit meson pkgconfig lib_package gtk-doc gobject-introspection
 
 GIR_MESON_ENABLE_FLAG = 'enabled'

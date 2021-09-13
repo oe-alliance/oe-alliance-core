@@ -6,6 +6,7 @@ DEPENDS = "libdvdread"
 PV = "6.0.0"
 SRCREV = "${AUTOREV}"
 
+CFLAGS_append_sh4 += "-std=gnu11"
 
 inherit autotools pkgconfig git-project
 

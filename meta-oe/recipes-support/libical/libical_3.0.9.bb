@@ -19,6 +19,8 @@ UPSTREAM_CHECK_URI = "https://github.com/libical/libical/releases"
 
 inherit cmake pkgconfig
 
+CFLAGS_append_sh4 += "-std=gnu11"
+
 DEPENDS_append_class-target = "libical-native"
 
 PACKAGECONFIG ??= "icu glib"
