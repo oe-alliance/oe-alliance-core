@@ -1,20 +1,21 @@
-From b8b52ac137fda5f5e1dbdf13434629431120ea05 Mon Sep 17 00:00:00 2001
-From: Andy Blackburn <andrew.blackburn644@btinternet.com>
-Date: Fri, 12 Apr 2013 19:34:25 +0100
+From d436a7a0b9c98028662c36fc605d8ba0f8c448cf Mon Sep 17 00:00:00 2001
+From: jbleyel <jbleyel@gmx.net>
+Date: Mon, 13 Sep 2021 14:47:49 +0200
 
 ---
  Makefile.am | 4 ----
  1 file changed, 4 deletions(-)
 
 diff --git a/Makefile.am b/Makefile.am
-index 3f62601e..4e67b8c1 100644
+index 57460341..0316bb1c 100644
 --- a/Makefile.am
 +++ b/Makefile.am
-@@ -21,6 +21,5 @@ SUBDIRS = \
+@@ -21,7 +21,6 @@ SUBDIRS = \
  	dreamirc \
  	dreammediathek \
  	dvdbackup \
 -	easyinfo \
+ 	easymedia \
  	ecasa \
  	eibox \
 @@ -59,13 +58,11 @@ SUBDIRS = \
@@ -31,7 +32,7 @@ index 3f62601e..4e67b8c1 100644
  	reconstructapsc \
  	reftopiconname \
  	remotetimer \
-@@ -130,7 +127,6 @@ SUBDIRS += \
+@@ -128,7 +125,6 @@ SUBDIRS += \
  	mytube \
  	yttrailer \
  	webinterface \
