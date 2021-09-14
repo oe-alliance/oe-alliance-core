@@ -9,12 +9,11 @@ inherit allarch
 
 RDEPENDS:${PN} = "${PYTHON_PN}-core streamlink"
 
-inherit ${PYTHON_PN}-dir
+inherit ${PYTHON_PN}-dir gitpkgv
 
-inherit gittag
 SRCREV = "${AUTOREV}"
-PV = "git${SRCPV}"
-PKGV = "${GITPKGVTAG}"
+PV = "1.8.2+git${SRCPV}"
+PKGV = "1.8.2+git${GITPKGV}"
 
 SRC_URI = "git://github.com/oe-mirrors/livestreamersrv;protocol=https;branch=streamlinksrv"
 
