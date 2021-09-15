@@ -51,7 +51,7 @@ DEPENDS = "\
     ${@bb.utils.contains('MACHINE_FEATURES', 'blindscan-dvbc', 'virtual/blindscan-dvbc' , '', d)} \
     ${@bb.utils.contains('MACHINE_FEATURES', 'blindscan-dvbs', 'virtual/blindscan-dvbs' , '', d)} \
     ${@bb.utils.contains('MACHINE_FEATURES', 'transcoding', 'virtual/transtreamproxy' , '', d)} \
-    python-dnspython python-beautifulsoup4 python-lxml python-simplejson python-pyamf python-icalendar python-pyusb \
+    python-dnspython python-beautifulsoup4 python-lxml python-simplejson python-pyamf python-icalendar python-pyusb python-six-native \
     djmount \
     rtmpdump \
     minidlna \
