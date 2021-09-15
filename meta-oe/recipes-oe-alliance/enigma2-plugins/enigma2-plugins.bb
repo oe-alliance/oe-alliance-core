@@ -71,6 +71,7 @@ DEPENDS = "enigma2 \
     python-google-api-client \
     python-httplib2 \
     python-youtube-dl \
+    python-six-native \
     dvdbackup \
     libav \
     libshowiframe \
