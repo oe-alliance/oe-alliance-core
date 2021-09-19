@@ -1,13 +1,13 @@
-From d436a7a0b9c98028662c36fc605d8ba0f8c448cf Mon Sep 17 00:00:00 2001
-From: jbleyel <jbleyel@gmx.net>
-Date: Mon, 13 Sep 2021 14:47:49 +0200
+From 54af4288418da2f8df11de4a87ce4d66e95572c5 Mon Sep 17 00:00:00 2001
+From: Huevos <rowland@moralet.com>
+Date: Fri, 17 Sep 2021 14:28:31 +0200
 
 ---
- Makefile.am | 4 ----
- 1 file changed, 4 deletions(-)
+ Makefile.am | 5 -----
+ 1 file changed, 5 deletions(-)
 
 diff --git a/Makefile.am b/Makefile.am
-index 57460341..0316bb1c 100644
+index 574603415..7d15059f5 100644
 --- a/Makefile.am
 +++ b/Makefile.am
 @@ -21,7 +21,6 @@ SUBDIRS = \
@@ -32,10 +32,11 @@ index 57460341..0316bb1c 100644
  	reconstructapsc \
  	reftopiconname \
  	remotetimer \
-@@ -128,7 +125,6 @@ SUBDIRS += \
+@@ -127,8 +124,6 @@ if TPM
+ SUBDIRS += \
  	mytube \
  	yttrailer \
- 	webinterface \
+-	webinterface \
 -	menusort \
  	pluginhider \
  	pluginsort 
