@@ -7,17 +7,17 @@ Date: Mon, 13 Sep 2021 14:47:49 +0200
  1 file changed, 4 deletions(-)
 
 diff --git a/Makefile.am b/Makefile.am
-index 57460341..0316bb1c 100644
+index 09343ff1..15891a7f 100644
 --- a/Makefile.am
 +++ b/Makefile.am
-@@ -21,7 +21,6 @@ SUBDIRS = \
- 	dreamirc \
+@@ -22,7 +22,6 @@ SUBDIRS = \
  	dreammediathek \
  	dvdbackup \
--	easyinfo \
- 	easymedia \
+ 	easyinfo \
+-	easymedia \
  	ecasa \
  	eibox \
+ 	emailclient \
 @@ -59,13 +58,11 @@ SUBDIRS = \
  	ofdb \
  	orfat \
@@ -32,7 +32,7 @@ index 57460341..0316bb1c 100644
  	reconstructapsc \
  	reftopiconname \
  	remotetimer \
-@@ -128,7 +125,6 @@ SUBDIRS += \
+@@ -129,7 +126,6 @@ SUBDIRS += \
  	mytube \
  	yttrailer \
  	webinterface \

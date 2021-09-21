@@ -14,7 +14,7 @@ inherit autotools-brokensep gitpkgv ${PYTHON_PN}native pkgconfig gettext ${PYTHO
 SRCREV = "${AUTOREV}"
 PV = "${IMAGE_VERSION}+git${SRCPV}"
 PKGV = "${IMAGE_VERSION}+git${GITPKGV}"
-PR = "r3"
+PR = "r4"
 
 SRC_URI = "${ENIGMA2_PLUGINS_URI} file://pluginnotwanted.patch"
 SRC_URI:append:openatv = " file://EPGSearch.patch"

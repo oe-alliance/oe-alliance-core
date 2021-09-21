@@ -7,7 +7,7 @@ Date: Mon, 13 Sep 2021 14:35:05 +0200
  1 file changed, 2 deletions(-)
 
 diff --git a/Makefile.am b/Makefile.am
-index 57460341..ed596427 100644
+index 09343ff1..19f350f8 100644
 --- a/Makefile.am
 +++ b/Makefile.am
 @@ -21,7 +21,6 @@ SUBDIRS = \
@@ -18,7 +18,7 @@ index 57460341..ed596427 100644
  	easymedia \
  	ecasa \
  	eibox \
-@@ -128,7 +127,6 @@ SUBDIRS += \
+@@ -129,7 +128,6 @@ SUBDIRS += \
  	mytube \
  	yttrailer \
  	webinterface \

@@ -7,17 +7,17 @@ Date: Fri, 12 Apr 2013 19:34:25 +0100
  1 file changed, 4 deletions(-)
 
 diff --git a/Makefile.am b/Makefile.am
-index 3f62601e..4e67b8c1 100644
+index 09343ff1..15891a7f 100644
 --- a/Makefile.am
 +++ b/Makefile.am
-@@ -21,7 +21,6 @@ SUBDIRS = \
- 	dreamirc \
+@@ -22,7 +22,6 @@ SUBDIRS = \
  	dreammediathek \
  	dvdbackup \
--	easyinfo \
- 	easymedia \
+ 	easyinfo \
+-	easymedia \
  	ecasa \
  	eibox \
+ 	emailclient \
 @@ -59,13 +58,11 @@ SUBDIRS = \
  	ofdb \
  	orfat \
@@ -32,7 +32,7 @@ index 3f62601e..4e67b8c1 100644
  	reconstructapsc \
  	reftopiconname \
  	remotetimer \
-@@ -130,7 +127,6 @@ SUBDIRS += \
+@@ -129,7 +126,6 @@ SUBDIRS += \
  	mytube \
  	yttrailer \
  	webinterface \
