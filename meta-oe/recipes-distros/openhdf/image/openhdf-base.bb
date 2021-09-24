@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda
 ALLOW_EMPTY_${PN} = "1"
 
 PV = "1.0"
-PR = "r43"
+PR = "r44"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
@@ -27,6 +27,7 @@ RDEPENDS_${PN} = "\
     python-imaging \
     python-netifaces \
     python-service-identity \
+    python-streamlink \
     unrar \
     ofgwrite \
     rtmpdump \
