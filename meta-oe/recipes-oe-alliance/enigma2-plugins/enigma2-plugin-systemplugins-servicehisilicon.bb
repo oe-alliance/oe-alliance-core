@@ -11,7 +11,10 @@ SRC_URI = "git://github.com/zgemma-star/servicehisilicon.git;branch=master \
 		file://0002-Allows-manual-selection-of-subtitles.patch \
 		file://0001-tryfix-missing-Handling-eit-Subtitle.patch \
 "
-
+SRC_URI_openhdf = "git://github.com/zgemma-star/servicehisilicon.git;branch=openpli \
+		file://0002-Allows-manual-selection-of-subtitles.patch \
+		file://0001-tryfix-missing-Handling-eit-Subtitle.patch \
+"
 S = "${WORKDIR}/git"
 
 inherit autotools gitpkgv pythonnative pkgconfig
