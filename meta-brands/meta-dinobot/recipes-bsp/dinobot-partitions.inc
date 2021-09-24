@@ -5,7 +5,7 @@ LICENSE = "CLOSED"
 require conf/license/license-close.inc
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-PR = "r1-${SRCDATE}"
+PR = "r2-${SRCDATE}"
 
 S = "${WORKDIR}"
 
@@ -13,7 +13,7 @@ SRC_URI = "http://source.mynonpublic.com/dinobot/${SOC_FAMILY}-partitions-${SRCD
   file://flash-apploader \
 "
 
-inherit update-rc.d
+#inherit update-rc.d
 
 INITSCRIPT_NAME = "flash-apploader"
 INITSCRIPT_PARAMS = "start 90 S ."
