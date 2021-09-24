@@ -7,6 +7,7 @@ SRC_URI = " \
     file://fix_indentation_for_gcc6.patch \
     file://whitespace.patch \
     file://void.patch \
+    file://use-guard-clauses.patch \
     "
 
 SRC_URI[md5sum] = "19e898edc41bde3f21e997d237156731"
