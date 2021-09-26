@@ -11,7 +11,7 @@ DEPENDS = "tslib mpfr gmp"
 SRCREV = "${AUTOREV}"
 PV = "${IMAGE_VERSION}+gitr${SRCPV}"
 PKGV = "${IMAGE_VERSION}+gitr${GITPKGV}"
-PR = "r10"
+PR = "r11"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins-python3.git;branch=main"
 
@@ -33,7 +33,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-netspeedtest_2.1.3_all.ipk \
     enigma2-plugin-extensions-screengrabber_2.6_all.ipk \
     enigma2-plugin-extensions-skyrecorder_2.0.3a-py3_all.ipk \
-    enigma2-plugin-extensions-xcplugin-forever_1.7_all.ipk \
+    enigma2-plugin-extensions-xcplugin-forever_1.8_all.ipk \
     "
 
 python populate_packages:prepend () {
