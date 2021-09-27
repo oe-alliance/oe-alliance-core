@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda
 ALLOW_EMPTY_${PN} = "1"
 
 PV = "1.0"
-PR = "r45"
+PR = "r46"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
@@ -27,7 +27,6 @@ RDEPENDS_${PN} = "\
     python-imaging \
     python-netifaces \
     python-service-identity \
-    streamlink-27 \
     streamlinksrv \
     unrar \
     ofgwrite \
@@ -43,7 +42,7 @@ RDEPENDS_${PN} = "\
     exteplayer3 \
     gstplayer \
     ffmpeg \
-    enigma2-plugin-systemplugins-serviceapp \
+    ${@bb.utils.contains("MACHINE_FEATURES", "himedia", "" , "enigma2-plugin-systemplugins-serviceapp", d)} \
     zip \
     ", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "dreambox", "", "ofgwrite", d)} \
