@@ -75,7 +75,7 @@ python(){
 }
 
 do_install_append(){
-    python2 -m py_compile ${D}/${libdir}/python${PYTHON_MAJMIN}/sitecustomize.py
+    python -m py_compile ${D}/${libdir}/python${PYTHON_MAJMIN}/sitecustomize.py
 }
 
 python populate_packages_prepend() {
