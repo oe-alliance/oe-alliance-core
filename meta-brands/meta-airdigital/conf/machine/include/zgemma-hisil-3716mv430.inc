@@ -14,9 +14,15 @@ DEFAULTTUNE = "cortexa7hf"
 MKUBIFS_ARGS = "-m 4096 -e 253952 -c 2048"
 UBINIZE_ARGS = "-m 4096 -p 256KiB -s 4096"
 UBI_VOLNAME = "rootfs"
+IMAGEDIRRECOVERY ?= "zgemma-recovery"
 CMDLINE ?= "console=ttyAMA0,115200n8"
 
 PREFERRED_VERSION_linux-airdigital = "4.4.35"
+
+IMAGE_CMD_ubifs_prepend = " \
+	rm -Rf ${IMAGE_ROOTFS}/boot/*; \
+	rm -Rf ${IMAGE_ROOTFS}/tmp/*; \
+	"
 
 IMAGE_CMD_ubi_append = " \
     mkdir -p ${DEPLOY_DIR_IMAGE}/${IMAGEDIRRECOVERY}/${IMAGEDIR}; \
