@@ -42,9 +42,9 @@ RDEPENDS_${PN} = "\
     exteplayer3 \
     gstplayer \
     ffmpeg \
-    ${@bb.utils.contains("MACHINE_FEATURES", "himedia", "" , "enigma2-plugin-systemplugins-serviceapp", d)} \
     zip \
     ", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "himedia", "" , "enigma2-plugin-systemplugins-serviceapp", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "dreambox", "", "ofgwrite", d)} \
     ${@bb.utils.contains("TUNE_FEATURES", "armv", "glibc-compat", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "singlecore", "", \
