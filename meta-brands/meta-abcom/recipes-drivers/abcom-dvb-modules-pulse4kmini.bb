@@ -1,5 +1,5 @@
 KV = "4.4.35"
-SRCDATE = "20210624"
+SRCDATE = "20210910"
 
 RDEPENDS:${PN} = "libjpeg-turbo pulseaudio-lib-rtp"
 PROVIDES = "virtual/blindscan-dvbs"
@@ -8,8 +8,8 @@ require abcom-dvb-modules.inc
 
 SRC_URI:append = " file://suspend.sh"
 
-SRC_URI[md5sum] = "b3c3b35bcf37fe40d4c46f5be377a22a"
-SRC_URI[sha256sum] = "bbcf31a4725a5f83791a00514335c95b482fb2185a6b74e5062928a702dba403"
+SRC_URI[md5sum] = "840b78273f9fb32b744dbc06650bcd02"
+SRC_URI[sha256sum] = "b879cefa9796729d65f227d83733a98baaf192c53e0e968ee291eda4878156f1"
 
 INITSCRIPT_NAME = "suspend"
 INITSCRIPT_PARAMS = "start 89 0 ."
