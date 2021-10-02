@@ -11,7 +11,7 @@ SRC_URI = "git://github.com/Barracuda09/SATPI.git;protocol=http \
     file://satpi.init \
 "
 
-SRCREV = "fc9e34ea4518eaecdd52f1fc2f6e9f2b3de4181d"
+SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 
 S = "${WORKDIR}/git"
