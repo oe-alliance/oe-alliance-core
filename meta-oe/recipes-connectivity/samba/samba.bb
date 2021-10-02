@@ -2,9 +2,9 @@ PR = "r1"
 
 require samba-source.inc
 
-inherit cpan-base perlnative python3native
+inherit cpan-base perlnative python3native pkgconfig
 
-DEPENDS += "asn1compile-native libparse-yapp-perl-native qemu-native libxslt-native docbook-xsl-stylesheets-native e2fsprogs readline zlib popt gnutls libtalloc libtasn1"
+DEPENDS += "asn1compile-native libparse-yapp-perl-native bison-native qemu-native libxslt-native docbook-xsl-stylesheets-native e2fsprogs readline zlib popt gnutls libtalloc libtasn1"
 
 inherit features_check
 REQUIRED_DISTRO_FEATURES = "pam"
@@ -66,7 +66,6 @@ EXTRA_OECONF += "--disable-cups \
                  --enable-fhs \
                  --without-automount \
                  --without-lttng \
-                 --without-ntvfs-fileserver \
                  --without-utmp \
                  --without-dmapi \
                  --without-fam \

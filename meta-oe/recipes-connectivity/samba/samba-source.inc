@@ -1,4 +1,4 @@
-PV = "4.14.7"
+PV = "4.15.0"
 HOMEPAGE = "https://www.samba.org/"
 SECTION = "console/network"
 
@@ -16,7 +16,6 @@ ${SAMBA_MIRROR}    http://www.mirrorservice.org/sites/ftp.samba.org \n \
 FILESEXTRAPATHS:prepend := "${THISDIR}/samba:"
 SRC_URI = "${SAMBA_MIRROR}/stable/samba-${PV}.tar.gz \
            file://001-samba-4.14-pam.patch \
-           file://002-dnsserver-4.14.patch \
            file://010-source3-msgsock-nvram-fix.patch \
            file://011-source4-msgsock-nvram-fix.patch \
            file://101-do-not-check-xsltproc-manpages.patch \
@@ -36,8 +35,7 @@ SRC_URI = "${SAMBA_MIRROR}/stable/samba-${PV}.tar.gz \
            file://302-dynamically-create-a-samba-account-if-needed.patch \
            file://400-samba-4.14-remove-getpwent_r.patch \
            file://401-cmocka-uintptr_t.patch \
-           file://402-samba-fix-musl-lib-without-innetgr.patch \
-           file://404-fix-finding-tools-heimdal-embedded.patch \
+           file://402-fix-finding-tools-heimdal-embedded.patch \
            file://smb.conf \
            file://smb-user.conf \
            file://smb-branding.conf \
@@ -59,7 +57,7 @@ SRC_URI:append:sh4 = " \
            file://209-strtoull.patch \
           "
 
-SRC_URI[md5sum] = "f0db8302944bb861b31f4163fd302f66"
-SRC_URI[sha256sum] = "6f50353f9602aa20245eb18ceb00e7e5ec793df0974aebd5254c38f16d8f1906"
+SRC_URI[md5sum] = "5bb03c6d9e3d172bc4b34b66561f980a"
+SRC_URI[sha256sum] = "b1f3470838623156283733e6295f49cd6ae44a7e61bb9c346315d1e668d24640"
 
 UPSTREAM_CHECK_REGEX = "samba\-(?P<pver>4\.14(\.\d+)+).tar.gz"

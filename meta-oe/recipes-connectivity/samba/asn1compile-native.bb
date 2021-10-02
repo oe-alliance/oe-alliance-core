@@ -2,7 +2,7 @@ require samba-source.inc
 
 S = "${WORKDIR}/samba-${PV}"
 
-inherit cpan-base perlnative python3native native
+inherit pkgconfig cpan-base perlnative python3native native
 
 #DEPENDS += "libxslt-native docbook-xsl-stylesheets-native e2fsprogs readline virtual/libiconv zlib popt"
 #DEPENDS += "python3native"
@@ -25,7 +25,6 @@ EXTRA_OECONF += "--disable-cups \
                  --without-automount \
                  --without-iconv \
                  --without-lttng \
-                 --without-ntvfs-fileserver \
                  --without-pam \
                  --without-systemd \
                  --without-utmp \
@@ -42,7 +41,6 @@ EXTRA_OECONF += "--disable-cups \
                  --without-json \
                  --without-libarchive \
                  --disable-python --nopyc --nopyo \
-                 --without-dnsupdate \
                  --without-ads \
                  --without-ldap \
                  --nonshared-binary=asn1_compile,compile_et \

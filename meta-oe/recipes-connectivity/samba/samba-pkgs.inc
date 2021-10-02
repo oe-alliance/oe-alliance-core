@@ -85,6 +85,7 @@ FILES:${PN} = " \
                ${libdir}/vfs/widelinks.so \
                ${bindir}/smbpasswd \
                ${bindir}/testparm \
+               ${libexecdir}/samba/samba-bgqd \
                \
               "
 RDEPENDS:${PN} += "${BPN}-common wsdd"
@@ -103,6 +104,7 @@ FILES:${PN}-admin = "${bindir}/net \
                      ${bindir}/tdbdump \
                      ${bindir}/tdbrestore \
                      ${bindir}/mdfind \
+                     ${bindir}/mdsearch \
                      ${bindir}/tdbtool \
                      ${sbindir}/eventlogadm \
                     "
