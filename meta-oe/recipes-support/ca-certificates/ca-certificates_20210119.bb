@@ -18,6 +18,8 @@ PACKAGE_WRITE_DEPS += "openssl-native debianutils-native"
 
 SRCREV = "181be7ebd169b4a6fb5d90c3e6dc791e90534144"
 
+PR = "r1"
+
 SRC_URI = "git://salsa.debian.org/debian/ca-certificates.git;protocol=https \
            file://0002-update-ca-certificates-use-SYSROOT.patch \
            file://0001-update-ca-certificates-don-t-use-Debianisms-in-run-p.patch \
@@ -49,6 +51,8 @@ do_install () {
 
     install -d ${D}${mandir}/man8
     install -m 0644 sbin/update-ca-certificates.8 ${D}${mandir}/man8/
+
+    rm ${D}${datadir}/ca-certificates/mozilla/DST_Root_CA_X3.crt
 
     install -d ${D}${sysconfdir}
     {
