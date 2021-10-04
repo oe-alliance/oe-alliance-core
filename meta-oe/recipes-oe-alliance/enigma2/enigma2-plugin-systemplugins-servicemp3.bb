@@ -5,68 +5,67 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-PROVIDES += "virtual/enigma2-mediaservice"
-RPROVIDES:${PN} += "virtual/enigma2-mediaservice"
-
 GST_BASE_RDEPS = "\
-	gstreamer${GST_VERSION}-plugins-base-alsa \
-	gstreamer${GST_VERSION}-plugins-base-app \
-	gstreamer${GST_VERSION}-plugins-base-audioconvert \
-	gstreamer${GST_VERSION}-plugins-base-audioresample \
-	gstreamer${GST_VERSION}-plugins-base-audiorate \
-	gstreamer${GST_VERSION}-plugins-base-videoconvert \
-	gstreamer${GST_VERSION}-plugins-base-ivorbisdec \
-	gstreamer${GST_VERSION}-plugins-base-ogg \
-	gstreamer${GST_VERSION}-plugins-base-opus \
-	gstreamer${GST_VERSION}-plugins-base-playback \
-	gstreamer${GST_VERSION}-plugins-base-subparse \
-	gstreamer${GST_VERSION}-plugins-base-typefindfunctions \
-	gstreamer${GST_VERSION}-plugins-base-vorbis \
-	gstreamer${GST_VERSION}-plugins-base-rawparse \
-	"
+    gstreamer1.0-plugins-base-alsa \
+    gstreamer1.0-plugins-base-app \
+    gstreamer1.0-plugins-base-audioconvert \
+    gstreamer1.0-plugins-base-audioresample \
+    gstreamer1.0-plugins-base-audiorate \
+    gstreamer1.0-plugins-base-videoconvert \
+    gstreamer1.0-plugins-base-ivorbisdec \
+    gstreamer1.0-plugins-base-ogg \
+    gstreamer1.0-plugins-base-playback \
+    gstreamer1.0-plugins-base-subparse \
+    gstreamer1.0-plugins-base-typefindfunctions \
+    gstreamer1.0-plugins-base-vorbis \
+    gstreamer1.0-plugins-base-rawparse \
+"
 
 GST_GOOD_RDEPS = "\
-	gstreamer${GST_VERSION}-plugins-good-apetag \
-	gstreamer${GST_VERSION}-plugins-good-audioparsers \
-	gstreamer${GST_VERSION}-plugins-good-autodetect \
-	gstreamer${GST_VERSION}-plugins-good-avi \
-	gstreamer${GST_VERSION}-plugins-good-flac \
-	gstreamer${GST_VERSION}-plugins-good-flv \
-	gstreamer${GST_VERSION}-plugins-good-icydemux \
-	gstreamer${GST_VERSION}-plugins-good-id3demux \
-	gstreamer${GST_VERSION}-plugins-good-isomp4 \
-	gstreamer${GST_VERSION}-plugins-good-matroska \
-	gstreamer${GST_VERSION}-plugins-good-mpg123 \
-	gstreamer${GST_VERSION}-plugins-good-rtp \
-	gstreamer${GST_VERSION}-plugins-good-rtpmanager \
-	gstreamer${GST_VERSION}-plugins-good-rtsp \
-	gstreamer${GST_VERSION}-plugins-good-soup \
-	gstreamer${GST_VERSION}-plugins-good-udp \
-	gstreamer${GST_VERSION}-plugins-good-wavparse \
-	gstreamer${GST_VERSION}-plugins-good-wavpack \
-	"
+    gstreamer1.0-plugins-good-apetag \
+    gstreamer1.0-plugins-good-audioparsers \
+    gstreamer1.0-plugins-good-autodetect \
+    gstreamer1.0-plugins-good-avi \
+    gstreamer1.0-plugins-good-flac \
+    gstreamer1.0-plugins-good-flv \
+    gstreamer1.0-plugins-good-icydemux \
+    gstreamer1.0-plugins-good-id3demux \
+    gstreamer1.0-plugins-good-isomp4 \
+    gstreamer1.0-plugins-good-matroska \
+    gstreamer1.0-plugins-good-rtp \
+    gstreamer1.0-plugins-good-rtpmanager \
+    gstreamer1.0-plugins-good-rtsp \
+    gstreamer1.0-plugins-good-soup \
+    gstreamer1.0-plugins-good-udp \
+    gstreamer1.0-plugins-good-wavparse \
+    gstreamer1.0-plugins-good-wavpack \
+"
 
 GST_BAD_RDEPS = "\
-	gstreamer${GST_VERSION}-plugins-bad-autoconvert \
-	gstreamer${GST_VERSION}-plugins-bad-dash \
-	gstreamer${GST_VERSION}-plugins-bad-mms \
-	gstreamer${GST_VERSION}-plugins-bad-mpegpsdemux \
-	gstreamer${GST_VERSION}-plugins-bad-mpegtsdemux \
-	gstreamer${GST_VERSION}-plugins-bad-rtmp \
-	gstreamer${GST_VERSION}-plugins-bad-smoothstreaming \
-	gstreamer${GST_VERSION}-plugins-bad-faad \
-	gstreamer${GST_VERSION}-plugins-bad-hls \
-	gstreamer${GST_VERSION}-plugins-bad-opusparse \
-	gstreamer${GST_VERSION}-plugins-bad-videoparsersbad \
-	"
+    gstreamer1.0-plugins-bad-dash \
+    gstreamer1.0-plugins-bad-mms \
+    gstreamer1.0-plugins-bad-mpegpsdemux \
+    gstreamer1.0-plugins-bad-mpegtsdemux \
+    gstreamer1.0-plugins-bad-rtmp \
+    gstreamer1.0-plugins-bad-smoothstreaming \
+    gstreamer1.0-plugins-bad-faad \
+    gstreamer1.0-plugins-bad-hls \
+    gstreamer1.0-plugins-bad-videoparsersbad \
+    gstreamer1.0-plugins-bad-autoconvert \
+"
+
+GST_BAD_OPUS = " \
+    ${@bb.utils.contains("TARGET_ARCH", "arm", " gstreamer1.0-plugins-base-opus gstreamer1.0-plugins-bad-opusparse", "", d)} \
+    ${@bb.utils.contains("TARGET_ARCH", "aarch64", " gstreamer1.0-plugins-base-opus gstreamer1.0-plugins-bad-opusparse", "", d)} \
+    "
 
 GST_UGLY_RDEPS = "\
-	gstreamer${GST_VERSION}-plugins-ugly-amrnb \
-	gstreamer${GST_VERSION}-plugins-ugly-amrwbdec \
-	gstreamer${GST_VERSION}-plugins-ugly-asf \
-	gstreamer${GST_VERSION}-plugins-ugly-cdio \
-	gstreamer${GST_VERSION}-plugins-ugly-dvdsub \
-	"
+    gstreamer1.0-plugins-ugly-amrnb \
+    gstreamer1.0-plugins-ugly-amrwbdec \
+    gstreamer1.0-plugins-ugly-asf \
+    gstreamer1.0-plugins-ugly-cdio \
+    gstreamer1.0-plugins-ugly-dvdsub \
+"
 
 DEPENDS = "\
 	enigma2 \
@@ -80,15 +79,17 @@ RDEPENDS:${PN} = "\
 RRECOMMENDS:${PN} = "\
 	glib-networking \
 	gstreamer${GST_VERSION}-plugin-subsink \
+	gstreamer${GST_VERSION}-plugin-dvbmediasink \
 	${GST_BASE_RDEPS} \
 	${GST_GOOD_RDEPS} \
 	${GST_BAD_RDEPS} \
+	${GST_BAD_OPUS} \
 	${GST_UGLY_RDEPS} \
 	"
 
-SRC_URI = "git://github.com/openpli/servicemp3.git;branch=master"
+SRC_URI = "git://github.com/openatv/servicemp3.git;branch=master"
 SRCREV = "${AUTOREV}"
-SRCREV_openeight = "c7750c5ab393341f5a65094ceac90fbb6afd12e6"
+#SRCREV_openeight = "c7750c5ab393341f5a65094ceac90fbb6afd12e6"
 
 S = "${WORKDIR}/git"
 
@@ -105,10 +106,4 @@ EXTRA_OECONF = "\
 	STAGING_LIBDIR=${STAGING_LIBDIR} \
 	"
 
-FILES:${PN} = "\
-	${libdir}/enigma2/python/Plugins/SystemPlugins/ServiceMP3/*.pyo \
-	${libdir}/enigma2/python/Plugins/SystemPlugins/ServiceMP3/servicemp3.so"
-
-FILES:${PN}-dev = "\
-	${libdir}/enigma2/python/Plugins/SystemPlugins/ServiceMP3/*.py \
-	${libdir}/enigma2/python/Plugins/SystemPlugins/ServiceMP3/servicemp3.la"
+FILES:${PN} = "${libdir}/enigma2/python/Plugins/SystemPlugins/ServiceMP3/"

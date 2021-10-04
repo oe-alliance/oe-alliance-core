@@ -13,7 +13,7 @@ LIC_FILES_CHKSUM:opendroid = "file://LICENSE;md5=b234ee4d69f5fce4486a80fdaf4a426
 DEPENDS = " \
     freetype \
     gettext-native \
-    gstreamer1.0-plugins-base gstreamer1.0 \
+    ${@bb.utils.contains("DISTRO_NAME", "openatv", "", "gstreamer1.0-plugins-base gstreamer1.0", d)} \
     jpeg \
     libdreamdvd libdvbsi++ fribidi libmad libpng giflib libxml2 libxmlccwrap libsigc++-2.0 \
     openssl avahi libudfread \
@@ -44,12 +44,12 @@ RDEPENDS:${PN} = " \
 RRECOMMENDS:${PN} = " \
     glib-networking \
     glibc-gconv-utf-16 \
-    gstreamer1.0-plugin-subsink \
+    ${@bb.utils.contains("DISTRO_NAME", "openatv", "enigma2-plugin-systemplugins-servicemp3", "gstreamer1.0-plugin-subsink \
     ${GST_BASE_RDEPS} \
     ${GST_GOOD_RDEPS} \
     ${GST_BAD_RDEPS} \
     ${GST_UGLY_RDEPS} \
-    ${GST_BAD_OPUS} \
+    ${GST_BAD_OPUS}", d)} \
     "
 
 PYTHON_RDEPS = " \
@@ -231,7 +231,7 @@ EXTRA_OECONF = " \
     --with-machinebuild="${MACHINEBUILD}" \
     --with-libsdl=no \
     --enable-dependency-tracking \
-    --with-gstversion=1.0 \
+    ${@bb.utils.contains("DISTRO_NAME", "openatv", "", "--with-gstversion=1.0", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "textlcd", "--with-textlcd" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "colorlcd", "--with-colorlcd" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "colorlcd128", "--with-colorlcd128" , "", d)} \
