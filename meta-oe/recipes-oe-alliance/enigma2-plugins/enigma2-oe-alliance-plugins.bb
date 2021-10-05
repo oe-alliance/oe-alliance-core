@@ -158,8 +158,8 @@ DESCRIPTION:enigma2-plugin-extensions-tvspielfilm = "TVSpielfilm Plugin"
 inherit autotools-brokensep gitpkgv ${PYTHON_PN}native gettext
 
 SRCREV = "${AUTOREV}"
-PV = "${IMAGE_VERSION}+git${SRCPV}"
-PKGV = "${IMAGE_VERSION}+git${GITPKGV}"
+PV = "${IMAGE_VERSION}+gitr${SRCPV}"
+PKGV = "${IMAGE_VERSION}+gitr${GITPKGV}"
 PR = "r1"
 
 SRC_URI = "${OEA_PLUGINS_URI}"
@@ -171,6 +171,7 @@ EXTRA_OECONF = " \
     STAGING_LIBDIR=${STAGING_LIBDIR} \
     --with-boxtype=${MACHINE} \
     --with-arch=${TARGET_ARCH} \
+    --with-pythonver=python3 \
     ${@bb.utils.contains("MACHINE_FEATURES", "aml-plugins", "--with-amlplugins" , "", d)} \
     "
 
