@@ -15,7 +15,7 @@ e2m3u2bouquet_BRANCH ?= "release"
 SRCREV = "${AUTOREV}"
 PV = "0.8.5+git${SRCPV}"
 PKGV = "0.8.5+git${GITPKGV}"
-PR = "r0"
+PR = "r1"
 
 INSANE_SKIP:${PN} += "already-stripped ldflags"
 
@@ -24,7 +24,7 @@ SRC_URI="git://github.com/oe-mirrors/e2m3u2bouquet-plugin.git"
 S = "${WORKDIR}/git"
 
 FILES:${PN} = "/usr/lib/enigma2/python/Plugins/Extensions/E2m3u2bouquet"
-D_FILES_PN = "${D}${FILES_${PN}}"
+D_FILES_PN = "${D}${FILES:${PN}}"
 
 EXTRA_OECONF = ""
 
