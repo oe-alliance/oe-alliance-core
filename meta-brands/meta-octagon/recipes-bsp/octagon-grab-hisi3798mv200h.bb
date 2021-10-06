@@ -27,7 +27,7 @@ do_install() {
 do_package_qa() {
 }
 
-FILES_${PN}  = "${bindir}/grab"
+FILES:${PN}  = "${bindir}/grab"
 
 SRC_URI[md5sum] = "4617805f460607e15a0f322ee25113c7"
 SRC_URI[sha256sum] = "a20b6a814f262c4cd2d18bdb74f2b718d921ff24fc07e66a032fec553072374e"
