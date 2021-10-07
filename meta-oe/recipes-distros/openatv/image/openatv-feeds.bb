@@ -7,7 +7,7 @@ ALLOW_EMPTY:${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "1.0"
-PR = "r48"
+PR = "r49"
 
 inherit packagegroup
 
@@ -34,6 +34,8 @@ RRECOMMENDS:${PN} = "\
     enigma2-plugin-extensions-sdgradio \
     enigma2-plugin-extensions-epgimport \
     enigma2-plugin-systemplugins-autobouquetsmaker \
+    enigma2-plugin-skincomponents-advancedmovieselection-steampunk-skin \
+    enigma2-plugin-skincomponents-advancedmovieselection-ultimate-skin \
     enigma2-plugin-skincomponents-bmediacenter-ax-blue-skin \
     enigma2-plugin-skincomponents-mediaportal-ax-blue-skin \
     enigma2-plugin-skincomponents-mediaportal-blue-line-skin \
@@ -56,10 +58,10 @@ RRECOMMENDS:${PN} = "\
 #    enigma2-plugin-extensions-cooltvguide
 #    enigma2-plugin-extensions-project-valerie
 
-RRECOMMENDS:${PN}:append:gb800solo = "enigma2-plugin-extensions-gbipboxclient"
-RRECOMMENDS:${PN}:append:gb7325 = "enigma2-plugin-extensions-gbipboxclient"
-RRECOMMENDS:${PN}:append:gb7358 = "enigma2-plugin-extensions-gbipboxclient"
-RRECOMMENDS:${PN}:append:gb7362 = "enigma2-plugin-extensions-gbipboxclient"
-RRECOMMENDS:${PN}:append:gb73625 = "enigma2-plugin-extensions-gbipboxclient"
-RRECOMMENDS:${PN}:append:gb7356 = "enigma2-plugin-extensions-gbipboxclient"
-RRECOMMENDS:${PN}:append:gb7252 = "enigma2-plugin-extensions-gbipboxclient"
+RRECOMMENDS:${PN}:append:gb800solo = " enigma2-plugin-extensions-gbipboxclient"
+RRECOMMENDS:${PN}:append:gb7325 = " enigma2-plugin-extensions-gbipboxclient"
+RRECOMMENDS:${PN}:append:gb7358 = " enigma2-plugin-extensions-gbipboxclient"
+RRECOMMENDS:${PN}:append:gb7362 = " enigma2-plugin-extensions-gbipboxclient"
+RRECOMMENDS:${PN}:append:gb73625 = " enigma2-plugin-extensions-gbipboxclient"
+RRECOMMENDS:${PN}:append:gb7356 = " enigma2-plugin-extensions-gbipboxclient"
+RRECOMMENDS:${PN}:append:gb7252 = " enigma2-plugin-extensions-gbipboxclient"
