@@ -7,7 +7,7 @@ ALLOW_EMPTY:${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r3"
+PR = "r4"
 
 inherit packagegroup
 
@@ -27,7 +27,7 @@ RRECOMMENDS:${PN} = "\
     enigma2-plugin-systemplugins-devicemanager \
     enigma2-plugin-systemplugins-osdpositionsetup \
     enigma2-plugin-systemplugins-positionersetup \
-    enigma2-plugin-systemplugins-skinselector \
+    enigma2-plugin-systemplugins-servicemp3 \
     enigma2-plugin-systemplugins-softwaremanager \
     enigma2-plugin-systemplugins-swapmanager \
     enigma2-plugin-systemplugins-videomode \
