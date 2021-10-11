@@ -5,10 +5,10 @@ SRCDATE_PR = "r0"
 
 require vuplus-dvb-proxy.inc
 
-DEPENDS_openvix = "driver-fix"
+DEPENDS:openvix = "driver-fix"
 RDEPENDS:${PN}_openvix = "driver-fix"
 
-DEPENDS_openbh = "driver-fix"
+DEPENDS:openbh = "driver-fix"
 RDEPENDS:${PN}_openbh = "driver-fix"
 
 SRC_URI[md5sum] = "42b7bcba72ea9313ba80e8dd769c5c15"

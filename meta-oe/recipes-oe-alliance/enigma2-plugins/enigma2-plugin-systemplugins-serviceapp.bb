@@ -10,8 +10,8 @@ RREPLACES:${PN} = "enigma2-plugin-extensions-serviceapp"
 
 SRCREV = "${AUTOREV}"
 SRC_URI = "git://github.com/oe-mirrors/serviceapp.git;branch=develop"
-SRC_URI_openvix = "git://github.com/OpenViX/serviceapp.git;branch=develop"
-SRC_URI_openbh = "git://github.com/OpenViX/serviceapp.git;branch=develop"
+SRC_URI:openvix = "git://github.com/OpenViX/serviceapp.git;branch=develop"
+SRC_URI:openbh = "git://github.com/OpenViX/serviceapp.git;branch=develop"
 
 
 S = "${WORKDIR}/git"
@@ -23,7 +23,7 @@ CXXFLAGS:append = " -std=c++11"
 PV = "0.5+git${SRCPV}"
 PKGV = "0.5+git${GITPKGV}"
 
-PR = "r0"
+PR = "r1"
 
 EXTRA_OECONF = "\
 	BUILD_SYS=${BUILD_SYS} \

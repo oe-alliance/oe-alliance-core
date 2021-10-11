@@ -9,7 +9,7 @@ inherit autotools gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
-PR = "r0"
+PR = "r1"
 
 PACKAGES = "enigma2-skindefault"
 PROVIDES = "enigma2-skindefault"
@@ -17,8 +17,8 @@ PROVIDES = "enigma2-skindefault"
 do_populate_sysroot[noexec] = "1"
 
 SRC_URI = "git://github.com/oe-alliance/oe-alliance-e2-skindefault.git;protocol=git"
-SRC_URI_openspa = "git://github.com/openspa/oe-alliance-e2-skindefault.git;protocol=git"
-SRC_URI_openvix = "git://github.com/oe-alliance/oe-alliance-e2-skindefault.git;protocol=git;branch=scalable"
+SRC_URI:openspa = "git://github.com/openspa/oe-alliance-e2-skindefault.git;protocol=git"
+SRC_URI:openvix = "git://github.com/oe-alliance/oe-alliance-e2-skindefault.git;protocol=git;branch=scalable"
 
 S = "${WORKDIR}/git"
 
