@@ -13,9 +13,9 @@ fi
 if [ -x /usr/bin/showiframe ]; then
 	SKIN=`sed -En 's|config\.skin\.primary_skin=(.+)/skin\.xml|\1|p' /etc/enigma2/settings`
 	if [ -n "${SKIN}" ]; then
-		SEARCHDIRS="/etc/enigma2/${SKIN} /etc/enigma2/skin_common /etc/enigma2 /usr/share/enigma2/${SKIN} /usr/share/enigma2/skin_default /usr/share/enigma2"
+		SEARCHDIRS="/etc/enigma2/${SKIN} /etc/enigma2/skin_common /etc/enigma2 /usr/share/enigma2/${SKIN} /usr/share/enigma2/skin_default /usr/share /usr/share/enigma2"
 	else
-		SEARCHDIRS="/etc/enigma2/skin_common /etc/enigma2 /usr/share/enigma2/skin_default /usr/share/enigma2"
+		SEARCHDIRS="/etc/enigma2/skin_common /etc/enigma2 /usr/share/enigma2/skin_default /usr/share /usr/share/enigma2"
 	fi
 	for DIR in ${SEARCHDIRS}; do
 		if [ -d "${DIR}" ] && [ -f "${DIR}/bootlogo.mvi" ]; then
