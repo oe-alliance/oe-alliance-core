@@ -126,6 +126,7 @@ RDEPENDS:${PN} = " \
     ${PYTHON_PN}-aiohttp \
     ${PYTHON_PN}-attr \
     ${PYTHON_PN}-attrs \
+    ${PYTHON_PN}-cattrs \
     ${PYTHON_PN}-autobahn \
     ${PYTHON_PN}-bluetool \
     ${PYTHON_PN}-circuits \
@@ -143,8 +144,10 @@ RDEPENDS:${PN} = " \
     ${PYTHON_PN}-psutil \
     ${PYTHON_PN}-pyasn1-modules \
     ${PYTHON_PN}-requests \
+    ${PYTHON_PN}-requests-cache \
     ${PYTHON_PN}-service-identity \
     ${PYTHON_PN}-ujson \
+    ${PYTHON_PN}-url-normalize \
     ${PYTHON_PN}-singledispatch \
     ${PYTHON_PN}-levenshtein \
     ${PYTHON_PN}-soco \
