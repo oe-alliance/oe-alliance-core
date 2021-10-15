@@ -36,6 +36,7 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-systemplugins-xmlupdate \
     ${@bb.utils.contains("MACHINE_FEATURES", "uianimation", "enigma2-plugin-systemplugins-animationsetup" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "osdanimation", "enigma2-plugin-systemplugins-animationsetup" , "", d)} \
+    openvix-picon-feed-opkg-conf \
     "
 
 RRECOMMENDS_${PN}_append_et8500 = " enigma2-plugin-extensions-yahooweather"
