@@ -8,8 +8,8 @@ RDEPENDS_${PN} = "python-argparse python-image python-imaging python-lzma python
 
 SRCREV = "${AUTOREV}"
 
-PV = "3.28+git${SRCPV}"
-PKGV = "3.28+git${GITPKGV}"
+PV = "3.32+git${SRCPV}"
+PKGV = "3.32+git${GITPKGV}"
 PR = "r1"
 
 inherit gitpkgv allarch
