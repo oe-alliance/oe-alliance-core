@@ -7,9 +7,9 @@ inherit kodi-addon
 
 DEPENDS += "expat"
 
-SRCREV = "d8cac91499710902d429256a04ac01f618d128be"
+SRCREV = "9e548998b3a31dd7ff7d55adf80d8a3fa1609c1d"
 
-PV = "3.4.0+gitr${SRCPV}"
+PV = "19.0.0+gitr${SRCPV}"
 
 KODIADDONBRANCH = "Matrix"
 
