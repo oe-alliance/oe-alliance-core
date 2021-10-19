@@ -5,8 +5,8 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-PV = "7.4"
-PR = "r5"
+PV = "7.5"
+PR = "r0"
 
 inherit packagegroup
 

@@ -7,7 +7,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "1.0"
-PR = "r48"
+PR = "r49"
 
 inherit packagegroup
 
@@ -37,6 +37,8 @@ RRECOMMENDS_${PN} = "\
     enigma2-plugin-skins-ultimate-hd-4atv \
     enigma2-plugin-skins-glamouraurafhd-atv \
     enigma2-plugin-skins-madmax-impossible \
+    enigma2-plugin-skincomponents-advancedmovieselection-steampunk-skin \
+    enigma2-plugin-skincomponents-advancedmovieselection-ultimate-skin \
     enigma2-plugin-skincomponents-bmediacenter-ax-blue-skin \
     enigma2-plugin-skincomponents-mediaportal-ax-blue-skin \
     enigma2-plugin-skincomponents-mediaportal-blue-line-skin \
