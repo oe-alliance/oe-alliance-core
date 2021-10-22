@@ -1,0 +1,25 @@
+From 039c53dd5baddec3359a05be0bff46a3b32bbb84 Mon Sep 17 00:00:00 2001
+From: Alexander Kanavin <alex.kanavin@gmail.com>
+Date: Fri, 25 Jan 2019 19:04:13 +0100
+Subject: [PATCH] Do not add /usr/lib/termcap to linker flags to avoid host
+ contamination
+
+Upstream-Status: Inappropriate [oe-core specific]
+Signed-off-by: Alexander Kanavin <alex.kanavin@gmail.com>
+
+---
+ setup.py | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/setup.py b/setup.py
+index 20d7f35..ab18ff0 100644
+--- a/setup.py
++++ b/setup.py
+@@ -957,7 +957,6 @@ class PyBuildExt(build_ext):
+                                                      'termcap'):
+                 readline_libs.append('termcap')
+             self.add(Extension('readline', ['readline.c'],
+-                               library_dirs=['/usr/lib/termcap'],
+                                extra_link_args=readline_extra_link_args,
+                                libraries=readline_libs))
+         else:

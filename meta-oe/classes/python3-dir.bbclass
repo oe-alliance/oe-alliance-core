@@ -1,0 +1,5 @@
+PYTHON_BASEVERSION = "3.9"
+PYTHON_ABI = ""
+PYTHON_DIR = "python${PYTHON_BASEVERSION}"
+PYTHON_PN = "python3"
+PYTHON_SITEPACKAGES_DIR = "${libdir}/${PYTHON_DIR}/site-packages"
