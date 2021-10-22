@@ -1,6 +1,6 @@
 # icu configure defaults to CXX11 if no -std= option is passed in CXXFLAGS
 # therefore pass one
-BUILD_CXXFLAGS:append:pn-icu-native = " -std=c++98"
+#BUILD_CXXFLAGS:append:pn-icu-native = " -std=c++98"
 
 # Some distros (ubuntu 16.10, debian-testing) default to gcc configured with
 # --enable-default-pie (see gcc -v). This breaks e.g. prelink-native on a pie
@@ -8,4 +8,4 @@ BUILD_CXXFLAGS:append:pn-icu-native = " -std=c++98"
 # We therefore enable pie unconditionally for native recipes where static libs are
 # used such as libiberty from binutils, for now, until our minimum distro set is
 # all default pie.
-BUILD_CFLAGS:append:pn-binutils-native = " -pie -fpie"
+#BUILD_CFLAGS:append:pn-binutils-native = " -pie -fpie"
