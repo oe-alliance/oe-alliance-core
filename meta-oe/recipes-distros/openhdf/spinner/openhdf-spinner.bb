@@ -7,7 +7,7 @@ require conf/license/license-gplv2.inc
 inherit allarch
 
 PV = "1.0"
-PR = "r3"
+PR = "r4"
 
 SRC_URI = "file://spinners/"
 
@@ -15,7 +15,7 @@ S = "${WORKDIR}"
 
 do_install() {
     install -d ${D}${datadir}/enigma2/spinner
-    install -m 0644 ${S}/*.png ${D}${datadir}/enigma2/spinner
+    install -m 0644 ${S}/spinners/*.png ${D}${datadir}/enigma2/spinner
 }
 
 FILES:${PN} = "${datadir}/enigma2"
