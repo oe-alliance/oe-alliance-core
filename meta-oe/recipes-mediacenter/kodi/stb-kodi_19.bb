@@ -7,7 +7,7 @@ FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}-19:"
 
 PACKAGE_ARCH = "${MACHINE}"
 
-inherit cmake gettext ${PYTHON_PN}-dir ${PYTHON_PN}native
+inherit cmake gettext pkgconfig ${PYTHON_PN}-dir ${PYTHON_PN}native
 
 DEPENDS += " \
             fmt \
@@ -17,6 +17,8 @@ DEPENDS += " \
             crossguid \
             libdvdnav libdvdcss libdvdread \
             ffmpeg \
+            autoconf-native \
+            automake-native \
             git-native \
             curl-native \
             gperf-native \
@@ -37,7 +39,7 @@ DEPENDS += " \
             faad2 \
             fontconfig \
             fribidi \
-            glib-2.0 \ 
+            glib-2.0 \
             giflib \
             libass \
             libcdio \

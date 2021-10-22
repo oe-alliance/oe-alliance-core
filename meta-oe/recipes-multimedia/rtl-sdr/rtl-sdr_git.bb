@@ -16,9 +16,9 @@ SRC_URI = "git://git.osmocom.org/rtl-sdr;protocol=https"
 
 S = "${WORKDIR}/git"
 
-EXTRA_OECMAKE += " -DLIB_INSTALL_DIR=${libdir}" 
+EXTRA_OECMAKE += " -DLIB_INSTALL_DIR=${libdir}"
 
-inherit cmake
+inherit cmake pkgconfig
 
 EXTRA_OECONF = "--enable-driver-detach"
 

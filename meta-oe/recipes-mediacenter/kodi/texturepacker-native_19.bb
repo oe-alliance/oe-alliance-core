@@ -24,7 +24,7 @@ PV = "19.0+gitr${SRCPV}"
 SRC_URI = "git://github.com/xbmc/xbmc.git;branch=master \
           "
 
-inherit autotools-brokensep gettext native
+inherit autotools-brokensep gettext pkgconfig native
 
 S = "${WORKDIR}/git/tools/depends/native/TexturePacker/src"
 

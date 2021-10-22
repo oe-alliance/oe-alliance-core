@@ -20,7 +20,7 @@ SRC_URI = "git://github.com/MusicPlayerDaemon/MPD \
 
 S = "${WORKDIR}/git"
 
-inherit meson update-rc.d
+inherit meson pkgconfig update-rc.d
 
 INITSCRIPT_NAME = "mpd"
 
