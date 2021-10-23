@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=cb8aedd3bced19bd8026d96a8b6876d7"
 DEPENDS = "gstreamer1.0 bison-native"
 RDEPENDS:${PN} = "wpa-supplicant connman"
 
-inherit gitpkgv
+inherit gitpkgv pkgconfig
 
 PV = "1.1.0+git${SRCPV}"
 PKGV = "1.1.0+git${GITPKGV}"
