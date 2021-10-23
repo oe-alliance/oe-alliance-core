@@ -7,7 +7,7 @@ ALLOW_EMPTY:${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r2"
+PR = "r3"
 
 inherit packagegroup
 
@@ -24,4 +24,5 @@ RDEPENDS:${PN} = "\
 	enigma2-plugin-skins-kiddac-1080-onyx \
 	enigma2-plugin-skins-kiddac-1080-slyk-q \
 	enigma2-plugin-skins-kiddac-1080-slyk-r19 \
+	enigma2-plugin-skins-overlayhd \
 	"
