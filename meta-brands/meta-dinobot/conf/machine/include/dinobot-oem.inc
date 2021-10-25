@@ -245,7 +245,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'hitube4k', 'dinobot/${MACHINE}' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'hitube4kpro', 'dinobot/${MACHINE}' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'hitube4kplus', 'dinobot/${MACHINE}' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iziboxone4k', 'dinobot/${MACHINE}' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'iziboxone4kplus', 'dinobot/${MACHINE}' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'iziboxone4kplus', 'e2/update' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iziboxelite4k', 'izibox/${MACHINE}' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iziboxx3', 'izibox/x3' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axashistwin', 'axas/axashistwin' , '', d)}\
