@@ -1,8 +1,8 @@
-SRCDATE = "20181121"
+SRCDATE = "20211026"
 
 require airdigital-mali-utgard.inc
 
-SRC_URI[md5sum] = "b96caae5248e4fa3606a367e290877d0"
-SRC_URI[sha256sum] = "dc408d3a0e647fcf008df3a8a8c2a68cf1884f3b86ce1b837469eed2caa25ad6"
+SRC_URI[md5sum] = "d2f5ba6437c41e614400dc1fe11ff0ee"
+SRC_URI[sha256sum] = "a177c4f19d3178526da8c5614973b307dd8ed970cc8be554e07a7120ba912b11"
 
 COMPATIBLE_MACHINE = "^h11$"
