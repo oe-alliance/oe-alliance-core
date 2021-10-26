@@ -6,37 +6,36 @@ MAINTAINER = "oe-alliance team"
 
 require conf/license/license-gplv2.inc
 
-PV = "${IMAGE_VERSION}"
-PR = "r${DATE}-${BUILD_VERSION}-${MACHINEBUILD}"
-PR[vardepsxeclude] += "DATE"
+PV = "${IMAGE_VERSION}-${BUILD_VERSION}"
+PR = "r${DATE}"
+
 PACKAGE_ARCH = "${MACHINEBUILD}"
-WORKDIR = "${TMPDIR}/work/${MULTIMACH_TARGET_SYS}/${PN}/${EXTENDPE}${PV}"
-do_configure[nostamp] = "1"
-do_configure[vardepsexclude] += "DATE"
-do_install[vardepsexclude] += "DATE"
-do_populate_lic[vardepsexclude] += "DATE"
-do_rm_work[vardepsexclude] += "DATE"
-S = "${WORKDIR}"
 
 PACKAGES = "${PN}"
 
+S = "${WORKDIR}"
+
+do_compile() {
+    mkdir -p ${S}/usr/lib/enigma2/python
+    printf "def getBoxType(): return '${MACHINEBUILD}'
+" > ${S}/usr/lib/enigma2/python/ImageIdentifier.py
+    printf "def getImageDistro(): return '${DISTRO_NAME}'
+" >> ${S}/usr/lib/enigma2/python/ImageIdentifier.py
+    printf "def getImageVersion(): return '${IMAGE_VERSION}'
+" >> ${S}/usr/lib/enigma2/python/ImageIdentifier.py
+    printf "def getImageBuild(): return '${BUILD_VERSION}'
+" >> ${S}/usr/lib/enigma2/python/ImageIdentifier.py
+    printf "def getImageDevBuild(): return '${DEVELOPER_BUILD_VERSION}'
+" >> ${S}/usr/lib/enigma2/python/ImageIdentifier.py
+    printf "def getImageType(): return '${DISTRO_TYPE}'
+" >> ${S}/usr/lib/enigma2/python/ImageIdentifier.py
+    printf "def getMachineBrand(): return '${MACHINE_BRAND}'
+" >> ${S}/usr/lib/enigma2/python/ImageIdentifier.py
+}
+
 do_install() {
     install -d ${D}/usr/lib/enigma2/python
-    printf "def getBoxType(): return '${MACHINEBUILD}'
-" > ${D}/usr/lib/enigma2/python/ImageIdentifier.py
-    printf "def getImageDistro(): return '${DISTRO_NAME}'
-" >> ${D}/usr/lib/enigma2/python/ImageIdentifier.py
-    printf "def getImageVersion(): return '${IMAGE_VERSION}'
-" >> ${D}/usr/lib/enigma2/python/ImageIdentifier.py
-    printf "def getImageBuild(): return '${BUILD_VERSION}'
-" >> ${D}/usr/lib/enigma2/python/ImageIdentifier.py
-    printf "def getImageDevBuild(): return '${DEVELOPER_BUILD_VERSION}'
-" >> ${D}/usr/lib/enigma2/python/ImageIdentifier.py
-    printf "def getImageType(): return '${DISTRO_TYPE}'
-" >> ${D}/usr/lib/enigma2/python/ImageIdentifier.py
-    printf "def getMachineBrand(): return '${MACHINE_BRAND}'
-" >> ${D}/usr/lib/enigma2/python/ImageIdentifier.py
-    printf "def getImageBuildDate(): return '${DATE}'
-" >> ${D}/usr/lib/enigma2/python/ImageIdentifier.py
+    install -m 0644 ${S}/usr/lib/enigma2/python/* ${D}/usr/lib/enigma2/python
 }
+
 FILES:${PN} += "/usr/lib/enigma2/python/ImageIdentifier.py"
