@@ -1,55 +1,5 @@
-From 4d330bafa3b4cba7d5e6d7db0fa04171a23fafc5 Mon Sep 17 00:00:00 2001
-From: aosp <aosp@no-replay.net>
-Date: Thu, 1 Mar 2018 12:09:19 +0100
-Subject: [PATCH] hi3798mv200 support
-
----
- .../driver/src/devicedrv/mali/Kbuild               |  31 +-
- .../driver/src/devicedrv/mali/Kconfig              |  14 +-
- .../driver/src/devicedrv/mali/MALI_CONFIGURATION   |  18 +
- .../driver/src/devicedrv/mali/Makefile             |  18 +-
- .../src/devicedrv/mali/common/mali_executor.c      |   3 +-
- .../src/devicedrv/mali/common/mali_executor.h      |   2 +
- .../driver/src/devicedrv/mali/common/mali_gp_job.c |   2 +-
- .../src/devicedrv/mali/common/mali_pm_metrics.c    |  58 ++
- .../src/devicedrv/mali/common/mali_pm_metrics.h    |   6 +
- .../src/devicedrv/mali/common/mali_soft_job.c      |   4 +
- .../driver/src/devicedrv/mali/kbuild_flags         | 111 ++++
- .../driver/src/devicedrv/mali/linux/mali_devfreq.c |  27 +
- .../src/devicedrv/mali/linux/mali_kernel_linux.c   |  19 +
- .../src/devicedrv/mali/linux/mali_linux_trace.h    |   2 +
- .../src/devicedrv/mali/platform/dt/drv_gpu_ext.h   |  17 +
- .../src/devicedrv/mali/platform/dt/hi_drv_module.h |  57 ++
- .../src/devicedrv/mali/platform/dt/hi_module.h     | 182 ++++++
- .../src/devicedrv/mali/platform/dt/hi_type.h       | 142 +++++
- .../src/devicedrv/mali/platform/dt/mali4xx_cfg.h   |  25 +
- .../src/devicedrv/mali/platform/dt/mali4xx_dt.c    | 652 +++++++++++++++++++++
- .../src/devicedrv/mali/platform/dt/mali4xx_dt.h    |  41 ++
- .../src/devicedrv/mali/platform/dt/mali4xx_opp.c   | 270 +++++++++
- .../src/devicedrv/mali/platform/dt/mali4xx_opp.h   |  29 +
- .../src/devicedrv/mali/platform/dt/mali4xx_proc.c  | 384 ++++++++++++
- .../src/devicedrv/mali/platform/dt/mali4xx_proc.h  |  15 +
- .../devicedrv/mali/platform/dt/mali4xx_scaling.c   | 118 ++++
- .../devicedrv/mali/platform/dt/mali4xx_scaling.h   |  31 +
- 27 files changed, 2249 insertions(+), 29 deletions(-)
- create mode 100755 driver/src/devicedrv/mali/MALI_CONFIGURATION
- create mode 100755 driver/src/devicedrv/mali/kbuild_flags
- create mode 100755 driver/src/devicedrv/mali/platform/dt/drv_gpu_ext.h
- create mode 100755 driver/src/devicedrv/mali/platform/dt/hi_drv_module.h
- create mode 100755 driver/src/devicedrv/mali/platform/dt/hi_module.h
- create mode 100755 driver/src/devicedrv/mali/platform/dt/hi_type.h
- create mode 100755 driver/src/devicedrv/mali/platform/dt/mali4xx_cfg.h
- create mode 100755 driver/src/devicedrv/mali/platform/dt/mali4xx_dt.c
- create mode 100755 driver/src/devicedrv/mali/platform/dt/mali4xx_dt.h
- create mode 100755 driver/src/devicedrv/mali/platform/dt/mali4xx_opp.c
- create mode 100755 driver/src/devicedrv/mali/platform/dt/mali4xx_opp.h
- create mode 100755 driver/src/devicedrv/mali/platform/dt/mali4xx_proc.c
- create mode 100755 driver/src/devicedrv/mali/platform/dt/mali4xx_proc.h
- create mode 100755 driver/src/devicedrv/mali/platform/dt/mali4xx_scaling.c
- create mode 100755 driver/src/devicedrv/mali/platform/dt/mali4xx_scaling.h
-
 diff --git a/driver/src/devicedrv/mali/Kbuild b/driver/src/devicedrv/mali/Kbuild
-index 37cdeb9..7412e9e
+index 37cdeb9..be52ec7 100755
 --- a/driver/src/devicedrv/mali/Kbuild
 +++ b/driver/src/devicedrv/mali/Kbuild
 @@ -11,9 +11,10 @@
@@ -100,8 +50,17 @@ index 37cdeb9..7412e9e
  
  ifeq ($(USING_GPU_UTILIZATION), 1)
      ifeq ($(USING_DVFS), 1)
+@@ -224,7 +225,7 @@ endif
+ ccflags-y += -DSVN_REV_STRING=\"$(DRIVER_REV)\"
+ 
+ VERSION_STRINGS :=
+-VERSION_STRINGS += API_VERSION=$(shell cd $(src); grep "\#define _MALI_API_VERSION" $(FILES_PREFIX)include/linux/mali/mali_utgard_uk_types.h | cut -d' ' -f 3 )
++#VERSION_STRINGS += API_VERSION=$(shell cd $(src); grep "\#define _MALI_API_VERSION" $(FILES_PREFIX)include/linux/mali/mali_utgard_uk_types.h | cut -d' ' -f 3 )
+ VERSION_STRINGS += REPO_URL=$(REPO_URL)
+ VERSION_STRINGS += REVISION=$(DRIVER_REV)
+ VERSION_STRINGS += CHANGED_REVISION=$(CHANGED_REVISION)
 diff --git a/driver/src/devicedrv/mali/Kconfig b/driver/src/devicedrv/mali/Kconfig
-index 7b4e9fb..18fd377
+index 7b4e9fb..18fd377 100755
 --- a/driver/src/devicedrv/mali/Kconfig
 +++ b/driver/src/devicedrv/mali/Kconfig
 @@ -69,7 +69,7 @@ config MALI_DMA_BUF_MAP_ON_ATTACH
@@ -130,11 +89,11 @@ index 7b4e9fb..18fd377
 +	---help---
 +	  This enables GPU DVFS function.
 diff --git a/driver/src/devicedrv/mali/MALI_CONFIGURATION b/driver/src/devicedrv/mali/MALI_CONFIGURATION
-new file mode 100644
+new file mode 100755
 index 0000000..be93771
 --- /dev/null
 +++ b/driver/src/devicedrv/mali/MALI_CONFIGURATION
-@@ -0,0 +1,12 @@
+@@ -0,0 +1,18 @@
 +include kbuild_flags
 +#===============================================================================
 +# export variables
@@ -146,11 +105,15 @@ index 0000000..be93771
 +KDIR-$(TARGET_PLATFORM):=$(LINUX_DIR)
 +
 +# Name of platform directory with platform specific code (should be built into kernel on a real system) 
++ifeq ($(CFG_HI_GPU_MALI450_SUPPORT),y)
 +MALI_PLATFORM-$(TARGET_PLATFORM)=mali450
++else ifeq ($(CFG_HI_GPU_MALI400_SUPPORT),y)
++MALI_PLATFORM-$(TARGET_PLATFORM)=mali400
++else
++$(error error: mali unknown)
++endif
 diff --git a/driver/src/devicedrv/mali/Makefile b/driver/src/devicedrv/mali/Makefile
-old mode 100755
-new mode 100644
-index f39ae4d..5a27cd4
+index f39ae4d..f589896 100755
 --- a/driver/src/devicedrv/mali/Makefile
 +++ b/driver/src/devicedrv/mali/Makefile
 @@ -10,8 +10,8 @@
@@ -173,7 +136,7 @@ index f39ae4d..5a27cd4
  export KDIR ?= $(KDIR-$(TARGET_PLATFORM))
  export MALI_PLATFORM ?= $(MALI_PLATFORM-$(TARGET_PLATFORM))
  
-@@ -89,7 +89,6 @@ endif
+@@ -89,10 +89,11 @@ endif
  KDIR-$(shell uname -m):=/lib/modules/$(shell uname -r)/build
  
  include $(KDIR)/.config
@@ -181,7 +144,12 @@ index f39ae4d..5a27cd4
  ifeq ($(ARCH), arm)
  # when compiling for ARM we're cross compiling
  export CROSS_COMPILE ?= $(call check_cc2, arm-linux-gnueabi-gcc, arm-linux-gnueabi-, arm-none-linux-gnueabi-)
-@@ -103,13 +102,11 @@ $(warning MALI_PLATFORM $(MALI_PLATFORM))
++else
++export CROSS_COMPILE = $(HI_KERNEL_TOOLCHAINS_NAME)-
+ endif
+ 
+ # report detected/selected settings
+@@ -103,13 +104,11 @@ $(warning MALI_PLATFORM $(MALI_PLATFORM))
  endif
  
  # Set up build config
@@ -199,7 +167,7 @@ index f39ae4d..5a27cd4
  
  ifneq ($(MALI_PLATFORM),)
  export EXTRA_DEFINES += -DMALI_FAKE_PLATFORM_DEVICE=1
-@@ -122,6 +119,7 @@ $(warning CONFIG_TRACEPOINTS required for profiling)
+@@ -122,6 +121,7 @@ $(warning CONFIG_TRACEPOINTS required for profiling)
  else
  export CONFIG_MALI400_PROFILING=y
  export EXTRA_DEFINES += -DCONFIG_MALI400_PROFILING=1
@@ -208,9 +176,7 @@ index f39ae4d..5a27cd4
  export CONFIG_MALI400_INTERNAL_PROFILING=y
  export EXTRA_DEFINES += -DCONFIG_MALI400_INTERNAL_PROFILING=1
 diff --git a/driver/src/devicedrv/mali/common/mali_executor.c b/driver/src/devicedrv/mali/common/mali_executor.c
-old mode 100755
-new mode 100644
-index 21acccc..45186e3
+index 21acccc..45186e3 100755
 --- a/driver/src/devicedrv/mali/common/mali_executor.c
 +++ b/driver/src/devicedrv/mali/common/mali_executor.c
 @@ -125,7 +125,6 @@ static void mali_executor_disable_empty_virtual(void);
@@ -231,9 +197,7 @@ index 21acccc..45186e3
  	u32 i;
  	u32 num_physical_needed = 0;
 diff --git a/driver/src/devicedrv/mali/common/mali_executor.h b/driver/src/devicedrv/mali/common/mali_executor.h
-old mode 100755
-new mode 100644
-index 1d69dc3..780f472
+index 1d69dc3..780f472 100755
 --- a/driver/src/devicedrv/mali/common/mali_executor.h
 +++ b/driver/src/devicedrv/mali/common/mali_executor.h
 @@ -40,6 +40,8 @@ void mali_executor_depopulate(void);
@@ -246,9 +210,7 @@ index 1d69dc3..780f472
  u32 mali_executor_get_num_cores_enabled(void);
  struct mali_pp_core *mali_executor_get_virtual_pp(void);
 diff --git a/driver/src/devicedrv/mali/common/mali_gp_job.c b/driver/src/devicedrv/mali/common/mali_gp_job.c
-old mode 100755
-new mode 100644
-index 00a2d1e..fb8dcd8
+index 00a2d1e..fb8dcd8 100755
 --- a/driver/src/devicedrv/mali/common/mali_gp_job.c
 +++ b/driver/src/devicedrv/mali/common/mali_gp_job.c
 @@ -133,7 +133,7 @@ struct mali_gp_job *mali_gp_job_create(struct mali_session_data *session, _mali_
@@ -260,17 +222,72 @@ index 00a2d1e..fb8dcd8
  
  			if (0 != _mali_osk_copy_from_user(job->varying_list, memory_list, sizeof(u32) * job->uargs.deferred_mem_num)) {
  				MALI_PRINT_ERROR(("Mali GP job: Failed to copy varying list from user space!\n"));
+diff --git a/driver/src/devicedrv/mali/common/mali_kernel_core.c b/driver/src/devicedrv/mali/common/mali_kernel_core.c
+index 43de848..93905eb 100755
+--- a/driver/src/devicedrv/mali/common/mali_kernel_core.c
++++ b/driver/src/devicedrv/mali/common/mali_kernel_core.c
+@@ -923,6 +923,8 @@ void mali_terminate_subsystems(void)
+ 	mali_utilization_term();
+ 	mali_control_timer_term();
+ 
++	mali_pm_terminate();
++
+ 	mali_executor_depopulate();
+ 	mali_delete_groups(); /* Delete groups not added to executor */
+ 	mali_executor_terminate();
+@@ -936,8 +938,6 @@ void mali_terminate_subsystems(void)
+ 		mali_dlbu_terminate();
+ 	}
+ 
+-	mali_pm_terminate();
+-
+ 	if (NULL != pmu) {
+ 		mali_pmu_delete(pmu);
+ 	}
+@@ -1035,12 +1035,18 @@ _mali_osk_errcode_t _mali_ukk_wait_for_notification(_mali_uk_wait_for_notificati
+ 		MALI_ERROR(err); /* errcode returned, pass on to caller */
+ 	}
+ 
+-	/* copy the buffer to the user */
+-	args->type = (_mali_uk_notification_type)notification->notification_type;
+-	_mali_osk_memcpy(&args->data, notification->result_buffer, notification->result_buffer_size);
++#if defined(UTGARD_HISILICON_PLUGIN)
++	/* guarantee the notification is not NULL */
++	if (NULL != notification)
++#endif
++	{
++		/* copy the buffer to the user */
++		args->type = (_mali_uk_notification_type)notification->notification_type;
++		_mali_osk_memcpy(&args->data, notification->result_buffer, notification->result_buffer_size);
+ 
+-	/* finished with the notification */
+-	_mali_osk_notification_delete(notification);
++		/* finished with the notification */
++		_mali_osk_notification_delete(notification);
++	}
+ 
+ 	return _MALI_OSK_ERR_OK; /* all ok */
+ }
 diff --git a/driver/src/devicedrv/mali/common/mali_pm_metrics.c b/driver/src/devicedrv/mali/common/mali_pm_metrics.c
-old mode 100755
-new mode 100644
-index 981ec81..5439a47
+index 981ec81..01f7c0e 100755
 --- a/driver/src/devicedrv/mali/common/mali_pm_metrics.c
 +++ b/driver/src/devicedrv/mali/common/mali_pm_metrics.c
-@@ -174,15 +174,45 @@ void mali_pm_record_gpu_active(mali_bool is_gp)
+@@ -12,6 +12,10 @@
+ #include "mali_osk_mali.h"
+ #include <linux/ktime.h>
+ 
++#if defined(UTGARD_HISILICON_PLUGIN) /* Hisi governor */
++#include "platform/dt/mali4xx_dt.h"
++#endif
++
+ #define MALI_PM_TIME_SHIFT 0
+ #define MALI_UTILIZATION_MAX_PERIOD 80000000/* ns = 100ms */
+ 
+@@ -174,15 +178,45 @@ void mali_pm_record_gpu_active(mali_bool is_gp)
  static void mali_pm_get_dvfs_utilisation_calc(struct mali_device *mdev, ktime_t now)
  {
  	ktime_t diff;
-+#if defined(UTGARD_HISILICON_PLUGIN)
++#if defined(UTGARD_HISILICON_PLUGIN) /* Hisi Governor */
 +	ktime_t diff_gp, diff_pp;
 +#endif
  
@@ -278,7 +295,7 @@ index 981ec81..5439a47
  
  	diff = ktime_sub(now, mdev->mali_metrics.time_period_start);
  
-+#if defined(UTGARD_HISILICON_PLUGIN)
++#if defined(UTGARD_HISILICON_PLUGIN) /* Hisi Governor */
 +	diff_gp = ktime_sub(now, mdev->mali_metrics.time_period_start_gp);
 +	diff_pp = ktime_sub(now, mdev->mali_metrics.time_period_start_pp);
 +#endif
@@ -286,7 +303,7 @@ index 981ec81..5439a47
  	if (mdev->mali_metrics.gpu_active) {
  		mdev->mali_metrics.time_busy += (u64)(ktime_to_ns(diff) >> MALI_PM_TIME_SHIFT);
 +
-+#if defined(UTGARD_HISILICON_PLUGIN)
++#if defined(UTGARD_HISILICON_PLUGIN) /* Hisi Governor */
 +	if(1 == mdev->mali_metrics.num_running_gp_cores)
 +	{
 +		mdev->mali_metrics.time_busy_gp += (u64)(ktime_to_ns(diff_gp) >> MALI_PM_TIME_SHIFT);
@@ -299,7 +316,7 @@ index 981ec81..5439a47
  	} else {
  		mdev->mali_metrics.time_idle += (u64)(ktime_to_ns(diff) >> MALI_PM_TIME_SHIFT);
 +
-+#if defined(UTGARD_HISILICON_PLUGIN)
++#if defined(UTGARD_HISILICON_PLUGIN) /* Hisi Governor */
 +	if(1 == mdev->mali_metrics.num_running_gp_cores)
 +	{
 +		mdev->mali_metrics.time_idle_gp += (u64)(ktime_to_ns(diff_gp) >> MALI_PM_TIME_SHIFT);
@@ -312,11 +329,11 @@ index 981ec81..5439a47
  	}
  }
  
-@@ -193,6 +223,13 @@ static void mali_pm_reset_dvfs_utilisation_unlocked(struct mali_device *mdev, kt
+@@ -193,6 +227,13 @@ static void mali_pm_reset_dvfs_utilisation_unlocked(struct mali_device *mdev, kt
  	mdev->mali_metrics.prev_idle = mdev->mali_metrics.time_idle;
  	mdev->mali_metrics.prev_busy = mdev->mali_metrics.time_busy;
  
-+#if defined(UTGARD_HISILICON_PLUGIN)
++#if defined(UTGARD_HISILICON_PLUGIN) /* Hisi Governor */
 +	mdev->mali_metrics.prev_idle_gp = mdev->mali_metrics.time_idle_gp;
 +	mdev->mali_metrics.prev_busy_gp = mdev->mali_metrics.time_busy_gp;
 +	mdev->mali_metrics.prev_idle_pp[0] = mdev->mali_metrics.time_idle_pp[0];
@@ -326,23 +343,25 @@ index 981ec81..5439a47
  	/* Reset current values */
  	mdev->mali_metrics.time_period_start = now;
  	mdev->mali_metrics.time_period_start_gp = now;
-@@ -220,6 +257,11 @@ void mali_pm_get_dvfs_utilisation(struct mali_device *mdev,
+@@ -220,6 +261,13 @@ void mali_pm_get_dvfs_utilisation(struct mali_device *mdev,
  	u64 busy = 0;
  	u64 total = 0;
  
-+#if defined(UTGARD_HISILICON_PLUGIN)
++#if defined(UTGARD_HISILICON_PLUGIN) /* Hisi Governor */
 +	u64 busy_gp = 0, total_gp = 0;
 +	u64 busy_pp = 0, total_pp = 0;
++
++	struct mali_config *mali_valuable;
 +#endif
 +
  	_mali_osk_spinlock_irq_lock(mdev->mali_metrics.lock);
  
  	mali_pm_get_dvfs_utilisation_calc(mdev, now);
-@@ -227,6 +269,13 @@ void mali_pm_get_dvfs_utilisation(struct mali_device *mdev,
+@@ -227,6 +275,13 @@ void mali_pm_get_dvfs_utilisation(struct mali_device *mdev,
  	busy = mdev->mali_metrics.time_busy;
  	total = busy + mdev->mali_metrics.time_idle;
  
-+#if defined(UTGARD_HISILICON_PLUGIN)
++#if defined(UTGARD_HISILICON_PLUGIN) /* Hisi Governor */
 +	busy_gp = mdev->mali_metrics.time_busy_gp;
 +	total_gp = busy_gp + mdev->mali_metrics.time_idle_gp;
 +	busy_pp = mdev->mali_metrics.time_busy_pp[0];
@@ -352,12 +371,12 @@ index 981ec81..5439a47
  	/* Reset stats if older than MALI_UTILIZATION_MAX_PERIOD (default
  	 * 100ms) */
  	if (total >= MALI_UTILIZATION_MAX_PERIOD) {
-@@ -235,6 +284,15 @@ void mali_pm_get_dvfs_utilisation(struct mali_device *mdev,
+@@ -235,10 +290,30 @@ void mali_pm_get_dvfs_utilisation(struct mali_device *mdev,
  		total += mdev->mali_metrics.prev_idle +
  			 mdev->mali_metrics.prev_busy;
  		busy += mdev->mali_metrics.prev_busy;
 +
-+#if defined(UTGARD_HISILICON_PLUGIN)
++#if defined(UTGARD_HISILICON_PLUGIN) /* Hisi Governor */
 +		total_gp += mdev->mali_metrics.prev_idle_gp +
 +             mdev->mali_metrics.prev_busy_gp;
 +		busy_gp += mdev->mali_metrics.prev_busy_gp;
@@ -368,32 +387,80 @@ index 981ec81..5439a47
  	}
  
  	*total_out = (unsigned long)total;
+ 	*busy_out = (unsigned long)busy;
++
++#if defined(UTGARD_HISILICON_PLUGIN) /* Hisi Governor */
++	mali_valuable = (struct mali_config*)mali_adp_get_configuration(mdev);
++
++	mali_valuable->time_busy_gp = (unsigned long)busy_gp;
++	mali_valuable->time_total_gp = (unsigned long)total_gp;
++
++	mali_valuable->time_busy_pp = (unsigned long)busy_pp;
++	mali_valuable->time_total_pp = (unsigned long)total_pp;
++#endif
++
+ 	_mali_osk_spinlock_irq_unlock(mdev->mali_metrics.lock);
+ }
+ 
 diff --git a/driver/src/devicedrv/mali/common/mali_pm_metrics.h b/driver/src/devicedrv/mali/common/mali_pm_metrics.h
-old mode 100755
-new mode 100644
-index 256f448..88283e8
+index 256f448..6d17308 100755
 --- a/driver/src/devicedrv/mali/common/mali_pm_metrics.h
 +++ b/driver/src/devicedrv/mali/common/mali_pm_metrics.h
-@@ -31,9 +31,15 @@ struct mali_pm_metrics_data {
+@@ -31,9 +31,21 @@ struct mali_pm_metrics_data {
  	ktime_t time_period_start_gp;
  	u64 time_busy_gp;
  	u64 time_idle_gp;
++
++#if defined(UTGARD_HISILICON_PLUGIN) /* Hisi governor */
 +	u64 prev_busy_gp;
 +	u64 prev_idle_gp;
++#endif
 +
  	ktime_t time_period_start_pp;
  	u64 time_busy_pp[MALI_MAX_NUMBER_OF_PHYSICAL_PP_GROUPS];
  	u64 time_idle_pp[MALI_MAX_NUMBER_OF_PHYSICAL_PP_GROUPS];
++
++#if defined(UTGARD_HISILICON_PLUGIN) /* Hisi governor */
 +	u64 prev_busy_pp[MALI_MAX_NUMBER_OF_PHYSICAL_PP_GROUPS];
 +	u64 prev_idle_pp[MALI_MAX_NUMBER_OF_PHYSICAL_PP_GROUPS];
++#endif
 +
  	mali_bool gpu_active;
  	_mali_osk_spinlock_irq_t *lock;
  };
+diff --git a/driver/src/devicedrv/mali/common/mali_pp_job.c b/driver/src/devicedrv/mali/common/mali_pp_job.c
+index 86f6304..ce32e6d 100755
+--- a/driver/src/devicedrv/mali/common/mali_pp_job.c
++++ b/driver/src/devicedrv/mali/common/mali_pp_job.c
+@@ -45,11 +45,15 @@ struct mali_pp_job *mali_pp_job_create(struct mali_session_data *session,
+ 
+ 	job = _mali_osk_calloc(1, sizeof(struct mali_pp_job));
+ 	if (NULL != job) {
+-		
+ 		_mali_osk_list_init(&job->list);
+ 		_mali_osk_list_init(&job->session_fb_lookup_list);
+ 		_mali_osk_atomic_inc(&session->number_of_pp_jobs);
+ 
++#if defined(UTGARD_HISILICON_PLUGIN)
++		/* if job create failed, the session will be needed */
++		job->session = session;
++#endif
++
+ 		if (0 != _mali_osk_copy_from_user(&job->uargs, uargs, sizeof(_mali_uk_pp_start_job_s))) {
+ 			goto fail;
+ 		}
+@@ -84,7 +88,9 @@ struct mali_pp_job *mali_pp_job_create(struct mali_session_data *session,
+ 			}
+ 		}
+ 
++#if !defined(UTGARD_HISILICON_PLUGIN)
+ 		job->session = session;
++#endif
+ 		job->id = id;
+ 
+ 		job->sub_jobs_num = job->uargs.num_cores ? job->uargs.num_cores : 1;
 diff --git a/driver/src/devicedrv/mali/common/mali_soft_job.c b/driver/src/devicedrv/mali/common/mali_soft_job.c
-old mode 100755
-new mode 100644
-index c76d1fe..2798435
+index c76d1fe..2798435 100755
 --- a/driver/src/devicedrv/mali/common/mali_soft_job.c
 +++ b/driver/src/devicedrv/mali/common/mali_soft_job.c
 @@ -435,4 +435,8 @@ void mali_soft_job_system_abort(struct mali_soft_job_system *system)
@@ -406,39 +473,43 @@ index c76d1fe..2798435
 +	mali_executor_unlock();
  }
 diff --git a/driver/src/devicedrv/mali/kbuild_flags b/driver/src/devicedrv/mali/kbuild_flags
-new file mode 100644
-index 0000000..8daeb3f
+new file mode 100755
+index 0000000..22f5002
 --- /dev/null
 +++ b/driver/src/devicedrv/mali/kbuild_flags
-@@ -0,0 +1,111 @@
+@@ -0,0 +1,134 @@
 +#===============================================================================
 +# export variables
 +#===============================================================================
 +
 +#SDK include header files
-+export EXTRA_CFLAGS += -I$(COMMON_UNF_INCLUDE)                 \
-+                -I$(COMMON_DRV_INCLUDE)                 \
-+                -I$(MSP_DRV_INCLUDE)                
++export EXTRA_CFLAGS += -I$(COMMON_UNF_INCLUDE) \
++                -I$(COMMON_API_INCLUDE) \
++                -I$(COMMON_DRV_INCLUDE) \
++                -I$(MSP_DRV_INCLUDE)
 +
 +#build in or not
 +export CONFIG_MALI400=$(HI_DRV_BUILDTYPE)
 +
++ifeq ($(CFG_HI_GPU_MALI450_SUPPORT),y)
 +export CONFIG_MALI450=$(HI_DRV_BUILDTYPE)
++endif
 +
++ifneq ($(CONFIG_MALI450),)
 +export EXTRA_DEFINES += -DCONFIG_MALI450=1
 +export TARGET_PLATFORM=mali450
++else
++export TARGET_PLATFORM=mali400
++endif
 +
-+#SDK flags  
++#SDK flags
 +export EXTRA_DEFINES += $(CFG_HI_KMOD_CFLAGS)
 +
 +#if use pmu, we need i2c driver
 +ifeq ($(CFG_HI_PMU_DEVICE_SELECT),y)
 +export EXTRA_DEFINES += -DCONFIG_HI_PMU_DEVICE_SELECT
-+export EXTRA_DEFINES += -I$(COMMON_UNF_INCLUDE) -I$(COMMON_DRV_INCLUDE) -I$(MSP_DRV_INCLUDE)
++export EXTRA_DEFINES += -I$(COMMON_UNF_INCLUDE) -I$(COMMON_API_INCLUDE) -I$(COMMON_DRV_INCLUDE) -I$(MSP_DRV_INCLUDE)
 +endif
-+
-+# Max GPU and OS shared memory size
-+export EXTRA_DEFINES += -DCONFIG_GPU_MAX_SHARE_MEM_SIZE=0x20000000
 +
 +# Enable DMA Buffer map on attach
 +export CONFIG_MALI_DMA_BUF_MAP_ON_ATTACH=y
@@ -448,10 +519,27 @@ index 0000000..8daeb3f
 +export CONFIG_GPU_DVFS_ENABLE=y
 +export EXTRA_DEFINES += -DCONFIG_GPU_DVFS_ENABLE
 +
++#enable gpu proc
++ifeq ($(CFG_HI_PROC_SUPPORT),y)
++export EXTRA_DEFINES += -DGPU_PROC_SUPPORT
++endif
++
 +#whether enable avs or not
 +ifeq ($(CFG_HI_AVS_SUPPORT),y)
 +export CONFIG_GPU_AVS_ENABLE=y
 +export EXTRA_DEFINES += -DCONFIG_GPU_AVS_ENABLE
++endif
++
++ifeq ($(CFG_HI_DONGLE_MODE_NORMAL),y)
++export EXTRA_DEFINES += -DHI_DONGLE_MODE_NORMAL
++endif
++
++ifeq ($(CFG_HI_DONGLE_MODE_LOW),y)
++export EXTRA_DEFINES += -DHI_DONGLE_MODE_LOW
++endif
++
++ifeq ($(CFG_HI_DONGLE_MODE_CRITICAL),y)
++export EXTRA_DEFINES += -DHI_DONGLE_MODE_CRITICAL
 +endif
 +
 +#if buildin, we should enable share interrupt and FAKE Driver here
@@ -459,8 +547,9 @@ index 0000000..8daeb3f
 +export EXTRA_DEFINES += -DCONFIG_MALI_SHARED_INTERRUPTS
 +
 +#debug or release
-+ifeq ($(CONFIG_MALI400_DEBUG),y)
++ifeq ($(CFG_HI_GPU_DEBUG),y)
 +BUILD=debug
++export CONFIG_MALI400_DEBUG=y
 +else
 +BUILD=release
 +endif
@@ -472,9 +561,11 @@ index 0000000..8daeb3f
 +ifeq ($(CFG_HI_ADVCA_SUPPORT), y)
 +HI_GPU_PROFILING=n
 +HI_GPU_INTERNAL_PROFILING=n
++MALI_QUIET=y
 +endif
 +
-+ifeq ($(CONFIG_MALI_QUIET),y)
++ifeq ($(MALI_QUIET),y)
++export CONFIG_MALI_QUIET=y
 +export EXTRA_DEFINES += -DCONFIG_MALI_QUIET
 +endif
 +
@@ -501,18 +592,18 @@ index 0000000..8daeb3f
 +export EXTRA_DEFINES += -DCFG_TEMP_CTRL_UP_THRESHOLD=$(CFG_HI_TEMP_CTRL_UP_THRESHOLD)
 +endif
 +
-+#device tree
-+
-+export CONFIG_MALI_DT=y
-+export EXTRA_DEFINES += -DCONFIG_MALI_DT=1
-+export EXTRA_DEFINES += -DUTGARD_HISILICON_PLUGIN=1
-+#hisi integration
 +export EXTRA_DEFINES += -DMALI_FAKE_PLATFORM_DEVICE=1
 +
++#hisi integration
++
++export EXTRA_DEFINES += -DUTGARD_HISILICON_PLUGIN=1
++
 +export CONFIG_MALI_DT=y
 +export EXTRA_DEFINES += -DCONFIG_MALI_DT=1
++
 +export CONFIG_MALI_DEVFREQ=y
 +export EXTRA_DEFINES += -DCONFIG_MALI_DEVFREQ=1
++
 +export MALI_PLATFORM_FILES = platform/dt/mali4xx_dt.c \
 +                             platform/dt/mali4xx_proc.c \
 +                             platform/dt/mali4xx_scaling.c \
@@ -521,18 +612,15 @@ index 0000000..8daeb3f
 +
 +
 +
-+
 diff --git a/driver/src/devicedrv/mali/linux/mali_devfreq.c b/driver/src/devicedrv/mali/linux/mali_devfreq.c
-old mode 100755
-new mode 100644
-index 0b0ba14..407f588
+index 0b0ba14..25d25d0 100755
 --- a/driver/src/devicedrv/mali/linux/mali_devfreq.c
 +++ b/driver/src/devicedrv/mali/linux/mali_devfreq.c
 @@ -36,6 +36,12 @@
  
  #include "mali_pm_metrics.h"
  
-+#if defined(UTGARD_HISILICON_PLUGIN)
++#if defined(UTGARD_HISILICON_PLUGIN) /* Hisi governor */
 +#include "platform/dt/mali4xx_dt.h"
 +#include "platform/dt/mali4xx_opp.h"
 +#include "platform/dt/mali4xx_cfg.h"
@@ -541,35 +629,30 @@ index 0b0ba14..407f588
  static int
  mali_devfreq_target(struct device *dev, unsigned long *target_freq, u32 flags)
  {
-@@ -121,10 +127,17 @@ mali_devfreq_status(struct device *dev, struct devfreq_dev_status *stat)
- 
+@@ -122,9 +128,13 @@ mali_devfreq_status(struct device *dev, struct devfreq_dev_status *stat)
  	stat->current_frequency = mdev->current_freq;
  
-+#if defined(UTGARD_HISILICON_PLUGIN)
-+	stat->private_data = mali_adp_get_configuration(mdev);
-+
-+	mali_pm_get_dvfs_utilisation(mdev,
-+				     &stat->total_time, &stat->busy_time);
-+#else
  	mali_pm_get_dvfs_utilisation(mdev,
- 				     &stat->total_time, &stat->busy_time);
+-				     &stat->total_time, &stat->busy_time);
++					 &stat->total_time, &stat->busy_time);
  
++#if defined(UTGARD_HISILICON_PLUGIN) /* Hisi governor */
++	stat->private_data = mali_adp_get_configuration(mdev);
++#else
  	stat->private_data = NULL;
 +#endif
  
  #ifdef CONFIG_DEVFREQ_THERMAL
  	memcpy(&mdev->devfreq->last_status, stat, sizeof(*stat));
-@@ -133,6 +146,9 @@ mali_devfreq_status(struct device *dev, struct devfreq_dev_status *stat)
+@@ -133,6 +143,7 @@ mali_devfreq_status(struct device *dev, struct devfreq_dev_status *stat)
  	return 0;
  }
  
-+#if defined(UTGARD_HISILICON_PLUGIN)
-+
-+#else
++#if !defined(UTGARD_HISILICON_PLUGIN) /* Hisi governor */
  /* setup platform specific opp in platform.c*/
  int __weak setup_opps(void)
  {
-@@ -144,6 +160,7 @@ int __weak term_opps(struct device *dev)
+@@ -144,6 +155,7 @@ int __weak term_opps(struct device *dev)
  {
  	return 0;
  }
@@ -577,11 +660,11 @@ index 0b0ba14..407f588
  
  static int mali_devfreq_init_freq_table(struct mali_device *mdev,
  					struct devfreq_dev_profile *dp)
-@@ -153,7 +170,11 @@ static int mali_devfreq_init_freq_table(struct mali_device *mdev,
+@@ -153,7 +165,11 @@ static int mali_devfreq_init_freq_table(struct mali_device *mdev,
  	unsigned long freq = 0;
  	struct dev_pm_opp *opp;
  
-+#if defined(UTGARD_HISILICON_PLUGIN)
++#if defined(UTGARD_HISILICON_PLUGIN) /* Hisi governor */
 +    err = setup_opps(mdev->dev);
 +#else
  	err = setup_opps();
@@ -589,13 +672,13 @@ index 0b0ba14..407f588
  	if (err)
  		return err;
  
-@@ -235,8 +256,14 @@ int mali_devfreq_init(struct mali_device *mdev)
+@@ -235,8 +251,14 @@ int mali_devfreq_init(struct mali_device *mdev)
  	if (mali_devfreq_init_freq_table(mdev, dp))
  		return -EFAULT;
  
-+#if defined(UTGARD_HISILICON_PLUGIN)
++#if defined(UTGARD_HISILICON_PLUGIN) /* Hisi governor */
 +	mdev->devfreq = devfreq_add_device(mdev->dev, dp,
-+					   "gpu_ondemand", NULL);
++					   "utgard_ondemand", NULL);
 +#else
  	mdev->devfreq = devfreq_add_device(mdev->dev, dp,
  					   "simple_ondemand", NULL);
@@ -605,9 +688,7 @@ index 0b0ba14..407f588
  		mali_devfreq_term_freq_table(mdev);
  		return PTR_ERR(mdev->devfreq);
 diff --git a/driver/src/devicedrv/mali/linux/mali_kernel_linux.c b/driver/src/devicedrv/mali/linux/mali_kernel_linux.c
-old mode 100755
-new mode 100644
-index 9bfa2bd..6a98adc
+index 9bfa2bd..6a98adc 100755
 --- a/driver/src/devicedrv/mali/linux/mali_kernel_linux.c
 +++ b/driver/src/devicedrv/mali/linux/mali_kernel_linux.c
 @@ -561,7 +561,12 @@ static int mali_probe(struct platform_device *pdev)
@@ -661,9 +742,7 @@ index 9bfa2bd..6a98adc
  		mdev->clock = NULL;
  	}
 diff --git a/driver/src/devicedrv/mali/linux/mali_linux_trace.h b/driver/src/devicedrv/mali/linux/mali_linux_trace.h
-old mode 100755
-new mode 100644
-index 2c91ddc..ecf9bf7
+index 2c91ddc..ecf9bf7 100755
 --- a/driver/src/devicedrv/mali/linux/mali_linux_trace.h
 +++ b/driver/src/devicedrv/mali/linux/mali_linux_trace.h
 @@ -18,7 +18,9 @@
@@ -678,7 +757,7 @@ index 2c91ddc..ecf9bf7
  #define TRACE_INCLUDE_FILE mali_linux_trace
 diff --git a/driver/src/devicedrv/mali/platform/dt/drv_gpu_ext.h b/driver/src/devicedrv/mali/platform/dt/drv_gpu_ext.h
 new file mode 100644
-index 0000000..a2908bb
+index 0000000..4869c41
 --- /dev/null
 +++ b/driver/src/devicedrv/mali/platform/dt/drv_gpu_ext.h
 @@ -0,0 +1,17 @@
@@ -764,7 +843,7 @@ index 0000000..55330d5
 +
 diff --git a/driver/src/devicedrv/mali/platform/dt/hi_module.h b/driver/src/devicedrv/mali/platform/dt/hi_module.h
 new file mode 100755
-index 0000000..3300708
+index 0000000..3bb93ab
 --- /dev/null
 +++ b/driver/src/devicedrv/mali/platform/dt/hi_module.h
 @@ -0,0 +1,182 @@
@@ -799,7 +878,7 @@ index 0000000..3300708
 +{
 +    HI_ID_STB         = 0,
 +
-+    /**< common. */ /**< CNcomment: ÏµÍ³Í¨ÓÃÃ¶¾ÙÊý¾Ý³£Á¿ */
++    /**< common. */ /**< CNcomment: ç³»ç»Ÿé€šç”¨æžšä¸¾æ•°æ®å¸¸é‡ */
 +    HI_ID_SYS         = 1,
 +    HI_ID_MODULE      ,
 +    HI_ID_LOG         ,
@@ -812,7 +891,7 @@ index 0000000..3300708
 +    HI_ID_DEMUX       = 0x0A,
 +    HI_ID_TSIO,
 +
-+    /**< audio. */ /**< CNcomment: ÒôÆµ²¿·Ö³£Á¿Çø */
++    /**< audio. */ /**< CNcomment: éŸ³é¢‘éƒ¨åˆ†å¸¸é‡åŒº */
 +    HI_ID_ADEC        = 0x10,
 +    HI_ID_AO          ,
 +    HI_ID_SIO_AI      ,
@@ -827,7 +906,7 @@ index 0000000..3300708
 +    HI_ID_AMP         ,
 +    HI_ID_SIF         ,
 +
-+    /**< video. */ /**< CNcomment: ÊÓÆµ²¿·Ö³£Á¿Çø */
++    /**< video. */ /**< CNcomment: è§†é¢‘éƒ¨åˆ†å¸¸é‡åŒº */
 +    HI_ID_VFMW        = 0x20,
 +    HI_ID_SVDEC       ,
 +    HI_ID_DISP        ,
@@ -841,7 +920,7 @@ index 0000000..3300708
 +    HI_ID_EDID,
 +    HI_ID_VICAP       ,
 +    HI_ID_HDMIRX      ,
-+    /**< graphics. */ /**< CNcomment: Í¼ÐÎ²¿·Ö³£Á¿Çø */
++    /**< graphics. */ /**< CNcomment: å›¾å½¢éƒ¨åˆ†å¸¸é‡åŒº */
 +    HI_ID_TDE         = 0x30,
 +    HI_ID_JPGDEC      ,
 +    HI_ID_JPGENC      ,
@@ -850,7 +929,7 @@ index 0000000..3300708
 +    HI_ID_HIGO        ,
 +    HI_ID_GFX2D       ,
 +
-+    /**< player. */ /**< CNcomment: ²¥·ÅÏà¹Ø²¿·Ö³£Á¿Çø */
++    /**< player. */ /**< CNcomment: æ’­æ”¾ç›¸å…³éƒ¨åˆ†å¸¸é‡åŒº */
 +    HI_ID_PVR         = 0x40,
 +    HI_ID_AVPLAY      ,
 +    HI_ID_SYNC        ,
@@ -858,7 +937,7 @@ index 0000000..3300708
 +    HI_ID_ASYNC       ,
 +    HI_ID_FASTPLAY ,
 +
-+    /**< ecs. */ /**< CNcomment: ÍâÉè²¿·Ö³£Á¿Çø */
++    /**< ecs. */ /**< CNcomment: å¤–è®¾éƒ¨åˆ†å¸¸é‡åŒº */
 +    HI_ID_FLASH       = 0x50,
 +    HI_ID_IR          ,
 +    HI_ID_RTC         ,
@@ -887,7 +966,7 @@ index 0000000..3300708
 +    HI_ID_PLCIPHER    ,//0x69
 +    HI_ID_CERT        ,//0x6A
 +
-+    /**< voip, bluetooth,alsa. */ /**<  CNcomment: VOIP¡¢À¶ÑÀ²¿·Ö³£Á¿Çø*/
++    /**< voip, bluetooth,alsa. */ /**<  CNcomment: VOIPã€è“ç‰™éƒ¨åˆ†å¸¸é‡åŒº*/
 +    HI_ID_VOIP_HME    = 0x80,
 +    HI_ID_NDPT        ,
 +    HI_ID_AUDADP      ,
@@ -896,11 +975,11 @@ index 0000000..3300708
 +    HI_ID_3G          ,
 +    HI_ID_KARAOKE     ,
 +
-+    /**< vp. */ /**<  CNcomment: VP³£Á¿Çø*/
++    /**< vp. */ /**<  CNcomment: VPå¸¸é‡åŒº*/
 +    HI_ID_VP          = 0x90,
 +    HI_ID_HDCP        ,
 +
-+    /**< subtitle. */ /**<  CNcomment: ×ÖÄ»³£Á¿Çø*/
++    /**< subtitle. */ /**<  CNcomment: å­—å¹•å¸¸é‡åŒº*/
 +    HI_ID_SUBT        = 0x98,
 +    HI_ID_TTX         ,
 +    HI_ID_CC          ,
@@ -933,7 +1012,7 @@ index 0000000..3300708
 +    /**<GPU. */ /**< CNcomment:GPU*/
 +    HI_ID_GPU        = 0xB8,
 +
-+    /**< user definition. */ /**< CNcomment: ÎªÕû»ú±£ÁôµÄ×Ô¶¨ÒåÇø */
++    /**< user definition. */ /**< CNcomment: ä¸ºæ•´æœºä¿ç•™çš„è‡ªå®šä¹‰åŒº */
 +    HI_ID_USR_START   = 0xC0,
 +    HI_ID_USR_END     = 0xFE,
 +
@@ -952,7 +1031,7 @@ index 0000000..3300708
 +
 diff --git a/driver/src/devicedrv/mali/platform/dt/hi_type.h b/driver/src/devicedrv/mali/platform/dt/hi_type.h
 new file mode 100644
-index 0000000..24fa2fe
+index 0000000..005b278
 --- /dev/null
 +++ b/driver/src/devicedrv/mali/platform/dt/hi_type.h
 @@ -0,0 +1,142 @@
@@ -965,7 +1044,7 @@ index 0000000..24fa2fe
 +Created       : 2005/4/23
 +Last Modified :
 +Description   : Common data types of the system.
-+                CNcomment: ÏµÍ³¹²ÓÃµÄÊý¾ÝÀàÐÍ¶¨Òå CNend
++                CNcomment: ç³»ç»Ÿå…±ç”¨çš„æ•°æ®ç±»åž‹å®šä¹‰ CNend
 +Function List :
 +History       :
 +******************************************************************************/
@@ -981,7 +1060,7 @@ index 0000000..24fa2fe
 +
 +/*--------------------------------------------------------------------------------------------------------------*
 + * Defintion of basic data types. The data types are applicable to both the application layer and kernel codes. *
-+ * CNcomment: »ù±¾Êý¾ÝÀàÐÍ¶¨Òå£¬Ó¦ÓÃ²ãºÍÄÚºË´úÂë¾ùÊ¹ÓÃ  CNend                                                   *
++ * CNcomment: åŸºæœ¬æ•°æ®ç±»åž‹å®šä¹‰ï¼Œåº”ç”¨å±‚å’Œå†…æ ¸ä»£ç å‡ä½¿ç”¨  CNend                                                   *
 + *--------------------------------------------------------------------------------------------------------------*/
 +/*************************** Structure Definition ****************************/
 +/** \addtogroup      Common_TYPE */
@@ -1028,7 +1107,7 @@ index 0000000..24fa2fe
 +#endif
 +
 +/** Constant Definition */
-+/** CNcomment: ³£Á¿¶¨Òå */
++/** CNcomment: å¸¸é‡å®šä¹‰ */
 +typedef enum
 +{
 +    HI_FALSE    = 0,
@@ -1099,11 +1178,11 @@ index 0000000..24fa2fe
 +#endif /* __HI_TYPE_H__ */
 +
 diff --git a/driver/src/devicedrv/mali/platform/dt/mali4xx_cfg.h b/driver/src/devicedrv/mali/platform/dt/mali4xx_cfg.h
-new file mode 100644
-index 0000000..7cec556
+new file mode 100755
+index 0000000..180ccb8
 --- /dev/null
 +++ b/driver/src/devicedrv/mali/platform/dt/mali4xx_cfg.h
-@@ -0,0 +1,25 @@
+@@ -0,0 +1,33 @@
 +
 +
 +#ifndef __MALI4XX_CFG__
@@ -1115,11 +1194,19 @@ index 0000000..7cec556
 +
 +#define GPU_DVFS_ENABLE
 +#define GPU_MAXFREQ_CONFIG_SUPPORT
++
++#if defined(CHIP_TYPE_hi3798mv200) || defined(CHIP_TYPE_hi3798mv300) \
++	|| defined(CHIP_TYPE_hi3796mv200) || defined(CHIP_TYPE_hi3716mv450)
 +#define GPU_SUPPORT_SVB
++#endif
++
++/*#if defined(CHIP_TYPE_hi3798mv200) || defined(CHIP_TYPE_hi3798mv300) || defined(CHIP_TYPE_hi3798mv310) \
++	|| defined(CHIP_TYPE_hi3796mv200) || defined(CHIP_TYPE_hi3716mv450)
 +#define GPU_SECURE_SUPPORT
++#endif*/
 +
 +#define HISI_ERROR_INFO() \
-+    printk("func = %s, line = %d\n", __FUNCTION__, __LINE__);
++	printk("func = %s, line = %d\n", __FUNCTION__, __LINE__);
 +
 +#define HISI_DEBUG 0
 +
@@ -1130,15 +1217,16 @@ index 0000000..7cec556
 +
 +
 diff --git a/driver/src/devicedrv/mali/platform/dt/mali4xx_dt.c b/driver/src/devicedrv/mali/platform/dt/mali4xx_dt.c
-new file mode 100644
-index 0000000..fce5e3d
+new file mode 100755
+index 0000000..cafe1e7
 --- /dev/null
 +++ b/driver/src/devicedrv/mali/platform/dt/mali4xx_dt.c
-@@ -0,0 +1,652 @@
+@@ -0,0 +1,711 @@
 +
 +#include <linux/platform_device.h>
 +#include <linux/version.h>
 +#include <linux/pm.h>
++#include <linux/input.h>
 +
 +/* After 3.19.0 kenrel droped CONFIG_PM_RUNTIME define,define by ourself */
 +#if defined(CONFIG_PM) && LINUX_VERSION_CODE >= KERNEL_VERSION(3, 19, 0)
@@ -1170,27 +1258,28 @@ index 0000000..fce5e3d
 +
 +typedef enum
 +{
-+    SEC_REG_ADDR_BASE = 0xF9230200,
-+    SEC_REG_ADDR_SIZE = 0x0100,
++	SEC_REG_ADDR_BASE = 0xF9230200,
++	SEC_REG_ADDR_SIZE = 0x0100,
 +
-+    SEC_REG_OFFSET_SWITCH  = 0x0,
-+    SEC_REG_OFFSET_IDLES_COUNT = 0x4,
-+    SEC_REG_OFFSET_STATUS = 0x8,
++	SEC_REG_OFFSET_SWITCH  = 0x0,
++	SEC_REG_OFFSET_IDLES_COUNT = 0x4,
++	SEC_REG_OFFSET_STATUS = 0x8,
 +} sec_reg_addr;
 +
 +typedef enum
 +{
-+    TEMP_REG_ADDR_BASE = 0xF80000b4,
-+    TEMP_REG_ADDR_SIZE = 0x0100,
++	TEMP_REG_ADDR_BASE = 0xF80000b4,
++	TEMP_REG_ADDR_SIZE = 0x0100,
 +
-+    TEMP_REG_VALUE_CONCTRL = 0x22222222,
++	TEMP_REG_VALUE_HIGH = 0x22222222,
++	TEMP_REG_VALUE_LOW  = 0x33333333,
 +} temp_reg_addr;
 +
 +typedef enum
 +{
-+    MALI_POWER_MODE_ON,
-+    MALI_POWER_MODE_LIGHT_SLEEP,
-+    MALI_POWER_MODE_DEEP_SLEEP,
++	MALI_POWER_MODE_ON,
++	MALI_POWER_MODE_LIGHT_SLEEP,
++	MALI_POWER_MODE_DEEP_SLEEP,
 +} mali_power_mode;
 +
 +#if CONFIG_GPU_DVFS_ENABLE
@@ -1202,12 +1291,12 @@ index 0000000..fce5e3d
 +MODULE_PARM_DESC(mali_dvfs_enable, "enable dvfs");
 +
 +#ifdef GPU_MAXFREQ_CONFIG_SUPPORT
-+static unsigned int mali_dvfs_max_frequency = 0;
-+module_param(mali_dvfs_max_frequency, int, S_IRUSR | S_IWUSR | S_IWGRP | S_IRGRP | S_IROTH);
++static unsigned long mali_dvfs_max_frequency = 0;
++module_param(mali_dvfs_max_frequency, long, S_IRUSR | S_IWUSR | S_IWGRP | S_IRGRP | S_IROTH);
 +MODULE_PARM_DESC(mali_dvfs_max_frequency, "max frequency");
 +
-+static unsigned int mali_dvfs_min_frequency = 0;
-+module_param(mali_dvfs_min_frequency, int, S_IRUSR | S_IWUSR | S_IWGRP | S_IRGRP | S_IROTH);
++static unsigned long mali_dvfs_min_frequency = 0;
++module_param(mali_dvfs_min_frequency, long, S_IRUSR | S_IWUSR | S_IWGRP | S_IRGRP | S_IROTH);
 +MODULE_PARM_DESC(mali_dvfs_min_frequency, "min frequency");
 +#endif
 +
@@ -1228,14 +1317,14 @@ index 0000000..fce5e3d
 +static struct mali_hw_core *s_SecCore = NULL;
 +static struct mali_hw_core *s_TempCore = NULL;
 +
-+static int	mali_adp_suspend(struct device *device);
-+static int	mali_adp_resume(struct device *device);
-+static int	mali_adp_freeze(struct device *device);
-+static int	mali_adp_thaw(struct device *device);
++static int mali_adp_suspend(struct device *device);
++static int mali_adp_resume(struct device *device);
++static int mali_adp_freeze(struct device *device);
++static int mali_adp_thaw(struct device *device);
 +#ifdef CONFIG_PM_RUNTIME
-+static int	mali_adp_runtime_suspend(struct device *device);
-+static int	mali_adp_runtime_resume(struct device *device);
-+static int	mali_adp_runtime_idle(struct device *device);
++static int mali_adp_runtime_suspend(struct device *device);
++static int mali_adp_runtime_resume(struct device *device);
++static int mali_adp_runtime_idle(struct device *device);
 +#endif
 +
 +int mali_adp_secure_init(void);
@@ -1243,368 +1332,374 @@ index 0000000..fce5e3d
 +int mali_adp_secure_enable(void);
 +int mali_adp_secure_disable(void);
 +
++
++void gpufreq_interactive_input_event(struct input_handle *handle, unsigned int type, unsigned int code, int value);
++int gpufreq_interactive_input_connect(struct input_handler *handler, struct input_dev *dev, const struct input_device_id *id);
++void gpufreq_interactive_input_disconnect(struct input_handle *handle);
++
 +_mali_osk_errcode_t mali_adp_platform_init(struct device *device);
 +_mali_osk_errcode_t mali_adp_platform_deinit(struct device *device);
 +
 +static struct dev_pm_ops mali_device_dev_pm_ops =
 +{
-+    .suspend         = mali_adp_suspend,
-+    .resume          = mali_adp_resume,
-+    .freeze          = mali_adp_freeze,
-+    .thaw            = mali_adp_thaw,
-+    .restore         = mali_adp_thaw,
++	.suspend         = mali_adp_suspend,
++	.resume          = mali_adp_resume,
++	.freeze          = mali_adp_freeze,
++	.thaw            = mali_adp_thaw,
++	.restore         = mali_adp_thaw,
 +#ifdef CONFIG_PM_RUNTIME
-+    .runtime_suspend = mali_adp_runtime_suspend,
-+    .runtime_resume  = mali_adp_runtime_resume,
-+    .runtime_idle    = mali_adp_runtime_idle,
++	.runtime_suspend = mali_adp_runtime_suspend,
++	.runtime_resume  = mali_adp_runtime_resume,
++	.runtime_idle    = mali_adp_runtime_idle,
 +#endif
++};
++
++static const struct input_device_id gpufreq_interactive_ids[] =
++{
++	{ .driver_info = 1 },       /* Matches all devices */
++	{ },                        /* Terminating zero entry */
++};
++
++static struct input_handler gpufreq_interactive_input_handler =
++{
++	.event = gpufreq_interactive_input_event,
++	.connect = gpufreq_interactive_input_connect,
++	.disconnect = gpufreq_interactive_input_disconnect,
++	.name = "gpufreq_interactive",
++	.id_table = gpufreq_interactive_ids,
 +};
 +
 +static struct device_type mali_device_device_type =
 +{
-+    .pm = &mali_device_dev_pm_ops,
++	.pm = &mali_device_dev_pm_ops,
 +};
 +
 +static GPU_EXT_FUNC_S mali_export_function =
 +{
-+    .pfnGPUSetFreqAndVolt = mali_ext_set_freq_and_volt,
-+    .pfnGPUSetMaxFreq = mali_ext_set_max_freq,
++	.pfnGPUSetFreqAndVolt = mali_ext_set_freq_and_volt,
++	.pfnGPUSetMaxFreq = mali_ext_set_max_freq,
 +};
 +
 +static struct mali_gpu_device_data mali_device_data =
 +{
-+    .shared_mem_size      = CONFIG_GPU_MAX_SHARE_MEM_SIZE,
-+    .fb_start             = 0x00000000,
-+    .fb_size              = 0x80000000,
-+    .dedicated_mem_start  = 0x0,
-+    .dedicated_mem_size   = 0x0,
-+    .control_interval     = 50,          /*50ms*/
-+    .utilization_callback = NULL,
-+    .max_job_runtime      = 5000,        /* 5 seconds */
-+    .get_clock_info       = NULL,
-+    .get_freq             = NULL,
-+    .set_freq             = NULL,
-+    .secure_mode_init                   = mali_adp_secure_init,
-+    .secure_mode_deinit                 = mali_adp_secure_deinit,
-+    .gpu_reset_and_secure_mode_enable   = mali_adp_secure_enable,
-+    .gpu_reset_and_secure_mode_disable  = mali_adp_secure_disable,
++	.shared_mem_size      = -1,
++	.fb_start             = 0x00000000,
++	.fb_size              = 0x80000000,
++	.dedicated_mem_start  = 0x0,
++	.dedicated_mem_size   = 0x0,
++	.control_interval     = 50,          /*50ms*/
++	.utilization_callback = NULL,
++	.max_job_runtime      = 5000,        /* 5 seconds */
++	.get_clock_info       = NULL,
++	.get_freq             = NULL,
++	.set_freq             = NULL,
++	.secure_mode_init                   = mali_adp_secure_init,
++	.secure_mode_deinit                 = mali_adp_secure_deinit,
++	.gpu_reset_and_secure_mode_enable   = mali_adp_secure_enable,
++	.gpu_reset_and_secure_mode_disable  = mali_adp_secure_disable,
 +};
 +
 +int mali_platform_device_init(struct platform_device *device)
 +{
-+    int err = -1;
-+    int num_pp_cores = 2;
++	int err = -1;
 +
-+    mali_adp_platform_init(&(device->dev));
-+
-+#ifdef CONFIG_PM_RUNTIME
-+    atomic_set(&device->dev.power.usage_count, 0);
++#if defined(CHIP_TYPE_hi3798mv200) || defined(CHIP_TYPE_hi3798mv300) || defined(CHIP_TYPE_hi3798mv310) \
++	|| defined(CHIP_TYPE_hi3796mv200) || defined(CHIP_TYPE_hi3716mv450)
++	int num_pp_cores = 2;
++#else
++	int num_pp_cores = 0;
 +#endif
 +
-+    if (!device->dev.dma_mask)
-+    {
-+        device->dev.dma_mask = &device->dev.coherent_dma_mask;
-+    }
++	mali_adp_platform_init(&(device->dev));
 +
-+    device->dev.type = &mali_device_device_type;
++#ifdef CONFIG_PM_RUNTIME
++	atomic_set(&device->dev.power.usage_count, 0);
++#endif
 +
-+    err = platform_device_add_data(device, &mali_device_data, sizeof(mali_device_data));
++	if (!device->dev.dma_mask) {
++		device->dev.dma_mask = &device->dev.coherent_dma_mask;
++	}
 +
-+    if (0 == err)
-+    {
++	device->dev.type = &mali_device_device_type;
++
++	err = platform_device_add_data(device, &mali_device_data, sizeof(mali_device_data));
++
++	if (0 == err) {
 +#ifdef CONFIG_PM_RUNTIME
 +#if (LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 37))
-+        pm_runtime_set_autosuspend_delay(&(device->dev), 1000);
-+        pm_runtime_use_autosuspend(&(device->dev));
++		pm_runtime_set_autosuspend_delay(&(device->dev), 1000);
++		pm_runtime_use_autosuspend(&(device->dev));
 +#endif
-+        pm_runtime_enable(&(device->dev));
++		pm_runtime_enable(&(device->dev));
 +#endif
-+        MALI_DEBUG_ASSERT(0 < num_pp_cores);
-+        mali_core_scaling_init(num_pp_cores);
-+    }
++		MALI_DEBUG_ASSERT(0 < num_pp_cores);
++		mali_core_scaling_init(num_pp_cores);
++	}
 +
-+    return err;
++	return err;
 +}
 +
 +int mali_platform_device_deinit(struct platform_device *device)
 +{
-+    MALI_IGNORE(device);
++	MALI_IGNORE(device);
 +
-+    mali_core_scaling_term();
++	mali_core_scaling_term();
 +
 +#ifdef CONFIG_PM_RUNTIME
-+    pm_runtime_disable(&(device->dev));
++	pm_runtime_disable(&(device->dev));
 +#endif
 +
-+    mali_adp_platform_deinit(&(device->dev));
++	mali_adp_platform_deinit(&(device->dev));
 +
-+    return 0;
++	return 0;
 +}
 +
 +static struct mali_hw_core * mali_adp_core_create(u32 phys_addr, u32 size, char* description)
 +{
-+    struct mali_hw_core *hwcore = (struct mali_hw_core *)_mali_osk_malloc(sizeof(struct mali_hw_core));
++	struct mali_hw_core *hwcore = (struct mali_hw_core *)_mali_osk_malloc(sizeof(struct mali_hw_core));
 +
-+    if (NULL == hwcore)
-+    {
-+        HISI_ERROR_INFO();
-+        return NULL;
-+    }
++	if (NULL == hwcore) {
++		HISI_ERROR_INFO();
++		return NULL;
++	}
 +
-+    hwcore->phys_addr = phys_addr;
-+    hwcore->size = size;
-+    hwcore->description = NULL;
-+    hwcore->mapped_registers = _mali_osk_mem_mapioregion(hwcore->phys_addr, hwcore->size, hwcore->description);
++	hwcore->phys_addr = phys_addr;
++	hwcore->size = size;
++	hwcore->description = NULL;
++	hwcore->mapped_registers = _mali_osk_mem_mapioregion(hwcore->phys_addr, hwcore->size, hwcore->description);
 +
-+    if (NULL == hwcore->mapped_registers)
-+    {
-+        HISI_ERROR_INFO();
-+        _mali_osk_free(hwcore);
-+        hwcore = NULL;
-+        return NULL;
-+    }
++	if (NULL == hwcore->mapped_registers) {
++		HISI_ERROR_INFO();
++		_mali_osk_free(hwcore);
++		hwcore = NULL;
++		return NULL;
++	}
 +
-+    return hwcore;
++	return hwcore;
 +}
 +
 +static void mali_adp_core_destroy(struct mali_hw_core *hwcore)
 +{
-+    if (NULL == hwcore)
-+    {
-+        HISI_ERROR_INFO();
-+        return;
-+    }
++	if (NULL == hwcore) {
++		HISI_ERROR_INFO();
++		return;
++	}
 +
-+    _mali_osk_mem_unmapioregion(hwcore->phys_addr, hwcore->size, hwcore->mapped_registers);
++	_mali_osk_mem_unmapioregion(hwcore->phys_addr, hwcore->size, hwcore->mapped_registers);
 +
-+    _mali_osk_free(hwcore);
++	_mali_osk_free(hwcore);
 +}
 +
 +void mali_adp_platform_hw_core_create(void)
 +{
-+    s_SecCore = mali_adp_core_create(SEC_REG_ADDR_BASE, SEC_REG_ADDR_SIZE, "hisi_sec");
++	s_SecCore = mali_adp_core_create(SEC_REG_ADDR_BASE, SEC_REG_ADDR_SIZE, "hisi_sec");
 +
-+    if (NULL == s_SecCore)
-+    {
-+        HISI_ERROR_INFO();
-+    }
++	if (NULL == s_SecCore) {
++		HISI_ERROR_INFO();
++	}
 +
-+    s_TempCore = mali_adp_core_create(TEMP_REG_ADDR_BASE, TEMP_REG_ADDR_SIZE, "hisi_temp");
++	s_TempCore = mali_adp_core_create(TEMP_REG_ADDR_BASE, TEMP_REG_ADDR_SIZE, "hisi_temp");
 +
-+    if (NULL == s_TempCore)
-+    {
-+        HISI_ERROR_INFO();
-+    }
++	if (NULL == s_TempCore) {
++		HISI_ERROR_INFO();
++	}
 +}
 +
 +void mali_adp_platform_hw_core_destroy(void)
 +{
-+    mali_adp_core_destroy(s_SecCore);
++	mali_adp_core_destroy(s_SecCore);
 +
-+    s_SecCore = NULL;
++	s_SecCore = NULL;
 +
-+    mali_adp_core_destroy(s_TempCore);
++	mali_adp_core_destroy(s_TempCore);
 +
-+    s_TempCore = NULL;
++	s_TempCore = NULL;
 +}
 +
 +_mali_osk_errcode_t mali_adp_platform_init(struct device *device)
 +{
-+    mali_adp_platform_hw_core_create();
++	int ret;
 +
-+    s_MaliDevice = device;
++	mali_adp_platform_hw_core_create();
++
++	s_MaliDevice = device;
 +
 +#ifdef GPU_PROC_SUPPORT
-+    gpu_proc_create();
++	gpu_proc_create();
 +#endif
 +
-+    HI_DRV_MODULE_Register(HI_ID_GPU, "MALI", (HI_VOID*)&mali_export_function);
++	ret = HI_DRV_MODULE_Register(HI_ID_GPU, "MALI", (HI_VOID*)&mali_export_function);
++	if (ret) {
++		HISI_ERROR_INFO();
++	}
 +
-+    MALI_SUCCESS;
++	ret = input_register_handler(&gpufreq_interactive_input_handler);
++	if (ret) {
++		HISI_ERROR_INFO();
++	}
++
++	MALI_SUCCESS;
 +}
 +
 +_mali_osk_errcode_t mali_adp_platform_deinit(struct device *device)
 +{
 +#ifdef GPU_PROC_SUPPORT
-+    gpu_proc_destroy();
++	gpu_proc_destroy();
 +#endif
 +
-+    mali_adp_platform_hw_core_destroy();
++	mali_adp_platform_hw_core_destroy();
 +
-+    s_MaliDevice = NULL;
++	s_MaliDevice = NULL;
 +
-+    HI_DRV_MODULE_UnRegister(HI_ID_GPU);
++	HI_DRV_MODULE_UnRegister(HI_ID_GPU);
 +
-+    MALI_SUCCESS;
++	input_unregister_handler(&gpufreq_interactive_input_handler);
++
++	MALI_SUCCESS;
 +}
 +
 +_mali_osk_errcode_t mali_adp_power_mode_change(struct device *device, mali_power_mode power_mode, mali_bool isruntime)
 +{
-+    struct mali_device *mdev = dev_get_drvdata(device);
-+    unsigned long d_freq, d_volt;
++	struct mali_device *mdev = dev_get_drvdata(device);
++	unsigned long d_freq, d_volt;
 +
-+    d_volt = opps_get_default_volt();
-+    d_freq = opps_get_default_freq();
++	d_volt = opps_get_default_volt();
++	d_freq = opps_get_default_freq();
 +
-+    switch (power_mode)
-+    {
-+        case MALI_POWER_MODE_ON:
-+            if (s_PowerOff == 1)
-+            {
-+                clk_enable(mdev->clock);
++	switch (power_mode) {
++	case MALI_POWER_MODE_ON:
++		if (s_PowerOff == 1) {
 +
-+                s_PowerOff = 0;
-+            }
-+            break;
-+        case MALI_POWER_MODE_LIGHT_SLEEP:
-+        case MALI_POWER_MODE_DEEP_SLEEP:
-+            if (s_PowerOff == 0)
-+            {
-+                if(mali_dvfs_enable == 1)
-+                {
-+                    regulator_set_voltage(mdev->regulator, d_volt, d_volt);
-+                    clk_set_rate(mdev->clock, d_freq);
-+                    mdev->current_voltage = d_volt;
-+                    mdev->current_freq = d_freq;
-+                }
++			clk_enable(mdev->clock);
++			s_PowerOff = 0;
 +
-+                clk_disable(mdev->clock);
++		}
++		break;
++	case MALI_POWER_MODE_LIGHT_SLEEP:
++	case MALI_POWER_MODE_DEEP_SLEEP:
++		if (s_PowerOff == 0) {
 +
-+                s_PowerOff = 1;
-+            }
-+            break;
-+    }
++			if (mali_dvfs_enable == 1) {
++				regulator_set_voltage(mdev->regulator, d_volt, d_volt);
++				clk_set_rate(mdev->clock, d_freq);
++				mdev->current_voltage = d_volt;
++				mdev->current_freq = d_freq;
++				s_MaliConfiguration.input_ctrl = 0;     /* if power down, disable input event */
++			}
 +
-+    if(HISI_DEBUG)
-+        printk("mali_adp_power_mode_change@ power_mode = %d\n", power_mode);
++			clk_disable(mdev->clock);
++			s_PowerOff = 1;
 +
-+    MALI_SUCCESS;
++		}
++		break;
++	}
++
++	if (HISI_DEBUG) {
++		printk("mali_adp_power_mode_change@ power_mode = %d\n", power_mode);
++	}
++
++	MALI_SUCCESS;
 +}
 +
 +static int mali_adp_suspend(struct device *device)
 +{
-+    int ret = 0;
++	int ret = 0;
 +
-+    if ((NULL != device->driver)
-+        && (NULL != device->driver->pm)
-+        && (NULL != device->driver->pm->suspend))
-+    {
-+        ret = device->driver->pm->suspend(device);
-+    }
++	if ((NULL != device->driver) && (NULL != device->driver->pm) && (NULL != device->driver->pm->suspend)) {
++		ret = device->driver->pm->suspend(device);
++	}
 +
-+    if(0 == ret)
-+    {
-+        mali_adp_power_mode_change(device, MALI_POWER_MODE_DEEP_SLEEP, MALI_FALSE);
-+    }
++	if (0 == ret) {
++		mali_adp_power_mode_change(device, MALI_POWER_MODE_DEEP_SLEEP, MALI_FALSE);
++	}
 +
-+    return ret;
++	return ret;
 +}
 +
 +static int mali_adp_resume(struct device *device)
 +{
-+    int ret = 0;
++	int ret = 0;
 +
-+    mali_adp_power_mode_change(device, MALI_POWER_MODE_ON, MALI_FALSE);
++	mali_adp_power_mode_change(device, MALI_POWER_MODE_ON, MALI_FALSE);
 +
-+    if ((NULL != device->driver)
-+        && (NULL != device->driver->pm)
-+        && (NULL != device->driver->pm->resume))
-+    {
-+        ret = device->driver->pm->resume(device);
-+    }
++	if ((NULL != device->driver) && (NULL != device->driver->pm) && (NULL != device->driver->pm->resume)) {
++		ret = device->driver->pm->resume(device);
++	}
 +
-+    return ret;
++	return ret;
 +}
 +
 +static int mali_adp_freeze(struct device *device)
 +{
-+    int ret = 0;
++	int ret = 0;
 +
-+    mali_adp_power_mode_change(device, MALI_POWER_MODE_ON, MALI_FALSE);
++	mali_adp_power_mode_change(device, MALI_POWER_MODE_ON, MALI_FALSE);
 +
-+    if ((NULL != device->driver)
-+        && (NULL != device->driver->pm)
-+        && (NULL != device->driver->pm->freeze))
-+    {
-+        ret = device->driver->pm->freeze(device);
-+    }
++	if ((NULL != device->driver) && (NULL != device->driver->pm) && (NULL != device->driver->pm->freeze)) {
++		ret = device->driver->pm->freeze(device);
++	}
 +
-+    if(0 == ret)
-+    {
-+        mali_adp_power_mode_change(device, MALI_POWER_MODE_DEEP_SLEEP, MALI_FALSE);
-+    }
++	if (0 == ret) {
++		mali_adp_power_mode_change(device, MALI_POWER_MODE_DEEP_SLEEP, MALI_FALSE);
++	}
 +
-+    return ret;
++	return ret;
 +}
 +
 +static int mali_adp_thaw(struct device *device)
 +{
-+    int ret = 0;
++	int ret = 0;
 +
-+    mali_adp_power_mode_change(device, MALI_POWER_MODE_ON, MALI_FALSE);
++	mali_adp_power_mode_change(device, MALI_POWER_MODE_ON, MALI_FALSE);
 +
-+    if ((NULL != device->driver)
-+        && (NULL != device->driver->pm)
-+        && (NULL != device->driver->pm->thaw))
-+    {
-+        ret = device->driver->pm->thaw(device);
-+    }
++	if ((NULL != device->driver) && (NULL != device->driver->pm) && (NULL != device->driver->pm->thaw)) {
++		ret = device->driver->pm->thaw(device);
++	}
 +
-+    return ret;
++	return ret;
 +}
 +
 +#ifdef CONFIG_PM_RUNTIME
 +static int mali_adp_runtime_suspend(struct device *device)
 +{
-+    int ret = 0;
++	int ret = 0;
 +
-+    if ((NULL != device->driver)
-+        && (NULL != device->driver->pm)
-+        && (NULL != device->driver->pm->runtime_suspend))
-+    {
-+        ret = device->driver->pm->runtime_suspend(device);
-+    }
++	if ((NULL != device->driver) && (NULL != device->driver->pm) && (NULL != device->driver->pm->runtime_suspend)) {
++		ret = device->driver->pm->runtime_suspend(device);
++	}
 +
-+    if(0 == ret)
-+    {
-+        mali_adp_power_mode_change(device, MALI_POWER_MODE_LIGHT_SLEEP, MALI_TRUE);
-+    }
++	if (0 == ret) {
++		mali_adp_power_mode_change(device, MALI_POWER_MODE_LIGHT_SLEEP, MALI_TRUE);
++	}
 +
-+    return ret;
++	return ret;
 +}
 +
 +static int mali_adp_runtime_resume(struct device *device)
 +{
-+    int ret = 0;
++	int ret = 0;
 +
-+    mali_adp_power_mode_change(device, MALI_POWER_MODE_ON, MALI_TRUE);
++	mali_adp_power_mode_change(device, MALI_POWER_MODE_ON, MALI_TRUE);
 +
-+    if ((NULL != device->driver)
-+        && (NULL != device->driver->pm)
-+        && (NULL != device->driver->pm->runtime_resume))
-+    {
-+        ret = device->driver->pm->runtime_resume(device);
-+    }
++	if ((NULL != device->driver) && (NULL != device->driver->pm) && (NULL != device->driver->pm->runtime_resume)) {
++		ret = device->driver->pm->runtime_resume(device);
++	}
 +
-+    return ret;
++	return ret;
 +}
 +
 +static int mali_adp_runtime_idle(struct device *device)
 +{
-+    if ((NULL != device->driver)
-+        && (NULL != device->driver->pm)
-+        && (NULL != device->driver->pm->runtime_idle))
-+    {
-+        int ret = device->driver->pm->runtime_idle(device);
-+        if (0 != ret)
-+        {
-+            return ret;
-+        }
-+    }
++	if ((NULL != device->driver) && (NULL != device->driver->pm) && (NULL != device->driver->pm->runtime_idle)) {
++		int ret = device->driver->pm->runtime_idle(device);
++		if (0 != ret) {
++			return ret;
++		}
++	}
 +
-+    pm_runtime_suspend(device);
++	pm_runtime_suspend(device);
 +
-+    return 0;
++	return 0;
 +}
 +
 +#endif
@@ -1614,18 +1709,17 @@ index 0000000..fce5e3d
 +#ifdef GPU_SECURE_SUPPORT
 +	int value ;
 +
-+    mali_hw_core_register_write(s_SecCore, SEC_REG_OFFSET_IDLES_COUNT, 0x1ff);
++	mali_hw_core_register_write(s_SecCore, SEC_REG_OFFSET_IDLES_COUNT, 0x1ff);
 +
-+    value = mali_hw_core_register_read(s_SecCore, SEC_REG_OFFSET_SWITCH);
-+    value = value | 0x1;
++	value = mali_hw_core_register_read(s_SecCore, SEC_REG_OFFSET_SWITCH);
++	value = value | 0x1;
 +
-+    mali_hw_core_register_write(s_SecCore, SEC_REG_OFFSET_SWITCH, value);
++	mali_hw_core_register_write(s_SecCore, SEC_REG_OFFSET_SWITCH, value);
 +
-+    value = 0 ;
-+    while(!value)
-+    {
-+        value = mali_hw_core_register_read(s_SecCore, SEC_REG_OFFSET_STATUS);
-+    }
++	value = 0 ;
++	while (!value) {
++		value = mali_hw_core_register_read(s_SecCore, SEC_REG_OFFSET_STATUS);
++	}
 +#endif
 +}
 +
@@ -1634,33 +1728,32 @@ index 0000000..fce5e3d
 +#ifdef GPU_SECURE_SUPPORT
 +	int value ;
 +
-+    mali_hw_core_register_write(s_SecCore, SEC_REG_OFFSET_IDLES_COUNT, 0x1ff);
++	mali_hw_core_register_write(s_SecCore, SEC_REG_OFFSET_IDLES_COUNT, 0x1ff);
 +
-+    value = mali_hw_core_register_read(s_SecCore, SEC_REG_OFFSET_SWITCH);
-+    value = value & 0xfffffffe;
++	value = mali_hw_core_register_read(s_SecCore, SEC_REG_OFFSET_SWITCH);
++	value = value & 0xfffffffe;
 +
-+    mali_hw_core_register_write(s_SecCore, SEC_REG_OFFSET_SWITCH, value);
++	mali_hw_core_register_write(s_SecCore, SEC_REG_OFFSET_SWITCH, value);
 +
-+    value = 0 ;
-+    while(!value)
-+    {
-+        value = mali_hw_core_register_read(s_SecCore, SEC_REG_OFFSET_STATUS);
-+    }
++	value = 0 ;
++	while (!value) {
++		value = mali_hw_core_register_read(s_SecCore, SEC_REG_OFFSET_STATUS);
++	}
 +#endif
 +}
 +
 +int mali_adp_secure_init(void)
 +{
-+    mali_adp_secure_reset_cancel() ;
++	mali_adp_secure_reset_cancel() ;
 +
-+    return 0 ;
++	return 0 ;
 +}
 +
 +void mali_adp_secure_deinit(void)
 +{
-+    mali_adp_secure_reset_cancel() ;
++	mali_adp_secure_reset_cancel() ;
 +
-+    return;
++	return;
 +}
 +
 +int mali_adp_secure_enable(void)
@@ -1679,120 +1772,173 @@ index 0000000..fce5e3d
 +
 +struct device * mali_adp_get_device(void)
 +{
-+    return s_MaliDevice;
++	return s_MaliDevice;
 +}
 +
 +int mali_adp_get_powerstatus(void)
 +{
-+    return s_PowerOff;
++	return s_PowerOff;
 +}
 +
 +int mali_adp_get_dvfsstatus(void)
 +{
-+    return mali_dvfs_enable;
++	return mali_dvfs_enable;
 +}
 +
 +unsigned int mali_adp_get_temp_ctrl(void)
 +{
-+    /* 1: disable dvfs, configure min frequency
-+       0: enable dvfs */
++	/* 1: disable dvfs, configure min frequency
++	0: enable dvfs */
 +
 +#ifdef CFG_TEMP_CTRL_CONFIG
-+    unsigned int value = mali_hw_core_register_read(s_TempCore, 0);
++	unsigned int value = mali_hw_core_register_read(s_TempCore, 0);
 +
-+    if(value == TEMP_REG_VALUE_CONCTRL)
-+    {
-+        if(HISI_DEBUG)
-+            printk("mali_adp_get_temp_ctrl@ disable dvfs\n");
++	if (value == TEMP_REG_VALUE_HIGH) {
++		if (HISI_DEBUG) {
++			printk("mali_adp_get_temp_ctrl@ high temperature disable dvfs\n");
++		}
++		return 1;
++	}
++#if defined(CHIP_TYPE_hi3798mv310)
 +
-+        return 1;
-+    }
++	if (value == TEMP_REG_VALUE_LOW) {
++		if (HISI_DEBUG) {
++			printk("mali_adp_get_temp_ctrl@ low temperature disable dvfs\n");
++		}
++		return 2;
++	}
++#endif
 +#endif
 +
-+    return 0;
++	return 0;
 +}
 +
 +void* mali_adp_get_configuration(struct mali_device *mdev)
 +{
-+    if(mali_dvfs_max_frequency == 0)
-+    {
-+        mali_dvfs_max_frequency = (unsigned int)opps_get_max_freq()/1000;
-+    }
++	if (mali_dvfs_max_frequency == 0) {
++		mali_dvfs_max_frequency = opps_get_max_freq()/1000;
++	}
 +
-+    if(mali_dvfs_min_frequency == 0)
-+    {
-+        mali_dvfs_min_frequency = (unsigned int)opps_get_min_freq()/1000;
-+    }
++	if (mali_dvfs_min_frequency == 0) {
++		mali_dvfs_min_frequency = opps_get_min_freq()/1000;
++	}
 +
-+    if(mali_dvfs_max_utilization == 0)
-+    {
-+        mali_dvfs_max_utilization = opps_get_max_utilization();
-+    }
++	if (mali_dvfs_max_utilization == 0) {
++		mali_dvfs_max_utilization = opps_get_max_utilization();
++	}
 +
-+    if(mali_dvfs_min_utilization == 0)
-+    {
-+        mali_dvfs_min_utilization = opps_get_min_utilization();
-+    }
++	if (mali_dvfs_min_utilization == 0) {
++		mali_dvfs_min_utilization = opps_get_min_utilization();
++	}
 +
-+    s_MaliConfiguration.dvfs_enable = mali_dvfs_enable;
-+    s_MaliConfiguration.max_frequency = mali_dvfs_max_frequency * 1000;
-+    s_MaliConfiguration.min_frequency = mali_dvfs_min_frequency * 1000;
-+    s_MaliConfiguration.max_utilization = mali_dvfs_max_utilization;
-+    s_MaliConfiguration.min_utilization = mali_dvfs_min_utilization;
++	s_MaliConfiguration.dvfs_enable = mali_dvfs_enable;
++	s_MaliConfiguration.max_frequency = mali_dvfs_max_frequency * 1000;
++	s_MaliConfiguration.min_frequency = mali_dvfs_min_frequency * 1000;
++	s_MaliConfiguration.max_utilization = mali_dvfs_max_utilization;
++	s_MaliConfiguration.min_utilization = mali_dvfs_min_utilization;
 +
-+    s_MaliConfiguration.time_busy_gp = mdev->mali_metrics.time_busy_gp;
-+    s_MaliConfiguration.time_idle_gp = mdev->mali_metrics.time_idle_gp;
-+    s_MaliConfiguration.time_busy_pp = mdev->mali_metrics.time_busy_pp[0];
-+    s_MaliConfiguration.time_idle_pp = mdev->mali_metrics.time_idle_pp[0];
++	s_MaliConfiguration.temp_ctrl = mali_adp_get_temp_ctrl();
 +
-+    s_MaliConfiguration.temp_ctrl = mali_adp_get_temp_ctrl();
-+
-+    return (void*)(&s_MaliConfiguration);
++	return (void*)(&s_MaliConfiguration);
 +}
 +
 +int mali_ext_set_freq_and_volt(int freq, int volt, int dvfs_enable)
 +{
-+    struct mali_device *mdev = dev_get_drvdata(mali_adp_get_device());
++	struct mali_device *mdev = dev_get_drvdata(mali_adp_get_device());
 +
-+    mali_dvfs_enable = dvfs_enable;
++	mali_dvfs_enable = dvfs_enable;
 +
-+    mdelay(1000);
++	mdelay(1000);
 +
-+    if((freq == 0) && (volt == 0))
-+    {
-+        HISI_ERROR_INFO();
-+    }
-+    else if(freq == 0)
-+    {
-+        regulator_set_voltage(mdev->regulator, volt*1000, volt*1000);
-+    }
-+    else if(volt == 0)
-+    {
-+        clk_set_rate(mdev->clock, freq*1000);
-+    }
-+    else
-+    {
-+        regulator_set_voltage(mdev->regulator, volt*1000, volt*1000);
-+        clk_set_rate(mdev->clock, freq*1000);
-+    }
++	if ((freq == 0) && (volt == 0)) {
 +
-+    return 0;
++		HISI_ERROR_INFO();
++
++	} else if(freq == 0) {
++
++		regulator_set_voltage(mdev->regulator, volt*1000, volt*1000);
++
++	} else if(volt == 0) {
++
++		clk_set_rate(mdev->clock, freq*1000);
++
++	} else {
++
++		regulator_set_voltage(mdev->regulator, volt*1000, volt*1000);
++		clk_set_rate(mdev->clock, freq*1000);
++
++	}
++
++	return 0;
 +}
 +
 +int mali_ext_set_max_freq(int freq)
 +{
-+    mali_dvfs_max_frequency = freq;
++	mali_dvfs_max_frequency = (unsigned long)freq;
 +
-+    return 0;
++	return 0;
++}
++
++void gpufreq_interactive_input_event(struct input_handle *handle, unsigned int type, unsigned int code, int value)
++{
++    struct mali_device *mdev = dev_get_drvdata(mali_adp_get_device());
++    int polling_ms = mdev->devfreq->profile->polling_ms;
++
++    if ((type == EV_SYN) && (code == SYN_REPORT)) {
++        s_MaliConfiguration.input_ctrl = 2000 / polling_ms;  /* 2s */
++    }
++
++    return;
++}
++
++int gpufreq_interactive_input_connect(struct input_handler *handler, struct input_dev *dev, const struct input_device_id *id)
++{
++	struct input_handle *handle;
++	int ret;
++
++	handle = kzalloc(sizeof(struct input_handle), GFP_KERNEL);
++	if (handle == NULL) {
++		HISI_ERROR_INFO();
++		return -ENOMEM;
++	}
++
++	handle->dev = dev;
++	handle->handler = handler;
++	handle->name = "gpufreq_interactive";
++
++	ret = input_register_handle(handle);
++	if (ret) {
++		HISI_ERROR_INFO();
++		kfree(handle);
++		return ret;
++	}
++
++	ret = input_open_device(handle);
++	if (ret) {
++		HISI_ERROR_INFO();
++		input_unregister_handle(handle);
++		kfree(handle);
++		return ret;
++	}
++
++	return 0;
++}
++
++void gpufreq_interactive_input_disconnect(struct input_handle *handle)
++{
++	input_close_device(handle);
++	input_unregister_handle(handle);
++	kfree(handle);
 +}
 +
 +
++
 diff --git a/driver/src/devicedrv/mali/platform/dt/mali4xx_dt.h b/driver/src/devicedrv/mali/platform/dt/mali4xx_dt.h
-new file mode 100644
-index 0000000..c3d3979
+new file mode 100755
+index 0000000..ba6c08d
 --- /dev/null
 +++ b/driver/src/devicedrv/mali/platform/dt/mali4xx_dt.h
-@@ -0,0 +1,41 @@
+@@ -0,0 +1,42 @@
 +
 +
 +#ifndef __MALI4XX_DT__
@@ -1803,18 +1949,19 @@ index 0000000..c3d3979
 +#endif
 +
 +typedef struct mali_config{
-+    int dvfs_enable;
-+    unsigned long max_frequency;
-+    unsigned long min_frequency;
-+    unsigned int max_utilization;
-+    unsigned int min_utilization;
++	int dvfs_enable;
++	unsigned long max_frequency;
++	unsigned long min_frequency;
++	unsigned int max_utilization;
++	unsigned int min_utilization;
 +
-+    unsigned int temp_ctrl;
++	unsigned int temp_ctrl;
++	unsigned int input_ctrl;
 +
-+    unsigned long long time_busy_gp;
-+    unsigned long long time_idle_gp;
-+    unsigned long long time_busy_pp;
-+    unsigned long long time_idle_pp;
++	unsigned long long time_busy_gp;
++	unsigned long long time_total_gp;
++	unsigned long long time_busy_pp;
++	unsigned long long time_total_pp;
 +}mali_config;
 +
 +struct device * mali_adp_get_device(void);
@@ -1835,11 +1982,11 @@ index 0000000..c3d3979
 +#endif
 +
 diff --git a/driver/src/devicedrv/mali/platform/dt/mali4xx_opp.c b/driver/src/devicedrv/mali/platform/dt/mali4xx_opp.c
-new file mode 100644
-index 0000000..d209954
+new file mode 100755
+index 0000000..9e423c4
 --- /dev/null
 +++ b/driver/src/devicedrv/mali/platform/dt/mali4xx_opp.c
-@@ -0,0 +1,270 @@
+@@ -0,0 +1,274 @@
 +
 +
 +#include <linux/io.h>
@@ -1860,10 +2007,10 @@ index 0000000..d209954
 +#ifdef GPU_SUPPORT_SVB
 +
 +typedef enum{
-+    SVB_REG_ADDR_BASE = 0xf8000000,
-+    SVB_REG_ADDR_SIZE = 0x100,
-+    SVB_REG_OFFSET_REGISTER1 = 0xc4, /*about: type - ff - ss*/
-+    SVB_REG_OFFSET_REGISTER2 = 0xc8, /*about: tt*/
++	SVB_REG_ADDR_BASE = 0xf8000000,
++	SVB_REG_ADDR_SIZE = 0x100,
++	SVB_REG_OFFSET_REGISTER1 = 0xc4, /*about: type - ff - ss*/
++	SVB_REG_OFFSET_REGISTER2 = 0xc8, /*about: tt*/
 +}svb_reg_addr;
 +
 +typedef enum{
@@ -1872,246 +2019,250 @@ index 0000000..d209954
 +	SVB_CHIP_TYPE_SS = 3,
 +}svb_chip_type;
 +
-+static char *clock_table[3] = {"operating-points-ff", "operating-points-tt", "operating-points-ss"};
-+
++#if defined(CHIP_TYPE_hi3798mv200) || defined(CHIP_TYPE_hi3798mv300)
 +static char *clock_table_98mv300[3] = {"operating-points-ff-98mv300", "operating-points-tt-98mv300", "operating-points-ss-98mv300"};
-+static char *clock_table_youtube[3] = {"operating-points-ff-youtube", "operating-points-tt-youtube", "operating-points-ss-youtube"};
++static char *clock_table_98mv200[3] = {"operating-points-ff", "operating-points-tt", "operating-points-ss"};
++static char *clock_table_98mv200_youtube[3] = {"operating-points-ff-youtube", "operating-points-tt-youtube", "operating-points-ss-youtube"};
++#endif
 +
 +char* opps_get_svb_type(void)
 +{
-+    volatile u32* pu32SVBBase = (u32*)ioremap_nocache(SVB_REG_ADDR_BASE,  SVB_REG_ADDR_SIZE);
-+    int svb_type, svb_corner[3];
-+    int reg1, reg2;
++	volatile u32* pu32SVBBase = (u32*)ioremap_nocache(SVB_REG_ADDR_BASE,  SVB_REG_ADDR_SIZE);
++	unsigned int svb_type, svb_corner[3];
++	unsigned int reg1, reg2;
 +
-+    if(pu32SVBBase == NULL)
-+    {
-+        HISI_ERROR_INFO();
-+        return NULL;
-+    }
++	if (pu32SVBBase == NULL) {
++		HISI_ERROR_INFO();
++		return NULL;
++	}
 +
-+    reg1 = *(pu32SVBBase +  (SVB_REG_OFFSET_REGISTER1 >> 2));
-+    reg2 = *(pu32SVBBase +  (SVB_REG_OFFSET_REGISTER2 >> 2));
++	reg1 = *(pu32SVBBase +  (SVB_REG_OFFSET_REGISTER1 >> 2));
++	reg2 = *(pu32SVBBase +  (SVB_REG_OFFSET_REGISTER2 >> 2));
 +
-+    svb_type = (reg1 >> 24) & 0xff;
-+    svb_corner[0] = (reg1 >> 16) & 0xff;	/*ff*/
-+    svb_corner[1] = (reg1 >> 8) & 0xff;	    /*tt*/
-+    svb_corner[2] = reg1 & 0xff;		    /*ss*/
++	svb_type = (reg1 >> 24) & 0xff;
++	svb_corner[0] = (reg1 >> 16) & 0xff;	/*ff*/
++	svb_corner[1] = (reg1 >> 8) & 0xff;	    /*tt*/
++	svb_corner[2] = reg1 & 0xff;		    /*ss*/
 +
-+    iounmap(pu32SVBBase);
++	iounmap(pu32SVBBase);
 +
-+    if((svb_type != SVB_CHIP_TYPE_FF) && (svb_type != SVB_CHIP_TYPE_TT) && (svb_type != SVB_CHIP_TYPE_SS))
-+    {
-+        svb_type = SVB_CHIP_TYPE_SS;
-+    }
++	if ((svb_type != SVB_CHIP_TYPE_FF) && (svb_type != SVB_CHIP_TYPE_TT) && (svb_type != SVB_CHIP_TYPE_SS)) {
++		svb_type = SVB_CHIP_TYPE_SS;
++	}
 +
-+    /* (3)98mv200 non-youtube mode : Max freq is 750M, it can be 800M in some BenchMark */
-+    s_MaxFreq = 750000000;
 +
-+    return clock_table[svb_type - 1];
++#if defined(CHIP_TYPE_hi3798mv200) || defined(CHIP_TYPE_hi3798mv300)
++	/* (3)98mv200 non-youtube mode : Max freq is 750M, it can be 800M in some BenchMark */
++	s_MaxFreq = 750000000;
++
++	return clock_table_98mv200[svb_type - 1];
++#endif
 +}
 +
 +#endif
 +
 +unsigned long opps_get_default_freq(void)
 +{
-+    return s_DefaultFreq;
++	return s_DefaultFreq;
 +}
 +
 +unsigned long opps_get_default_volt(void)
 +{
-+    return s_DefaultVolt;
++	return s_DefaultVolt;
 +}
 +
 +unsigned long opps_get_max_freq(void)
 +{
-+    return s_MaxFreq;
++	return s_MaxFreq;
 +}
 +
 +unsigned long opps_get_min_freq(void)
 +{
-+    return s_MinFreq;
++	return s_MinFreq;
 +}
 +
 +unsigned int opps_get_max_utilization(void)
 +{
-+    return s_MaxUtil;
++	return s_MaxUtil;
 +}
 +
 +unsigned int opps_get_min_utilization(void)
 +{
-+    return s_MinUtil;
++	return s_MinUtil;
 +}
 +
 +int setup_opps(struct device *dev)
 +{
-+    struct mali_device *mdev = dev_get_drvdata(dev);
-+    const struct property *prop;
-+    const __be32 *val;
-+    int nr;
-+    char *operating_points;
-+    unsigned long core_vol;
++	struct mali_device *mdev = dev_get_drvdata(dev);
++	const struct property *prop = NULL;
++	const __be32 *val = NULL;
++	int nr;
++	char *operating_points = NULL;
++	unsigned long core_vol;
 +
-+    /* (1) Get Default Frequency */
-+    prop = of_find_property(dev->of_node, "default-frequency", NULL);
-+    if(!prop || !prop->value)
-+    {
-+        HISI_ERROR_INFO();
-+        return -ENODATA;
-+    }
++	/* (1) Get Default Frequency */
++	prop = of_find_property(dev->of_node, "default-frequency", NULL);
++	if ((prop == NULL) || (prop->value == NULL)) {
++		HISI_ERROR_INFO();
++		return -ENODATA;
++	}
 +
-+    s_DefaultFreq = be32_to_cpup(prop->value);
++	s_DefaultFreq = be32_to_cpup(prop->value);
 +
-+    /* (2) Get Max/Min Frequency */
-+    prop = of_find_property(dev->of_node, "max-frequency", NULL);
-+    if(!prop || !prop->value)
-+    {
-+        HISI_ERROR_INFO();
-+        return -ENODATA;
-+    }
++	/* (2) Get Max/Min Frequency */
++	prop = of_find_property(dev->of_node, "max-frequency", NULL);
++	if (!prop || !prop->value) {
++		HISI_ERROR_INFO();
++		return -ENODATA;
++	}
 +
-+    s_MaxFreq = be32_to_cpup(prop->value);
++	s_MaxFreq = be32_to_cpup(prop->value);
 +
-+    prop = of_find_property(dev->of_node, "min-frequency", NULL);
-+    if(!prop || !prop->value)
-+    {
-+        HISI_ERROR_INFO();
-+        return -ENODATA;
-+    }
++	prop = of_find_property(dev->of_node, "min-frequency", NULL);
++	if (!prop || !prop->value) {
++		HISI_ERROR_INFO();
++		return -ENODATA;
++	}
 +
-+    s_MinFreq = be32_to_cpup(prop->value);
++	s_MinFreq = be32_to_cpup(prop->value);
 +
-+    /* (3) Get Max/Min Utilization */
-+    prop = of_find_property(dev->of_node, "max-utilization", NULL);
-+    if(!prop || !prop->value)
-+    {
-+        HISI_ERROR_INFO();
-+        return -ENODATA;
-+    }
++	/* (3) Get Max/Min Utilization */
++	prop = of_find_property(dev->of_node, "max-utilization", NULL);
++	if (!prop || !prop->value) {
++		HISI_ERROR_INFO();
++		return -ENODATA;
++	}
 +
-+    s_MaxUtil = be32_to_cpup(prop->value);
++	s_MaxUtil = be32_to_cpup(prop->value);
 +
-+    prop = of_find_property(dev->of_node, "min-utilization", NULL);
-+    if(!prop || !prop->value)
-+    {
-+        HISI_ERROR_INFO();
-+        return -ENODATA;
-+    }
++	prop = of_find_property(dev->of_node, "min-utilization", NULL);
++	if (!prop || !prop->value) {
++		HISI_ERROR_INFO();
++		return -ENODATA;
++	}
 +
-+    s_MinUtil = be32_to_cpup(prop->value);
++	s_MinUtil = be32_to_cpup(prop->value);
 +
-+    if(HISI_DEBUG)
-+        printk("setup_opps@ DefaultFreq = %ld, MaxFreq = %ld, MinFreq = %ld, MaxUtil = %ld, MinUtil = %ld\n",
-+            s_DefaultFreq, s_MaxFreq, s_MinFreq, s_MaxUtil, s_MinUtil);
++	if (HISI_DEBUG) {
++		printk("setup_opps@ DefaultFreq = %ld, MaxFreq = %ld, MinFreq = %ld, MaxUtil = %ld, MinUtil = %ld\n",
++			s_DefaultFreq, s_MaxFreq, s_MinFreq, s_MaxUtil, s_MinUtil);
++	}
 +
-+    /* (4) Get Operating-points */
++	/* (4) Get Operating-points */
 +#ifdef GPU_SUPPORT_SVB
-+    operating_points = opps_get_svb_type();
++	operating_points = opps_get_svb_type();
 +#else
-+    operating_points = "operating-points";
++	operating_points = "operating-points-tt";
 +#endif
 +
-+    if(HISI_DEBUG)
-+        printk("setup_opps@ vmin table is %s\n", operating_points);
++	if (operating_points == NULL) {
++		HISI_ERROR_INFO();
++		return -EINVAL;
++	}
 +
-+    prop = of_find_property(dev->of_node, operating_points, NULL);
-+    if(!prop || !prop->value)
-+    {
-+        HISI_ERROR_INFO();
-+        return -ENODATA;
-+    }
++	if (HISI_DEBUG) {
++		printk("setup_opps@ vmin table is %s\n", operating_points);
++	}
 +
-+    nr = prop->length / sizeof(u32);
-+    if (nr % 2)
-+    {
-+        HISI_ERROR_INFO();
-+        return -EINVAL;
-+    }
++	prop = of_find_property(dev->of_node, operating_points, NULL);
++	if (!prop || !prop->value) {
++		HISI_ERROR_INFO();
++		return -ENODATA;
++	}
 +
-+    val = prop->value;
++	nr = prop->length / sizeof(u32);
++	if (nr % 2) {
++		HISI_ERROR_INFO();
++		return -EINVAL;
++	}
 +
-+    /* (4) add vmin table */
-+    core_vol = (unsigned int)regulator_get_voltage(mdev->regulator);
++	val = prop->value;
 +
-+    while (nr)
-+    {
-+        unsigned long freq = be32_to_cpup(val++) ;
-+        unsigned long volt = be32_to_cpup(val++) ;
++	/* (4) add vmin table */
++	core_vol = (unsigned int)regulator_get_voltage(mdev->regulator);
++
++	while (nr) {
++		unsigned long freq = be32_to_cpup(val++);
++		unsigned long volt = be32_to_cpup(val++);
 +
 +#ifdef GPU_SUPPORT_SVB
-+        if(volt < core_vol)            /* gpu vmin could not be lower than core vmin */
-+        {
-+            volt = core_vol;
-+        }
++#if !(defined(CHIP_TYPE_hi3796mv200) || defined(CHIP_TYPE_hi3716mv450))		/* in 96mv200, gpu and core have different power domain */
++		if (volt < core_vol) {	/* gpu vmin could not be lower than core vmin */
++			volt = core_vol;
++		}
 +#endif
++#endif
++		if (s_DefaultFreq == freq) {
++			s_DefaultVolt = volt;
++		}
 +
-+        if(s_DefaultFreq == freq)
-+        {
-+            s_DefaultVolt = volt;
-+        }
++		if (HISI_DEBUG) {
++			printk("setup_opps@ add opps ~ Freq = %ld, Volt = %ld\n", freq, volt);
++		}
 +
-+        if(HISI_DEBUG)
-+            printk("setup_opps@ add opps ~ Freq = %ld, Volt = %ld\n", freq, volt);
++		dev_pm_opp_add(dev, freq, volt);
 +
-+        dev_pm_opp_add(dev, freq, volt);
-+
-+        nr -= 2;
-+    }
++		nr -= 2;
++	}
 +
 +	return 0;
 +}
 +
 +int term_opps(struct device *dev)
 +{
-+    const struct property *prop;
-+    const __be32 *val;
-+    int nr;
-+    char *operating_points;
++	const struct property *prop = NULL;
++	const __be32 *val = NULL;
++	int nr;
++	char *operating_points = NULL;
 +
 +#ifdef GPU_SUPPORT_SVB
-+    operating_points = opps_get_svb_type();
++	operating_points = opps_get_svb_type();
 +#else
-+    operating_points = "operating-points";
++	operating_points = "operating-points-tt";
 +#endif
 +
-+    prop = of_find_property(dev->of_node, operating_points, NULL);
-+    if(!prop)
-+    {
-+        HISI_ERROR_INFO();
-+        return -ENODEV;
-+    }
-+    if(!prop->value)
-+    {
-+        HISI_ERROR_INFO();
-+        return -ENODATA;
-+    }
++	if (operating_points == NULL) {
++		HISI_ERROR_INFO();
++		return -EINVAL;
++	}
 +
-+    nr = prop->length / sizeof(u32);
-+    if (nr % 2)
-+    {
-+        HISI_ERROR_INFO();
-+        return -EINVAL;
-+    }
++	prop = of_find_property(dev->of_node, operating_points, NULL);
++	if (prop == NULL) {
++		HISI_ERROR_INFO();
++		return -ENODEV;
++	}
 +
-+    val = prop->value;
++	if (prop->value == NULL) {
++		HISI_ERROR_INFO();
++		return -ENODATA;
++	}
 +
-+    while (nr)
-+    {
-+        unsigned long freq = be32_to_cpup(val);
++	nr = prop->length / sizeof(u32);
++	if (nr % 2) {
++		HISI_ERROR_INFO();
++		return -EINVAL;
++	}
 +
-+        dev_pm_opp_remove(dev, freq);
++	val = prop->value;
 +
-+        val += 2;
-+        nr -= 2;
-+    }
++	while (nr) {
++		unsigned long freq = be32_to_cpup(val);
 +
-+    if(HISI_DEBUG)
-+        printk("term_opps@\n");
++		dev_pm_opp_remove(dev, freq);
++
++		val += 2;
++		nr -= 2;
++	}
++
++	if (HISI_DEBUG) {
++		printk("term_opps@\n");
++	}
 +
 +	return 0;
 +}
 +
 diff --git a/driver/src/devicedrv/mali/platform/dt/mali4xx_opp.h b/driver/src/devicedrv/mali/platform/dt/mali4xx_opp.h
-new file mode 100644
+new file mode 100755
 index 0000000..eb02294
 --- /dev/null
 +++ b/driver/src/devicedrv/mali/platform/dt/mali4xx_opp.h
@@ -2146,11 +2297,11 @@ index 0000000..eb02294
 +#endif
 +
 diff --git a/driver/src/devicedrv/mali/platform/dt/mali4xx_proc.c b/driver/src/devicedrv/mali/platform/dt/mali4xx_proc.c
-new file mode 100644
-index 0000000..c5ef2ad
+new file mode 100755
+index 0000000..233e9a4
 --- /dev/null
 +++ b/driver/src/devicedrv/mali/platform/dt/mali4xx_proc.c
-@@ -0,0 +1,384 @@
+@@ -0,0 +1,341 @@
 +#ifdef GPU_PROC_SUPPORT
 +
 +#include <linux/clkdev.h>
@@ -2164,14 +2315,15 @@ index 0000000..c5ef2ad
 +#include <linux/seq_file.h>
 +
 +#include <linux/regulator/driver.h>
++#include <linux/hisilicon/securec.h>
 +#include <linux/clk.h>
 +
 +#include "mali_kernel_common.h"
 +#include "mali_osk_mali.h"
 +#include "mali_pm_metrics.h"
++#include "mali_ukk.h"
 +
 +#include "hi_drv_proc.h"
-+#include "hi_osal.h"
 +
 +#include "mali4xx_scaling.h"
 +#include "mali4xx_dt.h"
@@ -2191,352 +2343,308 @@ index 0000000..c5ef2ad
 +
 +typedef struct tagGPU_CMD_DATA_S
 +{
-+    HI_U8 aszCmd[GPU_CMD_MAX_CMD_LEN];
-+    HI_U8 aszValue[GPU_CMD_MAX_VLAUE_LEN];
++	HI_U8 aszCmd[GPU_CMD_MAX_CMD_LEN];
++	HI_U8 aszValue[GPU_CMD_MAX_VLAUE_LEN];
 +} GPU_CMD_DATA_S;
 +
 +static GPU_CMD_DATA_S g_astGPUProcCmd[GPU_CMD_MAX_NUM];
 +
 +unsigned int mali_proc_get_gp_utilization(void)
 +{
-+    struct mali_device *mdev = dev_get_drvdata(mali_adp_get_device());
-+    struct mali_config *mali_valuable;
-+    unsigned int busy = 0, total = 0;
++	struct mali_device *mdev = dev_get_drvdata(mali_adp_get_device());
++	struct mali_config *mali_valuable;
++	unsigned int busy = 0, total = 0;
 +
-+    mali_valuable = (struct mali_config*)mdev->devfreq->last_status.private_data;
++	mali_valuable = (struct mali_config*)mdev->devfreq->last_status.private_data;
 +
-+    if(mali_valuable == NULL)
-+    {
-+        return 0;
-+    }
++	if (mali_valuable == NULL) {
++		return 0;
++	}
 +
-+    busy = (unsigned int)(mali_valuable->time_busy_gp) >> 10;
++	busy = (unsigned int)(mali_valuable->time_busy_gp) >> 10;
 +
-+    total = (unsigned int)(mali_valuable->time_busy_gp + mali_valuable->time_idle_gp) >> 10;
++	total = (unsigned int)(mali_valuable->time_total_gp) >> 10;
 +
-+    return 100 * busy / (total + 1);
++	return 100 * busy / (total + 1);
 +}
 +
 +unsigned int mali_proc_get_pp_utilization(void)
 +{
-+    struct mali_device *mdev = dev_get_drvdata(mali_adp_get_device());
-+    struct mali_config *mali_valuable;
-+    unsigned int busy = 0, total = 0;
++	struct mali_device *mdev = dev_get_drvdata(mali_adp_get_device());
++	struct mali_config *mali_valuable;
++	unsigned int busy = 0, total = 0;
 +
-+    mali_valuable = (struct mali_config*)mdev->devfreq->last_status.private_data;
++	mali_valuable = (struct mali_config*)mdev->devfreq->last_status.private_data;
 +
-+    if(mali_valuable == NULL)
-+    {
-+        return 0;
-+    }
++	if (mali_valuable == NULL) {
++		return 0;
++	}
 +
-+    busy = (unsigned int)(mali_valuable->time_busy_pp) >> 10;
++	busy = (unsigned int)(mali_valuable->time_busy_pp) >> 10;
 +
-+    total = (unsigned int)(mali_valuable->time_busy_pp + mali_valuable->time_idle_pp) >> 10;
++	total = (unsigned int)(mali_valuable->time_total_pp) >> 10;
 +
-+    return 100 * busy / (total + 1);
++	return 100 * busy / (total + 1);
 +}
 +
 +HI_U32 GPUParseValue(HI_U8* pu8Value)
 +{
-+    if (strlen(pu8Value) < 2)
-+    {
-+        return (HI_U32)simple_strtoul(pu8Value, HI_NULL, 10);
-+    }
-+    else
-+    {
-+        if ((pu8Value[0] == '0') && ((pu8Value[1] == 'x') || (pu8Value[1] == 'X')))
-+        {
-+            return (HI_U32)simple_strtoul(pu8Value, HI_NULL, 16);
-+        }
-+        else
-+        {
-+            return (HI_U32)simple_strtoul(pu8Value, HI_NULL, 10);
-+        }
-+    }
++	if (strlen(pu8Value) < 2) {
++		return (HI_U32)simple_strtoul(pu8Value, HI_NULL, 10);
++	} else {
++		if ((pu8Value[0] == '0') && ((pu8Value[1] == 'x') || (pu8Value[1] == 'X'))) {
++			return (HI_U32)simple_strtoul(pu8Value, HI_NULL, 16);
++		} else {
++			return (HI_U32)simple_strtoul(pu8Value, HI_NULL, 10);
++		}
++	}
 +}
 +
 +HI_S32 GPUParseCmd(HI_U8* pu8Cmd, HI_U32 u32Len, GPU_CMD_DATA_S** pstCmd, HI_U32* pu32Num)
 +{
-+    HI_U32 u32Pos = 0;
-+    HI_U32 u32SavePos = 0;
-+    HI_U32 u32CmdNum = 0;
-+    HI_BOOL bIsCmd   = HI_TRUE;
-+    HI_U8 u8LastChar = ' ';
++	HI_U32 u32Pos = 0;
++	HI_U32 u32SavePos = 0;
++	HI_U32 u32CmdNum = 0;
++	HI_BOOL bIsCmd   = HI_TRUE;
++	HI_U8 u8LastChar = ' ';
 +
-+    if ((HI_NULL == pu8Cmd) || (0 == u32Len) || (HI_NULL == pstCmd) || (HI_NULL == pu32Num))
-+    {
-+        MALI_PRINT_ERROR(("Invalid.\n"));
-+        return HI_FAILURE;
-+    }
++	if ((HI_NULL == pu8Cmd) || (0 == u32Len) || (HI_NULL == pstCmd) || (HI_NULL == pu32Num)) {
++		MALI_PRINT_ERROR(("Invalid.\n"));
++		return HI_FAILURE;
++	}
 +
-+    u32CmdNum = 0;
-+    memset(g_astGPUProcCmd, 0, sizeof(g_astGPUProcCmd));
++	u32CmdNum = 0;
++	if (0 != memset_s(g_astGPUProcCmd, sizeof(g_astGPUProcCmd), 0, sizeof(g_astGPUProcCmd))) {
++		return HI_FAILURE;
++	}
 +
-+    while ((u32Pos < u32Len) && (pu8Cmd[u32Pos]))
-+    {
-+        switch (pu8Cmd[u32Pos])
-+        {
-+        case '\0':
-+        case '\n':
-+        case '\t':
-+            break;
++	while ((u32Pos < u32Len) && (pu8Cmd[u32Pos])) {
++		switch (pu8Cmd[u32Pos]) {
++		case '\0':
++		case '\n':
++		case '\t':
++			break;
 +
-+        case '=':
-+            if (bIsCmd)
-+            {
-+                bIsCmd = HI_FALSE;
-+                u32SavePos = 0;
-+            }
++		case '=':
++			if (bIsCmd) {
++				bIsCmd = HI_FALSE;
++				u32SavePos = 0;
++			}
++			break;
 +
-+            break;
-+        case ' ':
-+            if (!((' ' == u8LastChar) || ('=' == u8LastChar)))
-+            {
-+                bIsCmd = !bIsCmd;
-+                u32SavePos = 0;
-+                if (bIsCmd)
-+                {
-+                    if (u32CmdNum < GPU_CMD_MAX_NUM - 1)
-+                    {
-+                        u32CmdNum++;
-+                    }
-+                    else
-+                    {
-+                        goto out;
-+                    }
-+                }
-+            }
++		case ' ':
++			if (!((' ' == u8LastChar) || ('=' == u8LastChar))) {
++				bIsCmd = !bIsCmd;
++				u32SavePos = 0;
++				if (bIsCmd) {
++					if (u32CmdNum < GPU_CMD_MAX_NUM - 1) {
++						u32CmdNum++;
++					} else {
++						goto out;
++					}
++				}
++			}
++			break;
 +
-+            break;
-+        default:
-+            if (bIsCmd)
-+            {
-+                if (u32SavePos < GPU_CMD_MAX_CMD_LEN)
-+                {
-+                    g_astGPUProcCmd[u32CmdNum].aszCmd[u32SavePos++] = pu8Cmd[u32Pos];
-+                }
-+            }
-+            else
-+            {
-+                if (u32SavePos < GPU_CMD_MAX_VLAUE_LEN)
-+                {
-+                    g_astGPUProcCmd[u32CmdNum].aszValue[u32SavePos++] = pu8Cmd[u32Pos];
-+                }
-+            }
++		default:
++			if (bIsCmd) {
++				if (u32SavePos < GPU_CMD_MAX_CMD_LEN) {
++					g_astGPUProcCmd[u32CmdNum].aszCmd[u32SavePos++] = pu8Cmd[u32Pos];
++				}
++			} else {
++				if (u32SavePos < GPU_CMD_MAX_VLAUE_LEN) {
++					g_astGPUProcCmd[u32CmdNum].aszValue[u32SavePos++] = pu8Cmd[u32Pos];
++				}
++			}
++			break;
++		}
 +
-+            break;
-+        }
-+
-+        u8LastChar = pu8Cmd[u32Pos];
-+        u32Pos++;
-+    }
++		u8LastChar = pu8Cmd[u32Pos];
++		u32Pos++;
++	}
 +
 +out:
-+    if (strlen(g_astGPUProcCmd[u32CmdNum].aszCmd) > 0)
-+    {
-+        u32CmdNum += 1;
-+    }
++	if (strlen(g_astGPUProcCmd[u32CmdNum].aszCmd) > 0) {
++		u32CmdNum += 1;
++	}
 +
-+    *pstCmd  = g_astGPUProcCmd;
-+    *pu32Num = u32CmdNum;
-+    return HI_SUCCESS;
++	*pstCmd  = g_astGPUProcCmd;
++	*pu32Num = u32CmdNum;
++
++	return HI_SUCCESS;
 +}
 +
 +HI_S32 GPUDebugCtrl(HI_U32 u32Para1, HI_U32 u32Para2)
 +{
-+    HI_U32 u32CpuCurFreq = 0;
-+    struct mali_device *mdev = dev_get_drvdata(mali_adp_get_device());
++	HI_U32 u32CpuCurFreq = 0;
++	struct mali_device *mdev = dev_get_drvdata(mali_adp_get_device());
 +
-+    MALI_DEBUG_PRINT(2, ("\n gpu freq = 0x%x, voltage = 0x%x \n", u32Para1, u32Para2));
++	MALI_DEBUG_PRINT(2, ("\n gpu freq = 0x%x, voltage = 0x%x \n", u32Para1, u32Para2));
 +
-+    if ((0 == u32Para1) && (0 == u32Para2))
-+    {
-+        MALI_PRINT_ERROR(("plese set the valid value \n"));
-+        return HI_SUCCESS;
-+    }
++	if (mali_adp_get_dvfsstatus() != 0) {
++		return HI_SUCCESS;
++	}
 +
-+    if (0 == u32Para2)
-+    {
-+        clk_set_rate(mdev->clock, u32Para1*1000);
-+        mdev->current_freq = u32Para1*1000;
++	if ((0 == u32Para1) && (0 == u32Para2)) {
++		MALI_PRINT_ERROR(("plese set the valid value \n"));
 +
-+        return HI_SUCCESS;
-+    }
++		return HI_SUCCESS;
++	}
 +
-+    if (0 == u32Para1)
-+    {
-+        regulator_set_voltage(mdev->regulator, u32Para2*1000, u32Para2*1000);
-+        mdev->current_voltage = u32Para2*1000;
++	if (0 == u32Para2) {
++		clk_set_rate(mdev->clock, u32Para1*1000);
++		mdev->current_freq = u32Para1*1000;
 +
-+        return HI_SUCCESS;
-+    }
++		return HI_SUCCESS;
++	}
 +
-+    u32CpuCurFreq = (HI_U32)clk_get_rate(mdev->clock);
-+    if (u32Para1 > u32CpuCurFreq)
-+    {
-+        regulator_set_voltage(mdev->regulator, u32Para2*1000, u32Para2*1000);
-+        clk_set_rate(mdev->clock, u32Para1*1000);
-+    }
-+    else
-+    {
-+        clk_set_rate(mdev->clock, u32Para1*1000);
-+        regulator_set_voltage(mdev->regulator, u32Para2*1000, u32Para2*1000);
-+    }
++	if (0 == u32Para1) {
++		regulator_set_voltage(mdev->regulator, u32Para2*1000, u32Para2*1000);
++		mdev->current_voltage = u32Para2*1000;
 +
-+    mdev->current_voltage = u32Para2*1000;
-+    mdev->current_freq = u32Para1*1000;
++		return HI_SUCCESS;
++	}
 +
-+    return HI_SUCCESS;
++	u32CpuCurFreq = (HI_U32)clk_get_rate(mdev->clock);
++
++	if (u32Para1 > u32CpuCurFreq) {
++		regulator_set_voltage(mdev->regulator, u32Para2*1000, u32Para2*1000);
++		clk_set_rate(mdev->clock, u32Para1*1000);
++	} else {
++		clk_set_rate(mdev->clock, u32Para1*1000);
++		regulator_set_voltage(mdev->regulator, u32Para2*1000, u32Para2*1000);
++	}
++
++	mdev->current_voltage = u32Para2*1000;
++	mdev->current_freq = u32Para1*1000;
++
++	return HI_SUCCESS;
 +}
 +
 +static HI_S32 GPUProcRead(struct seq_file *p, HI_VOID *v)
 +{
-+    struct mali_device *mdev = dev_get_drvdata(mali_adp_get_device());
++	struct mali_device *mdev = dev_get_drvdata(mali_adp_get_device());
 +
-+    PROC_PRINT(p,     "---------Hisilicon GPU Info---------\n");
-+    PROC_PRINT(p,     "Frequency                :%d(kHz)\n",(HI_U32)clk_get_rate(mdev->clock)/1000);
-+    PROC_PRINT(p,     "Voltage                  :%d(mv)\n",(HI_U32)regulator_get_voltage(mdev->regulator)/1000);
-+    PROC_PRINT(p,     "GP_utilization           :%d(percent)\n",mali_proc_get_gp_utilization());
-+    PROC_PRINT(p,     "PP_utilization           :%d(percent)\n",mali_proc_get_pp_utilization());
++	HI_PROC_PRINT(p,     "---------Hisilicon GPU Info---------\n");
++	HI_PROC_PRINT(p,     "Frequency                :%d(kHz)\n",(HI_U32)clk_get_rate(mdev->clock)/1000);
++	HI_PROC_PRINT(p,     "Voltage                  :%d(mv)\n",(HI_U32)regulator_get_voltage(mdev->regulator)/1000);
++	HI_PROC_PRINT(p,     "GP_utilization           :%d(percent)\n", mali_proc_get_gp_utilization());
++	HI_PROC_PRINT(p,     "PP_utilization           :%d(percent)\n", mali_proc_get_pp_utilization());
 +
-+    if (1 == mali_adp_get_powerstatus())
-+    {
-+        PROC_PRINT(p, "Power_status             :power down\n");
-+    }
-+    else
-+    {
-+        PROC_PRINT(p, "Power_status             :power up\n");
-+    }
++	if (1 == mali_adp_get_powerstatus()) {
++		HI_PROC_PRINT(p, "Power_status             :power down\n");
++	} else {
++		HI_PROC_PRINT(p, "Power_status             :power up\n");
++	}
 +
-+    PROC_PRINT(p,     "Shared_mem_size          :%d(MB)\n",CONFIG_GPU_MAX_SHARE_MEM_SIZE/1024/1024);
++	HI_PROC_PRINT(p,     "Shared_mem_size          :%d(MB)\n", (u32)(((u64)_mali_ukk_report_total_memory_size() + 1)/1024/1024));
 +
-+    if (1 == mali_adp_get_dvfsstatus())
-+    {
-+        PROC_PRINT(p, "DVFS_enable              :enable\n");
-+    }
-+    else
-+    {
-+        PROC_PRINT(p, "DVFS_enable              :disable\n");
-+    }
++	if (1 == mali_adp_get_dvfsstatus()) {
++		HI_PROC_PRINT(p, "DVFS_enable              :enable\n");
++	} else {
++		HI_PROC_PRINT(p, "DVFS_enable              :disable\n");
++	}
 +
-+    return 0;
++	return 0;
 +}
 +
 +static HI_VOID GPUProcHelper(HI_VOID)
 +{
-+    HI_DRV_PROC_EchoHelper(
-+        "echo volt=1080 > /proc/hisi/msp/pm_gpu, set gpu volt in mv.\n"
-+        "echo freq=432000 > /proc/hisi/msp/pm_gpu, set gpu freq in kHz.\n"
-+        "echo avs on/off > /proc/hisi/msp/pm_gpu, open/close gpu avs.\n"
-+        "echo freq=432000 volt=1080 > /proc/hisi/msp/pm_gpu, set gpu volt and freq simultaneity.\n"
-+    );
++	hi_drv_proc_echo_helper(
++		"echo volt=1080 > /proc/hisi/msp/pm_gpu, set gpu volt in mv.\n"
++		"echo freq=432000 > /proc/hisi/msp/pm_gpu, set gpu freq in kHz.\n"
++		"echo avs on/off > /proc/hisi/msp/pm_gpu, open/close gpu avs.\n"
++		"echo freq=432000 volt=1080 > /proc/hisi/msp/pm_gpu, set gpu volt and freq simultaneity.\n"
++	);
 +
-+    return;
++	return;
 +}
 +
 +static HI_S32 GPUProcWrite(struct file * file,
 +                           const char __user * buf, size_t count, loff_t *ppos)
 +{
-+    HI_CHAR ProcPara[64] = {0};
-+    HI_S32 s32Ret;
-+    HI_U32 u32CmdNum = 0;
-+    GPU_CMD_DATA_S* pstCmd = HI_NULL;
++	HI_CHAR ProcPara[64] = {0};
++	HI_S32 s32Ret;
++	HI_U32 u32CmdNum = 0;
++	GPU_CMD_DATA_S* pstCmd = HI_NULL;
 +
-+    if(count > sizeof(ProcPara))
-+    {
-+        return -EFAULT;
-+    }
++	if (count > sizeof(ProcPara)) {
++		return -EFAULT;
++	}
 +
-+    if (copy_from_user(ProcPara, buf, count))
-+    {
-+        return -EFAULT;
-+    }
++	if (buf == NULL) {
++		return -EFAULT;
++	}
 +
-+    s32Ret = GPUParseCmd(ProcPara, count, &pstCmd, &u32CmdNum);
-+    if (HI_SUCCESS != s32Ret)
-+    {
-+        goto err;
-+    }
++	if (copy_from_user(ProcPara, buf, count)) {
++		return -EFAULT;
++	}
 +
-+    if (1 == u32CmdNum)
-+    {
-+        /* Only set GPU volt */
-+        if (0 == HI_OSAL_Strncasecmp(GPU_CMD_VOLT, pstCmd[0].aszCmd, strlen(pstCmd[0].aszCmd)))
-+        {
-+            GPUDebugCtrl(0, GPUParseValue(pstCmd[0].aszValue));
-+        }
-+        /* Only set GPU freq */
-+        else if (0 == HI_OSAL_Strncasecmp(GPU_CMD_FREQ, pstCmd[0].aszCmd, strlen(pstCmd[0].aszCmd)))
-+        {
-+            GPUDebugCtrl(GPUParseValue(pstCmd[0].aszValue), 0);
-+        }
-+        /* Help */
-+        else if (0 == HI_OSAL_Strncasecmp(GPU_CMD_HELP, pstCmd[0].aszCmd, strlen(pstCmd[0].aszCmd)))
-+        {
-+            GPUProcHelper();
-+        }
-+        /* Support 0xXXX 0xXXX command */
-+        else /*if (('0' == pstCmd[0].aszCmd[0]) && ('0' == pstCmd[0].aszValue[0]))*/
-+        {
-+            GPUDebugCtrl(GPUParseValue(pstCmd[0].aszCmd), GPUParseValue(pstCmd[0].aszValue));
-+        }
-+    }
-+    else if (2 == u32CmdNum)
-+    {
-+        if ((0 == HI_OSAL_Strncasecmp(GPU_CMD_VOLT, pstCmd[0].aszCmd, strlen(pstCmd[0].aszCmd)))
-+            && (0 == HI_OSAL_Strncasecmp(GPU_CMD_FREQ, pstCmd[1].aszCmd, strlen(pstCmd[1].aszCmd))))
-+        {
-+            GPUDebugCtrl(GPUParseValue(pstCmd[1].aszValue), GPUParseValue(pstCmd[0].aszValue));
-+        }
-+        else if ((0 == HI_OSAL_Strncasecmp(GPU_CMD_FREQ, pstCmd[0].aszCmd, strlen(pstCmd[0].aszCmd)))
-+                 && (0 == HI_OSAL_Strncasecmp(GPU_CMD_VOLT, pstCmd[1].aszCmd, strlen(pstCmd[1].aszCmd))))
-+        {
-+            GPUDebugCtrl(GPUParseValue(pstCmd[0].aszValue), GPUParseValue(pstCmd[1].aszValue));
-+        }
-+        else
-+        {
-+            goto err;
-+        }
-+    }
-+    else
-+    {
-+        goto err;
-+    }
++	s32Ret = GPUParseCmd(ProcPara, count, &pstCmd, &u32CmdNum);
++	if (HI_SUCCESS != s32Ret) {
++		goto err;
++	}
 +
-+    return count;
++	if (1 == u32CmdNum) {
++		if (0 == strncasecmp(GPU_CMD_VOLT, pstCmd[0].aszCmd, strlen(pstCmd[0].aszCmd))) {
++			/* Only set GPU volt */
++			GPUDebugCtrl(0, GPUParseValue(pstCmd[0].aszValue));
++		} else if (0 == strncasecmp(GPU_CMD_FREQ, pstCmd[0].aszCmd, strlen(pstCmd[0].aszCmd))) {
++			/* Only set GPU freq */
++			GPUDebugCtrl(GPUParseValue(pstCmd[0].aszValue), 0);
++		} else if (0 == strncasecmp(GPU_CMD_HELP, pstCmd[0].aszCmd, strlen(pstCmd[0].aszCmd))) {
++			/* Help */
++			GPUProcHelper();
++		} else {
++			/* Support 0xXXX 0xXXX command */
++			GPUDebugCtrl(GPUParseValue(pstCmd[0].aszCmd), GPUParseValue(pstCmd[0].aszValue));
++		}
++	} else if (2 == u32CmdNum) {
++		if ((0 == strncasecmp(GPU_CMD_VOLT, pstCmd[0].aszCmd, strlen(pstCmd[0].aszCmd)))
++			&& (0 == strncasecmp(GPU_CMD_FREQ, pstCmd[1].aszCmd, strlen(pstCmd[1].aszCmd)))) {
++			GPUDebugCtrl(GPUParseValue(pstCmd[1].aszValue), GPUParseValue(pstCmd[0].aszValue));
++		} else if ((0 == strncasecmp(GPU_CMD_FREQ, pstCmd[0].aszCmd, strlen(pstCmd[0].aszCmd)))
++			&& (0 == strncasecmp(GPU_CMD_VOLT, pstCmd[1].aszCmd, strlen(pstCmd[1].aszCmd)))) {
++			GPUDebugCtrl(GPUParseValue(pstCmd[0].aszValue), GPUParseValue(pstCmd[1].aszValue));
++		} else {
++			goto err;
++		}
++	} else {
++		goto err;
++	}
++
++	return count;
 +
 +err:
-+    HI_DRV_PROC_EchoHelper("Invaid parameter.\n");
-+    GPUProcHelper();
-+    return count;
++	hi_drv_proc_echo_helper("Invaid parameter.\n");
++	GPUProcHelper();
++	return count;
 +}
 +
 +int gpu_proc_create(void)
 +{
-+    DRV_PROC_ITEM_S *item;
++	hi_proc_item *item;
 +
-+    item = HI_DRV_PROC_AddModule("pm_gpu", NULL, NULL);
-+    if (!item)
-+    {
-+        MALI_PRINT_ERROR(("add GPU proc module failed\n"));
-+        return -1;
-+    }
++	item = hi_drv_proc_add_module("pm_gpu", NULL, NULL);
++	if (item == NULL) {
++		MALI_PRINT_ERROR(("add GPU proc module failed\n"));
++		return -1;
++	}
 +
-+    item->read  = GPUProcRead;
-+    item->write = GPUProcWrite;
-+    return 0;
++	item->read  = GPUProcRead;
++	item->write = GPUProcWrite;
++	return 0;
 +}
 +
 +int gpu_proc_destroy(void)
 +{
-+    HI_DRV_PROC_RemoveModule("pm_gpu");
-+    return 0;
++	hi_drv_proc_remove_module("pm_gpu");
++	return 0;
 +}
 +
 +#endif
 diff --git a/driver/src/devicedrv/mali/platform/dt/mali4xx_proc.h b/driver/src/devicedrv/mali/platform/dt/mali4xx_proc.h
-new file mode 100644
+new file mode 100755
 index 0000000..d8cda87
 --- /dev/null
 +++ b/driver/src/devicedrv/mali/platform/dt/mali4xx_proc.h
@@ -2557,11 +2665,11 @@ index 0000000..d8cda87
 +#endif
 +
 diff --git a/driver/src/devicedrv/mali/platform/dt/mali4xx_scaling.c b/driver/src/devicedrv/mali/platform/dt/mali4xx_scaling.c
-new file mode 100644
-index 0000000..4972951
+new file mode 100755
+index 0000000..96f7e2c
 --- /dev/null
 +++ b/driver/src/devicedrv/mali/platform/dt/mali4xx_scaling.c
-@@ -0,0 +1,118 @@
+@@ -0,0 +1,113 @@
 +/*
 + * Copyright (C) 2013 ARM Limited. All rights reserved.
 + *
@@ -2602,16 +2710,15 @@ index 0000000..4972951
 +
 +static void set_num_cores(struct work_struct *work)
 +{
-+    int err = mali_perf_set_num_pp_cores(num_cores_enabled);
++	int err = mali_perf_set_num_pp_cores(num_cores_enabled);
 +
-+    MALI_DEBUG_ASSERT(0 == err);
-+    MALI_IGNORE(err);
++	MALI_DEBUG_ASSERT(0 == err);
++	MALI_IGNORE(err);
 +}
 +
 +static void enable_fix_num_cores(unsigned int num)
 +{
-+	if(num > 0 && num <= num_cores_total)
-+	{
++	if (num > 0 && num <= num_cores_total) {
 +		num_cores_enabled = num ;
 +		schedule_work(&wq_work);
 +		MALI_DEBUG_PRINT(3, ("Core scaling: Enabling %d cores\n", num_cores_enabled));
@@ -2625,31 +2732,28 @@ index 0000000..4972951
 +
 +unsigned int gpu_set_pp_scale_cores(unsigned int num)
 +{
-+	if(num > num_cores_total)
-+	{
++	if (num > num_cores_total) {
 +		num = num_cores_total ;
-+	}
-+	else if(num < 1)
-+	{
++	} else if(num < 1) {
 +		num = 1;
 +	}
 +
 +	enable_fix_num_cores(num);
 +
-+    return num ;
++	return num ;
 +}
 +
 +void mali_core_scaling_init(int num_pp_cores)
 +{
-+    INIT_WORK(&wq_work, set_num_cores);
++	INIT_WORK(&wq_work, set_num_cores);
 +
-+    num_cores_total   = num_pp_cores;
-+    num_cores_enabled = num_pp_cores;
++	num_cores_total   = num_pp_cores;
++	num_cores_enabled = num_pp_cores;
 +}
 +
 +void mali_core_scaling_term(void)
 +{
-+    flush_scheduled_work();
++	flush_scheduled_work();
 +}
 +
 +void mali_init_pp_scale_cores(unsigned int num)
@@ -2662,27 +2766,26 @@ index 0000000..4972951
 +void mali_core_scaling_update(struct mali_gpu_utilization_data *data)
 +{
 +#ifdef GPU_PP_SCALING_ENABLE
-+	if( mali_pp_scale_cores != gpu_get_pp_scale_cores() )
-+	{
++	if (mali_pp_scale_cores != gpu_get_pp_scale_cores()) {
++
 +		mali_pp_scale_cores = gpu_set_pp_scale_cores(mali_pp_scale_cores);
-+		if( mali_pp_scale_cores == gpu_get_pp_scale_cores() )
-+		{
++
++		if (mali_pp_scale_cores == gpu_get_pp_scale_cores()) {
 +			MALI_DEBUG_PRINT(2, ("pp scale success, cores = %d\n", mali_pp_scale_cores));
-+		}
-+		else
-+		{
++		} else {
 +			MALI_DEBUG_PRINT(2, ("pp scale failed\n"));
 +		}
++
 +	}
 +#endif
 +
-+    utilization_gp_value = data->utilization_gp;
-+    utilization_pp_value = data->utilization_pp;
++	utilization_gp_value = data->utilization_gp;
++	utilization_pp_value = data->utilization_pp;
 +}
 +
 diff --git a/driver/src/devicedrv/mali/platform/dt/mali4xx_scaling.h b/driver/src/devicedrv/mali/platform/dt/mali4xx_scaling.h
-new file mode 100644
-index 0000000..3419762
+new file mode 100755
+index 0000000..035043f
 --- /dev/null
 +++ b/driver/src/devicedrv/mali/platform/dt/mali4xx_scaling.h
 @@ -0,0 +1,31 @@
@@ -2704,13 +2807,13 @@ index 0000000..3419762
 +#ifndef __ARM_CORE_SCALING_H__
 +#define __ARM_CORE_SCALING_H__
 +
-+void         mali_core_scaling_init(int num_pp_cores);
++void mali_core_scaling_init(int num_pp_cores);
 +
-+void         mali_core_scaling_term(void);
++void mali_core_scaling_term(void);
 +
 +void mali_init_pp_scale_cores(unsigned int num);
 +
-+void         mali_core_scaling_update(struct mali_gpu_utilization_data *data);
++void mali_core_scaling_update(struct mali_gpu_utilization_data *data);
 +
 +unsigned int gpu_get_gp_utilization(void);
 +
@@ -2718,5 +2821,5 @@ index 0000000..3419762
 +
 +#endif /* __ARM_CORE_SCALING_H__ */
 -- 
-2.7.4
+2.17.1
 
