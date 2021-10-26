@@ -7,7 +7,7 @@ LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://driver/src/devicedrv/mali/readme.txt;md5=92d15b487d204ace57072c48697b4a89"
 
 EXTRA_OEMAKE ?= ""
-
+PR = "r1"
 S = "${WORKDIR}/${MALI_PACKAGE_NAME}/"
 
 do_compile() {
@@ -38,7 +38,7 @@ python() {
         "CONFIG_MALI400=m",
         "CONFIG_MALI450=y",
         "CONFIG_MALI_DVFS=y",
-        "CHIP_TYPE_hi3798mv200=y",
+        "CHIP_TYPE_hi3798mv310=y",
         "CONFIG_GPU_AVS_ENABLE=y"]
 
     for c in config:

@@ -1,6 +1,5 @@
 SRCDATE = "20181121"
 
-
 require airdigital-mali-utgard.inc
 
 SRC_URI[md5sum] = "b96caae5248e4fa3606a367e290877d0"
