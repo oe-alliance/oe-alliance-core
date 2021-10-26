@@ -1,6 +1,6 @@
 require kernel-module-mali-utgard-v310.inc
 
-SRC_URI += "file://0001-3798mv-support.patch""
+SRC_URI += "file://0001-3798mv-support.patch"
 
 MALI_PACKAGE_NAME = "DX910-SW-99002-${PV}"
 
