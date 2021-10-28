@@ -1,3 +1,15 @@
+From 0384f028257826745fbd11a3b64be9e943d0752a Mon Sep 17 00:00:00 2001
+From: Captain <captain.onboard@web.de>
+Date: Thu, 28 Oct 2021 22:53:53 +0200
+Subject: [PATCH 3/3] dont-enable-AES-hwcaps-for-arm
+
+---
+ node/AES.hpp   | 3 ---
+ node/Utils.cpp | 9 ---------
+ 2 files changed, 12 deletions(-)
+
+diff --git a/node/AES.hpp b/node/AES.hpp
+index dc0130ad..0ff4f3b7 100644
 --- a/node/AES.hpp
 +++ b/node/AES.hpp
 @@ -24,9 +24,6 @@
@@ -10,9 +22,11 @@
  
  #ifndef ZT_INLINE
  #define ZT_INLINE inline
+diff --git a/node/Utils.cpp b/node/Utils.cpp
+index a0bf0707..d8b49a81 100644
 --- a/node/Utils.cpp
 +++ b/node/Utils.cpp
-@@ -114,15 +114,6 @@ Utils::ARMCapabilities::ARMCapabilities() noexcept
+@@ -116,15 +116,6 @@ Utils::ARMCapabilities::ARMCapabilities() noexcept
  		this->pmull = (hwcaps2 & HWCAP2_PMULL) != 0;
  		this->sha1 = (hwcaps2 & HWCAP2_SHA1) != 0;
  		this->sha2 = (hwcaps2 & HWCAP2_SHA2) != 0;
@@ -28,3 +42,6 @@
  	}
  #endif
  
+-- 
+2.33.0.windows.2
+
