@@ -58,6 +58,7 @@ SRC_URI += "http://code.vuplus.com/download/release/kernel/stblinux-${KSRC_VER}.
     file://move-default-dialect-to-SMB3.patch \
     file://v3-1-2-em28xx-Ignore-errors-while-reading-from-eeprom.patch \
     file://v3-2-2-em28xx-add-support-for-new-of-Terratec-H6.patch \
+    file://fix-multiple-defs-yyloc.patch \
     "
 
 S = "${WORKDIR}/linux"
