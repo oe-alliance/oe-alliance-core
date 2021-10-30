@@ -1,16 +1,19 @@
 DESCRIPTION = "OverlayHD skin and management plugin for Enigma2 PVRs by IanSav"
 SECTION = "skins"
 PRIORITY = "optional"
-MAINTAINER = "IanSav <IS.OzPVR@gmail.com>"
+MAINTAINER = "IanSav"
+LICENSE = "GPLv2"
 HOMEPAGE = "https://github.com/IanSav"
+SOURCE = "https://github.com/IanSav/OverlayHD"
 
 require conf/license/license-gplv2.inc
 
-inherit allarch gitpkgv
+inherit allarch gittag
 
 SRCREV = "${AUTOREV}"
-PV = "1.90-git${SRCPV}"
-PKGV = "1.90-git${GITPKGV}"
+PV = "git${SRCPV}"
+PKGV = "${GITPKGVTAG}"
+
 SRC_URI = "git://github.com/IanSav/OverlayHD.git;protocol=https"
 
 S = "${WORKDIR}/git"
@@ -31,7 +34,7 @@ echo "+--------------------------------------------------+"
 echo "| OverlayHD skin successfully installed / updated. |"
 echo "+--------------------------------------------------+"
 echo "| Skin developed by IanSav.                        |"
-echo "| https://github.com/IanSav/overlayhd              |"
+echo "| https://github.com/IanSav/OverlayHD              |"
 echo "+--------------------------------------------------+"
 echo ""
 echo "Restart the GUI to enable changes.  Failure to restart"
