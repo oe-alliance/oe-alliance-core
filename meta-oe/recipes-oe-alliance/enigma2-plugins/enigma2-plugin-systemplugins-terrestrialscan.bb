@@ -6,7 +6,7 @@ MAINTAINER = "Huevos"
 LICENSE = "Proprietary"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=84dcc94da3adb52b53ae4fa38fe49e5d"
 
-inherit autotools-brokensep gitpkgv ${PYTHON_PN}native gettext
+inherit autotools-brokensep gettext gitpkgv ${PYTHON_PN}targetconfig ${PYTHON_PN}native
 
 SRCREV = "${AUTOREV}"
 PV = "${IMAGE_VERSION}+git${SRCPV}"
@@ -24,11 +24,7 @@ EXTRA_OECONF = " \
 
 S = "${WORKDIR}/git"
 
-# does not build without this DEPENDS 
-DEPENDS = "enigma2"
-RDEPENDS:${PN} = "enigma2"
-
-INSANE_SKIP:${PN} += "already-stripped ldflags"
+INSANE_SKIP:${PN} += "already-stripped build-deps ldflags"
 
 python populate_packages:prepend() {
     enigma2_plugindir = bb.data.expand('${libdir}/enigma2/python/Plugins', d)
