@@ -10,9 +10,9 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "1.42+git${SRCPV}"
 PKGV = "1.42+git${GITPKGV}"
-PR = "r11"
+PR = "r12"
 
-SRC_URI = "git://github.com/nickersk/enigmalight.git;protocol=https;branch=4.4"
+SRC_URI = "git://github.com/nickersk/enigmalight.git;protocol=https;branch=python3"
 
 S = "${WORKDIR}/git"
 
