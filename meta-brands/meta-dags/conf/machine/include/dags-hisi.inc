@@ -36,6 +36,7 @@ PREFERRED_PROVIDER_virtual/kernel = "linux-dags"
 PREFERRED_PROVIDER_virtual/egl = "dags-opengl-${SOC_FAMILY}"
 PREFERRED_PROVIDER_virtual/libgles1 = "dags-opengl-${SOC_FAMILY}"
 PREFERRED_PROVIDER_virtual/libgles2 = "dags-opengl-${SOC_FAMILY}"
+PREFERRED_RPROVIDER_aio-grab = "dags-grab-${SOC_FAMILY}"
 
 PREFERRED_PROVIDER_virtual/blindscan-dvbs = "dags-blindscan-utils-${SOC_FAMILY}"
 
