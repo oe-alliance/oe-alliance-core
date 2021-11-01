@@ -2,8 +2,8 @@ SUMMARY = "Compatibility for packages that link to libcrypto or libssl 1.0.0"
 
 require conf/license/license-gplv2.inc
 
-RDEPENDS:${PN} = "libcrypto libssl"
-PV = "1.1"
+RDEPENDS:${PN} = "libcrypto10 libssl10"
+PV = "1.2"
 
 RREPLACES:${PN} = "libcrypto1.0.0 libssl1.0.0"
 RCONFLICTS:${PN} = "libcrypto1.0.0 libssl1.0.0"
