@@ -15,11 +15,11 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 DEPENDS = "hostperl-runtime-native"
 DEPENDS:append:class-target = " openssl-native"
 
-PROVIDES += "libcrypto libssl openssl-conf openssl"
-RPROVIDES:libcrypto10 ="libcrypto"
-RPROVIDES:libssl10 ="libssl"
-RPROVIDES:openssl-conf10 ="openssl-conf"
-RPROVIDES:${PN} ="openssl"
+PROVIDES += "libcrypto1.0.2 libssl1.0.2 openssl-conf1.0.2 openssl1.0.2"
+RPROVIDES:libcrypto10 ="libcrypto1.0.2"
+RPROVIDES:libssl10 ="libssl1.0.2"
+RPROVIDES:openssl-conf10 ="openssl-conf1.0.2"
+RPROVIDES:${PN} ="openssl1.0.2"
 
 SRC_URI = "http://www.openssl.org/source/openssl-${PV}.tar.gz \
            file://run-ptest \
@@ -271,6 +271,14 @@ do_install () {
 	    rm -f $f
 	    ln -s openssl10-$ln_f $(dirname $f)/openssl10-$(basename $f)
 	done
+
+	# Get rid of everything except the bare .so files. We don't want anything
+	# to link to this version ever!
+	rm -rf ${D}${libdir}/ssl ${D}${includedir} ${D}${bindir} ${D}/${libdir}/pkgconfig ${D}${datadir}
+	rm -f ${D}${base_libdir}/*.a ${D}${base_libdir}/*.la
+	rm -f ${D}/${libdir}/*.a ${D}/${libdir}/*.la
+	rm -f ${D}${base_libdir}/*.so ${D}${libdir}/*.so
+	rm -rf ${D}${libdir}/engines
 }
 
 do_install:append:class-native () {

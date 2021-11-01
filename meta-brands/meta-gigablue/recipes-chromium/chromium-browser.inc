@@ -5,15 +5,15 @@ LICENSE = "CLOSED"
 require conf/license/license-close.inc
 PACKAGE_ARCH := "${MACHINE_ARCH}"
 
-PV = "1.0"
+PV = "1.1"
 PR = "${SRCDATE}"
 SRC_URI = "http://source.mynonpublic.com/gigablue/chromium/chromium-gigablue-${MACHINE}-${SRCDATE}.zip"
 
 # Added very old NSS version need only for vuplus
 PREFERRED_VERSION_nss = "3.17.3"
 
-DEPENDS = "nss"
-RDEPENDS:${PN} = "nspr nss libxslt libcurl libudev"
+DEPENDS = "nss openssl10"
+RDEPENDS:${PN} = "libcrypto10 libssl10 nspr nss libxslt libcurl libudev"
 RDEPENDS:${PN} += "gb-v3ddriver-${MACHINE}"
 
 do_install() {
