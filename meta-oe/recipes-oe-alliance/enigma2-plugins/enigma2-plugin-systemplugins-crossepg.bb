@@ -15,7 +15,7 @@ PV = "0.8.7+gitr${SRCPV}"
 PKGV = "0.8.7+gitr${GITPKGV}"
 PR = "r0"
 
-SRC_URI = "git://github.com/oe-alliance/e2openplugin-CrossEPG.git;protocol=git"
+SRC_URI = "git://github.com/oe-alliance/e2openplugin-CrossEPG.git;protocol=https"
 
 inherit python-dir
 

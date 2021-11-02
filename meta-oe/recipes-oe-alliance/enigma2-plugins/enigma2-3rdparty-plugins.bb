@@ -13,7 +13,7 @@ PV = "${IMAGE_VERSION}+gitr${SRCPV}"
 PKGV = "${IMAGE_VERSION}+gitr${GITPKGV}"
 PR = "r296"
 
-SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=git"
+SRC_URI="git://github.com/oe-alliance/3rdparty-plugins.git;protocol=https"
 
 EXTRA_OECONF = " \
     BUILD_SYS=${BUILD_SYS} \

@@ -10,7 +10,7 @@ inherit gitpkgv
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
 
-SRC_URI="git://github.com/oe-alliance/aio-grab.git;protocol=git"
+SRC_URI="git://github.com/oe-alliance/aio-grab.git;protocol=https"
 
 S = "${WORKDIR}/git"
 

@@ -14,7 +14,7 @@ PV = "2.8.4+git${SRCPV}"
 PKGV = "2.8.4+git${GITPKGV}"
 PR = "r0"
 
-SRC_URI = "git://github.com/oe-alliance/e2openplugin-${MODULE}.git;protocol=git \
+SRC_URI = "git://github.com/oe-alliance/e2openplugin-${MODULE}.git;protocol=https \
         file://LICENSE.GPLv2"
 
 S = "${WORKDIR}/git"

@@ -9,7 +9,7 @@ DEPENDS = "freetype"
 
 inherit gitpkgv
 
-SRC_URI = "git://github.com/oe-alliance/e2plugins.git;protocol=git"
+SRC_URI = "git://github.com/oe-alliance/e2plugins.git;protocol=https"
 
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"

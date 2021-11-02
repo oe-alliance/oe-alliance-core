@@ -14,7 +14,7 @@ PV = "${IMAGE_VERSION}+git${SRCPV}"
 PKGV = "${IMAGE_VERSION}+git${GITPKGV}"
 PR = "r4"
 
-SRC_URI = "git://github.com/OpenViX/skins.git;protocol=git"
+SRC_URI = "git://github.com/OpenViX/skins.git;protocol=https"
 
 DEPENDS += "enigma2 font-roboto-enigma font-valis-hd enigma2-plugin-extensions-yahooweather "
 

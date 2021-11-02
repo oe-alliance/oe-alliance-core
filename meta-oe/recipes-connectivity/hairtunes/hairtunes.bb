@@ -12,7 +12,7 @@ SRCREV ?= "${AUTOREV}"
 
 require conf/license/license-gplv2.inc
 
-SRC_URI = "git://github.com/skaman/shairport.git;protocol=git"
+SRC_URI = "git://github.com/skaman/shairport.git;protocol=https"
 
 S = "${WORKDIR}/git"
 

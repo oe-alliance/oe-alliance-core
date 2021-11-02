@@ -13,7 +13,7 @@ PR = "r0"
 
 RDEPENDS_${PN} = "enigma2-plugin-skincomponents-novum enigma2-plugin-systemplugins-weathercomponenthandler"
 
-SRC_URI = "git://github.com/oe-alliance/oe-alliance-skins.git;protocol=git"
+SRC_URI = "git://github.com/oe-alliance/oe-alliance-skins.git;protocol=https"
 
 FILES_${PN} = "/usr/share/enigma2/myNOVUM_HD2"
 

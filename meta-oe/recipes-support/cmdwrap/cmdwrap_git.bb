@@ -9,7 +9,7 @@ PV = "2.0+git${SRCPV}"
 PKGV = "2.0+git${GITPKGV}"
 PR = "r0"
 
-SRC_URI = "git://github.com/oe-mirrors/e2iplayer-deps.git;protocol=git"
+SRC_URI = "git://github.com/oe-mirrors/e2iplayer-deps.git;protocol=https"
 SRCREV = "${AUTOREV}"
 
 S = "${WORKDIR}/git/cmdwrap"

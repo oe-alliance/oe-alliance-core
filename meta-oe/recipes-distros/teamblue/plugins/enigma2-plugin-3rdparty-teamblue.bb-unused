@@ -10,7 +10,7 @@ SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
 PR = "r0"
-SRC_URI="git://github.com/teamblue/teamBlue-3rdpart.git;protocol=git"
+SRC_URI="git://github.com/teamblue/teamBlue-3rdpart.git;protocol=https"
 
 EXTRA_OECONF = " \
     BUILD_SYS=${BUILD_SYS} \

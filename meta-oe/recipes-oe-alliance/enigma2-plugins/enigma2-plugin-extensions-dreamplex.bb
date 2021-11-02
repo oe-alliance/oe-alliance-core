@@ -13,7 +13,7 @@ PR = "r0"
 DEPENDS = "enigma2 python"
 RDEPENDS_${PN} = "gstreamer1.0-plugins-bad-hls curl mjpegtools python-ctypes libshowiframe0"
 
-SRC_URI = "git://github.com/DonDavici/DreamPlex.git;protocol=git"
+SRC_URI = "git://github.com/DonDavici/DreamPlex.git;protocol=https"
 
 EXTRA_OECONF = " \
     BUILD_SYS=${BUILD_SYS} \

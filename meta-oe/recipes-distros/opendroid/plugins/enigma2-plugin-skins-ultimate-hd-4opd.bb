@@ -11,7 +11,7 @@ PKGV = "0.0.6+git${GITPKGV}"
 VER="0.0.6"
 
 
-SRC_URI="git://github.com/stein17/Skins-for-openOPD.git;protocol=git"
+SRC_URI="git://github.com/stein17/Skins-for-openOPD.git;protocol=https"
 
 FILES_${PN} = "${libdir} /usr/share"
 

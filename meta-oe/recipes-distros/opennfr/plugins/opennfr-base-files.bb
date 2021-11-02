@@ -10,7 +10,7 @@ SRCREV = "${AUTOREV}"
 SRC_URI = ""
 
 SRC_URI_append_mipsel = "git://github.com/carlo0815/openNFR-base.git" 
-SRC_URI_append_sh4 = "git://github.com/carlo0815/openNFR-base.git;protocol=git;branch=sh4" 
+SRC_URI_append_sh4 = "git://github.com/carlo0815/openNFR-base.git;protocol=https;branch=sh4" 
 
 FILES_${PN} = "/*"
 

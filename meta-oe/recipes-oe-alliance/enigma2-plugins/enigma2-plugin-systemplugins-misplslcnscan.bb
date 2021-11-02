@@ -15,7 +15,7 @@ PR = "r1"
 
 DEPENDS = "python"
 
-SRC_URI = "git://github.com/oe-alliance/MisPlsLcnScan.git;protocol=git"
+SRC_URI = "git://github.com/oe-alliance/MisPlsLcnScan.git;protocol=https"
 
 EXTRA_OECONF = " \
     BUILD_SYS=${BUILD_SYS} \

@@ -11,7 +11,7 @@ VER="1.6"
 PR = "r5"
 
 
-SRC_URI="git://github.com/opendroid-Team/Skins-for-openOPD.git;protocol=git"
+SRC_URI="git://github.com/opendroid-Team/Skins-for-openOPD.git;protocol=https"
 
 FILES_${PN} = "/"
 

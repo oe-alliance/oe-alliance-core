@@ -16,7 +16,7 @@ PV = "0.0+git${SRCPV}"
 PKGV = "0.0+git${GITPKGV}"
 PR = "r1"
 
-SRC_URI = "git://github.com/openatv/skin-parts.git;protocol=git"
+SRC_URI = "git://github.com/openatv/skin-parts.git;protocol=https"
 
 # openatv-skinparts is an empty package, dependencies are avoided by do_split_packages( [...] extra_depends='')
 ALLOW_EMPTY_${PN} = "1"

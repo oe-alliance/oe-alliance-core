@@ -14,7 +14,7 @@ PR = "r1"
 
 PACKAGES = "${EPSM}-youplex-blue ${EPSM}-youplex-red ${EPSM}-youplex-green ${EPSM}-youplex-purple ${EPSM}-plex-experience"
 
-SRC_URI = "git://github.com/OpenViX/DreamPlexSkins.git;protocol=git"
+SRC_URI = "git://github.com/OpenViX/DreamPlexSkins.git;protocol=https"
 
 FILES_${EPSM}-youplex-blue = "/usr/lib/enigma2/python/Plugins/Extensions/DreamPlex/skins/YouPlex-Blue"
 FILES_${EPSM}-youplex-red = "/usr/lib/enigma2/python/Plugins/Extensions/DreamPlex/skins/YouPlex-Red"

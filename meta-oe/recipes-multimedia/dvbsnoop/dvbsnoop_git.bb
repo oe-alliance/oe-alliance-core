@@ -11,7 +11,7 @@ SRCREV = "${AUTOREV}"
 PV = "1.4.55+git${SRCPV}"
 PKGV = "1.4.55+git${GITPKGV}"
 
-SRC_URI = "git://github.com/OpenVisionE2/dvbsnoop.git;protocol=git"
+SRC_URI = "git://github.com/OpenVisionE2/dvbsnoop.git;protocol=https"
 
 S = "${WORKDIR}/git"
 

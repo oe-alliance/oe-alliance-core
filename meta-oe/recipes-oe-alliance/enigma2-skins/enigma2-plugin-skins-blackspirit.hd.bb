@@ -13,7 +13,7 @@ VER="0.60rc2"
 
 RDEPENDS_${PN} = "enigma2-plugin-systemplugins-extnumberzap"
 
-SRC_URI="git://github.com/DeadEyE-OpenATV/BlackSpirit.HD.git;protocol=git"
+SRC_URI="git://github.com/DeadEyE-OpenATV/BlackSpirit.HD.git;protocol=https"
 
 FILES_${PN} = "/usr/*"
 
