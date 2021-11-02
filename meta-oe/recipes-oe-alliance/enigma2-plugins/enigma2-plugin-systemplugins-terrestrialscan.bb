@@ -13,7 +13,7 @@ PV = "${IMAGE_VERSION}+git${SRCPV}"
 PKGV = "${IMAGE_VERSION}+git${GITPKGV}"
 PR = "r1"
 
-SRC_URI = "git://github.com/oe-alliance/TerrestrialScan.git;protocol=git"
+SRC_URI = "git://github.com/oe-alliance/TerrestrialScan.git;protocol=https"
 
 EXTRA_OECONF = " \
     BUILD_SYS=${BUILD_SYS} \

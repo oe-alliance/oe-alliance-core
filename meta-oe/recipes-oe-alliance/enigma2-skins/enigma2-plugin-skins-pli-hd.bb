@@ -10,7 +10,7 @@ PKGV = "0.1+git${GITPKGV}"
 PR = "r0"
 inherit allarch
 
-SRC_URI = "git://github.com/littlesat/skin-PLiHD.git;protocol=git"
+SRC_URI = "git://github.com/littlesat/skin-PLiHD.git;protocol=https"
 
 FILES:${PN} = "/usr/share/enigma2/"
 

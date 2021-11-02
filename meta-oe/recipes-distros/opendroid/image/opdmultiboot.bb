@@ -14,7 +14,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 DEPENDS = "freetype"
 
-SRC_URI = "git://github.com/formiano/opdmultiboot.git;protocol=git"
+SRC_URI = "git://github.com/formiano/opdmultiboot.git;protocol=https"
 
 inherit autotools-brokensep pkgconfig
 

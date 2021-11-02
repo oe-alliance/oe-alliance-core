@@ -13,7 +13,7 @@ PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
 PR = "r1"
 
-SRC_URI = "git://github.com/openhbbtvbrowser/openhbbtvbrowser.git;protocol=git \
+SRC_URI = "git://github.com/openhbbtvbrowser/openhbbtvbrowser.git;protocol=https \
     ${@bb.utils.contains_any("SOC_FAMILY", "hisi3716mv430 hisi3798mv200 hisi3716mv410 hisi3798mv310", "file://bg_transparent.patch", "", d)} \
     ${@bb.utils.contains_any("MACHINE_FEATURES", "qtevent1", "file://0001-use-event1.patch", "", d)} \
 "

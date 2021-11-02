@@ -16,7 +16,7 @@ RCONFLICTS:${PN} += "enigma2-plugin-skins-kravenfhd enigma2-plugin-skins-kravenv
 RREPLACES:${PN} += "enigma2-plugin-skins-kravenfhd enigma2-plugin-skins-kravenvb"
 RPROVIDES:${PN} += "enigma2-plugin-skins-kravenfhd enigma2-plugin-skins-kravenvb"
 
-SRC_URI = "git://github.com/oerlgrey/KravenHD.git;protocol=git;branch=python3"
+SRC_URI = "git://github.com/oerlgrey/KravenHD.git;protocol=https;branch=python3"
 
 FILES:${PN} = "/usr/*"
 

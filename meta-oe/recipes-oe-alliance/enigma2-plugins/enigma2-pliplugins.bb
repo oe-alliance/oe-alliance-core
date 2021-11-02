@@ -21,7 +21,7 @@ PV = "2.0+git${SRCPV}"
 PKGV = "2.0+git${GITPKGV}"
 PR = "r0"
 
-SRC_URI = "git://github.com/oe-alliance/openpli-plugins.git;protocol=git"
+SRC_URI = "git://github.com/oe-alliance/openpli-plugins.git;protocol=https"
 
 S = "${WORKDIR}/git"
 

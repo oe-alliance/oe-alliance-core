@@ -11,7 +11,7 @@ SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
 
-SRC_URI = "git://github.com/openatv/autorestore.git;protocol=git"
+SRC_URI = "git://github.com/openatv/autorestore.git;protocol=https"
 S = "${WORKDIR}/git/src"
 
 RDEPENDS:${PN} += "bash"

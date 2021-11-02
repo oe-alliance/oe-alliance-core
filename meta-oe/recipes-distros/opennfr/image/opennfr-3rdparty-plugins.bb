@@ -10,7 +10,7 @@ SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
 PR = "r39"
-SRC_URI="git://github.com/carlo0815/3rdparty-plugins.git;protocol=git;branch=4.4"
+SRC_URI="git://github.com/carlo0815/3rdparty-plugins.git;protocol=https;branch=4.4"
 
 EXTRA_OECONF = " \
     BUILD_SYS=${BUILD_SYS} \

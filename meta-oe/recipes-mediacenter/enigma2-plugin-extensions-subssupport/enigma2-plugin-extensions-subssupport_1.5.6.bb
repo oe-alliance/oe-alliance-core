@@ -12,7 +12,7 @@ SRCREV = "${AUTOREV}"
 PV = "1.5.6+git${SRCPV}"
 PKGV = "1.5.6+git${GITPKGV}"
 VER = "1.5.6"
-SRC_URI = "git://github.com/oe-mirrors/subssupport;protocol=git;branch=master"
+SRC_URI = "git://github.com/oe-mirrors/subssupport;protocol=https;branch=master"
 
 S = "${WORKDIR}/git"
 

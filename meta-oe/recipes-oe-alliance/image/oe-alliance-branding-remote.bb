@@ -17,7 +17,7 @@ BRANCH="master"
 do_configure[nostamp] = "1"
 
 FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
-SRC_URI="git://github.com/oe-mirrors/branding-module.git;protocol=git;branch=${BRANCH}"
+SRC_URI="git://github.com/oe-mirrors/branding-module.git;protocol=https;branch=${BRANCH}"
 #SRC_URI_append_openatv=" \
 #	file://openatv_mappings.patch \
 #"

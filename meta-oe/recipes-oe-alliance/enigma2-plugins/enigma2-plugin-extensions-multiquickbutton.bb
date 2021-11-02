@@ -14,7 +14,7 @@ PV = "2.8.4+git${SRCPV}"
 PKGV = "2.8.4+git${GITPKGV}"
 PR = "r0"
 
-SRC_URI = "git://github.com/oe-alliance/e2openplugin-MultiQuickButton.git;protocol=git;branch=python3 \
+SRC_URI = "git://github.com/oe-alliance/e2openplugin-MultiQuickButton.git;protocol=https;branch=python3 \
         file://LICENSE.GPLv2"
 
 S = "${WORKDIR}/git"

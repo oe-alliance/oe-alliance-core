@@ -13,7 +13,7 @@ SRCREV = "${AUTOREV}"
 PR = "r2"
 VER ?= ""
 
-SRC_URI = "git://github.com/oe-alliance/e2plugins.git;protocol=git;branch=python3"
+SRC_URI = "git://github.com/oe-alliance/e2plugins.git;protocol=https;branch=python3"
 
 RDEPENDS:${PN}  = "qtwebkit ${PYTHON_PN}-netifaces" 
 

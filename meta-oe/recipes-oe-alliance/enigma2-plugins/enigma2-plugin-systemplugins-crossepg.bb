@@ -15,7 +15,7 @@ PV = "0.8.9+gitr${SRCPV}"
 PKGV = "0.8.9+gitr${GITPKGV}"
 PR = "r2"
 
-SRC_URI = "git://github.com/oe-alliance/e2openplugin-CrossEPG.git;protocol=git;branch=dev \
+SRC_URI = "git://github.com/oe-alliance/e2openplugin-CrossEPG.git;protocol=https;branch=dev \
         file://fix-build-with-fno-common.patch \
         file://use-python-3.9-path.patch"
 

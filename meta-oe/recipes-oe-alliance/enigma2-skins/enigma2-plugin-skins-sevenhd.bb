@@ -13,7 +13,7 @@ VER="3.6.83"
 
 RDEPENDS:${PN} = "${PYTHON_PN}-requests ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-subprocess", "", d)} ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-imaging", "${PYTHON_PN}-pillow", d)} enigma2-plugin-systemplugins-mphelp ${PYTHON_PN}-lxml"
 
-SRC_URI="git://github.com/openatv/SevenHD.git;protocol=git"
+SRC_URI="git://github.com/openatv/SevenHD.git;protocol=https"
 
 FILES:${PN} = "/usr/*"
 

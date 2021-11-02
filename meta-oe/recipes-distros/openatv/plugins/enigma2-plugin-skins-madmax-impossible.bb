@@ -11,7 +11,7 @@ PKGV = "${GITPKGVTAG}"
 
 RDEPENDS:${PN} = "enigma2-plugin-systemplugins-weathercomponenthandler, enigma2-plugin-skincomponents-weathercomponent, enigma2-plugin-extensions-weatherplugin"
 
-SRC_URI="git://github.com/m4dhouse/MadMax-Atv.git;protocol=git;branch=main"
+SRC_URI="git://github.com/m4dhouse/MadMax-Atv.git;protocol=https;branch=main"
 
 FILES:${PN} = "${libdir} /usr/share"
 

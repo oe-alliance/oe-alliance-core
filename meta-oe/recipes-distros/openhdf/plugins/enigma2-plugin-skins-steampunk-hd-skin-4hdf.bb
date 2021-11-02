@@ -11,7 +11,7 @@ PKGV = "1.1+git${GITPKGV}"
 
 RDEPENDS:${PN} = "enigma2-plugin-systemplugins-weathercomponenthandler, enigma2-plugin-skincomponents-weathercomponent"
 
-SRC_URI="git://github.com/stein17/Skins-for-openHDF.git;protocol=git"
+SRC_URI="git://github.com/stein17/Skins-for-openHDF.git;protocol=https"
 
 S = "${WORKDIR}/git/Steampunk-HD-Skin-4HDF"
 

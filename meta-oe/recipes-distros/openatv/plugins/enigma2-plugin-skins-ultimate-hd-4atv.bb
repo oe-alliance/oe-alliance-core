@@ -12,7 +12,7 @@ VER="1.1"
 
 RDEPENDS:${PN} = "enigma2-plugin-systemplugins-weathercomponenthandler, enigma2-plugin-skincomponents-weathercomponent"
 
-SRC_URI="git://github.com/stein17/Skins-for-openATV.git;protocol=git;branch=python3"
+SRC_URI="git://github.com/stein17/Skins-for-openATV.git;protocol=https;branch=python3"
 
 FILES:${PN} = "/"
 

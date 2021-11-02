@@ -3,8 +3,8 @@ require conf/license/license-close.inc
 
 SRCREV = "46c66487a85cd05a4acbd5eb4828f72783d1be4c"
 
-SRC_URI = "git://github.com/mdamt/linux-firmware.git;protocol=git"
-SRC_URI = "git://github.com/BjornLee/linux-firmware.git;protocol=git"
+SRC_URI = "git://github.com/mdamt/linux-firmware.git;protocol=https"
+SRC_URI = "git://github.com/BjornLee/linux-firmware.git;protocol=https"
 
 S = "${WORKDIR}/git"
 

@@ -14,7 +14,7 @@ PKGV = "${IMAGE_VERSION}+git${GITPKGV}"
 VER ="${IMAGE_VERSION}"
 PR = "r1"
 
-SRC_URI="git://github.com/oerlgrey/TeamBlueHD.git;protocol=git"
+SRC_URI="git://github.com/oerlgrey/TeamBlueHD.git;protocol=https"
 
 S = "${WORKDIR}/git"
 

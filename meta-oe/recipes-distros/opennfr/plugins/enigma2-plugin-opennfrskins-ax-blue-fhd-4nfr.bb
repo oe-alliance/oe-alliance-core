@@ -12,7 +12,7 @@ VER="3.2"
 
 RDEPENDS:${PN} = "enigma2-plugin-systemplugins-weathercomponenthandler, enigma2-plugin-skincomponents-weathercomponent"
 
-SRC_URI="git://github.com/stein17/Skins-for-openNFR.git;protocol=git;branch=6.5"
+SRC_URI="git://github.com/stein17/Skins-for-openNFR.git;protocol=https;branch=6.5"
 
 FILES:${PN} = "${libdir} /usr/share"
 

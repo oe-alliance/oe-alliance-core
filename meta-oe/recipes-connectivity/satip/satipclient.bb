@@ -8,12 +8,12 @@ PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
 
 SRC_URI = " \
-    git://github.com/oe-alliance/satip-client.git;protocol=git;branch=mis \
+    git://github.com/oe-alliance/satip-client.git;protocol=https;branch=mis \
     file://satipclient.sh \
 "
 
 SRC_URI:arm = " \
-    git://github.com/oe-alliance/satip-client.git;protocol=git;branch=mis \
+    git://github.com/oe-alliance/satip-client.git;protocol=https;branch=mis \
     file://satipclient.sh \
     file://0001-auto-detect-and-avoid-ioctl-conflicts.patch \
 "

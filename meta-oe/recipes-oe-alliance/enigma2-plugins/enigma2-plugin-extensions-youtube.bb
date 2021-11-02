@@ -13,7 +13,7 @@ SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
 
-SRC_URI = "git://github.com/Taapat/enigma2-plugin-youtube.git;protocol=git"
+SRC_URI = "git://github.com/Taapat/enigma2-plugin-youtube.git;protocol=https"
 
 S="${WORKDIR}/git"
 

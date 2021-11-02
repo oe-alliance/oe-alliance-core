@@ -18,7 +18,7 @@ PV = "${IMAGE_VERSION}+git${SRCPV}"
 PKGV = "${IMAGE_VERSION}+git${GITPKGV}"
 PR = "r6"
 
-SRC_URI="git://github.com/OpenViX/vix-core.git;protocol=git;branch=master"
+SRC_URI="git://github.com/OpenViX/vix-core.git;protocol=https;branch=master"
 
 S = "${WORKDIR}/git"
 
