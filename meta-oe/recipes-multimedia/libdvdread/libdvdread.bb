@@ -9,4 +9,4 @@ CFLAGS_append_sh4 += "-std=gnu11"
 
 inherit autotools pkgconfig git-project
 
-SRC_URI = "git://github.com/xbmc/libdvdread.git"
+SRC_URI = "git://github.com/xbmc/libdvdread.git;protocol=https"

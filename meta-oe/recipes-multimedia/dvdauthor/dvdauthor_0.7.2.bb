@@ -11,7 +11,7 @@ SRCREV = "${AUTOREV}"
 PV = "0.7.2+git${SRCPV}"
 PKGV = "0.7.2+git${GITPKGV}"
 
-SRC_URI = "git://github.com/ldo/dvdauthor.git \
+SRC_URI = "git://github.com/ldo/dvdauthor.git;protocol=https \
         file://dont-build-docs.patch"
 
 S = "${WORKDIR}/git"

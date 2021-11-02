@@ -11,7 +11,7 @@ SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
 
-SRC_URI = "git://github.com/jmaggard10/nss-llmnr.git"
+SRC_URI = "git://github.com/jmaggard10/nss-llmnr.git;protocol=https"
 
 S = "${WORKDIR}/git"
 

@@ -10,7 +10,7 @@ SRCREV = "${AUTOREV}"
 PV = "2.21.0+git${SRCPV}"
 
 SRC_URI = " \
-           git://github.com/oe-mirrors/shellinabox.git;branch=master \
+           git://github.com/oe-mirrors/shellinabox.git;protocol=https;branch=master \
            file://0002-Enforce-localhost-only.patch \
            file://styles.css \
            file://shellinabox.service \

@@ -12,7 +12,7 @@ PKGV = "1+git${GITPKGV}"
 BRANCH = "master"
 PR = "r1"
 
-SRC_URI = "git://github.com/Taapat/enigma2-plugin-blurayplayer.git;branch=${BRANCH}"
+SRC_URI = "git://github.com/Taapat/enigma2-plugin-blurayplayer.git;protocol=https;branch=${BRANCH}"
 
 S = "${WORKDIR}/git"
 

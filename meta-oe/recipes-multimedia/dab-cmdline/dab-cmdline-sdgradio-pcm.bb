@@ -14,7 +14,7 @@ PV = "1.3+git${SRCPV}"
 PKGV = "1.3+git${GITPKGV}"
 PR = "r0"
 
-SRC_URI = "git://github.com/satdreamgr/dab-cmdline.git;branch=sdgradio"
+SRC_URI = "git://github.com/satdreamgr/dab-cmdline.git;protocol=https;branch=sdgradio"
 
 NEON_cube =" "
 NEON = "-DNEON_AVAILABLE=ON"

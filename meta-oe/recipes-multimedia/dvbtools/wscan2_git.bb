@@ -11,7 +11,7 @@ SRCREV = "${AUTOREV}"
 PV = "1.0.5+git${SRCPV}"
 PKGV = "1.0.5+git${GITPKGV}"
 
-SRC_URI = "git://github.com/stefantalpalaru/w_scan2;branch=master"
+SRC_URI = "git://github.com/stefantalpalaru/w_scan2;protocol=https;branch=master"
 
 S = "${WORKDIR}/git"
 

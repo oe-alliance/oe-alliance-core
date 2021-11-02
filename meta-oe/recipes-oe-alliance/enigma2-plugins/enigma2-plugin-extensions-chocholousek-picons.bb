@@ -16,7 +16,7 @@ PV = "${BPV}+gitr${SRCPV}"
 PKGV = "${BPV}+gitr${SRCPV}"
 PR = "r1"
 
-SRC_URI = "git://github.com/s3n0/e2plugins"
+SRC_URI = "git://github.com/s3n0/e2plugins;protocol=https"
 
 S = "${WORKDIR}/git/ChocholousekPicons/src"
 

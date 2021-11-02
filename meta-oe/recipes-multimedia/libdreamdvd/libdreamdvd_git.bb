@@ -10,7 +10,7 @@ SRCREV = "${AUTOREV}"
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
 
-SRC_URI = "git://github.com/mirakels/libdreamdvd.git"
+SRC_URI = "git://github.com/mirakels/libdreamdvd.git;protocol=https"
 
 SRC_URI_append_sh4 = "\
     file://libdreamdvd-1.0-support_sh4.patch;patch=1 \
