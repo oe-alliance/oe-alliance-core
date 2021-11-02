@@ -20,7 +20,7 @@ PROVIDES =+ "enigma2-plugin-skins-metrix-spa-fhd-icons enigma2-plugin-skins-metr
 RPROVIDES:enigma2-plugin-skins-metrix-spa-fhd-icons += "enigma2-plugin-skins-metrix-spa-fhd-icons"
 RPROVIDES:enigma2-plugin-skins-metrix-spa-uhd-icons += "enigma2-plugin-skins-metrix-spa-uhd-icons"
 
-SRC_URI="git://github.com/openspa/MetrixHD.git"
+SRC_URI="git://github.com/openspa/MetrixHD.git;protocol=https"
 
 S = "${WORKDIR}/git"
 

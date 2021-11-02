@@ -11,7 +11,7 @@ PV = "1.1.+git${SRCPV}"
 PKGV = "1.1.+git${GITPKGV}"
 PR = "r0"
 
-SRC_URI="git://github.com/betonme/e2openplugin-InfoBarTunerState.git;branch=python3"
+SRC_URI="git://github.com/betonme/e2openplugin-InfoBarTunerState.git;branch=python3;protocol=https"
 
 S = "${WORKDIR}/git"
 

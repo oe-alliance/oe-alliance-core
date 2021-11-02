@@ -13,7 +13,7 @@ PKGV = "1.0"
 VER ="1.0"
 PR = "r1"
 
-SRC_URI="git://github.com/pixbox-hdf/MediaPortalSkins.git"
+SRC_URI="git://github.com/pixbox-hdf/MediaPortalSkins.git;protocol=https"
 
 S = "${WORKDIR}/git/MetrixHD"
 

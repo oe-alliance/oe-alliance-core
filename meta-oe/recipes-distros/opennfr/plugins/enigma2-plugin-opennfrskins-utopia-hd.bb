@@ -15,7 +15,7 @@ PR = "r7"
 
 RDEPENDS_${PN} = "enigma2-plugin-systemplugins-weathercomponenthandler"
 
-SRC_URI="git://github.com/carlo0815/openNFR-skin.git;branch=6.5"
+SRC_URI="git://github.com/carlo0815/openNFR-skin.git;branch=6.5;protocol=https"
 
 S = "${WORKDIR}/git"
 

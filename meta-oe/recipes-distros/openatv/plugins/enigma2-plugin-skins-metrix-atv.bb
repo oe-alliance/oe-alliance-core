@@ -21,7 +21,7 @@ PROVIDES =+ "enigma2-plugin-skins-metrix-atv-fhd-icons enigma2-plugin-skins-metr
 RPROVIDES:enigma2-plugin-skins-metrix-atv-fhd-icons += "enigma2-plugin-skins-metrix-atv-fhd-icons"
 RPROVIDES:enigma2-plugin-skins-metrix-atv-uhd-icons += "enigma2-plugin-skins-metrix-atv-uhd-icons"
 RPROVIDES:enigma2-plugin-skins-metrix-atv-weather-icons += "enigma2-plugin-skins-metrix-atv-weather-icons"
-SRC_URI="git://github.com/openatv/MetrixHD.git;branch=dev"
+SRC_URI="git://github.com/openatv/MetrixHD.git;branch=dev;protocol=https"
 
 S = "${WORKDIR}/git"
 
