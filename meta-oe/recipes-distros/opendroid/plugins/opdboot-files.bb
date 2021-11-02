@@ -7,7 +7,7 @@ PR = "r4"
 
 SRCREV = "${AUTOREV}"
 
-SRC_URI = "git://github.com/opendroid-Team/OPD-boot-files.git"
+SRC_URI = "git://github.com/opendroid-Team/OPD-boot-files.git;protocol=https"
 
 FILES:${PN} += "${libdir}/*"
 

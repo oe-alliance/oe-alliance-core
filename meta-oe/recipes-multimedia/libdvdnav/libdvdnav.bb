@@ -9,4 +9,4 @@ SRCREV = "${AUTOREV}"
 
 inherit autotools pkgconfig git-project
 
-SRC_URI = "git://github.com/xbmc/libdvdnav.git"
+SRC_URI = "git://github.com/xbmc/libdvdnav.git;protocol=https"

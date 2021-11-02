@@ -7,7 +7,7 @@ PACKAGE_ARCH := "${MACHINE_ARCH}"
 
 SRCREV = "${AUTOREV}"
 
-SRC_URI = "git://github.com/carlo0815/openNFR-settings.git"
+SRC_URI = "git://github.com/carlo0815/openNFR-settings.git;protocol=https"
 
 FILES:${PN} = "/etc/* /etc/init.d/*"
 

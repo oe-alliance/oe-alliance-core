@@ -15,7 +15,7 @@ VER ="1.53"
 
 inherit gitpkgv pkgconfig
 
-SRC_URI = "git://github.com/emulatorE2/snes_init.git"
+SRC_URI = "git://github.com/emulatorE2/snes_init.git;protocol=https"
 
 S = "${WORKDIR}/git"
 

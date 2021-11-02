@@ -4,7 +4,7 @@ LICENSE = "CLOSED"
 require conf/license/license-close.inc
 
 SRCREV = "${AUTOREV}"
-SRC_URI = "git://github.com/atvcaptain/linux-firmware.git;branch=main"
+SRC_URI = "git://github.com/atvcaptain/linux-firmware.git;protocol=https;branch=main"
 
 S = "${WORKDIR}/git"
 

@@ -12,7 +12,7 @@ PKGV = "1.0+git${GITPKGV}"
 VER ="1.0"
 PR = "r0"
 
-SRC_URI = "git://github.com/norhap/Turquoise-HD.git"
+SRC_URI = "git://github.com/norhap/Turquoise-HD.git;protocol=https"
 S = "${WORKDIR}/git"
 
 FILES:${PN} += " ${datadir}/enigma2 ${libdir}/enigma2/python/Components/Converter/BTVInfo.pyo ${libdir}/enigma2/python/Components/Converter/BTVDevicesInfo.pyo ${libdir}/enigma2/python/Components/Converter/BTVCpuUsage.pyo ${libdir}/enigma2/python/Components/Converter/BTVRunning14Events.pyo ${libdir}/enigma2/python/Components/Renderer/DRRunningText.pyo ${libdir}/enigma2/python/Components/Renderer/poster.pyo"

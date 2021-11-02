@@ -3,7 +3,7 @@ MAINTAINER = "stein17"
 
 require conf/license/license-gplv2.inc
 
-inherit gitpkgv 
+inherit gitpkgv
 
 SRCREV = "${AUTOREV}"
 PV = "1.1+git${SRCPV}"
@@ -11,7 +11,7 @@ PKGV = "1.1+git${GITPKGV}"
 
 RDEPENDS:${PN} = "enigma2-plugin-systemplugins-weathercomponenthandler, enigma2-plugin-skincomponents-weathercomponent"
 
-SRC_URI = "git://github.com/stein17/Skins-for-openATV.git"
+SRC_URI = "git://github.com/stein17/Skins-for-openATV.git;protocol=https"
 
 S = "${WORKDIR}/git/Steampunk"
 

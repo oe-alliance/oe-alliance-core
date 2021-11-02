@@ -7,8 +7,9 @@ DEPENDS = "enigma2"
 RDEPENDS:${PN} = "enigma2"
 
 SRCREV = "${AUTOREV}"
-SRC_URI = "git://github.com/oe-mirrors/servicehisilicon.git;branch=master"
-SRC_URI:openvix = "git://github.com/OpenViX/servicehisilicon.git;branch=master"
+SRC_URI = "git://github.com/oe-mirrors/servicehisilicon.git;protocol=https;branch=master"
+SRC_URI:openvix = "git://github.com/OpenViX/servicehisilicon.git;protocol=https;branch=master"
+
 S = "${WORKDIR}/git"
 
 inherit autotools gitpkgv ${PYTHON_PN}native pkgconfig ${PYTHON_PN}targetconfig

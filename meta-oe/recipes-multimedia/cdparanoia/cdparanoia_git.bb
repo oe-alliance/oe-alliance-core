@@ -8,7 +8,7 @@ SECTION = "multimedia"
 SRCREV = "${AUTOREV}"
 PV = "10.2+gitr${SRCPV}"
 
-SRC_URI = "git://github.com/oe-mirrors/cdparanoia.git \
+SRC_URI = "git://github.com/oe-mirrors/cdparanoia.git;protocol=https \
      file://fixes10.patch \
      file://Makefile.in.patch \
      file://interface_Makefile.in.patch \
