@@ -54,6 +54,7 @@ do_install:append:libc-musl() {
 }
 
 PACKAGES =+ "${PN}-rmt"
+PACKAGE_NO_LOCALE = "1"
 
 FILES:${PN}-rmt = "${base_sbindir}/rmt*"
 

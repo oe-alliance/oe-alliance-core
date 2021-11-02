@@ -5,6 +5,7 @@ SRC_URI:append = " \
           "
 SRC_URI:append:sh4 = " file://sh4-getrandom.patch"
 
+PACKAGE_NO_LOCALE = "1"
 DEPENDS:remove = "gnutls"
 DEPENDS:append = " openssl"
 EXTRA_OECONF:remove = "--with-ssl=gnutls"
