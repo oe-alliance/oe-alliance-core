@@ -13,7 +13,7 @@ VER ="7.6"
 PR = "r0"
 
 
-SRC_URI="git://github.com/openatv/enigma2-plugin-extensions-cooltvguide.git"
+SRC_URI="git://github.com/openatv/enigma2-plugin-extensions-cooltvguide.git;protocol=https"
 
 S = "${WORKDIR}/git"
 

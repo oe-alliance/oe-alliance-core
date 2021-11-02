@@ -12,7 +12,7 @@ PKGV = "0.0+git${GITPKGV}"
 VER ="0.0"
 PR = "r0"
 
-SRC_URI="git://github.com/openatv/SpecialJump.git"
+SRC_URI="git://github.com/openatv/SpecialJump.git;protocol=https"
 
 S = "${WORKDIR}/git"
 

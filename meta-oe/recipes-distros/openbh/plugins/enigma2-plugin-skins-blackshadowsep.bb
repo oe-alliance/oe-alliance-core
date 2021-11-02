@@ -14,7 +14,7 @@ PKGV = "3.0+git${GITPKGV}"
 VER ="3.0"
 PR = "r2"
 
-SRC_URI="git://github.com/BlackHole/skins.git"
+SRC_URI="git://github.com/BlackHole/skins.git;protocol=https"
 
 S = "${WORKDIR}/git/BlackShadowSE_P"
 

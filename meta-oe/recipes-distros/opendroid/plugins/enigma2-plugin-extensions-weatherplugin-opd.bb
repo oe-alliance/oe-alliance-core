@@ -14,7 +14,7 @@ PKGV = "3.0+git${GITPKGV}"
 VER ="3.0"
 PR = "r1"
 
-SRC_URI="git://github.com/opendroid-Team/enigma2-plugin-extensions-weatherplugin.git"
+SRC_URI="git://github.com/opendroid-Team/enigma2-plugin-extensions-weatherplugin.git;protocol=https"
 
 S = "${WORKDIR}/git"
 

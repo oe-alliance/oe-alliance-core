@@ -17,7 +17,7 @@ PKGV = "1.0+git${GITPKGV}"
 VER ="1.0"
 PR = "r3"
 
-SRC_URI="git://github.com/openhdf/hdftoolbox.git"
+SRC_URI="git://github.com/openhdf/hdftoolbox.git;protocol=https"
 
 S = "${WORKDIR}/git"
 

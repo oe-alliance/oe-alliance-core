@@ -14,7 +14,7 @@ PKGV = "7.0+git${GITPKGV}"
 VER ="7.0"
 PR = "r6"
 
-SRC_URI="git://github.com/opendroid-Team/gioppygio-settings-and-picons.git"
+SRC_URI="git://github.com/opendroid-Team/gioppygio-settings-and-picons.git;protocol=https"
 
 S = "${WORKDIR}/git"
 

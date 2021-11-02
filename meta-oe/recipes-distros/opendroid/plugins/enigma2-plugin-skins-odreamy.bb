@@ -14,7 +14,7 @@ PKGV = "1.1+git${GITPKGV}"
 VER="1.1"
 PR = "r2"
 
-SRC_URI="git://github.com/opendroid-Team/skins-oDreamy.git"
+SRC_URI="git://github.com/opendroid-Team/skins-oDreamy.git;protocol=https"
 FILES_${PN} = "/usr/share ${libdir}"
 
 S = "${WORKDIR}/git"

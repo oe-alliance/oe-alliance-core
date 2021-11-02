@@ -14,7 +14,7 @@ PKGV = "13.8+git${GITPKGV}"
 VER ="13.8"
 PR = "r0"
 
-SRC_URI="git://github.com/opendroid-Team/dFlash.git"
+SRC_URI="git://github.com/opendroid-Team/dFlash.git;protocol=https"
 
 S = "${WORKDIR}/git"
 
