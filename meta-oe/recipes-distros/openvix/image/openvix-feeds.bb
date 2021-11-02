@@ -19,6 +19,7 @@ RRECOMMENDS:${PN} = "\
     enigma2-plugin-extensions-blurayplayer \
     enigma2-skins-openvix \
     enigma2-plugin-skins-vix-turquoise-hd \
+    enigma2-plugin-systemplugins-crossepg \
     oe-alliance-skins \
     openvix-bootlogos-meta \
     openvix-softcams-meta \
