@@ -6,17 +6,7 @@ LIC_FILES_CHKSUM = "file://ifcfg-wlan0;md5=a84acae65af4b2d44d5035aa9f63cd85"
 
 inherit module
 
-SRC_URI = "http://source.mynonpublic.com/rtl8814AU-driver-4.3.21-20170707.zip \
-    file://0001-add-support-kernel-4.15.patch \
-    file://add-linux-4.19-support.patch \
-    file://add-linux-4.20-support.patch \
-    file://add-linux-5.0-support.patch \
-    file://add-linux-5.1-support.patch \
-    file://add-linux-5.2-support.patch \
-    file://add-linux-5.6-support.patch \
-    file://add-linux-5.8-support.patch \
-    file://add-5.15-support.patch \
-"
+SRC_URI = "http://source.mynonpublic.com/rtl8814AU-driver-4.3.21-20211103.zip"
 
 EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR} KDIR=${STAGING_KERNEL_DIR}"
 
@@ -46,6 +36,6 @@ do_install() {
 do_package_qa() {
 }
 
-SRC_URI[md5sum] = "538691f32b98a62c99c32ad80d2d8430"
-SRC_URI[sha256sum] = "e7414ed9495f72ece75435f23f79468a00a8e2697c95916a09a140c5148027c2"
+SRC_URI[md5sum] = "acf7e361f6c1b3a87c5da5befb81cde6"
+SRC_URI[sha256sum] = "d090e8b93d64ed33e96274ef68382643ef4a94d9904f5d68fc1444298e020c75"
 
