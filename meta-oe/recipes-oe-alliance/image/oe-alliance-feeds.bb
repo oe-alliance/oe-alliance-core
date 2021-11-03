@@ -42,6 +42,7 @@ RDEPENDS:${PN} = " \
     enigma2-plugin-extensions-subssupport \
     enigma2-plugin-extensions-xstreamity \
     enigma2-plugin-systemplugins-terrestrialscan \
+    enigma2-plugin-systemplugins-satscanlcn \
     exteplayer3 \
     eplayer5 \
     enigma2-plugin-systemplugins-serviceapp \
