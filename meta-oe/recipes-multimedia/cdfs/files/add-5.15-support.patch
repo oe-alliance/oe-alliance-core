@@ -1,0 +1,23 @@
+diff --git a/utils.c b/utils.c
+index fba4197..935283b 100644
+--- a/utils.c
++++ b/utils.c
+@@ -89,10 +89,18 @@ void cdfs_constructMSFsize(char * result, unsigned length){
+ int ioctl_by_bdev(struct block_device *bdev, unsigned cmd, unsigned long arg)
+ {
+        int res;
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(5, 10, 0)
++       mm_segment_t old_fs = force_uaccess_begin();
++#else
+        mm_segment_t old_fs = get_fs();
+        set_fs(KERNEL_DS);
++#endif
+        res = blkdev_ioctl(bdev, 0, cmd, arg);
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(5, 10, 0)
++       force_uaccess_end(old_fs);
++#else
+        set_fs(old_fs);
++#endif
+        return res;
+ }
+ #endif

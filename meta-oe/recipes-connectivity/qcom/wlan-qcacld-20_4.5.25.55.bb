@@ -27,5 +27,5 @@ python do_package_prepend() {
     d.appendVar('PKGV', d.getVar("KERNEL_VERSION", True).split("-")[0])
 }
 
-SRC_URI[md5sum] = "e6de75ed79be7238fdd0e9fd0bd69100"
-SRC_URI[sha256sum] = "97e65f761c395e3f9d93f8b8ebc9b139763f688614f6fa7ad53e381539eb09ed"
+SRC_URI[md5sum] = "639660ec3ead1dc59e4ca20bfce7b4c9"
+SRC_URI[sha256sum] = "870b0e762e8ee885938eaf7da9dea0b6505a40a0eae7ce8c6409b53e015faa7a"

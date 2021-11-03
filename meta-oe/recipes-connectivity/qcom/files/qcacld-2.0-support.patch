@@ -1,4 +1,4 @@
-From 362dcb01b73bda17d40b6f092811369136197902 Mon Sep 17 00:00:00 2001
+From defc66ff9067a6ebc40153569e2b7bc1256093b8 Mon Sep 17 00:00:00 2001
 From: Jaedon Shin <jaedon.shin@gmail.com>
 Date: Mon, 13 Apr 2020 12:38:41 +0900
 Subject: [PATCH] qcacld-2.0: Make driver compatiable with mainline kernel
@@ -8,11 +8,11 @@ Signed-off-by: Jaedon Shin <jaedon.shin@gmail.com>
  CORE/EPPING/src/epping_txrx.c                 |  4 ++++
  CORE/HDD/inc/wlan_hdd_softap_tx_rx.h          |  4 ++++
  CORE/HDD/inc/wlan_hdd_tx_rx.h                 |  4 ++++
- CORE/HDD/src/wlan_hdd_cfg80211.c              |  6 ++++++
+ CORE/HDD/src/wlan_hdd_cfg80211.c              | 10 ++++++++++
  CORE/HDD/src/wlan_hdd_memdump.c               |  6 ++++++
  CORE/HDD/src/wlan_hdd_softap_tx_rx.c          |  4 ++++
  CORE/HDD/src/wlan_hdd_tx_rx.c                 |  4 ++++
- CORE/SERVICES/BMI/ol_fw.c                     |  7 +++++++
+ CORE/SERVICES/BMI/ol_fw.c                     |  8 ++++++++
  CORE/SERVICES/COMMON/adf/adf_nbuf.c           |  4 ++++
  CORE/SERVICES/COMMON/adf/adf_os_time.h        |  4 ++++
  .../COMMON/adf/linux/adf_os_dma_pvt.h         |  5 +++++
@@ -27,7 +27,7 @@ Signed-off-by: Jaedon Shin <jaedon.shin@gmail.com>
  CORE/VOSS/src/vos_timer.c                     | 20 +++++++++++++++++++
  CORE/VOSS/src/vos_utils.c                     |  7 +++++++
  Kbuild                                        |  5 ++---
- 22 files changed, 148 insertions(+), 3 deletions(-)
+ 22 files changed, 153 insertions(+), 3 deletions(-)
 
 diff --git a/CORE/EPPING/src/epping_txrx.c b/CORE/EPPING/src/epping_txrx.c
 index d63a4cd8e7d3..10c1c35cb4db 100644
@@ -78,7 +78,7 @@ index 2fd820c5886e..cb86442001b9 100644
  /**============================================================================
    @brief hdd_stats() - Function registered with the Linux OS for
 diff --git a/CORE/HDD/src/wlan_hdd_cfg80211.c b/CORE/HDD/src/wlan_hdd_cfg80211.c
-index db43f61aaaac..e5b44cd03ec9 100644
+index 796dfdd39599..4a761321b257 100644
 --- a/CORE/HDD/src/wlan_hdd_cfg80211.c
 +++ b/CORE/HDD/src/wlan_hdd_cfg80211.c
 @@ -5224,9 +5224,15 @@ static int hdd_extscan_passpoint_fill_network_list(
@@ -97,6 +97,18 @@ index db43f61aaaac..e5b44cd03ec9 100644
  		/* Don't send partial realm to firmware */
  		if (len >= SIR_PASSPOINT_REALM_LEN) {
  			hddLog(LOGE, FL("user passed invalid realm, len:%zu"),
+@@ -17542,7 +17548,11 @@ int wlan_hdd_cfg80211_update_apies(hdd_adapter_t* pHostapdAdapter)
+                           WLAN_EID_INTERWORKING);
+ 
+     wlan_hdd_add_extra_ie(pHostapdAdapter, genie, &total_ielen,
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(5,15,0))
++                          WLAN_EID_TX_POWER_ENVELOPE);
++#else
+                           WLAN_EID_VHT_TX_POWER_ENVELOPE);
++#endif
+     wlan_hdd_add_extra_ie(pHostapdAdapter, genie, &total_ielen,
+                           WLAN_ELEMID_RSNXE);
+     if (0 != wlan_hdd_add_ie(pHostapdAdapter, genie,
 diff --git a/CORE/HDD/src/wlan_hdd_memdump.c b/CORE/HDD/src/wlan_hdd_memdump.c
 index 09deb2e6105c..0e93b494e6e0 100644
 --- a/CORE/HDD/src/wlan_hdd_memdump.c
@@ -150,23 +162,34 @@ index 5fa42f629b60..677452b82f51 100644
  	vos_ssr_protect(__func__);
  	__hdd_tx_timeout(dev);
 diff --git a/CORE/SERVICES/BMI/ol_fw.c b/CORE/SERVICES/BMI/ol_fw.c
-index d7bcf7b24d89..07a6221aaffe 100644
+index 4b107c5e0c66..b5b89fd9e1a0 100644
 --- a/CORE/SERVICES/BMI/ol_fw.c
 +++ b/CORE/SERVICES/BMI/ol_fw.c
-@@ -67,6 +67,13 @@
- #include <linux/uaccess.h> /* for copy_to_user */
- #endif
+@@ -173,8 +173,12 @@ int _readwrite_file(const char *filename, char *rbuf,
+ 	int ret = 0;
+ 	struct file *filp = (struct file *)-ENOENT;
+ 	mm_segment_t oldfs;
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(5, 10, 0)
++	oldfs = force_uaccess_begin();
++#else
+ 	oldfs = get_fs();
+ 	set_fs(KERNEL_DS);
++#endif
  
-+#if LINUX_VERSION_CODE >= KERNEL_VERSION(5, 11, 0)
-+#ifdef CONFIG_ARM64
-+#define get_fs()	((mm_segment_t) { 0 })
-+#define set_fs(val)	do {} while (0)
+ 	do {
+ 		filp = filp_open(filename, mode, S_IRUSR);
+@@ -229,7 +233,11 @@ int _readwrite_file(const char *filename, char *rbuf,
+ 	if (!IS_ERR(filp))
+ 		filp_close(filp, NULL);
+ 
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(5, 10, 0)
++	force_uaccess_end(oldfs);
++#else
+ 	set_fs(oldfs);
 +#endif
-+#endif
-+
- #ifdef FEATURE_SECURE_FIRMWARE
- static struct hash_fw fw_hash;
- #endif
+ 	return ret;
+ }
+ 
 diff --git a/CORE/SERVICES/COMMON/adf/adf_nbuf.c b/CORE/SERVICES/COMMON/adf/adf_nbuf.c
 index 4a348112b145..f700a5ed5858 100644
 --- a/CORE/SERVICES/COMMON/adf/adf_nbuf.c
@@ -545,5 +568,5 @@ index 47b2733e16b8..e379fb64f1b5 100644
  		-DHAL_SELF_STA_PER_BSS=1 \
  		-DWLAN_FEATURE_VOWIFI_11R \
 -- 
-2.33.0
+2.33.1
 
