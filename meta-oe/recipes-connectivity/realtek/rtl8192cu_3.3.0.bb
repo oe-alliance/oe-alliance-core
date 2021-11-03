@@ -12,6 +12,7 @@ inherit module
 SRC_URI = "http://downloads.pli-images.org/misc/rtl8188C_8192C_8192D_usb_linux_v3.3.0_2971.20111128.tar.gz \
     file://additional_productids.patch \
     file://rtl8192cu-gcc5.patch \
+    file://add-5.15-support.patch \
     "
 
 S = "${WORKDIR}/rtl8188C_8192C_8192D_usb_linux_v3.3.0_2971.20111128"

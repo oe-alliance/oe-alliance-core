@@ -1,0 +1,126 @@
+diff --git a/core/rtw_br_ext.c b/core/rtw_br_ext.c
+index fee79e3..d24cbd4 100644
+--- a/core/rtw_br_ext.c
++++ b/core/rtw_br_ext.c
+@@ -22,7 +22,10 @@
+ #ifdef __KERNEL__
+ 	#include <linux/if_arp.h>
+ 	#include <net/ip.h>
++	#include <linux/version.h>
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(5, 15, 0))
+ 	#include <net/ipx.h>
++#endif
+ 	#include <linux/atalk.h>
+ 	#include <linux/udp.h>
+ 	#include <linux/if_pppox.h>
+@@ -174,6 +177,7 @@ static __inline__ void __nat25_generate_ipv4_network_addr(unsigned char *network
+ }
+ 
+ 
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(5, 15, 0))
+ static __inline__ void __nat25_generate_ipx_network_addr_with_node(unsigned char *networkAddr,
+ 		unsigned int *ipxNetAddr, unsigned char *ipxNodeAddr)
+ {
+@@ -194,6 +198,7 @@ static __inline__ void __nat25_generate_ipx_network_addr_with_socket(unsigned ch
+ 	memcpy(networkAddr + 1, (unsigned char *)ipxNetAddr, 4);
+ 	memcpy(networkAddr + 5, (unsigned char *)ipxSocketAddr, 2);
+ }
++#endif
+ 
+ 
+ static __inline__ void __nat25_generate_apple_network_addr(unsigned char *networkAddr,
+@@ -893,6 +898,7 @@ int nat25_db_handle(_adapter *priv, struct sk_buff *skb, int method)
+ 		}
+ 	}
+ 
++#if (LINUX_VERSION_CODE < KERNEL_VERSION(5, 15, 0))
+ 	/*---------------------------------------------------*/
+ 	/*         Handle IPX and Apple Talk frame          */
+ 	/*---------------------------------------------------*/
+@@ -1113,6 +1119,7 @@ int nat25_db_handle(_adapter *priv, struct sk_buff *skb, int method)
+ 
+ 		return -1;
+ 	}
++#endif
+ 
+ 	/*---------------------------------------------------*/
+ 	/*                Handle PPPoE frame                */
+diff --git a/os_dep/osdep_service.c b/os_dep/osdep_service.c
+index 9d12aa9..3fef32f 100644
+--- a/os_dep/osdep_service.c
++++ b/os_dep/osdep_service.c
+@@ -1975,6 +1975,9 @@ static int isFileReadable(char *path)
+ 	if (IS_ERR(fp))
+ 		ret = PTR_ERR(fp);
+ 	else {
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(5,10,0))
++		oldfs = force_uaccess_begin();
++#else
+ 		oldfs = get_fs();
+ 		set_fs(
+ #if (LINUX_VERSION_CODE >= KERNEL_VERSION(5,1,0))
+@@ -1983,11 +1986,16 @@ static int isFileReadable(char *path)
+ 			get_ds()
+ #endif
+ 			);
++#endif
+ 
+ 		if (1 != readFile(fp, &buf, 1))
+ 			ret = PTR_ERR(fp);
+ 
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(5,10,0))
++		force_uaccess_end(oldfs);
++#else
+ 		set_fs(oldfs);
++#endif
+ 		filp_close(fp, NULL);
+ 	}
+ 	return ret;
+@@ -2011,6 +2019,9 @@ static int retriveFromFile(char *path, u8 *buf, u32 sz)
+ 		if (0 == ret) {
+ 			RTW_INFO("%s openFile path:%s fp=%p\n", __FUNCTION__, path , fp);
+ 
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(5,10,0))
++			oldfs = force_uaccess_begin();
++#else
+ 			oldfs = get_fs();
+ 			set_fs(
+ #if (LINUX_VERSION_CODE >= KERNEL_VERSION(5,1,0))
+@@ -2019,8 +2030,13 @@ static int retriveFromFile(char *path, u8 *buf, u32 sz)
+ 				get_ds()
+ #endif
+ 				);
++#endif
+ 			ret = readFile(fp, buf, sz);
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(5,10,0))
++			force_uaccess_end(oldfs);
++#else
+ 			set_fs(oldfs);
++#endif
+ 			closeFile(fp);
+ 
+ 			RTW_INFO("%s readFile, ret:%d\n", __FUNCTION__, ret);
+@@ -2052,6 +2068,9 @@ static int storeToFile(char *path, u8 *buf, u32 sz)
+ 		if (0 == ret) {
+ 			RTW_INFO("%s openFile path:%s fp=%p\n", __FUNCTION__, path , fp);
+ 
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(5,10,0))
++			oldfs = force_uaccess_begin();
++#else
+ 			oldfs = get_fs();
+ 			set_fs(	
+ #if (LINUX_VERSION_CODE >= KERNEL_VERSION(5,1,0))
+@@ -2060,8 +2079,13 @@ static int storeToFile(char *path, u8 *buf, u32 sz)
+ 				get_ds()
+ #endif
+ 				);
++#endif
+ 			ret = writeFile(fp, buf, sz);
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(5,10,0))
++			force_uaccess_end(oldfs);
++#else
+ 			set_fs(oldfs);
++#endif
+ 			closeFile(fp);
+ 
+ 			RTW_INFO("%s writeFile, ret:%d\n", __FUNCTION__, ret);
