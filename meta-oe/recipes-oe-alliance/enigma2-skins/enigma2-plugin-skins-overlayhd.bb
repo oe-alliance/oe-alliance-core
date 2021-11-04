@@ -15,7 +15,7 @@ SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "${GITPKGVTAG}"
 
-SRC_URI = "git://github.com/IanSav/OverlayHD.git;protocol=https"
+SRC_URI = "git://github.com/IanSav/OverlayHD.git;protocol=https;branch=master"
 
 S = "${WORKDIR}/git"
 

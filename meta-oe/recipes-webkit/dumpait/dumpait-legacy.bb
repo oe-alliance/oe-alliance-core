@@ -12,7 +12,7 @@ PR = "r0"
 
 DEPENDS = "libdvbsi++"
 
-SRC_URI = "git://github.com/oe-alliance/dumpait-legacy.git;protocol=https "
+SRC_URI = "git://github.com/oe-alliance/dumpait-legacy.git;protocol=https;branch=master"
 
 
 S = "${WORKDIR}/git"

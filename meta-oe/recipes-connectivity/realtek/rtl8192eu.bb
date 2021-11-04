@@ -5,7 +5,7 @@ LIC_FILES_CHKSUM = "file://README.md;md5=3de16b8559dfb7e7295238b96e262cde"
 
 DEPENDS ="bc-native"
 
-SRC_URI = "git://github.com/atvcaptain/RTL8192EU.git;protocol=https"
+SRC_URI = "git://github.com/atvcaptain/RTL8192EU.git;protocol=https;branch=master"
 
 SRCREV = "${AUTOREV}"
 

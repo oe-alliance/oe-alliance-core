@@ -18,7 +18,7 @@ do_configure[nostamp] = "1"
 do_configure[vardepsexclude] += " DATE DATETIME"
 do_install[vardepsexclude] += " DATE"
 
-SRC_URI = "git://github.com/oe-alliance/enigma2-proc-module.git;protocol=https"
+SRC_URI = "git://github.com/oe-alliance/enigma2-proc-module.git;protocol=https;branch=master"
 
 S = "${WORKDIR}/git/source/epm"
 

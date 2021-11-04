@@ -12,7 +12,7 @@ PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
 PR = "r0"
 
-SRC_URI="git://github.com/stein17/Skins-for-Plugins-by-stein17.git;protocol=https"
+SRC_URI="git://github.com/stein17/Skins-for-Plugins-by-stein17.git;protocol=https;branch=master"
 
 S = "${WORKDIR}/git/Ultimate-HD-Skin-for-AMS-by-stein17"
 

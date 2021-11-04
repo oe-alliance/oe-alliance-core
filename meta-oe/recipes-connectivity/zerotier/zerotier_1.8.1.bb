@@ -16,7 +16,7 @@ SRCREV = "${AUTOREV}"
 PV = "1.8.1+git${SRCPV}"
 PKGV = "1.8.1+git${GITPKGV}"
 
-SRC_URI = "git://github.com/zerotier/ZeroTierOne.git;protocol=https \
+SRC_URI = "git://github.com/zerotier/ZeroTierOne.git;protocol=https;branch=master \
         file://zerotier \
         file://0001-accept-external-ldflags.patch \
         file://0002-fix-compile-with-gcc10.patch \

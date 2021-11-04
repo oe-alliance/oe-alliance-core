@@ -12,7 +12,7 @@ PV = "2.1+git${SRCPV}"
 PKGV = "2.1+git${GITPKGV}"
 VER ="2.1"
 PR = "r1"
-SRC_URI="git://github.com/carlo0815/Smoke-Light-HD.git;protocol=https"
+SRC_URI="git://github.com/carlo0815/Smoke-Light-HD.git;protocol=https;branch=master"
 
 S = "${WORKDIR}/git"
 

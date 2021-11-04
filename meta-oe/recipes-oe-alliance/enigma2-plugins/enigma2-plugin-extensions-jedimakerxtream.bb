@@ -13,7 +13,7 @@ PKGV = "6.18+git${GITPKGV}"
 PR = "r0"
 inherit gitpkgv allarch
 
-SRC_URI = "git://github.com/kiddac/Jedi_Maker_Xtream.git;protocol=http"
+SRC_URI = "git://github.com/kiddac/Jedi_Maker_Xtream.git;protocol=https;branch=master"
 
 S = "${WORKDIR}/git"
 

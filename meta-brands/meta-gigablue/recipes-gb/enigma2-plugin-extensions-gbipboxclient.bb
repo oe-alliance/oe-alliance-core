@@ -13,7 +13,7 @@ PKGV = "1.0+git${GITPKGV}"
 VER ="1.0"
 PR = "r1"
 
-SRC_URI="git://github.com/openmips/gbremote-client.git;protocol=https"
+SRC_URI="git://github.com/openmips/gbremote-client.git;protocol=https;branch=master"
 
 S = "${WORKDIR}/git"
 

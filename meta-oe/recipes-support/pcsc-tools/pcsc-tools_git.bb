@@ -12,7 +12,7 @@ SRCREV = "${AUTOREV}"
 PV = "1.5.4+git${SRCPV}"
 PKGV = "1.5.4+git${GITPKGV}"
 
-SRC_URI = "git://github.com/LudovicRousseau/pcsc-tools.git;protocol=https"
+SRC_URI = "git://github.com/LudovicRousseau/pcsc-tools.git;protocol=https;branch=master"
 
 S = "${WORKDIR}/git"
 

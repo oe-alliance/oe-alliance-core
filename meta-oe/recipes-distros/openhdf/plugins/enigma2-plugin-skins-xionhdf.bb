@@ -15,7 +15,7 @@ PKGV = "1.0+git${GITPKGV}"
 VER ="1.0"
 PR = "r6"
 
-SRC_URI="git://github.com/KravenHD/XionHDF.git;protocol=https"
+SRC_URI="git://github.com/KravenHD/XionHDF.git;protocol=https;branch=master"
 
 S = "${WORKDIR}/git"
 

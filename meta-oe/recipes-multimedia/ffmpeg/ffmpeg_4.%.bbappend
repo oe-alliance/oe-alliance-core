@@ -5,7 +5,7 @@ DEPENDS += "libxml2"
 PV = "4.4.1"
 
 SRCREV = "3e539d11e4a78d44e8d95cef1d67d67e00258e31"
-SRC_URI = "git://github.com/FFmpeg/FFmpeg.git;branch=release/4.4 \
+SRC_URI = "git://github.com/FFmpeg/FFmpeg.git;branch=release/4.4;protocol=https \
            file://0001-libavutil-include-assembly-with-full-path-from-sourc.patch \
            file://0002-fix-mpegts.patch \
            file://0003-allow-to-choose-rtmp-impl-at-runtime.patch \

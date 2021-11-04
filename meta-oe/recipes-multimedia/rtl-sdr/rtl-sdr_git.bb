@@ -12,7 +12,7 @@ SRCREV = "${AUTOREV}"
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
 
-SRC_URI = "git://git.osmocom.org/rtl-sdr;protocol=https"
+SRC_URI = "git://git.osmocom.org/rtl-sdr;protocol=https;branch=master"
 
 S = "${WORKDIR}/git"
 

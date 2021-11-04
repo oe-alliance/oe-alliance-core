@@ -7,7 +7,7 @@ LICENSE = "PD"
 
 require conf/license/license-gplv2.inc
 
-SRC_URI = "git://github.com/oe-mirrors/SDGRadio.git;protocol=http"
+SRC_URI = "git://github.com/oe-mirrors/SDGRadio.git;branch=master;protocol=https"
 
 S = "${WORKDIR}/git"
 

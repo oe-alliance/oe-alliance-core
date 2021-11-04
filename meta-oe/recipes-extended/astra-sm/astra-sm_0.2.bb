@@ -9,7 +9,7 @@ DEPENDS += "libaio"
 
 SRCREV = "${AUTOREV}"
 
-SRC_URI = "git://gitlab.com/berdyansk/astra-sm.git;protocol=http \
+SRC_URI = "git://gitlab.com/berdyansk/astra-sm.git;protocol=http;branch=master \
 	file://version.patch \
 	file://undef_dvb_net.patch \
 	file://astra-sm \

@@ -8,7 +8,7 @@ DEPENDS = "freetype"
 PV = "1.13+git${SRCPV}"
 PR = "r0"
 
-SRC_URI = "git://github.com/sklnet/tuxcom.git;protocol=https \
+SRC_URI = "git://github.com/sklnet/tuxcom.git;protocol=https;branch=master \
     file://add_advanced_rc.diff"
 
 S = "${WORKDIR}/git"

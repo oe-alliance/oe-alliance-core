@@ -7,7 +7,7 @@ DEPENDS = "directfb fulan-dvb-modules-${MACHINE}"
 
 inherit module autotools pkgconfig
 
-SRC_URI = "git://github.com/OpenVisionE2/stgfx2.git;protocol=https"
+SRC_URI = "git://github.com/OpenVisionE2/stgfx2.git;branch=master;protocol=https"
 SRCREV = "${AUTOREV}"
 
 S = "${WORKDIR}/git"

@@ -11,7 +11,7 @@ SRCREV ?= "a0408ec51ea862dda102482036c401d2e707e20b"
 
 SRCBRANCH ?= "release/${PV}/master"
 
-GLIBC_GIT_URI ?= "git://sourceware.org/git/glibc.git"
+GLIBC_GIT_URI ?= "git://sourceware.org/git/glibc.git;branch=master"
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>\d+\.\d+(\.(?!90)\d+)*)"
 
 SRC_URI = "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \

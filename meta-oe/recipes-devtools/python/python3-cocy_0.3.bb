@@ -13,7 +13,7 @@ SRCREV = "${AUTOREV}"
 PV = "0.3+git${SRCPV}"
 PKGV = "0.3+git${GITPKGV}"
 
-SRC_URI = "git://github.com/mnlipp/CoCy;protocol=https"
+SRC_URI = "git://github.com/mnlipp/CoCy;protocol=https;branch=master"
 
 S = "${WORKDIR}/git"
 

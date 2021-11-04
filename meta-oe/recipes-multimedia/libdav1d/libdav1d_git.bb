@@ -10,7 +10,7 @@ SRCREV = "c719d4a4e13dc865909b220118d935ac698ac9ba"
 PV = "0.9.1+git${SRCPV}"
 PKGV = "0.9.1+git${GITPKGV}"
 
-SRC_URI = "git://code.videolan.org/videolan/dav1d.git;protocol=https"
+SRC_URI = "git://code.videolan.org/videolan/dav1d.git;protocol=https;branch=master"
 
 S = "${WORKDIR}/git"
 

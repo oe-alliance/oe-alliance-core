@@ -16,7 +16,7 @@ PV = "2.7.11+git${SRCPV}"
 PKGV = "2.7.11+git${GITPKGV}"
 PR = "r3"
 
-SRC_URI = "git://github.com/teamblue/MultiQuickButton.git;protocol=https"
+SRC_URI = "git://github.com/teamblue/MultiQuickButton.git;protocol=https;branch=master"
 
 S = "${WORKDIR}/git"
 

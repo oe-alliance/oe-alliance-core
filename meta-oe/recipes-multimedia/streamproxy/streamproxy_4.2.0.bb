@@ -11,7 +11,7 @@ VERSION := "${PV}"
 PV = "${VERSION}+git${SRCPV}"
 PKGV = "${VERSION}+git${GITPKGV}"
 
-SRC_URI="git://github.com/oe-mirrors/streamproxy.git;protocol=https"
+SRC_URI="git://github.com/oe-mirrors/streamproxy.git;protocol=https;branch=master"
 
 pkg_postinst:${PN}() {
 #!/bin/sh

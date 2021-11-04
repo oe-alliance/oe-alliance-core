@@ -14,7 +14,7 @@ PV = "3.0+git${SRCPV}"
 PKGV = "3.0+git${GITPKGV}"
 PR = "r1"
 
-SRC_URI="git://github.com/carlo0815/enigma2-plugins.git;protocol=https"
+SRC_URI="git://github.com/carlo0815/enigma2-plugins.git;protocol=https;branch=master"
 
 S = "${WORKDIR}/git"
 

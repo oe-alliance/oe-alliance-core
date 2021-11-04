@@ -10,7 +10,7 @@ PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
 
 SRC_URI = " \
-    git://github.com/Duckbox-Developers/apps.git;protocol=https \
+    git://github.com/Duckbox-Developers/apps.git;protocol=https;branch=master \
 "
 
 S = "${WORKDIR}/git/tools/${@d.getVar('PN',1).replace('-', '_')}"

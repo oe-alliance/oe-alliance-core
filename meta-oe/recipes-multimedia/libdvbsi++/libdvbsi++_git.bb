@@ -10,7 +10,8 @@ SRCREV = "${AUTOREV}"
 PV = "0.3.9+git${SRCPV}"
 PKGV = "0.3.9+git${GITPKGV}"
 
-SRC_URI = "git://github.com/oe-alliance/libdvbsi.git;protocol=https"
+SRC_URI = "git://github.com/oe-alliance/libdvbsi.git;protocol=https;branch=master"
+
 
 S = "${WORKDIR}/git"
 

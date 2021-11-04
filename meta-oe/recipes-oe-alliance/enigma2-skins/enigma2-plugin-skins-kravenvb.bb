@@ -12,7 +12,7 @@ PV = "7.x+git${SRCPV}"
 PKGV = "7.x+git${GITPKGV}"
 VER="7.x"
 
-SRC_URI="git://github.com/atvcaptain/KravenVB.git;protocol=https"
+SRC_URI="git://github.com/atvcaptain/KravenVB.git;protocol=https;branch=master"
 
 FILES:${PN} = "/usr/*"
 

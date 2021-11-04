@@ -12,7 +12,7 @@ VER="1.0"
 
 RDEPENDS:${PN} = "enigma2-plugin-systemplugins-weathercomponenthandler, enigma2-plugin-skincomponents-weathercomponent, minilocale"
 
-SRC_URI="git://github.com/stein17/Skins-for-openHDF.git;protocol=https"
+SRC_URI="git://github.com/stein17/Skins-for-openHDF.git;protocol=https;branch=master"
 
 FILES:${PN} = "${libdir} /usr/share"
 

@@ -10,7 +10,7 @@ SRCREV = "${AUTOREV}"
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
 
-SRC_URI = "git://github.com/mirakels/libdreamdvd.git;protocol=https \
+SRC_URI = "git://github.com/mirakels/libdreamdvd.git;protocol=https;branch=master \
         file://fix-build-with-fno-common.patch"
 
 SRC_URI:append:sh4 = "\

@@ -9,7 +9,7 @@ SRCREV = "${AUTOREV}"
 PV = "1.2.2+git${SRCPV}"
 PKGV = "1.2.2+git${GITPKGV}"
 
-SRC_URI = "git://github.com/oe-mirrors/python-cjson.git;protocol=https"
+SRC_URI = "git://github.com/oe-mirrors/python-cjson.git;protocol=https;branch=master"
 
 S = "${WORKDIR}/git"
 

@@ -7,7 +7,7 @@ HOMEPAGE = "https://github.com/Barracuda09/SATPI/wiki"
 DEPENDS = "libdvbcsa openssl"
 RDEPENDS:${PN} = "libdvbcsa openssl"
 
-SRC_URI = "git://github.com/Barracuda09/SATPI.git;protocol=http \
+SRC_URI = "git://github.com/Barracuda09/SATPI.git;protocol=http;branch=master;protocol=https \
     file://satpi.init \
 "
 

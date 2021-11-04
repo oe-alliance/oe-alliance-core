@@ -12,7 +12,7 @@ VER="5.9"
 
 RDEPENDS:${PN} = "enigma2-plugin-systemplugins-weathercomponenthandler, enigma2-plugin-skincomponents-weathercomponent"
 
-SRC_URI="git://github.com/openatv/iflat.git;protocol=https"
+SRC_URI="git://github.com/openatv/iflat.git;protocol=https;branch=master"
 
 FILES:${PN} = "${libdir} /usr/share"
 

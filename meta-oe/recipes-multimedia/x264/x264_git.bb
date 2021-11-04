@@ -11,7 +11,7 @@ SRCREV = "${AUTOREV}"
 
 PV = "r2970+git${SRCPV}"
 
-SRC_URI = "git://code.videolan.org/videolan/x264;protocol=https \
+SRC_URI = "git://code.videolan.org/videolan/x264;protocol=https;branch=master \
            file://don-t-default-to-cortex-a9-with-neon.patch \
            file://Fix-X32-build-by-disabling-asm.patch \
            "

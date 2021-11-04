@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=96054b336a7ea61f1acd5c14acdda526"
 
 RDEPENDS:${PN} = "${PYTHON_PN}-pbkdf2"
 
-SRC_URI = "git://github.com/oe-mirrors/wifi.git"
+SRC_URI = "git://github.com/oe-mirrors/wifi.git;branch=master;protocol=https"
 
 SRCREV ?= "ea9b8896d9866ac752b60f87e767d2a9565d00cb"
 

@@ -14,7 +14,7 @@ SRCREV = "6418b00ac310fbde5c68d33903a244b6f4b9f8b5"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
 
-SRC_URI = "git://github.com/trapexit/mergerfs.git"
+SRC_URI = "git://github.com/trapexit/mergerfs.git;branch=master;protocol=https"
 
 S = "${WORKDIR}/git"
 

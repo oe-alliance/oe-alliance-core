@@ -5,7 +5,7 @@ SECTION = "multimedia"
 LICENSE = "GPLv2"
 require conf/license/license-gplv2.inc
 
-SRC_URI = "git://github.com/oe-mirrors/e2iplayer.git;protocol=http;branch=python3"
+SRC_URI = "git://github.com/oe-mirrors/e2iplayer.git;protocol=http;branch=python3;protocol=https"
 
 S = "${WORKDIR}/git"
 

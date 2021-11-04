@@ -9,9 +9,9 @@ RCONFLICTS:${PN} = "enigma2-plugin-extensions-serviceapp"
 RREPLACES:${PN} = "enigma2-plugin-extensions-serviceapp"
 
 SRCREV = "${AUTOREV}"
-SRC_URI = "git://github.com/oe-mirrors/serviceapp.git;branch=develop"
-SRC_URI:openvix = "git://github.com/OpenViX/serviceapp.git;branch=develop"
-SRC_URI:openbh = "git://github.com/OpenViX/serviceapp.git;branch=develop"
+SRC_URI = "git://github.com/oe-mirrors/serviceapp.git;branch=develop;protocol=https"
+SRC_URI:openvix = "git://github.com/OpenViX/serviceapp.git;branch=develop;protocol=https"
+SRC_URI:openbh = "git://github.com/OpenViX/serviceapp.git;branch=develop;protocol=https"
 
 
 S = "${WORKDIR}/git"

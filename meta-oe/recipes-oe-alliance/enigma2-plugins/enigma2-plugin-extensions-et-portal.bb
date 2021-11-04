@@ -12,7 +12,7 @@ PKGV = "inofficial-3.2.+git${GITPKGV}"
 PR = "r0"
 
 
-SRC_URI="git://github.com/e2plugins/etportal-inofficial.git;protocol=https"
+SRC_URI="git://github.com/e2plugins/etportal-inofficial.git;protocol=https;branch=master"
 
 S = "${WORKDIR}/git"
 

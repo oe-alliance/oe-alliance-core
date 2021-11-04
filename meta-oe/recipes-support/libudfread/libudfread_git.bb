@@ -10,7 +10,7 @@ SRCREV="${AUTOREV}"
 PV = "1.0.0+git${SRCPV}"
 PKGV = "1.0.0+git${GITPKGV}"
 
-SRC_URI = "git://code.videolan.org/videolan/libudfread;protocol=https"
+SRC_URI = "git://code.videolan.org/videolan/libudfread;protocol=https;branch=master"
 
 inherit autotools-brokensep pkgconfig
 

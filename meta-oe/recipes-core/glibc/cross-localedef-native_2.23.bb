@@ -13,7 +13,7 @@ PV = "2.23"
 SRCREV_glibc ?= "b039fd85db0717aca309b61925d00a5a6547a649"
 SRCREV_localedef ?= "5a81ff9f06a7a808d4c3d37bbf34077a4c5902ed"
 
-GLIBC_GIT_URI ?= "git://sourceware.org/git/glibc.git"
+GLIBC_GIT_URI ?= "git://sourceware.org/git/glibc.git;branch=master"
 
 # Tell autotools that we're working in the localedef directory
 #
@@ -25,7 +25,7 @@ inherit native
 FILESEXTRAPATHS =. "${FILE_DIRNAME}/${PN}:${FILE_DIRNAME}/glibc:"
 
 SRC_URI = "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \
-           git://github.com/kraj/localedef;branch=master;name=localedef;destsuffix=git/localedef \
+           git://github.com/kraj/localedef;branch=master;name=localedef;destsuffix=git/localedef;protocol=https \
            file://0016-timezone-re-written-tzselect-as-posix-sh.patch \
            file://0017-Remove-bash-dependency-for-nscd-init-script.patch \
            file://0018-eglibc-Cross-building-and-testing-instructions.patch \

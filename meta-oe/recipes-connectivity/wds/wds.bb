@@ -13,7 +13,7 @@ PV = "1.1.0+git${SRCPV}"
 PKGV = "1.1.0+git${GITPKGV}"
 PR = "r1"
 
-SRC_URI = "git://github.com/01org/wds.git;protocol=https"
+SRC_URI = "git://github.com/01org/wds.git;protocol=https;branch=master"
 SRCREV = "${AUTOREV}"
 
 S = "${WORKDIR}/git"

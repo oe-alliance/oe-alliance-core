@@ -16,7 +16,7 @@ PR = "r0"
 
 DEPENDS = "enigma2-plugin-skins-pax"
 
-SRC_URI="git://github.com/teamblue/skin-pax-fhd.git;protocol=https"
+SRC_URI="git://github.com/teamblue/skin-pax-fhd.git;protocol=https;branch=master"
 
 S = "${WORKDIR}/git"
 

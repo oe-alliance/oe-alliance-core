@@ -13,7 +13,7 @@ inherit ${PYTHON_PN}-dir gitpkgv
 
 SRCREV = "${AUTOREV}"
 
-SRC_URI = "git://github.com/oe-mirrors/livestreamersrv;protocol=https"
+SRC_URI = "git://github.com/oe-mirrors/livestreamersrv;protocol=https;branch=master"
 
 S = "${WORKDIR}/git"
 

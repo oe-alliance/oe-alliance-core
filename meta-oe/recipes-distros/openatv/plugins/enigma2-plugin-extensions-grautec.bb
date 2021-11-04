@@ -16,7 +16,7 @@ PR = "r0"
 
 INHIBIT_PACKAGE_STRIP = "1"
 
-SRC_URI="git://github.com/openatv/grautec.git;protocol=https"
+SRC_URI="git://github.com/openatv/grautec.git;protocol=https;branch=master"
 
 S = "${WORKDIR}/git"
 

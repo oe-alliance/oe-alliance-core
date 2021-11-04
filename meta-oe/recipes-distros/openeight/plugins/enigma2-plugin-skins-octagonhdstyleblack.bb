@@ -14,7 +14,7 @@ PKGV = "1.0+git${GITPKGV}"
 VER ="1.0"
 PR = "r1"
 
-SRC_URI="git://github.com/stein17/Octagon-HD-Style-Black.git;protocol=https"
+SRC_URI="git://github.com/stein17/Octagon-HD-Style-Black.git;protocol=https;branch=master"
 
 S = "${WORKDIR}/git"
 

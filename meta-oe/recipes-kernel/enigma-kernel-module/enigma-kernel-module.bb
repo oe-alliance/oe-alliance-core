@@ -10,7 +10,7 @@ SRCREV = "${AUTOREV}"
 PACKAGE_ARCH = "${MACHINEBUILD}"
 SSTATE_SKIP_CREATION = "1"
 
-SRC_URI = "git://github.com/oe-alliance/enigma2-kernel-module.git;protocol=https"
+SRC_URI = "git://github.com/oe-alliance/enigma2-kernel-module.git;protocol=https;branch=master"
 
 S = "${WORKDIR}/git/source/enigma"
 

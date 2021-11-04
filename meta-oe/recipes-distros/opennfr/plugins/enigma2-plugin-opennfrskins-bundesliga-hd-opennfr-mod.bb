@@ -13,7 +13,7 @@ PKGV = "2.1+git${GITPKGV}"
 VER ="1.0"
 PR = "r1"
 
-SRC_URI="git://github.com/carlo0815/bundesliga-hd-opennfr-mod.git;protocol=https"
+SRC_URI="git://github.com/carlo0815/bundesliga-hd-opennfr-mod.git;protocol=https;branch=master"
 
 S = "${WORKDIR}/git"
 

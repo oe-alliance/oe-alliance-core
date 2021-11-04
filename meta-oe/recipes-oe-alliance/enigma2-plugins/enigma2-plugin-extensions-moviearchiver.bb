@@ -12,7 +12,7 @@ PKGV = "0.2.+git${GITPKGV}"
 PR = "r0"
 
 
-SRC_URI="git://github.com/MovieArchiver/enigma2-plugin-extensions-moviearchiver.git;protocol=https"
+SRC_URI="git://github.com/MovieArchiver/enigma2-plugin-extensions-moviearchiver.git;protocol=https;branch=master"
 
 S = "${WORKDIR}/git"
 

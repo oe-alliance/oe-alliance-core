@@ -13,7 +13,7 @@ PKGV = "6.0+git${GITPKGV}"
 VER ="6.0"
 PR = "r0"
 
-SRC_URI="git://github.com/openatv/enigma2-plugin-settings-defaultsat.git;protocol=https"
+SRC_URI="git://github.com/openatv/enigma2-plugin-settings-defaultsat.git;protocol=https;branch=master"
 
 S = "${WORKDIR}/git"
 

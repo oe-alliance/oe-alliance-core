@@ -10,7 +10,7 @@ PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
 PR = "r2"
 
-SRC_URI = "git://github.com/tklauser/llmnrd.git;protocol=https \
+SRC_URI = "git://github.com/tklauser/llmnrd.git;protocol=https;branch=master \
     file://llmnrd.sh \
 "
 

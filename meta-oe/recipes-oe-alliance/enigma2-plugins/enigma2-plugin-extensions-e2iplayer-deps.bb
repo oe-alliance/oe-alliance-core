@@ -21,7 +21,7 @@ PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
 PR = "r2"
 
-SRC_URI = "git://github.com/oe-mirrors/e2iplayer-deps.git;protocol=https"
+SRC_URI = "git://github.com/oe-mirrors/e2iplayer-deps.git;protocol=https;branch=master"
 
 S1 = "${WORKDIR}/git/e2isubparser"
 SOURCE_FILES1 = "src/subparsermodule.c"

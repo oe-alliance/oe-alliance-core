@@ -12,7 +12,7 @@ SRCREV = "${AUTOREV}"
 PV = "v1.1.2+git${SRCPV}"
 PKGV = "v1.1.2+git${GITPKGV}"
 
-SRC_URI = "gitsm://code.videolan.org/videolan/libbluray.git;protocol=https"
+SRC_URI = "gitsm://code.videolan.org/videolan/libbluray.git;protocol=https;branch=master"
 
 S="${WORKDIR}/git"
 

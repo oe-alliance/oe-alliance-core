@@ -11,7 +11,7 @@ PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
 PR = "r1"
 
-SRC_URI = "git://github.com/OpenSPA/openspa-enigma2-skins.git;protocol=https"
+SRC_URI = "git://github.com/OpenSPA/openspa-enigma2-skins.git;protocol=https;branch=master"
 
 FILES:${PN} = "/usr/share/enigma2 /usr/lib/enigma2/python/Components"
 

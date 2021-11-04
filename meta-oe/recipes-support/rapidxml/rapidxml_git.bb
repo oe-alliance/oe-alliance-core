@@ -5,7 +5,7 @@ LICENSE = "MIT"
 
 LIC_FILES_CHKSUM = "file://license.txt;md5=d63ab70ba21ca0544b03284958324301"
 
-SRC_URI = "git://github.com/hydranix/rapidxml.git"
+SRC_URI = "git://github.com/hydranix/rapidxml.git;branch=master;protocol=https"
 
 SRCREV = "b79d25bddd83941e6f95c30e3d184e959b83417f"
 

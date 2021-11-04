@@ -15,7 +15,7 @@ TAG = "v4.4.2"
 PV = "${TAG}"
 PKGV = "${TAG}"
 
-SRC_URI = "git://github.com/einfall/serienrecorder.git;protocol=https;tag=${TAG}"
+SRC_URI = "git://github.com/einfall/serienrecorder.git;protocol=https;branch=master;tag=${TAG}"
 
 S = "${WORKDIR}/git/src"
 

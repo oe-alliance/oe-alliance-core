@@ -8,7 +8,7 @@ SRCREV = "${AUTOREV}"
 PV = "0.2+git${SRCPV}"
 PKGV = "0.2+git${GITPKGV}"
 
-SRC_URI = "git://github.com/foo86/dcadec.git;protocol=https"
+SRC_URI = "git://github.com/foo86/dcadec.git;protocol=https;branch=master"
 
 S = "${WORKDIR}/git"
 

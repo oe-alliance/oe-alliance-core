@@ -32,8 +32,8 @@ SRCREV_plugins = "${AUTOREV}"
 
 SRCREV_FORMAT = "streamlink_plugins"
 
-SRC_URI = "git://github.com/streamlink/streamlink.git;protocol=https;name=streamlink \
-           git://github.com/oe-mirrors/streamlink-plugins;protocol=https;name=plugins;destsuffix=additional-plugins"
+SRC_URI = "git://github.com/streamlink/streamlink.git;protocol=https;name=streamlink;branch=master \
+           git://github.com/oe-mirrors/streamlink-plugins;protocol=https;name=plugins;destsuffix=additional-plugins;branch=master"
 
 S = "${WORKDIR}/git"
 

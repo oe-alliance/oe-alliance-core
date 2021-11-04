@@ -11,7 +11,7 @@ PV = "git${SRCPV}"
 PKGV = "${GITPKGVTAG}"
 PR = "r1"
 
-SRC_URI = "git://github.com/OpenViX/HRTunerProxy.git;protocol=https"
+SRC_URI = "git://github.com/OpenViX/HRTunerProxy.git;protocol=https;branch=master"
 
 S = "${WORKDIR}/git"
 

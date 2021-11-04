@@ -8,7 +8,7 @@ PR = "r3"
 
 SRCREV = "7708383b086b31703d5b50b8ffa45991531cbe1c"
 
-SRC_URI = "git://github.com/anthonywong/rtl8723bs.git;protocol=https \
+SRC_URI = "git://github.com/anthonywong/rtl8723bs.git;protocol=https;branch=master \
     file://0001-makefile-disable-POWER_SAVING.patch \
     file://rt8723bs-makefile.patch \
     file://rt8723bs-remove-debug.patch \

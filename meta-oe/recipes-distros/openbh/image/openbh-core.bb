@@ -18,7 +18,7 @@ PV = "${IMAGE_VERSION}+git${SRCPV}"
 PKGV = "${IMAGE_VERSION}+git${GITPKGV}"
 PR = "r8"
 
-SRC_URI="git://github.com/BlackHole/obh-core.git;protocol=https"
+SRC_URI="git://github.com/BlackHole/obh-core.git;protocol=https;branch=master"
 
 S = "${WORKDIR}/git"
 

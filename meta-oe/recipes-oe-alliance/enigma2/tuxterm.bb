@@ -9,7 +9,7 @@ PN = "tuxterm"
 PV = "0.2+git${SRCPV}"
 PR = "r0"
 
-SRC_URI = "git://github.com/sklnet/tuxterm.git;protocol=https"
+SRC_URI = "git://github.com/sklnet/tuxterm.git;protocol=https;branch=master"
 
 S = "${WORKDIR}/git"
 

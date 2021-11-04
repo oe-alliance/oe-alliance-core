@@ -10,7 +10,7 @@ SRCREV = "${AUTOREV}"
 PV = "1.4.3+git${SRCPV}"
 PKGV = "1.4.3+git${GITPKGV}"
 
-SRC_URI = "git://code.videolan.org/videolan/libdvdcss.git;protocol=https"
+SRC_URI = "git://code.videolan.org/videolan/libdvdcss.git;protocol=https;branch=master"
 
 S = "${WORKDIR}/git"
 
