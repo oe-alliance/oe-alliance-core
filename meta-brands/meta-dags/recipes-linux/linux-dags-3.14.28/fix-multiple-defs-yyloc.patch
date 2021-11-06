@@ -1,0 +1,23 @@
+From eebe5d7aa6db55faac65dc060c773452350afccf Mon Sep 17 00:00:00 2001
+From: Huevos <rowland@moralet.com>
+Date: Sat, 6 Nov 2021 17:11:58 +0100
+Subject: [PATCH] fix-multiple-defs-yyloc.patch
+
+---
+ scripts/dtc/dtc-parser.tab.c_shipped | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/scripts/dtc/dtc-parser.tab.c_shipped b/scripts/dtc/dtc-parser.tab.c_shipped
+index ee1d8c3..c8c8ca8 100644
+--- a/scripts/dtc/dtc-parser.tab.c_shipped
++++ b/scripts/dtc/dtc-parser.tab.c_shipped
+@@ -73,7 +73,7 @@
+ #include "dtc.h"
+ #include "srcpos.h"
+ 
+-YYLTYPE yylloc;
++extern YYLTYPE yylloc;
+ 
+ extern int yylex(void);
+ extern void print_error(char const *fmt, ...);
+--
