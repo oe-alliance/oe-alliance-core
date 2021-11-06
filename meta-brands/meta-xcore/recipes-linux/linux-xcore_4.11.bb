@@ -38,6 +38,7 @@ SRC_URI += "http://source.mynonpublic.com/xcore/xcore-linux-${PV}-${SRC}.tar.gz 
     file://0001-cp1emu-do-not-use-bools-for-arithmetic.patch \
     file://0002-makefile-disable-warnings.patch \
     file://move-default-dialect-to-SMB3.patch \
+    file://fix-multiple-defs-yyloc.patch \
     "
 
 S = "${WORKDIR}/linux-brcmstb-${PV}"
