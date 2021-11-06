@@ -6,12 +6,12 @@ require conf/license/license-gplv2.inc
 inherit autotools-brokensep gitpkgv gettext ${PYTHON_PN}native
 
 SRCREV = "${AUTOREV}"
-PV = "2.1.3+git${SRCPV}"
-PKGV = "2.1.3+git${GITPKGV}"
+PV = "2.2.0+git${SRCPV}"
+PKGV = "2.2.0+git${GITPKGV}"
 PR = "r1"
 
 DEPENDS = "enigma2 ${PYTHON_PN}"
-RDEPENDS:${PN} = "gstreamer1.0-plugins-bad-hls curl mjpegtools ${PYTHON_PN}-ctypes libshowiframe0"
+RDEPENDS:${PN} = "gstreamer1.0-plugins-bad-hls curl mjpegtools ${PYTHON_PN}-ctypes libshowiframe0 ${PYTHON_PN}-textutils ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-imaging", "${PYTHON_PN}-pillow", d)}"
 
 SRC_URI = "git://github.com/oe-alliance/DreamPlex.git;protocol=https;branch=master"
 
