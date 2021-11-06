@@ -5,7 +5,7 @@ LICENSE = "CLOSED"
 require conf/license/license-close.inc
 PACKAGE_ARCH := "${MACHINE_ARCH}"
 
-PV = "1.0"
+PV = "1.1"
 PR = "${SRCDATE}"
 SRC_URI = "http://source.mynonpublic.com/gigablue/chromium/chromium-gigablue-${MACHINE}-${SRCDATE}.zip"
 
@@ -13,7 +13,7 @@ SRC_URI = "http://source.mynonpublic.com/gigablue/chromium/chromium-gigablue-${M
 PREFERRED_VERSION_nss = "3.17.3"
 
 DEPENDS = "nss"
-RDEPENDS_${PN} = "nspr nss libxslt libcurl libudev"
+RDEPENDS_${PN} = "nspr nss libxslt libcurl libudev libcrypto-compat-1.0.0"
 RDEPENDS_${PN} += "gb-v3ddriver-${MACHINE}"
 
 do_install() {

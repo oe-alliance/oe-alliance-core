@@ -5,7 +5,7 @@ LICENSE = "CLOSED"
 require conf/license/license-close.inc
 PACKAGE_ARCH := "${MACHINE_ARCH}"
 
-PV = "1.1"
+PV = "1.2"
 PR = "${SRCDATE}-r0"
 
 SRC_URI = "http://code.vuplus.com/download/chromium/chromium-vuplus_${MACHINE}_${SRCDATE}.tar.gz \
@@ -15,7 +15,7 @@ SRC_URI = "http://code.vuplus.com/download/chromium/chromium-vuplus_${MACHINE}_$
 PREFERRED_VERSION_nss = "3.17.3"
 
 DEPENDS = "nss"
-RDEPENDS_${PN} = "nspr nss libxslt libcurl libudev python-subprocess"
+RDEPENDS_${PN} = "nspr nss libxslt libcurl libudev python-subprocess libcrypto-compat-1.0.0"
 
 S = "${WORKDIR}/chromium"
 
