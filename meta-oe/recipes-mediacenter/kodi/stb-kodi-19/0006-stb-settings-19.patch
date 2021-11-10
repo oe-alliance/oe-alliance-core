@@ -4,10 +4,10 @@ Date: Wed, 15 Jul 2020 18:07:08 +0200
 Subject: [PATCH 06/10] stb-settings-19
 
 diff --git a/addons/skin.estuary/xml/Home.xml b/addons/skin.estuary/xml/Home.xml
-index 7ec09db8ef9..7bcd409294f 100644
+index f90d634..82671ef 100644
 --- a/addons/skin.estuary/xml/Home.xml
 +++ b/addons/skin.estuary/xml/Home.xml
-@@ -1053,7 +1053,7 @@
+@@ -1046,7 +1046,7 @@
  					<align>justify</align>
  					<include content="IconButton">
  						<param name="control_id" value="804" />
@@ -17,7 +17,7 @@ index 7ec09db8ef9..7bcd409294f 100644
  						<param name="label" value="$LOCALIZE[33060]" />
  					</include>
 diff --git a/cmake/modules/FindFFMPEG.cmake b/cmake/modules/FindFFMPEG.cmake
-index 81d26979e3d..356a009b23c 100644
+index 81d2697..356a009 100644
 --- a/cmake/modules/FindFFMPEG.cmake
 +++ b/cmake/modules/FindFFMPEG.cmake
 @@ -46,16 +46,22 @@ set(_postproc_ver ">=55.7.100")
@@ -94,7 +94,7 @@ index 81d26979e3d..356a009b23c 100644
         FILE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE)
 diff --git a/cmake/platform/linux/stb.cmake b/cmake/platform/linux/stb.cmake
 new file mode 100644
-index 00000000000..e1fe54a13d2
+index 0000000..e1fe54a
 --- /dev/null
 +++ b/cmake/platform/linux/stb.cmake
 @@ -0,0 +1,69 @@
@@ -168,13 +168,13 @@ index 00000000000..e1fe54a13d2
 +
 +list(APPEND PLATFORM_DEFINES -DMESA_EGL_NO_X11_HEADERS)
 diff --git a/cmake/scripts/linux/ArchSetup.cmake b/cmake/scripts/linux/ArchSetup.cmake
-index b68efe3bd03..6905eb95a40 100644
+index 1bfc32c..4f5ff57 100644
 --- a/cmake/scripts/linux/ArchSetup.cmake
 +++ b/cmake/scripts/linux/ArchSetup.cmake
-@@ -32,6 +32,10 @@ else()
-   elseif(CPU MATCHES aarch64 OR CPU MATCHES arm64)
-     set(ARCH aarch64)
-     set(NEON True)
+@@ -35,6 +35,10 @@ else()
+   elseif(CPU MATCHES riscv64)
+     set(ARCH riscv64)
+     set(NEON False)
 +  elseif(CPU MATCHES "cortexa15")
 +    set(ARCH arm)
 +    set(NEON True)
@@ -184,13 +184,13 @@ index b68efe3bd03..6905eb95a40 100644
    endif()
 diff --git a/cmake/treedata/common/stb.txt b/cmake/treedata/common/stb.txt
 new file mode 100644
-index 00000000000..2606a0f9995
+index 0000000..2606a0f
 --- /dev/null
 +++ b/cmake/treedata/common/stb.txt
 @@ -0,0 +1 @@
 +xbmc/windowing/egl   windowing/egl    # STB
 diff --git a/system/settings/settings.xml b/system/settings/settings.xml
-index b8ab2a5ee35..3d069cf7754 100755
+index b8ab2a5..3d069cf 100755
 --- a/system/settings/settings.xml
 +++ b/system/settings/settings.xml
 @@ -503,7 +503,7 @@
@@ -250,7 +250,7 @@ index b8ab2a5ee35..3d069cf7754 100755
              <options>regions</options>
            </constraints>
 diff --git a/tools/Linux/kodi.sh.in b/tools/Linux/kodi.sh.in
-index 108c0b007b8..e0401b53487 100644
+index 3806ebc..67780f3 100644
 --- a/tools/Linux/kodi.sh.in
 +++ b/tools/Linux/kodi.sh.in
 @@ -26,8 +26,11 @@ exec_prefix="@exec_prefix@"
@@ -299,7 +299,7 @@ index 108c0b007b8..e0401b53487 100644
  # Check for some options used by this script
  while [ "$#" -gt "0" ]
  do
-@@ -180,13 +208,13 @@ do
+@@ -185,13 +213,13 @@ do
    CHILD=$!
    wait "${CHILD}"
    RET=$?
@@ -321,7 +321,7 @@ index 108c0b007b8..e0401b53487 100644
  
  exit $RET
 diff --git a/tools/depends/target/ffmpeg/CMakeLists.txt b/tools/depends/target/ffmpeg/CMakeLists.txt
-index e3587759117..2b73a8751a2 100644
+index e358775..2b73a87 100644
 --- a/tools/depends/target/ffmpeg/CMakeLists.txt
 +++ b/tools/depends/target/ffmpeg/CMakeLists.txt
 @@ -10,6 +10,36 @@ else()
@@ -362,7 +362,7 @@ index e3587759117..2b73a8751a2 100644
    set(pkgconf "PKG_CONFIG_LIBDIR=${DEPENDS_PATH}/lib/pkgconfig")
    list(APPEND ffmpeg_conf --pkg-config=${PKG_CONFIG_EXECUTABLE} --pkg-config-flags=--static)
 diff --git a/tools/depends/target/libdvdcss/Makefile b/tools/depends/target/libdvdcss/Makefile
-index a5026227c20..c7b103117af 100644
+index a502622..c7b1031 100644
 --- a/tools/depends/target/libdvdcss/Makefile
 +++ b/tools/depends/target/libdvdcss/Makefile
 @@ -3,7 +3,7 @@ include DVDCSS-VERSION
@@ -384,7 +384,7 @@ index a5026227c20..c7b103117af 100644
  GITREV=$(shell git ls-remote $(BASE_URL) $(VERSION) | awk '{print $$1}')
  ifeq ($(GITREV),)
 diff --git a/tools/depends/target/libdvdnav/Makefile b/tools/depends/target/libdvdnav/Makefile
-index eada58a1604..38f9be520d2 100644
+index eada58a..38f9be5 100644
 --- a/tools/depends/target/libdvdnav/Makefile
 +++ b/tools/depends/target/libdvdnav/Makefile
 @@ -3,11 +3,11 @@ include DVDNAV-VERSION
@@ -402,7 +402,7 @@ index eada58a1604..38f9be520d2 100644
    ROOT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
    PREFIX := $(ROOT_DIR)/dvdnav-install
 diff --git a/tools/depends/target/libdvdread/Makefile b/tools/depends/target/libdvdread/Makefile
-index d240953fe4c..2c9100f84e9 100644
+index d240953..2c9100f 100644
 --- a/tools/depends/target/libdvdread/Makefile
 +++ b/tools/depends/target/libdvdread/Makefile
 @@ -3,11 +3,12 @@ include DVDREAD-VERSION
@@ -421,7 +421,7 @@ index d240953fe4c..2c9100f84e9 100644
    ROOT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
    PREFIX := $(ROOT_DIR)/dvdread-install
 diff --git a/xbmc/guilib/guiinfo/SystemGUIInfo.cpp b/xbmc/guilib/guiinfo/SystemGUIInfo.cpp
-index a310281956b..addcc265421 100644
+index a310281..addcc26 100644
 --- a/xbmc/guilib/guiinfo/SystemGUIInfo.cpp
 +++ b/xbmc/guilib/guiinfo/SystemGUIInfo.cpp
 @@ -57,6 +57,11 @@ std::string CSystemGUIInfo::GetSystemHeatInfo(int info) const
@@ -437,7 +437,7 @@ index a310281956b..addcc265421 100644
    }
  
 diff --git a/xbmc/input/InputManager.cpp b/xbmc/input/InputManager.cpp
-index 097245822ec..14d49726b38 100644
+index 0972458..14d4972 100644
 --- a/xbmc/input/InputManager.cpp
 +++ b/xbmc/input/InputManager.cpp
 @@ -579,6 +579,18 @@ bool CInputManager::HandleKey(const CKey& key)
@@ -460,7 +460,7 @@ index 097245822ec..14d49726b38 100644
      {
        // use the virtualkeyboard section of the keymap, and send keyboard-specific or navigation
 diff --git a/xbmc/view/ViewStateSettings.cpp b/xbmc/view/ViewStateSettings.cpp
-index a92bd1e8348..79faef81626 100644
+index a92bd1e..79faef8 100644
 --- a/xbmc/view/ViewStateSettings.cpp
 +++ b/xbmc/view/ViewStateSettings.cpp
 @@ -114,7 +114,7 @@ bool CViewStateSettings::Load(const TiXmlNode *settings)
@@ -472,6 +472,3 @@ index a92bd1e8348..79faef81626 100644
  
      const TiXmlNode* pEventLogNode = pElement->FirstChild(XML_EVENTLOG);
      if (pEventLogNode != NULL)
--- 
-2.25.1
-
