@@ -1,0 +1,13 @@
+--- a/src/main.cpp
++++ b/src/main.cpp
+@@ -43,6 +43,10 @@
+ #include <kodi/addon-instance/VideoCodec.h>
+ #include <kodi/addon-instance/inputstream/StreamCodec.h>
+ 
++#ifndef INPUTSTREAM_MAX_STREAM_COUNT
++#define INPUTSTREAM_MAX_STREAM_COUNT 256
++#endif
++
+ #if defined(ANDROID)
+ #include <kodi/platform/android/System.h>
+ #endif

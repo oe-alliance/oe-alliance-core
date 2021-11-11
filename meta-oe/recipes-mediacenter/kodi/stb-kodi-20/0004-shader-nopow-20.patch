@@ -1,4 +1,4 @@
-From 68ce92c24b764fb913d1f0f8f8ce7264d5a98eed Mon Sep 17 00:00:00 2001
+From 1dcbada926a9ff8255ddeb969d5e8db9fbb16820 Mon Sep 17 00:00:00 2001
 From: Captain <captain.onboard@web.de>
 Date: Wed, 15 Jul 2020 21:42:24 +0200
 Subject: [PATCH] shader-nopow-19
@@ -10,10 +10,10 @@ Subject: [PATCH] shader-nopow-19
  3 files changed, 43 insertions(+), 5 deletions(-)
 
 diff --git a/system/shaders/GLES/2.0/gles_yuv2rgb_basic.frag b/system/shaders/GLES/2.0/gles_yuv2rgb_basic.frag
-index ecd82b13ca..ad12c636ec 100644
+index d76a3b89e4..47dcd7dbbc 100644
 --- a/system/shaders/GLES/2.0/gles_yuv2rgb_basic.frag
 +++ b/system/shaders/GLES/2.0/gles_yuv2rgb_basic.frag
-@@ -62,9 +62,27 @@ void main()
+@@ -63,9 +63,27 @@ void main()
    rgb.a = m_alpha;
  
  #if defined(XBMC_COL_CONVERSION)
@@ -41,10 +41,10 @@ index ecd82b13ca..ad12c636ec 100644
 -  rgb.rgb = pow(rgb.rgb, vec3(m_gammaDstInv));
 +  rgb.rgb = ai * rgb.rgb*rgb.rgb + bi * rgb.rgb + ci * sqrt(rgb.rgb);
  
- #if defined(XBMC_TONE_MAPPING)
+ #if defined(KODI_TONE_MAPPING_REINHARD)
    float luma = dot(rgb.rgb, m_coefsDst);
 diff --git a/system/shaders/GLES/2.0/gles_yuv2rgb_bob.frag b/system/shaders/GLES/2.0/gles_yuv2rgb_bob.frag
-index 22d672dd14..119bab453a 100644
+index a82de9d8db..e5078ad8c2 100644
 --- a/system/shaders/GLES/2.0/gles_yuv2rgb_bob.frag
 +++ b/system/shaders/GLES/2.0/gles_yuv2rgb_bob.frag
 @@ -20,7 +20,7 @@
@@ -56,7 +56,7 @@ index 22d672dd14..119bab453a 100644
  uniform sampler2D m_sampY;
  uniform sampler2D m_sampU;
  uniform sampler2D m_sampV;
-@@ -83,9 +83,27 @@ void main()
+@@ -84,9 +84,27 @@ void main()
    rgb = mix(rgb, rgbBelow, 0.5);
  
  #if defined(XBMC_COL_CONVERSION)
@@ -84,13 +84,13 @@ index 22d672dd14..119bab453a 100644
 -  rgb.rgb = pow(rgb.rgb, vec3(m_gammaDstInv));
 +  rgb.rgb = ai * rgb.rgb*rgb.rgb + bi * rgb.rgb + ci * sqrt(rgb.rgb);
  
- #if defined(XBMC_TONE_MAPPING)
+ #if defined(KODI_TONE_MAPPING_REINHARD)
    float luma = dot(rgb.rgb, m_coefsDst);
 diff --git a/xbmc/cores/VideoPlayer/VideoRenderers/VideoShaders/YUV2RGBShaderGLES.cpp b/xbmc/cores/VideoPlayer/VideoRenderers/VideoShaders/YUV2RGBShaderGLES.cpp
-index 0da4b36374..53d6edc417 100644
+index fc2ff4375f..2210d348b9 100644
 --- a/xbmc/cores/VideoPlayer/VideoRenderers/VideoShaders/YUV2RGBShaderGLES.cpp
 +++ b/xbmc/cores/VideoPlayer/VideoRenderers/VideoShaders/YUV2RGBShaderGLES.cpp
-@@ -48,6 +48,8 @@ BaseYUV2RGBGLSLShader::BaseYUV2RGBGLSLShader(EShaderFormat format, AVColorPrimar
+@@ -52,6 +52,8 @@ BaseYUV2RGBGLSLShader::BaseYUV2RGBGLSLShader(EShaderFormat format,
    {
      m_colorConversion = true;
      m_defines += "#define XBMC_COL_CONVERSION\n";

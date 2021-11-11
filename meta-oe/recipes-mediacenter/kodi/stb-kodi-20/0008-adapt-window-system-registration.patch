@@ -1,4 +1,4 @@
-From a7cb3756eb3053d33675d3e1fb90aa4e17528221 Mon Sep 17 00:00:00 2001
+From ca56c08572b7438a8f831646be11bb2d441051f3 Mon Sep 17 00:00:00 2001
 From: NickerSK <nickersk@gmail.com>
 Date: Wed, 10 Mar 2021 09:45:23 +0000
 Subject: [PATCH] adapt window system registration

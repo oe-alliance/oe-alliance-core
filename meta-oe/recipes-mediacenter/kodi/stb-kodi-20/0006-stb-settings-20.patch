@@ -1,4 +1,4 @@
-From 85b84e34fe8c29cd6bdeae04d84c57364c13e076 Mon Sep 17 00:00:00 2001
+From 21d7c53ce1bcd731efc84f507c5d3c4d5547b601 Mon Sep 17 00:00:00 2001
 From: Captain <captain.onboard@web.de>
 Date: Wed, 15 Jul 2020 18:07:08 +0200
 Subject: [PATCH] stb-settings-19
@@ -23,10 +23,10 @@ Subject: [PATCH] stb-settings-19
  create mode 100644 cmake/treedata/common/stb.txt
 
 diff --git a/addons/skin.estuary/xml/Home.xml b/addons/skin.estuary/xml/Home.xml
-index f90d63470b..82671efbf9 100644
+index 19f9a867b2..ecc8f9aef0 100644
 --- a/addons/skin.estuary/xml/Home.xml
 +++ b/addons/skin.estuary/xml/Home.xml
-@@ -1046,7 +1046,7 @@
+@@ -1008,7 +1008,7 @@
  					<align>justify</align>
  					<include content="IconButton">
  						<param name="control_id" value="804" />
@@ -187,13 +187,13 @@ index 0000000000..e1fe54a13d
 +
 +list(APPEND PLATFORM_DEFINES -DMESA_EGL_NO_X11_HEADERS)
 diff --git a/cmake/scripts/linux/ArchSetup.cmake b/cmake/scripts/linux/ArchSetup.cmake
-index b68efe3bd0..6905eb95a4 100644
+index 0a27f30806..f43d96fcb2 100644
 --- a/cmake/scripts/linux/ArchSetup.cmake
 +++ b/cmake/scripts/linux/ArchSetup.cmake
-@@ -32,6 +32,10 @@ else()
-   elseif(CPU MATCHES aarch64 OR CPU MATCHES arm64)
-     set(ARCH aarch64)
-     set(NEON True)
+@@ -38,6 +38,10 @@ else()
+   elseif(CPU MATCHES riscv64)
+     set(ARCH riscv64)
+     set(NEON False)
 +  elseif(CPU MATCHES "cortexa15")
 +    set(ARCH arm)
 +    set(NEON True)
@@ -209,10 +209,10 @@ index 0000000000..2606a0f999
 @@ -0,0 +1 @@
 +xbmc/windowing/egl   windowing/egl    # STB
 diff --git a/system/settings/settings.xml b/system/settings/settings.xml
-index 2c81816158..22f5a09b49 100755
+index cade7e40d1..fb7c3b0969 100755
 --- a/system/settings/settings.xml
 +++ b/system/settings/settings.xml
-@@ -503,7 +503,7 @@
+@@ -518,7 +518,7 @@
            <control type="spinner" format="integer" delayed="true"/>
          </setting>
          <setting id="subtitles.font" type="string" label="14089" help="36185">
@@ -221,7 +221,7 @@ index 2c81816158..22f5a09b49 100755
            <default>arial.ttf</default>
            <constraints>
              <options>fonts</options>
-@@ -511,7 +511,7 @@
+@@ -526,7 +526,7 @@
            <control type="list" format="string" />
          </setting>
          <setting id="subtitles.charset" type="string" parent="subtitles.font" label="735" help="36189">
@@ -230,7 +230,7 @@ index 2c81816158..22f5a09b49 100755
            <default>DEFAULT</default>
            <constraints>
              <options>charsets</options>
-@@ -2759,7 +2759,7 @@
+@@ -2896,7 +2896,7 @@
          <setting id="audiooutput.processquality" type="integer" label="13505" help="36169">
            <requirement>HAS_AE_QUALITY_LEVELS</requirement>
            <level>2</level>
@@ -239,7 +239,7 @@ index 2c81816158..22f5a09b49 100755
            <constraints>
              <options>aequalitylevels</options>
            </constraints>
-@@ -2777,7 +2777,7 @@
+@@ -2914,7 +2914,7 @@
          </setting>
          <setting id="audiooutput.samplerate" type="integer" label="458" help="36523">
            <level>2</level>
@@ -248,7 +248,7 @@ index 2c81816158..22f5a09b49 100755
            <dependencies>
              <dependency type="visible">
                <and>
-@@ -2789,10 +2789,6 @@
+@@ -2926,10 +2926,6 @@
            <constraints>
              <options>
                <option label="34124">44100</option>
@@ -259,7 +259,7 @@ index 2c81816158..22f5a09b49 100755
                <option label="34129">352800</option>
                <option label="34130">384000</option>
              </options>
-@@ -3603,7 +3599,7 @@
+@@ -3744,7 +3740,7 @@
        <group id="2" label="14270">
          <setting id="locale.country" type="string" label="14271" help="36115">
            <level>0</level>
@@ -456,7 +456,7 @@ index c7c521202a..dba09cd1f0 100644
    }
  
 diff --git a/xbmc/input/InputManager.cpp b/xbmc/input/InputManager.cpp
-index f704de24b5..7240deb698 100644
+index b2b580f154..37df237c55 100644
 --- a/xbmc/input/InputManager.cpp
 +++ b/xbmc/input/InputManager.cpp
 @@ -579,6 +579,18 @@ bool CInputManager::HandleKey(const CKey& key)

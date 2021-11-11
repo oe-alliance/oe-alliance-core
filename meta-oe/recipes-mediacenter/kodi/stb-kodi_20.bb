@@ -7,7 +7,7 @@ FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}-20:"
 
 PACKAGE_ARCH = "${MACHINE}"
 
-inherit cmake gettext ${PYTHON_PN}-dir ${PYTHON_PN}native
+inherit cmake gettext pkgconfig ${PYTHON_PN}-dir ${PYTHON_PN}native
 
 DEPENDS += " \
             fmt \
@@ -17,6 +17,8 @@ DEPENDS += " \
             crossguid \
             libdvdnav libdvdcss libdvdread \
             ffmpeg \
+            autoconf-native \
+            automake-native \
             git-native \
             curl-native \
             gperf-native \
@@ -37,7 +39,7 @@ DEPENDS += " \
             faad2 \
             fontconfig \
             fribidi \
-            glib-2.0 \ 
+            glib-2.0 \
             giflib \
             libass \
             libcdio \
@@ -75,15 +77,15 @@ DEPENDS += " \
             gstreamer1.0-plugins-base \
           "
 
-# 20.0 Alpha1
-SRCREV = "58e75a75f8a95bec4e9d43c2865319c8ae89a13c"
+# 20.0 Nexus
+SRCREV = "5f5ad24f8cda826a7941fa0a8004c505468b6d31"
 
 # 'patch' doesn't support binary diffs
 #PATCHTOOL = "git"
 
 PR = "r0"
 
-PV = "20.0-gitr${SRCPV}"
+PV = "20.0+gitr${SRCPV}"
 
 SRC_URI = "git://github.com/xbmc/xbmc.git;protocol=https;branch=master \
            file://0001-flatbuffers-20.patch \
@@ -94,8 +96,10 @@ SRC_URI = "git://github.com/xbmc/xbmc.git;protocol=https;branch=master \
            file://0005-stb-support-20.patch \
            file://0007-add-winsystemfactory-windowing-init.patch \
            file://0008-adapt-window-system-registration.patch \
-           ${@bb.utils.contains_any('MACHINE_FEATURES', 'hisil-3798mv200 hisil-3798mv310 hisi hisil', '' , 'file://0009-e2-player.patch', d)} \
-           ${@bb.utils.contains_any('MACHINE_FEATURES', 'hisil-3798mv200 hisil-3798mv310 hisi hisil', '' , 'file://0010-gst-player.patch', d)} \
+           file://0009-reinstate-system-h.patch \
+           file://0010-reinstate-platform-defines.patch \
+           ${@bb.utils.contains_any('MACHINE_FEATURES', 'hisil-3798mv200 hisil-3798mv310 hisi hisil', '' , 'file://0011-e2-player.patch', d)} \
+           ${@bb.utils.contains_any('MACHINE_FEATURES', 'hisil-3798mv200 hisil-3798mv310 hisi hisil', '' , 'file://0012-gst-player.patch', d)} \
           "
 
 S = "${WORKDIR}/git"
@@ -256,8 +260,8 @@ RRECOMMENDS:${PN}:append = " libcec \
                              tzdata-europe \
                              tzdata-pacific \
                              xkeyboard-config \
-                             kodi-addon-inputstream-adaptive-matrix \
-                             kodi-addon-inputstream-rtmp-matrix \
+                             kodi-addon-inputstream-adaptive-nexus \
+                             kodi-addon-inputstream-rtmp-nexus \
                              alsa-plugins \
                            "
 
