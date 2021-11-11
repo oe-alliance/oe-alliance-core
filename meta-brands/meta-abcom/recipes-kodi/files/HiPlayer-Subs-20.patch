@@ -90,7 +90,7 @@ index 0000000000..429b3ad531
 +
 +//#include <inttypes.h>
 +
-+static UTILS::Color colors[8] = { UTILS::COLOR::YELLOW,
++static UTILS::COLOR::Color colors[8] = { UTILS::COLOR::YELLOW,
 +                                  UTILS::COLOR::WHITE,
 +                                  UTILS::COLOR::BLUE,
 +                                  UTILS::COLOR::BRIGHTGREEN,
@@ -169,25 +169,25 @@ index 0000000000..429b3ad531
 +	{
 +		RESOLUTION_INFO pal(720, 576, 0);
 +		CGUIFont *subtitle_font = g_fontManager.LoadTTF(StringUtils::Format("__subs{:d}{:x}{:x}{}__",
-+			settings->GetInt(CSettings::SETTING_SUBTITLES_HEIGHT),
++			settings->GetInt(CSettings::SETTING_SUBTITLES_FONTSIZE),
 +			settings->GetInt(CSettings::SETTING_SUBTITLES_COLOR),
 +			settings->GetInt(CSettings::SETTING_SUBTITLES_STYLE),
 +			settings->GetString(CSettings::SETTING_SUBTITLES_FONT))
 +			, settings->GetString(CSettings::SETTING_SUBTITLES_FONT)
 +			, colors[settings->GetInt(CSettings::SETTING_SUBTITLES_COLOR)]
 +			, 0
-+			, settings->GetInt(CSettings::SETTING_SUBTITLES_HEIGHT)
++			, settings->GetInt(CSettings::SETTING_SUBTITLES_FONTSIZE)
 +			, settings->GetInt(CSettings::SETTING_SUBTITLES_STYLE)
 +			, false, 1.0f, 1.0f, &pal, true);
 +		CGUIFont *border_font   = g_fontManager.LoadTTF(StringUtils::Format("__subsborder{:d}{:x}{:x}{}__",
-+			settings->GetInt(CSettings::SETTING_SUBTITLES_HEIGHT),
++			settings->GetInt(CSettings::SETTING_SUBTITLES_FONTSIZE),
 +			settings->GetInt(CSettings::SETTING_SUBTITLES_COLOR),
 +			settings->GetInt(CSettings::SETTING_SUBTITLES_STYLE),
 +			settings->GetString(CSettings::SETTING_SUBTITLES_FONT))
 +			, settings->GetString(CSettings::SETTING_SUBTITLES_FONT)
 +			, 0xFF000000
 +			, 0
-+			, settings->GetInt(CSettings::SETTING_SUBTITLES_HEIGHT)
++			, settings->GetInt(CSettings::SETTING_SUBTITLES_FONTSIZE)
 +			, settings->GetInt(CSettings::SETTING_SUBTITLES_STYLE)
 +			, true, 1.0f, 1.0f, &pal, true);
 +		if (subtitle_font && border_font)
