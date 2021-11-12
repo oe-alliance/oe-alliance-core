@@ -11,9 +11,9 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 inherit gitpkgv ${PYTHON_PN}native
 
 SRCREV = "${AUTOREV}"
-PV = "0.8.9+gitr${SRCPV}"
-PKGV = "0.8.9+gitr${GITPKGV}"
-PR = "r2"
+PV = "0.9.0+gitr${SRCPV}"
+PKGV = "0.9.0+gitr${GITPKGV}"
+PR = "r3"
 
 SRC_URI = "git://github.com/oe-alliance/e2openplugin-CrossEPG.git;protocol=https;branch=dev \
         file://fix-build-with-fno-common.patch \
