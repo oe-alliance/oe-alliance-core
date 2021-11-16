@@ -6,8 +6,8 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda
 ALLOW_EMPTY:${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-PV = "7.0"
-PR = "r8"
+PV = "7.1"
+PR = "r9"
 
 inherit packagegroup
 
@@ -32,6 +32,7 @@ RRECOMMENDS:${PN} = "\
     enigma2-plugin-skins-multibox-fhd-4opd \
     enigma2-plugin-skins-opd-steampunk \
     enigma2-plugin-skins-Ultimate-hd-Skin-4opd \
+    enigma2-plugin-extensions-filecommander \
     "
 RRECOMMENDS:${PN}:append:gb800solo = "enigma2-plugin-extensions-gbipboxclient"
 RRECOMMENDS:${PN}:append:gb7325 = "enigma2-plugin-extensions-gbipboxclient"
