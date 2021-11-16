@@ -7,7 +7,7 @@ ALLOW_EMPTY:${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "7.1"
-PR = "r9"
+PR = "r10"
 
 inherit packagegroup
 
@@ -32,7 +32,6 @@ RRECOMMENDS:${PN} = "\
     enigma2-plugin-skins-multibox-fhd-4opd \
     enigma2-plugin-skins-opd-steampunk \
     enigma2-plugin-skins-Ultimate-hd-Skin-4opd \
-    enigma2-plugin-extensions-filecommander \
     "
 RRECOMMENDS:${PN}:append:gb800solo = "enigma2-plugin-extensions-gbipboxclient"
 RRECOMMENDS:${PN}:append:gb7325 = "enigma2-plugin-extensions-gbipboxclient"

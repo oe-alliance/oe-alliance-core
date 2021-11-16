@@ -7,7 +7,7 @@ ALLOW_EMPTY:${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "7.1"
-PR = "r12"
+PR = "r13"
 
 inherit packagegroup
 
@@ -22,6 +22,7 @@ RRECOMMENDS:${PN} = " \
     enigma2-plugin-extensions-epgsearch \
     enigma2-plugin-extensions-graphmultiepg \
     enigma2-plugin-extensions-epgimport \
+    enigma2-plugin-extensions-filecommander \
     enigma2-plugin-extensions-cutlisteditor \
     enigma2-plugin-extensions-openwebif-themes \
     enigma2-plugin-extensions-openwebif-vxg \
