@@ -49,7 +49,7 @@ GITPKGV_PREFIX ??= "git"
 def gitpkgv_drop_tag_prefix(d, version):
     import re
 
-    if version and version[0].lower() == 'ver':
+    if version and version.lower().startswith('ver'):
         version = version[3:]
     if version and version[0].lower() == 'v':
         version = version[1:]
