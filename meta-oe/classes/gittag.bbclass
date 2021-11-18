@@ -23,35 +23,41 @@
 #
 # use example:
 #
-# inherit gitpkgv
+# inherit gittag
 #
 # PV = "1.0+gitr${SRCPV}"      # expands to something like 1.0+gitr3+4c1c21d7dbbf93b0df336994524313dfe0d4963b
 # PKGV = "1.0+gitr${GITPKGV}"  # expands also to something like 1.0+gitr31337+4c1c21d7d
 #
 # or
 #
-# inherit gitpkgv
+# inherit gittag
 #
-# PV = "1.0+gitr${SRCPV}" # expands to something like 1.0+gitr3+4c1c21d7dbbf93b0df336994524313dfe0d4963b
-# PKGV = "${GITPKGVTAG}"  # expands to something like 1.0-31337+g4c1c21d
-#                           if there is tag v1.0 before this revision or
-#                           ver1.0-31337+g4c1c21d if there is tag ver1.0
+# PV = "git${SRCPV}"  # expands to something like git+4c1c21d7dbbf93b0df336994524313dfe0d4963b
+# PKGV = "${GITPKGVTAG}"  # expands to something like 1.0-git31337+4c1c21d
+
+# The GITPKGVTAG format is <tag>-<GITPKGV_PREFIX><commit count>+<git ref>
+# The prefix "v" and "ver" will be removed from the git tag
 
 GITPKGV = "${@get_git_pkgv(d, False)}"
 GITPKGVTAG = "${@get_git_pkgv(d, True)}"
 
 # This regexp is used to drop unwanted parts of the found tags. Any matching
 # groups will be concatenated to yield the final version.
-GITPKGV_TAG_REGEXP ??= "v(\d.*)"
+GITPKGV_TAG_REGEXP ??= "(\d.*)-(.*)-g(.*)"
+GITPKGV_PREFIX ??= "git"
 
 def gitpkgv_drop_tag_prefix(d, version):
     import re
 
+    if version and version.lower().startswith('ver'):
+        version = version[3:]
+    if version and version[0].lower() == 'v':
+        version = version[1:]
+
     m = re.match(d.getVar('GITPKGV_TAG_REGEXP'), version)
     if m:
-        return ''.join(group for group in m.groups() if group)
-    else:
-        return version
+        m = m.groups()[0]
+    return m if m else version
 
 def get_git_pkgv(d, use_tags):
     import os
@@ -107,13 +113,15 @@ def get_git_pkgv(d, use_tags):
                         commits = f.readline(128).strip()
 
                 if use_tags:
+                    prefix = d.getVar('GITPKGV_PREFIX')
                     try:
                         output = bb.fetch2.runfetchcmd(
                             "git --git-dir=%(repodir)s describe %(rev)s --tags 2>/dev/null"
                             % vars, d, quiet=True).strip()
                         ver = gitpkgv_drop_tag_prefix(d, output)
+                        ver = "%s-%s%s+%s" % (ver, prefix, commits, vars['rev'][:7])
                     except Exception:
-                        ver = "0.0-%s-g%s" % (commits, vars['rev'][:7])
+                        ver = "0.0-%s%s+%s" % (prefix, commits, vars['rev'][:7])
                 else:
                     ver = "%s+%s" % (commits, vars['rev'][:7])
 
