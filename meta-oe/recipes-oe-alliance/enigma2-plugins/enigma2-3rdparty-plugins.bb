@@ -36,6 +36,11 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-xcplugin-forever_1.9_all.ipk \
     "
 
+# Install any packages that are only for this machines feed here
+THIRDPARTY_MACHINE_PLUGINS:et8000 = " \
+    enigma2-plugin-systemplugins-autorebootET8000_1.4_mipsel.ipk \
+    "
+
 python populate_packages:prepend () {
     pkg  = ""
     pkgs = ""
