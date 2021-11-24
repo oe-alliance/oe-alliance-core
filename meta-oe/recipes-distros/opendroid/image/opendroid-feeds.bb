@@ -21,7 +21,6 @@ RRECOMMENDS:${PN} = "\
     curlftpfs \
     enigma2-plugin-extensions-epgimport \
     enigma2-plugin-extensions-vhannibal-autosettings \
-    enigma2-plugin-extensions-gioppygio \
     enigma2-plugin-systemplugins-crossepg \
     enigma2-plugin-skincomponents-bmediacenter-ax-blue-skin \
     enigma2-plugin-skincomponents-mediaportal-ax-blue-skin \
