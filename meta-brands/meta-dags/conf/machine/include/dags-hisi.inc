@@ -40,6 +40,8 @@ PREFERRED_RPROVIDER_aio-grab = "dags-grab-${SOC_FAMILY}"
 
 PREFERRED_PROVIDER_virtual/blindscan-dvbs = "dags-blindscan-utils-${SOC_FAMILY}"
 
+MACHINE_EXTRA_RRECOMMENDS += " ffmpeg"
+
 require conf/machine/include/tune-cortexa15.inc
 
 IMAGE_CMD_dagsemmc_append = "\
