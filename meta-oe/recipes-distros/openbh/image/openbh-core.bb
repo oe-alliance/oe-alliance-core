@@ -1,5 +1,5 @@
-SUMMARY = "OpenBH Core"
-MAINTAINER = "OpenBH"
+SUMMARY = "OpenBh Core"
+MAINTAINER = "OpenBh"
 
 require conf/license/license-gplv2.inc
 
@@ -16,7 +16,7 @@ inherit autotools-brokensep gitpkgv ${PYTHON_PN}native
 SRCREV = "${AUTOREV}"
 PV = "${IMAGE_VERSION}+git${SRCPV}"
 PKGV = "${IMAGE_VERSION}+git${GITPKGV}"
-PR = "r6"
+PR = "r7"
 
 SRC_URI="git://github.com/BlackHole/obh-core.git;protocol=https"
 

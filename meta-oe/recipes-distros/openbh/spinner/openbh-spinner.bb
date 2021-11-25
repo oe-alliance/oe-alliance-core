@@ -1,5 +1,5 @@
 SUMMARY = "openbh-spinner"
-MAINTAINER = "BlackHole Team"
+MAINTAINER = "OpenBh Team"
 SECTION = "base"
 LICENSE = "proprietary"
 inherit allarch
@@ -18,7 +18,7 @@ SRC_URI="file://wait1.png \
         file://wait7.png \
         file://wait8.png \
         "
-        
+
 S = "${WORKDIR}"
 
 do_install() {

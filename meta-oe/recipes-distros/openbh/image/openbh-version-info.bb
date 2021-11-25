@@ -1,5 +1,5 @@
-SUMMARY = "OpenBH Version Info"
-MAINTAINER = "OpenBH"
+SUMMARY = "OpenBh Version Info"
+MAINTAINER = "OpenBh"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"
@@ -10,7 +10,7 @@ PV = "${IMAGE_VERSION}"
 PR = "${BUILD_VERSION}"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-URL = "http://www.vuplus-community.net"
+URL = "http://www.openbh.net"
 
 S = "${WORKDIR}"
 
@@ -19,7 +19,7 @@ PACKAGES = "${PN}"
 do_install() {
     # generate /etc/image-version
     install -d ${D}/etc
-    echo "Creator = OpenBH" > ${D}/etc/image-version
+    echo "Creator = OpenBh" > ${D}/etc/image-version
     echo "Version = ${IMAGE_VERSION}" >> ${D}/etc/image-version
     echo "Build = ${BUILD_VERSION}" >> ${D}/etc/image-version
     echo "Type = ${DISTRO_TYPE}" >> ${D}/etc/image-version

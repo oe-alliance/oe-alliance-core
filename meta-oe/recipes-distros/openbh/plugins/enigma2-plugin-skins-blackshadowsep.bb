@@ -1,5 +1,5 @@
 SUMMARY = "Enigma2 Skin BlackShadowSE_P"
-MAINTAINER = "BlackHole team"
+MAINTAINER = "OpenBh Team"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"

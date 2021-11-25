@@ -1,5 +1,5 @@
-SUMMARY = "OpenBH Image"
-MAINTAINER = "OpenBH"
+SUMMARY = "OpenBh Image"
+MAINTAINER = "OpenBh"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"

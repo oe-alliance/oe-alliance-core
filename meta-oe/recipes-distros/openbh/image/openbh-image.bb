@@ -1,4 +1,4 @@
-SUMMARY = "Build openBH Image with Feed"
+SUMMARY = "Build OpenBh Image with Feed"
 
 DEPENDS = "openbh-feeds"
 

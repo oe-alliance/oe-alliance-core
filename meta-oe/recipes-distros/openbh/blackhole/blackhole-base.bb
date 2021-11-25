@@ -1,7 +1,7 @@
-DESCRIPTION = "Open BlackHole extra files"
+DESCRIPTION = "OpenBh extra files"
 SECTION = "base"
 PRIORITY = "required"
-MAINTAINER = "Black Hole team"
+MAINTAINER = "OpenBh Team"
 
 require conf/license/license-gplv2.inc
 

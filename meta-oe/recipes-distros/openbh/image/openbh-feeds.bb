@@ -1,5 +1,5 @@
-SUMMARY = "OpenBH Extras"
-MAINTAINER = "OpenBH"
+SUMMARY = "OpenBh Extras"
+MAINTAINER = "OpenBh"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda2f7b4f302 \
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
@@ -9,7 +9,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r5"
+PR = "r6"
 
 inherit packagegroup
 

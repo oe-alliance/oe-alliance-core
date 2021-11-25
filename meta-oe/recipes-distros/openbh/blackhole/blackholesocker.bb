@@ -1,7 +1,7 @@
 DESCRIPTION="Blackholesocker: External bin to execute commands sent by Enigma2 via socket"
 SECTION = "base"
 PRIORITY = "required"
-MAINTAINER = "Black Hole team"
+MAINTAINER = "OpenBh Team"
 
 require conf/license/license-gplv2.inc
 

@@ -1,5 +1,5 @@
-SUMMARY = "OpenBH Bootlogo"
-MAINTAINER = "BlackHole Team"
+SUMMARY = "OpenBh Bootlogo"
+MAINTAINER = "OpenBh Team"
 SECTION = "base"
 PRIORITY = "required"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
