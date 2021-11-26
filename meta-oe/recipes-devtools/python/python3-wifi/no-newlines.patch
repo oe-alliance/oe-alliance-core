@@ -1,0 +1,14 @@
+--- a/setup.py
++++ b/setup.py
+@@ -4,10 +4,7 @@ import sys
+ 
+ from setuptools import setup
+ 
+-__doc__ = """
+-Command line tool and library wrappers around iwlist and
+-/etc/network/interfaces.
+-"""
++__doc__ = """Command line tool and library wrappers around iwlist and /etc/network/interfaces."""
+ 
+ 
+ def read(fname):
