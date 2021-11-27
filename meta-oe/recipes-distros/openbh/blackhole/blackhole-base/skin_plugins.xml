@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<skin>
+ <screen name="OscamInfoMenu" position="center,200" size="1300,720" title="">
+    <widget name="mainmenu" position="20,0" size="1260,680" zPosition="2" font="Regular;30" itemHeight="40" enableWrapAround="1" scrollbarMode="showOnDemand"  transparent="1" />
+  </screen>
+ <screen name="oscECMInfo" position="center,200" size="1300,720" title="">
+    <widget name="output" position="20,0" size="1260,680" zPosition="2" font="Regular;30"  transparent="1" />
+  </screen>
+ <screen name="OscamInfoConfigScreen" position="center,200" size="1300,720" title="">
+    <widget name="config" position="20,0" size="1260,400" zPosition="2" font="Regular;30" itemHeight="40" enableWrapAround="1" scrollbarMode="showOnDemand" transparent="1" />
+    <widget name="status" position="20,440" size="1260,260" zPosition="2" font="Regular;30" transparent="1" />
+  </screen>
+<screen name="CCcamInfoMain" position="center,200" size="1300,720" title="">
+    <widget name="menu" position="20,0" size="1260,680" zPosition="2" font="Regular;30" itemHeight="40" enableWrapAround="1" scrollbarMode="showOnDemand"  transparent="1" />
+  </screen>
+<screen name="CCcamInfoEcmInfoSelection" position="center,200" size="1300,720" title="">
+    <widget name="list" position="20,0" size="1260,680" zPosition="2" font="Regular;30" itemHeight="40" enableWrapAround="1" scrollbarMode="showOnDemand"  transparent="1" />
+  </screen>
+<screen name="CCcamInfoInfoScreen" position="center,200" size="1300,720" title="">
+    <widget name="text" position="20,0" size="1260,680" zPosition="2" font="Regular;30" itemHeight="40" enableWrapAround="1" scrollbarMode="showOnDemand"  transparent="1" />
+  </screen>
+<screen name="CCcamInfoSubMenu" position="center,200" size="1300,720" title="">
+    <widget name="list" position="20,0" size="1260,400" zPosition="2" font="Regular;30" itemHeight="40" enableWrapAround="1" scrollbarMode="showOnDemand"  transparent="1" />
+    <widget name="info" position="20,440" size="1260,260" zPosition="2" font="Regular;30" foregroundColor="#00008cff" transparent="1" />
+  </screen>
+<screen name="CCcamInfoServerMenu" position="center,200" size="1300,720" title="">
+    <widget name="list" position="20,0" size="1260,400" zPosition="2" font="Regular;30" itemHeight="40" enableWrapAround="1" scrollbarMode="showOnDemand"  transparent="1" />
+    <widget name="info" position="20,440" size="1260,260" zPosition="2" font="Regular;30" foregroundColor="#00008cff"  transparent="1" />
+  </screen>
+<screen name="CCcamInfoConfigMenu" position="center,200" size="1300,720" title="">
+    <widget name="list" position="20,0" size="1260,680" zPosition="2" font="Regular;30" itemHeight="40" enableWrapAround="1" scrollbarMode="showOnDemand"  transparent="1" />
+  </screen>
+<screen name="CCcamInfoRemoteBoxMenu" position="center,200" size="1300,720" title="">
+    <widget name="list" position="20,0" size="1260,680" zPosition="2" font="Regular;30" itemHeight="40" enableWrapAround="1" scrollbarMode="showOnDemand"  transparent="1" />
+  </screen>
+<screen name="CCcamInfoShareInfo" position="center,200" size="1300,720" title="">
+    <widget name="list" position="20,0" size="1260,680" zPosition="2" font="Regular;30" itemHeight="40" enableWrapAround="1" scrollbarMode="showOnDemand"  transparent="1" />
+  </screen>
+<screen name="CCcamInfoConfigSwitcher" position="center,200" size="1300,720" title="">
+    <widget name="list" position="20,0" size="1260,680" zPosition="2" font="Regular;30" itemHeight="40" enableWrapAround="1" scrollbarMode="showOnDemand"  transparent="1" />
+  </screen>
+<screen name="CCcamInfoMenuConfig" position="center,200" size="1300,720" title="">
+    <widget name="list" position="20,0" size="1260,680" zPosition="2" font="Regular;30" itemHeight="40" enableWrapAround="1" scrollbarMode="showOnDemand"  transparent="1" />
+  </screen>
+<screen name="CCcamShareViewMenu" position="center,200" size="1300,720" title="">
+ <widget name="list" position="20,0" size="1260,400" zPosition="2" font="Regular;30" itemHeight="40" enableWrapAround="1" scrollbarMode="showOnDemand"  transparent="1" />
+ <widget name="uphops" position="20,460" size="1260,40" zPosition="2" font="Regular;30"  transparent="1" />
+ <widget name="cards" position="20,460" size="1260,40" zPosition="2" font="Regular;30" halign="right"  transparent="1" />
+ <widget name="providers" position="20,500" size="1260,40" zPosition="2" font="Regular;30"  transparent="1" />
+ <widget name="reshare" position="20,500" size="1260,40" zPosition="2" font="Regular;30" halign="right"  transparent="1" />
+ <widget name="title" position="20,660" size="1260,40" zPosition="2" font="Regular;30"  transparent="1" />
+  </screen>
+</skin>
