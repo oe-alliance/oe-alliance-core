@@ -31,7 +31,8 @@ RDEPENDS_${PN} = "python-core \
 
 inherit gittag setuptools
 
-SRCREV = "${AUTOREV}"
+#SRCREV = "${AUTOREV}"
+SRCREV = "aaab3ccd2b3b0ff63c1ea821eadc92c1c81ad37f"
 PV = "git${SRCPV}"
 PKGV = "${GITPKGVTAG}"
 
