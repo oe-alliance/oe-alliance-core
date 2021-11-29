@@ -7,7 +7,7 @@ inherit gitpkgv ${@bb.utils.contains("PYTHON_PN", "python", "distutils-openplugi
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
-PR = "r5"
+PR = "r6"
 
 S = "${WORKDIR}/git"
 SRC_URI = "git://github.com/oe-alliance/enigma2-plugin-systemplugins-quadpip.git;protocol=http"
