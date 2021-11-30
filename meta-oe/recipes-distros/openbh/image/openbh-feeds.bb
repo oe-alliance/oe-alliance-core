@@ -9,7 +9,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r6"
+PR = "r7"
 
 inherit packagegroup
 
@@ -28,6 +28,7 @@ RRECOMMENDS:${PN} = "\
     enigma2-skins-openvix \
     oe-alliance-skins \
     openssl-old \
+    openvix-softcams-meta \
     ${@bb.utils.contains("MACHINE_FEATURES", "skins1080", "hd-skins-meta", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "quadpip", "enigma2-plugin-systemplugins-quadpip", "", d)} \
     "
