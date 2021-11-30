@@ -19,7 +19,6 @@ RRECOMMENDS:${PN} = "\
     cdfs \
     curlftpfs \
     enigma2-display-skins \
-    enigma2-pliplugins \
     enigma2-plugin-extensions-blurayplayer \
     enigma2-plugin-extensions-epgimport \
     enigma2-plugin-extensions-enhancedmoviecenter \
@@ -28,6 +27,7 @@ RRECOMMENDS:${PN} = "\
     enigma2-skins-openvix \
     oe-alliance-skins \
     openssl-old \
+    openvix-picon-feed
     openvix-softcams-meta \
     ${@bb.utils.contains("MACHINE_FEATURES", "skins1080", "hd-skins-meta", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "quadpip", "enigma2-plugin-systemplugins-quadpip", "", d)} \
