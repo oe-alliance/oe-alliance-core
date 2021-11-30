@@ -7,7 +7,7 @@ The openembedded alliance core.
 
 openatv   Support: [https://www.opena.tv/](https://www.opena.tv/)
 
-openbh    Support: [https://vuplus-community.net](https://vuplus-community.net)
+openbh    Support: [https://openbh.net](https://openbh.net)
 
 opendroid Support: [https://droidsat.org](https://droidsat.org)
 
@@ -27,7 +27,7 @@ teamblue  Support: [https://www.gigablue-support.org](https://www.gigablue-suppo
 
 # Supported Vendors and Models  with openATV
 
-### AirDigital  
+### AirDigital
 
 Zgemma-Star 2S          MACHINE:  zgemmas2s
 
@@ -104,11 +104,11 @@ Zgemma H9 TWIN SE       MACHINE:  zgemmah9twinse
 
 ### Amiko
 
-Viper SLIM              MACHINE:  viperslim 
+Viper SLIM              MACHINE:  viperslim
 
-Viper T2/C              MACHINE:  vipert2c 
+Viper T2/C              MACHINE:  vipert2c
 
-Viper Combo             MACHINE:  vipercombo 
+Viper Combo             MACHINE:  vipercombo
 
 Viper Combo HDD         MACHINE:  vipercombohdd
 
@@ -148,7 +148,7 @@ Atemio AM 6100          MACHINE:  atemio6100
 
 Atemio AM 6200          MACHINE:  atemio6200
 
-Atemio NEMESIS          MACHINE:  atemionemesis 
+Atemio NEMESIS          MACHINE:  atemionemesis
 
 
 ### Atto
@@ -575,7 +575,7 @@ MARAM9                  MACHINE:  maram9
 
 EVO                     MACHINE:  evo
 
-E3 HD                   MACHINE:  evoe3hd 
+E3 HD                   MACHINE:  evoe3hd
 
 
 ### Opticum
@@ -847,7 +847,7 @@ ET9500                  MACHINE:  et9x00
 
 ET8000                  MACHINE:  et8000
 
-ET8500                  MACHINE:  et8500 
+ET8500                  MACHINE:  et8500
 
 ET10000                 MACHINE:  et10000
 
