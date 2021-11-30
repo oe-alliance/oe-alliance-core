@@ -758,8 +758,8 @@ VUDUO                   MACHINE:  vuduo
 
 VUUNO                   MACHINE:  vuuno
 
-VUULTIMO                MACHINE:  vuultim
-o
+VUULTIMO                MACHINE:  vuultimo
+
 VUSOLO2                 MACHINE:  vusolo2
 
 VUDUO2                  MACHINE:  vuduo2
