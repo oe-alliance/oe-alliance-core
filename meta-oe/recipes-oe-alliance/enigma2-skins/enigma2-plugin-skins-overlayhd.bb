@@ -67,14 +67,14 @@ pkg_prerm:${PN} () {
 SKIN=`sed -En 's|config\.skin\.primary_skin=(.+)/skin\.xml|\1|p' /etc/enigma2/settings`
 if [ "${SKIN}" == "OverlayHD" ]; then
 	echo ""
-	echo "OverlayHD is the current skin and can't be removed at"
-	echo "this time."
+	echo "OverlayHD is the current skin. Please select another"
+	echo "skin as the active skin ASAP."
 	echo ""
-	echo "Please select another skin as the active skin and"
-	echo "then try again as OverlayHD should then be removable."
+	echo "Note that the system may become unstable if OverlayHD"
+	echo "is not reinstalled or another skin is not selected"
+	echo "promptly!"
 	echo ""
 	echo ""
-	exit 1
 fi
 if [ -L "/usr/share/enigma2/OverlayHD/bootlogo.mvi" ]; then
 	unlink "/usr/share/enigma2/OverlayHD/bootlogo.mvi"
