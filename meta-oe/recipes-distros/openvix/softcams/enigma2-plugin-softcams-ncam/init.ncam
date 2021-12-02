@@ -1,0 +1,94 @@
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides:          softcam
+# Required-Start:    $local_fs
+# Required-Stop:     
+# Should-Start:      $time $remote_fs cardserver
+# Should-Stop:     
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: ncam
+# Description:       ncam SoftCAM, card reader and server.
+### END INIT INFO
+
+readlink -f $0 >/dev/null 2>&1
+if [ $? -eq 0 ]; then
+	CAM=$(basename $(readlink -f $0) | sed s#^softcam\.##)
+else
+	CAM=$(basename $0 | sed s#^softcam\.##)
+fi
+
+[ -n "$CAM" ] || exit 1
+[ -x /usr/softcams/$CAM ] || exit 1
+
+PIDFILE=/var/tmp/${CAM}.pid
+DESC="Softcam service $CAM"
+DAEMON=/usr/softcams/$CAM
+
+case "$1" in
+start)
+	if [ -e $PIDFILE ]; then
+		PIDDIR=/proc/$(cat $PIDFILE)
+		if [ -d ${PIDDIR} ] && [[ $(readlink -f ${PIDDIR}/exe) == $DAEMON ]]; then
+			echo "$DESC already started; not starting."
+			exit 1
+		else
+			rm -f $PIDFILE
+		fi
+	fi
+	echo -n "Starting $DESC: "
+	ulimit -s 1024
+	$DAEMON --config-dir /etc/tuxbox/config/$CAM --daemon --pidfile $PIDFILE --restart 2 --utf8 2| grep -v "UTF-8 mode"
+	sleep 0.5
+	RETVAL=1
+	[ -e $PIDFILE ] && RETVAL=0
+	if [ "$RETVAL" -eq "0" ]; then
+		echo "OK"
+	else
+		echo "FAILED"
+	fi
+	exit $RETVAL
+	;;
+stop)
+	echo -n "Stopping $DESC: "
+	kill `cat $PIDFILE 2> /dev/null` 2> /dev/null
+	RETVAL=$?
+	if [ "$RETVAL" -eq "0" ]; then
+		echo "OK"
+	else
+		echo "FAILED"
+	fi
+	sleep 1
+	killall $CAM 2> /dev/null
+	exit $RETVAL
+	;;
+restart|reload)
+	$0 stop
+	sleep 1
+	$0 start
+	exit $?
+	;;
+status)
+	echo -n "$DESC: "
+	if [ -e $PIDFILE ]; then
+		PIDDIR=/proc/$(cat $PIDFILE)
+		if [ -d ${PIDDIR} ] && [[ $(readlink -f ${PIDDIR}/exe) == $DAEMON ]]; then
+			echo "Running."
+			exit 0
+		fi
+	fi
+	echo "Stopped."
+	exit 1
+	;;
+version)
+	$CAM -V | grep 'Version\|IPv6' | sed 's/Version:[ ]*//' | sed 's/IPv6.*yes/with IPv6/g' | sed 's/IPv6.*no/IPv4-only/g' | sed ':a;N;$!ba;s/\n/ /g'
+	;;
+info)
+	$CAM -V | grep 'Version\|IPv6' | sed 's/Version:[ ]*//' | sed 's/IPv6.*yes/with IPv6/g' | sed 's/IPv6.*no/IPv4-only/g' | sed ':a;N;$!ba;s/\n/ /g'
+	;;
+*)
+	echo "Usage: $0 start|stop|restart|status"
+	exit 1
+	;;
+esac
+exit 0

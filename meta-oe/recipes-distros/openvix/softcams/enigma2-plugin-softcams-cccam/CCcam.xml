@@ -1,0 +1,13 @@
+<directory name="CCcam PPanel">
+	<execute name="CCcam Online Clients" target="echo clients | nc localhost 16000" helptext="Show CCcam Clients"/>
+	<execute name="CCcam Online ActiveClients" target="echo activeclients | nc localhost 16000" helptext="Show CCcam Clients"/>
+	<execute name="CCcam Online Servers" target="echo servers | nc localhost 16000" helptext="Show CCcam Servers"/>
+	<execute name="CCcam Online Shares" target="echo shares | nc localhost 16000" helptext="Show CCcam Shares"/>
+	<execute name="CCcam Online Providers" target="echo providers | nc localhost 16000" helptext="Show CCcam Providers"/>
+	<execute name="CCcam Smartcard info" target="echo entitlements | nc localhost 16000" helptext="Show CCcam Smartcard Info"/>
+	<execute name="CCcam Cam info" target="echo info | nc localhost 16000" helptext="Show CCcam Cam Info"/>
+	<execute name="CCcam show config" target="cat /var/etc/CCcam.cfg" helptext="Show CCcam Config"/>
+	<execute name="Ecm Info" target="cat /tmp/ecm.info" helptext="Show Ecm Info"/>
+	<execute name="Netstat -nat" target="netstat - nat" helptext="Show Connections"/>
+	<separator/>
+</directory>

@@ -8,16 +8,21 @@ DEPENDS = "\
     enigma2-plugin-softcams-oscam-emu \
     enigma2-plugin-softcams-oscam-stable \
     enigma2-plugin-softcams-oscam-latest \
-    ${@bb.utils.contains("TARGET_ARCH", "mipsel", "openvix-softcams-cccam", "", d)} \
-    ${@bb.utils.contains("TARGET_ARCH", "mipsel", "openvix-softcams-evocamd", "", d)} \
+    \
+    enigma2-plugin-softcams-ncam \
+    \
+    enigma2-plugin-softcams-cccam \
+    \
+    enigma2-plugin-softcams-mgcamd \
+    \
     ${@bb.utils.contains("TARGET_ARCH", "mipsel", "openvix-softcams-mgcamd135a", "", d)} \
     ${@bb.utils.contains("TARGET_ARCH", "mipsel", "openvix-softcams-mgcamd138", "", d)} \
-    ${@bb.utils.contains("TARGET_ARCH", "mipsel", "openvix-softcams-mgcamd145c", "", d)} \
-    ${@bb.utils.contains("TARGET_ARCH", "mipsel", "openvix-softcams-newcs", "", d)} \
     ${@bb.utils.contains("TARGET_ARCH", "mipsel", "openvix-softcams-oscam-pcscd-mipsel" , "", d)} \
     ${@bb.utils.contains("TARGET_ARCH", "mipsel", "openvix-softcams-oscam-pcscd-latest-mipsel" , "openvix-softcams-oscam-pcscd-latest-arm", d)} \
+    ${@bb.utils.contains("TARGET_ARCH", "mipsel", "openvix-softcams-evocamd", "", d)} \
     ${@bb.utils.contains("TARGET_ARCH", "mipsel", "openvix-softcams-rqcamd", "", d)} \
     ${@bb.utils.contains("TARGET_ARCH", "mipsel", "openvix-softcams-scam", "", d)} \
+    ${@bb.utils.contains("TARGET_ARCH", "mipsel", "openvix-softcams-newcs", "", d)} \
     "
 
-PR = "r14"
+PR = "r15"
