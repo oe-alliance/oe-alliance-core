@@ -3,7 +3,7 @@
 CAMNAME="Common Interface"
 
 remove_tmp () {
-	rm -rf /tmp/*.info /tmp/*.tmp
+	rm -rf /tmp/*.info /tmp/*.tmp /tmp/.oscam* /tmp/.ncam* /tmp/.cccam* /tmp/.CCcam* /tmp/*mgcamd*
 }
 
 case "$1" in
