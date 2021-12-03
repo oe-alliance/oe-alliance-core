@@ -8,7 +8,7 @@ require conf/license/license-gplv2.inc
 SRC_URI = "file://Ncam_Ci.sh file://StartBhCam file://Delete_all_Crashlogs.sh file://Ifconfig.sh \
 	file://openvpn.log file://Netstat.sh file://Uptime.sh file://bh_swap file://skin_plugins.xml"
 
-PR = "r13"
+PR = "r14"
 
 FILES:${PN} = "/"
 
