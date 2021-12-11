@@ -1,0 +1,64 @@
+--- a/lib/replace/replace.c
++++ b/lib/replace/replace.c
+@@ -558,42 +558,6 @@ long long int rep_strtoll(const char *str, char **endptr, int base)
+ #endif /* HAVE_BSD_STRTOLL */
+ #endif /* HAVE_STRTOLL */
+ 
+-
+-#ifndef HAVE_STRTOULL
+-unsigned long long int rep_strtoull(const char *str, char **endptr, int base)
+-{
+-#ifdef HAVE_STRTOUQ
+-	return strtouq(str, endptr, base);
+-#elif defined(HAVE___STRTOULL) 
+-	return __strtoull(str, endptr, base);
+-#elif SIZEOF_LONG == SIZEOF_LONG_LONG
+-	return (unsigned long long int) strtoul(str, endptr, base);
+-#else
+-# error "You need a strtoull function"
+-#endif
+-}
+-#else
+-#ifdef HAVE_BSD_STRTOLL
+-#undef strtoull
+-unsigned long long int rep_strtoull(const char *str, char **endptr, int base)
+-{
+-	int saved_errno = errno;
+-	unsigned long long int nb = strtoull(str, endptr, base);
+-	/* With glibc EINVAL is only returned if base is not ok */
+-	if (errno == EINVAL) {
+-		if (base == 0 || (base >1 && base <37)) {
+-			/* Base was ok so it's because we were not
+-			 * able to make the conversion.
+-			 * Let's reset errno.
+-			 */
+-			errno = saved_errno;
+-		}
+-	}
+-	return nb;
+-}
+-#endif /* HAVE_BSD_STRTOLL */
+-#endif /* HAVE_STRTOULL */
+-
+ #ifndef HAVE_SETENV
+ int rep_setenv(const char *name, const char *value, int overwrite) 
+ {
+--- a/lib/replace/replace.h
++++ b/lib/replace/replace.h
+@@ -394,16 +394,6 @@ long long int rep_strtoll(const char *str, char **endptr, int base);
+ #endif
+ #endif
+ 
+-#ifndef HAVE_STRTOULL
+-#define strtoull rep_strtoull
+-unsigned long long int rep_strtoull(const char *str, char **endptr, int base);
+-#else
+-#ifdef HAVE_BSD_STRTOLL /* yes, it's not HAVE_BSD_STRTOULL */
+-#define strtoull rep_strtoull
+-unsigned long long int rep_strtoull(const char *str, char **endptr, int base);
+-#endif
+-#endif
+-
+ #ifndef HAVE_FTRUNCATE
+ #define ftruncate rep_ftruncate
+ int rep_ftruncate(int,off_t);
