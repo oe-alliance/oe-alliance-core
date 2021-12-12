@@ -92,7 +92,6 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-xbmcwetter_1.4rc1_all.ipk \
     enigma2-plugin-extensions-xcplugin-forever_1.9_all.ipk \
     enigma2-plugin-extensions-xcplugin-iptv-mod-lululla_6.7_all \
-    enigma2-plugin-picons-snp-full.220x132-190x102.light.on.transparent_2021-02-05--01-33-49_all.ipk \
     enigma2-plugin-systemplugins-bouquetsprotection_0.2-rc1_all.ipk \
     enigma2-plugin-systemplugins-channelselectionnavigator_1.5_mipsel.ipk \
     enigma2-plugin-systemplugins-extnumberzap_1.21_all.ipk \
