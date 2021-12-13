@@ -7,7 +7,7 @@ RDEPENDS_${PN} = "ffmpeg libjpeg-turbo"
 
 COMPATIBLE_MACHINE = "^(u42)$"
 
-SRCDATE = "20210607"
+SRCDATE = "20211109"
 
 PV = "${SRCDATE}"
 PR = "r1"
@@ -33,5 +33,5 @@ do_package_qa() {
 
 FILES_${PN}  = "${bindir}/showiframe ${bindir}/dinobotplayer"
 
-SRC_URI[md5sum] = "17f8ba5c12ea0a9b48bfa2391d5a99a4"
-SRC_URI[sha256sum] = "13bef3e35533a7781689d7568479056a51c560746dbd96538d1efdeac237ff96"
+SRC_URI[md5sum] = "1c17f1e5386ff47dbf6703185660ea08"
+SRC_URI[sha256sum] = "ed1eff767b6b4e6eda3fb3ccf08e21b9ce257676800153989c7a2b39f0c50702"
