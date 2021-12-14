@@ -1,19 +1,19 @@
 SUMMARY = "Plex Client for Enigma2 by Don Davici"
-MAINTAINER = "Don Davici"
+MAINTAINER = "OE-Alliance"
 
 require conf/license/license-gplv2.inc
 
 inherit autotools-brokensep gitpkgv pythonnative gettext
 
 SRCREV = "${AUTOREV}"
-PV = "2.1.3+git${SRCPV}"
-PKGV = "2.1.3+git${GITPKGV}"
+PV = "2.2.0+git${SRCPV}"
+PKGV = "2.2.0+git${GITPKGV}"
 PR = "r0"
 
 DEPENDS = "enigma2 python"
-RDEPENDS_${PN} = "gstreamer1.0-plugins-bad-hls curl mjpegtools python-ctypes libshowiframe0"
+RDEPENDS_${PN} = "gstreamer1.0-plugins-bad-hls curl mjpegtools python-ctypes libshowiframe0 python-textutils python-imaging python-pyopenssl openssl"
 
-SRC_URI = "git://github.com/DonDavici/DreamPlex.git;protocol=https"
+SRC_URI = "git://github.com/oe-alliance/DreamPlex.git;protocol=https;branch=master"
 
 EXTRA_OECONF = " \
     BUILD_SYS=${BUILD_SYS} \
