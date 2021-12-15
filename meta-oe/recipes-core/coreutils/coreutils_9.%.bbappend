@@ -1,3 +1,7 @@
+FILESEXTRAPATHS:prepend := "${THISDIR}/coreutils:"
+
+SRC_URI:append:sh4 = " file://sh4-getrandom.patch"
+
 PACKAGES =+ "${PN}-realpath ${PN}-truefalse"
 
 FILES:${PN}-truefalse = "${base_bindir}/true.${PN} ${base_bindir}/false.${PN}"
@@ -9,3 +13,5 @@ ALTERNATIVE:${PN}:remove = "realpath stdbuf true false"
 ALTERNATIVE:${PN}-truefalse = "true false"
 ALTERNATIVE:${PN}-realpath = "realpath"
 ALTERNATIVE:${PN}-stdbuf = "stdbuf"
+
+CFLAGS:append:sh4 = " -std=gnu99"

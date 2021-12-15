@@ -1,3 +1,7 @@
+FILESEXTRAPATHS:prepend := "${THISDIR}/nano:"
+
+SRC_URI:append:sh4 = " file://sh4-getrandom.patch"
+
 inherit update-alternatives
 
 EXTRA_OECONF:prepend = "--bindir=/bin"
