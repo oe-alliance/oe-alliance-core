@@ -1,4 +1,4 @@
-From 5a767c3794e2af31f254ba4fb326b48ed76409d4 Mon Sep 17 00:00:00 2001
+From 896a0ac6d74d87b39ee21620093379761b13cd48 Mon Sep 17 00:00:00 2001
 From: Captain <captain.onboard@web.de>
 Date: Fri, 17 Jul 2020 21:07:15 +0200
 Subject: [PATCH] gst-player
@@ -9,7 +9,7 @@ Subject: [PATCH] gst-player
  cmake/platform/linux/stb.cmake                |    2 +-
  cmake/treedata/common/cores.txt               |    1 +
  xbmc/cores/GstPlayer/CMakeLists.txt           |    9 +
- xbmc/cores/GstPlayer/GstPlayer.cpp            |  687 ++++++++
+ xbmc/cores/GstPlayer/GstPlayer.cpp            |  688 ++++++++
  xbmc/cores/GstPlayer/GstPlayer.h              |  186 +++
  xbmc/cores/GstPlayer/GstPlayerAudio.cpp       |  151 ++
  xbmc/cores/GstPlayer/GstPlayerAudio.h         |   44 +
@@ -17,7 +17,7 @@ Subject: [PATCH] gst-player
  xbmc/cores/GstPlayer/GstPlayerVideo.h         |  181 +++
  .../playercorefactory/PlayerCoreConfig.h      |   11 +
  .../playercorefactory/PlayerCoreFactory.cpp   |   15 +
- 13 files changed, 2833 insertions(+), 1 deletion(-)
+ 13 files changed, 2834 insertions(+), 1 deletion(-)
  create mode 100644 cmake/modules/FindGLIB.cmake
  create mode 100644 cmake/modules/FindGstreamer.cmake
  create mode 100644 xbmc/cores/GstPlayer/CMakeLists.txt
@@ -220,7 +220,7 @@ index 0000000..1b8adfa
 +core_add_library(gstplayer)
 diff --git a/xbmc/cores/GstPlayer/GstPlayer.cpp b/xbmc/cores/GstPlayer/GstPlayer.cpp
 new file mode 100644
-index 0000000..9d4ff4e
+index 0000000..e12a2bd
 --- /dev/null
 +++ b/xbmc/cores/GstPlayer/GstPlayer.cpp
 @@ -0,0 +1,688 @@
@@ -914,7 +914,7 @@ index 0000000..9d4ff4e
 +
 diff --git a/xbmc/cores/GstPlayer/GstPlayer.h b/xbmc/cores/GstPlayer/GstPlayer.h
 new file mode 100644
-index 0000000..2f2bdc0
+index 0000000..dfb3bc1
 --- /dev/null
 +++ b/xbmc/cores/GstPlayer/GstPlayer.h
 @@ -0,0 +1,186 @@
@@ -1106,7 +1106,7 @@ index 0000000..2f2bdc0
 +};
 diff --git a/xbmc/cores/GstPlayer/GstPlayerAudio.cpp b/xbmc/cores/GstPlayer/GstPlayerAudio.cpp
 new file mode 100644
-index 0000000..7672a7c
+index 0000000..1b0a3d0
 --- /dev/null
 +++ b/xbmc/cores/GstPlayer/GstPlayerAudio.cpp
 @@ -0,0 +1,151 @@
@@ -1313,7 +1313,7 @@ index 0000000..aba8813
 +};
 diff --git a/xbmc/cores/GstPlayer/GstPlayerVideo.cpp b/xbmc/cores/GstPlayer/GstPlayerVideo.cpp
 new file mode 100644
-index 0000000..c093d5d
+index 0000000..fe4fa48
 --- /dev/null
 +++ b/xbmc/cores/GstPlayer/GstPlayerVideo.cpp
 @@ -0,0 +1,1405 @@
@@ -2724,7 +2724,7 @@ index 0000000..c093d5d
 +
 diff --git a/xbmc/cores/GstPlayer/GstPlayerVideo.h b/xbmc/cores/GstPlayer/GstPlayerVideo.h
 new file mode 100644
-index 0000000..4e2a42b
+index 0000000..d89cc67
 --- /dev/null
 +++ b/xbmc/cores/GstPlayer/GstPlayerVideo.h
 @@ -0,0 +1,181 @@
@@ -2939,10 +2939,10 @@ index fc605c7..c04c5dd 100644
      {
        player = std::make_shared<CExternalPlayer>(callback);
 diff --git a/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp b/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp
-index c776ff0..3d59abf 100644
+index ca6590b..0cface5 100644
 --- a/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp
 +++ b/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp
-@@ -28,6 +28,10 @@
+@@ -29,6 +29,10 @@
  
  #include <sstream>
  
@@ -2953,7 +2953,7 @@ index c776ff0..3d59abf 100644
  #define PLAYERCOREFACTORY_XML "playercorefactory.xml"
  
  CPlayerCoreFactory::CPlayerCoreFactory(const CProfileManager &profileManager) :
-@@ -314,6 +318,13 @@ bool CPlayerCoreFactory::LoadConfiguration(const std::string &file, bool clear)
+@@ -345,6 +349,13 @@ bool CPlayerCoreFactory::LoadConfiguration(const std::string &file, bool clear)
      m_vecCoreSelectionRules.clear();
  
      // Builtin players
@@ -2967,7 +2967,7 @@ index c776ff0..3d59abf 100644
      auto VideoPlayer = std::make_unique<CPlayerCoreConfig>("VideoPlayer", "video", nullptr);
      VideoPlayer->m_bPlaysAudio = true;
      VideoPlayer->m_bPlaysVideo = true;
-@@ -354,6 +365,10 @@ bool CPlayerCoreFactory::LoadConfiguration(const std::string &file, bool clear)
+@@ -385,6 +396,10 @@ bool CPlayerCoreFactory::LoadConfiguration(const std::string &file, bool clear)
          internaltype = "video";
        else if (type == "paplayer")
          internaltype = "music";

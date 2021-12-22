@@ -1,4 +1,4 @@
-From ca56c08572b7438a8f831646be11bb2d441051f3 Mon Sep 17 00:00:00 2001
+From 90d028c6fe133895e59be176321380beedc69a55 Mon Sep 17 00:00:00 2001
 From: NickerSK <nickersk@gmail.com>
 Date: Wed, 10 Mar 2021 09:45:23 +0000
 Subject: [PATCH] adapt window system registration
@@ -10,7 +10,7 @@ d8cb6f7147a platform/linux: add CPlatformLinux to register window systems
  1 file changed, 12 insertions(+)
 
 diff --git a/xbmc/platform/linux/PlatformLinux.cpp b/xbmc/platform/linux/PlatformLinux.cpp
-index 74a22fff5b..842bf93e23 100644
+index 74a22ff..842bf93 100644
 --- a/xbmc/platform/linux/PlatformLinux.cpp
 +++ b/xbmc/platform/linux/PlatformLinux.cpp
 @@ -20,6 +20,9 @@

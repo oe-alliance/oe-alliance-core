@@ -1,4 +1,4 @@
-From 2ea9e021cd73037ee064134286b5b41ac9f2ddc5 Mon Sep 17 00:00:00 2001
+From 03923ba038fd0dda787048c2d1c6603b6765f6c1 Mon Sep 17 00:00:00 2001
 From: Captain <captain.onboard@web.de>
 Date: Wed, 15 Jul 2020 19:40:27 +0200
 Subject: [PATCH] flatbuffers-19
@@ -8,7 +8,7 @@ Subject: [PATCH] flatbuffers-19
  1 file changed, 6 insertions(+), 6 deletions(-)
 
 diff --git a/xbmc/cores/RetroPlayer/messages/savestate.fbs b/xbmc/cores/RetroPlayer/messages/savestate.fbs
-index 1d708d61f9..33b07d8dca 100644
+index 1d708d6..33b07d8 100644
 --- a/xbmc/cores/RetroPlayer/messages/savestate.fbs
 +++ b/xbmc/cores/RetroPlayer/messages/savestate.fbs
 @@ -13,7 +13,7 @@ namespace KODI.RETRO;

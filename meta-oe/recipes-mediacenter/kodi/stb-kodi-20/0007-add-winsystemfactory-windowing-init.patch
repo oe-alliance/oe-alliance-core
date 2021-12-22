@@ -1,4 +1,4 @@
-From 2e1e57b3e0e2d23b3f0391e9512798d960212342 Mon Sep 17 00:00:00 2001
+From 55ecdab609f3a69bf6a7f7b97ef72e4147d7db17 Mon Sep 17 00:00:00 2001
 From: NickerSK <nickersk@gmail.com>
 Date: Wed, 10 Mar 2021 09:13:42 +0000
 Subject: [PATCH] add winsystemfactory windowing init
@@ -9,7 +9,7 @@ Subject: [PATCH] add winsystemfactory windowing init
  2 files changed, 28 insertions(+), 2 deletions(-)
 
 diff --git a/xbmc/windowing/egl/WinSystemSTBContext.cpp b/xbmc/windowing/egl/WinSystemSTBContext.cpp
-index 623de92cc6..046daf6658 100644
+index 623de92..046daf6 100644
 --- a/xbmc/windowing/egl/WinSystemSTBContext.cpp
 +++ b/xbmc/windowing/egl/WinSystemSTBContext.cpp
 @@ -25,15 +25,27 @@
@@ -43,7 +43,7 @@ index 623de92cc6..046daf6658 100644
  bool CWinSystemSTBContext::InitWindowSystem()
  {
 diff --git a/xbmc/windowing/egl/WinSystemSTBContext.h b/xbmc/windowing/egl/WinSystemSTBContext.h
-index f8efc14f85..81685022d4 100644
+index f8efc14..8168502 100644
 --- a/xbmc/windowing/egl/WinSystemSTBContext.h
 +++ b/xbmc/windowing/egl/WinSystemSTBContext.h
 @@ -12,12 +12,22 @@

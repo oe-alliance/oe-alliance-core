@@ -1,3 +1,14 @@
+From c0630995356eef6ea722d35cc82a0b7bed63e69e Mon Sep 17 00:00:00 2001
+From: NickerSK <nickersk@gmail.com>
+Date: Thu, 11 Nov 2021 08:55:33 +0100
+Subject: [PATCH] kodi 20 - updated to latest git rev, updated patches
+
+---
+ cmake/scripts/common/ArchSetup.cmake | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/cmake/scripts/common/ArchSetup.cmake b/cmake/scripts/common/ArchSetup.cmake
+index b10e301..2faf24f 100644
 --- a/cmake/scripts/common/ArchSetup.cmake
 +++ b/cmake/scripts/common/ArchSetup.cmake
 @@ -147,6 +147,10 @@ if(NOT DEFINED NEON OR NEON)
@@ -9,5 +20,5 @@
 +endif()
 +
  if(NOT MSVC)
-   add_options(ALL_LANGUAGES ALL_BUILDS "-Wall" "-Wdouble-promotion" "-Wmissing-field-initializers")
-   add_options(ALL_LANGUAGES DEBUG "-g" "-D_DEBUG")
+   # these options affect all code built by cmake including external projects.
+   add_options(ALL_LANGUAGES ALL_BUILDS

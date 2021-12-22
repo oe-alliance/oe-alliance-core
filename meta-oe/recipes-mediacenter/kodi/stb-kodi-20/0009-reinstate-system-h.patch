@@ -1,3 +1,16 @@
+From 5474cf802112946c681df9d56b97b108c79c917e Mon Sep 17 00:00:00 2001
+From: NickerSK <nickersk@gmail.com>
+Date: Thu, 11 Nov 2021 08:55:33 +0100
+Subject: [PATCH] kodi 20 - updated to latest git rev, updated patches
+
+---
+ xbmc/system.h | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+ create mode 100644 xbmc/system.h
+
+diff --git a/xbmc/system.h b/xbmc/system.h
+new file mode 100644
+index 0000000..a0a15f5
 --- /dev/null
 +++ b/xbmc/system.h
 @@ -0,0 +1,12 @@

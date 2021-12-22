@@ -1,4 +1,4 @@
-From f3ced34cfc01ffabe192b7fdf95e7ec913980372 Mon Sep 17 00:00:00 2001
+From ce7df5c145b799ad3823e9fe2b348d6770e11ff9 Mon Sep 17 00:00:00 2001
 From: Captain <captain.onboard@web.de>
 Date: Fri, 17 Jul 2020 21:00:25 +0200
 Subject: [PATCH] e2-player
@@ -7,17 +7,17 @@ Subject: [PATCH] e2-player
  cmake/treedata/common/cores.txt               |   1 +
  system/playercorefactory.xml                  |  12 +-
  xbmc/cores/Enigma2Player/CMakeLists.txt       |   6 +
- xbmc/cores/Enigma2Player/Enigma2Player.cpp    | 794 ++++++++++++++++++
+ xbmc/cores/Enigma2Player/Enigma2Player.cpp    | 795 ++++++++++++++++++
  xbmc/cores/Enigma2Player/Enigma2Player.h      |  96 +++
  .../playercorefactory/PlayerCoreConfig.h      |   5 +
  .../playercorefactory/PlayerCoreFactory.cpp   |   8 +
- 7 files changed, 921 insertions(+), 1 deletion(-)
+ 7 files changed, 922 insertions(+), 1 deletion(-)
  create mode 100644 xbmc/cores/Enigma2Player/CMakeLists.txt
  create mode 100644 xbmc/cores/Enigma2Player/Enigma2Player.cpp
  create mode 100644 xbmc/cores/Enigma2Player/Enigma2Player.h
 
 diff --git a/cmake/treedata/common/cores.txt b/cmake/treedata/common/cores.txt
-index d23939d314e..5e5c6cbf80c 100644
+index d23939d..5e5c6cb 100644
 --- a/cmake/treedata/common/cores.txt
 +++ b/cmake/treedata/common/cores.txt
 @@ -4,5 +4,6 @@ xbmc/cores/DllLoader                   cores/dll-loader
@@ -28,7 +28,7 @@ index d23939d314e..5e5c6cbf80c 100644
  xbmc/cores/paplayer                    cores/paplayer
  xbmc/cores/playercorefactory           cores/playercorefactory
 diff --git a/system/playercorefactory.xml b/system/playercorefactory.xml
-index f928311cf0b..8e2502143eb 100644
+index f928311..8e25021 100644
 --- a/system/playercorefactory.xml
 +++ b/system/playercorefactory.xml
 @@ -8,9 +8,17 @@
@@ -61,7 +61,7 @@ index f928311cf0b..8e2502143eb 100644
      <!-- DVDs -->
 diff --git a/xbmc/cores/Enigma2Player/CMakeLists.txt b/xbmc/cores/Enigma2Player/CMakeLists.txt
 new file mode 100644
-index 00000000000..fc672758ff9
+index 0000000..fc67275
 --- /dev/null
 +++ b/xbmc/cores/Enigma2Player/CMakeLists.txt
 @@ -0,0 +1,6 @@
@@ -73,7 +73,7 @@ index 00000000000..fc672758ff9
 +
 diff --git a/xbmc/cores/Enigma2Player/Enigma2Player.cpp b/xbmc/cores/Enigma2Player/Enigma2Player.cpp
 new file mode 100644
-index 00000000000..24f7556f020
+index 0000000..4315511
 --- /dev/null
 +++ b/xbmc/cores/Enigma2Player/Enigma2Player.cpp
 @@ -0,0 +1,795 @@
@@ -874,7 +874,7 @@ index 00000000000..24f7556f020
 +
 diff --git a/xbmc/cores/Enigma2Player/Enigma2Player.h b/xbmc/cores/Enigma2Player/Enigma2Player.h
 new file mode 100644
-index 00000000000..59249cd214b
+index 0000000..59249cd
 --- /dev/null
 +++ b/xbmc/cores/Enigma2Player/Enigma2Player.h
 @@ -0,0 +1,96 @@
@@ -975,7 +975,7 @@ index 00000000000..59249cd214b
 +  CFileItem m_file;
 +};
 diff --git a/xbmc/cores/playercorefactory/PlayerCoreConfig.h b/xbmc/cores/playercorefactory/PlayerCoreConfig.h
-index 5af08c2d771..fc605c7d87d 100644
+index 5af08c2..fc605c7 100644
 --- a/xbmc/cores/playercorefactory/PlayerCoreConfig.h
 +++ b/xbmc/cores/playercorefactory/PlayerCoreConfig.h
 @@ -13,6 +13,7 @@
@@ -998,18 +998,18 @@ index 5af08c2d771..fc605c7d87d 100644
  #if defined(HAS_UPNP)
      else if (m_type.compare("remote") == 0)
 diff --git a/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp b/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp
-index e4e5d42a0a4..c776ff0825f 100644
+index 0bfb7de..ca6590b 100644
 --- a/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp
 +++ b/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp
-@@ -14,6 +14,7 @@
- #include "URL.h"
+@@ -15,6 +15,7 @@
  #include "cores/IPlayerCallback.h"
+ #include "cores/VideoPlayer/Interface/InputStreamConstants.h"
  #include "cores/paplayer/PAPlayer.h"
 +#include "cores/Enigma2Player/Enigma2Player.h"
  #include "dialogs/GUIDialogContextMenu.h"
  #include "guilib/LocalizeStrings.h"
  #include "profiles/ProfileManager.h"
-@@ -318,6 +319,11 @@ bool CPlayerCoreFactory::LoadConfiguration(const std::string &file, bool clear)
+@@ -349,6 +350,11 @@ bool CPlayerCoreFactory::LoadConfiguration(const std::string &file, bool clear)
      VideoPlayer->m_bPlaysVideo = true;
      m_vecPlayerConfigs.emplace_back(std::move(VideoPlayer));
  
@@ -1021,7 +1021,7 @@ index e4e5d42a0a4..c776ff0825f 100644
      auto paplayer = std::make_unique<CPlayerCoreConfig>("PAPlayer", "music", nullptr);
      paplayer->m_bPlaysAudio = true;
      m_vecPlayerConfigs.emplace_back(std::move(paplayer));
-@@ -350,6 +356,8 @@ bool CPlayerCoreFactory::LoadConfiguration(const std::string &file, bool clear)
+@@ -381,6 +387,8 @@ bool CPlayerCoreFactory::LoadConfiguration(const std::string &file, bool clear)
          internaltype = "music";
        else if (type == "externalplayer")
          internaltype = "external";

@@ -1,4 +1,4 @@
-From 21d7c53ce1bcd731efc84f507c5d3c4d5547b601 Mon Sep 17 00:00:00 2001
+From b3de7d6b68c58c11f342cf62110b0e8c53187824 Mon Sep 17 00:00:00 2001
 From: Captain <captain.onboard@web.de>
 Date: Wed, 15 Jul 2020 18:07:08 +0200
 Subject: [PATCH] stb-settings-19
@@ -23,10 +23,10 @@ Subject: [PATCH] stb-settings-19
  create mode 100644 cmake/treedata/common/stb.txt
 
 diff --git a/addons/skin.estuary/xml/Home.xml b/addons/skin.estuary/xml/Home.xml
-index 19f9a867b2..ecc8f9aef0 100644
+index 0a88c6c..f1c04ac 100644
 --- a/addons/skin.estuary/xml/Home.xml
 +++ b/addons/skin.estuary/xml/Home.xml
-@@ -1008,7 +1008,7 @@
+@@ -1026,7 +1026,7 @@
  					<align>justify</align>
  					<include content="IconButton">
  						<param name="control_id" value="804" />
@@ -36,7 +36,7 @@ index 19f9a867b2..ecc8f9aef0 100644
  						<param name="label" value="$LOCALIZE[33060]" />
  					</include>
 diff --git a/cmake/modules/FindFFMPEG.cmake b/cmake/modules/FindFFMPEG.cmake
-index 03626ef005..d9b5ba4b2f 100644
+index 03626ef..d9b5ba4 100644
 --- a/cmake/modules/FindFFMPEG.cmake
 +++ b/cmake/modules/FindFFMPEG.cmake
 @@ -45,16 +45,22 @@ set(_postproc_ver ">=55.9.100")
@@ -113,7 +113,7 @@ index 03626ef005..d9b5ba4b2f 100644
         FILE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE)
 diff --git a/cmake/platform/linux/stb.cmake b/cmake/platform/linux/stb.cmake
 new file mode 100644
-index 0000000000..e1fe54a13d
+index 0000000..e1fe54a
 --- /dev/null
 +++ b/cmake/platform/linux/stb.cmake
 @@ -0,0 +1,69 @@
@@ -187,7 +187,7 @@ index 0000000000..e1fe54a13d
 +
 +list(APPEND PLATFORM_DEFINES -DMESA_EGL_NO_X11_HEADERS)
 diff --git a/cmake/scripts/linux/ArchSetup.cmake b/cmake/scripts/linux/ArchSetup.cmake
-index 0a27f30806..f43d96fcb2 100644
+index 0a88e8f..1dfa221 100644
 --- a/cmake/scripts/linux/ArchSetup.cmake
 +++ b/cmake/scripts/linux/ArchSetup.cmake
 @@ -38,6 +38,10 @@ else()
@@ -203,13 +203,13 @@ index 0a27f30806..f43d96fcb2 100644
    endif()
 diff --git a/cmake/treedata/common/stb.txt b/cmake/treedata/common/stb.txt
 new file mode 100644
-index 0000000000..2606a0f999
+index 0000000..2606a0f
 --- /dev/null
 +++ b/cmake/treedata/common/stb.txt
 @@ -0,0 +1 @@
 +xbmc/windowing/egl   windowing/egl    # STB
 diff --git a/system/settings/settings.xml b/system/settings/settings.xml
-index cade7e40d1..fb7c3b0969 100755
+index a50c950..d470d03 100755
 --- a/system/settings/settings.xml
 +++ b/system/settings/settings.xml
 @@ -518,7 +518,7 @@
@@ -259,7 +259,7 @@ index cade7e40d1..fb7c3b0969 100755
                <option label="34129">352800</option>
                <option label="34130">384000</option>
              </options>
-@@ -3744,7 +3740,7 @@
+@@ -3769,7 +3765,7 @@
        <group id="2" label="14270">
          <setting id="locale.country" type="string" label="14271" help="36115">
            <level>0</level>
@@ -269,7 +269,7 @@ index cade7e40d1..fb7c3b0969 100755
              <options>regions</options>
            </constraints>
 diff --git a/tools/Linux/kodi.sh.in b/tools/Linux/kodi.sh.in
-index 108c0b007b..e0401b5348 100644
+index 108c0b0..e0401b5 100644
 --- a/tools/Linux/kodi.sh.in
 +++ b/tools/Linux/kodi.sh.in
 @@ -26,8 +26,11 @@ exec_prefix="@exec_prefix@"
@@ -340,7 +340,7 @@ index 108c0b007b..e0401b5348 100644
  
  exit $RET
 diff --git a/tools/depends/target/ffmpeg/CMakeLists.txt b/tools/depends/target/ffmpeg/CMakeLists.txt
-index e358775911..2b73a8751a 100644
+index f05c54a..2d68077 100644
 --- a/tools/depends/target/ffmpeg/CMakeLists.txt
 +++ b/tools/depends/target/ffmpeg/CMakeLists.txt
 @@ -10,6 +10,36 @@ else()
@@ -381,7 +381,7 @@ index e358775911..2b73a8751a 100644
    set(pkgconf "PKG_CONFIG_LIBDIR=${DEPENDS_PATH}/lib/pkgconfig")
    list(APPEND ffmpeg_conf --pkg-config=${PKG_CONFIG_EXECUTABLE} --pkg-config-flags=--static)
 diff --git a/tools/depends/target/libdvdcss/Makefile b/tools/depends/target/libdvdcss/Makefile
-index a5026227c2..c7b103117a 100644
+index a502622..c7b1031 100644
 --- a/tools/depends/target/libdvdcss/Makefile
 +++ b/tools/depends/target/libdvdcss/Makefile
 @@ -3,7 +3,7 @@ include DVDCSS-VERSION
@@ -403,7 +403,7 @@ index a5026227c2..c7b103117a 100644
  GITREV=$(shell git ls-remote $(BASE_URL) $(VERSION) | awk '{print $$1}')
  ifeq ($(GITREV),)
 diff --git a/tools/depends/target/libdvdnav/Makefile b/tools/depends/target/libdvdnav/Makefile
-index eada58a160..38f9be520d 100644
+index eada58a..38f9be5 100644
 --- a/tools/depends/target/libdvdnav/Makefile
 +++ b/tools/depends/target/libdvdnav/Makefile
 @@ -3,11 +3,11 @@ include DVDNAV-VERSION
@@ -421,7 +421,7 @@ index eada58a160..38f9be520d 100644
    ROOT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
    PREFIX := $(ROOT_DIR)/dvdnav-install
 diff --git a/tools/depends/target/libdvdread/Makefile b/tools/depends/target/libdvdread/Makefile
-index d240953fe4..2c9100f84e 100644
+index d240953..2c9100f 100644
 --- a/tools/depends/target/libdvdread/Makefile
 +++ b/tools/depends/target/libdvdread/Makefile
 @@ -3,11 +3,12 @@ include DVDREAD-VERSION
@@ -440,7 +440,7 @@ index d240953fe4..2c9100f84e 100644
    ROOT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
    PREFIX := $(ROOT_DIR)/dvdread-install
 diff --git a/xbmc/guilib/guiinfo/SystemGUIInfo.cpp b/xbmc/guilib/guiinfo/SystemGUIInfo.cpp
-index c7c521202a..dba09cd1f0 100644
+index fb8174a..479dd4d 100644
 --- a/xbmc/guilib/guiinfo/SystemGUIInfo.cpp
 +++ b/xbmc/guilib/guiinfo/SystemGUIInfo.cpp
 @@ -57,6 +57,11 @@ std::string CSystemGUIInfo::GetSystemHeatInfo(int info) const
@@ -456,7 +456,7 @@ index c7c521202a..dba09cd1f0 100644
    }
  
 diff --git a/xbmc/input/InputManager.cpp b/xbmc/input/InputManager.cpp
-index b2b580f154..37df237c55 100644
+index b2b580f..37df237 100644
 --- a/xbmc/input/InputManager.cpp
 +++ b/xbmc/input/InputManager.cpp
 @@ -579,6 +579,18 @@ bool CInputManager::HandleKey(const CKey& key)
@@ -479,7 +479,7 @@ index b2b580f154..37df237c55 100644
      {
        // use the virtualkeyboard section of the keymap, and send keyboard-specific or navigation
 diff --git a/xbmc/view/ViewStateSettings.cpp b/xbmc/view/ViewStateSettings.cpp
-index a92bd1e834..79faef8162 100644
+index a92bd1e..79faef8 100644
 --- a/xbmc/view/ViewStateSettings.cpp
 +++ b/xbmc/view/ViewStateSettings.cpp
 @@ -114,7 +114,7 @@ bool CViewStateSettings::Load(const TiXmlNode *settings)
