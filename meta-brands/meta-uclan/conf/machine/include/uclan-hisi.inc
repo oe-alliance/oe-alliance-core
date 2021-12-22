@@ -7,7 +7,7 @@ include conf/machine/include/build-extras.inc
 DISTRO_FEATURES:remove = "x11 wayland"
 
 BRAND_OEM = "uclan"
-RCNAME = "uclan"
+RCNAME = "uclan1"
 
 IMAGEDIR = "uclan/${MACHINE}"
 
