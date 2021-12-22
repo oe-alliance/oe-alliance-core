@@ -1187,7 +1187,7 @@ index 0000000..1b0a3d0
 +	}
 +#endif
 +	if (m_pAudioStream)
-+		CServiceBroker::GetActiveAE()->FreeStream(m_pAudioStream, true);
++		m_pAudioStream.reset();
 +	CLog::Log(LOGINFO, "CGstPlayerAudio::{}", __FUNCTION__ );
 +}
 +
@@ -1266,7 +1266,7 @@ new file mode 100644
 index 0000000..aba8813
 --- /dev/null
 +++ b/xbmc/cores/GstPlayer/GstPlayerAudio.h
-@@ -0,0 +1,44 @@
+@@ -0,0 +1,45 @@
 +#pragma once
 +
 +/*
@@ -1291,6 +1291,7 @@ index 0000000..aba8813
 +
 +#include "threads/Thread.h"
 +
++#include "cores/AudioEngine/Interfaces/AE.h"
 +#include "cores/AudioEngine/Interfaces/AEStream.h"
 +#include "cores/VideoPlayer/Process/ProcessInfo.h"
 +
@@ -1306,7 +1307,7 @@ index 0000000..aba8813
 +	int openMixer();
 +	int checkVolume(int vol);
 +	void closeMixer(int fd);
-+	IAEStream *m_pAudioStream;
++	IAE::StreamPtr m_pAudioStream;
 +	
 +protected:
 +	CProcessInfo &m_processInfo;
