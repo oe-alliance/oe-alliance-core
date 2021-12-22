@@ -24,5 +24,7 @@ EXTRA_ALSA_sf8008 = "mv200"
 EXTRA_ALSA_sf8008m = "mv200"
 EXTRA_ALSA_ustym4kpro = "mv200"
 EXTRA_ALSA_dual = "mv200"
+EXTRA_ALSA_sx988 = "mv200"
+EXTRA_ALSA_ustym4kott = "mv200"
 
 require alsa-state-${EXTRA_ALSA}.inc

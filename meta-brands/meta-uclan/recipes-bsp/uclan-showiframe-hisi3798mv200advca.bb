@@ -1,12 +1,12 @@
-SUMMARY = "showiframe for uclan Model ${MACHINE}"
+SUMMARY = "showiframe for Uclan Model ${SOC_FAMILY}"
 SECTION = "base"
 PRIORITY = "optional"
 LICENSE = "CLOSED"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-COMPATIBLE_MACHINE = "^(ustym4kpro)$"
+COMPATIBLE_MACHINE = "^(ustym4kott)$"
 
-SRCDATE = "20180301"
+SRCDATE = "20211220"
 
 PV = "${SRCDATE}"
 PR = "r0"
@@ -15,7 +15,7 @@ RPROVIDES_${PN}  = "showiframe"
 RREPLACES_${PN}  = "showiframe"
 RCONFLICTS_${PN} = "showiframe"
 
-SRC_URI = "http://source.mynonpublic.com/uclan/${MACHINE}-showiframe-${SRCDATE}.tar.gz"
+SRC_URI = "http://source.mynonpublic.com/uclan/${SOC_FAMILY}-showiframe-${SRCDATE}.tar.gz"
 
 S = "${WORKDIR}"
 
