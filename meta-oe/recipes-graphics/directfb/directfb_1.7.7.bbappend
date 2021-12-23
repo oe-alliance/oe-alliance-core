@@ -21,5 +21,6 @@ EXTRA_DIRECTFB_ustym4kott = "hisi"
 EXTRA_DIRECTFB_gbmv200 = "hisi"
 EXTRA_DIRECTFB_beyonwizv2 = "hisi"
 EXTRA_DIRECTFB_viper4k = "hisi"
+EXTRA_DIRECTFB_dual = "hisi"
 
 require directfb-${EXTRA_DIRECTFB}_1.7.7.inc
