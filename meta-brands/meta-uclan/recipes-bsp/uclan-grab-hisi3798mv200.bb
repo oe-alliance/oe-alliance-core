@@ -1,4 +1,4 @@
-SUMMARY = "grab for Uclan Model ${MACHINE}"
+SUMMARY = "grab for Uclan Model ${SOC_FAMILY}"
 SECTION = "base"
 PRIORITY = "optional"
 LICENSE = "CLOSED"
@@ -15,7 +15,7 @@ RPROVIDES:${PN}  = "aio-grab"
 RREPLACES:${PN}  = "aio-grab"
 RCONFLICTS:${PN} = "aio-grab"
 
-SRC_URI = "http://source.mynonpublic.com/uclan/${MACHINE}-grab-${SRCDATE}.tar.gz"
+SRC_URI = "http://source.mynonpublic.com/uclan/${SOC_FAMILY}-grab-${SRCDATE}.tar.gz"
 
 S = "${WORKDIR}"
 

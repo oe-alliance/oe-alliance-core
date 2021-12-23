@@ -7,15 +7,10 @@ include conf/machine/include/build-extras.inc
 DISTRO_FEATURES:remove = "x11 wayland"
 
 BRAND_OEM = "octagon"
-RCNAME = "sf8008"
 
 IMAGEDIR = "octagon/${MACHINE}"
 
 MACHINE_BRAND = "Octagon"
-
-MTD_KERNEL = "mmcblk0p12"
-
-MTD_ROOTFS = "mmcblk0p16"
 
 KERNEL_FILE = "kernel.bin"
 ROOTFS_FILE = "rootfs.tar.bz2"
@@ -38,7 +33,7 @@ MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "\
     gptfdisk \
 "
 
-MACHINE_FEATURES += "hisil switchoff 7segment hdmicec skins1080 emmc mmc blindscan-dvbs kodi19 alsa hbbtv-browser-webkit qtstalker qtnetflix openhbbtv"
+MACHINE_FEATURES += "hisil switchoff hdmicec skins1080 emmc mmc kodi19 alsa hbbtv-browser-webkit qtstalker qtnetflix openhbbtv"
 
 IMAGE_CLASSES  += "octagon-emmc_image"
 IMAGE_FSTYPES += "octagonemmc"
@@ -64,6 +59,9 @@ require conf/machine/include/arm/armv7a/tune-cortexa15.inc
 MACHINE_EXTRA_RRECOMMENDS += " \
     gstreamer1.0-plugin-dvbmediasink \
     gstreamer1.0-libav \
+    ${@bb.utils.contains('MACHINE', 'sx988', 'enigma2-plugin-extensions-gbipboxclient' , '', d)} \
+    ${@bb.utils.contains('MACHINE', 'sx988', 'enigma2-plugin-systemplugins-satipclient' , '', d)} \
+    ${@bb.utils.contains('MACHINE', 'sx988', 'enigma2-plugin-extensions-youtube' , '', d)} \
     "
 
 DVBPROVIDER = "kernel"

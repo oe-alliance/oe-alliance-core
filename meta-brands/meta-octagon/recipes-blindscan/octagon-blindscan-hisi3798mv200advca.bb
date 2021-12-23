@@ -1,4 +1,4 @@
-SUMMARY = "blindscan for Uclan Model ${MACHINE}"
+SUMMARY = "blindscan for Octagon Model ${SOC_FAMILY}"
 SECTION = "base"
 PRIORITY = "optional"
 LICENSE = "CLOSED"
@@ -7,27 +7,27 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 PROVIDES += "virtual/blindscan-dvbs"
 RPROVIDES:${PN} += "virtual/blindscan-dvbs"
 
-SRCDATE = "20190305"
+SRCDATE = "20211220"
 
 PV = "${SRCDATE}"
 PR = "r0"
 
-SRC_URI  = "http://source.mynonpublic.com/uclan/${MACHINE}-blindscan-${SRCDATE}.zip"
+SRC_URI  = "http://source.mynonpublic.com/octagon/${SOC_FAMILY}-blindscan-${SRCDATE}.zip"
 
 S = "${WORKDIR}"
 
 do_install() {
     install -d ${D}${bindir}
-    install -m 0755 ${S}/uclan-blindscan ${D}/${bindir}
+    install -m 0755 ${S}/octagon-blindscan ${D}/${bindir}
 }
 
 do_package_qa() {
 }
 
-FILES:${PN}  = "${bindir}/uclan-blindscan"
+FILES:${PN}  = "${bindir}/octagon-blindscan"
 
-SRC_URI[md5sum] = "ee98e5c30d36a7afaff364e6015e0956"
-SRC_URI[sha256sum] = "2eb583117f45a5e7d88a2843ff60ba7cf2420deb1987af83ae6299b8433a21ba"
+SRC_URI[md5sum] = "643ec0736a15f3aa16023772d1462a13"
+SRC_URI[sha256sum] = "c1c72d745d094c6b78203302e187e828e2293b72c804030c9246c296f63d4aa1"
 
 do_prepare_recipe_sysroot[noexec] = "1"
 INHIBIT_PACKAGE_STRIP = "1"

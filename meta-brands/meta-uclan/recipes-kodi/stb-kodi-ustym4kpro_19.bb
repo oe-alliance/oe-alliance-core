@@ -9,7 +9,7 @@ PROVIDES += "kodi"
 RPROVIDES:${PN} += "kodi"
 
 RDEPENDS:${PN} += "uclan-libs-${MACHINE}"
-RDEPENDS:${PN} += "uclan-opengl-${MACHINE}"
+RDEPENDS:${PN} += "uclan-opengl-${SOC_FAMILY}"
 
 EXTRA_OECMAKE += " \
     -DWITH_PLATFORM=clap-cortexa15 \

@@ -64,6 +64,14 @@ do_compile:append:hisi3798mv200() {
     echo "arch cortexa15hf-neon-vfpv4 $priority" >> $archconf
 }
 
+do_compile:append:3798mv200advca() {
+    echo "arch mips32el $priority" >> $archconf
+    echo "arch mipsel $priority" >> $archconf
+    echo "arch armv7ahf-vfp-neon $priority" >> $archconf
+    echo "arch armv7ahf-neon $priority" >> $archconf
+    echo "arch cortexa15hf-neon-vfpv4 $priority" >> $archconf
+}
+
 do_compile:append:hisi3798mv200h() {
     echo "arch mips32el $priority" >> $archconf
     echo "arch mipsel $priority" >> $archconf

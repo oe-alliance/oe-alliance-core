@@ -7,17 +7,10 @@ include conf/machine/include/build-extras.inc
 DISTRO_FEATURES:remove = "x11 wayland"
 
 BRAND_OEM = "uclan"
-RCNAME = "uclan1"
 
 IMAGEDIR = "uclan/${MACHINE}"
 
-MACHINE_NAME = "Ustym 4K PRO"
-
 MACHINE_BRAND = "Uclan"
-
-MTD_KERNEL = "mmcblk0p12"
-
-MTD_ROOTFS = "mmcblk0p16"
 
 KERNEL_FILE = "kernel.bin"
 ROOTFS_FILE = "rootfs.tar.bz2"
@@ -27,12 +20,12 @@ VER = "-ustym4kpro"
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "\
     uclan-dvb-modules-${MACHINE} \
-    uclan-loadmodules-${MACHINE} \ 
-    uclan-opengl-${MACHINE} \
+    uclan-loadmodules-${SOC_FAMILY} \ 
+    uclan-opengl-${SOC_FAMILY} \
     uclan-libs-${MACHINE} \
-    uclan-hihalt-${MACHINE} \
+    uclan-hihalt-${SOC_FAMILY} \
     uclan-reader-${MACHINE} \
-    uclan-libreader-${MACHINE} \
+    uclan-libreader-${SOC_FAMILY} \
     uclan-partitions-${MACHINE} \
     uclan-tntfs-${HICHIPSET} \
     uclan-buildimage \
@@ -40,7 +33,7 @@ MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "\
     gptfdisk \
 "
 
-MACHINE_FEATURES += "hisil switchoff 7segment hdmicec skins1080 emmc mmc blindscan-dvbs kodi19 alsa hbbtv-browser-webkit qtstalker qtnetflix openhbbtv"
+MACHINE_FEATURES += "hisil switchoff hdmicec skins1080 emmc mmc kodi19 alsa hbbtv-browser-webkit qtstalker qtnetflix openhbbtv"
 
 IMAGE_CLASSES  += "uclan-emmc_image"
 IMAGE_FSTYPES += "uclanemmc"
@@ -49,23 +42,23 @@ IMAGE_ROOTFS_SIZE ?= "524288"
 TARGET_ARCH = "arm"
 DEFAULTTUNE = "cortexa15hf-neon-vfpv4"
 
-PREFERRED_VERSION_linux-uclan = "4.4.35"
-
+PREFERRED_VERSION_linux-uclan = "${LINUX_VERSION}"
 PREFERRED_PROVIDER_virtual/kernel = "linux-uclan"
-PREFERRED_PROVIDER_virtual/egl = "uclan-opengl-${MACHINE}" 
-PREFERRED_PROVIDER_virtual/libgles1 = "uclan-opengl-${MACHINE}"
-PREFERRED_PROVIDER_virtual/libgles2 = "uclan-opengl-${MACHINE}"
+PREFERRED_PROVIDER_virtual/egl = "uclan-opengl-${SOC_FAMILY}" 
+PREFERRED_PROVIDER_virtual/libgles1 = "uclan-opengl-${SOC_FAMILY}"
+PREFERRED_PROVIDER_virtual/libgles2 = "uclan-opengl-${SOC_FAMILY}"
 PREFERRED_PROVIDER_virtual/kodi = "stb-kodi-${MACHINE}"
-PREFERRED_PROVIDER_virtual/blindscan-dvbs = "uclan-blindscan-${MACHINE}"
+PREFERRED_PROVIDER_virtual/blindscan-dvbs = "uclan-blindscan-${SOC_FAMILY}"
 
-PREFERRED_RPROVIDER_showiframe = "uclan-showiframe-${MACHINE}"
-PREFERRED_RPROVIDER_aio-grab = "uclan-grab-${MACHINE}"
+PREFERRED_RPROVIDER_showiframe = "uclan-showiframe-${SOC_FAMILY}"
+PREFERRED_RPROVIDER_aio-grab = "uclan-grab-${SOC_FAMILY}"
 
 require conf/machine/include/arm/armv7a/tune-cortexa15.inc
 
 MACHINE_EXTRA_RRECOMMENDS += " \
     gstreamer1.0-plugin-dvbmediasink \
     gstreamer1.0-libav \
+    ${@bb.utils.contains('MACHINE', 'ustym4kott', 'enigma2-plugin-extensions-gbipboxclient enigma2-plugin-systemplugins-satipclient' , '', d)} \
     "
 
 DVBPROVIDER = "kernel"
