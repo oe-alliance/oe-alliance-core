@@ -76,7 +76,7 @@ IMAGE_CMD_abfastboot8gb_append = " \
     cp ${DEPLOY_DIR_IMAGE}/abcom-partitions-${MACHINE}/bootargs.bin ${DEPLOY_DIR_IMAGE}/${IMAGEDIRRECOVERY}/bootargs.bin; \
     cp ${DEPLOY_DIR_IMAGE}/abcom-partitions-${MACHINE}/${MACHINE}/fastboot.bin ${DEPLOY_DIR_IMAGE}/${IMAGEDIRRECOVERY}/${IMAGEDIR}/fastboot.bin; \
     cp ${DEPLOY_DIR_IMAGE}/abcom-partitions-${MACHINE}/${MACHINE}/bootargs.bin ${DEPLOY_DIR_IMAGE}/${IMAGEDIRRECOVERY}/${IMAGEDIR}/bootargs.bin; \
-    cp ${DEPLOY_DIR_IMAGE}/abcom-partitions-${MACHINE}/${MACHINE}/pqparam.bin ${DEPLOY_DIR_IMAGE}/${IMAGEDIRRECOVERY}/${IMAGEDIR}/pqparam.bin; \
+    cp ${DEPLOY_DIR_IMAGE}/abcom-partitions-${MACHINE}/${MACHINE}/pq_param.bin ${DEPLOY_DIR_IMAGE}/${IMAGEDIRRECOVERY}/${IMAGEDIR}/pqparam.bin; \
     cp ${DEPLOY_DIR_IMAGE}/abcom-partitions-${MACHINE}/${MACHINE}/baseparam.img ${DEPLOY_DIR_IMAGE}/${IMAGEDIRRECOVERY}/${IMAGEDIR}/baseparam.img; \
     if [ -e ${DEPLOY_DIR_IMAGE}/abcom-partitions-${MACHINE}/${MACHINE}/recovery.bin ]; then \
         cp ${DEPLOY_DIR_IMAGE}/abcom-partitions-${MACHINE}/${MACHINE}/recovery.bin ${DEPLOY_DIR_IMAGE}/${IMAGEDIRRECOVERY}/${IMAGEDIR}/recovery.bin; \

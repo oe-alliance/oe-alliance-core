@@ -19,6 +19,7 @@ if [ $? -eq 0 ]
 then
 	echo [WOL] activate WakeOnLAN at device eth0
 	ethtool -s eth0 wol g
+	echo '0' > /proc/stb/power/vfd
 else
 	echo [WOL] WakeOnLAN is not enabled
 fi
