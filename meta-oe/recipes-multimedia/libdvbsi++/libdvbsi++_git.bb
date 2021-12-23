@@ -10,11 +10,7 @@ SRCREV = "${AUTOREV}"
 PV = "0.3.9+git${SRCPV}"
 PKGV = "0.3.9+git${GITPKGV}"
 
-SRC_URI = "git://git.opendreambox.org/git/obi/libdvbsi++.git"
-
-SRC_URI_append_sh4 = " \
-    file://libdvbsi++-fix-unaligned-access-on-SuperH.patch \
-"
+SRC_URI = "git://github.com/oe-alliance/libdvbsi.git;protocol=https"
 
 S = "${WORKDIR}/git"
 
