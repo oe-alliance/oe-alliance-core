@@ -14,7 +14,7 @@ IMAGE_CMD_zgemmaubi () {
 	echo "bootcmd=nand read 0x1FFFFC0 0x2000000 0x800000;bootm 0x1FFFFC0" >> ${WORKDIR}/STARTUP
 	echo "bootcmd=nand read 0x1FFFFC0 0x2000000 0x800000;bootm 0x1FFFFC0" >> ${WORKDIR}/STARTUP_LINUX_1
 	echo "bootcmd=nand read 0x1FFFFC0 0x800000 0x800000;bootm 0x1FFFFC0" > ${WORKDIR}/STARTUP_RECOVERY
-	echo "imageurl https://raw.githubusercontent.com/oe-alliance/bootmenu/raw/master/${MACHINEBUILD}/images" > ${WORKDIR}/bootmenu.conf
+	echo "imageurl https://raw.githubusercontent.com/oe-alliance/bootmenu/master/${MACHINEBUILD}/images" > ${WORKDIR}/bootmenu.conf
 	echo "# " >> ${WORKDIR}/bootmenu.conf
 	echo "iface eth0" >> ${WORKDIR}/bootmenu.conf
 	echo "dhcp yes" >> ${WORKDIR}/bootmenu.conf
