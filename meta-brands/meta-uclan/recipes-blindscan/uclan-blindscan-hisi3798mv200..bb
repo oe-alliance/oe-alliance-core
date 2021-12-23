@@ -1,4 +1,4 @@
-SUMMARY = "blindscan for Uclan Model ${MACHINE}"
+SUMMARY = "blindscan for Uclan Model ${SOC_FAMILY}"
 SECTION = "base"
 PRIORITY = "optional"
 LICENSE = "CLOSED"
@@ -12,7 +12,7 @@ SRCDATE = "20190305"
 PV = "${SRCDATE}"
 PR = "r0"
 
-SRC_URI  = "http://source.mynonpublic.com/uclan/${MACHINE}-blindscan-${SRCDATE}.zip"
+SRC_URI  = "http://source.mynonpublic.com/uclan/${SOC_FAMILY}-blindscan-${SRCDATE}.zip"
 
 S = "${WORKDIR}"
 
