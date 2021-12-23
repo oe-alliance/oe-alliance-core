@@ -14,7 +14,7 @@ SRC_URI:append:sf8008opt = " \
     file://libjpeg.so.8.2.2 \
 "
 
-SRC_URI_append:sx988 = " \
+SRC_URI:append:sx988 = " \
     file://libjpeg.so.8.2.2 \
 "
 do_install:append:sf8008() {
