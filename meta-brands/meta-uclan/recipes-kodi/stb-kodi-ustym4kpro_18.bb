@@ -21,7 +21,7 @@ PROVIDES += "kodi"
 RPROVIDES_${PN} += "kodi"
 
 RDEPENDS_${PN} += "uclan-libs-${MACHINE}"
-RDEPENDS_${PN} += "uclan-opengl-${MACHINE}"
+RDEPENDS_${PN} += "uclan-opengl-${SOC_FAMILY}"
 
 do_configure_append() {
         install -d ${D}${libdir}
