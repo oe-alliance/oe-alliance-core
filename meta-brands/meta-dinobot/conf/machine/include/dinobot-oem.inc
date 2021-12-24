@@ -262,9 +262,9 @@ ${@bb.utils.contains('MACHINEBUILD', 'arivatwin', 'e2/update' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'arivacombo', 'e2/update' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'vipertwin', 'dinobot/${MACHINE}' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'vipersingle', 'amiko/${MACHINE}' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'viper4kv20', 'amiko/${MACHINE}' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'viper4kv20', 'e2/update' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'viper4kv30', 'amiko/${MACHINE}' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'viper4kv40', 'amiko/${MACHINE}' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'viper4kv40', 'e2/update' , '', d)}\
 "
 
 RCNAME = "\
