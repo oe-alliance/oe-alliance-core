@@ -1,6 +1,6 @@
 #!/bin/bash
 
-black=1
+black=0
 
 sanity_fail () {
 	echo ERROR: Missing tools ...
@@ -33,12 +33,15 @@ sanity_check () {
 }
 
 overlay () {
-	[[ $black = 0 ]] && composite -gravity center restore_overlay.png bootlogo.jpg restore.jpg
-	[[ $black = 1 ]] && composite -gravity center restore_overlay_black.png bootlogo.jpg restore.jpg
+	[[ $black = 0 ]] && composite -gravity center overlay_hd.png bootlogo_hd.jpg restore_hd.jpg
+	[[ $black = 0 ]] && composite -gravity center overlay_fhd.png bootlogo_fhd.jpg restore_fhd.jpg
+	[[ $black = 1 ]] && composite -gravity center overlay_black_hd.png bootlogo_hd.jpg restore_hd.jpg
+	[[ $black = 1 ]] && composite -gravity center overlay_black_fhd.png bootlogo_fhd.jpg restore_fhd.jpg
 }
 
 jpg2mvi () {
-	jpeg2yuv -v 0 -f 25 -n1 -I p -j restore.jpg | mpeg2enc -v 0 -f 12 -x 1280 -y 720 -o restore_new.mvi
+	jpeg2yuv -v 0 -f 25 -n1 -I p -j restore_hd.jpg | mpeg2enc -v 0 -f 12 -x 1280 -y  720 -a 3 -4 1 -2 1 -q 1 -H --level high -o restore_new_HD.mvi
+	jpeg2yuv -v 0 -f 25 -n1 -I p -j restore_fhd.jpg | mpeg2enc -v 0 -f 13 -x 1920 -y 1080 -a 3 -4 1 -2 1 -q 1 -H --level high -o restore_new_FDH.mvi
 }
 
 sanity_check
@@ -47,10 +50,14 @@ pushd ./files >/dev/null
 overlay
 jpg2mvi
 
-if [ -f ./restore_new.mvi ]; then
-	rm restore.mvi
-	rm restore.jpg
-	mv restore_new.mvi restore.mvi
+if [ -f ./restore_new_hd.mvi ]; then
+	rm restore_hd.mvi
+	mv restore_new_hd.mvi restore_hd.mvi
+fi
+
+if [ -f ./restore_new_fhd.mvi ]; then
+	rm restore_fhd.mvi
+	mv restore_new_fhd.mvi restore_fhd.mvi
 fi
 
 popd >/dev/null
