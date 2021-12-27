@@ -33,14 +33,14 @@ DVBSKYPROVIDER = "kernel"
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "\
     abcom-libs-${HICHIPSET} \
-	abcom-fastboot-${MACHINE} \
-	abcom-param-${MACHINE} \
-	abcom-bootlogo-${MACHINE} \
-	abcom-bootargs-${MACHINE} \
-	abcom-recovery-${MACHINE} \
-	abcom-tntfs-${HICHIPSET} \
+    abcom-fastboot-${MACHINE} \
+    abcom-param-${MACHINE} \
+    abcom-bootlogo-${MACHINE} \
+    abcom-bootargs-${MACHINE} \
+    abcom-recovery-${MACHINE} \
+    abcom-tntfs-${HICHIPSET} \
     abcom-dvb-modules-${MACHINE} \
-	kernel-module-mali-${HICHIPSET} \
+    kernel-module-mali-${HICHIPSET} \
     "
 
 MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS += "\
@@ -48,19 +48,11 @@ MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS += "\
     abcom-ethwol \
     resizerootfs \
     "
-	
+
 MACHINE_EXTRA_RRECOMMENDS += " \
     gstreamer1.0-plugin-dvbmediasink \
     ffmpeg \
-	gstreamer1.0-libav \
-    "
-
-EXTRA_IMAGEDEPENDS += " \
-    enigma2-plugin-systemplugins-remotecontrolcode \
-    "
-
-MACHINE_EXTRA_RDEPENDS_${PN} = " \
-    enigma2-plugin-systemplugins-remotecontrolcode \
+    gstreamer1.0-libav \
     "
 
 CMDLINE ?= "console=ttyAMA0,115200n8"
@@ -68,7 +60,6 @@ CMDLINE ?= "console=ttyAMA0,115200n8"
 KERNEL_MODULE_AUTOLOAD += "mali"
 
 PREFERRED_VERSION_linux-abcom = "4.4.35"
-
 
 IMAGEDIRRECOVERY ?= "${MACHINE}-recovery"
 
