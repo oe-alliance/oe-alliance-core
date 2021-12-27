@@ -12,7 +12,7 @@ SRCREV = "${AUTOREV}"
 PV = "3.0+git${SRCPV}"
 PKGV = "3.0+git${GITPKGV}"
 VER ="3.0"
-PR = "r2"
+PR = "r3"
 
 SRC_URI="git://github.com/BlackHole/skins.git;protocol=https"
 
@@ -21,5 +21,5 @@ S = "${WORKDIR}/git/BlackShadowSE_P"
 FILES:${PN} = "/usr/*"
 
 do_install() {
-    cp -rp ${S}/usr ${D}/
+    cp -rf ${S}/usr ${D}/
 }
