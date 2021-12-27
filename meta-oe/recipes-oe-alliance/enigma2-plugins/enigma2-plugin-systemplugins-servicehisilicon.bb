@@ -9,7 +9,7 @@ RDEPENDS:${PN} = "enigma2"
 SRCREV = "${AUTOREV}"
 SRC_URI = "git://github.com/oe-mirrors/servicehisilicon.git;protocol=https;branch=master"
 SRC_URI:openvix = "git://github.com/OpenViX/servicehisilicon.git;protocol=https;branch=master"
-SRC_URI:openbh = "git://github.com:BlackHole/servicehisilicon.git;protocol=https;branch=master"
+SRC_URI:openbh = "git://github.com/BlackHole/servicehisilicon.git;protocol=https;branch=master"
 
 S = "${WORKDIR}/git"
 
