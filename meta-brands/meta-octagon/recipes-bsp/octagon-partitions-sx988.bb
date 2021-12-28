@@ -7,10 +7,10 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 inherit deploy
 
-SRCDATE = "20211220"
+SRCDATE = "20211228"
 PR = "${SRCDATE}"
 
-S = "${WORKDIR}/patitions"
+S = "${WORKDIR}/partitions"
 
 SRC_URI = "http://source.mynonpublic.com/octagon/${MACHINE}-partitions-${SRCDATE}.zip \
   file://flash-apploader \
@@ -52,7 +52,7 @@ do_deploy() {
 
 addtask deploy before do_build after do_install
 
-SRC_URI[md5sum] = "827a17dabdc10d8c6a0d7cfb1cfc00ec"
-SRC_URI[sha256sum] = "e87af182aba0b69c6827df270ece710434f2b6b126ef3658273eb928e4f9a6ff"
+SRC_URI[md5sum] = "52e112ecbaad2acd95080c83db95ae1d"
+SRC_URI[sha256sum] = "e3871670f402086ddaf2e207ddcd1009806f20dd7a03a8b718334a51a443716e"
 
 INSANE_SKIP_${PN} += "already-stripped"
