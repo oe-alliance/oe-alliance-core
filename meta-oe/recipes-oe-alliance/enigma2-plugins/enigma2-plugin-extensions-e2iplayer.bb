@@ -6,7 +6,6 @@ LICENSE = "GPLv2"
 require conf/license/license-gplv2.inc
 
 SRC_URI = "git://gitlab.com/zadmario/e2iplayer.git;protocol=http"
-SRC_URI_append += "file://ffmpeg4.patch"
 
 S = "${WORKDIR}/git"
 
