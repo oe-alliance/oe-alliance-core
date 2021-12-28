@@ -27,9 +27,14 @@ teamblue  Support: [https://www.gigablue-support.org](https://www.gigablue-suppo
 
 # Supported Vendors and Models  with openATV
 
+
 ### AirDigital
 
-Zgemma-Star 2S          MACHINE:  zgemmas2s
+Zgemma I55              MACHINE:  zgemmai55
+
+Zgemma I55 Plus         MACHINE:  zgemmai55plus
+
+Zgemma-Star LC          MACHINE:  zgemmaslc
 
 Zgemma-Star H1          MACHINE:  zgemmash1
 
@@ -37,13 +42,19 @@ Zgemma-Star H2          MACHINE:  zgemmash2
 
 Zgemma-Star S           MACHINE:  zgemmass
 
-Zgemma HS               MACHINE:  zgemmahs
+Zgemma-Star 2S          MACHINE:  zgemmas2s
 
-Zgemma H2S              MACHINE:  zgemmah2s
+Zgemma HS               MACHINE:  zgemmahs
 
 Zgemma H2H              MACHINE:  zgemmah2h
 
-Zgemma-Star LC          MACHINE:  zgemmaslc
+Zgemma H2S              MACHINE:  zgemmah2s
+
+Zgemma H2S PLUS         MACHINE:  zgemmah2splus
+
+Zgemma H3 AC            MACHINE:  zgemmah3ac
+
+Zgemma H3.2TC           MACHINE:  zgemmah32tc
 
 Zgemma H4               MACHINE:  zgemmah4
 
@@ -51,17 +62,9 @@ Zgemma H5               MACHINE:  zgemmah5
 
 Zgemma H52S             MACHINE:  zgemmah52s
 
-Zgemma I55              MACHINE:  zgemmai55
-
 Zgemma H5 AC            MACHINE:  zgemmah5ac
 
-Zgemma H3 AC            MACHINE:  zgemmah3ac
-
-Zgemma H3.2TC           MACHINE:  zgemmah32tc
-
 Zgemma H5.2TC           MACHINE:  zgemmah52tc
-
-Zgemma H2S PLUS         MACHINE:  zgemmah2splus
 
 Zgemma H52S PLUS        MACHINE:  zgemmah52splus
 
@@ -83,8 +86,6 @@ Zgemma H9 2S            MACHINE:  zgemmah92s
 
 Zgemma H9 2H            MACHINE:  zgemmah92h
 
-Zgemma I55 Plus         MACHINE:  zgemmai55plus
-
 Zgemma H9 COMBO         MACHINE:  zgemmah9combo
 
 Zgemma H9 TWIN          MACHINE:  zgemmah9twin
@@ -93,14 +94,13 @@ Zgemma H92H SE          MACHINE:  zgemmah92hse
 
 Zgemma H9S SE           MACHINE:  zgemmah9sse
 
-Zgemma H11S             MACHINE:  zgemmah11s
-
-Zgemma H10 COMBO        MACHINE:  zgemmah10combo
-
 Zgemma H9 COMBO SE      MACHINE:  zgemmah9combose
 
 Zgemma H9 TWIN SE       MACHINE:  zgemmah9twinse
 
+Zgemma H10 COMBO        MACHINE:  zgemmah10combo
+
+Zgemma H11S             MACHINE:  zgemmah11s
 
 ### Amiko
 
@@ -121,6 +121,8 @@ Viper TWIN              MACHINE:  vipertwin
 Viper 4K V20            MACHINE:  viper4kv20
 
 Viper 4K V30            MACHINE:  viper4kv30
+
+Viper 4K V40            MACHINE:  viper4kv40
 
 Viper Single            MACHINE:  vipersingle
 
@@ -442,6 +444,8 @@ Force 3 UHD Plus        MACHINE:  force3uhdplus
 
 IZIBOX ONE 4K           MACHINE:  iziboxone4k
 
+IZIBOX ONE 4K Plus      MACHINE:  iziboxone4kplus
+
 IZIBOX ECO TWIN HD      MACHINE:  iziboxecohd
 
 IZIBOX X3               MACHINE:  iziboxx3
@@ -565,6 +569,8 @@ SF8008 4K UHD           MACHINE:  sf8008
 
 SF8008 MINI 4K UHD      MACHINE:  sf8008m
 
+SX988 4K DUAL OS        MACHINE:  sx988
+
 
 ### Odin
 
@@ -625,6 +631,7 @@ Lunix3 4K               MACHINE:  lunix34k
 
 Lunix CO                MACHINE:  lunixco
 
+DUAL 4K UHD             MACHINE:  dual
 
 ### RedEagle
 
@@ -729,6 +736,8 @@ GalaxyM6                MACHINE:  galaxym6
 ###uClan
 
 Ustym 4K PRO            MACHINE:  ustym4kpro
+
+Ustym 4K OTT            MACHINE:  ustym4kott
 
 
 ### Venton Unibox
