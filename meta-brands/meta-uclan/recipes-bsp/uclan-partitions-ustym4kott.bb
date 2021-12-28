@@ -7,10 +7,10 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 inherit deploy
 
-SRCDATE = "20211220"
+SRCDATE = "20211228"
 PR = "${SRCDATE}"
 
-S = "${WORKDIR}/patitions"
+S = "${WORKDIR}/partitions"
 
 SRC_URI = "http://source.mynonpublic.com/uclan/${MACHINE}-partitions-${SRCDATE}.zip \
   file://flash-apploader \
@@ -52,7 +52,7 @@ do_deploy() {
 
 addtask deploy before do_build after do_install
 
-SRC_URI[md5sum] = "f048fd59f4c90f49061aac8924f480dd"
-SRC_URI[sha256sum] = "6c5b0b0a2f8787e678a4d2f13e39849bb1aff5a27f6126f9b70e4baaf920d25c"
+SRC_URI[md5sum] = "eb848a6ac14270228e5c0845f3868273"
+SRC_URI[sha256sum] = "156a70b507d5b52030210ca4a4fdc62f8ef4bb4310c95903c95e1158896d6231"
 
 INSANE_SKIP:${PN} += "already-stripped"
