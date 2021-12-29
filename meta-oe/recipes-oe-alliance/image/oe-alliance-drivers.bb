@@ -13,5 +13,5 @@ ALLOW_EMPTY:${PN} = "1"
 
 DEPENDS = "enigma2 network-usb-drivers-meta"
 
-RDEPENDS:${PN}_gbquad = "enigma2-plugin-drivers-network-usb-smsc75xx"
-RDEPENDS:${PN}_gbquadplus = "enigma2-plugin-drivers-network-usb-smsc75xx"
+RDEPENDS:${PN}:gbquad = "enigma2-plugin-drivers-network-usb-smsc75xx"
+RDEPENDS:${PN}:gbquadplus = "enigma2-plugin-drivers-network-usb-smsc75xx"
