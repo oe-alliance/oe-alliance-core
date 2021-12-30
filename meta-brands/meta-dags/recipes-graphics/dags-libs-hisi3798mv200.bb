@@ -1,6 +1,6 @@
-SRCDATE = "20211229"
+SRCDATE = "20211230"
 
 require dags-libs.inc
 
-SRC_URI[md5sum] = "644941c857bade91b21ae25cf083d43d"
-SRC_URI[sha256sum] = "d85fc476c0e795f71d5ae3b89f0e17abef3b7e6b7e957ddff0bfaaf39aa3607d"
+SRC_URI[md5sum] = "99e4e7f6cad1c96480d5050b326d8eba"
+SRC_URI[sha256sum] = "172225fde31ad6dd768327a259c6c0bf9fbb52f4a1edc1928f92ce631007579c"
