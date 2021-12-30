@@ -30,7 +30,7 @@ S = "${WORKDIR}/git"
 
 THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-e2piconizer_1.13.20201122_all.ipk \
-	enigma2-plugin-extensions-ipchecker_004_all.ipk \
+    enigma2-plugin-extensions-ipchecker_004_all.ipk \
     enigma2-plugin-extensions-netspeedtest_2.1.3_all.ipk \
     enigma2-plugin-extensions-screengrabber_2.6_all.ipk \
     enigma2-plugin-extensions-skyrecorder_2.0.3d-py3_all.ipk \
