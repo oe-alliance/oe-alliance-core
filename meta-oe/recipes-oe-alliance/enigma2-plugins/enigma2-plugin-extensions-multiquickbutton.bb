@@ -15,6 +15,7 @@ PKGV = "2.8.4+git${GITPKGV}"
 PR = "r0"
 
 SRC_URI = "git://github.com/oe-alliance/e2openplugin-MultiQuickButton.git;protocol=https;branch=python3 \
+        file://ax-python-devel-dont-check-for-distutils.patch \
         file://LICENSE.GPLv2"
 
 S = "${WORKDIR}/git"

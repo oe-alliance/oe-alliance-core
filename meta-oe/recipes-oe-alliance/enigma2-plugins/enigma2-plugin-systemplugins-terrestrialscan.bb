@@ -13,7 +13,8 @@ PV = "${IMAGE_VERSION}+git${SRCPV}"
 PKGV = "${IMAGE_VERSION}+git${GITPKGV}"
 PR = "r1"
 
-SRC_URI = "git://github.com/oe-alliance/TerrestrialScan.git;protocol=https;branch=master"
+SRC_URI = "git://github.com/oe-alliance/TerrestrialScan.git;protocol=https;branch=master \
+        file://ax-python-devel-dont-check-for-distutils.patch"
 
 EXTRA_OECONF = " \
     BUILD_SYS=${BUILD_SYS} \

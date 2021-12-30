@@ -13,7 +13,8 @@ PKGV = "1.0+git${GITPKGV}"
 VER ="1.0"
 PR = "r1"
 
-SRC_URI="git://github.com/openmips/gbremote-client.git;protocol=https;branch=master"
+SRC_URI="git://github.com/openmips/gbremote-client.git;protocol=https;branch=master \
+        file://ax-python-devel-dont-check-for-distutils.patch"
 
 S = "${WORKDIR}/git"
 

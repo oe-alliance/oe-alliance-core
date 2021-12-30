@@ -6,7 +6,7 @@ DEPENDS = "${PYTHON_PN} ${PYTHON_PN}-six-native"
 
 require conf/license/license-gplv2.inc
 
-inherit autotools-brokensep gitpkgv ${PYTHON_PN}native
+inherit autotools-brokensep gitpkgv ${PYTHON_PN}targetconfig ${PYTHON_PN}native
 
 SRCREV = "${AUTOREV}"
 PV = "${IMAGE_VERSION}+git${SRCPV}"
@@ -18,7 +18,8 @@ do_configure[nostamp] = "1"
 BRANCH="master"
 
 FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
-SRC_URI="git://github.com/oe-mirrors/branding-module.git;protocol=https;branch=${BRANCH}"
+SRC_URI="git://github.com/oe-mirrors/branding-module.git;protocol=https;branch=${BRANCH} \
+        file://ax-python-devel-dont-check-for-distutils.patch"
 #SRC_URI_append_openatv=" \
 #	file://openatv_mappings.patch \
 #"

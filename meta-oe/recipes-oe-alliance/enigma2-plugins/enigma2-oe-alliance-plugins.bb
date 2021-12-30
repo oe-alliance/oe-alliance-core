@@ -162,7 +162,8 @@ PV = "${IMAGE_VERSION}+gitr${SRCPV}"
 PKGV = "${IMAGE_VERSION}+gitr${GITPKGV}"
 PR = "r1"
 
-SRC_URI = "${OEA_PLUGINS_URI}"
+SRC_URI = "${OEA_PLUGINS_URI} \
+        file://ax-python-devel-dont-check-for-distutils.patch"
 
 EXTRA_OECONF = " \
     BUILD_SYS=${BUILD_SYS} \
