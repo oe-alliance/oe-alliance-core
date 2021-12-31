@@ -5923,7 +5923,7 @@ index 0000000..24a9a75
 +  }
 +
 +  bool ret = false;
-+  XBMC_Event event = {0};
++  XBMC_Event event = XBMC_Event();
 +  while (1)
 +  {
 +    event = m_devices.ReadEvent();

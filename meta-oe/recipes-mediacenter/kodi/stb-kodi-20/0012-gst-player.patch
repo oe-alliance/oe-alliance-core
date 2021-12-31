@@ -853,7 +853,7 @@ index 0000000..e12a2bd
 +	if (m_PlayerOptions.startpercent > 0)
 +	{
 +		//CLog::Log(LOGINFO, "CGstPlayer::{}: m_PlayerOptions.startpercent set", __FUNCTION__);
-+		m_VideoPlayerVideo->SeekPercentage(m_PlayerOptions.startpercent/(float) 100);
++		m_VideoPlayerVideo->SeekPercentage((float)m_PlayerOptions.startpercent/(float) 100);
 +		m_PlayerOptions.startpercent = 0.0f;
 +	}
 +	else if (m_PlayerOptions.starttime > 0)

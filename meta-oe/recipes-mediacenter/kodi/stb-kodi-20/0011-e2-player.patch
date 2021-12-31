@@ -207,7 +207,7 @@ index 0000000..4315511
 +        {
 +          CLog::Log(LOGDEBUG, "{} ex write error occurred(json)!", __FUNCTION__);
 +        }
-+        else if (ret != jsonStr.length())
++        else if (ret != (ssize_t)jsonStr.length())
 +        {
 +          CLog::Log(LOGDEBUG, "{} write error occurred(json)!", __FUNCTION__);
 +        }
