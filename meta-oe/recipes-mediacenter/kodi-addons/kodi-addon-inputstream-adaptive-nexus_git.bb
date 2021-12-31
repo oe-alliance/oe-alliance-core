@@ -7,17 +7,18 @@ FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 
 inherit kodi-addon
 
-DEPENDS += "expat"
+DEPENDS += "expat bento4"
 RDEPENDS:${PN} += "ldd"
 RRECOMMENDS:${PN} = "kernel-module-ext2"
 
-SRCREV = "6cb99782bbdc4756173c71aa6b5dd9ae7c1f91b3"
-PV = "20.0.2+gitr${SRCPV}"
+SRCREV = "0b2715a282f3726d089fae592c46efd425aa5b49"
+PV = "20.0.3+gitr${SRCPV}"
 
 KODIADDONBRANCH = "Nexus"
 
 SRC_URI = "git://github.com/xbmc/inputstream.adaptive.git;protocol=https;branch=${KODIADDONBRANCH} \
-        file://define-INPUTSTREAM_MAX_STREAM_COUNT-ifndef.patch"
+        file://define-INPUTSTREAM_MAX_STREAM_COUNT-ifndef.patch \
+        file://cmake-dont-search-for-bento4.patch"
 
 S = "${WORKDIR}/git"
 

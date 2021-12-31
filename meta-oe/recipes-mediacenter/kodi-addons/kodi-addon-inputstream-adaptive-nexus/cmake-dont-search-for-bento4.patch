@@ -1,0 +1,25 @@
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -78,14 +78,14 @@ add_subdirectory(lib/mpegts)
+ 
+ add_subdirectory(lib/webm_parser)
+ 
+-find_package(Bento4 REQUIRED)
+-if(CORE_SYSTEM_NAME STREQUAL ios OR CORE_SYSTEM_NAME STREQUAL darwin_embedded)
+-  set(BENTOUSESTCFS 1)
+-  include_directories(${BENTO4_INCLUDE_DIRS})
+-else()
+-  add_subdirectory(wvdecrypter)
+-  set(ADP_ADDITIONAL_BINARY $<TARGET_FILE:ssd_wv>)
+-endif()
++#find_package(Bento4 REQUIRED)
++#if(CORE_SYSTEM_NAME STREQUAL ios OR CORE_SYSTEM_NAME STREQUAL darwin_embedded)
++#  set(BENTOUSESTCFS 1)
++#  include_directories(${BENTO4_INCLUDE_DIRS})
++#else()
++#  add_subdirectory(wvdecrypter)
++#  set(ADP_ADDITIONAL_BINARY $<TARGET_FILE:ssd_wv>)
++#endif()
+ 
+ set(DECRYPTERPATH "special://home/cdm")
+ 
