@@ -9,7 +9,7 @@ LIC_FILES_CHKSUM = "file://src/os.h;md5=752555fa94e82005d45fd201fee5bd33"
 PV = "2.2.0"
 
 SRC_URI = "git://github.com/Pulse-Eight/platform.git;branch=master;protocol=https"
-SRCREV = "a822e196cb57d8545dccca6cc22fda0f83c34321"
+SRCREV = "a7cd0d5780ed80a4e70480d1650749f29e8a1fb2"
 
 S = "${WORKDIR}/git"
 
