@@ -1,19 +1,19 @@
-From c30ea87844813ced51f4cabc31787c32ea0e3d20 Mon Sep 17 00:00:00 2001
+From a14e90c53f3cb1d932034147f4685ca348d20965 Mon Sep 17 00:00:00 2001
 From: Captain <captain.onboard@web.de>
 Date: Sun, 13 Jun 2021 13:14:40 +0200
-Subject: [PATCH 3/3] HiPlayer-Subs-20
+Subject: [PATCH] HiPlayer-Subs-20
 
 ---
  xbmc/guilib/GUIWindowManager.cpp    |  11 +++
  xbmc/windows/CMakeLists.txt         |   6 +-
- xbmc/windows/GUIWindowSubtitles.cpp | 145 ++++++++++++++++++++++++++++
+ xbmc/windows/GUIWindowSubtitles.cpp | 144 ++++++++++++++++++++++++++++
  xbmc/windows/GUIWindowSubtitles.h   |  21 ++++
- 4 files changed, 181 insertions(+), 2 deletions(-)
+ 4 files changed, 180 insertions(+), 2 deletions(-)
  create mode 100644 xbmc/windows/GUIWindowSubtitles.cpp
  create mode 100644 xbmc/windows/GUIWindowSubtitles.h
 
 diff --git a/xbmc/guilib/GUIWindowManager.cpp b/xbmc/guilib/GUIWindowManager.cpp
-index 523405c102..550d06c6e3 100644
+index b55213a..943575f 100644
 --- a/xbmc/guilib/GUIWindowManager.cpp
 +++ b/xbmc/guilib/GUIWindowManager.cpp
 @@ -59,6 +59,9 @@
@@ -26,7 +26,7 @@ index 523405c102..550d06c6e3 100644
  
  // Dialog includes
  #include "music/dialogs/GUIDialogMusicOSD.h"
-@@ -300,6 +303,10 @@ void CGUIWindowManager::CreateWindows()
+@@ -304,6 +307,10 @@ void CGUIWindowManager::CreateWindows()
    Add(new GAME::CDialogGameAdvancedSettings);
    Add(new GAME::CDialogGameVideoRotation);
    Add(new RETRO::CGameWindowFullScreen);
@@ -37,7 +37,7 @@ index 523405c102..550d06c6e3 100644
  }
  
  bool CGUIWindowManager::DestroyWindows()
-@@ -430,6 +437,10 @@ bool CGUIWindowManager::DestroyWindows()
+@@ -436,6 +443,10 @@ bool CGUIWindowManager::DestroyWindows()
  
      DestroyWindow(WINDOW_DIALOG_PERIPHERALS);
      DestroyWindow(WINDOW_DIALOG_PERIPHERAL_SETTINGS);
@@ -49,7 +49,7 @@ index 523405c102..550d06c6e3 100644
    catch (...)
    {
 diff --git a/xbmc/windows/CMakeLists.txt b/xbmc/windows/CMakeLists.txt
-index 2fe465fcc2..f44fd3f751 100644
+index 2fe465f..f44fd3f 100644
 --- a/xbmc/windows/CMakeLists.txt
 +++ b/xbmc/windows/CMakeLists.txt
 @@ -8,7 +8,8 @@ set(SOURCES GUIMediaWindow.cpp
@@ -73,10 +73,10 @@ index 2fe465fcc2..f44fd3f751 100644
  core_add_library(windows)
 diff --git a/xbmc/windows/GUIWindowSubtitles.cpp b/xbmc/windows/GUIWindowSubtitles.cpp
 new file mode 100644
-index 0000000000..429b3ad531
+index 0000000..8e60eb6
 --- /dev/null
 +++ b/xbmc/windows/GUIWindowSubtitles.cpp
-@@ -0,0 +1,145 @@
+@@ -0,0 +1,144 @@
 +#include "GUIWindowSubtitles.h"
 +#include "Util.h"
 +#include "utils/log.h"
@@ -165,7 +165,6 @@ index 0000000000..429b3ad531
 +void CGUIWindowSubtitles::Process(unsigned int currentTime, CDirtyRegionList &dirtyregions)
 +{
 +	const std::shared_ptr<CSettings> settings = CServiceBroker::GetSettingsComponent()->GetSettings();
-+	if (CUtil::IsUsingTTFSubtitles())
 +	{
 +		RESOLUTION_INFO pal(720, 576, 0);
 +		CGUIFont *subtitle_font = g_fontManager.LoadTTF(StringUtils::Format("__subs{:d}{:x}{:x}{}__",
@@ -224,7 +223,7 @@ index 0000000000..429b3ad531
 +}
 diff --git a/xbmc/windows/GUIWindowSubtitles.h b/xbmc/windows/GUIWindowSubtitles.h
 new file mode 100644
-index 0000000000..4f9cef1100
+index 0000000..4f9cef1
 --- /dev/null
 +++ b/xbmc/windows/GUIWindowSubtitles.h
 @@ -0,0 +1,21 @@
@@ -249,6 +248,3 @@ index 0000000000..4f9cef1100
 +	CGUITextLayout *m_layout;
 +	std::string m_text;
 +};
--- 
-2.32.0.windows.1
-
