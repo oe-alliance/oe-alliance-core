@@ -3,7 +3,7 @@ DESCRIPTION = "Streamlink is a command-line utility that pipes video streams fro
 HOMEPAGE = "https://github.com/streamlink/streamlink"
 SECTION = "devel/python"
 LICENSE = "BSD-2-Clause"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=7c0be52291b7252b878da806d185b1d1"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=381ff91bf309000e0ec58dafe27a97b0"
 
 inherit setuptools3 ${PYTHON_PN}-dir gittag
 
