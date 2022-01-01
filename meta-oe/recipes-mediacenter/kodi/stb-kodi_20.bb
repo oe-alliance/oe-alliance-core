@@ -79,7 +79,7 @@ DEPENDS += " \
 SRCREV = "58e75a75f8a95bec4e9d43c2865319c8ae89a13c"
 
 # 'patch' doesn't support binary diffs
-PATCHTOOL = "git"
+#PATCHTOOL = "git"
 
 PR = "r0"
 
