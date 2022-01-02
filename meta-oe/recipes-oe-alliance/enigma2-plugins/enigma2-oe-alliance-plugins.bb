@@ -39,6 +39,7 @@ PROVIDES += " \
     enigma2-plugin-extensions-ondemand \
     enigma2-plugin-extensions-fempa \
     enigma2-plugin-extensions-lcd4linux \
+    enigma2-plugin-extensions-piconsupdater \
     enigma2-plugin-extensions-remotechannelstreamconverter \
     enigma2-plugin-extensions-tmdb \
     ${@bb.utils.contains('MACHINE_FEATURES', 'legacykernel', '' , 'enigma2-plugin-systemplugins-wirelessaccesspoint', d)} \
@@ -125,6 +126,9 @@ DESCRIPTION_enigma2-plugin-systemplugins-wirelessaccesspoint = "Using a Wireless
 RDEPENDS_enigma2-plugin-systemplugins-wirelessaccesspoint = "hostapd bridge-utils"
 DESCRIPTION_enigma2-plugin-extensions-rcuselect = "Change Remote for Wetek"
 DESCRIPTION_enigma2-plugin-extensions-rezap = "ReZap Sync Tool for Wetek"
+DESCRIPTION_enigma2-plugin-extensions-piconsupdater = "Download and install new Picons for your current bouquet channels. PiconsUpdater coded by svox and jbleyel, idea by arn354 and picons by mike99"
+RDEPENDS_enigma2-plugin-extensions-piconsupdater = "python-imaging python-textutils python-io python-compression pngquant"
+
 
 inherit autotools-brokensep gitpkgv pythonnative gettext
 
