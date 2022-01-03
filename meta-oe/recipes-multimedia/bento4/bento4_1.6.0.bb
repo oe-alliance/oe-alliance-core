@@ -5,7 +5,9 @@ LICENSE = "GPLv2"
 LIC_FILES_CHKSUM="file://Documents/LICENSE.txt;md5=2bdfce88f437a0613f41effed74b7061"
 
 SRCREV = "83c48e6e2a3f8e4be7ad2eddaa0639303184146d"
-PV = "v1.6.0-639"
+PV = "1.6.0-639"
+
+inherit cmake
 
 SRC_URI = "git://github.com/axiomatic-systems/Bento4;protocol=https;branch=master \
         file://0001-Add-additional-methods-funtions-and-passing-poolid.patch \
@@ -24,13 +26,20 @@ SRC_URI = "git://github.com/axiomatic-systems/Bento4;protocol=https;branch=maste
         file://0014-Ap4SampleDescription-added-missing-dynamic-casts.patch \
         file://0015-Avoid-set-next-fragment-position.patch \
         file://0016-Add-support-for-cmake-install.patch"
+SRC_URI:append:mipsel = " file://ap4config-set-mipsel-byte-order.patch"
 
-S="${WORKDIR}/git"
+S = "${WORKDIR}/git"
+
+EXTRA_OECMAKE:append  = " -DBUILD_APPS=OFF"
+CXXFLAGS:append = " -fPIC"
 
 ALLOW_EMPTY:${PN} = "1"
 
 do_install() {
-    install -d ${D}{includedir}
+    install -d ${D}${includedir}
     mkdir -p ${D}${includedir}/bento4
     find ${S}/Source/C++/ -name '*.h' -exec cp -f "{}" ${D}${includedir}/bento4 \;
+
+    install -d ${D}${libdir}
+    cp -f ${B}/libap4.a ${D}${libdir}
 }

@@ -1,0 +1,10 @@
+--- a/Source/C++/Core/Ap4Config.h
++++ b/Source/C++/Core/Ap4Config.h
+@@ -48,6 +48,7 @@
+ // define AP4_PLATFORM_BYTE_ORDER to one of these two choices
+ #define AP4_PLATFORM_BYTE_ORDER_BIG_ENDIAN    0
+ #define AP4_PLATFORM_BYTE_ORDER_LITTLE_ENDIAN 1
++#define AP4_PLATFORM_BYTE_ORDER AP4_PLATFORM_BYTE_ORDER_LITTLE_ENDIAN
+ 
+ #if !defined(AP4_PLATFORM_BYTE_ORDER)
+ #if defined(__ppc__)
