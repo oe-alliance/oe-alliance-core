@@ -58,7 +58,7 @@ do_install() {
     printf "mkubifs=${MKUBIFS_ARGS}\n" >> ${D}${sysconfdir}/image-version
     printf "ubinize=${UBINIZE_ARGS}\n" >> ${D}${sysconfdir}/image-version
     printf "driverdate=${DRIVERSDATE}\n" >> ${D}${sysconfdir}/image-version
-    printf "arch=${DEFAULTTUNE}\n" >> ${D}${sysconfdir}/image-version
+    printf "arch=${TUNE_PKGARCH}\n" >> ${D}${sysconfdir}/image-version
     printf "display-type=${DISPLAY_TYPE}\n" >> ${D}${sysconfdir}/image-version
     printf "hdmi=${HAVE_HDMI}\n" >> ${D}${sysconfdir}/image-version
     printf "yuv=${HAVE_YUV}\n" >> ${D}${sysconfdir}/image-version

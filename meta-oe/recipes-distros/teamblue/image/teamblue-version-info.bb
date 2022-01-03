@@ -57,7 +57,7 @@ do_install() {
     echo "mkubifs=${MKUBIFS_ARGS}" >> ${D}/etc/image-version
     echo "ubinize=${UBINIZE_ARGS}" >> ${D}/etc/image-version
     echo "driverdate=${DRIVERSDATE}" >> ${D}/etc/image-version
-    echo "arch=${DEFAULTTUNE}" >> ${D}/etc/image-version
+    echo "arch=${TUNE_PKGARCH}" >> ${D}/etc/image-version
     echo "display-type=${DISPLAY_TYPE}" >> ${D}/etc/image-version
     echo "hdmi=${HAVE_HDMI}" >> ${D}/etc/image-version
     echo "yuv=${HAVE_YUV}" >> ${D}/etc/image-version
