@@ -11,14 +11,13 @@ DEPENDS += "expat bento4"
 RDEPENDS:${PN} += "ldd"
 RRECOMMENDS:${PN} = "kernel-module-ext2"
 
-SRCREV = "0b2715a282f3726d089fae592c46efd425aa5b49"
-PV = "20.0.3+gitr${SRCPV}"
+SRCREV = "1e9924cfc15d8e5bdcf1ff195780da0afb96ba6b"
+PV = "20.1.0+gitr${SRCPV}"
 
 KODIADDONBRANCH = "Nexus"
 
 SRC_URI = "git://github.com/xbmc/inputstream.adaptive.git;protocol=https;branch=${KODIADDONBRANCH} \
-        file://define-INPUTSTREAM_MAX_STREAM_COUNT-ifndef.patch \
-        file://cmake-dont-search-for-bento4.patch"
+        file://define-INPUTSTREAM_MAX_STREAM_COUNT-ifndef.patch"
 
 S = "${WORKDIR}/git"
 
