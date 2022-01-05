@@ -9,7 +9,7 @@ require conf/license/license-gplv2.inc
 RDEPENDS:${PN} += "showiframe"
 
 PV = "${IMAGE_VERSION}"
-PR = "r2.4"
+PR = "r2.5"
 
 S = "${WORKDIR}"
 
@@ -100,7 +100,7 @@ do_install() {
     install -d ${D}/usr/share
     install -m 0644 bootlogo_fhd.mvi ${D}/usr/share/bootlogo.mvi
     install -m 0644 restore_fhd.mvi ${D}/usr/share/restore.mvi
-    ln -sf /usr/share/bootlogo_fhd.mvi ${D}/usr/share/backdrop.mvi
+    ln -sf /usr/share/bootlogo.mvi ${D}/usr/share/backdrop.mvi
     install -d ${D}/usr/share/enigma2
     install -m 0644 radio.mvi ${D}/usr/share/enigma2/radio.mvi
     install -d ${D}/${sysconfdir}/init.d
