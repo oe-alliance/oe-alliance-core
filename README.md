@@ -737,7 +737,7 @@ GalaxyM6                MACHINE:  galaxym6
 
 Ustym 4K PRO            MACHINE:  ustym4kpro
 
-Ustym 4K OTT            MACHINE:  ustym4kott
+Ustym 4K OTT            MACHINE:  ustym4kottpremium
 
 
 ### Venton Unibox

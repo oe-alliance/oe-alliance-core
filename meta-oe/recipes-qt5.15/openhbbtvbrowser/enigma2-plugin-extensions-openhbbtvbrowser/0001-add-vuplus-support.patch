@@ -1,0 +1,52 @@
+From 445257a27eb634f3e90e6028414ba2f53e16a4b6 Mon Sep 17 00:00:00 2001
+From: Captain <captain.onboard@web.de>
+Date: Mon, 26 Jul 2021 20:48:09 +0200
+Subject: [PATCH] add vuplus support
+
+---
+ browser.py | 18 +++++++++++++++++-
+ 1 file changed, 17 insertions(+), 1 deletion(-)
+
+diff --git a/browser.py b/browser.py
+index 9c358c8..1e47bd2 100644
+--- a/browser.py
++++ b/browser.py
+@@ -1,10 +1,23 @@
+ from __future__ import absolute_import
+ from enigma import eConsoleAppContainer
+ from . import datasocket
++from boxbranding import getBrandOEM
+ 
+ 
+ class Browser:
+     def __init__(self, urlcallback=None):
++
++        vmode = open("/proc/stb/video/videomode_50hz", "r").read()
++        self.resolution="1920x1080"
++        if vmode[0:3] == "480":
++            self.resolution="720x480"
++        elif vmode[0:3] == "576":
++            self.resolution="720x576"
++        elif vmode[0:3] == "720":
++            self.resolution="1280x720"
++        elif vmode[0:3] == "216":
++            self.resolution="3840x2160"
++
+         self.onBroadcastPlay = []
+         self.onBroadcastStop = []
+         self.onExit = []
+@@ -19,7 +32,10 @@ class Browser:
+             datasocket.onCommandReceived.append(self.onCommandReceived)
+             datasocket.onBrowserClosed.append(self.onBrowserClosed)
+             container = eConsoleAppContainer()
+-            container.execute("/usr/bin/openhbbtvbrowser %s --onid %d --tsid %d --sid %d" % (url, onid, tsid, sid))
++            if getBrandOEM() == "vuplus":
++                container.execute("export EGLFS_LIBVUPL_SIZE=%s /usr/bin/openhbbtvbrowser %s --onid %d --tsid %d --sid %d" % (self.resolution, url, onid, tsid, sid))
++            else:
++                container.execute("/usr/bin/openhbbtvbrowser %s --onid %d --tsid %d --sid %d" % (url, onid, tsid, sid))
+ 
+     def stop(self):
+         if self.commandserver:
+-- 
+2.32.0.windows.2
+

@@ -1,4 +1,4 @@
-SUMMARY = "ustym4kott partitions files"
+SUMMARY = "ustym4kottpremium partitions files"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "CLOSED"
@@ -7,7 +7,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 inherit deploy
 
-SRCDATE = "20211229"
+SRCDATE = "20220105"
 PR = "${SRCDATE}"
 
 S = "${WORKDIR}/partitions"
@@ -52,7 +52,7 @@ do_deploy() {
 
 addtask deploy before do_build after do_install
 
-SRC_URI[md5sum] = "b581224018fbf1a936f803396847fc4e"
-SRC_URI[sha256sum] = "c908897384f0dcf167c90bda1c7c9e8e0eaccbb0c3856395cf111b5fe407af2e"
+SRC_URI[md5sum] = "117e3cf66a33959351fca36d4d105321"
+SRC_URI[sha256sum] = "24518df91c50225374d6c5169adb0abf0f0f19ed851de8df1b12b8d565d7262f"
 
 INSANE_SKIP:${PN} += "already-stripped"

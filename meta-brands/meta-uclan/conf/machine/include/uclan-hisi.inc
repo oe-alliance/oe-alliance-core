@@ -58,7 +58,7 @@ require conf/machine/include/arm/armv7a/tune-cortexa15.inc
 MACHINE_EXTRA_RRECOMMENDS += " \
     gstreamer1.0-plugin-dvbmediasink \
     gstreamer1.0-libav \
-    ${@bb.utils.contains('MACHINE', 'ustym4kott', 'enigma2-plugin-extensions-gbipboxclient enigma2-plugin-systemplugins-satipclient' , '', d)} \
+    ${@bb.utils.contains('MACHINE', 'ustym4kottpremium', 'enigma2-plugin-extensions-gbipboxclient enigma2-plugin-systemplugins-satipclient' , '', d)} \
     "
 
 DVBPROVIDER = "kernel"
