@@ -4,7 +4,7 @@ SRC_URI_append_ustym4kpro = " \
      file://libjpeg.so.62.2.0 \
 "
 
-SRC_URI_append_ustym4kott = " \
+SRC_URI_append_ustym4kottpremium = " \
     file://libjpeg.so.8.2.2 \
 "
 
@@ -13,7 +13,7 @@ do_install_append_ustym4kpro() {
         install -m 0755 ${WORKDIR}/libjpeg.so.62.2.0 ${D}${libdir}/
 }
 
-do_install_append_ustym4kott() {
+do_install_append_ustym4kottpremium() {
     install -d ${D}${libdir}
     install -m 0755 ${WORKDIR}/libjpeg.so.8.2.2 ${D}${libdir}/
     ln -s libjpeg.so.8.2.2 ${D}${libdir}/libjpeg.so.8

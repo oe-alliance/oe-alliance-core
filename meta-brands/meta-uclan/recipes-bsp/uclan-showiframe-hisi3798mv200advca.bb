@@ -4,7 +4,7 @@ PRIORITY = "optional"
 LICENSE = "CLOSED"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-COMPATIBLE_MACHINE = "^(ustym4kott)$"
+COMPATIBLE_MACHINE = "^(ustym4kottpremium)$"
 
 SRCDATE = "20211220"
 
