@@ -1,0 +1,13 @@
+diff --git a/Makefile.in b/Makefile.in
+index 87969a1..8cafa75 100644
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -17,7 +17,7 @@ SRCDIR=		@srcdir@
+ VPATH=		@srcdir@
+ 
+ CC=		@CC@
+-CFLAGS=		@CFLAGS@ -DVER=\"$(VER)\" -DSSH_PATH=\"$(SSH)\"
++CFLAGS=		@CFLAGS@ -DVER=\"$(VER)\"
+ CPPFLAGS=	@CPPFLAGS@
+ 
+ OFILES=		autossh.o
