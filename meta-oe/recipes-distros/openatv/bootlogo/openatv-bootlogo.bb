@@ -189,7 +189,7 @@ do_deploy() {
 
 addtask deploy before do_build after do_install
 
-pkg_preinst:${PN}_dreamboxv1() {
+pkg_preinst:${PN}:dreamboxv1() {
 	if [ -z "$D" ]
 	then
 		if mountpoint -q /boot
@@ -201,14 +201,14 @@ pkg_preinst:${PN}_dreamboxv1() {
 	fi
 }
 
-pkg_postinst:${PN}_dreamboxv1() {
+pkg_postinst:${PN}:dreamboxv1() {
 	if [ -z "$D" ]
 	then
 		umount /boot
 	fi
 }
 
-pkg_prerm:${PN}_dreamboxv1() {
+pkg_prerm:${PN}:dreamboxv1() {
 	if [ -z "$D" ]
 	then
 		if mountpoint -q /boot
@@ -220,7 +220,7 @@ pkg_prerm:${PN}_dreamboxv1() {
 	fi
 }
 
-pkg_postrm:${PN}_dreamboxv1() {
+pkg_postrm:${PN}:dreamboxv1() {
 	if [ -z "$D" ]
 	then
 		umount /boot
