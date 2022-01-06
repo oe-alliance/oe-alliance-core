@@ -10,7 +10,7 @@ SRCREV = "ee7bef8644ad1bac3fce2c04afef13f1ec19166b"
 PV = "2.+git${SRCPV}"
 PKGV = "2.+git${GITPKGV}"
 
-SRC_URI = "git://github.com/pornel/pngquant.git \
+SRC_URI = "git://github.com/kornelski/pngquant.git;protocol=https;branch=main \
            file://readonly.patch \
 "
 
