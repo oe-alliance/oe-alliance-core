@@ -3,7 +3,7 @@ SECTION = "kernel"
 LICENSE = "GPLv2"
 
 KERNEL_RELEASE = "4.4.35"
-SRCDATE_u5pvr = "20180502"
+SRCDATE:u5pvr = "20180502"
 SRCDATE = "20180828"
 
 inherit kernel machine_kernel_pr
