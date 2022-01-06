@@ -4,7 +4,7 @@ LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://autossh.c;beginline=1;endline=24;md5=90bbe42c2e8146adf5a08a7e911c8ffd"
 
 SRC_URI = " \
-	http://www.harding.motd.ca/autossh/${P}.tgz \
+	http://source.mynonpublic.com/${P}.tgz \
 	file://0001-remove-hosttools-path-for-ssh.patch \
 	"
 
