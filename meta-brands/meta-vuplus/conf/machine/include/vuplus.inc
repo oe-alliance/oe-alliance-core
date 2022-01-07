@@ -50,7 +50,7 @@ EXTRA_IMAGECMD_COMPAT = "--eraseblock=0x20000 -n -l"
 
 IMAGEDIR ?= "vuplus/${UPDATE_DIR}"
 
-IMAGE_CMD:ubifs:prepend += " \
+IMAGE_CMD:ubifs:prepend = " \
     rm -rf ${IMAGE_ROOTFS}/boot/*; \
     rm -rf ${IMAGE_ROOTFS}/tmp/*; \
     "

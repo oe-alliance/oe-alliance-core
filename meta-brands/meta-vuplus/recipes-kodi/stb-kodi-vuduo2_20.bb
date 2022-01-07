@@ -12,7 +12,7 @@ FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 
 INSANE_SKIP:${PN} += "file-rdeps ldflags"
 
-SRC_URI:append += " \
+SRC_URI:append = " \
     http://code.vuplus.com/download/release/kodi/xbmc-support_${MACHINE}_${GLPR}.tar.gz;name=xbmc-support \
 "
 

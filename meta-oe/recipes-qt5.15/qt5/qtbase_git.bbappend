@@ -19,7 +19,7 @@ RDEPENDS:${PN}:append = "${@bb.utils.contains('MACHINE_FEATURES', 'vu-eglfs', 'l
 PACKAGECONFIG_GL = " "
 PACKAGECONFIG_OPENSSL = "openssl"
 PACKAGECONFIG:remove = "tests ${@bb.utils.contains('MACHINE_FEATURES', 'vu-eglfs', 'gl' , '', d)}"
-PACKAGECONFIG:append += " \
+PACKAGECONFIG:append = " \
     ${@bb.utils.contains('MACHINE_FEATURES', 'noopengl', '', ' gles2 eglfs ', d)} \
     linuxfb \
 "
