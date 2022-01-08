@@ -20,4 +20,4 @@ INITSCRIPT_NAME = "recovery-ui"
 
 PRECOMPILED_NAME = "recovery-ui"
 
-PRECOMPILED_ARCH_dm920 = "dm900"
+PRECOMPILED_ARCH:dm920 = "dm900"

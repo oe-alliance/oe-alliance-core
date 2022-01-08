@@ -4,7 +4,7 @@ LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
 PRECOMPILED_ARCH = "${MACHINE}"
-PRECOMPILED_ARCH_dm7020hdv2 = "dm7020hd"
+PRECOMPILED_ARCH:dm7020hdv2 = "dm7020hd"
 
 inherit kernel machine_kernel_pr
 
@@ -64,7 +64,7 @@ PACKAGES_DYNAMIC = "kernel-*"
 # the kernel here, so that it is known that the kernel has them built in.
 KERNEL_BUILTIN_MODULES = ""
 
-KERNEL_BUILTIN_MODULES_dm8000 = "\
+KERNEL_BUILTIN_MODULES:dm8000 = "\
     kernel-module-aes-generic \
     kernel-module-crc32c \
     kernel-module-mac80211 \

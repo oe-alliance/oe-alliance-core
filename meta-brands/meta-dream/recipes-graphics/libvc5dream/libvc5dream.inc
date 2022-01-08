@@ -5,13 +5,13 @@ PROVIDES = "virtual/egl virtual/libgles2"
 RPROVIDES:${PN} = "virtual/egl virtual/libgles2"
 
 LIBEGLDEP = ""
-LIBEGLDEP_bcm73625 = "libv3ddriver"
-LIBEGLDEP_bcm7435 = "libv3ddriver"
-LIBEGLDEP_bcm7252s = "libvc5driver"
+LIBEGLDEP:bcm73625 = "libv3ddriver"
+LIBEGLDEP:bcm7435 = "libv3ddriver"
+LIBEGLDEP:bcm7252s = "libvc5driver"
 
 LIBEGLRDEP = ""
-LIBEGLRDEP_bcm7435 = "libv3ddriver"
-LIBEGLRDEP_bcm7252s = "libvc5driver"
+LIBEGLRDEP:bcm7435 = "libv3ddriver"
+LIBEGLRDEP:bcm7252s = "libvc5driver"
 
 RDEPENDS:${PN} = "${LIBEGLRDEP}"
 

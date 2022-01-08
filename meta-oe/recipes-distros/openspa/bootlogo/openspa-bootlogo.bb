@@ -26,7 +26,7 @@ INITSCRIPT_PARAMS:vuzero4k = "start 70 S ."
 INITSCRIPT_PARAMS:vuduo4k = "start 70 S ."
 INITSCRIPT_PARAMS:gb7252 = "start 70 S ."
 PRECOMPILED_ARCH = "${MACHINE}"
-PRECOMPILED_ARCH_dm7020hdv2 = "dm7020hd"
+PRECOMPILED_ARCH:dm7020hdv2 = "dm7020hd"
 
 inherit update-rc.d
 
@@ -175,7 +175,7 @@ do_deploy() {
 
 addtask deploy before do_build after do_install
 
-pkg_preinst:${PN}_dreamboxv1() {
+pkg_preinst:${PN}:dreamboxv1() {
 	if [ -z "$D" ]
 	then
 		if mountpoint -q /boot
@@ -187,14 +187,14 @@ pkg_preinst:${PN}_dreamboxv1() {
 	fi
 }
 
-pkg_postinst:${PN}_dreamboxv1() {
+pkg_postinst:${PN}:dreamboxv1() {
 	if [ -z "$D" ]
 	then
 		umount /boot
 	fi
 }
 
-pkg_prerm:${PN}_dreamboxv1() {
+pkg_prerm:${PN}:dreamboxv1() {
 	if [ -z "$D" ]
 	then
 		if mountpoint -q /boot
@@ -206,7 +206,7 @@ pkg_prerm:${PN}_dreamboxv1() {
 	fi
 }
 
-pkg_postrm:${PN}_dreamboxv1() {
+pkg_postrm:${PN}:dreamboxv1() {
 	if [ -z "$D" ]
 	then
 		umount /boot
