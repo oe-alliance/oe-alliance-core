@@ -54,9 +54,9 @@ def read_header(fp, lba_size=512):
 	fmt, GPTHeader = _make_fmt('GPTHeader', GPT_HEADER_FORMAT)
 	data = fp.read(struct.calcsize(fmt))
 	header = GPTHeader._make(struct.unpack(fmt, data))
-	if header.signature != 'EFI PART':
+	if header.signature != b'EFI PART':
 		raise GPTError('Bad signature: %r' % header.signature)
-	if header.revision != '\x00\x00\x01\x00':
+	if header.revision != b'\x00\x00\x01\x00':
 		raise GPTError('Bad revision: %r' % header.revision)
 	if header.header_size < 92:
 		raise GPTError('Bad header size: %r' % header.header_size)
@@ -69,7 +69,7 @@ def read_header(fp, lba_size=512):
 def read_partitions(fp, header, lba_size=512):
 	fp.seek(header.part_entry_start_lba * lba_size)
 	fmt, GPTPartition = _make_fmt('GPTPartition', GPT_PARTITION_FORMAT, extras=['index'])
-	for idx in xrange(1, 1 + header.num_part_entries):
+	for idx in iter(range(1, 1 + header.num_part_entries)):
 		data = fp.read(header.part_entry_size)
 		if len(data) < struct.calcsize(fmt):
 			raise GPTError('Short partition entry')
@@ -99,8 +99,8 @@ def find_kernel_device_udevadm(kernelpartition):
 def find_kernel_device_gpt(kernelpartition):
 	try:
 		p = 1
-		header = read_header(open('/dev/mmcblk1', 'r'))
-		for part in read_partitions(open('/dev/mmcblk1', 'r'), header):
+		header = read_header(open('/dev/mmcblk1', 'rb'))
+		for part in read_partitions(open('/dev/mmcblk1', 'rb'), header):
 			if kernelpartition == part.name:
 				return '/dev/mmcblk1p' + str(p)
 			p += 1
