@@ -9,8 +9,9 @@ inherit gitpkgv ${@bb.utils.contains("PYTHON_PN", "python", "distutils-openplugi
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "${GITPKGVTAG}"
+PR = "r1"
 
-SRC_URI = "git://github.com/oe-mirrors/HRTunerProxy.git;protocol=https"
+SRC_URI = "git://github.com/OpenViX/HRTunerProxy.git;protocol=https"
 
 S = "${WORKDIR}/git"
 
