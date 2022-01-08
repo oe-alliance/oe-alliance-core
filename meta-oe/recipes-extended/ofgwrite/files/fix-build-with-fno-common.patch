@@ -26,7 +26,7 @@
 +enum FlashModeTypeEnum kernel_flash_mode;
 +enum FlashModeTypeEnum rootfs_flash_mode;
 +
- const char ofgwrite_version[] = "4.5.6";
+ const char ofgwrite_version[] = "4.5.7";
  int flash_kernel  = 0;
  int flash_rootfs  = 0;
 --- a/ofgwrite.h
