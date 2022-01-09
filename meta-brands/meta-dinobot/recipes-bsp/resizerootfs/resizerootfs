@@ -17,6 +17,10 @@ if [ ! -f "/.resize-rootfs" ]; then
     echo "Resizing rootfs, Do not unplug power!..."
     resize2fs /dev/block/by-name/exrootfs
     touch "/.resize-rootfs"
+  elif [ -e "/dev/block/by-name/userdata" ]; then
+    echo "Resizing rootfs, Do not unplug power!..."
+    resize2fs /dev/block/by-name/userdata
+    touch "/.resize-rootfs"
   fi
 fi
 : exit 0
