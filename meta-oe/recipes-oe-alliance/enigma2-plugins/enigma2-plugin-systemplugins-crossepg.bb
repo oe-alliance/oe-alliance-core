@@ -17,7 +17,7 @@ PR = "r3"
 
 SRC_URI = "git://github.com/oe-alliance/e2openplugin-CrossEPG.git;protocol=https;branch=dev \
         file://fix-build-with-fno-common.patch \
-        file://use-python-3.9-path.patch"
+        "
 
 inherit ${PYTHON_PN}-dir
 
@@ -37,7 +37,7 @@ do_compile() {
 }
 
 do_install() {
-    oe_runmake 'D=${D}' install
+    oe_runmake 'D=${D}' install 'PYTHON_BASEVERSION=${PYTHON_BASEVERSION}'
     mv ${D}/usr/crossepg/libcrossepg.so ${D}${libdir}/
 }
 
