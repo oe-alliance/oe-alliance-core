@@ -11,9 +11,9 @@ inherit opendreambox-git
 
 BRANCH = "master"
 BRANCH:dm520 = "dm520"
-BRANCH:dm820 = "${BRANCH_dm7080}"
+BRANCH:dm820 = "dm7080"
 BRANCH:dm900 = "dm900"
-BRANCH:dm920 = "${BRANCH_dm900}"
+BRANCH:dm920 = "dm900"
 BRANCH:dm7080 = "dm7080"
 
 COMPATIBLE_MACHINE = "^(dm520|dm820|dm900|dm920|dm7080)$"
