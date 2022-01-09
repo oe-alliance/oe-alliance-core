@@ -41,6 +41,7 @@ SRC_URI:u5pvr += "http://source.mynonpublic.com/dinobot/dinobot-linux-${PV}-${SR
 "
 
 SRC_URI = "http://source.mynonpublic.com/dinobot/dinobot-linux-${PV}-${SRCDATE}.tar.gz;name=new \
+    ${@bb.utils.contains('MACHINE', 'u57', 'file://initramfs-subdirboot.cpio.gz;unpack=0' , '', d)} \
     file://defconfig \
     file://410dts.patch \
     file://0001-mmc-switch-1.8V.patch \
@@ -64,6 +65,11 @@ FILES:${KERNEL_PACKAGE_NAME}-image = "${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}"
 
 KERNEL_IMAGETYPE = "uImage"
 KERNEL_OUTPUT = "arch/${ARCH}/boot/${KERNEL_IMAGETYPE}"
+
+kernel_do_configure:prepend() {
+	install -d ${B}/usr
+	install -m 0644 ${WORKDIR}/initramfs-subdirboot.cpio.gz ${B}/
+}
 
 kernel_do_install:append() {
 	install -d ${D}/${KERNEL_IMAGEDEST}
