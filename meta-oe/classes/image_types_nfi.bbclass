@@ -61,6 +61,21 @@ IMAGE_CMD_ubinfi = " \
 		--data-partition ${DREAMBOX_PART1_SIZE}:${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.boot.jffs2 \
 		--data-partition ${DREAMBOX_PART2_SIZE}:${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.ubi \
 		> ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.nfi; \
+	cd ${DEPLOY_DIR_IMAGE}; \
+	echo ${DISTRO_NAME}-${DISTRO_VERSION}.${BUILD_VERSION} > ${DEPLOY_DIR_IMAGE}/imageversion; \
+	echo "Image for WebBrower Update" >> ${DEPLOY_DIR_IMAGE}/imageversion; \
+	zip ${IMAGE_NAME}_web.zip ${IMAGE_NAME}.nfi imageversion; \
+	mkdir -p ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}; \
+	cp ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.ubi ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${ROOTFS_FILE}; \
+	echo ${DISTRO_NAME}-${DISTRO_VERSION}.${BUILD_VERSION} > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/imageversion; \
+	echo "Flash Online Image" >> ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/imageversion; \
+	echo "dummy file dont delete" > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/kernel.bin; \
+	zip ${IMAGE_NAME}_flash.zip ${IMAGEDIR}/*; \
+	rm -Rf ${IMAGEDIR}; \
+	rm -Rf ${IMAGE_NAME}.nfi; \
+	rm -Rf ${IMAGE_NAME}.boot.jffs2; \
+	rm -Rf ${IMAGE_NAME}.rootfs.ubi; \
+	rm -Rf ${IMAGE_NAME}.rootfs.ubifs; \
 "
 
 EXTRA_IMAGECMD_jffs2nfi ?= "-e ${DREAMBOX_ERASE_BLOCK_SIZE} -n -l"
