@@ -27,6 +27,7 @@ RPROVIDES:${KERNEL_PACKAGE_NAME}-base = "kernel-${KERNEL_VERSION}"
 RPROVIDES:${KERNEL_PACKAGE_NAME}-image = "kernel-image-${KERNEL_VERSION}"
 
 SRC_URI:u5pvr += "http://source.mynonpublic.com/dinobot/dinobot-linux-${PV}-${SRCDATE}.tar.gz \
+    file://initramfs-subdirboot.cpio.gz;unpack=0 \
     file://defconfig \
     file://sdio-platform.patch \
     file://accelmem.patch \
@@ -41,7 +42,7 @@ SRC_URI:u5pvr += "http://source.mynonpublic.com/dinobot/dinobot-linux-${PV}-${SR
 "
 
 SRC_URI = "http://source.mynonpublic.com/dinobot/dinobot-linux-${PV}-${SRCDATE}.tar.gz;name=new \
-    ${@bb.utils.contains('MACHINE', 'u57', 'file://initramfs-subdirboot.cpio.gz;unpack=0' , '', d)} \
+    file://initramfs-subdirboot.cpio.gz;unpack=0 \
     file://defconfig \
     file://410dts.patch \
     file://0001-mmc-switch-1.8V.patch \
