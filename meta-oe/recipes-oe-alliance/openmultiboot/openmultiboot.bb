@@ -20,6 +20,18 @@ inherit autotools-brokensep pkgconfig
 
 S = "${WORKDIR}/git"
 
+#temp workaround for dreambox add fake mtd2 for kernel
+MTD_KERNEL_dm500hd = "mtd2"
+MTD_KERNEL_dm500hdv2 = "mtd2"
+MTD_KERNEL_dm520 = "mtd2"
+MTD_KERNEL_dm800se = "mtd2"
+MTD_KERNEL_dm800sev2 = "mtd2"
+MTD_KERNEL_dm820 = "mtd2"
+MTD_KERNEL_dm7020hd = "mtd2"
+MTD_KERNEL_dm7020hdv2 = "mtd2"
+MTD_KERNEL_dm7080 = "mtd2"
+MTD_KERNEL_dm8000 = "mtd2"
+
 EXTRA_OEMAKE = " \
     'CFLAGS=${CFLAGS} \
     -I=${includedir}/freetype2 \
