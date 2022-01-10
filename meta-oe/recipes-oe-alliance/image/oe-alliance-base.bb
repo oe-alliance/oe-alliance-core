@@ -61,6 +61,7 @@ RDEPENDS:${PN} = "\
     volatile-media \
     vsftpd \
     wget \
+    wireless-tools \
     ${PYTHON_PN}-twisted-protocols ${PYTHON_PN}-numbers \
     ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-argparse", "", d)} \
     "
