@@ -1,5 +1,5 @@
 KODIADDONBRANCH = "Nexus"
-SRCREV_pvrmythtv:pn-kodi-addon-pvr-mythtv = "0ce05831c75884696086ee957256fd41d8059e47"
+SRCREV_pvrmythtv:pn-kodi-addon-pvr-mythtv = "22c9fe61bb7618486814250e6aea13ea9a3794a1"
 PV_pvrmythtv:pn-kodi-addon-pvr-mythtv = "20.2.0+git${SRCPV}"
 SRCREV_pvrargustv:pn-kodi-addon-pvr-argustv = "01bf3b30b75f93da4aa685b81d33d52fb59a2b74"
 PV_pvrargustv:pn-kodi-addon-pvr-argustv = "20.3.0+git${SRCPV}"
