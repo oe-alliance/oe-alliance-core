@@ -9,7 +9,7 @@ RDEPENDS:${PN} += "virtual/kodi kodi-addons-meta"
 
 RRECOMMENDS:${PN} = "${@bb.utils.contains("MACHINE_FEATURES", "no-subssupport", "" , "enigma2-plugin-extensions-subssupport", d)}"
 
-SRCREV = "fb3546a8e5496ff3d8d9035eb10a876ef1e4b807"
+SRCREV = "761ec559773857d27d8be5cccd2b7e84adb8f486"
 SRC_URI = "git://github.com/oe-alliance/kodiext.git;protocol=https;branch=python3 \
         file://advancedsettings.xml \
         "
