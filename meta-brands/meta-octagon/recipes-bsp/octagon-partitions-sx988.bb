@@ -7,7 +7,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 inherit deploy
 
-SRCDATE = "20220105"
+SRCDATE = "20220113"
 PR = "${SRCDATE}"
 
 S = "${WORKDIR}/partitions"
@@ -52,7 +52,7 @@ do_deploy() {
 
 addtask deploy before do_build after do_install
 
-SRC_URI[md5sum] = "0b9674d9e623a20b1c8f97fe75cb3dc8"
-SRC_URI[sha256sum] = "fcb0c29fa2704b25f9e94823b5eb6f82a8229827fc553ee659726d6e434f12b9"
+SRC_URI[md5sum] = "eda4058d15879bca52d4244b73d6ce61"
+SRC_URI[sha256sum] = "1fe112d5ad3198a3d22fb1472158882ce132fac3d7f8b6dd6cc39adf80676d38"
 
 INSANE_SKIP_${PN} += "already-stripped"
