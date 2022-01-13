@@ -2,6 +2,8 @@ SUMMARY = "meta file for enigma2 softcam packages"
 
 require conf/license/license-gplv2.inc
 
+inherit packagegroup
+
 PROVIDES = "openvix-softcams"
 
 DEPENDS = "\
@@ -25,4 +27,4 @@ DEPENDS = "\
     ${@bb.utils.contains("TARGET_ARCH", "mipsel", "openvix-softcams-newcs", "", d)} \
     "
 
-PR = "r15"
+PR = "r16"
