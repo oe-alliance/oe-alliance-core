@@ -10,7 +10,7 @@ SRC_URI = "https://files.pythonhosted.org/packages/f0/f3/4c0e4e1aef2972076333295
 
 S = "${WORKDIR}/pysnmp-se-${PV}"
 
-inherit distutils3
+inherit setuptools3
 
 SRC_URI[md5sum] = "445f5812110d33c72ad250798b9fdbb1"
 SRC_URI[sha256sum] = "f6b4fd14b1e868fbb89e7d2bd9c5fbcd4ce4bd4fc1d4b460971cf810762eb17b"

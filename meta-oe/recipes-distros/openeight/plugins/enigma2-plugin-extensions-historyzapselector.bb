@@ -12,4 +12,4 @@ PR = "r0"
 
 SRCREV="8ce31b693e0f07870bd7c91ad070c5ff91d9ff81"
 
-inherit ${@bb.utils.contains("PYTHON_PN", "python", "distutils-openplugins", "distutils3-openplugins", d)}
+inherit ${@bb.utils.contains("PYTHON_PN", "python", "distutils-openplugins", "setuptools3-openplugins", d)}

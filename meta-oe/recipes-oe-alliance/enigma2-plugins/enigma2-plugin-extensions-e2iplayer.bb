@@ -15,7 +15,7 @@ PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
 PR = "r0"
 
-inherit ${@bb.utils.contains("PYTHON_PN", "python", "distutils-openplugins", "distutils3-openplugins", d)} gettext
+inherit ${@bb.utils.contains("PYTHON_PN", "python", "distutils-openplugins", "setuptools3-openplugins", d)} gettext
 
 DEPENDS = "gettext-native ${PYTHON_PN}-future-native ${PYTHON_PN}"
 RRECOMMENDS:${PN} = " \

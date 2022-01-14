@@ -8,7 +8,7 @@ SRC_URI[sha256sum] = "56e7d22de819c22b13ceb0fe1869729b4287f89ebbd4bb55380d7bcf61
 
 S = "${WORKDIR}/gdata.py-${PV}"
 
-inherit pypi distutils3
+inherit pypi setuptools3
 
 FILES:${PN} += "${datadir}"
 

@@ -13,7 +13,7 @@ SRC_URI = "git://github.com/oe-mirrors/python-cjson.git;protocol=https;branch=ma
 
 S = "${WORKDIR}/git"
 
-inherit distutils3
+inherit setuptools3
 
 DISTUTILS_INSTALL_ARGS = "\
     --root=${D} \
@@ -22,7 +22,7 @@ DISTUTILS_INSTALL_ARGS = "\
     "
 
 # Remove "egg-info" files. If datadir or site-packages dir is empty, remove it.
-distutils3_do_install:append() {
+setuptools3_do_install:append() {
     rm -f ${D}${libdir}/enigma2/python/Plugins/Extensions/IPTVPlayer/libs/e2icjson/*.egg-info
     rmdir -p --ignore-fail-on-non-empty ${D}${datadir} ${D}/${PYTHON_SITEPACKAGES_DIR} || true
 }

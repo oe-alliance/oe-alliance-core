@@ -14,7 +14,7 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/${BPN}/${SRCNAME}-${PV}.tar.gz \
 
 S = "${WORKDIR}/${SRCNAME}-${PV}"
 
-inherit distutils3
+inherit setuptools3
 
 SRC_URI[md5sum] = "70716c4314f6c03a3da0cf57cabba03c"
 SRC_URI[sha256sum] = "4e3d20110a3083bf4c602b57c5bcf447182bb0effcb8b0603f5da0314a804cce"
