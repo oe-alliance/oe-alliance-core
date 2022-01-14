@@ -1,0 +1,51 @@
+diff --git a/libopkg/opkg_install.c b/libopkg/opkg_install.c
+index e7a9a24..b8ee4b3 100644
+--- a/libopkg/opkg_install.c
++++ b/libopkg/opkg_install.c
+@@ -66,7 +66,7 @@ static int update_file_ownership(pkg_t * new_pkg, pkg_t * old_pkg)
+                  owner ? owner->name : "<NULL>");
+ 
+         if (!owner || (owner == old_pkg) || obs)
+-            file_hash_set_file_owner(new_file->path, new_pkg);
++            file_hash_set_file_owner_with_old(new_file->path, new_pkg, old_pkg);
+     }
+ 
+     if (old_pkg) {
+diff --git a/libopkg/pkg_hash.c b/libopkg/pkg_hash.c
+index 6c6c269..0151ed0 100644
+--- a/libopkg/pkg_hash.c
++++ b/libopkg/pkg_hash.c
+@@ -922,3 +922,21 @@ void file_hash_set_file_owner(const char *file_name, pkg_t * owning_pkg)
+         owning_pkg->state_flag |= SF_FILELIST_CHANGED;
+     }
+ }
++
++void
++file_hash_set_file_owner_with_old(const char *file_name, pkg_t *owning_pkg, pkg_t *old_owning_pkg)
++{
++	file_name = strip_offline_root(file_name);
++
++	hash_table_insert(&opkg_config->file_hash, file_name, owning_pkg);
++
++	/* mark this package to have its filelist written */
++	owning_pkg->state_flag |= SF_FILELIST_CHANGED;
++
++	if (old_owning_pkg) {
++		pkg_get_installed_files(old_owning_pkg);
++		str_list_remove_elt(old_owning_pkg->installed_files, file_name);
++		/* mark the old package to have its filelist written */
++		old_owning_pkg->state_flag |= SF_FILELIST_CHANGED;
++	}
++}
+diff --git a/libopkg/pkg_hash.h b/libopkg/pkg_hash.h
+index 2ab9356..f9a267f 100644
+--- a/libopkg/pkg_hash.h
++++ b/libopkg/pkg_hash.h
+@@ -65,6 +65,7 @@ pkg_t *pkg_hash_fetch_installed_by_name_dest(const char *pkg_name,
+ void file_hash_remove(const char *file_name);
+ pkg_t *file_hash_get_file_owner(const char *file_name);
+ void file_hash_set_file_owner(const char *file_name, pkg_t * pkg);
++void file_hash_set_file_owner_with_old(const char *file_name, pkg_t *owning_pkg, pkg_t *old_owning_pkg);
+ 
+ #ifdef __cplusplus
+ }
