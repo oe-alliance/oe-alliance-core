@@ -35,7 +35,7 @@ do_install() {
         install
 }
 
-PACKAGES = "dvb-sky-modules-dvbs ${PN}-tests"
+PACKAGES =+ "dvb-sky-modules-dvbs ${PN}-tests"
 FILES:${PN} = ""
 ALLOW_EMPTY:${PN} = "1"
 
