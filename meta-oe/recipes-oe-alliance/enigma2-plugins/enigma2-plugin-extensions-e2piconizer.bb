@@ -3,7 +3,7 @@ HOMEPAGE = "https://github.com/kiddac/E2_Piconizer"
 MAINTAINER = "kiddac"
 PRIORITY = "optional"
 require conf/license/license-gplv2.inc
-DEPENDS = "${PYTHON_PN}-requests ${PYTHON_PN}-multiprocessing"
+RDEPENDS:${PN} = "${PYTHON_PN}-requests ${PYTHON_PN}-multiprocessing"
 
 SRCREV="${AUTOREV}"
 
