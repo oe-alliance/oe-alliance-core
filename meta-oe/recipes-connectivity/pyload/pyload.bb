@@ -37,10 +37,6 @@ FILES:${PN} = "/usr/pyload/* /etc/*"
 INITSCRIPT_NAME = "${PN}"
 INITSCRIPT_PARAMS = "defaults 60 "
 
-do_compile() {
-    python2 -m compileall ${S}
-}
-
 do_install() {
     install -d ${D}/etc/init.d
     install -d ${D}/usr/pyload

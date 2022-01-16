@@ -15,10 +15,6 @@ SRC_URI="git://github.com/stein17/Skins-for-openHDF.git;protocol=https"
 
 S = "${WORKDIR}/git/Steampunk-HD-Skin-4HDF"
 
-do_compile() {
-    python -O -m compileall ${S}
-}
-
 do_install() {
     install -d ${D}${libdir}
     install -d ${D}/usr/share
