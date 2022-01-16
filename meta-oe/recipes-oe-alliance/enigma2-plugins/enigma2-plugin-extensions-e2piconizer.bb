@@ -15,7 +15,7 @@ SRC_URI = "git://github.com/kiddac/E2_Piconizer.git;protocol=https;branch=master
 
 S = "${WORKDIR}/git"
 
-FILES_${PN} = "${sysconfdir} ${libdir}"
+FILES:${PN} = "${sysconfdir} ${libdir}"
 
 do_install () {
     install -d ${D}${sysconfdir}/enigma2/E2Piconizer
@@ -24,7 +24,7 @@ do_install () {
     cp -rf ${S}/E2Piconizer/usr/lib/enigma2/python/Plugins/Extensions/E2Piconizer/* ${D}${libdir}/enigma2/python/Plugins/Extensions/E2Piconizer/
 }
 
-pkg_postrm_${PN} () {
+pkg_postrm:${PN} () {
 #!/bin/sh
 echo "Removing E2Piconizer Plugin from the system ..."
 rm -r /usr/lib/enigma2/python/Plugins/Extensions/E2Piconizer > /dev/null 2>&1
