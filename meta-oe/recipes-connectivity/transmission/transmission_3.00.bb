@@ -10,7 +10,7 @@ DEPENDS = "curl libevent gnutls openssl libtool intltool-native glib-2.0-native"
 SRCREV = "bb6b5a062ee594dfd4b7a12a6b6e860c43849bfd"
 PV = "3.00"
 
-SRC_URI = "gitsm://github.com/transmission/transmission;protocol=https \
+SRC_URI = "gitsm://github.com/transmission/transmission;protocol=https;branch=main \
         file://configure-kill-intl-check.patch \
         file://configure-allow-local-network.patch \
         file://init \
