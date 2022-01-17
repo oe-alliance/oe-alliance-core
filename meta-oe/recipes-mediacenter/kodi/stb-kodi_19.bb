@@ -166,6 +166,9 @@ KODI_DISABLE_INTERNAL_LIBRARIES = " \
   -DENABLE_INTERNAL_FFMPEG=OFF \
 "
 
+# Allow downloads during internals build
+do_compile[network] = "1"
+
 EXTRA_OECMAKE = " \
     ${KODI_ARCH} \
     ${KODI_DISABLE_INTERNAL_LIBRARIES} \
