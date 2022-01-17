@@ -35,16 +35,16 @@ SRC_URI[gfxdriver.vuduo4kse.sha256sum] = "a1ee8bd434a6aff051503dfe9fdfa784fe1e0c
 
 GFX_FILE = "directfb_1.7-7_gfxdriver_${MACHINE}_${GFXPR}.tar.gz"
 
-DEPENDS:append:class-target += "vuplus-libgles-${MACHINE}"
+DEPENDS:append:class-target = " vuplus-libgles-${MACHINE}"
 
-SRC_URI:append:class-target += " \
+SRC_URI:append:class-target = " \
 	file://vuplus-conf.patch \
 	file://vuplus-prevent-VT.patch \
 	file://disable_linux_input_patch.diff \
 	http://code.vuplus.com/download/release/directfb/${GFX_FILE};name=gfxdriver.${MACHINE} \
 "
 
-EXTRA_OECONF:append:class-target += "\
+EXTRA_OECONF:append:class-target = "\
 	--with-inputdrivers=linuxinput \
 	--disable-devmem \
 	--disable-video4linux \
@@ -74,14 +74,14 @@ do_package_qa() {
 
 INSANE_SKIP:${PN}:append:class-target += "dev-so"
 
-FILES:${PN}:append:class-target += "\
+FILES:${PN}:append:class-target = "\
 	/etc/directfbrc \
 	/usr/lib/libinit* \
 	/usr/lib/directfb-${RV}/systems/libdirectfb_dvb_proxy_sys* \
 	/usr/lib/directfb-${RV}/gfxdrivers/* \
 "
 
-FILES:${PN}-dbg:append:class-target += "\
+FILES:${PN}-dbg:append:class-target = "\
 	/usr/lib/.debug/libinit* \
 	/usr/lib/directfb-${RV}/systems/.debug/* \
 	/usr/lib/directfb-${RV}/gfxdrivers/.debug/* \

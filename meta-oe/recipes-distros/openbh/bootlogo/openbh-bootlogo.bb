@@ -31,8 +31,8 @@ inherit update-rc.d
 SRC_URI = "file://bootlogo.mvi file://backdrop.mvi file://radio.mvi file://bootlogo.sh file://splash576.bmp file://splash480.bmp \
 "
 
-SRC_URI:append:vuduo2 = "file://lcdbootlogo.png file://bootlogo.py"
-SRC_URI:append:sf8008 = "file://logo.img"
+SRC_URI:append:vuduo2 = " file://lcdbootlogo.png file://bootlogo.py"
+SRC_URI:append:sf8008 = " file://logo.img"
 
 FILES:${PN} = "/boot /usr/share /etc/init.d"
 

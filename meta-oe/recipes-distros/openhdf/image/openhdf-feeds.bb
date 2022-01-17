@@ -34,10 +34,10 @@ RRECOMMENDS:${PN} = "\
     enigma2-plugin-skins-ultimate-hd-4hdf \
     "
 
-RRECOMMENDS:${PN}:append:gb800solo = "enigma2-plugin-extensions-gbipboxclient"
-RRECOMMENDS:${PN}:append:gb7325 = "enigma2-plugin-extensions-gbipboxclient"
-RRECOMMENDS:${PN}:append:gb7358 = "enigma2-plugin-extensions-gbipboxclient"
-RRECOMMENDS:${PN}:append:gb7362 = "enigma2-plugin-extensions-gbipboxclient"
-RRECOMMENDS:${PN}:append:gb73625 = "enigma2-plugin-extensions-gbipboxclient"
-RRECOMMENDS:${PN}:append:gb7356 = "enigma2-plugin-extensions-gbipboxclient"
-RRECOMMENDS:${PN}:append:gb7252 = "enigma2-plugin-extensions-gbipboxclient"
+RRECOMMENDS:${PN}:append:gb800solo = " enigma2-plugin-extensions-gbipboxclient"
+RRECOMMENDS:${PN}:append:gb7325 = " enigma2-plugin-extensions-gbipboxclient"
+RRECOMMENDS:${PN}:append:gb7358 = " enigma2-plugin-extensions-gbipboxclient"
+RRECOMMENDS:${PN}:append:gb7362 = " enigma2-plugin-extensions-gbipboxclient"
+RRECOMMENDS:${PN}:append:gb73625 = " enigma2-plugin-extensions-gbipboxclient"
+RRECOMMENDS:${PN}:append:gb7356 = " enigma2-plugin-extensions-gbipboxclient"
+RRECOMMENDS:${PN}:append:gb7252 = " enigma2-plugin-extensions-gbipboxclient"

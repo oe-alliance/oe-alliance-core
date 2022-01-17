@@ -1,6 +1,6 @@
 FILESEXTRAPATHS:prepend := "${THISDIR}/${P}:"
 
-SRC_URI:append:sh4 += "\
+SRC_URI:append:sh4 = "\
     file://glibc-fix-with-old-kernel.patch \
     file://sh4-trap.patch \
     file://0001-ldd-Force-correct-RTLDLIST-for-Solus.patch \
@@ -11,7 +11,7 @@ SRC_URI:append:sh4 += "\
     file://fix-x64-abi.patch \
 "
 
-SRC_URI:append:dm800 += " file://0001_signalfd_and_evendfd.patch"
+SRC_URI:append:dm800 = " file://0001_signalfd_and_evendfd.patch"
 
 #remove obsolete conflicting files
 do_install:append() {

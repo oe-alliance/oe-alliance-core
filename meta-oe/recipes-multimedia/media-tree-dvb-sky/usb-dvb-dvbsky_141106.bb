@@ -12,7 +12,7 @@ SRC_URI = "http://www.dvbsky.net/download/linux/media_build-bst-14-141106.tar.gz
            file://defconfig \
 "
 
-SRC_URI:append:mipsel = "file://sit2_op.o "
+SRC_URI:append:mipsel = " file://sit2_op.o "
 
 SRC_URI:append:arm = " file://vu_backport.patch \
                        file://sit2_op.o_150322_arm \

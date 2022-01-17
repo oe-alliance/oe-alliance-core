@@ -15,7 +15,7 @@ RRECOMMENDS:${PN} = " \
     openhdf-version-info \
     enigma2-skindefault \
     ${PYTHON_PN}-compression \
-    enigma2-plugin-skins-xionhdf \ 
+    enigma2-plugin-skins-xionhdf \
     enigma2-plugin-extensions-autotimer \
     enigma2-plugin-extensions-epgsearch \
     enigma2-plugin-extensions-imdb \
@@ -50,9 +50,9 @@ GST_BASE_DVD = "\
     gstreamer1.0-plugins-bad-mpegtsmux \
 "
 
-RRECOMMENDS:${PN}:append:dags7335 = "enigma2-plugin-systemplugins-osd3dsetup"
-RRECOMMENDS:${PN}:append:dags7356 = "enigma2-plugin-systemplugins-osd3dsetup"
-RRECOMMENDS:${PN}:append:dags7362 = "enigma2-plugin-systemplugins-osd3dsetup"
+RRECOMMENDS:${PN}:append:dags7335 = " enigma2-plugin-systemplugins-osd3dsetup"
+RRECOMMENDS:${PN}:append:dags7356 = " enigma2-plugin-systemplugins-osd3dsetup"
+RRECOMMENDS:${PN}:append:dags7362 = " enigma2-plugin-systemplugins-osd3dsetup"
 RRECOMMENDS:${PN}:append:bre2zet2c = " enigma2-plugin-systemplugins-satipclient"
 RRECOMMENDS:${PN}:append:bre2ze4k = " enigma2-plugin-systemplugins-satipclient"
 RRECOMMENDS:${PN}:append:bre2ze = " enigma2-plugin-systemplugins-satipclient"

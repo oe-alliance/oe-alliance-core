@@ -11,7 +11,7 @@ SRC_URI = "${CAF_MIRROR}/qcacld-2.0/snapshot/qcacld-2.0-${PV}.tar.gz \
     file://qcacld-2.0-support.patch \
 "
 
-SRC_URI:append:xc7439 = "file://qcacld-2.0-support-xc7439.patch"
+SRC_URI:append:xc7439 = " file://qcacld-2.0-support-xc7439.patch"
 
 S = "${WORKDIR}/qcacld-2.0-${PV}"
 

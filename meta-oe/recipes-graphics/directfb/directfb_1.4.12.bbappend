@@ -15,11 +15,11 @@ EXTRA_OECONF = "\
   ${@bb.utils.contains("TARGET_ARCH", "sh4", "--disable-fbdev --disable-devmem --enable-mme --enable-stmfbdev", "", d)} \
 "
 
-FILES:${PN}:append:sh4 += "\
+FILES:${PN}:append:sh4 = "\
   ${libdir}/directfb-${RV}/gfxdrivers/*.so \
 "
 
-FILES:${PN}-dev:append:sh4 += "\
+FILES:${PN}-dev:append:sh4 = "\
   ${libdir}/directfb-${RV}/gfxdrivers/*.la \
 "
 

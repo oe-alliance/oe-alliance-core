@@ -1,5 +1,5 @@
 PACKAGECONFIG_GL:pn-qtbase = " "
-PACKAGECONFIG:append:pn-qtbase += " gles2 linuxfb"
+PACKAGECONFIG:append:pn-qtbase = " gles2 linuxfb"
 
 #IMAGE_CLASSES += "hdemmc_image_single"
 IMAGE_CLASSES += "hdemmc_image_multiboot"

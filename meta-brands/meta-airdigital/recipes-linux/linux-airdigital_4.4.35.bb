@@ -37,16 +37,16 @@ SRC_URI = "http://source.mynonpublic.com/zgemma/linux-${PV}-${SRCDATE}-${ARCH}.t
     file://fix-multiple-defs-yyloc.patch \
 "
 
-SRC_URI:append:h9 += " \
+SRC_URI:append:h9 = " \
 	file://0001-mmc-switch-1.8V.patch \
 "
-SRC_URI:append:h9se += " \
+SRC_URI:append:h9se = " \
 	file://0001-mmc-switch-1.8V.patch \
 "
-SRC_URI:append:i55plus += " \
+SRC_URI:append:i55plus = " \
 	file://0001-mmc-switch-1.8V.patch \
 "
-SRC_URI:append:i55se += " \
+SRC_URI:append:i55se = " \
 	file://0001-mmc-switch-1.8V.patch \
 "
 

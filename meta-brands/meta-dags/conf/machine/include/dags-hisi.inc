@@ -3,7 +3,7 @@ include conf/machine/include/dags-oem.inc
 DISTRO_FEATURES:remove = "x11 wayland"
 
 PACKAGECONFIG_GL:pn-qtbase = " "
-PACKAGECONFIG:append:pn-qtbase += " gles2 linuxfb"
+PACKAGECONFIG:append:pn-qtbase = " gles2 linuxfb"
 KERNEL_FILE = "kernel.bin"
 ROOTFS_FILE = "rootfs.tar.bz2"
 MTD_BLACK  = "mmcblk0"

@@ -6,7 +6,7 @@ require conf/machine/include/arm/armv7a/tune-cortexa15.inc
 include conf/machine/include/build-extras.inc
 
 PACKAGECONFIG_GL:pn-qtbase = " "
-PACKAGECONFIG:append:pn-qtbase += " gles2 linuxfb"
+PACKAGECONFIG:append:pn-qtbase = " gles2 linuxfb"
 
 MACHINE_FEATURES += "3dtv alsa hdmicec switchoff blindscan-tbs HDMI qthbbtv qtstalker openhbbtv hbbtv-browser-webkit qtevent1"
 
