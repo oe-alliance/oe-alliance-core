@@ -1,6 +1,7 @@
 SUMMARY = "Glamour Aura FHD ATV skin for new generation STBs with OpenATV/OE-A based images"
 MAINTAINER = "MCelliotG"
 require conf/license/license-gplv2.inc
+require conf/python/python3-compileall.inc
 
 inherit allarch gitpkgv
 

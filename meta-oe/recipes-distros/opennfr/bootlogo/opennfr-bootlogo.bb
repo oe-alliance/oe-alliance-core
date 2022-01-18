@@ -166,7 +166,7 @@ do_deploy:append:lunix() {
 	rm ${DEPLOYDIR}/splash1_power.bmp
 	mv ${DEPLOYDIR}/splash1_rc.bmp ${DEPLOYDIR}/splash1_power.bmp
 }	
-addtask deploy before do_build after do_install
+addtask deploy before do_package after do_install
 
 pkg_preinst:${PN}() {
     if grep dm /etc/hostname > /dev/null ; then

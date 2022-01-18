@@ -2,6 +2,7 @@ SUMMARY = "Full HD Skin for ATV Images"
 MAINTAINER = "stein17"
 
 require conf/license/license-gplv2.inc
+require conf/python/python3-compileall.inc
 
 inherit gitpkgv 
 

@@ -5,6 +5,7 @@ SECTION = "multimedia"
 LICENSE = "GPLv2"
 
 require conf/license/license-gplv2.inc
+require conf/python/python3-compileall.inc
 
 RDEPENDS:${PN} = "p7zip"
 

@@ -19,6 +19,6 @@ do_deploy() {
     install -m 0755 ${WORKDIR}/logo_${MACHINE}.img ${DEPLOY_DIR_IMAGE}/zgemma-partitions-${MACHINE}/${MACHINE}/logo.img
 }
 
-addtask deploy before do_build after do_install
+addtask deploy before do_package after do_install
 
 INSANE_SKIP:${PN} += "already-stripped"

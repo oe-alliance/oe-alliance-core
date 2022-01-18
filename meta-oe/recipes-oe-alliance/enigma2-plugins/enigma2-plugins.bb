@@ -42,12 +42,21 @@ RCONFLICTS:enigma2-plugin-skincomponents-eventlist = "enigma2-plugin-components-
 CONFFILES:${PN} += "${sysconfdir}/enigma2/movietags"
 FILES:${PN} += " /usr/share/enigma2 /usr/share/fonts "
 FILES:${PN}-meta = "${datadir}/meta"
-FILES:enigma2-plugin-extensions-bmediacenter += " ${libdir}/enigma2/python/Components/Renderer/LizWatches.py ${libdir}/enigma2/python/Components/Converter/LizExtraNumText.py"
-FILES:enigma2-plugin-skincomponents-channelselectionshorttitle += " ${libdir}/enigma2/python/Components/Converter/ChannelSelectionShortTitle.py"
-FILES:enigma2-plugin-skincomponents-eventlist += " ${libdir}/enigma2/python/Components/Renderer/EventListDisplay.py ${libdir}/enigma2/python/Components/Converter/EventList.py"
-FILES:enigma2-plugin-skincomponents-eventposition += " ${libdir}/enigma2/python/Components/Converter/EventPosition.py"
-FILES:enigma2-plugin-skincomponents-weathercomponent += " ${libdir}/enigma2/python/Components/WeatherMSN.py ${libdir}/enigma2/python/Components/Converter/MSNWeather.py ${libdir}/enigma2/python/Components/Sources/MSNWeather.py ${libdir}/enigma2/python/Components/Renderer/MSNWeatherPixmap.py"
-FILES:enigma2-plugin-skincomponents-reftopiconname += " ${libdir}/enigma2/python/Components/Converter/RefToPiconName.py"
+FILES:enigma2-plugin-extensions-bmediacenter += " ${libdir}/enigma2/python/Components/Renderer/LizWatches.pyc ${libdir}/enigma2/python/Components/Converter/LizExtraNumText.pyc"
+FILES:enigma2-plugin-skincomponents-channelselectionshorttitle += " ${libdir}/enigma2/python/Components/Converter/ChannelSelectionShortTitle.pyc"
+FILES:enigma2-plugin-skincomponents-eventlist += " ${libdir}/enigma2/python/Components/Renderer/EventListDisplay.pyc ${libdir}/enigma2/python/Components/Converter/EventList.pyc"
+FILES:enigma2-plugin-skincomponents-eventposition += " ${libdir}/enigma2/python/Components/Converter/EventPosition.pyc"
+FILES:enigma2-plugin-skincomponents-weathercomponent += " ${libdir}/enigma2/python/Components/WeatherMSN.pyc ${libdir}/enigma2/python/Components/Converter/MSNWeather.pyc ${libdir}/enigma2/python/Components/Sources/MSNWeather.pyc ${libdir}/enigma2/python/Components/Renderer/MSNWeatherPixmap.pyc"
+FILES:enigma2-plugin-skincomponents-reftopiconname += " ${libdir}/enigma2/python/Components/Converter/RefToPiconName.pyc"
+
+FILES:enigma2-plugin-extensions-bmediacenter-src += " /usr/lib/enigma2/python/Components/Renderer/LizWatches.py /usr/lib/enigma2/python/Components/Converter/LizExtraNumText.py"
+FILES:enigma2-plugin-skincomponents-channelselectionshorttitle-src += " /usr/lib/enigma2/python/Components/Converter/ChannelSelectionShortTitle.py"
+FILES:enigma2-plugin-skincomponents-eventlist-src += " /usr/lib/enigma2/python/Components/Renderer/EventListDisplay.py /usr/lib/enigma2/python/Components/Converter/EventList.py"
+FILES:enigma2-plugin-skincomponents-eventposition-src += " /usr/lib/enigma2/python/Components/Converter/EventPosition.py"
+FILES:enigma2-plugin-skincomponents-weathercomponent-src += " /usr/lib/enigma2/python/Components/WeatherMSN.py /usr/lib/enigma2/python/Components/Converter/MSNWeather.py /usr/lib/enigma2/python/Components/Sources/MSNWeather.py /usr/lib/enigma2/python/Components/Renderer/MSNWeatherPixmap.py"
+FILES:enigma2-plugin-skincomponents-reftopiconname-src += " /usr/lib/enigma2/python/Components/Converter/RefToPiconName.py"
+
+
 
 PACKAGES += "${PN}-meta ${PN}-build-dependencies "
 PACKAGE_ARCH = "${MACHINE_ARCH}"
@@ -56,7 +65,7 @@ S = "${WORKDIR}/git"
 
 DEPENDS = "enigma2 \
     ${PYTHON_PN}-pyopenssl \
-    ${PYTHON_PN}-gdata \
+    ${PYTHON_PN}-gdata-python3 \
     streamripper \
     ${PYTHON_PN}-mutagen \
     ${PYTHON_PN}-twisted \
@@ -78,6 +87,7 @@ RDEPENDS:${PN} = "${PYTHON_PN}-ctypes"
 python populate_packages:prepend() {
     enigma2_plugindir = bb.data.expand('${libdir}/enigma2/python/Plugins', d)
     do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/[a-zA-Z0-9_]+.*$', 'enigma2-plugin-%s', '%s', recursive=True, match_path=True, prepend=True)
+    do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/.*\.py$', 'enigma2-plugin-%s-src', '%s (source files)', recursive=True, match_path=True, prepend=True)
     do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/.*\.la$', 'enigma2-plugin-%s-dev', '%s (development)', recursive=True, match_path=True, prepend=True)
     do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/.*\.a$', 'enigma2-plugin-%s-staticdev', '%s (static development)', recursive=True, match_path=True, prepend=True)
     do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/(.*/)?\.debug/.*$', 'enigma2-plugin-%s-dbg', '%s (debug)', recursive=True, match_path=True, prepend=True)
@@ -139,3 +149,9 @@ exit 0
 
 do_package_qa() {
 }
+
+fakeroot do_compileall() {
+    python3 -m compileall -b "${D}"
+}
+
+addtask compileall before do_package after do_install

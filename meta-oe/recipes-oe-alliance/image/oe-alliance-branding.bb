@@ -5,6 +5,7 @@ PACKAGE_ARCH = "${MACHINEBUILD}"
 DEPENDS = "${PYTHON_PN} ${PYTHON_PN}-six-native"
 
 require conf/license/license-gplv2.inc
+require conf/python/python3-compileall.inc
 
 inherit autotools-brokensep gitpkgv ${PYTHON_PN}native
 
@@ -263,10 +264,8 @@ do_install:append() {
     ln -sf /usr/share/enigma2/rc_models ${D}${libdir}/enigma2/python/Plugins/Extensions/OpenWebif/public/static/remotes
 }
 
-
-FILES:${PN} = "${libdir}/enigma2/python/*.so /usr/share \
-    ${libdir}/enigma2/python/Components/*.py ${libdir}/enigma2/python/Plugins \
-    ${libdir}/enigma2/python/Components/*/*.pyc ${libdir}/enigma2/python/Plugins"
+FILES:${PN}-src = "${libdir}/enigma2/python/Components/*.py"
+FILES:${PN} = "${libdir}/enigma2/python/*.so /usr/share ${libdir}/enigma2/python/Components/*.pyc ${libdir}/enigma2/python/Plugins"
 FILES:${PN}-dev += "${libdir}/enigma2/python/*.la"
 FILES:${PN}-staticdev += "${libdir}/enigma2/python/*.a"
 FILES:${PN}-dbg += "${libdir}/enigma2/python/.debug"

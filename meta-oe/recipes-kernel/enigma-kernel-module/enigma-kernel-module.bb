@@ -113,4 +113,4 @@ do_deploy() {
 	install -m 0644 ${S}/enigma-${MACHINE}.txt ${DEPLOY_DIR_IMAGE}/
 }
 
-addtask deploy before do_build after do_install
+addtask deploy before do_package after do_install

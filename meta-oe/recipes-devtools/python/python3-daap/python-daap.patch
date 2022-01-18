@@ -1,6 +1,6 @@
 --- python-daap-0.7.1/daap.py	2007-09-10 20:35:45.000000000 +0200
 +++ python-daap-0.7.1/daap.py	2010-11-03 19:39:09.000000000 +0100
-@@ -417,18 +417,21 @@
+@@ -419,18 +419,21 @@ class DAAPClient(object):
          # this returns an HTTP response object
          response    = self._get_response(r, params)
          status = response.status
@@ -13,26 +13,25 @@
 -            gunzipper = gzip.GzipFile(fileobj=compressedstream)
 -            content = gunzipper.read()
 -            log.debug("expanded from %s bytes to %s bytes", old_len, len(content))
--        # close this, we're done with it
-+	#Dr.Best --> fix 
-+	if status == 200:
-+		content = response.read()
-+		# if we got gzipped data base, gunzip it.
-+		if response.getheader("Content-Encoding") == "gzip":
-+		    log.debug("gunzipping data")
-+		    old_len = len(content)
-+		    compressedstream = StringIO( content )
-+		    gunzipper = gzip.GzipFile(fileobj=compressedstream)
-+		    content = gunzipper.read()
-+		    log.debug("expanded from %s bytes to %s bytes", old_len, len(content))
-+	# close this, we're done with it
++        #Dr.Best --> fix 
++        if status == 200:
++            content = response.read()
++            # if we got gzipped data base, gunzip it.
++            if response.getheader("Content-Encoding") == "gzip":
++                log.debug("gunzipping data")
++                old_len = len(content)
++                compressedstream = StringIO( content )
++                gunzipper = gzip.GzipFile(fileobj=compressedstream)
++                content = gunzipper.read()
++                log.debug("expanded from %s bytes to %s bytes", old_len, len(content))
+         # close this, we're done with it
          response.close()
  
 +
          if status == 401:
              raise DAAPError('DAAPClient: %s: auth required'%r)
          elif status == 403:
-@@ -511,7 +514,7 @@
+@@ -513,7 +516,7 @@ class DAAPSession(object):
  # the atoms we want. Making this list smaller reduces memory footprint,
  # and speeds up reading large libraries. It also reduces the metainformation
  # available to the client.
@@ -41,7 +40,7 @@
  
  class DAAPDatabase(object):
  
-@@ -560,7 +563,12 @@
+@@ -562,7 +565,12 @@ class DAAPTrack(object):
          'id':'miid',
          'type':'asfm',
          'time':'astm',
@@ -49,9 +48,9 @@
 +        'size':'assz',
 +        'year':'asyr',
 +        'genre':'asgn',
-+	'tracknr': 'astn',
-+	'trackcount': 'astc',
-+	'bitrate': 'asbr'}
++        'tracknr': 'astn',
++        'trackcount': 'astc',
++        'bitrate': 'asbr'}
  
      def __init__(self, database, atom):
          self.database = database

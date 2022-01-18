@@ -76,4 +76,4 @@ do_deploy() {
 
 do_package_qa[noexec] = "1"
 
-addtask deploy before do_build after do_install
+addtask deploy before do_package after do_install

@@ -4,6 +4,8 @@ PRIORITY = "required"
 LICENSE = "CLOSED"
 require conf/license/license-close.inc
 
+require conf/python/python3-compileall.inc
+
 RDEPENDS:${PN} = "\
     webkit-classic \
     webkit-classic-browser \

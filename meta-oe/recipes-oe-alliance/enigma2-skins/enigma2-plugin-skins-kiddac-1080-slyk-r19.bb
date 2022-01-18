@@ -3,6 +3,7 @@ DESCRIPTION = "Kiddac Slyk_1080_R19 skin"
 MAINTAINER = "Kiddac"
 PRIORITY = "optional"
 require conf/license/license-gplv2.inc
+require conf/python/python3-compileall.inc
 
 RDEPENDS:${PN} = "enigma2-plugin-skincomponents-kiddac-shared-skin"
 

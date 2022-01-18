@@ -4,6 +4,7 @@ HOMEPAGE = "https://gitlab.com/iptvplayer-for-e2/"
 SECTION = "multimedia"
 LICENSE = "GPLv2"
 require conf/license/license-gplv2.inc
+require conf/python/python3-compileall.inc
 
 SRC_URI = "git://github.com/oe-mirrors/e2iplayer.git;protocol=http;branch=python3"
 
@@ -30,4 +31,14 @@ RRECOMMENDS:${PN} = " \
         ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-textutils", "", d)} \
         "
 
+RDEPENDS:{PN}-src = "${PN}"
+FILES:${PN}-src = " \
+        ${libdir}/enigma2/python/Plugins/*/*.py \
+        ${libdir}/enigma2/python/Plugins/*/*/*.py \
+        ${libdir}/enigma2/python/Plugins/*/*/*/*.py \
+        ${libdir}/enigma2/python/Plugins/*/*/*/*/*.py \
+        ${libdir}/enigma2/python/Plugins/*/*/*/*/*/*.py \
+        ${libdir}/enigma2/python/Plugins/*-py2.7.egg-info/* \
+        ${libdir}/enigma2/python/Plugins/*/locale/*/LC_MESSAGES/*.po \
+        "
 deltask package_qa

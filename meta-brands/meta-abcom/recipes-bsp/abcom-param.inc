@@ -20,6 +20,6 @@ do_deploy() {
     install -m 0755 ${WORKDIR}/baseparam.img ${DEPLOY_DIR_IMAGE}/abcom-partitions-${MACHINE}/${MACHINE}
 }
 
-addtask deploy before do_build after do_install
+addtask deploy before do_package after do_install
 
 INSANE_SKIP:${PN} += "already-stripped"

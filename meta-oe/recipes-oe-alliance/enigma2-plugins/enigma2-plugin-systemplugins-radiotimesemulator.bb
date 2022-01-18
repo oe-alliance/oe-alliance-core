@@ -2,6 +2,7 @@ DESCRIPTION = "Handle your EPG on enigma2 using opentv and xmltv"
 HOMEPAGE = "https://github.com/LraiZer/RadiotimesXmltvEmulator"
 LICENSE = "LGPLv2.1"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=fc178bcd425090939a8b634d1d6a9594"
+require conf/python/python3-compileall.inc
 
 inherit gitpkgv
 

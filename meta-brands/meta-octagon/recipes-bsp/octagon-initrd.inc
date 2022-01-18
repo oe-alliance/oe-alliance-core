@@ -14,4 +14,4 @@ SRC_URI = "http://source.mynonpublic.com/octagon/vmlinuz-initrd-${MACHINE}-${SRC
 
 S = "${WORKDIR}"
 
-addtask deploy before do_build after do_install
+addtask deploy before do_package after do_install

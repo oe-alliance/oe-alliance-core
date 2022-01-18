@@ -108,17 +108,17 @@ DESCRIPTION:enigma2-plugin-systemplugins-remotecontrolcode = "Change Remote Cont
 RDEPENDS:enigma2-plugin-systemplugins-3gmodemmanager = "ppp usbmodeswitch usbmodeswitch-data wvdial wvstreams libwvutils4.6 libwvstreams-extras libuniconf4.6 kernel-module-ppp-async kernel-module-ppp-deflate kernel-module-ppp-synctty kernel-module-ppp-generic kernel-module-slhc kernel-module-usbserial kernel-module-cdc-acm kernel-module-ppp-mppe kernel-module-pppoe kernel-module-pppox kernel-module-option kernel-module-bsd-comp usbutils"
 FILES:enigma2-plugin-systemplugins-3gmodemmanager:append = "/etc/ppp/"
 DESCRIPTION:enigma2-plugin-extensions-webbrowser = "Webbrowser launcher"
-RDEPENDS:enigma2-plugin-extensions-webbrowser = "${PYTHON_PN}-gdata libqtwebkite4 webbrowser-utils qt4-embedded-fonts qt4-embedded-plugin-imageformat-gif qt4-embedded-plugin-imageformat-ico qt4-embedded-plugin-imageformat-jpeg qt4-embedded-plugin-imageformat-mng qt4-embedded-plugin-imageformat-svg qt4-embedded-plugin-imageformat-tiff qt4-embedded-plugin-iconengine-svgicon"
+RDEPENDS:enigma2-plugin-extensions-webbrowser = "${PYTHON_PN}-gdata-python3 libqtwebkite4 webbrowser-utils qt4-embedded-fonts qt4-embedded-plugin-imageformat-gif qt4-embedded-plugin-imageformat-ico qt4-embedded-plugin-imageformat-jpeg qt4-embedded-plugin-imageformat-mng qt4-embedded-plugin-imageformat-svg qt4-embedded-plugin-imageformat-tiff qt4-embedded-plugin-iconengine-svgicon"
 FILES:enigma2-plugin-extensions-webbrowser:append = "${datadir}/keymaps"
 DESCRIPTION:enigma2-plugin-extensions-openuitzendinggemist = "Watch NL-IP TV"
 DESCRIPTION:enigma2-plugin-systemplugins-satipclient = "Satip Client setup"
 RDEPENDS:enigma2-plugin-systemplugins-satipclient = "satipclient"
-DEPENDS_enigma2-plugin-systemplugins-satipclient = "satipclient"
-REPLACES_enigma2-plugin-systemplugins-satipclient = "enigma2-plugin-extensions-satipclient"
+DEPENDS:enigma2-plugin-systemplugins-satipclient = "satipclient"
+REPLACES:enigma2-plugin-systemplugins-satipclient = "enigma2-plugin-extensions-satipclient"
 DESCRIPTION:enigma2-plugin-extensions-tunerserver = "Builds a virtual channels list"
 DESCRIPTION:enigma2-plugin-extensions-hbbtv = "HbbTV player"
 RDEPENDS:enigma2-plugin-extensions-hbbtv = "vuplus-opera-browser-util"
-DEPENDS_enigma2-plugin-extensions-hbbtv = "vuplus-opera-browser-util"
+DEPENDS:enigma2-plugin-extensions-hbbtv = "vuplus-opera-browser-util"
 DESCRIPTION:enigma2-plugin-systemplugins-transcodingsetup = "Setup transcoding of your VU+"
 RDEPENDS:enigma2-plugin-systemplugins-transcodingsetup = "virtual/transtreamproxy"
 DESCRIPTION:enigma2-plugin-systemplugins-multitranscodingsetup = "Setup multitranscoding"
@@ -127,10 +127,11 @@ RDEPENDS:enigma2-plugin-extensions-ondemand = "${PYTHON_PN}-dnspython ${PYTHON_P
 DESCRIPTION:enigma2-plugin-extensions-ondemand = "Watch on demand TV."
 DESCRIPTION:enigma2-plugin-extensions-fempa = "Norwegian P4 FEM PAA radio show player."
 DESCRIPTION:enigma2-plugin-extensions-lcd4linux = "Web/DPF/Samsung LCD Ansteuerung"
-DEPENDS_enigma2-plugin-extensions-lcd4linux = "lcd4linux png-util"
-RDEPENDS:enigma2-plugin-extensions-lcd4linux = "dpflib ${PYTHON_PN}-icalendar ${PYTHON_PN}-pyusb ${PYTHON_PN}-codecs ${PYTHON_PN}-datetime ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-imaging", "${PYTHON_PN}-pillow", d)} ${PYTHON_PN}-image ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-textutils", "", d)} ${PYTHON_PN}-shell ${PYTHON_PN}-ctypes libusb-0.1-4 ${PYTHON_PN}-mutagen ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-zlib", "", d)} ${PYTHON_PN}-email ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-subprocess", "", d)} ${PYTHON_PN}-simplejson ${PYTHON_PN}-soco"
+DEPENDS:enigma2-plugin-extensions-lcd4linux = "png-util"
+RDEPENDS:enigma2-plugin-extensions-lcd4linux = "enigma2-plugin-extensions-lcd4linux-src dpflib ${PYTHON_PN}-icalendar ${PYTHON_PN}-pyusb ${PYTHON_PN}-codecs ${PYTHON_PN}-datetime ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-imaging", "${PYTHON_PN}-pillow", d)} ${PYTHON_PN}-image ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-textutils", "", d)} ${PYTHON_PN}-shell ${PYTHON_PN}-ctypes libusb-0.1-4 ${PYTHON_PN}-mutagen ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-zlib", "", d)} ${PYTHON_PN}-email ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-subprocess", "", d)} ${PYTHON_PN}-simplejson ${PYTHON_PN}-soco"
 RDEPENDS:enigma2-plugin-extensions-lcd4linux:append:vuduo2 = " png-util"
-FILES:enigma2-plugin-extensions-lcd4linux:append = "${libdir}/enigma2/python/Components/Renderer/*.py"
+FILES:enigma2-plugin-extensions-lcd4linux:append = " /usr/lib/enigma2/python/Components/Renderer/*.pyc"  
+FILES:enigma2-plugin-extensions-lcd4linux-src:append = " /usr/lib/enigma2/python/Components/Renderer/*.py"
 DESCRIPTION:enigma2-plugin-extensions-remotechannelstreamconverter = "Fetch channels from remote bouquets and make them available locally"
 RDEPENDS:enigma2-plugin-extensions-remotechannelstreamconverter = "${PYTHON_PN}-shell"
 RREPLACES:enigma2-plugin-extensions-remotechannelstreamconverter = "enigma2-plugin-extensions-remotestreamconvert"
@@ -155,7 +156,7 @@ RDEPENDS:enigma2-plugin-extensions-webkithbbtv = "vuplus-webkithbbtv-dumpait web
 DESCRIPTION:enigma2-plugin-extensions-stalkerclient = "E2 Staker Client Plugin"
 DESCRIPTION:enigma2-plugin-extensions-tvspielfilm = "TVSpielfilm Plugin"
 
-inherit autotools-brokensep gitpkgv ${PYTHON_PN}native gettext
+inherit python3-dir autotools-brokensep gitpkgv ${PYTHON_PN}native gettext
 
 SRCREV = "${AUTOREV}"
 PV = "${IMAGE_VERSION}+gitr${SRCPV}"
@@ -184,6 +185,7 @@ S = "${WORKDIR}/git"
 python populate_packages:prepend() {
     enigma2_plugindir = bb.data.expand('${libdir}/enigma2/python/Plugins', d)
     do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/[a-zA-Z0-9_]+.*$', 'enigma2-plugin-%s', '%s', recursive=True, match_path=True, prepend=True)
+    do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/.*\.py$', 'enigma2-plugin-%s-src', '%s (source files)', recursive=True, match_path=True, prepend=True)
     do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/.*\.la$', 'enigma2-plugin-%s-dev', '%s (development)', recursive=True, match_path=True, prepend=True)
     do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/.*\.a$', 'enigma2-plugin-%s-staticdev', '%s (static development)', recursive=True, match_path=True, prepend=True)
     do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/(.*/)?\.debug/.*$', 'enigma2-plugin-%s-dbg', '%s (debug)', recursive=True, match_path=True, prepend=True)
@@ -192,3 +194,9 @@ python populate_packages:prepend() {
 
 do_package_qa() {
 }
+
+fakeroot do_compileall() {
+    python3 -m compileall -b "${D}"
+}
+
+addtask compileall before do_package after do_install

@@ -12,4 +12,4 @@ ALLOW_EMPTY:${PN} = "1"
 
 S = "${WORKDIR}"
 
-addtask deploy before do_build after do_install
+addtask deploy before do_package after do_install

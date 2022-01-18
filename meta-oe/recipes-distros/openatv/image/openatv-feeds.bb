@@ -11,6 +11,10 @@ PR = "r50"
 
 inherit packagegroup
 
+#not py3 ready
+#    enigma2-plugin-skins-dmcconcinnityhd 
+
+
 DEPENDS += "oe-alliance-feeds enigma2-3rdparty-plugins"
 
 RRECOMMENDS:${PN} = "\
@@ -26,7 +30,6 @@ RRECOMMENDS:${PN} = "\
     openssl-old \
     enigma2-plugin-extensions-enhancedmoviecenter \
     enigma2-plugin-extensions-bmediacenter \
-    enigma2-plugin-skins-dmcconcinnityhd \
     enigma2-plugin-settings-defaultsat \
     enigma2-plugin-extensions-specialjump \
     enigma2-plugin-extensions-gbipboxclient \

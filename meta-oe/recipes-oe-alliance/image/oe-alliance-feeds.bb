@@ -13,6 +13,11 @@ PR = "r15"
 
 DEPENDS = "enigma2-plugin-drivers-usbserial enigma2-plugin-systemplugins-radiotimesemulator enigma2-plugin-systemplugins-hrtunerproxy"
 
+#not python3 ready
+#    ${PYTHON_PN}-cocy
+#    enigma2-plugin-extensions-moviearchiver
+
+
 RDEPENDS:${PN} = " \
     packagegroup-openplugins \
     bootlogos-enigma2-meta \
@@ -29,19 +34,18 @@ RDEPENDS:${PN} = " \
     enigma2-plugin-extensions-enigmalight \
     enigma2-plugin-extensions-mediatomb \
     enigma2-plugin-extensions-dreamplex \
-    enigma2-plugin-extensions-et-portal \
-    enigma2-plugin-extensions-moviearchiver \
-    enigma2-plugin-extensions-yahooweather \
     enigma2-plugin-extensions-youtube \
     enigma2-plugin-extensions-autobouquets \
     enigma2-plugin-extensions-e2m3u2bouquet \
     enigma2-plugin-extensions-e2piconizer \
+    enigma2-plugin-extensions-et-portal \
     enigma2-plugin-extensions-jedimakerxtream \
     enigma2-plugin-extensions-serienrecorder \
     enigma2-plugin-systemplugins-misplslcnscan \
     enigma2-plugin-systemplugins-radiotimesemulator \
     enigma2-plugin-extensions-subssupport \
     enigma2-plugin-extensions-xstreamity \
+    enigma2-plugin-extensions-yahooweather \
     enigma2-plugin-systemplugins-terrestrialscan \
     enigma2-plugin-systemplugins-satscanlcn \
     exteplayer3 \
@@ -133,7 +137,6 @@ RDEPENDS:${PN} = " \
     ${PYTHON_PN}-circuits \
     ${PYTHON_PN}-circuits-bricks \
     ${PYTHON_PN}-cfscrape \
-    ${PYTHON_PN}-cocy \
     ${PYTHON_PN}-future \
     ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-futures", "${PYTHON_PN}-futures3", d)} \
     ${PYTHON_PN}-fuzzywuzzy \

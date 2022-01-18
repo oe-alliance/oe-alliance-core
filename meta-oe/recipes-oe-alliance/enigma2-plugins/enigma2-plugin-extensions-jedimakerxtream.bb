@@ -5,6 +5,7 @@ MAINTAINER = "kiddac"
 PRIORITY = "optional"
 require conf/license/license-gplv2.inc
 DEPENDS += "${PYTHON_PN}-backports-lzma"
+require conf/python/python3-compileall.inc
 
 SRCREV="${AUTOREV}"
 

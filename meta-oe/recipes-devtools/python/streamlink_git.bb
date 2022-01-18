@@ -5,7 +5,9 @@ SECTION = "devel/python"
 LICENSE = "BSD-2-Clause"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=381ff91bf309000e0ec58dafe27a97b0"
 
-inherit setuptools3 ${PYTHON_PN}-dir gittag
+inherit python3-dir setuptools3 gittag
+
+include ${PYTHON_PN}-package-split.inc
 
 RDEPENDS:${PN} = "${PYTHON_PN}-core \
     ${PYTHON_PN}-ctypes \
@@ -47,16 +49,24 @@ do_prepare_plugins_dir() {
 
 do_install:append() {
     rm -rf ${D}${bindir}
-    rm -rf ${D}${libdir}/${PYTHON_DIR}/site-packages/streamlink_cli
-    rm -rf ${D}${libdir}/${PYTHON_DIR}/site-packages/*.egg-info
-    rm -rf ${D}${libdir}/${PYTHON_DIR}/site-packages/streamlink/plugins/.removed
+    rm -rf ${D}${PYTHON_SITEPACKAGES_DIR}/streamlink_cli
+    rm -rf ${D}${PYTHON_SITEPACKAGES_DIR}/*.egg-info
+    rm -rf ${D}${PYTHON_SITEPACKAGES_DIR}/streamlink/plugins/.removed
     rm -rf ${D}${datadir}
 }
 
 PACKAGES = "${PN}"
 
-FILES:${PN} = " \
-    ${libdir}/${PYTHON_DIR}/site-packages/streamlink/*.py \
-    ${libdir}/${PYTHON_DIR}/site-packages/streamlink/*/*.py \
-    ${libdir}/${PYTHON_DIR}/site-packages/streamlink/*/*/*.py \
+FILES:${PN} += " \
+    ${PYTHON_SITEPACKAGES_DIR}/streamlink/*.pyc \
+    ${PYTHON_SITEPACKAGES_DIR}/streamlink/*/*.pyc \
+    ${PYTHON_SITEPACKAGES_DIR}/streamlink/*/*/*.pyc \
+    "
+
+FILES_${PN}-src += " \
+    ${PYTHON_SITEPACKAGES_DIR}/streamlink-*.egg-info/* \
+    ${PYTHON_SITEPACKAGES_DIR}/streamlink/plugins/.removed \
+    ${PYTHON_SITEPACKAGES_DIR}/streamlink/*.py \
+    ${PYTHON_SITEPACKAGES_DIR}/streamlink/*/*.py \
+    ${PYTHON_SITEPACKAGES_DIR}/streamlink/*/*/*.py \
     "

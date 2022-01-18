@@ -19,6 +19,6 @@ do_deploy() {
     install -m 0755 ${WORKDIR}/recovery.bin ${DEPLOY_DIR_IMAGE}/abcom-partitions-${MACHINE}/${MACHINE}/recovery.bin
 }
 
-addtask deploy before do_build after do_install
+addtask deploy before do_package after do_install
 
 INSANE_SKIP:${PN} += "already-stripped"

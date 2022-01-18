@@ -1,6 +1,7 @@
 SUMMARY = "Meta package for installing all dependencies for SSS' E2iPlayer"
 MAINTAINER = "samsamsam"
 require conf/license/license-gplv2.inc
+require conf/python/python3-compileall.inc
 
 inherit gitpkgv ${PYTHON_PN}-dir
 

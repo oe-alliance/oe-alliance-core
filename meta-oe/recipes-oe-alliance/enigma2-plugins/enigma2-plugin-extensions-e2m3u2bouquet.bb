@@ -6,6 +6,7 @@ SECTION = "extra"
 PRIORITY = "optional"
 LICENSE = "GPLv2"
 require conf/license/license-gplv2.inc
+require conf/python/python3-compileall.inc
 
 RDEPENDS:${PN} = "${PYTHON_PN}-image ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-imaging", "${PYTHON_PN}-pillow", d)} ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-argparse", "", d)}"
 

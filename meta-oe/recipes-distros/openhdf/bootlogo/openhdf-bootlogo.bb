@@ -144,7 +144,7 @@ do_deploy() {
     fi
 }
 
-addtask deploy before do_build after do_install
+addtask deploy before do_package after do_install
 
 pkg_preinst:${PN}:dreamboxv1() {
 	if [ -z "$D" ]

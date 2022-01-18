@@ -5,6 +5,7 @@ DESCRIPTION = "Automatically build and update a MIS PLS bouquet from the DVB str
 MAINTAINER = "Huevos"
 LICENSE = "Proprietary"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=84dcc94da3adb52b53ae4fa38fe49e5d"
+require conf/python/python3-compileall.inc
 
 inherit autotools-brokensep gettext gitpkgv ${PYTHON_PN}targetconfig ${PYTHON_PN}native
 

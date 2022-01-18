@@ -2,13 +2,14 @@ SUMMARY = "Tuxbox Commander"
 MAINTAINER = "Sven Karschewski <seddi@i-have-a-dreambox.com>"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://tuxcom.c;beginline=8;endline=22;md5=8cfd78763de33face1d26b11904e84d5"
+require conf/python/python3-compileall.inc
 
 DEPENDS = "freetype"
 
 PV = "1.13+git${SRCPV}"
 PR = "r0"
 
-SRC_URI = "git://github.com/sklnet/tuxcom.git;protocol=https \
+SRC_URI = "git://github.com/oe-mirrors/tuxcom.git;protocol=https \
     file://add_advanced_rc.diff"
 
 S = "${WORKDIR}/git"

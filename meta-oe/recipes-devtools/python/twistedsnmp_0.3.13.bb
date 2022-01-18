@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://license.txt;md5=c6f330cac7a286df5a2a7617fdda815f"
 
 FILESEXTRAPATHS:prepend := "${THISDIR}/twistedsnmp:"
 
-RDEPENDS:${PN} = "${PYTHON_PN}-pysnmp-se"
+RDEPENDS:${PN} = "${PYTHON_PN}-pysnmp"
 
 SRCNAME = "TwistedSNMP"
 SRC_URI = "${SOURCEFORGE_MIRROR}/${BPN}/${SRCNAME}-${PV}.tar.gz \

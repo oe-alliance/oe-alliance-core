@@ -2,6 +2,7 @@ SUMMARY = "Tuxbox Terminal plugin"
 MAINTAINER = "Sven Karschewski <seddi@i-have-a-dreambox.com>"
 LICENSE = "PD"
 LIC_FILES_CHKSUM = "file://COPYING;md5=7968df00b3e6be507316ed9cfc8be290"
+require conf/python/python3-compileall.inc
 
 RDEPENDS:${PN} = "tuxterm"
 

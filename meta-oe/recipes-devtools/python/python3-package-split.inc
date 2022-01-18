@@ -1,8 +1,29 @@
+require conf/python/python3-compileall.inc
+
 inherit ${PYTHON_PN}-dir
 
 RDEPENDS:{PN}-src = "${PN}"
 
-SSTATE_DUPWHITELIST += "${STAGING_LIBDIR}/${PYTHON_DIR}/site-packages/tests/__init__.py ${STAGING_LIBDIR}/${PYTHON_DIR}/site-packages/tests/__init__.pyo"
+SSTATE_DUPWHITELIST += "${STAGING_LIBDIR}/${PYTHON_DIR}/site-packages/tests/__init__.py ${STAGING_LIBDIR}/${PYTHON_DIR}/site-packages/tests/__init__.pyc"
+
+FILES_${PN}-src += " \
+    ${PYTHON_SITEPACKAGES_DIR}/*.c \
+    ${PYTHON_SITEPACKAGES_DIR}/*/*.c \
+    ${PYTHON_SITEPACKAGES_DIR}/*/*/*.c \
+    ${PYTHON_SITEPACKAGES_DIR}/*/*/*/*.c \
+    ${PYTHON_SITEPACKAGES_DIR}/*/*/*/*/*.c \
+    ${PYTHON_SITEPACKAGES_DIR}/*.h \
+    ${PYTHON_SITEPACKAGES_DIR}/*/*.h \
+    ${PYTHON_SITEPACKAGES_DIR}/*/*/*.h \
+    ${PYTHON_SITEPACKAGES_DIR}/*/*/*/*.h \
+    ${PYTHON_SITEPACKAGES_DIR}/*/*/*/*/*.h \
+    ${PYTHON_SITEPACKAGES_DIR}/*.exe \
+    ${PYTHON_SITEPACKAGES_DIR}/*/*.exe \
+    ${PYTHON_SITEPACKAGES_DIR}/*/*/*.exe \
+    ${PYTHON_SITEPACKAGES_DIR}/*/*/*/*.exe \
+    ${PYTHON_SITEPACKAGES_DIR}/*/*/*/*/*.exe \
+    "
+
 
 FILES:${PN}-test += " \
     ${PYTHON_SITEPACKAGES_DIR}/test \
@@ -14,10 +35,17 @@ FILES:${PN}-test += " \
     ${PYTHON_SITEPACKAGES_DIR}/*/tests \
     ${PYTHON_SITEPACKAGES_DIR}/*/Test \
     ${PYTHON_SITEPACKAGES_DIR}/*/Tests \
+    ${PYTHON_SITEPACKAGES_DIR}/*/_test \
     ${PYTHON_SITEPACKAGES_DIR}/*/*/test \
+    ${PYTHON_SITEPACKAGES_DIR}/*/*/_test \
     ${PYTHON_SITEPACKAGES_DIR}/*/*/tests \
     ${PYTHON_SITEPACKAGES_DIR}/*/*/Test \
     ${PYTHON_SITEPACKAGES_DIR}/*/*/Tests \
+    ${PYTHON_SITEPACKAGES_DIR}/*/*/*/test \
+    ${PYTHON_SITEPACKAGES_DIR}/*/*/*/_test \
+    ${PYTHON_SITEPACKAGES_DIR}/*/*/*/tests \
+    ${PYTHON_SITEPACKAGES_DIR}/*/*/*/Test \
+    ${PYTHON_SITEPACKAGES_DIR}/*/*/*/Tests \
 "
 
 # some txt files which should go into -doc
