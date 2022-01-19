@@ -539,7 +539,7 @@ index 0000000..e12a2bd
 +	/* don't block external player's access to audio device  */
 +	CServiceBroker::GetActiveAE()->Suspend();
 +	// wait for AE has completed suspended
-+	XbmcThreads::EndTime timer(2000);
++	XbmcThreads::EndTime<> timer(2000ms);
 +	while (!timer.IsTimePast() && !CServiceBroker::GetActiveAE()->IsSuspended())
 +	{
 +		CThread::Sleep(50ms);
@@ -1165,7 +1165,7 @@ index 0000000..1b0a3d0
 +#if 0
 +	CServiceBroker::GetActiveAE()->Suspend();
 +	/* wait for AE has completed suspended */
-+	XbmcThreads::EndTime timer(1000);
++	XbmcThreads::EndTime<> timer(1000ms);
 +	while (!timer.IsTimePast() && !CServiceBroker::GetActiveAE()->IsSuspended())
 +	{
 +		usleep(80);

@@ -294,7 +294,7 @@ index 0000000..29f7a31
 +
 +	CServiceBroker::GetActiveAE()->Suspend();
 +
-+	XbmcThreads::EndTime timer(2000);
++	XbmcThreads::EndTime<> timer(2000ms);
 +	while (!timer.IsTimePast() && !CServiceBroker::GetActiveAE()->IsSuspended())
 +		CThread::Sleep(50ms);
 +

@@ -78,7 +78,7 @@ DEPENDS += " \
           "
 
 # 20.0 Nexus
-SRCREV = "7b899104dedc9b1d8dfcec92af383e0cfaab878c"
+SRCREV = "ef472bca0c36a8467eafa17173aa63c7abb4a601"
 
 # 'patch' doesn't support binary diffs
 #PATCHTOOL = "git"

@@ -5858,7 +5858,7 @@ index 0000000..3a73b3e
 +};
 diff --git a/xbmc/windowing/egl/WinEventsSTB.cpp b/xbmc/windowing/egl/WinEventsSTB.cpp
 new file mode 100644
-index 0000000..24a9a75
+index 0000000..adcc8bb
 --- /dev/null
 +++ b/xbmc/windowing/egl/WinEventsSTB.cpp
 @@ -0,0 +1,92 @@
@@ -6176,10 +6176,10 @@ index 0000000..f8efc14
 +};
 diff --git a/xbmc/windowing/egl/WinSystemstb.cpp b/xbmc/windowing/egl/WinSystemstb.cpp
 new file mode 100644
-index 0000000..76d569b
+index 0000000..abccc21
 --- /dev/null
 +++ b/xbmc/windowing/egl/WinSystemstb.cpp
-@@ -0,0 +1,541 @@
+@@ -0,0 +1,546 @@
 +/*
 + *  Copyright (C) 2005-2018 Team Kodi
 + *  This file is part of Kodi - https://kodi.tv
@@ -6222,6 +6222,8 @@ index 0000000..76d569b
 +#include <EGL/eglplatform.h>
 +
 +using namespace KODI;
++
++using namespace std::chrono_literals;
 +
 +CWinSystemstb::CWinSystemstb():
 +  m_libinput(new CLibInputHandler)
@@ -6408,11 +6410,14 @@ index 0000000..76d569b
 +    return true;
 +  }
 +
-+  int delay = CServiceBroker::GetSettingsComponent()->GetSettings()->GetInt("videoscreen.delayrefreshchange");
-+  if (delay > 0)
++  auto delay =
++      std::chrono::milliseconds(CServiceBroker::GetSettingsComponent()->GetSettings()->GetInt(
++                                    "videoscreen.delayrefreshchange") *
++                                100);
++  if (delay > 0ms)
 +  {
 +    m_delayDispReset = true;
-+    m_dispResetTimer.Set(delay * 100);
++    m_dispResetTimer.Set(delay);
 +  }
 +
 +  {
@@ -6723,7 +6728,7 @@ index 0000000..76d569b
 +
 diff --git a/xbmc/windowing/egl/WinSystemstb.h b/xbmc/windowing/egl/WinSystemstb.h
 new file mode 100644
-index 0000000..2ed66ba
+index 0000000..c2d176c
 --- /dev/null
 +++ b/xbmc/windowing/egl/WinSystemstb.h
 @@ -0,0 +1,79 @@
@@ -6799,7 +6804,7 @@ index 0000000..2ed66ba
 +  int m_displayHeight;
 +
 +  bool m_delayDispReset;
-+  XbmcThreads::EndTime m_dispResetTimer;
++  XbmcThreads::EndTime<> m_dispResetTimer;
 +
 +  CCriticalSection m_resourceSection;
 +  std::vector<IDispResource*> m_resources;
