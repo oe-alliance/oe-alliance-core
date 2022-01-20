@@ -7,6 +7,7 @@ LICENSE = "proprietary"
 RDEPENDS:${PN} = "dreambox-buildimage"
 
 require conf/license/license-gplv2.inc
+require conf/python/python3-compileall.inc
 
 inherit gitpkgv
 SRCREV = "${AUTOREV}"

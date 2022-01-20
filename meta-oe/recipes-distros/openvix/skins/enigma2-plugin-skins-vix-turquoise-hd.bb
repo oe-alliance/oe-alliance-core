@@ -4,6 +4,7 @@
 DESCRIPTION = "ViX-Turquoise-HD for OpenViX"
 MAINTAINER = "norhap"
 require conf/license/license-gplv2.inc
+require conf/python/python3-compileall.inc
 
 inherit gitpkgv
 SRCREV = "${AUTOREV}"

@@ -23,4 +23,4 @@ do_deploy() {
     install -m 0644 ${WORKDIR}/lcdwarning220.bin ${DEPLOYDIR}/lcdwarning220.bin
 }
 
-addtask deploy before do_build after do_install
+addtask deploy before do_package after do_install

@@ -4,6 +4,7 @@ SECTION = "extra"
 PRIORITY = "optional"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://../LICENSE.GPLv2;md5=eb723b61539feef013de476e68b5c50a"
+require conf/python/python3-compileall.inc
 
 DEPENDS = "${PYTHON_PN} ${PYTHON_PN}-six-native"
 

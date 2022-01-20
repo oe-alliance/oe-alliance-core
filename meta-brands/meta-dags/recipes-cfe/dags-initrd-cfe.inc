@@ -24,4 +24,4 @@ SRC_URI = "http://en3homeftp.net/pub/down/vmlinuz-initrd_${DOWNLOADNAME}_${SRCDA
 
 S = "${WORKDIR}"
 
-addtask deploy before do_build after do_install
+addtask deploy before do_package after do_install

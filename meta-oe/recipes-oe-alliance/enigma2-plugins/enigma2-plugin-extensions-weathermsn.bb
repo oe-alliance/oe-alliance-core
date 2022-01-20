@@ -4,6 +4,7 @@ MAINTAINER = "Sirius"
 LICENSE = "GPLv3+"
 HOMEPAGE = "www.gisclub.tv"
 require conf/license/license-gplv2.inc
+require conf/python/python3-compileall.inc
 
 inherit gitpkgv ${PYTHON_PN}native
 

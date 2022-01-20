@@ -5,6 +5,7 @@ PRIORITY = "required"
 LICENSE = "proprietary"
 
 require conf/license/license-gplv2.inc
+require conf/python/python3-compileall.inc
 
 inherit gitpkgv
 SRCREV = "${AUTOREV}"

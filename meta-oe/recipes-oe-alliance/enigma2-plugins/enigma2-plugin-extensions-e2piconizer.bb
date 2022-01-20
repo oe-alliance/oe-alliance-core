@@ -3,6 +3,7 @@ HOMEPAGE = "https://github.com/kiddac/E2_Piconizer"
 MAINTAINER = "kiddac"
 PRIORITY = "optional"
 require conf/license/license-gplv2.inc
+require conf/python/python3-compileall.inc
 
 SRCREV="${AUTOREV}"
 

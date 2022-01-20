@@ -3,6 +3,7 @@ HOMEPAGE = "https://www.linuxsat-support.com"
 MAINTAINER = "kiddac"
 PRIORITY = "optional"
 require conf/license/license-gplv2.inc
+require conf/python/python3-compileall.inc
 
 RDEPENDS:${PN} = "${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-imaging python-image", "${PYTHON_PN}-pillow", d)} ${PYTHON_PN}-multiprocessing ${PYTHON_PN}-requests"
 

@@ -2,6 +2,7 @@ SUMMARY = "Plex Client for Enigma2 by Don Davici"
 MAINTAINER = "OE-Alliance"
 
 require conf/license/license-gplv2.inc
+require conf/python/python3-compileall.inc
 
 inherit autotools-brokensep gitpkgv gettext ${PYTHON_PN}native
 

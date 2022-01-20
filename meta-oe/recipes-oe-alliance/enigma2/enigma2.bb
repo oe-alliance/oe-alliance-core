@@ -257,6 +257,10 @@ EXTRA_OECONF = " \
 LDFLAGS:prepend = "${@bb.utils.contains('GST_VERSION', '1.0', ' -lxml2 ', '', d)}"
 SRC_URI:append = "${@bb.utils.contains("MACHINE_FEATURES", "uianimation", " file://use-lv3ddriver.patch" , "", d)}"
 
+# Swig generated 200k enigma.py file has no purpose for end users
+FILES:${PN}-dbg += "\
+    ${libdir}/enigma2/python/enigma.py \
+    "
 
 # some plugins contain so's, their stripped symbols should not end up in the enigma2 package
 FILES:${PN}-dbg += "\
@@ -267,6 +271,26 @@ FILES:${PN}-dbg += "\
     ${libdir}/enigma2/python/Plugins/*/*/.debug \
     "
 
+# Save some space by not installing sources (StartEnigma.py must remain)
+FILES:${PN}-src = "\
+    ${libdir}/enigma2/python/BoxBrandingTest.py \
+    ${libdir}/enigma2/python/e2reactor.py \
+    ${libdir}/enigma2/python/enigma_py_patcher.py \
+    ${libdir}/enigma2/python/GlobalActions.py \
+    ${libdir}/enigma2/python/keyids.py \
+    ${libdir}/enigma2/python/keymapparser.py \
+    ${libdir}/enigma2/python/Navigation.py \
+    ${libdir}/enigma2/python/NavigationInstance.py \
+    ${libdir}/enigma2/python/PowerTimer.py \
+    ${libdir}/enigma2/python/RecordTimer.py \
+    ${libdir}/enigma2/python/ServiceReference.py \
+    ${libdir}/enigma2/python/skin.py \
+    ${libdir}/enigma2/python/timer.py \
+    ${libdir}/enigma2/python/upgrade.py \
+    ${libdir}/enigma2/python/*/*.py \
+    ${libdir}/enigma2/python/*/*/*.py \
+    ${libdir}/enigma2/python/*/*/*/*.py \
+    "
 FILES:${PN} += " \
     ${bindir} ${sysconfdir}/e2-git.log /usr/lib"
 
@@ -276,8 +300,8 @@ FILES:${PN}-po = "${datadir}/enigma2/po/*.po ${datadir}/enigma2/po/*.pot"
 
 do_install:append() {
     install -d ${D}/usr/share/keymaps
-    ln -s ${libdir}/enigma2/python/Tools/StbHardware.py ${D}${libdir}/enigma2/python/Tools/DreamboxHardware.py
-    ln -s ${libdir}/enigma2/python/Components/PackageInfo.py ${D}${libdir}/enigma2/python/Components/DreamboxInfoHandler.py
+    ln -s ${libdir}/enigma2/python/Tools/StbHardware.pyc ${D}${libdir}/enigma2/python/Tools/DreamboxHardware.pyc
+    ln -s ${libdir}/enigma2/python/Components/PackageInfo.pyc ${D}${libdir}/enigma2/python/Components/DreamboxInfoHandler.pyc
     install -d ${D}${sysconfdir}
     git --git-dir=${S}/.git log --no-merges --since=10.weeks --pretty=format:"%s" > ${D}${sysconfdir}/e2-git.log
     git --git-dir=${OE-ALLIANCE_BASE}/.git log --no-merges --since=10.weeks --pretty=format:"%s" > ${D}${sysconfdir}/oe-git.log
@@ -291,6 +315,7 @@ do_install:append() {
 python populate_packages:prepend() {
     enigma2_plugindir = bb.data.expand('${libdir}/enigma2/python/Plugins', d)
     do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/[a-zA-Z0-9_]+.*$', 'enigma2-plugin-%s', '%s', recursive=True, match_path=True, prepend=True, extra_depends="enigma2")
+    do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/.*\.py$', 'enigma2-plugin-%s-src', '%s (source files)', recursive=True, match_path=True, prepend=True)
     do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/.*\.la$', 'enigma2-plugin-%s-dev', '%s (development)', recursive=True, match_path=True, prepend=True)
     do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/.*\.a$', 'enigma2-plugin-%s-staticdev', '%s (static development)', recursive=True, match_path=True, prepend=True)
     do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/(.*/)?\.debug/.*$', 'enigma2-plugin-%s-dbg', '%s (debug)', recursive=True, match_path=True, prepend=True)
@@ -301,3 +326,9 @@ python populate_packages:prepend() {
 
 do_package_qa() {
 }
+
+fakeroot do_compileall() {
+    python3 -m compileall -b "${D}"
+}
+
+addtask compileall before do_package after do_install

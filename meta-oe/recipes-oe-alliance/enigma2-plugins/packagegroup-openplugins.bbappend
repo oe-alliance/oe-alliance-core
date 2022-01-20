@@ -23,7 +23,6 @@ DEPENDS = " \
     enigma2-plugin-extensions-setpicon \
     enigma2-plugin-extensions-xpower \
     enigma2-plugin-extensions-meteoviewer \
-    enigma2-plugin-extensions-snmpagent \
     enigma2-plugin-extensions-systemtools \
     enigma2-plugin-extensions-cacheflush \
 "

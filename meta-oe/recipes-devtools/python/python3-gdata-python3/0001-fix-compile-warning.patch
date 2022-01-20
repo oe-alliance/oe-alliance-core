@@ -1,0 +1,60 @@
+--- a/src/gdata/apps/migration/service.py
++++ b/src/gdata/apps/migration/service.py
+@@ -9,8 +9,7 @@
+   MigrationService: Provides methods to import mail.
+ """
+ 
+-# __author__ = ('google-apps-apis@googlegroups.com',
+-              'pti@google.com (Prashant Tiwari)')
++# __author__ = ('google-apps-apis@googlegroups.com','pti@google.com (Prashant Tiwari)')
+ 
+ import base64
+ import threading
+--- a/src/gdata/calendar/service.py
++++ b/src/gdata/calendar/service.py
+@@ -475,7 +475,7 @@ class CalendarEventQuery(gdata.service.Query):
+             return None
+ 
+     def _SetOrderBy(self, val):
+-        if val is not 'lastmodified' and val is not 'starttime':
++        if val != 'lastmodified' and val != 'starttime':
+             raise Error("Order By must be either 'lastmodified' or 'starttime'")
+         self['orderby'] = val
+ 
+@@ -489,9 +489,9 @@ class CalendarEventQuery(gdata.service.Query):
+             return None
+ 
+     def _SetSortOrder(self, val):
+-        if (val is not 'ascending' and val is not 'descending'
+-            and val is not 'a' and val is not 'd' and val is not 'ascend'
+-            and val is not 'descend'):
++        if (val != 'ascending' and val != 'descending'
++            and val != 'a' and val != 'd' and val != 'ascend'
++            and val != 'descend'):
+             raise Error("Sort order must be either ascending, ascend, " + (
+                 "a or descending, descend, or d"))
+         self['sortorder'] = val
+--- a/src/gdata/youtube/service.py
++++ b/src/gdata/youtube/service.py
+@@ -1378,7 +1378,7 @@ class YouTubeVideoQuery(gdata.service.Query):
+ 
+         if feed_type in YOUTUBE_STANDARDFEEDS and feed is None:
+             feed = 'http://%s/feeds/standardfeeds/%s' % (YOUTUBE_SERVER, feed_type)
+-        elif (feed_type is 'responses' or feed_type is 'comments' and video_id
++        elif (feed_type == 'responses' or feed_type == 'comments' and video_id
+         and feed is None):
+             feed = 'http://%s/feeds/videos/%s/%s' % (YOUTUBE_SERVER, video_id,
+                                                      feed_type)
+@@ -1511,10 +1511,10 @@ class YouTubeUserQuery(YouTubeVideoQuery):
+ 
+         uploads_favorites_playlists = ('uploads', 'favorites', 'playlists')
+ 
+-        if feed_type is 'subscriptions' and subscription_id and username:
++        if feed_type == 'subscriptions' and subscription_id and username:
+             feed = "http://%s/feeds/users/%s/%s/%s" % (YOUTUBE_SERVER, username,
+                                                        feed_type, subscription_id)
+-        elif feed_type is 'subscriptions' and not subscription_id and username:
++        elif feed_type == 'subscriptions' and not subscription_id and username:
+             feed = "http://%s/feeds/users/%s/%s" % (YOUTUBE_SERVER, username,
+                                                     feed_type)
+         elif feed_type in uploads_favorites_playlists:

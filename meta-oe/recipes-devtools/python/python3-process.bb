@@ -3,6 +3,8 @@ SECTION = "devel/python"
 PRIORITY = "optional"
 SRCNAME = "process"
 
+include ${PYTHON_PN}-package-split.inc
+
 require conf/license/license-gplv2.inc
 
 inherit setuptools3-base
@@ -16,7 +18,8 @@ S = "${WORKDIR}"
 
 PACKAGES = "${PN}"
 
-FILES:${PN} = "${PYTHON_SITEPACKAGES_DIR}/process.py"
+FILES:${PN} = "${PYTHON_SITEPACKAGES_DIR}/process.pyc"
+FILES:${PN}-src = "${PYTHON_SITEPACKAGES_DIR}/process.py"
 
 do_install() {
     install -d ${D}${PYTHON_SITEPACKAGES_DIR}

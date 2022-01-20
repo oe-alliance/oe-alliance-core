@@ -35,7 +35,6 @@ RDEPENDS:${PN} = "\
     ${PYTHON_PN}-pexpect \
     ${PYTHON_PN}-js2py \
     ofgwrite \
-    ${PYTHON_PN}-gdata \
     ${PYTHON_PN}-service-identity \
     libshowiframe \
     libdw \

@@ -3,6 +3,7 @@ MAINTAINER = "original by m43c0 and mmark and mod by mogli123"
 SECTION = "extra"
 PRIORITY = "optional"
 require conf/license/license-gplv2.inc
+require conf/python/python3-compileall.inc
 
 inherit gitpkgv ${PYTHON_PN}native autotools-brokensep gettext
 

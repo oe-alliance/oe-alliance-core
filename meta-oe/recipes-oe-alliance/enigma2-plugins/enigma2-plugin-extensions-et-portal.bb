@@ -4,6 +4,7 @@ SECTION = "extra"
 PRIORITY = "optional"
 
 require conf/license/license-gplv2.inc
+require conf/python/python3-compileall.inc
 
 inherit gitpkgv ${PYTHON_PN}native gettext autotools-brokensep
 SRCREV = "${AUTOREV}"

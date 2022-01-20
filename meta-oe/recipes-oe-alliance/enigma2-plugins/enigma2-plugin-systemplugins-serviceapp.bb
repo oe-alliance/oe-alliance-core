@@ -2,6 +2,7 @@ DESCRIPTION = "serviceapp service for enigma2"
 AUTHOR = "Maroš Ondrášek <mx3ldev@gmail.com>"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263"
+require conf/python/python3-compileall.inc
 
 DEPENDS = "enigma2 uchardet openssl"
 RDEPENDS:${PN} = "enigma2 uchardet openssl exteplayer3 ${PYTHON_PN}-json"
@@ -36,12 +37,13 @@ EXTRA_OECONF = "\
 PACKAGES = "${PN} ${PN}-src ${PN}-dbg"
 
 FILES:${PN} = "\
-    ${libdir}/enigma2/python/Plugins/SystemPlugins/ServiceApp/*.py \
+    ${libdir}/enigma2/python/Plugins/SystemPlugins/ServiceApp/*.pyc \
     ${libdir}/enigma2/python/Plugins/SystemPlugins/ServiceApp/serviceapp.so \
     ${libdir}/enigma2/python/Plugins/SystemPlugins/ServiceApp/locale/*/*/*.mo \
     "
 
 FILES:${PN}-src = "\
+    ${libdir}/enigma2/python/Plugins/SystemPlugins/ServiceApp/*.py \
     ${libdir}/enigma2/python/Plugins/SystemPlugins/ServiceApp/locale/*/LC_MESSAGES/*.mo \
     /usr/src/debug/* \
     "

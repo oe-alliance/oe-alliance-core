@@ -2,6 +2,7 @@ SUMMARY = "Skin iFlatFHD"
 MAINTAINER = "Nathanael and gordon55"
 
 require conf/license/license-gplv2.inc
+require conf/python/python3-compileall.inc
 
 inherit gitpkgv
 

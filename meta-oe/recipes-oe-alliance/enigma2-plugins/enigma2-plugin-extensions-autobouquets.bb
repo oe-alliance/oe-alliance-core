@@ -4,6 +4,7 @@ MAINTAINER = "LraiZer"
 HOMEPAGE = "https://github.com/LraiZer/AutoBouquets"
 SECTION = "extra"
 PRIORITY = "optional"
+require conf/python/python3-compileall.inc
 
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "\

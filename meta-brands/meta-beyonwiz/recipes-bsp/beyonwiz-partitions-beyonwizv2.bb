@@ -48,7 +48,7 @@ do_deploy() {
     install -m 0755 ${S}/deviceinfo.bin ${DEPLOY_DIR_IMAGE}/${MACHINE}-partitions
 }
 
-addtask deploy before do_build after do_install
+addtask deploy before do_package after do_install
 
 SRC_URI[md5sum] = "a843de0d42cbb237119df2f30a7a6dd1"
 SRC_URI[sha256sum] = "609430fdb06ac63f005a5544db52adfa9cad1bf6fe454b01069ff35f0a899417"

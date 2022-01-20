@@ -21,7 +21,6 @@ RDEPENDS:${PN} = "\
     openhdf-spinner \
     curl \
     hddtemp \
-    ${PYTHON_PN}-gdata \
     ${PYTHON_PN}-pexpect \
     ${PYTHON_PN}-requests \
     ${PYTHON_PN}-mutagen \

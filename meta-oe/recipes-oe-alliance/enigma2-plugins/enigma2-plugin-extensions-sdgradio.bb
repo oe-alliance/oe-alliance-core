@@ -6,6 +6,7 @@ HOMEPAGE = "http://satdreamgr.com"
 LICENSE = "PD"
 
 require conf/license/license-gplv2.inc
+require conf/python/python3-compileall.inc
 
 SRC_URI = "git://github.com/oe-mirrors/SDGRadio.git;branch=master;protocol=https"
 

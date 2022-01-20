@@ -2,6 +2,7 @@ SUMMARY = "Skin Full HD for NFR Images by stein17"
 MAINTAINER = "stein17"
 
 require conf/license/license-gplv2.inc
+require conf/python/python3-compileall.inc
 
 inherit gitpkgv
 

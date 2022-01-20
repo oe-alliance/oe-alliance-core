@@ -2,6 +2,7 @@ SUMMARY = "KravenHD Skin for Enigma2 by Team Kraven"
 MAINTAINER = "Team Kraven"
 
 require conf/license/license-gplv2.inc
+require conf/python/python3-compileall.inc
 
 inherit gitpkgv allarch gettext
 
