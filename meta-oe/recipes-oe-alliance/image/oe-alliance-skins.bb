@@ -7,7 +7,7 @@ ALLOW_EMPTY:${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r4"
+PR = "r5"
 
 inherit packagegroup
 
@@ -17,11 +17,11 @@ RDEPENDS:${PN} = "\
 	enigma2-plugin-skins-mynovumhd2 \
 	enigma2-plugin-skins-mynovumhd2black \
 	enigma2-plugin-skins-novum-hd-slim \
-	enigma2-plugin-skins-novum-fhd-light \
+	${@bb.utils.contains("MACHINE_FEATURES", "skins1080", "enigma2-plugin-skins-novum-fhd-light", "", d)} \
 	enigma2-plugin-skins-army-moodblue-hd \
 	enigma2-plugin-skins-kravenhd \
 	enigma2-plugin-skins-pli-hd-fullnight \
-	enigma2-plugin-skins-kiddac-1080-onyx \
-	enigma2-plugin-skins-kiddac-1080-slyk-q \
-	enigma2-plugin-skins-kiddac-1080-slyk-r19 \
+	${@bb.utils.contains("MACHINE_FEATURES", "skins1080", "enigma2-plugin-skins-kiddac-1080-onyx", "", d)} \
+	${@bb.utils.contains("MACHINE_FEATURES", "skins1080", "enigma2-plugin-skins-kiddac-1080-slyk-q", "", d)} \
+	${@bb.utils.contains("MACHINE_FEATURES", "skins1080", "enigma2-plugin-skins-kiddac-1080-slyk-r19", "", d)} \
 	"
