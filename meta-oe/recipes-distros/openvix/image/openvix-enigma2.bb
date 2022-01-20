@@ -29,10 +29,10 @@ RRECOMMENDS:${PN} = "\
     enigma2-plugin-extensions-imdb \
     enigma2-plugin-extensions-openwebif-themes \
     enigma2-plugin-extensions-openwebif-vxg \
-    enigma2-plugin-skins-openvix-magic-fhd \
-    enigma2-plugin-skins-openvix-simple-ten-eighty \
-    enigma2-plugin-skins-openvix-vix-day-1080 \
-    enigma2-plugin-skins-openvix-youvix-blue \
+    ${@bb.utils.contains("MACHINE_FEATURES", "skins1080", "enigma2-plugin-skins-openvix-magic-fhd", "", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "skins1080", "enigma2-plugin-skins-openvix-simple-ten-eighty", "", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "skins1080", "enigma2-plugin-skins-openvix-vix-day-1080", "enigma2-plugin-skins-openvix-vix-day-hd", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "skins1080", "enigma2-plugin-skins-openvix-youvix-blue" , "", d)} \
     enigma2-plugin-systemplugins-aboutboxbranding \
     enigma2-plugin-systemplugins-opentvzapper \
     enigma2-plugin-systemplugins-xmlupdate \
