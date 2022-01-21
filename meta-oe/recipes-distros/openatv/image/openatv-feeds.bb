@@ -55,9 +55,6 @@ RRECOMMENDS:${PN} = "\
     enigma2-plugin-skins-overlayhd \
     enigma2-plugin-skincomponents-mediaportal-atv-metrix-style \
     enigma2-plugin-extensions-chocholousek-picons \
-    enigma2-plugin-skinpacks-dreamplex-bluemod \
-    ${@bb.utils.contains("MACHINE_FEATURES", "skins1080", "hd-skins-meta", "", d)} \
-    ${@bb.utils.contains("MACHINE_FEATURES", "skins1080", "enigma2-plugin-skinpacks-dreamplex-bluemod-fhd", "", d)} \
     "
 
 # remove close cant update to py3
