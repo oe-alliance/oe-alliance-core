@@ -24,6 +24,7 @@ RDEPENDS:${PN} = " \
     dvb-usb-drivers-meta \
     network-usb-drivers-meta \
     picons-enigma2-meta \
+    dreamplex-skins-meta \
     meta-enigma2-dvdburn \
     enigma2-plugins \
     enigma2-plugin-drivers-ntfs-3g \
