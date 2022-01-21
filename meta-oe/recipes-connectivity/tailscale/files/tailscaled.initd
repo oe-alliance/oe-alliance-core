@@ -1,0 +1,45 @@
+#!/bin/sh
+
+# description: Startup/shutdown script for tailscale daemon
+if [ ! -d /var/lib/tailscale ] ; then
+	mkdir -p /var/lib/tailscale
+fi
+if [ ! -d /run/tailscale ] ; then
+	mkdir -p /var/run/tailscale
+fi
+
+modprobe tun
+
+TAILSCALED_LOGFILE="/var/log/tailscaled.log"
+TAILSCALED_PORT="41641"
+TAILSCALED=/usr/sbin/tailscaled
+
+ARGS="--state=/var/lib/tailscale/tailscaled.state --socket=/var/run/tailscale/tailscaled.sock --port ${TAILSCALED_PORT}"
+
+test -f $TAILSCALED || exit 0
+
+case "$1" in
+	start)
+		echo "Starting tailscaled"
+		start-stop-daemon -b --start --startas $TAILSCALED -- $ARGS
+		echo "done"
+		;;
+	stop)
+		echo "Stopping tailscaled"
+		start-stop-daemon -K -x $TAILSCALED
+		echo "done"
+		;;
+	restart|reload|force-reload)
+		echo "Restarting tailscaled"
+		start-stop-daemon --stop --retry 5 --startas $TAILSCALED
+		sleep 5
+		start-stop-daemon --start --startas $TAILSCALED -- $ARGS
+		echo "done"
+		;;
+	*)
+		echo "Usage: /etc/init.d/tailscaled {start|stop|restart|reload|force-reload}"
+		exit 1
+		;;
+esac
+
+exit 0 

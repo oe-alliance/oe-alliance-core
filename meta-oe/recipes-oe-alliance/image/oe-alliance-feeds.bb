@@ -113,7 +113,7 @@ RDEPENDS:${PN} = " \
     nss \
     ntfs-3g \
     ntp \
-    ${@bb.utils.contains("DEFAULTTUNE", "sh4", "" , "nodejs dvb-apps satpi", d)} \
+    ${@bb.utils.contains("DEFAULTTUNE", "sh4", "" , "nodejs dvb-apps satpi tailscale", d)} \
     odhcp6c \
     ofgwrite \
     openresolv \
