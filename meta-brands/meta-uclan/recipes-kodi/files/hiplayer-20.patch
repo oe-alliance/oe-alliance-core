@@ -1641,7 +1641,7 @@ index 0000000..7c488e6
 +
 +  pDvdVideoPicture->iDisplayWidth = pDvdVideoPicture->iWidth;
 +  pDvdVideoPicture->iDisplayHeight = pDvdVideoPicture->iHeight;
-+  if (m_aspect_ratio > 1.0 && !m_hints.forced_aspect)
++  if (m_aspect_ratio > 1.0f && !m_hints.forced_aspect)
 +  {
 +    pDvdVideoPicture->iDisplayWidth = ((int)lrint(pDvdVideoPicture->iHeight * m_aspect_ratio)) & ~3;
 +    if (pDvdVideoPicture->iDisplayWidth > pDvdVideoPicture->iWidth)
@@ -3508,9 +3508,9 @@ index 0000000..88940c9
 +#define PTS_FREQ 90000
 +#define UNIT_FREQ 96000
 +#define AV_SYNC_THRESH PTS_FREQ * 30
-+#define PTS_US_TO_MS(PTS_US) ((PTS_US) / 1000.0f)
++#define PTS_US_TO_MS(PTS_US) ((float)(PTS_US) / 1000.0f)
 +#define PTS_MS_TO_US(PTS_MS) ((PTS_MS)*1000.0f)
-+#define PTS_90KHZ_TO_MS(PTS_90MS) ((PTS_90MS) / 90.0f)
++#define PTS_90KHZ_TO_MS(PTS_90MS) ((float)(PTS_90MS) / 90.0f)
 +#define PTS_MS_TO_90KHZ(PTS_MS) ((PTS_MS)*90.0f)
 +
 +enum
@@ -5868,7 +5868,7 @@ index 0000000..c2e18c2
 +  if (hints.fpsrate > 0 && hints.fpsscale != 0)
 +  {
 +    // then ffmpeg avg_frame_rate next
-+    m_video_rate = 0.5 + (float)UNIT_FREQ * hints.fpsscale / hints.fpsrate;
++    m_video_rate = 0.5f + (float)UNIT_FREQ * hints.fpsscale / hints.fpsrate;
 +  }
 +
 +  // check for 1920x1080, interlaced, 25 fps
@@ -5876,7 +5876,7 @@ index 0000000..c2e18c2
 +  if (hints.width == 1920 && m_video_rate == 1920)
 +  {
 +    //CLog::Log(LOGNOTICE, "CHisiVdec::OpenDecoder video_rate exception");
-+    m_video_rate = 0.5 + (float)UNIT_FREQ * 1001 / 25000;
++    m_video_rate = 0.5f + (float)UNIT_FREQ * 1001 / 25000;
 +  }
 +
 +  // check for SD h264 content incorrectly reported as 60 fsp
@@ -5884,7 +5884,7 @@ index 0000000..c2e18c2
 +  if (hints.codec == AV_CODEC_ID_H264 && hints.width <= 720 && m_video_rate == 1602)
 +  {
 +    //CLog::Log(LOGNOTICE, "CHisiVdec::OpenDecoder video_rate exception");
-+    m_video_rate = 0.5 + (float)UNIT_FREQ * 1001 / 24000;
++    m_video_rate = 0.5f + (float)UNIT_FREQ * 1001 / 24000;
 +  }
 +
 +  // check for SD h264 content incorrectly reported as some form of 30 fsp
@@ -5894,7 +5894,7 @@ index 0000000..c2e18c2
 +    if (m_video_rate >= 3200 && m_video_rate <= 3210)
 +    {
 +      //CLog::Log(LOGNOTICE, "CHisiVdec::OpenDecoder video_rate exception");
-+      m_video_rate = 0.5 + (float)UNIT_FREQ * 1001 / 24000;
++      m_video_rate = 0.5f + (float)UNIT_FREQ * 1001 / 24000;
 +    }
 +  }
 +
@@ -19288,7 +19288,7 @@ index 0000000..15905a6
 +/** CNcomment:已经设定窗口内存模式 0xB0078005 */
 +#define HIGO_ERR_ALREADYSETMODE HIGO_DEF_ERR(HIGO_MOD_WINC, ERR_WINC_ALREADYSETMODE)
 +
-+/**Error codes of the HiGo surface module*/
++/**Error codes of the HiGo surface module*/
 +/** CNcomment:HiGo Cursor模块错误码 */
 +typedef enum
 +{
