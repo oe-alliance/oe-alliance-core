@@ -27,6 +27,7 @@ IMAGE_CMD_dinobotemmcmultiboot_append = "\
     rm -f ${DEPLOY_DIR_IMAGE}/.manifest; \
     rm -f -f ${DEPLOY_DIR_IMAGE}/*.json; \
     rm -Rf ${IMAGEDIR}; \
+    rm -Rf ${IMGDEPLOYDIR}/userdata; \
     "
 
 require conf/machine/include/dinobot-oem.inc

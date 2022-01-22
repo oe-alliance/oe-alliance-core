@@ -104,6 +104,7 @@ IMAGE_CMD_beyonwizemmc_append = "\
     rm -f -f ${DEPLOY_DIR_IMAGE}/*.json; \
     rm -Rf ${DEPLOY_DIR_IMAGE}/usb_update.bin; \
     rm -Rf ${IMAGEDIR}; \
+    rm -Rf ${IMGDEPLOYDIR}/userdata; \
     "
 
 # Add "MACHINEBUILD" override for recipes
