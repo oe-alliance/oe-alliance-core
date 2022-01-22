@@ -21,7 +21,7 @@ do_install:append() {
     perl -i -pe 's:(if \[ "\$UPDATE_HWCLOCK" = "yes" \]);:$1 && [ -x /sbin/stb-hwclock ];:;' \
                 -pe 's:(\s)(hwclock --systohc):$1/sbin/stb-$2:;' \
                  ${D}/usr/bin/ntpdate-sync
-    sed  's!if /usr/sbin/ntpdate -s $OPTS $NTPSERVERS!if /usr/sbin/ntpdate -s $OPTS $NTPSERVERS &!' -i ${D}/usr/bin/ntpdate-sync
+    sed  's!if /usr/sbin/ntpdate -s $OPTS $NTPSERVERS!if /usr/sbin/ntpdate -s $OPTS $NTPSERVERS \&!' -i ${D}/usr/bin/ntpdate-sync
 }
 
 pkg_postinst:ntpdate() {
