@@ -69,6 +69,7 @@ IMAGE_CMD:gigablueemmc:append = "\
     rm -f -f ${DEPLOY_DIR_IMAGE}/*.json; \
     rm -Rf ${DEPLOY_DIR_IMAGE}/usb_update.bin; \
     rm -Rf ${IMAGEDIR}; \
+    rm -Rf ${IMGDEPLOYDIR}/userdata; \
     "
 
 OEM_ARCH = "${MACHINEBUILD}"
