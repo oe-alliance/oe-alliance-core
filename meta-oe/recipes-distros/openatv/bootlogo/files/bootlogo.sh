@@ -19,7 +19,7 @@ if [ -x /usr/bin/showiframe ]; then
 	fi
 	for DIR in ${SEARCHDIRS}; do
 		if [ -d "${DIR}" ] && [ -f "${DIR}/bootlogo.mvi" ]; then
-			/usr/bin/showiframe "${DIR}/bootlogo.mvi"
+			/usr/bin/showiframe "${DIR}/bootlogo.mvi" &
 			break
 		fi
 	done
