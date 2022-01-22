@@ -5,6 +5,6 @@
 
 BOOTLOGO=/usr/share/bootlogo.mvi
 [ -f /etc/enigma2/bootlogo.mvi ] && BOOTLOGO=/etc/enigma2/bootlogo.mvi
-/usr/bin/showiframe ${BOOTLOGO}
+/usr/bin/showiframe ${BOOTLOGO} &
 
 [ -f /etc/init.d/bootlogo.py ] && /usr/bin/python /etc/init.d/bootlogo.py
