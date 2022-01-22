@@ -22,6 +22,6 @@ IMAGE_CMD:dinobotemmcmultiboot () {
         eval COUNT=\"$MIN_COUNT\"
     fi
     dd if=/dev/zero of=${IMGDEPLOYDIR}/${IMAGE_NAME}.rootfs.ext4 seek=${IMAGE_ROOTFS_SIZE} count=$COUNT bs=1024
-    mkfs.ext4 -F -i 4096 ${IMGDEPLOYDIR}/${IMAGE_NAME}.rootfs.ext4 -d ${IMGDEPLOYDIR}/userdata
+    /usr/bin/fakeroot mkfs.ext4 -F -i 4096 ${IMGDEPLOYDIR}/${IMAGE_NAME}.rootfs.ext4 -d ${IMGDEPLOYDIR}/userdata
 }
 
