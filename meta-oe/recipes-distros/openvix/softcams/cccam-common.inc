@@ -19,7 +19,7 @@ require softcam-binary-32bit.inc
 
 CONFFILES:${PN} ?= "/etc/CCcam.cfg"
 
-PACKAGE_ARCH = "${DEFAULTTUNE}"
+PACKAGE_ARCH = "${TUNE_PKGARCH}"
 
 do_install() {
     install -d ${D}/${bindir}
