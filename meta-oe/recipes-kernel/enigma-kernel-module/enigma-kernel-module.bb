@@ -91,6 +91,8 @@ print_md5hash() {
 	printf "checksum=%s\n" $(md5sum "$1" | awk '{print $1}')
 }
 
+do_install[nostamp] = "1"
+
 do_install() {
 	install -d ${D}${nonarch_base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/enigma
 	modinfo -d ${S}/enigma.ko > ${S}/enigma.txt
