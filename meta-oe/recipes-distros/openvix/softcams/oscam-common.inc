@@ -16,7 +16,7 @@ LIC_FILES_CHKSUM = "file://../OSCAM-LICENSE;md5=d32239bcb673463ab874e80d47fae504
 
 CONFFILES:${PN} ?= "/etc/tuxbox/config/${CAMNAME}"
 
-PACKAGE_ARCH = "${DEFAULTTUNE}"
+PACKAGE_ARCH = "${TUNE_PKGARCH}"
 
 DEPENDS += "libusb openssl"
 
