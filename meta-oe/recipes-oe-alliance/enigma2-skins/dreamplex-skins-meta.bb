@@ -12,11 +12,12 @@ PR = "r0"
 inherit packagegroup
 
 RDEPENDS:${PN} = "\
+    ${@bb.utils.contains("MACHINE_FEATURES", "skins1080", "enigma2-plugin-skinpacks-dreamplex-bluemod-fhd \
     enigma2-plugin-skinpacks-dreamplex-youplex-blue \
     enigma2-plugin-skinpacks-dreamplex-youplex-red \
     enigma2-plugin-skinpacks-dreamplex-youplex-green \
     enigma2-plugin-skinpacks-dreamplex-youplex-purple \
     enigma2-plugin-skinpacks-dreamplex-plex-experience \
+    ", "", d)} \
     enigma2-plugin-skinpacks-dreamplex-bluemod  \
-    ${@bb.utils.contains("MACHINE_FEATURES", "skins1080", "enigma2-plugin-skinpacks-dreamplex-bluemod-fhd", "", d)} \
     "
