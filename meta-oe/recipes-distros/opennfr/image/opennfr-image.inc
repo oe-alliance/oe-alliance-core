@@ -19,7 +19,7 @@ IMAGE_INSTALL = " \
 
 export IMAGE_BASENAME = "opennfr-image"
 IMAGE_LINGUAS = ""
-REPRODUCIBLE_TIMESTAMP_ROOTFS = ""
+REPRODUCIBLE_TIMESTAMP_ROOTFS = "${@time.strftime('%s')}"
 
 IMAGE_FEATURES += "package-management"	
 

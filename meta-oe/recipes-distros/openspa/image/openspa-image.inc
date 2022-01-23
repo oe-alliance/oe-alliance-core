@@ -11,7 +11,7 @@ PR = "${BUILD_VERSION}"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 do_rootfs[deptask] = "do_rm_work"
-REPRODUCIBLE_TIMESTAMP_ROOTFS = ""
+REPRODUCIBLE_TIMESTAMP_ROOTFS = "${@time.strftime('%s')}"
 
 IMAGE_INSTALL = "openspa-base \
     ${@bb.utils.contains("MACHINE_FEATURES", "no-cl-svr", "", \
