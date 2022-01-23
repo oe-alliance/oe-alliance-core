@@ -4,6 +4,8 @@ HOMEPAGE = "https://sabnzbd.org"
 MAINTAINER = "team@sabnzbd.org"
 LICENSE = "GPLv2+"
 LIC_FILES_CHKSUM = "file://COPYRIGHT.txt;md5=d4bfc20f13bd0e7363c57525136734ee"
+require conf/python/python3-compileall.inc
+
 
 DEPENDS = "${PYTHON_PN}"
 RDEPENDS:${PN} = "\
@@ -15,21 +17,22 @@ RDEPENDS:${PN} = "\
 
 RRECOMMENDS:${PN} = "par2cmdline unrar p7zip-full"
 
-SRC_URI = "https://github.com/sabnzbd/sabnzbd/releases/download/3.3.1/SABnzbd-3.3.1-src.tar.gz \
+SRC_URI = "https://github.com/sabnzbd/sabnzbd/releases/download/${PV}/SABnzbd-${PV}-src.tar.gz \
     file://sabnzbd \
     file://sabnzbd.conf \
     file://init-functions \
     "
 
-SRC_URI[md5sum] = "62483a336ea4a1241e4e122e67f2f217"
-SRC_URI[sha256sum] = "4ca22408e2f4f88880c8d0fb480c231c0b51d144eb871d01870dcb9b14199ec3"
+SRC_URI[md5sum] = "02f7c62bbae19dc43f07627281268641"
+SRC_URI[sha256sum] = "fd2c91e15aa667657dd7c960872fbff148467e88fe2d8c8e6e81fcc2e3402842"
 
 S = "${WORKDIR}/SABnzbd-${PV}"
 
 INSTALLDIR = "${libdir}/${PN}"
 
-PACKAGES = "${PN}-doc ${PN}"
+PACKAGES = "${PN}-doc ${PN}-src ${PN}"
 
+FILES:${PN}-src = "${INSTALLDIR}/*.py ${INSTALLDIR}/*/*.py ${INSTALLDIR}/*/*/*.py"
 FILES:${PN}-doc = "${INSTALLDIR}/*.txt ${INSTALLDIR}/licenses ${INSTALLDIR}/interfaces/*/licenses"
 FILES:${PN} = "${INSTALLDIR} /etc/init.d/sabnzbd /etc/init.d/init-functions /etc/enigma2/sabnzbd.conf"
 

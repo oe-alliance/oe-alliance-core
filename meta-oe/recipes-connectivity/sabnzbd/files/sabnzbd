@@ -20,7 +20,7 @@
 # Short-Description: SABnzbd+ binary newsgrabber
 ### END INIT INFO
 
-DAEMON=/usr/lib/sabnzbd3/SABnzbd.py
+DAEMON=/usr/lib/sabnzbd3/SABnzbd.pyc
 SETTINGS=/etc/enigma2/sabnzbd.conf
 
 ([ -x $DAEMON ] && [ -r $SETTINGS ]) || exit 0
