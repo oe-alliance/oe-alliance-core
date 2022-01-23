@@ -20,6 +20,7 @@ IMAGE_LINGUAS = ""
 IMAGE_FEATURES += "package-management"
 
 INHIBIT_DEFAULT_DEPS = "1"
+REPRODUCIBLE_TIMESTAMP_ROOTFS = ""
 
 inherit image
 
