@@ -157,6 +157,7 @@ RDEPENDS:${PN} = " \
     ${PYTHON_PN}-levenshtein \
     ${PYTHON_PN}-soco \
     ${PYTHON_PN}-pyexecjs \
+    ${PYTHON_PN}-scrapy \
     ${@bb.utils.contains("DEFAULTTUNE", "sh4", "" , "rclone zerotier", d)} \
     rapidxml \
     rsync \
