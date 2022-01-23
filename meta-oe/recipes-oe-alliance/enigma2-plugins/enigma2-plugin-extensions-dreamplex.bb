@@ -26,6 +26,10 @@ EXTRA_OECONF = " \
 PACKAGES += "enigma2-plugin-extensions-dreamplex-meta"
 FILES:enigma2-plugin-extensions-dreamplex-meta = "${datadir}/meta"
 
+RPROVIDES:${PN}  = "enigma2-plugin-skinpacks-dreamplex-bluemod-fhd enigma2-plugin-skinpacks-dreamplex-bluemod"
+RREPLACES:${PN}  = "enigma2-plugin-skinpacks-dreamplex-bluemod-fhd enigma2-plugin-skinpacks-dreamplex-bluemod"
+RCONFLICTS:${PN} = "enigma2-plugin-skinpacks-dreamplex-bluemod-fhd enigma2-plugin-skinpacks-dreamplex-bluemod"
+
 S = "${WORKDIR}/git"
 
 python populate_packages:prepend() {

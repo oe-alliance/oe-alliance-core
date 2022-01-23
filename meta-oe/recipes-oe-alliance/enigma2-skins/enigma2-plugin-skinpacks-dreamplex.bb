@@ -19,8 +19,6 @@ PACKAGES = "\
     ${EPSM}-youplex-green \
     ${EPSM}-youplex-purple \
     ${EPSM}-plex-experience \
-    ${EPSM}-bluemod-fhd \
-    ${EPSM}-bluemod \
     "
 
 SRC_URI = "git://github.com/oe-alliance/DreamPlexSkins.git;protocol=https"
@@ -30,8 +28,6 @@ FILES:${EPSM}-youplex-red = "/usr/lib/enigma2/python/Plugins/Extensions/DreamPle
 FILES:${EPSM}-youplex-green = "/usr/lib/enigma2/python/Plugins/Extensions/DreamPlex/skins/YouPlex-Green"
 FILES:${EPSM}-youplex-purple = "/usr/lib/enigma2/python/Plugins/Extensions/DreamPlex/skins/YouPlex-Purple"
 FILES:${EPSM}-plex-experience = "/usr/lib/enigma2/python/Plugins/Extensions/DreamPlex/skins/Plex_Experience"
-FILES:${EPSM}-bluemod = "/usr/lib/enigma2/python/Plugins/Extensions/DreamPlex/skins/BlueMod"
-FILES:${EPSM}-bluemod-fhd = "/usr/lib/enigma2/python/Plugins/Extensions/DreamPlex/skins/BlueMod-FHD"
 
 S = "${WORKDIR}/git"
 

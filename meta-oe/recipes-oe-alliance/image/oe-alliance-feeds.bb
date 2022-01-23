@@ -24,7 +24,7 @@ RDEPENDS:${PN} = " \
     dvb-usb-drivers-meta \
     network-usb-drivers-meta \
     picons-enigma2-meta \
-    dreamplex-skins-meta \
+    ${@bb.utils.contains("MACHINE_FEATURES", "skins1080", "dreamplex-skins-meta", "", d)} \
     meta-enigma2-dvdburn \
     enigma2-plugins \
     enigma2-plugin-drivers-ntfs-3g \
