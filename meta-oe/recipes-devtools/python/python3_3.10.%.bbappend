@@ -23,6 +23,7 @@ do_install:append() {
 
 fakeroot do_compileall() {
     python3 -m compileall -o2 -b "${D}"
+    sync
 }
 
 do_compileall[depends] += "virtual/fakeroot-native:do_populate_sysroot"
