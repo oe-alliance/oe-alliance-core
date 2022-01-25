@@ -329,7 +329,6 @@ do_package_qa() {
 
 fakeroot do_compileall() {
     python3 -m compileall -o2 -b "${D}"
-    /usr/bin/sync
 }
 
 do_compileall[depends] += "virtual/fakeroot-native:do_populate_sysroot"
