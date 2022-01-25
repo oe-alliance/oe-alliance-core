@@ -13,6 +13,7 @@ inherit packagegroup
 DEPENDS = "enigma2-pliplugins openatv-feeds"
 
 RRECOMMENDS_${PN} = " \
+    openvix-picon-feed-opkg-conf \
     enigma2-skindefault \
     openatv-version-info \
     ${@bb.utils.contains_any("FLASHSIZE", "64 96", " \
