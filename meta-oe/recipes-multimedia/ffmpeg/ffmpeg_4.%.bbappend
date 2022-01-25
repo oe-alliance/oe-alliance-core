@@ -107,6 +107,7 @@ EXTRA_FFCONF = " \
 	--enable-encoder=h263p \
 	--enable-encoder=jpeg2000 \
 	--enable-encoder=jpegls \
+	--enable-encoder=libx264 \
 	--enable-encoder=ljpeg \
 	--enable-encoder=mjpeg \
 	--enable-encoder=mpeg1video \
