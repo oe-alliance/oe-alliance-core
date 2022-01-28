@@ -21,6 +21,6 @@ FILES:${PN}-src += " \
     ${libdir}/enigma2/python/*/*/*/*/*/*.py \
     "
 
-do_install:append () {
+do_install:append:class-target () {
     python3 -m compileall -o2 -b ${D}
 }

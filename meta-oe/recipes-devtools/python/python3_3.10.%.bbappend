@@ -21,7 +21,7 @@ do_install:append() {
     fi
 }
 
-do_install:append () {
+do_install:append:class-target () {
     python3 -m compileall -b ${D}
 }
 
