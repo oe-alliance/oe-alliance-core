@@ -21,13 +21,9 @@ do_install:append() {
     fi
 }
 
-fakeroot do_compileall() {
-    python3 -m compileall -o2 -b "${D}"
+do_install:append () {
+    python3 -m compileall -b ${D}
 }
-
-do_compileall[depends] += "virtual/fakeroot-native:do_populate_sysroot"
-
-addtask compileall before do_package after do_install
 
 python(){
     import collections, json
