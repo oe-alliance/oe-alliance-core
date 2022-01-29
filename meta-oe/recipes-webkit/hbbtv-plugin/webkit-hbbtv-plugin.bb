@@ -4,8 +4,6 @@ PRIORITY = "required"
 LICENSE = "CLOSED"
 require conf/license/license-close.inc
 
-require conf/python/python3-compileall.inc
-
 RDEPENDS:${PN} = "\
     webkit-classic \
     webkit-classic-browser \
@@ -92,5 +90,7 @@ do_install:append() {
     install -d ${D}/usr/lib/mozilla/plugins
     install -m 0755 ${S}/libhbbtvplugin.so ${D}/usr/lib/mozilla/plugins/
 }
+
+require conf/python/python3-compileall.inc
 
 FILES:${PN} = "/"
