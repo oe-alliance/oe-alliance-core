@@ -3,7 +3,6 @@ DESCRIPTION = "Enigma2 plugin to manage your youtube account and wach videos"
 MAINTAINER = "Taapat"
 
 require conf/license/license-gplv2.inc
-require conf/python/python3-compileall.inc
 
 DEPENDS = "enigma2"
 RDEPENDS:${PN} = "${PYTHON_PN}-core ${PYTHON_PN}-codecs ${PYTHON_PN}-json ${PYTHON_PN}-netclient ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-zlib", "", d)} ${PYTHON_PN}-twisted ${PYTHON_PN}-twisted-web"
@@ -34,9 +33,11 @@ do_install:append() {
     install -d ${D}${PLUGINPATH}
     cp -rp ${S}/src/* ${D}${PLUGINPATH}
     cp -rp ${S}/po/* ${D}${PLUGINPATH}/locale
-	install -d ${D}/etc/enigma2
-	install -m 0644 ${S}/YouTube.key ${D}/etc/enigma2/YouTube.key
+    install -d ${D}/etc/enigma2
+    install -m 0644 ${S}/YouTube.key ${D}/etc/enigma2/YouTube.key
 }
+
+require conf/python/python3-compileall.inc
 
 CONFFILES = "/etc/enigma2/YouTube.key"
 

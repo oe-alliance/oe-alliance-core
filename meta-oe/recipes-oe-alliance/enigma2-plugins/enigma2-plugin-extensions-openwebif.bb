@@ -2,7 +2,6 @@ MODULE = "OpenWebif"
 DESCRIPTION = "Control your receiver with a browser"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://README;firstline=10;lastline=12;md5=26abba37d1c2fcbf96a087ceb8e1db86"
-require conf/python/python3-compileall.inc
 
 FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 
@@ -54,6 +53,8 @@ do_install:append() {
 	cp -r ${S}/plugin/* ${D}${PLUGINPATH}
 	chmod a+rX ${D}${PLUGINPATH}
 }
+
+require conf/python/python3-compileall.inc
 
 python populate_packages:prepend() {
     enigma2_plugindir = bb.data.expand('${libdir}/enigma2/python/Plugins', d)
