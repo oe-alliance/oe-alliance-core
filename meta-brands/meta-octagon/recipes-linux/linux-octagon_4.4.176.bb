@@ -27,6 +27,7 @@ SRC_URI += "http://source.mynonpublic.com/octagon/octagon-linux-${PV}-${SRCDATE}
     file://defconfig \
     file://initramfs-subdirboot.cpio.gz;unpack=0 \
     file://findkerneldevice.sh \
+    file://fix-multiple-defs-yyloc.patch \
 "
 
 S = "${WORKDIR}/linux-${PV}"
