@@ -2,7 +2,6 @@ SUMMARY = "Multi boot loader for enigma2"
 MAINTAINER = "oe-alliance"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263"
-require conf/python/python3-compileall.inc
 
 inherit gitpkgv ${PYTHON_PN}native gettext ${@bb.utils.contains("PYTHON_PN", "python3", "python3targetconfig", "", d)}
 
@@ -42,6 +41,8 @@ do_install:append() {
 # skip this!
 install_egg_info() {
 }
+
+require conf/python/python3-compileall.inc
 
 do_configure:prepend() {
     touch ${S}/NEWS

@@ -5,8 +5,6 @@ PRIORITY = "required"
 LICENSE = "proprietary"
 
 require conf/license/license-gplv2.inc
-require conf/python/python3-compileall.inc
-
 RDEPENDS:${PN} = "tar pigz xz"
 
 inherit gitpkgv
@@ -35,5 +33,7 @@ do_install:arm() {
     cp -rp ${S}/arm/* ${D}${libdir}/enigma2/python/Plugins/Extensions/dBackup/
     chmod -R 777 ${D}${libdir}/enigma2/python/Plugins/Extensions/dBackup
 }
+
+require conf/python/python3-compileall.inc
 
 do_package_qa[noexec] = "1"

@@ -4,8 +4,6 @@ PRIORITY = "required"
 LICENSE = "CLOSED"
 require conf/license/license-close.inc
 
-require conf/python/python3-compileall.inc
-
 RDEPENDS:${PN} = "dumpait-legacy \
     ${@bb.utils.contains('TUNE_FEATURES', 'aarch64', 'lib32-webkit-hbbtv-plugin' , 'webkit-hbbtv-plugin', d)} \
 "
@@ -35,5 +33,7 @@ do_install:append() {
     # Python Files
     cp -aRf ${S}/HbbTV/* ${D}${libdir}/${DESTDIR}
 }
+
+require conf/python/python3-compileall.inc
 
 FILES:${PN} = "/"
