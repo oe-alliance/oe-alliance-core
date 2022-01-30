@@ -11,8 +11,6 @@ DEPENDS = "libxml2 bash-completion"
 
 inherit python3-dir setuptools3 gittag
 
-include ${PYTHON_PN}-package-split.inc
-
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "${GITPKGVTAG}"
@@ -33,6 +31,8 @@ do_install:append() {
     install -m 0755 -d ${D}${sysconfdir}/bash_completion.d
     install -m 0644 youtube-dl.bash-completion ${D}${sysconfdir}/bash_completion.d
 }
+
+include ${PYTHON_PN}-package-split.inc
 
 RDEPENDS:${PN} = " \
     ${PYTHON_PN}-email \

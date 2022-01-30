@@ -7,8 +7,6 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=381ff91bf309000e0ec58dafe27a97b0"
 
 inherit python3-dir setuptools3 gittag
 
-include ${PYTHON_PN}-package-split.inc
-
 RDEPENDS:${PN} = "${PYTHON_PN}-core \
     ${PYTHON_PN}-ctypes \
     ${PYTHON_PN}-futures3 \
@@ -54,6 +52,8 @@ do_install:append() {
     rm -rf ${D}${PYTHON_SITEPACKAGES_DIR}/streamlink/plugins/.removed
     rm -rf ${D}${datadir}
 }
+
+include ${PYTHON_PN}-package-split.inc
 
 PACKAGES = "${PN}"
 
