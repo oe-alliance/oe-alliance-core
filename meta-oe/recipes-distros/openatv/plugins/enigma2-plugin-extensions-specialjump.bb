@@ -4,6 +4,7 @@ SECTION = "base"
 LICENSE = "proprietary"
 DEPENDS = "${PYTHON_PN}-six-native"
 require conf/license/license-gplv2.inc
+require conf/python/python3-compileall.inc
 
 inherit gitpkgv
 SRCREV = "${AUTOREV}"
