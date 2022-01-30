@@ -76,5 +76,5 @@ require conf/python/python3-compileall.inc
 
 PACKAGES = "${PN}-src ${PN}-dbg ${PN}-dev ${PN}"
 FILES:${PN}-src = "/usr/src ${libdir}/enigma2/python/Plugins/Extensions/Tuxtxt/*.py"
-FILES:${PN} = "${libdir}/libtuxtxt32bpp.so.* /usr/share/fonts ${libdir}/enigma2/python/Plugins/Extensions/Tuxtxt/*.py /etc/tuxtxt"
+FILES:${PN} = "${libdir}/libtuxtxt32bpp.so.* /usr/share/fonts ${libdir}/enigma2/python/Plugins/Extensions/Tuxtxt/*.pyc /etc/tuxtxt"
 CONFFILES:${PN} = "/etc/tuxtxt/tuxtxt2.conf"
