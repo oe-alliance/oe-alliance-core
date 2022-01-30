@@ -45,7 +45,7 @@ HAVE_MULTILIB = "${@bb.utils.contains("MACHINE_FEATURES", "multilib", "True", "F
 HAVE_VFDSYMBOL = "${@bb.utils.contains("MACHINE_FEATURES", "vfdsymbol", "True", "False", d)}"
 
 RCTYPE ??= "0"
-RCNAME ??= "N/A"
+RCNAME ??= "dmm1"
 RCIDNUM ??= "2"
 
 #deprecated setting
@@ -54,11 +54,12 @@ ${@bb.utils.contains('MACHINE_FEATURES', 'transcoding', 'transcoding' , '', d)}\
 ${@bb.utils.contains('MACHINE_FEATURES', 'multitranscoding', 'multitranscoding' , '', d)}\
 "
 
-#not use with oe-a
-LANGUAGE ?= "N/A"
-STB_PLATFORM ?= "N/A"
-MEDIASERVICE ?= "N/A"
-BLINDSCAN_BINARY ?= "N/A"
-FORCE ?= "N/A"
-SUPPORT_DBOXLCD ?= "N/A"
+LANGUAGECHECK = "${@bb.utils.contains_any("FLASHSIZE", "64 96", "DEU;ENG" , "multilang", d)}"
+LANGUAGE = "${@bb.utils.contains_any("MACHINE_FEATURES", "smallflash BootloaderMax110", "DEU;ENG", "${LANGUAGECHECK}", d)}"
+
+STB_PLATFORM ?= "${MACHINE}"
+MEDIASERVICE ?= "${@bb.utils.contains("MACHINE_FEATURES", "himedia", "servicehisilicon" , "servicegstreamer", d)}"
+BLINDSCAN_BINARY ?= "blindscan"
+FORCE ?= "no"
+SUPPORT_DBOXLCD ?= "${@bb.utils.contains_any("MACHINE_FEATURES", "textlcd", "True", "False", d)}"
 DEVELOPER_NAME ?= "${DISTRO_NAME}"
