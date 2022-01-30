@@ -8,7 +8,7 @@ inherit gitpkgv ${PYTHON_PN}native gettext ${@bb.utils.contains("PYTHON_PN", "py
 SRCREV = "${AUTOREV}"
 PV = "1.3+git${SRCPV}"
 PKGV = "1.3+git${GITPKGV}"
-PR = "r0"
+PR = "r1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 SRC_URI = "git://github.com/oe-alliance/openmultibootmanager.git;protocol=https;branch=dev-bootmenu-helper"
@@ -41,8 +41,6 @@ do_install:append() {
 # skip this!
 install_egg_info() {
 }
-
-require conf/python/python3-compileall.inc
 
 do_configure:prepend() {
     touch ${S}/NEWS
