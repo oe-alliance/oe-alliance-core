@@ -195,7 +195,3 @@ python populate_packages:prepend() {
 
 do_package_qa() {
 }
-
-do_install:append () {
-    python3 -m compileall -o2 -b ${D}
-}

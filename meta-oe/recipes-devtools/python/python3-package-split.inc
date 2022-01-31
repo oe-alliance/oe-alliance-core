@@ -1,5 +1,3 @@
-require conf/python/python3-compileall.inc
-
 inherit ${PYTHON_PN}-dir
 
 RDEPENDS:{PN}-src = "${PN}"
@@ -22,6 +20,24 @@ FILES:${PN}-src += " \
     ${PYTHON_SITEPACKAGES_DIR}/*/*/*.exe \
     ${PYTHON_SITEPACKAGES_DIR}/*/*/*/*.exe \
     ${PYTHON_SITEPACKAGES_DIR}/*/*/*/*/*.exe \
+    ${PYTHON_SITEPACKAGES_DIR}/*.py \
+    ${PYTHON_SITEPACKAGES_DIR}/*/*.py \
+    ${PYTHON_SITEPACKAGES_DIR}/*/*/*.py \
+    ${PYTHON_SITEPACKAGES_DIR}/*/*/*/*.py \
+    ${PYTHON_SITEPACKAGES_DIR}/*/*/*/*/*.py \
+    ${PYTHON_SITEPACKAGES_DIR}/*/*/*/*/*/*.py \
+    ${libdir}/${PYTHON_DIR}/*.py \
+    ${libdir}/${PYTHON_DIR}/*/*.py \
+    ${libdir}/${PYTHON_DIR}/*/*/*.py \
+    ${libdir}/${PYTHON_DIR}/*/*/*/*.py \
+    ${libdir}/${PYTHON_DIR}/*/*/*/*/*.py \
+    ${libdir}/${PYTHON_DIR}/*/*/*/*/*/*.py \
+    ${libdir}/enigma2/python/*.py \
+    ${libdir}/enigma2/python/*/*.py \
+    ${libdir}/enigma2/python/*/*/*.py \
+    ${libdir}/enigma2/python/*/*/*/*.py \
+    ${libdir}/enigma2/python/*/*/*/*/*.py \
+    ${libdir}/enigma2/python/*/*/*/*/*/*.py \
     "
 
 
