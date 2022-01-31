@@ -1,3 +1,6 @@
+FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
+SRC_URI += "file://importlib.patch"
+
 inherit python3-dir
 
 FILES:${PN}-src += " \
@@ -11,6 +14,16 @@ FILES:${PN}-src += " \
 
 CFLAGS:append:sh4 = " -std=gnu11"
 
+# for importlib patch
+# add dummy __pycache__ files to make rm happy later...
+do_install:prepend() {
+    mkdir -p ${D}${libdir}/python${PYTHON_MAJMIN}/__pycache__
+    touch ${D}${libdir}/python${PYTHON_MAJMIN}/__pycache__/_sysconfigdata.cpython
+    mkdir -p ${D}${libdir}/python${PYTHON_MAJMIN}/test/__pycache__
+    touch ${D}${libdir}/python${PYTHON_MAJMIN}/test/__pycache__/test_range.cpython
+    touch ${D}${libdir}/python${PYTHON_MAJMIN}/test/__pycache__/test_xml_etree.cpython
+}
+
 # hide compile warnings
 do_install:append() {
     if [ -e ${D}/usr/lib/${PYTHON_DIR}/test ]; then
@@ -19,10 +32,6 @@ do_install:append() {
     if [ -e ${D}/usr/lib/${PYTHON_DIR}/lib2to3/tests ]; then
       rm -rf ${D}/usr/lib/${PYTHON_DIR}/lib2to3/tests
     fi
-}
-
-do_install:append:class-target () {
-    python3 -m compileall -b ${D}
 }
 
 python(){
