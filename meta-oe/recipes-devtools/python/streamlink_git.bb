@@ -63,7 +63,7 @@ FILES:${PN} += " \
     ${PYTHON_SITEPACKAGES_DIR}/streamlink/*/*/*.pyc \
     "
 
-FILES_${PN}-src += " \
+FILES:${PN}-src += " \
     ${PYTHON_SITEPACKAGES_DIR}/streamlink-*.egg-info/* \
     ${PYTHON_SITEPACKAGES_DIR}/streamlink/plugins/.removed \
     ${PYTHON_SITEPACKAGES_DIR}/streamlink/*.py \
