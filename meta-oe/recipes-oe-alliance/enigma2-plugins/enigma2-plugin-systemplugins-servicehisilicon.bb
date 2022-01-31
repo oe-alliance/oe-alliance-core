@@ -28,10 +28,11 @@ EXTRA_OECONF = " \
 	"
 
 FILES:${PN} = "\
-	${libdir}/enigma2/python/Plugins/SystemPlugins/ServiceHisilicon/*.py \
+	${libdir}/enigma2/python/Plugins/SystemPlugins/ServiceHisilicon/*.pyc \
 	${libdir}/enigma2/python/Plugins/SystemPlugins/ServiceHisilicon/servicehisilicon.so \
 	"
 
 FILES:${PN}-dev = "\
+	${libdir}/enigma2/python/Plugins/SystemPlugins/ServiceHisilicon/*.py \
 	${libdir}/enigma2/python/Plugins/SystemPlugins/ServiceHisilicon/servicehisilicon.la \
 	"
