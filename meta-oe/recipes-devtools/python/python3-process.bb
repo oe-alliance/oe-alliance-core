@@ -25,5 +25,4 @@ FILES:${PN}-src = "${PYTHON_SITEPACKAGES_DIR}/process.py"
 do_install() {
     install -d ${D}${PYTHON_SITEPACKAGES_DIR}
     install -m 644 ${S}/process.py ${D}${PYTHON_SITEPACKAGES_DIR}/
-    install -m 644 ${S}/process.pyc ${D}${PYTHON_SITEPACKAGES_DIR}/
 }
