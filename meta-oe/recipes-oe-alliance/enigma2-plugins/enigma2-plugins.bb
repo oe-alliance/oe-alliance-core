@@ -58,7 +58,7 @@ FILES:${PN}-src += " /usr/lib/enigma2/python/Components/Converter/RefToPiconName
 
 
 
-PACKAGES += "${PN}-meta ${PN}-build-dependencies ${PN}-src"
+PACKAGES += "${PN}-meta ${PN}-build-dependencies"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 S = "${WORKDIR}/git"
