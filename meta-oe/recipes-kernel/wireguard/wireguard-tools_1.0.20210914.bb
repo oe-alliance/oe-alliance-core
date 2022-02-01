@@ -1,12 +1,16 @@
 require wireguard.inc
 
+SRC_URI = "https://git.zx2c4.com/wireguard-tools/snapshot/wireguard-tools-${PV}.tar.xz"
+SRC_URI[md5sum] = "1d98fb1623817721466152365aec8c45"
+SRC_URI[sha256sum] = "97ff31489217bb265b7ae850d3d0f335ab07d2652ba1feec88b734bc96bd05ac"
+
+S = "${WORKDIR}/wireguard-tools-${PV}/src"
+
 inherit bash-completion systemd pkgconfig
 
 DEPENDS = "libmnl"
 
-do_compile:prepend () {
-    cd ${S}/tools
-}
+PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 do_install () {
     cd ${S}/tools
