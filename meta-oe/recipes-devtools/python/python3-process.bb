@@ -17,7 +17,7 @@ SRC_URI = "file://process.py"
 
 S = "${WORKDIR}"
 
-PACKAGES = "${PN}"
+PACKAGES = "${PN} ${PN}-src"
 
 FILES:${PN} = "${PYTHON_SITEPACKAGES_DIR}/process.pyc"
 FILES:${PN}-src = "${PYTHON_SITEPACKAGES_DIR}/process.py"
@@ -25,4 +25,5 @@ FILES:${PN}-src = "${PYTHON_SITEPACKAGES_DIR}/process.py"
 do_install() {
     install -d ${D}${PYTHON_SITEPACKAGES_DIR}
     install -m 644 ${S}/process.py ${D}${PYTHON_SITEPACKAGES_DIR}/
+    install -m 644 ${S}/process.pyc ${D}${PYTHON_SITEPACKAGES_DIR}/
 }
