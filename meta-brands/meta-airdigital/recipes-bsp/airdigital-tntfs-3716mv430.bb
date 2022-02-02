@@ -4,15 +4,15 @@ PRIORITY = "required"
 LICENSE = "CLOSED"
 require conf/license/license-close.inc
 
-KV = "4.4.35"
+KV = "4.4.176"
 SRCDATE = "20200528"
 
-SRC_URI[md5sum] = "dd43506f34b3e827db951f352c6ed81c"
-SRC_URI[sha256sum] = "3a4ffbc520ef7c5dded28b78a99ea58b98c9ebfb500be43f7390033cf67ae867"
+SRC_URI[md5sum] = "ddd44a9b96f57fb6e0e838ff7b9a495c"
+SRC_URI[sha256sum] = "3ca38c87ba88a53582fdb1ffcd93a4c7b08764da04afda8bdf65678be5d3b3df"
 
 COMPATIBLE_MACHINE = "^h8$|^hzero$"
 
-SRC_URI = "http://source.mynonpublic.com/tntfs/${HICHIPSET}-tntfs-${SRCDATE}.zip"
+SRC_URI = "http://source.mynonpublic.com/tntfs/${HICHIPSET}-tntfs-${KV}-${SRCDATE}.zip"
 
 S = "${WORKDIR}"
 
