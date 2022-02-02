@@ -1,0 +1,19 @@
+--- a/setup.py	2021-11-05 00:09:22.000000000 +0100
++++ b/setup.py	2022-02-02 19:11:32.000000000 +0100
+@@ -50,16 +50,7 @@
+             license='MIT',
+             packages=find_packages(),
+             include_package_data=True,
+-            setup_requires=setup_requires,
+-            install_requires=install_requires,
+-            tests_require=tests_require,
+-            test_suite='rebulk.test',
+             zip_safe=True,
+-            extras_require={
+-                'test': tests_require,
+-                'dev': dev_require,
+-                'native': native_requires
+-            }
+             )
+ 
+ setup(**args)
