@@ -17,7 +17,7 @@ UBI_VOLNAME = "rootfs"
 IMAGEDIRRECOVERY ?= "zgemma-recovery"
 CMDLINE ?= "console=ttyAMA0,115200n8"
 
-PREFERRED_VERSION_linux-airdigital = "4.4.35"
+PREFERRED_VERSION_linux-airdigital = "4.4.176"
 
 IMAGE_CMD_ubifs_prepend = " \
 	rm -Rf ${IMAGE_ROOTFS}/boot/*; \
