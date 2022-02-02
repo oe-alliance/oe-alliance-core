@@ -5,14 +5,14 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
 KERNEL_RELEASE = "4.4.176"
 
-SRCDATE = "20210202"
+SRCDATE = "20210920"
 
 inherit kernel machine_kernel_pr
 
-MACHINE_KERNEL_PR:append = ".0"
+MACHINE_KERNEL_PR:append = ".1"
 
-SRC_URI[md5sum] = "33206485354da541cddb41e5cc381a7e"
-SRC_URI[sha256sum] = "2384081a944410f9b803414e4162ad5fdee2f241464eed2da1ffdb20fa7a90aa"
+SRC_URI[md5sum] = "261fd4b3d11cf2e593abb1706033fe1c"
+SRC_URI[sha256sum] = "6448ea7093cea5e30fcd9ceea357eee3ad98d1b3e7a2367a41fae990f39468e8"
 
 SRC_URI = "http://source.mynonpublic.com/zgemma/linux-${PV}-${SRCDATE}-${ARCH}.tar.gz \
 	file://defconfig \
@@ -46,6 +46,25 @@ kernel_do_configure:prepend() {
 	install -m 0644 ${WORKDIR}/initramfs-subdirboot.cpio.gz ${B}/
 }
 
+pkg_postinst:kernel-image:hzero() {
+	if [ "x$D" == "x" ]; then
+		if [ -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE} ] ; then
+			flash_erase /dev/${MTD_KERNEL} 0 0
+			nandwrite -p /dev/${MTD_KERNEL} /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}
+		fi
+	fi
+	true
+}
+
+pkg_postinst:kernel-image:h8() {
+	if [ "x$D" == "x" ]; then
+		if [ -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE} ] ; then
+			flash_erase /dev/${MTD_KERNEL} 0 0
+			nandwrite -p /dev/${MTD_KERNEL} /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}
+		fi
+	fi
+	true
+}
 
 pkg_postinst:kernel-image() {
 	if [ "x$D" == "x" ]; then
