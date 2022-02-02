@@ -8,7 +8,7 @@ ALLOW_EMPTY:${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r17"
+PR = "r18"
 
 inherit packagegroup
 
@@ -43,3 +43,5 @@ RRECOMMENDS:${PN} = " \
     openbh-picon-feed-opkg-conf \
     "
 
+RRECOMMENDS:${PN}:remove:osmio4kplus = "enigma2-plugin-extensions-openmultiboot"
+RRECOMMENDS:${PN}:remove:osmini4k = "enigma2-plugin-extensions-openmultiboot"
