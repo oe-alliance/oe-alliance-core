@@ -3,14 +3,14 @@ inherit image_types
 IMAGE_TYPEDEP:abfastboot8gb = "ext4 tar"
 BOOTOPTIONS_PARTITION_SIZE = "2048"
 
-do_image_abfastboot8gb[vardepsexclude] = "DATE DATETIME"
-
 do_image_abfastboot8gb[depends] = " \
 	e2fsprogs-native:do_populate_sysroot \
 	android-tools-native:do_populate_sysroot \
 	dosfstools-native:do_populate_sysroot \
 	mtools-native:do_populate_sysroot \
 "
+
+IMAGE_CMD:abfastboot8gb[vardepsexclude] += "DATE DATETIME"
 
 IMAGE_CMD:abfastboot8gb () {
     dd if=/dev/zero of=${WORKDIR}/bootoptions.img bs=1024 count=${BOOTOPTIONS_PARTITION_SIZE}
