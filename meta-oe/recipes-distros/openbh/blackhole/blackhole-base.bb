@@ -7,9 +7,9 @@ require conf/license/license-gplv2.inc
 
 SRC_URI = "file://Ncam_Ci.sh file://StartBhCam file://Delete_all_Crashlogs.sh file://Ifconfig.sh \
 	file://openvpn.log file://Netstat.sh file://Uptime.sh file://bh_swap file://skin_plugins.xml \
-	file://*.png"
+	file:///usr/share/enigma2/skin_plugins/buttons"
 
-PR = "r17"
+PR = "r18"
 
 FILES:${PN} = "/"
 
@@ -34,10 +34,7 @@ do_install() {
 	install -d ${D}/usr/share/enigma2
 	install -m 0644 ${WORKDIR}/skin_plugins.xml ${D}/usr/share/enigma2/skin_plugins.xml
 	install -m 0644 ${WORKDIR}/skin_plugins ${D}/usr/share/enigma2/skin_plugins/buttons
-	for x in /*.png; do
-		install -m 0644 ${WORKDIR}/$x ${D}/usr/share/enigma2/skin_plugins/buttons/$x
-	done
-
+	install -m 0644 ${WORKDIR}/$x ${D}/usr/share/enigma2/skin_plugins/buttons/$x
 
 	install -d ${D}/usr/bin
 	for x in /StartBhCam; do
