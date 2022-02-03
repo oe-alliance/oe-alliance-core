@@ -11,7 +11,7 @@ PKGV = "1.0+git${GITPKGV}"
 
 SRC_URI="git://github.com/stein17/Skins-for-openATV.git;protocol=https;branch=master"
 
-FILES_${PN} = "/"
+FILES:${PN} = "/"
 
 S = "${WORKDIR}/git/BlueAccents-HD-Skin-4ATV"
 
@@ -23,7 +23,7 @@ do_install() {
     chmod -R a+rX ${D}${datadir}/enigma2/
 }
 
-pkg_postinst_${PN} () {
+pkg_postinst:${PN} () {
 #!/bin/sh
 echo "                                                          "
 echo " ...BlueAccennts-HD Skin by stein17 successful installed. "
@@ -31,7 +31,7 @@ echo "                                                          "
 exit 0
 }
 
-pkg_postrm_${PN} () {
+pkg_postrm:${PN} () {
 #!/bin/sh
 rm -rf /usr/share/enigma2/BlueAccents-HD
 rm -rf /usr/lib/enigma2/python/Components/Converter/BlueA*
@@ -44,7 +44,7 @@ echo "The GUI of your receiver is now rebooting....                    "
 exit 0
 }
 
-pkg_preinst_${PN} () {
+pkg_preinst:${PN} () {
 #!/bin/sh
 echo "                                                                            "
 echo "                                                                            "
@@ -68,7 +68,7 @@ echo "                                                       "
 exit 0
 }
 
-pkg_prerm_${PN} () {
+pkg_prerm:${PN} () {
 #!/bin/sh
 echo "                                                                           "
 echo "BlueAccents-HD Skin by stein17 is now being removed from your receiver...  "
