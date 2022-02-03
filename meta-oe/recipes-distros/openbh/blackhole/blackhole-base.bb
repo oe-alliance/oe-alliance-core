@@ -7,9 +7,9 @@ require conf/license/license-gplv2.inc
 
 SRC_URI = "file://Ncam_Ci.sh file://StartBhCam file://Delete_all_Crashlogs.sh file://Ifconfig.sh \
 	file://openvpn.log file://Netstat.sh file://Uptime.sh file://bh_swap file://skin_plugins.xml \
-	file://skin_plugins/buttons/*.png"
+	file://*.png"
 
-PR = "r16"
+PR = "r17"
 
 FILES:${PN} = "/"
 
@@ -24,6 +24,8 @@ do_install() {
 	mkdir -p ${D}/usr/camscript
 	mkdir -p ${D}/usr/script
 	mkdir -p ${D}/usr/uninstall
+	mkdir -p ${D}/usr/share/enigma2/skin_plugins
+	mkdir -p ${D}/usr/share/enigma2/skin_plugins/buttons
 
 	install -d ${D}/etc
 	install -m 0644 ${WORKDIR}/bhmachine ${D}/etc/bhmachine
