@@ -46,6 +46,7 @@ RRECOMMENDS:${PN} = "\
     enigma2-plugin-skincomponents-skyrecorder-fhd-skin \
     enigma2-plugin-skins-ax-blue-fhd-4atv \
     enigma2-plugin-skins-blue-line-oe-4atv \
+    enigma2-plugin-skins-blueaccents-hd-4atv \
     enigma2-plugin-skins-multibox-fhd-4atv \
     enigma2-plugin-skins-steampunk \
     enigma2-plugin-skins-ultimate-hd-4atv \
