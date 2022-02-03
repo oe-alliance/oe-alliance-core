@@ -1,4 +1,4 @@
-From c0630995356eef6ea722d35cc82a0b7bed63e69e Mon Sep 17 00:00:00 2001
+From b3181211c7ef31095c04b99a56d2f2f916ba0228 Mon Sep 17 00:00:00 2001
 From: NickerSK <nickersk@gmail.com>
 Date: Thu, 11 Nov 2021 08:55:33 +0100
 Subject: [PATCH] kodi 20 - updated to latest git rev, updated patches
@@ -8,10 +8,10 @@ Subject: [PATCH] kodi 20 - updated to latest git rev, updated patches
  1 file changed, 4 insertions(+)
 
 diff --git a/cmake/scripts/common/ArchSetup.cmake b/cmake/scripts/common/ArchSetup.cmake
-index b10e301..2faf24f 100644
+index 52f6276e79..7771a71821 100644
 --- a/cmake/scripts/common/ArchSetup.cmake
 +++ b/cmake/scripts/common/ArchSetup.cmake
-@@ -147,6 +147,10 @@ if(NOT DEFINED NEON OR NEON)
+@@ -152,6 +152,10 @@ if(NOT DEFINED NEON OR NEON)
    endif()
  endif()
  

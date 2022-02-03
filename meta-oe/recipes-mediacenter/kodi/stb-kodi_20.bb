@@ -30,12 +30,9 @@ DEPENDS += " \
             zip-native \
             \
             avahi \
-            boost \
             bzip2 \
             curl \
             libdcadec \
-            enca \
-            expat \
             faad2 \
             fontconfig \
             fribidi \
@@ -46,20 +43,16 @@ DEPENDS += " \
             libcec \
             libinput \
             libbluray \
-            libmad \
             libmicrohttpd \
-            libmms \
-            libmodplug \
             libnfs \
             libpcre \
             libplist \
-            libsamplerate0 \
             libsquish \
             libssh \
             spdlog \
             libtinyxml \
-            libusb1 \
             libxkbcommon \
+            libxml2 \
             libxslt \
             lzo \
             mpeg2dec \
@@ -69,7 +62,6 @@ DEPENDS += " \
             taglib \
             virtual/egl \
             wavpack \
-            yajl \
             zlib \
             texturepacker-native \
             \
@@ -78,7 +70,7 @@ DEPENDS += " \
           "
 
 # 20.0 Nexus
-SRCREV = "ef472bca0c36a8467eafa17173aa63c7abb4a601"
+SRCREV = "f03637164b3721c90e3b4d7e1fa69123fac71df7"
 
 # 'patch' doesn't support binary diffs
 #PATCHTOOL = "git"
