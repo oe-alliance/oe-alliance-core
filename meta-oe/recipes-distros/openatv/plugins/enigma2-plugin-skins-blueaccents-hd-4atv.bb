@@ -9,7 +9,7 @@ SRCREV = "${AUTOREV}"
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
 
-SRC_URI="git://github.com/stein17/Skins-for-openATV.git;protocol=https;branch=master"
+SRC_URI="git://github.com/stein17/Skins-for-openATV.git;protocol=https;branch=python3"
 
 FILES:${PN} = "/"
 
