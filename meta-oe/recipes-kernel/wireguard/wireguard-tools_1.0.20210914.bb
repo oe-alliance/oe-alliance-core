@@ -13,7 +13,6 @@ DEPENDS = "libmnl"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 do_install () {
-    cd ${S}/tools
     oe_runmake DESTDIR="${D}" PREFIX="${prefix}" SYSCONFDIR="${sysconfdir}" \
         SYSTEMDUNITDIR="${systemd_unitdir}" \
         WITH_SYSTEMDUNITS=${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'yes', '', d)} \
