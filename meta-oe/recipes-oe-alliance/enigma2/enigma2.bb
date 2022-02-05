@@ -273,7 +273,6 @@ FILES:${PN}-dbg += "\
 
 # Save some space by not installing sources (StartEnigma.py must remain)
 FILES:${PN}-src = "\
-    ${libdir}/enigma2/python/BoxBrandingTest.py \
     ${libdir}/enigma2/python/e2reactor.py \
     ${libdir}/enigma2/python/enigma_py_patcher.py \
     ${libdir}/enigma2/python/GlobalActions.py \

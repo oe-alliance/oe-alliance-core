@@ -105,7 +105,7 @@ kernel_do_install:append:i55se() {
 	install -m 0755 ${WORKDIR}/findkerneldevice.sh ${D}${KERNEL_IMAGEDEST}
 }
 
-pkg_postinst:kernel-image_h9() {
+pkg_postinst:kernel-image:h9() {
 	if [ "x$D" == "x" ]; then
 		if [ -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE} ] ; then
 			flash_erase /dev/${MTD_KERNEL} 0 0
@@ -115,7 +115,7 @@ pkg_postinst:kernel-image_h9() {
 	true
 }
 
-pkg_postinst:kernel-image_i55plus() {
+pkg_postinst:kernel-image:i55plus() {
 	if [ "x$D" == "x" ]; then
 		if [ -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE} ] ; then
 			flash_erase /dev/${MTD_KERNEL} 0 0
@@ -125,7 +125,7 @@ pkg_postinst:kernel-image_i55plus() {
 	true
 }
 
-pkg_postinst:kernel-image_hzero() {
+pkg_postinst:kernel-image:hzero() {
 	if [ "x$D" == "x" ]; then
 		if [ -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE} ] ; then
 			flash_erase /dev/${MTD_KERNEL} 0 0
@@ -135,7 +135,7 @@ pkg_postinst:kernel-image_hzero() {
 	true
 }
 
-pkg_postinst:kernel-image_h8() {
+pkg_postinst:kernel-image:h8() {
 	if [ "x$D" == "x" ]; then
 		if [ -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE} ] ; then
 			flash_erase /dev/${MTD_KERNEL} 0 0

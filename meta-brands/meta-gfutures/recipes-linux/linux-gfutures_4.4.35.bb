@@ -73,7 +73,7 @@ kernel_do_install:append() {
 	install -m 0755 ${WORKDIR}/findkerneldevice.sh ${D}/${KERNEL_IMAGEDEST}
 }
 
-pkg_postinst:kernel-image_hd41() {
+pkg_postinst:kernel-image:hd41() {
 	if [ "x$D" == "x" ]; then
 		if [ -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE} ] ; then
 			flash_erase /dev/${MTD_KERNEL} 0 0
