@@ -30,9 +30,11 @@ do_install:append() {
     mv ${D}${datadir}/etc ${D}${sysconfdir}
     install -m 0755 -d ${D}${sysconfdir}/bash_completion.d
     install -m 0644 youtube-dl.bash-completion ${D}${sysconfdir}/bash_completion.d
+    rm -f ${D}${libdir}/${PYTHON_DIR}/site-packages/youtube_dl*egg-info/PKG-INFO
+    rm -f ${D}${libdir}/${PYTHON_DIR}/site-packages/youtube_dl*egg-info/SOURCES.txt
+    rm -f ${D}${libdir}/${PYTHON_DIR}/site-packages/youtube_dl*egg-info/dependency_links.txt
+    rm -f ${D}${libdir}/${PYTHON_DIR}/site-packages/youtube_dl*egg-info/top_level.txt
 }
-
-include ${PYTHON_PN}-package-split.inc
 
 RDEPENDS:${PN} = " \
     ${PYTHON_PN}-email \
