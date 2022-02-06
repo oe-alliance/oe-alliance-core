@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "1.0"
-PR = "r70"
+PR = "r71"
 
 inherit packagegroup
 
@@ -31,7 +31,6 @@ RRECOMMENDS:${PN} = " \
     enigma2-plugin-extensions-openwebif-vxg \
     ", d)} \
     \
-    enigma2-plugin-extensions-infopanel \
     enigma2-plugin-extensions-volume-adjust \
     enigma2-plugin-extensions-atilehd \
     enigma2-plugin-systemplugins-videotune \
