@@ -8,14 +8,12 @@ RDEPENDS_${PN} = "enigma2 uchardet openssl exteplayer3 python-json"
 RCONFLICTS_${PN} = "enigma2-plugin-extensions-serviceapp"
 RREPLACES_${PN} = "enigma2-plugin-extensions-serviceapp"
 
-SRCREV = "${AUTOREV}"
+SRCREV = "251520b6879456c529295d5a767de0144a54d165"
 SRCREV_openatv = "02956ea6b05a0186667582f9f25491f18334d31b"
 SRCREV_openeight = "02956ea6b05a0186667582f9f25491f18334d31b"
 SRCREV_opendroid = "02956ea6b05a0186667582f9f25491f18334d31b"
 SRCREV_openspa = "02956ea6b05a0186667582f9f25491f18334d31b"
 SRCREV_opennfr = "02956ea6b05a0186667582f9f25491f18334d31b"
-SRCREV_openhdf = "f1862d1ca29e55b048f23674894f424832931952"
-SRCREV_teamblue = "f1862d1ca29e55b048f23674894f424832931952"
 SRC_URI = " \
     git://github.com/mx3L/serviceapp.git;branch=develop \
     "
