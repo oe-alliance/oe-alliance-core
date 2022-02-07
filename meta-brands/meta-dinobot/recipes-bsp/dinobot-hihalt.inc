@@ -5,7 +5,7 @@ LICENSE = "CLOSED"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "${SRCDATE}"
-PR = "r2"
+PR = "r3"
 
 INITSCRIPT_NAME = "suspend"
 INITSCRIPT_PARAMS = "start 89 0 ."
