@@ -15,7 +15,8 @@ DEPENDS = " \
     gettext-native \
     gstreamer1.0-plugins-base gstreamer1.0 \
     jpeg \
-    libdreamdvd libdvbsi++ fribidi libmad libpng giflib libxml2 libxmlccwrap libsigc++-2.0 \
+    libdreamdvd libdvbsi++ fribidi libmad libpng giflib libxml2 libxmlccwrap \
+    ${@bb.utils.contains_any("DISTRO_NAME", "openvix", "libsigc++-3" , "libsigc++-2.0", d)} \                                    
     openssl avahi libudfread \
     ${PYTHON_PN} ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-imaging", "${PYTHON_PN}-pillow", d)} ${PYTHON_PN}-twisted ${PYTHON_PN}-wifi ${PYTHON_PN}-six-native \
     swig-native \
