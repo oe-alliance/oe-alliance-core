@@ -20,8 +20,6 @@ S = "${WORKDIR}/git"
 
 inherit autotools gitpkgv ${PYTHON_PN}native pkgconfig gettext ${@bb.utils.contains("PYTHON_PN", "python3", "python3targetconfig", "", d)}
 
-CXXFLAGS:append = " -std=c++11"
-
 PV = "0.5+git${SRCPV}"
 PKGV = "0.5+git${GITPKGV}"
 
