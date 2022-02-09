@@ -1,7 +1,7 @@
 SUMMARY = "A transparent persistent cache for the requests library"
 HOMEPAGE = "https://github.com/reclosedev/requests-cache"
 AUTHOR = "Roman Haritonov <>"
-LICENSE = "BSD"
+LICENSE = "BSD-3-Clause"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=ee449ea149592ffd5b15650216fc33a1"
 
 inherit setuptools3

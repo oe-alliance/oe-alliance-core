@@ -5,7 +5,7 @@ SUMMARY = "Binary Property List (plist) files provide a faster and smaller\
 SECTION = "devel/python"
 PRIORITY = "optional"
 HOMEPAGE = "https://pypi.org/project/biplist"
-LICENSE = "BSD"
+LICENSE = "BSD-3-Clause"
 require conf/license/license-gplv2.inc
 
 SRCNAME = "biplist"

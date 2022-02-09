@@ -1,7 +1,7 @@
 SUMMARY  = "library that implements object collections which are stored in memory or persisted to disk, provide a simple API, and run fast"
 HOMEPAGE = "https://github.com/scrapy/queuelib"
 SECTION = "devel/python"
-LICENSE = "BSD"
+LICENSE = "BSD-3-Clause"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=8a9dbf92a1904187a362d3fe098d4a1f"
 
 SRC_URI[md5sum] = "c64bb48ef41e464498755e3a94d5078d"

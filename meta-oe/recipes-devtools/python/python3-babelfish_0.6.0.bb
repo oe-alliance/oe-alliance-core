@@ -1,7 +1,7 @@
 SUMMARY  = "A module to work with countries and languages"
 HOMEPAGE = "https://github.com/Diaoul/babelfish"
 SECTION = "devel/python"
-LICENSE = "BSD"
+LICENSE = "BSD-3-Clause"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=6570714fbba8ff492626c8753620c54d"
 
 SRC_URI[md5sum] = "985464e05a7fd275d650347af8aa2439"

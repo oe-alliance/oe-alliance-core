@@ -1,7 +1,7 @@
 SUMMARY = "The icalendar package is a parser/generator of iCalendar files for use with Python."
 HOMEPAGE = "http://icalendar.readthedocs.org"
 SECTION = "devel/python"
-LICENSE = "BSD"
+LICENSE = "BSD-3-Clause"
 LIC_FILES_CHKSUM = "file://LICENSE.rst;md5=1b2957cd26c589d0defcb357be630e80"
 
 DEPENDS = "${PYTHON_PN}-pytz ${PYTHON_PN}-dateutil"

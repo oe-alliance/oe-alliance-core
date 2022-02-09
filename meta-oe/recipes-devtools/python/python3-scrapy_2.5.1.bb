@@ -1,7 +1,7 @@
 SUMMARY  = "Scrapy is a fast high-level web crawling and web scraping framework"
 HOMEPAGE = "https://scrapy.org"
 SECTION = "devel/python"
-LICENSE = "BSD"
+LICENSE = "BSD-3-Clause"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=786239b0f3b0d9c9403f6eecf35820dd"
 
 RDEPENDS:${PN} = "${PYTHON_PN}-twisted \

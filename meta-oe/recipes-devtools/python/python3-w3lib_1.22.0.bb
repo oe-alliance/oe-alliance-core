@@ -1,7 +1,7 @@
 SUMMARY  = "This is a Python library of web-related functions"
 HOMEPAGE = "https://github.com/scrapy/w3lib"
 SECTION = "devel/python"
-LICENSE = "BSD"
+LICENSE = "BSD-3-Clause"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=8a9dbf92a1904187a362d3fe098d4a1f"
 
 SRC_URI[md5sum] = "2eceef8cc9e3be81ae3eb825c23449cb"

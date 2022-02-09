@@ -1,7 +1,7 @@
 SUMMARY  = "library to extract and remove data from HTML and XML using XPath and CSS selectors, optionally combined with regular expressions"
 HOMEPAGE = "https://parsel.readthedocs.org"
 SECTION = "devel/python"
-LICENSE = "BSD"
+LICENSE = "BSD-3-Clause"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=e6f548d539cd10526f7256a0543f8c68"
 
 DEPENDS = "${PYTHON_PN}-pytest-runner"

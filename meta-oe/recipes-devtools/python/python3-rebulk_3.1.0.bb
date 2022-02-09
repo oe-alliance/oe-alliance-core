@@ -1,7 +1,7 @@
 SUMMARY  = "Rebulk - Define simple search patterns in bulk to perform advanced matching on any string."
 HOMEPAGE = "https://github.com/Toilal/rebulk/"
 SECTION = "devel/python"
-LICENSE = "BSD"
+LICENSE = "BSD-4-Clause"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=df5f9321c8784271adb6c95a3da69f82"
 
 RDEPENDS:${PN} = "${PYTHON_PN}-regex"

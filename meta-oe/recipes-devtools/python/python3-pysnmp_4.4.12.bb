@@ -1,7 +1,7 @@
 SUMMARY = "Python SNMP Toolkit"
 SECTION = "devel/python"
 PRIORITY = "optional"
-LICENSE = "BSD"
+LICENSE = "BSD-3-Clause"
 LIC_FILES_CHKSUM = "file://LICENSE.rst;md5=b15d29f500f748d1c2a15709769090a8"
 
 RDEPENDS:${PN} = "${PYTHON_PN}-core"

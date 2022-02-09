@@ -1,7 +1,7 @@
 SUMMARY = "A library implementing the 'SemVer' scheme."
 HOMEPAGE = "https://github.com/rbarrois/python-semanticversion"
 AUTHOR = "Raphaël Barrois <raphael.barrois+semver@polytechnique.org>"
-LICENSE = "BSD"
+LICENSE = "BSD-3-Clause"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=4fb31e3c1c7eeb8b5e8c07657cdd54e2"
 
 inherit setuptools3

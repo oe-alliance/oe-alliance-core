@@ -1,7 +1,7 @@
 SUMMARY = "Stateful programmatic web browsing, after Andy Lester's Perl module WWW::Mechanize."
 HOMEPAGE = "https://github.com/python-mechanize/mechanize"
 SECTION = "devel/python"
-LICENSE = "BSD"
+LICENSE = "BSD-3-Clause"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=621053d4e9daec9454e15e60fe40214f"
 
 RDEPENDS:${PN} = "${PYTHON_PN}-core ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-robotparser", "", d)}"

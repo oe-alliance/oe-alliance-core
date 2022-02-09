@@ -1,7 +1,7 @@
 SUMMARY  = "itemloaders is a library that helps you collect data from HTML and XML sources."
 HOMEPAGE = "https://github.com/scrapy/itemloaders"
 SECTION = "devel/python"
-LICENSE = "BSD"
+LICENSE = "BSD-3-Clause"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=786239b0f3b0d9c9403f6eecf35820dd"
 
 SRC_URI[md5sum] = "3bd9752494deb721d320d9beaea89c8e"
