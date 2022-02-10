@@ -27,10 +27,10 @@ been updated to include the new definitions.
  8 files changed, 114 insertions(+), 4 deletions(-)
 
 diff --git a/elf/do-rel.h b/elf/do-rel.h
-index 321ac2b359c..9d4f575a1a7 100644
+index 60d5dce8..c1477be9 100644
 --- a/elf/do-rel.h
 +++ b/elf/do-rel.h
-@@ -26,6 +26,12 @@
+@@ -28,6 +28,12 @@
  # define elf_machine_rel_relative	elf_machine_rela_relative
  #endif
  
@@ -43,7 +43,7 @@ index 321ac2b359c..9d4f575a1a7 100644
  #ifndef DO_ELF_MACHINE_REL_RELATIVE
  # define DO_ELF_MACHINE_REL_RELATIVE(map, l_addr, relative) \
    elf_machine_rel_relative (l_addr, relative,				      \
-@@ -46,12 +52,12 @@ elf_dynamic_do_Rel (struct link_map *map,
+@@ -48,12 +54,12 @@ elf_dynamic_do_Rel (struct link_map *map, struct r_scope_elem *scope[],
    const ElfW(Rel) *r = (const void *) reladdr;
    const ElfW(Rel) *end = (const void *) (reladdr + relsize);
    ElfW(Addr) l_addr = map->l_addr;
@@ -58,7 +58,7 @@ index 321ac2b359c..9d4f575a1a7 100644
    /* We never bind lazily during ld.so bootstrap.  Unfortunately gcc is
       not clever enough to see through all the function calls to realize
       that.  */
-@@ -80,8 +86,10 @@ elf_dynamic_do_Rel (struct link_map *map,
+@@ -82,8 +88,10 @@ elf_dynamic_do_Rel (struct link_map *map, struct r_scope_elem *scope[],
    else
  #endif
      {
@@ -69,7 +69,7 @@ index 321ac2b359c..9d4f575a1a7 100644
        const ElfW(Rel) *relative = r;
        r += nrelative;
  
-@@ -108,9 +116,36 @@ elf_dynamic_do_Rel (struct link_map *map,
+@@ -110,9 +118,36 @@ elf_dynamic_do_Rel (struct link_map *map, struct r_scope_elem *scope[],
  	if (l_addr != 0 || ! map->l_info[VALIDX(DT_GNU_PRELINKED)])
  # endif
  #endif
@@ -106,7 +106,7 @@ index 321ac2b359c..9d4f575a1a7 100644
  #ifdef RTLD_BOOTSTRAP
        /* The dynamic linker always uses versioning.  */
        assert (map->l_info[VERSYMIDX (DT_VERSYM)] != NULL);
-@@ -179,6 +214,7 @@ elf_dynamic_do_Rel (struct link_map *map,
+@@ -210,6 +245,7 @@ elf_dynamic_do_Rel (struct link_map *map, struct r_scope_elem *scope[],
  				 skip_ifunc);
  # endif
  	}
@@ -114,53 +114,53 @@ index 321ac2b359c..9d4f575a1a7 100644
  #endif
      }
  }
-@@ -189,3 +225,4 @@ elf_dynamic_do_Rel (struct link_map *map,
+@@ -220,3 +256,4 @@ elf_dynamic_do_Rel (struct link_map *map, struct r_scope_elem *scope[],
  #undef elf_machine_rel_relative
  #undef DO_ELF_MACHINE_REL_RELATIVE
  #undef DO_RELA
 +#undef DO_RELR
 diff --git a/elf/dynamic-link.h b/elf/dynamic-link.h
-index 3eb24ba3a6c..4f2b34fb587 100644
+index 25dd7ca4..af813c55 100644
 --- a/elf/dynamic-link.h
 +++ b/elf/dynamic-link.h
-@@ -76,6 +76,11 @@ auto inline void __attribute__((always_inline))
+@@ -50,6 +50,11 @@ static inline void __attribute__((always_inline))
  elf_machine_rela_relative (ElfW(Addr) l_addr, const ElfW(Rela) *reloc,
  			   void *const reloc_addr);
  # endif
 +# if ! ELF_MACHINE_NO_RELR
-+auto inline void __attribute__((always_inline))
++static inline void __attribute__((always_inline))
 +elf_machine_relr_relative (ElfW(Addr) l_addr,
 +			    void *const reloc_addr);
 +# endif
  # if ELF_MACHINE_NO_RELA || defined ELF_MACHINE_PLT_REL
- auto inline void __attribute__((always_inline))
- elf_machine_lazy_rel (struct link_map *map,
-@@ -190,6 +195,15 @@ elf_machine_lazy_rel (struct link_map *map,
- #  define ELF_DYNAMIC_DO_RELA(map, lazy, skip_ifunc) /* Nothing to do.  */
+ static inline void __attribute__((always_inline))
+ elf_machine_lazy_rel (struct link_map *map, struct r_scope_elem *scope[],
+@@ -146,6 +151,15 @@ elf_machine_lazy_rel (struct link_map *map, struct r_scope_elem *scope[],
+ #  define ELF_DYNAMIC_DO_RELA(map, scope, lazy, skip_ifunc) /* Nothing to do.  */
  # endif
  
 +# if ! ELF_MACHINE_NO_RELR
 +#  define DO_RELR
 +#  include "do-rel.h"
-+#  define ELF_DYNAMIC_DO_RELR(map, lazy, skip_ifunc) \
-+  _ELF_DYNAMIC_DO_RELOC (RELR, Relr, map, lazy, skip_ifunc, 1)
++#  define ELF_DYNAMIC_DO_RELR(map, scope, lazy, skip_ifunc) \
++  _ELF_DYNAMIC_DO_RELOC (RELR, Relr, map, scope, lazy, skip_ifunc, 1)
 +# else
-+#  define ELF_DYNAMIC_DO_RELR(map, lazy, skip_ifunc) /* Nothing to do.  */
++#  define ELF_DYNAMIC_DO_RELR(map, scope, lazy, skip_ifunc) /* Nothing to do.  */
 +# endif
 +
  /* This can't just be an inline function because GCC is too dumb
     to inline functions containing inlines themselves.  */
- # define ELF_DYNAMIC_RELOCATE(map, lazy, consider_profile, skip_ifunc) \
-@@ -198,6 +212,7 @@ elf_machine_lazy_rel (struct link_map *map,
+ # define ELF_DYNAMIC_RELOCATE(map, scope, lazy, consider_profile, skip_ifunc) \
+@@ -154,6 +168,7 @@ elf_machine_lazy_rel (struct link_map *map, struct r_scope_elem *scope[],
  					      (consider_profile));	      \
-     ELF_DYNAMIC_DO_REL ((map), edr_lazy, skip_ifunc);			      \
-     ELF_DYNAMIC_DO_RELA ((map), edr_lazy, skip_ifunc);			      \
-+    ELF_DYNAMIC_DO_RELR ((map), edr_lazy, skip_ifunc);			      \
+     ELF_DYNAMIC_DO_REL ((map), (scope), edr_lazy, skip_ifunc);		      \
+     ELF_DYNAMIC_DO_RELA ((map), (scope), edr_lazy, skip_ifunc);		      \
++    ELF_DYNAMIC_DO_RELR ((map), (scope), edr_lazy, skip_ifunc);			      \
    } while (0)
  
  #endif
 diff --git a/elf/elf.h b/elf/elf.h
-index 4738dfa28f6..9f37e9d3d35 100644
+index 0735f6b5..a62f0af3 100644
 --- a/elf/elf.h
 +++ b/elf/elf.h
 @@ -442,8 +442,9 @@ typedef struct
@@ -209,10 +209,10 @@ index 4738dfa28f6..9f37e9d3d35 100644
  #define DT_RELCOUNT	0x6ffffffa
  
 diff --git a/elf/get-dynamic-info.h b/elf/get-dynamic-info.h
-index d8ec32377d3..9c062faeab6 100644
+index 6c2ccd6d..92552a82 100644
 --- a/elf/get-dynamic-info.h
 +++ b/elf/get-dynamic-info.h
-@@ -103,6 +103,9 @@ elf_get_dynamic_info (struct link_map *l, ElfW(Dyn) *temp)
+@@ -89,6 +89,9 @@ elf_get_dynamic_info (struct link_map *l, bool bootstrap,
  # if ! ELF_MACHINE_NO_REL
        ADJUST_DYN_INFO (DT_REL);
  # endif
@@ -222,7 +222,7 @@ index d8ec32377d3..9c062faeab6 100644
        ADJUST_DYN_INFO (DT_JMPREL);
        ADJUST_DYN_INFO (VERSYMIDX (DT_VERSYM));
        ADJUST_DYN_INFO (ADDRIDX (DT_GNU_HASH));
-@@ -129,6 +132,10 @@ elf_get_dynamic_info (struct link_map *l, ElfW(Dyn) *temp)
+@@ -113,6 +116,10 @@ elf_get_dynamic_info (struct link_map *l, bool bootstrap,
    if (info[DT_REL] != NULL)
      assert (info[DT_RELENT]->d_un.d_val == sizeof (ElfW(Rel)));
  #endif
@@ -230,26 +230,27 @@ index d8ec32377d3..9c062faeab6 100644
 +  if (info[DT_RELR] != NULL)
 +    assert (info[DT_RELRENT]->d_un.d_val == sizeof (ElfW(Relr)));
 +# endif
- #ifdef RTLD_BOOTSTRAP
-   /* Only the bind now flags are allowed.  */
-   assert (info[VERSYMIDX (DT_FLAGS_1)] == NULL
+   if (bootstrap || static_pie_bootstrap)
+     {
+       assert (info[DT_RUNPATH] == NULL);
 diff --git a/sysdeps/aarch64/dl-machine.h b/sysdeps/aarch64/dl-machine.h
-index d29d827ab32..e9de305d3b0 100644
+index b40050a9..3d3f01bf 100644
 --- a/sysdeps/aarch64/dl-machine.h
 +++ b/sysdeps/aarch64/dl-machine.h
-@@ -198,6 +198,7 @@ _dl_start_user:								\n\
- /* AArch64 uses RELA not REL */
- #define ELF_MACHINE_NO_REL 1
- #define ELF_MACHINE_NO_RELA 0
-+#define ELF_MACHINE_NO_RELR 0
+@@ -192,6 +192,8 @@ _dl_start_user:								\n\
  
+ #define ELF_MACHINE_JMP_SLOT	AARCH64_R(JUMP_SLOT)
+ 
++#define ELF_MACHINE_NO_RELR 0
++
  #define DL_PLATFORM_INIT dl_platform_init ()
  
-@@ -383,6 +384,15 @@ elf_machine_rela_relative (ElfW(Addr) l_addr,
+ static inline void __attribute__ ((unused))
+@@ -378,6 +380,15 @@ elf_machine_rela_relative (ElfW(Addr) l_addr,
    *reloc_addr = l_addr + reloc->r_addend;
  }
  
-+inline void
++static inline void
 +__attribute__ ((always_inline))
 +elf_machine_relr_relative (ElfW(Addr) l_addr,
 +			   void *const reloc_addr_arg)
@@ -258,26 +259,38 @@ index d29d827ab32..e9de305d3b0 100644
 +  *reloc_addr += l_addr;
 +}
 +
- inline void
+ static inline void
  __attribute__ ((always_inline))
- elf_machine_lazy_rel (struct link_map *map,
-diff --git a/sysdeps/arm/dl-machine.h b/sysdeps/arm/dl-machine.h
-index d68bfe5cbef..9b6e9d10d0b 100644
---- a/sysdeps/arm/dl-machine.h
-+++ b/sysdeps/arm/dl-machine.h
-@@ -296,6 +296,7 @@ elf_machine_plt_value (struct link_map *map, const Elf32_Rel *reloc,
+ elf_machine_lazy_rel (struct link_map *map, struct r_scope_elem *scope[],
+diff --git a/sysdeps/arm/dl-machine-rel.h b/sysdeps/arm/dl-machine-rel.h
+index 99996793..88fe8cae 100644
+--- a/sysdeps/arm/dl-machine-rel.h
++++ b/sysdeps/arm/dl-machine-rel.h
+@@ -23,6 +23,7 @@
     Prelinked libraries may use Elf32_Rela though.  */
  #define ELF_MACHINE_NO_RELA defined RTLD_BOOTSTRAP
  #define ELF_MACHINE_NO_REL 0
++#define ELF_MACHINE_NO_RELR 0
+
+ /* ARM never uses Elf32_Rela relocations for the dynamic linker.
+    Prelinked libraries may use Elf32_Rela though.  */
+diff --git a/sysdeps/arm/dl-machine.h b/sysdeps/arm/dl-machine.h
+index 68dcb96d..a51e2735 100644
+--- a/sysdeps/arm/dl-machine.h
++++ b/sysdeps/arm/dl-machine.h
+@@ -264,6 +264,7 @@ elf_machine_plt_value (struct link_map *map, const Elf32_Rel *reloc,
+ 
+ #endif /* !dl_machine_h */
+ 
 +#define ELF_MACHINE_NO_RELR 0
  
  /* Names of the architecture-specific auditing callback functions.  */
  #define ARCH_LA_PLTENTER arm_gnu_pltenter
-@@ -637,6 +638,15 @@ elf_machine_rel_relative (Elf32_Addr l_addr, const Elf32_Rel *reloc,
+@@ -608,6 +609,15 @@ elf_machine_rel_relative (Elf32_Addr l_addr, const Elf32_Rel *reloc,
    *reloc_addr += l_addr;
  }
  
-+auto inline void
++static inline void
 +__attribute ((always_inline))
 +elf_machine_relr_relative (ElfW(Addr) l_addr,
 +			   void *const reloc_addr_arg)
@@ -287,25 +300,26 @@ index d68bfe5cbef..9b6e9d10d0b 100644
 +}
 +
  # ifndef RTLD_BOOTSTRAP
- auto inline void
+ static inline void
  __attribute__ ((always_inline))
 diff --git a/sysdeps/i386/dl-machine.h b/sysdeps/i386/dl-machine.h
-index 590b41d8d7e..91b0586581b 100644
+index 6182b45e..80f4c5b8 100644
 --- a/sysdeps/i386/dl-machine.h
 +++ b/sysdeps/i386/dl-machine.h
-@@ -285,6 +285,7 @@ elf_machine_plt_value (struct link_map *map, const Elf32_Rel *reloc,
-    Prelinked libraries may use Elf32_Rela though.  */
- #define ELF_MACHINE_NO_RELA defined RTLD_BOOTSTRAP
- #define ELF_MACHINE_NO_REL 0
-+#define ELF_MACHINE_NO_RELR 0
+@@ -251,6 +251,8 @@ elf_machine_plt_value (struct link_map *map, const Elf32_Rel *reloc,
  
+ #endif /* !dl_machine_h */
+ 
++#define ELF_MACHINE_NO_RELR 0
++
  #ifdef RESOLVE_MAP
  
-@@ -657,6 +658,15 @@ elf_machine_rel_relative (Elf32_Addr l_addr, const Elf32_Rel *reloc,
+ /* Perform the relocation specified by RELOC and SYM (which is fully resolved).
+@@ -626,6 +628,15 @@ elf_machine_rel_relative (Elf32_Addr l_addr, const Elf32_Rel *reloc,
    *reloc_addr += l_addr;
  }
  
-+auto inline void
++static inline void
 +__attribute ((always_inline))
 +elf_machine_relr_relative (ElfW(Addr) l_addr,
 +			   void *const reloc_addr_arg)
@@ -315,25 +329,26 @@ index 590b41d8d7e..91b0586581b 100644
 +}
 +
  # ifndef RTLD_BOOTSTRAP
- auto inline void
+ static inline void
  __attribute__ ((always_inline))
 diff --git a/sysdeps/x86_64/dl-machine.h b/sysdeps/x86_64/dl-machine.h
-index a8596aa3fa4..79e63d38012 100644
+index 155ca36b..5beb9433 100644
 --- a/sysdeps/x86_64/dl-machine.h
 +++ b/sysdeps/x86_64/dl-machine.h
-@@ -209,6 +209,7 @@ _dl_start_user:\n\
- /* The x86-64 never uses Elf64_Rel/Elf32_Rel relocations.  */
- #define ELF_MACHINE_NO_REL 1
- #define ELF_MACHINE_NO_RELA 0
-+#define ELF_MACHINE_NO_RELR 0
+@@ -202,6 +202,8 @@ _dl_start_user:\n\
+ // XXX This is a work-around for a broken linker.  Remove!
+ #define ELF_MACHINE_IRELATIVE	R_X86_64_IRELATIVE
  
++#define ELF_MACHINE_NO_RELR 0
++
  /* We define an initialization function.  This is called very early in
     _dl_sysdep_start.  */
-@@ -544,6 +545,15 @@ elf_machine_rela_relative (ElfW(Addr) l_addr, const ElfW(Rela) *reloc,
+ #define DL_PLATFORM_INIT dl_platform_init ()
+@@ -536,6 +538,15 @@ elf_machine_rela_relative (ElfW(Addr) l_addr, const ElfW(Rela) *reloc,
      }
  }
  
-+auto inline void
++static inline void
 +__attribute ((always_inline))
 +elf_machine_relr_relative (ElfW(Addr) l_addr,
 +			   void *const reloc_addr_arg)
@@ -342,6 +357,6 @@ index a8596aa3fa4..79e63d38012 100644
 +  *reloc_addr += l_addr;
 +}
 +
- auto inline void
+ static inline void
  __attribute ((always_inline))
- elf_machine_lazy_rel (struct link_map *map,
+ elf_machine_lazy_rel (struct link_map *map, struct r_scope_elem *scope[],
