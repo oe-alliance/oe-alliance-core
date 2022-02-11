@@ -171,8 +171,8 @@ index 0000000..8e60eb6
 +			settings->GetInt(CSettings::SETTING_SUBTITLES_FONTSIZE),
 +			settings->GetInt(CSettings::SETTING_SUBTITLES_COLOR),
 +			settings->GetInt(CSettings::SETTING_SUBTITLES_STYLE),
-+			settings->GetString(CSettings::SETTING_SUBTITLES_FONT))
-+			, settings->GetString(CSettings::SETTING_SUBTITLES_FONT)
++			settings->GetString(CSettings::SETTING_SUBTITLES_FONTNAME))
++			, settings->GetString(CSettings::SETTING_SUBTITLES_FONTNAME)
 +			, colors[settings->GetInt(CSettings::SETTING_SUBTITLES_COLOR)]
 +			, 0
 +			, settings->GetInt(CSettings::SETTING_SUBTITLES_FONTSIZE)
@@ -182,8 +182,8 @@ index 0000000..8e60eb6
 +			settings->GetInt(CSettings::SETTING_SUBTITLES_FONTSIZE),
 +			settings->GetInt(CSettings::SETTING_SUBTITLES_COLOR),
 +			settings->GetInt(CSettings::SETTING_SUBTITLES_STYLE),
-+			settings->GetString(CSettings::SETTING_SUBTITLES_FONT))
-+			, settings->GetString(CSettings::SETTING_SUBTITLES_FONT)
++			settings->GetString(CSettings::SETTING_SUBTITLES_FONTNAME))
++			, settings->GetString(CSettings::SETTING_SUBTITLES_FONTNAME)
 +			, 0xFF000000
 +			, 0
 +			, settings->GetInt(CSettings::SETTING_SUBTITLES_FONTSIZE)
