@@ -1378,7 +1378,7 @@ index 0000000..23588fd
 +    CThread("CLinuxInputDevicesCheckHotplugged"), m_parent(parent)
 +{
 +  Create();
-+  SetPriority(THREAD_PRIORITY_BELOW_NORMAL);
++  SetPriority(ThreadPriority::BELOW_NORMAL);
 +}
 +
 +CLinuxInputDevicesCheckHotplugged::~CLinuxInputDevicesCheckHotplugged()
