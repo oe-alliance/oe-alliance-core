@@ -20,7 +20,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'anadolmulti', 'ANADOL' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'anadolmultiboxse', 'ANADOL' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'maxytecmulti', 'Maxytec' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axmulticombo', 'AX' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'axmultiboxse', 'AX' , '', d)}
+${@bb.utils.contains('MACHINEBUILD', 'axmultiboxse', 'AX' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axmultitwin', 'AX' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'anadolmultitwin', 'ANADOL' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'maxytecmultise', 'Maxytec' , '', d)}\
