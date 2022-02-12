@@ -46,7 +46,7 @@ ROOTFS_FILE = "rootfs.tar.bz2"
 MTD_BLACK  = "mmcblk0"
 
 IMAGE_CLASSES += " maxytec-fastboot8gb_image"
-IMAGE_FSTYPES += " maxytecfastboot8gb"
+IMAGE_FSTYPES += "maxytecfastboot8gb"
 
 IMAGEDIRRECOVERY ?= "${MACHINE}-recovery"
 
