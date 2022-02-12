@@ -26,5 +26,6 @@ EXTRA_ALSA_ustym4kpro = "mv200"
 EXTRA_ALSA_dual = "mv200"
 EXTRA_ALSA_sx988 = "mv200"
 EXTRA_ALSA_ustym4kottpremium = "mv200"
+EXTRA_ALSA_og2ott4k = "mv200"
 
 require alsa-state-${EXTRA_ALSA}.inc
