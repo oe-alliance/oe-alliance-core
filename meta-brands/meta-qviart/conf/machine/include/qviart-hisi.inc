@@ -53,7 +53,7 @@ PREFERRED_PROVIDER_virtual/blindscan-dvbs = "qviart-blindscan-${SOC_FAMILY}"
 PREFERRED_RPROVIDER_showiframe = "qviart-showiframe-${SOC_FAMILY}"
 PREFERRED_RPROVIDER_aio-grab = "qviart-grab-${SOC_FAMILY}"
 
-require conf/machine/include/tune-cortexa15.inc
+require conf/machine/include/arm/armv7a/tune-cortexa15.inc
 
 MACHINE_EXTRA_RRECOMMENDS += " \
     gstreamer1.0-plugin-dvbmediasink \
