@@ -33,7 +33,7 @@ MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "\
     gptfdisk \
 "
 
-MACHINE_FEATURES += "switchoff hdmicec skins1080 emmc mmc kodi19 alsa hbbtv-browser-webkit qtstalker qtnetflix"
+MACHINE_FEATURES += "hisil switchoff hdmicec skins1080 emmc mmc kodi19 alsa hbbtv-browser-webkit qtstalker qtnetflix openhbbtv"
 
 IMAGE_CLASSES  += "qviart-emmc_image"
 IMAGE_FSTYPES += "qviartemmc"
