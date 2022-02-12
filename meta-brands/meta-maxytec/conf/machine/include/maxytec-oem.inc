@@ -5,8 +5,10 @@ BRAND_OEM = "maxytec"
 
 MACHINE_NAME = "\
 ${@bb.utils.contains('MACHINEBUILD', 'anadolmulti', 'Multibox Combo' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'anadolmultiboxse', 'Multibox SE' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'maxytecmulti', 'Multibox Combo' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axmulticombo', 'Multibox Combo' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'axmultiboxse', 'Multibox SE' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axmultitwin', 'Multibox TWIN' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'anadolmultitwin', 'Multibox TWIN' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'maxytecmultise', 'Multibox SE' , '', d)}\
@@ -15,8 +17,10 @@ ${@bb.utils.contains('MACHINEBUILD', 'novaler4k', 'Multibox 4K' , '', d)}\
 
 MACHINE_BRAND = "\
 ${@bb.utils.contains('MACHINEBUILD', 'anadolmulti', 'ANADOL' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'anadolmultiboxse', 'ANADOL' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'maxytecmulti', 'Maxytec' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axmulticombo', 'AX' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'axmultiboxse', 'AX' , '', d)}
 ${@bb.utils.contains('MACHINEBUILD', 'axmultitwin', 'AX' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'anadolmultitwin', 'ANADOL' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'maxytecmultise', 'Maxytec' , '', d)}\
@@ -25,8 +29,10 @@ ${@bb.utils.contains('MACHINEBUILD', 'novaler4k', 'NOVALER' , '', d)}\
 
 IMAGEDIR = "\
 ${@bb.utils.contains('MACHINEBUILD', 'anadolmulti', 'multibox' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'anadolmultiboxse', 'multiboxse' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'maxytecmulti', 'multibox' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axmulticombo', 'multibox' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'axmultiboxse', 'multiboxse' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axmultitwin', 'multibox' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'anadolmultitwin', 'multibox' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'maxytecmultise', 'multiboxse' , '', d)}\
@@ -35,8 +41,10 @@ ${@bb.utils.contains('MACHINEBUILD', 'novaler4k', 'multibox' , '', d)}\
 
 MACHINE_DRIVER ?= "\
 ${@bb.utils.contains('MACHINEBUILD', 'anadolmulti', 'multibox' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'anadolmultiboxse', 'multiboxse' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'maxytecmulti', 'multibox' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axmulticombo', 'multibox' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'axmultiboxse', 'multiboxse' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axmultitwin', 'multibox' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'anadolmultitwin', 'multibox' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'maxytecmultise', 'multiboxse' , '', d)}\
