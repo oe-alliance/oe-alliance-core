@@ -1,4 +1,4 @@
-SUMMARY = "Enigma proc module for ${MACHINE}"
+SUMMARY = "Enigma proc module for ${MACHINEBUILD}"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "GPLv3"
@@ -9,8 +9,6 @@ PV = "${DISTRO_NAME}-${IMAGE_VERSION}-${IMAGE_BUILD}-${MACHINEBUILD}"
 PR = "r${DATE}"
 
 PR[vardepsxeclude] += " DATE DATETIME"
-
-PACKAGE_ARCH = "${MACHINEBUILD}"
 
 URL = "https://github.com/oe-alliance"
 
@@ -23,6 +21,11 @@ SRC_URI = "git://github.com/oe-alliance/enigma2-proc-module.git;protocol=https"
 S = "${WORKDIR}/git/source/epm"
 
 inherit module gitpkgv
+
+PACKAGE_ARCH = "${MACHINEBUILD}"
+
+SSTATE_SKIP_CREATION = "1"
+do_install[nostamp] = "1"
 
 EXTRA_OEMAKE = "KSRC=${STAGING_KERNEL_BUILDDIR}"
 

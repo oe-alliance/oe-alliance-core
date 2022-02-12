@@ -1,4 +1,4 @@
-SUMMARY = "Enigma kernel information module for ${MACHINE}"
+SUMMARY = "Enigma kernel information module for ${MACHINEBUILD}"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "GPLv3"
@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://${WORKDIR}/git/LICENSE;md5=1ebbd3e34237af26da5dc08a4e
 PV = "${IMAGE_VERSION}"
 PR = "${BUILD_VERSION}"
 SRCREV = "${AUTOREV}"
-PACKAGE_ARCH = "${MACHINEBUILD}"
+
 SSTATE_SKIP_CREATION = "1"
 
 SRC_URI = "git://github.com/oe-alliance/enigma2-kernel-module.git;protocol=https"
@@ -15,6 +15,8 @@ SRC_URI = "git://github.com/oe-alliance/enigma2-kernel-module.git;protocol=https
 S = "${WORKDIR}/git/source/enigma"
 
 inherit python3-dir module gitpkgv deploy
+
+PACKAGE_ARCH = "${MACHINEBUILD}"
 
 EXTRA_OEMAKE = "KSRC=${STAGING_KERNEL_BUILDDIR}"
 
