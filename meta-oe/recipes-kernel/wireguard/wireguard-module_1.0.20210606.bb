@@ -2,6 +2,12 @@ require wireguard.inc
 
 inherit module kernel-module-split
 
+SRC_URI = "https://git.zx2c4.com/wireguard-linux-compat/snapshot/wireguard-linux-compat-${PV}.tar.xz"
+SRC_URI[md5sum] = "27d301bb1b1413df1437d0ce1f620996"
+RC_URI[sha256sum] = "3f5d990006e6eabfd692d925ec314fff2c5ee7dcdb869a6510d579acfdd84ec0"
+
+S = "${WORKDIR}/wireguard-linux-compat-${PV}/src/"
+
 DEPENDS = "virtual/kernel libmnl"
 
 # This module requires Linux 3.10 higher and several networking related
