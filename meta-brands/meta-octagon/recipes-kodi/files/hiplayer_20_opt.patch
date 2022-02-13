@@ -1,4 +1,4 @@
-From 3261dd9e2fcc3bea7db21ce207401834a9f33dcc Mon Sep 17 00:00:00 2001
+From 1cd02c8cbc15484affe17ac3f96b1b697c69b089 Mon Sep 17 00:00:00 2001
 From: Captain <captain.onboard@web.de>
 Date: Sun, 13 Feb 2022 12:01:41 +0100
 Subject: [PATCH] hiplayer_20_opt
@@ -3747,7 +3747,7 @@ index 0000000000..f7412b059c
 +}
 diff --git a/xbmc/cores/hiplayer/HiDecoder.h b/xbmc/cores/hiplayer/HiDecoder.h
 new file mode 100644
-index 0000000000..7d73200d11
+index 0000000000..aa2842deee
 --- /dev/null
 +++ b/xbmc/cores/hiplayer/HiDecoder.h
 @@ -0,0 +1,164 @@
@@ -3797,9 +3797,9 @@ index 0000000000..7d73200d11
 +#define PTS_FREQ 90000
 +#define UNIT_FREQ 96000
 +#define AV_SYNC_THRESH PTS_FREQ * 30
-+#define PTS_US_TO_MS(PTS_US) ((PTS_US) / 1000.0f)
++#define PTS_US_TO_MS(PTS_US) ((float)(PTS_US) / 1000.0f)
 +#define PTS_MS_TO_US(PTS_MS) ((PTS_MS)*1000.0f)
-+#define PTS_90KHZ_TO_MS(PTS_90MS) ((PTS_90MS) / 90.0f)
++#define PTS_90KHZ_TO_MS(PTS_90MS) ((float)(PTS_90MS) / 90.0f)
 +#define PTS_MS_TO_90KHZ(PTS_MS) ((PTS_MS)*90.0f)
 +
 +enum
@@ -3917,7 +3917,7 @@ index 0000000000..7d73200d11
 +};
 diff --git a/xbmc/cores/hiplayer/HiPlayerAudio.cpp b/xbmc/cores/hiplayer/HiPlayerAudio.cpp
 new file mode 100644
-index 0000000000..76c06b7968
+index 0000000000..3b9e665027
 --- /dev/null
 +++ b/xbmc/cores/hiplayer/HiPlayerAudio.cpp
 @@ -0,0 +1,813 @@
@@ -4249,7 +4249,7 @@ index 0000000000..76c06b7968
 +      {
 +        if (m_hisiAudio->Full())
 +        {
-+          KODI::TIME::Sleep(10);
++          KODI::TIME::Sleep(10ms);
 +          if (++try_times > 1000)
 +          {
 +            CLog::Log(LOGDEBUG, "CHiPlayerAudio full, push blocking, just drop package");
@@ -4261,7 +4261,7 @@ index 0000000000..76c06b7968
 +
 +        if (!m_hisiAudio->Push((uint8_t*)decoded, decoded_size, PTS_US_TO_MS(pts)))
 +        {
-+          KODI::TIME::Sleep(10);
++          KODI::TIME::Sleep(10ms);
 +          continue;
 +        }
 +
@@ -4297,7 +4297,7 @@ index 0000000000..76c06b7968
 +      {
 +        if (m_hisiAudio->Full())
 +        {
-+          KODI::TIME::Sleep(10);
++          KODI::TIME::Sleep(10ms);
 +          if (++try_times > 1000)
 +          {
 +            CLog::Log(LOGDEBUG, "CHiPlayerAudio blocking, quit");
@@ -4309,7 +4309,7 @@ index 0000000000..76c06b7968
 +        bool ret = m_hisiAudio->PushEx(pData, iSize, PTS_US_TO_MS(pkt->pts), true, true);
 +        if (!ret)
 +        {
-+          KODI::TIME::Sleep(10);
++          KODI::TIME::Sleep(10ms);
 +          continue;
 +        }
 +
@@ -4373,13 +4373,13 @@ index 0000000000..76c06b7968
 +
 +    if (ret == MSGQ_TIMEOUT)
 +    {
-+      KODI::TIME::Sleep(10);
++      KODI::TIME::Sleep(10ms);
 +      continue;
 +    }
 +
 +    if (MSGQ_IS_ERROR(ret) || ret == MSGQ_ABORT)
 +    {
-+      KODI::TIME::Sleep(10);
++      KODI::TIME::Sleep(10ms);
 +      continue;
 +    }
 +
@@ -4488,7 +4488,7 @@ index 0000000000..76c06b7968
 +  // leave 500ms to avound buffer underruns
 +  double delay = GetCacheTime();
 +  if (delay > 0.5)
-+    KODI::TIME::Sleep((int)(1000 * (delay - 0.5)));
++    KODI::TIME::Sleep(std::chrono::milliseconds((int)(1000 * (delay - 0.5))));
 +}
 +
 +bool CHiPlayerAudio::IsPassthrough() const
@@ -6048,7 +6048,7 @@ index 0000000000..ee218b5b00
 +};
 diff --git a/xbmc/cores/hiplayer/HiVdec.cpp b/xbmc/cores/hiplayer/HiVdec.cpp
 new file mode 100644
-index 0000000000..bbec907c13
+index 0000000000..bbb5ed6e55
 --- /dev/null
 +++ b/xbmc/cores/hiplayer/HiVdec.cpp
 @@ -0,0 +1,590 @@
@@ -6203,7 +6203,7 @@ index 0000000000..bbec907c13
 +  if (hints.fpsrate > 0 && hints.fpsscale != 0)
 +  {
 +    // then ffmpeg avg_frame_rate next
-+    m_video_rate = 0.5 + (float)UNIT_FREQ * hints.fpsscale / hints.fpsrate;
++    m_video_rate = 0.5f + (float)UNIT_FREQ * hints.fpsscale / hints.fpsrate;
 +  }
 +
 +  // check for 1920x1080, interlaced, 25 fps
@@ -6211,7 +6211,7 @@ index 0000000000..bbec907c13
 +  if (hints.width == 1920 && m_video_rate == 1920)
 +  {
 +    //CLog::Log(LOGNOTICE, "CHisiVdec::OpenDecoder video_rate exception");
-+    m_video_rate = 0.5 + (float)UNIT_FREQ * 1001 / 25000;
++    m_video_rate = 0.5f + (float)UNIT_FREQ * 1001 / 25000;
 +  }
 +
 +  // check for SD h264 content incorrectly reported as 60 fsp
@@ -6219,7 +6219,7 @@ index 0000000000..bbec907c13
 +  if (hints.codec == AV_CODEC_ID_H264 && hints.width <= 720 && m_video_rate == 1602)
 +  {
 +    //CLog::Log(LOGNOTICE, "CHisiVdec::OpenDecoder video_rate exception");
-+    m_video_rate = 0.5 + (float)UNIT_FREQ * 1001 / 24000;
++    m_video_rate = 0.5f + (float)UNIT_FREQ * 1001 / 24000;
 +  }
 +
 +  // check for SD h264 content incorrectly reported as some form of 30 fsp
@@ -6229,7 +6229,7 @@ index 0000000000..bbec907c13
 +    if (m_video_rate >= 3200 && m_video_rate <= 3210)
 +    {
 +      //CLog::Log(LOGNOTICE, "CHisiVdec::OpenDecoder video_rate exception");
-+      m_video_rate = 0.5 + (float)UNIT_FREQ * 1001 / 24000;
++      m_video_rate = 0.5f + (float)UNIT_FREQ * 1001 / 24000;
 +    }
 +  }
 +
@@ -6343,7 +6343,7 @@ index 0000000000..bbec907c13
 +    {
 +      if (hwDec->VideoBufferFull())
 +      {
-+        KODI::TIME::Sleep(10);
++        KODI::TIME::Sleep(10ms);
 +        continue;
 +      }
 +
@@ -6354,7 +6354,7 @@ index 0000000000..bbec907c13
 +
 +        if (!ret)
 +        {
-+          KODI::TIME::Sleep(10);
++          KODI::TIME::Sleep(10ms);
 +          continue;
 +        }
 +      }
@@ -6363,7 +6363,7 @@ index 0000000000..bbec907c13
 +        bool ret = hwDec->VideoWrite(pData, iSize, package_pts_ms);
 +        if (!ret)
 +        {
-+          KODI::TIME::Sleep(10);
++          KODI::TIME::Sleep(10ms);
 +          continue;
 +        }
 +      }
@@ -6491,7 +6491,7 @@ index 0000000000..bbec907c13
 +
 +  while (!m_bStop)
 +  {
-+    KODI::TIME::Sleep(10);
++    KODI::TIME::Sleep(10ms);
 +    {
 +      CSingleLock lock(m_ptsQueueMutex);
 +      int pts = 0;
