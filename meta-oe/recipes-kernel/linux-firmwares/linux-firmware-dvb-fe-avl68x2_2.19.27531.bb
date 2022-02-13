@@ -2,7 +2,7 @@ SUMMARY = "Availink demodulator firmware"
 HOMEPAGE = "http://www.availink.com/"
 LICENSE = "CLOSED"
 
-SRC_URI = "git://github.com/edision-open/linux-firmware.git"
+SRC_URI = "git://github.com/edision-open/linux-firmware.git;protocol=https"
 
 SRCREV = "824e8de5b7a048eaf49221f7ba788dbb79123715"
 

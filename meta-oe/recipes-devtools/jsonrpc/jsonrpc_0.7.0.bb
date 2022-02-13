@@ -9,7 +9,7 @@ LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=ee72d601854d5d2a065cf642883c489b"
 
 PV = "0.7.0+git${SRCPV}"
 
-SRC_URI = "git://github.com/cinemast/libjson-rpc-cpp \
+SRC_URI = "git://github.com/cinemast/libjson-rpc-cpp;protocol=https \
            file://0001-cmake-replace-hardcoded-lib-CMAKE_LIBRARY_PATH-with-.patch \
            file://0001-filedescriptorclient-Typecast-min-arguments-correctl.patch \
            file://0001-filedescriptorserver-Include-sys-select.h-before-oth.patch \

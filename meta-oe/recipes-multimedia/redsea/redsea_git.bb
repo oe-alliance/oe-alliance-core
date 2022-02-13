@@ -12,7 +12,7 @@ SRCREV = "${AUTOREV}"
 PV = "0.18+git${SRCPV}"
 PKGV = "0.18+git${GITPKGV}"
 
-SRC_URI = "git://github.com/windytan/redsea.git;protocol=http"
+SRC_URI = "git://github.com/windytan/redsea.git;protocol=https"
 
 S = "${WORKDIR}/git"
 

@@ -9,7 +9,7 @@ LIC_FILES_CHKSUM = "file://src/util/XMLUtils.cpp;beginline=2;endline=18;md5=dae8
 DEPENDS = "libtinyxml virtual/kodi"
 
 SRCREV = "e8574b883ffa2131f2eeb96ff3724d60b21130f7"
-SRC_URI = "git://github.com/xbmc/kodi-platform.git \
+SRC_URI = "git://github.com/xbmc/kodi-platform.git;protocol=https \
            file://0001-fix-cross-compile-badness.patch \
            file://kodi-platform-02_no-multi-lib.patch \
           "

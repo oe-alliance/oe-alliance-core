@@ -25,7 +25,7 @@ PV = "0.4.20"
 inherit update-rc.d
 
 SRCREV = "1f29cd14d4c3d90d3249d20165a21c2b04ffed26"
-SRC_URI = "git://github.com/pyload/pyload.git;branch=stable \
+SRC_URI = "git://github.com/pyload/pyload.git;branch=stable;protocol=https \
 	file://pyload.init \
 	file://pyload.tar.gz.defaults"
 

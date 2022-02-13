@@ -15,7 +15,7 @@ PKGV = "67+gitr${GITPKGV}"
 PR = "r1"
 
 SRCREV = "52666caaf08543122ad735e300acb2c2009c83d5"
-SRC_URI = "git://github.com/e2iplayer/www;branch=master"
+SRC_URI = "git://github.com/e2iplayer/www;branch=master;protocol=https"
 
 S = "${WORKDIR}/git"
 

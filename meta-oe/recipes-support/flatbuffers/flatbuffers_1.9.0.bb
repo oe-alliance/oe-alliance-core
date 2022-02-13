@@ -12,7 +12,7 @@ LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=a873c5645c184d51e0f9b34e1d7cf559"
 
 SRCREV = "25a15950f5a24d7217689739ed8f6dac64912d62"
 
-SRC_URI = "git://github.com/google/flatbuffers.git \
+SRC_URI = "git://github.com/google/flatbuffers.git;protocol=https \
            file://0001-correct-version-for-so-lib.patch \
            file://0001-flatbuffers-Move-EndianSwap-template-to-flatbuffers-.patch \
            file://0002-use-__builtin_bswap16-when-building-with-clang.patch \

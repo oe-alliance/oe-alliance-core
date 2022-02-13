@@ -25,7 +25,7 @@ inherit native
 FILESEXTRAPATHS =. "${FILE_DIRNAME}/${PN}:${FILE_DIRNAME}/glibc:"
 
 SRC_URI = "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \
-           git://github.com/kraj/localedef;branch=master;name=localedef;destsuffix=git/localedef \
+           git://github.com/kraj/localedef;branch=master;name=localedef;destsuffix=git/localedef;protocol=https \
            file://0016-timezone-re-written-tzselect-as-posix-sh.patch \
            file://0017-Remove-bash-dependency-for-nscd-init-script.patch \
            file://0018-eglibc-Cross-building-and-testing-instructions.patch \
