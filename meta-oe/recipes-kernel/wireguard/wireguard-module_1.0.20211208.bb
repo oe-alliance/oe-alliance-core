@@ -1,7 +1,7 @@
 require wireguard.inc
 
-SRC_URI:append = "file://fallthrough.patch"
 SRC_URI = "https://git.zx2c4.com/wireguard-linux-compat/snapshot/wireguard-linux-compat-${PV}.tar.xz"
+SRC_URI:append = " file://fallthrough.patch"
 SRC_URI[md5sum] = "7014bca39ac0da6159a701693c7b9b6a"
 SRC_URI[sha256sum] = "c0e607138a17daac656f508d8e63ea3737b5221fa5d9288191ddeb099f5a3b92"
 
