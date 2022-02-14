@@ -7,7 +7,7 @@ ALLOW_EMPTY:${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "1.0"
-PR = "r51"
+PR = "r52"
 
 inherit packagegroup
 
@@ -28,6 +28,7 @@ RRECOMMENDS:${PN} = "\
     cdfs \
     tvheadend \
     openssl-old \
+    sysbench \
     enigma2-plugin-extensions-enhancedmoviecenter \
     enigma2-plugin-extensions-bmediacenter \
     enigma2-plugin-settings-defaultsat \
