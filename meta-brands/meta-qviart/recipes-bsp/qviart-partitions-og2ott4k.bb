@@ -52,7 +52,7 @@ do_deploy() {
 
 addtask deploy before do_build after do_install
 
-SRC_URI[md5sum] = "a58757d3e3eb8ba385166e1e685d08e7"
-SRC_URI[sha256sum] = "b6d5d00c181857d6a77b9ab08a07d02a63d62e356efdc109c06804ee89b3c35d"
+SRC_URI[md5sum] = "d092a4a1837eb8e5025d7621c3e21f85"
+SRC_URI[sha256sum] = "20c426703a9efa498349e770261ab5c68fbf80bc8f0e5b75f99b085300d15d71"
 
 INSANE_SKIP_${PN} += "already-stripped"

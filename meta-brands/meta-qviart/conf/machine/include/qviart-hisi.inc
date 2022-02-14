@@ -35,8 +35,8 @@ MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "\
 
 MACHINE_FEATURES += "switchoff hdmicec skins1080 emmc mmc kodi18 alsa hbbtv-browser-webkit qtstalker qtnetflix"
 
-IMAGE_CLASSES  += "qviart-emmc_image"
-IMAGE_FSTYPES += "qviartemmc"
+IMAGE_CLASSES  += "qviart-emmc2_image"
+IMAGE_FSTYPES += "qviartemmc2"
 IMAGE_ROOTFS_SIZE ?= "524288"
 
 TARGET_ARCH = "arm"
@@ -70,7 +70,7 @@ require conf/machine/box-hardware.inc
 
 DVBMEDIASINK_CONFIG = "--with-h265 --with-vb8 --with-vb9 --with-spark --with-wma --with-wmv --with-pcm --with-dts --with-eac3"
 
-IMAGE_CMD_qviartemmc_append = "\
+IMAGE_CMD_qviartemmc2_append = "\
     mkdir -p ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}; \
     mv ${IMGDEPLOYDIR}/${IMAGE_NAME}.rootfs.ext4 ${DEPLOY_DIR_IMAGE}/${MACHINE}-partitions/rootfs.ext4; \
     cd ${IMAGE_ROOTFS}; \
