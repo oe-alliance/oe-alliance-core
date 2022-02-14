@@ -1,8 +1,8 @@
 KV = "4.4.176"
-SRCDATE = "20220211"
+SRCDATE = "20220212"
 
 require qviart-dvb-modules-hisi.inc
 
-SRC_URI[md5sum] = "7e5d3416cb5c9c118e1eeba3343b817f"
-SRC_URI[sha256sum] = "3bc34dd753617bf46797b86875a53f53ac4710a6dcda5aeea4267dc66c6c7a56"
+SRC_URI[md5sum] = "f44cb922c428b9ea5145143745793ad0"
+SRC_URI[sha256sum] = "68df56966e766bba53080b8ab9a7a1d8064d74ff058db8c3bb8cc3e3a170f3b3"
 
