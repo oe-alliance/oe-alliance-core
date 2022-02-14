@@ -1,5 +1,5 @@
---- a/src/compat/siphash/siphash.c
-+++ b/src/compat/siphash/siphash.c
+--- a/compat/siphash/siphash.c
++++ b/compat/siphash/siphash.c
 @@ -13,6 +13,8 @@
  #include <linux/siphash.h>
  #include <asm/unaligned.h>
