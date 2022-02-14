@@ -8,7 +8,7 @@ RDEPENDS:${PN} = "libsdl"
 
 COMPATIBLE_MACHINE = "^(og2ott4k)$"
 
-SRCDATE = "20220211"
+SRCDATE = "20220212"
 
 PV = "${SRCDATE}"
 PR = "r0"
@@ -27,7 +27,7 @@ do_package_qa() {
 
 FILES:${PN}  = "${bindir}/libreader"
 
-SRC_URI[md5sum] = "720569028ae20c15f04992b5a6ae0e10"
-SRC_URI[sha256sum] = "5358a0886648dee69ad51c5a4471c2beb43e07f3053bbfa96ceab4f05a13435b"
+SRC_URI[md5sum] = "f1b88dff76e565546ddb3b75cd10c62e"
+SRC_URI[sha256sum] = "2ea1608ec7102f06707e2e9a73c90cbcb75f69d73e55c72f788341fc709e2b42"
 
 INSANE_SKIP:${PN} += "already-stripped"
