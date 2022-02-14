@@ -7,7 +7,7 @@ ALLOW_EMPTY_${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "1.0"
-PR = "r50"
+PR = "r51"
 
 inherit packagegroup
 
@@ -24,6 +24,7 @@ RRECOMMENDS_${PN} = "\
     cdfs \
     tvheadend \
     openssl-old \
+    sysbench \
     enigma2-plugin-extensions-sdgradio \
     enigma2-plugin-extensions-enhancedmoviecenter \
     enigma2-plugin-extensions-cooltvguide \
