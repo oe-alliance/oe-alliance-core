@@ -11,7 +11,7 @@ DEPENDS = "tslib mpfr gmp"
 SRCREV = "${AUTOREV}"
 PV = "${IMAGE_VERSION}+gitr${SRCPV}"
 PKGV = "${IMAGE_VERSION}+gitr${GITPKGV}"
-PR = "r17"
+PR = "r18"
 
 SRC_URI="git://github.com/oe-alliance/3rdparty-plugins-python3.git;branch=main;protocol=https"
 
@@ -34,7 +34,7 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-screengrabber_2.6_all.ipk \
     enigma2-plugin-extensions-skyrecorder_2.0.3d-py3_all.ipk \
     enigma2-plugin-extensions-sundtekcontrolcenter_20210624-2_all.ipk \
-    enigma2-plugin-extensions-xcplugin-forever_1.9_all.ipk \
+    enigma2-plugin-extensions-xcplugin-forever_2.2_all.ipk \
     "
 
 # Install any packages that are only for this machines feed here
