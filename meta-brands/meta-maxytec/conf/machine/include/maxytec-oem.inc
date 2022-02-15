@@ -56,7 +56,9 @@ ${@bb.utils.contains('MACHINEBUILD', 'anadolmulti', 'anadol2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'maxytecmulti', 'maxytec1' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axmulticombo', 'ax5' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axmultitwin', 'ax5' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'axmultiboxse', 'ax5' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'anadolmultitwin', 'anadol2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'anadolmultiboxse', 'anadol2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'maxytecmultise', 'maxytec1' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'novaler4k', 'novaler1' , '', d)}\
 "
