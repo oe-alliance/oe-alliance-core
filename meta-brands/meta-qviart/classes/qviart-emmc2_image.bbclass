@@ -2,7 +2,7 @@ inherit image_types
 
 IMAGE_TYPEDEP:qviartemmc2 = "ext4"
 
-do_image_qviartemmc[depends] = " \
+do_image_qviartemmc2[depends] = " \
     parted-native:do_populate_sysroot \
     dosfstools-native:do_populate_sysroot \
     mtools-native:do_populate_sysroot \
