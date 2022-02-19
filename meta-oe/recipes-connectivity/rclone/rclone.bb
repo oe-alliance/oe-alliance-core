@@ -23,6 +23,8 @@ SRC_URI = "git://github.com/rclone/rclone;protocol=https;branch=master \
 
 S = "${WORKDIR}/git"
 
+do_compile[network] = "1"
+
 do_compile() {
     ${TARGET_PREFIX}go build
 }
