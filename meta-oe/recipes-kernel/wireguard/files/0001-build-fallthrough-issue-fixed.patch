@@ -1,0 +1,104 @@
+From 3615c275d637227ee9b7cd70a616dc1851f87c3e Mon Sep 17 00:00:00 2001
+From: Mehdi <mehdilauters@gmail.com>
+Date: Tue, 8 Feb 2022 23:30:41 +0100
+Subject: [PATCH] build: fallthrough issue fixed
+
+A build issue was introduced on some platforms by the commit 49d6983.
+The fallthrough keyword was introduced although it is a C++17 only
+keyword.
+
+This commit only revert some lines in the src/compat/siphash/siphash.c
+file.
+---
+ src/compat/siphash/siphash.c | 36 ++++++++++++++++++------------------
+ 1 file changed, 18 insertions(+), 18 deletions(-)
+
+diff --git a/compat/siphash/siphash.c b/src/compat/siphash/siphash.c
+index 7dc72cb..49237a5 100644
+--- a/compat/siphash/siphash.c
++++ b/compat/siphash/siphash.c
+@@ -77,11 +77,11 @@ u64 __siphash_aligned(const void *data, size_t len, const siphash_key_t *key)
+ 						  bytemask_from_count(left)));
+ #else
+ 	switch (left) {
+-	case 7: b |= ((u64)end[6]) << 48; fallthrough;
+-	case 6: b |= ((u64)end[5]) << 40; fallthrough;
+-	case 5: b |= ((u64)end[4]) << 32; fallthrough;
++	case 7: b |= ((u64)end[6]) << 48;
++	case 6: b |= ((u64)end[5]) << 40;
++	case 5: b |= ((u64)end[4]) << 32;
+ 	case 4: b |= le32_to_cpup(data); break;
+-	case 3: b |= ((u64)end[2]) << 16; fallthrough;
++	case 3: b |= ((u64)end[2]) << 16;
+ 	case 2: b |= le16_to_cpup(data); break;
+ 	case 1: b |= end[0];
+ 	}
+@@ -109,11 +109,11 @@ u64 __siphash_unaligned(const void *data, size_t len, const siphash_key_t *key)
+ 						  bytemask_from_count(left)));
+ #else
+ 	switch (left) {
+-	case 7: b |= ((u64)end[6]) << 48; fallthrough;
+-	case 6: b |= ((u64)end[5]) << 40; fallthrough;
+-	case 5: b |= ((u64)end[4]) << 32; fallthrough;
++	case 7: b |= ((u64)end[6]) << 48;
++	case 6: b |= ((u64)end[5]) << 40;
++	case 5: b |= ((u64)end[4]) << 32;
+ 	case 4: b |= get_unaligned_le32(end); break;
+-	case 3: b |= ((u64)end[2]) << 16; fallthrough;
++	case 3: b |= ((u64)end[2]) << 16;
+ 	case 2: b |= get_unaligned_le16(end); break;
+ 	case 1: b |= end[0];
+ 	}
+@@ -269,11 +269,11 @@ u32 __hsiphash_aligned(const void *data, size_t len, const hsiphash_key_t *key)
+ 						  bytemask_from_count(left)));
+ #else
+ 	switch (left) {
+-	case 7: b |= ((u64)end[6]) << 48; fallthrough;
+-	case 6: b |= ((u64)end[5]) << 40; fallthrough;
+-	case 5: b |= ((u64)end[4]) << 32; fallthrough;
++	case 7: b |= ((u64)end[6]) << 48;
++	case 6: b |= ((u64)end[5]) << 40;
++	case 5: b |= ((u64)end[4]) << 32;
+ 	case 4: b |= le32_to_cpup(data); break;
+-	case 3: b |= ((u64)end[2]) << 16; fallthrough;
++	case 3: b |= ((u64)end[2]) << 16;
+ 	case 2: b |= le16_to_cpup(data); break;
+ 	case 1: b |= end[0];
+ 	}
+@@ -301,11 +301,11 @@ u32 __hsiphash_unaligned(const void *data, size_t len,
+ 						  bytemask_from_count(left)));
+ #else
+ 	switch (left) {
+-	case 7: b |= ((u64)end[6]) << 48; fallthrough;
+-	case 6: b |= ((u64)end[5]) << 40; fallthrough;
+-	case 5: b |= ((u64)end[4]) << 32; fallthrough;
++	case 7: b |= ((u64)end[6]) << 48;
++	case 6: b |= ((u64)end[5]) << 40;
++	case 5: b |= ((u64)end[4]) << 32;
+ 	case 4: b |= get_unaligned_le32(end); break;
+-	case 3: b |= ((u64)end[2]) << 16; fallthrough;
++	case 3: b |= ((u64)end[2]) << 16;
+ 	case 2: b |= get_unaligned_le16(end); break;
+ 	case 1: b |= end[0];
+ 	}
+@@ -426,7 +426,7 @@ u32 __hsiphash_aligned(const void *data, size_t len, const hsiphash_key_t *key)
+ 		v0 ^= m;
+ 	}
+ 	switch (left) {
+-	case 3: b |= ((u32)end[2]) << 16; fallthrough;
++	case 3: b |= ((u32)end[2]) << 16;
+ 	case 2: b |= le16_to_cpup(data); break;
+ 	case 1: b |= end[0];
+ 	}
+@@ -448,7 +448,7 @@ u32 __hsiphash_unaligned(const void *data, size_t len,
+ 		v0 ^= m;
+ 	}
+ 	switch (left) {
+-	case 3: b |= ((u32)end[2]) << 16; fallthrough;
++	case 3: b |= ((u32)end[2]) << 16;
+ 	case 2: b |= get_unaligned_le16(end); break;
+ 	case 1: b |= end[0];
+ 	}
+-- 
+2.34.1.windows.1
+
