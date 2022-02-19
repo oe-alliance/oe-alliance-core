@@ -1,12 +1,13 @@
-diff -uNr enigma2-plugin-extensions-openhbbtvbrowser/browser.py modify/browser.py
---- enigma2-plugin-extensions-openhbbtvbrowser/browser.py	2021-06-23 16:28:45.360789459 +0800
-+++ modify/browser.py	2021-06-23 17:05:05.797806027 +0800
-@@ -19,7 +19,7 @@
+diff --git a/browser.py b/browser.py
+index cdf990c..1d65d4e 100644
+--- a/browser.py
++++ b/browser.py
+@@ -19,7 +19,7 @@ class Browser:
              datasocket.onCommandReceived.append(self.onCommandReceived)
              datasocket.onBrowserClosed.append(self.onBrowserClosed)
              container = eConsoleAppContainer()
--            container.execute("/usr/bin/openhbbtvbrowser %s --onid %d --tsid %d --sid %d" % (url, onid, tsid, sid))
-+            container.execute("export QT_QPA_EGLFS_INTEGRATION=eglfs_mali;/usr/bin/openhbbtvbrowser %s --onid %d --tsid %d --sid %d" % (url, onid, tsid, sid))
+-            container.execute("/usr/bin/openhbbtvbrowser '%s' --onid %d --tsid %d --sid %d" % (url, onid, tsid, sid))
++            container.execute("export QT_QPA_EGLFS_INTEGRATION=eglfs_mali;/usr/bin/openhbbtvbrowser '%s' --onid %d --tsid %d --sid %d" % (url, onid, tsid, sid))
  
      def stop(self):
          if self.commandserver:
