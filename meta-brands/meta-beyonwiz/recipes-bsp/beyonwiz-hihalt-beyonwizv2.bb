@@ -31,6 +31,8 @@ do_install() {
 do_package_qa() {
 }
 
+INHIBIT_PACKAGE_STRIP = "1"
+INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
 FILES:${PN}  = "${bindir}/hihalt ${sysconfdir}/init.d"
 
 SRC_URI[md5sum] = "6ca75df6a63a5268d28b27b51b505153"

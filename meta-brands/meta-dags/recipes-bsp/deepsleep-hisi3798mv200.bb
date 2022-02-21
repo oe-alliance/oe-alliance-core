@@ -29,3 +29,6 @@ do_package_qa() {
 }
 
 FILES:${PN}  = "${bindir}/deepsleep ${sysconfdir}/init.d"
+
+INHIBIT_PACKAGE_STRIP = "1"
+INHIBIT_PACKAGE_DEBUG_SPLIT = "1"

@@ -20,6 +20,7 @@ INITSCRIPT_PARAMS = "start 05 S ."
 inherit update-rc.d
 
 INHIBIT_PACKAGE_STRIP = "1"
+INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
 
 FILES:${PN} += "${nonarch_base_libdir}/modules/${KV}/extra"
 FILES:${PN} += "/usr/bin/komession"

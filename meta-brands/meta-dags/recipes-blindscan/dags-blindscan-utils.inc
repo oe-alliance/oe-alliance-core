@@ -11,6 +11,7 @@ SRC_URI = "http://en3homeftp.net/pub/down/dags_blindscan_${SOC_FAMILY}.tar.gz"
 S = "${WORKDIR}"
 
 INHIBIT_PACKAGE_STRIP = "1"
+INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
 
 PACKAGE_ARCH := "${MACHINE_ARCH}"
 

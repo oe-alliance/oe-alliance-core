@@ -27,6 +27,8 @@ do_install() {
 do_package_qa() {
 }
 
+INHIBIT_PACKAGE_STRIP = "1"
+INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
 FILES:${PN}  = "${bindir}/showiframe"
 
 SRC_URI[md5sum] = "898ccb22efbcc90123fdc9c1d794b078"

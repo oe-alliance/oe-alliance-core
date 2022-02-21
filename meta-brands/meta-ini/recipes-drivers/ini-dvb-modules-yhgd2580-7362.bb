@@ -18,6 +18,7 @@ SRC_URI = "http://source.mynonpublic.com/ini/yhgd2580-7362-drivers-${KV}-${SRCDA
 S = "${WORKDIR}"
 
 INHIBIT_PACKAGE_STRIP = "1"
+INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
 
 do_compile() {
 }

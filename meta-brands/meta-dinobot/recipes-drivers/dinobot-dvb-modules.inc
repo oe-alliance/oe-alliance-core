@@ -18,6 +18,7 @@ INITSCRIPT_PARAMS = "start 05 S ."
 inherit update-rc.d
 
 INHIBIT_PACKAGE_STRIP = "1"
+INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
 
 FILES:${PN} += "${sysconfdir}/modules-load.d/_${MACHINE}.conf"
 FILES:${PN} += "/lib/modules/${KV}/extra"

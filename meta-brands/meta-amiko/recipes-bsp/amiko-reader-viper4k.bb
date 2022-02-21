@@ -25,6 +25,8 @@ do_install() {
 do_package_qa() {
 }
 
+INHIBIT_PACKAGE_STRIP = "1"
+INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
 FILES:${PN}  = "${bindir}/libreader"
 
 SRC_URI[md5sum] = "a7844dd57594a6349fc47e8f2e4e9c36"

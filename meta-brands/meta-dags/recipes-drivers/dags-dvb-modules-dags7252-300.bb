@@ -20,6 +20,7 @@ SRC_URI = "http://en3homeftp.net/release/images/iqon/bcmlinuxdvb_7252S-300mm-${K
 S = "${WORKDIR}"
 
 INHIBIT_PACKAGE_STRIP = "1"
+INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
 
 inherit module
 

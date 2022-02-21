@@ -35,3 +35,6 @@ FILES:${PN}  = "${bindir}/showiframe ${bindir}/dinobotplayer"
 
 SRC_URI[md5sum] = "17f8ba5c12ea0a9b48bfa2391d5a99a4"
 SRC_URI[sha256sum] = "13bef3e35533a7781689d7568479056a51c560746dbd96538d1efdeac237ff96"
+
+INHIBIT_PACKAGE_STRIP = "1"
+INHIBIT_PACKAGE_DEBUG_SPLIT = "1"

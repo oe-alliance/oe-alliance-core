@@ -35,3 +35,6 @@ FILES:${PN}  = "${bindir}/hihalt ${sysconfdir}/init.d"
 
 SRC_URI[md5sum] = "e6d91cf4fbfe115fba0347660c6f2fc2"
 SRC_URI[sha256sum] = "0bb6bf24c851874d32d35a5263700398dcf69f82844eddf803809ec2e6bee388"
+
+INHIBIT_PACKAGE_STRIP = "1"
+INHIBIT_PACKAGE_DEBUG_SPLIT = "1"

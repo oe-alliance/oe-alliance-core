@@ -15,6 +15,7 @@ SRC_URI = "http://source.mynonpublic.com/xcore/${MACHINE_DRIVER}-drivers-${KV}-$
 S = "${WORKDIR}"
 
 INHIBIT_PACKAGE_STRIP = "1"
+INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
 
 do_compile() {
 }

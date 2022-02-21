@@ -40,6 +40,8 @@ FILES:${PN}-dev = "/usr/include/*"
 
 RPROVIDES:${PN} = "virtual/libgles2 virtual/egl libv3dplatform.so libv3ddriver.so libGLESv2.so libEGL.so"
 
+INHIBIT_PACKAGE_STRIP = "1"
+INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
 INSANE_SKIP:${PN} += "already-stripped dev-so"
 
 SRC_URI[md5sum] = "01a809640eed5ecd660bd147990a1793"

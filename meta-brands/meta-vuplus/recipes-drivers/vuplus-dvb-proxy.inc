@@ -11,6 +11,7 @@ SRC_URI = "http://code.vuplus.com/download/release/vuplus-dvb-proxy/vuplus-dvb-p
 S = "${WORKDIR}"
 
 INHIBIT_PACKAGE_STRIP = "1"
+INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
 
 do_compile() {
 }

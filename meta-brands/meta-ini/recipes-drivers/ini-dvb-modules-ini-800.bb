@@ -19,6 +19,7 @@ SRC_URI = "http://source.mynonpublic.com/ini/ini-800-drivers-${KV}-${SRCDATE}.zi
 S = "${WORKDIR}"
 
 INHIBIT_PACKAGE_STRIP = "1"
+INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
 
 do_compile() {
 }
