@@ -12,11 +12,11 @@ RDEPENDS:${PN} = "${PYTHON_PN}-sqlite3 ${PYTHON_PN}-json ${PYTHON_PN}-xmlrpc ${P
 
 inherit gitpkgv allarch
 
-TAG = "v4.4.7"
-PV = "${TAG}"
-PKGV = "${TAG}"
+PV = "4.4.7"
 
-SRC_URI = "git://github.com/einfall/serienrecorder.git;protocol=https;branch=master;tag=${TAG}"
+SRCREV = "82ed4baee97ee7a50b19d50fcd91ec7168dcb208"
+
+SRC_URI = "git://github.com/einfall/serienrecorder.git;protocol=https;branch=master"
 
 S = "${WORKDIR}/git/src"
 
