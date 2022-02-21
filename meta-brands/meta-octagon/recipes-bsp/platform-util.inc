@@ -28,3 +28,6 @@ inherit update-rc.d
 
 INITSCRIPT_PARAMS = "start 65 S . stop 90 0 ."
 INITSCRIPT_NAME = "platform-util"
+
+INHIBIT_PACKAGE_STRIP = "1"
+INHIBIT_PACKAGE_DEBUG_SPLIT = "1"

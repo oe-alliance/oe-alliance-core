@@ -26,5 +26,6 @@ SRC_URI[sha256sum] = "05c99af948d6fd1e17765698db5e4be46d1deda868ed0b84f5b03f6af8
 
 do_prepare_recipe_sysroot[noexec] = "1"
 INHIBIT_PACKAGE_STRIP = "1"
+INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
 do_compile[noexec] = "1"
 deltask do_populate_sysroot

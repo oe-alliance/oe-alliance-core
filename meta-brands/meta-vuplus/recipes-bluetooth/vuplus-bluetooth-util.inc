@@ -38,4 +38,6 @@ do_install() {
 	fi
 }
 
+INHIBIT_PACKAGE_STRIP = "1"
+INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
 INSANE_SKIP:${PN} = "already-stripped"

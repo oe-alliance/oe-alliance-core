@@ -59,4 +59,6 @@ do_install() {
 FILES:${PN} = "/usr/lib/* /lib"
 FILES:${PN}-dev = "/usr/include/*"
 
+INHIBIT_PACKAGE_STRIP = "1"
+INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
 INSANE_SKIP:${PN} += "already-stripped dev-so"

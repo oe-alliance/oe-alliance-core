@@ -13,6 +13,7 @@ SRC_URI = "http://source.mynonpublic.com/zgemma/${MACHINE_DRIVER}-drivers${MODUL
 S = "${WORKDIR}"
 
 INHIBIT_PACKAGE_STRIP = "1"
+INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
 
 FILES:${PN} += "${sysconfdir}/modules-load.d/_${MACHINEBUILD}.conf /lib/modules/${KV}/extra"
 

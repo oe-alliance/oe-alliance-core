@@ -23,6 +23,7 @@ SRC_URI_openspa = "https://openspa.webhop.info/drivers/qviart/openspa_bcmlinuxdv
 S = "${WORKDIR}"
 
 INHIBIT_PACKAGE_STRIP = "1"
+INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
 
 do_compile() {
 }

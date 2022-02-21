@@ -27,6 +27,8 @@ do_install() {
 do_package_qa() {
 }
 
+INHIBIT_PACKAGE_STRIP = "1"
+INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
 FILES:${PN}  = "${bindir}/grab"
 
 SRC_URI[md5sum] = "8adc85fe14b79f296fc7f0f1376e193e"

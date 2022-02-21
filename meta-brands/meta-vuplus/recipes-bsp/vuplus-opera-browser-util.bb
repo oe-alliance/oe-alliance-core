@@ -17,6 +17,7 @@ GSTVER = "1.4.5"
 S = "${WORKDIR}/opera-hbbtv"
 
 INHIBIT_PACKAGE_STRIP = "1"
+INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
 PRIVATE_LIBS:${PN} = "libopera_hbbtv.so \
 libdsmcc.so \
 libdirect-1.4.so.6 \

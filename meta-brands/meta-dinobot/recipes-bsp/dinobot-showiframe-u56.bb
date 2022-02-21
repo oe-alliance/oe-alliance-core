@@ -32,3 +32,6 @@ FILES:${PN}  = "${bindir}/showiframe"
 
 SRC_URI[md5sum] = "8bbeadd6172fdd5dd83c7ee0237066df"
 SRC_URI[sha256sum] = "5ddde534f387a8d9b22b7770b4f9e38489040b3d3ecc9fd487249219bd38d6b6"
+
+INHIBIT_PACKAGE_STRIP = "1"
+INHIBIT_PACKAGE_DEBUG_SPLIT = "1"

@@ -29,4 +29,6 @@ do_install() {
 	install -m 0644 ${S}/bthid.ko ${D}/usr/local/lib/modules/bthid.ko
 }
 
+INHIBIT_PACKAGE_STRIP = "1"
+INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
 INSANE_SKIP:${PN} = "already-stripped"

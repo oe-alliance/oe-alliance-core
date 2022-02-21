@@ -41,6 +41,8 @@ do_install:append() {
 FILES:${PN} = "/usr/lib/* /etc/udev/rules.d/50-mali.rules"
 FILES:${PN}-dev = "/usr/include/*"
 
+INHIBIT_PACKAGE_STRIP = "1"
+INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
 INSANE_SKIP:${PN} += "already-stripped dev-so ldflags"
 
 # The driver is missing EGL/GLES headers and pkgconfig files. Handle

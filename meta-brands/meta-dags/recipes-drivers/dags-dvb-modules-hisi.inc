@@ -14,6 +14,7 @@ SRC_URI = "http://en3homeftp.net/pub/down/${MACHINEBUILD}-hiko-${SRCDATE}.tar.gz
 S = "${WORKDIR}/lib/modules/${KV}/extra"
 
 INHIBIT_PACKAGE_STRIP = "1"
+INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
 
 FILES:${PN} += "${sysconfdir}/modules-load.d/_${MACHINEBUILD}.conf"
 FILES:${PN} += "/lib/modules/${KV}/extra"

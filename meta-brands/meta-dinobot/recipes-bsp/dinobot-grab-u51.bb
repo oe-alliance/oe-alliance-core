@@ -31,3 +31,6 @@ FILES:${PN}  = "${bindir}/grab"
 
 SRC_URI[md5sum] = "96eb79a1a1befab1c6d70327b5e3519e"
 SRC_URI[sha256sum] = "bbd4ad83e432ec6deccfadcf2e30b4cdd2f4d14a5612345852b7be65549e4d13"
+
+INHIBIT_PACKAGE_STRIP = "1"
+INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
