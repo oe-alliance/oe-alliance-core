@@ -1,3 +1,3 @@
 DEPENDS = "libxau libxcb libsm"
 
-SSTATE_DUPWHITELIST += "${STAGING_INCDIR}/gif_lib.h"
+SSTATE_ALLOW_OVERLAP_FILES += "${STAGING_INCDIR}/gif_lib.h"

@@ -16,7 +16,7 @@ INSANE_SKIP:${PN} = "dev-so"
 
 RRECOMMENDS:${PN} = "kernel-module-appletalk"
 
-SSTATE_DUPWHITELIST += "${STAGING_INCDIR}/netatalk/at.h"
+SSTATE_ALLOW_OVERLAP_FILES += "${STAGING_INCDIR}/netatalk/at.h"
 
 EXTRA_OECONF += "ac_cv_path_KRB5_CONFIG=no \
                 ac_cv_header_rpcsvc_rquota_h=no \

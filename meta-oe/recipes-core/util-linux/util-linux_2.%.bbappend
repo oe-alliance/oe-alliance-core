@@ -20,7 +20,7 @@ ALTERNATIVE_LINK_NAME[flock] = "${base_sbindir}/flock"
 ALTERNATIVE_PRIORITY[mount] = "10"
 ALTERNATIVE_PRIORITY[umount] = "10"
 
-SSTATE_DUPWHITELIST += "${STAGING_DIR_NATIVE}/bin/login"
+SSTATE_ALLOW_OVERLAP_FILES += "${STAGING_DIR_NATIVE}/bin/login"
 
 do_install:append () {
     if [ "${base_sbindir}" != "${sbindir}" ]; then

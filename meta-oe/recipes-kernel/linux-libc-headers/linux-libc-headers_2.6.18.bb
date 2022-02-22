@@ -24,4 +24,4 @@ SRC_URI += " \
 SRC_URI[md5sum] = "6badae7fe759131d9ba334bf3864a4ab"
 SRC_URI[sha256sum] = "ebbebe73aebdf235413763e78eddd48a16738630305ad298635ab25e83d6ebc6"
 
-SSTATE_DUPWHITELIST += "${STAGING_INCDIR}/scsi/scsi_ioctl.h ${STAGING_INCDIR}/scsi/sg.h"
+SSTATE_ALLOW_OVERLAP_FILES += "${STAGING_INCDIR}/scsi/scsi_ioctl.h ${STAGING_INCDIR}/scsi/sg.h"

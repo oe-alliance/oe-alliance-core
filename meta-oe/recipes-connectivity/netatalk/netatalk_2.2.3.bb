@@ -24,7 +24,7 @@ INSANE_SKIP:${PN} = "dev-so"
 
 RRECOMMENDS:${PN}-atalkd = "kernel-module-appletalk"
 
-SSTATE_DUPWHITELIST += "${STAGING_INCDIR}/netatalk/at.h"
+SSTATE_ALLOW_OVERLAP_FILES += "${STAGING_INCDIR}/netatalk/at.h"
 
 FILES:${PN}-atalkd += "${sysconfdir}/netatalk/atalkd.conf \
                     /usr/sbin/atalkd"

@@ -15,7 +15,7 @@ SRC_URI[src.sha256sum] = "7e02b0d2849ec83459c65d240809ff95ee4a857a3ba38af2cafbbe
 
 inherit autotools pkgconfig update-rc.d
 
-SSTATE_DUPWHITELIST += "${STAGING_INCDIR}/netatalk/at.h"
+SSTATE_ALLOW_OVERLAP_FILES += "${STAGING_INCDIR}/netatalk/at.h"
 
 INITSCRIPT_NAME = "atalk"
 INITSCRIPT_PARAMS = "defaults 20"
