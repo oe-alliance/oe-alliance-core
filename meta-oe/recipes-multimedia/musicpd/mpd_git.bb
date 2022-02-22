@@ -24,7 +24,7 @@ inherit meson pkgconfig update-rc.d
 
 INITSCRIPT_NAME = "mpd"
 
-PACKAGECONFIG = "${@bb.utils.contains('LICENSE_FLAGS_WHITELIST', 'commercial', 'aac', '', d)} \
+PACKAGECONFIG = "${@bb.utils.contains('LICENSE_FLAGS_ACCEPTED', 'commercial', 'aac', '', d)} \
                  alsa ao bzip2 curl daemon \
                  fifo flac fluidsynth id3tag iso9660 lame mad \
                  libsamplerate httpd \
