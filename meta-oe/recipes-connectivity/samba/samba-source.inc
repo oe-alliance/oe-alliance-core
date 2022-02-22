@@ -1,4 +1,4 @@
-PV = "4.15.3"
+PV = "4.15.5"
 HOMEPAGE = "https://www.samba.org/"
 SECTION = "console/network"
 
@@ -57,6 +57,6 @@ SRC_URI:append:sh4 = " \
            file://209-strtoull.patch \
           "
 
-SRC_URI[md5sum] = "ac2959e825fad82cbaa85c0d6ea6a0b8"
-SRC_URI[sha256sum] = "519399404391550345846768ea4dd0fe7fcb04e20c2b891b5eeb02e5554137db"
+SRC_URI[md5sum] = "c5c8221de44dc04ad7f3358d3b118d61"
+SRC_URI[sha256sum] = "69115e33831937ba5151be0247943147765aece658ba743f44741672ad68d17f"
 UPSTREAM_CHECK_REGEX = "samba\-(?P<pver>4\.15(\.\d+)+).tar.gz"
