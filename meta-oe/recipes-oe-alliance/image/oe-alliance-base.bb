@@ -54,7 +54,6 @@ RDEPENDS:${PN} = "\
     packagegroup-base \
     packagegroup-core-boot \
     tzdata \
-    ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "tzdata-europe", "tzdata-europe tzdata-australia tzdata-asia tzdata-pacific tzdata-africa tzdata-americas", d)} \
     util-linux-sfdisk \
     util-linux-blkid \
     util-linux-flock \
