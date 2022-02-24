@@ -79,6 +79,7 @@ RDEPENDS:${PN} = "\
     ${@bb.utils.contains("MACHINEBUILD", "osmio4kplus", "enigma2-plugin-drivers-network-usb-qca6174", "", d)} \
     ${@bb.utils.contains("MACHINEBUILD", "formuler1", "enigma2-plugin-drivers-network-usb-rtl8822bu", "", d)} \
     ${@bb.utils.contains("MACHINEBUILD", "hd51", "enigma2-plugin-drivers-network-usb-rtl8822bu", "", d)} \
+    ${@bb.utils.contains("MACHINE_BRAND", "NOVALER", "enigma2-plugin-drivers-network-usb-rtl8821cu enigma2-plugin-drivers-network-usb-rtl8192eu enigma2-plugin-drivers-network-usb-mt7601u enigma2-plugin-drivers-network-usb-rtl8822cu enigma2-plugin-drivers-network-usb-r8188eu", "", d)} \
     "
 
 RDEPENDS:${PN}:remove:odroidc2 = "enigma2-plugin-drivers-network-usb-rtl8192cu"
