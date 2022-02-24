@@ -12,8 +12,6 @@ SRC_URI = " \
     file://${INITSCRIPT_NAME}.sysvinit \
 "
 
-#S="${WORKDIR}/platform-util-${MACHINE}"
-S="${WORKDIR}"
 do_install() {
     install -d ${D}${bindir}
     install -m 0755 ${S}/* ${D}${bindir}
@@ -22,6 +20,8 @@ do_install() {
 }
 
 do_package_qa() {
+}
+do_populate_sysroot() {
 }
 
 FILES:${PN}="/"
