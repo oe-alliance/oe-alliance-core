@@ -8,7 +8,7 @@ inherit gitpkgv ${PYTHON_PN}native gettext ${@bb.utils.contains("PYTHON_PN", "py
 SRCREV = "${AUTOREV}"
 PV = "1.3+git${SRCPV}"
 PKGV = "1.3+git${GITPKGV}"
-PR = "r1"
+PR = "r3"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 SRC_URI = "git://github.com/oe-alliance/openmultibootmanager.git;protocol=https;branch=dev-bootmenu-helper"
@@ -34,6 +34,7 @@ EXTRA_OECONF = "\
     "
 
 do_install:append() {
+    echo "omb_legacy=False" > ${D}/usr/lib/enigma2/python/Plugins/Extensions/OpenMultiboot/OMBConfig.py
     chmod 755 ${D}/usr/lib/enigma2/python/Plugins/Extensions/OpenMultiboot/open-multiboot-branding-helper.py
     chmod 755 ${D}/usr/lib/enigma2/python/Plugins/Extensions/OpenMultiboot/open-multiboot-menu-helper.py
 }
