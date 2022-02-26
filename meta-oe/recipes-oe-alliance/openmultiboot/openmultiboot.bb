@@ -9,7 +9,7 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "1.3+git${SRCPV}"
 PKGV = "1.3+git${GITPKGV}"
-PR = "r0"
+PR = "r1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 DEPENDS = "freetype json-c"
@@ -41,7 +41,8 @@ EXTRA_OEMAKE = " \
     ${@bb.utils.contains("IMAGE_FSTYPES", "jffs2", "-DOMB_FLASH_JFFS2" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "dreambox", "-DOMB_DREAMBOX", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "mmc", "-DOMB_MMCBLK", "", d)} \
-    -DOMB_KERNEL_MTD=\"/dev/${MTD_KERNEL}\"' \
+    -DOMB_KERNEL_MTD=\"/dev/${MTD_KERNEL}\" \
+    -DBOXTYPE=\"${MACHINEBUILD}\"' \
     'LDFLAGS= -lfreetype ${LDFLAGS}' \
     "
 
