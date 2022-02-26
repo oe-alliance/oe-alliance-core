@@ -14,6 +14,8 @@ WORKDIR = "${TMPDIR}/work/${MULTIMACH_TARGET_SYS}/${PN}/${EXTENDPE}${PV}"
 
 do_rootfs[deptask] = "do_rm_work"
 
+SSTATE_DUPWHITELIST += "${DEPLOY_DIR_IMAGE}"
+
 IMAGE_INSTALL = "openatv-base \
     ${@bb.utils.contains("MACHINE_FEATURES", "dvbc-only", "", "enigma2-plugin-settings-defaultsat", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "no-cl-svr", "", \
