@@ -35,8 +35,8 @@ PACKAGES =+ "enigma2-plugin-vix-core-po"
 
 CONFFILES:enigma2-plugin-vix-core += "${sysconfdir}/exports"
 FILES:enigma2-plugin-vix-core = "/etc ${libdir}"
-FILES:enigma2-plugin-vix-core-src = "${libdir}/enigma2/python/Plugins/SystemPlugins/ViX/.py/"
-FILES:enigma2-plugin-vix-core-dbg = "${libdir}/enigma2/python/Plugins/SystemPlugins/ViX/.debug/"
+FILES:enigma2-plugin-vix-core-src = "${libdir}/enigma2/python/Plugins/SystemPlugins/ViX/*.py"
+FILES:enigma2-plugin-vix-core-dbg = "${libdir}/enigma2/python/Plugins/SystemPlugins/ViX/*.debug"
 FILES:enigma2-plugin-vix-core-po = "${libdir}/enigma2/python/Plugins/SystemPlugins/ViX/locale/*.po"
 FILES:enigma2-plugin-vix-core-doc = "/usr/share/enigma2/README*"
 
