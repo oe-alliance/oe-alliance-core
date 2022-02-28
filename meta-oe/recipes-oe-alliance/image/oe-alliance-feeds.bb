@@ -41,6 +41,7 @@ RDEPENDS:${PN} = " \
     enigma2-plugin-extensions-e2piconizer \
     enigma2-plugin-extensions-et-portal \
     enigma2-plugin-extensions-jedimakerxtream \
+    enigma2-plugin-extensions-lamedbmerger \
     enigma2-plugin-extensions-serienrecorder \
     enigma2-plugin-systemplugins-misplslcnscan \
     enigma2-plugin-systemplugins-radiotimesemulator \
