@@ -1,6 +1,6 @@
 SECTION = "console/multimedia"
 PRIORITY = "optional"
-LICENSE = "GPLv2+"
+LICENSE = "GPL-2.0-or-later"
 DEPENDS = "libxml2"
 SRCDATE = "20090621"
 PV = "0.0+cvs${SRCDATE}"

@@ -2,7 +2,7 @@ SUMMARY = "eplayer5 a simple gst videoplayer"
 MAINTAINER = "Duckbox Team"
 SECTION = "multimedia"
 PRIORITY = "optional"
-LICENSE = "GPLv2"
+LICENSE = "GPL-2.0-only"
 
 DEPENDS = "gstreamer1.0 gstreamer1.0-plugins-base glib-2.0 libxml2"
 

@@ -6,7 +6,7 @@ SECTION = "extra"
 PRIORITY = "optional"
 require conf/python/python3-compileall.inc
 
-LICENSE = "GPLv2"
+LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "\
     file://LICENSE;md5=a23a74b3f4caf9616230789d94217acb \
     file://COPYING;md5=036b9f2d884ff3a35bed6ab09bafff32 \

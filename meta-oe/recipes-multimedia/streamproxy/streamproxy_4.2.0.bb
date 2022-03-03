@@ -1,5 +1,5 @@
 SUMMARY = "streamproxy manages streaming data to a PC using enigma2"
-LICENSE = "GPLv2"
+LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://COPYING;md5=59530bdf33659b29e73d4adb9f9f6552"
 SRCREV = "d9396c07f1ddfcbacec70350604fea0d3ccae821"
 

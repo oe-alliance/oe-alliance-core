@@ -1,6 +1,6 @@
 SUMMARY = "kodi inputstream addon for several manifest types"
 
-LICENSE = "GPLv2+"
+LICENSE = "GPL-2.0-or-later"
 LIC_FILES_CHKSUM = "file://src/main.cpp;beginline=1;endline=17;md5=5eac1e215251c8f88d799f80ed45d5c0"
 
 inherit kodi-addon

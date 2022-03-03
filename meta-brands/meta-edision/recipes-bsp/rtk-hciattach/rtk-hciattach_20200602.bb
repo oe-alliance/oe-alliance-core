@@ -1,6 +1,6 @@
 SUMMARY = "Realtek Bluetooth UART and USB driver"
 HOMEPAGE = "https://www.realtek.com/"
-LICENSE = "GPLv2"
+LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://Makefile;md5=ac320a4e1d358e1234ea8489eca682e8"
 
 SRC_URI = "git://github.com/edision-open/LINUX_BT_DRIVER_RTL8723D.git;branch=master;protocol=https"

@@ -1,6 +1,6 @@
 SUMMARY = "genromfs generates romfs filesystem images"
 HOMEPAGE = "http://jf.koan19.org/dev/romfs/"
-LICENSE = "GPLv2+"
+LICENSE = "GPL-2.0-or-later"
 LIC_FILES_CHKSUM = "file://COPYING;md5=0c56db0143f4f80c369ee3af7425af6e"
 
 PV = "0.5.7+git${SRCREV}"

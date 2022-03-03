@@ -1,6 +1,6 @@
 DESCRIPTION = "An Ambilight clone for broadcom based linux receivers."
 HOMEPAGE = "https://github.com/oe-mirrors/enigmalight"
-LICENSE = "GPLv3"
+LICENSE = "GPL-3.0-only"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=156f94b2a67a05ad45ff99bec65b2c81"
 
 DEPENDS = "libusb1"

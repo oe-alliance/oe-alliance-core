@@ -4,7 +4,7 @@ DESCRIPTION = "Allows all networked devices, VMs, containers, and applications t
             as if they all reside in the same physical data center or cloud region."
 HOMEPAGE = "https://www.zerotier.com"
 SECTION = "net"
-LICENSE = "GPLv3+"
+LICENSE = "GPL-3.0-or-later"
 LIC_FILES_CHKSUM = "file://COPYING;md5=11bbae9cacaf61dd7fc10035f6f5c68e"
 
 DEPENDS = "miniupnpd"

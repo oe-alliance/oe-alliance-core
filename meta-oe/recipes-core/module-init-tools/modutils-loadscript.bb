@@ -1,6 +1,6 @@
 SECTION = "base"
 SUMMARY = "modutils configuration files"
-LICENSE = "GPLv2"
+LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://modload.sh;beginline=2;endline=2;md5=3b6e5b2caf81c241a5956ed7691327ab"
 SRC_URI = "file://modload.sh"
 PV = "2"

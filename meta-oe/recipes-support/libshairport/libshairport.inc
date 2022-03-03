@@ -2,7 +2,7 @@ SUMMARY = "libshairport for oe."
 SECTION = "misc"
 HOMEPAGE = "http://xbmc.org/"
 DEPENDS = "openssl"
-LICENSE = "GPLv2"
+LICENSE = "GPL-2.0-only"
 INC_PR = "r5"
 S="${WORKDIR}/${BPN}-${PV}_lib"
 SRC_URI = "http://source.mynonpublic.com/libshairport-1.2.0.20310_lib.tar.gz;name=archive \

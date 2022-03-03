@@ -2,7 +2,7 @@ SUMMARY = "Plugin for updating Chocholousek's picons in Enigma2"
 DESCRIPTION = "Enigma2 plugin for downloading and updating picons (almost all EU satellites)"
 HOMEPAGE = "https://github.com/s3n0/e2plugins/ChocholousekPicons"
 SECTION = "multimedia"
-LICENSE = "GPLv2"
+LICENSE = "GPL-2.0-only"
 
 require conf/license/license-gplv2.inc
 require conf/python/python3-compileall.inc

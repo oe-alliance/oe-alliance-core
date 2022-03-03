@@ -1,7 +1,7 @@
 SUMMARY = "Music Player Daemon (mpd)"
 HOMEPAGE = "http://www.musicpd.org"
 SECTION = "console/multimedia"
-LICENSE = "GPLv2"
+LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe"
 
 DEPENDS = "audiofile boost curl dbus expat faad2 flac icu libao libmikmod libogg libvorbis sqlite3 virtual/libiconv yajl zlib \

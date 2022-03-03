@@ -1,7 +1,7 @@
 SUMMARY = "lightweight DLNA/UPnP-AV server targeted at embedded systems"
 HOMEPAGE = "http://sourceforge.net/projects/minidlna/"
 SECTION = "network"
-LICENSE = "GPLv2"
+LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://COPYING;md5=b1a795ac1a06805cf8fd74920bc46b5c"
 DEPENDS = "libexif libjpeg-turbo libid3tag flac libvorbis sqlite3 ffmpeg util-linux virtual/libiconv"
 

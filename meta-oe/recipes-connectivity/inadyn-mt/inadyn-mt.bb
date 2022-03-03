@@ -1,5 +1,5 @@
 MAINTAINER = "Narcis Ilisei"
-LICENSE = "GPLv3"
+LICENSE = "GPL-3.0-only"
 LIC_FILES_CHKSUM = "file://COPYING;md5=3c34afdc3adf82d2448f12715a255122"
 
 PV = "v.02.24.44"

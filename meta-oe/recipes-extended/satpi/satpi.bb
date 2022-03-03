@@ -1,6 +1,6 @@
 SUMMARY = "An SAT>IP server for linux, suitable for running on an Raspberry Pi, VU+, BeagleBone or any other linux box."
 MAINTAINER = "Marc Postema (mpostema09 -at- gmail.com"
-LICENSE = "GPLv2+ & LGPLv2.1+"
+LICENSE = "GPL-2.0-or-later & LGPL-2.1-or-later"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=8264535c0c4e9c6c335635c4026a8022"
 
 HOMEPAGE = "https://github.com/Barracuda09/SATPI/wiki"

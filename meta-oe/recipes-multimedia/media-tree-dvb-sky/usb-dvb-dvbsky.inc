@@ -1,7 +1,7 @@
 SUMMARY = "media tree drivers for DVB SKY"
 HOMEPAGE = "http://linuxtv.org/"
 SECTION = "kernel/modules"
-LICENSE = "GPLv2"
+LICENSE = "GPL-2.0-only"
 
 inherit module
 

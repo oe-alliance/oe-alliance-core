@@ -1,7 +1,7 @@
 SUMMARY = "publish command line shell through AJAX interface"
 DESCRIPTION = "Shell In A Box implements a web server that can export arbitrary command line\ntools to a web based terminal emulator. This emulator is accessible to any\nJavaScript and CSS enabled web browser and does not require any additional\nbrowser plugins."
 HOMEPAGE = "https://github.com/shellinabox/shellinabox"
-LICENSE = "GPLv2"
+LICENSE = "GPL-2.0-only"
 require conf/license/license-gplv2.inc
 DEPENDS = "zlib"
 

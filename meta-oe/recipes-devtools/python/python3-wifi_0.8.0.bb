@@ -1,7 +1,7 @@
 SUMMARY = "Command line tool and library wrappers around iwlist and /etc/network/interfaces."
 HOMEPAGE = "https://pypi.org/project/wifi/"
 SECTION = "devel/python"
-LICENSE = "LGPLv2+ & GPLv2+"
+LICENSE = "LGPL-2.0-or-later & GPL-2.0-or-later"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=96054b336a7ea61f1acd5c14acdda526"
 
 RDEPENDS:${PN} = "${PYTHON_PN}-pbkdf2"

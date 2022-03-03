@@ -1,6 +1,6 @@
 SUMMARY = "replex remultiplexes TS (DVB) to PS (DVD)"
 SECTION = "console/multimedia"
-LICENSE = "GPLv2+"
+LICENSE = "GPL-2.0-or-later"
 LIC_FILES_CHKSUM = "file://COPYING;md5=8ca43cbc842c2336e835926c2166c28b"
 SRC_URI = "http://ftp.arm.slackware.com/slacky/slackware-12.0/utilities/${BPN}/${PV}/src/${BPN}-${PV}.tar.gz \
     file://fix-makefile.patch \

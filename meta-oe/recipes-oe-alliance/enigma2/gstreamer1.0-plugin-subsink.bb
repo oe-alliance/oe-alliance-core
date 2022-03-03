@@ -2,7 +2,7 @@ DESCRIPTION = "gstreamer subsink plugin"
 SECTION = "multimedia"
 PRIORITY = "optional"
 DEPENDS = "glib-2.0-native gstreamer1.0 gstreamer1.0-plugins-base"
-LICENSE = "LGPLv2.1"
+LICENSE = "LGPL-2.1-only"
 LIC_FILES_CHKSUM = "file://COPYING;md5=7fbc338309ac38fefcd64b04bb903e34"
 
 SRC_URI = "git://github.com/christophecvr/gstreamer1.0-plugin-subsink.git;protocol=https;branch=master"

@@ -1,7 +1,7 @@
 SUMMARY = "Driver for Ralink rt73 USB 802.11g WiFi sticks"
 HOMEPAGE = "http://www.ralinktech.com.tw"
 SECTION = "kernel/modules"
-LICENSE = "GPLv2"
+LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://../../COPYING;md5=94d55d512a9ba36caa9b7df079bae19f"
 
 RREPLACES:${PN} = "rt73-k2wrlz"

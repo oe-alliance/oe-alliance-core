@@ -2,7 +2,7 @@ MODULE = "MultiQuickButton"
 SUMMARY = "Multi Quickbutton editor/wizard/code interpreter for keyboard and RC ViX Version"
 SECTION = "extra"
 PRIORITY = "optional"
-LICENSE = "GPLv2"
+LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://../LICENSE.GPLv2;md5=eb723b61539feef013de476e68b5c50a"
 require conf/python/python3-compileall.inc
 

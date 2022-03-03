@@ -1,7 +1,7 @@
 SUMMARY = "Python interface to DBus notifications"
 HOMEPAGE = "https://bitbucket.org/takluyver/pynotify2/src/master/"
 SECTION = "devel/python"
-LICENSE = "LGPL-3.0"
+LICENSE = "LGPL-3.0-only"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=71a2cbec11611051cab37ac4f58ff05b"
 
 SRC_URI[md5sum] = "ffccaed9330787c7442b453f6520a474"

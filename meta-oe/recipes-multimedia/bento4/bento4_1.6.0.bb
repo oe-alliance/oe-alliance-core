@@ -1,7 +1,7 @@
 SUMMARY  = "C++ class library and tools designed to read and write ISO-MP4 files"
 SECTION = "misc"
 HOMEPAGE = "http://bento4.com"
-LICENSE = "GPLv2"
+LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM="file://Documents/LICENSE.txt;md5=2bdfce88f437a0613f41effed74b7061"
 
 SRCREV = "83c48e6e2a3f8e4be7ad2eddaa0639303184146d"

@@ -1,7 +1,7 @@
 SUMMARY = "GuessIt - a library for guessing information from video filenames."
 HOMEPAGE = "https://doc.guessit.io/"
 SECTION = "devel/python"
-LICENSE = "LGPL-3.0"
+LICENSE = "LGPL-3.0-only"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=bb3ca60759f3202f1ae42e3519cd06bc"
 DEPENDS += "${PYTHON_PN}-pytest-runner-native"
 

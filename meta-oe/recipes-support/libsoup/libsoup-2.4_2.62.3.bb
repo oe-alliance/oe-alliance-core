@@ -2,7 +2,7 @@ SUMMARY = "An HTTP library implementation in C"
 HOMEPAGE = "https://wiki.gnome.org/Projects/libsoup"
 BUGTRACKER = "https://bugzilla.gnome.org/"
 SECTION = "x11/gnome/libs"
-LICENSE = "LGPLv2"
+LICENSE = "LGPL-2.0-only"
 LIC_FILES_CHKSUM = "file://COPYING;md5=5f30f0716dfdd0d91eb439ebec522ec2"
 
 DEPENDS = "glib-2.0 glib-2.0-native libxml2 sqlite3 intltool-native"

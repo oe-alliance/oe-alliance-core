@@ -1,5 +1,5 @@
 SECTION = "net"
-LICENSE = "GPLv2"
+LICENSE = "GPL-2.0-only"
 
 DEPENDS = "cups db openssl"
 

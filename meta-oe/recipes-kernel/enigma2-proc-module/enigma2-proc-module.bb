@@ -1,7 +1,7 @@
 SUMMARY = "Enigma proc module for ${MACHINEBUILD}"
 SECTION = "base"
 PRIORITY = "required"
-LICENSE = "GPLv3"
+LICENSE = "GPL-3.0-only"
 LIC_FILES_CHKSUM = "file://${WORKDIR}/git/LICENSE;md5=1ebbd3e34237af26da5dc08a4e440464"
 
 SRCREV = "${AUTOREV}"

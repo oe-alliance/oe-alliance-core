@@ -1,6 +1,6 @@
 DESCRIPTION = "servicemp3 for enigma2"
 AUTHOR = "OpenPLi team <info@openpli.org>"
-LICENSE = "GPLv2"
+LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"

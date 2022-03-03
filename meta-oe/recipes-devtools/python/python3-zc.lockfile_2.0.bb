@@ -1,7 +1,7 @@
 SUMMARY = "Basic inter-process locks"
 HOMEPAGE = "https://github.com/zopefoundation/zc.lockfile"
 SECTION = "devel/python"
-LICENSE = "LGPL-3.0"
+LICENSE = "LGPL-3.0-only"
 LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=78ccb3640dc841e1baecb3e27a6966b2"
 DEPENDS += "${PYTHON_PN}-setuptools-scm-native"
 

@@ -2,7 +2,7 @@ SUMMARY = "A small libxml2 c++ wrapper"
 AUTHOR = "Jürgen Rinas <jrinas@gmx.de>"
 HOMEPAGE = "http://www.ant.uni-bremen.de/whomes/rinas/libxmlccwrap/"
 SECTION = "libs"
-LICENSE = "LGPLv2.1+"
+LICENSE = "LGPL-2.1-or-later"
 LIC_FILES_CHKSUM = "file://COPYING;md5=fad9b3332be894bab9bc501572864b29"
 DEPENDS = "libxml2"
 

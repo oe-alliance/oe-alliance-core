@@ -1,6 +1,6 @@
 HOMEPAGE = "https://github.com/PLi-metas/stgfx2"
 SECTION = "kernel/modules"
-LICENSE = "GPLv2"
+LICENSE = "GPL-2.0-only"
 require conf/license/license-gplv2.inc
 
 DEPENDS = "directfb fulan-dvb-modules-${MACHINE}"

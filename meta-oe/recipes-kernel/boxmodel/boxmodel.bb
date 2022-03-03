@@ -1,7 +1,7 @@
 SUMMARY = "BoxModel proc Helper"
 MAINTAINER = "Dr. Ideal"
 SECTION = "kernel/modules"
-LICENSE = "GPLv2"
+LICENSE = "GPL-2.0-only"
 DEPENDS = "virtual/kernel"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"

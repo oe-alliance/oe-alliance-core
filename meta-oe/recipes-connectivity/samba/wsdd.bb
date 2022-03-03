@@ -1,6 +1,6 @@
 SUMMARY = "WS-Discovery daemon"
 DESCRIPTION = "Anounces a device to Windows via WSD"
-LICENSE = "GPLv2"
+LICENSE = "GPL-2.0-only"
 
 require conf/license/license-gplv2.inc
 

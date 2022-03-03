@@ -2,7 +2,7 @@ DESCRIPTION = "STLIRC is a package for managing infrared on SH4-based boxes."
 SECTION = "base"
 PRIORITY = "optional"
 HOMEPAGE = "http://www.lirc.org"
-LICENSE = "GPLv2"
+LICENSE = "GPL-2.0-only"
 DEPENDS = "virtual/kernel libusb-compat"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 

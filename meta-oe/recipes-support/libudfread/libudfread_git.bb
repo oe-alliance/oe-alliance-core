@@ -1,7 +1,7 @@
 SUMMARY  = "UDF reader"
 SECTION = "misc"
 HOMEPAGE = "http://videolan.org"
-LICENSE = "LGPLv2.1"
+LICENSE = "LGPL-2.1-only"
 LIC_FILES_CHKSUM="file://COPYING;md5=4fbd65380cdd255951079008b364516c"
 
 inherit gitpkgv

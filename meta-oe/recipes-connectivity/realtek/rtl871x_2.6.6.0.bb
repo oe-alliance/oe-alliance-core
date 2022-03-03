@@ -1,7 +1,7 @@
 SUMMARY = "Driver for Realtek 871x series USB 802.11b/g/n WiFi stick"
 HOMEPAGE = "http://www.realtek.com.tw"
 SECTION = "kernel/modules"
-LICENSE = "GPLv2"
+LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://../COPYING;md5=94d55d512a9ba36caa9b7df079bae19f"
 
 

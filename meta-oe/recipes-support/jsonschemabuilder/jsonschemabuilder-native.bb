@@ -1,6 +1,6 @@
 DESCRIPTION = "dependency for Kodi"
 SECTION = "console/utils"
-LICENSE = "GPLv2+"
+LICENSE = "GPL-2.0-or-later"
 LIC_FILES_CHKSUM = "file://LICENSE.GPL;md5=a8119afbffe1b8b7cd2e751480b80ad8"
 DEPENDS = ""
 PV = "1.0"

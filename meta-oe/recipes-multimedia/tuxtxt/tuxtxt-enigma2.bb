@@ -1,6 +1,6 @@
 SUMMARY = "tuxbox tuxtxt for 32bit framebuffer"
 DESCRIPTION = "tuxbox tuxtxt for enigma2"
-LICENSE = "LGPLv2.1"
+LICENSE = "LGPL-2.1-only"
 LIC_FILES_CHKSUM = "file://COPYING;md5=393a5ca445f6965873eca0259a17f833"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"

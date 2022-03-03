@@ -1,6 +1,6 @@
 SUMMARY = "Ralink 3070"
 SECTION = "kernel/modules"
-LICENSE = "GPLv2"
+LICENSE = "GPL-2.0-only"
 
 
 inherit module

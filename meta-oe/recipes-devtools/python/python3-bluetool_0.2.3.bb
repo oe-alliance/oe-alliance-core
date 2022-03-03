@@ -1,7 +1,7 @@
 SUMMARY = "A simple Python API for Bluetooth D-Bus calls"
 DESCRIPTION = "Allows easy pairing, connecting and scanning. Also provides a TCP-to-RFCOMM socket bridge for data transfer."
 HOMEPAGE = "https://github.com/emlid/bluetool"
-LICENSE = "GPLv3"
+LICENSE = "GPL-3.0-only"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=4fe869ee987a340198fb0d54c55c47f1"
 
 RDEPENDS:${PN} = "${PYTHON_PN}-dbus ${PYTHON_PN}-tcpbridge ${PYTHON_PN}-pygobject"

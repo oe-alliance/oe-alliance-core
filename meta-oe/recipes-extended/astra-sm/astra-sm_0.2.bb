@@ -2,7 +2,7 @@ SUMMARY = "Astra (Advanced Streamer) SlonikMod"
 DESCRIPTION = "Astra (Advanced Streamer) is a professional software to organize \
 	Digital TV Service for TV operators and broadcasters, internet service providers, hotels, etc."
 SECTION = "multimedia"
-LICENSE = "GPLv3"
+LICENSE = "GPL-3.0-only"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 
 DEPENDS += "libaio"

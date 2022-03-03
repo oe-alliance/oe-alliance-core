@@ -1,6 +1,6 @@
 SUMMARY = "Size reduced but fully functional locale support"
 MAINTAINER = "OE-Alliance"
-LICENSE = "GPLv2"
+LICENSE = "GPL-2.0-only"
 SECTION = "base"
 PRIORITY = "required"
 

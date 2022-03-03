@@ -1,7 +1,7 @@
 DESCRIPTION = "gstreamer dvbmediasink plugin"
 SECTION = "multimedia"
 PRIORITY = "optional"
-LICENSE = "GPLv2"
+LICENSE = "GPL-2.0-only"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 LIC_FILES_CHKSUM = "file://COPYING;md5=7fbc338309ac38fefcd64b04bb903e34"
 

@@ -2,7 +2,7 @@ SUMMARY = "snes_init wake up framme buffer for enigma2"
 MAINTAINER = "DDamir@2015"
 SECTION = "multimedia"
 PRIORITY = "optional"
-LICENSE = "GPLv2"
+LICENSE = "GPL-2.0-only"
 
 DEPENDS = "directfb"
 

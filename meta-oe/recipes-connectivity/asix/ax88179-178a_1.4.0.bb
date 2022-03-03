@@ -1,7 +1,7 @@
 SUMMARY = "ASIX AX88179_178A USB 3.0/2.0 Gigabit Ethernet Network Adapter"
 HOMEPAGE = "http://www.asix.com.tw/"
 SECTION = "kernel/modules"
-LICENSE = "GPLv2"
+LICENSE = "GPL-2.0-only"
 
 
 inherit module

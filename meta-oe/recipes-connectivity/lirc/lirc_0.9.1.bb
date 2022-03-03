@@ -1,7 +1,7 @@
 DESCRIPTION = "LIRC is a package that allows you to decode and send infra-red signals of many (but not all) commonly used remote controls."
 PRIORITY = "optional"
 SECTION = "console/network"
-LICENSE = "GPLv2+"
+LICENSE = "GPL-2.0-or-later"
 DEPENDS = "virtual/kernel fakeroot-native setserial"
 HOMEPAGE = "http://www.lirc.org/"
 LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263"

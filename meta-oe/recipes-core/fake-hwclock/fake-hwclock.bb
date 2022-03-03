@@ -1,6 +1,6 @@
 SUMMARY = "fake-hwclock - Trivial script to load/save current contents of the kernel clock"
 HOMEPAGE = ""
-LICENSE = "GPLv2"
+LICENSE = "GPL-2.0-only"
 require conf/license/license-gplv2.inc
 
 PV = "1.0"

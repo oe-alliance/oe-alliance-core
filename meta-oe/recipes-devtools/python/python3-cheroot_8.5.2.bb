@@ -1,7 +1,7 @@
 SUMMARY = "Cheroot is the high-performance, pure-Python HTTP server used by CherryPy"
 HOMEPAGE = "https://cheroot.cherrypy.org/"
 SECTION = "devel/python"
-LICENSE = "LGPL-3.0"
+LICENSE = "LGPL-3.0-only"
 LIC_FILES_CHKSUM = "file://LICENSE.md;md5=53e455722e37d6acfe57bf370663edb5"
 DEPENDS += "${PYTHON_PN}-setuptools-scm-native ${PYTHON_PN}-setuptools-scm-git-archive-native"
 

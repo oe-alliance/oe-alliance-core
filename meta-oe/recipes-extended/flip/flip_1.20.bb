@@ -13,7 +13,7 @@ DESCRIPTION = "convert text file line endings between Unix and DOS formats \
  'recode')."
 MAINTAINER = "Jari Aalto <jari.aalto@cante.net>"
 SECTION = "console/utils"
-LICENSE = "GPL-2+"
+LICENSE = "GPL-2.0-or-later"
 
 FILESEXTRAPATHS:prepend := "${THISDIR}/debian:"
 

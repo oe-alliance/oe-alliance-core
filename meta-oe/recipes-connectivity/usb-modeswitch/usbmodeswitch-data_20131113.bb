@@ -1,7 +1,7 @@
 SUMMARY = "tool to switch multidevice usb modes"
 require conf/license/license-gplv2.inc
 
-LICENSE = "GPLv3"
+LICENSE = "GPL-3.0-only"
 
 DEPENDS += "tcl-native"
 

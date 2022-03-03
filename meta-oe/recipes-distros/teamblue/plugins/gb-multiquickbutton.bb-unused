@@ -2,7 +2,7 @@ MODULE = "Gigablue MultiQuickButton"
 SUMMARY = "Multi Quickbutton editor/wizard/code interpreter for keyboard and RC" 
 SECTION = "extra"
 PRIORITY = "optional"
-LICENSE = "GPLv2"
+LICENSE = "GPL-2.0-only"
 
 DEPENDS = "enigma2"
 

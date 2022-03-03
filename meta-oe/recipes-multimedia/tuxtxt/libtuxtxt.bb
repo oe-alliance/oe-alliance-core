@@ -1,5 +1,5 @@
 SUMMARY = "tuxbox libtuxtxt"
-LICENSE = "LGPLv2.1"
+LICENSE = "LGPL-2.1-only"
 LIC_FILES_CHKSUM = "file://COPYING;md5=393a5ca445f6965873eca0259a17f833"
 
 DEPENDS = "libpng freetype"

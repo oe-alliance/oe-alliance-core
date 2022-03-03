@@ -1,7 +1,7 @@
 SUMMARY = "A tool to apply the data-recovery capability concepts of RAID-like systems \
 to the posting & recovery of multi-part archives on Usenet."
 SECTION = "libs"
-LICENSE = "GPLv2"
+LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f"
 
 HOMEPAGE = "http://parchive.sourceforge.net/"

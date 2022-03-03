@@ -1,7 +1,7 @@
 SUMMARY = "Universal feed parser, handles RSS 0.9x, RSS 1.0, RSS 2.0, CDF, Atom 0.3, and Atom 1.0 feeds"
 HOMEPAGE = "https://feedparser.readthedocs.io/en/latest/"
 SECTION = "devel/python"
-LICENSE = "LGPL-3.0"
+LICENSE = "LGPL-3.0-only"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=4dd024c5a568d41577d68c900f653171"
 
 SRC_URI[md5sum] = "8d0ba773e049e8f1edc2541737593a92"

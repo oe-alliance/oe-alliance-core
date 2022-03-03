@@ -2,7 +2,7 @@ SUMMARY = "E2iPlayer"
 DESCRIPTION = "Watch Videos Online"
 HOMEPAGE = "https://gitlab.com/iptvplayer-for-e2/"
 SECTION = "multimedia"
-LICENSE = "GPLv2"
+LICENSE = "GPL-2.0-only"
 require conf/license/license-gplv2.inc
 require conf/python/python3-compileall.inc
 

@@ -1,7 +1,7 @@
 SUMMARY = "Python library for ISO 639 standard"
 HOMEPAGE = "https://github.com/noumar/iso639"
 AUTHOR = "Mikael Karlsson <i8myshoes@gmail.com>"
-LICENSE = "AGPLv3"
+LICENSE = "AGPL-3.0-only"
 LIC_FILES_CHKSUM = "file://setup.py;md5=985ce5e887f5e0440113829ba28ebe27"
 
 PROVIDES += "python3-iso639"

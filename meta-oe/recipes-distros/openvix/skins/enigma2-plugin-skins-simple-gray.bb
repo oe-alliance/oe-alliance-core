@@ -1,6 +1,6 @@
 DESCRIPTION = "Simple and clean multi resolution skin SimpleGray by Taapat"
 MAINTAINER = "Taapat"
-LICENSE = "GPLv3"
+LICENSE = "GPL-3.0-only"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=1ebbd3e34237af26da5dc08a4e440464"
 
 inherit gitpkgv allarch ${PYTHON_PN}native

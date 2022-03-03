@@ -1,7 +1,7 @@
 SUMMARY = "Realtek 8723A v1.0 Bluetooth"
 HOMEPAGE = "http://www.realtek.com.tw"
 SECTION = "kernel/modules"
-LICENSE = "GPLv2"
+LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://Makefile;md5=137c892e644370bd9573a3091781d8fa"
 
 inherit module

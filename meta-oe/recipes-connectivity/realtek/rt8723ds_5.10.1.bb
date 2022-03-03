@@ -1,6 +1,6 @@
 SUMMARY = "Realtek 8723D SDIO or SPI WiFi"
 HOMEPAGE = "https://www.realtek.com/"
-LICENSE = "GPLv2"
+LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://ifcfg-wlan0;md5=a84acae65af4b2d44d5035aa9f63cd85"
 
 DEPENDS ="bc-native"

@@ -1,6 +1,6 @@
 SUMMARY = "Driver for Realtek USB wireless device 8192fu"
 HOMEPAGE = "http://www.realtek.com/"
-LICENSE = "GPLv2"
+LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=7fc9206801c1cb9a93c37d7dc0667d87"
 
 DEPENDS ="bc-native"

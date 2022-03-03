@@ -1,7 +1,7 @@
 SUMMARY = "Py3k port of sgmllib."
 HOMEPAGE = "http://hg.hardcoded.net/sgmllib"
 SECTION = "devel/python"
-LICENSE = "LGPL-3.0"
+LICENSE = "LGPL-3.0-only"
 LIC_FILES_CHKSUM = "file://PKG-INFO;md5=df401240ef196247c2a016b94afa80f8"
 
 SRC_URI = "https://files.pythonhosted.org/packages/9e/bd/3704a8c3e0942d711c1299ebf7b9091930adae6675d7c8f476a7ce48653c/sgmllib3k-${PV}.tar.gz"

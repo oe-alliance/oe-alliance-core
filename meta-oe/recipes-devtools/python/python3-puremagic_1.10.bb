@@ -1,7 +1,7 @@
 SUMMARY = "Pure python implementation of magic file detection"
 HOMEPAGE = "https://github.com/cdgriffith/puremagic"
 SECTION = "devel/python"
-LICENSE = "LGPL-3.0"
+LICENSE = "LGPL-3.0-only"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=fc1a0f75023ac50d9ca9336268a36f43"
 
 SRC_URI[md5sum] = "dbc12ccaf0ff3b958b5a968ed6f23858"

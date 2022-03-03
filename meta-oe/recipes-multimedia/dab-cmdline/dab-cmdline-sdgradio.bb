@@ -1,6 +1,6 @@
 SUMMARY = "DAB decoding library with example of its use"
 SECTION = "libs/multimedia"
-LICENSE = "GPLv2"
+LICENSE = "GPL-2.0-only"
 require conf/license/license-gplv2.inc
 
 SRCREV = "${AUTOREV}"

@@ -3,7 +3,7 @@ HOMEPAGE = "http://www.mozilla.org/js/spidermonkey/"
 SECTION = "libs"
 
 # the package is licensed under either of the following
-LICENSE = "MPL-1 | GPLv2+ | LGPLv2.1+"
+LICENSE = "MPL-1.0 | GPL-2.0-or-later | LGPL-2.1-or-later"
 LIC_FILES_CHKSUM = "file://jsapi.c;beginline=4;endline=39;md5=347c6bbf4fb4547de1fa5ad830030063"
 
 SRC_URI = "http://ftp.mozilla.org/pub/mozilla.org/js/js-1.8.0-rc1.tar.gz \

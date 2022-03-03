@@ -2,7 +2,7 @@ SUMMARY = "Name Service Switch module for Link-local Multicast Name Resolution (
 HOMEPAGE = "https://github.com/jmaggard10/nss-llmnr"
 SECTION = "libs"
 
-LICENSE = "LGPLv2.1+"
+LICENSE = "LGPL-2.1-or-later"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=2d5025d4aa3495befef8f17206a5b0a1"
 
 inherit autotools gitpkgv

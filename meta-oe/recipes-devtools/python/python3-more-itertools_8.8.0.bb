@@ -1,7 +1,7 @@
 SUMMARY = "More routines for operating on iterables, beyond itertools"
 HOMEPAGE = "https://github.com/more-itertools/more-itertools"
 SECTION = "devel/python"
-LICENSE = "LGPL-3.0"
+LICENSE = "LGPL-3.0-only"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=3396ea30f9d21389d7857719816f83b5"
 
 SRC_URI[md5sum] = "4d06c23a027844e341c435d05facd947"

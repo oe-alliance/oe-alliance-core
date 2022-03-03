@@ -1,7 +1,7 @@
 SUMMARY = "yEnc Module for Python3 modified for SABnzbd"
 HOMEPAGE = "https://github.com/sabnzbd/sabnzbd-yenc"
 SECTION = "devel/python"
-LICENSE = "LGPL-3.0"
+LICENSE = "LGPL-3.0-only"
 LIC_FILES_CHKSUM = "file://PKG-INFO;md5=68dcf3baa84062cbac5a5b06aa406816"
 
 SRC_URI[md5sum] = "a741209df7dd80247a40143b6df91149"

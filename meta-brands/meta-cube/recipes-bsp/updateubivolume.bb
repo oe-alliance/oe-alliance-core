@@ -1,7 +1,7 @@
 SUMMARY = "update static ubi volume"
 SECTION = "console/utils"
 
-LICENSE = "GPLv3"
+LICENSE = "GPL-3.0-only"
 LIC_FILES_CHKSUM = "file://updateubivolume.cpp;firstline=2;endline=13;md5=c93a0d6160b7f4ce64067b5326cce929"
 
 PV = "1.0"

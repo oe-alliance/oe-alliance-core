@@ -1,6 +1,6 @@
 DESCRIPTION = "Handle your EPG on enigma2 from various sources (opentv, xmltv, custom sources)"
 HOMEPAGE = "https://github.com/oe-alliance/e2openplugin-CrossEPG"
-LICENSE = "LGPLv2.1"
+LICENSE = "LGPL-2.1-only"
 LIC_FILES_CHKSUM = "file://LICENSE.TXT;md5=4fbd65380cdd255951079008b364516c"
 require conf/python/python3-compileall.inc
 

@@ -1,7 +1,7 @@
 SUMMARY = "Driver for Realtek 8723BS wireless/bluetooth devices"
 HOMEPAGE = "http://www.realtek.com/"
 SECTION = "kernel/modules"
-LICENSE = "GPLv2"
+LICENSE = "GPL-2.0-only"
 require conf/license/license-gplv2.inc
 
 PR = "r3"

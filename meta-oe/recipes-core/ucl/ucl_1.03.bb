@@ -1,6 +1,6 @@
 HOMEPAGE = "http://www.oberhumer.com/opensource/ucl/"
 SUMMARY = "Data compression library"
-LICENSE = "GPLv2"
+LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://COPYING;md5=dfeaf3dc4beef4f5a7bdbc35b197f39e"
 
 SRC_URI = " \

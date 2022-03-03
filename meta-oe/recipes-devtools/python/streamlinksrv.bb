@@ -2,7 +2,7 @@ DESCRIPTION = "streamlinksrv is a helper deamon for streamlink"
 SECTION = "devel/python"
 MAINTAINER = "SatDreamGR Billy2011"
 HOMEPAGE = "www.satdreamgr.com"
-LICENSE = "GPLv2+"
+LICENSE = "GPL-2.0-or-later"
 require conf/license/license-gplv2.inc
 
 inherit allarch

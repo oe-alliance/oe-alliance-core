@@ -1,7 +1,7 @@
 SUMMARY = "Yet Another Flash File System"
 DESCRIPTION = "Tools for managing 'yaffs' file systems for bootmenu."
 
-LICENSE = "GPLv2"
+LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = " "
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 

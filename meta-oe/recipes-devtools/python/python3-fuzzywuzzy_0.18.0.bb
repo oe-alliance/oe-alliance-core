@@ -1,6 +1,6 @@
 SUMMARY = "Fuzzy string matching in python"
 HOMEPAGE = "https://github.com/seatgeek/fuzzywuzzy"
-LICENSE = "GPL-2.0"
+LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=9eea716ad75a54962b0802f278da3ccb"
 
 inherit pypi setuptools3

@@ -1,6 +1,6 @@
 require ${BPN}.inc
 
-LICENSE = "GPLv2"
+LICENSE = "GPL-2.0-only"
 SRCREV = "${PV}"
 LIC_FILES_CHKSUM = "file://COPYING;md5=ecabc31e90311da843753ba772885d9f"
 SRC_URI[md5sum] = "6073a6e0d865587defacc4ea00b6c298"

@@ -1,6 +1,6 @@
 SUMMARY = "Tuxbox Commander"
 MAINTAINER = "Sven Karschewski <seddi@i-have-a-dreambox.com>"
-LICENSE = "GPLv2"
+LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://tuxcom.c;beginline=8;endline=22;md5=8cfd78763de33face1d26b11904e84d5"
 require conf/python/python3-compileall.inc
 

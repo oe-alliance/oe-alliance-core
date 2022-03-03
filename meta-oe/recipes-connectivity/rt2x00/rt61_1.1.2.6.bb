@@ -1,7 +1,7 @@
 SUMMARY = "Driver for Ralink RT2501PCI/mPCI/CB (RT61:RT2561/RT2561S/RT2661)"
 HOMEPAGE = "http://www.realtek.com.tw"
 SECTION = "kernel/modules"
-LICENSE = "GPLv2"
+LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://README;md5=d517aa8db7935eee411104c5be1b2ed9"
 
 inherit module

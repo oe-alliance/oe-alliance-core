@@ -1,7 +1,7 @@
 SUMMARY = "Realtek 8723BU WIFI"
 HOMEPAGE = "http://www.realtek.com.tw"
 SECTION = "kernel/modules"
-LICENSE = "GPLv2"
+LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://README.md;md5=7967f55fbefa3330942afef996a272db"
 
 inherit module

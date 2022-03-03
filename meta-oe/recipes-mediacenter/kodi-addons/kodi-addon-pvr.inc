@@ -1,4 +1,4 @@
-LICENSE = "GPLv2+"
+LICENSE = "GPL-2.0-or-later"
 require conf/license/license-gplv2.inc
 require ${@bb.utils.contains("MACHINE_FEATURES", "kodi20", "kodi-nexus.inc", "", d)} ${@bb.utils.contains("MACHINE_FEATURES", "kodi19", "kodi-matrix.inc", "", d)}
 

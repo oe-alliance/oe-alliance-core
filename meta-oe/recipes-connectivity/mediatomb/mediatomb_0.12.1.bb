@@ -1,6 +1,6 @@
 SUMMARY = "MediaTomb - UPnP AV MediaServer for Linux"
 HOMEPAGE = "http://mediatomb.org/"
-LICENSE = "GPLv2"
+LICENSE = "GPL-2.0-only"
 DEPENDS = "expat ffmpeg sqlite3 libexif js zlib file id3lib curl"
 PV = "0.12.1"
 

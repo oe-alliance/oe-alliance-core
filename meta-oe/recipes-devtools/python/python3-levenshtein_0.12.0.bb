@@ -2,7 +2,7 @@ SUMMARY = "Python Levenshtein"
 HOMEPAGE = "http://github.com/joncasdam/python-Levenshtein"
 SECTION = "devel/python"
 DEPENDS = "${PYTHON_PN}"
-LICENSE = "LGPLv2+"
+LICENSE = "LGPL-2.0-or-later"
 LIC_FILES_CHKSUM = " file://COPYING;md5=24b9569831c46d4818450b55282476b4"
 
 SRC_URI = "https://files.pythonhosted.org/packages/source/p/python-Levenshtein/python-Levenshtein-${PV}.tar.gz"

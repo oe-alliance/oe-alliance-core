@@ -1,6 +1,6 @@
 SUMMARY = "Kodi Media Center"
 
-LICENSE = "GPLv2+"
+LICENSE = "GPL-2.0-or-later"
 LIC_FILES_CHKSUM = "file://JsonSchemaBuilder.cpp;beginline=2;endline=18;md5=1f67721215c03f66545390f6e45b99c7"
 
 SRCREV = "f44fdfbf675f30c01e7639177a34544e6a6b9dad"

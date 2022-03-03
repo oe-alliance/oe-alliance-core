@@ -1,6 +1,6 @@
 SUMMARY = "Linux Bluetooth HIDD COMPAT Backport"
 SECTION = "console"
-LICENSE = "GPLv2+"
+LICENSE = "GPL-2.0-or-later"
 require conf/license/license-gplv2.inc
 
 DEPENDS = "glib-2.0 bluez5"

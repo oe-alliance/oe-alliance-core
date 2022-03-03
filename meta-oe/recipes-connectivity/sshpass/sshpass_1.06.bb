@@ -1,5 +1,5 @@
 SUMMARY = "sshpass"
-LICENSE = "GPLv2+"
+LICENSE = "GPL-2.0-or-later"
 
 LIC_FILES_CHKSUM = "file://main.c;beginline=1;endline=19;md5=5f0246a83a3118d9161abc9611abea7b"
 

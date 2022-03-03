@@ -1,7 +1,7 @@
 SUMMARY = "setuptools_scm plugin for git archives"
 HOMEPAGE = "https://github.com/Changaco/setuptools_scm_git_archive/"
 SECTION = "devel/python"
-LICENSE = "LGPL-3.0"
+LICENSE = "LGPL-3.0-only"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=838c366f69b72c5df05c96dff79b35f2"
 DEPENDS += "${PYTHON_PN}-setuptools-scm-native"
 

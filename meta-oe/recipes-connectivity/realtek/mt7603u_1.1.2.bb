@@ -1,7 +1,7 @@
 SUMMARY = "mediatek 7603u v1.12"
 HOMEPAGE = "www.mediatek.com"
 SECTION = "kernel/modules"
-LICENSE = "GPLv2"
+LICENSE = "GPL-2.0-only"
 require conf/license/license-gplv2.inc
 
 inherit module

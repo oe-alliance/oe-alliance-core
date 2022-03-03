@@ -3,7 +3,7 @@ AUTHOR = "Robson Braga Araujo - <brag@users.sf.net>"
 HOMEPAGE = "http://curlftpfs.sourceforge.net/"
 SECTION = "console/network"
 PRIORITY = "optional"
-LICENSE = "GPLv2"
+LICENSE = "GPL-2.0-only"
 DEPENDS = "glib-2.0 fuse curl"
 RDEPENDS:${PN} += " libcurl "
 

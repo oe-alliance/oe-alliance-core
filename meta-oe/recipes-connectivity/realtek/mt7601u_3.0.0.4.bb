@@ -1,7 +1,7 @@
 SUMMARY = "mediatek 7601 v3.0.0.4"
 HOMEPAGE = "www.mediatek.com"
 SECTION = "kernel/modules"
-LICENSE = "GPLv2"
+LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://iwpriv_usage.txt;md5=8876ae2c103446a442658f1cc2a01b76"
 
 

@@ -1,6 +1,6 @@
 SUMMARY = "dumpait"
 PRIORITY = "required"
-LICENSE = "GPLv3"
+LICENSE = "GPL-3.0-only"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=84dcc94da3adb52b53ae4fa38fe49e5d"
 
 inherit autotools-brokensep pkgconfig gitpkgv

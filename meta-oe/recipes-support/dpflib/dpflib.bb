@@ -1,5 +1,5 @@
 DESCRIPTION = "Tools for managing memory technology devices."
-LICENSE = "GPLv2+"
+LICENSE = "GPL-2.0-or-later"
 LIC_FILES_CHKSUM = "file://${S}/README;md5=42a667e310028ad2cc31da2ae54d8f16"
 
 FILESEXTRAPATHSDIR:prepend := "${THISDIR}/${PN}:"

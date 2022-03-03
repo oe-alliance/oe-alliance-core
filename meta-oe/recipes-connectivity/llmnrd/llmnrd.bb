@@ -1,6 +1,6 @@
 SUMMARY = "llmnrd - Link-Local Multicast Resolution (LLMNR) Daemon for Linux"
 HOMEPAGE = "https://github.com/tklauser/llmnrd"
-LICENSE = "GPLv2"
+LICENSE = "GPL-2.0-only"
 require conf/license/license-gplv2.inc
 
 inherit gitpkgv
