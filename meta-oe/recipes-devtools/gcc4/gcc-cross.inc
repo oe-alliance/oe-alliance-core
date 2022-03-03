@@ -44,6 +44,8 @@ EXTRA_OECONF_PATHS = "\
 
 ARCH_FLAGS_FOR_TARGET += "-isystem${STAGING_DIR_TARGET}${target_includedir}"
 
+CXXFLAGS += "-std=c++11"
+
 do_compile () {
 	export CC="${BUILD_CC}"
 	export AR_FOR_TARGET="${TARGET_SYS}-ar"

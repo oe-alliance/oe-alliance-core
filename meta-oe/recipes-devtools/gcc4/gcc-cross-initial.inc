@@ -33,6 +33,8 @@ EXTRA_OECONF = "\
 
 EXTRA_OECONF += "--with-native-system-header-dir=${SYSTEMHEADERS}"
 
+CXXFLAGS += "-std=c++11"
+
 do_compile () {
     oe_runmake all-gcc configure-target-libgcc
 }
