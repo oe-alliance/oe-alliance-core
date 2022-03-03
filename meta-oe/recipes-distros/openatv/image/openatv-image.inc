@@ -15,7 +15,7 @@ WORKDIR = "${TMPDIR}/work/${MULTIMACH_TARGET_SYS}/${PN}/${EXTENDPE}${PV}"
 do_rootfs[deptask] = "do_rm_work"
 REPRODUCIBLE_TIMESTAMP_ROOTFS = "${@time.strftime('%s')}"
 
-SSTATE_DUPWHITELIST += "${DEPLOY_DIR_IMAGE}"
+SSTATE_ALLOW_OVERLAP_FILES += "${DEPLOY_DIR_IMAGE}"
 
 IMAGE_INSTALL = "openatv-base \
     ${@bb.utils.contains("MACHINE_FEATURES", "dvbc-only", "", "enigma2-plugin-settings-defaultsat", d)} \
