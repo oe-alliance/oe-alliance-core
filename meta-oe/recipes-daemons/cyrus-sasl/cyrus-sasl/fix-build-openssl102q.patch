@@ -1,9 +1,7 @@
-diff --git a/plugins/ntlm.c b/plugins/ntlm.c
-index fc0d89f..99c8580 100644
 --- a/plugins/ntlm.c
 +++ b/plugins/ntlm.c
-@@ -76,6 +76,11 @@
- #include <openssl/md4.h>
+@@ -83,6 +83,11 @@
+ #endif
  #include <openssl/md5.h>
  #include <openssl/hmac.h>
 +#if OPENSSL_VERSION_NUMBER < 0x10100000L
