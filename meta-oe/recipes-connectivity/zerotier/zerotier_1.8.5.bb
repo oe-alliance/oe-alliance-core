@@ -13,8 +13,8 @@ RDEPENDS:${PN} = "kernel-module-tun"
 inherit gitpkgv
 
 SRCREV = "${AUTOREV}"
-PV = "1.8.4+git${SRCPV}"
-PKGV = "1.8.4+git${GITPKGV}"
+PV = "1.8.5+git${SRCPV}"
+PKGV = "1.8.5+git${GITPKGV}"
 
 SRC_URI = "git://github.com/zerotier/ZeroTierOne.git;protocol=https;branch=master \
         file://zerotier \
@@ -34,4 +34,4 @@ do_install:append() {
     install -m 0755 ${WORKDIR}/zerotier ${D}${sysconfdir}/init.d/zerotier
 }
 
-INSANE_SKIP:${PN} = "already-stripped"
+INSANE_SKIP:${PN} = "already-stripped ldflags"
