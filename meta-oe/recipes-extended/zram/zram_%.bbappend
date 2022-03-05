@@ -4,7 +4,7 @@ RDEPENDS:${PN} = ""
 # that zram is a module.
 FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 
-PR .= ".2"
+PR .= ".3"
 
 do_install:append() {
 	# Remove systemd related configuration file
