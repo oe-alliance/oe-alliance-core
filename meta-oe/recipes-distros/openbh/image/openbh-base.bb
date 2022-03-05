@@ -26,8 +26,6 @@ RDEPENDS:${PN} = "\
     hddtemp \
     inadyn-mt \
     libcrypto-compat-0.9.7 \
-    mc \
-    ntfs-3g \
     oe-alliance-base \
     openbh-bootlogo \
     openbh-enigma2 \
@@ -43,6 +41,13 @@ RDEPENDS:${PN} = "\
     ${PYTHON_PN}-pexpect \
     ${PYTHON_PN}-six \
     rtmpdump \
-    wireless-tools \
     zip \
+    ${@bb.utils.contains_any("FLASHSIZE", "64 96", "", " \
+        ntfs-3g \
+        wireless-tools \
+    ", d)} \
     "
+RDEPENDS:${PN}:append:vuduo = " zram"
+RDEPENDS:${PN}:append:vusolo = " zram"
+
+
