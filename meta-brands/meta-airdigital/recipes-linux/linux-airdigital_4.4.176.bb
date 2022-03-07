@@ -18,6 +18,7 @@ SRC_URI = "http://source.mynonpublic.com/zgemma/linux-${PV}-${SRCDATE}-${ARCH}.t
 	file://defconfig \
 	file://initramfs-subdirboot.cpio.gz;unpack=0 \
 	file://findkerneldevice.sh \
+    file://fix-multiple-defs-yyloc.patch \
 "
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
