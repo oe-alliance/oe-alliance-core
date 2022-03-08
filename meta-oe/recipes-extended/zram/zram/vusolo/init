@@ -2,7 +2,7 @@
 set -e
 
 start() {
-    FACTOR=50
+    FACTOR=25
     [ -f /etc/default/zram ] && source /etc/default/zram || true
     modprobe zram
     factor=$FACTOR # percentage

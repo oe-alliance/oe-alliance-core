@@ -8,7 +8,7 @@ ALLOW_EMPTY:${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r19"
+PR = "r21"
 
 inherit packagegroup
 
@@ -44,5 +44,10 @@ RRECOMMENDS:${PN} = " \
     openbh-picon-feed-opkg-conf \
     "
 
-RRECOMMENDS:${PN}:remove:osmio4kplus = "enigma2-plugin-extensions-openmultiboot"
-RRECOMMENDS:${PN}:remove:osmini4k = "enigma2-plugin-extensions-openmultiboot"
+RRECOMMENDS:${PN}:remove:osmio4kplus = "enigma2-plugin-extensions-openmultiboot openmultiboot"
+RRECOMMENDS:${PN}:remove:osmini4k = "enigma2-plugin-extensions-openmultiboot openmultiboot"
+
+RRECOMMENDS:${PN}:remove:vuduo = "enigma2-plugin-extensions-openmultiboot openmultiboot enigma2-plugin-systemplugins-terrestrialscan enigma2-plugin-systemplugins-autobouquetsmaker"
+RRECOMMENDS:${PN}:remove:vusolo = "enigma2-plugin-extensions-openmultiboot openmultiboot enigma2-plugin-systemplugins-terrestrialscan enigma2-plugin-systemplugins-autobouquetsmaker"
+RRECOMMENDS:${PN}:remove:vuuno = "enigma2-plugin-extensions-openmultiboot openmultiboot enigma2-plugin-systemplugins-terrestrialscan enigma2-plugin-systemplugins-autobouquetsmaker"
+
