@@ -20,6 +20,9 @@ inherit module
 do_compile() {
 }
 
+INHIBIT_PACKAGE_STRIP = "1"
+INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
+
 do_install() {
     install -d ${D}${sysconfdir}/modules-load.d
     install -m 0644 ${WORKDIR}/modules ${D}${sysconfdir}/modules-load.d/${PN}.conf
