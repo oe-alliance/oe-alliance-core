@@ -4,7 +4,7 @@ Date: Fri, 17 Jul 2020 21:00:25 +0200
 Subject: [PATCH 09/10] e2-player
 
 diff --git a/cmake/treedata/common/cores.txt b/cmake/treedata/common/cores.txt
-index d23939d314e..5e5c6cbf80c 100644
+index d23939d..5e5c6cb 100644
 --- a/cmake/treedata/common/cores.txt
 +++ b/cmake/treedata/common/cores.txt
 @@ -4,5 +4,6 @@ xbmc/cores/DllLoader                   cores/dll-loader
@@ -15,7 +15,7 @@ index d23939d314e..5e5c6cbf80c 100644
  xbmc/cores/paplayer                    cores/paplayer
  xbmc/cores/playercorefactory           cores/playercorefactory
 diff --git a/system/playercorefactory.xml b/system/playercorefactory.xml
-index f928311cf0b..8e2502143eb 100644
+index f928311..8e25021 100644
 --- a/system/playercorefactory.xml
 +++ b/system/playercorefactory.xml
 @@ -8,9 +8,17 @@
@@ -48,7 +48,7 @@ index f928311cf0b..8e2502143eb 100644
      <!-- DVDs -->
 diff --git a/xbmc/cores/Enigma2Player/CMakeLists.txt b/xbmc/cores/Enigma2Player/CMakeLists.txt
 new file mode 100644
-index 00000000000..fc672758ff9
+index 0000000..fc67275
 --- /dev/null
 +++ b/xbmc/cores/Enigma2Player/CMakeLists.txt
 @@ -0,0 +1,6 @@
@@ -60,7 +60,7 @@ index 00000000000..fc672758ff9
 +
 diff --git a/xbmc/cores/Enigma2Player/Enigma2Player.cpp b/xbmc/cores/Enigma2Player/Enigma2Player.cpp
 new file mode 100644
-index 00000000000..70b0493bc64
+index 0000000..70b0493
 --- /dev/null
 +++ b/xbmc/cores/Enigma2Player/Enigma2Player.cpp
 @@ -0,0 +1,793 @@
@@ -859,7 +859,7 @@ index 00000000000..70b0493bc64
 +
 diff --git a/xbmc/cores/Enigma2Player/Enigma2Player.h b/xbmc/cores/Enigma2Player/Enigma2Player.h
 new file mode 100644
-index 00000000000..9d969049472
+index 0000000..9d96904
 --- /dev/null
 +++ b/xbmc/cores/Enigma2Player/Enigma2Player.h
 @@ -0,0 +1,96 @@
@@ -960,7 +960,7 @@ index 00000000000..9d969049472
 +  CFileItem m_file;
 +};
 diff --git a/xbmc/cores/playercorefactory/PlayerCoreConfig.h b/xbmc/cores/playercorefactory/PlayerCoreConfig.h
-index 92742cdcd59..0a7980e6ccd 100644
+index 92742cd..0a7980e 100644
 --- a/xbmc/cores/playercorefactory/PlayerCoreConfig.h
 +++ b/xbmc/cores/playercorefactory/PlayerCoreConfig.h
 @@ -13,6 +13,7 @@
@@ -983,18 +983,18 @@ index 92742cdcd59..0a7980e6ccd 100644
  #if defined(HAS_UPNP)
      else if (m_type.compare("remote") == 0)
 diff --git a/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp b/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp
-index 28ad4303a48..bbc5c090d26 100644
+index 9a515f7..6402429 100644
 --- a/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp
 +++ b/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp
-@@ -14,6 +14,7 @@
- #include "URL.h"
+@@ -15,6 +15,7 @@
  #include "cores/IPlayerCallback.h"
+ #include "cores/VideoPlayer/Interface/InputStreamConstants.h"
  #include "cores/paplayer/PAPlayer.h"
 +#include "cores/Enigma2Player/Enigma2Player.h"
  #include "dialogs/GUIDialogContextMenu.h"
  #include "guilib/LocalizeStrings.h"
  #include "profiles/ProfileManager.h"
-@@ -323,6 +324,11 @@ bool CPlayerCoreFactory::LoadConfiguration(const std::string &file, bool clear)
+@@ -354,6 +355,11 @@ bool CPlayerCoreFactory::LoadConfiguration(const std::string &file, bool clear)
      VideoPlayer->m_bPlaysVideo = true;
      m_vecPlayerConfigs.push_back(VideoPlayer);
  
@@ -1006,7 +1006,7 @@ index 28ad4303a48..bbc5c090d26 100644
      CPlayerCoreConfig* paplayer = new CPlayerCoreConfig("PAPlayer", "music", nullptr);
      paplayer->m_bPlaysAudio = true;
      m_vecPlayerConfigs.push_back(paplayer);
-@@ -355,6 +361,8 @@ bool CPlayerCoreFactory::LoadConfiguration(const std::string &file, bool clear)
+@@ -386,6 +392,8 @@ bool CPlayerCoreFactory::LoadConfiguration(const std::string &file, bool clear)
          internaltype = "music";
        else if (type == "externalplayer")
          internaltype = "external";
@@ -1015,6 +1015,3 @@ index 28ad4303a48..bbc5c090d26 100644
  
        int count = 0;
        std::string playername = name;
--- 
-2.25.1
-

@@ -77,15 +77,15 @@ DEPENDS += " \
 
 # 19.0 Matrix final
 #SRCREV = "f44fdfbf675f30c01e7639177a34544e6a6b9dad"
-# 19.3 Matrix release
-SRCREV = "49a04cd6a7f49ea9a0f05c492b11a3ba7c542a99"
+# 19.4 Matrix release
+SRCREV = "e12e66e019af29ba9d5f5a2614315b15a138b81a"
 
 # 'patch' doesn't support binary diffs
 PATCHTOOL = "git"
 
 PR = "r0"
 
-PV = "19.3-gitr${SRCPV}"
+PV = "19.4-gitr${SRCPV}"
 SRC_URI = "git://github.com/xbmc/xbmc.git;protocol=https;branch=Matrix \
            file://0001-flatbuffers-19.patch \
            file://0002-readd-Touchscreen-settings.patch \
