@@ -32,3 +32,5 @@ DEBIAN_NOAUTONAME:${PN} = "1"
 
 # glib-networking is needed for SSL, proxies, etc.
 RRECOMMENDS:${PN} = "glib-networking"
+
+PACKAGE_NO_LOCALE = "1"

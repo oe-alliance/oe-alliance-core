@@ -14,3 +14,6 @@ SRCREV_gst_plugins_good = "7747342a54ae56013a297b6554bfb3f12bde6784"
 SRCREV_gst_plugins_ugly = "8f97a05e1d2cb3cd2548cde2e70ea6d335040f59"
 
 S = "${WORKDIR}/git"
+
+
+PACKAGE_NO_LOCALE = "1"
