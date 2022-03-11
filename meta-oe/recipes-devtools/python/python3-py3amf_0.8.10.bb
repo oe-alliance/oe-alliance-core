@@ -14,6 +14,6 @@ SRC_URI[sha256sum] = "6dac2d34a09daf5351e654e8cdc3026b3560a6db498c17cdcc84322b31
 
 S = "${WORKDIR}/Py3AMF-0.8.10"
 
-inherit setuptools3
+inherit setuptools3_legacy
 
 include ${PYTHON_PN}-package-split.inc

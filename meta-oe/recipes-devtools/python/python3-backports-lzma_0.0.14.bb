@@ -13,6 +13,6 @@ SRC_URI[sha256sum] = "16d8b68e4d3cd4e6c9ddb059850452946da3914c8a8e197a7f2b095455
 
 S = "${WORKDIR}/backports.lzma-${PV}"
 
-inherit setuptools3
+inherit setuptools3_legacy
 
 include ${PYTHON_PN}-package-split.inc

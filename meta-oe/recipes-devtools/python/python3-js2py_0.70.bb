@@ -10,6 +10,6 @@ SRC_URI[sha256sum] = "7568b33f6bd15ee8ab1f3655928ed05481a6236ad2acca4598703ae501
 
 S = "${WORKDIR}/Js2Py-${PV}"
 
-inherit setuptools3
+inherit setuptools3_legacy
 
 include ${PYTHON_PN}-package-split.inc

@@ -26,6 +26,6 @@ SRC_URI[sha256sum] = "13af6032476ab4256158220e530411290b3b934dd602bb6dacacbf6d16
 
 S = "${WORKDIR}/Scrapy-${PV}"
 
-inherit setuptools3
+inherit setuptools3_legacy
 
 include ${PYTHON_PN}-package-split.inc

@@ -11,7 +11,7 @@ SRC_URI = "https://files.pythonhosted.org/packages/ba/8e/aedef81641c8dca6fd0fb72
 
 S = "${WORKDIR}/PyExecJS-${PV}"
 
-inherit setuptools3
+inherit setuptools3_legacy
 
 SRC_URI[md5sum] = "f530b8e14373714448a94f458d24d1d6"
 SRC_URI[sha256sum] = "34cc1d070976918183ff7bdc0ad71f8157a891c92708c00c5fbbff7a769f505c"

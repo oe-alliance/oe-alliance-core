@@ -13,7 +13,7 @@ SRC_URI = "git://github.com/oe-mirrors/python-cjson.git;protocol=https;branch=ma
 
 S = "${WORKDIR}/git"
 
-inherit setuptools3
+inherit setuptools3_legacy
 
 DISTUTILS_INSTALL_ARGS = "\
     --root=${D} \

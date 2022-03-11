@@ -11,6 +11,6 @@ SRC_URI[sha256sum] = "a682771bc7b51b2ff41466460896c1a5a653f9a1e71639ef365a72e66d
 
 S = "${WORKDIR}/Protego-${PV}"
 
-inherit setuptools3
+inherit setuptools3_legacy
 
 include ${PYTHON_PN}-package-split.inc
