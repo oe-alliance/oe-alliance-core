@@ -3,7 +3,7 @@ inherit image_types
 IMAGE_ROOTFS = "${WORKDIR}/rootfs/linuxrootfs1"
 BOOTOPTIONS_PARTITION_SIZE = "2048"
 IMAGE_ROOTFS_SIZE = "460800"
-do_image_zgemmafastboot8gb[vardepsexclude] = "DATETIME"
+IMAGE_CMD:zgemmafastboot8gb[vardepsexclude] += "DATE DATETIME"
 
 do_image_zgemmafastboot8gb[depends] = " \
 	e2fsprogs-native:do_populate_sysroot \

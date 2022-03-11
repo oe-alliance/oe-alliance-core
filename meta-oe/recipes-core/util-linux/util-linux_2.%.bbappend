@@ -30,3 +30,5 @@ do_install:append () {
         fi
     fi
 }
+
+PACKAGE_NO_LOCALE = "1"

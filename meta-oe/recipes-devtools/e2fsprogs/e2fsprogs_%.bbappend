@@ -12,3 +12,4 @@ do_install:append() {
 PACKAGES =+ "e2fsprogs-e4defrag"
 FILES:e2fsprogs-e4defrag = "/usr/sbin/e4defrag"
 
+PACKAGE_NO_LOCALE = "1"

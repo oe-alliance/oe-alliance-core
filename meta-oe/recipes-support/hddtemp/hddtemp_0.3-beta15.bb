@@ -20,3 +20,5 @@ do_install:append() {
     install -d ${D}/usr/share/misc/
     install -m 0644 ${WORKDIR}/hddtemp.db ${D}/usr/share/misc/hddtemp.db
 }
+
+PACKAGE_NO_LOCALE = "1"

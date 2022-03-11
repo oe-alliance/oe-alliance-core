@@ -12,3 +12,4 @@ do_install:append () {
 
 # for shairplay ...
 PACKAGECONFIG += "libdns_sd"
+PACKAGE_NO_LOCALE = "1"

@@ -5,3 +5,4 @@
 do_configure:prepend:sh4 (){
     sed -i -e /'-Werror=undef'/d ${S}/meson.build
 }
+PACKAGE_NO_LOCALE = "1"

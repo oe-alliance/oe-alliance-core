@@ -2,3 +2,4 @@
 #   error: 'maxsize' may be used uninitialized in this function
 # which are false positives?
 CFLAGS:append = " -Wno-maybe-uninitialized -Wno-uninitialized"
+PACKAGE_NO_LOCALE = "1"

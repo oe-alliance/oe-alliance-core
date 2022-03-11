@@ -48,3 +48,5 @@ if [ -f /etc/minidlna.conf.orig ];then
 		mv /etc/minidlna.conf.orig /etc/minidlna.conf
 	fi
 }
+
+PACKAGE_NO_LOCALE = "1"

@@ -5,3 +5,4 @@ BUILD_CFLAGS := "${@d.getVar('BUILD_CFLAGS', True).replace('-march=native', '')}
 BUILD_CXXFLAGS := "${@d.getVar('BUILD_CXXFLAGS', True).replace('-march=native', '')}"
 BUILD_CPPFLAGS := "${@d.getVar('BUILD_CPPFLAGS', True).replace('-march=native', '')}"
 
+PACKAGE_NO_LOCALE = "1"
