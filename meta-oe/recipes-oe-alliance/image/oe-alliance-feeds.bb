@@ -34,6 +34,7 @@ RDEPENDS:${PN} = " \
     enigma2-plugin-drivers-iptables \
     enigma2-plugin-extensions-enigmalight \
     enigma2-plugin-extensions-mediatomb \
+    enigma2-plugin-extensions-gerbera \
     enigma2-plugin-extensions-dreamplex \
     enigma2-plugin-extensions-youtube \
     enigma2-plugin-extensions-autobouquets \
