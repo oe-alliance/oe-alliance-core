@@ -27,9 +27,9 @@ do_compile:prepend() {
 }
 
 do_install:append() {
-    mv ${D}${datadir}/etc ${D}${sysconfdir}
     install -m 0755 -d ${D}${sysconfdir}/bash_completion.d
-    install -m 0644 youtube-dl.bash-completion ${D}${sysconfdir}/bash_completion.d
+    mv ${D}${prefix}${sysconfdir}/bash_completion.d ${D}${sysconfdir}
+    rm -rf ${D}${prefix}${sysconfdir}
     rm -f ${D}${libdir}/${PYTHON_DIR}/site-packages/youtube_dl*egg-info/PKG-INFO
     rm -f ${D}${libdir}/${PYTHON_DIR}/site-packages/youtube_dl*egg-info/SOURCES.txt
     rm -f ${D}${libdir}/${PYTHON_DIR}/site-packages/youtube_dl*egg-info/dependency_links.txt
