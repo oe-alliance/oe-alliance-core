@@ -12,6 +12,8 @@ PR_NUM = "${@bb.utils.contains("DISTRO_TYPE", "release", "${BUILD_VERSION}.000",
 PV = "${IMAGE_VERSION}"
 PR = "r${PR_NUM}"
 
+SSTATE_DUPWHITELIST += "${DEPLOY_DIR_IMAGE}"
+
 IMAGE_INSTALL = "openbh-base"
 
 # Some additional comfort on the shell: Pre-install nano on boxes with 128 MB or more:
