@@ -1,0 +1,521 @@
+diff -Naur media_build-bst-14.orig/linux/drivers/media/usb/dvb-usb-v2/dvbsky.c media_build-bst-14/linux/drivers/media/usb/dvb-usb-v2/dvbsky.c
+--- media_build-bst-14.orig/linux/drivers/media/usb/dvb-usb-v2/dvbsky.c	2014-10-14 10:05:32.000000000 +0200
++++ media_build-bst-14/linux/drivers/media/usb/dvb-usb-v2/dvbsky.c	2015-05-30 11:26:08.138390315 +0200
+@@ -69,7 +69,7 @@
+ 	if (wlen != 0)
+ 		memcpy(state->obuf, wbuf, wlen);
+ 
+-	ret = dvb_usbv2_generic_rw_locked(d, state->obuf, wlen,
++	ret = dvb_usbv2_mediatree_generic_rw_locked(d, state->obuf, wlen,
+ 			state->ibuf, rlen);
+ 
+ 	if (!ret && (rlen != 0))
+@@ -893,11 +893,11 @@
+ static struct usb_driver dvbsky_usb_driver = {
+ 	.name = KBUILD_MODNAME,
+ 	.id_table = dvbsky_id_table,
+-	.probe = dvb_usbv2_probe,
+-	.disconnect = dvb_usbv2_disconnect,
+-	.suspend = dvb_usbv2_suspend,
+-	.resume = dvb_usbv2_resume,
+-	.reset_resume = dvb_usbv2_reset_resume,
++	.probe = dvb_usbv2_mediatree_probe,
++	.disconnect = dvb_usbv2_mediatree_disconnect,
++	.suspend = dvb_usbv2_mediatree_suspend,
++	.resume = dvb_usbv2_mediatree_resume,
++	.reset_resume = dvb_usbv2_mediatree_reset_resume,
+ 	.no_dynamic_id = 1,
+ 	.soft_unbind = 1,
+ };
+diff -Naur media_build-bst-14.orig/linux/drivers/media/usb/dvb-usb-v2/dvb_usb_core.c media_build-bst-14/linux/drivers/media/usb/dvb-usb-v2/dvb_usb_core.c
+--- media_build-bst-14.orig/linux/drivers/media/usb/dvb-usb-v2/dvb_usb_core.c	2014-10-14 08:52:04.000000000 +0200
++++ media_build-bst-14/linux/drivers/media/usb/dvb-usb-v2/dvb_usb_core.c	2015-05-30 11:50:42.125378459 +0200
+@@ -21,8 +21,8 @@
+ 
+ #include "dvb_usb_common.h"
+ 
+-int dvb_usbv2_disable_rc_polling;
+-module_param_named(disable_rc_polling, dvb_usbv2_disable_rc_polling, int, 0644);
++int dvb_usbv2_mediatree_disable_rc_polling;
++module_param_named(disable_rc_polling, dvb_usbv2_mediatree_disable_rc_polling, int, 0644);
+ MODULE_PARM_DESC(disable_rc_polling,
+ 		"disable remote control polling (default: 0)");
+ static int dvb_usb_force_pid_filter_usage;
+@@ -31,7 +31,7 @@
+ MODULE_PARM_DESC(force_pid_filter_usage,
+ 		"force all DVB USB devices to use a PID filter, if any (default: 0)");
+ 
+-static int dvb_usbv2_download_firmware(struct dvb_usb_device *d,
++static int dvb_usbv2_mediatree_download_firmware(struct dvb_usb_device *d,
+ 		const char *name)
+ {
+ 	int ret;
+@@ -65,7 +65,7 @@
+ 	return ret;
+ }
+ 
+-static int dvb_usbv2_i2c_init(struct dvb_usb_device *d)
++static int dvb_usbv2_mediatree_i2c_init(struct dvb_usb_device *d)
+ {
+ 	int ret;
+ 	dev_dbg(&d->udev->dev, "%s:\n", __func__);
+@@ -92,7 +92,7 @@
+ 	return ret;
+ }
+ 
+-static int dvb_usbv2_i2c_exit(struct dvb_usb_device *d)
++static int dvb_usbv2_mediatree_i2c_exit(struct dvb_usb_device *d)
+ {
+ 	dev_dbg(&d->udev->dev, "%s:\n", __func__);
+ 
+@@ -113,7 +113,7 @@
+ 	 * When the parameter has been set to 1 via sysfs while the
+ 	 * driver was running, or when bulk mode is enabled after IR init.
+ 	 */
+-	if (dvb_usbv2_disable_rc_polling || d->rc.bulk_mode) {
++	if (dvb_usbv2_mediatree_disable_rc_polling || d->rc.bulk_mode) {
+ 		d->rc_polling_active = false;
+ 		return;
+ 	}
+@@ -130,13 +130,13 @@
+ 			msecs_to_jiffies(d->rc.interval));
+ }
+ 
+-static int dvb_usbv2_remote_init(struct dvb_usb_device *d)
++static int dvb_usbv2_mediatree_remote_init(struct dvb_usb_device *d)
+ {
+ 	int ret;
+ 	struct rc_dev *dev;
+ 	dev_dbg(&d->udev->dev, "%s:\n", __func__);
+ 
+-	if (dvb_usbv2_disable_rc_polling || !d->props->get_rc_config)
++	if (dvb_usbv2_mediatree_disable_rc_polling || !d->props->get_rc_config)
+ 		return 0;
+ 
+ 	d->rc.map_name = d->rc_map;
+@@ -199,7 +199,7 @@
+ 	return ret;
+ }
+ 
+-static int dvb_usbv2_remote_exit(struct dvb_usb_device *d)
++static int dvb_usbv2_mediatree_remote_exit(struct dvb_usb_device *d)
+ {
+ 	dev_dbg(&d->udev->dev, "%s:\n", __func__);
+ 
+@@ -212,8 +212,8 @@
+ 	return 0;
+ }
+ #else
+-	#define dvb_usbv2_remote_init(args...) 0
+-	#define dvb_usbv2_remote_exit(args...)
++	#define dvb_usbv2_mediatree_remote_init(args...) 0
++	#define dvb_usbv2_mediatree_remote_exit(args...)
+ #endif
+ 
+ static void dvb_usb_data_complete(struct usb_data_stream *stream, u8 *buf,
+@@ -237,7 +237,7 @@
+ 	dvb_dmx_swfilter_raw(&adap->demux, buf, len);
+ }
+ 
+-static int dvb_usbv2_adapter_stream_init(struct dvb_usb_adapter *adap)
++static int dvb_usbv2_mediatree_adapter_stream_init(struct dvb_usb_adapter *adap)
+ {
+ 	dev_dbg(&adap_to_d(adap)->udev->dev, "%s: adap=%d\n", __func__,
+ 			adap->id);
+@@ -249,7 +249,7 @@
+ 	return usb_urb_initv2(&adap->stream, &adap->props->stream);
+ }
+ 
+-static int dvb_usbv2_adapter_stream_exit(struct dvb_usb_adapter *adap)
++static int dvb_usbv2_mediatree_adapter_stream_exit(struct dvb_usb_adapter *adap)
+ {
+ 	dev_dbg(&adap_to_d(adap)->udev->dev, "%s: adap=%d\n", __func__,
+ 			adap->id);
+@@ -419,7 +419,7 @@
+ 	return ret;
+ }
+ 
+-static int dvb_usbv2_adapter_dvb_init(struct dvb_usb_adapter *adap)
++static int dvb_usbv2_mediatree_adapter_dvb_init(struct dvb_usb_adapter *adap)
+ {
+ 	int ret;
+ 	struct dvb_usb_device *d = adap_to_d(adap);
+@@ -489,7 +489,7 @@
+ 	return ret;
+ }
+ 
+-static int dvb_usbv2_adapter_dvb_exit(struct dvb_usb_adapter *adap)
++static int dvb_usbv2_mediatree_adapter_dvb_exit(struct dvb_usb_adapter *adap)
+ {
+ 	dev_dbg(&adap_to_d(adap)->udev->dev, "%s: adap=%d\n", __func__,
+ 			adap->id);
+@@ -505,7 +505,7 @@
+ 	return 0;
+ }
+ 
+-static int dvb_usbv2_device_power_ctrl(struct dvb_usb_device *d, int onoff)
++static int dvb_usbv2_mediatree_device_power_ctrl(struct dvb_usb_device *d, int onoff)
+ {
+ 	int ret;
+ 
+@@ -543,7 +543,7 @@
+ 		set_bit(ADAP_INIT, &adap->state_bits);
+ 	}
+ 
+-	ret = dvb_usbv2_device_power_ctrl(d, 1);
++	ret = dvb_usbv2_mediatree_device_power_ctrl(d, 1);
+ 	if (ret < 0)
+ 		goto err;
+ 
+@@ -603,7 +603,7 @@
+ 			goto err;
+ 	}
+ 
+-	ret = dvb_usbv2_device_power_ctrl(d, 0);
++	ret = dvb_usbv2_mediatree_device_power_ctrl(d, 0);
+ 	if (ret < 0)
+ 		goto err;
+ err:
+@@ -622,7 +622,7 @@
+ 	return ret;
+ }
+ 
+-static int dvb_usbv2_adapter_frontend_init(struct dvb_usb_adapter *adap)
++static int dvb_usbv2_mediatree_adapter_frontend_init(struct dvb_usb_adapter *adap)
+ {
+ 	int ret, i, count_registered = 0;
+ 	struct dvb_usb_device *d = adap_to_d(adap);
+@@ -693,7 +693,7 @@
+ 	return ret;
+ }
+ 
+-static int dvb_usbv2_adapter_frontend_exit(struct dvb_usb_adapter *adap)
++static int dvb_usbv2_mediatree_adapter_frontend_exit(struct dvb_usb_adapter *adap)
+ {
+ 	int i;
+ 	dev_dbg(&adap_to_d(adap)->udev->dev, "%s: adap=%d\n", __func__,
+@@ -709,7 +709,7 @@
+ 	return 0;
+ }
+ 
+-static int dvb_usbv2_adapter_init(struct dvb_usb_device *d)
++static int dvb_usbv2_mediatree_adapter_init(struct dvb_usb_device *d)
+ {
+ 	struct dvb_usb_adapter *adap;
+ 	int ret, i, adapter_count;
+@@ -763,15 +763,15 @@
+ 			adap->max_feed_count = adap->props->pid_filter_count;
+ 		}
+ 
+-		ret = dvb_usbv2_adapter_stream_init(adap);
++		ret = dvb_usbv2_mediatree_adapter_stream_init(adap);
+ 		if (ret)
+ 			goto err;
+ 
+-		ret = dvb_usbv2_adapter_dvb_init(adap);
++		ret = dvb_usbv2_mediatree_adapter_dvb_init(adap);
+ 		if (ret)
+ 			goto err;
+ 
+-		ret = dvb_usbv2_adapter_frontend_init(adap);
++		ret = dvb_usbv2_mediatree_adapter_frontend_init(adap);
+ 		if (ret)
+ 			goto err;
+ 
+@@ -786,16 +786,16 @@
+ 	return ret;
+ }
+ 
+-static int dvb_usbv2_adapter_exit(struct dvb_usb_device *d)
++static int dvb_usbv2_mediatree_adapter_exit(struct dvb_usb_device *d)
+ {
+ 	int i;
+ 	dev_dbg(&d->udev->dev, "%s:\n", __func__);
+ 
+ 	for (i = MAX_NO_OF_ADAPTER_PER_DEVICE - 1; i >= 0; i--) {
+ 		if (d->adapter[i].props) {
+-			dvb_usbv2_adapter_frontend_exit(&d->adapter[i]);
+-			dvb_usbv2_adapter_dvb_exit(&d->adapter[i]);
+-			dvb_usbv2_adapter_stream_exit(&d->adapter[i]);
++			dvb_usbv2_mediatree_adapter_frontend_exit(&d->adapter[i]);
++			dvb_usbv2_mediatree_adapter_dvb_exit(&d->adapter[i]);
++			dvb_usbv2_mediatree_adapter_stream_exit(&d->adapter[i]);
+ 		}
+ 	}
+ 
+@@ -803,25 +803,25 @@
+ }
+ 
+ /* general initialization functions */
+-static int dvb_usbv2_exit(struct dvb_usb_device *d)
++static int dvb_usbv2_mediatree_exit(struct dvb_usb_device *d)
+ {
+ 	dev_dbg(&d->udev->dev, "%s:\n", __func__);
+ 
+-	dvb_usbv2_remote_exit(d);
+-	dvb_usbv2_adapter_exit(d);
+-	dvb_usbv2_i2c_exit(d);
++	dvb_usbv2_mediatree_remote_exit(d);
++	dvb_usbv2_mediatree_adapter_exit(d);
++	dvb_usbv2_mediatree_i2c_exit(d);
+ 	kfree(d->priv);
+ 	kfree(d);
+ 
+ 	return 0;
+ }
+ 
+-static int dvb_usbv2_init(struct dvb_usb_device *d)
++static int dvb_usbv2_mediatree_init(struct dvb_usb_device *d)
+ {
+ 	int ret;
+ 	dev_dbg(&d->udev->dev, "%s:\n", __func__);
+ 
+-	dvb_usbv2_device_power_ctrl(d, 1);
++	dvb_usbv2_mediatree_device_power_ctrl(d, 1);
+ 
+ 	if (d->props->read_config) {
+ 		ret = d->props->read_config(d);
+@@ -829,11 +829,11 @@
+ 			goto err;
+ 	}
+ 
+-	ret = dvb_usbv2_i2c_init(d);
++	ret = dvb_usbv2_mediatree_i2c_init(d);
+ 	if (ret < 0)
+ 		goto err;
+ 
+-	ret = dvb_usbv2_adapter_init(d);
++	ret = dvb_usbv2_mediatree_adapter_init(d);
+ 	if (ret < 0)
+ 		goto err;
+ 
+@@ -843,20 +843,20 @@
+ 			goto err;
+ 	}
+ 
+-	ret = dvb_usbv2_remote_init(d);
++	ret = dvb_usbv2_mediatree_remote_init(d);
+ 	if (ret < 0)
+ 		goto err;
+ 
+-	dvb_usbv2_device_power_ctrl(d, 0);
++	dvb_usbv2_mediatree_device_power_ctrl(d, 0);
+ 
+ 	return 0;
+ err:
+-	dvb_usbv2_device_power_ctrl(d, 0);
++	dvb_usbv2_mediatree_device_power_ctrl(d, 0);
+ 	dev_dbg(&d->udev->dev, "%s: failed=%d\n", __func__, ret);
+ 	return ret;
+ }
+ 
+-int dvb_usbv2_probe(struct usb_interface *intf,
++int dvb_usbv2_mediatree_probe(struct usb_interface *intf,
+ 		const struct usb_device_id *id)
+ {
+ 	int ret;
+@@ -918,7 +918,7 @@
+ 			if (!name)
+ 				name = d->props->firmware;
+ 
+-			ret = dvb_usbv2_download_firmware(d, name);
++			ret = dvb_usbv2_mediatree_download_firmware(d, name);
+ 			if (ret == 0) {
+ 				/* device is warm, continue initialization */
+ 				;
+@@ -943,7 +943,7 @@
+ 	dev_info(&d->udev->dev, "%s: found a '%s' in warm state\n",
+ 			KBUILD_MODNAME, d->name);
+ 
+-	ret = dvb_usbv2_init(d);
++	ret = dvb_usbv2_mediatree_init(d);
+ 	if (ret < 0)
+ 		goto err_free_all;
+ 
+@@ -955,14 +955,14 @@
+ 
+ 	return 0;
+ err_free_all:
+-	dvb_usbv2_exit(d);
++	dvb_usbv2_mediatree_exit(d);
+ err:
+ 	dev_dbg(&udev->dev, "%s: failed=%d\n", __func__, ret);
+ 	return ret;
+ }
+-EXPORT_SYMBOL(dvb_usbv2_probe);
++EXPORT_SYMBOL(dvb_usbv2_mediatree_probe);
+ 
+-void dvb_usbv2_disconnect(struct usb_interface *intf)
++void dvb_usbv2_mediatree_disconnect(struct usb_interface *intf)
+ {
+ 	struct dvb_usb_device *d = usb_get_intfdata(intf);
+ 	const char *name = d->name;
+@@ -973,14 +973,14 @@
+ 	if (d->props->exit)
+ 		d->props->exit(d);
+ 
+-	dvb_usbv2_exit(d);
++	dvb_usbv2_mediatree_exit(d);
+ 
+ 	dev_info(&dev, "%s: '%s' successfully deinitialized and disconnected\n",
+ 			KBUILD_MODNAME, name);
+ }
+-EXPORT_SYMBOL(dvb_usbv2_disconnect);
++EXPORT_SYMBOL(dvb_usbv2_mediatree_disconnect);
+ 
+-int dvb_usbv2_suspend(struct usb_interface *intf, pm_message_t msg)
++int dvb_usbv2_mediatree_suspend(struct usb_interface *intf, pm_message_t msg)
+ {
+ 	struct dvb_usb_device *d = usb_get_intfdata(intf);
+ 	int ret = 0, i, active_fe;
+@@ -1009,9 +1009,9 @@
+ 
+ 	return ret;
+ }
+-EXPORT_SYMBOL(dvb_usbv2_suspend);
++EXPORT_SYMBOL(dvb_usbv2_mediatree_suspend);
+ 
+-static int dvb_usbv2_resume_common(struct dvb_usb_device *d)
++static int dvb_usbv2_mediatree_resume_common(struct dvb_usb_device *d)
+ {
+ 	int ret = 0, i, active_fe;
+ 	struct dvb_frontend *fe;
+@@ -1042,33 +1042,33 @@
+ 	return ret;
+ }
+ 
+-int dvb_usbv2_resume(struct usb_interface *intf)
++int dvb_usbv2_mediatree_resume(struct usb_interface *intf)
+ {
+ 	struct dvb_usb_device *d = usb_get_intfdata(intf);
+ 	dev_dbg(&d->udev->dev, "%s:\n", __func__);
+ 
+-	return dvb_usbv2_resume_common(d);
++	return dvb_usbv2_mediatree_resume_common(d);
+ }
+-EXPORT_SYMBOL(dvb_usbv2_resume);
++EXPORT_SYMBOL(dvb_usbv2_mediatree_resume);
+ 
+-int dvb_usbv2_reset_resume(struct usb_interface *intf)
++int dvb_usbv2_mediatree_reset_resume(struct usb_interface *intf)
+ {
+ 	struct dvb_usb_device *d = usb_get_intfdata(intf);
+ 	int ret;
+ 	dev_dbg(&d->udev->dev, "%s:\n", __func__);
+ 
+-	dvb_usbv2_device_power_ctrl(d, 1);
++	dvb_usbv2_mediatree_device_power_ctrl(d, 1);
+ 
+ 	if (d->props->init)
+ 		d->props->init(d);
+ 
+-	ret = dvb_usbv2_resume_common(d);
++	ret = dvb_usbv2_mediatree_resume_common(d);
+ 
+-	dvb_usbv2_device_power_ctrl(d, 0);
++	dvb_usbv2_mediatree_device_power_ctrl(d, 0);
+ 
+ 	return ret;
+ }
+-EXPORT_SYMBOL(dvb_usbv2_reset_resume);
++EXPORT_SYMBOL(dvb_usbv2_mediatree_reset_resume);
+ 
+ MODULE_VERSION("2.0");
+ MODULE_AUTHOR("Patrick Boettcher <patrick.boettcher@desy.de>");
+diff -Naur media_build-bst-14.orig/linux/drivers/media/usb/dvb-usb-v2/dvb_usb.h media_build-bst-14/linux/drivers/media/usb/dvb-usb-v2/dvb_usb.h
+--- media_build-bst-14.orig/linux/drivers/media/usb/dvb-usb-v2/dvb_usb.h	2014-03-11 11:08:46.000000000 +0100
++++ media_build-bst-14/linux/drivers/media/usb/dvb-usb-v2/dvb_usb.h	2015-05-30 10:58:06.000000000 +0200
+@@ -388,19 +388,19 @@
+ 	void *priv;
+ };
+ 
+-extern int dvb_usbv2_probe(struct usb_interface *,
++extern int dvb_usbv2_mediatree_probe(struct usb_interface *,
+ 		const struct usb_device_id *);
+-extern void dvb_usbv2_disconnect(struct usb_interface *);
+-extern int dvb_usbv2_suspend(struct usb_interface *, pm_message_t);
+-extern int dvb_usbv2_resume(struct usb_interface *);
+-extern int dvb_usbv2_reset_resume(struct usb_interface *);
++extern void dvb_usbv2_mediatree_disconnect(struct usb_interface *);
++extern int dvb_usbv2_mediatree_suspend(struct usb_interface *, pm_message_t);
++extern int dvb_usbv2_mediatree_resume(struct usb_interface *);
++extern int dvb_usbv2_mediatree_reset_resume(struct usb_interface *);
+ 
+ /* the generic read/write method for device control */
+-extern int dvb_usbv2_generic_rw(struct dvb_usb_device *, u8 *, u16, u8 *, u16);
+-extern int dvb_usbv2_generic_write(struct dvb_usb_device *, u8 *, u16);
++extern int dvb_usbv2_mediatree_generic_rw(struct dvb_usb_device *, u8 *, u16, u8 *, u16);
++extern int dvb_usbv2_mediatree_generic_write(struct dvb_usb_device *, u8 *, u16);
+ /* caller must hold lock when locked versions are called */
+-extern int dvb_usbv2_generic_rw_locked(struct dvb_usb_device *,
++extern int dvb_usbv2_mediatree_generic_rw_locked(struct dvb_usb_device *,
+ 		u8 *, u16, u8 *, u16);
+-extern int dvb_usbv2_generic_write_locked(struct dvb_usb_device *, u8 *, u16);
++extern int dvb_usbv2_mediatree_generic_write_locked(struct dvb_usb_device *, u8 *, u16);
+ 
+ #endif
+diff -Naur media_build-bst-14.orig/linux/drivers/media/usb/dvb-usb-v2/dvb_usb_urb.c media_build-bst-14/linux/drivers/media/usb/dvb-usb-v2/dvb_usb_urb.c
+--- media_build-bst-14.orig/linux/drivers/media/usb/dvb-usb-v2/dvb_usb_urb.c	2014-03-11 11:08:46.000000000 +0100
++++ media_build-bst-14/linux/drivers/media/usb/dvb-usb-v2/dvb_usb_urb.c	2015-05-30 11:46:29.894460058 +0200
+@@ -21,7 +21,7 @@
+ 
+ #include "dvb_usb_common.h"
+ 
+-static int dvb_usb_v2_generic_io(struct dvb_usb_device *d,
++static int dvb_usb_v2_mediatree_generic_io(struct dvb_usb_device *d,
+ 		u8 *wbuf, u16 wlen, u8 *rbuf, u16 rlen)
+ {
+ 	int ret, actual_length;
+@@ -65,40 +65,40 @@
+ 	return ret;
+ }
+ 
+-int dvb_usbv2_generic_rw(struct dvb_usb_device *d,
++int dvb_usbv2_mediatree_generic_rw(struct dvb_usb_device *d,
+ 		u8 *wbuf, u16 wlen, u8 *rbuf, u16 rlen)
+ {
+ 	int ret;
+ 
+ 	mutex_lock(&d->usb_mutex);
+-	ret = dvb_usb_v2_generic_io(d, wbuf, wlen, rbuf, rlen);
++	ret = dvb_usb_v2_mediatree_generic_io(d, wbuf, wlen, rbuf, rlen);
+ 	mutex_unlock(&d->usb_mutex);
+ 
+ 	return ret;
+ }
+-EXPORT_SYMBOL(dvb_usbv2_generic_rw);
++EXPORT_SYMBOL(dvb_usbv2_mediatree_generic_rw);
+ 
+-int dvb_usbv2_generic_write(struct dvb_usb_device *d, u8 *buf, u16 len)
++int dvb_usbv2_mediatree_generic_write(struct dvb_usb_device *d, u8 *buf, u16 len)
+ {
+ 	int ret;
+ 
+ 	mutex_lock(&d->usb_mutex);
+-	ret = dvb_usb_v2_generic_io(d, buf, len, NULL, 0);
++	ret = dvb_usb_v2_mediatree_generic_io(d, buf, len, NULL, 0);
+ 	mutex_unlock(&d->usb_mutex);
+ 
+ 	return ret;
+ }
+-EXPORT_SYMBOL(dvb_usbv2_generic_write);
++EXPORT_SYMBOL(dvb_usbv2_mediatree_generic_write);
+ 
+-int dvb_usbv2_generic_rw_locked(struct dvb_usb_device *d,
++int dvb_usbv2_mediatree_generic_rw_locked(struct dvb_usb_device *d,
+ 		u8 *wbuf, u16 wlen, u8 *rbuf, u16 rlen)
+ {
+-	return dvb_usb_v2_generic_io(d, wbuf, wlen, rbuf, rlen);
++	return dvb_usb_v2_mediatree_generic_io(d, wbuf, wlen, rbuf, rlen);
+ }
+-EXPORT_SYMBOL(dvb_usbv2_generic_rw_locked);
++EXPORT_SYMBOL(dvb_usbv2_mediatree_generic_rw_locked);
+ 
+-int dvb_usbv2_generic_write_locked(struct dvb_usb_device *d, u8 *buf, u16 len)
++int dvb_usbv2_mediatree_generic_write_locked(struct dvb_usb_device *d, u8 *buf, u16 len)
+ {
+-	return dvb_usb_v2_generic_io(d, buf, len, NULL, 0);
++	return dvb_usb_v2_mediatree_generic_io(d, buf, len, NULL, 0);
+ }
+-EXPORT_SYMBOL(dvb_usbv2_generic_write_locked);
++EXPORT_SYMBOL(dvb_usbv2_mediatree_generic_write_locked);

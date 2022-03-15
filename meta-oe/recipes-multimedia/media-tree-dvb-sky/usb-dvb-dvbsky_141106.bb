@@ -12,13 +12,20 @@ SRC_URI = "http://www.dvbsky.net/download/linux/media_build-bst-14-141106.tar.gz
            file://defconfig \
 "
 
-SRC_URI:append:mipsel = "file://sit2_op.o "
+SRC_URI:append:mipsel = " file://rename_dvb-usb-v2.patch \
+                          file://vu_adapter_adjustment.patch \
+                          file://vu_keep_compatibility.patch \
+                          file://sit2_op.o \
+"
 
-SRC_URI:append:arm = " file://vu_backport.patch \
+SRC_URI:append:arm = " file://rename_dvb-usb-v2.patch \
+                       file://vu_adapter_adjustment.patch \
+                       file://vu_keep_compatibility.patch \
+                       file://vu_backport.patch \
                        file://sit2_op.o_150322_arm \
 "
 
-PR = "r1"
+PR = "r2"
 
 S = "${WORKDIR}/media_build-bst-14"
 
@@ -39,5 +46,7 @@ do_configure:prepend:arm() {
     make DIR=${STAGING_KERNEL_BUILDDIR} allyesconfig
     cd $CUR
 }
+
+FILESEXTRAPATHS:prepend := "${THISDIR}/usb-dvb-dvbsky_141106:"
 
 require usb-dvb-dvbsky.inc
