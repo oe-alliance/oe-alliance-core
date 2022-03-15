@@ -1,9 +1,10 @@
 Description = "Gerbera - An UPnP media server"
 
-LICENSE = "GPLv2"
+LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://LICENSE.md;md5=25cdec9afe3f1f26212ead6bd2f7fac8"
 
-SRC_URI = "git://github.com/gerbera/gerbera.git;protocol=https;nobranch=1;tag=v${PV} \
+SRCREV = "be8273cf8528a33f11f263bb64419356c9d19a54"
+SRC_URI = "git://github.com/gerbera/gerbera.git;protocol=https;branch=master \
         file://config.xml \
         file://init \
 "
