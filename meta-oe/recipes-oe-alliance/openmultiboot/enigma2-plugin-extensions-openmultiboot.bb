@@ -8,7 +8,7 @@ inherit gitpkgv ${PYTHON_PN}native gettext ${@bb.utils.contains("PYTHON_PN", "py
 SRCREV = "${AUTOREV}"
 PV = "1.3+git${SRCPV}"
 PKGV = "1.3+git${GITPKGV}"
-PR = "r3"
+PR = "r4"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 SRC_URI = "git://github.com/oe-alliance/openmultibootmanager.git;protocol=https;branch=dev-bootmenu-helper"
