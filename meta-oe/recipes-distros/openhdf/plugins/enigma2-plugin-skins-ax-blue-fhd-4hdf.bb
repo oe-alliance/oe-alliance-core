@@ -2,6 +2,7 @@ SUMMARY = "Skin Full HD for HDF Images"
 MAINTAINER = "stein17"
 
 require conf/license/license-gplv2.inc
+require conf/python/${PYTHON_PN}-compileall.inc
 
 inherit gitpkgv allarch
 

@@ -2,6 +2,7 @@ SUMMARY = "Skin Full HD for HDF Images by stein17"
 MAINTAINER = "openhdf"
 
 require conf/license/license-gplv2.inc
+require conf/python/${PYTHON_PN}-compileall.inc
 
 inherit gitpkgv
 SRCREV = "${AUTOREV}"
