@@ -10,18 +10,15 @@ SRC_URI[sha256sum] = "b0a32dc6efb5cb62c0572938de10cd3d718d94191fe4648a9722b7fddd
 SRC_URI = "http://www.dvbsky.net/download/linux/media_build-bst-14-141106.tar.gz \
            file://fix-strip.patch;patch=1 \
            file://defconfig \
+           ${@bb.utils.contains('BRAND_OEM', 'vuplus', '\
+               file://rename_dvb-usb-v2.patch \
+               file://vu_adapter_adjustment.patch \
+               file://vu_keep_compatibility.patch ' , '', d)} \
 "
 
-SRC_URI:append:mipsel = " file://rename_dvb-usb-v2.patch \
-                          file://vu_adapter_adjustment.patch \
-                          file://vu_keep_compatibility.patch \
-                          file://sit2_op.o \
-"
+SRC_URI:append:mipsel = "file://sit2_op.o "
 
-SRC_URI:append:arm = " file://rename_dvb-usb-v2.patch \
-                       file://vu_adapter_adjustment.patch \
-                       file://vu_keep_compatibility.patch \
-                       file://vu_backport.patch \
+SRC_URI:append:arm = " file://vu_backport.patch \
                        file://sit2_op.o_150322_arm \
 "
 
