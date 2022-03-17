@@ -27,3 +27,7 @@ PACKAGECONFIG:class-target = "opengl egl gles gbm dri-no-drivers"
 
 RREPLACES:${PN} = "airdigital-mali-utgard-headers airdigital-v3ddriver-headers hd-v3ddriver-headers gfutures-mali-utgard-headers ceryon-v3ddriver-headers xtrend-v3ddriver-headers skylake-v3ddriver-headers formuler-v3ddriver-headers ax-v3ddriver-headers"
 RCONFLICTS:${PN} = "airdigital-mali-utgard-headers airdigital-v3ddriver-headers hd-v3ddriver-headers gfutures-mali-utgard-headers ceryon-v3ddriver-headers xtrend-v3ddriver-headers skylake-v3ddriver-headers formuler-v3ddriver-headers ax-v3ddriver-headers"
+
+DRIDRIVERS ??= ""
+DRIDRIVERS:append:x86:class-target = ",r100,r200,nouveau,i965"
+DRIDRIVERS:append:x86-64:class-target = ",r100,r200,nouveau,i965"

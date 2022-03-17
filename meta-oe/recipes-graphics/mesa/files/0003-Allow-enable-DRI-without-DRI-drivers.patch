@@ -1,4 +1,4 @@
-From 88bdd103e8d746818657237b0a32cee457b2e5cc Mon Sep 17 00:00:00 2001
+From 1abc73fef564325a1ab2748c73e78ff89ef92e5d Mon Sep 17 00:00:00 2001
 From: Fabio Berton <fabio.berton@ossystems.com.br>
 Date: Wed, 12 Jun 2019 14:18:31 -0300
 Subject: [PATCH] Allow enable DRI without DRI drivers
@@ -15,12 +15,12 @@ Signed-off-by: Otavio Salvador <otavio@ossystems.com.br>
  2 files changed, 7 insertions(+), 1 deletion(-)
 
 diff --git a/meson.build b/meson.build
-index 8450968..5ffd59d 100644
+index 1441611..073b719 100644
 --- a/meson.build
 +++ b/meson.build
-@@ -184,7 +184,7 @@ with_dri_r100 = dri_drivers.contains('r100')
- with_dri_r200 = dri_drivers.contains('r200')
- with_dri_nouveau = dri_drivers.contains('nouveau')
+@@ -179,7 +179,7 @@ if dri_drivers.length() != 0
+   error('Mesa\'s main branch no longer has any "classic" drivers, use the "amber" branch instead.')
+ endif
  
 -with_dri = dri_drivers.length() != 0
 +with_dri = get_option('dri') or (dri_drivers.length() != 0 and dri_drivers != [''])
@@ -28,10 +28,10 @@ index 8450968..5ffd59d 100644
  gallium_drivers = get_option('gallium-drivers')
  if gallium_drivers.contains('auto')
 diff --git a/meson_options.txt b/meson_options.txt
-index d7482c0..84387c8 100644
+index 99cc5cb..3b371f1 100644
 --- a/meson_options.txt
 +++ b/meson_options.txt
-@@ -41,6 +41,12 @@ option(
+@@ -51,6 +51,12 @@ option(
    choices : ['auto', 'true', 'false', 'disabled', 'enabled'],
    description : 'enable support for dri3'
  )
