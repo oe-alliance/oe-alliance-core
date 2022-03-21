@@ -5,10 +5,12 @@ require conf/license/license-gplv2.inc
 
 DVBSKYPROVIDER ?= "dvb-sky"
 
+DVBSKYDVBUSBV2 = "${@bb.utils.contains_any("BRAND_OEM", "vuplus", "${DVBSKYPROVIDER}-module-dvb-usb-v2-media-tree" , "${DVBSKYPROVIDER}-module-dvb-usb-v2", d)}"
+
 RRECOMMENDS:${PN} = " \
     ${@bb.utils.contains("MACHINE_FEATURES", "legacykernel", "", " \
     ${DVBSKYPROVIDER}-module-dvb-usb-dvbsky \
-    ${DVBSKYPROVIDER}-module-dvb-usb-v2 \
+    ${DVBSKYDVBUSBV2} \
     ${DVBSKYPROVIDER}-module-m88ds3103 \
     ${DVBSKYPROVIDER}-module-dvbsky-m88ds3103 \
     ${DVBSKYPROVIDER}-module-dvbsky-m88rs6000 \
@@ -23,6 +25,6 @@ RRECOMMENDS:${PN} = " \
     ", d)}"
 
 PV = "2.0"
-PR = "r1"
+PR = "r2"
 
 ALLOW_EMPTY:${PN} = "1"

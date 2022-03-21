@@ -1,0 +1,45 @@
+diff -Naur media_build-bst-14.orig/linux/drivers/media/dvb-core/dvbdev.c media_build-bst-14/linux/drivers/media/dvb-core/dvbdev.c
+--- media_build-bst-14.orig/linux/drivers/media/dvb-core/dvbdev.c	2014-05-08 07:18:09.000000000 +0200
++++ media_build-bst-14/linux/drivers/media/dvb-core/dvbdev.c	2014-12-13 11:17:16.000000000 +0100
+@@ -296,9 +296,9 @@
+ 	return 1;
+ }
+ 
+-static int dvbdev_get_free_adapter_num (void)
++static int dvbdev_get_free_adapter_num (int start_num)
+ {
+-	int num = 0;
++	int num = start_num;
+ 
+ 	while (num < DVB_MAX_ADAPTERS) {
+ 		if (dvbdev_check_free_adapter_num(num))
+@@ -316,16 +316,17 @@
+ {
+ 	int i, num;
+ 
++	char *vu_name = strstr(name, "_vuplus_");
+ 	mutex_lock(&dvbdev_register_lock);
+ 
+ 	for (i = 0; i < DVB_MAX_ADAPTERS; ++i) {
+ 		num = adapter_nums[i];
+-		if (num >= 0  &&  num < DVB_MAX_ADAPTERS) {
++		if (num >= vu_name? 0:1  &&  num < DVB_MAX_ADAPTERS) {
+ 		/* use the one the driver asked for */
+ 			if (dvbdev_check_free_adapter_num(num))
+ 				break;
+ 		} else {
+-			num = dvbdev_get_free_adapter_num();
++			num = dvbdev_get_free_adapter_num(vu_name? 0:1);
+ 			break;
+ 		}
+ 		num = -1;
+@@ -455,9 +456,6 @@
+ {
+ 	int retval;
+ 	dev_t dev = MKDEV(DVB_MAJOR, 0);
+-	/*printk(KERN_ERR "WARNING: You are using an experimental version of the media stack.\n\tAs the driver is backported to an older kernel, it doesn't offer\n\tenough quality for its usage in production.\n\tUse it with care.\nLatest git patches (needed if you report a bug to linux-media@vger.kernel.org):\n\ta83b93a7480441a47856dc9104bea970e84cda87 [media] em28xx-dvb: fix PCTV 461e tuner I2C binding\n\t5eef22031295234990a26d809efb4100c1e60c11 Revert [media] em28xx-dvb: fix PCTV 461e tuner I2C binding\n\t3ec40dcfb413214b2874aec858870502b61c2202 [media] em28xx: fix PCTV 290e LNA oops\n");
+-	*/
+-
+ 
+ 	if ((retval = register_chrdev_region(dev, MAX_DVB_MINORS, "DVB")) != 0) {
+ 		printk(KERN_ERR "dvb-core: unable to get major %d\n", DVB_MAJOR);

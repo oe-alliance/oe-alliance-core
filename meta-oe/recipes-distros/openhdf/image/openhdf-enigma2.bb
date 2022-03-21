@@ -22,7 +22,6 @@ RRECOMMENDS:${PN} = " \
     enigma2-plugin-extensions-hdftoolbox \
     enigma2-plugin-extensions-cutlisteditor \
     enigma2-plugin-extensions-dvdplayer \
-    enigma2-plugin-systemplugins-extnumberzap \
     enigma2-plugin-extensions-volume-adjust \
     enigma2-plugin-systemplugins-devicemanager \
     enigma2-plugin-systemplugins-videotune \
@@ -31,10 +30,8 @@ RRECOMMENDS:${PN} = " \
     enigma2-plugin-systemplugins-softwaremanager \
     enigma2-plugin-systemplugins-hotplug \
     enigma2-plugin-systemplugins-positionersetup \
-    enigma2-plugin-extensions-enhancedmoviecenter \
     enigma2-plugin-extensions-audiosync \
     ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", "enigma2-plugin-drivers-usbserial", d)} \
-    ${@bb.utils.contains("MACHINE_FEATURES", "videoenhancement", "", "enigma2-plugin-systemplugins-videoenhancement", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "boxmodel", "boxmodel", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "dreamboxv1", "enigma2-plugin-extensions-dflash mtd-utils-jffs2", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "dreamboxv2", "e2fsprogs-badblocks", "", d)} \

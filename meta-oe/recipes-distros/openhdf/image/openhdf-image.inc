@@ -13,6 +13,10 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 PR[vardepsexclude] += "DATE"
 REPRODUCIBLE_TIMESTAMP_ROOTFS = "${@time.strftime('%s')}"
 
+WORKDIR = "${TMPDIR}/work/${MULTIMACH_TARGET_SYS}/${PN}/${EXTENDPE}${PV}"
+
+do_rootfs[deptask] = "do_rm_work"
+
 IMAGE_INSTALL = "openhdf-base \
     ${@bb.utils.contains("MACHINE_FEATURES", "dvbc-only", "", "enigma2-plugin-settings-defaultsat", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "no-cl-svr", "", \
@@ -29,6 +33,9 @@ IMAGE_INSTALL += "${@bb.utils.contains_any("FLASHSIZE", "64 96", "", "nano", d)}
 IMAGE_INSTALL += "${@bb.utils.contains_any("FLASHSIZE", "64 96 128", "", "mc mc-fish mc-helpers", d)}"
 
 export IMAGE_BASENAME = "openhdf-image"
+# Prevent locales-archive creation to save some space
+IMAGE_LOCALES_ARCHIVE = ""
+
 # 64 or 128MB of flash: No language files, above: German and French
 IMAGE_LINGUAS  = "${@bb.utils.contains_any("FLASHSIZE", "64 96 128", "", "de-de fr-fr", d)}"
 
@@ -37,8 +44,12 @@ IMAGE_LINGUAS += "${@bb.utils.contains_any("FLASHSIZE", "64 96 128 256", "", "es
 
 IMAGE_FEATURES += "package-management"
 
+INHIBIT_DEFAULT_DEPS = "1"
+
 inherit image
 
+do_package_index[nostamp] = "1"
+do_package_index[depends] += "${PACKAGEINDEXDEPS}"
 
 rootfs_postprocess() {
     if [ -f ~/bin/parser.sh ]; then
@@ -54,23 +65,8 @@ rootfs_postprocess() {
 
 ROOTFS_POSTPROCESS_COMMAND += "rootfs_postprocess; "
 
-export NFO = '${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.nfo'
-
-do_generate_nfo() {
-    VER=`grep Version: "${IMAGE_ROOTFS}/usr/${libdir}/ipkg/info/enigma2.control" | cut -b 10-26`
-    echo "Enigma2: ${VER}" > ${NFO}
-    echo "Machine: ${MACHINE}" >> ${NFO}
-    DATE=`date +%Y-%m-%d' '%H':'%M`
-    echo "Date: ${DATE}" >> ${NFO}
-    echo "Issuer: OpenHDF" >> ${NFO}
-    echo "Link: ${DISTRO_FEED_URI}" >> ${NFO}
-    if [ "${DESC}" != "" ]; then
-        echo "Description: ${DESC}" >> ${NFO}
-        echo "${DESC}" >> ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.desc
-    fi
-    MD5SUM=`md5sum ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.nfi | cut -b 1-32`
-    echo "MD5: ${MD5SUM}" >> ${NFO}
+python do_package_index() {
+    from oe.rootfs import generate_index_files
+    generate_index_files(d)
 }
-
-addtask generate_nfo after do_rootfs
-
+addtask do_package_index after do_rootfs before do_image_complete
