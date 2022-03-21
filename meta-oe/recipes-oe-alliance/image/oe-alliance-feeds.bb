@@ -9,7 +9,7 @@ ALLOW_EMPTY:${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r15"
+PR = "r16"
 
 DEPENDS = "enigma2-plugin-drivers-usbserial enigma2-plugin-systemplugins-radiotimesemulator enigma2-plugin-systemplugins-hrtunerproxy"
 
@@ -23,6 +23,7 @@ RDEPENDS:${PN} = " \
     bootlogos-enigma2-meta \
     dvb-usb-drivers-meta \
     network-usb-drivers-meta \
+    extrahw-drivers-meta \
     picons-enigma2-meta \
     ${@bb.utils.contains("MACHINE_FEATURES", "skins1080", "dreamplex-skins-meta", "", d)} \
     meta-enigma2-dvdburn \
