@@ -4,10 +4,10 @@ require conf/license/license-close.inc
 
 inherit allarch
 
-SRC_URI = "http://source.mynonpublic.com/edision/firmware-qca6174.zip"
+SRC_URI = "http://source.mynonpublic.com/edision/firmware-qca6174_v2.zip"
 
 S = "${WORKDIR}"
-PR = "r1"
+PR = "r2"
 
 PACKAGES = "${PN}"
 FILES_${PN} += "${nonarch_base_libdir}/firmware"
@@ -27,7 +27,11 @@ do_install() {
     install -m 0644 utf30.bin ${D}${nonarch_base_libdir}/firmware/utf30.bin
     install -m 0644 wlan/cfg.dat ${D}${nonarch_base_libdir}/firmware/wlan/cfg.dat
     install -m 0644 wlan/qcom_cfg.ini ${D}${nonarch_base_libdir}/firmware/wlan/qcom_cfg.ini
+
+    install -d ${D}${nonarch_base_libdir}/firmware/qca
+    install -m 0644 nvm_00440302.bin ${D}${nonarch_base_libdir}/firmware/qca/nvm_00440302.bin
+    install -m 0644 rampatch_00440302.bin ${D}${nonarch_base_libdir}/firmware/qca/rampatch_00440302.bin
 }
 
-SRC_URI[md5sum] = "f193e6b80752e37234d0a70d56c72ed6"
-SRC_URI[sha256sum] = "b86d0160a7b84c3a1da251fd3b591d2828b66b8d050afd9d06327f2768f5ce4d"
+SRC_URI[md5sum] = "d0661e4962e32e7b3861da4169216e39"
+SRC_URI[sha256sum] = "2f2274266aba216bc1b6f79fee4862d2df23c5fe5441a8eb52ed765a4f6b5a8b"
