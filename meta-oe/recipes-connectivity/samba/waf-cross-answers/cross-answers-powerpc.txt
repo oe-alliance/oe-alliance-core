@@ -40,3 +40,4 @@ Checking whether blkcnt_t is 64 bit: OK
 Checking whether fcntl lock supports open file description locks: OK
 Checking for a 64-bit host to support lmdb: NO
 Checking for gnutls fips mode support: NO
+Checking for readlink breakage: NO
