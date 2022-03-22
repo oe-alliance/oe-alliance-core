@@ -11,7 +11,7 @@ PV = "3.0+git${SRCPV}"
 PKGV = "3.0+git${GITPKGV}"
 VER="3.0"
 
-SRC_URI="git://github.com/stein17/AX-Blue-FHD-4HDF.git;protocol=https"
+SRC_URI="git://github.com/stein17/AX-Blue-FHD-4HDF.git;protocol=https;branch=Python3"
 
 FILES:${PN} = "/usr/share ${libdir}"
 

@@ -11,7 +11,7 @@ PKGV = "2.1+git${GITPKGV}"
 VER ="2.1"
 PR = "r6"
 
-SRC_URI="git://github.com/stein17/Skins-for-openHDF.git;protocol=https"
+SRC_URI="git://github.com/stein17/Skins-for-openHDF.git;protocol=https;branch=Python3"
 
 FILES:${PN} = "/"
 
