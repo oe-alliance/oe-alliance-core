@@ -5,7 +5,7 @@ LICENSE = "CLOSED"
 PACKAGE_ARCH := "${MACHINE_ARCH}"
 require conf/license/license-close.inc
 
-PR="${SRCDATE}"
+PR="${SRCDATE}.r0"
 
 SRC_URI = " \
     http://en3homeftp.net/pub/down/platform-util-${MACHINE}.tar.gz \
@@ -21,8 +21,6 @@ do_install() {
 
 do_package_qa() {
 }
-do_populate_sysroot() {
-}
 
 FILES:${PN}="/"
 
@@ -31,4 +29,6 @@ inherit update-rc.d
 INITSCRIPT_PARAMS = "start 65 S . stop 90 0 ."
 INITSCRIPT_NAME = "dags-platform-util"
 
+INHIBIT_PACKAGE_STRIP = "1"
+INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
 INSANE_SKIP:${PN} += "already-stripped"
