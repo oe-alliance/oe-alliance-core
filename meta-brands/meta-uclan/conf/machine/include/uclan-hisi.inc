@@ -33,7 +33,7 @@ MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "\
     gptfdisk \
 "
 
-MACHINE_FEATURES += "switchoff hdmicec skins1080 emmc mmc kodi18 alsa hbbtv-browser-webkit qtstalker qtnetflix"
+MACHINE_FEATURES += "switchoff hdmicec skins1080 emmc mmc kodi18 alsa hbbtv-browser-webkit qtstalker qtnetflix hisichromium"
 
 IMAGE_CLASSES  += "uclan-emmc_image"
 IMAGE_FSTYPES += "uclanemmc"
