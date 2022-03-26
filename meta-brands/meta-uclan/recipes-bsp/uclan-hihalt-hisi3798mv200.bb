@@ -33,5 +33,5 @@ do_package_qa() {
 
 FILES_${PN}  = "${bindir}/hihalt ${sysconfdir}/init.d"
 
-SRC_URI[md5sum] = "3da28191fb7a2097a2fa220effcf5625"
-SRC_URI[sha256sum] = "37c188f2e28104a72c764d2f87fde8065c592aa9ded37207b604921aa58f361d"
+SRC_URI[md5sum] = "a6c47491393917654c43188d4831e7fc"
+SRC_URI[sha256sum] = "74e98134d4adff0f0bf942d66f1933333df33e96892b9dd88660361ef77f5090"
