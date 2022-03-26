@@ -1,7 +1,7 @@
 PACKAGECONFIG_GL:pn-qtbase = " "
 PACKAGECONFIG:append:pn-qtbase += " gles2 linuxfb"
 
-MACHINE_FEATURES += "qthbbtv qtstalker openhbbtv qtevent1"
+MACHINE_FEATURES += "qthbbtv qtstalker openhbbtv qtevent1 hisichromium"
 
 PREFERRED_PROVIDER_virtual/egl ?= "airdigital-mali-${HICHIPSET}"
 PREFERRED_PROVIDER_virtual/libgles1 ?= "airdigital-mali-${HICHIPSET}"
