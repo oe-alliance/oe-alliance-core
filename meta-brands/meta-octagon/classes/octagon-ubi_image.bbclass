@@ -14,7 +14,7 @@ IMAGE_CMD:octagonubi () {
     mkdir -p ${IMGDEPLOYDIR}/userdata
     mkdir -p ${IMGDEPLOYDIR}/userdata/linuxrootfs1
     mkdir -p ${IMGDEPLOYDIR}/userdata/linuxrootfs2
-    cp -a ${IMAGE_ROOTFS}/* ${IMGDEPLOYDIR}/userdata/linuxrootfs1/
+    cp -fR --preserve=mode,links ${IMAGE_ROOTFS}/* ${IMGDEPLOYDIR}/userdata/linuxrootfs1/
     mkfs.ubifs -F -d ${IMGDEPLOYDIR}/userdata -m 2048 -o ${IMGDEPLOYDIR}/rootfs.ubifs -e 126976 -c 3800
     echo \[ubifs\] > ${IMGDEPLOYDIR}/rootfs.ubicfg
     echo mode=ubi >> ${IMGDEPLOYDIR}/rootfs.ubicfg
