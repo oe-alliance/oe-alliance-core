@@ -8,7 +8,7 @@ require conf/license/license-close.inc
 PR="${SRCDATE}.r0"
 
 SRC_URI = " \
-    http://en3homeftp.net/pub/down/platform-util-${MACHINE}.tar.gz \
+    http://source.mynonpublic.com/dags/platform-util-${MACHINE}.zip \
     file://${INITSCRIPT_NAME}.sysvinit \
 "
 
