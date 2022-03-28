@@ -6,5 +6,5 @@ PV="17.1"
 
 S="${WORKDIR}/platform-util-${MACHINE}"
 
-SRC_URI[md5sum] = "41b2de172edf02196afe4640213552f5"
-SRC_URI[sha256sum] = "e6e7f72200958ae56614f0b6e7f09bd873e2b90ed10a81f1bdb4b7aaea6242d5"
+SRC_URI[md5sum] = "d0bd0250b563b65178809f0ab196b01f"
+SRC_URI[sha256sum] = "6b72a7d9930ebb45886b51ca81fca1374acdef27e1c842934ccebf86bac7878c"
