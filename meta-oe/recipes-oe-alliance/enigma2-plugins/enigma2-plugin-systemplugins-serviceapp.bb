@@ -11,7 +11,7 @@ RREPLACES:${PN} = "enigma2-plugin-extensions-serviceapp"
 
 SRCREV = "${AUTOREV}"
 SRC_URI = "git://github.com/oe-mirrors/serviceapp.git;branch=develop"
-SRC_URI:openvix = "git://github.com/OpenViX/serviceapp.git;branch=develop"
+SRC_URI:openvix = "git://github.com/OpenViX/serviceapp.git;branch=sigc3;protocol=https"
 SRC_URI:openbh = "git://github.com/OpenViX/serviceapp.git;branch=develop"
 
 
