@@ -12,7 +12,7 @@ PR_NUM = "${@bb.utils.contains("DISTRO_TYPE", "release", "${BUILD_VERSION}.000",
 PV = "${IMAGE_VERSION}"
 PR = "r${PR_NUM}"
 
-SSTATE_DUPWHITELIST += "${DEPLOY_DIR_IMAGE}"
+SSTATE_ALLOW_OVERLAP_FILES += "${DEPLOY_DIR_IMAGE}"
 
 IMAGE_INSTALL = "openbh-base"
 
