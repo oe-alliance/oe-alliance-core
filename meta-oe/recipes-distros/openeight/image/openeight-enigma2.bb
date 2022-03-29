@@ -61,6 +61,7 @@ E2_LANGUAGES = "\
 
 RRECOMMENDS:${PN} = "\
     openeight-version-info \
+    settings-autorestore \
     enigma2-plugin-pli-softcamsetup \
     enigma2-plugin-extensions-mediaplayer \
     enigma2-plugin-extensions-autobackup \
