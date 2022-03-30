@@ -8,6 +8,6 @@ do_install:append(){
     install -m 0755 ${WORKDIR}/xbmc-support/libxbmc_base.so ${D}${libdir}
 }
 
-FILES:${PN}:append = "${bindir}/xbmc.helper ${libdir}/libxbmc_base.so"
+FILES:${PN}:append = " ${bindir}/xbmc.helper ${libdir}/libxbmc_base.so"
 
 INSANE_SKIP:${PN} += "file-rdeps"
