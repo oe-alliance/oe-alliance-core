@@ -1,12 +1,12 @@
 DESCRIPTION = "libgles v3ddriver headers"
 LICENSE = "CLOSED"
 
-PR = "r0"
+PR = "r1"
 
-SRC_URI = "http://source.mynonpublic.com/gigablue/v3ddriver/gb-v3ddriver-headers.tar.gz"
+SRC_URI = "http://source.mynonpublic.com/gigablue/v3ddriver/gb-nexus-headers.zip"
 
-SRC_URI[md5sum] = "15fb88e9cc986d318c893a6b35e88140"
-SRC_URI[sha256sum] = "cbefb5746c0a7f9fe9ace0179d61e6a347487395c9785bdc948f2432915c36cf"
+SRC_URI[md5sum] = "cd28a6e2d862354c2854b9278fd32365"
+SRC_URI[sha256sum] = "4cfda443d72ec56965f989b9306c0af6f85cbac55fc6a70b0d081ea605c192aa"
 
 S = "${WORKDIR}"
 
@@ -15,7 +15,9 @@ do_compile() {
 
 do_install:append() {
 	install -d ${D}/${includedir}
-	install -m 0644 ${S}/v3dplatform.h ${D}${includedir}/
+	for f in ${S}/*.h; do
+		install -m 0644 $f ${D}${includedir}/
+	done
 	for d in EGL GLES GLES2 GLES3 KHR; do
 		install -d ${D}${includedir}/$d
 		for f in ${S}/$d/*.h; do
