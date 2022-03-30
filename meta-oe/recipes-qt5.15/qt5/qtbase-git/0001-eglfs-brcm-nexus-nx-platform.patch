@@ -1,0 +1,492 @@
+From 931e9524e5c6cbcc1a26e5a340232d688efa07f8 Mon Sep 17 00:00:00 2001
+From: Captain <captain.onboard@web.de>
+Date: Fri, 24 Dec 2021 13:55:36 +0100
+Subject: [PATCH] eglfs-brcm-nexus-nx-platform
+
+---
+ src/gui/configure.json                        |   7 +-
+ .../deviceintegration/deviceintegration.pro   |   1 +
+ .../eglfs_brcm_nx/eglfs_brcm_nx.json          |   3 +
+ .../eglfs_brcm_nx/eglfs_brcm_nx.pro           |  22 ++
+ .../eglfs_brcm_nx/qeglfsbrcmnxintegration.cpp | 250 ++++++++++++++++++
+ .../eglfs_brcm_nx/qeglfsbrcmnxintegration.h   |  70 +++++
+ .../eglfs_brcm_nx/qeglfsbrcmnxmain.cpp        |  56 ++++
+ 7 files changed, 408 insertions(+), 1 deletion(-)
+ create mode 100644 src/plugins/platforms/eglfs/deviceintegration/eglfs_brcm_nx/eglfs_brcm_nx.json
+ create mode 100644 src/plugins/platforms/eglfs/deviceintegration/eglfs_brcm_nx/eglfs_brcm_nx.pro
+ create mode 100644 src/plugins/platforms/eglfs/deviceintegration/eglfs_brcm_nx/qeglfsbrcmnxintegration.cpp
+ create mode 100644 src/plugins/platforms/eglfs/deviceintegration/eglfs_brcm_nx/qeglfsbrcmnxintegration.h
+ create mode 100644 src/plugins/platforms/eglfs/deviceintegration/eglfs_brcm_nx/qeglfsbrcmnxmain.cpp
+
+diff --git a/src/gui/configure.json b/src/gui/configure.json
+index c8c4864eca..1fa413fabd 100644
+--- a/src/gui/configure.json
++++ b/src/gui/configure.json
+@@ -1406,6 +1406,11 @@
+             "condition": "features.eglfs && tests.egl-brcm",
+             "output": [ "privateFeature" ]
+         },
++        "eglfs_brcm_nx": {
++            "label": "EGLFS Broadcom NX",
++            "condition": "features.eglfs",
++            "output": [ "privateFeature" ]
++        },
+         "eglfs_egldevice": {
+             "label": "EGLFS EGLDevice",
+             "condition": "features.eglfs && tests.egl-egldevice && features.kms",
+@@ -1978,7 +1983,7 @@ QMAKE_LIBDIR_OPENGL[_ES2] and QMAKE_LIBS_OPENGL[_ES2] in the mkspec for your pla
+                     "section": "EGLFS details",
+                     "condition": "features.eglfs",
+                     "entries": [
+-                        "eglfs_openwfd", "eglfs_viv", "eglfs_viv_wl", "eglfs_rcar", "eglfs_egldevice", "eglfs_gbm", "eglfs_vsp2", "eglfs_mali", "eglfs_brcm", "eglfs_x11"
++                        "eglfs_openwfd", "eglfs_viv", "eglfs_viv_wl", "eglfs_rcar", "eglfs_egldevice", "eglfs_gbm", "eglfs_vsp2", "eglfs_mali", "eglfs_brcm", "eglfs_x11", "eglfs_brcm_nx"
+                     ]
+                 },
+                 "linuxfb", "vnc",
+diff --git a/src/plugins/platforms/eglfs/deviceintegration/deviceintegration.pro b/src/plugins/platforms/eglfs/deviceintegration/deviceintegration.pro
+index 8c207d1413..d227bdfeb0 100644
+--- a/src/plugins/platforms/eglfs/deviceintegration/deviceintegration.pro
++++ b/src/plugins/platforms/eglfs/deviceintegration/deviceintegration.pro
+@@ -6,6 +6,7 @@ qtConfig(eglfs_gbm): SUBDIRS *= eglfs_kms_support eglfs_kms
+ qtConfig(eglfs_egldevice): SUBDIRS *= eglfs_kms_support eglfs_kms_egldevice
+ qtConfig(eglfs_vsp2): SUBDIRS += eglfs_kms_vsp2
+ qtConfig(eglfs_brcm): SUBDIRS += eglfs_brcm
++qtConfig(eglfs_brcm_nx): SUBDIRS += eglfs_brcm_nx
+ qtConfig(eglfs_mali): SUBDIRS += eglfs_mali
+ qtConfig(eglfs_viv): SUBDIRS += eglfs_viv
+ qtConfig(eglfs_rcar): SUBDIRS += eglfs_rcar
+diff --git a/src/plugins/platforms/eglfs/deviceintegration/eglfs_brcm_nx/eglfs_brcm_nx.json b/src/plugins/platforms/eglfs/deviceintegration/eglfs_brcm_nx/eglfs_brcm_nx.json
+new file mode 100644
+index 0000000000..04ad210092
+--- /dev/null
++++ b/src/plugins/platforms/eglfs/deviceintegration/eglfs_brcm_nx/eglfs_brcm_nx.json
+@@ -0,0 +1,3 @@
++{
++    "Keys": [ "eglfs_brcm_nx" ]
++}
+diff --git a/src/plugins/platforms/eglfs/deviceintegration/eglfs_brcm_nx/eglfs_brcm_nx.pro b/src/plugins/platforms/eglfs/deviceintegration/eglfs_brcm_nx/eglfs_brcm_nx.pro
+new file mode 100644
+index 0000000000..0c450bd6c0
+--- /dev/null
++++ b/src/plugins/platforms/eglfs/deviceintegration/eglfs_brcm_nx/eglfs_brcm_nx.pro
+@@ -0,0 +1,22 @@
++TARGET = qeglfs-brcm-nx-integration
++
++QT += core-private gui-private eglfsdeviceintegration-private
++
++INCLUDEPATH += $$PWD/../../api
++CONFIG += egl
++
++LIBS += -lnxpl -lnexus -lnxclient
++
++# Avoid X11 header collision, use generic EGL native types
++DEFINES += QT_EGL_NO_X11
++
++SOURCES += $$PWD/qeglfsbrcmnxmain.cpp \
++           $$PWD/qeglfsbrcmnxintegration.cpp
++
++HEADERS += $$PWD/qeglfsbrcmnxintegration.h
++
++OTHER_FILES += $$PWD/eglfs_brcm_nx.json
++
++PLUGIN_TYPE = egldeviceintegrations
++PLUGIN_CLASS_NAME = QEglFSBrcmnxIntegrationPlugin
++load(qt_plugin)
+\ No newline at end of file
+diff --git a/src/plugins/platforms/eglfs/deviceintegration/eglfs_brcm_nx/qeglfsbrcmnxintegration.cpp b/src/plugins/platforms/eglfs/deviceintegration/eglfs_brcm_nx/qeglfsbrcmnxintegration.cpp
+new file mode 100644
+index 0000000000..99f16603c0
+--- /dev/null
++++ b/src/plugins/platforms/eglfs/deviceintegration/eglfs_brcm_nx/qeglfsbrcmnxintegration.cpp
+@@ -0,0 +1,250 @@
++/****************************************************************************
++**
++** Copyright (C) 2016 The Qt Company Ltd.
++** Contact: https://www.qt.io/licensing/
++**
++** This file is part of the plugins of the Qt Toolkit.
++**
++** $QT_BEGIN_LICENSE:LGPL$
++** Commercial License Usage
++** Licensees holding valid commercial Qt licenses may use this file in
++** accordance with the commercial license agreement provided with the
++** Software or, alternatively, in accordance with the terms contained in
++** a written agreement between you and The Qt Company. For licensing terms
++** and conditions see https://www.qt.io/terms-conditions. For further
++** information use the contact form at https://www.qt.io/contact-us.
++**
++** GNU Lesser General Public License Usage
++** Alternatively, this file may be used under the terms of the GNU Lesser
++** General Public License version 3 as published by the Free Software
++** Foundation and appearing in the file LICENSE.LGPL3 included in the
++** packaging of this file. Please review the following information to
++** ensure the GNU Lesser General Public License version 3 requirements
++** will be met: https://www.gnu.org/licenses/lgpl-3.0.html.
++**
++** GNU General Public License Usage
++** Alternatively, this file may be used under the terms of the GNU
++** General Public License version 2.0 or (at your option) the GNU General
++** Public license version 3 or any later version approved by the KDE Free
++** Qt Foundation. The licenses are as published by the Free Software
++** Foundation and appearing in the file LICENSE.GPL2 and LICENSE.GPL3
++** included in the packaging of this file. Please review the following
++** information to ensure the GNU General Public License requirements will
++** be met: https://www.gnu.org/licenses/gpl-2.0.html and
++** https://www.gnu.org/licenses/gpl-3.0.html.
++**
++** $QT_END_LICENSE$
++**
++****************************************************************************/
++
++#include "qeglfsbrcmnxintegration.h"
++#include <fcntl.h>
++#include <unistd.h>
++#include <linux/fb.h>
++#include <sys/ioctl.h>
++#include <private/qcore_unix_p.h>
++
++#include <QDebug>
++#include <assert.h>
++#include "nexus_config.h"
++#include "nexus_core_utils.h"
++#include "nxclient.h"
++#include "default_nexus.h"
++
++#include <QThread>
++#include <linux/input.h>
++#include <qpa/qwindowsysteminterface.h>
++
++QT_BEGIN_NAMESPACE
++
++#ifdef __cplusplus
++extern "C"
++{
++#endif
++
++static unsigned int gs_screen_wdt   = 1280;
++static unsigned int gs_screen_hgt   = 720;
++static unsigned int bits_per_pixel = 32;
++//static unsigned int gs_screen_wdt   = 720;
++//static unsigned int gs_screen_hgt   = 486;
++static unsigned int client_id = 0; // Client ID for QT
++static unsigned int offsetX = 0;
++static unsigned int offsetY = 0;
++static unsigned int zorder = 1;
++
++static void *gs_native_window = 0;
++
++static NXPL_PlatformHandle  nxpl_handle = 0;
++
++
++bool InitPlatform(void)
++{
++
++    NEXUS_Error err = NEXUS_NOT_SUPPORTED;
++    NxClient_JoinSettings joinSettings;
++    /* We are multiprocess mode Nexus, so join with the existing instance */
++    NxClient_GetDefaultJoinSettings(&joinSettings);
++    snprintf(joinSettings.name, NXCLIENT_MAX_NAME, "qtwebbrower");
++
++    err = NxClient_Join(&joinSettings);
++    if (err != NEXUS_SUCCESS)
++    {
++       qFatal("NxClient_Join, err=%x\n", err);
++       return false;
++    }
++
++    return true;
++}
++
++void* NativeWindowHandle(void)
++{
++    return gs_native_window;
++}
++
++
++#include <sys/socket.h>
++#include <sys/un.h>
++#include <netinet/in.h>
++#include <arpa/inet.h>
++#include <stdio.h>
++#include <stdlib.h>
++#include <unistd.h>
++#include <string.h>
++#include <ctype.h>
++#include <sys/types.h>
++#include <time.h>
++#include <getopt.h>
++
++#include <fcntl.h>
++
++
++void QEglFSBrcmnxIntegration::platformInit()
++{
++
++    NXPL_NativeWindowInfo   win_info;
++
++    if (InitPlatform() == false)
++    {
++        qFatal("Err: InitPlatform() failed");
++    }
++
++    //client_id = qgetenv("BRCM_CLIENT_ID").toInt();
++    //gs_screen_wdt = qgetenv("QT_QPA_EGLFS_WIDTH").toInt();
++    //gs_screen_hgt = qgetenv("QT_QPA_EGLFS_HEIGHT").toInt();
++
++    /* MULTI-PROCESS uses NULL for its display as it doesnt own it */
++   // printf("1. InitDisplay\n");
++    NXPL_RegisterNexusDisplayPlatform(&nxpl_handle, NULL);
++    //printf("2. InitDisplay nxpl_handle 0x%x\n",nxpl_handle);
++    
++    struct fb_var_screeninfo vinfo;
++    int fd = qt_safe_open("/dev/fb0", O_RDWR, 0);
++    if (fd != -1) {
++        if (ioctl(fd, FBIOGET_VSCREENINFO, &vinfo) == -1) {
++            qWarning("eglconvenience: Could not read screen info");
++        } else {
++            gs_screen_wdt = vinfo.xres;
++            gs_screen_hgt = vinfo.yres;
++            bits_per_pixel = vinfo.bits_per_pixel;
++        }
++    }
++    qt_safe_close(fd);
++    mScreenSize.setWidth(gs_screen_wdt);
++    mScreenSize.setHeight(gs_screen_hgt);
++    mScreenDepth = bits_per_pixel;
++
++
++    win_info.x = offsetX;
++    win_info.y = offsetY;
++    win_info.width = mScreenSize.width();
++    win_info.height = mScreenSize.height();
++#if 0 	/* FHD */
++    win_info.stretch = false;
++#else
++	win_info.stretch = true;
++#endif
++    win_info.clientID = client_id;
++    win_info.zOrder = zorder;
++    gs_native_window = NXPL_CreateNativeWindow(&win_info);
++   // printf("3. InitDisplay gs_native_window 0x%x\n",gs_native_window);
++
++}
++
++EGLNativeDisplayType QEglFSBrcmnxIntegration::platformDisplay() const
++{
++    //dispman_display = vc_dispmanx_display_open(getDisplayId());
++    return EGL_DEFAULT_DISPLAY;
++}
++
++void QEglFSBrcmnxIntegration::platformDestroy()
++{
++    NXPL_DestroyNativeWindow(gs_native_window);
++    gs_native_window = NULL;
++ 
++    NXPL_UnregisterNexusDisplayPlatform(nxpl_handle);
++    nxpl_handle = NULL;
++
++    NxClient_Uninit();
++}
++
++QSize QEglFSBrcmnxIntegration::screenSize() const
++{
++	return QSize( gs_screen_wdt, gs_screen_hgt );
++
++}
++
++int QEglFSBrcmnxIntegration::screenDepth() const
++{
++    return mScreenDepth;
++}
++
++QImage::Format QEglFSBrcmnxIntegration::screenFormat() const
++{
++    return mScreenDepth == 32 ? QImage::Format_ARGB32 : QImage::Format_RGB16;
++}
++
++qreal QEglFSBrcmnxIntegration::refreshRate() const
++{
++    return 50;
++}
++
++QSurfaceFormat QEglFSBrcmnxIntegration::surfaceFormatFor(const QSurfaceFormat &inputFormat) const
++{
++    QSurfaceFormat format = inputFormat;
++    if (mScreenDepth == 32) {
++        format.setAlphaBufferSize(8);
++        format.setRedBufferSize(8);
++        format.setGreenBufferSize(8);
++        format.setBlueBufferSize(8);
++    }
++    return format;
++}
++
++EGLNativeWindowType QEglFSBrcmnxIntegration::createNativeWindow(QPlatformWindow *window, const QSize &size, const QSurfaceFormat &format)
++{
++	  return gs_native_window;
++}
++
++void QEglFSBrcmnxIntegration::destroyNativeWindow(EGLNativeWindowType window)
++{
++   
++}
++
++bool QEglFSBrcmnxIntegration::hasCapability(QPlatformIntegration::Capability cap) const
++{
++	  switch (cap) {
++		  case QPlatformIntegration::OpenGL:
++		  case QPlatformIntegration::RasterGLSurface:
++		  case QPlatformIntegration::NativeWidgets:
++			  return true;
++		  default: ;
++	  }
++	
++	  return false;
++
++}
++
++#ifdef __cplusplus
++}
++#endif
++QT_END_NAMESPACE
+diff --git a/src/plugins/platforms/eglfs/deviceintegration/eglfs_brcm_nx/qeglfsbrcmnxintegration.h b/src/plugins/platforms/eglfs/deviceintegration/eglfs_brcm_nx/qeglfsbrcmnxintegration.h
+new file mode 100644
+index 0000000000..22535d5db6
+--- /dev/null
++++ b/src/plugins/platforms/eglfs/deviceintegration/eglfs_brcm_nx/qeglfsbrcmnxintegration.h
+@@ -0,0 +1,70 @@
++/****************************************************************************
++**
++** Copyright (C) 2016 The Qt Company Ltd.
++** Contact: https://www.qt.io/licensing/
++**
++** This file is part of the plugins of the Qt Toolkit.
++**
++** $QT_BEGIN_LICENSE:LGPL$
++** Commercial License Usage
++** Licensees holding valid commercial Qt licenses may use this file in
++** accordance with the commercial license agreement provided with the
++** Software or, alternatively, in accordance with the terms contained in
++** a written agreement between you and The Qt Company. For licensing terms
++** and conditions see https://www.qt.io/terms-conditions. For further
++** information use the contact form at https://www.qt.io/contact-us.
++**
++** GNU Lesser General Public License Usage
++** Alternatively, this file may be used under the terms of the GNU Lesser
++** General Public License version 3 as published by the Free Software
++** Foundation and appearing in the file LICENSE.LGPL3 included in the
++** packaging of this file. Please review the following information to
++** ensure the GNU Lesser General Public License version 3 requirements
++** will be met: https://www.gnu.org/licenses/lgpl-3.0.html.
++**
++** GNU General Public License Usage
++** Alternatively, this file may be used under the terms of the GNU
++** General Public License version 2.0 or (at your option) the GNU General
++** Public license version 3 or any later version approved by the KDE Free
++** Qt Foundation. The licenses are as published by the Free Software
++** Foundation and appearing in the file LICENSE.GPL2 and LICENSE.GPL3
++** included in the packaging of this file. Please review the following
++** information to ensure the GNU General Public License requirements will
++** be met: https://www.gnu.org/licenses/gpl-2.0.html and
++** https://www.gnu.org/licenses/gpl-3.0.html.
++**
++** $QT_END_LICENSE$
++**
++****************************************************************************/
++
++#ifndef QEGLFSBRCMINTEGRATION_H
++#define QEGLFSBRCMINTEGRATION_H
++
++#include "private/qeglfsdeviceintegration_p.h"
++
++QT_BEGIN_NAMESPACE
++
++class QEglFSBrcmnxIntegration : public QEglFSDeviceIntegration
++{
++public:
++    void platformInit() override;
++    void platformDestroy() override;
++    EGLNativeDisplayType platformDisplay() const override;
++    QSize screenSize() const override;
++    int screenDepth() const override;
++    QImage::Format screenFormat() const override;
++    qreal refreshRate() const override;
++    QSurfaceFormat surfaceFormatFor(const QSurfaceFormat &inputFormat) const override;
++    EGLNativeWindowType createNativeWindow(QPlatformWindow *window, const QSize &size, const QSurfaceFormat &format) override;
++    void destroyNativeWindow(EGLNativeWindowType window) override;
++    bool hasCapability(QPlatformIntegration::Capability cap) const override;
++
++private:
++    QSize mScreenSize;
++    int mScreenDepth;
++
++};
++
++QT_END_NAMESPACE
++
++#endif
+diff --git a/src/plugins/platforms/eglfs/deviceintegration/eglfs_brcm_nx/qeglfsbrcmnxmain.cpp b/src/plugins/platforms/eglfs/deviceintegration/eglfs_brcm_nx/qeglfsbrcmnxmain.cpp
+new file mode 100644
+index 0000000000..dd4c6914ac
+--- /dev/null
++++ b/src/plugins/platforms/eglfs/deviceintegration/eglfs_brcm_nx/qeglfsbrcmnxmain.cpp
+@@ -0,0 +1,56 @@
++/****************************************************************************
++**
++** Copyright (C) 2016 The Qt Company Ltd.
++** Contact: https://www.qt.io/licensing/
++**
++** This file is part of the plugins of the Qt Toolkit.
++**
++** $QT_BEGIN_LICENSE:LGPL$
++** Commercial License Usage
++** Licensees holding valid commercial Qt licenses may use this file in
++** accordance with the commercial license agreement provided with the
++** Software or, alternatively, in accordance with the terms contained in
++** a written agreement between you and The Qt Company. For licensing terms
++** and conditions see https://www.qt.io/terms-conditions. For further
++** information use the contact form at https://www.qt.io/contact-us.
++**
++** GNU Lesser General Public License Usage
++** Alternatively, this file may be used under the terms of the GNU Lesser
++** General Public License version 3 as published by the Free Software
++** Foundation and appearing in the file LICENSE.LGPL3 included in the
++** packaging of this file. Please review the following information to
++** ensure the GNU Lesser General Public License version 3 requirements
++** will be met: https://www.gnu.org/licenses/lgpl-3.0.html.
++**
++** GNU General Public License Usage
++** Alternatively, this file may be used under the terms of the GNU
++** General Public License version 2.0 or (at your option) the GNU General
++** Public license version 3 or any later version approved by the KDE Free
++** Qt Foundation. The licenses are as published by the Free Software
++** Foundation and appearing in the file LICENSE.GPL2 and LICENSE.GPL3
++** included in the packaging of this file. Please review the following
++** information to ensure the GNU General Public License requirements will
++** be met: https://www.gnu.org/licenses/gpl-2.0.html and
++** https://www.gnu.org/licenses/gpl-3.0.html.
++**
++** $QT_END_LICENSE$
++**
++****************************************************************************/
++
++#include "private/qeglfsdeviceintegration_p.h"
++#include "qeglfsbrcmnxintegration.h"
++
++QT_BEGIN_NAMESPACE
++
++class QEglFSBrcmnxIntegrationPlugin : public QEglFSDeviceIntegrationPlugin
++{
++    Q_OBJECT
++    Q_PLUGIN_METADATA(IID QEglFSDeviceIntegrationFactoryInterface_iid FILE "eglfs_brcm_nx.json")
++
++public:
++    QEglFSDeviceIntegration *create() Q_DECL_OVERRIDE { return new QEglFSBrcmnxIntegration; }
++};
++
++QT_END_NAMESPACE
++
++#include "qeglfsbrcmnxmain.moc"
+-- 
+2.34.1.windows.1
+

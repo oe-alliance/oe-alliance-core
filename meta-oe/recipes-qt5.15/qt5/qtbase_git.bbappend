@@ -11,8 +11,8 @@ SRC_URI += " \
 	${@bb.utils.contains('MACHINE_FEATURES', 'v3d-nxpl', 'file://0002-eglfs-brcm-nexus-platform.patch' , '', d)} \
 	${@bb.utils.contains('MACHINE_FEATURES', 'v3d-eglfs', 'file://0001-Add-eglfs-brcmstb-support-for-INTEGRITY.patch' , '', d)} \
 	${@bb.utils.contains('MACHINE_FEATURES', 'vu-eglfs', 'file://0001-Add-eglfs-libvupl-support-for-INTEGRITY.patch' , '', d)} \
+	${@bb.utils.contains('MACHINE_FEATURES', 'gb-eglfs', 'file://0001-eglfs-brcm-nexus-nx-platform.patch' , '', d)} \
 "
-
 DEPENDS:append = "${@bb.utils.contains('MACHINE_FEATURES', 'vu-eglfs', 'libvupl libgles' , '', d)}"
 RDEPENDS:${PN}:append = "${@bb.utils.contains('MACHINE_FEATURES', 'vu-eglfs', 'libvupl libgles' , '', d)}"
 
@@ -28,6 +28,8 @@ SET_QT_QPA_DEFAULT_PLATFORM = "${@bb.utils.contains('MACHINE_FEATURES', 'qteglfs
 SET_QT_QPA_EGLFS_INTEGRATION = "${@bb.utils.contains('MACHINE_FEATURES', 'mali', 'eglfs_mali', '', d)}"
 SET_QT_QPA_EGLFS_INTEGRATION = "${@bb.utils.contains('MACHINE_FEATURES', 'v3d-nxpl', 'eglfs_nxpl', '', d)}"
 SET_QT_QPA_EGLFS_INTEGRATION = "${@bb.utils.contains('MACHINE_FEATURES', 'vu-eglfs', 'eglfs_libvupl', '', d)}"
+SET_QT_QPA_EGLFS_INTEGRATION = "${@bb.utils.contains('MACHINE_FEATURES', 'gb-eglfs', 'eglfs_brcm_nx', '', d)}"
+
 
 do_configure:prepend() {
 cat >> ${S}/mkspecs/oe-device-extra.pri <<EOF
