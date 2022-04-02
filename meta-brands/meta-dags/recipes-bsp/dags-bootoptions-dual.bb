@@ -5,7 +5,7 @@ SECTION = "base"
 PACKAGE_ARCH = "${MACHINEBUILD}"
 require conf/license/license-close.inc
 
-PR = "20210223"
+PR = "20220402"
 
 SRC_URI = "http://source.mynonpublic.com/dags/dags-bootoptions-${PR}.zip"
 
@@ -25,7 +25,7 @@ do_package_qa() {
 INSANE_SKIP:${PN} += "already-stripped"
 INHIBIT_PACKAGE_STRIP = "1"
 
-SRC_URI[md5sum] = "d57d0b2472f31b65c8b03592a5bbbbd8"
-SRC_URI[sha256sum] = "0a65d449eb415771ca564a001b3ea55edc844fa435e04cbb5a38c69fdf5ff5d2"
+SRC_URI[md5sum] = "79129766eda48ab19a3e36d88564afb1"
+SRC_URI[sha256sum] = "0dcae13526db0981a0900ce7102f2eb11330e06bf42e687396f1046a25491293"
 
 FILES:${PN} += "/boot/"
