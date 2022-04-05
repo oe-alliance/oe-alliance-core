@@ -9,8 +9,8 @@ require conf/python/python3-compileall.inc
 
 SRCREV="${AUTOREV}"
 
-PV = "6.18+git${SRCPV}"
-PKGV = "6.18+git${GITPKGV}"
+PV = "6.21+git${SRCPV}"
+PKGV = "6.21+git${GITPKGV}"
 PR = "r0"
 inherit gitpkgv allarch
 
