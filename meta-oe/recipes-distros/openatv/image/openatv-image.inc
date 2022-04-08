@@ -13,7 +13,6 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 WORKDIR = "${TMPDIR}/work/${MULTIMACH_TARGET_SYS}/${PN}/${EXTENDPE}${PV}"
 
 do_rootfs[deptask] = "do_rm_work"
-REPRODUCIBLE_TIMESTAMP_ROOTFS = "${@time.strftime('%s')}"
 
 SSTATE_ALLOW_OVERLAP_FILES += "${DEPLOY_DIR_IMAGE}"
 
