@@ -136,9 +136,12 @@ OLDEST_KERNEL = "2.6.32"
 PREFERRED_PROVIDER_virtual/kernel = "linux-fulan"
 PREFERRED_VERSION_glibc-initial = "2.23"
 PREFERRED_VERSION_directfb = "1.7.7"
+PREFERRED_VERSION_harfbuzz:sh4 = "3.2.0"
+PREFERRED_VERSION_patchelf:sh4 = "0.14.3"
 PREFERRED_VERSION_rt8812au = "4.3.14"
 PREFERRED_VERSION_mpd = "0.20.22"
-
+PREFERRED_VERSION_python3-cryptography:sh4 = "3.4.8"
+PREFERRED_VERSION_python3-google-api-python-client:sh4 = "1.8.4"
 PREFERRED_PROVIDER_virtual/egl = "libstgles"
 PREFERRED_PROVIDER_virtual/libgles1 = "libstgles"
 

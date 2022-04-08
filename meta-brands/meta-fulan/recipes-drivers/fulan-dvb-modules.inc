@@ -133,9 +133,24 @@ do_install() {
 
 PACKAGESPLITFUNCS:append = " handle_driver_rename "
 
+INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
+
+split_kernel_module_packages() {
+}
+
 python handle_driver_rename () {
     d.setVar("RPROVIDES:fulan-dvb-modules-${MACHINE}", "fulan-dvb-modules")
     d.setVar("RREPLACES:fulan-dvb-modules-${MACHINE}", "fulan-dvb-modules")
     d.setVar("RCONFLICTS:fulan-dvb-modules-${MACHINE}", "fulan-dvb-modules")
 }
+
 FILES:${PN}-dev += "${includedir}"
+
+FILES:${PN} += "/lib/modules/2.6.32.71_stm24_0217 \
+                /lib/modules/2.6.32.71_stm24_0217/extra/.debug \
+                /lib/modules/2.6.32.71_stm24_0217/extra/*/.debug \
+                /lib/modules/2.6.32.71_stm24_0217/extra/*/*/.debug \
+                /lib/modules/2.6.32.71_stm24_0217/extra/*/*/*/.debug \
+                /lib/modules/2.6.32.71_stm24_0217/extra/*/*/*/*/.debug \
+                /lib/modules/2.6.32.71_stm24_0217/extra/*/*/*/*/*/.debug \
+"

@@ -80,3 +80,4 @@ Checking value of SIGRTMIN: "34"
 Checking whether the WRFILE -keytab is supported: OK
 vfs_fileid checking for statfs() and struct statfs.f_fsid: OK
 Checking for gnutls fips mode support: NO
+Checking for readlink breakage: NO

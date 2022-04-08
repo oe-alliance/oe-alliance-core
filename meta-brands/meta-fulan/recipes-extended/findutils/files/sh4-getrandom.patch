@@ -1,0 +1,11 @@
+--- a/gnulib-tests/getrandom.c
++++ b/gnulib-tests/getrandom.c
+@@ -110,7 +110,7 @@ initialize (void)
+    Return the number of bytes written (> 0).
+    Upon error, return -1 and set errno.  */
+ ssize_t
+-getrandom (void *buffer, size_t length, unsigned int flags)
++__getrandom (void *buffer, size_t length, unsigned int flags)
+ #undef getrandom
+ {
+ #if defined _WIN32 && ! defined __CYGWIN__
