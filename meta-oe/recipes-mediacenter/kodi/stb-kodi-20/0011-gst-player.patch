@@ -1,4 +1,4 @@
-From 896a0ac6d74d87b39ee21620093379761b13cd48 Mon Sep 17 00:00:00 2001
+From ab5426c737423e451f687a76ca9cbf6254c38f77 Mon Sep 17 00:00:00 2001
 From: Captain <captain.onboard@web.de>
 Date: Fri, 17 Jul 2020 21:07:15 +0200
 Subject: [PATCH] gst-player
@@ -12,12 +12,12 @@ Subject: [PATCH] gst-player
  xbmc/cores/GstPlayer/GstPlayer.cpp            |  688 ++++++++
  xbmc/cores/GstPlayer/GstPlayer.h              |  186 +++
  xbmc/cores/GstPlayer/GstPlayerAudio.cpp       |  151 ++
- xbmc/cores/GstPlayer/GstPlayerAudio.h         |   44 +
+ xbmc/cores/GstPlayer/GstPlayerAudio.h         |   45 +
  xbmc/cores/GstPlayer/GstPlayerVideo.cpp       | 1405 +++++++++++++++++
  xbmc/cores/GstPlayer/GstPlayerVideo.h         |  181 +++
  .../playercorefactory/PlayerCoreConfig.h      |   11 +
  .../playercorefactory/PlayerCoreFactory.cpp   |   15 +
- 13 files changed, 2834 insertions(+), 1 deletion(-)
+ 13 files changed, 2835 insertions(+), 1 deletion(-)
  create mode 100644 cmake/modules/FindGLIB.cmake
  create mode 100644 cmake/modules/FindGstreamer.cmake
  create mode 100644 xbmc/cores/GstPlayer/CMakeLists.txt
@@ -30,7 +30,7 @@ Subject: [PATCH] gst-player
 
 diff --git a/cmake/modules/FindGLIB.cmake b/cmake/modules/FindGLIB.cmake
 new file mode 100644
-index 0000000..656aa0b
+index 0000000000..656aa0b7d6
 --- /dev/null
 +++ b/cmake/modules/FindGLIB.cmake
 @@ -0,0 +1,102 @@
@@ -138,7 +138,7 @@ index 0000000..656aa0b
 +                                       VERSION_VAR   GLIB_VERSION)
 diff --git a/cmake/modules/FindGstreamer.cmake b/cmake/modules/FindGstreamer.cmake
 new file mode 100644
-index 0000000..760e7d1
+index 0000000000..760e7d1321
 --- /dev/null
 +++ b/cmake/modules/FindGstreamer.cmake
 @@ -0,0 +1,40 @@
@@ -183,7 +183,7 @@ index 0000000..760e7d1
 +
 +mark_as_advanced(GSTREAMER_LIBRARY GSTREAMER_INCLUDE_DIR GSTREAMER_LDFLAGS)
 diff --git a/cmake/platform/linux/stb.cmake b/cmake/platform/linux/stb.cmake
-index e1fe54a..7d7e142 100644
+index e1fe54a13d..7d7e14205f 100644
 --- a/cmake/platform/linux/stb.cmake
 +++ b/cmake/platform/linux/stb.cmake
 @@ -1,4 +1,4 @@
@@ -193,7 +193,7 @@ index e1fe54a..7d7e142 100644
  
  set(STB_RENDER_SYSTEM "" CACHE STRING "Render system to use with STB: \"gl\" or \"gles\"")
 diff --git a/cmake/treedata/common/cores.txt b/cmake/treedata/common/cores.txt
-index 5e5c6cb..cbde630 100644
+index 5e5c6cbf80..cbde630e7d 100644
 --- a/cmake/treedata/common/cores.txt
 +++ b/cmake/treedata/common/cores.txt
 @@ -5,5 +5,6 @@ xbmc/cores/DllLoader/exports           cores/dll-loader/exports
@@ -205,7 +205,7 @@ index 5e5c6cb..cbde630 100644
  xbmc/cores/playercorefactory           cores/playercorefactory
 diff --git a/xbmc/cores/GstPlayer/CMakeLists.txt b/xbmc/cores/GstPlayer/CMakeLists.txt
 new file mode 100644
-index 0000000..1b8adfa
+index 0000000000..1b8adfab36
 --- /dev/null
 +++ b/xbmc/cores/GstPlayer/CMakeLists.txt
 @@ -0,0 +1,9 @@
@@ -220,7 +220,7 @@ index 0000000..1b8adfa
 +core_add_library(gstplayer)
 diff --git a/xbmc/cores/GstPlayer/GstPlayer.cpp b/xbmc/cores/GstPlayer/GstPlayer.cpp
 new file mode 100644
-index 0000000..e12a2bd
+index 0000000000..cd4972827e
 --- /dev/null
 +++ b/xbmc/cores/GstPlayer/GstPlayer.cpp
 @@ -0,0 +1,688 @@
@@ -291,7 +291,7 @@ index 0000000..e12a2bd
 +#include "storage/MediaManager.h"
 +
 +//using namespace PVR;
-+using namespace KODI::MESSAGING;
++//using namespace KODI::MESSAGING;
 +using namespace XFILE;
 +using namespace std::chrono_literals;
 +
@@ -530,7 +530,7 @@ index 0000000..e12a2bd
 +	
 +	CLog::Log(LOGINFO, "CGstPlayer{}: m_pInputStream->GetFileName(): {}", __FUNCTION__, hint.filename.c_str());
 +
-+	CApplicationMessenger::GetInstance().PostMsg(TMSG_SWITCHTOFULLSCREEN);
++	CServiceBroker::GetAppMessenger()->PostMsg(TMSG_SWITCHTOFULLSCREEN);
 +
 +	m_playbackStartTime = std::chrono::steady_clock::now();
 +	m_time = 0;
@@ -914,7 +914,7 @@ index 0000000..e12a2bd
 +
 diff --git a/xbmc/cores/GstPlayer/GstPlayer.h b/xbmc/cores/GstPlayer/GstPlayer.h
 new file mode 100644
-index 0000000..dfb3bc1
+index 0000000000..dfb3bc1db3
 --- /dev/null
 +++ b/xbmc/cores/GstPlayer/GstPlayer.h
 @@ -0,0 +1,186 @@
@@ -1106,7 +1106,7 @@ index 0000000..dfb3bc1
 +};
 diff --git a/xbmc/cores/GstPlayer/GstPlayerAudio.cpp b/xbmc/cores/GstPlayer/GstPlayerAudio.cpp
 new file mode 100644
-index 0000000..1b0a3d0
+index 0000000000..5aeacf0382
 --- /dev/null
 +++ b/xbmc/cores/GstPlayer/GstPlayerAudio.cpp
 @@ -0,0 +1,151 @@
@@ -1263,7 +1263,7 @@ index 0000000..1b0a3d0
 +}
 diff --git a/xbmc/cores/GstPlayer/GstPlayerAudio.h b/xbmc/cores/GstPlayer/GstPlayerAudio.h
 new file mode 100644
-index 0000000..aba8813
+index 0000000000..fe6f7008cd
 --- /dev/null
 +++ b/xbmc/cores/GstPlayer/GstPlayerAudio.h
 @@ -0,0 +1,45 @@
@@ -1314,7 +1314,7 @@ index 0000000..aba8813
 +};
 diff --git a/xbmc/cores/GstPlayer/GstPlayerVideo.cpp b/xbmc/cores/GstPlayer/GstPlayerVideo.cpp
 new file mode 100644
-index 0000000..fe4fa48
+index 0000000000..a58cf8d276
 --- /dev/null
 +++ b/xbmc/cores/GstPlayer/GstPlayerVideo.cpp
 @@ -0,0 +1,1405 @@
@@ -1598,7 +1598,7 @@ index 0000000..fe4fa48
 +		
 +		else if ( m_sourceinfo.is_streaming )
 +		{
-+			m_download_buffer_path = CSpecialProtocol::TranslatePath(CUtil::GetNextFilename("special://temp/filecache%03d.cache", 999));
++			m_download_buffer_path = CSpecialProtocol::TranslatePath(CUtil::GetNextFilename("special://temp/filecache{:03}.cache", 999));
 +			
 +
 +			m_notify_source_handler_id = g_signal_connect(m_playbin, "notify::source", G_CALLBACK (NotifySource), this);
@@ -2725,7 +2725,7 @@ index 0000000..fe4fa48
 +
 diff --git a/xbmc/cores/GstPlayer/GstPlayerVideo.h b/xbmc/cores/GstPlayer/GstPlayerVideo.h
 new file mode 100644
-index 0000000..d89cc67
+index 0000000000..d89cc678a4
 --- /dev/null
 +++ b/xbmc/cores/GstPlayer/GstPlayerVideo.h
 @@ -0,0 +1,181 @@
@@ -2911,7 +2911,7 @@ index 0000000..d89cc67
 +
 +};
 diff --git a/xbmc/cores/playercorefactory/PlayerCoreConfig.h b/xbmc/cores/playercorefactory/PlayerCoreConfig.h
-index fc605c7..c04c5dd 100644
+index fc605c7d87..c04c5dd467 100644
 --- a/xbmc/cores/playercorefactory/PlayerCoreConfig.h
 +++ b/xbmc/cores/playercorefactory/PlayerCoreConfig.h
 @@ -22,6 +22,11 @@
@@ -2940,11 +2940,11 @@ index fc605c7..c04c5dd 100644
      {
        player = std::make_shared<CExternalPlayer>(callback);
 diff --git a/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp b/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp
-index ca6590b..0cface5 100644
+index 9daee4f56c..a2a5ba2773 100644
 --- a/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp
 +++ b/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp
 @@ -29,6 +29,10 @@
- 
+ #include <mutex>
  #include <sstream>
  
 +#if defined(HAVE_LIBGSTREAMER)

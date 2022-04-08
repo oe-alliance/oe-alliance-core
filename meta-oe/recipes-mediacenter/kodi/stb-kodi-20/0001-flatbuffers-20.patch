@@ -1,14 +1,14 @@
 From 03923ba038fd0dda787048c2d1c6603b6765f6c1 Mon Sep 17 00:00:00 2001
 From: Captain <captain.onboard@web.de>
 Date: Wed, 15 Jul 2020 19:40:27 +0200
-Subject: [PATCH] flatbuffers-19
+Subject: [PATCH] flatbuffers-20
 
 ---
  xbmc/cores/RetroPlayer/messages/savestate.fbs | 12 ++++++------
  1 file changed, 6 insertions(+), 6 deletions(-)
 
 diff --git a/xbmc/cores/RetroPlayer/messages/savestate.fbs b/xbmc/cores/RetroPlayer/messages/savestate.fbs
-index 1d708d6..33b07d8 100644
+index 3a1c5c855b0..6a16a437ca2 100644
 --- a/xbmc/cores/RetroPlayer/messages/savestate.fbs
 +++ b/xbmc/cores/RetroPlayer/messages/savestate.fbs
 @@ -13,7 +13,7 @@ namespace KODI.RETRO;
@@ -24,32 +24,32 @@ index 1d708d6..33b07d8 100644
  
  table Savestate {
    // Schema version
--  version:uint8;
-+  version:ubyte;
+-  version:uint8 (id: 0);
++  version:ubyte (id: 0);
  
    // Savestate properties
-   type:SaveType;
--  slot:uint8;
-+  slot:ubyte;
-   label:string;
-   created:string; // RFC 1123 date time
- 
-@@ -33,15 +33,15 @@ table Savestate {
-   game_file_name:string;
+   type:SaveType (id: 1);
+-  slot:uint8 (id: 2);
++  slot:ubyte (id: 2);
+   label:string (id: 3);
+   caption:string (id: 11);
+   created:string (id: 4); // W3C date time [ISO 8601 : 1988 (E)] with timezone info
+@@ -34,15 +34,15 @@ table Savestate {
+   game_file_name:string (id: 5);
  
    // Environment properties
--  timestamp_frames:uint64;
--  timestamp_wall_clock_ns:uint64;
-+  timestamp_frames:ulong;
-+  timestamp_wall_clock_ns:ulong;
+-  timestamp_frames:uint64 (id: 6);
+-  timestamp_wall_clock_ns:uint64 (id: 7);
++  timestamp_frames:ulong (id: 6);
++  timestamp_wall_clock_ns:ulong (id: 7);
  
    // Emulator properties
-   emulator_addon_id:string;
-   emulator_version:string; // Semantic version
+   emulator_addon_id:string (id: 8);
+   emulator_version:string (id: 9); // Semantic version
  
    // Memory properties
--  memory_data:[uint8];
-+  memory_data:[ubyte];
+-  memory_data:[uint8] (id: 10);
++  memory_data:[ubyte] (id: 10);
  }
  
  root_type Savestate;

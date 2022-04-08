@@ -1,11 +1,11 @@
-From f5e938dc015da0730905cd4b2f2cb97011032523 Mon Sep 17 00:00:00 2001
+From e4c0c33e8d6a65e45396eb05364a1b36e9a3e757 Mon Sep 17 00:00:00 2001
 From: Captain <captain.onboard@web.de>
 Date: Wed, 15 Jul 2020 18:07:08 +0200
-Subject: [PATCH] stb-settings-19
+Subject: [PATCH] stb-settings-20
 
 ---
  addons/skin.estuary/xml/Home.xml           |  2 +-
- cmake/modules/FindFFMPEG.cmake             | 43 +++++++++-----
+ cmake/modules/FindFFMPEG.cmake             | 47 +++++++++------
  cmake/platform/linux/stb.cmake             | 69 ++++++++++++++++++++++
  cmake/scripts/linux/ArchSetup.cmake        |  4 ++
  cmake/treedata/common/stb.txt              |  1 +
@@ -18,12 +18,12 @@ Subject: [PATCH] stb-settings-19
  xbmc/guilib/guiinfo/SystemGUIInfo.cpp      |  5 ++
  xbmc/input/InputManager.cpp                | 12 ++++
  xbmc/view/ViewStateSettings.cpp            |  2 +-
- 14 files changed, 200 insertions(+), 41 deletions(-)
+ 14 files changed, 201 insertions(+), 44 deletions(-)
  create mode 100644 cmake/platform/linux/stb.cmake
  create mode 100644 cmake/treedata/common/stb.txt
 
 diff --git a/addons/skin.estuary/xml/Home.xml b/addons/skin.estuary/xml/Home.xml
-index 4192e93d67..ecaeaeaadf 100644
+index 4192e93..ecaeaea 100644
 --- a/addons/skin.estuary/xml/Home.xml
 +++ b/addons/skin.estuary/xml/Home.xml
 @@ -1026,7 +1026,7 @@
@@ -36,43 +36,10 @@ index 4192e93d67..ecaeaeaadf 100644
  						<param name="label" value="$LOCALIZE[33060]" />
  					</include>
 diff --git a/cmake/modules/FindFFMPEG.cmake b/cmake/modules/FindFFMPEG.cmake
-index 16c29e5044..5562754eb4 100644
+index 4e18d74..3ffff1c 100644
 --- a/cmake/modules/FindFFMPEG.cmake
 +++ b/cmake/modules/FindFFMPEG.cmake
-@@ -45,16 +45,22 @@ set(_postproc_ver ">=55.9.100")
- # Allows building with external ffmpeg not found in system paths,
- # without library version checks
- if(WITH_FFMPEG)
--  set(FFMPEG_PATH ${WITH_FFMPEG})
--  message(STATUS "Warning: FFmpeg version checking disabled")
--  set(REQUIRED_FFMPEG_VERSION undef)
--  unset(_avcodec_ver)
--  unset(_avfilter_ver)
--  unset(_avformat_ver)
--  unset(_avutil_ver)
--  unset(_swscale_ver)
--  unset(_swresample_ver)
--  unset(_postproc_ver)
-+  if(WITH_FFMPEG STREQUAL stb)
-+    set(FFMPEG_TARGET ${WITH_FFMPEG})
-+    set(ENABLE_INTERNAL_FFMPEG ON)
-+  else()
-+    set(FFMPEG_TARGET "")
-+    set(FFMPEG_PATH ${WITH_FFMPEG})
-+    message(STATUS "Warning: FFmpeg version checking disabled")
-+    set(REQUIRED_FFMPEG_VERSION undef)
-+    unset(_avcodec_ver)
-+    unset(_avfilter_ver)
-+    unset(_avformat_ver)
-+    unset(_avutil_ver)
-+    unset(_swscale_ver)
-+    unset(_swresample_ver)
-+    unset(_postproc_ver)
-+  endif()
- endif()
- 
- # Allows building with external ffmpeg not found in system paths,
-@@ -237,6 +243,12 @@ if(NOT FFMPEG_FOUND)
+@@ -55,6 +55,12 @@ macro(buildFFMPEG)
                       -DENABLE_DAV1D=${DAV1D_FOUND}
                       -DEXTRA_FLAGS=${FFMPEG_EXTRA_FLAGS})
  
@@ -85,7 +52,7 @@ index 16c29e5044..5562754eb4 100644
    if(KODI_DEPENDSBUILD)
      set(CROSS_ARGS -DDEPENDS_PATH=${DEPENDS_PATH}
                     -DPKG_CONFIG_EXECUTABLE=${PKG_CONFIG_EXECUTABLE}
-@@ -281,12 +293,12 @@ if(NOT FFMPEG_FOUND)
+@@ -92,12 +98,12 @@ macro(buildFFMPEG)
      add_dependencies(ffmpeg dav1d)
    endif()
  
@@ -103,7 +70,7 @@ index 16c29e5044..5562754eb4 100644
  if [[ $@ == *${APP_NAME_LC}.bin* || $@ == *${APP_NAME_LC}${APP_BINARY_SUFFIX}* || $@ == *${APP_NAME_LC}.so* || $@ == *${APP_NAME_LC}-test* ]]
  then
    avformat=`PKG_CONFIG_PATH=${CMAKE_BINARY_DIR}/${CORE_BUILD_DIR}/lib/pkgconfig ${PKG_CONFIG_EXECUTABLE} --libs --static libavcodec`
-@@ -300,6 +312,7 @@ then
+@@ -111,6 +117,7 @@ then
  else
    $@
  fi")
@@ -111,9 +78,48 @@ index 16c29e5044..5562754eb4 100644
    file(COPY ${CMAKE_BINARY_DIR}/${CORE_BUILD_DIR}/ffmpeg/ffmpeg-link-wrapper
         DESTINATION ${CMAKE_BINARY_DIR}/${CORE_BUILD_DIR}
         FILE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE)
+@@ -128,21 +135,25 @@ endmacro()
+ # Allows building with external ffmpeg not found in system paths,
+ # without library version checks
+ if(WITH_FFMPEG)
+-  set(FFMPEG_PATH ${WITH_FFMPEG})
+-  message(STATUS "Warning: FFmpeg version checking disabled")
+-  set(REQUIRED_FFMPEG_VERSION undef)
+-else()
+-  # required ffmpeg library versions
+-  set(REQUIRED_FFMPEG_VERSION 4.4.1)
+-  set(_avcodec_ver ">=58.134.100")
+-  set(_avfilter_ver ">=7.110.100")
+-  set(_avformat_ver ">=58.76.100")
+-  set(_avutil_ver ">=56.70.100")
+-  set(_postproc_ver ">=55.9.100")
+-  set(_swresample_ver ">=3.9.100")
+-  set(_swscale_ver ">=5.9.100")
++  if(WITH_FFMPEG STREQUAL stb)
++    set(FFMPEG_TARGET ${WITH_FFMPEG})
++    set(REQUIRED_FFMPEG_VERSION 4.4.1)
++  else()
++    set(FFMPEG_TARGET "")
++    set(FFMPEG_PATH ${WITH_FFMPEG})
++    message(STATUS "Warning: FFmpeg version checking disabled")
++    set(REQUIRED_FFMPEG_VERSION undef)
++    unset(_avcodec_ver)
++    unset(_avfilter_ver)
++    unset(_avformat_ver)
++    unset(_avutil_ver)
++    unset(_swscale_ver)
++    unset(_swresample_ver)
++    unset(_postproc_ver)
++  endif()
+ endif()
+ 
++
+ # Allows building with external ffmpeg not found in system paths,
+ # with library version checks
+ if(FFMPEG_PATH)
 diff --git a/cmake/platform/linux/stb.cmake b/cmake/platform/linux/stb.cmake
 new file mode 100644
-index 0000000000..e1fe54a13d
+index 0000000..e1fe54a
 --- /dev/null
 +++ b/cmake/platform/linux/stb.cmake
 @@ -0,0 +1,69 @@
@@ -187,10 +193,10 @@ index 0000000000..e1fe54a13d
 +
 +list(APPEND PLATFORM_DEFINES -DMESA_EGL_NO_X11_HEADERS)
 diff --git a/cmake/scripts/linux/ArchSetup.cmake b/cmake/scripts/linux/ArchSetup.cmake
-index 0a88e8ff11..1dfa22171a 100644
+index d3ad51a..c2b1257 100644
 --- a/cmake/scripts/linux/ArchSetup.cmake
 +++ b/cmake/scripts/linux/ArchSetup.cmake
-@@ -38,6 +38,10 @@ else()
+@@ -40,6 +40,10 @@ else()
    elseif(CPU MATCHES riscv64)
      set(ARCH riscv64)
      set(NEON False)
@@ -203,13 +209,13 @@ index 0a88e8ff11..1dfa22171a 100644
    endif()
 diff --git a/cmake/treedata/common/stb.txt b/cmake/treedata/common/stb.txt
 new file mode 100644
-index 0000000000..2606a0f999
+index 0000000..2606a0f
 --- /dev/null
 +++ b/cmake/treedata/common/stb.txt
 @@ -0,0 +1 @@
 +xbmc/windowing/egl   windowing/egl    # STB
 diff --git a/system/settings/settings.xml b/system/settings/settings.xml
-index 36b2f7fa47..7ace487dae 100755
+index 36b2f7f..7ace487 100755
 --- a/system/settings/settings.xml
 +++ b/system/settings/settings.xml
 @@ -518,7 +518,7 @@
@@ -269,7 +275,7 @@ index 36b2f7fa47..7ace487dae 100755
              <options>regions</options>
            </constraints>
 diff --git a/tools/Linux/kodi.sh.in b/tools/Linux/kodi.sh.in
-index 108c0b007b..e0401b5348 100644
+index 108c0b0..e0401b5 100644
 --- a/tools/Linux/kodi.sh.in
 +++ b/tools/Linux/kodi.sh.in
 @@ -26,8 +26,11 @@ exec_prefix="@exec_prefix@"
@@ -340,11 +346,11 @@ index 108c0b007b..e0401b5348 100644
  
  exit $RET
 diff --git a/tools/depends/target/ffmpeg/CMakeLists.txt b/tools/depends/target/ffmpeg/CMakeLists.txt
-index f05c54a823..2d6807765d 100644
+index 2748b0f..973f3fb 100644
 --- a/tools/depends/target/ffmpeg/CMakeLists.txt
 +++ b/tools/depends/target/ffmpeg/CMakeLists.txt
-@@ -10,6 +10,36 @@ else()
-   set(ffmpeg_conf --cc=${CMAKE_C_COMPILER} --cxx=${CMAKE_CXX_COMPILER})
+@@ -12,6 +12,36 @@ else()
+                 )
  endif()
  
 +if(FFMPEG_TARGET STREQUAL "stb")
@@ -379,9 +385,9 @@ index f05c54a823..2d6807765d 100644
 +
  if(CROSSCOMPILING)
    set(pkgconf "PKG_CONFIG_LIBDIR=${DEPENDS_PATH}/lib/pkgconfig")
-   list(APPEND ffmpeg_conf --pkg-config=${PKG_CONFIG_EXECUTABLE} --pkg-config-flags=--static)
+   list(APPEND ffmpeg_conf --pkg-config=${PKG_CONFIG_EXECUTABLE}
 diff --git a/tools/depends/target/libdvdcss/Makefile b/tools/depends/target/libdvdcss/Makefile
-index b157eee34d..789c0940f1 100644
+index b157eee..789c094 100644
 --- a/tools/depends/target/libdvdcss/Makefile
 +++ b/tools/depends/target/libdvdcss/Makefile
 @@ -3,7 +3,7 @@ include LIBDVDCSS-VERSION
@@ -403,7 +409,7 @@ index b157eee34d..789c0940f1 100644
  include ../../download-files.include
  all: .installed-$(PLATFORM)
 diff --git a/tools/depends/target/libdvdnav/Makefile b/tools/depends/target/libdvdnav/Makefile
-index eca4d53f54..77b856714f 100644
+index eca4d53..77b8567 100644
 --- a/tools/depends/target/libdvdnav/Makefile
 +++ b/tools/depends/target/libdvdnav/Makefile
 @@ -3,11 +3,11 @@ include LIBDVDNAV-VERSION
@@ -421,7 +427,7 @@ index eca4d53f54..77b856714f 100644
    ROOT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
    PREFIX := $(ROOT_DIR)/dvdnav-install
 diff --git a/tools/depends/target/libdvdread/Makefile b/tools/depends/target/libdvdread/Makefile
-index 0be5f2d6f4..8e7e0b0e38 100644
+index 0be5f2d..8e7e0b0 100644
 --- a/tools/depends/target/libdvdread/Makefile
 +++ b/tools/depends/target/libdvdread/Makefile
 @@ -3,11 +3,12 @@ include LIBDVDREAD-VERSION
@@ -440,7 +446,7 @@ index 0be5f2d6f4..8e7e0b0e38 100644
    ROOT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
    PREFIX := $(ROOT_DIR)/dvdread-install
 diff --git a/xbmc/guilib/guiinfo/SystemGUIInfo.cpp b/xbmc/guilib/guiinfo/SystemGUIInfo.cpp
-index fb8174ad4a..479dd4dcbe 100644
+index 00abec2..6125a81 100644
 --- a/xbmc/guilib/guiinfo/SystemGUIInfo.cpp
 +++ b/xbmc/guilib/guiinfo/SystemGUIInfo.cpp
 @@ -57,6 +57,11 @@ std::string CSystemGUIInfo::GetSystemHeatInfo(int info) const
@@ -456,10 +462,10 @@ index fb8174ad4a..479dd4dcbe 100644
    }
  
 diff --git a/xbmc/input/InputManager.cpp b/xbmc/input/InputManager.cpp
-index 274848289d..4b80c81669 100644
+index 0d4c347..18c29c6 100644
 --- a/xbmc/input/InputManager.cpp
 +++ b/xbmc/input/InputManager.cpp
-@@ -579,6 +579,18 @@ bool CInputManager::HandleKey(const CKey& key)
+@@ -580,6 +580,18 @@ bool CInputManager::HandleKey(const CKey& key)
            useKeyboard = true;
        }
      }
@@ -479,7 +485,7 @@ index 274848289d..4b80c81669 100644
      {
        // use the virtualkeyboard section of the keymap, and send keyboard-specific or navigation
 diff --git a/xbmc/view/ViewStateSettings.cpp b/xbmc/view/ViewStateSettings.cpp
-index a92bd1e834..79faef8162 100644
+index d883393..0c557ce 100644
 --- a/xbmc/view/ViewStateSettings.cpp
 +++ b/xbmc/view/ViewStateSettings.cpp
 @@ -114,7 +114,7 @@ bool CViewStateSettings::Load(const TiXmlNode *settings)

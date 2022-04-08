@@ -70,7 +70,7 @@ DEPENDS += " \
           "
 
 # 20.0 Nexus
-SRCREV = "cdb14802e55d6ad12085059419ce515844364d45"
+SRCREV = "fae5a54a151d57ee3664662795b8dfb174ac5e26"
 
 # 'patch' doesn't support binary diffs
 #PATCHTOOL = "git"
@@ -82,16 +82,15 @@ PV = "20.0+gitr${SRCPV}"
 SRC_URI = "git://github.com/xbmc/xbmc.git;protocol=https;branch=master \
            file://0001-flatbuffers-20.patch \
            file://0002-readd-Touchscreen-settings.patch \
-           file://0003-crossguid-0.2.patch \
-           file://0004-shader-nopow-20.patch \
-           file://0006-stb-settings-20.patch \
+           file://0003-shader-nopow-20.patch \
+           file://0004-stb-settings-20.patch \
            file://0005-stb-support-20.patch \
-           file://0007-add-winsystemfactory-windowing-init.patch \
-           file://0008-adapt-window-system-registration.patch \
-           file://0009-reinstate-system-h.patch \
-           file://0010-reinstate-platform-defines.patch \
-           ${@bb.utils.contains_any('MACHINE_FEATURES', 'hisil-3798mv200 hisil-3798mv310 hisi hisil', '' , 'file://0011-e2-player.patch', d)} \
-           ${@bb.utils.contains_any('MACHINE_FEATURES', 'hisil-3798mv200 hisil-3798mv310 hisi hisil', '' , 'file://0012-gst-player.patch', d)} \
+           file://0006-add-winsystemfactory-windowing-init.patch \
+           file://0007-adapt-window-system-registration.patch \
+           file://0008-reinstate-system-h.patch \
+           file://0009-reinstate-platform-defines.patch \
+           ${@bb.utils.contains_any('MACHINE_FEATURES', 'hisil-3798mv200 hisil-3798mv310 hisi hisil', '' , 'file://0010-e2-player.patch', d)} \
+           ${@bb.utils.contains_any('MACHINE_FEATURES', 'hisil-3798mv200 hisil-3798mv310 hisi hisil', '' , 'file://0011-gst-player.patch', d)} \
           "
 
 S = "${WORKDIR}/git"
@@ -214,9 +213,9 @@ do_configure:prepend() {
 INSANE_SKIP:${PN} = "rpaths already-stripped"
 
 FILES:${PN} = "${libdir}/kodi ${libdir}/xbmc"
-FILES:${PN} += "${bindir}/kodi ${bindir}/xbmc"
+FILES:${PN} += "${bindir}/kodi ${bindir}/xbmc ${bindir}/kodi-TexturePacker"
 FILES:${PN} += "${datadir}/icons ${datadir}/kodi ${datadir}/xbmc ${datadir}/applications"
-FILES:${PN} += "${bindir}/kodi-standalone ${bindir}/xbmc-standalone ${datadir}/xsessions"
+FILES:${PN} += "${bindir}/kodi-standalone ${bindir}/xbmc-standalone ${datadir}/xsessions ${datadir}/metainfo"
 FILES:${PN} += "${libdir}/firewalld"
 FILES:${PN}-dev = "${includedir}"
 FILES:${PN}-dbg += "${libdir}/kodi/.debug ${libdir}/kodi/*/.debug ${libdir}/kodi/*/*/.debug ${libdir}/kodi/*/*/*/.debug"
