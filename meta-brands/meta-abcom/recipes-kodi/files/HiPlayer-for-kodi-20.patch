@@ -1,4 +1,4 @@
-From 9de86553a3dd41a919bdc1703b375f07868e7256 Mon Sep 17 00:00:00 2001
+From 29644e1e45ab8b364a713b8bcfd4d1ccae701a54 Mon Sep 17 00:00:00 2001
 From: Captain <captain.onboard@web.de>
 Date: Sun, 13 Jun 2021 13:10:57 +0200
 Subject: [PATCH] HiPlayer-for-kodi-20
@@ -53,10 +53,10 @@ index 0000000..07a8253
 +core_add_library(hiplayer)
 diff --git a/xbmc/cores/HiPlayer/HiPlayer.cpp b/xbmc/cores/HiPlayer/HiPlayer.cpp
 new file mode 100644
-index 0000000..29f7a31
+index 0000000..e61937a
 --- /dev/null
 +++ b/xbmc/cores/HiPlayer/HiPlayer.cpp
-@@ -0,0 +1,592 @@
+@@ -0,0 +1,593 @@
 +#include "HiPlayer.h"
 +#include "HiPlayerVideo.h"
 +#include "HiPlayerAudio.h"
@@ -67,6 +67,7 @@ index 0000000..29f7a31
 +#include "utils/StringUtils.h"
 +#include "utils/URIUtils.h"
 +#include "utils/log.h"
++#include "utils/TimeUtils.h"
 +#include "cores/DataCacheCore.h"
 +#include "input/InputManager.h"
 +#include "settings/Settings.h"
@@ -307,9 +308,9 @@ index 0000000..29f7a31
 +	
 +	CLog::Log(LOGINFO, "CHiPlayer{}: m_pInputStream->GetFileName(): {}", __FUNCTION__, hint.filename.c_str());
 +
-+	KODI::MESSAGING::CApplicationMessenger::GetInstance().PostMsg(TMSG_SWITCHTOFULLSCREEN);
++	CServiceBroker::GetAppMessenger()->PostMsg(TMSG_SWITCHTOFULLSCREEN);
 +
-+	m_playbackStartTime = XbmcThreads::SystemClockMillis();
++	m_playbackStartTime = CTimeUtils::GetFrameTime();
 +	m_time = 0;
 +	
 +	if (m_pInputStream->IsStreamType(DVDSTREAM_TYPE_PVRMANAGER) && 
@@ -824,7 +825,7 @@ index 0000000..b0d37a8
 +#include "utils/log.h"
 +
 +#include "threads/Thread.h"
-+#include "threads/SystemClock.h"
++#include "utils/TimeUtils.h"
 +
 +#define AUDIO_DEV "/dev/dvb/adapter0/audio0"
 +
@@ -925,7 +926,7 @@ new file mode 100644
 index 0000000..3ca537a
 --- /dev/null
 +++ b/xbmc/cores/HiPlayer/HiPlayerVideo.cpp
-@@ -0,0 +1,1422 @@
+@@ -0,0 +1,1423 @@
 +#include "HiPlayerVideo.h"
 +#include "system.h"
 +#include "URL.h"
@@ -940,6 +941,7 @@ index 0000000..3ca537a
 +#include "messaging/ApplicationMessenger.h"
 +#include "guilib/GUIComponent.h"
 +#include "guilib/GUIWindowManager.h"
++#include "utils/TimeUtils.h"
 +#include "settings/Settings.h"
 +#include "settings/SettingsComponent.h"
 +#include "settings/MediaSettings.h"
@@ -2807,11 +2809,11 @@ index 5af08c2..ae143ea 100644
      {
        player = std::make_shared<CExternalPlayer>(callback);
 diff --git a/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp b/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp
-index 0bfb7de..98d09eb 100644
+index 65984e9..d64a540 100644
 --- a/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp
 +++ b/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp
 @@ -28,6 +28,10 @@
- 
+ #include <mutex>
  #include <sstream>
  
 +#if defined(HAS_HIPLAYER)
