@@ -19,7 +19,7 @@ MACHINE_KERNEL_PR:append = "6"
 PKG:${KERNEL_PACKAGE_NAME}-base = "kernel-base"
 PKG:${KERNEL_PACKAGE_NAME}-image = "kernel-image"
 RPROVIDES:${KERNEL_PACKAGE_NAME}-base = "kernel-${KERNEL_VERSION}"
-RPROVIDES:kernel-image = "kernel-image-${KERNEL_VERSION}"
+RPROVIDES:kernel-image = "kernel-image-${KERNEL_VERSION} kernel-${KERNEL_IMAGETYPE}"
 
 SRC_URI += "http://source.mynonpublic.com/formuler/linux-${PV}-${ARCH}.tar.gz \
     file://defconfig \

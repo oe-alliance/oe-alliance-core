@@ -18,7 +18,7 @@ MACHINE_KERNEL_PR:append = "2"
 PKG:${KERNEL_PACKAGE_NAME}-base = "kernel-base"
 PKG:${KERNEL_PACKAGE_NAME}-image = "kernel-image"
 RPROVIDES:${KERNEL_PACKAGE_NAME}-base = "kernel-${KERNEL_VERSION}"
-RPROVIDES:kernel-image = "kernel-image-${KERNEL_VERSION}"
+RPROVIDES:kernel-image = "kernel-image-${KERNEL_VERSION} kernel-${KERNEL_IMAGETYPE}"
 
 SRC_URI += "http://source.mynonpublic.com/xtrend/linux-${PV}.tar.xz \
     file://defconfig \

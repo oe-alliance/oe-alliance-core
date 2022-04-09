@@ -26,7 +26,7 @@ DEPENDS:append:spark = " \
 PKG:${KERNEL_PACKAGE_NAME}-base = "kernel-base"
 PKG:${KERNEL_PACKAGE_NAME}-image = "kernel-image"
 RPROVIDES:${KERNEL_PACKAGE_NAME}-base = "kernel-${KERNEL_VERSION}"
-RPROVIDES:kernel-image = "kernel-image-${KERNEL_VERSION}"
+RPROVIDES:kernel-image = "kernel-image-${KERNEL_VERSION} kernel-${KERNEL_IMAGETYPE}"
 
 STM_PATCH_STR = "0217"
 LINUX_VERSION = "2.6.32.71"

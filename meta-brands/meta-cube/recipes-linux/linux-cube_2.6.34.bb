@@ -19,7 +19,7 @@ SRC_URI[kernel.sha256sum] = "fa395fec7de633df1cb85b6248b8f35af98380ed128a8bc465f
 PKG:${KERNEL_PACKAGE_NAME}-base = "kernel-base"
 PKG:${KERNEL_PACKAGE_NAME}-image = "kernel-image"
 RPROVIDES:${KERNEL_PACKAGE_NAME}-base = "kernel-${KERNEL_VERSION}"
-RPROVIDES:kernel-image = "kernel-image-${KERNEL_VERSION}"
+RPROVIDES:kernel-image = "kernel-image-${KERNEL_VERSION} kernel-${KERNEL_IMAGETYPE}"
 
 DEPENDS = "virtual/${TARGET_PREFIX}gcc"
 RDEPENDS:${KERNEL_PACKAGE_NAME}-image = "updateubivolume"

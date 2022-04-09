@@ -6,6 +6,8 @@ MODULE = "linux-3.14.28"
 
 MACHINE_KERNEL_PR:append = "oea4.2-r4"
 
+RPROVIDES:kernel-image = "kernel-image-${KERNEL_VERSION} kernel-${KERNEL_IMAGETYPE}"
+
 inherit kernel machine_kernel_pr
 
 KERNELSRC = "stblinux-3.14-1.12.tar.bz2"

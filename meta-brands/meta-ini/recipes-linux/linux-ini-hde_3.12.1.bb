@@ -20,7 +20,7 @@ inherit kernel machine_kernel_pr
 PKG:${KERNEL_PACKAGE_NAME}-base = "kernel-base"
 PKG:${KERNEL_PACKAGE_NAME}-image = "kernel-image"
 RPROVIDES:${KERNEL_PACKAGE_NAME}-base = "kernel-${KERNEL_VERSION}"
-RPROVIDES:kernel-image = "kernel-image-${KERNEL_VERSION}"
+RPROVIDES:kernel-image = "kernel-image-${KERNEL_VERSION} kernel-${KERNEL_IMAGETYPE}"
 
 SRC_URI += "http://source.mynonpublic.com/ini/bcm7358-linux-${KV}-${SRCDATE}.tgz \
     file://defconfig \
