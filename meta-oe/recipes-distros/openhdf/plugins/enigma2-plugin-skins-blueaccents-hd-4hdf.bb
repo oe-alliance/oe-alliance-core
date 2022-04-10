@@ -13,15 +13,15 @@ VER="1.0"
 
 SRC_URI="git://github.com/stein17/Skins-for-openHDF.git;protocol=https;branch=Python3"
 
-FILES:${PN} = "${libdir} ${datadir}"
+FILES:${PN} = "/"
 
 S = "${WORKDIR}/git/BlueAccents-HD-4HDF"
 
 do_install() {
     install -d ${D}${libdir}
     install -d ${D}${datadir}
-    cp -rp ${S}/usr/lib/* ${D}${libdir}/
-    cp -rp ${S}/${datadir}/* ${D}${datadir}
+    cp -rf ${S}/usr/lib/* ${D}${libdir}
+    cp -rf ${S}/usr/share/* ${D}${datadir}
     chmod -R a+rX ${D}${datadir}/enigma2/
 }
 
@@ -35,7 +35,7 @@ exit 0
 
 pkg_postrm:${PN} () {
 #!/bin/sh
-rm -rf /enigma2/BlueAccents-HD
+rm -rf /usr/share/enigma2/BlueAccents-HD
 rm -rf /usr/lib/enigma2/python/Components/Converter/BlueA*
 rm -rf /usr/lib/enigma2/python/Components/Renderer/BlueA*
 rm -rf /usr/lib/enigma2/python/Plugins/Extensions/BlueAccents*
@@ -49,9 +49,9 @@ exit 0
 pkg_preinst:${PN} () {
 #!/bin/sh
 echo "Check if a previous version of the BlueAccents-HD skin is installed"
-if [ -f /enigma2/BlueAccents-HD/skin.xml ]; then
-    cp -R /enigma2/BlueAccents-HD/ /tmp
-    rm -rf /enigma2/BlueAccents-HD
+if [ -f /usr/share/enigma2/BlueAccents-HD/skin.xml ]; then
+    cp -R /usr/share/enigma2/BlueAccents-HD/ /tmp
+    rm -rf /usr/share/enigma2/BlueAccents-HD
     rm -rf /usr/lib/enigma2/python/Components/Converter/BlueA*
     rm -rf /usr/lib/enigma2/python/Components/Renderer/BlueA*
     rm -rf /usr/lib/enigma2/python/Plugins/Extensions/BlueAccents*
@@ -69,9 +69,7 @@ exit 0
 pkg_prerm:${PN} () {
 #!/bin/sh
 echo ""
-echo "BlueAccents-HD skin is now being removed..."
+echo "BlueAccents-HD Skin by stein17 is now being removed from your receiver...  "
 echo ""
 exit 0
 }
-
-do_package_qa[noexec] = "1"
