@@ -23,7 +23,7 @@ RDEPENDS:${PN} = "${PYTHON_PN}-core \
     ${PYTHON_PN}-websocket-client \
     "
 
-SRCREV = "${AUTOREV}"
+SRCREV = "89ab021c07cd2100b93023f6222fac28365c4d7c"
 PV = "git${SRCPV}"
 PKGV = "${GITPKGVTAG}"
 
