@@ -117,7 +117,9 @@ python split_kernel_module_packages () {
             if not os.path.exists(system_map_file):
                 bb.fatal("System.map-%s does not exist in '%s/boot' nor STAGING_KERNEL_BUILDDIR '%s'" % (kernelver, dvar, staging_kernel_dir))
 
-        cmd = "depmod -n -a -b %s -F %s %s" % (dvar, system_map_file, kernelver_stripped)
+        path = d.getVar("PATH", True)
+        host_prefix = d.getVar("HOST_PREFIX", True) or ""
+        cmd = "PATH=\"%s\" %sdepmod -n -a -b %s -F %s %s" % (path, host_prefix, dvar, system_map_file, kernelver_stripped)
         f = os.popen(cmd, 'r')
 
         deps = {}
