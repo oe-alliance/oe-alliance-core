@@ -5,6 +5,8 @@ KV = "3.9.7-r2"
 
 inherit kernel machine_kernel_pr
 
+RPROVIDES:kernel-image = "kernel-image-${KERNEL_VERSION} kernel-${KERNEL_IMAGETYPE}"
+
 SRCDATE = "20141120"
 
 SRC_URI[md5sum] = "dccfbe420bbc64291ab87b0545475841"
