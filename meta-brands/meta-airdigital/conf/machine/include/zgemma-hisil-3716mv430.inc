@@ -18,6 +18,7 @@ IMAGEDIRRECOVERY ?= "zgemma-recovery"
 CMDLINE ?= "console=ttyAMA0,115200n8"
 
 PREFERRED_VERSION_linux-airdigital = "4.4.176"
+PREFERRED_VERSION_python3-cryptography = "3.4.8"
 
 IMAGE_CMD:ubifs:prepend = " \
 	rm -Rf ${IMAGE_ROOTFS}/boot/*; \

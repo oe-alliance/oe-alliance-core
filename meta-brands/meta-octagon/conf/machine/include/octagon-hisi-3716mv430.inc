@@ -42,6 +42,7 @@ TARGET_ARCH = "arm"
 DEFAULTTUNE = "cortexa7hf"
 
 PREFERRED_VERSION_linux-octagon = "${LINUX_VERSION}"
+PREFERRED_VERSION_python3-cryptography = "3.4.8"
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-octagon"
 PREFERRED_PROVIDER_virtual/blindscan-dvbs = "octagon-blindscan-${SOC_FAMILY}"
