@@ -14,7 +14,7 @@ do_install:append() {
 
     # When invoked from ifup, wait for network to really be up
     # Previously execution via ifup ALWAYS failed.
-    perl -i -pe 's:(if /usr/sbin/ntpdate -s):\$DELAY\n\n$1:;' \
+    perl -i -pe 's:(if /usr/sbin/ntpdate -s):\#$DELAY \&\n\n$1:;' \
                  ${D}/usr/bin/ntpdate-sync
 
     # Only invoke hwclock if it is executable and use stb-hwclock instead ...
