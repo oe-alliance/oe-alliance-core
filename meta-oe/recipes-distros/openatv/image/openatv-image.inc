@@ -6,6 +6,8 @@ MAINTAINER = "openATV team"
 
 require conf/license/license-gplv2.inc
 
+REPRODUCIBLE_TIMESTAMP_ROOTFS = "${@int(time.time()-10000)}"
+
 PV = "${IMAGE_VERSION}"
 PR = "${BUILD_VERSION}"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
