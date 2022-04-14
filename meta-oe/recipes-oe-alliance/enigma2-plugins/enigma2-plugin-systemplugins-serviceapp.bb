@@ -43,7 +43,7 @@ FILES:${PN} = "\
 
 FILES:${PN}-src = "\
     ${libdir}/enigma2/python/Plugins/SystemPlugins/ServiceApp/*.py \
-    ${libdir}/enigma2/python/Plugins/SystemPlugins/ServiceApp/locale/*/LC_MESSAGES/*.mo \
+    ${libdir}/enigma2/python/Plugins/SystemPlugins/ServiceApp/locale/*/LC_MESSAGES/*.po \
     /usr/src/debug/* \
     "
 
