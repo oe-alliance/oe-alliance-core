@@ -1,0 +1,29 @@
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides:           oem-info
+# Required-Start:     $local_fs
+# Required-Stop:      $local_fs
+# Default-Start:      S
+# Default-Stop:
+# Short-Description:  change enigma.info on the fly for oem build
+### END INIT INFO
+
+if [ -f "/.oem-info" ]; then
+  exit
+fi
+
+# default build info
+displaymodel=DM520
+model=dm520
+
+INFO="/usr/lib/enigma.info"
+
+MODEL=`cat /proc/stb/info/model`
+if [ $MODEL == "dm525" ]; then
+  sed -i -e 's:displaymodel=DM520:displaymodel=DM525:' $INFO
+  sed -i -e 's:model=dm520:model=dm525:' $INFO
+fi
+
+sed -i '/checksum=/d' $INFO
+printf "checksum=%s\n" $(md5sum $INFO | cut -d ' ' -f 1) >> $INFO
+touch "/.oem-info"
