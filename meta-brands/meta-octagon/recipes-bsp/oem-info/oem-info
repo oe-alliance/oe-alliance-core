@@ -1,0 +1,32 @@
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides:           oem-info
+# Required-Start:     $local_fs
+# Required-Stop:      $local_fs
+# Default-Start:      S
+# Default-Stop:
+# Short-Description:  change enigma.info on the fly for oem build
+### END INIT INFO
+
+if [ -f "/.oem-info" ]; then
+  exit
+fi
+
+# default build info
+#displaymodel=SF8008 4K UHD
+#model=sf8008
+
+INFO="/usr/lib/enigma.info"
+
+TYPE=`cat /proc/stb/info/type`
+if [ $TYPE == "10" ]; then
+  sed -i -e 's:displaymodel=SF8008 4K UHD:displaymodel=SF8008 4K Single:' $INFO
+  sed -i -e 's:model=sf8008:model=sf8008s:' $INFO
+elif [ $TYPE == "11" ]; then
+  sed -i -e 's:displaymodel=SF8008 4K UHD:displaymodel=SF8008 4K Twin:' $INFO
+  sed -i -e 's:model=sf8008:model=sf8008t:' $INFO
+fi
+
+sed -i '/checksum=/d' $INFO
+printf "checksum=%s\n" $(md5sum $INFO | cut -d ' ' -f 1) >> $INFO
+touch "/.oem-info"
