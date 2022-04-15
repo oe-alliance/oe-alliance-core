@@ -231,6 +231,7 @@ EXTRA_OECONF = " \
     --enable-dependency-tracking \
     --with-gstversion=1.0 \
     --with-e2rev=${GITPKGV} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "fcc", "--with-fcc" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "textlcd", "--with-textlcd" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "colorlcd", "--with-colorlcd" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "colorlcd128", "--with-colorlcd128" , "", d)} \
