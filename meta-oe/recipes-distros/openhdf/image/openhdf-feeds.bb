@@ -7,7 +7,7 @@ ALLOW_EMPTY:${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "1.0"
-PR = "r34"
+PR = "r35"
 
 inherit packagegroup
 
@@ -30,6 +30,7 @@ RRECOMMENDS:${PN} = "\
     enigma2-plugin-skins-nblack51-hdfmod \
     enigma2-plugin-skins-ax-blue-fhd-4hdf \
     enigma2-plugin-skins-blue-line-oct-4hdf \
+    enigma2-plugin-skins-blueaccents-hd-4hdf \
     enigma2-plugin-skins-multibox-fhd-4hdf \
     enigma2-plugin-skins-steampunk-hd-skin-4hdf \
     enigma2-plugin-skins-ultimate-hd-4hdf \

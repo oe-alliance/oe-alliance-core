@@ -172,7 +172,6 @@ DESCRIPTION:append:enigma2-plugin-systemplugins-satelliteequipmentcontrol = "all
 DESCRIPTION:append:enigma2-plugin-systemplugins-satfinder = "helps you to align your dish."
 DESCRIPTION:append:enigma2-plugin-systemplugins-skinselector = "shows a menu with selectable skins."
 DESCRIPTION:append:enigma2-plugin-systemplugins-videomode = "selects advanced video modes"
-RDEPENDS:enigma2-plugin-systemplugins-nfiflash = "${PYTHON_PN}-twisted-web"
 RDEPENDS:enigma2-plugin-systemplugins-softwaremanager = "${PYTHON_PN}-twisted-web"
 DESCRIPTION:append:enigma2-plugin-systemplugins-crashlogautosubmit = "automatically send crashlogs to Dream Multimedia"
 RDEPENDS:enigma2-plugin-systemplugins-crashlogautosubmit = "${PYTHON_PN}-twisted-mail ${PYTHON_PN}-twisted-names ${PYTHON_PN}-compression ${PYTHON_PN}-mime ${PYTHON_PN}-email"
@@ -233,6 +232,7 @@ EXTRA_OECONF = " \
     --enable-dependency-tracking \
     --with-gstversion=1.0 \
     --with-e2rev=${GITPKGV} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "fcc", "--with-fcc" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "textlcd", "--with-textlcd" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "colorlcd", "--with-colorlcd" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "colorlcd128", "--with-colorlcd128" , "", d)} \

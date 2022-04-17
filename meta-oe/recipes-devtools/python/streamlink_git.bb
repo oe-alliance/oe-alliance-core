@@ -23,11 +23,11 @@ RDEPENDS:${PN} = "${PYTHON_PN}-core \
     ${PYTHON_PN}-websocket-client \
     "
 
-SRCREV = "${AUTOREV}"
+
 PV = "git${SRCPV}"
 PKGV = "${GITPKGVTAG}"
 
-SRCREV_streamlink = "${AUTOREV}"
+SRCREV_streamlink = "89ab021c07cd2100b93023f6222fac28365c4d7c"
 SRCREV_plugins = "${AUTOREV}"
 
 SRCREV_FORMAT = "streamlink_plugins"

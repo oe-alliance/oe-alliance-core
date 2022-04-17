@@ -140,6 +140,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'vizyonvita', 'hd1100' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mutant11', 'hd1100' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mutant51', 'hd1100' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mutant60', 'hd60' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mutant66se', 'hd66se' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'ax61', 'ax4' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'ax51', 'ax51' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'ax60', 'ax51' , '', d)}\
@@ -160,6 +161,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'vizyonvita', '16' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mutant11', '16' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mutant51', '16' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mutant60', '27' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mutant66se', '27' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'ax61', '26' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'ax51', '16' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'ax60', '16' , '', d)}\

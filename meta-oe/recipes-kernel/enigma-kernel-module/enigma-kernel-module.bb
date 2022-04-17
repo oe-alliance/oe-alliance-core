@@ -22,6 +22,7 @@ EXTRA_OEMAKE = "KSRC=${STAGING_KERNEL_BUILDDIR}"
 
 do_configure:prepend(){
 	find ${S}/ -type f -name "*.c" | xargs -r -L1 sed -i "s|@MACHINE@|${MACHINE}|g"
+	find ${S}/ -type f -name "*.c" | xargs -r -L1 sed -i "s|@MACHINEBUILD@|${MACHINEBUILD}|g"
 	find ${S}/ -type f -name "*.c" | xargs -r -L1 sed -i "s|@DISPLAY_MODEL@|${MACHINE_NAME}|g"
 	find ${S}/ -type f -name "*.c" | xargs -r -L1 sed -i "s|@BOX_BRAND@|${BRAND_OEM}|g"
 	find ${S}/ -type f -name "*.c" | xargs -r -L1 sed -i "s|@DISPLAY_BRAND@|${MACHINE_BRAND}|g"

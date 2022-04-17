@@ -1,0 +1,32 @@
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides:           oem-info
+# Required-Start:     $local_fs
+# Required-Stop:      $local_fs
+# Default-Start:      S
+# Default-Stop:
+# Short-Description:  change enigma.info on the fly for oem build
+### END INIT INFO
+
+if [ -f "/.oem-info" ]; then
+  exit
+fi
+
+# default build info
+#displaymodel=Ustym 4K PRO
+#model=ustym4kpro
+
+INFO="/usr/lib/enigma.info"
+
+TYPE=`cat /proc/stb/info/type`
+if [ $TYPE == "10" ]; then
+  sed -i -e 's:displaymodel=Ustym 4K PRO:displaymodel=Ustym 4K PRO Single:' $INFO
+  sed -i -e 's:model=ustym4kpro:model=ustym4kprosingle:' $INFO
+elif [ $TYPE == "11" ]; then
+  sed -i -e 's:displaymodel=Ustym 4K PRO:displaymodel=Ustym 4K PRO Twin:' $INFO
+  sed -i -e 's:model=ustym4kpro:model=ustym4kprotwin:' $INFO
+fi
+
+sed -i '/checksum=/d' $INFO
+printf "checksum=%s\n" $(md5sum $INFO | cut -d ' ' -f 1) >> $INFO
+touch "/.oem-info"

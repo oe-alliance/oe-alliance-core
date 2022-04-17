@@ -1,0 +1,31 @@
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides:           oem-info
+# Required-Start:     $local_fs
+# Required-Stop:      $local_fs
+# Default-Start:      S
+# Default-Stop:
+# Short-Description:  change enigma.info on the fly for oem build
+### END INIT INFO
+
+if [ -f "/.oem-info" ]; then
+  exit
+fi
+
+# default build info
+#displaybrand=RED EAGLE
+#model=7100s
+
+INFO="/usr/lib/enigma.info"
+
+BRAND=`cat /proc/enigma/displaybrand`
+TYPE=`cat /proc/stb/info/boxtype`
+if [ $BRAND == "RED EAGLE" ]; then
+  if [ $TYPE == "7200S" ]; then
+    sed -i -e 's:model=7100s:model=7200s:' $INFO
+  fi
+fi
+
+sed -i '/checksum=/d' $INFO
+printf "checksum=%s\n" $(md5sum $INFO | cut -d ' ' -f 1) >> $INFO
+touch "/.oem-info"
