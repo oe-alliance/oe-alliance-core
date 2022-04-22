@@ -4,7 +4,7 @@ TARGET_ARCH = "mipsel"
 DEFAULTTUNE = "mips32el"
 KERNEL_IMAGETYPE = "vmlinux"
 
-MACHINE_FEATURES += " boxmodel feature1 feature2"
+MACHINE_FEATURES += " omb boxmodel feature1 feature2"
 
 PREFERRED_PROVIDER_virtual/blindscan-dvbc = "gigablue-blindscan-utils-mips"
 PREFERRED_PROVIDER_virtual/blindscan-dvbs = "gigablue-blindscan-utils-mips"

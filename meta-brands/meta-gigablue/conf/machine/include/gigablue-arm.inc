@@ -16,7 +16,7 @@ DVBMEDIASINK_CONFIG = "--with-wma --with-wmv --with-amr --with-pcm --with-dts --
     ${@bb.utils.contains('MACHINE', 'gb72604', '--with-h265 --with-vb9' , '', d)} \
 "
 
-MACHINE_FEATURES += " mmc emmc swap"
+MACHINE_FEATURES += " omb mmc emmc swap"
 
 GLIBC_EXTRA_OECONF = "--with-tls --with-__thread"
 
