@@ -2,7 +2,7 @@ SUMMARY = "Platform Util drivers for ${MACHINE}"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "CLOSED"
-PACKAGE_ARCH := "${MACHINE_ARCH}"
+PACKAGE_ARCH := "${MACHINE}"
 require conf/license/license-close.inc
 
 PR="${SRCDATE}.r0"
@@ -20,6 +20,8 @@ do_install() {
 }
 
 do_package_qa() {
+}
+do_populate_sysroot() {
 }
 
 FILES:${PN}="/"
