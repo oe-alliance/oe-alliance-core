@@ -20,7 +20,7 @@ SRC_URI = "http://source.mynonpublic.com/zgemma/linux-${PV}-${SRCDATE}-${ARCH}.t
 	file://findkerneldevice.sh \
 "
 
-SRC_URI:h8:append = " file://0101-hi3716mv430-dts-move-aon-gpio7-gpio5.patch"
+SRC_URI_append_h8 = " file://0101-hi3716mv430-dts-move-aon-gpio7-gpio5.patch"
 
 # By default, kernel.bbclass modifies package names to allow multiple kernels
 # to be installed in parallel. We revert this change and rprovide the versioned
