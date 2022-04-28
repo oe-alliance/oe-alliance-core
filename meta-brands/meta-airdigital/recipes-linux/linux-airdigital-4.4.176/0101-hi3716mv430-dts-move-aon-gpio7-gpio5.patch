@@ -3,13 +3,13 @@ Subject: [PATCH] hi3716mv430 dts: move aon gpio7 --> gpio5
 to keep compatibility with the 4.4.35 gpio numbers, which our driver
 uses
 ---
- .../linux-4.4.y/arch/arm/boot/dts/hi3716mv430.dts    | 12 ++++++------
+ .../arch/arm/boot/dts/hi3716mv430.dts    | 12 ++++++------
  1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/source/kernel/linux-4.4.y/arch/arm/boot/dts/hi3716mv430.dts b/source/kernel/linux-4.4.y/arch/arm/boot/dts/hi3716mv430.dts
+diff --git a/arch/arm/boot/dts/hi3716mv430.dts b/arch/arm/boot/dts/hi3716mv430.dts
 index 902c4c479..e94ac6048 100755
---- a/source/kernel/linux-4.4.y/arch/arm/boot/dts/hi3716mv430.dts
-+++ b/source/kernel/linux-4.4.y/arch/arm/boot/dts/hi3716mv430.dts
+--- a/arch/arm/boot/dts/hi3716mv430.dts
++++ b/arch/arm/boot/dts/hi3716mv430.dts
 @@ -167,8 +167,8 @@
  			gpio5: gpio5 {
  				compatible = "arm,pl061", "arm,primecell";
