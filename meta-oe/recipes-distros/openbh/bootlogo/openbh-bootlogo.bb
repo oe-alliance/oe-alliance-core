@@ -9,7 +9,7 @@ require conf/license/license-gplv2.inc
 RDEPENDS:${PN} += "showiframe"
 
 PV = "${IMAGE_VERSION}"
-PR = "r24"
+PR = "r25"
 
 S = "${WORKDIR}"
 
@@ -33,6 +33,9 @@ SRC_URI = "file://bootlogo.mvi file://backdrop.mvi file://radio.mvi file://bootl
 
 SRC_URI:append:vuduo2 = " file://lcdbootlogo.png file://bootlogo.py"
 SRC_URI:append:sf8008 = " file://logo.img"
+SRC_URI:append:sx988 = " file://logo.img"
+SRC_URI:append:ustym4kpro = " file://logo.img"
+SRC_URI:append:gbmv200 = " file://logo.img"
 
 FILES:${PN} = "/boot /usr/share /etc/init.d"
 
