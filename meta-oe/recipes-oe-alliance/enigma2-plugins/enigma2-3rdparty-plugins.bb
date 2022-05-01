@@ -79,7 +79,6 @@ THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-tmbd_8.6_all.ipk \
     enigma2-plugin-extensions-transmission_2.92-r2_all.ipk \
     enigma2-plugin-extensions-tsmedia_15.0_all.ipk \
-    enigma2-plugin-extensions-tvspielfilm_6.6rc4_all.ipk \
     enigma2-plugin-extensions-verkehrsinfo_1.2rc3_all.ipk \
     enigma2-plugin-extensions-vcs_2.9_all.ipk \
     enigma2-plugin-extensions-vhannibalautosettings_1.1_mips32el.ipk \
