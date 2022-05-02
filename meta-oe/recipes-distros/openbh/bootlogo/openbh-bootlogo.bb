@@ -37,7 +37,7 @@ SRC_URI:append:sx988 = " file://logo.img"
 SRC_URI:append:pulse4k = " file://logo.img"
 SRC_URI:append:pulse4kmini = " file://logo.img"
 SRC_URI:append:ustym4kpro = " file://logo.img"
-SRC_URI:append:gbmv200 = " file://logo.img
+SRC_URI:append:gbmv200 = " file://logo.img"
 
 FILES:${PN} = "/boot /usr/share /etc/init.d"
 
