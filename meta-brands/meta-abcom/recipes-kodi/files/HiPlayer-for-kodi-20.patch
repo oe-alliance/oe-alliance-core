@@ -2331,7 +2331,7 @@ index 0000000..3ca537a
 +	}
 +	fclose(policy);
 +
-+	m_processInfo.UpdateVideoSettings().SetViewMode(mode, zoom, par, shift, stretch);
++	m_processInfo.GetVideoSettingsLocked().SetViewMode(mode, zoom, par, shift, stretch);
 +}
 +
 +void CHiPlayerVideo::AddSubtitleFile(const std::string &filename)
