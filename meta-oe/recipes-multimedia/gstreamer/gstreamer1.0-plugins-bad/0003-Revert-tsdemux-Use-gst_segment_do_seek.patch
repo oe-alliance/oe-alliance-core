@@ -5,21 +5,26 @@ Subject: [PATCH 2/2] Revert "tsdemux: Use gst_segment_do_seek()"
 
 This reverts commit b4a298c80e1c24a74910e096d08c7f6678d8938b.
 ---
- gst/mpegtsdemux/tsdemux.c | 105 +++++++++++++++++++---------------------------
- 1 file changed, 44 insertions(+), 61 deletions(-)
 
 diff --git a/gst/mpegtsdemux/tsdemux.c b/gst/mpegtsdemux/tsdemux.c
-index 6057f4247..e2a4fbaf3 100644
+index 144af47..a12b5d5 100644
 --- a/gst/mpegtsdemux/tsdemux.c
 +++ b/gst/mpegtsdemux/tsdemux.c
-@@ -853,14 +853,14 @@ gst_ts_demux_do_seek (MpegTSBase * base, GstEvent * event)
+@@ -915,21 +915,14 @@ gst_ts_demux_do_seek (MpegTSBase * base, GstEvent * event)
    GstSeekType start_type, stop_type;
    gint64 start, stop;
    guint64 start_offset;
 -  gboolean update = FALSE;
 -  GstSegment seeksegment;
 -
--  GST_DEBUG ("seek event, %" GST_PTR_FORMAT, event);
+-  GST_DEBUG_OBJECT (demux, "seek event, %" GST_PTR_FORMAT, event);
+-
+-  if (base->out_segment.format == GST_FORMAT_UNDEFINED) {
+-    GST_DEBUG_OBJECT (demux, "Cannot process seek event now, delaying");
+-    gst_event_replace (&base->seek_event, event);
+-    res = GST_FLOW_OK;
+-    goto done;
+-  }
  
    gst_event_parse_seek (event, &rate, &format, &flags, &start_type, &start,
        &stop_type, &stop);
@@ -29,9 +34,9 @@ index 6057f4247..e2a4fbaf3 100644
 +      GST_TIME_ARGS (stop));
 +
    if (rate <= 0.0) {
-     GST_WARNING ("Negative rate not supported");
+     GST_WARNING_OBJECT (demux, "Negative rate not supported");
      goto done;
-@@ -872,74 +872,61 @@ gst_ts_demux_do_seek (MpegTSBase * base, GstEvent * event)
+@@ -942,78 +935,62 @@ gst_ts_demux_do_seek (MpegTSBase * base, GstEvent * event)
    }
  
    /* configure the segment with the seek variables */
@@ -52,6 +57,7 @@ index 6057f4247..e2a4fbaf3 100644
 -      &seeksegment);
 -
 -  /* If the position actually changed, update == TRUE */
+-  g_mutex_lock (&demux->lock);
 -  if (update) {
 -    GstClockTime target = seeksegment.start;
 -    if (target >= SEEK_TIMESTAMP_OFFSET)
@@ -68,7 +74,9 @@ index 6057f4247..e2a4fbaf3 100644
 +            start - SEEK_TIMESTAMP_OFFSET), demux->program->pcr_pid);
 +
      if (G_UNLIKELY (start_offset == -1)) {
-       GST_WARNING ("Couldn't convert start position to an offset");
+       GST_WARNING_OBJECT (demux,
+           "Couldn't convert start position to an offset");
+-      g_mutex_unlock (&demux->lock);
        goto done;
      }
 -
@@ -95,8 +103,8 @@ index 6057f4247..e2a4fbaf3 100644
 -  } else {
 -    /* Position didn't change, just update the output segment based on
 -     * our new one */
--    gst_event_replace (&demux->segment_event, NULL);
--    demux->segment_event = gst_event_new_segment (&seeksegment);
+-    gst_event_take (&demux->segment_event,
+-        gst_event_new_segment (&seeksegment));
 -    if (base->last_seek_seqnum)
 -      gst_event_set_seqnum (demux->segment_event, base->last_seek_seqnum);
 -    for (tmp = demux->program->stream_list; tmp; tmp = tmp->next) {
@@ -111,6 +119,7 @@ index 6057f4247..e2a4fbaf3 100644
 +    res = GST_FLOW_OK;
 +    goto done;
    }
+-  g_mutex_unlock (&demux->lock);
  
 -  /* Commit the new segment */
 -  memcpy (&base->out_segment, &seeksegment, sizeof (GstSegment));
@@ -145,7 +154,7 @@ index 6057f4247..e2a4fbaf3 100644
  done:
    return res;
  }
-@@ -2534,8 +2521,7 @@ calculate_and_push_newsegment (GstTSDemux * demux, TSDemuxStream * stream,
+@@ -2846,8 +2823,7 @@ calculate_and_push_newsegment (GstTSDemux * demux, TSDemuxStream * stream,
      } else {
        /* Start from the first ts/pts */
        GstSegment *seg = &base->out_segment;
@@ -155,13 +164,12 @@ index 6057f4247..e2a4fbaf3 100644
        gst_segment_init (seg, GST_FORMAT_TIME);
        seg->start = firstts;
        seg->stop = GST_CLOCK_TIME_NONE;
-@@ -2555,9 +2541,6 @@ calculate_and_push_newsegment (GstTSDemux * demux, TSDemuxStream * stream,
+@@ -2866,8 +2842,6 @@ calculate_and_push_newsegment (GstTSDemux * demux, TSDemuxStream * stream,
      }
    }
  
 -  GST_LOG_OBJECT (demux, "Output segment now %" GST_SEGMENT_FORMAT,
 -      &base->out_segment);
--
-   if (!demux->segment_event) {
-     demux->segment_event = gst_event_new_segment (&base->out_segment);
  
+   g_mutex_lock (&demux->lock);
+   if (!demux->segment_event) {

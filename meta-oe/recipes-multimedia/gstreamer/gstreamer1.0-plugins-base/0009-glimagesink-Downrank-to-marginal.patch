@@ -11,20 +11,20 @@ Upstream-Status: Submitted [https://bugzilla.gnome.org/show_bug.cgi?id=751684]
 
 Signed-off-by: Alexander Kanavin <alex.kanavin@gmail.com>
 ---
- ext/gl/gstopengl.c | 2 +-
+ /ext/gl/gstglimagesink.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 
-diff --git a/ext/gl/gstopengl.c b/ext/gl/gstopengl.c
-index 302e8452c..463be9cd8 100644
---- a/ext/gl/gstopengl.c
-+++ b/ext/gl/gstopengl.c
-@@ -127,7 +127,7 @@ plugin_init (GstPlugin * plugin)
- #endif
+diff --git a/ext/gl/gstglimagesink.c b/ext/gl/gstglimagesink.c
+index 26b729e..0568a0d 100644
+--- a/ext/gl/gstglimagesink.c
++++ b/ext/gl/gstglimagesink.c
+@@ -111,7 +111,7 @@ typedef GstGLSinkBinClass GstGLImageSinkBinClass;
  
-   if (!gst_element_register (plugin, "glimagesink",
--          GST_RANK_SECONDARY, gst_gl_image_sink_bin_get_type ())) {
-+          GST_RANK_MARGINAL, gst_gl_image_sink_bin_get_type ())) {
-     return FALSE;
-   }
+ G_DEFINE_TYPE (GstGLImageSinkBin, gst_gl_image_sink_bin, GST_TYPE_GL_SINK_BIN);
+ GST_ELEMENT_REGISTER_DEFINE_WITH_CODE (glimagesink, "glimagesink",
+-    GST_RANK_SECONDARY, gst_gl_image_sink_bin_get_type (),
++    GST_RANK_MARGINAL, gst_gl_image_sink_bin_get_type (),
+     gl_element_init (plugin));
  
+ enum

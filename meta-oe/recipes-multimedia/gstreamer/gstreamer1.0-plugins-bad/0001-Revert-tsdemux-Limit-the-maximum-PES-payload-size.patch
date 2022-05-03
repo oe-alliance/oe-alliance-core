@@ -8,7 +8,7 @@ This commit causes audio/video asynchrony on some streams.
 Reverts commit eaf918df0366975c05003b4c2a98e077b0106483.
 
 diff --git a/gst/mpegtsdemux/tsdemux.c b/gst/mpegtsdemux/tsdemux.c
-index f27a624..8eb95d8 100644
+index 18f5ab9..8bd357a 100644
 --- a/gst/mpegtsdemux/tsdemux.c
 +++ b/gst/mpegtsdemux/tsdemux.c
 @@ -75,13 +75,6 @@
@@ -25,22 +25,23 @@ index f27a624..8eb95d8 100644
  GST_DEBUG_CATEGORY_STATIC (ts_demux_debug);
  #define GST_CAT_DEFAULT ts_demux_debug
  
-@@ -2534,7 +2527,7 @@ gst_ts_demux_queue_data (GstTSDemux * demux, TSDemuxStream * stream,
+@@ -2738,7 +2731,7 @@ gst_ts_demux_queue_data (GstTSDemux * demux, TSDemuxStream * stream,
        if (G_UNLIKELY (stream->current_size + size > stream->allocated_size)) {
-         GST_LOG ("resizing buffer");
+         GST_LOG_OBJECT (demux, "resizing buffer");
          do {
 -          stream->allocated_size = MAX (8192, 2 * stream->allocated_size);
 +          stream->allocated_size *= 2;
          } while (stream->current_size + size > stream->allocated_size);
          stream->data = g_realloc (stream->data, stream->allocated_size);
        }
-@@ -3321,17 +3314,11 @@ gst_ts_demux_push_pending_data (GstTSDemux * demux, TSDemuxStream * stream,
+@@ -3544,18 +3537,11 @@ gst_ts_demux_push_pending_data (GstTSDemux * demux, TSDemuxStream * stream,
    }
  
  beach:
 -  /* Reset the PES payload collection, but don't clear the state,
 -   * we might want to keep collecting this PES */
--  GST_LOG ("Cleared PES data. returning %s", gst_flow_get_name (res));
+-  GST_LOG_OBJECT (demux, "Cleared PES data. returning %s",
+-      gst_flow_get_name (res));
 -  if (stream->expected_size) {
 -    if (stream->current_size > stream->expected_size)
 -      stream->expected_size = 0;
@@ -48,7 +49,7 @@ index f27a624..8eb95d8 100644
 -      stream->expected_size -= stream->current_size;
 -  }
 +  /* Reset everything */
-+  GST_LOG ("Resetting to EMPTY, returning %s", gst_flow_get_name (res));
++  GST_LOG_OBJECT (demux, "Resetting to EMPTY, returning %s", gst_flow_get_name (res));
 +  stream->state = PENDING_PACKET_EMPTY;
    stream->data = NULL;
 -  stream->allocated_size = 0;
@@ -56,7 +57,7 @@ index f27a624..8eb95d8 100644
    stream->current_size = 0;
  
    return res;
-@@ -3348,26 +3335,18 @@ gst_ts_demux_handle_packet (GstTSDemux * demux, TSDemuxStream * stream,
+@@ -3573,26 +3559,18 @@ gst_ts_demux_handle_packet (GstTSDemux * demux, TSDemuxStream * stream,
        FLAGS_CONTINUITY_COUNTER (packet->scram_afc_cc), packet->payload);
  
    if (G_UNLIKELY (packet->payload_unit_start_indicator) &&
@@ -74,13 +75,13 @@ index f27a624..8eb95d8 100644
    if (packet->payload && (res == GST_FLOW_OK || res == GST_FLOW_NOT_LINKED)
        && stream->pad) {
      gst_ts_demux_queue_data (demux, stream, packet);
-     GST_LOG ("current_size:%d, expected_size:%d",
+     GST_LOG_OBJECT (demux, "current_size:%d, expected_size:%d",
          stream->current_size, stream->expected_size);
 -    /* Finally check if the data we queued completes a packet, or got too
 -     * large and needs output now */
 -    if ((stream->expected_size && stream->current_size >= stream->expected_size)
 -        || (stream->current_size >= MAX_PES_PAYLOAD)) {
--      GST_LOG ("pushing packet of size %u", stream->current_size);
+-      GST_LOG_OBJECT (demux, "pushing packet of size %u", stream->current_size);
 +    /* Finally check if the data we queued completes a packet */
 +    if (stream->expected_size && stream->current_size == stream->expected_size) {
 +      GST_LOG ("pushing complete packet");
