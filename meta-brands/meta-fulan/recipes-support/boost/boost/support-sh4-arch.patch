@@ -1,0 +1,80 @@
+--- a/boostcpp.jam
++++ b/boostcpp.jam
+@@ -634,7 +634,7 @@ rule address-model ( )
+     return <conditional>@boostcpp.deduce-address-model ;
+ }
+ 
+-local deducable-architectures = arm mips1 power riscv s390x sparc x86 combined ;
++local deducable-architectures = arm mips1 power riscv s390x sh sparc x86 combined ;
+ feature.feature deduced-architecture : $(deducable-architectures) : propagated optional composite hidden ;
+ for a in $(deducable-architectures)
+ {
+@@ -645,13 +645,14 @@ rule deduce-architecture ( properties * )
+ {
+     local result ;
+     local filtered = [ toolset-properties $(properties) ] ;
+-    local names = arm mips1 power riscv s390x sparc x86 combined ;
++    local names = arm mips1 power riscv s390x sh sparc x86 combined ;
+     local idx = [ configure.find-builds "default architecture" : $(filtered)
+         : /boost/architecture//arm
+         : /boost/architecture//mips1
+         : /boost/architecture//power
+         : /boost/architecture//riscv
+         : /boost/architecture//s390x
++        : /boost/architecture//sh
+         : /boost/architecture//sparc
+         : /boost/architecture//x86
+         : /boost/architecture//combined ] ;
+--- a/libs/config/checks/architecture/Jamfile.jam
++++ b/libs/config/checks/architecture/Jamfile.jam
+@@ -24,3 +24,4 @@ obj riscv    : riscv.cpp ;
+ obj sparc    : sparc.cpp ;
+ obj x86      : x86.cpp ;
+ obj s390x    : s390x.cpp ;
++obj sh      : sh.cpp ;
+--- /dev/null
++++ b/libs/config/checks/architecture/sh.cpp
+@@ -0,0 +1,9 @@
++// sh4.cpp
++//
++// Distributed under the Boost Software License Version 1.0. (See
++// accompanying file LICENSE_1_0.txt or copy at
++// http://www.boost.org/LICENSE_1_0.txt)
++
++#if !defined(__sh__) && !defined(__sh)
++#error "Not SH"
++#endif
+--- a/tools/build/src/tools/builtin.py
++++ b/tools/build/src/tools/builtin.py
+@@ -273,6 +273,9 @@ def register_globals ():
+         # z Systems (aka s390x)
+         's390x',
+ 
++        # SH4
++        'sh',
++
+         # Combined architectures for platforms/toolsets that support building for
+         # multiple architectures at once. "combined" would be the default multi-arch
+         # for the toolset.
+--- a/tools/build/src/tools/features/architecture-feature.jam
++++ b/tools/build/src/tools/features/architecture-feature.jam
+@@ -10,7 +10,7 @@ import feature ;
+ [[bbv2.builtin.features.architecture]]`architecture`::
+ *Allowed values:* `x86`, `ia64`, `sparc`, `power`, `mips`, `mips1`, `mips2`,
+ `mips3`, `mips4`, `mips32`, `mips32r2`, `mips64`, `parisc`, `arm`,
+-`s390x`, `loongarch`.
++`s390x`, `sh`, `loongarch`.
+ +
+ Specifies the general processor family to generate code for.
+ 
+@@ -47,6 +47,10 @@ feature.feature architecture
+ 
+         # z Systems (aka s390x)
+         s390x
++
++        # SH4
++        sh
++
+     :
+         propagated optional
+     ;
