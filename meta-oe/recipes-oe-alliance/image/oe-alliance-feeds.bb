@@ -38,6 +38,7 @@ RDEPENDS:${PN} = " \
     enigma2-plugin-extensions-dreamplex \
     enigma2-plugin-extensions-youtube \
     enigma2-plugin-extensions-autobouquets \
+    enigma2-plugin-extensions-bouquetcleanup \
     enigma2-plugin-extensions-e2m3u2bouquet \
     enigma2-plugin-extensions-e2piconizer \
     enigma2-plugin-extensions-et-portal \
