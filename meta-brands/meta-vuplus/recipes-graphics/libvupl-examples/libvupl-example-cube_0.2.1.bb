@@ -9,9 +9,9 @@ PR = "r1"
 DEPENDS = "libvupl libgles"
 RDEPENDS:${PN} = "libvupl libgles"
 
-SRC_URI = "http://code.vuplus.com/download/release/support/${PN}-${PV}.${PR}.tar.gz"
+SRC_URI = "http://code.vuplus.com/download/release/support/${BPN}-${PV}.${PR}.tar.gz"
 
-S = "${WORKDIR}/${PN}-${PV}"
+S = "${WORKDIR}/${BPN}-${PV}"
 
 EXTRA_OECMAKE += "-DVUPLUS=1"
 
