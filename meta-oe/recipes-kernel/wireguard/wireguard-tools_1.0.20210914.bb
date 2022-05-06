@@ -41,3 +41,5 @@ FILES:${PN} = " \
 export KERNEL_VERSION = "${@oe.utils.read_file('${PKGDATA_DIR}/kernel-depmod/kernel-abiversion')}"
 
 RDEPENDS:${PN} = "${@ 'wireguard-module' if ("${KERNEL_VERSION}" and bb.utils.vercmp_string("${KERNEL_VERSION}", '5.6') < 0) else 'kernel-module-wireguard' } bash"
+
+INSANE_SKIP:${PN} = "build-deps"
