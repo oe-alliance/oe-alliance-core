@@ -21,7 +21,7 @@ BUILD = "${WORKDIR}/git"
 inherit autotools-brokensep
 
 INITSCRIPT_NAME = "minisatip"
-EXTRA_OECONF = "--enable-enigma --disable-netcv"
+EXTRA_OECONF = "--disable-netcv"
 
 do_configure:prepend () {
 }
