@@ -39,16 +39,16 @@ Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
 Upstream-Status: Submitted [https://gcc.gnu.org/pipermail/gcc-patches/2021-October/582724.html]
 ---
  gcc/c-family/c.opt  | 4 ++++
- gcc/cp/g++spec.c    | 1 +
+ gcc/cp/g++spec.cc   | 1 +
  gcc/doc/invoke.texi | 8 +++++++-
- gcc/gcc.c           | 1 +
+ gcc/gcc.cc          | 1 +
  4 files changed, 13 insertions(+), 1 deletion(-)
 
-Index: gcc-11.2.0/gcc/c-family/c.opt
-===================================================================
---- gcc-11.2.0.orig/gcc/c-family/c.opt
-+++ gcc-11.2.0/gcc/c-family/c.opt
-@@ -2153,6 +2153,10 @@ nostdinc++
+diff --git a/gcc/c-family/c.opt b/gcc/c-family/c.opt
+index 07da40ef4..979a6c752 100644
+--- a/gcc/c-family/c.opt
++++ b/gcc/c-family/c.opt
+@@ -2249,6 +2249,10 @@ nostdinc++
  C++ ObjC++
  Do not search standard system include directories for C++.
  
@@ -59,11 +59,11 @@ Index: gcc-11.2.0/gcc/c-family/c.opt
  o
  C ObjC C++ ObjC++ Joined Separate
  ; Documented in common.opt
-Index: gcc-11.2.0/gcc/cp/g++spec.c
-===================================================================
---- gcc-11.2.0.orig/gcc/cp/g++spec.c
-+++ gcc-11.2.0/gcc/cp/g++spec.c
-@@ -159,6 +159,7 @@ lang_specific_driver (struct cl_decoded_
+diff --git a/gcc/cp/g++spec.cc b/gcc/cp/g++spec.cc
+index 8174d6527..b63d8350b 100644
+--- a/gcc/cp/g++spec.cc
++++ b/gcc/cp/g++spec.cc
+@@ -159,6 +159,7 @@ lang_specific_driver (struct cl_decoded_option **in_decoded_options,
        switch (decoded_options[i].opt_index)
  	{
  	case OPT_nostdlib:
@@ -71,10 +71,10 @@ Index: gcc-11.2.0/gcc/cp/g++spec.c
  	case OPT_nodefaultlibs:
  	  library = -1;
  	  break;
-Index: gcc-11.2.0/gcc/doc/invoke.texi
-===================================================================
---- gcc-11.2.0.orig/gcc/doc/invoke.texi
-+++ gcc-11.2.0/gcc/doc/invoke.texi
+diff --git a/gcc/doc/invoke.texi b/gcc/doc/invoke.texi
+index b2de46479..8a52249c0 100644
+--- a/gcc/doc/invoke.texi
++++ b/gcc/doc/invoke.texi
 @@ -239,6 +239,7 @@ in the following sections.
  -fno-weak  -nostdinc++ @gol
  -fvisibility-inlines-hidden @gol
@@ -83,7 +83,7 @@ Index: gcc-11.2.0/gcc/doc/invoke.texi
  -fext-numeric-literals @gol
  -flang-info-include-translate@r{[}=@var{header}@r{]} @gol
  -flang-info-include-translate-not @gol
-@@ -632,7 +633,7 @@ Objective-C and Objective-C++ Dialects}.
+@@ -651,7 +652,7 @@ Objective-C and Objective-C++ Dialects}.
  -pie  -pthread  -r  -rdynamic @gol
  -s  -static  -static-pie  -static-libgcc  -static-libstdc++ @gol
  -static-libasan  -static-libtsan  -static-liblsan  -static-libubsan @gol
@@ -92,7 +92,7 @@ Index: gcc-11.2.0/gcc/doc/invoke.texi
  -T @var{script}  -Wl,@var{option}  -Xlinker @var{option} @gol
  -u @var{symbol}  -z @var{keyword}}
  
-@@ -15721,6 +15722,11 @@ Specify that the program entry point is
+@@ -16677,6 +16678,11 @@ Specify that the program entry point is @var{entry}.  The argument is
  interpreted by the linker; the GNU linker accepts either a symbol name
  or an address.
  
@@ -104,11 +104,11 @@ Index: gcc-11.2.0/gcc/doc/invoke.texi
  @item -pie
  @opindex pie
  Produce a dynamically linked position independent executable on targets
-Index: gcc-11.2.0/gcc/gcc.c
-===================================================================
---- gcc-11.2.0.orig/gcc/gcc.c
-+++ gcc-11.2.0/gcc/gcc.c
-@@ -1162,6 +1162,7 @@ proper position among the other output f
+diff --git a/gcc/gcc.cc b/gcc/gcc.cc
+index 4598f6cd7..9eb219aa6 100644
+--- a/gcc/gcc.cc
++++ b/gcc/gcc.cc
+@@ -1172,6 +1172,7 @@ proper position among the other output files.  */
      %(mflib) " STACK_SPLIT_SPEC "\
      %{fprofile-arcs|fprofile-generate*|coverage:-lgcov} " SANITIZER_SPEC " \
      %{!nostdlib:%{!r:%{!nodefaultlibs:%(link_ssp) %(link_gcc_c_sequence)}}}\
@@ -116,3 +116,4 @@ Index: gcc-11.2.0/gcc/gcc.c
      %{!nostdlib:%{!r:%{!nostartfiles:%E}}} %{T*}  \n%(post_link) }}}}}}"
  #endif
  
+
