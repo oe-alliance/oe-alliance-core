@@ -39,3 +39,5 @@ if ! grep -q -s ntpdate /var/spool/cron/crontabs/root; then
 fi
 }
 
+pkg_postinst:ntpdate:openvix() {
+}
