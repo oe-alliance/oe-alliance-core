@@ -4,14 +4,14 @@ SECTION = "console/multimedia"
 LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe"
 
-DEPENDS += "audiofile boost curl dbus expat faad2 flac icu libao \
+DEPENDS += "audiofile boost curl dbus expat faad2 flac fmt icu libao \
             libmikmod libogg libvorbis sqlite3 virtual/libiconv yajl zlib"
 
 inherit gitpkgv
 
-SRCREV = "938728820b11d4544a071994fe3c63c6ab710e8e"
-PV = "0.22.6+git${SRCPV}"
-PKGV = "0.22.6+git${GITPKGV}"
+SRCREV = "0341ca1b6a134315869cf25f15d4bd5caabeba61"
+PV = "0.23.7+git${SRCPV}"
+PKGV = "0.23.7+git${GITPKGV}"
 
 SRC_URI = "git://github.com/MusicPlayerDaemon/MPD;branch=master;protocol=https \
         file://mpd.conf \
@@ -61,7 +61,7 @@ PACKAGECONFIG[pulse] = "-Dpulse=enabled,-Dpulse=disabled,pulseaudio"
 PACKAGECONFIG[recorder] = "-Drecorder=true,-Drecorder=false"
 PACKAGECONFIG[smb] = "-Dsmbclient=enabled,-Dsmbclient=disabled,samba"
 PACKAGECONFIG[sndfile] = "-Dsndfile=enabled,-Dsndfile=disabled,libsndfile1"
-PACKAGECONFIG[upnp] = "-Dupnp=enabled,-Dupnp=disabled,libupnp"
+PACKAGECONFIG[upnp] = "-Dupnp=pupnp,-Dupnp=disabled,libupnp"
 PACKAGECONFIG[vorbis] = "-Dvorbis=enabled,-Dvorbis=disabled,libvorbis libogg"
 PACKAGECONFIG[wavpack] = "-Dwavpack=enabled,-Dwavpack=disabled,wavpack"
 PACKAGECONFIG[zlib] = "-Dzlib=enabled,-Dzlib=disabled,zlib"

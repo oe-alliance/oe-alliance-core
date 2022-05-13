@@ -15,7 +15,7 @@ PV = "0.20.22"
 PKGV = "0.20.22"
 
 SRC_URI = "git://github.com/MusicPlayerDaemon/MPD;branch=master;protocol=https \
-        file://mpd.conf \
+        file://mpd_0.20.22.conf \
         file://mpd.init \
         "
 
@@ -81,7 +81,7 @@ do_install:append() {
     install -d ${D}/var/lib/mpd/playlists
     install -d ${D}${sysconfdir}/init.d
     install -m 755 ${WORKDIR}/mpd.init ${D}${sysconfdir}/init.d/mpd
-    install -m 644 ${WORKDIR}/mpd.conf ${D}${sysconfdir}/mpd.conf
+    install -m 644 ${WORKDIR}/mpd_0.20.22.conf ${D}${sysconfdir}/mpd.conf
 
     # we don't need the icons
     rm -rf ${D}${datadir}/icons
