@@ -14,3 +14,5 @@ SRC_URI:append:arm = " file://stdlib-canonicalize-realpath_stk-dest-maybe-uninit
 "
 
 SSTATE_ALLOW_OVERLAP_FILES += "${STAGING_INCDIR}/netatalk/at.h ${STAGING_INCDIR}/scsi/scsi_ioctl.h ${STAGING_INCDIR}/scsi/sg.h"
+
+CFLAGS:append = " -Wno-maybe-uninitialized"
