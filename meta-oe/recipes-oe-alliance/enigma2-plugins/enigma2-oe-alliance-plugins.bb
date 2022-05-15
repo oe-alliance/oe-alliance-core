@@ -154,6 +154,7 @@ RDEPENDS:enigma2-plugin-extensions-witaispeechtotext = "${PYTHON_PN}-requests"
 DESCRIPTION:enigma2-plugin-extensions-webkithbbtv = "E2 HbbTV Plugin"
 RDEPENDS:enigma2-plugin-extensions-webkithbbtv = "vuplus-webkithbbtv-dumpait webkit-hbbtv-browser libupnp1.6"
 DESCRIPTION:enigma2-plugin-extensions-stalkerclient = "E2 Staker Client Plugin"
+RDEPENDS:python3-youtube-dl = "TVSpielfilm Plugin"
 DESCRIPTION:enigma2-plugin-extensions-tvspielfilm = "TVSpielfilm Plugin"
 
 inherit python3-dir autotools-brokensep gitpkgv ${PYTHON_PN}native gettext
