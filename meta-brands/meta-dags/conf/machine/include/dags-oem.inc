@@ -504,7 +504,7 @@ DVBSKYPROVIDER = "kernel"
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS += " \
     dags-dvb-modules-${MACHINE_DRIVER} \
-    ${@bb.utils.contains("MACHINE_FEATURES", "proxy", "platform-util-${MACHINE}", "", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "proxy", "platform-util-${MACHINEBUILD}", "", d)} \
     ${@bb.utils.contains('SOC_FAMILY', 'hisi3798mv200', 'hisi3798mv200-shutdown' , 'dags-shutdown', d)} \
     "
 
