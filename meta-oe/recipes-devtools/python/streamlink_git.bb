@@ -5,6 +5,8 @@ SECTION = "devel/python"
 LICENSE = "BSD-2-Clause"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=381ff91bf309000e0ec58dafe27a97b0"
 
+DEPENDS += "${PYTHON_PN}-versioningit-native ${PYTHON_PN}-importlib-metadata-native"
+
 inherit python3-dir setuptools3 gittag
 
 RDEPENDS:${PN} = "${PYTHON_PN}-core \
@@ -23,17 +25,16 @@ RDEPENDS:${PN} = "${PYTHON_PN}-core \
     ${PYTHON_PN}-websocket-client \
     "
 
-
 PV = "git${SRCPV}"
 PKGV = "${GITPKGVTAG}"
 
-SRCREV_streamlink = "89ab021c07cd2100b93023f6222fac28365c4d7c"
+SRCREV_streamlink = "${AUTOREV}"
 SRCREV_plugins = "${AUTOREV}"
 
 SRCREV_FORMAT = "streamlink_plugins"
 
-SRC_URI = "git://github.com/streamlink/streamlink.git;protocol=https;name=streamlink \
-           git://github.com/oe-mirrors/streamlink-plugins;protocol=https;name=plugins;destsuffix=additional-plugins"
+SRC_URI = "git://github.com/streamlink/streamlink.git;protocol=https;name=streamlink;branch=master \
+           git://github.com/oe-mirrors/streamlink-plugins;protocol=https;name=plugins;destsuffix=additional-plugins;branch=master"
 
 S = "${WORKDIR}/git"
 

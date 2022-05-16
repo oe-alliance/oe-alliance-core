@@ -16,7 +16,7 @@ index 10ecbc3..3102272 100644
  #include <unistd.h>
  #include <errno.h>
  
--const char ofgwrite_version[] = "4.6.0";
+-const char ofgwrite_version[] = "4.6.1";
 +struct stat kernel_file_stat;
 +struct stat rootfs_file_stat;
 +

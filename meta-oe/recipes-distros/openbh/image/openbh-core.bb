@@ -14,7 +14,7 @@ PROVIDES += "openbh-core"
 RPROVIDES:enigma2-plugin-obh-core += "openbh-core"
 
 inherit autotools-brokensep gitpkgv ${PYTHON_PN}native
-SRCREV = "${AUTOREV}"
+SRCREV = "87bec5a67215d1a233fc32c1ec725250211cc094"
 PV = "${IMAGE_VERSION}+git${SRCPV}"
 PKGV = "${IMAGE_VERSION}+git${GITPKGV}"
 PR = "r9"

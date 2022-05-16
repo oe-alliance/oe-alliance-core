@@ -268,7 +268,7 @@ PREFERRED_PROVIDER_virtual/kodi = "stb-kodi-${MACHINE}"
 KERNEL_OUTPUT = "${KERNEL_IMAGETYPE}"
 KERNEL_CONSOLE = "ttyS0,115200n8"
 
-MACHINE_FEATURES += "3dtv alsa hdmicec switchoff bootsplash skins1080 blindscan-tbs omb HDMI \
+MACHINE_FEATURES += "3dtv alsa hdmicec switchoff bootsplash skins1080 blindscan-tbs HDMI \
 ${@bb.utils.contains('MACHINEBUILD', 'gb800se', 'SCART YUV RCA' , '', d)} \
 ${@bb.utils.contains('MACHINEBUILD', 'gb800seplus', 'YUV RCA' , '', d)} \
 ${@bb.utils.contains('MACHINEBUILD', 'gb800solo', 'SCART YUV RCA' , '', d)} \
