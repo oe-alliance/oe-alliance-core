@@ -34,8 +34,8 @@ MACHINE_FEATURES += "switchoff hdmicec skins1080 alsa qtstalker"
 IMAGE_CLASSES  += "octagon-ubi_image"
 IMAGE_FSTYPES += "octagonubi"
 
-MKUBIFS_ARGS = "-m 2048 -e 126976 -c 3800"
-UBINIZE_ARGS = "-m 2048 -p 128KiB -s 2048"
+MKUBIFS_ARGS = "-m 4096 -e 253952 -c 1900"
+UBINIZE_ARGS = "-m 4096 -p 256KiB -s 4096"
 UBI_VOLNAME = "rootfs"
 
 TARGET_ARCH = "arm"
