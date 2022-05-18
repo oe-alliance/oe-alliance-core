@@ -1,0 +1,61 @@
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides:          platform-util
+# Required-Start:    kmod bootmisc
+# Required-Stop:
+# Should-Start:      checkroot
+# Should-Stop:
+# Default-Start:     S
+# Default-Stop:
+# Short-Description: Load the Broadcam platform-util.
+# Description:       Load the Broadcam platform-util.
+### END INIT INFO
+
+if [ -e /sys/class/net/sys0 ]; then
+  ifconfig sys0 up
+fi
+case "$1" in
+  start)
+    # first boot?
+    [ -f /etc/dropbear/dropbear_rsa_host_key ]
+    echo "start and init. platform..."
+	extra_module_path=/lib/modules/4.1.20/extra
+
+	# load api module
+	echo "loading api module..."
+	insmod $extra_module_path/nexus.ko
+
+	if [ -e $extra_module_path/wakeup_drv.ko ] ; then
+		echo "loading wakeup module..."
+		insmod $extra_module_path/wakeup_drv.ko
+	fi
+ 	if [ ! -e /dev/wake0 ] ; then
+ 		mknod -m a=rw /dev/wake0 c 34 0
+	fi
+	
+	# start nexus server
+	echo "run api server..."
+	start-stop-daemon --start --exec /usr/bin/nxserver -- &
+
+  	if [ ! -e /dev/brcm0 ] ; then
+ 		mknod -m a=rw /dev/brcm0 c 30 0
+   	fi
+
+	sleep 10
+
+	# load proprietary module
+	echo "loading proprietary module..."	
+	start-stop-daemon --start --exec /usr/bin/init_driver $extra_module_path/bcmlinuxdvb.ko -- &
+
+    echo "(___)"
+    ;;
+  stop)
+    ;;
+  restart)
+    ;;
+  *)
+    echo "Usage: /etc/init.d/dags-platform-util {start|stop|restart}"
+    exit 1
+esac
+
+exit 0
