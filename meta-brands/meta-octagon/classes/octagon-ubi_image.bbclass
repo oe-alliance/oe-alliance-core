@@ -15,7 +15,7 @@ IMAGE_CMD:octagonubi () {
     mkdir -p ${IMGDEPLOYDIR}/userdata/linuxrootfs1
     mkdir -p ${IMGDEPLOYDIR}/userdata/linuxrootfs2
     cp -fR --preserve=mode,links ${IMAGE_ROOTFS}/* ${IMGDEPLOYDIR}/userdata/linuxrootfs1/
-    mkfs.ubifs -F -d ${IMGDEPLOYDIR}/userdata -m 2048 -o ${IMGDEPLOYDIR}/rootfs.ubifs -e 126976 -c 3800
+    mkfs.ubifs -F -d ${IMGDEPLOYDIR}/userdata -m 4096 -o ${IMGDEPLOYDIR}/rootfs.ubifs -e 253952 -c 1900
     echo \[ubifs\] > ${IMGDEPLOYDIR}/rootfs.ubicfg
     echo mode=ubi >> ${IMGDEPLOYDIR}/rootfs.ubicfg
     echo image=${IMGDEPLOYDIR}/rootfs.ubifs >> ${IMGDEPLOYDIR}/rootfs.ubicfg
@@ -23,5 +23,5 @@ IMAGE_CMD:octagonubi () {
     echo vol_type=dynamic >> ${IMGDEPLOYDIR}/rootfs.ubicfg
     echo vol_name=ubifs >> ${IMGDEPLOYDIR}/rootfs.ubicfg
     echo vol_flags=autoresize >> ${IMGDEPLOYDIR}/rootfs.ubicfg
-    ubinize -o ${IMGDEPLOYDIR}/${IMAGE_NAME}.ubi -m 2048 -p 0x20000 ${IMGDEPLOYDIR}/rootfs.ubicfg
+    ubinize -o ${IMGDEPLOYDIR}/${IMAGE_NAME}.ubi -m 4096 -p 0x40000 ${IMGDEPLOYDIR}/rootfs.ubicfg
 }
