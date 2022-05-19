@@ -39,5 +39,27 @@ if ! grep -q -s ntpdate /var/spool/cron/crontabs/root; then
 fi
 }
 
+# Vix-only code.
+# We wish to completely override the ntpdate-sync that would otherwise
+# by produced by a build, and not install the cron job.
+#
+NTP_SYNC_LOC := "${THISDIR}/${PN}"
+
+do_install:append:openvix() {
+
+# Put the required version in place
+    install -m 755 ${NTP_SYNC_LOC}/ntpdate-sync-openvix ${D}${bindir}/ntpdate-sync
+
+# And re-run the code to "Fix hardcoded paths in scripts" (which may
+# well leave them unchanged)
+#
+    sed -i 's!/usr/sbin/!${sbindir}/!g' ${D}${bindir}/ntpdate-sync
+    sed -i 's!/usr/bin/!${bindir}/!g' ${D}${bindir}/ntpdate-sync
+    sed -i 's!/etc/!${sysconfdir}/!g' ${D}${bindir}/ntpdate-sync
+    sed -i 's!/var/!${localstatedir}/!g' ${D}${bindir}/ntpdate-sync
+    sed -i 's!^PATH=.*!PATH=${base_sbindir}:${base_bindir}:${sbindir}:${bindir}!' ${D}${bindir}/ntpdate-sync
+
+}
+
 pkg_postinst:ntpdate:openvix() {
 }
