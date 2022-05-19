@@ -9,17 +9,13 @@ DEPENDS = "libusb1"
 inherit gitpkgv
 
 SRCREV = "${AUTOREV}"
-PV = "1.0+git${SRCPV}"
-PKGV = "1.0+git${GITPKGV}"
+PV = "1.1+git${SRCPV}"
+PKGV = "1.1+git${GITPKGV}"
 
 SRC_URI = "git://git.osmocom.org/rtl-sdr;protocol=https;branch=master"
 
 S = "${WORKDIR}/git"
 
-EXTRA_OECMAKE += " -DLIB_INSTALL_DIR=${libdir}"
+EXTRA_OECMAKE += " -DDETACH_KERNEL_DRIVER=ON -DLIB_INSTALL_DIR=${libdir}"
 
 inherit cmake pkgconfig
-
-EXTRA_OECONF = "--enable-driver-detach"
-
-CFLAGS += "-fgnu89-inline"
