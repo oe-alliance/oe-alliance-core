@@ -80,7 +80,7 @@ PYTHON_RDEPS = " \
     ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-imaging", "${PYTHON_PN}-pillow", d)} \
     ${PYTHON_PN}-smtpd \
     ${PYTHON_PN}-six \
-    ${@bb.utils.contains_any("DISTRO_NAME", "openatv openbh openvix", "${PYTHON_PN}-treq" , "", d)} \
+    ${PYTHON_PN}-treq \
     "
 
 GST_BASE_RDEPS = "\
