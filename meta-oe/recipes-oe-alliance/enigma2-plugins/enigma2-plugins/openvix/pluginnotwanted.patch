@@ -1,13 +1,5 @@
-From 54af4288418da2f8df11de4a87ce4d66e95572c5 Mon Sep 17 00:00:00 2001
-From: Huevos <rowland@moralet.com>
-Date: Fri, 17 Sep 2021 14:28:31 +0200
-
----
- Makefile.am | 5 -----
- 1 file changed, 5 deletions(-)
-
 diff --git a/Makefile.am b/Makefile.am
-index 09343ff1..addd5090 100644
+index 4f6461ce..159205a3 100644
 --- a/Makefile.am
 +++ b/Makefile.am
 @@ -22,7 +22,6 @@ SUBDIRS = \
@@ -32,7 +24,17 @@ index 09343ff1..addd5090 100644
  	reconstructapsc \
  	reftopiconname \
  	remotetimer \
-@@ -128,8 +125,6 @@ if TPM
+@@ -101,8 +98,7 @@ SUBDIRS = \
+ 	schiffe \
+ 	sudoku \
+ 	vierg \
+-	bmediacenter \
+-	advancedmovieselection
++	bmediacenter
+ 
+ if DREAMBOX
+ SUBDIRS +=  fancontrol2 letterbox logomanager movielistpreview genuinedreambox
+@@ -129,8 +125,6 @@ if TPM
  SUBDIRS += \
  	mytube \
  	yttrailer \
