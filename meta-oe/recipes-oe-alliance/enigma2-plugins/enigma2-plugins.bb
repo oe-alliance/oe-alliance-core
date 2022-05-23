@@ -14,7 +14,7 @@ inherit autotools-brokensep gitpkgv ${PYTHON_PN}native pkgconfig gettext ${PYTHO
 SRCREV = "${AUTOREV}"
 PV = "${IMAGE_VERSION}+gitr${SRCPV}"
 PKGV = "${IMAGE_VERSION}+gitr${GITPKGV}"
-PR = "r4"
+PR = "r5"
 
 SRC_URI = "${ENIGMA2_PLUGINS_URI} file://pluginnotwanted.patch \
         file://ax-python-devel-dont-check-for-distutils.patch"
