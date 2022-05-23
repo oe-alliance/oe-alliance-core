@@ -11,6 +11,6 @@ SETUPTOOLS_INSTALL_ARGS = "\
 
 # Remove "egg-info" files. If datadir or site-packages dir is empty, remove it.
 setuptools3_legacy_do_install:append() {
-	rm -f ${D}${libdir}/enigma2/python/Plugins/*.egg-info
+	rm -rf ${D}${libdir}/enigma2/python/Plugins/*.egg-info
 	rmdir -p --ignore-fail-on-non-empty ${D}${datadir} ${D}/${PYTHON_SITEPACKAGES_DIR} || true
 }
