@@ -33,6 +33,7 @@ PV = "git${SRCPV}"
 PKGV = "${GITPKGVTAG}"
 
 SRC_URI = "git://github.com/E2OpenPlugins/e2openplugin-${MODULE}.git;protocol=https;branch=${BRANCH} \
+           file://setuptools-62.patch \
            file://transcoding.py"
 
 S="${WORKDIR}/git"

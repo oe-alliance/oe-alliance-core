@@ -1,0 +1,9 @@
+--- a/setup.py
++++ b/setup.py
+@@ -7,4 +7,6 @@ pkg = 'Extensions.OpenWebif'
+ setup(name='enigma2-plugin-extensions-openwebif',
+ 	description='Control your receiver with a browser',
+ 	cmdclass=setup_translate.cmdclass,
++# explicitly declare packages so setuptools does not attempt auto discovery
++packages=[],
+ )
