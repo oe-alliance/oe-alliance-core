@@ -57,6 +57,7 @@ RRECOMMENDS:${PN} = "\
     enigma2-plugin-skins-overlayhd \
     enigma2-plugin-skincomponents-mediaportal-atv-metrix-style \
     enigma2-plugin-extensions-chocholousek-picons \
+    mediainfo \
     "
 
 # remove close cant update to py3
