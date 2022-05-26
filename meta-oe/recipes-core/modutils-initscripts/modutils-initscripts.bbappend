@@ -1,10 +1,10 @@
-
-FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
-
-SRC_URI += "file://0001-ignore_modversions.patch \
-           "
-
 S = "${WORKDIR}/src"
+
+PR = "r8"
+
+do_install:append () {
+	sed -i 's!LOAD_MODULE=modprobe!LOAD_MODULE="modprobe --force-modversion"!g' ${D}${sysconfdir}/init.d/modutils.sh
+}
 
 python do_unpack:append() {
     import shutil
