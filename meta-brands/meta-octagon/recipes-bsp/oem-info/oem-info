@@ -18,13 +18,21 @@ fi
 
 INFO="/usr/lib/enigma.info"
 
+BOXTYPE=`cat /proc/stb/info/boxtype`
 TYPE=`cat /proc/stb/info/type`
-if [ $TYPE == "10" ]; then
-  sed -i -e 's:displaymodel=SF8008 4K UHD:displaymodel=SF8008 4K Single:' $INFO
-  sed -i -e 's:model=sf8008:model=sf8008s:' $INFO
-elif [ $TYPE == "11" ]; then
-  sed -i -e 's:displaymodel=SF8008 4K UHD:displaymodel=SF8008 4K Twin:' $INFO
-  sed -i -e 's:model=sf8008:model=sf8008t:' $INFO
+if [ $BOXTYPE == "sf8008" ]; then
+  if [ $TYPE == "10" ]; then
+    sed -i -e 's:displaymodel=SF8008 4K UHD:displaymodel=SF8008 4K Single:' $INFO
+    sed -i -e 's:model=sf8008:model=sf8008s:' $INFO
+  elif [ $TYPE == "11" ]; then
+    sed -i -e 's:displaymodel=SF8008 4K UHD:displaymodel=SF8008 4K Twin:' $INFO
+    sed -i -e 's:model=sf8008:model=sf8008t:' $INFO
+  fi
+elif [ $BOXTYPE == "sfx6008" ]; then
+  if [ $TYPE == "10" ]; then
+    sed -i -e 's:displaymodel=SFX6008:displaymodel=SFX6018:' $INFO
+    sed -i -e 's:model=sfx6008:model=sfx6018:' $INFO
+  fi
 fi
 
 sed -i '/checksum=/d' $INFO
