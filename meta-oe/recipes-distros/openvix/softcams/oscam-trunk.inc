@@ -5,6 +5,4 @@ EXTRA_OECMAKE += "\
 require oscam-common.inc
 
 PV = "1.20+svn${SRCPV}"
-#S = "${WORKDIR}/trunk"
-S = "${WORKDIR}/git"
-
+S = "${WORKDIR}/trunk"

@@ -8,10 +8,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 FILESEXTRAPATHS:prepend := "${THISDIR}/openvix-softcams-oscam:"
 
 PV = "1.20+svn${SRCPV}"
-#SRCREV = "11517"
-SRCREV = "${AUTOREV}"
-#SRC_URI = "svn://svn.streamboard.tv/oscam;protocol=https;module=trunk;scmdata=keep;rev=${SRCREV};externals=nowarn"
-SRC_URI = "git://github.com/Huevos/oscam.git;protocol=https;branch=master"
+SRCREV = "11517"
+SRC_URI = "svn://svn.streamboard.tv/oscam;protocol=https;module=trunk;scmdata=keep;rev=${SRCREV};externals=nowarn"
 
 PR = "r1"
 
@@ -23,8 +21,7 @@ RPROVIDES:enigma2-plugin-softcams-oscam-pcscd += "openvix-softcams-oscam-pcscd-m
 DEPENDS = "libusb openssl pcsc-lite"
 RDEPENDS:enigma2-plugin-softcams-oscam-pcscd = "pcsc-lite"
 
-#S = "${WORKDIR}/trunk"
-S = "${WORKDIR}/git"
+S = "${WORKDIR}/trunk"
 
 EXTRA_OECMAKE += "\
     -DOSCAM_SYSTEM_NAME=Tuxbox \
