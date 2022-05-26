@@ -10,7 +10,7 @@ ALLOW_EMPTY:${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r14"
+PR = "r15"
 
 OPTIONAL_WIFIDRIVERS = "${@bb.utils.contains("MACHINE_FEATURES", "wifiusblegacy", "enigma2-plugin-drivers-network-usb-rt3070", " \
     enigma2-plugin-drivers-network-usb-ath9k-htc \
@@ -81,6 +81,7 @@ RDEPENDS:${PN} = "\
     ${@bb.utils.contains("MACHINEBUILD", "formuler1", "enigma2-plugin-drivers-network-usb-rtl8822bu", "", d)} \
     ${@bb.utils.contains("MACHINEBUILD", "hd51", "enigma2-plugin-drivers-network-usb-rtl8822bu", "", d)} \
     ${@bb.utils.contains("MACHINE_BRAND", "NOVALER", "enigma2-plugin-drivers-network-usb-rtl8821cu enigma2-plugin-drivers-network-usb-rtl8192eu enigma2-plugin-drivers-network-usb-mt7601u enigma2-plugin-drivers-network-usb-rtl8822cu enigma2-plugin-drivers-network-usb-r8188eu", "", d)} \
+    ${@bb.utils.contains("MACHINE", "hd66se", "enigma2-plugin-drivers-network-usb-rtl8821cu enigma2-plugin-drivers-network-usb-rtl8192eu enigma2-plugin-drivers-network-usb-mt7601u enigma2-plugin-drivers-network-usb-rtl8822cu enigma2-plugin-drivers-network-usb-rtl8188fu", "", d)} \
     "
 
 RDEPENDS:${PN}:remove:odroidc2 = "enigma2-plugin-drivers-network-usb-rtl8192cu"
