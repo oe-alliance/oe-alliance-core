@@ -333,6 +333,12 @@ do_install_ptest () {
 	-e 's,--sysroot=${STAGING_DIR_TARGET},,g' \
 	-e 's|${DEBUG_PREFIX_MAP}||g' \
 	${D}${PTEST_PATH}/Makefile ${D}${PTEST_PATH}/Configure
+
+	# Get rid of everything except the bare .so files. We don't want anything
+	# to link to this version ever!
+	rm -rf ${D}${libdir}/ssl ${D}${bindir} ${D}${datadir}
+	rm -f ${D}${base_libdir}/*.so ${D}${libdir}/*.so
+	rm -rf ${D}${libdir}/engines
 }
 
 # Add the openssl.cnf file to the openssl-conf package. Make the libcrypto
