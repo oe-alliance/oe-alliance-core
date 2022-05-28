@@ -30,7 +30,7 @@ if [ $BOXTYPE == "sf8008" ]; then
   fi
 elif [ $BOXTYPE == "sfx6008" ]; then
   if [ $TYPE == "10" ]; then
-    sed -i -e 's:displaymodel=SFX6008:displaymodel=SFX6018:' $INFO
+    sed -i -e 's:displaymodel=SFX6008 IP:displaymodel=SFX6018 S2:' $INFO
     sed -i -e 's:model=sfx6008:model=sfx6018:' $INFO
   fi
 fi
