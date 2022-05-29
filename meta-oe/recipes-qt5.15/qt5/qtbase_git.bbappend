@@ -18,6 +18,7 @@ RDEPENDS:${PN}:append = "${@bb.utils.contains('MACHINE_FEATURES', 'vu-eglfs', 'l
 
 PACKAGECONFIG_GL = " "
 PACKAGECONFIG_OPENSSL = "openssl"
+OPENSSL_LINKING_MODE = "-linked"
 PACKAGECONFIG:remove = "tests ${@bb.utils.contains('MACHINE_FEATURES', 'vu-eglfs', 'gl' , '', d)}"
 PACKAGECONFIG:append = " \
     ${@bb.utils.contains('MACHINE_FEATURES', 'noopengl', '', ' gles2 eglfs ', d)} \
@@ -38,6 +39,3 @@ EGLFS_DEVICE_INTEGRATION = ${SET_QT_QPA_EGLFS_INTEGRATION}
 QT_QPA_EGLFS_INTEGRATION = ${SET_QT_QPA_EGLFS_INTEGRATION}
 EOF
 }
-
-INSANE_SKIP:${PN} += "file-rdeps"
-INSANE_SKIP:${PN}-plugins += "file-rdeps"

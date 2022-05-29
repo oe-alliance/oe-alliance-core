@@ -21,5 +21,3 @@ DEPENDS += " \
 FILESEXTRAPATHS:prepend := "${THISDIR}/qtwebengine-git:"
 
 PACKAGECONFIG:append = " libwebp ffmpeg opus libvpx proprietary-codecs pepper-plugins webrtc"
-
-INSANE_SKIP:${PN} += "file-rdeps"

@@ -5,7 +5,7 @@ LICENSE = "CLOSED"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PROVIDES = "virtual/libgles2 virtual/egl"
-DEPENDS = "formuler-v3ddriver-headers"
+DEPENDS = "formuler-v3ddriver-headers patchelf-native"
 
 PV = "${SRCDATE}"
 PR = "r0"
@@ -25,6 +25,7 @@ do_install:append() {
 	install -m 0755 ${S}/libnxpl.so ${D}${libdir}/
 	install -m 0755 ${S}/libnexus.so ${D}${libdir}/
 	install -m 0755 ${S}/libv3ddriver.so ${D}${libdir}/
+	patchelf --set-soname libv3ddriver.so ${D}${libdir}/libv3ddriver.so
 	ln -s libv3ddriver.so ${D}${libdir}/libEGL.so
 	ln -s libv3ddriver.so ${D}${libdir}/libGLESv2.so
 }

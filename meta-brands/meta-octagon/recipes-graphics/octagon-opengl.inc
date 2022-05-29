@@ -4,6 +4,8 @@ PRIORITY = "required"
 LICENSE = "CLOSED"
 PACKAGE_ARCH := "${MACHINE_ARCH}"
 
+DEPENDS = "patchelf-native"
+
 PR = "r1-${SRCDATE}"
 
 PROVIDES = "virtual/libgles1 virtual/libgles2 virtual/egl"
@@ -31,6 +33,7 @@ do_install() {
     ln -s libMali.so ${D}${libdir}/libEGL.so.1.4
     ln -s libEGL.so.1.4 ${D}${libdir}/libEGL.so.1
     ln -s libEGL.so.1 ${D}${libdir}/libEGL.so
+    patchelf --set-soname libMali.so ${D}${libdir}/libMali.so
     install -d ${D}/${includedir}
     install -m 0644 ${S}/include/hi_dbe.h ${D}${includedir}/
     for d in EGL GLES GLES2 KHR; do

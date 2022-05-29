@@ -9,6 +9,8 @@ PR = "r1-${SRCDATE}"
 PROVIDES = "virtual/libgles1 virtual/libgles2 virtual/egl"
 RPROVIDES:${PN} = "virtual/libgles1 virtual/libgles2 virtual/egl libEGL.so libGLESv2.so libmali.so"
 
+DEPENDS = "patchelf-native"
+
 SRC_URI = "http://en3homeftp.net/pub/down/hisi3798mv200-opengl-${SRCDATE}.tar.gz"
 
 S = "${WORKDIR}/usr"
@@ -22,6 +24,7 @@ do_compile() {
 do_install() {
     install -d ${D}${libdir}
     install -m 0755 ${S}/lib/libmali.so ${D}${libdir}/libMali.so
+    patchelf --set-soname libMali.so ${D}${libdir}/libMali.so
     ln -s libMali.so ${D}${libdir}/libGLESv2.so.2.0
     ln -s libGLESv2.so.2.0 ${D}${libdir}/libGLESv2.so.2
     ln -s libGLESv2.so.2 ${D}${libdir}/libGLESv2.so
