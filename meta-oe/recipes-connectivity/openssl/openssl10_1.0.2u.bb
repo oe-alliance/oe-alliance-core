@@ -271,7 +271,6 @@ do_install () {
 	    rm -f $f
 	    ln -s openssl10-$ln_f $(dirname $f)/openssl10-$(basename $f)
 	done
-
 }
 
 do_install:append:class-native () {
@@ -333,12 +332,6 @@ do_install_ptest () {
 	-e 's,--sysroot=${STAGING_DIR_TARGET},,g' \
 	-e 's|${DEBUG_PREFIX_MAP}||g' \
 	${D}${PTEST_PATH}/Makefile ${D}${PTEST_PATH}/Configure
-
-	# Get rid of everything except the bare .so files. We don't want anything
-	# to link to this version ever!
-	rm -rf ${D}${libdir}/ssl ${D}${bindir} ${D}${datadir}
-	rm -f ${D}${base_libdir}/*.so ${D}${libdir}/*.so
-	rm -rf ${D}${libdir}/engines
 }
 
 # Add the openssl.cnf file to the openssl-conf package. Make the libcrypto
@@ -355,6 +348,7 @@ FILES:${PN}-engines = "${libdir}/ssl/engines/*.so ${libdir}/engines"
 FILES:${PN}-misc = "${libdir}/ssl/misc"
 FILES:${PN} =+ "${libdir}/ssl/*"
 FILES:${PN}:append:class-nativesdk = " ${SDKPATHNATIVE}/environment-setup.d/openssl.sh"
+FILES:${PN}-staticdev += "*.a"
 
 CONFFILES:openssl10-conf = "${sysconfdir}/ssl/openssl.cnf"
 
@@ -369,15 +363,16 @@ PACKAGE_PREPROCESS_FUNCS += "openssl_package_preprocess"
 # files when installed into target rootfs. So we don't put them into
 # packages, but they continue to be provided via target sysroot for
 # cross-compilation on the host, if some software still depends on openssl 1.0.
-#openssl_package_preprocess () {
-#        for file in `find ${PKGD} -name *.h -o -name *.pc -o -name *.so`; do
-#                rm $file
-#        done
-#        rm ${PKGD}${bindir}/openssl
-#        rm ${PKGD}${bindir}/c_rehash
-#        rmdir ${PKGD}${bindir}
-#
-#}
 openssl_package_preprocess () {
-    :
+        mv ${PKGD}${libdir}/pkgconfig/libcrypto.pc ${PKGD}${libdir}/pkgconfig/libcrypto10.pc
+        mv ${PKGD}${libdir}/pkgconfig/libssl.pc ${PKGD}${libdir}/pkgconfig/libssl10.pc
+        mv ${PKGD}${libdir}/pkgconfig/openssl.pc ${PKGD}${libdir}/pkgconfig/openssl10.pc
+        mv ${PKGD}${libdir}/libcrypto.a ${PKGD}/libcrypto10.a
+        mv ${PKGD}${libdir}/libssl.a ${PKGD}/libssl10.a
+        mv ${PKGD}/usr/include/openssl ${PKGD}/usr/include/openssl10
+        rm ${PKGD}${libdir}/*.so
+        rm ${PKGD}${bindir}/openssl
+        rm ${PKGD}${bindir}/c_rehash
+        rmdir ${PKGD}${bindir}
+
 }
