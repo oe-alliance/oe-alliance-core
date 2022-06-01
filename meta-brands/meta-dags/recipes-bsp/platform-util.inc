@@ -14,9 +14,6 @@ S="${WORKDIR}/platform-util-${MACHINE}"
 SRC_URI[md5sum] = "d0bd0250b563b65178809f0ab196b01f"
 SRC_URI[sha256sum] = "6b72a7d9930ebb45886b51ca81fca1374acdef27e1c842934ccebf86bac7878c"
 
-
-PR="${SRCDATE}.r0"
-
 SRC_URI = " \
     http://source.mynonpublic.com/dags/platform-util-${MACHINE}.zip \
     file://${INITSCRIPT_NAME}.sysvinit \
