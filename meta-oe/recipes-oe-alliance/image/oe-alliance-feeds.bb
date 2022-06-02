@@ -91,6 +91,7 @@ RDEPENDS:${PN} = " \
     dvdfs \
     ${@bb.utils.contains('MACHINE', 'cube', '' , 'edid-decode', d)} \
     exfat-utils \
+    ${@bb.utils.contains_any("MACHINEBUILD", "gbquad4k gbue4k galaxy4k lunix34k", "enigma2-plugin-extensions-forcefbclnbpower" , "", d)} \
     fuse-exfat \
     gptfdisk \
     hddtemp \
