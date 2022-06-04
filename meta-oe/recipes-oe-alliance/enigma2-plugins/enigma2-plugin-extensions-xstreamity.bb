@@ -9,8 +9,8 @@ RDEPENDS:${PN} = "${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-imag
 
 SRCREV = "${AUTOREV}"
 
-PV = "3.58+git${SRCPV}"
-PKGV = "3.58+git${GITPKGV}"
+PV = "3.67+git${SRCPV}"
+PKGV = "3.67+git${GITPKGV}"
 PR = "r0"
 
 inherit gitpkgv allarch
