@@ -9,7 +9,7 @@ DEPENDS += "${PYTHON_PN}-incremental-native"
 
 RDEPENDS:${PN} += "${PYTHON_PN}-attrs ${PYTHON_PN}-hyperlink ${PYTHON_PN}-incremental ${PYTHON_PN}-requests ${PYTHON_PN}-twisted"
 
-${PYPI_PACKAGE} = "${PYTHON_PN}-treq"
+PYPI_PACKAGE = "treq"
 
 SRC_URI[sha256sum] = "df757e3f141fc782ede076a604521194ffcb40fa2645cf48e5a37060307f52ec"
 
