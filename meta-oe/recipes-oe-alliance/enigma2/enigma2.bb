@@ -80,6 +80,7 @@ PYTHON_RDEPS = " \
     ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-imaging", "${PYTHON_PN}-pillow", d)} \
     ${PYTHON_PN}-smtpd \
     ${PYTHON_PN}-six \
+    ${PYTHON_PN}-treq \
     "
 
 GST_BASE_RDEPS = "\
