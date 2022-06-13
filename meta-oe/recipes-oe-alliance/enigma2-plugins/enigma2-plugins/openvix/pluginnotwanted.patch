@@ -1,16 +1,24 @@
 diff --git a/Makefile.am b/Makefile.am
-index 4f6461ce..159205a3 100644
+index 4f6461ce..82234472 100644
 --- a/Makefile.am
 +++ b/Makefile.am
-@@ -22,7 +22,6 @@ SUBDIRS = \
- 	dreammediathek \
+@@ -14,15 +14,11 @@ SUBDIRS = \
+ 	babelzapper \
+ 	birthdayreminder \
+ 	bonjour \
+-	cdinfo \
+ 	channelselectionshorttitle \
+ 	curlytx \
+ 	dreamexplorer \
+-	dreamirc \
+-	dreammediathek \
  	dvdbackup \
  	easyinfo \
 -	easymedia \
  	ecasa \
  	eibox \
  	emailclient \
-@@ -59,13 +58,11 @@ SUBDIRS = \
+@@ -59,13 +55,11 @@ SUBDIRS = \
  	ofdb \
  	orfat \
  	orfteletext \
@@ -24,7 +32,7 @@ index 4f6461ce..159205a3 100644
  	reconstructapsc \
  	reftopiconname \
  	remotetimer \
-@@ -101,8 +98,7 @@ SUBDIRS = \
+@@ -101,8 +95,7 @@ SUBDIRS = \
  	schiffe \
  	sudoku \
  	vierg \
@@ -34,7 +42,7 @@ index 4f6461ce..159205a3 100644
  
  if DREAMBOX
  SUBDIRS +=  fancontrol2 letterbox logomanager movielistpreview genuinedreambox
-@@ -129,8 +125,6 @@ if TPM
+@@ -129,8 +122,6 @@ if TPM
  SUBDIRS += \
  	mytube \
  	yttrailer \
