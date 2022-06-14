@@ -16,6 +16,7 @@ DEPENDS += "oe-alliance-feeds enigma2-3rdparty-plugins"
 RRECOMMENDS:${PN} = "\
     openspa-skins \
     openspa-display-skins \
+    oe-alliance-skins \
     enigma2-skins \
     enigma2-plugin-systemplugins-crossepg \
     curlftpfs \
