@@ -13,8 +13,8 @@ RDEPENDS:${PN} = "kernel-module-tun"
 inherit gitpkgv
 
 SRCREV = "${AUTOREV}"
-PV = "1.8.5+git${SRCPV}"
-PKGV = "1.8.5+git${GITPKGV}"
+PV = "1.10.0+git${SRCPV}"
+PKGV = "1.10.0+git${GITPKGV}"
 
 SRC_URI = "git://github.com/zerotier/ZeroTierOne.git;protocol=https;branch=master \
         file://zerotier \
