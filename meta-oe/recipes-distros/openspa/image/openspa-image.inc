@@ -10,7 +10,11 @@ PV = "${IMAGE_VERSION}"
 PR = "${BUILD_VERSION}"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
+WORKDIR = "${TMPDIR}/work/${MULTIMACH_TARGET_SYS}/${PN}/${EXTENDPE}${PV}"
+
 do_rootfs[deptask] = "do_rm_work"
+
+SSTATE_DUPWHITELIST += "${DEPLOY_DIR_IMAGE}"
 
 IMAGE_INSTALL = "openspa-base \
     ${@bb.utils.contains("MACHINE_FEATURES", "no-cl-svr", "", \
@@ -21,7 +25,17 @@ IMAGE_INSTALL = "openspa-base \
     ", d)} \
     "
 
+# Some additional comfort on the shell: Pre-install nano on boxes with 128 MB or more:
+IMAGE_INSTALL += "${@bb.utils.contains_any("FLASHSIZE", "64 96", "", "nano", d)}"
+
+# ... plus mc and helpers on 256 MB or more:
+IMAGE_INSTALL += "${@bb.utils.contains_any("FLASHSIZE", "64 96 128", "", "mc mc-fish mc-helpers", d)}"
+
 export IMAGE_BASENAME = "openspa-image"
+
+# Prevent locales-archive creation to save some space
+IMAGE_LOCALES_ARCHIVE = ""
+
 # 64 or 128MB of flash: No language files, above: Spanish and French
 IMAGE_LINGUAS  = "${@bb.utils.contains_any("FLASHSIZE", "64 96 128", "", "es-es fr-fr", d)}"
 
