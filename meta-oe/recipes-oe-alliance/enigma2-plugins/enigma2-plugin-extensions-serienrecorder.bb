@@ -12,9 +12,9 @@ RDEPENDS:${PN} = "${PYTHON_PN}-sqlite3 ${PYTHON_PN}-json ${PYTHON_PN}-xmlrpc ${P
 
 inherit gitpkgv allarch
 
-PV = "4.4.7"
+PV = "4.5.0"
 
-SRCREV = "82ed4baee97ee7a50b19d50fcd91ec7168dcb208"
+SRCREV = "56eada788a1e31fbe7648b386bda287451104294"
 
 SRC_URI = "git://github.com/einfall/serienrecorder.git;protocol=https;branch=master"
 
