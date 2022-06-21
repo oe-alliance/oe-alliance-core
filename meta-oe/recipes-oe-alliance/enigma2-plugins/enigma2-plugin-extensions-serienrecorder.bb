@@ -12,7 +12,7 @@ RDEPENDS:${PN} = "${PYTHON_PN}-sqlite3 ${PYTHON_PN}-json ${PYTHON_PN}-xmlrpc ${P
 
 inherit gitpkgv allarch
 
-TAG = "v4.4.7"
+TAG = "v4.5.0"
 PV = "${TAG}"
 PKGV = "${TAG}"
 
