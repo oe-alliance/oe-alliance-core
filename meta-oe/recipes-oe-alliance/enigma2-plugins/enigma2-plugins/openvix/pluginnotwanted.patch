@@ -1,9 +1,20 @@
 diff --git a/Makefile.am b/Makefile.am
-index 4f6461ce..82234472 100644
+index 4f6461ce..044501d6 100644
 --- a/Makefile.am
 +++ b/Makefile.am
-@@ -14,15 +14,11 @@ SUBDIRS = \
- 	babelzapper \
+@@ -2,7 +2,6 @@ ACLOCAL_AMFLAGS = -I m4
+ 
+ SUBDIRS = \
+ 	advhdmi \
+-	aihdcontroler \
+ 	antiscrollbar \
+ 	aspectratioswitch \
+ 	audiorestart \
+@@ -11,23 +10,12 @@ SUBDIRS = \
+ 	automaticvolumeadjustment \
+ 	autoresolution \
+ 	autotimer \
+-	babelzapper \
  	birthdayreminder \
  	bonjour \
 -	cdinfo \
@@ -13,27 +24,84 @@ index 4f6461ce..82234472 100644
 -	dreamirc \
 -	dreammediathek \
  	dvdbackup \
- 	easyinfo \
+-	easyinfo \
 -	easymedia \
- 	ecasa \
- 	eibox \
- 	emailclient \
-@@ -59,13 +55,11 @@ SUBDIRS = \
+-	ecasa \
+-	eibox \
+-	emailclient \
+-	emission \
+-	eparted \
+ 	epgrefresh \
+ 	eurotictv \
+ 	eventlist \
+@@ -35,74 +23,39 @@ SUBDIRS = \
+ 	filebrowser \
+ 	flashexpander \
+ 	fritzcall \
+-	fstabeditor \
+ 	ftpbrowser \
+-	googlemaps \
+ 	growlee \
+ 	imdb \
+ 	infobartunerstate \
+-	kiddytimer \
+-	letterbox \
+ 	mediadownloader \
+-	merlinepg \
+-	merlinepgcenter \
+-	merlinmusicplayer \
+ 	mosaic \
+ 	moviecut \
+ 	movieretitle \
+-	moviesearch \
+ 	movietagger \
+ 	mphelp \
+-	multirc \
+-	ncidclient \
+-	netcaster \
  	ofdb \
- 	orfat \
- 	orfteletext \
+-	orfat \
+-	orfteletext \
 -	partnerbox \
  	permanentclock \
  	pipservicerelation \
  	podcast \
- 	porncenter \
- 	pushservice \
+-	porncenter \
+-	pushservice \
 -	quickbutton \
  	reconstructapsc \
  	reftopiconname \
  	remotetimer \
-@@ -101,8 +95,7 @@ SUBDIRS = \
- 	schiffe \
+-	rsdownloader \
+-	seriesplugin \
+-	setpasswd \
+ 	shoutcast \
+-	showclock \
+ 	simplerss \
+ 	startuptostandby \
+-	subsdownloader2 \
+-	svdrp \
+ 	tageditor \
+-	teletext \
+ 	toolkit \
+-	tvcharts \
+-	unwetterinfo \
+-	valixdcontrol \
+-	videocolorspace \
+ 	vlcplayer \
+ 	vps \
+ 	weatherplugin \
+ 	weathercomponent \
+ 	weathercomponenthandler \
+-	webadmin \
+-	webbouqueteditor \
+-	webcamviewer \
+ 	werbezapper \
+-	zaphistorybrowser \
+ 	zapstatistic \
+-	zdfmediathek \
+ 	esame \
+-	schiffe \
  	sudoku \
  	vierg \
 -	bmediacenter \
@@ -42,7 +110,7 @@ index 4f6461ce..82234472 100644
  
  if DREAMBOX
  SUBDIRS +=  fancontrol2 letterbox logomanager movielistpreview genuinedreambox
-@@ -129,8 +122,6 @@ if TPM
+@@ -129,8 +82,6 @@ if TPM
  SUBDIRS += \
  	mytube \
  	yttrailer \
