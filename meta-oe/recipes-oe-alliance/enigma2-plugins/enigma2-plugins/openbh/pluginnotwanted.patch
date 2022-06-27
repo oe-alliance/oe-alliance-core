@@ -1,41 +1,120 @@
-From d436a7a0b9c98028662c36fc605d8ba0f8c448cf Mon Sep 17 00:00:00 2001
-From: jbleyel <jbleyel@gmx.net>
-Date: Mon, 13 Sep 2021 14:47:49 +0200
-
----
- Makefile.am | 4 ----
- 1 file changed, 4 deletions(-)
-
 diff --git a/Makefile.am b/Makefile.am
-index 09343ff1..15891a7f 100644
+index 4f6461ce..044501d6 100644
 --- a/Makefile.am
 +++ b/Makefile.am
-@@ -22,7 +22,6 @@ SUBDIRS = \
- 	dreammediathek \
+@@ -2,7 +2,6 @@ ACLOCAL_AMFLAGS = -I m4
+ 
+ SUBDIRS = \
+ 	advhdmi \
+-	aihdcontroler \
+ 	antiscrollbar \
+ 	aspectratioswitch \
+ 	audiorestart \
+@@ -11,23 +10,12 @@ SUBDIRS = \
+ 	automaticvolumeadjustment \
+ 	autoresolution \
+ 	autotimer \
+-	babelzapper \
+ 	birthdayreminder \
+ 	bonjour \
+-	cdinfo \
+ 	channelselectionshorttitle \
+ 	curlytx \
+ 	dreamexplorer \
+-	dreamirc \
+-	dreammediathek \
  	dvdbackup \
- 	easyinfo \
+-	easyinfo \
 -	easymedia \
- 	ecasa \
- 	eibox \
- 	emailclient \
-@@ -59,13 +58,11 @@ SUBDIRS = \
+-	ecasa \
+-	eibox \
+-	emailclient \
+-	emission \
+-	eparted \
+ 	epgrefresh \
+ 	eurotictv \
+ 	eventlist \
+@@ -35,74 +23,39 @@ SUBDIRS = \
+ 	filebrowser \
+ 	flashexpander \
+ 	fritzcall \
+-	fstabeditor \
+ 	ftpbrowser \
+-	googlemaps \
+ 	growlee \
+ 	imdb \
+ 	infobartunerstate \
+-	kiddytimer \
+-	letterbox \
+ 	mediadownloader \
+-	merlinepg \
+-	merlinepgcenter \
+-	merlinmusicplayer \
+ 	mosaic \
+ 	moviecut \
+ 	movieretitle \
+-	moviesearch \
+ 	movietagger \
+ 	mphelp \
+-	multirc \
+-	ncidclient \
+-	netcaster \
  	ofdb \
- 	orfat \
- 	orfteletext \
+-	orfat \
+-	orfteletext \
 -	partnerbox \
  	permanentclock \
  	pipservicerelation \
  	podcast \
- 	porncenter \
- 	pushservice \
+-	porncenter \
+-	pushservice \
 -	quickbutton \
  	reconstructapsc \
  	reftopiconname \
  	remotetimer \
-@@ -129,7 +126,6 @@ SUBDIRS += \
+-	rsdownloader \
+-	seriesplugin \
+-	setpasswd \
+ 	shoutcast \
+-	showclock \
+ 	simplerss \
+ 	startuptostandby \
+-	subsdownloader2 \
+-	svdrp \
+ 	tageditor \
+-	teletext \
+ 	toolkit \
+-	tvcharts \
+-	unwetterinfo \
+-	valixdcontrol \
+-	videocolorspace \
+ 	vlcplayer \
+ 	vps \
+ 	weatherplugin \
+ 	weathercomponent \
+ 	weathercomponenthandler \
+-	webadmin \
+-	webbouqueteditor \
+-	webcamviewer \
+ 	werbezapper \
+-	zaphistorybrowser \
+ 	zapstatistic \
+-	zdfmediathek \
+ 	esame \
+-	schiffe \
+ 	sudoku \
+ 	vierg \
+-	bmediacenter \
+-	advancedmovieselection
++	bmediacenter
+ 
+ if DREAMBOX
+ SUBDIRS +=  fancontrol2 letterbox logomanager movielistpreview genuinedreambox
+@@ -129,8 +82,6 @@ if TPM
+ SUBDIRS += \
  	mytube \
  	yttrailer \
- 	webinterface \
+-	webinterface \
 -	menusort \
  	pluginhider \
  	pluginsort 
