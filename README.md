@@ -1,4 +1,4 @@
-oe-alliance-core 5.0
+oe-alliance-core 5.1
 ================
 
 The openembedded alliance core.
@@ -23,7 +23,7 @@ openvix   Support: [https://www.world-of-satellite.com](https://www.world-of-sat
 
 teamblue  Support: [https://www.gigablue-support.org](https://www.gigablue-support.org)
 
-
+openvision  Support: [https://openvision.tech](https://openvision.tech)
 
 # Supported Vendors and Models  with openATV
 

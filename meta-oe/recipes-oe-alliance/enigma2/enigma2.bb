@@ -9,6 +9,7 @@ LIC_FILES_CHKSUM:openbh = "file://LICENSE;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 LIC_FILES_CHKSUM:beyonwiz = "file://LICENSE;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 LIC_FILES_CHKSUM:openeight = "file://LICENSE;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 LIC_FILES_CHKSUM:opendroid = "file://LICENSE;md5=b234ee4d69f5fce4486a80fdaf4a4263"
+LIC_FILES_CHKSUM:openvision = "file://LICENSE;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 
 DEPENDS = " \
     freetype \
@@ -38,7 +39,7 @@ RDEPENDS:${PN} = " \
     ${@bb.utils.contains("MACHINE_FEATURES", "uianimation", "vuplus-libgles-${MACHINE} libvugles2" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "hiaccel", "dinobot-libs-${MACHINE}" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", "enigma2-plugin-font-wqy-microhei", d)} \
-    oe-alliance-branding \
+    ${@bb.utils.contains("DISTRO_NAME", "openvision", "enigma2-data-iso-639-3", "oe-alliance-branding", d)} \
     "
 
 RRECOMMENDS:${PN} = " \
@@ -160,6 +161,7 @@ BLINDSCAN = "${@bb.utils.contains_any("FLASHSIZE", "64", "", "virtual/blindscan-
 
 #make sure default skin is installed.
 RDEPENDS:${PN} += "${E2DEFAULTSKIN} "
+RDEPENDS:${PN}:remove:openvision = "${E2DEFAULTSKIN}"
 
 DEMUXTOOL ?= "replex"
 

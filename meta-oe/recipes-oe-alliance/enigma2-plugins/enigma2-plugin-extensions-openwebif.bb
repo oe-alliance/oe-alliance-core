@@ -21,7 +21,7 @@ RDEPENDS:${PN} = "\
 	${PYTHON_PN}-shell \
 	${PYTHON_PN}-twisted-web \
 	${PYTHON_PN}-unixadmin \
-	oe-alliance-branding \
+	${@bb.utils.contains("DISTRO_NAME", "openvision", "openwebif-remotes", "oe-alliance-branding", d)} \
 	"
 
 inherit gittag ${@bb.utils.contains("PYTHON_PN", "python", "distutils-openplugins", "setuptools3-openplugins", d)} gettext
@@ -32,7 +32,7 @@ SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "${GITPKGVTAG}"
 
-SRC_URI = "git://github.com/E2OpenPlugins/e2openplugin-${MODULE}.git;protocol=https;branch=${BRANCH} \
+SRC_URI = "${@bb.utils.contains("DISTRO_NAME", "openvision", "git://github.com/OpenVisionE2/${MODULE}.git;protocol=https;branch=${BRANCH}", "git://github.com/E2OpenPlugins/e2openplugin-${MODULE}.git;protocol=https;branch=${BRANCH}", d)} \
            file://transcoding.py"
 
 S="${WORKDIR}/git"

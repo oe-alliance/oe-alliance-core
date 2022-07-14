@@ -15,7 +15,7 @@ PR = "r2"
 
 RDEPENDS:${PN} = "\
     oe-alliance-enigma2 \
-    oe-alliance-branding \
+    ${@bb.utils.contains("DISTRO_NAME", "openvision", "", "oe-alliance-branding", d)} \
     oe-alliance-remote \
     ${@bb.utils.contains("MACHINE_FEATURES", "wol", "vuplus-coldboot vuplus-ethwol", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "wowl", "vuplus-wowl", "", d)} \
