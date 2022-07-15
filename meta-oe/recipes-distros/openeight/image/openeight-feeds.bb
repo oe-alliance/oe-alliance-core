@@ -18,6 +18,7 @@ RRECOMMENDS_${PN} = "\
     cdfs \  
     enigma2-plugin-extensions-historyzapselector \
     enigma2-plugin-extensions-enhancedmoviecenter \
+    enigma2-plugin-extensions-oscamstatus \
     enigma2-plugin-skins-octagonhdstyledark \
     enigma2-plugin-skins-octagonhdstyleblack \
     enigma2-plugin-skins-pli-hd \
