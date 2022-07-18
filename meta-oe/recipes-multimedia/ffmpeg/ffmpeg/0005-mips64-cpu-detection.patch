@@ -1,19 +1,6 @@
-in OE we user mips32r2 and mips64r2 for mips arch versions
-so there is no benefit of detecting it automatically by
-poking at tools especially in cross env
-
-Fixes errors like
-
-linking -mnan=2008 module with previous -mnan=legacy modules
-failed to merge target specific data of file
-
--Khem
-Upstream-Status: Inappropriate [OE-Specific]
-
-
 --- a/configure
 +++ b/configure
-@@ -5880,17 +5880,10 @@ elif enabled mips; then
+@@ -6004,17 +6004,10 @@ elif enabled mips; then
  
      # Check toolchain ISA level
      if enabled mips64; then

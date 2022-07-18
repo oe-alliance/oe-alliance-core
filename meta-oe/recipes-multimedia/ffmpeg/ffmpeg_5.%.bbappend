@@ -2,24 +2,18 @@ FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 
 DEPENDS += "libxml2"
 
-PV = "4.4.2"
-
-SRCREV = "8e98dfc57fd05c49095dd964456a7acbb6da634c"
-SRC_URI = "git://github.com/FFmpeg/FFmpeg.git;branch=release/4.4;protocol=https \
-           file://0001-libavutil-include-assembly-with-full-path-from-sourc.patch \
-           file://0002-fix-mpegts.patch \
-           file://0003-allow-to-choose-rtmp-impl-at-runtime.patch \
-           file://0004-hls-replace-key-uri.patch \
-           file://0005-mips64-cpu-detection.patch \
-           file://0006-optimize-aac.patch \
-           file://0007-increase-buffer-size.patch \
-           file://0008-recheck-discard-flags.patch \
-           file://0009-ffmpeg-fix-edit-list-parsing.patch \
-           file://0011-rtsp.patch \
-           file://0012-dxva2.patch \
-           "
-
-S = "${WORKDIR}/git"
+SRC_URI += "file://0002-fix-mpegts.patch \
+            file://0003-allow-to-choose-rtmp-impl-at-runtime.patch \
+            file://0004-hls-replace-key-uri.patch \
+            file://0005-mips64-cpu-detection.patch \
+            file://0006-optimize-aac.patch \
+            file://0007-increase-buffer-size.patch \
+            file://0008-recheck-discard-flags.patch \
+            file://0009-ffmpeg-fix-edit-list-parsing.patch \
+            file://0011-rtsp.patch \
+            file://0012-dxva2.patch \
+            file://0013-add-av_stream_get_first_dts-for-chromium.patch \
+            "
 
 PACKAGECONFIG:append = " gpl libbluray libdav1d libfreetype librtmp openssl x264"
 
@@ -97,7 +91,7 @@ EXTRA_FFCONF = " \
     --disable-podpages \
     --disable-txtpages \
     ${@bb.utils.contains("TARGET_ARCH", "mipsel", "${MIPSFPU} --extra-libs=-latomic --disable-mips32r5 --disable-mipsdsp --disable-mipsdspr2 \
-                             --disable-loongson2 --disable-loongson3 --disable-mmi --disable-msa --disable-msa2", "", d)} \
+                             --disable-loongson2 --disable-loongson3 --disable-mmi --disable-msa", "", d)} \
     ${@bb.utils.contains("TARGET_ARCH", "arm", "--enable-armv6 --enable-armv6t2 --enable-vfp --enable-neon", "", d)} \
     ${@bb.utils.contains("TUNE_FEATURES", "aarch64", "--enable-armv8 --enable-vfp --enable-neon", "", d)} \
 "
