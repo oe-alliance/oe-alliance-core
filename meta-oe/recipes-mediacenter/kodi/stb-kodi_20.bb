@@ -16,7 +16,7 @@ DEPENDS += " \
             rapidjson \
             crossguid \
             libdvdnav libdvdcss libdvdread \
-            ffmpeg \
+            kodi-ffmpeg \
             autoconf-native \
             automake-native \
             git-native \
@@ -70,7 +70,7 @@ DEPENDS += " \
           "
 
 # 20.0 Nexus
-SRCREV = "ee3663fd468ec417ea0bba20b0d18f3448c8980c"
+SRCREV = "efc833a06d74c20425cb3cef31a8bd17746dc3ec"
 
 # 'patch' doesn't support binary diffs
 #PATCHTOOL = "git"
@@ -89,8 +89,8 @@ SRC_URI = "git://github.com/xbmc/xbmc.git;protocol=https;branch=master \
            file://0007-adapt-window-system-registration.patch \
            file://0008-reinstate-system-h.patch \
            file://0009-reinstate-platform-defines.patch \
-           ${@bb.utils.contains_any('MACHINE_FEATURES', 'hisil-3798mv200 hisil-3798mv310 hisi hisil', '' , 'file://0010-e2-player.patch', d)} \
-           ${@bb.utils.contains_any('MACHINE_FEATURES', 'hisil-3798mv200 hisil-3798mv310 hisi hisil', '' , 'file://0011-gst-player.patch', d)} \
+           ${@bb.utils.contains_any('MACHINE_FEATURES', 'hisil-3798mv200 hisil-3798mv310 hisi hisil', '' , 'file://0100-e2-player.patch', d)} \
+           ${@bb.utils.contains_any('MACHINE_FEATURES', 'hisil-3798mv200 hisil-3798mv310 hisi hisil', '' , 'file://0101-gst-player.patch', d)} \
           "
 
 S = "${WORKDIR}/git"
