@@ -53,6 +53,7 @@ RRECOMMENDS:${PN} = " \
     "
 
 PYTHON_RDEPS = " \
+    ${PYTHON_PN}-asyncio \
     ${PYTHON_PN}-codecs \
     ${PYTHON_PN}-core \
     ${PYTHON_PN}-crypt \
@@ -188,6 +189,12 @@ RRECOMMENDS:enigma2-plugin-extensions-dvdplayer = "kernel-module-cdrom kernel-mo
 RDEPENDS:enigma2-plugin-systemplugins-hotplug = "hotplug-e2-helper"
 RDEPENDS:enigma2-plugin-systemplugins-fsblupdater = "${PYTHON_PN}-distutils"
 DESCRIPTION:enigma2-plugin-font-wqy-microhei = "Font wqy-microhei add support for China EPG"
+SUMMARY:enigma2-plugin-extensions-streamlinkwrapper = "Enables support for streamlink url scheme in bouquet list."
+RDEPENDS:enigma2-plugin-extensions-streamlinkwrapper = "streamlink"
+SUMMARY:enigma2-plugin-extensions-ytdlwrapper = "Enables support for Youtube-DL url scheme in bouquet list."
+RDEPENDS:enigma2-plugin-extensions-ytdlwrapper = "${PYTHON_PN}-youtube-dl"
+SUMMARY:enigma2-plugin-extensions-ytdlpwrapper = "Enables support for YT-DLP url scheme in bouquet list."
+RDEPENDS:enigma2-plugin-extensions-ytdlpwrapper = "${PYTHON_PN}-yt-dlp"
 
 inherit autotools-brokensep gitpkgv pkgconfig ${PYTHON_PN}native ${@bb.utils.contains("PYTHON_PN", "python3", "python3targetconfig", "", d)} upx-compress
 
