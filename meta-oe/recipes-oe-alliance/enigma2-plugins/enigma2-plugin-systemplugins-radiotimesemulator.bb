@@ -19,6 +19,9 @@ SRC_URI = "git://github.com/LraiZer/RadiotimesXmltvEmulator.git;branch=gui-plugi
 
 S = "${WORKDIR}/git"
 
+# fixes parallel compilation races
+PARALLEL_MAKE = ""
+
 do_compile() {
     echo ${PV} > ${S}/VERSION
     oe_runmake SWIG="swig"
