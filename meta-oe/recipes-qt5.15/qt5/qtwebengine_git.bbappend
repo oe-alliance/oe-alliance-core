@@ -2,6 +2,7 @@
 PACKAGE_ARCH := "${MACHINE_ARCH}"
 
 SRC_URI += " \
+    file://0002-ffmpeg-5.patch \
     file://chromium/0002-Replace-hbbtv-responses-with-application-xhtml-xml.patch;patchdir=src/3rdparty \
     ${@bb.utils.contains('MACHINE_FEATURES', 'vu-eglfs', 'file://0001-force-alsa.patch' , '', d)} \
 "
