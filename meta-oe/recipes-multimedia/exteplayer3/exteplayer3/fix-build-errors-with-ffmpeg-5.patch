@@ -1,0 +1,77 @@
+From 6c33e9fdb4fd10bcb074bc92a74ad6078c4b1cf4 Mon Sep 17 00:00:00 2001
+From: WXbet <57314510+WXbet@users.noreply.github.com>
+Date: Sat, 5 Feb 2022 13:57:11 +0100
+Subject: [PATCH] Fix build errors with FFmpeg5
+
+- container\container_ffmpeg.c: add missing include of avcodec.h and bsf.h
+- container\container_ffmpeg.c: comment out read-only object member assignment and use const for AVCodec
+- output\graphic_subtitle.c: replace deprecated av_init_packet API, see https://github.com/kaltura/nginx-vod-module/pull/1284/files
+---
+ container/container_ffmpeg.c |  9 +++++++--
+ output/graphic_subtitle.c    | 12 +++++++++++-
+ 2 files changed, 18 insertions(+), 3 deletions(-)
+
+diff --git a/container/container_ffmpeg.c b/container/container_ffmpeg.c
+index 219ba54..692ca6a 100755
+--- a/container/container_ffmpeg.c
++++ b/container/container_ffmpeg.c
+@@ -48,6 +48,10 @@
+ #include <libavformat/avformat.h>
+ #include <libswresample/swresample.h>
+ #include <libavutil/opt.h>
++#if LIBAVCODEC_VERSION_INT >= AV_VERSION_INT(59, 0, 100)
++#include <libavcodec/bsf.h>
++#include <libavcodec/avcodec.h>
++#endif
+ 
+ #include <ffmpeg/mpeg4audio.h>
+ 
+@@ -1853,7 +1857,8 @@ int32_t container_ffmpeg_init_av_context(Context_t *context, char *filename, uin
+         }
+     }
+ 
+-    avContextTab[AVIdx]->iformat->flags |= AVFMT_SEEK_TO_PTS;
++    //ffmpeg5: error: assignment of member 'flags' in read-only object -> so commented out next line
++    //avContextTab[AVIdx]->iformat->flags |= AVFMT_SEEK_TO_PTS;
+     avContextTab[AVIdx]->flags = AVFMT_FLAG_GENPTS;
+ 
+     if (context->playback->noprobe)
+@@ -2268,7 +2273,7 @@ int32_t container_ffmpeg_update_tracks(Context_t *context, char *filename, int32
+                         {
+                             ffmpeg_printf(10, " Handle inject_as_pcm = %d\n", track.inject_as_pcm);
+ 
+-                            AVCodec *codec = avcodec_find_decoder(get_codecpar(stream)->codec_id);
++                            const AVCodec *codec = avcodec_find_decoder(get_codecpar(stream)->codec_id);
+ 
+                             int errorCode = avcodec_open2(track.avCodecCtx, codec, NULL);
+                             if(codec != NULL && !errorCode)
+diff --git a/output/graphic_subtitle.c b/output/graphic_subtitle.c
+index cfd76b3..5a4d930 100755
+--- a/output/graphic_subtitle.c
++++ b/output/graphic_subtitle.c
+@@ -234,14 +234,24 @@ static int32_t Write(WriterSubCallData_t *subPacket)
+     AVSubtitle subtitle;
+     memset(&subtitle, 0, sizeof(subtitle));
+ 
++    int has_subtitle = 0;
++#if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(59, 0, 100)
+     AVPacket pkt;
+     av_init_packet(&pkt);
+     pkt.data = subPacket->data;
+     pkt.size = subPacket->len;
+     pkt.pts  = subPacket->pts;
+ 
+-    int has_subtitle = 0;
+     int used = avcodec_decode_subtitle2(g_sys->p_context, &subtitle, &has_subtitle, &pkt);
++#else
++    AVPacket* pkt;
++    pkt = av_packet_alloc();
++    pkt->data = subPacket->data;
++    pkt->size = subPacket->len;
++    pkt->pts  = subPacket->pts;
++
++    int used = avcodec_decode_subtitle2(g_sys->p_context, &subtitle, &has_subtitle, pkt);
++#endif
+     uint32_t width = g_sys->p_context->width > 0 ? g_sys->p_context->width : subPacket->width;
+     uint32_t height = g_sys->p_context->height > 0 ? g_sys->p_context->height : subPacket->height;
+     if (has_subtitle && width > 0 && height > 0)
