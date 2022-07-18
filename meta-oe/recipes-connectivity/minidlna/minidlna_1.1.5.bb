@@ -12,6 +12,7 @@ EXTRA_OECONF:append = " --disable-nls "
 SRC_URI = "https://mirrors.omniosce.org/minidlna//minidlna-${PV}.tar.gz  \
 		file://0001_default_sqlite_caches.diff \
                 file://0002-fix-build-with-fno-common.patch \
+                file://0003-metadata-add-libavformat-57-plus-compatibility.patch \
 		file://minidlna.conf \
 		file://init \
 "
