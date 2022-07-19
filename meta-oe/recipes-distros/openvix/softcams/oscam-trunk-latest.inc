@@ -1,5 +1,5 @@
 SRCREV = "${AUTOREV}"
-CAMNAME = "oscam-latest"
+CAMNAME = "oscam-trunk"
 SUMMARY:${PN} = "OSCam-latest ${PKGV}"
 DESCRIPTION:${PN} = "OSCam Open Source Softcam\n \
 - latest trunk"
