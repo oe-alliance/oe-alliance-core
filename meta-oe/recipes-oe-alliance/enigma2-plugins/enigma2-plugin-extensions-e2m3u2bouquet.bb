@@ -10,31 +10,39 @@ require conf/python/python3-compileall.inc
 
 RDEPENDS:${PN} = "${PYTHON_PN}-image ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-imaging", "${PYTHON_PN}-pillow", d)} ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-argparse", "", d)}"
 
-inherit gitpkgv
+inherit gettext gitpkgv
 
-e2m3u2bouquet_BRANCH ?= "release"
 SRCREV = "${AUTOREV}"
-PV = "0.8.5+git${SRCPV}"
-PKGV = "0.8.5+git${GITPKGV}"
+PV = "0.9.0+git${SRCPV}"
+PKGV = "0.9.0+git${GITPKGV}"
 PR = "r1"
 
-INSANE_SKIP:${PN} += "already-stripped ldflags"
-
-SRC_URI="git://github.com/oe-mirrors/e2m3u2bouquet-plugin.git;protocol=https"
+SRC_URI="git://github.com/oe-mirrors/e2m3u2bouquet-plugin.git;protocol=https;branch=master"
 
 S = "${WORKDIR}/git"
 
-FILES:${PN} = "/usr/lib/enigma2/python/Plugins/Extensions/E2m3u2bouquet"
+PLUGINPATH = "${libdir}/enigma2/python/Plugins/Extensions/E2m3u2bouquet"
+FILES:${PN} = "${PLUGINPATH}"
 D_FILES_PN = "${D}${FILES:${PN}}"
 
-EXTRA_OECONF = ""
+do_compile:append() {
+    cd ${S}
+    for f in $(find po -name *.po ); do
+        l=$(echo ${f%} | sed 's/\.po//' | sed 's/.*locale\///')
+        mkdir -p locale/${l%}/LC_MESSAGES
+        msgfmt -o locale/${l%}/LC_MESSAGES/E2m3u2bouquet.mo $l.po
+    done
+}
 
 do_install() {
     install -d ${D_FILES_PN}
     install -d ${D_FILES_PN}/images
     install -m 644 ${S}/images/*.png ${D_FILES_PN}/images
     install -m 644 ${S}/*.py ${D_FILES_PN}
+    install -m 644 ${S}/setup.xml ${D_FILES_PN}
     install -m 644 ${S}/LICENSE ${D_FILES_PN}
+    mkdir -p ${D_FILES_PN}/locale
+    cp -rf ${S}/locale/* ${D_FILES_PN}/locale
 }
 
 pkg_preinst:${PN}() {
@@ -54,17 +62,6 @@ fi
 if [ -f "/var/tmp/config.xml" -a ! -f "/etc/enigma2/e2m3u2bouquet/config.xml" ]; then
   mv  /var/tmp/config.xml /etc/enigma2/e2m3u2bouquet/ 2>&1
 fi
-exit 0
-}
-
-pkg_postinst:${PN}() {
-#!/bin/sh
-
-echo "*                               *"
-echo "* plugin installed successfully *"
-echo "*                               *"
-echo "* Enigma2 restart is required!  *"
-echo "*                               *"
 exit 0
 }
 
@@ -101,3 +98,5 @@ echo "Restart box to complete uninstall"
 echo "********************************************"
 exit 0
 }
+
+INSANE_SKIP:${PN} += "already-stripped file-rdeps ldflags"
