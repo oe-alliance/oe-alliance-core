@@ -15,7 +15,7 @@ RDEPENDS:${PN}-dev += "bash ${PYTHON_PN}-core"
 
 inherit gitpkgv upx-compress
 
-SRCREV = "${AUTOREV}"
+SRCREV = "3a8e52de74e81f499f44a47a937552378d5bc83b"
 PV = "1.55-DEV+git${SRCPV}"
 
 SRC_URI = "git://github.com/rclone/rclone;protocol=https;branch=master \
