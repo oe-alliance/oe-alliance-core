@@ -6,6 +6,7 @@ DEPENDS = "openssl libpam"
 SRC_URI = "\
         https://mmonit.com/monit/dist/monit-${PV}.tar.gz \
         file://enable-etc-monit.d-include.patch \
+        file://uprev-libtool-2.4.7.patch \
         file://init \
         "
 
