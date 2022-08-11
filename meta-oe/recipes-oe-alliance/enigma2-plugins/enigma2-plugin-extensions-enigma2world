@@ -1,0 +1,33 @@
+DESCRIPTION = "The Best DreamOS/Enigma2 Videoblog"
+HOMEPAGE = "https://github.com/e2world/e2w-plugin.git"
+MAINTAINER = "Commander Data"
+PRIORITY = "optional"
+require conf/license/license-gplv2.inc
+require conf/python/python3-compileall.inc
+
+SRCREV="${AUTOREV}"
+
+PV = "0.1+git${SRCPV}"
+PKGV = "0.1+git${GITPKGV}"
+PR = "r0"
+inherit gitpkgv allarch
+
+RDEPENDS:${PN} = "${PYTHON_PN}-youtube-dl"
+
+SRC_URI = "git://github.com/e2world/e2w-plugin.git;protocol=https;branch=main"
+
+S = "${WORKDIR}/git"
+
+FILES:${PN} = "${libdir}/enigma2/python/Plugins/Extensions/Enigma2World/*"
+
+do_install () {
+    install -d ${D}${libdir}/enigma2/python/Plugins/Extensions/Enigma2World
+    cp -rf ${S}/src/* ${D}${libdir}/enigma2/python/Plugins/Extensions/Enigma2World/
+}
+
+pkg_postrm:${PN} () {
+#!/bin/sh
+echo "Removing Enigma2World Plugin from the system ..."
+rm -r /usr/lib/enigma2/python/Plugins/Extensions/Enigma2World > /dev/null 2>&1
+exit 0
+}
