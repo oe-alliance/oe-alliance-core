@@ -1,6 +1,6 @@
 --- a/configure
 +++ b/configure
-@@ -3538,10 +3538,8 @@ xv_outdev_deps="xlib_xv xlib_x11 xlib_xext"
+@@ -3549,10 +3549,8 @@ xv_outdev_deps="xlib_xv xlib_x11 xlib_xext"
  # protocols
  async_protocol_deps="threads"
  bluray_protocol_deps="libbluray"
@@ -11,7 +11,7 @@
  ffrtmphttp_protocol_select="http_protocol"
  ftp_protocol_select="tcp_protocol"
  gopher_protocol_select="tcp_protocol"
-@@ -3555,20 +3553,18 @@ https_protocol_suggest="zlib"
+@@ -3566,20 +3564,18 @@ https_protocol_suggest="zlib"
  icecast_protocol_select="http_protocol"
  mmsh_protocol_select="http_protocol"
  mmst_protocol_select="network"
@@ -46,8 +46,8 @@
  sctp_protocol_deps="struct_sctp_event_subscribe struct_msghdr_msg_flags"
 --- a/libavformat/Makefile
 +++ b/libavformat/Makefile
-@@ -644,12 +644,12 @@ OBJS-$(CONFIG_MMSH_PROTOCOL)             += mmsh.o mms.o asf.o
- OBJS-$(CONFIG_MMST_PROTOCOL)             += mmst.o mms.o asf.o
+@@ -656,12 +656,12 @@ OBJS-$(CONFIG_MMSH_PROTOCOL)             += mmsh.o mms.o asf_tags.o
+ OBJS-$(CONFIG_MMST_PROTOCOL)             += mmst.o mms.o asf_tags.o
  OBJS-$(CONFIG_PIPE_PROTOCOL)             += file.o
  OBJS-$(CONFIG_PROMPEG_PROTOCOL)          += prompeg.o
 -OBJS-$(CONFIG_RTMP_PROTOCOL)             += rtmpproto.o rtmpdigest.o rtmppkt.o
@@ -67,7 +67,7 @@
  OBJS-$(CONFIG_SRTP_PROTOCOL)             += srtpproto.o srtp.o
 --- a/libavformat/protocols.c
 +++ b/libavformat/protocols.c
-@@ -46,12 +46,12 @@ extern const URLProtocol ff_mmst_protocol;
+@@ -44,12 +44,12 @@ extern const URLProtocol ff_mmst_protocol;
  extern const URLProtocol ff_md5_protocol;
  extern const URLProtocol ff_pipe_protocol;
  extern const URLProtocol ff_prompeg_protocol;
@@ -88,7 +88,7 @@
  extern const URLProtocol ff_srtp_protocol;
 --- a/libavformat/rtmpproto.c
 +++ b/libavformat/rtmpproto.c
-@@ -2590,7 +2590,7 @@ static int inject_fake_duration_metadata(RTMPContext *rt)
+@@ -2594,7 +2594,7 @@ static int inject_fake_duration_metadata(RTMPContext *rt)
  static int rtmp_open(URLContext *s, const char *uri, int flags, AVDictionary **opts)
  {
      RTMPContext *rt = s->priv_data;
@@ -97,7 +97,7 @@
      char *old_app, *qmark, *n, fname_buffer[1024];
      uint8_t buf[2048];
      int port;
-@@ -2601,7 +2601,9 @@ static int rtmp_open(URLContext *s, const char *uri, int flags, AVDictionary **o
+@@ -2605,7 +2605,9 @@ static int rtmp_open(URLContext *s, const char *uri, int flags, AVDictionary **o
  
      rt->is_input = !(flags & AVIO_FLAG_WRITE);
  
@@ -108,7 +108,7 @@
                   hostname, sizeof(hostname), &port,
                   path, sizeof(path), s->filename);
  
-@@ -3147,9 +3149,9 @@ const URLProtocol ff_##flavor##_protocol = {     \
+@@ -3151,9 +3153,9 @@ const URLProtocol ff_##flavor##_protocol = {     \
  #define RTMP_PROTOCOL(flavor, uppercase)         \
      RTMP_PROTOCOL_3(flavor, CONFIG_ ## uppercase ## _PROTOCOL)
  

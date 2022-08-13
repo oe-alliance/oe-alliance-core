@@ -1,6 +1,6 @@
 --- a/libavcodec/dxva2.c
 +++ b/libavcodec/dxva2.c
-@@ -771,16 +771,18 @@
+@@ -777,16 +777,18 @@ unsigned ff_dxva2_get_surface_index(const AVCodecContext *avctx,
  #if CONFIG_D3D11VA
      if (avctx->pix_fmt == AV_PIX_FMT_D3D11)
          return (intptr_t)frame->data[1];
@@ -25,7 +25,7 @@
  
 --- a/libavcodec/dxva2_h264.c
 +++ b/libavcodec/dxva2_h264.c
-@@ -504,6 +504,14 @@
+@@ -506,6 +506,14 @@ static int dxva2_h264_end_frame(AVCodecContext *avctx)
  
      if (ctx_pic->slice_count <= 0 || ctx_pic->bitstream_size <= 0)
          return -1;
@@ -40,9 +40,9 @@
      ret = ff_dxva2_common_end_frame(avctx, h->cur_pic_ptr->f,
                                      &ctx_pic->pp, sizeof(ctx_pic->pp),
                                      &ctx_pic->qm, sizeof(ctx_pic->qm),
---- a/h264_slice.c
+--- a/libavcodec/h264_slice.c
 +++ b/libavcodec/h264_slice.c
-@@ -936,6 +936,7 @@
+@@ -971,6 +971,7 @@ static int h264_slice_header_init(H264Context *h)
  
      h->first_field           = 0;
      h->prev_interlaced_frame = 1;
@@ -52,7 +52,7 @@
      ret = ff_h264_alloc_tables(h);
 --- a/libavcodec/h264dec.c
 +++ b/libavcodec/h264dec.c
-@@ -486,6 +486,7 @@
+@@ -448,6 +448,7 @@ void ff_h264_flush_change(H264Context *h)
  
      h->next_outputed_poc = INT_MIN;
      h->prev_interlaced_frame = 1;
@@ -62,7 +62,7 @@
      h->poc.prev_frame_num = -1;
 --- a/libavcodec/h264dec.h
 +++ b/libavcodec/h264dec.h
-@@ -533,6 +533,8 @@
+@@ -532,6 +532,8 @@ typedef struct H264Context {
       * slices) anymore */
      int setup_finished;
  
@@ -73,7 +73,7 @@
      int16_t slice_row[MAX_SLICES]; ///< to detect when MAX_SLICES is too low
 --- a/libavcodec/vaapi_h264.c
 +++ b/libavcodec/vaapi_h264.c
-@@ -314,6 +314,11 @@
+@@ -314,6 +314,11 @@ static int vaapi_h264_end_frame(AVCodecContext *avctx)
      H264SliceContext *sl = &h->slice_ctx[0];
      int ret;
  
@@ -87,7 +87,7 @@
          goto finish;
 --- a/libavformat/bintext.c
 +++ b/libavformat/bintext.c
-@@ -149,7 +149,7 @@
+@@ -149,7 +149,7 @@ static int bin_probe(const AVProbeData *p)
              return AVPROBE_SCORE_EXTENSION + 1;
  
          predict_width(&par, p->buf_size, got_width);
@@ -96,7 +96,7 @@
              return 0;
          calculate_height(&par, p->buf_size);
          if (par.height <= 0)
-@@ -195,8 +195,6 @@
+@@ -189,8 +189,6 @@ static int bintext_read_header(AVFormatContext *s)
              next_tag_read(s, &bin->fsize);
          if (!bin->width) {
              predict_width(st->codecpar, bin->fsize, got_width);
@@ -105,4 +105,3 @@
              calculate_height(st->codecpar, bin->fsize);
          }
          avio_seek(pb, 0, SEEK_SET);
-

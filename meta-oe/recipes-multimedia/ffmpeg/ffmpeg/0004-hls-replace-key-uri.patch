@@ -1,6 +1,6 @@
 --- a/libavformat/hls.c
 +++ b/libavformat/hls.c
-@@ -215,6 +215,8 @@ typedef struct HLSContext {
+@@ -222,6 +222,8 @@ typedef struct HLSContext {
      AVDictionary *seg_format_opts;
      char *allowed_extensions;
      int max_reload;
@@ -9,7 +9,7 @@
      int http_persistent;
      int http_multiple;
      int http_seekable;
-@@ -1270,8 +1272,16 @@ static int open_input(HLSContext *c, struct playlist *pls, struct segment *seg,
+@@ -1292,8 +1294,16 @@ static int open_input(HLSContext *c, struct playlist *pls, struct segment *seg,
  
      if (seg->key_type == KEY_AES_128 || seg->key_type == KEY_SAMPLE_AES) {
          if (strcmp(seg->key, pls->key_url)) {
@@ -27,7 +27,7 @@
                  ret = avio_read(pb, pls->key, sizeof(pls->key));
                  if (ret != sizeof(pls->key)) {
                      av_log(pls->parent, AV_LOG_ERROR, "Unable to read key file %s\n",
-@@ -1283,6 +1293,8 @@ static int open_input(HLSContext *c, struct playlist *pls, struct segment *seg,
+@@ -1305,6 +1315,8 @@ static int open_input(HLSContext *c, struct playlist *pls, struct segment *seg,
                         seg->key);
              }
              av_strlcpy(pls->key_url, seg->key, sizeof(pls->key_url));
@@ -36,7 +36,7 @@
          }
      }
  
-@@ -2468,6 +2480,8 @@ static const AVOption hls_options[] = {
+@@ -2538,6 +2550,8 @@ static const AVOption hls_options[] = {
          INT_MIN, INT_MAX, FLAGS},
      {"max_reload", "Maximum number of times a insufficient list is attempted to be reloaded",
          OFFSET(max_reload), AV_OPT_TYPE_INT, {.i64 = 1000}, 0, INT_MAX, FLAGS},

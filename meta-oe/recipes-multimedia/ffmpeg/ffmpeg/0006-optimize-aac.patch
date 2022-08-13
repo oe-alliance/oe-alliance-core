@@ -1,6 +1,6 @@
 --- a/libavcodec/aacdec_template.c
 +++ b/libavcodec/aacdec_template.c
-@@ -2589,7 +2589,7 @@ static int decode_extension_payload(AACContext *ac, GetBitContext *gb, int cnt,
+@@ -2606,7 +2606,7 @@ static int decode_extension_payload(AACContext *ac, GetBitContext *gb, int cnt,
   * @param   decode  1 if tool is used normally, 0 if tool is used in LTP.
   * @param   coef    spectral coefficients
   */
@@ -22,7 +22,7 @@
      LOCAL_ALIGNED_16(INTFLOAT, transient_gain, [34], [PS_QMF_TIME_SLOTS]);
 --- a/libavcodec/fft_template.c
 +++ b/libavcodec/fft_template.c
-@@ -544,7 +544,7 @@ static void fft##n(FFTComplex *z)\
+@@ -551,7 +551,7 @@ static void fft##n(FFTComplex *z)\
      pass(z,FFT_NAME(ff_cos_##n),n4/2);\
  }
  
@@ -31,7 +31,7 @@
  {
      FFTDouble t1, t2, t3, t4, t5, t6, t7, t8;
  
-@@ -558,7 +558,7 @@ static void fft4(FFTComplex *z)
+@@ -565,7 +565,7 @@ static void fft4(FFTComplex *z)
      BF(z[2].im, z[0].im, t2, t5);
  }
  
