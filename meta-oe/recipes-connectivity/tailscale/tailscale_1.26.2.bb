@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://src/${GO_IMPORT}/LICENSE;md5=909a1094c010630b8a862f0d
 
 RRECOMMENDS:${PN} = "kernel-module-tun enigma2-plugin-drivers-iptables"
 
-SRCREV = "8e32002cf32c03682a5156f2f9020b088a5dde7f"
+SRCREV = "5a60f1ffe3741c55eb9637ddd2f20157d164f511"
 SRC_URI = "git://github.com/tailscale/tailscale.git;protocol=https;nobranch=1 \
 	file://tailscaled.initd \
 "
