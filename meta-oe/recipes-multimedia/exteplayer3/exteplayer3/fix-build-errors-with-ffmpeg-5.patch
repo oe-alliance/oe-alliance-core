@@ -19,10 +19,10 @@ index 219ba54..692ca6a 100755
  #include <libavformat/avformat.h>
  #include <libswresample/swresample.h>
  #include <libavutil/opt.h>
-+#if LIBAVCODEC_VERSION_INT >= AV_VERSION_INT(59, 0, 100)
++//#if LIBAVCODEC_VERSION_INT >= AV_VERSION_INT(59, 0, 100)
 +#include <libavcodec/bsf.h>
 +#include <libavcodec/avcodec.h>
-+#endif
++//#endif
  
  #include <ffmpeg/mpeg4audio.h>
  
@@ -75,3 +75,13 @@ index cfd76b3..5a4d930 100755
      uint32_t width = g_sys->p_context->width > 0 ? g_sys->p_context->width : subPacket->width;
      uint32_t height = g_sys->p_context->height > 0 ? g_sys->p_context->height : subPacket->height;
      if (has_subtitle && width > 0 && height > 0)
+--- a/external/ffmpeg/put_bits.h
++++ b/external/ffmpeg/put_bits.h
+@@ -31,6 +31,7 @@
+ 
+ #include "libavutil/intreadwrite.h"
+ #include "libavutil/avassert.h"
++#include "libavutil/common.h"
+ 
+ typedef struct PutBitContext {
+     uint32_t bit_buf;
