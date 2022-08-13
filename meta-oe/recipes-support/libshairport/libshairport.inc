@@ -19,7 +19,7 @@ SRC_URI = "https://source.mynonpublic.com/libshairport-1.2.0.20310_lib.tar.gz;na
            file://011_fix_ipv4_fallback.patch;apply=yes;striplevel=0 \
            file://0001-xbmc-patch-for-xbmc.patch;apply=yes;striplevel=1 \
            "
-inherit autotools package
+inherit autotools
 
 do_package_qa() {
 }
