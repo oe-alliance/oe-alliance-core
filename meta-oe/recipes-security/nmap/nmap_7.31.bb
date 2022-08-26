@@ -5,7 +5,8 @@ LICENSE = "GPL-2.0-only"
 
 LIC_FILES_CHKSUM = "file://COPYING;beginline=7;endline=12;md5=bce7593e567a4b12f60c6a04f9b8c1e5"
 
-SRC_URI = "http://nmap.org/dist/${BP}.tar.bz2"
+SRC_URI = "http://nmap.org/dist/${BP}.tar.bz2 \
+            file://fix-compile-with-gcc-12.patch"
 
 SRC_URI[md5sum] = "f2f6660142a777862342a58cc54258ea"
 SRC_URI[sha256sum] = "cb9f4e03c0771c709cd47dc8fc6ac3421eadbdd313f0aae52276829290583842"

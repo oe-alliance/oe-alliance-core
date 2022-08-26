@@ -1,0 +1,61 @@
+--- a/nmap_error.cc
++++ b/nmap_error.cc
+@@ -126,7 +126,7 @@
+ #include "output.h"
+ #include "NmapOps.h"
+ #include "xml.h"
+-
++#include <time.h>
+ #include <errno.h>
+ 
+ extern NmapOps o;
+--- a/osscan.cc
++++ b/osscan.cc
+@@ -135,16 +135,7 @@
+ 
+ #include <errno.h>
+ #include <stdarg.h>
+-#if TIME_WITH_SYS_TIME
+-# include <sys/time.h>
+-# include <time.h>
+-#else
+-# if HAVE_SYS_TIME_H
+-#  include <sys/time.h>
+-# else
+-#  include <time.h>
+-# endif
+-#endif
++#include <time.h>
+ 
+ #include <algorithm>
+ #include <list>
+--- a/osscan2.cc
++++ b/osscan2.cc
+@@ -135,6 +135,7 @@
+ #include <dnet.h>
+ 
+ #include "struct_ip.h"
++#include <time.h>
+ 
+ #include <list>
+ #include <math.h>
+--- a/service_scan.cc
++++ b/service_scan.cc
+@@ -148,16 +148,7 @@
+ #include <openssl/ssl.h>
+ #endif
+ 
+-#if TIME_WITH_SYS_TIME
+-# include <sys/time.h>
+-# include <time.h>
+-#else
+-# if HAVE_SYS_TIME_H
+-#  include <sys/time.h>
+-# else
+-#  include <time.h>
+-# endif
+-#endif
++#include <time.h>
+ 
+ #include <algorithm>
+ #include <list>
