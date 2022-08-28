@@ -1,13 +1,13 @@
-From 1fbf2df057b1303a8815972f14663e138f3e3177 Mon Sep 17 00:00:00 2001
+From 1d422fd73de04c3f041786bd9fecaee4c28a5817 Mon Sep 17 00:00:00 2001
 From: jbleyel <jbleyel@gmx.net>
-Date: Mon, 13 Sep 2021 14:35:05 +0200
+Date: Wed, 24 Aug 2022 04:27:46 +0000
 
 ---
- Makefile.am | 2 --
- 1 file changed, 2 deletions(-)
+ Makefile.am | 3 ---
+ 1 file changed, 3 deletions(-)
 
 diff --git a/Makefile.am b/Makefile.am
-index 09343ff1..19f350f8 100644
+index ab10c1d00..fc69cfab0 100644
 --- a/Makefile.am
 +++ b/Makefile.am
 @@ -21,7 +21,6 @@ SUBDIRS = \
@@ -18,7 +18,15 @@ index 09343ff1..19f350f8 100644
  	easymedia \
  	ecasa \
  	eibox \
-@@ -129,7 +128,6 @@ SUBDIRS += \
+@@ -86,7 +85,6 @@ SUBDIRS = \
+ 	valixdcontrol \
+ 	videocolorspace \
+ 	vlcplayer \
+-	vps \
+ 	weatherplugin \
+ 	weathercomponent \
+ 	weathercomponenthandler \
+@@ -130,7 +128,6 @@ SUBDIRS += \
  	mytube \
  	yttrailer \
  	webinterface \
