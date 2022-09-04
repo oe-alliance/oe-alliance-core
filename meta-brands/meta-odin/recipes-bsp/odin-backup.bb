@@ -5,6 +5,8 @@ LICENSE = "GPL-2.0-only"
 
 require conf/license/license-gplv2.inc
 
+COMPATIBLE_MACHINE = "^(odinm7$|odinm9)$"
+
 PV = "1.0"
 PR = "r5"
 
