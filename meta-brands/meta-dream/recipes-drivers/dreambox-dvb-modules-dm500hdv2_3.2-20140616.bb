@@ -1,3 +1,5 @@
+COMPATIBLE_MACHINE = "dm500hdv2"
+
 require dreambox-dvb-modules.inc
 
 PR = "${INC_PR}.0"

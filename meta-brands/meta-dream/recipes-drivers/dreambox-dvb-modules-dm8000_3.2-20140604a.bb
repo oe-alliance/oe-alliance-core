@@ -1,3 +1,5 @@
+COMPATIBLE_MACHINE = "dm8000"
+
 require dreambox-dvb-modules.inc
 
 PR = "${INC_PR}.0"

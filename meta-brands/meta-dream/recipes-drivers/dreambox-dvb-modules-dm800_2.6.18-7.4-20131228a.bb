@@ -6,6 +6,8 @@ PRIORITY = "required"
 INC_PR = "r8"
 require conf/license/license-close.inc
 
+COMPATIBLE_MACHINE = "dm800"
+
 PR = "${INC_PR}.3"
 
 SRC_URI[modules.md5sum] = "ed50381eb09c8278ebc3decba2d0c8e9"

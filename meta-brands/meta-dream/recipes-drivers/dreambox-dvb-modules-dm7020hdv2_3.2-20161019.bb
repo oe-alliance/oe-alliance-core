@@ -1,3 +1,5 @@
+COMPATIBLE_MACHINE = "dm7020hdv2"
+
 PRECOMPILED_ARCH = "dm7020hd"
 
 require dreambox-dvb-modules.inc
