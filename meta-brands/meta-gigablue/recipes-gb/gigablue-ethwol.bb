@@ -3,6 +3,8 @@ MAINTAINER = "GigaBlue"
 LICENSE = "CLOSED"
 require conf/license/license-close.inc
 
+COMPATIBLE_MACHINE = "^(gb7356$|gb7362$|gb73625)$"
+
 PV = "1.0"
 PR = "r3"
 
