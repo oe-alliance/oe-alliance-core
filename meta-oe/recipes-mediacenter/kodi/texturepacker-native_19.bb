@@ -34,4 +34,4 @@ do_configure:prepend() {
     sed -i '/STATIC_FLAG/d' ${S}/Makefile.am
 }
 
-
+BBCLASSEXTEND = "native"
