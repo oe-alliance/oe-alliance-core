@@ -4,6 +4,7 @@ DISTRO_FEATURES_remove = "x11 wayland"
 
 KERNEL_FILE = "kernel.bin"
 ROOTFS_FILE = "rootfs.tar.bz2"
+APPLOADER_FILE = "apploader.bin"
 MTD_BLACK  = "mmcblk0"
 
 MTD_KERNEL = "mmcblk0p27"
@@ -17,6 +18,7 @@ MACHINE_ESSENTIAL_EXTRA_RDEPENDS += " \
 	dags-libs-${SOC_FAMILY} \
 	enigma2-plugin-drivers-network-usb-rtl8192eu \
 	dags-bootoptions-${MACHINEBUILD} \
+	dags-partitions-${MACHINEBUILD} \
 	dags-buildimage \
 	deepsleep-${SOC_FAMILY} \
 	dags-blindscan-utils-${SOC_FAMILY} \
@@ -48,6 +50,7 @@ IMAGE_CMD_dagsemmc_append = "\
     mkdir -p ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}; \
     mkdir -p ${DEPLOY_DIR_IMAGE}/release/${IMAGEDIR}; \
     cp ${DEPLOY_DIR_IMAGE}/uImage ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${KERNEL_FILE}; \
+    cp ${DEPLOY_DIR_IMAGE}/${MACHINEBUILD}-${APPLOADER_FILE} ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${APPLOADER_FILE}; \
     mv ${IMGDEPLOYDIR}/${IMAGE_NAME}_subrootfs.ext4 ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/rootfs.ext4; \
     echo ${IMAGE_VER_STRING} > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/imageversion; \
     cd ${DEPLOY_DIR_IMAGE}; \
