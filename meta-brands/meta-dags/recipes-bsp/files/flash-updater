@@ -1,0 +1,54 @@
+#!/bin/sh
+if [ -f "/usr/share/apploader.bin" ]; then
+  if [ -e "/dev/block/by-name/loader" ]; then
+    DEVICE=/dev/block/by-name/loader
+  fi
+  if [ ! -z $DEVICE ]; then
+    dd if=$DEVICE of=/tmp/current.bin count=8192 2> /dev/null
+    dd if=/usr/share/apploader.bin of=/tmp/new.bin count=8192 2> /dev/null
+    NEW=`md5sum /tmp/new.bin | cut -d ' ' -f1`
+    CURRENT=`md5sum /tmp/current.bin | cut -d ' ' -f1`
+    if [ $NEW == $CURRENT ]; then
+      echo "Apploader uptodate"
+    else
+      echo "new Apploader Flashing"
+      dd if=/usr/share/apploader.bin of=$DEVICE 2> /dev/null
+    fi
+  fi
+fi
+
+if [ -f "/usr/share/fastboot.bin" ]; then
+  if [ -e "/dev/block/by-name/fastboot" ]; then
+    DEVICE1=/dev/block/by-name/fastboot
+  fi
+  if [ ! -z $DEVICE1 ]; then
+    dd if=$DEVICE1 of=/tmp/fastboot_cur.bin count=768 2> /dev/null
+    dd if=/usr/share/fastboot.bin of=/tmp/fastboot_new.bin count=768 2> /dev/null
+    NEW=`md5sum /tmp/fastboot_new.bin | cut -d ' ' -f1`
+    CURRENT=`md5sum /tmp/fastboot_cur.bin | cut -d ' ' -f1`
+    if [ $NEW == $CURRENT ]; then
+      echo "fastboot uptodate"
+    else
+      echo "new fastboot Flashing"
+      dd if=/usr/share/fastboot.bin of=$DEVICE1 2> /dev/null
+    fi
+  fi
+fi
+
+if [ -f "/usr/share/bootargs.bin" ]; then
+  if [ -e "/dev/block/by-name/bootargs" ]; then
+    DEVICE2=/dev/block/by-name/bootargs
+  fi
+  if [ ! -z $DEVICE2 ]; then
+    dd if=$DEVICE2 of=/tmp/bootargs_cur.bin count=128 2> /dev/null
+    dd if=/usr/share/bootargs.bin of=/tmp/bootargs_new.bin count=128 2> /dev/null
+    NEW=`md5sum /tmp/bootargs_new.bin | cut -d ' ' -f1`
+    CURRENT=`md5sum /tmp/bootargs_cur.bin | cut -d ' ' -f1`
+    if [ $NEW == $CURRENT ]; then
+      echo "bootargs uptodate"
+    else
+      echo "new bootargs Flashing"
+      dd if=/usr/share/bootargs.bin of=$DEVICE2 2> /dev/null
+    fi
+  fi
+fi
