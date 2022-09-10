@@ -31,6 +31,7 @@ SRC_URI += "http://en3homeftp.net/pub/down/linux-4.4.35.tar.xz \
 	file://vmap.patch \
 	file://move-default-dialect-to-SMB3.patch \
 	file://0004_swifthooking.patch \
+	file://fix-multiple-defs-yyloc.patch \
 	"
 
 S = "${WORKDIR}/linux-${PV}"

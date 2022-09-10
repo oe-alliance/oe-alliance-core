@@ -27,6 +27,7 @@ SRC_URI += "http://source.mynonpublic.com/qviart/qviart-linux-${PV}-${SRCDATE}.t
     file://defconfig \
     file://initramfs-subdirboot.cpio.gz;unpack=0 \
     file://findkerneldevice.sh \
+    file://fix-multiple-defs-yyloc.patch \
 "
 
 S = "${WORKDIR}/linux-${PV}"
