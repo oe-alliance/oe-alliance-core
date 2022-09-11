@@ -8,7 +8,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 PV = "${KV}+${SRCDATE}"
 PR = "r1"
 
-SRC_URI = "http://source.mynonpublic.com/dinobot/${MACHINE}-drivers-${KV}-${SRCDATE}.tar.gz \
+SRC_URI = "https://source.mynonpublic.com/dinobot/${MACHINE}-drivers-${KV}-${SRCDATE}.tar.gz \
     file://loadmodules.sh \
 "
 

@@ -23,7 +23,7 @@ PKG_${KERNEL_PACKAGE_NAME}-image = "kernel-image"
 RPROVIDES_${KERNEL_PACKAGE_NAME}-base = "kernel-${KERNEL_VERSION}"
 RPROVIDES_${KERNEL_PACKAGE_NAME}-image = "kernel-image-${KERNEL_VERSION}"
 
-SRC_URI += "http://source.mynonpublic.com/octagon/octagon-linux-${PV}-${SRCDATE}.tar.gz \
+SRC_URI += "https://source.mynonpublic.com/octagon/octagon-linux-${PV}-${SRCDATE}.tar.gz \
     file://defconfig \
     file://initramfs-subdirboot.cpio.gz;unpack=0 \
     file://initramfs.cpio.gz;unpack=0 \

@@ -7,7 +7,7 @@ require conf/license/license-close.inc
 PV = "${KV}+${SRCDATE}"
 PR = "r12"
 
-SRC_URI = "http://source.mynonpublic.com/ixuss-${DOWNLOADMACHINE}-drivers-${SRCDATE}.zip"
+SRC_URI = "https://source.mynonpublic.com/ixuss-${DOWNLOADMACHINE}-drivers-${SRCDATE}.zip"
 
 S = "${WORKDIR}"
 

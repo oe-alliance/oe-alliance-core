@@ -8,7 +8,7 @@ PACKAGE_ARCH = "${MACHINE}"
 PV = "${KV}+${SRCDATE}"
 PR = "r2"
 
-SRC_URI = "http://source.mynonpublic.com/octagon/${MACHINE}-drivers-${KV}-${GCCREV}-${SRCDATE}.zip"
+SRC_URI = "https://source.mynonpublic.com/octagon/${MACHINE}-drivers-${KV}-${GCCREV}-${SRCDATE}.zip"
 
 S = "${WORKDIR}"
 

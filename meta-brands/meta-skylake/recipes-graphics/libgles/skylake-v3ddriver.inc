@@ -10,7 +10,7 @@ DEPENDS = "skylake-v3ddriver-headers"
 PV = "${SRCDATE}"
 PR = "r2"
 
-SRC_URI = "http://source.mynonpublic.com/skylake/${MACHINE}/${MACHINE}-v3ddriver-${SRCDATE}.zip"
+SRC_URI = "https://source.mynonpublic.com/skylake/${MACHINE}/${MACHINE}-v3ddriver-${SRCDATE}.zip"
 
 S = "${WORKDIR}"
 

@@ -12,7 +12,7 @@ PR = "${SRCDATE}"
 
 S = "${WORKDIR}/partitions"
 
-SRC_URI = "http://source.mynonpublic.com/octagon/${MACHINE}-partitions-${SRCDATE}.zip \
+SRC_URI = "https://source.mynonpublic.com/octagon/${MACHINE}-partitions-${SRCDATE}.zip \
 "
 
 ALLOW_EMPTY_${PN} = "1"

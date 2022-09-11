@@ -9,7 +9,7 @@ inherit module
 
 MACHINE_KERNEL_PR_append = ".1"
 
-SRC_URI = "http://source.mynonpublic.com/rtl8812AU-driver-4.3.14.zip \
+SRC_URI = "https://source.mynonpublic.com/rtl8812AU-driver-4.3.14.zip \
     file://rt8812au-gcc5.patch \
     file://0001-Add-support-for-kernels-4.8.patch \
 "

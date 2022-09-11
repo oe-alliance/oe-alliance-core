@@ -11,7 +11,7 @@ PR = "r1"
 
 inherit gitpkgv
 
-SRC_URI = "http://source.mynonpublic.com/gigablue/hbbtv/gb-hbbtv-qt-${SRCDATE}.tar.gz"
+SRC_URI = "https://source.mynonpublic.com/gigablue/hbbtv/gb-hbbtv-qt-${SRCDATE}.tar.gz"
 
 SRC_URI[md5sum] = "4608df53d3fa0aecf190a8db6e26e0df"
 SRC_URI[sha256sum] = "4ef50f0d78c2bb3778c28d8432705310b77c96183c549fa436d42196acc29824"

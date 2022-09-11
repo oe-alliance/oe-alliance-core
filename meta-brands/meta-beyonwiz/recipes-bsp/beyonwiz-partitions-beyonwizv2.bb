@@ -12,7 +12,7 @@ PR = "${SRCDATE}"
 
 S = "${WORKDIR}/patitions"
 
-SRC_URI = "http://source.mynonpublic.com/beyonwiz/${MACHINE}-partitions-${SRCDATE}.zip \
+SRC_URI = "https://source.mynonpublic.com/beyonwiz/${MACHINE}-partitions-${SRCDATE}.zip \
   file://flash-apploader \
 "
 

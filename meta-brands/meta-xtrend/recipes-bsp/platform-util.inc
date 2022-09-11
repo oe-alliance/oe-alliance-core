@@ -8,7 +8,7 @@ require conf/license/license-close.inc
 PR="${SRCDATE}.${SRCDATE_PR}"
 
 SRC_URI = " \
-    http://source.mynonpublic.com/xtrend/platform-util-${MACHINE}-${PV}-${PR}.tar.gz \
+    https://source.mynonpublic.com/xtrend/platform-util-${MACHINE}-${PV}-${PR}.tar.gz \
     file://${INITSCRIPT_NAME}.sysvinit \
 "
 

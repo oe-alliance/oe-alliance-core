@@ -15,7 +15,7 @@ RPROVIDES_${PN}  = "aio-grab"
 RREPLACES_${PN}  = "aio-grab"
 RCONFLICTS_${PN} = "aio-grab"
 
-SRC_URI = "http://source.mynonpublic.com/beyonwiz/${MACHINE}-grab-${SRCDATE}.tar.gz"
+SRC_URI = "https://source.mynonpublic.com/beyonwiz/${MACHINE}-grab-${SRCDATE}.tar.gz"
 
 S = "${WORKDIR}"
 

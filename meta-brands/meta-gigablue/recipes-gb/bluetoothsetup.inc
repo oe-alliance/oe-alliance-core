@@ -15,7 +15,7 @@ RREPLACES_${PN} = "enigma2-plugin-systemplugins-bluetoothsetup"
 PR="${SRCDATE}.${SRCDATE_PR}"
 
 SRC_URI = " \
-     http://source.mynonpublic.com/gigablue/bluetooth/enigma2-plugin-bluetoothsetup-${MACHINE}-${PR}.tar.gz \
+     https://source.mynonpublic.com/gigablue/bluetooth/enigma2-plugin-bluetoothsetup-${MACHINE}-${PR}.tar.gz \
 "
 
 S = "${WORKDIR}/plugin"

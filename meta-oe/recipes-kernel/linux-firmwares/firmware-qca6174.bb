@@ -4,7 +4,7 @@ require conf/license/license-close.inc
 
 inherit allarch
 
-SRC_URI = "http://source.mynonpublic.com/edision/firmware-qca6174_v2.zip"
+SRC_URI = "https://source.mynonpublic.com/edision/firmware-qca6174_v2.zip"
 
 S = "${WORKDIR}"
 PR = "r2"

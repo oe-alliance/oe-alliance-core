@@ -24,7 +24,7 @@ PKG_${KERNEL_PACKAGE_NAME}-image = "kernel-image"
 RPROVIDES_${KERNEL_PACKAGE_NAME}-base = "kernel-${KERNEL_VERSION}"
 RPROVIDES_kernel-image = "kernel-image-${KERNEL_VERSION}"
 
-SRC_URI += "http://source.mynonpublic.com/edision/linux-edision-${PV}.tar.gz \
+SRC_URI += "https://source.mynonpublic.com/edision/linux-edision-${PV}.tar.gz \
     file://defconfig \
     file://findkerneldevice.py \
     "

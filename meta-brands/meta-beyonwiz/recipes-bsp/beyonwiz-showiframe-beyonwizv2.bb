@@ -15,7 +15,7 @@ RPROVIDES_${PN}  = "showiframe"
 RREPLACES_${PN}  = "showiframe"
 RCONFLICTS_${PN} = "showiframe"
 
-SRC_URI = "http://source.mynonpublic.com/beyonwiz/${MACHINE}-showiframe-${SRCDATE}.tar.gz"
+SRC_URI = "https://source.mynonpublic.com/beyonwiz/${MACHINE}-showiframe-${SRCDATE}.tar.gz"
 
 S = "${WORKDIR}"
 

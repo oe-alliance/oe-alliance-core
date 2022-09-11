@@ -9,7 +9,7 @@ PR = "r5-${SRCDATE}"
 PROVIDES = "virtual/libgles1 virtual/libgles2 virtual/egl"
 RPROVIDES_${PN} = "virtual/libgles1 virtual/libgles2 virtual/egl libEGL.so libGLESv2.so libmali.so"
 
-SRC_URI = "http://source.mynonpublic.com/dinobot/${SOC_FAMILY}-opengl-armhf-${SRCDATE}.zip \
+SRC_URI = "https://source.mynonpublic.com/dinobot/${SOC_FAMILY}-opengl-armhf-${SRCDATE}.zip \
  file://libm-2.27.so.zip \
 "
 

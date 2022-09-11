@@ -9,7 +9,7 @@ inherit module
 
 MACHINE_KERNEL_PR_append = ".0"
 
-SRC_URI = "http://source.mynonpublic.com/rtl8723bu_v4.3.6.11_12942.20141204_BTCOEX20140507-4E40.zip \
+SRC_URI = "https://source.mynonpublic.com/rtl8723bu_v4.3.6.11_12942.20141204_BTCOEX20140507-4E40.zip \
     file://rt8723bu-gcc5.patch \
 "
 

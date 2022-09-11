@@ -7,7 +7,7 @@ RDEPENDS_${PN} = "libbluray"
 PR = "${SRCDATE}"
 LIBSVER ?= "${@bb.utils.contains('TARGET_ARCH', 'aarch64', '64' , '', d)}"
 
-SRC_URI = "http://source.mynonpublic.com/gfutures/gfutures-libs${LIBSVER}-${HICHIPSET}-${SRCDATE}.zip"
+SRC_URI = "https://source.mynonpublic.com/gfutures/gfutures-libs${LIBSVER}-${HICHIPSET}-${SRCDATE}.zip"
 
 S = "${WORKDIR}"
 

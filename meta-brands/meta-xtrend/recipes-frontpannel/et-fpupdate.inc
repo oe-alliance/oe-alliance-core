@@ -9,8 +9,8 @@ PR = "r4"
 PV = "${FPVERSION}"
 
 SRC_URI = " \
-    http://source.mynonpublic.com/xtrend/fpupdate-${FPUPDATE}.zip \
-    http://source.mynonpublic.com/xtrend/avrmain-${MACHINE}-${FPVERSION}.zip;name=avrmain \
+    https://source.mynonpublic.com/xtrend/fpupdate-${FPUPDATE}.zip \
+    https://source.mynonpublic.com/xtrend/avrmain-${MACHINE}-${FPVERSION}.zip;name=avrmain \
     "
 
 S = "${WORKDIR}"

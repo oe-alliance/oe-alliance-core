@@ -17,7 +17,7 @@ INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
 SOLIBS = ".so"
 FILES_SOLIBSDEV = ""
 
-SRC_URI = "http://source.mynonpublic.com/qviart/${MACHINE}-hilib-${SRCDATE}.tar.gz"
+SRC_URI = "https://source.mynonpublic.com/qviart/${MACHINE}-hilib-${SRCDATE}.tar.gz"
 
 S = "${WORKDIR}/hilib"
 

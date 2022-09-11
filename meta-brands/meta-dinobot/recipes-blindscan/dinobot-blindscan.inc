@@ -9,7 +9,7 @@ RPROVIDES_${PN} += "virtual/blindscan-dvbs"
 PV = "${SRCDATE}"
 PR = "r0"
 
-SRC_URI  = "http://source.mynonpublic.com/dinobot/dinobot-blindscan-${SRCDATE}-${MACHINE}.tar.gz"
+SRC_URI  = "https://source.mynonpublic.com/dinobot/dinobot-blindscan-${SRCDATE}-${MACHINE}.tar.gz"
 
 S = "${WORKDIR}"
 

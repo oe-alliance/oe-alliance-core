@@ -8,7 +8,7 @@ inherit module
 
 PR = "r2"
 
-SRC_URI = "http://source.mynonpublic.com/rtl8189es-driver-1.0-20180522.zip"
+SRC_URI = "https://source.mynonpublic.com/rtl8189es-driver-1.0-20180522.zip"
 
 EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR} KDIR=${STAGING_KERNEL_DIR} KSRC=${STAGING_KERNEL_DIR}"
 

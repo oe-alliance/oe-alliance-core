@@ -7,7 +7,7 @@ require conf/license/license-close.inc
 
 PR = "20220402"
 
-SRC_URI = "http://source.mynonpublic.com/dags/dags-bootoptions-${PR}.zip"
+SRC_URI = "https://source.mynonpublic.com/dags/dags-bootoptions-${PR}.zip"
 
 S = "${WORKDIR}"
 

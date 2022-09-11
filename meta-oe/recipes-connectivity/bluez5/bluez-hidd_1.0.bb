@@ -10,7 +10,7 @@ SRC_URI[sha256sum] = "1889fe89b1ec8e725d3404f3d8125d5e824a4cc0ab05891ef1b755a61a
 
 CFLAGS_append = " -Wall -I${S} -I${S}/lib -I${STAGING_INCDIR}/glib-2.0 -I${STAGING_DIR_HOST}${libdir}/glib-2.0/include"
 
-SRC_URI = "http://source.mynonpublic.com/bluez-hidd-1.4.zip"
+SRC_URI = "https://source.mynonpublic.com/bluez-hidd-1.4.zip"
 
 S = "${WORKDIR}/bluez-hidd"
 

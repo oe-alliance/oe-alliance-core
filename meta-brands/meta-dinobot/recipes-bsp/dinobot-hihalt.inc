@@ -11,7 +11,7 @@ INITSCRIPT_NAME = "suspend"
 INITSCRIPT_PARAMS = "start 89 0 ."
 inherit update-rc.d
 
-SRC_URI  = "http://source.mynonpublic.com/dinobot/${MACHINE}-hihalt-${SRCDATE}.tar.gz \
+SRC_URI  = "https://source.mynonpublic.com/dinobot/${MACHINE}-hihalt-${SRCDATE}.tar.gz \
     file://suspend.sh \
 "
 

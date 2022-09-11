@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=8f0e2cd40e05189ec81232da84bd6e1a"
 
 inherit autotools-brokensep pkgconfig
 
-SRC_URI="http://source.mynonpublic.com/idle3-tools-0.9.1.tgz"
+SRC_URI="https://source.mynonpublic.com/idle3-tools-0.9.1.tgz"
 
 S = "${WORKDIR}/${BPN}-${PV}"
 

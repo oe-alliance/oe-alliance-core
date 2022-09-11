@@ -12,7 +12,7 @@ SRCDATE = "20190307"
 PV = "${SRCDATE}"
 PR = "r0"
 
-SRC_URI  = "http://source.mynonpublic.com/gigablue/mv200/${MACHINE}-blindscan-${SRCDATE}.zip"
+SRC_URI  = "https://source.mynonpublic.com/gigablue/mv200/${MACHINE}-blindscan-${SRCDATE}.zip"
 
 S = "${WORKDIR}"
 

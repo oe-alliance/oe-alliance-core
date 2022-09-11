@@ -14,7 +14,7 @@ LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad
 
 MACHINE_KERNEL_PR_append = ".4"
 
-SRC_URI = "http://source.mynonpublic.com/gigablue/linux/gigablue-linux-${PV}-${SRCDATE}.tgz \
+SRC_URI = "https://source.mynonpublic.com/gigablue/linux/gigablue-linux-${PV}-${SRCDATE}.tgz \
     file://defconfig \
     file://nor-maps-gb800solo.patch \
     file://add-dmx-source-timecode.patch \

@@ -10,7 +10,7 @@ DEPENDS = "et-v3ddriver-headers"
 PV = "${SRCDATE}"
 PR = "r2"
 
-SRC_URI = "http://source.mynonpublic.com/xtrend/${MACHINE_DRIVER}-v3ddriver-${SRCDATE}.zip"
+SRC_URI = "https://source.mynonpublic.com/xtrend/${MACHINE_DRIVER}-v3ddriver-${SRCDATE}.zip"
 
 S = "${WORKDIR}"
 

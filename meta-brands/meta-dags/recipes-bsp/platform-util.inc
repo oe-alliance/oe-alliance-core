@@ -8,7 +8,7 @@ require conf/license/license-close.inc
 PR="${SRCDATE}"
 
 SRC_URI = " \
-    http://source.mynonpublic.com/dags/platform-util-${MACHINE}.zip \
+    https://source.mynonpublic.com/dags/platform-util-${MACHINE}.zip \
     file://${INITSCRIPT_NAME}.sysvinit \
 "
 
