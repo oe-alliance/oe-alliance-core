@@ -10,7 +10,7 @@ DEPENDS = "libdrm mesa"
 PV = "${SRCDATE}"
 PR = "r2"
 
-SRC_URI = "http://source.mynonpublic.com/zgemma/${MACHINE}-v3ddriver-${SRCDATE}.zip"
+SRC_URI = "https://source.mynonpublic.com/zgemma/${MACHINE}-v3ddriver-${SRCDATE}.zip"
 
 S = "${WORKDIR}"
 

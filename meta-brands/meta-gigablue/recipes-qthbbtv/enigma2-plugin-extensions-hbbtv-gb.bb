@@ -9,7 +9,7 @@ SRCDATE = "20181019_r1"
 
 PR = "r1"
 
-SRC_URI = "http://source.mynonpublic.com/gigablue/hbbtv/gb-hbbtv-qt-${SRCDATE}.zip"
+SRC_URI = "https://source.mynonpublic.com/gigablue/hbbtv/gb-hbbtv-qt-${SRCDATE}.zip"
 
 SRC_URI[md5sum] = "fb71d97af77211e46e5dbfcf0ae2e61d"
 SRC_URI[sha256sum] = "8ce7d977174d5c317211e3a42c911c3cc06a20a3a585fb695183b074d5e90071"

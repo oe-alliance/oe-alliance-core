@@ -14,7 +14,7 @@ MACHINE_KERNEL_PR:append = "1"
 SRC_URI[md5sum] = "f9e67e2d0ceab518510413f8f4315bc3"
 SRC_URI[sha256sum] = "45ae717b966a74326fd7297d81b3a17fd5b3962b7704170682a615ca7cdec644"
 
-SRC_URI = "http://source.mynonpublic.com/abcom/linux-${PV}-${SRCDATE}-${ARCH}.tar.gz \
+SRC_URI = "https://source.mynonpublic.com/abcom/linux-${PV}-${SRCDATE}-${ARCH}.tar.gz \
 	file://defconfig \
 	file://0002-log2-give-up-on-gcc-constant-optimizations.patch \
 	file://0003-dont-mark-register-as-const.patch \

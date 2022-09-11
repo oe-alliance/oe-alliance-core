@@ -33,7 +33,7 @@ do_deploy() {
     fi
 }
 
-SRC_URI = "http://source.mynonpublic.com/gigablue/initrd/initrd_${MACHINEBUILD}_${SRCDATE}.zip"
+SRC_URI = "https://source.mynonpublic.com/gigablue/initrd/initrd_${MACHINEBUILD}_${SRCDATE}.zip"
 
 S = "${WORKDIR}"
 

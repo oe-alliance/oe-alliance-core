@@ -22,7 +22,7 @@ PKG:${KERNEL_PACKAGE_NAME}-image = "kernel-image"
 RPROVIDES:${KERNEL_PACKAGE_NAME}-base = "kernel-${KERNEL_VERSION}"
 RPROVIDES:kernel-image = "kernel-image-${KERNEL_VERSION}"
 
-SRC_URI += "http://source.mynonpublic.com/unibox/linux-${KV}-${SRCDATE}.tar.gz \
+SRC_URI += "https://source.mynonpublic.com/unibox/linux-${KV}-${SRCDATE}.tar.gz \
     file://defconfig \
     file://nfs-max-rwsize-8k.patch \
     file://linux-3.14.21-gcc-4.9.3-build-error-fixed.patch \

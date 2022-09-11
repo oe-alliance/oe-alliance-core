@@ -8,7 +8,7 @@ PACKAGE_ARCH = "${MACHINEBUILD}"
 PV = "${KV}+${SRCDATE}"
 PR = "r3"
 
-SRC_URI = "http://source.mynonpublic.com/gigablue/mv200/${MACHINE_DRIVER}-hiko-${SRCDATE}.zip \
+SRC_URI = "https://source.mynonpublic.com/gigablue/mv200/${MACHINE_DRIVER}-hiko-${SRCDATE}.zip \
     file://modules \
 "
 

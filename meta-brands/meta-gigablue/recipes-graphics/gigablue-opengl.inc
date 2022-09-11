@@ -9,7 +9,7 @@ PR = "r1-${SRCDATE}"
 PROVIDES = "virtual/libgles1 virtual/libgles2 virtual/egl"
 RPROVIDES:${PN} = "virtual/libgles1 virtual/libgles2 virtual/egl libEGL.so libGLESv2.so libmali.so"
 
-SRC_URI = "http://source.mynonpublic.com/gigablue/mv200/${MACHINE}-opengl-${SRCDATE}.tar.gz"
+SRC_URI = "https://source.mynonpublic.com/gigablue/mv200/${MACHINE}-opengl-${SRCDATE}.tar.gz"
 
 S = "${WORKDIR}/usr"
 

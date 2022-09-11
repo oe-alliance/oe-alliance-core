@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://os/linux/rt_linux.c;endline=25;md5=21ed2a5918a3062a6c
 inherit module
 
 SRC_URI = " \
-    http://source.mynonpublic.com/ini/2011_0719_RT3070_RT3370_RT5370_RT5372_Linux_STA_V${PV}_DPO.tar.gz \
+    https://source.mynonpublic.com/ini/2011_0719_RT3070_RT3370_RT5370_RT5372_Linux_STA_V${PV}_DPO.tar.gz \
     file://makefile.patch \
     file://config.patch \
     file://remove_linux_2_4_compability.patch \

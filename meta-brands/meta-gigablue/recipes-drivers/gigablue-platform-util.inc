@@ -12,7 +12,7 @@ INHIBIT_PACKAGE_STRIP = "1"
 INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
 
 SRC_URI = " \
-    http://source.mynonpublic.com/gigablue/drivers/platform-util-${MACHINE}-${KV}-${SRCDATE}.zip \
+    https://source.mynonpublic.com/gigablue/drivers/platform-util-${MACHINE}-${KV}-${SRCDATE}.zip \
     file://${INITSCRIPT_NAME}.sysvinit \
 "
 

@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://iwpriv_usage.txt;md5=8876ae2c103446a442658f1cc2a01b76
 
 inherit module
 
-SRC_URI = "http://source.mynonpublic.com/ini/20120911_RT3573_Linux_STA_v2.5.0.0_Rev4_DPO.tar.gz \
+SRC_URI = "https://source.mynonpublic.com/ini/20120911_RT3573_Linux_STA_v2.5.0.0_Rev4_DPO.tar.gz \
     file://remove_linux_2_4_compability.patch"
 
 EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR} KDIR=${STAGING_KERNEL_DIR}"

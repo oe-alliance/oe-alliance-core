@@ -9,7 +9,7 @@ RCONFLICTS:${PN} = "rt73-k2wrlz"
 
 MACHINE_KERNEL_PR:append = ".2"
 
-SRC_URI = "http://source.mynonpublic.com/gigablue/wlan/RT73.tar.gz \
+SRC_URI = "https://source.mynonpublic.com/gigablue/wlan/RT73.tar.gz \
            file://COPYING"
 
 inherit module

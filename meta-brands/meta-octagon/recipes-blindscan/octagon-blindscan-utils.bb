@@ -13,7 +13,7 @@ PACKAGES = "octagon-blindscan-dvbc-utils"
 PROVIDES += "virtual/blindscan-dvbc"
 RPROVIDES:octagon-blindscan-dvbc-utils += "virtual/blindscan-dvbc"
 
-SRC_URI = "http://source.mynonpublic.com/octagon/octagon-dvbc-blindscan-1.1.zip"
+SRC_URI = "https://source.mynonpublic.com/octagon/octagon-dvbc-blindscan-1.1.zip"
 
 PV = "1.1"
 PR = "r1"

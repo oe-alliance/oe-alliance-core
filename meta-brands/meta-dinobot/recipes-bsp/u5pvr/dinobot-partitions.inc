@@ -9,7 +9,7 @@ PR = "r1-${SRCDATE}"
 
 S = "${WORKDIR}"
 
-SRC_URI = "http://source.mynonpublic.com/dinobot/${SOC_FAMILY}-partitions-${SRCDATE}.zip \
+SRC_URI = "https://source.mynonpublic.com/dinobot/${SOC_FAMILY}-partitions-${SRCDATE}.zip \
   file://flash-apploader \
 "
 

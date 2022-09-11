@@ -15,7 +15,7 @@ RPROVIDES:${PN}  = "aio-grab"
 RREPLACES:${PN}  = "aio-grab"
 RCONFLICTS:${PN} = "aio-grab"
 
-SRC_URI = "http://source.mynonpublic.com/amiko/${MACHINE}-grab-${SRCDATE}.tar.gz"
+SRC_URI = "https://source.mynonpublic.com/amiko/${MACHINE}-grab-${SRCDATE}.tar.gz"
 
 S = "${WORKDIR}"
 

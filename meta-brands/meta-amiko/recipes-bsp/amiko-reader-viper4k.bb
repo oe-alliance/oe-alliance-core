@@ -13,7 +13,7 @@ SRCDATE = "20200612"
 PV = "${SRCDATE}"
 PR = "r0"
 
-SRC_URI = "http://source.mynonpublic.com/amiko/${MACHINE}-libreader-${SRCDATE}.tar.gz"
+SRC_URI = "https://source.mynonpublic.com/amiko/${MACHINE}-libreader-${SRCDATE}.tar.gz"
 
 S = "${WORKDIR}"
 

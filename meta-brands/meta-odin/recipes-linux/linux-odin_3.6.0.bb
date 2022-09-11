@@ -19,7 +19,7 @@ PKG:${KERNEL_PACKAGE_NAME}-image = "kernel-image"
 RPROVIDES:${KERNEL_PACKAGE_NAME}-base = "kernel-${KERNEL_VERSION}"
 RPROVIDES:${KERNEL_PACKAGE_NAME}-image = "kernel-image-${KERNEL_VERSION}"
 
-SRC_URI += "http://source.mynonpublic.com/download/linux-${PV}.tar.gz \
+SRC_URI += "https://source.mynonpublic.com/download/linux-${PV}.tar.gz \
     file://defconfig \
     file://0001-kernel-add-support-for-gcc-5.patch \
     file://0001-Revert-MIPS-mm-Add-compound-tail-page-_mapcount-when.patch \

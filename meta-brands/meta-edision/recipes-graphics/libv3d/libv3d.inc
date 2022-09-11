@@ -7,7 +7,7 @@ require conf/license/license-close.inc
 
 PROVIDES = "virtual/libgles2 virtual/egl"
 
-SRC_URI = "http://source.mynonpublic.com/edision/edision-libv3d-${PV}.tar.xz"
+SRC_URI = "https://source.mynonpublic.com/edision/edision-libv3d-${PV}.tar.xz"
 
 S = "${WORKDIR}/edision-libv3d-${PV}"
 

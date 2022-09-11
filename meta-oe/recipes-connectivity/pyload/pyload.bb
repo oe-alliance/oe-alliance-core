@@ -24,7 +24,7 @@ PV = "0.4.9"
 
 inherit update-rc.d
 
-SRC_URI = "http://source.mynonpublic.com/pyload-src-v${PV}.zip \
+SRC_URI = "https://source.mynonpublic.com/pyload-src-v${PV}.zip \
   file://pyload.init \
   file://pyload.tar.gz.defaults"
 SRC_URI[md5sum] = "28876150af22999b6f539c8579d3b415"

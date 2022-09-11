@@ -21,7 +21,7 @@ PKG:${KERNEL_PACKAGE_NAME}-image = "kernel-image"
 RPROVIDES:${KERNEL_PACKAGE_NAME}-base = "kernel-${KERNEL_VERSION}"
 RPROVIDES:kernel-image = "kernel-image-${KERNEL_VERSION}"
 
-SRC_URI += "http://source.mynonpublic.com/ceryon/ceryon-linux-${PV}.tgz \
+SRC_URI += "https://source.mynonpublic.com/ceryon/ceryon-linux-${PV}.tgz \
         file://defconfig \
         file://dvb-usb-i2c_duplicate.patch \
         file://kernel-add-support-for-gcc6.patch \

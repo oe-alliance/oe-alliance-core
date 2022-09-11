@@ -8,7 +8,7 @@ LIC_FILES_CHKSUM = "file://../COPYING;md5=94d55d512a9ba36caa9b7df079bae19f"
 inherit module
 
 
-SRC_URI = "http://source.mynonpublic.com/rtl871x-01112013.tar.gz \
+SRC_URI = "https://source.mynonpublic.com/rtl871x-01112013.tar.gz \
            file://rtl871x-gcc5.patch \
            file://COPYING"
 
