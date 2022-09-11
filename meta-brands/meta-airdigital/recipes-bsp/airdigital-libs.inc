@@ -6,7 +6,7 @@ DEPENDS = "zlib libpng freetype curl libxml2 libjpeg-turbo harfbuzz"
 RDEPENDS:${PN} = "libbluray"
 PR = "${SRCDATE}"
 
-SRC_URI = "http://source.mynonpublic.com/zgemma/zgemma-libs-${HICHIPSET}-${SRCDATE}.zip"
+SRC_URI = "https://source.mynonpublic.com/zgemma/zgemma-libs-${HICHIPSET}-${SRCDATE}.zip"
 
 S = "${WORKDIR}"
 

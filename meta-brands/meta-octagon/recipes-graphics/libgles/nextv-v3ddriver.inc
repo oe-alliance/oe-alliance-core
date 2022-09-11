@@ -10,7 +10,7 @@ DEPENDS = "nextv-v3ddriver-headers patchelf-native"
 PV = "${SRCDATE}"
 PR = "r2"
 
-SRC_URI = "http://source.mynonpublic.com/octagon/${MACHINE}-v3ddriver-${SRCDATE}.zip"
+SRC_URI = "https://source.mynonpublic.com/octagon/${MACHINE}-v3ddriver-${SRCDATE}.zip"
 
 S = "${WORKDIR}"
 

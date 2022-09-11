@@ -5,7 +5,7 @@ DEPENDS = "openssl"
 LICENSE = "GPL-2.0-only"
 INC_PR = "r5"
 S="${WORKDIR}/${BPN}-${PV}_lib"
-SRC_URI = "http://source.mynonpublic.com/libshairport-1.2.0.20310_lib.tar.gz;name=archive \
+SRC_URI = "https://source.mynonpublic.com/libshairport-1.2.0.20310_lib.tar.gz;name=archive \
            file://001_add_ao.patch;apply=yes;striplevel=0 \
            file://002_fix_install_header.patch;apply=yes;striplevel=0 \
            file://003_fix_deadlock.patch;apply=yes;striplevel=0 \

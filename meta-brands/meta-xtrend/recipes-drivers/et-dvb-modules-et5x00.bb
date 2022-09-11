@@ -1,7 +1,7 @@
 KV = "3.8.7"
 SRCDATE = "20180412"
 
-SRC_URI = "http://source.mynonpublic.com/xtrend/${MACHINE}-drivers-${KV}-${SRCDATE}.zip"
+SRC_URI = "https://source.mynonpublic.com/xtrend/${MACHINE}-drivers-${KV}-${SRCDATE}.zip"
 
 RDEPENDS:${PN} += "et-fpupdate-${MACHINE}"
 

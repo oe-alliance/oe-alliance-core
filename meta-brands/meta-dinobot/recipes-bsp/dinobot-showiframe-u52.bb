@@ -16,7 +16,7 @@ RPROVIDES:${PN}  = "showiframe"
 RREPLACES:${PN}  = "showiframe"
 RCONFLICTS:${PN} = "showiframe"
 
-SRC_URI = "http://source.mynonpublic.com/dinobot/${MACHINE}-showiframe-${SRCDATE}.tar.gz"
+SRC_URI = "https://source.mynonpublic.com/dinobot/${MACHINE}-showiframe-${SRCDATE}.tar.gz"
 
 S = "${WORKDIR}"
 

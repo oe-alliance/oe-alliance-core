@@ -9,7 +9,7 @@ PROVIDES += " virtual/libgles2 virtual/libgles1 virtual/egl"
 RPROVIDES:${PN} = "virtual/libgles2 virtual/libgles1 virtual/egl libMali.so libmali.so libEGL.so.1.4 libEGL.so.1 libEGL.so libGLESv1_CM.so.1.1 libGLESv1_CM.so.1 libGLESv1_CM.so libGLESv2.so.2.0 libGLESv2.so.2 libGLESv2.so libgbm.so"
 DEPENDS = "libdrm mesa patchelf-native"
 
-SRC_URI = "http://source.mynonpublic.com/maxytec/maxytec-mali${MALIVER}-${HICHIPSET}-${SRCDATE}.zip"
+SRC_URI = "https://source.mynonpublic.com/maxytec/maxytec-mali${MALIVER}-${HICHIPSET}-${SRCDATE}.zip"
 
 S = "${WORKDIR}"
 

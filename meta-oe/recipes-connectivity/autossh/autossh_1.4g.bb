@@ -4,7 +4,7 @@ LICENSE = "GPL-2.0-or-later"
 LIC_FILES_CHKSUM = "file://autossh.c;beginline=1;endline=24;md5=90bbe42c2e8146adf5a08a7e911c8ffd"
 
 SRC_URI = " \
-	http://source.mynonpublic.com/${P}.tgz \
+	https://source.mynonpublic.com/${P}.tgz \
 	file://0001-remove-hosttools-path-for-ssh.patch \
 	"
 

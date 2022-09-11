@@ -11,7 +11,7 @@ RPROVIDES:${PN} = "virtual/libgles1 virtual/libgles2 virtual/egl libEGL.so libGL
 
 DEPENDS = "patchelf-native"
 
-SRC_URI = "http://source.mynonpublic.com/gigablue/mv200/${MACHINE}-opengl-${SRCDATE}.tar.gz"
+SRC_URI = "https://source.mynonpublic.com/gigablue/mv200/${MACHINE}-opengl-${SRCDATE}.tar.gz"
 
 S = "${WORKDIR}/usr"
 

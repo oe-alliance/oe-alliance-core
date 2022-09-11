@@ -11,7 +11,7 @@ PROVIDES = "virtual/libgles2 virtual/egl"
 
 DEPENDS = "patchelf-native"
 
-SRC_URI = "http://source.mynonpublic.com/xcore/xcore-libgles-${MACHINE}-${SRCDATE}.tar.gz"
+SRC_URI = "https://source.mynonpublic.com/xcore/xcore-libgles-${MACHINE}-${SRCDATE}.tar.gz"
 
 S = "${WORKDIR}/libgles-${MACHINE}"
 

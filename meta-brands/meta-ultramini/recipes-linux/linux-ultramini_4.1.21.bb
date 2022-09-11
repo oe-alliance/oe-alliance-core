@@ -20,7 +20,7 @@ PKG:${KERNEL_PACKAGE_NAME}-image = "kernel-image"
 RPROVIDES:${KERNEL_PACKAGE_NAME}-base = "kernel-${KERNEL_VERSION}"
 RPROVIDES:kernel-image = "kernel-image-${KERNEL_VERSION} kernel-${KERNEL_IMAGETYPE}"
 
-SRC_URI += "http://source.mynonpublic.com/xtrend/linux-${PV}.tar.xz \
+SRC_URI += "https://source.mynonpublic.com/xtrend/linux-${PV}.tar.xz \
     file://defconfig \
     file://0001-regmap-add-regmap_write_bits.patch \
     file://0002-af9035-fix-device-order-in-ID-list.patch \

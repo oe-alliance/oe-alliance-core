@@ -22,7 +22,7 @@ PKG:${KERNEL_PACKAGE_NAME}-image = "kernel-image"
 RPROVIDES:${KERNEL_PACKAGE_NAME}-base = "kernel-${KERNEL_VERSION}"
 RPROVIDES:kernel-image = "kernel-image-${KERNEL_VERSION} kernel-${KERNEL_IMAGETYPE}"
 
-SRC_URI += "http://source.mynonpublic.com/edision/linux-edision-${PV}.tar.xz \
+SRC_URI += "https://source.mynonpublic.com/edision/linux-edision-${PV}.tar.xz \
     file://defconfig \
     file://0001-Support-TBS-USB-drivers-for-4.6-kernel.patch \
     file://0001-TBS-fixes-for-4.6-kernel.patch \

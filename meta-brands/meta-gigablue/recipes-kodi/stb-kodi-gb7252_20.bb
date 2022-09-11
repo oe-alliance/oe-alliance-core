@@ -13,7 +13,7 @@ RDEPENDS:${PN} += "glibc-gconv-iso8859-1"
 FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 
 SRC_URI:append = " \
-     http://source.mynonpublic.com/gigablue/v3ddriver/xbmc-support_${MACHINE}_${GLPR}.tar.gz;name=xbmc-support \
+     https://source.mynonpublic.com/gigablue/v3ddriver/xbmc-support_${MACHINE}_${GLPR}.tar.gz;name=xbmc-support \
 "
 
 EXTRA_OECMAKE += " \

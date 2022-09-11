@@ -18,7 +18,7 @@ PKG:${KERNEL_PACKAGE_NAME}-image = "kernel-image"
 RPROVIDES:${KERNEL_PACKAGE_NAME}-base = "kernel-${KERNEL_VERSION}"
 RPROVIDES:kernel-image = "kernel-image-${KERNEL_VERSION} kernel-${KERNEL_IMAGETYPE}"
 
-SRC_URI += "http://source.mynonpublic.com/ax/linux-${PV}-${ARCH}.tar.gz \
+SRC_URI += "https://source.mynonpublic.com/ax/linux-${PV}-${ARCH}.tar.gz \
     file://defconfig \
     file://ax_partition_layout.patch \
     file://0001-Support-TBS-USB-drivers-for-4.6-kernel.patch \

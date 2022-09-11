@@ -12,7 +12,7 @@ SRC_URI[sha256sum] = "5741c9f80afe101ba3ef92010eec2a7596546c998ed8e9de847648f85f
 
 COMPATIBLE_MACHINE = "^h11$"
 
-SRC_URI = "http://source.mynonpublic.com/tntfs/${HICHIPSET}-tntfs-${KV}-${SRCDATE}.zip"
+SRC_URI = "https://source.mynonpublic.com/tntfs/${HICHIPSET}-tntfs-${KV}-${SRCDATE}.zip"
 
 S = "${WORKDIR}"
 

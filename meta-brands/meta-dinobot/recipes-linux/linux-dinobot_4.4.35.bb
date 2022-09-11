@@ -26,7 +26,7 @@ PKG:${KERNEL_PACKAGE_NAME}-image = "kernel-image"
 RPROVIDES:${KERNEL_PACKAGE_NAME}-base = "kernel-${KERNEL_VERSION}"
 RPROVIDES:${KERNEL_PACKAGE_NAME}-image = "kernel-image-${KERNEL_VERSION}"
 
-SRC_URI:u5pvr += "http://source.mynonpublic.com/dinobot/dinobot-linux-${PV}-${SRCDATE}.tar.gz \
+SRC_URI:u5pvr += "https://source.mynonpublic.com/dinobot/dinobot-linux-${PV}-${SRCDATE}.tar.gz \
     file://initramfs-subdirboot.cpio.gz;unpack=0 \
     file://defconfig \
     file://sdio-platform.patch \
@@ -42,7 +42,7 @@ SRC_URI:u5pvr += "http://source.mynonpublic.com/dinobot/dinobot-linux-${PV}-${SR
     file://fix-multiple-defs-yyloc.patch \
 "
 
-SRC_URI = "http://source.mynonpublic.com/dinobot/dinobot-linux-${PV}-${SRCDATE}.tar.gz;name=new \
+SRC_URI = "https://source.mynonpublic.com/dinobot/dinobot-linux-${PV}-${SRCDATE}.tar.gz;name=new \
     file://initramfs-subdirboot.cpio.gz;unpack=0 \
     file://defconfig \
     file://410dts.patch \

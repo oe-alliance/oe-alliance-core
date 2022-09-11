@@ -8,8 +8,8 @@ PV = "${KV}"
 PR = "${SRCDATE}"
 
 SRC_URI = " \
-    http://source.mynonpublic.com/edicombo/dvb-usb-edicombo_${PV}_${SRCDATE}.zip;name=driver \
-    http://source.mynonpublic.com/edicombo/edicombo-firmware_${FW_SRCDATE}.zip;name=binfw \
+    https://source.mynonpublic.com/edicombo/dvb-usb-edicombo_${PV}_${SRCDATE}.zip;name=driver \
+    https://source.mynonpublic.com/edicombo/edicombo-firmware_${FW_SRCDATE}.zip;name=binfw \
 "
 DEPENDS += "virtual/kernel module-init-tools"
 RDEPENDS:${PN} += "module-init-tools-depmod"

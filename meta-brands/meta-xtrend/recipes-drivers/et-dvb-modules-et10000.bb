@@ -1,7 +1,7 @@
 KV = "4.10.6"
 SRCDATE = "20200402"
 
-SRC_URI = "http://source.mynonpublic.com/xtrend/${MACHINE}-drivers-${KV}-${SRCDATE}.zip"
+SRC_URI = "https://source.mynonpublic.com/xtrend/${MACHINE}-drivers-${KV}-${SRCDATE}.zip"
 
 require et-dvb-modules.inc
 

@@ -2,7 +2,7 @@ KV = "4.1.21"
 GCCREV = "6.3.0"
 SRCDATE = "20170424"
 
-SRC_URI = "http://source.mynonpublic.com/protek/${MACHINE}-drivers-${KV}-${GCCREV}-${SRCDATE}.zip"
+SRC_URI = "https://source.mynonpublic.com/protek/${MACHINE}-drivers-${KV}-${GCCREV}-${SRCDATE}.zip"
 require protek-dvb-modules.inc
 
 SRC_URI[md5sum] = "a3d9e559d735eed2bc7a443c4bf0f524"

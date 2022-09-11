@@ -19,7 +19,7 @@ PKG:${KERNEL_PACKAGE_NAME}-image = "kernel-image"
 RPROVIDES:${KERNEL_PACKAGE_NAME}-base = "kernel-${KERNEL_VERSION}"
 RPROVIDES:kernel-image = "kernel-image-${KERNEL_VERSION} kernel-${KERNEL_IMAGETYPE}"
 
-SRC_URI += "http://source.mynonpublic.com/stblinux-3.3.0-20130404.tgz \
+SRC_URI += "https://source.mynonpublic.com/stblinux-3.3.0-20130404.tgz \
     file://defconfig \
     file://0001-kernel-add-support-for-gcc-5.patch \
     file://kernel-add-support-for-gcc6.patch \

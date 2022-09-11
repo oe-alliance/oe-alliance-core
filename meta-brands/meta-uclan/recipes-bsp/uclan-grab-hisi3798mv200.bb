@@ -15,7 +15,7 @@ RPROVIDES:${PN}  = "aio-grab"
 RREPLACES:${PN}  = "aio-grab"
 RCONFLICTS:${PN} = "aio-grab"
 
-SRC_URI = "http://source.mynonpublic.com/uclan/${SOC_FAMILY}-grab-${SRCDATE}.tar.gz"
+SRC_URI = "https://source.mynonpublic.com/uclan/${SOC_FAMILY}-grab-${SRCDATE}.tar.gz"
 
 S = "${WORKDIR}"
 

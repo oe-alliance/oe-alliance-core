@@ -16,7 +16,7 @@ RPROVIDES:edision-blindscan-dvbc-utils-${MACHINE} += "virtual/blindscan-dvbc"
 
 PV = "20200313"
 
-SRC_URI = "http://source.mynonpublic.com/edision/edision-blindscan-utils-${MACHINE}-${PV}.zip"
+SRC_URI = "https://source.mynonpublic.com/edision/edision-blindscan-utils-${MACHINE}-${PV}.zip"
 
 S = "${WORKDIR}"
 

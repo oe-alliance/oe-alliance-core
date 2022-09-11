@@ -13,7 +13,7 @@ PACKAGES = "broadmedia-blindscan-dvbc-utils"
 PROVIDES += "virtual/blindscan-dvbc"
 RPROVIDES:broadmedia-blindscan-dvbc-utils += "virtual/blindscan-dvbc"
 
-SRC_URI = "http://source.mynonpublic.com/broadmedia/broadmedia-dvbc-blindscan-1.1.zip"
+SRC_URI = "https://source.mynonpublic.com/broadmedia/broadmedia-dvbc-blindscan-1.1.zip"
 
 PV = "1.1"
 PR = "r1"

@@ -10,7 +10,7 @@ SRCDATE = "20211220"
 SRC_URI[md5sum] = "acf3691c6c60030d49c7ae4c75f76dca"
 SRC_URI[sha256sum] = "9d8f71a4d256b30c092c58b961732926b68d00b1a8940444b139afd0c702f2f4"
 
-SRC_URI = "http://source.mynonpublic.com/tntfs/${HICHIPSET}-tntfs-${SRCDATE}.zip"
+SRC_URI = "https://source.mynonpublic.com/tntfs/${HICHIPSET}-tntfs-${SRCDATE}.zip"
 
 S = "${WORKDIR}"
 
