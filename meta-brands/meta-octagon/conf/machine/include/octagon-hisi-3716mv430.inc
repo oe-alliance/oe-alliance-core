@@ -99,6 +99,5 @@ IMAGE_CMD:octagonubi:append = "\
 MACHINEOVERRIDES =. "${@['', '${MACHINEBUILD}:']['${MACHINEBUILD}' != '']}"
 
 BBMASK = "meta-vuplus/recipes-graphics/"
-BBMASK += "meta-fulan/recipes-graphics/"
 BBMASK += "meta-vuplus/recipes-webkit/"
 

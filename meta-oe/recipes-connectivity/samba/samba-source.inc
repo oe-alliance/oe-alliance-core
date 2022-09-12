@@ -53,10 +53,6 @@ SRC_URI:append:arm = " \
            file://500-arm-status-segfault-fix.patch \
           "
 
-SRC_URI:append:sh4 = " \
-           file://209-strtoull.patch \
-          "
-
 SRC_URI[md5sum] = "18809a49d08d4166b85cc874282eed2f"
 SRC_URI[sha256sum] = "9682a2c71c2ff253aa27cbb01260eac897ff625cf39db20ee32073e5386fe219"
 UPSTREAM_CHECK_REGEX = "samba\-(?P<pver>4\.15(\.\d+)+).tar.gz"

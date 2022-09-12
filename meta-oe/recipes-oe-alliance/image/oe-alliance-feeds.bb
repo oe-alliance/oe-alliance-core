@@ -42,6 +42,7 @@ RDEPENDS:${PN} = " \
     enigma2-plugin-extensions-e2m3u2bouquet \
     enigma2-plugin-extensions-e2piconizer \
     enigma2-plugin-extensions-et-portal \
+    enigma2-plugin-extensions-gerbera \
     enigma2-plugin-extensions-jedimakerxtream \
     enigma2-plugin-extensions-jediepgxtream \
     enigma2-plugin-extensions-lamedbmerger \
@@ -86,6 +87,7 @@ RDEPENDS:${PN} = " \
     davfs2 \
     djmount \
     dosfstools \
+    dvb-apps \
     dvblast \
     dvbsnoop \
     dvdfs \
@@ -115,10 +117,10 @@ RDEPENDS:${PN} = " \
     nano \
     net-snmp \
     nlohmann-json \
+    nodejs \
     nss \
     ntfs-3g \
     ntp \
-    ${@bb.utils.contains("DEFAULTTUNE", "sh4", "" , "nodejs dvb-apps satpi tailscale enigma2-plugin-extensions-gerbera", d)} \
     odhcp6c \
     ofgwrite \
     openresolv \
@@ -163,26 +165,29 @@ RDEPENDS:${PN} = " \
     ${PYTHON_PN}-soco \
     ${PYTHON_PN}-pyexecjs \
     ${PYTHON_PN}-scrapy \
-    ${@bb.utils.contains("DEFAULTTUNE", "sh4", "" , "rclone zerotier", d)} \
     rapidxml \
+    rclone \
     rsync \
     rtorrent \
     ${@bb.utils.contains("PYTHON_PN", "python", "sabnzbd", "sabnzbd3", d)} \
+    satpi \
     screen \
     smartmontools \
     smbnetfs \
     sshpass \
     streamproxy \
     strongswan \
+    tailscale \
     tcpdump \
     tmux \
     transmission \
     ushare \
     vim \
     wakelan \
-    ${@bb.utils.contains_any("MACHINE", "cube spark spark7162 dm900 dm920 vuduo2 vusolose vusolo2 vuzero vuuno vuduo vuultimo vusolo inihde2 jj7362 odinm9 et9x00 et6x00 et5x00 dags7356 dags7335 inihdx inihde inihdp vg5000 vg2000 vg1000 ew7356 ew7358 ew7362 ixussone ixusszero blackbox7405 dm520 dm8000 dm7020hd dm7020hdv2 dm800sev2 dm500hdv2 dm7080 dm820 yh7362 yh62tc gb800solo gb7325 ch62lc", "" , "wireguard-tools", d)} \
+    ${@bb.utils.contains_any("MACHINE", "cube dm900 dm920 vuduo2 vusolose vusolo2 vuzero vuuno vuduo vuultimo vusolo inihde2 jj7362 odinm9 et9x00 et6x00 et5x00 dags7356 dags7335 inihdx inihde inihdp vg5000 vg2000 vg1000 ew7356 ew7358 ew7362 ixussone ixusszero blackbox7405 dm520 dm8000 dm7020hd dm7020hdv2 dm800sev2 dm500hdv2 dm7080 dm820 yh7362 yh62tc gb800solo gb7325 ch62lc", "" , "wireguard-tools", d)} \
     wireless-tools \
     zeroconf \
+    zerotier \
     "
 
 GST_BASE_DVD = "\

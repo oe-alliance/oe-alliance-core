@@ -15,8 +15,6 @@ SRC_URI = "git://code.videolan.org/videolan/bitstream.git;protocol=https;branch=
 
 S = "${WORKDIR}/git"
 
-CFLAGS:sh4 += "-std=gnu99"
-
 inherit autotools-brokensep pkgconfig
 
 do_compile:prepend() {

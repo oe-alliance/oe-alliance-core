@@ -18,8 +18,6 @@ SRC_URI = "git://gitlab.com/berdyansk/astra-sm.git;protocol=http;branch=master \
 	file://replace-sys-siglist.patch \
 	"
 
-SRC_URI:remove:sh4 = "file://replace-sys-siglist.patch"
-
 S = "${WORKDIR}/git"
 
 inherit autotools-brokensep pkgconfig gettext

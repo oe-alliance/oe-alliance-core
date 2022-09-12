@@ -10,8 +10,6 @@ SRC_URI = "git://github.com/atvcaptain/rtl8822bu.git;protocol=https;branch=main 
     file://add-5.15-support.patch \
 "
 
-SRC_URI:append:sh4 = " file://fix_sh4_build.patch"
-
 EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR} KDIR=${STAGING_KERNEL_DIR}"
 
 S = "${WORKDIR}/git"

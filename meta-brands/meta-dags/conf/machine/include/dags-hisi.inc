@@ -74,6 +74,5 @@ IMAGE_CMD:dagsemmc:append = "\
     "
 
 BBMASK = "meta-vuplus/recipes-graphics/"
-BBMASK += "meta-fulan/recipes-graphics/"
 BBMASK += "meta-vuplus/recipes-webkit/"
 

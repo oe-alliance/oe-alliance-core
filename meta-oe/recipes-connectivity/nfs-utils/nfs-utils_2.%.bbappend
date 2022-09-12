@@ -13,7 +13,3 @@ do_install:append() {
         rm ${D}${sysconfdir}/init.d/nfsserver
     fi
 }
-
-FILESEXTRAPATHS:prepend:sh4 := "${THISDIR}/${PN}:"
-# SRC_URI:append:sh4 = " file://0001-sh4-fix-rpc-header-location.patch"
-CFLAGS:remove:sh4 = "-Wno-error=format-overflow"

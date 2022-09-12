@@ -12,8 +12,6 @@ FILES:${PN}-src += " \
     ${libdir}/${PYTHON_DIR}/*/*/*/*/*/*.py \
     "
 
-CFLAGS:append:sh4 = " -std=gnu11"
-
 # for importlib patch
 # add dummy __pycache__ files to make rm happy later...
 do_install:prepend() {

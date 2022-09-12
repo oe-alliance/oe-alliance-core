@@ -1,4 +1,4 @@
-oe-alliance-core 5.0
+oe-alliance-core 5.1
 ================
 
 The openembedded alliance core.
@@ -660,15 +660,6 @@ Sezam 1000HD            MACHINE:  sezam1000hd
 Sezam 5000HD            MACHINE:  sezam5000hd
 
 Sezam Marvel            MACHINE:  sezammarvel
-
-
-### SOGNO
-
-Sogno 8800HD            MACHINE:  sogno8800hd
-
-Sogno Spark Revolution  MACHINE:  sognorevolution
-
-Sogno Spark Triple      MACHINE:  sognotriple
 
 
 ### SPACE

@@ -112,6 +112,5 @@ IMAGE_CMD:beyonwizemmc:append = "\
 MACHINEOVERRIDES =. "${@['', '${MACHINEBUILD}:']['${MACHINEBUILD}' != '']}"
 
 BBMASK = "meta-vuplus/recipes-graphics/"
-BBMASK += "meta-fulan/recipes-graphics/"
 BBMASK += "meta-vuplus/recipes-webkit/"
 

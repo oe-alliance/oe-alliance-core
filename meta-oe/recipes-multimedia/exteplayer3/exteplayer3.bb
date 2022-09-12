@@ -47,21 +47,7 @@ SOURCE_FILES =+ "external/flv2mpeg4/src/dcprediction.c"
 SOURCE_FILES =+ "external/flv2mpeg4/src/flv2mpeg4.c"
 SOURCE_FILES =+ "external/plugins/src/png.c"
 
-SOURCE_FILES =+ "${@bb.utils.contains("TARGET_ARCH", "sh4", "\
-output/linuxdvb_sh4.c \
-output/writer/sh4/writer.c \
-output/writer/sh4/aac.c \
-output/writer/sh4/ac3.c \
-output/writer/sh4/divx2.c \
-output/writer/sh4/dts.c \
-output/writer/sh4/h263.c \
-output/writer/sh4/h264.c \
-output/writer/sh4/mp3.c \
-output/writer/sh4/mpeg2.c \
-output/writer/sh4/pcm.c \
-output/writer/sh4/vc1.c \
-output/writer/sh4/wma.c \
-output/writer/sh4/wmv.c ", " \
+SOURCE_FILES =+ " \
 output/linuxdvb_mipsel.c \
 output/writer/mipsel/writer.c \
 output/writer/mipsel/aac.c \
@@ -80,7 +66,7 @@ output/writer/mipsel/mpeg4.c \
 output/writer/mipsel/divx3.c \
 output/writer/mipsel/vp.c \
 output/writer/mipsel/wmv.c \
-output/writer/mipsel/vc1.c ", d)}"
+output/writer/mipsel/vc1.c"
 
 do_compile() {
     ${CC} ${SOURCE_FILES} -D_FILE_OFFSET_BITS=64 -D_LARGEFILE64_SOURCE -D_LARGEFILE_SOURCE -DHAVE_FLV2MPEG4_CONVERTER -I${S}/include -I${S}/external -I${S}/external/flv2mpeg4 -I${D}/${libdir} -I${D}/${includedir} -lswscale -ldl -lpthread -lavformat -lavcodec -lavutil -lswresample -o exteplayer3 ${LDFLAGS}

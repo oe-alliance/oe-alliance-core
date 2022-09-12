@@ -14,8 +14,6 @@ SRC_URI = "https://source.mynonpublic.com/rtl8812AU-driver-4.3.14.zip \
     file://0001-Add-support-for-kernels-4.8.patch \
 "
 
-SRC_URI:append:sh4 = " file://fix_sh4_build.patch"
-
 EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR} KDIR=${STAGING_KERNEL_DIR}"
 
 S = "${WORKDIR}/rtl8812AU-driver-4.3.14"

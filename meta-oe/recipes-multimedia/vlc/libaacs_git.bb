@@ -14,8 +14,6 @@ PKGV = "0.10.0+git${GITPKGV}"
 SRC_URI = "git://code.videolan.org/videolan/${BPN}.git;protocol=https;branch=master \
         file://libgcrypt-gpg-error-use-pkgconfig.patch"
 
-SRC_URI:append:sh4 = " file://add-missing-includes-for-gcc-4-9-4.patch"
-
 S = "${WORKDIR}/git"
 
 inherit autotools-brokensep lib_package pkgconfig

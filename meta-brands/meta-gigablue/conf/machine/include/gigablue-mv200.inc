@@ -75,6 +75,5 @@ IMAGE_CMD:gigablueemmc:append = "\
 OEM_ARCH = "${MACHINEBUILD}"
 
 BBMASK = "meta-vuplus/recipes-graphics/"
-BBMASK += "meta-fulan/recipes-graphics/"
 BBMASK += "meta-vuplus/recipes-webkit/"
 

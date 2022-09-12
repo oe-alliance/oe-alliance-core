@@ -21,8 +21,6 @@ DEPENDS = "${PYTHON_PN} lzo"
 RDEPENDS:${PN} = "kernel-module-nandsim openmultiboot enigma2 lzo"
 
 RDEPENDS:${PN}:gb800solo = "kernel-module-block2mtd openmultiboot"
-RDEPENDS:${PN}:spark7162 = "kernel-module-block2mtd openmultiboot unjffs2"
-RDEPENDS:${PN}:spark = "kernel-module-block2mtd openmultiboot unjffs2"
 
 EXTRA_OECONF = "\
     --with-po \

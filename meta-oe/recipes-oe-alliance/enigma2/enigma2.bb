@@ -207,10 +207,6 @@ SRC_URI = "${ENIGMA2_URI}"
 #    file://enigma2-dinobotplayer.patch \
 #    "
 
-SRC_URI:append:sh4 = " \
-    ${@bb.utils.contains("DISTRO_NAME", "openspa", "file://sh4-define-DTV_ENUM_DELSYS.patch" , "", d)} \
-    "
-
 SRC_URI:append:vuduo = " \
     file://duo_VFD.patch \
     "

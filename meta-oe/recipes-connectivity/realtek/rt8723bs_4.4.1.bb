@@ -28,9 +28,6 @@ SRC_URI = "git://github.com/anthonywong/rtl8723bs.git;protocol=https;branch=mast
     file://add-5.15-support.patch \
     "
 
-SRC_URI:append:sh4 = " file://rt8723bs_sh4.patch;patch=1 \
-    "
-
 S = "${WORKDIR}/git"
 
 inherit module

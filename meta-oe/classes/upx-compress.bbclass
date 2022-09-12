@@ -3,9 +3,9 @@ do_upx() {
 	if [ ${FLASHSIZE} -le ${COMPRESS_UPTO} ]
 	then
 		echo "UPX - Binary compression"
-		if [ "${TARGET_ARCH}" == "sh4" ] || [ "${TARGET_ARCH}" == "arm" ]
+		if [ "${TARGET_ARCH}" == "arm" ]
 		then
-			echo "Sorry UPX doesn't support sh4 and doesn't work reliably on arm.."
+			echo "Sorry UPX doesn't work reliably on arm.."
 			echo "So no compression for your platform."
 		else
 			find "${WORKDIR}/packages-split" -type f -executable | while read line

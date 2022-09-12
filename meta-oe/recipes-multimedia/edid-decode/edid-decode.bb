@@ -14,10 +14,4 @@ SRC_URI = "git://git.linuxtv.org/edid-decode.git;protocol=https;branch=master"
 
 S = "${WORKDIR}/git"
 
-CFLAGS:sh4 += "-std=c++11"
-
 inherit autotools-brokensep pkgconfig
-
-do_configure:prepend:sh4() {
-    sed -i 's/-Wimplicit-fallthrough//g' Makefile
-}

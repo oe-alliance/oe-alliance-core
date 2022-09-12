@@ -22,11 +22,6 @@ SRC_URI:append = " \
     ${@bb.utils.contains('DISTRO_FEATURES', 'tuxtxtfhd', 'file://libtuxtxt_FHD.patch', '', d)} \
     "
 
-
-SRC_URI:append:sh4 = " \
-    file://tuxtxtlib_sh4_fix.patch;patch=1 \
-"
-
 SRC_URI:append:xc7362 = " \
     file://tuxtxt_clear_screen.patch \
 "

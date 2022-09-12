@@ -1,9 +1,6 @@
-
 FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 
-SRC_URI += "file://add-sh4.patch \
-    file://udev-builtin-input_id.patch \
-"
+SRC_URI += "file://udev-builtin-input_id.patch"
 
 do_install:append() {
 	install -d ${D}${base_libdir}

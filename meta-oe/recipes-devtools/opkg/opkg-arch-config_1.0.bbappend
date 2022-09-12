@@ -78,11 +78,6 @@ do_compile:append:hisi3798cv200() {
     echo "arch cortexa15hf-neon-vfpv4 $priority" >> $archconf
 }
 
-do_compile:append:sh4() {
-    echo "arch mips32el $priority" >> $archconf
-    echo "arch mipsel $priority" >> $archconf
-}
-
 do_compile:append:cube() {
     echo "arch mips32el $priority" >> $archconf
     echo "arch mipsel $priority" >> $archconf

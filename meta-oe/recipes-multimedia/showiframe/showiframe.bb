@@ -9,10 +9,6 @@ PV = "1.4"
 
 SRC_URI = "file://showiframe.c"
 
-SRC_URI:append:sh4 = " \
-    file://showiframe-sh4.patch \
-"
-
 S = "${WORKDIR}"
 
 do_compile() {
