@@ -79,4 +79,4 @@ RRECOMMENDS:${PN} = "\
     kernel-module-nls-iso8859-15 \
     "
 
-GETEXTRA = "${@bb.utils.contains('MACHINE', 'cube', '', 'edid-decode', d)}"
+GETEXTRA = "edid-decode"

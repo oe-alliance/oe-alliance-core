@@ -1,9 +1,3 @@
-FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
-
-SRC_URI:append:cube = " \
-    file://util-linux-random.patch \
-"
-
 PACKAGES =+ "util-linux-flock"
 FILES:util-linux-flock = "${base_sbindir}/flock.${BPN}"
 
