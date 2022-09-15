@@ -36,6 +36,7 @@ LINUX_WIFI_mt7106u = " \
     ${@bb.utils.contains("MACHINE", "pulse4kmini", "kernel-module-mt7601u", "", d)} \
     ${@bb.utils.contains("MACHINE", "viper4k", "kernel-module-mt7601u", "", d)} \
     ${@bb.utils.contains("MACHINE", "dagsmv200", "kernel-module-mt7601u", "", d)} \
+    ${@bb.utils.contains("MACHINE", "ip8", "kernel-module-mt7601u", "", d)} \
     "
 
 PV = "1.0"

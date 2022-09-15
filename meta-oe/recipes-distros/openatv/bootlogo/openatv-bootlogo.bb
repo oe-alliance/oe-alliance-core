@@ -77,6 +77,7 @@ SRC_URI:append:multibox = " file://logo.img"
 SRC_URI:append:gbmv200 = " file://logo.img"
 SRC_URI:append:beyonwizv2 = " file://logo.img"
 SRC_URI:append:viper4k = " file://logo.img"
+SRC_URI:append:ip8 = " file://logo.img"
 
 BINARY_VERSION = "1.3"
 
