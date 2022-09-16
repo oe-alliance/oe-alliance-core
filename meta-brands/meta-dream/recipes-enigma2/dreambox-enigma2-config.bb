@@ -6,6 +6,8 @@ require conf/license/license-gplv2.inc
 PV = "1.0"
 PR = "r3"
 
+COMPATIBLE_MACHINE = "^(dm7020hd$|dm7020hdv2$|dm8000)$"
+
 SRC_URI = "file://skin_box.xml"
 
 PACKAGES = "${PN}"
