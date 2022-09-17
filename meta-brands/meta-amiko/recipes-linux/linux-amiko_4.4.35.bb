@@ -3,6 +3,9 @@ SECTION = "kernel"
 LICENSE = "GPL-2.0-only"
 
 KERNEL_RELEASE = "4.4.35"
+
+COMPATIBLE_MACHINE = "viper4k"
+
 SRCDATE = "20181224"
 
 inherit kernel machine_kernel_pr

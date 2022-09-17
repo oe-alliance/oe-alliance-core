@@ -3,6 +3,8 @@ LICENSE = "GPL-2.0-only"
 SECTION = "kernel"
 KV = "3.13.5"
 
+COMPATIBLE_MACHINE = "^(vuduo2|vusolo2|vusolose|vuzero)$"
+
 RPROVIDES:kernel-image = "kernel-image-${KERNEL_VERSION} kernel-${KERNEL_IMAGETYPE}"
 
 inherit kernel machine_kernel_pr

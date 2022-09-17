@@ -6,6 +6,8 @@ SRC = "20170220"
 
 inherit kernel machine_kernel_pr
 
+COMPATIBLE_MACHINE = "^(g100|g101|g300)$"
+
 KERNEL_RELEASE = "4.1.24"
 
 SRC_URI[md5sum] = "7167a90b414af721440a3b6c607f86d5"

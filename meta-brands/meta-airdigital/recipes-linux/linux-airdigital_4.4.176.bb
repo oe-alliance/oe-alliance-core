@@ -5,6 +5,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
 KERNEL_RELEASE = "4.4.176"
 
+COMPATIBLE_MACHINE = "^(h8|hzero|h11)$"
+
 SRCDATE = "20210920"
 
 inherit kernel machine_kernel_pr

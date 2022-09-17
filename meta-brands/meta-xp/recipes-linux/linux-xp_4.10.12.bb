@@ -4,6 +4,8 @@ LICENSE = "GPL-2.0-only"
 
 KERNEL_RELEASE = "4.10.12"
 
+COMPATIBLE_MACHINE = "xp1000"
+
 inherit kernel machine_kernel_pr
 
 SRC_URI[md5sum] = "3c42df14db9d12041802f4c8fec88e17"

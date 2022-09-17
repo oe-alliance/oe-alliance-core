@@ -4,6 +4,8 @@ LICENSE = "GPL-2.0-only"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 SRC = "20171113"
 
+COMPATIBLE_MACHINE = "sf5008"
+
 inherit kernel machine_kernel_pr
 
 KERNEL_RELEASE = "4.9.51"

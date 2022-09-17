@@ -8,6 +8,8 @@ KERNEL_RELEASE = "4.4.35"
 
 SRCDATE = "20200219"
 
+COMPATIBLE_MACHINE = "^(hd60|hd61|hd66se)$"
+
 inherit kernel machine_kernel_pr
 
 MACHINE_KERNEL_PR:append = "19"

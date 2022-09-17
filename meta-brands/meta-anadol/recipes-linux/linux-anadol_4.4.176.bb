@@ -3,6 +3,9 @@ SECTION = "kernel"
 LICENSE = "GPLv2"
 
 KERNEL_RELEASE = "4.4.176"
+
+COMPATIBLE_MACHINE = "ip8"
+
 SRCDATE = "20220302"
 
 inherit kernel machine_kernel_pr

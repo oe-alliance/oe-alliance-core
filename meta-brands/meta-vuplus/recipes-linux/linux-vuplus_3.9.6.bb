@@ -7,6 +7,8 @@ RPROVIDES:kernel-image = "kernel-image-${KERNEL_VERSION} kernel-${KERNEL_IMAGETY
 
 inherit kernel machine_kernel_pr
 
+COMPATIBLE_MACHINE = "^(vuduo|vusolo|vuultimo|vuuno)$"
+
 SRCREV = ""
 
 SRC_URI[md5sum] = "33142378c8387a87190156be1cb1a254"

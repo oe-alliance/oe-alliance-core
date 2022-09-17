@@ -5,6 +5,8 @@ SECTION = "kernel"
 KV = "3.14.28"
 MACHINE_KERNEL_PR:append = "11"
 
+COMPATIBLE_MACHINE = "dags7252"
+
 RPROVIDES:kernel-image = "kernel-image-${KERNEL_VERSION} kernel-${KERNEL_IMAGETYPE}"
 
 inherit kernel machine_kernel_pr

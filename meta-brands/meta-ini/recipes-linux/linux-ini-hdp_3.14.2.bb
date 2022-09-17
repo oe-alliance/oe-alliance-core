@@ -5,6 +5,8 @@ LICENSE = "GPL-2.0-only"
 KV = "3.14.2"
 SRCDATE = "20150603"
 
+COMPATIBLE_MACHINE = "inihdp"
+
 SRC_URI[md5sum] = "0a9eb4bab291ea6047a0c779c0dd4304"
 SRC_URI[sha256sum] = "81effcef755b6b0fe5a930b5bfc058ea1f5195b410819df1585dc52aff0f6d8c"
 

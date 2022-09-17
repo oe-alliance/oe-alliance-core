@@ -10,6 +10,8 @@ SRCDATE:vg2000 = "20141208"
 SRCDATE:yh7362 = "20160217"
 SRCDATE:yh62tc = "20170821"
 
+COMPATIBLE_MACHINE = "^(jj7362|vg1000|vg2000|vg5000|yh62tc|yh7362)$"
+
 inherit kernel machine_kernel_pr
 
 MACHINE_KERNEL_PR:append = ".4"

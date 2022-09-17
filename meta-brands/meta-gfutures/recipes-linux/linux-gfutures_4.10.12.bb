@@ -6,6 +6,8 @@ KERNEL_RELEASE = "4.10.12"
 
 inherit kernel machine_kernel_pr
 
+COMPATIBLE_MACHINE = "^(hd11|hd51|hd500c|hd530c|hd1100|hd1200|hd1265|hd1500|vs1000|vs1500)$"
+
 SRC_URI[mips.md5sum] = "3c42df14db9d12041802f4c8fec88e17"
 SRC_URI[mips.sha256sum] = "738896d2682211d2079eeaa1c7b8bdd0fe75eb90cd12dff2fc5aeb3cc02562bc"
 SRC_URI[arm.md5sum] = "bda1c09ed92a805cedc6770c0dd40e81"

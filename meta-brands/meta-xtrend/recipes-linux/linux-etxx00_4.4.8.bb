@@ -8,6 +8,8 @@ inherit kernel machine_kernel_pr
 KERNEL_RELEASE = "4.4.8"
 SRCDATE = "20160504"
 
+COMPATIBLE_MACHINE = "^(et7x00|et8500)$"
+
 MACHINE_KERNEL_PR:append = ".1"
 
 SRC_URI[md5sum] = "8b67a95176111385270ed3276436193a"

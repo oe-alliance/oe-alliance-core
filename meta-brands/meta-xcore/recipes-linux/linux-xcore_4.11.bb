@@ -7,6 +7,8 @@ SRC = "20170501"
 
 KERNEL_RELEASE = "4.11"
 
+COMPATIBLE_MACHINE = "^(xc7346|xc7362)$"
+
 inherit kernel machine_kernel_pr
 
 SRC_URI[md5sum] = "314b8c61217557f05ea2678313af8a9e"
@@ -39,6 +41,8 @@ SRC_URI += "https://source.mynonpublic.com/xcore/xcore-linux-${PV}-${SRC}.tar.gz
     file://0002-makefile-disable-warnings.patch \
     file://move-default-dialect-to-SMB3.patch \
     file://fix-multiple-defs-yyloc.patch \
+    file://fix-never-be-null_outside-array-bounds-gcc-12.patch \
+    file://use-address-of-operator-on-section-symbols-gcc-12.patch \
     "
 
 S = "${WORKDIR}/linux-brcmstb-${PV}"

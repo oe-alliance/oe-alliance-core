@@ -5,6 +5,8 @@ KV = "3.9.7-r2"
 
 inherit kernel machine_kernel_pr
 
+COMPATIBLE_MACHINE = "^(dags7335|dags7356|dags7362)$"
+
 RPROVIDES:kernel-image = "kernel-image-${KERNEL_VERSION} kernel-${KERNEL_IMAGETYPE}"
 
 SRCDATE = "20141120"

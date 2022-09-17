@@ -2,6 +2,8 @@ inherit kernel machine_kernel_pr
 
 MACHINE_KERNEL_PR:append = ".14"
 
+COMPATIBLE_MACHINE = "^(dm520|dm820|dm7080)$"
+
 PATCHREV = "30070c78a23d461935d9db0b6ce03afc70a10c51"
 PATCHLEVEL = "113"
 

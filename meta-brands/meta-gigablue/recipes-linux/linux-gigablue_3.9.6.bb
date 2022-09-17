@@ -5,6 +5,8 @@ KV = "3.9.6"
 
 inherit kernel machine_kernel_pr
 
+COMPATIBLE_MACHINE = "^(gb800solo|gb7325)$"
+
 SRCDATE = "20140904"
 
 SRC_URI[md5sum] = "0cb37745787e0ff5070e14a7bbf3dc5c"

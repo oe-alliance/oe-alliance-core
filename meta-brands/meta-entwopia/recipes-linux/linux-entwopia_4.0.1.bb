@@ -5,6 +5,8 @@ LICENSE = "GPL-2.0-only"
 KERNEL_RELEASE = "4.0.1"
 SRCDATE = "20160525"
 
+COMPATIBLE_MACHINE = "ch625lc"
+
 inherit kernel machine_kernel_pr
 
 SRC_URI[md5sum] = "1272910039af73c5fce786254ced6ce6"

@@ -6,6 +6,8 @@ inherit kernel machine_kernel_pr
 
 KERNEL_RELEASE = "3.3.0"
 
+COMPATIBLE_MACHINE = "^(ixussone|ixusszero)$"
+
 SRC_URI[md5sum] = "a2fbd9e424a8d0d6157fcb25e08ec393"
 SRC_URI[sha256sum] = "5ad462c4a9b8433685eef816090cb9fbc83a88126ea1fc5c0495ad79bf849469"
 

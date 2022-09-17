@@ -8,6 +8,8 @@ SRCDATE:ew7358 = "20141102"
 SRCDATE:ew7362 = "20140517"
 SRCDATE:ch62lc = "20150920"
 
+COMPATIBLE_MACHINE = "^(ch62lc|ew7356|ew7358|ew7362)$"
+
 inherit kernel machine_kernel_pr
 
 MACHINE_KERNEL_PR:append = ".3"

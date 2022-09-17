@@ -3,6 +3,8 @@ SECTION = "kernel"
 LICENSE = "GPL-2.0-only"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
+COMPATIBLE_MACHINE = "ultramini"
+
 inherit kernel machine_kernel_pr
 
 SRC_URI[md5sum] = "e7ba35d427bfa40d78cd6e23db7872a2"

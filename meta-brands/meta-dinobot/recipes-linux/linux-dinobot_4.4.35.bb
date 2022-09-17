@@ -6,6 +6,8 @@ KERNEL_RELEASE = "4.4.35"
 SRCDATE:u5pvr = "20180502"
 SRCDATE = "20180828"
 
+COMPATIBLE_MACHINE = "^(u41|u42|u43|u45|u5|u51|u52|u53|u54|u55|u56|u57|u532|u533|u571|u5pvr)$"
+
 inherit kernel machine_kernel_pr
 
 MACHINE_KERNEL_PR:append = "32"

@@ -7,6 +7,8 @@ inherit kernel machine_kernel_pr
 MACHINE_KERNEL_PR:append = "2"
 KERNEL_RELEASE = "3.8.7"
 
+COMPATIBLE_MACHINE = "^(et5x00|et6x00|et9x00)$"
+
 SRC_URI[md5sum] = "5f6aaac90a4587df34e418bedd7d40eb"
 SRC_URI[sha256sum] = "afc3e654b779f4b994a0d455d6ad12f46ff0dbec2fe222a4f55925744b498218"
 

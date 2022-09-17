@@ -6,6 +6,8 @@ KV = "4.1.20"
 DATETIME = "20180321"
 MACHINE_KERNEL_PR:append = "1"
 
+COMPATIBLE_MACHINE = "dags72604"
+
 RPROVIDES:kernel-image = "kernel-image-${KERNEL_VERSION} kernel-${KERNEL_IMAGETYPE}"
 
 inherit kernel machine_kernel_pr

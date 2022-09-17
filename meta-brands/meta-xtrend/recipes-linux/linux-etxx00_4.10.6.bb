@@ -4,6 +4,8 @@ LICENSE = "GPL-2.0-only"
 
 KERNEL_RELEASE = "4.10.6"
 
+COMPATIBLE_MACHINE = "^(et4x00|et8000|et10000)$"
+
 inherit kernel machine_kernel_pr
 
 SRC_URI[md5sum] = "e5d32dd03b742e6101fde917dcba837d"

@@ -5,6 +5,8 @@ LICENSE = "GPL-2.0-only"
 KERNEL_RELEASE = "4.4.176"
 SRCDATE = "20210806"
 
+COMPATIBLE_MACHINE = "ustym4kottpremium"
+
 inherit kernel machine_kernel_pr
 
 MACHINE_KERNEL_PR:append = "0"

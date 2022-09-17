@@ -3,6 +3,8 @@ SECTION = "kernel"
 LICENSE = "GPL-2.0-only"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
+COMPATIBLE_MACHINE = "^(e3hd|odinm7)$"
+
 inherit kernel machine_kernel_pr
 
 SRC_URI[md5sum] = "76b7b50307cddf1b30ba63c16af95e52"

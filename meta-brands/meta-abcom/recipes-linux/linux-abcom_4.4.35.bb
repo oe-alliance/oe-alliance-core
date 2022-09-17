@@ -5,6 +5,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
 KERNEL_RELEASE = "4.4.35"
 
+COMPATIBLE_MACHINE = "^(pulse4k|pulse4kmini)$"
+
 SRCDATE = "20200219"
 
 inherit kernel machine_kernel_pr

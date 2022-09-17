@@ -4,6 +4,8 @@ SECTION = "kernel"
 
 MODULE = "linux-3.14.28"
 
+COMPATIBLE_MACHINE = "^(vusolo4k|vuultimo4k|vuuno4k)$"
+
 MACHINE_KERNEL_PR:append = "oea4.2-r4"
 
 RPROVIDES:kernel-image = "kernel-image-${KERNEL_VERSION} kernel-${KERNEL_IMAGETYPE}"

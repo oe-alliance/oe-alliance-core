@@ -1,0 +1,85 @@
+From d422c6c0644bccbb1ebeefffa51f35cec3019517 Mon Sep 17 00:00:00 2001
+From: Nathan Chancellor <natechancellor@gmail.com>
+Date: Tue, 5 Jan 2021 13:18:27 -0700
+Subject: MIPS: Use address-of operator on section symbols
+
+When building xway_defconfig with clang:
+
+arch/mips/lantiq/prom.c:82:23: error: array comparison always evaluates
+to true [-Werror,-Wtautological-compare]
+        else if (__dtb_start != __dtb_end)
+                             ^
+1 error generated.
+
+These are not true arrays, they are linker defined symbols, which are
+just addresses. Using the address of operator silences the warning
+and does not change the resulting assembly with either clang/ld.lld
+or gcc/ld (tested with diff + objdump -Dr). Do the same thing across
+the entire MIPS subsystem to ensure there are no more warnings around
+this type of comparison.
+
+Link: https://github.com/ClangBuiltLinux/linux/issues/1232
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+---
+ arch/mips/bmips/setup.c          | 2 +-
+ arch/mips/lantiq/prom.c          | 2 +-
+ arch/mips/pic32/pic32mzda/init.c | 2 +-
+ arch/mips/ralink/of.c            | 2 +-
+ 4 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/arch/mips/bmips/setup.c b/arch/mips/bmips/setup.c
+index 19308df5f5779..1b06b25aea87d 100644
+--- a/arch/mips/bmips/setup.c
++++ b/arch/mips/bmips/setup.c
+@@ -167,7 +167,7 @@ void __init plat_mem_setup(void)
+ 		dtb = phys_to_virt(fw_arg2);
+ 	else if (fw_passed_dtb) /* UHI interface or appended dtb */
+ 		dtb = (void *)fw_passed_dtb;
+-	else if (__dtb_start != __dtb_end)
++	else if (&__dtb_start != &__dtb_end)
+ 		dtb = (void *)__dtb_start;
+ 	else
+ 		panic("no dtb found");
+diff --git a/arch/mips/lantiq/prom.c b/arch/mips/lantiq/prom.c
+index 51a218f04fe0d..3f568f5aae2d1 100644
+--- a/arch/mips/lantiq/prom.c
++++ b/arch/mips/lantiq/prom.c
+@@ -79,7 +79,7 @@ void __init plat_mem_setup(void)
+ 
+ 	if (fw_passed_dtb) /* UHI interface */
+ 		dtb = (void *)fw_passed_dtb;
+-	else if (__dtb_start != __dtb_end)
++	else if (&__dtb_start != &__dtb_end)
+ 		dtb = (void *)__dtb_start;
+ 	else
+ 		panic("no dtb found");
+diff --git a/arch/mips/pic32/pic32mzda/init.c b/arch/mips/pic32/pic32mzda/init.c
+index 50f376f058f43..f232c77ff5265 100644
+--- a/arch/mips/pic32/pic32mzda/init.c
++++ b/arch/mips/pic32/pic32mzda/init.c
+@@ -28,7 +28,7 @@ static ulong get_fdtaddr(void)
+ 	if (fw_passed_dtb && !fw_arg2 && !fw_arg3)
+ 		return (ulong)fw_passed_dtb;
+ 
+-	if (__dtb_start < __dtb_end)
++	if (&__dtb_start < &__dtb_end)
+ 		ftaddr = (ulong)__dtb_start;
+ 
+ 	return ftaddr;
+diff --git a/arch/mips/ralink/of.c b/arch/mips/ralink/of.c
+index cbae9d23ab7ff..2c9af61efc205 100644
+--- a/arch/mips/ralink/of.c
++++ b/arch/mips/ralink/of.c
+@@ -75,7 +75,7 @@ void __init plat_mem_setup(void)
+ 	 */
+ 	if (fw_passed_dtb)
+ 		dtb = (void *)fw_passed_dtb;
+-	else if (__dtb_start != __dtb_end)
++	else if (&__dtb_start != &__dtb_end)
+ 		dtb = (void *)__dtb_start;
+ 
+ 	__dt_setup_arch(dtb);
+-- 
+cgit 

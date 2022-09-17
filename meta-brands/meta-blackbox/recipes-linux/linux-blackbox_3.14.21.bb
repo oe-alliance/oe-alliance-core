@@ -6,6 +6,9 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 inherit kernel machine_kernel_pr
 
 KV = "3.14.21"
+
+COMPATIBLE_MACHINE = "blackbox7405"
+
 SRCDATE = "20151003"
 
 SRC_URI[md5sum] = "f7edd5923ead4c334840c62eab3e79f0"

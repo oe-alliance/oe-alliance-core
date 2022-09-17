@@ -5,6 +5,8 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 inherit kernel machine_kernel_pr
 
+COMPATIBLE_MACHINE = "9900lx"
+
 KERNEL_RELEASE = "4.1.21"
 SRCDATE = "20160407"
 

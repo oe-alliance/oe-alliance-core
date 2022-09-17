@@ -6,6 +6,8 @@ LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad
 PRECOMPILED_ARCH = "${MACHINE}"
 PRECOMPILED_ARCH:dm7020hdv2 = "dm7020hd"
 
+COMPATIBLE_MACHINE = "^(dm500hd|dm500hdv2|dm800se|dm800sev2|dm7020hd|dm7020hdv2|dm8000)$"
+
 inherit kernel machine_kernel_pr
 
 MACHINE_KERNEL_PR:append = ".7"

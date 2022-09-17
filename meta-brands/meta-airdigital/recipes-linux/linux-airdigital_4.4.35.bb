@@ -7,6 +7,8 @@ KERNEL_RELEASE = "4.4.35"
 
 SRCDATE = "20200508"
 
+COMPATIBLE_MACHINE = "^(h8|h9|h9se|h9combo|h9combose|h10|hzero|i55plus|i55se)$"
+
 inherit kernel machine_kernel_pr
 
 MACHINE_KERNEL_PR:append = "34"

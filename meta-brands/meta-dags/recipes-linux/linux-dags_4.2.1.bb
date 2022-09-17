@@ -6,6 +6,8 @@ SRCDATE = "20151022"
 
 inherit kernel machine_kernel_pr
 
+COMPATIBLE_MACHINE = "^(dags7362|dags73625)$"
+
 RPROVIDES:kernel-image = "kernel-image-${KERNEL_VERSION} kernel-${KERNEL_IMAGETYPE}"
 
 SRC_URI[md5sum] = "48d1c96b3bedcc6a11c34eede6e36bfd"

@@ -4,6 +4,8 @@ LICENSE = "GPL-2.0-only"
 
 KERNEL_RELEASE = "4.10.12"
 
+COMPATIBLE_MACHINE = "^(7005s|7105s|7215s|7225s|8100s)$"
+
 inherit kernel machine_kernel_pr
 
 SRC_URI[mips.md5sum] = "1d85dbb87cd57d6147213c65d73fed9e"

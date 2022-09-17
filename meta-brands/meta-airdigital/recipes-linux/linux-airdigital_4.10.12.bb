@@ -4,6 +4,8 @@ LICENSE = "GPL-2.0-only"
 
 KERNEL_RELEASE = "4.10.12"
 
+COMPATIBLE_MACHINE = "^(sh1|h3|h4|h5|h6|h7|lc|i55)$"
+
 inherit kernel machine_kernel_pr
 
 SRC_URI[mips.md5sum] = "3c42df14db9d12041802f4c8fec88e17"
@@ -48,6 +50,7 @@ SRC_URI:append:mipsel = " \
     file://0001-add-dmx-source-timecode.patch \
     file://0002-nand-ecc-strength-and-bitflip.patch \
     file://sdio-pinmux.patch \
+    file://fix-never-be-null_outside-array-bounds-gcc-12.patch \
     "
 
 SRC_URI:append:arm = " \

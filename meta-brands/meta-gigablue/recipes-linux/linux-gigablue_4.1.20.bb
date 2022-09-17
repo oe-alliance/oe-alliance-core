@@ -4,6 +4,8 @@ SECTION = "kernel"
 
 MODULE = "linux-4.1.20"
 
+COMPATIBLE_MACHINE = "^(gb7252|gb72604)$"
+
 inherit kernel machine_kernel_pr
 
 MACHINE_KERNEL_PR:append = "r11"

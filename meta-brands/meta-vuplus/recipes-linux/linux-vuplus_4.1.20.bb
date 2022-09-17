@@ -4,6 +4,8 @@ SECTION = "kernel"
 
 MODULE = "linux-4.1.20"
 
+COMPATIBLE_MACHINE = "^(vuuno4kse|vuzero4k)$"
+
 MACHINE_KERNEL_PR:append = "oea4.1-r7"
 
 RPROVIDES:kernel-image = "kernel-image-${KERNEL_VERSION} kernel-${KERNEL_IMAGETYPE}"
