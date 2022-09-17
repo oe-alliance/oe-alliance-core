@@ -64,6 +64,7 @@ SRC_URI += "https://source.mynonpublic.com/tripledot/${MACHINE}-linux-${PV}-base
         file://kernel-add-support-for-gcc10.patch \
         file://kernel-add-support-for-gcc11.patch \
         file://kernel-add-support-for-gcc12.patch \
+        file://build-with-gcc12-fixes.patch \
         file://rtl8712-fix-warnings.patch \
         file://0001-Support-TBS-USB-drivers.patch \
         file://0001-STV-Add-PLS-support.patch \

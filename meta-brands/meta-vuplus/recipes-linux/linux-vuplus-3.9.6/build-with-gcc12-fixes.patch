@@ -1,0 +1,218 @@
+From a5df0d18ee61cca52f76ca7a69d4809471e912c9 Mon Sep 17 00:00:00 2001
+From: NickerSK <nickersk@gmail.com>
+Date: Wed, 11 May 2022 13:39:29 +0000
+Subject: [PATCH] build with gcc12 fixes
+
+---
+ arch/mips/kernel/module.c |  7 ++++--
+ arch/mips/kernel/traps.c  | 12 +++++-----
+ include/linux/extable.h   | 46 +++++++++++++++++++++++++++++++++++++++
+ include/linux/mmzone.h    | 11 ++++++++--
+ include/linux/module.h    |  4 ++--
+ init/main.c               |  1 +
+ kernel/extable.c          |  1 +
+ kernel/module.c           |  3 ++-
+ 8 files changed, 73 insertions(+), 12 deletions(-)
+ create mode 100644 include/linux/extable.h
+
+diff --git a/arch/mips/kernel/module.c b/arch/mips/kernel/module.c
+index 2a52568d..1fafec5d 100644
+--- a/arch/mips/kernel/module.c
++++ b/arch/mips/kernel/module.c
+@@ -20,6 +20,8 @@
+ 
+ #undef DEBUG
+ 
++
++#include <linux/extable.h>
+ #include <linux/moduleloader.h>
+ #include <linux/elf.h>
+ #include <linux/mm.h>
+@@ -255,8 +257,9 @@ const struct exception_table_entry *search_module_dbetables(unsigned long addr)
+ 
+ 	spin_lock_irqsave(&dbe_lock, flags);
+ 	list_for_each_entry(dbe, &dbe_list, dbe_list) {
+-		e = search_extable(dbe->dbe_start, dbe->dbe_end - 1, addr);
+-		if (e)
++		e = search_extable(dbe->dbe_start,
++				   dbe->dbe_end - dbe->dbe_start, addr);
++	if (e)
+ 			break;
+ 	}
+ 	spin_unlock_irqrestore(&dbe_lock, flags);
+diff --git a/arch/mips/kernel/traps.c b/arch/mips/kernel/traps.c
+index 1aa22bba..262681dd 100644
+--- a/arch/mips/kernel/traps.c
++++ b/arch/mips/kernel/traps.c
+@@ -18,6 +18,7 @@
+ #include <linux/init.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
++#include <linux/extable.h>
+ #include <linux/mm.h>
+ #include <linux/sched.h>
+ #include <linux/smp.h>
+@@ -421,12 +422,13 @@ __asm__(
+ /* Given an address, look for it in the exception tables. */
+ static const struct exception_table_entry *search_dbe_tables(unsigned long addr)
+ {
+-	const struct exception_table_entry *e;
++    const struct exception_table_entry *e;
+ 
+-	e = search_extable(__start___dbe_table, __stop___dbe_table - 1, addr);
+-	if (!e)
+-		e = search_module_dbetables(addr);
+-	return e;
++    e = search_extable(__start___dbe_table,
++		        __stop___dbe_table - __start___dbe_table, addr);
++    if (!e)
++	e = search_module_dbetables(addr);
++    return e;
+ }
+ 
+ asmlinkage void do_be(struct pt_regs *regs)
+diff --git a/include/linux/extable.h b/include/linux/extable.h
+new file mode 100644
+index 00000000..4ab9e78f
+--- /dev/null
++++ b/include/linux/extable.h
+@@ -0,0 +1,46 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _LINUX_EXTABLE_H
++#define _LINUX_EXTABLE_H
++
++#include <linux/stddef.h>	/* for NULL */
++#include <linux/types.h>
++
++struct module;
++struct exception_table_entry;
++
++const struct exception_table_entry *
++search_extable(const struct exception_table_entry *base,
++	       const size_t num,
++	       unsigned long value);
++void sort_extable(struct exception_table_entry *start,
++		  struct exception_table_entry *finish);
++void sort_main_extable(void);
++void trim_init_extable(struct module *m);
++
++/* Given an address, look for it in the exception tables */
++const struct exception_table_entry *search_exception_tables(unsigned long add);
++const struct exception_table_entry *
++search_kernel_exception_table(unsigned long addr);
++
++#ifdef CONFIG_MODULES
++/* For extable.c to search modules' exception tables. */
++const struct exception_table_entry *search_module_extables(unsigned long addr);
++#else
++static inline const struct exception_table_entry *
++search_module_extables(unsigned long addr)
++{
++	return NULL;
++}
++#endif /*CONFIG_MODULES*/
++
++#ifdef CONFIG_BPF_JIT
++const struct exception_table_entry *search_bpf_extables(unsigned long addr);
++#else
++static inline const struct exception_table_entry *
++search_bpf_extables(unsigned long addr)
++{
++	return NULL;
++}
++#endif
++
++#endif /* _LINUX_EXTABLE_H */
+diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+index bd791e45..4c49e7aa 100644
+--- a/include/linux/mmzone.h
++++ b/include/linux/mmzone.h
+@@ -1133,9 +1133,16 @@ extern struct mem_section mem_section[NR_SECTION_ROOTS][SECTIONS_PER_ROOT];
+ 
+ static inline struct mem_section *__nr_to_section(unsigned long nr)
+ {
+-	if (!mem_section[SECTION_NR_TO_ROOT(nr)])
++	unsigned long root = SECTION_NR_TO_ROOT(nr);
++
++	if (unlikely(root >= NR_SECTION_ROOTS))
+ 		return NULL;
+-	return &mem_section[SECTION_NR_TO_ROOT(nr)][nr & SECTION_ROOT_MASK];
++
++#ifdef CONFIG_SPARSEMEM_EXTREME
++	if (!mem_section || !mem_section[root])
++		return NULL;
++#endif
++	return &mem_section[root][nr & SECTION_ROOT_MASK];
+ }
+ extern int __section_nr(struct mem_section* ms);
+ extern unsigned long usemap_size(void);
+diff --git a/include/linux/module.h b/include/linux/module.h
+index 15cd6b1b..080a598f 100644
+--- a/include/linux/module.h
++++ b/include/linux/module.h
+@@ -74,7 +74,7 @@ extern void cleanup_module(void);
+ /* Archs provide a method of finding the correct exception table. */
+ struct exception_table_entry;
+ 
+-const struct exception_table_entry *
++/*const struct exception_table_entry *
+ search_extable(const struct exception_table_entry *first,
+ 	       const struct exception_table_entry *last,
+ 	       unsigned long value);
+@@ -82,7 +82,7 @@ void sort_extable(struct exception_table_entry *start,
+ 		  struct exception_table_entry *finish);
+ void sort_main_extable(void);
+ void trim_init_extable(struct module *m);
+-
++*/
+ #ifdef MODULE
+ #define MODULE_GENERIC_TABLE(gtype,name)			\
+ extern const struct gtype##_id __mod_##gtype##_table		\
+diff --git a/init/main.c b/init/main.c
+index febc511e..98b49eb1 100644
+--- a/init/main.c
++++ b/init/main.c
+@@ -12,6 +12,7 @@
+ #define DEBUG		/* Enable initcall_debug */
+ 
+ #include <linux/types.h>
++#include <linux/extable.h>
+ #include <linux/module.h>
+ #include <linux/proc_fs.h>
+ #include <linux/kernel.h>
+diff --git a/kernel/extable.c b/kernel/extable.c
+index 763faf03..aa3db055 100644
+--- a/kernel/extable.c
++++ b/kernel/extable.c
+@@ -17,6 +17,7 @@
+ */
+ #include <linux/ftrace.h>
+ #include <linux/memory.h>
++#include <linux/extable.h>
+ #include <linux/module.h>
+ #include <linux/mutex.h>
+ #include <linux/init.h>
+diff --git a/kernel/module.c b/kernel/module.c
+index f5a3b1e8..e53781a1 100644
+--- a/kernel/module.c
++++ b/kernel/module.c
+@@ -17,6 +17,7 @@
+     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
+ #include <linux/export.h>
++#include <linux/extable.h>
+ #include <linux/moduleloader.h>
+ #include <linux/ftrace_event.h>
+ #include <linux/init.h>
+@@ -3705,7 +3706,7 @@ const struct exception_table_entry *search_module_extables(unsigned long addr)
+ 			continue;
+ 
+ 		e = search_extable(mod->extable,
+-				   mod->extable + mod->num_exentries - 1,
++				   mod->extable + mod->num_exentries,
+ 				   addr);
+ 		if (e)
+ 			break;
+-- 
+2.34.1
+
