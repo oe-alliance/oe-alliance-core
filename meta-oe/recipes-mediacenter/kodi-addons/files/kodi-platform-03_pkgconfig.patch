@@ -1,0 +1,8 @@
+--- a/kodiplatform.pc.in
++++ b/kodiplatform.pc.in
+@@ -9,4 +9,4 @@ Name: @name@
+ Description: @description@ @major@.@minor@
+ Version: @major@.@minor@
+ Libs: @target@ @libs@
+-Cflags: @CMAKE_CXX_FLAGS@
++Cflags: -I${includedir}
