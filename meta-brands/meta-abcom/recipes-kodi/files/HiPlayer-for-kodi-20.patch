@@ -2140,7 +2140,7 @@ index 0000000..3ca537a
 +			::ioctl(m_video_fd, VIDEO_COMMAND, &cmd);
 +		}
 +	}
-+	CServiceBroker::GetGUI()->GetInfoManager().GetInfoProviders().GetPlayerInfoProvider().SetDisplayAfterSeek();
++//	CServiceBroker::GetGUI()->GetInfoManager().GetInfoProviders().GetPlayerInfoProvider().SetDisplayAfterSeek();
 +}
 +
 +bool CHiPlayerVideo::SeekTimeRelative(int64_t iTime)
@@ -2178,7 +2178,7 @@ index 0000000..3ca537a
 +			::ioctl(m_video_fd, VIDEO_CONTINUE);
 +		}
 +	}
-+	CServiceBroker::GetGUI()->GetInfoManager().GetInfoProviders().GetPlayerInfoProvider().SetDisplayAfterSeek();
++//	CServiceBroker::GetGUI()->GetInfoManager().GetInfoProviders().GetPlayerInfoProvider().SetDisplayAfterSeek();
 +}
 +
 +int64_t CHiPlayerVideo::GetTime()
