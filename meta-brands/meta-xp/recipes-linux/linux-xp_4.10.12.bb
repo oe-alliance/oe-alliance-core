@@ -26,6 +26,8 @@ RPROVIDES:${KERNEL_PACKAGE_NAME}-image = "kernel-image-${KERNEL_VERSION}"
 SRC_URI += "https://source.mynonpublic.com/xp1000/linux-${PV}-${ARCH}.tar.gz \
     file://defconfig \
     file://move-default-dialect-to-SMB3.patch \
+    file://fix-multiple-defs-yyloc.patch \
+    file://fix-never-be-null_outside-array-bounds-gcc-12.patch \
     "
 
 S = "${WORKDIR}/linux-${PV}"

@@ -42,6 +42,8 @@ SRC_URI += "https://source.mynonpublic.com/entwopia/${MACHINE}/${MACHINE}-linux-
     file://add-more-devices-rtl8xxxu.patch \
     file://0005-xbox-one-tuner-4.10.patch \
     file://0006-dvb-media-tda18250-support-for-new-silicon-tuner.patch \
+    file://fix-multiple-defs-yyloc.patch \
+    file://fix-never-be-null_outside-array-bounds-gcc-12.patch \
     "
 
 S = "${WORKDIR}/linux-${PV}-base"

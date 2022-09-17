@@ -1,0 +1,24 @@
+From 87ec4ee1aecf71d3b11e9d6cdaa6e398026cdf0c Mon Sep 17 00:00:00 2001
+From: Huevos <rowland@moralet.com>
+Date: Sat, 6 Nov 2021 16:42:44 +0100
+Subject: [PATCH] fix-multiple-defs-yyloc.patch
+
+---
+ scripts/dtc/dtc-parser.tab.c_shipped | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/scripts/dtc/dtc-parser.tab.c_shipped b/scripts/dtc/dtc-parser.tab.c_shipped
+index 31cec50..da139e3 100644
+--- a/scripts/dtc/dtc-parser.tab.c_shipped
++++ b/scripts/dtc/dtc-parser.tab.c_shipped
+@@ -1196,7 +1196,7 @@ int yychar;
+ /* The semantic value of the lookahead symbol.  */
+ YYSTYPE yylval;
+ /* Location data for the lookahead symbol.  */
+-YYLTYPE yylloc
++extern YYLTYPE yylloc
+ # if defined YYLTYPE_IS_TRIVIAL && YYLTYPE_IS_TRIVIAL
+   = { 1, 1, 1, 1 }
+ # endif
+--
+

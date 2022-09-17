@@ -55,6 +55,10 @@ SRC_URI:append:arm = " \
     file://blacklist_mmc0.patch \
     "
 
+SRC_URI:append:mipsel = " \
+    file://fix-never-be-null_outside-array-bounds-gcc-12.patch \
+    "
+
 S = "${WORKDIR}/linux-${PV}"
 B = "${WORKDIR}/build"
 

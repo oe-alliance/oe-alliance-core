@@ -31,6 +31,8 @@ SRC_URI += "https://source.mynonpublic.com/ax/linux-${PV}-${ARCH}.tar.gz \
     file://0001-stv090x-optimized-TS-sync-control.patch \
     file://0002-log2-give-up-on-gcc-constant-optimizations.patch \
     file://move-default-dialect-to-SMB3.patch \
+    file://fix-never-be-null_outside-array-bounds-gcc-12.patch \
+    file://fix-multiple-defs-yyloc.patch \
     "
 
 inherit kernel machine_kernel_pr
