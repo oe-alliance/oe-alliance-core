@@ -1,7 +1,7 @@
 SUMMARY = "kodi inputstream addon for several manifest types"
 
 LICENSE = "GPL-2.0-or-later"
-LIC_FILES_CHKSUM = "file://src/main.cpp;beginline=1;endline=17;md5=5eac1e215251c8f88d799f80ed45d5c0"
+LIC_FILES_CHKSUM = "file://src/main.cpp;beginline=1;endline=17;md5=7906619e2feca59ac3f5088ac7bc4100"
 
 FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 
@@ -11,8 +11,8 @@ DEPENDS += "expat bento4"
 RDEPENDS:${PN} += "ldd"
 RRECOMMENDS:${PN} = "kernel-module-ext2"
 
-SRCREV = "80da276cd7efd2ee6f669a55b269d65a178b6dab"
-PV = "20.1.2+gitr${SRCPV}"
+SRCREV = "3051f4727bfc2f311ede94ac6d4163ca6d140370"
+PV = "20.3.0+gitr${SRCPV}"
 
 KODIADDONBRANCH = "Nexus"
 

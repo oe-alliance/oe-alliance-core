@@ -7,9 +7,9 @@ inherit kodi-addon
 
 DEPENDS += "expat"
 
-SRCREV = "10640f8a721e302e7cbb5788ebd56a61529b257f"
+SRCREV = "7acd55ef3a24a620ccf54f936d39a27f6c6d53e7"
 
-PV = "20.1.0+gitr${SRCPV}"
+PV = "20.2.1+gitr${SRCPV}"
 
 KODIADDONBRANCH = "Nexus"
 
