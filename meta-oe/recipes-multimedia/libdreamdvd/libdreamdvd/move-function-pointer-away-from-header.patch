@@ -1,9 +1,12 @@
+diff --git a/a52_dec.c b/a52_dec.c
+index 36b4e87..dae23c0 100644
 --- a/a52_dec.c
 +++ b/a52_dec.c
 @@ -36,6 +36,17 @@
  
  #include "a52dec.h"
  
++// liba52 function defs for using dlsym
 +a52_state_t * (*a52_init) (uint32_t);
 +sample_t * (*a52_samples) (a52_state_t *);
 +int (*a52_syncinfo) (uint8_t * , int * , int * , int * );
@@ -14,32 +17,27 @@
 +void *a52_handle;
 +
 +a52_state_t * state;
-+
  
  // try to dynamically load and wrap liba52.so.0
  
+diff --git a/a52dec.h b/a52dec.h
+index 2cce61c..781d6c5 100644
 --- a/a52dec.h
 +++ b/a52dec.h
-@@ -50,16 +50,16 @@ typedef struct a52_state_s a52_state_t;
+@@ -49,17 +49,7 @@ typedef struct a52_state_s a52_state_t;
+ #define A52_LFE 16
  #define A52_ADJUST_LEVEL 32
  
- // liba52 function defs for using dlsym
+-// liba52 function defs for using dlsym
 -a52_state_t * (*a52_init) (uint32_t);
 -sample_t * (*a52_samples) (a52_state_t *);
 -int (*a52_syncinfo) (uint8_t * , int * , int * , int * );
 -int (*a52_frame) (a52_state_t * , uint8_t * , int * , level_t * , sample_t );
 -int (*a52_block) (a52_state_t * );
 -void (*a52_free) (a52_state_t * );
-+extern a52_state_t * (*a52_init) (uint32_t);
-+extern sample_t * (*a52_samples) (a52_state_t *);
-+extern int (*a52_syncinfo) (uint8_t * , int * , int * , int * );
-+extern int (*a52_frame) (a52_state_t * , uint8_t * , int * , level_t * , sample_t );
-+extern int (*a52_block) (a52_state_t * );
-+extern void (*a52_free) (a52_state_t * );
- 
+-
 -void *a52_handle;
-+extern void *a52_handle;
- 
+-
 -a52_state_t * state;
 +extern a52_state_t * state;
  
