@@ -37,6 +37,7 @@ SRC_URI += "http://en3homeftp.net/pub/src/dags-linux-${PV}-${SRCDATE}.tar.gz \
     file://0004-cp1emu-do-not-use-bools-for-arithmetic.patch \
     file://dvbskyt330_si2168_demod.patch \
     file://move-default-dialect-to-SMB3.patch \
+    file://fix-never-be-null_outside-array-bounds-gcc-12.patch \
     "
 
 S = "${WORKDIR}/linux-${PV}"

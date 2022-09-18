@@ -67,6 +67,7 @@ SRC_URI += "https://source.mynonpublic.com/protek/protek-linux-${PV}-${SRCDATE}.
     file://0003-cp1emu-do-not-use-bools-for-arithmetic.patch \
     file://0004-makefile-disable-warnings.patch \
     file://move-default-dialect-to-SMB3.patch \
+    file://fix-never-be-null_outside-array-bounds-gcc-12.patch \
 "
 
 S = "${WORKDIR}/linux-${PV}"

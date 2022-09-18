@@ -43,6 +43,7 @@ SRC_URI += "https://source.mynonpublic.com/ceryon/ceryon-linux-${PV}.tgz \
         file://0003-cp1emu-do-not-use-bools-for-arithmetic.patch \
         file://0004-log2-give-up-on-gcc-constant-optimizations.patch \
         file://move-default-dialect-to-SMB3.patch \
+        file://fix-never-be-null_outside-array-bounds-gcc-12.patch \
 "
 
 S = "${WORKDIR}/linux-${PV}"

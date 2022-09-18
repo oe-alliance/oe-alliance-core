@@ -35,6 +35,7 @@ SRC_URI += "https://source.mynonpublic.com/octagon/octagon-linux-${PV}-${SRC}.ta
     file://0001-stv090x-optimized-TS-sync-control.patch \
     file://0002-makefile-disable-warnings.patch \
     file://move-default-dialect-to-SMB3.patch \
+    file://fix-multiple-defs-yyloc.patch \
     "
 
 S = "${WORKDIR}/linux-${PV}"
