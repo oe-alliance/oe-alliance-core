@@ -1,0 +1,25 @@
+From 902cbb69bbd1cf49427e26e36f13d5083fe7457d Mon Sep 17 00:00:00 2001
+From: Captain <captain.onboard@web.de>
+Date: Sun, 18 Sep 2022 14:40:33 +0200
+Subject: [PATCH] add setup.py
+
+---
+ setup.py | 6 ++++++
+ 1 file changed, 6 insertions(+)
+ create mode 100644 setup.py
+
+diff --git a/setup.py b/setup.py
+new file mode 100644
+index 0000000..bac24a4
+--- /dev/null
++++ b/setup.py
+@@ -0,0 +1,6 @@
++#!/usr/bin/env python
++
++import setuptools
++
++if __name__ == "__main__":
++    setuptools.setup()
+-- 
+2.36.0.windows.1
+

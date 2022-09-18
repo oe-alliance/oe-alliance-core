@@ -13,19 +13,20 @@ RDEPENDS:${PN} = "\
     ${PYTHON_PN}-misc ${PYTHON_PN}-multiprocessing ${PYTHON_PN}-sqlite3 ${PYTHON_PN}-shell ${PYTHON_PN}-sabyenc3 ${PYTHON_PN}-configobj \
     ${PYTHON_PN}-cryptography ${PYTHON_PN}-feedparser ${PYTHON_PN}-cheroot ${PYTHON_PN}-cherrypy ${PYTHON_PN}-portend ${PYTHON_PN}-chardet \
     ${PYTHON_PN}-notify2 ${PYTHON_PN}-puremagic ${PYTHON_PN}-guessit ${PYTHON_PN}-sgmllib3k ${PYTHON_PN}-more-itertools ${PYTHON_PN}-modules \
-    ${PYTHON_PN}-rebulk ${PYTHON_PN}-babelfish ${PYTHON_PN}-dateutil \
+    ${PYTHON_PN}-rebulk ${PYTHON_PN}-babelfish ${PYTHON_PN}-dateutil ${PYTHON_PN}-pysocks ${PYTHON_PN}-jaraco.context ${PYTHON_PN}-setuptools \
+    ${PYTHON_PN}-jaraco.functools ${PYTHON_PN}-jaraco.collections ${PYTHON_PN}-jaraco.text ${PYTHON_PN}-jaraco.classes \
     "
 
 RRECOMMENDS:${PN} = "par2cmdline unrar p7zip-full"
 
-SRC_URI = "https://github.com/sabnzbd/sabnzbd/releases/download/3.5.0/SABnzbd-3.5.0-src.tar.gz \
+SRC_URI = "https://github.com/sabnzbd/sabnzbd/releases/download/3.6.1/SABnzbd-3.6.1-src.tar.gz \
     file://sabnzbd \
     file://sabnzbd.conf \
     file://init-functions \
     "
 
-SRC_URI[md5sum] = "f9e24bd12deeceba00143942687ee0cc"
-SRC_URI[sha256sum] = "139e60f7616c8e99796d287bbedd58fa7f63567b562fcfcef249a615d2b89f02"
+SRC_URI[md5sum] = "30d2f3af7466ef107e1c4e95a8f9d896"
+SRC_URI[sha256sum] = "e365e4581c594aac445b9fb229aa80c0a1ed299deca511045bb78bd55d2ece9e"
 
 S = "${WORKDIR}/SABnzbd-${PV}"
 

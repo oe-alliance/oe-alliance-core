@@ -4,8 +4,10 @@ SECTION = "devel/python"
 LICENSE = "LGPL-3.0-only"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=3396ea30f9d21389d7857719816f83b5"
 
-SRC_URI[md5sum] = "4d06c23a027844e341c435d05facd947"
-SRC_URI[sha256sum] = "83f0308e05477c68f56ea3a888172c78ed5d5b3c282addb67508e7ba6c8f813a"
+SRC_URI:append = " file://0001-update-setup.py.patch"
+
+SRC_URI[md5sum] = "0f498e65f3cb8c793399f38952a41883"
+SRC_URI[sha256sum] = "c09443cd3d5438b8dafccd867a6bc1cb0894389e90cb53d227456b0b0bccb750"
 
 inherit pypi setuptools3
 

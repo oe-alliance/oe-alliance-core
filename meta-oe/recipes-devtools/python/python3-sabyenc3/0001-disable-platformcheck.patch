@@ -1,0 +1,31 @@
+From 39b7bb0c490ec672b98f694282297cb66784e7f9 Mon Sep 17 00:00:00 2001
+From: Captain <captain.onboard@web.de>
+Date: Sun, 18 Sep 2022 13:52:35 +0200
+Subject: [PATCH] disable platformcheck
+
+---
+ setup.py | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/setup.py b/setup.py
+index fd3aa6b..91945db 100644
+--- a/setup.py
++++ b/setup.py
+@@ -79,10 +79,10 @@ class SAByEncBuild(build_ext):
+     def build_extension(self, ext: Extension):
+         # Try to determine the architecture to build for
+         machine = platform.machine().lower()
+-        IS_X86 = machine in ["i386", "i686", "x86", "x86_64", "x64", "amd64"]
+-        IS_MACOS = sys.platform == "darwin"
+-        IS_ARM = machine.startswith("arm") or machine.startswith("aarch64")
+-        IS_AARCH64 = True
++        IS_X86 = False
++        IS_MACOS = False
++        IS_ARM = False
++        IS_AARCH64 = False
+ 
+         log.info("==> Baseline detection: ARM=%s, x86=%s, macOS=%s", IS_ARM, IS_X86, IS_MACOS)
+ 
+-- 
+2.36.0.windows.1
+
