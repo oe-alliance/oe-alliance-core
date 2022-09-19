@@ -13,7 +13,7 @@ PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
 
 SRC_URI = "git://github.com/mirakels/libdreamdvd.git;protocol=https;branch=master \
-        file://fix-build-with-fno-common.patch"
+        file://move-function-pointer-away-from-header.patch"
 
 S = "${WORKDIR}/git"
 
