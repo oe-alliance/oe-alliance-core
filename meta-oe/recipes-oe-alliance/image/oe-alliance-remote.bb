@@ -9,6 +9,9 @@ SRCREV = "${AUTOREV}"
 
 PV = "${IMAGE_VERSION}+git${SRCPV}"
 PKGV = "${IMAGE_VERSION}+git${GITPKGV}"
+PR = "r${DATE}-${MACHINEBUILD}"
+
+do_configure[nostamp] = "1"
 
 SRC_URI = "git://github.com/oe-alliance/remotes;protocol=https;branch=master"
 
