@@ -1,7 +1,7 @@
 DESCRIPTION = "OEM-INFO changer for enigma2.info"
 require conf/license/license-gplv2.inc
 
-COMPATIBLE_MACHINE = "sf8008"
+COMPATIBLE_MACHINE = "^(sf8008|sfx6008)$"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "1.0"
