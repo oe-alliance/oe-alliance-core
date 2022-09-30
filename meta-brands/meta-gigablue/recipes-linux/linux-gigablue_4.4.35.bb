@@ -40,6 +40,11 @@ SRC_URI += "https://source.mynonpublic.com/gigablue/mv200/gigablue-linux-${PV}-$
     file://0007-dvb-mn88472-staging.patch \
     file://mn88472_reset_stream_ID_reg_if_no_PLP_given.patch \
     file://fix-multiple-defs-yyloc.patch \
+    file://fix_highspeed_sdio.patch \
+"
+
+SRC_URI:append:i55se += " \
+	file://0001-mmc-switch-1.8V.patch \
 "
 
 S = "${WORKDIR}/linux-${PV}"
