@@ -57,7 +57,7 @@ KERNEL_OUTPUT = "arch/${ARCH}/boot/${KERNEL_IMAGETYPE}"
 
 KERNEL_EXTRA_ARGS = "EXTRA_CFLAGS=-Wno-attribute-alias"
 
-FILES:${KERNEL_PACKAGE_NAME}-image_hd41 = " "
+FILES:${KERNEL_PACKAGE_NAME}-image:hd41 = " "
 FILES:${KERNEL_PACKAGE_NAME}-image = "/${KERNEL_IMAGEDEST}/findkerneldevice.sh"
 
 kernel_do_configure:prepend() {
