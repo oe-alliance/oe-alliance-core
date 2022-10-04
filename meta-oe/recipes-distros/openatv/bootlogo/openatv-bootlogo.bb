@@ -9,7 +9,7 @@ require conf/license/license-gplv2.inc
 RDEPENDS:${PN} += "showiframe"
 
 PV = "${IMAGE_VERSION}"
-PR = "r2.6"
+PR = "r2.7"
 
 S = "${WORKDIR}"
 
@@ -102,7 +102,11 @@ do_install() {
     ${@bb.utils.contains("MACHINE_FEATURES", "dreamboxv1", "install -d ${D}/boot", "", d)}
     ${@bb.utils.contains("MACHINE_FEATURES", "dreamboxv1", "install -m 0755 ${S}/dreambox-bootlogo_${BINARY_VERSION}_${PRECOMPILED_ARCH}/bootlogo-${PRECOMPILED_ARCH}.elf.gz ${D}/boot/; install -m 0755 ${S}/splash1280.jpg ${D}/boot/bootlogo-${PRECOMPILED_ARCH}.jpg", "", d)}
     install -d ${D}/usr/share
-    install -m 0644 bootlogo_fhd.mvi ${D}/usr/share/bootlogo.mvi
+    if [ "${BRAND_OEM}" = "dreambox" ]; then
+        install -m 0644 bootlogo_hd.mvi ${D}/usr/share/bootlogo.mvi
+    else
+        install -m 0644 bootlogo_fhd.mvi ${D}/usr/share/bootlogo.mvi
+    fi
     install -m 0644 restore_fhd.mvi ${D}/usr/share/restore.mvi
     ln -sf /usr/share/bootlogo.mvi ${D}/usr/share/backdrop.mvi
     install -d ${D}/usr/share/enigma2
@@ -157,7 +161,7 @@ inherit deploy
 do_deploy() {
     if [ "${MACHINE}" = "dags7252" ] || [ "${MACHINE}" = "dags72604" ]; then
         install -m 0644 atv_splash.bmp ${DEPLOYDIR}/${BOOTLOGO_FILENAME}
-    elif [ "${MACHINE}" = "vuduo" ] || [ "${MACHINE}" = "vuduo2" ] || [ "${MACHINE}" = "vuuno" ] || [ "${MACHINE}" = "vusolo" ] || [ "${MACHINE}" = "vusolose" ] || [ "${MACHINE}" = "vuultimo" ] || [ "${MACHINE}" = "vuzero" ] || [ "${MACHINE}" = "vusolo4k" ] || [ "${MACHINE}" = "vuuno4k" ] || [ "${MACHINE}" = "vuuno4kse" ] || [ "${MACHINE}" = "vuultimo4k" ] || [ "${MACHINE}" = "vuzero4k" ] || [ "${MACHINE}" = "vuduo4k" ] || [ "${BRAND_OEM}" = "dags" ]; then
+    elif [ "${MACHINE}" = "vusolo2" ] || [ "${MACHINE}" = "vuduo" ] || [ "${MACHINE}" = "vuduo2" ] || [ "${MACHINE}" = "vuuno" ] || [ "${MACHINE}" = "vusolo" ] || [ "${MACHINE}" = "vusolose" ] || [ "${MACHINE}" = "vuultimo" ] || [ "${MACHINE}" = "vuzero" ] || [ "${MACHINE}" = "vusolo4k" ] || [ "${MACHINE}" = "vuuno4k" ] || [ "${MACHINE}" = "vuuno4kse" ] || [ "${MACHINE}" = "vuultimo4k" ] || [ "${MACHINE}" = "vuzero4k" ] || [ "${MACHINE}" = "vuduo4k" ] || [ "${BRAND_OEM}" = "dags" ]; then
         install -m 0644 splash480.bmp ${DEPLOYDIR}/${BOOTLOGO_FILENAME}
     else
         install -m 0644 splash576.bmp ${DEPLOYDIR}/${BOOTLOGO_FILENAME}
