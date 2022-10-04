@@ -9,13 +9,13 @@ require conf/python/python3-compileall.inc
 
 inherit gitpkgv gettext
 DEPENDS += "gettext-native"
-RDEPENDS:${PN} = "${@bb.utils.contains_any("FLASHSIZE", "64 96 128", "", "enigma2-plugin-skins-metrix-atv-weather-icons", d)}"
+RDEPENDS:${PN} = "enigma2-tools-weatherinfo ${@bb.utils.contains_any("FLASHSIZE", "64 96 128", "", "enigma2-plugin-skins-metrix-atv-weather-icons", d)}"
 
 SRCREV = "${AUTOREV}"
 PV = "${DISTRO_VERSION}+git${SRCPV}"
 PKGV = "${DISTRO_VERSION}+git${GITPKGV}"
 VER ="${DISTRO_VERSION}"
-PR = "r0"
+PR = "r1"
 
 PACKAGES =+ "enigma2-plugin-skins-metrix-atv-fhd-icons enigma2-plugin-skins-metrix-atv-uhd-icons enigma2-plugin-skins-metrix-atv-weather-icons"
 PROVIDES =+ "enigma2-plugin-skins-metrix-atv-fhd-icons enigma2-plugin-skins-metrix-atv-uhd-icons enigma2-plugin-skins-metrix-atv-weather-icons"
