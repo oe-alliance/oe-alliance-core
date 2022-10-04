@@ -45,10 +45,6 @@ SRC_URI += "https://source.mynonpublic.com/gigablue/mv200/gigablue-linux-${PV}-$
     file://fix_highspeed_sdio.patch \
 "
 
-SRC_URI:append:i55se += " \
-	file://0001-mmc-switch-1.8V.patch \
-"
-
 S = "${WORKDIR}/linux-${PV}"
 B = "${WORKDIR}/build"
 
