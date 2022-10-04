@@ -220,7 +220,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'gbx3h', 'gb2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbquad4k', 'gb3' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbue4k', 'gb3' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbtrio4k', 'gb3' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'gbtrio4kplus', 'gb4' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbtrio4kplus', 'gb5' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbip4k', 'gb3' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbx34k', 'gb3' , '', d)}\
 "
