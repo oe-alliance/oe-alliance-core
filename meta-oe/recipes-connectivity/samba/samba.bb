@@ -232,4 +232,5 @@ do_install() {
 
 require samba-pkgs.inc
 
-INSANE_SKIP += "dev-so"
+INSANE_SKIP += "dev-so file-rdeps"
+INSANE_SKIP:libsmbconf += "file-rdeps"
