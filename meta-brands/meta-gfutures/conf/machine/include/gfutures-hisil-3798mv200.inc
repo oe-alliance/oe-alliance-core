@@ -73,7 +73,7 @@ IMAGE_CMD_hdfastboot8gb_append = " \
     echo "Rename the unforce_${MACHINE}.txt to force_${MACHINE}.txt and move it to the root of your usb-stick" > ${DEPLOY_DIR_IMAGE}/${MACHINE}/${IMAGEDIR}/force_${MACHINE}_READ.ME; \
     echo "When you enter the recovery menu then it will force to install the image ${IMAGE_NAME}_usb.zip in the linux1 selection" >> ${DEPLOY_DIR_IMAGE}/${MACHINE}/${IMAGEDIR}/force_${MACHINE}_READ.ME; \
     cd ${DEPLOY_DIR_IMAGE}/${MACHINE}; \
-    zip -r ../${IMAGE_NAME}_mmc.zip *; \
+    zip -r ../${IMAGE_NAME}_multi.zip *; \
     rm -f ${DEPLOY_DIR_IMAGE}/*.manifest; \
     rm -f ${DEPLOY_DIR_IMAGE}/.manifest; \
     cd ..; \
