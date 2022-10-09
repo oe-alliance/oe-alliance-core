@@ -17,8 +17,6 @@ do_install:append() {
     ${@bb.utils.contains('MACHINE_FEATURES', 'no-opengl', '', 'patchelf --add-needed libEGL.so ${D}${libdir}/libQt5WebKit.so.5.212.0', d)} \
 }
 
-SRCREV = "ac8ebc6c3a56064f88f5506e5e3783ab7bee2456"
-
 PACKAGECONFIG = " "
 
 CXXFLAGS:append = " -Wno-deprecated-copy -DBROADCOM_PLATFORM"
