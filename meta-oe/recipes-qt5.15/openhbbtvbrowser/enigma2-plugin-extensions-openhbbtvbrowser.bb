@@ -13,7 +13,6 @@ PKGV = "git${GITPKGV}"
 PR = "r1"
 
 SRC_URI = "git://github.com/openhbbtvbrowser/enigma2-plugin-extensions-openhbbtvbrowser.git;protocol=https \
-    ${@bb.utils.contains_any("SOC_FAMILY", "hisi3716mv430 hisi3798mv200 hisi3716mv410 hisi3798mv310", "file://eglfs.patch", "", d)} \
     ${@bb.utils.contains('MACHINE_FEATURES', 'vu-eglfs', 'file://0001-add-vuplus-support.patch' , '', d)} \
 "
 
