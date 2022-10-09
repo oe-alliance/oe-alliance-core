@@ -20,7 +20,7 @@ PACKAGECONFIG_GL = " "
 PACKAGECONFIG_OPENSSL = "openssl"
 PACKAGECONFIG:remove = "tests ${@bb.utils.contains('MACHINE_FEATURES', 'vu-eglfs', 'gl' , '', d)}"
 PACKAGECONFIG:append = " \
-    ${@bb.utils.contains('MACHINE_FEATURES', 'noopengl', '', ' gles2 eglfs ', d)} \
+    ${@bb.utils.contains('MACHINE_FEATURES', 'no-opengl', '', ' gles2 eglfs ', d)} \
     linuxfb \
 "
 
