@@ -1,0 +1,56 @@
+---
+ .../qevdevkeyboard_defaultmap_p.h             | 19 ++++++++++++++++++-
+ 1 file changed, 18 insertions(+), 1 deletion(-)
+
+diff --git a/src/platformsupport/input/evdevkeyboard/qevdevkeyboard_defaultmap_p.h b/src/platformsupport/input/evdevkeyboard/qevdevkeyboard_defaultmap_p.h
+index 17bf0fb797..8f3262ffe5 100644
+--- a/src/platformsupport/input/evdevkeyboard/qevdevkeyboard_defaultmap_p.h
++++ b/src/platformsupport/input/evdevkeyboard/qevdevkeyboard_defaultmap_p.h
+@@ -655,10 +655,15 @@ const QEvdevKeyboardMap::Mapping QEvdevKeyboardHandler::s_keymap_default[] = {
+     { KEY_POWER,        0xffff, Qt::Key_PowerOff,       0x00, 0x00, 0x0000 },
+     { KEY_PAUSE,        0xffff, Qt::Key_Pause,          0x00, 0x00, 0x0000 },
+     { KEY_STOP,         0xffff, Qt::Key_Stop,           0x00, 0x00, 0x0000 },
++    { KEY_HELP,         0xffff, Qt::Key_Help,           0x00, 0x00, 0x0000 },
++    { KEY_SLEEP,        0xffff, Qt::Key_Sleep,          0x00, 0x00, 0x0000 },
+     { KEY_SETUP,        0xffff, Qt::Key_Settings,       0x00, 0x00, 0x0000 },
++    { KEY_BACK,         0xffff, Qt::Key_Back,           0x00, 0x00, 0x0000 },
++    { KEY_NEXTSONG,     0xffff, Qt::Key_MediaNext,      0x00, 0x00, 0x0000 },
++    { KEY_PREVIOUSSONG, 0xffff, Qt::Key_MediaPrevious,  0x00, 0x00, 0x0000 },
+     { KEY_RECORD,       0xffff, Qt::Key_MediaRecord,    0x00, 0x00, 0x0000 },
+     { KEY_REWIND,       0xffff, Qt::Key_AudioRewind,    0x00, 0x00, 0x0000 },
+-    { KEY_PLAYPAUSE,    0xffff, Qt::Key_MediaTogglePlayPause,  0x00, 0x00, 0x0000 },
++    { KEY_PLAYPAUSE,    0xffff, Qt::Key_MediaTogglePlayPause, 0x00, 0x00, 0x0000 },
+     { KEY_PLAY,         0xffff, Qt::Key_MediaPlay,      0x00, 0x00, 0x0000 },
+     { KEY_FASTFORWARD,  0xffff, Qt::Key_AudioForward,   0x00, 0x00, 0x0000 },
+     { KEY_CANCEL,       0xffff, Qt::Key_Cancel,         0x00, 0x00, 0x0000 },
+@@ -667,8 +672,16 @@ const QEvdevKeyboardMap::Mapping QEvdevKeyboardHandler::s_keymap_default[] = {
+     { KEY_SELECT,       0xffff, Qt::Key_Select,         0x00, 0x00, 0x0000 },
+     { KEY_CLEAR,        0xffff, Qt::Key_Clear,          0x00, 0x00, 0x0000 },
+     { KEY_EXIT,         0xffff, Qt::Key_Exit,           0x00, 0x00, 0x0000 },
++    { KEY_SWITCHVIDEOMODE, 0xffff, Qt::Key_Display,     0x00, 0x00, 0x0000 },
++    { KEY_OK,           0xffff, Qt::Key_Return,         0x00, 0x00, 0x0000 },
+     { KEY_INFO,         0xffff, Qt::Key_Info,           0x00, 0x00, 0x0000 },
+     { KEY_PROGRAM,      0xffff, Qt::Key_Guide,          0x00, 0x00, 0x0000 },
++    { KEY_FAVORITES,    0xffff, Qt::Key_Favorites,      0x00, 0x00, 0x0000 },
++    { KEY_EPG,          0xffff, Qt::Key_Guide,          0x00, 0x00, 0x0000 },
++    { KEY_SUBTITLE,     0xffff, Qt::Key_Subtitle,       0x00, 0x00, 0x0000 },
++    { KEY_TEXT,         0xffff, Qt::Key_MediaPlay,      0x00, 0x00, 0x0000 },
++    { KEY_AUDIO,        0xffff, Qt::Key_AudioCycleTrack,      0x00, 0x00, 0x0000 },
++    { KEY_VIDEO,        0xffff, Qt::Key_Video,          0x00, 0x00, 0x0000 },
+     { KEY_CALENDAR,     0xffff, Qt::Key_Calendar,       0x00, 0x00, 0x0000 },
+     { KEY_RED,          0xffff, Qt::Key_Red,            0x00, 0x00, 0x0000 },
+     { KEY_GREEN,        0xffff, Qt::Key_Green,          0x00, 0x00, 0x0000 },
+@@ -676,6 +689,10 @@ const QEvdevKeyboardMap::Mapping QEvdevKeyboardHandler::s_keymap_default[] = {
+     { KEY_BLUE,         0xffff, Qt::Key_Blue,           0x00, 0x00, 0x0000 },
+     { KEY_CHANNELUP,    0xffff, Qt::Key_ChannelUp,      0x00, 0x00, 0x0000 },
+     { KEY_CHANNELDOWN,  0xffff, Qt::Key_ChannelDown,    0x00, 0x00, 0x0000 },
++    { KEY_NEXT,         0xffff, Qt::Key_MediaNext ,     0x00, 0x00, 0x0000 },
++    { KEY_PREVIOUS,     0xffff, Qt::Key_MediaPrevious,  0x00, 0x00, 0x0000 },
++    { KEY_CONTEXT_MENU, 0xffff, Qt::Key_Context1,       0x00, 0x00, 0x0000 },
++    { KEY_TOUCHPAD_TOGGLE, 0xffff, Qt::Key_TouchpadToggle,    0x00, 0x00, 0x0000 },
+ };
+ 
+ const QEvdevKeyboardMap::Composing QEvdevKeyboardHandler::s_keycompose_default[] = {
+-- 
+2.17.1
+
