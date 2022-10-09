@@ -22,7 +22,7 @@ PACKAGECONFIG_OPENSSL = "openssl"
 OPENSSL_LINKING_MODE = "-linked"
 PACKAGECONFIG:remove = "tests ${@bb.utils.contains('MACHINE_FEATURES', 'vu-eglfs', 'gl' , '', d)}"
 PACKAGECONFIG:append = " \
-    ${@bb.utils.contains('MACHINE_FEATURES', 'noopengl', '', ' gles2 eglfs ', d)} \
+    ${@bb.utils.contains('MACHINE_FEATURES', 'no-opengl', '', ' gles2 eglfs ', d)} \
     linuxfb \
 "
 
