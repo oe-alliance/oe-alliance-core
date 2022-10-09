@@ -45,7 +45,7 @@ IMAGE_CMD:ubi:append = " \
     fi; \
     echo "${IMAGE_NAME}" > ${DEPLOY_DIR_IMAGE}/${IMAGEDIRRECOVERY}/${IMAGEDIR}/imageversion; \
     cd ${DEPLOY_DIR_IMAGE}/${IMAGEDIRRECOVERY}; \
-    zip -r ../${IMAGE_NAME}_usb.zip *; \
+    zip -r ../${IMAGE_NAME}_recovery_usb.zip *; \
     rm -f ${DEPLOY_DIR_IMAGE}/*.ubi; \
     rm -f ${DEPLOY_DIR_IMAGE}/*.ubifs; \
     rm -f ${DEPLOY_DIR_IMAGE}/*.manifest; \
