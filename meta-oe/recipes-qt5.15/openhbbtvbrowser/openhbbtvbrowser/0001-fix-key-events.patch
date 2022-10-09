@@ -1,0 +1,16 @@
+diff --git a/browsercontrol.cpp b/browsercontrol.cpp
+index 562d345..5bd4b11 100644
+--- a/browsercontrol.cpp
++++ b/browsercontrol.cpp
+@@ -68,11 +68,6 @@ void RemoteController::readKeycode()
+             case KEY_GREEN:         vk = VirtualKey::VK_GREEN; break;
+             case KEY_YELLOW:        vk = VirtualKey::VK_YELLOW; break;
+             case KEY_BLUE:          vk = VirtualKey::VK_BLUE; break;
+-            case KEY_LEFT:          vk = VirtualKey::VK_LEFT; break;
+-            case KEY_UP:            vk = VirtualKey::VK_UP; break;
+-            case KEY_RIGHT:         vk = VirtualKey::VK_RIGHT; break;
+-            case KEY_DOWN:          vk = VirtualKey::VK_DOWN; break;
+-            case KEY_OK:            vk = VirtualKey::VK_ENTER; break;
+             case KEY_EXIT:          vk = VirtualKey::VK_BACK; break;
+             case KEY_0:             vk = VirtualKey::VK_0; break;
+             case KEY_1:             vk = VirtualKey::VK_1; break;
