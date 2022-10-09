@@ -1,0 +1,25 @@
+diff --git a/main.cpp b/main.cpp
+index 6a23778..b71d7f8 100644
+--- a/main.cpp
++++ b/main.cpp
+@@ -49,13 +49,12 @@ QUrl commandLineUrlArgument()
+ int main(int argc, char *argv[])
+ {
+ #if defined(EMBEDDED_BUILD)
++    qputenv("QTWEBENGINE_CHROMIUM_FLAGS", "--disable-web-security");
++    qputenv("QT_QPA_FONTDIR", "/usr/share/fonts");
++    qputenv("QTWEBENGINE_DISABLE_SANDBOX", "1");
++    qputenv("QT_QPA_PLATFORM", "linuxfb");
+     if (mkdir_mount_devshm())
+         return 1;
+-
+-    if (qgetenv("QT_QPA_FONTDIR").isNull())
+-        qputenv("QT_QPA_FONTDIR", "/usr/share/fonts");
+-    if (qgetenv("QT_QPA_PLATFORM").isNull())
+-        qputenv("QT_QPA_PLATFORM", "eglfs");
+     if (qgetenv("QT_QPA_EGLFS_HIDECURSOR").isNull())
+         qputenv("QT_QPA_EGLFS_HIDECURSOR", "1");
+ #endif
+-- 
+2.17.1
+

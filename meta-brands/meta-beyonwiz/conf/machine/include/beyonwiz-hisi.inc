@@ -40,7 +40,7 @@ MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "\
     gptfdisk \
 "
 
-MACHINE_FEATURES += "hisil switchoff 7segment hdmicec skins1080 emmc mmc dvbc-only kodi20 alsa hbbtv-browser-webkit qtstalker qtnetflix openhbbtv hisichromium"
+MACHINE_FEATURES += "hisil switchoff 7segment hdmicec skins1080 emmc mmc dvbc-only kodi20 alsa hbbtv-browser-webkit qtstalker qtnetflix openhbbtv hisichromium mali"
 
 IMAGE_CLASSES  += "beyonwiz-emmc_image"
 IMAGE_FSTYPES += "beyonwizemmc"
