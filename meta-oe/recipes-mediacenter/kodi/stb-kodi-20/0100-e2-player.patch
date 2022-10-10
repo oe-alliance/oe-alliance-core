@@ -7,11 +7,11 @@ Subject: [PATCH] e2-player
  cmake/treedata/common/cores.txt               |   1 +
  system/playercorefactory.xml                  |  12 +-
  xbmc/cores/Enigma2Player/CMakeLists.txt       |   6 +
- xbmc/cores/Enigma2Player/Enigma2Player.cpp    | 795 ++++++++++++++++++
+ xbmc/cores/Enigma2Player/Enigma2Player.cpp    | 799 ++++++++++++++++++
  xbmc/cores/Enigma2Player/Enigma2Player.h      |  96 +++
- .../playercorefactory/PlayerCoreConfig.h      |   5 +
+ .../playercorefactory/PlayerCoreConfig.cpp    |   5 +
  .../playercorefactory/PlayerCoreFactory.cpp   |   8 +
- 7 files changed, 922 insertions(+), 1 deletion(-)
+ 7 files changed, 926 insertions(+), 1 deletion(-)
  create mode 100644 xbmc/cores/Enigma2Player/CMakeLists.txt
  create mode 100644 xbmc/cores/Enigma2Player/Enigma2Player.cpp
  create mode 100644 xbmc/cores/Enigma2Player/Enigma2Player.h
@@ -73,10 +73,10 @@ index 0000000..fc67275
 +
 diff --git a/xbmc/cores/Enigma2Player/Enigma2Player.cpp b/xbmc/cores/Enigma2Player/Enigma2Player.cpp
 new file mode 100644
-index 0000000..4315511
+index 0000000..e03e97d
 --- /dev/null
 +++ b/xbmc/cores/Enigma2Player/Enigma2Player.cpp
-@@ -0,0 +1,795 @@
+@@ -0,0 +1,799 @@
 +/*
 + *  Copyright (C) 2005-2018 Team Kodi
 + *  This file is part of Kodi - https://kodi.tv
@@ -92,7 +92,9 @@ index 0000000..4315511
 +#include "dialogs/GUIDialogOK.h"
 +#include "guilib/GUIComponent.h"
 +#include "guilib/GUIWindowManager.h"
-+#include "Application.h"
++#include "application/Application.h"
++#include "application/ApplicationComponents.h"
++#include "application/ApplicationPowerHandling.h"
 +#include "filesystem/MusicDatabaseFile.h"
 +#include "FileItem.h"
 +#include "utils/RegExp.h"
@@ -519,8 +521,10 @@ index 0000000..4315511
 +  }
 +
 +  // We don't want to come back to an active screensaver
-+  g_application.ResetScreenSaver();
-+  g_application.WakeUpScreenSaverAndDPMS();
++  auto& components = CServiceBroker::GetAppComponents();
++  const auto appPower = components.GetComponent<CApplicationPowerHandling>();
++  appPower->ResetScreenSaver();
++  appPower->WakeUpScreenSaverAndDPMS();
 +
 +  if (!ret || (m_playOneStackItem && g_application.CurrentFileItem().IsStack()))
 +    m_callback.OnPlayBackStopped();
@@ -642,7 +646,7 @@ index 0000000..4315511
 +  return false;
 +}
 +
-+bool CEnigma2Player::CanSeek()
++bool CEnigma2Player::CanSeek() const
 +{
 +  return false;
 +}
@@ -874,7 +878,7 @@ index 0000000..4315511
 +
 diff --git a/xbmc/cores/Enigma2Player/Enigma2Player.h b/xbmc/cores/Enigma2Player/Enigma2Player.h
 new file mode 100644
-index 0000000..59249cd
+index 0000000..403fa88
 --- /dev/null
 +++ b/xbmc/cores/Enigma2Player/Enigma2Player.h
 @@ -0,0 +1,96 @@
@@ -911,7 +915,7 @@ index 0000000..59249cd
 +  void Pause() override;
 +  bool HasVideo() const override;
 +  bool HasAudio() const override;
-+  bool CanSeek() override;
++  bool CanSeek() const override;
 +  void Seek(bool bPlus, bool bLargeStep, bool bChapterOverride) override;
 +  void SeekPercentage(float iPercent) override;
 +  void SetVolume(float volume) override {}
@@ -974,31 +978,31 @@ index 0000000..59249cd
 +  std::vector<std::string> m_filenameReplacers;
 +  CFileItem m_file;
 +};
-diff --git a/xbmc/cores/playercorefactory/PlayerCoreConfig.h b/xbmc/cores/playercorefactory/PlayerCoreConfig.h
-index 5af08c2..fc605c7 100644
---- a/xbmc/cores/playercorefactory/PlayerCoreConfig.h
-+++ b/xbmc/cores/playercorefactory/PlayerCoreConfig.h
-@@ -13,6 +13,7 @@
- #include "cores/RetroPlayer/RetroPlayer.h"
- #include "cores/VideoPlayer/VideoPlayer.h"
- #include "cores/paplayer/PAPlayer.h"
+diff --git a/xbmc/cores/playercorefactory/PlayerCoreConfig.cpp b/xbmc/cores/playercorefactory/PlayerCoreConfig.cpp
+index 545062e..6c4718d 100644
+--- a/xbmc/cores/playercorefactory/PlayerCoreConfig.cpp
++++ b/xbmc/cores/playercorefactory/PlayerCoreConfig.cpp
+@@ -21,6 +21,7 @@
+ #include "utils/log.h"
+ 
+ #include <utility>
 +#include "cores/Enigma2Player/Enigma2Player.h"
- #ifdef HAS_UPNP
- #include "network/upnp/UPnPPlayer.h"
- #endif
-@@ -87,6 +88,10 @@ public:
-     {
-       player = std::make_shared<CExternalPlayer>(callback);
-     }
-+    else if (m_type.compare("enigma2") == 0)
-+    {
-+      player = std::make_shared<CEnigma2Player>(callback);
-+    }
+ 
+ CPlayerCoreConfig::CPlayerCoreConfig(std::string name,
+                                      std::string type,
+@@ -60,6 +61,10 @@ std::shared_ptr<IPlayer> CPlayerCoreConfig::CreatePlayer(IPlayerCallback& callba
+   {
+     player = std::make_shared<CExternalPlayer>(callback);
+   }
++  else if (m_type.compare("enigma2") == 0)
++  {
++  player = std::make_shared<CEnigma2Player>(callback);
++  }
  
  #if defined(HAS_UPNP)
-     else if (m_type.compare("remote") == 0)
+   else if (m_type.compare("remote") == 0)
 diff --git a/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp b/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp
-index 0bfb7de..ca6590b 100644
+index 34792a4..79255d8 100644
 --- a/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp
 +++ b/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp
 @@ -15,6 +15,7 @@
@@ -1009,7 +1013,7 @@ index 0bfb7de..ca6590b 100644
  #include "dialogs/GUIDialogContextMenu.h"
  #include "guilib/LocalizeStrings.h"
  #include "profiles/ProfileManager.h"
-@@ -349,6 +350,11 @@ bool CPlayerCoreFactory::LoadConfiguration(const std::string &file, bool clear)
+@@ -350,6 +351,11 @@ bool CPlayerCoreFactory::LoadConfiguration(const std::string &file, bool clear)
      VideoPlayer->m_bPlaysVideo = true;
      m_vecPlayerConfigs.emplace_back(std::move(VideoPlayer));
  
@@ -1021,7 +1025,7 @@ index 0bfb7de..ca6590b 100644
      auto paplayer = std::make_unique<CPlayerCoreConfig>("PAPlayer", "music", nullptr);
      paplayer->m_bPlaysAudio = true;
      m_vecPlayerConfigs.emplace_back(std::move(paplayer));
-@@ -381,6 +387,8 @@ bool CPlayerCoreFactory::LoadConfiguration(const std::string &file, bool clear)
+@@ -382,6 +388,8 @@ bool CPlayerCoreFactory::LoadConfiguration(const std::string &file, bool clear)
          internaltype = "music";
        else if (type == "externalplayer")
          internaltype = "external";
@@ -1030,3 +1034,6 @@ index 0bfb7de..ca6590b 100644
  
        int count = 0;
        std::string playername = name;
+-- 
+2.34.1
+

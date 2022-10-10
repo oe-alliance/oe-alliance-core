@@ -9,15 +9,15 @@ Subject: [PATCH] gst-player
  cmake/platform/linux/stb.cmake                |    2 +-
  cmake/treedata/common/cores.txt               |    1 +
  xbmc/cores/GstPlayer/CMakeLists.txt           |    9 +
- xbmc/cores/GstPlayer/GstPlayer.cpp            |  688 ++++++++
+ xbmc/cores/GstPlayer/GstPlayer.cpp            |  692 ++++++++
  xbmc/cores/GstPlayer/GstPlayer.h              |  186 +++
  xbmc/cores/GstPlayer/GstPlayerAudio.cpp       |  151 ++
  xbmc/cores/GstPlayer/GstPlayerAudio.h         |   45 +
  xbmc/cores/GstPlayer/GstPlayerVideo.cpp       | 1405 +++++++++++++++++
  xbmc/cores/GstPlayer/GstPlayerVideo.h         |  181 +++
- .../playercorefactory/PlayerCoreConfig.h      |   11 +
+ .../playercorefactory/PlayerCoreConfig.cpp    |    9 +
  .../playercorefactory/PlayerCoreFactory.cpp   |   15 +
- 13 files changed, 2835 insertions(+), 1 deletion(-)
+ 13 files changed, 2837 insertions(+), 1 deletion(-)
  create mode 100644 cmake/modules/FindGLIB.cmake
  create mode 100644 cmake/modules/FindGstreamer.cmake
  create mode 100644 xbmc/cores/GstPlayer/CMakeLists.txt
@@ -30,7 +30,7 @@ Subject: [PATCH] gst-player
 
 diff --git a/cmake/modules/FindGLIB.cmake b/cmake/modules/FindGLIB.cmake
 new file mode 100644
-index 0000000000..656aa0b7d6
+index 0000000..656aa0b
 --- /dev/null
 +++ b/cmake/modules/FindGLIB.cmake
 @@ -0,0 +1,102 @@
@@ -138,7 +138,7 @@ index 0000000000..656aa0b7d6
 +                                       VERSION_VAR   GLIB_VERSION)
 diff --git a/cmake/modules/FindGstreamer.cmake b/cmake/modules/FindGstreamer.cmake
 new file mode 100644
-index 0000000000..760e7d1321
+index 0000000..760e7d1
 --- /dev/null
 +++ b/cmake/modules/FindGstreamer.cmake
 @@ -0,0 +1,40 @@
@@ -183,7 +183,7 @@ index 0000000000..760e7d1321
 +
 +mark_as_advanced(GSTREAMER_LIBRARY GSTREAMER_INCLUDE_DIR GSTREAMER_LDFLAGS)
 diff --git a/cmake/platform/linux/stb.cmake b/cmake/platform/linux/stb.cmake
-index e1fe54a13d..7d7e14205f 100644
+index e1fe54a..7d7e142 100644
 --- a/cmake/platform/linux/stb.cmake
 +++ b/cmake/platform/linux/stb.cmake
 @@ -1,4 +1,4 @@
@@ -193,7 +193,7 @@ index e1fe54a13d..7d7e14205f 100644
  
  set(STB_RENDER_SYSTEM "" CACHE STRING "Render system to use with STB: \"gl\" or \"gles\"")
 diff --git a/cmake/treedata/common/cores.txt b/cmake/treedata/common/cores.txt
-index 5e5c6cbf80..cbde630e7d 100644
+index 5e5c6cb..cbde630 100644
 --- a/cmake/treedata/common/cores.txt
 +++ b/cmake/treedata/common/cores.txt
 @@ -5,5 +5,6 @@ xbmc/cores/DllLoader/exports           cores/dll-loader/exports
@@ -205,7 +205,7 @@ index 5e5c6cbf80..cbde630e7d 100644
  xbmc/cores/playercorefactory           cores/playercorefactory
 diff --git a/xbmc/cores/GstPlayer/CMakeLists.txt b/xbmc/cores/GstPlayer/CMakeLists.txt
 new file mode 100644
-index 0000000000..1b8adfab36
+index 0000000..1b8adfa
 --- /dev/null
 +++ b/xbmc/cores/GstPlayer/CMakeLists.txt
 @@ -0,0 +1,9 @@
@@ -220,10 +220,10 @@ index 0000000000..1b8adfab36
 +core_add_library(gstplayer)
 diff --git a/xbmc/cores/GstPlayer/GstPlayer.cpp b/xbmc/cores/GstPlayer/GstPlayer.cpp
 new file mode 100644
-index 0000000000..cd4972827e
+index 0000000..a6355a2
 --- /dev/null
 +++ b/xbmc/cores/GstPlayer/GstPlayer.cpp
-@@ -0,0 +1,688 @@
+@@ -0,0 +1,691 @@
 +/*
 + *      Copyright (C) 2005-2015 Team Kodi
 + *      http://kodi.tv
@@ -251,7 +251,9 @@ index 0000000000..cd4972827e
 +#include "system.h"
 +#include "Util.h"
 +#include "FileItem.h"
-+#include "Application.h"
++#include "application/Application.h"
++#include "application/ApplicationComponents.h"
++#include "application/ApplicationPowerHandling.h"
 +#include "ServiceBroker.h"
 +#include "messaging/ApplicationMessenger.h"
 +#include "CompileInfo.h"
@@ -585,8 +587,10 @@ index 0000000000..cd4972827e
 +	}
 +
 +	// We don't want to come back to an active screensaver
-+	g_application.ResetScreenSaver();
-+	g_application.WakeUpScreenSaverAndDPMS();
++	auto& components = CServiceBroker::GetAppComponents();
++	const auto appPower = components.GetComponent<CApplicationPowerHandling>();
++	appPower->ResetScreenSaver();
++	appPower->WakeUpScreenSaverAndDPMS();
 +
 +	if (g_application.CurrentFileItem().IsStack() || 
 +			m_pInputStream->IsStreamType(DVDSTREAM_TYPE_PVRMANAGER))
@@ -621,7 +625,7 @@ index 0000000000..cd4972827e
 +	m_VideoPlayerVideo->ToggleSubtitles();
 +}
 +
-+bool CGstPlayer::CanSeek()
++bool CGstPlayer::CanSeek() const
 +{
 +	return m_VideoPlayerVideo->CanSeek();
 +}
@@ -766,7 +770,7 @@ index 0000000000..cd4972827e
 +	m_VideoPlayerAudio->SetMute(bOnOff);
 +}
 +
-+int CGstPlayer::GetAudioStreamCount()
++int CGstPlayer::GetAudioStreamCount() const
 +{
 +	return m_VideoPlayerVideo->GetAudioStreamCount();
 +}
@@ -781,7 +785,7 @@ index 0000000000..cd4972827e
 +	return m_VideoPlayerVideo->GetVideoStreamCount();
 +}
 +
-+int CGstPlayer::GetSubtitleCount()
++int CGstPlayer::GetSubtitleCount() const
 +{
 +	return m_VideoPlayerVideo->GetSubtitleCount();
 +}
@@ -796,17 +800,17 @@ index 0000000000..cd4972827e
 +	return m_VideoPlayerVideo->GetStreamDetails(details);
 +}*/
 +
-+void CGstPlayer::GetVideoStreamInfo(int index, VideoStreamInfo &info)
++void CGstPlayer::GetVideoStreamInfo(int index, VideoStreamInfo &info) const
 +{
 +	m_VideoPlayerVideo->GetVideoStreamInfo(index, info);
 +}
 +
-+void CGstPlayer::GetAudioStreamInfo(int index, AudioStreamInfo &info)
++void CGstPlayer::GetAudioStreamInfo(int index, AudioStreamInfo &info) const
 +{
 +	m_VideoPlayerVideo->GetAudioStreamInfo(index, info);
 +}
 +
-+void CGstPlayer::GetSubtitleStreamInfo(int index, SubtitleStreamInfo &info)
++void CGstPlayer::GetSubtitleStreamInfo(int index, SubtitleStreamInfo &info) const
 +{
 +	m_VideoPlayerVideo->GetSubtitleStreamInfo(index, info);
 +}
@@ -826,7 +830,7 @@ index 0000000000..cd4972827e
 +	m_VideoPlayerVideo->SetSubtitle(iStream);
 +}
 +
-+bool CGstPlayer::GetSubtitleVisible()
++bool CGstPlayer::GetSubtitleVisible() const
 +{
 +	return m_VideoPlayerVideo->GetSubtitleVisible();
 +}
@@ -854,13 +858,13 @@ index 0000000000..cd4972827e
 +	{
 +		//CLog::Log(LOGINFO, "CGstPlayer::{}: m_PlayerOptions.startpercent set", __FUNCTION__);
 +		m_VideoPlayerVideo->SeekPercentage((float)m_PlayerOptions.startpercent/(float) 100);
-+		m_PlayerOptions.startpercent = 0.0f;
++		m_PlayerOptions.startpercent = 0.0;
 +	}
 +	else if (m_PlayerOptions.starttime > 0)
 +	{
 +		//CLog::Log(LOGINFO, "CGstPlayer::{}: m_PlayerOptions.starttime set", __FUNCTION__);
 +		m_VideoPlayerVideo->SeekTimeRelative((int64_t) m_PlayerOptions.starttime * 1000);
-+		m_PlayerOptions.starttime = 0.0f;
++		m_PlayerOptions.starttime = 0.0;
 +	}
 +	
 +	if (m_pInputStream->IsStreamType(DVDSTREAM_TYPE_PVRMANAGER) && 
@@ -914,7 +918,7 @@ index 0000000000..cd4972827e
 +
 diff --git a/xbmc/cores/GstPlayer/GstPlayer.h b/xbmc/cores/GstPlayer/GstPlayer.h
 new file mode 100644
-index 0000000000..dfb3bc1db3
+index 0000000..5c027cd
 --- /dev/null
 +++ b/xbmc/cores/GstPlayer/GstPlayer.h
 @@ -0,0 +1,186 @@
@@ -995,7 +999,7 @@ index 0000000000..dfb3bc1db3
 +	void ToggleOSD(); // empty
 +	void SwitchToNextLanguage();
 +	void ToggleSubtitles();
-+	bool CanSeek();
++	bool CanSeek() const;
 +	void Seek(bool bPlus, bool bLargeStep, bool bChapterOverride);
 +	void SeekPercentage(float iPercent);
 +	float GetPercentage();
@@ -1042,26 +1046,26 @@ index 0000000000..dfb3bc1db3
 +	std::string GetPlayerState();
 +	bool SetPlayerState(const std::string& state);
 +	
-+	int GetAudioStreamCount() override;
++	int GetAudioStreamCount() const override;
 +	int GetVideoStreamCount();
-+	int GetSubtitleCount() override;
++	int GetSubtitleCount() const override;
 +	
 +	int GetAudioStream() override;
 +	int GetVideoStream();
 +	int GetSubtitle();
 +  	void SetSubtitle(int iStream) override;
-+  	bool GetSubtitleVisible() override;
++  	bool GetSubtitleVisible() const override;
 +  	void SetSubtitleVisible(bool bVisible) override;
 +
 +
 +//	virtual bool GetStreamDetails(CStreamDetails &details);
 +
 +	void SetAudioStream(int iStream) override;
-+	void GetAudioStreamInfo(int index, AudioStreamInfo &info) override;
++	void GetAudioStreamInfo(int index, AudioStreamInfo &info) const override;
 +	
-+	void GetVideoStreamInfo(int index, VideoStreamInfo &info) override;
++	void GetVideoStreamInfo(int index, VideoStreamInfo &info) const override;
 +
-+	void GetSubtitleStreamInfo(int index, SubtitleStreamInfo &info) override;
++	void GetSubtitleStreamInfo(int index, SubtitleStreamInfo &info) const override;
 +
 +	bool SupportsTempo() { return m_canTempo; };
 +	
@@ -1106,7 +1110,7 @@ index 0000000000..dfb3bc1db3
 +};
 diff --git a/xbmc/cores/GstPlayer/GstPlayerAudio.cpp b/xbmc/cores/GstPlayer/GstPlayerAudio.cpp
 new file mode 100644
-index 0000000000..5aeacf0382
+index 0000000..5aeacf0
 --- /dev/null
 +++ b/xbmc/cores/GstPlayer/GstPlayerAudio.cpp
 @@ -0,0 +1,151 @@
@@ -1263,7 +1267,7 @@ index 0000000000..5aeacf0382
 +}
 diff --git a/xbmc/cores/GstPlayer/GstPlayerAudio.h b/xbmc/cores/GstPlayer/GstPlayerAudio.h
 new file mode 100644
-index 0000000000..fe6f7008cd
+index 0000000..fe6f700
 --- /dev/null
 +++ b/xbmc/cores/GstPlayer/GstPlayerAudio.h
 @@ -0,0 +1,45 @@
@@ -1314,7 +1318,7 @@ index 0000000000..fe6f7008cd
 +};
 diff --git a/xbmc/cores/GstPlayer/GstPlayerVideo.cpp b/xbmc/cores/GstPlayer/GstPlayerVideo.cpp
 new file mode 100644
-index 0000000000..a58cf8d276
+index 0000000..b2fd0e1
 --- /dev/null
 +++ b/xbmc/cores/GstPlayer/GstPlayerVideo.cpp
 @@ -0,0 +1,1405 @@
@@ -1723,7 +1727,7 @@ index 0000000000..a58cf8d276
 +	CLog::Log(LOGINFO, "CGstPlayerVideo::{}", __FUNCTION__ );
 +}
 +
-+bool CGstPlayerVideo::CanSeek()
++bool CGstPlayerVideo::CanSeek() const
 +{
 +	if(m_pInputStream)
 +		return false;
@@ -2308,7 +2312,7 @@ index 0000000000..a58cf8d276
 +}
 +
 +
-+void CGstPlayerVideo::GetVideoStreamInfo(int index, VideoStreamInfo &info)
++void CGstPlayerVideo::GetVideoStreamInfo(int index, VideoStreamInfo &info) const
 +{
 +	if (index<0)
 +		index = m_current_video;
@@ -2335,7 +2339,7 @@ index 0000000000..a58cf8d276
 +	info.height = (int) height;
 +}
 +
-+void CGstPlayerVideo::GetAudioStreamInfo(int index, AudioStreamInfo &info)
++void CGstPlayerVideo::GetAudioStreamInfo(int index, AudioStreamInfo &info) const
 +{
 +	if (index<0)
 +		index = m_current_audio;
@@ -2386,7 +2390,7 @@ index 0000000000..a58cf8d276
 + 	info.valid = true;
 +}
 +
-+void CGstPlayerVideo::GetSubtitleStreamInfo(int index, SubtitleStreamInfo &info)
++void CGstPlayerVideo::GetSubtitleStreamInfo(int index, SubtitleStreamInfo &info) const
 +{
 +	if (index<0)
 +		index = m_current_text;
@@ -2418,7 +2422,7 @@ index 0000000000..a58cf8d276
 +	}
 +}
 +
-+bool CGstPlayerVideo::GetSubtitleVisible()
++bool CGstPlayerVideo::GetSubtitleVisible() const
 +{
 +	return m_is_sub_visible;
 +}
@@ -2725,7 +2729,7 @@ index 0000000000..a58cf8d276
 +
 diff --git a/xbmc/cores/GstPlayer/GstPlayerVideo.h b/xbmc/cores/GstPlayer/GstPlayerVideo.h
 new file mode 100644
-index 0000000000..d89cc678a4
+index 0000000..20aa87f
 --- /dev/null
 +++ b/xbmc/cores/GstPlayer/GstPlayerVideo.h
 @@ -0,0 +1,181 @@
@@ -2797,7 +2801,7 @@ index 0000000000..d89cc678a4
 +	void Pause();
 +	void SwitchToNextLanguage();
 +	void ToggleSubtitles();
-+	bool CanSeek();
++	bool CanSeek() const;
 +	void Seek(bool bPlus, bool bLargeStep, bool bChapterOverride);
 +	void SwitchToNextAudioLanguage();
 +	void SeekPercentage(float iPercent);
@@ -2820,14 +2824,14 @@ index 0000000000..d89cc678a4
 +	int GetVideoStream() { CLog::Log(LOGINFO, "{}: m_current_video: {:d}", __FUNCTION__, m_current_video); return (int)m_current_video; };
 +	int GetSubtitle()    { CLog::Log(LOGINFO, "{}: m_current_text: {:d}", __FUNCTION__, m_current_text); return (int)m_current_text; };
 +
-+	void GetAudioStreamInfo(int index, AudioStreamInfo &info);
++	void GetAudioStreamInfo(int index, AudioStreamInfo &info) const;
 +	void SetAudioStream(int iStream);
 +
-+	void GetVideoStreamInfo(int index, VideoStreamInfo &info);
++	void GetVideoStreamInfo(int index, VideoStreamInfo &info) const;
 +
-+	void GetSubtitleStreamInfo(int index, SubtitleStreamInfo &info);
++	void GetSubtitleStreamInfo(int index, SubtitleStreamInfo &info) const;
 +  	void SetSubtitle(int iStream);
-+  	bool GetSubtitleVisible();
++  	bool GetSubtitleVisible() const;
 +  	void SetSubtitleVisible(bool bVisible);
 +	
 +	struct sourceStream
@@ -2910,40 +2914,38 @@ index 0000000000..d89cc678a4
 +	CDVDInputStreamFile *m_pInputStream;
 +
 +};
-diff --git a/xbmc/cores/playercorefactory/PlayerCoreConfig.h b/xbmc/cores/playercorefactory/PlayerCoreConfig.h
-index fc605c7d87..c04c5dd467 100644
---- a/xbmc/cores/playercorefactory/PlayerCoreConfig.h
-+++ b/xbmc/cores/playercorefactory/PlayerCoreConfig.h
-@@ -22,6 +22,11 @@
+diff --git a/xbmc/cores/playercorefactory/PlayerCoreConfig.cpp b/xbmc/cores/playercorefactory/PlayerCoreConfig.cpp
+index 6c4718d..513eed3 100644
+--- a/xbmc/cores/playercorefactory/PlayerCoreConfig.cpp
++++ b/xbmc/cores/playercorefactory/PlayerCoreConfig.cpp
+@@ -22,6 +22,9 @@
  
  #include <utility>
- 
-+#include "system.h"
+ #include "cores/Enigma2Player/Enigma2Player.h"
 +#if defined(HAVE_LIBGSTREAMER)
 +#include "cores/GstPlayer/GstPlayer.h"
 +#endif
-+
- class CPlayerCoreConfig
- {
- public:
-@@ -84,6 +89,12 @@ public:
-     {
-       player = std::make_shared<KODI::RETRO::CRetroPlayer>(callback);
-     }
+ 
+ CPlayerCoreConfig::CPlayerCoreConfig(std::string name,
+                                      std::string type,
+@@ -57,6 +60,12 @@ std::shared_ptr<IPlayer> CPlayerCoreConfig::CreatePlayer(IPlayerCallback& callba
+   {
+     player = std::make_shared<KODI::RETRO::CRetroPlayer>(callback);
+   }
 +#if defined(HAVE_LIBGSTREAMER)
-+    else if (m_type.compare("gstreamer") == 0)
-+    {
-+      player = std::make_shared<CGstPlayer>(callback);
-+    }
++  else if (m_type.compare("gstreamer") == 0)
++  {
++    player = std::make_shared<CGstPlayer>(callback);
++  }
 +#endif
-     else if (m_type.compare("external") == 0)
-     {
-       player = std::make_shared<CExternalPlayer>(callback);
+   else if (m_type.compare("external") == 0)
+   {
+     player = std::make_shared<CExternalPlayer>(callback);
 diff --git a/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp b/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp
-index 9daee4f56c..a2a5ba2773 100644
+index 79255d8..6fad7c4 100644
 --- a/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp
 +++ b/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp
-@@ -29,6 +29,10 @@
+@@ -30,6 +30,10 @@
  #include <mutex>
  #include <sstream>
  
@@ -2954,7 +2956,7 @@ index 9daee4f56c..a2a5ba2773 100644
  #define PLAYERCOREFACTORY_XML "playercorefactory.xml"
  
  CPlayerCoreFactory::CPlayerCoreFactory(const CProfileManager &profileManager) :
-@@ -345,6 +349,13 @@ bool CPlayerCoreFactory::LoadConfiguration(const std::string &file, bool clear)
+@@ -346,6 +350,13 @@ bool CPlayerCoreFactory::LoadConfiguration(const std::string &file, bool clear)
      m_vecCoreSelectionRules.clear();
  
      // Builtin players
@@ -2968,7 +2970,7 @@ index 9daee4f56c..a2a5ba2773 100644
      auto VideoPlayer = std::make_unique<CPlayerCoreConfig>("VideoPlayer", "video", nullptr);
      VideoPlayer->m_bPlaysAudio = true;
      VideoPlayer->m_bPlaysVideo = true;
-@@ -385,6 +396,10 @@ bool CPlayerCoreFactory::LoadConfiguration(const std::string &file, bool clear)
+@@ -386,6 +397,10 @@ bool CPlayerCoreFactory::LoadConfiguration(const std::string &file, bool clear)
          internaltype = "video";
        else if (type == "paplayer")
          internaltype = "music";
@@ -2979,3 +2981,6 @@ index 9daee4f56c..a2a5ba2773 100644
        else if (type == "externalplayer")
          internaltype = "external";
        else if (type == "enigma2player")
+-- 
+2.34.1
+

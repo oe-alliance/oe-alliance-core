@@ -1,0 +1,96 @@
+From 51922b57639371aa4aad2581594d79353974118f Mon Sep 17 00:00:00 2001
+From: Markus Volk <f_l_k@t-online.de>
+Date: Wed, 29 Jun 2022 16:10:58 +0200
+Subject: [PATCH] FindLibDvd.cmake: allow to build with external libdvd
+
+After recent FindLibDvd.cmake rework libdvd can only be built internally
+or by using a tarball. Allow shared build using pkgconfig.
+
+Patch-Status: Inappropriate
+
+---
+ cmake/modules/FindLibDvd.cmake | 68 +++++++++++++++++++++-------------
+ 1 file changed, 42 insertions(+), 26 deletions(-)
+
+diff --git a/cmake/modules/FindLibDvd.cmake b/cmake/modules/FindLibDvd.cmake
+index aa1d12c3017..a825f406b32 100644
+--- a/cmake/modules/FindLibDvd.cmake
++++ b/cmake/modules/FindLibDvd.cmake
+@@ -1,32 +1,48 @@
+ 
+ # Check for existing LIBDVDREAD.
+ # Suppress mismatch warning, see https://cmake.org/cmake/help/latest/module/FindPackageHandleStandardArgs.html
+-set(FPHSA_NAME_MISMATCHED 1)
+-find_package(LibDvdNav MODULE REQUIRED)
+-unset(FPHSA_NAME_MISMATCHED)
+-
+-set(_dvdlibs ${LIBDVDREAD_LIBRARY} ${LIBDVDCSS_LIBRARY})
+-
+-if(NOT CORE_SYSTEM_NAME MATCHES windows)
+-  # link a shared dvdnav library that includes the whole archives of dvdread and dvdcss as well
+-  # the quotes around _dvdlibs are on purpose, since we want to pass a list to the function that will be unpacked automatically
+-  core_link_library(${LIBDVDNAV_LIBRARY} system/players/VideoPlayer/libdvdnav libdvdnav archives "${_dvdlibs}")
+-else()
+-  set(LIBDVD_TARGET_DIR .)
+-  if(CORE_SYSTEM_NAME STREQUAL windowsstore)
+-    set(LIBDVD_TARGET_DIR dlls)
++  set(_dvdlibs dvdread dvdnav)
++  set(_handlevars LIBDVD_INCLUDE_DIRS DVDREAD_LIBRARY DVDNAV_LIBRARY)
++  if(ENABLE_DVDCSS)
++    list(APPEND _dvdlibs libdvdcss)
++    list(APPEND _handlevars DVDCSS_LIBRARY)
+   endif()
+-  copy_file_to_buildtree(${DEPENDS_PATH}/bin/libdvdnav.dll DIRECTORY ${LIBDVD_TARGET_DIR})
+-  add_dependencies(export-files LibDvdNav::LibDvdNav)
+-endif()
+-
+-set(LIBDVD_INCLUDE_DIRS ${LIBDVDREAD_INCLUDE_DIR} ${LIBDVDNAV_INCLUDE_DIR})
+-set(LIBDVD_LIBRARIES ${LIBDVDNAV_LIBRARY} ${LIBDVDREAD_LIBRARY})
+-if(TARGET LibDvdCSS::LibDvdCSS)
+-  list(APPEND LIBDVD_LIBRARIES ${LIBDVDCSS_LIBRARY})
+-  list(APPEND LIBDVD_INCLUDE_DIRS ${LIBDVDCSS_INCLUDE_DIR})
+-endif()
+-set(LIBDVD_LIBRARIES ${LIBDVD_LIBRARIES} CACHE STRING "libdvd libraries" FORCE)
+-set(LIBDVD_FOUND 1 CACHE BOOL "libdvd found" FORCE)
++
++  if(PKG_CONFIG_FOUND)
++    pkg_check_modules(PC_DVD ${_dvdlibs} QUIET)
++  endif()
++
++  find_path(LIBDVD_INCLUDE_DIRS dvdnav/dvdnav.h PATHS ${PC_DVD_INCLUDE_DIRS})
++  find_library(DVDREAD_LIBRARY NAMES dvdread libdvdread PATHS ${PC_DVD_dvdread_LIBDIR})
++  find_library(DVDNAV_LIBRARY NAMES dvdnav libdvdnav PATHS ${PC_DVD_dvdnav_LIBDIR})
++  if(ENABLE_DVDCSS)
++    find_library(DVDCSS_LIBRARY NAMES dvdcss libdvdcss PATHS ${PC_DVD_libdvdcss_LIBDIR})
++  endif()
++
++  include(FindPackageHandleStandardArgs)
++  find_package_handle_standard_args(LibDvd REQUIRED_VARS ${_handlevars})
++  if(LIBDVD_FOUND)
++    add_library(dvdnav UNKNOWN IMPORTED)
++    set_target_properties(dvdnav PROPERTIES
++                                  FOLDER "External Projects"
++                                  IMPORTED_LOCATION "${DVDNAV_LIBRARY}")
++
++    add_library(dvdread UNKNOWN IMPORTED)
++    set_target_properties(dvdread PROPERTIES
++                                  FOLDER "External Projects"
++                                  IMPORTED_LOCATION "${DVDREAD_LIBRARY}")
++    add_library(dvdcss UNKNOWN IMPORTED)
++    set_target_properties(dvdcss PROPERTIES
++                                  FOLDER "External Projects"
++                                  IMPORTED_LOCATION "${DVDCSS_LIBRARY}")
++
++    set(_linklibs ${DVDREAD_LIBRARY})
++    if(ENABLE_DVDCSS)
++      list(APPEND _linklibs ${DVDCSS_LIBRARY})
++    endif()
++    set(_linklibs ${DVDNAV_LIBRARY})
++    set(LIBDVD_LIBRARIES ${DVDNAV_LIBRARY})
++    mark_as_advanced(LIBDVD_INCLUDE_DIRS LIBDVD_LIBRARIES)
++  endif()
+ 
+ mark_as_advanced(LIBDVD_INCLUDE_DIRS LIBDVD_LIBRARIES)
+-- 
+2.25.1
+
