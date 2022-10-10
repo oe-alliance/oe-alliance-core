@@ -16,6 +16,7 @@ PKGV = "0.23.7+git${GITPKGV}"
 SRC_URI = "git://github.com/MusicPlayerDaemon/MPD;branch=master;protocol=https \
         file://mpd.conf \
         file://mpd.init \
+        file://0001-support-fmt9.patch \
         "
 
 S = "${WORKDIR}/git"
