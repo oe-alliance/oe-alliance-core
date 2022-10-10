@@ -190,6 +190,7 @@ RRECOMMENDS:enigma2-plugin-extensions-dvdplayer = "kernel-module-cdrom kernel-mo
 RDEPENDS:enigma2-plugin-systemplugins-hotplug = "hotplug-e2-helper"
 RDEPENDS:enigma2-plugin-systemplugins-fsblupdater = "${PYTHON_PN}-distutils"
 DESCRIPTION:enigma2-plugin-font-wqy-microhei = "Font wqy-microhei add support for China EPG"
+RDEPENDS:enigma2-plugin-extensions-filecommander = "${PYTHON_PN}-puremagic"
 
 inherit autotools-brokensep gitpkgv pkgconfig ${PYTHON_PN}native ${@bb.utils.contains("PYTHON_PN", "python3", "python3targetconfig", "", d)} upx-compress
 
