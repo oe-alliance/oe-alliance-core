@@ -62,7 +62,7 @@ RDEPENDS:${PN} = "\
     vsftpd \
     wget \
     wireless-tools \
-    ${PYTHON_PN}-twisted-protocols ${PYTHON_PN}-numbers \
+    ${PYTHON_PN}-twisted-protocols ${PYTHON_PN}-numbers ${PYTHON_PN}-puremagic \
     ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-argparse", "", d)} \
     "
 
