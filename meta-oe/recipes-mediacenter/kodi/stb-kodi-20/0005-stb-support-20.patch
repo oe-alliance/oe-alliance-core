@@ -5883,12 +5883,12 @@ index 0000000000..adcc8bb8ca
 + */
 +#include "system.h"
 +
-+#include "AppInboundProtocol.h"
++#include "application/AppInboundProtocol.h"
 +#include "WinEventsSTB.h"
 +#include "windowing/WinEvents.h"
 +#include "windowing/XBMC_events.h"
 +#include "input/XBMC_keysym.h"
-+#include "Application.h"
++#include "application/Application.h"
 +#include "input/mouse/MouseStat.h"
 +#include "utils/log.h"
 +#include "powermanagement/PowerManager.h"
@@ -6023,7 +6023,7 @@ index 0000000000..623de92cc6
 +
 +#include "WinSystemSTBContext.h"
 +
-+#include "Application.h"
++#include "application/Application.h"
 +#include "ServiceBroker.h"
 +#include "cores/VideoPlayer/VideoRenderers/RenderFactory.h"
 +#include "cores/RetroPlayer/process/RPProcessInfo.h"
@@ -6179,7 +6179,7 @@ new file mode 100644
 index 0000000000..54c4c12fc3
 --- /dev/null
 +++ b/xbmc/windowing/egl/WinSystemstb.cpp
-@@ -0,0 +1,546 @@
+@@ -0,0 +1,547 @@
 +/*
 + *  Copyright (C) 2005-2018 Team Kodi
 + *  This file is part of Kodi - https://kodi.tv
@@ -6202,6 +6202,7 @@ index 0000000000..54c4c12fc3
 +#include "settings/AdvancedSettings.h"
 +#include "settings/SettingsComponent.h"
 +#include "utils/log.h"
++#include "utils/StringUtils.h"
 +#include "windowing/GraphicContext.h"
 +#include "windowing/Resolution.h"
 +

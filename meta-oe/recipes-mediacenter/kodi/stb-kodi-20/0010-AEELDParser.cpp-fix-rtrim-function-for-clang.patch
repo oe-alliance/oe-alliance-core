@@ -1,0 +1,39 @@
+From 3a39cae4a1dd7847b8ebae56df202372f814b53d Mon Sep 17 00:00:00 2001
+From: Markus Volk <f_l_k@t-online.de>
+Date: Tue, 27 Sep 2022 16:48:10 +0200
+Subject: [PATCH] AEELDParser.cpp: fix rtrim function for clang
+
+---
+ xbmc/cores/AudioEngine/Utils/AEELDParser.cpp | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/xbmc/cores/AudioEngine/Utils/AEELDParser.cpp b/xbmc/cores/AudioEngine/Utils/AEELDParser.cpp
+index a9a4cf1a01d..ab7e1bdc536 100644
+--- a/xbmc/cores/AudioEngine/Utils/AEELDParser.cpp
++++ b/xbmc/cores/AudioEngine/Utils/AEELDParser.cpp
+@@ -12,6 +12,8 @@
+ #include "utils/EndianSwap.h"
+ 
+ #include <algorithm>
++#include <cctype>
++#include <locale>
+ #include <functional>
+ #include <stdio.h>
+ #include <string.h>
+@@ -72,7 +74,12 @@ typedef struct
+ #define CEA_861_FORMAT_WMAPRO    14
+ #define CEA_861_FORMAT_RESERVED2 15
+ 
+-#define rtrim(s) s.erase(std::find_if(s.rbegin(), s.rend(), std::not1(std::ptr_fun<int, int>(std::isspace))).base(), s.end())
++// trim from end (in place)
++static inline void rtrim(std::string &s) {
++    s.erase(std::find_if(s.rbegin(), s.rend(), [](int ch) {
++        return !std::isspace(ch);
++    }).base(), s.end());
++}
+ 
+ void CAEELDParser::Parse(const uint8_t *data, size_t length, CAEDeviceInfo& info)
+ {
+-- 
+2.34.1
+

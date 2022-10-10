@@ -7,7 +7,7 @@ FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}-20:"
 
 PACKAGE_ARCH = "${MACHINE}"
 
-inherit cmake gettext pkgconfig ${PYTHON_PN}-dir ${PYTHON_PN}native
+inherit ccache cmake gettext pkgconfig ${PYTHON_PN}native
 
 DEPENDS += " \
             fmt \
@@ -68,12 +68,12 @@ DEPENDS += " \
             gstreamer1.0 \
             gstreamer1.0-plugins-base \
           "
-
+inherit gitpkgv
 # 20.0 Nexus
-SRCREV = "d3474a88f4a161101569f1c98bd866c17369fd6d"
+SRCREV = "${AUTOREV}"
 
 # 'patch' doesn't support binary diffs
-#PATCHTOOL = "git"
+PATCHTOOL = "git"
 
 PR = "r0"
 
@@ -89,6 +89,8 @@ SRC_URI = "git://github.com/xbmc/xbmc.git;protocol=https;branch=master \
            file://0007-adapt-window-system-registration.patch \
            file://0008-reinstate-system-h.patch \
            file://0009-reinstate-platform-defines.patch \
+           file://0010-AEELDParser.cpp-fix-rtrim-function-for-clang.patch \
+           file://0011-FindLibDvd.cmake-build-with-external-source.patch \
            ${@bb.utils.contains_any('MACHINE_FEATURES', 'hisil-3798mv200 hisil-3798mv310 hisi hisil', '' , 'file://0100-e2-player.patch', d)} \
            ${@bb.utils.contains_any('MACHINE_FEATURES', 'hisil-3798mv200 hisil-3798mv310 hisi hisil', '' , 'file://0101-gst-player.patch', d)} \
           "
@@ -96,8 +98,8 @@ SRC_URI = "git://github.com/xbmc/xbmc.git;protocol=https;branch=master \
 S = "${WORKDIR}/git"
 
 # breaks compilation
-CCACHE_DISABLE = "1"
-ASNEEDED = ""
+#CCACHE_DISABLE = "1"
+#ASNEEDED = ""
 
 ACCEL ?= ""
 ACCEL:x86 = "vaapi vdpau"
@@ -110,7 +112,11 @@ WINDOWSYSTEM ?= "stb"
 #https://github.com/xbmc/xbmc/commit/d159837cf736c9ba17772ba52e4ce95aa3625528
 APPRENDERSYSTEM ?= "gles"
 
+TOOLCHAIN ?= "clang"
+
 PACKAGECONFIG ??= "${ACCEL} ${WINDOWSYSTEM} pulseaudio lcms lto \
+                   ${@bb.utils.contains('TOOLCHAIN', 'clang', 'clang', '', d)} \
+                   ${@bb.utils.contains('DISTRO_FEATURES', 'ld-is-lld', 'lld', '', d)} \
                    ${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'x11', '', d)} \
                    ${@bb.utils.contains('DISTRO_FEATURES', 'opengl', 'opengl', 'openglesv2', d)}"
 
@@ -134,6 +140,8 @@ PACKAGECONFIG[lcms] = ",,lcms"
 
 # Compilation tunes
 
+PACKAGECONFIG[lld] = "-DENABLE_LLD=ON,-DENABLE_LLD=OFF"
+PACKAGECONFIG[clang] = "-DENABLE_CLANGFORMAT=ON -DENABLE_CLANGTIDY=ON,-DENABLE_CLANGFORMAT=OFF -DENABLE_CLANGTIDY=OFF"
 PACKAGECONFIG[gold] = "-DENABLE_LDGOLD=ON,-DENABLE_LDGOLD=OFF"
 PACKAGECONFIG[lto] = "-DUSE_LTO=${@oe.utils.cpu_count()},-DUSE_LTO=OFF"
 
@@ -161,6 +169,10 @@ KODI_DISABLE_INTERNAL_LIBRARIES = " \
 # Allow downloads during internals build
 do_compile[network] = "1"
 
+RUNTIME ?= "llvm"
+
+RUNTIME_NM = "${@bb.utils.contains('RUNTIME', 'llvm', '${TARGET_PREFIX}llvm-nm', '${TARGET_PREFIX}gcc-nm', d)}"
+
 EXTRA_OECMAKE = " \
     ${KODI_ARCH} \
     ${KODI_DISABLE_INTERNAL_LIBRARIES} \
@@ -168,10 +180,14 @@ EXTRA_OECMAKE = " \
     \
     -DNATIVEPREFIX=${STAGING_DIR_NATIVE}${prefix} \
     -DJava_JAVA_EXECUTABLE=/usr/bin/java \
+    -DCLANG_TIDY_EXECUTABLE=${STAGING_BINDIR_NATIVE}/clang-tidy \
+    -DCLANG_FORMAT_EXECUTABLE=${STAGING_BINDIR_NATIVE}/clang-format \
+    \
     -DWITH_TEXTUREPACKER=${STAGING_BINDIR_NATIVE}/TexturePacker \
     -DWITH_JSONSCHEMABUILDER=${STAGING_BINDIR_NATIVE}/JsonSchemaBuilder \
     \
-    -DCMAKE_NM='${NM}' \
+    -DENABLE_STATIC_LIBS=FALSE \
+    -DCMAKE_NM=${STAGING_BINDIR_NATIVE}/${TARGET_SYS}/${RUNTIME_NM} \
     \
     -DFFMPEG_PATH=${STAGING_DIR_TARGET} \
     -DLIBDVD_INCLUDE_DIRS=${STAGING_INCDIR} \
@@ -188,8 +204,8 @@ EXTRA_OECMAKE = " \
 # OECMAKE_GENERATOR="Unix Makefiles"
 # PARALLEL_MAKE = " "
 
-FULL_OPTIMIZATION:armv7a = "-fexpensive-optimizations -fomit-frame-pointer -O3 -ffast-math"
-FULL_OPTIMIZATION:armv7ve = "-fexpensive-optimizations -fomit-frame-pointer -O3 -ffast-math"
+FULL_OPTIMIZATION:armv7a = "-fomit-frame-pointer -O3 -ffast-math"
+FULL_OPTIMIZATION:armv7ve = "-fomit-frame-pointer -O3 -ffast-math"
 BUILD_OPTIMIZATION = "${FULL_OPTIMIZATION}"
 
 # for python modules
@@ -207,10 +223,10 @@ do_configure:prepend() {
     mkdir -p ${STAGING_LIBDIR_NATIVE}/bfd-plugins
     ln -sf $liblto ${STAGING_LIBDIR_NATIVE}/bfd-plugins/liblto_plugin.so
 
-    sed -i -e 's:CMAKE_NM}:}${TARGET_PREFIX}gcc-nm:' ${S}/xbmc/cores/DllLoader/exports/CMakeLists.txt
+#    sed -i -e 's:CMAKE_NM}:}${TARGET_PREFIX}gcc-nm:' ${S}/xbmc/cores/DllLoader/exports/CMakeLists.txt
 }
 
-INSANE_SKIP:${PN} = "rpaths already-stripped"
+INSANE_SKIP:${PN} = "rpaths already-stripped textrel"
 
 FILES:${PN} = "${libdir}/kodi ${libdir}/xbmc"
 FILES:${PN} += "${bindir}/kodi ${bindir}/xbmc ${bindir}/kodi-TexturePacker"
