@@ -6,17 +6,17 @@ Subject: [PATCH] HiPlayer-for-kodi-20
 ---
  cmake/treedata/common/cores.txt               |    1 +
  xbmc/cores/HiPlayer/CMakeLists.txt            |    9 +
- xbmc/cores/HiPlayer/HiPlayer.cpp              |  592 +++++++
+ xbmc/cores/HiPlayer/HiPlayer.cpp              |  597 +++++++
  xbmc/cores/HiPlayer/HiPlayer.h                |  151 ++
- xbmc/cores/HiPlayer/HiPlayerAudio.cpp         |   79 +
+ xbmc/cores/HiPlayer/HiPlayerAudio.cpp         |   80 +
  xbmc/cores/HiPlayer/HiPlayerAudio.h           |   23 +
- xbmc/cores/HiPlayer/HiPlayerVideo.cpp         | 1422 +++++++++++++++++
+ xbmc/cores/HiPlayer/HiPlayerVideo.cpp         | 1423 +++++++++++++++++
  xbmc/cores/HiPlayer/HiPlayerVideo.h           |  117 ++
  xbmc/cores/HiPlayer/Makefile                  |    8 +
  xbmc/cores/HiPlayer/hisilicon.h               |  287 ++++
- .../playercorefactory/PlayerCoreConfig.h      |   10 +
+ .../playercorefactory/PlayerCoreConfig.cpp    |   10 +
  .../playercorefactory/PlayerCoreFactory.cpp   |   12 +
- 12 files changed, 2711 insertions(+)
+ 12 files changed, 2714 insertions(+)
  create mode 100644 xbmc/cores/HiPlayer/CMakeLists.txt
  create mode 100644 xbmc/cores/HiPlayer/HiPlayer.cpp
  create mode 100644 xbmc/cores/HiPlayer/HiPlayer.h
@@ -53,16 +53,18 @@ index 0000000..07a8253
 +core_add_library(hiplayer)
 diff --git a/xbmc/cores/HiPlayer/HiPlayer.cpp b/xbmc/cores/HiPlayer/HiPlayer.cpp
 new file mode 100644
-index 0000000..e61937a
+index 0000000..a8e1028
 --- /dev/null
 +++ b/xbmc/cores/HiPlayer/HiPlayer.cpp
-@@ -0,0 +1,593 @@
+@@ -0,0 +1,597 @@
 +#include "HiPlayer.h"
 +#include "HiPlayerVideo.h"
 +#include "HiPlayerAudio.h"
 +
 +#include "Util.h"
-+#include "Application.h"
++#include "application/Application.h"
++#include "application/ApplicationComponents.h"
++#include "application/ApplicationPowerHandling.h"
 +#include "ServiceBroker.h"
 +#include "utils/StringUtils.h"
 +#include "utils/URIUtils.h"
@@ -337,8 +339,10 @@ index 0000000..e61937a
 +	CServiceBroker::GetActiveAE()->Resume();
 +
 +	// We don't want to come back to an active screensaver
-+	g_application.ResetScreenSaver();
-+	g_application.WakeUpScreenSaverAndDPMS();
++	auto& components = CServiceBroker::GetAppComponents();
++	const auto appPower = components.GetComponent<CApplicationPowerHandling>();
++	appPower->ResetScreenSaver();
++	appPower->WakeUpScreenSaverAndDPMS();
 +
 +	if (g_application.CurrentFileItem().IsStack() || 
 +			m_pInputStream->IsStreamType(DVDSTREAM_TYPE_PVRMANAGER))
@@ -572,12 +576,12 @@ index 0000000..e61937a
 +	if (m_PlayerOptions.startpercent > 0)
 +	{
 +		m_VideoPlayerVideo->SeekPercentage((float)m_PlayerOptions.startpercent/(float) 100);
-+		m_PlayerOptions.startpercent = 0.0f;
++		m_PlayerOptions.startpercent = 0.0;
 +	}
 +	else if (m_PlayerOptions.starttime > 0)
 +	{
 +		m_VideoPlayerVideo->SeekTimeRelative((int64_t) m_PlayerOptions.starttime * 1000);
-+		m_PlayerOptions.starttime = 0.0f;
++		m_PlayerOptions.starttime = 0.0;
 +	}
 +
 +	m_callback.OnPlayBackStarted(file);
@@ -809,13 +813,14 @@ index 0000000..56e861d
 +};
 diff --git a/xbmc/cores/HiPlayer/HiPlayerAudio.cpp b/xbmc/cores/HiPlayer/HiPlayerAudio.cpp
 new file mode 100644
-index 0000000..b0d37a8
+index 0000000..235e40a
 --- /dev/null
 +++ b/xbmc/cores/HiPlayer/HiPlayerAudio.cpp
-@@ -0,0 +1,79 @@
+@@ -0,0 +1,80 @@
 +#include "threads/SingleLock.h"
 +#include "utils/XMLUtils.h"
 +
++#include <unistd.h>
 +#include <fcntl.h>
 +#include <sys/ioctl.h>
 +#include <linux/dvb/audio.h>
@@ -854,7 +859,7 @@ index 0000000..b0d37a8
 +		ioctl(fd, AUDIO_SET_MIXER, &mixer);
 +		closeMixer(fd);
 +	}
-+	CLog::Log(LOGDEBUG, "{}: volume:%f set:{:d} (-1db)", __FUNCTION__, volume, vol);
++	CLog::Log(LOGDEBUG, "{}: volume: {} set: {} (-1db)", __FUNCTION__, volume, vol);
 +}
 +
 +void CHiPlayerAudio::SetMute(bool bOnOff)
@@ -863,7 +868,7 @@ index 0000000..b0d37a8
 +	if (fd >= 0)
 +	{
 +		bool mute = bOnOff;
-+		if (!ioctl(fd, AUDIO_SET_MUTE, mute) == 0)
++		if ((!ioctl(fd, AUDIO_SET_MUTE, mute)) == 0)
 +			CLog::Log(LOGERROR, "{}: ioctl AUDIO_SET_MUTE failed", __FUNCTION__);
 +		
 +		closeMixer(fd);
@@ -871,7 +876,7 @@ index 0000000..b0d37a8
 +	else
 +			CLog::Log(LOGERROR, "{}: i/o AUDIO_SET_MUTE failed", __FUNCTION__);
 +	
-+	CLog::Log(LOGDEBUG, "{}: bOnOff	:{}", __FUNCTION__, bOnOff == false ? "off":"on" ); 
++	CLog::Log(LOGDEBUG, "{}: bOnOff:{}", __FUNCTION__, bOnOff == false ? "off":"on" ); 
 +}
 +
 +int CHiPlayerAudio::openMixer()
@@ -923,7 +928,7 @@ index 0000000..a03dafb
 +};
 diff --git a/xbmc/cores/HiPlayer/HiPlayerVideo.cpp b/xbmc/cores/HiPlayer/HiPlayerVideo.cpp
 new file mode 100644
-index 0000000..3ca537a
+index 0000000..818ec24
 --- /dev/null
 +++ b/xbmc/cores/HiPlayer/HiPlayerVideo.cpp
 @@ -0,0 +1,1423 @@
@@ -2780,39 +2785,39 @@ index 0000000..6563348
 +} HI_FORMAT_FILE_INFO_S;
 +
 +#endif
-diff --git a/xbmc/cores/playercorefactory/PlayerCoreConfig.h b/xbmc/cores/playercorefactory/PlayerCoreConfig.h
-index 5af08c2..ae143ea 100644
---- a/xbmc/cores/playercorefactory/PlayerCoreConfig.h
-+++ b/xbmc/cores/playercorefactory/PlayerCoreConfig.h
-@@ -21,6 +21,10 @@
+diff --git a/xbmc/cores/playercorefactory/PlayerCoreConfig.cpp b/xbmc/cores/playercorefactory/PlayerCoreConfig.cpp
+index 545062e..24d5b9e 100644
+--- a/xbmc/cores/playercorefactory/PlayerCoreConfig.cpp
++++ b/xbmc/cores/playercorefactory/PlayerCoreConfig.cpp
+@@ -22,6 +22,10 @@
  
  #include <utility>
  
 +#if defined(HAS_HIPLAYER)
-+  #include "cores/HiPlayer/HiPlayer.h"
++#include "cores/HiPlayer/HiPlayer.h"
 +#endif
 +
- class CPlayerCoreConfig
- {
- public:
-@@ -83,6 +87,12 @@ public:
-     {
-       player = std::make_shared<KODI::RETRO::CRetroPlayer>(callback);
-     }
+ CPlayerCoreConfig::CPlayerCoreConfig(std::string name,
+                                      std::string type,
+                                      const TiXmlElement* pConfig,
+@@ -56,6 +60,12 @@ std::shared_ptr<IPlayer> CPlayerCoreConfig::CreatePlayer(IPlayerCallback& callba
+   {
+     player = std::make_shared<KODI::RETRO::CRetroPlayer>(callback);
+   }
 +#if defined(HAS_HIPLAYER)
-+    else if (m_type.compare("hiplayer") == 0)
-+    {
-+      player = std::make_shared<CHiPlayer>(callback);
-+    }
++  else if (m_type.compare("hiplayer") == 0)
++  {
++    player = std::make_shared<CHiPlayer>(callback);
++  }
 +#endif
-     else if (m_type.compare("external") == 0)
-     {
-       player = std::make_shared<CExternalPlayer>(callback);
+   else if (m_type.compare("external") == 0)
+   {
+     player = std::make_shared<CExternalPlayer>(callback);
 diff --git a/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp b/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp
-index 65984e9..d64a540 100644
+index 34792a4..faa1f55 100644
 --- a/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp
 +++ b/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp
-@@ -28,6 +28,10 @@
+@@ -29,6 +29,10 @@
  #include <mutex>
  #include <sstream>
  
@@ -2823,7 +2828,7 @@ index 65984e9..d64a540 100644
  #define PLAYERCOREFACTORY_XML "playercorefactory.xml"
  
  CPlayerCoreFactory::CPlayerCoreFactory(const CProfileManager &profileManager) :
-@@ -344,6 +348,12 @@ bool CPlayerCoreFactory::LoadConfiguration(const std::string &file, bool clear)
+@@ -345,6 +349,12 @@ bool CPlayerCoreFactory::LoadConfiguration(const std::string &file, bool clear)
      m_vecCoreSelectionRules.clear();
  
      // Builtin players
@@ -2836,7 +2841,7 @@ index 65984e9..d64a540 100644
      auto VideoPlayer = std::make_unique<CPlayerCoreConfig>("VideoPlayer", "video", nullptr);
      VideoPlayer->m_bPlaysAudio = true;
      VideoPlayer->m_bPlaysVideo = true;
-@@ -379,6 +389,8 @@ bool CPlayerCoreFactory::LoadConfiguration(const std::string &file, bool clear)
+@@ -380,6 +390,8 @@ bool CPlayerCoreFactory::LoadConfiguration(const std::string &file, bool clear)
          internaltype = "video";
        else if (type == "paplayer")
          internaltype = "music";
@@ -2845,3 +2850,6 @@ index 65984e9..d64a540 100644
        else if (type == "externalplayer")
          internaltype = "external";
  
+-- 
+2.34.1
+
