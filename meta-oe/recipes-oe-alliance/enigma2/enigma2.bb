@@ -195,6 +195,7 @@ SUMMARY:enigma2-plugin-extensions-ytdlwrapper = "Enables support for Youtube-DL 
 RDEPENDS:enigma2-plugin-extensions-ytdlwrapper = "${PYTHON_PN}-youtube-dl"
 SUMMARY:enigma2-plugin-extensions-ytdlpwrapper = "Enables support for YT-DLP url scheme in bouquet list."
 RDEPENDS:enigma2-plugin-extensions-ytdlpwrapper = "${PYTHON_PN}-yt-dlp"
+RDEPENDS:enigma2-plugin-extensions-filecommander = "${PYTHON_PN}-puremagic"
 
 inherit autotools-brokensep gitpkgv pkgconfig ${PYTHON_PN}native ${@bb.utils.contains("PYTHON_PN", "python3", "python3targetconfig", "", d)} upx-compress
 
