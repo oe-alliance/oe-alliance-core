@@ -88,7 +88,7 @@ SRC_URI = " \
     file://159-apollo_onfi_nand_support.patch \
     file://160-apollo_usb_reset_fix.patch \
     file://161-apollo_sfc_macronix_dma.patch \
-    file://162-apollo:arm_errata.patch \
+    file://162-apollo_arm_errata.patch \
     file://163-apollo_nand_onfi_chipsize.patch \
     file://164-kronos_nand.patch \
     file://165-kronos_sdio.patch \
@@ -136,7 +136,7 @@ SRC_URI = " \
     file://209-i2c_locking.patch \
     file://210-kronos_sddata4_7_pins_disable.patch \
     file://211-nand_oob_write.patch \
-    file://212-kronos-krome_detect:arm_freq.patch \
+    file://212-kronos-krome_detect_arm_freq.patch \
     file://213-kronos-krome_nand_224oob.patch \
     file://214-kronos-krome_vmalloc_increase.patch \
     file://215-kronos_active_standby_fix.patch \
@@ -150,7 +150,7 @@ SRC_URI = " \
     file://223-apollo_sata_coherency_issue_fix.patch \
     file://224-kronosrevb_krome_splash.patch \
     file://225-krome-balboa.patch \
-    file://226-krome_print:arm_freq.patch \
+    file://226-krome_print_arm_freq.patch \
     file://227-sd_fallback_normalspeed.patch \
     file://228-kronos-krome_8k_nand.patch \
     file://229-splashlogo_sfc_mx_spi.patch \
