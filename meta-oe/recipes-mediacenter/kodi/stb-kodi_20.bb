@@ -97,10 +97,6 @@ SRC_URI = "git://github.com/xbmc/xbmc.git;protocol=https;branch=master \
 
 S = "${WORKDIR}/git"
 
-# breaks compilation
-#CCACHE_DISABLE = "1"
-#ASNEEDED = ""
-
 ACCEL ?= ""
 ACCEL:x86 = "vaapi vdpau"
 ACCEL:x86-64 = "vaapi vdpau"
@@ -112,9 +108,9 @@ WINDOWSYSTEM ?= "stb"
 #https://github.com/xbmc/xbmc/commit/d159837cf736c9ba17772ba52e4ce95aa3625528
 APPRENDERSYSTEM ?= "gles"
 
-TOOLCHAIN ?= "clang"
+TOOLCHAIN:arm ?= "clang"
 
-PACKAGECONFIG ??= "${ACCEL} ${WINDOWSYSTEM} pulseaudio lcms lto \
+PACKAGECONFIG ?= "${ACCEL} ${WINDOWSYSTEM} pulseaudio lcms lto \
                    ${@bb.utils.contains('TOOLCHAIN', 'clang', 'clang', '', d)} \
                    ${@bb.utils.contains('DISTRO_FEATURES', 'ld-is-lld', 'lld', '', d)} \
                    ${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'x11', '', d)} \
@@ -146,16 +142,8 @@ PACKAGECONFIG[gold] = "-DENABLE_LDGOLD=ON,-DENABLE_LDGOLD=OFF"
 PACKAGECONFIG[lto] = "-DUSE_LTO=${@oe.utils.cpu_count()},-DUSE_LTO=OFF"
 
 LDFLAGS += "${TOOLCHAIN_OPTIONS}"
-LDFLAGS:append:mips = " -latomic"
-LDFLAGS:append:mipsel = " -latomic"
-LDFLAGS:append:mips64 = " -latomic"
-LDFLAGS:append:mips64el = " -latomic"
-
-KODI_ARCH = ""
-KODI_ARCH:mips = "-DWITH_ARCH=${TARGET_ARCH}"
-KODI_ARCH:mipsel = "-DWITH_ARCH=${TARGET_ARCH}"
-KODI_ARCH:mips64 = "-DWITH_ARCH=${TARGET_ARCH}"
-KODI_ARCH:mips64el = "-DWITH_ARCH=${TARGET_ARCH}"
+LDFLAGS:append:mipsarch = " -latomic"
+EXTRA_OECMAKE:append:mipsarch = " -DWITH_ARCH=${TARGET_ARCH}"
 
 KODI_DISABLE_INTERNAL_LIBRARIES = " \
   -DENABLE_INTERNAL_CROSSGUID=OFF \
@@ -169,7 +157,7 @@ KODI_DISABLE_INTERNAL_LIBRARIES = " \
 # Allow downloads during internals build
 do_compile[network] = "1"
 
-RUNTIME ?= "llvm"
+RUNTIME:arm ?= "llvm"
 
 RUNTIME_NM = "${@bb.utils.contains('RUNTIME', 'llvm', '${TARGET_PREFIX}llvm-nm', '${TARGET_PREFIX}gcc-nm', d)}"
 
