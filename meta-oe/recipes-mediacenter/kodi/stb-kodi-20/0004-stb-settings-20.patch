@@ -1,4 +1,4 @@
-From e685c3bb07f646b08c23d8fbf30ed57fc52032cf Mon Sep 17 00:00:00 2001
+From 88c4cf3c49f96eb7af48625e8689b7905d4ea073 Mon Sep 17 00:00:00 2001
 From: Captain <captain.onboard@web.de>
 Date: Wed, 15 Jul 2020 18:07:08 +0200
 Subject: [PATCH] stb-settings-20
@@ -23,10 +23,10 @@ Subject: [PATCH] stb-settings-20
  create mode 100644 cmake/treedata/common/stb.txt
 
 diff --git a/addons/skin.estuary/xml/Home.xml b/addons/skin.estuary/xml/Home.xml
-index 4192e93d67..ecaeaeaadf 100644
+index 9db8d89902..4c557fbd9c 100644
 --- a/addons/skin.estuary/xml/Home.xml
 +++ b/addons/skin.estuary/xml/Home.xml
-@@ -1026,7 +1026,7 @@
+@@ -1028,7 +1028,7 @@
  					<align>justify</align>
  					<include content="IconButton">
  						<param name="control_id" value="804" />
@@ -36,7 +36,7 @@ index 4192e93d67..ecaeaeaadf 100644
  						<param name="label" value="$LOCALIZE[33060]" />
  					</include>
 diff --git a/cmake/modules/FindFFMPEG.cmake b/cmake/modules/FindFFMPEG.cmake
-index b60dfd84d0..e61412aaa8 100644
+index fedbf0adde..40485253fa 100644
 --- a/cmake/modules/FindFFMPEG.cmake
 +++ b/cmake/modules/FindFFMPEG.cmake
 @@ -63,6 +63,12 @@ macro(buildFFMPEG)
@@ -52,7 +52,7 @@ index b60dfd84d0..e61412aaa8 100644
    if(KODI_DEPENDSBUILD)
      set(CROSS_ARGS -DDEPENDS_PATH=${DEPENDS_PATH}
                     -DPKG_CONFIG_EXECUTABLE=${PKG_CONFIG_EXECUTABLE}
-@@ -101,12 +107,12 @@ macro(buildFFMPEG)
+@@ -110,12 +116,12 @@ macro(buildFFMPEG)
      add_dependencies(ffmpeg dav1d)
    endif()
  
@@ -70,7 +70,7 @@ index b60dfd84d0..e61412aaa8 100644
  if [[ $@ == *${APP_NAME_LC}.bin* || $@ == *${APP_NAME_LC}${APP_BINARY_SUFFIX}* || $@ == *${APP_NAME_LC}.so* || $@ == *${APP_NAME_LC}-test* ]]
  then
    avcodec=`PKG_CONFIG_PATH=${DEPENDS_PATH}/lib/pkgconfig ${PKG_CONFIG_EXECUTABLE} --libs --static libavcodec`
-@@ -120,6 +126,7 @@ then
+@@ -129,6 +135,7 @@ then
  else
    $@
  fi")
@@ -78,7 +78,7 @@ index b60dfd84d0..e61412aaa8 100644
    file(COPY ${CMAKE_BINARY_DIR}/${CORE_BUILD_DIR}/ffmpeg/ffmpeg-link-wrapper
         DESTINATION ${CMAKE_BINARY_DIR}/${CORE_BUILD_DIR}
         FILE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE)
-@@ -137,21 +144,25 @@ endmacro()
+@@ -146,21 +153,25 @@ endmacro()
  # Allows building with external ffmpeg not found in system paths,
  # without library version checks
  if(WITH_FFMPEG)
@@ -193,7 +193,7 @@ index 0000000000..e1fe54a13d
 +
 +list(APPEND PLATFORM_DEFINES -DMESA_EGL_NO_X11_HEADERS)
 diff --git a/cmake/scripts/linux/ArchSetup.cmake b/cmake/scripts/linux/ArchSetup.cmake
-index 35ab1402f5..cfb6f6ab1c 100644
+index 848723af1f..a89080f143 100644
 --- a/cmake/scripts/linux/ArchSetup.cmake
 +++ b/cmake/scripts/linux/ArchSetup.cmake
 @@ -43,6 +43,10 @@ else()
@@ -215,10 +215,10 @@ index 0000000000..2606a0f999
 @@ -0,0 +1 @@
 +xbmc/windowing/egl   windowing/egl    # STB
 diff --git a/system/settings/settings.xml b/system/settings/settings.xml
-index 32805fed3c..d6e929237f 100755
+index 1b998bcc66..b04ad16383 100755
 --- a/system/settings/settings.xml
 +++ b/system/settings/settings.xml
-@@ -509,7 +509,7 @@
+@@ -518,7 +518,7 @@
            <control type="list" format="string" />
          </setting>
          <setting id="subtitles.fontname" type="string" label="14089" help="36185">
@@ -227,7 +227,7 @@ index 32805fed3c..d6e929237f 100755
            <default>DEFAULT</default>
            <constraints>
              <options>subtitlesfonts</options>
-@@ -699,7 +699,7 @@
+@@ -710,7 +710,7 @@
            <control type="spinner" format="integer" delayed="true"/>
          </setting>
          <setting id="subtitles.charset" type="string" label="735" help="36189">
@@ -236,7 +236,7 @@ index 32805fed3c..d6e929237f 100755
            <default>DEFAULT</default>
            <constraints>
              <options>charsets</options>
-@@ -2920,7 +2920,7 @@
+@@ -2961,7 +2961,7 @@
          <setting id="audiooutput.processquality" type="integer" label="13505" help="36169">
            <requirement>HAS_AE_QUALITY_LEVELS</requirement>
            <level>2</level>
@@ -245,7 +245,7 @@ index 32805fed3c..d6e929237f 100755
            <constraints>
              <options>aequalitylevels</options>
            </constraints>
-@@ -2938,7 +2938,7 @@
+@@ -2979,7 +2979,7 @@
          </setting>
          <setting id="audiooutput.samplerate" type="integer" label="458" help="36523">
            <level>2</level>
@@ -254,7 +254,7 @@ index 32805fed3c..d6e929237f 100755
            <dependencies>
              <dependency type="visible">
                <and>
-@@ -2950,10 +2950,6 @@
+@@ -2991,10 +2991,6 @@
            <constraints>
              <options>
                <option label="34124">44100</option>
@@ -265,7 +265,7 @@ index 32805fed3c..d6e929237f 100755
                <option label="34129">352800</option>
                <option label="34130">384000</option>
              </options>
-@@ -3773,7 +3769,7 @@
+@@ -3815,7 +3811,7 @@
        <group id="2" label="14270">
          <setting id="locale.country" type="string" label="14271" help="36115">
            <level>0</level>
@@ -446,10 +446,10 @@ index 0be5f2d6f4..8e7e0b0e38 100644
    ROOT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
    PREFIX := $(ROOT_DIR)/dvdread-install
 diff --git a/xbmc/guilib/guiinfo/SystemGUIInfo.cpp b/xbmc/guilib/guiinfo/SystemGUIInfo.cpp
-index 8e03172ace..fa932ee7e0 100644
+index 781092fb12..b38cd345f4 100644
 --- a/xbmc/guilib/guiinfo/SystemGUIInfo.cpp
 +++ b/xbmc/guilib/guiinfo/SystemGUIInfo.cpp
-@@ -59,6 +59,11 @@ std::string CSystemGUIInfo::GetSystemHeatInfo(int info) const
+@@ -61,6 +61,11 @@ std::string CSystemGUIInfo::GetSystemHeatInfo(int info) const
  #if defined(TARGET_POSIX)
      CServiceBroker::GetCPUInfo()->GetTemperature(m_cpuTemp);
      m_gpuTemp = GetGPUTemperature();
@@ -462,10 +462,10 @@ index 8e03172ace..fa932ee7e0 100644
    }
  
 diff --git a/xbmc/input/InputManager.cpp b/xbmc/input/InputManager.cpp
-index 42b008cf16..5533344f91 100644
+index 306e5bd54a..32c13639a4 100644
 --- a/xbmc/input/InputManager.cpp
 +++ b/xbmc/input/InputManager.cpp
-@@ -579,6 +579,18 @@ bool CInputManager::HandleKey(const CKey& key)
+@@ -587,6 +587,18 @@ bool CInputManager::HandleKey(const CKey& key)
            useKeyboard = true;
        }
      }

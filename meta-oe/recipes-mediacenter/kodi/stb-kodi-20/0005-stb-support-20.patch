@@ -1,4 +1,4 @@
-From bd8e939acc3bda199e34af3332e601de07f5466f Mon Sep 17 00:00:00 2001
+From 58e2d9da38ff9e6d4edf5cdde63edabbcc5df059 Mon Sep 17 00:00:00 2001
 From: Captain <captain.onboard@web.de>
 Date: Wed, 15 Jul 2020 18:02:31 +0200
 Subject: [PATCH] stb-support-20
@@ -45,9 +45,9 @@ Subject: [PATCH] stb-support-20
  xbmc/windowing/egl/WinEventsSTB.h             |   47 +
  xbmc/windowing/egl/WinSystemSTBContext.cpp    |  112 ++
  xbmc/windowing/egl/WinSystemSTBContext.h      |   43 +
- xbmc/windowing/egl/WinSystemstb.cpp           |  546 ++++++
+ xbmc/windowing/egl/WinSystemstb.cpp           |  547 ++++++
  xbmc/windowing/egl/WinSystemstb.h             |   79 +
- 43 files changed, 6337 insertions(+), 4 deletions(-)
+ 43 files changed, 6338 insertions(+), 4 deletions(-)
  create mode 100644 xbmc/platform/linux/input/Keymap.h
  create mode 100644 xbmc/platform/linux/input/LinuxInputDevices.cpp
  create mode 100644 xbmc/platform/linux/input/LinuxInputDevices.h
@@ -84,10 +84,10 @@ Subject: [PATCH] stb-support-20
  create mode 100644 xbmc/windowing/egl/WinSystemstb.h
 
 diff --git a/xbmc/addons/addoninfo/AddonInfoBuilder.cpp b/xbmc/addons/addoninfo/AddonInfoBuilder.cpp
-index 09bdf193a2..091978fab6 100644
+index b3e8aa8365..41a9afe4c6 100644
 --- a/xbmc/addons/addoninfo/AddonInfoBuilder.cpp
 +++ b/xbmc/addons/addoninfo/AddonInfoBuilder.cpp
-@@ -600,6 +600,12 @@ const char* CAddonInfoBuilder::GetPlatformLibraryName(const TiXmlElement* elemen
+@@ -766,6 +766,12 @@ const char* CAddonInfoBuilder::GetPlatformLibraryName(const TiXmlElement* elemen
  #if defined(TARGET_FREEBSD)
    libraryName = element->Attribute("library_freebsd");
    if (libraryName == nullptr)
@@ -100,7 +100,7 @@ index 09bdf193a2..091978fab6 100644
  #endif
    libraryName = element->Attribute("library_linux");
  #elif defined(TARGET_WINDOWS_DESKTOP)
-@@ -639,6 +645,12 @@ bool CAddonInfoBuilder::PlatformSupportsAddon(const AddonInfoPtr& addon)
+@@ -805,6 +811,12 @@ bool CAddonInfoBuilder::PlatformSupportsAddon(const AddonInfoPtr& addon)
  #else
      #warning no architecture dependant platform tag
  #endif
@@ -138,10 +138,10 @@ index 6b71389043..ef7a12f114 100644
                         "wayland" IN_LIST CORE_PLATFORM_NAME_LC))
    list(APPEND SOURCES VideoFilterShaderGLES.cpp
 diff --git a/xbmc/cores/VideoPlayer/VideoRenderers/VideoShaders/VideoFilterShaderGLES.cpp b/xbmc/cores/VideoPlayer/VideoRenderers/VideoShaders/VideoFilterShaderGLES.cpp
-index d0b77faf5b..b50aeed869 100644
+index 4f6ffc0061..4e2680e4ea 100644
 --- a/xbmc/cores/VideoPlayer/VideoRenderers/VideoShaders/VideoFilterShaderGLES.cpp
 +++ b/xbmc/cores/VideoPlayer/VideoRenderers/VideoShaders/VideoFilterShaderGLES.cpp
-@@ -101,6 +101,10 @@ ConvolutionFilterShader::ConvolutionFilterShader(ESCALINGMETHOD method)
+@@ -89,6 +89,10 @@ ConvolutionFilterShader::ConvolutionFilterShader(ESCALINGMETHOD method)
      shadername = "gles_convolution-6x6.frag";
    }
  
@@ -152,14 +152,14 @@ index d0b77faf5b..b50aeed869 100644
    if (m_floattex)
    {
      m_internalformat = GL_RGBA16F_EXT;
-@@ -110,6 +114,7 @@ ConvolutionFilterShader::ConvolutionFilterShader(ESCALINGMETHOD method)
+@@ -98,6 +102,7 @@ ConvolutionFilterShader::ConvolutionFilterShader(ESCALINGMETHOD method)
    {
      m_internalformat = GL_RGBA;
    }
 +#endif
  
-   CLog::Log(LOGDEBUG, "GL: ConvolutionFilterShader: using {} defines:\n{}", shadername, defines);
-   PixelShader()->LoadSource(shadername, defines);
+   CLog::Log(LOGDEBUG, "GLES: using scaling method: {}", m_method);
+   CLog::Log(LOGDEBUG, "GLES: using shader: {}", shadername);
 diff --git a/xbmc/platform/linux/input/CMakeLists.txt b/xbmc/platform/linux/input/CMakeLists.txt
 index ebb2ccd585..3def6644af 100644
 --- a/xbmc/platform/linux/input/CMakeLists.txt
@@ -1964,10 +1964,10 @@ index 04c4d55c66..5179f8d636 100644
  #include <GLES2/gl2.h>
  #include <GLES2/gl2ext.h>
 diff --git a/xbmc/utils/CMakeLists.txt b/xbmc/utils/CMakeLists.txt
-index 904b5cc985..580c01b2ff 100644
+index c1937d1a33..41de87250d 100644
 --- a/xbmc/utils/CMakeLists.txt
 +++ b/xbmc/utils/CMakeLists.txt
-@@ -172,6 +172,11 @@ set(HEADERS ActorProtocol.h
+@@ -177,6 +177,11 @@ set(HEADERS ActorProtocol.h
              XMLUtils.h
              XTimeUtils.h)
  
@@ -2201,7 +2201,7 @@ index 7c5e70938f..d843f01d7f 100644
    m_eglContext = eglCreateContext(m_eglDisplay, eglConfig,
                                    EGL_NO_CONTEXT, contextAttribs.Get());
 diff --git a/xbmc/utils/GLUtils.cpp b/xbmc/utils/GLUtils.cpp
-index c6ddcc0771..1cf1953c4a 100644
+index df8921e2b0..d1267c2de5 100644
 --- a/xbmc/utils/GLUtils.cpp
 +++ b/xbmc/utils/GLUtils.cpp
 @@ -41,7 +41,7 @@ std::map<GLenum, const char*> glErrors =
@@ -5858,7 +5858,7 @@ index 0000000000..3a73b3e5d7
 +};
 diff --git a/xbmc/windowing/egl/WinEventsSTB.cpp b/xbmc/windowing/egl/WinEventsSTB.cpp
 new file mode 100644
-index 0000000000..adcc8bb8ca
+index 0000000000..720b493146
 --- /dev/null
 +++ b/xbmc/windowing/egl/WinEventsSTB.cpp
 @@ -0,0 +1,92 @@
@@ -6009,7 +6009,7 @@ index 0000000000..d1540687d3
 +
 diff --git a/xbmc/windowing/egl/WinSystemSTBContext.cpp b/xbmc/windowing/egl/WinSystemSTBContext.cpp
 new file mode 100644
-index 0000000000..623de92cc6
+index 0000000000..c1cfb331d4
 --- /dev/null
 +++ b/xbmc/windowing/egl/WinSystemSTBContext.cpp
 @@ -0,0 +1,112 @@
@@ -6176,7 +6176,7 @@ index 0000000000..f8efc14f85
 +};
 diff --git a/xbmc/windowing/egl/WinSystemstb.cpp b/xbmc/windowing/egl/WinSystemstb.cpp
 new file mode 100644
-index 0000000000..54c4c12fc3
+index 0000000000..30e73ccbd2
 --- /dev/null
 +++ b/xbmc/windowing/egl/WinSystemstb.cpp
 @@ -0,0 +1,547 @@
