@@ -1,4 +1,4 @@
-From 29644e1e45ab8b364a713b8bcfd4d1ccae701a54 Mon Sep 17 00:00:00 2001
+From 4714a10e305f0842beba59cc7563ea5412be4db1 Mon Sep 17 00:00:00 2001
 From: Captain <captain.onboard@web.de>
 Date: Sun, 13 Jun 2021 13:10:57 +0200
 Subject: [PATCH] HiPlayer-for-kodi-20
@@ -16,7 +16,7 @@ Subject: [PATCH] HiPlayer-for-kodi-20
  xbmc/cores/HiPlayer/hisilicon.h               |  287 ++++
  .../playercorefactory/PlayerCoreConfig.cpp    |   10 +
  .../playercorefactory/PlayerCoreFactory.cpp   |   12 +
- 12 files changed, 2714 insertions(+)
+ 12 files changed, 2718 insertions(+)
  create mode 100644 xbmc/cores/HiPlayer/CMakeLists.txt
  create mode 100644 xbmc/cores/HiPlayer/HiPlayer.cpp
  create mode 100644 xbmc/cores/HiPlayer/HiPlayer.h
@@ -28,7 +28,7 @@ Subject: [PATCH] HiPlayer-for-kodi-20
  create mode 100644 xbmc/cores/HiPlayer/hisilicon.h
 
 diff --git a/cmake/treedata/common/cores.txt b/cmake/treedata/common/cores.txt
-index d23939d..599b76c 100644
+index d23939d314..599b76ce4b 100644
 --- a/cmake/treedata/common/cores.txt
 +++ b/cmake/treedata/common/cores.txt
 @@ -6,3 +6,4 @@ xbmc/cores/DllLoader/exports/util      cores/dll-loader/exports/util
@@ -38,7 +38,7 @@ index d23939d..599b76c 100644
 +xbmc/cores/HiPlayer                    cores/hiplayer
 diff --git a/xbmc/cores/HiPlayer/CMakeLists.txt b/xbmc/cores/HiPlayer/CMakeLists.txt
 new file mode 100644
-index 0000000..07a8253
+index 0000000000..07a825340e
 --- /dev/null
 +++ b/xbmc/cores/HiPlayer/CMakeLists.txt
 @@ -0,0 +1,9 @@
@@ -53,7 +53,7 @@ index 0000000..07a8253
 +core_add_library(hiplayer)
 diff --git a/xbmc/cores/HiPlayer/HiPlayer.cpp b/xbmc/cores/HiPlayer/HiPlayer.cpp
 new file mode 100644
-index 0000000..a8e1028
+index 0000000000..5271b77d87
 --- /dev/null
 +++ b/xbmc/cores/HiPlayer/HiPlayer.cpp
 @@ -0,0 +1,597 @@
@@ -656,7 +656,7 @@ index 0000000..a8e1028
 +
 diff --git a/xbmc/cores/HiPlayer/HiPlayer.h b/xbmc/cores/HiPlayer/HiPlayer.h
 new file mode 100644
-index 0000000..56e861d
+index 0000000000..56e861dad0
 --- /dev/null
 +++ b/xbmc/cores/HiPlayer/HiPlayer.h
 @@ -0,0 +1,151 @@
@@ -813,7 +813,7 @@ index 0000000..56e861d
 +};
 diff --git a/xbmc/cores/HiPlayer/HiPlayerAudio.cpp b/xbmc/cores/HiPlayer/HiPlayerAudio.cpp
 new file mode 100644
-index 0000000..235e40a
+index 0000000000..e032897b91
 --- /dev/null
 +++ b/xbmc/cores/HiPlayer/HiPlayerAudio.cpp
 @@ -0,0 +1,80 @@
@@ -899,7 +899,7 @@ index 0000000..235e40a
 +}
 diff --git a/xbmc/cores/HiPlayer/HiPlayerAudio.h b/xbmc/cores/HiPlayer/HiPlayerAudio.h
 new file mode 100644
-index 0000000..a03dafb
+index 0000000000..a03dafb1fa
 --- /dev/null
 +++ b/xbmc/cores/HiPlayer/HiPlayerAudio.h
 @@ -0,0 +1,23 @@
@@ -928,7 +928,7 @@ index 0000000..a03dafb
 +};
 diff --git a/xbmc/cores/HiPlayer/HiPlayerVideo.cpp b/xbmc/cores/HiPlayer/HiPlayerVideo.cpp
 new file mode 100644
-index 0000000..818ec24
+index 0000000000..818ec24650
 --- /dev/null
 +++ b/xbmc/cores/HiPlayer/HiPlayerVideo.cpp
 @@ -0,0 +1,1423 @@
@@ -2357,7 +2357,7 @@ index 0000000..818ec24
 +}
 diff --git a/xbmc/cores/HiPlayer/HiPlayerVideo.h b/xbmc/cores/HiPlayer/HiPlayerVideo.h
 new file mode 100644
-index 0000000..bc3d9d5
+index 0000000000..bc3d9d515a
 --- /dev/null
 +++ b/xbmc/cores/HiPlayer/HiPlayerVideo.h
 @@ -0,0 +1,117 @@
@@ -2480,7 +2480,7 @@ index 0000000..bc3d9d5
 +};
 diff --git a/xbmc/cores/HiPlayer/Makefile b/xbmc/cores/HiPlayer/Makefile
 new file mode 100644
-index 0000000..9a5d658
+index 0000000000..9a5d658f02
 --- /dev/null
 +++ b/xbmc/cores/HiPlayer/Makefile
 @@ -0,0 +1,8 @@
@@ -2494,7 +2494,7 @@ index 0000000..9a5d658
 +-include $(patsubst %.cpp,%.P,$(patsubst %.c,%.P,$(SRCS)))
 diff --git a/xbmc/cores/HiPlayer/hisilicon.h b/xbmc/cores/HiPlayer/hisilicon.h
 new file mode 100644
-index 0000000..6563348
+index 0000000000..6563348f92
 --- /dev/null
 +++ b/xbmc/cores/HiPlayer/hisilicon.h
 @@ -0,0 +1,287 @@
@@ -2786,7 +2786,7 @@ index 0000000..6563348
 +
 +#endif
 diff --git a/xbmc/cores/playercorefactory/PlayerCoreConfig.cpp b/xbmc/cores/playercorefactory/PlayerCoreConfig.cpp
-index 545062e..24d5b9e 100644
+index 545062e050..24d5b9e336 100644
 --- a/xbmc/cores/playercorefactory/PlayerCoreConfig.cpp
 +++ b/xbmc/cores/playercorefactory/PlayerCoreConfig.cpp
 @@ -22,6 +22,10 @@
@@ -2814,7 +2814,7 @@ index 545062e..24d5b9e 100644
    {
      player = std::make_shared<CExternalPlayer>(callback);
 diff --git a/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp b/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp
-index 34792a4..faa1f55 100644
+index 34792a477e..faa1f55277 100644
 --- a/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp
 +++ b/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp
 @@ -29,6 +29,10 @@
@@ -2850,6 +2850,3 @@ index 34792a4..faa1f55 100644
        else if (type == "externalplayer")
          internaltype = "external";
  
--- 
-2.34.1
-
