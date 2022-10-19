@@ -2,7 +2,7 @@
 <sources>
 
 <!--
-Version: 19-03-2021
+Version: 19-10-2022
 -->
 
 <!--
@@ -27,8 +27,16 @@ The description must be unique for each source, and is displayed on the UI.
 			<url>http://rytecepg.dyndns.tv/epg_data/rytec.channels.xml.xz</url>
 			<url>http://epg.vuplus-community.net/rytec.channels.xml.xz</url>
 		</channel>
-	</mappings>
 
+		<channel name="azman.channels.xml.xz">
+			<url>http://www.topolowa4.pl/azman.channels.xml.xz</url>
+			<url>http://www.xmltvepg.nl/azman.channels.xml.xz</url>
+			<url>http://epgspot.com/rytec_epg/azman.channels.xml.xz</url>
+			<url>http://rytecepg.wanwizard.eu/azman.channels.xml.xz</url>
+			<url>http://rytecepg.dyndns.tv/epg_data/azman.channels.xml.xz</url>
+			<url>http://epg.vuplus-community.net/azman.channels.xml.xz</url>			
+		</channel>
+	</mappings>
 
 	<sourcecat sourcecatname="Rytec General XMLTV">
 		<source type="gen_xmltv" channels="rytec.channels.xml.xz">
@@ -337,6 +345,59 @@ The description must be unique for each source, and is displayed on the UI.
 		</source>
 	</sourcecat>
 
+	<sourcecat sourcecatname="[azman] Poland XMLTV">
+		<source type="gen_xmltv" nocheck="1" channels="azman.channels.xml.xz">
+			<description>Polska - Podstawowy</description>
+			<url>http://www.topolowa4.pl/azman_basic.xml.xz</url>
+			<url>http://www.xmltvepg.nl/azman_basic.xml.xz</url>
+			<url>http://epgspot.com/rytec_epg/azman_basic.xml.xz</url>
+			<url>http://rytecepg.wanwizard.eu/azman_basic.xml.xz</url>
+			<url>http://rytecepg.dyndns.tv/epg_data/azman_basic.xml.xz</url>
+			<url>http://epg.vuplus-community.net/azman_basic.xml.xz</url>			
+		</source>	
+		
+		<source type="gen_xmltv" nocheck="1" channels="azman.channels.xml.xz">
+			<description>Polska - Rozszezony</description>
+			<url>http://www.topolowa4.pl/azman_expanded.xml.xz</url>
+			<url>http://www.xmltvepg.nl/azman_expanded.xml.xz</url>
+			<url>http://epgspot.com/rytec_epg/azman_expanded.xml.xz</url>
+			<url>http://rytecepg.wanwizard.eu/azman_expanded.xml.xz</url>
+			<url>http://rytecepg.dyndns.tv/epg_data/azman_expanded.xml.xz</url>
+			<url>http://epg.vuplus-community.net/azman_expanded.xml.xz</url>			
+		</source>
+		
+		<source type="gen_xmltv" nocheck="1" channels="azman.channels.xml.xz">
+			<description>Polska - Dodatkowy</description>
+			<url>http://www.topolowa4.pl/azman_misc.xml.xz</url>
+			<url>http://www.xmltvepg.nl/azman_misc.xml.xz</url>
+			<url>http://epgspot.com/rytec_epg/azman_misc.xml.xz</url>
+			<url>http://rytecepg.wanwizard.eu/azman_misc.xml.xz</url>
+			<url>http://rytecepg.dyndns.tv/epg_data/azman_misc.xml.xz</url>
+			<url>http://epg.vuplus-community.net/azman_misc.xml.xz</url>			
+		</source>
+		
+		<source type="gen_xmltv" nocheck="1" channels="azman.channels.xml.xz">
+			<description>Polska - IPTV</description>
+			<url>http://www.topolowa4.pl/azman_iptv.xml.xz</url>
+			<url>http://www.xmltvepg.nl/azman_iptv.xml.xz</url>
+			<url>http://epgspot.com/rytec_epg/azman_iptv.xml.xz</url>
+			<url>http://rytecepg.wanwizard.eu/azman_iptv.xml.xz</url>
+			<url>http://rytecepg.dyndns.tv/epg_data/azman_iptv.xml.xz</url>
+			<url>http://epg.vuplus-community.net/azman_iptv.xml.xz</url>			
+		</source>
+	
+		<source type="gen_xmltv" nocheck="1" channels="azman.channels.xml.xz">
+			<description>Polska - Radio</description>
+			<url>http://www.topolowa4.pl/azman_radio.xml.xz</url>
+			<url>http://www.xmltvepg.nl/azman_radio.xml.xz</url>
+			<url>http://epgspot.com/rytec_epg/azman_radio.xml.xz</url>
+			<url>http://rytecepg.wanwizard.eu/azman_radio.xml.xz</url>
+			<url>http://rytecepg.dyndns.tv/epg_data/azman_radio.xml.xz</url>
+			<url>http://epg.vuplus-community.net/azman_radio.xml.xz</url>			
+		</source>
+	</sourcecat>
+
+
 	<sourcecat sourcecatname="Rytec Poland XMLTV">
 		<source type="gen_xmltv" channels="rytec.channels.xml.xz">
 			<description>Polska - Podstawowy (xz)</description>
@@ -626,24 +687,4 @@ The description must be unique for each source, and is displayed on the UI.
 		</source>
 	</sourcecat>
 
-	<sourcecat sourcecatname="LatinMunic XMLTV">
-		<source type="gen_xmltv" nocheck="1" channels="http://epg.tododream.com/rytec.channels.xml.gz">
-			<description>LatinMunic XMLTV Astra</description>
-			<url>http://epg.tododream.com/latinmunich_xmltv-movistar-spain_todo.gz</url>
-		</source>
-		<source type="gen_xmltv" nocheck="1" channels="http://epg.tododream.com/hispasat.channels.xml.gz">
-			<description>LatinMunic XMLTV Hispasat</description>
-			<url>http://epg.tododream.com/latinmunich_xmltv-movistar-spain_todo.gz</url>
-		</source>
-		<source type="gen_xmltv" nocheck="1" channels="http://epg.tododream.com/tdt.channels.xml.gz">
-			<description>LatinMunic XMLTV TDT</description>
-			<url>http://epg.tododream.com/latinmunich_xmltv-movistar-spain_todo.gz</url>
-		</source>
-		<source type="gen_xmltv" nocheck="1" channels="http://epg.tododream.com/todo.channels.xml.gz">
-			<description>LatinMunic XMLTV Astra + Hispasat + TDT</description>
-			<url>http://epg.tododream.com/latinmunich_xmltv-movistar-spain_todo.gz</url>
-		</source>
-	</sourcecat>
-
 </sources>
-
