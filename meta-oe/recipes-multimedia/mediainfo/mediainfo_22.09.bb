@@ -11,9 +11,9 @@ DEPENDS += "libmediainfo libzen zlib"
 
 RDEPENDS:${PN} += "libmediainfo libzen"
 
-SRC_URI = "https://mediaarea.net/download/source/mediainfo/22.03/mediainfo_22.03.tar.bz2"
-SRC_URI[md5sum] = "75757ea125647f43229e51e7dbd102c8"
-SRC_URI[sha256sum] = "ea4ba633be25740b745498a4df943a56a994149e2ee4591a91488a6f2392c36c"
+SRC_URI = "https://mediaarea.net/download/source/mediainfo/${PV}/mediainfo_${PV}.tar.bz2"
+SRC_URI[md5sum] = "f7425bbaba310b0f489aae39b7a6494e"
+SRC_URI[sha256sum] = "26bfed67861967e96c9e1f3077a8b462f4ff456d3fc7f1dfaf8a51f1339aed4c"
 
 S = "${WORKDIR}/MediaInfo/Project/GNU/CLI"
 
