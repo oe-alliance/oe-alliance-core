@@ -1,8 +1,7 @@
 FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 
-DEPENDS += "libxml2"
-
 PV = "4.4.1"
+PR = "r1"
 
 SRCREV = "3e539d11e4a78d44e8d95cef1d67d67e00258e31"
 SRC_URI = "git://github.com/FFmpeg/FFmpeg.git;branch=release/4.4 \
@@ -21,13 +20,14 @@ SRC_URI = "git://github.com/FFmpeg/FFmpeg.git;branch=release/4.4 \
 
 S = "${WORKDIR}/git"
 
-PACKAGECONFIG:append = " gpl libbluray libdav1d libfreetype librtmp openssl x264"
+PACKAGECONFIG:append = " gpl libbluray libdav1d libfreetype librtmp libxml2 openssl x264"
 
 PACKAGECONFIG[libbluray] = "--enable-libbluray --enable-protocol=bluray,--disable-libbluray,libbluray"
 PACKAGECONFIG[libdav1d] = "--enable-libdav1d,--disable-libdav1d,libdav1d"
 PACKAGECONFIG[libfreetype] = "--enable-libfreetype,--disable-libfreetype,freetype"
 PACKAGECONFIG[librtmp] = "--enable-librtmp,--disable-librtmp,librtmp rtmpdump"
 PACKAGECONFIG[libv4l2] = "--enable-libv4l2,--disable-libv4l2,v4l-utils"
+PACKAGECONFIG[libxml2] = "--enable-libxml2,--disable-libxml2,libxml2"
 
 MIPSFPU = "${@bb.utils.contains('TARGET_FPU', 'soft', '--disable-mipsfpu', '--enable-mipsfpu', d)}"
 
