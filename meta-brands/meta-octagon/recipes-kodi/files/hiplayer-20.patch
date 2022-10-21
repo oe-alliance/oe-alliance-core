@@ -10,7 +10,7 @@ Subject: [PATCH] hiplayer-20
  cmake/treedata/linux/subdirs.txt              |    1 +
  system/playercorefactory.xml                  |    1 +
  system/settings/settings.xml                  |    6 +
- xbmc/Application.cpp                          |    8 +
+ xbmc/application/Application.cpp              |    8 +
  .../application/ApplicationVolumeHandling.cpp |   13 +
  xbmc/commons/ilog.h                           |    1 +
  xbmc/cores/VideoPlayer/VideoPlayer.cpp        |  123 +-
@@ -304,10 +304,10 @@ Subject: [PATCH] hiplayer-20
  create mode 100644 xbmc/platform/linux/hisi/hifb.h
 
 diff --git a/addons/resource.language.en_gb/resources/strings.po b/addons/resource.language.en_gb/resources/strings.po
-index 5727114ab3e..bfd4193d5fe 100644
+index 11626eb..1116806 100644
 --- a/addons/resource.language.en_gb/resources/strings.po
 +++ b/addons/resource.language.en_gb/resources/strings.po
-@@ -7325,6 +7325,17 @@ msgstr ""
+@@ -7378,6 +7378,17 @@ msgstr ""
  
  #empty strings from id 13458 to 13459
  
@@ -326,7 +326,7 @@ index 5727114ab3e..bfd4193d5fe 100644
  msgctxt "#13460"
  msgid "Use HEVC VAAPI"
 diff --git a/cmake/platform/linux/stb.cmake b/cmake/platform/linux/stb.cmake
-index e1fe54a13d2..072e601acea 100644
+index e1fe54a..072e601 100644
 --- a/cmake/platform/linux/stb.cmake
 +++ b/cmake/platform/linux/stb.cmake
 @@ -59,9 +59,7 @@ elseif(WITH_PLATFORM STREQUAL "edision-cortexa15")
@@ -341,7 +341,7 @@ index e1fe54a13d2..072e601acea 100644
  
  
 diff --git a/cmake/treedata/common/cores.txt b/cmake/treedata/common/cores.txt
-index d23939d314e..4d496979533 100644
+index d23939d..4d49697 100644
 --- a/cmake/treedata/common/cores.txt
 +++ b/cmake/treedata/common/cores.txt
 @@ -6,3 +6,4 @@ xbmc/cores/DllLoader/exports/util      cores/dll-loader/exports/util
@@ -350,7 +350,7 @@ index d23939d314e..4d496979533 100644
  xbmc/cores/playercorefactory           cores/playercorefactory
 +xbmc/cores/hiplayer                    cores/hiplayer
 diff --git a/cmake/treedata/linux/subdirs.txt b/cmake/treedata/linux/subdirs.txt
-index a8e81940385..a563b581b45 100644
+index a8e8194..a563b58 100644
 --- a/cmake/treedata/linux/subdirs.txt
 +++ b/cmake/treedata/linux/subdirs.txt
 @@ -9,6 +9,7 @@ xbmc/platform/linux/powermanagement platform/linux/powermanagement
@@ -362,7 +362,7 @@ index a8e81940385..a563b581b45 100644
  xbmc/platform/posix/filesystem      platform/posix/filesystem
  xbmc/platform/posix/network         platform/posix/network
 diff --git a/system/playercorefactory.xml b/system/playercorefactory.xml
-index f928311cf0b..dc5c232a0a0 100644
+index f928311..dc5c232 100644
 --- a/system/playercorefactory.xml
 +++ b/system/playercorefactory.xml
 @@ -22,6 +22,7 @@
@@ -374,7 +374,7 @@ index f928311cf0b..dc5c232a0a0 100644
  
      <!-- DVDs -->
 diff --git a/system/settings/settings.xml b/system/settings/settings.xml
-index 722468a0e06..fb542958c0f 100755
+index 5f902c4..17880e6 100755
 --- a/system/settings/settings.xml
 +++ b/system/settings/settings.xml
 @@ -143,6 +143,12 @@
@@ -390,11 +390,11 @@ index 722468a0e06..fb542958c0f 100755
          <setting id="winsystem.ishdrdisplay" type="boolean" label="13436" help="36299">
            <dependencies>
              <dependency type="visible">
-diff --git a/xbmc/Application.cpp b/xbmc/Application.cpp
-index bc5b15523d5..0a0f9a0128c 100644
---- a/xbmc/Application.cpp
-+++ b/xbmc/Application.cpp
-@@ -98,6 +98,7 @@
+diff --git a/xbmc/application/Application.cpp b/xbmc/application/Application.cpp
+index d53fdd6..a8ba7ab 100644
+--- a/xbmc/application/Application.cpp
++++ b/xbmc/application/Application.cpp
+@@ -102,6 +102,7 @@
  #include "windowing/WindowSystemFactory.h"
  
  #include <cmath>
@@ -402,7 +402,7 @@ index bc5b15523d5..0a0f9a0128c 100644
  
  #ifdef HAS_UPNP
  #include "network/upnp/UPnP.h"
-@@ -378,6 +379,9 @@ bool CApplication::Create()
+@@ -371,6 +372,9 @@ bool CApplication::Create()
    // Init our DllLoaders emu env
    init_emu_environ();
  
@@ -412,9 +412,9 @@ index bc5b15523d5..0a0f9a0128c 100644
    PrintStartupLog();
  
    // initialize network protocols
-@@ -2003,6 +2007,10 @@ bool CApplication::Stop(int exitCode)
-   CLog::Log(LOGINFO, "Stopping player");
-   m_appPlayer.ClosePlayer();
+@@ -2024,6 +2028,10 @@ bool CApplication::Stop(int exitCode)
+   const auto appPlayer = GetComponent<CApplicationPlayer>();
+   appPlayer->ClosePlayer();
  
 +  std::string cmd("echo \"1\" > /proc/stb/vmpeg/0/enable");
 +  system(cmd.c_str());
@@ -424,21 +424,21 @@ index bc5b15523d5..0a0f9a0128c 100644
      // close inbound port
      CServiceBroker::UnregisterAppPort();
 diff --git a/xbmc/application/ApplicationVolumeHandling.cpp b/xbmc/application/ApplicationVolumeHandling.cpp
-index 3f1ba9fbb48..f90aa90d9b9 100644
+index 25229be..cb6ada6 100644
 --- a/xbmc/application/ApplicationVolumeHandling.cpp
 +++ b/xbmc/application/ApplicationVolumeHandling.cpp
-@@ -22,6 +22,7 @@
+@@ -23,6 +23,7 @@
  #include "utils/XMLUtils.h"
  
  #include <tinyxml.h>
 +#include "utils/log.h"
  
- CApplicationVolumeHandling::CApplicationVolumeHandling(CApplicationPlayer& appPlayer)
-   : m_appPlayer(appPlayer)
-@@ -59,6 +60,18 @@ void CApplicationVolumeHandling::VolumeChanged()
-   // if player has volume control, set it.
-   m_appPlayer.SetVolume(m_volumeLevel);
-   m_appPlayer.SetMute(m_muted);
+ float CApplicationVolumeHandling::GetVolumePercent() const
+ {
+@@ -60,6 +61,18 @@ void CApplicationVolumeHandling::VolumeChanged()
+     appPlayer->SetVolume(m_volumeLevel);
+     appPlayer->SetMute(m_muted);
+   }
 +
 +#ifdef USE_HIPLAYER
 +  int vol = m_muted?0:(int)(m_volumeLevel*100);
@@ -455,7 +455,7 @@ index 3f1ba9fbb48..f90aa90d9b9 100644
  
  void CApplicationVolumeHandling::ShowVolumeBar(const CAction* action)
 diff --git a/xbmc/commons/ilog.h b/xbmc/commons/ilog.h
-index 10b3880ccd2..907d17d4057 100644
+index 10b3880..907d17d 100644
 --- a/xbmc/commons/ilog.h
 +++ b/xbmc/commons/ilog.h
 @@ -21,6 +21,7 @@
@@ -467,7 +467,7 @@ index 10b3880ccd2..907d17d4057 100644
  // extra masks - from bit 5
  #define LOGMASKBIT    5
 diff --git a/xbmc/cores/VideoPlayer/VideoPlayer.cpp b/xbmc/cores/VideoPlayer/VideoPlayer.cpp
-index 53b8f1dd452..84f7d392305 100644
+index 854e09b..adeba93 100644
 --- a/xbmc/cores/VideoPlayer/VideoPlayer.cpp
 +++ b/xbmc/cores/VideoPlayer/VideoPlayer.cpp
 @@ -63,6 +63,10 @@
@@ -481,7 +481,7 @@ index 53b8f1dd452..84f7d392305 100644
  #include "windowing/WinSystem.h"
  
  #include <iterator>
-@@ -571,11 +575,28 @@ int CSelectionStreams::CountType(StreamType type) const
+@@ -576,11 +580,28 @@ int CSelectionStreams::CountType(StreamType type) const
  
  void CVideoPlayer::CreatePlayers()
  {
@@ -512,7 +512,7 @@ index 53b8f1dd452..84f7d392305 100644
    m_VideoPlayerSubtitle = new CVideoPlayerSubtitle(&m_overlayContainer, *m_processInfo);
    m_VideoPlayerTeletext = new CDVDTeletextData(*m_processInfo);
    m_VideoPlayerRadioRDS = new CDVDRadioRDSData(*m_processInfo);
-@@ -628,6 +649,14 @@ CVideoPlayer::CVideoPlayer(IPlayerCallback& callback)
+@@ -636,6 +657,14 @@ CVideoPlayer::CVideoPlayer(IPlayerCallback& callback)
  
    memset(&m_SpeedState, 0, sizeof(m_SpeedState));
  
@@ -527,7 +527,7 @@ index 53b8f1dd452..84f7d392305 100644
    m_SkipCommercials = true;
  
    m_processInfo.reset(CProcessInfo::CreateInstance());
-@@ -662,6 +691,83 @@ bool CVideoPlayer::OpenFile(const CFileItem& file, const CPlayerOptions &options
+@@ -670,6 +699,83 @@ bool CVideoPlayer::OpenFile(const CFileItem& file, const CPlayerOptions &options
  {
    CLog::Log(LOGINFO, "VideoPlayer::OpenFile: {}", CURL::GetRedacted(file.GetPath()));
  
@@ -611,7 +611,7 @@ index 53b8f1dd452..84f7d392305 100644
    if (IsRunning())
    {
      CDVDMsgOpenFile::FileParams params;
-@@ -1514,6 +1620,10 @@ void CVideoPlayer::Process()
+@@ -1535,6 +1641,10 @@ void CVideoPlayer::Process()
        {
          m_VideoPlayerVideo->SendMessage(std::make_shared<CDVDMsg>(CDVDMsg::VIDEO_DRAIN));
        }
@@ -622,7 +622,7 @@ index 53b8f1dd452..84f7d392305 100644
  
        m_CurrentAudio.inited = false;
        m_CurrentVideo.inited = false;
-@@ -2584,6 +2694,15 @@ void CVideoPlayer::HandleMessages()
+@@ -2630,6 +2740,15 @@ void CVideoPlayer::HandleMessages()
  
        FlushBuffers(DVD_NOPTS_VALUE, true, true);
        m_renderManager.Flush(false, false);
@@ -639,10 +639,10 @@ index 53b8f1dd452..84f7d392305 100644
        m_pSubtitleDemuxer.reset();
        m_subtitleDemuxerMap.clear();
 diff --git a/xbmc/cores/VideoPlayer/VideoPlayer.h b/xbmc/cores/VideoPlayer/VideoPlayer.h
-index 6255c227b70..e12f5b03534 100644
+index a2d9636..c5c90a3 100644
 --- a/xbmc/cores/VideoPlayer/VideoPlayer.h
 +++ b/xbmc/cores/VideoPlayer/VideoPlayer.h
-@@ -558,4 +558,11 @@ protected:
+@@ -566,4 +566,11 @@ protected:
    bool m_UpdateStreamDetails;
  
    std::atomic<bool> m_displayLost;
@@ -655,7 +655,7 @@ index 6255c227b70..e12f5b03534 100644
 +#endif
  };
 diff --git a/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/CMakeLists.txt b/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/CMakeLists.txt
-index b1286231c41..7f095f9eb6c 100644
+index b128623..7f095f9 100644
 --- a/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/CMakeLists.txt
 +++ b/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/CMakeLists.txt
 @@ -62,6 +62,9 @@ if("gbm" IN_LIST CORE_PLATFORM_NAME_LC OR "wayland" IN_LIST CORE_PLATFORM_NAME_L
@@ -670,7 +670,7 @@ index b1286231c41..7f095f9eb6c 100644
  if(SOURCES)
 diff --git a/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/RendererHisi.cpp b/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/RendererHisi.cpp
 new file mode 100644
-index 00000000000..f2f247452b0
+index 0000000..904a140
 --- /dev/null
 +++ b/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/RendererHisi.cpp
 @@ -0,0 +1,165 @@
@@ -792,7 +792,7 @@ index 00000000000..f2f247452b0
 +  }
 +}
 +
-+bool CRendererHisi::Supports(ERENDERFEATURE feature)
++bool CRendererHisi::Supports(ERENDERFEATURE feature) const
 +{
 +  if (feature == RENDERFEATURE_ZOOM ||
 +      feature == RENDERFEATURE_CONTRAST ||
@@ -841,7 +841,7 @@ index 00000000000..f2f247452b0
 +}
 diff --git a/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/RendererHisi.h b/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/RendererHisi.h
 new file mode 100644
-index 00000000000..c0f3ad1d529
+index 0000000..5b3124e
 --- /dev/null
 +++ b/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/RendererHisi.h
 @@ -0,0 +1,56 @@
@@ -883,8 +883,8 @@ index 00000000000..c0f3ad1d529
 +  virtual bool IsGuiLayer() override { return false; };
 +
 +  // Feature support
-+  virtual bool Supports(ESCALINGMETHOD method) override { return false; };
-+  virtual bool Supports(ERENDERFEATURE feature) override;
++  virtual bool Supports(ESCALINGMETHOD method) const override { return false; };
++  virtual bool Supports(ERENDERFEATURE feature) const override;
 +
 +private:
 +  void Reset();
@@ -903,7 +903,7 @@ index 00000000000..c0f3ad1d529
 +};
 diff --git a/xbmc/cores/hiplayer/CMakeLists.txt b/xbmc/cores/hiplayer/CMakeLists.txt
 new file mode 100644
-index 00000000000..c7997c58e96
+index 0000000..c7997c5
 --- /dev/null
 +++ b/xbmc/cores/hiplayer/CMakeLists.txt
 @@ -0,0 +1,17 @@
@@ -926,7 +926,7 @@ index 00000000000..c7997c58e96
 +core_add_library(hiplayer)
 diff --git a/xbmc/cores/hiplayer/HiAdec.cpp b/xbmc/cores/hiplayer/HiAdec.cpp
 new file mode 100644
-index 00000000000..f5ed61a2090
+index 0000000..f5ed61a
 --- /dev/null
 +++ b/xbmc/cores/hiplayer/HiAdec.cpp
 @@ -0,0 +1,113 @@
@@ -1045,7 +1045,7 @@ index 00000000000..f5ed61a2090
 +}
 diff --git a/xbmc/cores/hiplayer/HiAdec.h b/xbmc/cores/hiplayer/HiAdec.h
 new file mode 100644
-index 00000000000..0cb2ac23d7c
+index 0000000..0cb2ac2
 --- /dev/null
 +++ b/xbmc/cores/hiplayer/HiAdec.h
 @@ -0,0 +1,59 @@
@@ -1110,7 +1110,7 @@ index 00000000000..0cb2ac23d7c
 +};
 diff --git a/xbmc/cores/hiplayer/HiCodecAudio.cpp b/xbmc/cores/hiplayer/HiCodecAudio.cpp
 new file mode 100644
-index 00000000000..93652029aa1
+index 0000000..fa7759c
 --- /dev/null
 +++ b/xbmc/cores/hiplayer/HiCodecAudio.cpp
 @@ -0,0 +1,408 @@
@@ -1410,8 +1410,8 @@ index 00000000000..93652029aa1
 +
 +  if (m_bFirstFrame)
 +  {
-+    CLog::Log(LOGDEBUG, "CDVDAudioCodecHisi::GetData size={}/{} line={}/{} buf={}, desired={}",
-+              inputSize, outputSize, inLineSize, outLineSize, m_pBufferOutput, desired_size);
++    CLog::LogF(LOGDEBUG, "CDVDAudioCodecHisi::GetData size={}/{} line={}/{} buf={}, desired={}",
++              inputSize, outputSize, inLineSize, outLineSize, reinterpret_cast<const char*>(m_pBufferOutput), desired_size);
 +    m_bFirstFrame = false;
 +  }
 +  m_iBufferOutputUsed += outputSize;
@@ -1524,7 +1524,7 @@ index 00000000000..93652029aa1
 +}
 diff --git a/xbmc/cores/hiplayer/HiCodecAudio.h b/xbmc/cores/hiplayer/HiCodecAudio.h
 new file mode 100644
-index 00000000000..06ed9997fe5
+index 0000000..06ed999
 --- /dev/null
 +++ b/xbmc/cores/hiplayer/HiCodecAudio.h
 @@ -0,0 +1,89 @@
@@ -1619,7 +1619,7 @@ index 00000000000..06ed9997fe5
 +};
 diff --git a/xbmc/cores/hiplayer/HiCodecVideo.cpp b/xbmc/cores/hiplayer/HiCodecVideo.cpp
 new file mode 100644
-index 00000000000..0f9e7a56a1a
+index 0000000..0f9e7a5
 --- /dev/null
 +++ b/xbmc/cores/hiplayer/HiCodecVideo.cpp
 @@ -0,0 +1,579 @@
@@ -2104,11 +2104,11 @@ index 00000000000..0f9e7a56a1a
 +      m_hints.fpsrate = m_mpeg2_sequence->fps_rate;
 +      m_hints.fpsscale = m_mpeg2_sequence->fps_scale;
 +      m_framerate = static_cast<float>(m_mpeg2_sequence->fps_rate) / m_mpeg2_sequence->fps_scale;
-+      m_video_rate = (int)(0.5 + (96000.0 / m_framerate));
++      m_video_rate = (int)(0.5 + (96000.0 / (double)m_framerate));
 +
 +      m_hints.width = m_mpeg2_sequence->width;
 +      m_hints.height = m_mpeg2_sequence->height;
-+      m_hints.aspect = m_mpeg2_sequence->ratio;
++      m_hints.aspect = (double)m_mpeg2_sequence->ratio;
 +    }
 +    return;
 +  }
@@ -2204,7 +2204,7 @@ index 00000000000..0f9e7a56a1a
 +}
 diff --git a/xbmc/cores/hiplayer/HiCodecVideo.h b/xbmc/cores/hiplayer/HiCodecVideo.h
 new file mode 100644
-index 00000000000..cfc096aa4f6
+index 0000000..cfc096a
 --- /dev/null
 +++ b/xbmc/cores/hiplayer/HiCodecVideo.h
 @@ -0,0 +1,94 @@
@@ -2287,7 +2287,7 @@ index 00000000000..cfc096aa4f6
 +  frame_queue* m_frame_queue;
 +  int32_t m_queue_depth;
 +  pthread_mutex_t m_queue_mutex;
-+  double m_framerate;
++  float m_framerate;
 +  int m_video_rate;
 +  float m_aspect_ratio;
 +  mpeg2_sequence* m_mpeg2_sequence;
@@ -2304,7 +2304,7 @@ index 00000000000..cfc096aa4f6
 +};
 diff --git a/xbmc/cores/hiplayer/HiDecoder.cpp b/xbmc/cores/hiplayer/HiDecoder.cpp
 new file mode 100644
-index 00000000000..5695822726c
+index 0000000..5695822
 --- /dev/null
 +++ b/xbmc/cores/hiplayer/HiDecoder.cpp
 @@ -0,0 +1,1465 @@
@@ -3775,7 +3775,7 @@ index 00000000000..5695822726c
 +}
 diff --git a/xbmc/cores/hiplayer/HiDecoder.h b/xbmc/cores/hiplayer/HiDecoder.h
 new file mode 100644
-index 00000000000..7e7cf7f37b7
+index 0000000..7e7cf7f
 --- /dev/null
 +++ b/xbmc/cores/hiplayer/HiDecoder.h
 @@ -0,0 +1,166 @@
@@ -3826,9 +3826,9 @@ index 00000000000..7e7cf7f37b7
 +#define UNIT_FREQ 96000
 +#define AV_SYNC_THRESH PTS_FREQ * 30
 +#define PTS_US_TO_MS(PTS_US) ((float)(PTS_US) / 1000.0f)
-+#define PTS_MS_TO_US(PTS_MS) ((PTS_MS)*1000.0f)
-+#define PTS_90KHZ_TO_MS(PTS_90MS) ((float)(PTS_90MS) / 90.0f)
-+#define PTS_MS_TO_90KHZ(PTS_MS) ((PTS_MS)*90.0f)
++#define PTS_MS_TO_US(PTS_MS) ((PTS_MS)*1000.0)
++#define PTS_90KHZ_TO_MS(PTS_90MS) ((PTS_90MS) / 90.0)
++#define PTS_MS_TO_90KHZ(PTS_MS) ((PTS_MS)*90.0)
 +
 +enum
 +{
@@ -3947,7 +3947,7 @@ index 00000000000..7e7cf7f37b7
 +};
 diff --git a/xbmc/cores/hiplayer/HiPlayerAudio.cpp b/xbmc/cores/hiplayer/HiPlayerAudio.cpp
 new file mode 100644
-index 00000000000..ac3b27a2302
+index 0000000..c7e48c9
 --- /dev/null
 +++ b/xbmc/cores/hiplayer/HiPlayerAudio.cpp
 @@ -0,0 +1,804 @@
@@ -4758,7 +4758,7 @@ index 00000000000..ac3b27a2302
 \ No newline at end of file
 diff --git a/xbmc/cores/hiplayer/HiPlayerAudio.h b/xbmc/cores/hiplayer/HiPlayerAudio.h
 new file mode 100644
-index 00000000000..0c68da72a10
+index 0000000..0c68da7
 --- /dev/null
 +++ b/xbmc/cores/hiplayer/HiPlayerAudio.h
 @@ -0,0 +1,116 @@
@@ -4880,7 +4880,7 @@ index 00000000000..0c68da72a10
 +};
 diff --git a/xbmc/cores/hiplayer/HiPlayerVideo.cpp b/xbmc/cores/hiplayer/HiPlayerVideo.cpp
 new file mode 100644
-index 00000000000..be36a0e46f9
+index 0000000..be36a0e
 --- /dev/null
 +++ b/xbmc/cores/hiplayer/HiPlayerVideo.cpp
 @@ -0,0 +1,993 @@
@@ -5879,7 +5879,7 @@ index 00000000000..be36a0e46f9
 +}
 diff --git a/xbmc/cores/hiplayer/HiPlayerVideo.h b/xbmc/cores/hiplayer/HiPlayerVideo.h
 new file mode 100644
-index 00000000000..af23e30ba5e
+index 0000000..af23e30
 --- /dev/null
 +++ b/xbmc/cores/hiplayer/HiPlayerVideo.h
 @@ -0,0 +1,138 @@
@@ -6023,7 +6023,7 @@ index 00000000000..af23e30ba5e
 +
 diff --git a/xbmc/cores/hiplayer/HiVdec.cpp b/xbmc/cores/hiplayer/HiVdec.cpp
 new file mode 100644
-index 00000000000..28811ef97f7
+index 0000000..28811ef
 --- /dev/null
 +++ b/xbmc/cores/hiplayer/HiVdec.cpp
 @@ -0,0 +1,602 @@
@@ -6631,7 +6631,7 @@ index 00000000000..28811ef97f7
 +}
 diff --git a/xbmc/cores/hiplayer/HiVdec.h b/xbmc/cores/hiplayer/HiVdec.h
 new file mode 100644
-index 00000000000..b385af07f8b
+index 0000000..b385af0
 --- /dev/null
 +++ b/xbmc/cores/hiplayer/HiVdec.h
 @@ -0,0 +1,113 @@
@@ -6750,7 +6750,7 @@ index 00000000000..b385af07f8b
 +};
 diff --git a/xbmc/platform/linux/hisi/CMakeLists.txt b/xbmc/platform/linux/hisi/CMakeLists.txt
 new file mode 100644
-index 00000000000..13abf60e0d7
+index 0000000..13abf60
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/CMakeLists.txt
 @@ -0,0 +1,7 @@
@@ -6763,7 +6763,7 @@ index 00000000000..13abf60e0d7
 +core_add_library(hiadp)
 diff --git a/xbmc/platform/linux/hisi/HA.AUDIO.AAC.decode.h b/xbmc/platform/linux/hisi/HA.AUDIO.AAC.decode.h
 new file mode 100644
-index 00000000000..b1789eb1b67
+index 0000000..b1789eb
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/HA.AUDIO.AAC.decode.h
 @@ -0,0 +1,100 @@
@@ -6869,7 +6869,7 @@ index 00000000000..b1789eb1b67
 +
 diff --git a/xbmc/platform/linux/hisi/HA.AUDIO.AAC.encode.h b/xbmc/platform/linux/hisi/HA.AUDIO.AAC.encode.h
 new file mode 100644
-index 00000000000..a068bd7d7b6
+index 0000000..a068bd7
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/HA.AUDIO.AAC.encode.h
 @@ -0,0 +1,87 @@
@@ -6962,7 +6962,7 @@ index 00000000000..a068bd7d7b6
 +#endif /* __HISI_AUDIO_ENCODER_AAC_H__ */
 diff --git a/xbmc/platform/linux/hisi/HA.AUDIO.AC3PASSTHROUGH.decode.h b/xbmc/platform/linux/hisi/HA.AUDIO.AC3PASSTHROUGH.decode.h
 new file mode 100644
-index 00000000000..915450e1e7a
+index 0000000..915450e
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/HA.AUDIO.AC3PASSTHROUGH.decode.h
 @@ -0,0 +1,49 @@
@@ -7017,7 +7017,7 @@ index 00000000000..915450e1e7a
 +
 diff --git a/xbmc/platform/linux/hisi/HA.AUDIO.AMRNB.codec.h b/xbmc/platform/linux/hisi/HA.AUDIO.AMRNB.codec.h
 new file mode 100644
-index 00000000000..dd4dd1353d7
+index 0000000..dd4dd13
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/HA.AUDIO.AMRNB.codec.h
 @@ -0,0 +1,113 @@
@@ -7136,7 +7136,7 @@ index 00000000000..dd4dd1353d7
 +#endif /* __HISI_AUDIO_CODEC_AMRNB_H__ */
 diff --git a/xbmc/platform/linux/hisi/HA.AUDIO.AMRWB.codec.h b/xbmc/platform/linux/hisi/HA.AUDIO.AMRWB.codec.h
 new file mode 100644
-index 00000000000..9c94afe1e0e
+index 0000000..9c94afe
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/HA.AUDIO.AMRWB.codec.h
 @@ -0,0 +1,112 @@
@@ -7254,7 +7254,7 @@ index 00000000000..9c94afe1e0e
 +#endif /* __HISI_AUDIO_CODEC_AMRWB_H__ */
 diff --git a/xbmc/platform/linux/hisi/HA.AUDIO.BLURAYLPCM.decode.h b/xbmc/platform/linux/hisi/HA.AUDIO.BLURAYLPCM.decode.h
 new file mode 100644
-index 00000000000..16a583b8cf7
+index 0000000..16a583b
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/HA.AUDIO.BLURAYLPCM.decode.h
 @@ -0,0 +1,62 @@
@@ -7322,7 +7322,7 @@ index 00000000000..16a583b8cf7
 +
 diff --git a/xbmc/platform/linux/hisi/HA.AUDIO.COOK.decode.h b/xbmc/platform/linux/hisi/HA.AUDIO.COOK.decode.h
 new file mode 100644
-index 00000000000..2f1bd8849dc
+index 0000000..2f1bd88
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/HA.AUDIO.COOK.decode.h
 @@ -0,0 +1,69 @@
@@ -7397,7 +7397,7 @@ index 00000000000..2f1bd8849dc
 +
 diff --git a/xbmc/platform/linux/hisi/HA.AUDIO.DOLBYMS12.decode.h b/xbmc/platform/linux/hisi/HA.AUDIO.DOLBYMS12.decode.h
 new file mode 100644
-index 00000000000..4c4bdd2bc8b
+index 0000000..4c4bdd2
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/HA.AUDIO.DOLBYMS12.decode.h
 @@ -0,0 +1,230 @@
@@ -7633,7 +7633,7 @@ index 00000000000..4c4bdd2bc8b
 +#endif /* __HA_AUDIO_DOLBYMS12_DECODE_H__ */
 diff --git a/xbmc/platform/linux/hisi/HA.AUDIO.DOLBYMS12EXT.decode.h b/xbmc/platform/linux/hisi/HA.AUDIO.DOLBYMS12EXT.decode.h
 new file mode 100644
-index 00000000000..9e8b390325b
+index 0000000..9e8b390
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/HA.AUDIO.DOLBYMS12EXT.decode.h
 @@ -0,0 +1,238 @@
@@ -7877,7 +7877,7 @@ index 00000000000..9e8b390325b
 +#endif /* __HA_AUDIO_DOLBYMS12EXT_DECODE_H__ */
 diff --git a/xbmc/platform/linux/hisi/HA.AUDIO.DOLBYPLUS.decode.h b/xbmc/platform/linux/hisi/HA.AUDIO.DOLBYPLUS.decode.h
 new file mode 100644
-index 00000000000..9e422719f68
+index 0000000..9e42271
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/HA.AUDIO.DOLBYPLUS.decode.h
 @@ -0,0 +1,278 @@
@@ -8161,7 +8161,7 @@ index 00000000000..9e422719f68
 +
 diff --git a/xbmc/platform/linux/hisi/HA.AUDIO.DOLBYTRUEHD.decode.h b/xbmc/platform/linux/hisi/HA.AUDIO.DOLBYTRUEHD.decode.h
 new file mode 100644
-index 00000000000..b72ce9b68c3
+index 0000000..b72ce9b
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/HA.AUDIO.DOLBYTRUEHD.decode.h
 @@ -0,0 +1,87 @@
@@ -8254,7 +8254,7 @@ index 00000000000..b72ce9b68c3
 +
 diff --git a/xbmc/platform/linux/hisi/HA.AUDIO.DRA.decode.h b/xbmc/platform/linux/hisi/HA.AUDIO.DRA.decode.h
 new file mode 100644
-index 00000000000..de371c4f498
+index 0000000..de371c4
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/HA.AUDIO.DRA.decode.h
 @@ -0,0 +1,93 @@
@@ -8353,7 +8353,7 @@ index 00000000000..de371c4f498
 +
 diff --git a/xbmc/platform/linux/hisi/HA.AUDIO.DTSHD.decode.h b/xbmc/platform/linux/hisi/HA.AUDIO.DTSHD.decode.h
 new file mode 100644
-index 00000000000..d2b6f664a4c
+index 0000000..d2b6f66
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/HA.AUDIO.DTSHD.decode.h
 @@ -0,0 +1,73 @@
@@ -8432,7 +8432,7 @@ index 00000000000..d2b6f664a4c
 +#endif /* __HISI_AUDIO_DECODER_DTSHD_H__ */
 diff --git a/xbmc/platform/linux/hisi/HA.AUDIO.DTSM6.decode.h b/xbmc/platform/linux/hisi/HA.AUDIO.DTSM6.decode.h
 new file mode 100644
-index 00000000000..e893f985a35
+index 0000000..e893f98
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/HA.AUDIO.DTSM6.decode.h
 @@ -0,0 +1,113 @@
@@ -8551,7 +8551,7 @@ index 00000000000..e893f985a35
 +#endif /* __HISI_AUDIO_DECODER_DTSM6_H__ */
 diff --git a/xbmc/platform/linux/hisi/HA.AUDIO.DTSPASSTHROUGH.decode.h b/xbmc/platform/linux/hisi/HA.AUDIO.DTSPASSTHROUGH.decode.h
 new file mode 100644
-index 00000000000..49c4c972d3d
+index 0000000..49c4c97
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/HA.AUDIO.DTSPASSTHROUGH.decode.h
 @@ -0,0 +1,49 @@
@@ -8606,7 +8606,7 @@ index 00000000000..49c4c972d3d
 +
 diff --git a/xbmc/platform/linux/hisi/HA.AUDIO.FFMPEG_DECODE.decode.h b/xbmc/platform/linux/hisi/HA.AUDIO.FFMPEG_DECODE.decode.h
 new file mode 100644
-index 00000000000..da8882cdec3
+index 0000000..da8882c
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/HA.AUDIO.FFMPEG_DECODE.decode.h
 @@ -0,0 +1,114 @@
@@ -8726,7 +8726,7 @@ index 00000000000..da8882cdec3
 +#endif /* __HISI_AUDIO_DECODER_FFMPEG_DECODE_H__ */
 diff --git a/xbmc/platform/linux/hisi/HA.AUDIO.FFMPEG_WMAPRO.decode.h b/xbmc/platform/linux/hisi/HA.AUDIO.FFMPEG_WMAPRO.decode.h
 new file mode 100644
-index 00000000000..0b761558532
+index 0000000..0b76155
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/HA.AUDIO.FFMPEG_WMAPRO.decode.h
 @@ -0,0 +1,70 @@
@@ -8802,7 +8802,7 @@ index 00000000000..0b761558532
 +#endif /* __HISI_AUDIO_DECODER_FFMPEG_WMAPRO_H__ */
 diff --git a/xbmc/platform/linux/hisi/HA.AUDIO.G711.codec.h b/xbmc/platform/linux/hisi/HA.AUDIO.G711.codec.h
 new file mode 100644
-index 00000000000..04ebd961d2b
+index 0000000..04ebd96
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/HA.AUDIO.G711.codec.h
 @@ -0,0 +1,70 @@
@@ -8878,7 +8878,7 @@ index 00000000000..04ebd961d2b
 +#endif /* __HISI_AUDIO_CODEC_G711_H__ */
 diff --git a/xbmc/platform/linux/hisi/HA.AUDIO.G722.codec.h b/xbmc/platform/linux/hisi/HA.AUDIO.G722.codec.h
 new file mode 100644
-index 00000000000..85602a10c99
+index 0000000..85602a1
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/HA.AUDIO.G722.codec.h
 @@ -0,0 +1,67 @@
@@ -8951,7 +8951,7 @@ index 00000000000..85602a10c99
 +#endif /* __HISI_AUDIO_CODEC_G722_H__ */
 diff --git a/xbmc/platform/linux/hisi/HA.AUDIO.MP2.decode.h b/xbmc/platform/linux/hisi/HA.AUDIO.MP2.decode.h
 new file mode 100644
-index 00000000000..45c38b544f0
+index 0000000..45c38b5
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/HA.AUDIO.MP2.decode.h
 @@ -0,0 +1,65 @@
@@ -9022,7 +9022,7 @@ index 00000000000..45c38b544f0
 +
 diff --git a/xbmc/platform/linux/hisi/HA.AUDIO.MP3.decode.h b/xbmc/platform/linux/hisi/HA.AUDIO.MP3.decode.h
 new file mode 100644
-index 00000000000..9677c958b04
+index 0000000..9677c95
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/HA.AUDIO.MP3.decode.h
 @@ -0,0 +1,71 @@
@@ -9099,7 +9099,7 @@ index 00000000000..9677c958b04
 +
 diff --git a/xbmc/platform/linux/hisi/HA.AUDIO.OPUS.codec.h b/xbmc/platform/linux/hisi/HA.AUDIO.OPUS.codec.h
 new file mode 100644
-index 00000000000..22b8d4953f2
+index 0000000..22b8d49
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/HA.AUDIO.OPUS.codec.h
 @@ -0,0 +1,35 @@
@@ -9140,7 +9140,7 @@ index 00000000000..22b8d4953f2
 +
 diff --git a/xbmc/platform/linux/hisi/HA.AUDIO.PCM.decode.h b/xbmc/platform/linux/hisi/HA.AUDIO.PCM.decode.h
 new file mode 100644
-index 00000000000..e06b8a7a28d
+index 0000000..e06b8a7
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/HA.AUDIO.PCM.decode.h
 @@ -0,0 +1,67 @@
@@ -9213,7 +9213,7 @@ index 00000000000..e06b8a7a28d
 +
 diff --git a/xbmc/platform/linux/hisi/HA.AUDIO.TRUEHDPASSTHROUGH.decode.h b/xbmc/platform/linux/hisi/HA.AUDIO.TRUEHDPASSTHROUGH.decode.h
 new file mode 100644
-index 00000000000..7fe575bca4c
+index 0000000..7fe575b
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/HA.AUDIO.TRUEHDPASSTHROUGH.decode.h
 @@ -0,0 +1,49 @@
@@ -9268,7 +9268,7 @@ index 00000000000..7fe575bca4c
 +
 diff --git a/xbmc/platform/linux/hisi/HA.AUDIO.VOICE.codec.h b/xbmc/platform/linux/hisi/HA.AUDIO.VOICE.codec.h
 new file mode 100644
-index 00000000000..1fd59e15910
+index 0000000..1fd59e1
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/HA.AUDIO.VOICE.codec.h
 @@ -0,0 +1,116 @@
@@ -9390,7 +9390,7 @@ index 00000000000..1fd59e15910
 +#endif /* __HI_AUDIO_VOICE_CODEC_H__ */
 diff --git a/xbmc/platform/linux/hisi/HA.AUDIO.VORBIS.codec.h b/xbmc/platform/linux/hisi/HA.AUDIO.VORBIS.codec.h
 new file mode 100644
-index 00000000000..f7549e50a23
+index 0000000..f7549e5
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/HA.AUDIO.VORBIS.codec.h
 @@ -0,0 +1,46 @@
@@ -9442,7 +9442,7 @@ index 00000000000..f7549e50a23
 +#endif /* __HA_AUDIO_VORBIS_CODEC_H__ */
 diff --git a/xbmc/platform/linux/hisi/HA.AUDIO.WMA9STD.decode.h b/xbmc/platform/linux/hisi/HA.AUDIO.WMA9STD.decode.h
 new file mode 100644
-index 00000000000..87d5cc899fd
+index 0000000..87d5cc8
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/HA.AUDIO.WMA9STD.decode.h
 @@ -0,0 +1,146 @@
@@ -9594,7 +9594,7 @@ index 00000000000..87d5cc899fd
 +
 diff --git a/xbmc/platform/linux/hisi/Makefile.in b/xbmc/platform/linux/hisi/Makefile.in
 new file mode 100644
-index 00000000000..6c52b6eb5dc
+index 0000000..6c52b6e
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/Makefile.in
 @@ -0,0 +1,7 @@
@@ -9607,7 +9607,7 @@ index 00000000000..6c52b6eb5dc
 +-include $(patsubst %.cpp,%.P,$(patsubst %.c,%.P,$(SRCS)))
 diff --git a/xbmc/platform/linux/hisi/OsdManager.h b/xbmc/platform/linux/hisi/OsdManager.h
 new file mode 100644
-index 00000000000..f14204e852c
+index 0000000..f14204e
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/OsdManager.h
 @@ -0,0 +1,185 @@
@@ -9798,7 +9798,7 @@ index 00000000000..f14204e852c
 +#endif
 diff --git a/xbmc/platform/linux/hisi/hi_3g_intf.h b/xbmc/platform/linux/hisi/hi_3g_intf.h
 new file mode 100644
-index 00000000000..958f6794578
+index 0000000..958f679
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/hi_3g_intf.h
 @@ -0,0 +1,346 @@
@@ -10150,7 +10150,7 @@ index 00000000000..958f6794578
 +#endif /* __HI_3G_INF_H__ */
 diff --git a/xbmc/platform/linux/hisi/hi_adp.h b/xbmc/platform/linux/hisi/hi_adp.h
 new file mode 100644
-index 00000000000..66ec79a8d16
+index 0000000..66ec79a
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/hi_adp.h
 @@ -0,0 +1,132 @@
@@ -10288,7 +10288,7 @@ index 00000000000..66ec79a8d16
 +#endif
 diff --git a/xbmc/platform/linux/hisi/hi_adp_boardcfg.h b/xbmc/platform/linux/hisi/hi_adp_boardcfg.h
 new file mode 100644
-index 00000000000..02a64db70f6
+index 0000000..02a64db
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/hi_adp_boardcfg.h
 @@ -0,0 +1,473 @@
@@ -10767,7 +10767,7 @@ index 00000000000..02a64db70f6
 +
 diff --git a/xbmc/platform/linux/hisi/hi_adp_data.h b/xbmc/platform/linux/hisi/hi_adp_data.h
 new file mode 100644
-index 00000000000..ed4695f0faf
+index 0000000..ed4695f
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/hi_adp_data.h
 @@ -0,0 +1,138 @@
@@ -10911,7 +10911,7 @@ index 00000000000..ed4695f0faf
 +#endif
 diff --git a/xbmc/platform/linux/hisi/hi_adp_demux.h b/xbmc/platform/linux/hisi/hi_adp_demux.h
 new file mode 100644
-index 00000000000..e997cbb6af8
+index 0000000..e997cbb
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/hi_adp_demux.h
 @@ -0,0 +1,67 @@
@@ -10984,7 +10984,7 @@ index 00000000000..e997cbb6af8
 +#endif /* _SECTIONSVR_PUB_H*/
 diff --git a/xbmc/platform/linux/hisi/hi_adp_gfx.h b/xbmc/platform/linux/hisi/hi_adp_gfx.h
 new file mode 100644
-index 00000000000..8fb774972f4
+index 0000000..8fb7749
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/hi_adp_gfx.h
 @@ -0,0 +1,113 @@
@@ -11103,7 +11103,7 @@ index 00000000000..8fb774972f4
 +#endif /* __HI_ADP_GFX_H__*/
 diff --git a/xbmc/platform/linux/hisi/hi_adp_hdmi.c b/xbmc/platform/linux/hisi/hi_adp_hdmi.c
 new file mode 100644
-index 00000000000..92b315a7255
+index 0000000..92b315a
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/hi_adp_hdmi.c
 @@ -0,0 +1,488 @@
@@ -11597,7 +11597,7 @@ index 00000000000..92b315a7255
 +
 diff --git a/xbmc/platform/linux/hisi/hi_adp_hdmi.h b/xbmc/platform/linux/hisi/hi_adp_hdmi.h
 new file mode 100644
-index 00000000000..dd15f4e451b
+index 0000000..dd15f4e
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/hi_adp_hdmi.h
 @@ -0,0 +1,15 @@
@@ -11618,7 +11618,7 @@ index 00000000000..dd15f4e451b
 +
 diff --git a/xbmc/platform/linux/hisi/hi_adp_hdmi_rx.h b/xbmc/platform/linux/hisi/hi_adp_hdmi_rx.h
 new file mode 100644
-index 00000000000..c81cf2fc4a7
+index 0000000..c81cf2f
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/hi_adp_hdmi_rx.h
 @@ -0,0 +1,36 @@
@@ -11660,7 +11660,7 @@ index 00000000000..c81cf2fc4a7
 +#endif
 diff --git a/xbmc/platform/linux/hisi/hi_adp_higo.h b/xbmc/platform/linux/hisi/hi_adp_higo.h
 new file mode 100644
-index 00000000000..e1167bc78b4
+index 0000000..e1167bc
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/hi_adp_higo.h
 @@ -0,0 +1,13 @@
@@ -11679,7 +11679,7 @@ index 00000000000..e1167bc78b4
 +#endif
 diff --git a/xbmc/platform/linux/hisi/hi_adp_mpi.c b/xbmc/platform/linux/hisi/hi_adp_mpi.c
 new file mode 100644
-index 00000000000..0d35477d098
+index 0000000..0d35477
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/hi_adp_mpi.c
 @@ -0,0 +1,1456 @@
@@ -13141,7 +13141,7 @@ index 00000000000..0d35477d098
 +}
 diff --git a/xbmc/platform/linux/hisi/hi_adp_mpi.h b/xbmc/platform/linux/hisi/hi_adp_mpi.h
 new file mode 100644
-index 00000000000..109df23e237
+index 0000000..109df23
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/hi_adp_mpi.h
 @@ -0,0 +1,90 @@
@@ -13237,7 +13237,7 @@ index 00000000000..109df23e237
 +
 diff --git a/xbmc/platform/linux/hisi/hi_adp_osd.h b/xbmc/platform/linux/hisi/hi_adp_osd.h
 new file mode 100644
-index 00000000000..91b0f095c1a
+index 0000000..91b0f09
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/hi_adp_osd.h
 @@ -0,0 +1,122 @@
@@ -13365,7 +13365,7 @@ index 00000000000..91b0f095c1a
 +#endif
 diff --git a/xbmc/platform/linux/hisi/hi_adp_pvr.h b/xbmc/platform/linux/hisi/hi_adp_pvr.h
 new file mode 100644
-index 00000000000..d3922adebca
+index 0000000..d3922ad
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/hi_adp_pvr.h
 @@ -0,0 +1,210 @@
@@ -13581,7 +13581,7 @@ index 00000000000..d3922adebca
 +
 diff --git a/xbmc/platform/linux/hisi/hi_adp_search.h b/xbmc/platform/linux/hisi/hi_adp_search.h
 new file mode 100644
-index 00000000000..8a2735a4f99
+index 0000000..8a2735a
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/hi_adp_search.h
 @@ -0,0 +1,375 @@
@@ -13962,7 +13962,7 @@ index 00000000000..8a2735a4f99
 +#endif /*__SEARCH_H__*/
 diff --git a/xbmc/platform/linux/hisi/hi_adp_tuner.h b/xbmc/platform/linux/hisi/hi_adp_tuner.h
 new file mode 100644
-index 00000000000..0eafb2ae046
+index 0000000..0eafb2a
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/hi_adp_tuner.h
 @@ -0,0 +1,25 @@
@@ -13993,7 +13993,7 @@ index 00000000000..0eafb2ae046
 +
 diff --git a/xbmc/platform/linux/hisi/hi_audio_codec.h b/xbmc/platform/linux/hisi/hi_audio_codec.h
 new file mode 100644
-index 00000000000..69dd85fa1b5
+index 0000000..69dd85f
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/hi_audio_codec.h
 @@ -0,0 +1,828 @@
@@ -14827,7 +14827,7 @@ index 00000000000..69dd85fa1b5
 +#endif /* #ifndef __HI_AUDIO_CODEC_H__ */
 diff --git a/xbmc/platform/linux/hisi/hi_common.h b/xbmc/platform/linux/hisi/hi_common.h
 new file mode 100644
-index 00000000000..fa72c78f259
+index 0000000..fa72c78
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/hi_common.h
 @@ -0,0 +1,743 @@
@@ -15576,7 +15576,7 @@ index 00000000000..fa72c78f259
 +
 diff --git a/xbmc/platform/linux/hisi/hi_dbe.h b/xbmc/platform/linux/hisi/hi_dbe.h
 new file mode 100644
-index 00000000000..45833bd1af4
+index 0000000..45833bd
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/hi_dbe.h
 @@ -0,0 +1,43 @@
@@ -15625,7 +15625,7 @@ index 00000000000..45833bd1af4
 +#endif /* _LINUX_DMA_BUF_TEST_EXPORTER_H_ */
 diff --git a/xbmc/platform/linux/hisi/hi_debug.h b/xbmc/platform/linux/hisi/hi_debug.h
 new file mode 100644
-index 00000000000..f2e849387ff
+index 0000000..f2e8493
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/hi_debug.h
 @@ -0,0 +1,237 @@
@@ -15868,7 +15868,7 @@ index 00000000000..f2e849387ff
 +
 diff --git a/xbmc/platform/linux/hisi/hi_effect.h b/xbmc/platform/linux/hisi/hi_effect.h
 new file mode 100644
-index 00000000000..a0619e25541
+index 0000000..a0619e2
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/hi_effect.h
 @@ -0,0 +1,260 @@
@@ -16134,7 +16134,7 @@ index 00000000000..a0619e25541
 +#endif /* __HI_PEFFECT_H__ */
 diff --git a/xbmc/platform/linux/hisi/hi_error_mpi.h b/xbmc/platform/linux/hisi/hi_error_mpi.h
 new file mode 100644
-index 00000000000..638c19ac413
+index 0000000..638c19a
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/hi_error_mpi.h
 @@ -0,0 +1,822 @@
@@ -16962,7 +16962,7 @@ index 00000000000..638c19ac413
 +
 diff --git a/xbmc/platform/linux/hisi/hi_filter.h b/xbmc/platform/linux/hisi/hi_filter.h
 new file mode 100644
-index 00000000000..a87a8c87f8c
+index 0000000..a87a8c8
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/hi_filter.h
 @@ -0,0 +1,84 @@
@@ -17052,7 +17052,7 @@ index 00000000000..a87a8c87f8c
 +#endif /* __HI_FILTER_H__ */
 diff --git a/xbmc/platform/linux/hisi/hi_flash.h b/xbmc/platform/linux/hisi/hi_flash.h
 new file mode 100644
-index 00000000000..006d3369ada
+index 0000000..006d336
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/hi_flash.h
 @@ -0,0 +1,245 @@
@@ -17303,7 +17303,7 @@ index 00000000000..006d3369ada
 +#endif // __HI_FLASH__H__
 diff --git a/xbmc/platform/linux/hisi/hi_go.h b/xbmc/platform/linux/hisi/hi_go.h
 new file mode 100644
-index 00000000000..8ca80a6b84b
+index 0000000..8ca80a6
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/hi_go.h
 @@ -0,0 +1,46 @@
@@ -17355,7 +17355,7 @@ index 00000000000..8ca80a6b84b
 +#endif /* __HI_GO_H__ */
 diff --git a/xbmc/platform/linux/hisi/hi_go_bliter.h b/xbmc/platform/linux/hisi/hi_go_bliter.h
 new file mode 100644
-index 00000000000..d8d47038f73
+index 0000000..d8d4703
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/hi_go_bliter.h
 @@ -0,0 +1,645 @@
@@ -18006,7 +18006,7 @@ index 00000000000..d8d47038f73
 +#endif /* __HI_GO_BLITER_H__ */
 diff --git a/xbmc/platform/linux/hisi/hi_go_comm.h b/xbmc/platform/linux/hisi/hi_go_comm.h
 new file mode 100644
-index 00000000000..5cefa98cee6
+index 0000000..5cefa98
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/hi_go_comm.h
 @@ -0,0 +1,252 @@
@@ -18264,7 +18264,7 @@ index 00000000000..5cefa98cee6
 +#endif /* __HI_GO_COMM_H__ */
 diff --git a/xbmc/platform/linux/hisi/hi_go_cursor.h b/xbmc/platform/linux/hisi/hi_go_cursor.h
 new file mode 100644
-index 00000000000..a0efa7067f1
+index 0000000..a0efa70
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/hi_go_cursor.h
 @@ -0,0 +1,226 @@
@@ -18496,7 +18496,7 @@ index 00000000000..a0efa7067f1
 +#endif
 diff --git a/xbmc/platform/linux/hisi/hi_go_decoder.h b/xbmc/platform/linux/hisi/hi_go_decoder.h
 new file mode 100644
-index 00000000000..1c7db599b4c
+index 0000000..1c7db59
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/hi_go_decoder.h
 @@ -0,0 +1,460 @@
@@ -18962,7 +18962,7 @@ index 00000000000..1c7db599b4c
 +#endif /* __HI_GO_DECODE_H__ */
 diff --git a/xbmc/platform/linux/hisi/hi_go_encoder.h b/xbmc/platform/linux/hisi/hi_go_encoder.h
 new file mode 100644
-index 00000000000..1f856824e14
+index 0000000..1f85682
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/hi_go_encoder.h
 @@ -0,0 +1,173 @@
@@ -19141,7 +19141,7 @@ index 00000000000..1f856824e14
 +#endif /* __HI_TYPE_H__ */
 diff --git a/xbmc/platform/linux/hisi/hi_go_errno.h b/xbmc/platform/linux/hisi/hi_go_errno.h
 new file mode 100644
-index 00000000000..15905a67b10
+index 0000000..15905a6
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/hi_go_errno.h
 @@ -0,0 +1,499 @@
@@ -19646,7 +19646,7 @@ index 00000000000..15905a67b10
 +#endif /* __HI_GO_ERRNO_H__ */
 diff --git a/xbmc/platform/linux/hisi/hi_go_gdev.h b/xbmc/platform/linux/hisi/hi_go_gdev.h
 new file mode 100644
-index 00000000000..afe03a3c769
+index 0000000..afe03a3
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/hi_go_gdev.h
 @@ -0,0 +1,1016 @@
@@ -20668,7 +20668,7 @@ index 00000000000..afe03a3c769
 +#endif /* __HI_GO_GDEV_H__ */
 diff --git a/xbmc/platform/linux/hisi/hi_go_surface.h b/xbmc/platform/linux/hisi/hi_go_surface.h
 new file mode 100644
-index 00000000000..f3483efd8ce
+index 0000000..f3483ef
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/hi_go_surface.h
 @@ -0,0 +1,817 @@
@@ -21491,7 +21491,7 @@ index 00000000000..f3483efd8ce
 +#endif /* __HI_GO_SURFACE_H__ */
 diff --git a/xbmc/platform/linux/hisi/hi_go_text.h b/xbmc/platform/linux/hisi/hi_go_text.h
 new file mode 100644
-index 00000000000..2cecf6012b1
+index 0000000..2cecf60
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/hi_go_text.h
 @@ -0,0 +1,466 @@
@@ -21963,7 +21963,7 @@ index 00000000000..2cecf6012b1
 +#endif /* __HI_GO_TEXT_H__ */
 diff --git a/xbmc/platform/linux/hisi/hi_go_winc.h b/xbmc/platform/linux/hisi/hi_go_winc.h
 new file mode 100644
-index 00000000000..736bd92613c
+index 0000000..736bd92
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/hi_go_winc.h
 @@ -0,0 +1,421 @@
@@ -22390,7 +22390,7 @@ index 00000000000..736bd92613c
 +#endif /* __HI_GO_WINC_H__ */
 diff --git a/xbmc/platform/linux/hisi/hi_module.h b/xbmc/platform/linux/hisi/hi_module.h
 new file mode 100644
-index 00000000000..33007084291
+index 0000000..3300708
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/hi_module.h
 @@ -0,0 +1,182 @@
@@ -22578,7 +22578,7 @@ index 00000000000..33007084291
 +
 diff --git a/xbmc/platform/linux/hisi/hi_psi_si.h b/xbmc/platform/linux/hisi/hi_psi_si.h
 new file mode 100644
-index 00000000000..b53666291c9
+index 0000000..b536662
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/hi_psi_si.h
 @@ -0,0 +1,231 @@
@@ -22815,7 +22815,7 @@ index 00000000000..b53666291c9
 +#endif /* __HI_PSI_SI_H__ */
 diff --git a/xbmc/platform/linux/hisi/hi_resampler.h b/xbmc/platform/linux/hisi/hi_resampler.h
 new file mode 100644
-index 00000000000..e0fb8a1648b
+index 0000000..e0fb8a1
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/hi_resampler.h
 @@ -0,0 +1,68 @@
@@ -22889,7 +22889,7 @@ index 00000000000..e0fb8a1648b
 +#endif
 diff --git a/xbmc/platform/linux/hisi/hi_tde_api.h b/xbmc/platform/linux/hisi/hi_tde_api.h
 new file mode 100644
-index 00000000000..7105144acb3
+index 0000000..7105144
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/hi_tde_api.h
 @@ -0,0 +1,681 @@
@@ -23576,7 +23576,7 @@ index 00000000000..7105144acb3
 +#endif  /* _HI_API_TDE2_H_ */
 diff --git a/xbmc/platform/linux/hisi/hi_tde_errcode.h b/xbmc/platform/linux/hisi/hi_tde_errcode.h
 new file mode 100644
-index 00000000000..02440a3ec93
+index 0000000..02440a3
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/hi_tde_errcode.h
 @@ -0,0 +1,62 @@
@@ -23644,7 +23644,7 @@ index 00000000000..02440a3ec93
 +
 diff --git a/xbmc/platform/linux/hisi/hi_tde_type.h b/xbmc/platform/linux/hisi/hi_tde_type.h
 new file mode 100644
-index 00000000000..35c707a291b
+index 0000000..35c707a
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/hi_tde_type.h
 @@ -0,0 +1,522 @@
@@ -24172,7 +24172,7 @@ index 00000000000..35c707a291b
 +#endif /*__HI_TDE_TYPE_H__ */
 diff --git a/xbmc/platform/linux/hisi/hi_type.h b/xbmc/platform/linux/hisi/hi_type.h
 new file mode 100644
-index 00000000000..59f0b4124d0
+index 0000000..59f0b41
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/hi_type.h
 @@ -0,0 +1,142 @@
@@ -24320,7 +24320,7 @@ index 00000000000..59f0b4124d0
 +
 diff --git a/xbmc/platform/linux/hisi/hi_unf_advca.h b/xbmc/platform/linux/hisi/hi_unf_advca.h
 new file mode 100644
-index 00000000000..e0abd97e59e
+index 0000000..e0abd97
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/hi_unf_advca.h
 @@ -0,0 +1,1789 @@
@@ -26115,7 +26115,7 @@ index 00000000000..e0abd97e59e
 +
 diff --git a/xbmc/platform/linux/hisi/hi_unf_aenc.h b/xbmc/platform/linux/hisi/hi_unf_aenc.h
 new file mode 100644
-index 00000000000..fdb3ee77dda
+index 0000000..fdb3ee7
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/hi_unf_aenc.h
 @@ -0,0 +1,271 @@
@@ -26392,7 +26392,7 @@ index 00000000000..fdb3ee77dda
 +
 diff --git a/xbmc/platform/linux/hisi/hi_unf_ai.h b/xbmc/platform/linux/hisi/hi_unf_ai.h
 new file mode 100644
-index 00000000000..67aae65def9
+index 0000000..67aae65
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/hi_unf_ai.h
 @@ -0,0 +1,340 @@
@@ -26738,7 +26738,7 @@ index 00000000000..67aae65def9
 +
 diff --git a/xbmc/platform/linux/hisi/hi_unf_audio.h b/xbmc/platform/linux/hisi/hi_unf_audio.h
 new file mode 100644
-index 00000000000..2507f48f80b
+index 0000000..2507f48
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/hi_unf_audio.h
 @@ -0,0 +1,234 @@
@@ -26978,7 +26978,7 @@ index 00000000000..2507f48f80b
 +#endif /* __HI_UNF_AUDIO_ H*/
 diff --git a/xbmc/platform/linux/hisi/hi_unf_avplay.h b/xbmc/platform/linux/hisi/hi_unf_avplay.h
 new file mode 100644
-index 00000000000..b98af51541e
+index 0000000..b98af51
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/hi_unf_avplay.h
 @@ -0,0 +1,1534 @@
@@ -28518,7 +28518,7 @@ index 00000000000..b98af51541e
 +#endif
 diff --git a/xbmc/platform/linux/hisi/hi_unf_cc.h b/xbmc/platform/linux/hisi/hi_unf_cc.h
 new file mode 100644
-index 00000000000..2e4223021e7
+index 0000000..2e42230
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/hi_unf_cc.h
 @@ -0,0 +1,685 @@
@@ -29209,7 +29209,7 @@ index 00000000000..2e4223021e7
 +#endif
 diff --git a/xbmc/platform/linux/hisi/hi_unf_ci.h b/xbmc/platform/linux/hisi/hi_unf_ci.h
 new file mode 100644
-index 00000000000..f13a1e171b7
+index 0000000..f13a1e1
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/hi_unf_ci.h
 @@ -0,0 +1,688 @@
@@ -29904,7 +29904,7 @@ index 00000000000..f13a1e171b7
 \ No newline at end of file
 diff --git a/xbmc/platform/linux/hisi/hi_unf_cipher.h b/xbmc/platform/linux/hisi/hi_unf_cipher.h
 new file mode 100644
-index 00000000000..a35fa1ddead
+index 0000000..a35fa1d
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/hi_unf_cipher.h
 @@ -0,0 +1,1246 @@
@@ -31156,7 +31156,7 @@ index 00000000000..a35fa1ddead
 +#endif /* __HI_UNF_CIPHER_H__ */
 diff --git a/xbmc/platform/linux/hisi/hi_unf_common.h b/xbmc/platform/linux/hisi/hi_unf_common.h
 new file mode 100644
-index 00000000000..859d7e48a69
+index 0000000..859d7e4
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/hi_unf_common.h
 @@ -0,0 +1,82 @@
@@ -31244,7 +31244,7 @@ index 00000000000..859d7e48a69
 +#endif /* __HI_UNF_COMMON_ H*/
 diff --git a/xbmc/platform/linux/hisi/hi_unf_demux.h b/xbmc/platform/linux/hisi/hi_unf_demux.h
 new file mode 100644
-index 00000000000..90aea944752
+index 0000000..90aea94
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/hi_unf_demux.h
 @@ -0,0 +1,2109 @@
@@ -33359,7 +33359,7 @@ index 00000000000..90aea944752
 +
 diff --git a/xbmc/platform/linux/hisi/hi_unf_descrambler.h b/xbmc/platform/linux/hisi/hi_unf_descrambler.h
 new file mode 100644
-index 00000000000..0eb82fe73fb
+index 0000000..0eb82fe
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/hi_unf_descrambler.h
 @@ -0,0 +1,357 @@
@@ -33722,7 +33722,7 @@ index 00000000000..0eb82fe73fb
 +
 diff --git a/xbmc/platform/linux/hisi/hi_unf_disp.h b/xbmc/platform/linux/hisi/hi_unf_disp.h
 new file mode 100644
-index 00000000000..9decba3de8c
+index 0000000..9decba3
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/hi_unf_disp.h
 @@ -0,0 +1,1519 @@
@@ -35247,7 +35247,7 @@ index 00000000000..9decba3de8c
 +/************************************** The End Of File **************************************/
 diff --git a/xbmc/platform/linux/hisi/hi_unf_ecs.h b/xbmc/platform/linux/hisi/hi_unf_ecs.h
 new file mode 100644
-index 00000000000..a4272ed07ca
+index 0000000..a4272ed
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/hi_unf_ecs.h
 @@ -0,0 +1,28 @@
@@ -35281,7 +35281,7 @@ index 00000000000..a4272ed07ca
 +
 diff --git a/xbmc/platform/linux/hisi/hi_unf_edid.h b/xbmc/platform/linux/hisi/hi_unf_edid.h
 new file mode 100644
-index 00000000000..68c1615b263
+index 0000000..68c1615
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/hi_unf_edid.h
 @@ -0,0 +1,462 @@
@@ -35749,7 +35749,7 @@ index 00000000000..68c1615b263
 +
 diff --git a/xbmc/platform/linux/hisi/hi_unf_frontend.h b/xbmc/platform/linux/hisi/hi_unf_frontend.h
 new file mode 100644
-index 00000000000..e67698dfcb2
+index 0000000..e67698d
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/hi_unf_frontend.h
 @@ -0,0 +1,2549 @@
@@ -38304,7 +38304,7 @@ index 00000000000..e67698dfcb2
 +
 diff --git a/xbmc/platform/linux/hisi/hi_unf_gpio.h b/xbmc/platform/linux/hisi/hi_unf_gpio.h
 new file mode 100644
-index 00000000000..5a5bc11dba9
+index 0000000..5a5bc11
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/hi_unf_gpio.h
 @@ -0,0 +1,269 @@
@@ -38579,7 +38579,7 @@ index 00000000000..5a5bc11dba9
 +#endif /* __HI_UNF_GPIO_H__ */
 diff --git a/xbmc/platform/linux/hisi/hi_unf_hdcp.h b/xbmc/platform/linux/hisi/hi_unf_hdcp.h
 new file mode 100644
-index 00000000000..8e96024c591
+index 0000000..8e96024
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/hi_unf_hdcp.h
 @@ -0,0 +1,72 @@
@@ -38657,7 +38657,7 @@ index 00000000000..8e96024c591
 +#endif /* __HI_UNF_HDCP_H__ */
 diff --git a/xbmc/platform/linux/hisi/hi_unf_hdmi.h b/xbmc/platform/linux/hisi/hi_unf_hdmi.h
 new file mode 100644
-index 00000000000..f3166d866e4
+index 0000000..f3166d8
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/hi_unf_hdmi.h
 @@ -0,0 +1,1238 @@
@@ -39901,7 +39901,7 @@ index 00000000000..f3166d866e4
 +
 diff --git a/xbmc/platform/linux/hisi/hi_unf_hdmirx.h b/xbmc/platform/linux/hisi/hi_unf_hdmirx.h
 new file mode 100644
-index 00000000000..69d4caf1457
+index 0000000..69d4caf
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/hi_unf_hdmirx.h
 @@ -0,0 +1,243 @@
@@ -40150,7 +40150,7 @@ index 00000000000..69d4caf1457
 +
 diff --git a/xbmc/platform/linux/hisi/hi_unf_i2c.h b/xbmc/platform/linux/hisi/hi_unf_i2c.h
 new file mode 100644
-index 00000000000..c38f526d608
+index 0000000..c38f526
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/hi_unf_i2c.h
 @@ -0,0 +1,248 @@
@@ -40404,7 +40404,7 @@ index 00000000000..c38f526d608
 +#endif /* __HI_UNF_ECS_TYPE_H__ */
 diff --git a/xbmc/platform/linux/hisi/hi_unf_ir.h b/xbmc/platform/linux/hisi/hi_unf_ir.h
 new file mode 100644
-index 00000000000..bb7ba85304c
+index 0000000..bb7ba85
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/hi_unf_ir.h
 @@ -0,0 +1,408 @@
@@ -40818,7 +40818,7 @@ index 00000000000..bb7ba85304c
 +#endif /* End of #ifndef __HI_UNF_IR_H__ */
 diff --git a/xbmc/platform/linux/hisi/hi_unf_keyled.h b/xbmc/platform/linux/hisi/hi_unf_keyled.h
 new file mode 100644
-index 00000000000..08311c8a42e
+index 0000000..08311c8
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/hi_unf_keyled.h
 @@ -0,0 +1,476 @@
@@ -41300,7 +41300,7 @@ index 00000000000..08311c8a42e
 +
 diff --git a/xbmc/platform/linux/hisi/hi_unf_klad.h b/xbmc/platform/linux/hisi/hi_unf_klad.h
 new file mode 100644
-index 00000000000..cf99a5fe81e
+index 0000000..cf99a5f
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/hi_unf_klad.h
 @@ -0,0 +1,278 @@
@@ -41584,7 +41584,7 @@ index 00000000000..cf99a5fe81e
 +
 diff --git a/xbmc/platform/linux/hisi/hi_unf_klad_common_ca.h b/xbmc/platform/linux/hisi/hi_unf_klad_common_ca.h
 new file mode 100644
-index 00000000000..f61b8cb481d
+index 0000000..f61b8cb
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/hi_unf_klad_common_ca.h
 @@ -0,0 +1,82 @@
@@ -41672,7 +41672,7 @@ index 00000000000..f61b8cb481d
 +
 diff --git a/xbmc/platform/linux/hisi/hi_unf_klad_dcas.h b/xbmc/platform/linux/hisi/hi_unf_klad_dcas.h
 new file mode 100644
-index 00000000000..ec50049fe93
+index 0000000..ec50049
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/hi_unf_klad_dcas.h
 @@ -0,0 +1,81 @@
@@ -41759,7 +41759,7 @@ index 00000000000..ec50049fe93
 +
 diff --git a/xbmc/platform/linux/hisi/hi_unf_mce.h b/xbmc/platform/linux/hisi/hi_unf_mce.h
 new file mode 100644
-index 00000000000..a98c52f4845
+index 0000000..a98c52f
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/hi_unf_mce.h
 @@ -0,0 +1,253 @@
@@ -42018,7 +42018,7 @@ index 00000000000..a98c52f4845
 +
 diff --git a/xbmc/platform/linux/hisi/hi_unf_otp.h b/xbmc/platform/linux/hisi/hi_unf_otp.h
 new file mode 100644
-index 00000000000..f4dd994b8b9
+index 0000000..f4dd994
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/hi_unf_otp.h
 @@ -0,0 +1,978 @@
@@ -43002,7 +43002,7 @@ index 00000000000..f4dd994b8b9
 +#endif /* __HI_UNF_OTP_H__ */
 diff --git a/xbmc/platform/linux/hisi/hi_unf_otp_common_ca.h b/xbmc/platform/linux/hisi/hi_unf_otp_common_ca.h
 new file mode 100644
-index 00000000000..e5055de619f
+index 0000000..e5055de
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/hi_unf_otp_common_ca.h
 @@ -0,0 +1,239 @@
@@ -43247,7 +43247,7 @@ index 00000000000..e5055de619f
 +#endif /* __HI_UNF_OTP_COMMON_CA_H__ */
 diff --git a/xbmc/platform/linux/hisi/hi_unf_otp_customize.h b/xbmc/platform/linux/hisi/hi_unf_otp_customize.h
 new file mode 100644
-index 00000000000..60a61dd43ba
+index 0000000..60a61dd
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/hi_unf_otp_customize.h
 @@ -0,0 +1,45 @@
@@ -43298,7 +43298,7 @@ index 00000000000..60a61dd43ba
 +#endif /* __HI_UNF_OTP_CUSTOMIZE_H__ */
 diff --git a/xbmc/platform/linux/hisi/hi_unf_otp_dcas.h b/xbmc/platform/linux/hisi/hi_unf_otp_dcas.h
 new file mode 100644
-index 00000000000..a8319c8e856
+index 0000000..a8319c8
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/hi_unf_otp_dcas.h
 @@ -0,0 +1,61 @@
@@ -43365,7 +43365,7 @@ index 00000000000..a8319c8e856
 +#endif /* __HI_UNF_OTP_DCAS_H__ */
 diff --git a/xbmc/platform/linux/hisi/hi_unf_payloadcipher.h b/xbmc/platform/linux/hisi/hi_unf_payloadcipher.h
 new file mode 100644
-index 00000000000..23a162f4c63
+index 0000000..23a162f
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/hi_unf_payloadcipher.h
 @@ -0,0 +1,217 @@
@@ -43588,7 +43588,7 @@ index 00000000000..23a162f4c63
 +#endif /* __HI_UNF_PAYLOADCIPHER_H__ */
 diff --git a/xbmc/platform/linux/hisi/hi_unf_pdm.h b/xbmc/platform/linux/hisi/hi_unf_pdm.h
 new file mode 100644
-index 00000000000..cc5c12372c6
+index 0000000..cc5c123
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/hi_unf_pdm.h
 @@ -0,0 +1,402 @@
@@ -43996,7 +43996,7 @@ index 00000000000..cc5c12372c6
 +
 diff --git a/xbmc/platform/linux/hisi/hi_unf_pmoc.h b/xbmc/platform/linux/hisi/hi_unf_pmoc.h
 new file mode 100644
-index 00000000000..2e6260b1b23
+index 0000000..2e6260b
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/hi_unf_pmoc.h
 @@ -0,0 +1,477 @@
@@ -44479,7 +44479,7 @@ index 00000000000..2e6260b1b23
 +#endif /* __HI_UNF_PMOC_H__ */
 diff --git a/xbmc/platform/linux/hisi/hi_unf_pq.h b/xbmc/platform/linux/hisi/hi_unf_pq.h
 new file mode 100644
-index 00000000000..95c4bb181d9
+index 0000000..95c4bb1
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/hi_unf_pq.h
 @@ -0,0 +1,583 @@
@@ -45068,7 +45068,7 @@ index 00000000000..95c4bb181d9
 +
 diff --git a/xbmc/platform/linux/hisi/hi_unf_pvr.h b/xbmc/platform/linux/hisi/hi_unf_pvr.h
 new file mode 100644
-index 00000000000..4f81eb9f0c2
+index 0000000..4f81eb9
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/hi_unf_pvr.h
 @@ -0,0 +1,1333 @@
@@ -46407,7 +46407,7 @@ index 00000000000..4f81eb9f0c2
 +#endif /* End of #ifndef __HI_UNF_PVR_H__ */
 diff --git a/xbmc/platform/linux/hisi/hi_unf_pwm.h b/xbmc/platform/linux/hisi/hi_unf_pwm.h
 new file mode 100644
-index 00000000000..98e2f5424ab
+index 0000000..98e2f54
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/hi_unf_pwm.h
 @@ -0,0 +1,162 @@
@@ -46575,7 +46575,7 @@ index 00000000000..98e2f5424ab
 +
 diff --git a/xbmc/platform/linux/hisi/hi_unf_sci.h b/xbmc/platform/linux/hisi/hi_unf_sci.h
 new file mode 100644
-index 00000000000..3a5271b30ec
+index 0000000..3a5271b
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/hi_unf_sci.h
 @@ -0,0 +1,630 @@
@@ -47211,7 +47211,7 @@ index 00000000000..3a5271b30ec
 +#endif /* __HI_UNF_SCI_H__ */
 diff --git a/xbmc/platform/linux/hisi/hi_unf_so.h b/xbmc/platform/linux/hisi/hi_unf_so.h
 new file mode 100644
-index 00000000000..7320d6a6e53
+index 0000000..7320d6a
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/hi_unf_so.h
 @@ -0,0 +1,450 @@
@@ -47667,7 +47667,7 @@ index 00000000000..7320d6a6e53
 +
 diff --git a/xbmc/platform/linux/hisi/hi_unf_sound.h b/xbmc/platform/linux/hisi/hi_unf_sound.h
 new file mode 100644
-index 00000000000..59a3fe6e8b6
+index 0000000..59a3fe6
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/hi_unf_sound.h
 @@ -0,0 +1,1743 @@
@@ -49416,7 +49416,7 @@ index 00000000000..59a3fe6e8b6
 +
 diff --git a/xbmc/platform/linux/hisi/hi_unf_spi.h b/xbmc/platform/linux/hisi/hi_unf_spi.h
 new file mode 100644
-index 00000000000..ff146051ba9
+index 0000000..ff14605
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/hi_unf_spi.h
 @@ -0,0 +1,277 @@
@@ -49700,7 +49700,7 @@ index 00000000000..ff146051ba9
 \ No newline at end of file
 diff --git a/xbmc/platform/linux/hisi/hi_unf_subt.h b/xbmc/platform/linux/hisi/hi_unf_subt.h
 new file mode 100644
-index 00000000000..9c9bf7efc53
+index 0000000..9c9bf7e
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/hi_unf_subt.h
 @@ -0,0 +1,221 @@
@@ -49927,7 +49927,7 @@ index 00000000000..9c9bf7efc53
 +#endif
 diff --git a/xbmc/platform/linux/hisi/hi_unf_ttx.h b/xbmc/platform/linux/hisi/hi_unf_ttx.h
 new file mode 100644
-index 00000000000..65122cfd566
+index 0000000..65122cf
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/hi_unf_ttx.h
 @@ -0,0 +1,522 @@
@@ -50455,7 +50455,7 @@ index 00000000000..65122cfd566
 +#endif
 diff --git a/xbmc/platform/linux/hisi/hi_unf_venc.h b/xbmc/platform/linux/hisi/hi_unf_venc.h
 new file mode 100644
-index 00000000000..551e11a3477
+index 0000000..551e11a
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/hi_unf_venc.h
 @@ -0,0 +1,493 @@
@@ -50954,7 +50954,7 @@ index 00000000000..551e11a3477
 +
 diff --git a/xbmc/platform/linux/hisi/hi_unf_version.h b/xbmc/platform/linux/hisi/hi_unf_version.h
 new file mode 100644
-index 00000000000..a1bdc2d39e2
+index 0000000..a1bdc2d
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/hi_unf_version.h
 @@ -0,0 +1,52 @@
@@ -51012,7 +51012,7 @@ index 00000000000..a1bdc2d39e2
 +
 diff --git a/xbmc/platform/linux/hisi/hi_unf_vi.h b/xbmc/platform/linux/hisi/hi_unf_vi.h
 new file mode 100644
-index 00000000000..d85bfab09b3
+index 0000000..d85bfab
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/hi_unf_vi.h
 @@ -0,0 +1,351 @@
@@ -51369,7 +51369,7 @@ index 00000000000..d85bfab09b3
 +#endif
 diff --git a/xbmc/platform/linux/hisi/hi_unf_video.h b/xbmc/platform/linux/hisi/hi_unf_video.h
 new file mode 100644
-index 00000000000..6549306b072
+index 0000000..6549306
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/hi_unf_video.h
 @@ -0,0 +1,646 @@
@@ -52021,7 +52021,7 @@ index 00000000000..6549306b072
 +#endif /* __HI_UNF_VIDEO_ H*/
 diff --git a/xbmc/platform/linux/hisi/hi_unf_vo.h b/xbmc/platform/linux/hisi/hi_unf_vo.h
 new file mode 100644
-index 00000000000..730499385fd
+index 0000000..7304993
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/hi_unf_vo.h
 @@ -0,0 +1,823 @@
@@ -52850,7 +52850,7 @@ index 00000000000..730499385fd
 +/************************************** The End Of File **************************************/
 diff --git a/xbmc/platform/linux/hisi/hi_unf_vp.h b/xbmc/platform/linux/hisi/hi_unf_vp.h
 new file mode 100644
-index 00000000000..b4b5fd1e239
+index 0000000..b4b5fd1
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/hi_unf_vp.h
 @@ -0,0 +1,468 @@
@@ -53324,7 +53324,7 @@ index 00000000000..b4b5fd1e239
 +#endif
 diff --git a/xbmc/platform/linux/hisi/hi_unf_wdg.h b/xbmc/platform/linux/hisi/hi_unf_wdg.h
 new file mode 100644
-index 00000000000..0dc050e916e
+index 0000000..0dc050e
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/hi_unf_wdg.h
 @@ -0,0 +1,189 @@
@@ -53519,7 +53519,7 @@ index 00000000000..0dc050e916e
 +#endif /* __HI_UNF_WDG_H__ */
 diff --git a/xbmc/platform/linux/hisi/hi_video_codec.h b/xbmc/platform/linux/hisi/hi_video_codec.h
 new file mode 100644
-index 00000000000..113f89a8ea6
+index 0000000..113f89a
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/hi_video_codec.h
 @@ -0,0 +1,769 @@
@@ -54294,7 +54294,7 @@ index 00000000000..113f89a8ea6
 +#endif /* __HI_VIDEO_CODEC_H__ */
 diff --git a/xbmc/platform/linux/hisi/hifb.h b/xbmc/platform/linux/hisi/hifb.h
 new file mode 100644
-index 00000000000..3137d3183a1
+index 0000000..3137d31
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/hifb.h
 @@ -0,0 +1,529 @@
@@ -54828,7 +54828,7 @@ index 00000000000..3137d3183a1
 +
 +#endif /* __HIFB_H__ */
 diff --git a/xbmc/platform/posix/PlatformDefs.h b/xbmc/platform/posix/PlatformDefs.h
-index e6e59fe4cca..7eea143c14e 100644
+index e6e59fe..7eea143 100644
 --- a/xbmc/platform/posix/PlatformDefs.h
 +++ b/xbmc/platform/posix/PlatformDefs.h
 @@ -151,3 +151,7 @@ struct _stati64 {
@@ -54841,10 +54841,10 @@ index e6e59fe4cca..7eea143c14e 100644
 +#endif
 \ No newline at end of file
 diff --git a/xbmc/settings/SettingConditions.cpp b/xbmc/settings/SettingConditions.cpp
-index 5fc1311b998..b1adc4ce865 100644
+index 693ee06..2806804 100644
 --- a/xbmc/settings/SettingConditions.cpp
 +++ b/xbmc/settings/SettingConditions.cpp
-@@ -384,6 +384,9 @@ void CSettingConditions::Initialize()
+@@ -386,6 +386,9 @@ void CSettingConditions::Initialize()
  #ifdef HAS_ZEROCONF
    m_simpleConditions.emplace("has_zeroconf");
  #endif
@@ -54855,10 +54855,10 @@ index 5fc1311b998..b1adc4ce865 100644
    m_simpleConditions.emplace("have_libva");
  #endif
 diff --git a/xbmc/settings/Settings.cpp b/xbmc/settings/Settings.cpp
-index 226fe8af064..0f8e2c0dcff 100644
+index 56c1b8b..cfa5cd9 100644
 --- a/xbmc/settings/Settings.cpp
 +++ b/xbmc/settings/Settings.cpp
-@@ -149,6 +149,7 @@ constexpr const char* CSettings::SETTING_VIDEOPLAYER_USEVDPAUMPEG2;
+@@ -148,6 +148,7 @@ constexpr const char* CSettings::SETTING_VIDEOPLAYER_USEVDPAUMPEG2;
  constexpr const char* CSettings::SETTING_VIDEOPLAYER_USEVDPAUMPEG4;
  constexpr const char* CSettings::SETTING_VIDEOPLAYER_USEVDPAUVC1;
  constexpr const char* CSettings::SETTING_VIDEOPLAYER_USEDXVA2;
@@ -54867,7 +54867,7 @@ index 226fe8af064..0f8e2c0dcff 100644
  constexpr const char* CSettings::SETTING_VIDEOPLAYER_USEPRIMEDECODER;
  constexpr const char* CSettings::SETTING_VIDEOPLAYER_USESTAGEFRIGHT;
 diff --git a/xbmc/settings/Settings.h b/xbmc/settings/Settings.h
-index ddec9aeec76..4d20628e7f3 100644
+index 5edf2ad..79bbbe4 100644
 --- a/xbmc/settings/Settings.h
 +++ b/xbmc/settings/Settings.h
 @@ -124,6 +124,7 @@ public:
@@ -54879,7 +54879,7 @@ index ddec9aeec76..4d20628e7f3 100644
    static constexpr auto SETTING_VIDEOPLAYER_USEPRIMEDECODER = "videoplayer.useprimedecoder";
    static constexpr auto SETTING_VIDEOPLAYER_USESTAGEFRIGHT = "videoplayer.usestagefright";
 diff --git a/xbmc/windowing/egl/WinSystemSTBContext.cpp b/xbmc/windowing/egl/WinSystemSTBContext.cpp
-index 046daf6658f..fd4ab94312e 100644
+index 3b4e3e8..c70869b 100644
 --- a/xbmc/windowing/egl/WinSystemSTBContext.cpp
 +++ b/xbmc/windowing/egl/WinSystemSTBContext.cpp
 @@ -21,6 +21,8 @@
