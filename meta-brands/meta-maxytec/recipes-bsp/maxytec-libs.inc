@@ -25,7 +25,6 @@ do_install() {
 	install -d ${D}${libdir}/hisilicon
 	install -m 0755 ${S}/hisilicon/* ${D}${libdir}/hisilicon
 	install -m 0755 ${S}/ffmpeg/* ${D}${libdir}/hisilicon
-	install -d ${D}/lib
 	ln -sf /lib/ld-linux-armhf.so.3 ${D}${libdir}/hisilicon/ld-linux.so
 }
 
