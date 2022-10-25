@@ -26,9 +26,9 @@ FILES:${PN} = "${PLUGINPATH}"
 D_FILES_PN = "${D}${FILES:${PN}}"
 
 do_compile:append() {
-    cd ${S}
+    cd ${S}/po
     for f in $(find po -name *.po ); do
-        l=$(echo ${f%} | sed 's/\.po//' | sed 's/.*locale\///')
+        l=$(echo ${f%} | sed 's/\.po//' | sed 's/.*po\///')
         mkdir -p locale/${l%}/LC_MESSAGES
         msgfmt -o locale/${l%}/LC_MESSAGES/E2m3u2bouquet.mo $l.po
     done
