@@ -21,7 +21,7 @@ index 3744ee8a..74479621 100644
 +						_bindings[(unsigned int)_bindingCount].udpSock = udps;
 +						_bindings[(unsigned int)_bindingCount].tcpListenSock = tcps;
 +						_bindings[(unsigned int)_bindingCount].address = ii->first;
- 						phy.setIfName(udps, (char*)ii->second.c_str(), (int)ii->second.length());
+ 						memcpy(_bindings[_bindingCount].ifname, (char*)ii->second.c_str(), (int)ii->second.length());
  						++_bindingCount;
  					}
 -- 
