@@ -13,13 +13,12 @@ RDEPENDS:${PN} = "kernel-module-tun"
 inherit gitpkgv
 
 SRCREV = "${AUTOREV}"
-PV = "1.10.0+git${SRCPV}"
-PKGV = "1.10.0+git${GITPKGV}"
+PV = "1.10.2+git${SRCPV}"
+PKGV = "1.10.2+git${GITPKGV}"
 
 SRC_URI = "git://github.com/zerotier/ZeroTierOne.git;protocol=https \
         file://zerotier \
         file://0001-accept-external-ldflags.patch \
-        file://0002-fix-compile-with-gcc10.patch \
         file://0003-dont-enable-AES-hwcaps-for-arm.patch \
 "
 
