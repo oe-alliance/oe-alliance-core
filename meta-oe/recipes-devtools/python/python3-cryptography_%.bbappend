@@ -1,3 +1,3 @@
-DEPENDS:append = " python3-semantic-version-native"
+DEPENDS:append = " ${PYTHON_PN}-semantic-version-native"
 
 include ${PYTHON_PN}-package-split.inc
