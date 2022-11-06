@@ -1,0 +1,21 @@
+--- a/python/Makefile
++++ b/python/Makefile
+@@ -37,7 +37,7 @@ endif
+ 
+ 
+ include $(DEVLIB)/unixdll.mk
+-DLLDEPS = $(CLIENTLIB) -lpython3.8
++DLLDEPS = $(CLIENTLIB) -lpython3.11
+ PYTHONINCLUDES = -I${PYTHON_INCLUDE_DIR}
+ 
+ 
+--- a/python/py_device.c
++++ b/python/py_device.c
+@@ -582,6 +582,6 @@ static struct PyModuleDef moduledef = {
+ 
+ PyMODINIT_FUNC PyInit_dpflib(void)
+ {
+-    Py_TYPE(&DeviceType) = &PyType_Type;
++    Py_SET_TYPE(&DeviceType, &PyType_Type);
+     return PyModule_Create(&moduledef);
+ }
