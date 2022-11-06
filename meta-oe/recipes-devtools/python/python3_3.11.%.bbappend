@@ -1,5 +1,5 @@
 FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
-SRC_URI += "file://importlib.patch"
+SRC_URI += "file://use-legacy-path-for-pycs.patch"
 
 inherit python3-dir
 
