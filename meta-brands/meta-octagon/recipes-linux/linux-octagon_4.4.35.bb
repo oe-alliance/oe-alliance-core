@@ -40,13 +40,14 @@ SRC_URI += "https://source.mynonpublic.com/octagon/octagon-linux-${PV}-${SRCDATE
     file://0007-dvb-mn88472-staging.patch \
     file://mn88472_reset_stream_ID_reg_if_no_PLP_given.patch \
     file://fix-multiple-defs-yyloc.patch \
+    file://extend_modules_space.patch \
 "
 
-SRC_URI:append:sf8008m += " \
+SRC_URI:append:sf8008m = " \
 	file://fix-index-for-usb.patch \
 "
 
-SRC_URI_append_sf8008 = " \
+SRC_URI:append:sf8008 = " \
 	file://emmc_ks81aa80_05s000_reboot.patch \
 "
 

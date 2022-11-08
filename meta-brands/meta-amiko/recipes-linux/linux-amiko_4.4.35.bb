@@ -40,6 +40,7 @@ SRC_URI += "https://source.mynonpublic.com/amiko/amiko-linux-${PV}-${SRCDATE}.ta
     file://0007-dvb-mn88472-staging.patch \
     file://mn88472_reset_stream_ID_reg_if_no_PLP_given.patch \
     file://fix-multiple-defs-yyloc.patch \
+    file://extend_modules_space.patch \
 "
 
 S = "${WORKDIR}/linux-${PV}"
