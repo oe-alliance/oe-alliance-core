@@ -1,0 +1,71 @@
+diff -uNr a/drivers/mmc/core/mmc.c b/drivers/mmc/core/mmc.c
+--- a/drivers/mmc/core/mmc.c	2017-07-31 21:25:15.000000000 +0800
++++ b/drivers/mmc/core/mmc.c	2022-11-07 17:14:53.091726006 +0800
+@@ -45,6 +45,8 @@
+ 	35,	40,	45,	50,	55,	60,	70,	80,
+ };
+ 
++static char g_mmc_prodname[8];
++
+ #define UNSTUFF_BITS(resp,start,size)					\
+ 	({								\
+ 		const int __size = size;				\
+@@ -110,6 +112,8 @@
+ 			mmc_hostname(card->host), card->csd.mmca_vsn);
+ 		return -EINVAL;
+ 	}
++	
++	memcpy(g_mmc_prodname,card->cid.prod_name,8);
+ 
+ 	return 0;
+ }
+@@ -1971,6 +1975,12 @@
+ }
+ EXPORT_SYMBOL(mmc_can_reset);
+ 
++char *mmc_get_product_name(void)
++{
++	return g_mmc_prodname;
++}
++EXPORT_SYMBOL(mmc_get_product_name);
++
+ static int mmc_reset(struct mmc_host *host)
+ {
+ 	struct mmc_card *card = host->card;
+diff -uNr a/kernel/reboot.c b/kernel/reboot.c
+--- a/kernel/reboot.c	2017-07-31 21:25:19.000000000 +0800
++++ b/kernel/reboot.c	2022-11-07 17:13:48.989796160 +0800
+@@ -211,6 +211,12 @@
+  *	Shutdown everything and perform a clean reboot.
+  *	This is not safe to call in interrupt context.
+  */
++static void (*suspend_for_reboot)(void) = NULL;
++void kernel_set_callback_for_reboot(void (*callback)(void))
++{
++	suspend_for_reboot = callback;
++}
++
+ void kernel_restart(char *cmd)
+ {
+ 	kernel_restart_prepare(cmd);
+@@ -221,9 +227,19 @@
+ 	else
+ 		pr_emerg("Restarting system with command '%s'\n", cmd);
+ 	kmsg_dump(KMSG_DUMP_RESTART);
+-	machine_restart(cmd);
++	if(suspend_for_reboot)
++	{
++		(suspend_for_reboot)();
++		pm_suspend(PM_SUSPEND_STANDBY);
++	}
++	else
++	{
++		machine_restart(cmd);
++	}
+ }
+ EXPORT_SYMBOL_GPL(kernel_restart);
++EXPORT_SYMBOL_GPL(kernel_set_callback_for_reboot);
++
+ 
+ static void kernel_shutdown_prepare(enum system_states state)
+ {
