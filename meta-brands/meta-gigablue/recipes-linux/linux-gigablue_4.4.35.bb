@@ -43,6 +43,10 @@ SRC_URI += "https://source.mynonpublic.com/gigablue/mv200/gigablue-linux-${PV}-$
     file://fix_highspeed_sdio.patch \
 "
 
+SRC_URI_append_gbtrio4k = " \
+	file://emmc_ks81aa80_05s000_reboot.patch \
+"
+
 S = "${WORKDIR}/linux-${PV}"
 B = "${WORKDIR}/build"
 
