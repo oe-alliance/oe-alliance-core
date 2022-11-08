@@ -43,6 +43,11 @@ SRC_URI += "https://source.mynonpublic.com/gigablue/mv200/gigablue-linux-${PV}-$
     file://mn88472_reset_stream_ID_reg_if_no_PLP_given.patch \
     file://fix-multiple-defs-yyloc.patch \
     file://fix_highspeed_sdio.patch \
+    file://extend_modules_space.patch \
+"
+
+SRC_URI:append:gbtrio4k = " \
+	file://emmc_ks81aa80_05s000_reboot.patch \
 "
 
 S = "${WORKDIR}/linux-${PV}"
