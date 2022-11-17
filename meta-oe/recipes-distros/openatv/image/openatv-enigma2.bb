@@ -17,9 +17,7 @@ RRECOMMENDS:${PN} = " \
     enigma2-skindefault \
     openatv-version-info \
     enigma-kernel-module \
-    ${@bb.utils.contains_any("FLASHSIZE", "64 96", " \
-    enigma2-plugin-extensions-openwebif-webtv \
-    ", " \
+    ${@bb.utils.contains_any("FLASHSIZE", "64 96", "", " \
     enigma2-plugin-drivers-usbserial \
     enigma2-plugin-extensions-autotimer \
     enigma2-plugin-extensions-cutlisteditor \
