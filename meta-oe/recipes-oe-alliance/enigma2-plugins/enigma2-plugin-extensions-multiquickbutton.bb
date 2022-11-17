@@ -6,9 +6,9 @@ LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://../LICENSE.GPLv2;md5=eb723b61539feef013de476e68b5c50a"
 require conf/python/python3-compileall.inc
 
-DEPENDS = "${PYTHON_PN} ${PYTHON_PN}-six-native"
+DEPENDS += "${PYTHON_PN}-six-native"
 
-inherit gitpkgv ${PYTHON_PN}native gettext
+inherit gitpkgv gettext ${PYTHON_PN}targetconfig
 
 SRCREV = "${AUTOREV}"
 PV = "2.8.4+git${SRCPV}"
