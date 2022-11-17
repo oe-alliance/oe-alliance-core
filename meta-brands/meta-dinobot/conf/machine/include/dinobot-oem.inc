@@ -45,6 +45,8 @@ ${@bb.utils.contains('MACHINEBUILD', 'vipersingle', 'Viper Single' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'viper4kv20', 'Viper 4K V20' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'viper4kv30', 'Viper 4K V30' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'viper4kv40', 'Viper 4K V40' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'axas4kcombo', '4K Combo' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'axas4ktwin', '4K TWIN' , '', d)}\
 "
 
 MACHINE_BRAND = "\
@@ -89,6 +91,8 @@ ${@bb.utils.contains('MACHINEBUILD', 'vipersingle', 'AMIKO' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'viper4kv20', 'AMIKO' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'viper4kv30', 'AMIKO' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'viper4kv40', 'AMIKO' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'axas4kcombo', 'AXAS' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'axas4ktwin', 'AXAS' , '', d)}\
 "
 
 MTD_KERNEL = "\
@@ -133,6 +137,8 @@ ${@bb.utils.contains('MACHINEBUILD', 'vipersingle', 'mtd8' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'viper4kv20', 'mmcblk0p9' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'viper4kv30', 'mmcblk0p9' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'viper4kv40', 'mmcblk0p9' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'axas4kcombo', 'mmcblk0p9' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'axas4ktwin', 'mmcblk0p9' , '', d)}\
 "
 
 MTD_ROOTFS = "\
@@ -177,6 +183,8 @@ ${@bb.utils.contains('MACHINEBUILD', 'vipersingle', 'mtd9' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'viper4kv20', 'mmcblk0p10' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'viper4kv30', 'mmcblk0p10' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'viper4kv40', 'mmcblk0p10' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'axas4kcombo', 'mmcblk0p10' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'axas4ktwin', 'mmcblk0p10' , '', d)}\
 "
 
 SDCARDIMG = "\
@@ -221,6 +229,8 @@ ${@bb.utils.contains('MACHINEBUILD', 'vipersingle', 'no' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'viper4kv20', 'no' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'viper4kv30', 'no' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'viper4kv40', 'no' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'axas4kcombo', 'no' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'axas4ktwin', 'no' , '', d)}\
 "
 
 IMAGEDIR = "\
@@ -265,6 +275,8 @@ ${@bb.utils.contains('MACHINEBUILD', 'vipersingle', 'amiko/${MACHINE}' , '', d)}
 ${@bb.utils.contains('MACHINEBUILD', 'viper4kv20', 'e2/update' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'viper4kv30', 'amiko/${MACHINE}' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'viper4kv40', 'e2/update' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'axas4kcombo', 'e2/update' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'axas4ktwin', 'e2/update' , '', d)}\
 "
 
 RCNAME = "\
@@ -309,6 +321,8 @@ ${@bb.utils.contains('MACHINEBUILD', 'vipersingle', 'amiko6' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'viper4kv20', 'amiko6' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'viper4kv30', 'amiko6' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'viper4kv40', 'amiko6' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'axas4kcombo', 'axas2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'axas4ktwin', 'axas2' , '', d)}\
 "
 
 KERNEL_MODULE_AUTOLOAD += "xhci-plat-hcd"
@@ -334,6 +348,7 @@ MACHINE_FEATURES += "switchoff  hdmicec blindscan-tbs alsa hbbtv-browser-webkit 
     ${@bb.utils.contains('MACHINEBUILD', 'anadol4k', '' , ' dvb-c', d)} \
     ${@bb.utils.contains('MACHINEBUILD', 'anadol4kcombo', '' , ' dvb-c', d)} \
     ${@bb.utils.contains('MACHINEBUILD', 'hitube4kplus', '' , ' dvb-c', d)} \
+    ${@bb.utils.contains('MACHINEBUILD', 'axas4kcombo', '' , ' dvb-c', d)} \
     ${@bb.utils.contains_any('SOC_FAMILY', 'hisi3798mv200', 'openhbbtv' , '', d)} \
     "
 
