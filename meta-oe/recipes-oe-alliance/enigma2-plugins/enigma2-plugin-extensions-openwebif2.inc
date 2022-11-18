@@ -1,6 +1,6 @@
 MODULE = "OpenWebif"
 DESCRIPTION = "Control your receiver with a browser"
-LICENSE = "GPLv2"
+LICENSE = "GPL-3.0-only"
 LIC_FILES_CHKSUM = "file://README;firstline=10;lastline=12;md5=eb66cb719ed579d6523cf9c3e000d811"
 
 FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
