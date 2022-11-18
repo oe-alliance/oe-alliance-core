@@ -31,7 +31,8 @@ SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "${GITPKGVTAG}"
 
-SRC_URI = "git://github.com/oe-alliance/${MODULE}.git;protocol=https;branch=${BRANCH}"
+SRC_URI = "git://github.com/oe-alliance/${MODULE}.git;protocol=https;branch=${BRANCH} \
+           file://setuptools-auto-discovery.patch"
 
 S="${WORKDIR}/git"
 
