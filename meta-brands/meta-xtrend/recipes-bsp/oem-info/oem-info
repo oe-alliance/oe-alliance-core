@@ -20,7 +20,7 @@ INFO="/usr/lib/enigma.info"
 CHIP=`cat /proc/stb/info/chipset`
 if [ $CHIP == "bcm73625" ]; then
   sed -i -e 's:displaymodel=ET7x00:displaymodel=ET7100 V2:' $INFO
-elif [ $TYPE == "11" ]; then
+else
   sed -i -e 's:displaymodel=ET7x00:displaymodel=ET7000:' $INFO
 fi
 
