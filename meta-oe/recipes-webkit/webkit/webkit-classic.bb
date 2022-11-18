@@ -21,7 +21,8 @@ PR = "r0"
 
 SRC_URI = "git://github.com/oe-alliance/webkit.org.git;protocol=https;branch=master \
         file://0001-fix-build-with-bison-3.7.patch \
-        file://0002-fix-build-with-gcc11.patch"
+        file://0002-fix-build-with-gcc11.patch \
+        file://0003-fix-build-with-glib-2.7x.patch"
 
 inherit autotools lib_package gtk-doc pkgconfig perlnative ${PYTHON_PN}native gitpkgv
 
