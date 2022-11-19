@@ -102,6 +102,8 @@ Zgemma H10 COMBO        MACHINE:  zgemmah10combo
 
 Zgemma H11S             MACHINE:  zgemmah11s
 
+Zgemma H112H            MACHINE:  zgemmah112h
+
 ### Amiko
 
 Viper SLIM              MACHINE:  viperslim
@@ -139,6 +141,9 @@ ANADOL MULTIBOX Combo   MACHINE:  anadolmulti
 
 ANADOL MULTIBOX Twin    MACHINE:  anadolmultitwin
 
+ANADOL MULTIBOX SE      MACHINE:  anadolmultiboxse
+
+ANADOL IP8 4K           MACHINE:  ip8
 
 ### Atemio
 
@@ -174,6 +179,8 @@ AX MULTIBOX Combo       MACHINE:  axmulticombo
 
 AX MULTIBOX Twin        MACHINE:  axmultitwin
 
+AX MULTIBOX SE          MACHINE:  axmultiboxse
+
 
 ### Axas
 
@@ -201,6 +208,9 @@ HIS C 4K                MACHINE:  axashisc4k
 
 HIS TWIN +              MACHINE:  axashistwinplus
 
+4K COMBO                MACHINE:  axas4kcombo
+
+4K TWIN                MACHINE:  axas4ktwin
 
 ### Beyonwiz
 
@@ -378,6 +388,8 @@ GB UE 4K                MACHINE:  gbue4k
 
 GB TRIO 4K              MACHINE:  gbtrio4k
 
+GB TRIO 4K Plus         MACHINE:  gbtrio4kplus
+
 GB X3 4K                MACHINE:  gbx34k
 
 GB IP 4K                MACHINE:  gbip4k
@@ -535,10 +547,14 @@ HD11                    MACHINE:  mutant11
 
 HD60                    MACHINE:  mutant60
 
+HD66SE                  MACHINE:  mutant66se
+
 
 ### Novaler
 
 Multibox 4K             MACHINE:  novaler4k
+
+Multibox 4K SE          MACHINE:  novaler4kse
 
 
 ### Octagon
@@ -570,6 +586,8 @@ SF8008 4K UHD           MACHINE:  sf8008
 SF8008 MINI 4K UHD      MACHINE:  sf8008m
 
 SX988 4K DUAL OS        MACHINE:  sx988
+
+SXF60x8 HD              MACHINE:  stx6008
 
 
 ### Odin
