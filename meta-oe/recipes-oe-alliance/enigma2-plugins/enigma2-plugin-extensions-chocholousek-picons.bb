@@ -12,9 +12,9 @@ RDEPENDS:${PN} = "p7zip"
 inherit gitpkgv gettext
 
 SRCREV = "${AUTOREV}"
-BPV = "5.x.xxxxxx"
-PV = "${BPV}+gitr${SRCPV}"
-PKGV = "${BPV}+gitr${SRCPV}"
+BPV = "5.0"
+PV = "${BPV}+git${SRCPV}"
+PKGV = "${BPV}+git${GITPKGV}"
 PR = "r1"
 
 SRC_URI = "git://github.com/s3n0/e2plugins;protocol=https;branch=master"
