@@ -5,7 +5,7 @@ LICENSE = "CLOSED"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PROVIDES = "virtual/libgles2 virtual/libgles1 virtual/egl virtual/libgbm"
-DEPENDS = "libdrm mesa"
+DEPENDS = "libdrm mesa patchelf-native"
 
 PV = "${SRCDATE}"
 PR = "r2"
@@ -26,6 +26,7 @@ do_install:append() {
     install -m 0755 ${S}/libnxpl.so ${D}${libdir}/
     install -m 0755 ${S}/libnexus.so ${D}${libdir}/
     install -m 0755 ${S}/libv3ddriver.so ${D}${libdir}/
+    patchelf --set-soname libv3ddriver.so ${D}${libdir}/libv3ddriver.so   
     (cd ${D}/${libdir} && ln -sf libv3ddriver.so libEGL.so.1.4 \
     && ln -sf libEGL.so.1.4 libEGL.so.1 \
     && ln -sf libEGL.so.1 libEGL.so)

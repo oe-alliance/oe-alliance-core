@@ -7,6 +7,8 @@ require conf/license/license-close.inc
 
 PROVIDES = "virtual/libgles2 virtual/egl"
 
+DEPENDS = "patchelf-native"
+
 SRC_URI = "https://source.mynonpublic.com/edision/edision-libv3d-${PV}.tar.xz"
 
 S = "${WORKDIR}/edision-libv3d-${PV}"
@@ -30,6 +32,7 @@ do_install() {
 	install -m 0755 -d ${D}${libdir}
 	oe_soinstall ${S}/${ARCH_DIR}/libv3dplatform.so.${PV} ${D}${libdir}
 	oe_soinstall ${S}/${ARCH_DIR}/libv3ddriver.so.${PV} ${D}${libdir}
+    patchelf --set-soname libv3ddriver.so ${D}${libdir}/libv3ddriver.so
 	ln -s libv3ddriver.so.${PV} ${D}${libdir}/libEGL.so
 	ln -s libv3ddriver.so.${PV} ${D}${libdir}/libGLESv2.so
 	install -m 0755 -d ${D}/${includedir}

@@ -9,6 +9,8 @@ PR = "r0-${SRCDATE}"
 
 PROVIDES = "virtual/libgles2 virtual/egl"
 
+DEPENDS = "patchelf-native"
+
 SRC_URI = "https://source.mynonpublic.com/xcore/xcore-libgles-${MACHINE}-${SRCDATE}.tar.gz"
 
 S = "${WORKDIR}/libgles-${MACHINE}"
@@ -23,6 +25,7 @@ do_install:append() {
 	install -d ${D}${libdir}
 	install -m 0755 ${S}/lib/libv3dplatform.so ${D}${libdir}/
 	install -m 0755 ${S}/lib/libv3ddriver.so ${D}${libdir}/
+	patchelf --set-soname libv3ddriver.so ${D}${libdir}/libv3ddriver.so
 	ln -s libv3ddriver.so ${D}${libdir}/libEGL.so
 	ln -s libv3ddriver.so ${D}${libdir}/libGLESv2.so
 	install -d ${D}/${includedir}

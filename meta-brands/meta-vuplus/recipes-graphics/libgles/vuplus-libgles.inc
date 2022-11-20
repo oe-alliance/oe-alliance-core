@@ -11,6 +11,8 @@ PR="${SRCDATE}.${SRCDATE_PR}"
 PROVIDES = "virtual/libgles1 virtual/libgles2 virtual/egl libgles"
 RPROVIDES:${PN} = "virtual/libgles1 virtual/libgles2 virtual/egl libEGL.so libGLESv2.so libgles"
 
+DEPENDS = "patchelf-native"
+
 SRC_URI = "http://code.vuplus.com/download/release/libgles/libgles-${MACHINE}-${PV}-${PR}.tar.gz"
 
 S = "${WORKDIR}/libgles-${MACHINE}"
@@ -25,6 +27,7 @@ libGLESv2.so"
 do_install() {
     install -d ${D}/usr/lib/
     install -m 0755 ${S}/lib/*.so ${D}/usr/lib/
+    patchelf --set-soname libv3ddriver.so ${D}${libdir}/libv3ddriver.so
     ln -s libv3ddriver.so ${D}/usr/lib/libEGL.so
     ln -s libv3ddriver.so ${D}/usr/lib/libGLESv2.so
     install -d ${D}/usr/include

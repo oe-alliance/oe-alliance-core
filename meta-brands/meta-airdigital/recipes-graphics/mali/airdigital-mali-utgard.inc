@@ -24,6 +24,7 @@ do_install:append() {
     echo 'KERNEL=="mali0", MODE="0660", GROUP="video"' > ${S}/50-mali.rules
     install -m 0644 ${S}/50-mali.rules ${D}${sysconfdir}/udev/rules.d/50-mali.rules
     install -m 0755 ${S}/libMali.so ${D}${libdir}
+    patchelf --set-soname libMali.so ${D}${libdir}/libMali.so
     (cd ${D}/${libdir} && ln -sf libMali.so libmali.so)
     (cd ${D}/${libdir} && ln -sf libMali.so libEGL.so.1.4 \
     && ln -sf libEGL.so.1.4 libEGL.so.1 \
