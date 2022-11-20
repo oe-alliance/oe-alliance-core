@@ -1,4 +1,4 @@
-From 88c4cf3c49f96eb7af48625e8689b7905d4ea073 Mon Sep 17 00:00:00 2001
+From 81fa8854f8bae20690456f9d0d8f506d0b1f9793 Mon Sep 17 00:00:00 2001
 From: Captain <captain.onboard@web.de>
 Date: Wed, 15 Jul 2020 18:07:08 +0200
 Subject: [PATCH] stb-settings-20
@@ -23,10 +23,10 @@ Subject: [PATCH] stb-settings-20
  create mode 100644 cmake/treedata/common/stb.txt
 
 diff --git a/addons/skin.estuary/xml/Home.xml b/addons/skin.estuary/xml/Home.xml
-index 9db8d89902..4c557fbd9c 100644
+index 5b9f2fbf57..ee2dc4fd45 100644
 --- a/addons/skin.estuary/xml/Home.xml
 +++ b/addons/skin.estuary/xml/Home.xml
-@@ -1028,7 +1028,7 @@
+@@ -1044,7 +1044,7 @@
  					<align>justify</align>
  					<include content="IconButton">
  						<param name="control_id" value="804" />
@@ -193,12 +193,12 @@ index 0000000000..e1fe54a13d
 +
 +list(APPEND PLATFORM_DEFINES -DMESA_EGL_NO_X11_HEADERS)
 diff --git a/cmake/scripts/linux/ArchSetup.cmake b/cmake/scripts/linux/ArchSetup.cmake
-index 848723af1f..a89080f143 100644
+index 4083483173..838c82a3f4 100644
 --- a/cmake/scripts/linux/ArchSetup.cmake
 +++ b/cmake/scripts/linux/ArchSetup.cmake
-@@ -43,6 +43,10 @@ else()
-   elseif(CPU MATCHES ppc64le)
-     set(ARCH ppc64le)
+@@ -46,6 +46,10 @@ else()
+   elseif(CPU MATCHES loongarch64)
+     set(ARCH loongarch64)
      set(NEON False)
 +  elseif(CPU MATCHES "cortexa15")
 +    set(ARCH arm)
@@ -446,10 +446,10 @@ index 0be5f2d6f4..8e7e0b0e38 100644
    ROOT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
    PREFIX := $(ROOT_DIR)/dvdread-install
 diff --git a/xbmc/guilib/guiinfo/SystemGUIInfo.cpp b/xbmc/guilib/guiinfo/SystemGUIInfo.cpp
-index 781092fb12..b38cd345f4 100644
+index bc01047b3b..72b1daaaf0 100644
 --- a/xbmc/guilib/guiinfo/SystemGUIInfo.cpp
 +++ b/xbmc/guilib/guiinfo/SystemGUIInfo.cpp
-@@ -61,6 +61,11 @@ std::string CSystemGUIInfo::GetSystemHeatInfo(int info) const
+@@ -62,6 +62,11 @@ std::string CSystemGUIInfo::GetSystemHeatInfo(int info) const
  #if defined(TARGET_POSIX)
      CServiceBroker::GetCPUInfo()->GetTemperature(m_cpuTemp);
      m_gpuTemp = GetGPUTemperature();
@@ -462,7 +462,7 @@ index 781092fb12..b38cd345f4 100644
    }
  
 diff --git a/xbmc/input/InputManager.cpp b/xbmc/input/InputManager.cpp
-index 306e5bd54a..32c13639a4 100644
+index 571b2599ab..938ed628d6 100644
 --- a/xbmc/input/InputManager.cpp
 +++ b/xbmc/input/InputManager.cpp
 @@ -587,6 +587,18 @@ bool CInputManager::HandleKey(const CKey& key)

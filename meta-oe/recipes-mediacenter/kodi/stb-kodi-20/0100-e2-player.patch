@@ -17,7 +17,7 @@ Subject: [PATCH] e2-player
  create mode 100644 xbmc/cores/Enigma2Player/Enigma2Player.h
 
 diff --git a/cmake/treedata/common/cores.txt b/cmake/treedata/common/cores.txt
-index d23939d..5e5c6cb 100644
+index d23939d314e..5e5c6cbf80c 100644
 --- a/cmake/treedata/common/cores.txt
 +++ b/cmake/treedata/common/cores.txt
 @@ -4,5 +4,6 @@ xbmc/cores/DllLoader                   cores/dll-loader
@@ -28,7 +28,7 @@ index d23939d..5e5c6cb 100644
  xbmc/cores/paplayer                    cores/paplayer
  xbmc/cores/playercorefactory           cores/playercorefactory
 diff --git a/system/playercorefactory.xml b/system/playercorefactory.xml
-index f928311..8e25021 100644
+index f928311cf0b..8e2502143eb 100644
 --- a/system/playercorefactory.xml
 +++ b/system/playercorefactory.xml
 @@ -8,9 +8,17 @@
@@ -61,7 +61,7 @@ index f928311..8e25021 100644
      <!-- DVDs -->
 diff --git a/xbmc/cores/Enigma2Player/CMakeLists.txt b/xbmc/cores/Enigma2Player/CMakeLists.txt
 new file mode 100644
-index 0000000..fc67275
+index 00000000000..fc672758ff9
 --- /dev/null
 +++ b/xbmc/cores/Enigma2Player/CMakeLists.txt
 @@ -0,0 +1,6 @@
@@ -73,7 +73,7 @@ index 0000000..fc67275
 +
 diff --git a/xbmc/cores/Enigma2Player/Enigma2Player.cpp b/xbmc/cores/Enigma2Player/Enigma2Player.cpp
 new file mode 100644
-index 0000000..e03e97d
+index 00000000000..dfb01b7739d
 --- /dev/null
 +++ b/xbmc/cores/Enigma2Player/Enigma2Player.cpp
 @@ -0,0 +1,799 @@
@@ -878,7 +878,7 @@ index 0000000..e03e97d
 +
 diff --git a/xbmc/cores/Enigma2Player/Enigma2Player.h b/xbmc/cores/Enigma2Player/Enigma2Player.h
 new file mode 100644
-index 0000000..403fa88
+index 00000000000..403fa88b88b
 --- /dev/null
 +++ b/xbmc/cores/Enigma2Player/Enigma2Player.h
 @@ -0,0 +1,96 @@
@@ -979,7 +979,7 @@ index 0000000..403fa88
 +  CFileItem m_file;
 +};
 diff --git a/xbmc/cores/playercorefactory/PlayerCoreConfig.cpp b/xbmc/cores/playercorefactory/PlayerCoreConfig.cpp
-index 545062e..6c4718d 100644
+index 545062e0506..6c4718d7365 100644
 --- a/xbmc/cores/playercorefactory/PlayerCoreConfig.cpp
 +++ b/xbmc/cores/playercorefactory/PlayerCoreConfig.cpp
 @@ -21,6 +21,7 @@
@@ -1002,13 +1002,13 @@ index 545062e..6c4718d 100644
  #if defined(HAS_UPNP)
    else if (m_type.compare("remote") == 0)
 diff --git a/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp b/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp
-index 34792a4..79255d8 100644
+index 3042774c722..ef42e634406 100644
 --- a/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp
 +++ b/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp
-@@ -15,6 +15,7 @@
+@@ -14,6 +14,7 @@
+ #include "URL.h"
  #include "cores/IPlayerCallback.h"
  #include "cores/VideoPlayer/Interface/InputStreamConstants.h"
- #include "cores/paplayer/PAPlayer.h"
 +#include "cores/Enigma2Player/Enigma2Player.h"
  #include "dialogs/GUIDialogContextMenu.h"
  #include "guilib/LocalizeStrings.h"
@@ -1035,5 +1035,5 @@ index 34792a4..79255d8 100644
        int count = 0;
        std::string playername = name;
 -- 
-2.34.1
+2.37.2
 
