@@ -12,7 +12,7 @@ SRC_URI += " \
 "
 
 # HACK Close libEGL.so issue fix rpatch
-do_install_append() {
+do_install:append() {
     if [ -e ${PKG_CONFIG_SYSROOT_DIR}${libdir}/libEGL.so ]; then
         patchelf --remove-needed ${PKG_CONFIG_SYSROOT_DIR}${libdir}/libEGL.so ${D}${libdir}/libQt5WebKit.so.5.212.0
         patchelf --add-needed libEGL.so ${D}${libdir}/libQt5WebKit.so.5.212.0
