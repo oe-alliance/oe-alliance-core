@@ -11,7 +11,7 @@ do_compile() {
     mkdir -p ${S}/${sysconfdir}/opkg
     for feed in all ${PACKAGE_EXTRA_ARCHS} ${MACHINE_ARCH} 3rdparty ${MACHINE}_3rdparty ; do
         if [ "${feed}" = "static-${MACHINEBUILD}" ] || [ "${feed}" = "static-${TUNE_PKGARCH}" ]; then
-            echo "src/gz ${DISTRO_FEED_PREFIX}-static-${feed} ${STATIC_DISTRO_FEED_URI}/${feed}" > ${S}/${sysconfdir}/opkg/${feed}-feed.conf
+            echo "src/gz ${DISTRO_FEED_PREFIX}-${feed} ${STATIC_DISTRO_FEED_URI}/${feed}" > ${S}/${sysconfdir}/opkg/${feed}-feed.conf
         else
             echo "src/gz ${DISTRO_FEED_PREFIX}-${feed} ${DISTRO_FEED_URI}/${feed}" > ${S}/${sysconfdir}/opkg/${feed}-feed.conf
         fi
