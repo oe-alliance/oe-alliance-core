@@ -36,6 +36,7 @@ EXTRA_OECONF = " \
 CFLAGS += "-I${STAGING_INCDIR}/tirpc"
 LDFLAGS += "-ltirpc"
 CXXFLAGS = " -std=c++11"
+ALLOW_EMPTY:${PN} = "1"
 
 RREPLACES:enigma2-plugin-skincomponents-eventlist = "enigma2-plugin-components-eventlist"
 RCONFLICTS:enigma2-plugin-skincomponents-eventlist = "enigma2-plugin-components-eventlist"
