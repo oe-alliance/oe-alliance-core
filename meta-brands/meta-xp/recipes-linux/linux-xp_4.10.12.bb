@@ -19,7 +19,7 @@ MACHINE_KERNEL_PR:prepend = "2"
 PKG:${KERNEL_PACKAGE_NAME}-base = "kernel-base"
 PKG:${KERNEL_PACKAGE_NAME}-image = "kernel-image"
 RPROVIDES:${KERNEL_PACKAGE_NAME}-base = "kernel-${KERNEL_VERSION}"
-RPROVIDES:${KERNEL_PACKAGE_NAME}-image = "kernel-image-${KERNEL_VERSION}"
+RPROVIDES:kernel-image = "kernel-image-${KERNEL_VERSION}"
 
 SRC_URI += "https://source.mynonpublic.com/xp1000/linux-${PV}-${ARCH}.tar.gz \
     file://defconfig \
@@ -32,18 +32,25 @@ B = "${WORKDIR}/build"
 export OS = "Linux"
 KERNEL_OBJECT_SUFFIX = "ko"
 KERNEL_IMAGEDEST = "tmp"
-
-KERNEL_OUTPUT = "vmlinux.gz"
-KERNEL_OUTPUT_DIR = "."
-KERNEL_IMAGETYPE = "vmlinux.gz"
+KERNEL_OUTPUT = "vmlinux"
+KERNEL_IMAGETYPE = "vmlinux"
 
 KERNEL_EXTRA_ARGS = "EXTRA_CFLAGS=-Wno-attribute-alias"
 
+FILES:${KERNEL_PACKAGE_NAME}-image = "/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}*"
+
+kernel_do_install:append() {
+	${STRIP} ${D}/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}
+	gzip -9c ${D}/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION} > ${D}/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz
+	rm ${D}/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}
+}
+
 pkg_postinst:kernel-image () {
 	if [ "x$D" == "x" ]; then
-		if [ -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE} ] ; then
+		if [ -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz ] ; then
 			flash_erase /dev/${MTD_KERNEL} 0 0
-			nandwrite -p /dev/${MTD_KERNEL} /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}
+			nandwrite -p /dev/${MTD_KERNEL} /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz
+			rm -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz
 		fi
 	fi
 	true
@@ -51,3 +58,6 @@ pkg_postinst:kernel-image () {
 
 do_rm_work() {
 }
+
+# extra tasks
+addtask kernel_link_images after do_compile before do_install
