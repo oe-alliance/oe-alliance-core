@@ -9,6 +9,8 @@ PR="${SRCDATE}.${SRCDATE_PR}"
 
 PROVIDES = "virtual/libgles2 virtual/egl"
 
+DEPENDS = "patchelf-native"
+
 SRC_URI = "http://en3homeftp.net/pub/down/libgles-arm-${SRCDATE}.tar.gz"
 
 S = "${WORKDIR}/libgles"
@@ -24,6 +26,7 @@ do_install() {
 	install -m 0755 ${S}/libnxpl.so ${D}${libdir}/
 	install -m 0755 ${S}/libnexus.so ${D}${libdir}/
 	install -m 0755 ${S}/libv3ddriver.so ${D}${libdir}/
+	patchelf --set-soname libv3ddriver.so ${D}${libdir}/libv3ddriver.so
 	install -m 0755 ${S}/libnxclient.so ${D}${libdir}/
 	ln -s libv3ddriver.so ${D}${libdir}/libEGL.so
 	ln -s libv3ddriver.so ${D}${libdir}/libGLESv2.so
