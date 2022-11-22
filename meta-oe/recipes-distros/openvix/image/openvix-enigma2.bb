@@ -8,7 +8,7 @@ ALLOW_EMPTY:${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r22"
+PR = "r25"
 
 inherit packagegroup
 
@@ -21,7 +21,7 @@ RDEPENDS:${PN} = "\
     "
 
 RRECOMMENDS:${PN} = "\
-    enigma-kernel-module \
+    enigma-info \
     enigma2-plugin-extensions-autotimer \
     enigma2-plugin-extensions-epgimport \
     enigma2-plugin-extensions-epgsearch \
@@ -51,3 +51,15 @@ RRECOMMENDS:${PN}:append:tmtwin4k = " enigma2-plugin-systemplugins-tempfancontro
 RRECOMMENDS:${PN}:append:osmio4k = " enigma2-plugin-extensions-hbbtv-webkit"
 RRECOMMENDS:${PN}:append:osmio4kplus = " enigma2-plugin-extensions-hbbtv-webkit"
 RRECOMMENDS:${PN}:append:osmini4k = " enigma2-plugin-extensions-hbbtv-webkit"
+
+pkg_preinst:${PN}:prepend() {
+#!/bin/sh
+echo "Checking for presence enigma-kernel-module. If present it will be removed."
+opkginstalled=$(opkg list-installed)
+if [[ $opkginstalled == *"enigma-kernel-module"* ]]; then
+    opkg remove enigma-kernel-module --force-depends
+    echo "enigma-kernel-module has been removed."
+else
+    echo "enigma-kernel-module was not present"
+fi
+}
