@@ -20,8 +20,10 @@ MACHINE_KERNEL_PR:prepend = "3"
 # package names instead, to allow only one kernel to be installed.
 PKG:${KERNEL_PACKAGE_NAME}-base = "kernel-base"
 PKG:${KERNEL_PACKAGE_NAME}-image = "kernel-image"
+PKG:${KERNEL_PACKAGE_NAME}-${KERNEL_IMAGETYPE} = "kernel-image"
 RPROVIDES:${KERNEL_PACKAGE_NAME}-base = "kernel-${KERNEL_VERSION}"
 RPROVIDES:${KERNEL_PACKAGE_NAME}-image = "kernel-image-${KERNEL_VERSION}"
+RPROVIDES:${KERNEL_PACKAGE_NAME}-${KERNEL_IMAGETYPE} = "kernel-image-${KERNEL_VERSION}"
 
 SRC_URI += "https://source.mynonpublic.com/gfutures/linux-${PV}-${ARCH}.tar.gz;name=${ARCH} \
     file://defconfig \
