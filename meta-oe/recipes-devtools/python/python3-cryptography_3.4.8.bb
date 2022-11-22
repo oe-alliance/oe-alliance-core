@@ -65,7 +65,7 @@ do_install_ptest() {
 }
 
 FILES:${PN}-dbg += " \
-    ${libdir}/${PYTHON_PN}2.7/site-packages/${SRCNAME}/hazmat/bindings/.debug \
+    ${libdir}/${PYTHON_PN}3.11/site-packages/${SRCNAME}/hazmat/bindings/.debug \
 "
 
 BBCLASSEXTEND = "native nativesdk"
