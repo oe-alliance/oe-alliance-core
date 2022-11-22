@@ -4,8 +4,6 @@ SECTION = "devel/python"
 LICENSE = "( Apache-2.0 | BSD-3-Clause ) & PSF-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=bf405a8056a6647e7d077b0e7bc36aba"
 
-include ${PYTHON_PN}-package-split.inc
-
 LDSHARED += "-pthread"
 
 SRC_URI[sha256sum] = "94cc5ed4ceaefcbe5bf38c8fba6a21fc1d365bb8fb826ea1688e3370b2e24a1c"
