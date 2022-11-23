@@ -6,7 +6,7 @@ PRIORITY = "required"
 INC_PR = "r8"
 require conf/license/license-close.inc
 
-COMPATIBLE_MACHINE = "dm800"
+COMPATIBLE_MACHINE = "^(dm800)$"
 
 PR = "${INC_PR}.3"
 

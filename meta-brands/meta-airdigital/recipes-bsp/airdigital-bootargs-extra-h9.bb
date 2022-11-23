@@ -1,7 +1,7 @@
 DESCRIPTION = "H9 Bootargs to extend rootfs"
 require conf/license/license-gplv2.inc
 
-COMPATIBLE_MACHINE = "h9"
+COMPATIBLE_MACHINE = "^h9$"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "1.0"

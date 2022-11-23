@@ -1,4 +1,4 @@
-COMPATIBLE_MACHINE = "dm500hdv2"
+COMPATIBLE_MACHINE = "^(dm500hdv2)$"
 
 require dreambox-dvb-modules.inc
 

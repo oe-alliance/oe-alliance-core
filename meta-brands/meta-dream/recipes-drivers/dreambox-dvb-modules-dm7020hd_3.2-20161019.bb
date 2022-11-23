@@ -1,4 +1,4 @@
-COMPATIBLE_MACHINE = "dm7020hd"
+COMPATIBLE_MACHINE = "^(dm7020hd)$"
 
 require dreambox-dvb-modules.inc
 
