@@ -28,6 +28,7 @@ do_configure[noexec] = "1"
 
 do_compile[noexec] = "1"
 
+INSANE_SKIP:${PN} += "file-rdeps"
 do_install() {
 	install -m 0755 -d ${D}${libdir}
 	oe_soinstall ${S}/${ARCH_DIR}/libv3dplatform.so.${PV} ${D}${libdir}
