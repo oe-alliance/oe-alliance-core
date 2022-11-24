@@ -37,7 +37,7 @@ MACHINE_FEATURES += "hisil switchoff hdmicec skins1080 emmc mmc kodi20 alsa hbbt
 
 IMAGE_CLASSES  += "octagon-emmc_image"
 IMAGE_FSTYPES += "octagonemmc"
-IMAGE_ROOTFS_SIZE ?= "524288"
+IMAGE_ROOTFS_SIZE ?= "624288"
 
 TARGET_ARCH = "arm"
 DEFAULTTUNE = "cortexa15hf-neon-vfpv4"
