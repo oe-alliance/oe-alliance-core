@@ -7,7 +7,8 @@ SRC_URI:append = " \
            file://0001-gstrtpmp4gpay-set-dafault-value-for-MPEG4-without-co.patch \
 "
 
-RDEPENDS:${PN}-soup += "libsoup"
+PACKAGECONFIG_SOUP = "soup2"
+RDEPENDS:${PN}-soup += "libsoup-2.4"
 
 PACKAGECONFIG:append = " \
     ${@bb.utils.contains('MACHINE_FEATURES', 'novp9', '', 'vpx',d)} \
