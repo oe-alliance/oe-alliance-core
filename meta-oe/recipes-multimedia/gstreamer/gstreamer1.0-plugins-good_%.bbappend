@@ -1,6 +1,6 @@
 FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 
-
+PACKAGE_NO_LOCALE = "1"
 PR = "r1"
 
 SRC_URI:append = " \
