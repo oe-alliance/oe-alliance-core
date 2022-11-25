@@ -7,6 +7,8 @@ require conf/license/license-gplv2.inc
 RCONFLICTS:${PN} = "enigma-kernel-module"
 RREPLACES:${PN} = "enigma-kernel-module"
 
+SSTATE_SKIP_CREATION = "1"
+
 PACKAGE_ARCH = "${MACHINEBUILD}"
 PV = "${@bb.utils.contains_any("DISTRO_NAME", "openvix", "${IMAGE_VERSION}.${BUILD_VERSION}.${DEVELOPER_BUILD_VERSION}", "${DATE}", d)}"
 
@@ -14,7 +16,11 @@ PACKAGES = "${PN}"
 
 S = "${WORKDIR}"
 
+inherit python3-dir 
+
 INFOFILE = "${libdir}/enigma.info"
+
+export KERNEL_VERSION = "${@oe.utils.read_file('${PKGDATA_DIR}/kernel-depmod/kernel-abiversion')}"
 
 do_compile(){
     if [ "${MACHINE}" = "vusolo4k" -o "${MACHINE}" = "vusolo2" -o "${MACHINE}" = "vusolose" -o "${MACHINE}" = "vuduo2" -o "${MACHINE}" = "vuuno4k" -o "${MACHINE}" = "vuuno4kse" -o "${MACHINE}" = "vuultimo4k" -o "${MACHINE}" = "vuzero4k" -o "${MACHINE}" = "vuduo4k" -o "${MACHINE}" = "vuduo4kse" ]; then
@@ -133,14 +139,14 @@ do_compile(){
     echo "architecture=${DEFAULTTUNE}" > ${S}${INFOFILE}
     echo "avjack=${HAVE_AV_JACK}" >> ${S}${INFOFILE}
     echo "blindscanbinary=${BLINDSCAN_BINARY}" >> ${S}${INFOFILE}
-    echo "brand=${BOX_BRAND}" >> ${S}${INFOFILE}
+    echo "brand=${BRAND_OEM}" >> ${S}${INFOFILE}
     echo "ci=${HAVE_CI}" >> ${S}${INFOFILE}
     echo "compiledate='${DATE}'" >> ${S}${INFOFILE}
     echo "dboxlcd=${SUPPORT_DBOXLCD}" >> ${S}${INFOFILE}
     echo "developername=${DEVELOPER_NAME}" >> ${S}${INFOFILE}
-    echo "displaybrand=${DISPLAY_BRAND}" >> ${S}${INFOFILE}
+    echo "displaybrand=${MACHINE_BRAND}" >> ${S}${INFOFILE}
     echo "displaydistro=${DISPLAY_DISTRO}" >> ${S}${INFOFILE}
-    echo "displaymodel=${DISPLAY_MODEL}" >> ${S}${INFOFILE}
+    echo "displaymodel=${MACHINE_NAME}" >> ${S}${INFOFILE}
     echo "displaytype=${DISPLAY_TYPE}" >> ${S}${INFOFILE}
     echo "distro=${DISTRO_NAME}" >> ${S}${INFOFILE}
     echo "driversdate='${DRIVERSDATE}'" >> ${S}${INFOFILE}
@@ -162,10 +168,10 @@ do_compile(){
     echo "imglanguage=${LANGUAGE}" >> ${S}${INFOFILE}
     echo "imgrevision='${BUILD_VERSION}'" >> ${S}${INFOFILE}
     echo "imgversion='${IMAGE_VERSION}'" >> ${S}${INFOFILE}
-    echo "kernel='${KERNELVERSION}'" >> ${S}${INFOFILE}
+    echo "kernel='${KERNEL_VERSION}'" >> ${S}${INFOFILE}
     echo "kernelfile=${KERNEL_FILE}" >> ${S}${INFOFILE}
     echo "machinebuild=${MACHINEBUILD}" >> ${S}${INFOFILE}
-    echo "mediaservice=${PREFERRED_PROVIDER_virtual/enigma2-mediaservice}" >> ${S}${INFOFILE}
+    echo "mediaservice=${MEDIASERVICE}" >> ${S}${INFOFILE}
     echo "middleflash=${HAVE_MIDDLEFLASH}" >> ${S}${INFOFILE}
     echo "mkubifs=${MKUBIFS_ARGS}" >> ${S}${INFOFILE}
     echo "model=${MACHINE}" >> ${S}${INFOFILE}
@@ -174,9 +180,9 @@ do_compile(){
     echo "mtdrootfs=${MTD_ROOTFS}" >> ${S}${INFOFILE}
     echo "multilib=${HAVE_MULTILIB}" >> ${S}${INFOFILE}
     echo "multitranscoding=${HAVE_MULTITRANSCODING}" >> ${S}${INFOFILE}
-    echo "oe=${OE_VERSION}" >> ${S}${INFOFILE}
+    echo "oe=${OE_VER}" >> ${S}${INFOFILE}
     echo "platform=${STB_PLATFORM}" >> ${S}${INFOFILE}
-    echo "python='${PREFERRED_VERSION_python}'" >> ${S}${INFOFILE}
+    echo "python='${PYTHON_BASEVERSION}'" >> ${S}${INFOFILE}
     echo "rca=${HAVE_RCA}" >> ${S}${INFOFILE}
     echo "rcidnum=${RCIDNUM}" >> ${S}${INFOFILE}
     echo "rcname=${RCNAME}" >> ${S}${INFOFILE}
@@ -195,6 +201,8 @@ do_compile(){
     echo "yuv=${HAVE_YUV}" >> ${S}${INFOFILE}
     printf "checksum=%s\n" $(md5sum "${S}${INFOFILE}" | awk '{print $1}') >> ${S}${INFOFILE}
 }
+
+do_install[nostamp] = "1"
 
 do_install() {
     install -d ${D}${libdir}
