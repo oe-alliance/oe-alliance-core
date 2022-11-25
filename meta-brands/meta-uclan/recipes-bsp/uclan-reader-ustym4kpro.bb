@@ -11,7 +11,7 @@ COMPATIBLE_MACHINE = "^(ustym4kpro)$"
 SRCDATE = "20200612"
 
 PV = "${SRCDATE}"
-PR = "r0"
+PR = "r2"
 
 SRC_URI = "https://source.mynonpublic.com/uclan/${MACHINE}-libreader-${SRCDATE}.zip"
 
