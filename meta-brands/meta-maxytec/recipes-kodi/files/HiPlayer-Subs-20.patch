@@ -1,4 +1,4 @@
-From 6fefd09a35e325141796fc957e60db127f502c95 Mon Sep 17 00:00:00 2001
+From 00c2aadc4082310ebcf0b927101aca4694651003 Mon Sep 17 00:00:00 2001
 From: Captain <captain.onboard@web.de>
 Date: Sun, 13 Jun 2021 13:14:40 +0200
 Subject: [PATCH] HiPlayer-Subs-20
@@ -13,10 +13,10 @@ Subject: [PATCH] HiPlayer-Subs-20
  create mode 100644 xbmc/windows/GUIWindowSubtitles.h
 
 diff --git a/xbmc/guilib/GUIWindowManager.cpp b/xbmc/guilib/GUIWindowManager.cpp
-index 79932ae..7f470bd 100644
+index d73dce68b0..7eb3544847 100644
 --- a/xbmc/guilib/GUIWindowManager.cpp
 +++ b/xbmc/guilib/GUIWindowManager.cpp
-@@ -60,6 +60,9 @@
+@@ -63,6 +63,9 @@
  #include "windows/GUIWindowSplash.h"
  #include "windows/GUIWindowStartup.h"
  #include "windows/GUIWindowSystemInfo.h"
@@ -26,7 +26,7 @@ index 79932ae..7f470bd 100644
  
  #include <mutex>
  
-@@ -310,6 +313,10 @@ void CGUIWindowManager::CreateWindows()
+@@ -316,6 +319,10 @@ void CGUIWindowManager::CreateWindows()
    Add(new GAME::CDialogGameVideoRotation);
    Add(new GAME::CDialogInGameSaves);
    Add(new RETRO::CGameWindowFullScreen);
@@ -37,7 +37,7 @@ index 79932ae..7f470bd 100644
  }
  
  bool CGUIWindowManager::DestroyWindows()
-@@ -444,6 +451,10 @@ bool CGUIWindowManager::DestroyWindows()
+@@ -452,6 +459,10 @@ bool CGUIWindowManager::DestroyWindows()
  
      DestroyWindow(WINDOW_DIALOG_PERIPHERALS);
      DestroyWindow(WINDOW_DIALOG_PERIPHERAL_SETTINGS);
@@ -49,7 +49,7 @@ index 79932ae..7f470bd 100644
    catch (...)
    {
 diff --git a/xbmc/windows/CMakeLists.txt b/xbmc/windows/CMakeLists.txt
-index 2fe465f..f44fd3f 100644
+index 2fe465fcc2..f44fd3f751 100644
 --- a/xbmc/windows/CMakeLists.txt
 +++ b/xbmc/windows/CMakeLists.txt
 @@ -8,7 +8,8 @@ set(SOURCES GUIMediaWindow.cpp
@@ -73,7 +73,7 @@ index 2fe465f..f44fd3f 100644
  core_add_library(windows)
 diff --git a/xbmc/windows/GUIWindowSubtitles.cpp b/xbmc/windows/GUIWindowSubtitles.cpp
 new file mode 100644
-index 0000000..2e92356
+index 0000000000..2e92356e79
 --- /dev/null
 +++ b/xbmc/windows/GUIWindowSubtitles.cpp
 @@ -0,0 +1,144 @@
@@ -223,7 +223,7 @@ index 0000000..2e92356
 +}
 diff --git a/xbmc/windows/GUIWindowSubtitles.h b/xbmc/windows/GUIWindowSubtitles.h
 new file mode 100644
-index 0000000..4f9cef1
+index 0000000000..4f9cef1100
 --- /dev/null
 +++ b/xbmc/windows/GUIWindowSubtitles.h
 @@ -0,0 +1,21 @@
