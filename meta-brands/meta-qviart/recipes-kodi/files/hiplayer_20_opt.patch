@@ -1,16 +1,17 @@
-From 8eaf117bb78c7f68996e084a38f7481de0f87619 Mon Sep 17 00:00:00 2001
+From a525c5aa508405c61b5379cf4b913986a0dca684 Mon Sep 17 00:00:00 2001
 From: Captain <captain.onboard@web.de>
-Date: Sun, 10 Apr 2022 12:20:55 +0200
-Subject: [PATCH 1/2] hiplayer_20_opt
+Date: Fri, 25 Nov 2022 07:57:31 +0100
+Subject: [PATCH] hiplayer_20_opt
 
 ---
  .../resources/strings.po                      |   11 +
- cmake/platform/linux/stb.cmake                |    4 +-
+ cmake/platform/linux/stb.cmake                |  136 +-
  cmake/treedata/common/cores.txt               |    1 +
  cmake/treedata/linux/subdirs.txt              |    1 +
  system/playercorefactory.xml                  |    1 +
- system/settings/settings.xml                  |    6 +
- xbmc/Application.cpp                          |   20 +
+ system/settings/settings.xml                  |   16 +-
+ xbmc/application/Application.cpp              |    8 +
+ .../application/ApplicationVolumeHandling.cpp |   12 +
  xbmc/commons/ilog.h                           |    1 +
  xbmc/cores/VideoPlayer/VideoPlayer.cpp        |  123 +-
  xbmc/cores/VideoPlayer/VideoPlayer.h          |    7 +
@@ -151,8 +152,8 @@ Subject: [PATCH 1/2] hiplayer_20_opt
  xbmc/settings/SettingConditions.cpp           |    3 +
  xbmc/settings/Settings.cpp                    |    1 +
  xbmc/settings/Settings.h                      |    1 +
- xbmc/windowing/egl/WinSystemSTBContext.cpp    |    3 +
- 148 files changed, 52532 insertions(+), 5 deletions(-)
+ xbmc/windowing/egl/WinSystemSTBContext.cpp    |  251 +-
+ 149 files changed, 52727 insertions(+), 200 deletions(-)
  create mode 100644 xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/RendererHisi.cpp
  create mode 100644 xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/RendererHisi.h
  create mode 100644 xbmc/cores/hiplayer/CMakeLists.txt
@@ -287,10 +288,10 @@ Subject: [PATCH 1/2] hiplayer_20_opt
  create mode 100644 xbmc/platform/linux/hisi/hi_video_codec.h
 
 diff --git a/addons/resource.language.en_gb/resources/strings.po b/addons/resource.language.en_gb/resources/strings.po
-index 5e7dc252cc..4aaf6eb8a6 100644
+index 1cb0bc42a4..108a45014e 100644
 --- a/addons/resource.language.en_gb/resources/strings.po
 +++ b/addons/resource.language.en_gb/resources/strings.po
-@@ -7315,6 +7315,17 @@ msgstr ""
+@@ -7412,6 +7412,17 @@ msgstr ""
  
  #empty strings from id 13458 to 13459
  
@@ -309,20 +310,146 @@ index 5e7dc252cc..4aaf6eb8a6 100644
  msgctxt "#13460"
  msgid "Use HEVC VAAPI"
 diff --git a/cmake/platform/linux/stb.cmake b/cmake/platform/linux/stb.cmake
-index 88ab54faff..3cfbc0fe30 100644
+index 88ab54faff..072e601ace 100644
 --- a/cmake/platform/linux/stb.cmake
 +++ b/cmake/platform/linux/stb.cmake
-@@ -59,9 +59,7 @@ elseif(WITH_PLATFORM STREQUAL "edision-cortexa15")
-   list(APPEND DEPLIBS EGL GLESv2 v3dplatform)
- elseif(WITH_PLATFORM STREQUAL "clap-cortexa15")
-   list(APPEND PLATFORM_DEFINES "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_MALI -DUSE_HIPLAYER")
+@@ -1,69 +1,67 @@
+-set(PLATFORM_REQUIRED_DEPS EGL LibInput Xkbcommon)
+-set(PLATFORM_OPTIONAL_DEPS VAAPI)
+-
+-set(STB_RENDER_SYSTEM "" CACHE STRING "Render system to use with STB: \"gl\" or \"gles\"")
+-
+-if(ENABLE_OPENGL STREQUAL "ON")
+-  list(APPEND PLATFORM_REQUIRED_DEPS OpenGl)
+-  set(APP_RENDER_SYSTEM gl)
+-  message(STATUS "STB_RENDER_SYSTEM=GL")
+-elseif(ENABLE_GLES STREQUAL "ON")
+-  list(APPEND PLATFORM_REQUIRED_DEPS OpenGLES)
+-  set(APP_RENDER_SYSTEM gles)
+-  message(STATUS "STB_RENDER_SYSTEM=GLES")
+-else()
+-  message(SEND_ERROR "You need to decide whether you want to use GL- or GLES-based rendering in combination with the STB windowing system. Please set STB_RENDER_SYSTEM to either \"gl\" or \"gles\". For normal desktop systems, you will usually want to use \"gl\".")
+-endif()
+-
+-if(WITH_PLATFORM STREQUAL "GB-cortexa15")
+-  set(CPU cortexa15)
+-  list(APPEND PLATFORM_DEFINES "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_STB_EXTEND -DTARGET_V3D -DTARGET_GB")
+-  list(APPEND DEPLIBS ${CMAKE_SOURCE_DIR}/xbmc/windowing/egl/gles_init.a EGL GLESv2 nxpl nexus nxclient)
+-elseif(WITH_PLATFORM STREQUAL "dags-cortexa15")
+-  set(CPU cortexa15)
+-  list(APPEND PLATFORM_DEFINES "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_STB_EXTEND -DTARGET_V3D -DTARGET_DAGS")
+-  list(APPEND DEPLIBS EGL GLESv2 nxpl nexus nxclient)
+-elseif(WITH_PLATFORM STREQUAL "dreambox-cortexa15")
+-  set(CPU cortexa15)
+-  list(APPEND PLATFORM_DEFINES "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_STB_EXTEND -DTARGET_V3D -DTARGET_DREAMBOX")
+-elseif(WITH_PLATFORM STREQUAL "dreambox-mipsel")
+-  list(APPEND PLATFORM_DEFINES "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_STB_EXTEND -DTARGET_V3D -DTARGET_DREAMBOX")
+-elseif(WITH_PLATFORM STREQUAL "vuplus-cortexa15")
+-  set(CPU cortexa15)
+-  list(APPEND PLATFORM_DEFINES "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_STB_EXTEND -DTARGET_V3D -DTARGET_VUPLUS -DTARGET_VUPLUS_ARM")
+-  list(APPEND DEPLIBS EGL GLESv2 KodiGLESPL dvb_base nxpl dvb_client)
+-elseif(WITH_PLATFORM STREQUAL "vuplus-mipsel")
+-  list(APPEND PLATFORM_DEFINES "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_STB_EXTEND -DTARGET_V3D -DTARGET_VUPLUS -DTARGET_VUPLUS_MIPSEL")
+-  list(APPEND DEPLIBS ${CMAKE_SOURCE_DIR}/xbmc/windowing/egl/gles_init.a EGL GLESv2 dvb_base nxpl xbmc_base dvb_client)
+-  list(APPEND SYSTEM_LDFLAGS -L${CMAKE_SOURCE_DIR}/../xbmc-support)
+-elseif(WITH_PLATFORM STREQUAL "v3d-cortexa15")
+-  set(CPU cortexa15)
+-  list(APPEND PLATFORM_DEFINES "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_STB_EXTEND -DTARGET_V3D -DTARGET_V3DNXPL")
+-  list(APPEND DEPLIBS EGL GLESv2 nxpl nexus)
+-elseif(WITH_PLATFORM STREQUAL "v3d-mipsel")
+-  list(APPEND PLATFORM_DEFINES "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_STB_EXTEND -DTARGET_V3D -DTARGET_V3DNXPL")
+-  list(APPEND DEPLIBS EGL GLESv2 nxpl nexus)
+-elseif(WITH_PLATFORM STREQUAL "xcore-mipsel")
+-  list(APPEND PLATFORM_DEFINES "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_STB_EXTEND -DTARGET_V3D -DTARGET_XCORE")
+-  list(APPEND DEPLIBS EGL GLESv2 v3dplatform)
+-elseif(WITH_PLATFORM STREQUAL "nextv-cortexa15")
+-  set(CPU cortexa15)
+-  list(APPEND PLATFORM_DEFINES "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_STB_EXTEND -DTARGET_V3D -DTARGET_NEXTV")
+-  list(APPEND DEPLIBS EGL GLESv2 nxpl nexus nxclient)
+-elseif(WITH_PLATFORM STREQUAL "mali-cortexa15")
+-  set(CPU cortexa15)
+-  list(APPEND PLATFORM_DEFINES "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_STB_EXTEND -DTARGET_MALI -DHAS_HIPLAYER")
+-  list(APPEND DEPLIBS EGL GLESv2 mali)
+-elseif(WITH_PLATFORM STREQUAL "edision-cortexa15")
+-  list(APPEND PLATFORM_DEFINES "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_STB_EXTEND -DTARGET_V3D -DTARGET_EDISION")
+-  list(APPEND DEPLIBS EGL GLESv2 v3dplatform)
+-elseif(WITH_PLATFORM STREQUAL "clap-cortexa15")
+-  list(APPEND PLATFORM_DEFINES "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_MALI -DUSE_HIPLAYER")
 -#  list(APPEND DEPLIBS ${CMAKE_SOURCE_DIR}xbmc/cores/hiplayer/hiplayer.a ${CMAKE_SOURCE_DIR}xbmc/linux/hisi/hiadp.a)
 -#  list(APPEND DEPLIBS EGL GLESv2 jpeg hi_common hi_msp)
 -  list(APPEND DEPLIBS EGL GLESv2 jpeg)
+-endif()
+-
+-
+-
+-list(APPEND PLATFORM_DEFINES -DMESA_EGL_NO_X11_HEADERS)
++set(PLATFORM_REQUIRED_DEPS EGL LibInput Xkbcommon)
++set(PLATFORM_OPTIONAL_DEPS VAAPI)
++
++set(STB_RENDER_SYSTEM "" CACHE STRING "Render system to use with STB: \"gl\" or \"gles\"")
++
++if(ENABLE_OPENGL STREQUAL "ON")
++  list(APPEND PLATFORM_REQUIRED_DEPS OpenGl)
++  set(APP_RENDER_SYSTEM gl)
++  message(STATUS "STB_RENDER_SYSTEM=GL")
++elseif(ENABLE_GLES STREQUAL "ON")
++  list(APPEND PLATFORM_REQUIRED_DEPS OpenGLES)
++  set(APP_RENDER_SYSTEM gles)
++  message(STATUS "STB_RENDER_SYSTEM=GLES")
++else()
++  message(SEND_ERROR "You need to decide whether you want to use GL- or GLES-based rendering in combination with the STB windowing system. Please set STB_RENDER_SYSTEM to either \"gl\" or \"gles\". For normal desktop systems, you will usually want to use \"gl\".")
++endif()
++
++if(WITH_PLATFORM STREQUAL "GB-cortexa15")
++  set(CPU cortexa15)
++  list(APPEND PLATFORM_DEFINES "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_STB_EXTEND -DTARGET_V3D -DTARGET_GB")
++  list(APPEND DEPLIBS ${CMAKE_SOURCE_DIR}/xbmc/windowing/egl/gles_init.a EGL GLESv2 nxpl nexus nxclient)
++elseif(WITH_PLATFORM STREQUAL "dags-cortexa15")
++  set(CPU cortexa15)
++  list(APPEND PLATFORM_DEFINES "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_STB_EXTEND -DTARGET_V3D -DTARGET_DAGS")
++  list(APPEND DEPLIBS EGL GLESv2 nxpl nexus nxclient)
++elseif(WITH_PLATFORM STREQUAL "dreambox-cortexa15")
++  set(CPU cortexa15)
++  list(APPEND PLATFORM_DEFINES "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_STB_EXTEND -DTARGET_V3D -DTARGET_DREAMBOX")
++elseif(WITH_PLATFORM STREQUAL "dreambox-mipsel")
++  list(APPEND PLATFORM_DEFINES "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_STB_EXTEND -DTARGET_V3D -DTARGET_DREAMBOX")
++elseif(WITH_PLATFORM STREQUAL "vuplus-cortexa15")
++  set(CPU cortexa15)
++  list(APPEND PLATFORM_DEFINES "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_STB_EXTEND -DTARGET_V3D -DTARGET_VUPLUS -DTARGET_VUPLUS_ARM")
++  list(APPEND DEPLIBS EGL GLESv2 KodiGLESPL dvb_base nxpl dvb_client)
++elseif(WITH_PLATFORM STREQUAL "vuplus-mipsel")
++  list(APPEND PLATFORM_DEFINES "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_STB_EXTEND -DTARGET_V3D -DTARGET_VUPLUS -DTARGET_VUPLUS_MIPSEL")
++  list(APPEND DEPLIBS ${CMAKE_SOURCE_DIR}/xbmc/windowing/egl/gles_init.a EGL GLESv2 dvb_base nxpl xbmc_base dvb_client)
++  list(APPEND SYSTEM_LDFLAGS -L${CMAKE_SOURCE_DIR}/../xbmc-support)
++elseif(WITH_PLATFORM STREQUAL "v3d-cortexa15")
++  set(CPU cortexa15)
++  list(APPEND PLATFORM_DEFINES "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_STB_EXTEND -DTARGET_V3D -DTARGET_V3DNXPL")
++  list(APPEND DEPLIBS EGL GLESv2 nxpl nexus)
++elseif(WITH_PLATFORM STREQUAL "v3d-mipsel")
++  list(APPEND PLATFORM_DEFINES "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_STB_EXTEND -DTARGET_V3D -DTARGET_V3DNXPL")
++  list(APPEND DEPLIBS EGL GLESv2 nxpl nexus)
++elseif(WITH_PLATFORM STREQUAL "xcore-mipsel")
++  list(APPEND PLATFORM_DEFINES "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_STB_EXTEND -DTARGET_V3D -DTARGET_XCORE")
++  list(APPEND DEPLIBS EGL GLESv2 v3dplatform)
++elseif(WITH_PLATFORM STREQUAL "nextv-cortexa15")
++  set(CPU cortexa15)
++  list(APPEND PLATFORM_DEFINES "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_STB_EXTEND -DTARGET_V3D -DTARGET_NEXTV")
++  list(APPEND DEPLIBS EGL GLESv2 nxpl nexus nxclient)
++elseif(WITH_PLATFORM STREQUAL "mali-cortexa15")
++  set(CPU cortexa15)
++  list(APPEND PLATFORM_DEFINES "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_STB_EXTEND -DTARGET_MALI -DHAS_HIPLAYER")
++  list(APPEND DEPLIBS EGL GLESv2 mali)
++elseif(WITH_PLATFORM STREQUAL "edision-cortexa15")
++  list(APPEND PLATFORM_DEFINES "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_STB_EXTEND -DTARGET_V3D -DTARGET_EDISION")
++  list(APPEND DEPLIBS EGL GLESv2 v3dplatform)
++elseif(WITH_PLATFORM STREQUAL "clap-cortexa15")
++  list(APPEND PLATFORM_DEFINES "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_MALI -DUSE_HIPLAYER")
 +  list(APPEND DEPLIBS EGL GLESv2 jpeg hi_common hi_msp)
- endif()
- 
- 
++endif()
++
++
++
++list(APPEND PLATFORM_DEFINES -DMESA_EGL_NO_X11_HEADERS)
 diff --git a/cmake/treedata/common/cores.txt b/cmake/treedata/common/cores.txt
 index d23939d314..4d49697953 100644
 --- a/cmake/treedata/common/cores.txt
@@ -333,10 +460,10 @@ index d23939d314..4d49697953 100644
  xbmc/cores/playercorefactory           cores/playercorefactory
 +xbmc/cores/hiplayer                    cores/hiplayer
 diff --git a/cmake/treedata/linux/subdirs.txt b/cmake/treedata/linux/subdirs.txt
-index d25c36de51..585185ff84 100644
+index a8e8194038..a563b581b4 100644
 --- a/cmake/treedata/linux/subdirs.txt
 +++ b/cmake/treedata/linux/subdirs.txt
-@@ -8,6 +8,7 @@ xbmc/platform/linux/powermanagement platform/linux/powermanagement
+@@ -9,6 +9,7 @@ xbmc/platform/linux/powermanagement platform/linux/powermanagement
  xbmc/platform/linux/sse4            platform/linux/sse4
  xbmc/platform/linux/storage         platform/linux/storage
  xbmc/platform/linux/threads         platform/linux/threads
@@ -357,7 +484,7 @@ index f928311cf0..dc5c232a0a 100644
  
      <!-- DVDs -->
 diff --git a/system/settings/settings.xml b/system/settings/settings.xml
-index 747f003677..f2f6060cb5 100755
+index 72537e5484..3369455946 100755
 --- a/system/settings/settings.xml
 +++ b/system/settings/settings.xml
 @@ -143,6 +143,12 @@
@@ -373,11 +500,56 @@ index 747f003677..f2f6060cb5 100755
          <setting id="winsystem.ishdrdisplay" type="boolean" label="13436" help="36299">
            <dependencies>
              <dependency type="visible">
-diff --git a/xbmc/Application.cpp b/xbmc/Application.cpp
-index 21e71e309b..95b8d85fa9 100644
---- a/xbmc/Application.cpp
-+++ b/xbmc/Application.cpp
-@@ -97,6 +97,7 @@
+@@ -518,7 +524,7 @@
+           <control type="list" format="string" />
+         </setting>
+         <setting id="subtitles.fontname" type="string" label="14089" help="36185">
+-          <level>3</level>
++          <level>3</level>
+           <default>DEFAULT</default>
+           <constraints>
+             <options>subtitlesfonts</options>
+@@ -710,7 +716,7 @@
+           <control type="spinner" format="integer" delayed="true"/>
+         </setting>
+         <setting id="subtitles.charset" type="string" label="735" help="36189">
+-          <level>3</level>
++          <level>3</level>
+           <default>DEFAULT</default>
+           <constraints>
+             <options>charsets</options>
+@@ -2961,7 +2967,7 @@
+         <setting id="audiooutput.processquality" type="integer" label="13505" help="36169">
+           <requirement>HAS_AE_QUALITY_LEVELS</requirement>
+           <level>2</level>
+-          <default>20</default> <!-- AE_QUALITY_MID -->
++          <default>20</default> <!-- AE_QUALITY_MID -->
+           <constraints>
+             <options>aequalitylevels</options>
+           </constraints>
+@@ -2979,7 +2985,7 @@
+         </setting>
+         <setting id="audiooutput.samplerate" type="integer" label="458" help="36523">
+           <level>2</level>
+-          <default>44100</default>
++          <default>44100</default>
+           <dependencies>
+             <dependency type="visible">
+               <and>
+@@ -3811,7 +3817,7 @@
+       <group id="2" label="14270">
+         <setting id="locale.country" type="string" label="14271" help="36115">
+           <level>0</level>
+-          <default>Central Europe</default>
++          <default>Central Europe</default>
+           <constraints>
+             <options>regions</options>
+           </constraints>
+diff --git a/xbmc/application/Application.cpp b/xbmc/application/Application.cpp
+index b3edbdf0ca..b87057200b 100644
+--- a/xbmc/application/Application.cpp
++++ b/xbmc/application/Application.cpp
+@@ -110,6 +110,7 @@
  #include "windowing/WindowSystemFactory.h"
  
  #include <cmath>
@@ -385,7 +557,7 @@ index 21e71e309b..95b8d85fa9 100644
  
  #ifdef HAS_UPNP
  #include "network/upnp/UPnP.h"
-@@ -384,6 +385,9 @@ bool CApplication::Create(const CAppParamParser &params)
+@@ -387,6 +388,9 @@ bool CApplication::Create()
    // Init our DllLoaders emu env
    init_emu_environ();
  
@@ -395,22 +567,33 @@ index 21e71e309b..95b8d85fa9 100644
    PrintStartupLog();
  
    // initialize network protocols
-@@ -2578,6 +2582,10 @@ bool CApplication::Stop(int exitCode)
+@@ -2051,6 +2055,10 @@ bool CApplication::Stop(int exitCode)
    CLog::Log(LOGINFO, "Stopping player");
-   m_appPlayer.ClosePlayer();
- 
+   const auto appPlayer = GetComponent<CApplicationPlayer>();
+   appPlayer->ClosePlayer();
++  
 +  std::string cmd("echo \"1\" > /proc/stb/vmpeg/0/enable");
 +  system(cmd.c_str());
 +  CLog::Log(LOGNOTICE,  "Hisi Clear Video backgroud: {}",cmd.c_str());
-+  
+ 
    {
      // close inbound port
-     CServiceBroker::UnregisterAppPort();
-@@ -4534,6 +4542,18 @@ void CApplication::VolumeChanged()
-   // if player has volume control, set it.
-   m_appPlayer.SetVolume(m_volumeLevel);
-   m_appPlayer.SetMute(m_muted);
-+  
+diff --git a/xbmc/application/ApplicationVolumeHandling.cpp b/xbmc/application/ApplicationVolumeHandling.cpp
+index 25229be7da..d8aa44d62f 100644
+--- a/xbmc/application/ApplicationVolumeHandling.cpp
++++ b/xbmc/application/ApplicationVolumeHandling.cpp
+@@ -23,6 +23,7 @@
+ #include "utils/XMLUtils.h"
+ 
+ #include <tinyxml.h>
++#include "utils/log.h"
+ 
+ float CApplicationVolumeHandling::GetVolumePercent() const
+ {
+@@ -60,6 +61,17 @@ void CApplicationVolumeHandling::VolumeChanged()
+     appPlayer->SetVolume(m_volumeLevel);
+     appPlayer->SetMute(m_muted);
+   }
 +#ifdef USE_HIPLAYER
 +  int vol = m_muted?0:(int)(m_volumeLevel*100);
 +  std::ostringstream sstreamer;
@@ -419,12 +602,12 @@ index 21e71e309b..95b8d85fa9 100644
 +  sstreamer << " > /proc/stb/avs/0/volume";
 +  std::string cmd(sstreamer.str());
 +  system(cmd.c_str());
-+  
++
 +  CLog::Log(LOGNOTICE, "Vol {}", vol);
 +#endif
  }
  
- int CApplication::GetSubtitleDelay()
+ void CApplicationVolumeHandling::ShowVolumeBar(const CAction* action)
 diff --git a/xbmc/commons/ilog.h b/xbmc/commons/ilog.h
 index 10b3880ccd..907d17d405 100644
 --- a/xbmc/commons/ilog.h
@@ -438,7 +621,7 @@ index 10b3880ccd..907d17d405 100644
  // extra masks - from bit 5
  #define LOGMASKBIT    5
 diff --git a/xbmc/cores/VideoPlayer/VideoPlayer.cpp b/xbmc/cores/VideoPlayer/VideoPlayer.cpp
-index 39944ad2db..2c362f2e75 100644
+index af901b33dd..ddd699a262 100644
 --- a/xbmc/cores/VideoPlayer/VideoPlayer.cpp
 +++ b/xbmc/cores/VideoPlayer/VideoPlayer.cpp
 @@ -64,6 +64,10 @@
@@ -452,7 +635,7 @@ index 39944ad2db..2c362f2e75 100644
  #include "windowing/WinSystem.h"
  
  #include <iterator>
-@@ -572,11 +576,28 @@ int CSelectionStreams::CountType(StreamType type) const
+@@ -577,11 +581,28 @@ int CSelectionStreams::CountType(StreamType type) const
  
  void CVideoPlayer::CreatePlayers()
  {
@@ -483,7 +666,7 @@ index 39944ad2db..2c362f2e75 100644
    m_VideoPlayerSubtitle = new CVideoPlayerSubtitle(&m_overlayContainer, *m_processInfo);
    m_VideoPlayerTeletext = new CDVDTeletextData(*m_processInfo);
    m_VideoPlayerRadioRDS = new CDVDRadioRDSData(*m_processInfo);
-@@ -629,6 +650,14 @@ CVideoPlayer::CVideoPlayer(IPlayerCallback& callback)
+@@ -637,6 +658,14 @@ CVideoPlayer::CVideoPlayer(IPlayerCallback& callback)
  
    memset(&m_SpeedState, 0, sizeof(m_SpeedState));
  
@@ -498,7 +681,7 @@ index 39944ad2db..2c362f2e75 100644
    m_SkipCommercials = true;
  
    m_processInfo.reset(CProcessInfo::CreateInstance());
-@@ -663,6 +692,83 @@ bool CVideoPlayer::OpenFile(const CFileItem& file, const CPlayerOptions &options
+@@ -671,6 +700,83 @@ bool CVideoPlayer::OpenFile(const CFileItem& file, const CPlayerOptions &options
  {
    CLog::Log(LOGINFO, "VideoPlayer::OpenFile: {}", CURL::GetRedacted(file.GetPath()));
  
@@ -582,7 +765,7 @@ index 39944ad2db..2c362f2e75 100644
    if (IsRunning())
    {
      CDVDMsgOpenFile::FileParams params;
-@@ -1507,6 +1613,10 @@ void CVideoPlayer::Process()
+@@ -1536,6 +1642,10 @@ void CVideoPlayer::Process()
        {
          m_VideoPlayerVideo->SendMessage(std::make_shared<CDVDMsg>(CDVDMsg::VIDEO_DRAIN));
        }
@@ -593,7 +776,7 @@ index 39944ad2db..2c362f2e75 100644
  
        m_CurrentAudio.inited = false;
        m_CurrentVideo.inited = false;
-@@ -2576,6 +2686,15 @@ void CVideoPlayer::HandleMessages()
+@@ -2631,6 +2741,15 @@ void CVideoPlayer::HandleMessages()
  
        FlushBuffers(DVD_NOPTS_VALUE, true, true);
        m_renderManager.Flush(false, false);
@@ -610,10 +793,10 @@ index 39944ad2db..2c362f2e75 100644
        m_pSubtitleDemuxer.reset();
        m_subtitleDemuxerMap.clear();
 diff --git a/xbmc/cores/VideoPlayer/VideoPlayer.h b/xbmc/cores/VideoPlayer/VideoPlayer.h
-index 7fe9553199..2c9ef68675 100644
+index aa59f96645..f6fec8d4f4 100644
 --- a/xbmc/cores/VideoPlayer/VideoPlayer.h
 +++ b/xbmc/cores/VideoPlayer/VideoPlayer.h
-@@ -545,4 +545,11 @@ protected:
+@@ -565,4 +565,11 @@ protected:
    bool m_UpdateStreamDetails;
  
    std::atomic<bool> m_displayLost;
@@ -641,7 +824,7 @@ index b1286231c4..7f095f9eb6 100644
  if(SOURCES)
 diff --git a/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/RendererHisi.cpp b/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/RendererHisi.cpp
 new file mode 100644
-index 0000000000..f2f247452b
+index 0000000000..904a140bfa
 --- /dev/null
 +++ b/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/RendererHisi.cpp
 @@ -0,0 +1,165 @@
@@ -763,7 +946,7 @@ index 0000000000..f2f247452b
 +  }
 +}
 +
-+bool CRendererHisi::Supports(ERENDERFEATURE feature)
++bool CRendererHisi::Supports(ERENDERFEATURE feature) const
 +{
 +  if (feature == RENDERFEATURE_ZOOM ||
 +      feature == RENDERFEATURE_CONTRAST ||
@@ -812,7 +995,7 @@ index 0000000000..f2f247452b
 +}
 diff --git a/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/RendererHisi.h b/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/RendererHisi.h
 new file mode 100644
-index 0000000000..c0f3ad1d52
+index 0000000000..5b3124e6f6
 --- /dev/null
 +++ b/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/RendererHisi.h
 @@ -0,0 +1,56 @@
@@ -854,8 +1037,8 @@ index 0000000000..c0f3ad1d52
 +  virtual bool IsGuiLayer() override { return false; };
 +
 +  // Feature support
-+  virtual bool Supports(ESCALINGMETHOD method) override { return false; };
-+  virtual bool Supports(ERENDERFEATURE feature) override;
++  virtual bool Supports(ESCALINGMETHOD method) const override { return false; };
++  virtual bool Supports(ERENDERFEATURE feature) const override;
 +
 +private:
 +  void Reset();
@@ -1082,7 +1265,7 @@ index 0000000000..0cb2ac23d7
 +};
 diff --git a/xbmc/cores/hiplayer/HiCodecAudio.cpp b/xbmc/cores/hiplayer/HiCodecAudio.cpp
 new file mode 100644
-index 0000000000..248fa6fe34
+index 0000000000..97ad0e629b
 --- /dev/null
 +++ b/xbmc/cores/hiplayer/HiCodecAudio.cpp
 @@ -0,0 +1,407 @@
@@ -1381,8 +1564,8 @@ index 0000000000..248fa6fe34
 +
 +  if (m_bFirstFrame)
 +  {
-+    CLog::Log(LOGDEBUG, "CDVDAudioCodecHisi::GetData size={}/{} line={}/{} buf={}, desired={}",
-+              inputSize, outputSize, inLineSize, outLineSize, m_pBufferOutput, desired_size);
++    CLog::LogF(LOGDEBUG, "CDVDAudioCodecHisi::GetData size={}/{} line={}/{} buf={}, desired={}",
++              inputSize, outputSize, inLineSize, outLineSize, reinterpret_cast<const char*>(m_pBufferOutput), desired_size);
 +    m_bFirstFrame = false;
 +  }
 +  m_iBufferOutputUsed += outputSize;
@@ -1594,7 +1777,7 @@ index 0000000000..fdeec19c5f
 +};
 diff --git a/xbmc/cores/hiplayer/HiCodecVideo.cpp b/xbmc/cores/hiplayer/HiCodecVideo.cpp
 new file mode 100644
-index 0000000000..b5f6bc539f
+index 0000000000..473107abaa
 --- /dev/null
 +++ b/xbmc/cores/hiplayer/HiCodecVideo.cpp
 @@ -0,0 +1,578 @@
@@ -2078,11 +2261,11 @@ index 0000000000..b5f6bc539f
 +      m_hints.fpsrate = m_mpeg2_sequence->fps_rate;
 +      m_hints.fpsscale = m_mpeg2_sequence->fps_scale;
 +      m_framerate = static_cast<float>(m_mpeg2_sequence->fps_rate) / m_mpeg2_sequence->fps_scale;
-+      m_video_rate = (int)(0.5 + (96000.0 / m_framerate));
++      m_video_rate = (int)(0.5 + (96000.0 / (double)m_framerate));
 +
 +      m_hints.width = m_mpeg2_sequence->width;
 +      m_hints.height = m_mpeg2_sequence->height;
-+      m_hints.aspect = m_mpeg2_sequence->ratio;
++      m_hints.aspect = (double)m_mpeg2_sequence->ratio;
 +    }
 +    return;
 +  }
@@ -2178,7 +2361,7 @@ index 0000000000..b5f6bc539f
 +}
 diff --git a/xbmc/cores/hiplayer/HiCodecVideo.h b/xbmc/cores/hiplayer/HiCodecVideo.h
 new file mode 100644
-index 0000000000..24da3e754c
+index 0000000000..97fd039612
 --- /dev/null
 +++ b/xbmc/cores/hiplayer/HiCodecVideo.h
 @@ -0,0 +1,97 @@
@@ -2264,7 +2447,7 @@ index 0000000000..24da3e754c
 +  frame_queue* m_frame_queue;
 +  int32_t m_queue_depth;
 +  pthread_mutex_t m_queue_mutex;
-+  double m_framerate;
++  float m_framerate;
 +  int m_video_rate;
 +  float m_aspect_ratio;
 +  mpeg2_sequence* m_mpeg2_sequence;
@@ -3747,7 +3930,7 @@ index 0000000000..aade8f32be
 +}
 diff --git a/xbmc/cores/hiplayer/HiDecoder.h b/xbmc/cores/hiplayer/HiDecoder.h
 new file mode 100644
-index 0000000000..aa2842deee
+index 0000000000..5629af5969
 --- /dev/null
 +++ b/xbmc/cores/hiplayer/HiDecoder.h
 @@ -0,0 +1,164 @@
@@ -3798,9 +3981,9 @@ index 0000000000..aa2842deee
 +#define UNIT_FREQ 96000
 +#define AV_SYNC_THRESH PTS_FREQ * 30
 +#define PTS_US_TO_MS(PTS_US) ((float)(PTS_US) / 1000.0f)
-+#define PTS_MS_TO_US(PTS_MS) ((PTS_MS)*1000.0f)
-+#define PTS_90KHZ_TO_MS(PTS_90MS) ((float)(PTS_90MS) / 90.0f)
-+#define PTS_MS_TO_90KHZ(PTS_MS) ((PTS_MS)*90.0f)
++#define PTS_MS_TO_US(PTS_MS) ((PTS_MS)*1000.0)
++#define PTS_90KHZ_TO_MS(PTS_90MS) ((PTS_90MS) / 90.0)
++#define PTS_MS_TO_90KHZ(PTS_MS) ((PTS_MS)*90.0)
 +
 +enum
 +{
@@ -53795,24 +53978,24 @@ index e6e59fe4cc..7eea143c14 100644
 +#endif
 \ No newline at end of file
 diff --git a/xbmc/settings/SettingConditions.cpp b/xbmc/settings/SettingConditions.cpp
-index fb4201f114..69d23aaa4d 100644
+index f0a78a8829..a75edd84be 100644
 --- a/xbmc/settings/SettingConditions.cpp
 +++ b/xbmc/settings/SettingConditions.cpp
-@@ -388,6 +388,9 @@ void CSettingConditions::Initialize()
+@@ -384,6 +384,9 @@ void CSettingConditions::Initialize()
  #ifdef HAS_ZEROCONF
-   m_simpleConditions.insert("has_zeroconf");
+   m_simpleConditions.emplace("has_zeroconf");
  #endif
 +#ifdef USE_HIPLAYER
 +  m_simpleConditions.insert("use_hiplayer");
 +#endif
  #ifdef HAVE_LIBVA
-   m_simpleConditions.insert("have_libva");
+   m_simpleConditions.emplace("have_libva");
  #endif
 diff --git a/xbmc/settings/Settings.cpp b/xbmc/settings/Settings.cpp
-index a79a80e89d..fb9a1c524a 100644
+index b403b63bdf..ab3a5b0164 100644
 --- a/xbmc/settings/Settings.cpp
 +++ b/xbmc/settings/Settings.cpp
-@@ -149,6 +149,7 @@ constexpr const char* CSettings::SETTING_VIDEOPLAYER_USEVDPAUMPEG2;
+@@ -148,6 +148,7 @@ constexpr const char* CSettings::SETTING_VIDEOPLAYER_USEVDPAUMPEG2;
  constexpr const char* CSettings::SETTING_VIDEOPLAYER_USEVDPAUMPEG4;
  constexpr const char* CSettings::SETTING_VIDEOPLAYER_USEVDPAUVC1;
  constexpr const char* CSettings::SETTING_VIDEOPLAYER_USEDXVA2;
@@ -53821,10 +54004,10 @@ index a79a80e89d..fb9a1c524a 100644
  constexpr const char* CSettings::SETTING_VIDEOPLAYER_USEPRIMEDECODER;
  constexpr const char* CSettings::SETTING_VIDEOPLAYER_USESTAGEFRIGHT;
 diff --git a/xbmc/settings/Settings.h b/xbmc/settings/Settings.h
-index c31fc60a82..c674b82290 100644
+index cdd2d31ae3..5f113f12b2 100644
 --- a/xbmc/settings/Settings.h
 +++ b/xbmc/settings/Settings.h
-@@ -126,6 +126,7 @@ public:
+@@ -124,6 +124,7 @@ public:
    static constexpr auto SETTING_VIDEOPLAYER_USEVDPAUMPEG4 = "videoplayer.usevdpaumpeg4";
    static constexpr auto SETTING_VIDEOPLAYER_USEVDPAUVC1 = "videoplayer.usevdpauvc1";
    static constexpr auto SETTING_VIDEOPLAYER_USEDXVA2 = "videoplayer.usedxva2";
@@ -53833,26 +54016,261 @@ index c31fc60a82..c674b82290 100644
    static constexpr auto SETTING_VIDEOPLAYER_USEPRIMEDECODER = "videoplayer.useprimedecoder";
    static constexpr auto SETTING_VIDEOPLAYER_USESTAGEFRIGHT = "videoplayer.usestagefright";
 diff --git a/xbmc/windowing/egl/WinSystemSTBContext.cpp b/xbmc/windowing/egl/WinSystemSTBContext.cpp
-index 3fd406c266..cf0cec07a7 100644
+index 0a33178617..c70869bbd2 100644
 --- a/xbmc/windowing/egl/WinSystemSTBContext.cpp
 +++ b/xbmc/windowing/egl/WinSystemSTBContext.cpp
-@@ -21,6 +21,8 @@
- #include "cores/VideoPlayer/VideoRenderers/LinuxRendererGL.h"
- #endif
- 
+@@ -1,124 +1,127 @@
+-/*
+- *  Copyright (C) 2005-2018 Team Kodi
+- *  This file is part of Kodi - https://kodi.tv
+- *
+- *  SPDX-License-Identifier: GPL-2.0-or-later
+- *  See LICENSES/README.md for more information.
+- */
+-
+-#include "WinSystemSTBContext.h"
+-
+-#include "application/Application.h"
+-#include "ServiceBroker.h"
+-#include "cores/VideoPlayer/VideoRenderers/RenderFactory.h"
+-#include "cores/RetroPlayer/process/RPProcessInfo.h"
+-
+-#ifdef HAS_GLES
+-#include "cores/RetroPlayer/rendering/VideoRenderers/RPRendererOpenGLES.h"
+-#include "cores/VideoPlayer/VideoRenderers/LinuxRendererGLES.h"
+-#else
+-#include "cores/RetroPlayer/rendering/VideoRenderers/RPRendererOpenGL.h"
+-#include "cores/VideoPlayer/VideoRenderers/LinuxRendererGL.h"
+-#endif
+-
+-#include "cores/VideoPlayer/VideoRenderers/RenderFactory.h"
+-#include "guilib/GUIComponent.h"
+-#include "guilib/GUIWindowManager.h"
+-#include "utils/log.h"
+-#include "windowing/WindowSystemFactory.h"
+-
+-using namespace KODI;
+-using namespace KODI::WINDOWING::STB;
+-
+-/*std::unique_ptr<CWinSystemBase> CWinSystemBase::CreateWinSystem()
+-{
+-  std::unique_ptr<CWinSystemBase> winSystem(new CWinSystemSTBContext());
+-  return winSystem;
+-}
+-*/
+-
+-void CWinSystemSTBContext::Register()
+-{
+- KODI::WINDOWING::CWindowSystemFactory::RegisterWindowSystem(CreateWinSystem, "stb");
+-}
+-
+-std::unique_ptr<CWinSystemBase> CWinSystemSTBContext::CreateWinSystem()
+-{
+-  return std::make_unique<CWinSystemSTBContext>();
+-}
+-
+-bool CWinSystemSTBContext::InitWindowSystem()
+-{
+-  if (!CWinSystemstb::InitWindowSystem())
+-  {
+-    return false;
+-  }
+-
+-
+-  VIDEOPLAYER::CRendererFactory::ClearRenderer();
+-#ifdef HAS_GLES
+-  CLinuxRendererGLES::Register();
+-  RETRO::CRPProcessInfo::RegisterRendererFactory(new RETRO::CRendererFactoryOpenGLES);
+-#else
+-  CLinuxRendererGL::Register();
+-  RETRO::CRPProcessInfo::RegisterRendererFactory(new RETRO::CRendererFactoryOpenGL);
+-#endif
+-  return true;
+-}
+-
+-bool CWinSystemSTBContext::CreateNewWindow(const std::string& name,
+-                                               bool fullScreen,
+-                                               RESOLUTION_INFO& res)
+-{
+-  CWinSystemstb::CreateNewWindow(name,fullScreen,res);
+-
+-  return true;
+-}
+-
+-bool CWinSystemSTBContext::ResizeWindow(int newWidth, int newHeight, int newLeft, int newTop)
+-{
+-  CRenderSystemGLES::ResetRenderSystem(newWidth, newHeight);
+-  return true;
+-}
+-
+-bool CWinSystemSTBContext::SetFullScreen(bool fullScreen, RESOLUTION_INFO& res, bool blankOtherDisplays)
+-{
+-  CreateNewWindow("", fullScreen, res);
+-  CRenderSystemGLES::ResetRenderSystem(res.iWidth, res.iHeight);
+-  return true;
+-}
+-
+-void CWinSystemSTBContext::SetVSyncImpl(bool enable)
+-{
+-  m_bVSync = enable;
+-  if (!CWinSystemstb::SetVSyncImpl(enable))
+-      m_bVSync = 0;
+-}
+-
+-void CWinSystemSTBContext::PresentRenderImpl(bool rendered)
+-{
+-  CWinSystemstb::PresentRenderImpl(rendered);
+-}
+-
+-EGLDisplay CWinSystemSTBContext::GetEGLDisplay()
+-{
+-  return CWinSystemstb::GetEGLDisplay();
+-}
+-
+-EGLContext CWinSystemSTBContext::GetEGLContext()
+-{
+-  return CWinSystemstb::GetEGLContext();
+-}
+-
+-EGLConfig  CWinSystemSTBContext::GetEGLConfig()
+-{
+-  return CWinSystemstb::GetEGLConfig();
+-}
+-
+-/*std::unique_ptr<CVideoSync> CWinSystemSTBContext::GetVideoSync(void *clock)
+-{
+-  std::unique_ptr<CVideoSync> pVSync(new CVideoSyncPi(clock));
+-  return pVSync;
+-    return false;
+-}*/
+-
++/*
++ *  Copyright (C) 2005-2018 Team Kodi
++ *  This file is part of Kodi - https://kodi.tv
++ *
++ *  SPDX-License-Identifier: GPL-2.0-or-later
++ *  See LICENSES/README.md for more information.
++ */
++
++#include "WinSystemSTBContext.h"
++
++#include "application/Application.h"
++#include "ServiceBroker.h"
++#include "cores/VideoPlayer/VideoRenderers/RenderFactory.h"
++#include "cores/RetroPlayer/process/RPProcessInfo.h"
++
++#ifdef HAS_GLES
++#include "cores/RetroPlayer/rendering/VideoRenderers/RPRendererOpenGLES.h"
++#include "cores/VideoPlayer/VideoRenderers/LinuxRendererGLES.h"
++#else
++#include "cores/RetroPlayer/rendering/VideoRenderers/RPRendererOpenGL.h"
++#include "cores/VideoPlayer/VideoRenderers/LinuxRendererGL.h"
++#endif
++
 +#include "cores/VideoPlayer/VideoRenderers/HwDecRender/RendererHisi.h"
 +
- #include "cores/VideoPlayer/VideoRenderers/RenderFactory.h"
- #include "guilib/GUIComponent.h"
- #include "guilib/GUIWindowManager.h"
-@@ -58,6 +60,7 @@ bool CWinSystemSTBContext::InitWindowSystem()
-   VIDEOPLAYER::CRendererFactory::ClearRenderer();
- #ifdef HAS_GLES
-   CLinuxRendererGLES::Register();
++#include "cores/VideoPlayer/VideoRenderers/RenderFactory.h"
++#include "guilib/GUIComponent.h"
++#include "guilib/GUIWindowManager.h"
++#include "utils/log.h"
++#include "windowing/WindowSystemFactory.h"
++
++using namespace KODI;
++using namespace KODI::WINDOWING::STB;
++
++/*std::unique_ptr<CWinSystemBase> CWinSystemBase::CreateWinSystem()
++{
++  std::unique_ptr<CWinSystemBase> winSystem(new CWinSystemSTBContext());
++  return winSystem;
++}
++*/
++
++void CWinSystemSTBContext::Register()
++{
++ KODI::WINDOWING::CWindowSystemFactory::RegisterWindowSystem(CreateWinSystem, "stb");
++}
++
++std::unique_ptr<CWinSystemBase> CWinSystemSTBContext::CreateWinSystem()
++{
++  return std::make_unique<CWinSystemSTBContext>();
++}
++
++bool CWinSystemSTBContext::InitWindowSystem()
++{
++  if (!CWinSystemstb::InitWindowSystem())
++  {
++    return false;
++  }
++
++
++  VIDEOPLAYER::CRendererFactory::ClearRenderer();
++#ifdef HAS_GLES
++  CLinuxRendererGLES::Register();
 +  CRendererHisi::Register();
-   RETRO::CRPProcessInfo::RegisterRendererFactory(new RETRO::CRendererFactoryOpenGLES);
- #else
-   CLinuxRendererGL::Register();
++  RETRO::CRPProcessInfo::RegisterRendererFactory(new RETRO::CRendererFactoryOpenGLES);
++#else
++  CLinuxRendererGL::Register();
++  RETRO::CRPProcessInfo::RegisterRendererFactory(new RETRO::CRendererFactoryOpenGL);
++#endif
++  return true;
++}
++
++bool CWinSystemSTBContext::CreateNewWindow(const std::string& name,
++                                               bool fullScreen,
++                                               RESOLUTION_INFO& res)
++{
++  CWinSystemstb::CreateNewWindow(name,fullScreen,res);
++
++  return true;
++}
++
++bool CWinSystemSTBContext::ResizeWindow(int newWidth, int newHeight, int newLeft, int newTop)
++{
++  CRenderSystemGLES::ResetRenderSystem(newWidth, newHeight);
++  return true;
++}
++
++bool CWinSystemSTBContext::SetFullScreen(bool fullScreen, RESOLUTION_INFO& res, bool blankOtherDisplays)
++{
++  CreateNewWindow("", fullScreen, res);
++  CRenderSystemGLES::ResetRenderSystem(res.iWidth, res.iHeight);
++  return true;
++}
++
++void CWinSystemSTBContext::SetVSyncImpl(bool enable)
++{
++  m_bVSync = enable;
++  if (!CWinSystemstb::SetVSyncImpl(enable))
++      m_bVSync = 0;
++}
++
++void CWinSystemSTBContext::PresentRenderImpl(bool rendered)
++{
++  CWinSystemstb::PresentRenderImpl(rendered);
++}
++
++EGLDisplay CWinSystemSTBContext::GetEGLDisplay()
++{
++  return CWinSystemstb::GetEGLDisplay();
++}
++
++EGLContext CWinSystemSTBContext::GetEGLContext()
++{
++  return CWinSystemstb::GetEGLContext();
++}
++
++EGLConfig  CWinSystemSTBContext::GetEGLConfig()
++{
++  return CWinSystemstb::GetEGLConfig();
++}
++
++/*std::unique_ptr<CVideoSync> CWinSystemSTBContext::GetVideoSync(void *clock)
++{
++  std::unique_ptr<CVideoSync> pVSync(new CVideoSyncPi(clock));
++  return pVSync;
++    return false;
++}*/
++
 -- 
-2.32.0
+2.36.0.windows.1
 
