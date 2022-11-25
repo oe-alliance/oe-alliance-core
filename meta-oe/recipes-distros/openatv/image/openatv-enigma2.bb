@@ -16,7 +16,7 @@ RRECOMMENDS:${PN} = " \
     openvix-picon-feed-opkg-conf \
     enigma2-skindefault \
     openatv-version-info \
-    enigma-kernel-module \
+    enigma-info \
     ${@bb.utils.contains_any("FLASHSIZE", "64 96", " \
     enigma2-plugin-extensions-openwebif-webtv \
     ", " \
