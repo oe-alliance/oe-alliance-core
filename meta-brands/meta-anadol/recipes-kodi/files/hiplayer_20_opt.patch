@@ -1,4 +1,4 @@
-From 767e4f6494e1c0723501d93c30f41de0cddc6041 Mon Sep 17 00:00:00 2001
+From dbd5de9d09c56de494dac20ee362382b3a08c02e Mon Sep 17 00:00:00 2001
 From: Captain <captain.onboard@web.de>
 Date: Fri, 25 Nov 2022 07:57:31 +0100
 Subject: [PATCH] hiplayer_20_opt
@@ -3929,7 +3929,7 @@ index 0000000000..5629af5969
 +};
 diff --git a/xbmc/cores/hiplayer/HiPlayerAudio.cpp b/xbmc/cores/hiplayer/HiPlayerAudio.cpp
 new file mode 100644
-index 0000000000..3b9e665027
+index 0000000000..69b6c54554
 --- /dev/null
 +++ b/xbmc/cores/hiplayer/HiPlayerAudio.cpp
 @@ -0,0 +1,813 @@
@@ -4261,7 +4261,7 @@ index 0000000000..3b9e665027
 +      {
 +        if (m_hisiAudio->Full())
 +        {
-+          KODI::TIME::Sleep(10ms);
++          CThread::Sleep(10ms);
 +          if (++try_times > 1000)
 +          {
 +            CLog::Log(LOGDEBUG, "CHiPlayerAudio full, push blocking, just drop package");
@@ -4273,7 +4273,7 @@ index 0000000000..3b9e665027
 +
 +        if (!m_hisiAudio->Push((uint8_t*)decoded, decoded_size, PTS_US_TO_MS(pts)))
 +        {
-+          KODI::TIME::Sleep(10ms);
++          CThread::Sleep(10ms);
 +          continue;
 +        }
 +
@@ -4309,7 +4309,7 @@ index 0000000000..3b9e665027
 +      {
 +        if (m_hisiAudio->Full())
 +        {
-+          KODI::TIME::Sleep(10ms);
++          CThread::Sleep(10ms);
 +          if (++try_times > 1000)
 +          {
 +            CLog::Log(LOGDEBUG, "CHiPlayerAudio blocking, quit");
@@ -4321,7 +4321,7 @@ index 0000000000..3b9e665027
 +        bool ret = m_hisiAudio->PushEx(pData, iSize, PTS_US_TO_MS(pkt->pts), true, true);
 +        if (!ret)
 +        {
-+          KODI::TIME::Sleep(10ms);
++          CThread::Sleep(10ms);
 +          continue;
 +        }
 +
@@ -4385,13 +4385,13 @@ index 0000000000..3b9e665027
 +
 +    if (ret == MSGQ_TIMEOUT)
 +    {
-+      KODI::TIME::Sleep(10ms);
++      CThread::Sleep(10ms);
 +      continue;
 +    }
 +
 +    if (MSGQ_IS_ERROR(ret) || ret == MSGQ_ABORT)
 +    {
-+      KODI::TIME::Sleep(10ms);
++      CThread::Sleep(10ms);
 +      continue;
 +    }
 +
@@ -6060,7 +6060,7 @@ index 0000000000..ee218b5b00
 +};
 diff --git a/xbmc/cores/hiplayer/HiVdec.cpp b/xbmc/cores/hiplayer/HiVdec.cpp
 new file mode 100644
-index 0000000000..4c53d5cb41
+index 0000000000..9a09a83d0b
 --- /dev/null
 +++ b/xbmc/cores/hiplayer/HiVdec.cpp
 @@ -0,0 +1,590 @@
@@ -6355,7 +6355,7 @@ index 0000000000..4c53d5cb41
 +    {
 +      if (hwDec->VideoBufferFull())
 +      {
-+        KODI::TIME::Sleep(10ms);
++        CThread::Sleep(10ms);
 +        continue;
 +      }
 +
@@ -6366,7 +6366,7 @@ index 0000000000..4c53d5cb41
 +
 +        if (!ret)
 +        {
-+          KODI::TIME::Sleep(10ms);
++          CThread::Sleep(10ms);
 +          continue;
 +        }
 +      }
@@ -6375,7 +6375,7 @@ index 0000000000..4c53d5cb41
 +        bool ret = hwDec->VideoWrite(pData, iSize, package_pts_ms);
 +        if (!ret)
 +        {
-+          KODI::TIME::Sleep(10ms);
++          CThread::Sleep(10ms);
 +          continue;
 +        }
 +      }
@@ -6503,7 +6503,7 @@ index 0000000000..4c53d5cb41
 +
 +  while (!m_bStop)
 +  {
-+    KODI::TIME::Sleep(10ms);
++    CThread::Sleep(10ms);
 +    {
 +      std::unique_lock<CCriticalSection> lock(m_ptsQueueMutex);
 +      int pts = 0;
