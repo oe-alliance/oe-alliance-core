@@ -83,6 +83,7 @@ RDEPENDS:${PN} = "\
     ${@bb.utils.contains("MACHINEBUILD", "hd51", "enigma2-plugin-drivers-network-usb-rtl8822bu", "", d)} \
     ${@bb.utils.contains("MACHINE_BRAND", "NOVALER", "enigma2-plugin-drivers-network-usb-rtl8821cu enigma2-plugin-drivers-network-usb-rtl8192eu enigma2-plugin-drivers-network-usb-mt7601u enigma2-plugin-drivers-network-usb-rtl8822cu enigma2-plugin-drivers-network-usb-r8188eu", "", d)} \
     ${@bb.utils.contains("MACHINE", "hd66se", "enigma2-plugin-drivers-network-usb-rtl8821cu enigma2-plugin-drivers-network-usb-rtl8192eu enigma2-plugin-drivers-network-usb-mt7601u enigma2-plugin-drivers-network-usb-rtl8822cu enigma2-plugin-drivers-network-usb-rtl8188fu", "", d)} \
+    ${@bb.utils.contains_any("MACHINE", "vuduo4k vuduo4kse vusolo4k vuultimo4k vuuno4k vuuno4kse vuzero4k", "enigma2-plugin-drivers-network-usb-rtl8821cu enigma2-plugin-drivers-network-usb-rtl8192eu enigma2-plugin-drivers-network-usb-mt7601u enigma2-plugin-drivers-network-usb-rtl8822cu", "", d)} \
     "
 
 RDEPENDS:${PN}:remove:odroidc2 = "enigma2-plugin-drivers-network-usb-rtl8192cu"
