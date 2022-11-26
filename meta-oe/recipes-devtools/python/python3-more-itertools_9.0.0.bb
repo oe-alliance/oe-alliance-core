@@ -6,8 +6,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=3396ea30f9d21389d7857719816f83b5"
 
 SRC_URI:append = " file://0001-update-setup.py.patch"
 
-SRC_URI[md5sum] = "0f498e65f3cb8c793399f38952a41883"
-SRC_URI[sha256sum] = "c09443cd3d5438b8dafccd867a6bc1cb0894389e90cb53d227456b0b0bccb750"
+SRC_URI[sha256sum] = "5a6257e40878ef0520b1803990e3e22303a41b5714006c32a3fd8304b26ea1ab"
 
 inherit pypi setuptools3
 
