@@ -12,8 +12,7 @@ SRC_URI = "http://download.savannah.nongnu.org/releases/davfs2/${BP}.tar.gz \
            file://neon-config \
            file://volatiles"
 
-SRC_URI[md5sum] = "04c82c25663f7dae5931002aa8ffea06"
-SRC_URI[sha256sum] = "ce3eb948ece582a51c934ccb0cc70e659839172717caff173f69a5e2af90c5c0"
+SRC_URI[sha256sum] = "251db75a27380cca1330b1b971700c5e5dcc0c90e5a47622285f0140edfe3a2f"
 
 inherit autotools pkgconfig useradd
 
