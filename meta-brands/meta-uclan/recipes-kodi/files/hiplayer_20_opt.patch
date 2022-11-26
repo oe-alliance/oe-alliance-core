@@ -1,15 +1,15 @@
-From a525c5aa508405c61b5379cf4b913986a0dca684 Mon Sep 17 00:00:00 2001
+From 767e4f6494e1c0723501d93c30f41de0cddc6041 Mon Sep 17 00:00:00 2001
 From: Captain <captain.onboard@web.de>
 Date: Fri, 25 Nov 2022 07:57:31 +0100
 Subject: [PATCH] hiplayer_20_opt
 
 ---
  .../resources/strings.po                      |   11 +
- cmake/platform/linux/stb.cmake                |  136 +-
+ cmake/platform/linux/stb.cmake                |    4 +-
  cmake/treedata/common/cores.txt               |    1 +
  cmake/treedata/linux/subdirs.txt              |    1 +
  system/playercorefactory.xml                  |    1 +
- system/settings/settings.xml                  |   16 +-
+ system/settings/settings.xml                  |    6 +
  xbmc/application/Application.cpp              |    8 +
  .../application/ApplicationVolumeHandling.cpp |   12 +
  xbmc/commons/ilog.h                           |    1 +
@@ -152,8 +152,8 @@ Subject: [PATCH] hiplayer_20_opt
  xbmc/settings/SettingConditions.cpp           |    3 +
  xbmc/settings/Settings.cpp                    |    1 +
  xbmc/settings/Settings.h                      |    1 +
- xbmc/windowing/egl/WinSystemSTBContext.cpp    |  251 +-
- 149 files changed, 52727 insertions(+), 200 deletions(-)
+ xbmc/windowing/egl/WinSystemSTBContext.cpp    |    3 +
+ 149 files changed, 52532 insertions(+), 5 deletions(-)
  create mode 100644 xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/RendererHisi.cpp
  create mode 100644 xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/RendererHisi.h
  create mode 100644 xbmc/cores/hiplayer/CMakeLists.txt
@@ -310,146 +310,20 @@ index 1cb0bc42a4..108a45014e 100644
  msgctxt "#13460"
  msgid "Use HEVC VAAPI"
 diff --git a/cmake/platform/linux/stb.cmake b/cmake/platform/linux/stb.cmake
-index 88ab54faff..072e601ace 100644
+index e1fe54a13d..072e601ace 100644
 --- a/cmake/platform/linux/stb.cmake
 +++ b/cmake/platform/linux/stb.cmake
-@@ -1,69 +1,67 @@
--set(PLATFORM_REQUIRED_DEPS EGL LibInput Xkbcommon)
--set(PLATFORM_OPTIONAL_DEPS VAAPI)
--
--set(STB_RENDER_SYSTEM "" CACHE STRING "Render system to use with STB: \"gl\" or \"gles\"")
--
--if(ENABLE_OPENGL STREQUAL "ON")
--  list(APPEND PLATFORM_REQUIRED_DEPS OpenGl)
--  set(APP_RENDER_SYSTEM gl)
--  message(STATUS "STB_RENDER_SYSTEM=GL")
--elseif(ENABLE_GLES STREQUAL "ON")
--  list(APPEND PLATFORM_REQUIRED_DEPS OpenGLES)
--  set(APP_RENDER_SYSTEM gles)
--  message(STATUS "STB_RENDER_SYSTEM=GLES")
--else()
--  message(SEND_ERROR "You need to decide whether you want to use GL- or GLES-based rendering in combination with the STB windowing system. Please set STB_RENDER_SYSTEM to either \"gl\" or \"gles\". For normal desktop systems, you will usually want to use \"gl\".")
--endif()
--
--if(WITH_PLATFORM STREQUAL "GB-cortexa15")
--  set(CPU cortexa15)
--  list(APPEND PLATFORM_DEFINES "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_STB_EXTEND -DTARGET_V3D -DTARGET_GB")
--  list(APPEND DEPLIBS ${CMAKE_SOURCE_DIR}/xbmc/windowing/egl/gles_init.a EGL GLESv2 nxpl nexus nxclient)
--elseif(WITH_PLATFORM STREQUAL "dags-cortexa15")
--  set(CPU cortexa15)
--  list(APPEND PLATFORM_DEFINES "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_STB_EXTEND -DTARGET_V3D -DTARGET_DAGS")
--  list(APPEND DEPLIBS EGL GLESv2 nxpl nexus nxclient)
--elseif(WITH_PLATFORM STREQUAL "dreambox-cortexa15")
--  set(CPU cortexa15)
--  list(APPEND PLATFORM_DEFINES "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_STB_EXTEND -DTARGET_V3D -DTARGET_DREAMBOX")
--elseif(WITH_PLATFORM STREQUAL "dreambox-mipsel")
--  list(APPEND PLATFORM_DEFINES "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_STB_EXTEND -DTARGET_V3D -DTARGET_DREAMBOX")
--elseif(WITH_PLATFORM STREQUAL "vuplus-cortexa15")
--  set(CPU cortexa15)
--  list(APPEND PLATFORM_DEFINES "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_STB_EXTEND -DTARGET_V3D -DTARGET_VUPLUS -DTARGET_VUPLUS_ARM")
--  list(APPEND DEPLIBS EGL GLESv2 KodiGLESPL dvb_base nxpl dvb_client)
--elseif(WITH_PLATFORM STREQUAL "vuplus-mipsel")
--  list(APPEND PLATFORM_DEFINES "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_STB_EXTEND -DTARGET_V3D -DTARGET_VUPLUS -DTARGET_VUPLUS_MIPSEL")
--  list(APPEND DEPLIBS ${CMAKE_SOURCE_DIR}/xbmc/windowing/egl/gles_init.a EGL GLESv2 dvb_base nxpl xbmc_base dvb_client)
--  list(APPEND SYSTEM_LDFLAGS -L${CMAKE_SOURCE_DIR}/../xbmc-support)
--elseif(WITH_PLATFORM STREQUAL "v3d-cortexa15")
--  set(CPU cortexa15)
--  list(APPEND PLATFORM_DEFINES "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_STB_EXTEND -DTARGET_V3D -DTARGET_V3DNXPL")
--  list(APPEND DEPLIBS EGL GLESv2 nxpl nexus)
--elseif(WITH_PLATFORM STREQUAL "v3d-mipsel")
--  list(APPEND PLATFORM_DEFINES "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_STB_EXTEND -DTARGET_V3D -DTARGET_V3DNXPL")
--  list(APPEND DEPLIBS EGL GLESv2 nxpl nexus)
--elseif(WITH_PLATFORM STREQUAL "xcore-mipsel")
--  list(APPEND PLATFORM_DEFINES "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_STB_EXTEND -DTARGET_V3D -DTARGET_XCORE")
--  list(APPEND DEPLIBS EGL GLESv2 v3dplatform)
--elseif(WITH_PLATFORM STREQUAL "nextv-cortexa15")
--  set(CPU cortexa15)
--  list(APPEND PLATFORM_DEFINES "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_STB_EXTEND -DTARGET_V3D -DTARGET_NEXTV")
--  list(APPEND DEPLIBS EGL GLESv2 nxpl nexus nxclient)
--elseif(WITH_PLATFORM STREQUAL "mali-cortexa15")
--  set(CPU cortexa15)
--  list(APPEND PLATFORM_DEFINES "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_STB_EXTEND -DTARGET_MALI -DHAS_HIPLAYER")
--  list(APPEND DEPLIBS EGL GLESv2 mali)
--elseif(WITH_PLATFORM STREQUAL "edision-cortexa15")
--  list(APPEND PLATFORM_DEFINES "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_STB_EXTEND -DTARGET_V3D -DTARGET_EDISION")
--  list(APPEND DEPLIBS EGL GLESv2 v3dplatform)
--elseif(WITH_PLATFORM STREQUAL "clap-cortexa15")
--  list(APPEND PLATFORM_DEFINES "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_MALI -DUSE_HIPLAYER")
+@@ -59,9 +59,7 @@ elseif(WITH_PLATFORM STREQUAL "edision-cortexa15")
+   list(APPEND DEPLIBS EGL GLESv2 v3dplatform)
+ elseif(WITH_PLATFORM STREQUAL "clap-cortexa15")
+   list(APPEND PLATFORM_DEFINES "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_MALI -DUSE_HIPLAYER")
 -#  list(APPEND DEPLIBS ${CMAKE_SOURCE_DIR}xbmc/cores/hiplayer/hiplayer.a ${CMAKE_SOURCE_DIR}xbmc/linux/hisi/hiadp.a)
 -#  list(APPEND DEPLIBS EGL GLESv2 jpeg hi_common hi_msp)
 -  list(APPEND DEPLIBS EGL GLESv2 jpeg)
--endif()
--
--
--
--list(APPEND PLATFORM_DEFINES -DMESA_EGL_NO_X11_HEADERS)
-+set(PLATFORM_REQUIRED_DEPS EGL LibInput Xkbcommon)
-+set(PLATFORM_OPTIONAL_DEPS VAAPI)
-+
-+set(STB_RENDER_SYSTEM "" CACHE STRING "Render system to use with STB: \"gl\" or \"gles\"")
-+
-+if(ENABLE_OPENGL STREQUAL "ON")
-+  list(APPEND PLATFORM_REQUIRED_DEPS OpenGl)
-+  set(APP_RENDER_SYSTEM gl)
-+  message(STATUS "STB_RENDER_SYSTEM=GL")
-+elseif(ENABLE_GLES STREQUAL "ON")
-+  list(APPEND PLATFORM_REQUIRED_DEPS OpenGLES)
-+  set(APP_RENDER_SYSTEM gles)
-+  message(STATUS "STB_RENDER_SYSTEM=GLES")
-+else()
-+  message(SEND_ERROR "You need to decide whether you want to use GL- or GLES-based rendering in combination with the STB windowing system. Please set STB_RENDER_SYSTEM to either \"gl\" or \"gles\". For normal desktop systems, you will usually want to use \"gl\".")
-+endif()
-+
-+if(WITH_PLATFORM STREQUAL "GB-cortexa15")
-+  set(CPU cortexa15)
-+  list(APPEND PLATFORM_DEFINES "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_STB_EXTEND -DTARGET_V3D -DTARGET_GB")
-+  list(APPEND DEPLIBS ${CMAKE_SOURCE_DIR}/xbmc/windowing/egl/gles_init.a EGL GLESv2 nxpl nexus nxclient)
-+elseif(WITH_PLATFORM STREQUAL "dags-cortexa15")
-+  set(CPU cortexa15)
-+  list(APPEND PLATFORM_DEFINES "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_STB_EXTEND -DTARGET_V3D -DTARGET_DAGS")
-+  list(APPEND DEPLIBS EGL GLESv2 nxpl nexus nxclient)
-+elseif(WITH_PLATFORM STREQUAL "dreambox-cortexa15")
-+  set(CPU cortexa15)
-+  list(APPEND PLATFORM_DEFINES "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_STB_EXTEND -DTARGET_V3D -DTARGET_DREAMBOX")
-+elseif(WITH_PLATFORM STREQUAL "dreambox-mipsel")
-+  list(APPEND PLATFORM_DEFINES "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_STB_EXTEND -DTARGET_V3D -DTARGET_DREAMBOX")
-+elseif(WITH_PLATFORM STREQUAL "vuplus-cortexa15")
-+  set(CPU cortexa15)
-+  list(APPEND PLATFORM_DEFINES "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_STB_EXTEND -DTARGET_V3D -DTARGET_VUPLUS -DTARGET_VUPLUS_ARM")
-+  list(APPEND DEPLIBS EGL GLESv2 KodiGLESPL dvb_base nxpl dvb_client)
-+elseif(WITH_PLATFORM STREQUAL "vuplus-mipsel")
-+  list(APPEND PLATFORM_DEFINES "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_STB_EXTEND -DTARGET_V3D -DTARGET_VUPLUS -DTARGET_VUPLUS_MIPSEL")
-+  list(APPEND DEPLIBS ${CMAKE_SOURCE_DIR}/xbmc/windowing/egl/gles_init.a EGL GLESv2 dvb_base nxpl xbmc_base dvb_client)
-+  list(APPEND SYSTEM_LDFLAGS -L${CMAKE_SOURCE_DIR}/../xbmc-support)
-+elseif(WITH_PLATFORM STREQUAL "v3d-cortexa15")
-+  set(CPU cortexa15)
-+  list(APPEND PLATFORM_DEFINES "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_STB_EXTEND -DTARGET_V3D -DTARGET_V3DNXPL")
-+  list(APPEND DEPLIBS EGL GLESv2 nxpl nexus)
-+elseif(WITH_PLATFORM STREQUAL "v3d-mipsel")
-+  list(APPEND PLATFORM_DEFINES "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_STB_EXTEND -DTARGET_V3D -DTARGET_V3DNXPL")
-+  list(APPEND DEPLIBS EGL GLESv2 nxpl nexus)
-+elseif(WITH_PLATFORM STREQUAL "xcore-mipsel")
-+  list(APPEND PLATFORM_DEFINES "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_STB_EXTEND -DTARGET_V3D -DTARGET_XCORE")
-+  list(APPEND DEPLIBS EGL GLESv2 v3dplatform)
-+elseif(WITH_PLATFORM STREQUAL "nextv-cortexa15")
-+  set(CPU cortexa15)
-+  list(APPEND PLATFORM_DEFINES "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_STB_EXTEND -DTARGET_V3D -DTARGET_NEXTV")
-+  list(APPEND DEPLIBS EGL GLESv2 nxpl nexus nxclient)
-+elseif(WITH_PLATFORM STREQUAL "mali-cortexa15")
-+  set(CPU cortexa15)
-+  list(APPEND PLATFORM_DEFINES "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_STB_EXTEND -DTARGET_MALI -DHAS_HIPLAYER")
-+  list(APPEND DEPLIBS EGL GLESv2 mali)
-+elseif(WITH_PLATFORM STREQUAL "edision-cortexa15")
-+  list(APPEND PLATFORM_DEFINES "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_STB_EXTEND -DTARGET_V3D -DTARGET_EDISION")
-+  list(APPEND DEPLIBS EGL GLESv2 v3dplatform)
-+elseif(WITH_PLATFORM STREQUAL "clap-cortexa15")
-+  list(APPEND PLATFORM_DEFINES "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_MALI -DUSE_HIPLAYER")
 +  list(APPEND DEPLIBS EGL GLESv2 jpeg hi_common hi_msp)
-+endif()
-+
-+
-+
-+list(APPEND PLATFORM_DEFINES -DMESA_EGL_NO_X11_HEADERS)
+ endif()
+ 
+ 
 diff --git a/cmake/treedata/common/cores.txt b/cmake/treedata/common/cores.txt
 index d23939d314..4d49697953 100644
 --- a/cmake/treedata/common/cores.txt
@@ -484,7 +358,7 @@ index f928311cf0..dc5c232a0a 100644
  
      <!-- DVDs -->
 diff --git a/system/settings/settings.xml b/system/settings/settings.xml
-index 72537e5484..3369455946 100755
+index b04ad16383..3369455946 100755
 --- a/system/settings/settings.xml
 +++ b/system/settings/settings.xml
 @@ -143,6 +143,12 @@
@@ -500,51 +374,6 @@ index 72537e5484..3369455946 100755
          <setting id="winsystem.ishdrdisplay" type="boolean" label="13436" help="36299">
            <dependencies>
              <dependency type="visible">
-@@ -518,7 +524,7 @@
-           <control type="list" format="string" />
-         </setting>
-         <setting id="subtitles.fontname" type="string" label="14089" help="36185">
--          <level>3</level>
-+          <level>3</level>
-           <default>DEFAULT</default>
-           <constraints>
-             <options>subtitlesfonts</options>
-@@ -710,7 +716,7 @@
-           <control type="spinner" format="integer" delayed="true"/>
-         </setting>
-         <setting id="subtitles.charset" type="string" label="735" help="36189">
--          <level>3</level>
-+          <level>3</level>
-           <default>DEFAULT</default>
-           <constraints>
-             <options>charsets</options>
-@@ -2961,7 +2967,7 @@
-         <setting id="audiooutput.processquality" type="integer" label="13505" help="36169">
-           <requirement>HAS_AE_QUALITY_LEVELS</requirement>
-           <level>2</level>
--          <default>20</default> <!-- AE_QUALITY_MID -->
-+          <default>20</default> <!-- AE_QUALITY_MID -->
-           <constraints>
-             <options>aequalitylevels</options>
-           </constraints>
-@@ -2979,7 +2985,7 @@
-         </setting>
-         <setting id="audiooutput.samplerate" type="integer" label="458" help="36523">
-           <level>2</level>
--          <default>44100</default>
-+          <default>44100</default>
-           <dependencies>
-             <dependency type="visible">
-               <and>
-@@ -3811,7 +3817,7 @@
-       <group id="2" label="14270">
-         <setting id="locale.country" type="string" label="14271" help="36115">
-           <level>0</level>
--          <default>Central Europe</default>
-+          <default>Central Europe</default>
-           <constraints>
-             <options>regions</options>
-           </constraints>
 diff --git a/xbmc/application/Application.cpp b/xbmc/application/Application.cpp
 index b3edbdf0ca..b87057200b 100644
 --- a/xbmc/application/Application.cpp
@@ -54016,261 +53845,26 @@ index cdd2d31ae3..5f113f12b2 100644
    static constexpr auto SETTING_VIDEOPLAYER_USEPRIMEDECODER = "videoplayer.useprimedecoder";
    static constexpr auto SETTING_VIDEOPLAYER_USESTAGEFRIGHT = "videoplayer.usestagefright";
 diff --git a/xbmc/windowing/egl/WinSystemSTBContext.cpp b/xbmc/windowing/egl/WinSystemSTBContext.cpp
-index 0a33178617..c70869bbd2 100644
+index 3b4e3e8d66..c70869bbd2 100644
 --- a/xbmc/windowing/egl/WinSystemSTBContext.cpp
 +++ b/xbmc/windowing/egl/WinSystemSTBContext.cpp
-@@ -1,124 +1,127 @@
--/*
-- *  Copyright (C) 2005-2018 Team Kodi
-- *  This file is part of Kodi - https://kodi.tv
-- *
-- *  SPDX-License-Identifier: GPL-2.0-or-later
-- *  See LICENSES/README.md for more information.
-- */
--
--#include "WinSystemSTBContext.h"
--
--#include "application/Application.h"
--#include "ServiceBroker.h"
--#include "cores/VideoPlayer/VideoRenderers/RenderFactory.h"
--#include "cores/RetroPlayer/process/RPProcessInfo.h"
--
--#ifdef HAS_GLES
--#include "cores/RetroPlayer/rendering/VideoRenderers/RPRendererOpenGLES.h"
--#include "cores/VideoPlayer/VideoRenderers/LinuxRendererGLES.h"
--#else
--#include "cores/RetroPlayer/rendering/VideoRenderers/RPRendererOpenGL.h"
--#include "cores/VideoPlayer/VideoRenderers/LinuxRendererGL.h"
--#endif
--
--#include "cores/VideoPlayer/VideoRenderers/RenderFactory.h"
--#include "guilib/GUIComponent.h"
--#include "guilib/GUIWindowManager.h"
--#include "utils/log.h"
--#include "windowing/WindowSystemFactory.h"
--
--using namespace KODI;
--using namespace KODI::WINDOWING::STB;
--
--/*std::unique_ptr<CWinSystemBase> CWinSystemBase::CreateWinSystem()
--{
--  std::unique_ptr<CWinSystemBase> winSystem(new CWinSystemSTBContext());
--  return winSystem;
--}
--*/
--
--void CWinSystemSTBContext::Register()
--{
-- KODI::WINDOWING::CWindowSystemFactory::RegisterWindowSystem(CreateWinSystem, "stb");
--}
--
--std::unique_ptr<CWinSystemBase> CWinSystemSTBContext::CreateWinSystem()
--{
--  return std::make_unique<CWinSystemSTBContext>();
--}
--
--bool CWinSystemSTBContext::InitWindowSystem()
--{
--  if (!CWinSystemstb::InitWindowSystem())
--  {
--    return false;
--  }
--
--
--  VIDEOPLAYER::CRendererFactory::ClearRenderer();
--#ifdef HAS_GLES
--  CLinuxRendererGLES::Register();
--  RETRO::CRPProcessInfo::RegisterRendererFactory(new RETRO::CRendererFactoryOpenGLES);
--#else
--  CLinuxRendererGL::Register();
--  RETRO::CRPProcessInfo::RegisterRendererFactory(new RETRO::CRendererFactoryOpenGL);
--#endif
--  return true;
--}
--
--bool CWinSystemSTBContext::CreateNewWindow(const std::string& name,
--                                               bool fullScreen,
--                                               RESOLUTION_INFO& res)
--{
--  CWinSystemstb::CreateNewWindow(name,fullScreen,res);
--
--  return true;
--}
--
--bool CWinSystemSTBContext::ResizeWindow(int newWidth, int newHeight, int newLeft, int newTop)
--{
--  CRenderSystemGLES::ResetRenderSystem(newWidth, newHeight);
--  return true;
--}
--
--bool CWinSystemSTBContext::SetFullScreen(bool fullScreen, RESOLUTION_INFO& res, bool blankOtherDisplays)
--{
--  CreateNewWindow("", fullScreen, res);
--  CRenderSystemGLES::ResetRenderSystem(res.iWidth, res.iHeight);
--  return true;
--}
--
--void CWinSystemSTBContext::SetVSyncImpl(bool enable)
--{
--  m_bVSync = enable;
--  if (!CWinSystemstb::SetVSyncImpl(enable))
--      m_bVSync = 0;
--}
--
--void CWinSystemSTBContext::PresentRenderImpl(bool rendered)
--{
--  CWinSystemstb::PresentRenderImpl(rendered);
--}
--
--EGLDisplay CWinSystemSTBContext::GetEGLDisplay()
--{
--  return CWinSystemstb::GetEGLDisplay();
--}
--
--EGLContext CWinSystemSTBContext::GetEGLContext()
--{
--  return CWinSystemstb::GetEGLContext();
--}
--
--EGLConfig  CWinSystemSTBContext::GetEGLConfig()
--{
--  return CWinSystemstb::GetEGLConfig();
--}
--
--/*std::unique_ptr<CVideoSync> CWinSystemSTBContext::GetVideoSync(void *clock)
--{
--  std::unique_ptr<CVideoSync> pVSync(new CVideoSyncPi(clock));
--  return pVSync;
--    return false;
--}*/
--
-+/*
-+ *  Copyright (C) 2005-2018 Team Kodi
-+ *  This file is part of Kodi - https://kodi.tv
-+ *
-+ *  SPDX-License-Identifier: GPL-2.0-or-later
-+ *  See LICENSES/README.md for more information.
-+ */
-+
-+#include "WinSystemSTBContext.h"
-+
-+#include "application/Application.h"
-+#include "ServiceBroker.h"
-+#include "cores/VideoPlayer/VideoRenderers/RenderFactory.h"
-+#include "cores/RetroPlayer/process/RPProcessInfo.h"
-+
-+#ifdef HAS_GLES
-+#include "cores/RetroPlayer/rendering/VideoRenderers/RPRendererOpenGLES.h"
-+#include "cores/VideoPlayer/VideoRenderers/LinuxRendererGLES.h"
-+#else
-+#include "cores/RetroPlayer/rendering/VideoRenderers/RPRendererOpenGL.h"
-+#include "cores/VideoPlayer/VideoRenderers/LinuxRendererGL.h"
-+#endif
-+
+@@ -21,6 +21,8 @@
+ #include "cores/VideoPlayer/VideoRenderers/LinuxRendererGL.h"
+ #endif
+ 
 +#include "cores/VideoPlayer/VideoRenderers/HwDecRender/RendererHisi.h"
 +
-+#include "cores/VideoPlayer/VideoRenderers/RenderFactory.h"
-+#include "guilib/GUIComponent.h"
-+#include "guilib/GUIWindowManager.h"
-+#include "utils/log.h"
-+#include "windowing/WindowSystemFactory.h"
-+
-+using namespace KODI;
-+using namespace KODI::WINDOWING::STB;
-+
-+/*std::unique_ptr<CWinSystemBase> CWinSystemBase::CreateWinSystem()
-+{
-+  std::unique_ptr<CWinSystemBase> winSystem(new CWinSystemSTBContext());
-+  return winSystem;
-+}
-+*/
-+
-+void CWinSystemSTBContext::Register()
-+{
-+ KODI::WINDOWING::CWindowSystemFactory::RegisterWindowSystem(CreateWinSystem, "stb");
-+}
-+
-+std::unique_ptr<CWinSystemBase> CWinSystemSTBContext::CreateWinSystem()
-+{
-+  return std::make_unique<CWinSystemSTBContext>();
-+}
-+
-+bool CWinSystemSTBContext::InitWindowSystem()
-+{
-+  if (!CWinSystemstb::InitWindowSystem())
-+  {
-+    return false;
-+  }
-+
-+
-+  VIDEOPLAYER::CRendererFactory::ClearRenderer();
-+#ifdef HAS_GLES
-+  CLinuxRendererGLES::Register();
+ #include "cores/VideoPlayer/VideoRenderers/RenderFactory.h"
+ #include "guilib/GUIComponent.h"
+ #include "guilib/GUIWindowManager.h"
+@@ -58,6 +60,7 @@ bool CWinSystemSTBContext::InitWindowSystem()
+   VIDEOPLAYER::CRendererFactory::ClearRenderer();
+ #ifdef HAS_GLES
+   CLinuxRendererGLES::Register();
 +  CRendererHisi::Register();
-+  RETRO::CRPProcessInfo::RegisterRendererFactory(new RETRO::CRendererFactoryOpenGLES);
-+#else
-+  CLinuxRendererGL::Register();
-+  RETRO::CRPProcessInfo::RegisterRendererFactory(new RETRO::CRendererFactoryOpenGL);
-+#endif
-+  return true;
-+}
-+
-+bool CWinSystemSTBContext::CreateNewWindow(const std::string& name,
-+                                               bool fullScreen,
-+                                               RESOLUTION_INFO& res)
-+{
-+  CWinSystemstb::CreateNewWindow(name,fullScreen,res);
-+
-+  return true;
-+}
-+
-+bool CWinSystemSTBContext::ResizeWindow(int newWidth, int newHeight, int newLeft, int newTop)
-+{
-+  CRenderSystemGLES::ResetRenderSystem(newWidth, newHeight);
-+  return true;
-+}
-+
-+bool CWinSystemSTBContext::SetFullScreen(bool fullScreen, RESOLUTION_INFO& res, bool blankOtherDisplays)
-+{
-+  CreateNewWindow("", fullScreen, res);
-+  CRenderSystemGLES::ResetRenderSystem(res.iWidth, res.iHeight);
-+  return true;
-+}
-+
-+void CWinSystemSTBContext::SetVSyncImpl(bool enable)
-+{
-+  m_bVSync = enable;
-+  if (!CWinSystemstb::SetVSyncImpl(enable))
-+      m_bVSync = 0;
-+}
-+
-+void CWinSystemSTBContext::PresentRenderImpl(bool rendered)
-+{
-+  CWinSystemstb::PresentRenderImpl(rendered);
-+}
-+
-+EGLDisplay CWinSystemSTBContext::GetEGLDisplay()
-+{
-+  return CWinSystemstb::GetEGLDisplay();
-+}
-+
-+EGLContext CWinSystemSTBContext::GetEGLContext()
-+{
-+  return CWinSystemstb::GetEGLContext();
-+}
-+
-+EGLConfig  CWinSystemSTBContext::GetEGLConfig()
-+{
-+  return CWinSystemstb::GetEGLConfig();
-+}
-+
-+/*std::unique_ptr<CVideoSync> CWinSystemSTBContext::GetVideoSync(void *clock)
-+{
-+  std::unique_ptr<CVideoSync> pVSync(new CVideoSyncPi(clock));
-+  return pVSync;
-+    return false;
-+}*/
-+
+   RETRO::CRPProcessInfo::RegisterRendererFactory(new RETRO::CRendererFactoryOpenGLES);
+ #else
+   CLinuxRendererGL::Register();
 -- 
 2.36.0.windows.1
 
