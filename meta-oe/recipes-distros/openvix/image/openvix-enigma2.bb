@@ -8,7 +8,7 @@ ALLOW_EMPTY:${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r25"
+PR = "r26"
 
 inherit packagegroup
 
