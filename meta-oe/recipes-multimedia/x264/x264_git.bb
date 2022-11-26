@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f"
 
 DEPENDS = "nasm-native"
 
-SRCREV = "f53fbffde7ae9b0ccae0933451413bb14aa6d15d"
+SRCREV = "b093bbe7d9bc642c8f24067cbdcc73bb43562eab"
 
 PV = "r2970+git${SRCPV}"
 
