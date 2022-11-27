@@ -5,12 +5,12 @@ require conf/license/license-gplv2.inc
 RCONFLICTS:${PN} = "distro-feed-configs"
 RREPLACES:${PN} = "distro-feed-configs"
 PACKAGE_ARCH = "${MACHINEBUILD}"
-PR = "r1"
+PR = "r2"
 
 do_compile() {
     mkdir -p ${S}/${sysconfdir}/opkg
     for feed in all ${PACKAGE_EXTRA_ARCHS} ${MACHINE_ARCH} 3rdparty ${MACHINE}_3rdparty ; do
-        if [ "${feed}" = "static-${MACHINEBUILD}" ] || [ "${feed}" = "static-${TUNE_PKGARCH}" ]; then
+        if [ "${feed}" = "static-${MACHINE}" ] || [ "${feed}" = "static-${TUNE_PKGARCH}" ]; then
             echo "src/gz ${DISTRO_FEED_PREFIX}-${feed} ${STATIC_DISTRO_FEED_URI}/${feed}" > ${S}/${sysconfdir}/opkg/${feed}-feed.conf
         else
             echo "src/gz ${DISTRO_FEED_PREFIX}-${feed} ${DISTRO_FEED_URI}/${feed}" > ${S}/${sysconfdir}/opkg/${feed}-feed.conf
