@@ -12,7 +12,7 @@ PV = "1.42+git${SRCPV}"
 PKGV = "1.42+git${GITPKGV}"
 PR = "r11"
 
-SRC_URI = "git://github.com/nickersk/enigmalight.git;protocol=https;branch=4.4"
+SRC_URI = "git://github.com/nickersk/enigmalight.git;protocol=https;branch=python2"
 
 S = "${WORKDIR}/git"
 
