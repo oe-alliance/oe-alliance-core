@@ -1,6 +1,6 @@
 --- a/source3/utils/status.c
 +++ b/source3/utils/status.c
-@@ -803,7 +803,6 @@ int main(int argc, const char *argv[])
+@@ -862,7 +862,6 @@ int main(int argc, const char *argv[])
  			TALLOC_FREE(db_path);
  			exit(0);
  		} else {
@@ -8,7 +8,7 @@
  			TALLOC_FREE(db_path);
  		}
  
-@@ -813,6 +812,8 @@ int main(int argc, const char *argv[])
+@@ -872,6 +871,8 @@ int main(int argc, const char *argv[])
  			goto done;
  		}
  
@@ -17,7 +17,7 @@
  		result = share_entry_forall(print_share_mode, &resolve_uids);
  
  		if (result == 0) {
-@@ -827,7 +828,7 @@ int main(int argc, const char *argv[])
+@@ -886,7 +887,7 @@ int main(int argc, const char *argv[])
  			brl_forall(print_brl, NULL);
  		}
  
