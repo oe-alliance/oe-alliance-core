@@ -36,6 +36,7 @@ do_install() {
 FILES:${PN} = "/usr/share ${sysconfdir}"
 
 do_deploy() {
+    install -d ${DEPLOY_DIR_IMAGE}
     install -m 0755 ${S}/apploader.bin ${DEPLOY_DIR_IMAGE}/${MACHINEBUILD}-apploader.bin
 }
 
