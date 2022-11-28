@@ -1,0 +1,18 @@
+--- a/src/libFLAC/window.c
++++ b/src/libFLAC/window.c
+@@ -186,13 +186,13 @@ void FLAC__window_triangle(FLAC__real *window, const FLAC__int32 L)
+ 		for (n = 1; n <= (L+1)/2; n++)
+ 			window[n-1] = 2.0f * n / ((float)L + 1.0f);
+ 		for (; n <= L; n++)
+-			window[n-1] = (float)(2 * (L - n + 1)) / ((float)L + 1.0f);
++			window[n-1] = (2 * (float)(L - n + 1)) / ((float)L + 1.0f);
+ 	}
+ 	else {
+ 		for (n = 1; n <= L/2; n++)
+ 			window[n-1] = 2.0f * n / ((float)L + 1.0f);
+ 		for (; n <= L; n++)
+-			window[n-1] = (float)(2 * (L - n + 1)) / ((float)L + 1.0f);
++			window[n-1] = (2 * (float)(L - n + 1)) / ((float)L + 1.0f);
+ 	}
+ }
+ 
