@@ -37,6 +37,7 @@ SRC_URI += "https://source.mynonpublic.com/xtrend/xtrend-linux-${PV}-${SRCDATE}.
     file://0002-log2-give-up-on-gcc-constant-optimizations.patch \
     file://0003-dont-mark-register-as-const.patch \
     file://move-default-dialect-to-SMB3.patch \
+    file://fix-never-be-null_outside-array-bounds-gcc-12.patch \
     "
 
 S = "${WORKDIR}/linux-${PV}"
