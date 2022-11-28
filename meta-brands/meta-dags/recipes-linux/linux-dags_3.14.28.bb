@@ -44,6 +44,7 @@ SRC_URI += "http://en3homeftp.net/pub/src/linux-3.14.28.tar.xz \
     file://0003-uaccess-dont-mark-register-as-const.patch \
     file://move-default-dialect-to-SMB3.patch \
     file://fix-multiple-defs-yyloc.patch \
+    file://fix-linker-issue-undefined-reference.patch \
 "
 
 S = "${WORKDIR}/linux"
