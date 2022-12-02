@@ -4,17 +4,27 @@ MAINTAINER = "oe-alliance team"
 
 require conf/license/license-gplv2.inc
 
+deltask fetch
+deltask unpack
+deltask patch
+deltask prepare_recipe_sysroot
+deltask configure
+deltask compile
+
 RCONFLICTS:${PN} = "enigma-kernel-module"
 RREPLACES:${PN} = "enigma-kernel-module"
 
 SSTATE_SKIP_CREATION = "1"
 
 PACKAGE_ARCH = "${MACHINEBUILD}"
-PV = "${@bb.utils.contains_any("DISTRO_NAME", "openvix", "${IMAGE_VERSION}.${BUILD_VERSION}.${DEVELOPER_BUILD_VERSION}", "${IMAGE_VERSION}", d)}"
+PV = "${@bb.utils.contains_any("DISTRO_NAME", "openvix", "${IMAGE_VERSION}.${BUILD_VERSION}.${DEVELOPER_BUILD_VERSION}", "r${DATE}-${MACHINEBUILD}", d)}"
 
 PACKAGES = "${PN}"
 
-S = "${WORKDIR}"
+# if DATE in PR changes (next day), workdir name changes too
+# this makes sstate unhappy and breakes many tasks in many weird ways
+
+WORKDIR = "${TMPDIR}/work/${MULTIMACH_TARGET_SYS}/${PN}/${EXTENDPE}${PV}"
 
 inherit python3-dir 
 
@@ -22,7 +32,7 @@ INFOFILE = "${libdir}/enigma.info"
 
 export KERNEL_VERSION = "${@oe.utils.read_file('${PKGDATA_DIR}/kernel-depmod/kernel-abiversion')}"
 
-do_compile(){
+do_install() {
     if [ "${MACHINE}" = "vusolo4k" -o "${MACHINE}" = "vusolo2" -o "${MACHINE}" = "vusolose" -o "${MACHINE}" = "vuduo2" -o "${MACHINE}" = "vuuno4k" -o "${MACHINE}" = "vuuno4kse" -o "${MACHINE}" = "vuultimo4k" -o "${MACHINE}" = "vuzero4k" -o "${MACHINE}" = "vuduo4k" -o "${MACHINE}" = "vuduo4kse" ]; then
         DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-VUPLUS-BASE}/recipes-drivers/vuplus-dvb-proxy-${MACHINE}.bb | cut -b 12-19`
     elif [ "${BRAND_OEM}" = "vuplus" ]; then
@@ -135,78 +145,75 @@ do_compile(){
         DRIVERSDATE='N/A'
     fi
 
-    mkdir -p ${S}${libdir}
-    echo "architecture=${DEFAULTTUNE}" > ${S}${INFOFILE}
-    echo "avjack=${HAVE_AV_JACK}" >> ${S}${INFOFILE}
-    echo "blindscanbinary=${BLINDSCAN_BINARY}" >> ${S}${INFOFILE}
-    echo "brand=${BRAND_OEM}" >> ${S}${INFOFILE}
-    echo "ci=${HAVE_CI}" >> ${S}${INFOFILE}
-    echo "compiledate='${DATE}'" >> ${S}${INFOFILE}
-    echo "dboxlcd=${SUPPORT_DBOXLCD}" >> ${S}${INFOFILE}
-    echo "developername=${DEVELOPER_NAME}" >> ${S}${INFOFILE}
-    echo "displaybrand=${MACHINE_BRAND}" >> ${S}${INFOFILE}
-    echo "displaydistro=${DISPLAY_DISTRO}" >> ${S}${INFOFILE}
-    echo "displaymodel=${MACHINE_NAME}" >> ${S}${INFOFILE}
-    echo "displaytype=${DISPLAY_TYPE}" >> ${S}${INFOFILE}
-    echo "distro=${DISTRO_NAME}" >> ${S}${INFOFILE}
-    echo "driversdate='${DRIVERSDATE}'" >> ${S}${INFOFILE}
-    echo "dvi=${HAVE_DVI}" >> ${S}${INFOFILE}
-    echo "feedsurl=${DISTRO_FEED_URI}" >> ${S}${INFOFILE}
-    echo "fhdskin=${HAVE_FHDSKIN}" >> ${S}${INFOFILE}
-    echo "forcemode=${FORCE}" >> ${S}${INFOFILE}
-    echo "fpu=${TARGET_FPU}" >> ${S}${INFOFILE}
-    echo "friendlyfamily=${FRIENDLY_FAMILY}" >> ${S}${INFOFILE}
-    echo "hdmi=${HAVE_HDMI}" >> ${S}${INFOFILE}
-    echo "hdmifhdin=${HAVE_HDMI_IN_FHD}" >> ${S}${INFOFILE}
-    echo "hdmihdin=${HAVE_HDMI_IN_HD}" >> ${S}${INFOFILE}
-    echo "imagebuild='${BUILD_VERSION}'" >> ${S}${INFOFILE}
-    echo "imagedevbuild='${DEVELOPER_BUILD_VERSION}'" >> ${S}${INFOFILE}
-    echo "imagedir=${IMAGEDIR}" >> ${S}${INFOFILE}
-    echo "imagefs=${IMAGE_FSTYPES}" >> ${S}${INFOFILE}
-    echo "imagetype=${DISTRO_TYPE}" >> ${S}${INFOFILE}
-    echo "imageversion='${DISTRO_VERSION}'" >> ${S}${INFOFILE}
-    echo "imglanguage=${LANGUAGE}" >> ${S}${INFOFILE}
-    echo "imgrevision='${BUILD_VERSION}'" >> ${S}${INFOFILE}
-    echo "imgversion='${IMAGE_VERSION}'" >> ${S}${INFOFILE}
-    echo "kernel='${KERNEL_VERSION}'" >> ${S}${INFOFILE}
-    echo "kernelfile=${KERNEL_FILE}" >> ${S}${INFOFILE}
-    echo "machinebuild=${MACHINEBUILD}" >> ${S}${INFOFILE}
-    echo "mediaservice=${MEDIASERVICE}" >> ${S}${INFOFILE}
-    echo "middleflash=${HAVE_MIDDLEFLASH}" >> ${S}${INFOFILE}
-    echo "mkubifs=${MKUBIFS_ARGS}" >> ${S}${INFOFILE}
-    echo "model=${MACHINE}" >> ${S}${INFOFILE}
-    echo "mtdbootfs=${MTD_BOOTFS}" >> ${S}${INFOFILE}
-    echo "mtdkernel=${MTD_KERNEL}" >> ${S}${INFOFILE}
-    echo "mtdrootfs=${MTD_ROOTFS}" >> ${S}${INFOFILE}
-    echo "multilib=${HAVE_MULTILIB}" >> ${S}${INFOFILE}
-    echo "multitranscoding=${HAVE_MULTITRANSCODING}" >> ${S}${INFOFILE}
-    echo "oe=${OE_VER}" >> ${S}${INFOFILE}
-    echo "platform=${STB_PLATFORM}" >> ${S}${INFOFILE}
-    echo "python='${PYTHON_BASEVERSION}'" >> ${S}${INFOFILE}
-    echo "rca=${HAVE_RCA}" >> ${S}${INFOFILE}
-    echo "rcidnum=${RCIDNUM}" >> ${S}${INFOFILE}
-    echo "rcname=${RCNAME}" >> ${S}${INFOFILE}
-    echo "rctype=${RCTYPE}" >> ${S}${INFOFILE}
-    echo "rootfile=${ROOTFS_FILE}" >> ${S}${INFOFILE}
-    echo "scart=${HAVE_SCART}" >> ${S}${INFOFILE}
-    echo "scartyuv=${HAVE_SCART_YUV}" >> ${S}${INFOFILE}
-    echo "smallflash=${HAVE_SMALLFLASH}" >> ${S}${INFOFILE}
-    echo "socfamily='${SOC_FAMILY}'" >> ${S}${INFOFILE}
-    echo "svideo=${HAVE_SVIDEO}" >> ${S}${INFOFILE}
-    echo "transcoding=${HAVE_TRANSCODING}" >> ${S}${INFOFILE}
-    echo "ubinize=${UBINIZE_ARGS}" >> ${S}${INFOFILE}
-    echo "vfdsymbol=${HAVE_VFDSYMBOL}" >> ${S}${INFOFILE}
-    echo "wol=${HAVE_WOL}" >> ${S}${INFOFILE}
-    echo "wwol=${HAVE_WWOL}" >> ${S}${INFOFILE}
-    echo "yuv=${HAVE_YUV}" >> ${S}${INFOFILE}
-    printf "checksum=%s\n" $(md5sum "${S}${INFOFILE}" | awk '{print $1}') >> ${S}${INFOFILE}
+    install -d ${D}${libdir}
+    printf "architecture=${DEFAULTTUNE}\n" > ${D}${INFOFILE}
+    printf "avjack=${HAVE_AV_JACK}\n" >> ${D}${INFOFILE}
+    printf "blindscanbinary=${BLINDSCAN_BINARY}\n" >> ${D}${INFOFILE}
+    printf "brand=${BRAND_OEM}\n" >> ${D}${INFOFILE}
+    printf "ci=${HAVE_CI}\n" >> ${D}${INFOFILE}
+    printf "compiledate='${DATE}'\n" >> ${D}${INFOFILE}
+    printf "dboxlcd=${SUPPORT_DBOXLCD}\n" >> ${D}${INFOFILE}
+    printf "developername=${DEVELOPER_NAME}\n" >> ${D}${INFOFILE}
+    printf "displaybrand=${MACHINE_BRAND}\n" >> ${D}${INFOFILE}
+    printf "displaydistro=${DISPLAY_DISTRO}\n" >> ${D}${INFOFILE}
+    printf "displaymodel=${MACHINE_NAME}\n" >> ${D}${INFOFILE}
+    printf "displaytype=${DISPLAY_TYPE}\n" >> ${D}${INFOFILE}
+    printf "distro=${DISTRO_NAME}\n" >> ${D}${INFOFILE}
+    printf "driversdate='${DRIVERSDATE}'\n" >> ${D}${INFOFILE}
+    printf "dvi=${HAVE_DVI}\n" >> ${D}${INFOFILE}
+    printf "feedsurl=${DISTRO_FEED_URI}\n" >> ${D}${INFOFILE}
+    printf "fhdskin=${HAVE_FHDSKIN}\n" >> ${D}${INFOFILE}
+    printf "forcemode=${FORCE}\n" >> ${D}${INFOFILE}
+    printf "fpu=${TARGET_FPU}\n" >> ${D}${INFOFILE}
+    printf "friendlyfamily=${FRIENDLY_FAMILY}\n" >> ${D}${INFOFILE}
+    printf "hdmi=${HAVE_HDMI}\n" >> ${D}${INFOFILE}
+    printf "hdmifhdin=${HAVE_HDMI_IN_FHD}\n" >> ${D}${INFOFILE}
+    printf "hdmihdin=${HAVE_HDMI_IN_HD}\n" >> ${D}${INFOFILE}
+    printf "imagebuild='${BUILD_VERSION}'\n" >> ${D}${INFOFILE}
+    printf "imagedevbuild='${DEVELOPER_BUILD_VERSION}'\n" >> ${D}${INFOFILE}
+    printf "imagedir=${IMAGEDIR}\n" >> ${D}${INFOFILE}
+    printf "imagefs=${IMAGE_FSTYPES}\n" >> ${D}${INFOFILE}
+    printf "imagetype=${DISTRO_TYPE}\n" >> ${D}${INFOFILE}
+    printf "imageversion='${DISTRO_VERSION}'\n" >> ${D}${INFOFILE}
+    printf "imglanguage=${LANGUAGE}\n" >> ${D}${INFOFILE}
+    printf "imgrevision='${BUILD_VERSION}'\n" >> ${D}${INFOFILE}
+    printf "imgversion='${IMAGE_VERSION}'\n" >> ${D}${INFOFILE}
+    printf "kernel='${KERNEL_VERSION}'\n" >> ${D}${INFOFILE}
+    printf "kernelfile=${KERNEL_FILE}\n" >> ${D}${INFOFILE}
+    printf "machinebuild=${MACHINEBUILD}\n" >> ${D}${INFOFILE}
+    printf "mediaservice=${MEDIASERVICE}\n" >> ${D}${INFOFILE}
+    printf "middleflash=${HAVE_MIDDLEFLASH}\n" >> ${D}${INFOFILE}
+    printf "mkubifs=${MKUBIFS_ARGS}\n" >> ${D}${INFOFILE}
+    printf "model=${MACHINE}\n" >> ${D}${INFOFILE}
+    printf "mtdbootfs=${MTD_BOOTFS}\n" >> ${D}${INFOFILE}
+    printf "mtdkernel=${MTD_KERNEL}\n" >> ${D}${INFOFILE}
+    printf "mtdrootfs=${MTD_ROOTFS}\n" >> ${D}${INFOFILE}
+    printf "multilib=${HAVE_MULTILIB}\n" >> ${D}${INFOFILE}
+    printf "multitranscoding=${HAVE_MULTITRANSCODING}\n" >> ${D}${INFOFILE}
+    printf "oe=${OE_VER}\n" >> ${D}${INFOFILE}
+    printf "platform=${STB_PLATFORM}\n" >> ${D}${INFOFILE}
+    printf "python='${PYTHON_BASEVERSION}'\n" >> ${D}${INFOFILE}
+    printf "rca=${HAVE_RCA}\n" >> ${D}${INFOFILE}
+    printf "rcidnum=${RCIDNUM}\n" >> ${D}${INFOFILE}
+    printf "rcname=${RCNAME}\n" >> ${D}${INFOFILE}
+    printf "rctype=${RCTYPE}\n" >> ${D}${INFOFILE}
+    printf "rootfile=${ROOTFS_FILE}\n" >> ${D}${INFOFILE}
+    printf "scart=${HAVE_SCART}\n" >> ${D}${INFOFILE}
+    printf "scartyuv=${HAVE_SCART_YUV}\n" >> ${D}${INFOFILE}
+    printf "smallflash=${HAVE_SMALLFLASH}\n" >> ${D}${INFOFILE}
+    printf "socfamily='${SOC_FAMILY}'\n" >> ${D}${INFOFILE}
+    printf "svideo=${HAVE_SVIDEO}\n" >> ${D}${INFOFILE}
+    printf "transcoding=${HAVE_TRANSCODING}\n" >> ${D}${INFOFILE}
+    printf "ubinize=${UBINIZE_ARGS}\n" >> ${D}${INFOFILE}
+    printf "vfdsymbol=${HAVE_VFDSYMBOL}\n" >> ${D}${INFOFILE}
+    printf "wol=${HAVE_WOL}\n" >> ${D}${INFOFILE}
+    printf "wwol=${HAVE_WWOL}\n" >> ${D}${INFOFILE}
+    printf "yuv=${HAVE_YUV}\n" >> ${D}${INFOFILE}
+    printf "checksum=%s\n" $(md5sum "${D}${INFOFILE}" | awk '{print $1}') >> ${D}${INFOFILE}
 }
 
 do_install[nostamp] = "1"
 
-do_install() {
-    install -d ${D}${libdir}
-    install -m 0644 ${S}${INFOFILE} ${D}${INFOFILE}
-}
+do_install[vardepsexclude] += "DATE DATETIME"
 
 FILES:${PN}:append = " /usr"
