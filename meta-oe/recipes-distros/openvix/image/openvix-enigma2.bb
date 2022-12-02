@@ -8,7 +8,7 @@ ALLOW_EMPTY:${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r26"
+PR = "r27"
 
 inherit packagegroup
 
@@ -18,10 +18,10 @@ RREPLACES:${PN} = "enigma2-plugin-extensions-permanenttimeshift enigma2-plugin-s
 RDEPENDS:${PN} = "\
     enigma2-skindefault \
     openvix-core \
+    enigma-info \
     "
 
 RRECOMMENDS:${PN} = "\
-    enigma-info \
     enigma2-plugin-extensions-autotimer \
     enigma2-plugin-extensions-epgimport \
     enigma2-plugin-extensions-epgsearch \
