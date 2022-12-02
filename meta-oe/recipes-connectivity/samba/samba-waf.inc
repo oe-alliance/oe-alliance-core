@@ -59,6 +59,8 @@ do_configure() {
     export STAGING_LIBDIR=${STAGING_LIBDIR}
     export STAGING_INCDIR=${STAGING_INCDIR}
     export PYTHONPATH=${STAGING_DIR_HOST}${PYTHON_SITEPACKAGES_DIR}
+    export PYTHON_CONFIG=${STAGING_EXECPREFIXDIR}/python-target-config/python3-config
+
 
     CONFIG_CMD="./configure ${CONFIGUREOPTS} ${EXTRA_OECONF} --cross-compile"
 #    CONFIG_CMD="./buildtools/bin/waf configure ${CONFIGUREOPTS} ${EXTRA_OECONF} --cross-compile"
