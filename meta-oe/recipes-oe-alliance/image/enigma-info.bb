@@ -10,13 +10,13 @@ RREPLACES:${PN} = "enigma-kernel-module"
 SSTATE_SKIP_CREATION = "1"
 
 PACKAGE_ARCH = "${MACHINEBUILD}"
-PV = "${@bb.utils.contains_any("DISTRO_NAME", "openvix", "${IMAGE_VERSION}.${BUILD_VERSION}.${DEVELOPER_BUILD_VERSION}", "${IMAGE_VERSION}", d)}"
+PV = "${@bb.utils.contains_any("DISTRO_NAME", "openvix", "openbh", "${IMAGE_VERSION}.${BUILD_VERSION}.${DEVELOPER_BUILD_VERSION}", "${IMAGE_VERSION}", d)}"
 
 PACKAGES = "${PN}"
 
 S = "${WORKDIR}"
 
-inherit python3-dir 
+inherit python3-dir
 
 INFOFILE = "${libdir}/enigma.info"
 

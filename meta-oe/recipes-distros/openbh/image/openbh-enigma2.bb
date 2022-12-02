@@ -8,7 +8,7 @@ ALLOW_EMPTY:${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r21"
+PR = "r22"
 
 inherit packagegroup
 
@@ -18,10 +18,10 @@ RREPLACES:${PN} = "enigma2-plugin-extensions-permanenttimeshift enigma2-plugin-s
 RDEPENDS:${PN} = "\
     enigma2-skindefault \
     openbh-core \
+    enigma-info \
     "
 
 RRECOMMENDS:${PN} = " \
-    enigma-kernel-module \
     enigma2-plugin-extensions-autotimer \
     enigma2-plugin-extensions-cutlisteditor \
     enigma2-plugin-extensions-epgimport \
