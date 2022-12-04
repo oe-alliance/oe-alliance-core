@@ -18,7 +18,7 @@ RREPLACES:${PN} = "enigma-kernel-module"
 SSTATE_SKIP_CREATION = "1"
 
 PACKAGE_ARCH = "${MACHINEBUILD}"
-PV = "${@bb.utils.contains_any("DISTRO_NAME", "openvix", "${IMAGE_VERSION}.${BUILD_VERSION}.${DEVELOPER_BUILD_VERSION}", "r${DATE}-${MACHINEBUILD}", d)}"
+PV = "${@bb.utils.contains_any("DISTRO_NAME", "openvix openbh", "${IMAGE_VERSION}.${BUILD_VERSION}.${DEVELOPER_BUILD_VERSION}", "r${DATE}-${MACHINEBUILD}", d)}"
 PR = "r1"
 
 PACKAGES = "${PN}"
@@ -33,6 +33,8 @@ inherit python3-dir
 INFOFILE = "${libdir}/enigma.info"
 
 export KERNEL_VERSION = "${@oe.utils.read_file('${PKGDATA_DIR}/kernel-depmod/kernel-abiversion')}"
+
+do_install[nostamp] = "1"
 
 do_install() {
     if [ "${MACHINE}" = "vusolo4k" -o "${MACHINE}" = "vusolo2" -o "${MACHINE}" = "vusolose" -o "${MACHINE}" = "vuduo2" -o "${MACHINE}" = "vuuno4k" -o "${MACHINE}" = "vuuno4kse" -o "${MACHINE}" = "vuultimo4k" -o "${MACHINE}" = "vuzero4k" -o "${MACHINE}" = "vuduo4k" -o "${MACHINE}" = "vuduo4kse" ]; then
@@ -213,8 +215,6 @@ do_install() {
     printf "yuv=${HAVE_YUV}\n" >> ${D}${INFOFILE}
     printf "checksum=%s\n" $(md5sum "${D}${INFOFILE}" | awk '{print $1}') >> ${D}${INFOFILE}
 }
-
-do_install[nostamp] = "1"
 
 do_install[vardepsexclude] += "DATE DATETIME"
 
