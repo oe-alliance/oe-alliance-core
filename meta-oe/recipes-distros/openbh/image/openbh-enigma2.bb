@@ -8,7 +8,7 @@ ALLOW_EMPTY:${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r22"
+PR = "r23"
 
 inherit packagegroup
 
@@ -51,3 +51,14 @@ RRECOMMENDS:${PN}:remove:vuduo = "enigma2-plugin-extensions-openmultiboot openmu
 RRECOMMENDS:${PN}:remove:vusolo = "enigma2-plugin-extensions-openmultiboot openmultiboot enigma2-plugin-systemplugins-terrestrialscan enigma2-plugin-systemplugins-autobouquetsmaker"
 RRECOMMENDS:${PN}:remove:vuuno = "enigma2-plugin-extensions-openmultiboot openmultiboot enigma2-plugin-systemplugins-terrestrialscan enigma2-plugin-systemplugins-autobouquetsmaker"
 
+pkg_preinst:${PN}:prepend() {
+#!/bin/sh
+echo "Checking for presence enigma-kernel-module. If present it will be removed."
+opkginstalled=$(opkg list-installed)
+if [[ $opkginstalled == *"enigma-kernel-module"* ]]; then
+    opkg remove enigma-kernel-module --force-depends
+    echo "enigma-kernel-module has been removed."
+else
+    echo "enigma-kernel-module was not present"
+fi
+}
