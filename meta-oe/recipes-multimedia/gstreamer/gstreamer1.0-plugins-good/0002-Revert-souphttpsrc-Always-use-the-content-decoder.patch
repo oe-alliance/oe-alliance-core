@@ -1,0 +1,15 @@
+--- a/ext/soup/gstsouphttpsrc.c
++++ b/ext/soup/gstsouphttpsrc.c
+@@ -1762,10 +1763,8 @@ gst_soup_http_src_build_message (GstSoupHTTPSrc * src, const gchar * method)
+     _soup_message_disable_feature (src->msg, _soup_cookie_jar_get_type ());
+   }
+ 
+-  if (!src->compress) {
+-    _soup_message_headers_append (_soup_message_get_request_headers (src->msg),
+-        "Accept-Encoding", "identity");
+-  }
++  if (!src->compress)
++    _soup_message_disable_feature (src->msg, _soup_content_decoder_get_type ());
+ 
+   if (gst_soup_loader_get_api_version () == 3) {
+     g_signal_connect (src->msg, "accept-certificate",
