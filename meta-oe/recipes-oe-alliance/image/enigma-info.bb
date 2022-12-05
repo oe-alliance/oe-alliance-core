@@ -18,8 +18,9 @@ RREPLACES:${PN} = "enigma-kernel-module"
 SSTATE_SKIP_CREATION = "1"
 
 PACKAGE_ARCH = "${MACHINEBUILD}"
-PV = "${@bb.utils.contains_any("DISTRO_NAME", "openvix openbh", "${IMAGE_VERSION}.${BUILD_VERSION}.${DEVELOPER_BUILD_VERSION}", "r${DATE}-${MACHINEBUILD}", d)}"
-PR = "r1"
+PV = "${IMAGE_VERSION}"
+PR = "${@bb.utils.contains("DISTRO_NAME", "openvix openbh", "${IMAGE_BUILD}-${MACHINEBUILD}" , "r${DATE}-${MACHINEBUILD}", d)}"
+
 
 PACKAGES = "${PN}"
 
