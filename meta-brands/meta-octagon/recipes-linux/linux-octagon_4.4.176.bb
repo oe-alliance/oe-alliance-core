@@ -3,7 +3,9 @@ SECTION = "kernel"
 LICENSE = "GPL-2.0-only"
 
 KERNEL_RELEASE = "4.4.176"
+
 SRCDATE = "20220302"
+SRCDATE:sx88v2 = "20221203"
 
 COMPATIBLE_MACHINE = "^(sf8008opt|sfx6008|sx988)$"
 
@@ -11,9 +13,13 @@ inherit kernel machine_kernel_pr
 
 MACHINE_KERNEL_PR:append = "0"
 
+KVTYPE = "mv200"
+KVTYPE:sx88v2 = "mv300"
 
-SRC_URI[md5sum] = "96c57616c9e0121a57b34c93e6453824"
-SRC_URI[sha256sum] = "fd113f78998a63702e6e0ea62e9133d7865edb0e5172f79ab2779c5ae850fb71"
+SRC_URI[mv200.md5sum] = "96c57616c9e0121a57b34c93e6453824"
+SRC_URI[mv200.sha256sum] = "fd113f78998a63702e6e0ea62e9133d7865edb0e5172f79ab2779c5ae850fb71"
+SRC_URI[mv300.md5sum] = "9c400b45c9bc7949c97ddb5bf6714b1e"
+SRC_URI[mv300.sha256sum] = "e5604bb3576ead02b23861b0dde082a2b219fe7a622d973f7a52aaafbc56f7bb"
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
@@ -25,7 +31,7 @@ PKG:${KERNEL_PACKAGE_NAME}-image = "kernel-image"
 RPROVIDES:${KERNEL_PACKAGE_NAME}-base = "kernel-${KERNEL_VERSION}"
 RPROVIDES:${KERNEL_PACKAGE_NAME}-image = "kernel-image-${KERNEL_VERSION}"
 
-SRC_URI += "https://source.mynonpublic.com/octagon/octagon-linux-${PV}-${SRCDATE}.tar.gz \
+SRC_URI += "https://source.mynonpublic.com/octagon/octagon-linux-${PV}-${SRCDATE}.tar.gz;name=${KVTYPE} \
     file://defconfig \
     file://initramfs-subdirboot.cpio.gz;unpack=0 \
     file://initramfs.cpio.gz;unpack=0 \ 
