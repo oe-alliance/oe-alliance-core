@@ -63,6 +63,7 @@ MACHINE_EXTRA_RRECOMMENDS += " \
     ${@bb.utils.contains('MACHINE', 'sx988', 'enigma2-plugin-systemplugins-satipclient' , '', d)} \
     ${@bb.utils.contains('MACHINE', 'sx988', 'enigma2-plugin-extensions-youtube' , '', d)} \
     ${@bb.utils.contains('MACHINE_FEATURES', 'oem-info', 'oem-info', '',d)} \
+    ${@bb.utils.contains('MACHINE', 'sx88v2', 'firmware-uwe5621' , '', d)} \
     "
 
 DVBPROVIDER = "kernel"

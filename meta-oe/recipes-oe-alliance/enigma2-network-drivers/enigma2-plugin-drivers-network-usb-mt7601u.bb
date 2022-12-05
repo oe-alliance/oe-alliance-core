@@ -13,6 +13,7 @@ LINUX_WIFI_mt7106u = " \
     ${@bb.utils.contains("MACHINE", "sf8008", "kernel-module-mt7601u", "", d)} \
     ${@bb.utils.contains("MACHINE", "sf8008m", "kernel-module-mt7601u", "", d)} \
     ${@bb.utils.contains("MACHINE", "sx988", "kernel-module-mt7601u", "", d)} \
+    ${@bb.utils.contains("MACHINE", "sx88v2", "kernel-module-mt7601u", "", d)} \
     ${@bb.utils.contains("MACHINE", "sfx6008", "kernel-module-mt7601u", "", d)} \
     ${@bb.utils.contains("MACHINE", "gbmv200", "kernel-module-mt7601u", "", d)} \
     ${@bb.utils.contains("MACHINE", "ustym4kpro", "kernel-module-mt7601u", "", d)} \
