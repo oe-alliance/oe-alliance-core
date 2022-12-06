@@ -88,6 +88,7 @@ RDEPENDS:${PN} = " \
     dvbsnoop \
     dvdfs \
     edid-decode \
+    extundelete \
     exfat-utils \
     ${@bb.utils.contains_any("MACHINEBUILD", "gbquad4k gbue4k galaxy4k lunix34k", "enigma2-plugin-extensions-forcefbclnbpower" , "", d)} \
     fuse-exfat \
