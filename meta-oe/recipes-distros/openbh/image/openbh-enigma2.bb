@@ -8,7 +8,7 @@ ALLOW_EMPTY:${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r22"
+PR = "r23"
 
 inherit packagegroup
 
@@ -22,7 +22,6 @@ RDEPENDS:${PN} = "\
     "
 
 RRECOMMENDS:${PN} = " \
-    enigma-kernel-module \
     enigma2-plugin-extensions-autotimer \
     enigma2-plugin-extensions-cutlisteditor \
     enigma2-plugin-extensions-epgimport \
