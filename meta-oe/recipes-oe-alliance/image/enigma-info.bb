@@ -217,6 +217,6 @@ do_install() {
     printf "checksum=%s\n" $(md5sum "${D}${INFOFILE}" | awk '{print $1}') >> ${D}${INFOFILE}
 }
 
-do_install[vardepsexclude] += "DATE DATETIME"
+do_install[vardepsexclude] += " DATE DATETIME"
 
 FILES:${PN}:append = " /usr"
