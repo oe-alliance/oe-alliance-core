@@ -19,7 +19,7 @@ SSTATE_SKIP_CREATION = "1"
 
 PACKAGE_ARCH = "${MACHINEBUILD}"
 PV = "${IMAGE_VERSION}"
-PR = "${@bb.utils.contains("DISTRO_NAME", "openvix openbh", "${IMAGE_BUILD}-${MACHINEBUILD}" , "r${DATE}-${MACHINEBUILD}", d)}"
+PR = "${@bb.utils.contains_any("DISTRO_NAME", "openvix openbh", "${IMAGE_BUILD}", "r${DATE}-${MACHINEBUILD}", d)}"
 
 
 PACKAGES = "${PN}"
