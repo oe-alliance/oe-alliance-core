@@ -15,7 +15,7 @@ PREFERRED_PROVIDER_virtual/blindscan-dvbc = "maxytec-dvb-modules-${MACHINE}"
 PREFERRED_PROVIDER_virtual/blindscan-dvbs = "maxytec-dvb-modules-${MACHINE}"
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "\
-    ${@bb.utils.contains('MACHINE_FEATURES', 'hisil-${HICHIPSET}', 'maxytec-bootlogo-${HICHIPSET} maxytec-libs-${HICHIPSET} maxytec-param-${HICHIPSET} maxytec-bootargs-${MACHINE} maxytec-fastboot-${MACHINE} maxytec-recovery-${MACHINE} maxytec-tntfs-${HICHIPSET}' , '', d)} \
+    ${@bb.utils.contains('MACHINE_FEATURES', 'hisil-${HICHIPSET}', 'maxytec-bootlogo-${HICHIPSET} maxytec-libs-${HICHIPSET} maxytec-param-${HICHIPSET} maxytec-bootargs-${MACHINE} maxytec-fastboot-${MACHINE} maxytec-recovery-${MACHINE} maxytec-tntfs-${HICHIPSET} maxytec-dtbo-${MACHINE}' , '', d)} \
     ${@bb.utils.contains('MACHINE_FEATURES', 'hisi-recovery', 'maxytec-recovery-${MACHINE}' , '', d)} \
     "
 
@@ -59,6 +59,7 @@ IMAGE_CMD:maxytecfastboot8gb:append = " \
     cp ${DEPLOY_DIR_IMAGE}/maxytec-partitions-${MACHINE}/${MACHINE}/bootargs-8gb.bin ${DEPLOY_DIR_IMAGE}/${IMAGEDIRRECOVERY}/${IMAGEDIR}/bootargs.bin; \
     cp ${DEPLOY_DIR_IMAGE}/maxytec-partitions-${MACHINE}/${MACHINE}/pq_param.bin ${DEPLOY_DIR_IMAGE}/${IMAGEDIRRECOVERY}/${IMAGEDIR}/pq_param.bin; \
     cp ${DEPLOY_DIR_IMAGE}/maxytec-partitions-${MACHINE}/${MACHINE}/baseparam.img ${DEPLOY_DIR_IMAGE}/${IMAGEDIRRECOVERY}/${IMAGEDIR}/baseparam.img; \
+    cp ${DEPLOY_DIR_IMAGE}/maxytec-partitions-${MACHINE}/${MACHINE}/dtbo.img ${DEPLOY_DIR_IMAGE}/${IMAGEDIRRECOVERY}/${MACHINE}/dtbo.img; \
     if [ -e ${DEPLOY_DIR_IMAGE}/maxytec-partitions-${MACHINE}/${MACHINE}/recovery.bin ]; then \
         cp ${DEPLOY_DIR_IMAGE}/maxytec-partitions-${MACHINE}/${MACHINE}/recovery.bin ${DEPLOY_DIR_IMAGE}/${IMAGEDIRRECOVERY}/${IMAGEDIR}/recovery.bin; \
     fi; \
