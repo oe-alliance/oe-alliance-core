@@ -13,21 +13,21 @@ do_image_maxytecfastboot8gb[depends] = " \
 IMAGE_CMD:maxytecfastboot8gb () {
     dd if=/dev/zero of=${WORKDIR}/bootoptions.img bs=1024 count=${BOOTOPTIONS_PARTITION_SIZE}
     mkfs.msdos -S 512 ${WORKDIR}/bootoptions.img
-    echo "bootcmd=setenv bootargs \$(bootargs) \$(bootargs_common); mmc read 0 0x1000000 0x3BD000 0x8000; bootm 0x1000000; run bootcmd_fallback" > ${WORKDIR}/STARTUP
+    echo "bootcmd=setenv vfd_msg -e2-; setenv notee y; setenv bootargs \$(bootargs) \$(bootargs_common); mmc read 0 0x1000000 0x3BD000 0x8000; bootm 0x1000000; run bootcmd_fallback" > ${WORKDIR}/STARTUP
     echo "bootargs=root=/dev/mmcblk0p23 rootsubdir=linuxrootfs1 rootfstype=ext4 kernel=/dev/mmcblk0p19" >> ${WORKDIR}/STARTUP
-    echo "bootcmd=setenv bootargs \$(bootargs) \$(bootargs_common); run bootcmd_android; run bootcmd_fallback" > ${WORKDIR}/STARTUP_ANDROID
-    echo "bootargs=androidboot.selinux=disabled" >> ${WORKDIR}/STARTUP_ANDROID
-    echo "bootcmd=setenv bootargs \$(bootargs) \$(bootargs_common); run bootcmd_android; run bootcmd_fallback" > ${WORKDIR}/STARTUP_ANDROID_DISABLE_LINUXSE
-    echo "bootargs=androidboot.selinux=disabled" >> ${WORKDIR}/STARTUP_ANDROID_DISABLE_LINUXSE
-    echo "bootcmd=setenv bootargs \$(bootargs) \$(bootargs_common); mmc read 0 0x1000000 0x3BD000 0x8000; bootm 0x1000000; run bootcmd_fallback" > ${WORKDIR}/STARTUP_LINUX_1
+    echo "bootcmd=setenv vfd_msg andr;setenv bootargs \$(bootargs) \$(bootargs_common); run bootcmd_android; run bootcmd_fallback" > ${WORKDIR}/STARTUP_ANDROID
+    echo "bootargs=androidboot.hardware=bigfish androidboot.serialno=0123456789 androidboot.selinux=disabled hbcomp=/dev/block/mmcblk0p13 androidboot.dtbo_idx=0" >> ${WORKDIR}/STARTUP_ANDROID
+    echo "bootcmd=setenv vfd_msg andr;setenv bootargs \$(bootargs) \$(bootargs_common); run bootcmd_android; run bootcmd_fallback" > ${WORKDIR}/STARTUP_ANDROID_DISABLE_LINUXSE
+    echo "bootargs=androidboot.hardware=bigfish androidboot.serialno=0123456789 androidboot.selinux=disabled hbcomp=/dev/block/mmcblk0p13 androidboot.dtbo_idx=0" >> ${WORKDIR}/STARTUP_ANDROID_DISABLE_LINUXSE
+    echo "bootcmd=setenv vfd_msg -e2-; setenv notee y; setenv bootargs \$(bootargs) \$(bootargs_common); mmc read 0 0x1000000 0x3BD000 0x8000; bootm 0x1000000; run bootcmd_fallback" > ${WORKDIR}/STARTUP_LINUX_1
     echo "bootargs=root=/dev/mmcblk0p23 rootsubdir=linuxrootfs1 rootfstype=ext4 kernel=/dev/mmcblk0p19" >> ${WORKDIR}/STARTUP_LINUX_1
-    echo "bootcmd=setenv bootargs \$(bootargs) \$(bootargs_common); mmc read 0 0x1000000 0x3C5000 0x8000; bootm 0x1000000; run bootcmd_fallback" > ${WORKDIR}/STARTUP_LINUX_2
+    echo "bootcmd=setenv vfd_msg -e2-; setenv notee y; setenv bootargs \$(bootargs) \$(bootargs_common); mmc read 0 0x1000000 0x3C5000 0x8000; bootm 0x1000000; run bootcmd_fallback" > ${WORKDIR}/STARTUP_LINUX_2
     echo "bootargs=root=/dev/mmcblk0p23 rootsubdir=linuxrootfs2 rootfstype=ext4 kernel=/dev/mmcblk0p20" >> ${WORKDIR}/STARTUP_LINUX_2
-    echo "bootcmd=setenv bootargs \$(bootargs) \$(bootargs_common); mmc read 0 0x1000000 0x3CD000 0x8000; bootm 0x1000000; run bootcmd_fallback" > ${WORKDIR}/STARTUP_LINUX_3
+    echo "bootcmd=setenv vfd_msg -e2-; setenv notee y; setenv bootargs \$(bootargs) \$(bootargs_common); mmc read 0 0x1000000 0x3CD000 0x8000; bootm 0x1000000; run bootcmd_fallback" > ${WORKDIR}/STARTUP_LINUX_3
     echo "bootargs=root=/dev/mmcblk0p23 rootsubdir=linuxrootfs3 rootfstype=ext4 kernel=/dev/mmcblk0p21" >> ${WORKDIR}/STARTUP_LINUX_3
-    echo "bootcmd=setenv bootargs \$(bootargs) \$(bootargs_common); mmc read 0 0x1000000 0x3D5000 0x8000; bootm 0x1000000; run bootcmd_fallback" > ${WORKDIR}/STARTUP_LINUX_4
+    echo "bootcmd=setenv vfd_msg -e2-; setenv notee y; setenv bootargs \$(bootargs) \$(bootargs_common); mmc read 0 0x1000000 0x3D5000 0x8000; bootm 0x1000000; run bootcmd_fallback" > ${WORKDIR}/STARTUP_LINUX_4
     echo "bootargs=root=/dev/mmcblk0p23 rootsubdir=linuxrootfs4 rootfstype=ext4 kernel=/dev/mmcblk0p22" >> ${WORKDIR}/STARTUP_LINUX_4
-    echo "bootcmd=setenv bootargs \$(bootargs_common); mmc read 0 0x1000000 0x1000 0x9000; bootm 0x1000000" > ${WORKDIR}/STARTUP_RECOVERY
+    echo "bootcmd=setenv vfd_msg rcvy; setenv notee y; setenv bootargs \$(bootargs_common); mmc read 0 0x1000000 0x1000 0x9000; bootm 0x1000000" > ${WORKDIR}/STARTUP_RECOVERY
     echo "imageurl https://raw.githubusercontent.com/oe-alliance/bootmenu/master/${MACHINEBUILD}/images" > ${WORKDIR}/bootmenu.conf
     echo "# " >> ${WORKDIR}/bootmenu.conf
     echo "iface eth0" >> ${WORKDIR}/bootmenu.conf
