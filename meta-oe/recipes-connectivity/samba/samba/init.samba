@@ -18,6 +18,9 @@ test -x "$nmbd" || exit 0
 wsdd=/usr/sbin/wsdd
 test -x "$wsdd" && WSDD_DISABLED="No"
 
+if [ ! -e /var/log/samba ]; then
+    mkdir /var/log/samba
+fi
 
 case "$1" in
   start)
