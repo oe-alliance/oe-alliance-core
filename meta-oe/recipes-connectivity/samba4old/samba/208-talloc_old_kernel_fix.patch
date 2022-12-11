@@ -1,0 +1,14 @@
+diff -Nur a/lib/replace/test/testsuite.c b/lib/replace/test/testsuite.c
+--- a/lib/replace/test/testsuite.c	2019-11-02 14:35:36.837722222 +0100
++++ b/lib/replace/test/testsuite.c	2019-11-02 15:42:04.368135541 +0100
+@@ -31,9 +31,9 @@
+   we include all the system/ include files here so that libreplace tests
+   them in the build farm
+ */
+-#include "system/capability.h"
+ #include "system/dir.h"
+ #include "system/filesys.h"
++#include "system/capability.h"
+ #include "system/glob.h"
+ #include "system/iconv.h"
+ #include "system/locale.h"
