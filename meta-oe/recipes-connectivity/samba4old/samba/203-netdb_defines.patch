@@ -1,0 +1,18 @@
+diff -Nur a/nsswitch/wins.c b/nsswitch/wins.c
+--- a/nsswitch/wins.c	2019-01-15 11:07:00.000000000 +0100
++++ b/nsswitch/wins.c	2019-11-02 14:25:52.378819818 +0100
+@@ -39,6 +39,14 @@
+ #define INADDRSZ 4
+ #endif
+ 
++#ifndef NETDB_INTERNAL
++#define NETDB_INTERNAL (-1)
++#endif
++
++#ifndef NETDB_SUCCESS
++#define NETDB_SUCCESS  0
++#endif
++
+ NSS_STATUS _nss_wins_gethostbyname_r(const char *hostname,
+ 				     struct hostent *he,
+ 				     char *buffer,

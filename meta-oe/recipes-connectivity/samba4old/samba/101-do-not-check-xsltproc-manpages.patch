@@ -1,0 +1,36 @@
+diff -Nur a/lib/ldb/wscript b/lib/ldb/wscript
+--- a/lib/ldb/wscript	2019-10-22 10:55:55.000000000 +0200
++++ b/lib/ldb/wscript	2019-11-03 13:38:03.289988602 +0100
+@@ -152,7 +152,7 @@
+         conf.DEFINE('EXPECTED_SYSTEM_LDB_VERSION_RELEASE', int(v[2]))
+ 
+     if conf.env.standalone_ldb:
+-        conf.CHECK_XSLTPROC_MANPAGES()
++        #conf.CHECK_XSLTPROC_MANPAGES()
+ 
+         # we need this for the ldap backend
+         if conf.CHECK_FUNCS_IN('ber_flush ldap_open ldap_initialize', 'lber ldap', headers='lber.h ldap.h'):
+diff -Nur a/lib/talloc/wscript b/lib/talloc/wscript
+--- a/lib/talloc/wscript	2018-07-12 10:23:36.000000000 +0200
++++ b/lib/talloc/wscript	2019-11-03 13:38:03.289988602 +0100
+@@ -49,7 +49,7 @@
+         conf.env.PKGCONFIGDIR = '${LIBDIR}/pkgconfig'
+         conf.env.TALLOC_VERSION = VERSION
+ 
+-    conf.CHECK_XSLTPROC_MANPAGES()
++    #conf.CHECK_XSLTPROC_MANPAGES()
+ 
+     conf.CHECK_HEADERS('sys/auxv.h')
+     conf.CHECK_FUNCS('getauxval')
+diff -Nur a/lib/tdb/wscript b/lib/tdb/wscript
+--- a/lib/tdb/wscript	2018-07-12 10:23:36.000000000 +0200
++++ b/lib/tdb/wscript	2019-11-03 13:38:03.289988602 +0100
+@@ -89,7 +89,7 @@
+         not conf.env.disable_tdb_mutex_locking):
+         conf.define('USE_TDB_MUTEX_LOCKING', 1)
+ 
+-    conf.CHECK_XSLTPROC_MANPAGES()
++    #conf.CHECK_XSLTPROC_MANPAGES()
+ 
+     if not conf.env.disable_python:
+         # also disable if we don't have the python libs installed
