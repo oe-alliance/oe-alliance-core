@@ -7,7 +7,7 @@ KERNEL_RELEASE = "4.4.35"
 
 SRCDATE = "20200219"
 
-COMPATIBLE_MACHINE = "^(multibox|multiboxse)$"
+COMPATIBLE_MACHINE = "^(multibox|multiboxse|multiboxpro)$"
 
 inherit kernel machine_kernel_pr
 

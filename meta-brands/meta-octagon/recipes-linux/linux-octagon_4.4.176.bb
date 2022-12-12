@@ -7,7 +7,7 @@ KERNEL_RELEASE = "4.4.176"
 SRCDATE = "20220302"
 SRCDATE:sx88v2 = "20221203"
 
-COMPATIBLE_MACHINE = "^(sf8008opt|sfx6008|sx988)$"
+COMPATIBLE_MACHINE = "^(sf8008opt|sfx6008|sx988|sx88v2)$"
 
 inherit kernel machine_kernel_pr
 
