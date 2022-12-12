@@ -43,6 +43,7 @@ TARGET_ARCH = "arm"
 DEFAULTTUNE = "cortexa15hf-neon-vfpv4"
 
 PREFERRED_VERSION_linux-octagon = "${LINUX_VERSION}"
+PREFERRED_VERSION_wpa-supplicant = "${@bb.utils.contains('MACHINE', 'sx88v2', '2.9' , '2.10', d)}"
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-octagon"
 PREFERRED_PROVIDER_virtual/egl = "octagon-opengl-${SOC_FAMILY}" 
