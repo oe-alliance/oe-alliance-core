@@ -141,6 +141,7 @@ RDEPENDS:${PN} = " \
     ${PYTHON_PN}-circuits \
     ${PYTHON_PN}-circuits-bricks \
     ${PYTHON_PN}-cfscrape \
+    ${PYTHON_PN}-evdev \
     ${PYTHON_PN}-future \
     ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-futures", "${PYTHON_PN}-futures3", d)} \
     ${PYTHON_PN}-fuzzywuzzy \
