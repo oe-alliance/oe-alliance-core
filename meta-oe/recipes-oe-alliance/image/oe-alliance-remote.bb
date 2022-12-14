@@ -70,6 +70,9 @@ do_install() {
     elif [ ${MACHINEBUILD} = "sfx6008" ]; then
         install -m 0644 ${S}/boxes/sfx6008.png ${D}${datadir}/enigma2/hardware/sfx6008_front.png
         install -m 0644 ${S}/boxes/sfx6018.png ${D}${datadir}/enigma2/hardware/sfx6018_front.png
+    elif [ ${MACHINEBUILD} = "sx88v2" ]; then
+        install -m 0644 ${S}/boxes/sx888.png ${D}${datadir}/enigma2/hardware/sx888_front.png
+        install -m 0644 ${S}/boxes/sx88v2.png ${D}${datadir}/enigma2/hardware/sx88v2_front.png
     elif [ ${MACHINEBUILD} = "ustym4kpro" ]; then
         install -m 0644 ${S}/boxes/ustym4kpro.png ${D}${datadir}/enigma2/hardware/ustym4kpro_front.png
         install -m 0644 ${S}/boxes/ustym4kprosingle.png ${D}${datadir}/enigma2/hardware/ustym4kprosingle_front.png
