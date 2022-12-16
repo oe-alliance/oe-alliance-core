@@ -122,8 +122,8 @@ index 21ccdda5ed64..4a4fba3580c2 100644
    if (decode_nalus_)
      codec_context_->flags2 |= AV_CODEC_FLAG2_CHUNKS;
  
--  AVCodec* codec = avcodec_find_decoder(codec_context_->codec_id);
-+  AVCodec* codec = NULL;
+-  const AVCodec* codec = avcodec_find_decoder(codec_context_->codec_id);
++  const AVCodec* codec = NULL;
 +  if (codec_context_->codec_id == AV_CODEC_ID_H264)
 +    codec = avcodec_find_decoder_by_name("h264_v4l2m2m");
 +  else if (codec_context_->codec_id == AV_CODEC_ID_VP9)
