@@ -17,11 +17,32 @@ fi
 
 INFO="/usr/lib/enigma.info"
 
+BOXTYPE=`cat /proc/stb/info/boxtype`
 CHIP=`cat /proc/stb/info/chipset`
-if [ $CHIP == "bcm73625" ]; then
-  sed -i -e 's:displaymodel=ET7x00:displaymodel=ET7100 V2:' $INFO
-else
-  sed -i -e 's:displaymodel=ET7x00:displaymodel=ET7000:' $INFO
+if [ $BOXTYPE == "et4000" ]; then
+  sed -i -e 's:displaymodel=ET4X00:displaymodel=ET4000:' $INFO
+elif [ $BOXTYPE == "et5000" ]; then
+  sed -i -e 's:displaymodel=ET5X00:displaymodel=ET5000:' $INFO
+elif [ $BOXTYPE == "et6000" ]; then
+  sed -i -e 's:displaymodel=ET6X00:displaymodel=ET6000:' $INFO
+elif [ $BOXTYPE == "et6500" ]; then
+  sed -i -e 's:displaymodel=ET6X00:displaymodel=ET6500:' $INFO
+elif [ $BOXTYPE == "et7000" ]; then
+  if [ $CHIP == "bcm73625" ]; then
+    sed -i -e 's:displaymodel=ET7x00:displaymodel=ET7100 V2:' $INFO
+  else
+    sed -i -e 's:displaymodel=ET7x00:displaymodel=ET7000:' $INFO
+  fi
+elif [ $BOXTYPE == "et7500" ]; then
+  sed -i -e 's:displaymodel=ET7x00:displaymodel=ET7500:' $INFO
+elif [ $BOXTYPE == "et9000" ]; then
+  sed -i -e 's:displaymodel=ET9X00:displaymodel=ET9000:' $INFO
+elif [ $BOXTYPE == "et9100" ]; then
+  sed -i -e 's:displaymodel=ET9X00:displaymodel=ET9100:' $INFO
+elif [ $BOXTYPE == "et9200" ]; then
+  sed -i -e 's:displaymodel=ET9X00:displaymodel=ET9200:' $INFO
+elif [ $BOXTYPE == "et9500" ]; then
+  sed -i -e 's:displaymodel=ET9X00:displaymodel=ET9500:' $INFO
 fi
 
 sed -i '/checksum=/d' $INFO
