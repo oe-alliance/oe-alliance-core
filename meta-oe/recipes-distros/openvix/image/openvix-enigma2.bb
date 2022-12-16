@@ -8,7 +8,7 @@ ALLOW_EMPTY:${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r27"
+PR = "r28"
 
 inherit packagegroup
 
@@ -30,8 +30,8 @@ RRECOMMENDS:${PN} = "\
     enigma2-plugin-extensions-openwebif-themes \
     enigma2-plugin-extensions-openwebif-vxg \
     ${@bb.utils.contains("MACHINE_FEATURES", "skins1080", "enigma2-plugin-skins-openvix-magic-fhd", "", d)} \
-    ${@bb.utils.contains("MACHINE_FEATURES", "skins1080", "enigma2-plugin-skins-openvix-vix-night-1080", "", d)} \
-    ${@bb.utils.contains("MACHINE_FEATURES", "skins1080", "enigma2-plugin-skins-openvix-vix-day-1080", "enigma2-plugin-skins-openvix-vix-day-hd", d)} \
+    enigma2-plugin-skins-openvix-vix-night-hd \
+    enigma2-plugin-skins-openvix-vix-day-hd \
     ${@bb.utils.contains("MACHINE_FEATURES", "skins1080", "enigma2-plugin-skins-openvix-youvix-blue" , "", d)} \
     enigma2-plugin-systemplugins-aboutboxbranding \
     enigma2-plugin-systemplugins-opentvzapper \
