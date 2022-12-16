@@ -35,7 +35,7 @@ elif [ $BOXTYPE == "sfx6008" ]; then
   fi
 elif [ $BOXTYPE == "sx88v2" ]; then
   if [ $TYPE == "00" ] || [ $TYPE == "unknown" ]; then
-    sed -i -e 's:displaymodel=SX88V2 4K DUAL OS:displaymodel=SX888 4K DUAL OS:' $INFO
+    sed -i -e 's:displaymodel=SX88V2 4K DUAL OS:displaymodel=SX888V2 4K DUAL OS:' $INFO
     sed -i -e 's:model=sx88v2:model=sx888:' $INFO
   fi
 fi
