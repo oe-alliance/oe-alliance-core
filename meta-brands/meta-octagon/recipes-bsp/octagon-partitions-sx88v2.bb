@@ -7,7 +7,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 inherit deploy
 
-SRCDATE = "20221214"
+SRCDATE = "20221216"
 PR = "${SRCDATE}"
 
 S = "${WORKDIR}/partitions"
@@ -46,11 +46,12 @@ do_deploy() {
     install -m 0755 ${S}/baseparam.img ${DEPLOY_DIR_IMAGE}/${MACHINE}-partitions
     install -m 0755 ${S}/logo.img ${DEPLOY_DIR_IMAGE}/${MACHINE}-partitions
     install -m 0755 ${S}/deviceinfo.bin ${DEPLOY_DIR_IMAGE}/${MACHINE}-partitions
+    install -m 0755 ${S}/6605s.upg ${DEPLOY_DIR_IMAGE}/${MACHINE}-partitions
 }
 
 addtask deploy before do_package after do_install
 
-SRC_URI[md5sum] = "74a0a920a9809976e584b8f23acbb407"
-SRC_URI[sha256sum] = "7b1f55002ad2ca515d1f7dae513662d17eba7867571f0a502149ae4f94da84d2"
+SRC_URI[md5sum] = "15ac1bb9edeb76d68f2173f49baa7f70"
+SRC_URI[sha256sum] = "01b324aa5a4a9125387b974622d4b4db3c4e124b4f6c4aaff404a574be15fd17"
 
 INSANE_SKIP:${PN} += "already-stripped"
