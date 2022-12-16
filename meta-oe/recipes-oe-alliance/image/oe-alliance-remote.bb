@@ -44,9 +44,6 @@ do_install() {
         install -m 0644 ${S}/boxes/premium.png ${D}${datadir}/enigma2/hardware/premium_front.png
         install -m 0644 ${S}/boxes/premium+.png ${D}${datadir}/enigma2/hardware/premium+_front.png
         install -m 0644 ${S}/boxes/ultra.png ${D}${datadir}/enigma2/hardware/ultra_front.png
-    elif [ ${MACHINEBUILD} = "xpeedlx" ]; then
-        install -m 0644 ${S}/boxes/xpeedlx1.png ${D}${datadir}/enigma2/hardware/xpeedlx1_front.png
-        install -m 0644 ${S}/boxes/xpeedlx2.png ${D}${datadir}/enigma2/hardware/xpeedlx2_front.png
     elif [ ${MACHINEBUILD} = "atemio6x00" ]; then
         install -m 0644 ${S}/boxes/atemio6100.png ${D}${datadir}/enigma2/hardware/atemio6100_front.png
         install -m 0644 ${S}/boxes/atemio6200.png ${D}${datadir}/enigma2/hardware/atemio6200_front.png

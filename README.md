@@ -397,9 +397,9 @@ GB IP 4K                MACHINE:  gbip4k
 
 ### GoldenInterstar
 
-XPEED LX1               MACHINE:  xpeedlx
+XPEED LX1               MACHINE:  xpeedlx1
 
-XPEED LX2               MACHINE:  xpeedlx
+XPEED LX2               MACHINE:  xpeedlx2
 
 XPEED LX3               MACHINE:  xpeedlx3
 

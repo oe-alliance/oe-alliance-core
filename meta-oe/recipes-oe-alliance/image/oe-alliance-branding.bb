@@ -209,11 +209,6 @@ do_install:append() {
         ln -sf /usr/share/enigma2/premium+.png ${D}${libdir}/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/premium+.png
         install -m 0644 ${S}/BoxBranding/boxes/ultra.png ${D}/usr/share/enigma2/ultra.png
         ln -sf /usr/share/enigma2/ultra.png ${D}${libdir}/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/ultra.png
-    elif [ ${MACHINEBUILD} = "xpeedlx" ]; then
-        install -m 0644 ${S}/BoxBranding/boxes/xpeedlx1.png ${D}/usr/share/enigma2/xpeedlx1.png
-        ln -sf /usr/share/enigma2/xpeedlx1.png ${D}${libdir}/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/xpeedlx1.png
-        install -m 0644 ${S}/BoxBranding/boxes/xpeedlx2.png ${D}/usr/share/enigma2/xpeedlx2.png
-        ln -sf /usr/share/enigma2/xpeedlx2.png ${D}${libdir}/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/xpeedlx2.png
     elif [ ${MACHINEBUILD} = "atemio6x00" ]; then
         install -m 0644 ${S}/BoxBranding/boxes/atemio6100.png ${D}/usr/share/enigma2/atemio6100.png
         ln -sf /usr/share/enigma2/atemio6100.png ${D}${libdir}/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/atemio6100.png
