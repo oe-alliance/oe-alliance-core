@@ -174,6 +174,7 @@ do_install() {
     printf "hdmi=${HAVE_HDMI}\n" >> ${D}${INFOFILE}
     printf "hdmifhdin=${HAVE_HDMI_IN_FHD}\n" >> ${D}${INFOFILE}
     printf "hdmihdin=${HAVE_HDMI_IN_HD}\n" >> ${D}${INFOFILE}
+    printf "hdmistandbymode=${HDMISTANDBY_MODE}\n" >> ${D}${INFOFILE}
     printf "imagebuild='${BUILD_VERSION}'\n" >> ${D}${INFOFILE}
     printf "imagedevbuild='${DEVELOPER_BUILD_VERSION}'\n" >> ${D}${INFOFILE}
     printf "imagedir=${IMAGEDIR}\n" >> ${D}${INFOFILE}
