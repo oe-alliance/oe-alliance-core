@@ -266,7 +266,7 @@ IMAGE_CMD:ubi:append = "\
     rm -rf opticum; \
     "
 
-MACHINE_FEATURES += "3dtv alsa hdmicec switchoff wifi bootsplash omb feature1 feature2 HDMI"
+MACHINE_FEATURES += "3dtv alsa hdmicec switchoff wifi bootsplash omb feature1 feature2 HDMI TIMERWAKEUP"
 
 BOOTLOGO_FILENAME = "splash.bin"
 

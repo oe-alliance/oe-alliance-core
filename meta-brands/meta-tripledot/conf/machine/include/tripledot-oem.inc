@@ -147,7 +147,7 @@ IMAGE_CMD:ubi:append = "\
     rm -Rf ${IMAGEDIR}; \
     "
 
-MACHINE_FEATURES += "3dtv alsa hdmicec switchoff bootsplash omb feature1 feature2 blindscan-tbs HDMI"
+MACHINE_FEATURES += "3dtv alsa hdmicec switchoff bootsplash omb feature1 feature2 blindscan-tbs HDMI TIMERWAKEUP"
 
 BOOTLOGO_FILENAME = "splash.bin"
 

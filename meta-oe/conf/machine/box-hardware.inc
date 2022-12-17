@@ -65,3 +65,4 @@ SUPPORT_DBOXLCD ?= "${@bb.utils.contains_any("MACHINE_FEATURES", "textlcd", "Tru
 DEVELOPER_NAME ?= "${DISTRO_NAME}"
 FRIENDLY_FAMILY ?= "${MACHINE} ${BUILDMACHINE}"
 HDMISTANDBY_MODE ?= "${@bb.utils.contains_any("MACHINE_FEATURES", "HDMISTANDBY", "1", "0", d)}"
+TIMERWAKEUP_MODE ?= "${@bb.utils.contains_any("MACHINE_FEATURES", "TIMERWAKEUP", "1", "0", d)}"
