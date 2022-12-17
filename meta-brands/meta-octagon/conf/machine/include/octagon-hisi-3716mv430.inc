@@ -29,7 +29,7 @@ MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "\
     gptfdisk \
 "
 
-MACHINE_FEATURES += "switchoff hdmicec skins1080 alsa qtstalker"
+MACHINE_FEATURES += "switchoff hdmicec skins1080 alsa qtstalker HDMISTANDBY"
 
 IMAGE_CLASSES  += "octagon-ubi_image"
 IMAGE_FSTYPES += "octagonubi"
