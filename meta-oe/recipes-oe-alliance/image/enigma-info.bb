@@ -209,6 +209,7 @@ do_install() {
     printf "smallflash=${HAVE_SMALLFLASH}\n" >> ${D}${INFOFILE}
     printf "socfamily='${SOC_FAMILY}'\n" >> ${D}${INFOFILE}
     printf "svideo=${HAVE_SVIDEO}\n" >> ${D}${INFOFILE}
+    printf "timerwakeupmode=${TIMERWAKEUP_MODE}\n" >> ${D}${INFOFILE}
     printf "transcoding=${HAVE_TRANSCODING}\n" >> ${D}${INFOFILE}
     printf "ubinize=${UBINIZE_ARGS}\n" >> ${D}${INFOFILE}
     printf "vfdsymbol=${HAVE_VFDSYMBOL}\n" >> ${D}${INFOFILE}
