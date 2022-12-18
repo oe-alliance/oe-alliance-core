@@ -8,6 +8,7 @@ BRAND_OEM = "gigablue"
 
 RCTYPE = "502"
 RCNAME = "gb1"
+RCHARDWARE = "GB"
 
 MACHINE_NAME = "\
 ${@bb.utils.contains('MACHINEBUILD', 'gb800se', '800 SE' , '', d)}\

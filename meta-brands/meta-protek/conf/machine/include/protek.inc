@@ -2,6 +2,7 @@
 include conf/machine/include/build-extras.inc
 
 BRAND_OEM = "protek"
+RCHARDWARE = "V1"
 
 MTD_KERNEL = "mtd1"
 MTD_ROOTFS = "mtd2"

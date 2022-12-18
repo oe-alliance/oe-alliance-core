@@ -4,6 +4,7 @@ include conf/machine/include/build-extras.inc
 BRAND_OEM = "skylake"
 RCTYPE = "19"
 RCNAME = "hd2400"
+RCHARDWARE = "V2"
 
 MACHINE_NAME = "\
 ${@bb.utils.contains('MACHINEBUILD', 'mutant2400', 'HD2400' , '', d)}\

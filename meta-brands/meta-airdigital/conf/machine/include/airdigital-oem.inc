@@ -2,6 +2,7 @@
 include conf/machine/include/build-extras.inc
 
 BRAND_OEM = "airdigital"
+RCHARDWARE = "V2"
 
 MACHINE_NAME = "\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmash1', 'Star H1' , '', d)}\

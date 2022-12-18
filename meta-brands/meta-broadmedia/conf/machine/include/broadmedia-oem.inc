@@ -2,6 +2,7 @@
 include conf/machine/include/build-extras.inc
 
 BRAND_OEM = "broadmedia"
+RCHARDWARE = "V1"
 
 MACHINE_NAME = "\
 ${@bb.utils.contains('MACHINEBUILD', 'mbtwinplus', 'Premium Twin Plus' , '', d)}\

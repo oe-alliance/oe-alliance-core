@@ -47,6 +47,7 @@ HAVE_VFDSYMBOL = "${@bb.utils.contains("MACHINE_FEATURES", "vfdsymbol", "True", 
 RCTYPE ??= "0"
 RCNAME ??= "dmm1"
 RCIDNUM ??= "2"
+RCHARDWARE ??= "N/A"
 
 #deprecated setting
 TRANSCODING = "\

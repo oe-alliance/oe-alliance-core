@@ -4,6 +4,7 @@ include conf/machine/include/build-extras.inc
 BRAND_OEM = "xp"
 RCTYPE = "14"
 RCNAME = "xp1000"
+RCHARDWARE = "V2"
 
 MACHINE_NAME = "\
 ${@bb.utils.contains('MACHINEBUILD', 'xp1000mk', 'XP1000' , '', d)}\
