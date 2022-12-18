@@ -2,6 +2,7 @@
 include conf/machine/include/build-extras.inc
 
 BRAND_OEM = "odin"
+RCHARDWARE = "V1"
 
 MACHINE_NAME = "\
 ${@bb.utils.contains('MACHINEBUILD', 'classm', 'CLASS M' , '', d)}\

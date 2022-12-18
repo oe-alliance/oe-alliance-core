@@ -3,6 +3,7 @@ include conf/machine/include/build-extras.inc
 
 BRAND_OEM = "ultramini"
 RCTYPE = "504"
+RCHARDWARE = "V1"
 
 MACHINE_NAME = "\
 ${@bb.utils.contains('MACHINEBUILD', 'xpeedlxcs2', 'XPEED LX CLASS S2' , '', d)}\

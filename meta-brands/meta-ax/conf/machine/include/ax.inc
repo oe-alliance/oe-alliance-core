@@ -3,6 +3,7 @@ include conf/machine/include/build-extras.inc
 
 BRAND_OEM = "ax"
 MACHINE_BRAND = "AX"
+RCHARDWARE = "V2"
 
 MTD_KERNEL = "mtd1"
 MTD_ROOTFS = "mtd2"
