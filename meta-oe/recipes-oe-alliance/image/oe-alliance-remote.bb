@@ -37,28 +37,28 @@ do_install() {
             install -m 0644 ${S}/png/${i}.png ${D}${datadir}/enigma2/hardware
             install -m 0644 ${S}/xml/${i}.xml ${D}${datadir}/enigma2/hardware
         done
-        install -m 0644 ${S}/hardware/vu.xml ${D}${datadir}/enigma2/hardware
+        install -m 0644 ${S}/hardware/vu.xml ${D}${datadir}/enigma2/hardware/hardware.xml
     fi
     if [ ${RCHARDWARE} == "GB" ] ; then
         for i in gb0 gb1 gb2 gb3 gb4 gb5 ; do
             install -m 0644 ${S}/png/${i}.png ${D}${datadir}/enigma2/hardware
             install -m 0644 ${S}/xml/${i}.xml ${D}${datadir}/enigma2/hardware
         done
-        install -m 0644 ${S}/hardware/gb.xml ${D}${datadir}/enigma2/hardware
+        install -m 0644 ${S}/hardware/gb.xml ${D}${datadir}/enigma2/hardware/hardware.xml
     fi
     if [ ${RCHARDWARE} == "BW" ] ; then
         for i in U4 ; do
             install -m 0644 ${S}/png/${i}.png ${D}${datadir}/enigma2/hardware
             install -m 0644 ${S}/xml/${i}.xml ${D}${datadir}/enigma2/hardware
         done
-        install -m 0644 ${S}/hardware/bw.xml ${D}${datadir}/enigma2/hardware
+        install -m 0644 ${S}/hardware/bw.xml ${D}${datadir}/enigma2/hardware/hardware.xml
     fi
     if [ ${RCHARDWARE} == "V1" ] ; then
         for i in odinm9 dmm1 et9x00 dmm2 et7x00 vu1 et8000 et6500 et4x00 xp1000 hd1100 formuler1 hd2400 zgemma1 wwio1 sf3038 gb0 miraclebox e3hd ini5 beyonwiz1 ; do
             install -m 0644 ${S}/png/${i}.png ${D}${datadir}/enigma2/hardware
             install -m 0644 ${S}/xml/${i}.xml ${D}${datadir}/enigma2/hardware
         done
-        install -m 0644 ${S}/hardware/v1.xml ${D}${datadir}/enigma2/hardware
+        install -m 0644 ${S}/hardware/v1.xml ${D}${datadir}/enigma2/hardware/hardware.xml
     fi
     if [ ${RCHARDWARE} == "V2" ] ; then
         for i in  odinm9 dmm1 et9x00 dmm2 et7x00 vu1 et8000 et6500 et4x00 xp1000 hd1100 formuler1 hd2400 zgemma1 zgemma3 zgemma5 wwio1 e4hd ax4 hd60 zgemma6 ; do
