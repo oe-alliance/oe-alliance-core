@@ -79,7 +79,7 @@ PR = "r0"
 
 PV = "20.0+gitr${SRCPV}"
 
-SRC_URI = "git://github.com/xbmc/xbmc.git;protocol=https;branch=master \
+SRC_URI = "git://github.com/xbmc/xbmc.git;protocol=https;branch=Nexus \
            file://0001-flatbuffers-20.patch \
            file://0002-readd-Touchscreen-settings.patch \
            file://0003-shader-nopow-20.patch \
