@@ -75,7 +75,7 @@ SRCREV = "${AUTOREV}"
 # 'patch' doesn't support binary diffs
 PATCHTOOL = "git"
 
-PR = "r0"
+PR = "r1"
 
 PV = "20.0+gitr${SRCPV}"
 
