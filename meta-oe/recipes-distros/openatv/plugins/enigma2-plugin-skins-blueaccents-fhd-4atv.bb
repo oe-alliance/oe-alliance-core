@@ -1,4 +1,4 @@
-SUMMARY = "HD Skin for ATV Images"
+SUMMARY = "Full HD Skin for ATV Images"
 MAINTAINER = "stein17"
 
 require conf/license/license-gplv2.inc
@@ -14,7 +14,7 @@ SRC_URI="git://github.com/stein17/Skins-for-openATV.git;protocol=https;branch=py
 
 FILES:${PN} = "/"
 
-S = "${WORKDIR}/git/BlueAccents-HD-Skin-4ATV"
+S = "${WORKDIR}/git/BlueAccents-FHD"
 
 do_install() {
     install -d ${D}${libdir}
@@ -27,19 +27,19 @@ do_install() {
 pkg_postinst:${PN} () {
 #!/bin/sh
 echo "                                                          "
-echo " ...BlueAccennts-HD Skin by stein17 successful installed. "
+echo " ...BlueAccennts-FHD Skin by stein17 successful installed. "
 echo "                                                          "
 exit 0
 }
 
 pkg_postrm:${PN} () {
 #!/bin/sh
-rm -rf /usr/share/enigma2/BlueAccents-HD
+rm -rf /usr/share/enigma2/BlueAccents-FHD
 rm -rf /usr/lib/enigma2/python/Components/Converter/BlueA*
 rm -rf /usr/lib/enigma2/python/Components/Renderer/BlueA*
 rm -rf /usr/lib/enigma2/python/Plugins/Extensions/BlueAccents*
 echo "                                                                 "
-echo "BlueAccents-HD skin was successfully removed from your receiver  "
+echo "BlueAccents-FHD skin was successfully removed from your receiver  "
 echo "                                                                 "
 echo "The GUI of your receiver is now rebooting....                    "
 exit 0
@@ -51,20 +51,20 @@ echo "                                                                          
 echo "                                                                            "
 echo "                                                                            "
 echo "                                                                            "
-echo "Check if a previous version of the BlueAccents-HD skin is installed"
-if [ -f /usr/share/enigma2/BlueAccents-HD/skin.xml ]; then
-    cp -R /usr/share/enigma2/BlueAccents-HD/ /tmp
-    rm -rf /usr/share/enigma2/BlueAccents-HD
+echo "Check if a previous version of the BlueAccents-FHD skin is installed"
+if [ -f /usr/share/enigma2/BlueAccents-FHD/skin.xml ]; then
+    cp -R /usr/share/enigma2/BlueAccents-FHD/ /tmp
+    rm -rf /usr/share/enigma2/BlueAccents-FHD
     rm -rf /usr/lib/enigma2/python/Components/Converter/BlueA*
     rm -rf /usr/lib/enigma2/python/Components/Renderer/BlueA*
     rm -rf /usr/lib/enigma2/python/Plugins/Extensions/BlueAccents*
     echo "                                                   "
-    echo "Previous BlueAccents-HD skin installation          "
+    echo "Previous BlueAccents-FHD skin installation          "
     echo "    was found and removed successfully!            "
     echo "                                                   "
 fi
 echo "                                                       "
-echo "BlueAccents-HD skin is now being installed...          "
+echo "BlueAccents-FHD skin is now being installed...          "
 echo "                                                       "
 exit 0
 }
@@ -72,7 +72,7 @@ exit 0
 pkg_prerm:${PN} () {
 #!/bin/sh
 echo "                                                                           "
-echo "BlueAccents-HD Skin by stein17 is now being removed from your receiver...  "
+echo "BlueAccents-FHD Skin by stein17 is now being removed from your receiver...  "
 echo "                                                                           "
 exit 0
 }
