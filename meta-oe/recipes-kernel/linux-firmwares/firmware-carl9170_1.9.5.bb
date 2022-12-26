@@ -3,7 +3,7 @@ LICENCE = "closed"
 
 require linux-firmware.inc
 
-SRCREV = "c8157f24773d71bef6b45811a2d4b40eafa08f9c"
+SRCREV = "3aa7bab757fdb0e38c484e73d73c6d34a770c1ba"
 
 do_install() {
     install -d ${D}${nonarch_base_libdir}/firmware

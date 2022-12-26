@@ -2,7 +2,7 @@ require linux-firmware.inc
 
 SUMMARY = "Firmware for DVB USB TeVii S660 adapter"
 
-SRCREV = "2c7a7f802cdf515e6e7b814111aea56669fac4b2"
+SRCREV = "3aa7bab757fdb0e38c484e73d73c6d34a770c1ba"
 
 do_install() {
     install -d ${D}${nonarch_base_libdir}/firmware

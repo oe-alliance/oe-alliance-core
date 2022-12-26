@@ -2,7 +2,7 @@ require linux-firmware.inc
 
 SUMMARY = "Firmware for as102_data2_st"
 
-SRCREV = "61a66a03697b3cdc04e244688fa716aa13b3bf12"
+SRCREV = "3aa7bab757fdb0e38c484e73d73c6d34a770c1ba"
 
 
 do_install() {
