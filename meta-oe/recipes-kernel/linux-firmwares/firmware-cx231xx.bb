@@ -2,7 +2,7 @@ require linux-firmware.inc
 
 SUMMARY = "Firmware for cx231xx"
 
-SRCREV = "6dda26f406b6eb85c5a364a85a83a73f217395ad"
+SRCREV = "46c66487a85cd05a4acbd5eb4828f72783d1be4c"
 
 do_install() {
     install -d ${D}${nonarch_base_libdir}/firmware
