@@ -1,5 +1,5 @@
 diff --git a/libopkg/opkg_install.c b/libopkg/opkg_install.c
-index e7a9a24..b8ee4b3 100644
+index d120203..bf72aa5 100644
 --- a/libopkg/opkg_install.c
 +++ b/libopkg/opkg_install.c
 @@ -66,7 +66,7 @@ static int update_file_ownership(pkg_t * new_pkg, pkg_t * old_pkg)
@@ -8,14 +8,14 @@ index e7a9a24..b8ee4b3 100644
          if (!owner || (owner == old_pkg) || obs)
 -            file_hash_set_file_owner(new_file->path, new_pkg);
 +            file_hash_set_file_owner_with_old(new_file->path, new_pkg, old_pkg);
-     }
  
-     if (old_pkg) {
+         /*
+          * If the path is a directory or a symlink to a directory, it
 diff --git a/libopkg/pkg_hash.c b/libopkg/pkg_hash.c
-index 6c6c269..0151ed0 100644
+index 1371bb6..431df6a 100644
 --- a/libopkg/pkg_hash.c
 +++ b/libopkg/pkg_hash.c
-@@ -922,3 +922,21 @@ void file_hash_set_file_owner(const char *file_name, pkg_t * owning_pkg)
+@@ -928,3 +928,21 @@ void file_hash_set_file_owner(const char *file_name, pkg_t * owning_pkg)
          owning_pkg->state_flag |= SF_FILELIST_CHANGED;
      }
  }

@@ -1,8 +1,8 @@
 diff --git a/libopkg/opkg_download.c b/libopkg/opkg_download.c
-index 5c74f66..cc89ff3 100644
+index 4086f83..e03e816 100644
 --- a/libopkg/opkg_download.c
 +++ b/libopkg/opkg_download.c
-@@ -397,13 +397,13 @@ static int opkg_prepare_file_for_install(const char *path, char **namep)
+@@ -442,13 +442,13 @@ static int opkg_prepare_file_for_install(const char *path, char **namep)
          pkg_t *old_pkg = pkg_hash_fetch_installed_by_name(pkg->name);
          if (old_pkg && (pkg_compare_versions(pkg, old_pkg) == 0)) {
              char *version = pkg_version_str_alloc(old_pkg);
@@ -18,7 +18,7 @@ index 5c74f66..cc89ff3 100644
          }
      }
  
-@@ -509,8 +509,8 @@ int opkg_prepare_url_for_install(const char *url, char **namep)
+@@ -554,8 +554,8 @@ int opkg_prepare_url_for_install(const char *url, char **namep)
      }
  
      /* Can't find anything matching the requested URL. */
@@ -30,10 +30,10 @@ index 5c74f66..cc89ff3 100644
  CLEANUP:
      free(pkg_name);
 diff --git a/libopkg/opkg_install.c b/libopkg/opkg_install.c
-index e7a9a24..666609f 100644
+index 354dc10..652ff06 100644
 --- a/libopkg/opkg_install.c
 +++ b/libopkg/opkg_install.c
-@@ -231,9 +231,9 @@ static int prerm_upgrade_old_pkg(pkg_t * pkg, pkg_t * old_pkg)
+@@ -245,9 +245,9 @@ static int prerm_upgrade_old_pkg(pkg_t * pkg, pkg_t * old_pkg)
      err = pkg_run_script(old_pkg, "prerm", script_args);
      free(script_args);
      if (err != 0) {
@@ -45,7 +45,7 @@ index e7a9a24..666609f 100644
      }
      return 0;
  }
-@@ -666,9 +666,9 @@ static int postrm_upgrade_old_pkg(pkg_t * pkg, pkg_t * old_pkg)
+@@ -680,9 +680,9 @@ static int postrm_upgrade_old_pkg(pkg_t * pkg, pkg_t * old_pkg)
      err = pkg_run_script(old_pkg, "postrm", script_args);
      free(script_args);
      if (err != 0) {
@@ -57,7 +57,7 @@ index e7a9a24..666609f 100644
      }
      return 0;
  }
-@@ -964,9 +964,6 @@ int opkg_install_pkg(pkg_t * pkg, pkg_t * old_pkg)
+@@ -978,9 +978,6 @@ int opkg_install_pkg(pkg_t * pkg, pkg_t * old_pkg)
      err = prerm_upgrade_old_pkg(pkg, old_pkg);
      if (err)
          goto UNWIND_PRERM_UPGRADE_OLD_PKG;
@@ -67,7 +67,7 @@ index e7a9a24..666609f 100644
  
      err = backup_modified_conffiles(pkg, old_pkg);
      if (err)
-@@ -980,6 +977,10 @@ int opkg_install_pkg(pkg_t * pkg, pkg_t * old_pkg)
+@@ -994,6 +991,10 @@ int opkg_install_pkg(pkg_t * pkg, pkg_t * old_pkg)
      if (err)
          goto UNWIND_POSTRM_UPGRADE_OLD_PKG;
  
@@ -78,7 +78,7 @@ index e7a9a24..666609f 100644
      if (opkg_config->noaction)
          return 0;
  
-@@ -1060,14 +1061,14 @@ int opkg_install_pkg(pkg_t * pkg, pkg_t * old_pkg)
+@@ -1074,14 +1075,14 @@ int opkg_install_pkg(pkg_t * pkg, pkg_t * old_pkg)
      sigprocmask(SIG_UNBLOCK, &newset, &oldset);
      return 0;
  

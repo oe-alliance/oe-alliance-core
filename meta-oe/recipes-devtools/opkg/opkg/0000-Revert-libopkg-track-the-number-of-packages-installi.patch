@@ -1,0 +1,348 @@
+diff --git a/libopkg/opkg_conf.c b/libopkg/opkg_conf.c
+index c2e1c2f..e13ebc1 100644
+--- a/libopkg/opkg_conf.c
++++ b/libopkg/opkg_conf.c
+@@ -770,8 +770,6 @@ int opkg_conf_load(void)
+     pkg_hash_init();
+     hash_table_init("file-hash", &opkg_config->file_hash,
+                     OPKG_CONF_DEFAULT_HASH_LEN);
+-    hash_table_init("dir-hash", &opkg_config->dir_hash,
+-                    OPKG_CONF_DEFAULT_HASH_LEN);
+     hash_table_init("obs-file-hash", &opkg_config->obs_file_hash,
+                     OPKG_CONF_DEFAULT_HASH_LEN / 16);
+ 
+@@ -873,7 +871,6 @@ int opkg_conf_load(void)
+  err4:
+     pkg_hash_deinit();
+     hash_table_deinit(&opkg_config->file_hash);
+-    hash_table_deinit(&opkg_config->dir_hash);
+     hash_table_deinit(&opkg_config->obs_file_hash);
+ 
+     r = rmdir(opkg_config->tmp_dir);
+@@ -928,13 +925,11 @@ void opkg_conf_deinit(void)
+     if (opkg_config->verbosity >= DEBUG) {
+         hash_print_stats(&opkg_config->pkg_hash);
+         hash_print_stats(&opkg_config->file_hash);
+-        hash_print_stats(&opkg_config->dir_hash);
+         hash_print_stats(&opkg_config->obs_file_hash);
+     }
+ 
+     pkg_hash_deinit();
+     hash_table_deinit(&opkg_config->file_hash);
+-    hash_table_deinit(&opkg_config->dir_hash);
+     hash_table_deinit(&opkg_config->obs_file_hash);
+ 
+     for (i = 0; options[i].name; i++) {
+diff --git a/libopkg/opkg_conf.h b/libopkg/opkg_conf.h
+index 4d84b09..0f43d4c 100644
+--- a/libopkg/opkg_conf.h
++++ b/libopkg/opkg_conf.h
+@@ -166,7 +166,6 @@ typedef struct opkg_conf {
+     hash_table_t pkg_hash;
+     hash_table_t file_hash;
+     hash_table_t obs_file_hash;
+-    hash_table_t dir_hash;
+ } opkg_conf_t;
+ 
+ enum opkg_option_type {
+diff --git a/libopkg/opkg_remove.c b/libopkg/opkg_remove.c
+index 889c672..09a7c48 100644
+--- a/libopkg/opkg_remove.c
++++ b/libopkg/opkg_remove.c
+@@ -72,20 +72,7 @@ void remove_data_files_and_list(pkg_t * pkg)
+             continue;
+ 
+         if (file_is_dir(file_name)) {
+-            /*
+-               Ensure that the directory is marked for deletion only if
+-               no other installed package is using that directory.
+-             */
+-            if (dir_hash_get_ref_count(file_name) == 1)
+-            {
+-                str_list_append(&installed_dirs, file_name);
+-                dir_hash_remove(file_name);
+-            }
+-            else
+-            {
+-                /* directory should get a new owner in the file hash*/
+-                file_hash_remove(file_name);
+-            }
++            str_list_append(&installed_dirs, file_name);
+             continue;
+         } else if (file_is_symlink(file_name)) {
+             char *link_target;
+@@ -94,21 +81,7 @@ void remove_data_files_and_list(pkg_t * pkg)
+             link_target = realpath(file_name, NULL);
+             if (link_target) {
+                 if ((xlstat(link_target, &target_stat) == 0) && S_ISDIR(target_stat.st_mode)) {
+-                    /*
+-                     * Ensure that the symlink is marked for deletion
+-                     * only if no other installed package uses that symlink.
+-                     */
+-                    if (dir_hash_get_ref_count(file_name) == 1)
+-                    {
+-                        str_list_append(&installed_dirs_symlinks, file_name);
+-                        dir_hash_remove(file_name);
+-                    }
+-                    else
+-                    {
+-                        /* directory should get a new owner in the file hash*/
+-                        file_hash_remove(file_name);
+-                    }
+-
++                    str_list_append(&installed_dirs_symlinks, file_name);
+                     free(link_target);
+                     continue;
+                 }
+diff --git a/libopkg/pkg.c b/libopkg/pkg.c
+index 6b1bd8f..a196714 100644
+--- a/libopkg/pkg.c
++++ b/libopkg/pkg.c
+@@ -1434,16 +1434,6 @@ void pkg_info_preinstall_check(void)
+                 iter = niter, niter = file_list_next(installed_files, iter)) {
+             file_info_t *installed_file = (file_info_t *)iter->data;
+             file_hash_set_file_owner(installed_file->path, pkg);
+-            /*
+-             * Ensure that directories or symlink to directories used
+-             * by multiple packages are tracked in the dir_hash.
+-             * This is later used in remove operations to determine if
+-             * the directory or symlink can be deleted.
+-             */
+-            if(file_is_dir(installed_file->path) || file_is_symlink_to_dir(installed_file->path))
+-            {
+-                dir_hash_add_ref_count(installed_file->path);
+-            }
+         }
+         pkg_free_installed_files(pkg);
+     }
+diff --git a/libopkg/pkg_hash.c b/libopkg/pkg_hash.c
+index 3ca1804..1371bb6 100644
+--- a/libopkg/pkg_hash.c
++++ b/libopkg/pkg_hash.c
+@@ -928,33 +928,3 @@ void file_hash_set_file_owner(const char *file_name, pkg_t * owning_pkg)
+         owning_pkg->state_flag |= SF_FILELIST_CHANGED;
+     }
+ }
+-
+-int dir_hash_get_ref_count(const char* file_name)
+-{
+-    int* current_count = hash_table_get(&opkg_config->dir_hash, file_name);
+-    if (!current_count)
+-        return 0;
+-
+-    return *current_count;
+-}
+-
+-void dir_hash_add_ref_count(const char* file_name)
+-{
+-    int* current_count = hash_table_get(&opkg_config->dir_hash, file_name);
+-    if(!current_count)
+-    {
+-        current_count = xmalloc(sizeof(int*));
+-        *current_count = 0;
+-    }
+-    *current_count = *current_count + 1;
+-    hash_table_insert(&opkg_config->dir_hash, file_name, current_count);
+-}
+-
+-void dir_hash_remove(const char* file_name)
+-{
+-    int* current_count = hash_table_get(&opkg_config->dir_hash, file_name);
+-    if (current_count) {
+-        hash_table_remove(&opkg_config->dir_hash, file_name);
+-        free(current_count);
+-    }
+-}
+diff --git a/libopkg/pkg_hash.h b/libopkg/pkg_hash.h
+index acac797..2ab9356 100644
+--- a/libopkg/pkg_hash.h
++++ b/libopkg/pkg_hash.h
+@@ -66,10 +66,6 @@ void file_hash_remove(const char *file_name);
+ pkg_t *file_hash_get_file_owner(const char *file_name);
+ void file_hash_set_file_owner(const char *file_name, pkg_t * pkg);
+ 
+-int dir_hash_get_ref_count(const char* file_name);
+-void dir_hash_add_ref_count(const char* file_name);
+-void dir_hash_remove(const char* file_name);
+-
+ #ifdef __cplusplus
+ }
+ #endif
+diff --git a/tests/Makefile b/tests/Makefile
+index e68a741..d69d041 100644
+--- a/tests/Makefile
++++ b/tests/Makefile
+@@ -87,8 +87,6 @@ REGRESSION_TESTS := core/01_install.py \
+ 		    regress/issue9939.py \
+ 		    regress/issue10358.py \
+ 		    regress/issue10358b.py \
+-		    regress/issue10461a.py \
+-		    regress/issue10461b.py \
+ 		    regress/issue10777.py \
+ 		    regress/issue10781.py \
+ 		    regress/issue11033.py \
+diff --git a/tests/regress/issue10461a.py b/tests/regress/issue10461a.py
+deleted file mode 100644
+index 8895f18..0000000
+--- a/tests/regress/issue10461a.py
++++ /dev/null
+@@ -1,64 +0,0 @@
+-#! /usr/bin/env python3
+-# SPDX-License-Identifier: GPL-2.0-only
+-#
+-# Reporter: Gabe Jones
+-#
+-# What steps will reproduce the problem?
+-# ======================================
+-#
+-# 1.- Create package 'a' and 'b', which install files to
+-#     a shared new directory.
+-# 2.- Install package 'b', followed by package 'a'.
+-# 3.- Remove package 'b', followed by package 'a'.
+-#
+-# What is the expected output? What do you see instead?
+-# ======================================
+-#
+-# The shared new directory is deleted when the package 'a'
+-# is uninstalled.
+-# The shared directory is orphaned and not deleted after
+-# both packages are uninstalled.
+-
+-import os
+-import opk, cfg, opkgcl
+-
+-opk.regress_init()
+-o = opk.OpkGroup()
+-
+-dir = "dir10461"
+-filename1 = os.path.join(dir, "myfile1")
+-filename2 = os.path.join(dir, "myfile2")
+-
+-os.makedirs(dir)
+-open(filename1, "w").close()
+-a = opk.Opk(Package="a")
+-a.write(data_files=[dir])
+-o.addOpk(a)
+-
+-os.unlink(filename1)
+-
+-open(filename2, "w").close()
+-b = opk.Opk(Package="b")
+-b.write(data_files=[dir])
+-o.addOpk(b)
+-
+-os.unlink(filename2)
+-os.rmdir(dir)
+-
+-o.write_list()
+-opkgcl.update()
+-
+-opkgcl.install("b")
+-if not opkgcl.is_installed("b"):
+-     opk.fail("Package 'b' installed but reports as not installed.")
+-
+-opkgcl.install("a")
+-if not opkgcl.is_installed("a"):
+-     opk.fail("Package 'a' installed but reports as not installed.")
+-
+-opkgcl.remove("b")
+-opkgcl.remove("a")
+-
+-
+-if os.path.exists("{}/{}".format(cfg.offline_root, dir)):
+-    opk.fail("Dir '{}' incorrectly orphaned.".format(dir))
+diff --git a/tests/regress/issue10461b.py b/tests/regress/issue10461b.py
+deleted file mode 100644
+index ac2bd17..0000000
+--- a/tests/regress/issue10461b.py
++++ /dev/null
+@@ -1,75 +0,0 @@
+-#! /usr/bin/env python3
+-# SPDX-License-Identifier: GPL-2.0-only
+-#
+-# 1.- Create package 'a', 'b' and 'c', which install files to
+-#     a shared new directory.
+-# 2.- Install package 'b', followed by packages 'a' and 'c'.
+-# 3.- Remove package 'c', followed by packages 'b' and 'a'.
+-#
+-# The shared new directory should be deleted only when the last package
+-# 'a' is uninstalled.
+-#
+-# 4. Install and remove package 'c' again
+-#
+-# The new directory should be deleted correctly after 'c' is uninstalled.
+-#
+-
+-
+-import os
+-import opk, cfg, opkgcl
+-
+-opk.regress_init()
+-o = opk.OpkGroup()
+-
+-dir = "dir10461"
+-
+-os.makedirs(dir)
+-a = opk.Opk(Package="a")
+-a.write(data_files=[dir])
+-o.addOpk(a)
+-
+-b = opk.Opk(Package="b")
+-b.write(data_files=[dir])
+-o.addOpk(b)
+-
+-c = opk.Opk(Package="c")
+-c.write(data_files=[dir])
+-o.addOpk(c)
+-
+-os.rmdir(dir)
+-
+-o.write_list()
+-opkgcl.update()
+-
+-opkgcl.install("b")
+-if not opkgcl.is_installed("b"):
+-     opk.fail("Package 'b' installed but reports as not installed.")
+-
+-opkgcl.install("a")
+-if not opkgcl.is_installed("a"):
+-     opk.fail("Package 'a' installed but reports as not installed.")
+-
+-opkgcl.install("c")
+-if not opkgcl.is_installed("c"):
+-     opk.fail("Package 'c' installed but reports as not installed.")
+-
+-opkgcl.remove("c")
+-if not os.path.exists("{}/{}".format(cfg.offline_root, dir)):
+-    opk.fail("Dir '{}' incorrectly deleted.".format(dir))
+-
+-opkgcl.remove("b")
+-if not os.path.exists("{}/{}".format(cfg.offline_root, dir)):
+-    opk.fail("Dir '{}' incorrectly deleted.".format(dir))
+-
+-opkgcl.remove("a")
+-if os.path.exists("{}/{}".format(cfg.offline_root, dir)):
+-    opk.fail("Dir '{}' incorrectly orphaned.".format(dir))
+-
+-
+-opkgcl.install("c")
+-if not os.path.exists("{}/{}".format(cfg.offline_root, dir)):
+-    opk.fail("Dir '{}' not created by package 'c'.".format(dir))
+-
+-opkgcl.remove("c")
+-if os.path.exists("{}/{}".format(cfg.offline_root, dir)):
+-    opk.fail("Dir '{}' incorrectly orphaned.".format(dir))
+\ No newline at end of file
+diff --git a/tests/regress/issue13574.py b/tests/regress/issue13574.py
+index 6dda761..e9c9fd5 100755
+--- a/tests/regress/issue13574.py
++++ b/tests/regress/issue13574.py
+@@ -48,7 +48,7 @@ if not os.path.exists("%s/lib64/testfile2.txt" % cfg.offline_root):
+     opk.fail("Package 'a' removed package 'b' file")
+ 
+ if not os.path.exists("%s/lib" % cfg.offline_root):
+-    opk.fail("Package 'a' incorrectly removed symlink that is in use by Package 'b'")
++    opk.fail("Package 'a' incorrectly removed symlink that should belong to Package 'b'")
+ 
+ opkgcl.remove('b')
+ if os.path.exists("%s/lib64/testfile2.txt" % cfg.offline_root):

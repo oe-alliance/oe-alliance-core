@@ -1,3 +1,5 @@
+diff --git a/libopkg/pkg_depends.c b/libopkg/pkg_depends.c
+index eec8961..0ad470c 100644
 --- a/libopkg/pkg_depends.c
 +++ b/libopkg/pkg_depends.c
 @@ -410,15 +410,15 @@ version_constraint_t str_to_constraint(const char **str)

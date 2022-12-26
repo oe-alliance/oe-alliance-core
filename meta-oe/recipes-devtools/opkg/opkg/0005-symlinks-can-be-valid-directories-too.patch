@@ -1,4 +1,4 @@
-From 354644d396b2d8cd4010eab1b5496b80a6efa59f Mon Sep 17 00:00:00 2001
+From dafa11238728d62b516135e086c6ff88327c6134 Mon Sep 17 00:00:00 2001
 From: arn354 <arn354@email.de>
 Date: Sat, 26 Oct 2019 17:24:25 +0200
 Subject: [PATCH] opkg - update
@@ -84,11 +84,11 @@ index d13e805..97dded3 100644
  
  file_list_elt_t *file_list_first(file_list_t *list);
 diff --git a/libopkg/file_util.c b/libopkg/file_util.c
-index ee9f59d..1c34483 100644
+index 050e4a7..4624034 100644
 --- a/libopkg/file_util.c
 +++ b/libopkg/file_util.c
-@@ -96,28 +96,6 @@ int file_is_symlink(const char *file_name)
-     return S_ISLNK(st.st_mode);
+@@ -112,28 +112,6 @@ int file_is_symlink_to_dir(const char *file_name)
+     return is_symlink_to_dir;
  }
  
 -char *file_readlink_alloc(const char *file_name)
@@ -117,19 +117,19 @@ index ee9f59d..1c34483 100644
     If a newline is read, it will appear in the resulting string.
     Return value is a malloc'ed char * which should be freed at
 diff --git a/libopkg/file_util.h b/libopkg/file_util.h
-index 2487649..c75fbbc 100644
+index 87d3944..f51d02f 100644
 --- a/libopkg/file_util.h
 +++ b/libopkg/file_util.h
-@@ -31,7 +31,6 @@ int xlstat(const char *file_name, struct stat *st);
- int file_exists(const char *file_name);
+@@ -32,7 +32,6 @@ int file_exists(const char *file_name);
  int file_is_dir(const char *file_name);
  int file_is_symlink(const char *file_name);
+ int file_is_symlink_to_dir(const char *file_name);
 -char *file_readlink_alloc(const char *file_name);
  char *file_read_line_alloc(FILE * file);
  int file_link(const char *src, const char *dest);
  int file_copy(const char *src, const char *dest);
 diff --git a/libopkg/opkg_archive.c b/libopkg/opkg_archive.c
-index f19cece..f8fcea7 100644
+index 03a4afb..c6dd4b7 100644
 --- a/libopkg/opkg_archive.c
 +++ b/libopkg/opkg_archive.c
 @@ -344,12 +344,7 @@ static int extract_paths_to_stream(struct archive *a, FILE * stream)
@@ -147,10 +147,10 @@ index f19cece..f8fcea7 100644
              opkg_msg(ERROR, "Failed to path to stream: %s\n", strerror(errno));
              return -1;
 diff --git a/libopkg/opkg_install.c b/libopkg/opkg_install.c
-index 8490788..a276e6c 100644
+index 0a33cb5..d120203 100644
 --- a/libopkg/opkg_install.c
 +++ b/libopkg/opkg_install.c
-@@ -452,9 +452,10 @@ static int check_data_file_clashes(pkg_t * pkg, pkg_t * old_pkg)
+@@ -466,9 +466,10 @@ static int check_data_file_clashes(pkg_t * pkg, pkg_t * old_pkg)
              pkg_t *owner;
              pkg_t *obs;
              int existing_is_dir = file_is_dir(filename);
@@ -162,7 +162,7 @@ index 8490788..a276e6c 100644
                  continue;
              } else if (existing_is_dir || S_ISDIR(file_info->mode)) {
                  /* OK if existing file is a symlink to a directory and the new
-@@ -494,32 +495,6 @@ static int check_data_file_clashes(pkg_t * pkg, pkg_t * old_pkg)
+@@ -508,32 +509,6 @@ static int check_data_file_clashes(pkg_t * pkg, pkg_t * old_pkg)
                  continue;
              }
  
@@ -196,10 +196,10 @@ index 8490788..a276e6c 100644
                  continue;
              }
 diff --git a/libopkg/pkg.c b/libopkg/pkg.c
-index cec07fa..2a0fc1a 100644
+index ca4d039..f581b44 100644
 --- a/libopkg/pkg.c
 +++ b/libopkg/pkg.c
-@@ -1189,22 +1189,17 @@ file_list_t *pkg_get_installed_files(pkg_t * pkg)
+@@ -1206,22 +1206,17 @@ file_list_t *pkg_get_installed_files(pkg_t * pkg)
          char *file_name;
          char *mode_str;
          mode_t mode = 0;
@@ -223,7 +223,7 @@ index cec07fa..2a0fc1a 100644
              mode = (mode_t)strtoul(mode_str, NULL, 0);
          }
  
-@@ -1228,14 +1223,11 @@ file_list_t *pkg_get_installed_files(pkg_t * pkg)
+@@ -1254,14 +1249,11 @@ file_list_t *pkg_get_installed_files(pkg_t * pkg)
                  // already contains root_dir as header -> ABSOLUTE
                  sprintf_alloc(&installed_file_name, "%s", file_name);
              }
@@ -240,7 +240,7 @@ index cec07fa..2a0fc1a 100644
          free(line);
      }
  
-@@ -1429,7 +1421,6 @@ static void pkg_write_filelist_helper(const char *key, void *entry_,
+@@ -1455,7 +1447,6 @@ static void pkg_write_filelist_helper(const char *key, void *entry_,
          char *installed_file_name;
          struct stat file_stat;
          mode_t mode = 0;
@@ -248,7 +248,7 @@ index cec07fa..2a0fc1a 100644
          size_t size;
          int unmatched_offline_root = opkg_config->offline_root
                  && !str_starts_with(key, opkg_config->offline_root);
-@@ -1449,19 +1440,13 @@ static void pkg_write_filelist_helper(const char *key, void *entry_,
+@@ -1475,19 +1466,13 @@ static void pkg_write_filelist_helper(const char *key, void *entry_,
  
          if (xlstat(installed_file_name, &file_stat) == 0) {
              mode = file_stat.st_mode;
@@ -272,10 +272,10 @@ index cec07fa..2a0fc1a 100644
      }
  }
 diff --git a/tests/Makefile b/tests/Makefile
-index f3472db..7e529e6 100644
+index d69d041..32f0e3b 100644
 --- a/tests/Makefile
 +++ b/tests/Makefile
-@@ -88,7 +88,6 @@ REGRESSION_TESTS := core/01_install.py \
+@@ -90,7 +90,6 @@ REGRESSION_TESTS := core/01_install.py \
  		    regress/issue10777.py \
  		    regress/issue10781.py \
  		    regress/issue11033.py \

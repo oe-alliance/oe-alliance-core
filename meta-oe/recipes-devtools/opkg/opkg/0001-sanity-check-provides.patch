@@ -1,5 +1,5 @@
 diff --git a/libopkg/pkg.c b/libopkg/pkg.c
-index 31abdd1..cec07fa 100644
+index a196714..ca4d039 100644
 --- a/libopkg/pkg.c
 +++ b/libopkg/pkg.c
 @@ -706,6 +706,7 @@ static void pkg_formatted_field(FILE * fp, pkg_t * pkg, const char *field, const
