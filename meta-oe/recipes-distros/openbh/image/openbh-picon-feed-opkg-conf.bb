@@ -6,7 +6,7 @@ require conf/license/license-gplv2.inc
 inherit allarch
 
 PV = "${IMAGE_VERSION}"
-PR = "r0"
+PR = "r1"
 
 PACKAGES = "${PN}"
 
@@ -16,7 +16,7 @@ feed_name = "openbh-picon-feed"
 
 do_compile() {
     mkdir -p ${S}/${sysconfdir}/opkg
-    echo "src/gz ${feed_name} http://feeds.vuplus-community.net/openbh/picons/" > ${S}/${sysconfdir}/opkg/${feed_name}.conf
+    echo "src/gz ${feed_name} http://feeds.openbh.net/picons/" > ${S}/${sysconfdir}/opkg/${feed_name}.conf
 }
 
 do_install() {
