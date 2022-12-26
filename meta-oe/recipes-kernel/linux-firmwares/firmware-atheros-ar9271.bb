@@ -2,7 +2,7 @@ require linux-firmware.inc
 
 SUMMARY = "Firmware for Atheros HTC devices ar9271"
 
-SRCREV = "a3ffb1a98408f713ff82d59ae1fd203d650974c4"
+SRCREV = "bf9f8648fdf1d1d63db471554781f897d219bd62"
 
 do_install() {
     install -d ${D}${nonarch_base_libdir}/firmware
