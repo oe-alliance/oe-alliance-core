@@ -1,8 +1,8 @@
-SRCREV = "${AUTOREV}"
-
 require linux-firmware.inc
 
-DESCRIPTION = "Firmware for SDIO RTL8723BU"
+SUMMARY = "Firmware for SDIO RTL8723BU"
+
+SRCREV = "${AUTOREV}"
 
 do_install() {
 	install -d ${D}${nonarch_base_libdir}/firmware/rtlwifi

@@ -1,6 +1,6 @@
 require linux-firmware.inc
 
-DESCRIPTION = "Firmware for RTL8192EU"
+SUMMARY = "Firmware for RTL8192EU"
 
 SRCREV = "${AUTOREV}"
 
