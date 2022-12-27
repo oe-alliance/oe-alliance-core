@@ -6,7 +6,8 @@ LICENSE = "CLOSED"
 
 PE = "1"
 
-SRC_URI = "file://ap6212-wifi-firmware.zip \
+SRC_URI = " \
+           file://ap6212-wifi-firmware.zip \
            file://config.txt \
            file://ap6212-bluetooth \
            file://ap6212-default \

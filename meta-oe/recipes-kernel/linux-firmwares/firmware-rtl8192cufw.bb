@@ -1,8 +1,6 @@
 LICENSE = "CLOSED"
 require conf/license/license-close.inc
-SRC_URI = " \
-    file://rtl8192cufw_TMSC.zip \
-"
+SRC_URI = "file://rtl8192cufw_TMSC.zip"
 
 S = "${WORKDIR}"
 
