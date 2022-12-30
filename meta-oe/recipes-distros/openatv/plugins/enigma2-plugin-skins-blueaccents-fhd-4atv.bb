@@ -4,11 +4,13 @@ MAINTAINER = "stein17"
 require conf/license/license-gplv2.inc
 require conf/python/python3-compileall.inc
 
+RDEPENDS:${PN} += "enigma2-plugin-skincomponents-weathercomponent enigma2-plugin-systemplugins-weathercomponenthandler"
+
 inherit gitpkgv
 
 SRCREV = "${AUTOREV}"
-PV = "1.0+git${SRCPV}"
-PKGV = "1.0+git${GITPKGV}"
+PV = "1.1+git${SRCPV}"
+PKGV = "1.1+git${GITPKGV}"
 
 SRC_URI="git://github.com/stein17/Skins-for-openATV.git;protocol=https;branch=python3"
 
@@ -76,3 +78,5 @@ echo "BlueAccents-FHD Skin by stein17 is now being removed from your receiver...
 echo "                                                                           "
 exit 0
 }
+
+INSANE_SKIP:${PN} += "build-deps"
