@@ -63,7 +63,7 @@ do_install() {
         done
         install -m 0644 ${S}/hardware/v2.xml ${D}${datadir}/enigma2/hardware/hardware.xml
     else
-        printf '<hardware>\n\t<remotes>\n\t\t<remote rcName="%s" rcCode="%s" name="Default" />\n\t</remotes>\n</hardware>' '${RCNAME}' '${RCTYPE}' > ${D}${datadir}/enigma2/hardware/hardware.xml
+        printf '<hardware>\n\t<remotes>\n\t\t<remote rcName="%s" rcType="%s" name="Default" />\n\t</remotes>\n</hardware>' '${RCNAME}' '${RCTYPE}' > ${D}${datadir}/enigma2/hardware/hardware.xml
     fi
     if [ ${MACHINEBUILD} = "ventonhdx" ]; then
         install -m 0644 ${S}/boxes/uniboxhd1.png ${D}${datadir}/enigma2/hardware/uniboxhd1_front.png
