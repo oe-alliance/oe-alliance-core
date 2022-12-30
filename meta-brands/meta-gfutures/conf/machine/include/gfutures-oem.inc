@@ -135,7 +135,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'mutant1100', 'hd1100' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mutant1265', 'hd1100' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mutant1500', 'hd1100' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mutant500c', 'hd1100' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'mutant530c', 'hd1100' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'mutant530c', 'hd530c' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mutant1200', 'hd1100' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'vizyonvita', 'hd1100' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'mutant11', 'hd1100' , '', d)}\
