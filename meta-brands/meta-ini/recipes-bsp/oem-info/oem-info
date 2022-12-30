@@ -33,9 +33,11 @@ if [ $BRAND == "UNiBOX" ]; then
   elif [ $TYPE == "ini-5000" ]; then
     sed -i -e 's:displaymodel=HD-x:displaymodel=HD-2:' $INFO
     sed -i -e 's:model=inihdx:model=uniboxhd2:' $INFO
+    sed -i -e 's:rcname=ini0:model=rcname=ini1:' $INFO
   elif [ $TYPE == "ini-7000" ]; then
     sed -i -e 's:displaymodel=HD-x:displaymodel=HD-3:' $INFO
     sed -i -e 's:model=inihdx:model=uniboxhd3:' $INFO
+    sed -i -e 's:rcname=ini0:model=rcname=ini1:' $INFO
   elif [ $TYPE == "ini-7012" ]; then
     sed -i -e 's:displaymodel=HD-x:displaymodel=HD-3:' $INFO
     sed -i -e 's:model=inihdx:model=uniboxhd3:' $INFO
