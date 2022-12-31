@@ -1,4 +1,6 @@
 /* Unknown license, public domain */
+#include <unistd.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <fcntl.h>
@@ -6,12 +8,24 @@
 #include <sys/ioctl.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <unistd.h>
 #include <errno.h>
 #ifdef HAVE_AMLOGIC
 # include <codec.h>
 #else
 # include <linux/dvb/video.h>
+#endif
+
+#ifdef __aarch64__
+
+struct video_frame {
+	uint64_t pts;
+	ssize_t bytes[8];
+	const uint8_t *data[8];
+	int is_phys_addr[8];
+};
+
+#define VIDEO_SET_FRAME _IOWR('o', 64, struct video_frame)
+
 #endif
 
 #ifdef HAVE_AMLOGIC
@@ -176,6 +190,7 @@ int main(int argc, char **argv)
 #endif
 		while(pos <= (s.st_size-4) && !(seq_end_avail = (!iframe[pos] && !iframe[pos+1] && iframe[pos+2] == 1 && iframe[pos+3] == 0xB7)))
 			++pos;
+#ifndef __aarch64__
 		while(count--){
 			if ((iframe[3] >> 4) != 0xE) // no pes header
 			{
@@ -191,6 +206,23 @@ int main(int argc, char **argv)
 		if (!seq_end_avail)
 			write_all(fd, seq_end, sizeof(seq_end));
 		write_all(fd, stuffing, 8192);
+#else
+		{
+			struct video_frame fr;
+			int pos = 0;
+			memset(&fr, 0, sizeof(fr));
+			fr.bytes[pos] = sizeof(iframe);
+			fr.data[pos++] = iframe;
+			fr.pts = 0;
+			if (!seq_end_avail) {
+				fr.bytes[pos] = sizeof(seq_end);
+				fr.data[pos++] = seq_end;
+			}
+			fr.bytes[pos] = sizeof(stuffing);
+			fr.data[pos++] = stuffing;
+			c(ioctl(fd, VIDEO_SET_FRAME, &fr));
+		}
+#endif
 #ifndef HAVE_AMLOGIC
 		usleep(150000);
 		c(ioctl(fd, VIDEO_STOP, 0));

@@ -17,11 +17,15 @@ SRC_URI:dm920 += "http://dreamboxupdate.com/download/opendreambox/2.5.0/blindsca
 SRC_URI:dm520 += "http://dreamboxupdate.com/download/opendreambox/2.5.0/blindscan-utils/${PV}/${DEFAULTTUNE}/185cd9490723728f39953348e322f5c7/blindscan-utils_${PV}_${DEFAULTTUNE}.tar.xz;name=${DEFAULTTUNE}-krogoth"
 SRC_URI:dm820 += "http://dreamboxupdate.com/download/opendreambox/2.5.0/blindscan-utils/${PV}/${DEFAULTTUNE}/185cd9490723728f39953348e322f5c7/blindscan-utils_${PV}_${DEFAULTTUNE}.tar.xz;name=${DEFAULTTUNE}-krogoth"
 SRC_URI:dm7080 += "http://dreamboxupdate.com/download/opendreambox/2.5.0/blindscan-utils/${PV}/${DEFAULTTUNE}/185cd9490723728f39953348e322f5c7/blindscan-utils_${PV}_${DEFAULTTUNE}.tar.xz;name=${DEFAULTTUNE}-krogoth"
+SRC_URI:dreamone += "http://dreamboxupdate.com/download/opendreambox/2.6.0/blindscan-utils/${PV}/${DEFAULTTUNE}/aa6dad1ece041c236338d3a41fd5da1e/blindscan-utils_${PV}_${DEFAULTTUNE}.tar.xz;name=${DEFAULTTUNE}-pyro"
+SRC_URI:dreamtwo += "http://dreamboxupdate.com/download/opendreambox/2.6.0/blindscan-utils/${PV}/${DEFAULTTUNE}/aa6dad1ece041c236338d3a41fd5da1e/blindscan-utils_${PV}_${DEFAULTTUNE}.tar.xz;name=${DEFAULTTUNE}-pyro"
 
 S = "${WORKDIR}/blindscan-utils_${PV}_${DEFAULTTUNE}"
 
 PACKAGES = "${PN}"
 
+SRC_URI[aarch64-pyro.md5sum] = "aa6dad1ece041c236338d3a41fd5da1e"
+SRC_URI[aarch64-pyro.sha256sum] = "aeaf9088b3cb2bf91dcab7e7ae8d417ab7eaca304f2f9dc35e5e14838ce5f0cc"
 SRC_URI[mips32el-dora.md5sum] = "2acb58192434f308bfed6879c51d5d6e"
 SRC_URI[mips32el-dora.sha256sum] = "afe56c1d222c4d6d33509208116628c30f88916bda7a19e5c749dcbc914d6020"
 SRC_URI[cortexa15hf-neon-vfpv4-krogoth.md5sum] = "9e93783a6ac4611bb683d0b36fc44a87"

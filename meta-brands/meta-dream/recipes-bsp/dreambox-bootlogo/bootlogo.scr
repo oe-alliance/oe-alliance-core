@@ -1,0 +1,20 @@
+setenv logo_width 1280
+setenv logo_height 720
+setenv logo_bpp 16
+setenv logo_color_format 16
+ext4load mmc 1:6 ${loadaddr} /boot/bootlogo.bmp
+
+setenv fb_width ${logo_width}
+setenv fb_height ${logo_height}
+setenv display_bpp ${logo_bpp}
+setenv display_color_index ${logo_color_format}
+setenv display_color_fg 0xffffffff
+setenv display_color_bg 0
+setenv display_layer osd0
+osd open
+osd clear
+bmp scale
+bmp display ${loadaddr}
+vout output ${outputmode}
+
+setenv bootargs ${initargs} logo=${display_layer},loaded,0x${initrd_high} vout=${outputmode},enable hdmimode=${hdmimode} fb_width=${fb_width} fb_height=${fb_height}

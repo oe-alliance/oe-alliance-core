@@ -15,6 +15,9 @@ PV = "1.0"
 
 inherit module
 
+# need only for dreambox linux-meson64 4.9
+export KCFLAGS += " -Wno-error=unused-variable"
+
 do_compile () {  
     unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS
     oe_runmake 'MODPATH="${D}${base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/boxmodel" ' \

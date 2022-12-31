@@ -36,6 +36,21 @@ SRC_URI[sha256sum] = "d034f6c6d9578fe2addfaeceaa101584a4a1fc9f27d825c340baebd345
 
 inherit module machine_kernel_pr
 
+# need only for dreambox linux-meson64 4.9
+export KCFLAGS += " -Wno-error=misleading-indentation \
+                    -Wno-error=aggressive-loop-optimizations \
+                    -Wno-error=int-to-pointer-cast \
+                    -Wno-error=restrict \
+                    -Wno-error=int-conversion \
+                    -Wno-error=maybe-uninitialized \
+                    -Wno-error=discarded-qualifiers \
+                    -Wno-error=switch-unreachable \
+                    -Wno-error=bool-operation \
+                    -Wno-error=declaration-after-statement \
+                    -Wno-error=incompatible-pointer-types \
+                    -Wno-error \
+"
+
 do_compile() {
         unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS
         oe_runmake -C "${STAGING_KERNEL_BUILDDIR}" M="${S}" modules

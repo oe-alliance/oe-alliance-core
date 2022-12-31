@@ -1,0 +1,13 @@
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index 8690dc56e883..b229c55a8232 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -986,7 +986,7 @@ struct file_handle {
+ 	__u32 handle_bytes;
+ 	int handle_type;
+ 	/* file identifier */
+-	unsigned char f_handle[0];
++	unsigned char f_handle[];
+ };
+ 
+ static inline struct file *get_file(struct file *f)

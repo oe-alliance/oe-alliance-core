@@ -13,5 +13,5 @@ RDEPENDS:${PN}-soup += "libsoup-2.4"
 
 PACKAGECONFIG:append = " \
     ${@bb.utils.contains('MACHINE_FEATURES', 'novp9', '', 'vpx',d)} \
-    wavpack \
+    wavpack gudev \
 "

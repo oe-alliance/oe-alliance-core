@@ -12,6 +12,21 @@ SRC_URI = "https://source.mynonpublic.com/ini/rt5572_2.6.1.4.tar.gz \
 
 EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR} KDIR=${STAGING_KERNEL_DIR}"
 
+# need only for dreambox linux-meson64 4.9
+export KCFLAGS += " -Wno-error=misleading-indentation \
+                    -Wno-error=aggressive-loop-optimizations \
+                    -Wno-error=int-to-pointer-cast \
+                    -Wno-error=restrict \
+                    -Wno-error=int-conversion \
+                    -Wno-error=maybe-uninitialized \
+                    -Wno-error=discarded-qualifiers \
+                    -Wno-error=switch-unreachable \
+                    -Wno-error=bool-operation \
+                    -Wno-error=declaration-after-statement \
+                    -Wno-error=incompatible-pointer-types \
+                    -Wno-error \
+"
+
 S = "${WORKDIR}/RT5572"
 
 do_install() {

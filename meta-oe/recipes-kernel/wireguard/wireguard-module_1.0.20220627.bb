@@ -14,8 +14,10 @@ SRC_URI = "https://git.zx2c4.com/wireguard-linux-compat/snapshot/wireguard-linux
     file://0001-build-fallthrough-issue-fixed.patch \
 "
 
-SRC_URI[md5sum] = "7014bca39ac0da6159a701693c7b9b6a"
-SRC_URI[sha256sum] = "c0e607138a17daac656f508d8e63ea3737b5221fa5d9288191ddeb099f5a3b92"
+SRC_URI:append:meson64 = " file://version.patch"
+
+SRC_URI[md5sum] = "0499a3315b7013e65a07234dc83dec39"
+SRC_URI[sha256sum] = "362d412693c8fe82de00283435818d5c5def7f15e2433a07a9fe99d0518f63c0"
 
 S = "${WORKDIR}/wireguard-linux-compat-${PV}/src"
 

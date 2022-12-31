@@ -43,3 +43,5 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 INHIBIT_PACKAGE_STRIP = "1"
 INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
 INSANE_SKIP:${PN} = "already-stripped ldflags"
+
+COMPATIBLE_MACHINE = "^(vuduo|vuduo2|vuduo4k|vuduo4kse|vusolo|vusolo2|vusolo4k|vusolose|vuultimo|vuultimo4k|vuuno|vuuno4k|vuuno4kse|vuzero|vuzero4k)$"

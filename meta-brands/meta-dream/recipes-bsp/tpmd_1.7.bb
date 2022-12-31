@@ -12,4 +12,11 @@ INITSCRIPT_NAME = "${PN}"
 INHIBIT_PACKAGE_STRIP = "1"
 INITSCRIPT_PARAMS = "start 60 S ."
 
+FILES:${PN}-src += " \
+    /lib/systemd/system/tpmd.socket \
+    /lib/systemd/system/tpmd.service \
+"
+
 INSANE_SKIP:${PN} += "file-rdeps"
+
+COMPATIBLE_MACHINE = "^(dm520|dm820|dm7080|dm900|dm920)$"

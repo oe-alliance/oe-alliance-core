@@ -28,6 +28,9 @@ do_install() {
 	if [ -d ${B}/bin/linux_mipsle ]; then
 		install ${B}/bin/linux_mipsle/tailscale ${D}${bindir}/tailscale
 		install ${B}/bin/linux_mipsle/tailscaled ${D}${sbindir}/tailscaled
+	elif [ -d ${B}/bin/linux_arm64 ]; then
+		install ${B}/bin/linux_arm64/tailscale ${D}${bindir}/tailscale
+		install ${B}/bin/linux_arm64/tailscaled ${D}${sbindir}/tailscaled
 	else
 		install ${B}/bin/linux_${TARGET_ARCH}/tailscale ${D}${bindir}/tailscale
 		install ${B}/bin/linux_${TARGET_ARCH}/tailscaled ${D}${sbindir}/tailscaled

@@ -6,6 +6,8 @@ RDEPENDS:${PN} = "dreambox-compat wdog libssl0.9.8"
 PR = "r6"
 require conf/license/license-close.inc
 
+COMPATIBLE_MACHINE = "^(dm500hd|dm500hdv2|dm800se|dm800sev2|dm7020hd|dm7020hdv2|dm8000)$"
+
 SRC_URI[mips32el.md5sum] = "36218ca3eff5bd0bcb13055026e50d63"
 SRC_URI[mips32el.sha256sum] = "969438a72ca7c473903516e845cefe52313c01b4de5692bf2fa613a7814a1a84"
 SRC_URI[mips32el-nf.md5sum] = "52ef082a5e2291a53204a1cbdfc0ff5a"

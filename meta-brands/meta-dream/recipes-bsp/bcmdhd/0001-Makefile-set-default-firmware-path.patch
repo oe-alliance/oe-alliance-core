@@ -1,0 +1,12 @@
+diff -Naur bcmdhd.1.363.59.144.x.cn.orig/Makefile bcmdhd.1.363.59.144.x.cn/Makefile
+--- bcmdhd.1.363.59.144.x.cn.orig/Makefile	2019-01-24 00:24:29.000000000 +0100
++++ bcmdhd.1.363.59.144.x.cn/Makefile	2019-04-10 21:11:03.412627110 +0200
+@@ -111,6 +111,8 @@
+ DHDCFLAGS += -DWLTDLS -DMIRACAST_AMPDU_SIZE=8
+ DHDCFLAGS += -DWL_VIRTUAL_APSTA
+ endif
++DHDCFLAGS += -DCONFIG_BCMDHD_FW_PATH='"/lib/firmware/brcm/fw_bcm4356a2_ag.bin"'
++DHDCFLAGS += -DCONFIG_BCMDHD_NVRAM_PATH='"/etc/brcm/nvram_ap6356.txt"'
+ EXTRA_CFLAGS = $(DHDCFLAGS)
+ ifeq ($(CONFIG_BCMDHD),m)
+ DHDCFLAGS += -DMULTIPLE_SUPPLICANT

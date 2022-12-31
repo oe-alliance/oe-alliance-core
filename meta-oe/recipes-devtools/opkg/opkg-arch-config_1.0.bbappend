@@ -10,10 +10,6 @@ do_compile:append:mipsel() {
 # add support for extra feeds
 PACKAGE_ARCHS += " ocram"
 
-do_compile:append:dm800() {
-    echo "arch mips32el $priority" >> $archconf
-}
-
 do_compile:append:bcm7376() {
     echo "arch armv7ahf-vfp-neon $priority" >> $archconf
     echo "arch armv7ahf-neon $priority" >> $archconf
@@ -68,6 +64,12 @@ do_compile:append:hisi3798mv200h() {
     echo "arch cortexa15hf-neon-vfpv4 $priority" >> $archconf
 }
 
+do_compile:append:hisi3798mv300h() {
+    echo "arch armv7ahf-vfp-neon $priority" >> $archconf
+    echo "arch armv7ahf-neon $priority" >> $archconf
+    echo "arch cortexa15hf-neon-vfpv4 $priority" >> $archconf
+}
+
 do_compile:append:hisi3798mv310() {
     echo "arch armv7ahf-vfp-neon $priority" >> $archconf
     echo "arch armv7ahf-neon $priority" >> $archconf
@@ -84,17 +86,6 @@ do_compile:append:hisi3798cv200() {
     echo "arch cortexa15hf-neon-vfpv4 $priority" >> $archconf
 }
 
-do_compile:append:AML8726() {
-    echo "arch mips32el $priority" >> $archconf
-    echo "arch mipsel $priority" >> $archconf
-}
-
-do_compile:append:AMLS905() {
-    echo "arch mips32el $priority" >> $archconf
-    echo "arch mipsel $priority" >> $archconf
-}
-
-do_compile:append:AML905D() {
-    echo "arch mips32el $priority" >> $archconf
-    echo "arch mipsel $priority" >> $archconf
+do_compile:append:aarch64() {
+    echo "arch arm64 $priority" >> $archconf
 }

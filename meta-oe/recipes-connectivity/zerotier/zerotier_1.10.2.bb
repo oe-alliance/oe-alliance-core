@@ -28,6 +28,8 @@ INITSCRIPT_NAME = "zerotier"
 
 inherit autotools-brokensep update-rc.d systemd
 
+EXTRA_OEMAKE = " ZT_SSO_SUPPORTED=0 "
+
 do_install:append() {
     install -d ${D}${sysconfdir}/init.d
     install -m 0755 ${WORKDIR}/zerotier ${D}${sysconfdir}/init.d/zerotier

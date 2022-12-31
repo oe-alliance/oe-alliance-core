@@ -1,0 +1,12 @@
+diff -Naur a/scripts/dtc/dtc-parser.tab.c_shipped b/scripts/dtc/dtc-parser.tab.c_shipped
+--- a/scripts/dtc/dtc-parser.tab.c_shipped	2021-10-29 12:55:38.000000000 +0200
++++ b/scripts/dtc/dtc-parser.tab.c_shipped	2022-11-27 15:29:01.700431125 +0100
+@@ -1202,7 +1202,7 @@
+ /* The semantic value of the lookahead symbol.  */
+ YYSTYPE yylval;
+ /* Location data for the lookahead symbol.  */
+-YYLTYPE yylloc
++extern YYLTYPE yylloc
+ # if defined YYLTYPE_IS_TRIVIAL && YYLTYPE_IS_TRIVIAL
+   = { 1, 1, 1, 1 }
+ # endif

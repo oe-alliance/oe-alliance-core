@@ -1,0 +1,11 @@
+--- a/fs/sdcardfs/main.c	2022-12-24 10:03:10.597851837 +0000
++++ b/fs/sdcardfs/main.c	2022-12-24 10:05:21.553849156 +0000
+@@ -445,7 +445,7 @@
+ {
+ 	int err;
+ 
+-	pr_info("Registering sdcardfs " SDCARDFS_VERSION "\n");
++	//pr_info("Registering sdcardfs " SDCARDFS_VERSION "\n");
+ 
+ 	err = sdcardfs_init_inode_cache();
+ 	if (err)

@@ -37,3 +37,5 @@ do_install:arm() {
 require conf/python/python3-compileall.inc
 
 do_package_qa[noexec] = "1"
+INSANE_SKIP:${PN} += "already-stripped"
+

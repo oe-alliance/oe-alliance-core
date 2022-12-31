@@ -1,0 +1,14 @@
+--- a/compat/version/linux/version.h	2022-12-30 08:22:36.915861551 +0000
++++ b/compat/version/linux/version.h	2022-12-30 08:23:22.107861734 +0000
+@@ -4,7 +4,7 @@
+  */
+ 
+ #include_next <linux/version.h>
+-#undef KERNEL_VERSION
+-#define KERNEL_VERSION(a, b, c) (((a) << 24) + ((b) << 16) + (c))
+-#undef LINUX_VERSION_CODE
+-#define LINUX_VERSION_CODE KERNEL_VERSION(COMPAT_VERSION, COMPAT_PATCHLEVEL, COMPAT_SUBLEVEL)
++//#undef KERNEL_VERSION
++//#define KERNEL_VERSION(a, b, c) (((a) << 24) + ((b) << 16) + (c))
++//#undef LINUX_VERSION_CODE
++//#define LINUX_VERSION_CODE KERNEL_VERSION(COMPAT_VERSION, COMPAT_PATCHLEVEL, COMPAT_SUBLEVEL)

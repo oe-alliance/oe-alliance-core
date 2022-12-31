@@ -32,5 +32,7 @@ EXTRA_ALSA:og2ott4k = "mv200"
 EXTRA_ALSA:sfx6008 = "mv200"
 EXTRA_ALSA:ip8 = "mv200"
 EXTRA_ALSA:sx88v2 = "mv200"
+EXTRA_ALSA:dreamone = "meson64"
+EXTRA_ALSA:dreamtwo = "meson64"
 
 require alsa-state-${EXTRA_ALSA}.inc

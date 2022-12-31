@@ -1,0 +1,83 @@
+From 01ce6d395750fd179948c34294f6f060f6cfa148 Mon Sep 17 00:00:00 2001
+From: Andreas Oberritter <obi@opendreambox.org>
+Date: Thu, 28 Mar 2019 00:35:26 +0100
+Subject: [PATCH] bifrost/r12p0: compile-fix for dreambox kernel
+
+Signed-off-by: Andreas Oberritter <obi@opendreambox.org>
+---
+ .../kernel/drivers/base/dma_buf_lock/src/dma_buf_lock.c     | 2 +-
+ .../r12p0/kernel/drivers/gpu/arm/midgard/mali_kbase_fence.h | 2 +-
+ .../kernel/drivers/gpu/arm/midgard/mali_kbase_fence_defs.h  | 2 +-
+ .../kernel/drivers/gpu/arm/midgard/mali_kbase_sync_file.c   | 6 +++---
+ 4 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/bifrost/r12p0/kernel/drivers/base/dma_buf_lock/src/dma_buf_lock.c b/bifrost/r12p0/kernel/drivers/base/dma_buf_lock/src/dma_buf_lock.c
+index 529ce71..0834a8f 100644
+--- a/bifrost/r12p0/kernel/drivers/base/dma_buf_lock/src/dma_buf_lock.c
++++ b/bifrost/r12p0/kernel/drivers/base/dma_buf_lock/src/dma_buf_lock.c
+@@ -50,7 +50,7 @@
+ #define dma_fence_add_callback(a, b, c) fence_add_callback(a, b, c)
+ #define dma_fence_remove_callback(a, b) fence_remove_callback(a, b)
+ 
+-#if (KERNEL_VERSION(4, 9, 68) > LINUX_VERSION_CODE)
++#if (KERNEL_VERSION(4, 9, 0) > LINUX_VERSION_CODE)
+ #define dma_fence_get_status(a) (fence_is_signaled(a) ? (a)->status ?: 1 : 0)
+ #else
+ #define dma_fence_get_status(a) (fence_is_signaled(a) ? (a)->error ?: 1 : 0)
+diff --git a/bifrost/r12p0/kernel/drivers/gpu/arm/midgard/mali_kbase_fence.h b/bifrost/r12p0/kernel/drivers/gpu/arm/midgard/mali_kbase_fence.h
+index ab0db40..0038594 100644
+--- a/bifrost/r12p0/kernel/drivers/gpu/arm/midgard/mali_kbase_fence.h
++++ b/bifrost/r12p0/kernel/drivers/gpu/arm/midgard/mali_kbase_fence.h
+@@ -139,7 +139,7 @@ static inline bool kbase_fence_out_is_ours(struct kbase_jd_atom *katom)
+ static inline int kbase_fence_out_signal(struct kbase_jd_atom *katom,
+ 					 int status)
+ {
+-#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 9, 68))
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 9, 0))
+ 	katom->dma_fence.fence->error = status;
+ #else
+ 	katom->dma_fence.fence->status = status;
+diff --git a/bifrost/r12p0/kernel/drivers/gpu/arm/midgard/mali_kbase_fence_defs.h b/bifrost/r12p0/kernel/drivers/gpu/arm/midgard/mali_kbase_fence_defs.h
+index 607a95c..08f03ff 100644
+--- a/bifrost/r12p0/kernel/drivers/gpu/arm/midgard/mali_kbase_fence_defs.h
++++ b/bifrost/r12p0/kernel/drivers/gpu/arm/midgard/mali_kbase_fence_defs.h
+@@ -45,7 +45,7 @@
+ #define dma_fence_add_callback(a, b, c) fence_add_callback(a, b, c)
+ #define dma_fence_remove_callback(a, b) fence_remove_callback(a, b)
+ 
+-#if (KERNEL_VERSION(4, 9, 68) <= LINUX_VERSION_CODE)
++#if (KERNEL_VERSION(4, 9, 0) <= LINUX_VERSION_CODE)
+ #define dma_fence_get_status(a) (fence_is_signaled(a) ? (a)->error ?: 1 : 0)
+ #else
+ #define dma_fence_get_status(a) (fence_is_signaled(a) ? (a)->status ?: 1 : 0)
+diff --git a/bifrost/r12p0/kernel/drivers/gpu/arm/midgard/mali_kbase_sync_file.c b/bifrost/r12p0/kernel/drivers/gpu/arm/midgard/mali_kbase_sync_file.c
+index 2312399..49266b4 100644
+--- a/bifrost/r12p0/kernel/drivers/gpu/arm/midgard/mali_kbase_sync_file.c
++++ b/bifrost/r12p0/kernel/drivers/gpu/arm/midgard/mali_kbase_sync_file.c
+@@ -73,7 +73,7 @@ int kbase_sync_fence_out_create(struct kbase_jd_atom *katom, int stream_fd)
+ 	if (!fence)
+ 		return -ENOMEM;
+ 
+-#if (KERNEL_VERSION(4, 9, 67) >= LINUX_VERSION_CODE)
++#if (KERNEL_VERSION(4, 8, 99) >= LINUX_VERSION_CODE)
+ 	/* Take an extra reference to the fence on behalf of the sync_file.
+ 	 * This is only needed on older kernels where sync_file_create()
+ 	 * does not take its own reference. This was changed in v4.9.68,
+@@ -170,7 +170,7 @@ static void kbase_fence_wait_callback(struct dma_fence *fence,
+ 	struct kbase_context *kctx = katom->kctx;
+ 
+ 	/* Cancel atom if fence is erroneous */
+-#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 9, 68))
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 9, 0))
+ 	if (dma_fence_is_signaled(kcb->fence) && kcb->fence->error)
+ #else
+ 	if (dma_fence_is_signaled(kcb->fence) && kcb->fence->status < 0)
+@@ -286,7 +286,7 @@ static void kbase_sync_fence_info_get(struct dma_fence *fence,
+ 	 * 1 : signaled
+ 	 */
+ 	if (dma_fence_is_signaled(fence)) {
+-#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 9, 68))
++#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 9, 0))
+ 		int status = fence->error;
+ #else
+ 		int status = fence->status;

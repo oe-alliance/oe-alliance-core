@@ -67,4 +67,3 @@ require conf/machine/box-hardware.inc
 MACHINEOVERRIDES =. "${@['', '${MACHINEBUILD}:']['${MACHINEBUILD}' != '']}"
 
 BBMASK = "meta-octagon/"
-
