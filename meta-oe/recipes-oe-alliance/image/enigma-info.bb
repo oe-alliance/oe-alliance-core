@@ -219,7 +219,7 @@ do_install() {
     printf "checksum=%s\n" $(md5sum "${D}${INFOFILE}" | awk '{print $1}') >> ${D}${INFOFILE}
 }
 
-do_install[vardepsexclude] += " DATE DATETIME IMAGE_BUILD"
+do_install[vardepsexclude] += " DATE DATETIME IMAGE_BUILD MACHINEBUILD"
 
 FILES:${PN}:append = " /usr"
 
