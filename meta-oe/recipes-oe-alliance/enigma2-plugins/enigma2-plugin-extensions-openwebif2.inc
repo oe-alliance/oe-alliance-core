@@ -57,7 +57,12 @@ python populate_packages:prepend() {
     do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/[a-zA-Z0-9_]+.*$', 'enigma2-plugin-%s', '%s', recursive=True, match_path=True, prepend=True, extra_depends="enigma2")
     do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/(.*/)?\.debug/.*$', 'enigma2-plugin-%s-dbg', '%s (debug)', recursive=True, match_path=True, prepend=True)
     do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/.*\/.*\.po$', 'enigma2-plugin-%s-po', '%s (translations)', recursive=True, match_path=True, prepend=True)
+    do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/controllers/views/.*\.tmpl$', 'enigma2-plugin-%s-src', '%s (Template sources for OpenWebif)', recursive=True, match_path=True, prepend=True)
 }
+
+FILES:${PN}-themes += " ${libdir}/enigma2/python/Plugins/Extensions/OpenWebif/public/modern \
+                        ${libdir}/enigma2/python/Plugins/Extensions/OpenWebif/controllers/views/responsive \
+"
 
 RPROVIDES:${PN}  = "${PN}-terminal ${PN}-webtv"
 RREPLACES:${PN}  = "${PN}-terminal ${PN}-webtv"
