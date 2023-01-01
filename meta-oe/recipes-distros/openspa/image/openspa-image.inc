@@ -14,7 +14,7 @@ do_rootfs[deptask] = "do_rm_work"
 REPRODUCIBLE_TIMESTAMP_ROOTFS = "${@time.strftime('%s')}"
 
 IMAGE_INSTALL = "openspa-base \
-    ${@bb.utils.contains("MACHINE_FEATURES", "no-cl-svr", "", \
+    ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", \
     " \
     packagegroup-base-smbfs-client \
     packagegroup-base-smbfs-server \

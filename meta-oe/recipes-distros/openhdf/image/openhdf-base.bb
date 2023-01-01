@@ -49,7 +49,7 @@ RDEPENDS:${PN} = "\
     ", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "dreambox", "", "ofgwrite", d)} \
     ${@bb.utils.contains("TUNE_FEATURES", "armv", "glibc-compat", "", d)} \
-    ${@bb.utils.contains("MACHINE_FEATURES", "singlecore", "", \
+    ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", \
     " \
     packagegroup-base-smbfs-server \
     packagegroup-base-nfs \

@@ -56,7 +56,7 @@ ${@bb.utils.contains('MACHINE_FEATURES', 'multitranscoding', 'multitranscoding' 
 "
 
 LANGUAGECHECK = "${@bb.utils.contains_any("FLASHSIZE", "64 96", "DEU;ENG" , "multilang", d)}"
-LANGUAGE = "${@bb.utils.contains_any("MACHINE_FEATURES", "smallflash BootloaderMax110", "DEU;ENG", "${LANGUAGECHECK}", d)}"
+LANGUAGE = "${@bb.utils.contains_any("MACHINE_FEATURES", "smallflash", "DEU;ENG", "${LANGUAGECHECK}", d)}"
 
 STB_PLATFORM ?= "${MACHINE}"
 MEDIASERVICE ?= "${@bb.utils.contains("MACHINE_FEATURES", "himedia", "servicehisilicon" , "servicegstreamer", d)}"

@@ -172,7 +172,7 @@ IMAGE_CMD:ubi:append = "\
     rm -Rf ${IMAGEDIR}; \
     "
 
-MACHINE_FEATURES += "3dtv alsa hdmicec switchoff bootsplash blindscan-dvbs blindscan-dvbc omb boxmodel feature1 feature2 HDMI BootloaderMax110 \
+MACHINE_FEATURES += "3dtv alsa hdmicec switchoff bootsplash blindscan-dvbs blindscan-dvbc omb boxmodel feature1 feature2 HDMI smallflash \
 ${@bb.utils.contains('MACHINEBUILD', 'axodinc', 'dvb-c dvbc-only' , '', d)} \
 ${@bb.utils.contains('MACHINEBUILD', 'axase3c', 'dvb-c dvbc-only' , '', d)} \
 ${@bb.utils.contains('MACHINEBUILD', 'classm', 'SCART' , '', d)} \

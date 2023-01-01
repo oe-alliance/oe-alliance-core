@@ -23,7 +23,7 @@ S = "${WORKDIR}/git"
 EXTRA_OEMAKE = " \
     'CFLAGS=${CFLAGS} \
     -I=${includedir}/freetype2 \
-    ${@bb.utils.contains("MACHINE_FEATURES", "singlecore", "-DOPD_DEFAULT_TIMER=10" , "-DOPD_DEFAULT_TIMER=5", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "-DOPD_DEFAULT_TIMER=10" , "-DOPD_DEFAULT_TIMER=5", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "textlcd", "-DOPD_HAVE_TEXTLCD" , "", d)} \
     ${@bb.utils.contains("IMAGE_FSTYPES", "ubi", "-DOPD_FLASH_UBI" , "", d)} \
     ${@bb.utils.contains("IMAGE_FSTYPES", "jffs2", "-DOPD_FLASH_JFFS2" , "", d)} \

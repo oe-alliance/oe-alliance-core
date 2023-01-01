@@ -45,7 +45,7 @@ RRECOMMENDS:${PN} = "\
     ${@bb.utils.contains("MACHINE_FEATURES", "dvbc-only", "", "enigma2-plugin-systemplugins-positionersetup", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "blindscan-dvbs", "${BLINDSCAN}" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "hdmicec", "enigma2-plugin-systemplugins-hdmicec" , "", d)} \
-    ${@bb.utils.contains("MACHINE_FEATURES", "nowifi", "", "oe-alliance-wifi", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", "oe-alliance-wifi", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "dvb-c", "enigma2-plugin-systemplugins-cablescan" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "fastscan", "enigma2-plugin-systemplugins-fastscan" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "frontprocessor", "enigma2-plugin-systemplugins-frontprocessorupgrade" , "", d)} \
@@ -61,4 +61,4 @@ RRECOMMENDS:${PN} = "\
     ${@bb.utils.contains("MACHINE_FEATURES", "himedia", "enigma2-plugin-systemplugins-servicehisilicon" , "", d)} \
     "
 
-BLINDSCAN = "${@bb.utils.contains_any("FLASHSIZE", "64", "", "enigma2-plugin-systemplugins-blindscan", d)}"
+BLINDSCAN = "${@bb.utils.contains_any("FLASHSIZE", "smallflash", "", "enigma2-plugin-systemplugins-blindscan", d)}"

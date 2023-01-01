@@ -35,7 +35,7 @@ MTD_KERNEL:dm8000 = "mtd2"
 EXTRA_OEMAKE = " \
     'CFLAGS=${CFLAGS} \
     -I=${includedir}/freetype2 \
-    ${@bb.utils.contains("MACHINE_FEATURES", "singlecore", "-DOMB_DEFAULT_TIMER=10" , "-DOMB_DEFAULT_TIMER=5", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "-DOMB_DEFAULT_TIMER=10" , "-DOMB_DEFAULT_TIMER=5", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "textlcd", "-DOMB_HAVE_TEXTLCD" , "", d)} \
     ${@bb.utils.contains("IMAGE_FSTYPES", "ubi", "-DOMB_FLASH_UBI" , "", d)} \
     ${@bb.utils.contains("IMAGE_FSTYPES", "jffs2", "-DOMB_FLASH_JFFS2" , "", d)} \
