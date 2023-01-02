@@ -6,7 +6,7 @@ MODULE = "linux-4.1.45"
 
 COMPATIBLE_MACHINE = "^(vuduo4k|vuduo4kse)$"
 
-MACHINE_KERNEL_PR:append = "oea4.2-r6"
+MACHINE_KERNEL_PR:append = "oea4.2-r7"
 
 inherit kernel machine_kernel_pr
 
