@@ -5,15 +5,15 @@ LICENSE = "BSD-2-Clause"
 LIC_FILES_CHKSUM = "file://resolvconf.in;beginline=4;endline=26;md5=e962049f535f7385f0f2a0ac9638cd43"
 inherit allarch
 
-SRC_URI = "http://roy.marples.name/downloads/${BPN}/${BP}.tar.bz2 \
+SRC_URI = "http://roy.marples.name/downloads/${BPN}/${BP}.tar.xz \
            file://000resolvconf.if-up \
            file://000resolvconf.ppp.ip-down \
            file://000resolvconf.ppp.ip-up \
            file://resolvconf.conf \
            file://resolvconf.if-down \
            file://volatiles.99_openresolv"
-SRC_URI[md5sum] = "76337107ff56d7450d4ed622630c5574"
-SRC_URI[sha256sum] = "4a4cf4ef20a1ce207937fb669bbae43f9db36f6298090b5e074c80ed2fe4a996"
+SRC_URI[md5sum] = "dab07cd1601df9aac22ad946fe410b71"
+SRC_URI[sha256sum] = "b3ee7960f8808c83ab4923ced3c4b114f1c0141367ab1c3d08765327c0782a02"
 
 do_configure() {
         echo "SYSCONFDIR=${sysconfdir}" > config.mk
