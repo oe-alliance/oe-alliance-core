@@ -158,6 +158,7 @@ RDEPENDS:${PN} = " \
     ${PYTHON_PN}-requests \
     ${PYTHON_PN}-requests-cache \
     ${PYTHON_PN}-service-identity \
+    ${PYTHON_PN}-tmdbsimple \
     ${PYTHON_PN}-ujson \
     ${PYTHON_PN}-url-normalize \
     ${PYTHON_PN}-singledispatch \
