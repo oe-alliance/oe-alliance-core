@@ -328,17 +328,17 @@ index 108c0b0..e0401b5 100644
    CHILD=$!
    wait "${CHILD}"
    RET=$?
--  if [ $RET -eq 65 ]
+-  if [ $(( $RET == 65 )) = "1" ]
 -  then # User requested to restart app
 -    LOOP=1
--  elif [ $RET -ge 131 ] && [ $RET -le 136 ] || [ $RET -eq 139 ]
+-  elif [ $(( ($RET >= 131 && $RET <= 136) || $RET == 139 )) = "1" ]
 -  then # Crashed with core dump
 -    print_crash_report
 -  fi
-+#  if [ $RET -eq 65 ]
++#  if [ $(( $RET == 65 )) = "1" ]
 +#  then # User requested to restart app
 +#    LOOP=1
-+#  elif [ $RET -ge 131 ] && [ $RET -le 136 ] || [ $RET -eq 139 ]
++#  elif [ $(( ($RET >= 131 && $RET <= 136) || $RET == 139 )) = "1" ]
 +#  then # Crashed with core dump
 +#    print_crash_report
 +#  fi
