@@ -15,7 +15,6 @@ RDEPENDS:${PN} = "\
        jpeg \
        libdvbsi++ \
        libssl \
-       libpython2 \
        "       
 
 PR = "r9"
@@ -32,7 +31,6 @@ if [ ! -e $D${libdir}/libdvbsi++.so.0     ]; then if [ -e $D${libdir}/libdvbsi++
 if [ ! -e $D${libdir}/libjpeg.so.62       ]; then if [ -e $D${libdir}/libjpeg.so.8        ]; then ln -sf libjpeg.so.8        $D${libdir}/libjpeg.so.62       ; fi; fi  
 if [ ! -e $D${libdir}/libssl.so.0.9.7     ]; then if [ -e $D${libdir}/libssl.so.0.9.8     ]; then ln -sf libssl.so.0.9.8     $D${libdir}/libssl.so.0.9.7     ; fi; fi  
 if [ ! -e $D${libdir}/libssl.so.0.9.7     ]; then if [ -e $D${libdir}/libssl.so.1.0.0     ]; then ln -sf libssl.so.1.0.0     $D${libdir}/libssl.so.0.9.7     ; fi; fi  
-if [ ! -e $D${libdir}/libpython2.6.so.1.0 ]; then if [ -e $D${libdir}/libpython2.7.so.1.0 ]; then ln -sf libpython2.7.so.1.0 $D${libdir}/libpython2.6.so.1.0 ; fi; fi  
 }
 
 PACKAGES = "${PN}"
