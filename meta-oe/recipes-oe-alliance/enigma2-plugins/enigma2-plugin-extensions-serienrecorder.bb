@@ -10,11 +10,11 @@ require conf/python/python3-compileall.inc
 
 RDEPENDS:${PN} = "${PYTHON_PN}-sqlite3 ${PYTHON_PN}-json ${PYTHON_PN}-xmlrpc ${PYTHON_PN}-email"
 
-inherit gitpkgv allarch
+inherit gittag allarch
 
-PV = "4.5.0"
-
-SRCREV = "56eada788a1e31fbe7648b386bda287451104294"
+SRCREV = "${AUTOREV}"
+PV = "git${SRCPV}"
+PKGV = "${GITPKGVTAG}"
 
 SRC_URI = "git://github.com/einfall/serienrecorder.git;protocol=https;branch=master"
 
