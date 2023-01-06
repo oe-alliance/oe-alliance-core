@@ -20,6 +20,10 @@ EXTRA_OEMAKE += " \
     M=${S}/${GPU_MODEL}/${GPU_VERSION}/kernel/drivers/gpu/arm/midgard \
 "
 
+export KCFLAGS = "-Wno-error=array-bounds \
+                  -Wno-error=maybe-uninitialized \
+"
+
 EXTRA_CFLAGS = "-DCONFIG_MALI_PLATFORM_DEVICETREE -DCONFIG_MALI_MIDGARD_DVFS -DCONFIG_MALI_BACKEND=gpu"
 
 do_compile() {
@@ -50,3 +54,7 @@ COMPATIBLE_MACHINE = "^(meson64)$"
 addtask make_scripts after do_prepare_recipe_sysroot before do_compile
 do_make_scripts[lockfiles] = "${TMPDIR}/kernel-scripts.lock"
 do_make_scripts[depends] += "virtual/kernel:do_shared_workdir"
+
+do_make_scripts() {
+	:
+}

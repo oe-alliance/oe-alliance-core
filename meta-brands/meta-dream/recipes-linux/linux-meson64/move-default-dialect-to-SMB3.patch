@@ -19,9 +19,9 @@ mount
 Signed-off-by: Steve French <smfrench@gmail.com>
 Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
 
---- a/fs/cifs/connect.c	2019-10-19 09:34:13.448215659 +0200
-+++ b/fs/cifs/connect.c	2019-10-19 09:41:22.938494534 +0200
-@@ -1245,9 +1245,9 @@
+--- a/fs/cifs/connect.c
++++ b/fs/cifs/connect.c
+@@ -1255,9 +1255,9 @@ cifs_parse_mount_options(const char *mountdata, const char *devname,
  
  	vol->actimeo = CIFS_DEF_ACTIMEO;
  
@@ -32,5 +32,5 @@ Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
 +	vol->ops = &smb30_operations; /* both secure and accepted widely */
 +	vol->vals = &smb302_values;
  
- 	if (!mountdata)
- 		goto cifs_parse_mount_err;
+ 	vol->echo_interval = SMB_ECHO_INTERVAL_DEFAULT;
+ 

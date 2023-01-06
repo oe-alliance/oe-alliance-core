@@ -70,7 +70,6 @@ PREFERRED_PROVIDER_virtual/fftw = "fftw"
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-${SOC_FAMILY}"
 PREFERRED_VERSION_linux-${SOC_FAMILY} = "4.9.%"
-GCCVERSION:dreambox = "10.%"
 
 MACHINE_FEATURES_BACKFILL_CONSIDERED = "rtc gobject-introspection-data"
 
