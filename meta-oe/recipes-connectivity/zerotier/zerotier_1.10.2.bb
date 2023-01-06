@@ -16,7 +16,7 @@ SRCREV = "${AUTOREV}"
 PV = "1.10.2+git${SRCPV}"
 PKGV = "1.10.2+git${GITPKGV}"
 
-SRC_URI = "git://github.com/zerotier/ZeroTierOne.git;protocol=https \
+SRC_URI = "git://github.com/zerotier/ZeroTierOne.git;protocol=https;branch=main \
         file://zerotier \
         file://0001-accept-external-ldflags.patch \
         file://0003-dont-enable-AES-hwcaps-for-arm.patch \
