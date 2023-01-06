@@ -29,7 +29,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'gbx3h', 'X3 H' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbquad4k', 'UHD QUAD 4K' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbue4k', 'UHD UE 4K' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbtrio4k', 'UHD TRIO 4K' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'gbtrio4kplus', 'UHD TRIO 4K Plus' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbtrio4kpro', 'UHD TRIO 4K PRO' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbip4k', 'UHD IP 4K' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbx34k', 'UHD X3 4K' , '', d)}\
 "
@@ -53,7 +53,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'gbx3h', 'GigaBlue' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbquad4k', 'GigaBlue' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbue4k', 'GigaBlue' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbtrio4k', 'GigaBlue' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'gbtrio4kplus', 'GigaBlue' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbtrio4kpro', 'GigaBlue' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbip4k', 'GigaBlue' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbx34k', 'GigaBlue' , '', d)}\
 "
@@ -77,7 +77,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'gbx3h', 'gigablue/x3h' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbquad4k', 'gigablue/quad4k' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbue4k', 'gigablue/ue4k' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbtrio4k', 'gigablue/trio4k' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'gbtrio4kplus', 'gigablue/trio4kplus' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbtrio4kpro', 'gigablue/trio4kpro' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbip4k', 'gigablue/ip4k' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbx34k', 'gigablue/x34k' , '', d)}\
 "
@@ -101,7 +101,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'gbx3h', 'mtd2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbquad4k', 'mmcblk0p4' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbue4k', 'mmcblk0p4' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbtrio4k', 'mmcblk0p12' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'gbtrio4kplus', 'mmcblk0p12' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbtrio4kpro', 'mmcblk0p12' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbip4k', 'mmcblk0p12' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbx34k', 'mmcblk0p4' , '', d)}\
 "
@@ -125,7 +125,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'gbx3h', 'mtd0' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbquad4k', 'mmcblk0p5' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbue4k', 'mmcblk0p5' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbtrio4k', 'mmcblk0p16' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'gbtrio4kplus', 'mmcblk0p16' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbtrio4kpro', 'mmcblk0p16' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbip4k', 'mmcblk0p16' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbx34k', 'mmcblk0p5' , '', d)}\
 "
@@ -149,7 +149,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'gbx3h', 'gb73625' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbquad4k', 'gb7252' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbue4k', 'gb7252' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbtrio4k', 'gbtrio4k' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'gbtrio4kplus', 'gbtrio4kplus' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbtrio4kpro', 'gbtrio4kpro' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbip4k', 'gbip4k' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbx34k', 'gb72604' , '', d)}\
 "
@@ -173,7 +173,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'gbx3h', 'kernel.bin' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbquad4k', 'kernel.bin' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbue4k', 'kernel.bin' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbtrio4k', 'kernel.bin' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'gbtrio4kplus', 'kernel.bin' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbtrio4kpro', 'kernel.bin' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbip4k', 'kernel.bin' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbx34k', 'kernel.bin' , '', d)}\
 "
@@ -197,7 +197,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'gbx3h', 'rootfs.bin' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbquad4k', 'rootfs.tar.bz2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbue4k', 'rootfs.tar.bz2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbtrio4k', 'rootfs.tar.bz2' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'gbtrio4kplus', 'rootfs.tar.bz2' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbtrio4kpro', 'rootfs.tar.bz2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbip4k', 'rootfs.tar.bz2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbx34k', 'rootfs.tar.bz2' , '', d)}\
 "
@@ -221,7 +221,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'gbx3h', 'gb2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbquad4k', 'gb3' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbue4k', 'gb4' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbtrio4k', 'gb4' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'gbtrio4kplus', 'gb5' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbtrio4kpro', 'gb5' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbip4k', 'gb4' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbx34k', 'gb3' , '', d)}\
 "
@@ -241,7 +241,7 @@ MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS += " \
     kernel-module-ext4 \
     kernel-module-cifs \
     kernel-module-autofs4 \
-    ${@bb.utils.contains('MACHINEBUILD', 'gbtrio4kplus', 'firmware-uwe5621' , '', d)} \
+    ${@bb.utils.contains('MACHINEBUILD', 'gbtrio4kpro', 'firmware-uwe5621' , '', d)} \
     ${@bb.utils.contains('MACHINEBUILD', 'gbquad', 'kernel-module-smsc75xx' , '', d)} \
     ${@bb.utils.contains('MACHINE_FEATURES', 'swap', 'gigablue-swapcreate', '',d)} \
     "
@@ -292,7 +292,6 @@ ${@bb.utils.contains('MACHINEBUILD', 'gbultraue', 'YUV RCA' , '', d)} \
 ${@bb.utils.contains('MACHINEBUILD', 'gbultraueh', 'YUV RCA' , '', d)} \
 ${@bb.utils.contains('MACHINEBUILD', 'gbquad4k', 'HDMI-IN-FHD' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbtrio4k', 'AV_JACK' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'gbtrio4kplus', 'AV_JACK' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbip4k', 'AV_JACK' , '', d)}\
 "
 

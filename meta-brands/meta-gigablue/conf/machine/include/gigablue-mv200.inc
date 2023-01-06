@@ -30,7 +30,7 @@ TARGET_ARCH = "arm"
 DEFAULTTUNE = "cortexa15hf-neon-vfpv4"
 
 PREFERRED_VERSION_linux-gigablue = "4.4.35"
-PREFERRED_VERSION_wpa-supplicant = "${@bb.utils.contains('MACHINEBUILD', 'gbtrio4kplus', '2.9' , '2.10', d)}"
+PREFERRED_VERSION_wpa-supplicant = "${@bb.utils.contains('MACHINEBUILD', 'gbtrio4kpro', '2.9' , '2.10', d)}"
 
 PREFERRED_PROVIDER_virtual/egl = "gigablue-opengl-${MACHINE}" 
 PREFERRED_PROVIDER_virtual/libgles1 = "gigablue-opengl-${MACHINE}"
