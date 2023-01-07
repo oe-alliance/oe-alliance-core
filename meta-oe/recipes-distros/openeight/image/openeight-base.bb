@@ -18,6 +18,7 @@ RDEPENDS_${PN} = "\
     packagegroup-base-smbfs-client \
     packagegroup-base-smbfs-server \
     packagegroup-base-nfs \
+    python-requests \
     unrar \
     ofgwrite \
     enigma2-plugin-drivers-dvb-usb-af9035 \
