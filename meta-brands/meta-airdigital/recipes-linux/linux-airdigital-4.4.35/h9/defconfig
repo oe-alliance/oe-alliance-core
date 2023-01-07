@@ -1366,7 +1366,7 @@ CONFIG_SATA_PMP=y
 # Controllers with non-SFF native interface
 #
 # CONFIG_SATA_AHCI is not set
-CONFIG_SATA_AHCI_PLATFORM=y
+CONFIG_SATA_AHCI_PLATFORM=m
 # CONFIG_AHCI_CEVA is not set
 # CONFIG_AHCI_QORIQ is not set
 # CONFIG_SATA_INIC162X is not set
@@ -3431,7 +3431,7 @@ CONFIG_USB_STORAGE=y
 # CONFIG_USB_STORAGE_KARMA is not set
 # CONFIG_USB_STORAGE_CYPRESS_ATACB is not set
 # CONFIG_USB_STORAGE_ENE_UB6250 is not set
-CONFIG_USB_UAS=y
+# CONFIG_USB_UAS is not set
 
 #
 # USB Imaging devices
