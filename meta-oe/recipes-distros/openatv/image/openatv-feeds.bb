@@ -29,7 +29,7 @@ RRECOMMENDS:${PN} = "\
     cdfs \
     tvheadend \
     openssl-old \
-    sysbench \
+    ${@bb.utils.contains_any('TARGET_ARCH', 'arm aarch64', 'sysbench', '', d)} \
     enigma2-plugin-extensions-enhancedmoviecenter \
     enigma2-plugin-extensions-bmediacenter \
     enigma2-plugin-settings-defaultsat \
