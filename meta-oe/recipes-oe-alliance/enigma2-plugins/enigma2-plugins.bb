@@ -16,8 +16,7 @@ PV = "${IMAGE_VERSION}+gitr${SRCPV}"
 PKGV = "${IMAGE_VERSION}+gitr${GITPKGV}"
 PR = "r8"
 
-SRC_URI = "${ENIGMA2_PLUGINS_URI} file://pluginnotwanted.patch \
-        file://ax-python-devel-dont-check-for-distutils.patch"
+SRC_URI = "${ENIGMA2_PLUGINS_URI} file://pluginnotwanted.patch"
 SRC_URI:append:openatv = " file://EPGSearch.patch"
 
 EXTRA_OECONF = " \
