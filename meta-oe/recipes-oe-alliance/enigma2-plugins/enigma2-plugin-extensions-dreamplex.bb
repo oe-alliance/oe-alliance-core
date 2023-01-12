@@ -4,7 +4,7 @@ MAINTAINER = "OE-Alliance"
 require conf/license/license-gplv2.inc
 require conf/python/python3-compileall.inc
 
-inherit autotools-brokensep gitpkgv gettext ${PYTHON_PN}native
+inherit autotools-brokensep gitpkgv gettext ${PYTHON_PN}targetconfig ${PYTHON_PN}native
 
 SRCREV = "${AUTOREV}"
 PV = "2.2.0+git${SRCPV}"
