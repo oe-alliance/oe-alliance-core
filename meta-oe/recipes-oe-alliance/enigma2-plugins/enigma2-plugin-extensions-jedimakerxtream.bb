@@ -28,15 +28,6 @@ do_install () {
     cp -rf ${S}/JediMakerXtream/usr/lib/enigma2/python/Plugins/Extensions/JediMakerXtream/* ${D}/${libdir}/enigma2/python/Plugins/Extensions/JediMakerXtream/
 }
 
-pkg_preinst:${PN} () {
-#!/bin/sh
-        rm -rf /etc/enigma2/jediplaylists/playlist_all.json > /dev/null 2>&1
-        rm -rf /usr/lib/enigma2/python/Plugins/Extensions/JediMakerXtream > /dev/null 2>&1
-        rm -rf /etc/enigma2/*jmx*.* > /dev/null 2>&1
-        rm -rf /etc/epgimport/*jmx*.* > /dev/null 2>&1
-        sed -i '/jmx/d' /etc/enigma2/bouquets.tv
-}
-
 pkg_postrm:${PN} () {
 #!/bin/sh
         rm -rf /etc/enigma2/jediplaylists/playlist_all.json > /dev/null 2>&1
