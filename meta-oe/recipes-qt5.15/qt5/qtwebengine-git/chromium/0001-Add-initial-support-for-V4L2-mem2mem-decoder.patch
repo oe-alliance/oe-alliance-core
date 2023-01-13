@@ -12,7 +12,7 @@ diff --git a/chromium/media/filters/ffmpeg_video_decoder.cc b/chromium/media/fil
 index 21ccdda5ed64..4a4fba3580c2 100644
 --- a/chromium/media/filters/ffmpeg_video_decoder.cc
 +++ b/chromium/media/filters/ffmpeg_video_decoder.cc
-@@ -86,7 +86,7 @@ bool FFmpegVideoDecoder::IsCodecSupported(VideoCodec codec) {
+@@ -86,7 +86,7 @@
  }
  
  FFmpegVideoDecoder::FFmpegVideoDecoder(MediaLog* media_log)
@@ -21,7 +21,7 @@ index 21ccdda5ed64..4a4fba3580c2 100644
    DVLOG(1) << __func__;
    thread_checker_.DetachFromThread();
  }
-@@ -319,7 +319,12 @@ bool FFmpegVideoDecoder::FFmpegDecode(const DecoderBuffer& buffer) {
+@@ -319,7 +319,12 @@
      DCHECK_GT(packet.size, 0);
  
      // Let FFmpeg handle presentation timestamp reordering.
@@ -35,7 +35,7 @@ index 21ccdda5ed64..4a4fba3580c2 100644
    }
  
    switch (decoding_loop_->DecodePacket(
-@@ -356,6 +361,74 @@ bool FFmpegVideoDecoder::OnNewFrame(AVFrame* frame) {
+@@ -356,12 +361,80 @@
      return false;
    }
  
@@ -103,22 +103,20 @@ index 21ccdda5ed64..4a4fba3580c2 100644
 +    }
 +
 +    video_frame->set_timestamp(base::TimeDelta::FromMicroseconds(frame->pts));
-+    video_frame->metadata()->SetBoolean(VideoFrameMetadata::POWER_EFFICIENT,
-+                                        false);
++    video_frame->metadata()->power_efficient = false;
 +    output_cb_.Run(video_frame);
 +  } else {
    scoped_refptr<VideoFrame> video_frame =
        reinterpret_cast<VideoFrame*>(av_buffer_get_opaque(frame->buf[0]));
    video_frame->set_timestamp(
-@@ -363,6 +436,7 @@ bool FFmpegVideoDecoder::OnNewFrame(AVFrame* frame) {
-   video_frame->metadata()->SetBoolean(VideoFrameMetadata::POWER_EFFICIENT,
-                                       false);
+       base::TimeDelta::FromMicroseconds(frame->reordered_opaque));
+   video_frame->metadata()->power_efficient = false;
    output_cb_.Run(video_frame);
 +  }
    return true;
  }
  
-@@ -392,7 +466,25 @@ bool FFmpegVideoDecoder::ConfigureDecoder(const VideoDecoderConfig& config,
+@@ -391,7 +464,25 @@
    if (decode_nalus_)
      codec_context_->flags2 |= AV_CODEC_FLAG2_CHUNKS;
  
