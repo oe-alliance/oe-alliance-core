@@ -27,7 +27,7 @@ index 199798882a74..cc898dbb825b 100644
 +        mime_type.find("text/X-arib-bml") != std::string::npos ||
 +        mime_type.find("atsc-http-attributes") != std::string::npos) {
 +        new_response_headers->RemoveHeader("Content-Type");
-+        new_response_headers->AddHeader("Content-Type: application/xhtml+xml");
++        new_response_headers->AddHeader("Content-Type", "application/xhtml+xml");
 +    }
 +    if (new_response_headers->HasHeader("Content-Security-Policy")) {
 +        new_response_headers->RemoveHeader("Content-Security-Policy");
@@ -35,7 +35,7 @@ index 199798882a74..cc898dbb825b 100644
 +    }
 +    if (new_response_headers->HasHeader("Access-Control-Allow-Origin")) {
 +        new_response_headers->RemoveHeader("Access-Control-Allow-Origin");
-+        new_response_headers->AddHeader("Access-Control-Allow-Origin: *");
++        new_response_headers->AddHeader("Access-Control-Allow-Origin", "*");
 +    }
 +
 +    override_response_headers_ = new_response_headers;
