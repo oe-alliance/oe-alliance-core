@@ -52,6 +52,13 @@ do_compile_append_hisi3798mv200() {
     echo "arch cortexa15hf-neon-vfpv4 $priority" >> $archconf
 }
 
+
+do_compile_append_hisi3798mv300() {
+    echo "arch armv7ahf-vfp-neon $priority" >> $archconf
+    echo "arch armv7ahf-neon $priority" >> $archconf
+    echo "arch cortexa15hf-neon-vfpv4 $priority" >> $archconf
+}
+
 do_compile_append_3798mv200advca() {
     echo "arch armv7ahf-vfp-neon $priority" >> $archconf
     echo "arch armv7ahf-neon $priority" >> $archconf

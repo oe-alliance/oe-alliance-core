@@ -66,7 +66,7 @@ PR = "r0"
 
 INSANE_SKIP_${PN} += "already-stripped arch"
 
-SRC_URI = "git://github.com/oe-alliance/enigma2-plugin-extensions-hbbtv-webkit.git;protocol=https"
+SRC_URI = "git://github.com/oe-alliance/enigma2-plugin-extensions-hbbtv-webkit.git;protocol=https;branch=dev"
 
 S = "${WORKDIR}/git"
 

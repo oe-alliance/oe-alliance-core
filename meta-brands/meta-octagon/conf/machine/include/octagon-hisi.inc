@@ -59,9 +59,10 @@ require conf/machine/include/tune-cortexa15.inc
 MACHINE_EXTRA_RRECOMMENDS += " \
     gstreamer1.0-plugin-dvbmediasink \
     gstreamer1.0-libav \
-    ${@bb.utils.contains('MACHINE', 'sx988', 'enigma2-plugin-extensions-gbipboxclient' , '', d)} \
-    ${@bb.utils.contains('MACHINE', 'sx988', 'enigma2-plugin-systemplugins-satipclient' , '', d)} \
-    ${@bb.utils.contains('MACHINE', 'sx988', 'enigma2-plugin-extensions-youtube' , '', d)} \
+    ${@bb.utils.contains('MACHINE', 'sx988 sx88v2', 'enigma2-plugin-extensions-gbipboxclient' , '', d)} \
+    ${@bb.utils.contains('MACHINE', 'sx988 sx88v2', 'enigma2-plugin-systemplugins-satipclient' , '', d)} \
+    ${@bb.utils.contains('MACHINE', 'sx988 sx88v2', 'enigma2-plugin-extensions-youtube' , '', d)} \
+    ${@bb.utils.contains('MACHINE', 'sx88v2', 'firmware-uwe5621' , '', d)} \
     "
 
 DVBPROVIDER = "kernel"
