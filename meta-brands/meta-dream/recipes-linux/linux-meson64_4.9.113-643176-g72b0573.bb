@@ -43,13 +43,13 @@ export KCFLAGS = "-Wno-error=misleading-indentation \
                   -Wno-error=parentheses \
                   -Wno-error=shift-overflow \
                   -Wno-error=array-bounds \
-				  -Wno-error=array-compare \
-				  -Wno-error=sizeof-array-div \
+                  -Wno-error=array-compare \
+                  -Wno-error=sizeof-array-div \
                   -Wno-error=bool-compare \
                   -Wno-error=maybe-uninitialized \
                   -Wno-error=unused-variable \
                   -Wno-error=stringop-overflow \
-				  -Wno-error=stringop-overread \
+                  -Wno-error=stringop-overread \
                   -Wno-error=zero-length-bounds \
                   -Wno-error=builtin-declaration-mismatch \
                   -Wno-error=address \
