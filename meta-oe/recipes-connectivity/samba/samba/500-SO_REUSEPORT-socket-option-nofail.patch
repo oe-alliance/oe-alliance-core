@@ -1,0 +1,28 @@
+From: WXbet <57314510+WXbet@users.noreply.github.com>
+Date: Tue, 15 Nov 2022 22:17:03 +0100
+Subject: [PATCH] Partly revert "lib: Properly return errno from open_socket_in()"
+
+Older kernel versions 3.x don't support SO_REUSEPORT, so remove goto fail
+
+This partly reverts commit https://git.samba.org/?p=samba.git;a=commitdiff;h=72540222c2290dc041fb01018de7febe44a4ac0d
+See: https://www.spinics.net/lists/samba/msg175560.html, https://bugzilla.samba.org/show_bug.cgi?id=15149
+diff --git a/source3/lib/util_sock.c b/source3/lib/util_sock.c
+index 85dc3efb..82d242be 100644
+--- a/source3/lib/util_sock.c
++++ b/source3/lib/util_sock.c
+@@ -283,7 +283,6 @@ int open_socket_in(
+ 		ret = -errno;
+ 		DBG_DEBUG("setsockopt(SO_REUSEADDR) failed: %s\n",
+ 			  strerror(errno));
+-		goto fail;
+ 	}
+ 
+ #ifdef SO_REUSEPORT
+@@ -293,7 +292,6 @@ int open_socket_in(
+ 		ret = -errno;
+ 		DBG_DEBUG("setsockopt(SO_REUSEPORT) failed: %s\n",
+ 			  strerror(errno));
+-		goto fail;
+ 	}
+ #endif /* SO_REUSEPORT */
+ 
