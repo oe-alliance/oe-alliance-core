@@ -36,7 +36,7 @@ RRECOMMENDS:${PN} = "\
     enigma2-plugin-extensions-mediascanner \
     enigma2-plugin-extensions-pictureplayer \
     enigma2-plugin-extensions-openwebif \
-    ${@bb.utils.contains_any("FLASHSIZE", "64", "", "enigma2-plugin-systemplugins-networkbrowser", d)} \
+    enigma2-plugin-systemplugins-networkbrowser \
     enigma2-plugin-systemplugins-networkwizard \
     \
     ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", "oe-alliance-drivers", d)} \
