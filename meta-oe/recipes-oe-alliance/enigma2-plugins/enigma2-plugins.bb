@@ -9,7 +9,7 @@ PROVIDES = "${PN} \
     enigma2-plugin-extensions-fancontrol2 \
     "
 
-inherit autotools-brokensep gitpkgv ${PYTHON_PN}native pkgconfig gettext ${PYTHON_PN}-dir
+inherit autotools-brokensep gitpkgv ${PYTHON_PN}native pkgconfig gettext ${PYTHON_PN}-dir ${PYTHON_PN}targetconfig
 
 SRCREV = "${AUTOREV}"
 PV = "${IMAGE_VERSION}+gitr${SRCPV}"

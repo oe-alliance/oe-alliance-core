@@ -156,7 +156,7 @@ RDEPENDS:enigma2-plugin-extensions-webkithbbtv = "vuplus-webkithbbtv-dumpait web
 DESCRIPTION:enigma2-plugin-extensions-stalkerclient = "E2 Staker Client Plugin"
 DESCRIPTION:enigma2-plugin-extensions-tvspielfilm = "TVSpielfilm Plugin"
 
-inherit python3-dir autotools-brokensep gitpkgv ${PYTHON_PN}native gettext
+inherit python3-dir autotools-brokensep gitpkgv ${PYTHON_PN}native gettext ${PYTHON_PN}targetconfig
 
 SRCREV = "${AUTOREV}"
 PV = "${IMAGE_VERSION}+gitr${SRCPV}"
