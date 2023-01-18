@@ -11,7 +11,7 @@ COMPATIBLE_MACHINE = "^(sf8008opt|sfx6008|sx988|sx88v2)$"
 
 inherit kernel machine_kernel_pr
 
-MACHINE_KERNEL_PR:append = "0"
+MACHINE_KERNEL_PR:append = "1"
 
 KVTYPE = "mv200"
 KVTYPE:sx88v2 = "mv300"
@@ -34,7 +34,7 @@ RPROVIDES:${KERNEL_PACKAGE_NAME}-image = "kernel-image-${KERNEL_VERSION}"
 SRC_URI += "https://source.mynonpublic.com/octagon/octagon-linux-${PV}-${SRCDATE}.tar.gz;name=${KVTYPE} \
     file://defconfig \
     file://initramfs-subdirboot.cpio.gz;unpack=0 \
-    file://initramfs.cpio.gz;unpack=0 \ 
+    file://initramfs.cpio.gz;unpack=0 \
     file://findkerneldevice.sh \
     file://fix-multiple-defs-yyloc.patch \
 "
