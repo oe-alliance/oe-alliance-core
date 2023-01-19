@@ -91,6 +91,7 @@ RDEPENDS:${PN} = " \
     ${@bb.utils.contains('MACHINE', 'cube', '' , 'edid-decode', d)} \
     exfat-utils \
     fuse-exfat \
+    gerbera \
     gptfdisk \
     hddtemp \
     hdparm \
