@@ -7,7 +7,7 @@ ALLOW_EMPTY:${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "1.0"
-PR = "r37"
+PR = "r38"
 
 inherit packagegroup
 
@@ -26,6 +26,7 @@ RRECOMMENDS:${PN} = "\
     enigma2-plugin-extensions-blurayplayer \
     enigma2-plugin-systemplugins-autobouquetsmaker \
     enigma2-plugin-extensions-subssupport \
+    gerbera \
     enigma2-plugin-extensions-bmediacenter \
     enigma2-plugin-skins-nblack51-hdfmod \
     enigma2-plugin-skins-ax-blue-fhd-4hdf \
