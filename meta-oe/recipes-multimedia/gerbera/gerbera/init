@@ -1,0 +1,61 @@
+#! /bin/sh 
+PATH=/sbin:/bin:/usr/sbin:/usr/bin
+DESC="upnp media server"
+NAME=gerbera
+DAEMON=/usr/bin/$NAME
+PIDFILE=/var/run/$NAME.pid
+SCRIPTNAME=/etc/init.d/gerbera
+LOGFILE=/var/log/gerbera
+
+GERBERA_ARGS="-c /etc/gerbera/config.xml -l $LOGFILE"
+
+if [ ! -e  "/hdd/gerbera" ]; then
+	mkdir -p /hdd/gerbera
+fi
+
+test -x $DAEMON || exit 0
+
+d_start() {
+	start-stop-daemon -S -q -m -b -p "$PIDFILE" -x "$DAEMON" \
+		-- $GERBERA_ARGS
+	status=$?
+	if [ "$status" -eq 0 ]; then
+		echo "OK"
+	else
+		echo "FAIL"
+	fi
+	return "$status"
+}
+
+d_stop() {
+        start-stop-daemon --stop --signal 2 --retry 5 --quiet --pidfile $PIDFILE \
+                --name $NAME
+        rm $PIDFILE
+}
+
+case "$1" in
+  start)
+        echo -n "Starting $DESC: $NAME"
+        d_start
+        echo "."
+        ;;
+  stop)
+        echo -n "Stopping $DESC: $NAME"
+        d_stop
+        echo "."
+        ;;
+  restart)
+        echo -n "Restarting $DESC: $NAME"
+        d_stop
+        sleep 1
+        d_start
+        echo "."
+        ;;
+  *)
+
+        echo "Usage: $SCRIPTNAME {start|stop|restart}" >&2
+        exit 1
+        ;;
+esac
+
+exit 0
