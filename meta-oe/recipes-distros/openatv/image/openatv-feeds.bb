@@ -61,6 +61,7 @@ RRECOMMENDS:${PN} = "\
     enigma2-plugin-extensions-chocholousek-picons \
     enigma2-plugin-extensions-oaweather \
     mediainfo \
+    ncdu \
     "
 
 # remove close cant update to py3
