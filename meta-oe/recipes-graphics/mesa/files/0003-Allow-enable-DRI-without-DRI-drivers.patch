@@ -1,34 +1,14 @@
-From 1abc73fef564325a1ab2748c73e78ff89ef92e5d Mon Sep 17 00:00:00 2001
-From: Fabio Berton <fabio.berton@ossystems.com.br>
-Date: Wed, 12 Jun 2019 14:18:31 -0300
-Subject: [PATCH] Allow enable DRI without DRI drivers
-
-Upstream-Status: Pending
-
-Signed-off-by: Andrei Gherzan <andrei@gherzan.ro>
-Signed-off-by: Fabio Berton <fabio.berton@ossystems.com.br>
-Signed-off-by: Otavio Salvador <otavio@ossystems.com.br>
-
----
- meson.build       | 2 +-
- meson_options.txt | 6 ++++++
- 2 files changed, 7 insertions(+), 1 deletion(-)
-
-diff --git a/meson.build b/meson.build
-index 1441611..073b719 100644
 --- a/meson.build
 +++ b/meson.build
-@@ -179,7 +179,7 @@ if dri_drivers.length() != 0
-   error('Mesa\'s main branch no longer has any "classic" drivers, use the "amber" branch instead.')
+@@ -245,7 +245,7 @@ if not system_has_kms_drm
+    with_gallium_kmsro = false
  endif
  
--with_dri = dri_drivers.length() != 0
+-with_dri = false
 +with_dri = get_option('dri') or (dri_drivers.length() != 0 and dri_drivers != [''])
- 
- gallium_drivers = get_option('gallium-drivers')
- if gallium_drivers.contains('auto')
-diff --git a/meson_options.txt b/meson_options.txt
-index 99cc5cb..3b371f1 100644
+ if with_gallium and system_has_kms_drm
+   _glx = get_option('glx')
+   _egl = get_option('egl')
 --- a/meson_options.txt
 +++ b/meson_options.txt
 @@ -51,6 +51,12 @@ option(
