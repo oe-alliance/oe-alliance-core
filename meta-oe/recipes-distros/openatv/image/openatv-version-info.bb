@@ -80,8 +80,8 @@ do_install() {
     printf "ci=${HAVE_CI}\n" >> ${D}${sysconfdir}/image-version
     printf "transcoding=${TRANSCODING}\n" >> ${D}${sysconfdir}/image-version
     printf "${MACHINE}\n" > ${D}${sysconfdir}/model
-    printf "compile-date=${DATE}" >> ${D}/etc/image-version
-    printf "compile-datetime=${DATETIME}" >> ${D}/etc/image-version
+    printf "compile-date=${DATE}\n" >> ${D}/etc/image-version
+    printf "compile-datetime=${DATETIME}\n" >> ${D}/etc/image-version
 }
 
 do_install[vardepsexclude] += "DATE DATETIME"
