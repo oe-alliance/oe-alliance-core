@@ -203,6 +203,7 @@ inherit autotools-brokensep gitpkgv pkgconfig ${PYTHON_PN}native ${@bb.utils.con
 PV = "${IMAGE_VERSION}+git${SRCPV}"
 PKGV = "${IMAGE_VERSION}+git${GITPKGV}"
 
+SRCREV ?= "${AUTOREV}"
 SRC_URI = "${ENIGMA2_URI}"
 
 #SRC_URI_append_spycatminiv2 = " \
