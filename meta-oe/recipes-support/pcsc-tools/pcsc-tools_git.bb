@@ -8,9 +8,10 @@ RDEPENDS:${PN} = "pcsc-lite"
 
 inherit gitpkgv
 
-SRCREV = "${AUTOREV}"
-PV = "1.5.4+git${SRCPV}"
-PKGV = "1.5.4+git${GITPKGV}"
+#SRCREV = "${AUTOREV}"
+SRCREV = "b1018b83346f8a3bc3d42c96f2ed4dc62147cb24"
+PV = "1.6.2+git${SRCPV}"
+PKGV = "1.6.2+git${GITPKGV}"
 
 SRC_URI = "git://github.com/LudovicRousseau/pcsc-tools.git;protocol=https"
 
