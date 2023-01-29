@@ -4,7 +4,7 @@ MAINTAINER = "stein17"
 require conf/license/license-gplv2.inc
 require conf/python/python3-compileall.inc
 
-RDEPENDS:${PN} += "enigma2-plugin-skincomponents-weathercomponent enigma2-plugin-systemplugins-weathercomponenthandler"
+RDEPENDS:${PN} += "enigma2-plugin-extensions-oaweather"
 
 inherit gitpkgv
 
