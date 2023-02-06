@@ -1,4 +1,4 @@
-PV = "4.15.12"
+PV = "4.15.13"
 HOMEPAGE = "https://www.samba.org/"
 SECTION = "console/network"
 
@@ -54,6 +54,6 @@ SRC_URI:append:arm = " \
            file://500-arm-status-segfault-fix.patch \
           "
 
-SRC_URI[md5sum] = "f9e55a5e5294ba35c3d7d72135f6388f"
-SRC_URI[sha256sum] = "5889493d69dc7723be6c3154387fbed38c1cddf93a16da8670d99b7cca33b15e"
+SRC_URI[md5sum] = "2b65218f037e1ec969f8c0f971267f18"
+SRC_URI[sha256sum] = "c412e3536a5265d04e52983e643bae9e047bcc3eac08683a945b1057ecdf4968"
 UPSTREAM_CHECK_REGEX = "samba\-(?P<pver>4\.15(\.\d+)+).tar.gz"
