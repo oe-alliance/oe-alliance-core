@@ -8,11 +8,11 @@ RDEPENDS:${PN} = "enigma2-tools-weatherinfo"
 
 require conf/python/python3-compileall.inc
 
-inherit gettext gitpkgv
+inherit gettext gittag
 
 SRCREV = "${AUTOREV}"
-PV = "1.0+git${SRCPV}"
-PKGV = "1.0+git${GITPKGV}"
+PV = "git${SRCPV}"
+PKGV = "${GITPKGVTAG}"
 
 SRC_URI="git://github.com/oe-alliance/OAWeather;protocol=https;branch=main"
 
@@ -22,7 +22,8 @@ PACKAGES =+ "${PN}-po"
 
 FILES:${PN} += "${libdir}/enigma2/python/Components/*/*.pyc ${libdir}/enigma2/python/Plugins/Extensions/OAWeather/*.pyc \
                 ${libdir}/enigma2/python/Plugins/Extensions/OAWeather/*.xml ${libdir}/enigma2/python/Plugins/Extensions/OAWeather/*.png \
-                ${libdir}/enigma2/python/Plugins/Extensions/OAWeather/locale/*.mo"
+                ${libdir}/enigma2/python/Plugins/Extensions/OAWeather/locale/*.mo \
+                ${libdir}/enigma2/python/Plugins/Extensions/OAWeather/Images/*.png ${libdir}/enigma2/python/Plugins/Extensions/OAWeather/Icons/*.png"
 FILES:${PN}-src += "${libdir}/enigma2/python/Components/*/*.py {libdir}/enigma2/python/Plugins/Extensions/OAWeather/*.py"
 FILES:${PN}-po += "${libdir}/enigma2/python/Plugins/Extensions/OAWeather/locale/*.po ${libdir}/enigma2/python/Plugins/Extensions/OAWeather/locale/*.pot"
 
