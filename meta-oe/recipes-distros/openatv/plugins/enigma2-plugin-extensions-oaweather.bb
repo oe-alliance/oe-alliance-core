@@ -22,20 +22,27 @@ PACKAGES =+ "${PN}-po"
 
 FILES:${PN} += "${libdir}/enigma2/python/Components/*/*.pyc ${libdir}/enigma2/python/Plugins/Extensions/OAWeather/*.pyc \
                 ${libdir}/enigma2/python/Plugins/Extensions/OAWeather/*.xml ${libdir}/enigma2/python/Plugins/Extensions/OAWeather/*.png \
-                ${libdir}/enigma2/python/Plugins/Extensions/OAWeather/locale/*.mo \
+                ${libdir}/enigma2/python/Plugins/Extensions/OAWeather/locale/*/*/*.mo \
                 ${libdir}/enigma2/python/Plugins/Extensions/OAWeather/Images/*.png ${libdir}/enigma2/python/Plugins/Extensions/OAWeather/Icons/*.png"
 FILES:${PN}-src += "${libdir}/enigma2/python/Components/*/*.py {libdir}/enigma2/python/Plugins/Extensions/OAWeather/*.py"
-FILES:${PN}-po += "${libdir}/enigma2/python/Plugins/Extensions/OAWeather/locale/*.po ${libdir}/enigma2/python/Plugins/Extensions/OAWeather/locale/*.pot"
+#FILES:${PN}-po += "${libdir}/enigma2/python/Plugins/Extensions/OAWeather/locale/*.po ${libdir}/enigma2/python/Plugins/Extensions/OAWeather/locale/*.pot"
+
 
 do_compile() {
     # generate translation .mo files
-    find ${S}/po -name \*.po -execdir sh -c 'msgfmt "$0" -o `basename $0 .po`.mo' '{}' \;
+	mkdir -p ${S}/locale
+	for f in $(find ${S}/po -name *.po ); do
+		l=$(echo ${f%} | sed 's/\.po//' | sed 's/.*po\///')
+		mkdir -p ${S}/locale/${l%}/LC_MESSAGES
+		msgfmt -o ${S}/locale/${l%}/LC_MESSAGES/OAWeather.mo ${S}/po/$l.po
+	done
 }
+
 
 do_install() {
     install -d ${D}${libdir}/enigma2/python
     cp -rf ${S}/src/* ${D}${libdir}/enigma2/python/
 
     install -d ${D}${libdir}/enigma2/python/Plugins/Extensions/OAWeather/locale/
-    cp -rf ${S}/po/* ${D}${libdir}/enigma2/python/Plugins/Extensions/OAWeather/locale/
+    cp -rf ${S}/locale/* ${D}${libdir}/enigma2/python/Plugins/Extensions/OAWeather/locale/
 }
