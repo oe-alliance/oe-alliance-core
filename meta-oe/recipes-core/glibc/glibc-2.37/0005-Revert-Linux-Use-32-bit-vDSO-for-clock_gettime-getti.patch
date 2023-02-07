@@ -16,10 +16,10 @@ Subject: [PATCH] Revert "Linux: Use 32-bit vDSO for clock_gettime,
  delete mode 100644 sysdeps/unix/sysv/linux/tst-time-clobber.c
 
 diff --git a/sysdeps/unix/sysv/linux/Makefile b/sysdeps/unix/sysv/linux/Makefile
-index 7122f559..f89804f2 100644
+index f298878e..7adbe9a7 100644
 --- a/sysdeps/unix/sysv/linux/Makefile
 +++ b/sysdeps/unix/sysv/linux/Makefile
-@@ -244,12 +244,6 @@ ifeq ($(subdir),time)
+@@ -375,12 +375,6 @@ ifeq ($(subdir),time)
  sysdep_headers += sys/timex.h bits/timex.h
  
  sysdep_routines += ntp_gettime ntp_gettimex
@@ -33,7 +33,7 @@ index 7122f559..f89804f2 100644
  
  ifeq ($(subdir),signal)
 diff --git a/sysdeps/unix/sysv/linux/clock_gettime.c b/sysdeps/unix/sysv/linux/clock_gettime.c
-index 01ce2751..5f9d7fce 100644
+index 8833fb9f..4e571e77 100644
 --- a/sysdeps/unix/sysv/linux/clock_gettime.c
 +++ b/sysdeps/unix/sysv/linux/clock_gettime.c
 @@ -35,54 +35,27 @@ __clock_gettime64 (clockid_t clock_id, struct __timespec64 *tp)
@@ -105,12 +105,12 @@ index 01ce2751..5f9d7fce 100644
  #if __TIMESIZE != 64
 diff --git a/sysdeps/unix/sysv/linux/tst-clock_gettime-clobber.c b/sysdeps/unix/sysv/linux/tst-clock_gettime-clobber.c
 deleted file mode 100644
-index 9c398115..00000000
+index 0f528a5d..00000000
 --- a/sysdeps/unix/sysv/linux/tst-clock_gettime-clobber.c
 +++ /dev/null
 @@ -1,57 +0,0 @@
 -/* Check that clock_gettime does not clobber errno on success.
--   Copyright (C) 2021-2022 Free Software Foundation, Inc.
+-   Copyright (C) 2021-2023 Free Software Foundation, Inc.
 -   This file is part of the GNU C Library.
 -
 -   The GNU C Library is free software; you can redistribute it and/or
@@ -168,12 +168,12 @@ index 9c398115..00000000
 -#include <support/test-driver.c>
 diff --git a/sysdeps/unix/sysv/linux/tst-gettimeofday-clobber.c b/sysdeps/unix/sysv/linux/tst-gettimeofday-clobber.c
 deleted file mode 100644
-index 5b204c66..00000000
+index 43e099d1..00000000
 --- a/sysdeps/unix/sysv/linux/tst-gettimeofday-clobber.c
 +++ /dev/null
 @@ -1,37 +0,0 @@
 -/* Check that gettimeofday does not clobber errno.
--   Copyright (C) 2021-2022 Free Software Foundation, Inc.
+-   Copyright (C) 2021-2023 Free Software Foundation, Inc.
 -   This file is part of the GNU C Library.
 -
 -   The GNU C Library is free software; you can redistribute it and/or
@@ -211,12 +211,12 @@ index 5b204c66..00000000
 -#include <support/test-driver.c>
 diff --git a/sysdeps/unix/sysv/linux/tst-time-clobber.c b/sysdeps/unix/sysv/linux/tst-time-clobber.c
 deleted file mode 100644
-index 3d22eb85..00000000
+index 6a8700a3..00000000
 --- a/sysdeps/unix/sysv/linux/tst-time-clobber.c
 +++ /dev/null
 @@ -1,36 +0,0 @@
 -/* Check that time does not clobber errno.
--   Copyright (C) 2021-2022 Free Software Foundation, Inc.
+-   Copyright (C) 2021-2023 Free Software Foundation, Inc.
 -   This file is part of the GNU C Library.
 -
 -   The GNU C Library is free software; you can redistribute it and/or

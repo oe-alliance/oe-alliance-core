@@ -17,7 +17,7 @@ This rewrites user2netname() to use snprintf to guard against overflows.
 In doing so, it removes the if-check and related macros.
 
 diff --git a/sunrpc/netname.c b/sunrpc/netname.c
-index ceed23b1a72..7b1b0dcffaf 100644
+index dd2cb1b4..cc64f9be 100644
 --- a/sunrpc/netname.c
 +++ b/sunrpc/netname.c
 @@ -24,8 +24,7 @@
@@ -39,7 +39,7 @@ index ceed23b1a72..7b1b0dcffaf 100644
  
    if (domain == NULL)
      {
-@@ -46,11 +45,10 @@ user2netname (char netname[MAXNETNAMELEN + 1], const uid_t uid,
+@@ -46,9 +45,13 @@ user2netname (char netname[MAXNETNAMELEN + 1], const uid_t uid,
        dfltdom[MAXNETNAMELEN] = '\0';
      }
  
@@ -48,11 +48,12 @@ index ceed23b1a72..7b1b0dcffaf 100644
 +  if (i <= 0 || i > (ssize_t) MAXNETNAMELEN)
      return 0;
  
--  sprintf (netname, "%s.%d@%s", OPSYS, uid, dfltdom);
--  i = strlen (netname);
-   if (netname[i - 1] == '.')
-     netname[i - 1] = '\0';
-   return 1;
++  if (netname[i - 1] == '.')
++    netname[i - 1] = '\0';
++  return 1;
+   /* GCC with -Os or -O1 warns that sprint might overflow while handling
+      dfltdom, however the above test does check if an overflow would
+      happen.  */
 -- 
-2.25.1
+2.34.1
 
