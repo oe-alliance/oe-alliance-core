@@ -8,7 +8,7 @@ ALLOW_EMPTY:${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r23"
+PR = "r24"
 
 inherit packagegroup
 
@@ -37,17 +37,15 @@ RRECOMMENDS:${PN} = " \
     ${@bb.utils.contains("MACHINE_FEATURES", "videoenhancement", "", "enigma2-plugin-systemplugins-videoenhancement", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "uianimation", "enigma2-plugin-systemplugins-animationsetup" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "osdanimation", "enigma2-plugin-systemplugins-animationsetup" , "", d)} \
-    ${@bb.utils.contains("MACHINE_FEATURES", "omb", "enigma2-plugin-extensions-openmultiboot", "", d)} \
-    ${@bb.utils.contains("MACHINE_FEATURES", "omb", "openmultiboot", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "quadpip", "enigma2-plugin-systemplugins-quadpip", "", d)} \
     ${@bb.utils.contains("TARGET_ARCH", "arm", "glibc-compat", "", d)} \
     openbh-picon-feed-opkg-conf \
     "
 
-RRECOMMENDS:${PN}:remove:osmio4kplus = "enigma2-plugin-extensions-openmultiboot openmultiboot"
-RRECOMMENDS:${PN}:remove:osmini4k = "enigma2-plugin-extensions-openmultiboot openmultiboot"
+RRECOMMENDS:${PN}:append:vuduo2 = "enigma2-plugin-extensions-openmultiboot openmultiboot"
+RRECOMMENDS:${PN}:append:vusolose = "enigma2-plugin-extensions-openmultiboot openmultiboot"
+RRECOMMENDS:${PN}:append:vusolo2 = "enigma2-plugin-extensions-openmultiboot openmultiboot"
+RRECOMMENDS:${PN}:append:vuzero = "enigma2-plugin-extensions-openmultiboot openmultiboot"
+RRECOMMENDS:${PN}:append:vuultimo = "enigma2-plugin-extensions-openmultiboot openmultiboot"
 
-RRECOMMENDS:${PN}:remove:vuduo = "enigma2-plugin-extensions-openmultiboot openmultiboot enigma2-plugin-systemplugins-terrestrialscan enigma2-plugin-systemplugins-autobouquetsmaker"
-RRECOMMENDS:${PN}:remove:vusolo = "enigma2-plugin-extensions-openmultiboot openmultiboot enigma2-plugin-systemplugins-terrestrialscan enigma2-plugin-systemplugins-autobouquetsmaker"
-RRECOMMENDS:${PN}:remove:vuuno = "enigma2-plugin-extensions-openmultiboot openmultiboot enigma2-plugin-systemplugins-terrestrialscan enigma2-plugin-systemplugins-autobouquetsmaker"
 
