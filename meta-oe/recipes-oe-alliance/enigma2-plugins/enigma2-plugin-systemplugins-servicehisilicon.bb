@@ -12,6 +12,8 @@ SRC_URI = "git://github.com/oe-mirrors/servicehisilicon.git;protocol=https;branc
         file://ax-python-devel-dont-check-for-distutils.patch"
 SRC_URI:openatv = "git://github.com/oe-mirrors/servicehisilicon.git;protocol=https;branch=openatv \
         file://ax-python-devel-dont-check-for-distutils.patch"
+SRC_URI:openhdf = "git://github.com/oe-mirrors/servicehisilicon.git;protocol=https;branch=openatv \
+        file://ax-python-devel-dont-check-for-distutils.patch"
 SRC_URI:openvix = "git://github.com/OpenViX/servicehisilicon.git;protocol=https;branch=sigc3"
 SRC_URI:openbh = "git://github.com/BlackHole/servicehisilicon.git;protocol=https;branch=sigc3"
 
@@ -38,3 +40,7 @@ FILES:${PN}-dev = "\
 	${libdir}/enigma2/python/Plugins/SystemPlugins/ServiceHisilicon/*.py \
 	${libdir}/enigma2/python/Plugins/SystemPlugins/ServiceHisilicon/servicehisilicon.la \
 	"
+
+do_compile:openhdf:prepend() {
+        sed -i "s/PyInt/PyLong/g" ${S}/servicehisilicon/servicehisilicon.cpp
+}
