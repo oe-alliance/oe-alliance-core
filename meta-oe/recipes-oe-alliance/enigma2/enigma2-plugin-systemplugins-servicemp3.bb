@@ -86,12 +86,13 @@ RRECOMMENDS:${PN} = "\
 	"
 
 SRC_URI = "git://github.com/openpli/servicemp3.git;protocol=https;branch=master"
+SRC_URI:teamblue = "git://github.com/teamblue-e2/servicemp3.git;protocol=https;branch=master"
 SRCREV = "${AUTOREV}"
 SRCREV_openeight = "c7750c5ab393341f5a65094ceac90fbb6afd12e6"
 
 S = "${WORKDIR}/git"
 
-inherit autotools gitpkgv ${PYTHON_PN}native pkgconfig
+inherit autotools gitpkgv ${PYTHON_PN}native pkgconfig ${PYTHON_PN}targetconfig
 
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
@@ -105,6 +106,7 @@ EXTRA_OECONF = "\
 	"
 
 FILES:${PN} = "\
+	${libdir}/enigma2/python/Plugins/SystemPlugins/ServiceMP3/*.pyc \
 	${libdir}/enigma2/python/Plugins/SystemPlugins/ServiceMP3/*.pyo \
 	${libdir}/enigma2/python/Plugins/SystemPlugins/ServiceMP3/servicemp3.so"
 
