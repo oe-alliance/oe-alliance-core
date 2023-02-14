@@ -32,7 +32,6 @@ RRECOMMENDS:${PN} = "\
     enigma2-plugin-systemplugins-swapmanager \
     enigma2-plugin-systemplugins-videomode \
     enigma2-plugin-systemplugins-videotune \
-    ${@bb.utils.contains("MACHINE_FEATURES", "osdanimation", "enigma2-plugin-systemplugins-animationsetup", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "videoenhancement", "", "enigma2-plugin-systemplugins-videoenhancement", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "quadpip", "enigma2-plugin-systemplugins-quadpip", "", d)} \
     "

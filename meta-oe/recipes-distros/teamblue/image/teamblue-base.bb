@@ -15,10 +15,6 @@ inherit packagegroup
 RDEPENDS:${PN} = "\
     autofs \
     ca-certificates \
-    ${@bb.utils.contains_any("FLASHSIZE", "64 96 128", "", \
-    " \
-    enigma2-plugin-skins-pli-hd \
-    ", d)} \
     oe-alliance-base \
     teamblue-enigma2 \
     teamblue-bootlogo \

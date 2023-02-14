@@ -19,13 +19,10 @@ export IMAGE_BASENAME = "teamblue-image"
 IMAGE_INSTALL = "teamblue-base"
 
 # Some additional comfort on the shell: Pre-install nano on boxes with 128 MB or more:
-IMAGE_INSTALL += "${@bb.utils.contains_any("FLASHSIZE", "64 96", "", "nano htop iproute2", d)}"
+IMAGE_INSTALL += "${@bb.utils.contains_any("FLASHSIZE", "64 96", "", "iproute2", d)}"
 
-# ... plus mc and helpers on 256 MB or more:
-#IMAGE_INSTALL += "${@bb.utils.contains_any("FLASHSIZE", "64 96 128", "", "mc mc-fish mc-helpers", d)}"
-
-# 64 or 128MB of flash: No language files, above: German and French
-#IMAGE_LINGUAS  = "${@bb.utils.contains_any("FLASHSIZE", "64 96 128", "", "de-de fr-fr", d)}"
+# 64 or 128MB of flash: No language files, above: German
+#IMAGE_LINGUAS  = "${@bb.utils.contains_any("FLASHSIZE", "64 96 128", "", "de-de", d)}"
 
 # Add more languages for 512 or more MB of flash:
 #IMAGE_LINGUAS += "${@bb.utils.contains_any("FLASHSIZE", "64 96 128 256", "", "es-es it-it nl-nl pt-pt", d)}"
