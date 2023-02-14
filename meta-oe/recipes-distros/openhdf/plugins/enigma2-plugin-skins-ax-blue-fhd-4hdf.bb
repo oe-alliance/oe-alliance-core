@@ -1,58 +1,64 @@
-SUMMARY = "Skin Full HD for HDF Images"
+SUMMARY = "Full HD Skin for HDF Images"
 MAINTAINER = "stein17"
 
 require conf/license/license-gplv2.inc
 require conf/python/${PYTHON_PN}-compileall.inc
 
-inherit gitpkgv allarch
+inherit gitpkgv
 
 SRCREV = "${AUTOREV}"
-PV = "3.0+git${SRCPV}"
-PKGV = "3.0+git${GITPKGV}"
-VER="3.0"
+PV = "3.1+git${SRCPV}"
+PKGV = "3.1+git${GITPKGV}"
+VER="3.1"
 
-SRC_URI="git://github.com/stein17/AX-Blue-FHD-4HDF.git;protocol=https;branch=master"
+RDEPENDS:${PN} = "enigma2-plugin-systemplugins-weathercomponenthandler, enigma2-plugin-skincomponents-weathercomponent"
 
-FILES:${PN} = "/usr/share ${libdir}"
+SRC_URI="git://github.com/stein17/Skins-for-openHDF.git;protocol=https;branch=Python3"
 
-S = "${WORKDIR}/git"
+FILES:${PN} = "${libdir} ${datadir}"
+
+S = "${WORKDIR}/git/AX-Blue-FHD-4HDF"
 
 do_install() {
-	install -d ${D}/usr/share
-	install -d ${D}${libdir}
-	cp -rp ${S}/usr/share/* ${D}/usr/share/
-	cp -rp ${S}/usr/lib/* ${D}${libdir}/
-	chmod -R a+rX ${D}/usr/share/enigma2/
+    install -d ${D}${libdir}
+    install -d ${D}${datadir}
+    cp -rp ${S}/usr/lib/* ${D}${libdir}/
+    cp -rp ${S}/${datadir}/* ${D}${datadir}
+    chmod -R a+rX ${D}${datadir}/enigma2/
 }
 
 pkg_postinst:${PN} () {
 #!/bin/sh
-echo "              ...Skin successful installed.                "
+echo ""
+echo "...AX-Blue-FHD-4HDF by stein17 successful installed."
+echo ""
 exit 0
 }
 
 pkg_postrm:${PN} () {
 #!/bin/sh
-rm -rf /usr/share/enigma2/AX_Blue_FHD_4HDF
-rm -rf /usr/share/enigma2/Spinner/AX_Blue
-echo "                                                           "
-echo "               ...Skin successful removed.                 "
+rm -rf /enigma2/AX_Blue_FHD_4HDF
+rm -rf /enigma2/Spinner/AX_Blue
+echo ""
+echo "... AX-Blue-FHD-4HDF Skin by stein17 successful removed."
+echo ""
 exit 0
 }
 
 pkg_preinst:${PN} () {
 #!/bin/sh
-echo "        AX-Blue-FHD Skin will be now installed...            "
+echo ""
+echo "AX-Blue-FHD-4HDF Skin by stein17 will be now installed..."
+echo ""
 exit 0
 }
 
 pkg_prerm:${PN} () {
 #!/bin/sh
-echo "                                                           "
-echo "              AX-Blue-FHD is now being removed...          "
-echo "                                                           "
+echo ""
+echo "AX-Blue-FHD-4HDF Skin by stein17 is now being removed..."
+echo ""
 exit 0
 }
 
 do_package_qa[noexec] = "1"
-

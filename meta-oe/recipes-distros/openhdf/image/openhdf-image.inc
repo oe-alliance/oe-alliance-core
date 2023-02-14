@@ -51,7 +51,7 @@ inherit image
 do_package_index[nostamp] = "1"
 do_package_index[depends] += "${PACKAGEINDEXDEPS}"
 
-rootfs_postprocess() {
+fakeroot rootfs_postprocess() {
     if [ -f ~/bin/parser.sh ]; then
         cp ~/bin/parser.sh .
         ./parser.sh ${MACHINEBUILD} ${IMAGE_ROOTFS}
@@ -70,3 +70,4 @@ python do_package_index() {
     generate_index_files(d)
 }
 addtask do_package_index after do_rootfs before do_image_complete
+do_rootfs[network] = "1"

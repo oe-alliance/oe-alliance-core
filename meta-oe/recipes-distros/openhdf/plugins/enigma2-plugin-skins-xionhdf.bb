@@ -4,9 +4,9 @@ MAINTAINER = "HDFreaks"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"
-inherit allarch
 
 require conf/license/license-gplv2.inc
+require conf/python/${PYTHON_PN}-compileall.inc
 
 inherit gitpkgv
 SRCREV = "${AUTOREV}"
@@ -15,17 +15,17 @@ PKGV = "1.0+git${GITPKGV}"
 VER ="1.0"
 PR = "r6"
 
-SRC_URI="git://github.com/KravenHD/XionHDF.git;protocol=https;branch=master"
+SRC_URI="git://github.com/KravenHD/XionHDF.git;branch=python3;protocol=https"
 
 S = "${WORKDIR}/git"
 
 FILES:${PN} = "/usr/share ${libdir}"
 
 do_install() {
-	install -d ${D}${libdir}
-	install -d ${D}/usr/share
-        cp -rp ${S}/usr/lib/* ${D}/${libdir}
-	cp -rp ${S}/usr/share/* ${D}/usr/share
+    install -d ${D}${libdir}
+    install -d ${D}/usr/share
+    cp -r --preserve=mode,links ${S}/usr/lib/* ${D}${libdir}/
+    cp -r --preserve=mode,links ${S}/usr/share/* ${D}/usr/share/
 }
 
 pkg_preinst:${PN}() {
@@ -71,13 +71,6 @@ echo "                                                          "
 exit 0
 }
 
-pkg_prerm:${PN} () {
-#!/bin/sh
-echo "                                                           "
-echo "         The Skin XionHDF is now being removed...          "
-echo "                                                           "
-exit 0
-}
 
 pkg_postrm:${PN} () {
 #!/bin/sh
