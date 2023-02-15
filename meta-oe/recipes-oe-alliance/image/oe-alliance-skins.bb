@@ -7,7 +7,7 @@ ALLOW_EMPTY:${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r7"
+PR = "r8"
 
 inherit packagegroup
 
@@ -33,4 +33,20 @@ RDEPENDS:${PN}:remove:openvix = "\
 	enigma2-plugin-skins-novum-fhd-light \
 	enigma2-plugin-skins-army-moodblue-hd \
 	enigma2-plugin-skins-kravenhd \
+	"
+
+RDEPENDS:${PN}:remove:teamblue = "\
+	enigma2-plugin-skins-mynovumhd2 \
+	enigma2-plugin-skins-mynovumhd2black \
+	enigma2-plugin-skins-novum-hd-slim \
+	enigma2-plugin-skins-novum-fhd-light \
+	enigma2-plugin-skins-army-moodblue-hd \
+	"
+
+RDEPENDS:${PN}:remove:openhdf = "\
+	enigma2-plugin-skins-mynovumhd2 \
+	enigma2-plugin-skins-mynovumhd2black \
+	enigma2-plugin-skins-novum-hd-slim \
+	enigma2-plugin-skins-novum-fhd-light \
+	enigma2-plugin-skins-army-moodblue-hd \
 	"
