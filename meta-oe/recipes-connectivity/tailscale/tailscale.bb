@@ -2,13 +2,18 @@ SUMMARY = "Tailscale client and daemon for Linux"
 HOMEPAGE = "github.com/tailscale/tailscale"
 SECTION = "net"
 LICENSE = "BSD-3-Clause"
-LIC_FILES_CHKSUM = "file://src/${GO_IMPORT}/LICENSE;md5=909a1094c010630b8a862f0d29e418dd"
+LIC_FILES_CHKSUM = "file://src/${GO_IMPORT}/LICENSE;md5=a672713a9eb730050e491c92edf7984d"
 
 RRECOMMENDS:${PN} = "kernel-module-tun enigma2-plugin-drivers-iptables"
 
-SRCREV = "5a60f1ffe3741c55eb9637ddd2f20157d164f511"
-SRC_URI = "git://github.com/tailscale/tailscale.git;protocol=https;nobranch=1 \
-	file://tailscaled.initd \
+inherit gitpkgv
+
+SRCREV = "${AUTOREV}"
+PV = "1.37.0+git${SRCPV}"
+PKGV = "1.37.0+git${GITPKGV}"
+
+SRC_URI = "git://github.com/tailscale/tailscale.git;protocol=https;branch=main \
+        file://tailscaled.initd \
 "
 
 inherit go-mod update-rc.d systemd upx-compress
@@ -16,6 +21,9 @@ inherit go-mod update-rc.d systemd upx-compress
 GO_IMPORT = "tailscale.com"
 GO_WORKDIR = "${GO_IMPORT}"
 GO_INSTALL = "${GO_IMPORT}/cmd/tailscale ${GO_IMPORT}/cmd/tailscaled"
+
+# Fixes duplicated definition of symbols errors by linking for arm arch
+GO_DYNLINK:arm = ""
 
 FILES:${PN} += "${systemd_unitdir} ${sysconfdir}"
 
