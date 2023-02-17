@@ -20,8 +20,8 @@ RREPLACES:${PN} += "enigma2-plugin-skins-kravenfhd enigma2-plugin-skins-kravenvb
 RPROVIDES:${PN} += "enigma2-plugin-skins-kravenfhd enigma2-plugin-skins-kravenvb"
 
 SRC_URI = "git://github.com/oerlgrey/KravenHD.git;protocol=https;branch=python3"
-SRC_URI:openhdf = "git://github.com/oerlgrey/KravenHD.git;protocol=https;branch=python3"
-SRC_URI:teamblue = "git://github.com/oerlgrey/KravenHD.git;protocol=https;branch=python3"
+SRC_URI:openhdf = "git://github.com/oerlgrey/KravenHD_openHDF.git;protocol=https;branch=python3"
+SRC_URI:teamblue = "git://github.com/oerlgrey/KravenHD_teamBlue.git;protocol=https;branch=python3"
 
 FILES:${PN} = "/usr/*"
 
