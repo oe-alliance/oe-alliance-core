@@ -1,8 +1,9 @@
-From 00c2aadc4082310ebcf0b927101aca4694651003 Mon Sep 17 00:00:00 2001
+From 7ed06cb9ca3c2b2a2c5b081e1ea18509f93f50eb Mon Sep 17 00:00:00 2001
 From: Captain <captain.onboard@web.de>
 Date: Sun, 13 Jun 2021 13:14:40 +0200
 Subject: [PATCH] HiPlayer-Subs-20
 
+%% original patch: HiPlayer-Subs-20.patch
 ---
  xbmc/guilib/GUIWindowManager.cpp    |  11 +++
  xbmc/windows/CMakeLists.txt         |   6 +-
@@ -13,10 +14,10 @@ Subject: [PATCH] HiPlayer-Subs-20
  create mode 100644 xbmc/windows/GUIWindowSubtitles.h
 
 diff --git a/xbmc/guilib/GUIWindowManager.cpp b/xbmc/guilib/GUIWindowManager.cpp
-index d73dce68b0..7eb3544847 100644
+index f15489e00e0..81db9f4aac9 100644
 --- a/xbmc/guilib/GUIWindowManager.cpp
 +++ b/xbmc/guilib/GUIWindowManager.cpp
-@@ -63,6 +63,9 @@
+@@ -64,6 +64,9 @@
  #include "windows/GUIWindowSplash.h"
  #include "windows/GUIWindowStartup.h"
  #include "windows/GUIWindowSystemInfo.h"
@@ -26,7 +27,7 @@ index d73dce68b0..7eb3544847 100644
  
  #include <mutex>
  
-@@ -316,6 +319,10 @@ void CGUIWindowManager::CreateWindows()
+@@ -319,6 +322,10 @@ void CGUIWindowManager::CreateWindows()
    Add(new GAME::CDialogGameVideoRotation);
    Add(new GAME::CDialogInGameSaves);
    Add(new RETRO::CGameWindowFullScreen);
@@ -37,7 +38,7 @@ index d73dce68b0..7eb3544847 100644
  }
  
  bool CGUIWindowManager::DestroyWindows()
-@@ -452,6 +459,10 @@ bool CGUIWindowManager::DestroyWindows()
+@@ -457,6 +464,10 @@ bool CGUIWindowManager::DestroyWindows()
  
      DestroyWindow(WINDOW_DIALOG_PERIPHERALS);
      DestroyWindow(WINDOW_DIALOG_PERIPHERAL_SETTINGS);
@@ -49,7 +50,7 @@ index d73dce68b0..7eb3544847 100644
    catch (...)
    {
 diff --git a/xbmc/windows/CMakeLists.txt b/xbmc/windows/CMakeLists.txt
-index 2fe465fcc2..f44fd3f751 100644
+index 2fe465fcc2b..f44fd3f7516 100644
 --- a/xbmc/windows/CMakeLists.txt
 +++ b/xbmc/windows/CMakeLists.txt
 @@ -8,7 +8,8 @@ set(SOURCES GUIMediaWindow.cpp
@@ -73,7 +74,7 @@ index 2fe465fcc2..f44fd3f751 100644
  core_add_library(windows)
 diff --git a/xbmc/windows/GUIWindowSubtitles.cpp b/xbmc/windows/GUIWindowSubtitles.cpp
 new file mode 100644
-index 0000000000..2e92356e79
+index 00000000000..82d7c4e67b2
 --- /dev/null
 +++ b/xbmc/windows/GUIWindowSubtitles.cpp
 @@ -0,0 +1,144 @@
@@ -93,11 +94,11 @@ index 0000000000..2e92356e79
 +static UTILS::COLOR::Color colors[8] = { UTILS::COLOR::YELLOW,
 +                                  UTILS::COLOR::WHITE,
 +                                  UTILS::COLOR::BLUE,
-+                                  UTILS::COLOR::BRIGHTGREEN,
-+                                  UTILS::COLOR::YELLOWGREEN,
-+                                  UTILS::COLOR::CYAN,
-+                                  UTILS::COLOR::LIGHTGREY,
-+                                  UTILS::COLOR::GREY };
++                                  UTILS::COLOR::OLIVE,
++                                  UTILS::COLOR::LIME,
++                                  UTILS::COLOR::AQUA,
++                                  UTILS::COLOR::SILVER,
++                                  UTILS::COLOR::GRAY };
 +//UTILS::COLOR::DARKGREY
 +//UTILS::COLOR::NONE
 +//UTILS::COLOR::BLACK
@@ -223,7 +224,7 @@ index 0000000000..2e92356e79
 +}
 diff --git a/xbmc/windows/GUIWindowSubtitles.h b/xbmc/windows/GUIWindowSubtitles.h
 new file mode 100644
-index 0000000000..4f9cef1100
+index 00000000000..4f9cef1100e
 --- /dev/null
 +++ b/xbmc/windows/GUIWindowSubtitles.h
 @@ -0,0 +1,21 @@
@@ -248,3 +249,6 @@ index 0000000000..4f9cef1100
 +	CGUITextLayout *m_layout;
 +	std::string m_text;
 +};
+-- 
+2.25.1
+
