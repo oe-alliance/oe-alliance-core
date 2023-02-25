@@ -1,17 +1,8 @@
-From 03923ba038fd0dda787048c2d1c6603b6765f6c1 Mon Sep 17 00:00:00 2001
-From: Captain <captain.onboard@web.de>
-Date: Wed, 15 Jul 2020 19:40:27 +0200
-Subject: [PATCH] flatbuffers-20
-
----
- xbmc/cores/RetroPlayer/messages/savestate.fbs | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
-
 diff --git a/xbmc/cores/RetroPlayer/messages/savestate.fbs b/xbmc/cores/RetroPlayer/messages/savestate.fbs
-index 3a1c5c855b0..6a16a437ca2 100644
+index 7f8d805..2a63c4d 100644
 --- a/xbmc/cores/RetroPlayer/messages/savestate.fbs
 +++ b/xbmc/cores/RetroPlayer/messages/savestate.fbs
-@@ -13,7 +13,7 @@ namespace KODI.RETRO;
+@@ -15,7 +15,7 @@ namespace KODI.RETRO;
  
  file_identifier "SAV_";
  
@@ -20,7 +11,7 @@ index 3a1c5c855b0..6a16a437ca2 100644
    Unknown,
    Auto,
    Manual
-@@ -21,11 +21,11 @@ enum SaveType : uint8 {
+@@ -23,11 +23,11 @@ enum SaveType : uint8 {
  
  table Savestate {
    // Schema version
@@ -34,7 +25,7 @@ index 3a1c5c855b0..6a16a437ca2 100644
    label:string (id: 3);
    caption:string (id: 11);
    created:string (id: 4); // W3C date time [ISO 8601 : 1988 (E)] with timezone info
-@@ -34,15 +34,15 @@ table Savestate {
+@@ -36,8 +36,8 @@ table Savestate {
    game_file_name:string (id: 5);
  
    // Environment properties
@@ -45,7 +36,8 @@ index 3a1c5c855b0..6a16a437ca2 100644
  
    // Emulator properties
    emulator_addon_id:string (id: 8);
-   emulator_version:string (id: 9); // Semantic version
+@@ -58,7 +58,7 @@ table Savestate {
+   rotation_ccw:VideoRotation (id: 21);
  
    // Memory properties
 -  memory_data:[uint8] (id: 10);
