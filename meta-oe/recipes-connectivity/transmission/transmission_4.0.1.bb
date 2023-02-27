@@ -1,18 +1,16 @@
 DESCRIPTION = "Transmission is a BitTorrent client w/ a built-in Ajax-Powered Webif GUI."
 SECTION = "network"
 HOMEPAGE = "www.transmissionbt.com/"
-LICENSE = "GPL-2.0-only"
-LIC_FILES_CHKSUM = "file://COPYING;md5=73f535ddffcf2a0d3af4f381f84f9b33"
+LICENSE = "GPL-2.0-or-later & GPL-3.0-or-later"
+LIC_FILES_CHKSUM = "file://COPYING;md5=ba8199e739948e198310093de27175fa"
 
 DEPENDS = "curl libevent gnutls openssl libtool intltool-native glib-2.0-native"
 
-# Transmission release 3.00
-SRCREV = "bb6b5a062ee594dfd4b7a12a6b6e860c43849bfd"
-PV = "3.00"
+# Transmission release 4.0.1
+SRCREV = "e1c6e1be43ff7d3bf69a4c6f9468f8c19d6c6c01"
+PV = "4.0.1"
 
 SRC_URI = "gitsm://github.com/transmission/transmission;protocol=https;branch=main \
-        file://configure-kill-intl-check.patch \
-        file://configure-allow-local-network.patch \
         file://init \
         file://service \
         file://config \
@@ -23,27 +21,17 @@ INITSCRIPT_PARAMS = "defaults 60 "
 
 S = "${WORKDIR}/git"
 
-inherit autotools-brokensep gettext pkgconfig update-rc.d systemd
+inherit cmake gettext pkgconfig update-rc.d systemd
 
 PACKAGECONFIG = "${@bb.utils.contains('DISTRO_FEATURES','systemd','systemd','',d)}"
 
-PACKAGECONFIG[systemd] = "--with-systemd,--without-systemd,systemd,"
+PACKAGECONFIG[systemd] = "-DWITH_SYSTEMD=ON,-DWITH_SYSTEMD=OFF,systemd,"
 
-EXTRA_OECONF += " \
-    --without-gtk \
-    --disable-cli \
-    --disable-mac \
-    --enable-lightweight \
-    --enable-daemon \
-    CPPFLAGS=-DTR_EMBEDDED \
+EXTRA_OECMAKE += " \
+    -DENABLE-GTK=OFF \
+    -DENABLE_MAC=OFF \
+    -DENABLE_TESTS=OFF \
 "
-
-do_configure:prepend() {
-    sed -i /AM_GLIB_GNU_GETTEXT/d ${S}/configure.ac
-    cd ${S}
-    ./update-version-h.sh
-    intltoolize --copy --force --automake
-}
 
 do_install:append() {
     install -d ${D}${sysconfdir}/default
