@@ -8,9 +8,9 @@ DEPENDS += "${PYTHON_PN}-setuptools-scm-native"
 
 RDEPENDS:${PN} += "${PYTHON_PN}-packaging ${PYTHON_PN}-tomli"
 
-SRC_URI[sha256sum] = "3b7565a2db92f1206b5b833a72cc6936c8a74d65e94224f0a9eb54799d1561d9"
-
 PYPI_PACKAGE = "versioningit"
+
+SRC_URI[sha256sum] = "eb18e7ba7268a880bf1ccfe92e534e96ab34e0397f28dcbcb3fc0da4f6a5b6bd"
 
 inherit pypi python_setuptools_build_meta
 
