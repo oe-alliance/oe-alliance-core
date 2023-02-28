@@ -1,0 +1,8 @@
+--- a/passwd.master
++++ b/passwd.master
+@@ -1,4 +1,4 @@
+-root::0:0:root:/root:/bin/sh
++root::0:0:root:/root:/bin/bash
+ daemon:*:1:1:daemon:/usr/sbin:/usr/sbin/nologin
+ bin:*:2:2:bin:/bin:/usr/sbin/nologin
+ sys:*:3:3:sys:/dev:/usr/sbin/nologin

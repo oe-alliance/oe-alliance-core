@@ -1,5 +1,5 @@
 FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 
-# Remove the nobash patch as all distros have bash now (A lot of things depend on it).
+# All distros have bash now (A lot of things depend on it).
 # Using /bin/sh linked to /bin/bash is not the way to go, as it breaks things, e.g. subshell support in Midnight Commander
-SRC_URI:remove = "file://nobash.patch"
+SRC_URI += "file://use-bash-for-root-shell.patch"
