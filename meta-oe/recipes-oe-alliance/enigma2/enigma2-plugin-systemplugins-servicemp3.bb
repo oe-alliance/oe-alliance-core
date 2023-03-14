@@ -14,7 +14,7 @@ GST_BASE_RDEPS = "\
 	gstreamer${GST_VERSION}-plugins-base-audioconvert \
 	gstreamer${GST_VERSION}-plugins-base-audioresample \
 	gstreamer${GST_VERSION}-plugins-base-audiorate \
-	gstreamer${GST_VERSION}-plugins-base-videoconvert \
+	gstreamer${GST_VERSION}-plugins-base-videoconvertscale \
 	gstreamer${GST_VERSION}-plugins-base-ivorbisdec \
 	gstreamer${GST_VERSION}-plugins-base-ogg \
 	gstreamer${GST_VERSION}-plugins-base-opus \
