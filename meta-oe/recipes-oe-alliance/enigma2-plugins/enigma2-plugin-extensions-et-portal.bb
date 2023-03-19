@@ -6,7 +6,7 @@ PRIORITY = "optional"
 require conf/license/license-gplv2.inc
 require conf/python/python3-compileall.inc
 
-inherit gitpkgv ${PYTHON_PN}native gettext autotools-brokensep
+inherit gitpkgv gettext autotools-brokensep ${PYTHON_PN}native
 SRCREV = "${AUTOREV}"
 PV = "inofficial-3.2.+git${SRCPV}"
 PKGV = "inofficial-3.2.+git${GITPKGV}"
@@ -29,12 +29,10 @@ EXTRA_OECONF = "\
     STAGING_LIBDIR=${STAGING_LIBDIR} \
 "
 
-do_configure:prepend() {
-sed -i 's/python/python2/g' ${S}/xml2po.py
-}
+PARALLEL_MAKEINST = ""
 
 pkg_postinst:${PN}() {
-#!/bin/sh 
+#!/bin/sh
 if  [ -f /usr/lib/enigma2/python/Plugins/Extensions/EtPortal/adultpassword ] ; then
      echo ""
 else

@@ -5,7 +5,7 @@ PRIORITY = "optional"
 require conf/license/license-gplv2.inc
 require conf/python/python3-compileall.inc
 
-inherit gitpkgv ${PYTHON_PN}native autotools-brokensep gettext
+inherit gitpkgv autotools-brokensep gettext ${PYTHON_PN}native
 
 SRCREV = "${AUTOREV}"
 PV = "1.2.+git${SRCPV}"
@@ -22,11 +22,6 @@ EXTRA_OECONF = " \
     STAGING_INCDIR=${STAGING_INCDIR} \
     STAGING_LIBDIR=${STAGING_LIBDIR} \
 "
-
-do_configure:prepend() {
-sed -i 's/python/python2/g' ${S}/xml2po.py
-}
-
 
 PARALLEL_MAKEINST = ""
 
