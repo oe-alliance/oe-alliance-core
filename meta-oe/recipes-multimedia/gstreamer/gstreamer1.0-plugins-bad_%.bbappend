@@ -12,7 +12,7 @@ SRC_URI:append = " \
 "
 
 PACKAGECONFIG:append = " \
-    assrender faac faad libde265 neon opusparse rtmp \
+    assrender faac faad libde265 neon opusparse resindvd rtmp \
 "
 
 PACKAGECONFIG:remove = "rsvg"
