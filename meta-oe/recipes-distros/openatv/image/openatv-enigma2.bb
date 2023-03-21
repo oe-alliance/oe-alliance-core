@@ -13,7 +13,7 @@ inherit packagegroup
 DEPENDS = "enigma2-pliplugins"
 
 RRECOMMENDS:${PN} = " \
-    openvix-picon-feed-opkg-conf \
+    oe-alliance-picon-feed-conf \
     enigma2-skindefault \
     openatv-version-info \
     enigma-info \
