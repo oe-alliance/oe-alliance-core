@@ -1,0 +1,56 @@
+# dvbapi configuration
+#
+# types:
+#	P - Priority
+#		format:
+#			P: <caid>:[<provider>]:[<srvid>]:[<ecmpid>]
+#	I - Ignore
+#		format:
+#			I: <caid>:[<provider>]:[<srvid>]:[<ecmpid>]
+#	M - Map
+#		format:
+#			M: <caid>:[<provider>]:[<srvid>]:[<ecmpid>] <target caid>:[<target provider>]
+#	D - Delay
+#		format:
+#			D: <caid>:[<provider>]:[<srvid>]:[<ecmpid>] <delay (ms)>
+#
+#
+#
+
+# Delay answers that come too fast (e.g. from cache)
+D: 0500 90
+D: 1830 320
+D: 1838 320
+D: 1843 320
+D: 1860 320
+D: 186A 320
+D: 098C 120
+D: 098D 120
+D: 098E 120
+D: 09C4 120
+
+# Schweizer Fernsehen
+#P: 0500:040810				# SRG v4
+#P: 0500:040820				# SRG v4
+#P: 0500:040830				# SRG v4
+#P: 0500:050800				# SRG v5
+#P: 0500:050810				# SRG v5
+#P: 0500:060200				# SRG v6
+#P: 0500:060210				# SRG v6
+
+# ORF
+#P: 0D95		        	# ORF ICE
+#P: 0D98		        	# ORF ICE
+#P: 0648		        	# ORF
+#P: 0650		        	# ORF
+
+# Astra HD+
+#P: 1830				# HD01
+#P: 1843				# HD02
+#P: 1860				# HD03
+#P: 186A				# HD04
+
+# Sky Sat V13/V14/V15
+#P: 09C4		        	# V13
+#P: 098C		        	# V14
+#P: 098D		        	# V15
