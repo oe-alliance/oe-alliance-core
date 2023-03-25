@@ -24,4 +24,10 @@ do_install() {
     install -m 0644 ${S}${sysconfdir}/opkg/* ${D}${sysconfdir}/opkg
 }
 
+pkg_postinst:openatv:${PN} () {
+    #!/bin/sh
+    rm -f /etc/opkg/openvix-picon-feed.conf
+    exit 0
+}
+
 CONFFILES:${PN} += "${sysconfdir}/opkg/${feed_name}.conf"
