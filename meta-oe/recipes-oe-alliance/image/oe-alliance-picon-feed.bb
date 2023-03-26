@@ -24,7 +24,6 @@ do_install() {
     install -m 0644 ${S}${sysconfdir}/opkg/* ${D}${sysconfdir}/opkg
 }
 
-RPROVIDES:${PN} = "openvix-picon-feed-opkg-conf"
 RREPLACES:${PN} = "openvix-picon-feed-opkg-conf"
 RCONFLICTS:${PN} = "openvix-picon-feed-opkg-conf"
 
