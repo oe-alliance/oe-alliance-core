@@ -46,7 +46,6 @@ RDEPENDS:${PN} = "\
     libxcrypt-compat \
     llmnrd \
     modutils-loadscript \
-    ntpdate \
     opkg \
     rc-local \
     sdparm \
