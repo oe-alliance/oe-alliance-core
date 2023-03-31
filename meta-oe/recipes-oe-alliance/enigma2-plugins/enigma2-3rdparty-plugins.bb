@@ -30,11 +30,13 @@ S = "${WORKDIR}/git"
 
 THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-ipchecker_004_all.ipk \
+    enigma2-plugin-extensions-missingpicons_2022_09_18_all.ipk \
     enigma2-plugin-extensions-netspeedtest_2.1.4_all.ipk \
     enigma2-plugin-extensions-screengrabber_2.6_all.ipk \
     enigma2-plugin-extensions-skyrecorder_2.1.1d-py3_all.ipk \
     enigma2-plugin-extensions-sundtekcontrolcenter_20210624-2_all.ipk \
     enigma2-plugin-extensions-xcplugin-forever_2.2_all.ipk \
+    enigma2-plugin-extensions-xeaio_3.2.8_all.ipk \
     "
 
 # Install any packages that are only for this machines feed here
