@@ -7,7 +7,7 @@ ALLOW_EMPTY:${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "1.0"
-PR = "r53"
+PR = "r54"
 
 inherit packagegroup
 
@@ -18,6 +18,7 @@ inherit packagegroup
 DEPENDS += "oe-alliance-feeds enigma2-3rdparty-plugins"
 
 RRECOMMENDS:${PN} = "\
+    chrony \
     enigma2-pliplugins \
     enigma2-display-skins \
     openatv-skinparts \
