@@ -5,7 +5,7 @@ require conf/license/license-gplv2.inc
 require conf/python/python3-compileall.inc
 
 DEPENDS = "enigma2 ${PYTHON_PN}-process libcrypto-compat-0.9.7 gettext-native"
-RDEPENDS:enigma2-plugin-obh-core = "ofgwrite ${PYTHON_PN}-process libcrypto-compat-0.9.7 ${PYTHON_PN}-compression zip procps ${PYTHON_PN}-beautifulsoup4 bzip2"
+RDEPENDS:enigma2-plugin-obh-core = "ffmpeg ofgwrite ${PYTHON_PN}-process libcrypto-compat-0.9.7 ${PYTHON_PN}-compression zip procps ${PYTHON_PN}-beautifulsoup4 bzip2"
 
 RCONFLICTS:enigma2-plugin-obh-core = "settings-autorestore"
 RREPLACES:enigma2-plugin-obh-core = "settings-autorestore"

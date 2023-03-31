@@ -5,7 +5,7 @@ require conf/license/license-gplv2.inc
 require conf/python/python3-compileall.inc
 
 DEPENDS = "enigma2 ${PYTHON_PN}-process libcrypto-compat-0.9.7 gettext-native"
-RDEPENDS:enigma2-plugin-vix-core = "ofgwrite ${PYTHON_PN}-process libcrypto-compat-0.9.7 ${PYTHON_PN}-compression zip procps bzip2"
+RDEPENDS:enigma2-plugin-vix-core = "ffmpeg ofgwrite ${PYTHON_PN}-process libcrypto-compat-0.9.7 ${PYTHON_PN}-compression zip procps bzip2"
 
 RCONFLICTS:enigma2-plugin-vix-core = "settings-autorestore"
 RREPLACES:enigma2-plugin-vix-core = "settings-autorestore"
