@@ -9,8 +9,8 @@ LICENSE = "Zlib"
 LIC_FILES_CHKSUM = "file://${WORKDIR}/ZenLib/License.txt;md5=3fc93316cd7abee66f851588fbcde985"
 
 SRC_URI= "https://mediaarea.net/download/source/libzen/${PV}/libzen_${PV}.tar.bz2"
-SRC_URI[md5sum] = "b1087fb2cbf3de4d7d5f7344d1f89bea"
-SRC_URI[sha256sum] = "bd2772ab1ae4e375cdbbbdd114ad8471ebe67bf78c76e3812d66c7d462ed8ae7"
+SRC_URI[md5sum] = "2e1e1018d33c8a957e72774a7f9d602b"
+SRC_URI[sha256sum] = "5543e2c45214b9d9f0ba4f43dee61d0296e1ff9f1427ed6c879ddd1b62b9f69e"
 
 S = "${WORKDIR}/ZenLib/Project/GNU/Library"
 
