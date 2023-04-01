@@ -6,7 +6,7 @@ require conf/license/license-gplv2.inc
 require conf/python/python3-compileall.inc
 
 DEPENDS = "${PYTHON_PN}-six-native"
-RDEPENDS:${PN} = "gstreamer1.0-plugins-good-flv gstreamer1.0-plugins-bad-rtmp ${PYTHON_PN}-json ${PYTHON_PN}-html ${PYTHON_PN}-requests ${PYTHON_PN}-mutagen rtmpdump ${PYTHON_PN}-chardet"
+RDEPENDS:${PN} = "gstreamer1.0-plugins-good-flv gstreamer1.0-plugins-bad-rtmp ${PYTHON_PN}-json ${PYTHON_PN}-html ${PYTHON_PN}-requests ${PYTHON_PN}-mutagen rtmpdump ${PYTHON_PN}-chardet ${PYTHON_PN}-tmdbsimple"
 
 inherit gitpkgv ${PYTHON_PN}native autotools-brokensep gettext
 
