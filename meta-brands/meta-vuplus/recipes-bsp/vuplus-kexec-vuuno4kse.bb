@@ -8,7 +8,7 @@ PR = "r1"
 
 SRC_URI = " \
     file://kernel_auto.bin \
-    file://STARTUP_cpio.bin \        
+    file://STARTUP_cpio.bin \
 "
 
 S = "${WORKDIR}"

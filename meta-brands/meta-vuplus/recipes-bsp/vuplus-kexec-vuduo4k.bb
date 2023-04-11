@@ -4,11 +4,11 @@ LICENSE = "CLOSED"
 require conf/license/license-close.inc
 
 PV = "1.0"
-PR = "r2"
+PR = "r3"
 
 SRC_URI = " \
     file://kernel_auto.bin \
-    file://STARTUP_cpio.bin \        
+    file://STARTUP_cpio.bin \
 "
 
 S = "${WORKDIR}"
@@ -16,7 +16,7 @@ S = "${WORKDIR}"
 do_install() {
     install -d ${D}${bindir}
     install -m 0755 ${WORKDIR}/kernel_auto.bin ${D}${bindir}/kernel_auto.bin
-    install -m 0755 ${WORKDIR}/STARTUP_cpio.bin ${D}${bindir}/STARTUP.cpio.gz    
+    install -m 0755 ${WORKDIR}/STARTUP_cpio.bin ${D}${bindir}/STARTUP.cpio.gz
 }
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
