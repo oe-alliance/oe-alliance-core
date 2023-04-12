@@ -12,8 +12,7 @@ SRCREV = "${AUTOREV}"
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
 
-SRC_URI = "git://github.com/mirakels/libdreamdvd.git;protocol=https;branch=master \
-        file://move-function-pointer-away-from-header.patch"
+SRC_URI = "git://github.com/oe-mirrors/libdreamdvd.git;protocol=https;branch=master"
 
 S = "${WORKDIR}/git"
 
