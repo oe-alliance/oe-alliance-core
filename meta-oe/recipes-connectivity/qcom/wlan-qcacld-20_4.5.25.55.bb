@@ -7,7 +7,7 @@ inherit module
 
 COMPATIBLE_MACHINE = "osmio4k|osmio4kplus|xc7439"
 
-SRC_URI = "${CAF_MIRROR}/qcacld-2.0/snapshot/qcacld-2.0-${PV}.tar.gz \
+SRC_URI = "https://source.mynonpublic.com/qcacld-2.0-${PV}.tar.gz \
     file://qcacld-2.0-support.patch \
 "
 
