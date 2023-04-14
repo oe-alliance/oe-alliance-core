@@ -1,8 +1,8 @@
 --- a/meson.build
 +++ b/meson.build
-@@ -245,7 +245,7 @@ if not system_has_kms_drm
-    with_gallium_kmsro = false
- endif
+@@ -250,7 +250,7 @@ with_gallium_kmsro = system_has_kms_drm and [
+   with_gallium_vc4,
+ ].contains(true)
  
 -with_dri = false
 +with_dri = get_option('dri') or (dri_drivers.length() != 0 and dri_drivers != [''])
@@ -24,3 +24,25 @@
  option(
    'dri-drivers',
    type : 'array',
+--- a/src/egl/meson.build
++++ b/src/egl/meson.build
+@@ -100,7 +100,7 @@ if with_dri2
+   incs_for_egl += inc_gallium
+   incs_for_egl += inc_gallium_aux
+   incs_for_egl += inc_mesa
+-  incs_for_egl += inc_st_dri
++#  incs_for_egl += inc_st_dri
+ 
+   files_egl += files(
+     'drivers/dri2/platform_device.c',
+--- a/src/egl/drivers/dri2/egl_dri2.c
++++ b/src/egl/drivers/dri2/egl_dri2.c
+@@ -46,7 +46,7 @@
+ #include <GL/internal/dri_interface.h>
+ #include <sys/types.h>
+ #include <sys/stat.h>
+-#include "dri_screen.h"
++#include <gallium/frontends/dri/dri_screen.h>
+ 
+ #ifdef HAVE_WAYLAND_PLATFORM
+ #include <wayland-client.h>
