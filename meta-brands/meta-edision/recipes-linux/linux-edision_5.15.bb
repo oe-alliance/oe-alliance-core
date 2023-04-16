@@ -18,14 +18,6 @@ DEPENDS += "flex-native bison-native openssl-native coreutils-native"
 
 MACHINE_KERNEL_PR:append = "0"
 
-# By default, kernel.bbclass modifies package names to allow multiple kernels
-# to be installed in parallel. We revert this change and rprovide the versioned
-# package names instead, to allow only one kernel to be installed.
-PKG:${KERNEL_PACKAGE_NAME}-base = "kernel-base"
-PKG:${KERNEL_PACKAGE_NAME}-image = "kernel-image"
-RPROVIDES:${KERNEL_PACKAGE_NAME}-base = "kernel-${KERNEL_VERSION}"
-RPROVIDES:kernel-image = "kernel-image-${KERNEL_VERSION}"
-
 SRC_URI += "https://source.mynonpublic.com/edision/linux-edision-${PV}.tar.gz \
     file://defconfig \
     file://findkerneldevice.py \

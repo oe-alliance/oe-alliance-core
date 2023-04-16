@@ -17,14 +17,6 @@ LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad
 
 MACHINE_KERNEL_PR:append = "3"
 
-# By default, kernel.bbclass modifies package names to allow multiple kernels
-# to be installed in parallel. We revert this change and rprovide the versioned
-# package names instead, to allow only one kernel to be installed.
-PKG:${KERNEL_PACKAGE_NAME}-base = "kernel-base"
-PKG:${KERNEL_PACKAGE_NAME}-image = "kernel-image"
-RPROVIDES:${KERNEL_PACKAGE_NAME}-base = "kernel-${KERNEL_VERSION}"
-RPROVIDES:${KERNEL_PACKAGE_NAME}-image = "kernel-image-${KERNEL_VERSION}"
-
 SRC_URI += "https://source.mynonpublic.com/octagon/octagon-linux-${PV}-${SRC}.tar.xz \
     file://defconfig \
     file://0001-regmap-add-regmap_write_bits.patch \

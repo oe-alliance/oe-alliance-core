@@ -18,14 +18,6 @@ SRC_URI[sha256sum] = "fd113f78998a63702e6e0ea62e9133d7865edb0e5172f79ab2779c5ae8
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-# By default, kernel.bbclass modifies package names to allow multiple kernels
-# to be installed in parallel. We revert this change and rprovide the versioned
-# package names instead, to allow only one kernel to be installed.
-PKG:${KERNEL_PACKAGE_NAME}-base = "kernel-base"
-PKG:${KERNEL_PACKAGE_NAME}-image = "kernel-image"
-RPROVIDES:${KERNEL_PACKAGE_NAME}-base = "kernel-${KERNEL_VERSION}"
-RPROVIDES:${KERNEL_PACKAGE_NAME}-image = "kernel-image-${KERNEL_VERSION}"
-
 SRC_URI += "https://source.mynonpublic.com/anadol/anadol-linux-${PV}-${SRCDATE}.tar.gz \
     file://defconfig \
     file://initramfs-subdirboot.cpio.gz;unpack=0 \

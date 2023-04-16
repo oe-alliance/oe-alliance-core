@@ -17,14 +17,6 @@ SRC_URI[sha256sum] = "2a9ab0dc82d9fe4e0a8a551a6323b177be11f2679bc43233c0344ecf15
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-# By default, kernel.bbclass modifies package names to allow multiple kernels
-# to be installed in parallel. We revert this change and rprovide the versioned
-# package names instead, to allow only one kernel to be installed.
-PKG:${KERNEL_PACKAGE_NAME}-base = "kernel-base"
-PKG:${KERNEL_PACKAGE_NAME}-image = "kernel-image"
-RPROVIDES:${KERNEL_PACKAGE_NAME}-base = "kernel-${KERNEL_VERSION}"
-RPROVIDES:${KERNEL_PACKAGE_NAME}-image = "kernel-image-${KERNEL_VERSION}"
-
 SRC_URI += "https://source.mynonpublic.com/qviart/qviart-linux-${PV}-${SRCDATE}.tar.gz \
     file://defconfig \
     file://initramfs-subdirboot.cpio.gz;unpack=0 \

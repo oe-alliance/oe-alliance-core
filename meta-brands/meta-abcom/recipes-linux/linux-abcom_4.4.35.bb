@@ -39,14 +39,6 @@ SRC_URI = "https://source.mynonpublic.com/abcom/linux-${PV}-${SRCDATE}-${ARCH}.t
 	file://fix-multiple-defs-yyloc.patch \
 	"
 
-# By default, kernel.bbclass modifies package names to allow multiple kernels
-# to be installed in parallel. We revert this change and rprovide the versioned
-# package names instead, to allow only one kernel to be installed.
-PKG:${KERNEL_PACKAGE_NAME}-base = "kernel-base"
-PKG:${KERNEL_PACKAGE_NAME}-image = "kernel-image"
-RPROVIDES:${KERNEL_PACKAGE_NAME}-base = "kernel-${KERNEL_VERSION}"
-RPROVIDES:${KERNEL_PACKAGE_NAME}-image = "kernel-image-${KERNEL_VERSION}"
-
 S = "${WORKDIR}/linux-${PV}"
 B = "${WORKDIR}/build"
 

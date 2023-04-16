@@ -8,7 +8,7 @@ COMPATIBLE_MACHINE = "^(vusolo4k|vuultimo4k|vuuno4k)$"
 
 MACHINE_KERNEL_PR:append = "oea4.2-r4"
 
-RPROVIDES:kernel-image = "kernel-image-${KERNEL_VERSION} kernel-${KERNEL_IMAGETYPE}"
+RPROVIDES:kernel-image = "kernel-${KERNEL_IMAGETYPE}"
 
 inherit kernel machine_kernel_pr
 

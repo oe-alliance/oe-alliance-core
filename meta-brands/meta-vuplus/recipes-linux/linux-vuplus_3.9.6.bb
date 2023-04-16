@@ -3,7 +3,7 @@ LICENSE = "GPL-2.0-only"
 SECTION = "kernel"
 KV = "3.9.6"
 
-RPROVIDES:kernel-image = "kernel-image-${KERNEL_VERSION} kernel-${KERNEL_IMAGETYPE}"
+RPROVIDES:kernel-image = "kernel-${KERNEL_IMAGETYPE}"
 
 inherit kernel machine_kernel_pr
 

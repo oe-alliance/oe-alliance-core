@@ -80,14 +80,6 @@ KERNEL_BUILTIN_MODULES:dm8000 = "\
     kernel-module-udf \
     "
 
-# By default, kernel.bbclass modifies package names to allow multiple kernels
-# to be installed in parallel. We revert this change and rprovide the versioned
-# package names instead, to allow only one kernel to be installed.
-PKG:${KERNEL_PACKAGE_NAME}-base = "kernel-base"
-PKG:${KERNEL_PACKAGE_NAME}-image = "kernel-image"
-RPROVIDES:${KERNEL_PACKAGE_NAME}-base = "kernel-${KERNEL_VERSION}"
-RPROVIDES:${KERNEL_PACKAGE_NAME}-image = "kernel-image-${KERNEL_VERSION} ${KERNEL_BUILTIN_MODULES}"
-
 SRC_URI[kernel.md5sum] = "364066fa18767ec0ae5f4e4abcf9dc51"
 SRC_URI[kernel.sha256sum] = "dd96ed02b53fb5d57762e4b1f573460909de472ca588f81ec6660e4a172e7ba7"
 SRC_URI[stable-patch.md5sum] = "8ba205b73dcd6aa6748d916af294b6f0"
