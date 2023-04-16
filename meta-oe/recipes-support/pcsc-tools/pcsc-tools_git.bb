@@ -8,7 +8,7 @@ RDEPENDS:${PN} = "pcsc-lite"
 
 inherit gitpkgv
 
-SRCREV = "${AUTOREV}"
+SRCREV = "aa11c16797adb4fce2f63ea346a09feacb2341db"
 PV = "1.6.2+git${SRCPV}"
 PKGV = "1.6.2+git${GITPKGV}"
 
