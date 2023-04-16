@@ -8,7 +8,7 @@ RDEPENDS:${PN} = "pcsc-lite"
 
 inherit gitpkgv
 
-SRCREV = "aa11c16797adb4fce2f63ea346a09feacb2341db"
+SRCREV = "${AUTOREV}"
 PV = "1.6.2+git${SRCPV}"
 PKGV = "1.6.2+git${GITPKGV}"
 
@@ -16,6 +16,6 @@ SRC_URI = "git://github.com/LudovicRousseau/pcsc-tools.git;protocol=https;branch
 
 S = "${WORKDIR}/git"
 
-inherit autotools pkgconfig
+inherit autotools gettext pkgconfig
 
 FILES:${PN} += "${datadir}"
