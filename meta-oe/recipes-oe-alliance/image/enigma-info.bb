@@ -189,6 +189,7 @@ do_install() {
     printf "imgrevision='${BUILD_VERSION}'\n" >> ${D}${INFOFILE}
     printf "imgversion='${IMAGE_VERSION}'\n" >> ${D}${INFOFILE}
     printf "kernel='${KERNEL_VERSION}'\n" >> ${D}${INFOFILE}
+    printf "kexecmb=${HAVE_KEXECMB}\n" >> ${D}${INFOFILE}
     printf "kernelfile=${KERNEL_FILE}\n" >> ${D}${INFOFILE}
     printf "machinebuild=${MACHINEBUILD}\n" >> ${D}${INFOFILE}
     printf "mediaservice=${MEDIASERVICE}\n" >> ${D}${INFOFILE}
