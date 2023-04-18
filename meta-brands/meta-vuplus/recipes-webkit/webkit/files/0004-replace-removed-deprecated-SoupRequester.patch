@@ -1,0 +1,47 @@
+--- a/Source/WebCore/platform/network/soup/ResourceHandleSoup.cpp
++++ b/Source/WebCore/platform/network/soup/ResourceHandleSoup.cpp
+@@ -160,12 +160,6 @@ static void ensureSessionIsInitialized(SoupSession* session)
+         g_object_unref(logger);
+     }
+ 
+-    if (!soup_session_get_feature(session, SOUP_TYPE_REQUESTER)) {
+-        SoupRequester* requester = soup_requester_new();
+-        soup_session_add_feature(session, SOUP_SESSION_FEATURE(requester));
+-        g_object_unref(requester);
+-    }
+-
+     g_object_set_data(G_OBJECT(session), "webkit-init", reinterpret_cast<void*>(0xdeadbeef));
+ }
+ 
+@@ -564,7 +558,6 @@ static bool startHTTPRequest(ResourceHandle* handle)
+ 
+     SoupSession* session = handle->defaultSession();
+     ensureSessionIsInitialized(session);
+-    SoupRequester* requester = SOUP_REQUESTER(soup_session_get_feature(session, SOUP_TYPE_REQUESTER));
+ 
+     ResourceHandleInternal* d = handle->getInternal();
+ 
+@@ -615,7 +608,7 @@ static bool startHTTPRequest(ResourceHandle* handle)
+     d->m_finished = false;
+ 
+     GOwnPtr<GError> error;
+-    d->m_soupRequest = adoptGRef(soup_requester_request(requester, url.string().utf8().data(), &error.outPtr()));
++    d->m_soupRequest = adoptGRef(soup_session_request(session, url.string().utf8().data(), &error.outPtr()));
+     if (error) {
+         d->m_soupRequest = 0;
+         return false;
+@@ -858,13 +851,12 @@ static bool startNonHTTPRequest(ResourceHandle* handle, KURL url)
+ 
+     SoupSession* session = handle->defaultSession();
+     ensureSessionIsInitialized(session);
+-    SoupRequester* requester = SOUP_REQUESTER(soup_session_get_feature(session, SOUP_TYPE_REQUESTER));
+     ResourceHandleInternal* d = handle->getInternal();
+ 
+     CString urlStr = url.string().utf8();
+ 
+     GOwnPtr<GError> error;
+-    d->m_soupRequest = adoptGRef(soup_requester_request(requester, urlStr.data(), &error.outPtr()));
++    d->m_soupRequest = adoptGRef(soup_session_request(session, urlStr.data(), &error.outPtr()));
+     if (error) {
+         d->m_soupRequest = 0;
+         return false;
