@@ -40,7 +40,7 @@ do_install:append() {
 
 PACKAGES =+ "${PN}-lcd ${PN}-stb-core"
 
-RDEPENDS:${PN} = "dreambox-secondstage-${MACHINE} kernel-${KV} ${PN}-stb-core"
+RDEPENDS:${PN} = "dreambox-secondstage-${MACHINE} ${PN}-stb-core"
 RDEPENDS:${PN}-lcd = "${PN}-stb-core"
 RRECOMMENDS:${PN} = "${PN}-lcd"
 
