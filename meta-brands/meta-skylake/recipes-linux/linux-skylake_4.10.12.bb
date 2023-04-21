@@ -15,6 +15,8 @@ LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad
 
 MACHINE_KERNEL_PR:append = "4"
 
+RPROVIDES:kernel-image = "kernel-${KERNEL_IMAGETYPE}"
+
 SRC_URI += "https://source.mynonpublic.com/gfutures/linux-${PV}-${ARCH}.tar.gz \
     file://defconfig \
     file://TBS-fixes-for-4.10-kernel.patch \
