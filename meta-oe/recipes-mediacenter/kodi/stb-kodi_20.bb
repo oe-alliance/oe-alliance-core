@@ -16,7 +16,7 @@ DEPENDS += " \
             rapidjson \
             crossguid \
             libdvdnav libdvdcss libdvdread \
-            kodi-ffmpeg \
+            ffmpeg \
             autoconf-native \
             automake-native \
             git-native \
@@ -69,7 +69,7 @@ DEPENDS += " \
             gstreamer1.0-plugins-base \
           "
 inherit gitpkgv
-# 20.2 Nexus
+# 21.0 Omega
 SRCREV = "${AUTOREV}"
 
 # 'patch' doesn't support binary diffs
@@ -79,7 +79,7 @@ PR = "r1"
 
 PV = "20.2+gitr${SRCPV}"
 
-SRC_URI = "git://github.com/xbmc/xbmc.git;protocol=https;branch=Nexus \
+SRC_URI = "git://github.com/xbmc/xbmc.git;protocol=https;branch=master \
            file://0001-flatbuffers-20.patch \
            file://0002-readd-Touchscreen-settings.patch \
            file://0003-shader-nopow-20.patch \
@@ -89,8 +89,8 @@ SRC_URI = "git://github.com/xbmc/xbmc.git;protocol=https;branch=Nexus \
            file://0007-adapt-window-system-registration.patch \
            file://0008-reinstate-system-h.patch \
            file://0009-reinstate-platform-defines.patch \
-           file://0010-AEELDParser.cpp-fix-rtrim-function-for-clang.patch \
-           file://0011-FindLibDvd.cmake-build-with-external-source.patch \
+           file://0010-FindLibDvd.cmake-build-with-external-source.patch \
+           file://0011-cmake-includedirs.patch \
            ${@bb.utils.contains_any('MACHINE_FEATURES', 'hisil-3798mv200 hisil-3798mv310 hisi hisil', '' , 'file://0100-e2-player.patch', d)} \
            ${@bb.utils.contains_any('MACHINE_FEATURES', 'hisil-3798mv200 hisil-3798mv310 hisi hisil', '' , 'file://0101-gst-player.patch', d)} \
           "
@@ -206,7 +206,7 @@ export ${PYTHON_DIR}
 export TARGET_PREFIX
 
 do_configure:prepend() {
-    # Ensure 'nm' can find the lto plugins 
+    # Ensure 'nm' can find the lto plugins
     liblto=$(find ${STAGING_DIR_NATIVE} -name "liblto_plugin.so.0.0.0")
     mkdir -p ${STAGING_LIBDIR_NATIVE}/bfd-plugins
     ln -sf $liblto ${STAGING_LIBDIR_NATIVE}/bfd-plugins/liblto_plugin.so
@@ -255,8 +255,8 @@ RRECOMMENDS:${PN}:append = " libcec \
                              tzdata-europe \
                              tzdata-pacific \
                              xkeyboard-config \
-                             kodi-addon-inputstream-adaptive-nexus \
-                             kodi-addon-inputstream-rtmp-nexus \
+                             kodi-addon-inputstream-adaptive-omega \
+                             kodi-addon-inputstream-rtmp-omega \
                              alsa-plugins \
                            "
 

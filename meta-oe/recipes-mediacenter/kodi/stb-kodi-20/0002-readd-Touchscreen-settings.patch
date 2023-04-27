@@ -1,4 +1,4 @@
-From 8ff14780c5e08bbaeeb5a5bdfa5cdda3d6831db3 Mon Sep 17 00:00:00 2001
+From 61fb557c01c1906762ce3b579a4f99885999acf3 Mon Sep 17 00:00:00 2001
 From: Captain <captain.onboard@web.de>
 Date: Wed, 15 Jul 2020 20:34:38 +0200
 Subject: [PATCH] readd Touchscreen settings
@@ -9,10 +9,10 @@ Subject: [PATCH] readd Touchscreen settings
  2 files changed, 22 insertions(+)
 
 diff --git a/xbmc/settings/AdvancedSettings.cpp b/xbmc/settings/AdvancedSettings.cpp
-index c266751..873ba90 100644
+index b321df0776..c88d06013b 100644
 --- a/xbmc/settings/AdvancedSettings.cpp
 +++ b/xbmc/settings/AdvancedSettings.cpp
-@@ -360,6 +360,12 @@ void CAdvancedSettings::Initialize()
+@@ -351,6 +351,12 @@ void CAdvancedSettings::Initialize()
    m_iEdlCommBreakAutowait = 0;             // Off by default
    m_iEdlCommBreakAutowind = 0;             // Off by default
  
@@ -25,7 +25,7 @@ index c266751..873ba90 100644
    m_curlconnecttimeout = 30;
    m_curllowspeedtime = 20;
    m_curlretries = 2;
-@@ -973,6 +979,16 @@ void CAdvancedSettings::ParseSettingsFile(const std::string &file)
+@@ -956,6 +962,16 @@ void CAdvancedSettings::ParseSettingsFile(const std::string &file)
      XMLUtils::GetInt(pElement, "commbreakautowind", m_iEdlCommBreakAutowind, -60, 60);        // Between -60 and 60 seconds
    }
  
@@ -43,10 +43,10 @@ index c266751..873ba90 100644
    TiXmlElement* pPictureExcludes = pRootElement->FirstChildElement("pictureexcludes");
    if (pPictureExcludes)
 diff --git a/xbmc/settings/AdvancedSettings.h b/xbmc/settings/AdvancedSettings.h
-index 7857c69..e85aa40 100644
+index fc92f1e3c4..a307e3f588 100644
 --- a/xbmc/settings/AdvancedSettings.h
 +++ b/xbmc/settings/AdvancedSettings.h
-@@ -320,6 +320,12 @@ class CAdvancedSettings : public ISettingCallback, public ISettingsHandler
+@@ -313,6 +313,12 @@ class CAdvancedSettings : public ISettingCallback, public ISettingsHandler
      std::string m_cpuTempCmd;
      std::string m_gpuTempCmd;
  
@@ -59,6 +59,3 @@ index 7857c69..e85aa40 100644
      /* PVR/TV related advanced settings */
      int m_iPVRTimeCorrection;     /*!< @brief correct all times (epg tags, timer tags, recording tags) by this amount of minutes. defaults to 0. */
      int m_iPVRInfoToggleInterval; /*!< @brief if there are more than 1 pvr gui info item available (e.g. multiple recordings active at the same time), use this toggle delay in milliseconds. defaults to 3000. */
--- 
-2.34.1
-

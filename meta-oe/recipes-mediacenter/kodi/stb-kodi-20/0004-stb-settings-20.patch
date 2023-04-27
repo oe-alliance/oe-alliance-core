@@ -1,11 +1,11 @@
-From 81fa8854f8bae20690456f9d0d8f506d0b1f9793 Mon Sep 17 00:00:00 2001
+From e4658bb60b10c1fcf881ac456a539b7c7e13ec39 Mon Sep 17 00:00:00 2001
 From: Captain <captain.onboard@web.de>
 Date: Wed, 15 Jul 2020 18:07:08 +0200
 Subject: [PATCH] stb-settings-20
 
 ---
  addons/skin.estuary/xml/Home.xml           |  2 +-
- cmake/modules/FindFFMPEG.cmake             | 47 +++++++++------
+ cmake/modules/FindFFMPEG.cmake             | 46 +++++++++------
  cmake/platform/linux/stb.cmake             | 69 ++++++++++++++++++++++
  cmake/scripts/linux/ArchSetup.cmake        |  4 ++
  cmake/treedata/common/stb.txt              |  1 +
@@ -18,15 +18,15 @@ Subject: [PATCH] stb-settings-20
  xbmc/guilib/guiinfo/SystemGUIInfo.cpp      |  5 ++
  xbmc/input/InputManager.cpp                | 12 ++++
  xbmc/view/ViewStateSettings.cpp            |  2 +-
- 14 files changed, 201 insertions(+), 44 deletions(-)
+ 14 files changed, 200 insertions(+), 44 deletions(-)
  create mode 100644 cmake/platform/linux/stb.cmake
  create mode 100644 cmake/treedata/common/stb.txt
 
 diff --git a/addons/skin.estuary/xml/Home.xml b/addons/skin.estuary/xml/Home.xml
-index 5b9f2fbf57..ee2dc4fd45 100644
+index 9a27af758a..5277f70d48 100644
 --- a/addons/skin.estuary/xml/Home.xml
 +++ b/addons/skin.estuary/xml/Home.xml
-@@ -1044,7 +1044,7 @@
+@@ -1050,7 +1050,7 @@
  					<align>justify</align>
  					<include content="IconButton">
  						<param name="control_id" value="804" />
@@ -36,10 +36,10 @@ index 5b9f2fbf57..ee2dc4fd45 100644
  						<param name="label" value="$LOCALIZE[33060]" />
  					</include>
 diff --git a/cmake/modules/FindFFMPEG.cmake b/cmake/modules/FindFFMPEG.cmake
-index fedbf0adde..40485253fa 100644
+index e53a121ecf..6dca3f2adc 100644
 --- a/cmake/modules/FindFFMPEG.cmake
 +++ b/cmake/modules/FindFFMPEG.cmake
-@@ -63,6 +63,12 @@ macro(buildFFMPEG)
+@@ -52,6 +52,12 @@ macro(buildFFMPEG)
                       -DENABLE_DAV1D=${DAV1D_FOUND}
                       -DEXTRA_FLAGS=${FFMPEG_EXTRA_FLAGS})
  
@@ -52,7 +52,7 @@ index fedbf0adde..40485253fa 100644
    if(KODI_DEPENDSBUILD)
      set(CROSS_ARGS -DDEPENDS_PATH=${DEPENDS_PATH}
                     -DPKG_CONFIG_EXECUTABLE=${PKG_CONFIG_EXECUTABLE}
-@@ -110,12 +116,12 @@ macro(buildFFMPEG)
+@@ -99,12 +105,12 @@ macro(buildFFMPEG)
      add_dependencies(ffmpeg dav1d)
    endif()
  
@@ -70,7 +70,7 @@ index fedbf0adde..40485253fa 100644
  if [[ $@ == *${APP_NAME_LC}.bin* || $@ == *${APP_NAME_LC}${APP_BINARY_SUFFIX}* || $@ == *${APP_NAME_LC}.so* || $@ == *${APP_NAME_LC}-test* ]]
  then
    avcodec=`PKG_CONFIG_PATH=${DEPENDS_PATH}/lib/pkgconfig ${PKG_CONFIG_EXECUTABLE} --libs --static libavcodec`
-@@ -129,6 +135,7 @@ then
+@@ -118,6 +124,7 @@ then
  else
    $@
  fi")
@@ -78,7 +78,7 @@ index fedbf0adde..40485253fa 100644
    file(COPY ${CMAKE_BINARY_DIR}/${CORE_BUILD_DIR}/ffmpeg/ffmpeg-link-wrapper
         DESTINATION ${CMAKE_BINARY_DIR}/${CORE_BUILD_DIR}
         FILE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE)
-@@ -146,21 +153,25 @@ endmacro()
+@@ -135,19 +142,22 @@ endmacro()
  # Allows building with external ffmpeg not found in system paths,
  # without library version checks
  if(WITH_FFMPEG)
@@ -87,17 +87,17 @@ index fedbf0adde..40485253fa 100644
 -  set(REQUIRED_FFMPEG_VERSION undef)
 -else()
 -  # required ffmpeg library versions
--  set(REQUIRED_FFMPEG_VERSION 4.4.1)
--  set(_avcodec_ver ">=58.134.100")
--  set(_avfilter_ver ">=7.110.100")
--  set(_avformat_ver ">=58.76.100")
--  set(_avutil_ver ">=56.70.100")
--  set(_postproc_ver ">=55.9.100")
--  set(_swresample_ver ">=3.9.100")
--  set(_swscale_ver ">=5.9.100")
+-  set(REQUIRED_FFMPEG_VERSION 6.0.0)
+-  set(_avcodec_ver ">=60.2.100")
+-  set(_avfilter_ver ">=9.3.100")
+-  set(_avformat_ver ">=60.3.100")
+-  set(_avutil_ver ">=58.2.100")
+-  set(_postproc_ver ">=57.1.100")
+-  set(_swresample_ver ">=4.10.100")
+-  set(_swscale_ver ">=7.1.100")
 +  if(WITH_FFMPEG STREQUAL stb)
 +    set(FFMPEG_TARGET ${WITH_FFMPEG})
-+    set(REQUIRED_FFMPEG_VERSION 4.4.1)
++    set(REQUIRED_FFMPEG_VERSION 5.0.0)
 +  else()
 +    set(FFMPEG_TARGET "")
 +    set(FFMPEG_PATH ${WITH_FFMPEG})
@@ -107,16 +107,13 @@ index fedbf0adde..40485253fa 100644
 +    unset(_avfilter_ver)
 +    unset(_avformat_ver)
 +    unset(_avutil_ver)
-+    unset(_swscale_ver)
-+    unset(_swresample_ver)
 +    unset(_postproc_ver)
++    unset(_swresample_ver)
++    unset(_swscale_ver)
 +  endif()
  endif()
  
-+
  # Allows building with external ffmpeg not found in system paths,
- # with library version checks
- if(FFMPEG_PATH)
 diff --git a/cmake/platform/linux/stb.cmake b/cmake/platform/linux/stb.cmake
 new file mode 100644
 index 0000000000..e1fe54a13d
@@ -193,7 +190,7 @@ index 0000000000..e1fe54a13d
 +
 +list(APPEND PLATFORM_DEFINES -DMESA_EGL_NO_X11_HEADERS)
 diff --git a/cmake/scripts/linux/ArchSetup.cmake b/cmake/scripts/linux/ArchSetup.cmake
-index 4083483173..838c82a3f4 100644
+index ab142177c8..07f3d6aef0 100644
 --- a/cmake/scripts/linux/ArchSetup.cmake
 +++ b/cmake/scripts/linux/ArchSetup.cmake
 @@ -46,6 +46,10 @@ else()
@@ -215,7 +212,7 @@ index 0000000000..2606a0f999
 @@ -0,0 +1 @@
 +xbmc/windowing/egl   windowing/egl    # STB
 diff --git a/system/settings/settings.xml b/system/settings/settings.xml
-index 1b998bcc66..b04ad16383 100755
+index 358225b8d1..40cc80ce05 100755
 --- a/system/settings/settings.xml
 +++ b/system/settings/settings.xml
 @@ -518,7 +518,7 @@
@@ -236,7 +233,7 @@ index 1b998bcc66..b04ad16383 100755
            <default>DEFAULT</default>
            <constraints>
              <options>charsets</options>
-@@ -2961,7 +2961,7 @@
+@@ -2973,7 +2973,7 @@
          <setting id="audiooutput.processquality" type="integer" label="13505" help="36169">
            <requirement>HAS_AE_QUALITY_LEVELS</requirement>
            <level>2</level>
@@ -245,7 +242,7 @@ index 1b998bcc66..b04ad16383 100755
            <constraints>
              <options>aequalitylevels</options>
            </constraints>
-@@ -2979,7 +2979,7 @@
+@@ -2991,7 +2991,7 @@
          </setting>
          <setting id="audiooutput.samplerate" type="integer" label="458" help="36523">
            <level>2</level>
@@ -254,7 +251,7 @@ index 1b998bcc66..b04ad16383 100755
            <dependencies>
              <dependency type="visible">
                <and>
-@@ -2991,10 +2991,6 @@
+@@ -3003,10 +3003,6 @@
            <constraints>
              <options>
                <option label="34124">44100</option>
@@ -265,7 +262,7 @@ index 1b998bcc66..b04ad16383 100755
                <option label="34129">352800</option>
                <option label="34130">384000</option>
              </options>
-@@ -3815,7 +3811,7 @@
+@@ -3827,7 +3823,7 @@
        <group id="2" label="14270">
          <setting id="locale.country" type="string" label="14271" help="36115">
            <level>0</level>
@@ -275,7 +272,7 @@ index 1b998bcc66..b04ad16383 100755
              <options>regions</options>
            </constraints>
 diff --git a/tools/Linux/kodi.sh.in b/tools/Linux/kodi.sh.in
-index 108c0b007b..e0401b5348 100644
+index 11cace29a5..be291667eb 100644
 --- a/tools/Linux/kodi.sh.in
 +++ b/tools/Linux/kodi.sh.in
 @@ -26,8 +26,11 @@ exec_prefix="@exec_prefix@"
@@ -346,7 +343,7 @@ index 108c0b007b..e0401b5348 100644
  
  exit $RET
 diff --git a/tools/depends/target/ffmpeg/CMakeLists.txt b/tools/depends/target/ffmpeg/CMakeLists.txt
-index f09258058b..854e76a2f1 100644
+index 0bbc23540a..85f3e8dd64 100644
 --- a/tools/depends/target/ffmpeg/CMakeLists.txt
 +++ b/tools/depends/target/ffmpeg/CMakeLists.txt
 @@ -12,6 +12,36 @@ else()
@@ -387,7 +384,7 @@ index f09258058b..854e76a2f1 100644
    set(pkgconf "PKG_CONFIG_LIBDIR=${DEPENDS_PATH}/lib/pkgconfig")
    list(APPEND ffmpeg_conf --pkg-config=${PKG_CONFIG_EXECUTABLE}
 diff --git a/tools/depends/target/libdvdcss/Makefile b/tools/depends/target/libdvdcss/Makefile
-index b157eee34d..789c0940f1 100644
+index 308661aafa..eac0612af3 100644
 --- a/tools/depends/target/libdvdcss/Makefile
 +++ b/tools/depends/target/libdvdcss/Makefile
 @@ -3,7 +3,7 @@ include LIBDVDCSS-VERSION
@@ -399,8 +396,8 @@ index b157eee34d..789c0940f1 100644
  else
    ROOT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
    PREFIX := $(ROOT_DIR)/dvdcss-install
-@@ -19,7 +19,7 @@ RETRIEVE_TOOL := curl -Ls --create-dirs --retry 10 --retry-delay 3
- ARCHIVE_TOOL := tar --strip-components=1 -xf
+@@ -20,7 +20,7 @@ else
+ endif
  
  # configuration settings
 -config = --prefix=$(PREFIX) --disable-shared --enable-static --with-pic
@@ -409,7 +406,7 @@ index b157eee34d..789c0940f1 100644
  include ../../download-files.include
  all: .installed-$(PLATFORM)
 diff --git a/tools/depends/target/libdvdnav/Makefile b/tools/depends/target/libdvdnav/Makefile
-index eca4d53f54..77b856714f 100644
+index a43c9072f6..1bc9baa34b 100644
 --- a/tools/depends/target/libdvdnav/Makefile
 +++ b/tools/depends/target/libdvdnav/Makefile
 @@ -3,11 +3,11 @@ include LIBDVDNAV-VERSION
@@ -427,7 +424,7 @@ index eca4d53f54..77b856714f 100644
    ROOT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
    PREFIX := $(ROOT_DIR)/dvdnav-install
 diff --git a/tools/depends/target/libdvdread/Makefile b/tools/depends/target/libdvdread/Makefile
-index 0be5f2d6f4..8e7e0b0e38 100644
+index ac32ac445f..657de6a21b 100644
 --- a/tools/depends/target/libdvdread/Makefile
 +++ b/tools/depends/target/libdvdread/Makefile
 @@ -3,11 +3,12 @@ include LIBDVDREAD-VERSION

@@ -9,7 +9,7 @@ Subject: [PATCH] gst-player
  cmake/platform/linux/stb.cmake                |    2 +-
  cmake/treedata/common/cores.txt               |    1 +
  xbmc/cores/GstPlayer/CMakeLists.txt           |    9 +
- xbmc/cores/GstPlayer/GstPlayer.cpp            |  692 ++++++++
+ xbmc/cores/GstPlayer/GstPlayer.cpp            |  691 ++++++++
  xbmc/cores/GstPlayer/GstPlayer.h              |  186 +++
  xbmc/cores/GstPlayer/GstPlayerAudio.cpp       |  151 ++
  xbmc/cores/GstPlayer/GstPlayerAudio.h         |   45 +
@@ -17,7 +17,7 @@ Subject: [PATCH] gst-player
  xbmc/cores/GstPlayer/GstPlayerVideo.h         |  181 +++
  .../playercorefactory/PlayerCoreConfig.cpp    |    9 +
  .../playercorefactory/PlayerCoreFactory.cpp   |   15 +
- 13 files changed, 2837 insertions(+), 1 deletion(-)
+ 13 files changed, 2836 insertions(+), 1 deletion(-)
  create mode 100644 cmake/modules/FindGLIB.cmake
  create mode 100644 cmake/modules/FindGstreamer.cmake
  create mode 100644 xbmc/cores/GstPlayer/CMakeLists.txt
@@ -30,7 +30,7 @@ Subject: [PATCH] gst-player
 
 diff --git a/cmake/modules/FindGLIB.cmake b/cmake/modules/FindGLIB.cmake
 new file mode 100644
-index 0000000..656aa0b
+index 00000000000..656aa0b7d62
 --- /dev/null
 +++ b/cmake/modules/FindGLIB.cmake
 @@ -0,0 +1,102 @@
@@ -138,7 +138,7 @@ index 0000000..656aa0b
 +                                       VERSION_VAR   GLIB_VERSION)
 diff --git a/cmake/modules/FindGstreamer.cmake b/cmake/modules/FindGstreamer.cmake
 new file mode 100644
-index 0000000..760e7d1
+index 00000000000..760e7d13212
 --- /dev/null
 +++ b/cmake/modules/FindGstreamer.cmake
 @@ -0,0 +1,40 @@
@@ -183,7 +183,7 @@ index 0000000..760e7d1
 +
 +mark_as_advanced(GSTREAMER_LIBRARY GSTREAMER_INCLUDE_DIR GSTREAMER_LDFLAGS)
 diff --git a/cmake/platform/linux/stb.cmake b/cmake/platform/linux/stb.cmake
-index e1fe54a..7d7e142 100644
+index e1fe54a13d2..7d7e14205f8 100644
 --- a/cmake/platform/linux/stb.cmake
 +++ b/cmake/platform/linux/stb.cmake
 @@ -1,4 +1,4 @@
@@ -193,7 +193,7 @@ index e1fe54a..7d7e142 100644
  
  set(STB_RENDER_SYSTEM "" CACHE STRING "Render system to use with STB: \"gl\" or \"gles\"")
 diff --git a/cmake/treedata/common/cores.txt b/cmake/treedata/common/cores.txt
-index 5e5c6cb..cbde630 100644
+index 5e5c6cbf80c..cbde630e7dd 100644
 --- a/cmake/treedata/common/cores.txt
 +++ b/cmake/treedata/common/cores.txt
 @@ -5,5 +5,6 @@ xbmc/cores/DllLoader/exports           cores/dll-loader/exports
@@ -205,7 +205,7 @@ index 5e5c6cb..cbde630 100644
  xbmc/cores/playercorefactory           cores/playercorefactory
 diff --git a/xbmc/cores/GstPlayer/CMakeLists.txt b/xbmc/cores/GstPlayer/CMakeLists.txt
 new file mode 100644
-index 0000000..1b8adfa
+index 00000000000..1b8adfab36c
 --- /dev/null
 +++ b/xbmc/cores/GstPlayer/CMakeLists.txt
 @@ -0,0 +1,9 @@
@@ -220,7 +220,7 @@ index 0000000..1b8adfa
 +core_add_library(gstplayer)
 diff --git a/xbmc/cores/GstPlayer/GstPlayer.cpp b/xbmc/cores/GstPlayer/GstPlayer.cpp
 new file mode 100644
-index 0000000..a6355a2
+index 00000000000..df0dd7b8c7c
 --- /dev/null
 +++ b/xbmc/cores/GstPlayer/GstPlayer.cpp
 @@ -0,0 +1,691 @@
@@ -422,13 +422,13 @@ index 0000000..a6355a2
 +	m_pInputStream = CDVDFactoryInputStream::CreateInputStream(this, m_item, true);
 +	if(m_pInputStream == NULL)
 +	{
-+		CLog::Log(LOGERROR, "CGstPlayer{}: - unable to create input stream for [{}]", __FUNCTION__, CURL::GetRedacted(m_item.GetPath()).c_str());
++		CLog::Log(LOGERROR, "CGstPlayer{}: - unable to create input stream for [{}]", __FUNCTION__, CURL::GetRedacted(m_item.GetPath()));
 +		return false;
 +	}
 +
 +	if (!m_pInputStream->Open())
 +	{
-+		CLog::Log(LOGERROR, "CGstPlayer{}: - error opening [{}]", __FUNCTION__, CURL::GetRedacted(m_item.GetPath()).c_str());
++		CLog::Log(LOGERROR, "CGstPlayer{}: - error opening [{}]", __FUNCTION__, CURL::GetRedacted(m_item.GetPath()));
 +		return false;
 +	}
 +
@@ -530,7 +530,7 @@ index 0000000..a6355a2
 +	
 +	CURL Url(hint.filename);
 +	
-+	CLog::Log(LOGINFO, "CGstPlayer{}: m_pInputStream->GetFileName(): {}", __FUNCTION__, hint.filename.c_str());
++	CLog::Log(LOGINFO, "CGstPlayer{}: m_pInputStream->GetFileName(): {}", __FUNCTION__, hint.filename);
 +
 +	CServiceBroker::GetAppMessenger()->PostMsg(TMSG_SWITCHTOFULLSCREEN);
 +
@@ -652,7 +652,7 @@ index 0000000..a6355a2
 +
 +	if (iTotalTime != 0)
 +	{
-+		//CLog::Log(LOGINFO, "CGstPlayer::{}: Percentage={:f}", __FUNCTION__ , (iTime * 100 / (float)iTotalTime) );
++		CLog::Log(LOGINFO, "CGstPlayer::{}: Percentage={}", __FUNCTION__ , (iTime * 100 / (float)iTotalTime) );
 +		return iTime * 100 / (float)iTotalTime;
 +	}
 +
@@ -722,7 +722,7 @@ index 0000000..a6355a2
 +
 +void CGstPlayer::SetSpeed(float iSpeed)
 +{
-+	CLog::Log(LOGINFO, "CGstPlayer::{}: {:f}", __FUNCTION__, iSpeed);
++	CLog::Log(LOGINFO, "CGstPlayer::{}: {}", __FUNCTION__, iSpeed);
 +}
 +
 +void CGstPlayer::ShowOSD(bool bOnoff)
@@ -738,7 +738,7 @@ index 0000000..a6355a2
 +
 +bool CGstPlayer::SetPlayerState(const std::string& state)
 +{
-+	CLog::Log(LOGINFO, "CGstPlayer::{}: state:{}", __FUNCTION__, state.c_str());
++	CLog::Log(LOGINFO, "CGstPlayer::{}: state:{}", __FUNCTION__, state);
 +	return true;
 +}
 +
@@ -752,7 +752,7 @@ index 0000000..a6355a2
 +{
 +	//CServiceBroker::GetWinSystem().ClearBuffers(0.0f);
 +
-+	//CLog::Log(LOGINFO, "CGstPlayer::{}: clear={}, alpha={:d}, gui={}", __FUNCTION__, clear == false ? "false":"true", (int)alpha, gui == false ? "false":"true");
++	//CLog::Log(LOGINFO, "CGstPlayer::{}: clear={}, alpha={}, gui={}", __FUNCTION__, clear == false ? "false":"true", (int)alpha, gui == false ? "false":"true");
 +}
 +
 +void CGstPlayer::ToggleOSD()
@@ -852,7 +852,7 @@ index 0000000..a6355a2
 +	
 +	CURL Url(m_pInputStream->GetFileName());
 +	
-+	CLog::Log(LOGINFO, "CGstPlayer::{}: startpercent={:f} starttime={:f}", __FUNCTION__, m_PlayerOptions.startpercent, m_PlayerOptions.starttime);
++	CLog::Log(LOGINFO, "CGstPlayer::{}: startpercent={} starttime={}", __FUNCTION__, m_PlayerOptions.startpercent, m_PlayerOptions.starttime);
 +	
 +	if (m_PlayerOptions.startpercent > 0)
 +	{
@@ -886,7 +886,7 @@ index 0000000..a6355a2
 +
 +bool CGstPlayer::OnAction(const CAction &action)
 +{
-+	CLog::Log(LOGINFO, "CGstPlayer::{}: id={:d}", __FUNCTION__, action.GetID());
++	CLog::Log(LOGINFO, "CGstPlayer::{}: id={}", __FUNCTION__, action.GetID());
 +	return false;
 +}
 +
@@ -896,7 +896,7 @@ index 0000000..a6355a2
 +	width = res.iWidth;
 +	height = res.iHeight;
 +	
-+	CLog::Log(LOGINFO, "CGstPlayer::{}: width={:d} height={:d}", __FUNCTION__, width, height);
++	CLog::Log(LOGINFO, "CGstPlayer::{}: width={} height={}", __FUNCTION__, width, height);
 +}
 +
 +void CGstPlayer::FrameMove() 
@@ -915,10 +915,9 @@ index 0000000..a6355a2
 +{
 +	return IsPlaying();
 +}
-+
 diff --git a/xbmc/cores/GstPlayer/GstPlayer.h b/xbmc/cores/GstPlayer/GstPlayer.h
 new file mode 100644
-index 0000000..5c027cd
+index 00000000000..5c027cde259
 --- /dev/null
 +++ b/xbmc/cores/GstPlayer/GstPlayer.h
 @@ -0,0 +1,186 @@
@@ -1023,7 +1022,7 @@ index 0000000..5c027cd
 +	void Render(bool clear, uint32_t alpha, bool gui);
 +	void FlushRenderer() { CLog::Log(LOGINFO, "{}: ", __FUNCTION__ ); };
 +	
-+	void SetRenderViewMode(int mode) { CLog::Log(LOGINFO, "{}: mode={:d}", __FUNCTION__, mode); };
++	void SetRenderViewMode(int mode) { CLog::Log(LOGINFO, "{}: mode={}", __FUNCTION__, mode); };
 +	float GetRenderAspectRatio();
 +	void TriggerUpdateResolution() { CLog::Log(LOGINFO, "{}: ", __FUNCTION__ ); };
 +	
@@ -1110,7 +1109,7 @@ index 0000000..5c027cd
 +};
 diff --git a/xbmc/cores/GstPlayer/GstPlayerAudio.cpp b/xbmc/cores/GstPlayer/GstPlayerAudio.cpp
 new file mode 100644
-index 0000000..5aeacf0
+index 00000000000..5aeacf0382c
 --- /dev/null
 +++ b/xbmc/cores/GstPlayer/GstPlayerAudio.cpp
 @@ -0,0 +1,151 @@
@@ -1219,7 +1218,7 @@ index 0000000..5aeacf0
 +		fclose (stb);
 +	}
 +
-+	CLog::Log(LOGDEBUG, "{}: volume:{:f} set:{:d} (-1db)", __FUNCTION__, volume, vol);
++	CLog::Log(LOGDEBUG, "{}: volume:{} set:{} (-1db)", __FUNCTION__, volume, vol);
 +}
 +
 +void CGstPlayerAudio::SetMute(bool bOnOff)
@@ -1267,7 +1266,7 @@ index 0000000..5aeacf0
 +}
 diff --git a/xbmc/cores/GstPlayer/GstPlayerAudio.h b/xbmc/cores/GstPlayer/GstPlayerAudio.h
 new file mode 100644
-index 0000000..fe6f700
+index 00000000000..fe6f7008cdd
 --- /dev/null
 +++ b/xbmc/cores/GstPlayer/GstPlayerAudio.h
 @@ -0,0 +1,45 @@
@@ -1318,7 +1317,7 @@ index 0000000..fe6f700
 +};
 diff --git a/xbmc/cores/GstPlayer/GstPlayerVideo.cpp b/xbmc/cores/GstPlayer/GstPlayerVideo.cpp
 new file mode 100644
-index 0000000..b2fd0e1
+index 00000000000..b2fd0e16048
 --- /dev/null
 +++ b/xbmc/cores/GstPlayer/GstPlayerVideo.cpp
 @@ -0,0 +1,1405 @@
@@ -1583,7 +1582,7 @@ index 0000000..b2fd0e1
 +				m_offset = 0;
 +				m_pInputStream->Seek(0, SEEK_SET);
 +				m_notify_source_handler_id = g_signal_connect(m_playbin, "deep-notify::source", G_CALLBACK (DeepNotifySource), this);
-+				CLog::Log(LOGINFO, "CGstPlayerVideo::{}: m_length={:d} m_pInputStream->GetLength()={:d}\n", __FUNCTION__,(int)m_length, m_pInputStream->GetLength());
++				CLog::Log(LOGINFO, "CGstPlayerVideo::{}: m_length={} m_pInputStream->GetLength()={}\n", __FUNCTION__,(int)m_length, m_pInputStream->GetLength());
 +				printf("CGstPlayerVideo::%s: m_pInputStream->GetLength() %d\n", __FUNCTION__,(int)m_length);
 +			}
 +			else
@@ -1613,11 +1612,11 @@ index 0000000..b2fd0e1
 +			}
 +			else
 +			{
-+				CLog::Log(LOGINFO, "CGstPlayerVideo::{}: m_download_buffer_path: {}", __FUNCTION__, m_download_buffer_path.c_str());
++				CLog::Log(LOGINFO, "CGstPlayerVideo::{}: m_download_buffer_path: {}", __FUNCTION__, m_download_buffer_path);
 +			
 +				if (access(m_download_buffer_path.c_str(), X_OK) >= 0)
 +				{
-+					CLog::Log(LOGINFO, "CGstPlayerVideo::{}: using cache file (buffer): {}", __FUNCTION__, m_download_buffer_path.c_str());
++					CLog::Log(LOGINFO, "CGstPlayerVideo::{}: using cache file (buffer): {}", __FUNCTION__, m_download_buffer_path);
 +					/* It looks like /hdd points to a valid mount, so we can store a download buffer on it */
 +					m_use_prefillbuffer = true;
 +					flags |= GST_PLAY_FLAG_DOWNLOAD;
@@ -1627,7 +1626,7 @@ index 0000000..b2fd0e1
 +				}
 +				else
 +				{
-+					CLog::Log(LOGERROR, "CGstPlayerVideo::{}: - Unable to access cache file {}", __FUNCTION__, m_download_buffer_path.c_str());
++					CLog::Log(LOGERROR, "CGstPlayerVideo::{}: - Unable to access cache file {}", __FUNCTION__, m_download_buffer_path);
 +					m_download_buffer_path = "";
 +				}
 +			}
@@ -1750,7 +1749,7 @@ index 0000000..b2fd0e1
 +
 +void CGstPlayerVideo::SeekPercentage(float iPercent)
 +{
-+	CLog::Log(LOGERROR, "CGstPlayerVideo::{}: iPercent={:f}", __FUNCTION__, iPercent);
++	CLog::Log(LOGERROR, "CGstPlayerVideo::{}: iPercent={}", __FUNCTION__, iPercent);
 +	
 +	if(m_playbin)
 +	{
@@ -1774,7 +1773,7 @@ index 0000000..b2fd0e1
 +
 +		int val = (int) GetTotalTime() * iPercent;
 +		
-+		CLog::Log(LOGINFO, "CGstPlayerVideo::{}: iPercent={:f} seek to {:d} milliseconds", __FUNCTION__, iPercent, val);
++		CLog::Log(LOGINFO, "CGstPlayerVideo::{}: iPercent={} seek to {} milliseconds", __FUNCTION__, iPercent, val);
 +
 +		if(val<0)
 +			return;
@@ -1813,9 +1812,9 @@ index 0000000..b2fd0e1
 +{
 +	int seekOffset = (int)(iTime - GetTime());
 +	
-+	CLog::Log(LOGINFO, "CGstPlayerVideo::{}: seekOffset={:d}", __FUNCTION__, seekOffset);
-+	CLog::Log(LOGINFO, "CGstPlayerVideo::{}: iTime={:d}", __FUNCTION__, iTime);
-+	CLog::Log(LOGINFO, "CGstPlayerVideo::{}: GetTime()={:d}", __FUNCTION__, GetTime());
++	CLog::Log(LOGINFO, "CGstPlayerVideo::{}: seekOffset={}", __FUNCTION__, seekOffset);
++	CLog::Log(LOGINFO, "CGstPlayerVideo::{}: iTime={}", __FUNCTION__, iTime);
++	CLog::Log(LOGINFO, "CGstPlayerVideo::{}: GetTime()={}", __FUNCTION__, GetTime());
 +	
 +	printf("CGstPlayerVideo::%s: seekOffset=%d", __FUNCTION__, seekOffset);
 +	printf("CGstPlayerVideo::%s: iTime=%d", __FUNCTION__, iTime);
@@ -1833,9 +1832,9 @@ index 0000000..b2fd0e1
 +{
 +	int64_t abstime = GetTime() + iTime;
 +	
-+	CLog::Log(LOGINFO, "CGstPlayerVideo::{}: abstime={:d}", __FUNCTION__, abstime);
-+	CLog::Log(LOGINFO, "CGstPlayerVideo::{}: iTime={:d}", __FUNCTION__, iTime);
-+	CLog::Log(LOGINFO, "CGstPlayerVideo::{}: GetTime()={:d}", __FUNCTION__, GetTime());
++	CLog::Log(LOGINFO, "CGstPlayerVideo::{}: abstime={}", __FUNCTION__, abstime);
++	CLog::Log(LOGINFO, "CGstPlayerVideo::{}: iTime={}", __FUNCTION__, iTime);
++	CLog::Log(LOGINFO, "CGstPlayerVideo::{}: GetTime()={}", __FUNCTION__, GetTime());
 +	printf("CGstPlayerVideo::%s: abstime=%d", __FUNCTION__, abstime);
 +	printf("CGstPlayerVideo::%s: iTime=%d", __FUNCTION__, iTime);
 +	printf("CGstPlayerVideo::%s: GetTime()=%d", __FUNCTION__, GetTime());
@@ -1846,7 +1845,7 @@ index 0000000..b2fd0e1
 +		if (!gst_element_seek(m_playbin, 1.0, GST_FORMAT_TIME, GST_SEEK_FLAG_FLUSH, GST_SEEK_TYPE_SET, nanoSec, GST_SEEK_TYPE_NONE, GST_CLOCK_TIME_NONE))
 +			CLog::Log(LOGERROR, "CGstPlayerVideo::{}: seek", __FUNCTION__ );
 +
-+		CLog::Log(LOGINFO, "CGstPlayerVideo::{}: abstime={:d}", __FUNCTION__, abstime);
++		CLog::Log(LOGINFO, "CGstPlayerVideo::{}: abstime={}", __FUNCTION__, abstime);
 +	}
 +	
 +	return true;
@@ -1881,7 +1880,7 @@ index 0000000..b2fd0e1
 +		if(m_pInputStream)
 +		{
 +			m_time = (int64_t) (((GetTotalTime() * 1000) / m_length) * m_offset) / 1000;
-+			CLog::Log(LOGINFO, "CGstPlayerVideo::{}: (appsrc) m_offset={:d} m_length={:d} m_pInputStream->GetLength()={:d}", __FUNCTION__, (int) m_offset, (int) m_length, m_pInputStream->GetLength());
++			CLog::Log(LOGINFO, "CGstPlayerVideo::{}: (appsrc) m_offset={} m_length={} m_pInputStream->GetLength()={}", __FUNCTION__, (int) m_offset, (int) m_length, m_pInputStream->GetLength());
 +		return m_time;
 +		}
 +	}
@@ -1942,7 +1941,7 @@ index 0000000..b2fd0e1
 +	//m_processInfo.SetAudioChannels(m_audio);
 +	//m_processInfo.SetAudioSampleRate(GST_TAG_NOMINAL_BITRATE)
 +	
-+	CLog::Log(LOGINFO, "CGstPlayerVideo::{}: {:d} video stream(s), {:d} audio stream(s), {:d} text stream(s)", 
++	CLog::Log(LOGINFO, "CGstPlayerVideo::{}: {} video stream(s), {} audio stream(s), {} text stream(s)", 
 +		 __FUNCTION__,
 +		(int)m_video,
 +		(int)m_audio,
@@ -1954,7 +1953,7 @@ index 0000000..b2fd0e1
 +		g_signal_emit_by_name (m_playbin, "get-video-tags", i, &tags);
 +		if (tags) {
 +			gst_tag_list_get_string (tags, GST_TAG_VIDEO_CODEC, &str);
-+			CLog::Log(LOGINFO, "CGstPlayerVideo::{}: video stream: {:d} codec: {}", 
++			CLog::Log(LOGINFO, "CGstPlayerVideo::{}: video stream: {} codec: {}", 
 +				__FUNCTION__,
 +				(int)i,
 +				(char *) str ? str : "unknown");
@@ -1968,7 +1967,7 @@ index 0000000..b2fd0e1
 +		/* Retrieve the stream's audio tags */
 +		g_signal_emit_by_name (m_playbin, "get-audio-tags", i, &tags);
 +		if (tags) {
-+			CLog::Log(LOGINFO, "CGstPlayerVideo::{}: audio stream: {:d}", 
++			CLog::Log(LOGINFO, "CGstPlayerVideo::{}: audio stream: {}", 
 +				__FUNCTION__,
 +				(int)i);
 +			if (gst_tag_list_get_string (tags, GST_TAG_AUDIO_CODEC, &str)) {
@@ -1993,7 +1992,7 @@ index 0000000..b2fd0e1
 +				g_free (str);
 +			}
 +			if (gst_tag_list_get_uint (tags, GST_TAG_BITRATE, &rate)) {
-+				CLog::Log(LOGINFO, "	bitrate: {:d}", (int)rate);
++				CLog::Log(LOGINFO, "	bitrate: {}", (int)rate);
 +			}
 +			gst_tag_list_free (tags);
 +		}
@@ -2004,7 +2003,7 @@ index 0000000..b2fd0e1
 +		/* Retrieve the stream's subtitle tags */
 +		g_signal_emit_by_name (m_playbin, "get-text-tags", i, &tags);
 +		if (tags) {
-+			CLog::Log(LOGINFO, "CGstPlayerVideo::{}: subtitle stream: {:d}", 
++			CLog::Log(LOGINFO, "CGstPlayerVideo::{}: subtitle stream: {}", 
 +				__FUNCTION__,
 +				(int)i);
 +
@@ -2045,7 +2044,7 @@ index 0000000..b2fd0e1
 +	g_object_get (m_playbin, "current-audio", &m_current_audio, NULL);
 +	g_object_get (m_playbin, "current-text", &m_current_text, NULL);
 +	
-+	CLog::Log(LOGINFO, "CGstPlayerVideo::{}: current video stream: {:d}, current audio stream: {:d}, current text stream: {:d}", 
++	CLog::Log(LOGINFO, "CGstPlayerVideo::{}: current video stream: {}, current audio stream: {}, current text stream: {}", 
 +		 __FUNCTION__,
 +		(int)m_current_video,
 +		(int)m_current_audio,
@@ -2068,7 +2067,7 @@ index 0000000..b2fd0e1
 +
 +float CGstPlayerVideo::GetRenderAspectRatio()
 +{
-+	CLog::Log(LOGINFO, "{}: m_aspect: {:d}.0f", __FUNCTION__, (int)m_aspect); 
++	CLog::Log(LOGINFO, "{}: m_aspect: {}.0f", __FUNCTION__, (int)m_aspect); 
 +	return (float) (1.0f * (int)m_aspect);
 +	
 +}
@@ -2141,7 +2140,7 @@ index 0000000..b2fd0e1
 +				{
 +					CLog::Log(LOGINFO, "CGstPlayerVideo::{}: Invalid header format {}",
 +								__FUNCTION__,
-+								_this->m_extra_headers.c_str());
++								_this->m_extra_headers);
 +					break;
 +				}
 +			}
@@ -2204,7 +2203,7 @@ index 0000000..b2fd0e1
 +	CGstPlayerVideo *_this = (CGstPlayerVideo*)user_data;
 +	
 +	printf("CGstPlayerVideo::seekData: offset=%" G_GUINT64_FORMAT " m_offset=%d m_length=%d", position, _this->m_offset, _this->m_length);
-+	CLog::Log(LOGINFO, "CGstPlayerVideo::seekData: offset=%" G_GUINT64_FORMAT " m_offset={:d} m_length={:d}", position, _this->m_offset, _this->m_length);
++	CLog::Log(LOGINFO, "CGstPlayerVideo::seekData: offset=%" G_GUINT64_FORMAT " m_offset={} m_length={}", position, _this->m_offset, _this->m_length);
 +	_this->m_offset = position;
 +
 +	return TRUE;
@@ -2261,7 +2260,7 @@ index 0000000..b2fd0e1
 +
 +		if (g_str_has_prefix(elementname, "queue2"))
 +		{
-+			if (_this->m_download_buffer_path != "")
++			if (_this->m_download_buffer_path.c_str() != "")
 +			{
 +				g_object_set(G_OBJECT(element), "temp-template", _this->m_download_buffer_path.c_str(), NULL);
 +			}
@@ -2369,7 +2368,7 @@ index 0000000..b2fd0e1
 +	GstStructure* str = gst_caps_get_structure(caps, 0);
 +	gint ch = 0;
 +	if (gst_structure_get_int (str, "channels", &ch)) {
-+		CLog::Log(LOGINFO, "CGstPlayerVideo::audio: {:d} Channels: {:d}", index, (uint16_t) ch);
++		CLog::Log(LOGINFO, "CGstPlayerVideo::audio: {} Channels: {}", index, (uint16_t) ch);
 +		info.channels = (uint16_t) ch;
 +		switch (info.channels)
 +		{
@@ -2414,7 +2413,7 @@ index 0000000..b2fd0e1
 +		g_object_set (m_playbin, "current-text", -1, NULL);
 +		m_current_text = iStream;
 +		g_object_set (GST_ELEMENT(m_playbin), "current-text", iStream, NULL);
-+		CLog::Log(LOGINFO, "CGstPlayerVideo::Set Subtitle track: {:d}", iStream);
++		CLog::Log(LOGINFO, "CGstPlayerVideo::Set Subtitle track: {}", iStream);
 +		CServiceBroker::GetDataCacheCore().SignalAudioInfoChange();
 +		CServiceBroker::GetDataCacheCore().SignalVideoInfoChange();
 +		CServiceBroker::GetDataCacheCore().SignalSubtitleInfoChange();
@@ -2637,7 +2636,7 @@ index 0000000..b2fd0e1
 +						{
 +							CLog::Log(LOGERROR, "CGstPlayerVideo::{}: missing codec: {}",
 +								__FUNCTION__,
-+								codec.c_str());
++								codec);
 +							CLog::Log(LOGERROR, "CGstPlayerVideo::{}: GStreamer plugin: {} not available!",
 +								__FUNCTION__,
 +								(const char*)description);
@@ -2729,7 +2728,7 @@ index 0000000..b2fd0e1
 +
 diff --git a/xbmc/cores/GstPlayer/GstPlayerVideo.h b/xbmc/cores/GstPlayer/GstPlayerVideo.h
 new file mode 100644
-index 0000000..20aa87f
+index 00000000000..20aa87f97b4
 --- /dev/null
 +++ b/xbmc/cores/GstPlayer/GstPlayerVideo.h
 @@ -0,0 +1,181 @@
@@ -2816,13 +2815,13 @@ index 0000000..20aa87f
 +	std::string GetPlayerState();
 +	float GetRenderAspectRatio();
 +	
-+	int GetAudioStreamCount() { CLog::Log(LOGINFO, "{}: m_audio: {:d}", __FUNCTION__, m_audio); return (int)m_audio; };
-+	int GetVideoStreamCount() { CLog::Log(LOGINFO, "{}: m_video: {:d}", __FUNCTION__, m_video); return (int)m_video; };
-+	int GetSubtitleCount()    { CLog::Log(LOGINFO, "{}: m_text: {:d}", __FUNCTION__, m_text); return (int)m_text; };
++	int GetAudioStreamCount() { CLog::Log(LOGINFO, "{}: m_audio: {}", __FUNCTION__, m_audio); return (int)m_audio; };
++	int GetVideoStreamCount() { CLog::Log(LOGINFO, "{}: m_video: {}", __FUNCTION__, m_video); return (int)m_video; };
++	int GetSubtitleCount()    { CLog::Log(LOGINFO, "{}: m_text: {}", __FUNCTION__, m_text); return (int)m_text; };
 +	
-+	int GetAudioStream() { CLog::Log(LOGINFO, "{}: m_current_audio: {:d}", __FUNCTION__, m_current_audio); return (int)m_current_audio; };
-+	int GetVideoStream() { CLog::Log(LOGINFO, "{}: m_current_video: {:d}", __FUNCTION__, m_current_video); return (int)m_current_video; };
-+	int GetSubtitle()    { CLog::Log(LOGINFO, "{}: m_current_text: {:d}", __FUNCTION__, m_current_text); return (int)m_current_text; };
++	int GetAudioStream() { CLog::Log(LOGINFO, "{}: m_current_audio: {}", __FUNCTION__, m_current_audio); return (int)m_current_audio; };
++	int GetVideoStream() { CLog::Log(LOGINFO, "{}: m_current_video: {}", __FUNCTION__, m_current_video); return (int)m_current_video; };
++	int GetSubtitle()    { CLog::Log(LOGINFO, "{}: m_current_text: {}", __FUNCTION__, m_current_text); return (int)m_current_text; };
 +
 +	void GetAudioStreamInfo(int index, AudioStreamInfo &info) const;
 +	void SetAudioStream(int iStream);
@@ -2915,7 +2914,7 @@ index 0000000..20aa87f
 +
 +};
 diff --git a/xbmc/cores/playercorefactory/PlayerCoreConfig.cpp b/xbmc/cores/playercorefactory/PlayerCoreConfig.cpp
-index 6c4718d..513eed3 100644
+index 6c4718d7365..513eed3dbc5 100644
 --- a/xbmc/cores/playercorefactory/PlayerCoreConfig.cpp
 +++ b/xbmc/cores/playercorefactory/PlayerCoreConfig.cpp
 @@ -22,6 +22,9 @@
@@ -2942,7 +2941,7 @@ index 6c4718d..513eed3 100644
    {
      player = std::make_shared<CExternalPlayer>(callback);
 diff --git a/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp b/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp
-index 79255d8..6fad7c4 100644
+index dc412a6e214..af667aa69c6 100644
 --- a/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp
 +++ b/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp
 @@ -30,6 +30,10 @@
@@ -2955,8 +2954,8 @@ index 79255d8..6fad7c4 100644
 +
  #define PLAYERCOREFACTORY_XML "playercorefactory.xml"
  
- CPlayerCoreFactory::CPlayerCoreFactory(const CProfileManager &profileManager) :
-@@ -346,6 +350,13 @@ bool CPlayerCoreFactory::LoadConfiguration(const std::string &file, bool clear)
+ CPlayerCoreFactory::CPlayerCoreFactory(const CProfileManager& profileManager)
+@@ -345,6 +349,13 @@ bool CPlayerCoreFactory::LoadConfiguration(const std::string &file, bool clear)
      m_vecCoreSelectionRules.clear();
  
      // Builtin players
@@ -2970,7 +2969,7 @@ index 79255d8..6fad7c4 100644
      auto VideoPlayer = std::make_unique<CPlayerCoreConfig>("VideoPlayer", "video", nullptr);
      VideoPlayer->m_bPlaysAudio = true;
      VideoPlayer->m_bPlaysVideo = true;
-@@ -386,6 +397,10 @@ bool CPlayerCoreFactory::LoadConfiguration(const std::string &file, bool clear)
+@@ -385,6 +396,10 @@ bool CPlayerCoreFactory::LoadConfiguration(const std::string &file, bool clear)
          internaltype = "video";
        else if (type == "paplayer")
          internaltype = "music";
@@ -2981,6 +2980,3 @@ index 79255d8..6fad7c4 100644
        else if (type == "externalplayer")
          internaltype = "external";
        else if (type == "enigma2player")
--- 
-2.34.1
-
