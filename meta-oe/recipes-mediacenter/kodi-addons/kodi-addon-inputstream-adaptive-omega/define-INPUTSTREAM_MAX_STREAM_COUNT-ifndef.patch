@@ -1,6 +1,6 @@
 --- a/src/main.cpp
 +++ b/src/main.cpp
-@@ -27,6 +27,10 @@
+@@ -22,6 +22,10 @@
  
  #include <stdarg.h> // va_list, va_start, va_arg, va_end
  
@@ -8,6 +8,6 @@
 +#define INPUTSTREAM_MAX_STREAM_COUNT 256
 +#endif
 +
- using namespace UTILS;
+ using namespace PLAYLIST;
  using namespace SESSION;
- 
+ using namespace UTILS;

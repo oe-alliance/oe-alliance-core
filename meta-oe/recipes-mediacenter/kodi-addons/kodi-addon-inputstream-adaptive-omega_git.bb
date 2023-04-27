@@ -1,25 +1,30 @@
 SUMMARY = "kodi inputstream addon for several manifest types"
 
 LICENSE = "GPL-2.0-or-later"
-LIC_FILES_CHKSUM = "file://src/main.cpp;beginline=1;endline=17;md5=7906619e2feca59ac3f5088ac7bc4100"
+LIC_FILES_CHKSUM = "file://src/main.cpp;beginline=1;endline=7;md5=45347fdc3c187ba13a5d93a1db696f47"
 
 FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 
 inherit kodi-addon
 
-DEPENDS += "expat bento4"
+DEPENDS += "expat pugixml"
 RDEPENDS:${PN} += "ldd"
 RRECOMMENDS:${PN} = "kernel-module-ext2"
 
-SRCREV = "f51330b653b8d3266c111d85d5e1f47053624207"
-PV = "20.3.12+gitr${SRCPV}"
+SRCREV = "f7ae9ace856882657430a4a8158e18a25445b37f"
+PV = "21.1.0+gitr${SRCPV}"
 
-KODIADDONBRANCH = "Nexus"
+KODIADDONBRANCH = "Omega"
 
 SRC_URI = "git://github.com/xbmc/inputstream.adaptive.git;protocol=https;branch=${KODIADDONBRANCH} \
         file://define-INPUTSTREAM_MAX_STREAM_COUNT-ifndef.patch"
 
 S = "${WORKDIR}/git"
+
+EXTRA_OECMAKE += "-DENABLE_INTERNAL_BENTO4=ON"
+
+# Allow downloads during internals build
+do_compile[network] = "1"
 
 KODIADDONNAME = "inputstream.adaptive"
 

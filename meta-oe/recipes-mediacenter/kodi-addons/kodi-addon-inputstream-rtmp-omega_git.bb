@@ -7,11 +7,11 @@ inherit kodi-addon
 
 DEPENDS += "expat"
 
-SRCREV = "c6badfaa437be63a499a3c92b08051ea49af7f8e"
+SRCREV = "9ab6dfcc328de7abf136341b408294df96998bf6"
 
-PV = "20.3.0+gitr${SRCPV}"
+PV = "21.1.0+gitr${SRCPV}"
 
-KODIADDONBRANCH = "Nexus"
+KODIADDONBRANCH = "Omega"
 
 SRC_URI = "git://github.com/xbmc/inputstream.rtmp.git;protocol=https;branch=${KODIADDONBRANCH}"
 
