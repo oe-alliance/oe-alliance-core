@@ -56,7 +56,7 @@ new file mode 100644
 index 0000000000..5271b77d87
 --- /dev/null
 +++ b/xbmc/cores/HiPlayer/HiPlayer.cpp
-@@ -0,0 +1,597 @@
+@@ -0,0 +1,600 @@
 +#include "HiPlayer.h"
 +#include "HiPlayerVideo.h"
 +#include "HiPlayerAudio.h"
@@ -198,13 +198,13 @@ index 0000000000..5271b77d87
 +	m_pInputStream = CDVDFactoryInputStream::CreateInputStream(this, m_item, true);
 +	if(m_pInputStream == nullptr)
 +	{
-+		CLog::Log(LOGERROR, "CHiPlayer{}: - unable to create input stream for [{}]", __FUNCTION__, CURL::GetRedacted(m_item.GetPath()).c_str());
++		CLog::Log(LOGERROR, "CHiPlayer{}: - unable to create input stream for [{}]", __FUNCTION__, CURL::GetRedacted(m_item.GetPath()));
 +		return false;
 +	}
 +
 +	if (!m_pInputStream->Open())
 +	{
-+		CLog::Log(LOGERROR, "CHiPlayer{}: - error opening [{}]", __FUNCTION__, CURL::GetRedacted(m_item.GetPath()).c_str());
++		CLog::Log(LOGERROR, "CHiPlayer{}: - error opening [{}]", __FUNCTION__, CURL::GetRedacted(m_item.GetPath()));
 +		return false;
 +	}
 +
@@ -308,7 +308,7 @@ index 0000000000..5271b77d87
 +	
 +	CURL Url(hint.filename);
 +	
-+	CLog::Log(LOGINFO, "CHiPlayer{}: m_pInputStream->GetFileName(): {}", __FUNCTION__, hint.filename.c_str());
++	CLog::Log(LOGINFO, "CHiPlayer{}: m_pInputStream->GetFileName(): {}", __FUNCTION__, hint.filename);
 +
 +	CServiceBroker::GetAppMessenger()->PostMsg(TMSG_SWITCHTOFULLSCREEN);
 +
@@ -464,7 +464,7 @@ index 0000000000..5271b77d87
 +
 +void CHiPlayer::SetSpeed(float iSpeed)
 +{
-+	CLog::Log(LOGINFO, "CHiPlayer::{}: %f", __FUNCTION__, iSpeed);
++	CLog::Log(LOGINFO, "CHiPlayer::{}: {}", __FUNCTION__, iSpeed);
 +	m_VideoPlayerVideo->SetSpeed(iSpeed);
 +}
 +
@@ -481,7 +481,7 @@ index 0000000000..5271b77d87
 +
 +bool CHiPlayer::SetPlayerState(const std::string& state)
 +{
-+	CLog::Log(LOGINFO, "CHiPlayer::{}: state:{}", __FUNCTION__, state.c_str());
++	CLog::Log(LOGINFO, "CHiPlayer::{}: state:{}", __FUNCTION__, state);
 +	return true;
 +}
 +
@@ -571,7 +571,7 @@ index 0000000000..5271b77d87
 +	
 +	CURL Url(m_pInputStream->GetFileName());
 +	
-+	CLog::Log(LOGINFO, "CHiPlayer::{}: startpercent=%f starttime=%f", __FUNCTION__, m_PlayerOptions.startpercent, m_PlayerOptions.starttime);
++	CLog::Log(LOGINFO, "CHiPlayer::{}: startpercent={} starttime={}", __FUNCTION__, m_PlayerOptions.startpercent, m_PlayerOptions.starttime);
 +	
 +	if (m_PlayerOptions.startpercent > 0)
 +	{
@@ -590,14 +590,17 @@ index 0000000000..5271b77d87
 +
 +bool CHiPlayer::OnAction(const CAction &action)
 +{
-+	CLog::Log(LOGINFO, "CHiPlayer::{}: id={:d}", __FUNCTION__, action.GetID());
++	CLog::Log(LOGINFO, "CHiPlayer::{}: id={}", __FUNCTION__, action.GetID());
 +	return false;
 +}
 +
 +void CHiPlayer::GetVideoResolution(unsigned int &width, unsigned int &height)
 +{
-+	m_VideoPlayerVideo->GetVideoResolution(width, height);
-+	CLog::Log(LOGINFO, "CHiPlayer::{}: width={:d} height={:d}", __FUNCTION__, width, height);
++//	m_VideoPlayerVideo->GetVideoResolution(width, height);
++	RESOLUTION_INFO res = CServiceBroker::GetWinSystem()->GetGfxContext().GetResInfo();
++	  width = res.iWidth;
++	  height = res.iHeight;
++	CLog::Log(LOGINFO, "CHiPlayer::{}: width={} height={}", __FUNCTION__, width, height);
 +}
 +
 +void CHiPlayer::FrameMove() 
@@ -650,7 +653,7 @@ index 0000000000..5271b77d87
 +
 +void CHiPlayer::SetRenderViewMode(int mode, float zoom, float par, float shift, bool stretch)
 +{
-+	CLog::Log(LOGINFO, "CHiPlayer::{} {:d}", __FUNCTION__, mode);
++	CLog::Log(LOGINFO, "CHiPlayer::{} {}", __FUNCTION__, mode);
 +	m_VideoPlayerVideo->SetRenderViewMode(mode, zoom, par, shift, stretch);
 +}
 +
@@ -1632,7 +1635,7 @@ index 0000000000..818ec24650
 +		seekTarget = (int64_t)(GetTotalTime()*(current + percent)/100);
 +	}
 +
-+	CLog::Log(LOGINFO, "CHiPlayerVideo::{}: seekTarget={:11d}", __FUNCTION__, seekTarget);
++	CLog::Log(LOGINFO, "CHiPlayerVideo::{}: seekTarget={}", __FUNCTION__, seekTarget);
 +
 +	SeekTime(seekTarget);
 +}
@@ -1641,7 +1644,7 @@ index 0000000000..818ec24650
 +{
 +	int val = (int) GetTotalTime() * iPercent;
 +
-+	CLog::Log(LOGINFO, "CHiPlayerVideo::{}: iPercent=%f seek to {:d} milliseconds", __FUNCTION__, iPercent, val);
++	CLog::Log(LOGINFO, "CHiPlayerVideo::{}: iPercent={} seek to {} milliseconds", __FUNCTION__, iPercent, val);
 +
 +	if(val<0)
 +		return;
@@ -2133,7 +2136,7 @@ index 0000000000..818ec24650
 +
 +void CHiPlayerVideo::SeekTime(int64_t iTime)
 +{
-+	CLog::Log(LOGINFO, "CHiPlayerVideo::{}: iTime={:11d}", __FUNCTION__, iTime);
++	CLog::Log(LOGINFO, "CHiPlayerVideo::{}: iTime={}", __FUNCTION__, iTime);
 +
 +	if (iTime >= 0)
 +	{
@@ -2152,7 +2155,7 @@ index 0000000000..818ec24650
 +{
 +	int64_t abstime = GetTime() + iTime;
 +	
-+	CLog::Log(LOGINFO, "CHiPlayerVideo::{}: iTime={:11d} abstime={:d}", __FUNCTION__, iTime, abstime);
++	CLog::Log(LOGINFO, "CHiPlayerVideo::{}: iTime={} abstime={}", __FUNCTION__, iTime, abstime);
 +
 +	if (abstime >= 0)
 +	{
@@ -2194,8 +2197,8 @@ index 0000000000..818ec24650
 +	if (m_pInputStream)
 +	{
 +		m_time = (int64_t) (((GetTotalTime() * 1000) / m_length) * m_offset) / 1000;
-+		CLog::Log(LOGINFO, "CGstPlayerVideo::{}: (appsrc) m_offset={:d} m_length={:d} m_pInputStream->GetLength()={:d}", __FUNCTION__, (int) m_offset, (int) m_length, m_pInputStream->GetLength());
-+		CLog::Log(LOGINFO, "CGstPlayerVideo::{}: (appsrc) milliseconds={:d}", __FUNCTION__, (int) m_time);
++		CLog::Log(LOGINFO, "CGstPlayerVideo::{}: (appsrc) m_offset={} m_length={} m_pInputStream->GetLength()={}", __FUNCTION__, (int) m_offset, (int) m_length, m_pInputStream->GetLength());
++		CLog::Log(LOGINFO, "CGstPlayerVideo::{}: (appsrc) milliseconds={}", __FUNCTION__, (int) m_time);
 +		return m_time;
 +	}
 +	return m_time;
@@ -2217,7 +2220,7 @@ index 0000000000..818ec24650
 +
 +float CHiPlayerVideo::GetRenderAspectRatio()
 +{
-+	CLog::Log(LOGINFO, "{}: m_aspect: {:d}.0f", __FUNCTION__, (int)m_aspect); 
++	CLog::Log(LOGINFO, "{}: m_aspect: {}", __FUNCTION__, (int)m_aspect);
 +	return 0.01f * (float)m_aspect;
 +}
 +
@@ -2406,13 +2409,13 @@ index 0000000000..bc3d9d515a
 +
 +	void GetVideoResolution(unsigned int &width, unsigned int &height);
 +
-+	int GetAudioStreamCount() { CLog::Log(LOGINFO, "{}: m_audio: {:d}", __FUNCTION__, m_audio); return (int)m_audio; };
-+	int GetVideoStreamCount() { CLog::Log(LOGINFO, "{}: m_video: {:d}", __FUNCTION__, m_video); return (int)m_video; };
-+	int GetSubtitleCount()    { /*CLog::Log(LOGINFO, "{}: m_text: {:d}", __FUNCTION__, m_text);*/ return (int)m_text; };
++	int GetAudioStreamCount() { CLog::Log(LOGINFO, "{}: m_audio: {}", __FUNCTION__, m_audio); return (int)m_audio; };
++	int GetVideoStreamCount() { CLog::Log(LOGINFO, "{}: m_video: {}", __FUNCTION__, m_video); return (int)m_video; };
++	int GetSubtitleCount()    { /*CLog::Log(LOGINFO, "{}: m_text: {}", __FUNCTION__, m_text);*/ return (int)m_text; };
 +	
-+	int GetAudioStream() { CLog::Log(LOGINFO, "{}: m_current_audio: {:d}", __FUNCTION__, m_current_audio); return (int)m_current_audio; };
-+	int GetVideoStream() { CLog::Log(LOGINFO, "{}: m_current_video: {:d}", __FUNCTION__, m_current_video); return (int)m_current_video; };
-+	int GetSubtitle()    { CLog::Log(LOGINFO, "{}: m_current_text: {:d}", __FUNCTION__, m_current_text); return (int)m_current_text; };
++	int GetAudioStream() { CLog::Log(LOGINFO, "{}: m_current_audio: {}", __FUNCTION__, m_current_audio); return (int)m_current_audio; };
++	int GetVideoStream() { CLog::Log(LOGINFO, "{}: m_current_video: {}", __FUNCTION__, m_current_video); return (int)m_current_video; };
++	int GetSubtitle()    { CLog::Log(LOGINFO, "{}: m_current_text: {}", __FUNCTION__, m_current_text); return (int)m_current_text; };
 +
 +	void SetSubtitle(int iStream);
 +	bool GetSubtitleVisible();
