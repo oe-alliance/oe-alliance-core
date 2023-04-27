@@ -100,6 +100,7 @@ RDEPENDS:${PN} = " \
     inadyn-mt \
     iperf3 \
     joe \
+    liba52 \
     lighttpd \
     livestreamersrv \
     streamlinksrv \
