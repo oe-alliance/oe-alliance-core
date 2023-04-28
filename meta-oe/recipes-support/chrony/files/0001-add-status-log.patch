@@ -1,0 +1,32 @@
+--- a/reference.c
++++ b/reference.c
+@@ -840,13 +840,26 @@ write_log(struct timespec *now, int combined_sources, double freq,
+   double root_dispersion, max_error;
+   static double last_sys_offset = 0.0;
+ 
+-  if (logfileid == -1)
+-    return;
+-
+   max_error = orig_root_distance + fabs(last_sys_offset);
+   root_dispersion = get_root_dispersion(now);
+   last_sys_offset = offset - uncorrected_offset;
+ 
++  FILE *fd = fopen("/tmp/chrony.status", "w");
++  if (fd) {
++    fprintf(fd,"%s %-15s %2d %10.3f %10.3f %10.3e %1c %2d %10.3e %10.3e %10.3e %10.3e %10.3e\n",
++                  UTI_TimeToLogForm(now->tv_sec),
++                  our_ref_ip.family != IPADDR_UNSPEC ?
++                    UTI_IPToString(&our_ref_ip) : UTI_RefidToString(our_ref_id),
++                  our_stratum, freq, 1.0e6 * our_skew, offset,
++                  leap_codes[our_leap_status], combined_sources, offset_sd,
++                  uncorrected_offset, our_root_delay, root_dispersion, max_error);    
++    fclose(fd);
++  }
++
++  if (logfileid == -1) {
++      return;
++  }
++
+   LOG_FileWrite(logfileid,
+                 "%s %-15s %2d %10.3f %10.3f %10.3e %1c %2d %10.3e %10.3e %10.3e %10.3e %10.3e",
+                 UTI_TimeToLogForm(now->tv_sec),
