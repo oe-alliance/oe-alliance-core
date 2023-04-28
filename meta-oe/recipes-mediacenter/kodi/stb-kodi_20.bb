@@ -7,7 +7,7 @@ FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}-20:"
 
 PACKAGE_ARCH = "${MACHINE}"
 
-inherit ccache cmake gettext pkgconfig ${PYTHON_PN}native
+inherit ccache cmake gettext pkgconfig python3targetconfig
 
 DEPENDS += " \
             fmt \
