@@ -19,6 +19,7 @@ DEPENDS += "oe-alliance-feeds enigma2-3rdparty-plugins"
 
 RRECOMMENDS:${PN} = "\
     chrony \
+    fpclock \
     enigma2-pliplugins \
     enigma2-display-skins \
     openatv-skinparts \
