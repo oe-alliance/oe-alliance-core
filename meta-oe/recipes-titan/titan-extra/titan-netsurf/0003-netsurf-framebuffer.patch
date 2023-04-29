@@ -1,0 +1,30 @@
+--- a/netsurf/frontends/framebuffer/framebuffer.c
++++ b/netsurf/frontends/framebuffer/framebuffer.c
+@@ -538,9 +538,11 @@
+ 
+ static bool framebuffer_format_from_bpp(int bpp, enum nsfb_format_e *fmt)
+ {
++printf("[netsurf/framebuffer/framebuffer.c] static bool framebuffer_format_from_bpp start: set %dbpp\n", bpp);
+ 	switch (bpp) {
+ 	case 32:
+-		*fmt = NSFB_FMT_XRGB8888;
++printf("[netsurf/framebuffer/framebuffer.c] NSFB_FMT_ABGR8888\n");
++		*fmt = NSFB_FMT_ABGR8888;
+ 		break;
+ 
+ 	case 24:
+@@ -579,10 +581,14 @@
+     enum nsfb_type_e fbtype;
+     enum nsfb_format_e fbfmt;
+ 
++printf("[netsurf/framebuffer/framebuffer.c] framebuffer_initialise: bpp %dbpp\n", bpp);
++printf("[netsurf/framebuffer/framebuffer.c] framebuffer_initialise: fbfmt %fbfmt\n", fbfmt);
++printf("[netsurf/framebuffer/framebuffer.c] framebuffer_initialise: check\n");
+     /* bpp is a proxy for the framebuffer format */
+     if (framebuffer_format_from_bpp(bpp, &fbfmt) == false) {
+ 	return NULL;
+     }
++printf("[netsurf/framebuffer/framebuffer.c] framebuffer_initialise: check ok\n");
+ 
+     fbtype = nsfb_type_from_name(fename);
+     if (fbtype == NSFB_SURFACE_NONE) {

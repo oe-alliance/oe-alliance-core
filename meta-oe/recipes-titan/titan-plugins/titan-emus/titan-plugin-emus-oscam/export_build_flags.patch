@@ -1,0 +1,38 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 027deef..d1ff04b 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -624,10 +624,10 @@ if (CMAKE_COMPILER_IS_GNUCC)
+     list(GET GCC_VERSION_COMPONENTS 0 GCC_MAJOR)
+     list(GET GCC_VERSION_COMPONENTS 0 GCC_MINOR)
+     add_definitions ("-W -Wall ")
+-    set (CMAKE_C_FLAGS "-Wall -O2")
+-	set (CMAKE_CXX_FLAGS "-Wall -O2")
+-    set (CMAKE_C_FLAGS_DEBUG "-O0 -ggdb")
+-    set (CMAKE_CXX_FLAGS_DEBUG "-O0 -ggdb")
++    set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -O2")
++    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -O2")
++    set (CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -O0 -ggdb")
++    set (CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O0 -ggdb")
+ endif (CMAKE_COMPILER_IS_GNUCC)
+ # some optimisations
+ if (OSCamOperatingSystem MATCHES "Mac OS X")
+diff --git a/csctapi/CMakeLists.txt b/csctapi/CMakeLists.txt
+index 208fa64..2de284b 100644
+--- a/csctapi/CMakeLists.txt
++++ b/csctapi/CMakeLists.txt
+@@ -5,10 +5,10 @@ if (CMAKE_COMPILER_IS_GNUCC)
+     list(GET GCC_VERSION_COMPONENTS 0 GCC_MAJOR)
+     list(GET GCC_VERSION_COMPONENTS 0 GCC_MINOR)
+     add_definitions ("-W -Wall ")
+-    set (CMAKE_C_FLAGS "-Wall -O2")
+-	set (CMAKE_CXX_FLAGS "-Wall -O2")
+-    set (CMAKE_C_FLAGS_DEBUG "-O0 -ggdb")
+-    set (CMAKE_CXX_FLAGS_DEBUG "-O0 -ggdb")
++    set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -O2")
++    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -O2")
++    set (CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -O0 -ggdb")
++    set (CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O0 -ggdb")
+ endif (CMAKE_COMPILER_IS_GNUCC)
+ # Mac extra removes to avoid ranlib warnings in some situations
+ if (OSCamOperatingSystem MATCHES "Mac OS X" AND NOT HAVE_LIBUSB AND HAVE_PCSC)
