@@ -1,0 +1,45 @@
+--- a/libopkg/opkg_configure.c	2019-02-13 20:59:55.000000000 +0100
++++ a/libopkg/opkg_configure.c.patched	2022-04-07 22:12:04.402139645 +0200
+@@ -35,7 +35,7 @@
+     /* DPKG_INCOMPATIBILITY:
+      * dpkg actually includes a version number to this script call */
+ 
+-    err = pkg_run_script(pkg, "postinst", "configure");
++    err = pkg_run_script(pkg, "postinst", pkg->dest->name);
+     if (err) {
+         if (!opkg_config->offline_root)
+             opkg_msg(ERROR, "%s.postinst returned %d.\n", pkg->name, err);
+
+--- a/libopkg/opkg_install.c	2022-04-08 11:49:59.186797852 +0200
++++ a/libopkg/opkg_install.c.patched	2022-04-08 11:48:35.695981145 +0200
+@@ -273,7 +273,7 @@
+         preinst_args = xstrdup("install");
+     }
+ 
+-    err = pkg_run_script(pkg, "preinst", preinst_args);
++    err = pkg_run_script(pkg, "preinst", pkg->dest->name);
+     if (err) {
+         opkg_msg(ERROR, "Aborting installation of %s.\n", pkg->name);
+         free(preinst_args);
+
+--- a/libopkg/opkg_remove.c	2022-04-08 11:54:11.887218090 +0200
++++ a/libopkg/opkg_remove.c.patched	2022-04-08 11:53:59.487393698 +0200
+@@ -203,7 +203,7 @@
+     pkg->state_want = SW_DEINSTALL;
+     opkg_state_changed++;
+ 
+-    r = pkg_run_script(pkg, "prerm", "remove");
++    r = pkg_run_script(pkg, "prerm", pkg->dest->name);
+     if (r != 0) {
+         if (!opkg_config->force_remove) {
+             opkg_msg(ERROR,
+@@ -223,7 +223,7 @@
+      * feel free to fix this. */
+     remove_data_files_and_list(pkg);
+ 
+-    err = pkg_run_script(pkg, "postrm", "remove");
++    err = pkg_run_script(pkg, "postrm", pkg->dest->name);
+ 
+     remove_maintainer_scripts(pkg);
+     pkg->state_status = SS_NOT_INSTALLED;
+
