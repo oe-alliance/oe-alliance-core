@@ -99,7 +99,6 @@ RDEPENDS:${PN} = "\
 	nfs-utils \
 	nfs-utils-client \
 	ntfs-3g \
-	ntpdate \
 	ofgwrite \
     openssh-sftp-server \
 	openssl \
