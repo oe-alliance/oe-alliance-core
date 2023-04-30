@@ -9,9 +9,9 @@ require conf/python/python3-compileall.inc
 DEPENDS = "${PYTHON_PN}-backports-lzma"
 
 SRCREV = "${AUTOREV}"
-PV = "1.xx+git${SRCPV}"
-PKGV = "1.xx+git${GITPKGV}"
-PR = "r1"
+PV = "1.01+git${SRCPV}"
+PKGV = "1.01+git${GITPKGV}"
+PR = "r2"
 
 inherit gitpkgv allarch
 

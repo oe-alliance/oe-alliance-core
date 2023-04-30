@@ -7,9 +7,9 @@ require conf/python/python3-compileall.inc
 
 SRCREV="${AUTOREV}"
 
-PV = "1.xx+git${SRCPV}"
-PKGV = "1.xx+git${GITPKGV}"
-PR = "r1"
+PV = "1.01+git${SRCPV}"
+PKGV = "1.01+git${GITPKGV}"
+PR = "r2"
 inherit gitpkgv allarch
 
 SRC_URI = "git://github.com/kiddac/E2_Piconizer.git;protocol=https;branch=master"
