@@ -5,11 +5,11 @@ LICENSE = "CLOSED"
 require conf/license/license-close.inc
 PACKAGE_ARCH := "${MACHINE_ARCH}"
 
-PV = "1.2"
+PV = "1.4"
 PR = "${SRCDATE}"
-SRC_URI = "https://source.mynonpublic.com/gigablue/chromium/chromium-gigablue-${MACHINE}-${SRCDATE}.zip"
+SRC_URI = "https://source.mynonpublic.com/gigablue/chromium/chromium-gigablue-${MACHINE}-${SRCDATE}.tar.gz"
 
-# Added very old NSS version need only for vuplus
+# Added very old NSS version need only for gigablue
 PREFERRED_VERSION_nss = "3.17.3"
 
 DEPENDS = "nss"
