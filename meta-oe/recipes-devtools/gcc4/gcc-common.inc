@@ -10,7 +10,7 @@ inherit autotools gettext texinfo
 BPN = "gcc"
 COMPILERINITIAL = ""
 COMPILERDEP = "virtual/${MLPREFIX}${TARGET_PREFIX}gcc${COMPILERINITIAL}:do_gcc_stash_builddir"
-COMPILERDEP:class-nativesdk = "virtual/${TARGET_PREFIX}gcc${COMPILERINITIAL}-crosssdk:do_gcc_stash_builddir"
+COMPILERDEP:class-nativesdk = "virtual/${TARGET_PREFIX}gcc${COMPILERINITIAL}:do_gcc_stash_builddir"
 
 python extract_stashed_builddir () {
     src = d.expand("${STAGING_DIR}-components/${BUILD_ARCH}/gcc-stashed-builddir${COMPILERINITIAL}-${TARGET_SYS}")
