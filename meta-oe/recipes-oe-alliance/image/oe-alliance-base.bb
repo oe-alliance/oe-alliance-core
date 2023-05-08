@@ -11,7 +11,7 @@ ALLOW_EMPTY:${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r2"
+PR = "r3"
 
 RDEPENDS:${PN} = "\
     oe-alliance-enigma2 \
@@ -29,6 +29,7 @@ RDEPENDS:${PN} = "\
     ${@bb.utils.contains("MACHINE_FEATURES", "vubluetooth", "enigma2-plugin-systemplugins-bluetoothsetup enigma2-plugin-extensions-witaispeechtotext", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "gbbluetooth", "enigma2-plugin-systemplugins-bluetoothsetup", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "kexecmb", "kexec-multiboot", "", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "displayvfd", "displayvfd", "", d)} \
     ${@bb.utils.contains("TARGET_ARCH", "arm", "${GETEXTRA}", "", d)} \
     ${@bb.utils.contains("TARGET_ARCH", "aarch64", "${GETEXTRA}", "", d)} \
     avahi-daemon \

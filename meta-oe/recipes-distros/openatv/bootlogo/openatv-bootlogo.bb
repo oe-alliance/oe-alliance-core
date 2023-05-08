@@ -34,6 +34,13 @@ inherit update-rc.d
 SRC_URI = "file://bootlogo_hd.mvi file://restore_hd.mvi file://bootlogo_fhd.mvi file://restore_fhd.mvi file://radio.mvi file://bootlogo.sh file://splash576.bmp file://splash480.bmp file://splash1280.jpg \
     ${@bb.utils.contains("MACHINE_FEATURES", "gigabluelcd220", "file://lcdsplash220.bin file://lcdwaitkey220.bin file://lcdwarning220.bin" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "gigabluelcd400", "file://lcdsplash400.bin file://lcdwaitkey400.bin file://lcdwarning400.bin" , "", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "displayvfd", "${DISPLAYVFD_LOGO}" , "", d)} \
+"
+
+DISPLAYVFD_LOGO = "\
+    ${@bb.utils.contains("MACHINE_FEATURES", "colorlcd400", "file://400.png" , "", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "colorlcd480", "file://480.png" , "", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "colorlcd800", "file://800.png" , "", d)} \
 "
 
 SRC_URI:append:vuduo2 = " file://lcdbootlogo.png file://bootlogo.py"
@@ -120,6 +127,13 @@ do_install() {
     ${@bb.utils.contains("MACHINE_FEATURES", "gigabluelcd400", "install -m 0644 lcdwarning400.bin ${D}/usr/share/lcdwarning.bin" , "", d)}
     ${@bb.utils.contains("MACHINE_FEATURES", "gigabluelcd220", "install -m 0644 lcdwaitkey220.bin ${D}/usr/share/lcdwaitkey.bin" , "", d)}
     ${@bb.utils.contains("MACHINE_FEATURES", "gigabluelcd220", "install -m 0644 lcdwarning220.bin ${D}/usr/share/lcdwarning.bin" , "", d)}
+    if [ -e 400.png ]; then
+        install -m 0644 400.png ${D}/usr/share/lcd.png
+    elif [ -e 480.png ]; then
+        install -m 0644 480.png ${D}/usr/share/lcd.png
+    elif [ -e 800.png ]; then
+        install -m 0644 800.png ${D}/usr/share/lcd.png
+    fi
 }
 
 do_install:append:vuduo2() {

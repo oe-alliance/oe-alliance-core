@@ -8,3 +8,4 @@ BOOTLOGO=/usr/share/bootlogo.mvi
 /usr/bin/showiframe ${BOOTLOGO}
 
 [ -f /etc/init.d/bootlogo.py ] && /usr/bin/python /etc/init.d/bootlogo.py
+[ -f /usr/share/lcd.png ] && /usr/bin/displayvfd -p /usr/share/lcd.png

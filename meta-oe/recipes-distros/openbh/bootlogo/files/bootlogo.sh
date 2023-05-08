@@ -22,3 +22,4 @@ if [ -x /usr/bin/showiframe ]; then
 fi
 
 [ -f /etc/init.d/bootlogo.py ] && /usr/bin/python /etc/init.d/bootlogo.py
+[ -f /usr/share/lcd.png ] && /usr/bin/displayvfd -p /usr/share/lcd.png
