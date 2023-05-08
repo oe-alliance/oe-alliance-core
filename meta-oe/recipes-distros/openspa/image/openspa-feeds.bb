@@ -6,8 +6,8 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda
 ALLOW_EMPTY:${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-PV = "7.4"
-PR = "r1"
+PV = "8.1"
+PR = "r0"
 
 inherit packagegroup
 
@@ -19,18 +19,19 @@ RRECOMMENDS:${PN} = "\
     enigma2-skins \
     enigma2-plugin-extensions-epgimport \
     enigma2-plugin-systemplugins-crossepg \
-    enigma2-plugin-systemplugins-devicemanager \
     enigma2-plugin-extensions-filecommander \
+    enigma2-plugin-extensions-specialjump \
     curlftpfs \
     cdfs \
+    tvheadend \
     openssl-old \
-    enigma2-plugin-extensions-cooltvguide \
+    sysbench \
     enigma2-plugin-extensions-bmediacenter \
     enigma2-plugin-extensions-enhancedmoviecenter \
     enigma2-plugin-extensions-blurayplayer \
     enigma2-plugin-extensions-subssupport \
     enigma2-plugin-systemplugins-autobouquetsmaker \
-    ${@bb.utils.contains("MACHINE_BRAND", "AZBOX", "enigma2-plugin-extensions-azplay enigma2-plugin-extensions-aziptv", "", d)} \
+    mediainfo \
     "
 
 RRECOMMENDS:${PN}:append:gb800solo = " enigma2-plugin-extensions-gbipboxclient"
