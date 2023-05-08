@@ -5,3 +5,5 @@ kernel_do_install:append() {
         touch ${D}/${nonarch_base_libdir}/modules/${KERNEL_VERSION}/modules.builtin.modinfo
     fi
 }
+
+OLDEST_KERNEL = "3.2.0"

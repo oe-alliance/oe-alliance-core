@@ -81,3 +81,5 @@ do_configure:append:arm () {
 	echo "CFLAGS-abort.c = -fasynchronous-unwind-tables" >> ${B}/configparms
 	echo "CFLAGS-raise.c = -fasynchronous-unwind-tables" >> ${B}/configparms
 }
+
+OLDEST_KERNEL = "3.2.0"

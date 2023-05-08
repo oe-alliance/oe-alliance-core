@@ -17,3 +17,5 @@ SRC_URI:append = " file://0006-remove-arc4random-implementation.patch"
 SSTATE_ALLOW_OVERLAP_FILES += "${STAGING_INCDIR}/netatalk/at.h ${STAGING_INCDIR}/scsi/scsi_ioctl.h ${STAGING_INCDIR}/scsi/sg.h"
 
 CFLAGS:append = " -Wno-maybe-uninitialized"
+
+OLDEST_KERNEL = "3.2.0"
