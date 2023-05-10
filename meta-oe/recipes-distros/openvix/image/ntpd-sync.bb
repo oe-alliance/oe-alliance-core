@@ -16,5 +16,5 @@ do_install() {
     install -d ${D}${bindir}
     install -m 755 ${NTPD_SYNC_LOC}/ntpd-sync ${D}${bindir}/ntpd-sync
     install -d ${D}${sysconfdir}/network/if-up.d
-    install -m 755 ${NTPD_SYNC_LOC}/ntpd ${D}${sysconfdir}/network/if-up.d/ntpd
+    ln -sf ${bindir}/ntpd-sync ${D}${sysconfdir}/network/if-up.d/ntpd-sync
 }
