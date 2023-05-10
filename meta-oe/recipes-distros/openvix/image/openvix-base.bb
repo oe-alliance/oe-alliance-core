@@ -19,6 +19,7 @@ DEPENDS = "openvix-version-info"
 RDEPENDS:${PN} = "\
     autofs \
     ca-certificates \
+    ntpd-sync \
     oe-alliance-base \
     openvix-version-info \
     openvix-enigma2 \
