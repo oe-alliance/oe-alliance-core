@@ -165,6 +165,7 @@ RDEPENDS:${PN} = " \
     ${PYTHON_PN}-soco \
     ${PYTHON_PN}-pyexecjs \
     ${PYTHON_PN}-scrapy \
+    ${PYTHON_PN}-timeout-decorator \
     rapidxml \
     rclone \
     rsync \
