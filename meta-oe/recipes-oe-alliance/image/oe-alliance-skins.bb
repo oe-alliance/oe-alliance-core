@@ -21,9 +21,6 @@ RDEPENDS:${PN} = "\
 	enigma2-plugin-skins-army-moodblue-hd \
 	enigma2-plugin-skins-kravenhd \
 	enigma2-plugin-skins-pli-hd-fullnight \
-	${@bb.utils.contains("MACHINE_FEATURES", "skins1080", "enigma2-plugin-skins-kiddac-1080-onyx", "", d)} \
-	${@bb.utils.contains("MACHINE_FEATURES", "skins1080", "enigma2-plugin-skins-kiddac-1080-slyk-q", "", d)} \
-	${@bb.utils.contains("MACHINE_FEATURES", "skins1080", "enigma2-plugin-skins-kiddac-1080-slyk-r19", "", d)} \
 	"
 
 RDEPENDS:${PN}:remove:openvix = "\
