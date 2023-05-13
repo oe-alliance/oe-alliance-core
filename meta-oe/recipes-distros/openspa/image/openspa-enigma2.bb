@@ -6,16 +6,15 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "8.1"
-PR = "r0"
+PR = "r1"
 
 inherit packagegroup
 
 RRECOMMENDS:${PN} = " \
     enigma2-skindefault \
     openspa-version-info \
-    ${@bb.utils.contains_any("FLASHSIZE", "64 96", " \
-    enigma2-plugin-extensions-openwebif-webtv \
-    ", " \
+	enigma-info \
+    ${@bb.utils.contains_any("FLASHSIZE", "64 96", "", " \
     enigma2-plugin-drivers-usbserial \
     enigma2-plugin-extensions-autotimer \
     enigma2-plugin-extensions-epgsearch \
