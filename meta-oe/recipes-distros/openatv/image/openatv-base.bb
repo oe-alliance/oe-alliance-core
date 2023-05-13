@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda
 ALLOW_EMPTY:${PN} = "1"
 
 PV = "1.0"
-PR = "r33"
+PR = "r34"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
@@ -15,6 +15,7 @@ inherit packagegroup
 RDEPENDS:${PN} = "\
     autofs \
     ca-certificates \
+    chrony \
     flip \
     hddtemp \
     wireless-tools \
