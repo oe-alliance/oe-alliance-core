@@ -104,6 +104,7 @@ Zgemma H11S             MACHINE:  zgemmah11s
 
 Zgemma H112H            MACHINE:  zgemmah112h
 
+
 ### Amiko
 
 Viper SLIM              MACHINE:  viperslim
@@ -144,6 +145,7 @@ ANADOL MULTIBOX Twin    MACHINE:  anadolmultitwin
 ANADOL MULTIBOX SE      MACHINE:  anadolmultiboxse
 
 ANADOL IP8 4K           MACHINE:  ip8
+
 
 ### Atemio
 
@@ -211,6 +213,7 @@ HIS TWIN +              MACHINE:  axashistwinplus
 4K COMBO                MACHINE:  axas4kcombo
 
 4K TWIN                MACHINE:  axas4ktwin
+
 
 ### Beyonwiz
 
@@ -388,7 +391,7 @@ GB UE 4K                MACHINE:  gbue4k
 
 GB TRIO 4K              MACHINE:  gbtrio4k
 
-GB TRIO 4K Plus         MACHINE:  gbtrio4kplus
+GB TRIO 4K Pro          MACHINE:  gbtrio4kpro
 
 GB X3 4K                MACHINE:  gbx34k
 
@@ -589,6 +592,8 @@ SX988 4K DUAL OS        MACHINE:  sx988
 
 SXF60x8 HD              MACHINE:  stx6008
 
+SX88x v2 4K             MACHINE:  sx88v2
+
 
 ### Odin
 
@@ -650,6 +655,7 @@ Lunix3 4K               MACHINE:  lunix34k
 Lunix CO                MACHINE:  lunixco
 
 DUAL 4K UHD             MACHINE:  dual
+
 
 ### RedEagle
 
