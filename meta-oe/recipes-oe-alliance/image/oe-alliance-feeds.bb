@@ -48,6 +48,8 @@ RDEPENDS:${PN} = " \
     enigma2-plugin-extensions-lamedbmerger \
     enigma2-plugin-extensions-serienrecorder \
     enigma2-plugin-systemplugins-misplslcnscan \
+    enigma2-plugin-extensions-planerfs \
+    enigma2-plugin-extensions-picturecenterfs \
     enigma2-plugin-systemplugins-radiotimesemulator \
     enigma2-plugin-extensions-subssupport \
     enigma2-plugin-extensions-xstreamity \
