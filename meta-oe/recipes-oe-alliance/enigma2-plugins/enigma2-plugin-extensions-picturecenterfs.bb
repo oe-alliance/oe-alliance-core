@@ -23,7 +23,7 @@ do_compile() {
     for f in $(find ./po -name *.po ); do
         l=$(echo ${f%} | sed 's/\.po//' | sed 's/.*po\///')
         mkdir -p ${S}/locale/${l%}/LC_MESSAGES
-        msgfmt -o ${S}/locale/${l%}/LC_MESSAGES/PlanerFS.mo ./po/$l.po
+        msgfmt -o ${S}/locale/${l%}/LC_MESSAGES/PictureCenterFS.mo ./po/$l.po
     done
     cd -
 }
