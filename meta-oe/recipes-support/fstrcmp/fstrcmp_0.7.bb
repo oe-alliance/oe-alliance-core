@@ -16,4 +16,6 @@ inherit autotools-brokensep manpages
 
 DEPENDS = "groff-native"
 
+RDEPENDS:${PN} += "bash"
+
 BBCLASSEXTEND = "native nativesdk"
