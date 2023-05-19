@@ -9,7 +9,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r9"
+PR = "r10"
 
 inherit packagegroup
 
@@ -23,7 +23,6 @@ RRECOMMENDS:${PN} = "\
     enigma2-plugin-extensions-epgimport \
     enigma2-plugin-extensions-enhancedmoviecenter \
     enigma2-plugin-systemplugins-crossepg \
-    enigma2-skins \
     enigma2-skins-openvix \
     oe-alliance-skins \
     openssl-old \
