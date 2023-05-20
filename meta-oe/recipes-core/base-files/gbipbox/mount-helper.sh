@@ -12,13 +12,17 @@ case "$ACTION" in
 	add|"")
 		ACTION="add"
 		FSTYPE=`blkid /dev/${MDEV} | grep -v 'TYPE="swap"' | grep ${MDEV} | sed -e "s/.*TYPE=//" -e 's/"//g'`
+		FLASHEXPANDERDEV=`cat /proc/mounts | grep '.FlashExpander' | cut -d " " -f1`
+		MOUNTPOINT=`cat /proc/mounts | grep ${FLASHEXPANDERDEV} | cut -d " " -f2`
 		if [ -z "$FSTYPE" ] ; then
 			exit 0
 		fi
 		# check if already mounted
 		if grep -q "^/dev/${MDEV} " /proc/mounts ; then
-			# Already mounted
-			exit 0
+			if [ ! "${FLASHEXPANDERDEV}" == "/dev/${MDEV}" ] || [[ "$MOUNTPOINT"  =~ .*"/media/"* ]]; then 
+				# Already mounted
+				exit 0
+			fi
 		fi
 		DEVBASE=`expr substr $MDEV 1 3`
 		# check for "please don't mount it" file
