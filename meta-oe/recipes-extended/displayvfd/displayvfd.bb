@@ -4,6 +4,9 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/meta/files/common-licenses/GPL-2.0-only;m
 
 DEPENDS = "libpng"
 
+RCONFLICTS:${PN} = "vuplus-displayvfd"
+RREPLACES:${PN}  = "vuplus-displayvfd"
+
 inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PKGV = "1.0+git${GITPKGV}"
