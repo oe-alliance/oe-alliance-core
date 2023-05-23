@@ -24,7 +24,7 @@ RDEPENDS:${PN} = " \
     openspa-enigma2 \
     ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", "openssh-sftp-server ", d)} \
     packagegroup-base-smbfs-client \
-    ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-imaging", "${PYTHON_PN}-pillow", d)} \
+    ${PYTHON_PN}-pillow \
     ${PYTHON_PN}-service-identity \
     ${PYTHON_PN}-requests \
     ${PYTHON_PN}-future \

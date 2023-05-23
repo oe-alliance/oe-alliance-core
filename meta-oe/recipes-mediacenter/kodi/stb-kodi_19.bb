@@ -238,13 +238,10 @@ RRECOMMENDS:${PN}:append = " libcec \
                              ${@bb.utils.contains('PACKAGECONFIG', 'x11', 'xdyinfo xrandr xinit mesa-demos', '', d)} \
                              ${PYTHON_PN} \
                              ${PYTHON_PN}-ctypes \
-                             ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-lang", "", d)} \
-                             ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-re", "", d)} \
                              ${PYTHON_PN}-netclient \
                              ${PYTHON_PN}-html \
                              ${PYTHON_PN}-difflib \
                              ${PYTHON_PN}-json \
-                             ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-zlib", "", d)} \
                              ${PYTHON_PN}-shell \
                              ${PYTHON_PN}-sqlite3 \
                              ${PYTHON_PN}-compression \

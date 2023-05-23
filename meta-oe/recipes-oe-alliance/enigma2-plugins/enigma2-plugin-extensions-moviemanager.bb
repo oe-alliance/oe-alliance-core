@@ -14,4 +14,4 @@ SRC_URI = "git://github.com/oe-mirrors/MovieManager.git;protocol=https;branch=ma
 
 S="${WORKDIR}/git"
 
-inherit ${@bb.utils.contains("PYTHON_PN", "python", "distutils-openplugins", "setuptools3-openplugins", d)}
+inherit setuptools3-openplugins

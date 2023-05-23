@@ -27,7 +27,7 @@ RDEPENDS:${PN} = "\
     ${PYTHON_PN}-plistlib \
     ${PYTHON_PN}-future \
     ${PYTHON_PN}-six \
-    ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-imaging", "${PYTHON_PN}-pillow", d)} \
+    ${PYTHON_PN}-pillow \
     ${PYTHON_PN}-netifaces \
     ${PYTHON_PN}-service-identity \
     unrar \

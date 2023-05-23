@@ -12,7 +12,7 @@ PKGV = "2.2.0+git${GITPKGV}"
 PR = "r1"
 
 DEPENDS = "enigma2 ${PYTHON_PN}"
-RDEPENDS:${PN} = "gstreamer1.0-plugins-bad-hls curl mjpegtools ${PYTHON_PN}-ctypes libshowiframe0 ${PYTHON_PN}-pyopenssl ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-imaging", "${PYTHON_PN}-pillow", d)} ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-textutils", "", d)}"
+RDEPENDS:${PN} = "gstreamer1.0-plugins-bad-hls curl mjpegtools ${PYTHON_PN}-ctypes libshowiframe0 ${PYTHON_PN}-pyopenssl ${PYTHON_PN}-pillow"
 
 SRC_URI = "git://github.com/oe-alliance/DreamPlex.git;protocol=https;branch=master"
 

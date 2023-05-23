@@ -5,7 +5,7 @@ LIC_FILES_CHKSUM = "file://LICENSE.TXT;md5=4fbd65380cdd255951079008b364516c"
 require conf/python/python3-compileall.inc
 
 DEPENDS += "curl libxml2 ${PYTHON_PN} swig-native zlib"
-RDEPENDS:${PN} += "enigma2 libcurl ${PYTHON_PN}-core ${PYTHON_PN}-compression ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-backports-lzma", "", d)} xz"
+RDEPENDS:${PN} += "enigma2 libcurl ${PYTHON_PN}-core ${PYTHON_PN}-compression xz"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 

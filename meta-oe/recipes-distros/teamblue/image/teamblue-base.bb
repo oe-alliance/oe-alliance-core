@@ -24,7 +24,7 @@ RDEPENDS:${PN} = "\
     ntfs-3g \
     ntfsprogs \
     hddtemp \
-    ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-imaging", "${PYTHON_PN}-pillow", d)} \
+    ${PYTHON_PN}-pillow \
     ${PYTHON_PN}-service-identity \
     ${PYTHON_PN}-requests \
     ${PYTHON_PN}-future \

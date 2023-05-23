@@ -63,6 +63,8 @@ RRECOMMENDS:${PN} = "\
     enigma2-plugin-extensions-oaweather \
     mediainfo \
     ncdu \
+    ${@bb.utils.contains("MACHINE_FEATURES", "nogui", "packagegroup-openatv-nogui", "", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "packagegroup-openatv-small", "", d)} \
     "
 
 # remove close cant update to py3

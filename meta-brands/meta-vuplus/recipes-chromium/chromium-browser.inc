@@ -15,7 +15,7 @@ SRC_URI = "http://code.vuplus.com/download/chromium/chromium-vuplus_${MACHINE}_$
 PREFERRED_VERSION_nss = "3.17.3"
 
 DEPENDS = "nss" 
-RDEPENDS:${PN} = "libcrypto-compat-1.0.0 nspr nss libxslt libcurl libudev ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-subprocess", "", d)}"
+RDEPENDS:${PN} = "libcrypto-compat-1.0.0 nspr nss libxslt libcurl libudev"
 
 S = "${WORKDIR}/chromium"
 

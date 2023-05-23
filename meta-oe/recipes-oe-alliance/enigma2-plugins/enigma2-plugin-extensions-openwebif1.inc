@@ -24,7 +24,7 @@ RDEPENDS:${PN} = "\
 	oe-alliance-branding \
 	"
 
-inherit gittag ${@bb.utils.contains("PYTHON_PN", "python", "distutils-openplugins", "setuptools3-openplugins", d)} gettext
+inherit gittag setuptools3-openplugins gettext
 
 DISTUTILS_INSTALL_ARGS = "--root=${D} --install-lib=${libdir}/enigma2/python/Plugins"
 

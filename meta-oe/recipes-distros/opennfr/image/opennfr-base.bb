@@ -28,8 +28,8 @@ RDEPENDS:${PN} = "\
     exteplayer3 \
     gstplayer \
     ffmpeg \
-    enigma2-plugin-systemplugins-serviceapp \ 	
-    ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-imaging", "${PYTHON_PN}-pillow", d)} \
+    enigma2-plugin-systemplugins-serviceapp \
+    ${PYTHON_PN}-pillow \
     ${PYTHON_PN}-requests \
     ${PYTHON_PN}-cfscrape \
     ${PYTHON_PN}-pexpect \

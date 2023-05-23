@@ -3,7 +3,7 @@ DESCRIPTION = "QuadPiP plugin for supported receivers"
 require conf/license/license-gplv2.inc
 require conf/python/python3-compileall.inc
 
-inherit gitpkgv ${@bb.utils.contains("PYTHON_PN", "python", "distutils-openplugins", "setuptools3-openplugins", d)}
+inherit gitpkgv setuptools3-openplugins
 
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"

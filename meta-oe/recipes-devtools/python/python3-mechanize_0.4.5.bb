@@ -4,7 +4,7 @@ SECTION = "devel/python"
 LICENSE = "BSD-3-Clause"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=621053d4e9daec9454e15e60fe40214f"
 
-RDEPENDS:${PN} = "${PYTHON_PN}-core ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-robotparser", "", d)}"
+RDEPENDS:${PN} = "${PYTHON_PN}-core"
 
 SRC_URI = "https://files.pythonhosted.org/packages/77/1b/7e4b644108e4e99b136e52c6aae34873fcd267e3d2489f3bd2cff8655a59/mechanize-${PV}.tar.gz"
 SRC_URI[md5sum] = "7c771ff38cced05a6153b56a155f5b76"

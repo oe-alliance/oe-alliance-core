@@ -25,7 +25,7 @@ RDEPENDS:${PN} = "\
     openvix-enigma2 \
     openvix-bootlogo \
     openvix-spinner \
-    ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-imaging", "${PYTHON_PN}-pillow", d)} \
+    ${PYTHON_PN}-pillow \
     ${@bb.utils.contains("TUNE_FEATURES", "armv", "glibc-compat", "", d)} \
     ${PYTHON_PN}-service-identity \
     ${PYTHON_PN}-requests \

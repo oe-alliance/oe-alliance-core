@@ -5,9 +5,6 @@ RDEPENDS:${PN} += "libusb1 ${PYTHON_PN}"
 
 SRC_URI:append = " file://pcscd.init"
 
-# if PYTHON_PN is python2
-SRC_URI:remove = "${@bb.utils.contains("PYTHON_PN", "python", "0001-pcsc-spy-use-python3-only.patch", "", d)}"
-RDEPENDS:${PN}-spy:remove = "${@bb.utils.contains("PYTHON_PN", "python", "python3", "", d)}"
 RDEPENDS:${PN}-spy += "${PYTHON_PN}"
 
 PACKAGECONFIG = ""

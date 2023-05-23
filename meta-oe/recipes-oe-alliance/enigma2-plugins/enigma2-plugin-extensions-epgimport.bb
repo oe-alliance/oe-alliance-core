@@ -15,7 +15,7 @@ SRC_URI = "git://github.com/oe-alliance/XMLTV-Import.git;protocol=https;branch=p
 
 S = "${WORKDIR}/git/src"
 
-inherit ${@bb.utils.contains("PYTHON_PN", "python", "distutils-openplugins", "setuptools3-openplugins", d)}
+inherit setuptools3-openplugins
 
 DEPENDS = "${PYTHON_PN}"
 RDEPENDS:${PN} = "${PYTHON_PN}-compression ${PYTHON_PN}-shell ${PYTHON_PN}-backports-lzma ${PYTHON_PN}-pkgutil"

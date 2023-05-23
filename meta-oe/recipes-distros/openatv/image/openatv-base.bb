@@ -13,33 +13,44 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 inherit packagegroup
 
 RDEPENDS:${PN} = "\
+    enigma-info \
+    openatv-version-info \
+    oe-alliance-picon-feed \
     autofs \
-    ca-certificates \
     chrony \
-    flip \
-    hddtemp \
-    wireless-tools \
     oe-alliance-base \
     openatv-bootlogo \
+    openssh-sftp-server \
+    ${@bb.utils.contains("MACHINE_FEATURES", "nogui", "", "${NORMAL_GUI}", d)} \
+    ${@bb.utils.contains("TUNE_FEATURES", "armv", "glibc-compat", "", d)} \
+    ${@bb.utils.contains("SMALLBOXWIZARD", "1", "${SMALLBOXWIZARD_IMAGE}", "${NORMAL_IMAGE}", d)} \
+"
+
+NORMAL_GUI = "\
     openatv-enigma2 \
     openatv-spinner \
-    openssh-sftp-server \
-    ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-imaging", "${PYTHON_PN}-pillow", d)} \
+    ${PYTHON_PN}-pillow \
     ${PYTHON_PN}-service-identity \
     ${PYTHON_PN}-requests \
     ${PYTHON_PN}-future \
     ${PYTHON_PN}-pexpect \
     ${PYTHON_PN}-six \
+"
+
+SMALLBOXWIZARD_IMAGE = "\
+    ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", "${NORMAL_IMAGE}", d)} \
+"
+
+NORMAL_IMAGE = "\
+    ntfs-3g \
+    unrar \
+    iproute2 \
+    tar \
+    ca-certificates \
+    flip \
+    hddtemp \
+    wireless-tools \
     rtmpdump \
     zip \
-    ${@bb.utils.contains("TUNE_FEATURES", "armv", "glibc-compat", "", d)} \
     ofgwrite \
-    ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", " \
-        iproute2 \
-        tar \
-    ", d)} \
-    ${@bb.utils.contains_any("FLASHSIZE", "64 96", "", " \
-        ntfs-3g \
-        unrar \
-    ", d)} \
-    "
+"
