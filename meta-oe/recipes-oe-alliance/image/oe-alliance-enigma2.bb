@@ -39,6 +39,7 @@ NORMAL_IMAGE_DEPEND = "\
 
 RRECOMMENDS:${PN} = "\
     enigma2-plugin-systemplugins-networkwizard \
+    enigma2-plugin-systemplugins-wirelesslan \
     ${@bb.utils.contains("SMALLBOXWIZARD", "1", "${SMALLBOXWIZARD_IMAGE_RECOMMENDS}", "${NORMAL_IMAGE_RECOMMENDS}", d)} \
     "
 
