@@ -9,8 +9,8 @@ RRECOMMENDS:${PN} = "kernel-module-tun enigma2-plugin-drivers-iptables"
 inherit gitpkgv
 
 SRCREV = "${AUTOREV}"
-PV = "1.37.0+git${SRCPV}"
-PKGV = "1.37.0+git${GITPKGV}"
+PV = "1.43.0+git${SRCPV}"
+PKGV = "1.43.0+git${GITPKGV}"
 
 SRC_URI = "git://github.com/tailscale/tailscale.git;protocol=https;branch=main \
         file://tailscaled.initd \
