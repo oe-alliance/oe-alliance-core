@@ -27,10 +27,5 @@ do_install () {
     cp -rf ${S}/etc/* ${D}${sysconfdir}/
 }
 
-pkg_postrm:${PN} () {
-#!/bin/sh
-        rm -rf /etc/enigma2/jediepgxtream > /dev/null 2>&1
-        echo "Restart GUI to finish uninstall!"
-}
 
 FILES:${PN} = "${libdir} ${sysconfdir}"
