@@ -27,8 +27,7 @@ do_install () {
 
 pkg_postrm:${PN} () {
 #!/bin/sh
-echo "Removing E2Piconizer Plugin from the system ..."
-rm -r /usr/lib/enigma2/python/Plugins/Extensions/E2Piconizer > /dev/null 2>&1
-rm -r /etc/enigma2/E2Piconizer > /dev/null 2>&1
+echo "Removing ${PN}"
+rm -rf ${FILES:${PN}} > /dev/null 2>&1
 exit 0
 }
