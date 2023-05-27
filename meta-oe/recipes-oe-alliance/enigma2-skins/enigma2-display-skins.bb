@@ -47,15 +47,4 @@ python populate_packages:prepend () {
     if bb.data.expand('${REL_MINOR}', d) != "4":
         enigma2_skindir = bb.data.expand('${datadir}/enigma2/display', d)
         do_split_packages(d, enigma2_skindir, '(.*?)/.*', 'enigma2-plugin-display-%s', 'Enigma2 Display Skin: %s', recursive=True, match_path=True, prepend=True)
-
-    currentlist = d.getVar('PACKAGES', True)
-    pkgnotwanted = open(d.getVar('S', True) + "/../skinsnotwanted").read()
-#     logger.warning("NOT WANTED %s ", pkgnotwanted)
-
-    newlist = currentlist.split(" ")
-    for line in pkgnotwanted.split("\n"):
-        if line in newlist:
-            newlist.remove(line)
-
-    d.setVar('PACKAGES', ' '.join(newlist))
 }
