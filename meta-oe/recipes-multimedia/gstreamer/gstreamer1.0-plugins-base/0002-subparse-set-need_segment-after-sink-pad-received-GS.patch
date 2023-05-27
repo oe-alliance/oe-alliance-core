@@ -22,10 +22,10 @@ Signed-off-by: Mingke Wang <mingke.wang@freescale.com>
 diff --git a/gst/subparse/gstsubparse.c b/gst/subparse/gstsubparse.c
 old mode 100644
 new mode 100755
-index cf29a56..98c43fc
+index 7aa922c..2a6595d
 --- a/gst/subparse/gstsubparse.c
 +++ b/gst/subparse/gstsubparse.c
-@@ -270,24 +270,20 @@ gst_sub_parse_src_event (GstPad * pad, GstObject * parent, GstEvent * event)
+@@ -275,24 +275,20 @@ gst_sub_parse_src_event (GstPad * pad, GstObject * parent, GstEvent * event)
          goto beach;
        }
  
@@ -58,7 +58,7 @@ index cf29a56..98c43fc
          GST_WARNING_OBJECT (self, "seek to 0 bytes failed");
        }
  
-@@ -1873,8 +1869,10 @@ gst_sub_parse_sink_event (GstPad * pad, GstObject * parent, GstEvent * event)
+@@ -1806,10 +1802,12 @@ gst_sub_parse_sink_event (GstPad * pad, GstObject * parent, GstEvent * event)
        gst_event_parse_segment (event, &s);
        if (s->format == GST_FORMAT_TIME)
          gst_event_copy_segment (event, &self->segment);
@@ -66,8 +66,10 @@ index cf29a56..98c43fc
 -          gst_format_get_name (self->segment.format));
 +      GST_DEBUG_OBJECT (self, "newsegment (%s) %" GST_SEGMENT_FORMAT,
 +          gst_format_get_name (self->segment.format), &self->segment);
-+
-+      self->need_segment = TRUE;
+       self->segment_seqnum = gst_event_get_seqnum (event);
  
++      self->need_segment = TRUE;
++
        /* if not time format, we'll either start with a 0 timestamp anyway or
         * it's following a seek in which case we'll have saved the requested
+        * seek segment and don't want to overwrite it (remember that on a seek
