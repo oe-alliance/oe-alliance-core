@@ -160,7 +160,7 @@ inherit autotools-brokensep gitpkgv gettext ${PYTHON_PN}targetconfig
 SRCREV = "${AUTOREV}"
 PV = "${IMAGE_VERSION}+gitr${SRCPV}"
 PKGV = "${IMAGE_VERSION}+gitr${GITPKGV}"
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "${OEA_PLUGINS_URI}"
 
