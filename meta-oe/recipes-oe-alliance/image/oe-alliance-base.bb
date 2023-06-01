@@ -48,6 +48,7 @@ RDEPENDS:${PN} = "\
     util-linux-blkid \
     util-linux-flock \
     volatile-media \
+    wireless-tools \
     wget \
     ${@bb.utils.contains("SMALLBOXWIZARD", "1", "${SMALLBOXWIZARD_IMAGE}", "${NORMAL_IMAGE}", d)} \
 "
@@ -58,7 +59,6 @@ SMALLBOXWIZARD_IMAGE = "\
 
 NORMAL_IMAGE = "\
     tzdata \
-    wireless-tools \
     e2fsprogs-e2fsck \
     e2fsprogs-tune2fs \
     minilocale \
@@ -71,7 +71,6 @@ NORMAL_IMAGE = "\
     llmnrd \
     sdparm \
     vsftpd \
-    wireless-tools \
     mtd-utils \
     mtd-utils-ubifs \
 "
