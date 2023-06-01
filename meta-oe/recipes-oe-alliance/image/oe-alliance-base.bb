@@ -33,6 +33,7 @@ RDEPENDS:${PN} = "\
     ${@bb.utils.contains("TARGET_ARCH", "arm", "${GETEXTRA}", "", d)} \
     ${@bb.utils.contains("TARGET_ARCH", "aarch64", "${GETEXTRA}", "", d)} \
     bash \
+    cronie \
     dropbear \
     early-configure \
     e2fsprogs-mke2fs \
@@ -67,7 +68,6 @@ NORMAL_IMAGE = "\
     libcrypto-compat-1.0.0 \
     libxcrypt-compat \
     avahi-daemon \
-    cronie \
     llmnrd \
     sdparm \
     vsftpd \
