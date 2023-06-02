@@ -24,10 +24,3 @@ do_install () {
     cp -rf ${S}/E2Piconizer/etc/enigma2/E2Piconizer/* ${D}${sysconfdir}/enigma2/E2Piconizer/
     cp -rf ${S}/E2Piconizer/usr/lib/enigma2/python/Plugins/Extensions/E2Piconizer/* ${D}${libdir}/enigma2/python/Plugins/Extensions/E2Piconizer/
 }
-
-pkg_postrm:${PN} () {
-#!/bin/sh
-    rm -r /usr/lib/enigma2/python/Plugins/Extensions/E2Piconizer > /dev/null 2>&1
-    rm -r /etc/enigma2/E2Piconizer/*/*.png > /dev/null 2>&1
-    exit 0
-}
