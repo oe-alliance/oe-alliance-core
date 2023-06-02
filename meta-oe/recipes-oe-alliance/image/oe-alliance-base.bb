@@ -33,6 +33,7 @@ RDEPENDS:${PN} = "\
     ${@bb.utils.contains("TARGET_ARCH", "arm", "${GETEXTRA}", "", d)} \
     ${@bb.utils.contains("TARGET_ARCH", "aarch64", "${GETEXTRA}", "", d)} \
     bash \
+    cronie \
     dropbear \
     early-configure \
     e2fsprogs-mke2fs \
@@ -48,6 +49,7 @@ RDEPENDS:${PN} = "\
     util-linux-blkid \
     util-linux-flock \
     volatile-media \
+    wireless-tools \
     wget \
     ${@bb.utils.contains("SMALLBOXWIZARD", "1", "${SMALLBOXWIZARD_IMAGE}", "${NORMAL_IMAGE}", d)} \
 "
@@ -58,7 +60,6 @@ SMALLBOXWIZARD_IMAGE = "\
 
 NORMAL_IMAGE = "\
     tzdata \
-    wireless-tools \
     e2fsprogs-e2fsck \
     e2fsprogs-tune2fs \
     minilocale \
@@ -67,11 +68,9 @@ NORMAL_IMAGE = "\
     libcrypto-compat-1.0.0 \
     libxcrypt-compat \
     avahi-daemon \
-    cronie \
     llmnrd \
     sdparm \
     vsftpd \
-    wireless-tools \
     mtd-utils \
     mtd-utils-ubifs \
 "
