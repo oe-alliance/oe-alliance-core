@@ -1,6 +1,6 @@
-SRCDATE = "20190917"
+SRCDATE = "20230530"
 
 require gigablue-libs.inc
 
-SRC_URI[md5sum] = "4ce4d7e560246d54ce4b8b71c7b5f782"
-SRC_URI[sha256sum] = "8d7f56dbf4b30f48ebe94985b6a6aafb7978936681f55af9b45944edb46001c7"
+SRC_URI[md5sum] = "36a39bee16d38a011b2dfe7cc75f1512"
+SRC_URI[sha256sum] = "97d30115d12c2b76a046befefd001f142d6f4b86da17ffbc1e6b53451a1e5ced"
