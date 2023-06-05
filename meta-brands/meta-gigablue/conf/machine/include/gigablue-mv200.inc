@@ -21,7 +21,7 @@ MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "\
 "
 
 MACHINE_FEATURES += "hisil switchoff 7segment hdmicec skins1080 emmc mmc blindscan-dvbs kodi20 alsa hbbtv-browser-webkit qtstalker hisi qtnetflix openhbbtv hisichromium mali HDMISTANDBY"
-MACHINE_FEATURES:append:teamblue += "textlcd"
+MACHINE_FEATURES:append:teamblue = " textlcd"
 
 IMAGE_CLASSES  += "gigablue-emmc_image"
 IMAGE_FSTYPES += "gigablueemmc"
