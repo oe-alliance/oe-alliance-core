@@ -7,7 +7,7 @@ ALLOW_EMPTY:${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "1.0"
-PR = "r0"
+PR = "r1"
 
 inherit packagegroup
 
@@ -15,7 +15,6 @@ RRECOMMENDS:${PN} = "\
     enigma2 \
     enigma-info \
     opkg-arch-config \
-    libdvdnav \
-    libdvdread \
+    enigma2-plugin-skins-metrix-atv \
     enigma2-skins \
     "
