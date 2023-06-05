@@ -37,6 +37,6 @@ FILES:${PN} = " \
     ${bindir} \
 "
 
-RDEPENDS:${PN} = "${@bb.utils.contains_any("MACHINE", "osmini4k osmio4k osmio4kplus pulse4k pulse4kmini h8 h9 h9combo h9combose h9se h10 h55plus i55se hd61 hd60 hd66se multibox multiboxse multiboxpro", "kernel-module-wireguard", "wireguard-module", d)} bash"
+RDEPENDS:${PN} = "${@bb.utils.contains_any("MACHINE", "osmini4k osmio4k osmio4kplus pulse4k pulse4kmini h8 h9 h9combo h9combose h9se h10 h11 h55plus i55se hd61 hd60 hd66se multibox multiboxse multiboxpro", "kernel-module-wireguard", "wireguard-module", d)} bash"
 
 INSANE_SKIP:${PN} = "build-deps"
