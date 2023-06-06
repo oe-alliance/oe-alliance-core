@@ -281,15 +281,15 @@ KERNEL_CONSOLE = "ttyS0,115200n8"
 
 MACHINE_FEATURES += "3dtv alsa hdmicec switchoff bootsplash skins1080 blindscan-tbs HDMI \
 ${@bb.utils.contains('MACHINEBUILD', 'gb800se', 'SCART YUV RCA' , '', d)} \
-${@bb.utils.contains('MACHINEBUILD', 'gb800seplus', 'YUV RCA' , '', d)} \
+${@bb.utils.contains('MACHINEBUILD', 'gb800seplus', 'YUV RCA NO_SCART_SWITCH' , '', d)} \
 ${@bb.utils.contains('MACHINEBUILD', 'gb800solo', 'SCART YUV RCA' , '', d)} \
 ${@bb.utils.contains('MACHINEBUILD', 'gb800ue', 'SCART YUV RCA' , '', d)} \
-${@bb.utils.contains('MACHINEBUILD', 'gb800ueplus', 'YUV RCA' , '', d)} \
-${@bb.utils.contains('MACHINEBUILD', 'gbquad', 'YUV RCA' , '', d)} \
-${@bb.utils.contains('MACHINEBUILD', 'gbquadplus', 'YUV RCA' , '', d)} \
-${@bb.utils.contains('MACHINEBUILD', 'gbultrase', 'YUV RCA' , '', d)} \
-${@bb.utils.contains('MACHINEBUILD', 'gbultraue', 'YUV RCA' , '', d)} \
-${@bb.utils.contains('MACHINEBUILD', 'gbultraueh', 'YUV RCA' , '', d)} \
+${@bb.utils.contains('MACHINEBUILD', 'gb800ueplus', 'YUV RCA NO_SCART_SWITCH' , '', d)} \
+${@bb.utils.contains('MACHINEBUILD', 'gbquad', 'YUV RCA NO_SCART_SWITCH' , '', d)} \
+${@bb.utils.contains('MACHINEBUILD', 'gbquadplus', 'YUV RCA NO_SCART_SWITCH' , '', d)} \
+${@bb.utils.contains('MACHINEBUILD', 'gbultrase', 'YUV RCA NO_SCART_SWITCH' , '', d)} \
+${@bb.utils.contains('MACHINEBUILD', 'gbultraue', 'YUV RCA NO_SCART_SWITCH' , '', d)} \
+${@bb.utils.contains('MACHINEBUILD', 'gbultraueh', 'YUV RCA NO_SCART_SWITCH' , '', d)} \
 ${@bb.utils.contains('MACHINEBUILD', 'gbquad4k', 'HDMI-IN-FHD' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbtrio4k', 'AV_JACK' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbip4k', 'AV_JACK' , '', d)}\
