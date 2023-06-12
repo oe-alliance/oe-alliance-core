@@ -169,7 +169,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'iziboxone4k', 'mtd11' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iziboxone4kplus', 'mtd11' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iziboxelite4k', 'mmcblk0p10' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iziboxx3', 'mtd11' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'iziboxx3', 'mmcblk0p10' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'iziboxx4', 'mmcblk0p10' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axashistwin', 'mtd9' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axashistwinplus', 'mtd9' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axashisc4k', 'mmcblk0p10' , '', d)}\
