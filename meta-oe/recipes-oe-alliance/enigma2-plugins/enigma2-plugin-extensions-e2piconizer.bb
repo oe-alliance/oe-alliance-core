@@ -5,12 +5,11 @@ PRIORITY = "optional"
 require conf/license/license-gplv2.inc
 require conf/python/python3-compileall.inc
 
-SRCREV="${AUTOREV}"
+inherit gittag
 
-PV = "1.01+git${SRCPV}"
-PKGV = "1.01+git${GITPKGV}"
-PR = "r2"
-inherit gitpkgv allarch
+SRCREV = "${AUTOREV}"
+PV = "git${SRCPV}"
+PKGV = "${GITPKGVTAG}"
 
 SRC_URI = "git://github.com/kiddac/E2_Piconizer.git;protocol=https;branch=master"
 
