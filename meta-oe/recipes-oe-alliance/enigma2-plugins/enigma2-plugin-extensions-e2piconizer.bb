@@ -11,6 +11,8 @@ SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "${GITPKGVTAG}"
 
+inherit allarch
+
 SRC_URI = "git://github.com/kiddac/E2_Piconizer.git;protocol=https;branch=master"
 
 S = "${WORKDIR}/git"

@@ -13,6 +13,8 @@ SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "${GITPKGVTAG}"
 
+inherit allarch
+
 SRC_URI = "git://github.com/kiddac/XStreamity.git;branch=master;protocol=https"
 
 S = "${WORKDIR}/git"
