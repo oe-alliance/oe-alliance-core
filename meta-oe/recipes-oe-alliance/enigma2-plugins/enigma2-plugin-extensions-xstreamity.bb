@@ -7,13 +7,11 @@ require conf/python/python3-compileall.inc
 
 RDEPENDS:${PN} = "${PYTHON_PN}-pillow ${PYTHON_PN}-multiprocessing ${PYTHON_PN}-requests"
 
-inherit gittag
+inherit gittag allarch
 
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "${GITPKGVTAG}"
-
-inherit allarch
 
 SRC_URI = "git://github.com/kiddac/XStreamity.git;branch=master;protocol=https"
 
