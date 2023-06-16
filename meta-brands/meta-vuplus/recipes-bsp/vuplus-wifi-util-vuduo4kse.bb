@@ -3,7 +3,7 @@ require vuplus-wifi-util.inc
 COMPATIBLE_MACHINE = "^(vuduo4kse)$"
 
 PV="17.1"
-SRCDATE = "20210428"
+SRCDATE = "20230613"
 SRCDATE_PR = "r0"
 
 PR="${SRCDATE}.${SRCDATE_PR}.1"
@@ -25,5 +25,5 @@ do_install:append() {
 	install -m 0755 ${S}/${INITSCRIPT_NAME} ${D}${INIT_D_DIR}/${INITSCRIPT_NAME}
 }
 
-SRC_URI[md5sum] = "1258a3792ed175ca36236ba8f230bba9"
-SRC_URI[sha256sum] = "fc5c1ba0ca9bad56c164b3065773f9820693cebc83c02293ae0e6a47e7402fd0"
+SRC_URI[md5sum] = "fc0f909ad46dfb7f4d2ee73607c3dbbd"
+SRC_URI[sha256sum] = "240bfad0e6504d175a4f1266c077da12e9904ab310d92203ac2ff027f4eaeba0"
