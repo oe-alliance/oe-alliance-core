@@ -1,6 +1,6 @@
 FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 
-PR = "r1"
+PR = "r2"
 
 SRC_URI += "file://0002-fix-mpegts.patch \
             file://0003-allow-to-choose-rtmp-impl-at-runtime.patch \
@@ -52,6 +52,7 @@ EXTRA_FFCONF = " \
     --disable-x86asm \
     --disable-fast-unaligned \
     --enable-protocol=http \
+    --enable-demuxer=dash \
     \
     --disable-muxers \
     --enable-muxer=adts \
