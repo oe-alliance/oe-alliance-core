@@ -9,7 +9,7 @@ require conf/license/license-gplv2.inc
 RDEPENDS:${PN} += "showiframe"
 
 PV = "7.3"
-PR = "r18"
+PR = "r19"
 
 S = "${WORKDIR}"
 
@@ -24,7 +24,9 @@ INITSCRIPT_PARAMS:vuuno4kse = "start 70 S ."
 INITSCRIPT_PARAMS:vuultimo4k = "start 70 S ."
 INITSCRIPT_PARAMS:vuzero4k = "start 70 S ."
 INITSCRIPT_PARAMS:vuduo4k = "start 70 S ."
+INITSCRIPT_PARAMS:vuduo4kse = "start 70 S ."
 INITSCRIPT_PARAMS:gb7252 = "start 70 S ."
+INITSCRIPT_PARAMS:gb72604 = "start 70 S ."
 PRECOMPILED_ARCH = "${MACHINE}"
 PRECOMPILED_ARCH:dm7020hdv2 = "dm7020hd"
 
@@ -48,6 +50,11 @@ SRC_URI:append:i55plus = " file://logo.img"
 SRC_URI:append:hd60 = " file://logo.img"
 SRC_URI:append:hd61 = " file://logo.img"
 SRC_URI:append:sf8008 = " file://logo.img"
+SRC_URI:append:sf8008m = " file://logo.img"
+SRC_URI:append:sf8008opt = " file://logo.img"
+SRC_URI:append:ustym4kpro = " file://logo.img"
+SRC_URI:append:ustym4kottpremium = " file://logo.img"
+SRC_URI:append:ustym4ks2ottx = " file://logo.img"
 SRC_URI:append:gbmv200 = " file://logo.img"
 
 BINARY_VERSION = "1.3"
