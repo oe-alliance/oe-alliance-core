@@ -11,7 +11,7 @@ SRCREV = "${AUTOREV}"
 SRC_URI = "git://github.com/atvcaptain/RTL8822C.git;protocol=https;branch=main \
 "
 
-EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR} KDIR=${STAGING_KERNEL_DIR} EXTRA_CFLAGS +=${@bb.utils.contains_any("SOC_FAMILY", "hisi3716mv430 hisi3798mv200 hisi3798mv300 hisi3716mv410 hisi3798mv310", " -DCONFIG_PLATFORM_HISILICON", "", d)}"
+EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR} KDIR=${STAGING_KERNEL_DIR} ${@bb.utils.contains_any("SOC_FAMILY", "hisi3716mv430 hisi3798mv200 hisi3798mv300 hisi3716mv410 hisi3798mv310", "EXTRA_CFLAGS += -DCONFIG_PLATFORM_HISILICON", "", d)}"
 
 # need only for dreambox linux-meson64 4.9
 export KCFLAGS += " -Wno-error=misleading-indentation \
