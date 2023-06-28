@@ -59,7 +59,7 @@ RDEPENDS:${PN} = " \
     enigma2-plugin-extensions-xmodem  \
     enigma2-plugin-extensions-e2iplayer \
     enigma2-plugin-extensions-e2iplayer-deps \
-	enigma2-plugin-extensions-tmdb \
+    enigma2-plugin-extensions-tmdb \
     ${@bb.utils.contains("MACHINE_FEATURES", "legacykernel", "" , "gdb v4l-utils evtest strace", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "omb", "enigma2-plugin-extensions-openmultiboot openmultiboot", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "webkithbbtv", "enigma2-plugin-extensions-webkithbbtv", "", d)} \
@@ -208,4 +208,3 @@ STATIC_FEED_DEPENDS = "\
 "
 
 RRECOMMENDS:${PN} = "${@bb.utils.contains("MACHINE_FEATURES", "operahbbtv", "enigma2-plugin-extensions-hbbtv" , "", d)}"
- 
