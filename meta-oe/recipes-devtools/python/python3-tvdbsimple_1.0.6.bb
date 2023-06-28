@@ -9,9 +9,11 @@ inherit gitpkgv
 
 SRCREV = "${AUTOREV}"
 PV = "1.0.6+git${SRCPV}"
-PKGV = "1.0.6.3+git${GITPKGV}"
+PKGV = "1.0.6+git${GITPKGV}"
 
-SRC_URI = "git://github.com/phate89/tvdbsimple.git;protocol=https;branch=master"
+SRC_URI = "git://github.com/phate89/tvdbsimple.git;protocol=https;branch=master \
+    file://0001-remove-version-check.patch \
+"
 
 S = "${WORKDIR}/git"
 
