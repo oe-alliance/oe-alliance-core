@@ -13,12 +13,10 @@ inherit kernel machine_kernel_pr
 
 MACHINE_KERNEL_PR:append = "34"
 
-SRCREV_FORMAT = "kernel_wireguard"
+SRC_URI[md5sum] = "f9e67e2d0ceab518510413f8f4315bc3"
+SRC_URI[sha256sum] = "45ae717b966a74326fd7297d81b3a17fd5b3962b7704170682a615ca7cdec644"
 
-SRC_URI[kernel.md5sum] = "f9e67e2d0ceab518510413f8f4315bc3"
-SRC_URI[kernel.sha256sum] = "45ae717b966a74326fd7297d81b3a17fd5b3962b7704170682a615ca7cdec644"
-
-SRC_URI = "https://source.mynonpublic.com/zgemma/linux-${PV}-${SRCDATE}-${ARCH}.tar.gz;name=kernel \
+SRC_URI = "https://source.mynonpublic.com/zgemma/linux-${PV}-${SRCDATE}-${ARCH}.tar.gz \
     file://defconfig \
     file://0002-log2-give-up-on-gcc-constant-optimizations.patch \
     file://0003-dont-mark-register-as-const.patch \
@@ -39,13 +37,6 @@ SRC_URI = "https://source.mynonpublic.com/zgemma/linux-${PV}-${SRCDATE}-${ARCH}.
     file://0007-dvb-mn88472-staging.patch \
     file://mn88472_reset_stream_ID_reg_if_no_PLP_given.patch \
     file://fix-multiple-defs-yyloc.patch \
-"
-
-# wireguard v1.0.20220627
-SRCREV_wireguard = "18fbcd68a35a892527345dc5679d0b2d860ee004"
-SRC_URI:append = "\
-    git://git.zx2c4.com/wireguard-linux-compat;protocol=https;branch=master;name=wireguard;subpath=src;destsuffix=${S}/net/wireguard \
-    file://wg-kconfig.patch \
 "
 
 SRC_URI:append:h9 = " \
