@@ -20,7 +20,9 @@ RDEPENDS:${PN} = "\
     enigma2 \
     tuxbox-links \
     tuxbox-common \
-    ${@bb.utils.contains('MACHINE_FEATURES', 'emmc', 'bzip2 pbzip2 rsync', '', d)} \
+    bzip2 \
+    pbzip2 \
+    rsync \
     ${PYTHON_PN}-compat2 \
     ${PYTHON_PN}-twisted-protocols \
     ${PYTHON_PN}-numbers \
