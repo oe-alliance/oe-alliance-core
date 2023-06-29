@@ -53,6 +53,7 @@ EXTRA_OECONF = "--disable-mysql \
                 ac_cv_header_sys_inotify_h=yes"
 
 CFLAGS += "-fgnu89-inline"
+TARGET_CC_ARCH:remove = "-D_TIME_BITS=64"
 
 do_install() {
     oe_runmake 'DESTDIR=${D}' install
