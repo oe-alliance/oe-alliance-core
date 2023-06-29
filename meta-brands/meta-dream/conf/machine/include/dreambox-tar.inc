@@ -1,7 +1,7 @@
 IMAGE_FSTYPES =+ "tar.bz2"
 IMAGEDIR = "${MACHINE}"
 
-MTD_KERNEL = "sda3"
+MTD_KERNEL = "mtd3"
 MTD_ROOTFS = "sda3"
 KERNEL_FILE = "N/A"
 ROOTFS_FILE = "rootfs.tar.bz2"
