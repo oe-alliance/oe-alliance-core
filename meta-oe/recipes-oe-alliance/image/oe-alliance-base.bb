@@ -42,7 +42,7 @@ RDEPENDS:${PN} = "\
     parted \
     procps \
     rc-local \
-    ${@bb.utils.contains("MACHINE_FEATURES", "dreamboxv1", "", "p7zip", d)} \
+    p7zip \
     packagegroup-base \
     packagegroup-core-boot \
     util-linux-sfdisk \
