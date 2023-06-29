@@ -12,15 +12,17 @@ inherit kernel machine_kernel_pr
 
 MACHINE_KERNEL_PR:append = "32"
 
-SRC_URI[md5sum] = "bd22f82d08a5feb4f1360d5739919ee0"
-SRC_URI[sha256sum] = "df83207ddfe34ac41a55e5e42eaae9c3ac3c4ef0750c786886719a33bf08b617"
+SRCREV_FORMAT = "kernel_wireguard"
+
+SRC_URI[kernel.md5sum] = "bd22f82d08a5feb4f1360d5739919ee0"
+SRC_URI[kernel.sha256sum] = "df83207ddfe34ac41a55e5e42eaae9c3ac3c4ef0750c786886719a33bf08b617"
 
 SRC_URI[new.md5sum] = "f0dd43d5adc013d0dd89061e3249855a"
 SRC_URI[new.sha256sum] = "32a8caabfba94d81b649de8dd62cc5b02e1d750cad8d2676e98e242a944273a3"
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-SRC_URI:u5pvr += "https://source.mynonpublic.com/dinobot/dinobot-linux-${PV}-${SRCDATE}.tar.gz \
+SRC_URI:u5pvr += "https://source.mynonpublic.com/dinobot/dinobot-linux-${PV}-${SRCDATE}.tar.gz;name=kernel \
     file://initramfs-subdirboot.cpio.gz;unpack=0 \
     file://defconfig \
     file://sdio-platform.patch \
@@ -34,6 +36,7 @@ SRC_URI:u5pvr += "https://source.mynonpublic.com/dinobot/dinobot-linux-${PV}-${S
     file://0005-kallsyms-allow-bigger-ksym_name_len.patch \
     file://move-default-dialect-to-SMB3.patch \
     file://fix-multiple-defs-yyloc.patch \
+    file://Backport_minimal_compiler_attributes_h_to_support_GCC_9.patch \
 "
 
 SRC_URI = "https://source.mynonpublic.com/dinobot/dinobot-linux-${PV}-${SRCDATE}.tar.gz;name=new \
@@ -48,6 +51,14 @@ SRC_URI = "https://source.mynonpublic.com/dinobot/dinobot-linux-${PV}-${SRCDATE}
     file://0005-kallsyms-allow-bigger-ksym_name_len.patch \
     file://cmav2.patch \
     file://fix-multiple-defs-yyloc.patch \
+    file://Backport_minimal_compiler_attributes_h_to_support_GCC_9.patch \
+"
+
+# wireguard v1.0.20220627
+SRCREV_wireguard = "18fbcd68a35a892527345dc5679d0b2d860ee004"
+SRC_URI:append = "\
+    git://git.zx2c4.com/wireguard-linux-compat;protocol=https;branch=master;name=wireguard;subpath=src;destsuffix=${S}/net/wireguard \
+    file://wg-kconfig.patch \
 "
 
 S = "${WORKDIR}/linux-${PV}"

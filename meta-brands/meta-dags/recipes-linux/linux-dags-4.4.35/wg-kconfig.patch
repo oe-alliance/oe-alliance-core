@@ -1,0 +1,24 @@
+diff --git a/net/Kconfig b/net/Kconfig
+index fd4c7ec9..24d51a7a 100644
+--- a/net/Kconfig
++++ b/net/Kconfig
+@@ -80,6 +80,7 @@ config INET
+ 	  Short answer: say Y.
+ 
+ if INET
++source "net/wireguard/Kconfig"
+ source "net/ipv4/Kconfig"
+ source "net/ipv6/Kconfig"
+ source "net/netlabel/Kconfig"
+diff --git a/net/Makefile b/net/Makefile
+index a5d04098..c08889e3 100644
+--- a/net/Makefile
++++ b/net/Makefile
+@@ -14,6 +14,7 @@ obj-$(CONFIG_NET)		+= $(tmp-y)
+ obj-$(CONFIG_LLC)		+= llc/
+ obj-$(CONFIG_NET)		+= ethernet/ 802/ sched/ netlink/
+ obj-$(CONFIG_NETFILTER)		+= netfilter/
++obj-$(CONFIG_WIREGUARD) += wireguard/
+ obj-$(CONFIG_INET)		+= ipv4/
+ obj-$(CONFIG_XFRM)		+= xfrm/
+ obj-$(CONFIG_UNIX)		+= unix/

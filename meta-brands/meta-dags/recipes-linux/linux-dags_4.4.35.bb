@@ -10,12 +10,14 @@ inherit kernel machine_kernel_pr
 
 MACHINE_KERNEL_PR:append = "2"
 
-SRC_URI[md5sum] = "4c8f204781ac5a4a83918d5527fbcab0"
-SRC_URI[sha256sum] = "ce63b433241890fc64df4a21c8fa0dea9d10c4f7100e47485cf687727c1f708d"
+SRCREV_FORMAT = "kernel_wireguard"
+
+SRC_URI[kernel.md5sum] = "4c8f204781ac5a4a83918d5527fbcab0"
+SRC_URI[kernel.sha256sum] = "ce63b433241890fc64df4a21c8fa0dea9d10c4f7100e47485cf687727c1f708d"
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-SRC_URI += "http://en3homeftp.net/pub/down/linux-4.4.35.tar.xz \
+SRC_URI += "http://en3homeftp.net/pub/down/linux-4.4.35.tar.xz;name=kernel \
 	file://defconfig \
 	file://findkerneldevice.sh \
 	file://0002-log2-give-up-on-gcc-constant-optimizations.patch \
@@ -26,7 +28,15 @@ SRC_URI += "http://en3homeftp.net/pub/down/linux-4.4.35.tar.xz \
 	file://move-default-dialect-to-SMB3.patch \
 	file://0004_swifthooking.patch \
 	file://fix-multiple-defs-yyloc.patch \
+	file://Backport_minimal_compiler_attributes_h_to_support_GCC_9.patch \
 	"
+
+# wireguard v1.0.20220627
+SRCREV_wireguard = "18fbcd68a35a892527345dc5679d0b2d860ee004"
+SRC_URI:append = "\
+    git://git.zx2c4.com/wireguard-linux-compat;protocol=https;branch=master;name=wireguard;subpath=src;destsuffix=${S}/net/wireguard \
+    file://wg-kconfig.patch \
+"
 
 S = "${WORKDIR}/linux-${PV}"
 B = "${WORKDIR}/build"

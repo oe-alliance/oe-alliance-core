@@ -433,8 +433,8 @@ ${@bb.utils.contains('MACHINEBUILD', 'mediaart200hd', 'YUV RCA' , '', d)} \
 ${@bb.utils.contains('MACHINEBUILD', 'optimussos1plus', 'RCA' , '', d)} \
 ${@bb.utils.contains('MACHINEBUILD', 'optimussos2plus', 'YUV RCA' , '', d)} \
 ${@bb.utils.contains('MACHINEBUILD', 'optimussos3plus', 'RCA' , '', d)} \
-${@bb.utils.contains('MACHINEBUILD', 'optimussos1', 'RCA' , '', d)} \
-${@bb.utils.contains('MACHINEBUILD', 'optimussos2', 'YUV RCA' , '', d)} \
+${@bb.utils.contains('MACHINEBUILD', 'optimussos1', 'RCA NO_SCART_SWITCH' , '', d)} \
+${@bb.utils.contains('MACHINEBUILD', 'optimussos2', 'YUV RCA NO_SCART_SWITCH' , '', d)} \
 ${@bb.utils.contains('MACHINEBUILD', 'optimussos', 'AV_JACK' , '', d)} \
 ${@bb.utils.contains('MACHINEBUILD', 'mediabox', 'YUV RCA' , '', d)} \
 ${@bb.utils.contains('MACHINEBUILD', 'lunixco', 'fastscan dvb-c' , '', d)} \

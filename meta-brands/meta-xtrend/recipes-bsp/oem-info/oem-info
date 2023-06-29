@@ -27,7 +27,7 @@ elif [ $BOXTYPE == "et6000" ]; then
   sed -i -e 's:displaymodel=ET6X00:displaymodel=ET6000:' $INFO
 elif [ $BOXTYPE == "et6500" ]; then
   sed -i -e 's:displaymodel=ET6X00:displaymodel=ET6500:' $INFO
-  sed -i -e 's:rcname=et9x00:model=rcname=et6x00:' $INFO
+  sed -i -e 's:rcname=et9x00:rcname=et6x00:' $INFO
   sed -i -e 's:rctype=7:model=rctype=11:' $INFO
 elif [ $BOXTYPE == "et7000" ]; then
   if [ $CHIP == "bcm73625" ]; then
@@ -45,7 +45,7 @@ elif [ $BOXTYPE == "et9200" ]; then
   sed -i -e 's:displaymodel=ET9X00:displaymodel=ET9200:' $INFO
 elif [ $BOXTYPE == "et9500" ]; then
   sed -i -e 's:displaymodel=ET9X00:displaymodel=ET9500:' $INFO
-  sed -i -e 's:rcname=et9x00:model=rcname=et9500:' $INFO
+  sed -i -e 's:rcname=et9x00:rcname=et9500:' $INFO
 fi
 
 sed -i '/checksum=/d' $INFO

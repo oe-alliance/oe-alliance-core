@@ -9,7 +9,7 @@ ALLOW_EMPTY:${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r16"
+PR = "r17"
 
 DEPENDS = "enigma2-plugin-drivers-usbserial enigma2-plugin-systemplugins-radiotimesemulator enigma2-plugin-systemplugins-hrtunerproxy"
 
@@ -154,6 +154,7 @@ RDEPENDS:${PN} = " \
     ${PYTHON_PN}-requests-cache \
     ${PYTHON_PN}-service-identity \
     ${PYTHON_PN}-tmdbsimple \
+	${PYTHON_PN}-tvdbsimple \
     ${PYTHON_PN}-tmdbv3api \
     ${PYTHON_PN}-ujson \
     ${PYTHON_PN}-url-normalize \

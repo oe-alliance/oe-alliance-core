@@ -27,11 +27,4 @@ do_install () {
     cp -rf ${S}/etc/* ${D}${sysconfdir}/
 }
 
-pkg_postrm:${PN} () {
-#!/bin/sh
-    rm -rf /etc/enigma2/jediepgxtream/*.txt > /dev/null 2>&1
-    rm -rf /etc/enigma2/jediepgxtream/*/*.txt > /dev/null 2>&1
-    exit 0
-}
-
 FILES:${PN} = "${libdir} ${sysconfdir}"

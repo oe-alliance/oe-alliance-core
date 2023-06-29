@@ -1,0 +1,44 @@
+From abd0838c19d6e12360729bc7f1be14f67bb0c20d Mon Sep 17 00:00:00 2001
+From: Captain <captain.onboard@web.de>
+Date: Wed, 28 Jun 2023 10:46:14 +0200
+Subject: [PATCH] remove version check
+
+---
+ tvdbsimple/search.py | 7 -------
+ 1 file changed, 7 deletions(-)
+
+diff --git a/tvdbsimple/search.py b/tvdbsimple/search.py
+index d074621..87b9803 100644
+--- a/tvdbsimple/search.py
++++ b/tvdbsimple/search.py
+@@ -7,7 +7,6 @@ Allows to search for tv series in the db.
+ See [Search API section](https://api.thetvdb.com/swagger#!/Search)
+ """
+ 
+-import deprecation
+ from . import __version__
+ from .base import TVDB
+ 
+@@ -48,9 +47,6 @@ class Search(TVDB):
+         self._set_attrs_to_values({'series': res})
+         return res
+ 
+-    # pylint: disable=undefined-variable
+-    @deprecation.deprecated(deprecated_in="1.0.7", removed_in="1.1.0", current_version=__version__,
+-                            details="Use the tvseries function instead")
+     def series(self, name='', imdbId='', zap2itId='', language=''):
+         """
+         Search series with the information provided. Deprecated since 1.0.7
+@@ -85,9 +81,6 @@ class Search(TVDB):
+         self._set_attrs_to_values({'series_params': res})
+         return res
+ 
+-    # pylint: disable=undefined-variable
+-    @deprecation.deprecated(deprecated_in="1.0.7", removed_in="1.1.0", current_version=__version__,
+-                            details="Use the tvseries_params function instead")
+     def series_params(self):
+         """
+         Return the available search params. Deprecated since 1.0.7
+-- 
+2.41.0.windows.1
+

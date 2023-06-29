@@ -28,6 +28,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'iziboxone4k', 'ONE 4K' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iziboxone4kplus', 'ONE 4K PLus' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iziboxelite4k', 'Elite 4K' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iziboxx3', 'X3' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'iziboxx4', 'X4 4K OTT' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axashistwin', 'HIS Twin' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axashistwinplus', 'HIS Twin +' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axashisc4k', 'HIS C 4K' , '', d)}\
@@ -74,6 +75,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'iziboxone4k', 'IZIBOX' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iziboxone4kplus', 'IZIBOX' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iziboxelite4k', 'IZIBOX' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iziboxx3', 'IZIBOX' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'iziboxx4', 'IZIBOX' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axashistwin', 'AXAS' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axashistwinplus', 'AXAS' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axashisc4k', 'AXAS' , '', d)}\
@@ -120,6 +122,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'iziboxone4k', 'mtd10' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iziboxone4kplus', 'mtd10' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iziboxelite4k', 'mmcblk0p9' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iziboxx3', 'mtd10' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'iziboxx4', 'mmcblk0p9' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axashistwin', 'mtd8' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axashistwinplus', 'mtd8' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axashisc4k', 'mmcblk0p9' , '', d)}\
@@ -166,6 +169,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'iziboxone4k', 'mtd11' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iziboxone4kplus', 'mtd11' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iziboxelite4k', 'mmcblk0p10' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iziboxx3', 'mtd11' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'iziboxx4', 'mmcblk0p10' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axashistwin', 'mtd9' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axashistwinplus', 'mtd9' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axashisc4k', 'mmcblk0p10' , '', d)}\
@@ -212,6 +216,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'iziboxone4k', 'no' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iziboxone4kplus', 'no' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iziboxelite4k', 'no' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iziboxx3', 'no' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'iziboxx4', 'no' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axashistwin', 'no' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axashistwinplus', 'no' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axashisc4k', 'no' , '', d)}\
@@ -258,6 +263,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'iziboxone4k', 'dinobot/${MACHINE}' , '', d
 ${@bb.utils.contains('MACHINEBUILD', 'iziboxone4kplus', 'e2/update' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iziboxelite4k', 'izibox/${MACHINE}' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iziboxx3', 'izibox/x3' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'iziboxx4', 'izibox/u57' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axashistwin', 'axas/axashistwin' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axashistwinplus', 'axas/axashistwinplus' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axashisc4k', 'axas/axasc4k' , '', d)}\
@@ -304,6 +310,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'iziboxone4k', 'izibox1' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iziboxone4kplus', 'izibox2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iziboxelite4k', 'izibox2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'iziboxx3', 'izibox1' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'iziboxx4', 'izibox1' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axashistwin', 'axas3' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axashistwinplus', 'axas4' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axashisc4k', 'axas2' , '', d)}\
@@ -362,7 +369,7 @@ PREFERRED_PROVIDER_virtual/blindscan-dvbs = "dinobot-blindscan-${MACHINE}"
 MACHINE_EXTRA_RRECOMMENDS += " \
     gstreamer1.0-plugin-dvbmediasink \
     gstreamer1.0-libav \
-    ${@bb.utils.contains('MACHINEBUILD', 'iziboxx3', 'enigma2-plugin-extensions-gbipboxclient' , '', d)} \
+    ${@bb.utils.contains_any('MACHINEBUILD', 'iziboxx3 iziboxx4', 'enigma2-plugin-extensions-gbipboxclient' , '', d)} \
     ${@bb.utils.contains('MACHINE', 'u41', 'dinobot-cpu-scaling' , '', d)} \
     ${@bb.utils.contains('MACHINE', 'u42', 'dinobot-cpu-scaling' , '', d)} \
     ${@bb.utils.contains('MACHINE', 'u43', 'dinobot-cpu-scaling' , '', d)} \

@@ -18,6 +18,13 @@ IMAGE_CMD:jffs2nfi = " \
 		--data-partition ${DREAMBOX_PART1_SIZE}:${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.boot.jffs2 \
 		--data-partition ${DREAMBOX_PART2_SIZE}:${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.jffs2 \
 		> ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.nfi; \
+	cd ${DEPLOY_DIR_IMAGE}; \
+	rm -Rf ${IMAGE_NAME}_web.zip; \
+	echo ${DISTRO_NAME}-${DISTRO_VERSION}.${BUILD_VERSION} > ${DEPLOY_DIR_IMAGE}/imageversion; \
+	echo "Image for WebBrower Update" >> ${DEPLOY_DIR_IMAGE}/imageversion; \
+	zip ${IMAGE_NAME}_web.zip ${IMAGE_NAME}.nfi imageversion; \
+	rm -Rf ${IMAGE_NAME}.nfi; \
+	rm -Rf ${IMAGE_NAME}.boot.jffs2; \
 "
 
 IMAGE_CMD:ubinfi = " \

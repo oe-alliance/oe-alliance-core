@@ -27,13 +27,3 @@ do_install () {
     cp -rf ${S}/JediMakerXtream//etc/enigma2/jediplaylists/* ${D}/${sysconfdir}/enigma2/jediplaylists/
     cp -rf ${S}/JediMakerXtream/usr/lib/enigma2/python/Plugins/Extensions/JediMakerXtream/* ${D}/${libdir}/enigma2/python/Plugins/Extensions/JediMakerXtream/
 }
-
-pkg_postrm:${PN} () {
-#!/bin/sh
-   rm -rf /etc/enigma2/jedimakerxtream/*.txt > /dev/null 2>&1
-   rm -rf /etc/enigma2/jedimakerxtream/*.xml.xz > /dev/null 2>&1
-   rm -rf /etc/enigma2/jediplaylists/*.txt > /dev/null 2>&1
-   rm -rf /etc/enigma2/jediplaylists/*.xml.xz > /dev/null 2>&1
-   rm -rf /usr/lib/enigma2/python/Plugins/Extensions/JediMakerXtream > /dev/null 2>&1
-   exit 0
-}

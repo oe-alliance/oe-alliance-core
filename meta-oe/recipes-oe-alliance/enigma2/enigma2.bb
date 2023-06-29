@@ -12,6 +12,7 @@ LIC_FILES_CHKSUM:opendroid = "file://LICENSE;md5=b234ee4d69f5fce4486a80fdaf4a426
 LIC_FILES_CHKSUM:openspa = "file://LICENSE;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 
 DEPENDS = " \
+    curl \
     freetype \
     gettext-native \
     gstreamer1.0-plugins-base gstreamer1.0 \

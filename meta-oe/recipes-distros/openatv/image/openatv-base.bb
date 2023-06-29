@@ -18,6 +18,7 @@ RDEPENDS:${PN} = "\
     oe-alliance-picon-feed \
     autofs \
     chrony \
+    dosfstools \
     oe-alliance-base \
     openatv-bootlogo \
     openssh-sftp-server \
