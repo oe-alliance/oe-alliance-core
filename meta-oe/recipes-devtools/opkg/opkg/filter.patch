@@ -1,0 +1,64 @@
+From 853bbea2084b4fa77866281a9def67e7554e9cee Mon Sep 17 00:00:00 2001
+From: jbleyel <jbleyel@gmx.net>
+Date: Fri, 30 Jun 2023 11:08:01 +0200
+Subject: [PATCH] add second filter for info, list , list-installed
+
+---
+ libopkg/opkg_cmd.c | 27 ++++++++++++++++++++++-----
+ 1 file changed, 22 insertions(+), 5 deletions(-)
+
+diff --git a/libopkg/opkg_cmd.c b/libopkg/opkg_cmd.c
+index 5d23b62..8bcfea4 100644
+--- a/libopkg/opkg_cmd.c
++++ b/libopkg/opkg_cmd.c
+@@ -532,8 +532,14 @@ static int opkg_list_find_cmd(int argc, char **argv, int use_desc)
+         pkg = available->pkgs[i];
+         /* if we have package name or pattern and pkg does not match, then skip it */
+         if (pkg_name && fnmatch(pkg_name, pkg->name, 0) &&
+-           (!use_desc || !pkg->description || fnmatch(pkg_name, pkg->description, 0)))
+-            continue;
++           (!use_desc || !pkg->description || fnmatch(pkg_name, pkg->description, 0))) {
++                if (argc > 1) {
++                    if (argv[1] && fnmatch(argv[1], pkg->name, 0) && (!use_desc || !pkg->description || fnmatch(argv[1], pkg->description, 0)))
++                        continue;
++                }
++                else
++                    continue;
++           }
+         print_pkg(pkg);
+     }
+     pkg_vec_free(available);
+@@ -636,8 +642,14 @@ static int opkg_list_installed_cmd(int argc, char **argv)
+     for (i = 0; i < available->len; i++) {
+         pkg = available->pkgs[i];
+         /* if we have package name or pattern and pkg does not match, then skip it */
+-        if (pkg_name && fnmatch(pkg_name, pkg->name, 0))
+-            continue;
++        if (pkg_name && fnmatch(pkg_name, pkg->name, 0)) {
++            if (argc > 1) {
++                if (argv[1] && fnmatch(argv[1], pkg->name, 0))
++                    continue;
++            }
++            else
++                continue;
++        }
+         print_pkg(pkg);
+     }
+ 
+@@ -707,7 +719,12 @@ static int opkg_info_status_cmd(int argc, char **argv, int installed_only)
+     for (i = 0; i < available->len; i++) {
+         pkg = available->pkgs[i];
+         if (pkg_name && fnmatch(pkg_name, pkg->name, 0)) {
+-            continue;
++            if (argc > 1) {
++                if (argv[1] && fnmatch(argv[1], pkg->name, 0))
++                    continue;
++            }
++            else
++                continue;
+         }
+ 
+         pkg_formatted_info(stdout, pkg, opkg_config->fields_filter);
+-- 
+2.39.1
+

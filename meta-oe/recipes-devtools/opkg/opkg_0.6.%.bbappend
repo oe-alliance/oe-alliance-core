@@ -9,6 +9,7 @@ SRC_URI += " \
     file://0004-busybox_workaround.patch \
     file://0005-symlinks-can-be-valid-directories-too.patch \
     file://0006-reuse-the-installed_files-list-when-possible.patch \
+    file://filter.patch \
     file://modprobe \
     "
 
@@ -19,4 +20,4 @@ do_install:prepend() {
     install -m 755 ${WORKDIR}/modprobe ${D}${datadir}/opkg/intercept/
 }
 
-PR = "r6"
+PR = "r7"
