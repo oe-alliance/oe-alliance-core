@@ -10,6 +10,7 @@ SRC_URI += " \
     file://0005-symlinks-can-be-valid-directories-too.patch \
     file://0006-reuse-the-installed_files-list-when-possible.patch \
     file://filter.patch \
+    file://timeout.patch \
     file://modprobe \
     "
 
@@ -20,4 +21,4 @@ do_install:prepend() {
     install -m 755 ${WORKDIR}/modprobe ${D}${datadir}/opkg/intercept/
 }
 
-PR = "r7"
+PR = "r8"
