@@ -33,6 +33,8 @@ EXTRA_OECMAKE += " \
     -DENABLE_TESTS=OFF \
 "
 
+TARGET_CC_ARCH:remove = "-D_TIME_BITS=64"
+
 do_install:append() {
     install -d ${D}${sysconfdir}/default
     install -m 0755 ${WORKDIR}/config ${D}${sysconfdir}/default/transmission-daemon
