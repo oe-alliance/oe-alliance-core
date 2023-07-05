@@ -16,7 +16,7 @@ PACKAGECONFIG:append = " \
     wavpack gudev \
 "
 
-PV = "1.22.3"
+PV = "1.22.4"
 
-SRC_URI[md5sum] = "98e104f96ddf9de91528ac73f028a76f"
-SRC_URI[sha256sum] = "af81154b3a2ef3f4d2feba395f25696feea6fd13ec62c92d3c7a973470710273"
+SRC_URI[md5sum] = "6d8134ee72fd3e0fd5d92640e149721f"
+SRC_URI[sha256sum] = "d7120c1146a9d723d53d5bfe8074da2575a81f0598438752937f39bb7c833b6a"
