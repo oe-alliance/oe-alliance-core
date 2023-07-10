@@ -12,9 +12,8 @@ SRCREV = "${AUTOREV}"
 PV = "3.0+git${SRCPV}"
 PKGV = "3.0+git${GITPKGV}"
 VER ="3.0"
-PR = "r2"
+PR = "r3"
 
-SRC_URI:dual="git://github.com/BlackHole/skins.git;protocol=https;branch=dual"
 SRC_URI="git://github.com/BlackHole/skins.git;protocol=https;branch=master"
 
 S = "${WORKDIR}/git/MX_Slim-Line_NP"
