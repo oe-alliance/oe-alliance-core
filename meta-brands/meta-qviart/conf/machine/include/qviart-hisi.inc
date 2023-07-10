@@ -44,6 +44,7 @@ DEFAULTTUNE = "cortexa15hf-neon-vfpv4"
 
 PREFERRED_VERSION_linux-qviart = "${LINUX_VERSION}"
 PREFERRED_PROVIDER_virtual/kernel = "linux-qviart"
+PREFERRED_VERSION_wpa-supplicant = "${@bb.utils.contains('MACHINE', 'og2s4k', '2.9' , '2.10', d)}"
 PREFERRED_PROVIDER_virtual/egl = "qviart-opengl-${SOC_FAMILY}" 
 PREFERRED_PROVIDER_virtual/libgles1 = "qviart-opengl-${SOC_FAMILY}"
 PREFERRED_PROVIDER_virtual/libgles2 = "qviart-opengl-${SOC_FAMILY}"
@@ -59,6 +60,7 @@ MACHINE_EXTRA_RRECOMMENDS += " \
     gstreamer1.0-plugin-dvbmediasink \
     gstreamer1.0-libav \
     ${@bb.utils.contains('MACHINE', 'og2ott4k', 'enigma2-plugin-extensions-gbipboxclient enigma2-plugin-systemplugins-satipclient' , '', d)} \
+    ${@bb.utils.contains('MACHINE', 'og2s4k', 'firmware-uwe5621' , '', d)} \
     "
 
 DVBPROVIDER = "kernel"
@@ -88,6 +90,9 @@ IMAGE_CMD:qviartemmc2:append = "\
     cd ${DEPLOY_DIR_IMAGE}; \
     cp ${IMGDEPLOYDIR}/${IMAGE_NAME}.rootfs.manifest ${IMAGE_NAME}_usb.zip.manifest; \
     zip -j ${IMAGE_NAME}_recovery_emmc.zip ${DEPLOY_DIR_IMAGE}/usb_update.bin ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/imageversion ${DEPLOY_DIR_IMAGE}/${MACHINE}-partitions/bootargs.bin ${DEPLOY_DIR_IMAGE}/${MACHINE}-partitions/fastboot.bin ${DEPLOY_DIR_IMAGE}/${MACHINE}-partitions/apploader.bin; \
+    if [ -e ${DEPLOY_DIR_IMAGE}/${MACHINE}-partitions/6605s.upg ]; then \
+        zip -j ${IMAGE_NAME}_recovery_emmc.zip ${DEPLOY_DIR_IMAGE}/${MACHINE}-partitions/6605s.upg; \
+    fi; \
     zip ${IMAGE_NAME}_mmc.zip ${IMAGEDIR}/*; \
     rm -f ${DEPLOY_DIR_IMAGE}/*.ext4; \
     rm -f ${DEPLOY_DIR_IMAGE}/.ext4; \

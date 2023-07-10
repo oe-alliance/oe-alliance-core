@@ -1,4 +1,4 @@
-SUMMARY = "ustym4ks2ottx partitions files"
+SUMMARY = "OG2OTT4K partitions files"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "CLOSED"
@@ -7,12 +7,12 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 inherit deploy
 
-SRCDATE = "20230217"
+SRCDATE = "20230710"
 PR = "${SRCDATE}"
 
 S = "${WORKDIR}/partitions"
 
-SRC_URI = "https://source.mynonpublic.com/uclan/${MACHINE}-partitions-${SRCDATE}.zip \
+SRC_URI = "https://source.mynonpublic.com/qviart/${MACHINE}-partitions-${SRCDATE}.zip \
   file://flash-apploader \
 "
 
@@ -51,7 +51,7 @@ do_deploy() {
 
 addtask deploy before do_package after do_install
 
-SRC_URI[md5sum] = "e5bcfb23c425ba7c450aa656499cafad"
-SRC_URI[sha256sum] = "9937a28c64ea9af1e2047f6ca8866061de03b6df31b4574dc639e156027b3300"
+SRC_URI[md5sum] = "70b3acf87aa14b2619e3d29d94c323b7"
+SRC_URI[sha256sum] = "4a2ba9db8c31538cf608c1b674c7caa9fadb7cea33a96456bd756d81b6a2fb15"
 
 INSANE_SKIP:${PN} += "already-stripped"

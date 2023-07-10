@@ -76,6 +76,7 @@ RDEPENDS:${PN} = "\
     ${@bb.utils.contains("MACHINE", "ustym4kottpremium", "enigma2-plugin-drivers-network-usb-rtl8192eu enigma2-plugin-drivers-network-usb-rtl8822cu", "", d)} \
     ${@bb.utils.contains("MACHINE", "ustym4ks2ottx", "enigma2-plugin-drivers-network-usb-rtl8192eu enigma2-plugin-drivers-network-usb-rtl8822cu", "", d)} \
     ${@bb.utils.contains("MACHINE", "og2ott4k", "enigma2-plugin-drivers-network-usb-rtl8821cu enigma2-plugin-drivers-network-usb-rtl8192eu enigma2-plugin-drivers-network-usb-mt7601u enigma2-plugin-drivers-network-usb-rtl8822cu", "", d)} \
+    ${@bb.utils.contains("MACHINE", "og2s4k", "enigma2-plugin-drivers-network-usb-rtl8192eu enigma2-plugin-drivers-network-usb-rtl8822cu", "", d)} \
     ${@bb.utils.contains("MACHINE", "ip8", "enigma2-plugin-drivers-network-usb-rtl8821cu enigma2-plugin-drivers-network-usb-rtl8192eu enigma2-plugin-drivers-network-usb-mt7601u enigma2-plugin-drivers-network-usb-rtl8822cu", "", d)} \
     ${@bb.utils.contains("MACHINE", "sx88v2", "enigma2-plugin-drivers-network-usb-rtl8821cu enigma2-plugin-drivers-network-usb-rtl8192eu enigma2-plugin-drivers-network-usb-mt7601u enigma2-plugin-drivers-network-usb-rtl8822cu", "", d)} \
     ${@bb.utils.contains("MACHINEBUILD", "osmio4k", "enigma2-plugin-drivers-network-usb-qca6174", "", d)} \
