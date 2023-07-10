@@ -494,7 +494,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'lunix', 'qviart1' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'force4', 'iqon1' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'lunix4k', 'qviart3' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'lunixco', 'qviart4' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'dual', 'qviart5', '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'dual', 'qviart7', '', d)}\
 "
 
 BOOTLOGO_FILENAME = "splash.bmp"
