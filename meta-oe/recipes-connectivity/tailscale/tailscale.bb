@@ -24,6 +24,7 @@ GO_INSTALL = "${GO_IMPORT}/cmd/tailscale ${GO_IMPORT}/cmd/tailscaled"
 
 # Fixes duplicated definition of symbols errors by linking for arm arch
 GO_DYNLINK:arm = ""
+GO_DYNLINK:aarch64 = ""
 
 FILES:${PN} += "${systemd_unitdir} ${sysconfdir}"
 
