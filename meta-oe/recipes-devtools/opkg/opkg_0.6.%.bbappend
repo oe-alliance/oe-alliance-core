@@ -21,4 +21,4 @@ do_install:prepend() {
     install -m 755 ${WORKDIR}/modprobe ${D}${datadir}/opkg/intercept/
 }
 
-PR = "r8"
+PR = "r9"
