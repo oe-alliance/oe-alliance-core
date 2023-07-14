@@ -41,6 +41,7 @@ RRECOMMENDS:${PN} = "\
     enigma2-plugin-extensions-epgimport \
     enigma2-plugin-systemplugins-autobouquetsmaker \
     enigma2-plugin-extensions-openatvreader \
+    enigma2-plugin-extensions-openatvstatus \
     enigma2-plugin-skincomponents-advancedmovieselection-steampunk-skin \
     enigma2-plugin-skincomponents-advancedmovieselection-ultimate-skin \
     enigma2-plugin-skincomponents-bmediacenter-ax-blue-skin \
