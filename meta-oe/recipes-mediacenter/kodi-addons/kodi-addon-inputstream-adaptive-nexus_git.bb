@@ -11,8 +11,8 @@ DEPENDS += "expat bento4"
 RDEPENDS:${PN} += "ldd"
 RRECOMMENDS:${PN} = "kernel-module-ext2"
 
-SRCREV = "94833130ecab798cd2a58315a7e31d91c5d27d8d"
-PV = "20.3.1+gitr${SRCPV}"
+SRCREV = "e1e6cfb24c2920f8f687644ab5630ab8336cb240"
+PV = "20.3.9+gitr${SRCPV}"
 
 KODIADDONBRANCH = "Nexus"
 

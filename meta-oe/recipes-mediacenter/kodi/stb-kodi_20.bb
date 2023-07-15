@@ -69,7 +69,7 @@ DEPENDS += " \
             gstreamer1.0-plugins-base \
           "
 inherit gitpkgv
-# 20.0 Nexus
+# 20.2 Nexus
 SRCREV = "${AUTOREV}"
 
 # 'patch' doesn't support binary diffs
@@ -77,7 +77,7 @@ PATCHTOOL = "git"
 
 PR = "r1"
 
-PV = "20.0+gitr${SRCPV}"
+PV = "20.2+gitr${SRCPV}"
 
 SRC_URI = "git://github.com/xbmc/xbmc.git;protocol=https;branch=Nexus \
            file://0001-flatbuffers-20.patch \
