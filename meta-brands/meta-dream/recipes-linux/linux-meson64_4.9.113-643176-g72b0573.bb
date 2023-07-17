@@ -10,7 +10,7 @@ require linux-dreambox-4.9.inc
 
 SRC_URI = "https://dreamboxupdate.com/download/opendreambox/${BPN}/${BPN}-v${PV}.tar.xz \
            file://dmmaml_cec2.patch \
-           file://de2d.patch \
+           file://ge2d.patch \
            file://hdmi_tx_spdif.patch \	 
            file://support-for-gcc12.patch \
            file://defonfig \
