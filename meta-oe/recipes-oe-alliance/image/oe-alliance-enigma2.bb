@@ -46,6 +46,9 @@ RRECOMMENDS:${PN} = "\
     "
 
 SMALLBOXWIZARD_IMAGE_RECOMMENDS = "\
+    enigma2-locale-de \ 
+    enigma2-locale-en \
+    enigma2-locale-fr \
     ${@bb.utils.contains_any("MACHINE_FEATURES", "smallflash", "", "${NORMAL_IMAGE_RECOMMENDS}", d)} \
 "
 
