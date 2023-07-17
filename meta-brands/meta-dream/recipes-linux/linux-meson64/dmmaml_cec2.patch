@@ -1,0 +1,47 @@
+diff -Naur a/drivers/amlogic/cec/hdmi_ao_cec.c b/drivers/amlogic/cec/hdmi_ao_cec.c
+--- a/drivers/amlogic/cec/hdmi_ao_cec.c	2021-10-29 12:55:38.000000000 +0200
++++ b/drivers/amlogic/cec/hdmi_ao_cec.c	2023-05-23 20:18:04.467088000 +0200
+@@ -3077,10 +3077,12 @@
+ 			port[e].arc_supported = 1;
+ 		else
+ 			port[e].arc_supported = 0;
+-		CEC_INFO_L(L_3, "portinfo id:%d arc:%d phy:%x,type:%d\n",
++		port[e].logical_address = cec_dev->cec_info.log_addr;
++		CEC_INFO_L(L_3, "portinfo id:%d arc:%d log:%x,phy:%x,type:%d\n",
+ 				port[e].port_id, port[e].arc_supported,
++				port[e].logical_address,
+ 				port[e].physical_address,
+-				port[e].type);
++				port[e].type);						
+ 		e++;
+ 		if (e >= cec_dev->port_num)
+ 			break;
+@@ -3206,7 +3208,7 @@
+ 			return -EINVAL;
+ 		}
+ 		break;
+-
++		
+ 	case CEC_IOC_GET_VENDOR_ID:
+ 		tmp = cec_dev->v_data.vendor_id;
+ 		if (copy_to_user(argp, &tmp, _IOC_SIZE(cmd))) {
+@@ -3320,7 +3322,7 @@
+ 			return -EINVAL;
+ 		}
+ 		break;
+-
++		
+ 	case CEC_IOC_ADD_LOGICAL_ADDR:
+ 		tmp = arg & 0xf;
+ 		/*cec_logicaddr_set(tmp);*/
+diff -Naur a/include/linux/amlogic/media/vout/hdmi_tx/hdmi_tx_cec_20.h b/include/linux/amlogic/media/vout/hdmi_tx/hdmi_tx_cec_20.h
+--- a/include/linux/amlogic/media/vout/hdmi_tx/hdmi_tx_cec_20.h	2021-10-29 12:55:38.000000000 +0200
++++ b/include/linux/amlogic/media/vout/hdmi_tx/hdmi_tx_cec_20.h	2023-05-23 19:41:11.737573000 +0200
+@@ -122,6 +122,7 @@
+ 	int cec_supported;
+ 	int arc_supported;
+ 	uint16_t physical_address;
++	unsigned char logical_address;
+ };
+ 
+ enum cec_dev_type_addr {

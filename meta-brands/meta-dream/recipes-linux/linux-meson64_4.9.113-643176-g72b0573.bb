@@ -4,11 +4,14 @@ PE = "1"
 
 inherit kernel machine_kernel_pr
 
-MACHINE_KERNEL_PR:append = ".1"
+MACHINE_KERNEL_PR:append = ".2"
 
 require linux-dreambox-4.9.inc
 
 SRC_URI = "https://dreamboxupdate.com/download/opendreambox/${BPN}/${BPN}-v${PV}.tar.xz \
+           file://dmmaml_cec2.patch \
+           file://de2d.patch \
+           file://hdmi_tx_spdif.patch \	 
            file://support-for-gcc12.patch \
            file://defonfig \
            file://fix-multiple-defs-yyloc_v1.patch \
