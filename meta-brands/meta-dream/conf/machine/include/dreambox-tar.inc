@@ -6,7 +6,7 @@ MTD_ROOTFS = "sda3"
 KERNEL_FILE = "N/A"
 ROOTFS_FILE = "rootfs.tar.bz2"
 
-IMAGE_CMD:tar:prepend = " ; \
+IMAGE_CMD:tar:prepend = "\
 	mkdir -p ${IMAGE_ROOTFS}/usr/lib; \
 	if [ "${PACKAGE_LIST}" = "1" ]; then \
         cp ${IMAGE_MANIFEST} ${IMAGE_ROOTFS}/usr/lib/package.lst; \

@@ -49,7 +49,7 @@ PREFERRED_PROVIDER_virtual/blindscan-dvbs = "dags-blindscan-utils-${SOC_FAMILY}"
 
 require conf/machine/include/arm/armv7a/tune-cortexa15.inc
 
-IMAGE_CMD:tar:prepend = " ; \
+IMAGE_CMD:tar:prepend = "\
 	mkdir -p ${IMAGE_ROOTFS}/usr/lib; \
 	if [ "${PACKAGE_LIST}" = "1" ]; then \
         cp ${IMAGE_MANIFEST} ${IMAGE_ROOTFS}/usr/lib/package.lst; \
