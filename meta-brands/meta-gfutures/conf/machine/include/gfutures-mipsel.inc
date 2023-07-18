@@ -15,6 +15,13 @@ PREFERRED_VERSION_linux-gfutures = "4.10.12"
 
 IMAGE_FSTYPES ?= "ubi"
 
+IMAGE_CMD:ubifs:prepend = " \
+	mkdir -p ${IMAGE_ROOTFS}/usr/lib; \
+	if [ "${PACKAGE_LIST}" = "1" ]; then \
+        cp ${IMAGE_MANIFEST} ${IMAGE_ROOTFS}/usr/lib/package.lst; \
+    fi; \
+    "
+
 IMAGE_CMD:ubi:append = "\
     mkdir -p ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}; \
     cp ${DEPLOY_DIR_IMAGE}/splash.bin ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/splash.bin; \

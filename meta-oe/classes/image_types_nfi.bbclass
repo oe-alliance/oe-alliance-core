@@ -1,4 +1,8 @@
 IMAGE_CMD:jffs2nfi = " \
+	mkdir -p ${IMAGE_ROOTFS}/usr/lib; \
+	if [ "${PACKAGE_LIST}" = "1" ]; then \
+        cp ${IMAGE_MANIFEST} ${IMAGE_ROOTFS}/usr/lib/package.lst; \
+    fi; \
 	mkfs.jffs2 \
 		--root=${IMAGE_ROOTFS}/boot \
 		--disable-compressor=lzo \
@@ -28,6 +32,10 @@ IMAGE_CMD:jffs2nfi = " \
 "
 
 IMAGE_CMD:ubinfi = " \
+	mkdir -p ${IMAGE_ROOTFS}/usr/lib; \
+	if [ "${PACKAGE_LIST}" = "1" ]; then \
+        cp ${IMAGE_MANIFEST} ${IMAGE_ROOTFS}/usr/lib/package.lst; \
+    fi; \
 	mkfs.jffs2 \
 		--root=${IMAGE_ROOTFS}/boot \
 		--disable-compressor=lzo \

@@ -46,6 +46,10 @@ IMAGE_FSTYPES ?= "ubi"
 IMAGEDIR ?= "${MACHINE}"
 
 IMAGE_CMD:ubifs:prepend = " \
+	mkdir -p ${IMAGE_ROOTFS}/usr/lib; \
+	if [ "${PACKAGE_LIST}" = "1" ]; then \
+        cp ${IMAGE_MANIFEST} ${IMAGE_ROOTFS}/usr/lib/package.lst; \
+    fi; \
     rm -rf ${IMAGE_ROOTFS}/boot/*; \
     rm -rf ${IMAGE_ROOTFS}/tmp/*; \
     "

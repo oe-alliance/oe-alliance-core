@@ -6,6 +6,13 @@ UBI_VOLNAME = "rootfs"
 MKUBIFS_ARGS = "-F -m 2048 -e 126976 -c 3840"
 UBINIZE_ARGS = "-m 2048 -p 128KiB"
 
+IMAGE_CMD:ubifs:prepend = " \
+	mkdir -p ${IMAGE_ROOTFS}/usr/lib; \
+	if [ "${PACKAGE_LIST}" = "1" ]; then \
+        cp ${IMAGE_MANIFEST} ${IMAGE_ROOTFS}/usr/lib/package.lst; \
+    fi; \
+    "
+
 IMAGE_CMD:ubi:append = " \
     mkdir -p ${DEPLOY_DIR_IMAGE}/${MACHINE}/${IMAGEDIR}; \
     mv ${IMGDEPLOYDIR}/${IMAGE_NAME}${IMAGE_NAME_SUFFIX}.ubi ${DEPLOY_DIR_IMAGE}/${MACHINE}/${IMAGEDIR}/${ROOTFS_FILE}; \
