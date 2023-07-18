@@ -14,7 +14,7 @@ inherit packagegroup
 
 RDEPENDS:${PN} = "\
     enigma-info \
-	crontab-clearmen \
+    crontab-clearmen \
     openatv-version-info \
     oe-alliance-picon-feed \
     autofs \
