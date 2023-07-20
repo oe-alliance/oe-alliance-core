@@ -14,7 +14,8 @@ PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
 PR = "r0"
 
-SRC_URI = "git://github.com/oe-alliance/enigma2-display-skins.git;protocol=https;branch=master file://skinsnotwanted"
+SRC_URI = "git://github.com/oe-alliance/enigma2-display-skins.git;protocol=https;branch=master"
+SRC_URI:openatv = "git://github.com/oe-alliance/enigma2-display-skins.git;protocol=https;branch=openATV"
 
 # note that enigma2-skins is just an empty package to satisfy silly dependencies.
 ALLOW_EMPTY:${PN} = "1"
@@ -46,15 +47,4 @@ python populate_packages:prepend () {
     if bb.data.expand('${REL_MINOR}', d) != "4":
         enigma2_skindir = bb.data.expand('${datadir}/enigma2/display', d)
         do_split_packages(d, enigma2_skindir, '(.*?)/.*', 'enigma2-plugin-display-%s', 'Enigma2 Display Skin: %s', recursive=True, match_path=True, prepend=True)
-
-    currentlist = d.getVar('PACKAGES', True)
-    pkgnotwanted = open(d.getVar('S', True) + "/../skinsnotwanted").read()
-#     logger.warning("NOT WANTED %s ", pkgnotwanted)
-
-    newlist = currentlist.split(" ")
-    for line in pkgnotwanted.split("\n"):
-        if line in newlist:
-            newlist.remove(line)
-
-    d.setVar('PACKAGES', ' '.join(newlist))
 }

@@ -11,10 +11,12 @@ PV = "${IMAGE_VERSION}"
 PR = "r${PR_NUM}"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
+WORKDIR = "${TMPDIR}/work/${MULTIMACH_TARGET_SYS}/${PN}/${EXTENDPE}${PV}"
+REPRODUCIBLE_TIMESTAMP_ROOTFS = "${@int(time.time()-10000)}"
 do_rootfs[deptask] = "do_rm_work"
-REPRODUCIBLE_TIMESTAMP_ROOTFS = "${@time.strftime('%s')}"
 
 export IMAGE_BASENAME = "teamblue-image"
+SSTATE_ALLOW_OVERLAP_FILES += "${DEPLOY_DIR_IMAGE}"
 
 IMAGE_INSTALL = "teamblue-base"
 
@@ -26,6 +28,10 @@ IMAGE_INSTALL += "${@bb.utils.contains_any("FLASHSIZE", "64 96", "", "iproute2",
 
 # Add more languages for 512 or more MB of flash:
 #IMAGE_LINGUAS += "${@bb.utils.contains_any("FLASHSIZE", "64 96 128 256", "", "es-es it-it nl-nl pt-pt", d)}"
+
+# Prevent locales-archive creation to save some space
+IMAGE_LOCALES_ARCHIVE = ""
+
 
 IMAGE_FEATURES += "package-management"
 

@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda
 ALLOW_EMPTY:${PN} = "1"
 
 PV = "1.0"
-PR = "r44"
+PR = "r45"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
@@ -27,7 +27,7 @@ RDEPENDS:${PN} = "\
     ${PYTHON_PN}-plistlib \
     ${PYTHON_PN}-future \
     ${PYTHON_PN}-six \
-    ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-imaging", "${PYTHON_PN}-pillow", d)} \
+    ${PYTHON_PN}-pillow \
     ${PYTHON_PN}-netifaces \
     ${PYTHON_PN}-service-identity \
     unrar \

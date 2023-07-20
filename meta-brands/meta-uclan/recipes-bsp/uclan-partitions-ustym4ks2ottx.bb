@@ -1,4 +1,4 @@
-SUMMARY = "ustym4kottpremium partitions files"
+SUMMARY = "ustym4ks2ottx partitions files"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "CLOSED"

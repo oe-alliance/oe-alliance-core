@@ -7,7 +7,7 @@ inherit kodi-addon
 
 DEPENDS += "expat"
 
-SRCREV = "61f7ff342b5c60ff5c9d75f6de843fe4b8cd7aa7"
+SRCREV = "c6badfaa437be63a499a3c92b08051ea49af7f8e"
 
 PV = "20.3.0+gitr${SRCPV}"
 

@@ -1,4 +1,8 @@
 IMAGE_CMD:jffs2nfi = " \
+	mkdir -p ${IMAGE_ROOTFS}/usr/lib; \
+	if [ "${PACKAGE_LIST}" = "1" ]; then \
+        cp ${IMAGE_MANIFEST} ${IMAGE_ROOTFS}/usr/lib/package.lst; \
+    fi; \
 	mkfs.jffs2 \
 		--root=${IMAGE_ROOTFS}/boot \
 		--disable-compressor=lzo \
@@ -18,9 +22,20 @@ IMAGE_CMD:jffs2nfi = " \
 		--data-partition ${DREAMBOX_PART1_SIZE}:${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.boot.jffs2 \
 		--data-partition ${DREAMBOX_PART2_SIZE}:${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.jffs2 \
 		> ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.nfi; \
+	cd ${DEPLOY_DIR_IMAGE}; \
+	rm -Rf ${IMAGE_NAME}_web.zip; \
+	echo ${DISTRO_NAME}-${DISTRO_VERSION}.${BUILD_VERSION} > ${DEPLOY_DIR_IMAGE}/imageversion; \
+	echo "Image for WebBrower Update" >> ${DEPLOY_DIR_IMAGE}/imageversion; \
+	zip ${IMAGE_NAME}_web.zip ${IMAGE_NAME}.nfi imageversion; \
+	rm -Rf ${IMAGE_NAME}.nfi; \
+	rm -Rf ${IMAGE_NAME}.boot.jffs2; \
 "
 
 IMAGE_CMD:ubinfi = " \
+	mkdir -p ${IMAGE_ROOTFS}/usr/lib; \
+	if [ "${PACKAGE_LIST}" = "1" ]; then \
+        cp ${IMAGE_MANIFEST} ${IMAGE_ROOTFS}/usr/lib/package.lst; \
+    fi; \
 	mkfs.jffs2 \
 		--root=${IMAGE_ROOTFS}/boot \
 		--disable-compressor=lzo \
@@ -62,20 +77,23 @@ IMAGE_CMD:ubinfi = " \
 		--data-partition ${DREAMBOX_PART2_SIZE}:${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.ubi \
 		> ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.nfi; \
 	cd ${DEPLOY_DIR_IMAGE}; \
+	rm -Rf ${IMAGE_NAME}.zip; \
 	echo ${DISTRO_NAME}-${DISTRO_VERSION}.${BUILD_VERSION} > ${DEPLOY_DIR_IMAGE}/imageversion; \
 	echo "Image for WebBrower Update" >> ${DEPLOY_DIR_IMAGE}/imageversion; \
 	zip ${IMAGE_NAME}_web.zip ${IMAGE_NAME}.nfi imageversion; \
-	mkdir -p ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}; \
-	cp ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.ubi ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${ROOTFS_FILE}; \
-	echo ${DISTRO_NAME}-${DISTRO_VERSION}.${BUILD_VERSION} > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/imageversion; \
-	echo "Flash Online Image" >> ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/imageversion; \
-	echo "dummy file dont delete" > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/kernel.bin; \
-	zip ${IMAGE_NAME}_flash.zip ${IMAGEDIR}/*; \
-	rm -Rf ${IMAGEDIR}; \
+	mkdir -p ${DEPLOY_DIR_IMAGE}/${MACHINE}/${IMAGEDIR}; \
+	cp ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.ubi ${DEPLOY_DIR_IMAGE}/${MACHINE}/${IMAGEDIR}/${ROOTFS_FILE}; \
+	echo ${DISTRO_NAME}-${DISTRO_VERSION}.${BUILD_VERSION} > ${DEPLOY_DIR_IMAGE}/${MACHINE}/${IMAGEDIR}/imageversion; \
+	echo "Flash Online Image" >> ${DEPLOY_DIR_IMAGE}/${MACHINE}/${IMAGEDIR}/imageversion; \
+	echo "dummy file dont delete" > ${DEPLOY_DIR_IMAGE}/${MACHINE}/${IMAGEDIR}/kernel.bin; \
+	cd ${DEPLOY_DIR_IMAGE}/${MACHINE}; \
+	zip -r ../${IMAGE_NAME}_flash.zip *; \
 	rm -Rf ${IMAGE_NAME}.nfi; \
 	rm -Rf ${IMAGE_NAME}.boot.jffs2; \
 	rm -Rf ${IMAGE_NAME}.rootfs.ubi; \
 	rm -Rf ${IMAGE_NAME}.rootfs.ubifs; \
+	cd ..; \
+	rm -Rf ${DEPLOY_DIR_IMAGE}/${MACHINE}; \
 "
 
 EXTRA_IMAGECMD:jffs2nfi ?= "-e ${DREAMBOX_ERASE_BLOCK_SIZE} -n -l"

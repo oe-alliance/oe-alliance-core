@@ -11,12 +11,12 @@ ALLOW_EMPTY:${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r2"
+PR = "r3"
 
 RDEPENDS:${PN} = "\
-    oe-alliance-enigma2 \
-    oe-alliance-branding \
-    oe-alliance-remote \
+    oe-alliance-feeds-configs \
+    oe-alliance-botfeed-configs \
+    ${@bb.utils.contains("MACHINE_FEATURES", "nogui", "", "oe-alliance-enigma2", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "wol", "vuplus-coldboot vuplus-ethwol", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "wowl", "vuplus-wowl", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "iniwol", "ini-coldboot ini-ethwol", "", d)} \
@@ -29,14 +29,37 @@ RDEPENDS:${PN} = "\
     ${@bb.utils.contains("MACHINE_FEATURES", "vubluetooth", "enigma2-plugin-systemplugins-bluetoothsetup enigma2-plugin-extensions-witaispeechtotext", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "gbbluetooth", "enigma2-plugin-systemplugins-bluetoothsetup", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "kexecmb", "kexec-multiboot", "", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "displayvfd", "displayvfd", "", d)} \
     ${@bb.utils.contains("TARGET_ARCH", "arm", "${GETEXTRA}", "", d)} \
     ${@bb.utils.contains("TARGET_ARCH", "aarch64", "${GETEXTRA}", "", d)} \
-    avahi-daemon \
     bash \
     cronie \
     dropbear \
     early-configure \
     e2fsprogs-mke2fs \
+    modutils-loadscript \
+    opkg \
+    parted \
+    procps \
+    rc-local \
+    p7zip \
+    packagegroup-base \
+    packagegroup-core-boot \
+    util-linux-sfdisk \
+    util-linux-blkid \
+    util-linux-flock \
+    volatile-media \
+    wireless-tools \
+    wget \
+    ${@bb.utils.contains("SMALLBOXWIZARD", "1", "${SMALLBOXWIZARD_IMAGE}", "${NORMAL_IMAGE}", d)} \
+"
+
+SMALLBOXWIZARD_IMAGE = "\
+     ${@bb.utils.contains_any("MACHINE_FEATURES", "smallflash", "", "${NORMAL_IMAGE}", d)} \
+"
+
+NORMAL_IMAGE = "\
+    tzdata \
     e2fsprogs-e2fsck \
     e2fsprogs-tune2fs \
     minilocale \
@@ -44,25 +67,13 @@ RDEPENDS:${PN} = "\
     libcrypto-compat-0.9.7 \
     libcrypto-compat-1.0.0 \
     libxcrypt-compat \
+    avahi-daemon \
     llmnrd \
-    modutils-loadscript \
-    opkg \
-    rc-local \
     sdparm \
-    ${@bb.utils.contains("MACHINE_FEATURES", "dreamboxv1", "", "p7zip", d)} \
-    packagegroup-base \
-    packagegroup-core-boot \
-    tzdata \
-    util-linux-sfdisk \
-    util-linux-blkid \
-    util-linux-flock \
-    volatile-media \
     vsftpd \
-    wget \
-    wireless-tools \
-    ${PYTHON_PN}-twisted-protocols ${PYTHON_PN}-numbers ${PYTHON_PN}-puremagic \
-    ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-argparse", "", d)} \
-    "
+    mtd-utils \
+    mtd-utils-ubifs \
+"
 
 # The following RRECOMMENDS ensure that images on boxes with very limited
 # kernel space behave identical to those that have these options built-in

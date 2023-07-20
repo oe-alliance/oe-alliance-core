@@ -10,8 +10,10 @@ LIC_FILES_CHKSUM:openbh = "file://LICENSE;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 LIC_FILES_CHKSUM:beyonwiz = "file://LICENSE;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 LIC_FILES_CHKSUM:openeight = "file://LICENSE;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 LIC_FILES_CHKSUM:opendroid = "file://LICENSE;md5=b234ee4d69f5fce4486a80fdaf4a4263"
+LIC_FILES_CHKSUM:openspa = "file://LICENSE;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 
 DEPENDS = " \
+    curl \
     freetype \
     gettext-native \
     gstreamer1.0-plugins-base gstreamer1.0 \
@@ -19,7 +21,7 @@ DEPENDS = " \
     libdreamdvd libdvbsi++ fribidi libmad libpng giflib libxml2 libxmlccwrap \
     ${@bb.utils.contains_any("DISTRO_NAME", "openvix openbh", "libsigc++-3" , "libsigc++-2.0", d)} \
     openssl avahi libudfread \
-    ${PYTHON_PN} ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-imaging", "${PYTHON_PN}-pillow", d)} ${PYTHON_PN}-twisted ${PYTHON_PN}-wifi ${PYTHON_PN}-six-native \
+    ${PYTHON_PN}-pillow ${PYTHON_PN}-twisted ${PYTHON_PN}-wifi ${PYTHON_PN}-six-native \
     swig-native \
     tuxtxt-enigma2 \
     ${@bb.utils.contains("DISTRO_NAME", "openspa", "uchardet" , "", d)} \
@@ -30,29 +32,50 @@ DEPENDS = " \
 
 RDEPENDS:${PN} = " \
     alsa-conf \
+    libdreamdvd \
     enigma2-fonts \
+    hotplug-e2-helper \
+    font-valis-enigma \
     ethtool \
     glibc-gconv-iso8859-15 \
     glibc-gconv-cp1250 \
-    hotplug-e2-helper \
     ${PYTHON_RDEPS} \
     ${@bb.utils.contains("DISTRO_NAME", "openatv", "openatv-autorestore" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "uianimation", "vuplus-libgles-${MACHINE} libvugles2" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "hiaccel", "dinobot-libs-${MACHINE}" , "", d)} \
-    ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", "enigma2-plugin-font-wqy-microhei", d)} \
     oe-alliance-branding \
-    "
+    ${@bb.utils.contains("SMALLBOXWIZARD", "1", "${SMALLBOXWIZARD_NORMAL_IMAGE}", "${NORMAL_IMAGE_DEPEND}", d)} \
+"
+
+SMALLBOXWIZARD_NORMAL_IMAGE = "\
+    ${@bb.utils.contains_any("MACHINE_FEATURES", "smallflash", "", "${NORMAL_IMAGE_DEPEND}", d)} \
+"
+
+NORMAL_IMAGE_DEPEND = "\
+    ${E2DEFAULTSKIN} \
+    enigma2-plugin-font-wqy-microhei \
+    ${@bb.utils.contains("MACHINE_FEATURES", "blindscan-dvbc", "virtual/blindscan-dvbc" , "", d)} \
+"
 
 RRECOMMENDS:${PN} = " \
+    libdvdcss \
     glib-networking \
     glibc-gconv-utf-16 \
+    ${@bb.utils.contains("SMALLBOXWIZARD", "1", "${SMALLBOXWIZARD_IMAGE_RECOMMENDS}", "${NORMAL_IMAGE_RECOMMENDS}", d)} \
+"
+
+SMALLBOXWIZARD_IMAGE_RECOMMENDS = "\
+    ${@bb.utils.contains_any("MACHINE_FEATURES", "smallflash", "", "${NORMAL_IMAGE_RECOMMENDS}", d)} \
+"
+
+NORMAL_IMAGE_RECOMMENDS = "\
     gstreamer1.0-plugin-subsink \
     ${GST_BASE_RDEPS} \
     ${GST_GOOD_RDEPS} \
     ${GST_BAD_RDEPS} \
     ${GST_UGLY_RDEPS} \
     ${GST_BAD_OPUS} \
-    "
+"
 
 PYTHON_RDEPS = " \
     ${PYTHON_PN}-asyncio \
@@ -60,31 +83,27 @@ PYTHON_RDEPS = " \
     ${PYTHON_PN}-core \
     ${PYTHON_PN}-crypt \
     ${PYTHON_PN}-fcntl \
-    ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-lang", "", d)} \
     ${PYTHON_PN}-mmap \
     ${PYTHON_PN}-netclient \
     ${PYTHON_PN}-netifaces \
     ${PYTHON_PN}-netserver \
     ${PYTHON_PN}-pickle \
-    ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-re", "", d)} \
     ${PYTHON_PN}-shell \
     ${PYTHON_PN}-threading \
     ${PYTHON_PN}-twisted-core \
     ${PYTHON_PN}-twisted-web \
     ${PYTHON_PN}-xml \
-    ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-zlib", "", d)} \
     ${PYTHON_PN}-zopeinterface \
     ${PYTHON_PN}-email \
     ${PYTHON_PN}-mime \
     ${PYTHON_PN}-pyusb \
-    ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-subprocess", "", d)} \
     ${PYTHON_PN}-process \
     ${PYTHON_PN}-image \
-    ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-imaging", "${PYTHON_PN}-pillow", d)} \
+    ${PYTHON_PN}-pillow \
     ${PYTHON_PN}-smtpd \
     ${PYTHON_PN}-six \
     ${PYTHON_PN}-treq \
-    "
+"
 
 GST_BASE_RDEPS = "\
     gstreamer1.0-plugins-base-alsa \
@@ -137,7 +156,7 @@ GST_BAD_RDEPS = "\
 GST_BAD_OPUS = " \
     ${@bb.utils.contains("TARGET_ARCH", "arm", " gstreamer1.0-plugins-base-opus gstreamer1.0-plugins-bad-opusparse", "", d)} \
     ${@bb.utils.contains("TARGET_ARCH", "aarch64", " gstreamer1.0-plugins-base-opus gstreamer1.0-plugins-bad-opusparse", "", d)} \
-    "
+"
 
 GST_UGLY_RDEPS = "\
     gstreamer1.0-plugins-ugly-amrnb \
@@ -146,24 +165,6 @@ GST_UGLY_RDEPS = "\
     gstreamer1.0-plugins-ugly-cdio \
     gstreamer1.0-plugins-ugly-dvdsub \
 "
-
-# DVD playback is integrated, we need the libraries
-RDEPENDS:${PN} += " \
-    libdreamdvd \
-    "
-
-RRECOMMENDS:${PN} += "libdvdcss"
-
-# We depend on the font which we use for TXT subtitles (defined in skin_subtitles.xml)
-RDEPENDS:${PN} += "font-valis-enigma"
-
-RDEPENDS:${PN} += "${@bb.utils.contains("MACHINE_FEATURES", "blindscan-dvbc", "${BLINDSCAN}" , "", d)}"
-BLINDSCAN = "${@bb.utils.contains_any("FLASHSIZE", "64", "", "virtual/blindscan-dvbc", d)}"
-
-#make sure default skin is installed.
-RDEPENDS:${PN} += "${E2DEFAULTSKIN} "
-
-DEMUXTOOL ?= "replex"
 
 DESCRIPTION:append:enigma2-plugin-extensions-cutlisteditor = "enables you to cut your movies."
 RDEPENDS:enigma2-plugin-extensions-cutlisteditor = "aio-grab"
@@ -185,7 +186,7 @@ DESCRIPTION:append:enigma2-plugin-systemplugins-wirelesslan = "helps you configu
 RDEPENDS:enigma2-plugin-systemplugins-wirelesslan = "wpa-supplicant wireless-tools ${PYTHON_PN}-wifi"
 DESCRIPTION:append:enigma2-plugin-systemplugins-networkwizard = "provides easy step by step network configuration"
 # Note that these tools lack recipes
-RDEPENDS:enigma2-plugin-extensions-dvdburn = "dvd+rw-tools dvdauthor mjpegtools genisoimage ${PYTHON_PN}-imaging ${DEMUXTOOL}"
+RDEPENDS:enigma2-plugin-extensions-dvdburn = "dvd+rw-tools dvdauthor mjpegtools genisoimage replex"
 RRECOMMENDS:enigma2-plugin-extensions-dvdburn = "kernel-module-sg"
 RRECOMMENDS:enigma2-plugin-extensions-dvdplayer = "kernel-module-cdrom kernel-module-sr-mod"
 RDEPENDS:enigma2-plugin-systemplugins-hotplug = "hotplug-e2-helper"
@@ -199,7 +200,7 @@ SUMMARY:enigma2-plugin-extensions-ytdlpwrapper = "Enables support for YT-DLP url
 RDEPENDS:enigma2-plugin-extensions-ytdlpwrapper = "${PYTHON_PN}-yt-dlp"
 RDEPENDS:enigma2-plugin-extensions-filecommander = "${PYTHON_PN}-puremagic"
 
-inherit autotools-brokensep gitpkgv pkgconfig ${PYTHON_PN}native ${@bb.utils.contains("PYTHON_PN", "python3", "python3targetconfig", "", d)} upx-compress
+inherit autotools-brokensep gitpkgv pkgconfig ${PYTHON_PN}native python3targetconfig upx-compress
 
 PV = "${IMAGE_VERSION}+git${SRCPV}"
 PKGV = "${IMAGE_VERSION}+git${GITPKGV}"

@@ -3,7 +3,7 @@ HOMEPAGE = "https://github.com/mx3L/mediaplayer2"
 AUTHOR = "Maroš Ondrášek <mx3ldev@gmail.com>"
 LICENSE = "CLOSED"
 
-RDEPENDS:${PN} = "${PYTHON_PN}-xmlrpc ${PYTHON_PN}-compression ${PYTHON_PN}-codecs ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-zlib", "", d)} ${PYTHON_PN}-difflib unrar enigma2-plugin-extensions-subssupport"
+RDEPENDS:${PN} = "${PYTHON_PN}-xmlrpc ${PYTHON_PN}-compression ${PYTHON_PN}-codecs ${PYTHON_PN}-difflib unrar enigma2-plugin-extensions-subssupport"
 
 SRCREV = "${AUTOREV}"
 inherit gitpkgv

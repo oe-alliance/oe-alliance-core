@@ -9,10 +9,12 @@ if [ "$(grep config.bootvideo.booting /etc/enigma2/settings)" ]; then
     [ -f /etc/enigma2/bootlogo.mvi ] && BOOTLOGO=/etc/enigma2/bootlogo.mvi
     /usr/bin/showiframe ${BOOTLOGO}
     [ -f /etc/init.d/bootlogo.py ] && /usr/bin/python /etc/init.d/bootlogo.py
+    [ -f /usr/share/lcd.png ] && /usr/bin/displayvfd -p /usr/share/lcd.png
 else
     BOOTLOGO=/usr/share/bootlogo.mvi
     [ -f /etc/enigma2/bootlogo.mvi ] && BOOTLOGO=/etc/enigma2/bootlogo.mvi
     /usr/bin/showiframe ${BOOTLOGO}
     [ -f /etc/init.d/bootlogo.py ] && /usr/bin/python /etc/init.d/bootlogo.py
+    [ -f /usr/share/lcd.png ] && /usr/bin/displayvfd -p /usr/share/lcd.png
 fi
 

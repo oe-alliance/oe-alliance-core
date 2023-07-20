@@ -15,35 +15,48 @@ PR = "r3"
 DEPENDS = "enigma2 enigma2-locale-meta enigma2-plugins enigma2-oe-alliance-plugins oe-alliance-wifi"
 
 RDEPENDS:${PN} = "\
-    enigma2-locale-meta \
-    oe-alliance-feeds-configs \
-    oe-alliance-botfeed-configs \
-    aio-grab \
+    oe-alliance-branding \
+    oe-alliance-remote \
     enigma2 \
     tuxbox-links \
     tuxbox-common \
-    mtd-utils \
-    mtd-utils-ubifs \
-    ${@bb.utils.contains('MACHINE_FEATURES', 'emmc', 'bzip2 pbzip2 rsync', '', d)} \
-    ${@bb.utils.contains("PYTHON_PN", "python3", "${PYTHON_PN}-compat2", "", d)} \
-    procps \
-    parted \
+    bzip2 \
+    pbzip2 \
+    rsync \
+    ${PYTHON_PN}-compat2 \
+    ${PYTHON_PN}-twisted-protocols \
+    ${PYTHON_PN}-numbers \
+    ${PYTHON_PN}-puremagic \
+    ${@bb.utils.contains("SMALLBOXWIZARD", "1", "${SMALLBOXWIZARD_IMAGE_DEPEND}", "${NORMAL_IMAGE_DEPEND}", d)} \
     "
 
+SMALLBOXWIZARD_IMAGE_DEPEND = "\
+    ${@bb.utils.contains_any("MACHINE_FEATURES", "smallflash", "", "${NORMAL_IMAGE_DEPEND}", d)} \
+"
+
+NORMAL_IMAGE_DEPEND = "\
+    enigma2-locale-meta \
+    aio-grab \
+"
+
 RRECOMMENDS:${PN} = "\
-    ${@bb.utils.contains("DISTRO_FEATURES", "no-autobouquetsmaker", "" , "enigma2-plugin-systemplugins-autobouquetsmaker", d)} \
-    enigma2-plugin-systemplugins-hotplug \
-    enigma2-plugin-extensions-mediascanner \
-    enigma2-plugin-extensions-pictureplayer \
-    enigma2-plugin-extensions-openwebif \
-    enigma2-plugin-systemplugins-networkbrowser \
     enigma2-plugin-systemplugins-networkwizard \
-    \
+    enigma2-plugin-systemplugins-wirelesslan \
+    ${@bb.utils.contains("SMALLBOXWIZARD", "1", "${SMALLBOXWIZARD_IMAGE_RECOMMENDS}", "${NORMAL_IMAGE_RECOMMENDS}", d)} \
+    "
+
+SMALLBOXWIZARD_IMAGE_RECOMMENDS = "\
+    enigma2-locale-de \ 
+    enigma2-locale-en \
+    enigma2-locale-fr \
+    ${@bb.utils.contains_any("MACHINE_FEATURES", "smallflash", "", "${NORMAL_IMAGE_RECOMMENDS}", d)} \
+"
+
+NORMAL_IMAGE_RECOMMENDS = "\
     ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", "oe-alliance-drivers", d)} \
-    \
-    enigma2-plugin-systemplugins-satfinder \
+    ${@bb.utils.contains("DISTRO_FEATURES", "no-autobouquetsmaker", "" , "enigma2-plugin-systemplugins-autobouquetsmaker", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "dvbc-only", "", "enigma2-plugin-systemplugins-positionersetup", d)} \
-    ${@bb.utils.contains("MACHINE_FEATURES", "blindscan-dvbs", "${BLINDSCAN}" , "", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "blindscan-dvbs", "enigma2-plugin-systemplugins-blindscan" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "hdmicec", "enigma2-plugin-systemplugins-hdmicec" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", "oe-alliance-wifi", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "dvb-c", "enigma2-plugin-systemplugins-cablescan" , "", d)} \
@@ -59,6 +72,10 @@ RRECOMMENDS:${PN} = "\
     ${@bb.utils.contains("MACHINE_FEATURES", "minitv", "enigma2-plugin-extensions-minitv" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "fcc", "enigma2-plugin-systemplugins-fastchannelchange" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "himedia", "enigma2-plugin-systemplugins-servicehisilicon" , "", d)} \
-    "
-
-BLINDSCAN = "${@bb.utils.contains_any("FLASHSIZE", "smallflash", "", "enigma2-plugin-systemplugins-blindscan", d)}"
+    enigma2-plugin-systemplugins-hotplug \
+    enigma2-plugin-extensions-mediascanner \
+    enigma2-plugin-extensions-pictureplayer \
+    enigma2-plugin-extensions-openwebif \
+    enigma2-plugin-systemplugins-networkbrowser \
+    enigma2-plugin-systemplugins-satfinder \
+"

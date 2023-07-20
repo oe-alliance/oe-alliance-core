@@ -1,5 +1,13 @@
 inherit upx-compress
 
+SRC_URI:append = " \
+           file://mke2fs_conf.patch \
+"
+
+FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
+
+PR .= ".0"
+
 EXTRA_OECONF += "--enable-defrag"
 
 do_install:append() {

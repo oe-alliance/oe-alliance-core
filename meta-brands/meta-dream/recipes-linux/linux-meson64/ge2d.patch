@@ -1,0 +1,21 @@
+diff -Naur a/drivers/amlogic/media/common/ge2d/ge2d_main.c b/drivers/amlogic/media/common/ge2d/ge2d_main.c
+--- a/drivers/amlogic/media/common/ge2d/ge2d_main.c	2021-10-29 12:55:38.000000000 +0200
++++ b/drivers/amlogic/media/common/ge2d/ge2d_main.c	2023-05-25 17:18:32.398887952 +0200
+@@ -448,16 +448,7 @@
+ 	memset(&ge2d_config_ex_ion, 0, sizeof(struct config_para_ex_ion_s));
+ 	memset(&ge2d_req_buf, 0, sizeof(struct ge2d_dmabuf_req_s));
+ 	memset(&ge2d_exp_buf, 0, sizeof(struct ge2d_dmabuf_exp_s));
+-#ifdef CONFIG_AMLOGIC_MEDIA_GE2D_MORE_SECURITY
+-	switch (cmd) {
+-	case GE2D_CONFIG:
+-	case GE2D_CONFIG32:
+-	case GE2D_CONFIG_EX:
+-	case GE2D_CONFIG_EX32:
+-		pr_err("ioctl not support.\n");
+-		return -EINVAL;
+-	}
+-#endif
++
+ 	switch (cmd) {
+ 	case GE2D_GET_CAP:
+ 		cap_mask = ge2d_meson_dev.src2_alp & 0x1;

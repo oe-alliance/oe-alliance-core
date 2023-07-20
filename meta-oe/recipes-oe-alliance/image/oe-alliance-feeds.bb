@@ -9,14 +9,9 @@ ALLOW_EMPTY:${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r16"
+PR = "r17"
 
 DEPENDS = "enigma2-plugin-drivers-usbserial enigma2-plugin-systemplugins-radiotimesemulator enigma2-plugin-systemplugins-hrtunerproxy"
-
-#not python3 ready
-#    ${PYTHON_PN}-cocy
-#    enigma2-plugin-extensions-moviearchiver
-
 
 RDEPENDS:${PN} = " \
     packagegroup-openplugins \
@@ -48,6 +43,8 @@ RDEPENDS:${PN} = " \
     enigma2-plugin-extensions-lamedbmerger \
     enigma2-plugin-extensions-serienrecorder \
     enigma2-plugin-systemplugins-misplslcnscan \
+    enigma2-plugin-extensions-planerfs \
+    enigma2-plugin-extensions-picturecenterfs \
     enigma2-plugin-systemplugins-radiotimesemulator \
     enigma2-plugin-extensions-subssupport \
     enigma2-plugin-extensions-xstreamity \
@@ -144,7 +141,7 @@ RDEPENDS:${PN} = " \
     ${PYTHON_PN}-cfscrape \
     ${PYTHON_PN}-evdev \
     ${PYTHON_PN}-future \
-    ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-futures", "${PYTHON_PN}-futures3", d)} \
+    ${PYTHON_PN}-futures3 \
     ${PYTHON_PN}-fuzzywuzzy \
     ${PYTHON_PN}-ipaddress \
     ${PYTHON_PN}-js2py \
@@ -157,6 +154,7 @@ RDEPENDS:${PN} = " \
     ${PYTHON_PN}-requests-cache \
     ${PYTHON_PN}-service-identity \
     ${PYTHON_PN}-tmdbsimple \
+	${PYTHON_PN}-tvdbsimple \
     ${PYTHON_PN}-tmdbv3api \
     ${PYTHON_PN}-ujson \
     ${PYTHON_PN}-url-normalize \
@@ -165,11 +163,12 @@ RDEPENDS:${PN} = " \
     ${PYTHON_PN}-soco \
     ${PYTHON_PN}-pyexecjs \
     ${PYTHON_PN}-scrapy \
+    ${PYTHON_PN}-timeout-decorator \
     rapidxml \
     rclone \
     rsync \
     rtorrent \
-    ${@bb.utils.contains("PYTHON_PN", "python", "sabnzbd", "sabnzbd3", d)} \
+    sabnzbd3 \
     satpi \
     screen \
     smartmontools \
@@ -184,7 +183,7 @@ RDEPENDS:${PN} = " \
     ushare \
     vim \
     wakelan \
-    ${@bb.utils.contains_any("MACHINE", "dm900 dm920 vuduo2 vusolose vusolo2 vuzero vuuno vuduo vuultimo vusolo inihde2 jj7362 odinm9 et9x00 et6x00 et5x00 dags7356 dags7335 inihdx inihde inihdp vg5000 vg2000 vg1000 ew7356 ew7358 ew7362 ixussone ixusszero blackbox7405 dm520 dm8000 dm7020hd dm7020hdv2 dm800sev2 dm500hdv2 dm7080 dm820 yh7362 yh62tc gb800solo gb7325 ch62lc", "" , "wireguard-tools", d)} \
+    ${@bb.utils.contains_any("MACHINE", "dreamone dreamtwo dm900 dm920 vuduo2 vusolose vusolo2 vuzero vuuno vuduo vuultimo vusolo inihde2 jj7362 odinm9 et9x00 et6x00 et5x00 dags7356 dags7335 inihdx inihde inihdp vg5000 vg2000 vg1000 ew7356 ew7358 ew7362 ixussone ixusszero blackbox7405 dm520 dm8000 dm7020hd dm7020hdv2 dm800sev2 dm500hdv2 dm800se dm500hd dm7080 dm820 yh7362 yh62tc gb800solo gb7325 ch62lc", "" , "wireguard-tools", d)} \
     wireless-tools \
     zeroconf \
     zerotier \
@@ -207,10 +206,5 @@ STATIC_FEED_BUILD = "\
 STATIC_FEED_DEPENDS = "\
 "
 
-RRECOMMENDS:${PN}:append:vuuno = " enigma2-plugin-extensions-hbbtv"
-RRECOMMENDS:${PN}:append:vuultimo = " enigma2-plugin-extensions-hbbtv"
-RRECOMMENDS:${PN}:append:vusolo = " enigma2-plugin-extensions-hbbtv"
-RRECOMMENDS:${PN}:append:vusolo2 = " enigma2-plugin-extensions-hbbtv"
-RRECOMMENDS:${PN}:append:vuduo = " enigma2-plugin-extensions-hbbtv"
-RRECOMMENDS:${PN}:append:vuduo2 = " enigma2-plugin-extensions-hbbtv"
-RRECOMMENDS:${PN}:append:vuzero = " enigma2-plugin-extensions-hbbtv"
+RRECOMMENDS:${PN} = "${@bb.utils.contains("MACHINE_FEATURES", "operahbbtv", "enigma2-plugin-extensions-hbbtv" , "", d)}"
+ 

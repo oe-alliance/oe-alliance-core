@@ -7,7 +7,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 SRC_URI = "file://LCD4linux.tar.gz file://wetter.tar.gz file://duo2lcd4linux.patch;patch=1;pnum=1"
 
 DEPENDS = "${PYTHON_PN} ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-imaging", "${PYTHON_PN}-pillow", d)} ${PYTHON_PN}-pyusb lcd4linux lcd4linuxsupport"
-RDEPENDS:enigma2-plugin-extensions-lcd4linux-duo2 = "enigma2 ${PYTHON_PN}-codecs ${PYTHON_PN}-datetime ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-imaging", "${PYTHON_PN}-pillow", d)} ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-textutils", "", d)} \ ${PYTHON_PN}-shell ${PYTHON_PN}-ctypes ${PYTHON_PN}-pyusb lcd4linux lcd4linuxsupport"
+RDEPENDS:enigma2-plugin-extensions-lcd4linux-duo2 = "enigma2 ${PYTHON_PN}-codecs ${PYTHON_PN}-datetime ${PYTHON_PN}-pillow ${PYTHON_PN}-shell ${PYTHON_PN}-ctypes ${PYTHON_PN}-pyusb lcd4linux lcd4linuxsupport"
 DESCRIPTION:enigma2-plugin-extensions-lcd4linux-duo2 = "Duo2 LCD support driver and setup."
 
 S = "${WORKDIR}/LCD4linux"

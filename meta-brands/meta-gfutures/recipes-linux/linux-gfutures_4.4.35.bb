@@ -44,7 +44,7 @@ SRC_URI = "https://source.mynonpublic.com/gfutures/linux-${PV}-${SRCDATE}-${ARCH
 
 # wireguard v1.0.20220627
 SRCREV_wireguard = "18fbcd68a35a892527345dc5679d0b2d860ee004"
-SRC_URI:append = "${@bb.utils.contains('MACHINEBUILD', 'ax61', ' \
+SRC_URI:append = "${@bb.utils.contains_any('MACHINE', 'hd61', ' \
                     git://git.zx2c4.com/wireguard-linux-compat;protocol=https;branch=master;name=wireguard;subpath=src;destsuffix=${S}/net/wireguard \
                     file://wg-kconfig.patch \
 ', ' ', d)}"

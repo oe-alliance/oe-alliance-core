@@ -64,6 +64,13 @@ PREFERRED_VERSION_linux-abcom = "4.4.35"
 
 IMAGEDIRRECOVERY ?= "${MACHINE}-recovery"
 
+IMAGE_CMD:tar:prepend = "\
+	mkdir -p ${IMAGE_ROOTFS}/usr/lib; \
+	if [ "${PACKAGE_LIST}" = "1" ]; then \
+        cp ${IMAGE_MANIFEST} ${IMAGE_ROOTFS}/usr/lib/package.lst; \
+    fi; \
+    "
+
 IMAGE_CMD:abfastboot8gb:append = " \
     mkdir -p ${DEPLOY_DIR_IMAGE}/${IMAGEDIRRECOVERY}/${IMAGEDIR}; \
     cp ${IMGDEPLOYDIR}/bootoptions.img ${DEPLOY_DIR_IMAGE}/${IMAGEDIRRECOVERY}/${IMAGEDIR}/bootoptions.img; \

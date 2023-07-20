@@ -57,7 +57,7 @@ DEPENDS = "\
     ${@bb.utils.contains('MACHINE_FEATURES', 'blindscan-dvbc', 'virtual/blindscan-dvbc' , '', d)} \
     ${@bb.utils.contains('MACHINE_FEATURES', 'blindscan-dvbs', 'virtual/blindscan-dvbs' , '', d)} \
     ${@bb.utils.contains('MACHINE_FEATURES', 'transcoding', 'virtual/transtreamproxy' , '', d)} \
-    ${PYTHON_PN}-dnspython ${PYTHON_PN}-beautifulsoup4 ${PYTHON_PN}-lxml ${PYTHON_PN}-simplejson ${PYTHON_PN}-pyamf ${PYTHON_PN}-icalendar ${PYTHON_PN}-pyusb ${PYTHON_PN}-six-native \
+    ${PYTHON_PN}-dnspython ${PYTHON_PN}-beautifulsoup4 ${PYTHON_PN}-lxml ${PYTHON_PN}-simplejson ${PYTHON_PN}-pyamf ${PYTHON_PN}-icalendar ${PYTHON_PN}-pyusb ${PYTHON_PN}-six-native ${PYTHON_PN}-yt-dlp \
     djmount \
     dpflib \
     rtmpdump \
@@ -126,7 +126,7 @@ DESCRIPTION:enigma2-plugin-extensions-ondemand = "Watch on demand TV."
 DESCRIPTION:enigma2-plugin-extensions-fempa = "Norwegian P4 FEM PAA radio show player."
 DESCRIPTION:enigma2-plugin-extensions-lcd4linux = "Web/DPF/Samsung LCD Ansteuerung"
 DEPENDS:enigma2-plugin-extensions-lcd4linux = "png-util"
-RDEPENDS:enigma2-plugin-extensions-lcd4linux = "enigma2-plugin-extensions-lcd4linux-src dpflib ${PYTHON_PN}-icalendar ${PYTHON_PN}-pyusb ${PYTHON_PN}-codecs ${PYTHON_PN}-datetime ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-imaging", "${PYTHON_PN}-pillow", d)} ${PYTHON_PN}-image ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-textutils", "", d)} ${PYTHON_PN}-shell ${PYTHON_PN}-ctypes libusb-0.1-4 ${PYTHON_PN}-mutagen ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-zlib", "", d)} ${PYTHON_PN}-email ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-subprocess", "", d)} ${PYTHON_PN}-simplejson ${PYTHON_PN}-soco"
+RDEPENDS:enigma2-plugin-extensions-lcd4linux = "enigma2-plugin-extensions-lcd4linux-src dpflib ${PYTHON_PN}-icalendar ${PYTHON_PN}-pyusb ${PYTHON_PN}-codecs ${PYTHON_PN}-datetime ${PYTHON_PN}-pillow ${PYTHON_PN}-image ${PYTHON_PN}-shell ${PYTHON_PN}-ctypes libusb-0.1-4 ${PYTHON_PN}-mutagen ${PYTHON_PN}-email ${PYTHON_PN}-simplejson ${PYTHON_PN}-soco"
 RDEPENDS:enigma2-plugin-extensions-lcd4linux:append:vuduo2 = " png-util"
 FILES:enigma2-plugin-extensions-lcd4linux:append = " /usr/lib/enigma2/python/Components/Renderer/*.pyc"  
 FILES:enigma2-plugin-extensions-lcd4linux-src:append = " /usr/lib/enigma2/python/Components/Renderer/*.py"
@@ -134,13 +134,13 @@ DESCRIPTION:enigma2-plugin-extensions-remotechannelstreamconverter = "Fetch chan
 RDEPENDS:enigma2-plugin-extensions-remotechannelstreamconverter = "${PYTHON_PN}-shell"
 RREPLACES:enigma2-plugin-extensions-remotechannelstreamconverter = "enigma2-plugin-extensions-remotestreamconvert"
 DESCRIPTION:enigma2-plugin-extensions-tmdb = "Show TMDb information"
-RDEPENDS:enigma2-plugin-extensions-tmdb = "${PYTHON_PN}-json ${PYTHON_PN}-requests"
+RDEPENDS:enigma2-plugin-extensions-tmdb = "${PYTHON_PN}-json ${PYTHON_PN}-requests ${PYTHON_PN}-tmdbsimple"
 DESCRIPTION:enigma2-plugin-systemplugins-wirelessaccesspoint = "Using a Wireless module as AP."
 RDEPENDS:enigma2-plugin-systemplugins-wirelessaccesspoint = "hostapd bridge-utils"
 DESCRIPTION:enigma2-plugin-extensions-rcuselect = "Change Remote for Wetek"
 DESCRIPTION:enigma2-plugin-extensions-rezap = "ReZap Sync Tool for Wetek"
 DESCRIPTION:enigma2-plugin-extensions-piconsupdater = "Download and install new Picons for your current bouquet channels. PiconsUpdater coded by svox and jbleyel, idea by arn354 and picons by mike99"
-RDEPENDS:enigma2-plugin-extensions-piconsupdater = "${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-imaging ${PYTHON_PN}-textutils", "${PYTHON_PN}-pillow", d)} ${PYTHON_PN}-io ${PYTHON_PN}-compression pngquant"
+RDEPENDS:enigma2-plugin-extensions-piconsupdater = "${PYTHON_PN}-pillow ${PYTHON_PN}-io ${PYTHON_PN}-compression pngquant"
 DESCRIPTION:enigma2-plugin-systemplugins-bluetoothsetup = "E2 bluetooth plugin"
 RDEPENDS:enigma2-plugin-systemplugins-bluetoothsetup = "libcurl libsqlite3 libssl libcrypto libudev libusb-compat libusb1 ${@bb.utils.contains("MACHINE_FEATURES", "vubluetooth", "vuplus-bluetooth-util", "", d)} ${@bb.utils.contains("MACHINE_FEATURES", "gbbluetooth", "gb-bluetooth-util", "", d)} "
 DESCRIPTION:enigma2-plugin-extensions-chromium = "E2 Chromium Plugin"
@@ -153,13 +153,14 @@ DESCRIPTION:enigma2-plugin-extensions-webkithbbtv = "E2 HbbTV Plugin"
 RDEPENDS:enigma2-plugin-extensions-webkithbbtv = "vuplus-webkithbbtv-dumpait webkit-hbbtv-browser libupnp1.6"
 DESCRIPTION:enigma2-plugin-extensions-stalkerclient = "E2 Staker Client Plugin"
 DESCRIPTION:enigma2-plugin-extensions-tvspielfilm = "TVSpielfilm Plugin"
+RDEPENDS:enigma2-plugin-extensions-tvspielfilm = "${PYTHON_PN}-yt-dlp"
 
 inherit autotools-brokensep gitpkgv gettext ${PYTHON_PN}targetconfig
 
 SRCREV = "${AUTOREV}"
 PV = "${IMAGE_VERSION}+gitr${SRCPV}"
 PKGV = "${IMAGE_VERSION}+gitr${GITPKGV}"
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "${OEA_PLUGINS_URI}"
 

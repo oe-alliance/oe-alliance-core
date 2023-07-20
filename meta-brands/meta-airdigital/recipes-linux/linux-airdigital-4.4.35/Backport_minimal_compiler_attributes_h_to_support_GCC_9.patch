@@ -23,7 +23,7 @@ diff --git a/include/linux/compiler.h b/include/linux/compiler.h
 index ed772311ec1f..5508011cc0c7 100644
 --- a/include/linux/compiler.h
 +++ b/include/linux/compiler.h
-@@ -52,6 +52,22 @@ extern void __chk_io_ptr(const volatile void __iomem *);
+@@ -52,6 +52,39 @@ extern void __chk_io_ptr(const volatile void __iomem *);
  
  #ifdef __KERNEL__
  
@@ -41,6 +41,23 @@ index ed772311ec1f..5508011cc0c7 100644
 +# define __copy(symbol)                 __attribute__((__copy__(symbol)))
 +#else
 +# define __copy(symbol)
++#endif
++
++# define __GCC4_has_attribute___fallthrough__         0
++/*
++ * Add the pseudo keyword 'fallthrough' so case statement blocks
++ * must end with any of these keywords:
++ *   break;
++ *   fallthrough;
++ *   goto <label>;
++ *   return [expression];
++ *
++ *  gcc: https://gcc.gnu.org/onlinedocs/gcc/Statement-Attributes.html#Statement-Attributes
++ */
++#if __has_attribute(__fallthrough__)
++# define fallthrough                    __attribute__((__fallthrough__))
++#else
++# define fallthrough                    do {} while (0)  /* fallthrough */
 +#endif
 +
  #ifdef __GNUC__

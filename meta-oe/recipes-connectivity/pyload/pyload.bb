@@ -7,13 +7,12 @@ RDEPENDS:${PN} = "\
   ${PYTHON_PN}-db \
   ${PYTHON_PN}-email \
   ${PYTHON_PN}-html \
-  ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-imaging", "${PYTHON_PN}-pillow", d)} \
+  ${PYTHON_PN}-pillow \
   ${PYTHON_PN}-numbers \
   ${PYTHON_PN}-pprint \
   ${PYTHON_PN}-pycryptodome \
   ${PYTHON_PN}-pycurl \
   ${PYTHON_PN}-sqlite3 \
-  ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-subprocess", "", d)} \
   ${PYTHON_PN}-terminal \
   ${PYTHON_PN}-unixadmin \
   ${PYTHON_PN}-xmlrpc \

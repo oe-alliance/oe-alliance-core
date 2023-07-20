@@ -11,6 +11,7 @@ DEPENDS = "libxml2 bash-completion"
 
 inherit python3-dir setuptools3 gittag
 
+
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "${GITPKGVTAG}"
@@ -33,6 +34,7 @@ do_install:append() {
     rm -f ${D}${libdir}/${PYTHON_DIR}/site-packages/yt_dlp*egg-info/SOURCES.txt
     rm -f ${D}${libdir}/${PYTHON_DIR}/site-packages/yt_dlp*egg-info/dependency_links.txt
     rm -f ${D}${libdir}/${PYTHON_DIR}/site-packages/yt_dlp*egg-info/top_level.txt
+    rm -f ${D}${libdir}/${PYTHON_DIR}/site-packages/yt_dlp*dist-info/*
 }
 
 RDEPENDS:${PN} = " \

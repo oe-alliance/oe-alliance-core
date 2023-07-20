@@ -20,7 +20,7 @@ SSTATE_ALLOW_OVERLAP_FILES += "${DEPLOY_DIR_IMAGE}"
 
 IMAGE_INSTALL = "openatv-base \
     ${@bb.utils.contains("MACHINE_FEATURES", "dvbc-only", "", "enigma2-plugin-settings-defaultsat", d)} \
-    ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", \
+    ${@bb.utils.contains_any("MACHINE_FEATURES", "smallflash singlecore", "", \
     " \
     packagegroup-base-smbfs-client \
     packagegroup-base-smbfs-server \

@@ -1,6 +1,5 @@
 # git
 SRCREV:pn-enigma2-plugin-skins-magic ?= "${AUTOREV}"
-SRCREV:pn-enigma2 ?= "${AUTOREV}"
 SRCREV:pn-aio-grab ?= "${AUTOREV}"
 SRCREV:pn-ambx ?= "${AUTOREV}"
 SRCREV:pn-${PYTHON_PN}-pyambx ?= "${AUTOREV}"

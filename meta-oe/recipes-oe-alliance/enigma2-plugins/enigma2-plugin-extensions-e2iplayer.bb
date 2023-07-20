@@ -16,7 +16,7 @@ PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
 PR = "r0"
 
-inherit ${@bb.utils.contains("PYTHON_PN", "python", "distutils-openplugins", "setuptools3-openplugins", d)} gettext
+inherit setuptools3-openplugins gettext
 
 DEPENDS = "gettext-native ${PYTHON_PN}-future-native ${PYTHON_PN}"
 RRECOMMENDS:${PN} = " \
@@ -27,8 +27,6 @@ RRECOMMENDS:${PN} = " \
         ${PYTHON_PN}-e2icjson \
         ${PYTHON_PN}-json \
         ${PYTHON_PN}-shell \
-        ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-subprocess", "", d)} \
-        ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-textutils", "", d)} \
         "
 
 RDEPENDS:{PN}-src = "${PN}"

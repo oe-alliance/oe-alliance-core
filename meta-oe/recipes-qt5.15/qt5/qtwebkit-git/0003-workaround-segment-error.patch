@@ -1,0 +1,25 @@
+From b5dd9853975e6606a7af083cda7454c940b72eda Mon Sep 17 00:00:00 2001
+From: zgemma-star <yanmei@airsatddt.com>
+Date: Tue, 2 May 2023 11:25:15 +0200
+Subject: [PATCH] workaround segment error
+
+---
+ Source/WTF/wtf/StdLibExtras.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Source/WTF/wtf/StdLibExtras.h b/Source/WTF/wtf/StdLibExtras.h
+index d8720971d..e5a6000b4 100644
+--- a/Source/WTF/wtf/StdLibExtras.h
++++ b/Source/WTF/wtf/StdLibExtras.h
+@@ -80,7 +80,7 @@
+  * - https://bugs.webkit.org/show_bug.cgi?id=38045
+  * - http://gcc.gnu.org/bugzilla/show_bug.cgi?id=43976
+  */
+-#if (CPU(ARM) || CPU(MIPS)) && COMPILER(GCC_OR_CLANG)
++#if CPU(MIPS) && COMPILER(GCC_OR_CLANG)
+ template<typename Type>
+ inline bool isPointerTypeAlignmentOkay(Type* ptr)
+ {
+-- 
+2.17.1
+

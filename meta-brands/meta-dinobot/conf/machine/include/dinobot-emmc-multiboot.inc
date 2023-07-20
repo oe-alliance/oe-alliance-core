@@ -9,6 +9,10 @@ IMAGE_ROOTFS_SIZE ?= "589824"
 MACHINE_FEATURES += "emmc mmc"
 
 IMAGE_CMD:dinobotemmcmultiboot:append = "\
+	mkdir -p ${IMAGE_ROOTFS}/usr/lib; \
+	if [ "${PACKAGE_LIST}" = "1" ]; then \
+        cp ${IMAGE_MANIFEST} ${IMAGE_ROOTFS}/usr/lib/package.lst; \
+    fi; \
     mkdir -p ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}; \
 	mkdir -p ${DEPLOY_DIR_IMAGE}/${MACHINE}-partitions; \
 	cp ${IMGDEPLOYDIR}/${IMAGE_NAME}.rootfs.ext4 ${DEPLOY_DIR_IMAGE}/${MACHINE}-partitions/rootfs.ext4; \

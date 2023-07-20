@@ -7,6 +7,8 @@ LICENSE = "GPL-2.0-only"
 HOMEPAGE = "https://github.com/IanSav"
 SOURCE = "https://github.com/IanSav/OverlayHD"
 
+DEPENDS = "gettext-native"
+
 require conf/license/license-gplv2.inc
 
 inherit allarch gittag
@@ -21,11 +23,23 @@ S = "${WORKDIR}/git"
 
 FILES:${PN} = "${libdir} ${datadir}"
 
+do_compile() {
+    # generate translation .mo files
+	mkdir -p ${S}/locale
+	for f in $(find ${S}/po -name *.po ); do
+		l=$(echo ${f%} | sed 's/\.po//' | sed 's/.*po\///')
+		mkdir -p ${S}/locale/${l%}/LC_MESSAGES
+		msgfmt -o ${S}/locale/${l%}/LC_MESSAGES/OverlayHD.mo ${S}/po/$l.po
+	done
+}
+
 do_install() {
     install -d ${D}${libdir}
     install -d ${D}${datadir}
     cp -rf ${S}/usr/lib/* ${D}${libdir}/
     cp -rf ${S}/usr/share/* ${D}${datadir}/
+    install -d ${D}${libdir}/enigma2/python/Plugins/Extensions/OverlayHD/locale/
+    cp -rf ${S}/locale/* ${D}${libdir}/enigma2/python/Plugins/Extensions/OverlayHD/locale/
 }
 
 pkg_postinst:${PN} () {

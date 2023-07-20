@@ -15,3 +15,8 @@ PACKAGECONFIG:append = " \
     ${@bb.utils.contains('MACHINE_FEATURES', 'novp9', '', 'vpx',d)} \
     wavpack gudev \
 "
+
+PV = "1.22.1"
+
+SRC_URI[md5sum] = "270286bf2827940f54bc55a226b9334b"
+SRC_URI[sha256sum] = "44f9104654b4fd042aebe90932ab92e7ff7d8460fbc05b23dad87dffe70974cc"

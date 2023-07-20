@@ -69,7 +69,7 @@ DEPENDS += " \
             gstreamer1.0-plugins-base \
           "
 inherit gitpkgv
-# 20.0 Nexus
+# 20.2 Nexus
 SRCREV = "${AUTOREV}"
 
 # 'patch' doesn't support binary diffs
@@ -77,7 +77,7 @@ PATCHTOOL = "git"
 
 PR = "r1"
 
-PV = "20.0+gitr${SRCPV}"
+PV = "20.2+gitr${SRCPV}"
 
 SRC_URI = "git://github.com/xbmc/xbmc.git;protocol=https;branch=Nexus \
            file://0001-flatbuffers-20.patch \
@@ -234,13 +234,10 @@ RRECOMMENDS:${PN}:append = " libcec \
                              ${@bb.utils.contains('PACKAGECONFIG', 'x11', 'xrandr xinit mesa-demos', '', d)} \
                              ${PYTHON_PN} \
                              ${PYTHON_PN}-ctypes \
-                             ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-lang", "", d)} \
-                             ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-re", "", d)} \
                              ${PYTHON_PN}-netclient \
                              ${PYTHON_PN}-html \
                              ${PYTHON_PN}-difflib \
                              ${PYTHON_PN}-json \
-                             ${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-zlib", "", d)} \
                              ${PYTHON_PN}-shell \
                              ${PYTHON_PN}-sqlite3 \
                              ${PYTHON_PN}-compression \

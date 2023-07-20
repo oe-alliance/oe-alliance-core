@@ -1,21 +1,20 @@
 DESCRIPTION = "Shared component for skins by KiddaC"
-HOMEPAGE = "https://github.com/kiddac/Enigma2_Skins"
+HOMEPAGE = "https://github.com/kiddac/shared-skin-components"
 MAINTAINER = "kiddac"
 PRIORITY = "optional"
 require conf/license/license-gplv2.inc
+require conf/python/python3-compileall.inc
+
+inherit gittag
 
 SRCREV = "${AUTOREV}"
+PV = "git${SRCPV}"
+PKGV = "${GITPKGVTAG}"
 
-PV = "1.01+git${SRCPV}"
-PKGV = "1.01+git${GITPKGV}"
-PR = "r1"
+SRC_URI="git://github.com/kiddac/shared-skin-components.git;protocol=https;branch=master"
 
-inherit gitpkgv
-SRC_URI="git://github.com/kiddac/Enigma2_Skins.git;protocol=https;branch=master"
+S = "${WORKDIR}/git/kiddac-shared-skin-components"
 
-S = "${WORKDIR}/git/1080_Skins/kiddac-shared-skin-components/kiddac-shared-skin-components"
-
-FILES:${PN}-src = "${datadir}/enigma2/slyk-common/*.txt"
 FILES:${PN} = "${libdir} ${datadir}"
 
 do_install() {

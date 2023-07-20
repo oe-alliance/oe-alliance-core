@@ -12,7 +12,7 @@ require conf/python/python3-compileall.inc
 
 S = "${WORKDIR}/git"
 
-inherit gitpkgv ${@bb.utils.contains("PYTHON_PN", "python", "distutils-openplugins", "setuptools3-openplugins", d)}
+inherit gitpkgv setuptools3-openplugins
 
 PV = "1+git${SRCPV}"
 PKGV = "1+git${GITPKGV}"

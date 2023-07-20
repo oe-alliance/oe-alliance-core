@@ -1,0 +1,25 @@
+From 1a4e546928cbbe0ee6daf36d62cffbc666a16a36 Mon Sep 17 00:00:00 2001
+From: jbleyel <jbleyel@gmx.net>
+Date: Sat, 1 Jul 2023 19:18:40 +0200
+Subject: [PATCH] add wget timeouts
+
+---
+ libopkg/opkg_download_wget.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/libopkg/opkg_download_wget.c b/libopkg/opkg_download_wget.c
+index 3dec766..ca66b5d 100644
+--- a/libopkg/opkg_download_wget.c
++++ b/libopkg/opkg_download_wget.c
+@@ -56,6 +56,8 @@ int opkg_download_backend(const char *src, const char *dest,
+         argv[i++] = "-Y";
+         argv[i++] = "on";
+     }
++    argv[i++] = "--dns-timeout=5";
++    argv[i++] = "--connect-timeout=5";
+     argv[i++] = "-O";
+     argv[i++] = dest;
+     argv[i++] = src;
+-- 
+2.39.1
+

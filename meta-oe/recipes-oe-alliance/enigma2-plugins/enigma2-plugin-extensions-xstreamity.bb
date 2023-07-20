@@ -5,15 +5,13 @@ PRIORITY = "optional"
 require conf/license/license-gplv2.inc
 require conf/python/python3-compileall.inc
 
-RDEPENDS:${PN} = "${@bb.utils.contains("PYTHON_PN", "python", "${PYTHON_PN}-imaging python-image", "${PYTHON_PN}-pillow", d)} ${PYTHON_PN}-multiprocessing ${PYTHON_PN}-requests"
+RDEPENDS:${PN} = "${PYTHON_PN}-pillow ${PYTHON_PN}-multiprocessing ${PYTHON_PN}-requests"
+
+inherit gittag allarch
 
 SRCREV = "${AUTOREV}"
-
-PV = "1.01+git${SRCPV}"
-PKGV = "1.01+git${GITPKGV}"
-PR = "r2"
-
-inherit gitpkgv allarch
+PV = "git${SRCPV}"
+PKGV = "${GITPKGVTAG}"
 
 SRC_URI = "git://github.com/kiddac/XStreamity.git;branch=master;protocol=https"
 

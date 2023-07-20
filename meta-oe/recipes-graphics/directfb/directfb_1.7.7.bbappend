@@ -25,6 +25,7 @@ EXTRA_DIRECTFB:beyonwizv2 = "hisi"
 EXTRA_DIRECTFB:viper4k = "hisi"
 EXTRA_DIRECTFB:dual = "hisi"
 EXTRA_DIRECTFB:og2ott4k = "hisi"
+EXTRA_DIRECTFB:og2s4k = "hisi"
 EXTRA_DIRECTFB:ip8 = "hisi"
 EXTRA_DIRECTFB:sx88v2 = "hisi"
 
