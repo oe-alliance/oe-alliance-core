@@ -13,7 +13,7 @@ SRCREV = "${AUTOREV}"
 SRC_URI = "git://github.com/oe-mirrors/serviceapp.git;branch=develop;protocol=https \
         file://ax-python-devel-dont-check-for-distutils.patch"
 SRC_URI:openvix = "git://github.com/OpenViX/serviceapp.git;branch=sigc3;protocol=https"
-SRC_URI:openbh = "git://github.com:BlackHole/serviceapp.git;branch=sigc3;protocol=https"
+SRC_URI:openbh = "git://github.com/BlackHole/serviceapp.git;branch=sigc3;protocol=https"
 
 
 S = "${WORKDIR}/git"
