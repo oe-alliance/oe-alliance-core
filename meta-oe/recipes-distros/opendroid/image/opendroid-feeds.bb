@@ -26,7 +26,6 @@ RRECOMMENDS:${PN} = "\
     enigma2-plugin-skincomponents-mediaportal-ax-blue-skin \
     enigma2-plugin-skincomponents-mediaportal-blue-line-skin \
     enigma2-plugin-skincomponents-mediaportal-smoke-hd-skin \
-    enigma2-plugin-skins-glamouraurafhd-atv \
     enigma2-plugin-skincomponents-skyrecorder-fhd-skin \
     enigma2-plugin-skins-opd-blue-line \
     enigma2-plugin-skins-multibox-fhd-4opd \
