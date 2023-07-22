@@ -7,7 +7,7 @@ ALLOW_EMPTY:${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "1.0"
-PR = "r1"
+PR = "r2"
 
 inherit packagegroup
 
@@ -17,4 +17,5 @@ RRECOMMENDS:${PN} = "\
     opkg-arch-config \
     enigma2-plugin-skins-metrix-atv \
     enigma2-skins \
+    enigma2-plugin-systemplugins-serviceapp \
     "
