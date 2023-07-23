@@ -51,6 +51,15 @@ INHIBIT_DEFAULT_DEPS = "1"
 
 inherit image
 
+do_rootfs:append() {
+    mydir = d.getVar('IMAGE_ROOTFS')
+    print("mydir ", mydir)
+    # fix settings restore
+    bb.process.run("cp %s/mnt/settings/* %s/etc/titan.restore/mnt/settings; rm %s/mnt/settings; rm -rf %s/media/settings" % (mydir, mydir, mydir, mydir))
+    # fix skin restore
+    bb.process.run("ln -s /var/usr/local/share/titan/skin %s/lib/titan" % (mydir))
+}
+
 do_package_index[nostamp] = "1"
 do_package_index[depends] += "${PACKAGEINDEXDEPS}"
 
