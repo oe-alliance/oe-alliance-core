@@ -9,7 +9,7 @@ require conf/license/license-close.inc
 PRECOMPILED_ARCH ?= "${MACHINE}"
 PRECOMPILED_VERSION ?= "${PV}"
 
-DREAMBOX_DVB_MODULES_MIRROR ?= "http://sources.dreamboxupdate.com/download/opendreambox/2.0.0/dreambox-dvb-modules"
+DREAMBOX_DVB_MODULES_MIRROR ?= "https://source.mynonpublic.com/dreambox"
 
 SRC_URI = " \
             ${DREAMBOX_DVB_MODULES_MIRROR}/dreambox-dvb-modules-${PRECOMPILED_ARCH}-${DM_LOCALVERSION}-${DRIVERDATE}.tar.bz2;name=modules \

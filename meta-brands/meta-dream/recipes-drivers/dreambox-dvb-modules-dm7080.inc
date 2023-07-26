@@ -5,7 +5,7 @@ PRIORITY = "required"
 INC_PR = "r0"
 require conf/license/license-close.inc
 
-DREAMBOX_DVB_MODULES_MIRROR ?= "http://dreamboxupdate.com/download/opendreambox/2.5.0/dreambox-dvb-modules/${KV}-${MACHINE}-${DRIVERDATE}/${MACHINE}/${MD5SUM}"
+DREAMBOX_DVB_MODULES_MIRROR ?= "https://source.mynonpublic.com/dreambox"
 
 SRC_URI = "${DREAMBOX_DVB_MODULES_MIRROR}/dreambox-dvb-modules_${KV}-${MACHINE}-${DRIVERDATE}_${MACHINE}.tar.xz;name=${MACHINE}"
 

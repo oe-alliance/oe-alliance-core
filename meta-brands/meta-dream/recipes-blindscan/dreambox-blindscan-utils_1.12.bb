@@ -11,14 +11,14 @@ DEPENDS = "ncurses"
 
 PR = "r4"
 
-SRC_URI += "http://dreamboxupdate.com/download/opendreambox/2.2.0/blindscan-utils/${PV}/${DEFAULTTUNE}/2acb58192434f308bfed6879c51d5d6e/blindscan-utils_${PV}_${DEFAULTTUNE}.tar.xz;name=${DEFAULTTUNE}-dora"
-SRC_URI:dm900 += "http://dreamboxupdate.com/download/opendreambox/2.5.0/blindscan-utils/${PV}/${DEFAULTTUNE}/9e93783a6ac4611bb683d0b36fc44a87/blindscan-utils_${PV}_${DEFAULTTUNE}.tar.xz;name=${DEFAULTTUNE}-krogoth"
-SRC_URI:dm920 += "http://dreamboxupdate.com/download/opendreambox/2.5.0/blindscan-utils/${PV}/${DEFAULTTUNE}/9e93783a6ac4611bb683d0b36fc44a87/blindscan-utils_${PV}_${DEFAULTTUNE}.tar.xz;name=${DEFAULTTUNE}-krogoth"
-SRC_URI:dm520 += "http://dreamboxupdate.com/download/opendreambox/2.5.0/blindscan-utils/${PV}/${DEFAULTTUNE}/185cd9490723728f39953348e322f5c7/blindscan-utils_${PV}_${DEFAULTTUNE}.tar.xz;name=${DEFAULTTUNE}-krogoth"
-SRC_URI:dm820 += "http://dreamboxupdate.com/download/opendreambox/2.5.0/blindscan-utils/${PV}/${DEFAULTTUNE}/185cd9490723728f39953348e322f5c7/blindscan-utils_${PV}_${DEFAULTTUNE}.tar.xz;name=${DEFAULTTUNE}-krogoth"
-SRC_URI:dm7080 += "http://dreamboxupdate.com/download/opendreambox/2.5.0/blindscan-utils/${PV}/${DEFAULTTUNE}/185cd9490723728f39953348e322f5c7/blindscan-utils_${PV}_${DEFAULTTUNE}.tar.xz;name=${DEFAULTTUNE}-krogoth"
-SRC_URI:dreamone += "http://dreamboxupdate.com/download/opendreambox/2.6.0/blindscan-utils/${PV}/${DEFAULTTUNE}/aa6dad1ece041c236338d3a41fd5da1e/blindscan-utils_${PV}_${DEFAULTTUNE}.tar.xz;name=${DEFAULTTUNE}-pyro"
-SRC_URI:dreamtwo += "http://dreamboxupdate.com/download/opendreambox/2.6.0/blindscan-utils/${PV}/${DEFAULTTUNE}/aa6dad1ece041c236338d3a41fd5da1e/blindscan-utils_${PV}_${DEFAULTTUNE}.tar.xz;name=${DEFAULTTUNE}-pyro"
+SRC_URI += "https://source.mynonpublic.com/dreambox/blindscan-utils_${PV}_${DEFAULTTUNE}.tar.xz;name=${DEFAULTTUNE}-dora"
+SRC_URI:dm900 += "https://source.mynonpublic.com/dreambox/blindscan-utils_${PV}_${DEFAULTTUNE}.tar.xz;name=${DEFAULTTUNE}-krogoth"
+SRC_URI:dm920 += "https://source.mynonpublic.com/dreambox/blindscan-utils_${PV}_${DEFAULTTUNE}.tar.xz;name=${DEFAULTTUNE}-krogoth"
+SRC_URI:dm520 += "https://source.mynonpublic.com/dreambox/dm520/blindscan-utils_${PV}_${DEFAULTTUNE}.tar.xz;name=${DEFAULTTUNE}-krogoth"
+SRC_URI:dm820 += "https://source.mynonpublic.com/dreambox/dm820/blindscan-utils_${PV}_${DEFAULTTUNE}.tar.xz;name=${DEFAULTTUNE}-krogoth"
+SRC_URI:dm7080 += "https://source.mynonpublic.com/dreambox/dm7080/blindscan-utils_${PV}_${DEFAULTTUNE}.tar.xz;name=${DEFAULTTUNE}-krogoth"
+SRC_URI:dreamone += "https://source.mynonpublic.com/dreambox/blindscan-utils_${PV}_${DEFAULTTUNE}.tar.xz;name=${DEFAULTTUNE}-pyro"
+SRC_URI:dreamtwo += "https://source.mynonpublic.com/dreambox/blindscan-utils_${PV}_${DEFAULTTUNE}.tar.xz;name=${DEFAULTTUNE}-pyro"
 
 S = "${WORKDIR}/blindscan-utils_${PV}_${DEFAULTTUNE}"
 

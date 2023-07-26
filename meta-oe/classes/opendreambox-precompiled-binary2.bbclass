@@ -2,7 +2,7 @@ require conf/license/license-close.inc
 PRECOMPILED_NAME ?= "${PN}"
 PRECOMPILED_ARCH ?= "${PACKAGE_ARCH}"
 PRECOMPILED_VERSION ?= "${PV}"
-PRECOMPILED_URI ?= "http://dreamboxupdate.com/download/opendreambox/2.2.0/${@precompiledPath(d)};name=${PRECOMPILED_ARCH}"
+PRECOMPILED_URI ?= "https://source.mynonpublic.com/dreambox/${@precompiledPath(d)};name=${PRECOMPILED_ARCH}"
 
 SRC_URI += "${PRECOMPILED_URI}"
 
@@ -15,7 +15,7 @@ def precompiledPath(d):
     md5sum = d.getVarFlag('SRC_URI', '%s.md5sum' % package_arch, True)
     if md5sum is None:
         raise bb.parse.SkipPackage("No checksum found for precompiled binary package %s" % pn)
-    return '%s/%s/%s/%s/%s_%s_%s.tar.xz' % (pn, pv, package_arch, md5sum, pn, pv, package_arch)
+    return '%s_%s_%s.tar.xz' % (pn, pv, package_arch)
 
 do_install() {
     find . -depth -not -path "./patches*" -not -path "./.pc*" -print0 | cpio --null -pdlu ${D}
