@@ -7,7 +7,7 @@ require conf/license/license-gplv2.inc
 
 
 PV = "7.3"
-PR = "r8"
+PR = "r10"
 
 SRC_URI="file://wait1.png \
         file://wait2.png \
