@@ -2596,7 +2596,7 @@ index 0000000000..f6021ef20e
 +        int tmp_resolution = 0;
 +        std::string mode;
 +        CSysfsPath videomode{"/proc/stb/video/videomode"};
-+        mode = videomode.Get<std::string>();
++        mode = videomode.Get<std::string>().value_or("");
 +
 +        std::string fromMode = mode;        
 +        StringUtils::Trim(fromMode);
@@ -3114,7 +3114,7 @@ index 0000000000..3ae4254c04
 +{
 +  std::string mode;
 +  CSysfsPath videomode{"/proc/stb/video/videomode"};
-+  mode = videomode.Get<std::string>();
++  mode = videomode.Get<std::string>().value_or("");
 +  return dreambox_mode_to_resolution(mode.c_str(), res);
 +}
 +
@@ -3123,7 +3123,7 @@ index 0000000000..3ae4254c04
 +  // Don't set the same mode as current
 +  std::string mode;
 +  CSysfsPath videomode{"/proc/stb/video/videomode"};
-+  mode = videomode.Get<std::string>();
++  mode = videomode.Get<std::string>().value_or("");
 +  if (res.strId == mode)
 +    return false;
 +
@@ -3134,7 +3134,7 @@ index 0000000000..3ae4254c04
 +{
 +  std::string valstr;
 +  CSysfsPath videomode_choices{"/proc/stb/video/videomode_choices"};
-+  valstr = videomode_choices.Get<std::string>();
++  valstr = videomode_choices.Get<std::string>().value_or("");
 +  std::vector<std::string> probe_str = StringUtils::Split(valstr, " ");
 +
 +  resolutions.clear();
@@ -3170,7 +3170,7 @@ index 0000000000..3ae4254c04
 +{
 +  // switch display resolution
 +  CSysfsPath videomode{"/proc/stb/video/videomode"};
-+  mode = videomode.Get<std::string>();
++  mode = videomode.Get<std::string>().value_or("");
 +
 +  RESOLUTION_INFO res;
 +  dreambox_mode_to_resolution(mode, &res);
