@@ -8,13 +8,13 @@ LICENSE = "GPL-3.0-or-later"
 LIC_FILES_CHKSUM = "file://COPYING;md5=11bbae9cacaf61dd7fc10035f6f5c68e"
 
 DEPENDS = "miniupnpd"
-RDEPENDS:${PN} = "kernel-module-tun"
+RRECOMMENDS:${PN} = "kernel-module-tun"
 
 inherit gitpkgv
 
 SRCREV = "${AUTOREV}"
-PV = "1.10.2+git${SRCPV}"
-PKGV = "1.10.2+git${GITPKGV}"
+PV = "1.10.6+git${SRCPV}"
+PKGV = "1.10.6+git${GITPKGV}"
 
 SRC_URI = "git://github.com/zerotier/ZeroTierOne.git;protocol=https;branch=main \
         file://zerotier \
