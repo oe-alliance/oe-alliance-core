@@ -32,15 +32,15 @@ SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "${GITPKGVTAG}"
 
-SRC_URI = "git://github.com/E2OpenPlugins/e2openplugin-${MODULE}.git;protocol=https;branch=${BRANCH} \
-           file://transcoding.py \
+SRC_URI = "${@bb.utils.contains_any('DISTRO', 'openhdf teamblue', 'git://github.com/openhdf/OpenWebif.git;protocol=https;branch=${BRANCH}', \
+                'git://github.com/E2OpenPlugins/e2openplugin-${MODULE}.git;protocol=https;branch=${BRANCH} file://transcoding.py', d)} \
            file://setuptools-auto-discovery.patch"
 
 S="${WORKDIR}/git"
 
 # Just a quick hack to "compile" it
 do_compile() {
-	cp ${WORKDIR}/transcoding.py ${S}/plugin/controllers/transcoding.py
+	cp ${WORKDIR}/transcoding.py ${S}/plugin/controllers/transcoding.py >/dev/null 2>&1 || true
 	rm -rf ${S}/plugin/public/static/remotes >/dev/null 2>&1 || true
 	find ${S}/plugin/public/ -empty -type d -delete >/dev/null 2>&1 || true
 	find ${S}/plugin/public/images/boxes/ ! -name 'unknown.png' -type f -exec rm -f {} +
