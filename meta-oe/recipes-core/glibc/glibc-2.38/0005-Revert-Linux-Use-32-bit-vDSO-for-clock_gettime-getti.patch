@@ -16,13 +16,13 @@ Subject: [PATCH] Revert "Linux: Use 32-bit vDSO for clock_gettime,
  delete mode 100644 sysdeps/unix/sysv/linux/tst-time-clobber.c
 
 diff --git a/sysdeps/unix/sysv/linux/Makefile b/sysdeps/unix/sysv/linux/Makefile
-index f298878e..7adbe9a7 100644
+index be801e3b..192aced7 100644
 --- a/sysdeps/unix/sysv/linux/Makefile
 +++ b/sysdeps/unix/sysv/linux/Makefile
-@@ -375,12 +375,6 @@ ifeq ($(subdir),time)
- sysdep_headers += sys/timex.h bits/timex.h
- 
- sysdep_routines += ntp_gettime ntp_gettimex
+@@ -403,12 +403,6 @@ sysdep_routines += \
+   ntp_gettime \
+   ntp_gettimex \
+   # sysdep_routines
 -
 -tests += \
 -  tst-clock_gettime-clobber \
@@ -251,3 +251,6 @@ index 6a8700a3..00000000
 -}
 -
 -#include <support/test-driver.c>
+-- 
+2.40.1
+
