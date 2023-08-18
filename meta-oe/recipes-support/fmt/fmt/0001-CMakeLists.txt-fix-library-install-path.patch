@@ -1,6 +1,6 @@
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -257,7 +257,7 @@ target_include_directories(fmt-header-only INTERFACE
+@@ -341,7 +341,7 @@ target_include_directories(fmt-header-only ${FMT_SYSTEM_HEADERS_ATTRIBUTE} INTER
  # Install targets.
  if (FMT_INSTALL)
    include(CMakePackageConfigHelpers)
@@ -9,7 +9,7 @@
                "Installation directory for cmake files, a relative path that "
                "will be joined with ${CMAKE_INSTALL_PREFIX} or an absolute "
                "path.")
-@@ -266,11 +266,11 @@ if (FMT_INSTALL)
+@@ -350,11 +350,11 @@ if (FMT_INSTALL)
    set(pkgconfig ${PROJECT_BINARY_DIR}/fmt.pc)
    set(targets_export_name fmt-targets)
  
@@ -18,8 +18,8 @@
                "Installation directory for libraries, a relative path that "
                "will be joined to ${CMAKE_INSTALL_PREFIX} or an absolute path.")
  
--  set_verbose(FMT_PKGCONFIG_DIR ${CMAKE_INSTALL_LIBDIR}/pkgconfig CACHE PATH
-+  set_verbose(FMT_PKGCONFIG_DIR ${BASE_LIB_PATH}/pkgconfig CACHE PATH
+-  set_verbose(FMT_PKGCONFIG_DIR ${CMAKE_INSTALL_LIBDIR}/pkgconfig CACHE STRING
++  set_verbose(FMT_PKGCONFIG_DIR ${BASE_LIB_PATH}/pkgconfig CACHE STRING
                "Installation directory for pkgconfig (.pc) files, a relative "
                "path that will be joined with ${CMAKE_INSTALL_PREFIX} or an "
                "absolute path.")
