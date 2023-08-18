@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda
 ALLOW_EMPTY:${PN} = "1"
 
 PV = "1.0"
-PR = "r45"
+PR = "r46"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
@@ -18,6 +18,7 @@ RDEPENDS:${PN} = "\
     ca-certificates \
     openhdf-enigma2 \
     openhdf-bootlogo \
+    openhdf-radio-feed \
     openhdf-spinner \
     curl \
     hddtemp \
