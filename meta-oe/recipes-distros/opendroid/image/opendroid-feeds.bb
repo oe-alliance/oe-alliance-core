@@ -6,8 +6,8 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda
 ALLOW_EMPTY:${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-PV = "7.1"
-PR = "r11"
+PV = "7.3"
+PR = "r13"
 
 inherit packagegroup
 
@@ -19,9 +19,11 @@ RRECOMMENDS:${PN} = "\
     enigma2-display-skins \
     cdfs \
     curlftpfs \
+
     enigma2-plugin-extensions-epgimport \
     enigma2-plugin-extensions-vhannibal-autosettings \
     enigma2-plugin-systemplugins-crossepg \
+    enigma2-plugin-systemplugins-autobouquetsmaker \
     enigma2-plugin-skincomponents-bmediacenter-ax-blue-skin \
     enigma2-plugin-skincomponents-mediaportal-ax-blue-skin \
     enigma2-plugin-skincomponents-mediaportal-blue-line-skin \
