@@ -4,7 +4,7 @@ LICENSE = "GPLv2"
 require conf/license/license-gplv2.inc
 
 DEPENDS = " \
-	libupnp \
+	libupnp1.14 \
 	glib-2.0 \
 	rtmpdump \
     ${@bb.utils.contains("GST_VERSION", "1.0", "gstreamer1.0-plugins-base gstreamer1.0", "gst-plugins-base gstreamer", d)} \

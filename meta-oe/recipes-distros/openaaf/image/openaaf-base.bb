@@ -59,6 +59,7 @@ TITANPACKAGES += "\
 	titan-rarfs \
 	titan-tuxtxt \
 	titan-portscan \
+	titan-bouquet2m3u \
 	"
     
 RDEPENDS:${PN} = "\
@@ -148,5 +149,6 @@ RDEPENDS:${PN} = "\
 	${TITANPACKAGES} \
     \
 	${@bb.utils.contains("MACHINE_FEATURES", "dreamboxv1", "", "oe-alliance-wifi", d)} \
+	${@bb.utils.contains('MACHINE', 'dm900', 'webkit-hbbtv-plugin' , '', d)} \
  	"
 
