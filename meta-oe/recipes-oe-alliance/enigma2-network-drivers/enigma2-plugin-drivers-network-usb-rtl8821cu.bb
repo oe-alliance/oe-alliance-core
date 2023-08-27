@@ -6,10 +6,10 @@ require conf/license/license-gplv2.inc
 RRECOMMENDS:${PN} = " \
         rt8821cu \
 		linux-firmware-8821cu \
-		${@bb.utils.contains("MACHINE", "inihdp", "", "rtk-btusb", d)} \
+		${@bb.utils.contains_any("MACHINE", "inihdp sf8008", "", "rtk-btusb", d)} \
 "
 
 PV = "1.0"
-PR = "r2"
+PR = "r3"
 
 ALLOW_EMPTY:${PN} = "1"

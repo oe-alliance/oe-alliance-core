@@ -11,7 +11,7 @@ COMPATIBLE_MACHINE = "^(multibox|multiboxse|multiboxpro)$"
 
 inherit kernel machine_kernel_pr
 
-MACHINE_KERNEL_PR:append = "19"
+MACHINE_KERNEL_PR:append = "20"
 
 SRCREV_FORMAT = "kernel_wireguard"
 
@@ -43,10 +43,10 @@ SRC_URI = "https://source.mynonpublic.com/maxytec/linux-${PV}-${SRCDATE}-${ARCH}
 
 # wireguard v1.0.20220627
 SRCREV_wireguard = "18fbcd68a35a892527345dc5679d0b2d860ee004"
-SRC_URI:append = "${@bb.utils.contains_any('MACHINE', 'multiboxpro', ' \
+SRC_URI:append = "\
                     git://git.zx2c4.com/wireguard-linux-compat;protocol=https;branch=master;name=wireguard;subpath=src;destsuffix=${S}/net/wireguard \
                     file://wg-kconfig.patch \
-', ' ', d)}"
+"
 
 S = "${WORKDIR}/linux-${PV}"
 B = "${WORKDIR}/build"

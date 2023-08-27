@@ -11,7 +11,7 @@ SRCDATE = "20200219"
 
 inherit kernel machine_kernel_pr
 
-MACHINE_KERNEL_PR:append = "3"
+MACHINE_KERNEL_PR:append = "4"
 
 SRCREV_FORMAT = "kernel_wireguard"
 

@@ -54,7 +54,7 @@ SRC_URI:append:gbmv200 = " file://logo.img"
 
 BINARY_VERSION = "1.3"
 
-SRC_URI += "${@bb.utils.contains("MACHINE_FEATURES", "dreambox", "http://dreamboxupdate.com/download/opendreambox/2.0.0/dreambox-bootlogo/dreambox-bootlogo_${BINARY_VERSION}_${MACHINE_ARCH}.tar.bz2;name=${MACHINE_ARCH}" , "", d)}"
+SRC_URI += "${@bb.utils.contains("MACHINE_FEATURES", "dreambox", "https://source.mynonpublic.com/dreambox/dreambox-bootlogo_${BINARY_VERSION}_${MACHINE_ARCH}.tar.bz2;name=${MACHINE_ARCH}" , "", d)}"
 
 SRC_URI[dm800.md5sum] = "0aacd07cc4d19b388c6441b007e3525a"
 SRC_URI[dm800.sha256sum] = "978a7c50fd0c963013477b5ba08462b35597ea130ae428c828bfcbb5c7cf4cac"

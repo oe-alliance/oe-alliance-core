@@ -8,13 +8,13 @@ LICENSE = "GPL-3.0-or-later"
 LIC_FILES_CHKSUM = "file://COPYING;md5=11bbae9cacaf61dd7fc10035f6f5c68e"
 
 DEPENDS = "miniupnpd"
-RDEPENDS:${PN} = "kernel-module-tun"
+RRECOMMENDS:${PN} = "kernel-module-tun"
 
 inherit gitpkgv
 
 SRCREV = "${AUTOREV}"
-PV = "1.10.2+git${SRCPV}"
-PKGV = "1.10.2+git${GITPKGV}"
+PV = "1.12.0+git${SRCPV}"
+PKGV = "1.12.0+git${GITPKGV}"
 
 SRC_URI = "git://github.com/zerotier/ZeroTierOne.git;protocol=https;branch=main \
         file://zerotier \
@@ -29,6 +29,10 @@ INITSCRIPT_NAME = "zerotier"
 inherit autotools-brokensep update-rc.d systemd
 
 EXTRA_OEMAKE = " ZT_SSO_SUPPORTED=0 "
+
+do_compile:prepend:mipsel() {
+    export LDLIBS+=-latomic
+}
 
 do_install:append() {
     install -d ${D}${sysconfdir}/init.d

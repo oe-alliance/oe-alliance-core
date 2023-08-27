@@ -1,7 +1,7 @@
 PRECOMPILED_ARCH ?= "${MACHINE}"
 PRECOMPILED_VERSION ?= "${PV}"
 
-SRC_URI = "http://sources.dreamboxupdate.com/download/7020/secondstage-${PRECOMPILED_ARCH}-${PRECOMPILED_VERSION}.bin"
+SRC_URI = "https://source.mynonpublic.com/dreambox/secondstage-${PRECOMPILED_ARCH}-${PRECOMPILED_VERSION}.bin"
 
 S = "${WORKDIR}"
 

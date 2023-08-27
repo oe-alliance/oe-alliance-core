@@ -5,7 +5,7 @@ LICENSE = "GPL-3.0-or-later"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 DEPENDS = "libcddb libcdio"
 
-SRC_URI = "http://dreamboxupdate.com/download/sources/${P}.tar.bz2 \
+SRC_URI = "https://source.mynonpublic.com/dreambox/${P}.tar.bz2 \
            file://libcdio090.patch \
 "
 
