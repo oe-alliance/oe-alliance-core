@@ -88,7 +88,6 @@ RDEPENDS:${PN} = "\
 	kernel-module-pl2303 \
 	kernel-module-belkin-sa \
 	kernel-module-keyspan \
-	kernel-module-tun \
 	libdreamdvd \
 	libdvdcss \
 	libusb1 \
