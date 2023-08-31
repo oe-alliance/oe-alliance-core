@@ -17,7 +17,7 @@ RREPLACES:${PN} = "enigma2-plugin-extensions-permanenttimeshift enigma2-plugin-s
 
 RDEPENDS:${PN} = "\
     enigma2-skindefault \
-    openvix-core \
+    enigma2-plugin-systemplugins-vix \
     enigma-info \
     "
 
