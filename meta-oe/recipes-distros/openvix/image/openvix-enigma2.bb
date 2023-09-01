@@ -8,16 +8,27 @@ ALLOW_EMPTY:${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r28"
+PR = "r29"
 
 inherit packagegroup
 
 RCONFLICTS:${PN} = "enigma2-plugin-extensions-permanenttimeshift enigma2-plugin-systemplugins-skinselector"
 RREPLACES:${PN} = "enigma2-plugin-extensions-permanenttimeshift enigma2-plugin-systemplugins-skinselector"
 
+# required for vix plugin: ffmpeg ofgwrite ${PYTHON_PN}-process libcrypto-compat-0.9.7 ${PYTHON_PN}-compression zip procps bzip2
+DEPENDS = "${PYTHON_PN}-process libcrypto-compat-0.9.7 gettext-native"
+
 RDEPENDS:${PN} = "\
+    ffmpeg \
+    ofgwrite \
+    ${PYTHON_PN}-process \
+    libcrypto-compat-0.9.7 \
+    ${PYTHON_PN}-compression \
+    zip \
+    procps \
+    bzip2 \
     enigma2-skindefault \
-    openvix-core \
+    enigma2-plugin-systemplugins-vix \
     enigma-info \
     "
 

@@ -23,6 +23,7 @@ RRECOMMENDS:${PN} = "\
     enigma2-plugin-extensions-epgimport \
     enigma2-plugin-extensions-enhancedmoviecenter \
     enigma2-plugin-systemplugins-crossepg \
+    enigma2-plugin-systemplugins-remotecontrolselection \
     enigma2-skins-openvix \
     oe-alliance-skins \
     openssl-old \

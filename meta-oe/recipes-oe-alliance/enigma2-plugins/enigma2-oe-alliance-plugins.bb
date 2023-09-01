@@ -64,8 +64,8 @@ DEPENDS = "\
     minidlna \
     hddtemp \
     ppp \
-    usbmodeswitch \
-    usbmodeswitch-data \
+    usb-modeswitch \
+    usb-modeswitch-data \
     usbutils \
     satipclient \
     bluez-conf \
@@ -103,7 +103,7 @@ DESCRIPTION:enigma2-plugin-systemplugins-abmcustommiximporter = "Imports ABM Cus
 DESCRIPTION:enigma2-plugin-systemplugins-fancontrol = "Control your internal system fan."
 RDEPENDS:enigma2-plugin-systemplugins-fancontrol_et9x00 = "hddtemp"
 DESCRIPTION:enigma2-plugin-systemplugins-remotecontrolcode = "Change Remote Control Code"
-RDEPENDS:enigma2-plugin-systemplugins-3gmodemmanager = "ppp usbmodeswitch usbmodeswitch-data wvdial wvstreams libwvutils4.6 libwvstreams-extras libuniconf4.6 kernel-module-ppp-async kernel-module-ppp-deflate kernel-module-ppp-synctty kernel-module-ppp-generic kernel-module-slhc kernel-module-usbserial kernel-module-cdc-acm kernel-module-ppp-mppe kernel-module-pppoe kernel-module-pppox kernel-module-option kernel-module-bsd-comp usbutils"
+RDEPENDS:enigma2-plugin-systemplugins-3gmodemmanager = "ppp usb-modeswitch usb-modeswitch-data wvdial wvstreams libwvutils4.6 libwvstreams-extras libuniconf4.6 kernel-module-ppp-async kernel-module-ppp-deflate kernel-module-ppp-synctty kernel-module-ppp-generic kernel-module-slhc kernel-module-usbserial kernel-module-cdc-acm kernel-module-ppp-mppe kernel-module-pppoe kernel-module-pppox kernel-module-option kernel-module-bsd-comp usbutils"
 FILES:enigma2-plugin-systemplugins-3gmodemmanager:append = "/etc/ppp/"
 DESCRIPTION:enigma2-plugin-extensions-webbrowser = "Webbrowser launcher"
 RDEPENDS:enigma2-plugin-extensions-webbrowser = "${PYTHON_PN}-gdata-python3 libqtwebkite4 webbrowser-utils qt4-embedded-fonts qt4-embedded-plugin-imageformat-gif qt4-embedded-plugin-imageformat-ico qt4-embedded-plugin-imageformat-jpeg qt4-embedded-plugin-imageformat-mng qt4-embedded-plugin-imageformat-svg qt4-embedded-plugin-imageformat-tiff qt4-embedded-plugin-iconengine-svgicon"
