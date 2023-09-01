@@ -20,8 +20,11 @@ INFO="/usr/lib/enigma.info"
 
 BOXTYPE=`cat /proc/stb/info/boxtype`
 TYPE=`cat /proc/stb/info/type`
+USB1=`cat /sys/bus/usb/devices/1-1.4/manufacturer`
 if [ $BOXTYPE == "sf8008" ]; then
-  if [ $TYPE == "10" ]; then
+  if [ $USB1 == "JMicron" ]; then
+    sed -i -e 's:displaymodel=SF8008 4K UHD:displaymodel=SF8008 4K Supreme:' $INFO
+  elif [ $TYPE == "10" ]; then
     sed -i -e 's:displaymodel=SF8008 4K UHD:displaymodel=SF8008 4K Single:' $INFO
     sed -i -e 's:model=sf8008:model=sf8008s:' $INFO
   elif [ $TYPE == "11" ]; then
