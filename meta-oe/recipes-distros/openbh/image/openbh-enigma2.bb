@@ -15,9 +15,19 @@ inherit packagegroup
 RCONFLICTS:${PN} = "enigma2-plugin-extensions-permanenttimeshift enigma2-plugin-systemplugins-skinselector"
 RREPLACES:${PN} = "enigma2-plugin-extensions-permanenttimeshift enigma2-plugin-systemplugins-skinselector"
 
+# required for obh plugin: ffmpeg ofgwrite ${PYTHON_PN}-process libcrypto-compat-0.9.7 ${PYTHON_PN}-compression zip procps bzip2
+DEPENDS = "${PYTHON_PN}-process libcrypto-compat-0.9.7 gettext-native"
+
 RDEPENDS:${PN} = "\
+    ffmpeg \
+    ofgwrite \
+    ${PYTHON_PN}-process \
+    libcrypto-compat-0.9.7 \
+    ${PYTHON_PN}-compression \
+    zip \
+    procps \
+    bzip2 \
     enigma2-skindefault \
-    enigma2-plugin-systemplugins-obh \
     enigma-info \
     "
 
@@ -32,6 +42,7 @@ RRECOMMENDS:${PN} = " \
     enigma2-plugin-extensions-socketmmi \
     enigma2-plugin-systemplugins-crossepg \
     enigma2-plugin-systemplugins-hotplug \
+    enigma2-plugin-systemplugins-obh \
     enigma2-plugin-systemplugins-terrestrialscan \
     ${@bb.utils.contains("MACHINE_FEATURES", "fcc", "enigma2-plugin-systemplugins-fastchannelchange", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "videoenhancement", "", "enigma2-plugin-systemplugins-videoenhancement", d)} \
