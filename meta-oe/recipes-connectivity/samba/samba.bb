@@ -1,4 +1,4 @@
-PR = "r2"
+PR = "r3"
 
 require samba-source.inc
 
@@ -214,6 +214,7 @@ do_install() {
     install -m 644 ${WORKDIR}/users.map ${D}${sysconfdir}/samba/private
     install -d ${D}${sysconfdir}/init.d
     install -m 755 ${WORKDIR}/init.samba ${D}${sysconfdir}/init.d/samba
+    install -m 755 ${WORKDIR}/init.wsdd ${D}${sysconfdir}/init.d/wsdd
 
     if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
         perl -i -pe 's:(PIDFile=)/run/(.*?\.pid):${1}${localstatedir}/run/${2}:' ${D}${systemd_system_unitdir}/*.service

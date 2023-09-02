@@ -44,6 +44,7 @@ SRC_URI = "${SAMBA_MIRROR}/stable/samba-${PV}.tar.gz \
            file://smb-shares.conf \
            file://smb-vmc.samba \
            file://init.samba \
+           file://init.wsdd \
            file://pam.samba \
            file://users.map \
            file://smbpasswd \
