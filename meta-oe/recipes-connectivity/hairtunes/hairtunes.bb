@@ -6,7 +6,7 @@ DEPENDS = "alsa-lib openssl"
 
 inherit gitpkgv pkgconfig
 
-PV = "1.0+git${SRCPV}"
+PV = "1.0+git"
 PKGV = "1.0+git${GITPKGV}"
 SRCREV ?= "${AUTOREV}"
 

@@ -13,7 +13,7 @@ RRECOMMENDS:${PN} = "kernel-module-tun"
 inherit gitpkgv
 
 SRCREV = "${AUTOREV}"
-PV = "1.12.0+git${SRCPV}"
+PV = "1.12.0+git"
 PKGV = "1.12.0+git${GITPKGV}"
 
 SRC_URI = "git://github.com/zerotier/ZeroTierOne.git;protocol=https;branch=main \

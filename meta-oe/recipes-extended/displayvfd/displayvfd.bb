@@ -10,7 +10,7 @@ RREPLACES:${PN}  = "vuplus-displayvfd"
 inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PKGV = "1.0+git${GITPKGV}"
-PV = "1.0+git${SRCPV}"
+PV = "1.0+git"
 
 SRC_URI = "git://github.com/oe-alliance/displayvfd.git;protocol=https;branch=main"
 

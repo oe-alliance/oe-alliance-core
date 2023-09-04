@@ -6,7 +6,7 @@ require conf/python/python3-compileall.inc
 inherit gitpkgv setuptools3-openplugins
 
 SRCREV = "${AUTOREV}"
-PV = "git${SRCPV}"
+PV = "git"
 PKGV = "git${GITPKGV}"
 PR = "r7"
 

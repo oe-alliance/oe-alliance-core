@@ -10,7 +10,7 @@ RDEPENDS:${PN} = "${PYTHON_PN}-core ${PYTHON_PN}-codecs ${PYTHON_PN}-json ${PYTH
 inherit ${PYTHON_PN}-dir gitpkgv ${PYTHON_PN}native gettext
 
 SRCREV = "${AUTOREV}"
-PV = "git${SRCPV}"
+PV = "git"
 PKGV = "git${GITPKGV}"
 
 SRC_URI = "git://github.com/Taapat/enigma2-plugin-youtube.git;protocol=https;branch=master"

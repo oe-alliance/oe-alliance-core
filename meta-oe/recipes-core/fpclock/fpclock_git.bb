@@ -7,7 +7,7 @@ RDEPENDS:${PN} += "bash"
 inherit autotools gitpkgv update-rc.d
 
 SRCREV = "${AUTOREV}"
-PV = "1.0+git${SRCPV}"
+PV = "1.0+git"
 PKGV = "1.0+git${GITPKGV}"
 
 SRC_URI = "git://github.com/oe-alliance/FPClock;protocol=https;branch=main"

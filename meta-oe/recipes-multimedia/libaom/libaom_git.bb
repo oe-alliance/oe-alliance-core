@@ -9,7 +9,7 @@ DEPENDS = "nasm-native"
 inherit gitpkgv
 
 SRCREV = "${AUTOREV}"
-PV = "1.0.0+git${SRCPV}"
+PV = "1.0.0+git"
 PKGV = "1.0.0+git${GITPKGV}"
 
 SRC_URI = "git://aomedia.googlesource.com/aom;branch=master;protocol=https"

@@ -7,7 +7,7 @@ DEPENDS = "zlib"
 
 
 SRCREV = "${AUTOREV}"
-PV = "V2.21.0.r3+git${SRCPV}"
+PV = "V2.21.0.r3+git"
 PKGV = "V2.21.0.r3+git${GITPKGV}"
 
 SRC_URI = " \

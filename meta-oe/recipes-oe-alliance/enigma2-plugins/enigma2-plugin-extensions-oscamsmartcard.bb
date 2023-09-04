@@ -10,7 +10,7 @@ require conf/python/python3-compileall.inc
 inherit gitpkgv ${PYTHON_PN}native
 
 SRCREV = "${AUTOREV}"
-PV = "2.4+git${SRCPV}"
+PV = "2.4+git"
 PKGV = "2.4+git${GITPKGV}"
 VER ="2.4"
 PR = "r0"

@@ -8,7 +8,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=860e4083ceb93ce0939b1a58fcaacb53"
 inherit gitpkgv
 
 SRCREV = "0add775ad4c8a999e3e72228c50e11c1da06d3b5"
-PV = "1.3.2a+git${SRCPV}"
+PV = "1.3.2a+git"
 PKGV = "1.3.2a+git${GITPKGV}"
 PR = "r1"
 

@@ -11,7 +11,7 @@ RDEPENDS:${PN} = "gstreamer1.0-plugins-good-flv gstreamer1.0-plugins-bad-rtmp ${
 inherit gitpkgv ${PYTHON_PN}native autotools-brokensep gettext
 
 SRCREV = "${AUTOREV}"
-PV = "4.0.+git${SRCPV}"
+PV = "4.0.+git"
 PKGV = "4.0.+git${GITPKGV}"
 
 SRC_URI="git://github.com/oe-mirrors/e2openplugin-EnhancedMovieCenter.git;branch=master;protocol=https"

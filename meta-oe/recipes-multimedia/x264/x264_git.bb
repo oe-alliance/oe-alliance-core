@@ -9,7 +9,7 @@ DEPENDS = "nasm-native"
 
 SRCREV = "b093bbe7d9bc642c8f24067cbdcc73bb43562eab"
 
-PV = "r2970+git${SRCPV}"
+PV = "r2970+git"
 
 SRC_URI = "git://code.videolan.org/videolan/x264;protocol=https;branch=master \
            file://don-t-default-to-cortex-a9-with-neon.patch \

@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 
 FILESEXTRAPATHS:prepend := "${THISDIR}/openvix-softcams-oscam:"
 
-PV = "1.20+svn${SRCPV}"
+PV = "1.20+svn"
 SRCREV = "11517"
 SRC_URI = "svn://svn.streamboard.tv/oscam;protocol=https;module=trunk;scmdata=keep;rev=${SRCREV};externals=nowarn"
 

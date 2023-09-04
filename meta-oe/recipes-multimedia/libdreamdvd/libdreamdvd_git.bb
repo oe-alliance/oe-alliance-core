@@ -8,7 +8,7 @@ DEPENDS = "libdvdnav"
 inherit gitpkgv
 
 SRCREV = "${AUTOREV}"
-PV = "1.1+git${SRCPV}"
+PV = "1.1+git"
 PKGV = "1.1+git${GITPKGV}"
 
 SRC_URI = "git://github.com/oe-mirrors/libdreamdvd.git;protocol=https;branch=master"

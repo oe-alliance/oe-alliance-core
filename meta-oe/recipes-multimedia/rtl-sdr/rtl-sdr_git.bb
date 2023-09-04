@@ -9,7 +9,7 @@ DEPENDS = "libusb1"
 inherit gitpkgv
 
 SRCREV = "${AUTOREV}"
-PV = "2.0.1+git${SRCPV}"
+PV = "2.0.1+git"
 PKGV = "2.0.1+git${GITPKGV}"
 
 SRC_URI = "git://gitea.osmocom.org/sdr/rtl-sdr;protocol=https;branch=master"

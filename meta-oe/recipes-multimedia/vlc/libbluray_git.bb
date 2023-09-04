@@ -9,7 +9,7 @@ RDEPENDS:${PN} = "libaacs libdca libdvdcss"
 
 inherit gitpkgv
 SRCREV = "${AUTOREV}"
-PV = "v1.3.4+git${SRCPV}"
+PV = "v1.3.4+git"
 PKGV = "v1.3.4+git${GITPKGV}"
 
 SRC_URI = "gitsm://code.videolan.org/videolan/libbluray.git;protocol=https;branch=master"

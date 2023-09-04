@@ -11,7 +11,7 @@ S = "${WORKDIR}/git"
 
 inherit pkgconfig cmake gitpkgv
 
-PV = "0.0.8-r1+git${SRCPV}"
+PV = "0.0.8-r1+git"
 PKGV = "0.0.8-r1+git${GITPKGV}"
 
 SRCREV = "${AUTOREV}"

@@ -17,7 +17,7 @@ RDEPENDS:enigma2-plugin-pli-softcamsetup = "enigma2"
 
 inherit gitpkgv gettext
 
-PV = "2.0+git${SRCPV}"
+PV = "2.0+git"
 PKGV = "2.0+git${GITPKGV}"
 PR = "r0"
 

@@ -12,7 +12,7 @@ DEPENDS = "libxml2 bash-completion"
 inherit python3-dir setuptools3 gittag
 
 SRCREV = "${AUTOREV}"
-PV = "git${SRCPV}"
+PV = "git"
 PKGV = "${GITPKGVTAG}"
 
 SRC_URI = "git://github.com/ytdl-org/youtube-dl.git;protocol=https;branch=master"

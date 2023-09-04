@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://edid-decode.cpp;beginline=1;endline=8;md5=2193df34747
 inherit gitpkgv
 
 SRCREV = "${AUTOREV}"
-PV = "1.0+git${SRCPV}"
+PV = "1.0+git"
 PKGV = "1.0+git${GITPKGV}"
 PR = "r3"
 

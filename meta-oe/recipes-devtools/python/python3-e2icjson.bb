@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=0816bf71e8b244e6de5618a54522e845"
 inherit gitpkgv
 
 SRCREV = "${AUTOREV}"
-PV = "1.2.2+git${SRCPV}"
+PV = "1.2.2+git"
 PKGV = "1.2.2+git${GITPKGV}"
 
 SRC_URI = "git://github.com/oe-mirrors/python-cjson.git;protocol=https;branch=master"

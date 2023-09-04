@@ -9,7 +9,7 @@ RDEPENDS:${PN} = "enigma2-plugin-skincomponents-kiddac-shared-skin"
 inherit gittag
 
 SRCREV = "${AUTOREV}"
-PV = "git${SRCPV}"
+PV = "git"
 PKGV = "${GITPKGVTAG}"
 
 SRC_URI="git://github.com/kiddac/Slyk_R19_1080.git;protocol=https;branch=master"

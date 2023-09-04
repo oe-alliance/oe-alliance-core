@@ -25,7 +25,7 @@ RDEPENDS:${PN} = "${PYTHON_PN}-core \
     ${PYTHON_PN}-websocket-client \
     "
 
-PV = "git${SRCPV}"
+PV = "git"
 PKGV = "${GITPKGVTAG}"
 
 SRCREV_streamlink = "${AUTOREV}"

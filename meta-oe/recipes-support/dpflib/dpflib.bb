@@ -14,7 +14,7 @@ S = "${WORKDIR}/git"
 inherit pkgconfig gitpkgv autotools-brokensep python3native
 
 SRCREV = "${AUTOREV}"
-PV = "4.0.+git${SRCPV}"
+PV = "4.0.+git"
 PKGV = "4.0.+git${GITPKGV}"
 
 INHIBIT_PACKAGE_STRIP = "1"

@@ -20,7 +20,7 @@ SRCREV = "f44fdfbf675f30c01e7639177a34544e6a6b9dad"
 # 'patch' doesn't support binary diffs
 #PATCHTOOL = "git"
 
-PV = "19.0+gitr${SRCPV}"
+PV = "19.0+gitr"
 SRC_URI = "git://github.com/xbmc/xbmc.git;branch=master;protocol=https \
           "
 

@@ -6,7 +6,7 @@ require conf/python/python3-compileall.inc
 
 RDEPENDS:${PN} = "tuxterm"
 
-PV = "V0.2+git${SRCPV}"
+PV = "V0.2+git"
 PKGV = "V0.2+git${GITPKGV}"
 PR = "r0"
 

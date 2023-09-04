@@ -9,7 +9,7 @@ DEPENDS += "expat"
 
 SRCREV = "c42190390f609fba1837903abc7e9446a641032f"
 
-PV = "21.0.1+gitr${SRCPV}"
+PV = "21.0.1+gitr"
 
 KODIADDONBRANCH = "Omega"
 

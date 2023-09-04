@@ -29,7 +29,7 @@ inherit gittag setuptools3-openplugins gettext
 DISTUTILS_INSTALL_ARGS = "--root=${D} --install-lib=${libdir}/enigma2/python/Plugins"
 
 SRCREV = "${AUTOREV}"
-PV = "git${SRCPV}"
+PV = "git"
 PKGV = "${GITPKGVTAG}"
 
 SRC_URI = "${@bb.utils.contains_any('DISTRO', 'openhdf teamblue', 'git://github.com/openhdf/OpenWebif.git;protocol=https;branch=${BRANCH}', \

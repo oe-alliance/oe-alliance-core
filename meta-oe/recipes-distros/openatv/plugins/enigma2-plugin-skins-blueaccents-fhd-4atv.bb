@@ -9,7 +9,7 @@ RDEPENDS:${PN} += "enigma2-plugin-extensions-oaweather"
 inherit gitpkgv
 
 SRCREV = "${AUTOREV}"
-PV = "1.1+git${SRCPV}"
+PV = "1.1+git"
 PKGV = "1.1+git${GITPKGV}"
 
 SRC_URI="git://github.com/stein17/Skins-for-openATV.git;protocol=https;branch=python3"

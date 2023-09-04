@@ -9,7 +9,7 @@ RDEPENDS:${PN} = "${PYTHON_PN}-xmlrpc ${PYTHON_PN}-compression ${PYTHON_PN}-code
 inherit gitpkgv
 
 SRCREV = "${AUTOREV}"
-PV = "1.5.8+git${SRCPV}"
+PV = "1.5.8+git"
 PKGV = "1.5.8+git${GITPKGV}"
 VER = "1.5.8"
 SRC_URI = "git://github.com/oe-mirrors/subssupport;protocol=https;branch=master"

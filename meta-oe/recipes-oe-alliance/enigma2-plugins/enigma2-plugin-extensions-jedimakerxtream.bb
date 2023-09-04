@@ -8,7 +8,7 @@ DEPENDS += "${PYTHON_PN}-backports-lzma"
 require conf/python/python3-compileall.inc
 
 SRCREV="${AUTOREV}"
-PV = "git${SRCPV}"
+PV = "git"
 PKGV = "${GITPKGVTAG}"
 PR = "r3"
 

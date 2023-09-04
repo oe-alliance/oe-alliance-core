@@ -11,7 +11,7 @@ DEPENDS = "bitstream libev"
 inherit gitpkgv
 
 SRCREV = "${AUTOREV}"
-PV = "3.4+git${SRCPV}"
+PV = "3.4+git"
 PKGV = "3.4+git${GITPKGV}"
 
 SRC_URI = "git://code.videolan.org/videolan/dvblast.git;protocol=https;branch=master"

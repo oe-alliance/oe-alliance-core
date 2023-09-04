@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://unjffs2.cpp;beginline=19;endline=19;md5=bde85ed4c68e5
 inherit gitpkgv
 
 PKGV = "1.0+git${GITPKGV}"
-PV = "1.0+git${SRCPV}"
+PV = "1.0+git"
 SRCREV = "${AUTOREV}"
 
 SRC_URI = "git://github.com/athoik/unjffs2.git;protocol=https;branch=master"

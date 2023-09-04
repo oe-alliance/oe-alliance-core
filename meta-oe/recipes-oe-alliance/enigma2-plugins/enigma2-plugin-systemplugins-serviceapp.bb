@@ -21,7 +21,7 @@ inherit autotools gitpkgv ${PYTHON_PN}native pkgconfig gettext python3targetconf
 
 CXXFLAGS += "${@bb.utils.contains_any("DISTRO_NAME", "openvix openbh", "" , " -std=c++11", d)}"
 
-PV = "0.5+git${SRCPV}"
+PV = "0.5+git"
 PKGV = "0.5+git${GITPKGV}"
 
 PR = "r3"

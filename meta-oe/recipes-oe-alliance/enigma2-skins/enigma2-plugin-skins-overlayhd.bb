@@ -14,7 +14,7 @@ require conf/license/license-gplv2.inc
 inherit allarch gittag
 
 SRCREV = "${AUTOREV}"
-PV = "git${SRCPV}"
+PV = "git"
 PKGV = "${GITPKGVTAG}"
 
 SRC_URI = "git://github.com/IanSav/OverlayHD.git;protocol=https;branch=master"

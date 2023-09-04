@@ -13,7 +13,7 @@ inherit python3-dir setuptools3 gittag
 
 
 SRCREV = "${AUTOREV}"
-PV = "git${SRCPV}"
+PV = "git"
 PKGV = "${GITPKGVTAG}"
 
 SRC_URI = "git://github.com/yt-dlp/yt-dlp;protocol=https;branch=master"

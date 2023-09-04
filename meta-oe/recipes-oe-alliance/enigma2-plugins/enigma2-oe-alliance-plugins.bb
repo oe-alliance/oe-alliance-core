@@ -158,7 +158,7 @@ RDEPENDS:enigma2-plugin-extensions-tvspielfilm = "${PYTHON_PN}-yt-dlp"
 inherit autotools-brokensep gitpkgv gettext ${PYTHON_PN}targetconfig
 
 SRCREV = "${AUTOREV}"
-PV = "${IMAGE_VERSION}+gitr${SRCPV}"
+PV = "${IMAGE_VERSION}+gitr"
 PKGV = "${IMAGE_VERSION}+gitr${GITPKGV}"
 PR = "r2"
 

@@ -15,7 +15,7 @@ RPROVIDES:enigma2-plugin-vix-core += "openvix-core"
 
 inherit autotools-brokensep gitpkgv ${PYTHON_PN}native
 SRCREV = "${AUTOREV}"
-PV = "${IMAGE_VERSION}+git${SRCPV}"
+PV = "${IMAGE_VERSION}+git"
 PKGV = "${IMAGE_VERSION}+git${GITPKGV}"
 PR = "r8"
 

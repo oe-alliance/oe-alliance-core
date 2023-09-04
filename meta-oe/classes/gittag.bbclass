@@ -25,14 +25,14 @@
 #
 # inherit gittag
 #
-# PV = "1.0+gitr${SRCPV}"      # expands to something like 1.0+gitr3+4c1c21d7dbbf93b0df336994524313dfe0d4963b
+# PV = "1.0+gitr"      # expands to something like 1.0+gitr3+4c1c21d7dbbf93b0df336994524313dfe0d4963b
 # PKGV = "1.0+gitr${GITPKGV}"  # expands also to something like 1.0+gitr31337+4c1c21d7d
 #
 # or
 #
 # inherit gittag
 #
-# PV = "git${SRCPV}"  # expands to something like git+4c1c21d7dbbf93b0df336994524313dfe0d4963b
+# PV = "git"  # expands to something like git+4c1c21d7dbbf93b0df336994524313dfe0d4963b
 # PKGV = "${GITPKGVTAG}"  # expands to something like 1.0-git31337+4c1c21d
 
 # The GITPKGVTAG format is <tag>-<GITPKGV_PREFIX><commit count>+<git ref>

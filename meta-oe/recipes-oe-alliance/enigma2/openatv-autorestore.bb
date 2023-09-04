@@ -8,7 +8,7 @@ require conf/license/license-gplv2.inc
 FILES:${PN} = "/etc"
 
 SRCREV = "${AUTOREV}"
-PV = "git${SRCPV}"
+PV = "git"
 PKGV = "git${GITPKGV}"
 
 SRC_URI = "git://github.com/openatv/autorestore.git;protocol=https;branch=master"

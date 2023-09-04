@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://resolvconf.in;beginline=4;endline=26;md5=e962049f535f
 inherit allarch gitpkgv
 
 SRCREV = "${AUTOREV}"
-PV = "3.13.1+git${SRCPV}"
+PV = "3.13.1+git"
 PKGV = "3.13.1+git${GITPKGV}"
 
 SRC_URI = "git://github.com/NetworkConfiguration/openresolv;protocol=https;branch=master \

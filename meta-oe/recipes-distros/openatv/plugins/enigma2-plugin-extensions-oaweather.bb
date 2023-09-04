@@ -11,7 +11,7 @@ require conf/python/python3-compileall.inc
 inherit gettext gittag
 
 SRCREV = "${AUTOREV}"
-PV = "git${SRCPV}"
+PV = "git"
 PKGV = "${GITPKGVTAG}"
 
 SRC_URI="git://github.com/oe-alliance/OAWeather;protocol=https;branch=main"

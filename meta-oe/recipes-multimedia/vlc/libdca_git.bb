@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe"
 inherit gitpkgv
 
 SRCREV = "${AUTOREV}"
-PV = "0.0.7+git${SRCPV}"
+PV = "0.0.7+git"
 PKGV = "0.0.7+git${GITPKGV}"
 
 SRC_URI = "git://code.videolan.org/videolan/libdca;protocol=https;branch=master \

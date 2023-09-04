@@ -7,7 +7,7 @@ PACKAGE_ARCH := "${MACHINE_ARCH}"
 
 inherit gitpkgv
 
-PV = "1.0+git${SRCPV}"
+PV = "1.0+git"
 PKGV = "1.0+git${GITPKGV}"
 SRCREV = "${AUTOREV}"
 PR = "r2"

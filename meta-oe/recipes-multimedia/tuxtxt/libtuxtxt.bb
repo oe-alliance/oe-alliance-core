@@ -9,7 +9,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 inherit gitpkgv
 
 SRCREV = "${AUTOREV}"
-PV = "2.0+git${SRCPV}"
+PV = "2.0+git"
 PKGV = "2.0+git${GITPKGV}"
 
 SRC_URI = "git://github.com/OpenPLi/tuxtxt.git;protocol=https;branch=master \

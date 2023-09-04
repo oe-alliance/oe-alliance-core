@@ -87,7 +87,7 @@ SRCREV = "e12e66e019af29ba9d5f5a2614315b15a138b81a"
 
 PR = "r0"
 
-PV = "19.4-gitr${SRCPV}"
+PV = "19.4-gitr"
 SRC_URI = "git://github.com/xbmc/xbmc.git;protocol=https;branch=Matrix \
            file://0001-flatbuffers-19.patch \
            file://0002-readd-Touchscreen-settings.patch \

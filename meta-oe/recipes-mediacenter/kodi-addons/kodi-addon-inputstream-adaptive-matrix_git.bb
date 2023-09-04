@@ -12,7 +12,7 @@ RDEPENDS:${PN} += "ldd"
 RRECOMMENDS:${PN} = "kernel-module-ext2"
 
 SRCREV = "018c7199ad6650e33e7112c2ec01dedc7a1b75ab"
-PV = "19.0.3+gitr${SRCPV}"
+PV = "19.0.3+gitr"
 
 KODIADDONBRANCH = "Matrix"
 
