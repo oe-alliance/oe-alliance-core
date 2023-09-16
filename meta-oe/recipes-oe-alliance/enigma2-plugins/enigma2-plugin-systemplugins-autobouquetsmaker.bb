@@ -12,8 +12,7 @@ PV = "3.3+git${SRCPV}"
 PKGV = "3.3+git${GITPKGV}"
 PR = "r0"
 
-SRC_URI = "git://github.com/oe-alliance/AutoBouquetsMaker.git;protocol=https;branch=master \
-        file://ax-python-devel-dont-check-for-distutils.patch"
+SRC_URI = "git://github.com/oe-alliance/AutoBouquetsMaker.git;protocol=https;branch=master"
 
 EXTRA_OECONF = " \
     BUILD_SYS=${BUILD_SYS} \
