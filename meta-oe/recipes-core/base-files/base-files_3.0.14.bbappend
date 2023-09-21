@@ -46,27 +46,28 @@ do_install:append() {
         perl -i -pe 's:(\@rootfs\@):rootfs\t:s' ${D}${sysconfdir}/fstab
     #fi
 
-    if [ "${MACHINEBUILD}" = "azboxhd" ]; then
-        printf "/dev/hda3\t\tswap\t\tswap\t\tdefaults\t\t\t\t0  0\n" >> ${D}${sysconfdir}/fstab
-    fi
     if [ "${MACHINEBUILD}" = "sf4008" -o "${MACHINEBUILD}" = "sf5008" ]; then
         printf "/dev/mmcblk0p5\t\tnone\t\tswap\t\tsw\t\t\t\t\t0  0\n" >> ${D}${sysconfdir}/fstab
     fi
     if [ "${DISTRO}" = "egami" ]; then
         printf "/dev/sda1\t\t/media/hdd\tauto\t\tdefaults\t\t\t\t0  0\n" >> ${D}${sysconfdir}/fstab
     fi
+    if [ "${MACHINEBUILD}" = "dreamone" -o "${MACHINEBUILD}" = "dreamtwo" ]; then
+        mkdir ${D}/data
+        printf '/dev/dreambox-data\t/data\t\tauto\tdefaults\t\t\t\t0 0\n' >> ${D}${sysconfdir}/fstab
+    fi
 }
 
 # For Classic Dreambox Inject the /boot partition into /etc/fstab. At image creation time,
 # this is done by IMAGE_CMD:ubi.nfi (image_types_nfi.bbclass).
-pkg_postinst:${PN}_dreamboxv1() {
+pkg_postinst:${PN}:dreamboxv1() {
 if [ -z "$D" ]; then
 	ROOT='\<root=ubi0:rootfs\>'
 	if grep -q $ROOT /proc/cmdline && ! grep -q '\s\+/boot\s\+' /etc/fstab; then
 	       printf '/dev/mtdblock2\t/boot\t\tjffs2\tro\t\t\t\t0 0\n' >> /etc/fstab
 	fi
 	if grep -q '/dev/ubi0_1' /proc/mounts && ! grep -q '\s\+/data\s\+' /etc/fstab; then
-	        printf '/dev/ubi0_1\t/data\t\tubifs\trw,nofail\t\t\t\t0 0\n' >> /etc/fstab
+	        printf '/dev/ubi0_1\t/data\t\tubifs\tdefaults\t\t\t\t0 0\n' >> /etc/fstab
 	fi
 fi
 }
