@@ -11,6 +11,11 @@ do
     else
       ln -sf /dev/$devname /dev/block/by-name/$partname-$devname
     fi
+    if [ -d "/usr/share/u-boot-bin/" ] && [ -e "/dev/mmcblk0p7" ]; then
+      mkdir -p /dev/disk/by-label/
+      ln -sf /dev/$devname /dev/disk/by-label/$partname
+      ln -sf /dev/$devname /dev/$partname
+    fi
   fi
 done
 }
