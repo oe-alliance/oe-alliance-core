@@ -13,7 +13,9 @@ do
     fi
     if [ -d "/usr/share/u-boot-bin/" ] && [ -e "/dev/mmcblk0p7" ]; then
       mkdir -p /dev/disk/by-label/
+	  mkdir -p /dev/disk/by-partlabel/
       ln -sf /dev/$devname /dev/disk/by-label/$partname
+      ln -sf /dev/$devname /dev/disk/by-partlabel/$partname
       ln -sf /dev/$devname /dev/$partname
     fi
   fi

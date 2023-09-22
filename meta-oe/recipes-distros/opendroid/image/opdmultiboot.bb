@@ -57,7 +57,7 @@ rm /sbin/init
 ln -s /sbin/opd_multiboot /sbin/init
 }
 
-pkg_postinst_ontarget:${PN}_openbh() {
+pkg_postinst_ontarget:${PN}:openbh() {
 }
 
 pkg_postrm:${PN}() {

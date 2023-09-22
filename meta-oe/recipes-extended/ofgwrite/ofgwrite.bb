@@ -22,4 +22,5 @@ do_install() {
     install -m 755 ${S}/ofgwrite ${D}/usr/bin
     install -m 755 ${S}/ofgwrite_bin ${D}/usr/bin
     install -m 755 ${S}/ofgwrite_test ${D}/usr/bin
+    install -m 755 ${S}/flash-ofgwrite ${D}/usr/bin
 }

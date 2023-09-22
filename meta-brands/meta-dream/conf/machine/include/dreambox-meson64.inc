@@ -50,6 +50,7 @@ MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS = "\
     fbset \
     fbset-modes \
     dp-device \
+    dream-gpt-startup \
 "
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "\
