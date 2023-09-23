@@ -1,40 +1,38 @@
 --- a/meson.build
 +++ b/meson.build
-@@ -250,7 +250,7 @@ with_gallium_kmsro = system_has_kms_drm and [
+@@ -198,7 +198,9 @@ with_gallium_kmsro = system_has_kms_drm and [
    with_gallium_vc4,
  ].contains(true)
  
 -with_dri = false
++dri_drivers = get_option('dri-drivers')
++
 +with_dri = get_option('dri') or (dri_drivers.length() != 0 and dri_drivers != [''])
  if with_gallium and system_has_kms_drm
    _glx = get_option('glx')
    _egl = get_option('egl')
 --- a/meson_options.txt
 +++ b/meson_options.txt
-@@ -51,6 +51,12 @@ option(
-   choices : ['auto', 'true', 'false', 'disabled', 'enabled'],
+@@ -43,6 +43,19 @@ option(
    description : 'enable support for dri3'
  )
+ 
 +option(
 +  'dri',
 +  type : 'boolean',
 +  value : false,
 +  description : 'enable support for dri'
 +)
++
++option(
++  'dri-drivers',
++  type : 'array',
++  description : 'List of dri drivers to build. If this is set to auto all drivers applicable to the target OS/architecture will be built'
++)
++
  option(
-   'dri-drivers',
-   type : 'array',
---- a/src/egl/meson.build
-+++ b/src/egl/meson.build
-@@ -100,7 +100,7 @@ if with_dri2
-   incs_for_egl += inc_gallium
-   incs_for_egl += inc_gallium_aux
-   incs_for_egl += inc_mesa
--  incs_for_egl += inc_st_dri
-+#  incs_for_egl += inc_st_dri
- 
-   files_egl += files(
-     'drivers/dri2/platform_device.c',
+   'dri-drivers-path',
+   type : 'string',
 --- a/src/egl/drivers/dri2/egl_dri2.c
 +++ b/src/egl/drivers/dri2/egl_dri2.c
 @@ -46,7 +46,7 @@
@@ -46,3 +44,81 @@
  
  #ifdef HAVE_WAYLAND_PLATFORM
  #include <wayland-client.h>
+@@ -138,7 +138,7 @@ dri_set_background_context(void *loaderPrivate)
+ static void
+ dri2_gl_flush_get(_glapi_proc *glFlush)
+ {
+-   *glFlush = _glapi_get_proc_address("glFlush");
++//   *glFlush = _glapi_get_proc_address("glFlush");
+ }
+ 
+ static void
+@@ -3673,7 +3673,6 @@ const _EGLDriver _eglDriver = {
+    .CreatePixmapSurface = dri2_create_pixmap_surface,
+    .CreatePbufferSurface = dri2_create_pbuffer_surface,
+    .DestroySurface = dri2_destroy_surface,
+-   .GetProcAddress = dri2_get_proc_address,
+    .WaitClient = dri2_wait_client,
+    .WaitNative = dri2_wait_native,
+    .BindTexImage = dri2_bind_tex_image,
+--- a/src/egl/main/eglapi.c
++++ b/src/egl/main/eglapi.c
+@@ -94,6 +94,7 @@
+ #include <stdlib.h>
+ #include <string.h>
+ #include "c11/threads.h"
++#include "mapi/glapi/glapi.h"
+ #include "util/u_debug.h"
+ #include "util/macros.h"
+ #include "util/perf/cpu_trace.h"
+@@ -2885,8 +2886,8 @@ eglGetProcAddress(const char *procname)
+          ret = entrypoint->function;
+    }
+ 
+-   if (!ret && _eglDriver.GetProcAddress)
+-      ret = _eglDriver.GetProcAddress(procname);
++//  if (!ret)
++//     ret = _glapi_get_proc_address(procname);
+ 
+    RETURN_EGL_SUCCESS(NULL, ret);
+ }
+--- a/src/egl/main/egldriver.h
++++ b/src/egl/main/egldriver.h
+@@ -125,9 +125,6 @@ struct _egl_driver
+    EGLBoolean (*WaitClient)(_EGLDisplay *disp, _EGLContext *ctx);
+    EGLBoolean (*WaitNative)(EGLint engine);
+ 
+-   /* this function may be called from multiple threads at the same time */
+-   _EGLProc (*GetProcAddress)(const char *procname);
+-
+    /* for EGL_KHR_image_base */
+    _EGLImage *(*CreateImageKHR)(_EGLDisplay *disp, _EGLContext *ctx,
+                                 EGLenum target, EGLClientBuffer buffer,
+--- a/src/egl/meson.build
++++ b/src/egl/meson.build
+@@ -64,6 +64,7 @@ files_egl = files(
+   'main/egltypedefs.h',
+ )
+ 
++genCommon_py = files('../mapi/new/genCommon.py')
+ g_egldispatchstubs_c = custom_target(
+   'g_egldispatchstubs.c',
+   input : [
+@@ -104,7 +105,7 @@ if with_dri2
+   incs_for_egl += inc_gallium
+   incs_for_egl += inc_gallium_aux
+   incs_for_egl += inc_mesa
+-  incs_for_egl += inc_st_dri
++#  incs_for_egl += inc_st_dri
+ 
+   files_egl += files(
+     'drivers/dri2/platform_device.c',
+@@ -207,7 +208,7 @@ libegl = shared_library(
+   override_options : override_for_egl,
+   gnu_symbol_visibility : 'hidden',
+   include_directories : incs_for_egl,
+-  link_with : [link_for_egl, libglapi],
++  link_with : [link_for_egl],
+   link_args : [ld_args_bsymbolic, ld_args_gc_sections],
+   dependencies : [deps_for_egl, dep_dl, dep_libdrm, dep_clock, dep_thread, idep_mesautil],
+   install : true,
