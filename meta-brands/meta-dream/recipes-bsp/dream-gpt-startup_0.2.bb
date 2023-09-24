@@ -4,9 +4,6 @@ require conf/license/license-gplv2.inc
 COMPATIBLE_MACHINE = "^(dreamone|dreamtwo)$"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-PV = "0.1"
-PR = "r0"
-
 SRC_URI = "file://startup.zip \
     file://startup.sh \
 "

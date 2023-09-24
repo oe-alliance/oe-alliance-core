@@ -27,6 +27,7 @@ if [ -e "$input_file" ]; then
   count_cmd=$(grep -o 'cmd=' "$input_file" | wc -l)
   if [ "$count_cmd" -ge 2 ]; then
   new_content=$(cat <<EOF
+default=0
 details=0
 timeout=2
 fb_pos=100,400
