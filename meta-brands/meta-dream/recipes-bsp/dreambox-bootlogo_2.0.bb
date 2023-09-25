@@ -1,12 +1,12 @@
 SUMMARY = "Bootlogo support"
 LICENSE = "CLOSED"
 
-SRCREV = "b680994da2cc9771fb07bae0032126612ba4caf7"
+SRCREV = "a0bf37c5b20c1db4dc0008882cc5494b475be0c1"
 SRC_URI += " file://bootlogo.scr"
 
-inherit allarch opendreambox-github
+inherit allarch opendreambox-git
 
-GITHUB_PROJECT = "bootlogo"
+OPENDREAMBOX_PROJECT = "bootlogo"
 
 S = "${WORKDIR}/git"
 
