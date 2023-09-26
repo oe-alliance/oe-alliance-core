@@ -17,7 +17,7 @@ do
       ln -sf /dev/$devname /dev/disk/by-label/$partname
       ln -sf /dev/$devname /dev/disk/by-partlabel/$partname
       if [ ! -e /dev/$partname ]; then
-        ln -sf /dev/$devname c$partname
+        ln -sf /dev/$devname /dev/$partname
       fi
     fi
   fi
