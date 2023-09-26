@@ -40,7 +40,11 @@ case $ACTION in
 		ACTION="add"
 		FSTYPE=`blkid /dev/${MDEV} | grep -v 'TYPE="swap"' | grep ${MDEV} | sed -e "s/.*TYPE=//" -e 's/"//g'`
 		FLASHEXPANDERDEV=`cat /proc/mounts | grep '.FlashExpander' | cut -d " " -f1`
-		MOUNTPOINT=`cat /proc/mounts | grep ${FLASHEXPANDERDEV} | cut -d " " -f2`
+		if [ -n "$FLASHEXPANDERDEV" ]; then
+			MOUNTPOINT=`cat /proc/mounts | grep ${FLASHEXPANDERDEV} | cut -d " " -f2`
+		else
+			MOUNTPOINT=""
+		fi
 		if [ -z "$FSTYPE" ] ; then
 			exit 0
 		fi
