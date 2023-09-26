@@ -42,4 +42,28 @@ EOF
   fi
 fi
 
+input_file="/data/bootconfig.txt"
+temp_file="/data/bootconfig_temp.txt"
+desired_arg="arg=\${bootargs} logo=osd0,loaded,0x7f800000 vout=1080p50hz,enable hdmimode=1080p50hz fb_width=1280 fb_height=720 panel_type=lcd_4"
+awk -v desired_arg="$desired_arg" '
+{
+    if ($0 == "[   Recovery]") {
+        in_recovery_section = !in_recovery_section;
+    }
+
+    if (in_recovery_section && $0 == "arg=\${bootargs}") {
+        print $0;
+    } else if (in_recovery_section) {
+        print $0;
+    } else {
+        if ($0 == "arg=\${bootargs}") {
+            print desired_arg;
+        } else {
+            print $0;
+        }
+    }
+}
+' "$input_file" > "$temp_file"
+mv "$temp_file" "$input_file"
+
 : exit 0
