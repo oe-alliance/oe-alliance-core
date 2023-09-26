@@ -25,13 +25,13 @@ fb_pos=100,400
 fb_size=1080,300
 [BuildIn Slot 1]
 cmd=ext4load mmc 1:5 1080000 /boot/kernel.img;bootm;
-arg=\${bootargs}
+arg=\${bootargs} logo=osd0,loaded,0x7f800000 vout=1080p50hz,enable hdmimode=1080p50hz fb_width=1280 fb_height=720 panel_type=lcd_4
 [BuildIn Slot 2]
 cmd=ext4load mmc 1:6 1080000 /boot/kernel.img;bootm;
-arg=\${bootargs}
+arg=\${bootargs} logo=osd0,loaded,0x7f800000 vout=1080p50hz,enable hdmimode=1080p50hz fb_width=1280 fb_height=720 panel_type=lcd_4
 [BuildIn Slot 3]
 cmd=ext4load mmc 1:7 1080000 /boot/kernel.img;bootm;
-arg=\${bootargs}
+arg=\${bootargs} logo=osd0,loaded,0x7f800000 vout=1080p50hz,enable hdmimode=1080p50hz fb_width=1280 fb_height=720 panel_type=lcd_4
 [   Recovery   ]
 cmd=imgread kernel recovery \${loadaddr} 0; bootm \${loadaddr};
 arg=\${bootargs}
