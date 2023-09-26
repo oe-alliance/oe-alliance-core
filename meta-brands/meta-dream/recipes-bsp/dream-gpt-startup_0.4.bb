@@ -6,12 +6,14 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 SRC_URI = "file://startup.zip \
     file://startup.sh \
+    file://dream-data.sh \
 "
 
 do_install () {
     install -m 0755 -d ${D}${sysconfdir}/init.d
     install -m 0755 -d ${D}${sysconfdir}/rc3.d
     install -m 0755 ${WORKDIR}/startup.sh ${D}${sysconfdir}/init.d/startup.sh
+    install -m 0755 ${WORKDIR}/dream-data.sh ${D}${sysconfdir}/init.d/dream-data.sh
     ln -sf   ../init.d/startup.sh ${D}${sysconfdir}/rc3.d/S85startup.sh
     install -m 0755 -d ${D}/usr/share/startup
 	install -m 0755 ${WORKDIR}/STARTUP ${D}/usr/share/startup/STARTUP
