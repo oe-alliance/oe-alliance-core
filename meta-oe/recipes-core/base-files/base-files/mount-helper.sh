@@ -67,6 +67,15 @@ case $ACTION in
 					fi
 				fi
 			fi
+		elif [ -e /proc/stb/info/model ]; then
+			stbcheck=`cat /proc/stb/info/model`
+			# detected multiboot sdcard
+			if [ $stbcheck == "one" ] || [ $stbcheck == "two" ]; then
+				LABEL=$(blkid -s LABEL -o value /dev/$MDEV)
+				if [ "${LABEL}" == "dreambox-rootfs" ] ; then
+					BLACKLISTED=`echo ${BLACKLISTED} mmcblk1`
+				fi
+			fi
 		fi
 		DEVCHECK=`expr substr $MDEV 1 7`
 		DEVCHECK2=`expr substr $MDEV 1 3`
