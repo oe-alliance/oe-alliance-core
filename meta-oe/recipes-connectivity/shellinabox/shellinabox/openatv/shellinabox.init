@@ -20,6 +20,15 @@ DAEMON=/usr/bin/shellinaboxd
 NAME=shellinabox
 DESC="Shell In A Box server"
 PIDFILE=/var/run/shellinabox.pid
+current_second=0
+while [ ! -e /dev/log ]; do
+    if [ "$current_second" -ge "5" ]; then
+        break # This will exit the loop
+    fi
+    sleep 1
+    ((current_second++))
+done
+
 set -e
 
 test "$NO_START" = "0" || exit 0
