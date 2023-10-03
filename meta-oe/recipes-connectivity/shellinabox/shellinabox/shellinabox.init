@@ -23,7 +23,7 @@ PIDFILE=/var/run/shellinabox.pid
 current_second=0
 while [ ! -e /dev/log ]; do
     if [ "$current_second" -ge "5" ]; then
-        exit 1
+        break # This will exit the loop
     fi
     sleep 1
     ((current_second++))

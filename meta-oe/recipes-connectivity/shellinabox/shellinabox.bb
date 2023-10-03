@@ -7,7 +7,7 @@ DEPENDS = "zlib"
 
 
 SRCREV = "${AUTOREV}"
-PV = "2.21.0.r1+git${SRCPV}"
+PV = "2.21.0.r2+git${SRCPV}"
 
 SRC_URI = " \
            git://github.com/oe-mirrors/shellinabox.git;protocol=https;branch=master \
