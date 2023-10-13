@@ -17,7 +17,7 @@ PKGV = "${DISTRO_VERSION}+git${GITPKGV}"
 VER ="${DISTRO_VERSION}"
 PR = "r1"
 
-METRIX_URI ?= "git://github.com/openatv/MetrixHD.git;branch=master;protocol=https"
+METRIX_URI ?= "git://github.com/openatv/MetrixHD.git;branch=7.3;protocol=https"
 
 PACKAGES =+ "enigma2-plugin-skins-metrix-atv-fhd-icons enigma2-plugin-skins-metrix-atv-uhd-icons enigma2-plugin-skins-metrix-atv-weather-icons"
 PROVIDES =+ "enigma2-plugin-skins-metrix-atv-fhd-icons enigma2-plugin-skins-metrix-atv-uhd-icons enigma2-plugin-skins-metrix-atv-weather-icons"
