@@ -107,6 +107,10 @@ FILES:flash-scripts = " \
     ${sbindir}/writespi \
 "
 
+FILES:flash-scripts:append:meson64 = " \
+    ${sbindir}/force-fsbl \
+"
+
 INITSCRIPT_PACKAGES = "${PN}-autoflashd ${PN}-fbscaled"
 INITSCRIPT_NAME = ""
 INITSCRIPT_NAME:${PN}-autoflashd = "autoflashd"

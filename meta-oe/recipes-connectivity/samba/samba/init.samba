@@ -33,7 +33,8 @@ case "$1" in
     fi
     if [ "$WSDD_DISABLED" != "Yes" ]; then
       echo -n " wsdd"
-      start-stop-daemon --start --quiet --exec $wsdd
+      /etc/init.d/wsdd &
+      #start-stop-daemon --start --quiet --exec $wsdd
     fi
     echo "."
     ;;

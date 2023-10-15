@@ -14,11 +14,8 @@ inherit gitpkgv upx-compress
 PV = "67+gitr${SRCPV}"
 PKGV = "67+gitr${GITPKGV}"
 
-PR = "r2"
-
-SRCREV = "52666caaf08543122ad735e300acb2c2009c83d5"
-SRC_URI = "git://github.com/e2iplayer/www;branch=master;protocol=https \
-        file://fix-build-errors-with-ffmpeg-5.patch"
+SRCREV = "${AUTOREV}"
+SRC_URI = "git://github.com/oe-mirrors/exteplayer3.git;branch=master;protocol=https"
 
 S = "${WORKDIR}/git"
 

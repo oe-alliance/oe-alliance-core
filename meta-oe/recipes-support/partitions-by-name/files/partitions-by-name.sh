@@ -11,6 +11,15 @@ do
     else
       ln -sf /dev/$devname /dev/block/by-name/$partname-$devname
     fi
+    if [ -d "/usr/share/u-boot-bin/" ] && [ -e "/dev/mmcblk0p7" ]; then
+      mkdir -p /dev/disk/by-label/
+      mkdir -p /dev/disk/by-partlabel/
+      ln -sf /dev/$devname /dev/disk/by-label/$partname
+      ln -sf /dev/$devname /dev/disk/by-partlabel/$partname
+      if [ ! -e /dev/$partname ]; then
+        ln -sf /dev/$devname /dev/$partname
+      fi
+    fi
   fi
 done
 }
@@ -33,7 +42,7 @@ fi
 if [ -e "/sys/block/mtdblock2/device/name" ]; then
     devname=`cat /sys/block/mtdblock2/device/name`
     if [ $devname == "bootoptions" ]; then
-        mkdir -p /dev/block/by-name/
-        ln -sf /dev/mtdblock2 /dev/block/by-name/$devname
+      mkdir -p /dev/block/by-name/
+      ln -sf /dev/mtdblock2 /dev/block/by-name/$devname
     fi
 fi

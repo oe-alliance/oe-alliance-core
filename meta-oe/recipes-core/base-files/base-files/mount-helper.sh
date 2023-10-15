@@ -40,7 +40,11 @@ case $ACTION in
 		ACTION="add"
 		FSTYPE=`blkid /dev/${MDEV} | grep -v 'TYPE="swap"' | grep ${MDEV} | sed -e "s/.*TYPE=//" -e 's/"//g'`
 		FLASHEXPANDERDEV=`cat /proc/mounts | grep '.FlashExpander' | cut -d " " -f1`
-		MOUNTPOINT=`cat /proc/mounts | grep ${FLASHEXPANDERDEV} | cut -d " " -f2`
+		if [ -n "$FLASHEXPANDERDEV" ]; then
+			MOUNTPOINT=`cat /proc/mounts | grep ${FLASHEXPANDERDEV} | cut -d " " -f2`
+		else
+			MOUNTPOINT=""
+		fi
 		if [ -z "$FSTYPE" ] ; then
 			exit 0
 		fi
@@ -61,6 +65,15 @@ case $ACTION in
 					if [ $DEVSIZE -lt "32769" ]; then
 						BLACKLISTED=`echo ${BLACKLISTED} sda`
 					fi
+				fi
+			fi
+		elif [ -e /proc/stb/info/model ]; then
+			stbcheck=`cat /proc/stb/info/model`
+			# detected multiboot sdcard
+			if [ $stbcheck == "one" ] || [ $stbcheck == "two" ]; then
+				LABEL=$(blkid -s LABEL -o value /dev/$MDEV)
+				if [ "${LABEL}" == "dreambox-rootfs" ] ; then
+					BLACKLISTED=`echo ${BLACKLISTED} mmcblk1`
 				fi
 			fi
 		fi
@@ -147,7 +160,7 @@ case $ACTION in
 							fi
 							# Remove mountpoint not being used
 							if [ -z "`grep $MOUNTPOINT /proc/mounts`" ] ; then
-								find $MOUNTPOINT -type d -delete
+								find $MOUNTPOINT -maxdepth 1 -type d -delete
 								[ -d $MOUNTPOINT ] && rmdir $MOUNTPOINT
 							fi
 							if ! mkdir $MOUNTPOINT ; then
@@ -157,7 +170,7 @@ case $ACTION in
 							if ! mount -t auto ${TEMPDEV} "${MOUNTPOINT}" ; then
 								if ! mount.exfat ${TEMPDEV} "${MOUNTPOINT}" ; then
 									#echo "[mdev-mount.sh] mount failed 1" >> $LOG
-									find "${MOUNTPOINT}" -type d -delete
+									find "${MOUNTPOINT}" -maxdepth 1 -type d -delete
 									[ -d $MOUNTPOINT ] && rmdir "${MOUNTPOINT}"
 								fi
 							fi
@@ -237,7 +250,7 @@ case $ACTION in
 			# Remove mountpoint not being used
 			if [ -z "`grep $MOUNTPOINT /proc/mounts`" ] ; then
 				#echo "[mdev-mount.sh] rmdir $MOUNTPOINT" >> $LOG
-				find $MOUNTPOINT  -type d -delete
+				find $MOUNTPOINT -maxdepth 1 -type d -delete
 				[ -d $MOUNTPOINT ] && rmdir $MOUNTPOINT
 			fi
 			if ! mkdir $MOUNTPOINT ; then
@@ -248,7 +261,7 @@ case $ACTION in
 			if ! mount -t auto /dev/$MDEV "${MOUNTPOINT}" ; then
 				if ! mount.exfat /dev/$MDEV "${MOUNTPOINT}" ; then
 					#echo "[mdev-mount.sh] mount failed 2" >> $LOG
-					find "${MOUNTPOINT}" -type d -delete
+					find "${MOUNTPOINT}" -maxdepth 1 -type d -delete
 					[ -d $MOUNTPOINT ] && rmdir "${MOUNTPOINT}"
 				fi
 			fi
@@ -261,7 +274,7 @@ case $ACTION in
 			MOUNTPOINT="/media/$MDEV"
 		fi
 		umount $MOUNTPOINT || umount /dev/$MDEV
-		find $MOUNTPOINT  -type d -delete
+		find $MOUNTPOINT -maxdepth 1 -type d -delete
 		[ -d $MOUNTPOINT ] && rmdir $MOUNTPOINT
 		#echo "[mdev-mount.sh] umounted $MOUNTPOINT" >> $LOG
 		;;

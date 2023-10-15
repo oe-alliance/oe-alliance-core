@@ -70,7 +70,7 @@ rm /sbin/init
 ln -s /sbin/open_multiboot /sbin/init
 }
 
-pkg_postinst:${PN}_openbh() {
+pkg_postinst:${PN}:openbh() {
 }
 
 pkg_postrm:${PN}() {

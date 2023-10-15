@@ -11,7 +11,7 @@ SRC_URI = "file://oem-info"
 inherit update-rc.d
 
 INITSCRIPT_NAME = "oem-info"
-INITSCRIPT_PARAMS = "start 7 S ."
+INITSCRIPT_PARAMS = "start 40 S ."
 
 do_install () {
     install -m 0755 -d ${D}${sysconfdir}/init.d

@@ -1,0 +1,4 @@
+#! /bin/sh
+wsdd=/usr/sbin/wsdd
+sleep 5
+start-stop-daemon --start --quiet --exec $wsdd

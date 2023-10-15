@@ -8,7 +8,7 @@ ALLOW_EMPTY:${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r29"
+PR = "r30"
 
 inherit packagegroup
 
@@ -28,7 +28,6 @@ RDEPENDS:${PN} = "\
     procps \
     bzip2 \
     enigma2-skindefault \
-    enigma2-plugin-systemplugins-vix \
     enigma-info \
     "
 
@@ -47,6 +46,7 @@ RRECOMMENDS:${PN} = "\
     enigma2-plugin-systemplugins-aboutboxbranding \
     enigma2-plugin-systemplugins-opentvzapper \
     enigma2-plugin-systemplugins-xmlupdate \
+    enigma2-plugin-systemplugins-vix \
     ${@bb.utils.contains("MACHINE_FEATURES", "uianimation", "enigma2-plugin-systemplugins-animationsetup" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "osdanimation", "enigma2-plugin-systemplugins-animationsetup" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "webkithbbtv", "enigma2-plugin-extensions-webkithbbtv", "", d)} \
