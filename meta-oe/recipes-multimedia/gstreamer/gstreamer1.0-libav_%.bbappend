@@ -1,5 +1,3 @@
-SRC_URI:remove = "file://ffmpeg-6.0.patch"
-
 PV = "1.22.7"
 
 SRC_URI[md5sum] = "fce79c7520067a2d130ee8dfe2f81b38"
