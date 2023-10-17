@@ -9,9 +9,9 @@ require conf/python/python3-compileall.inc
 
 SRCREV="${AUTOREV}"
 
-PV = "1.xx+git${SRCPV}"
-PKGV = "1.xx+git${GITPKGV}"
-PR = "r1"
+PV = "1.01+git${SRCPV}"
+PKGV = "1.01+git${GITPKGV}"
+PR = "r2"
 inherit gitpkgv allarch
 
 SRC_URI = "git://github.com/kiddac/Jedi_Maker_Xtream.git;protocol=https;branch=master"
@@ -30,10 +30,10 @@ do_install () {
 
 pkg_postrm:${PN} () {
 #!/bin/sh
-        rm -rf /etc/enigma2/jediplaylists/playlist_all.json > /dev/null 2>&1
-        rm -rf /usr/lib/enigma2/python/Plugins/Extensions/JediMakerXtream > /dev/null 2>&1
-        rm -rf /etc/enigma2/*jmx*.* > /dev/null 2>&1
-        rm -rf /etc/epgimport/*jmx*.* > /dev/null 2>&1
-        sed -i '/jmx/d' /etc/enigma2/bouquets.tv
-        echo "Restart GUI to finish uninstall!"
+   rm -rf /etc/enigma2/jedimakerxtream/*.txt > /dev/null 2>&1
+   rm -rf /etc/enigma2/jedimakerxtream/*.xml.xz > /dev/null 2>&1
+   rm -rf /etc/enigma2/jediplaylists/*.txt > /dev/null 2>&1
+   rm -rf /etc/enigma2/jediplaylists/*.xml.xz > /dev/null 2>&1
+   rm -rf /usr/lib/enigma2/python/Plugins/Extensions/JediMakerXtream > /dev/null 2>&1
+   exit 0
 }

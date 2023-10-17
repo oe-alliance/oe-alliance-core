@@ -9,9 +9,9 @@ require conf/python/python3-compileall.inc
 DEPENDS = "${PYTHON_PN}-backports-lzma"
 
 SRCREV = "${AUTOREV}"
-PV = "1.xx+git${SRCPV}"
-PKGV = "1.xx+git${GITPKGV}"
-PR = "r1"
+PV = "1.01+git${SRCPV}"
+PKGV = "1.01+git${GITPKGV}"
+PR = "r2"
 
 inherit gitpkgv allarch
 
@@ -29,8 +29,9 @@ do_install () {
 
 pkg_postrm:${PN} () {
 #!/bin/sh
-        rm -rf /etc/enigma2/jediepgxtream > /dev/null 2>&1
-        echo "Restart GUI to finish uninstall!"
+    rm -rf /etc/enigma2/jediepgxtream/*.txt > /dev/null 2>&1
+    rm -rf /etc/enigma2/jediepgxtream/*/*.txt > /dev/null 2>&1
+    exit 0
 }
 
 FILES:${PN} = "${libdir} ${sysconfdir}"
