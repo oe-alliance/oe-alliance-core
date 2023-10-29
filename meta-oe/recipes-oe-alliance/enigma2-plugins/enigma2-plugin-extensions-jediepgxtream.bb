@@ -9,11 +9,11 @@ require conf/python/python3-compileall.inc
 DEPENDS = "${PYTHON_PN}-backports-lzma"
 
 SRCREV = "${AUTOREV}"
-PV = "1.01+git${SRCPV}"
-PKGV = "1.01+git${GITPKGV}"
-PR = "r2"
+PV = "git${SRCPV}"
+PKGV = "${GITPKGVTAG}"
+PR = "r3"
 
-inherit gitpkgv allarch
+inherit gittag allarch
 
 SRC_URI = "git://github.com/kiddac/Jedi-EPG-XStream.git;protocol=https;branch=main"
 
