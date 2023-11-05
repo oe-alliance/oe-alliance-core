@@ -29,4 +29,5 @@ RRECOMMENDS:${PN} = "\
     ${@bb.utils.contains("MACHINE_FEATURES", "nolcd", "", "enigma2-display-skins", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "quadpip", "enigma2-plugin-systemplugins-quadpip", "", d)} \
     enigma2-plugin-systemplugins-icetv \
+    enigma2-plugin-extensions-piconsmissing \
     "
