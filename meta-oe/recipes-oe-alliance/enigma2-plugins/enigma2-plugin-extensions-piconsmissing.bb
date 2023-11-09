@@ -25,5 +25,3 @@ do_install:append() {
 }
 
 FILES:${PN} = "${pluginpath}/"
-
-FILES:${PN}-src = "${pluginpath}/*.py"
