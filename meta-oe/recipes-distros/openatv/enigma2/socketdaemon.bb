@@ -1,4 +1,4 @@
-DESCRIPTION="enigma2 socketdaemon for start/stop services"
+SUMMARY = "enigma2 socketdaemon for start/stop services"
 SECTION = "base"
 PRIORITY = "required"
 MAINTAINER = "openATV"
