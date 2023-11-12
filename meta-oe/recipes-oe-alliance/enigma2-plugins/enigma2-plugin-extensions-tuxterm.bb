@@ -6,13 +6,14 @@ require conf/python/python3-compileall.inc
 
 RDEPENDS:${PN} = "tuxterm"
 
-PV = "0.2+git${SRCPV}"
+PV = "V0.2+git${SRCPV}"
+PKGV = "V0.2+git${GITPKGV}"
 PR = "r0"
 
 SRC_URI = "git://github.com/sklnet/tuxterm-enigma2-plugin.git;protocol=https;branch=master"
 
 S = "${WORKDIR}/git"
 
-inherit autotools-brokensep
+inherit gitpkgv autotools-brokensep
 
 FILES:${PN} = "/"
