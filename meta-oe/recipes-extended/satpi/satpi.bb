@@ -12,12 +12,13 @@ SRC_URI = "git://github.com/Barracuda09/SATPI.git;protocol=http;branch=master;pr
 "
 
 SRCREV = "${AUTOREV}"
-PV = "git${SRCPV}"
+PV = "V1.6+git${SRCPV}"
+PKGV = "V1.6+git${GITPKGV}"
 
 S = "${WORKDIR}/git"
 BUILD = "${WORKDIR}/git"
 
-inherit autotools-brokensep update-rc.d
+inherit gitpkgv autotools-brokensep update-rc.d
 
 INITSCRIPT_NAME = "satpi"
 EXTRA_OECONF = "LIBDVBCSA=yes ENIGMA=yes debug "
