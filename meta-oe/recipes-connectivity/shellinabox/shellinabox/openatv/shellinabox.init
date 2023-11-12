@@ -28,6 +28,7 @@ while [ ! -e /dev/log ]; do
     sleep 1
     ((current_second++))
 done
+sleep 1
 
 set -e
 
