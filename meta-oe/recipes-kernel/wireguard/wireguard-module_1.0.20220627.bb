@@ -44,6 +44,9 @@ MODULE_NAME = "wireguard"
 # The following line is only necessary if the recipe name does not begin
 # with kernel-module-.
 PKG:${PN} = "kernel-module-${MODULE_NAME}"
+RDEPENDS:remove:kernel-module-${MODULE_NAME}-${KERNEL_VERSION} = "kernel-module-ip6-udp-tunnel-${KERNEL_VERSION} kernel-module-udp-tunnel-${KERNEL_VERSION}"
+RRECOMMENDS:append:kernel-module-${MODULE_NAME}-${KERNEL_VERSION} = "kernel-module-ip6-udp-tunnel-${KERNEL_VERSION} kernel-module-udp-tunnel-${KERNEL_VERSION}"
+
 
 module_do_install() {
     install -d ${D}${nonarch_base_libdir}/modules/${KERNEL_VERSION}/kernel/${MODULE_NAME}
