@@ -8,3 +8,8 @@ SECTION:pn-libatomic-ops = "libs"
 SECTION:pn-mtools = "console/utils"
 SECTION:pn-autofs = "console/utils"
 SECTION:pn-cronie = "console/utils"
+SECTION:pn-protobuf = "libs"
+SECTION:pn-parted = "console/utils"
+SECTION:pn-parted-locale  = "console/utils"
+SECTION:pn-ca-certificates = "libs/network"
+
