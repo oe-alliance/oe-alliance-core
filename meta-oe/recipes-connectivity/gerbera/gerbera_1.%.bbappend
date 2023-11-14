@@ -1,6 +1,7 @@
 FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 
 SRC_URI:append = " \
+                file://fix-build-linking-order.patch \
                 file://config.xml \
                 file://init \
 "
