@@ -3,7 +3,7 @@ FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 PACKAGE_NO_LOCALE = "1"
 SRC_URI:append = " file://0001-revert-use-new-gst-adapter-get-buffer.patch"
 
-PV = "1.22.6"
+PV = "1.22.7"
 
-SRC_URI[md5sum] = "62caa2c16550ea444f5d0eb09e0851f3"
-SRC_URI[sha256sum] = "f500e6cfddff55908f937711fc26a0840de28a1e9ec49621c0b6f1adbd8f818e"
+SRC_URI[md5sum] = "3c46d722ef672e4d4baa062db3c111e9"
+SRC_URI[sha256sum] = "01e42c6352a06bdfa4456e64b06ab7d98c5c487a25557c761554631cbda64217"
