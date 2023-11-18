@@ -37,6 +37,6 @@ FILES:${PN} = " \
     ${bindir} \
 "
 
-RDEPENDS:${PN} = "${@bb.utils.contains_any("MACHINE", "dagsmv200 u5 u5pvr u41 u42 u43 u45 u51 u52 u53 u54 u55 u56 u57 u532 u533 u571 osmini4k osmio4k osmio4kplus pulse4k pulse4kmini hd61 multiboxpro", "kernel-module-wireguard", "wireguard-module", d)} bash"
+RRECOMMENDS:${PN} = "kernel-module-wireguard wireguard-module bash"
 
 INSANE_SKIP:${PN} = "build-deps"

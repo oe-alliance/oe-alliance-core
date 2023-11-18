@@ -185,7 +185,7 @@ RDEPENDS:${PN} = " \
     ushare \
     vim \
     wakelan \
-    ${@bb.utils.contains_any("MACHINE", "dreamone dreamtwo dm900 dm920 vuduo2 vusolose vusolo2 vuzero vuuno vuduo vuultimo vusolo inihde2 jj7362 odinm9 et9x00 et6x00 et5x00 dags7356 dags7335 inihdx inihde inihdp vg5000 vg2000 vg1000 ew7356 ew7358 ew7362 ixussone ixusszero blackbox7405 dm520 dm8000 dm7020hd dm7020hdv2 dm800sev2 dm500hdv2 dm800se dm500hd dm7080 dm820 yh7362 yh62tc gb800solo gb7325 ch62lc", "" , "wireguard-tools", d)} \
+    ${@bb.utils.contains_any("MACHINE", "dreamone dreamtwo dm900 dm920 vuduo2 vusolose vusolo2 vuzero vuuno vuduo vuultimo vusolo inihde2 jj7362 odinm9 et9x00 et6x00 et5x00 dags7356 dags7335 inihdx inihde inihdp vg5000 vg2000 vg1000 ew7356 ew7358 ew7362 ixussone ixusszero blackbox7405 dm520 dm8000 dm7020hd dm7020hdv2 dm800sev2 dm500hdv2 dm800se dm500hd dm7080 dm820 yh7362 yh62tc gb800solo gb7325 ch62lc", "" , "wireguard-tools wireguard-module", d)} \
     wireless-tools \
     zeroconf \
     zerotier \
