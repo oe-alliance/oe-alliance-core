@@ -37,7 +37,7 @@ FILES:${PN} = " \
     ${bindir} \
 "
 
-RRECOMMENDS:${PN} = "kernel-module-wireguard wireguard-module"
+RRECOMMENDS:${PN} = "${@bb.utils.contains_any("MACHINE", "osmini4k osmio4k osmio4kplus", "kernel-module-wireguard", "wireguard-module", d)}"
 RDEPENDS:${PN} = "bash"
 
 INSANE_SKIP:${PN} = "build-deps"
