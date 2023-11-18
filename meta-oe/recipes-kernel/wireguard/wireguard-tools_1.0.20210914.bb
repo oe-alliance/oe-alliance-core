@@ -37,6 +37,7 @@ FILES:${PN} = " \
     ${bindir} \
 "
 
-RRECOMMENDS:${PN} = "kernel-module-wireguard wireguard-module bash"
+RRECOMMENDS:${PN} = "kernel-module-wireguard wireguard-module"
+RDEPENDS:${PN} = "bash"
 
 INSANE_SKIP:${PN} = "build-deps"
