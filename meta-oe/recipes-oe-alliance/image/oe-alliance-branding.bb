@@ -13,7 +13,9 @@ PV = "${IMAGE_VERSION}+git${SRCPV}"
 PKGV = "${IMAGE_VERSION}+git${GITPKGV}"
 PR = "${@bb.utils.contains("DISTRO_NAME", "openvix", "${IMAGE_BUILD}-${MACHINEBUILD}" , "r${DATE}-${MACHINEBUILD}", d)}"
 
-do_configure[nostamp] = "1"
+SSTATE_SKIP_CREATION = "1"
+PR[vardepsexclude] = "DATE"
+deltask source_date_epoch
 
 BRANCH="master"
 
