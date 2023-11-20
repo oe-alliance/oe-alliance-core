@@ -11,20 +11,16 @@ inherit autotools-brokensep gitpkgv ${PYTHON_PN}targetconfig ${PYTHON_PN}native
 SRCREV = "${AUTOREV}"
 PV = "${IMAGE_VERSION}+git${SRCPV}"
 PKGV = "${IMAGE_VERSION}+git${GITPKGV}"
-PR = "${@bb.utils.contains("DISTRO_NAME", "openvix", "${IMAGE_BUILD}-${MACHINEBUILD}" , "r${DATE}-${MACHINEBUILD}", d)}"
+PR = "${@bb.utils.contains("DISTRO_NAME", "openvix", "${IMAGE_BUILD}-${MACHINEBUILD}" , "r3-${MACHINEBUILD}", d)}"
 
 SSTATE_SKIP_CREATION = "1"
-PR[vardepsexclude] = "DATE"
-deltask source_date_epoch
 
 BRANCH="master"
 
 FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
 SRC_URI="git://github.com/oe-mirrors/branding-module.git;protocol=https;branch=${BRANCH} \
         file://ax-python-devel-dont-check-for-distutils.patch"
-#SRC_URI_append_openatv=" \
-#	file://openatv_mappings.patch \
-#"
+
 
 S = "${WORKDIR}/git"
 
