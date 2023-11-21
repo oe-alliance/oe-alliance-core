@@ -8,12 +8,9 @@ DEPENDS = "enigma2"
 RDEPENDS:${PN} = "enigma2"
 
 SRCREV = "${AUTOREV}"
-SRC_URI = "git://github.com/oe-mirrors/servicehisilicon.git;protocol=https;branch=master \
-        file://ax-python-devel-dont-check-for-distutils.patch"
-SRC_URI:openatv = "git://github.com/oe-mirrors/servicehisilicon.git;protocol=https;branch=openatv \
-        file://ax-python-devel-dont-check-for-distutils.patch"
-SRC_URI:openhdf = "git://github.com/oe-mirrors/servicehisilicon.git;protocol=https;branch=openatv \
-        file://ax-python-devel-dont-check-for-distutils.patch"
+SRC_URI = "git://github.com/oe-mirrors/servicehisilicon.git;protocol=https;branch=master
+SRC_URI:openatv = "git://github.com/oe-mirrors/servicehisilicon.git;protocol=https;branch=openatv
+SRC_URI:openhdf = "git://github.com/oe-mirrors/servicehisilicon.git;protocol=https;branch=openatv
 SRC_URI:openvix = "git://github.com/OpenViX/servicehisilicon.git;protocol=https;branch=sigc3"
 SRC_URI:openbh = "git://github.com/BlackHole/servicehisilicon.git;protocol=https;branch=sigc3"
 
