@@ -17,14 +17,14 @@ SRC_URI:openbh = "git://github.com/BlackHole/serviceapp.git;branch=sigc3;protoco
 
 S = "${WORKDIR}/git"
 
-inherit autotools gitpkgv ${PYTHON_PN}native pkgconfig gettext ${@bb.utils.contains("PYTHON_PN", "python3", "python3targetconfig", "", d)}
+inherit autotools gitpkgv ${PYTHON_PN}native pkgconfig gettext python3targetconfig
 
 CXXFLAGS += "${@bb.utils.contains_any("DISTRO_NAME", "openvix openbh", "" , " -std=c++11", d)}"
 
 PV = "0.5+git${SRCPV}"
 PKGV = "0.5+git${GITPKGV}"
 
-PR = "r2.2"
+PR = "r3"
 
 EXTRA_OECONF = "\
 	BUILD_SYS=${BUILD_SYS} \
