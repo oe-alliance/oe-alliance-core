@@ -19,7 +19,9 @@ echo "/sbin/mdev" >/proc/sys/kernel/hotplug
 touch /dev/.udev
 
 [ -d "/sys/kernel" ] || mount sysfs /sys -t sysfs
-
 [ -L "/dev/fd" ] || ln -sf /proc/self/fd /dev/fd
+[ -e /dev/pts ] || mkdir -m 0755 /dev/pts
+[ -e /dev/shm ] || mkdir -m 1777 /dev/shm
+mount -t devpts devpts /dev/pts
 
 mdev -s
