@@ -1,5 +1,5 @@
 SUMMARY = "replex remultiplexes TS (DVB) to PS (DVD)"
-SECTION = "console/multimedia"
+SECTION = "multimedia"
 LICENSE = "GPL-2.0-or-later"
 LIC_FILES_CHKSUM = "file://COPYING;md5=8ca43cbc842c2336e835926c2166c28b"
 SRC_URI = "https://people.freebsd.org/~dinoex/distfiles/${BPN}-${PV}.tar.gz \

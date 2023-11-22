@@ -12,4 +12,12 @@ SECTION:pn-protobuf = "libs"
 SECTION:pn-parted = "console/utils"
 SECTION:pn-parted-locale  = "console/utils"
 SECTION:pn-ca-certificates = "libs/network"
-
+SECTION:pn-shadow-base = "console/utils
+SECTION:pn-shadow-locale = "console/utils
+SECTION:pn-shadow = "console/utils
+SECTION:pn-nmap-db;security = "console/utils
+SECTION:pn-nmap;security = "console/utils
+SECTION:pn-tcl = "libs"
+SECTION:pn-libtcl8.6-0 = "libs"
+SECTION:pn-miniupnpd = "network"
+SECTION:pn-python3-pycairo = "devel/python"

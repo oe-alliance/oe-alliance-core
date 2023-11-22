@@ -1,5 +1,5 @@
 SUMMARY = "StreamRipper lets you record streaming mp3 to your hard drive."
-SECTION = "console/multimedia"
+SECTION = "multimedia"
 LICENSE = "GPL-2.0-or-later"
 LIC_FILES_CHKSUM = "file://COPYING;md5=8ca43cbc842c2336e835926c2166c28b"
 DEPENDS = "libogg libvorbis faad2 glib-2.0 libmad"

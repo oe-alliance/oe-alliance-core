@@ -1,6 +1,6 @@
 SUMMARY = "Music Player Daemon (mpd)"
 HOMEPAGE = "http://www.musicpd.org"
-SECTION = "console/multimedia"
+SECTION = "multimedia"
 LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe"
 
