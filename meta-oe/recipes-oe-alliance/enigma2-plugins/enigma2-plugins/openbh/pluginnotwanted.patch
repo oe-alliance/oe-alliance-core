@@ -1,9 +1,9 @@
 diff --git a/Makefile.am b/Makefile.am
-index 4f6461ce..044501d6 100644
+index d4ff4512d..4c1b8482d 100644
 --- a/Makefile.am
 +++ b/Makefile.am
 @@ -2,7 +2,6 @@ ACLOCAL_AMFLAGS = -I m4
-
+ 
  SUBDIRS = \
  	advhdmi \
 -	aihdcontroler \
@@ -34,7 +34,7 @@ index 4f6461ce..044501d6 100644
  	epgrefresh \
  	eurotictv \
  	eventlist \
-@@ -35,74 +23,39 @@ SUBDIRS = \
+@@ -35,73 +23,38 @@ SUBDIRS = \
  	filebrowser \
  	flashexpander \
  	fritzcall \
@@ -106,15 +106,28 @@ index 4f6461ce..044501d6 100644
 -	bmediacenter \
 -	advancedmovieselection
 +	bmediacenter
-
+ 
  if DREAMBOX
  SUBDIRS +=  fancontrol2 letterbox logomanager movielistpreview genuinedreambox
-@@ -129,8 +82,6 @@ if TPM
+@@ -128,8 +81,6 @@ if TPM
  SUBDIRS += \
  	mytube \
  	yttrailer \
 -	webinterface \
 -	menusort \
  	pluginhider \
- 	pluginsort
+ 	pluginsort 
  endif
+@@ -140,12 +91,6 @@ else
+ SUBDIRS += networkbrowser epgsearch
+ endif
+ 
+-if REMOTETIMER2
+-SUBDIRS += 	remotetimer2
+-else
+-SUBDIRS += 	remotetimer
+-endif
+-
+ SUBDIRS += tetris ardmediathek netzkino Series2Folder srfmediathek epgexport
+ 
+ metadir = $(datadir)/meta
