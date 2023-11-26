@@ -3,7 +3,7 @@ index 4f6461ce..044501d6 100644
 --- a/Makefile.am
 +++ b/Makefile.am
 @@ -2,7 +2,6 @@ ACLOCAL_AMFLAGS = -I m4
- 
+
  SUBDIRS = \
  	advhdmi \
 -	aihdcontroler \
@@ -106,7 +106,7 @@ index 4f6461ce..044501d6 100644
 -	bmediacenter \
 -	advancedmovieselection
 +	bmediacenter
- 
+
  if DREAMBOX
  SUBDIRS +=  fancontrol2 letterbox logomanager movielistpreview genuinedreambox
 @@ -129,8 +82,6 @@ if TPM
@@ -116,5 +116,5 @@ index 4f6461ce..044501d6 100644
 -	webinterface \
 -	menusort \
  	pluginhider \
- 	pluginsort 
+ 	pluginsort
  endif
