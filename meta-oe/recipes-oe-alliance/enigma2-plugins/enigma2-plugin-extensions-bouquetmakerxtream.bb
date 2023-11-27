@@ -10,7 +10,7 @@ require conf/python/python3-compileall.inc
 SRCREV="${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "${GITPKGVTAG}"
-PR = "r3"
+PR = "r4"
 
 inherit gittag allarch
 
