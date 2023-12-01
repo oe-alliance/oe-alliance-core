@@ -39,7 +39,7 @@ RDEPENDS:${PN} = " \
     glibc-gconv-iso8859-15 \
     glibc-gconv-cp1250 \
     ${PYTHON_RDEPS} \
-    ${@bb.utils.contains("DISTRO_NAME", "openatv", "openatv-autorestore" , "", d)} \
+    ${@bb.utils.contains("DISTRO_NAME", "openatv", "openatv-autorestore socketdaemon" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "uianimation", "vuplus-libgles-${MACHINE} libvugles2" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "hiaccel", "dinobot-libs-${MACHINE}" , "", d)} \
     oe-alliance-branding \
