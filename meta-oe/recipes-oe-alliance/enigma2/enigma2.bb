@@ -292,7 +292,7 @@ FILES:${PN}-src = "\
     ${libdir}/enigma2/python/PowerTimer.py \
     ${libdir}/enigma2/python/RecordTimer.py \
     ${libdir}/enigma2/python/ServiceReference.py \
-    ${@bb.utils.contains("DISTRO_NAME", "openvix", "${libdir}/enigma2/python/Session.py", "", d)} \
+    ${@bb.utils.contains("DISTRO_NAME", "openvix openbh", "${libdir}/enigma2/python/Session.py", "", d)} \
     ${libdir}/enigma2/python/skin.py \
     ${libdir}/enigma2/python/timer.py \
     ${libdir}/enigma2/python/upgrade.py \
