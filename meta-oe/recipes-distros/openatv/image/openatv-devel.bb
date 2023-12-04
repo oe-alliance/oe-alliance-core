@@ -7,7 +7,7 @@ ALLOW_EMPTY:${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "1.0"
-PR = "r3"
+PR = "r4"
 
 inherit packagegroup
 
@@ -21,4 +21,5 @@ RRECOMMENDS:${PN} = "\
     valgrind \
     exteplayer3 \
     sysvinit \
+    socketdaemon \
     "

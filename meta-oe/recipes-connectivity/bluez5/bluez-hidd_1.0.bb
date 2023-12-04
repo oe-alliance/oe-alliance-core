@@ -1,5 +1,5 @@
 SUMMARY = "Linux Bluetooth HIDD COMPAT Backport"
-SECTION = "console"
+SECTION = "console/network"
 LICENSE = "GPL-2.0-or-later"
 require conf/license/license-gplv2.inc
 

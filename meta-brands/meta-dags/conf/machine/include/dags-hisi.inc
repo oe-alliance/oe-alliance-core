@@ -66,7 +66,7 @@ IMAGE_CMD:dagsemmc:append = "\
     cd ${DEPLOY_DIR_IMAGE}; \
     zip ${IMAGE_NAME}_restore_mmc.zip ${IMAGEDIR}/*; \
     cd ${IMAGE_ROOTFS}; \
-    tar -cvf ${DEPLOY_DIR_IMAGE}/rootfs.tar -C ${IMAGE_ROOTFS} .; \
+    /usr/bin/fakeroot tar -cvf ${DEPLOY_DIR_IMAGE}/rootfs.tar -C ${IMAGE_ROOTFS} .; \
     mv ${DEPLOY_DIR_IMAGE}/rootfs.tar ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/rootfs.tar; \
     cd ${DEPLOY_DIR_IMAGE}; \
     bzip2 ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/rootfs.tar; \

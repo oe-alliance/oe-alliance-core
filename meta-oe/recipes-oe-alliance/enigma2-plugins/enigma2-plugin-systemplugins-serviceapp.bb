@@ -10,22 +10,21 @@ RCONFLICTS:${PN} = "enigma2-plugin-extensions-serviceapp"
 RREPLACES:${PN} = "enigma2-plugin-extensions-serviceapp"
 
 SRCREV = "${AUTOREV}"
-SRC_URI = "git://github.com/oe-mirrors/serviceapp.git;branch=develop;protocol=https \
-        file://ax-python-devel-dont-check-for-distutils.patch"
+SRC_URI = "git://github.com/oe-mirrors/serviceapp.git;branch=develop;protocol=https"
 SRC_URI:openvix = "git://github.com/OpenViX/serviceapp.git;branch=sigc3;protocol=https"
 SRC_URI:openbh = "git://github.com/BlackHole/serviceapp.git;branch=sigc3;protocol=https"
 
 
 S = "${WORKDIR}/git"
 
-inherit autotools gitpkgv ${PYTHON_PN}native pkgconfig gettext ${@bb.utils.contains("PYTHON_PN", "python3", "python3targetconfig", "", d)}
+inherit autotools gitpkgv ${PYTHON_PN}native pkgconfig gettext python3targetconfig
 
 CXXFLAGS += "${@bb.utils.contains_any("DISTRO_NAME", "openvix openbh", "" , " -std=c++11", d)}"
 
 PV = "0.5+git${SRCPV}"
 PKGV = "0.5+git${GITPKGV}"
 
-PR = "r2.2"
+PR = "r3"
 
 EXTRA_OECONF = "\
 	BUILD_SYS=${BUILD_SYS} \

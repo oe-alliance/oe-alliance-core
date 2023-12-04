@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "1.0"
-PR = "r72"
+PR = "r73"
 
 inherit packagegroup
 
@@ -14,6 +14,7 @@ DEPENDS = "enigma2-pliplugins"
 
 RRECOMMENDS:${PN} = " \
     enigma2-skindefault \
+    socketdaemon \
     enigma2-plugin-systemplugins-hotplug \
     enigma2-plugin-systemplugins-softwaremanager \
     ${@bb.utils.contains("SMALLBOXWIZARD", "1", "${SMALLBOXWIZARD_IMAGE}", "${NORMAL_IMAGE}", d)} \

@@ -12,17 +12,16 @@ SRCREV = "${AUTOREV}"
 PV = "${IMAGE_VERSION}+git${SRCPV}"
 PKGV = "${IMAGE_VERSION}+git${GITPKGV}"
 PR = "${@bb.utils.contains("DISTRO_NAME", "openvix", "${IMAGE_BUILD}-${MACHINEBUILD}" , "r${DATE}-${MACHINEBUILD}", d)}"
+PR:openatv = "r3-${MACHINEBUILD}"
 
-do_configure[nostamp] = "1"
+SSTATE_SKIP_CREATION = "1"
 
 BRANCH="master"
 
 FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
 SRC_URI="git://github.com/oe-mirrors/branding-module.git;protocol=https;branch=${BRANCH} \
         file://ax-python-devel-dont-check-for-distutils.patch"
-#SRC_URI_append_openatv=" \
-#	file://openatv_mappings.patch \
-#"
+
 
 S = "${WORKDIR}/git"
 

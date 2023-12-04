@@ -9,7 +9,7 @@ SRCREV = "${AUTOREV}"
 
 PV = "${IMAGE_VERSION}+git${SRCPV}"
 PKGV = "${IMAGE_VERSION}+git${GITPKGV}"
-PR = "r${DATE}-${MACHINEBUILD}"
+PR = "r3-${MACHINEBUILD}"
 
 do_configure[nostamp] = "1"
 

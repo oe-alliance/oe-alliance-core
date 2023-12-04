@@ -7,7 +7,8 @@ DEPENDS = "zlib"
 
 
 SRCREV = "${AUTOREV}"
-PV = "2.21.0.r3+git${SRCPV}"
+PV = "V2.21.0.r3+git${SRCPV}"
+PKGV = "V2.21.0.r3+git${GITPKGV}"
 
 SRC_URI = " \
            git://github.com/oe-mirrors/shellinabox.git;protocol=https;branch=master \
@@ -18,7 +19,7 @@ SRC_URI = " \
           "
 
 
-inherit autotools-brokensep update-rc.d systemd upx-compress
+inherit gitpkgv autotools-brokensep update-rc.d systemd upx-compress
 
 EXTRA_OECONF = "--disable-runtime-loading --disable-utmp"
 

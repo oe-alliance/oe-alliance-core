@@ -40,7 +40,7 @@ RDEPENDS:${PN} = " \
     glibc-gconv-iso8859-15 \
     glibc-gconv-cp1250 \
     ${PYTHON_RDEPS} \
-    ${@bb.utils.contains("DISTRO_NAME", "openatv", "openatv-autorestore" , "", d)} \
+    ${@bb.utils.contains("DISTRO_NAME", "openatv", "openatv-autorestore socketdaemon" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "uianimation", "vuplus-libgles-${MACHINE} libvugles2" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "hiaccel", "dinobot-libs-${MACHINE}" , "", d)} \
     oe-alliance-branding \
@@ -293,6 +293,7 @@ FILES:${PN}-src = "\
     ${libdir}/enigma2/python/PowerTimer.py \
     ${libdir}/enigma2/python/RecordTimer.py \
     ${libdir}/enigma2/python/ServiceReference.py \
+    ${@bb.utils.contains("DISTRO_NAME", "openvix openbh", "${libdir}/enigma2/python/Session.py", "", d)} \
     ${libdir}/enigma2/python/skin.py \
     ${libdir}/enigma2/python/timer.py \
     ${libdir}/enigma2/python/upgrade.py \

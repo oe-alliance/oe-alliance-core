@@ -12,7 +12,7 @@ inherit gitpkgv
 
 PV = "1.3+git${SRCPV}"
 PKGV = "1.3+git${GITPKGV}"
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "git://github.com/satdreamgr/dab-cmdline.git;protocol=https;branch=sdgradio"
 
@@ -26,9 +26,9 @@ S = "${WORKDIR}/git/sdgradio"
 inherit cmake pkgconfig
 
 do_configure:prepend() {
-	sed -i -e 's:librtlsdr.so:librtlsdr.so.0:g' ${WORKDIR}/git/devices/rtlsdr-handler/rtlsdr-handler.cpp
+    sed -i -e 's:librtlsdr.so:librtlsdr.so.2:g' ${WORKDIR}/git/devices/rtlsdr-handler/rtlsdr-handler.cpp
 }
 
 do_install:append() {
-	mv ${D}/usr/bin/dab-rtlsdr-sdgradio ${D}/usr/bin/dab-rtlsdr-sdgradio-pcm
+    mv ${D}/usr/bin/dab-rtlsdr-sdgradio ${D}/usr/bin/dab-rtlsdr-sdgradio-pcm
 }

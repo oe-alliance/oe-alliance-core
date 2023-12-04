@@ -4,7 +4,7 @@ implemented as a kernel virtual network interface for Linux, which aims to \
 replace both IPsec for most use cases, as well as popular user space and/or \
 TLS-based solutions like OpenVPN, while being more secure, more performant, \
 and easier to use."
-SECTION = "networking"
+SECTION = "network"
 HOMEPAGE = "https://www.wireguard.io/"
 LICENSE = "GPL-2.0-only"
 
@@ -37,6 +37,7 @@ FILES:${PN} = " \
     ${bindir} \
 "
 
-RDEPENDS:${PN} = "${@bb.utils.contains_any("MACHINE", "dagsmv200 u5 u5pvr u41 u42 u43 u45 u51 u52 u53 u54 u55 u56 u57 u532 u533 u571 osmini4k osmio4k osmio4kplus pulse4k pulse4kmini hd61 multiboxpro", "kernel-module-wireguard", "wireguard-module", d)} bash"
+RRECOMMENDS:${PN} = "${@bb.utils.contains_any("MACHINE", "osmini4k osmio4k osmio4kplus", "kernel-module-wireguard", "wireguard-module", d)}"
+RDEPENDS:${PN} = "bash"
 
 INSANE_SKIP:${PN} = "build-deps"

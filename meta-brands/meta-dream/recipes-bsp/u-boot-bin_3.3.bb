@@ -2,16 +2,16 @@ SUMMARY = "dreambox u-boot-bin"
 SECTION = "base"
 LICENSE = "CLOSED"
 require conf/license/license-close.inc
-PR = "r0"
+PR = "r1"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 RDEPENDS:${PN} = "flash-scripts"
 
-SRC_URI = "https://source.mynonpublic.com/dreambox/uboot-bin_3.3.zip"
+SRC_URI = "https://source.mynonpublic.com/dreambox/uboot-bin_3.3.r1.zip"
 
-SRC_URI[md5sum] = "0c8258062fdc8e45704cb2097217c121"
-SRC_URI[sha256sum] = "c8365e5d05afb53b851fa4f6be519af5c34e8ea9bb3cc6369a07b4b7b92d4574"
+SRC_URI[md5sum] = "8ff80679877987823ea89c8d3ecec07b"
+SRC_URI[sha256sum] = "69d5dab3c4b670e182fbff9824c4b08583d15cc92df3cf1908f9ac6df74a6a45"
 
 S = "${WORKDIR}"
 

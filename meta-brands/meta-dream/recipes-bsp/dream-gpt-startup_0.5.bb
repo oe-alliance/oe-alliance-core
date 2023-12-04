@@ -16,11 +16,12 @@ do_install () {
     install -m 0755 ${WORKDIR}/dream-data.sh ${D}${sysconfdir}/init.d/dream-data.sh
     ln -sf   ../init.d/startup.sh ${D}${sysconfdir}/rc3.d/S85startup.sh
     install -m 0755 -d ${D}/usr/share/startup
-	install -m 0755 ${WORKDIR}/STARTUP ${D}/usr/share/startup/STARTUP
-	install -m 0755 ${WORKDIR}/STARTUP_1 ${D}/usr/share/startup/STARTUP_1
-	install -m 0755 ${WORKDIR}/STARTUP_2 ${D}/usr/share/startup/STARTUP_2
-	install -m 0755 ${WORKDIR}/STARTUP_3 ${D}/usr/share/startup/STARTUP_3
-	install -m 0755 ${WORKDIR}/STARTUP_RECOVERY ${D}/usr/share/startup/STARTUP_RECOVERY
+    install -m 0755 ${WORKDIR}/STARTUP ${D}/usr/share/startup/STARTUP
+    install -m 0755 ${WORKDIR}/STARTUP_1 ${D}/usr/share/startup/STARTUP_1
+    install -m 0755 ${WORKDIR}/STARTUP_2 ${D}/usr/share/startup/STARTUP_2
+    install -m 0755 ${WORKDIR}/STARTUP_3 ${D}/usr/share/startup/STARTUP_3
+    install -m 0755 ${WORKDIR}/STARTUP_4 ${D}/usr/share/startup/STARTUP_4
+    install -m 0755 ${WORKDIR}/STARTUP_RECOVERY ${D}/usr/share/startup/STARTUP_RECOVERY
 }
 
 FILES:${PN} = "/usr/share ${sysconfdir}"

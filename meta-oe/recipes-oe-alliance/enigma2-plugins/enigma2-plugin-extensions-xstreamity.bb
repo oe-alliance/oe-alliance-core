@@ -12,6 +12,7 @@ inherit gittag allarch
 SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "${GITPKGVTAG}"
+PR = "r1"
 
 SRC_URI = "git://github.com/kiddac/XStreamity.git;branch=master;protocol=https"
 

@@ -41,6 +41,7 @@ RRECOMMENDS:${PN} = "\
     enigma2-locale-sk \
     enigma2-locale-sl \
     enigma2-locale-sr \
+    enigma2-locale-sq \
     enigma2-locale-sv \
     enigma2-locale-th \
     enigma2-locale-tr \
@@ -51,6 +52,6 @@ RRECOMMENDS:${PN} = "\
     enigma2-locale-zh-hk \
 "
 
-PR = "r1"
+PR = "r2"
 
 ALLOW_EMPTY:${PN} = "1"

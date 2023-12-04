@@ -2,7 +2,7 @@ SUMMARY = "Mediainfo is a tool to analyze multimedia files"
 DESCRIPTION = "MediaInfo is a convenient unified display of the most relevant \
                technical and tag data for video and audio files."
 HOMEPAGE = "https://mediaarea.net/en/MediaInfo"
-SECTION = "utils"
+SECTION = "console/utils"
 PRIORIITY = "optional"
 LICENSE = "BSD-2-Clause"
 LIC_FILES_CHKSUM = "file://${WORKDIR}/MediaInfo/LICENSE;md5=8f93c85175cbc94ea160ad08cc157822"

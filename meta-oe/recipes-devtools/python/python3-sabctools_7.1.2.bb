@@ -8,7 +8,7 @@ inherit pypi setuptools3
 
 SRC_URI:append = " file://0001-disable-platformcheck.patch"
 
-SRC_URI[md5sum] = "9a75fe6e68f1141ca1bd33cbde35b50a"
-SRC_URI[sha256sum] = "d89744a46825db35e1c9b107bb97db5f1c5c0fd0245ea0fe76e3bbe08c3ca44f"
+SRC_URI[md5sum] = "35d6bd261734f53b6658ae3a1d22a93f"
+SRC_URI[sha256sum] = "c038055eec5c966a8c9515f2afdaa9aee24970e5df3a23964d95d7e77b98101f"
 
 include ${PYTHON_PN}-package-split.inc
