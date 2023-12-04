@@ -12,9 +12,7 @@ PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
 PR = "r1"
 
-SRC_URI = "git://github.com/openhbbtvbrowser/enigma2-plugin-extensions-openhbbtvbrowser.git;protocol=https;branch=master \
-    ${@bb.utils.contains('MACHINE_FEATURES', 'vu-eglfs', 'file://0001-add-vuplus-support.patch' , '', d)} \
-"
+SRC_URI = "git://github.com/oe-mirrors/enigma2-plugin-extensions-openhbbtvbrowser.git;protocol=https;branch=master"
 
 S = "${WORKDIR}/git"
 
