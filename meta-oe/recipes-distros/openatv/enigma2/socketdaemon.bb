@@ -8,7 +8,7 @@ require conf/license/license-gplv2.inc
 inherit gitpkgv autotools update-rc.d
 
 SRCREV = "${AUTOREV}"
-PV = "1.1+git${SRCPV}"
+PV = "1.1+git"
 PKGV = "1.1+git${GITPKGV}"
 VER ="1.1"
 PR = "r0"
