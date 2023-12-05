@@ -29,7 +29,7 @@ include conf/machine/include/autoload-filesystems.inc
 
 DVBMEDIASINK_CONFIG = "--with-wma --with-wmv --with-pcm --with-dts --with-eac3 --with-max-pcmrate-48K \
     ${@bb.utils.contains('MACHINE', 'et8500', '--with-vb6 --with-vb8 --with-spark' , '', d)} \
-    ${@bb.utils.contains('MACHINE', 'et7x00', '--with-vb6 --with-vb8 --with-spark' , '', d)} \
+    ${@bb.utils.contains('MACHINE', 'et7x00', '--with-vb6 --with-vb8 --with-spark --with-h265' , '', d)} \
 "
 
 TARGET_ARCH = "mipsel"
