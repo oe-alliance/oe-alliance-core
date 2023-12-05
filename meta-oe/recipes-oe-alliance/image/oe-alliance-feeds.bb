@@ -156,13 +156,14 @@ RDEPENDS:${PN} = " \
     ${PYTHON_PN}-requests-cache \
     ${PYTHON_PN}-service-identity \
     ${PYTHON_PN}-tmdbsimple \
-	${PYTHON_PN}-tvdbsimple \
+    ${PYTHON_PN}-tvdbsimple \
     ${PYTHON_PN}-tmdbv3api \
     ${PYTHON_PN}-ujson \
     ${PYTHON_PN}-url-normalize \
     ${PYTHON_PN}-singledispatch \
     ${PYTHON_PN}-levenshtein \
     ${PYTHON_PN}-soco \
+    ${PYTHON_PN}-tqdm \
     ${PYTHON_PN}-pyexecjs \
     ${PYTHON_PN}-scrapy \
     ${PYTHON_PN}-timeout-decorator \
