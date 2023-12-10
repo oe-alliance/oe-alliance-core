@@ -1,3 +1,5 @@
+#Adding platform archives as overwriters for bb files
+MACHINEOVERRIDES =. "${TUNE_PKGARCH}:"
 
 # Hardware Branding
 
