@@ -8,7 +8,7 @@ LIC_FILES_CHKSUM = "file://src/util/XMLUtils.cpp;beginline=2;endline=18;md5=dae8
 
 DEPENDS = "libtinyxml virtual/kodi"
 
-PV = "19.0.0"
+PV = "21.0.0"
 
 SRCREV = "809c5e9d711e378561440a896fcb7dbcd009eb3d"
 SRC_URI = "git://github.com/xbmc/kodi-platform.git;protocol=https;branch=master \
