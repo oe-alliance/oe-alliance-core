@@ -53,7 +53,7 @@ IMAGE_CMD:gigablueemmc:append = "\
         cp ${IMAGE_MANIFEST} ${IMAGE_ROOTFS}/usr/lib/package.lst; \
     fi; \
     mkdir -p ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}; \
-    mv ${IMGDEPLOYDIR}/${IMAGE_NAME}.rootfs.ext4 ${DEPLOY_DIR_IMAGE}/${MACHINEBUILD}-partitions/rootfs.ext4; \
+    mv ${IMGDEPLOYDIR}/${IMAGE_NAME}.ext4 ${DEPLOY_DIR_IMAGE}/${MACHINEBUILD}-partitions/rootfs.ext4; \
     cd ${IMAGE_ROOTFS}; \
     tar -cvf ${DEPLOY_DIR_IMAGE}/rootfs.tar -C ${IMAGE_ROOTFS} .; \
     mv ${DEPLOY_DIR_IMAGE}/rootfs.tar ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/rootfs.tar; \
@@ -67,7 +67,7 @@ IMAGE_CMD:gigablueemmc:append = "\
     cd ${DEPLOY_DIR_IMAGE}/${MACHINEBUILD}-partitions; \
     mkupdate -s 00000003-00000001-01010101 -f ${DEPLOY_DIR_IMAGE}/${MACHINEBUILD}-partitions/emmc_partitions.xml -d ${DEPLOY_DIR_IMAGE}/usb_update.bin; \ 
     cd ${DEPLOY_DIR_IMAGE}; \
-    cp ${IMGDEPLOYDIR}/${IMAGE_NAME}.rootfs.manifest ${IMAGE_NAME}_usb.zip.manifest; \
+    cp ${IMGDEPLOYDIR}/${IMAGE_NAME}.manifest ${IMAGE_NAME}_usb.zip.manifest; \
     zip -j ${IMAGE_NAME}_recovery_emmc.zip ${DEPLOY_DIR_IMAGE}/usb_update.bin ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/imageversion ${DEPLOY_DIR_IMAGE}/${MACHINEBUILD}-partitions/bootargs.bin ${DEPLOY_DIR_IMAGE}/${MACHINEBUILD}-partitions/fastboot.bin ${DEPLOY_DIR_IMAGE}/${MACHINEBUILD}-partitions/apploader.bin; \
     zip ${IMAGE_NAME}_mmc.zip ${IMAGEDIR}/*; \
     rm -f ${DEPLOY_DIR_IMAGE}/*.ext4; \
