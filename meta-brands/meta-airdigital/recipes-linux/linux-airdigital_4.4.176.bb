@@ -21,6 +21,7 @@ SRC_URI = "https://source.mynonpublic.com/zgemma/linux-${PV}-${SRCDATE}-${ARCH}.
 	file://initramfs-subdirboot.cpio.gz;unpack=0 \
 	file://findkerneldevice.sh \
     file://fix-multiple-defs-yyloc.patch \
+    file://fix-build-with-binutils-2.41.patch \
 "
 
 SRC_URI:append:h8 = " file://0101-hi3716mv430-dts-move-aon-gpio7-gpio5.patch"

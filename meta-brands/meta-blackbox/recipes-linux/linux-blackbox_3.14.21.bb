@@ -43,6 +43,8 @@ SRC_URI += "https://source.mynonpublic.com/unibox/linux-${KV}-${SRCDATE}.tar.gz 
     file://0002-cp1emu-do-not-use-bools-for-arithmetic.patch \
     file://0003-log2-give-up-on-gcc-constant-optimizations.patch \
     file://move-default-dialect-to-SMB3.patch \
+    file://linux3.4-ARM-8933-1-replace-Sun-Solaris-style-flag-on-section.patch \
+    file://fix-build-with-binutils-2.41.patch \
     "
 
 S = "${WORKDIR}/linux-${PV}"

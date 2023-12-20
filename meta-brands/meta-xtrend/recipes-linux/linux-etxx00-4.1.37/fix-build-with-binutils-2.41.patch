@@ -1,0 +1,8 @@
+--- a/arch/arm/boot/compressed/piggy.gzip.S
++++ b/arch/arm/boot/compressed/piggy.gzip.S
+@@ -1,4 +1,4 @@
+-	.section .piggydata,#alloc
++	.section .piggydata, "a"
+ 	.globl	input_data
+ input_data:
+ 	.incbin	"arch/arm/boot/compressed/piggy.gzip"

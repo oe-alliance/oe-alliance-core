@@ -36,6 +36,7 @@ SRC_URI += "https://source.mynonpublic.com/gigablue/mv200/gigablue-linux-${PV}-$
     file://fix-multiple-defs-yyloc.patch \
     file://fix_highspeed_sdio.patch \
     file://extend_modules_space.patch \
+    file://fix-build-with-binutils-2.41.patch \
 "
 
 SRC_URI:append:gbtrio4k = " \

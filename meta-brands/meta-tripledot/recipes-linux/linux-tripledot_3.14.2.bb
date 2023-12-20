@@ -71,6 +71,8 @@ SRC_URI += "https://source.mynonpublic.com/tripledot/${MACHINE}-linux-${PV}-base
         file://0003-cp1emu-do-not-use-bools-for-arithmetic.patch \
         file://0004-makefile-disable-warnings.patch \
         file://move-default-dialect-to-SMB3.patch \
+        file://linux3.4-ARM-8933-1-replace-Sun-Solaris-style-flag-on-section.patch \
+        file://fix-build-with-binutils-2.41.patch \
         "
 
 S = "${WORKDIR}/linux-${PV}-base"

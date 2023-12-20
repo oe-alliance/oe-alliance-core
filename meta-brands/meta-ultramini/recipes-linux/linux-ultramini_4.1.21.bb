@@ -54,6 +54,8 @@ SRC_URI += "https://source.mynonpublic.com/xtrend/linux-${PV}.tar.xz \
     file://0004-cp1emu-do-not-use-bools-for-arithmetic.patch \
     file://move-default-dialect-to-SMB3.patch \
     file://fix-never-be-null_outside-array-bounds-gcc-12.patch \
+    file://linux3.4-ARM-8933-1-replace-Sun-Solaris-style-flag-on-section.patch \
+    file://fix-build-with-binutils-2.41.patch \
 "
 
 S = "${WORKDIR}/linux-${PV}"

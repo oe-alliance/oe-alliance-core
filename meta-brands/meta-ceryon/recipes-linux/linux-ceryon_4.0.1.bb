@@ -39,6 +39,8 @@ SRC_URI += "https://source.mynonpublic.com/ceryon/ceryon-linux-${PV}.tgz \
         file://0004-log2-give-up-on-gcc-constant-optimizations.patch \
         file://move-default-dialect-to-SMB3.patch \
         file://fix-never-be-null_outside-array-bounds-gcc-12.patch \
+        file://linux3.4-ARM-8933-1-replace-Sun-Solaris-style-flag-on-section.patch \
+        file://fix-build-with-binutils-2.41.patch \
 "
 
 S = "${WORKDIR}/linux-${PV}"

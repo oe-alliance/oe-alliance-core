@@ -1,0 +1,100 @@
+From 3020e3a81b63e05891ef5d40f3acfbd00040ba17 Mon Sep 17 00:00:00 2001
+From: Nick Desaulniers <ndesaulniers@google.com>
+Date: Mon, 4 Nov 2019 19:31:45 +0100
+Subject: [PATCH] ARM: 8933/1: replace Sun/Solaris style flag on section
+ directive
+
+It looks like a section directive was using "Solaris style" to declare
+the section flags. Replace this with the GNU style so that Clang's
+integrated assembler can assemble this directive.
+
+The modified instances were identified via:
+$ ag \.section | grep #
+
+Link: https://ftp.gnu.org/old-gnu/Manuals/gas-2.9.1/html_chapter/as_7.html#SEC119
+Link: https://github.com/ClangBuiltLinux/linux/issues/744
+Link: https://bugs.llvm.org/show_bug.cgi?id=43759
+Link: https://reviews.llvm.org/D69296
+
+Acked-by: Nicolas Pitre <nico@fluxnic.net>
+Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
+Reviewed-by: Stefan Agner <stefan@agner.ch>
+Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+Suggested-by: Fangrui Song <maskray@google.com>
+Suggested-by: Jian Cai <jiancai@google.com>
+Suggested-by: Peter Smith <peter.smith@linaro.org>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+[ partial backport to 3.4 ]
+---
+ arch/arm/boot/bootp/init.S            | 2 +-
+ arch/arm/boot/compressed/big-endian.S | 2 +-
+ arch/arm/boot/compressed/head.S       | 2 +-
+ arch/arm/boot/compressed/piggy.lzma.S | 2 +-
+ arch/arm/mm/proc-v7.S                 | 2 +-
+ 5 files changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/arch/arm/boot/bootp/init.S b/arch/arm/boot/bootp/init.S
+index 78b508075161..868eeeaaa46e 100644
+--- a/arch/arm/boot/bootp/init.S
++++ b/arch/arm/boot/bootp/init.S
+@@ -16,7 +16,7 @@
+  *  size immediately following the kernel, we could build this into
+  *  a binary blob, and concatenate the zImage using the cat command.
+  */
+-		.section .start,#alloc,#execinstr
++		.section .start, "ax"
+ 		.type	_start, #function
+ 		.globl	_start
+ 
+diff --git a/arch/arm/boot/compressed/big-endian.S b/arch/arm/boot/compressed/big-endian.S
+index 25ab26f1c6f0..f22428e275f8 100644
+--- a/arch/arm/boot/compressed/big-endian.S
++++ b/arch/arm/boot/compressed/big-endian.S
+@@ -5,7 +5,7 @@
+  *  Author: Nicolas Pitre
+  */
+ 
+-	.section ".start", #alloc, #execinstr
++	.section ".start", "ax"
+ 
+ 	mrc	p15, 0, r0, c1, c0, 0	@ read control reg
+ 	orr	r0, r0, #(1 << 7)	@ enable big endian mode
+diff --git a/arch/arm/boot/compressed/head.S b/arch/arm/boot/compressed/head.S
+index 77a716bdf4d3..b70606652d21 100644
+--- a/arch/arm/boot/compressed/head.S
++++ b/arch/arm/boot/compressed/head.S
+@@ -113,7 +113,7 @@
+ #endif
+ 		.endm
+ 
+-		.section ".start", #alloc, #execinstr
++		.section ".start", "ax"
+ /*
+  * sort out different calling conventions
+  */
+diff --git a/arch/arm/boot/compressed/piggy.lzma.S b/arch/arm/boot/compressed/piggy.lzma.S
+index d7e69cffbc0a..cfea81ae8f4b 100644
+--- a/arch/arm/boot/compressed/piggy.lzma.S
++++ b/arch/arm/boot/compressed/piggy.lzma.S
+@@ -1,4 +1,4 @@
+-	.section .piggydata,#alloc
++	.section .piggydata, "a"
+ 	.globl	input_data
+ input_data:
+ 	.incbin	"arch/arm/boot/compressed/piggy.lzma"
+diff --git a/arch/arm/mm/proc-v7.S b/arch/arm/mm/proc-v7.S
+index 69363be2f241..321cb1c6a091 100644
+--- a/arch/arm/mm/proc-v7.S
++++ b/arch/arm/mm/proc-v7.S
+@@ -422,7 +422,7 @@ __v7_setup_stack:
+ 	string	cpu_elf_name, "v7"
+ 	.align
+ 
+-	.section ".proc.info.init", #alloc, #execinstr
++	.section ".proc.info.init", "ax"
+ 
+ 	/*
+ 	 * Standard v7 proc info content
+-- 
+2.30.2
+

@@ -60,6 +60,8 @@ SRC_URI += "https://source.mynonpublic.com/ini/bcm7413-linux-${KV}-${SRCDATE}.ta
     file://0003-cp1emu-do-not-use-bools-for-arithmetic.patch \
     file://0004-makefile-disable-warnings.patch \
     file://devinitdata-gcc11.patch \
+    file://linux3.4-ARM-8933-1-replace-Sun-Solaris-style-flag-on-section.patch \
+    file://fix-build-with-binutils-2.41.patch \
     "
 
 S = "${WORKDIR}/linux-${PV}"

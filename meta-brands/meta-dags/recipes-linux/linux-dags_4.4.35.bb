@@ -29,6 +29,7 @@ SRC_URI += "http://en3homeftp.net/pub/down/linux-4.4.35.tar.xz;name=kernel \
 	file://0004_swifthooking.patch \
 	file://fix-multiple-defs-yyloc.patch \
 	file://Backport_minimal_compiler_attributes_h_to_support_GCC_9.patch \
+	file://fix-build-with-binutils-2.41.patch \
 	"
 
 # wireguard v1.0.20220627

@@ -59,6 +59,8 @@ SRC_URI += "https://source.mynonpublic.com/download/linux-${PV}.tar.gz \
     file://0003-cp1emu-do-not-use-bools-for-arithmetic.patch \
     file://0004-log2-give-up-on-gcc-constant-optimizations.patch \
     file://devinitdata-gcc11.patch \
+    file://linux3.4-ARM-8933-1-replace-Sun-Solaris-style-flag-on-section.patch \
+    file://fix-build-with-binutils-2.41.patch \
     "
 
 S = "${WORKDIR}/linux-${PV}"

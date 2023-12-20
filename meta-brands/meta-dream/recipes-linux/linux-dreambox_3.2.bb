@@ -61,6 +61,8 @@ SRC_URI = " \
     file://0014-makefile-silence-packed-not-aligned-warn.patch \
     file://0015-fcrypt-fix-bitoperation-for-gcc.patch \
     file://devinitdata-gcc11.patch \
+    file://linux3.4-ARM-8933-1-replace-Sun-Solaris-style-flag-on-section.patch \
+    file://fix-build-with-binutils-2.41.patch \
 "
 
 PACKAGES_DYNAMIC = "kernel-*"

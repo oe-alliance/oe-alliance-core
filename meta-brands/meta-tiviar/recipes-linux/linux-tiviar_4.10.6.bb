@@ -42,6 +42,7 @@ SRC_URI += "https://source.mynonpublic.com/tiviar/linux-${PV}-${ARCH}.tar.gz \
     file://0006-dvb-media-tda18250-support-for-new-silicon-tuner.patch \
     file://fix-multiple-defs-yyloc.patch \
     file://fix-never-be-null_outside-array-bounds-gcc-12.patch \
+    file://fix-build-with-binutils-2.41.patch \
     "
 
 S = "${WORKDIR}/linux-${PV}"

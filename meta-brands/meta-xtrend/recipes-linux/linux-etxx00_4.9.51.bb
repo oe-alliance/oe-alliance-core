@@ -29,6 +29,7 @@ SRC_URI += "https://source.mynonpublic.com/xtrend/linux-${PV}-${SRC}.tar.xz \
     file://0001-stv090x-optimized-TS-sync-control.patch \
     file://move-default-dialect-to-SMB3.patch \
     file://fix-multiple-defs-yyloc.patch \
+    file://fix-build-with-binutils-2.41.patch \
     "
 
 S = "${WORKDIR}/linux-${PV}"

@@ -60,6 +60,8 @@ SRC_URI += "https://source.mynonpublic.com/gigablue/linux/gigablue-linux-${PV}-2
     file://add-partition-specific-uevent-callbacks-for-partition-info.patch \
     file://move-default-dialect-to-SMB3.patch \
     file://fix-multiple-defs-yyloc.patch \
+    file://linux3.4-ARM-8933-1-replace-Sun-Solaris-style-flag-on-section.patch \
+    file://fix-build-with-binutils-2.41.patch \
 "
 
 S = "${WORKDIR}/linux-${PV}"

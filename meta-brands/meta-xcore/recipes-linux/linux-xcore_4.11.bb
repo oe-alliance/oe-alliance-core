@@ -35,6 +35,7 @@ SRC_URI += "https://source.mynonpublic.com/xcore/xcore-linux-${PV}-${SRC}.tar.gz
     file://fix-multiple-defs-yyloc.patch \
     file://fix-never-be-null_outside-array-bounds-gcc-12.patch \
     file://use-address-of-operator-on-section-symbols-gcc-12.patch \
+    file://fix-build-with-binutils-2.41.patch \
     "
 
 S = "${WORKDIR}/linux-brcmstb-${PV}"

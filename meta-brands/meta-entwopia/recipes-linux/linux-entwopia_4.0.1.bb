@@ -40,6 +40,8 @@ SRC_URI += "https://source.mynonpublic.com/entwopia/${MACHINE}/${MACHINE}-linux-
     file://0001-stv090x-optimized-TS-sync-control.patch \
     file://move-default-dialect-to-SMB3.patch \
     file://fix-never-be-null_outside-array-bounds-gcc-12.patch \
+    file://linux3.4-ARM-8933-1-replace-Sun-Solaris-style-flag-on-section.patch \
+    file://fix-build-with-binutils-2.41.patch \
     "
 
 S = "${WORKDIR}/linux-${PV}-base"
