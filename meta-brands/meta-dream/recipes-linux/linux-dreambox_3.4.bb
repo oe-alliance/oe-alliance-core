@@ -19,6 +19,7 @@ SRC_URI = " \
     file://kernel-add-support-for-gcc10.patch \
     file://kernel-add-support-for-gcc11.patch \
     file://kernel-add-support-for-gcc12.patch \
+    file://kernel-add-support-for-gcc13.patch \
     file://build-with-gcc12-fixes.patch \
     file://genksyms_fix_typeof_handling.patch \
     file://defconfig \

@@ -50,6 +50,7 @@ SRC_URI += "http://code.vuplus.com/download/release/kernel/stblinux-4.1-${KERNEL
     file://kernel-add-support-for-gcc10.patch \
     file://kernel-add-support-for-gcc11.patch \
     file://kernel-add-support-for-gcc12.patch \
+    file://kernel-add-support-for-gcc13.patch \
     file://0001-Support-TBS-USB-drivers-for-4.1-kernel.patch \
     file://0001-TBS-fixes-for-4.1-kernel.patch \
     file://0001-STV-Add-PLS-support.patch \
@@ -60,6 +61,8 @@ SRC_URI += "http://code.vuplus.com/download/release/kernel/stblinux-4.1-${KERNEL
     file://0003-uaccess-dont-mark-register-as-const.patch \
     file://move-default-dialect-to-SMB3.patch \
     file://fix-multiple-defs-yyloc.patch \
+    file://linux3.4-ARM-8933-1-replace-Sun-Solaris-style-flag-on-section.patch \
+    file://fix-build-with-binutils-2.41.patch \
     "
 
 SRC_URI:append = "${@bb.utils.contains("MACHINE_FEATURES", "dvbproxy", " file://linux_dvb_adapter.patch;patch=1;pnum=1", "", d)}"

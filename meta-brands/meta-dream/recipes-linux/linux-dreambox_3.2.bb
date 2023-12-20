@@ -51,6 +51,7 @@ SRC_URI = " \
     file://kernel-add-support-for-gcc10.patch \
     file://kernel-add-support-for-gcc11.patch \
     file://kernel-add-support-for-gcc12.patch \
+    file://kernel-add-support-for-gcc13.patch \
     file://build-with-gcc12-fixes.patch \
     file://misc_latin1_to_utf8_conversions.patch \
     file://0001-dvb_frontend-backport-multistream-support.patch \

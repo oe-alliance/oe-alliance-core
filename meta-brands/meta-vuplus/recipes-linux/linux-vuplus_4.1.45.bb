@@ -50,6 +50,7 @@ SRC_URI += "http://code.vuplus.com/download/release/kernel/stblinux-${KSRC_VER}.
     file://kernel-add-support-for-gcc10.patch \
     file://kernel-add-support-for-gcc11.patch \
     file://kernel-add-support-for-gcc12.patch \
+    file://kernel-add-support-for-gcc13.patch \
     file://0001-Support-TBS-USB-drivers-for-4.1-kernel.patch \
     file://0001-TBS-fixes-for-4.1-kernel.patch \
     file://0001-STV-Add-PLS-support.patch \
@@ -62,6 +63,8 @@ SRC_URI += "http://code.vuplus.com/download/release/kernel/stblinux-${KSRC_VER}.
     file://v3-1-2-em28xx-Ignore-errors-while-reading-from-eeprom.patch \
     file://v3-2-2-em28xx-add-support-for-new-of-Terratec-H6.patch \
     file://fix-multiple-defs-yyloc.patch \
+    file://linux3.4-ARM-8933-1-replace-Sun-Solaris-style-flag-on-section.patch \
+    file://fix-build-with-binutils-2.41.patch \
     "
 
 S = "${WORKDIR}/linux"

@@ -37,6 +37,7 @@ SRC_URI += "http://code.vuplus.com/download/release/kernel/${KERNELSRC};name=${M
     file://kernel-add-support-for-gcc10.patch \
     file://kernel-add-support-for-gcc11.patch \
     file://kernel-add-support-for-gcc12.patch \
+    file://kernel-add-support-for-gcc13.patch \
     file://build-with-gcc12-fixes.patch \
     file://0001-Support-TBS-USB-drivers.patch \
     file://0001-STV-Add-PLS-support.patch \
@@ -57,6 +58,8 @@ SRC_URI += "http://code.vuplus.com/download/release/kernel/${KERNELSRC};name=${M
     file://move-default-dialect-to-SMB3.patch \
     file://fix-multiple-defs-yyloc.patch \
     file://fix-linker-issue-undefined-reference.patch \
+    file://linux3.4-ARM-8933-1-replace-Sun-Solaris-style-flag-on-section.patch \
+    file://fix-build-with-binutils-2.41.patch \
     "
 
 SRC_URI:append:vuuno4k = " file://linux_prevent_usb_dma_from_bmem.patch"

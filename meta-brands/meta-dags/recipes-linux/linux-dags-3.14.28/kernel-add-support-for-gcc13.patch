@@ -1,5 +1,5 @@
 --- /dev/null
-+++ b/include/linux/compiler-gcc13.h
++++ b/include/linux/compiler-gcc12.h
 @@ -0,0 +1,59 @@
 +#ifndef __LINUX_COMPILER_H
 +#error "Please don't include <linux/compiler-gcc11.h> directly, include <linux/compiler.h> instead."

@@ -62,6 +62,8 @@ SRC_URI = "http://code.vuplus.com/download/release/kernel/stblinux-${KV}.tar.bz2
     file://CONFIG_DVB_SP2.patch \
     file://dvbsky.patch \
     file://move-default-dialect-to-SMB3.patch \
+    file://linux3.4-ARM-8933-1-replace-Sun-Solaris-style-flag-on-section.patch \
+    file://fix-build-with-binutils-2.41.patch \
     "
 
 SRC_URI:append:vuduo2 = " file://brcm_s3_wol.patch;patch=1;pnum=1 "

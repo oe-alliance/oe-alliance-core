@@ -50,6 +50,7 @@ SRC_URI += "https://source.mynonpublic.com/download/linux-${PV}.tar.gz \
     file://kernel-add-support-for-gcc10.patch \
     file://kernel-add-support-for-gcc11.patch \
     file://kernel-add-support-for-gcc12.patch \
+    file://kernel-add-support-for-gcc13.patch \
     file://fix-never-be-null_outside-array-bounds-gcc-12.patch \
     file://dvb_frontend-Multistream-support-3.6.patch \
     file://timeconst_perl5.patch \
