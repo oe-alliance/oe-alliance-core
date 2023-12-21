@@ -53,6 +53,7 @@ SRC_URI = "https://source.mynonpublic.com/dinobot/dinobot-linux-${PV}-${SRCDATE}
     file://cmav2.patch \
     file://fix-multiple-defs-yyloc.patch \
     file://Backport_minimal_compiler_attributes_h_to_support_GCC_9.patch \
+    file://fix-build-with-binutils-2.41.patch \
 "
 
 # wireguard v1.0.20220627
