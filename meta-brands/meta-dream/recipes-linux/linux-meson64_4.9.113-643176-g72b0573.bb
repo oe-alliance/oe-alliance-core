@@ -14,7 +14,7 @@ SRC_URI = "https://source.mynonpublic.com/dreambox/${BPN}-v${PV}.tar.xz \
            file://hdmi_tx_spdif.patch \	 
            file://support-for-gcc12.patch \
            file://support-for-gcc13.patch \
-           file://defonfig \
+           file://defconfig \
            file://fix-multiple-defs-yyloc_v1.patch \
            file://0003-cp1emu-do-not-use-bools-for-arithmetic.patch \
            file://move-default-dialect-to-SMB3.patch \
@@ -59,6 +59,8 @@ export KCFLAGS = "-Wno-error=misleading-indentation \
                   -Wno-error=builtin-declaration-mismatch \
                   -Wno-error=address \
                   -Wno-error=unused-const-variable \
+                  -Wno-error=enum-int-mismatch \
+                  -Wno-error=dangling-pointer \   
 "
 
 KERNEL_FLASH_ARGS = "-c '${CMDLINE}'"
