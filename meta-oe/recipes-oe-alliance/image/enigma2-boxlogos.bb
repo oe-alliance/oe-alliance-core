@@ -20,20 +20,20 @@ SRC_URI = "git://github.com/DimitarCC/e2-boxlogos.git;protocol=https;branch=main
 S = "${WORKDIR}/git"
 
 do_install() {
-    install -d ${D}${datadir}/enigma2
+    install -d ${D}${datadir}/enigma2/logos
     if [ -f "${S}/box/${MACHINEBUILD}.svg" ] ; then
-        install -m 0644 "${S}/box/${MACHINEBUILD}.svg" ${D}${datadir}/enigma2/boxlogo.svg
+        install -m 0644 "${S}/box/${MACHINEBUILD}.svg" ${D}${datadir}/enigma2/logos/boxlogo.svg
     fi
     if [ -f "${S}/brand/${MACHINE_BRAND}.svg" ] ; then
-        install -m 0644 "${S}/brand/${MACHINE_BRAND}.svg" ${D}${datadir}/enigma2/brandlogo.svg
+        install -m 0644 "${S}/brand/${MACHINE_BRAND}.svg" ${D}${datadir}/enigma2/logos/brandlogo.svg
     fi
     if [ -f "${S}/distro/${DISTRO_NAME}.svg" ] ; then
-        install -m 0644 "${S}/distro/${DISTRO_NAME}.svg" ${D}${datadir}/enigma2/distrologo.svg
+        install -m 0644 "${S}/distro/${DISTRO_NAME}.svg" ${D}${datadir}/enigma2/logos/distrologo.svg
     fi
     install -d ${D}${libdir}/enigma2/python/Components/Renderer
     cp -r ${S}/Renderer/* ${D}${libdir}/enigma2/python/Components/Renderer
     python3 -m compileall -o2 -b ${D}${libdir}/enigma2/python/Components/Renderer
 }
 
-FILES:${PN} = "${datadir}/enigma2/ ${libdir}/enigma2/python/Components/Renderer/"
+FILES:${PN} = "${datadir}/enigma2/logos ${libdir}/enigma2/python/Components/Renderer/"
 FILES:${PN}-src = "${libdir}/enigma2/python/Components/Renderer/*.py"
