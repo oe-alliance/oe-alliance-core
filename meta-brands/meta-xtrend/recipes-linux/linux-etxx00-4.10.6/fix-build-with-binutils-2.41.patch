@@ -9,14 +9,6 @@
  /*
   * sort out different calling conventions
   */
---- a/arch/arm/boot/compressed/piggy.gzip.S
-+++ b/arch/arm/boot/compressed/piggy.gzip.S
-@@ -1,4 +1,4 @@
--	.section .piggydata,#alloc
-+	.section .piggydata, "a"
- 	.globl	input_data
- input_data:
- 	.incbin	"arch/arm/boot/compressed/piggy.gzip"
 --- a/arch/arm/mm/proc-v7.S
 +++ b/arch/arm/mm/proc-v7.S
 @@ -504,7 +504,7 @@ __v7_setup_stack:
