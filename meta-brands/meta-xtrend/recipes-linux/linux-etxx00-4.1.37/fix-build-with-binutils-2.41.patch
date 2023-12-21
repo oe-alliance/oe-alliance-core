@@ -6,3 +6,11 @@
  	.globl	input_data
  input_data:
  	.incbin	"arch/arm/boot/compressed/piggy.gzip"
+--- a/arch/arm/boot/compressed/piggy.xzkern.S	2023-12-21 07:10:14.031264705 +0000
++++ b/arch/arm/boot/compressed/piggy.xzkern.S	2023-12-21 07:11:57.595434223 +0000
+@@ -1,4 +1,4 @@
+-	.section .piggydata,#alloc
++	.section .piggydata, "a"
+ 	.globl	input_data
+ input_data:
+ 	.incbin	"arch/arm/boot/compressed/piggy.xzkern"
