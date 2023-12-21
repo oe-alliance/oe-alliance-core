@@ -20,7 +20,7 @@ SRC_URI = "git://github.com/DimitarCC/e2-boxlogos.git;protocol=https;branch=main
 S = "${WORKDIR}/git"
 
 do_install() {
-    install -d ${D}${datadir}/enigma2
+    install -d ${D}${datadir}/enigma2/logos
     if [ -f "${S}/box/${MACHINEBUILD}.svg" ] ; then
         install -m 0644 "${S}/box/${MACHINEBUILD}.svg" ${D}${datadir}/enigma2/logos/boxlogo.svg
     fi
