@@ -1,3 +1,11 @@
+--- a/arch/arm/boot/compressed/piggy.S	2023-12-21 09:44:00.853070309 +0000
++++ b/arch/arm/boot/compressed/piggy.S	2023-12-21 09:46:35.869291262 +0000
+@@ -1,4 +1,4 @@
+-	.section .piggydata,#alloc
++	.section .piggydata, "a"
+ 	.globl	input_data
+ input_data:
+ 	.incbin	"arch/arm/boot/compressed/piggy_data"
 --- a/arch/arm/boot/compressed/head.S
 +++ b/arch/arm/boot/compressed/head.S
 @@ -112,7 +112,7 @@
