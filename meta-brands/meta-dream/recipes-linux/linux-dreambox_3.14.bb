@@ -28,6 +28,7 @@ SRC_URI = " \
     file://0004-log2-give-up-on-gcc-constant-optimizations.patch \
     file://0005-uaccess-dont-mark-register-as-const.patch \
     file://0006-makefile-silence-packed-not-aligned-warn.patch \
+    file://0007-overlayfs.patch \
     file://move-default-dialect-to-SMB3.patch \
     file://fix-multiple-defs-yyloc.patch \
     file://linux3.4-ARM-8933-1-replace-Sun-Solaris-style-flag-on-section.patch \

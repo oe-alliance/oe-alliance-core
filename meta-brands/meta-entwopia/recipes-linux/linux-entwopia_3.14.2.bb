@@ -67,6 +67,7 @@ SRC_URI += "https://source.mynonpublic.com/entwopia/${MACHINE}/${MACHINE}-linux-
     file://move-default-dialect-to-SMB3.patch \
     file://linux3.4-ARM-8933-1-replace-Sun-Solaris-style-flag-on-section.patch \
     file://fix-build-with-binutils-2.41.patch \
+    file://0007-overlayfs.patch \
     "
 
 S = "${WORKDIR}/linux-${PV}-base"
