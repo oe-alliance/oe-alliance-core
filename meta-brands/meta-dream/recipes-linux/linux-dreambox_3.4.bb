@@ -27,7 +27,6 @@ SRC_URI = " \
     file://0002-cp1emu-do-not-use-bools-for-arithmetic.patch \
     file://0003-makefile-silence-packed-not-aligned-warn.patch \
     file://0004-fcrypt-fix-bitoperation-for-gcc.patch \
-    file://linux3.4-ARM-8933-1-replace-Sun-Solaris-style-flag-on-section.patch \
     file://fix-build-with-binutils-2.41.patch \
 "
 

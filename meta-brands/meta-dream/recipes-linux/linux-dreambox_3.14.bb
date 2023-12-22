@@ -31,7 +31,6 @@ SRC_URI = " \
     file://0007-overlayfs.patch \
     file://move-default-dialect-to-SMB3.patch \
     file://fix-multiple-defs-yyloc.patch \
-    file://linux3.4-ARM-8933-1-replace-Sun-Solaris-style-flag-on-section.patch \
     file://fix-build-with-binutils-2.41.patch \
 "
 
