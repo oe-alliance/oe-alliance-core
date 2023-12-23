@@ -48,7 +48,6 @@ SRC_URI += "http://en3homeftp.net/pub/src/linux-3.14.28.tar.xz \
     file://fix-linker-issue-undefined-reference.patch \
     file://linux3.4-ARM-8933-1-replace-Sun-Solaris-style-flag-on-section.patch \
     file://fix-build-with-binutils-2.41.patch \
-    file://0007-overlayfs.patch \
 "
 
 S = "${WORKDIR}/linux"
