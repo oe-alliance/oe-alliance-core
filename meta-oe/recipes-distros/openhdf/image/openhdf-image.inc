@@ -10,6 +10,9 @@ PV = "${IMAGE_VERSION}"
 PR = "r${DATE}"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
+image_combine_spdx() {
+}
+
 PR[vardepsexclude] += "DATE"
 REPRODUCIBLE_TIMESTAMP_ROOTFS = "${@time.strftime('%s')}"
 
