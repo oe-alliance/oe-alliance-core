@@ -43,11 +43,6 @@ DEFAULTTUNE = "cortexa7hf"
 
 PREFERRED_VERSION_linux-octagon = "${LINUX_VERSION}"
 
-#cryptography >=35.x dont support arm 32bit A7 CPU
-PREFERRED_VERSION_python3-cryptography = "3.4.8"
-PREFERRED_VERSION_python3-bcrypt = "3.2.2"
-PREFERRED_VERSION_python3-pyopenssl = "22.0.0"
-
 PREFERRED_PROVIDER_virtual/kernel = "linux-octagon"
 PREFERRED_PROVIDER_virtual/blindscan-dvbs = "octagon-blindscan-${SOC_FAMILY}"
 
