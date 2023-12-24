@@ -223,10 +223,10 @@ python split_kernel_module_packages () {
     # avoid warnings. removedirs only raises an OSError if an empty
     # directory cannot be removed.
     dvar = d.getVar('PKGD', True)
-    for dir in ["%s/etc/modprobe.d" % (dvar), "%s/etc/modules-load.d" % (dvar), "%s/etc" % (dvar)]:
-        if len(os.listdir(dir)) == 0:
-            try:
+    try:
+        for dir in ["%s/etc/modprobe.d" % (dvar), "%s/etc/modules-load.d" % (dvar), "%s/etc" % (dvar)]:
+            if len(os.listdir(dir)) == 0:
                 os.rmdir(dir)
-            except:
-                pass
+    except:
+        pass
 }
