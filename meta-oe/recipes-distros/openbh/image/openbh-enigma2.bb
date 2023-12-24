@@ -8,7 +8,7 @@ ALLOW_EMPTY:${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r25"
+PR = "r26"
 
 inherit packagegroup
 
@@ -31,16 +31,14 @@ RDEPENDS:${PN} = "\
     enigma-info \
     "
 
-RRECOMMENDS:${PN} = " \
+RRECOMMENDS:${PN} = "\
     enigma2-plugin-extensions-autotimer \
     enigma2-plugin-extensions-cutlisteditor \
-    enigma2-plugin-extensions-epgimport \
     enigma2-plugin-extensions-epgrefresh \
     enigma2-plugin-extensions-epgsearch \
     enigma2-plugin-extensions-imdb \
     enigma2-plugin-extensions-mediaplayer \
     enigma2-plugin-extensions-socketmmi \
-    enigma2-plugin-systemplugins-crossepg \
     enigma2-plugin-systemplugins-hotplug \
     enigma2-plugin-systemplugins-obh \
     enigma2-plugin-systemplugins-terrestrialscan \
