@@ -8,7 +8,7 @@ DEPENDS = "libgcrypt libgpg-error bison-native"
 inherit gitpkgv
 
 SRCREV = "${AUTOREV}"
-PV = "0.10.0+git${SRCPV}"
+PV = "0.10.0+git"
 PKGV = "0.10.0+git${GITPKGV}"
 
 SRC_URI = "git://code.videolan.org/videolan/${BPN}.git;protocol=https;branch=master \

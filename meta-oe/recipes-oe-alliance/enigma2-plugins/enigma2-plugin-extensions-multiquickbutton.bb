@@ -11,7 +11,7 @@ DEPENDS += "${PYTHON_PN}-six-native"
 inherit gitpkgv gettext ${PYTHON_PN}targetconfig
 
 SRCREV = "${AUTOREV}"
-PV = "2.8.4+git${SRCPV}"
+PV = "2.8.4+git"
 PKGV = "2.8.4+git${GITPKGV}"
 PR = "r0"
 

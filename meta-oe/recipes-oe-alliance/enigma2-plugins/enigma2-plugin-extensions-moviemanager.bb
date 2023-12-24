@@ -7,7 +7,7 @@ require conf/python/python3-compileall.inc
 inherit gitpkgv
 
 SRCREV = "${AUTOREV}"
-PV = "2.0+git${SRCPV}"
+PV = "2.0+git"
 PKGV = "2.0+git${GITPKGV}"
 
 SRC_URI = "git://github.com/oe-mirrors/MovieManager.git;protocol=https;branch=master"

@@ -8,7 +8,7 @@ inherit autotools gitpkgv
 S = "${WORKDIR}/git"
 
 VERSION := "${PV}"
-PV = "${VERSION}+git${SRCPV}"
+PV = "${VERSION}+git"
 PKGV = "${VERSION}+git${GITPKGV}"
 
 SRC_URI="git://github.com/oe-mirrors/streamproxy.git;protocol=https;branch=master"

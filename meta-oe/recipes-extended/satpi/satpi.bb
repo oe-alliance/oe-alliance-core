@@ -12,7 +12,7 @@ SRC_URI = "git://github.com/Barracuda09/SATPI.git;protocol=http;branch=master;pr
 "
 
 SRCREV = "${AUTOREV}"
-PV = "V1.6+git${SRCPV}"
+PV = "V1.6+git"
 PKGV = "V1.6+git${GITPKGV}"
 
 S = "${WORKDIR}/git"

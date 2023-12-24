@@ -7,7 +7,7 @@ DEPENDS += "avahi libao"
 inherit gitpkgv
 
 SRCREV = "${AUTOREV}"
-PV = "0.9.0+git${SRCPV}"
+PV = "0.9.0+git"
 PKGV = "0.9.0+git${GITPKGV}"
 
 SRC_URI = "git://github.com/juhovh/shairplay.git;protocol=https;branch=master"

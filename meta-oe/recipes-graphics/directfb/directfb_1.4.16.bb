@@ -13,6 +13,8 @@ EXTRA_OECONF = "\
   --disable-x11 \
 "
 
+TARGET_CC_ARCH:remove = "-D_TIME_BITS=64"
+
 LEAD_SONAME = "libdirectfb-1.4.so.6"
 
 SRC_URI[md5sum] = "888e9b2e3d33a42c3c105d6551e06555"

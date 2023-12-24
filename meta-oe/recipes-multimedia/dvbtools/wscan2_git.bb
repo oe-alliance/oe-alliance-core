@@ -8,7 +8,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=892f569a555ba9c07a568a7c0c4fa63a"
 inherit gitpkgv
 
 SRCREV = "${AUTOREV}"
-PV = "1.0.5+git${SRCPV}"
+PV = "1.0.5+git"
 PKGV = "1.0.5+git${GITPKGV}"
 
 SRC_URI = "git://github.com/stefantalpalaru/w_scan2;protocol=https;branch=master"

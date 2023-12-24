@@ -1,6 +1,6 @@
 --- a/libavcodec/aacdec_template.c
 +++ b/libavcodec/aacdec_template.c
-@@ -2606,7 +2606,7 @@ static int decode_extension_payload(AACContext *ac, GetBitContext *gb, int cnt,
+@@ -2520,7 +2520,7 @@ static int decode_extension_payload(AACContext *ac, GetBitContext *gb, int cnt,
   * @param   decode  1 if tool is used normally, 0 if tool is used in LTP.
   * @param   coef    spectral coefficients
   */
@@ -20,34 +20,3 @@
  {
      LOCAL_ALIGNED_16(INTFLOAT, power, [34], [PS_QMF_TIME_SLOTS]);
      LOCAL_ALIGNED_16(INTFLOAT, transient_gain, [34], [PS_QMF_TIME_SLOTS]);
---- a/libavcodec/fft_template.c
-+++ b/libavcodec/fft_template.c
-@@ -551,7 +551,7 @@ static void fft##n(FFTComplex *z)\
-     pass(z,FFT_NAME(ff_cos_##n),n4/2);\
- }
- 
--static void fft4(FFTComplex *z)
-+static void __attribute__((optimize(0))) fft4(FFTComplex *z)
- {
-     FFTDouble t1, t2, t3, t4, t5, t6, t7, t8;
- 
-@@ -565,7 +565,7 @@ static void fft4(FFTComplex *z)
-     BF(z[2].im, z[0].im, t2, t5);
- }
- 
--static void fft8(FFTComplex *z)
-+static void __attribute__((optimize(0))) fft8(FFTComplex *z)
- {
-     FFTDouble t1, t2, t3, t4, t5, t6;
- 
---- a/libavcodec/mdct_template.c
-+++ b/libavcodec/mdct_template.c
-@@ -98,7 +98,7 @@ av_cold int ff_mdct_init(FFTContext *s, int nbits, int inverse, double scale)
-  * @param output N/2 samples
-  * @param input N/2 samples
-  */
--void ff_imdct_half_c(FFTContext *s, FFTSample *output, const FFTSample *input)
-+void __attribute__((optimize(0))) ff_imdct_half_c(FFTContext *s, FFTSample *output, const FFTSample *input)
- {
-     int k, n8, n4, n2, n, j;
-     const uint16_t *revtab = s->revtab;

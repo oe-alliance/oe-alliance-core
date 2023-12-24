@@ -9,7 +9,7 @@ DEPENDS = "liquid-dsp virtual/libiconv libsndfile1"
 inherit gitpkgv
 
 SRCREV = "${AUTOREV}"
-PV = "0.18+git${SRCPV}"
+PV = "0.18+git"
 PKGV = "0.18+git${GITPKGV}"
 
 SRC_URI = "git://github.com/windytan/redsea.git;protocol=http;branch=master;protocol=https"

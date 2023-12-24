@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://COPYING-GPL;md5=1ed9d357695b2e3ef099df37fed63d96 \
                     file://COPYING-LGPL;md5=d370feaa1c9edcdbd29ca27ea3d2304d"
 SECTION = "multimedia"
 SRCREV = "${AUTOREV}"
-PV = "10.2+gitr${SRCPV}"
+PV = "10.2+gitr"
 
 SRC_URI = "git://github.com/oe-mirrors/cdparanoia.git;protocol=https;branch=master \
      file://fixes10.patch \

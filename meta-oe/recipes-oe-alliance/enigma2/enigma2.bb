@@ -201,7 +201,7 @@ RDEPENDS:enigma2-plugin-extensions-filecommander = "${PYTHON_PN}-puremagic"
 
 inherit autotools-brokensep gitpkgv pkgconfig ${PYTHON_PN}native python3targetconfig upx-compress
 
-PV = "${IMAGE_VERSION}+git${SRCPV}"
+PV = "${IMAGE_VERSION}+git"
 PKGV = "${IMAGE_VERSION}+git${GITPKGV}"
 
 SRCREV ?= "${AUTOREV}"

@@ -24,6 +24,7 @@ SRC_URI += "http://en3homeftp.net/pub/src/linux-3.14.28.tar.xz \
     file://kernel-add-support-for-gcc10.patch \
     file://kernel-add-support-for-gcc11.patch \
     file://kernel-add-support-for-gcc12.patch \
+    file://kernel-add-support-for-gcc13.patch \
     file://build-with-gcc12-fixes.patch \
     file://date-time.patch \
     file://0001.remove_vtuner_index_check.patch \
@@ -45,6 +46,8 @@ SRC_URI += "http://en3homeftp.net/pub/src/linux-3.14.28.tar.xz \
     file://move-default-dialect-to-SMB3.patch \
     file://fix-multiple-defs-yyloc.patch \
     file://fix-linker-issue-undefined-reference.patch \
+    file://linux3.4-ARM-8933-1-replace-Sun-Solaris-style-flag-on-section.patch \
+    file://fix-build-with-binutils-2.41.patch \
 "
 
 S = "${WORKDIR}/linux"

@@ -11,7 +11,7 @@ SRC_URI = "git://bitbucket.org/majortom/blindscan-s2.git;protocol=http;branch=ma
 
 inherit gitpkgv
 SRCREV = "2989816405c72af5beb5f354809566170a0755af"
-PV = "1+git${SRCPV}"
+PV = "1+git"
 PKGV = "1+git${GITPKGV}"
 
 S = "${WORKDIR}/git"

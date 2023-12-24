@@ -12,7 +12,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 inherit gitpkgv ${PYTHON_PN}native
 
 SRCREV = "${AUTOREV}"
-PV = "0.9.0+gitr${SRCPV}"
+PV = "0.9.0+gitr"
 PKGV = "0.9.0+gitr${GITPKGV}"
 PR = "r3"
 

@@ -12,7 +12,7 @@ DEPENDS += "gettext-native"
 RDEPENDS:${PN} = "enigma2-tools-weatherinfo ${@bb.utils.contains_any("FLASHSIZE", "64 96 128", "", "enigma2-plugin-skins-metrix-atv-weather-icons", d)}"
 
 SRCREV = "${AUTOREV}"
-PV = "${DISTRO_VERSION}+git${SRCPV}"
+PV = "${DISTRO_VERSION}+git"
 PKGV = "${DISTRO_VERSION}+git${GITPKGV}"
 VER ="${DISTRO_VERSION}"
 PR = "r1"

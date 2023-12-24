@@ -9,7 +9,7 @@ RDEPENDS:${PN} += "${PYTHON_PN}-pillow ${PYTHON_PN}-requests ${PYTHON_PN}-lxml e
 inherit gitpkgv allarch gettext
 
 SRCREV = "${AUTOREV}"
-PV = "7.x+git${SRCPV}"
+PV = "7.x+git"
 PKGV = "7.x+git${GITPKGV}"
 VER="7.x"
 

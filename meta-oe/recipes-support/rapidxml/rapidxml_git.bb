@@ -9,7 +9,7 @@ SRC_URI = "git://github.com/hydranix/rapidxml.git;branch=master;protocol=https"
 
 SRCREV = "b79d25bddd83941e6f95c30e3d184e959b83417f"
 
-PV = "1.13+git${SRCPV}"
+PV = "1.13+git"
 
 S = "${WORKDIR}/git"
 

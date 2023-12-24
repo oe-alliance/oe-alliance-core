@@ -1,4 +1,4 @@
-oe-alliance-core 5.3
+oe-alliance-core 5.4
 ================
 
 The openembedded alliance core.
@@ -236,12 +236,20 @@ DINOBOT 4K SE           MACHINE:  dinobot4kse
 
 DINOBOT 4K plus         MACHINE:  dinobot4kplus
 
+DINOBOT 4K PRO          MACHINE:  dinobot4kpro
+
+DINOBOT 4K ELITE        MACHINE:  dinobot4kelite
+
 DINOBOT 4K mini         MACHINE:  dinobot4kmini
 
 DINOBOT 4K TWIN         MACHINE:  dinobot4ktwin
 
 
 ### Dreambox
+
+DM500HD                 MACHINE:  dm500hd
+
+DM800SE                 MACHINE:  dm800se
 
 DM500HDV2               MACHINE:  dm500hdv2
 
@@ -264,6 +272,10 @@ DM7080                  MACHINE:  dm7080
 DM900 Ultra HD          MACHINE:  dm900
 
 DM920 Ultra HD          MACHINE:  dm920
+
+Dream ONE               MACHINE:  dreamone
+ 
+Dream TWO               MACHINE:  dreamtwo
 
 
 ### Edision
@@ -558,6 +570,8 @@ HD66SE                  MACHINE:  mutant66se
 Multibox 4K             MACHINE:  novaler4k
 
 Multibox 4K SE          MACHINE:  novaler4kse
+
+Multibox 4K PRO         MACHINE:  novaler4kpro
 
 
 ### Octagon

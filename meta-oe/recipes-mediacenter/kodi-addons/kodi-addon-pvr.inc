@@ -1,6 +1,6 @@
 LICENSE = "GPL-2.0-or-later"
 require conf/license/license-gplv2.inc
-require ${@bb.utils.contains("MACHINE_FEATURES", "kodi20", "kodi-nexus.inc", "", d)} ${@bb.utils.contains("MACHINE_FEATURES", "kodi19", "kodi-matrix.inc", "", d)}
+require kodi-omega.inc 
 
 DEPENDS += " \
             zip-native \
@@ -19,7 +19,7 @@ SRCREV_FORMAT = "pvr${KODIADDONPLUGIN}"
 
 PVRMYTV = "${@bb.utils.contains("KODIADDONPLUGIN", "mythtv", "janbar", "kodi-pvr", d)}"
 
-PVRGIT = "${@bb.utils.contains_any("MACHINE_FEATURES", "kodi20 kodi19", "${PVRMYTV}", "kodi-pvr", d)}"
+PVRGIT = "${PVRMYTV}"
 
 SRC_URI = "git://github.com/${PVRGIT}/pvr.${KODIADDONPLUGIN}.git;destsuffix=pvr.${KODIADDONPLUGIN};name=pvr${KODIADDONPLUGIN};branch=${KODIADDONBRANCH};protocol=https"
 

@@ -13,7 +13,7 @@ inherit gitpkgv gettext
 
 SRCREV = "${AUTOREV}"
 BPV = "5.0"
-PV = "${BPV}+git${SRCPV}"
+PV = "${BPV}+git"
 PKGV = "${BPV}+git${GITPKGV}"
 PR = "r1"
 

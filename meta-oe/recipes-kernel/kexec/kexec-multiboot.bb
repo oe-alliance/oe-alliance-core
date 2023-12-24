@@ -5,7 +5,7 @@ require conf/license/license-gplv2.inc
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 SRCREV = "${AUTOREV}"
-PV = "git${SRCPV}"
+PV = "git"
 PKGV = "${GITPKGVTAG}"
 
 SRC_URI="git://github.com/oe-alliance/kexec-multiboot.git;protocol=https;branch=main"

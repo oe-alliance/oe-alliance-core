@@ -7,7 +7,7 @@ inherit allarch gitpkgv
 
 SRCREV = "${AUTOREV}"
 
-PV = "14.x+git${SRCPV}"
+PV = "14.x+git"
 PKGV = "14.x+git${GITPKGV}"
 VER = "14.x"
 

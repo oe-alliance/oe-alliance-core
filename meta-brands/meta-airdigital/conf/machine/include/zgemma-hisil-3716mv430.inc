@@ -18,10 +18,6 @@ IMAGEDIRRECOVERY ?= "zgemma-recovery"
 CMDLINE ?= "console=ttyAMA0,115200n8"
 
 PREFERRED_VERSION_linux-airdigital = "4.4.176"
-#cryptography >=35.x dont support arm 32bit A7 CPU
-PREFERRED_VERSION_python3-cryptography = "3.4.8"
-PREFERRED_VERSION_python3-bcrypt = "3.2.2"
-PREFERRED_VERSION_python3-pyopenssl = "22.0.0"
 
 IMAGE_CMD:ubifs:prepend = " \
 	mkdir -p ${IMAGE_ROOTFS}/usr/lib; \
@@ -34,7 +30,7 @@ IMAGE_CMD:ubifs:prepend = " \
 
 IMAGE_CMD:ubi:append = " \
     mkdir -p ${DEPLOY_DIR_IMAGE}/${IMAGEDIRRECOVERY}/${IMAGEDIR}; \
-    cp ${IMGDEPLOYDIR}/${IMAGE_NAME}${IMAGE_NAME_SUFFIX}.ubi ${DEPLOY_DIR_IMAGE}/${IMAGEDIRRECOVERY}/${IMAGEDIR}/${ROOTFS_FILE}; \
+    cp ${IMGDEPLOYDIR}/${IMAGE_NAME}.ubi ${DEPLOY_DIR_IMAGE}/${IMAGEDIRRECOVERY}/${IMAGEDIR}/${ROOTFS_FILE}; \
     cp ${DEPLOY_DIR_IMAGE}/uImage ${DEPLOY_DIR_IMAGE}/${IMAGEDIRRECOVERY}/${IMAGEDIR}/${KERNEL_FILE}; \
     cp ${IMGDEPLOYDIR}/bootoptions.yaffs ${DEPLOY_DIR_IMAGE}/${IMAGEDIRRECOVERY}/${IMAGEDIR}/bootoptions.yaffs; \
     cp ${DEPLOY_DIR_IMAGE}/zgemma-partitions-${MACHINE}/update_bootargs_${MACHINE}.bin ${DEPLOY_DIR_IMAGE}/${IMAGEDIRRECOVERY}/update_bootargs_${MACHINE}.bin; \
@@ -61,7 +57,7 @@ IMAGE_CMD:ubi:append = " \
     cd ..; \
     rm -Rf ${DEPLOY_DIR_IMAGE}/${IMAGEDIRRECOVERY}; \
     mkdir -p ${DEPLOY_DIR_IMAGE}/${MACHINE}/${IMAGEDIR}; \
-    cp ${IMGDEPLOYDIR}/${IMAGE_NAME}${IMAGE_NAME_SUFFIX}.ubi ${DEPLOY_DIR_IMAGE}/${MACHINE}/${IMAGEDIR}/${ROOTFS_FILE}; \
+    cp ${IMGDEPLOYDIR}/${IMAGE_NAME}.ubi ${DEPLOY_DIR_IMAGE}/${MACHINE}/${IMAGEDIR}/${ROOTFS_FILE}; \
     cp ${DEPLOY_DIR_IMAGE}/uImage ${DEPLOY_DIR_IMAGE}/${MACHINE}/${IMAGEDIR}/${KERNEL_FILE}; \
     cd ${DEPLOY_DIR_IMAGE}/${MACHINE}; \
     zip -r ../${IMAGE_NAME}_nand.zip *; \

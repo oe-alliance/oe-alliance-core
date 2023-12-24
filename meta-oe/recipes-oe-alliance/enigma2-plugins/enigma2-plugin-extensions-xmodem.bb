@@ -13,7 +13,7 @@ S = "${WORKDIR}/git"
 
 SRCREV = "${AUTOREV}"
 inherit gitpkgv ${PYTHON_PN}native
-PV = "1+git${SRCPV}"
+PV = "1+git"
 PKGV = "1+git${GITPKGV}"
 
 inherit setuptools3-openplugins

@@ -11,7 +11,7 @@ inherit gitpkgv gettext
 DEPENDS += "gettext-native"
 
 SRCREV = "${AUTOREV}"
-PV = "2.1+git${SRCPV}"
+PV = "2.1+git"
 PKGV = "2.1+git${GITPKGV}"
 VER ="2.1"
 PR = "r0"

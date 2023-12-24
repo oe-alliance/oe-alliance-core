@@ -6,7 +6,7 @@ require conf/python/python3-compileall.inc
 
 DEPENDS = "freetype"
 
-PV = "1.13+git${SRCPV}"
+PV = "1.13+git"
 PR = "r0"
 
 SRC_URI = "git://github.com/oe-mirrors/tuxcom.git;protocol=https;branch=master \

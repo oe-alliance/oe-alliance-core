@@ -20,7 +20,7 @@ SRC_URI = " \
     ${KERNELORG_MIRROR}/linux/kernel/v3.x/patch-${PV}.${PATCHLEVEL}.xz;apply=yes;name=stable-patch \
     https://source.mynonpublic.com/dreambox/${P}-${PATCHREV}.patch.bz2;name=dream-patch \
     http://download.filesystems.org/unionfs/unionfs-2.x/unionfs-2.5.11_for_3.2.2.diff.gz;name=unionfs \
-    file://0001-correctly-initiate-nand-flash-ecc-config-when-old-2n.patch \ 
+    file://0001-correctly-initiate-nand-flash-ecc-config-when-old-2n.patch \
     file://0001-Revert-MIPS-Fix-potencial-corruption.patch \
     file://fadvise_dontneed_change.patch \
     file://fix-proc-cputype.patch \
@@ -51,6 +51,7 @@ SRC_URI = " \
     file://kernel-add-support-for-gcc10.patch \
     file://kernel-add-support-for-gcc11.patch \
     file://kernel-add-support-for-gcc12.patch \
+    file://kernel-add-support-for-gcc13.patch \
     file://build-with-gcc12-fixes.patch \
     file://misc_latin1_to_utf8_conversions.patch \
     file://0001-dvb_frontend-backport-multistream-support.patch \
@@ -60,6 +61,7 @@ SRC_URI = " \
     file://0014-makefile-silence-packed-not-aligned-warn.patch \
     file://0015-fcrypt-fix-bitoperation-for-gcc.patch \
     file://devinitdata-gcc11.patch \
+    file://fix-build-with-binutils-2.41.patch \
 "
 
 PACKAGES_DYNAMIC = "kernel-*"
@@ -168,3 +170,5 @@ do_rm_work() {
 
 # extra tasks
 addtask kernel_link_images after do_compile before do_install
+
+INSANE_SKIP:${PN} = "patch-fuzz"

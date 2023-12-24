@@ -15,7 +15,7 @@ S = "${WORKDIR}/git"
 
 inherit gitpkgv
 
-PV = "${GSTVERSION}+git${SRCPV}"
+PV = "${GSTVERSION}+git"
 PKGV = "${GSTVERSION}+git${GITPKGV}"
 
 # added to have al m4 macro's into build when using bitbake with -b option.

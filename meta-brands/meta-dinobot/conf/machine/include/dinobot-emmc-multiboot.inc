@@ -15,7 +15,7 @@ IMAGE_CMD:dinobotemmcmultiboot:append = "\
     fi; \
     mkdir -p ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}; \
 	mkdir -p ${DEPLOY_DIR_IMAGE}/${MACHINE}-partitions; \
-	cp ${IMGDEPLOYDIR}/${IMAGE_NAME}.rootfs.ext4 ${DEPLOY_DIR_IMAGE}/${MACHINE}-partitions/rootfs.ext4; \
+	cp ${IMGDEPLOYDIR}/${IMAGE_NAME}.ext4 ${DEPLOY_DIR_IMAGE}/${MACHINE}-partitions/rootfs.ext4; \
     cd ${IMAGE_ROOTFS}; \
     tar -cvf ${DEPLOY_DIR_IMAGE}/rootfs.tar -C ${IMAGE_ROOTFS} .; \
     mv ${DEPLOY_DIR_IMAGE}/rootfs.tar ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/rootfs.tar; \

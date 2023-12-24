@@ -14,7 +14,7 @@ DEPENDS = "glib-2.0 glib-2.0-native gettext-native enchant2 libsoup-2.4 curl lib
            gstreamer1.0 gstreamer1.0-plugins-base flex-native bison-native gperf-native sqlite3 pango"
 
 SRCREV = "${AUTOREV}"
-PV = "1.1+git${SRCPV}"
+PV = "1.1+git"
 PKGV = "1.1+git${GITPKGV}"
 VER ="1.1"
 PR = "r0"

@@ -10,7 +10,7 @@ RDEPENDS:${PN} = "rtl-sdr"
 
 inherit gitpkgv
 
-PV = "1.3+git${SRCPV}"
+PV = "1.3+git"
 PKGV = "1.3+git${GITPKGV}"
 PR = "r1"
 

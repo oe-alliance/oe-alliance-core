@@ -19,7 +19,7 @@ inherit gitpkgv
 
 SRCREV = "${AUTOREV}"
 
-PV = "git${SRCPV}"
+PV = "git"
 PKGV = "git${GITPKGV}"
 PR = "r0"
 

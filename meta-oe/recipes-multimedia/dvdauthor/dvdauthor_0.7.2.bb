@@ -8,7 +8,7 @@ DEPENDS = "freetype libdvdread fribidi libpng fontconfig libxml2 zlib bison-nati
 inherit gitpkgv
 
 SRCREV = "${AUTOREV}"
-PV = "0.7.2+git${SRCPV}"
+PV = "0.7.2+git"
 PKGV = "0.7.2+git${GITPKGV}"
 
 SRC_URI = "git://github.com/ldo/dvdauthor.git;protocol=https;branch=master \

@@ -15,5 +15,5 @@ S = "${WORKDIR}/git"
 
 inherit gitpkgv autotools
 
-PV = "2.1.12+git${SRCPV}"
+PV = "2.1.12+git"
 PKGV = "2.1.12+git${GITPKGV}"

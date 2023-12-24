@@ -28,7 +28,7 @@ inherit gittag setuptools3-openplugins gettext
 DISTUTILS_INSTALL_ARGS = "--root=${D} --install-lib=${libdir}/enigma2/python/Plugins"
 
 SRCREV = "${AUTOREV}"
-PV = "git${SRCPV}"
+PV = "git"
 PKGV = "${GITPKGVTAG}"
 
 SRC_URI = "git://github.com/oe-alliance/${MODULE}.git;protocol=https;branch=${BRANCH} \

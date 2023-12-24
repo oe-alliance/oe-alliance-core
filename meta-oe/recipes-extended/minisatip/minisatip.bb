@@ -12,7 +12,7 @@ SRC_URI = " \
     "
 
 SRCREV = "${AUTOREV}"
-PV = "V1.3+git${SRCPV}"
+PV = "V1.3+git"
 PKGV = "V1.3+git${GITPKGV}"
 
 S = "${WORKDIR}/git"

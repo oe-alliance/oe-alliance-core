@@ -9,7 +9,7 @@ RDEPENDS:${PN} = "wpa-supplicant connman"
 
 inherit gitpkgv pkgconfig
 
-PV = "1.1.0+git${SRCPV}"
+PV = "1.1.0+git"
 PKGV = "1.1.0+git${GITPKGV}"
 PR = "r1"
 

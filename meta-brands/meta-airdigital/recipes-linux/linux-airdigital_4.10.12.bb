@@ -36,6 +36,7 @@ SRC_URI += "https://source.mynonpublic.com/zgemma/linux-${PV}-${ARCH}.tar.gz;nam
     file://0005-xbox-one-tuner-4.10.patch \
     file://0006-dvb-media-tda18250-support-for-new-silicon-tuner.patch \
     file://fix-multiple-defs-yyloc.patch \
+    file://fix-build-with-binutils-2.41.patch \
     "
 
 SRC_URI:append:mipsel = " \

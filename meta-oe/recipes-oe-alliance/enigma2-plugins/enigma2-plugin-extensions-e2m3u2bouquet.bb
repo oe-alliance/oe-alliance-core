@@ -13,7 +13,7 @@ RDEPENDS:${PN} = "${PYTHON_PN}-image ${PYTHON_PN}-pillow"
 inherit gettext gitpkgv
 
 SRCREV = "${AUTOREV}"
-PV = "0.9.0+git${SRCPV}"
+PV = "0.9.0+git"
 PKGV = "0.9.0+git${GITPKGV}"
 PR = "r1"
 

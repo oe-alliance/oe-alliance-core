@@ -12,7 +12,7 @@ DEPENDS = "enigma2"
 inherit gitpkgv
 
 SRCREV = "${AUTOREV}"
-PV = "2.7.11+git${SRCPV}"
+PV = "2.7.11+git"
 PKGV = "2.7.11+git${GITPKGV}"
 PR = "r3"
 

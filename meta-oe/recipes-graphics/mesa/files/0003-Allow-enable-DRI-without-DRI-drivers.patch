@@ -1,32 +1,83 @@
 --- a/meson.build
 +++ b/meson.build
-@@ -250,7 +250,7 @@ with_gallium_kmsro = system_has_kms_drm and [
+@@ -198,7 +198,9 @@ with_gallium_kmsro = system_has_kms_drm and [
    with_gallium_vc4,
  ].contains(true)
  
 -with_dri = false
++dri_drivers = get_option('dri-drivers')
++
 +with_dri = get_option('dri') or (dri_drivers.length() != 0 and dri_drivers != [''])
  if with_gallium and system_has_kms_drm
    _glx = get_option('glx')
    _egl = get_option('egl')
 --- a/meson_options.txt
 +++ b/meson_options.txt
-@@ -51,6 +51,12 @@ option(
-   choices : ['auto', 'true', 'false', 'disabled', 'enabled'],
+@@ -43,6 +43,19 @@ option(
    description : 'enable support for dri3'
  )
+ 
 +option(
 +  'dri',
 +  type : 'boolean',
 +  value : false,
 +  description : 'enable support for dri'
 +)
++
++option(
++  'dri-drivers',
++  type : 'array',
++  description : 'List of dri drivers to build. If this is set to auto all drivers applicable to the target OS/architecture will be built'
++)
++
  option(
-   'dri-drivers',
-   type : 'array',
+   'dri-drivers-path',
+   type : 'string',
+--- a/src/egl/drivers/dri2/egl_dri2.c
++++ b/src/egl/drivers/dri2/egl_dri2.c
+@@ -45,7 +45,8 @@
+ #include <GL/internal/dri_interface.h>
+ #include <sys/stat.h>
+ #include <sys/types.h>
+-#include "dri_screen.h"
++//#include "dri_screen.h"
++#include <gallium/frontends/dri/dri_screen.h>
+ 
+ #ifdef HAVE_WAYLAND_PLATFORM
+ #include "linux-dmabuf-unstable-v1-client-protocol.h"
+@@ -139,7 +140,7 @@ dri_set_background_context(void *loaderPrivate)
+ static void
+ dri2_gl_flush_get(_glapi_proc *glFlush)
+ {
+-   *glFlush = _glapi_get_proc_address("glFlush");
++//   *glFlush = _glapi_get_proc_address("glFlush");
+ }
+ 
+ static void
+--- a/src/egl/main/eglapi.c
++++ b/src/egl/main/eglapi.c
+@@ -2814,8 +2814,8 @@ eglGetProcAddress(const char *procname)
+          ret = entrypoint->function;
+    }
+ 
+-   if (!ret)
+-      ret = _glapi_get_proc_address(procname);
++//  if (!ret)
++//     ret = _glapi_get_proc_address(procname);
+ 
+    RETURN_EGL_SUCCESS(NULL, ret);
+ }
 --- a/src/egl/meson.build
 +++ b/src/egl/meson.build
-@@ -100,7 +100,7 @@ if with_dri2
+@@ -63,6 +63,7 @@ files_egl = files(
+   'main/egltypedefs.h',
+ )
+ 
++genCommon_py = files('../mapi/new/genCommon.py')
+ g_egldispatchstubs_c = custom_target(
+   'g_egldispatchstubs.c',
+   input : [
+@@ -103,7 +104,7 @@ if with_dri2
    incs_for_egl += inc_gallium
    incs_for_egl += inc_gallium_aux
    incs_for_egl += inc_mesa
@@ -35,14 +86,12 @@
  
    files_egl += files(
      'drivers/dri2/platform_device.c',
---- a/src/egl/drivers/dri2/egl_dri2.c
-+++ b/src/egl/drivers/dri2/egl_dri2.c
-@@ -46,7 +46,7 @@
- #include <GL/internal/dri_interface.h>
- #include <sys/types.h>
- #include <sys/stat.h>
--#include "dri_screen.h"
-+#include <gallium/frontends/dri/dri_screen.h>
- 
- #ifdef HAVE_WAYLAND_PLATFORM
- #include <wayland-client.h>
+@@ -201,7 +202,7 @@ libegl = shared_library(
+   cpp_args : [cpp_args_for_egl],
+   gnu_symbol_visibility : 'hidden',
+   include_directories : incs_for_egl,
+-  link_with : [link_for_egl, libglapi],
++  link_with : [link_for_egl],
+   link_args : [ld_args_bsymbolic, ld_args_gc_sections],
+   dependencies : [deps_for_egl, dep_dl, dep_libdrm, dep_clock, dep_thread, idep_mesautil],
+   install : true,

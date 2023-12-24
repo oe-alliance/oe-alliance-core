@@ -10,7 +10,7 @@ require conf/python/python3-compileall.inc
 inherit autotools-brokensep gettext gitpkgv ${PYTHON_PN}native ${PYTHON_PN}targetconfig
 
 SRCREV = "${AUTOREV}"
-PV = "git${SRCPV}"
+PV = "git"
 PKGV = "${GITPKGVTAG}"
 
 SRC_URI = "git://bitbucket.org/prl/icetv.git;protocol=https;branch=master"

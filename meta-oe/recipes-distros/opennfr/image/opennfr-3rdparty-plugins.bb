@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=45de10587e108efb50c321c1affd5e00"
 inherit gitpkgv deploy
 
 SRCREV = "${AUTOREV}"
-PV = "git${SRCPV}"
+PV = "git"
 PKGV = "git${GITPKGV}"
 PR = "r39"
 SRC_URI="git://github.com/carlo0815/3rdparty-plugins.git;protocol=https;branch=4.4"

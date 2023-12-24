@@ -7,7 +7,7 @@ FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 inherit gitpkgv
 
 SRCREV = "${AUTOREV}"
-PV = "1.4.3+git${SRCPV}"
+PV = "1.4.3+git"
 PKGV = "1.4.3+git${GITPKGV}"
 
 SRC_URI = "git://code.videolan.org/videolan/libdvdcss.git;protocol=https;branch=master"

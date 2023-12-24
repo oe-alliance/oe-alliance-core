@@ -9,9 +9,9 @@ DEPENDS += "audiofile boost curl dbus expat faad2 flac fmt icu libao \
 
 inherit gitpkgv
 
-SRCREV = "3242943cd11dbf47117b448a4d2f8e5053cc5681"
-PV = "0.23.11+git${SRCPV}"
-PKGV = "0.23.11+git${GITPKGV}"
+SRCREV = "feac1a3f56591ccfb00870aba66c9ac3abac4773"
+PV = "0.23.14+git"
+PKGV = "0.23.14+git${GITPKGV}"
 
 SRC_URI = "git://github.com/MusicPlayerDaemon/MPD;branch=master;protocol=https \
         file://mpd.conf \

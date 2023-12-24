@@ -11,6 +11,9 @@ PV = "${IMAGE_VERSION}"
 PR = "r${PR_NUM}"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
+image_combine_spdx() {
+}
+
 WORKDIR = "${TMPDIR}/work/${MULTIMACH_TARGET_SYS}/${PN}/${EXTENDPE}${PV}"
 REPRODUCIBLE_TIMESTAMP_ROOTFS = "${@int(time.time()-10000)}"
 do_rootfs[deptask] = "do_rm_work"

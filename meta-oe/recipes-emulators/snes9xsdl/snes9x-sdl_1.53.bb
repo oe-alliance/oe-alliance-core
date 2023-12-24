@@ -12,7 +12,7 @@ SRC_URI = "git://github.com/emulatorE2/snes9x-sdl.git;protocol=https;branch=mast
 inherit gitpkgv autotools-brokensep
 
 SRCREV = "${AUTOREV}"
-PV = "1.53+git${SRCPV}"
+PV = "1.53+git"
 PKGV = "1.53+git${GITPKGV}"
 VER ="1.53"
 

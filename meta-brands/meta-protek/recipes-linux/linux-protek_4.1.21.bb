@@ -51,6 +51,7 @@ SRC_URI += "https://source.mynonpublic.com/protek/protek-linux-${PV}-${SRCDATE}.
     file://kernel-add-support-for-gcc10.patch \
     file://kernel-add-support-for-gcc11.patch \
     file://kernel-add-support-for-gcc12.patch \
+    file://kernel-add-support-for-gcc13.patch \
     file://0001-Support-TBS-USB-drivers-for-4.1-kernel.patch \
     file://0001-TBS-fixes-for-4.1-kernel.patch \
     file://0001-STV-Add-PLS-support.patch \
@@ -62,6 +63,8 @@ SRC_URI += "https://source.mynonpublic.com/protek/protek-linux-${PV}-${SRCDATE}.
     file://0004-makefile-disable-warnings.patch \
     file://move-default-dialect-to-SMB3.patch \
     file://fix-never-be-null_outside-array-bounds-gcc-12.patch \
+    file://linux3.4-ARM-8933-1-replace-Sun-Solaris-style-flag-on-section.patch \
+    file://fix-build-with-binutils-2.41.patch \
 "
 
 S = "${WORKDIR}/linux-${PV}"

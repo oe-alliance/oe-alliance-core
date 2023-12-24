@@ -8,7 +8,7 @@ RRECOMMENDS:${PN} = "${PYTHON_PN}-cheetah libusb1 kernel-module-cdc-acm kernel-m
 
 inherit gitpkgv
 SRCREV = "${AUTOREV}"
-PV = "1.42+git${SRCPV}"
+PV = "1.42+git"
 PKGV = "1.42+git${GITPKGV}"
 PR = "r12"
 

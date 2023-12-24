@@ -59,7 +59,7 @@ inherit gitpkgv
 
 SRCREV = "${AUTOREV}"
 PKGVERSION = "2.0-r0"
-PV = "${PKGVERSION}-${SRCPV}"
+PV = "${PKGVERSION}-"
 PKGV = "${PKGVERSION}-${GITPKGV}"
 PR = "r0"
 

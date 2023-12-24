@@ -7,7 +7,7 @@ require conf/python/python3-compileall.inc
 inherit gittag
 
 SRCREV = "${AUTOREV}"
-PV = "git${SRCPV}"
+PV = "git"
 PKGV = "${GITPKGVTAG}"
 
 RDEPENDS:${PN} = "enigma2-plugin-extensions-oaweather"

@@ -1,0 +1,4529 @@
+From ed2db89f45bf20967b0016162ffdc807cbdb1dec Mon Sep 17 00:00:00 2001
+From: NickerSK <nickersk@gmail.com>
+Date: Wed, 16 Aug 2023 09:19:37 +0000
+Subject: [PATCH] remove arc4random implementation
+
+---
+ NEWS                                          |  12 -
+ benchtests/Makefile                           |   5 +-
+ benchtests/bench-arc4random.c                 | 218 -------
+ benchtests/bench-hash-funcs-kernel.h          |   1 -
+ benchtests/bench-hash-funcs.c                 |   2 +
+ benchtests/bench-util.h                       |   7 -
+ include/stdlib.h                              |   9 -
+ malloc/malloc.c                               |   3 +-
+ malloc/thread-freeres.c                       |   2 +-
+ manual/math.texi                              |  39 --
+ nptl/allocatestack.c                          |   3 +-
+ stdlib/Makefile                               |   7 -
+ stdlib/Versions                               |   5 -
+ stdlib/arc4random.c                           | 102 ----
+ stdlib/arc4random_uniform.c                   |  71 ---
+ stdlib/chacha20.c                             | 191 ++++++
+ stdlib/stdlib.h                               |  13 -
+ stdlib/tst-arc4random-fork.c                  | 194 ------
+ stdlib/tst-arc4random-stats.c                 | 147 -----
+ stdlib/tst-arc4random-thread.c                | 353 -----------
+ sysdeps/aarch64/Makefile                      |   4 +
+ sysdeps/aarch64/chacha20-aarch64.S            | 314 ++++++++++
+ sysdeps/aarch64/chacha20_arch.h               |  40 ++
+ sysdeps/generic/chacha20_arch.h               |  24 +
+ sysdeps/generic/not-cancel.h                  |   5 -
+ sysdeps/generic/tls-internal.c                |   8 -
+ sysdeps/generic/tls-internal.h                |   7 +-
+ sysdeps/mach/hurd/i386/libc.abilist           |   3 -
+ sysdeps/mach/hurd/not-cancel.h                |  14 -
+ .../powerpc/powerpc64/be/multiarch/Makefile   |   4 +
+ .../powerpc64/be/multiarch/chacha20-ppc.c     |   1 +
+ .../powerpc64/be/multiarch/chacha20_arch.h    |  42 ++
+ sysdeps/powerpc/powerpc64/power8/Makefile     |   5 +
+ .../powerpc/powerpc64/power8/chacha20-ppc.c   | 256 ++++++++
+ .../powerpc/powerpc64/power8/chacha20_arch.h  |  37 ++
+ sysdeps/s390/s390-64/Makefile                 |   6 +
+ sysdeps/s390/s390-64/chacha20-s390x.S         | 573 ++++++++++++++++++
+ sysdeps/s390/s390-64/chacha20_arch.h          |  45 ++
+ sysdeps/unix/sysv/linux/aarch64/libc.abilist  |   3 -
+ sysdeps/unix/sysv/linux/alpha/libc.abilist    |   3 -
+ sysdeps/unix/sysv/linux/arc/libc.abilist      |   3 -
+ sysdeps/unix/sysv/linux/arm/be/libc.abilist   |   3 -
+ sysdeps/unix/sysv/linux/arm/le/libc.abilist   |   3 -
+ sysdeps/unix/sysv/linux/csky/libc.abilist     |   3 -
+ sysdeps/unix/sysv/linux/hppa/libc.abilist     |   3 -
+ sysdeps/unix/sysv/linux/i386/libc.abilist     |   3 -
+ sysdeps/unix/sysv/linux/ia64/libc.abilist     |   3 -
+ .../sysv/linux/m68k/coldfire/libc.abilist     |   3 -
+ .../unix/sysv/linux/m68k/m680x0/libc.abilist  |   3 -
+ .../sysv/linux/microblaze/be/libc.abilist     |   3 -
+ .../sysv/linux/microblaze/le/libc.abilist     |   3 -
+ .../sysv/linux/mips/mips32/fpu/libc.abilist   |   3 -
+ .../sysv/linux/mips/mips32/nofpu/libc.abilist |   3 -
+ .../sysv/linux/mips/mips64/n32/libc.abilist   |   3 -
+ .../sysv/linux/mips/mips64/n64/libc.abilist   |   3 -
+ sysdeps/unix/sysv/linux/nios2/libc.abilist    |   3 -
+ sysdeps/unix/sysv/linux/not-cancel.h          |  14 +-
+ sysdeps/unix/sysv/linux/or1k/libc.abilist     |   3 -
+ .../linux/powerpc/powerpc32/fpu/libc.abilist  |   3 -
+ .../powerpc/powerpc32/nofpu/libc.abilist      |   3 -
+ .../linux/powerpc/powerpc64/be/libc.abilist   |   3 -
+ .../linux/powerpc/powerpc64/le/libc.abilist   |   3 -
+ .../unix/sysv/linux/riscv/rv32/libc.abilist   |   3 -
+ .../unix/sysv/linux/riscv/rv64/libc.abilist   |   3 -
+ .../unix/sysv/linux/s390/s390-32/libc.abilist |   3 -
+ .../unix/sysv/linux/s390/s390-64/libc.abilist |   3 -
+ sysdeps/unix/sysv/linux/sh/be/libc.abilist    |   3 -
+ sysdeps/unix/sysv/linux/sh/le/libc.abilist    |   3 -
+ .../sysv/linux/sparc/sparc32/libc.abilist     |   3 -
+ .../sysv/linux/sparc/sparc64/libc.abilist     |   3 -
+ sysdeps/unix/sysv/linux/tls-internal.c        |  29 +-
+ sysdeps/unix/sysv/linux/tls-internal.h        |   7 +-
+ .../unix/sysv/linux/x86_64/64/libc.abilist    |   3 -
+ .../unix/sysv/linux/x86_64/x32/libc.abilist   |   3 -
+ sysdeps/x86_64/Makefile                       |   7 +
+ sysdeps/x86_64/chacha20-amd64-avx2.S          | 328 ++++++++++
+ sysdeps/x86_64/chacha20-amd64-sse2.S          | 311 ++++++++++
+ sysdeps/x86_64/chacha20_arch.h                |  55 ++
+ 78 files changed, 2264 insertions(+), 1358 deletions(-)
+ delete mode 100644 benchtests/bench-arc4random.c
+ delete mode 100644 stdlib/arc4random.c
+ delete mode 100644 stdlib/arc4random_uniform.c
+ create mode 100644 stdlib/chacha20.c
+ delete mode 100644 stdlib/tst-arc4random-fork.c
+ delete mode 100644 stdlib/tst-arc4random-stats.c
+ delete mode 100644 stdlib/tst-arc4random-thread.c
+ create mode 100644 sysdeps/aarch64/chacha20-aarch64.S
+ create mode 100644 sysdeps/aarch64/chacha20_arch.h
+ create mode 100644 sysdeps/generic/chacha20_arch.h
+ create mode 100644 sysdeps/powerpc/powerpc64/be/multiarch/Makefile
+ create mode 100644 sysdeps/powerpc/powerpc64/be/multiarch/chacha20-ppc.c
+ create mode 100644 sysdeps/powerpc/powerpc64/be/multiarch/chacha20_arch.h
+ create mode 100644 sysdeps/powerpc/powerpc64/power8/chacha20-ppc.c
+ create mode 100644 sysdeps/powerpc/powerpc64/power8/chacha20_arch.h
+ create mode 100644 sysdeps/s390/s390-64/chacha20-s390x.S
+ create mode 100644 sysdeps/s390/s390-64/chacha20_arch.h
+ create mode 100644 sysdeps/x86_64/chacha20-amd64-avx2.S
+ create mode 100644 sysdeps/x86_64/chacha20-amd64-sse2.S
+ create mode 100644 sysdeps/x86_64/chacha20_arch.h
+
+diff --git a/NEWS b/NEWS
+index 872bc890..1adfd158 100644
+--- a/NEWS
++++ b/NEWS
+@@ -289,18 +289,6 @@ Major new features:
+   _GNU_SOURCE macro is defined and the C++20 __cpp_char8_t feature test macro
+   is not defined (if __cpp_char8_t is defined, then char8_t is a builtin type).
+ 
+-* The functions arc4random, arc4random_buf, and arc4random_uniform have been
+-  added.  The functions wrap getrandom and/or /dev/urandom to return high-
+-  quality randomness from the kernel.
+-
+-* Support for LoongArch running on Linux has been added.  This port requires
+-  as least binutils 2.38, GCC 12, and Linux 5.19.  Currently only hard-float
+-  ABI is supported:
+-
+-    - loongarch64-linux-gnu
+-
+-  The LoongArch ABI is 64-bit little-endian.
+-
+ Deprecated and removed features, and other changes affecting compatibility:
+ 
+ * Support for prelink will be removed in the next release; this includes
+diff --git a/benchtests/Makefile b/benchtests/Makefile
+index e1346bbd..94382bf9 100644
+--- a/benchtests/Makefile
++++ b/benchtests/Makefile
+@@ -244,10 +244,7 @@ hash-benchset := \
+   nss-hash \
+   # hash-benchset
+ 
+-stdlib-benchset := \
+-  arc4random \
+-  strtod \
+-  # stdlib-benchset
++stdlib-benchset := strtod
+ 
+ stdio-common-benchset := sprintf
+ 
+diff --git a/benchtests/bench-arc4random.c b/benchtests/bench-arc4random.c
+deleted file mode 100644
+index 775a570e..00000000
+--- a/benchtests/bench-arc4random.c
++++ /dev/null
+@@ -1,218 +0,0 @@
+-/* arc4random benchmarks.
+-   Copyright (C) 2022-2023 Free Software Foundation, Inc.
+-   This file is part of the GNU C Library.
+-
+-   The GNU C Library is free software; you can redistribute it and/or
+-   modify it under the terms of the GNU Lesser General Public
+-   License as published by the Free Software Foundation; either
+-   version 2.1 of the License, or (at your option) any later version.
+-
+-   The GNU C Library is distributed in the hope that it will be useful,
+-   but WITHOUT ANY WARRANTY; without even the implied warranty of
+-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+-   Lesser General Public License for more details.
+-
+-   You should have received a copy of the GNU Lesser General Public
+-   License along with the GNU C Library; if not, see
+-   <https://www.gnu.org/licenses/>.  */
+-
+-#include "bench-timing.h"
+-#include "bench-util.h"
+-#include "json-lib.h"
+-#include <array_length.h>
+-#include <intprops.h>
+-#include <signal.h>
+-#include <stdbool.h>
+-#include <stdio.h>
+-#include <stdlib.h>
+-#include <support/support.h>
+-#include <support/timespec.h>
+-#include <support/xthread.h>
+-
+-static volatile sig_atomic_t timer_finished;
+-
+-static void timer_callback (int unused)
+-{
+-  timer_finished = 1;
+-}
+-
+-static timer_t timer;
+-
+-/* Run for approximately DURATION seconds, and it does not matter who
+-   receive the signal (so not need to mask it on main thread).  */
+-static void
+-timer_start (void)
+-{
+-  timer_finished = 0;
+-  timer = support_create_timer (DURATION, 0, false, timer_callback);
+-}
+-static void
+-timer_stop (void)
+-{
+-  support_delete_timer (timer);
+-}
+-
+-static const uint32_t sizes[] = { 0, 16, 32, 48, 64, 80, 96, 112, 128 };
+-
+-static double
+-bench_throughput (void)
+-{
+-  uint64_t n = 0;
+-
+-  struct timespec start, end;
+-  clock_gettime (CLOCK_MONOTONIC, &start);
+-  while (1)
+-    {
+-      DO_NOT_OPTIMIZE_OUT (arc4random ());
+-      n++;
+-
+-      if (timer_finished == 1)
+-	break;
+-    }
+-  clock_gettime (CLOCK_MONOTONIC, &end);
+-  struct timespec diff = timespec_sub (end, start);
+-
+-  double total = (double) n * sizeof (uint32_t);
+-  double duration = (double) diff.tv_sec
+-    + (double) diff.tv_nsec / TIMESPEC_HZ;
+-
+-  return total / duration;
+-}
+-
+-static double
+-bench_latency (void)
+-{
+-  timing_t start, stop, cur;
+-  const size_t iters = 1024;
+-
+-  TIMING_NOW (start);
+-  for (size_t i = 0; i < iters; i++)
+-    DO_NOT_OPTIMIZE_OUT (arc4random ());
+-  TIMING_NOW (stop);
+-
+-  TIMING_DIFF (cur, start, stop);
+-
+-  return (double) (cur) / (double) iters;
+-}
+-
+-static double
+-bench_buf_throughput (size_t len)
+-{
+-  uint8_t buf[len];
+-  uint64_t n = 0;
+-
+-  struct timespec start, end;
+-  clock_gettime (CLOCK_MONOTONIC, &start);
+-  while (1)
+-    {
+-      arc4random_buf (buf, len);
+-      n++;
+-
+-      if (timer_finished == 1)
+-	break;
+-    }
+-  clock_gettime (CLOCK_MONOTONIC, &end);
+-  struct timespec diff = timespec_sub (end, start);
+-
+-  double total = (double) n * len;
+-  double duration = (double) diff.tv_sec
+-    + (double) diff.tv_nsec / TIMESPEC_HZ;
+-
+-  return total / duration;
+-}
+-
+-static double
+-bench_buf_latency (size_t len)
+-{
+-  timing_t start, stop, cur;
+-  const size_t iters = 1024;
+-
+-  uint8_t buf[len];
+-
+-  TIMING_NOW (start);
+-  for (size_t i = 0; i < iters; i++)
+-    arc4random_buf (buf, len);
+-  TIMING_NOW (stop);
+-
+-  TIMING_DIFF (cur, start, stop);
+-
+-  return (double) (cur) / (double) iters;
+-}
+-
+-static void
+-bench_singlethread (json_ctx_t *json_ctx)
+-{
+-  json_element_object_begin (json_ctx);
+-
+-  json_array_begin (json_ctx, "throughput");
+-  for (int i = 0; i < array_length (sizes); i++)
+-    {
+-      timer_start ();
+-      double r = sizes[i] == 0
+-	? bench_throughput () : bench_buf_throughput (sizes[i]);
+-      timer_stop ();
+-
+-      json_element_double (json_ctx, r);
+-    }
+-  json_array_end (json_ctx);
+-
+-  json_array_begin (json_ctx, "latency");
+-  for (int i = 0; i < array_length (sizes); i++)
+-    {
+-      timer_start ();
+-      double r = sizes[i] == 0
+-	? bench_latency () : bench_buf_latency (sizes[i]);
+-      timer_stop ();
+-
+-      json_element_double (json_ctx, r);
+-    }
+-  json_array_end (json_ctx);
+-
+-  json_element_object_end (json_ctx);
+-}
+-
+-static void
+-run_bench (json_ctx_t *json_ctx, const char *name,
+-	   char *const*fnames, size_t fnameslen,
+-	   void (*bench) (json_ctx_t *ctx))
+-{
+-  json_attr_object_begin (json_ctx, name);
+-  json_array_begin (json_ctx, "functions");
+-  for (int i = 0; i < fnameslen; i++)
+-    json_element_string (json_ctx, fnames[i]);
+-  json_array_end (json_ctx);
+-
+-  json_array_begin (json_ctx, "results");
+-  bench (json_ctx);
+-  json_array_end (json_ctx);
+-  json_attr_object_end (json_ctx);
+-}
+-
+-static int
+-do_test (void)
+-{
+-  char *fnames[array_length (sizes)];
+-  for (int i = 0; i < array_length (sizes); i++)
+-    if (sizes[i] == 0)
+-      fnames[i] = xasprintf ("arc4random");
+-    else
+-      fnames[i] = xasprintf ("arc4random_buf(%u)", sizes[i]);
+-
+-  json_ctx_t json_ctx;
+-  json_init (&json_ctx, 0, stdout);
+-
+-  json_document_begin (&json_ctx);
+-  json_attr_string (&json_ctx, "timing_type", TIMING_TYPE);
+-
+-  run_bench (&json_ctx, "single-thread", fnames, array_length (fnames),
+-	     bench_singlethread);
+-
+-  json_document_end (&json_ctx);
+-
+-  for (int i = 0; i < array_length (sizes); i++)
+-    free (fnames[i]);
+-
+-  return 0;
+-}
+-
+-#include <support/test-driver.c>
+diff --git a/benchtests/bench-hash-funcs-kernel.h b/benchtests/bench-hash-funcs-kernel.h
+index f6474111..8939bdab 100644
+--- a/benchtests/bench-hash-funcs-kernel.h
++++ b/benchtests/bench-hash-funcs-kernel.h
+@@ -17,7 +17,6 @@
+    <https://www.gnu.org/licenses/>.  */
+ 
+ 
+-#include "bench-util.h"
+ 
+ /* We go through the trouble of using macros here because many of the
+    hash functions are meant to be inlined so its not fair to benchmark
+diff --git a/benchtests/bench-hash-funcs.c b/benchtests/bench-hash-funcs.c
+index 4a6858c0..6dc285ae 100644
+--- a/benchtests/bench-hash-funcs.c
++++ b/benchtests/bench-hash-funcs.c
+@@ -38,6 +38,8 @@
+ #include <stdlib.h>
+ #include <string.h>
+ 
++#define DO_NOT_OPTIMIZE_OUT(x) __asm__ volatile("" : : "r,m"(x) : "memory")
++
+ enum
+ {
+   NFIXED_ITERS = 1048576,
+diff --git a/benchtests/bench-util.h b/benchtests/bench-util.h
+index 13927ff0..df39f43f 100644
+--- a/benchtests/bench-util.h
++++ b/benchtests/bench-util.h
+@@ -16,13 +16,6 @@
+    License along with the GNU C Library; if not, see
+    <https://www.gnu.org/licenses/>.  */
+ 
+-/* Prevent compiler to optimize away call.  */
+-#define DO_NOT_OPTIMIZE_OUT(value)		  \
+-  ({						  \
+-    __typeof (value) __v = (value);		  \
+-    asm volatile ("" : : "r,m" (__v) : "memory"); \
+-    __v;					  \
+-  })
+ 
+ #ifndef START_ITER
+ # define START_ITER (100000000)
+diff --git a/include/stdlib.h b/include/stdlib.h
+index 7deb8193..6fb962b2 100644
+--- a/include/stdlib.h
++++ b/include/stdlib.h
+@@ -184,15 +184,6 @@ libc_hidden_proto (__ptsname_r)
+ libc_hidden_proto (grantpt)
+ libc_hidden_proto (unlockpt)
+ 
+-__typeof (arc4random) __arc4random;
+-libc_hidden_proto (__arc4random);
+-__typeof (arc4random_buf) __arc4random_buf;
+-libc_hidden_proto (__arc4random_buf);
+-__typeof (arc4random_uniform) __arc4random_uniform;
+-libc_hidden_proto (__arc4random_uniform);
+-extern void __arc4random_buf_internal (void *buffer, size_t len)
+-     attribute_hidden;
+-
+ extern double __strtod_internal (const char *__restrict __nptr,
+ 				 char **__restrict __endptr, int __group)
+      __THROW __nonnull ((1)) __wur;
+diff --git a/malloc/malloc.c b/malloc/malloc.c
+index e2f1a615..4ddde69e 100644
+--- a/malloc/malloc.c
++++ b/malloc/malloc.c
+@@ -254,7 +254,6 @@
+ /* For tcache double-free check.  */
+ #include <random-bits.h>
+ #include <sys/random.h>
+-#include <not-cancel.h>
+ 
+ /*
+   Debugging:
+@@ -3129,7 +3128,7 @@ static uintptr_t tcache_key;
+ static void
+ tcache_key_initialize (void)
+ {
+-  if (__getrandom_nocancel (&tcache_key, sizeof(tcache_key), GRND_NONBLOCK)
++  if (__getrandom (&tcache_key, sizeof(tcache_key), GRND_NONBLOCK)
+       != sizeof (tcache_key))
+     {
+       tcache_key = random_bits ();
+diff --git a/malloc/thread-freeres.c b/malloc/thread-freeres.c
+index 416d199a..374067e2 100644
+--- a/malloc/thread-freeres.c
++++ b/malloc/thread-freeres.c
+@@ -33,7 +33,7 @@ __libc_thread_freeres (void)
+   __rpc_thread_destroy ();
+ #endif
+   call_function_static_weak (__res_thread_freeres);
+-  call_function_static_weak (__glibc_tls_internal_free);
++  __glibc_tls_internal_free ();
+   call_function_static_weak (__libc_dlerror_result_free);
+ 
+   /* This should come last because it shuts down malloc for this
+diff --git a/manual/math.texi b/manual/math.texi
+index 7f0499ab..105d6122 100644
+--- a/manual/math.texi
++++ b/manual/math.texi
+@@ -1447,7 +1447,6 @@ systems.
+ * ISO Random::                  @code{rand} and friends.
+ * BSD Random::                  @code{random} and friends.
+ * SVID Random::                 @code{drand48} and friends.
+-* High Quality Random::         @code{arc4random} and friends.
+ @end menu
+ 
+ @node ISO Random
+@@ -1986,44 +1985,6 @@ This function is a GNU extension and should not be used in portable
+ programs.
+ @end deftypefun
+ 
+-@node High Quality Random
+-@subsection High Quality Random Number Functions
+-
+-This section describes the random number functions provided as a GNU
+-extension, based on OpenBSD interfaces.
+-
+-@Theglibc{} uses kernel entropy obtained either through @code{getrandom}
+-or by reading @file{/dev/urandom} to seed.
+-
+-These functions provide higher random quality than ISO, BSD, and SVID
+-functions, and may be used in cryptographic contexts.
+-
+-The prototypes for these functions are in @file{stdlib.h}.
+-@pindex stdlib.h
+-
+-@deftypefun uint32_t arc4random (void)
+-@standards{BSD, stdlib.h}
+-@safety{@mtsafe{}@asunsafe{@asucorrupt{}}@acsafe{}}
+-This function returns a single 32-bit value in the range of @code{0} to
+-@code{2^32−1} (inclusive), which is twice the range of @code{rand} and
+-@code{random}.
+-@end deftypefun
+-
+-@deftypefun void arc4random_buf (void *@var{buffer}, size_t @var{length})
+-@standards{BSD, stdlib.h}
+-@safety{@mtsafe{}@asunsafe{@asucorrupt{}}@acsafe{}}
+-This function fills the region @var{buffer} of length @var{length} bytes
+-with random data.
+-@end deftypefun
+-
+-@deftypefun uint32_t arc4random_uniform (uint32_t @var{upper_bound})
+-@standards{BSD, stdlib.h}
+-@safety{@mtsafe{}@asunsafe{@asucorrupt{}}@acsafe{}}
+-This function returns a single 32-bit value, uniformly distributed but
+-less than the @var{upper_bound}.  It avoids the @w{modulo bias} when the
+-upper bound is not a power of two.
+-@end deftypefun
+-
+ @node FP Function Optimizations
+ @section Is Fast Code or Small Code preferred?
+ @cindex Optimization
+diff --git a/nptl/allocatestack.c b/nptl/allocatestack.c
+index f9d8cdfd..4dea1155 100644
+--- a/nptl/allocatestack.c
++++ b/nptl/allocatestack.c
+@@ -32,7 +32,6 @@
+ #include <kernel-features.h>
+ #include <nptl-stack.h>
+ #include <libc-lock.h>
+-#include <tls-internal.h>
+ 
+ /* Default alignment of stack.  */
+ #ifndef STACK_ALIGN
+@@ -128,7 +127,7 @@ get_cached_stack (size_t *sizep, void **memp)
+ 
+   result->exiting = false;
+   __libc_lock_init (result->exit_lock);
+-  memset (&result->tls_state, 0, sizeof result->tls_state);
++  result->tls_state = (struct tls_internal_t) { 0 };
+ 
+   /* Clear the DTV.  */
+   dtv_t *dtv = GET_DTV (TLS_TPADJ (result));
+diff --git a/stdlib/Makefile b/stdlib/Makefile
+index 25e42a77..9b692321 100644
+--- a/stdlib/Makefile
++++ b/stdlib/Makefile
+@@ -53,8 +53,6 @@ routines := \
+   a64l \
+   abort \
+   abs \
+-  arc4random \
+-  arc4random_uniform \
+   at_quick_exit \
+   atof \
+   atoi \
+@@ -192,9 +190,6 @@ tests := \
+   testrand \
+   testsort \
+   tst-abs \
+-  tst-arc4random-fork \
+-  tst-arc4random-stats \
+-  tst-arc4random-thread \
+   tst-at_quick_exit \
+   tst-atexit \
+   tst-atof1 \
+@@ -289,8 +284,6 @@ LDLIBS-test-cxa_atexit-race = $(shared-thread-library)
+ LDLIBS-test-cxa_atexit-race2 = $(shared-thread-library)
+ LDLIBS-test-on_exit-race = $(shared-thread-library)
+ LDLIBS-tst-canon-bz26341 = $(shared-thread-library)
+-LDLIBS-tst-arc4random-fork = $(shared-thread-library)
+-LDLIBS-tst-arc4random-thread = $(shared-thread-library)
+ LDLIBS-tst-system = $(shared-thread-library)
+ 
+ LDLIBS-test-dlclose-exit-race = $(shared-thread-library)
+diff --git a/stdlib/Versions b/stdlib/Versions
+index 6a861c54..4235f01a 100644
+--- a/stdlib/Versions
++++ b/stdlib/Versions
+@@ -136,11 +136,6 @@ libc {
+     strtof32; strtof64; strtof32x;
+     strtof32_l; strtof64_l; strtof32x_l;
+   }
+-  GLIBC_2.36 {
+-    arc4random;
+-    arc4random_buf;
+-    arc4random_uniform;
+-  }
+   GLIBC_2.37 {
+   }
+   GLIBC_2.38 {
+diff --git a/stdlib/arc4random.c b/stdlib/arc4random.c
+deleted file mode 100644
+index 757aaa31..00000000
+--- a/stdlib/arc4random.c
++++ /dev/null
+@@ -1,102 +0,0 @@
+-/* Pseudo Random Number Generator
+-   Copyright (C) 2022-2023 Free Software Foundation, Inc.
+-   This file is part of the GNU C Library.
+-
+-   The GNU C Library is free software; you can redistribute it and/or
+-   modify it under the terms of the GNU Lesser General Public
+-   License as published by the Free Software Foundation; either
+-   version 2.1 of the License, or (at your option) any later version.
+-
+-   The GNU C Library is distributed in the hope that it will be useful,
+-   but WITHOUT ANY WARRANTY; without even the implied warranty of
+-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+-   Lesser General Public License for more details.
+-
+-   You should have received a copy of the GNU Lesser General Public
+-   License along with the GNU C Library; if not, see
+-   <https://www.gnu.org/licenses/>.  */
+-
+-#include <errno.h>
+-#include <not-cancel.h>
+-#include <stdio.h>
+-#include <stdlib.h>
+-#include <sys/mman.h>
+-#include <sys/param.h>
+-#include <sys/random.h>
+-
+-static void
+-arc4random_getrandom_failure (void)
+-{
+-  __libc_fatal ("Fatal glibc error: cannot get entropy for arc4random\n");
+-}
+-
+-void
+-__arc4random_buf (void *p, size_t n)
+-{
+-  static int seen_initialized;
+-  ssize_t l;
+-  int fd;
+-
+-  if (n == 0)
+-    return;
+-
+-  for (;;)
+-    {
+-      l = TEMP_FAILURE_RETRY (__getrandom_nocancel (p, n, 0));
+-      if (l > 0)
+-	{
+-	  if ((size_t) l == n)
+-	    return; /* Done reading, success.  */
+-	  p = (uint8_t *) p + l;
+-	  n -= l;
+-	  continue; /* Interrupted by a signal; keep going.  */
+-	}
+-      else if (l == -ENOSYS)
+-	break; /* No syscall, so fallback to /dev/urandom.  */
+-      arc4random_getrandom_failure ();
+-    }
+-
+-  if (atomic_load_relaxed (&seen_initialized) == 0)
+-    {
+-      /* Poll /dev/random as an approximation of RNG initialization.  */
+-      struct pollfd pfd = { .events = POLLIN };
+-      pfd.fd = TEMP_FAILURE_RETRY (
+-	  __open64_nocancel ("/dev/random", O_RDONLY | O_CLOEXEC | O_NOCTTY));
+-      if (pfd.fd < 0)
+-	arc4random_getrandom_failure ();
+-      if (TEMP_FAILURE_RETRY (__poll_infinity_nocancel (&pfd, 1)) < 0)
+-	arc4random_getrandom_failure ();
+-      if (__close_nocancel (pfd.fd) < 0)
+-	arc4random_getrandom_failure ();
+-      atomic_store_relaxed (&seen_initialized, 1);
+-    }
+-
+-  fd = TEMP_FAILURE_RETRY (
+-      __open64_nocancel ("/dev/urandom", O_RDONLY | O_CLOEXEC | O_NOCTTY));
+-  if (fd < 0)
+-    arc4random_getrandom_failure ();
+-  for (;;)
+-    {
+-      l = TEMP_FAILURE_RETRY (__read_nocancel (fd, p, n));
+-      if (l <= 0)
+-	arc4random_getrandom_failure ();
+-      if ((size_t) l == n)
+-	break; /* Done reading, success.  */
+-      p = (uint8_t *) p + l;
+-      n -= l;
+-    }
+-  if (__close_nocancel (fd) < 0)
+-    arc4random_getrandom_failure ();
+-}
+-libc_hidden_def (__arc4random_buf)
+-weak_alias (__arc4random_buf, arc4random_buf)
+-
+-uint32_t
+-__arc4random (void)
+-{
+-  uint32_t r;
+-  __arc4random_buf (&r, sizeof (r));
+-  return r;
+-}
+-libc_hidden_def (__arc4random)
+-weak_alias (__arc4random, arc4random)
+diff --git a/stdlib/arc4random_uniform.c b/stdlib/arc4random_uniform.c
+deleted file mode 100644
+index f106e616..00000000
+--- a/stdlib/arc4random_uniform.c
++++ /dev/null
+@@ -1,71 +0,0 @@
+-/* Random pseudo generator number which returns a single 32 bit value
+-   uniformly distributed but with an upper_bound.
+-   Copyright (C) 2022-2023 Free Software Foundation, Inc.
+-   This file is part of the GNU C Library.
+-
+-   The GNU C Library is free software; you can redistribute it and/or
+-   modify it under the terms of the GNU Lesser General Public
+-   License as published by the Free Software Foundation; either
+-   version 2.1 of the License, or (at your option) any later version.
+-
+-   The GNU C Library is distributed in the hope that it will be useful,
+-   but WITHOUT ANY WARRANTY; without even the implied warranty of
+-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+-   Lesser General Public License for more details.
+-
+-   You should have received a copy of the GNU Lesser General Public
+-   License along with the GNU C Library; if not, see
+-   <https://www.gnu.org/licenses/>.  */
+-
+-#include <stdlib.h>
+-#include <sys/param.h>
+-
+-/* Return a uniformly distributed random number less than N.  The algorithm
+-   calculates a mask being the lowest power of two bounding the upper bound
+-   N, successively queries new random values, and rejects values outside of
+-   the request range.
+-
+-   For reject values, it also tries if the remaining entropy could fit on
+-   the asked range after range adjustment.
+-
+-   The algorithm avoids modulo and divide operations, which might be costly
+-   depending on the architecture.  */
+-uint32_t
+-__arc4random_uniform (uint32_t n)
+-{
+-  if (n <= 1)
+-    /* There is no valid return value for a zero limit, and 0 is the
+-       only possible result for limit 1.  */
+-    return 0;
+-
+-  /* Powers of two are easy.  */
+-  if (powerof2 (n))
+-    return __arc4random () & (n - 1);
+-
+-  /* mask is the smallest power of 2 minus 1 number larger than n.  */
+-  int z = __builtin_clz (n);
+-  uint32_t mask = ~UINT32_C(0) >> z;
+-  int bits = CHAR_BIT * sizeof (uint32_t) - z;
+-
+-  while (1)
+-    {
+-      uint32_t value = __arc4random ();
+-
+-      /* Return if the lower power of 2 minus 1 satisfy the condition.  */
+-      uint32_t r = value & mask;
+-      if (r < n)
+-	return r;
+-
+-      /* Otherwise check if remaining bits of entropy provides fits in the
+-	 bound.  */
+-      for (int bits_left = z; bits_left >= bits; bits_left -= bits)
+-	{
+-	  value >>= bits;
+-	  r = value & mask;
+-	  if (r < n)
+-	    return r;
+-	}
+-    }
+-}
+-libc_hidden_def (__arc4random_uniform)
+-weak_alias (__arc4random_uniform, arc4random_uniform)
+diff --git a/stdlib/chacha20.c b/stdlib/chacha20.c
+new file mode 100644
+index 00000000..2745a813
+--- /dev/null
++++ b/stdlib/chacha20.c
+@@ -0,0 +1,191 @@
++/* Generic ChaCha20 implementation (used on arc4random).
++   Copyright (C) 2022 Free Software Foundation, Inc.
++   This file is part of the GNU C Library.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, see
++   <https://www.gnu.org/licenses/>.  */
++
++#include <array_length.h>
++#include <endian.h>
++#include <stddef.h>
++#include <stdint.h>
++#include <string.h>
++
++/* 32-bit stream position, then 96-bit nonce.  */
++#define CHACHA20_IV_SIZE	16
++#define CHACHA20_KEY_SIZE	32
++
++#define CHACHA20_STATE_LEN	16
++
++/* The ChaCha20 implementation is based on RFC8439 [1], omitting the final
++   XOR of the keystream with the plaintext because the plaintext is a
++   stream of zeros.  */
++
++enum chacha20_constants
++{
++  CHACHA20_CONSTANT_EXPA = 0x61707865U,
++  CHACHA20_CONSTANT_ND_3 = 0x3320646eU,
++  CHACHA20_CONSTANT_2_BY = 0x79622d32U,
++  CHACHA20_CONSTANT_TE_K = 0x6b206574U
++};
++
++static inline uint32_t
++read_unaligned_32 (const uint8_t *p)
++{
++  uint32_t r;
++  memcpy (&r, p, sizeof (r));
++  return r;
++}
++
++static inline void
++write_unaligned_32 (uint8_t *p, uint32_t v)
++{
++  memcpy (p, &v, sizeof (v));
++}
++
++#if __BYTE_ORDER == __BIG_ENDIAN
++# define read_unaligned_le32(p) __builtin_bswap32 (read_unaligned_32 (p))
++# define set_state(v)		__builtin_bswap32 ((v))
++#else
++# define read_unaligned_le32(p) read_unaligned_32 ((p))
++# define set_state(v)		(v)
++#endif
++
++static inline void
++chacha20_init (uint32_t *state, const uint8_t *key, const uint8_t *iv)
++{
++  state[0]  = CHACHA20_CONSTANT_EXPA;
++  state[1]  = CHACHA20_CONSTANT_ND_3;
++  state[2]  = CHACHA20_CONSTANT_2_BY;
++  state[3]  = CHACHA20_CONSTANT_TE_K;
++
++  state[4]  = read_unaligned_le32 (key + 0 * sizeof (uint32_t));
++  state[5]  = read_unaligned_le32 (key + 1 * sizeof (uint32_t));
++  state[6]  = read_unaligned_le32 (key + 2 * sizeof (uint32_t));
++  state[7]  = read_unaligned_le32 (key + 3 * sizeof (uint32_t));
++  state[8]  = read_unaligned_le32 (key + 4 * sizeof (uint32_t));
++  state[9]  = read_unaligned_le32 (key + 5 * sizeof (uint32_t));
++  state[10] = read_unaligned_le32 (key + 6 * sizeof (uint32_t));
++  state[11] = read_unaligned_le32 (key + 7 * sizeof (uint32_t));
++
++  state[12] = read_unaligned_le32 (iv + 0 * sizeof (uint32_t));
++  state[13] = read_unaligned_le32 (iv + 1 * sizeof (uint32_t));
++  state[14] = read_unaligned_le32 (iv + 2 * sizeof (uint32_t));
++  state[15] = read_unaligned_le32 (iv + 3 * sizeof (uint32_t));
++}
++
++static inline uint32_t
++rotl32 (unsigned int shift, uint32_t word)
++{
++  return (word << (shift & 31)) | (word >> ((-shift) & 31));
++}
++
++static void
++state_final (const uint8_t *src, uint8_t *dst, uint32_t v)
++{
++#ifdef CHACHA20_XOR_FINAL
++  v ^= read_unaligned_32 (src);
++#endif
++  write_unaligned_32 (dst, v);
++}
++
++static inline void
++chacha20_block (uint32_t *state, uint8_t *dst, const uint8_t *src)
++{
++  uint32_t x0, x1, x2, x3, x4, x5, x6, x7;
++  uint32_t x8, x9, x10, x11, x12, x13, x14, x15;
++
++  x0 = state[0];
++  x1 = state[1];
++  x2 = state[2];
++  x3 = state[3];
++  x4 = state[4];
++  x5 = state[5];
++  x6 = state[6];
++  x7 = state[7];
++  x8 = state[8];
++  x9 = state[9];
++  x10 = state[10];
++  x11 = state[11];
++  x12 = state[12];
++  x13 = state[13];
++  x14 = state[14];
++  x15 = state[15];
++
++  for (int i = 0; i < 20; i += 2)
++    {
++#define QROUND(_x0, _x1, _x2, _x3) 			\
++  do {							\
++   _x0 = _x0 + _x1; _x3 = rotl32 (16, (_x0 ^ _x3)); 	\
++   _x2 = _x2 + _x3; _x1 = rotl32 (12, (_x1 ^ _x2)); 	\
++   _x0 = _x0 + _x1; _x3 = rotl32 (8,  (_x0 ^ _x3));	\
++   _x2 = _x2 + _x3; _x1 = rotl32 (7,  (_x1 ^ _x2));	\
++  } while(0)
++
++      QROUND (x0, x4, x8,  x12);
++      QROUND (x1, x5, x9,  x13);
++      QROUND (x2, x6, x10, x14);
++      QROUND (x3, x7, x11, x15);
++
++      QROUND (x0, x5, x10, x15);
++      QROUND (x1, x6, x11, x12);
++      QROUND (x2, x7, x8,  x13);
++      QROUND (x3, x4, x9,  x14);
++    }
++
++  state_final (&src[0], &dst[0], set_state (x0 + state[0]));
++  state_final (&src[4], &dst[4], set_state (x1 + state[1]));
++  state_final (&src[8], &dst[8], set_state (x2 + state[2]));
++  state_final (&src[12], &dst[12], set_state (x3 + state[3]));
++  state_final (&src[16], &dst[16], set_state (x4 + state[4]));
++  state_final (&src[20], &dst[20], set_state (x5 + state[5]));
++  state_final (&src[24], &dst[24], set_state (x6 + state[6]));
++  state_final (&src[28], &dst[28], set_state (x7 + state[7]));
++  state_final (&src[32], &dst[32], set_state (x8 + state[8]));
++  state_final (&src[36], &dst[36], set_state (x9 + state[9]));
++  state_final (&src[40], &dst[40], set_state (x10 + state[10]));
++  state_final (&src[44], &dst[44], set_state (x11 + state[11]));
++  state_final (&src[48], &dst[48], set_state (x12 + state[12]));
++  state_final (&src[52], &dst[52], set_state (x13 + state[13]));
++  state_final (&src[56], &dst[56], set_state (x14 + state[14]));
++  state_final (&src[60], &dst[60], set_state (x15 + state[15]));
++
++  state[12]++;
++}
++
++static void
++__attribute_maybe_unused__
++chacha20_crypt_generic (uint32_t *state, uint8_t *dst, const uint8_t *src,
++			size_t bytes)
++{
++  while (bytes >= CHACHA20_BLOCK_SIZE)
++    {
++      chacha20_block (state, dst, src);
++
++      bytes -= CHACHA20_BLOCK_SIZE;
++      dst += CHACHA20_BLOCK_SIZE;
++      src += CHACHA20_BLOCK_SIZE;
++    }
++
++  if (__glibc_unlikely (bytes != 0))
++    {
++      uint8_t stream[CHACHA20_BLOCK_SIZE];
++      chacha20_block (state, stream, src);
++      memcpy (dst, stream, bytes);
++      explicit_bzero (stream, sizeof stream);
++    }
++}
++
++/* Get the architecture optimized version.  */
++#include <chacha20_arch.h>
+diff --git a/stdlib/stdlib.h b/stdlib/stdlib.h
+index 631b0cbb..62a5f50a 100644
+--- a/stdlib/stdlib.h
++++ b/stdlib/stdlib.h
+@@ -652,19 +652,6 @@ extern int seed48_r (unsigned short int __seed16v[3],
+ extern int lcong48_r (unsigned short int __param[7],
+ 		      struct drand48_data *__buffer)
+      __THROW __nonnull ((1, 2));
+-
+-/* Return a random integer between zero and 2**32-1 (inclusive).  */
+-extern __uint32_t arc4random (void)
+-     __THROW __wur;
+-
+-/* Fill the buffer with random data.  */
+-extern void arc4random_buf (void *__buf, size_t __size)
+-     __THROW __nonnull ((1));
+-
+-/* Return a random number between zero (inclusive) and the specified
+-   limit (exclusive).  */
+-extern __uint32_t arc4random_uniform (__uint32_t __upper_bound)
+-     __THROW __wur;
+ # endif	/* Use misc.  */
+ #endif	/* Use misc or X/Open.  */
+ 
+diff --git a/stdlib/tst-arc4random-fork.c b/stdlib/tst-arc4random-fork.c
+deleted file mode 100644
+index 65d5893f..00000000
+--- a/stdlib/tst-arc4random-fork.c
++++ /dev/null
+@@ -1,194 +0,0 @@
+-/* Test that subprocesses generate distinct streams of randomness.
+-   Copyright (C) 2022-2023 Free Software Foundation, Inc.
+-   This file is part of the GNU C Library.
+-
+-   The GNU C Library is free software; you can redistribute it and/or
+-   modify it under the terms of the GNU Lesser General Public
+-   License as published by the Free Software Foundation; either
+-   version 2.1 of the License, or (at your option) any later version.
+-
+-   The GNU C Library is distributed in the hope that it will be useful,
+-   but WITHOUT ANY WARRANTY; without even the implied warranty of
+-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+-   Lesser General Public License for more details.
+-
+-   You should have received a copy of the GNU Lesser General Public
+-   License along with the GNU C Library; if not, see
+-   <https://www.gnu.org/licenses/>.  */
+-
+-/* Collect random data from subprocesses and check that all the
+-   results are unique.  */
+-
+-#include <array_length.h>
+-#include <stdlib.h>
+-#include <stdio.h>
+-#include <string.h>
+-#include <support/check.h>
+-#include <support/support.h>
+-#include <support/xthread.h>
+-#include <support/xunistd.h>
+-#include <unistd.h>
+-
+-/* Perform multiple runs.  The subsequent runs start with an
+-   already-initialized random number generator.  */
+-enum { runs = 10 };
+-
+-/* Total number of spawned processes on each run.  */
+-enum { subprocesses = 49 };
+-
+-/* The total number of processes.  */
+-enum { processes = subprocesses + 1 };
+-
+-/* Number of bytes of randomness to generate per process.  Large
+-   enough to make false positive duplicates extremely unlikely.  */
+-enum { random_size = 16 };
+-
+-/* Generated bytes of randomness.  */
+-struct result
+-{
+-  unsigned char bytes[random_size];
+-};
+-
+-/* Shared across all processes.  */
+-static struct shared_data
+-{
+-  pthread_barrier_t barrier;
+-  struct result results[runs][processes];
+-} *shared_data;
+-
+-static void
+-generate_arc4random (unsigned char *bytes)
+-{
+-  for (int i = 0; i < random_size / sizeof (uint32_t); i++)
+-    {
+-      uint32_t x = arc4random ();
+-      memcpy (&bytes[4 * i], &x, sizeof x);
+-    }
+-}
+-
+-static void
+-generate_arc4random_buf (unsigned char *bytes)
+-{
+-  arc4random_buf (bytes, random_size);
+-}
+-
+-static void
+-generate_arc4random_uniform (unsigned char *bytes)
+-{
+-  for (int i = 0; i < random_size; i++)
+-    bytes[i] = arc4random_uniform (256);
+-}
+-
+-/* Invoked to collect data from a subprocess.  */
+-static void
+-subprocess (int run, int process_index, void (*func)(unsigned char *))
+-{
+-  xpthread_barrier_wait (&shared_data->barrier);
+-  func (shared_data->results[run][process_index].bytes);
+-}
+-
+-/* Used to sort the results.  */
+-struct index
+-{
+-  int run;
+-  int process_index;
+-};
+-
+-/* Used to sort an array of struct index values.  */
+-static int
+-index_compare (const void *left1, const void *right1)
+-{
+-  const struct index *left = left1;
+-  const struct index *right = right1;
+-
+-  return memcmp (shared_data->results[left->run][left->process_index].bytes,
+-                 shared_data->results[right->run][right->process_index].bytes,
+-                 random_size);
+-}
+-
+-static int
+-do_test_func (void (*func)(unsigned char *bytes))
+-{
+-  /* Collect random data.  */
+-  for (int run = 0; run < runs; ++run)
+-    {
+-      pid_t pids[subprocesses];
+-      for (int process_index = 0; process_index < subprocesses;
+-           ++process_index)
+-        {
+-          pids[process_index] = xfork ();
+-          if (pids[process_index] == 0)
+-            {
+-              subprocess (run, process_index, func);
+-              _exit (0);
+-            }
+-        }
+-
+-      /* Trigger all subprocesses.  Also add data from the parent
+-         process.  */
+-      subprocess (run, subprocesses, func);
+-
+-      for (int process_index = 0; process_index < subprocesses;
+-           ++process_index)
+-        {
+-          int status;
+-          xwaitpid (pids[process_index], &status, 0);
+-          if (status != 0)
+-            FAIL_EXIT1 ("subprocess index %d (PID %d) exit status %d\n",
+-                        process_index, (int) pids[process_index], status);
+-        }
+-    }
+-
+-  /* Check for duplicates.  */
+-  struct index indexes[runs * processes];
+-  for (int run = 0; run < runs; ++run)
+-    for (int process_index = 0; process_index < processes; ++process_index)
+-      indexes[run * processes + process_index]
+-        = (struct index) { .run = run, .process_index = process_index };
+-  qsort (indexes, array_length (indexes), sizeof (indexes[0]), index_compare);
+-  for (size_t i = 1; i < array_length (indexes); ++i)
+-    {
+-      if (index_compare (indexes + i - 1, indexes + i) == 0)
+-        {
+-          support_record_failure ();
+-          unsigned char *bytes
+-            = shared_data->results[indexes[i].run]
+-                [indexes[i].process_index].bytes;
+-          char *quoted = support_quote_blob (bytes, random_size);
+-          printf ("error: duplicate randomness data: \"%s\"\n"
+-                  "  run %d, subprocess %d\n"
+-                  "  run %d, subprocess %d\n",
+-                  quoted, indexes[i - 1].run, indexes[i - 1].process_index,
+-                  indexes[i].run, indexes[i].process_index);
+-          free (quoted);
+-        }
+-    }
+-
+-  return 0;
+-}
+-
+-static int
+-do_test (void)
+-{
+-  shared_data = support_shared_allocate (sizeof (*shared_data));
+-  {
+-    pthread_barrierattr_t attr;
+-    xpthread_barrierattr_init (&attr);
+-    xpthread_barrierattr_setpshared (&attr, PTHREAD_PROCESS_SHARED);
+-    xpthread_barrier_init (&shared_data->barrier, &attr, processes);
+-    xpthread_barrierattr_destroy (&attr);
+-  }
+-
+-  do_test_func (generate_arc4random);
+-  do_test_func (generate_arc4random_buf);
+-  do_test_func (generate_arc4random_uniform);
+-
+-  xpthread_barrier_destroy (&shared_data->barrier);
+-  support_shared_free (shared_data);
+-  shared_data = NULL;
+-
+-  return 0;
+-}
+-
+-#define TIMEOUT 40
+-#include <support/test-driver.c>
+diff --git a/stdlib/tst-arc4random-stats.c b/stdlib/tst-arc4random-stats.c
+deleted file mode 100644
+index 1808cf65..00000000
+--- a/stdlib/tst-arc4random-stats.c
++++ /dev/null
+@@ -1,147 +0,0 @@
+-/* Statistical tests for arc4random-related functions.
+-   Copyright (C) 2022-2023 Free Software Foundation, Inc.
+-   This file is part of the GNU C Library.
+-
+-   The GNU C Library is free software; you can redistribute it and/or
+-   modify it under the terms of the GNU Lesser General Public
+-   License as published by the Free Software Foundation; either
+-   version 2.1 of the License, or (at your option) any later version.
+-
+-   The GNU C Library is distributed in the hope that it will be useful,
+-   but WITHOUT ANY WARRANTY; without even the implied warranty of
+-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+-   Lesser General Public License for more details.
+-
+-   You should have received a copy of the GNU Lesser General Public
+-   License along with the GNU C Library; if not, see
+-   <https://www.gnu.org/licenses/>.  */
+-
+-#include <array_length.h>
+-#include <stdbool.h>
+-#include <stdio.h>
+-#include <stdlib.h>
+-#include <stdint.h>
+-#include <string.h>
+-#include <support/check.h>
+-
+-enum
+-{
+-  arc4random_key_size = 32
+-};
+-
+-struct key
+-{
+-  unsigned char data[arc4random_key_size];
+-};
+-
+-/* With 12,000 keys, the probability that a byte in a predetermined
+-   position does not have a predetermined value in all generated keys
+-   is about 4e-21.  The probability that this happens with any of the
+-   16 * 256 possible byte position/values is 1.6e-17.  This results in
+-   an acceptably low false-positive rate.  */
+-enum { key_count = 12000 };
+-
+-static struct key keys[key_count];
+-
+-/* Used to perform the distribution check.  */
+-static int byte_counts[arc4random_key_size][256];
+-
+-/* Bail out after this many failures.  */
+-enum { failure_limit = 100 };
+-
+-static void
+-find_stuck_bytes (bool (*func) (unsigned char *key))
+-{
+-  memset (&keys, 0xcc, sizeof (keys));
+-
+-  int failures = 0;
+-  for (int key = 0; key < key_count; ++key)
+-    {
+-      while (true)
+-        {
+-          if (func (keys[key].data))
+-            break;
+-          ++failures;
+-          if (failures >= failure_limit)
+-            {
+-              printf ("warning: bailing out after %d failures\n", failures);
+-              return;
+-            }
+-        }
+-    }
+-  printf ("info: key generation finished with %d failures\n", failures);
+-
+-  memset (&byte_counts, 0, sizeof (byte_counts));
+-  for (int key = 0; key < key_count; ++key)
+-    for (int pos = 0; pos < arc4random_key_size; ++pos)
+-      ++byte_counts[pos][keys[key].data[pos]];
+-
+-  for (int pos = 0; pos < arc4random_key_size; ++pos)
+-    for (int byte = 0; byte < 256; ++byte)
+-      if (byte_counts[pos][byte] == 0)
+-        {
+-          support_record_failure ();
+-          printf ("error: byte %d never appeared at position %d\n", byte, pos);
+-        }
+-}
+-
+-/* Test adapter for arc4random.  */
+-static bool
+-generate_arc4random (unsigned char *key)
+-{
+-  uint32_t words[arc4random_key_size / 4];
+-  _Static_assert (sizeof (words) == arc4random_key_size, "sizeof (words)");
+-
+-  for (int i = 0; i < array_length (words); ++i)
+-    words[i] = arc4random ();
+-  memcpy (key, &words, arc4random_key_size);
+-  return true;
+-}
+-
+-/* Test adapter for arc4random_buf.  */
+-static bool
+-generate_arc4random_buf (unsigned char *key)
+-{
+-  arc4random_buf (key, arc4random_key_size);
+-  return true;
+-}
+-
+-/* Test adapter for arc4random_uniform.  */
+-static bool
+-generate_arc4random_uniform (unsigned char *key)
+-{
+-  for (int i = 0; i < arc4random_key_size; ++i)
+-    key[i] = arc4random_uniform (256);
+-  return true;
+-}
+-
+-/* Test adapter for arc4random_uniform with argument 257.  This means
+-   that byte 0 happens more often, but we do not perform such a
+-   statistical check, so the test will still pass */
+-static bool
+-generate_arc4random_uniform_257 (unsigned char *key)
+-{
+-  for (int i = 0; i < arc4random_key_size; ++i)
+-    key[i] = arc4random_uniform (257);
+-  return true;
+-}
+-
+-static int
+-do_test (void)
+-{
+-  puts ("info: arc4random implementation test");
+-  find_stuck_bytes (generate_arc4random);
+-
+-  puts ("info: arc4random_buf implementation test");
+-  find_stuck_bytes (generate_arc4random_buf);
+-
+-  puts ("info: arc4random_uniform implementation test");
+-  find_stuck_bytes (generate_arc4random_uniform);
+-
+-  puts ("info: arc4random_uniform implementation test (257 variant)");
+-  find_stuck_bytes (generate_arc4random_uniform_257);
+-
+-  return 0;
+-}
+-
+-#include <support/test-driver.c>
+diff --git a/stdlib/tst-arc4random-thread.c b/stdlib/tst-arc4random-thread.c
+deleted file mode 100644
+index d8863cf6..00000000
+--- a/stdlib/tst-arc4random-thread.c
++++ /dev/null
+@@ -1,353 +0,0 @@
+-/* Test that threads generate distinct streams of randomness.
+-   Copyright (C) 2022-2023 Free Software Foundation, Inc.
+-   This file is part of the GNU C Library.
+-
+-   The GNU C Library is free software; you can redistribute it and/or
+-   modify it under the terms of the GNU Lesser General Public
+-   License as published by the Free Software Foundation; either
+-   version 2.1 of the License, or (at your option) any later version.
+-
+-   The GNU C Library is distributed in the hope that it will be useful,
+-   but WITHOUT ANY WARRANTY; without even the implied warranty of
+-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+-   Lesser General Public License for more details.
+-
+-   You should have received a copy of the GNU Lesser General Public
+-   License along with the GNU C Library; if not, see
+-   <https://www.gnu.org/licenses/>.  */
+-
+-#include <array_length.h>
+-#include <sched.h>
+-#include <stdio.h>
+-#include <stdlib.h>
+-#include <string.h>
+-#include <support/check.h>
+-#include <support/namespace.h>
+-#include <support/support.h>
+-#include <support/xthread.h>
+-
+-/* Number of arc4random_buf calls per thread.  */
+-enum { count_per_thread = 2048 };
+-
+-/* Number of threads computing randomness.  */
+-enum { inner_threads = 4 };
+-
+-/* Number of threads launching other threads.  */
+-static int outer_threads = 1;
+-
+-/* Number of launching rounds performed by the outer threads.  */
+-enum { outer_rounds = 10 };
+-
+-/* Maximum number of bytes generated in an arc4random call.  */
+-enum { max_size = 32 };
+-
+-/* Sizes generated by threads.  Must be long enough to be unique with
+-   high probability.  */
+-static const int sizes[] = { 12, 15, 16, 17, 24, 31, max_size };
+-
+-/* Data structure to capture randomness results.  */
+-struct blob
+-{
+-  unsigned int size;
+-  int thread_id;
+-  unsigned int index;
+-  unsigned char bytes[max_size];
+-};
+-
+-struct subprocess_args
+-{
+-  struct blob *blob;
+-  void (*func)(unsigned char *, size_t);
+-};
+-
+-static void
+-generate_arc4random (unsigned char *bytes, size_t size)
+-{
+-  int i;
+-  for (i = 0; i < size / sizeof (uint32_t); i++)
+-    {
+-      uint32_t x = arc4random ();
+-      memcpy (&bytes[4 * i], &x, sizeof x);
+-    }
+-  int rem = size % sizeof (uint32_t);
+-  if (rem > 0)
+-    {
+-      uint32_t x = arc4random ();
+-      memcpy (&bytes[4 * i], &x, rem);
+-    }
+-}
+-
+-static void
+-generate_arc4random_buf (unsigned char *bytes, size_t size)
+-{
+-  arc4random_buf (bytes, size);
+-}
+-
+-static void
+-generate_arc4random_uniform (unsigned char *bytes, size_t size)
+-{
+-  for (int i = 0; i < size; i++)
+-    bytes[i] = arc4random_uniform (256);
+-}
+-
+-#define DYNARRAY_STRUCT dynarray_blob
+-#define DYNARRAY_ELEMENT struct blob
+-#define DYNARRAY_PREFIX dynarray_blob_
+-#include <malloc/dynarray-skeleton.c>
+-
+-/* Sort blob elements by length first, then by comparing the data
+-   member.  */
+-static int
+-compare_blob (const void *left1, const void *right1)
+-{
+-  const struct blob *left = left1;
+-  const struct blob *right = right1;
+-
+-  if (left->size != right->size)
+-    /* No overflow due to limited range.  */
+-    return left->size - right->size;
+-  return memcmp (left->bytes, right->bytes, left->size);
+-}
+-
+-/* Used to store the global result.  */
+-static pthread_mutex_t global_result_lock = PTHREAD_MUTEX_INITIALIZER;
+-static struct dynarray_blob global_result;
+-
+-/* Copy data to the global result, with locking.  */
+-static void
+-copy_result_to_global (struct dynarray_blob *result)
+-{
+-  xpthread_mutex_lock (&global_result_lock);
+-  size_t old_size = dynarray_blob_size (&global_result);
+-  TEST_VERIFY_EXIT
+-    (dynarray_blob_resize (&global_result,
+-                           old_size + dynarray_blob_size (result)));
+-  memcpy (dynarray_blob_begin (&global_result) + old_size,
+-          dynarray_blob_begin (result),
+-          dynarray_blob_size (result) * sizeof (struct blob));
+-  xpthread_mutex_unlock (&global_result_lock);
+-}
+-
+-/* Used to assign unique thread IDs.  Accessed atomically.  */
+-static int next_thread_id;
+-
+-static void *
+-inner_thread (void *closure)
+-{
+-  void (*func) (unsigned char *, size_t) = closure;
+-
+-  /* Use local result to avoid global lock contention while generating
+-     randomness.  */
+-  struct dynarray_blob result;
+-  dynarray_blob_init (&result);
+-
+-  int thread_id = __atomic_fetch_add (&next_thread_id, 1, __ATOMIC_RELAXED);
+-
+-  /* Determine the sizes to be used by this thread.  */
+-  int size_slot = thread_id % (array_length (sizes) + 1);
+-  bool switch_sizes = size_slot == array_length (sizes);
+-  if (switch_sizes)
+-    size_slot = 0;
+-
+-  /* Compute the random blobs.  */
+-  for (int i = 0; i < count_per_thread; ++i)
+-    {
+-      struct blob *place = dynarray_blob_emplace (&result);
+-      TEST_VERIFY_EXIT (place != NULL);
+-      place->size = sizes[size_slot];
+-      place->thread_id = thread_id;
+-      place->index = i;
+-      func (place->bytes, place->size);
+-
+-      if (switch_sizes)
+-        size_slot = (size_slot + 1) % array_length (sizes);
+-    }
+-
+-  /* Store the blobs in the global result structure.  */
+-  copy_result_to_global (&result);
+-
+-  dynarray_blob_free (&result);
+-
+-  return NULL;
+-}
+-
+-/* Launch the inner threads and wait for their termination.  */
+-static void *
+-outer_thread (void *closure)
+-{
+-  void (*func) (unsigned char *, size_t) = closure;
+-
+-  for (int round = 0; round < outer_rounds; ++round)
+-    {
+-      pthread_t threads[inner_threads];
+-
+-      for (int i = 0; i < inner_threads; ++i)
+-        threads[i] = xpthread_create (NULL, inner_thread, func);
+-
+-      for (int i = 0; i < inner_threads; ++i)
+-        xpthread_join (threads[i]);
+-    }
+-
+-  return NULL;
+-}
+-
+-static bool termination_requested;
+-
+-/* Call arc4random_buf to fill one blob with 16 bytes.  */
+-static void *
+-get_one_blob_thread (void *closure)
+-{
+-  struct subprocess_args *arg = closure;
+-  struct blob *result = arg->blob;
+-
+-  result->size = 16;
+-  arg->func (result->bytes, result->size);
+-  return NULL;
+-}
+-
+-/* Invoked from fork_thread to actually obtain randomness data.  */
+-static void
+-fork_thread_subprocess (void *closure)
+-{
+-  struct subprocess_args *arg = closure;
+-  struct blob *shared_result = arg->blob;
+-
+-  struct subprocess_args args[3] =
+-  {
+-    { shared_result + 0, arg->func },
+-    { shared_result + 1, arg->func },
+-    { shared_result + 2, arg->func }
+-  };
+-
+-  pthread_t thr1 = xpthread_create (NULL, get_one_blob_thread, &args[1]);
+-  pthread_t thr2 = xpthread_create (NULL, get_one_blob_thread, &args[2]);
+-  get_one_blob_thread (&args[0]);
+-  xpthread_join (thr1);
+-  xpthread_join (thr2);
+-}
+-
+-/* Continuously fork subprocesses to obtain a little bit of
+-   randomness.  */
+-static void *
+-fork_thread (void *closure)
+-{
+-  void (*func)(unsigned char *, size_t) = closure;
+-
+-  struct dynarray_blob result;
+-  dynarray_blob_init (&result);
+-
+-  /* Three blobs from each subprocess.  */
+-  struct blob *shared_result
+-    = support_shared_allocate (3 * sizeof (*shared_result));
+-
+-  while (!__atomic_load_n (&termination_requested, __ATOMIC_RELAXED))
+-    {
+-      /* Obtain the results from a subprocess.  */
+-      struct subprocess_args arg = { shared_result, func };
+-      support_isolate_in_subprocess (fork_thread_subprocess, &arg);
+-
+-      for (int i = 0; i < 3; ++i)
+-        {
+-          struct blob *place = dynarray_blob_emplace (&result);
+-          TEST_VERIFY_EXIT (place != NULL);
+-          place->size = shared_result[i].size;
+-          place->thread_id = -1;
+-          place->index = i;
+-          memcpy (place->bytes, shared_result[i].bytes, place->size);
+-        }
+-    }
+-
+-  support_shared_free (shared_result);
+-
+-  copy_result_to_global (&result);
+-  dynarray_blob_free (&result);
+-
+-  return NULL;
+-}
+-
+-/* Launch the outer threads and wait for their termination.  */
+-static void
+-run_outer_threads (void (*func)(unsigned char *, size_t))
+-{
+-  /* Special thread that continuously calls fork.  */
+-  pthread_t fork_thread_id = xpthread_create (NULL, fork_thread, func);
+-
+-  pthread_t threads[outer_threads];
+-  for (int i = 0; i < outer_threads; ++i)
+-    threads[i] = xpthread_create (NULL, outer_thread, func);
+-
+-  for (int i = 0; i < outer_threads; ++i)
+-    xpthread_join (threads[i]);
+-
+-  __atomic_store_n (&termination_requested, true, __ATOMIC_RELAXED);
+-  xpthread_join (fork_thread_id);
+-}
+-
+-static int
+-do_test_func (const char *fname, void (*func)(unsigned char *, size_t))
+-{
+-  dynarray_blob_init (&global_result);
+-  int expected_blobs
+-    = count_per_thread * inner_threads * outer_threads * outer_rounds;
+-  printf ("info: %s: minimum of %d blob results expected\n",
+-	  fname, expected_blobs);
+-
+-  run_outer_threads (func);
+-
+-  /* The forking thread delivers a non-deterministic number of
+-     results, which is why expected_blobs is only a minimum number of
+-     results.  */
+-  printf ("info: %s: %zu blob results observed\n", fname,
+-          dynarray_blob_size (&global_result));
+-  TEST_VERIFY (dynarray_blob_size (&global_result) >= expected_blobs);
+-
+-  /* Verify that there are no duplicates.  */
+-  qsort (dynarray_blob_begin (&global_result),
+-         dynarray_blob_size (&global_result),
+-         sizeof (struct blob), compare_blob);
+-  struct blob *end = dynarray_blob_end (&global_result);
+-  for (struct blob *p = dynarray_blob_begin (&global_result) + 1;
+-       p < end; ++p)
+-    {
+-      if (compare_blob (p - 1, p) == 0)
+-        {
+-          support_record_failure ();
+-          char *quoted = support_quote_blob (p->bytes, p->size);
+-          printf ("error: %s: duplicate blob: \"%s\" (%d bytes)\n",
+-		  fname, quoted, (int) p->size);
+-          printf ("  first source: thread %d, index %u\n",
+-                  p[-1].thread_id, p[-1].index);
+-          printf ("  second source: thread %d, index %u\n",
+-                  p[0].thread_id, p[0].index);
+-          free (quoted);
+-        }
+-    }
+-
+-  dynarray_blob_free (&global_result);
+-
+-  return 0;
+-}
+-
+-static int
+-do_test (void)
+-{
+-  /* Do not run more threads than the maximum of schedulable CPUs.  */
+-  cpu_set_t cpuset;
+-  if (sched_getaffinity (0, sizeof cpuset, &cpuset) == 0)
+-    {
+-      unsigned int ncpus = CPU_COUNT (&cpuset);
+-      /* Limit the number to not overload the system.  */
+-      outer_threads = (ncpus / 2) / inner_threads ?: 1;
+-    }
+-
+-  printf ("info: outer_threads=%d inner_threads=%d\n", outer_threads,
+-	  inner_threads);
+-
+-  do_test_func ("arc4random", generate_arc4random);
+-  do_test_func ("arc4random_buf", generate_arc4random_buf);
+-  do_test_func ("arc4random_uniform", generate_arc4random_uniform);
+-
+-  return 0;
+-}
+-
+-#include <support/test-driver.c>
+diff --git a/sysdeps/aarch64/Makefile b/sysdeps/aarch64/Makefile
+index 6a9559e5..fe2e211d 100644
+--- a/sysdeps/aarch64/Makefile
++++ b/sysdeps/aarch64/Makefile
+@@ -51,6 +51,10 @@ ifeq ($(subdir),csu)
+ gen-as-const-headers += tlsdesc.sym
+ endif
+ 
++ifeq ($(subdir),stdlib)
++sysdep_routines += chacha20-aarch64
++endif
++
+ ifeq ($(subdir),gmon)
+ CFLAGS-mcount.c += -mgeneral-regs-only
+ endif
+diff --git a/sysdeps/aarch64/chacha20-aarch64.S b/sysdeps/aarch64/chacha20-aarch64.S
+new file mode 100644
+index 00000000..cce5291c
+--- /dev/null
++++ b/sysdeps/aarch64/chacha20-aarch64.S
+@@ -0,0 +1,314 @@
++/* Optimized AArch64 implementation of ChaCha20 cipher.
++   Copyright (C) 2022 Free Software Foundation, Inc.
++
++   This file is part of the GNU C Library.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, see
++   <https://www.gnu.org/licenses/>.  */
++
++/* Copyright (C) 2017-2019 Jussi Kivilinna <jussi.kivilinna@iki.fi>
++
++   This file is part of Libgcrypt.
++
++   Libgcrypt is free software; you can redistribute it and/or modify
++   it under the terms of the GNU Lesser General Public License as
++   published by the Free Software Foundation; either version 2.1 of
++   the License, or (at your option) any later version.
++
++   Libgcrypt is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++   GNU Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with this program; if not, see <https://www.gnu.org/licenses/>.
++ */
++
++/* Based on D. J. Bernstein reference implementation at
++   http://cr.yp.to/chacha.html:
++
++   chacha-regs.c version 20080118
++   D. J. Bernstein
++   Public domain.  */
++
++#include <sysdep.h>
++
++/* Only LE is supported.  */
++#ifdef __AARCH64EL__
++
++#define GET_DATA_POINTER(reg, name) \
++        adrp    reg, name ; \
++        add     reg, reg, :lo12:name
++
++/* 'ret' instruction replacement for straight-line speculation mitigation */
++#define ret_spec_stop \
++        ret; dsb sy; isb;
++
++.cpu generic+simd
++
++.text
++
++/* register macros */
++#define INPUT     x0
++#define DST       x1
++#define SRC       x2
++#define NBLKS     x3
++#define ROUND     x4
++#define INPUT_CTR x5
++#define INPUT_POS x6
++#define CTR       x7
++
++/* vector registers */
++#define X0 v16
++#define X4 v17
++#define X8 v18
++#define X12 v19
++
++#define X1 v20
++#define X5 v21
++
++#define X9 v22
++#define X13 v23
++#define X2 v24
++#define X6 v25
++
++#define X3 v26
++#define X7 v27
++#define X11 v28
++#define X15 v29
++
++#define X10 v30
++#define X14 v31
++
++#define VCTR    v0
++#define VTMP0   v1
++#define VTMP1   v2
++#define VTMP2   v3
++#define VTMP3   v4
++#define X12_TMP v5
++#define X13_TMP v6
++#define ROT8    v7
++
++/**********************************************************************
++  helper macros
++ **********************************************************************/
++
++#define _(...) __VA_ARGS__
++
++#define vpunpckldq(s1, s2, dst) \
++	zip1 dst.4s, s2.4s, s1.4s;
++
++#define vpunpckhdq(s1, s2, dst) \
++	zip2 dst.4s, s2.4s, s1.4s;
++
++#define vpunpcklqdq(s1, s2, dst) \
++	zip1 dst.2d, s2.2d, s1.2d;
++
++#define vpunpckhqdq(s1, s2, dst) \
++	zip2 dst.2d, s2.2d, s1.2d;
++
++/* 4x4 32-bit integer matrix transpose */
++#define transpose_4x4(x0, x1, x2, x3, t1, t2, t3) \
++	vpunpckhdq(x1, x0, t2); \
++	vpunpckldq(x1, x0, x0); \
++	\
++	vpunpckldq(x3, x2, t1); \
++	vpunpckhdq(x3, x2, x2); \
++	\
++	vpunpckhqdq(t1, x0, x1); \
++	vpunpcklqdq(t1, x0, x0); \
++	\
++	vpunpckhqdq(x2, t2, x3); \
++	vpunpcklqdq(x2, t2, x2);
++
++/**********************************************************************
++  4-way chacha20
++ **********************************************************************/
++
++#define XOR(d,s1,s2) \
++	eor d.16b, s2.16b, s1.16b;
++
++#define PLUS(ds,s) \
++	add ds.4s, ds.4s, s.4s;
++
++#define ROTATE4(dst1,dst2,dst3,dst4,c,src1,src2,src3,src4) \
++	shl dst1.4s, src1.4s, #(c);		\
++	shl dst2.4s, src2.4s, #(c);		\
++	shl dst3.4s, src3.4s, #(c);		\
++	shl dst4.4s, src4.4s, #(c);		\
++	sri dst1.4s, src1.4s, #(32 - (c));	\
++	sri dst2.4s, src2.4s, #(32 - (c));	\
++	sri dst3.4s, src3.4s, #(32 - (c));	\
++	sri dst4.4s, src4.4s, #(32 - (c));
++
++#define ROTATE4_8(dst1,dst2,dst3,dst4,src1,src2,src3,src4) \
++	tbl dst1.16b, {src1.16b}, ROT8.16b;     \
++	tbl dst2.16b, {src2.16b}, ROT8.16b;	\
++	tbl dst3.16b, {src3.16b}, ROT8.16b;	\
++	tbl dst4.16b, {src4.16b}, ROT8.16b;
++
++#define ROTATE4_16(dst1,dst2,dst3,dst4,src1,src2,src3,src4) \
++	rev32 dst1.8h, src1.8h;			\
++	rev32 dst2.8h, src2.8h;			\
++	rev32 dst3.8h, src3.8h;			\
++	rev32 dst4.8h, src4.8h;
++
++#define QUARTERROUND4(a1,b1,c1,d1,a2,b2,c2,d2,a3,b3,c3,d3,a4,b4,c4,d4,ign,tmp1,tmp2,tmp3,tmp4) \
++	PLUS(a1,b1); PLUS(a2,b2);						\
++	PLUS(a3,b3); PLUS(a4,b4);						\
++	    XOR(tmp1,d1,a1); XOR(tmp2,d2,a2);					\
++	    XOR(tmp3,d3,a3); XOR(tmp4,d4,a4);					\
++		ROTATE4_16(d1, d2, d3, d4, tmp1, tmp2, tmp3, tmp4);		\
++	PLUS(c1,d1); PLUS(c2,d2);						\
++	PLUS(c3,d3); PLUS(c4,d4);						\
++	    XOR(tmp1,b1,c1); XOR(tmp2,b2,c2);					\
++	    XOR(tmp3,b3,c3); XOR(tmp4,b4,c4);					\
++		ROTATE4(b1, b2, b3, b4, 12, tmp1, tmp2, tmp3, tmp4)		\
++	PLUS(a1,b1); PLUS(a2,b2);						\
++	PLUS(a3,b3); PLUS(a4,b4);						\
++	    XOR(tmp1,d1,a1); XOR(tmp2,d2,a2);					\
++	    XOR(tmp3,d3,a3); XOR(tmp4,d4,a4);					\
++		ROTATE4_8(d1, d2, d3, d4, tmp1, tmp2, tmp3, tmp4)		\
++	PLUS(c1,d1); PLUS(c2,d2);						\
++	PLUS(c3,d3); PLUS(c4,d4);						\
++	    XOR(tmp1,b1,c1); XOR(tmp2,b2,c2);					\
++	    XOR(tmp3,b3,c3); XOR(tmp4,b4,c4);					\
++		ROTATE4(b1, b2, b3, b4, 7, tmp1, tmp2, tmp3, tmp4)		\
++
++.align 4
++L(__chacha20_blocks4_data_inc_counter):
++	.long 0,1,2,3
++
++.align 4
++L(__chacha20_blocks4_data_rot8):
++	.byte 3,0,1,2
++	.byte 7,4,5,6
++	.byte 11,8,9,10
++	.byte 15,12,13,14
++
++.hidden __chacha20_neon_blocks4
++ENTRY (__chacha20_neon_blocks4)
++	/* input:
++	 *	x0: input
++	 *	x1: dst
++	 *	x2: src
++	 *	x3: nblks (multiple of 4)
++	 */
++
++	GET_DATA_POINTER(CTR, L(__chacha20_blocks4_data_rot8))
++	add INPUT_CTR, INPUT, #(12*4);
++	ld1 {ROT8.16b}, [CTR];
++	GET_DATA_POINTER(CTR, L(__chacha20_blocks4_data_inc_counter))
++	mov INPUT_POS, INPUT;
++	ld1 {VCTR.16b}, [CTR];
++
++L(loop4):
++	/* Construct counter vectors X12 and X13 */
++
++	ld1 {X15.16b}, [INPUT_CTR];
++	mov ROUND, #20;
++	ld1 {VTMP1.16b-VTMP3.16b}, [INPUT_POS];
++
++	dup X12.4s, X15.s[0];
++	dup X13.4s, X15.s[1];
++	ldr CTR, [INPUT_CTR];
++	add X12.4s, X12.4s, VCTR.4s;
++	dup X0.4s, VTMP1.s[0];
++	dup X1.4s, VTMP1.s[1];
++	dup X2.4s, VTMP1.s[2];
++	dup X3.4s, VTMP1.s[3];
++	dup X14.4s, X15.s[2];
++	cmhi VTMP0.4s, VCTR.4s, X12.4s;
++	dup X15.4s, X15.s[3];
++	add CTR, CTR, #4; /* Update counter */
++	dup X4.4s, VTMP2.s[0];
++	dup X5.4s, VTMP2.s[1];
++	dup X6.4s, VTMP2.s[2];
++	dup X7.4s, VTMP2.s[3];
++	sub X13.4s, X13.4s, VTMP0.4s;
++	dup X8.4s, VTMP3.s[0];
++	dup X9.4s, VTMP3.s[1];
++	dup X10.4s, VTMP3.s[2];
++	dup X11.4s, VTMP3.s[3];
++	mov X12_TMP.16b, X12.16b;
++	mov X13_TMP.16b, X13.16b;
++	str CTR, [INPUT_CTR];
++
++L(round2):
++	subs ROUND, ROUND, #2
++	QUARTERROUND4(X0, X4,  X8, X12,   X1, X5,  X9, X13,
++		      X2, X6, X10, X14,   X3, X7, X11, X15,
++		      tmp:=,VTMP0,VTMP1,VTMP2,VTMP3)
++	QUARTERROUND4(X0, X5, X10, X15,   X1, X6, X11, X12,
++		      X2, X7,  X8, X13,   X3, X4,  X9, X14,
++		      tmp:=,VTMP0,VTMP1,VTMP2,VTMP3)
++	b.ne L(round2);
++
++	ld1 {VTMP0.16b, VTMP1.16b}, [INPUT_POS], #32;
++
++	PLUS(X12, X12_TMP);        /* INPUT + 12 * 4 + counter */
++	PLUS(X13, X13_TMP);        /* INPUT + 13 * 4 + counter */
++
++	dup VTMP2.4s, VTMP0.s[0]; /* INPUT + 0 * 4 */
++	dup VTMP3.4s, VTMP0.s[1]; /* INPUT + 1 * 4 */
++	dup X12_TMP.4s, VTMP0.s[2]; /* INPUT + 2 * 4 */
++	dup X13_TMP.4s, VTMP0.s[3]; /* INPUT + 3 * 4 */
++	PLUS(X0, VTMP2);
++	PLUS(X1, VTMP3);
++	PLUS(X2, X12_TMP);
++	PLUS(X3, X13_TMP);
++
++	dup VTMP2.4s, VTMP1.s[0]; /* INPUT + 4 * 4 */
++	dup VTMP3.4s, VTMP1.s[1]; /* INPUT + 5 * 4 */
++	dup X12_TMP.4s, VTMP1.s[2]; /* INPUT + 6 * 4 */
++	dup X13_TMP.4s, VTMP1.s[3]; /* INPUT + 7 * 4 */
++	ld1 {VTMP0.16b, VTMP1.16b}, [INPUT_POS];
++	mov INPUT_POS, INPUT;
++	PLUS(X4, VTMP2);
++	PLUS(X5, VTMP3);
++	PLUS(X6, X12_TMP);
++	PLUS(X7, X13_TMP);
++
++	dup VTMP2.4s, VTMP0.s[0]; /* INPUT + 8 * 4 */
++	dup VTMP3.4s, VTMP0.s[1]; /* INPUT + 9 * 4 */
++	dup X12_TMP.4s, VTMP0.s[2]; /* INPUT + 10 * 4 */
++	dup X13_TMP.4s, VTMP0.s[3]; /* INPUT + 11 * 4 */
++	dup VTMP0.4s, VTMP1.s[2]; /* INPUT + 14 * 4 */
++	dup VTMP1.4s, VTMP1.s[3]; /* INPUT + 15 * 4 */
++	PLUS(X8, VTMP2);
++	PLUS(X9, VTMP3);
++	PLUS(X10, X12_TMP);
++	PLUS(X11, X13_TMP);
++	PLUS(X14, VTMP0);
++	PLUS(X15, VTMP1);
++
++	transpose_4x4(X0, X1, X2, X3, VTMP0, VTMP1, VTMP2);
++	transpose_4x4(X4, X5, X6, X7, VTMP0, VTMP1, VTMP2);
++	transpose_4x4(X8, X9, X10, X11, VTMP0, VTMP1, VTMP2);
++	transpose_4x4(X12, X13, X14, X15, VTMP0, VTMP1, VTMP2);
++
++	subs NBLKS, NBLKS, #4;
++
++	st1 {X0.16b,X4.16B,X8.16b, X12.16b}, [DST], #64
++	st1 {X1.16b,X5.16b}, [DST], #32;
++	st1 {X9.16b, X13.16b, X2.16b, X6.16b}, [DST], #64
++	st1 {X10.16b,X14.16b}, [DST], #32;
++	st1 {X3.16b, X7.16b, X11.16b, X15.16b}, [DST], #64;
++
++	b.ne L(loop4);
++
++	ret_spec_stop
++END (__chacha20_neon_blocks4)
++
++#endif
+diff --git a/sysdeps/aarch64/chacha20_arch.h b/sysdeps/aarch64/chacha20_arch.h
+new file mode 100644
+index 00000000..37dbb917
+--- /dev/null
++++ b/sysdeps/aarch64/chacha20_arch.h
+@@ -0,0 +1,40 @@
++/* Chacha20 implementation, used on arc4random.
++   Copyright (C) 2022 Free Software Foundation, Inc.
++   This file is part of the GNU C Library.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, see
++   <https://www.gnu.org/licenses/>.  */
++
++#include <ldsodefs.h>
++#include <stdbool.h>
++
++unsigned int __chacha20_neon_blocks4 (uint32_t *state, uint8_t *dst,
++				      const uint8_t *src, size_t nblks)
++     attribute_hidden;
++
++static void
++chacha20_crypt (uint32_t *state, uint8_t *dst, const uint8_t *src,
++		size_t bytes)
++{
++  _Static_assert (CHACHA20_BUFSIZE % 4 == 0,
++		  "CHACHA20_BUFSIZE not multiple of 4");
++  _Static_assert (CHACHA20_BUFSIZE > CHACHA20_BLOCK_SIZE * 4,
++		  "CHACHA20_BUFSIZE <= CHACHA20_BLOCK_SIZE * 4");
++#ifdef __AARCH64EL__
++  __chacha20_neon_blocks4 (state, dst, src,
++			   CHACHA20_BUFSIZE / CHACHA20_BLOCK_SIZE);
++#else
++  chacha20_crypt_generic (state, dst, src, bytes);
++#endif
++}
+diff --git a/sysdeps/generic/chacha20_arch.h b/sysdeps/generic/chacha20_arch.h
+new file mode 100644
+index 00000000..1b4559cc
+--- /dev/null
++++ b/sysdeps/generic/chacha20_arch.h
+@@ -0,0 +1,24 @@
++/* Chacha20 implementation, generic interface for encrypt.
++   Copyright (C) 2022 Free Software Foundation, Inc.
++   This file is part of the GNU C Library.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, see
++   <https://www.gnu.org/licenses/>.  */
++
++static inline void
++chacha20_crypt (uint32_t *state, uint8_t *dst, const uint8_t *src,
++		size_t bytes)
++{
++  chacha20_crypt_generic (state, dst, src, bytes);
++}
+diff --git a/sysdeps/generic/not-cancel.h b/sysdeps/generic/not-cancel.h
+index 03bab49e..97111174 100644
+--- a/sysdeps/generic/not-cancel.h
++++ b/sysdeps/generic/not-cancel.h
+@@ -20,7 +20,6 @@
+ # define NOT_CANCEL_H
+ 
+ #include <fcntl.h>
+-#include <poll.h>
+ #include <unistd.h>
+ #include <sys/wait.h>
+ #include <time.h>
+@@ -49,9 +48,5 @@
+   (void) __writev (fd, iov, n)
+ #define __fcntl64_nocancel(fd, cmd, ...) \
+   __fcntl64 (fd, cmd, __VA_ARGS__)
+-#define __getrandom_nocancel(buf, size, flags) \
+-  __getrandom (buf, size, flags)
+-#define __poll_infinity_nocancel(fds, nfds) \
+-  __poll (fds, nfds, -1)
+ 
+ #endif /* NOT_CANCEL_H  */
+diff --git a/sysdeps/generic/tls-internal.c b/sysdeps/generic/tls-internal.c
+index 1ba53023..4d459ef0 100644
+--- a/sysdeps/generic/tls-internal.c
++++ b/sysdeps/generic/tls-internal.c
+@@ -16,14 +16,6 @@
+    License along with the GNU C Library; if not, see
+    <https://www.gnu.org/licenses/>.  */
+ 
+-#include <string.h>
+ #include <tls-internal.h>
+ 
+ __thread struct tls_internal_t __tls_internal;
+-
+-void
+-__glibc_tls_internal_free (void)
+-{
+-  free (__tls_internal.strsignal_buf);
+-  free (__tls_internal.strerror_l_buf);
+-}
+diff --git a/sysdeps/generic/tls-internal.h b/sysdeps/generic/tls-internal.h
+index 9dca66aa..f75698ee 100644
+--- a/sysdeps/generic/tls-internal.h
++++ b/sysdeps/generic/tls-internal.h
+@@ -30,6 +30,11 @@ __glibc_tls_internal (void)
+   return &__tls_internal;
+ }
+ 
+-extern void __glibc_tls_internal_free (void) attribute_hidden;
++static inline void
++__glibc_tls_internal_free (void)
++{
++  free (__tls_internal.strsignal_buf);
++  free (__tls_internal.strerror_l_buf);
++}
+ 
+ #endif
+diff --git a/sysdeps/mach/hurd/i386/libc.abilist b/sysdeps/mach/hurd/i386/libc.abilist
+index 74a9f427..ea214eaf 100644
+--- a/sysdeps/mach/hurd/i386/libc.abilist
++++ b/sysdeps/mach/hurd/i386/libc.abilist
+@@ -2289,9 +2289,6 @@ GLIBC_2.35 __memcmpeq F
+ GLIBC_2.35 _dl_find_object F
+ GLIBC_2.35 close_range F
+ GLIBC_2.35 posix_spawn_file_actions_addtcsetpgrp_np F
+-GLIBC_2.36 arc4random F
+-GLIBC_2.36 arc4random_buf F
+-GLIBC_2.36 arc4random_uniform F
+ GLIBC_2.36 c8rtomb F
+ GLIBC_2.36 mbrtoc8 F
+ GLIBC_2.38 __isoc23_fscanf F
+diff --git a/sysdeps/mach/hurd/not-cancel.h b/sysdeps/mach/hurd/not-cancel.h
+index aa720714..074063f4 100644
+--- a/sysdeps/mach/hurd/not-cancel.h
++++ b/sysdeps/mach/hurd/not-cancel.h
+@@ -21,7 +21,6 @@
+ 
+ #include <fcntl.h>
+ #include <unistd.h>
+-#include <poll.h>
+ #include <sys/wait.h>
+ #include <time.h>
+ #include <sys/uio.h>
+@@ -76,19 +75,6 @@ __typeof (__fcntl) __fcntl_nocancel;
+ #define __fcntl64_nocancel(...) \
+   __fcntl_nocancel (__VA_ARGS__)
+ 
+-static inline ssize_t
+-__getrandom_nocancel (void *buf, size_t buflen, unsigned int flags)
+-{
+-  int save_errno = errno;
+-  ssize_t r = __getrandom (buf, buflen, flags);
+-  r = r == -1 ? -errno : r;
+-  __set_errno (save_errno);
+-  return r;
+-}
+-
+-#define __poll_infinity_nocancel(fds, nfds) \
+-  __poll (fds, nfds, -1)
+-
+ #if IS_IN (libc)
+ hidden_proto (__close_nocancel)
+ hidden_proto (__close_nocancel_nostatus)
+diff --git a/sysdeps/powerpc/powerpc64/be/multiarch/Makefile b/sysdeps/powerpc/powerpc64/be/multiarch/Makefile
+new file mode 100644
+index 00000000..8c75165f
+--- /dev/null
++++ b/sysdeps/powerpc/powerpc64/be/multiarch/Makefile
+@@ -0,0 +1,4 @@
++ifeq ($(subdir),stdlib)
++sysdep_routines += chacha20-ppc
++CFLAGS-chacha20-ppc.c += -mcpu=power8
++endif
+diff --git a/sysdeps/powerpc/powerpc64/be/multiarch/chacha20-ppc.c b/sysdeps/powerpc/powerpc64/be/multiarch/chacha20-ppc.c
+new file mode 100644
+index 00000000..cf9e7353
+--- /dev/null
++++ b/sysdeps/powerpc/powerpc64/be/multiarch/chacha20-ppc.c
+@@ -0,0 +1 @@
++#include <sysdeps/powerpc/powerpc64/power8/chacha20-ppc.c>
+diff --git a/sysdeps/powerpc/powerpc64/be/multiarch/chacha20_arch.h b/sysdeps/powerpc/powerpc64/be/multiarch/chacha20_arch.h
+new file mode 100644
+index 00000000..08494dc0
+--- /dev/null
++++ b/sysdeps/powerpc/powerpc64/be/multiarch/chacha20_arch.h
+@@ -0,0 +1,42 @@
++/* PowerPC optimization for ChaCha20.
++   Copyright (C) 2022 Free Software Foundation, Inc.
++   This file is part of the GNU C Library.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, see
++   <https://www.gnu.org/licenses/>.  */
++
++#include <stdbool.h>
++#include <ldsodefs.h>
++
++unsigned int __chacha20_power8_blocks4 (uint32_t *state, uint8_t *dst,
++					const uint8_t *src, size_t nblks)
++     attribute_hidden;
++
++static void
++chacha20_crypt (uint32_t *state, uint8_t *dst,
++		const uint8_t *src, size_t bytes)
++{
++  _Static_assert (CHACHA20_BUFSIZE % 4 == 0,
++		  "CHACHA20_BUFSIZE not multiple of 4");
++  _Static_assert (CHACHA20_BUFSIZE >= CHACHA20_BLOCK_SIZE * 4,
++		  "CHACHA20_BUFSIZE < CHACHA20_BLOCK_SIZE * 4");
++
++  unsigned long int hwcap = GLRO(dl_hwcap);
++  unsigned long int hwcap2 = GLRO(dl_hwcap2);
++  if (hwcap2 & PPC_FEATURE2_ARCH_2_07 && hwcap & PPC_FEATURE_HAS_ALTIVEC)
++    __chacha20_power8_blocks4 (state, dst, src,
++			       CHACHA20_BUFSIZE / CHACHA20_BLOCK_SIZE);
++  else
++    chacha20_crypt_generic (state, dst, src, bytes);
++}
+diff --git a/sysdeps/powerpc/powerpc64/power8/Makefile b/sysdeps/powerpc/powerpc64/power8/Makefile
+index 71a59529..abb0aa3f 100644
+--- a/sysdeps/powerpc/powerpc64/power8/Makefile
++++ b/sysdeps/powerpc/powerpc64/power8/Makefile
+@@ -1,3 +1,8 @@
+ ifeq ($(subdir),string)
+ sysdep_routines += strcasestr-ppc64
+ endif
++
++ifeq ($(subdir),stdlib)
++sysdep_routines += chacha20-ppc
++CFLAGS-chacha20-ppc.c += -mcpu=power8
++endif
+diff --git a/sysdeps/powerpc/powerpc64/power8/chacha20-ppc.c b/sysdeps/powerpc/powerpc64/power8/chacha20-ppc.c
+new file mode 100644
+index 00000000..0bbdcb93
+--- /dev/null
++++ b/sysdeps/powerpc/powerpc64/power8/chacha20-ppc.c
+@@ -0,0 +1,256 @@
++/* Optimized PowerPC implementation of ChaCha20 cipher.
++   Copyright (C) 2022 Free Software Foundation, Inc.
++
++   This file is part of the GNU C Library.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, see
++   <https://www.gnu.org/licenses/>.  */
++
++/* chacha20-ppc.c - PowerPC vector implementation of ChaCha20
++   Copyright (C) 2019 Jussi Kivilinna <jussi.kivilinna@iki.fi>
++
++   This file is part of Libgcrypt.
++
++   Libgcrypt is free software; you can redistribute it and/or modify
++   it under the terms of the GNU Lesser General Public License as
++   published by the Free Software Foundation; either version 2.1 of
++   the License, or (at your option) any later version.
++
++   Libgcrypt is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++   GNU Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with this program; if not, see <https://www.gnu.org/licenses/>.
++ */
++
++#include <altivec.h>
++#include <endian.h>
++#include <stddef.h>
++#include <stdint.h>
++#include <sys/cdefs.h>
++
++typedef vector unsigned char vector16x_u8;
++typedef vector unsigned int vector4x_u32;
++typedef vector unsigned long long vector2x_u64;
++
++#if __BYTE_ORDER == __BIG_ENDIAN
++static const vector16x_u8 le_bswap_const =
++  { 3, 2, 1, 0, 7, 6, 5, 4, 11, 10, 9, 8, 15, 14, 13, 12 };
++#endif
++
++static inline vector4x_u32
++vec_rol_elems (vector4x_u32 v, unsigned int idx)
++{
++#if __BYTE_ORDER != __BIG_ENDIAN
++  return vec_sld (v, v, (16 - (4 * idx)) & 15);
++#else
++  return vec_sld (v, v, (4 * idx) & 15);
++#endif
++}
++
++static inline vector4x_u32
++vec_load_le (unsigned long offset, const unsigned char *ptr)
++{
++  vector4x_u32 vec;
++  vec = vec_vsx_ld (offset, (const uint32_t *)ptr);
++#if __BYTE_ORDER == __BIG_ENDIAN
++  vec = (vector4x_u32) vec_perm ((vector16x_u8)vec, (vector16x_u8)vec,
++				 le_bswap_const);
++#endif
++  return vec;
++}
++
++static inline void
++vec_store_le (vector4x_u32 vec, unsigned long offset, unsigned char *ptr)
++{
++#if __BYTE_ORDER == __BIG_ENDIAN
++  vec = (vector4x_u32)vec_perm((vector16x_u8)vec, (vector16x_u8)vec,
++			       le_bswap_const);
++#endif
++  vec_vsx_st (vec, offset, (uint32_t *)ptr);
++}
++
++
++static inline vector4x_u32
++vec_add_ctr_u64 (vector4x_u32 v, vector4x_u32 a)
++{
++#if __BYTE_ORDER == __BIG_ENDIAN
++  static const vector16x_u8 swap32 =
++    { 4, 5, 6, 7, 0, 1, 2, 3, 12, 13, 14, 15, 8, 9, 10, 11 };
++  vector2x_u64 vec, add, sum;
++
++  vec = (vector2x_u64)vec_perm ((vector16x_u8)v, (vector16x_u8)v, swap32);
++  add = (vector2x_u64)vec_perm ((vector16x_u8)a, (vector16x_u8)a, swap32);
++  sum = vec + add;
++  return (vector4x_u32)vec_perm ((vector16x_u8)sum, (vector16x_u8)sum, swap32);
++#else
++  return (vector4x_u32)((vector2x_u64)(v) + (vector2x_u64)(a));
++#endif
++}
++
++/**********************************************************************
++  4-way chacha20
++ **********************************************************************/
++
++#define ROTATE(v1,rolv)			\
++	__asm__ ("vrlw %0,%1,%2\n\t" : "=v" (v1) : "v" (v1), "v" (rolv))
++
++#define PLUS(ds,s) \
++	((ds) += (s))
++
++#define XOR(ds,s) \
++	((ds) ^= (s))
++
++#define ADD_U64(v,a) \
++	(v = vec_add_ctr_u64(v, a))
++
++/* 4x4 32-bit integer matrix transpose */
++#define transpose_4x4(x0, x1, x2, x3) ({ \
++	vector4x_u32 t1 = vec_mergeh(x0, x2); \
++	vector4x_u32 t2 = vec_mergel(x0, x2); \
++	vector4x_u32 t3 = vec_mergeh(x1, x3); \
++	x3 = vec_mergel(x1, x3); \
++	x0 = vec_mergeh(t1, t3); \
++	x1 = vec_mergel(t1, t3); \
++	x2 = vec_mergeh(t2, x3); \
++	x3 = vec_mergel(t2, x3); \
++      })
++
++#define QUARTERROUND2(a1,b1,c1,d1,a2,b2,c2,d2)			\
++	PLUS(a1,b1); PLUS(a2,b2); XOR(d1,a1); XOR(d2,a2);	\
++	    ROTATE(d1, rotate_16); ROTATE(d2, rotate_16);	\
++	PLUS(c1,d1); PLUS(c2,d2); XOR(b1,c1); XOR(b2,c2);	\
++	    ROTATE(b1, rotate_12); ROTATE(b2, rotate_12);	\
++	PLUS(a1,b1); PLUS(a2,b2); XOR(d1,a1); XOR(d2,a2);	\
++	    ROTATE(d1, rotate_8); ROTATE(d2, rotate_8);		\
++	PLUS(c1,d1); PLUS(c2,d2); XOR(b1,c1); XOR(b2,c2);	\
++	    ROTATE(b1, rotate_7); ROTATE(b2, rotate_7);
++
++unsigned int attribute_hidden
++__chacha20_power8_blocks4 (uint32_t *state, uint8_t *dst, const uint8_t *src,
++			   size_t nblks)
++{
++  vector4x_u32 counters_0123 = { 0, 1, 2, 3 };
++  vector4x_u32 counter_4 = { 4, 0, 0, 0 };
++  vector4x_u32 rotate_16 = { 16, 16, 16, 16 };
++  vector4x_u32 rotate_12 = { 12, 12, 12, 12 };
++  vector4x_u32 rotate_8 = { 8, 8, 8, 8 };
++  vector4x_u32 rotate_7 = { 7, 7, 7, 7 };
++  vector4x_u32 state0, state1, state2, state3;
++  vector4x_u32 v0, v1, v2, v3, v4, v5, v6, v7;
++  vector4x_u32 v8, v9, v10, v11, v12, v13, v14, v15;
++  vector4x_u32 tmp;
++  int i;
++
++  /* Force preload of constants to vector registers.  */
++  __asm__ ("": "+v" (counters_0123) :: "memory");
++  __asm__ ("": "+v" (counter_4) :: "memory");
++  __asm__ ("": "+v" (rotate_16) :: "memory");
++  __asm__ ("": "+v" (rotate_12) :: "memory");
++  __asm__ ("": "+v" (rotate_8) :: "memory");
++  __asm__ ("": "+v" (rotate_7) :: "memory");
++
++  state0 = vec_vsx_ld (0 * 16, state);
++  state1 = vec_vsx_ld (1 * 16, state);
++  state2 = vec_vsx_ld (2 * 16, state);
++  state3 = vec_vsx_ld (3 * 16, state);
++
++  do
++    {
++      v0 = vec_splat (state0, 0);
++      v1 = vec_splat (state0, 1);
++      v2 = vec_splat (state0, 2);
++      v3 = vec_splat (state0, 3);
++      v4 = vec_splat (state1, 0);
++      v5 = vec_splat (state1, 1);
++      v6 = vec_splat (state1, 2);
++      v7 = vec_splat (state1, 3);
++      v8 = vec_splat (state2, 0);
++      v9 = vec_splat (state2, 1);
++      v10 = vec_splat (state2, 2);
++      v11 = vec_splat (state2, 3);
++      v12 = vec_splat (state3, 0);
++      v13 = vec_splat (state3, 1);
++      v14 = vec_splat (state3, 2);
++      v15 = vec_splat (state3, 3);
++
++      v12 += counters_0123;
++      v13 -= vec_cmplt (v12, counters_0123);
++
++      for (i = 20; i > 0; i -= 2)
++	{
++	  QUARTERROUND2 (v0, v4,  v8, v12,   v1, v5,  v9, v13)
++	  QUARTERROUND2 (v2, v6, v10, v14,   v3, v7, v11, v15)
++	  QUARTERROUND2 (v0, v5, v10, v15,   v1, v6, v11, v12)
++	  QUARTERROUND2 (v2, v7,  v8, v13,   v3, v4,  v9, v14)
++	}
++
++      v0 += vec_splat (state0, 0);
++      v1 += vec_splat (state0, 1);
++      v2 += vec_splat (state0, 2);
++      v3 += vec_splat (state0, 3);
++      v4 += vec_splat (state1, 0);
++      v5 += vec_splat (state1, 1);
++      v6 += vec_splat (state1, 2);
++      v7 += vec_splat (state1, 3);
++      v8 += vec_splat (state2, 0);
++      v9 += vec_splat (state2, 1);
++      v10 += vec_splat (state2, 2);
++      v11 += vec_splat (state2, 3);
++      tmp = vec_splat( state3, 0);
++      tmp += counters_0123;
++      v12 += tmp;
++      v13 += vec_splat (state3, 1) - vec_cmplt (tmp, counters_0123);
++      v14 += vec_splat (state3, 2);
++      v15 += vec_splat (state3, 3);
++      ADD_U64 (state3, counter_4);
++
++      transpose_4x4 (v0, v1, v2, v3);
++      transpose_4x4 (v4, v5, v6, v7);
++      transpose_4x4 (v8, v9, v10, v11);
++      transpose_4x4 (v12, v13, v14, v15);
++
++      vec_store_le (v0, (64 * 0 + 16 * 0), dst);
++      vec_store_le (v1, (64 * 1 + 16 * 0), dst);
++      vec_store_le (v2, (64 * 2 + 16 * 0), dst);
++      vec_store_le (v3, (64 * 3 + 16 * 0), dst);
++
++      vec_store_le (v4, (64 * 0 + 16 * 1), dst);
++      vec_store_le (v5, (64 * 1 + 16 * 1), dst);
++      vec_store_le (v6, (64 * 2 + 16 * 1), dst);
++      vec_store_le (v7, (64 * 3 + 16 * 1), dst);
++
++      vec_store_le (v8, (64 * 0 + 16 * 2), dst);
++      vec_store_le (v9, (64 * 1 + 16 * 2), dst);
++      vec_store_le (v10, (64 * 2 + 16 * 2), dst);
++      vec_store_le (v11, (64 * 3 + 16 * 2), dst);
++
++      vec_store_le (v12, (64 * 0 + 16 * 3), dst);
++      vec_store_le (v13, (64 * 1 + 16 * 3), dst);
++      vec_store_le (v14, (64 * 2 + 16 * 3), dst);
++      vec_store_le (v15, (64 * 3 + 16 * 3), dst);
++
++      src += 4*64;
++      dst += 4*64;
++
++      nblks -= 4;
++    }
++  while (nblks);
++
++  vec_vsx_st (state3, 3 * 16, state);
++
++  return 0;
++}
+diff --git a/sysdeps/powerpc/powerpc64/power8/chacha20_arch.h b/sysdeps/powerpc/powerpc64/power8/chacha20_arch.h
+new file mode 100644
+index 00000000..ded06762
+--- /dev/null
++++ b/sysdeps/powerpc/powerpc64/power8/chacha20_arch.h
+@@ -0,0 +1,37 @@
++/* PowerPC optimization for ChaCha20.
++   Copyright (C) 2022 Free Software Foundation, Inc.
++   This file is part of the GNU C Library.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, see
++   <https://www.gnu.org/licenses/>.  */
++
++#include <stdbool.h>
++#include <ldsodefs.h>
++
++unsigned int __chacha20_power8_blocks4 (uint32_t *state, uint8_t *dst,
++					const uint8_t *src, size_t nblks)
++     attribute_hidden;
++
++static void
++chacha20_crypt (uint32_t *state, uint8_t *dst,
++		const uint8_t *src, size_t bytes)
++{
++  _Static_assert (CHACHA20_BUFSIZE % 4 == 0,
++		  "CHACHA20_BUFSIZE not multiple of 4");
++  _Static_assert (CHACHA20_BUFSIZE >= CHACHA20_BLOCK_SIZE * 4,
++		  "CHACHA20_BUFSIZE < CHACHA20_BLOCK_SIZE * 4");
++
++  __chacha20_power8_blocks4 (state, dst, src,
++			     CHACHA20_BUFSIZE / CHACHA20_BLOCK_SIZE);
++}
+diff --git a/sysdeps/s390/s390-64/Makefile b/sysdeps/s390/s390-64/Makefile
+index 66ed844e..96c110f4 100644
+--- a/sysdeps/s390/s390-64/Makefile
++++ b/sysdeps/s390/s390-64/Makefile
+@@ -67,3 +67,9 @@ tests-container += tst-glibc-hwcaps-cache
+ endif
+ 
+ endif # $(subdir) == elf
++
++ifeq ($(subdir),stdlib)
++sysdep_routines += \
++  chacha20-s390x \
++  # sysdep_routines
++endif
+diff --git a/sysdeps/s390/s390-64/chacha20-s390x.S b/sysdeps/s390/s390-64/chacha20-s390x.S
+new file mode 100644
+index 00000000..e38504d3
+--- /dev/null
++++ b/sysdeps/s390/s390-64/chacha20-s390x.S
+@@ -0,0 +1,573 @@
++/* Optimized s390x implementation of ChaCha20 cipher.
++   Copyright (C) 2022 Free Software Foundation, Inc.
++   This file is part of the GNU C Library.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, see
++   <https://www.gnu.org/licenses/>.  */
++
++/* chacha20-s390x.S  -  zSeries implementation of ChaCha20 cipher
++
++   Copyright (C) 2020 Jussi Kivilinna <jussi.kivilinna@iki.fi>
++
++   This file is part of Libgcrypt.
++
++   Libgcrypt is free software; you can redistribute it and/or modify
++   it under the terms of the GNU Lesser General Public License as
++   published by the Free Software Foundation; either version 2.1 of
++   the License, or (at your option) any later version.
++
++   Libgcrypt is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++   GNU Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with this program; if not, see <https://www.gnu.org/licenses/>.
++ */
++
++#include <sysdep.h>
++
++#ifdef HAVE_S390_VX_ASM_SUPPORT
++
++/* CFA expressions are used for pointing CFA and registers to
++ * SP relative offsets. */
++# define DW_REGNO_SP 15
++
++/* Fixed length encoding used for integers for now. */
++# define DW_SLEB128_7BIT(value) \
++        0x00|((value) & 0x7f)
++# define DW_SLEB128_28BIT(value) \
++        0x80|((value)&0x7f), \
++        0x80|(((value)>>7)&0x7f), \
++        0x80|(((value)>>14)&0x7f), \
++        0x00|(((value)>>21)&0x7f)
++
++# define cfi_cfa_on_stack(rsp_offs,cfa_depth) \
++        .cfi_escape \
++          0x0f, /* DW_CFA_def_cfa_expression */ \
++            DW_SLEB128_7BIT(11), /* length */ \
++          0x7f, /* DW_OP_breg15, rsp + constant */ \
++            DW_SLEB128_28BIT(rsp_offs), \
++          0x06, /* DW_OP_deref */ \
++          0x23, /* DW_OP_plus_constu */ \
++            DW_SLEB128_28BIT((cfa_depth)+160)
++
++.machine "z13+vx"
++.text
++
++.balign 16
++.Lconsts:
++.Lwordswap:
++	.byte 12, 13, 14, 15, 8, 9, 10, 11, 4, 5, 6, 7, 0, 1, 2, 3
++.Lbswap128:
++	.byte 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0
++.Lbswap32:
++	.byte 3, 2, 1, 0, 7, 6, 5, 4, 11, 10, 9, 8, 15, 14, 13, 12
++.Lone:
++	.long 0, 0, 0, 1
++.Ladd_counter_0123:
++	.long 0, 1, 2, 3
++.Ladd_counter_4567:
++	.long 4, 5, 6, 7
++
++/* register macros */
++#define INPUT %r2
++#define DST   %r3
++#define SRC   %r4
++#define NBLKS %r0
++#define ROUND %r1
++
++/* stack structure */
++
++#define STACK_FRAME_STD    (8 * 16 + 8 * 4)
++#define STACK_FRAME_F8_F15 (8 * 8)
++#define STACK_FRAME_Y0_Y15 (16 * 16)
++#define STACK_FRAME_CTR    (4 * 16)
++#define STACK_FRAME_PARAMS (6 * 8)
++
++#define STACK_MAX   (STACK_FRAME_STD + STACK_FRAME_F8_F15 + \
++		     STACK_FRAME_Y0_Y15 + STACK_FRAME_CTR + \
++		     STACK_FRAME_PARAMS)
++
++#define STACK_F8     (STACK_MAX - STACK_FRAME_F8_F15)
++#define STACK_F9     (STACK_F8 + 8)
++#define STACK_F10    (STACK_F9 + 8)
++#define STACK_F11    (STACK_F10 + 8)
++#define STACK_F12    (STACK_F11 + 8)
++#define STACK_F13    (STACK_F12 + 8)
++#define STACK_F14    (STACK_F13 + 8)
++#define STACK_F15    (STACK_F14 + 8)
++#define STACK_Y0_Y15 (STACK_F8 - STACK_FRAME_Y0_Y15)
++#define STACK_CTR    (STACK_Y0_Y15 - STACK_FRAME_CTR)
++#define STACK_INPUT  (STACK_CTR - STACK_FRAME_PARAMS)
++#define STACK_DST    (STACK_INPUT + 8)
++#define STACK_SRC    (STACK_DST + 8)
++#define STACK_NBLKS  (STACK_SRC + 8)
++#define STACK_POCTX  (STACK_NBLKS + 8)
++#define STACK_POSRC  (STACK_POCTX + 8)
++
++#define STACK_G0_H3  STACK_Y0_Y15
++
++/* vector registers */
++#define A0 %v0
++#define A1 %v1
++#define A2 %v2
++#define A3 %v3
++
++#define B0 %v4
++#define B1 %v5
++#define B2 %v6
++#define B3 %v7
++
++#define C0 %v8
++#define C1 %v9
++#define C2 %v10
++#define C3 %v11
++
++#define D0 %v12
++#define D1 %v13
++#define D2 %v14
++#define D3 %v15
++
++#define E0 %v16
++#define E1 %v17
++#define E2 %v18
++#define E3 %v19
++
++#define F0 %v20
++#define F1 %v21
++#define F2 %v22
++#define F3 %v23
++
++#define G0 %v24
++#define G1 %v25
++#define G2 %v26
++#define G3 %v27
++
++#define H0 %v28
++#define H1 %v29
++#define H2 %v30
++#define H3 %v31
++
++#define IO0 E0
++#define IO1 E1
++#define IO2 E2
++#define IO3 E3
++#define IO4 F0
++#define IO5 F1
++#define IO6 F2
++#define IO7 F3
++
++#define S0 G0
++#define S1 G1
++#define S2 G2
++#define S3 G3
++
++#define TMP0 H0
++#define TMP1 H1
++#define TMP2 H2
++#define TMP3 H3
++
++#define X0 A0
++#define X1 A1
++#define X2 A2
++#define X3 A3
++#define X4 B0
++#define X5 B1
++#define X6 B2
++#define X7 B3
++#define X8 C0
++#define X9 C1
++#define X10 C2
++#define X11 C3
++#define X12 D0
++#define X13 D1
++#define X14 D2
++#define X15 D3
++
++#define Y0 E0
++#define Y1 E1
++#define Y2 E2
++#define Y3 E3
++#define Y4 F0
++#define Y5 F1
++#define Y6 F2
++#define Y7 F3
++#define Y8 G0
++#define Y9 G1
++#define Y10 G2
++#define Y11 G3
++#define Y12 H0
++#define Y13 H1
++#define Y14 H2
++#define Y15 H3
++
++/**********************************************************************
++  helper macros
++ **********************************************************************/
++
++#define _ /*_*/
++
++#define START_STACK(last_r) \
++	lgr %r0, %r15; \
++	lghi %r1, ~15; \
++	stmg %r6, last_r, 6 * 8(%r15); \
++	aghi %r0, -STACK_MAX; \
++	ngr %r0, %r1; \
++	lgr %r1, %r15; \
++	cfi_def_cfa_register(1); \
++	lgr %r15, %r0; \
++	stg %r1, 0(%r15); \
++	cfi_cfa_on_stack(0, 0); \
++	std %f8, STACK_F8(%r15); \
++	std %f9, STACK_F9(%r15); \
++	std %f10, STACK_F10(%r15); \
++	std %f11, STACK_F11(%r15); \
++	std %f12, STACK_F12(%r15); \
++	std %f13, STACK_F13(%r15); \
++	std %f14, STACK_F14(%r15); \
++	std %f15, STACK_F15(%r15);
++
++#define END_STACK(last_r) \
++	lg %r1, 0(%r15); \
++	ld %f8, STACK_F8(%r15); \
++	ld %f9, STACK_F9(%r15); \
++	ld %f10, STACK_F10(%r15); \
++	ld %f11, STACK_F11(%r15); \
++	ld %f12, STACK_F12(%r15); \
++	ld %f13, STACK_F13(%r15); \
++	ld %f14, STACK_F14(%r15); \
++	ld %f15, STACK_F15(%r15); \
++	lmg %r6, last_r, 6 * 8(%r1); \
++	lgr %r15, %r1; \
++	cfi_def_cfa_register(DW_REGNO_SP);
++
++#define PLUS(dst,src) \
++	vaf dst, dst, src;
++
++#define XOR(dst,src) \
++	vx dst, dst, src;
++
++#define ROTATE(v1,c) \
++	verllf v1, v1, (c)(0);
++
++#define WORD_ROTATE(v1,s) \
++	vsldb v1, v1, v1, ((s) * 4);
++
++#define DST_8(OPER, I, J) \
++	OPER(A##I, J); OPER(B##I, J); OPER(C##I, J); OPER(D##I, J); \
++	OPER(E##I, J); OPER(F##I, J); OPER(G##I, J); OPER(H##I, J);
++
++/**********************************************************************
++  round macros
++ **********************************************************************/
++
++/**********************************************************************
++  8-way chacha20 ("vertical")
++ **********************************************************************/
++
++#define QUARTERROUND4_V8_POLY(x0,x1,x2,x3,x4,x5,x6,x7,\
++			      x8,x9,x10,x11,x12,x13,x14,x15,\
++			      y0,y1,y2,y3,y4,y5,y6,y7,\
++			      y8,y9,y10,y11,y12,y13,y14,y15,\
++			      op1,op2,op3,op4,op5,op6,op7,op8,\
++			      op9,op10,op11,op12) \
++	op1;							\
++	PLUS(x0, x1); PLUS(x4, x5);				\
++	PLUS(x8, x9); PLUS(x12, x13);				\
++	PLUS(y0, y1); PLUS(y4, y5);				\
++	PLUS(y8, y9); PLUS(y12, y13);				\
++	    op2;						\
++	    XOR(x3, x0);  XOR(x7, x4);				\
++	    XOR(x11, x8); XOR(x15, x12);			\
++	    XOR(y3, y0);  XOR(y7, y4);				\
++	    XOR(y11, y8); XOR(y15, y12);			\
++		op3;						\
++		ROTATE(x3, 16); ROTATE(x7, 16);			\
++		ROTATE(x11, 16); ROTATE(x15, 16);		\
++		ROTATE(y3, 16); ROTATE(y7, 16);			\
++		ROTATE(y11, 16); ROTATE(y15, 16);		\
++	op4;							\
++	PLUS(x2, x3); PLUS(x6, x7);				\
++	PLUS(x10, x11); PLUS(x14, x15);				\
++	PLUS(y2, y3); PLUS(y6, y7);				\
++	PLUS(y10, y11); PLUS(y14, y15);				\
++	    op5;						\
++	    XOR(x1, x2); XOR(x5, x6);				\
++	    XOR(x9, x10); XOR(x13, x14);			\
++	    XOR(y1, y2); XOR(y5, y6);				\
++	    XOR(y9, y10); XOR(y13, y14);			\
++		op6;						\
++		ROTATE(x1,12); ROTATE(x5,12);			\
++		ROTATE(x9,12); ROTATE(x13,12);			\
++		ROTATE(y1,12); ROTATE(y5,12);			\
++		ROTATE(y9,12); ROTATE(y13,12);			\
++	op7;							\
++	PLUS(x0, x1); PLUS(x4, x5);				\
++	PLUS(x8, x9); PLUS(x12, x13);				\
++	PLUS(y0, y1); PLUS(y4, y5);				\
++	PLUS(y8, y9); PLUS(y12, y13);				\
++	    op8;						\
++	    XOR(x3, x0); XOR(x7, x4);				\
++	    XOR(x11, x8); XOR(x15, x12);			\
++	    XOR(y3, y0); XOR(y7, y4);				\
++	    XOR(y11, y8); XOR(y15, y12);			\
++		op9;						\
++		ROTATE(x3,8); ROTATE(x7,8);			\
++		ROTATE(x11,8); ROTATE(x15,8);			\
++		ROTATE(y3,8); ROTATE(y7,8);			\
++		ROTATE(y11,8); ROTATE(y15,8);			\
++	op10;							\
++	PLUS(x2, x3); PLUS(x6, x7);				\
++	PLUS(x10, x11); PLUS(x14, x15);				\
++	PLUS(y2, y3); PLUS(y6, y7);				\
++	PLUS(y10, y11); PLUS(y14, y15);				\
++	    op11;						\
++	    XOR(x1, x2); XOR(x5, x6);				\
++	    XOR(x9, x10); XOR(x13, x14);			\
++	    XOR(y1, y2); XOR(y5, y6);				\
++	    XOR(y9, y10); XOR(y13, y14);			\
++		op12;						\
++		ROTATE(x1,7); ROTATE(x5,7);			\
++		ROTATE(x9,7); ROTATE(x13,7);			\
++		ROTATE(y1,7); ROTATE(y5,7);			\
++		ROTATE(y9,7); ROTATE(y13,7);
++
++#define QUARTERROUND4_V8(x0,x1,x2,x3,x4,x5,x6,x7,x8,x9,x10,x11,x12,x13,x14,x15,\
++			 y0,y1,y2,y3,y4,y5,y6,y7,y8,y9,y10,y11,y12,y13,y14,y15) \
++	QUARTERROUND4_V8_POLY(x0,x1,x2,x3,x4,x5,x6,x7,\
++			      x8,x9,x10,x11,x12,x13,x14,x15,\
++			      y0,y1,y2,y3,y4,y5,y6,y7,\
++			      y8,y9,y10,y11,y12,y13,y14,y15,\
++			      ,,,,,,,,,,,)
++
++#define TRANSPOSE_4X4_2(v0,v1,v2,v3,va,vb,vc,vd,tmp0,tmp1,tmp2,tmpa,tmpb,tmpc) \
++	  vmrhf tmp0, v0, v1;					\
++	  vmrhf tmp1, v2, v3;					\
++	  vmrlf tmp2, v0, v1;					\
++	  vmrlf   v3, v2, v3;					\
++	  vmrhf tmpa, va, vb;					\
++	  vmrhf tmpb, vc, vd;					\
++	  vmrlf tmpc, va, vb;					\
++	  vmrlf   vd, vc, vd;					\
++	  vpdi v0, tmp0, tmp1, 0;				\
++	  vpdi v1, tmp0, tmp1, 5;				\
++	  vpdi v2, tmp2,   v3, 0;				\
++	  vpdi v3, tmp2,   v3, 5;				\
++	  vpdi va, tmpa, tmpb, 0;				\
++	  vpdi vb, tmpa, tmpb, 5;				\
++	  vpdi vc, tmpc,   vd, 0;				\
++	  vpdi vd, tmpc,   vd, 5;
++
++.balign 8
++.globl __chacha20_s390x_vx_blocks8
++ENTRY (__chacha20_s390x_vx_blocks8)
++	/* input:
++	 *	%r2: input
++	 *	%r3: dst
++	 *	%r4: src
++	 *	%r5: nblks (multiple of 8)
++	 */
++
++	START_STACK(%r8);
++	lgr NBLKS, %r5;
++
++	larl %r7, .Lconsts;
++
++	/* Load counter. */
++	lg %r8, (12 * 4)(INPUT);
++	rllg %r8, %r8, 32;
++
++.balign 4
++	/* Process eight chacha20 blocks per loop. */
++.Lloop8:
++	vlm Y0, Y3, 0(INPUT);
++
++	slgfi NBLKS, 8;
++	lghi ROUND, (20 / 2);
++
++	/* Construct counter vectors X12/X13 & Y12/Y13. */
++	vl X4, (.Ladd_counter_0123 - .Lconsts)(%r7);
++	vl Y4, (.Ladd_counter_4567 - .Lconsts)(%r7);
++	vrepf Y12, Y3, 0;
++	vrepf Y13, Y3, 1;
++	vaccf X5, Y12, X4;
++	vaccf Y5, Y12, Y4;
++	vaf X12, Y12, X4;
++	vaf Y12, Y12, Y4;
++	vaf X13, Y13, X5;
++	vaf Y13, Y13, Y5;
++
++	vrepf X0, Y0, 0;
++	vrepf X1, Y0, 1;
++	vrepf X2, Y0, 2;
++	vrepf X3, Y0, 3;
++	vrepf X4, Y1, 0;
++	vrepf X5, Y1, 1;
++	vrepf X6, Y1, 2;
++	vrepf X7, Y1, 3;
++	vrepf X8, Y2, 0;
++	vrepf X9, Y2, 1;
++	vrepf X10, Y2, 2;
++	vrepf X11, Y2, 3;
++	vrepf X14, Y3, 2;
++	vrepf X15, Y3, 3;
++
++	/* Store counters for blocks 0-7. */
++	vstm X12, X13, (STACK_CTR + 0 * 16)(%r15);
++	vstm Y12, Y13, (STACK_CTR + 2 * 16)(%r15);
++
++	vlr Y0, X0;
++	vlr Y1, X1;
++	vlr Y2, X2;
++	vlr Y3, X3;
++	vlr Y4, X4;
++	vlr Y5, X5;
++	vlr Y6, X6;
++	vlr Y7, X7;
++	vlr Y8, X8;
++	vlr Y9, X9;
++	vlr Y10, X10;
++	vlr Y11, X11;
++	vlr Y14, X14;
++	vlr Y15, X15;
++
++	/* Update and store counter. */
++	agfi %r8, 8;
++	rllg %r5, %r8, 32;
++	stg %r5, (12 * 4)(INPUT);
++
++.balign 4
++.Lround2_8:
++	QUARTERROUND4_V8(X0, X4,  X8, X12,   X1, X5,  X9, X13,
++			 X2, X6, X10, X14,   X3, X7, X11, X15,
++			 Y0, Y4,  Y8, Y12,   Y1, Y5,  Y9, Y13,
++			 Y2, Y6, Y10, Y14,   Y3, Y7, Y11, Y15);
++	QUARTERROUND4_V8(X0, X5, X10, X15,   X1, X6, X11, X12,
++			 X2, X7,  X8, X13,   X3, X4,  X9, X14,
++			 Y0, Y5, Y10, Y15,   Y1, Y6, Y11, Y12,
++			 Y2, Y7,  Y8, Y13,   Y3, Y4,  Y9, Y14);
++	brctg ROUND, .Lround2_8;
++
++	/* Store blocks 4-7. */
++	vstm Y0, Y15, STACK_Y0_Y15(%r15);
++
++	/* Load counters for blocks 0-3. */
++	vlm Y0, Y1, (STACK_CTR + 0 * 16)(%r15);
++
++	lghi ROUND, 1;
++	j .Lfirst_output_4blks_8;
++
++.balign 4
++.Lsecond_output_4blks_8:
++	/* Load blocks 4-7. */
++	vlm X0, X15, STACK_Y0_Y15(%r15);
++
++	/* Load counters for blocks 4-7. */
++	vlm Y0, Y1, (STACK_CTR + 2 * 16)(%r15);
++
++	lghi ROUND, 0;
++
++.balign 4
++	/* Output four chacha20 blocks per loop. */
++.Lfirst_output_4blks_8:
++	vlm Y12, Y15, 0(INPUT);
++	PLUS(X12, Y0);
++	PLUS(X13, Y1);
++	vrepf Y0, Y12, 0;
++	vrepf Y1, Y12, 1;
++	vrepf Y2, Y12, 2;
++	vrepf Y3, Y12, 3;
++	vrepf Y4, Y13, 0;
++	vrepf Y5, Y13, 1;
++	vrepf Y6, Y13, 2;
++	vrepf Y7, Y13, 3;
++	vrepf Y8, Y14, 0;
++	vrepf Y9, Y14, 1;
++	vrepf Y10, Y14, 2;
++	vrepf Y11, Y14, 3;
++	vrepf Y14, Y15, 2;
++	vrepf Y15, Y15, 3;
++	PLUS(X0, Y0);
++	PLUS(X1, Y1);
++	PLUS(X2, Y2);
++	PLUS(X3, Y3);
++	PLUS(X4, Y4);
++	PLUS(X5, Y5);
++	PLUS(X6, Y6);
++	PLUS(X7, Y7);
++	PLUS(X8, Y8);
++	PLUS(X9, Y9);
++	PLUS(X10, Y10);
++	PLUS(X11, Y11);
++	PLUS(X14, Y14);
++	PLUS(X15, Y15);
++
++	vl Y15, (.Lbswap32 - .Lconsts)(%r7);
++	TRANSPOSE_4X4_2(X0, X1, X2, X3, X4, X5, X6, X7,
++			Y9, Y10, Y11, Y12, Y13, Y14);
++	TRANSPOSE_4X4_2(X8, X9, X10, X11, X12, X13, X14, X15,
++			Y9, Y10, Y11, Y12, Y13, Y14);
++
++	vlm Y0, Y14, 0(SRC);
++	vperm X0, X0, X0, Y15;
++	vperm X1, X1, X1, Y15;
++	vperm X2, X2, X2, Y15;
++	vperm X3, X3, X3, Y15;
++	vperm X4, X4, X4, Y15;
++	vperm X5, X5, X5, Y15;
++	vperm X6, X6, X6, Y15;
++	vperm X7, X7, X7, Y15;
++	vperm X8, X8, X8, Y15;
++	vperm X9, X9, X9, Y15;
++	vperm X10, X10, X10, Y15;
++	vperm X11, X11, X11, Y15;
++	vperm X12, X12, X12, Y15;
++	vperm X13, X13, X13, Y15;
++	vperm X14, X14, X14, Y15;
++	vperm X15, X15, X15, Y15;
++	vl Y15, (15 * 16)(SRC);
++
++	XOR(Y0, X0);
++	XOR(Y1, X4);
++	XOR(Y2, X8);
++	XOR(Y3, X12);
++	XOR(Y4, X1);
++	XOR(Y5, X5);
++	XOR(Y6, X9);
++	XOR(Y7, X13);
++	XOR(Y8, X2);
++	XOR(Y9, X6);
++	XOR(Y10, X10);
++	XOR(Y11, X14);
++	XOR(Y12, X3);
++	XOR(Y13, X7);
++	XOR(Y14, X11);
++	XOR(Y15, X15);
++	vstm Y0, Y15, 0(DST);
++
++	aghi SRC, 256;
++	aghi DST, 256;
++
++	clgije ROUND, 1, .Lsecond_output_4blks_8;
++
++	clgijhe NBLKS, 8, .Lloop8;
++
++
++	END_STACK(%r8);
++	xgr %r2, %r2;
++	br %r14;
++END (__chacha20_s390x_vx_blocks8)
++
++#endif /* HAVE_S390_VX_ASM_SUPPORT */
+diff --git a/sysdeps/s390/s390-64/chacha20_arch.h b/sysdeps/s390/s390-64/chacha20_arch.h
+new file mode 100644
+index 00000000..0c6abf77
+--- /dev/null
++++ b/sysdeps/s390/s390-64/chacha20_arch.h
+@@ -0,0 +1,45 @@
++/* s390x optimization for ChaCha20.VE_S390_VX_ASM_SUPPORT
++   Copyright (C) 2022 Free Software Foundation, Inc.
++   This file is part of the GNU C Library.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, see
++   <https://www.gnu.org/licenses/>.  */
++
++#include <stdbool.h>
++#include <ldsodefs.h>
++#include <sys/auxv.h>
++
++unsigned int __chacha20_s390x_vx_blocks8 (uint32_t *state, uint8_t *dst,
++					  const uint8_t *src, size_t nblks)
++     attribute_hidden;
++
++static inline void
++chacha20_crypt (uint32_t *state, uint8_t *dst, const uint8_t *src,
++		size_t bytes)
++{
++#ifdef HAVE_S390_VX_ASM_SUPPORT
++  _Static_assert (CHACHA20_BUFSIZE % 8 == 0,
++		  "CHACHA20_BUFSIZE not multiple of 8");
++  _Static_assert (CHACHA20_BUFSIZE >= CHACHA20_BLOCK_SIZE * 8,
++		  "CHACHA20_BUFSIZE < CHACHA20_BLOCK_SIZE * 8");
++
++  if (GLRO(dl_hwcap) & HWCAP_S390_VX)
++    {
++      __chacha20_s390x_vx_blocks8 (state, dst, src,
++				   CHACHA20_BUFSIZE / CHACHA20_BLOCK_SIZE);
++      return;
++    }
++#endif
++  chacha20_crypt_generic (state, dst, src, bytes);
++}
+diff --git a/sysdeps/unix/sysv/linux/aarch64/libc.abilist b/sysdeps/unix/sysv/linux/aarch64/libc.abilist
+index c49363e7..8dd75b8d 100644
+--- a/sysdeps/unix/sysv/linux/aarch64/libc.abilist
++++ b/sysdeps/unix/sysv/linux/aarch64/libc.abilist
+@@ -2616,9 +2616,6 @@ GLIBC_2.35 __memcmpeq F
+ GLIBC_2.35 _dl_find_object F
+ GLIBC_2.35 epoll_pwait2 F
+ GLIBC_2.35 posix_spawn_file_actions_addtcsetpgrp_np F
+-GLIBC_2.36 arc4random F
+-GLIBC_2.36 arc4random_buf F
+-GLIBC_2.36 arc4random_uniform F
+ GLIBC_2.36 c8rtomb F
+ GLIBC_2.36 fsconfig F
+ GLIBC_2.36 fsmount F
+diff --git a/sysdeps/unix/sysv/linux/alpha/libc.abilist b/sysdeps/unix/sysv/linux/alpha/libc.abilist
+index d6b1dcaa..0ce66215 100644
+--- a/sysdeps/unix/sysv/linux/alpha/libc.abilist
++++ b/sysdeps/unix/sysv/linux/alpha/libc.abilist
+@@ -2713,9 +2713,6 @@ GLIBC_2.35 __memcmpeq F
+ GLIBC_2.35 _dl_find_object F
+ GLIBC_2.35 epoll_pwait2 F
+ GLIBC_2.35 posix_spawn_file_actions_addtcsetpgrp_np F
+-GLIBC_2.36 arc4random F
+-GLIBC_2.36 arc4random_buf F
+-GLIBC_2.36 arc4random_uniform F
+ GLIBC_2.36 c8rtomb F
+ GLIBC_2.36 fsconfig F
+ GLIBC_2.36 fsmount F
+diff --git a/sysdeps/unix/sysv/linux/arc/libc.abilist b/sysdeps/unix/sysv/linux/arc/libc.abilist
+index dfe0c3f7..5c2a558f 100644
+--- a/sysdeps/unix/sysv/linux/arc/libc.abilist
++++ b/sysdeps/unix/sysv/linux/arc/libc.abilist
+@@ -2377,9 +2377,6 @@ GLIBC_2.35 __memcmpeq F
+ GLIBC_2.35 _dl_find_object F
+ GLIBC_2.35 epoll_pwait2 F
+ GLIBC_2.35 posix_spawn_file_actions_addtcsetpgrp_np F
+-GLIBC_2.36 arc4random F
+-GLIBC_2.36 arc4random_buf F
+-GLIBC_2.36 arc4random_uniform F
+ GLIBC_2.36 c8rtomb F
+ GLIBC_2.36 fsconfig F
+ GLIBC_2.36 fsmount F
+diff --git a/sysdeps/unix/sysv/linux/arm/be/libc.abilist b/sysdeps/unix/sysv/linux/arm/be/libc.abilist
+index 6c75e5aa..e3ec8270 100644
+--- a/sysdeps/unix/sysv/linux/arm/be/libc.abilist
++++ b/sysdeps/unix/sysv/linux/arm/be/libc.abilist
+@@ -496,9 +496,6 @@ GLIBC_2.35 __memcmpeq F
+ GLIBC_2.35 _dl_find_object F
+ GLIBC_2.35 epoll_pwait2 F
+ GLIBC_2.35 posix_spawn_file_actions_addtcsetpgrp_np F
+-GLIBC_2.36 arc4random F
+-GLIBC_2.36 arc4random_buf F
+-GLIBC_2.36 arc4random_uniform F
+ GLIBC_2.36 c8rtomb F
+ GLIBC_2.36 fsconfig F
+ GLIBC_2.36 fsmount F
+diff --git a/sysdeps/unix/sysv/linux/arm/le/libc.abilist b/sysdeps/unix/sysv/linux/arm/le/libc.abilist
+index 03d6f7ae..34f16af8 100644
+--- a/sysdeps/unix/sysv/linux/arm/le/libc.abilist
++++ b/sysdeps/unix/sysv/linux/arm/le/libc.abilist
+@@ -493,9 +493,6 @@ GLIBC_2.35 __memcmpeq F
+ GLIBC_2.35 _dl_find_object F
+ GLIBC_2.35 epoll_pwait2 F
+ GLIBC_2.35 posix_spawn_file_actions_addtcsetpgrp_np F
+-GLIBC_2.36 arc4random F
+-GLIBC_2.36 arc4random_buf F
+-GLIBC_2.36 arc4random_uniform F
+ GLIBC_2.36 c8rtomb F
+ GLIBC_2.36 fsconfig F
+ GLIBC_2.36 fsmount F
+diff --git a/sysdeps/unix/sysv/linux/csky/libc.abilist b/sysdeps/unix/sysv/linux/csky/libc.abilist
+index d858c108..7c1c3e49 100644
+--- a/sysdeps/unix/sysv/linux/csky/libc.abilist
++++ b/sysdeps/unix/sysv/linux/csky/libc.abilist
+@@ -2652,9 +2652,6 @@ GLIBC_2.35 __memcmpeq F
+ GLIBC_2.35 _dl_find_object F
+ GLIBC_2.35 epoll_pwait2 F
+ GLIBC_2.35 posix_spawn_file_actions_addtcsetpgrp_np F
+-GLIBC_2.36 arc4random F
+-GLIBC_2.36 arc4random_buf F
+-GLIBC_2.36 arc4random_uniform F
+ GLIBC_2.36 c8rtomb F
+ GLIBC_2.36 fsconfig F
+ GLIBC_2.36 fsmount F
+diff --git a/sysdeps/unix/sysv/linux/hppa/libc.abilist b/sysdeps/unix/sysv/linux/hppa/libc.abilist
+index 82a14f8a..3f21f4fa 100644
+--- a/sysdeps/unix/sysv/linux/hppa/libc.abilist
++++ b/sysdeps/unix/sysv/linux/hppa/libc.abilist
+@@ -2601,9 +2601,6 @@ GLIBC_2.35 __memcmpeq F
+ GLIBC_2.35 _dl_find_object F
+ GLIBC_2.35 epoll_pwait2 F
+ GLIBC_2.35 posix_spawn_file_actions_addtcsetpgrp_np F
+-GLIBC_2.36 arc4random F
+-GLIBC_2.36 arc4random_buf F
+-GLIBC_2.36 arc4random_uniform F
+ GLIBC_2.36 c8rtomb F
+ GLIBC_2.36 fsconfig F
+ GLIBC_2.36 fsmount F
+diff --git a/sysdeps/unix/sysv/linux/i386/libc.abilist b/sysdeps/unix/sysv/linux/i386/libc.abilist
+index 1950b15d..5058223c 100644
+--- a/sysdeps/unix/sysv/linux/i386/libc.abilist
++++ b/sysdeps/unix/sysv/linux/i386/libc.abilist
+@@ -2785,9 +2785,6 @@ GLIBC_2.35 __memcmpeq F
+ GLIBC_2.35 _dl_find_object F
+ GLIBC_2.35 epoll_pwait2 F
+ GLIBC_2.35 posix_spawn_file_actions_addtcsetpgrp_np F
+-GLIBC_2.36 arc4random F
+-GLIBC_2.36 arc4random_buf F
+-GLIBC_2.36 arc4random_uniform F
+ GLIBC_2.36 c8rtomb F
+ GLIBC_2.36 fsconfig F
+ GLIBC_2.36 fsmount F
+diff --git a/sysdeps/unix/sysv/linux/ia64/libc.abilist b/sysdeps/unix/sysv/linux/ia64/libc.abilist
+index d0b9cb27..1e777f96 100644
+--- a/sysdeps/unix/sysv/linux/ia64/libc.abilist
++++ b/sysdeps/unix/sysv/linux/ia64/libc.abilist
+@@ -2551,9 +2551,6 @@ GLIBC_2.35 __memcmpeq F
+ GLIBC_2.35 _dl_find_object F
+ GLIBC_2.35 epoll_pwait2 F
+ GLIBC_2.35 posix_spawn_file_actions_addtcsetpgrp_np F
+-GLIBC_2.36 arc4random F
+-GLIBC_2.36 arc4random_buf F
+-GLIBC_2.36 arc4random_uniform F
+ GLIBC_2.36 c8rtomb F
+ GLIBC_2.36 fsconfig F
+ GLIBC_2.36 fsmount F
+diff --git a/sysdeps/unix/sysv/linux/m68k/coldfire/libc.abilist b/sysdeps/unix/sysv/linux/m68k/coldfire/libc.abilist
+index 35785a3d..5de68530 100644
+--- a/sysdeps/unix/sysv/linux/m68k/coldfire/libc.abilist
++++ b/sysdeps/unix/sysv/linux/m68k/coldfire/libc.abilist
+@@ -497,9 +497,6 @@ GLIBC_2.35 __memcmpeq F
+ GLIBC_2.35 _dl_find_object F
+ GLIBC_2.35 epoll_pwait2 F
+ GLIBC_2.35 posix_spawn_file_actions_addtcsetpgrp_np F
+-GLIBC_2.36 arc4random F
+-GLIBC_2.36 arc4random_buf F
+-GLIBC_2.36 arc4random_uniform F
+ GLIBC_2.36 c8rtomb F
+ GLIBC_2.36 fsconfig F
+ GLIBC_2.36 fsmount F
+diff --git a/sysdeps/unix/sysv/linux/m68k/m680x0/libc.abilist b/sysdeps/unix/sysv/linux/m68k/m680x0/libc.abilist
+index 4ab2426e..b9bf2b72 100644
+--- a/sysdeps/unix/sysv/linux/m68k/m680x0/libc.abilist
++++ b/sysdeps/unix/sysv/linux/m68k/m680x0/libc.abilist
+@@ -2728,9 +2728,6 @@ GLIBC_2.35 __memcmpeq F
+ GLIBC_2.35 _dl_find_object F
+ GLIBC_2.35 epoll_pwait2 F
+ GLIBC_2.35 posix_spawn_file_actions_addtcsetpgrp_np F
+-GLIBC_2.36 arc4random F
+-GLIBC_2.36 arc4random_buf F
+-GLIBC_2.36 arc4random_uniform F
+ GLIBC_2.36 c8rtomb F
+ GLIBC_2.36 fsconfig F
+ GLIBC_2.36 fsmount F
+diff --git a/sysdeps/unix/sysv/linux/microblaze/be/libc.abilist b/sysdeps/unix/sysv/linux/microblaze/be/libc.abilist
+index 38faa162..fe336293 100644
+--- a/sysdeps/unix/sysv/linux/microblaze/be/libc.abilist
++++ b/sysdeps/unix/sysv/linux/microblaze/be/libc.abilist
+@@ -2701,9 +2701,6 @@ GLIBC_2.35 __memcmpeq F
+ GLIBC_2.35 _dl_find_object F
+ GLIBC_2.35 epoll_pwait2 F
+ GLIBC_2.35 posix_spawn_file_actions_addtcsetpgrp_np F
+-GLIBC_2.36 arc4random F
+-GLIBC_2.36 arc4random_buf F
+-GLIBC_2.36 arc4random_uniform F
+ GLIBC_2.36 c8rtomb F
+ GLIBC_2.36 fsconfig F
+ GLIBC_2.36 fsmount F
+diff --git a/sysdeps/unix/sysv/linux/microblaze/le/libc.abilist b/sysdeps/unix/sysv/linux/microblaze/le/libc.abilist
+index 374d6589..78fe30f1 100644
+--- a/sysdeps/unix/sysv/linux/microblaze/le/libc.abilist
++++ b/sysdeps/unix/sysv/linux/microblaze/le/libc.abilist
+@@ -2698,9 +2698,6 @@ GLIBC_2.35 __memcmpeq F
+ GLIBC_2.35 _dl_find_object F
+ GLIBC_2.35 epoll_pwait2 F
+ GLIBC_2.35 posix_spawn_file_actions_addtcsetpgrp_np F
+-GLIBC_2.36 arc4random F
+-GLIBC_2.36 arc4random_buf F
+-GLIBC_2.36 arc4random_uniform F
+ GLIBC_2.36 c8rtomb F
+ GLIBC_2.36 fsconfig F
+ GLIBC_2.36 fsmount F
+diff --git a/sysdeps/unix/sysv/linux/mips/mips32/fpu/libc.abilist b/sysdeps/unix/sysv/linux/mips/mips32/fpu/libc.abilist
+index fcc5e88e..3c0b3c80 100644
+--- a/sysdeps/unix/sysv/linux/mips/mips32/fpu/libc.abilist
++++ b/sysdeps/unix/sysv/linux/mips/mips32/fpu/libc.abilist
+@@ -2693,9 +2693,6 @@ GLIBC_2.35 __memcmpeq F
+ GLIBC_2.35 _dl_find_object F
+ GLIBC_2.35 epoll_pwait2 F
+ GLIBC_2.35 posix_spawn_file_actions_addtcsetpgrp_np F
+-GLIBC_2.36 arc4random F
+-GLIBC_2.36 arc4random_buf F
+-GLIBC_2.36 arc4random_uniform F
+ GLIBC_2.36 c8rtomb F
+ GLIBC_2.36 fsconfig F
+ GLIBC_2.36 fsmount F
+diff --git a/sysdeps/unix/sysv/linux/mips/mips32/nofpu/libc.abilist b/sysdeps/unix/sysv/linux/mips/mips32/nofpu/libc.abilist
+index 01eb96cd..4916e6e4 100644
+--- a/sysdeps/unix/sysv/linux/mips/mips32/nofpu/libc.abilist
++++ b/sysdeps/unix/sysv/linux/mips/mips32/nofpu/libc.abilist
+@@ -2691,9 +2691,6 @@ GLIBC_2.35 __memcmpeq F
+ GLIBC_2.35 _dl_find_object F
+ GLIBC_2.35 epoll_pwait2 F
+ GLIBC_2.35 posix_spawn_file_actions_addtcsetpgrp_np F
+-GLIBC_2.36 arc4random F
+-GLIBC_2.36 arc4random_buf F
+-GLIBC_2.36 arc4random_uniform F
+ GLIBC_2.36 c8rtomb F
+ GLIBC_2.36 fsconfig F
+ GLIBC_2.36 fsmount F
+diff --git a/sysdeps/unix/sysv/linux/mips/mips64/n32/libc.abilist b/sysdeps/unix/sysv/linux/mips/mips64/n32/libc.abilist
+index a2748b7b..1e061f17 100644
+--- a/sysdeps/unix/sysv/linux/mips/mips64/n32/libc.abilist
++++ b/sysdeps/unix/sysv/linux/mips/mips64/n32/libc.abilist
+@@ -2699,9 +2699,6 @@ GLIBC_2.35 __memcmpeq F
+ GLIBC_2.35 _dl_find_object F
+ GLIBC_2.35 epoll_pwait2 F
+ GLIBC_2.35 posix_spawn_file_actions_addtcsetpgrp_np F
+-GLIBC_2.36 arc4random F
+-GLIBC_2.36 arc4random_buf F
+-GLIBC_2.36 arc4random_uniform F
+ GLIBC_2.36 c8rtomb F
+ GLIBC_2.36 fsconfig F
+ GLIBC_2.36 fsmount F
+diff --git a/sysdeps/unix/sysv/linux/mips/mips64/n64/libc.abilist b/sysdeps/unix/sysv/linux/mips/mips64/n64/libc.abilist
+index 0ae7ba49..411dd982 100644
+--- a/sysdeps/unix/sysv/linux/mips/mips64/n64/libc.abilist
++++ b/sysdeps/unix/sysv/linux/mips/mips64/n64/libc.abilist
+@@ -2602,9 +2602,6 @@ GLIBC_2.35 __memcmpeq F
+ GLIBC_2.35 _dl_find_object F
+ GLIBC_2.35 epoll_pwait2 F
+ GLIBC_2.35 posix_spawn_file_actions_addtcsetpgrp_np F
+-GLIBC_2.36 arc4random F
+-GLIBC_2.36 arc4random_buf F
+-GLIBC_2.36 arc4random_uniform F
+ GLIBC_2.36 c8rtomb F
+ GLIBC_2.36 fsconfig F
+ GLIBC_2.36 fsmount F
+diff --git a/sysdeps/unix/sysv/linux/nios2/libc.abilist b/sysdeps/unix/sysv/linux/nios2/libc.abilist
+index 947495a0..fab4a70c 100644
+--- a/sysdeps/unix/sysv/linux/nios2/libc.abilist
++++ b/sysdeps/unix/sysv/linux/nios2/libc.abilist
+@@ -2740,9 +2740,6 @@ GLIBC_2.35 __memcmpeq F
+ GLIBC_2.35 _dl_find_object F
+ GLIBC_2.35 epoll_pwait2 F
+ GLIBC_2.35 posix_spawn_file_actions_addtcsetpgrp_np F
+-GLIBC_2.36 arc4random F
+-GLIBC_2.36 arc4random_buf F
+-GLIBC_2.36 arc4random_uniform F
+ GLIBC_2.36 c8rtomb F
+ GLIBC_2.36 fsconfig F
+ GLIBC_2.36 fsmount F
+diff --git a/sysdeps/unix/sysv/linux/not-cancel.h b/sysdeps/unix/sysv/linux/not-cancel.h
+index ea2615b3..7a84ca66 100644
+--- a/sysdeps/unix/sysv/linux/not-cancel.h
++++ b/sysdeps/unix/sysv/linux/not-cancel.h
+@@ -23,7 +23,6 @@
+ #include <sysdep.h>
+ #include <errno.h>
+ #include <unistd.h>
+-#include <sys/poll.h>
+ #include <sys/syscall.h>
+ #include <sys/wait.h>
+ #include <time.h>
+@@ -83,16 +82,7 @@ __writev_nocancel_nostatus (int fd, const struct iovec *iov, int iovcnt)
+   INTERNAL_SYSCALL_CALL (writev, fd, iov, iovcnt);
+ }
+ 
+-static inline ssize_t
+-__getrandom_nocancel (void *buf, size_t buflen, unsigned int flags)
+-{
+-  return INTERNAL_SYSCALL_CALL (getrandom, buf, buflen, flags);
+-}
+-
+-static inline int
+-__poll_infinity_nocancel (struct pollfd *fds, nfds_t nfds)
+-{
+-  return INLINE_SYSCALL_CALL (ppoll, fds, nfds, NULL, NULL, 0);
+-}
++/* Uncancelable fcntl.  */
++__typeof (__fcntl) __fcntl64_nocancel;
+ 
+ #endif /* NOT_CANCEL_H  */
+diff --git a/sysdeps/unix/sysv/linux/or1k/libc.abilist b/sysdeps/unix/sysv/linux/or1k/libc.abilist
+index 115f1039..ca5189e8 100644
+--- a/sysdeps/unix/sysv/linux/or1k/libc.abilist
++++ b/sysdeps/unix/sysv/linux/or1k/libc.abilist
+@@ -2123,9 +2123,6 @@ GLIBC_2.35 wprintf F
+ GLIBC_2.35 write F
+ GLIBC_2.35 writev F
+ GLIBC_2.35 wscanf F
+-GLIBC_2.36 arc4random F
+-GLIBC_2.36 arc4random_buf F
+-GLIBC_2.36 arc4random_uniform F
+ GLIBC_2.36 c8rtomb F
+ GLIBC_2.36 fsconfig F
+ GLIBC_2.36 fsmount F
+diff --git a/sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/libc.abilist b/sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/libc.abilist
+index 19c4c325..69c8d94a 100644
+--- a/sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/libc.abilist
++++ b/sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/libc.abilist
+@@ -2755,9 +2755,6 @@ GLIBC_2.35 __memcmpeq F
+ GLIBC_2.35 _dl_find_object F
+ GLIBC_2.35 epoll_pwait2 F
+ GLIBC_2.35 posix_spawn_file_actions_addtcsetpgrp_np F
+-GLIBC_2.36 arc4random F
+-GLIBC_2.36 arc4random_buf F
+-GLIBC_2.36 arc4random_uniform F
+ GLIBC_2.36 c8rtomb F
+ GLIBC_2.36 fsconfig F
+ GLIBC_2.36 fsmount F
+diff --git a/sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/libc.abilist b/sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/libc.abilist
+index 3e043c40..d378bea4 100644
+--- a/sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/libc.abilist
++++ b/sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/libc.abilist
+@@ -2788,9 +2788,6 @@ GLIBC_2.35 __memcmpeq F
+ GLIBC_2.35 _dl_find_object F
+ GLIBC_2.35 epoll_pwait2 F
+ GLIBC_2.35 posix_spawn_file_actions_addtcsetpgrp_np F
+-GLIBC_2.36 arc4random F
+-GLIBC_2.36 arc4random_buf F
+-GLIBC_2.36 arc4random_uniform F
+ GLIBC_2.36 c8rtomb F
+ GLIBC_2.36 fsconfig F
+ GLIBC_2.36 fsmount F
+diff --git a/sysdeps/unix/sysv/linux/powerpc/powerpc64/be/libc.abilist b/sysdeps/unix/sysv/linux/powerpc/powerpc64/be/libc.abilist
+index e4f3a766..cf143d68 100644
+--- a/sysdeps/unix/sysv/linux/powerpc/powerpc64/be/libc.abilist
++++ b/sysdeps/unix/sysv/linux/powerpc/powerpc64/be/libc.abilist
+@@ -2510,9 +2510,6 @@ GLIBC_2.35 __memcmpeq F
+ GLIBC_2.35 _dl_find_object F
+ GLIBC_2.35 epoll_pwait2 F
+ GLIBC_2.35 posix_spawn_file_actions_addtcsetpgrp_np F
+-GLIBC_2.36 arc4random F
+-GLIBC_2.36 arc4random_buf F
+-GLIBC_2.36 arc4random_uniform F
+ GLIBC_2.36 c8rtomb F
+ GLIBC_2.36 fsconfig F
+ GLIBC_2.36 fsmount F
+diff --git a/sysdeps/unix/sysv/linux/powerpc/powerpc64/le/libc.abilist b/sysdeps/unix/sysv/linux/powerpc/powerpc64/le/libc.abilist
+index dafe1c4a..6953a657 100644
+--- a/sysdeps/unix/sysv/linux/powerpc/powerpc64/le/libc.abilist
++++ b/sysdeps/unix/sysv/linux/powerpc/powerpc64/le/libc.abilist
+@@ -2812,9 +2812,6 @@ GLIBC_2.35 __memcmpeq F
+ GLIBC_2.35 _dl_find_object F
+ GLIBC_2.35 epoll_pwait2 F
+ GLIBC_2.35 posix_spawn_file_actions_addtcsetpgrp_np F
+-GLIBC_2.36 arc4random F
+-GLIBC_2.36 arc4random_buf F
+-GLIBC_2.36 arc4random_uniform F
+ GLIBC_2.36 c8rtomb F
+ GLIBC_2.36 fsconfig F
+ GLIBC_2.36 fsmount F
+diff --git a/sysdeps/unix/sysv/linux/riscv/rv32/libc.abilist b/sysdeps/unix/sysv/linux/riscv/rv32/libc.abilist
+index b9740a1a..4a3c4fd1 100644
+--- a/sysdeps/unix/sysv/linux/riscv/rv32/libc.abilist
++++ b/sysdeps/unix/sysv/linux/riscv/rv32/libc.abilist
+@@ -2379,9 +2379,6 @@ GLIBC_2.35 __memcmpeq F
+ GLIBC_2.35 _dl_find_object F
+ GLIBC_2.35 epoll_pwait2 F
+ GLIBC_2.35 posix_spawn_file_actions_addtcsetpgrp_np F
+-GLIBC_2.36 arc4random F
+-GLIBC_2.36 arc4random_buf F
+-GLIBC_2.36 arc4random_uniform F
+ GLIBC_2.36 c8rtomb F
+ GLIBC_2.36 fsconfig F
+ GLIBC_2.36 fsmount F
+diff --git a/sysdeps/unix/sysv/linux/riscv/rv64/libc.abilist b/sysdeps/unix/sysv/linux/riscv/rv64/libc.abilist
+index e3b4656a..b98a000c 100644
+--- a/sysdeps/unix/sysv/linux/riscv/rv64/libc.abilist
++++ b/sysdeps/unix/sysv/linux/riscv/rv64/libc.abilist
+@@ -2579,9 +2579,6 @@ GLIBC_2.35 __memcmpeq F
+ GLIBC_2.35 _dl_find_object F
+ GLIBC_2.35 epoll_pwait2 F
+ GLIBC_2.35 posix_spawn_file_actions_addtcsetpgrp_np F
+-GLIBC_2.36 arc4random F
+-GLIBC_2.36 arc4random_buf F
+-GLIBC_2.36 arc4random_uniform F
+ GLIBC_2.36 c8rtomb F
+ GLIBC_2.36 fsconfig F
+ GLIBC_2.36 fsmount F
+diff --git a/sysdeps/unix/sysv/linux/s390/s390-32/libc.abilist b/sysdeps/unix/sysv/linux/s390/s390-32/libc.abilist
+index 84cb7a50..cfa38811 100644
+--- a/sysdeps/unix/sysv/linux/s390/s390-32/libc.abilist
++++ b/sysdeps/unix/sysv/linux/s390/s390-32/libc.abilist
+@@ -2753,9 +2753,6 @@ GLIBC_2.35 __memcmpeq F
+ GLIBC_2.35 _dl_find_object F
+ GLIBC_2.35 epoll_pwait2 F
+ GLIBC_2.35 posix_spawn_file_actions_addtcsetpgrp_np F
+-GLIBC_2.36 arc4random F
+-GLIBC_2.36 arc4random_buf F
+-GLIBC_2.36 arc4random_uniform F
+ GLIBC_2.36 c8rtomb F
+ GLIBC_2.36 fsconfig F
+ GLIBC_2.36 fsmount F
+diff --git a/sysdeps/unix/sysv/linux/s390/s390-64/libc.abilist b/sysdeps/unix/sysv/linux/s390/s390-64/libc.abilist
+index 33df3b16..e50cf9f0 100644
+--- a/sysdeps/unix/sysv/linux/s390/s390-64/libc.abilist
++++ b/sysdeps/unix/sysv/linux/s390/s390-64/libc.abilist
+@@ -2547,9 +2547,6 @@ GLIBC_2.35 __memcmpeq F
+ GLIBC_2.35 _dl_find_object F
+ GLIBC_2.35 epoll_pwait2 F
+ GLIBC_2.35 posix_spawn_file_actions_addtcsetpgrp_np F
+-GLIBC_2.36 arc4random F
+-GLIBC_2.36 arc4random_buf F
+-GLIBC_2.36 arc4random_uniform F
+ GLIBC_2.36 c8rtomb F
+ GLIBC_2.36 fsconfig F
+ GLIBC_2.36 fsmount F
+diff --git a/sysdeps/unix/sysv/linux/sh/be/libc.abilist b/sysdeps/unix/sysv/linux/sh/be/libc.abilist
+index 94cbccd7..be7bd514 100644
+--- a/sysdeps/unix/sysv/linux/sh/be/libc.abilist
++++ b/sysdeps/unix/sysv/linux/sh/be/libc.abilist
+@@ -2608,9 +2608,6 @@ GLIBC_2.35 __memcmpeq F
+ GLIBC_2.35 _dl_find_object F
+ GLIBC_2.35 epoll_pwait2 F
+ GLIBC_2.35 posix_spawn_file_actions_addtcsetpgrp_np F
+-GLIBC_2.36 arc4random F
+-GLIBC_2.36 arc4random_buf F
+-GLIBC_2.36 arc4random_uniform F
+ GLIBC_2.36 c8rtomb F
+ GLIBC_2.36 fsconfig F
+ GLIBC_2.36 fsmount F
+diff --git a/sysdeps/unix/sysv/linux/sh/le/libc.abilist b/sysdeps/unix/sysv/linux/sh/le/libc.abilist
+index 3bb316a7..416cd00b 100644
+--- a/sysdeps/unix/sysv/linux/sh/le/libc.abilist
++++ b/sysdeps/unix/sysv/linux/sh/le/libc.abilist
+@@ -2605,9 +2605,6 @@ GLIBC_2.35 __memcmpeq F
+ GLIBC_2.35 _dl_find_object F
+ GLIBC_2.35 epoll_pwait2 F
+ GLIBC_2.35 posix_spawn_file_actions_addtcsetpgrp_np F
+-GLIBC_2.36 arc4random F
+-GLIBC_2.36 arc4random_buf F
+-GLIBC_2.36 arc4random_uniform F
+ GLIBC_2.36 c8rtomb F
+ GLIBC_2.36 fsconfig F
+ GLIBC_2.36 fsmount F
+diff --git a/sysdeps/unix/sysv/linux/sparc/sparc32/libc.abilist b/sysdeps/unix/sysv/linux/sparc/sparc32/libc.abilist
+index 6341b491..500b46e6 100644
+--- a/sysdeps/unix/sysv/linux/sparc/sparc32/libc.abilist
++++ b/sysdeps/unix/sysv/linux/sparc/sparc32/libc.abilist
+@@ -2748,9 +2748,6 @@ GLIBC_2.35 __memcmpeq F
+ GLIBC_2.35 _dl_find_object F
+ GLIBC_2.35 epoll_pwait2 F
+ GLIBC_2.35 posix_spawn_file_actions_addtcsetpgrp_np F
+-GLIBC_2.36 arc4random F
+-GLIBC_2.36 arc4random_buf F
+-GLIBC_2.36 arc4random_uniform F
+ GLIBC_2.36 c8rtomb F
+ GLIBC_2.36 fsconfig F
+ GLIBC_2.36 fsmount F
+diff --git a/sysdeps/unix/sysv/linux/sparc/sparc64/libc.abilist b/sysdeps/unix/sysv/linux/sparc/sparc64/libc.abilist
+index 8ed1ea29..a280e3a1 100644
+--- a/sysdeps/unix/sysv/linux/sparc/sparc64/libc.abilist
++++ b/sysdeps/unix/sysv/linux/sparc/sparc64/libc.abilist
+@@ -2574,9 +2574,6 @@ GLIBC_2.35 __memcmpeq F
+ GLIBC_2.35 _dl_find_object F
+ GLIBC_2.35 epoll_pwait2 F
+ GLIBC_2.35 posix_spawn_file_actions_addtcsetpgrp_np F
+-GLIBC_2.36 arc4random F
+-GLIBC_2.36 arc4random_buf F
+-GLIBC_2.36 arc4random_uniform F
+ GLIBC_2.36 c8rtomb F
+ GLIBC_2.36 fsconfig F
+ GLIBC_2.36 fsmount F
+diff --git a/sysdeps/unix/sysv/linux/tls-internal.c b/sysdeps/unix/sysv/linux/tls-internal.c
+index 9409de72..6e25b021 100644
+--- a/sysdeps/unix/sysv/linux/tls-internal.c
++++ b/sysdeps/unix/sysv/linux/tls-internal.c
+@@ -1,28 +1 @@
+-/* Per-thread state.  Linux version.
+-   Copyright (C) 2022-2023 Free Software Foundation, Inc.
+-   This file is part of the GNU C Library.
+-
+-   The GNU C Library is free software; you can redistribute it and/or
+-   modify it under the terms of the GNU Lesser General Public
+-   License as published by the Free Software Foundation; either
+-   version 2.1 of the License, or (at your option) any later version.
+-
+-   The GNU C Library is distributed in the hope that it will be useful,
+-   but WITHOUT ANY WARRANTY; without even the implied warranty of
+-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+-   Lesser General Public License for more details.
+-
+-   You should have received a copy of the GNU Lesser General Public
+-   License along with the GNU C Library; if not, see
+-   <https://www.gnu.org/licenses/>.  */
+-
+-#include <string.h>
+-#include <tls-internal.h>
+-
+-void
+-__glibc_tls_internal_free (void)
+-{
+-  struct pthread *self = THREAD_SELF;
+-  free (self->tls_state.strsignal_buf);
+-  free (self->tls_state.strerror_l_buf);
+-}
++/* Empty.  */
+diff --git a/sysdeps/unix/sysv/linux/tls-internal.h b/sysdeps/unix/sysv/linux/tls-internal.h
+index f13980ef..9cf8e1bf 100644
+--- a/sysdeps/unix/sysv/linux/tls-internal.h
++++ b/sysdeps/unix/sysv/linux/tls-internal.h
+@@ -28,6 +28,11 @@ __glibc_tls_internal (void)
+   return &THREAD_SELF->tls_state;
+ }
+ 
+-extern void __glibc_tls_internal_free (void) attribute_hidden;
++static inline void
++__glibc_tls_internal_free (void)
++{
++  free (THREAD_SELF->tls_state.strsignal_buf);
++  free (THREAD_SELF->tls_state.strerror_l_buf);
++}
+ 
+ #endif
+diff --git a/sysdeps/unix/sysv/linux/x86_64/64/libc.abilist b/sysdeps/unix/sysv/linux/x86_64/64/libc.abilist
+index 57cfcc20..5336f6f6 100644
+--- a/sysdeps/unix/sysv/linux/x86_64/64/libc.abilist
++++ b/sysdeps/unix/sysv/linux/x86_64/64/libc.abilist
+@@ -2525,9 +2525,6 @@ GLIBC_2.35 __memcmpeq F
+ GLIBC_2.35 _dl_find_object F
+ GLIBC_2.35 epoll_pwait2 F
+ GLIBC_2.35 posix_spawn_file_actions_addtcsetpgrp_np F
+-GLIBC_2.36 arc4random F
+-GLIBC_2.36 arc4random_buf F
+-GLIBC_2.36 arc4random_uniform F
+ GLIBC_2.36 c8rtomb F
+ GLIBC_2.36 fsconfig F
+ GLIBC_2.36 fsmount F
+diff --git a/sysdeps/unix/sysv/linux/x86_64/x32/libc.abilist b/sysdeps/unix/sysv/linux/x86_64/x32/libc.abilist
+index 3f0a9f6d..e7ac69e0 100644
+--- a/sysdeps/unix/sysv/linux/x86_64/x32/libc.abilist
++++ b/sysdeps/unix/sysv/linux/x86_64/x32/libc.abilist
+@@ -2631,9 +2631,6 @@ GLIBC_2.35 __memcmpeq F
+ GLIBC_2.35 _dl_find_object F
+ GLIBC_2.35 epoll_pwait2 F
+ GLIBC_2.35 posix_spawn_file_actions_addtcsetpgrp_np F
+-GLIBC_2.36 arc4random F
+-GLIBC_2.36 arc4random_buf F
+-GLIBC_2.36 arc4random_uniform F
+ GLIBC_2.36 c8rtomb F
+ GLIBC_2.36 fsconfig F
+ GLIBC_2.36 fsmount F
+diff --git a/sysdeps/x86_64/Makefile b/sysdeps/x86_64/Makefile
+index 00120ca9..ec30e872 100644
+--- a/sysdeps/x86_64/Makefile
++++ b/sysdeps/x86_64/Makefile
+@@ -5,6 +5,13 @@ ifeq ($(subdir),csu)
+ gen-as-const-headers += link-defines.sym
+ endif
+ 
++ifeq ($(subdir),stdlib)
++sysdep_routines += \
++  chacha20-amd64-sse2 \
++  chacha20-amd64-avx2 \
++  # sysdep_routines
++endif
++
+ ifeq ($(subdir),gmon)
+ sysdep_routines += _mcount
+ # We cannot compile _mcount.S with -pg because that would create
+diff --git a/sysdeps/x86_64/chacha20-amd64-avx2.S b/sysdeps/x86_64/chacha20-amd64-avx2.S
+new file mode 100644
+index 00000000..aefd1cdb
+--- /dev/null
++++ b/sysdeps/x86_64/chacha20-amd64-avx2.S
+@@ -0,0 +1,328 @@
++/* Optimized AVX2 implementation of ChaCha20 cipher.
++   Copyright (C) 2022 Free Software Foundation, Inc.
++
++   This file is part of the GNU C Library.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, see
++   <https://www.gnu.org/licenses/>.  */
++
++/* chacha20-amd64-avx2.S  -  AVX2 implementation of ChaCha20 cipher
++
++   Copyright (C) 2017-2019 Jussi Kivilinna <jussi.kivilinna@iki.fi>
++
++   This file is part of Libgcrypt.
++
++   Libgcrypt is free software; you can redistribute it and/or modify
++   it under the terms of the GNU Lesser General Public License as
++   published by the Free Software Foundation; either version 2.1 of
++   the License, or (at your option) any later version.
++
++   Libgcrypt is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++   GNU Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with this program; if not, see <https://www.gnu.org/licenses/>.
++*/
++
++/* Based on D. J. Bernstein reference implementation at
++   http://cr.yp.to/chacha.html:
++
++   chacha-regs.c version 20080118
++   D. J. Bernstein
++   Public domain.  */
++
++#include <sysdep.h>
++
++#ifdef PIC
++#  define rRIP (%rip)
++#else
++#  define rRIP
++#endif
++
++/* register macros */
++#define INPUT %rdi
++#define DST   %rsi
++#define SRC   %rdx
++#define NBLKS %rcx
++#define ROUND %eax
++
++/* stack structure */
++#define STACK_VEC_X12 (32)
++#define STACK_VEC_X13 (32 + STACK_VEC_X12)
++#define STACK_TMP     (32 + STACK_VEC_X13)
++#define STACK_TMP1    (32 + STACK_TMP)
++
++#define STACK_MAX     (32 + STACK_TMP1)
++
++/* vector registers */
++#define X0 %ymm0
++#define X1 %ymm1
++#define X2 %ymm2
++#define X3 %ymm3
++#define X4 %ymm4
++#define X5 %ymm5
++#define X6 %ymm6
++#define X7 %ymm7
++#define X8 %ymm8
++#define X9 %ymm9
++#define X10 %ymm10
++#define X11 %ymm11
++#define X12 %ymm12
++#define X13 %ymm13
++#define X14 %ymm14
++#define X15 %ymm15
++
++#define X0h %xmm0
++#define X1h %xmm1
++#define X2h %xmm2
++#define X3h %xmm3
++#define X4h %xmm4
++#define X5h %xmm5
++#define X6h %xmm6
++#define X7h %xmm7
++#define X8h %xmm8
++#define X9h %xmm9
++#define X10h %xmm10
++#define X11h %xmm11
++#define X12h %xmm12
++#define X13h %xmm13
++#define X14h %xmm14
++#define X15h %xmm15
++
++/**********************************************************************
++  helper macros
++ **********************************************************************/
++
++/* 4x4 32-bit integer matrix transpose */
++#define transpose_4x4(x0,x1,x2,x3,t1,t2) \
++	vpunpckhdq x1, x0, t2; \
++	vpunpckldq x1, x0, x0; \
++	\
++	vpunpckldq x3, x2, t1; \
++	vpunpckhdq x3, x2, x2; \
++	\
++	vpunpckhqdq t1, x0, x1; \
++	vpunpcklqdq t1, x0, x0; \
++	\
++	vpunpckhqdq x2, t2, x3; \
++	vpunpcklqdq x2, t2, x2;
++
++/* 2x2 128-bit matrix transpose */
++#define transpose_16byte_2x2(x0,x1,t1) \
++	vmovdqa    x0, t1; \
++	vperm2i128 $0x20, x1, x0, x0; \
++	vperm2i128 $0x31, x1, t1, x1;
++
++/**********************************************************************
++  8-way chacha20
++ **********************************************************************/
++
++#define ROTATE2(v1,v2,c,tmp)	\
++	vpsrld $(32 - (c)), v1, tmp;	\
++	vpslld $(c), v1, v1;		\
++	vpaddb tmp, v1, v1;		\
++	vpsrld $(32 - (c)), v2, tmp;	\
++	vpslld $(c), v2, v2;		\
++	vpaddb tmp, v2, v2;
++
++#define ROTATE_SHUF_2(v1,v2,shuf)	\
++	vpshufb shuf, v1, v1;		\
++	vpshufb shuf, v2, v2;
++
++#define XOR(ds,s) \
++	vpxor s, ds, ds;
++
++#define PLUS(ds,s) \
++	vpaddd s, ds, ds;
++
++#define QUARTERROUND2(a1,b1,c1,d1,a2,b2,c2,d2,ign,tmp1,\
++		      interleave_op1,interleave_op2,\
++		      interleave_op3,interleave_op4)		\
++	vbroadcasti128 .Lshuf_rol16 rRIP, tmp1;			\
++		interleave_op1;					\
++	PLUS(a1,b1); PLUS(a2,b2); XOR(d1,a1); XOR(d2,a2);	\
++	    ROTATE_SHUF_2(d1, d2, tmp1);			\
++		interleave_op2;					\
++	PLUS(c1,d1); PLUS(c2,d2); XOR(b1,c1); XOR(b2,c2);	\
++	    ROTATE2(b1, b2, 12, tmp1);				\
++	vbroadcasti128 .Lshuf_rol8 rRIP, tmp1;			\
++		interleave_op3;					\
++	PLUS(a1,b1); PLUS(a2,b2); XOR(d1,a1); XOR(d2,a2);	\
++	    ROTATE_SHUF_2(d1, d2, tmp1);			\
++		interleave_op4;					\
++	PLUS(c1,d1); PLUS(c2,d2); XOR(b1,c1); XOR(b2,c2);	\
++	    ROTATE2(b1, b2,  7, tmp1);
++
++	.section .text.avx2, "ax", @progbits
++	.align 32
++chacha20_data:
++L(shuf_rol16):
++	.byte 2,3,0,1,6,7,4,5,10,11,8,9,14,15,12,13
++L(shuf_rol8):
++	.byte 3,0,1,2,7,4,5,6,11,8,9,10,15,12,13,14
++L(inc_counter):
++	.byte 0,1,2,3,4,5,6,7
++L(unsigned_cmp):
++	.long 0x80000000
++
++	.hidden __chacha20_avx2_blocks8
++ENTRY (__chacha20_avx2_blocks8)
++	/* input:
++	 *	%rdi: input
++	 *	%rsi: dst
++	 *	%rdx: src
++	 *	%rcx: nblks (multiple of 8)
++	 */
++	vzeroupper;
++
++	pushq %rbp;
++	cfi_adjust_cfa_offset(8);
++	cfi_rel_offset(rbp, 0)
++	movq %rsp, %rbp;
++	cfi_def_cfa_register(rbp);
++
++	subq $STACK_MAX, %rsp;
++	andq $~31, %rsp;
++
++L(loop8):
++	mov $20, ROUND;
++
++	/* Construct counter vectors X12 and X13 */
++	vpmovzxbd L(inc_counter) rRIP, X0;
++	vpbroadcastd L(unsigned_cmp) rRIP, X2;
++	vpbroadcastd (12 * 4)(INPUT), X12;
++	vpbroadcastd (13 * 4)(INPUT), X13;
++	vpaddd X0, X12, X12;
++	vpxor X2, X0, X0;
++	vpxor X2, X12, X1;
++	vpcmpgtd X1, X0, X0;
++	vpsubd X0, X13, X13;
++	vmovdqa X12, (STACK_VEC_X12)(%rsp);
++	vmovdqa X13, (STACK_VEC_X13)(%rsp);
++
++	/* Load vectors */
++	vpbroadcastd (0 * 4)(INPUT), X0;
++	vpbroadcastd (1 * 4)(INPUT), X1;
++	vpbroadcastd (2 * 4)(INPUT), X2;
++	vpbroadcastd (3 * 4)(INPUT), X3;
++	vpbroadcastd (4 * 4)(INPUT), X4;
++	vpbroadcastd (5 * 4)(INPUT), X5;
++	vpbroadcastd (6 * 4)(INPUT), X6;
++	vpbroadcastd (7 * 4)(INPUT), X7;
++	vpbroadcastd (8 * 4)(INPUT), X8;
++	vpbroadcastd (9 * 4)(INPUT), X9;
++	vpbroadcastd (10 * 4)(INPUT), X10;
++	vpbroadcastd (11 * 4)(INPUT), X11;
++	vpbroadcastd (14 * 4)(INPUT), X14;
++	vpbroadcastd (15 * 4)(INPUT), X15;
++	vmovdqa X15, (STACK_TMP)(%rsp);
++
++L(round2):
++	QUARTERROUND2(X0, X4,  X8, X12,   X1, X5,  X9, X13, tmp:=,X15,,,,)
++	vmovdqa (STACK_TMP)(%rsp), X15;
++	vmovdqa X8, (STACK_TMP)(%rsp);
++	QUARTERROUND2(X2, X6, X10, X14,   X3, X7, X11, X15, tmp:=,X8,,,,)
++	QUARTERROUND2(X0, X5, X10, X15,   X1, X6, X11, X12, tmp:=,X8,,,,)
++	vmovdqa (STACK_TMP)(%rsp), X8;
++	vmovdqa X15, (STACK_TMP)(%rsp);
++	QUARTERROUND2(X2, X7,  X8, X13,   X3, X4,  X9, X14, tmp:=,X15,,,,)
++	sub $2, ROUND;
++	jnz L(round2);
++
++	vmovdqa X8, (STACK_TMP1)(%rsp);
++
++	/* tmp := X15 */
++	vpbroadcastd (0 * 4)(INPUT), X15;
++	PLUS(X0, X15);
++	vpbroadcastd (1 * 4)(INPUT), X15;
++	PLUS(X1, X15);
++	vpbroadcastd (2 * 4)(INPUT), X15;
++	PLUS(X2, X15);
++	vpbroadcastd (3 * 4)(INPUT), X15;
++	PLUS(X3, X15);
++	vpbroadcastd (4 * 4)(INPUT), X15;
++	PLUS(X4, X15);
++	vpbroadcastd (5 * 4)(INPUT), X15;
++	PLUS(X5, X15);
++	vpbroadcastd (6 * 4)(INPUT), X15;
++	PLUS(X6, X15);
++	vpbroadcastd (7 * 4)(INPUT), X15;
++	PLUS(X7, X15);
++	transpose_4x4(X0, X1, X2, X3, X8, X15);
++	transpose_4x4(X4, X5, X6, X7, X8, X15);
++	vmovdqa (STACK_TMP1)(%rsp), X8;
++	transpose_16byte_2x2(X0, X4, X15);
++	transpose_16byte_2x2(X1, X5, X15);
++	transpose_16byte_2x2(X2, X6, X15);
++	transpose_16byte_2x2(X3, X7, X15);
++	vmovdqa (STACK_TMP)(%rsp), X15;
++	vmovdqu X0, (64 * 0 + 16 * 0)(DST)
++	vmovdqu X1, (64 * 1 + 16 * 0)(DST)
++	vpbroadcastd (8 * 4)(INPUT), X0;
++	PLUS(X8, X0);
++	vpbroadcastd (9 * 4)(INPUT), X0;
++	PLUS(X9, X0);
++	vpbroadcastd (10 * 4)(INPUT), X0;
++	PLUS(X10, X0);
++	vpbroadcastd (11 * 4)(INPUT), X0;
++	PLUS(X11, X0);
++	vmovdqa (STACK_VEC_X12)(%rsp), X0;
++	PLUS(X12, X0);
++	vmovdqa (STACK_VEC_X13)(%rsp), X0;
++	PLUS(X13, X0);
++	vpbroadcastd (14 * 4)(INPUT), X0;
++	PLUS(X14, X0);
++	vpbroadcastd (15 * 4)(INPUT), X0;
++	PLUS(X15, X0);
++	vmovdqu X2, (64 * 2 + 16 * 0)(DST)
++	vmovdqu X3, (64 * 3 + 16 * 0)(DST)
++
++	/* Update counter */
++	addq $8, (12 * 4)(INPUT);
++
++	transpose_4x4(X8, X9, X10, X11, X0, X1);
++	transpose_4x4(X12, X13, X14, X15, X0, X1);
++	vmovdqu X4, (64 * 4 + 16 * 0)(DST)
++	vmovdqu X5, (64 * 5 + 16 * 0)(DST)
++	transpose_16byte_2x2(X8, X12, X0);
++	transpose_16byte_2x2(X9, X13, X0);
++	transpose_16byte_2x2(X10, X14, X0);
++	transpose_16byte_2x2(X11, X15, X0);
++	vmovdqu X6,  (64 * 6 + 16 * 0)(DST)
++	vmovdqu X7,  (64 * 7 + 16 * 0)(DST)
++	vmovdqu X8,  (64 * 0 + 16 * 2)(DST)
++	vmovdqu X9,  (64 * 1 + 16 * 2)(DST)
++	vmovdqu X10, (64 * 2 + 16 * 2)(DST)
++	vmovdqu X11, (64 * 3 + 16 * 2)(DST)
++	vmovdqu X12, (64 * 4 + 16 * 2)(DST)
++	vmovdqu X13, (64 * 5 + 16 * 2)(DST)
++	vmovdqu X14, (64 * 6 + 16 * 2)(DST)
++	vmovdqu X15, (64 * 7 + 16 * 2)(DST)
++
++	sub $8, NBLKS;
++	lea (8 * 64)(DST), DST;
++	lea (8 * 64)(SRC), SRC;
++	jnz L(loop8);
++
++	vzeroupper;
++
++	/* eax zeroed by round loop. */
++	leave;
++	cfi_adjust_cfa_offset(-8)
++	cfi_def_cfa_register(%rsp);
++	ret;
++	int3;
++END(__chacha20_avx2_blocks8)
+diff --git a/sysdeps/x86_64/chacha20-amd64-sse2.S b/sysdeps/x86_64/chacha20-amd64-sse2.S
+new file mode 100644
+index 00000000..351a1109
+--- /dev/null
++++ b/sysdeps/x86_64/chacha20-amd64-sse2.S
+@@ -0,0 +1,311 @@
++/* Optimized SSE2 implementation of ChaCha20 cipher.
++   Copyright (C) 2022 Free Software Foundation, Inc.
++   This file is part of the GNU C Library.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, see
++   <https://www.gnu.org/licenses/>.  */
++
++/* chacha20-amd64-ssse3.S  -  SSSE3 implementation of ChaCha20 cipher
++
++   Copyright (C) 2017-2019 Jussi Kivilinna <jussi.kivilinna@iki.fi>
++
++   This file is part of Libgcrypt.
++
++   Libgcrypt is free software; you can redistribute it and/or modify
++   it under the terms of the GNU Lesser General Public License as
++   published by the Free Software Foundation; either version 2.1 of
++   the License, or (at your option) any later version.
++
++   Libgcrypt is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++   GNU Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with this program; if not, see <https://www.gnu.org/licenses/>.
++*/
++
++/* Based on D. J. Bernstein reference implementation at
++   http://cr.yp.to/chacha.html:
++
++   chacha-regs.c version 20080118
++   D. J. Bernstein
++   Public domain.  */
++
++#include <sysdep.h>
++#include <isa-level.h>
++
++#if MINIMUM_X86_ISA_LEVEL <= 2
++
++#ifdef PIC
++#  define rRIP (%rip)
++#else
++#  define rRIP
++#endif
++
++/* 'ret' instruction replacement for straight-line speculation mitigation */
++#define ret_spec_stop \
++        ret; int3;
++
++/* register macros */
++#define INPUT %rdi
++#define DST   %rsi
++#define SRC   %rdx
++#define NBLKS %rcx
++#define ROUND %eax
++
++/* stack structure */
++#define STACK_VEC_X12 (16)
++#define STACK_VEC_X13 (16 + STACK_VEC_X12)
++#define STACK_TMP     (16 + STACK_VEC_X13)
++#define STACK_TMP1    (16 + STACK_TMP)
++#define STACK_TMP2    (16 + STACK_TMP1)
++
++#define STACK_MAX     (16 + STACK_TMP2)
++
++/* vector registers */
++#define X0 %xmm0
++#define X1 %xmm1
++#define X2 %xmm2
++#define X3 %xmm3
++#define X4 %xmm4
++#define X5 %xmm5
++#define X6 %xmm6
++#define X7 %xmm7
++#define X8 %xmm8
++#define X9 %xmm9
++#define X10 %xmm10
++#define X11 %xmm11
++#define X12 %xmm12
++#define X13 %xmm13
++#define X14 %xmm14
++#define X15 %xmm15
++
++/**********************************************************************
++  helper macros
++ **********************************************************************/
++
++/* 4x4 32-bit integer matrix transpose */
++#define TRANSPOSE_4x4(x0, x1, x2, x3, t1, t2, t3) \
++	movdqa    x0, t2; \
++	punpckhdq x1, t2; \
++	punpckldq x1, x0; \
++	\
++	movdqa    x2, t1; \
++	punpckldq x3, t1; \
++	punpckhdq x3, x2; \
++	\
++	movdqa     x0, x1; \
++	punpckhqdq t1, x1; \
++	punpcklqdq t1, x0; \
++	\
++	movdqa     t2, x3; \
++	punpckhqdq x2, x3; \
++	punpcklqdq x2, t2; \
++	movdqa     t2, x2;
++
++/* fill xmm register with 32-bit value from memory */
++#define PBROADCASTD(mem32, xreg) \
++	movd mem32, xreg; \
++	pshufd $0, xreg, xreg;
++
++/**********************************************************************
++  4-way chacha20
++ **********************************************************************/
++
++#define ROTATE2(v1,v2,c,tmp1,tmp2)	\
++	movdqa v1, tmp1; 		\
++	movdqa v2, tmp2; 		\
++	psrld $(32 - (c)), v1;		\
++	pslld $(c), tmp1;		\
++	paddb tmp1, v1;			\
++	psrld $(32 - (c)), v2;		\
++	pslld $(c), tmp2;		\
++	paddb tmp2, v2;
++
++#define XOR(ds,s) \
++	pxor s, ds;
++
++#define PLUS(ds,s) \
++	paddd s, ds;
++
++#define QUARTERROUND2(a1,b1,c1,d1,a2,b2,c2,d2,ign,tmp1,tmp2)	\
++	PLUS(a1,b1); PLUS(a2,b2); XOR(d1,a1); XOR(d2,a2);	\
++	    ROTATE2(d1, d2, 16, tmp1, tmp2);			\
++	PLUS(c1,d1); PLUS(c2,d2); XOR(b1,c1); XOR(b2,c2);	\
++	    ROTATE2(b1, b2, 12, tmp1, tmp2);			\
++	PLUS(a1,b1); PLUS(a2,b2); XOR(d1,a1); XOR(d2,a2);	\
++	    ROTATE2(d1, d2, 8, tmp1, tmp2);			\
++	PLUS(c1,d1); PLUS(c2,d2); XOR(b1,c1); XOR(b2,c2);	\
++	    ROTATE2(b1, b2,  7, tmp1, tmp2);
++
++	.section .text.sse2,"ax",@progbits
++
++chacha20_data:
++	.align 16
++L(counter1):
++	.long 1,0,0,0
++L(inc_counter):
++	.long 0,1,2,3
++L(unsigned_cmp):
++	.long 0x80000000,0x80000000,0x80000000,0x80000000
++
++	.hidden __chacha20_sse2_blocks4
++ENTRY (__chacha20_sse2_blocks4)
++	/* input:
++	 *	%rdi: input
++	 *	%rsi: dst
++	 *	%rdx: src
++	 *	%rcx: nblks (multiple of 4)
++	 */
++
++	pushq %rbp;
++	cfi_adjust_cfa_offset(8);
++	cfi_rel_offset(rbp, 0)
++	movq %rsp, %rbp;
++	cfi_def_cfa_register(%rbp);
++
++	subq $STACK_MAX, %rsp;
++	andq $~15, %rsp;
++
++L(loop4):
++	mov $20, ROUND;
++
++	/* Construct counter vectors X12 and X13 */
++	movdqa L(inc_counter) rRIP, X0;
++	movdqa L(unsigned_cmp) rRIP, X2;
++	PBROADCASTD((12 * 4)(INPUT), X12);
++	PBROADCASTD((13 * 4)(INPUT), X13);
++	paddd X0, X12;
++	movdqa X12, X1;
++	pxor X2, X0;
++	pxor X2, X1;
++	pcmpgtd X1, X0;
++	psubd X0, X13;
++	movdqa X12, (STACK_VEC_X12)(%rsp);
++	movdqa X13, (STACK_VEC_X13)(%rsp);
++
++	/* Load vectors */
++	PBROADCASTD((0 * 4)(INPUT), X0);
++	PBROADCASTD((1 * 4)(INPUT), X1);
++	PBROADCASTD((2 * 4)(INPUT), X2);
++	PBROADCASTD((3 * 4)(INPUT), X3);
++	PBROADCASTD((4 * 4)(INPUT), X4);
++	PBROADCASTD((5 * 4)(INPUT), X5);
++	PBROADCASTD((6 * 4)(INPUT), X6);
++	PBROADCASTD((7 * 4)(INPUT), X7);
++	PBROADCASTD((8 * 4)(INPUT), X8);
++	PBROADCASTD((9 * 4)(INPUT), X9);
++	PBROADCASTD((10 * 4)(INPUT), X10);
++	PBROADCASTD((11 * 4)(INPUT), X11);
++	PBROADCASTD((14 * 4)(INPUT), X14);
++	PBROADCASTD((15 * 4)(INPUT), X15);
++	movdqa X11, (STACK_TMP)(%rsp);
++	movdqa X15, (STACK_TMP1)(%rsp);
++
++L(round2_4):
++	QUARTERROUND2(X0, X4,  X8, X12,   X1, X5,  X9, X13, tmp:=,X11,X15)
++	movdqa (STACK_TMP)(%rsp), X11;
++	movdqa (STACK_TMP1)(%rsp), X15;
++	movdqa X8, (STACK_TMP)(%rsp);
++	movdqa X9, (STACK_TMP1)(%rsp);
++	QUARTERROUND2(X2, X6, X10, X14,   X3, X7, X11, X15, tmp:=,X8,X9)
++	QUARTERROUND2(X0, X5, X10, X15,   X1, X6, X11, X12, tmp:=,X8,X9)
++	movdqa (STACK_TMP)(%rsp), X8;
++	movdqa (STACK_TMP1)(%rsp), X9;
++	movdqa X11, (STACK_TMP)(%rsp);
++	movdqa X15, (STACK_TMP1)(%rsp);
++	QUARTERROUND2(X2, X7,  X8, X13,   X3, X4,  X9, X14, tmp:=,X11,X15)
++	sub $2, ROUND;
++	jnz L(round2_4);
++
++	/* tmp := X15 */
++	movdqa (STACK_TMP)(%rsp), X11;
++	PBROADCASTD((0 * 4)(INPUT), X15);
++	PLUS(X0, X15);
++	PBROADCASTD((1 * 4)(INPUT), X15);
++	PLUS(X1, X15);
++	PBROADCASTD((2 * 4)(INPUT), X15);
++	PLUS(X2, X15);
++	PBROADCASTD((3 * 4)(INPUT), X15);
++	PLUS(X3, X15);
++	PBROADCASTD((4 * 4)(INPUT), X15);
++	PLUS(X4, X15);
++	PBROADCASTD((5 * 4)(INPUT), X15);
++	PLUS(X5, X15);
++	PBROADCASTD((6 * 4)(INPUT), X15);
++	PLUS(X6, X15);
++	PBROADCASTD((7 * 4)(INPUT), X15);
++	PLUS(X7, X15);
++	PBROADCASTD((8 * 4)(INPUT), X15);
++	PLUS(X8, X15);
++	PBROADCASTD((9 * 4)(INPUT), X15);
++	PLUS(X9, X15);
++	PBROADCASTD((10 * 4)(INPUT), X15);
++	PLUS(X10, X15);
++	PBROADCASTD((11 * 4)(INPUT), X15);
++	PLUS(X11, X15);
++	movdqa (STACK_VEC_X12)(%rsp), X15;
++	PLUS(X12, X15);
++	movdqa (STACK_VEC_X13)(%rsp), X15;
++	PLUS(X13, X15);
++	movdqa X13, (STACK_TMP)(%rsp);
++	PBROADCASTD((14 * 4)(INPUT), X15);
++	PLUS(X14, X15);
++	movdqa (STACK_TMP1)(%rsp), X15;
++	movdqa X14, (STACK_TMP1)(%rsp);
++	PBROADCASTD((15 * 4)(INPUT), X13);
++	PLUS(X15, X13);
++	movdqa X15, (STACK_TMP2)(%rsp);
++
++	/* Update counter */
++	addq $4, (12 * 4)(INPUT);
++
++	TRANSPOSE_4x4(X0, X1, X2, X3, X13, X14, X15);
++	movdqu X0, (64 * 0 + 16 * 0)(DST)
++	movdqu X1, (64 * 1 + 16 * 0)(DST)
++	movdqu X2, (64 * 2 + 16 * 0)(DST)
++	movdqu X3, (64 * 3 + 16 * 0)(DST)
++	TRANSPOSE_4x4(X4, X5, X6, X7, X0, X1, X2);
++	movdqa (STACK_TMP)(%rsp), X13;
++	movdqa (STACK_TMP1)(%rsp), X14;
++	movdqa (STACK_TMP2)(%rsp), X15;
++	movdqu X4, (64 * 0 + 16 * 1)(DST)
++	movdqu X5, (64 * 1 + 16 * 1)(DST)
++	movdqu X6, (64 * 2 + 16 * 1)(DST)
++	movdqu X7, (64 * 3 + 16 * 1)(DST)
++	TRANSPOSE_4x4(X8, X9, X10, X11, X0, X1, X2);
++	movdqu X8,  (64 * 0 + 16 * 2)(DST)
++	movdqu X9,  (64 * 1 + 16 * 2)(DST)
++	movdqu X10, (64 * 2 + 16 * 2)(DST)
++	movdqu X11, (64 * 3 + 16 * 2)(DST)
++	TRANSPOSE_4x4(X12, X13, X14, X15, X0, X1, X2);
++	movdqu X12, (64 * 0 + 16 * 3)(DST)
++	movdqu X13, (64 * 1 + 16 * 3)(DST)
++	movdqu X14, (64 * 2 + 16 * 3)(DST)
++	movdqu X15, (64 * 3 + 16 * 3)(DST)
++
++	sub $4, NBLKS;
++	lea (4 * 64)(DST), DST;
++	lea (4 * 64)(SRC), SRC;
++	jnz L(loop4);
++
++	/* eax zeroed by round loop. */
++	leave;
++	cfi_adjust_cfa_offset(-8)
++	cfi_def_cfa_register(%rsp);
++	ret_spec_stop;
++END (__chacha20_sse2_blocks4)
++
++#endif /* if MINIMUM_X86_ISA_LEVEL <= 2 */
+diff --git a/sysdeps/x86_64/chacha20_arch.h b/sysdeps/x86_64/chacha20_arch.h
+new file mode 100644
+index 00000000..6f3784e3
+--- /dev/null
++++ b/sysdeps/x86_64/chacha20_arch.h
+@@ -0,0 +1,55 @@
++/* Chacha20 implementation, used on arc4random.
++   Copyright (C) 2022 Free Software Foundation, Inc.
++   This file is part of the GNU C Library.
++
++   The GNU C Library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 2.1 of the License, or (at your option) any later version.
++
++   The GNU C Library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with the GNU C Library; if not, see
++   <https://www.gnu.org/licenses/>.  */
++
++#include <isa-level.h>
++#include <ldsodefs.h>
++#include <cpu-features.h>
++#include <sys/param.h>
++
++unsigned int __chacha20_sse2_blocks4 (uint32_t *state, uint8_t *dst,
++				      const uint8_t *src, size_t nblks)
++     attribute_hidden;
++unsigned int __chacha20_avx2_blocks8 (uint32_t *state, uint8_t *dst,
++				      const uint8_t *src, size_t nblks)
++     attribute_hidden;
++
++static inline void
++chacha20_crypt (uint32_t *state, uint8_t *dst, const uint8_t *src,
++		size_t bytes)
++{
++  _Static_assert (CHACHA20_BUFSIZE % 4 == 0 && CHACHA20_BUFSIZE % 8 == 0,
++		  "CHACHA20_BUFSIZE not multiple of 4 or 8");
++  _Static_assert (CHACHA20_BUFSIZE >= CHACHA20_BLOCK_SIZE * 8,
++		  "CHACHA20_BUFSIZE < CHACHA20_BLOCK_SIZE * 8");
++
++#if MINIMUM_X86_ISA_LEVEL > 2
++  __chacha20_avx2_blocks8 (state, dst, src,
++			   CHACHA20_BUFSIZE / CHACHA20_BLOCK_SIZE);
++#else
++  const struct cpu_features* cpu_features = __get_cpu_features ();
++
++  /* AVX2 version uses vzeroupper, so disable it if RTM is enabled.  */
++  if (X86_ISA_CPU_FEATURE_USABLE_P (cpu_features, AVX2)
++      && X86_ISA_CPU_FEATURES_ARCH_P (cpu_features, Prefer_No_VZEROUPPER, !))
++    __chacha20_avx2_blocks8 (state, dst, src,
++			     CHACHA20_BUFSIZE / CHACHA20_BLOCK_SIZE);
++  else
++    __chacha20_sse2_blocks4 (state, dst, src,
++			     CHACHA20_BUFSIZE / CHACHA20_BLOCK_SIZE);
++#endif
++}
+-- 
+2.40.1
+

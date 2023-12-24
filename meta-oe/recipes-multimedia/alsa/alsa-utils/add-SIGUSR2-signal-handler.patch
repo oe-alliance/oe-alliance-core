@@ -1,16 +1,16 @@
 diff --git a/aplay/aplay.c b/aplay/aplay.c
-index 0aa1688a6710..9cd2f7bd6b33 100644
+index f180d42..8736f0a 100644
 --- a/aplay/aplay.c
 +++ b/aplay/aplay.c
-@@ -135,6 +135,7 @@ static long long max_file_size = 0;
+@@ -140,6 +140,7 @@ static long long max_file_size = 0;
  static int max_file_time = 0;
  static int use_strftime = 0;
- volatile static int recycle_capture_file = 0;
-+volatile static int restart_playback = 0;
+ static volatile int recycle_capture_file = 0;
++static volatile int restart_playback = 0;
  static long term_c_lflag = -1;
  static int dump_hw_params = 0;
  
-@@ -413,6 +414,12 @@ static void signal_handler_recycle (int sig)
+@@ -418,6 +419,12 @@ static void signal_handler_recycle(int sig ATTRIBUTE_UNUSED)
  	recycle_capture_file = 1;
  }
  
@@ -23,7 +23,7 @@ index 0aa1688a6710..9cd2f7bd6b33 100644
  enum {
  	OPT_VERSION = 1,
  	OPT_PERIOD_SIZE,
-@@ -881,7 +888,9 @@ int main(int argc, char *argv[])
+@@ -895,7 +902,9 @@ int main(int argc, char *argv[])
  	signal(SIGTERM, signal_handler);
  	signal(SIGABRT, signal_handler);
  	signal(SIGUSR1, signal_handler_recycle);
@@ -33,7 +33,7 @@ index 0aa1688a6710..9cd2f7bd6b33 100644
  		if (optind > argc - 1) {
  			if (stream == SND_PCM_STREAM_PLAYBACK)
  				playback(NULL);
-@@ -895,6 +904,10 @@ int main(int argc, char *argv[])
+@@ -909,6 +918,10 @@ int main(int argc, char *argv[])
  					capture(argv[optind++]);
  			}
  		}
@@ -44,7 +44,7 @@ index 0aa1688a6710..9cd2f7bd6b33 100644
  	} else {
  		if (stream == SND_PCM_STREAM_PLAYBACK)
  			playbackv(&argv[optind], argc - optind);
-@@ -2769,7 +2782,7 @@ static void playback_go(int fd, size_t loaded, off64_t count, int rtype, char *n
+@@ -2866,7 +2879,7 @@ static void playback_go(int fd, size_t loaded, off_t count, int rtype, char *nam
  		memmove(audiobuf, audiobuf + written, loaded);
  
  	l = loaded;
@@ -52,4 +52,4 @@ index 0aa1688a6710..9cd2f7bd6b33 100644
 +	while (written < count && !in_aborting && !restart_playback) {
  		do {
  			c = count - written;
- 			if (c > chunk_bytes)
+ 			if (c > (off_t)chunk_bytes)

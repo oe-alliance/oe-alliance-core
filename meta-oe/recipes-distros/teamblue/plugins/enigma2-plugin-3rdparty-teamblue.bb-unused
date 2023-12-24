@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=8e37f34d0e40d32ea2bc90ee812c9131"
 inherit gitpkgv autotools deploy
 
 SRCREV = "${AUTOREV}"
-PV = "git${SRCPV}"
+PV = "git"
 PKGV = "git${GITPKGV}"
 PR = "r0"
 SRC_URI="git://github.com/teamblue/teamBlue-3rdpart.git;protocol=https;branch=master"

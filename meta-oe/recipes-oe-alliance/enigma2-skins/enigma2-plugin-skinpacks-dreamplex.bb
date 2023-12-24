@@ -9,7 +9,7 @@ inherit gitpkgv
 
 EPSM = "enigma2-plugin-skinpacks-dreamplex"
 SRCREV = "${AUTOREV}"
-PV = "${IMAGE_VERSION}+git${SRCPV}"
+PV = "${IMAGE_VERSION}+git"
 PKGV = "${IMAGE_VERSION}+git${GITPKGV}"
 PR = "r1"
 

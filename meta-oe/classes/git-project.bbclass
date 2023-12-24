@@ -3,5 +3,5 @@ S = "${WORKDIR}/git"
 inherit gitpkgv
 
 VERSION := "${PV}"
-PV = "${VERSION}+git${SRCPV}"
+PV = "${VERSION}+git"
 PKGV = "${VERSION}+git${GITPKGV}"

@@ -8,7 +8,7 @@ require conf/python/python3-compileall.inc
 
 inherit gitpkgv gettext autotools-brokensep ${PYTHON_PN}native
 SRCREV = "${AUTOREV}"
-PV = "inofficial-3.2.+git${SRCPV}"
+PV = "inofficial-3.2.+git"
 PKGV = "inofficial-3.2.+git${GITPKGV}"
 PR = "r0"
 

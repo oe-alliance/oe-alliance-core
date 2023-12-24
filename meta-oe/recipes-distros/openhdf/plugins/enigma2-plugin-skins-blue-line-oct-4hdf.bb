@@ -7,7 +7,7 @@ require conf/python/${PYTHON_PN}-compileall.inc
 inherit gitpkgv
 
 SRCREV = "${AUTOREV}"
-PV = "2.2+git${SRCPV}"
+PV = "2.2+git"
 PKGV = "2.2+git${GITPKGV}"
 VER="2.2"
 

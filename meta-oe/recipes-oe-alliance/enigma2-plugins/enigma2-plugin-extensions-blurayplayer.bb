@@ -8,7 +8,7 @@ require conf/python/python3-compileall.inc
 
 inherit gitpkgv ${PYTHON_PN}native
 SRCREV = "${AUTOREV}"
-PV = "1+git${SRCPV}"
+PV = "1+git"
 PKGV = "1+git${GITPKGV}"
 BRANCH = "master"
 PR = "r1"

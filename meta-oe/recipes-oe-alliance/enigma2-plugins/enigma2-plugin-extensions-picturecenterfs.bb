@@ -10,7 +10,7 @@ RDEPENDS:${PN} = "${PYTHON_PN}-core"
 inherit ${PYTHON_PN}-dir gitpkgv ${PYTHON_PN}native gettext
 
 SRCREV = "${AUTOREV}"
-PV = "1.0+git${SRCPV}"
+PV = "1.0+git"
 PKGV = "1.0+git${GITPKGV}"
 
 SRC_URI = "git://github.com/oe-mirrors/PictureCenterFS.git;protocol=https;branch=main"

@@ -12,7 +12,7 @@ PROVIDES = "${PN} \
 inherit autotools-brokensep gitpkgv pkgconfig gettext ${PYTHON_PN}targetconfig
 
 SRCREV = "${AUTOREV}"
-PV = "${IMAGE_VERSION}+gitr${SRCPV}"
+PV = "${IMAGE_VERSION}+gitr"
 PKGV = "${IMAGE_VERSION}+gitr${GITPKGV}"
 PR = "r8"
 

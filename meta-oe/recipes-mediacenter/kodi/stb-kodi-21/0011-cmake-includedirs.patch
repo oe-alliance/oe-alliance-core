@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 1c678b1695..d82e73b0b9 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -299,7 +299,7 @@ endif()
+ # Generate messages
+ core_add_subdirs_from_filelist(${CMAKE_SOURCE_DIR}/cmake/messages/flatbuffers/*.txt)
+ 
+-include_directories(${INCLUDES} SYSTEM ${SYSTEM_INCLUDES})
++include_directories(${INCLUDES} ${SYSTEM_INCLUDES})
+ add_compile_options(${ARCH_DEFINES} "${SYSTEM_DEFINES}" ${DEP_DEFINES} ${PATH_DEFINES})
+ 
+ set(core_DEPENDS "" CACHE STRING "" FORCE)

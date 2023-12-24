@@ -30,6 +30,7 @@ SRC_URI += "https://source.mynonpublic.com/edision/linux-edision-${PV}.tar.xz \
     file://0003-cp1emu-do-not-use-bools-for-arithmetic.patch \
     file://move-default-dialect-to-SMB3.patch \
     file://fix-never-be-null_outside-array-bounds-gcc-12.patch \
+    file://fix-build-with-binutils-2.41.patch \
     "
 
 S = "${WORKDIR}/linux-${PV}"

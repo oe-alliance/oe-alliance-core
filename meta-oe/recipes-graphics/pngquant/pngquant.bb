@@ -7,7 +7,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 inherit gitpkgv
 SRCREV = "ee7bef8644ad1bac3fce2c04afef13f1ec19166b"
-PV = "2.+git${SRCPV}"
+PV = "2.+git"
 PKGV = "2.+git${GITPKGV}"
 
 SRC_URI = "git://github.com/kornelski/pngquant.git;protocol=https;branch=main \

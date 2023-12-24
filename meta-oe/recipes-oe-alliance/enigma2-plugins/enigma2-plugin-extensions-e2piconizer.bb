@@ -8,7 +8,7 @@ require conf/python/python3-compileall.inc
 inherit gittag allarch
 
 SRCREV = "${AUTOREV}"
-PV = "git${SRCPV}"
+PV = "git"
 PKGV = "${GITPKGVTAG}"
 
 SRC_URI = "git://github.com/kiddac/E2_Piconizer.git;protocol=https;branch=master"

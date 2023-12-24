@@ -10,6 +10,9 @@ PV = "${IMAGE_VERSION}"
 PR = "${BUILD_VERSION}"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
+image_combine_spdx() {
+}
+
 IMAGE_INSTALL = " \
     opennfr-base \
     packagegroup-base-smbfs-client \
