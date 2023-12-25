@@ -22,7 +22,7 @@ IMAGE_CMD:tar:append = " ; \
 CONVERSION_CMD:bz2:append = ";\
 	cd ${DEPLOY_DIR_IMAGE}; \
 	mkdir -p ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}; \
-	mv ${IMGDEPLOYDIR}/${IMAGE_NAME}.rootfs.tar.bz2 ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/rootfs.tar.bz2; \
+	mv ${IMGDEPLOYDIR}/${IMAGE_NAME}.tar.bz2 ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/rootfs.tar.bz2; \
 	echo ${DISTRO_NAME}-${DISTRO_VERSION}.${BUILD_VERSION} > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/imageversion; \
 	echo "dummy file dont delete" > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/kernel.bin; \
 	zip ${IMAGE_NAME}_flash.zip ${IMAGEDIR}/*; \
