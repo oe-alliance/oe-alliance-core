@@ -22,6 +22,7 @@ require conf/machine/include/arm/arch-armv8a.inc
 
 MACHINE_EXTRA_RRECOMMENDS += "\
     ffmpeg \
+    exteplayer3 \
     gstreamer1.0-dreamsinks \
     gstreamer1.0-libav \
     kernel-module-cifs \
