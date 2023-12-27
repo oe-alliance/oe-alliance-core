@@ -82,6 +82,7 @@ PYTHON_RDEPS = " \
     ${PYTHON_PN}-core \
     ${PYTHON_PN}-crypt \
     ${PYTHON_PN}-fcntl \
+    ${PYTHON_PN}-icalendar \
     ${PYTHON_PN}-mmap \
     ${PYTHON_PN}-netclient \
     ${PYTHON_PN}-netifaces \
