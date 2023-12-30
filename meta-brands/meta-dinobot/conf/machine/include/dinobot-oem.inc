@@ -360,6 +360,7 @@ MACHINE_FEATURES += "switchoff  hdmicec blindscan-tbs alsa hbbtv-browser-webkit 
     "
 
 PREFERRED_VERSION_linux-dinobot = "4.4.35"
+PREFERRED_VERSION_libjpeg-turbo = "2.1.5.1"
 PREFERRED_PROVIDER_virtual/egl = "dinobot-opengl-${SOC_FAMILY}" 
 PREFERRED_PROVIDER_virtual/libgles1 = "dinobot-opengl-${SOC_FAMILY}"
 PREFERRED_PROVIDER_virtual/libgles2 = "dinobot-opengl-${SOC_FAMILY}"
