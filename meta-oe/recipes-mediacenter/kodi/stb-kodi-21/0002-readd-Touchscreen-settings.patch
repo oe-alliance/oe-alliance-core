@@ -1,4 +1,4 @@
-From 61fb557c01c1906762ce3b579a4f99885999acf3 Mon Sep 17 00:00:00 2001
+From e8515189834b653e92b0f4e44b66ea8a252cc67e Mon Sep 17 00:00:00 2001
 From: Captain <captain.onboard@web.de>
 Date: Wed, 15 Jul 2020 20:34:38 +0200
 Subject: [PATCH] readd Touchscreen settings
@@ -9,10 +9,10 @@ Subject: [PATCH] readd Touchscreen settings
  2 files changed, 22 insertions(+)
 
 diff --git a/xbmc/settings/AdvancedSettings.cpp b/xbmc/settings/AdvancedSettings.cpp
-index b321df0776..c88d06013b 100644
+index dc75c31..747db41 100644
 --- a/xbmc/settings/AdvancedSettings.cpp
 +++ b/xbmc/settings/AdvancedSettings.cpp
-@@ -351,6 +351,12 @@ void CAdvancedSettings::Initialize()
+@@ -352,6 +352,12 @@ void CAdvancedSettings::Initialize()
    m_iEdlCommBreakAutowait = 0;             // Off by default
    m_iEdlCommBreakAutowind = 0;             // Off by default
  
@@ -25,7 +25,7 @@ index b321df0776..c88d06013b 100644
    m_curlconnecttimeout = 30;
    m_curllowspeedtime = 20;
    m_curlretries = 2;
-@@ -956,6 +962,16 @@ void CAdvancedSettings::ParseSettingsFile(const std::string &file)
+@@ -957,6 +963,16 @@ void CAdvancedSettings::ParseSettingsFile(const std::string &file)
      XMLUtils::GetInt(pElement, "commbreakautowind", m_iEdlCommBreakAutowind, -60, 60);        // Between -60 and 60 seconds
    }
  
@@ -43,7 +43,7 @@ index b321df0776..c88d06013b 100644
    TiXmlElement* pPictureExcludes = pRootElement->FirstChildElement("pictureexcludes");
    if (pPictureExcludes)
 diff --git a/xbmc/settings/AdvancedSettings.h b/xbmc/settings/AdvancedSettings.h
-index fc92f1e3c4..a307e3f588 100644
+index fc92f1e..a307e3f 100644
 --- a/xbmc/settings/AdvancedSettings.h
 +++ b/xbmc/settings/AdvancedSettings.h
 @@ -313,6 +313,12 @@ class CAdvancedSettings : public ISettingCallback, public ISettingsHandler

@@ -15,10 +15,8 @@ DEPENDS += " \
             fstrcmp \
             rapidjson \
             crossguid \
-            libdvdnav libdvdcss libdvdread \
+            libdvdnav libdvdcss libdvdread libudfread \
             ffmpeg \
-            autoconf-native \
-            automake-native \
             git-native \
             curl-native \
             gperf-native \
@@ -51,6 +49,7 @@ DEPENDS += " \
             libssh \
             spdlog \
             libtinyxml \
+            libtinyxml2 \
             libxkbcommon \
             libxml2 \
             libxslt \
@@ -78,8 +77,18 @@ PATCHTOOL = "git"
 PR = "r0"
 
 PV = "21.0+gitr"
+PV_groovy = "4.0.17"
+PV_commons-lang3 = "3.14.0"
+PV_commons-text = "1.11.0"
+
+SRC_URI[groovy.sha256sum] = "05d8fc8f3c3c583850fc7f46c235ca4c8b58024ec8d9d7c16f72548a2b2b5430"
+SRC_URI[commons-lang.sha256sum] = "317c3e3fcd5fcca3781a7996ff1e0c50c13244ee961e94e5f6f6d84b84733b16"
+SRC_URI[commons-text.sha256sum] = "4169cb90571fb28fad4c5eea7c1c994c18f1995452f73e8ea7a86087c0e3822e"
 
 SRC_URI = "git://github.com/xbmc/xbmc.git;protocol=https;branch=master \
+           https://groovy.jfrog.io/artifactory/dist-release-local/groovy-zips/apache-groovy-binary-${PV_groovy}.zip;name=groovy \
+           https://dlcdn.apache.org/commons/lang/binaries/commons-lang3-${PV_commons-lang3}-bin.tar.gz;name=commons-lang \
+           https://dlcdn.apache.org/commons/text/binaries/commons-text-${PV_commons-text}-bin.tar.gz;name=commons-text \
            file://0001-flatbuffers-20.patch \
            file://0002-readd-Touchscreen-settings.patch \
            file://0003-shader-nopow-20.patch \
@@ -136,9 +145,9 @@ PACKAGECONFIG[lcms] = ",,lcms"
 
 # Compilation tunes
 
-PACKAGECONFIG[lld] = "-DENABLE_LLD=ON,-DENABLE_LLD=OFF"
-PACKAGECONFIG[clang] = "-DENABLE_CLANGFORMAT=ON -DENABLE_CLANGTIDY=ON,-DENABLE_CLANGFORMAT=OFF -DENABLE_CLANGTIDY=OFF"
-PACKAGECONFIG[gold] = "-DENABLE_LDGOLD=ON,-DENABLE_LDGOLD=OFF"
+PACKAGECONFIG[lld] = "-DENABLE_LLD=ON,-DENABLE_LLD=OFF,llvm"
+PACKAGECONFIG[clang] = "-DENABLE_CLANGFORMAT=ON -DENABLE_CLANGTIDY=ON,-DENABLE_CLANGFORMAT=OFF -DENABLE_CLANGTIDY=OFF,llvm"
+PACKAGECONFIG[gold] = "-DENABLE_GOLD=ON,-DENABLE_GOLD=OFF"
 PACKAGECONFIG[lto] = "-DUSE_LTO=${@oe.utils.cpu_count()},-DUSE_LTO=OFF"
 
 LDFLAGS += "${TOOLCHAIN_OPTIONS}"
@@ -151,6 +160,7 @@ KODI_DISABLE_INTERNAL_LIBRARIES = " \
   -DENABLE_INTERNAL_FMT=OFF \
   -DENABLE_INTERNAL_FSTRCMP=0 \
   -DENABLE_INTERNAL_RapidJSON=OFF \
+  -DENABLE_INTERNAL_SPDLOG=OFF \
   -DENABLE_INTERNAL_FFMPEG=OFF \
 "
 
@@ -166,7 +176,6 @@ EXTRA_OECMAKE = " \
     ${KODI_DISABLE_INTERNAL_LIBRARIES} \
     -DAPP_RENDER_SYSTEM=${APPRENDERSYSTEM} \
     \
-    -DNATIVEPREFIX=${STAGING_DIR_NATIVE}${prefix} \
     -DJava_JAVA_EXECUTABLE=/usr/bin/java \
     -DCLANG_TIDY_EXECUTABLE=${STAGING_BINDIR_NATIVE}/clang-tidy \
     -DCLANG_FORMAT_EXECUTABLE=${STAGING_BINDIR_NATIVE}/clang-format \
@@ -187,6 +196,9 @@ EXTRA_OECMAKE = " \
     -DENABLE_DVDCSS=OFF \
     -DENABLE_DEBUGFISSION=OFF \
     -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+    -Dgroovy_SOURCE_DIR=${WORKDIR}/groovy-${PV_groovy} \
+    -Dapache-commons-lang_SOURCE_DIR=${WORKDIR}/commons-lang3-${PV_commons-lang3} \
+    -Dapache-commons-text_SOURCE_DIR=${WORKDIR}/commons-text-${PV_commons-text} \
 "
 
 # OECMAKE_GENERATOR="Unix Makefiles"

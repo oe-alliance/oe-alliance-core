@@ -9,14 +9,14 @@ or by using a tarball. Allow shared build using pkgconfig.
 Patch-Status: Inappropriate
 
 ---
- cmake/modules/FindLibDvd.cmake | 62 +++++++++++++++++++++-------------
- 1 file changed, 39 insertions(+), 23 deletions(-)
+ cmake/modules/FindLibDvd.cmake | 61 ++++++++++++++++++++++------------
+ 1 file changed, 40 insertions(+), 21 deletions(-)
 
 diff --git a/cmake/modules/FindLibDvd.cmake b/cmake/modules/FindLibDvd.cmake
-index 6853e84618..693f83b1ad 100644
+index dd7d8a2..693f83b 100644
 --- a/cmake/modules/FindLibDvd.cmake
 +++ b/cmake/modules/FindLibDvd.cmake
-@@ -1,32 +1,48 @@
+@@ -1,29 +1,48 @@
  
  # Check for existing LIBDVDREAD.
  # Suppress mismatch warning, see https://cmake.org/cmake/help/latest/module/FindPackageHandleStandardArgs.html
@@ -41,17 +41,15 @@ index 6853e84618..693f83b1ad 100644
 -  core_link_library(${LIBDVDNAV_LIBRARY} system/players/VideoPlayer/libdvdnav libdvdnav archives "${_dvdlibs}")
 -else()
 -  set(LIBDVD_TARGET_DIR .)
--  if(CORE_SYSTEM_NAME STREQUAL windowsstore)
--    set(LIBDVD_TARGET_DIR dlls)
+-  copy_file_to_buildtree(${DEPENDS_PATH}/bin/libdvdnav.dll DIRECTORY ${LIBDVD_TARGET_DIR})
+-  set_property(GLOBAL APPEND PROPERTY INTERNAL_DEPS_PROP LibDvdNav::LibDvdNav)
+-endif()
 +  find_path(LIBDVD_INCLUDE_DIRS dvdnav/dvdnav.h PATHS ${PC_DVD_INCLUDE_DIRS})
 +  find_library(DVDREAD_LIBRARY NAMES dvdread libdvdread PATHS ${PC_DVD_dvdread_LIBDIR})
 +  find_library(DVDNAV_LIBRARY NAMES dvdnav libdvdnav PATHS ${PC_DVD_dvdnav_LIBDIR})
 +  if(ENABLE_DVDCSS)
 +    find_library(DVDCSS_LIBRARY NAMES dvdcss libdvdcss PATHS ${PC_DVD_libdvdcss_LIBDIR})
-   endif()
--  copy_file_to_buildtree(${DEPENDS_PATH}/bin/libdvdnav.dll DIRECTORY ${LIBDVD_TARGET_DIR})
--  add_dependencies(export-files LibDvdNav::LibDvdNav)
--endif()
++  endif()
  
 -set(LIBDVD_INCLUDE_DIRS ${LIBDVDREAD_INCLUDE_DIR} ${LIBDVDNAV_INCLUDE_DIR})
 -set(LIBDVD_LIBRARIES ${LIBDVDNAV_LIBRARY} ${LIBDVDREAD_LIBRARY})
