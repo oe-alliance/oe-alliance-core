@@ -210,7 +210,7 @@ do_install() {
     printf "rctype=${RCTYPE}\n" >> ${D}${INFOFILE}
     printf "rootfile=${ROOTFS_FILE}\n" >> ${D}${INFOFILE}
     printf "scart=${HAVE_SCART}\n" >> ${D}${INFOFILE}
-    printf "noscartswitch=${NO_SCART_SWITCH}\n" >> ${D}${INFOFILE}
+    printf "noscartswitch=${HAVE_NO_SCART_SWITCH}\n" >> ${D}${INFOFILE}
     printf "scartyuv=${HAVE_SCART_YUV}\n" >> ${D}${INFOFILE}
     printf "smallflash=${HAVE_SMALLFLASH}\n" >> ${D}${INFOFILE}
     printf "socfamily='${SOC_FAMILY}'\n" >> ${D}${INFOFILE}
