@@ -10,7 +10,7 @@ inherit gitpkgv
 
 PV = "experimental-git"
 PKGV = "experimental-git${GITPKGV}"
-PR = "r0"
+PR = "r1"
 BRANCH = "3.2"
 
 SRC_URI = "git://github.com/opendreambox/enigma2-skins.git;protocol=https;branch=${BRANCH} \
