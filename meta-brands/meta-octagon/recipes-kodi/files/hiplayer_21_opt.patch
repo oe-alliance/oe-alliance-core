@@ -1208,14 +1208,14 @@ index 0000000..29f6029
 +  if (m_pCodecContext->bits_per_coded_sample == 0)
 +    m_pCodecContext->bits_per_coded_sample = 16;
 +
-+  if (hints.extradata && hints.extrasize > 0)
++  if (hints.extradata.GetData() && hints.extradata.GetSize() > 0)
 +  {
 +    m_pCodecContext->extradata =
-+        (uint8_t*)av_mallocz(hints.extrasize + AV_INPUT_BUFFER_PADDING_SIZE);
++        (uint8_t*)av_mallocz(hints.extradata.GetSize() + AV_INPUT_BUFFER_PADDING_SIZE);
 +    if (m_pCodecContext->extradata)
 +    {
-+      m_pCodecContext->extradata_size = hints.extrasize;
-+      memcpy(m_pCodecContext->extradata, hints.extradata, hints.extrasize);
++      m_pCodecContext->extradata_size = hints.extradata.GetSize();
++      memcpy(m_pCodecContext->extradata, hints.extradata.GetData(), hints.extradata.GetSize());
 +    }
 +  }
 +
@@ -1681,7 +1681,7 @@ index 0000000..6f5696d
 +    , m_video_rate(0)
 +    , m_mpeg2_sequence(NULL)
 +    , m_bitparser(NULL)
-+    , m_bitstream(NULL)
++    , m_bitstream(nullptr)
 +    , m_opened(false)
 +    , m_drop(false)
 +{
@@ -1719,32 +1719,32 @@ index 0000000..6f5696d
 +      m_pFormatName = "hi-h264";
 +      // convert h264-avcC to h264-annex-b as h264-avcC
 +      // under streamers can have issues when seeking.
-+      if (m_hints.extradata && *(uint8_t*)m_hints.extradata == 1)
++      if (m_hints.extradata && !m_hints.cryptoSession)
 +      {
-+        m_bitstream = new CBitstreamConverter;
-+        if (m_bitstream->Open(m_hints.codec, (uint8_t*)m_hints.extradata, m_hints.extrasize, true))
++        m_bitstream = std::make_unique<CBitstreamConverter>();
++        if (!m_bitstream->Open(m_hints.codec, m_hints.extradata.GetData(), m_hints.extradata.GetSize(), true))
 +        // make sure we do not leak the existing m_hints.extradata
 +        {
 +          // make sure we do not leak the existing m_hints.extradata
-+          free(m_hints.extradata);
-+          m_hints.extrasize = m_bitstream->GetExtraSize();
-+          m_hints.extradata = malloc(m_hints.extrasize);
-+          memcpy(m_hints.extradata, m_bitstream->GetExtraData(), m_hints.extrasize);
++          // free(m_hints.extradata);
++          // m_hints.extrasize = m_bitstream->GetExtraSize();
++          // m_hints.extradata = malloc(m_hints.extrasize);
++          m_bitstream.reset();
 +        }
 +      }
 +      break;
 +    case AV_CODEC_ID_HEVC:
 +      m_pFormatName = "hi-h265";
-+      if (m_hints.extradata && m_hints.extrasize >= 23)
++      if (m_hints.extradata.GetSize() && m_hints.extradata.GetSize() >= 23)
 +      {
-+        m_bitstream = new CBitstreamConverter();
-+        if (m_bitstream->Open(m_hints.codec, (uint8_t*)m_hints.extradata, m_hints.extrasize, true))
++        m_bitstream = std::make_unique<CBitstreamConverter>();
++        if (!m_bitstream->Open(m_hints.codec, m_hints.extradata.GetData(), m_hints.extradata.GetSize(), true))
 +        {
 +          // make sure we do not leak the existing m_hints.extradata
-+          free(m_hints.extradata);
-+          m_hints.extrasize = m_bitstream->GetExtraSize();
-+          m_hints.extradata = malloc(m_hints.extrasize);
-+          memcpy(m_hints.extradata, m_bitstream->GetExtraData(), m_hints.extrasize);
++          // free(m_hints.extradata);
++          // m_hints.extrasize = m_bitstream->GetExtraSize();
++          // m_hints.extradata = malloc(m_hints.extrasize);
++          m_bitstream.reset();
 +        }
 +      }
 +      break;
@@ -1839,7 +1839,7 @@ index 0000000..6f5696d
 +    delete m_mpeg2_sequence, m_mpeg2_sequence = NULL;
 +
 +  if (m_bitstream)
-+    delete m_bitstream, m_bitstream = NULL;
++    m_bitstream->ResetStartDecode();
 +
 +  if (m_bitparser)
 +    delete m_bitparser, m_bitparser = NULL;
@@ -2296,7 +2296,7 @@ index 0000000..24da3e7
 +  double m_mpeg2_sequence_pts;
 +
 +  CBitstreamParser* m_bitparser;
-+  CBitstreamConverter* m_bitstream;
++  std::unique_ptr<CBitstreamConverter> m_bitstream;
 +
 +  bool m_opened;
 +  bool m_drop;
@@ -4081,7 +4081,7 @@ index 0000000..0fc51e8
 +  CLog::Log(LOGNOTICE, "hints.channels     : {}", hints.channels);
 +  CLog::Log(LOGNOTICE, "hints.samplerate   : {}", hints.samplerate);
 +  CLog::Log(LOGNOTICE, "hints.bitspersample: {}", hints.bitspersample);
-+  CLog::Log(LOGNOTICE, "hints.extrasize    : {}", hints.extrasize);
++  CLog::Log(LOGNOTICE, "hints.extrasize    : {}", hints.extradata.GetSize());
 +
 +  if (hints.bitspersample == 0)
 +    hints.bitspersample = 16;
@@ -6225,9 +6225,9 @@ index 0000000..ce74e9e
 +  CLog::Log(LOGNOTICE, "\t|orientation  : {}", hints.orientation);
 +  CLog::Log(LOGNOTICE, "\t|bitsperpixel : {}", hints.bitsperpixel);
 +
-+  m_extradata = (unsigned char*)malloc(hints.extrasize);
-+  m_extrasize = hints.extrasize;
-+  memcpy(m_extradata, hints.extradata, m_extrasize);
++  m_extradata = (unsigned char*)malloc(hints.extradata.GetSize());
++  m_extrasize = hints.extradata.GetSize();
++  memcpy(m_extradata, hints.extradata.GetData(), m_extrasize);
 +
 +  SetHeader();
 +
@@ -6347,7 +6347,7 @@ index 0000000..ce74e9e
 +
 +  if (m_extraneed)
 +  {
-+    hwDec->VideoWrite((uint8_t*)m_hints.extradata, m_hints.extrasize, 0);
++    hwDec->VideoWrite((uint8_t*)m_hints.extradata.GetData(), m_hints.extradata.GetSize(), 0);
 +    m_extraneed = false;
 +  }
 +

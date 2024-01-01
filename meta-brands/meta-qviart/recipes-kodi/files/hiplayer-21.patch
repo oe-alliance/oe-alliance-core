@@ -1,7 +1,7 @@
 From 47f46e2e8ffc0e12c84d325b0c3aa9328888faa0 Mon Sep 17 00:00:00 2001
 From: Captain <captain.onboard@web.de>
-Date: Wed, 21 Dec 2022 17:37:30 +0100
-Subject: [PATCH] hiplayer-20
+Date: Wed, 31 Dec 2023 17:37:30 +0100
+Subject: [PATCH] hiplayer-21
 
 ---
  .../resources/strings.po                      |   11 +
@@ -10,20 +10,20 @@ Subject: [PATCH] hiplayer-20
  cmake/treedata/linux/subdirs.txt              |    1 +
  system/playercorefactory.xml                  |    1 +
  system/settings/settings.xml                  |    6 +
- xbmc/application/Application.cpp              |    7 +
+ xbmc/application/Application.cpp              |   12 +-
  .../application/ApplicationVolumeHandling.cpp |   14 +-
  xbmc/commons/ilog.h                           |    1 +
  xbmc/cores/VideoPlayer/VideoPlayer.cpp        |  125 +-
  xbmc/cores/VideoPlayer/VideoPlayer.h          |    7 +
  .../VideoRenderers/HwDecRender/CMakeLists.txt |    3 +
- .../HwDecRender/RendererHisi.cpp              |  165 ++
+ .../HwDecRender/RendererHisi.cpp              |  164 ++
  .../VideoRenderers/HwDecRender/RendererHisi.h |   56 +
  xbmc/cores/hiplayer/CMakeLists.txt            |   17 +
  xbmc/cores/hiplayer/HiAdec.cpp                |  114 +
  xbmc/cores/hiplayer/HiAdec.h                  |   59 +
  xbmc/cores/hiplayer/HiCodecAudio.cpp          |  419 +++
  xbmc/cores/hiplayer/HiCodecAudio.h            |   93 +
- xbmc/cores/hiplayer/HiCodecVideo.cpp          |  577 ++++
+ xbmc/cores/hiplayer/HiCodecVideo.cpp          |  568 ++++
  xbmc/cores/hiplayer/HiCodecVideo.h            |   97 +
  xbmc/cores/hiplayer/HiDecoder.cpp             | 1461 ++++++++++
  xbmc/cores/hiplayer/HiDecoder.h               |  164 ++
@@ -160,7 +160,7 @@ Subject: [PATCH] hiplayer-20
  xbmc/settings/SettingConditions.cpp           |    3 +
  xbmc/settings/Settings.h                      |    1 +
  xbmc/windowing/egl/WinSystemSTBContext.cpp    |    3 +
- 156 files changed, 53562 insertions(+), 6 deletions(-)
+ 156 files changed, 53556 insertions(+), 7 deletions(-)
  create mode 100644 xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/RendererHisi.cpp
  create mode 100644 xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/RendererHisi.h
  create mode 100644 xbmc/cores/hiplayer/CMakeLists.txt
@@ -303,10 +303,10 @@ Subject: [PATCH] hiplayer-20
  create mode 100644 xbmc/platform/linux/hisi/hifb.h
 
 diff --git a/addons/resource.language.en_gb/resources/strings.po b/addons/resource.language.en_gb/resources/strings.po
-index daa14a206e8..727a2b2fcab 100644
+index 78820a3b286..e05b2f16b41 100644
 --- a/addons/resource.language.en_gb/resources/strings.po
 +++ b/addons/resource.language.en_gb/resources/strings.po
-@@ -7411,6 +7411,17 @@ msgstr ""
+@@ -7476,6 +7476,17 @@ msgstr ""
  
  #empty strings from id 13458 to 13459
  
@@ -373,14 +373,14 @@ index f928311cf0b..dc5c232a0a0 100644
  
      <!-- DVDs -->
 diff --git a/system/settings/settings.xml b/system/settings/settings.xml
-index 40cc80ce05f..6e6385c412f 100755
+index e4475c06393..146426d1070 100755
 --- a/system/settings/settings.xml
 +++ b/system/settings/settings.xml
-@@ -143,6 +143,12 @@
-           <default>true</default>
-           <control type="toggle" />
+@@ -60,6 +60,12 @@
+           </constraints>
+           <control type="list" format="string" />
          </setting>
-+	<setting id="videoplayer.usehiplayer" type="boolean" label="13458" help="13459">
++        <setting id="videoplayer.usehiplayer" type="boolean" label="13458" help="13459">
 +          <requirement>USE_HIPLAYER</requirement>
 +          <level>2</level>
 +          <default>true</default>
@@ -390,18 +390,30 @@ index 40cc80ce05f..6e6385c412f 100755
            <dependencies>
              <dependency type="visible">
 diff --git a/xbmc/application/Application.cpp b/xbmc/application/Application.cpp
-index f336292abe9..cc1a5d76003 100644
+index 720e473cc4a..e485de51af6 100644
 --- a/xbmc/application/Application.cpp
 +++ b/xbmc/application/Application.cpp
-@@ -110,6 +110,7 @@
- #include "windowing/WindowSystemFactory.h"
- 
- #include <cmath>
+@@ -99,6 +99,10 @@
+ #include "network/EventServer.h"
+ #include "network/Network.h"
+ #include "network/ZeroconfBrowser.h"
++
++#include <cmath>
 +#include <fstream>
- 
++
  #ifdef HAS_UPNP
  #include "network/upnp/UPnP.h"
-@@ -397,6 +398,9 @@ bool CApplication::Create()
+ #endif
+@@ -170,7 +174,7 @@
+ #include "platform/win32/threads/Win32Exception.h"
+ #endif
+ 
+-#include <cmath>
++
+ #include <memory>
+ #include <mutex>
+ 
+@@ -370,6 +374,9 @@ bool CApplication::Create()
    // Init our DllLoaders emu env
    init_emu_environ();
  
@@ -411,7 +423,7 @@ index f336292abe9..cc1a5d76003 100644
    PrintStartupLog();
  
    // initialize network protocols
-@@ -2077,6 +2081,9 @@ bool CApplication::Stop(int exitCode)
+@@ -2053,6 +2060,9 @@ bool CApplication::Stop(int exitCode)
    const auto appPlayer = GetComponent<CApplicationPlayer>();
    appPlayer->ClosePlayer();
  
@@ -466,10 +478,10 @@ index 9fe074af414..2c522196a9d 100644
  // extra masks - from bit 5
  constexpr int LOGMASKBIT = 5;
 diff --git a/xbmc/cores/VideoPlayer/VideoPlayer.cpp b/xbmc/cores/VideoPlayer/VideoPlayer.cpp
-index 3b3f876eebe..86d02752e5d 100644
+index a18f350d470..1ac288f0f48 100644
 --- a/xbmc/cores/VideoPlayer/VideoPlayer.cpp
 +++ b/xbmc/cores/VideoPlayer/VideoPlayer.cpp
-@@ -64,6 +64,10 @@
+@@ -61,6 +61,10 @@
  #include "utils/log.h"
  #include "video/Bookmark.h"
  #include "video/VideoInfoTag.h"
@@ -480,7 +492,7 @@ index 3b3f876eebe..86d02752e5d 100644
  #include "windowing/WinSystem.h"
  
  #include <iterator>
-@@ -577,11 +581,28 @@ int CSelectionStreams::CountType(StreamType type) const
+@@ -576,11 +580,28 @@ int CSelectionStreams::CountType(StreamType type) const
  
  void CVideoPlayer::CreatePlayers()
  {
@@ -511,7 +523,7 @@ index 3b3f876eebe..86d02752e5d 100644
    m_VideoPlayerSubtitle = new CVideoPlayerSubtitle(&m_overlayContainer, *m_processInfo);
    m_VideoPlayerTeletext = new CDVDTeletextData(*m_processInfo);
    m_VideoPlayerRadioRDS = new CDVDRadioRDSData(*m_processInfo);
-@@ -637,6 +658,14 @@ CVideoPlayer::CVideoPlayer(IPlayerCallback& callback)
+@@ -636,6 +657,14 @@ CVideoPlayer::CVideoPlayer(IPlayerCallback& callback)
  
    memset(&m_SpeedState, 0, sizeof(m_SpeedState));
  
@@ -526,7 +538,7 @@ index 3b3f876eebe..86d02752e5d 100644
    m_SkipCommercials = true;
  
    m_processInfo.reset(CProcessInfo::CreateInstance());
-@@ -671,6 +700,83 @@ bool CVideoPlayer::OpenFile(const CFileItem& file, const CPlayerOptions &options
+@@ -670,6 +699,83 @@ bool CVideoPlayer::OpenFile(const CFileItem& file, const CPlayerOptions &options
  {
    CLog::Log(LOGINFO, "VideoPlayer::OpenFile: {}", CURL::GetRedacted(file.GetPath()));
  
@@ -610,7 +622,7 @@ index 3b3f876eebe..86d02752e5d 100644
    if (IsRunning())
    {
      CDVDMsgOpenFile::FileParams params;
-@@ -1536,6 +1642,12 @@ void CVideoPlayer::Process()
+@@ -1535,6 +1641,12 @@ void CVideoPlayer::Process()
        {
          m_VideoPlayerVideo->SendMessage(std::make_shared<CDVDMsg>(CDVDMsg::VIDEO_DRAIN));
        }
@@ -623,7 +635,7 @@ index 3b3f876eebe..86d02752e5d 100644
  
        m_CurrentAudio.inited = false;
        m_CurrentVideo.inited = false;
-@@ -2643,6 +2755,15 @@ void CVideoPlayer::HandleMessages()
+@@ -2642,6 +2754,15 @@ void CVideoPlayer::HandleMessages()
  
        FlushBuffers(DVD_NOPTS_VALUE, true, true);
        m_renderManager.Flush(false, false);
@@ -640,10 +652,10 @@ index 3b3f876eebe..86d02752e5d 100644
        m_pSubtitleDemuxer.reset();
        m_subtitleDemuxerMap.clear();
 diff --git a/xbmc/cores/VideoPlayer/VideoPlayer.h b/xbmc/cores/VideoPlayer/VideoPlayer.h
-index daa0f2ad41c..de69d62f398 100644
+index 35708a9436f..adb3c65e869 100644
 --- a/xbmc/cores/VideoPlayer/VideoPlayer.h
 +++ b/xbmc/cores/VideoPlayer/VideoPlayer.h
-@@ -574,4 +574,11 @@ protected:
+@@ -580,4 +580,11 @@ protected:
    bool m_UpdateStreamDetails;
  
    std::atomic<bool> m_displayLost;
@@ -656,10 +668,10 @@ index daa0f2ad41c..de69d62f398 100644
 +#endif
  };
 diff --git a/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/CMakeLists.txt b/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/CMakeLists.txt
-index 92cc1e97d1b..2172ecef3e9 100644
+index 8598052b418..963e0001e86 100644
 --- a/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/CMakeLists.txt
 +++ b/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/CMakeLists.txt
-@@ -67,6 +67,9 @@ if("webos" IN_LIST CORE_PLATFORM_NAME_LC)
+@@ -69,6 +69,9 @@ if("webos" IN_LIST CORE_PLATFORM_NAME_LC)
    list(APPEND HEADERS RendererStarfish.h)
  endif()
  
@@ -671,10 +683,10 @@ index 92cc1e97d1b..2172ecef3e9 100644
  if(SOURCES)
 diff --git a/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/RendererHisi.cpp b/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/RendererHisi.cpp
 new file mode 100644
-index 00000000000..904a140bfa0
+index 00000000000..24ce49c49da
 --- /dev/null
 +++ b/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/RendererHisi.cpp
-@@ -0,0 +1,165 @@
+@@ -0,0 +1,164 @@
 +/*
 + *  Copyright (C) 2007-2018 Team Kodi
 + *  This file is part of Kodi - https://kodi.tv
@@ -757,7 +769,6 @@ index 00000000000..904a140bfa0
 +{
 +  CRenderInfo info;
 +  info.max_buffer_size = m_numRenderBuffers;
-+  info.optimal_buffer_size = m_numRenderBuffers;
 +  info.opaque_pointer = (void *)this;
 +  return info;
 +}
@@ -1112,7 +1123,7 @@ index 00000000000..0cb2ac23d7c
 +};
 diff --git a/xbmc/cores/hiplayer/HiCodecAudio.cpp b/xbmc/cores/hiplayer/HiCodecAudio.cpp
 new file mode 100644
-index 00000000000..a39b946b1c4
+index 00000000000..ccbe832d312
 --- /dev/null
 +++ b/xbmc/cores/hiplayer/HiCodecAudio.cpp
 @@ -0,0 +1,419 @@
@@ -1224,14 +1235,14 @@ index 00000000000..a39b946b1c4
 +  if (m_pCodecContext->bits_per_coded_sample == 0)
 +    m_pCodecContext->bits_per_coded_sample = 16;
 +
-+  if (hints.extradata && hints.extrasize > 0)
++  if (hints.extradata.GetData() && hints.extradata.GetSize() > 0)
 +  {
 +    m_pCodecContext->extradata =
-+        (uint8_t*)av_mallocz(hints.extrasize + AV_INPUT_BUFFER_PADDING_SIZE);
++        (uint8_t*)av_mallocz(hints.extradata.GetSize() + AV_INPUT_BUFFER_PADDING_SIZE);
 +    if (m_pCodecContext->extradata)
 +    {
-+      m_pCodecContext->extradata_size = hints.extrasize;
-+      memcpy(m_pCodecContext->extradata, hints.extradata, hints.extrasize);
++      m_pCodecContext->extradata_size = hints.extradata.GetSize();
++      memcpy(m_pCodecContext->extradata, hints.extradata.GetData(), hints.extradata.GetSize());
 +    }
 +  }
 +
@@ -1636,10 +1647,10 @@ index 00000000000..fdeec19c5f1
 +};
 diff --git a/xbmc/cores/hiplayer/HiCodecVideo.cpp b/xbmc/cores/hiplayer/HiCodecVideo.cpp
 new file mode 100644
-index 00000000000..6f5696dc566
+index 00000000000..df56a5ce406
 --- /dev/null
 +++ b/xbmc/cores/hiplayer/HiCodecVideo.cpp
-@@ -0,0 +1,577 @@
+@@ -0,0 +1,568 @@
 +/*
 + *      Copyright (C) 2005-2013 Team XBMC
 + *      http://xbmc.org
@@ -1697,7 +1708,7 @@ index 00000000000..6f5696dc566
 +    , m_video_rate(0)
 +    , m_mpeg2_sequence(NULL)
 +    , m_bitparser(NULL)
-+    , m_bitstream(NULL)
++    , m_bitstream(nullptr)
 +    , m_opened(false)
 +    , m_drop(false)
 +{
@@ -1735,32 +1746,23 @@ index 00000000000..6f5696dc566
 +      m_pFormatName = "hi-h264";
 +      // convert h264-avcC to h264-annex-b as h264-avcC
 +      // under streamers can have issues when seeking.
-+      if (m_hints.extradata && *(uint8_t*)m_hints.extradata == 1)
++      if (m_hints.extradata && !m_hints.cryptoSession)
 +      {
-+        m_bitstream = new CBitstreamConverter;
-+        if (m_bitstream->Open(m_hints.codec, (uint8_t*)m_hints.extradata, m_hints.extrasize, true))
-+        // make sure we do not leak the existing m_hints.extradata
++        m_bitstream = std::make_unique<CBitstreamConverter>();
++        if (!m_bitstream->Open(m_hints.codec, m_hints.extradata.GetData(), m_hints.extradata.GetSize(), true))
 +        {
-+          // make sure we do not leak the existing m_hints.extradata
-+          free(m_hints.extradata);
-+          m_hints.extrasize = m_bitstream->GetExtraSize();
-+          m_hints.extradata = malloc(m_hints.extrasize);
-+          memcpy(m_hints.extradata, m_bitstream->GetExtraData(), m_hints.extrasize);
++          m_bitstream.reset();
 +        }
 +      }
 +      break;
 +    case AV_CODEC_ID_HEVC:
 +      m_pFormatName = "hi-h265";
-+      if (m_hints.extradata && m_hints.extrasize >= 23)
++      if (m_hints.extradata.GetSize() && m_hints.extradata.GetSize() >= 23)
 +      {
-+        m_bitstream = new CBitstreamConverter();
-+        if (m_bitstream->Open(m_hints.codec, (uint8_t*)m_hints.extradata, m_hints.extrasize, true))
++        m_bitstream = std::make_unique<CBitstreamConverter>();
++        if (!m_bitstream->Open(m_hints.codec, m_hints.extradata.GetData(), m_hints.extradata.GetSize(), true))
 +        {
-+          // make sure we do not leak the existing m_hints.extradata
-+          free(m_hints.extradata);
-+          m_hints.extrasize = m_bitstream->GetExtraSize();
-+          m_hints.extradata = malloc(m_hints.extrasize);
-+          memcpy(m_hints.extradata, m_bitstream->GetExtraData(), m_hints.extrasize);
++          m_bitstream.reset();
 +        }
 +      }
 +      break;
@@ -1855,7 +1857,7 @@ index 00000000000..6f5696dc566
 +    delete m_mpeg2_sequence, m_mpeg2_sequence = NULL;
 +
 +  if (m_bitstream)
-+    delete m_bitstream, m_bitstream = NULL;
++    m_bitstream->ResetStartDecode();
 +
 +  if (m_bitparser)
 +    delete m_bitparser, m_bitparser = NULL;
@@ -2219,7 +2221,7 @@ index 00000000000..6f5696dc566
 +}
 diff --git a/xbmc/cores/hiplayer/HiCodecVideo.h b/xbmc/cores/hiplayer/HiCodecVideo.h
 new file mode 100644
-index 00000000000..24da3e754c0
+index 00000000000..1cdcfab3ab4
 --- /dev/null
 +++ b/xbmc/cores/hiplayer/HiCodecVideo.h
 @@ -0,0 +1,97 @@
@@ -2312,7 +2314,7 @@ index 00000000000..24da3e754c0
 +  double m_mpeg2_sequence_pts;
 +
 +  CBitstreamParser* m_bitparser;
-+  CBitstreamConverter* m_bitstream;
++  std::unique_ptr<CBitstreamConverter> m_bitstream;
 +
 +  bool m_opened;
 +  bool m_drop;
@@ -3959,7 +3961,7 @@ index 00000000000..d4cb7c6fcec
 +};
 diff --git a/xbmc/cores/hiplayer/HiPlayerAudio.cpp b/xbmc/cores/hiplayer/HiPlayerAudio.cpp
 new file mode 100644
-index 00000000000..562443929cd
+index 00000000000..72bf9acbe92
 --- /dev/null
 +++ b/xbmc/cores/hiplayer/HiPlayerAudio.cpp
 @@ -0,0 +1,817 @@
@@ -4097,7 +4099,7 @@ index 00000000000..562443929cd
 +  CLog::Log(LOGNOTICE, "hints.channels     : {}", hints.channels);
 +  CLog::Log(LOGNOTICE, "hints.samplerate   : {}", hints.samplerate);
 +  CLog::Log(LOGNOTICE, "hints.bitspersample: {}", hints.bitspersample);
-+  CLog::Log(LOGNOTICE, "hints.extrasize    : {}", hints.extrasize);
++  CLog::Log(LOGNOTICE, "hints.extrasize    : {}", hints.extradata.GetSize());
 +
 +  if (hints.bitspersample == 0)
 +    hints.bitspersample = 16;
@@ -6097,7 +6099,7 @@ index 00000000000..a7eceb1f9f8
 +};
 diff --git a/xbmc/cores/hiplayer/HiVdec.cpp b/xbmc/cores/hiplayer/HiVdec.cpp
 new file mode 100644
-index 00000000000..ce74e9e601c
+index 00000000000..d09ae380441
 --- /dev/null
 +++ b/xbmc/cores/hiplayer/HiVdec.cpp
 @@ -0,0 +1,590 @@
@@ -6240,9 +6242,9 @@ index 00000000000..ce74e9e601c
 +  CLog::Log(LOGNOTICE, "\t|orientation  : {}", hints.orientation);
 +  CLog::Log(LOGNOTICE, "\t|bitsperpixel : {}", hints.bitsperpixel);
 +
-+  m_extradata = (unsigned char*)malloc(hints.extrasize);
-+  m_extrasize = hints.extrasize;
-+  memcpy(m_extradata, hints.extradata, m_extrasize);
++  m_extradata = (unsigned char*)malloc(hints.extradata.GetSize());
++  m_extrasize = hints.extradata.GetSize();
++  memcpy(m_extradata, hints.extradata.GetData(), m_extrasize);
 +
 +  SetHeader();
 +
@@ -6362,7 +6364,7 @@ index 00000000000..ce74e9e601c
 +
 +  if (m_extraneed)
 +  {
-+    hwDec->VideoWrite((uint8_t*)m_hints.extradata, m_hints.extrasize, 0);
++    hwDec->VideoWrite((uint8_t*)m_hints.extradata.GetData(), m_hints.extradata.GetSize(), 0);
 +    m_extraneed = false;
 +  }
 +
@@ -54902,10 +54904,10 @@ index e6e59fe4cca..7eea143c14e 100644
 +#endif
 \ No newline at end of file
 diff --git a/xbmc/settings/SettingConditions.cpp b/xbmc/settings/SettingConditions.cpp
-index e584d15a07a..fb623180f7b 100644
+index 45997a36a41..baf8408524d 100644
 --- a/xbmc/settings/SettingConditions.cpp
 +++ b/xbmc/settings/SettingConditions.cpp
-@@ -392,6 +392,9 @@ void CSettingConditions::Initialize()
+@@ -408,6 +408,9 @@ void CSettingConditions::Initialize()
  #ifdef HAS_ZEROCONF
    m_simpleConditions.emplace("has_zeroconf");
  #endif
@@ -54916,10 +54918,10 @@ index e584d15a07a..fb623180f7b 100644
    m_simpleConditions.emplace("have_libva");
  #endif
 diff --git a/xbmc/settings/Settings.h b/xbmc/settings/Settings.h
-index 9794bc88d74..6930489b729 100644
+index 5d01b07a33c..e0d691f85ea 100644
 --- a/xbmc/settings/Settings.h
 +++ b/xbmc/settings/Settings.h
-@@ -122,6 +122,7 @@ public:
+@@ -129,6 +129,7 @@ public:
    static constexpr auto SETTING_VIDEOPLAYER_USEVDPAUMPEG4 = "videoplayer.usevdpaumpeg4";
    static constexpr auto SETTING_VIDEOPLAYER_USEVDPAUVC1 = "videoplayer.usevdpauvc1";
    static constexpr auto SETTING_VIDEOPLAYER_USEDXVA2 = "videoplayer.usedxva2";
@@ -54949,5 +54951,5 @@ index 3b4e3e8d661..c70869bbd24 100644
  #else
    CLinuxRendererGL::Register();
 -- 
-2.39.2
+2.43.0
 
