@@ -929,7 +929,7 @@ index 0000000000..403fa88b88
 +
 +  void SeekTime(int64_t iTime) override;
 +  void SetSpeed(float speed) override;
-+  void DoAudioWork() override {}
++  void DoAudioWork() {};
 +  int64_t GetTime();
 +  int64_t GetTotalTime();
 +  float GetPercentage();
