@@ -93,7 +93,7 @@ SRC_URI = "git://github.com/xbmc/xbmc.git;protocol=https;branch=master \
            file://0002-readd-Touchscreen-settings.patch \
            file://0003-shader-nopow-20.patch \
            file://0004-stb-settings-20.patch \
-           file://0005-stb-support-20.patch \
+           file://0005-stb-support-21.patch \
            file://0006-add-winsystemfactory-windowing-init.patch \
            file://0007-adapt-window-system-registration.patch \
            file://0008-reinstate-system-h.patch \
