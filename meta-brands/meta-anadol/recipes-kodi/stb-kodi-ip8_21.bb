@@ -1,6 +1,6 @@
 require recipes-mediacenter/kodi/stb-kodi_${PV}.bb
 
-SRC_URI:append = "file://hiplayer_20_opt.patch"
+SRC_URI:append = "file://hiplayer_21_opt.patch"
 
 DEPENDS += "anadol-libs-${MACHINE}"
 PROVIDES += "virtual/kodi"
