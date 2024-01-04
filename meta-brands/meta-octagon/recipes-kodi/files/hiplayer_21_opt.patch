@@ -1,6 +1,6 @@
-From f67c4b174d442076ad79a6be21c47672dd0d6fd9 Mon Sep 17 00:00:00 2001
+From 74668d565270fd3038e4a90e018ea4c1e9fbce7a Mon Sep 17 00:00:00 2001
 From: Captain <captain.onboard@web.de>
-Date: Wed, 3 Jan 2024 21:29:50 +0100
+Date: Thu, 4 Jan 2024 08:06:05 +0100
 Subject: [PATCH] hiplayer_21_opt
 
 ---
@@ -16,7 +16,7 @@ Subject: [PATCH] hiplayer_21_opt
  xbmc/cores/VideoPlayer/VideoPlayer.cpp        |  125 +-
  xbmc/cores/VideoPlayer/VideoPlayer.h          |    7 +
  .../VideoRenderers/HwDecRender/CMakeLists.txt |    3 +
- .../HwDecRender/RendererHisi.cpp              |  165 ++
+ .../HwDecRender/RendererHisi.cpp              |  164 ++
  .../VideoRenderers/HwDecRender/RendererHisi.h |   56 +
  xbmc/cores/hiplayer/CMakeLists.txt            |   17 +
  xbmc/cores/hiplayer/HiAdec.cpp                |  114 +
@@ -152,7 +152,7 @@ Subject: [PATCH] hiplayer_21_opt
  xbmc/settings/SettingConditions.cpp           |    3 +
  xbmc/settings/Settings.h                      |    1 +
  xbmc/windowing/egl/WinSystemSTBContext.cpp    |    3 +
- 148 files changed, 52553 insertions(+), 6 deletions(-)
+ 148 files changed, 52552 insertions(+), 6 deletions(-)
  create mode 100644 xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/RendererHisi.cpp
  create mode 100644 xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/RendererHisi.h
  create mode 100644 xbmc/cores/hiplayer/CMakeLists.txt
@@ -655,10 +655,10 @@ index 8598052b41..963e0001e8 100644
  if(SOURCES)
 diff --git a/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/RendererHisi.cpp b/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/RendererHisi.cpp
 new file mode 100644
-index 0000000000..904a140bfa
+index 0000000000..24ce49c49d
 --- /dev/null
 +++ b/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/RendererHisi.cpp
-@@ -0,0 +1,165 @@
+@@ -0,0 +1,164 @@
 +/*
 + *  Copyright (C) 2007-2018 Team Kodi
 + *  This file is part of Kodi - https://kodi.tv
@@ -741,7 +741,6 @@ index 0000000000..904a140bfa
 +{
 +  CRenderInfo info;
 +  info.max_buffer_size = m_numRenderBuffers;
-+  info.optimal_buffer_size = m_numRenderBuffers;
 +  info.opaque_pointer = (void *)this;
 +  return info;
 +}
