@@ -7,9 +7,9 @@ require conf/python/python3-compileall.inc
 
 inherit gettext gitpkgv
 SRCREV = "${AUTOREV}"
-PV = "1.9+git"
-PKGV = "1.9+git${GITPKGV}"
-VER ="1.9"
+PV = "2.0+git"
+PKGV = 2.0+git${GITPKGV}"
+VER ="2.0"
 PR = "r0"
 
 SRC_URI="git://github.com/openatv/openatvstatus.git;branch=main;protocol=https"
