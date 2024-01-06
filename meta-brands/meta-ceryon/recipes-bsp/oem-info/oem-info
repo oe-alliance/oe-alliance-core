@@ -22,7 +22,7 @@ BRAND=`cat /proc/enigma/displaybrand`
 TYPE=`cat /proc/stb/info/boxtype`
 if [ $BRAND == "RED EAGLE" ]; then
   if [ $TYPE == "7200S" ]; then
-    sed -i -e 's:model=7100s:model=7200s:' $INFO
+    sed -i -e "s:model='7100s':model='7200s':" $INFO
   fi
 fi
 

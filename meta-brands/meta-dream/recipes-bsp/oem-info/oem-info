@@ -20,8 +20,8 @@ INFO="/usr/lib/enigma.info"
 
 MODEL=`cat /proc/stb/info/model`
 if [ $MODEL == "dm525" ]; then
-  sed -i -e 's:displaymodel=DM520:displaymodel=DM525:' $INFO
-  sed -i -e 's:model=dm520:model=dm525:' $INFO
+  sed -i -e "s:displaymodel='DM520':displaymodel='DM525':" $INFO
+  sed -i -e "s:model='dm520':model='dm525':" $INFO
 fi
 
 sed -i '/checksum=/d' $INFO
