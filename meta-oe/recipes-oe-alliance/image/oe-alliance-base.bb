@@ -11,7 +11,7 @@ ALLOW_EMPTY:${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r3"
+PR = "r4"
 
 RDEPENDS:${PN} = "\
     oe-alliance-feeds-configs \
@@ -26,7 +26,6 @@ RDEPENDS:${PN} = "\
     ${@bb.utils.contains("MACHINE_FEATURES", "emmc", "dosfstools mtools e2fsprogs-resize2fs partitions-by-name" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "fastboot", "dosfstools mtools android-tools" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "recovery", "recovery" , "", d)} \
-    ${@bb.utils.contains("MACHINE_FEATURES", "vubluetooth", "enigma2-plugin-systemplugins-bluetoothsetup enigma2-plugin-extensions-witaispeechtotext", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "gbbluetooth", "enigma2-plugin-systemplugins-bluetoothsetup", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "kexecmb", "kexec-multiboot", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "displayvfd", "displayvfd", "", d)} \

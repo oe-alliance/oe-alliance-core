@@ -9,7 +9,7 @@ ALLOW_EMPTY:${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r18"
+PR = "r19"
 
 DEPENDS = "enigma2-plugin-drivers-usbserial enigma2-plugin-systemplugins-radiotimesemulator enigma2-plugin-systemplugins-hrtunerproxy"
 
@@ -70,6 +70,7 @@ RDEPENDS:${PN} = " \
     ${@bb.utils.contains("MACHINE_FEATURES", "vustalker", "enigma2-plugin-extensions-stalkerclient", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "wifi-direct", "wds", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "dvd", "bdremux replex mjpegtools dvdauthor dvd+rw-tools genisoimage cdfs enigma2-plugin-extensions-cdinfo enigma2-plugin-extensions-dvdburn enigma2-plugin-extensions-dvdplayer ${GST_BASE_DVD}", "", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "vubluetooth", "enigma2-plugin-systemplugins-bluetoothsetup enigma2-plugin-extensions-witaispeechtotext", "", d)} \
     ${@bb.utils.contains("STATIC_FEED", "0", "${STATIC_FEED_BUILD}", "${STATIC_FEED_DEPENDS}", d)} \
     autofs \
     autossh \
