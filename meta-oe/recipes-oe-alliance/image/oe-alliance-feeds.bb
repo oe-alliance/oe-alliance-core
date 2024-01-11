@@ -9,7 +9,7 @@ ALLOW_EMPTY:${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r19"
+PR = "r20"
 
 DEPENDS = "enigma2-plugin-drivers-usbserial enigma2-plugin-systemplugins-radiotimesemulator enigma2-plugin-systemplugins-hrtunerproxy"
 
@@ -77,6 +77,7 @@ RDEPENDS:${PN} = " \
     ${@bb.utils.contains("DISTRO_FEATURES", "directfb", "avahi-ui", "", d)} \
     astra-sm \
     binutils \
+    btrfs-tools \
     chrpath \
     ctorrent \
     cups \
@@ -92,6 +93,7 @@ RDEPENDS:${PN} = " \
     extundelete \
     exfatprogs \
     ${@bb.utils.contains_any("MACHINEBUILD", "gbquad4k gbue4k galaxy4k lunix34k", "enigma2-plugin-extensions-forcefbclnbpower" , "", d)} \
+    f2fs-tools \
     fuse-exfat \
     gptfdisk \
     hddtemp \
