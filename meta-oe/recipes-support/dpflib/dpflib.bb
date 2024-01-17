@@ -7,7 +7,7 @@ FILESEXTRAPATHSDIR:prepend := "${THISDIR}/${PN}:"
 DEPENDS = "libusb-compat libusb1 python3"
 
 SRC_URI="git://github.com/atvcaptain/dpf-ax.git;branch=dreamlayers;protocol=https \
-        file://fix-build-with-python-3.11.patch"
+        file://fix-build-with-python-3.12.patch"
 
 S = "${WORKDIR}/git"
 

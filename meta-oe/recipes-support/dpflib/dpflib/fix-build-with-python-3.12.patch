@@ -5,7 +5,7 @@
  
  include $(DEVLIB)/unixdll.mk
 -DLLDEPS = $(CLIENTLIB) -lpython3.8
-+DLLDEPS = $(CLIENTLIB) -lpython3.11
++DLLDEPS = $(CLIENTLIB) -lpython3.12
  PYTHONINCLUDES = -I${PYTHON_INCLUDE_DIR}
  
  
