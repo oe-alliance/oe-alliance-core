@@ -1,0 +1,45 @@
+From d8d7c6bbb3b1dbaff3288f51082998d7c21caaa9 Mon Sep 17 00:00:00 2001
+From: Captain <captain.onboard@web.de>
+Date: Wed, 17 Jan 2024 10:12:54 +0100
+Subject: [PATCH] distutils are outdated use setuptools
+
+---
+ setup.py           | 2 +-
+ setup_translate.py | 9 +++------
+ 2 files changed, 4 insertions(+), 7 deletions(-)
+
+diff --git a/setup.py b/setup.py
+index b4509d5..f82a914 100644
+--- a/setup.py
++++ b/setup.py
+@@ -1,4 +1,4 @@
+-from distutils.core import setup
++from setuptools import setup
+ import setup_translate
+ 
+ 
+diff --git a/setup_translate.py b/setup_translate.py
+index 158a0ba..6a59422 100644
+--- a/setup_translate.py
++++ b/setup_translate.py
+@@ -1,14 +1,11 @@
+ # -*- coding: utf-8 -*-
+-
+-# Language extension for distutils Python scripts. Based on this concept:
+-# http://wiki.maemo.org/Internationalize_a_Python_application
+ from __future__ import print_function
+-from distutils import cmd
+-from distutils.command.build import build as _build
++from setuptools import Command
++from setuptools.command.build import build as _build
+ import glob
+ import os
+ 
+-class build_trans(cmd.Command):
++class build_trans(Command):
+ 	description = 'Compile .po files into .mo files'
+ 	def initialize_options(self):
+ 		pass
+-- 
+2.43.0.windows.1
+

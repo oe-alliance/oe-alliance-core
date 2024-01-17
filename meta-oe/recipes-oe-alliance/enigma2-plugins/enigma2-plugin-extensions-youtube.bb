@@ -13,7 +13,9 @@ SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
 
-SRC_URI = "git://github.com/Taapat/enigma2-plugin-youtube.git;protocol=https;branch=master"
+SRC_URI = "git://github.com/Taapat/enigma2-plugin-youtube.git;protocol=https;branch=master \
+    file://0001-distutils-are-outdated-use-setuptools.patch \
+"
 
 S="${WORKDIR}/git"
 
