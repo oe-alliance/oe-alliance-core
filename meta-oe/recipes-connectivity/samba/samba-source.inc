@@ -49,6 +49,7 @@ SRC_URI = "${SAMBA_MIRROR}/stable/samba-${PV}.tar.gz \
            file://users.map \
            file://smbpasswd \
            file://volatiles.03_samba \
+           file://setuptools.patch \
            "
 
 SRC_URI:append:arm = " \

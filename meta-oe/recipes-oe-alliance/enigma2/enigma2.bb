@@ -99,7 +99,6 @@ PYTHON_RDEPS = " \
     ${PYTHON_PN}-process \
     ${PYTHON_PN}-image \
     ${PYTHON_PN}-pillow \
-    ${PYTHON_PN}-smtpd \
     ${PYTHON_PN}-six \
     ${PYTHON_PN}-treq \
 "
