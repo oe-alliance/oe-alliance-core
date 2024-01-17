@@ -1,0 +1,56 @@
+From ce08d085fa53010c92096e07de390eed1bace761 Mon Sep 17 00:00:00 2001
+From: Captain <captain.onboard@web.de>
+Date: Wed, 17 Jan 2024 09:05:08 +0100
+Subject: [PATCH] distutils are outdated use setuptools
+
+---
+ Source/ThirdParty/gyp/setup.py             | 8 ++++----
+ Tools/CygwinDownloader/setup.py            | 2 +-
+ Websites/planet.webkit.org/planet/setup.py | 2 +-
+ 3 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/Source/ThirdParty/gyp/setup.py b/Source/ThirdParty/gyp/setup.py
+index ed2b41a3..567ebe7b 100755
+--- a/Source/ThirdParty/gyp/setup.py
++++ b/Source/ThirdParty/gyp/setup.py
+@@ -4,10 +4,10 @@
+ # Use of this source code is governed by a BSD-style license that can be
+ # found in the LICENSE file.
+ 
+-from distutils.core import setup
+-from distutils.command.install import install
+-from distutils.command.install_lib import install_lib
+-from distutils.command.install_scripts import install_scripts
++from setuptools import setup
++from setuptools.command.install import install
++from setuptools.command.install_lib import install_lib
++from setuptools.command.install_scripts import install_scripts
+ 
+ setup(
+   name='gyp',
+diff --git a/Tools/CygwinDownloader/setup.py b/Tools/CygwinDownloader/setup.py
+index c3171d91..26664d86 100644
+--- a/Tools/CygwinDownloader/setup.py
++++ b/Tools/CygwinDownloader/setup.py
+@@ -1,4 +1,4 @@
+-from distutils.core import setup
++from setuptools import setup
+ import py2exe
+ 
+ setup(console=['cygwin-downloader.py'])
+diff --git a/Websites/planet.webkit.org/planet/setup.py b/Websites/planet.webkit.org/planet/setup.py
+index 54bf428d..fe64a9ca 100755
+--- a/Websites/planet.webkit.org/planet/setup.py
++++ b/Websites/planet.webkit.org/planet/setup.py
+@@ -2,7 +2,7 @@
+ """The Planet Feed Aggregator"""
+ 
+ import os
+-from distutils.core import setup
++from setuptools import setup
+ 
+ from planet import __version__ as VERSION
+ from planet import __license__ as LICENSE
+-- 
+2.43.0.windows.1
+
