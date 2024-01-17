@@ -7,7 +7,7 @@ SRC_URI = "git://github.com/oe-mirrors/enigma2-plugin-extensions-xmodem.git;prot
 
 require conf/python/python3-compileall.inc
 
-DEPENDS = "${PYTHON_PN}-future-native"
+DEPENDS += "${PYTHON_PN}-future-native"
 
 S = "${WORKDIR}/git"
 
