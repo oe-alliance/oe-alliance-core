@@ -14,12 +14,11 @@ PKGV = "1.0+git${GITPKGV}"
 VER ="1.0"
 PR = "r1"
 
-SRC_URI="git://github.com/openmips/gbremote-client.git;protocol=https;branch=master \
-        file://ax-python-devel-dont-check-for-distutils.patch"
+SRC_URI="git://github.com/openmips/gbremote-client.git;protocol=https;branch=master"
 
 S = "${WORKDIR}/git"
 
-DEPENDS = "${PYTHON_PN}"
+DEPENDS += "${PYTHON_PN} python3-setuptools-native"
 
 RDEPENDS:${PN} = "cifs-utils"
 
