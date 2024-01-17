@@ -24,7 +24,6 @@ RRECOMMENDS:${PN} = " \
         ${PYTHON_PN}-compression \
         ${PYTHON_PN}-core \
         ${PYTHON_PN}-html \
-        ${PYTHON_PN}-e2icjson \
         ${PYTHON_PN}-json \
         ${PYTHON_PN}-shell \
         "
