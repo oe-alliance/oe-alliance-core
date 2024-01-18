@@ -1,0 +1,46 @@
+From e6457c5e99857e0c0c1924a7c3e12560921eb5c0 Mon Sep 17 00:00:00 2001
+From: Adam Reichold <adam.reichold@t-online.de>
+Date: Sat, 2 Dec 2023 07:52:33 +0100
+Subject: [PATCH] Use portable-atomic for targets which lack 64-bit atomics
+ used to check interpreter ID.
+
+I chose to make the dependency mandatory instead of optional as portable-atomic
+itself just forwards to the native atomics when they are available so making
+that choice part of our build system is not really necessary. Personally, I was
+unable to perceive any noticeable compile-time hit from adding it.
+---
+ Cargo.toml                  | 1 +
+ src/impl_/pymodule.rs       | 2 +-
+ 3 files changed, 3 insertions(+), 1 deletion(-)
+ create mode 100644 newsfragments/3619.fixed.md
+
+diff --git a/Cargo.toml b/Cargo.toml
+index 1b6416f0..01a888be 100644
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -62,6 +62,9 @@
+     "docsrs",
+ ]
+ 
++[target.'cfg(not(target_has_atomic = "64"))'.dependencies]
++portable-atomic = "1.0"
++
+ [dependencies.anyhow]
+ version = "1.0"
+ optional = true
+diff --git a/src/impl_/pymodule.rs b/src/impl_/pymodule.rs
+index 8ec96345..7c5243fc 100644
+--- a/src/impl_/pymodule.rs
++++ b/src/impl_/pymodule.rs
+@@ -3,7 +3,7 @@
+ use std::cell::UnsafeCell;
+ 
+ #[cfg(all(not(PyPy), Py_3_9, not(all(windows, Py_LIMITED_API, not(Py_3_10)))))]
+-use std::sync::atomic::{AtomicI64, Ordering};
++use portable_atomic::{AtomicI64, Ordering};
+ 
+ #[cfg(not(PyPy))]
+ use crate::exceptions::PyImportError;
+-- 
+2.43.0.windows.1
+
