@@ -4,7 +4,7 @@ DEPENDS += "kodiegl"
 RDEPENDS:${PN} += "kodiegl"
 
 PROVIDES += "virtual/kodi"
-RPROVIDES:${PN} += "virtual/kodi"
+RPROVIDES:${PN} += "virtual-kodi"
 PROVIDES += "kodi"
 RPROVIDES:${PN} += "kodi"
 

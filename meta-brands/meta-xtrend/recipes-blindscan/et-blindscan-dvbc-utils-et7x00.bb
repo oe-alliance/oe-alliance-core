@@ -9,7 +9,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 SRC_URI = "https://source.mynonpublic.com/xtrend/${MACHINE}-dvbc-blindscan-${PV}.zip"
 
 PROVIDES += "virtual/blindscan-dvbc"
-RPROVIDES:${PN} += "virtual/blindscan-dvbc"
+RPROVIDES:${PN} += "virtual-blindscan-dvbc"
 
 PV = "1.6"
 PR = "r2"

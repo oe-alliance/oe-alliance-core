@@ -9,7 +9,7 @@ DEPENDS = "patchelf-native"
 PR = "r1-${SRCDATE}"
 
 PROVIDES = "virtual/libgles1 virtual/libgles2 virtual/egl"
-RPROVIDES:${PN} = "virtual/libgles1 virtual/libgles2 virtual/egl libEGL.so libGLESv2.so libmali.so"
+RPROVIDES:${PN} = "virtual-libgles1 virtual-libgles2 virtual-egl libEGL.so libGLESv2.so libmali.so"
 
 SRC_URI = "https://source.mynonpublic.com/octagon/${SOC_FAMILY}-opengl-${SRCDATE}.tar.gz"
 

@@ -4,7 +4,7 @@ SRC_URI:append = "file://hiplayer-21.patch"
 
 DEPENDS += "gigablue-libs-${MACHINE}"
 PROVIDES += "virtual/kodi"
-RPROVIDES:${PN} += "virtual/kodi"
+RPROVIDES:${PN} += "virtual-kodi"
 PROVIDES += "kodi"
 RPROVIDES:${PN} += "kodi"
 

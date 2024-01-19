@@ -1,7 +1,7 @@
 require recipes-mediacenter/kodi/stb-kodi_${PV}.bb
 
 PROVIDES += "virtual/kodi"
-RPROVIDES:${PN} += "virtual/kodi"
+RPROVIDES:${PN} += "virtual-kodi"
 PROVIDES += "kodi"
 RPROVIDES:${PN} += "kodi"
 RDEPENDS:${PN} += "ceryon-v3ddriver-${MACHINE}"

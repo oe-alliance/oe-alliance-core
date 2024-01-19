@@ -33,7 +33,7 @@ do_package_qa() {
 }
 
 PROVIDES += "virtual/chromium-browser"
-RPROVIDES:${PN} += "virtual/chromium-browser"
+RPROVIDES:${PN} += "virtual-chromium-browser"
 PROVIDES += "chromium-browser"
 RPROVIDES:${PN} += "chromium-browser"
 

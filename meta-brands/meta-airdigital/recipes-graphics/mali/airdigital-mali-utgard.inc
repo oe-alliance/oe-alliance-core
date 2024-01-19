@@ -5,7 +5,7 @@ LICENSE = "CLOSED"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PROVIDES += " virtual/libgles2 virtual/libgles1 virtual/egl virtual/libgbm"
-RPROVIDES:${PN} = "virtual/libgles2 virtual/libgles1 virtual/egl virtual/libgbm libMali.so libmali.so libEGL.so.1.4 libEGL.so.1 libEGL.so libGLESv1_CM.so.1.1 libGLESv1_CM.so.1 libGLESv1_CM.so libGLESv2.so.2.0 libGLESv2.so.2 libGLESv2.so libgbm.so"
+RPROVIDES:${PN} = "virtual-libgles2 virtual-libgles1 virtual-egl virtual-libgbm libMali.so libmali.so libEGL.so.1.4 libEGL.so.1 libEGL.so libGLESv1_CM.so.1.1 libGLESv1_CM.so.1 libGLESv1_CM.so libGLESv2.so.2.0 libGLESv2.so.2 libGLESv2.so libgbm.so"
 DEPENDS = "libdrm mesa patchelf-native"
 
 SRC_URI = "https://source.mynonpublic.com/zgemma/zgemma-mali-${HICHIPSET}-${SRCDATE}.zip"

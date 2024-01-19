@@ -6,7 +6,7 @@ RDEPENDS:${PN} += "kodiegl"
 SRC_URI:append = " file://vuplus-fix-exception-duo4k-20.patch"
 
 PROVIDES += "virtual/kodi"
-RPROVIDES:${PN} += "virtual/kodi"
+RPROVIDES:${PN} += "virtual-kodi"
 PROVIDES += "kodi"
 RPROVIDES:${PN} += "kodi"
 

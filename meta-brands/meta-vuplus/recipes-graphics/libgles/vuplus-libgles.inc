@@ -9,7 +9,7 @@ PV="15.1"
 PR="${SRCDATE}.${SRCDATE_PR}"
 
 PROVIDES = "virtual/libgles1 virtual/libgles2 virtual/egl libgles"
-RPROVIDES:${PN} = "virtual/libgles1 virtual/libgles2 virtual/egl libEGL.so libGLESv2.so libgles"
+RPROVIDES:${PN} = "virtual-libgles1 virtual-libgles2 virtual-egl libEGL.so libGLESv2.so libgles"
 
 DEPENDS = "patchelf-native"
 

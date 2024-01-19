@@ -4,7 +4,7 @@ SRC_URI:append = "file://hiplayer_21_opt.patch"
 
 DEPENDS += "octagon-libs-${MACHINE}"
 PROVIDES += "virtual/kodi"
-RPROVIDES:${PN} += "virtual/kodi"
+RPROVIDES:${PN} += "virtual-kodi"
 PROVIDES += "kodi"
 RPROVIDES:${PN} += "kodi"
 

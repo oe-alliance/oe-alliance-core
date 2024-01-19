@@ -12,9 +12,9 @@ PKGV = "1.1+git${GITPKGV}"
 PR = "r0"
 
 PROVIDES += "virtual/transtreamproxy"
-RPROVIDES:${PN} += "virtual/transtreamproxy"
+RPROVIDES:${PN} += "virtual-transtreamproxy"
 DEPENDS = "boost virtual/inetd"
-RDEPENDS:${PN} += "virtual/inetd"
+RDEPENDS:${PN} += "virtual-inetd"
 
 SRC_URI = "git://github.com/oe-mirrors/filestreamproxy.git;protocol=http;branch=transtreamproxy;protocol=https"
 

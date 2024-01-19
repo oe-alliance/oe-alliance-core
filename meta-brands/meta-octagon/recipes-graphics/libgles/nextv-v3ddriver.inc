@@ -34,6 +34,6 @@ do_install:append() {
 FILES:${PN} = "/usr/lib/*"
 FILES:${PN}-dev = "/usr/include/*"
 
-RPROVIDES:${PN} = "virtual/libgles2 virtual/egl libnxpl.so libnexus.so libv3ddriver.so libnxclient.so libGLESv2.so libEGL.so"
+RPROVIDES:${PN} = "virtual-libgles2 virtual-egl libnxpl.so libnexus.so libv3ddriver.so libnxclient.so libGLESv2.so libEGL.so"
 
 INSANE_SKIP:${PN} += "already-stripped dev-so ldflags"

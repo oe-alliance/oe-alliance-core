@@ -6,7 +6,7 @@ SRC_URI:append = " file://HiPlayer-for-kodi-20.patch \
 "
 
 PROVIDES += "virtual/kodi"
-RPROVIDES:${PN} += "virtual/kodi"
+RPROVIDES:${PN} += "virtual-kodi"
 PROVIDES += "kodi"
 RPROVIDES:${PN} += "kodi"
 RDEPENDS:${PN} += "airdigital-mali-${HICHIPSET}"

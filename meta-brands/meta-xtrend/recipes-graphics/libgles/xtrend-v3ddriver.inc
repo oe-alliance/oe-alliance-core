@@ -43,7 +43,7 @@ do_install:append() {
 FILES:${PN} = "/usr/lib/*"
 FILES:${PN}-dev = "/usr/include/*"
 
-RPROVIDES:${PN} = "virtual/libgles2 virtual/libgles1 virtual/egl virtual/libgbm libnxpl.so libnexus.so libv3ddriver.so libEGL.so.1.4 libEGL.so.1 libEGL.so libGLESv1_CM.so.1.1 libGLESv1_CM.so.1 libGLESv1_CM.so libGLESv2.so.2.0 libGLESv2.so.2 libGLESv2.so libgbm.so libgbm.so.1"
+RPROVIDES:${PN} = "virtual-libgles2 virtual-libgles1 virtual-egl virtual-libgbm libnxpl.so libnexus.so libv3ddriver.so libEGL.so.1.4 libEGL.so.1 libEGL.so libGLESv1_CM.so.1.1 libGLESv1_CM.so.1 libGLESv1_CM.so libGLESv2.so.2.0 libGLESv2.so.2 libGLESv2.so libgbm.so libgbm.so.1"
 
 INHIBIT_PACKAGE_STRIP = "1"
 INHIBIT_PACKAGE_DEBUG_SPLIT = "1"

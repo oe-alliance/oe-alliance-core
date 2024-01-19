@@ -2,7 +2,7 @@ require samba-source.inc
 
 S = "${WORKDIR}/samba-${PV}"
 
-inherit pkgconfig cpan-base perlnative python3native native setuptools3
+inherit pkgconfig cpan-base perlnative setuptools3 python3native native
 
 #DEPENDS += "libxslt-native docbook-xsl-stylesheets-native e2fsprogs readline virtual/libiconv zlib popt"
 #DEPENDS += "python3native"

@@ -6,7 +6,7 @@ require conf/python/python3-compileall.inc
 
 PV = "21"
 
-RDEPENDS:${PN} += "virtual/kodi kodi-addons-meta"
+RDEPENDS:${PN} += "virtual-kodi kodi-addons-meta"
 
 RRECOMMENDS:${PN} = "${@bb.utils.contains("MACHINE_FEATURES", "no-subssupport", "" , "enigma2-plugin-extensions-subssupport", d)}"
 
