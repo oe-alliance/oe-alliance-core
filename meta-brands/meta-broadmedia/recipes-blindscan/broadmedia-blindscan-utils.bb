@@ -11,7 +11,7 @@ require conf/license/license-close.inc
 PACKAGES = "broadmedia-blindscan-dvbc-utils"
 
 PROVIDES += "virtual/blindscan-dvbc"
-RPROVIDES:broadmedia-blindscan-dvbc-utils += "virtual/blindscan-dvbc"
+RPROVIDES:broadmedia-blindscan-dvbc-utils += "virtual-blindscan-dvbc"
 
 SRC_URI = "https://source.mynonpublic.com/broadmedia/broadmedia-dvbc-blindscan-1.1.zip"
 

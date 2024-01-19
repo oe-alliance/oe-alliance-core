@@ -11,8 +11,8 @@ require conf/license/license-close.inc
 PACKAGES = "ceryon-blindscan-dvbs-utils ceryon-blindscan-dvbc-utils"
 
 PROVIDES += "virtual/blindscan-dvbs virtual/blindscan-dvbc"
-RPROVIDES:ceryon-blindscan-dvbs-utils += "virtual/blindscan-dvbs"
-RPROVIDES:ceryon-blindscan-dvbc-utils += "virtual/blindscan-dvbc"
+RPROVIDES:ceryon-blindscan-dvbs-utils += "virtual-blindscan-dvbs"
+RPROVIDES:ceryon-blindscan-dvbc-utils += "virtual-blindscan-dvbc"
 
 SRC_URI = "file://ceryon_blindscan file://tda1002x"
 

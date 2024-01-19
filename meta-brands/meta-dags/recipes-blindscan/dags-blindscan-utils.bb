@@ -11,7 +11,7 @@ require conf/license/license-close.inc
 PACKAGES = "dags-blindscan-dvbs-utils"
 
 PROVIDES += "virtual/blindscan-dvbs"
-RPROVIDES:dags-blindscan-dvbs-utils += "virtual/blindscan-dvbs"
+RPROVIDES:dags-blindscan-dvbs-utils += "virtual-blindscan-dvbs"
 
 SRC_URI = "file://dags_blindscan"
 
