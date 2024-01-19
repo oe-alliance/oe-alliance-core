@@ -53,7 +53,7 @@ SMALLBOXWIZARD_NORMAL_IMAGE = "\
 NORMAL_IMAGE_DEPEND = "\
     ${E2DEFAULTSKIN} \
     enigma2-plugin-font-wqy-microhei \
-    ${@bb.utils.contains("MACHINE_FEATURES", "blindscan-dvbc", "virtual/blindscan-dvbc" , "", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "blindscan-dvbc", "virtual-blindscan-dvbc" , "", d)} \
 "
 
 RRECOMMENDS:${PN} = " \
