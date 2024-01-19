@@ -31,7 +31,7 @@ CONFFILES:${PN}-inetd = "${sysconfdir}/inetd.conf"
 FILES:${PN}-inetd = "${sysconfdir}/init.d/inetd.${BPN} ${sysconfdir}/inetd.conf"
 RDEPENDS:${PN}-inetd += "${PN}"
 PROVIDES += "virtual/inetd"
-RPROVIDES:${PN}-inetd += "virtual/inetd"
+RPROVIDES:${PN}-inetd += "virtual-inetd"
 RCONFLICTS:${PN}-inetd += "xinetd"
 
 PACKAGES =+ "${PN}-telnetd"
@@ -40,7 +40,7 @@ INITSCRIPT_NAME:${PN}-telnetd = "telnetd.${BPN}"
 FILES:${PN}-telnetd = "${sysconfdir}/init.d/telnetd.${BPN}"
 RDEPENDS:${PN}-telnetd += "${PN}"
 PROVIDES += "virtual/telnetd"
-RPROVIDES:${PN}-telnetd += "virtual/telnetd"
+RPROVIDES:${PN}-telnetd += "virtual-telnetd"
 
 do_install:append() {
     if grep "CONFIG_FEATURE_TELNETD_STANDALONE=y" ${B}/.config; then
