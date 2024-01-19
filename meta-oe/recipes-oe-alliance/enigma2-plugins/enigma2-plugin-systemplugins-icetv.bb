@@ -15,7 +15,9 @@ SRCREV = "${AUTOREV}"
 PV = "git"
 PKGV = "${GITPKGVTAG}"
 
-SRC_URI = "git://bitbucket.org/prl/icetv.git;protocol=https;branch=master"
+SRC_URI = "git://bitbucket.org/prl/icetv.git;protocol=https;branch=master \
+    file://0001-update-ax_python_devel.m4.patch \
+"
 
 PACKAGES += "${PN}-meta"
 
