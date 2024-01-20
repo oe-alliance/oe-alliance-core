@@ -188,7 +188,6 @@ RDEPENDS:enigma2-plugin-extensions-dvdburn = "dvd+rw-tools dvdauthor mjpegtools 
 RRECOMMENDS:enigma2-plugin-extensions-dvdburn = "kernel-module-sg"
 RRECOMMENDS:enigma2-plugin-extensions-dvdplayer = "kernel-module-cdrom kernel-module-sr-mod"
 RDEPENDS:enigma2-plugin-systemplugins-hotplug = "hotplug-e2-helper"
-RDEPENDS:enigma2-plugin-systemplugins-fsblupdater = "${PYTHON_PN}-distutils"
 DESCRIPTION:enigma2-plugin-font-wqy-microhei = "Font wqy-microhei add support for China EPG"
 SUMMARY:enigma2-plugin-extensions-streamlinkwrapper = "Enables support for streamlink url scheme in bouquet list."
 RDEPENDS:enigma2-plugin-extensions-streamlinkwrapper = "streamlink"
