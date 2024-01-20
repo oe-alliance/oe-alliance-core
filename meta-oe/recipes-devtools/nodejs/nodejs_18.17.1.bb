@@ -5,7 +5,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=bc1f9ebe76be76f163e3b675303ad9cd"
 
 CVE_PRODUCT = "nodejs node.js"
 
-DEPENDS = "openssl file-replacement-native"
+DEPENDS = "openssl file-replacement-native python3-packaging-native"
 DEPENDS:append:class-target = " qemu-native"
 DEPENDS:append:class-native = " c-ares-native"
 
@@ -28,6 +28,7 @@ SRC_URI = "http://nodejs.org/dist/v${PV}/node-v${PV}.tar.xz \
            file://0001-liftoff-Correct-function-signatures.patch \
            file://0001-mips-Use-32bit-cast-for-operand-on-mips32.patch \
            file://run-ptest \
+           file://remove-distutils.patch \
            "
 
 SRC_URI:append:mipsel = " file://fix-mips-build.patch"

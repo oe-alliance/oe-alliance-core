@@ -1,0 +1,46 @@
+--- a/configure.py	2024-01-20 04:50:49.336300900 +0100
++++ b/configure.py	2024-01-20 04:49:51.167086900 +0100
+@@ -14,7 +14,7 @@
+ import io
+ from pathlib import Path
+ 
+-from distutils.version import StrictVersion
++from packaging.version import Version
+ 
+ # If not run from node/, cd to node/.
+ os.chdir(Path(__file__).parent)
+@@ -1605,10 +1605,10 @@
+     # supported asm compiler for AVX2. See https://github.com/openssl/openssl/
+     # blob/OpenSSL_1_1_0-stable/crypto/modes/asm/aesni-gcm-x86_64.pl#L52-L69
+     openssl110_asm_supported = \
+-      ('gas_version' in variables and StrictVersion(variables['gas_version']) >= StrictVersion('2.23')) or \
+-      ('xcode_version' in variables and StrictVersion(variables['xcode_version']) >= StrictVersion('5.0')) or \
+-      ('llvm_version' in variables and StrictVersion(variables['llvm_version']) >= StrictVersion('3.3')) or \
+-      ('nasm_version' in variables and StrictVersion(variables['nasm_version']) >= StrictVersion('2.10'))
++      ('gas_version' in variables and Version(variables['gas_version']) >= Version('2.23')) or \
++      ('xcode_version' in variables and Version(variables['xcode_version']) >= Version('5.0')) or \
++      ('llvm_version' in variables and Version(variables['llvm_version']) >= Version('3.3')) or \
++      ('nasm_version' in variables and Version(variables['nasm_version']) >= Version('2.10'))
+ 
+     if is_x86 and not openssl110_asm_supported:
+       error('''Did not find a new enough assembler, install one or build with
+--- a/tools/gyp/pylib/gyp/input.py	2024-01-20 05:27:17.038804300 +0100
++++ b/tools/gyp/pylib/gyp/input.py	2024-01-20 05:26:54.187608000 +0100
+@@ -16,7 +16,7 @@
+ import sys
+ import threading
+ import traceback
+-from distutils.version import StrictVersion
++from packaging.version import Version
+ from gyp.common import GypError
+ from gyp.common import OrderedSet
+ 
+@@ -1190,7 +1190,7 @@
+         else:
+             ast_code = compile(cond_expr_expanded, "<string>", "eval")
+             cached_conditions_asts[cond_expr_expanded] = ast_code
+-        env = {"__builtins__": {}, "v": StrictVersion}
++        env = {"__builtins__": {}, "v": Version}
+         if eval(ast_code, env, variables):
+             return true_dict
+         return false_dict
