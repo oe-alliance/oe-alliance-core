@@ -5,10 +5,10 @@ LICENSE = "CLOSED"
 require conf/license/license-close.inc
 
 KV = "4.4.176"
-SRCDATE = "20221203"
+SRCDATE = "20230217"
 
-SRC_URI[md5sum] = "05ad1af9ba470d7208456cd64c070357"
-SRC_URI[sha256sum] = "bf41912a40a3f9e8e86bea839ed4e8483b23b971fe878ed4371ae1a853076208"
+SRC_URI[md5sum] = "fbceeb019fa27a16b775b0957b560121"
+SRC_URI[sha256sum] = "65ca46249bfb7ac5ae18b4b65827fbc24400e337deb6ab9c5c92adf0faa2dfc7"
 
 SRC_URI = "https://source.mynonpublic.com/tntfs/${HICHIPSET}-tntfs-${SRCDATE}.zip"
 
