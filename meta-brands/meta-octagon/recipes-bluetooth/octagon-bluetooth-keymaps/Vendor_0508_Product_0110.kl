@@ -1,0 +1,44 @@
+key 0x0c00e2 113 #mute
+key 0x0c0069 398 #red
+key 0x0c006a 399 #green
+key 0x0c006c 400 #yellow
+key 0x0c006b 401 #blue
+key 0x0c00cd 164 #playpause
+key 0x0c0226 128 #stop
+key 0x0c00b2 167 #rec
+key 0x0c000c 158 #recall
+key 0x0c000d 168 #groups unknown
+key 0x0c0008 388 #vod unknown
+key 0x0c000a 138w #series unknown
+key 0x0c000e 208 #radio unknown
+key 0x0c000f 368 #youtube search
+key 0x0c0221 370 #mic search
+key 0x0c0042 103 #up
+key 0x0c0043 108 #down
+key 0x0c0044 105 #left
+key 0x0c0045 106 #right
+key 0x0c0041 352 #ok
+key 0x0c0006 365 #epg
+key 0x0c01bd 358 #info
+key 0x0c0040 139 #menu
+key 0x0c0224 174 #back
+key 0x0c00e9 115 #vol+
+key 0x0c00ea 114 #vol-
+key 0x0c009c 402 #ch+
+key 0x0c009d 403 #ch-
+key 0x0c0223 396 #home
+key 0x0c0007 377 #livetv
+key 0x0c001e 2 #1
+key 0x0c001f 3 #2
+key 0x0c0020 4 #3
+key 0x0c0021 5 #4
+key 0x0c0022 6 #5
+key 0x0c0023 7 #6
+key 0x0c0024 8 #7
+key 0x0c0025 9 #8
+key 0x0c0026 10 #9
+key 0x0c026a 412 #stern
+key 0x0c0027 11 #0
+key 0x0c0011 407 #punkte
+
+
