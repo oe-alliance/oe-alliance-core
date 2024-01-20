@@ -13,8 +13,8 @@ PR = "r13"
 PACKAGES = "gigablue-blindscan-dvbs-utils-${MACHINE} gigablue-blindscan-dvbc-utils-${MACHINE}"
 
 PROVIDES += "virtual/blindscan-dvbc virtual/blindscan-dvbs"
-RPROVIDES:gigablue-blindscan-dvbc-utils-${MACHINE} += "virtual/blindscan-dvbc"
-RPROVIDES:gigablue-blindscan-dvbs-utils-${MACHINE} += "virtual/blindscan-dvbs"
+RPROVIDES:gigablue-blindscan-dvbc-utils-${MACHINE} += "virtual-blindscan-dvbc"
+RPROVIDES:gigablue-blindscan-dvbs-utils-${MACHINE} += "virtual-blindscan-dvbs"
 
 S = "${WORKDIR}/blindscan-utils"
 
