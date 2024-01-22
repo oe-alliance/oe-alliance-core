@@ -52,7 +52,7 @@ IMAGE_CMD:ubi:append = "\
     rm -Rf ${IMAGEDIR}; \
     "
 
-MACHINE_FEATURES += " bootsplash omb boxmodel feature1 linuxwifi"
+MACHINE_FEATURES += " bootsplash omb boxmodel feature1 linuxwifi skins1080"
 
 BOOTLOGO_FILENAME = "splash.bin"
 

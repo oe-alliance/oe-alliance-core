@@ -9,7 +9,7 @@ ALLOW_EMPTY:${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r17"
+PR = "r20"
 
 DEPENDS = "enigma2-plugin-drivers-usbserial enigma2-plugin-systemplugins-radiotimesemulator enigma2-plugin-systemplugins-hrtunerproxy"
 
@@ -42,6 +42,7 @@ RDEPENDS:${PN} = " \
     enigma2-plugin-extensions-jedimakerxtream \
     enigma2-plugin-extensions-jediepgxtream \
     enigma2-plugin-extensions-lamedbmerger \
+    enigma2-plugin-extensions-mediaplayer2 \
     enigma2-plugin-extensions-serienrecorder \
     enigma2-plugin-systemplugins-misplslcnscan \
     enigma2-plugin-extensions-planerfs \
@@ -75,6 +76,7 @@ RDEPENDS:${PN} = " \
     ${@bb.utils.contains("DISTRO_FEATURES", "directfb", "avahi-ui", "", d)} \
     astra-sm \
     binutils \
+    btrfs-tools \
     chrpath \
     ctorrent \
     cups \
@@ -90,6 +92,7 @@ RDEPENDS:${PN} = " \
     extundelete \
     exfatprogs \
     ${@bb.utils.contains_any("MACHINEBUILD", "gbquad4k gbue4k galaxy4k lunix34k", "enigma2-plugin-extensions-forcefbclnbpower" , "", d)} \
+    f2fs-tools \
     fuse-exfat \
     gptfdisk \
     hddtemp \
@@ -135,6 +138,7 @@ RDEPENDS:${PN} = " \
     ${PYTHON_PN}-aiohttp \
     ${PYTHON_PN}-attr \
     ${PYTHON_PN}-attrs \
+    ${PYTHON_PN}-aws-iot-device-sdk-python \
     ${PYTHON_PN}-cattrs \
     ${PYTHON_PN}-autobahn \
     ${PYTHON_PN}-bluetool \
@@ -156,13 +160,14 @@ RDEPENDS:${PN} = " \
     ${PYTHON_PN}-requests-cache \
     ${PYTHON_PN}-service-identity \
     ${PYTHON_PN}-tmdbsimple \
-	${PYTHON_PN}-tvdbsimple \
+    ${PYTHON_PN}-tvdbsimple \
     ${PYTHON_PN}-tmdbv3api \
     ${PYTHON_PN}-ujson \
     ${PYTHON_PN}-url-normalize \
     ${PYTHON_PN}-singledispatch \
     ${PYTHON_PN}-levenshtein \
     ${PYTHON_PN}-soco \
+    ${PYTHON_PN}-tqdm \
     ${PYTHON_PN}-pyexecjs \
     ${PYTHON_PN}-scrapy \
     ${PYTHON_PN}-timeout-decorator \

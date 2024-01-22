@@ -23,23 +23,23 @@ TYPE=`cat /proc/stb/info/type`
 USB1=`cat /sys/bus/usb/devices/1-1.4/manufacturer`
 if [ $BOXTYPE == "sf8008" ]; then
   if [ $USB1 == "JMicron" ]; then
-    sed -i -e 's:displaymodel=SF8008 4K UHD:displaymodel=SF8008 4K Supreme:' $INFO
+    sed -i -e "s:displaymodel='SF8008 4K UHD':displaymodel='SF8008 4K Supreme':" $INFO
   elif [ $TYPE == "10" ]; then
-    sed -i -e 's:displaymodel=SF8008 4K UHD:displaymodel=SF8008 4K Single:' $INFO
-    sed -i -e 's:model=sf8008:model=sf8008s:' $INFO
+    sed -i -e "s:displaymodel='SF8008 4K UHD':displaymodel='SF8008 4K Single':" $INFO
+    sed -i -e "s:model='sf8008':model='sf8008s':" $INFO
   elif [ $TYPE == "11" ]; then
-    sed -i -e 's:displaymodel=SF8008 4K UHD:displaymodel=SF8008 4K Twin:' $INFO
-    sed -i -e 's:model=sf8008:model=sf8008t:' $INFO
+    sed -i -e "s:displaymodel='SF8008 4K UHD':displaymodel='SF8008 4K Twin':" $INFO
+    sed -i -e "s:model='sf8008':model='sf8008t':" $INFO
   fi
 elif [ $BOXTYPE == "sfx6008" ]; then
   if [ $TYPE == "10" ]; then
-    sed -i -e 's:displaymodel=SFX6008 IP:displaymodel=SFX6018 S2:' $INFO
-    sed -i -e 's:model=sfx6008:model=sfx6018:' $INFO
+    sed -i -e "s:displaymodel='SFX6008 IP':displaymodel='SFX6018 S2':" $INFO
+    sed -i -e "s:model='sfx6008':model='sfx6018':" $INFO
   fi
 elif [ $BOXTYPE == "sx88v2" ]; then
   if [ $TYPE == "00" ] || [ $TYPE == "unknown" ]; then
-    sed -i -e 's:displaymodel=SX88V2 4K DUAL OS:displaymodel=SX888V2 4K DUAL OS:' $INFO
-    sed -i -e 's:model=sx88v2:model=sx888:' $INFO
+    sed -i -e "s:displaymodel='SX88V2 4K DUAL OS':displaymodel='SX888V2 4K DUAL OS':" $INFO
+    sed -i -e "s:model='sx88v2':model='sx888':" $INFO
   fi
 fi
 

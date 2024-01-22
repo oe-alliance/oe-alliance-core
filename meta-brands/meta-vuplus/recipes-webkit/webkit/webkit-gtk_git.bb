@@ -11,7 +11,7 @@ LIC_FILES_CHKSUM = "\
 
 DEPENDS = "glib-2.0 glib-2.0-native gettext-native zlib enchant2 libsoup-2.4 curl libxml2 cairo libidn2 gnutls \
            gtk+ gstreamer1.0 gstreamer1.0-plugins-base flex-native bison-native gperf-native sqlite3 \
-           libxslt libpcre harfbuzz pango atk udev"
+           libxslt libpcre harfbuzz pango atk udev python3-setuptools-native"
 
 PR = "r6"
 PV = "r95199"
@@ -29,6 +29,7 @@ SRC_URI = "git://code.vuplus.com:/git/webkit-r95199-base.git;protocol=http;branc
     file://maketokenizer.patch \
     file://0003-fix-build-with-glib-2.7x.patch \
     file://0004-replace-removed-deprecated-SoupRequester.patch \
+    file://0001-distutils-are-outdated-use-setuptools.patch \
 "
 
 inherit autotools lib_package gtk-doc pkgconfig perlnative ${PYTHON_PN}native

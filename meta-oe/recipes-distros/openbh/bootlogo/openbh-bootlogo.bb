@@ -9,7 +9,7 @@ require conf/license/license-gplv2.inc
 RDEPENDS:${PN} += "showiframe"
 
 PV = "${IMAGE_VERSION}"
-PR = "r32"
+PR = "r33"
 
 S = "${WORKDIR}"
 
@@ -37,6 +37,7 @@ SRC_URI:append:sx988 = " file://logo.img"
 SRC_URI:append:pulse4k = " file://logo.img"
 SRC_URI:append:pulse4kmini = " file://logo.img"
 SRC_URI:append:ustym4kpro = " file://logo.img"
+SRC_URI:append:novaler4kpro = " file://logo.img"
 SRC_URI:append:gbmv200 = " file://logo.img"
 SRC_URI:append:dagsmv200 = " file://logo.img"
 

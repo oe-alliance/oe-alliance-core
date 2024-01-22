@@ -27,9 +27,9 @@ CONFIGFILE=/etc/ushare.conf
 [ -x $DAEMON ] || exit 0
 
 # Get lsb functions
-if [ -f /lib/lsb/init-functions ]
+if [ -f /etc/init.d/init-functions ]
 then
-    . /lib/lsb/init-functions
+    . /etc/init.d/init-functions
 else
     # int log_begin_message (char *message)
     log_begin_msg () {

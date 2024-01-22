@@ -16,7 +16,7 @@ index 3dec766..ca66b5d 100644
          argv[i++] = "on";
      }
 +    argv[i++] = "--dns-timeout=5";
-+    argv[i++] = "--connect-timeout=5";
++    argv[i++] = "--connect-timeout=30";
      argv[i++] = "-O";
      argv[i++] = dest;
      argv[i++] = src;

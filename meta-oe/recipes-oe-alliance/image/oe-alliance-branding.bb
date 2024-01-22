@@ -19,9 +19,7 @@ SSTATE_SKIP_CREATION = "1"
 BRANCH="master"
 
 FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
-SRC_URI="git://github.com/oe-mirrors/branding-module.git;protocol=https;branch=${BRANCH} \
-        file://ax-python-devel-dont-check-for-distutils.patch"
-
+SRC_URI="git://github.com/oe-mirrors/branding-module.git;protocol=https;branch=${BRANCH}"
 
 S = "${WORKDIR}/git"
 
@@ -171,7 +169,7 @@ do_configure:prepend() {
         elif [ "${MACHINE}" = "dm900" ]; then
             DRIVERSDATE="20200226"
         elif [ "${MACHINE}" = "dm920" ]; then
-            DRIVERSDATE="20190830"
+            DRIVERSDATE="20200321"
         elif [ "${MACHINE}" = "dreamone" ]; then
             DRIVERSDATE="20210518"
         elif [ "${MACHINE}" = "dreamtwo" ]; then

@@ -7,7 +7,7 @@ FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 
 BRANCH="master"
 
-DEPENDS = "${PYTHON_PN}-cheetah-native"
+DEPENDS += "${PYTHON_PN}-cheetah-native"
 RDEPENDS:${PN} = "\
 	aio-grab \
 	${PYTHON_PN}-cheetah \

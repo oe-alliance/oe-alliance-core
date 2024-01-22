@@ -8,6 +8,8 @@ inherit gitpkgv allarch ${PYTHON_PN}native
 PV = "1.0+git${SRCPV}"
 PKGV = "1.0+git${GITPKGV}"
 
+RRECOMMENDS:${PN} = "enigma2-boxlogos"
+
 SRCREV = "${AUTOREV}"
 
 SRC_URI = "git://github.com/DimitarCC/E2-DarkOS-skin.git;protocol=https;branch=main"

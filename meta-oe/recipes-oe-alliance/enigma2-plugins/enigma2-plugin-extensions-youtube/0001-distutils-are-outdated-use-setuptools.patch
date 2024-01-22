@@ -1,0 +1,23 @@
+From 946e241591278d92037def393c50cb4c0c2db3d2 Mon Sep 17 00:00:00 2001
+From: Captain <captain.onboard@web.de>
+Date: Wed, 17 Jan 2024 10:43:40 +0100
+Subject: [PATCH] distutils are outdated use setuptools
+
+---
+ setup.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/setup.py b/setup.py
+index 62877c9..24076b8 100644
+--- a/setup.py
++++ b/setup.py
+@@ -1,5 +1,5 @@
+ from __future__ import print_function
+-from distutils.core import setup
++from setuptools import setup
+ import os
+ 
+ 
+-- 
+2.43.0.windows.1
+

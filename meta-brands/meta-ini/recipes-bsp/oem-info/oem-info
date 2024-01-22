@@ -28,29 +28,29 @@ BRAND=`cat /proc/enigma/displaybrand`
 VERSION=`cat /proc/stb/fp/version`
 if [ $BRAND == "UNiBOX" ]; then
   if [ $TYPE == "ini-3000" ]; then
-    sed -i -e 's:displaymodel=HD-x:displaymodel=HD-1:' $INFO
-    sed -i -e 's:model=inihdx:model=uniboxhd1:' $INFO
+    sed -i -e "s:displaymodel='HD-x':displaymodel='HD-1':" $INFO
+    sed -i -e "s:model='inihdx':model='uniboxhd1':" $INFO
   elif [ $TYPE == "ini-5000" ]; then
-    sed -i -e 's:displaymodel=HD-x:displaymodel=HD-2:' $INFO
-    sed -i -e 's:model=inihdx:model=uniboxhd2:' $INFO
-    sed -i -e 's:rcname=ini0:model=rcname=ini1:' $INFO
+    sed -i -e "s:displaymodel='HD-x':displaymodel='HD-2':" $INFO
+    sed -i -e "s:model='inihdx':model='uniboxhd2':" $INFO
+    sed -i -e "s:rcname='ini0':model=rcname='ini1':" $INFO
   elif [ $TYPE == "ini-7000" ]; then
-    sed -i -e 's:displaymodel=HD-x:displaymodel=HD-3:' $INFO
-    sed -i -e 's:model=inihdx:model=uniboxhd3:' $INFO
-    sed -i -e 's:rcname=ini0:model=rcname=ini1:' $INFO
+    sed -i -e "s:displaymodel='HD-x':displaymodel='HD-3':" $INFO
+    sed -i -e "s:model='inihdx':model='uniboxhd3':" $INFO
+    sed -i -e "s:rcname='ini0':model=rcname='ini1':" $INFO
   elif [ $TYPE == "ini-7012" ]; then
-    sed -i -e 's:displaymodel=HD-x:displaymodel=HD-3:' $INFO
-    sed -i -e 's:model=inihdx:model=uniboxhd3:' $INFO
+    sed -i -e "s:displaymodel='HD-x':displaymodel='HD-3':" $INFO
+    sed -i -e "s:model='inihdx':model='uniboxhd3':" $INFO
   fi
 elif [ $BRAND == "GI" ]; then
   if [ $TYPE == "ini-1000lx" ]; then
-    sed -i -e 's:displaymodel=LX-x:displaymodel=LX-2T:' $INFO
-    sed -i -e 's:model=inihde:model=xpeedlx2t:' $INFO
+    sed -i -e "s:displaymodel='LX-x':displaymodel='LX-2T':" $INFO
+    sed -i -e "s:model='inihde':model='xpeedlx2t':" $INFO
   elif [ $TYPE == "ini-1000de" ]; then
     if [ $VERSION == "2" ]; then
-      sed -i -e 's:model=inihde:model=xpeedlx2:' $INFO
+      sed -i -e "s:model='inihde':model='xpeedlx2':" $INFO
     else
-      sed -i -e 's:model=inihde:model=xpeedlx1:' $INFO
+      sed -i -e "s:model='inihde':model='xpeedlx1':" $INFO
     fi
   fi
 fi
