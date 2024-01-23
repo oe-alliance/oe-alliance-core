@@ -86,6 +86,8 @@ FILES:${PN}-doc += " \
     ${PYTHON_SITEPACKAGES_DIR}/*/doc \
     ${PYTHON_SITEPACKAGES_DIR}/LICENSE \
     ${PYTHON_SITEPACKAGES_DIR}/README \
+    ${PYTHON_SITEPACKAGES_DIR}/*/*.misc \
+    ${PYTHON_SITEPACKAGES_DIR}/*/*/.gitignore \
     "
 
 FILES:${PN}-dbg += " \
