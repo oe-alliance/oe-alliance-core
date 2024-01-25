@@ -94,6 +94,7 @@ RDEPENDS:${PN} = " \
     exfatprogs \
     ${@bb.utils.contains_any("MACHINEBUILD", "gbquad4k gbue4k galaxy4k lunix34k", "enigma2-plugin-extensions-forcefbclnbpower" , "", d)} \
     f2fs-tools \
+    fio \
     fuse-exfat \
     gptfdisk \
     hddtemp \
