@@ -7,8 +7,8 @@ DEPENDS += "${PYTHON_PN}-setuptools-scm-native"
 
 SRC_URI:append = " file://0001-add-setup.py.patch"
 
-SRC_URI[md5sum] = "82cb02f561ab5afe4f7c9e07574aef57"
-SRC_URI[sha256sum] = "a58e94dd67871639abc091b57d32842449b230777570ef2bcec3dc16b912613e"
+SRC_URI[md5sum] = "b40aeeda6a07dd283f2a407f622cda5b"
+SRC_URI[sha256sum] = "4dad2404540b936a20acedec53355bdaea223acb88fd329fa6de9261c941566e"
 
 inherit pypi setuptools3
 
