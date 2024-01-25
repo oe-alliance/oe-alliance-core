@@ -4,15 +4,16 @@ AUTHOR = "John Thorvald Wodder II <versioningit@varonathe.org>"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=f50f611f98ab86be42339ced21a10fdc"
 
-DEPENDS += "${PYTHON_PN}-setuptools-scm-native"
+DEPENDS += "${PYTHON_PN}-setuptools-scm-native ${PYTHON_PN}-hatchling-native ${PYTHON_PN}-hatch-fancy-pypi-readme-native"
 
 RDEPENDS:${PN} += "${PYTHON_PN}-packaging ${PYTHON_PN}-tomli"
 
 PYPI_PACKAGE = "versioningit"
 
-SRC_URI[sha256sum] = "eb18e7ba7268a880bf1ccfe92e534e96ab34e0397f28dcbcb3fc0da4f6a5b6bd"
+SRC_URI[md5sum] = "98181ba44e55d67405720f297a39ebdd"
+SRC_URI[sha256sum] = "4e3ce47a6424d850ae9e55e1b134a020e9fcbcb895338f107f2b5c51d34c9c1b"
 
-inherit pypi python_setuptools_build_meta
+inherit pypi python_hatchling
 
 require python3-package-split.inc
 
