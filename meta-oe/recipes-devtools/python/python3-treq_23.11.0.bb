@@ -11,7 +11,8 @@ RDEPENDS:${PN} += "${PYTHON_PN}-attrs ${PYTHON_PN}-hyperlink ${PYTHON_PN}-increm
 
 PYPI_PACKAGE = "treq"
 
-SRC_URI[sha256sum] = "df757e3f141fc782ede076a604521194ffcb40fa2645cf48e5a37060307f52ec"
+SRC_URI[md5sum] = "bdb28bd00f10abaf367f074b9ada300d"
+SRC_URI[sha256sum] = "0914ff929fd1632ce16797235260f8bc19d20ff7c459c1deabd65b8c68cbeac5"
 
 inherit pypi setuptools3
 
