@@ -1,3 +1,5 @@
+PR .= ".1"
+
 FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 
 SRC_URI:append = " \
