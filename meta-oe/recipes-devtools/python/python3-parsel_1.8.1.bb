@@ -8,8 +8,8 @@ DEPENDS = "${PYTHON_PN}-pytest-runner"
 
 SRC_URI = "file://disable-test.patch"
 
-SRC_URI[md5sum] = "524b9519a20f401cd44f06d7f725c856"
-SRC_URI[sha256sum] = "70efef0b651a996cceebc69e55a85eb2233be0890959203ba7c3a03c72725c79"
+SRC_URI[md5sum] = "0721c0c3e92cfd290e54ec7ba6ca2f74"
+SRC_URI[sha256sum] = "aff28e68c9b3f1a901db2a4e3f158d8480a38724d7328ee751c1a4e1c1801e39"
 
 S = "${WORKDIR}/parsel-${PV}"
 

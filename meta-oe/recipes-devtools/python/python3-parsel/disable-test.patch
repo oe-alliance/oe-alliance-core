@@ -1,11 +1,14 @@
 --- a/setup.py	2020-05-07 22:46:26.000000000 +0200
 +++ b/setup.py	2022-01-23 19:07:20.000000000 +0100
-@@ -76,7 +76,5 @@
-         'Programming Language :: Python :: Implementation :: CPython',
-         'Programming Language :: Python :: Implementation :: PyPy',
+@@ -53,11 +53,4 @@
+         "Programming Language :: Python :: Implementation :: CPython",
+         "Programming Language :: Python :: Implementation :: PyPy",
      ],
--    setup_requires=['pytest-runner',],
--    tests_require=['pytest',],
--    test_suite='tests',
-+
+-    setup_requires=[
+-        "pytest-runner",
+-    ],
+-    tests_require=[
+-        "pytest",
+-    ],
+-    test_suite="tests",
  )
