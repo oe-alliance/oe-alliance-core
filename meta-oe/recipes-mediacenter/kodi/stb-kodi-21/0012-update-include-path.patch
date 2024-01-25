@@ -1,0 +1,36 @@
+diff -r -u gitold/xbmc/windowing/egl/WinEventsSTB.cpp gitnew/xbmc/windowing/egl/WinEventsSTB.cpp
+--- gitold/xbmc/windowing/egl/WinEventsSTB.cpp	2024-01-25 11:00:52.000000000 +0100
++++ gitnew/xbmc/windowing/egl/WinEventsSTB.cpp	2024-01-25 11:29:23.563224181 +0100
+@@ -23,7 +23,7 @@
+ #include "WinEventsSTB.h"
+ #include "windowing/WinEvents.h"
+ #include "windowing/XBMC_events.h"
+-#include "input/XBMC_keysym.h"
++#include "input/keyboard/XBMC_keysym.h"
+ #include "application/Application.h"
+ #include "input/mouse/MouseStat.h"
+ #include "utils/log.h"
+diff -r -u gitold/xbmc/platform/linux/input/LinuxInputDevices.cpp gitnew/xbmc/platform/linux/input/LinuxInputDevices.cpp
+--- gitold/xbmc/platform/linux/input/LinuxInputDevices.cpp	2024-01-25 11:00:52.000000000 +0100
++++ gitnew/xbmc/platform/linux/input/LinuxInputDevices.cpp	2024-01-25 11:32:51.950074363 +0100
+@@ -105,7 +105,7 @@
+ #include <stdio.h>
+ 
+ #include "windowing/GraphicContext.h"
+-#include "input/XBMC_keysym.h"
++#include "input/keyboard/XBMC_keysym.h"
+ #include "LinuxInputDevices.h"
+ #include "input/mouse/MouseStat.h"
+ #include "utils/log.h"
+diff -r -u gitold/xbmc/platform/linux/input/LinuxInputDevices.h gitnew/xbmc/platform/linux/input/LinuxInputDevices.h
+--- gitold/xbmc/platform/linux/input/LinuxInputDevices.h	2024-01-25 11:00:52.000000000 +0100
++++ gitnew/xbmc/platform/linux/input/LinuxInputDevices.h	2024-01-25 11:32:02.905399372 +0100
+@@ -24,7 +24,7 @@
+ #include <string>
+ #include <deque>
+ #include "windowing/XBMC_events.h"
+-#include "input/XBMC_keyboard.h"
++#include "input/keyboard/XBMC_keyboard.h"
+ #include "threads/SingleLock.h"
+ #include "input/touch/ITouchInputHandler.h"
+ #include "input/touch/generic/IGenericTouchGestureDetector.h"
