@@ -8,10 +8,8 @@ RDEPENDS:${PN} = "${PYTHON_PN}-regex"
 
 SRC_URI += "file://disable-test.patch"
 
-SRC_URI[md5sum] = "ce9e0f02e5e812859a479d6536543f41"
-SRC_URI[sha256sum] = "809de3a97c68afa831f7101b10d316fe62e061dc9f7f67a44b7738128721173a"
-
-S = "${WORKDIR}/rebulk-${PV}"
+SRC_URI[md5sum] = "e2c88915303b311cea24b200ab332375"
+SRC_URI[sha256sum] = "0d30bf80fca00fa9c697185ac475daac9bde5f646ce3338c9ff5d5dc1ebdfebc"
 
 inherit pypi setuptools3
 
