@@ -5,8 +5,8 @@ LICENSE = "LGPL-3.0-only"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=bb3ca60759f3202f1ae42e3519cd06bc"
 DEPENDS += "${PYTHON_PN}-pytest-runner-native"
 
-SRC_URI[md5sum] = "6be580bad4dec4d31ec0137810ef821a"
-SRC_URI[sha256sum] = "731e96e6a1f3b065d05accc8c19f35d4485d880b77ab8dc4b262cc353df294f7"
+SRC_URI[md5sum] = "5a488b3a1fb0e8df0a5b9af8eb336209"
+SRC_URI[sha256sum] = "6619fcbbf9a0510ec8c2c33744c4251cad0507b1d573d05c875de17edc5edbed"
 
 inherit ${PYTHON_PN}-dir pypi setuptools3 
 
