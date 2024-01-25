@@ -19,13 +19,11 @@ RDEPENDS:${PN} = "${PYTHON_PN}-twisted \
     ${PYTHON_PN}-h2 \
 "
 
-SRC_URI = "https://files.pythonhosted.org/packages/cc/f8/5f412e9cff97a330cb813b6771db8579944debe5e1f0f9dae93af46c2be1/Scrapy-2.5.1.tar.gz"
+PYPI_PACKAGE = "Scrapy"
 
-SRC_URI[md5sum] = "2c559a7dcd20fbd841796b1220f6c85b"
-SRC_URI[sha256sum] = "13af6032476ab4256158220e530411290b3b934dd602bb6dacacbf6d16141f49"
+SRC_URI[md5sum] = "acbbaf2f42cdd8cb503048e94e25e040"
+SRC_URI[sha256sum] = "3cbdedce0c3f0e0482d61be2d7458683be7cd7cf14b0ee6adfbaddb80f5b36a5"
 
-S = "${WORKDIR}/Scrapy-${PV}"
-
-inherit setuptools3_legacy
+inherit pypi setuptools3_legacy
 
 include ${PYTHON_PN}-package-split.inc
