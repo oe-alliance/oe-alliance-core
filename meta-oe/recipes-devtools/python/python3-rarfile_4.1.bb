@@ -4,10 +4,8 @@ SECTION = "devel/python"
 LICENSE = "BSD-3-Clause"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=2f31e224cbf0c29cb6c55f2bae0e165f"
 
-SRC_URI[md5sum] = "e4ceaa894c05afdb4f9b0966b56fd410"
-SRC_URI[sha256sum] = "67548769229c5bda0827c1663dce3f54644f9dbfba4ae86d4da2b2afd3e602a1"
-
-S = "${WORKDIR}/rarfile-${PV}"
+SRC_URI[md5sum] = "35940bb31c831b49c963c48280416873"
+SRC_URI[sha256sum] = "db60b3b5bc1c4bdeb941427d50b606d51df677353385255583847639473eda48"
 
 inherit pypi setuptools3
 
