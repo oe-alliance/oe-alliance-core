@@ -341,7 +341,7 @@ index 0000000000..3cc2882d60
 +#include <stdio.h>
 +
 +#include "windowing/GraphicContext.h"
-+#include "input/XBMC_keysym.h"
++#include "input/keyboard/XBMC_keysym.h"
 +#include "LinuxInputDevices.h"
 +#include "input/mouse/MouseStat.h"
 +#include "utils/log.h"
@@ -5896,7 +5896,7 @@ index 0000000000..720b493146
 +#include "WinEventsSTB.h"
 +#include "windowing/WinEvents.h"
 +#include "windowing/XBMC_events.h"
-+#include "input/XBMC_keysym.h"
++#include "input/keyboard/XBMC_keyboard.h"
 +#include "application/Application.h"
 +#include "input/mouse/MouseStat.h"
 +#include "utils/log.h"

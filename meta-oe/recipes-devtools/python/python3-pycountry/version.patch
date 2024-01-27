@@ -1,22 +1,31 @@
 --- a/src/pycountry/__init__.py
 +++ b/src/pycountry/__init__.py
-@@ -6,15 +6,10 @@ import unicodedata
- import pycountry.db
+@@ -18,23 +18,14 @@
+     from importlib import resources as importlib_resources
  
  
--try:
--    import pkg_resources
--    resource_filename = pkg_resources.resource_filename
--    __version__ = pkg_resources.get_distribution("pycountry").version
--except ImportError:
--    __version__ = 'n/a'
+-def resource_filename(package_or_requirement: str, resource_name: str) -> str:
+-    return str(
+-        importlib_resources.files(package_or_requirement) / resource_name
+-    )
 -
--    def resource_filename(package_or_requirement, resource_name):
--        return os.path.join(os.path.dirname(__file__), resource_name)
-+__version__ = '20.7.3'
-+
+-
+-def get_version(distribution_name: str) -> Optional[str]:
+-    try:
+-        return importlib_metadata.version(distribution_name)
+-    except importlib_metadata.PackageNotFoundError:
+-        return "n/a"
 +def resource_filename(package_or_requirement, resource_name):
 +    return os.path.join(os.path.dirname(__file__), resource_name)
  
  
- LOCALES_DIR = resource_filename('pycountry', 'locales')
+ # Variable annotations
+-LOCALES_DIR: str = resource_filename("pycountry", "locales")
+-DATABASE_DIR: str = resource_filename("pycountry", "databases")
+-__version__: Optional[str] = get_version("pycountry")
++LOCALES_DIR = resource_filename("pycountry", "locales")
++DATABASE_DIR = resource_filename("pycountry", "databases")
++__version__ = '23.12.11'
+ 
+ 
+ def remove_accents(input_str: str) -> str:

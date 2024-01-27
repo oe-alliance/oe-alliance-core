@@ -19,7 +19,7 @@ do_install:append() {
         rm -f ${D}${includedir}/GL/glext.h
 }
 
-PV = "1.22.8"
+PV = "1.22.9"
 
-SRC_URI[md5sum] = "100d44880b6345958e5d8608bbfe6182"
-SRC_URI[sha256sum] = "eb6792e5c73c6defb9159c36ea6e4b78a2f8af6512678b4bd3b02c8d2d492acf"
+SRC_URI[md5sum] = "09f78621379f7cc8e8a27532238587e3"
+SRC_URI[sha256sum] = "fac3e0dd2d8e9370388b34bf8c21b89d5f63bc3cfc12cd7fdc8fc6c1cba03334"
