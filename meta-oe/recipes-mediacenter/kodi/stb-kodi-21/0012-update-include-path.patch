@@ -34,3 +34,33 @@ diff -r -u gitold/xbmc/platform/linux/input/LinuxInputDevices.h gitnew/xbmc/plat
  #include "threads/SingleLock.h"
  #include "input/touch/ITouchInputHandler.h"
  #include "input/touch/generic/IGenericTouchGestureDetector.h"
+ --- gitold/tools/Linux/kodi.sh.in       2024-01-25 11:00:52.000000000 +0100
++++ gitnew/tools/Linux/kodi.sh.in       2024-01-27 19:22:19.813998135 +0100
+@@ -40,24 +40,9 @@
+ 
+ check_media_hdd() {
+     [ -e /proc/mounts ] || return 0
++     [ -d /media/mmc ] && export HOME="/media/mmc"
++     [ -d /media/hdd ] && export HOME="/media/hdd"
+ 
+-    exec 9<&0 < /proc/mounts
+-    while read DEV MTPT REST; do
+-        case $DEV in
+-            /dev/sd[a-z][0-9])
+-            if [ "$MTPT" == "/media/hdd" ]; then
+-                export HOME="$MTPT"
+-                break
+-            fi
+-            ;;
+-           /dev/mmcblk[0-9]p[0-9])
+-            if [ "$MTPT" == "/media/mmc" ]; then
+-               export HOME="$MTPT"
+-            fi
+-           ;;
+-        esac
+-    done
+-    exec 0<&9 9<&-
+ }
+ 
+ check_media_hdd
+
