@@ -100,7 +100,6 @@ SRC_URI = "git://github.com/xbmc/xbmc.git;protocol=https;branch=master \
            file://0009-reinstate-platform-defines.patch \
            file://0010-FindLibDvd.cmake-build-with-external-source.patch \
            file://0011-cmake-includedirs.patch \
-           file://0012-update-include-path.patch \
            ${@bb.utils.contains_any('MACHINE_FEATURES', 'hisil-3798mv200 hisil-3798mv310 hisi hisil', '' , 'file://0100-e2-player.patch', d)} \
            ${@bb.utils.contains_any('MACHINE_FEATURES', 'hisil-3798mv200 hisil-3798mv310 hisi hisil', '' , 'file://0101-gst-player.patch', d)} \
           "
