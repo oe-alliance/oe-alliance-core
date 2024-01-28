@@ -773,7 +773,7 @@ index 00000000000..24ce49c49da
 +  return info;
 +}
 +
-+bool CRendererHisi::RenderCapture(CRenderCapture* capture)
++bool CRendererHisi::RenderCapture(int index, CRenderCapture* capture)
 +{
 +  capture->BeginRender();
 +  capture->EndRender();
@@ -879,7 +879,7 @@ index 00000000000..5b3124e6f65
 +  static CBaseRenderer* Create(CVideoBuffer *buffer);
 +  static bool Register();
 +
-+  virtual bool RenderCapture(CRenderCapture* capture) override;
++  virtual bool RenderCapture(int index, CRenderCapture* capture) override;
 +  virtual void AddVideoPicture(const VideoPicture &picture, int index) override;
 +  virtual void ReleaseBuffer(int idx) override;
 +  virtual bool Configure(const VideoPicture &picture, float fps, unsigned int orientation) override;
