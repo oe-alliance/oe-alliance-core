@@ -13,9 +13,5 @@ inherit packagegroup
 
 RRECOMMENDS:${PN} = "\
     enigma2 \
-    enigma-info \
-    opkg-arch-config \
-    libdvdnav \
-    libdvdread \
-    enigma2-skins \
+    enigma2-skins-openvix \
     "
