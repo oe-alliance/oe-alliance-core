@@ -35,7 +35,7 @@ DEPENDS = "\
     enigma2-plugin-drivers-network-usb-rtl8192cu-rev2 \
     enigma2-plugin-drivers-network-usb-rtl8192ce \
     enigma2-plugin-drivers-network-usb-r8188eu \
-    enigma2-plugin-drivers-network-usb-r8152 \
+    enigma2-plugin-drivers-network-usb-rtl8152 \
     enigma2-plugin-drivers-network-usb-lan78xx \
     "
 
