@@ -1,0 +1,187 @@
+From e705498945ad3a3b945771c5d683df064bb9819c Mon Sep 17 00:00:00 2001
+From: "Kanchanapally, Vidyullatha" <vkanchan@qti.qualcomm.com>
+Date: Mon, 11 Apr 2016 15:16:01 +0530
+Subject: cfg80211: Add option to report the bss entry in connect result
+
+Since cfg80211 maintains separate BSS table entries for APs if the same
+BSSID, SSID pair is seen on multiple channels, it is possible that it
+can map the current_bss to a BSS entry on the wrong channel. This
+current_bss will not get flushed unless disconnected and cfg80211
+reports a wrong channel as the associated channel.
+
+Fix this by introducing a new cfg80211_connect_bss() function which is
+similar to cfg80211_connect_result(), but it includes an additional
+parameter: the bss the STA is connected to. This allows drivers to
+provide the exact bss entry that matches the BSS to which the connection
+was completed.
+
+Reviewed-by: Jouni Malinen <jouni@qca.qualcomm.com>
+Signed-off-by: Vidyullatha Kanchanapally <vkanchan@qti.qualcomm.com>
+Signed-off-by: Sunil Dutt <usdutt@qti.qualcomm.com>
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+---
+ Documentation/DocBook/80211.tmpl |  1 +
+ include/net/cfg80211.h           | 39 +++++++++++++++++++++++++++++++++++----
+ net/wireless/core.h              |  1 +
+ net/wireless/sme.c               | 28 ++++++++++++++++++++++------
+ net/wireless/util.c              |  2 +-
+ 5 files changed, 60 insertions(+), 11 deletions(-)
+
+diff --git a/Documentation/DocBook/80211.tmpl b/Documentation/DocBook/80211.tmpl
+index f2a312b35875d..5f7c55999c779 100644
+--- a/Documentation/DocBook/80211.tmpl
++++ b/Documentation/DocBook/80211.tmpl
+@@ -135,6 +135,7 @@
+ !Finclude/net/cfg80211.h cfg80211_tx_mlme_mgmt
+ !Finclude/net/cfg80211.h cfg80211_ibss_joined
+ !Finclude/net/cfg80211.h cfg80211_connect_result
++!Finclude/net/cfg80211.h cfg80211_connect_bss
+ !Finclude/net/cfg80211.h cfg80211_roamed
+ !Finclude/net/cfg80211.h cfg80211_disconnected
+ !Finclude/net/cfg80211.h cfg80211_ready_on_channel
+diff --git a/include/net/cfg80211.h b/include/net/cfg80211.h
+index c8414962683d5..1e008cddd41d4 100644
+--- a/include/net/cfg80211.h
++++ b/include/net/cfg80211.h
+@@ -4651,6 +4651,32 @@ static inline void cfg80211_testmode_event(struct sk_buff *skb, gfp_t gfp)
+ #define CFG80211_TESTMODE_DUMP(cmd)
+ #endif
+ 
++/**
++ * cfg80211_connect_bss - notify cfg80211 of connection result
++ *
++ * @dev: network device
++ * @bssid: the BSSID of the AP
++ * @bss: entry of bss to which STA got connected to, can be obtained
++ *	through cfg80211_get_bss (may be %NULL)
++ * @req_ie: association request IEs (maybe be %NULL)
++ * @req_ie_len: association request IEs length
++ * @resp_ie: association response IEs (may be %NULL)
++ * @resp_ie_len: assoc response IEs length
++ * @status: status code, 0 for successful connection, use
++ *      %WLAN_STATUS_UNSPECIFIED_FAILURE if your device cannot give you
++ *      the real status code for failures.
++ * @gfp: allocation flags
++ *
++ * It should be called by the underlying driver whenever connect() has
++ * succeeded. This is similar to cfg80211_connect_result(), but with the
++ * option of identifying the exact bss entry for the connection. Only one of
++ * these functions should be called.
++ */
++void cfg80211_connect_bss(struct net_device *dev, const u8 *bssid,
++			  struct cfg80211_bss *bss, const u8 *req_ie,
++			  size_t req_ie_len, const u8 *resp_ie,
++			  size_t resp_ie_len, u16 status, gfp_t gfp);
++
+ /**
+  * cfg80211_connect_result - notify cfg80211 of connection result
+  *
+@@ -4668,10 +4694,15 @@ static inline void cfg80211_testmode_event(struct sk_buff *skb, gfp_t gfp)
+  * It should be called by the underlying driver whenever connect() has
+  * succeeded.
+  */
+-void cfg80211_connect_result(struct net_device *dev, const u8 *bssid,
+-			     const u8 *req_ie, size_t req_ie_len,
+-			     const u8 *resp_ie, size_t resp_ie_len,
+-			     u16 status, gfp_t gfp);
++static inline void
++cfg80211_connect_result(struct net_device *dev, const u8 *bssid,
++			const u8 *req_ie, size_t req_ie_len,
++			const u8 *resp_ie, size_t resp_ie_len,
++			u16 status, gfp_t gfp)
++{
++	cfg80211_connect_bss(dev, bssid, NULL, req_ie, req_ie_len, resp_ie,
++			     resp_ie_len, status, gfp);
++}
+ 
+ /**
+  * cfg80211_roamed - notify cfg80211 of roaming
+diff --git a/net/wireless/core.h b/net/wireless/core.h
+index 022ccad06cbe2..ac44e77ac2f2d 100644
+--- a/net/wireless/core.h
++++ b/net/wireless/core.h
+@@ -214,6 +214,7 @@ struct cfg80211_event {
+ 			const u8 *resp_ie;
+ 			size_t req_ie_len;
+ 			size_t resp_ie_len;
++			struct cfg80211_bss *bss;
+ 			u16 status;
+ 		} cr;
+ 		struct {
+diff --git a/net/wireless/sme.c b/net/wireless/sme.c
+index e22e5b83cfa94..d814279fb5560 100644
+--- a/net/wireless/sme.c
++++ b/net/wireless/sme.c
+@@ -753,19 +753,32 @@ void __cfg80211_connect_result(struct net_device *dev, const u8 *bssid,
+ 	kfree(country_ie);
+ }
+ 
+-void cfg80211_connect_result(struct net_device *dev, const u8 *bssid,
+-			     const u8 *req_ie, size_t req_ie_len,
+-			     const u8 *resp_ie, size_t resp_ie_len,
+-			     u16 status, gfp_t gfp)
++/* Consumes bss object one way or another */
++void cfg80211_connect_bss(struct net_device *dev, const u8 *bssid,
++			  struct cfg80211_bss *bss, const u8 *req_ie,
++			  size_t req_ie_len, const u8 *resp_ie,
++			  size_t resp_ie_len, u16 status, gfp_t gfp)
+ {
+ 	struct wireless_dev *wdev = dev->ieee80211_ptr;
+ 	struct cfg80211_registered_device *rdev = wiphy_to_rdev(wdev->wiphy);
+ 	struct cfg80211_event *ev;
+ 	unsigned long flags;
+ 
++	if (bss) {
++		/* Make sure the bss entry provided by the driver is valid. */
++		struct cfg80211_internal_bss *ibss = bss_from_pub(bss);
++
++		if (WARN_ON(list_empty(&ibss->list))) {
++			cfg80211_put_bss(wdev->wiphy, bss);
++			return;
++		}
++	}
++
+ 	ev = kzalloc(sizeof(*ev) + req_ie_len + resp_ie_len, gfp);
+-	if (!ev)
++	if (!ev) {
++		cfg80211_put_bss(wdev->wiphy, bss);
+ 		return;
++	}
+ 
+ 	ev->type = EVENT_CONNECT_RESULT;
+ 	if (bssid)
+@@ -780,6 +793,9 @@ void cfg80211_connect_result(struct net_device *dev, const u8 *bssid,
+ 		ev->cr.resp_ie_len = resp_ie_len;
+ 		memcpy((void *)ev->cr.resp_ie, resp_ie, resp_ie_len);
+ 	}
++	if (bss)
++		cfg80211_hold_bss(bss_from_pub(bss));
++	ev->cr.bss = bss;
+ 	ev->cr.status = status;
+ 
+ 	spin_lock_irqsave(&wdev->event_lock, flags);
+@@ -787,7 +803,7 @@ void cfg80211_connect_result(struct net_device *dev, const u8 *bssid,
+ 	spin_unlock_irqrestore(&wdev->event_lock, flags);
+ 	queue_work(cfg80211_wq, &rdev->event_work);
+ }
+-EXPORT_SYMBOL(cfg80211_connect_result);
++EXPORT_SYMBOL(cfg80211_connect_bss);
+ 
+ /* Consumes bss object one way or another */
+ void __cfg80211_roamed(struct wireless_dev *wdev,
+diff --git a/net/wireless/util.c b/net/wireless/util.c
+index f36039888eb56..7cfabd6e83c68 100644
+--- a/net/wireless/util.c
++++ b/net/wireless/util.c
+@@ -950,7 +950,7 @@ void cfg80211_process_wdev_events(struct wireless_dev *wdev)
+ 				ev->cr.resp_ie, ev->cr.resp_ie_len,
+ 				ev->cr.status,
+ 				ev->cr.status == WLAN_STATUS_SUCCESS,
+-				NULL);
++				ev->cr.bss);
+ 			break;
+ 		case EVENT_ROAMED:
+ 			__cfg80211_roamed(wdev, ev->rm.bss, ev->rm.req_ie,
+-- 
+cgit 1.2.3-korg
+

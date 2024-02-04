@@ -30,6 +30,7 @@ SRC_URI += "http://en3homeftp.net/pub/down/linux-4.4.35.tar.xz;name=kernel \
 	file://fix-multiple-defs-yyloc.patch \
 	file://Backport_minimal_compiler_attributes_h_to_support_GCC_9.patch \
 	file://fix-build-with-binutils-2.41.patch \
+	file://cfg80211_Add_option_to_report_the_bss_entry_in_connect_result.patch \
 	"
 
 # wireguard v1.0.20220627

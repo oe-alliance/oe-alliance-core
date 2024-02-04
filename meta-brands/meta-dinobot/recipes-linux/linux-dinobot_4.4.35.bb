@@ -38,6 +38,7 @@ SRC_URI:u5pvr += "https://source.mynonpublic.com/dinobot/dinobot-linux-${PV}-${S
     file://fix-multiple-defs-yyloc.patch \
     file://Backport_minimal_compiler_attributes_h_to_support_GCC_9.patch \
     file://fix-build-with-binutils-2.41.patch \
+    file://cfg80211_Add_option_to_report_the_bss_entry_in_connect_result.patch \
 "
 
 SRC_URI = "https://source.mynonpublic.com/dinobot/dinobot-linux-${PV}-${SRCDATE}.tar.gz;name=new \
@@ -54,6 +55,7 @@ SRC_URI = "https://source.mynonpublic.com/dinobot/dinobot-linux-${PV}-${SRCDATE}
     file://fix-multiple-defs-yyloc.patch \
     file://Backport_minimal_compiler_attributes_h_to_support_GCC_9.patch \
     file://fix-build-with-binutils-2.41.patch \
+    file://cfg80211_Add_option_to_report_the_bss_entry_in_connect_result.patch \
 "
 
 # wireguard v1.0.20220627

@@ -24,6 +24,7 @@ SRC_URI += "https://source.mynonpublic.com/anadol/anadol-linux-${PV}-${SRCDATE}.
     file://findkerneldevice.sh \
     file://fix-multiple-defs-yyloc.patch \
     file://fix-build-with-binutils-2.41.patch \
+    file://cfg80211_Add_option_to_report_the_bss_entry_in_connect_result.patch \
 "
 
 S = "${WORKDIR}/linux-${PV}"
