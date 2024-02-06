@@ -2,16 +2,6 @@ diff --git a/Makefile.cmdline b/Makefile.cmdline
 index a5fffb7..d92cd48 100644
 --- a/Makefile.cmdline
 +++ b/Makefile.cmdline
-@@ -8,7 +8,8 @@ DUKTAPE_SOURCES = src/duktape.c
- CMDLINE_SOURCES = \
- 	examples/cmdline/duk_cmdline.c
- 
--CC = gcc
-+# Let bitbake specify CC and LDFLAGS
-+# CC	= gcc
- CCOPTS = -Os -pedantic -std=c99 -Wall -fstrict-aliasing -fomit-frame-pointer
- CCOPTS += -I./examples/cmdline -I./src   # duktape.h and duk_config.h must be in include path
- CCLIBS = -lm
 @@ -22,12 +23,12 @@ CCOPTS += -DDUK_CMDLINE_CONSOLE_SUPPORT -I./extras/console
  CMDLINE_SOURCES += extras/console/duk_console.c
  
@@ -29,15 +19,6 @@ index a5fffb7..d92cd48 100644
  
  # If you want linenoise, you can enable these.  At the moment linenoise
  # will cause some harmless compilation warnings.
-@@ -40,7 +41,7 @@ CMDLINE_SOURCES += extras/module-duktape/duk_module_duktape.c
- # http://wiki.duktape.org/Configuring.html
- 
- duk: $(DUKTAPE_SOURCES) $(CMDLINE_SOURCES)
--	$(CC) -o $@ $(DEFINES) $(CCOPTS) $(DUKTAPE_SOURCES) $(CMDLINE_SOURCES) $(CCLIBS)
-+	$(CC) -o $@ $(DEFINES) $(CCOPTS) $(DUKTAPE_SOURCES) $(CMDLINE_SOURCES) $(CCLIBS) $(LDFLAGS)
- 
- linenoise/linenoise.c: linenoise
- linenoise:
 diff --git a/examples/cmdline/duk_cmdline.c b/examples/cmdline/duk_cmdline.c
 index b55ec66..54705fe 100644
 --- a/examples/cmdline/duk_cmdline.c
