@@ -52,6 +52,7 @@ RRECOMMENDS:${PN} = "\
     ${@bb.utils.contains("MACHINE_FEATURES", "webkithbbtv", "enigma2-plugin-extensions-webkithbbtv", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "quadpip", "enigma2-plugin-systemplugins-quadpip", "", d)} \
     openvix-picon-feed-opkg-conf \
+    shellinabox \
     "
 
 RRECOMMENDS:${PN}:append:et8500 = " enigma2-plugin-extensions-yahooweather"
