@@ -1,0 +1,102 @@
+From d4ececaecacd01720bc68929a17cfde7cb071228 Mon Sep 17 00:00:00 2001
+From: Captain <openatv@gmail.com>
+Date: Tue, 6 Feb 2024 13:58:04 +0100
+Subject: [PATCH] [PATCH] Revert "Linux: Use 32-bit vDSO for clock_gettime,
+ gettimeofday, time (BZ# 28071)"
+
+---
+ sysdeps/unix/sysv/linux/Makefile        |  6 ---
+ sysdeps/unix/sysv/linux/clock_gettime.c | 51 ++++++-------------------
+ 2 files changed, 12 insertions(+), 45 deletions(-)
+
+diff --git a/sysdeps/unix/sysv/linux/Makefile b/sysdeps/unix/sysv/linux/Makefile
+index 415aa1f14d..a5792e3fbf 100644
+--- a/sysdeps/unix/sysv/linux/Makefile
++++ b/sysdeps/unix/sysv/linux/Makefile
+@@ -407,12 +407,6 @@ sysdep_routines += \
+   ntp_gettime \
+   ntp_gettimex \
+   # sysdep_routines
+-
+-tests += \
+-  tst-clock_gettime-clobber \
+-  tst-gettimeofday-clobber \
+-  tst-time-clobber \
+-  # tests
+ endif
+ 
+ ifeq ($(subdir),signal)
+diff --git a/sysdeps/unix/sysv/linux/clock_gettime.c b/sysdeps/unix/sysv/linux/clock_gettime.c
+index f10a289f79..cd9c9a3a84 100644
+--- a/sysdeps/unix/sysv/linux/clock_gettime.c
++++ b/sysdeps/unix/sysv/linux/clock_gettime.c
+@@ -35,54 +35,27 @@ __clock_gettime64 (clockid_t clock_id, struct __timespec64 *tp)
+ #endif
+ 
+ #ifdef HAVE_CLOCK_GETTIME64_VSYSCALL
+-  int (*vdso_time64) (clockid_t clock_id, struct __timespec64 *tp)
+-    = GLRO(dl_vdso_clock_gettime64);
+-  if (vdso_time64 != NULL)
+-    {
+-      r = INTERNAL_VSYSCALL_CALL (vdso_time64, 2, clock_id, tp);
+-      if (r == 0)
+-	return 0;
+-      return INLINE_SYSCALL_ERROR_RETURN_VALUE (-r);
+-    }
++  r = INLINE_VSYSCALL (clock_gettime64, 2, clock_id, tp);
++#else
++  r = INLINE_SYSCALL_CALL (clock_gettime64, clock_id, tp);
+ #endif
+ 
+-#ifdef HAVE_CLOCK_GETTIME_VSYSCALL
+-  int (*vdso_time) (clockid_t clock_id, struct timespec *tp)
+-    = GLRO(dl_vdso_clock_gettime);
+-  if (vdso_time != NULL)
+-    {
+-      struct timespec tp32;
+-      r = INTERNAL_VSYSCALL_CALL (vdso_time, 2, clock_id, &tp32);
+-      if (r == 0 && tp32.tv_sec >= 0)
+-	{
+-	  *tp = valid_timespec_to_timespec64 (tp32);
+-	  return 0;
+-	}
+-      else if (r != 0)
+-	return INLINE_SYSCALL_ERROR_RETURN_VALUE (-r);
+-
+-      /* Fallback to syscall if the 32-bit time_t vDSO returns overflows.  */
+-    }
+-#endif
+-
+-  r = INTERNAL_SYSCALL_CALL (clock_gettime64, clock_id, tp);
+-  if (r == 0)
+-    return 0;
+-  if (r != -ENOSYS)
+-    return INLINE_SYSCALL_ERROR_RETURN_VALUE (-r);
++  if (r == 0 || errno != ENOSYS)
++    return r;
+ 
+ #ifndef __ASSUME_TIME64_SYSCALLS
+   /* Fallback code that uses 32-bit support.  */
+   struct timespec tp32;
+-  r = INTERNAL_SYSCALL_CALL (clock_gettime, clock_id, &tp32);
++# ifdef HAVE_CLOCK_GETTIME_VSYSCALL
++  r = INLINE_VSYSCALL (clock_gettime, 2, clock_id, &tp32);
++# else
++  r = INLINE_SYSCALL_CALL (clock_gettime, clock_id, &tp32);
++# endif
+   if (r == 0)
+-    {
+-      *tp = valid_timespec_to_timespec64 (tp32);
+-      return 0;
+-    }
++    *tp = valid_timespec_to_timespec64 (tp32);
+ #endif
+ 
+-  return INLINE_SYSCALL_ERROR_RETURN_VALUE (-r);
++  return r;
+ }
+ 
+ #if __TIMESIZE != 64
+-- 
+2.43.0.windows.1
+

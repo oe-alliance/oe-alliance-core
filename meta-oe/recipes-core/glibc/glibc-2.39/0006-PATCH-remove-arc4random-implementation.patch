@@ -1,12 +1,11 @@
-From ed2db89f45bf20967b0016162ffdc807cbdb1dec Mon Sep 17 00:00:00 2001
-From: NickerSK <nickersk@gmail.com>
-Date: Wed, 16 Aug 2023 09:19:37 +0000
-Subject: [PATCH] remove arc4random implementation
+From 6e1d281dc893420f3f83d8cbe2fbce63381d4fc8 Mon Sep 17 00:00:00 2001
+From: Captain <openatv@gmail.com>
+Date: Tue, 6 Feb 2024 14:41:57 +0100
+Subject: [PATCH] [PATCH] remove arc4random implementation
 
 ---
  NEWS                                          |  12 -
  benchtests/Makefile                           |   5 +-
- benchtests/bench-arc4random.c                 | 218 -------
  benchtests/bench-hash-funcs-kernel.h          |   1 -
  benchtests/bench-hash-funcs.c                 |   2 +
  benchtests/bench-util.h                       |   7 -
@@ -17,22 +16,17 @@ Subject: [PATCH] remove arc4random implementation
  nptl/allocatestack.c                          |   3 +-
  stdlib/Makefile                               |   7 -
  stdlib/Versions                               |   5 -
- stdlib/arc4random.c                           | 102 ----
- stdlib/arc4random_uniform.c                   |  71 ---
  stdlib/chacha20.c                             | 191 ++++++
  stdlib/stdlib.h                               |  13 -
- stdlib/tst-arc4random-fork.c                  | 194 ------
- stdlib/tst-arc4random-stats.c                 | 147 -----
- stdlib/tst-arc4random-thread.c                | 353 -----------
  sysdeps/aarch64/Makefile                      |   4 +
  sysdeps/aarch64/chacha20-aarch64.S            | 314 ++++++++++
  sysdeps/aarch64/chacha20_arch.h               |  40 ++
  sysdeps/generic/chacha20_arch.h               |  24 +
- sysdeps/generic/not-cancel.h                  |   5 -
+ sysdeps/generic/not-cancel.h                  |   1 -
  sysdeps/generic/tls-internal.c                |   8 -
  sysdeps/generic/tls-internal.h                |   7 +-
  sysdeps/mach/hurd/i386/libc.abilist           |   3 -
- sysdeps/mach/hurd/not-cancel.h                |  14 -
+ sysdeps/mach/hurd/not-cancel.h                |   1 -
  .../powerpc/powerpc64/be/multiarch/Makefile   |   4 +
  .../powerpc64/be/multiarch/chacha20-ppc.c     |   1 +
  .../powerpc64/be/multiarch/chacha20_arch.h    |  42 ++
@@ -50,7 +44,6 @@ Subject: [PATCH] remove arc4random implementation
  sysdeps/unix/sysv/linux/csky/libc.abilist     |   3 -
  sysdeps/unix/sysv/linux/hppa/libc.abilist     |   3 -
  sysdeps/unix/sysv/linux/i386/libc.abilist     |   3 -
- sysdeps/unix/sysv/linux/ia64/libc.abilist     |   3 -
  .../sysv/linux/m68k/coldfire/libc.abilist     |   3 -
  .../unix/sysv/linux/m68k/m680x0/libc.abilist  |   3 -
  .../sysv/linux/microblaze/be/libc.abilist     |   3 -
@@ -60,7 +53,7 @@ Subject: [PATCH] remove arc4random implementation
  .../sysv/linux/mips/mips64/n32/libc.abilist   |   3 -
  .../sysv/linux/mips/mips64/n64/libc.abilist   |   3 -
  sysdeps/unix/sysv/linux/nios2/libc.abilist    |   3 -
- sysdeps/unix/sysv/linux/not-cancel.h          |  14 +-
+ sysdeps/unix/sysv/linux/not-cancel.h          |   3 +
  sysdeps/unix/sysv/linux/or1k/libc.abilist     |   3 -
  .../linux/powerpc/powerpc32/fpu/libc.abilist  |   3 -
  .../powerpc/powerpc32/nofpu/libc.abilist      |   3 -
@@ -74,7 +67,7 @@ Subject: [PATCH] remove arc4random implementation
  sysdeps/unix/sysv/linux/sh/le/libc.abilist    |   3 -
  .../sysv/linux/sparc/sparc32/libc.abilist     |   3 -
  .../sysv/linux/sparc/sparc64/libc.abilist     |   3 -
- sysdeps/unix/sysv/linux/tls-internal.c        |  29 +-
+ sysdeps/unix/sysv/linux/tls-internal.c        |   9 +-
  sysdeps/unix/sysv/linux/tls-internal.h        |   7 +-
  .../unix/sysv/linux/x86_64/64/libc.abilist    |   3 -
  .../unix/sysv/linux/x86_64/x32/libc.abilist   |   3 -
@@ -82,14 +75,8 @@ Subject: [PATCH] remove arc4random implementation
  sysdeps/x86_64/chacha20-amd64-avx2.S          | 328 ++++++++++
  sysdeps/x86_64/chacha20-amd64-sse2.S          | 311 ++++++++++
  sysdeps/x86_64/chacha20_arch.h                |  55 ++
- 78 files changed, 2264 insertions(+), 1358 deletions(-)
- delete mode 100644 benchtests/bench-arc4random.c
- delete mode 100644 stdlib/arc4random.c
- delete mode 100644 stdlib/arc4random_uniform.c
+ 71 files changed, 2265 insertions(+), 221 deletions(-)
  create mode 100644 stdlib/chacha20.c
- delete mode 100644 stdlib/tst-arc4random-fork.c
- delete mode 100644 stdlib/tst-arc4random-stats.c
- delete mode 100644 stdlib/tst-arc4random-thread.c
  create mode 100644 sysdeps/aarch64/chacha20-aarch64.S
  create mode 100644 sysdeps/aarch64/chacha20_arch.h
  create mode 100644 sysdeps/generic/chacha20_arch.h
@@ -105,10 +92,10 @@ Subject: [PATCH] remove arc4random implementation
  create mode 100644 sysdeps/x86_64/chacha20_arch.h
 
 diff --git a/NEWS b/NEWS
-index 872bc890..1adfd158 100644
+index 1b89f9c010..36bcd4e6fc 100644
 --- a/NEWS
 +++ b/NEWS
-@@ -289,18 +289,6 @@ Major new features:
+@@ -530,18 +530,6 @@ Major new features:
    _GNU_SOURCE macro is defined and the C++20 __cpp_char8_t feature test macro
    is not defined (if __cpp_char8_t is defined, then char8_t is a builtin type).
  
@@ -128,7 +115,7 @@ index 872bc890..1adfd158 100644
  
  * Support for prelink will be removed in the next release; this includes
 diff --git a/benchtests/Makefile b/benchtests/Makefile
-index e1346bbd..94382bf9 100644
+index 4fb9bae023..190d508c3a 100644
 --- a/benchtests/Makefile
 +++ b/benchtests/Makefile
 @@ -244,10 +244,7 @@ hash-benchset := \
@@ -143,232 +130,8 @@ index e1346bbd..94382bf9 100644
  
  stdio-common-benchset := sprintf
  
-diff --git a/benchtests/bench-arc4random.c b/benchtests/bench-arc4random.c
-deleted file mode 100644
-index 775a570e..00000000
---- a/benchtests/bench-arc4random.c
-+++ /dev/null
-@@ -1,218 +0,0 @@
--/* arc4random benchmarks.
--   Copyright (C) 2022-2023 Free Software Foundation, Inc.
--   This file is part of the GNU C Library.
--
--   The GNU C Library is free software; you can redistribute it and/or
--   modify it under the terms of the GNU Lesser General Public
--   License as published by the Free Software Foundation; either
--   version 2.1 of the License, or (at your option) any later version.
--
--   The GNU C Library is distributed in the hope that it will be useful,
--   but WITHOUT ANY WARRANTY; without even the implied warranty of
--   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
--   Lesser General Public License for more details.
--
--   You should have received a copy of the GNU Lesser General Public
--   License along with the GNU C Library; if not, see
--   <https://www.gnu.org/licenses/>.  */
--
--#include "bench-timing.h"
--#include "bench-util.h"
--#include "json-lib.h"
--#include <array_length.h>
--#include <intprops.h>
--#include <signal.h>
--#include <stdbool.h>
--#include <stdio.h>
--#include <stdlib.h>
--#include <support/support.h>
--#include <support/timespec.h>
--#include <support/xthread.h>
--
--static volatile sig_atomic_t timer_finished;
--
--static void timer_callback (int unused)
--{
--  timer_finished = 1;
--}
--
--static timer_t timer;
--
--/* Run for approximately DURATION seconds, and it does not matter who
--   receive the signal (so not need to mask it on main thread).  */
--static void
--timer_start (void)
--{
--  timer_finished = 0;
--  timer = support_create_timer (DURATION, 0, false, timer_callback);
--}
--static void
--timer_stop (void)
--{
--  support_delete_timer (timer);
--}
--
--static const uint32_t sizes[] = { 0, 16, 32, 48, 64, 80, 96, 112, 128 };
--
--static double
--bench_throughput (void)
--{
--  uint64_t n = 0;
--
--  struct timespec start, end;
--  clock_gettime (CLOCK_MONOTONIC, &start);
--  while (1)
--    {
--      DO_NOT_OPTIMIZE_OUT (arc4random ());
--      n++;
--
--      if (timer_finished == 1)
--	break;
--    }
--  clock_gettime (CLOCK_MONOTONIC, &end);
--  struct timespec diff = timespec_sub (end, start);
--
--  double total = (double) n * sizeof (uint32_t);
--  double duration = (double) diff.tv_sec
--    + (double) diff.tv_nsec / TIMESPEC_HZ;
--
--  return total / duration;
--}
--
--static double
--bench_latency (void)
--{
--  timing_t start, stop, cur;
--  const size_t iters = 1024;
--
--  TIMING_NOW (start);
--  for (size_t i = 0; i < iters; i++)
--    DO_NOT_OPTIMIZE_OUT (arc4random ());
--  TIMING_NOW (stop);
--
--  TIMING_DIFF (cur, start, stop);
--
--  return (double) (cur) / (double) iters;
--}
--
--static double
--bench_buf_throughput (size_t len)
--{
--  uint8_t buf[len];
--  uint64_t n = 0;
--
--  struct timespec start, end;
--  clock_gettime (CLOCK_MONOTONIC, &start);
--  while (1)
--    {
--      arc4random_buf (buf, len);
--      n++;
--
--      if (timer_finished == 1)
--	break;
--    }
--  clock_gettime (CLOCK_MONOTONIC, &end);
--  struct timespec diff = timespec_sub (end, start);
--
--  double total = (double) n * len;
--  double duration = (double) diff.tv_sec
--    + (double) diff.tv_nsec / TIMESPEC_HZ;
--
--  return total / duration;
--}
--
--static double
--bench_buf_latency (size_t len)
--{
--  timing_t start, stop, cur;
--  const size_t iters = 1024;
--
--  uint8_t buf[len];
--
--  TIMING_NOW (start);
--  for (size_t i = 0; i < iters; i++)
--    arc4random_buf (buf, len);
--  TIMING_NOW (stop);
--
--  TIMING_DIFF (cur, start, stop);
--
--  return (double) (cur) / (double) iters;
--}
--
--static void
--bench_singlethread (json_ctx_t *json_ctx)
--{
--  json_element_object_begin (json_ctx);
--
--  json_array_begin (json_ctx, "throughput");
--  for (int i = 0; i < array_length (sizes); i++)
--    {
--      timer_start ();
--      double r = sizes[i] == 0
--	? bench_throughput () : bench_buf_throughput (sizes[i]);
--      timer_stop ();
--
--      json_element_double (json_ctx, r);
--    }
--  json_array_end (json_ctx);
--
--  json_array_begin (json_ctx, "latency");
--  for (int i = 0; i < array_length (sizes); i++)
--    {
--      timer_start ();
--      double r = sizes[i] == 0
--	? bench_latency () : bench_buf_latency (sizes[i]);
--      timer_stop ();
--
--      json_element_double (json_ctx, r);
--    }
--  json_array_end (json_ctx);
--
--  json_element_object_end (json_ctx);
--}
--
--static void
--run_bench (json_ctx_t *json_ctx, const char *name,
--	   char *const*fnames, size_t fnameslen,
--	   void (*bench) (json_ctx_t *ctx))
--{
--  json_attr_object_begin (json_ctx, name);
--  json_array_begin (json_ctx, "functions");
--  for (int i = 0; i < fnameslen; i++)
--    json_element_string (json_ctx, fnames[i]);
--  json_array_end (json_ctx);
--
--  json_array_begin (json_ctx, "results");
--  bench (json_ctx);
--  json_array_end (json_ctx);
--  json_attr_object_end (json_ctx);
--}
--
--static int
--do_test (void)
--{
--  char *fnames[array_length (sizes)];
--  for (int i = 0; i < array_length (sizes); i++)
--    if (sizes[i] == 0)
--      fnames[i] = xasprintf ("arc4random");
--    else
--      fnames[i] = xasprintf ("arc4random_buf(%u)", sizes[i]);
--
--  json_ctx_t json_ctx;
--  json_init (&json_ctx, 0, stdout);
--
--  json_document_begin (&json_ctx);
--  json_attr_string (&json_ctx, "timing_type", TIMING_TYPE);
--
--  run_bench (&json_ctx, "single-thread", fnames, array_length (fnames),
--	     bench_singlethread);
--
--  json_document_end (&json_ctx);
--
--  for (int i = 0; i < array_length (sizes); i++)
--    free (fnames[i]);
--
--  return 0;
--}
--
--#include <support/test-driver.c>
 diff --git a/benchtests/bench-hash-funcs-kernel.h b/benchtests/bench-hash-funcs-kernel.h
-index f6474111..8939bdab 100644
+index 7eaa3665b6..72965e4ad2 100644
 --- a/benchtests/bench-hash-funcs-kernel.h
 +++ b/benchtests/bench-hash-funcs-kernel.h
 @@ -17,7 +17,6 @@
@@ -380,7 +143,7 @@ index f6474111..8939bdab 100644
  /* We go through the trouble of using macros here because many of the
     hash functions are meant to be inlined so its not fair to benchmark
 diff --git a/benchtests/bench-hash-funcs.c b/benchtests/bench-hash-funcs.c
-index 4a6858c0..6dc285ae 100644
+index 8dd88c9e39..30448d0fe9 100644
 --- a/benchtests/bench-hash-funcs.c
 +++ b/benchtests/bench-hash-funcs.c
 @@ -38,6 +38,8 @@
@@ -393,7 +156,7 @@ index 4a6858c0..6dc285ae 100644
  {
    NFIXED_ITERS = 1048576,
 diff --git a/benchtests/bench-util.h b/benchtests/bench-util.h
-index 13927ff0..df39f43f 100644
+index 91d9089237..e7a5707206 100644
 --- a/benchtests/bench-util.h
 +++ b/benchtests/bench-util.h
 @@ -16,13 +16,6 @@
@@ -411,10 +174,10 @@ index 13927ff0..df39f43f 100644
  #ifndef START_ITER
  # define START_ITER (100000000)
 diff --git a/include/stdlib.h b/include/stdlib.h
-index 7deb8193..6fb962b2 100644
+index 580da9be15..32040816d1 100644
 --- a/include/stdlib.h
 +++ b/include/stdlib.h
-@@ -184,15 +184,6 @@ libc_hidden_proto (__ptsname_r)
+@@ -180,15 +180,6 @@ libc_hidden_proto (__ptsname_r)
  libc_hidden_proto (grantpt)
  libc_hidden_proto (unlockpt)
  
@@ -431,10 +194,10 @@ index 7deb8193..6fb962b2 100644
  				 char **__restrict __endptr, int __group)
       __THROW __nonnull ((1)) __wur;
 diff --git a/malloc/malloc.c b/malloc/malloc.c
-index e2f1a615..4ddde69e 100644
+index bcb6e5b83c..da3d1694b7 100644
 --- a/malloc/malloc.c
 +++ b/malloc/malloc.c
-@@ -254,7 +254,6 @@
+@@ -255,7 +255,6 @@
  /* For tcache double-free check.  */
  #include <random-bits.h>
  #include <sys/random.h>
@@ -442,17 +205,17 @@ index e2f1a615..4ddde69e 100644
  
  /*
    Debugging:
-@@ -3129,7 +3128,7 @@ static uintptr_t tcache_key;
- static void
+@@ -3140,7 +3139,7 @@ static void
  tcache_key_initialize (void)
  {
--  if (__getrandom_nocancel (&tcache_key, sizeof(tcache_key), GRND_NONBLOCK)
-+  if (__getrandom (&tcache_key, sizeof(tcache_key), GRND_NONBLOCK)
+   /* We need to use the _nostatus version here, see BZ 29624.  */
+-  if (__getrandom_nocancel_nostatus (&tcache_key, sizeof(tcache_key),
++  if (__getrandom (&tcache_key, sizeof(tcache_key),
+ 				     GRND_NONBLOCK)
        != sizeof (tcache_key))
      {
-       tcache_key = random_bits ();
 diff --git a/malloc/thread-freeres.c b/malloc/thread-freeres.c
-index 416d199a..374067e2 100644
+index 55ba4e7b83..48bdbb27cf 100644
 --- a/malloc/thread-freeres.c
 +++ b/malloc/thread-freeres.c
 @@ -33,7 +33,7 @@ __libc_thread_freeres (void)
@@ -465,7 +228,7 @@ index 416d199a..374067e2 100644
  
    /* This should come last because it shuts down malloc for this
 diff --git a/manual/math.texi b/manual/math.texi
-index 7f0499ab..105d6122 100644
+index 2f6ee253b9..087f4146bc 100644
 --- a/manual/math.texi
 +++ b/manual/math.texi
 @@ -1447,7 +1447,6 @@ systems.
@@ -522,7 +285,7 @@ index 7f0499ab..105d6122 100644
  @section Is Fast Code or Small Code preferred?
  @cindex Optimization
 diff --git a/nptl/allocatestack.c b/nptl/allocatestack.c
-index f9d8cdfd..4dea1155 100644
+index f35a8369bd..b461285b57 100644
 --- a/nptl/allocatestack.c
 +++ b/nptl/allocatestack.c
 @@ -32,7 +32,6 @@
@@ -530,10 +293,10 @@ index f9d8cdfd..4dea1155 100644
  #include <nptl-stack.h>
  #include <libc-lock.h>
 -#include <tls-internal.h>
+ #include <intprops.h>
+ #include <setvmaname.h>
  
- /* Default alignment of stack.  */
- #ifndef STACK_ALIGN
-@@ -128,7 +127,7 @@ get_cached_stack (size_t *sizep, void **memp)
+@@ -130,7 +129,7 @@ get_cached_stack (size_t *sizep, void **memp)
  
    result->exiting = false;
    __libc_lock_init (result->exit_lock);
@@ -543,10 +306,10 @@ index f9d8cdfd..4dea1155 100644
    /* Clear the DTV.  */
    dtv_t *dtv = GET_DTV (TLS_TPADJ (result));
 diff --git a/stdlib/Makefile b/stdlib/Makefile
-index 25e42a77..9b692321 100644
+index d587f054d1..78504d3182 100644
 --- a/stdlib/Makefile
 +++ b/stdlib/Makefile
-@@ -53,8 +53,6 @@ routines := \
+@@ -55,8 +55,6 @@ routines := \
    a64l \
    abort \
    abs \
@@ -555,7 +318,7 @@ index 25e42a77..9b692321 100644
    at_quick_exit \
    atof \
    atoi \
-@@ -192,9 +190,6 @@ tests := \
+@@ -263,9 +261,6 @@ tests := \
    testrand \
    testsort \
    tst-abs \
@@ -565,7 +328,7 @@ index 25e42a77..9b692321 100644
    tst-at_quick_exit \
    tst-atexit \
    tst-atof1 \
-@@ -289,8 +284,6 @@ LDLIBS-test-cxa_atexit-race = $(shared-thread-library)
+@@ -381,8 +376,6 @@ LDLIBS-test-cxa_atexit-race = $(shared-thread-library)
  LDLIBS-test-cxa_atexit-race2 = $(shared-thread-library)
  LDLIBS-test-on_exit-race = $(shared-thread-library)
  LDLIBS-tst-canon-bz26341 = $(shared-thread-library)
@@ -575,7 +338,7 @@ index 25e42a77..9b692321 100644
  
  LDLIBS-test-dlclose-exit-race = $(shared-thread-library)
 diff --git a/stdlib/Versions b/stdlib/Versions
-index 6a861c54..4235f01a 100644
+index ea2265bbd4..e8e73145af 100644
 --- a/stdlib/Versions
 +++ b/stdlib/Versions
 @@ -136,11 +136,6 @@ libc {
@@ -590,194 +353,9 @@ index 6a861c54..4235f01a 100644
    GLIBC_2.37 {
    }
    GLIBC_2.38 {
-diff --git a/stdlib/arc4random.c b/stdlib/arc4random.c
-deleted file mode 100644
-index 757aaa31..00000000
---- a/stdlib/arc4random.c
-+++ /dev/null
-@@ -1,102 +0,0 @@
--/* Pseudo Random Number Generator
--   Copyright (C) 2022-2023 Free Software Foundation, Inc.
--   This file is part of the GNU C Library.
--
--   The GNU C Library is free software; you can redistribute it and/or
--   modify it under the terms of the GNU Lesser General Public
--   License as published by the Free Software Foundation; either
--   version 2.1 of the License, or (at your option) any later version.
--
--   The GNU C Library is distributed in the hope that it will be useful,
--   but WITHOUT ANY WARRANTY; without even the implied warranty of
--   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
--   Lesser General Public License for more details.
--
--   You should have received a copy of the GNU Lesser General Public
--   License along with the GNU C Library; if not, see
--   <https://www.gnu.org/licenses/>.  */
--
--#include <errno.h>
--#include <not-cancel.h>
--#include <stdio.h>
--#include <stdlib.h>
--#include <sys/mman.h>
--#include <sys/param.h>
--#include <sys/random.h>
--
--static void
--arc4random_getrandom_failure (void)
--{
--  __libc_fatal ("Fatal glibc error: cannot get entropy for arc4random\n");
--}
--
--void
--__arc4random_buf (void *p, size_t n)
--{
--  static int seen_initialized;
--  ssize_t l;
--  int fd;
--
--  if (n == 0)
--    return;
--
--  for (;;)
--    {
--      l = TEMP_FAILURE_RETRY (__getrandom_nocancel (p, n, 0));
--      if (l > 0)
--	{
--	  if ((size_t) l == n)
--	    return; /* Done reading, success.  */
--	  p = (uint8_t *) p + l;
--	  n -= l;
--	  continue; /* Interrupted by a signal; keep going.  */
--	}
--      else if (l == -ENOSYS)
--	break; /* No syscall, so fallback to /dev/urandom.  */
--      arc4random_getrandom_failure ();
--    }
--
--  if (atomic_load_relaxed (&seen_initialized) == 0)
--    {
--      /* Poll /dev/random as an approximation of RNG initialization.  */
--      struct pollfd pfd = { .events = POLLIN };
--      pfd.fd = TEMP_FAILURE_RETRY (
--	  __open64_nocancel ("/dev/random", O_RDONLY | O_CLOEXEC | O_NOCTTY));
--      if (pfd.fd < 0)
--	arc4random_getrandom_failure ();
--      if (TEMP_FAILURE_RETRY (__poll_infinity_nocancel (&pfd, 1)) < 0)
--	arc4random_getrandom_failure ();
--      if (__close_nocancel (pfd.fd) < 0)
--	arc4random_getrandom_failure ();
--      atomic_store_relaxed (&seen_initialized, 1);
--    }
--
--  fd = TEMP_FAILURE_RETRY (
--      __open64_nocancel ("/dev/urandom", O_RDONLY | O_CLOEXEC | O_NOCTTY));
--  if (fd < 0)
--    arc4random_getrandom_failure ();
--  for (;;)
--    {
--      l = TEMP_FAILURE_RETRY (__read_nocancel (fd, p, n));
--      if (l <= 0)
--	arc4random_getrandom_failure ();
--      if ((size_t) l == n)
--	break; /* Done reading, success.  */
--      p = (uint8_t *) p + l;
--      n -= l;
--    }
--  if (__close_nocancel (fd) < 0)
--    arc4random_getrandom_failure ();
--}
--libc_hidden_def (__arc4random_buf)
--weak_alias (__arc4random_buf, arc4random_buf)
--
--uint32_t
--__arc4random (void)
--{
--  uint32_t r;
--  __arc4random_buf (&r, sizeof (r));
--  return r;
--}
--libc_hidden_def (__arc4random)
--weak_alias (__arc4random, arc4random)
-diff --git a/stdlib/arc4random_uniform.c b/stdlib/arc4random_uniform.c
-deleted file mode 100644
-index f106e616..00000000
---- a/stdlib/arc4random_uniform.c
-+++ /dev/null
-@@ -1,71 +0,0 @@
--/* Random pseudo generator number which returns a single 32 bit value
--   uniformly distributed but with an upper_bound.
--   Copyright (C) 2022-2023 Free Software Foundation, Inc.
--   This file is part of the GNU C Library.
--
--   The GNU C Library is free software; you can redistribute it and/or
--   modify it under the terms of the GNU Lesser General Public
--   License as published by the Free Software Foundation; either
--   version 2.1 of the License, or (at your option) any later version.
--
--   The GNU C Library is distributed in the hope that it will be useful,
--   but WITHOUT ANY WARRANTY; without even the implied warranty of
--   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
--   Lesser General Public License for more details.
--
--   You should have received a copy of the GNU Lesser General Public
--   License along with the GNU C Library; if not, see
--   <https://www.gnu.org/licenses/>.  */
--
--#include <stdlib.h>
--#include <sys/param.h>
--
--/* Return a uniformly distributed random number less than N.  The algorithm
--   calculates a mask being the lowest power of two bounding the upper bound
--   N, successively queries new random values, and rejects values outside of
--   the request range.
--
--   For reject values, it also tries if the remaining entropy could fit on
--   the asked range after range adjustment.
--
--   The algorithm avoids modulo and divide operations, which might be costly
--   depending on the architecture.  */
--uint32_t
--__arc4random_uniform (uint32_t n)
--{
--  if (n <= 1)
--    /* There is no valid return value for a zero limit, and 0 is the
--       only possible result for limit 1.  */
--    return 0;
--
--  /* Powers of two are easy.  */
--  if (powerof2 (n))
--    return __arc4random () & (n - 1);
--
--  /* mask is the smallest power of 2 minus 1 number larger than n.  */
--  int z = __builtin_clz (n);
--  uint32_t mask = ~UINT32_C(0) >> z;
--  int bits = CHAR_BIT * sizeof (uint32_t) - z;
--
--  while (1)
--    {
--      uint32_t value = __arc4random ();
--
--      /* Return if the lower power of 2 minus 1 satisfy the condition.  */
--      uint32_t r = value & mask;
--      if (r < n)
--	return r;
--
--      /* Otherwise check if remaining bits of entropy provides fits in the
--	 bound.  */
--      for (int bits_left = z; bits_left >= bits; bits_left -= bits)
--	{
--	  value >>= bits;
--	  r = value & mask;
--	  if (r < n)
--	    return r;
--	}
--    }
--}
--libc_hidden_def (__arc4random_uniform)
--weak_alias (__arc4random_uniform, arc4random_uniform)
 diff --git a/stdlib/chacha20.c b/stdlib/chacha20.c
 new file mode 100644
-index 00000000..2745a813
+index 0000000000..2745a81315
 --- /dev/null
 +++ b/stdlib/chacha20.c
 @@ -0,0 +1,191 @@
@@ -973,7 +551,7 @@ index 00000000..2745a813
 +/* Get the architecture optimized version.  */
 +#include <chacha20_arch.h>
 diff --git a/stdlib/stdlib.h b/stdlib/stdlib.h
-index 631b0cbb..62a5f50a 100644
+index 414c49d731..7cb7669a16 100644
 --- a/stdlib/stdlib.h
 +++ b/stdlib/stdlib.h
 @@ -652,19 +652,6 @@ extern int seed48_r (unsigned short int __seed16v[3],
@@ -996,724 +574,12 @@ index 631b0cbb..62a5f50a 100644
  # endif	/* Use misc.  */
  #endif	/* Use misc or X/Open.  */
  
-diff --git a/stdlib/tst-arc4random-fork.c b/stdlib/tst-arc4random-fork.c
-deleted file mode 100644
-index 65d5893f..00000000
---- a/stdlib/tst-arc4random-fork.c
-+++ /dev/null
-@@ -1,194 +0,0 @@
--/* Test that subprocesses generate distinct streams of randomness.
--   Copyright (C) 2022-2023 Free Software Foundation, Inc.
--   This file is part of the GNU C Library.
--
--   The GNU C Library is free software; you can redistribute it and/or
--   modify it under the terms of the GNU Lesser General Public
--   License as published by the Free Software Foundation; either
--   version 2.1 of the License, or (at your option) any later version.
--
--   The GNU C Library is distributed in the hope that it will be useful,
--   but WITHOUT ANY WARRANTY; without even the implied warranty of
--   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
--   Lesser General Public License for more details.
--
--   You should have received a copy of the GNU Lesser General Public
--   License along with the GNU C Library; if not, see
--   <https://www.gnu.org/licenses/>.  */
--
--/* Collect random data from subprocesses and check that all the
--   results are unique.  */
--
--#include <array_length.h>
--#include <stdlib.h>
--#include <stdio.h>
--#include <string.h>
--#include <support/check.h>
--#include <support/support.h>
--#include <support/xthread.h>
--#include <support/xunistd.h>
--#include <unistd.h>
--
--/* Perform multiple runs.  The subsequent runs start with an
--   already-initialized random number generator.  */
--enum { runs = 10 };
--
--/* Total number of spawned processes on each run.  */
--enum { subprocesses = 49 };
--
--/* The total number of processes.  */
--enum { processes = subprocesses + 1 };
--
--/* Number of bytes of randomness to generate per process.  Large
--   enough to make false positive duplicates extremely unlikely.  */
--enum { random_size = 16 };
--
--/* Generated bytes of randomness.  */
--struct result
--{
--  unsigned char bytes[random_size];
--};
--
--/* Shared across all processes.  */
--static struct shared_data
--{
--  pthread_barrier_t barrier;
--  struct result results[runs][processes];
--} *shared_data;
--
--static void
--generate_arc4random (unsigned char *bytes)
--{
--  for (int i = 0; i < random_size / sizeof (uint32_t); i++)
--    {
--      uint32_t x = arc4random ();
--      memcpy (&bytes[4 * i], &x, sizeof x);
--    }
--}
--
--static void
--generate_arc4random_buf (unsigned char *bytes)
--{
--  arc4random_buf (bytes, random_size);
--}
--
--static void
--generate_arc4random_uniform (unsigned char *bytes)
--{
--  for (int i = 0; i < random_size; i++)
--    bytes[i] = arc4random_uniform (256);
--}
--
--/* Invoked to collect data from a subprocess.  */
--static void
--subprocess (int run, int process_index, void (*func)(unsigned char *))
--{
--  xpthread_barrier_wait (&shared_data->barrier);
--  func (shared_data->results[run][process_index].bytes);
--}
--
--/* Used to sort the results.  */
--struct index
--{
--  int run;
--  int process_index;
--};
--
--/* Used to sort an array of struct index values.  */
--static int
--index_compare (const void *left1, const void *right1)
--{
--  const struct index *left = left1;
--  const struct index *right = right1;
--
--  return memcmp (shared_data->results[left->run][left->process_index].bytes,
--                 shared_data->results[right->run][right->process_index].bytes,
--                 random_size);
--}
--
--static int
--do_test_func (void (*func)(unsigned char *bytes))
--{
--  /* Collect random data.  */
--  for (int run = 0; run < runs; ++run)
--    {
--      pid_t pids[subprocesses];
--      for (int process_index = 0; process_index < subprocesses;
--           ++process_index)
--        {
--          pids[process_index] = xfork ();
--          if (pids[process_index] == 0)
--            {
--              subprocess (run, process_index, func);
--              _exit (0);
--            }
--        }
--
--      /* Trigger all subprocesses.  Also add data from the parent
--         process.  */
--      subprocess (run, subprocesses, func);
--
--      for (int process_index = 0; process_index < subprocesses;
--           ++process_index)
--        {
--          int status;
--          xwaitpid (pids[process_index], &status, 0);
--          if (status != 0)
--            FAIL_EXIT1 ("subprocess index %d (PID %d) exit status %d\n",
--                        process_index, (int) pids[process_index], status);
--        }
--    }
--
--  /* Check for duplicates.  */
--  struct index indexes[runs * processes];
--  for (int run = 0; run < runs; ++run)
--    for (int process_index = 0; process_index < processes; ++process_index)
--      indexes[run * processes + process_index]
--        = (struct index) { .run = run, .process_index = process_index };
--  qsort (indexes, array_length (indexes), sizeof (indexes[0]), index_compare);
--  for (size_t i = 1; i < array_length (indexes); ++i)
--    {
--      if (index_compare (indexes + i - 1, indexes + i) == 0)
--        {
--          support_record_failure ();
--          unsigned char *bytes
--            = shared_data->results[indexes[i].run]
--                [indexes[i].process_index].bytes;
--          char *quoted = support_quote_blob (bytes, random_size);
--          printf ("error: duplicate randomness data: \"%s\"\n"
--                  "  run %d, subprocess %d\n"
--                  "  run %d, subprocess %d\n",
--                  quoted, indexes[i - 1].run, indexes[i - 1].process_index,
--                  indexes[i].run, indexes[i].process_index);
--          free (quoted);
--        }
--    }
--
--  return 0;
--}
--
--static int
--do_test (void)
--{
--  shared_data = support_shared_allocate (sizeof (*shared_data));
--  {
--    pthread_barrierattr_t attr;
--    xpthread_barrierattr_init (&attr);
--    xpthread_barrierattr_setpshared (&attr, PTHREAD_PROCESS_SHARED);
--    xpthread_barrier_init (&shared_data->barrier, &attr, processes);
--    xpthread_barrierattr_destroy (&attr);
--  }
--
--  do_test_func (generate_arc4random);
--  do_test_func (generate_arc4random_buf);
--  do_test_func (generate_arc4random_uniform);
--
--  xpthread_barrier_destroy (&shared_data->barrier);
--  support_shared_free (shared_data);
--  shared_data = NULL;
--
--  return 0;
--}
--
--#define TIMEOUT 40
--#include <support/test-driver.c>
-diff --git a/stdlib/tst-arc4random-stats.c b/stdlib/tst-arc4random-stats.c
-deleted file mode 100644
-index 1808cf65..00000000
---- a/stdlib/tst-arc4random-stats.c
-+++ /dev/null
-@@ -1,147 +0,0 @@
--/* Statistical tests for arc4random-related functions.
--   Copyright (C) 2022-2023 Free Software Foundation, Inc.
--   This file is part of the GNU C Library.
--
--   The GNU C Library is free software; you can redistribute it and/or
--   modify it under the terms of the GNU Lesser General Public
--   License as published by the Free Software Foundation; either
--   version 2.1 of the License, or (at your option) any later version.
--
--   The GNU C Library is distributed in the hope that it will be useful,
--   but WITHOUT ANY WARRANTY; without even the implied warranty of
--   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
--   Lesser General Public License for more details.
--
--   You should have received a copy of the GNU Lesser General Public
--   License along with the GNU C Library; if not, see
--   <https://www.gnu.org/licenses/>.  */
--
--#include <array_length.h>
--#include <stdbool.h>
--#include <stdio.h>
--#include <stdlib.h>
--#include <stdint.h>
--#include <string.h>
--#include <support/check.h>
--
--enum
--{
--  arc4random_key_size = 32
--};
--
--struct key
--{
--  unsigned char data[arc4random_key_size];
--};
--
--/* With 12,000 keys, the probability that a byte in a predetermined
--   position does not have a predetermined value in all generated keys
--   is about 4e-21.  The probability that this happens with any of the
--   16 * 256 possible byte position/values is 1.6e-17.  This results in
--   an acceptably low false-positive rate.  */
--enum { key_count = 12000 };
--
--static struct key keys[key_count];
--
--/* Used to perform the distribution check.  */
--static int byte_counts[arc4random_key_size][256];
--
--/* Bail out after this many failures.  */
--enum { failure_limit = 100 };
--
--static void
--find_stuck_bytes (bool (*func) (unsigned char *key))
--{
--  memset (&keys, 0xcc, sizeof (keys));
--
--  int failures = 0;
--  for (int key = 0; key < key_count; ++key)
--    {
--      while (true)
--        {
--          if (func (keys[key].data))
--            break;
--          ++failures;
--          if (failures >= failure_limit)
--            {
--              printf ("warning: bailing out after %d failures\n", failures);
--              return;
--            }
--        }
--    }
--  printf ("info: key generation finished with %d failures\n", failures);
--
--  memset (&byte_counts, 0, sizeof (byte_counts));
--  for (int key = 0; key < key_count; ++key)
--    for (int pos = 0; pos < arc4random_key_size; ++pos)
--      ++byte_counts[pos][keys[key].data[pos]];
--
--  for (int pos = 0; pos < arc4random_key_size; ++pos)
--    for (int byte = 0; byte < 256; ++byte)
--      if (byte_counts[pos][byte] == 0)
--        {
--          support_record_failure ();
--          printf ("error: byte %d never appeared at position %d\n", byte, pos);
--        }
--}
--
--/* Test adapter for arc4random.  */
--static bool
--generate_arc4random (unsigned char *key)
--{
--  uint32_t words[arc4random_key_size / 4];
--  _Static_assert (sizeof (words) == arc4random_key_size, "sizeof (words)");
--
--  for (int i = 0; i < array_length (words); ++i)
--    words[i] = arc4random ();
--  memcpy (key, &words, arc4random_key_size);
--  return true;
--}
--
--/* Test adapter for arc4random_buf.  */
--static bool
--generate_arc4random_buf (unsigned char *key)
--{
--  arc4random_buf (key, arc4random_key_size);
--  return true;
--}
--
--/* Test adapter for arc4random_uniform.  */
--static bool
--generate_arc4random_uniform (unsigned char *key)
--{
--  for (int i = 0; i < arc4random_key_size; ++i)
--    key[i] = arc4random_uniform (256);
--  return true;
--}
--
--/* Test adapter for arc4random_uniform with argument 257.  This means
--   that byte 0 happens more often, but we do not perform such a
--   statistical check, so the test will still pass */
--static bool
--generate_arc4random_uniform_257 (unsigned char *key)
--{
--  for (int i = 0; i < arc4random_key_size; ++i)
--    key[i] = arc4random_uniform (257);
--  return true;
--}
--
--static int
--do_test (void)
--{
--  puts ("info: arc4random implementation test");
--  find_stuck_bytes (generate_arc4random);
--
--  puts ("info: arc4random_buf implementation test");
--  find_stuck_bytes (generate_arc4random_buf);
--
--  puts ("info: arc4random_uniform implementation test");
--  find_stuck_bytes (generate_arc4random_uniform);
--
--  puts ("info: arc4random_uniform implementation test (257 variant)");
--  find_stuck_bytes (generate_arc4random_uniform_257);
--
--  return 0;
--}
--
--#include <support/test-driver.c>
-diff --git a/stdlib/tst-arc4random-thread.c b/stdlib/tst-arc4random-thread.c
-deleted file mode 100644
-index d8863cf6..00000000
---- a/stdlib/tst-arc4random-thread.c
-+++ /dev/null
-@@ -1,353 +0,0 @@
--/* Test that threads generate distinct streams of randomness.
--   Copyright (C) 2022-2023 Free Software Foundation, Inc.
--   This file is part of the GNU C Library.
--
--   The GNU C Library is free software; you can redistribute it and/or
--   modify it under the terms of the GNU Lesser General Public
--   License as published by the Free Software Foundation; either
--   version 2.1 of the License, or (at your option) any later version.
--
--   The GNU C Library is distributed in the hope that it will be useful,
--   but WITHOUT ANY WARRANTY; without even the implied warranty of
--   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
--   Lesser General Public License for more details.
--
--   You should have received a copy of the GNU Lesser General Public
--   License along with the GNU C Library; if not, see
--   <https://www.gnu.org/licenses/>.  */
--
--#include <array_length.h>
--#include <sched.h>
--#include <stdio.h>
--#include <stdlib.h>
--#include <string.h>
--#include <support/check.h>
--#include <support/namespace.h>
--#include <support/support.h>
--#include <support/xthread.h>
--
--/* Number of arc4random_buf calls per thread.  */
--enum { count_per_thread = 2048 };
--
--/* Number of threads computing randomness.  */
--enum { inner_threads = 4 };
--
--/* Number of threads launching other threads.  */
--static int outer_threads = 1;
--
--/* Number of launching rounds performed by the outer threads.  */
--enum { outer_rounds = 10 };
--
--/* Maximum number of bytes generated in an arc4random call.  */
--enum { max_size = 32 };
--
--/* Sizes generated by threads.  Must be long enough to be unique with
--   high probability.  */
--static const int sizes[] = { 12, 15, 16, 17, 24, 31, max_size };
--
--/* Data structure to capture randomness results.  */
--struct blob
--{
--  unsigned int size;
--  int thread_id;
--  unsigned int index;
--  unsigned char bytes[max_size];
--};
--
--struct subprocess_args
--{
--  struct blob *blob;
--  void (*func)(unsigned char *, size_t);
--};
--
--static void
--generate_arc4random (unsigned char *bytes, size_t size)
--{
--  int i;
--  for (i = 0; i < size / sizeof (uint32_t); i++)
--    {
--      uint32_t x = arc4random ();
--      memcpy (&bytes[4 * i], &x, sizeof x);
--    }
--  int rem = size % sizeof (uint32_t);
--  if (rem > 0)
--    {
--      uint32_t x = arc4random ();
--      memcpy (&bytes[4 * i], &x, rem);
--    }
--}
--
--static void
--generate_arc4random_buf (unsigned char *bytes, size_t size)
--{
--  arc4random_buf (bytes, size);
--}
--
--static void
--generate_arc4random_uniform (unsigned char *bytes, size_t size)
--{
--  for (int i = 0; i < size; i++)
--    bytes[i] = arc4random_uniform (256);
--}
--
--#define DYNARRAY_STRUCT dynarray_blob
--#define DYNARRAY_ELEMENT struct blob
--#define DYNARRAY_PREFIX dynarray_blob_
--#include <malloc/dynarray-skeleton.c>
--
--/* Sort blob elements by length first, then by comparing the data
--   member.  */
--static int
--compare_blob (const void *left1, const void *right1)
--{
--  const struct blob *left = left1;
--  const struct blob *right = right1;
--
--  if (left->size != right->size)
--    /* No overflow due to limited range.  */
--    return left->size - right->size;
--  return memcmp (left->bytes, right->bytes, left->size);
--}
--
--/* Used to store the global result.  */
--static pthread_mutex_t global_result_lock = PTHREAD_MUTEX_INITIALIZER;
--static struct dynarray_blob global_result;
--
--/* Copy data to the global result, with locking.  */
--static void
--copy_result_to_global (struct dynarray_blob *result)
--{
--  xpthread_mutex_lock (&global_result_lock);
--  size_t old_size = dynarray_blob_size (&global_result);
--  TEST_VERIFY_EXIT
--    (dynarray_blob_resize (&global_result,
--                           old_size + dynarray_blob_size (result)));
--  memcpy (dynarray_blob_begin (&global_result) + old_size,
--          dynarray_blob_begin (result),
--          dynarray_blob_size (result) * sizeof (struct blob));
--  xpthread_mutex_unlock (&global_result_lock);
--}
--
--/* Used to assign unique thread IDs.  Accessed atomically.  */
--static int next_thread_id;
--
--static void *
--inner_thread (void *closure)
--{
--  void (*func) (unsigned char *, size_t) = closure;
--
--  /* Use local result to avoid global lock contention while generating
--     randomness.  */
--  struct dynarray_blob result;
--  dynarray_blob_init (&result);
--
--  int thread_id = __atomic_fetch_add (&next_thread_id, 1, __ATOMIC_RELAXED);
--
--  /* Determine the sizes to be used by this thread.  */
--  int size_slot = thread_id % (array_length (sizes) + 1);
--  bool switch_sizes = size_slot == array_length (sizes);
--  if (switch_sizes)
--    size_slot = 0;
--
--  /* Compute the random blobs.  */
--  for (int i = 0; i < count_per_thread; ++i)
--    {
--      struct blob *place = dynarray_blob_emplace (&result);
--      TEST_VERIFY_EXIT (place != NULL);
--      place->size = sizes[size_slot];
--      place->thread_id = thread_id;
--      place->index = i;
--      func (place->bytes, place->size);
--
--      if (switch_sizes)
--        size_slot = (size_slot + 1) % array_length (sizes);
--    }
--
--  /* Store the blobs in the global result structure.  */
--  copy_result_to_global (&result);
--
--  dynarray_blob_free (&result);
--
--  return NULL;
--}
--
--/* Launch the inner threads and wait for their termination.  */
--static void *
--outer_thread (void *closure)
--{
--  void (*func) (unsigned char *, size_t) = closure;
--
--  for (int round = 0; round < outer_rounds; ++round)
--    {
--      pthread_t threads[inner_threads];
--
--      for (int i = 0; i < inner_threads; ++i)
--        threads[i] = xpthread_create (NULL, inner_thread, func);
--
--      for (int i = 0; i < inner_threads; ++i)
--        xpthread_join (threads[i]);
--    }
--
--  return NULL;
--}
--
--static bool termination_requested;
--
--/* Call arc4random_buf to fill one blob with 16 bytes.  */
--static void *
--get_one_blob_thread (void *closure)
--{
--  struct subprocess_args *arg = closure;
--  struct blob *result = arg->blob;
--
--  result->size = 16;
--  arg->func (result->bytes, result->size);
--  return NULL;
--}
--
--/* Invoked from fork_thread to actually obtain randomness data.  */
--static void
--fork_thread_subprocess (void *closure)
--{
--  struct subprocess_args *arg = closure;
--  struct blob *shared_result = arg->blob;
--
--  struct subprocess_args args[3] =
--  {
--    { shared_result + 0, arg->func },
--    { shared_result + 1, arg->func },
--    { shared_result + 2, arg->func }
--  };
--
--  pthread_t thr1 = xpthread_create (NULL, get_one_blob_thread, &args[1]);
--  pthread_t thr2 = xpthread_create (NULL, get_one_blob_thread, &args[2]);
--  get_one_blob_thread (&args[0]);
--  xpthread_join (thr1);
--  xpthread_join (thr2);
--}
--
--/* Continuously fork subprocesses to obtain a little bit of
--   randomness.  */
--static void *
--fork_thread (void *closure)
--{
--  void (*func)(unsigned char *, size_t) = closure;
--
--  struct dynarray_blob result;
--  dynarray_blob_init (&result);
--
--  /* Three blobs from each subprocess.  */
--  struct blob *shared_result
--    = support_shared_allocate (3 * sizeof (*shared_result));
--
--  while (!__atomic_load_n (&termination_requested, __ATOMIC_RELAXED))
--    {
--      /* Obtain the results from a subprocess.  */
--      struct subprocess_args arg = { shared_result, func };
--      support_isolate_in_subprocess (fork_thread_subprocess, &arg);
--
--      for (int i = 0; i < 3; ++i)
--        {
--          struct blob *place = dynarray_blob_emplace (&result);
--          TEST_VERIFY_EXIT (place != NULL);
--          place->size = shared_result[i].size;
--          place->thread_id = -1;
--          place->index = i;
--          memcpy (place->bytes, shared_result[i].bytes, place->size);
--        }
--    }
--
--  support_shared_free (shared_result);
--
--  copy_result_to_global (&result);
--  dynarray_blob_free (&result);
--
--  return NULL;
--}
--
--/* Launch the outer threads and wait for their termination.  */
--static void
--run_outer_threads (void (*func)(unsigned char *, size_t))
--{
--  /* Special thread that continuously calls fork.  */
--  pthread_t fork_thread_id = xpthread_create (NULL, fork_thread, func);
--
--  pthread_t threads[outer_threads];
--  for (int i = 0; i < outer_threads; ++i)
--    threads[i] = xpthread_create (NULL, outer_thread, func);
--
--  for (int i = 0; i < outer_threads; ++i)
--    xpthread_join (threads[i]);
--
--  __atomic_store_n (&termination_requested, true, __ATOMIC_RELAXED);
--  xpthread_join (fork_thread_id);
--}
--
--static int
--do_test_func (const char *fname, void (*func)(unsigned char *, size_t))
--{
--  dynarray_blob_init (&global_result);
--  int expected_blobs
--    = count_per_thread * inner_threads * outer_threads * outer_rounds;
--  printf ("info: %s: minimum of %d blob results expected\n",
--	  fname, expected_blobs);
--
--  run_outer_threads (func);
--
--  /* The forking thread delivers a non-deterministic number of
--     results, which is why expected_blobs is only a minimum number of
--     results.  */
--  printf ("info: %s: %zu blob results observed\n", fname,
--          dynarray_blob_size (&global_result));
--  TEST_VERIFY (dynarray_blob_size (&global_result) >= expected_blobs);
--
--  /* Verify that there are no duplicates.  */
--  qsort (dynarray_blob_begin (&global_result),
--         dynarray_blob_size (&global_result),
--         sizeof (struct blob), compare_blob);
--  struct blob *end = dynarray_blob_end (&global_result);
--  for (struct blob *p = dynarray_blob_begin (&global_result) + 1;
--       p < end; ++p)
--    {
--      if (compare_blob (p - 1, p) == 0)
--        {
--          support_record_failure ();
--          char *quoted = support_quote_blob (p->bytes, p->size);
--          printf ("error: %s: duplicate blob: \"%s\" (%d bytes)\n",
--		  fname, quoted, (int) p->size);
--          printf ("  first source: thread %d, index %u\n",
--                  p[-1].thread_id, p[-1].index);
--          printf ("  second source: thread %d, index %u\n",
--                  p[0].thread_id, p[0].index);
--          free (quoted);
--        }
--    }
--
--  dynarray_blob_free (&global_result);
--
--  return 0;
--}
--
--static int
--do_test (void)
--{
--  /* Do not run more threads than the maximum of schedulable CPUs.  */
--  cpu_set_t cpuset;
--  if (sched_getaffinity (0, sizeof cpuset, &cpuset) == 0)
--    {
--      unsigned int ncpus = CPU_COUNT (&cpuset);
--      /* Limit the number to not overload the system.  */
--      outer_threads = (ncpus / 2) / inner_threads ?: 1;
--    }
--
--  printf ("info: outer_threads=%d inner_threads=%d\n", outer_threads,
--	  inner_threads);
--
--  do_test_func ("arc4random", generate_arc4random);
--  do_test_func ("arc4random_buf", generate_arc4random_buf);
--  do_test_func ("arc4random_uniform", generate_arc4random_uniform);
--
--  return 0;
--}
--
--#include <support/test-driver.c>
 diff --git a/sysdeps/aarch64/Makefile b/sysdeps/aarch64/Makefile
-index 6a9559e5..fe2e211d 100644
+index 141d7d9cc2..44966fbcd8 100644
 --- a/sysdeps/aarch64/Makefile
 +++ b/sysdeps/aarch64/Makefile
-@@ -51,6 +51,10 @@ ifeq ($(subdir),csu)
- gen-as-const-headers += tlsdesc.sym
+@@ -53,6 +53,10 @@ gen-as-const-headers += \
+   rtld-global-offsets.sym
  endif
  
 +ifeq ($(subdir),stdlib)
@@ -1725,7 +591,7 @@ index 6a9559e5..fe2e211d 100644
  endif
 diff --git a/sysdeps/aarch64/chacha20-aarch64.S b/sysdeps/aarch64/chacha20-aarch64.S
 new file mode 100644
-index 00000000..cce5291c
+index 0000000000..cce5291c5c
 --- /dev/null
 +++ b/sysdeps/aarch64/chacha20-aarch64.S
 @@ -0,0 +1,314 @@
@@ -2045,7 +911,7 @@ index 00000000..cce5291c
 +#endif
 diff --git a/sysdeps/aarch64/chacha20_arch.h b/sysdeps/aarch64/chacha20_arch.h
 new file mode 100644
-index 00000000..37dbb917
+index 0000000000..37dbb917f1
 --- /dev/null
 +++ b/sysdeps/aarch64/chacha20_arch.h
 @@ -0,0 +1,40 @@
@@ -2091,7 +957,7 @@ index 00000000..37dbb917
 +}
 diff --git a/sysdeps/generic/chacha20_arch.h b/sysdeps/generic/chacha20_arch.h
 new file mode 100644
-index 00000000..1b4559cc
+index 0000000000..1b4559ccbc
 --- /dev/null
 +++ b/sysdeps/generic/chacha20_arch.h
 @@ -0,0 +1,24 @@
@@ -2120,7 +986,7 @@ index 00000000..1b4559cc
 +  chacha20_crypt_generic (state, dst, src, bytes);
 +}
 diff --git a/sysdeps/generic/not-cancel.h b/sysdeps/generic/not-cancel.h
-index 03bab49e..97111174 100644
+index 2dd1064600..8e41d630fc 100644
 --- a/sysdeps/generic/not-cancel.h
 +++ b/sysdeps/generic/not-cancel.h
 @@ -20,7 +20,6 @@
@@ -2131,18 +997,8 @@ index 03bab49e..97111174 100644
  #include <unistd.h>
  #include <sys/wait.h>
  #include <time.h>
-@@ -49,9 +48,5 @@
-   (void) __writev (fd, iov, n)
- #define __fcntl64_nocancel(fd, cmd, ...) \
-   __fcntl64 (fd, cmd, __VA_ARGS__)
--#define __getrandom_nocancel(buf, size, flags) \
--  __getrandom (buf, size, flags)
--#define __poll_infinity_nocancel(fds, nfds) \
--  __poll (fds, nfds, -1)
- 
- #endif /* NOT_CANCEL_H  */
 diff --git a/sysdeps/generic/tls-internal.c b/sysdeps/generic/tls-internal.c
-index 1ba53023..4d459ef0 100644
+index 7648f38479..cce09c7471 100644
 --- a/sysdeps/generic/tls-internal.c
 +++ b/sysdeps/generic/tls-internal.c
 @@ -16,14 +16,6 @@
@@ -2161,7 +1017,7 @@ index 1ba53023..4d459ef0 100644
 -  free (__tls_internal.strerror_l_buf);
 -}
 diff --git a/sysdeps/generic/tls-internal.h b/sysdeps/generic/tls-internal.h
-index 9dca66aa..f75698ee 100644
+index 2ac0992b51..738ce1d2b6 100644
 --- a/sysdeps/generic/tls-internal.h
 +++ b/sysdeps/generic/tls-internal.h
 @@ -30,6 +30,11 @@ __glibc_tls_internal (void)
@@ -2178,7 +1034,7 @@ index 9dca66aa..f75698ee 100644
  
  #endif
 diff --git a/sysdeps/mach/hurd/i386/libc.abilist b/sysdeps/mach/hurd/i386/libc.abilist
-index 74a9f427..ea214eaf 100644
+index 2adf98e71d..e87dc25d8a 100644
 --- a/sysdeps/mach/hurd/i386/libc.abilist
 +++ b/sysdeps/mach/hurd/i386/libc.abilist
 @@ -2289,9 +2289,6 @@ GLIBC_2.35 __memcmpeq F
@@ -2192,7 +1048,7 @@ index 74a9f427..ea214eaf 100644
  GLIBC_2.36 mbrtoc8 F
  GLIBC_2.38 __isoc23_fscanf F
 diff --git a/sysdeps/mach/hurd/not-cancel.h b/sysdeps/mach/hurd/not-cancel.h
-index aa720714..074063f4 100644
+index 69fb3c00ef..1de04e7f6e 100644
 --- a/sysdeps/mach/hurd/not-cancel.h
 +++ b/sysdeps/mach/hurd/not-cancel.h
 @@ -21,7 +21,6 @@
@@ -2203,29 +1059,9 @@ index aa720714..074063f4 100644
  #include <sys/wait.h>
  #include <time.h>
  #include <sys/uio.h>
-@@ -76,19 +75,6 @@ __typeof (__fcntl) __fcntl_nocancel;
- #define __fcntl64_nocancel(...) \
-   __fcntl_nocancel (__VA_ARGS__)
- 
--static inline ssize_t
--__getrandom_nocancel (void *buf, size_t buflen, unsigned int flags)
--{
--  int save_errno = errno;
--  ssize_t r = __getrandom (buf, buflen, flags);
--  r = r == -1 ? -errno : r;
--  __set_errno (save_errno);
--  return r;
--}
--
--#define __poll_infinity_nocancel(fds, nfds) \
--  __poll (fds, nfds, -1)
--
- #if IS_IN (libc)
- hidden_proto (__close_nocancel)
- hidden_proto (__close_nocancel_nostatus)
 diff --git a/sysdeps/powerpc/powerpc64/be/multiarch/Makefile b/sysdeps/powerpc/powerpc64/be/multiarch/Makefile
 new file mode 100644
-index 00000000..8c75165f
+index 0000000000..8c75165f7f
 --- /dev/null
 +++ b/sysdeps/powerpc/powerpc64/be/multiarch/Makefile
 @@ -0,0 +1,4 @@
@@ -2235,14 +1071,14 @@ index 00000000..8c75165f
 +endif
 diff --git a/sysdeps/powerpc/powerpc64/be/multiarch/chacha20-ppc.c b/sysdeps/powerpc/powerpc64/be/multiarch/chacha20-ppc.c
 new file mode 100644
-index 00000000..cf9e7353
+index 0000000000..cf9e735326
 --- /dev/null
 +++ b/sysdeps/powerpc/powerpc64/be/multiarch/chacha20-ppc.c
 @@ -0,0 +1 @@
 +#include <sysdeps/powerpc/powerpc64/power8/chacha20-ppc.c>
 diff --git a/sysdeps/powerpc/powerpc64/be/multiarch/chacha20_arch.h b/sysdeps/powerpc/powerpc64/be/multiarch/chacha20_arch.h
 new file mode 100644
-index 00000000..08494dc0
+index 0000000000..08494dc045
 --- /dev/null
 +++ b/sysdeps/powerpc/powerpc64/be/multiarch/chacha20_arch.h
 @@ -0,0 +1,42 @@
@@ -2289,7 +1125,7 @@ index 00000000..08494dc0
 +    chacha20_crypt_generic (state, dst, src, bytes);
 +}
 diff --git a/sysdeps/powerpc/powerpc64/power8/Makefile b/sysdeps/powerpc/powerpc64/power8/Makefile
-index 71a59529..abb0aa3f 100644
+index 71a59529f3..abb0aa3f11 100644
 --- a/sysdeps/powerpc/powerpc64/power8/Makefile
 +++ b/sysdeps/powerpc/powerpc64/power8/Makefile
 @@ -1,3 +1,8 @@
@@ -2303,7 +1139,7 @@ index 71a59529..abb0aa3f 100644
 +endif
 diff --git a/sysdeps/powerpc/powerpc64/power8/chacha20-ppc.c b/sysdeps/powerpc/powerpc64/power8/chacha20-ppc.c
 new file mode 100644
-index 00000000..0bbdcb93
+index 0000000000..0bbdcb9363
 --- /dev/null
 +++ b/sysdeps/powerpc/powerpc64/power8/chacha20-ppc.c
 @@ -0,0 +1,256 @@
@@ -2565,7 +1401,7 @@ index 00000000..0bbdcb93
 +}
 diff --git a/sysdeps/powerpc/powerpc64/power8/chacha20_arch.h b/sysdeps/powerpc/powerpc64/power8/chacha20_arch.h
 new file mode 100644
-index 00000000..ded06762
+index 0000000000..ded06762b6
 --- /dev/null
 +++ b/sysdeps/powerpc/powerpc64/power8/chacha20_arch.h
 @@ -0,0 +1,37 @@
@@ -2607,7 +1443,7 @@ index 00000000..ded06762
 +			     CHACHA20_BUFSIZE / CHACHA20_BLOCK_SIZE);
 +}
 diff --git a/sysdeps/s390/s390-64/Makefile b/sysdeps/s390/s390-64/Makefile
-index 66ed844e..96c110f4 100644
+index 66ed844e68..96c110f490 100644
 --- a/sysdeps/s390/s390-64/Makefile
 +++ b/sysdeps/s390/s390-64/Makefile
 @@ -67,3 +67,9 @@ tests-container += tst-glibc-hwcaps-cache
@@ -2622,7 +1458,7 @@ index 66ed844e..96c110f4 100644
 +endif
 diff --git a/sysdeps/s390/s390-64/chacha20-s390x.S b/sysdeps/s390/s390-64/chacha20-s390x.S
 new file mode 100644
-index 00000000..e38504d3
+index 0000000000..e38504d370
 --- /dev/null
 +++ b/sysdeps/s390/s390-64/chacha20-s390x.S
 @@ -0,0 +1,573 @@
@@ -3201,7 +2037,7 @@ index 00000000..e38504d3
 +#endif /* HAVE_S390_VX_ASM_SUPPORT */
 diff --git a/sysdeps/s390/s390-64/chacha20_arch.h b/sysdeps/s390/s390-64/chacha20_arch.h
 new file mode 100644
-index 00000000..0c6abf77
+index 0000000000..0c6abf77e8
 --- /dev/null
 +++ b/sysdeps/s390/s390-64/chacha20_arch.h
 @@ -0,0 +1,45 @@
@@ -3251,7 +2087,7 @@ index 00000000..0c6abf77
 +  chacha20_crypt_generic (state, dst, src, bytes);
 +}
 diff --git a/sysdeps/unix/sysv/linux/aarch64/libc.abilist b/sysdeps/unix/sysv/linux/aarch64/libc.abilist
-index c49363e7..8dd75b8d 100644
+index 68eeca1c08..f958dc78e3 100644
 --- a/sysdeps/unix/sysv/linux/aarch64/libc.abilist
 +++ b/sysdeps/unix/sysv/linux/aarch64/libc.abilist
 @@ -2616,9 +2616,6 @@ GLIBC_2.35 __memcmpeq F
@@ -3265,7 +2101,7 @@ index c49363e7..8dd75b8d 100644
  GLIBC_2.36 fsconfig F
  GLIBC_2.36 fsmount F
 diff --git a/sysdeps/unix/sysv/linux/alpha/libc.abilist b/sysdeps/unix/sysv/linux/alpha/libc.abilist
-index d6b1dcaa..0ce66215 100644
+index 34c187b721..d309b38502 100644
 --- a/sysdeps/unix/sysv/linux/alpha/libc.abilist
 +++ b/sysdeps/unix/sysv/linux/alpha/libc.abilist
 @@ -2713,9 +2713,6 @@ GLIBC_2.35 __memcmpeq F
@@ -3279,7 +2115,7 @@ index d6b1dcaa..0ce66215 100644
  GLIBC_2.36 fsconfig F
  GLIBC_2.36 fsmount F
 diff --git a/sysdeps/unix/sysv/linux/arc/libc.abilist b/sysdeps/unix/sysv/linux/arc/libc.abilist
-index dfe0c3f7..5c2a558f 100644
+index 916c18ea94..4e68879df1 100644
 --- a/sysdeps/unix/sysv/linux/arc/libc.abilist
 +++ b/sysdeps/unix/sysv/linux/arc/libc.abilist
 @@ -2377,9 +2377,6 @@ GLIBC_2.35 __memcmpeq F
@@ -3293,7 +2129,7 @@ index dfe0c3f7..5c2a558f 100644
  GLIBC_2.36 fsconfig F
  GLIBC_2.36 fsmount F
 diff --git a/sysdeps/unix/sysv/linux/arm/be/libc.abilist b/sysdeps/unix/sysv/linux/arm/be/libc.abilist
-index 6c75e5aa..e3ec8270 100644
+index ea95de282a..99231b3575 100644
 --- a/sysdeps/unix/sysv/linux/arm/be/libc.abilist
 +++ b/sysdeps/unix/sysv/linux/arm/be/libc.abilist
 @@ -496,9 +496,6 @@ GLIBC_2.35 __memcmpeq F
@@ -3307,7 +2143,7 @@ index 6c75e5aa..e3ec8270 100644
  GLIBC_2.36 fsconfig F
  GLIBC_2.36 fsmount F
 diff --git a/sysdeps/unix/sysv/linux/arm/le/libc.abilist b/sysdeps/unix/sysv/linux/arm/le/libc.abilist
-index 03d6f7ae..34f16af8 100644
+index 1cdbc983e1..54e8b5f071 100644
 --- a/sysdeps/unix/sysv/linux/arm/le/libc.abilist
 +++ b/sysdeps/unix/sysv/linux/arm/le/libc.abilist
 @@ -493,9 +493,6 @@ GLIBC_2.35 __memcmpeq F
@@ -3321,7 +2157,7 @@ index 03d6f7ae..34f16af8 100644
  GLIBC_2.36 fsconfig F
  GLIBC_2.36 fsmount F
 diff --git a/sysdeps/unix/sysv/linux/csky/libc.abilist b/sysdeps/unix/sysv/linux/csky/libc.abilist
-index d858c108..7c1c3e49 100644
+index 96d45961e2..1102ed8abf 100644
 --- a/sysdeps/unix/sysv/linux/csky/libc.abilist
 +++ b/sysdeps/unix/sysv/linux/csky/libc.abilist
 @@ -2652,9 +2652,6 @@ GLIBC_2.35 __memcmpeq F
@@ -3335,7 +2171,7 @@ index d858c108..7c1c3e49 100644
  GLIBC_2.36 fsconfig F
  GLIBC_2.36 fsmount F
 diff --git a/sysdeps/unix/sysv/linux/hppa/libc.abilist b/sysdeps/unix/sysv/linux/hppa/libc.abilist
-index 82a14f8a..3f21f4fa 100644
+index fbcd60c2b3..d9788800e0 100644
 --- a/sysdeps/unix/sysv/linux/hppa/libc.abilist
 +++ b/sysdeps/unix/sysv/linux/hppa/libc.abilist
 @@ -2601,9 +2601,6 @@ GLIBC_2.35 __memcmpeq F
@@ -3349,7 +2185,7 @@ index 82a14f8a..3f21f4fa 100644
  GLIBC_2.36 fsconfig F
  GLIBC_2.36 fsmount F
 diff --git a/sysdeps/unix/sysv/linux/i386/libc.abilist b/sysdeps/unix/sysv/linux/i386/libc.abilist
-index 1950b15d..5058223c 100644
+index c989b433c0..fe2aed3cab 100644
 --- a/sysdeps/unix/sysv/linux/i386/libc.abilist
 +++ b/sysdeps/unix/sysv/linux/i386/libc.abilist
 @@ -2785,9 +2785,6 @@ GLIBC_2.35 __memcmpeq F
@@ -3362,22 +2198,8 @@ index 1950b15d..5058223c 100644
  GLIBC_2.36 c8rtomb F
  GLIBC_2.36 fsconfig F
  GLIBC_2.36 fsmount F
-diff --git a/sysdeps/unix/sysv/linux/ia64/libc.abilist b/sysdeps/unix/sysv/linux/ia64/libc.abilist
-index d0b9cb27..1e777f96 100644
---- a/sysdeps/unix/sysv/linux/ia64/libc.abilist
-+++ b/sysdeps/unix/sysv/linux/ia64/libc.abilist
-@@ -2551,9 +2551,6 @@ GLIBC_2.35 __memcmpeq F
- GLIBC_2.35 _dl_find_object F
- GLIBC_2.35 epoll_pwait2 F
- GLIBC_2.35 posix_spawn_file_actions_addtcsetpgrp_np F
--GLIBC_2.36 arc4random F
--GLIBC_2.36 arc4random_buf F
--GLIBC_2.36 arc4random_uniform F
- GLIBC_2.36 c8rtomb F
- GLIBC_2.36 fsconfig F
- GLIBC_2.36 fsmount F
 diff --git a/sysdeps/unix/sysv/linux/m68k/coldfire/libc.abilist b/sysdeps/unix/sysv/linux/m68k/coldfire/libc.abilist
-index 35785a3d..5de68530 100644
+index d9bd6a9b56..e1d81a3b5d 100644
 --- a/sysdeps/unix/sysv/linux/m68k/coldfire/libc.abilist
 +++ b/sysdeps/unix/sysv/linux/m68k/coldfire/libc.abilist
 @@ -497,9 +497,6 @@ GLIBC_2.35 __memcmpeq F
@@ -3391,7 +2213,7 @@ index 35785a3d..5de68530 100644
  GLIBC_2.36 fsconfig F
  GLIBC_2.36 fsmount F
 diff --git a/sysdeps/unix/sysv/linux/m68k/m680x0/libc.abilist b/sysdeps/unix/sysv/linux/m68k/m680x0/libc.abilist
-index 4ab2426e..b9bf2b72 100644
+index 439796d693..89d4362999 100644
 --- a/sysdeps/unix/sysv/linux/m68k/m680x0/libc.abilist
 +++ b/sysdeps/unix/sysv/linux/m68k/m680x0/libc.abilist
 @@ -2728,9 +2728,6 @@ GLIBC_2.35 __memcmpeq F
@@ -3405,7 +2227,7 @@ index 4ab2426e..b9bf2b72 100644
  GLIBC_2.36 fsconfig F
  GLIBC_2.36 fsmount F
 diff --git a/sysdeps/unix/sysv/linux/microblaze/be/libc.abilist b/sysdeps/unix/sysv/linux/microblaze/be/libc.abilist
-index 38faa162..fe336293 100644
+index 1069d3252c..ec9c2916dc 100644
 --- a/sysdeps/unix/sysv/linux/microblaze/be/libc.abilist
 +++ b/sysdeps/unix/sysv/linux/microblaze/be/libc.abilist
 @@ -2701,9 +2701,6 @@ GLIBC_2.35 __memcmpeq F
@@ -3419,7 +2241,7 @@ index 38faa162..fe336293 100644
  GLIBC_2.36 fsconfig F
  GLIBC_2.36 fsmount F
 diff --git a/sysdeps/unix/sysv/linux/microblaze/le/libc.abilist b/sysdeps/unix/sysv/linux/microblaze/le/libc.abilist
-index 374d6589..78fe30f1 100644
+index 17abe08c8b..c18e7f832c 100644
 --- a/sysdeps/unix/sysv/linux/microblaze/le/libc.abilist
 +++ b/sysdeps/unix/sysv/linux/microblaze/le/libc.abilist
 @@ -2698,9 +2698,6 @@ GLIBC_2.35 __memcmpeq F
@@ -3433,7 +2255,7 @@ index 374d6589..78fe30f1 100644
  GLIBC_2.36 fsconfig F
  GLIBC_2.36 fsmount F
 diff --git a/sysdeps/unix/sysv/linux/mips/mips32/fpu/libc.abilist b/sysdeps/unix/sysv/linux/mips/mips32/fpu/libc.abilist
-index fcc5e88e..3c0b3c80 100644
+index 799e508950..30bf7fd8e3 100644
 --- a/sysdeps/unix/sysv/linux/mips/mips32/fpu/libc.abilist
 +++ b/sysdeps/unix/sysv/linux/mips/mips32/fpu/libc.abilist
 @@ -2693,9 +2693,6 @@ GLIBC_2.35 __memcmpeq F
@@ -3447,7 +2269,7 @@ index fcc5e88e..3c0b3c80 100644
  GLIBC_2.36 fsconfig F
  GLIBC_2.36 fsmount F
 diff --git a/sysdeps/unix/sysv/linux/mips/mips32/nofpu/libc.abilist b/sysdeps/unix/sysv/linux/mips/mips32/nofpu/libc.abilist
-index 01eb96cd..4916e6e4 100644
+index 1c10996cbc..2226f0785d 100644
 --- a/sysdeps/unix/sysv/linux/mips/mips32/nofpu/libc.abilist
 +++ b/sysdeps/unix/sysv/linux/mips/mips32/nofpu/libc.abilist
 @@ -2691,9 +2691,6 @@ GLIBC_2.35 __memcmpeq F
@@ -3461,7 +2283,7 @@ index 01eb96cd..4916e6e4 100644
  GLIBC_2.36 fsconfig F
  GLIBC_2.36 fsmount F
 diff --git a/sysdeps/unix/sysv/linux/mips/mips64/n32/libc.abilist b/sysdeps/unix/sysv/linux/mips/mips64/n32/libc.abilist
-index a2748b7b..1e061f17 100644
+index 03d9655f26..ca698477cd 100644
 --- a/sysdeps/unix/sysv/linux/mips/mips64/n32/libc.abilist
 +++ b/sysdeps/unix/sysv/linux/mips/mips64/n32/libc.abilist
 @@ -2699,9 +2699,6 @@ GLIBC_2.35 __memcmpeq F
@@ -3475,7 +2297,7 @@ index a2748b7b..1e061f17 100644
  GLIBC_2.36 fsconfig F
  GLIBC_2.36 fsmount F
 diff --git a/sysdeps/unix/sysv/linux/mips/mips64/n64/libc.abilist b/sysdeps/unix/sysv/linux/mips/mips64/n64/libc.abilist
-index 0ae7ba49..411dd982 100644
+index 05e402ed30..d56aeb158f 100644
 --- a/sysdeps/unix/sysv/linux/mips/mips64/n64/libc.abilist
 +++ b/sysdeps/unix/sysv/linux/mips/mips64/n64/libc.abilist
 @@ -2602,9 +2602,6 @@ GLIBC_2.35 __memcmpeq F
@@ -3489,7 +2311,7 @@ index 0ae7ba49..411dd982 100644
  GLIBC_2.36 fsconfig F
  GLIBC_2.36 fsmount F
 diff --git a/sysdeps/unix/sysv/linux/nios2/libc.abilist b/sysdeps/unix/sysv/linux/nios2/libc.abilist
-index 947495a0..fab4a70c 100644
+index 3aa81766aa..677eea3402 100644
 --- a/sysdeps/unix/sysv/linux/nios2/libc.abilist
 +++ b/sysdeps/unix/sysv/linux/nios2/libc.abilist
 @@ -2740,9 +2740,6 @@ GLIBC_2.35 __memcmpeq F
@@ -3503,38 +2325,19 @@ index 947495a0..fab4a70c 100644
  GLIBC_2.36 fsconfig F
  GLIBC_2.36 fsmount F
 diff --git a/sysdeps/unix/sysv/linux/not-cancel.h b/sysdeps/unix/sysv/linux/not-cancel.h
-index ea2615b3..7a84ca66 100644
+index 2a7585b73f..13d6eae420 100644
 --- a/sysdeps/unix/sysv/linux/not-cancel.h
 +++ b/sysdeps/unix/sysv/linux/not-cancel.h
-@@ -23,7 +23,6 @@
- #include <sysdep.h>
- #include <errno.h>
- #include <unistd.h>
--#include <sys/poll.h>
- #include <sys/syscall.h>
- #include <sys/wait.h>
- #include <time.h>
-@@ -83,16 +82,7 @@ __writev_nocancel_nostatus (int fd, const struct iovec *iov, int iovcnt)
-   INTERNAL_SYSCALL_CALL (writev, fd, iov, iovcnt);
+@@ -103,4 +103,7 @@ __poll_infinity_nocancel (struct pollfd *fds, nfds_t nfds)
+   return INLINE_SYSCALL_CALL (ppoll, fds, nfds, NULL, NULL, 0);
  }
  
--static inline ssize_t
--__getrandom_nocancel (void *buf, size_t buflen, unsigned int flags)
--{
--  return INTERNAL_SYSCALL_CALL (getrandom, buf, buflen, flags);
--}
--
--static inline int
--__poll_infinity_nocancel (struct pollfd *fds, nfds_t nfds)
--{
--  return INLINE_SYSCALL_CALL (ppoll, fds, nfds, NULL, NULL, 0);
--}
 +/* Uncancelable fcntl.  */
 +__typeof (__fcntl) __fcntl64_nocancel;
- 
++
  #endif /* NOT_CANCEL_H  */
 diff --git a/sysdeps/unix/sysv/linux/or1k/libc.abilist b/sysdeps/unix/sysv/linux/or1k/libc.abilist
-index 115f1039..ca5189e8 100644
+index c40c843aaf..9efc6ead43 100644
 --- a/sysdeps/unix/sysv/linux/or1k/libc.abilist
 +++ b/sysdeps/unix/sysv/linux/or1k/libc.abilist
 @@ -2123,9 +2123,6 @@ GLIBC_2.35 wprintf F
@@ -3548,7 +2351,7 @@ index 115f1039..ca5189e8 100644
  GLIBC_2.36 fsconfig F
  GLIBC_2.36 fsmount F
 diff --git a/sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/libc.abilist b/sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/libc.abilist
-index 19c4c325..69c8d94a 100644
+index 9714305608..65fab47772 100644
 --- a/sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/libc.abilist
 +++ b/sysdeps/unix/sysv/linux/powerpc/powerpc32/fpu/libc.abilist
 @@ -2755,9 +2755,6 @@ GLIBC_2.35 __memcmpeq F
@@ -3562,7 +2365,7 @@ index 19c4c325..69c8d94a 100644
  GLIBC_2.36 fsconfig F
  GLIBC_2.36 fsmount F
 diff --git a/sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/libc.abilist b/sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/libc.abilist
-index 3e043c40..d378bea4 100644
+index 0beb52c542..bba9fb9948 100644
 --- a/sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/libc.abilist
 +++ b/sysdeps/unix/sysv/linux/powerpc/powerpc32/nofpu/libc.abilist
 @@ -2788,9 +2788,6 @@ GLIBC_2.35 __memcmpeq F
@@ -3576,7 +2379,7 @@ index 3e043c40..d378bea4 100644
  GLIBC_2.36 fsconfig F
  GLIBC_2.36 fsmount F
 diff --git a/sysdeps/unix/sysv/linux/powerpc/powerpc64/be/libc.abilist b/sysdeps/unix/sysv/linux/powerpc/powerpc64/be/libc.abilist
-index e4f3a766..cf143d68 100644
+index cfc2ebd3ec..713fc8863f 100644
 --- a/sysdeps/unix/sysv/linux/powerpc/powerpc64/be/libc.abilist
 +++ b/sysdeps/unix/sysv/linux/powerpc/powerpc64/be/libc.abilist
 @@ -2510,9 +2510,6 @@ GLIBC_2.35 __memcmpeq F
@@ -3590,7 +2393,7 @@ index e4f3a766..cf143d68 100644
  GLIBC_2.36 fsconfig F
  GLIBC_2.36 fsmount F
 diff --git a/sysdeps/unix/sysv/linux/powerpc/powerpc64/le/libc.abilist b/sysdeps/unix/sysv/linux/powerpc/powerpc64/le/libc.abilist
-index dafe1c4a..6953a657 100644
+index 8c9efc5a16..0582ad986e 100644
 --- a/sysdeps/unix/sysv/linux/powerpc/powerpc64/le/libc.abilist
 +++ b/sysdeps/unix/sysv/linux/powerpc/powerpc64/le/libc.abilist
 @@ -2812,9 +2812,6 @@ GLIBC_2.35 __memcmpeq F
@@ -3604,7 +2407,7 @@ index dafe1c4a..6953a657 100644
  GLIBC_2.36 fsconfig F
  GLIBC_2.36 fsmount F
 diff --git a/sysdeps/unix/sysv/linux/riscv/rv32/libc.abilist b/sysdeps/unix/sysv/linux/riscv/rv32/libc.abilist
-index b9740a1a..4a3c4fd1 100644
+index f90c94bc35..df61233be0 100644
 --- a/sysdeps/unix/sysv/linux/riscv/rv32/libc.abilist
 +++ b/sysdeps/unix/sysv/linux/riscv/rv32/libc.abilist
 @@ -2379,9 +2379,6 @@ GLIBC_2.35 __memcmpeq F
@@ -3618,7 +2421,7 @@ index b9740a1a..4a3c4fd1 100644
  GLIBC_2.36 fsconfig F
  GLIBC_2.36 fsmount F
 diff --git a/sysdeps/unix/sysv/linux/riscv/rv64/libc.abilist b/sysdeps/unix/sysv/linux/riscv/rv64/libc.abilist
-index e3b4656a..b98a000c 100644
+index e04ff93bd2..f87ef93139 100644
 --- a/sysdeps/unix/sysv/linux/riscv/rv64/libc.abilist
 +++ b/sysdeps/unix/sysv/linux/riscv/rv64/libc.abilist
 @@ -2579,9 +2579,6 @@ GLIBC_2.35 __memcmpeq F
@@ -3632,7 +2435,7 @@ index e3b4656a..b98a000c 100644
  GLIBC_2.36 fsconfig F
  GLIBC_2.36 fsmount F
 diff --git a/sysdeps/unix/sysv/linux/s390/s390-32/libc.abilist b/sysdeps/unix/sysv/linux/s390/s390-32/libc.abilist
-index 84cb7a50..cfa38811 100644
+index a7467e2850..1917f0a4c5 100644
 --- a/sysdeps/unix/sysv/linux/s390/s390-32/libc.abilist
 +++ b/sysdeps/unix/sysv/linux/s390/s390-32/libc.abilist
 @@ -2753,9 +2753,6 @@ GLIBC_2.35 __memcmpeq F
@@ -3646,7 +2449,7 @@ index 84cb7a50..cfa38811 100644
  GLIBC_2.36 fsconfig F
  GLIBC_2.36 fsmount F
 diff --git a/sysdeps/unix/sysv/linux/s390/s390-64/libc.abilist b/sysdeps/unix/sysv/linux/s390/s390-64/libc.abilist
-index 33df3b16..e50cf9f0 100644
+index fd1cb2972d..866bf7ebff 100644
 --- a/sysdeps/unix/sysv/linux/s390/s390-64/libc.abilist
 +++ b/sysdeps/unix/sysv/linux/s390/s390-64/libc.abilist
 @@ -2547,9 +2547,6 @@ GLIBC_2.35 __memcmpeq F
@@ -3660,7 +2463,7 @@ index 33df3b16..e50cf9f0 100644
  GLIBC_2.36 fsconfig F
  GLIBC_2.36 fsmount F
 diff --git a/sysdeps/unix/sysv/linux/sh/be/libc.abilist b/sysdeps/unix/sysv/linux/sh/be/libc.abilist
-index 94cbccd7..be7bd514 100644
+index ff6e6b1a13..1d8d585227 100644
 --- a/sysdeps/unix/sysv/linux/sh/be/libc.abilist
 +++ b/sysdeps/unix/sysv/linux/sh/be/libc.abilist
 @@ -2608,9 +2608,6 @@ GLIBC_2.35 __memcmpeq F
@@ -3674,7 +2477,7 @@ index 94cbccd7..be7bd514 100644
  GLIBC_2.36 fsconfig F
  GLIBC_2.36 fsmount F
 diff --git a/sysdeps/unix/sysv/linux/sh/le/libc.abilist b/sysdeps/unix/sysv/linux/sh/le/libc.abilist
-index 3bb316a7..416cd00b 100644
+index 449d92bbc5..d0d512c988 100644
 --- a/sysdeps/unix/sysv/linux/sh/le/libc.abilist
 +++ b/sysdeps/unix/sysv/linux/sh/le/libc.abilist
 @@ -2605,9 +2605,6 @@ GLIBC_2.35 __memcmpeq F
@@ -3688,7 +2491,7 @@ index 3bb316a7..416cd00b 100644
  GLIBC_2.36 fsconfig F
  GLIBC_2.36 fsmount F
 diff --git a/sysdeps/unix/sysv/linux/sparc/sparc32/libc.abilist b/sysdeps/unix/sysv/linux/sparc/sparc32/libc.abilist
-index 6341b491..500b46e6 100644
+index e615be759a..d61a897544 100644
 --- a/sysdeps/unix/sysv/linux/sparc/sparc32/libc.abilist
 +++ b/sysdeps/unix/sysv/linux/sparc/sparc32/libc.abilist
 @@ -2748,9 +2748,6 @@ GLIBC_2.35 __memcmpeq F
@@ -3702,7 +2505,7 @@ index 6341b491..500b46e6 100644
  GLIBC_2.36 fsconfig F
  GLIBC_2.36 fsmount F
 diff --git a/sysdeps/unix/sysv/linux/sparc/sparc64/libc.abilist b/sysdeps/unix/sysv/linux/sparc/sparc64/libc.abilist
-index 8ed1ea29..a280e3a1 100644
+index bd36431dd7..cd00ee43c1 100644
 --- a/sysdeps/unix/sysv/linux/sparc/sparc64/libc.abilist
 +++ b/sysdeps/unix/sysv/linux/sparc/sparc64/libc.abilist
 @@ -2574,9 +2574,6 @@ GLIBC_2.35 __memcmpeq F
@@ -3716,31 +2519,17 @@ index 8ed1ea29..a280e3a1 100644
  GLIBC_2.36 fsconfig F
  GLIBC_2.36 fsmount F
 diff --git a/sysdeps/unix/sysv/linux/tls-internal.c b/sysdeps/unix/sysv/linux/tls-internal.c
-index 9409de72..6e25b021 100644
+index 81ebcdfbf8..9b6e7d1466 100644
 --- a/sysdeps/unix/sysv/linux/tls-internal.c
 +++ b/sysdeps/unix/sysv/linux/tls-internal.c
-@@ -1,28 +1 @@
--/* Per-thread state.  Linux version.
--   Copyright (C) 2022-2023 Free Software Foundation, Inc.
--   This file is part of the GNU C Library.
--
--   The GNU C Library is free software; you can redistribute it and/or
--   modify it under the terms of the GNU Lesser General Public
--   License as published by the Free Software Foundation; either
--   version 2.1 of the License, or (at your option) any later version.
--
--   The GNU C Library is distributed in the hope that it will be useful,
--   but WITHOUT ANY WARRANTY; without even the implied warranty of
--   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
--   Lesser General Public License for more details.
--
--   You should have received a copy of the GNU Lesser General Public
--   License along with the GNU C Library; if not, see
--   <https://www.gnu.org/licenses/>.  */
--
+@@ -16,13 +16,6 @@
+    License along with the GNU C Library; if not, see
+    <https://www.gnu.org/licenses/>.  */
+ 
 -#include <string.h>
--#include <tls-internal.h>
--
++
+ #include <tls-internal.h>
+ 
 -void
 -__glibc_tls_internal_free (void)
 -{
@@ -3748,9 +2537,8 @@ index 9409de72..6e25b021 100644
 -  free (self->tls_state.strsignal_buf);
 -  free (self->tls_state.strerror_l_buf);
 -}
-+/* Empty.  */
 diff --git a/sysdeps/unix/sysv/linux/tls-internal.h b/sysdeps/unix/sysv/linux/tls-internal.h
-index f13980ef..9cf8e1bf 100644
+index 8cb0d8ab68..03af7de9ac 100644
 --- a/sysdeps/unix/sysv/linux/tls-internal.h
 +++ b/sysdeps/unix/sysv/linux/tls-internal.h
 @@ -28,6 +28,11 @@ __glibc_tls_internal (void)
@@ -3767,7 +2555,7 @@ index f13980ef..9cf8e1bf 100644
  
  #endif
 diff --git a/sysdeps/unix/sysv/linux/x86_64/64/libc.abilist b/sysdeps/unix/sysv/linux/x86_64/64/libc.abilist
-index 57cfcc20..5336f6f6 100644
+index aea7848ed6..fb209cb626 100644
 --- a/sysdeps/unix/sysv/linux/x86_64/64/libc.abilist
 +++ b/sysdeps/unix/sysv/linux/x86_64/64/libc.abilist
 @@ -2525,9 +2525,6 @@ GLIBC_2.35 __memcmpeq F
@@ -3781,7 +2569,7 @@ index 57cfcc20..5336f6f6 100644
  GLIBC_2.36 fsconfig F
  GLIBC_2.36 fsmount F
 diff --git a/sysdeps/unix/sysv/linux/x86_64/x32/libc.abilist b/sysdeps/unix/sysv/linux/x86_64/x32/libc.abilist
-index 3f0a9f6d..e7ac69e0 100644
+index 4ab3681914..e1764996d6 100644
 --- a/sysdeps/unix/sysv/linux/x86_64/x32/libc.abilist
 +++ b/sysdeps/unix/sysv/linux/x86_64/x32/libc.abilist
 @@ -2631,9 +2631,6 @@ GLIBC_2.35 __memcmpeq F
@@ -3795,11 +2583,11 @@ index 3f0a9f6d..e7ac69e0 100644
  GLIBC_2.36 fsconfig F
  GLIBC_2.36 fsmount F
 diff --git a/sysdeps/x86_64/Makefile b/sysdeps/x86_64/Makefile
-index 00120ca9..ec30e872 100644
+index 90f4ecfd26..29334a500a 100644
 --- a/sysdeps/x86_64/Makefile
 +++ b/sysdeps/x86_64/Makefile
-@@ -5,6 +5,13 @@ ifeq ($(subdir),csu)
- gen-as-const-headers += link-defines.sym
+@@ -13,6 +13,13 @@ ifeq ($(subdir),csu)
+ gen-as-const-headers += features-offsets.sym link-defines.sym
  endif
  
 +ifeq ($(subdir),stdlib)
@@ -3814,7 +2602,7 @@ index 00120ca9..ec30e872 100644
  # We cannot compile _mcount.S with -pg because that would create
 diff --git a/sysdeps/x86_64/chacha20-amd64-avx2.S b/sysdeps/x86_64/chacha20-amd64-avx2.S
 new file mode 100644
-index 00000000..aefd1cdb
+index 0000000000..aefd1cdbd0
 --- /dev/null
 +++ b/sysdeps/x86_64/chacha20-amd64-avx2.S
 @@ -0,0 +1,328 @@
@@ -4148,7 +2936,7 @@ index 00000000..aefd1cdb
 +END(__chacha20_avx2_blocks8)
 diff --git a/sysdeps/x86_64/chacha20-amd64-sse2.S b/sysdeps/x86_64/chacha20-amd64-sse2.S
 new file mode 100644
-index 00000000..351a1109
+index 0000000000..351a1109c6
 --- /dev/null
 +++ b/sysdeps/x86_64/chacha20-amd64-sse2.S
 @@ -0,0 +1,311 @@
@@ -4465,7 +3253,7 @@ index 00000000..351a1109
 +#endif /* if MINIMUM_X86_ISA_LEVEL <= 2 */
 diff --git a/sysdeps/x86_64/chacha20_arch.h b/sysdeps/x86_64/chacha20_arch.h
 new file mode 100644
-index 00000000..6f3784e3
+index 0000000000..6f3784e392
 --- /dev/null
 +++ b/sysdeps/x86_64/chacha20_arch.h
 @@ -0,0 +1,55 @@
@@ -4525,5 +3313,5 @@ index 00000000..6f3784e3
 +#endif
 +}
 -- 
-2.40.1
+2.43.0.windows.1
 

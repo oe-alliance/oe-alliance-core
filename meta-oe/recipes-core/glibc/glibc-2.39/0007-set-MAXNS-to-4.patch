@@ -1,0 +1,25 @@
+From 7cff21365fb50fc2303f80253d79fedf7bfb8222 Mon Sep 17 00:00:00 2001
+From: Captain <openatv@gmail.com>
+Date: Tue, 6 Feb 2024 14:05:54 +0100
+Subject: [PATCH] set MAXNS to 4
+
+---
+ resolv/bits/types/res_state.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/resolv/bits/types/res_state.h b/resolv/bits/types/res_state.h
+index 79e079c5c9..8fc292920c 100644
+--- a/resolv/bits/types/res_state.h
++++ b/resolv/bits/types/res_state.h
+@@ -5,7 +5,7 @@
+ #include <netinet/in.h>
+ 
+ /* res_state: the global state used by the resolver stub.  */
+-#define MAXNS			3	/* max # name servers we'll track */
++#define MAXNS			4	/* max # name servers we'll track */
+ #define MAXDFLSRCH		3	/* # default domain levels to try */
+ #define MAXDNSRCH		6	/* max # domains in search path */
+ #define MAXRESOLVSORT		10	/* number of net to sort on */
+-- 
+2.43.0.windows.1
+
