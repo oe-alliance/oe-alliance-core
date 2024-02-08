@@ -74,6 +74,7 @@ NORMAL_IMAGE_RECOMMENDS = "\
     ${GST_BAD_RDEPS} \
     ${GST_UGLY_RDEPS} \
     ${GST_BAD_OPUS} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", "shellinabox", d)} \
 "
 
 PYTHON_RDEPS = " \
