@@ -1,5 +1,5 @@
 diff --git a/Makefile.am b/Makefile.am
-index d4ff4512d..4c1b8482d 100644
+index 5b740db9b..09587e540 100644
 --- a/Makefile.am
 +++ b/Makefile.am
 @@ -2,7 +2,6 @@ ACLOCAL_AMFLAGS = -I m4
@@ -128,6 +128,6 @@ index d4ff4512d..4c1b8482d 100644
 -SUBDIRS += 	remotetimer
 -endif
 -
- SUBDIRS += tetris ardmediathek netzkino Series2Folder srfmediathek epgexport
+ SUBDIRS += tetris ardmediathek netzkino Series2Folder srfmediathek epgexport mediathekviewweb
  
  metadir = $(datadir)/meta
