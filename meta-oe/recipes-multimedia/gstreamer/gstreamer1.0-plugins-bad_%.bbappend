@@ -9,6 +9,7 @@ SRC_URI:append = " \
         file://0005-rtmp-fix-seeking-and-potential-segfault.patch \
         file://0006-dvbapi5-fix-old-kernel.patch \
         file://0007-hls-main-thread-block.patch \
+        file://0008-allow-building-against-newer-neon.patch \
 "
 
 PACKAGECONFIG:append = " \
