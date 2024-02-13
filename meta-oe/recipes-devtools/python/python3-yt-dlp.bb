@@ -9,7 +9,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=7246f848faa4e9c9fc0ea91122d6e680"
 
 DEPENDS = "libxml2 bash-completion"
 
-inherit python3-dir setuptools3 gittag
+inherit python3-dir python_hatchling gittag
 
 
 SRCREV = "${AUTOREV}"
