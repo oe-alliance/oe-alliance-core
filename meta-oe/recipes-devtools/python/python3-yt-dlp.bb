@@ -34,7 +34,7 @@ do_install:append() {
     rm -f ${D}${libdir}/${PYTHON_DIR}/site-packages/yt_dlp*egg-info/SOURCES.txt
     rm -f ${D}${libdir}/${PYTHON_DIR}/site-packages/yt_dlp*egg-info/dependency_links.txt
     rm -f ${D}${libdir}/${PYTHON_DIR}/site-packages/yt_dlp*egg-info/top_level.txt
-    rm -f ${D}${libdir}/${PYTHON_DIR}/site-packages/yt_dlp*dist-info/*
+    rm -rf ${D}${libdir}/${PYTHON_DIR}/site-packages/yt_dlp*dist-info/*
 }
 
 RDEPENDS:${PN} = " \
