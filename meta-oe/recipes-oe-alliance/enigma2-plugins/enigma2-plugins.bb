@@ -97,9 +97,10 @@ python do_patch:append() {
     s = d.getVar('S', True)
     import re
     import os
-    if os.path.exists((pluginnotwantedfile := os.path.join(s, "..", "pluginnotwanted"))):
+    notwanted = os.path.exists((pluginnotwantedfile := os.path.join(s, "..", "pluginnotwanted"))) and open(pluginnotwantedfile, "r").read()
+    if notwanted:
         mfile = os.path.join(s, "Makefile.am")
-        exp = "|".join([r"\b%s\b(?:(?!\n)\s)*" % x.strip() for x in open(pluginnotwantedfile, "r").read().splitlines() if x.strip()])
+        exp = "|".join([r"\b%s\b(?:(?!\n)\s)*" % x.strip() for x in notwanted.splitlines() if x.strip()])
         newmakefile = "\n".join([re.sub(exp, "", x) if x.strip().startswith("SUBDIRS") else x for x in re.sub("\s*[\\\\]\s*\n\s+", " ", open(mfile, "r").read()).splitlines()])
         open(mfile, "w").write(newmakefile)
 }
