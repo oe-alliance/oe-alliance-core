@@ -16,9 +16,8 @@ PV = "${IMAGE_VERSION}+gitr${SRCPV}"
 PKGV = "${IMAGE_VERSION}+gitr${GITPKGV}"
 PR = "r8"
 
-SRC_URI = "${ENIGMA2_PLUGINS_URI} file://pluginnotwanted.patch"
+SRC_URI = "${ENIGMA2_PLUGINS_URI} file://pluginnotwanted"
 SRC_URI:append:openatv = " file://EPGSearch.patch"
-SRC_URI:openvix = "${ENIGMA2_PLUGINS_URI} file://pluginnotwanted"
 
 EXTRA_OECONF = " \
     BUILD_SYS=${BUILD_SYS} \
