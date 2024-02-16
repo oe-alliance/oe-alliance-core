@@ -29,6 +29,7 @@ RDEPENDS:${PN} = " \
     enigma2-plugin-extensions-tuxcom \
     enigma2-plugin-drivers-iptables \
     enigma2-plugin-extensions-enigmalight \
+    enigma2-plugin-extensions-enigmawelt \
     enigma2-plugin-extensions-mediatomb \
     enigma2-plugin-extensions-dreamplex \
     enigma2-plugin-extensions-youtube \
