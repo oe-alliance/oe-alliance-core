@@ -162,6 +162,7 @@ RDEPENDS:${PN} = " \
     ${PYTHON_PN}-requests \
     ${PYTHON_PN}-requests-cache \
     ${PYTHON_PN}-service-identity \
+    ${PYTHON_PN}-tinytag \
     ${PYTHON_PN}-tmdbsimple \
     ${PYTHON_PN}-tvdbsimple \
     ${PYTHON_PN}-tmdbv3api \
