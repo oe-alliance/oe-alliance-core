@@ -10,9 +10,9 @@ require conf/python/python3-compileall.inc
 inherit gitpkgv
 
 SRCREV = "${AUTOREV}"
-PV = "1.3+git${SRCPV}"
-PKGV = "1.3+git${GITPKGV}"
-VER ="1.3"
+PV = "1.3.1+git${SRCPV}"
+PKGV = "1.3.1+git${GITPKGV}"
+VER ="1.3.1"
 PR = "r0"
 
 SRC_URI="git://github.com/enigmawelt/enigmawelt.de.git;protocol=https;branch=main"
