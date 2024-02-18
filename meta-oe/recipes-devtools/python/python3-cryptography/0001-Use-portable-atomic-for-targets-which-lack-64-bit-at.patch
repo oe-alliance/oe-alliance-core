@@ -1,6 +1,6 @@
-From 7f13fc9a472ed6578e7fc61a7c4c6b9194320486 Mon Sep 17 00:00:00 2001
-From: Captain <openatv@gmail.com>
-Date: Sun, 18 Feb 2024 10:11:28 +0100
+From e6457c5e99857e0c0c1924a7c3e12560921eb5c0 Mon Sep 17 00:00:00 2001
+From: Adam Reichold <adam.reichold@t-online.de>
+Date: Sat, 2 Dec 2023 07:52:33 +0100
 Subject: [PATCH] Use portable-atomic for targets which lack 64-bit atomics
  used to check interpreter ID.
 
@@ -9,22 +9,25 @@ itself just forwards to the native atomics when they are available so making
 that choice part of our build system is not really necessary. Personally, I was
 unable to perceive any noticeable compile-time hit from adding it.
 ---
- Cargo.toml            | 1 +
- src/impl_/pymodule.rs | 2 +-
- 2 files changed, 2 insertions(+), 1 deletion(-)
+ Cargo.toml                  | 1 +
+ src/impl_/pymodule.rs       | 2 +-
+ 3 files changed, 3 insertions(+), 1 deletion(-)
+ create mode 100644 newsfragments/3619.fixed.md
 
 diff --git a/Cargo.toml b/Cargo.toml
-index 175b40a1..9275c665 100644
+index 1b6416f0..01a888be 100644
 --- a/Cargo.toml
 +++ b/Cargo.toml
-@@ -19,6 +19,7 @@ cfg-if = "1.0"
- libc = "0.2.62"
- parking_lot = ">= 0.11, < 0.13"
- memoffset = "0.9"
-+portable-atomic = "1.0"
+@@ -62,6 +62,9 @@
+     "docsrs",
+ ]
  
- # ffi bindings to the python interpreter, split into a separate crate so they can be used independently
- pyo3-ffi = { path = "pyo3-ffi", version = "=0.20.2" }
++[target.'cfg(not(target_has_atomic = "64"))'.dependencies]
++portable-atomic = "1.0"
++
+ [dependencies.anyhow]
+ version = "1.0"
+ optional = true
 diff --git a/src/impl_/pymodule.rs b/src/impl_/pymodule.rs
 index 8ec96345..7c5243fc 100644
 --- a/src/impl_/pymodule.rs
