@@ -3,7 +3,7 @@ SECTION = "libs"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=dd2c2486aca02190153cf399e508c7e7"
 
-SRC_URI = "${SOURCEFORGE_MIRROR}/${BPN}/${BPN}-${PV}.tar.gz"
+SRC_URI = "https://source.mynonpublic.com/${BPN}-${PV}.tar.gz"
 
 S = "${WORKDIR}/${BPN}-${PV}"
 

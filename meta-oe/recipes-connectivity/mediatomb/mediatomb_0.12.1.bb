@@ -10,7 +10,7 @@ SRC_URI[md5sum] = "e927dd5dc52d3cfcebd8ca1af6f0d3c2"
 SRC_URI[sha256sum] = "31163c34a7b9d1c9735181737cb31306f29f1f2a0335fb4f53ecccf8f62f11cd"
 
 
-SRC_URI = "${SOURCEFORGE_MIRROR}/mediatomb/mediatomb-${PV}.tar.gz \
+SRC_URI = "https://source.mynonpublic.com/mediatomb-${PV}.tar.gz \
         file://youtube_warning.patch \
         file://libav_0.7_support.patch \
         file://libavformat_0.11_support.patch \
