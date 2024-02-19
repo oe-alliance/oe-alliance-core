@@ -7,13 +7,11 @@ inherit allarch
 require conf/license/license-gplv2.inc
 require conf/python/python3-compileall.inc
 
-inherit gitpkgv
+inherit gittag
 
 SRCREV = "${AUTOREV}"
-PV = "1.3+git${SRCPV}"
-PKGV = "1.3+git${GITPKGV}"
-VER ="1.3"
-PR = "r0"
+PV = "git"
+PKGV = "${GITPKGVTAG}"
 
 SRC_URI="git://github.com/enigmawelt/enigmawelt.de.git;protocol=https;branch=main"
 
