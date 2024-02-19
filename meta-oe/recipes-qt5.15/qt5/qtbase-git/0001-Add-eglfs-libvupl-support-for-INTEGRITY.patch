@@ -22,7 +22,20 @@ diff --git a/src/gui/configure.json b/src/gui/configure.json
 index c8c4864eca..ca9dc3257e 100644
 --- a/src/gui/configure.json
 +++ b/src/gui/configure.json
-@@ -880,6 +880,18 @@
+@@ -223,6 +223,12 @@
+                 { "type": "makeSpec", "spec": "EGL" }
+             ]
+         },
++        "vupl": {
++            "export": "",
++            "sources": [
++                "-Wl,--no-as-needed -lEGL -lvupl -lnxpl -Wl,--as-needed"
++            ]
++        },
+         "freetype": {
+             "label": "FreeType",
+             "test": {
+@@ -871,6 +877,18 @@
              },
              "use": "egl"
          },
@@ -41,20 +54,7 @@ index c8c4864eca..ca9dc3257e 100644
          "egl-mali": {
              "label": "Mali EGL",
              "type": "compile",
-@@ -1191,6 +1203,12 @@
-             "condition": "features.direct3d11 && features.dxgi1_2 && libs.d3d11_1",
-             "output": [ "privateFeature" ]
-         },
-+        "vupl": {
-+            "export": "",
-+            "sources": [
-+                "-Wl,--no-as-needed -lEGL -lvupl -lnxpl -Wl,--as-needed"
-+            ]
-+        },
-         "direct2d": {
-             "label": "Direct 2D",
-             "condition": "config.win32 && !config.winrt && features.direct3d11 && libs.d2d1",
-@@ -1421,6 +1439,11 @@
+@@ -1411,6 +1429,11 @@
              "condition": "features.eglfs && features.gbm && features.kms && features.vsp2",
              "output": [ "privateFeature" ]
          },
@@ -66,7 +66,7 @@ index c8c4864eca..ca9dc3257e 100644
          "eglfs_mali": {
              "label": "EGLFS Mali",
              "condition": "features.eglfs && (tests.egl-mali || tests.egl-mali-2)",
-@@ -1978,7 +2001,7 @@ QMAKE_LIBDIR_OPENGL[_ES2] and QMAKE_LIBS_OPENGL[_ES2] in the mkspec for your pla
+@@ -1968,7 +1991,7 @@ QMAKE_LIBDIR_OPENGL[_ES2] and QMAKE_LIBS_OPENGL[_ES2] in the mkspec for your pla
                      "section": "EGLFS details",
                      "condition": "features.eglfs",
                      "entries": [
