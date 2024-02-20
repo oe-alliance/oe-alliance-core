@@ -11,7 +11,7 @@ PKGV = "1.01+git${GITPKGV}"
 PR = "r1"
 
 inherit gitpkgv
-SRC_URI="git://github.com/kiddac/Enigma2_Skins.git;protocol=https;branch=master"
+SRC_URI="git://github.com/kiddac/shared-skin-components.git;protocol=https;branch=master"
 
 S = "${WORKDIR}/git/1080_Skins/kiddac-shared-skin-components/kiddac-shared-skin-components"
 

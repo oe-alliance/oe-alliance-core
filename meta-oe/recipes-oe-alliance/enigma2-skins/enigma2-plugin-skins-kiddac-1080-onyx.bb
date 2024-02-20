@@ -13,7 +13,7 @@ PV = "1.1+git${SRCPV}"
 PKGV = "1.1+git${GITPKGV}"
 PR = "r0"
 
-SRC_URI="git://github.com/kiddac/Enigma2_Skins.git;protocol=https;branch=master"
+SRC_URI="git://github.com/kiddac/Slyk_Onyx_1080.git;protocol=https;branch=master"
 
 S = "${WORKDIR}/git/1080_Skins/Slyk_Onyx_1080/Slyk_Onyx_1080"
 
