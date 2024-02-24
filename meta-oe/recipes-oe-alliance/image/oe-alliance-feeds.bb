@@ -29,6 +29,7 @@ RDEPENDS:${PN} = " \
     enigma2-plugin-extensions-tuxcom \
     enigma2-plugin-drivers-iptables \
     enigma2-plugin-extensions-enigmalight \
+    enigma2-plugin-extensions-enigmawelt \
     enigma2-plugin-extensions-mediatomb \
     enigma2-plugin-extensions-dreamplex \
     enigma2-plugin-extensions-youtube \
@@ -159,6 +160,7 @@ RDEPENDS:${PN} = " \
     ${PYTHON_PN}-requests \
     ${PYTHON_PN}-requests-cache \
     ${PYTHON_PN}-service-identity \
+    ${PYTHON_PN}-tinytag \
     ${PYTHON_PN}-tmdbsimple \
     ${PYTHON_PN}-tvdbsimple \
     ${PYTHON_PN}-tmdbv3api \

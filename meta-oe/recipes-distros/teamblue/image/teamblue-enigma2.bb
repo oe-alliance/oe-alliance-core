@@ -7,11 +7,12 @@ ALLOW_EMPTY:${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r4"
+PR = "r5"
 
 inherit packagegroup
 
 RRECOMMENDS:${PN} = "\
+    enigma-info \
     teamblue-version-info \
     enigma2-plugin-drivers-usbserial \
     enigma2-plugin-extensions-autotimer \

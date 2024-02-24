@@ -6,7 +6,7 @@ LICENSE = "GPL-2.0-only"
 require conf/license/license-gplv2.inc
 require conf/python/python3-compileall.inc
 
-inherit gitpkgv ${PYTHON_PN}native autotools-brokensep gettext 
+inherit gitpkgv ${PYTHON_PN}targetconfig ${PYTHON_PN}native autotools-brokensep gettext 
 
 SRCREV = "${AUTOREV}"
 PV = "1.0+git${SRCPV}"

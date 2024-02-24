@@ -20,7 +20,8 @@ SRC_URI = "https://source.mynonpublic.com/zgemma/linux-${PV}-${SRCDATE}-${ARCH}.
 	file://defconfig \
 	file://initramfs-subdirboot.cpio.gz;unpack=0 \
 	file://findkerneldevice.sh \
-    file://fix-multiple-defs-yyloc.patch \
+	file://fix-multiple-defs-yyloc.patch \
+	file://cfg80211_Add_option_to_report_the_bss_entry_in_connect_result.patch \
 "
 
 SRC_URI:append:h8 = " file://0101-hi3716mv430-dts-move-aon-gpio7-gpio5.patch"

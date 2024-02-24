@@ -9,7 +9,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=7246f848faa4e9c9fc0ea91122d6e680"
 
 DEPENDS = "libxml2 bash-completion"
 
-inherit python3-dir setuptools3 gittag
+inherit python3-dir python_hatchling gittag
 
 
 SRCREV = "${AUTOREV}"
@@ -34,7 +34,7 @@ do_install:append() {
     rm -f ${D}${libdir}/${PYTHON_DIR}/site-packages/yt_dlp*egg-info/SOURCES.txt
     rm -f ${D}${libdir}/${PYTHON_DIR}/site-packages/yt_dlp*egg-info/dependency_links.txt
     rm -f ${D}${libdir}/${PYTHON_DIR}/site-packages/yt_dlp*egg-info/top_level.txt
-    rm -f ${D}${libdir}/${PYTHON_DIR}/site-packages/yt_dlp*dist-info/*
+    rm -rf ${D}${libdir}/${PYTHON_DIR}/site-packages/yt_dlp*dist-info/*
 }
 
 RDEPENDS:${PN} = " \

@@ -27,6 +27,7 @@ SRC_URI += "https://source.mynonpublic.com/qviart/qviart-linux-${PV}-${SRCDATE}.
     file://initramfs-subdirboot.cpio.gz;unpack=0 \
     file://findkerneldevice.sh \
     file://fix-multiple-defs-yyloc.patch \
+    file://cfg80211_Add_option_to_report_the_bss_entry_in_connect_result.patch \
 "
 
 S = "${WORKDIR}/linux-${PV}"

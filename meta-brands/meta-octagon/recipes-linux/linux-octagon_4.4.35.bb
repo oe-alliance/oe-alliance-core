@@ -35,6 +35,7 @@ SRC_URI += "https://source.mynonpublic.com/octagon/octagon-linux-${PV}-${SRCDATE
     file://mn88472_reset_stream_ID_reg_if_no_PLP_given.patch \
     file://fix-multiple-defs-yyloc.patch \
     file://extend_modules_space.patch \
+    file://cfg80211_Add_option_to_report_the_bss_entry_in_connect_result.patch \
 "
 
 SRC_URI:append:sf8008m = " \
