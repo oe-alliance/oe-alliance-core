@@ -1,0 +1,1003 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index dc19535..8d8fe7c 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -684,7 +684,7 @@ if (CMAKE_COMPILER_IS_GNUCC)
+ 	list(GET GCC_VERSION_COMPONENTS 0 GCC_MAJOR)
+ 	list(GET GCC_VERSION_COMPONENTS 0 GCC_MINOR)
+ 	add_definitions ("-W -Wall ")
+-	set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -O2")
++	set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -O3 -pipe -ffunction-sections -fdata-sections -funroll-loops -fomit-frame-pointer -fno-schedule-insns")
+ 	set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -O2")
+ 	set (CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -O0 -ggdb")
+ 	set (CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O0 -ggdb")
+diff --git a/Makefile b/Makefile
+index 1c6c59f..dfdbc5a 100644
+--- a/Makefile
++++ b/Makefile
+@@ -58,7 +58,7 @@ override STD_DEFS += -D'CS_CONFDIR="$(CONF_DIR)"'
+ CC_WARN = -W -Wall -Wshadow -Wredundant-decls -Wstrict-prototypes -Wold-style-definition
+ 
+ # Compiler optimizations
+-CC_OPTS = -O2 -ggdb -pipe -ffunction-sections -fdata-sections
++cc_opts = -O3 -ggdb -pipe -ffunction-sections -fdata-sections -funroll-loops -fomit-frame-pointer -fno-schedule-insns
+ 
+ CC = $(CROSS_DIR)$(CROSS)gcc
+ STRIP = $(CROSS_DIR)$(CROSS)strip
+@@ -68,6 +68,8 @@ LDFLAGS = -Wl,--gc-sections
+ TARGETHELP := $(shell $(CC) --target-help 2>&1)
+ ifneq (,$(findstring sse2,$(TARGETHELP)))
+ override CFLAGS += -fexpensive-optimizations -mmmx -msse -msse2 -msse3
++else ifneq (,$(findstring neon,$(TARGETHELP)))
++override CFLAGS += -fexpensive-optimizations -mfpu=neon
+ else
+ override CFLAGS += -fexpensive-optimizations
+ endif
+@@ -286,6 +288,7 @@ SRC-$(CONFIG_WITH_EMU) += module-emulator-director.c
+ SRC-$(CONFIG_WITH_EMU) += module-emulator-irdeto.c
+ SRC-$(CONFIG_WITH_EMU) += module-emulator-nagravision.c
+ SRC-$(CONFIG_WITH_EMU) += module-emulator-powervu.c
++SRC-$(CONFIG_WITH_EMU) += module-emulator-icam.c
+ SRC-$(CONFIG_WITH_EMU) += module-emulator-viaccess.c
+ SRC-$(CONFIG_WITH_EMU) += ffdecsa/ffdecsa.c
+ ifeq "$(CONFIG_WITH_EMU)" "y"
+@@ -448,7 +451,7 @@ $(OBJDIR)/config.o: $(OBJDIR)/config.c
+ 	$(Q)$(CC) $(STD_DEFS) $(CC_OPTS) $(CC_WARN) $(CFLAGS) -c $< -o $@
+ 
+ $(OBJDIR)/%.o: %.c Makefile
+-	@$(CC) -MP -MM -MT $@ -o $(subst .o,.d,$@) $<
++	@$(CC) $(CFLAGS) -MP -MM -MT $@ -o $(subst .o,.d,$@) $<
+ 	$(SAY) "CC	$<"
+ 	$(Q)$(CC) $(STD_DEFS) $(CC_OPTS) $(CC_WARN) $(CFLAGS) -c $< -o $@
+ 
+diff --git a/config.h b/config.h
+index 8995af7..567d1d5 100644
+--- a/config.h
++++ b/config.h
+@@ -3,6 +3,7 @@
+ 
+ #define WITH_EMU 1
+ #define WITH_SOFTCAM 1
++#define WITH_ARM_NEON 1
+ #define WEBIF 1
+ #define WEBIF_LIVELOG 1
+ #define WEBIF_JQUERY 1
+ 
+diff --git a/config.sh b/config.sh
+index fd5bb0f..8c3cf9a 100755
+--- a/config.sh
++++ b/config.sh
+@@ -1,6 +1,6 @@
+ #!/bin/sh
+ 
+-addons="WEBIF WEBIF_LIVELOG WEBIF_JQUERY TOUCH WITH_SSL HAVE_DVBAPI WITH_NEUTRINO READ_SDT_CHARSETS IRDETO_GUESSING CS_ANTICASC WITH_DEBUG MODULE_MONITOR WITH_LB CS_CACHEEX CS_CACHEEX_AIO CW_CYCLE_CHECK LCDSUPPORT LEDSUPPORT CLOCKFIX IPV6SUPPORT WITH_EMU WITH_SOFTCAM"
++addons="WEBIF WEBIF_LIVELOG WEBIF_JQUERY TOUCH HAVE_DVBAPI WITH_NEUTRINO READ_SDT_CHARSETS IRDETO_GUESSING CS_ANTICASC WITH_DEBUG MODULE_MONITOR WITH_LB CS_CACHEEX CS_CACHEEX_AIO CW_CYCLE_CHECK LCDSUPPORT LEDSUPPORT CLOCKFIX IPV6SUPPORT WITH_EMU WITH_SOFTCAM WITH_ARM_NEON"
+ protocols="MODULE_CAMD33 MODULE_CAMD35 MODULE_CAMD35_TCP MODULE_NEWCAMD MODULE_CCCAM MODULE_CCCSHARE MODULE_GBOX MODULE_RADEGAST MODULE_SCAM MODULE_SERIAL MODULE_CONSTCW MODULE_PANDORA MODULE_GHTTP"
+ readers="READER_NAGRA READER_NAGRA_MERLIN READER_IRDETO READER_CONAX READER_CRYPTOWORKS READER_SECA READER_VIACCESS READER_VIDEOGUARD READER_DRE READER_TONGFANG READER_BULCRYPT READER_GRIFFIN READER_DGCRYPT"
+ card_readers="CARDREADER_PHOENIX CARDREADER_INTERNAL CARDREADER_SC8IN1 CARDREADER_MP35 CARDREADER_SMARGO CARDREADER_DB2COM CARDREADER_STAPI CARDREADER_STAPI5 CARDREADER_STINGER CARDREADER_DRECAS"
+@@ -29,6 +29,7 @@ CONFIG_WITH_LB=y
+ # CONFIG_IPV6SUPPORT=n
+ CONFIG_WITH_EMU=y
+ CONFIG_WITH_SOFTCAM=y
++CONFIG_WITH_ARM_NEON=y
+ # CONFIG_MODULE_CAMD33=n
+ CONFIG_MODULE_CAMD35=y
+ CONFIG_MODULE_CAMD35_TCP=y
+@@ -477,6 +478,7 @@ menu_addons() {
+ 		IPV6SUPPORT			"IPv6 support (experimental)"			$(check_test "IPV6SUPPORT") \
+ 		WITH_EMU			"Emulator support"						$(check_test "WITH_EMU") \
+ 		WITH_SOFTCAM		"Built-in SoftCam.Key"					$(check_test "WITH_SOFTCAM") \
++		WITH_ARM_NEON		"ARM Neon Support"						$(check_test "WITH_ARM_NEON") \
+ 		2> ${tempfile}
+ 
+ 	opt=${?}
+diff --git a/ffdecsa/CMakeLists.txt b/ffdecsa/CMakeLists.txt
+index d5be555..a703e5a 100644
+--- a/ffdecsa/CMakeLists.txt
++++ b/ffdecsa/CMakeLists.txt
+@@ -5,4 +5,15 @@ file (GLOB ffdecsa_hdrs "*.h")
+ 
+ set (lib_name "ffdecsa")
+ 
++if (CMAKE_SYSTEM_PROCESSOR MATCHES "(x86)|(X86)|(amd64)|(AMD64)")
++    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -msse -msse2 -msse3")
++elseif (CMAKE_SYSTEM_PROCESSOR MATCHES "(arm)|(ARM)")
++    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -mfpu=neon")
++    set (CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -mfpu=neon")
++endif (CMAKE_SYSTEM_PROCESSOR MATCHES "(x86)|(X86)|(amd64)|(AMD64)")
++
++if (CMAKE_COMPILER_IS_GNUCC)
++        set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -O3 -pipe -ffunction-sections -fdata-sections -funroll-loops -fomit-frame-pointer -fno-schedule-insns")
++endif (CMAKE_COMPILER_IS_GNUCC)
++
+ add_library (${lib_name} STATIC ${ffdecsa_srcs} ${ffdecsa_hdrs})
+diff --git a/ffdecsa/ffdecsa.c b/ffdecsa/ffdecsa.c
+index 2c7169a..ca6d109 100644
+--- a/ffdecsa/ffdecsa.c
++++ b/ffdecsa/ffdecsa.c
+@@ -24,6 +24,7 @@
+ #include <stdlib.h>
+ 
+ #include "ffdecsa.h"
++#include "../config.h"
+ 
+ #ifndef NULL
+ #define NULL 0
+@@ -53,6 +54,7 @@
+ #define PARALLEL_128_2MMX    1284
+ #define PARALLEL_128_SSE     1285
+ #define PARALLEL_128_SSE2    1286
++#define PARALLEL_128_NEON    1287
+ 
+ //////// our choice //////////////// our choice //////////////// our choice //////////////// our choice ////////
+ #ifndef PARALLEL_MODE
+@@ -61,13 +63,21 @@
+ #define PARALLEL_MODE PARALLEL_128_SSE2
+ 
+ #elif defined(__mips__) || defined(__mips) || defined(__MIPS__)
+-#define PARALLEL_MODE PARALLEL_64_LONG
++//#define PARALLEL_MODE PARALLEL_64_LONG
++#define PARALLEL_MODE PARALLEL_32_INT
+ 
+ #elif defined(__sh__) || defined(__SH4__)
+ #define PARALLEL_MODE PARALLEL_32_INT
+ #define COPY_UNALIGNED_PKT
+ #define MEMALIGN_VAL 4
+ 
++#elif defined(__arm__)
++#ifdef WITH_ARM_NEON
++#define PARALLEL_MODE PARALLEL_128_NEON
++#else
++#define PARALLEL_MODE PARALLEL_32_INT
++#endif
++
+ #else
+ #define PARALLEL_MODE PARALLEL_32_INT
+ #endif
+@@ -107,6 +117,8 @@
+ #include "parallel_128_sse.h"
+ #elif PARALLEL_MODE==PARALLEL_128_SSE2
+ #include "parallel_128_sse2.h"
++#elif PARALLEL_MODE==PARALLEL_128_NEON
++#include "parallel_128_neon.h"
+ #else
+ #error "unknown/undefined parallel mode"
+ #endif
+@@ -278,6 +290,96 @@ static void key_schedule_block(
+ 
+ }
+ 
++static void key_schedule_block_ecm(
++  unsigned char *ck,    // [In]  ck[0]-ck[7]   8 bytes | Key.
++  unsigned char *kk,    // [Out] kk[0]-kk[55] 56 bytes | Key schedule.
++  unsigned char ecm)    // ecm
++{
++  static const unsigned char key_perm[0x40] = {
++    0x12,0x24,0x09,0x07,0x2A,0x31,0x1D,0x15, 0x1C,0x36,0x3E,0x32,0x13,0x21,0x3B,0x40,
++    0x18,0x14,0x25,0x27,0x02,0x35,0x1B,0x01, 0x22,0x04,0x0D,0x0E,0x39,0x28,0x1A,0x29,
++    0x33,0x23,0x34,0x0C,0x16,0x30,0x1E,0x3A, 0x2D,0x1F,0x08,0x19,0x17,0x2F,0x3D,0x11,
++    0x3C,0x05,0x38,0x2B,0x0B,0x06,0x0A,0x2C, 0x20,0x3F,0x2E,0x0F,0x03,0x26,0x10,0x37,
++  };
++
++  static const unsigned char ecm_perm[0x100] = {
++    0x00,0x02,0x80,0x82,0x20,0x22,0xa0,0xa2, 0x04,0x06,0x84,0x86,0x24,0x26,0xa4,0xa6,
++    0x40,0x42,0xc0,0xc2,0x60,0x62,0xe0,0xe2, 0x44,0x46,0xc4,0xc6,0x64,0x66,0xe4,0xe6,
++    0x01,0x03,0x81,0x83,0x21,0x23,0xa1,0xa3, 0x05,0x07,0x85,0x87,0x25,0x27,0xa5,0xa7,
++    0x41,0x43,0xc1,0xc3,0x61,0x63,0xe1,0xe3, 0x45,0x47,0xc5,0xc7,0x65,0x67,0xe5,0xe7,
++    0x08,0x0a,0x88,0x8a,0x28,0x2a,0xa8,0xaa, 0x0c,0x0e,0x8c,0x8e,0x2c,0x2e,0xac,0xae,
++    0x48,0x4a,0xc8,0xca,0x68,0x6a,0xe8,0xea, 0x4c,0x4e,0xcc,0xce,0x6c,0x6e,0xec,0xee,
++    0x09,0x0b,0x89,0x8b,0x29,0x2b,0xa9,0xab, 0x0d,0x0f,0x8d,0x8f,0x2d,0x2f,0xad,0xaf,
++    0x49,0x4b,0xc9,0xcb,0x69,0x6b,0xe9,0xeb, 0x4d,0x4f,0xcd,0xcf,0x6d,0x6f,0xed,0xef,
++    0x10,0x12,0x90,0x92,0x30,0x32,0xb0,0xb2, 0x14,0x16,0x94,0x96,0x34,0x36,0xb4,0xb6,
++    0x50,0x52,0xd0,0xd2,0x70,0x72,0xf0,0xf2, 0x54,0x56,0xd4,0xd6,0x74,0x76,0xf4,0xf6,
++    0x11,0x13,0x91,0x93,0x31,0x33,0xb1,0xb3, 0x15,0x17,0x95,0x97,0x35,0x37,0xb5,0xb7,
++    0x51,0x53,0xd1,0xd3,0x71,0x73,0xf1,0xf3, 0x55,0x57,0xd5,0xd7,0x75,0x77,0xf5,0xf7,
++    0x18,0x1a,0x98,0x9a,0x38,0x3a,0xb8,0xba, 0x1c,0x1e,0x9c,0x9e,0x3c,0x3e,0xbc,0xbe,
++    0x58,0x5a,0xd8,0xda,0x78,0x7a,0xf8,0xfa, 0x5c,0x5e,0xdc,0xde,0x7c,0x7e,0xfc,0xfe,
++    0x19,0x1b,0x99,0x9b,0x39,0x3b,0xb9,0xbb, 0x1d,0x1f,0x9d,0x9f,0x3d,0x3f,0xbd,0xbf,
++    0x59,0x5b,0xd9,0xdb,0x79,0x7b,0xf9,0xfb, 0x5d,0x5f,0xdd,0xdf,0x7d,0x7f,0xfd,0xff
++  };
++
++  int i,j,k;
++  int bit[64];
++  int newbit[64];
++  int kb[7][8];
++
++  // 56 steps
++  // 56 key bytes kk(55)..kk(0) by key schedule from ck
++
++  // kb(6,0) .. kb(6,7) = ck(0) .. ck(7)
++  if (ecm == 4)
++  {
++     kb[6][0] = ecm_perm[ck[0]];
++     kb[6][1] = ck[1];
++     kb[6][2] = ck[2];
++     kb[6][3] = ck[3];
++     kb[6][4] = ecm_perm[ck[4]];
++     kb[6][5] = ck[5];
++     kb[6][6] = ck[6];
++     kb[6][7] = ck[7];
++  }
++  else
++  {
++     kb[6][0] = ck[0];
++     kb[6][1] = ck[1];
++     kb[6][2] = ck[2];
++     kb[6][3] = ck[3];
++     kb[6][4] = ck[4];
++     kb[6][5] = ck[5];
++     kb[6][6] = ck[6];
++     kb[6][7] = ck[7];
++  }
++
++
++  // calculate kb[5] .. kb[0]
++  for(i=5; i>=0; i--){
++    // 64 bit perm on kb
++    for(j=0; j<8; j++){
++      for(k=0; k<8; k++){
++        bit[j*8+k] = (kb[i+1][j] >> (7-k)) & 1;
++        newbit[key_perm[j*8+k]-1] = bit[j*8+k];
++      }
++    }
++    for(j=0; j<8; j++){
++      kb[i][j] = 0;
++      for(k=0; k<8; k++){
++        kb[i][j] |= newbit[j*8+k] << (7-k);
++      }
++    }
++  }
++
++  // xor to give kk
++  for(i=0; i<7; i++){
++    for(j=0; j<8; j++){
++      kk[i*8+j] = kb[i][j] ^ i;
++    }
++  }
++
++}
++
+ //-----block utils
+ 
+ static inline __attribute__((always_inline)) void trasp_N_8 (unsigned char *in,unsigned char* out,int count){
+@@ -395,7 +497,7 @@ static void block_decypher_group(
+ 
+   roff=GROUP_PARALLELISM*56;
+ 
+-#define FASTTRASP1
++//#define FASTTRASP1
+ #ifndef FASTTRASP1
+   for(g=0;g<count;g++){
+     // Init registers 
+@@ -476,7 +578,7 @@ static void block_decypher_group(
+ #endif
+   }
+ 
+-#define FASTTRASP2
++//#define FASTTRASP2
+ #ifndef FASTTRASP2
+   for(g=0;g<count;g++){
+     // Copy results
+@@ -552,6 +654,34 @@ static void schedule_key(struct csa_key_t *key, const unsigned char *pk){
+   }
+ }
+ 
++static void schedule_key_ecm(struct csa_key_t *key, const unsigned char *pk, const unsigned char ecm){
++  // could be made faster, but is not run often
++  int bi,by;
++  int i,j;
++// key
++  memcpy(key->ck,pk,8);
++// precalculations for stream
++  key_schedule_stream(key->ck,key->iA,key->iB);
++  for(by=0;by<8;by++){
++    for(bi=0;bi<8;bi++){
++      key->ck_g[by][bi]=(key->ck[by]&(1<<bi))?FF1():FF0();
++    }
++  }
++  for(by=0;by<8;by++){
++    for(bi=0;bi<4;bi++){
++      key->iA_g[by][bi]=(key->iA[by]&(1<<bi))?FF1():FF0();
++      key->iB_g[by][bi]=(key->iB[by]&(1<<bi))?FF1():FF0();
++    }
++  }
++// precalculations for block
++  key_schedule_block_ecm(key->ck,key->kk,ecm);
++  for(i=0;i<56;i++){
++    for(j=0;j<BYTES_PER_BATCH;j++){
++      *(((unsigned char *)&key->kkmulti[i])+j)=key->kk[i];
++    }
++  }
++}
++
+ void set_control_words(void *keys, const unsigned char *ev, const unsigned char *od){
+   schedule_key(&((struct csa_keys_t *)keys)->even,ev);
+   schedule_key(&((struct csa_keys_t *)keys)->odd,od);
+@@ -561,10 +691,18 @@ void set_even_control_word(void *keys, const unsigned char *pk){
+   schedule_key(&((struct csa_keys_t *)keys)->even,pk);
+ }
+ 
++void set_even_control_word_ecm(void *keys, const unsigned char *pk, const unsigned char ecm){
++  schedule_key_ecm(&((struct csa_keys_t *)keys)->even,pk,ecm);
++}
++
+ void set_odd_control_word(void *keys, const unsigned char *pk){
+   schedule_key(&((struct csa_keys_t *)keys)->odd,pk);
+ }
+ 
++void set_odd_control_word_ecm(void *keys, const unsigned char *pk, const unsigned char ecm){
++  schedule_key_ecm(&((struct csa_keys_t *)keys)->odd,pk,ecm);
++}
++
+ //-----get control words
+ 
+ void get_control_words(void *keys, unsigned char *even, unsigned char *odd){
+diff --git a/ffdecsa/ffdecsa.h b/ffdecsa/ffdecsa.h
+index 1be08e7..d37c606 100644
+--- a/ffdecsa/ffdecsa.h
++++ b/ffdecsa/ffdecsa.h
+@@ -47,9 +47,11 @@ void set_control_words(void *keys, const unsigned char *even, const unsigned cha
+ 
+ // -- set even control word, 8 bytes
+ void set_even_control_word(void *keys, const unsigned char *even);
++void set_even_control_word_ecm(void *keys, const unsigned char *even, const unsigned char ecm);
+ 
+ // -- set odd control word, 8 bytes
+ void set_odd_control_word(void *keys, const unsigned char *odd);
++void set_odd_control_word_ecm(void *keys, const unsigned char *odd, const unsigned char ecm);
+ 
+ // -- get control words, 8 bytes each
+ //void get_control_words(void *keys, unsigned char *even, unsigned char *odd);
+diff --git a/ffdecsa/parallel_128_neon.h b/ffdecsa/parallel_128_neon.h
+new file mode 100644
+index 0000000..0265123
+--- /dev/null
++++ b/ffdecsa/parallel_128_neon.h
+@@ -0,0 +1,81 @@
++/* FFdecsa -- fast decsa algorithm
++ *
++ * Copyright (C) 2007 Dark Avenger
++ *               2003-2004  fatih89r
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, write to the Free Software
++ * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
++ */
++
++# include <arm_neon.h>
++
++#define MEMALIGN_VAL 16
++
++union __u128i {
++	unsigned int u[4];
++	uint64x2_t v;
++};
++
++static const union __u128i ff0 = {{0x00000000U, 0x00000000U, 0x00000000U, 0x00000000U}};
++static const union __u128i ff1 = {{0xffffffffU, 0xffffffffU, 0xffffffffU, 0xffffffffU}};
++
++typedef uint64x2_t group;
++#define GROUP_PARALLELISM 128
++#define FF0() ff0.v
++#define FF1() ff1.v
++#define FFAND(a,b) vandq_u64((a),(b))
++#define FFOR(a,b)  vorrq_u64((a),(b))
++#define FFXOR(a,b) veorq_u64((a),(b))
++#define FFNOT(a)   vreinterpretq_u64_u8(vmvnq_u8(vreinterpretq_u8_u64(a)))
++
++
++/* BATCH */
++
++static const union __u128i ff29 = {{0x29292929U, 0x29292929U, 0x29292929U, 0x29292929U}};
++static const union __u128i ff02 = {{0x02020202U, 0x02020202U, 0x02020202U, 0x02020202U}};
++static const union __u128i ff04 = {{0x04040404U, 0x04040404U, 0x04040404U, 0x04040404U}};
++static const union __u128i ff10 = {{0x10101010U, 0x10101010U, 0x10101010U, 0x10101010U}};
++static const union __u128i ff40 = {{0x40404040U, 0x40404040U, 0x40404040U, 0x40404040U}};
++static const union __u128i ff80 = {{0x80808080U, 0x80808080U, 0x80808080U, 0x80808080U}};
++
++typedef uint64x2_t batch;
++#define BYTES_PER_BATCH 16
++#define B_FFN_ALL_29() ff29.v
++#define B_FFN_ALL_02() ff02.v
++#define B_FFN_ALL_04() ff04.v
++#define B_FFN_ALL_10() ff10.v
++#define B_FFN_ALL_40() ff40.v
++#define B_FFN_ALL_80() ff80.v
++
++#define B_FFAND(a,b) FFAND(a,b)
++#define B_FFOR(a,b)  FFOR(a,b)
++#define B_FFXOR(a,b) FFXOR(a,b)
++#define B_FFSH8L(a,n) vshlq_n_u64((a),(n))
++#define B_FFSH8R(a,n) vshrq_n_u64((a),(n))
++
++#define M_EMPTY()
++
++#undef BEST_SPAN
++#define BEST_SPAN            16
++
++#undef XOR_BEST_BY
++inline static void XOR_BEST_BY(unsigned char *d, unsigned char *s1, unsigned char *s2)
++{
++	uint64x2_t vs1 = vld1q_u64((uint64_t*)s1);
++	uint64x2_t vs2 = vld1q_u64((uint64_t*)s2);
++	vs1 = veorq_u64(vs1, vs2);
++	vst1q_u64((uint64_t*)d, vs1);
++}
++
++#include "fftable.h"
+diff --git a/module-dvbapi.c b/module-dvbapi.c
+index 118a1e5..81ad127 100644
+--- a/module-dvbapi.c
++++ b/module-dvbapi.c
+@@ -11,6 +11,7 @@
+ #include "module-dvbapi-coolapi.h"
+ #include "module-dvbapi-stapi.h"
+ #include "module-dvbapi-chancache.h"
++#include "module-emulator-streamserver.h"
+ #include "module-stat.h"
+ #include "oscam-chk.h"
+ #include "oscam-client.h"
+@@ -7869,7 +7870,13 @@ void dvbapi_send_dcw(struct s_client *client, ECM_REQUEST *er)
+ 		delayer(er, delay);
+ 
+ #ifdef WITH_EMU
+-		if(!chk_ctab_ex(er->caid, &cfg.emu_stream_relay_ctab) || !cfg.emu_stream_relay_enabled)
++		bool set_dvbapi_cw = true;
++		if(chk_ctab_ex(er->caid, &cfg.emu_stream_relay_ctab) && cfg.emu_stream_relay_enabled)
++		{
++			// streamserver set cw
++			set_dvbapi_cw = !stream_write_cw(er);
++		}
++		if (set_dvbapi_cw)
+ #endif
+ 		switch(selected_api)
+ 		{
+diff --git a/module-emulator-icam.c b/module-emulator-icam.c
+new file mode 100644
+index 0000000..aae20c7
+--- /dev/null
++++ b/module-emulator-icam.c
+@@ -0,0 +1,153 @@
++#define MODULE_LOG_PREFIX "emu"
++
++#include "globals.h"
++#include "oscam-net.h"
++#include "oscam-chk.h"
++#include "module-emulator-icam.h"
++#include "oscam-ecm.h"
++#include "oscam-client.h"
++#include "ffdecsa/ffdecsa.h"
++
++#ifdef WITH_EMU
++
++
++#ifdef MODULE_RADEGAST
++static int32_t gRadegastFd = 0;
++static uint8_t gLast_ecm_paket[EMU_STREAM_SERVER_MAX_CONNECTIONS][8];
++#endif
++
++
++bool caid_is_icam(uint16_t caid)
++{
++	if (caid == 0x098C || caid == 0x098D || caid == 0x09C4)
++		return true;
++	return false;
++}
++
++
++void icam_write_cw(ECM_REQUEST *er, int32_t connid)
++{
++	SAFE_MUTEX_LOCK(&emu_fixed_key_data_mutex[connid]);
++
++	if (emu_fixed_key_data[connid].icam_csa_ks == NULL)
++	{
++		emu_fixed_key_data[connid].icam_csa_ks = get_key_struct();
++	}
++
++	bool icam = (er->ecm[2] - er->ecm[4]) == 4;
++	if (er->ecm[0] == 0x80)
++	{
++		if (icam)
++		{
++			set_even_control_word_ecm(emu_fixed_key_data[connid].icam_csa_ks, er->cw, er->ecm[0x15]);
++		}
++		else
++		{
++			set_even_control_word(emu_fixed_key_data[connid].icam_csa_ks, er->cw);
++		}
++	}
++	else if (icam)
++	{
++		set_odd_control_word_ecm(emu_fixed_key_data[connid].icam_csa_ks, er->cw + 8, er->ecm[0x15]);
++	}
++	else
++	{
++		set_odd_control_word(emu_fixed_key_data[connid].icam_csa_ks, er->cw + 8);
++	}
++
++	emu_fixed_key_data[connid].icam_csa_used = 1;
++
++	SAFE_MUTEX_UNLOCK(&emu_fixed_key_data_mutex[connid]);
++}
++
++#ifdef MODULE_RADEGAST
++void icam_ecm(emu_stream_client_data *cdata)
++{
++	uint16_t section_length = SCT_LEN(cdata->ecm_data);
++	uint16_t packet_len;
++	static uint8_t header_len = 2;
++	static uint8_t payload_static_len = 12;
++
++	if (memcmp(gLast_ecm_paket[cdata->connid], cdata->ecm_data, 8) != 0)
++	{
++		memcpy(gLast_ecm_paket[cdata->connid], cdata->ecm_data, 8);
++
++		if (gRadegastFd <= 0)
++			icam_connect_to_radegast();
++
++		packet_len = header_len + payload_static_len + section_length;
++		uint8_t outgoing_data[packet_len];
++		outgoing_data[0] = 1;
++		outgoing_data[1] = payload_static_len + section_length;
++		outgoing_data[2] = 10;  // caid
++		outgoing_data[3] = 2;
++		outgoing_data[4] = cdata->caid >> 8;
++		outgoing_data[5] = cdata->caid & 0xFF;
++		outgoing_data[6] = 9;   // srvid
++		outgoing_data[7] = 4;
++		outgoing_data[8] = cdata->srvid & 0xFF;
++		outgoing_data[10] = cdata->srvid >> 8;
++		outgoing_data[12] = 3;
++		outgoing_data[13] = section_length;
++
++		memcpy(outgoing_data + header_len + payload_static_len, cdata->ecm_data, section_length);
++
++		if (!icam_send_to_radegast(outgoing_data, packet_len))
++		{
++			icam_close_radegast_connection();
++			if (icam_connect_to_radegast())
++			{
++				icam_send_to_radegast(outgoing_data, packet_len);
++			}
++		}
++	}
++}
++
++bool icam_connect_to_radegast(void)
++{
++	struct sockaddr_in cservaddr;
++
++	if (gRadegastFd == 0)
++		gRadegastFd = socket(AF_INET, SOCK_STREAM, 0);
++
++	if (gRadegastFd < 0)
++	{
++		gRadegastFd = 0;
++		return false;
++	}
++
++	int32_t flags = fcntl(gRadegastFd, F_GETFL);
++	fcntl(gRadegastFd, F_SETFL, flags | O_NONBLOCK);
++
++	bzero(&cservaddr, sizeof(cservaddr));
++	cservaddr.sin_family = AF_INET;
++	SIN_GET_ADDR(cservaddr) = cfg.rad_srvip;
++	cservaddr.sin_port = htons(cfg.rad_port);
++
++	connect(gRadegastFd,(struct sockaddr *)&cservaddr, sizeof(cservaddr));
++	return true;
++}
++
++void icam_reset(int32_t connid)
++{
++	memset(gLast_ecm_paket[connid], 0, 8);
++}
++
++void icam_close_radegast_connection(void)
++{
++	close(gRadegastFd);
++	gRadegastFd = 0;
++}
++
++bool icam_send_to_radegast(uint8_t* data, int len)
++{
++	if (send(gRadegastFd, data, len, 0) < 0)
++	{
++		cs_log("icam_send_to_radegast: Send failure");
++		return false;
++	}
++	return true;
++}
++#endif // MODULE_RADEGAST
++
++#endif // WITH_EMU
+diff --git a/module-emulator-icam.h b/module-emulator-icam.h
+new file mode 100644
+index 0000000..3ecc782
+--- /dev/null
++++ b/module-emulator-icam.h
+@@ -0,0 +1,21 @@
++#ifndef MODULE_EMULATOR_ICAM_H
++#define MODULE_EMULATOR_ICAM_H
++
++#ifdef WITH_EMU
++
++#include "module-emulator-streamserver.h"
++
++bool caid_is_icam(uint16_t caid);
++void icam_write_cw(ECM_REQUEST *er, int32_t connid);
++
++#ifdef MODULE_RADEGAST
++void icam_ecm(emu_stream_client_data *cdata);
++bool icam_connect_to_radegast(void);
++void icam_close_radegast_connection(void);
++void icam_reset(int32_t connid);
++bool icam_send_to_radegast(uint8_t* data, int len);
++#endif // MODULE_RADEGAST
++
++#endif // WITH_EMU
++
++#endif // MODULE_EMULATOR_ICAM_H
+diff --git a/module-emulator-streamserver.c b/module-emulator-streamserver.c
+index a828a4f..e32c244 100644
+--- a/module-emulator-streamserver.c
++++ b/module-emulator-streamserver.c
+@@ -9,6 +9,7 @@
+ #include "module-emulator-osemu.h"
+ #include "module-emulator-streamserver.h"
+ #include "module-emulator-powervu.h"
++#include "module-emulator-icam.h"
+ #include "oscam-config.h"
+ #include "oscam-net.h"
+ #include "oscam-string.h"
+@@ -378,7 +379,7 @@ static void ParsePmtData(emu_stream_client_data *cdata)
+ 		{
+ 			caid = b2i(2, data + i + 2);
+ 
+-			if (caid_is_powervu(caid) || caid == 0xA101) // add all supported caids here
++			if (chk_ctab_ex(caid, &cfg.emu_stream_relay_ctab) && (caid_is_powervu(caid) || caid == 0xA101 || caid_is_icam(caid))) // add all supported caids here
+ 			{
+ 				if (cdata->caid == NO_CAID_VALUE)
+ 				{
+@@ -537,6 +538,12 @@ static void ParseEcmData(emu_stream_client_data *cdata)
+ 			powervu_ecm(data, dcw, NULL, cdata->srvid, cdata->caid, cdata->tsid, cdata->onid, cdata->ens, &cdata->key);
+ 		}
+ 	}
++#ifdef MODULE_RADEGAST
++	else if (caid_is_icam(cdata->caid))
++	{
++		icam_ecm(cdata);
++	}
++#endif // MODULE_RADEGAST
+ 	//else if () // All other caids
+ 	//{
+ 		//emu_process_ecm();
+@@ -1230,6 +1237,84 @@ static void DescrambleTsPacketsCompel(emu_stream_client_data *data, uint8_t *str
+ 	}
+ }
+ 
++static void DescrambleTsPacketsICam(emu_stream_client_data *data, uint8_t *stream_buf, uint32_t bufLength, uint16_t packetSize)
++{
++	uint8_t *packetCluster[4];
++	uint8_t scrambled_packets = 0, scramblingControl;
++	uint32_t i, tsHeader;
++	int8_t odd_even = -1, odd_even_count = 1;
++
++	for (i = 0; i < bufLength; i += packetSize)
++	{
++		tsHeader = b2i(4, stream_buf + i);
++		scramblingControl = (tsHeader & 0xC0) >> 6;
++
++#ifdef MODULE_RADEGAST
++		uint16_t pid, offset, payloadStart;
++
++		pid = (tsHeader & 0x1FFF00) >> 8;
++		payloadStart = (tsHeader & 0x400000) >> 22;
++
++		if (tsHeader & 0x20)
++		{
++			offset = 4 + stream_buf[i + 4] + 1;
++		}
++		else
++		{
++			offset = 4;
++		}
++
++		if (data->ecm_pid && pid == data->ecm_pid) // Process the ECM data
++		{
++			stream_server_has_ecm[data->connid] = 1;
++			data->key.icam_csa_used = emu_fixed_key_data[data->connid].icam_csa_used;
++
++			ParseTsData(0x80, 0xFE, 3, &data->have_ecm_data, data->ecm_data, sizeof(data->ecm_data),
++						&data->ecm_data_pos, payloadStart, stream_buf + i + offset, packetSize - offset, ParseEcmData, data);
++		}
++#endif // MODULE_RADEGAST
++
++		if (scramblingControl == 0)
++		{
++			continue;
++		}
++
++		scrambled_packets++;
++		scramblingControl &= 0x1;
++
++		if (odd_even == -1)
++		{
++			odd_even = scramblingControl;
++		}
++
++		if (odd_even != scramblingControl)
++		{
++			odd_even_count++;
++			odd_even = scramblingControl;
++		}
++	}
++
++	if (scrambled_packets == 0)
++		return;
++
++	SAFE_MUTEX_LOCK(&emu_fixed_key_data_mutex[data->connid]);
++
++	if (emu_fixed_key_data[data->connid].icam_csa_used && emu_fixed_key_data[data->connid].icam_csa_ks != NULL)
++	{
++		packetCluster[0] = stream_buf;
++		packetCluster[1] = stream_buf + bufLength;
++		packetCluster[2] = NULL;
++
++		decrypt_packets(emu_fixed_key_data[data->connid].icam_csa_ks, packetCluster);
++		if (odd_even_count > 1) // odd and even packets together cannot be decrypted in one step
++		{
++			decrypt_packets(emu_fixed_key_data[data->connid].icam_csa_ks, packetCluster);
++		}
++	}
++
++	SAFE_MUTEX_UNLOCK(&emu_fixed_key_data_mutex[data->connid]);
++}
++
+ static int32_t connect_to_stream(char *http_buf, int32_t http_buf_len, char *stream_path)
+ {
+ 	struct sockaddr_in cservaddr;
+@@ -1241,15 +1326,6 @@ static int32_t connect_to_stream(char *http_buf, int32_t http_buf_len, char *str
+ 		return -1;
+ 	}
+ 
+-	struct timeval tv;
+-	tv.tv_sec = 2;
+-	tv.tv_usec = 0;
+-	if (setsockopt(streamfd, SOL_SOCKET, SO_RCVTIMEO, (char *)&tv, sizeof tv))
+-	{
+-		cs_log("ERROR: setsockopt() failed for SO_RCVTIMEO");
+-		return -1;
+-	}
+-
+ 	bzero(&cservaddr, sizeof(cservaddr));
+ 	cservaddr.sin_family = AF_INET;
+ 	cs_resolve(emu_stream_source_host, &in_addr, NULL, NULL);
+@@ -1284,6 +1360,8 @@ static int32_t connect_to_stream(char *http_buf, int32_t http_buf_len, char *str
+ 		return -1;
+ 	}
+ 
++	fcntl(streamfd, F_SETFL, fcntl(streamfd, F_GETFL) | O_NONBLOCK);
++
+ 	return streamfd;
+ }
+ 
+@@ -1332,6 +1410,9 @@ static void *stream_client_handler(void *arg)
+ 	uint16_t packetCount = 0, packetSize = 0, startOffset = 0;
+ 	uint32_t remainingDataPos, remainingDataLength, tmp_pids[4];
+ 
++	struct pollfd pfd[2];
++	int ret;
++
+ 	cs_log("Stream client %i connected", conndata->connid);
+ 
+ 	if (!cs_malloc(&http_buf, 1024))
+@@ -1454,35 +1535,55 @@ static void *stream_client_handler(void *arg)
+ 				cur_dvb_buffer_size = EMU_DVB_BUFFER_SIZE_CSA;
+ 				cur_dvb_buffer_wait = EMU_DVB_BUFFER_WAIT_CSA;
+ 			}
++			else if (emu_fixed_key_data[conndata->connid].icam_csa_used)
++			{
++				cur_dvb_buffer_size = 188 * cluster_size;
++				cur_dvb_buffer_wait = 188 * (cluster_size - 3);
++			}
+ 			else
+ 			{
+ 				cur_dvb_buffer_size = EMU_DVB_BUFFER_SIZE_DES;
+ 				cur_dvb_buffer_wait = EMU_DVB_BUFFER_WAIT_DES;
+ 			}
+ 
+-			streamStatus = recv(streamfd, stream_buf + bytesRead, cur_dvb_buffer_size - bytesRead, MSG_WAITALL);
+-			if (streamStatus == 0) // socket closed
++			pfd[0].fd = streamfd;
++			pfd[0].events = POLLIN | POLLRDHUP | POLLHUP;
++			pfd[1].fd = conndata->connfd;
++			pfd[1].events = POLLRDHUP | POLLHUP;
++
++			ret = poll(pfd, 2, 2000);
++
++			if (ret < 0) // poll error
+ 			{
+-				cs_log("WARNING: stream client %i - stream source closed connection", conndata->connid);
++				cs_log("WARNING: stream client %i error receiving data from stream source", conndata->connid);
+ 				streamConnectErrorCount++;
+ 				cs_sleepms(100);
+ 				break;
+ 			}
+-
+-			if (streamStatus < 0) // error
++			else if (ret == 0) // timeout
++			{
++				cs_log("WARNING: stream client %i no data from stream source", conndata->connid);
++				streamDataErrorCount++; // 2 sec timeout * 15 = 30 seconds no data -> close
++				continue;
++			}
++			else
+ 			{
+-				if ((errno == EWOULDBLOCK) | (errno == EAGAIN))
++				if (pfd[0].revents & POLLIN) // new incoming data
+ 				{
+-					cs_log("WARNING: stream client %i no data from stream source", conndata->connid);
+-					streamDataErrorCount++; // 2 sec timeout * 15 = 30 seconds no data -> close
++					streamStatus = recv(streamfd, stream_buf + bytesRead, cur_dvb_buffer_size - bytesRead, MSG_DONTWAIT);
++				}
++				if ((pfd[0].revents & POLLHUP) || (pfd[0].revents & POLLRDHUP)) // incoming connection closed
++				{
++					cs_log("WARNING: stream client %i - stream source closed connection", conndata->connid);
++					streamConnectErrorCount++;
+ 					cs_sleepms(100);
+-					continue;
++					break;
++				}
++				if ((pfd[1].revents & POLLHUP) || (pfd[1].revents & POLLRDHUP)) // outgoing connection was closed -> e.g. user zapped to other channel
++				{
++					clientStatus = -1;
++					break;
+ 				}
+-
+-				cs_log("WARNING: stream client %i error receiving data from stream source", conndata->connid);
+-				streamConnectErrorCount++;
+-				cs_sleepms(100);
+-				break;
+ 			}
+ 
+ 			if (streamStatus < cur_dvb_buffer_size - bytesRead) // probably just received header but no stream
+@@ -1546,6 +1647,10 @@ static void *stream_client_handler(void *arg)
+ 							{
+ 								DescrambleTsPacketsCompel(data, stream_buf + startOffset, packetCount * packetSize, packetSize);
+ 							}
++							else if (caid_is_icam(data->caid)) //ICAM
++							{
++								DescrambleTsPacketsICam(data, stream_buf + startOffset, packetCount * packetSize, packetSize);
++							}
+ 						}
+ 						else
+ 						{
+@@ -1590,6 +1695,13 @@ static void *stream_client_handler(void *arg)
+ 			free_key_struct(data->key.pvu_csa_ks[i]);
+ 		}
+ 	}
++	if (data->key.icam_csa_ks)
++	{
++		free_key_struct(data->key.icam_csa_ks);
++	}
++#ifdef MODULE_RADEGAST
++	icam_reset(data->connid);
++#endif
+ 	NULLFREE(data);
+ 
+ 	stream_client_disconnect(conndata);
+@@ -1805,8 +1917,35 @@ void stop_stream_server(void)
+ 	gconncount = 0;
+ 	SAFE_MUTEX_UNLOCK(&emu_stream_server_mutex);
+ 
++#ifdef MODULE_RADEGAST
++	icam_close_radegast_connection();
++#endif
++
+ 	shutdown(glistenfd, 2);
+ 	close(glistenfd);
+ }
+ 
++bool stream_write_cw(ECM_REQUEST *er)
++{
++	int32_t i;
++
++	if (caid_is_icam(er->caid))
++	{
++		bool cw_written = false;
++		//SAFE_MUTEX_LOCK(&emu_fixed_key_srvid_mutex);
++		for (i = 0; i < EMU_STREAM_SERVER_MAX_CONNECTIONS; i++)
++		{
++			if (emu_stream_cur_srvid[i] == er->srvid)
++			{
++				icam_write_cw(er, i);
++				cw_written = true;
++				// don't return as there might be more connections which for the same channel (recording)
++			}
++		}
++		//SAFE_MUTEX_UNLOCK(&emu_fixed_key_srvid_mutex);
++		return cw_written;
++	}
++	return true;
++}
++
+ #endif // WITH_EMU
+diff --git a/module-emulator-streamserver.h b/module-emulator-streamserver.h
+index 2b1c2ac..5b76d0d 100644
+--- a/module-emulator-streamserver.h
++++ b/module-emulator-streamserver.h
+@@ -18,6 +18,8 @@ typedef struct
+ 	uint32_t pvu_des_ks[8][2][32];
+ 	int8_t pvu_csa_used;
+ 	void* pvu_csa_ks[8];
++	int8_t icam_csa_used;
++	uint32_t* icam_csa_ks;
+ } emu_stream_client_key_data;
+ 
+ typedef struct
+@@ -84,6 +86,7 @@ extern emu_stream_client_key_data emu_fixed_key_data[EMU_STREAM_SERVER_MAX_CONNE
+ extern LLIST *ll_emu_stream_delayed_keys[EMU_STREAM_SERVER_MAX_CONNECTIONS];
+ 
+ void *stream_key_delayer(void *arg);
++bool stream_write_cw(ECM_REQUEST *er);
+ 
+ #endif // WITH_EMU
+ 
+diff --git a/module-radegast.c b/module-radegast.c
+index b514203..5b07d2d 100644
+--- a/module-radegast.c
++++ b/module-radegast.c
+@@ -7,6 +7,8 @@
+ #include "oscam-net.h"
+ #include "oscam-string.h"
+ #include "oscam-reader.h"
++#include "module-emulator-streamserver.h"
++#include "oscam-chk.h"
+ 
+ static int32_t radegast_connect(void);
+ 
+@@ -86,6 +88,9 @@ static void radegast_send_dcw(struct s_client *client, ECM_REQUEST *er)
+ 	mbuf[0] = 0x02; // DCW
+ 	if(er->rc < E_NOTFOUND)
+ 	{
++		if(chk_ctab_ex(er->caid, &cfg.emu_stream_relay_ctab) && cfg.emu_stream_relay_enabled)
++			stream_write_cw(er);
++
+ 		mbuf[1] = 0x12; // len (overall)
+ 		mbuf[2] = 0x05; // ACCESS
+ 		mbuf[3] = 0x10; // len
+diff --git a/oscam.c b/oscam.c
+index d014cd1..f948b69 100644
+--- a/oscam.c
++++ b/oscam.c
+@@ -385,7 +385,7 @@ static void write_versionfile(bool use_stdout)
+ 				st.tm_hour, st.tm_min, st.tm_sec);
+ 	}
+ 
+-	fprintf(fp, "Version:        oscam-%s-r%s\n", CS_VERSION, CS_SVN_VERSION);
++	fprintf(fp, "Version:        oscam-%s-r%s\n", CS_VERSION, CS_SVN_VERSION);
+ 	fprintf(fp, "Compiler:       %s\n", CS_TARGET);
+ 	fprintf(fp, "Box type:       %s (%s)\n", boxtype_get(), boxname_get());
+ 	fprintf(fp, "PID:            %d\n", getppid());
+@@ -424,6 +424,10 @@ static void write_versionfile(bool use_stdout)
+ 		write_conf(WITH_STAPI5, "DVB API with STAPI5 support");
+ 		write_conf(WITH_NEUTRINO, "DVB API with NEUTRINO support");
+ 		write_conf(READ_SDT_CHARSETS, "DVB API read-sdt charsets");
++		if(config_enabled(WITH_EMU))
++		{
++			write_conf(true, "DVB API with ICAM streamrelay support");
++		}
+ 	}
+ 	write_conf(IRDETO_GUESSING, "Irdeto guessing");
+ 	write_conf(CS_ANTICASC, "Anti-cascading support");
