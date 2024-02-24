@@ -11,22 +11,19 @@ SRCREV = "${AUTOREV}"
 SRC_URI = "svn://public:public@sbnc.dyndns.tv/svn/ipk/source.arm;module=emus_oscam;protocol=http"
 SRCREV_FORMAT = "${PV}"
 
-#PR = "r1"
-
 SRC_URI += "svn://svn.streamboard.tv/oscam;protocol=https;module=trunk;scmdata=keep;externals=nowarn"
-SRC_URI += "file://1-emu.patch"
-SRC_URI += "file://2-icam_v9.patch"
-SRC_URI += "file://3-buffer.v3.patch"
+#SRC_URI += "file://1-oscam-emu_icam_11734r799.patch"
 
-#PATCHREV = "58a7b142f89857f3ef732a44ce20fa290ff64dee"
-##PATCHREV = "beee6c0faa8114eff02128b22b993f01cdf93e07"
-#PR = "r798"
-#SRC_URI += "https://raw.githubusercontent.com/oscam-emu/oscam-emu/${PATCHREV}/oscam-emu.patch;downloadfilename=oscam-emu.${PATCHREV}.patch;name=emu;striplevel=0"
-#SRC_URI[emu.md5sum] = "33125f03229e094cd35c3d8f13322143"
-#SRC_URI[emu.sha256sum] = "98c60e46754d6b8416e8497c52385d3051187f3e900234fb5bdee1477f716b12"
-##SRC_URI += "file://oscam_emu_icam_dvbapi_radegast_v6.patch"
-#SRC_URI += "file://oscam_emu_icam_dvbapi_radegast_v5.patch"
-##SRC_URI += "file://oscam_emu_icam_dvbapi_radegast_v8.patch"
+PATCHREV = "74b85eaeaf85842fcd050a19a98885355f2c8540"
+PR = "r799"
+
+SRC_URI += "https://raw.githubusercontent.com/oscam-emu/oscam-emu/${PATCHREV}/oscam-emu.patch;downloadfilename=oscam-emu.${PATCHREV}.patch;name=emu;striplevel=0"
+SRC_URI[emu.md5sum] = "2d4e7b4444b23460a4b4a102bdb47257"
+SRC_URI[emu.sha256sum] = "b4771a57857976665f5df7428a3218fbc2946c121dda0e0007cc44a2dad2fe10"
+
+#SRC_URI += "file://3-buffer.v3.patch"
+#SRC_URI += "file://4-demuxer-err.patch"
+#SRC_URI += "file://5-info-file-v9-err.patch"
 
 E = "${WORKDIR}/emus_oscam"
 

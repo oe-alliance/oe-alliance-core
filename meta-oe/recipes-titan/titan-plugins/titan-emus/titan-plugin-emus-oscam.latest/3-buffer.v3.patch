@@ -4,12 +4,12 @@ index ca6d109..2ca01ff 100644
 +++ b/ffdecsa/ffdecsa.c
 @@ -63,8 +63,7 @@
  #define PARALLEL_MODE PARALLEL_128_SSE2
- 
+
  #elif defined(__mips__) || defined(__mips) || defined(__MIPS__)
 -//#define PARALLEL_MODE PARALLEL_64_LONG
 -#define PARALLEL_MODE PARALLEL_32_INT
 +#define PARALLEL_MODE PARALLEL_64_LONG
- 
+
  #elif defined(__sh__) || defined(__SH4__)
  #define PARALLEL_MODE PARALLEL_32_INT
 @@ -75,7 +74,7 @@
@@ -19,7 +19,7 @@ index ca6d109..2ca01ff 100644
 -#define PARALLEL_MODE PARALLEL_32_INT
 +#define PARALLEL_MODE PARALLEL_64_LONG
  #endif
- 
+
  #else
 diff --git a/globals.h b/globals.h
 index 1cab50c..7af2385 100644
@@ -42,12 +42,12 @@ index e32c244..78599f7 100644
  int8_t emu_stream_emm_enabled = 0;
  uint32_t cluster_size = 50;
 +uint32_t suggested_cluster_size;
- 
+
  static uint8_t emu_stream_server_mutex_init = 0;
  static pthread_mutex_t emu_stream_server_mutex;
 @@ -47,6 +48,11 @@ uint16_t emu_stream_cur_srvid[EMU_STREAM_SERVER_MAX_CONNECTIONS];
  int8_t stream_server_has_ecm[EMU_STREAM_SERVER_MAX_CONNECTIONS];
- 
+
  pthread_mutex_t emu_fixed_key_data_mutex[EMU_STREAM_SERVER_MAX_CONNECTIONS];
 +pthread_mutex_t emu_send_buffer_mutex[EMU_STREAM_SERVER_MAX_CONNECTIONS];
 +uint8_t *send_buffer[EMU_STREAM_SERVER_MAX_CONNECTIONS];
@@ -56,11 +56,11 @@ index e32c244..78599f7 100644
 +uint8_t continue_sending[EMU_STREAM_SERVER_MAX_CONNECTIONS] = {0};
  emu_stream_client_key_data emu_fixed_key_data[EMU_STREAM_SERVER_MAX_CONNECTIONS];
  LLIST *ll_emu_stream_delayed_keys[EMU_STREAM_SERVER_MAX_CONNECTIONS];
- 
+
 @@ -1237,19 +1243,20 @@ static void DescrambleTsPacketsCompel(emu_stream_client_data *data, uint8_t *str
  	}
  }
- 
+
 -static void DescrambleTsPacketsICam(emu_stream_client_data *data, uint8_t *stream_buf, uint32_t bufLength, uint16_t packetSize)
 +static uint16_t DescrambleTsPacketsICam(emu_stream_client_data *data, uint8_t *stream_buf, uint32_t bufLength, uint16_t packetSize)
  {
@@ -74,16 +74,16 @@ index e32c244..78599f7 100644
 +#ifdef MODULE_RADEGAST
 +	uint32_t i;
 +	uint32_t tsHeader;
- 
+
  	for (i = 0; i < bufLength; i += packetSize)
  	{
  		tsHeader = b2i(4, stream_buf + i);
 -		scramblingControl = (tsHeader & 0xC0) >> 6;
- 
+
 -#ifdef MODULE_RADEGAST
 +
  		uint16_t pid, offset, payloadStart;
- 
+
  		pid = (tsHeader & 0x1FFF00) >> 8;
 @@ -1272,30 +1279,8 @@ static void DescrambleTsPacketsICam(emu_stream_client_data *data, uint8_t *strea
  			ParseTsData(0x80, 0xFE, 3, &data->have_ecm_data, data->ecm_data, sizeof(data->ecm_data),
@@ -114,13 +114,13 @@ index e32c244..78599f7 100644
 -	if (scrambled_packets == 0)
 -		return;
 +#endif // MODULE_RADEGAST
- 
+
  	SAFE_MUTEX_LOCK(&emu_fixed_key_data_mutex[data->connid]);
- 
+
 @@ -1305,14 +1290,12 @@ static void DescrambleTsPacketsICam(emu_stream_client_data *data, uint8_t *strea
  		packetCluster[1] = stream_buf + bufLength;
  		packetCluster[2] = NULL;
- 
+
 -		decrypt_packets(emu_fixed_key_data[data->connid].icam_csa_ks, packetCluster);
 -		if (odd_even_count > 1) // odd and even packets together cannot be decrypted in one step
 -		{
@@ -128,17 +128,17 @@ index e32c244..78599f7 100644
 -		}
 +		retVal = decrypt_packets(emu_fixed_key_data[data->connid].icam_csa_ks, packetCluster);
  	}
- 
+
  	SAFE_MUTEX_UNLOCK(&emu_fixed_key_data_mutex[data->connid]);
 +
 +	return retVal;
  }
- 
+
  static int32_t connect_to_stream(char *http_buf, int32_t http_buf_len, char *stream_path)
 @@ -1393,6 +1376,135 @@ static void stream_client_disconnect(emu_stream_client_conn_data *conndata)
  	NULLFREE(conndata);
  }
- 
+
 +int64_t parse_pcr(const uint8_t *tsPacket) {
 +    if (tsPacket[0] != 0x47) {
 +        return INVALID_PCR;
@@ -274,16 +274,16 @@ index e32c244..78599f7 100644
 @@ -1410,6 +1522,8 @@ static void *stream_client_handler(void *arg)
  	uint16_t packetCount = 0, packetSize = 0, startOffset = 0;
  	uint32_t remainingDataPos, remainingDataLength, tmp_pids[4];
- 
+
 +	pthread_t sender_thread;
 +
  	struct pollfd pfd[2];
  	int ret;
- 
+
 @@ -1428,10 +1542,19 @@ static void *stream_client_handler(void *arg)
  		return NULL;
  	}
- 
+
 +	if (!cs_malloc(&send_buffer[conndata->connid], EMU_SEND_BUFFER_SIZE))
 +	{
 +		NULLFREE(http_buf);
@@ -327,7 +327,7 @@ index e32c244..78599f7 100644
 @@ -1527,6 +1653,11 @@ static void *stream_client_handler(void *arg)
  		streamStatus = 0;
  		bytesRead = 0;
- 
+
 +		send_buffer_length[conndata->connid] = 0;
 +		send_buffer_offset[conndata->connid] = 0;
 +		continue_sending[conndata->connid] = 1;
@@ -350,7 +350,7 @@ index e32c244..78599f7 100644
 @@ -1546,12 +1677,15 @@ static void *stream_client_handler(void *arg)
  				cur_dvb_buffer_wait = EMU_DVB_BUFFER_WAIT_DES;
  			}
- 
+
 +			uint8_t packets_left_in_buffer = (packetSize > 0) ? bytesRead/packetSize:0;
 +			uint8_t descrambling = data->have_pat_data == 1 && data->have_pmt_data == 1;
 +
@@ -358,10 +358,10 @@ index e32c244..78599f7 100644
  			pfd[0].events = POLLIN | POLLRDHUP | POLLHUP;
  			pfd[1].fd = conndata->connfd;
  			pfd[1].events = POLLRDHUP | POLLHUP;
- 
+
 -			ret = poll(pfd, 2, 2000);
 +			ret = poll(pfd, 2, (packets_left_in_buffer > 0 && descrambling) ? 5:2000);
- 
+
  			if (ret < 0) // poll error
  			{
 @@ -1562,9 +1696,14 @@ static void *stream_client_handler(void *arg)
@@ -393,16 +393,16 @@ index e32c244..78599f7 100644
 @@ -1612,7 +1750,7 @@ static void *stream_client_handler(void *arg)
  			streamConnectErrorCount = 0;
  			bytesRead += streamStatus;
- 
+
 -			if (bytesRead >= cur_dvb_buffer_wait)
 +			if (bytesRead >= cur_dvb_buffer_wait || (packets_left_in_buffer > 0 && descrambling))
  			{
  				startOffset = 0;
- 
+
 @@ -1622,9 +1760,9 @@ static void *stream_client_handler(void *arg)
  					SearchTsPackets(stream_buf, bytesRead, &packetSize, &startOffset);
  				}
- 
+
 -				if (packetSize == 0)
 +				if (packetSize == 0) // no ts packets found yet
  				{
@@ -424,7 +424,7 @@ index e32c244..78599f7 100644
 @@ -1663,7 +1802,18 @@ static void *stream_client_handler(void *arg)
  						ParseTsPackets(data, stream_buf + startOffset, packetCount * packetSize, packetSize);
  					}
- 
+
 -					clientStatus = send(conndata->connfd, stream_buf + startOffset, packetCount * packetSize, 0);
 +					SAFE_MUTEX_LOCK(&emu_send_buffer_mutex[conndata->connid]);
 +					if (send_buffer_length[conndata->connid] + packetCount * packetSize > EMU_SEND_BUFFER_SIZE) {
@@ -438,13 +438,13 @@ index e32c244..78599f7 100644
 +					SAFE_MUTEX_UNLOCK(&emu_send_buffer_mutex[conndata->connid]);
 +
 +					clientStatus = packetCount * packetSize;
- 
+
  					remainingDataPos = startOffset + (packetCount * packetSize);
  					remainingDataLength = bytesRead - remainingDataPos;
 @@ -1685,8 +1835,13 @@ static void *stream_client_handler(void *arg)
  		close(streamfd);
  	}
- 
+
 +	continue_sending[conndata->connid] = 0;
 +	// wait for sender thread to finish
 +	pthread_join(sender_thread, NULL);
@@ -452,28 +452,17 @@ index e32c244..78599f7 100644
  	NULLFREE(http_buf);
  	NULLFREE(stream_buf);
 +	NULLFREE(send_buffer[conndata->connid]);
- 
+
  	for (i = 0; i < 8; i++)
  	{
-@@ -1695,10 +1850,6 @@ static void *stream_client_handler(void *arg)
- 			free_key_struct(data->key.pvu_csa_ks[i]);
- 		}
- 	}
--	if (data->key.icam_csa_ks)
--	{
--		free_key_struct(data->key.icam_csa_ks);
--	}
- #ifdef MODULE_RADEGAST
- 	icam_reset(data->connid);
- #endif
 @@ -1717,7 +1868,8 @@ void *stream_server(void *UNUSED(a))
  	emu_stream_client_conn_data *conndata;
- 
+
  	cluster_size = get_internal_parallelism();
 -	cs_log("INFO: FFDecsa parallel mode = %d", cluster_size);
 +	suggested_cluster_size = get_suggested_cluster_size();
 +	cs_log("INFO: FFDecsa parallel mode = %d (suggested cluster size: %d packets)", cluster_size, suggested_cluster_size);
- 
+
  	if (!emu_stream_server_mutex_init)
  	{
 diff --git a/module-emulator-streamserver.h b/module-emulator-streamserver.h
@@ -483,7 +472,7 @@ index 5b76d0d..580e699 100644
 @@ -13,6 +13,15 @@
  #define EMU_DVB_BUFFER_WAIT_DES 188*29
  #define EMU_DVB_BUFFER_SIZE EMU_DVB_BUFFER_SIZE_CSA
- 
+
 +#define EMU_SEND_BUFFER_SIZE 188*204*208*2 // might implement ring buffer in future
 +
 +#define INVALID_PCR (uint64_t) 0xFFFFFFFFFFFFFFFF
@@ -499,12 +488,12 @@ index 5b76d0d..580e699 100644
 @@ -85,6 +94,8 @@ extern pthread_mutex_t emu_fixed_key_data_mutex[EMU_STREAM_SERVER_MAX_CONNECTION
  extern emu_stream_client_key_data emu_fixed_key_data[EMU_STREAM_SERVER_MAX_CONNECTIONS];
  extern LLIST *ll_emu_stream_delayed_keys[EMU_STREAM_SERVER_MAX_CONNECTIONS];
- 
+
 +extern pthread_mutex_t emu_send_buffer_mutex[EMU_STREAM_SERVER_MAX_CONNECTIONS];
 +
  void *stream_key_delayer(void *arg);
  bool stream_write_cw(ECM_REQUEST *er);
- 
+
 diff --git a/module-emulator.c b/module-emulator.c
 index 0cdb915..ce6630e 100644
 --- a/module-emulator.c
@@ -526,7 +515,7 @@ index 9ecb13e..516e994 100644
  	tpl_printf(vars, TPLADD, "STREAM_RELAY_PORT", "%d", cfg.emu_stream_relay_port);
  	tpl_printf(vars, TPLADD, "STREAM_ECM_DELAY", "%d", cfg.emu_stream_ecm_delay);
 +	tpl_printf(vars, TPLADD, "STREAM_RELAY_BUFFER_TIME", "%d", cfg.emu_stream_relay_buffer_time);
- 
+
  	tpl_printf(vars, TPLADD, "TMP", "STREAMRELAYENABLEDSELECTED%d", cfg.emu_stream_relay_enabled);
  	tpl_addVar(vars, TPLADD, tpl_getVar(vars, "TMP"), "selected");
 diff --git a/oscam-config-global.c b/oscam-config-global.c

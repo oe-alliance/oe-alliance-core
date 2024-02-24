@@ -1,0 +1,13 @@
+diff --git a/module-dvbapi.c b/module-dvbapi.c
+index 118a1e5..81ad127 100644
+--- a/module-dvbapi.c
++++ b/module-dvbapi.c
+@@ -6831,7 +6831,7 @@
+				}
+
+				// count ecm filters to see if demuxing is possible anyway
+-				if(demux[i].demux_fd[g].type == TYPE_ECM)
++				if (demux[i].demux_fd[g].type == TYPE_ECM || demux[i].demux_fd[g].type == 3 || demux[i].demux_fd[g].type == 6)
+				{
+					ecmcounter++;
+				}
