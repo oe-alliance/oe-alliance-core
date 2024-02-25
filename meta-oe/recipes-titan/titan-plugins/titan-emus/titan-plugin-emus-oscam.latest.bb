@@ -21,6 +21,9 @@ SRC_URI += "https://raw.githubusercontent.com/oscam-emu/oscam-emu/${PATCHREV}/os
 SRC_URI[emu.md5sum] = "2d4e7b4444b23460a4b4a102bdb47257"
 SRC_URI[emu.sha256sum] = "b4771a57857976665f5df7428a3218fbc2946c121dda0e0007cc44a2dad2fe10"
 
+SRC_URI += "file://disable.neon.patch"
+#SRC_URI += "file://1-emu.patch"
+#SRC_URI += "file://2-icam_v9.patch"
 #SRC_URI += "file://3-buffer.v3.patch"
 #SRC_URI += "file://4-demuxer-err.patch"
 #SRC_URI += "file://5-info-file-v9-err.patch"
