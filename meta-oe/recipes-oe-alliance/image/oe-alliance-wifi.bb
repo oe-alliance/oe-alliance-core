@@ -45,6 +45,7 @@ RDEPENDS:${PN} = "\
     ${@bb.utils.contains("DISTRO_NAME", "egami", "enigma2-plugin-drivers-network-usb-rtl8192cu-rev2 enigma2-plugin-drivers-network-usb-rtl8812au", "", d)} \
     ${@bb.utils.contains("DISTRO_NAME", "opendroid", "enigma2-plugin-drivers-network-usb-rtl8192cu-rev2", "", d)} \
     ${@bb.utils.contains("DISTRO_NAME", "openhdf", "enigma2-plugin-drivers-network-usb-rtl8192cu-rev2 enigma2-plugin-drivers-network-usb-rtl8812au", "", d)} \
+    ${@bb.utils.contains("DISTRO_NAME", "openbh", "enigma2-plugin-drivers-network-usb-rtl8192cu-rev2 enigma2-plugin-drivers-network-usb-rtl8812au", "", d)} \
     ${@bb.utils.contains("MACHINEBUILD", "bre2ze", "enigma2-plugin-drivers-network-usb-mt7601u", "", d)} \
     ${@bb.utils.contains("MACHINE", "9900lx", "enigma2-plugin-drivers-network-usb-mt7601u", "", d)} \
     ${@bb.utils.contains("MACHINE", "8100s", "enigma2-plugin-drivers-network-usb-mt7601u", "", d)} \
