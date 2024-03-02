@@ -360,8 +360,8 @@ do_configure:prepend() {
 	echo "./oealliance.sh ${CACHEDIR} ${KERNELDIR} ${ROOTDIR} ${TYPE} ${SRCDIR} ${CPU} ${STM} ${BOXNAME} ${DISTRO_NAME} ${DISTRO_TYPE} ${SWTYPE} ${IMAGE_NAME} ${GITVERSION} ${SVNVERSION} ${MACHINE_BRAND} ${MACHINE_NAME} ${DRIVERSDATE} ${DISTRO_VERSION} ${DISTRO_TYPE}"
 	./oealliance.sh "${CACHEDIR}" "${KERNELDIR}" "${ROOTDIR}" "${TYPE}" "${SRCDIR}" "${CPU}" "${STM}" "${BOXNAME}" "${DISTRO_NAME}" "${DISTRO_TYPE}" "${SWTYPE}" "${IMAGE_NAME}" "${GITVERSION}" "${SVNVERSION}" "${MACHINE_BRAND}" "${MACHINE_NAME}" "${DRIVERSDATE}" "${DISTRO_VERSION}" "${DISTRO_TYPE}"
 
-#	cd ${S}
-#	cp Makefile.am.4.3 Makefile.am
+	cd ${S}
+	cp Makefile.am.4.3 Makefile.am
 	cd ${S}
 }
 
