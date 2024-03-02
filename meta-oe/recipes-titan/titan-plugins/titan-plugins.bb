@@ -115,64 +115,7 @@ FILES:${PN} = "/usr/local/share/titan/plugins"
 INSANE_SKIP:${PN} = "already-stripped"
 
 do_install() {
-	if [ ${HOST_SYS} = "sh4-oe-linux" ];then
-		HOST=sh4
-	elif [ ${HOST_SYS} = "arm-oe-linux-gnueabi" ];then
-		HOST=arm
-	else
-		HOST=mipsel
-	fi
-	
-	install -d ${D}/usr/local/share/titan/plugins
-	
-	SECTIONLIST="`cat ../plugins/Makefile.am | sed 's/\\t\+/ /g' | sed 's/ \\+//g' | sed 's/\\\//g' | grep -v =`"
-	echo SECTIONLIST $SECTIONLIST
-	for SECTION in $SECTIONLIST;do
-		echo SECTION $SECTION
-    	PLUGINLIST="`cat ../plugins/$SECTION/Makefile.am | sed 's/\\t\+/ /g' | sed 's/ \\+//g' | sed 's/\\\//g' | grep -v =`"
-
-	    for PLUGIN in $PLUGINLIST;do
-		    echo PLUGIN $PLUGIN
-		    install -d ${D}/usr/local/share/titan/plugins/$SECTION/$PLUGIN
-		    install -m 0644 ../plugins/$SECTION/$PLUGIN/.libs/*.so ${D}/usr/local/share/titan/plugins/$SECTION/$PLUGIN/
-
-echo SECTION $SECTION
-echo PLUGIN $PLUGIN
-echo HOST_SYS ${HOST_SYS}
-echo HOST $HOST
-	
-		    if test -e ../plugins/$SECTION/$PLUGIN/$PLUGIN.sh;then
-			    install -m 0655 ../plugins/$SECTION/$PLUGIN/*.sh ${D}/usr/local/share/titan/plugins/$SECTION/$PLUGIN
-		    fi
-		    if test -e ../plugins/$SECTION/$PLUGIN/$PLUGIN.conf;then
-			    install -m 0655 ../plugins/$SECTION/$PLUGIN/*.conf ${D}/usr/local/share/titan/plugins/$SECTION/$PLUGIN
-		    fi
-		    if test -e ../plugins/$SECTION/$PLUGIN/files;then
-			    cp -a ../plugins/$SECTION/$PLUGIN/files/* ${D}/usr/local/share/titan/plugins/$SECTION/$PLUGIN/
-		    fi
-		    if test -e ../plugins/$SECTION/$PLUGIN/$HOST;then
-			    cp -a ../plugins/$SECTION/$PLUGIN/${HOST}/* ${D}/usr/local/share/titan/plugins/$SECTION/$PLUGIN/
-		    fi
-		    if test -e ../plugins/$SECTION/$PLUGIN/${HOST_SYS};then
-			    cp -a ../plugins/$SECTION/$PLUGIN/f${HOST_SYS}/* ${D}/usr/local/share/titan/plugins/$SECTION/$PLUGIN/
-		    fi
-		    if test -e ../plugins/$SECTION/$PLUGIN/picons;then
-			    cp -a ../plugins/$SECTION/$PLUGIN/picons ${D}/usr/local/share/titan/plugins/$SECTION/$PLUGIN/
-		    fi
-		    if test -e ../plugins/$SECTION/$PLUGIN/skin;then
-			    cp -a ../plugins/$SECTION/$PLUGIN/skin ${D}/usr/local/share/titan/plugins/$SECTION/$PLUGIN/
-		    fi
-		    if test -e ../plugins/$SECTION/$PLUGIN/skin.xml;then
-			    install -m 0644 ../plugins/$SECTION/$PLUGIN/skin.xml ${D}/usr/local/share/titan/plugins/$SECTION/$PLUGIN/
-		    fi
-		    if test -e ../plugins/$SECTION/$PLUGIN/plugin.png;then
-			    install -m 0644 ../plugins/$SECTION/$PLUGIN/plugin.png ${D}/usr/local/share/titan/plugins/$SECTION/$PLUGIN/
-		    fi
-		    if test -e ../plugins/$SECTION/$PLUGIN/default.jpg;then
-			    install -m 0644 ../plugins/$SECTION/$PLUGIN/default.jpg ${D}/usr/local/share/titan/plugins/$SECTION/$PLUGIN/
-		    fi
-	    done
-	done
+	./inst.sh ${HOST_SYS} ${D}
 }
 
 python populate_packages:prepend() {
