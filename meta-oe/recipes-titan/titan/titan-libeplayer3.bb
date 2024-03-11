@@ -11,7 +11,7 @@ require conf/license/license-gplv2.inc
 inherit pkgconfig
 
 SRCREV = "${AUTOREV}"
-PV = "${SRCPV}"
+PV = "${@bb.fetch2.get_srcrev(d)}"
 
 SRC_URI = "svn://public:public@sbnc.dyndns.tv/svn/titan;module=libeplayer3;protocol=http"
 

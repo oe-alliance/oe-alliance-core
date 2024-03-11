@@ -10,9 +10,8 @@ DEPENDS = " \
 inherit gitpkgv
 
 SRCREV = "${AUTOREV}"
-PV = "2.0+gitr${SRCPV}"
-PR = "r1"
-PR = "r2"
+PV = "${IMAGE_VERSION}+git"
+PKGV = "${IMAGE_VERSION}+git${GITPKGV}"
 
 SRC_URI="git://github.com/vadmium/rarfs.git;protocol=https;branch=master"
 

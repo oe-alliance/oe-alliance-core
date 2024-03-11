@@ -8,7 +8,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 require conf/license/license-gplv2.inc
 
 SRCREV = "${AUTOREV}"
-PV = "${SRCPV}"
+PV = "${@bb.fetch2.get_srcrev(d)}"
 
 SRC_URI = "svn://public:public@sbnc.dyndns.tv/svn/ipk/source;module=bootlogos_zombie_0_1;protocol=http"
 
@@ -45,7 +45,7 @@ python populate_packages:prepend() {
             return
 
         for line in src.split("\n"):
-            rev = bb.data.expand('${SRCPV}', d)
+            rev = bb.data.expand('${PV}', d)
             box = bb.data.expand('${MACHINE}', d)
             pr = bb.data.expand('${PR}', d)
             workdir = bb.data.expand('${WORKDIR}', d)

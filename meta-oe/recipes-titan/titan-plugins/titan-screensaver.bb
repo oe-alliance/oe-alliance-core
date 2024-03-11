@@ -8,7 +8,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 require conf/license/license-gplv2.inc
 
 SRCREV = "${AUTOREV}"
-PV = "${SRCPV}"
+PV = "${@bb.fetch2.get_srcrev(d)}"
 
 SRC_URI = "svn://public:public@svn.dyndns.tv/svn/ipk;module=source;protocol=http"
 
@@ -49,7 +49,7 @@ python populate_packages:prepend() {
         except IOError:
             return
         for line in src.split("\n"):
-            rev = bb.data.expand('${SRCPV}', d)
+            rev = bb.data.expand('${PV}', d)
             box = bb.data.expand('${MACHINE}', d)
             pr = bb.data.expand('${PR}', d)
             workdir = bb.data.expand('${WORKDIR}', d)

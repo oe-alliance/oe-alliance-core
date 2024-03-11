@@ -8,8 +8,8 @@ require conf/license/license-gplv2.inc
 FILES:${PN} = "/etc"
 
 SRCREV = "${AUTOREV}"
-PV = "git${SRCPV}"
-PKGV = "git${GITPKGV}"
+PV = "${IMAGE_VERSION}+git"
+PKGV = "${IMAGE_VERSION}+git${GITPKGV}"
 
 SRC_URI = "git://github.com/openaaf/autorestore.git;protocol=https;branch=master"
 S = "${WORKDIR}/git/src"
