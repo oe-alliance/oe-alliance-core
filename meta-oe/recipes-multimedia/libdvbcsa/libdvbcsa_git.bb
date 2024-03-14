@@ -9,13 +9,30 @@ SRCREV = "${AUTOREV}"
 PV = "1.1.0+git${SRCPV}"
 PKGV = "1.1.0+git${GITPKGV}"
 
-SRC_URI = "git://code.videolan.org/videolan/libdvbcsa.git;protocol=https;branch=master \
+SRC_URI = "git://github.com/glenvt18/libdvbcsa.git;protocol=https;branch=master \
            file://libdvbcsa.pc \
+           file://emm.patch \
 "
+
+SRC_URI[sha256sum] = "c78b61f83a8b7542b5a91164398aa2809d2ea9926488002653e3776a26f4c17b"
 
 S = "${WORKDIR}/git"
 
+#libdvbcsa-32 mipsel, arm w/o Neon --enable-uint32
+#libdvbcsa-64 aarch64 w/o Neon --enable-uint64
+#libdvbcsa-128 arm+aarch64 with Neon --enable-neon
+
+#CFLAGS:arm:append = " -mfpu=neon"
+
 inherit autotools lib_package pkgconfig
+
+do_configureaus:append(){
+	../git/configure --host=${HOST_SYS} --build=${BUILD_SYS} --enable-neon
+}
+
+CONFIGUREOPTS:arm = " --host=${HOST_SYS} --build=${BUILD_SYS} --prefix=${prefix} --enable-neon ${PACKAGECONFIG_CONFARGS}"
+CONFIGUREOPTS:mipsel = " --host=${HOST_SYS} --build=${BUILD_SYS} --prefix=${prefix} --enable-uint32 ${PACKAGECONFIG_CONFARGS}"
+CONFIGUREOPTS:arm = " --host=${HOST_SYS} --build=${BUILD_SYS} --prefix=${prefix} --enable-uint32 ${PACKAGECONFIG_CONFARGS}"
 
 do_install:append() {
     install -d ${D}${includedir}/dvbcsa/

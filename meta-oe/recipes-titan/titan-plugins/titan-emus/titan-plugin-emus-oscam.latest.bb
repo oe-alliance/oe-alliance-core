@@ -12,44 +12,19 @@ SRC_URI = "svn://public:public@sbnc.dyndns.tv/svn/ipk/source.arm;module=emus_osc
 SRCREV_FORMAT = "${PV}"
 
 SRC_URI += "svn://svn.streamboard.tv/oscam;protocol=https;module=trunk;scmdata=keep;externals=nowarn"
-#SRC_URI += "file://1-oscam-emu_icam_11734r799.patch"
-#SRC_URI += "file://emu.oscam11111.r799.patch"
-
-#PATCHREV = "74b85eaeaf85842fcd050a19a98885355f2c8540"
-#PR = "r799"
-
-#SRC_URI += "https://raw.githubusercontent.com/oscam-emu/oscam-emu/${PATCHREV}/oscam-emu.patch;downloadfilename=oscam-emu.${PATCHREV}.patch;name=emu;striplevel=0"
-#SRC_URI[emu.md5sum] = "2d4e7b4444b23460a4b4a102bdb47257"
-#SRC_URI[emu.sha256sum] = "b4771a57857976665f5df7428a3218fbc2946c121dda0e0007cc44a2dad2fe10"
-#SRC_URI += "file://disable.neon.patch"
+SRC_URI += "file://config.patch"
 
 E = "${WORKDIR}/emus_oscam"
 
-DEPENDS = "libusb openssl"
+DEPENDS = "libusb openssl libdvbcsa"
 
 S = "${WORKDIR}/trunk"
 
-EXTRA_OECMAKE:arm += " -DOSCAM_SYSTEM_NAME=FriendlyARM"
-EXTRA_OECMAKE:mipsel += " -DOSCAM_SYSTEM_NAME=FriendlyMIPSEL"
-EXTRA_OECMAKE:sh4 += " -DOSCAM_SYSTEM_NAME=FriendlySH4"
+EXTRA_OECMAKE:arm += " -DOSCAM_SYSTEM_NAME=FriendlyARM -DHAVE_LIBDVBCSA=1 -DSTATIC_LIBDVBCSA=1 -DSTATIC_LIBUSB=1 -DSTATIC_LIBUSB=1 -DWEBIF=1 -DWITH_STAPI=0 -DHAVE_LIBUSB=1 -DSTATIC_LIBUSB=1 -DWITH_SSL=1 -DCLOCKFIX=0 -DMODULE_CONSTCW=1 -DHAVE_PCSC=0 -DWITH_EMU=0"
+EXTRA_OECMAKE:mipsel += " -DOSCAM_SYSTEM_NAME=FriendlyARM -DHAVE_LIBDVBCSA=1 -DSTATIC_LIBDVBCSA=1 -DSTATIC_LIBUSB=1 -DSTATIC_LIBUSB=1 -DWEBIF=1 -DWITH_STAPI=0 -DHAVE_LIBUSB=1 -DSTATIC_LIBUSB=1 -DWITH_SSL=1 -DCLOCKFIX=0 -DMODULE_CONSTCW=1 -DHAVE_PCSC=0 -DWITH_EMU=0"
+EXTRA_OECMAKE:sh4 += " -DOSCAM_SYSTEM_NAME=FriendlyARM -DHAVE_LIBDVBCSA=1 -DSTATIC_LIBDVBCSA=1 -DSTATIC_LIBUSB=1 -DSTATIC_LIBUSB=1 -DWEBIF=1 -DWITH_STAPI=0 -DHAVE_LIBUSB=1 -DSTATIC_LIBUSB=1 -DWITH_SSL=1 -DCLOCKFIX=0 -DMODULE_CONSTCW=1 -DHAVE_PCSC=0 -DWITH_EMU=0"
 
-EXTRA_OECMAKE += "\
-	-DMODULE_STREAMRELAY=1 \
-	-DMODULE_RADEGAST=1 \
-	-DWITH_ARM_NEON=1 \
-	-DWITH_EMU=1 \
-    -DWEBIF=1 \
-    -DWITH_STAPI=0 \
-    -DHAVE_LIBUSB=1 \
-    -DSTATIC_LIBUSB=1 \
-    -DWITH_SSL=1 \
-    -DCLOCKFIX=0 \
-    -DMODULE_CONSTCW=1 \
-    -DHAVE_PCSC=0"
-
-#CFLAGS:append:arm = " -DOSCAM_SYSTEM_NAME=FriendlyARM"
-#CFLAGS:append:mipsel = " -DOSCAM_SYSTEM_NAME=FriendlyMIPSEL"
-#CFLAGS:append:sh4 = " -DOSCAM_SYSTEM_NAME=FriendlySH4"
+EXTRA_OECMAKE:arm += " -DWITH_ARM_NEON=1"
 
 do_install() {
     install -d ${D}/bin
@@ -87,7 +62,7 @@ python populate_packages:prepend() {
             return
 
         for line in src.split("\n"):
-            rev = bb.data.expand('${PV}', d)
+            rev = bb.data.expand('${SRCPV}', d)
             box = bb.data.expand('${MACHINEBUILD}', d)
             pr = bb.data.expand('${PR}', d)
             workdir = bb.data.expand('${WORKDIR}', d)
