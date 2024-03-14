@@ -22,17 +22,11 @@ S = "${WORKDIR}/git"
 #libdvbcsa-64 aarch64 w/o Neon --enable-uint64
 #libdvbcsa-128 arm+aarch64 with Neon --enable-neon
 
-#CFLAGS:arm:append = " -mfpu=neon"
-
 inherit autotools lib_package pkgconfig
-
-do_configureaus:append(){
-	../git/configure --host=${HOST_SYS} --build=${BUILD_SYS} --enable-neon
-}
 
 CONFIGUREOPTS:arm = " --host=${HOST_SYS} --build=${BUILD_SYS} --prefix=${prefix} --enable-neon ${PACKAGECONFIG_CONFARGS}"
 CONFIGUREOPTS:mipsel = " --host=${HOST_SYS} --build=${BUILD_SYS} --prefix=${prefix} --enable-uint32 ${PACKAGECONFIG_CONFARGS}"
-CONFIGUREOPTS:arm = " --host=${HOST_SYS} --build=${BUILD_SYS} --prefix=${prefix} --enable-uint32 ${PACKAGECONFIG_CONFARGS}"
+CONFIGUREOPTS:sh4 = " --host=${HOST_SYS} --build=${BUILD_SYS} --prefix=${prefix} --enable-uint32 ${PACKAGECONFIG_CONFARGS}"
 
 do_install:append() {
     install -d ${D}${includedir}/dvbcsa/
