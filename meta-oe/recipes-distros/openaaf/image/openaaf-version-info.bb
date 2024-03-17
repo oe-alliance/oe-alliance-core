@@ -4,69 +4,84 @@ PRIORITY = "required"
 LICENSE = "proprietary"
 MAINTAINER = "openAAF"
 
+
 require conf/license/license-gplv2.inc
+
+deltask fetch
+deltask unpack
+deltask patch
+deltask prepare_recipe_sysroot
+deltask configure
+deltask compile
 
 PV = "${IMAGE_VERSION}"
 PR = "${BUILD_VERSION}"
 PACKAGE_ARCH = "${MACHINEBUILD}"
 
+SSTATE_SKIP_CREATION = "1"
+
 URL = "http://www.aaf-digital.info"
 
-do_configure[nostamp] = "1"
+# if DATE in PR changes (next day), workdir name changes too
+# this makes sstate unhappy and breakes many tasks in many weird ways
 
-S = "${WORKDIR}"
+WORKDIR = "${TMPDIR}/work/${MULTIMACH_TARGET_SYS}/${PN}/${EXTENDPE}${PV}"
 
 PACKAGES = "${PN}"
 
+do_install[nostamp] = "1"
+
 do_install() {
-    install -d ${D}/etc
-    echo "box_type=${MACHINEBUILD}" > ${D}/etc/image-version
-    echo "build_type=${BUILDTYPE}" >> ${D}/etc/image-version
-    echo "machine_brand=${MACHINE_BRAND}" >> ${D}/etc/image-version
-    echo "machine_name=${MACHINE_NAME}" >> ${D}/etc/image-version
-    echo "version=${IMAGE_VERSION}" >> ${D}/etc/image-version
-    echo "build=${BUILD_VERSION}" >> ${D}/etc/image-version
-    echo "date=${DATETIME}" >> ${D}/etc/image-version
-    echo "comment=openATV" >> ${D}/etc/image-version
-    echo "target=9" >> ${D}/etc/image-version
-    echo "creator=openATV" >> ${D}/etc/image-version
-    echo "url=${URL}" >> ${D}/etc/image-version
-    echo "catalog=${URL}" >> ${D}/etc/image-version
-    echo "oever=${OE_VER}" >> ${D}/etc/image-version
-    echo "distro=${DISTRO_NAME}" >> ${D}/etc/image-version
-    echo "brandoem=${BRAND_OEM}" >> ${D}/etc/image-version
-    echo "machinemake=${MACHINEBUILD}" >> ${D}/etc/image-version
-    echo "imageversion=${DISTRO_VERSION}" >> ${D}/etc/image-version
-    echo "imagebuild=${BUILD_VERSION}" >> ${D}/etc/image-version
-    echo "imagedevbuild=${DEVELOPER_BUILD_VERSION}" >> ${D}/etc/image-version
-    echo "imagetype=${DISTRO_TYPE}" >> ${D}/etc/image-version
-    echo "feedsurl=${DISTRO_FEED_URI}" >> ${D}/etc/image-version
-    echo "imagedir=${IMAGEDIR}" >> ${D}/etc/image-version
-    echo "imagefs=${IMAGE_FSTYPES}" >> ${D}/etc/image-version
-    echo "mtdrootfs=${MTD_ROOTFS}" >> ${D}/etc/image-version
-    echo "mtdkernel=${MTD_KERNEL}" >> ${D}/etc/image-version
-    echo "rootfile=${ROOTFS_FILE}" >> ${D}/etc/image-version
-    echo "kernelfile=${KERNEL_FILE}" >> ${D}/etc/image-version
-    echo "mkubifs=${MKUBIFS_ARGS}" >> ${D}/etc/image-version
-    echo "ubinize=${UBINIZE_ARGS}" >> ${D}/etc/image-version
-    echo "driverdate=${DRIVERSDATE}" >> ${D}/etc/image-version
-    echo "arch=${DEFAULTTUNE}" >> ${D}/etc/image-version
-    echo "display-type=${DISPLAY_TYPE}" >> ${D}/etc/image-version
-    echo "hdmi=${HAVE_HDMI}" >> ${D}/etc/image-version
-    echo "yuv=${HAVE_YUV}" >> ${D}/etc/image-version
-    echo "rca=${HAVE_RCA}" >> ${D}/etc/image-version
-    echo "av-jack=${HAVE_AV_JACK}" >> ${D}/etc/image-version
-    echo "scart=${HAVE_SCART}" >> ${D}/etc/image-version
-    echo "scart-yuv=${HAVE_SCART_YUV}" >> ${D}/etc/image-version
-    echo "dvi=${HAVE_DVI}" >> ${D}/etc/image-version
-    echo "minitv=${HAVE_MINITV}" >> ${D}/etc/image-version
-    echo "hdmi-in-hd=${HAVE_HDMI_IN_HD}" >> ${D}/etc/image-version
-    echo "hdmi-in-fhd=${HAVE_HDMI_IN_FHD}" >> ${D}/etc/image-version
-    echo "wol=${HAVE_WOL}" >> ${D}/etc/image-version
-    echo "wwol=${HAVE_WWOL}" >> ${D}/etc/image-version
-    echo "ci=${HAVE_CI}" >> ${D}/etc/image-version
-    echo "transcoding=${TRANSCODING}" >> ${D}/etc/image-version
-    echo "${MACHINE}" > ${D}/etc/model
+    install -d ${D}${sysconfdir}
+    printf "box_type=${MACHINEBUILD}\n" > ${D}${sysconfdir}/image-version
+    printf "build_type=${BUILDTYPE}\n" >> ${D}${sysconfdir}/image-version
+    printf "machine_brand=${MACHINE_BRAND}\n" >> ${D}${sysconfdir}/image-version
+    printf "machine_name=${MACHINE_NAME}\n" >> ${D}${sysconfdir}/image-version
+    printf "version=${IMAGE_VERSION}\n" >> ${D}${sysconfdir}/image-version
+    printf "build=${BUILD_VERSION}\n" >> ${D}${sysconfdir}/image-version
+    printf "date=${DATE}\n" >> ${D}${sysconfdir}/image-version
+    printf "comment=openATV\n" >> ${D}${sysconfdir}/image-version
+    printf "target=9\n" >> ${D}${sysconfdir}/image-version
+    printf "creator=openATV\n" >> ${D}${sysconfdir}/image-version
+    printf "url=${URL}\n" >> ${D}${sysconfdir}/image-version
+    printf "catalog=${URL}\n" >> ${D}${sysconfdir}/image-version
+    printf "oever=${OE_VER}\n" >> ${D}${sysconfdir}/image-version
+    printf "distro=${DISTRO_NAME}\n" >> ${D}${sysconfdir}/image-version
+    printf "brandoem=${BRAND_OEM}\n" >> ${D}${sysconfdir}/image-version
+    printf "machinemake=${MACHINEBUILD}\n" >> ${D}${sysconfdir}/image-version
+    printf "imageversion=${DISTRO_VERSION}\n" >> ${D}${sysconfdir}/image-version
+    printf "imagebuild=${BUILD_VERSION}\n" >> ${D}${sysconfdir}/image-version
+    printf "imagedevbuild=${DEVELOPER_BUILD_VERSION}\n" >> ${D}${sysconfdir}/image-version
+    printf "imagetype=${DISTRO_TYPE}\n" >> ${D}${sysconfdir}/image-version
+    printf "feedsurl=${DISTRO_FEED_URI}\n" >> ${D}${sysconfdir}/image-version
+    printf "imagedir=${IMAGEDIR}\n" >> ${D}${sysconfdir}/image-version
+    printf "imagefs=${IMAGE_FSTYPES}\n" >> ${D}${sysconfdir}/image-version
+    printf "mtdrootfs=${MTD_ROOTFS}\n" >> ${D}${sysconfdir}/image-version
+    printf "mtdkernel=${MTD_KERNEL}\n" >> ${D}${sysconfdir}/image-version
+    printf "rootfile=${ROOTFS_FILE}\n" >> ${D}${sysconfdir}/image-version
+    printf "kernelfile=${KERNEL_FILE}\n" >> ${D}${sysconfdir}/image-version
+    printf "mkubifs=${MKUBIFS_ARGS}\n" >> ${D}${sysconfdir}/image-version
+    printf "ubinize=${UBINIZE_ARGS}\n" >> ${D}${sysconfdir}/image-version
+    printf "driverdate=${DRIVERSDATE}\n" >> ${D}${sysconfdir}/image-version
+    printf "arch=${TUNE_PKGARCH}\n" >> ${D}${sysconfdir}/image-version
+    printf "display-type=${DISPLAY_TYPE}\n" >> ${D}${sysconfdir}/image-version
+    printf "hdmi=${HAVE_HDMI}\n" >> ${D}${sysconfdir}/image-version
+    printf "yuv=${HAVE_YUV}\n" >> ${D}${sysconfdir}/image-version
+    printf "rca=${HAVE_RCA}\n" >> ${D}${sysconfdir}/image-version
+    printf "av-jack=${HAVE_AV_JACK}\n" >> ${D}${sysconfdir}/image-version
+    printf "scart=${HAVE_SCART}\n" >> ${D}${sysconfdir}/image-version
+    printf "scart-yuv=${HAVE_SCART_YUV}\n" >> ${D}${sysconfdir}/image-version
+    printf "dvi=${HAVE_DVI}\n" >> ${D}${sysconfdir}/image-version
+    printf "minitv=${HAVE_MINITV}\n" >> ${D}${sysconfdir}/image-version
+    printf "hdmi-in-hd=${HAVE_HDMI_IN_HD}\n" >> ${D}${sysconfdir}/image-version
+    printf "hdmi-in-fhd=${HAVE_HDMI_IN_FHD}\n" >> ${D}${sysconfdir}/image-version
+    printf "wol=${HAVE_WOL}\n" >> ${D}${sysconfdir}/image-version
+    printf "wwol=${HAVE_WWOL}\n" >> ${D}${sysconfdir}/image-version
+    printf "ci=${HAVE_CI}\n" >> ${D}${sysconfdir}/image-version
+    printf "transcoding=${TRANSCODING}\n" >> ${D}${sysconfdir}/image-version
+    printf "${MACHINE}\n" > ${D}${sysconfdir}/model
+    printf "compile-date=${DATE}\n" >> ${D}/etc/image-version
+    printf "compile-datetime=${DATETIME}\n" >> ${D}/etc/image-version
 }
 do_install[vardepsexclude] += "DATETIME"
 
