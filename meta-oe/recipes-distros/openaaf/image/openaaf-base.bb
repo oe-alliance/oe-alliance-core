@@ -10,6 +10,8 @@ PR = "r16"
 
 inherit packagegroup
 
+PACKAGE_ARCH = "${MACHINE_ARCH}"
+
 DEPENDS = " \
 	ca-certificates \
 	flip \
@@ -143,7 +145,9 @@ RDEPENDS:${PN} = "\
 	", d)} \
 	${@bb.utils.contains("TARGET_ARCH", "sh4", "alsa-utils-amixer-conf" , "", d)} \
 	oe-alliance-feeds-configs \
-	openatv-version-info \
+	openaaf-version-info \
+    enigma2-dhcp-wait \
+    enigma-info \
 	\
 	${TITANPACKAGES} \
     \
