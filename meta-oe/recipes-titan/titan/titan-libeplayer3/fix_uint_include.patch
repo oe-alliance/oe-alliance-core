@@ -1,0 +1,13 @@
+diff --git a/include/bcm_ioctls.h b/include/bcm_ioctls.h
+index cc400c4..ec001b5 100755
+--- a/include/bcm_ioctls.h
++++ b/include/bcm_ioctls.h
+@@ -9,6 +9,8 @@
+ #ifndef H_DVB_BCM_H
+ #define H_DVB_BCM_H
+ 
++#include <stdint.h>
++
+ typedef struct video_codec_data
+ {
+     int32_t length;

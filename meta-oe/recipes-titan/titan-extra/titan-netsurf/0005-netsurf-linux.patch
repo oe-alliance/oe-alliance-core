@@ -1,0 +1,819 @@
+--- a/libnsfb/Makefile
++++ b/libnsfb/Makefile
+@@ -47,6 +47,13 @@
+ $(eval $(call pkg_config_package_available,NSFB_SDL_AVAILABLE,sdl))
+ $(eval $(call pkg_config_package_available,NSFB_XCB_AVAILABLE,$(NSFB_XCB_PKG_NAMES)))
+ $(eval $(call pkg_config_package_available,NSFB_WLD_AVAILABLE,wayland-client))
++
++# surfaces not detectable via pkg-config 
++ifeq ($(findstring linux,$(HOST)),linux)
++  NSFB_LINUX_AVAILABLE := yes
++else
++  NSFB_LINUX_AVAILABLE := no
++endif
+ 
+ # Flags and setup for each support library
+ ifeq ($(NSFB_SDL_AVAILABLE),yes)
+--- a/libnsfb/src/surface/Makefile
++++ b/libnsfb/src/surface/Makefile
+@@ -4,6 +4,7 @@
+ SURFACE_HANDLER_yes := surface.c ram.c
+ 
+ # optional surface handlers
++SURFACE_HANDLER_$(NSFB_LINUX_AVAILABLE) += linux.c
+ SURFACE_HANDLER_$(NSFB_SDL_AVAILABLE) += sdl.c
+ SURFACE_HANDLER_$(NSFB_XCB_AVAILABLE) += x.c
+ SURFACE_HANDLER_$(NSFB_VNC_AVAILABLE) += vnc.c
+--- a/libnsfb/src/surface/linux.c
++++ b/libnsfb/src/surface/linux.c
+@@ -0,0 +1,790 @@
++/*
++ * Copyright 2012 Vincent Sanders <vince@simtec.co.uk>
++ *
++ * This file is part of libnsfb, http://www.netsurf-browser.org/
++ * Licenced under the MIT License,
++ *                http://www.opensource.org/licenses/mit-license.php
++ */
++
++#include <stdbool.h>
++#include <stdio.h>
++#include <stdlib.h>
++#include <sys/types.h>
++#include <sys/stat.h>
++#include <sys/ioctl.h>
++#include <fcntl.h>
++#include <string.h>
++#include <errno.h>
++#include <unistd.h>
++#include <sys/mman.h>
++
++#include <linux/fb.h>
++#include <linux/input.h>
++
++#include "libnsfb.h"
++#include "libnsfb_event.h"
++#include "libnsfb_plot.h"
++#include "libnsfb_plot_util.h"
++
++#include "nsfb.h"
++#include "plot.h"
++#include "surface.h"
++#include "cursor.h"
++
++#include <unistd.h>
++
++# define TEMP_FAILURE_RETRY(expression) \
++(__extension__ \
++({ long int __result; \
++do __result = (long int) (expression); \
++while (__result == -1L && errno == EINTR); \
++__result; }))
++
++#define FBIO_BLIT 0x22
++#define FBIO_WAITFORVSYNC _IOW('F', 0x20, __u32)
++#define FBIO_SET_MANUAL_BLIT _IOW('F', 0x21, __u8)
++int g_manual_blit = 0;
++void blit(lstate);
++int waitvsync(lstate);
++void enablemanualblit(lstate);
++void checkmousetimeout(lstate);
++void checkkeytimeout(lstate);
++int getrcconfigint(const char* key);
++
++int keymap0[] = {NSFB_KEY_0, NSFB_KEY_SPACE, NSFB_KEY_HASH, NSFB_KEY_UNDERSCORE, -1};
++int keymap1[] = {NSFB_KEY_1, NSFB_KEY_PERIOD, NSFB_KEY_COMMA, NSFB_KEY_QUESTION, NSFB_KEY_EXCLAIM, NSFB_KEY_BACKSLASH, NSFB_KEY_MINUS, NSFB_KEY_LEFTPAREN, NSFB_KEY_RIGHTPAREN, NSFB_KEY_AT, NSFB_KEY_SLASH, NSFB_KEY_COLON, -1};
++int keymap2[] = {NSFB_KEY_2, NSFB_KEY_a, NSFB_KEY_b, NSFB_KEY_c, 130, 131, 132, -1};
++int keymap3[] = {NSFB_KEY_3, NSFB_KEY_d, NSFB_KEY_e, NSFB_KEY_f, 133, 134, 135, -1};
++int keymap4[] = {NSFB_KEY_4, NSFB_KEY_g, NSFB_KEY_h, NSFB_KEY_i, 136, 137, 138, -1};
++int keymap5[] = {NSFB_KEY_5, NSFB_KEY_j, NSFB_KEY_k, NSFB_KEY_l, 139, 140, 141, -1};
++int keymap6[] = {NSFB_KEY_6, NSFB_KEY_m, NSFB_KEY_n, NSFB_KEY_o, 142, 143, 144, -1};
++int keymap7[] = {NSFB_KEY_7, NSFB_KEY_p, NSFB_KEY_q, NSFB_KEY_r, NSFB_KEY_s, 145, 146, 147, 148, -1};
++int keymap8[] = {NSFB_KEY_8, NSFB_KEY_t, NSFB_KEY_u, NSFB_KEY_v, 149, 150, 151, -1};
++int keymap9[] = {NSFB_KEY_9, NSFB_KEY_w, NSFB_KEY_x, NSFB_KEY_y, NSFB_KEY_z, 152, 153, 154, 155, -1};
++
++int getrcconfigint(const char* key)
++{
++//printf("getrcconfigint: %s\n", key); 
++	if(key == NULL) return 0;
++	
++	if(strcmp("rctext", key) == 0) return 388;
++	if(strcmp("rcpup", key) == 0) return 414;
++	if(strcmp("rcpdown", key) == 0) return 415;
++	if(strcmp("rcepg", key) == 0) return 365;
++	if(strcmp("rcinfo", key) == 0) return 138;
++	if(strcmp("rcnext", key) == 0) return 407;
++	if(strcmp("rclast", key) == 0) return 412;
++	if(strcmp("rcrecall", key) == 0) return 396;
++	if(strcmp("rcvolup", key) == 0) return 115;
++	if(strcmp("rcvoldown", key) == 0) return 114;
++	if(strcmp("rcmenu", key) == 0) return 139;
++	if(strcmp("rcok", key) == 0) return 352;
++//	if(strcmp("rcexit", key) == 0) return 102;
++	if(strcmp("rcexit", key) == 0) return 174;
++	if(strcmp("rcup", key) == 0) return 103;
++	if(strcmp("rcdown", key) == 0) return 108;
++	if(strcmp("rcleft", key) == 0) return 106;
++	if(strcmp("rcright", key) == 0) return 105;
++	if(strcmp("rcff", key) == 0) return 208;
++	if(strcmp("rcfr", key) == 0) return 168;
++	if(strcmp("rcchup", key) == 0) return 104;
++	if(strcmp("rcchdown", key) == 0) return 109;
++	if(strcmp("rc1", key) == 0) return 2;
++	if(strcmp("rc2", key) == 0) return 3;
++	if(strcmp("rc3", key) == 0) return 4;
++	if(strcmp("rc4", key) == 0) return 5;
++	if(strcmp("rc5", key) == 0) return 6;
++	if(strcmp("rc6", key) == 0) return 7;
++	if(strcmp("rc7", key) == 0) return 8;
++	if(strcmp("rc8", key) == 0) return 9;
++	if(strcmp("rc9", key) == 0) return 10;
++	if(strcmp("rc0", key) == 0) return 11;
++
++	return 0;
++}
++
++#define UNUSED(x) ((x) = (x))
++
++#define FB_NAME "/dev/fb0"
++#define RC_NAME "/dev/input/event1"
++
++struct lnx_priv
++{
++	struct fb_fix_screeninfo FixInfo;
++	struct fb_var_screeninfo VarInfo;
++	int fb;
++	int rc;
++	int mstep;
++	struct timeval lastmousetime;
++	struct timeval lastkeytime;
++	int keycount;
++	int lastkey;
++	int keyauto;
++};
++
++static int linux_set_geometry(nsfb_t *nsfb, int width, int height, enum nsfb_format_e format)
++{
++	if (nsfb->surface_priv != NULL)
++	{
++		printf("linux_set_geometry: error\n");
++		return -1; /* if we are already initialised fail */
++	}
++
++	nsfb->width = width;
++	nsfb->height = height;
++	nsfb->format = format;
++
++	/* select default sw plotters for bpp */
++	if (select_plotters(nsfb) != true)
++	{
++		return -1;
++	}
++
++	return 0;
++}
++
++static enum nsfb_format_e
++format_from_lstate(nsfb_t *nsfb, struct lnx_priv *lstate)
++{
++	enum nsfb_format_e fmt = NSFB_FMT_ANY;
++
++	switch (nsfb->bpp)
++	{
++		case 32:
++			if (lstate->VarInfo.transp.length == 0)
++				fmt = NSFB_FMT_XBGR8888;
++			else
++				fmt = NSFB_FMT_ABGR8888;
++			break;
++
++		case 24:
++			fmt = NSFB_FMT_RGB888;
++			break;
++
++		case 16:
++			fmt = NSFB_FMT_RGB565;
++			break;
++
++		case 8:
++			fmt = NSFB_FMT_I8;
++			break;
++
++		case 1:
++			fmt = NSFB_FMT_RGB565;
++			break;
++	}
++	return fmt;
++}
++
++static int linux_initialise(nsfb_t *nsfb)
++{
++printf("[libnsfb/src/surface/linux.c] initialise start\n");
++	int iFrameBufferSize;
++	struct lnx_priv *lstate;
++	enum nsfb_format_e lformat;
++
++	if (nsfb->surface_priv != NULL)
++		return -1;
++
++	lstate = calloc(1, sizeof(struct lnx_priv));
++	if (lstate == NULL)
++	{
++		return -1;
++	}
++
++	lstate->fb = - 1;
++	lstate->rc = - 1;
++	lstate->mstep = 4;
++	int i = 0;
++
++	//rc
++	while (lstate->rc < 0 && i < 3)
++	{
++		lstate->rc = open("/dev/input/event1", O_RDONLY);
++		if(lstate->rc < 0) sleep(1);
++		i++;
++	}
++
++	if (lstate->rc < 0)
++	{
++		printf("[libnsfb/src/surface/linux.c] failed to open /dev/input/event1\n");
++		return -1;
++	}
++
++	/* Open the framebuffer device in read write */
++	lstate->fb = open(FB_NAME, O_RDWR);
++	if (lstate->fb < 0)
++	{
++		printf("[libnsfb/src/surface/linux.c] Unable to open %s.\n", FB_NAME);
++		free(lstate);
++		return -1;
++	}
++
++	enablemanualblit(lstate);
++	waitvsync(lstate);
++
++	lstate->VarInfo.height = 0;
++	lstate->VarInfo.width = 0;
++	lstate->VarInfo.xoffset = 0;
++	lstate->VarInfo.yoffset = 0;
++	lstate->VarInfo.xres = 1280;
++	lstate->VarInfo.xres_virtual = 1280;
++	lstate->VarInfo.yres = 720;
++	lstate->VarInfo.yres_virtual = 1440;
++	lstate->VarInfo.bits_per_pixel = 32;
++
++	lstate->VarInfo.transp.offset = 24;
++	lstate->VarInfo.transp.length = 8;
++	lstate->VarInfo.red.offset = 16;
++	lstate->VarInfo.red.length = 8;
++	lstate->VarInfo.green.offset = 8;
++	lstate->VarInfo.green.length = 8;
++	lstate->VarInfo.blue.offset = 0;
++	lstate->VarInfo.blue.length = 8;
++
++	printf("[libnsfb/src/surface/linux.c] FB: lstate->FixInfo.line_length %d\n", lstate->FixInfo.line_length);
++	printf("[libnsfb/src/surface/linux.c] FB: lstate->VarInfo.xres %d\n", lstate->VarInfo.xres);
++	printf("[libnsfb/src/surface/linux.c] FB: lstate->VarInfo.yres %d\n", lstate->VarInfo.yres);
++	printf("[libnsfb/src/surface/linux.c] FB: lstate->VarInfo.xres_virt %d\n", lstate->VarInfo.xres_virtual);
++	printf("[libnsfb/src/surface/linux.c] FB: lstate->VarInfo.yres_virt %d\n", lstate->VarInfo.yres_virtual);
++	printf("[libnsfb/src/surface/linux.c] FB: lstate->VarInfo.xoffset %d\n", lstate->VarInfo.xoffset);
++	printf("[libnsfb/src/surface/linux.c] FB: lstate->VarInfo.yoffset %d\n", lstate->VarInfo.yoffset);
++	printf("[libnsfb/src/surface/linux.c] FB: lstate->VarInfo.bits_per_pixel %d\n", lstate->VarInfo.bits_per_pixel);
++	printf("[libnsfb/src/surface/linux.c] FB: lstate->VarInfo.grayscale %d\n", lstate->VarInfo.grayscale);
++
++	/* Do Ioctl. Retrieve fixed screen info. */
++	if (ioctl(lstate->fb, FBIOGET_FSCREENINFO, &lstate->FixInfo) < 0)
++	{
++		printf("[libnsfb/src/surface/linux.c] get fixed screen info failed: %s\n", strerror(errno));
++		close(lstate->fb);
++		free(lstate);
++		return -1;
++	}
++
++	/* Do Ioctl. Get the variable screen info. */
++	if (ioctl(lstate->fb, FBIOGET_VSCREENINFO, &lstate->VarInfo) < 0)
++	{
++		printf("[libnsfb/src/surface/linux.c] Unable to retrieve variable screen info: %s\n", strerror(errno));
++		close(lstate->fb);
++		free(lstate);
++		return -1;
++	}
++
++	/* Calculate the size to mmap */
++	iFrameBufferSize = lstate->FixInfo.line_length * lstate->VarInfo.yres;
++
++	printf("[libnsfb/src/surface/linux.c] %dx%d, %dbpp\n", lstate->VarInfo.xres, lstate->VarInfo.yres, lstate->VarInfo.bits_per_pixel);
++
++	/* Now mmap the framebuffer. */
++	nsfb->ptr = mmap(NULL, iFrameBufferSize, PROT_READ | PROT_WRITE, MAP_SHARED, lstate->fb, 0);
++	if (nsfb->ptr == NULL)
++	{
++		printf("[libnsfb/src/surface/linux.c] mmap failed:\n");
++		close(lstate->fb);
++		free(lstate);
++		return -1;
++	}
++
++	blit(lstate);
++	enablemanualblit(lstate);
++	blit(lstate);
++	enablemanualblit(lstate);
++	blit(lstate);
++
++	nsfb->linelen = lstate->FixInfo.line_length;
++
++	nsfb->width = lstate->VarInfo.xres;
++	nsfb->height = lstate->VarInfo.yres;
++
++	printf("[libnsfb/src/surface/linux.c] lstate->FixInfo.line_length %d\n", lstate->FixInfo.line_length);
++	printf("[libnsfb/src/surface/linux.c] nsfb->bpp %d\n", nsfb->bpp);
++
++	lformat = format_from_lstate(nsfb, lstate);
++
++	if (nsfb->format != lformat) {
++		nsfb->format = lformat;
++
++		/* select default sw plotters for format */
++		if (select_plotters(nsfb) != true)
++		{
++			munmap(nsfb->ptr, 0);
++			close(lstate->fb);
++			free(lstate);
++			return -1;
++		}
++	}
++
++	nsfb->surface_priv = lstate;
++
++	blit(lstate);
++
++printf("[libnsfb/src/surface/linux.c] initialise end\n");
++
++	return 0;
++}
++
++static int linux_finalise(nsfb_t *nsfb)
++{
++	struct lnx_priv *lstate = nsfb->surface_priv;
++
++	if (lstate != NULL)
++	{
++		munmap(nsfb->ptr, 0);
++		close(lstate->fb);
++		free(lstate);
++	}
++
++	return 0;
++}
++
++void checkmousetimeout(struct lnx_priv *lstate)
++{
++	long sec = 0, usec = 0;
++	struct timeval akttime;
++
++	if (lstate->mstep > 4)
++	{
++		//if after xxxx usec no input for mouse, set mouse to slow
++		gettimeofday(&akttime, 0);
++		sec = akttime.tv_sec - lstate->lastmousetime.tv_sec;
++		usec = akttime.tv_usec - lstate->lastmousetime.tv_usec;
++		if (usec < 0)
++		{
++			usec += 1000000;
++			sec--;
++		}
++		if (sec > 0 || usec > 300000)
++			lstate->mstep = 4;
++	}
++}
++
++void checkkeytimeout(struct lnx_priv *lstate)
++{
++	long sec = 0, usec = 0;
++	struct timeval akttime;
++
++	//if after xxxx usec no input for mouse, set mouse to slow
++	gettimeofday(&akttime, 0);
++	sec = akttime.tv_sec - lstate->lastkeytime.tv_sec;
++	usec = akttime.tv_usec - lstate->lastkeytime.tv_usec;
++	if (usec < 0)
++	{
++		usec += 1000000;
++		sec--;
++	}
++
++	if (sec > 0)
++	{
++		lstate->keycount = 0;
++		lstate->lastkey = 0;
++	}
++}
++
++static bool linux_input(nsfb_t *nsfb, nsfb_event_t *event, int timeout)
++{
++	struct lnx_priv *lstate = nsfb->surface_priv;
++
++	int mousex = 0, mousey = 0;
++	int ret = 0, len = 0;
++	int keyauto = 0;
++	fd_set rfds;
++	struct timeval tv;
++	struct input_event rcdata;
++	struct nsfb_cursor_s *cursor = NULL;
++
++	if (nsfb != NULL)
++		cursor = nsfb->cursor;
++
++	rcdata.code = 0;
++	if (timeout > 0 && lstate->keyauto == 0)
++	{
++		tv.tv_sec = timeout / 1000;
++		tv.tv_usec = timeout % 1000;
++		FD_ZERO(&rfds);
++		FD_SET(lstate->rc, &rfds);
++
++		ret = TEMP_FAILURE_RETRY(select(lstate->rc + 1, &rfds, NULL, NULL, &tv));
++
++		if (ret > 0) // data
++		{
++			len = TEMP_FAILURE_RETRY(read(lstate->rc, &rcdata, sizeof(struct input_event)));
++			if (rcdata.type != EV_KEY)
++				return false;
++			else if (ret == 0) //timeout
++				return false;
++			else if (ret < 0) //error
++				return false;
++		}
++	}
++
++	if (lstate->keyauto > 0)
++	{
++		rcdata.code = lstate->keyauto;
++		rcdata.value = 1;
++		lstate->keyauto = 0;
++		keyauto = 1;
++	}
++
++	checkmousetimeout(lstate);
++	checkkeytimeout(lstate);
++	event->type = NSFB_EVENT_NONE;
++
++	//get mouse pos
++	if (cursor != NULL)
++	{
++		mousex = cursor->loc.x0;
++		mousey = cursor->loc.y0;
++	}
++
++	if (rcdata.code == getrcconfigint("rcleft") && rcdata.value != 0)
++	{
++printf("[libnsfb/src/surface/linux.c] linux_input: rcleft\n");
++
++		event->type = NSFB_EVENT_MOVE_ABSOLUTE;
++		mousex += lstate->mstep;
++		if (lstate->mstep < 50)
++			lstate->mstep += 2;
++		gettimeofday(&lstate->lastmousetime, 0);
++		event->value.vector.x = mousex;
++		event->value.vector.y = mousey;
++		event->value.vector.z = 0;
++	}
++
++	if (rcdata.code == getrcconfigint("rcright") && rcdata.value != 0)
++	{
++printf("[libnsfb/src/surface/linux.c] linux_input: rcright\n");
++
++		event->type = NSFB_EVENT_MOVE_ABSOLUTE;
++		mousex -= lstate->mstep;
++		if (lstate->mstep < 50)
++			lstate->mstep += 2;
++		gettimeofday(&lstate->lastmousetime, 0);
++		event->value.vector.x = mousex;
++		event->value.vector.y = mousey;
++		event->value.vector.z = 0;
++	}
++
++	if (rcdata.code == getrcconfigint("rcdown") && rcdata.value != 0)
++	{
++printf("[libnsfb/src/surface/linux.c] linux_input: rcdown\n");
++		event->type = NSFB_EVENT_MOVE_ABSOLUTE;
++		mousey += lstate->mstep;
++		if (lstate->mstep < 50)
++			lstate->mstep += 2;
++		gettimeofday(&lstate->lastmousetime, 0);
++		event->value.vector.x = mousex;
++		event->value.vector.y = mousey;
++		event->value.vector.z = 0;
++	}
++
++	if (rcdata.code == getrcconfigint("rcup") && rcdata.value != 0)
++	{
++printf("[libnsfb/src/surface/linux.c] linux_input: rcup\n");
++		event->type = NSFB_EVENT_MOVE_ABSOLUTE;
++		mousey -= lstate->mstep;
++		if (lstate->mstep < 50)
++			lstate->mstep += 2;
++		gettimeofday(&lstate->lastmousetime, 0);
++		event->value.vector.x = mousex;
++		event->value.vector.y = mousey;
++		event->value.vector.z = 0;
++	}
++
++	if (rcdata.code == getrcconfigint("rcok"))
++	{
++printf("[libnsfb/src/surface/linux.c] linux_input: rcok\n");
++		if (rcdata.value == 0)
++			event->type = NSFB_EVENT_KEY_UP;
++		if (rcdata.value == 1)
++			event->type = NSFB_EVENT_KEY_DOWN;
++		event->value.keycode = NSFB_KEY_MOUSE_1; //left mouse click
++	}
++
++	if(rcdata.code == getrcconfigint("rcchup"))
++	{
++printf("[libnsfb/src/surface/linux.c] linux_input: rcchup\n");
++		if (rcdata.value == 0)
++			event->type = NSFB_EVENT_KEY_UP;
++		if (rcdata.value == 1)
++			event->type = NSFB_EVENT_KEY_DOWN;
++		event->value.keycode = NSFB_KEY_MOUSE_4; //wheel up
++	}
++
++	if (rcdata.code == getrcconfigint("rcchdown"))
++	{
++printf("[libnsfb/src/surface/linux.c] linux_input: rcchdown\n");
++		if (rcdata.value == 0)
++			event->type = NSFB_EVENT_KEY_UP;
++		if (rcdata.value == 1)
++			event->type = NSFB_EVENT_KEY_DOWN;
++		event->value.keycode = NSFB_KEY_MOUSE_5; //wheel down
++	}
++
++	if (rcdata.code == getrcconfigint("rcfr"))
++	{
++printf("[libnsfb/src/surface/linux.c] linux_input: rcfr\n");
++		if (rcdata.value == 0)
++			event->type = NSFB_EVENT_KEY_UP;
++		if (rcdata.value == 1)
++			event->type = NSFB_EVENT_KEY_DOWN;
++		event->value.keycode = NSFB_KEY_BACKSPACE;
++	}
++
++	if (rcdata.code == getrcconfigint("rcmenu"))
++	{
++printf("[libnsfb/src/surface/linux.c] linux_input: rcmenu\n");
++		if (rcdata.value == 0)
++			event->type = NSFB_EVENT_KEY_UP;
++		if (rcdata.value == 1)
++			event->type = NSFB_EVENT_KEY_DOWN;
++		event->value.keycode = NSFB_KEY_RETURN;
++	}
++
++	if (rcdata.code == getrcconfigint("rcexit"))
++	{
++printf("[libnsfb/src/surface/linux.c] linux_input: rcexit\n");
++		event->type = NSFB_EVENT_CONTROL;
++		event->value.controlcode = NSFB_CONTROL_QUIT;
++	}
++
++	if (rcdata.code == getrcconfigint("rcvolup")) // zoom +
++	{
++printf("[libnsfb/src/surface/linux.c] linux_input: rcvolup\n");
++		if (rcdata.value == 0)
++			event->type = NSFB_EVENT_KEY_UP;
++		if (rcdata.value == 1)
++			event->type = NSFB_EVENT_KEY_DOWN;
++		event->value.keycode = NSFB_KEY_F10;
++	}
++
++	if (rcdata.code == getrcconfigint("rcvoldown")) // zoom -
++	{
++printf("[libnsfb/src/surface/linux.c] linux_input: rcvoldown\n");
++		if (rcdata.value == 0)
++			event->type = NSFB_EVENT_KEY_UP;
++		if (rcdata.value == 1)
++			event->type = NSFB_EVENT_KEY_DOWN;
++		event->value.keycode = NSFB_KEY_F11;
++	}
++
++	if (rcdata.code == getrcconfigint("rcinfo")) // history window
++	{
++printf("[libnsfb/src/surface/linux.c] linux_input: rcinfo\n");
++		if (rcdata.value == 0)
++			event->type = NSFB_EVENT_KEY_UP;
++		if (rcdata.value == 1)
++			event->type = NSFB_EVENT_KEY_DOWN;
++		event->value.keycode = NSFB_KEY_F7;
++	}
++
++	if (rcdata.code == getrcconfigint("rctext")) // osk
++	{
++printf("[libnsfb/src/surface/linux.c] linux_input: rctext\n");
++		if (rcdata.value == 0)
++			event->type = NSFB_EVENT_KEY_UP;
++		if (rcdata.value == 1)
++			event->type = NSFB_EVENT_KEY_DOWN;
++		event->value.keycode = NSFB_KEY_F12;
++	}
++
++	/*
++	if (rcdata.code == getrcconfigint("rcepg"))
++	{
++printf("[libnsfb/src/surface/linux.c] linux_input: rcepg\n");
++		if (rcdata.value == 0)
++			event->type = NSFB_EVENT_KEY_UP;
++		if (rcdata.value == 1)
++			event->type = NSFB_EVENT_KEY_DOWN;
++		event->value.keycode = NSFB_KEY_F2;
++	}
++	*/
++
++	if (rcdata.code == getrcconfigint("rcrecall") || rcdata.code == getrcconfigint("rclast"))
++	{
++printf("[libnsfb/src/surface/linux.c] linux_input: rcrecall/rclast\n");
++		if (rcdata.value == 0)
++			event->type = NSFB_EVENT_KEY_UP;
++		if (rcdata.value == 1)
++			event->type = NSFB_EVENT_KEY_DOWN;
++		event->value.keycode = NSFB_KEY_F8; //go back
++	}
++
++	if (rcdata.code == getrcconfigint("rcnext"))
++	{
++printf("[libnsfb/src/surface/linux.c] linux_input: rcnext\n");
++		if (rcdata.value == 0)
++			event->type = NSFB_EVENT_KEY_UP;
++		if (rcdata.value == 1)
++			event->type = NSFB_EVENT_KEY_DOWN;
++		event->value.keycode = NSFB_KEY_F9; //go forward
++	}
++
++	if (rcdata.code == getrcconfigint("rcpup"))
++	{
++printf("[libnsfb/src/surface/linux.c] linux_input: rcpup\n");
++		if (rcdata.value == 0)
++			event->type = NSFB_EVENT_KEY_UP;
++		if (rcdata.value == 1)
++			event->type = NSFB_EVENT_KEY_DOWN;
++		event->value.keycode = NSFB_KEY_PAGEUP;
++	}
++
++	if (rcdata.code == getrcconfigint("rcpdown"))
++	{
++printf("[libnsfb/src/surface/linux.c] linux_input: rcpdown\n");
++		if (rcdata.value == 0)
++			event->type = NSFB_EVENT_KEY_UP;
++		if (rcdata.value == 1)
++			event->type = NSFB_EVENT_KEY_DOWN;
++		event->value.keycode = NSFB_KEY_PAGEDOWN;
++	}
++
++	if (rcdata.code >= getrcconfigint("rc1") && rcdata.code <= getrcconfigint("rc0") && rcdata.value == 1)
++	{
++printf("[libnsfb/src/surface/linux.c] linux_input: rc0-9\n");
++		int *keymap = NULL;
++		if (rcdata.code == getrcconfigint("rc0"))
++			keymap = keymap0;
++		if (rcdata.code == getrcconfigint("rc1"))
++			keymap = keymap1;
++		if (rcdata.code == getrcconfigint("rc2"))
++			keymap = keymap2;
++		if (rcdata.code == getrcconfigint("rc3"))
++			keymap = keymap3;
++		if (rcdata.code == getrcconfigint("rc4"))
++			keymap = keymap4;
++		if (rcdata.code == getrcconfigint("rc5"))
++			keymap = keymap5;
++		if (rcdata.code == getrcconfigint("rc6"))
++			keymap = keymap6;
++		if (rcdata.code == getrcconfigint("rc7"))
++			keymap = keymap7;
++		if (rcdata.code == getrcconfigint("rc8"))
++			keymap = keymap8;
++		if (rcdata.code == getrcconfigint("rc9"))
++			keymap = keymap9;
++
++		if (keymap != NULL)
++		{
++			event->type = NSFB_EVENT_KEY_DOWN;
++			gettimeofday(&lstate->lastkeytime, 0);
++
++			if (lstate->lastkey != rcdata.code)
++			{
++				lstate->keycount = 0;
++				event->value.keycode = keymap[lstate->keycount];
++			}
++			else if (keyauto == 0)
++			{
++				event->value.keycode = NSFB_KEY_BACKSPACE;
++				lstate->keyauto = rcdata.code;
++			}
++			else
++				event->value.keycode = keymap[lstate->keycount];
++
++			if (lstate->keyauto == 0)
++				lstate->keycount++;
++			if (keymap[lstate->keycount] == -1)
++				lstate->keycount = 0;
++		}
++	}
++
++	blit(lstate);
++
++	if (rcdata.code != 0)
++		lstate->lastkey = rcdata.code;
++
++	return true;
++}
++
++static int linux_claim(nsfb_t *nsfb, nsfb_bbox_t *box)
++{
++	struct nsfb_cursor_s *cursor = nsfb->cursor;
++
++	if ((cursor != NULL) && (cursor->plotted == true) && (nsfb_plot_bbox_intersect(box, &cursor->loc)))
++	{
++		nsfb->plotter_fns->bitmap(nsfb, 
++					&cursor->savloc,  
++					cursor->sav, 
++					cursor->sav_width, 
++					cursor->sav_height, 
++					cursor->sav_width, 
++					false);
++		cursor->plotted = false;
++	}
++	return 0;
++}
++
++static int linux_cursor(nsfb_t *nsfb, struct nsfb_cursor_s *cursor)
++{
++	nsfb_bbox_t sclip;
++
++	if ((cursor != NULL) && (cursor->plotted == true))
++	{
++		sclip = nsfb->clip;
++
++		nsfb->plotter_fns->set_clip(nsfb, NULL);
++
++		nsfb->plotter_fns->bitmap(nsfb, 
++					&cursor->savloc,  
++					cursor->sav, 
++					cursor->sav_width, 
++					cursor->sav_height, 
++					cursor->sav_width, 
++					false);
++		nsfb_cursor_plot(nsfb, cursor);
++		nsfb->clip = sclip;
++	}
++	return true;
++}
++
++static int linux_update(nsfb_t *nsfb, nsfb_bbox_t *box)
++{
++	struct nsfb_cursor_s *cursor = nsfb->cursor;
++
++	UNUSED(box);
++
++	if ((cursor != NULL) && (cursor->plotted == false))
++	{
++		nsfb_cursor_plot(nsfb, cursor);
++	}
++
++	return 0;
++}
++
++void blit(struct lnx_priv *lstate)
++{
++	if (g_manual_blit == 1)
++	{
++		if (ioctl(lstate->fb, FBIO_BLIT) < 0)
++			printf("[libnsfb/src/surface/linux.c] void blit set FBIO_BLIT ok\n");
++	}
++}
++
++int waitvsync(struct lnx_priv *lstate)
++{
++	int c = 0;
++	return ioctl(lstate->fb, FBIO_WAITFORVSYNC, &c);
++}
++
++void enablemanualblit(struct lnx_priv *lstate)
++{
++	unsigned char tmp = 1;
++	if (ioctl(lstate->fb, FBIO_SET_MANUAL_BLIT, &tmp)<0)
++		printf("[libnsfb/src/surface/linux.c] void enablemanualblit FBIO_SET_MANUAL_BLIT ok\n");
++	else
++		g_manual_blit = 1;
++}
++
++const nsfb_surface_rtns_t linux_rtns =
++{
++	.initialise = linux_initialise,
++	.finalise = linux_finalise,
++	.input = linux_input,
++	.claim = linux_claim,
++	.update = linux_update,
++	.cursor = linux_cursor,
++	.geometry = linux_set_geometry,
++};
++
++NSFB_SURFACE_DEF(linux, NSFB_SURFACE_LINUX, &linux_rtns)

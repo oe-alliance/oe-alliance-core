@@ -1,0 +1,349 @@
+--- a/plugins/xupnpd_coolstream.lua
++++ b/plugins/xupnpd_coolstream.lua
+@@ -0,0 +1,177 @@
++-- Plugin for converting channels lists from coolstream receivers
++-- Author focus.cst@gmail.com
++-- License GPL v2
++-- Copyright (C) 2013 CoolStream International Ltd
++
++-- flag to test as plain script, without xupnpd - cfg not defined in this case
++local cst_test =  false
++
++if not cfg then
++cfg={}
++cfg.tmp_path='/tmp/'
++cfg.feeds_path='/tmp/'
++cfg.debug=1
++cst_test = true
++end
++
++function cst_debug(level, msg)
++	if cfg.debug>level then
++		print(msg)
++	end
++end
++
++function cst_get_bouquets(file)
++	local btable={}
++	repeat
++		local string=file:read()
++		if string then
++			cst_debug(1, "########## bouquet="..string)
++			local num = string.match(string, "%d+");
++			if num then
++				local len = string.len(num);
++				local name = string.sub(string, len+1);
++				btable[num] = name
++				cst_debug(1, "num="..num.." name="..btable[num]);
++			end
++			--break; -- one bouquet
++		end
++	until not string
++	return btable
++end
++
++function cst_get_channels(file)
++	local ctable={}
++	repeat
++		local string=file:read()
++		idx = 1;
++		if string then
++			cst_debug(1, "########## channel="..string)
++			local num = string.match(string, "%d+");
++			if num then
++				local len = string.len(num);
++				local rest = string.sub(string, len+1);
++				local id = string.match(rest, "%x+ ");
++				len = string.len(id);
++				local name = string.sub(rest, len+2);
++				cst_debug(1, "num="..num.." id="..id.." name="..name)
++				if id and name then
++					table.insert(ctable, {id, name});
++					idx = idx + 1;
++				end
++			end
++		end
++	until not string
++	return ctable
++end
++
++-- all bouquets
++-- local burl = "getbouquets"
++-- only favorites
++local burl = "getbouquets?fav=true"
++
++-- without epg
++-- local curl = "getbouquet?bouquet="
++-- with epg
++local curl = "getbouquet?epg=true&bouquet="
++
++function cst_updatefeed(feed,friendly_name)
++	local rc=false
++	local feedspath = cfg.feeds_path
++	if not friendly_name then
++		friendly_name = feed
++	end
++	local wget = "wget -q -O- "
++	local cst_url = 'http://'..feed..'/control/'
++
++	cst_debug(0, wget..cst_url..burl)
++	local bouquetsfile = io.popen(wget..cst_url..burl)
++	local bouquets = cst_get_bouquets(bouquetsfile)
++	bouquetsfile:close()
++
++	if not bouquets then
++		return rc
++	end
++	local bindex
++	local bouquett = {}
++	for bindex,bouquett in pairs(bouquets) do
++		local cindex
++		local channelt = {}
++		cst_debug(0,wget.."\""..cst_url..curl..bindex.."\"")
++		local xmlbouquetfile = io.popen(wget.."\""..cst_url..curl..bindex.."\"")
++		local bouquet = cst_get_channels(xmlbouquetfile)
++		xmlbouquetfile:close()
++		if bouquet then
++			local m3ufilename = cfg.tmp_path.."cst_"..friendly_name.."_bouquet_"..bindex..".m3u"
++			cst_debug(0, m3ufilename)
++			local m3ufile = io.open(m3ufilename,"w")
++			--m3ufile:write("#EXTM3U name=\""..bouquett.." ("..friendly_name..")\" plugin=coolstream type=ts\n")
++			m3ufile:write("#EXTM3U name=\""..bouquett.." ("..friendly_name..")\" plugin=coolstream type=m2t\n")
++			for cindex,channelt in pairs(bouquet) do
++				local id = channelt[1];
++				if (string.sub(id, 1, 8) ~= "ffffffff") then -- skip webtv
++					local name = channelt[2];
++					m3ufile:write("#EXTINF:0,"..name.."\n")
++					-- m3ufile:write(cst_url.."zapto?"..id.."\n")
++					m3ufile:write("http://"..feed..":31339/id="..id.."\n")
++				end
++			end
++			m3ufile:close()
++			os.execute(string.format('mv %s %s',m3ufilename,feedspath))
++			rc=true
++		end
++	end
++	return rc
++end
++
++function cst_read_url(url)
++	local wget = "wget -q -O- "
++	local turl = wget..url
++	cst_debug(0, turl)
++	local file = io.popen(turl)
++	local string = file:read()
++	file:close()
++	return string
++end
++
++function cst_zapto(urlbase,id)
++	local zap = urlbase.."/control/zapto?"..id;
++	cst_read_url(zap)
++end
++
++function cst_sendurl(cst_url,range)
++	local i,j,baseurl = string.find(cst_url,"(.+):.+")
++	cst_debug(0, "cst_sendurl: url="..cst_url.." baseurl="..baseurl)
++
++--	i,j,id = string.find(cst_url,".*id=(.+)")
++--	local surl = baseurl.."/control/standby"
++--	local standby = cst_read_url(surl)
++
++--	if standby then
++--		cst_debug(0, "standby="..standby)
++
++		-- wakeup from standby
++--		if string.find(standby,"on") then
++--			cst_read_url(surl.."?off")
++--		end
++--	end
++	-- zap to channel
++--	cst_zapto(baseurl,id)
++
++	if not cst_test then
++		plugin_sendurl(cst_url,cst_url,range)
++	end
++end
++
++if cst_test then
++cst_updatefeed("172.16.1.20","neutrino")
++-- cst_updatefeed("172.16.1.10","neutrino")
++-- cst_sendurl("http://172.16.1.20:31339/id=c1f000010070277a", 0)
++end
++
++if not cst_test then
++plugins['coolstream']={}
++plugins.coolstream.name="CoolStream"
++plugins.coolstream.desc="IP address (example: <i>192.168.0.1</i>)"
++plugins.coolstream.updatefeed=cst_updatefeed
++plugins.coolstream.sendurl=cst_sendurl
++end
+--- a/xupnpd.lua	2023-08-09 15:07:05.000000000 +0200
++++ b/xupnpd.lua	2023-08-09 15:14:18.619567582 +0200
+@@ -5,13 +5,13 @@
+ cfg.ui_session_file='/tmp/xupnpd.session'
+ 
+ -- multicast interface for SSDP exchange, 'eth0', 'br0', 'br-lan' for example
+-cfg.ssdp_interface='lo'
++cfg.ssdp_interface='any'
+ 
+ -- 'cfg.ssdp_loop' enables multicast loop (if player and server in one host)
+ cfg.ssdp_loop=1
+ 
+ -- SSDP announcement interval
+-cfg.ssdp_notify_interval=15
++cfg.ssdp_notify_interval=5
+ 
+ -- SSDP announcement age
+ cfg.ssdp_max_age=1800
+@@ -23,10 +23,10 @@
+ cfg.log_facility='local0'
+ 
+ -- 'cfg.daemon' detach server from terminal
+-cfg.daemon=false
++cfg.daemon=true
+ 
+ -- silent mode - no logs, no pid file
+-cfg.embedded=false
++cfg.embedded=true
+ 
+ -- 'cfg.debug' enables SSDP debug output to stdout (if cfg.daemon=false)
+ -- 0-off, 1-basic, 2-messages
+@@ -36,7 +36,7 @@
+ --cfg.udpxy_url='http://192.168.1.1:4022'
+ 
+ -- downstream interface for builtin multicast proxy (comment 'cfg.udpxy_url' for processing 'udp://@...' playlists)
+-cfg.mcast_interface='eth1'
++cfg.mcast_interface='eth0'
+ 
+ -- 'cfg.proxy' enables proxy for injection DLNA headers to stream
+ -- 0-off, 1-radio, 2-radio/TV
+@@ -52,7 +52,7 @@
+ cfg.dlna_notify=true
+ 
+ -- UPnP/DLNA subscribe ttl
+-cfg.dlna_subscribe_ttl=1800
++--cfg.dlna_subscribe_ttl=1800
+ 
+ -- group by 'group-title'
+ cfg.group=true
+@@ -61,10 +61,11 @@
+ cfg.sort_files=false
+ 
+ -- Device name
+-cfg.name='UPnP-IPTV'
++--cfg.name='UPnP-IPTV'
++cfg.name=io.popen("uname -n"):read("*l")..'-xupnpd'
+ 
+ -- static device UUID, '60bd2fb3-dabe-cb14-c766-0e319b54c29a' for example or nil
+-cfg.uuid='60bd2fb3-dabe-cb14-c766-0e319b54c29a'
++cfg.uuid=''
+ 
+ -- max url cache size
+ cfg.cache_size=8
+@@ -76,7 +77,7 @@
+ cfg.default_mime_type='mpeg'
+ 
+ -- feeds update interval (seconds, 0 - disabled)
+-cfg.feeds_update_interval=0
++cfg.feeds_update_interval=3600
+ cfg.playlists_update_interval=0
+ 
+ -- host for UI playlist download
+@@ -85,6 +86,8 @@
+ -- playlist (m3u file path or path with alias
+ playlist=
+ {
++   { '/hdd/movie', 'Local Record Files' },
++   { '/hdd/pictures', 'Local Picture Files' },
+ --    { './playlists/mozhay.m3u', 'Mozhay.tv' },
+ --    { './localmedia', 'Local Media Files' }
+ --    { './private', 'Private Media Files', '127.0.0.1;192.168.1.1' }  -- only for 127.0.0.1 and 192.168.1.1
+@@ -104,6 +107,8 @@
+ --    { 'gametrailers',   'ps3',                   'GT - PS3' },
+ --    { 'giantbomb',      'all',                  'GiantBomb - All' },
+ --    { 'dreambox',       'http://192.168.0.1:8001/','Dreambox1' },
++    { 'coolstream',       'localhost', 'Neutrino' },
++--    { 'coolstream',       '172.16.1.10', 'NEO' },
+ }
+ 
+ -- log ident, pid file end www root
+@@ -115,7 +120,7 @@
+ cfg.plugin_path='./plugins/'
+ cfg.config_path='./config/'
+ cfg.playlists_path='./playlists/'
+---cfg.feeds_path='/tmp/xupnpd-feeds/'
++cfg.feeds_path='/tmp/xupnpd-feeds/'
+ cfg.ui_path='./ui/'
+ cfg.drive=''                    -- reload playlists only if drive state=active/idle, example: cfg.drive='/dev/sda'
+ cfg.profiles='./profiles/'      -- device profiles feature
+--- a/ui/xupnpd_ui.lua
++++ b/ui/xupnpd_ui.lua
+@@ -24,7 +24,7 @@
+         end
+     end
+     http.send('</table>')
+-    http.send('<br/><a class="btn btn-info" href="/ui">Back</a>')
++    http.send('<br/><a class="btn btn-info" href="/ui/">Back</a>')
+ end
+ 
+ function ui_download(name)
+@@ -85,7 +85,7 @@
+     http.send('<input type=file name=m3ufile><br /><br />')
+     http.send('<input class="btn btn-primary" type=submit value=Send>')
+     http.send('</form><hr/>')
+-    http.send('<br/><a class="btn btn-primary" href="/ui/reload">Reload</a> <a class="btn btn-primary" href="/ui/reload_feeds?return_url=/ui/playlists">Reload feeds</a> <a class="btn btn-info" href="/ui">Back</a>')
++    http.send('<br/><a class="btn btn-primary" href="/ui/reload">Reload</a> <a class="btn btn-primary" href="/ui/reload_feeds?return_url=/ui/playlists">Reload feeds</a> <a class="btn btn-info" href="/ui/">Back</a>')
+ end
+ 
+ function ui_feeds()
+@@ -119,7 +119,7 @@
+     http.send('<br/><input class="btn btn-primary" type=submit value=Add> <a class="btn btn-info" href="/ui/fhelp" target="_blank">Help</a>')
+     http.send('</form><hr/>')
+ 
+-    http.send('<br/><a class="btn btn-primary" href="/ui/save_feeds">Save</a> <a class="btn btn-primary" href="/ui/reload_feeds?return_url=/ui/feeds">Reload feeds</a> <a class="btn btn-info" href="/ui">Back</a>')
++    http.send('<br/><a class="btn btn-primary" href="/ui/save_feeds">Save</a> <a class="btn btn-primary" href="/ui/reload_feeds?return_url=/ui/feeds">Reload feeds</a> <a class="btn btn-info" href="/ui/">Back</a>')
+ end
+ 
+ function ui_fhelp()
+@@ -427,7 +427,7 @@
+ 
+     http.send('</table>')
+ 
+-    http.send('<br/><a class="btn btn-primary" href="/ui/status">Refresh</a> <a class="btn btn-info" href="/ui">Back</a>')
++    http.send('<br/><a class="btn btn-primary" href="/ui/status">Refresh</a> <a class="btn btn-info" href="/ui/">Back</a>')
+ end
+ 
+ function ui_kill()
+@@ -533,7 +533,7 @@
+ end
+ 
+ function ui_restart()
+-    if core.restart(cfg.pid_file,"./xupnpd") then http.send('<h3>Attempt to restart...</h3>') else http.send('<h3>Unable to restart.</h3>') end
++    if core.restart(cfg.pid_file,"/usr/bin/xupnpd") then http.send('<h3>Attempt to restart...</h3>') else http.send('<h3>Unable to restart.</h3>') end
+ 
+     http.send('<br/><form method=get action="/ui"><input class="btn btn-primary" type=submit value=OK></form>')
+ 
+--- a/xupnpd_m3u.lua
++++ b/xupnpd_m3u.lua
+@@ -83,6 +83,8 @@
+     playlist_data.objid='0'
+     playlist_data.size=0
+     playlist_data.elements={}
++
++    collectgarbage()   -- free unused memory immediately
+ 
+     local plist=clone_table(playlist)
+ 
+--- a/xupnpd_main.lua
++++ b/xupnpd_main.lua
+@@ -2,6 +2,9 @@
+ -- clark15b@gmail.com
+ -- https://tsdemuxer.googlecode.com/svn/trunk/xupnpd
+ 
++-- fix memleak on coolstream boxes by changing collectgarbage() interval from 200 (default) to 50
++collectgarbage('setpause', 50)
++
+ http.sendurl_buffer_size(32768,1);
+ 
+ if cfg.daemon==true then core.detach() end
