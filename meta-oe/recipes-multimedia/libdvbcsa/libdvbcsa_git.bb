@@ -9,13 +9,15 @@ SRCREV = "${AUTOREV}"
 PV = "1.1.0+git${SRCPV}"
 PKGV = "1.1.0+git${GITPKGV}"
 
-SRC_URI = "git://code.videolan.org/videolan/libdvbcsa.git;protocol=https;branch=master \
+SRC_URI = "git://github.com/oe-mirrors/libdvbcsa.git;protocol=https;branch=master \
            file://libdvbcsa.pc \
 "
 
 S = "${WORKDIR}/git"
 
 inherit autotools lib_package pkgconfig
+
+EXTRA_OECONF += "${@bb.utils.contains("TUNE_FEATURES", "neon", "--enable-neon", "--enable-uint32", d)}"
 
 do_install:append() {
     install -d ${D}${includedir}/dvbcsa/
