@@ -17,7 +17,15 @@ S = "${WORKDIR}/git"
 
 inherit autotools lib_package pkgconfig
 
-EXTRA_OECONF += "${@bb.utils.contains("TUNE_FEATURES", "neon", "--enable-neon", "--enable-uint32", d)}"
+EXTRA_OECONF += " \
+           ${@bb.utils.contains("TUNE_FEATURES", "altivec", "--enable-altivec", \
+           ${@bb.utils.contains("TUNE_FEATURES", "avx2",    "--enable-avx2", \
+           ${@bb.utils.contains("TUNE_FEATURES", "ssse3",   "--enable-ssse3", \
+           ${@bb.utils.contains("TUNE_FEATURES", "sse2",    "--enable-sse2", \
+           ${@bb.utils.contains("TUNE_FEATURES", "mmx",     "--enable-mmx", \
+           ${@bb.utils.contains("TUNE_FEATURES", "neon",    "--enable-neon", \
+           ${@bb.utils.contains("TUNE_FEATURES", "mips64",  "--enable-uint64", "--enable-uint32", d)})})})})})})} \
+"
 
 do_install:append() {
     install -d ${D}${includedir}/dvbcsa/
