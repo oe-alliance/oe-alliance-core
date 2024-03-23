@@ -17,15 +17,10 @@ S = "${WORKDIR}/git"
 
 inherit autotools lib_package pkgconfig
 
-EXTRA_OECONF += " \
-           ${@bb.utils.contains("TUNE_FEATURES", "altivec", "--enable-altivec", "--enable-uint32", d)} \
-           ${@bb.utils.contains("TUNE_FEATURES", "avx2",    "--enable-avx2", "--enable-uint32", d)} \
-           ${@bb.utils.contains("TUNE_FEATURES", "ssse3",   "--enable-ssse3", "--enable-uint32", d)} \
-           ${@bb.utils.contains("TUNE_FEATURES", "sse2",    "--enable-sse2", "--enable-uint32", d)} \
-           ${@bb.utils.contains("TUNE_FEATURES", "mmx",     "--enable-mmx", "--enable-uint32", d)} \
-           ${@bb.utils.contains("TUNE_FEATURES", "neon",    "--enable-neon", "--enable-uint32", d)} \
-           ${@bb.utils.contains("TUNE_FEATURES", "mips64",  "--enable-uint64", "--enable-uint32", d)} \
-"
+TUNE_32_64   = "${@bb.utils.contains("TUNE_FEATURES", "mips64",        "--enable-uint64",  "--enable-uint32", d)}"
+TUNE_DVBCSA  = "${@bb.utils.contains_any("TUNE_FEATURES", "neon simd", "--enable-neon",    "${TUNE_32_64}", d)}"
+
+EXTRA_OECONF += "${TUNE_DVBCSA}"
 
 do_install:append() {
     install -d ${D}${includedir}/dvbcsa/
