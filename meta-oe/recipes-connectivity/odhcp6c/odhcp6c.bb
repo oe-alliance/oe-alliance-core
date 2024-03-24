@@ -34,7 +34,7 @@ do_install() {
     install -d ${D}${bindir}
     install -m 755 ${S}/odhcp6c ${D}${bindir}
     install -d ${D}${sysconfdir}/network/if-up.d
-    if [ ${DISTRO_NAME} = "openatv" ]; then
+    if [ "${DISTRO_NAME}" = "openatv" ]; then
         install -m 755 ${WORKDIR}/ifupv6 ${D}${sysconfdir}/network/if-up.d/ifupv6
     else
         install -m 755 ${WORKDIR}/ifup ${D}${sysconfdir}/network/if-up.d/odhcp6c

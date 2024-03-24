@@ -2,7 +2,7 @@
 
 [ "x$IFACE" = "xlo" ] && exit 0
 [ "x$IFACE" = "x--all" ] && exit 0
-if grep -Eq '^iface\s+'${IFACE}'\s+inet6\s+.*$' /etc/network/interfaces; then
+if grep -qE "^iface\s+${IFACE}\s+inet6\s+.*$" /etc/network/interfaces; then
 	sysctl -w net.ipv6.conf.${IFACE}.disable_ipv6=0
 else
 	sysctl -w net.ipv6.conf.${IFACE}.disable_ipv6=1
