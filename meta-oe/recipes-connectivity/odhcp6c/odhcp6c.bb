@@ -11,6 +11,7 @@ PV = "git"
 PKGV = "git${GITPKGV}"
 
 SRC_URI = "git://github.com/openwrt/odhcp6c.git;protocol=https;branch=master \
+           file://ifupv6 \
            file://ifup \
            file://ifdown \
            file://odhcp6c-update \
@@ -33,9 +34,13 @@ do_install() {
     install -d ${D}${bindir}
     install -m 755 ${S}/odhcp6c ${D}${bindir}
     install -d ${D}${sysconfdir}/network/if-up.d
-    install -m 755 ${WORKDIR}/ifup ${D}${sysconfdir}/network/if-up.d/odhcp6c
-    install -d ${D}${sysconfdir}/network/if-down.d
-    install -m 755 ${WORKDIR}/ifdown ${D}${sysconfdir}/network/if-down.d/odhcp6c
+    if [ ${DISTRO_NAME} = "openatv" ]; then
+        install -m 755 ${WORKDIR}/ifupv6 ${D}${sysconfdir}/network/if-up.d/ifupv6
+    else
+        install -m 755 ${WORKDIR}/ifup ${D}${sysconfdir}/network/if-up.d/odhcp6c
+        install -d ${D}${sysconfdir}/network/if-down.d
+        install -m 755 ${WORKDIR}/ifdown ${D}${sysconfdir}/network/if-down.d/odhcp6c
+    fi
     install -d ${D}${sbindir}
     install -m 755 ${WORKDIR}/odhcp6c-update ${D}${sbindir}/odhcp6c-update
 }
