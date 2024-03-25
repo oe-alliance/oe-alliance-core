@@ -18,7 +18,10 @@ CONFFILES:${PN} ?= "/etc/tuxbox/config/${CAMNAME}"
 
 PACKAGE_ARCH = "${TUNE_PKGARCH}"
 
-DEPENDS += "libusb openssl"
+DEPENDS += "libusb openssl libdvbcsa"
+RDEPENDS_${PN} += "libdvbcsa libusb"
+
+LDFLAGS:prepend = "-ldvbcsa "
 
 EXTRA_OECMAKE += "\
 	-DWEBIF=1 \
@@ -31,7 +34,9 @@ EXTRA_OECMAKE += "\
 	-DWITH_STAPI=0 \
 	-DHAVE_LIBUSB=1 \
 	-DSTATIC_LIBUSB=0 \
-    	-DMODULE_CONSTCW=1 \	
+	-DMODULE_CONSTCW=1 \
+	-DMODULE_STREAMRELAY=1 \
+	-DHAVE_LIBDVBCSA=1 \
 "
 
 do_configure:prepend () {
