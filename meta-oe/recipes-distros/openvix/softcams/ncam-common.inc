@@ -21,7 +21,7 @@ PACKAGE_ARCH = "${TUNE_PKGARCH}"
 DEPENDS += "libusb openssl libdvbcsa"
 RDEPENDS:${PN} += "libdvbcsa libusb1"
 
-LDFLAGS:prepend = "-ludev -ldvbcsa "
+LDFLAGS:prepend = "-ldvbcsa"
 
 EXTRA_OECMAKE += "\
 	-DWEBIF=1 \
