@@ -3,7 +3,6 @@ SUMMARY:${PN} = "NCam ${PKGV}"
 DESCRIPTION:${PN} = "NCam Open Source Softcam\n \
 - latest git revision"
 
-#SRC_URI="git://github.com/oe-special/NCam.git;protocol=https;branch=master"
 SRC_URI="git://github.com/fairbird/NCam.git;protocol=https;branch=master"
 
 CAMNAME = "ncam"
@@ -18,8 +17,8 @@ inherit gitpkgv
 
 SRCREV = "${AUTOREV}"
 
-PV = "git"
-PKGV = "git${GITPKGV}"
+PV = "1.20+git"
+PKGV = "1.20+git${GITPKGV}"
 PR = "r0"
 
 S = "${WORKDIR}/git"
