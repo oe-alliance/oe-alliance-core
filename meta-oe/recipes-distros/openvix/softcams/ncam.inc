@@ -1,10 +1,9 @@
-MAINTAINER = "OpenVisionE2 team"
+MAINTAINER = "Raed - fairbird"
 SUMMARY:${PN} = "NCam ${PKGV}"
 DESCRIPTION:${PN} = "NCam Open Source Softcam\n \
 - latest git revision"
 
 #SRC_URI="git://github.com/oe-special/NCam.git;protocol=https;branch=master"
-#SRC_URI="git://github.com/OpenVisionE2/NCam.git;protocol=https;branch=master"
 SRC_URI="git://github.com/fairbird/NCam.git;protocol=https;branch=master"
 
 CAMNAME = "ncam"
