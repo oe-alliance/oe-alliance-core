@@ -3,7 +3,7 @@
 SUMMARY = "IceTV EPG & recording management service"
 DESCRIPTION = "IceTV provides an online subscription service for EPG and recording management in Australia."
 MAINTAINER = "prl <prl@ozemail.com.au>"
-LICENSE = "GPLv3"
+LICENSE = "GPL-3.0-only"
 LIC_FILES_CHKSUM = "file://icetv/src/LICENSE;md5=1ebbd3e34237af26da5dc08a4e440464"
 require conf/python/python3-compileall.inc
 
