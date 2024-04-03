@@ -1,13 +1,14 @@
 require conf/license/license-gplv2.inc
 inherit cmake
+inherit gitpkgv
 
 SUMMARY = "OScam ${PV} Open Source Softcam, with OMNIKEY support."
 LICENSE = "GPL-3.0-only"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 
-PV = "1.20+svn"
+PV = "1.30+git"
 SRCREV = "${AUTOREV}"
-SRC_URI = "svn://svn.streamboard.tv/oscam;protocol=https;module=trunk;scmdata=keep;externals=nowarn"
+SRC_URI = "git://repo.or.cz/oscam.git;protocol=git"
 
 PACKAGES = "enigma2-plugin-softcams-oscam-pcscd-latest"
 
@@ -17,7 +18,7 @@ RPROVIDES:enigma2-plugin-softcams-oscam-pcscd-latest += "openvix-softcams-oscam-
 DEPENDS = "libusb openssl pcsc-lite"
 RDEPENDS:enigma2-plugin-softcams-oscam-pcscd-latest = "pcsc-lite"
 
-S = "${WORKDIR}/trunk"
+S = "${WORKDIR}/git"
 
 EXTRA_OECMAKE += "\
     -DOSCAM_SYSTEM_NAME=Tuxbox \
