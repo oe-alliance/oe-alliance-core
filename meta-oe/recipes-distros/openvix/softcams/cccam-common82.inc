@@ -1,0 +1,43 @@
+# Stuff applying to all CCcams on image
+SUMMARY:${PN} = "CCcam ${PKGV}"
+DESCRIPTION:${PN} = "An outdated binary only softcam"
+
+PR = "r2"
+
+LICENSE = "CLOSED"
+require conf/license/license-close.inc
+
+FILESEXTRAPATHS:prepend := "${THISDIR}/enigma2-plugin-softcams-cccam82:"
+
+SRC_URI = " \
+            file://cccam_versions \
+            file://CCcam.cfg \
+"
+
+require softcam.inc
+require softcam-binary-32bit.inc
+
+CONFFILES:${PN} ?= "/etc/CCcam.cfg"
+
+PACKAGE_ARCH = "${TUNE_PKGARCH}"
+
+do_install() {
+    install -d ${D}/${bindir}
+    install -d ${D}/usr/softcams
+    install -m 0755 ${WORKDIR}/cccam_versions/CCcam_${PV}_${TARGET_ARCH} ${D}/usr/softcams/${CAMNAME}
+    install -d ${D}/etc
+    install -m 0755 ${WORKDIR}/CCcam.cfg ${D}/etc/CCcam.cfg
+}
+
+RDEPENDS:${PN} = "glibc libstdc++ softcam-support"
+RDEPENDS:${PN}_aarch64 = "lib32-glibc lib32-libstdc++ softcam-support"
+
+# libxcrypt
+
+INHIBIT_PACKAGE_STRIP = "1"
+INSANE_SKIP:${PN} = "already-stripped build-deps file-rdeps"
+INSANE_SKIP:${PN}_aarch64 = "already-stripped arch build-deps file-rdeps"
+
+RPROVIDES:${PN} += "enigma2-plugin-softcams-cccam-2.8.2"
+RREPLACES:${PN} += "enigma2-plugin-softcams-cccam-2.8.2"
+RCONFLICTS:${PN} += "enigma2-plugin-softcams-cccam-2.8.2"
