@@ -11,7 +11,7 @@ FILESEXTRAPATHS:prepend := "${THISDIR}/openvix-softcams-oscam:"
 PV = "1.20+11517"
 SRCREV = "a2ee0528f1de527748aaf7a79982ed112ffa3183"
 
-SRC_URI = "git://repo.or.cz/oscam.git;protocol=git"
+SRC_URI = "git://repo.or.cz/oscam.git;protocol=git;branch=master"
 
 PR = "r1"
 
