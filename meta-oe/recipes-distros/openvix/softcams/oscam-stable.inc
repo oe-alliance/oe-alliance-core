@@ -5,5 +5,5 @@ CAMNAME = "oscam-stable"
 SUMMARY:${PN} = "OSCam-stable ${PKGV}"
 DESCRIPTION:${PN} = "OSCam Open Source Softcam\n \
 - build from a known stable trunk revision\n \"
-SRC_URI += "git://repo.or.cz/oscam.git;protocol=git;branch=master;rev=${SRCREV}"
+SRC_URI += "git://repo.or.cz/oscam.git;protocol=git;branch=master"
 PR = "r2"
