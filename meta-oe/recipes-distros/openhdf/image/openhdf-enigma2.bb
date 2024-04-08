@@ -7,11 +7,12 @@ ALLOW_EMPTY:${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "1.0"
-PR = "r90"
+PR = "r91"
 
 inherit packagegroup
 
 RRECOMMENDS:${PN} = " \
+    enigma-info \
     openhdf-version-info \
     enigma2-skindefault \
     ${PYTHON_PN}-compression \
