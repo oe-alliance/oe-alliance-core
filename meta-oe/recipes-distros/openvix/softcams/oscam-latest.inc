@@ -9,4 +9,4 @@ RPROVIDES:${PN} += "enigma2-plugin-softcams-oscam-openvix"
 RREPLACES:${PN} += "enigma2-plugin-softcams-oscam-openvix"
 RCONFLICTS:${PN} += "enigma2-plugin-softcams-oscam-openvix"
 
-SRC_URI += "svn://svn.streamboard.tv/oscam;protocol=https;module=trunk;scmdata=keep"
+SRC_URI += "git://repo.or.cz/oscam.git;protocol=git;branch=master"
