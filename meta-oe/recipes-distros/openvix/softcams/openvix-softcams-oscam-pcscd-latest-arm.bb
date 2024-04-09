@@ -8,7 +8,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 
 PV = "1.30+git"
 SRCREV = "${AUTOREV}"
-SRC_URI = "git://repo.or.cz/oscam.git;protocol=git;branch=master"
+SRC_URI += "git://git.streamboard.tv/common/oscam.git;protocol=https;branch=master"
 
 PACKAGES = "enigma2-plugin-softcams-oscam-pcscd-latest"
 
