@@ -2,30 +2,50 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 require conf/license/license-gplv2.inc
 inherit cmake
+inherit gitpkgv
 
 SUMMARY = "OScam ${PV} Open Source Softcam"
 LICENSE = "GPLv3"
 LIC_FILES:CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 
 SRC_URI = "svn://public:public@sbnc.dyndns.tv/svn/ipk/source.arm;module=emus_oscam;protocol=http;name=svn;destsuffix=emus_oscam"
-SRC_URI += "svn://svn.streamboard.tv/oscam;protocol=https;module=trunk;scmdata=keep;externals=nowarn;name=trunk;destsuffix=trunk"
-SRC_URI += "file://config.patch"
-SRCREV_svn = "${AUTOREV}"
-SRCREV_trunk = "${AUTOREV}"
-SRCREV_trunk = "11748"
-SRCREV_FORMAT = "svn_trunk"
+#SRC_URI += "svn://svn.streamboard.tv/oscam;protocol=https;module=trunk;scmdata=keep;externals=nowarn;name=trunk;destsuffix=trunk"
+#SRC_URI += "file://config.patch"
+#SRCREV_svn = "${AUTOREV}"
+#SRCREV_trunk = "${AUTOREV}"
+#SRCREV_trunk = "11748"
+#SRCREV_FORMAT = "svn_trunk"
+
+SRC_URI += "git://git.streamboard.tv/common/oscam.git;protocol=https;branch=master"
+SRCREV = "${AUTOREV}"
+SRCREV_FORMAT = "svn_git"
+PV = "1.0"
 
 E = "${WORKDIR}/emus_oscam"
 
 DEPENDS = "libusb openssl libdvbcsa"
+RDEPENDS:${PN} += "libdvbcsa libusb1"
 
-S = "${WORKDIR}/trunk"
+LDFLAGS:prepend = "-ldvbcsa "
 
-EXTRA_OECMAKE:arm += " -DOSCAM_SYSTEM_NAME=FriendlyARM -DHAVE_LIBDVBCSA=1 -DSTATIC_LIBDVBCSA=1 -DSTATIC_LIBUSB=1 -DSTATIC_LIBUSB=1 -DWEBIF=1 -DWITH_STAPI=0 -DHAVE_LIBUSB=1 -DSTATIC_LIBUSB=1 -DWITH_SSL=1 -DCLOCKFIX=0 -DMODULE_CONSTCW=1 -DHAVE_PCSC=0 -DWITH_EMU=0"
-EXTRA_OECMAKE:mipsel += " -DOSCAM_SYSTEM_NAME=FriendlyARM -DHAVE_LIBDVBCSA=1 -DSTATIC_LIBDVBCSA=1 -DSTATIC_LIBUSB=1 -DSTATIC_LIBUSB=1 -DWEBIF=1 -DWITH_STAPI=0 -DHAVE_LIBUSB=1 -DSTATIC_LIBUSB=1 -DWITH_SSL=1 -DCLOCKFIX=0 -DMODULE_CONSTCW=1 -DHAVE_PCSC=0 -DWITH_EMU=0"
-EXTRA_OECMAKE:sh4 += " -DOSCAM_SYSTEM_NAME=FriendlyARM -DHAVE_LIBDVBCSA=1 -DSTATIC_LIBDVBCSA=1 -DSTATIC_LIBUSB=1 -DSTATIC_LIBUSB=1 -DWEBIF=1 -DWITH_STAPI=0 -DHAVE_LIBUSB=1 -DSTATIC_LIBUSB=1 -DWITH_SSL=1 -DCLOCKFIX=0 -DMODULE_CONSTCW=1 -DHAVE_PCSC=0 -DWITH_EMU=0"
+#S = "${WORKDIR}/trunk"
+S = "${WORKDIR}/git"
 
-EXTRA_OECMAKE:arm += " -DWITH_ARM_NEON=1"
+EXTRA_OECMAKE += "\
+	-DWEBIF=1 \
+	-DWEBIF_LIVELOG=1 \
+	-DWEBIF_JQUERY=1 \
+	-DTOUCH=1 \
+	-DLCDSUPPORT=1 \
+	-DLEDSUPPORT=1 \
+	-DWITH_SSL=1 \
+	-DWITH_STAPI=0 \
+	-DHAVE_LIBUSB=1 \
+	-DSTATIC_LIBUSB=0 \
+	-DMODULE_CONSTCW=1 \
+	-DMODULE_STREAMRELAY=1 \
+	-DHAVE_LIBDVBCSA=1 \
+"
 
 do_install() {
     install -d ${D}/bin
@@ -34,8 +54,20 @@ do_install() {
     cp -a _path_/keys ${D}/
     cp -a _path_/etc ${D}/
 
-    SVNVERSION=$(svnversion ${WORKDIR}/trunk)
+#    SVNVERSION=$(svnversion ${WORKDIR}/trunk)
+#    sed "s/Description:.*/Description: Latest Version $SVNVERSION of OScam/" -i ${E}/CONTROL/control
+
+#	 which git > /dev/null 2>&1 && revision=`git log -10 --pretty=%B | grep git-svn-id | head -n 1 | sed -n -e 's/^.*trunk@\([0-9]*\) .*$/\1/p'`
+#    sed "s/Description:.*/Description: Latest Version $revision of OScam/" -i ${E}/CONTROL/control
+
+	offset="1103"
+	revision=$(git -C ${WORKDIR}/git rev-list --no-merges --count HEAD)
+	SVNVERSION="$(expr $offset + $revision)"
     sed "s/Description:.*/Description: Latest Version $SVNVERSION of OScam/" -i ${E}/CONTROL/control
+}
+
+do_rmwork () {
+	:
 }
 
 FILES:${PN} = "/bin /etc /keys"
@@ -63,7 +95,8 @@ python populate_packages:prepend() {
             return
 
         for line in src.split("\n"):
-            rev = bb.data.expand('${SRCPV}', d)
+#            rev = bb.data.expand('${SRCPV}', d)
+            rev = bb.data.expand('${PV}', d)
             box = bb.data.expand('${MACHINEBUILD}', d)
             pr = bb.data.expand('${PR}', d)
             workdir = bb.data.expand('${WORKDIR}', d)
