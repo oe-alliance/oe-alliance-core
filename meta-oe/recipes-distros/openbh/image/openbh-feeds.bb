@@ -9,7 +9,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r11"
+PR = "r12"
 
 inherit packagegroup
 
@@ -19,6 +19,7 @@ RRECOMMENDS:${PN} = "\
     cdfs \
     curlftpfs \
     enigma2-display-skins \
+    enigma2-plugin-skins-e2-darkos \
     enigma2-plugin-extensions-blurayplayer \
     enigma2-plugin-extensions-epgimport \
     enigma2-plugin-extensions-enhancedmoviecenter \
@@ -32,4 +33,5 @@ RRECOMMENDS:${PN} = "\
     ${@bb.utils.contains("MACHINE_FEATURES", "quadpip", "enigma2-plugin-systemplugins-quadpip", "", d)} \
     enigma2-plugin-systemplugins-icetv \
     enigma2-plugin-systemplugins-eitconfig \
+    enigma2-plugin-systemplugins-m3uiptv \
     "
