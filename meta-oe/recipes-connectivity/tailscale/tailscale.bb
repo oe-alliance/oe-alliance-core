@@ -8,11 +8,11 @@ RRECOMMENDS:${PN} = "kernel-module-tun enigma2-plugin-drivers-iptables"
 
 inherit gitpkgv
 
-SRCREV = "9c64e015e5a66e3d25a7d1f2d6f1789d31ae0ad1"
-PV = "1.45.0+git"
-PKGV = "1.45.0+git${GITPKGV}"
+SRCREV = "ede81e2669bc01d60f52c84eea1d404215b13e16"
+PV = "1.64.2+git"
+PKGV = "1.64.2+git${GITPKGV}"
 
-SRC_URI = "git://github.com/tailscale/tailscale.git;protocol=https;branch=main \
+SRC_URI = "git://github.com/tailscale/tailscale.git;protocol=https;branch=release-branch/1.64 \
         file://tailscaled.initd \
 "
 
@@ -21,6 +21,7 @@ inherit go-mod update-rc.d systemd upx-compress
 GO_IMPORT = "tailscale.com"
 GO_WORKDIR = "${GO_IMPORT}"
 GO_INSTALL = "${GO_IMPORT}/cmd/tailscale ${GO_IMPORT}/cmd/tailscaled"
+export GOPROXY = "https://proxy.golang.org,direct"
 
 # Fixes duplicated definition of symbols errors by linking for arm arch
 GO_DYNLINK:arm = ""

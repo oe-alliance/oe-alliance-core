@@ -6,6 +6,7 @@
 
 GOPATH = "${TMPDIR}/go/"
 export GOPATH
+export GOPROXY = "https://proxy.golang.org,direct"
 
 do_compile:append() {
     chmod -R +w "$GOPATH"
