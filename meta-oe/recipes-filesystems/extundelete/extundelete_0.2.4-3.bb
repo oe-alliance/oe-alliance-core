@@ -20,4 +20,4 @@ S = "${WORKDIR}"
 do_install () {
 	install -d ${D}/usr/bin
 	install -m 755 ${S}/src/extundelete ${D}/usr/bin
-	}
+}
