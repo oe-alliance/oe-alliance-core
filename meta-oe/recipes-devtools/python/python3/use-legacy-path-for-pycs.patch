@@ -1,6 +1,6 @@
 --- a/Lib/importlib/_bootstrap_external.py
 +++ b/Lib/importlib/_bootstrap_external.py
-@@ -465,13 +465,13 @@ def cache_from_source(path, debug_override=None, *, optimization=None):
+@@ -510,13 +510,13 @@ def cache_from_source(path, debug_override=None, *, optimization=None):
      tag = sys.implementation.cache_tag
      if tag is None:
          raise NotImplementedError('sys.implementation.cache_tag is None')
@@ -15,8 +15,8 @@
 +    optimization = ''
      if optimization != '':
          if not optimization.isalnum():
-             raise ValueError('{!r} is not alphanumeric'.format(optimization))
-@@ -502,7 +502,7 @@ def cache_from_source(path, debug_override=None, *, optimization=None):
+             raise ValueError(f'{optimization!r} is not alphanumeric')
+@@ -546,7 +546,7 @@ def cache_from_source(path, debug_override=None, *, optimization=None):
              head.lstrip(path_separators),
              filename,
          )
@@ -27,7 +27,7 @@
  def source_from_cache(path):
 --- a/Python/initconfig.c
 +++ b/Python/initconfig.c
-@@ -752,7 +752,7 @@ _PyConfig_InitCompatConfig(PyConfig *config)
+@@ -775,7 +775,7 @@ _PyConfig_InitCompatConfig(PyConfig *config)
      config->warn_default_encoding = 0;
      config->inspect = -1;
      config->interactive = -1;
@@ -36,7 +36,7 @@
      config->parser_debug= -1;
      config->write_bytecode = -1;
      config->verbose = -1;
-@@ -794,7 +794,7 @@ config_init_defaults(PyConfig *config)
+@@ -813,7 +813,7 @@ config_init_defaults(PyConfig *config)
      config->bytes_warning = 0;
      config->inspect = 0;
      config->interactive = 0;
@@ -45,7 +45,7 @@
      config->parser_debug= 0;
      config->write_bytecode = 1;
      config->verbose = 0;
-@@ -2410,7 +2410,7 @@ config_parse_cmdline(PyConfig *config, PyWideStringList *warnoptions,
+@@ -2487,7 +2487,7 @@ config_parse_cmdline(PyConfig *config, PyWideStringList *warnoptions,
          /* case 'J': reserved for Jython */
  
          case 'O':
