@@ -30,11 +30,11 @@ do_install:append() {
     install -m 0755 -d ${D}${sysconfdir}/bash_completion.d
     mv ${D}${prefix}${sysconfdir}/bash_completion.d ${D}${sysconfdir}
     rm -rf ${D}${prefix}${sysconfdir}
-    rm -f ${D}${libdir}/${PYTHON_DIR}/site-packages/youtube_dl*egg-info/PKG-INFO
-    rm -f ${D}${libdir}/${PYTHON_DIR}/site-packages/youtube_dl*egg-info/SOURCES.txt
-    rm -f ${D}${libdir}/${PYTHON_DIR}/site-packages/youtube_dl*egg-info/dependency_links.txt
-    rm -f ${D}${libdir}/${PYTHON_DIR}/site-packages/youtube_dl*egg-info/top_level.txt
-    rm -f ${D}${libdir}/${PYTHON_DIR}/site-packages/youtube_dl*dist-info/*
+    rm -f ${D}${PYTHON_SITEPACKAGES_DIR}/youtube_dl*egg-info/PKG-INFO
+    rm -f ${D}${PYTHON_SITEPACKAGES_DIR}/youtube_dl*egg-info/SOURCES.txt
+    rm -f ${D}${PYTHON_SITEPACKAGES_DIR}/youtube_dl*egg-info/dependency_links.txt
+    rm -f ${D}${PYTHON_SITEPACKAGES_DIR}/youtube_dl*egg-info/top_level.txt
+    rm -f ${D}${PYTHON_SITEPACKAGES_DIR}/youtube_dl*dist-info/*
     chmod 755 ${D}/usr/bin/youtube-dl
 }
 
@@ -48,10 +48,10 @@ RDEPENDS:${PN} = " \
 
 RDEPENDS:{PN}-src = "${PN}"
 FILES:${PN}-src = " \
-    ${libdir}/${PYTHON_DIR}/site-packages/*/*.py \
-    ${libdir}/${PYTHON_DIR}/site-packages/*/*/*.py \
-    ${libdir}/${PYTHON_DIR}/site-packages/*/*/*/*.py \
-    ${libdir}/${PYTHON_DIR}/site-packages/*/*/*/*/*.py \
+    ${PYTHON_SITEPACKAGES_DIR}/*/*.py \
+    ${PYTHON_SITEPACKAGES_DIR}/*/*/*.py \
+    ${PYTHON_SITEPACKAGES_DIR}/*/*/*/*.py \
+    ${PYTHON_SITEPACKAGES_DIR}/*/*/*/*/*.py \
     ${datadir}/etc/* \
     "
 

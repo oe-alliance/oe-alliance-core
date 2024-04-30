@@ -30,11 +30,11 @@ do_compile:prepend() {
 do_install:append() {
     install -m 0755 -d ${D}${sysconfdir}/bash_completion.d
     install -m 0644 ${S}/completions/bash/yt-dlp ${D}${sysconfdir}/bash_completion.d/yt-dlp.bash-completion
-    rm -f ${D}${libdir}/${PYTHON_DIR}/site-packages/yt_dlp*egg-info/PKG-INFO
-    rm -f ${D}${libdir}/${PYTHON_DIR}/site-packages/yt_dlp*egg-info/SOURCES.txt
-    rm -f ${D}${libdir}/${PYTHON_DIR}/site-packages/yt_dlp*egg-info/dependency_links.txt
-    rm -f ${D}${libdir}/${PYTHON_DIR}/site-packages/yt_dlp*egg-info/top_level.txt
-    rm -rf ${D}${libdir}/${PYTHON_DIR}/site-packages/yt_dlp*dist-info/*
+    rm -f ${D}${PYTHON_SITEPACKAGES_DIR}/yt_dlp*egg-info/PKG-INFO
+    rm -f ${D}${PYTHON_SITEPACKAGES_DIR}/yt_dlp*egg-info/SOURCES.txt
+    rm -f ${D}${PYTHON_SITEPACKAGES_DIR}/yt_dlp*egg-info/dependency_links.txt
+    rm -f ${D}${PYTHON_SITEPACKAGES_DIR}/yt_dlp*egg-info/top_level.txt
+    rm -rf ${D}${PYTHON_SITEPACKAGES_DIR}/yt_dlp*dist-info/*
 }
 
 RDEPENDS:${PN} = " \
@@ -47,10 +47,10 @@ RDEPENDS:${PN} = " \
 
 RDEPENDS:{PN}-src = "${PN}"
 FILES:${PN}-src = " \
-    ${libdir}/${PYTHON_DIR}/site-packages/*/*.py \
-    ${libdir}/${PYTHON_DIR}/site-packages/*/*/*.py \
-    ${libdir}/${PYTHON_DIR}/site-packages/*/*/*/*.py \
-    ${libdir}/${PYTHON_DIR}/site-packages/*/*/*/*/*.py \
+    ${PYTHON_SITEPACKAGES_DIR}/*/*.py \
+    ${PYTHON_SITEPACKAGES_DIR}/*/*/*.py \
+    ${PYTHON_SITEPACKAGES_DIR}/*/*/*/*.py \
+    ${PYTHON_SITEPACKAGES_DIR}/*/*/*/*/*.py \
     ${datadir} \
     "
 

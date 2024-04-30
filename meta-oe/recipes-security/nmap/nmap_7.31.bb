@@ -40,7 +40,7 @@ DESCRIPTION:${PN}-db = "Databases for translation of numeric values into friendl
 # append packages if enabled
 FILES:${PN} += "${@bb.utils.contains("PACKAGECONFIG", "ncat", "${bindir}/ncat ${target_datadir}/ncat", "", d)}"
 FILES:${PN} += "${@bb.utils.contains("PACKAGECONFIG", "nping", "${bindir}/nping", "", d)}"
-FILES:${PN} += "${@bb.utils.contains("PACKAGECONFIG", "ndiff", "${bindir}/ndiff ${bindir}/uninstall_ndiff ${libdir}/python${PYTHON_BASEVERSION}/site-packages/ndiff.py*", "", d)}"
+FILES:${PN} += "${@bb.utils.contains("PACKAGECONFIG", "ndiff", "${bindir}/ndiff ${bindir}/uninstall_ndiff ${PYTHON_SITEPACKAGES_DIR}/ndiff.py*", "", d)}"
 
 do_configure() {
     # strip hard coded python2#
