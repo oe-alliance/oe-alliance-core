@@ -1,7 +1,7 @@
-From d4ececaecacd01720bc68929a17cfde7cb071228 Mon Sep 17 00:00:00 2001
+From d1ab50a777bdd31d7c71eaf7fd471789253cde5d Mon Sep 17 00:00:00 2001
 From: Captain <openatv@gmail.com>
 Date: Tue, 6 Feb 2024 13:58:04 +0100
-Subject: [PATCH] [PATCH] Revert "Linux: Use 32-bit vDSO for clock_gettime,
+Subject: [PATCH] Revert "Linux: Use 32-bit vDSO for clock_gettime,
  gettimeofday, time (BZ# 28071)"
 
 ---
@@ -10,10 +10,10 @@ Subject: [PATCH] [PATCH] Revert "Linux: Use 32-bit vDSO for clock_gettime,
  2 files changed, 12 insertions(+), 45 deletions(-)
 
 diff --git a/sysdeps/unix/sysv/linux/Makefile b/sysdeps/unix/sysv/linux/Makefile
-index 415aa1f14d..a5792e3fbf 100644
+index 76d0309dc2..f04db6e970 100644
 --- a/sysdeps/unix/sysv/linux/Makefile
 +++ b/sysdeps/unix/sysv/linux/Makefile
-@@ -407,12 +407,6 @@ sysdep_routines += \
+@@ -409,12 +409,6 @@ sysdep_routines += \
    ntp_gettime \
    ntp_gettimex \
    # sysdep_routines
@@ -97,6 +97,3 @@ index f10a289f79..cd9c9a3a84 100644
  }
  
  #if __TIMESIZE != 64
--- 
-2.43.0.windows.1
-

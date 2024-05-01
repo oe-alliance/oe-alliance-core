@@ -1,7 +1,7 @@
-From 6e1d281dc893420f3f83d8cbe2fbce63381d4fc8 Mon Sep 17 00:00:00 2001
+From dfbb28a1c31846bbfa6388e4fa8645cd8acf5437 Mon Sep 17 00:00:00 2001
 From: Captain <openatv@gmail.com>
 Date: Tue, 6 Feb 2024 14:41:57 +0100
-Subject: [PATCH] [PATCH] remove arc4random implementation
+Subject: [PATCH] remove arc4random implementation
 
 ---
  NEWS                                          |  12 -
@@ -306,7 +306,7 @@ index f35a8369bd..b461285b57 100644
    /* Clear the DTV.  */
    dtv_t *dtv = GET_DTV (TLS_TPADJ (result));
 diff --git a/stdlib/Makefile b/stdlib/Makefile
-index d587f054d1..78504d3182 100644
+index 9898cc5d8a..216ddedcba 100644
 --- a/stdlib/Makefile
 +++ b/stdlib/Makefile
 @@ -55,8 +55,6 @@ routines := \
@@ -328,7 +328,7 @@ index d587f054d1..78504d3182 100644
    tst-at_quick_exit \
    tst-atexit \
    tst-atof1 \
-@@ -381,8 +376,6 @@ LDLIBS-test-cxa_atexit-race = $(shared-thread-library)
+@@ -382,8 +377,6 @@ LDLIBS-test-cxa_atexit-race = $(shared-thread-library)
  LDLIBS-test-cxa_atexit-race2 = $(shared-thread-library)
  LDLIBS-test-on_exit-race = $(shared-thread-library)
  LDLIBS-tst-canon-bz26341 = $(shared-thread-library)
@@ -2583,11 +2583,11 @@ index 4ab3681914..e1764996d6 100644
  GLIBC_2.36 fsconfig F
  GLIBC_2.36 fsmount F
 diff --git a/sysdeps/x86_64/Makefile b/sysdeps/x86_64/Makefile
-index 90f4ecfd26..29334a500a 100644
+index 0ede447405..6c67009775 100644
 --- a/sysdeps/x86_64/Makefile
 +++ b/sysdeps/x86_64/Makefile
 @@ -13,6 +13,13 @@ ifeq ($(subdir),csu)
- gen-as-const-headers += features-offsets.sym link-defines.sym
+ gen-as-const-headers += link-defines.sym
  endif
  
 +ifeq ($(subdir),stdlib)
@@ -3312,6 +3312,3 @@ index 0000000000..6f3784e392
 +			     CHACHA20_BUFSIZE / CHACHA20_BLOCK_SIZE);
 +#endif
 +}
--- 
-2.43.0.windows.1
-
