@@ -43,14 +43,14 @@ RDEPENDS:${PN} = " \
     ${@bb.utils.contains("MACHINE_FEATURES", "uianimation", "vuplus-libgles-${MACHINE} libvugles2" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "hiaccel", "dinobot-libs-${MACHINE}" , "", d)} \
     oe-alliance-branding \
-    ${@bb.utils.contains("SMALLBOXWIZARD", "1", "${SMALLBOXWIZARD_NORMAL_IMAGE}", "${NORMAL_IMAGE_DEPEND}", d)} \
+    ${@bb.utils.contains("SMALLBOXWIZARD", "1", "${SMALLBOXWIZARD_IMAGE_DEPENDS}", "${NORMAL_IMAGE_DEPENDS}", d)} \
 "
 
-SMALLBOXWIZARD_NORMAL_IMAGE = "\
-    ${@bb.utils.contains_any("MACHINE_FEATURES", "smallflash", "", "${NORMAL_IMAGE_DEPEND}", d)} \
+SMALLBOXWIZARD_IMAGE_DEPENDS = "\
+    ${@bb.utils.contains_any("MACHINE_FEATURES", "smallflash", "", "${NORMAL_IMAGE_DEPENDS}", d)} \
 "
 
-NORMAL_IMAGE_DEPEND = "\
+NORMAL_IMAGE_DEPENDS = "\
     ${E2DEFAULTSKIN} \
     enigma2-plugin-font-wqy-microhei \
     ${@bb.utils.contains("MACHINE_FEATURES", "blindscan-dvbc", "virtual-blindscan-dvbc" , "", d)} \
