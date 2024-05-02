@@ -32,6 +32,15 @@ RDEPENDS:${PN} = "\
     "
 
 RRECOMMENDS:${PN} = "\
+    enigma2-plugin-systemplugins-vix \
+    ${@bb.utils.contains("SMALLBOXWIZARD", "1", "${SMALLBOXWIZARD_IMAGE}", "${NORMAL_IMAGE}", d)} \
+    "
+
+SMALLBOXWIZARD_IMAGE = "\
+    ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", "${NORMAL_IMAGE}", d)} \
+"
+
+NORMAL_IMAGE = "\
     enigma2-plugin-extensions-autotimer \
     enigma2-plugin-extensions-epgimport \
     enigma2-plugin-extensions-epgsearch \
@@ -46,13 +55,12 @@ RRECOMMENDS:${PN} = "\
     enigma2-plugin-systemplugins-aboutboxbranding \
     enigma2-plugin-systemplugins-opentvzapper \
     enigma2-plugin-systemplugins-xmlupdate \
-    enigma2-plugin-systemplugins-vix \
     ${@bb.utils.contains("MACHINE_FEATURES", "uianimation", "enigma2-plugin-systemplugins-animationsetup" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "osdanimation", "enigma2-plugin-systemplugins-animationsetup" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "webkithbbtv", "enigma2-plugin-extensions-webkithbbtv", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "quadpip", "enigma2-plugin-systemplugins-quadpip", "", d)} \
     openvix-picon-feed-opkg-conf \
-    "
+"
 
 RRECOMMENDS:${PN}:append:et8500 = " enigma2-plugin-extensions-yahooweather"
 RRECOMMENDS:${PN}:append:tmnanoseplus = " enigma2-plugin-systemplugins-tempfancontrol"

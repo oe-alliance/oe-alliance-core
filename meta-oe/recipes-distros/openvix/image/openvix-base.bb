@@ -18,7 +18,6 @@ DEPENDS = "openvix-version-info"
 
 RDEPENDS:${PN} = "\
     autofs \
-    ca-certificates \
     ntpd-sync \
     oe-alliance-base \
     openvix-version-info \
@@ -32,7 +31,19 @@ RDEPENDS:${PN} = "\
     ${PYTHON_PN}-future \
     ${PYTHON_PN}-pexpect \
     ${PYTHON_PN}-six \
+    "
+
+RRECOMMENDS:${PN} = "\
+    ${@bb.utils.contains("SMALLBOXWIZARD", "1", "${SMALLBOXWIZARD_IMAGE}", "${NORMAL_IMAGE}", d)} \
+    "
+
+SMALLBOXWIZARD_IMAGE = "\
+    ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", "${NORMAL_IMAGE}", d)} \
+"
+
+NORMAL_IMAGE = "\
+    ca-certificates \
     rtmpdump \
     wireless-tools \
     zip \
-    "
+"
