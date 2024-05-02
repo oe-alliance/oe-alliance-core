@@ -46,9 +46,9 @@ RRECOMMENDS:${PN} = "\
     "
 
 SMALLBOXWIZARD_IMAGE_RECOMMENDS = "\
-    enigma2-locale-de \ 
+    ${@bb.utils.contains("DISTRO_NAME", "openvix", "" , "enigma2-locale-de", d)} \ 
     enigma2-locale-en \
-    enigma2-locale-fr \
+    ${@bb.utils.contains("DISTRO_NAME", "openvix", "" , "enigma2-locale-fr", d)} \
     ${@bb.utils.contains_any("MACHINE_FEATURES", "smallflash", "", "${NORMAL_IMAGE_RECOMMENDS}", d)} \
 "
 
