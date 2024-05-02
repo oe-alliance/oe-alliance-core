@@ -10,6 +10,8 @@ do_image_maxytecfastboot8gb[depends] = " \
 	mtools-native:do_populate_sysroot \
 	"
 
+IMAGE_CMD:maxytecfastboot8gb[vardepsexclude] += "DATE DATETIME"
+
 IMAGE_CMD:maxytecfastboot8gb () {
     dd if=/dev/zero of=${WORKDIR}/bootoptions.img bs=1024 count=${BOOTOPTIONS_PARTITION_SIZE}
     mkfs.msdos -S 512 ${WORKDIR}/bootoptions.img
