@@ -8,7 +8,7 @@ SUMMARY = "OScam ${PV} Open Source Softcam"
 LICENSE = "GPLv3"
 LIC_FILES:CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 
-SRC_URI = "svn://public:public@sbnc.dyndns.tv/svn/ipk/source.arm;module=emus_oscam;protocol=http;name=svn;destsuffix=emus_oscam"
+SRC_URI = "svn://public:public@svn.dyndns.tv/svn/ipk/source.arm;module=emus_oscam;protocol=http;name=svn;destsuffix=emus_oscam"
 #SRC_URI += "svn://svn.streamboard.tv/oscam;protocol=https;module=trunk;scmdata=keep;externals=nowarn;name=trunk;destsuffix=trunk"
 #SRC_URI += "file://config.patch"
 #SRCREV_svn = "${AUTOREV}"

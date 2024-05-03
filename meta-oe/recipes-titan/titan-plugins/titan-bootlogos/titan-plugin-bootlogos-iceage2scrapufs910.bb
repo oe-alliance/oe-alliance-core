@@ -10,7 +10,7 @@ require conf/license/license-gplv2.inc
 SRCREV = "${AUTOREV}"
 PV = "${@bb.fetch2.get_srcrev(d)}"
 
-SRC_URI = "svn://public:public@sbnc.dyndns.tv/svn/ipk/source;module=bootlogos_iceage2scrapufs910_0_1;protocol=http"
+SRC_URI = "svn://public:public@svn.dyndns.tv/svn/ipk/source;module=bootlogos_iceage2scrapufs910_0_1;protocol=http"
 
 S = "${WORKDIR}/bootlogos_iceage2scrapufs910_0_1"
 

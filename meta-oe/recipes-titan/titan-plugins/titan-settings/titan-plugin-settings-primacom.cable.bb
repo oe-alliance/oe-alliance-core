@@ -10,7 +10,7 @@ require conf/license/license-gplv2.inc
 SRCREV = "${AUTOREV}"
 PV = "${@bb.fetch2.get_srcrev(d)}"
 
-SRC_URI = "svn://public:public@sbnc.dyndns.tv/svn/ipk/source;module=settings_primacom_cable_1_0;protocol=http"
+SRC_URI = "svn://public:public@svn.dyndns.tv/svn/ipk/source;module=settings_primacom_cable_1_0;protocol=http"
 
 S = "${WORKDIR}/settings_primacom_cable_1_0"
 

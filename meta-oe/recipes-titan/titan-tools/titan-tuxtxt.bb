@@ -11,7 +11,7 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "${@bb.fetch2.get_srcrev(d)}"
 
-SRC_URI = "svn://public:public@sbnc.dyndns.tv/svn/tools;module=tuxtxt;protocol=http"
+SRC_URI = "svn://public:public@svn.dyndns.tv/svn/tools;module=tuxtxt;protocol=http"
 
 DEPENDS = " \
 	tuxtxt-enigma2 \
