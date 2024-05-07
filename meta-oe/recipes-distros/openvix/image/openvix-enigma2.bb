@@ -15,10 +15,14 @@ inherit packagegroup
 RCONFLICTS:${PN} = "enigma2-plugin-extensions-permanenttimeshift enigma2-plugin-systemplugins-skinselector"
 RREPLACES:${PN} = "enigma2-plugin-extensions-permanenttimeshift enigma2-plugin-systemplugins-skinselector"
 
-# required for vix plugin: ffmpeg ofgwrite ${PYTHON_PN}-process libcrypto-compat-0.9.7 ${PYTHON_PN}-compression zip procps bzip2
+# required for vix plugin: ffmpeg ofgwrite ${PYTHON_PN}-process libcrypto-compat-0.9.7 ${PYTHON_PN}-compression zip procps bzip2 mtd-utils mtd-utils-ubifs
+# requied for ftp access: vsftpd 
 DEPENDS = "${PYTHON_PN}-process libcrypto-compat-0.9.7 gettext-native"
 
 RDEPENDS:${PN} = "\
+    vsftpd \
+    mtd-utils \
+    mtd-utils-ubifs \
     ffmpeg \
     ofgwrite \
     ${PYTHON_PN}-process \
@@ -37,6 +41,8 @@ RRECOMMENDS:${PN} = "\
     "
 
 SMALLBOXWIZARD_IMAGE = "\
+    tzdata \
+    ${@bb.utils.contains("MACHINE_FEATURES", "skins1080", "enigma2-plugin-skins-openvix-simple-ten-eighty" , "enigma2-plugin-skins-openvix-vix-night-hd", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", "${NORMAL_IMAGE}", d)} \
 "
 
