@@ -8,7 +8,7 @@ ALLOW_EMPTY:${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r27"
+PR = "r28"
 
 inherit packagegroup
 
@@ -23,6 +23,7 @@ RDEPENDS:${PN} = "\
     ofgwrite \
     ${PYTHON_PN}-process \
     libcrypto-compat-0.9.7 \
+	libssl0.9.8 \
     ${PYTHON_PN}-compression \
     zip \
     procps \
@@ -41,6 +42,7 @@ RRECOMMENDS:${PN} = "\
     enigma2-plugin-extensions-mediaplayer \
     enigma2-plugin-extensions-socketmmi \
     enigma2-plugin-systemplugins-crossepg \
+	enigma2-plugin-systemplugins-eitconfig \
     enigma2-plugin-systemplugins-hotplug \
     enigma2-plugin-systemplugins-obh \
     enigma2-plugin-systemplugins-terrestrialscan \
