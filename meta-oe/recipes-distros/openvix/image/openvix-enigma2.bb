@@ -42,7 +42,7 @@ RRECOMMENDS:${PN} = "\
 
 SMALLBOXWIZARD_IMAGE = "\
     tzdata \
-    ${@bb.utils.contains("MACHINE_FEATURES", "skins1080", "enigma2-plugin-skins-openvix-simple-ten-eighty" , "enigma2-plugin-skins-openvix-vix-night-hd", d)} \
+    ${E2DEFAULTSKIN} \
     ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", "${NORMAL_IMAGE}", d)} \
 "
 
