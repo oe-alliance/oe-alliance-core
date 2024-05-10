@@ -1,7 +1,3 @@
-PV = "3.12.2"
-
-SRC_URI[sha256sum] = "be28112dac813d2053545c14bf13a16401a21877f1a69eb6ea5d84c4a0f3d870"
-
 FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 SRC_URI += "file://use-legacy-path-for-pycs.patch"
 
