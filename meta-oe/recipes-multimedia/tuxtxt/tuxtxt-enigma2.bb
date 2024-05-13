@@ -13,11 +13,7 @@ SRCREV = "${AUTOREV}"
 PV = "2.0+git"
 PKGV = "2.0+git${GITPKGV}"
 
-SRC_URI = "git://github.com/OpenPLi/tuxtxt.git;protocol=https;branch=master \
-           file://0001-Workaround-for-Gigablue-Quad-receivers.patch \
-           file://0002-Use-separate-transparency-for-menu-and-teletext.patch \
-           file://0003-Write-enigma2-settings-to-tuxtxt2-conf.patch \
-           file://acinclude_fix_DVB_API_VERSION_check_for_gcc5.patch \
+SRC_URI = "git://github.com/oe-alliance/tuxtxt.git;protocol=https;branch=master \
            ${@bb.utils.contains('DISTRO_FEATURES', 'tuxtxtfhd', ' \
            file://tuxtxt.ttf \
            file://tuxtxt_nonbold.ttf \

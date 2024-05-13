@@ -12,11 +12,7 @@ SRCREV = "${AUTOREV}"
 PV = "2.0+git"
 PKGV = "2.0+git${GITPKGV}"
 
-SRC_URI = "git://github.com/OpenPLi/tuxtxt.git;protocol=https;branch=master \
-    file://tuxtxt_getPressedKey.patch \
-    file://acinclude_fix_DVB_API_VERSION_check_for_gcc5.patch \
-    file://0001-fix-secfault-w-use-wrong-line_length.patch \
-"
+SRC_URI = "git://github.com/oe-alliance/tuxtxt.git;protocol=https;branch=master"
 
 SRC_URI:append = " \
     ${@bb.utils.contains('DISTRO_FEATURES', 'tuxtxtfhd', 'file://libtuxtxt_FHD.patch', '', d)} \
