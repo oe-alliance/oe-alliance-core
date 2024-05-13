@@ -1,0 +1,10 @@
+#!/bin/sh
+
+[ "x$IFACE" = "xlo" ] && exit 0
+[ "x$IFACE" = "x--all" ] && exit 0
+grep -Eq "^#?\s*iface\s+${IFACE}\s+inet6\s+.*$" /etc/network/interfaces && exit 0
+
+kill -9 $(cat /var/run/odhcp6c.${IFACE}.pid) 2>/dev/null
+
+exit 0
+
