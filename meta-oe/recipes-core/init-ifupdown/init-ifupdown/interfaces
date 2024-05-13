@@ -6,5 +6,4 @@ iface lo inet loopback
 
 auto eth0
 iface eth0 inet dhcp
-  hostname $(hostname)
-
+iface eth0 inet6 dhcp

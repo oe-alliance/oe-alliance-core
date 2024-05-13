@@ -1,3 +1,4 @@
+FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}/${DISTRO_NAME}:"
 FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 FILESEXTRAPATHS:prepend := "${THISDIR}/${MACHINE}:"
 
