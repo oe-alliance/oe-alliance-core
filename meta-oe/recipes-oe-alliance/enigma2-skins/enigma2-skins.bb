@@ -28,7 +28,9 @@ SRC_URI:append = " \
 ALLOW_EMPTY:${PN} = "1"
 FILES:${PN} = "/usr/share/enigma2 /usr/share/fonts"
 FILES:${PN}-meta = "${datadir}/meta"
-RDEPENDS:${PN}-meta = ""
+RDEPENDS:${PN}-meta = " \
+    ${PYTHON_PN}-six \
+    "
 
 inherit autotools-brokensep
 
