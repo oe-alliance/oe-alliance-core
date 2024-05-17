@@ -1,19 +1,14 @@
-From 07793106b93e7a4b298086c8c0fe1a4cd71e93d7 Mon Sep 17 00:00:00 2001
-From: Markus Volk <f_l_k@t-online.de>
-Date: Wed, 29 Jun 2022 16:10:58 +0200
-Subject: [PATCH] FindLibDvd.cmake: allow to build with external libdvd
-
-After recent FindLibDvd.cmake rework libdvd can only be built internally
-or by using a tarball. Allow shared build using pkgconfig.
-
-Patch-Status: Inappropriate
+From 279dc696f32e7c9fa643fb0875773044761d539e Mon Sep 17 00:00:00 2001
+From: Captain <openatv@gmail.com>
+Date: Sat, 18 May 2024 05:13:24 +0200
+Subject: [PATCH 10/14] FindLibDvd.cmake-build-with-external-source
 
 ---
  cmake/modules/FindLibDvd.cmake | 61 ++++++++++++++++++++++------------
  1 file changed, 40 insertions(+), 21 deletions(-)
 
 diff --git a/cmake/modules/FindLibDvd.cmake b/cmake/modules/FindLibDvd.cmake
-index dd7d8a2..693f83b 100644
+index dd7d8a26d2..693f83b1ad 100644
 --- a/cmake/modules/FindLibDvd.cmake
 +++ b/cmake/modules/FindLibDvd.cmake
 @@ -1,29 +1,48 @@
@@ -86,3 +81,6 @@ index dd7d8a2..693f83b 100644
 +  endif()
  
  mark_as_advanced(LIBDVD_INCLUDE_DIRS LIBDVD_LIBRARIES)
+-- 
+2.45.1.windows.1
+

@@ -3,7 +3,7 @@ require recipes-mediacenter/kodi/stb-kodi_${PV}.bb
 DEPENDS += "kodiegl"
 RDEPENDS:${PN} += "kodiegl"
 
-SRC_URI:append = " file://vuplus-fix-exception-duo4k-20.patch"
+SRC_URI:append = " file://vuplus-fix-exception-duo4k-21.patch"
 
 PROVIDES += "virtual/kodi"
 RPROVIDES:${PN} += "virtual-kodi"

@@ -1,16 +1,14 @@
-From eef97984f1e8e7c0a82551113e82e582aec584a0 Mon Sep 17 00:00:00 2001
-From: NickerSK <nickersk@gmail.com>
-Date: Wed, 10 Mar 2021 09:45:23 +0000
-Subject: [PATCH] adapt window system registration
-
-d8cb6f7147a platform/linux: add CPlatformLinux to register window systems
+From 01a708f99be106e4560e733c56b940dbf250c84c Mon Sep 17 00:00:00 2001
+From: Captain <openatv@gmail.com>
+Date: Sat, 18 May 2024 05:09:21 +0200
+Subject: [PATCH 07/14] adapt-window-system-registration
 
 ---
  xbmc/platform/linux/PlatformLinux.cpp | 12 ++++++++++++
  1 file changed, 12 insertions(+)
 
 diff --git a/xbmc/platform/linux/PlatformLinux.cpp b/xbmc/platform/linux/PlatformLinux.cpp
-index a99ceef..6761686 100644
+index 25eb9818da..7751f4e49c 100644
 --- a/xbmc/platform/linux/PlatformLinux.cpp
 +++ b/xbmc/platform/linux/PlatformLinux.cpp
 @@ -33,6 +33,9 @@
@@ -33,7 +31,7 @@ index a99ceef..6761686 100644
  #if defined(HAVE_GBM)
  #include "windowing/gbm/WinSystemGbmGLContext.h"
  #endif
-@@ -86,6 +92,9 @@ bool CPlatformLinux::InitStageOne()
+@@ -74,6 +80,9 @@ bool CPlatformLinux::InitStageOne()
  #if defined(HAVE_X11)
    KODI::WINDOWING::X11::CWinSystemX11GLESContext::Register();
  #endif
@@ -43,7 +41,7 @@ index a99ceef..6761686 100644
  #if defined(HAVE_GBM)
    KODI::WINDOWING::GBM::CWinSystemGbmGLESContext::Register();
  #endif
-@@ -98,6 +107,9 @@ bool CPlatformLinux::InitStageOne()
+@@ -86,6 +95,9 @@ bool CPlatformLinux::InitStageOne()
  #if defined(HAVE_X11)
    KODI::WINDOWING::X11::CWinSystemX11GLContext::Register();
  #endif
@@ -53,3 +51,6 @@ index a99ceef..6761686 100644
  #if defined(HAVE_GBM)
    KODI::WINDOWING::GBM::CWinSystemGbmGLContext::Register();
  #endif
+-- 
+2.45.1.windows.1
+

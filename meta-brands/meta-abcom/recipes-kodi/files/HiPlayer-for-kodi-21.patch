@@ -1,12 +1,12 @@
-From 4714a10e305f0842beba59cc7563ea5412be4db1 Mon Sep 17 00:00:00 2001
-From: Captain <captain.onboard@web.de>
-Date: Sun, 13 Jun 2021 13:10:57 +0200
-Subject: [PATCH] HiPlayer-for-kodi-20
+From 268dc44b8e8978b87205efc1fbb55a8da8832b89 Mon Sep 17 00:00:00 2001
+From: Captain <openatv@gmail.com>
+Date: Sat, 18 May 2024 09:23:24 +0200
+Subject: [PATCH] HiPlayer-for-kodi-21
 
 ---
  cmake/treedata/common/cores.txt               |    1 +
  xbmc/cores/HiPlayer/CMakeLists.txt            |    9 +
- xbmc/cores/HiPlayer/HiPlayer.cpp              |  597 +++++++
+ xbmc/cores/HiPlayer/HiPlayer.cpp              |  600 +++++++
  xbmc/cores/HiPlayer/HiPlayer.h                |  151 ++
  xbmc/cores/HiPlayer/HiPlayerAudio.cpp         |   80 +
  xbmc/cores/HiPlayer/HiPlayerAudio.h           |   23 +
@@ -16,7 +16,7 @@ Subject: [PATCH] HiPlayer-for-kodi-20
  xbmc/cores/HiPlayer/hisilicon.h               |  287 ++++
  .../playercorefactory/PlayerCoreConfig.cpp    |   10 +
  .../playercorefactory/PlayerCoreFactory.cpp   |   12 +
- 12 files changed, 2718 insertions(+)
+ 12 files changed, 2721 insertions(+)
  create mode 100644 xbmc/cores/HiPlayer/CMakeLists.txt
  create mode 100644 xbmc/cores/HiPlayer/HiPlayer.cpp
  create mode 100644 xbmc/cores/HiPlayer/HiPlayer.h
@@ -28,11 +28,11 @@ Subject: [PATCH] HiPlayer-for-kodi-20
  create mode 100644 xbmc/cores/HiPlayer/hisilicon.h
 
 diff --git a/cmake/treedata/common/cores.txt b/cmake/treedata/common/cores.txt
-index d23939d314..599b76ce4b 100644
+index cbde630e7d..5c9b75ebb6 100644
 --- a/cmake/treedata/common/cores.txt
 +++ b/cmake/treedata/common/cores.txt
-@@ -6,3 +6,4 @@ xbmc/cores/DllLoader/exports/util      cores/dll-loader/exports/util
- xbmc/cores/ExternalPlayer              cores/externalplayer
+@@ -8,3 +8,4 @@ xbmc/cores/Enigma2Player               cores/enigma2player
+ xbmc/cores/GstPlayer                   cores/gstplayer
  xbmc/cores/paplayer                    cores/paplayer
  xbmc/cores/playercorefactory           cores/playercorefactory
 +xbmc/cores/HiPlayer                    cores/hiplayer
@@ -53,7 +53,7 @@ index 0000000000..07a825340e
 +core_add_library(hiplayer)
 diff --git a/xbmc/cores/HiPlayer/HiPlayer.cpp b/xbmc/cores/HiPlayer/HiPlayer.cpp
 new file mode 100644
-index 0000000000..5271b77d87
+index 0000000000..4282e8ec8c
 --- /dev/null
 +++ b/xbmc/cores/HiPlayer/HiPlayer.cpp
 @@ -0,0 +1,600 @@
@@ -931,7 +931,7 @@ index 0000000000..a03dafb1fa
 +};
 diff --git a/xbmc/cores/HiPlayer/HiPlayerVideo.cpp b/xbmc/cores/HiPlayer/HiPlayerVideo.cpp
 new file mode 100644
-index 0000000000..818ec24650
+index 0000000000..cc40a8a4f3
 --- /dev/null
 +++ b/xbmc/cores/HiPlayer/HiPlayerVideo.cpp
 @@ -0,0 +1,1423 @@
@@ -2360,7 +2360,7 @@ index 0000000000..818ec24650
 +}
 diff --git a/xbmc/cores/HiPlayer/HiPlayerVideo.h b/xbmc/cores/HiPlayer/HiPlayerVideo.h
 new file mode 100644
-index 0000000000..bc3d9d515a
+index 0000000000..aa04d3bdb6
 --- /dev/null
 +++ b/xbmc/cores/HiPlayer/HiPlayerVideo.h
 @@ -0,0 +1,117 @@
@@ -2789,12 +2789,12 @@ index 0000000000..6563348f92
 +
 +#endif
 diff --git a/xbmc/cores/playercorefactory/PlayerCoreConfig.cpp b/xbmc/cores/playercorefactory/PlayerCoreConfig.cpp
-index 545062e050..24d5b9e336 100644
+index 513eed3dbc..6c439078d8 100644
 --- a/xbmc/cores/playercorefactory/PlayerCoreConfig.cpp
 +++ b/xbmc/cores/playercorefactory/PlayerCoreConfig.cpp
-@@ -22,6 +22,10 @@
- 
- #include <utility>
+@@ -26,6 +26,10 @@
+ #include "cores/GstPlayer/GstPlayer.h"
+ #endif
  
 +#if defined(HAS_HIPLAYER)
 +#include "cores/HiPlayer/HiPlayer.h"
@@ -2803,7 +2803,7 @@ index 545062e050..24d5b9e336 100644
  CPlayerCoreConfig::CPlayerCoreConfig(std::string name,
                                       std::string type,
                                       const TiXmlElement* pConfig,
-@@ -56,6 +60,12 @@ std::shared_ptr<IPlayer> CPlayerCoreConfig::CreatePlayer(IPlayerCallback& callba
+@@ -60,6 +64,12 @@ std::shared_ptr<IPlayer> CPlayerCoreConfig::CreatePlayer(IPlayerCallback& callba
    {
      player = std::make_shared<KODI::RETRO::CRetroPlayer>(callback);
    }
@@ -2813,16 +2813,16 @@ index 545062e050..24d5b9e336 100644
 +    player = std::make_shared<CHiPlayer>(callback);
 +  }
 +#endif
-   else if (m_type.compare("external") == 0)
+ #if defined(HAVE_LIBGSTREAMER)
+   else if (m_type.compare("gstreamer") == 0)
    {
-     player = std::make_shared<CExternalPlayer>(callback);
 diff --git a/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp b/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp
-index 34792a477e..faa1f55277 100644
+index 2744daf06e..1aeaae6d8a 100644
 --- a/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp
 +++ b/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp
-@@ -29,6 +29,10 @@
- #include <mutex>
- #include <sstream>
+@@ -34,6 +34,10 @@
+   #include "cores/GstPlayer/GstPlayer.h"
+ #endif
  
 +#if defined(HAS_HIPLAYER)
 +  #include "cores/HiPlayer/HiPlayer.h"
@@ -2830,8 +2830,8 @@ index 34792a477e..faa1f55277 100644
 +
  #define PLAYERCOREFACTORY_XML "playercorefactory.xml"
  
- CPlayerCoreFactory::CPlayerCoreFactory(const CProfileManager &profileManager) :
-@@ -345,6 +349,12 @@ bool CPlayerCoreFactory::LoadConfiguration(const std::string &file, bool clear)
+ CPlayerCoreFactory::CPlayerCoreFactory(const CProfileManager& profileManager)
+@@ -365,6 +369,12 @@ bool CPlayerCoreFactory::LoadConfiguration(const std::string &file, bool clear)
      m_vecCoreSelectionRules.clear();
  
      // Builtin players
@@ -2841,15 +2841,18 @@ index 34792a477e..faa1f55277 100644
 +    HiPlayer->m_bPlaysVideo = true;
 +    m_vecPlayerConfigs.emplace_back(std::move(HiPlayer));
 +#endif
-     auto VideoPlayer = std::make_unique<CPlayerCoreConfig>("VideoPlayer", "video", nullptr);
-     VideoPlayer->m_bPlaysAudio = true;
-     VideoPlayer->m_bPlaysVideo = true;
-@@ -380,6 +390,8 @@ bool CPlayerCoreFactory::LoadConfiguration(const std::string &file, bool clear)
+ #if defined(HAVE_LIBGSTREAMER)
+     auto GstPlayer = std::make_unique<CPlayerCoreConfig>("GstPlayer", "gstreamer", nullptr);
+     GstPlayer->m_bPlaysAudio = true;
+@@ -412,6 +422,8 @@ bool CPlayerCoreFactory::LoadConfiguration(const std::string &file, bool clear)
          internaltype = "video";
        else if (type == "paplayer")
          internaltype = "music";
 +      else if (type == "hiplayer")
 +        internaltype = "hiplayer";
-       else if (type == "externalplayer")
-         internaltype = "external";
- 
+ #if defined(HAVE_LIBGSTREAMER)
+       else if (type == "gstplayer")
+         internaltype = "gstreamer";
+-- 
+2.45.1.windows.1
+

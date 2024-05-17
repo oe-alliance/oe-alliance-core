@@ -1,14 +1,14 @@
-From b10cce4af5fbd2e9d6af2b6446bc49e5f06aa716 Mon Sep 17 00:00:00 2001
-From: NickerSK <nickersk@gmail.com>
-Date: Thu, 11 Nov 2021 08:55:33 +0100
-Subject: [PATCH] kodi 20 - updated to latest git rev, updated patches
+From 29c1f8ad40ddaf1f4c0125a886664827b993a8c6 Mon Sep 17 00:00:00 2001
+From: Captain <openatv@gmail.com>
+Date: Sat, 18 May 2024 05:12:04 +0200
+Subject: [PATCH 09/14] reinstate-platform-defines
 
 ---
  cmake/scripts/common/ArchSetup.cmake | 4 ++++
  1 file changed, 4 insertions(+)
 
 diff --git a/cmake/scripts/common/ArchSetup.cmake b/cmake/scripts/common/ArchSetup.cmake
-index 97a09b4433..41652b63ff 100644
+index a83d2ae198..7a18d06afc 100644
 --- a/cmake/scripts/common/ArchSetup.cmake
 +++ b/cmake/scripts/common/ArchSetup.cmake
 @@ -156,6 +156,10 @@ if(NOT DEFINED NEON OR NEON)
@@ -22,3 +22,6 @@ index 97a09b4433..41652b63ff 100644
  if(NOT MSVC)
    # these options affect all code built by cmake including external projects.
    add_options(ALL_LANGUAGES ALL_BUILDS
+-- 
+2.45.1.windows.1
+

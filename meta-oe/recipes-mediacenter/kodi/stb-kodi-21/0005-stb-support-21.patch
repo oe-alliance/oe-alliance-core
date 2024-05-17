@@ -1,7 +1,7 @@
-From 21c11eb93247b453eedad74fc5a77de7fd268e30 Mon Sep 17 00:00:00 2001
-From: Captain <captain.onboard@web.de>
-Date: Wed, 3 Jan 2024 21:16:03 +0100
-Subject: [PATCH] stb-support-21
+From d592c35d8cb92795a3024634b6397ae9f5e5528c Mon Sep 17 00:00:00 2001
+From: Captain <openatv@gmail.com>
+Date: Sat, 18 May 2024 05:06:22 +0200
+Subject: [PATCH 05/14] stb-support-21
 
 ---
  xbmc/addons/addoninfo/AddonInfoBuilder.cpp    |   12 +
@@ -230,7 +230,7 @@ index 0000000000..dda1758558
 +};
 diff --git a/xbmc/platform/linux/input/LinuxInputDevices.cpp b/xbmc/platform/linux/input/LinuxInputDevices.cpp
 new file mode 100644
-index 0000000000..3cc2882d60
+index 0000000000..af088c5f40
 --- /dev/null
 +++ b/xbmc/platform/linux/input/LinuxInputDevices.cpp
 @@ -0,0 +1,1593 @@
@@ -1829,7 +1829,7 @@ index 0000000000..3cc2882d60
 +*/
 diff --git a/xbmc/platform/linux/input/LinuxInputDevices.h b/xbmc/platform/linux/input/LinuxInputDevices.h
 new file mode 100644
-index 0000000000..23794ab925
+index 0000000000..5e2885f5ff
 --- /dev/null
 +++ b/xbmc/platform/linux/input/LinuxInputDevices.h
 @@ -0,0 +1,125 @@
@@ -1973,10 +1973,10 @@ index ff7ead6b42..18446f79c9 100644
  #include <GLES2/gl2.h>
  #include <GLES2/gl2ext.h>
 diff --git a/xbmc/utils/CMakeLists.txt b/xbmc/utils/CMakeLists.txt
-index 68c5c666af..db4c73d9a8 100644
+index 87429d34c3..57e21f8ab8 100644
 --- a/xbmc/utils/CMakeLists.txt
 +++ b/xbmc/utils/CMakeLists.txt
-@@ -185,6 +185,11 @@ set(HEADERS ActorProtocol.h
+@@ -187,6 +187,11 @@ set(HEADERS ActorProtocol.h
              XMLUtils.h
              XTimeUtils.h)
  
@@ -2129,7 +2129,7 @@ index 0000000000..3f845cbfc4
 +bool dreambox_mode_to_resolution(const char *mode, RESOLUTION_INFO *res);
 +
 diff --git a/xbmc/utils/EGLUtils.cpp b/xbmc/utils/EGLUtils.cpp
-index 7c5e70938f..d843f01d7f 100644
+index 85f889dc9f..4fcb79e32e 100644
 --- a/xbmc/utils/EGLUtils.cpp
 +++ b/xbmc/utils/EGLUtils.cpp
 @@ -22,6 +22,19 @@
@@ -2171,15 +2171,15 @@ index 7c5e70938f..d843f01d7f 100644
  void EglErrorCallback(EGLenum error,
                        const char* command,
                        EGLint messageType,
-@@ -117,6 +133,7 @@ void EglErrorCallback(EGLenum error,
- 
-   CLog::Log(LOGDEBUG, "EGL Debugging:\nError: {}\nCommand: {}\nType: {}\nMessage: {}", errorStr, command, typeStr, message);
+@@ -118,6 +134,7 @@ void EglErrorCallback(EGLenum error,
+   CLog::Log(LOGDEBUG, "EGL Debugging:\nError: {}\nCommand: {}\nType: {}\nMessage: {}", errorStr,
+             command, typeStr, message ? message : "");
  }
 +#endif
  
  std::set<std::string> CEGLUtils::GetClientExtensions()
  {
-@@ -171,6 +188,7 @@ void CEGLUtils::Log(int logLevel, const std::string& what)
+@@ -172,6 +189,7 @@ void CEGLUtils::Log(int logLevel, const std::string& what)
  CEGLContextUtils::CEGLContextUtils(EGLenum platform, std::string const& platformExtension)
  : m_platform{platform}
  {
@@ -2187,7 +2187,7 @@ index 7c5e70938f..d843f01d7f 100644
    if (CEGLUtils::HasClientExtension("EGL_KHR_debug"))
    {
      auto eglDebugMessageControl = CEGLUtils::GetRequiredProcAddress<PFNEGLDEBUGMESSAGECONTROLKHRPROC>("eglDebugMessageControlKHR");
-@@ -183,6 +201,7 @@ CEGLContextUtils::CEGLContextUtils(EGLenum platform, std::string const& platform
+@@ -184,6 +202,7 @@ CEGLContextUtils::CEGLContextUtils(EGLenum platform, std::string const& platform
  
      eglDebugMessageControl(EglErrorCallback, eglDebugAttribs);
    }
@@ -2195,7 +2195,7 @@ index 7c5e70938f..d843f01d7f 100644
  
    m_platformSupported = CEGLUtils::HasClientExtension("EGL_EXT_platform_base") && CEGLUtils::HasClientExtension(platformExtension);
  }
-@@ -400,11 +419,13 @@ bool CEGLContextUtils::CreateContext(CEGLAttributesVec contextAttribs)
+@@ -401,11 +420,13 @@ bool CEGLContextUtils::CreateContext(CEGLAttributesVec contextAttribs)
    if (CEGLUtils::HasExtension(m_eglDisplay, "EGL_IMG_context_priority"))
      contextAttribs.Add({{EGL_CONTEXT_PRIORITY_LEVEL_IMG, EGL_CONTEXT_PRIORITY_HIGH_IMG}});
  
@@ -5867,7 +5867,7 @@ index 0000000000..3a73b3e5d7
 +};
 diff --git a/xbmc/windowing/egl/WinEventsSTB.cpp b/xbmc/windowing/egl/WinEventsSTB.cpp
 new file mode 100644
-index 0000000000..720b493146
+index 0000000000..4c5d04ccf1
 --- /dev/null
 +++ b/xbmc/windowing/egl/WinEventsSTB.cpp
 @@ -0,0 +1,92 @@
@@ -6185,7 +6185,7 @@ index 0000000000..f8efc14f85
 +};
 diff --git a/xbmc/windowing/egl/WinSystemstb.cpp b/xbmc/windowing/egl/WinSystemstb.cpp
 new file mode 100644
-index 0000000000..30e73ccbd2
+index 0000000000..896ad21d1a
 --- /dev/null
 +++ b/xbmc/windowing/egl/WinSystemstb.cpp
 @@ -0,0 +1,547 @@
@@ -6822,5 +6822,5 @@ index 0000000000..c2d176c017
 +  std::unique_ptr<CLibInputHandler> m_libinput;
 +};
 -- 
-2.43.0.windows.1
+2.45.1.windows.1
 

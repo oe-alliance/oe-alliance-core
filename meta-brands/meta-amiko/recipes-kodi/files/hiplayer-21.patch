@@ -8,12 +8,11 @@ Subject: [PATCH] hiplayer-21
  cmake/platform/linux/stb.cmake                |    4 +-
  cmake/treedata/common/cores.txt               |    1 +
  cmake/treedata/linux/subdirs.txt              |    1 +
- system/playercorefactory.xml                  |    1 +
  system/settings/settings.xml                  |    6 +
  xbmc/application/Application.cpp              |   12 +-
  .../application/ApplicationVolumeHandling.cpp |   14 +-
  xbmc/commons/ilog.h                           |    1 +
- xbmc/cores/VideoPlayer/VideoPlayer.cpp        |  125 +-
+ xbmc/cores/VideoPlayer/VideoPlayer.cpp        |  127 +-
  xbmc/cores/VideoPlayer/VideoPlayer.h          |    7 +
  .../VideoRenderers/HwDecRender/CMakeLists.txt |    3 +
  .../HwDecRender/RendererHisi.cpp              |  164 ++
@@ -160,7 +159,7 @@ Subject: [PATCH] hiplayer-21
  xbmc/settings/SettingConditions.cpp           |    3 +
  xbmc/settings/Settings.h                      |    1 +
  xbmc/windowing/egl/WinSystemSTBContext.cpp    |    3 +
- 156 files changed, 53556 insertions(+), 7 deletions(-)
+ 155 files changed, 53557 insertions(+), 7 deletions(-)
  create mode 100644 xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/RendererHisi.cpp
  create mode 100644 xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/RendererHisi.h
  create mode 100644 xbmc/cores/hiplayer/CMakeLists.txt
@@ -303,10 +302,10 @@ Subject: [PATCH] hiplayer-21
  create mode 100644 xbmc/platform/linux/hisi/hifb.h
 
 diff --git a/addons/resource.language.en_gb/resources/strings.po b/addons/resource.language.en_gb/resources/strings.po
-index 78820a3b286..e05b2f16b41 100644
+index a0f0d79fb0f..91bbbbac44a 100644
 --- a/addons/resource.language.en_gb/resources/strings.po
 +++ b/addons/resource.language.en_gb/resources/strings.po
-@@ -7476,6 +7476,17 @@ msgstr ""
+@@ -7469,6 +7469,17 @@ msgstr ""
  
  #empty strings from id 13458 to 13459
  
@@ -325,7 +324,7 @@ index 78820a3b286..e05b2f16b41 100644
  msgctxt "#13460"
  msgid "Use HEVC VAAPI"
 diff --git a/cmake/platform/linux/stb.cmake b/cmake/platform/linux/stb.cmake
-index e1fe54a13d2..072e601acea 100644
+index 7d7e14205f8..f6452f96431 100644
 --- a/cmake/platform/linux/stb.cmake
 +++ b/cmake/platform/linux/stb.cmake
 @@ -59,9 +59,7 @@ elseif(WITH_PLATFORM STREQUAL "edision-cortexa15")
@@ -340,11 +339,11 @@ index e1fe54a13d2..072e601acea 100644
  
  
 diff --git a/cmake/treedata/common/cores.txt b/cmake/treedata/common/cores.txt
-index d23939d314e..4d496979533 100644
+index cbde630e7dd..b111eac0950 100644
 --- a/cmake/treedata/common/cores.txt
 +++ b/cmake/treedata/common/cores.txt
-@@ -6,3 +6,4 @@ xbmc/cores/DllLoader/exports/util      cores/dll-loader/exports/util
- xbmc/cores/ExternalPlayer              cores/externalplayer
+@@ -8,3 +8,4 @@ xbmc/cores/Enigma2Player               cores/enigma2player
+ xbmc/cores/GstPlayer                   cores/gstplayer
  xbmc/cores/paplayer                    cores/paplayer
  xbmc/cores/playercorefactory           cores/playercorefactory
 +xbmc/cores/hiplayer                    cores/hiplayer
@@ -360,20 +359,8 @@ index a8e81940385..391bc65e974 100644
  xbmc/platform/linux/input           platform/linux/input
  xbmc/platform/linux/network         platform/linux/network
  xbmc/platform/linux/peripherals     platform/linux/peripherals
-diff --git a/system/playercorefactory.xml b/system/playercorefactory.xml
-index f928311cf0b..dc5c232a0a0 100644
---- a/system/playercorefactory.xml
-+++ b/system/playercorefactory.xml
-@@ -22,6 +22,7 @@
-     <rule name="streams" internetstream="true">
-       <rule name="aacp/sdp" mimetypes="audio/aacp|application/sdp" player="VideoPlayer" />
-       <rule name="mp2" mimetypes="application/octet-stream" filetypes="mp2" player="PAPlayer" />
-+      <rule name="netflix" filename="*manifest*"  player="VideoPlayer" />
-     </rule>
- 
-     <!-- DVDs -->
 diff --git a/system/settings/settings.xml b/system/settings/settings.xml
-index e4475c06393..146426d1070 100755
+index 6f6b0236248..02a767c7b03 100755
 --- a/system/settings/settings.xml
 +++ b/system/settings/settings.xml
 @@ -60,6 +60,12 @@
@@ -390,10 +377,10 @@ index e4475c06393..146426d1070 100755
            <dependencies>
              <dependency type="visible">
 diff --git a/xbmc/application/Application.cpp b/xbmc/application/Application.cpp
-index 720e473cc4a..e485de51af6 100644
+index 299b533f2d3..57214c2ce6e 100644
 --- a/xbmc/application/Application.cpp
 +++ b/xbmc/application/Application.cpp
-@@ -99,6 +99,10 @@
+@@ -101,6 +101,10 @@
  #include "network/EventServer.h"
  #include "network/Network.h"
  #include "network/ZeroconfBrowser.h"
@@ -404,7 +391,7 @@ index 720e473cc4a..e485de51af6 100644
  #ifdef HAS_UPNP
  #include "network/upnp/UPnP.h"
  #endif
-@@ -170,7 +174,7 @@
+@@ -173,7 +177,7 @@
  #include "platform/win32/threads/Win32Exception.h"
  #endif
  
@@ -413,7 +400,7 @@ index 720e473cc4a..e485de51af6 100644
  #include <memory>
  #include <mutex>
  
-@@ -370,6 +374,9 @@ bool CApplication::Create()
+@@ -373,6 +377,9 @@ bool CApplication::Create()
    // Init our DllLoaders emu env
    init_emu_environ();
  
@@ -423,7 +410,7 @@ index 720e473cc4a..e485de51af6 100644
    PrintStartupLog();
  
    // initialize network protocols
-@@ -2053,6 +2060,9 @@ bool CApplication::Stop(int exitCode)
+@@ -2079,6 +2086,9 @@ bool CApplication::Stop(int exitCode)
    const auto appPlayer = GetComponent<CApplicationPlayer>();
    appPlayer->ClosePlayer();
  
@@ -478,7 +465,7 @@ index 9fe074af414..2c522196a9d 100644
  // extra masks - from bit 5
  constexpr int LOGMASKBIT = 5;
 diff --git a/xbmc/cores/VideoPlayer/VideoPlayer.cpp b/xbmc/cores/VideoPlayer/VideoPlayer.cpp
-index a18f350d470..1ac288f0f48 100644
+index bf3f6067982..419bd51b26d 100644
 --- a/xbmc/cores/VideoPlayer/VideoPlayer.cpp
 +++ b/xbmc/cores/VideoPlayer/VideoPlayer.cpp
 @@ -61,6 +61,10 @@
@@ -523,10 +510,12 @@ index a18f350d470..1ac288f0f48 100644
    m_VideoPlayerSubtitle = new CVideoPlayerSubtitle(&m_overlayContainer, *m_processInfo);
    m_VideoPlayerTeletext = new CDVDTeletextData(*m_processInfo);
    m_VideoPlayerRadioRDS = new CDVDRadioRDSData(*m_processInfo);
-@@ -636,6 +657,14 @@ CVideoPlayer::CVideoPlayer(IPlayerCallback& callback)
+@@ -634,6 +655,16 @@ CVideoPlayer::CVideoPlayer(IPlayerCallback& callback)
+   m_HasAudio = false;
+   m_UpdateStreamDetails = false;
  
-   memset(&m_SpeedState, 0, sizeof(m_SpeedState));
- 
++  memset(&m_SpeedState, 0, sizeof(m_SpeedState));
++
 +#ifdef USE_HIPLAYER
 +  m_hiplayer_mode		= CServiceBroker::GetSettingsComponent()->GetSettings()->GetBool(CSettings::SETTING_VIDEOPLAYER_USEHIPLAYER);
 +  m_use_hicodec			= m_hiplayer_mode;
@@ -538,7 +527,7 @@ index a18f350d470..1ac288f0f48 100644
    m_SkipCommercials = true;
  
    m_processInfo.reset(CProcessInfo::CreateInstance());
-@@ -670,6 +699,83 @@ bool CVideoPlayer::OpenFile(const CFileItem& file, const CPlayerOptions &options
+@@ -668,6 +699,83 @@ bool CVideoPlayer::OpenFile(const CFileItem& file, const CPlayerOptions &options
  {
    CLog::Log(LOGINFO, "VideoPlayer::OpenFile: {}", CURL::GetRedacted(file.GetPath()));
  
@@ -622,7 +611,7 @@ index a18f350d470..1ac288f0f48 100644
    if (IsRunning())
    {
      CDVDMsgOpenFile::FileParams params;
-@@ -1535,6 +1641,12 @@ void CVideoPlayer::Process()
+@@ -1531,6 +1639,12 @@ void CVideoPlayer::Process()
        {
          m_VideoPlayerVideo->SendMessage(std::make_shared<CDVDMsg>(CDVDMsg::VIDEO_DRAIN));
        }
@@ -635,7 +624,7 @@ index a18f350d470..1ac288f0f48 100644
  
        m_CurrentAudio.inited = false;
        m_CurrentVideo.inited = false;
-@@ -2642,6 +2754,15 @@ void CVideoPlayer::HandleMessages()
+@@ -2631,6 +2745,15 @@ void CVideoPlayer::HandleMessages()
  
        FlushBuffers(DVD_NOPTS_VALUE, true, true);
        m_renderManager.Flush(false, false);
@@ -652,10 +641,10 @@ index a18f350d470..1ac288f0f48 100644
        m_pSubtitleDemuxer.reset();
        m_subtitleDemuxerMap.clear();
 diff --git a/xbmc/cores/VideoPlayer/VideoPlayer.h b/xbmc/cores/VideoPlayer/VideoPlayer.h
-index 35708a9436f..adb3c65e869 100644
+index 01cbca01197..8960c382b2d 100644
 --- a/xbmc/cores/VideoPlayer/VideoPlayer.h
 +++ b/xbmc/cores/VideoPlayer/VideoPlayer.h
-@@ -580,4 +580,11 @@ protected:
+@@ -589,4 +589,11 @@ protected:
    bool m_UpdateStreamDetails;
  
    std::atomic<bool> m_displayLost;
@@ -683,7 +672,7 @@ index 8598052b418..963e0001e86 100644
  if(SOURCES)
 diff --git a/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/RendererHisi.cpp b/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/RendererHisi.cpp
 new file mode 100644
-index 00000000000..24ce49c49da
+index 00000000000..c7117c66c66
 --- /dev/null
 +++ b/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/RendererHisi.cpp
 @@ -0,0 +1,164 @@
@@ -853,7 +842,7 @@ index 00000000000..24ce49c49da
 +}
 diff --git a/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/RendererHisi.h b/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/RendererHisi.h
 new file mode 100644
-index 00000000000..5b3124e6f65
+index 00000000000..9d2bee2faaf
 --- /dev/null
 +++ b/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/RendererHisi.h
 @@ -0,0 +1,56 @@
@@ -54904,7 +54893,7 @@ index e6e59fe4cca..7eea143c14e 100644
 +#endif
 \ No newline at end of file
 diff --git a/xbmc/settings/SettingConditions.cpp b/xbmc/settings/SettingConditions.cpp
-index 45997a36a41..baf8408524d 100644
+index 1f11a4995ee..26cc059e7b2 100644
 --- a/xbmc/settings/SettingConditions.cpp
 +++ b/xbmc/settings/SettingConditions.cpp
 @@ -408,6 +408,9 @@ void CSettingConditions::Initialize()
@@ -54918,7 +54907,7 @@ index 45997a36a41..baf8408524d 100644
    m_simpleConditions.emplace("have_libva");
  #endif
 diff --git a/xbmc/settings/Settings.h b/xbmc/settings/Settings.h
-index 5d01b07a33c..e0d691f85ea 100644
+index bfc5e6072cd..9a36e4be547 100644
 --- a/xbmc/settings/Settings.h
 +++ b/xbmc/settings/Settings.h
 @@ -129,6 +129,7 @@ public:

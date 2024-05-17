@@ -69,7 +69,7 @@ DEPENDS += " \
           "
 inherit gitpkgv
 # 21.0 Omega
-SRCREV = "${AUTOREV}"
+SRCREV = "86b0c771b9da04c7ae2dffcf94d431c186b73ac6"
 
 # 'patch' doesn't support binary diffs
 PATCHTOOL = "git"
@@ -77,22 +77,22 @@ PATCHTOOL = "git"
 PR = "r0"
 
 PV = "21.0+gitr"
-PV_groovy = "4.0.17"
+PV_groovy = "4.0.18"
 PV_commons-lang3 = "3.14.0"
-PV_commons-text = "1.11.0"
+PV_commons-text = "1.12.0"
 
-SRC_URI[groovy.sha256sum] = "05d8fc8f3c3c583850fc7f46c235ca4c8b58024ec8d9d7c16f72548a2b2b5430"
+SRC_URI[groovy.sha256sum] = "4b03aa472ec7848d272893348a656be05d1b3502b30770ea57efa158e61154a6"
 SRC_URI[commons-lang.sha256sum] = "317c3e3fcd5fcca3781a7996ff1e0c50c13244ee961e94e5f6f6d84b84733b16"
-SRC_URI[commons-text.sha256sum] = "4169cb90571fb28fad4c5eea7c1c994c18f1995452f73e8ea7a86087c0e3822e"
+SRC_URI[commons-text.sha256sum] = "265a149c7e0c1ebfe019bbe0226f8c1f6474811054d459145510ea2eed93a11a"
 
-SRC_URI = "git://github.com/xbmc/xbmc.git;protocol=https;branch=master \
-           https://groovy.jfrog.io/artifactory/dist-release-local/groovy-zips/apache-groovy-binary-${PV_groovy}.zip;name=groovy \
+SRC_URI = "git://github.com/xbmc/xbmc.git;protocol=https;branch=Omega \
+           https://archive.apache.org/dist/groovy/${PV_groovy}/distribution/apache-groovy-binary-${PV_groovy}.zip;name=groovy \
            https://dlcdn.apache.org/commons/lang/binaries/commons-lang3-${PV_commons-lang3}-bin.tar.gz;name=commons-lang \
            https://dlcdn.apache.org/commons/text/binaries/commons-text-${PV_commons-text}-bin.tar.gz;name=commons-text \
-           file://0001-flatbuffers-20.patch \
+           file://0001-flatbuffers-21.patch \
            file://0002-readd-Touchscreen-settings.patch \
-           file://0003-shader-nopow-20.patch \
-           file://0004-stb-settings-20.patch \
+           file://0003-shader-nopow-21.patch \
+           file://0004-stb-settings-21.patch \
            file://0005-stb-support-21.patch \
            file://0006-add-winsystemfactory-windowing-init.patch \
            file://0007-adapt-window-system-registration.patch \
@@ -100,8 +100,9 @@ SRC_URI = "git://github.com/xbmc/xbmc.git;protocol=https;branch=master \
            file://0009-reinstate-platform-defines.patch \
            file://0010-FindLibDvd.cmake-build-with-external-source.patch \
            file://0011-cmake-includedirs.patch \
-           ${@bb.utils.contains_any('MACHINE_FEATURES', 'hisil-3798mv200 hisil-3798mv310 hisi hisil', '' , 'file://0100-e2-player.patch', d)} \
-           ${@bb.utils.contains_any('MACHINE_FEATURES', 'hisil-3798mv200 hisil-3798mv310 hisi hisil', '' , 'file://0101-gst-player.patch', d)} \
+           file://0012-taglib2.patch \
+           file://0100-e2-player.patch \
+           file://0101-gst-player.patch \
           "
 
 S = "${WORKDIR}/git"
@@ -245,18 +246,28 @@ RRECOMMENDS:${PN}:append = " libcec \
                              os-release \
                              ${@bb.utils.contains('PACKAGECONFIG', 'x11', 'xrandr xinit mesa-demos', '', d)} \
                              ${PYTHON_PN} \
-                             ${PYTHON_PN}-ctypes \
-                             ${PYTHON_PN}-netclient \
-                             ${PYTHON_PN}-html \
-                             ${PYTHON_PN}-difflib \
-                             ${PYTHON_PN}-json \
-                             ${PYTHON_PN}-shell \
-                             ${PYTHON_PN}-sqlite3 \
                              ${PYTHON_PN}-compression \
-                             ${PYTHON_PN}-xmlrpc \
-                             ${PYTHON_PN}-pycryptodomex \
+                             ${PYTHON_PN}-crypt \
+                             ${PYTHON_PN}-ctypes \
+                             ${PYTHON_PN}-datetime \
+                             ${PYTHON_PN}-db \
+                             ${PYTHON_PN}-image \
+                             ${PYTHON_PN}-difflib \
+                             ${PYTHON_PN}-html \
+                             ${PYTHON_PN}-json \
                              ${PYTHON_PN}-mechanize \
+                             ${PYTHON_PN}-multiprocessing \
+                             ${PYTHON_PN}-netclient \
+                             ${PYTHON_PN}-pillow \
                              ${PYTHON_PN}-profile \
+                             ${PYTHON_PN}-pycryptodome \
+                             ${PYTHON_PN}-pycryptodomex \
+                             ${PYTHON_PN}-regex \
+                             ${PYTHON_PN}-setuptools \
+                             ${PYTHON_PN}-shell \
+                             ${PYTHON_PN}-six \
+                             ${PYTHON_PN}-sqlite3 \
+                             ${PYTHON_PN}-xmlrpc \
                              tzdata-africa \
                              tzdata-americas \
                              tzdata-antarctica \

@@ -1,7 +1,7 @@
-From faedd5f6ebe548da8fff0939f23a5147503de230 Mon Sep 17 00:00:00 2001
-From: Captain <captain.onboard@web.de>
-Date: Wed, 15 Jul 2020 21:42:24 +0200
-Subject: [PATCH] shader-nopow-19
+From ee64fa198bf25ac208e1706dd53d7ba2b77202f3 Mon Sep 17 00:00:00 2001
+From: Captain <openatv@gmail.com>
+Date: Sat, 18 May 2024 05:02:29 +0200
+Subject: [PATCH 03/14] shader-nopow-21
 
 ---
  .../shaders/GLES/2.0/gles_yuv2rgb_basic.frag  | 22 +++++++++++++++--
@@ -10,7 +10,7 @@ Subject: [PATCH] shader-nopow-19
  3 files changed, 43 insertions(+), 5 deletions(-)
 
 diff --git a/system/shaders/GLES/2.0/gles_yuv2rgb_basic.frag b/system/shaders/GLES/2.0/gles_yuv2rgb_basic.frag
-index d76a3b8..47dcd7d 100644
+index d76a3b89e4..47dcd7dbbc 100644
 --- a/system/shaders/GLES/2.0/gles_yuv2rgb_basic.frag
 +++ b/system/shaders/GLES/2.0/gles_yuv2rgb_basic.frag
 @@ -63,9 +63,27 @@ void main()
@@ -44,7 +44,7 @@ index d76a3b8..47dcd7d 100644
  #if defined(KODI_TONE_MAPPING_REINHARD)
    float luma = dot(rgb.rgb, m_coefsDst);
 diff --git a/system/shaders/GLES/2.0/gles_yuv2rgb_bob.frag b/system/shaders/GLES/2.0/gles_yuv2rgb_bob.frag
-index a82de9d..e5078ad 100644
+index a82de9d8db..e5078ad8c2 100644
 --- a/system/shaders/GLES/2.0/gles_yuv2rgb_bob.frag
 +++ b/system/shaders/GLES/2.0/gles_yuv2rgb_bob.frag
 @@ -20,7 +20,7 @@
@@ -87,10 +87,10 @@ index a82de9d..e5078ad 100644
  #if defined(KODI_TONE_MAPPING_REINHARD)
    float luma = dot(rgb.rgb, m_coefsDst);
 diff --git a/xbmc/cores/VideoPlayer/VideoRenderers/VideoShaders/YUV2RGBShaderGLES.cpp b/xbmc/cores/VideoPlayer/VideoRenderers/VideoShaders/YUV2RGBShaderGLES.cpp
-index 7282dbf..956107c 100644
+index 63e4d304a4..6d2c20eda0 100644
 --- a/xbmc/cores/VideoPlayer/VideoRenderers/VideoShaders/YUV2RGBShaderGLES.cpp
 +++ b/xbmc/cores/VideoPlayer/VideoRenderers/VideoShaders/YUV2RGBShaderGLES.cpp
-@@ -52,6 +52,8 @@ BaseYUV2RGBGLSLShader::BaseYUV2RGBGLSLShader(EShaderFormat format,
+@@ -53,6 +53,8 @@ BaseYUV2RGBGLSLShader::BaseYUV2RGBGLSLShader(EShaderFormat format,
    {
      m_colorConversion = true;
      m_defines += "#define XBMC_COL_CONVERSION\n";
@@ -99,3 +99,6 @@ index 7282dbf..956107c 100644
    }
  
    if (toneMap)
+-- 
+2.45.1.windows.1
+

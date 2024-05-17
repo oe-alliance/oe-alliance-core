@@ -1,7 +1,7 @@
-From e8515189834b653e92b0f4e44b66ea8a252cc67e Mon Sep 17 00:00:00 2001
-From: Captain <captain.onboard@web.de>
-Date: Wed, 15 Jul 2020 20:34:38 +0200
-Subject: [PATCH] readd Touchscreen settings
+From 0ad7aba5483b82427813b92125feafc2efd48136 Mon Sep 17 00:00:00 2001
+From: Captain <openatv@gmail.com>
+Date: Sat, 18 May 2024 05:01:04 +0200
+Subject: [PATCH 02/14] readd-Touchscreen-settings
 
 ---
  xbmc/settings/AdvancedSettings.cpp | 16 ++++++++++++++++
@@ -9,10 +9,10 @@ Subject: [PATCH] readd Touchscreen settings
  2 files changed, 22 insertions(+)
 
 diff --git a/xbmc/settings/AdvancedSettings.cpp b/xbmc/settings/AdvancedSettings.cpp
-index dc75c31..747db41 100644
+index b59ba893bd..6d78435f7f 100644
 --- a/xbmc/settings/AdvancedSettings.cpp
 +++ b/xbmc/settings/AdvancedSettings.cpp
-@@ -352,6 +352,12 @@ void CAdvancedSettings::Initialize()
+@@ -358,6 +358,12 @@ void CAdvancedSettings::Initialize()
    m_iEdlCommBreakAutowait = 0;             // Off by default
    m_iEdlCommBreakAutowind = 0;             // Off by default
  
@@ -25,7 +25,7 @@ index dc75c31..747db41 100644
    m_curlconnecttimeout = 30;
    m_curllowspeedtime = 20;
    m_curlretries = 2;
-@@ -957,6 +963,16 @@ void CAdvancedSettings::ParseSettingsFile(const std::string &file)
+@@ -951,6 +957,16 @@ void CAdvancedSettings::ParseSettingsFile(const std::string &file)
      XMLUtils::GetInt(pElement, "commbreakautowind", m_iEdlCommBreakAutowind, -60, 60);        // Between -60 and 60 seconds
    }
  
@@ -43,10 +43,10 @@ index dc75c31..747db41 100644
    TiXmlElement* pPictureExcludes = pRootElement->FirstChildElement("pictureexcludes");
    if (pPictureExcludes)
 diff --git a/xbmc/settings/AdvancedSettings.h b/xbmc/settings/AdvancedSettings.h
-index fc92f1e..a307e3f 100644
+index b5df5118dd..10cd920d69 100644
 --- a/xbmc/settings/AdvancedSettings.h
 +++ b/xbmc/settings/AdvancedSettings.h
-@@ -313,6 +313,12 @@ class CAdvancedSettings : public ISettingCallback, public ISettingsHandler
+@@ -311,6 +311,12 @@ class CAdvancedSettings : public ISettingCallback, public ISettingsHandler
      std::string m_cpuTempCmd;
      std::string m_gpuTempCmd;
  
@@ -59,3 +59,6 @@ index fc92f1e..a307e3f 100644
      /* PVR/TV related advanced settings */
      int m_iPVRTimeCorrection;     /*!< @brief correct all times (epg tags, timer tags, recording tags) by this amount of minutes. defaults to 0. */
      int m_iPVRInfoToggleInterval; /*!< @brief if there are more than 1 pvr gui info item available (e.g. multiple recordings active at the same time), use this toggle delay in milliseconds. defaults to 3000. */
+-- 
+2.45.1.windows.1
+

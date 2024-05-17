@@ -1,0 +1,105 @@
+From dfbf967294e733c7d5a65ca0c67f29bda17bc545 Mon Sep 17 00:00:00 2001
+From: Captain <openatv@gmail.com>
+Date: Sat, 18 May 2024 05:15:39 +0200
+Subject: [PATCH 12/14] taglib2
+
+---
+ xbmc/music/tags/TagLibVFSStream.cpp | 10 +++++-----
+ xbmc/music/tags/TagLibVFSStream.h   | 10 +++++-----
+ 2 files changed, 10 insertions(+), 10 deletions(-)
+
+diff --git a/xbmc/music/tags/TagLibVFSStream.cpp b/xbmc/music/tags/TagLibVFSStream.cpp
+index c5f9c2473f..1515751f80 100644
+--- a/xbmc/music/tags/TagLibVFSStream.cpp
++++ b/xbmc/music/tags/TagLibVFSStream.cpp
+@@ -59,7 +59,7 @@ FileName TagLibVFSStream::name() const
+  * Reads a block of size \a length at the current get pointer.
+  */
+ #if (TAGLIB_MAJOR_VERSION >= 2)
+-ByteVector TagLibVFSStream::readBlock(unsigned long length)
++ByteVector TagLibVFSStream::readBlock(size_t length)
+ #else
+ ByteVector TagLibVFSStream::readBlock(TagLib::ulong length)
+ #endif
+@@ -282,7 +282,7 @@ bool TagLibVFSStream::isOpen() const
+  *
+  * \see Position
+  */
+-void TagLibVFSStream::seek(long offset, Position p)
++void TagLibVFSStream::seek(off_t offset, Position p)
+ {
+   const long fileLen = length();
+   if (m_bIsReadOnly && fileLen > 0)
+@@ -340,7 +340,7 @@ void TagLibVFSStream::clear()
+ /*!
+  * Returns the current offset within the file.
+  */
+-long TagLibVFSStream::tell() const
++off_t TagLibVFSStream::tell() const
+ {
+   int64_t pos = m_file.GetPosition();
+   if(pos > LONG_MAX)
+@@ -352,7 +352,7 @@ long TagLibVFSStream::tell() const
+ /*!
+  * Returns the length of the file.
+  */
+-long TagLibVFSStream::length()
++off_t TagLibVFSStream::length()
+ {
+   return (long)m_file.GetLength();
+ }
+@@ -360,7 +360,7 @@ long TagLibVFSStream::length()
+ /*!
+  * Truncates the file to a \a length.
+  */
+-void TagLibVFSStream::truncate(long length)
++void TagLibVFSStream::truncate(off_t length)
+ {
+   m_file.Truncate(length);
+ }
+diff --git a/xbmc/music/tags/TagLibVFSStream.h b/xbmc/music/tags/TagLibVFSStream.h
+index 2302c04dd9..f39817ad8b 100644
+--- a/xbmc/music/tags/TagLibVFSStream.h
++++ b/xbmc/music/tags/TagLibVFSStream.h
+@@ -38,7 +38,7 @@ namespace MUSIC_INFO
+      * Reads a block of size \a length at the current get pointer.
+      */
+ #if (TAGLIB_MAJOR_VERSION >= 2)
+-    TagLib::ByteVector readBlock(unsigned long length) override;
++    TagLib::ByteVector readBlock(size_t length) override;
+ #else
+     TagLib::ByteVector readBlock(TagLib::ulong length) override;
+ #endif
+@@ -99,7 +99,7 @@ namespace MUSIC_INFO
+      *
+      * \see Position
+      */
+-    void seek(long offset, TagLib::IOStream::Position p = Beginning) override;
++    void seek(off_t offset, TagLib::IOStream::Position p = Beginning) override;
+ 
+     /*!
+      * Reset the end-of-file and error flags on the file.
+@@ -109,17 +109,17 @@ namespace MUSIC_INFO
+     /*!
+      * Returns the current offset within the file.
+      */
+-    long tell() const override;
++    off_t tell() const override;
+ 
+     /*!
+      * Returns the length of the file.
+      */
+-    long length() override;
++    off_t length() override;
+ 
+     /*!
+      * Truncates the file to a \a length.
+      */
+-    void truncate(long length) override;
++    void truncate(off_t length) override;
+ 
+   protected:
+     /*!
+-- 
+2.45.1.windows.1
+

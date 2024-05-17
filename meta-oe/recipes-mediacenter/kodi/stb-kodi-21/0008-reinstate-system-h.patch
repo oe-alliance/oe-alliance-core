@@ -1,7 +1,7 @@
-From 5474cf802112946c681df9d56b97b108c79c917e Mon Sep 17 00:00:00 2001
-From: NickerSK <nickersk@gmail.com>
-Date: Thu, 11 Nov 2021 08:55:33 +0100
-Subject: [PATCH] kodi 20 - updated to latest git rev, updated patches
+From 1ad4b471387cd0fd8167a9db33a875e97dc8f862 Mon Sep 17 00:00:00 2001
+From: Captain <openatv@gmail.com>
+Date: Sat, 18 May 2024 05:10:43 +0200
+Subject: [PATCH 08/14] reinstate-system-h
 
 ---
  xbmc/system.h | 12 ++++++++++++
@@ -10,7 +10,7 @@ Subject: [PATCH] kodi 20 - updated to latest git rev, updated patches
 
 diff --git a/xbmc/system.h b/xbmc/system.h
 new file mode 100644
-index 0000000..a0a15f5
+index 0000000000..a0a15f58b8
 --- /dev/null
 +++ b/xbmc/system.h
 @@ -0,0 +1,12 @@
@@ -26,3 +26,6 @@ index 0000000..a0a15f5
 +
 +#define SAFE_DELETE(p)       do { delete (p);     (p)=NULL; } while (0)
 +#define SAFE_RELEASE(p)      do { if(p) { (p)->Release(); (p)=NULL; } } while (0)
+-- 
+2.45.1.windows.1
+
