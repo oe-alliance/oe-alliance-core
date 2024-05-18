@@ -14,7 +14,7 @@ RDEPENDS:${PN} = "\
     ${PYTHON_PN}-cryptography ${PYTHON_PN}-feedparser ${PYTHON_PN}-cheroot ${PYTHON_PN}-cherrypy ${PYTHON_PN}-portend ${PYTHON_PN}-chardet \
     ${PYTHON_PN}-notify2 ${PYTHON_PN}-puremagic ${PYTHON_PN}-guessit ${PYTHON_PN}-sgmllib3k ${PYTHON_PN}-more-itertools ${PYTHON_PN}-modules \
     ${PYTHON_PN}-rebulk ${PYTHON_PN}-babelfish ${PYTHON_PN}-dateutil ${PYTHON_PN}-pysocks ${PYTHON_PN}-jaraco.context ${PYTHON_PN}-setuptools \
-    ${PYTHON_PN}-jaraco.functools ${PYTHON_PN}-jaraco.collections ${PYTHON_PN}-jaraco.text ${PYTHON_PN}-jaraco.classes ${PYTHON_PN}-sabctools \
+    ${PYTHON_PN}-jaraco.functools ${PYTHON_PN}-jaraco.collections ${PYTHON_PN}-jaraco.text ${PYTHON_PN}-jaraco.classes ${PYTHON_PN}-sabctools ${PYTHON_PN}-apprise \
     "
 
 RRECOMMENDS:${PN} = "par2cmdline unrar p7zip-full"
@@ -25,8 +25,8 @@ SRC_URI = "https://github.com/sabnzbd/sabnzbd/releases/download/${PV}/SABnzbd-${
     file://init-functions \
     "
 
-SRC_URI[md5sum] = "b839e793ded8c15f7518ff2e7f0ec61a"
-SRC_URI[sha256sum] = "c4996a2ba65f279af81c93b1330591d8a58c2144b718d134972878cf4b527cd1"
+SRC_URI[md5sum] = "6cc8ea77a4781c36e6146e90861c4fcf"
+SRC_URI[sha256sum] = "c9902c212df3e6b7208c850e6ceab244afc4b3e173459c425db9be4df902bd44"
 
 S = "${WORKDIR}/SABnzbd-${PV}"
 
