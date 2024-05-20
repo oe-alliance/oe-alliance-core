@@ -5,14 +5,13 @@ LICENSE = "LGPL-3.0-only"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=838c366f69b72c5df05c96dff79b35f2"
 DEPENDS += "${PYTHON_PN}-setuptools-scm-native"
 
-PYPI_PACKAGE = "setuptools_scm_git_archive"
-
-SRC_URI[md5sum] = "cfcdab6edbe6b710ab24ad355e7cf7a3"
-SRC_URI[sha256sum] = "c418bc77b3974d3ac65f268f058f23e01dc5f991f2233128b0e16a69de227b09"
+SRC_URI = "https://files.pythonhosted.org/packages/7e/2c/0c15b29a1b5940250bfdc4a4f53272e35cd7cf8a34159291b6b4ec9eb291/setuptools_scm_git_archive-${PV}.tar.gz"
+SRC_URI[md5sum] = "1c9351fa5cebd12e76488737a7c78f2e"
+SRC_URI[sha256sum] = "6026f61089b73fa1b5ee737e95314f41cb512609b393530385ed281d0b46c062"
 
 S = "${WORKDIR}/setuptools_scm_git_archive-${PV}"
 
-inherit pypi setuptools3_legacy
+inherit setuptools3
 
 include ${PYTHON_PN}-package-split.inc
 
