@@ -6,8 +6,8 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=621053d4e9daec9454e15e60fe40214f"
 
 RDEPENDS:${PN} = "${PYTHON_PN}-core"
 
-SRC_URI[md5sum] = "f5d078e07b2a0b2fec73c82dcd275e8c"
-SRC_URI[sha256sum] = "69a5edb0962f921e8b10837368c2242d8ad049f0b91ff699ce7f601bfc431521"
+SRC_URI[md5sum] = "8ccc66d8b049951d477fb20b204d545f"
+SRC_URI[sha256sum] = "1dea947f9be7ea0ab610f7bbc4a4e36b45d6bfdfceea29ad3d389a88a1957ddf"
 
 inherit pypi setuptools3
 
