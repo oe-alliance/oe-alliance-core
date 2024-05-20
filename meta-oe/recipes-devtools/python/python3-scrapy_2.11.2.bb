@@ -19,10 +19,8 @@ RDEPENDS:${PN} = "${PYTHON_PN}-twisted \
     ${PYTHON_PN}-h2 \
 "
 
-PYPI_PACKAGE = "Scrapy"
-
-SRC_URI[md5sum] = "acbbaf2f42cdd8cb503048e94e25e040"
-SRC_URI[sha256sum] = "3cbdedce0c3f0e0482d61be2d7458683be7cd7cf14b0ee6adfbaddb80f5b36a5"
+SRC_URI[md5sum] = "7edc65f079f24f8b11e28f5464bced13"
+SRC_URI[sha256sum] = "dfbd565384fc3fffeba121f5a3a2d0899ac1f756d41432ca0879933fbfb3401d"
 
 inherit pypi setuptools3_legacy
 
