@@ -4,12 +4,12 @@ SECTION = "devel/python"
 LICENSE = "BSD-3-Clause"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=6570714fbba8ff492626c8753620c54d"
 
-SRC_URI[md5sum] = "985464e05a7fd275d650347af8aa2439"
-SRC_URI[sha256sum] = "2dadfadd1b205ca5fa5dc9fa637f5b7933160a0418684c7c46a7a664033208a2"
+SRC_URI[md5sum] = "a3ef27e5b12c795d48aa6fa4005d2826"
+SRC_URI[sha256sum] = "decb67a4660888d48480ab6998309837174158d0f1aa63bebb1c2e11aab97aab"
 
 S = "${WORKDIR}/babelfish-${PV}"
 
-inherit pypi setuptools3
+inherit pypi python_poetry_core
 
 FILES:${PN}-src += " \
     ${PYTHON_SITEPACKAGES_DIR}/*.py \
