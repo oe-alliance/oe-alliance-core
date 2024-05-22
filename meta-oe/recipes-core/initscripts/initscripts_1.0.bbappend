@@ -18,7 +18,7 @@ do_install:append() {
     ln -sf        ../init.d/umountnfs.sh    ${D}${sysconfdir}/rc6.d/K31umountnfs.sh
     ln -sf        ../init.d/umountnfs.sh    ${D}${sysconfdir}/rc0.d/K31umountnfs.sh
 
-    install -m 0755    ${WORKDIR}/hotplug.sh	${D}${sysconfdir}/init.d
+    install -m 0755    ${S}/hotplug.sh	${D}${sysconfdir}/init.d
     ln -sf        ../init.d/hotplug.sh      ${D}${sysconfdir}/rcS.d/S06hotplug.sh
 
     perl -i -pe 's:mount -a.+?$:mount -a -t nonfs,nfs4,smbfs,cifs,ncp,ncpfs,coda,ocfs2,gfs,gfs2,ceph -O no_netdev 2>/dev/null:' ${D}${sysconfdir}/init.d/mountall.sh
@@ -28,7 +28,7 @@ do_install:append() {
     update-rc.d -f -r ${D} bootmisc.sh remove
     update-rc.d -r ${D} bootmisc.sh start 55 S .
 
-    install -m 0755    ${WORKDIR}/nocard.sh	${D}${sysconfdir}/init.d/cardserver.None
+    install -m 0755    ${S}/nocard.sh	${D}${sysconfdir}/init.d/cardserver.None
 
     # Create the startup links for /etc/init.d/cardserver ...
     ln -sf cardserver.None ${D}/etc/init.d/cardserver
@@ -37,7 +37,7 @@ do_install:append() {
     # ... but avoid the link /etc/init.d/cardserver becoming a file of this package
     rm ${D}/etc/init.d/cardserver
 
-    install -m 0755    ${WORKDIR}/nocam.sh	${D}${sysconfdir}/init.d/softcam.None
+    install -m 0755    ${S}/nocam.sh	${D}${sysconfdir}/init.d/softcam.None
 
     # Create the startup links for /etc/init.d/softcam ...
     ln -sf softcam.None ${D}/etc/init.d/softcam
