@@ -1,7 +1,8 @@
-diff -Nur bluez-5.50/Makefile.in bluez-5.50-rtk_h5/Makefile.in
---- bluez-5.50/Makefile.in	2018-06-01 17:38:19.000000000 +0900
-+++ bluez-5.50-rtk_h5/Makefile.in	2018-12-12 11:31:27.000000000 +0900
-@@ -1331,7 +1331,7 @@
+diff --git a/Makefile.in b/Makefile.in
+index 5859d23..c48c06f 100644
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -1331,7 +1331,7 @@ am__tools_hciattach_SOURCES_DIST = tools/hciattach.c tools/hciattach.h \
  	tools/hciattach_st.c tools/hciattach_ti.c \
  	tools/hciattach_tialt.c tools/hciattach_ath3k.c \
  	tools/hciattach_qualcomm.c tools/hciattach_intel.c \
@@ -10,7 +11,7 @@ diff -Nur bluez-5.50/Makefile.in bluez-5.50-rtk_h5/Makefile.in
  @DEPRECATED_TRUE@@TOOLS_TRUE@am_tools_hciattach_OBJECTS =  \
  @DEPRECATED_TRUE@@TOOLS_TRUE@	tools/hciattach.$(OBJEXT) \
  @DEPRECATED_TRUE@@TOOLS_TRUE@	tools/hciattach_st.$(OBJEXT) \
-@@ -1340,7 +1340,8 @@
+@@ -1340,7 +1340,8 @@ am__tools_hciattach_SOURCES_DIST = tools/hciattach.c tools/hciattach.h \
  @DEPRECATED_TRUE@@TOOLS_TRUE@	tools/hciattach_ath3k.$(OBJEXT) \
  @DEPRECATED_TRUE@@TOOLS_TRUE@	tools/hciattach_qualcomm.$(OBJEXT) \
  @DEPRECATED_TRUE@@TOOLS_TRUE@	tools/hciattach_intel.$(OBJEXT) \
@@ -20,7 +21,7 @@ diff -Nur bluez-5.50/Makefile.in bluez-5.50-rtk_h5/Makefile.in
  tools_hciattach_OBJECTS = $(am_tools_hciattach_OBJECTS)
  @DEPRECATED_TRUE@@TOOLS_TRUE@tools_hciattach_DEPENDENCIES =  \
  @DEPRECATED_TRUE@@TOOLS_TRUE@	lib/libbluetooth-internal.la
-@@ -2783,7 +2784,9 @@
+@@ -2783,7 +2784,9 @@ unit_tests = $(am__append_52) unit/test-eir unit/test-uuid \
  @DEPRECATED_TRUE@@TOOLS_TRUE@						tools/hciattach_ath3k.c \
  @DEPRECATED_TRUE@@TOOLS_TRUE@						tools/hciattach_qualcomm.c \
  @DEPRECATED_TRUE@@TOOLS_TRUE@						tools/hciattach_intel.c \
@@ -31,7 +32,7 @@ diff -Nur bluez-5.50/Makefile.in bluez-5.50-rtk_h5/Makefile.in
  
  @DEPRECATED_TRUE@@TOOLS_TRUE@tools_hciattach_LDADD = lib/libbluetooth-internal.la
  @DEPRECATED_TRUE@@TOOLS_TRUE@tools_hciconfig_SOURCES = tools/hciconfig.c tools/csr.h tools/csr.c
-@@ -4860,6 +4863,8 @@
+@@ -4860,6 +4863,8 @@ tools/hciattach_intel.$(OBJEXT): tools/$(am__dirstamp) \
  	tools/$(DEPDIR)/$(am__dirstamp)
  tools/hciattach_bcm43xx.$(OBJEXT): tools/$(am__dirstamp) \
  	tools/$(DEPDIR)/$(am__dirstamp)
@@ -40,7 +41,7 @@ diff -Nur bluez-5.50/Makefile.in bluez-5.50-rtk_h5/Makefile.in
  
  tools/hciattach$(EXEEXT): $(tools_hciattach_OBJECTS) $(tools_hciattach_DEPENDENCIES) $(EXTRA_tools_hciattach_DEPENDENCIES) tools/$(am__dirstamp)
  	@rm -f tools/hciattach$(EXEEXT)
-@@ -5748,6 +5753,7 @@
+@@ -5748,6 +5753,7 @@ distclean-compile:
  @AMDEP_TRUE@@am__include@ @am__quote@tools/$(DEPDIR)/hciattach.Po@am__quote@
  @AMDEP_TRUE@@am__include@ @am__quote@tools/$(DEPDIR)/hciattach_ath3k.Po@am__quote@
  @AMDEP_TRUE@@am__include@ @am__quote@tools/$(DEPDIR)/hciattach_bcm43xx.Po@am__quote@
@@ -48,10 +49,11 @@ diff -Nur bluez-5.50/Makefile.in bluez-5.50-rtk_h5/Makefile.in
  @AMDEP_TRUE@@am__include@ @am__quote@tools/$(DEPDIR)/hciattach_intel.Po@am__quote@
  @AMDEP_TRUE@@am__include@ @am__quote@tools/$(DEPDIR)/hciattach_qualcomm.Po@am__quote@
  @AMDEP_TRUE@@am__include@ @am__quote@tools/$(DEPDIR)/hciattach_st.Po@am__quote@
-diff -Nur bluez-5.50/Makefile.tools bluez-5.50-rtk_h5/Makefile.tools
---- bluez-5.50/Makefile.tools	2018-06-01 17:37:35.000000000 +0900
-+++ bluez-5.50-rtk_h5/Makefile.tools	2018-12-12 11:31:27.000000000 +0900
-@@ -327,7 +327,8 @@
+diff --git a/Makefile.tools b/Makefile.tools
+index 9106c1a..5632a24 100644
+--- a/Makefile.tools
++++ b/Makefile.tools
+@@ -327,7 +327,8 @@ tools_hciattach_SOURCES = tools/hciattach.c tools/hciattach.h \
  						tools/hciattach_ath3k.c \
  						tools/hciattach_qualcomm.c \
  						tools/hciattach_intel.c \
@@ -61,10 +63,11 @@ diff -Nur bluez-5.50/Makefile.tools bluez-5.50-rtk_h5/Makefile.tools
  tools_hciattach_LDADD = lib/libbluetooth-internal.la
  
  tools_hciconfig_SOURCES = tools/hciconfig.c tools/csr.h tools/csr.c
-diff -Nur bluez-5.50/android/Android.mk bluez-5.50-rtk_h5/android/Android.mk
---- bluez-5.50/android/Android.mk	2017-12-27 08:03:47.000000000 +0900
-+++ bluez-5.50-rtk_h5/android/Android.mk	2018-12-12 11:31:27.000000000 +0900
-@@ -699,6 +699,7 @@
+diff --git a/android/Android.mk b/android/Android.mk
+index 76a826b..39b453f 100644
+--- a/android/Android.mk
++++ b/android/Android.mk
+@@ -699,6 +699,7 @@ LOCAL_SRC_FILES := \
  	bluez/tools/hciattach_qualcomm.c \
  	bluez/tools/hciattach_intel.c \
  	bluez/tools/hciattach_bcm43xx.c \
@@ -72,10 +75,11 @@ diff -Nur bluez-5.50/android/Android.mk bluez-5.50-rtk_h5/android/Android.mk
  	bluez/lib/bluetooth.c \
  	bluez/lib/hci.c \
  
-diff -Nur bluez-5.50/tools/hciattach.c bluez-5.50-rtk_h5/tools/hciattach.c
---- bluez-5.50/tools/hciattach.c	2016-05-27 01:51:11.000000000 +0900
-+++ bluez-5.50-rtk_h5/tools/hciattach.c	2018-12-12 11:31:27.000000000 +0900
-@@ -278,6 +278,16 @@
+diff --git a/tools/hciattach.c b/tools/hciattach.c
+index fad176c..8041156 100644
+--- a/tools/hciattach.c
++++ b/tools/hciattach.c
+@@ -278,6 +278,16 @@ static int bcm43xx(int fd, struct uart_t *u, struct termios *ti)
  	return bcm43xx_init(fd, u->init_speed, u->speed, ti, u->bdaddr);
  }
  
@@ -92,7 +96,7 @@ diff -Nur bluez-5.50/tools/hciattach.c bluez-5.50-rtk_h5/tools/hciattach.c
  static int read_check(int fd, void *buf, int count)
  {
  	int res;
-@@ -1109,6 +1119,10 @@
+@@ -1109,6 +1119,10 @@ struct uart_t uart[] = {
  	{ "amp",	0x0000, 0x0000, HCI_UART_H4, 115200, 115200,
  			AMP_DEV, DISABLE_PM, NULL, NULL, NULL },
  
@@ -103,9 +107,21 @@ diff -Nur bluez-5.50/tools/hciattach.c bluez-5.50-rtk_h5/tools/hciattach.c
  	{ NULL, 0 }
  };
  
-diff -Nur bluez-5.50/tools/hciattach_rtk.c bluez-5.50-rtk_h5/tools/hciattach_rtk.c
---- bluez-5.50/tools/hciattach_rtk.c	1970-01-01 09:00:00.000000000 +0900
-+++ bluez-5.50-rtk_h5/tools/hciattach_rtk.c	2018-12-12 11:31:27.000000000 +0900
+diff --git a/tools/hciattach.h b/tools/hciattach.h
+index 249aab4..42e95b5 100644
+--- a/tools/hciattach.h
++++ b/tools/hciattach.h
+@@ -69,3 +69,5 @@ int qualcomm_init(int fd, int speed, struct termios *ti, const char *bdaddr);
+ int intel_init(int fd, int init_speed, int *speed, struct termios *ti);
+ int bcm43xx_init(int fd, int def_speed, int speed, struct termios *ti,
+ 		const char *bdaddr);
++int rtk_init(int fd, int *speed, struct termios *ti);
++int rtk_post(int fd, struct termios *ti);
+diff --git a/tools/hciattach_rtk.c b/tools/hciattach_rtk.c
+new file mode 100644
+index 0000000..6ad6c22
+--- /dev/null
++++ b/tools/hciattach_rtk.c
 @@ -0,0 +1,389 @@
 +/*
 + *
