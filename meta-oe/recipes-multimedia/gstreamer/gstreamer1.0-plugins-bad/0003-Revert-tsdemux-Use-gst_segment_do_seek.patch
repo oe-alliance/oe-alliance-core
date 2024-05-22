@@ -7,10 +7,10 @@ This reverts commit b4a298c80e1c24a74910e096d08c7f6678d8938b.
 ---
 
 diff --git a/gst/mpegtsdemux/tsdemux.c b/gst/mpegtsdemux/tsdemux.c
-index 144af47..a12b5d5 100644
+index 62bdf31..a08e985 100644
 --- a/gst/mpegtsdemux/tsdemux.c
 +++ b/gst/mpegtsdemux/tsdemux.c
-@@ -915,21 +915,14 @@ gst_ts_demux_do_seek (MpegTSBase * base, GstEvent * event)
+@@ -916,101 +916,76 @@ gst_ts_demux_do_seek (MpegTSBase * base, GstEvent * event)
    GstSeekType start_type, stop_type;
    gint64 start, stop;
    guint64 start_offset;
@@ -36,7 +36,6 @@ index 144af47..a12b5d5 100644
    if (rate <= 0.0) {
      GST_WARNING_OBJECT (demux, "Negative rate not supported");
      goto done;
-@@ -942,78 +935,62 @@ gst_ts_demux_do_seek (MpegTSBase * base, GstEvent * event)
    }
  
    /* configure the segment with the seek variables */
@@ -123,6 +122,8 @@ index 144af47..a12b5d5 100644
  
 -  /* Commit the new segment */
 -  memcpy (&base->out_segment, &seeksegment, sizeof (GstSegment));
+-  /* And prepare to restart */
+-  gst_flow_combiner_reset (demux->flowcombiner);
 +  /* record offset and rate */
 +  base->seek_offset = start_offset;
 +  demux->last_seek_offset = base->seek_offset;
@@ -154,7 +155,7 @@ index 144af47..a12b5d5 100644
  done:
    return res;
  }
-@@ -2846,8 +2823,7 @@ calculate_and_push_newsegment (GstTSDemux * demux, TSDemuxStream * stream,
+@@ -2874,8 +2849,7 @@ calculate_and_push_newsegment (GstTSDemux * demux, TSDemuxStream * stream,
      } else {
        /* Start from the first ts/pts */
        GstSegment *seg = &base->out_segment;
@@ -164,7 +165,7 @@ index 144af47..a12b5d5 100644
        gst_segment_init (seg, GST_FORMAT_TIME);
        seg->start = firstts;
        seg->stop = GST_CLOCK_TIME_NONE;
-@@ -2866,8 +2842,6 @@ calculate_and_push_newsegment (GstTSDemux * demux, TSDemuxStream * stream,
+@@ -2894,8 +2868,6 @@ calculate_and_push_newsegment (GstTSDemux * demux, TSDemuxStream * stream,
      }
    }
  

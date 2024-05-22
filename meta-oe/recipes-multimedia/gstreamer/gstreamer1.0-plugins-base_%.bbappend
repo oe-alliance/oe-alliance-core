@@ -18,7 +18,3 @@ do_install:append() {
         rm -f ${D}${includedir}/KHR/khrplatform.h
         rm -f ${D}${includedir}/GL/glext.h
 }
-PV = "1.22.12"
- 
-SRC_URI[md5sum] = "0e41fc9431a1446724691ab780a1c7e6"
-SRC_URI[sha256sum] = "73cfadc3a6ffe77ed974cfd6fb391c605e4531f48db21dd6b9f42b8cb69bd8c1"
