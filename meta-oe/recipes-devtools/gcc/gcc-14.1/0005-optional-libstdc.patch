@@ -44,10 +44,10 @@ Upstream-Status: Submitted [https://gcc.gnu.org/pipermail/gcc-patches/2021-Octob
  3 files changed, 12 insertions(+), 1 deletion(-)
 
 diff --git a/gcc/c-family/c.opt b/gcc/c-family/c.opt
-index 3333cddee..f400119d1 100644
+index 403abc1f2..29a8d73cb 100644
 --- a/gcc/c-family/c.opt
 +++ b/gcc/c-family/c.opt
-@@ -2338,6 +2338,10 @@ nostdinc++
+@@ -2419,6 +2419,10 @@ nostdinc++
  C++ ObjC++
  Do not search standard system include directories for C++.
  
@@ -59,10 +59,10 @@ index 3333cddee..f400119d1 100644
  C ObjC C++ ObjC++ Joined Separate
  ; Documented in common.opt
 diff --git a/gcc/doc/invoke.texi b/gcc/doc/invoke.texi
-index 85e4ad4b5..b341c26e4 100644
+index bea965fbd..036bf9e78 100644
 --- a/gcc/doc/invoke.texi
 +++ b/gcc/doc/invoke.texi
-@@ -240,6 +240,7 @@ in the following sections.
+@@ -241,6 +241,7 @@ in the following sections.
  -fno-weak  -nostdinc++
  -fvisibility-inlines-hidden
  -fvisibility-ms-compat
@@ -70,7 +70,7 @@ index 85e4ad4b5..b341c26e4 100644
  -fext-numeric-literals
  -flang-info-include-translate@r{[}=@var{header}@r{]}
  -flang-info-include-translate-not
-@@ -678,7 +679,7 @@ Objective-C and Objective-C++ Dialects}.
+@@ -704,7 +705,7 @@ Objective-C and Objective-C++ Dialects}.
  -pie  -pthread  -r  -rdynamic
  -s  -static  -static-pie  -static-libgcc  -static-libstdc++
  -static-libasan  -static-libtsan  -static-liblsan  -static-libubsan
@@ -79,7 +79,7 @@ index 85e4ad4b5..b341c26e4 100644
  -T @var{script}  -Wl,@var{option}  -Xlinker @var{option}
  -u @var{symbol}  -z @var{keyword}}
  
-@@ -17760,6 +17761,11 @@ Specify that the program entry point is @var{entry}.  The argument is
+@@ -18736,6 +18737,11 @@ Specify that the program entry point is @var{entry}.  The argument is
  interpreted by the linker; the GNU linker accepts either a symbol name
  or an address.
  
@@ -92,17 +92,17 @@ index 85e4ad4b5..b341c26e4 100644
  @item -pie
  Produce a dynamically linked position independent executable on targets
 diff --git a/gcc/gcc.cc b/gcc/gcc.cc
-index c3a1dab38..0469346b2 100644
+index 1a1ca0506..bdbb5b133 100644
 --- a/gcc/gcc.cc
 +++ b/gcc/gcc.cc
-@@ -1159,6 +1159,7 @@ proper position among the other output files.  */
-     %(mflib) " STACK_SPLIT_SPEC "\
-     %{fprofile-arcs|fprofile-generate*|coverage:-lgcov} " SANITIZER_SPEC " \
+@@ -1172,6 +1172,7 @@ proper position among the other output files.  */
+     " STACK_SPLIT_SPEC "\
+     %{fprofile-arcs|fcondition-coverage|fprofile-generate*|coverage:-lgcov} " SANITIZER_SPEC " \
      %{!nostdlib:%{!r:%{!nodefaultlibs:%(link_ssp) %(link_gcc_c_sequence)}}}\
 +    %{!nostdlib++:}\
      %{!nostdlib:%{!r:%{!nostartfiles:%E}}} %{T*}  \n%(post_link) }}}}}}"
  #endif
  
 -- 
-2.39.2
+2.43.0
 
