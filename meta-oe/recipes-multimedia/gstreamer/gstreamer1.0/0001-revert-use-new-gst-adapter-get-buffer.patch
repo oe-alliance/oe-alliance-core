@@ -1,8 +1,6 @@
-diff --git a/gstbaseparse.c b/gstbaseparse.c
-index 99283b8..5a3e104 100644
 --- a/libs/gst/base/gstbaseparse.c
 +++ b/libs/gst/base/gstbaseparse.c
-@@ -3021,6 +3021,7 @@ gst_base_parse_chain (GstPad * pad, GstObject * parent, GstBuffer * buffer)
+@@ -3101,6 +3101,7 @@ gst_base_parse_chain (GstPad * pad, GstObject * parent, GstBuffer * buffer)
    GstBuffer *tmpbuf = NULL;
    guint fsize = 1;
    gint skip = -1;
@@ -10,7 +8,7 @@ index 99283b8..5a3e104 100644
    guint min_size, av;
    GstClockTime pts, dts;
  
-@@ -3227,7 +3228,11 @@ gst_base_parse_chain (GstPad * pad, GstObject * parent, GstBuffer * buffer)
+@@ -3308,7 +3309,11 @@ gst_base_parse_chain (GstPad * pad, GstObject * parent, GstBuffer * buffer)
      }
  
      /* always pass all available data */
@@ -23,7 +21,7 @@ index 99283b8..5a3e104 100644
  
      /* already inform subclass what timestamps we have planned,
       * at least if provided by time-based upstream */
-@@ -3242,6 +3247,9 @@ gst_base_parse_chain (GstPad * pad, GstObject * parent, GstBuffer * buffer)
+@@ -3323,6 +3328,9 @@ gst_base_parse_chain (GstPad * pad, GstObject * parent, GstBuffer * buffer)
      ret = gst_base_parse_handle_buffer (parse, tmpbuf, &skip, &flush);
      tmpbuf = NULL;
  
@@ -33,6 +31,3 @@ index 99283b8..5a3e104 100644
      if (ret != GST_FLOW_OK && ret != GST_FLOW_NOT_LINKED) {
        goto done;
      }
--- 
-2.14.1
-

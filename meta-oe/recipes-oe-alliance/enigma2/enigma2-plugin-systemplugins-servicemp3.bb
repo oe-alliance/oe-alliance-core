@@ -26,6 +26,8 @@ GST_BASE_RDEPS = "\
 	"
 
 GST_GOOD_RDEPS = "\
+	gstreamer${GST_VERSION}-plugins-good-amrnb \
+	gstreamer${GST_VERSION}-plugins-good-amrwbdec \
 	gstreamer${GST_VERSION}-plugins-good-apetag \
 	gstreamer${GST_VERSION}-plugins-good-audioparsers \
 	gstreamer${GST_VERSION}-plugins-good-autodetect \
@@ -60,8 +62,6 @@ GST_BAD_RDEPS = "\
 	"
 
 GST_UGLY_RDEPS = "\
-	gstreamer${GST_VERSION}-plugins-ugly-amrnb \
-	gstreamer${GST_VERSION}-plugins-ugly-amrwbdec \
 	gstreamer${GST_VERSION}-plugins-ugly-asf \
 	gstreamer${GST_VERSION}-plugins-ugly-cdio \
 	gstreamer${GST_VERSION}-plugins-ugly-dvdsub \

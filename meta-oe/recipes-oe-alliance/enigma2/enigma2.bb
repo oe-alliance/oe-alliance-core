@@ -121,6 +121,8 @@ GST_BASE_RDEPS = "\
 "
 
 GST_GOOD_RDEPS = "\
+    gstreamer1.0-plugins-good-amrnb \
+    gstreamer1.0-plugins-good-amrwbdec \
     gstreamer1.0-plugins-good-apetag \
     gstreamer1.0-plugins-good-audioparsers \
     gstreamer1.0-plugins-good-autodetect \
@@ -158,8 +160,6 @@ GST_BAD_OPUS = " \
 "
 
 GST_UGLY_RDEPS = "\
-    gstreamer1.0-plugins-ugly-amrnb \
-    gstreamer1.0-plugins-ugly-amrwbdec \
     gstreamer1.0-plugins-ugly-asf \
     gstreamer1.0-plugins-ugly-cdio \
     gstreamer1.0-plugins-ugly-dvdsub \
