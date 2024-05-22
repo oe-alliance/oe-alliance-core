@@ -2,7 +2,7 @@ SUMMARY = "Tailscale client and daemon for Linux"
 HOMEPAGE = "github.com/tailscale/tailscale"
 SECTION = "net"
 LICENSE = "BSD-3-Clause"
-LIC_FILES_CHKSUM = "file://src/${GO_IMPORT}/LICENSE;md5=a672713a9eb730050e491c92edf7984d"
+LIC_FILES_CHKSUM = "file://${GO_SRCURI_DESTSUFFIX}/LICENSE;md5=a672713a9eb730050e491c92edf7984d"
 
 RRECOMMENDS:${PN} = "kernel-module-tun enigma2-plugin-drivers-iptables"
 

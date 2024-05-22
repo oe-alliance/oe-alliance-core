@@ -24,11 +24,11 @@ do_install:append() {
     rm -fr ${D}/tmp
     mkdir ${D}/media/net
     install -d ${D}${sysconfdir}/udev
-    install -m 0755 ${WORKDIR}/mount-helper.sh       ${D}${sysconfdir}/udev
+    install -m 0755 ${S}/mount-helper.sh       ${D}${sysconfdir}/udev
     install -d ${D}${sysconfdir}/profile.d
-    install -m 0644 ${WORKDIR}/editor.sh   ${D}${sysconfdir}/profile.d/editor.sh
-    install -m 0644 ${WORKDIR}/terminfo.sh ${D}${sysconfdir}/profile.d/terminfo.sh
-    install -m 0644 ${WORKDIR}/filesystems ${D}${sysconfdir}/filesystems
+    install -m 0644 ${S}/editor.sh   ${D}${sysconfdir}/profile.d/editor.sh
+    install -m 0644 ${S}/terminfo.sh ${D}${sysconfdir}/profile.d/terminfo.sh
+    install -m 0644 ${S}/filesystems ${D}${sysconfdir}/filesystems
 
     # Inject machine specific blacklists into mount-helper:
     perl -i -pe 's:(\@BLACKLISTED\@):${MTD_BLACK}:s' ${D}${sysconfdir}/udev/mount-helper.sh
