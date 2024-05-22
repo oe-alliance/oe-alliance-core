@@ -1,17 +1,17 @@
-From dd6b9bf9ee35ba6fdebb095e5d1c26665acb44f9 Mon Sep 17 00:00:00 2001
+From 1f533f53fafb9c1b2a7faffb0a33e8e23a2f5e8b Mon Sep 17 00:00:00 2001
 From: Captain <openatv@gmail.com>
-Date: Sat, 18 May 2024 05:17:01 +0200
-Subject: [PATCH 13/14] e2-player
+Date: Wed, 22 May 2024 21:22:47 +0200
+Subject: [PATCH] e2-player
 
 ---
  cmake/treedata/common/cores.txt               |   1 +
  system/playercorefactory.xml                  |  12 +-
  xbmc/cores/Enigma2Player/CMakeLists.txt       |   6 +
- xbmc/cores/Enigma2Player/Enigma2Player.cpp    | 800 ++++++++++++++++++
+ xbmc/cores/Enigma2Player/Enigma2Player.cpp    | 802 ++++++++++++++++++
  xbmc/cores/Enigma2Player/Enigma2Player.h      |  96 +++
  .../playercorefactory/PlayerCoreConfig.cpp    |   5 +
  .../playercorefactory/PlayerCoreFactory.cpp   |   8 +
- 7 files changed, 927 insertions(+), 1 deletion(-)
+ 7 files changed, 929 insertions(+), 1 deletion(-)
  create mode 100644 xbmc/cores/Enigma2Player/CMakeLists.txt
  create mode 100644 xbmc/cores/Enigma2Player/Enigma2Player.cpp
  create mode 100644 xbmc/cores/Enigma2Player/Enigma2Player.h
@@ -73,10 +73,10 @@ index 0000000000..fc672758ff
 +
 diff --git a/xbmc/cores/Enigma2Player/Enigma2Player.cpp b/xbmc/cores/Enigma2Player/Enigma2Player.cpp
 new file mode 100644
-index 0000000000..c9cd63aae7
+index 0000000000..150f3f2ef1
 --- /dev/null
 +++ b/xbmc/cores/Enigma2Player/Enigma2Player.cpp
-@@ -0,0 +1,800 @@
+@@ -0,0 +1,802 @@
 +/*
 + *  Copyright (C) 2005-2018 Team Kodi
 + *  This file is part of Kodi - https://kodi.tv
@@ -108,6 +108,7 @@ index 0000000000..c9cd63aae7
 +#include "ServiceBroker.h"
 +#include "cores/AudioEngine/Interfaces/AE.h"
 +#include "cores/DataCacheCore.h"
++#include "messaging/ApplicationMessenger.h" 
 +#if defined(TARGET_WINDOWS)
 +  #include "utils/CharsetConverter.h"
 +  #include <Windows.h>
@@ -436,6 +437,7 @@ index 0000000000..c9cd63aae7
 +  m_callback.OnAVStarted(m_file);
 +
 +  bool ret = true;
++  CServiceBroker::GetAppMessenger()->PostMsg(TMSG_SWITCHTOFULLSCREEN);
 +#if defined(TARGET_WINDOWS_DESKTOP)
 +  ret = ExecuteAppW32(strFName.c_str(),strFArgs.c_str());
 +#elif defined(TARGET_ANDROID)

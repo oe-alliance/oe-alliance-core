@@ -1,7 +1,7 @@
-From e9a58c56ef1f5bae5a4e4979e45b0a57b6ff7256 Mon Sep 17 00:00:00 2001
+From 34c1acc5d6ae811e15654e9420276f1be5624004 Mon Sep 17 00:00:00 2001
 From: Captain <openatv@gmail.com>
-Date: Sat, 18 May 2024 05:04:31 +0200
-Subject: [PATCH 04/14] stb-settings-21
+Date: Wed, 22 May 2024 20:32:48 +0200
+Subject: [PATCH] stb-settings-21
 
 ---
  addons/skin.estuary/xml/Home.xml           |  2 +-
@@ -10,7 +10,7 @@ Subject: [PATCH 04/14] stb-settings-21
  cmake/scripts/linux/ArchSetup.cmake        |  4 ++
  cmake/treedata/common/stb.txt              |  1 +
  system/settings/settings.xml               | 14 ++---
- tools/Linux/kodi.sh.in                     | 46 ++++++++++++---
+ tools/Linux/kodi.sh.in                     | 52 ++++++++++++----
  tools/depends/target/ffmpeg/CMakeLists.txt | 30 ++++++++++
  tools/depends/target/libdvdcss/Makefile    |  4 +-
  tools/depends/target/libdvdnav/Makefile    |  4 +-
@@ -18,7 +18,7 @@ Subject: [PATCH 04/14] stb-settings-21
  xbmc/guilib/guiinfo/SystemGUIInfo.cpp      |  3 +
  xbmc/input/InputManager.cpp                | 12 ++++
  xbmc/view/ViewStateSettings.cpp            |  2 +-
- 14 files changed, 199 insertions(+), 45 deletions(-)
+ 14 files changed, 203 insertions(+), 47 deletions(-)
  create mode 100644 cmake/platform/linux/stb.cmake
  create mode 100644 cmake/treedata/common/stb.txt
 
@@ -274,7 +274,7 @@ index ef5abcde4e..1acec8255d 100755
              <options>regions</options>
            </constraints>
 diff --git a/tools/Linux/kodi.sh.in b/tools/Linux/kodi.sh.in
-index 52d4646db5..bc73fce2b5 100644
+index 52d4646db5..efcb9825dd 100644
 --- a/tools/Linux/kodi.sh.in
 +++ b/tools/Linux/kodi.sh.in
 @@ -26,8 +26,11 @@ exec_prefix="@exec_prefix@"
@@ -291,12 +291,14 @@ index 52d4646db5..bc73fce2b5 100644
  
  # Workaround for high CPU load with nvidia GFX
  export __GL_YIELD=USLEEP
-@@ -35,6 +38,31 @@ export __GL_YIELD=USLEEP
+@@ -35,6 +38,33 @@ export __GL_YIELD=USLEEP
  # Fix wasting RAM due to fragmentation
  export MALLOC_MMAP_THRESHOLD_=131072
  
 +check_media_hdd() {
 +    [ -e /proc/mounts ] || return 0
++    [ -d /media/mmc ] && export HOME="/media/mmc"
++    [ -d /media/hdd ] && export HOME="/media/hdd"
 +
 +    exec 9<&0 < /proc/mounts
 +    while read DEV MTPT REST; do
@@ -307,11 +309,11 @@ index 52d4646db5..bc73fce2b5 100644
 +                break
 +            fi
 +            ;;
-+	    /dev/mmcblk[0-9]p[0-9])
++            /dev/mmcblk[0-9]p[0-9])
 +            if [ "$MTPT" == "/media/mmc" ]; then
 +            	export HOME="$MTPT"
 +            fi
-+	    ;;
++        ;;
 +        esac
 +    done
 +    exec 0<&9 9<&-
@@ -323,7 +325,18 @@ index 52d4646db5..bc73fce2b5 100644
  # Check for some options used by this script
  while [ "$#" -gt "0" ]
  do
-@@ -214,13 +242,13 @@ do
+@@ -90,8 +120,8 @@ print_crash_report()
+   uname -rvs >> $FILE
+   printf " Release: " >> $FILE
+   if [ -f /etc/os-release ]; then
+-	  . /etc/os-release
+-	  echo $NAME $VERSION >> $FILE
++    . /etc/os-release
++    echo $NAME $VERSION >> $FILE
+   elif command_exists lsb_release; then
+     echo >> $FILE
+     lsb_release -a 2> /dev/null | sed -e 's/^/    /' >> $FILE
+@@ -214,13 +244,13 @@ do
    CHILD=$!
    wait "${CHILD}"
    RET=$?

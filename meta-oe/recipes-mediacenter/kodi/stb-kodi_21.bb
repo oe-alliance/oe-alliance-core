@@ -69,7 +69,7 @@ DEPENDS += " \
           "
 inherit gitpkgv
 # 21.0 Omega
-SRCREV = "86b0c771b9da04c7ae2dffcf94d431c186b73ac6"
+SRCREV = "068f0f694f28179549fcc3c99df237c26b8876d6"
 
 # 'patch' doesn't support binary diffs
 PATCHTOOL = "git"
