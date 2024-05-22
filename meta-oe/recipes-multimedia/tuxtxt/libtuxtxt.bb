@@ -26,6 +26,8 @@ S = "${WORKDIR}/git/libtuxtxt"
 
 EXTRA_OECONF = "--with-boxtype=generic"
 
+CFLAGS += "-Wno-error=return-mismatch"
+
 inherit autotools pkgconfig
 
 do_configure:prepend() {
