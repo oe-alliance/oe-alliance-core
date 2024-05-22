@@ -8,11 +8,12 @@ Index: djmount/djmount/upnp_util.h
 ===================================================================
 --- djmount.orig/djmount/upnp_util.h	2012-02-22 03:34:37.459476269 +0100
 +++ djmount/djmount/upnp_util.h	2012-02-22 03:48:14.184514680 +0100
-@@ -28,6 +28,7 @@
+@@ -28,6 +28,8 @@
  
  
  #include <upnp/upnptools.h>
 +#include <upnp/upnp.h>
++#include <string.h>
  
  
  #ifdef __cplusplus
