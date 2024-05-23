@@ -27,7 +27,7 @@ INITSCRIPT_PARAMS = "defaults"
 
 do_install:append() {
     install -d ${D}/etc/init.d
-    install -m 0755 ${WORKDIR}/satipclient.sh ${D}/etc/init.d/satipclient
+    install -m 0755 ${UNPACKDIR}/satipclient.sh ${D}/etc/init.d/satipclient
 }
 
 EXTRA_OECONF = " \
