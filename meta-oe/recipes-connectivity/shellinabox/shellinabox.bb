@@ -12,7 +12,8 @@ PKGV = "V2.21.0.r3+git${GITPKGV}"
 
 SRC_URI = " \
            git://github.com/oe-mirrors/shellinabox.git;protocol=https;branch=master \
-           file://0002-Enforce-localhost-only.patch \
+           file://0001-Enforce-localhost-only.patch \
+           file://0002-fix-compile-with-gcc14.patch \
            file://styles.css \
            file://shellinabox.service \
            file://shellinabox.init \
