@@ -1,0 +1,63 @@
+--- a/src/cds.c
++++ b/src/cds.c
+@@ -19,6 +19,8 @@
+  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+  */
+ 
++#include <string.h>
++#include <stdio.h>
+ #include <stdlib.h>
+ #include <upnp/upnp.h>
+ #include <upnp/upnptools.h>
+--- a/src/cms.c
++++ b/src/cms.c
+@@ -20,6 +20,7 @@
+  */
+ 
+ #include <stdlib.h>
++#include <string.h>
+ #include <upnp/upnp.h>
+ #include <upnp/upnptools.h>
+ 
+--- a/src/http.c
++++ b/src/http.c
+@@ -25,6 +25,7 @@
+ #include <errno.h>
+ #include <stdio.h>
+ #include <stdlib.h>
++#include <string.h>
+ #include <unistd.h>
+ #include <errno.h>
+ 
+--- a/src/mime.c
++++ b/src/mime.c
+@@ -19,6 +19,7 @@
+  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+  */
+ 
++#include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
+ 
+--- a/src/presentation.c
++++ b/src/presentation.c
+@@ -18,7 +18,9 @@
+  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+  */
+ 
++#include <stdio.h>
+ #include <stdlib.h>
++#include <string.h>
+ 
+ #if HAVE_LANGINFO_CODESET
+ # include <langinfo.h>
+--- a/src/services.c
++++ b/src/services.c
+@@ -20,6 +20,7 @@
+  */
+ 
+ #include <stdlib.h>
++#include <string.h>
+ #include <upnp/upnp.h>
+ #include <upnp/upnptools.h>
+ 
