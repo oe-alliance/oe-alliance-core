@@ -63,8 +63,8 @@ do_install:append() {
         install -d ${D}/usr/share/fonts
         rm -f ${D}/usr/share/fonts/tuxtxt.ttf
         rm -f ${D}/usr/share/fonts/tuxtxt_nonbold.ttf
-        cp -f ${WORKDIR}/tuxtxt.ttf ${D}/usr/share/fonts/tuxtxt.ttf
-        cp -f ${WORKDIR}/tuxtxt_nonbold.ttf ${D}/usr/share/fonts/tuxtxt_nonbold.ttf
+        cp -f ${UNPACKDIR}/tuxtxt.ttf ${D}/usr/share/fonts/tuxtxt.ttf
+        cp -f ${UNPACKDIR}/tuxtxt_nonbold.ttf ${D}/usr/share/fonts/tuxtxt_nonbold.ttf
     fi
 }
 
