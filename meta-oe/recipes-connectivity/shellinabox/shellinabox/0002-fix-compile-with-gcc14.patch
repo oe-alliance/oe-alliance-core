@@ -1,0 +1,10 @@
+--- a/shellinabox/launcher.c
++++ b/shellinabox/launcher.c
+@@ -69,6 +69,7 @@
+ #include <sys/utsname.h>
+ #include <termios.h>
+ #include <unistd.h>
++#include <utmp.h>
+ 
+ #ifdef HAVE_LIBUTIL_H
+ #include <libutil.h>
