@@ -10,6 +10,7 @@ SRC_URI = "http://ftp.mozilla.org/pub/mozilla.org/js/js-1.8.0-rc1.tar.gz \
            file://link_with_gcc.patch \
            file://usepic.patch \
            file://buildcc.patch;striplevel=2 \
+           file://fix-compile-with-gcc14.patch \
            file://jsautocfg.h \
            file://configure.ac"
 
