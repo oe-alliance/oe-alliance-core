@@ -34,5 +34,5 @@ do_configure:prepend() {
 
 do_install:append() {
 	install -d ${D}/etc/init.d
-	install -m 0755 ${WORKDIR}/init ${D}/etc/init.d/djmount
+	install -m 0755 ${UNPACKDIR}/init ${D}/etc/init.d/djmount
 }
