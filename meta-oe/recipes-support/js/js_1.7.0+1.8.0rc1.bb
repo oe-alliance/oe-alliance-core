@@ -24,8 +24,8 @@ S = "${WORKDIR}/js/src"
 inherit autotools-brokensep
 
 do_extraunpack() {
-	cp -f ${WORKDIR}/configure.ac ${S}
-	cp -f ${WORKDIR}/jsautocfg.h ${S}
+	cp -f ${UNPACKDIR}/configure.ac ${S}
+	cp -f ${UNPACKDIR}/jsautocfg.h ${S}
 }
 addtask extraunpack before do_configure after do_unpack
 
