@@ -11,7 +11,9 @@ PACKAGES =+ " libshowiframe0"
 
 SRC_URI = "file://showiframe.c file://showiframe.h"
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
+
 do_compile() {
 	${CC} -fPIC -c showiframe.c
 	${CC} -shared -Wl,-soname,libshowiframe.so.0 -o libshowiframe.so.0.0.0 showiframe.o
