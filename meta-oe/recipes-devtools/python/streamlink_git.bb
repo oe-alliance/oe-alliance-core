@@ -44,7 +44,7 @@ do_unpack:append() {
 }
 
 do_prepare_plugins_dir() {
-    cp -f ${WORKDIR}/additional-plugins/*.py ${S}/src/streamlink/plugins
+    cp -f ${UNPACKDIR}/additional-plugins/*.py ${S}/src/streamlink/plugins
 }
 
 do_install:append() {
