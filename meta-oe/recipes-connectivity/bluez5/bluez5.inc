@@ -78,7 +78,7 @@ NOINST_TOOLS = " \
 
 do_install:append() {
 	install -d ${D}${INIT_D_DIR}
-	install -m 0755 ${WORKDIR}/init ${D}${INIT_D_DIR}/bluetooth
+	install -m 0755 ${UNPACKDIR}/init ${D}${INIT_D_DIR}/bluetooth
 
 	install -d ${D}${sysconfdir}/bluetooth/
 	if [ -f ${S}/profiles/network/network.conf ]; then
