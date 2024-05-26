@@ -10,6 +10,6 @@ require conf/license/license-gplv2.inc
 PR = "r3"
 ALLOW_EMPTY:${PN} = "1"
 
-SRC_URI = "http://code.vuplus.com/download/release/kernel/vmlinuz-initrd_${MACHINE}_${SRCDATE}.tar.gz"
+SRC_URI = "https://source.mynonpublic.com/vuplus/release/kernel/vmlinuz-initrd_${MACHINE}_${SRCDATE}.tar.gz"
 
 S = "${WORKDIR}"

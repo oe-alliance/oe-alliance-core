@@ -9,8 +9,8 @@ PV = "${KV}"
 PR = "${SRCDATE}"
 
 SRC_URI = " \
-	http://code.vuplus.com/download/release/turbo/vuplus_tuner_turbo2_driver_${PV}_${TARGET_ARCH}_${SRCDATE}.tar.gz;name=driver \
-	http://code.vuplus.com/download/release/turbo/vuplus_tuner_turbo2_bin_fw_${TARGET_ARCH}_${FW_SRCDATE}.tar.gz;name=binfw \
+	https://source.mynonpublic.com/vuplus/release/turbo/vuplus_tuner_turbo2_driver_${PV}_${TARGET_ARCH}_${SRCDATE}.tar.gz;name=driver \
+	https://source.mynonpublic.com/vuplus/release/turbo/vuplus_tuner_turbo2_bin_fw_${TARGET_ARCH}_${FW_SRCDATE}.tar.gz;name=binfw \
 "
 
 DEPENDS += "virtual/kernel module-init-tools"
