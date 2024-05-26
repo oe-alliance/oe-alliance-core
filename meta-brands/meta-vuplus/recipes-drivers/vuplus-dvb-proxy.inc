@@ -6,7 +6,7 @@ require conf/license/license-close.inc
 
 PR = "${SRCDATE}.${SRCDATE_PR}"
 
-#SRC_URI = "http://code.vuplus.com/download/release/vuplus-dvb-proxy/vuplus-dvb-proxy-${MACHINE}-${PV}-${PR}.tar.gz "
+#SRC_URI = "https://source.mynonpublic.com/vuplus/release/vuplus-dvb-proxy/vuplus-dvb-proxy-${MACHINE}-${PV}-${PR}.tar.gz "
 SRC_URI = "https://source.mynonpublic.com/vuplus/vuplus-dvb-proxy-${MACHINE}-${PV}-${PR}.tar.gz "
 
 

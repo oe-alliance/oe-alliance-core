@@ -19,7 +19,7 @@ PV = "r95199"
 BRANCH="vuplus-webkit"
 SRCREV="9eed47d1f873a13759d3fd8ead72739b328d710a"
 
-SRC_URI = "git://code.vuplus.com:/git/webkit-r95199-base.git;protocol=http;branch=${BRANCH};rev=${SRCREV} \
+SRC_URI = "git://github.com/vuplus-com/webkit-r95199-base.git;protocol=https;branch=${BRANCH};rev=${SRCREV} \
     file://0001-bison-3.patch \
     file://0001-fix-build-with-gcc-6.20.patch \
     file://0001-fix-build-issue-with-cglib-2.2.4.patch \

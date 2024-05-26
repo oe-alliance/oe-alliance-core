@@ -18,7 +18,7 @@ LIC_FILES_CHKSUM = "file://${WORKDIR}/linux/COPYING;md5=d7810fab7487fb0aad327b76
 
 KERNEL_CONFIG = "${@bb.utils.contains("MACHINE_FEATURES", "dvbproxy", "defconfig_proxy", "defconfig", d)}"
 
-SRC_URI = "http://code.vuplus.com/download/release/kernel/stblinux-${KV}.tar.bz2 \
+SRC_URI = "https://source.mynonpublic.com/vuplus/release/kernel/stblinux-${KV}.tar.bz2 \
     file://${KERNEL_CONFIG} \
     file://kernel-add-support-for-gcc5.patch \
     file://kernel-add-support-for-gcc6.patch \

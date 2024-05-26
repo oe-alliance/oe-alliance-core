@@ -19,7 +19,7 @@ SRC_URI[sha256sum] = "5f5a43e222716962336df55eb98bd96001de2caf7b7dce538e266f5ba6
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-SRC_URI += "http://code.vuplus.com/download/release/kernel/stblinux-4.1-${KERNEL_SRC_VERSION}.tar.bz2 \
+SRC_URI += "https://source.mynonpublic.com/vuplus/release/kernel/stblinux-4.1-${KERNEL_SRC_VERSION}.tar.bz2 \
     file://defconfig \
     file://linux_dvb-core.patch \
     file://bcmgenet-recovery-fix.patch \

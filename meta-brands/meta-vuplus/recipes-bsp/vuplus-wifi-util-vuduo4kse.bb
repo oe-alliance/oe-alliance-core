@@ -9,7 +9,7 @@ SRCDATE_PR = "r0"
 PR="${SRCDATE}.${SRCDATE_PR}.1"
 
 SRC_URI = " \
-	http://code.vuplus.com/download/release/wifi/vuplus-wifi-util-${MACHINE}-${PV}-${SRCDATE}.${SRCDATE_PR}.tar.gz \
+	https://source.mynonpublic.com/vuplus/release/wifi/vuplus-wifi-util-${MACHINE}-${PV}-${SRCDATE}.${SRCDATE_PR}.tar.gz \
 "
 
 inherit update-rc.d

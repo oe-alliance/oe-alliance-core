@@ -8,7 +8,7 @@ PACKAGE_ARCH := "${MACHINE_ARCH}"
 PV = "1.3"
 PR = "${SRCDATE}-r0"
 
-SRC_URI = "http://code.vuplus.com/download/chromium/chromium-vuplus_${MACHINE}_${SRCDATE}.tar.gz \
+SRC_URI = "https://source.mynonpublic.com/vuplus/chromium/chromium-vuplus_${MACHINE}_${SRCDATE}.tar.gz \
            file://run.patch;striplevel=0"
 
 # Added very old NSS version need only for vuplus

@@ -9,7 +9,7 @@ PR = "r1"
 DEPENDS = "libvupl libgles"
 RDEPENDS:${PN} = "libvupl libgles"
 
-SRC_URI = "http://code.vuplus.com/download/release/support/${BPN}-${PV}.${PR}.tar.gz"
+SRC_URI = "https://source.mynonpublic.com/vuplus/release/support/${BPN}-${PV}.${PR}.tar.gz"
 
 S = "${WORKDIR}/${BPN}-${PV}"
 

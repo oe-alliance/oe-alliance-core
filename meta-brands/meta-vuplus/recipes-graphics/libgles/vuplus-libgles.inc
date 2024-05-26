@@ -13,7 +13,7 @@ RPROVIDES:${PN} = "virtual-libgles1 virtual-libgles2 virtual-egl libEGL.so libGL
 
 DEPENDS = "patchelf-native"
 
-SRC_URI = "http://code.vuplus.com/download/release/libgles/libgles-${MACHINE}-${PV}-${PR}.tar.gz"
+SRC_URI = "https://source.mynonpublic.com/vuplus/release/libgles/libgles-${MACHINE}-${PV}-${PR}.tar.gz"
 
 S = "${WORKDIR}/libgles-${MACHINE}"
 

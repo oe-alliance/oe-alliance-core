@@ -14,7 +14,7 @@ PROVIDES += "virtual/filestreamproxy"
 RPROVIDES:${PN} += "virtual-filestreamproxy"
 RDEPENDS:${PN} = "busybox-inetd"
 
-SRC_URI = "git://code.vuplus.com/git/filestreamproxy.git;protocol=http;branch=master"
+SRC_URI = "git://github.com/vuplus-com/filestreamproxy.git;protocol=https;branch=master"
 
 S = "${WORKDIR}/git"
 
