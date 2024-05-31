@@ -14,8 +14,8 @@ SRCREV = "${AUTOREV}"
 PV = "4.0.+git"
 PKGV = "4.0.+git${GITPKGV}"
 
-SRC_URI="git://github.com/oe-mirrors/e2openplugin-EnhancedMovieCenter.git;branch=master;protocol=https"
-SRC_URI:openatv = "git://github.com/oe-mirrors/EnhancedMovieCenter.git;protocol=https;branch=master"
+SRC_URI ?= "git://github.com/oe-mirrors/e2openplugin-EnhancedMovieCenter.git;branch=master;protocol=https"
+SRC_URI:openatv ?= "git://github.com/oe-mirrors/EnhancedMovieCenter.git;protocol=https;branch=7.4"
 
 S = "${WORKDIR}/git"
 
