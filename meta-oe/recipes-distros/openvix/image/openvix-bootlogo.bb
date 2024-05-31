@@ -23,6 +23,10 @@ INITSCRIPT_PARAMS:vuuno4k = "start 70 S ."
 INITSCRIPT_PARAMS:vuuno4kse = "start 70 S ."
 INITSCRIPT_PARAMS:vuultimo4k = "start 70 S ."
 INITSCRIPT_PARAMS:vuzero4k = "start 70 S ."
+INITSCRIPT_PARAMS:vuduo4k = "start 70 S ."
+INITSCRIPT_PARAMS:vuduo4kse = "start 70 S ."
+INITSCRIPT_PARAMS:gb7252 = "start 70 S ."
+INITSCRIPT_PARAMS:gb72604 = "start 70 S ."
 
 inherit update-rc.d
 
