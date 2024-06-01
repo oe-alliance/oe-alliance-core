@@ -1,4 +1,4 @@
-PV = "4.15.13"
+PV = "4.19.6"
 HOMEPAGE = "https://www.samba.org/"
 SECTION = "console/network"
 
@@ -13,6 +13,8 @@ ${SAMBA_MIRROR}    http://mirror.internode.on.net/pub/samba \n \
 ${SAMBA_MIRROR}    http://www.mirrorservice.org/sites/ftp.samba.org \n \
 "
 
+export PYTHONHASHSEED="1"
+
 FILESEXTRAPATHS:prepend := "${THISDIR}/samba:"
 SRC_URI = "${SAMBA_MIRROR}/stable/samba-${PV}.tar.gz \
            file://001-samba-4.14-pam.patch \
@@ -22,12 +24,12 @@ SRC_URI = "${SAMBA_MIRROR}/stable/samba-${PV}.tar.gz \
            file://102-add-options-to-configure-the-use-of-libbsd.patch \
            file://103-tmsize-overflow-fix.patch \
            file://104-samba-defeat-iconv-test.patch \
-           file://105-wscript_configure_system_gnutls-disable-check-gnutls.patch \
            file://106-source3-wscript-disable-check-fcntl-F_OWNER_EX.patch \
            file://107-source3-wscript-disable-check-fcntl-RW_HINTS.patch \
+           file://108-do-not-import-target-module-while-cross-compile.patch \
+           file://109-Fix-pyext_PATTERN-for-cross-compilation.patch \
            file://201-add-config-option-without-valgrind.patch \
            file://202-samba-4.14-unbundle-icu.patch \
-           file://203-netdb-defines.patch \
            file://207-glibc_only.patch \
            file://208-talloc_old_kernel_fix.patch \
            file://300-Revert-pam_smbpass-REMOVE-this-PAM-module.patch \
@@ -49,13 +51,12 @@ SRC_URI = "${SAMBA_MIRROR}/stable/samba-${PV}.tar.gz \
            file://users.map \
            file://smbpasswd \
            file://volatiles.03_samba \
-           file://setuptools.patch \
            "
 
 SRC_URI:append:arm = " \
            file://500-arm-status-segfault-fix.patch \
           "
 
-SRC_URI[md5sum] = "2b65218f037e1ec969f8c0f971267f18"
-SRC_URI[sha256sum] = "c412e3536a5265d04e52983e643bae9e047bcc3eac08683a945b1057ecdf4968"
-UPSTREAM_CHECK_REGEX = "samba\-(?P<pver>4\.15(\.\d+)+).tar.gz"
+SRC_URI[md5sum] = "6b43c2af5b23b3ed68dcb9116c59b803"
+SRC_URI[sha256sum] = "653b52095554dbc223c63b96af5cdf9e98c3e048549c5f56143d3b33dce1cef1"
+UPSTREAM_CHECK_REGEX = "samba\-(?P<pver>4\.19(\.\d+)+).tar.gz"

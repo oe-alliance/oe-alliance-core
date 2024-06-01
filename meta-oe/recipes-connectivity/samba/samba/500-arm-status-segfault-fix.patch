@@ -1,28 +1,28 @@
 --- a/source3/utils/status.c
 +++ b/source3/utils/status.c
-@@ -862,7 +862,6 @@ int main(int argc, const char *argv[])
- 			TALLOC_FREE(db_path);
- 			exit(0);
+@@ -1166,7 +1166,6 @@ int main(int argc, const char *argv[])
+ 			ret = 0;
+ 			goto done;
  		} else {
 -			TALLOC_FREE(db);
  			TALLOC_FREE(db_path);
  		}
  
-@@ -872,6 +871,8 @@ int main(int argc, const char *argv[])
+@@ -1176,6 +1175,8 @@ int main(int argc, const char *argv[])
  			goto done;
  		}
  
 +		TALLOC_FREE(db);
 +
- 		result = share_entry_forall(print_share_mode, &resolve_uids);
+ 		prepare_share_mode(&state);
+ 		result = share_entry_forall(print_share_mode, &state);
  
- 		if (result == 0) {
-@@ -886,7 +887,7 @@ int main(int argc, const char *argv[])
- 			brl_forall(print_brl, NULL);
+@@ -1194,7 +1195,7 @@ int main(int argc, const char *argv[])
+ 			brl_forall(print_brl, &state);
  		}
  
 -		locking_end();
-+//		locking_end();
++		// locking_end();
  	}
  
  	if (show_notify) {

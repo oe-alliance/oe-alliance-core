@@ -4,7 +4,7 @@ PACKAGES =+ "smbclient ${PN}-common \
              ${PN}-admin ${PN}-utils \
              ${PN}-ldb-tools ${PN}-tdb-tools ${PN}-pdb-tools registry-tools \
              winbind ${PN}-ad-dc ${PN}-ctdb-tests \
-             ${PN}-python3 ${PN}-pidl ${PN}-dsdb-modules ${PN}-testsuite \
+             ${PN}-python3 ${PN}-pidl ${PN}-rpcd ${PN}-dsdb-modules ${PN}-testsuite \
             "
 
 # remove default added RDEPENDS on perl
@@ -86,7 +86,9 @@ FILES:${PN} = " \
                ${bindir}/smbpasswd \
                ${bindir}/testparm \
                ${libexecdir}/samba/samba-bgqd \
-               \
+               ${libexecdir}/samba/samba-dcerpcd \
+               ${libexecdir}/samba/rpcd_classic \
+               ${libexecdir}/samba/rpcd_winreg \
               "
 RDEPENDS:${PN} += "${BPN}-common wsdd"
 INSANE_SKIP:${PN} += "dev-so"
@@ -146,6 +148,7 @@ FILES:${PN}-pdb-tools = "${bindir}/pdbedit"
 FILES:winbind = "${sbindir}/winbindd \
                  ${bindir}/wbinfo \
                  ${bindir}/ntlm_auth \
+                 ${bindir}/samba-log-parser \
                  ${libdir}/samba/idmap \
                  ${libdir}/samba/nss_info \
                  ${libdir}/krb5/winbind_krb5_locator.so \
@@ -174,6 +177,13 @@ FILES:${PN}-python3 = "${PYTHON_SITEPACKAGES_DIR}"
 
 RDEPENDS:${PN}-pidl:append = " perl"
 FILES:${PN}-pidl = "${bindir}/pidl ${datadir}/perl5/Parse"
+
+FILES:${PN}-rpcd = "${libexecdir}/samba/rpcd_epmapper \
+                    ${libexecdir}/samba/rpcd_fsrvp \
+                    ${libexecdir}/samba/rpcd_lsad \
+                    ${libexecdir}/samba/rpcd_mdssvc \
+                    ${libexecdir}/samba/rpcd_rpcecho \
+                    ${libexecdir}/samba/rpcd_spoolss"
 
 pkg_postinst:${BPN}-common:append() {
 #!/bin/sh
