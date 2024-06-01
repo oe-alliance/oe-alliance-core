@@ -1,7 +1,7 @@
 --- a/configure
 +++ b/configure
-@@ -3549,10 +3549,8 @@ xv_outdev_deps="xlib_xv xlib_x11 xlib_xext"
- # protocols
+@@ -3714,10 +3714,8 @@ android_content_protocol_deps="jni"
+ android_content_protocol_select="file_protocol"
  async_protocol_deps="threads"
  bluray_protocol_deps="libbluray"
 -ffrtmpcrypt_protocol_conflict="librtmp_protocol"
@@ -11,7 +11,7 @@
  ffrtmphttp_protocol_select="http_protocol"
  ftp_protocol_select="tcp_protocol"
  gopher_protocol_select="tcp_protocol"
-@@ -3566,20 +3564,18 @@ https_protocol_suggest="zlib"
+@@ -3731,20 +3729,18 @@ https_protocol_suggest="zlib"
  icecast_protocol_select="http_protocol"
  mmsh_protocol_select="http_protocol"
  mmst_protocol_select="network"
@@ -44,9 +44,11 @@
  rtp_protocol_select="udp_protocol"
  schannel_conflict="openssl gnutls libtls mbedtls"
  sctp_protocol_deps="struct_sctp_event_subscribe struct_msghdr_msg_flags"
+diff --git a/libavformat/Makefile b/libavformat/Makefile
+index c5fa28b..5625239 100644
 --- a/libavformat/Makefile
 +++ b/libavformat/Makefile
-@@ -656,12 +656,12 @@ OBJS-$(CONFIG_MMSH_PROTOCOL)             += mmsh.o mms.o asf_tags.o
+@@ -685,12 +685,12 @@ OBJS-$(CONFIG_MMSH_PROTOCOL)             += mmsh.o mms.o asf_tags.o
  OBJS-$(CONFIG_MMST_PROTOCOL)             += mmst.o mms.o asf_tags.o
  OBJS-$(CONFIG_PIPE_PROTOCOL)             += file.o
  OBJS-$(CONFIG_PROMPEG_PROTOCOL)          += prompeg.o
@@ -65,9 +67,11 @@
  OBJS-$(CONFIG_RTP_PROTOCOL)              += rtpproto.o ip.o
  OBJS-$(CONFIG_SCTP_PROTOCOL)             += sctp.o
  OBJS-$(CONFIG_SRTP_PROTOCOL)             += srtpproto.o srtp.o
+diff --git a/libavformat/protocols.c b/libavformat/protocols.c
+index 93a6d67..4807fa7 100644
 --- a/libavformat/protocols.c
 +++ b/libavformat/protocols.c
-@@ -44,12 +44,12 @@ extern const URLProtocol ff_mmst_protocol;
+@@ -49,12 +49,12 @@ extern const URLProtocol ff_mmst_protocol;
  extern const URLProtocol ff_md5_protocol;
  extern const URLProtocol ff_pipe_protocol;
  extern const URLProtocol ff_prompeg_protocol;
@@ -86,9 +90,11 @@
  extern const URLProtocol ff_rtp_protocol;
  extern const URLProtocol ff_sctp_protocol;
  extern const URLProtocol ff_srtp_protocol;
+diff --git a/libavformat/rtmpproto.c b/libavformat/rtmpproto.c
+index 4b01b67..478c254 100644
 --- a/libavformat/rtmpproto.c
 +++ b/libavformat/rtmpproto.c
-@@ -2594,7 +2594,7 @@ static int inject_fake_duration_metadata(RTMPContext *rt)
+@@ -2627,7 +2627,7 @@ static int inject_fake_duration_metadata(RTMPContext *rt)
  static int rtmp_open(URLContext *s, const char *uri, int flags, AVDictionary **opts)
  {
      RTMPContext *rt = s->priv_data;
@@ -97,7 +103,7 @@
      char *old_app, *qmark, *n, fname_buffer[1024];
      uint8_t buf[2048];
      int port;
-@@ -2605,7 +2605,9 @@ static int rtmp_open(URLContext *s, const char *uri, int flags, AVDictionary **o
+@@ -2638,7 +2638,9 @@ static int rtmp_open(URLContext *s, const char *uri, int flags, AVDictionary **o
  
      rt->is_input = !(flags & AVIO_FLAG_WRITE);
  
@@ -108,7 +114,7 @@
                   hostname, sizeof(hostname), &port,
                   path, sizeof(path), s->filename);
  
-@@ -3151,9 +3153,9 @@ const URLProtocol ff_##flavor##_protocol = {     \
+@@ -3187,9 +3189,9 @@ const URLProtocol ff_##flavor##_protocol = {     \
  #define RTMP_PROTOCOL(flavor, uppercase)         \
      RTMP_PROTOCOL_3(flavor, CONFIG_ ## uppercase ## _PROTOCOL)
  

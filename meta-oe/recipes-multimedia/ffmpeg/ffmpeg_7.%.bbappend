@@ -2,7 +2,8 @@ FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 
 PR = "r3"
 
-SRC_URI += "file://0002-fix-mpegts.patch \
+SRC_URI += "file://0001-makefile-add-demux-header.patch \
+            file://0002-fix-mpegts.patch \
             file://0003-allow-to-choose-rtmp-impl-at-runtime.patch \
             file://0004-hls-replace-key-uri.patch \
             file://0005-mips64-cpu-detection.patch \
