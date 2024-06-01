@@ -1,7 +1,7 @@
 --- a/libavformat/aviobuf.c
 +++ b/libavformat/aviobuf.c
-@@ -34,7 +34,7 @@
- #include "url.h"
+@@ -32,7 +32,7 @@
+ #include "internal.h"
  #include <stdarg.h>
  
 -#define IO_BUFFER_SIZE 32768
@@ -9,7 +9,7 @@
  
  /**
   * Do seeks within this distance ahead of the current buffer by skipping
-@@ -562,16 +562,15 @@ static void fill_buffer(AVIOContext *s)
+@@ -532,16 +532,15 @@ static void fill_buffer(AVIOContext *s)
      }
  
      /* make buffer smaller in case it ended up large after probing */

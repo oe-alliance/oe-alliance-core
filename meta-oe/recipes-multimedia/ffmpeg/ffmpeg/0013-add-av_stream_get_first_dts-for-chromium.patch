@@ -1,17 +1,21 @@
-From 891e11d98227781ce0d89d7144543447d5b08e24 Mon Sep 17 00:00:00 2001
+From 2df3d49d1ab25446fa3c43441d945e15ccd12432 Mon Sep 17 00:00:00 2001
 From: "liberato@chromium.org" <liberato@chromium.org>
 Date: Wed, 7 Jul 2021 19:01:22 -0700
 Subject: [PATCH] Add av_stream_get_first_dts for Chromium
 
 [foutrelis: adjust for new FFStream struct replacing AVStreamInternal]
+---
+ libavformat/avformat.h | 4 ++++
+ libavformat/utils.c    | 7 +++++++
+ 2 files changed, 11 insertions(+)
 
 diff --git a/libavformat/avformat.h b/libavformat/avformat.h
-index 1916aa2..e668284 100644
+index de40397..dc6ff7f 100644
 --- a/libavformat/avformat.h
 +++ b/libavformat/avformat.h
-@@ -1019,6 +1019,10 @@ attribute_deprecated
- int64_t    av_stream_get_end_pts(const AVStream *st);
- #endif
+@@ -1170,6 +1170,10 @@ typedef struct AVStreamGroup {
+ 
+ struct AVCodecParserContext *av_stream_get_parser(const AVStream *s);
  
 +// Chromium: We use the internal field first_dts vvv
 +int64_t    av_stream_get_first_dts(const AVStream *st);
@@ -21,10 +25,10 @@ index 1916aa2..e668284 100644
  
  /**
 diff --git a/libavformat/utils.c b/libavformat/utils.c
-index cf4d68b..d3e7488 100644
+index c722743..ce10c51 100644
 --- a/libavformat/utils.c
 +++ b/libavformat/utils.c
-@@ -99,6 +99,13 @@ static int append_packet_chunked(AVIOContext *s, AVPacket *pkt, int size)
+@@ -100,6 +100,13 @@ static int append_packet_chunked(AVIOContext *s, AVPacket *pkt, int size)
      return pkt->size > orig_size ? pkt->size - orig_size : ret;
  }
  
