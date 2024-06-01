@@ -2,12 +2,12 @@ require samba-source.inc
 
 S = "${WORKDIR}/samba-${PV}"
 
-inherit pkgconfig cpan-base perlnative setuptools3 python3native native
+inherit pkgconfig cpan-base perlnative python3native native
 
 #DEPENDS += "libxslt-native docbook-xsl-stylesheets-native e2fsprogs readline virtual/libiconv zlib popt"
 #DEPENDS += "python3native"
 
-DEPENDS += "zlib-native readline-native gnutls-native libparse-yapp-perl-native bison-native icu-native libtasn1-native"
+DEPENDS += "zlib-native readline-native gnutls-native libjson-perl-native libparse-yapp-perl-native bison-native icu-native libtasn1-native"
 
 DEPENDS:append:libc-musl = " libtirpc"
 CFLAGS:append:libc-musl = " -I${STAGING_INCDIR}/tirpc"
@@ -88,6 +88,6 @@ do_compile () {
 
 do_install() {
     install -d ${D}${bindir}
-    install -m 0755 ${S}/bin/default/source4/heimdal_build/asn1_compile ${D}${bindir}/asn1_compile
-    install -m 0755 ${S}/bin/default/source4/heimdal_build/compile_et ${D}${bindir}/compile_et
+    install -m 0755 ${S}/bin/default/third_party/heimdal_build/asn1_compile ${D}${bindir}/asn1_compile
+    install -m 0755 ${S}/bin/default/third_party/heimdal_build/compile_et ${D}${bindir}/compile_et
 }

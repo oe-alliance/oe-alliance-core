@@ -13,7 +13,8 @@ SRC_URI = " \
 
 PV = "1.08"
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 do_compile() {
     make -f Makefile
@@ -21,7 +22,7 @@ do_compile() {
 
 do_install() {
     install -d ${D}/${sbindir}
-    install -m 755 ${S}/wsdd ${D}/${sbindir}
+    install -m 755 ${UNPACKDIR}/wsdd ${D}/${sbindir}
 }
 
 INSANE_SKIP:${PN} += "ldflags"

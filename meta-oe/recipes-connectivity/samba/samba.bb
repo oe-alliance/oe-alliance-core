@@ -1,10 +1,12 @@
-PR = "r3"
+PR = "r1"
 
 require samba-source.inc
+require samba-waf.inc
 
-inherit cpan-base perlnative python3native pkgconfig
+#inherit cpan-base perlnative python3native pkgconfig
+inherit  cpan-base perlnative perl-version pkgconfig
 
-DEPENDS += "asn1compile-native libparse-yapp-perl-native bison-native qemu-native libxslt-native docbook-xsl-stylesheets-native e2fsprogs readline zlib popt gnutls libtalloc libtasn1"
+DEPENDS += "asn1compile-native libparse-yapp-perl-native bison-native qemu-native libxslt-native docbook-xsl-stylesheets-native e2fsprogs jansson readline zlib popt gnutls libtalloc libtasn1"
 
 inherit features_check
 REQUIRED_DISTRO_FEATURES = "pam"
@@ -87,7 +89,6 @@ EXTRA_OECONF += "--disable-cups \
                  --private-libraries=tevent,tevent-util,texpect,tdb,ldb,tdr,cmocka,replace \
                  --with-pam --with-pammodulesdir=${base_libdir}/security \
                  --with-pam_smbpass \
-                 --accel-aes=none \
                 "
 
 LDFLAGS += "-Wl,-z,relro,-z,now ${@bb.utils.contains('DISTRO_FEATURES', 'ld-is-gold', ' -fuse-ld=bfd ', '', d)}"
@@ -108,13 +109,20 @@ CONFIGUREOPTS = " --prefix=${prefix} \
                   ${PACKAGECONFIG_CONFARGS} \
                 "
 
-require samba-waf.inc
+
 
 do_configure:prepend () {
     # un-bundle dnspython
     sed '/"dns.resolver":/d' ${S}/third_party/wscript
     # unbundle iso8601
     sed '/"iso8601":/d' ${S}/third_party/wscript
+}
+
+do_configure:append() {
+    cd ${S}/pidl/
+    perl Makefile.PL PREFIX=${prefix}
+    sed -e 's,VENDORPREFIX)/lib/perl,VENDORPREFIX)/${baselib}/perl,g' \
+        -e 's,PERLPREFIX)/lib/perl,PERLPREFIX)/${baselib}/perl,g' -i Makefile
 }
 
 do_compile[progress] = "outof:^\[\s*(\d+)/\s*(\d+)\]\s+"
@@ -152,6 +160,7 @@ do_compile() {
     TARGETS=$(echo $TARGETS | sed 's/^,//')
 
     ./buildtools/bin/waf --targets=$TARGETS ${@oe.utils.parallel_make_argument(d, '--jobs=%d', limit=64)}
+    oe_runmake -C ${S}/pidl
 }
 
 do_install() {
@@ -180,11 +189,11 @@ do_install() {
     fi
 
     install -d ${D}${sysconfdir}/tmpfiles.d
-    install -m644 packaging/systemd/samba.conf.tmp ${D}${sysconfdir}/tmpfiles.d/samba.conf
+    install -m 644 packaging/systemd/samba.conf.tmp ${D}${sysconfdir}/tmpfiles.d/samba.conf
     echo "d ${localstatedir}/log/samba 0755 root root -" \
         >> ${D}${sysconfdir}/tmpfiles.d/samba.conf
 
-    install -D -m 644 ${WORKDIR}/volatiles.03_samba ${D}${sysconfdir}/default/volatiles/03_samba
+    install -D -m 644 ${UNPACKDIR}/volatiles.03_samba ${D}${sysconfdir}/default/volatiles/03_samba
 
     # fix file-rdeps qa warning
     if [ -f ${D}${bindir}/onnode ]; then
@@ -198,23 +207,23 @@ do_install() {
     rm -rf ${D}/run ${D}${localstatedir}/run ${D}${localstatedir}/log
 
     install -d ${D}${sysconfdir}/pam.d
-    install -m 644 ${WORKDIR}/pam.samba ${D}${sysconfdir}/pam.d/samba
+    install -m 644 ${UNPACKDIR}/pam.samba ${D}${sysconfdir}/pam.d/samba
 
     install -d ${D}${sysconfdir}/samba
     install -d ${D}${sysconfdir}/samba/distro
     install -d ${D}${sysconfdir}/samba/private
     echo "127.0.0.1 localhost" > ${D}${sysconfdir}/samba/lmhosts
-    install -m 644 ${WORKDIR}/smb.conf ${D}${sysconfdir}/samba
-    install -m 644 ${WORKDIR}/smb-user.conf ${D}${sysconfdir}/samba
-    install -m 644 ${WORKDIR}/smb-branding.conf ${D}${sysconfdir}/samba/distro
-    install -m 644 ${WORKDIR}/smb-global.conf ${D}${sysconfdir}/samba/distro
-    install -m 644 ${WORKDIR}/smb-shares.conf ${D}${sysconfdir}/samba/distro
-    install -m 644 ${WORKDIR}/smb-vmc.samba ${D}${sysconfdir}/samba/distro
-    install -m 644 ${WORKDIR}/smbpasswd ${D}${sysconfdir}/samba/private
-    install -m 644 ${WORKDIR}/users.map ${D}${sysconfdir}/samba/private
+    install -m 644 ${UNPACKDIR}/smb.conf ${D}${sysconfdir}/samba
+    install -m 644 ${UNPACKDIR}/smb-user.conf ${D}${sysconfdir}/samba
+    install -m 644 ${UNPACKDIR}/smb-branding.conf ${D}${sysconfdir}/samba/distro
+    install -m 644 ${UNPACKDIR}/smb-global.conf ${D}${sysconfdir}/samba/distro
+    install -m 644 ${UNPACKDIR}/smb-shares.conf ${D}${sysconfdir}/samba/distro
+    install -m 644 ${UNPACKDIR}/smb-vmc.samba ${D}${sysconfdir}/samba/distro
+    install -m 644 ${UNPACKDIR}/smbpasswd ${D}${sysconfdir}/samba/private
+    install -m 644 ${UNPACKDIR}/users.map ${D}${sysconfdir}/samba/private
     install -d ${D}${sysconfdir}/init.d
-    install -m 755 ${WORKDIR}/init.samba ${D}${sysconfdir}/init.d/samba
-    install -m 755 ${WORKDIR}/init.wsdd ${D}${sysconfdir}/init.d/wsdd
+    install -m 755 ${UNPACKDIR}/init.samba ${D}${sysconfdir}/init.d/samba
+    install -m 755 ${UNPACKDIR}/init.wsdd ${D}${sysconfdir}/init.d/wsdd
 
     if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
         perl -i -pe 's:(PIDFile=)/run/(.*?\.pid):${1}${localstatedir}/run/${2}:' ${D}${systemd_system_unitdir}/*.service

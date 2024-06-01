@@ -16,10 +16,10 @@ Signed-off-by: Yi Zhao <yi.zhao@windriver.com>
  1 file changed, 61 deletions(-)
 
 diff --git a/source3/wscript b/source3/wscript
-index f6de0a6..3e260c1 100644
+index 549580e..521de42 100644
 --- a/source3/wscript
 +++ b/source3/wscript
-@@ -1164,67 +1164,6 @@ err:
+@@ -1152,67 +1152,6 @@ err:
              execute=True,
              msg="Checking whether fcntl lock supports open file description locks")
  
@@ -82,11 +82,11 @@ index f6de0a6..3e260c1 100644
 -            'HAVE_RW_HINTS',
 -            addmain=False,
 -            execute=True,
--            msg="Checking whether fcntl supports setting/geting hints")
+-            msg="Checking whether fcntl supports setting/getting hints")
 -
      conf.CHECK_STRUCTURE_MEMBER('struct stat', 'st_mtim.tv_nsec',
                                  define='HAVE_STRUCT_STAT_ST_MTIM_TV_NSEC') # Linux, Solaris
      conf.CHECK_STRUCTURE_MEMBER('struct stat', 'st_mtimensec',
 -- 
-2.17.1
+2.40.1
 
