@@ -28,9 +28,9 @@ RREPLACES:${PN}  = "${@" ".join(map(lambda s: "locale-base-%s" % s, d.getVar('LA
 
 do_install() {
 	install -d ${D}${sysconfdir}/profile.d
-	install -m 0644 ${WORKDIR}/locale.sh ${D}${sysconfdir}/profile.d/locale.sh
+	install -m 0644 ${UNPACKDIR}/locale.sh ${D}${sysconfdir}/profile.d/locale.sh
 	install -d ${D}${LOCALEDIR2}
-	install ${WORKDIR}/locale.alias ${D}${LOCALEDIR2}
+	install ${UNPACKDIR}/locale.alias ${D}${LOCALEDIR2}
 
 	install -d ${D}${LOCALEDIR}
 	cp -rp ${S}/* ${D}/${LOCALEDIR}
