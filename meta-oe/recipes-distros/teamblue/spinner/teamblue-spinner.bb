@@ -7,7 +7,7 @@ inherit allarch
 require conf/license/license-gplv2.inc
 
 PV = "${IMAGE_VERSION}"
-PR = "r0"
+PR = "r1"
 
 SRC_URI="file://wait1.png \
 		file://wait2.png \
@@ -22,7 +22,7 @@ SRC_URI="file://wait1.png \
 		file://wait11.png \
 		file://wait12.png \
 		"
-		
+
 S = "${WORKDIR}"		
 
 do_install() {
