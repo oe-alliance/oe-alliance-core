@@ -14,7 +14,7 @@ PR = "r1"
 BRANCH = "3.2"
 
 SRC_URI = "git://github.com/opendreambox/enigma2-skins.git;protocol=https;branch=${BRANCH} \
-        file://0001-make-genmetaindex-py2-py3-compatible.patch \
+        file://0001-make-genmetaindex-py3-compatible.patch \
         file://skinsnotwanted"
 
 #include examples of openpli widgets

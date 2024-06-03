@@ -1,0 +1,22 @@
+From 3732ad6327532d0b1977d1184cdd4b5bd170dcd9 Mon Sep 17 00:00:00 2001
+From: Captain <openatv@gmail.com>
+Date: Mon, 3 Jun 2024 17:20:52 +0200
+Subject: [PATCH] update genmetaindex.py
+
+---
+ genmetaindex.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/genmetaindex.py b/genmetaindex.py
+index f42cefc..e14f1b6 100755
+--- a/genmetaindex.py
++++ b/genmetaindex.py
+@@ -47,4 +47,4 @@ def indent(elem, level=0):
+ 
+ indent(root)
+ 
+-ElementTree(root).write(sys.stdout)
++ElementTree(root).write(sys.stdout, encoding='unicode')
+-- 
+2.45.1.windows.1
+
