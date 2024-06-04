@@ -14,7 +14,8 @@ inherit pkgconfig
 
 SRC_URI = "file://eplayer5.c file://Makefile"
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 FILES:${PN} = "${bindir}/*"
 
@@ -24,7 +25,7 @@ do_compile() {
 
 do_install() {
     install -d ${D}/${bindir}
-    install -m 755 ${S}/eplayer5 ${D}/${bindir}
+    install -m 755 ${UNPACKDIR}/eplayer5 ${D}/${bindir}
 }
 
 INSANE_SKIP:${PN} += "ldflags"
