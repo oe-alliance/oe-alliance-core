@@ -3,7 +3,8 @@ LICENSE = "CLOSED"
 
 SRC_URI = "file://dvb-usb-tbsqbox-id5520.zip"
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 PACKAGES = "${PN}"
 FILES:${PN} += "${nonarch_base_libdir}/firmware"

@@ -5,7 +5,8 @@ SRC_URI = " \
     file://rtl8723aufw_B_NoBT.zip \
 "
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 PACKAGES = "${PN}"
 FILES:${PN} += "${base_libdir}/firmware"
