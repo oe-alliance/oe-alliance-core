@@ -12,7 +12,8 @@ SRC_URI[sha256sum] = "eb64e3870e8db000abe6dcb122428eb424cbdea0db5c3569465a0c0f6a
 
 SRC_URI = "https://source.mynonpublic.com/tntfs/${HICHIPSET}-tntfs-${SRCDATE}.zip"
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 INHIBIT_PACKAGE_STRIP = "1"
 
@@ -24,7 +25,7 @@ do_populate_sysroot() {
 do_install() {
     install -d ${D}/lib/modules/${KV}/extra
     install -d ${D}/${sysconfdir}/modules-load.d
-    install -m 0755 ${S}/tntfs.ko ${D}${base_libdir}/modules/${KV}/extra
+    install -m 0755 ${UNPACKDIR}/tntfs.ko ${D}${base_libdir}/modules/${KV}/extra
     echo tntfs >> ${D}/${sysconfdir}/modules-load.d/tntfs.conf
 }
 

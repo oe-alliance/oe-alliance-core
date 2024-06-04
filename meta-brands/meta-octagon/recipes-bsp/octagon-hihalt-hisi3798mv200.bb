@@ -19,13 +19,14 @@ SRC_URI  = "https://source.mynonpublic.com/octagon/${SOC_FAMILY}-hihalt-${SRCDAT
     file://suspend.sh \
 "
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 do_install() {
     install -d ${D}${bindir}
-    install -m 0755 ${S}/hihalt ${D}/${bindir}
+    install -m 0755 ${UNPACKDIR}/hihalt ${D}/${bindir}
     install -d ${D}${sysconfdir}/init.d
-    install -m 0755 ${S}/suspend.sh ${D}${sysconfdir}/init.d/suspend
+    install -m 0755 ${UNPACKDIR}/suspend.sh ${D}${sysconfdir}/init.d/suspend
 }
 
 do_package_qa() {
