@@ -17,11 +17,12 @@ RCONFLICTS:${PN} = "showiframe"
 
 SRC_URI = "https://source.mynonpublic.com/uclan/${SOC_FAMILY}-showiframe-${SRCDATE}.tar.gz"
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 do_install() {
     install -d ${D}${bindir}
-    install -m 0755 ${S}/showiframe ${D}/${bindir}
+    install -m 0755 ${UNPACKDIR}/showiframe ${D}/${bindir}
 }
 
 do_package_qa() {

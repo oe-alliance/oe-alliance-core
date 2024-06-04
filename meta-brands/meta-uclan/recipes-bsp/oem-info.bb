@@ -15,5 +15,5 @@ INITSCRIPT_PARAMS = "start 40 S ."
 
 do_install () {
     install -m 0755 -d ${D}${sysconfdir}/init.d
-    install -m 0755 ${WORKDIR}/oem-info ${D}${sysconfdir}/init.d/oem-info
+    install -m 0755 ${UNPACKDIR}/oem-info ${D}${sysconfdir}/init.d/oem-info
 }
