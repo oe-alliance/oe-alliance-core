@@ -20,8 +20,8 @@ Subject: [PATCH] hiplayer-21
  xbmc/cores/hiplayer/CMakeLists.txt            |   17 +
  xbmc/cores/hiplayer/HiAdec.cpp                |  114 +
  xbmc/cores/hiplayer/HiAdec.h                  |   59 +
- xbmc/cores/hiplayer/HiCodecAudio.cpp          |  419 +++
- xbmc/cores/hiplayer/HiCodecAudio.h            |   93 +
+ xbmc/cores/hiplayer/HiCodecAudio.cpp          |  481 ++++
+ xbmc/cores/hiplayer/HiCodecAudio.h            |   97 +
  xbmc/cores/hiplayer/HiCodecVideo.cpp          |  568 ++++
  xbmc/cores/hiplayer/HiCodecVideo.h            |   97 +
  xbmc/cores/hiplayer/HiDecoder.cpp             | 1461 ++++++++++
@@ -159,7 +159,7 @@ Subject: [PATCH] hiplayer-21
  xbmc/settings/SettingConditions.cpp           |    3 +
  xbmc/settings/Settings.h                      |    1 +
  xbmc/windowing/egl/WinSystemSTBContext.cpp    |    3 +
- 155 files changed, 53557 insertions(+), 7 deletions(-)
+ 155 files changed, 53623 insertions(+), 7 deletions(-)
  create mode 100644 xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/RendererHisi.cpp
  create mode 100644 xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/RendererHisi.h
  create mode 100644 xbmc/cores/hiplayer/CMakeLists.txt
@@ -302,10 +302,10 @@ Subject: [PATCH] hiplayer-21
  create mode 100644 xbmc/platform/linux/hisi/hifb.h
 
 diff --git a/addons/resource.language.en_gb/resources/strings.po b/addons/resource.language.en_gb/resources/strings.po
-index a0f0d79fb0f..91bbbbac44a 100644
+index 19774a0091b..36da0a1354f 100644
 --- a/addons/resource.language.en_gb/resources/strings.po
 +++ b/addons/resource.language.en_gb/resources/strings.po
-@@ -7469,6 +7469,17 @@ msgstr ""
+@@ -7511,6 +7511,17 @@ msgstr ""
  
  #empty strings from id 13458 to 13459
  
@@ -360,7 +360,7 @@ index a8e81940385..391bc65e974 100644
  xbmc/platform/linux/network         platform/linux/network
  xbmc/platform/linux/peripherals     platform/linux/peripherals
 diff --git a/system/settings/settings.xml b/system/settings/settings.xml
-index 6f6b0236248..02a767c7b03 100755
+index 0fc2f4adf6c..17aae0098fa 100755
 --- a/system/settings/settings.xml
 +++ b/system/settings/settings.xml
 @@ -60,6 +60,12 @@
@@ -377,10 +377,10 @@ index 6f6b0236248..02a767c7b03 100755
            <dependencies>
              <dependency type="visible">
 diff --git a/xbmc/application/Application.cpp b/xbmc/application/Application.cpp
-index 299b533f2d3..57214c2ce6e 100644
+index fba4b3763e2..9ef1990aa99 100644
 --- a/xbmc/application/Application.cpp
 +++ b/xbmc/application/Application.cpp
-@@ -101,6 +101,10 @@
+@@ -104,6 +104,10 @@
  #include "network/EventServer.h"
  #include "network/Network.h"
  #include "network/ZeroconfBrowser.h"
@@ -391,7 +391,7 @@ index 299b533f2d3..57214c2ce6e 100644
  #ifdef HAS_UPNP
  #include "network/upnp/UPnP.h"
  #endif
-@@ -173,7 +177,7 @@
+@@ -176,7 +180,7 @@
  #include "platform/win32/threads/Win32Exception.h"
  #endif
  
@@ -400,7 +400,7 @@ index 299b533f2d3..57214c2ce6e 100644
  #include <memory>
  #include <mutex>
  
-@@ -373,6 +377,9 @@ bool CApplication::Create()
+@@ -307,6 +311,9 @@ bool CApplication::Create()
    // Init our DllLoaders emu env
    init_emu_environ();
  
@@ -410,7 +410,7 @@ index 299b533f2d3..57214c2ce6e 100644
    PrintStartupLog();
  
    // initialize network protocols
-@@ -2079,6 +2086,9 @@ bool CApplication::Stop(int exitCode)
+@@ -2014,6 +2021,9 @@ bool CApplication::Stop(int exitCode)
    const auto appPlayer = GetComponent<CApplicationPlayer>();
    appPlayer->ClosePlayer();
  
@@ -465,10 +465,10 @@ index 9fe074af414..2c522196a9d 100644
  // extra masks - from bit 5
  constexpr int LOGMASKBIT = 5;
 diff --git a/xbmc/cores/VideoPlayer/VideoPlayer.cpp b/xbmc/cores/VideoPlayer/VideoPlayer.cpp
-index bf3f6067982..419bd51b26d 100644
+index 78e9cc3cdc5..6a75376060a 100644
 --- a/xbmc/cores/VideoPlayer/VideoPlayer.cpp
 +++ b/xbmc/cores/VideoPlayer/VideoPlayer.cpp
-@@ -61,6 +61,10 @@
+@@ -63,6 +63,10 @@
  #include "utils/log.h"
  #include "video/Bookmark.h"
  #include "video/VideoInfoTag.h"
@@ -479,7 +479,7 @@ index bf3f6067982..419bd51b26d 100644
  #include "windowing/WinSystem.h"
  
  #include <iterator>
-@@ -576,11 +580,28 @@ int CSelectionStreams::CountType(StreamType type) const
+@@ -579,11 +583,28 @@ int CSelectionStreams::CountType(StreamType type) const
  
  void CVideoPlayer::CreatePlayers()
  {
@@ -510,7 +510,7 @@ index bf3f6067982..419bd51b26d 100644
    m_VideoPlayerSubtitle = new CVideoPlayerSubtitle(&m_overlayContainer, *m_processInfo);
    m_VideoPlayerTeletext = new CDVDTeletextData(*m_processInfo);
    m_VideoPlayerRadioRDS = new CDVDRadioRDSData(*m_processInfo);
-@@ -634,6 +655,16 @@ CVideoPlayer::CVideoPlayer(IPlayerCallback& callback)
+@@ -637,6 +658,16 @@ CVideoPlayer::CVideoPlayer(IPlayerCallback& callback)
    m_HasAudio = false;
    m_UpdateStreamDetails = false;
  
@@ -527,7 +527,7 @@ index bf3f6067982..419bd51b26d 100644
    m_SkipCommercials = true;
  
    m_processInfo.reset(CProcessInfo::CreateInstance());
-@@ -668,6 +699,83 @@ bool CVideoPlayer::OpenFile(const CFileItem& file, const CPlayerOptions &options
+@@ -671,6 +702,83 @@ bool CVideoPlayer::OpenFile(const CFileItem& file, const CPlayerOptions &options
  {
    CLog::Log(LOGINFO, "VideoPlayer::OpenFile: {}", CURL::GetRedacted(file.GetPath()));
  
@@ -611,7 +611,7 @@ index bf3f6067982..419bd51b26d 100644
    if (IsRunning())
    {
      CDVDMsgOpenFile::FileParams params;
-@@ -1531,6 +1639,12 @@ void CVideoPlayer::Process()
+@@ -1536,6 +1644,12 @@ void CVideoPlayer::Process()
        {
          m_VideoPlayerVideo->SendMessage(std::make_shared<CDVDMsg>(CDVDMsg::VIDEO_DRAIN));
        }
@@ -624,7 +624,7 @@ index bf3f6067982..419bd51b26d 100644
  
        m_CurrentAudio.inited = false;
        m_CurrentVideo.inited = false;
-@@ -2631,6 +2745,15 @@ void CVideoPlayer::HandleMessages()
+@@ -2636,6 +2750,15 @@ void CVideoPlayer::HandleMessages()
  
        FlushBuffers(DVD_NOPTS_VALUE, true, true);
        m_renderManager.Flush(false, false);
@@ -641,10 +641,10 @@ index bf3f6067982..419bd51b26d 100644
        m_pSubtitleDemuxer.reset();
        m_subtitleDemuxerMap.clear();
 diff --git a/xbmc/cores/VideoPlayer/VideoPlayer.h b/xbmc/cores/VideoPlayer/VideoPlayer.h
-index 01cbca01197..8960c382b2d 100644
+index 2dfd8f4be31..1080654e192 100644
 --- a/xbmc/cores/VideoPlayer/VideoPlayer.h
 +++ b/xbmc/cores/VideoPlayer/VideoPlayer.h
-@@ -589,4 +589,11 @@ protected:
+@@ -591,4 +591,11 @@ protected:
    bool m_UpdateStreamDetails;
  
    std::atomic<bool> m_displayLost;
@@ -657,7 +657,7 @@ index 01cbca01197..8960c382b2d 100644
 +#endif
  };
 diff --git a/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/CMakeLists.txt b/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/CMakeLists.txt
-index 8598052b418..963e0001e86 100644
+index bd4d6333eea..1c72b226b01 100644
 --- a/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/CMakeLists.txt
 +++ b/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/CMakeLists.txt
 @@ -69,6 +69,9 @@ if("webos" IN_LIST CORE_PLATFORM_NAME_LC)
@@ -1112,10 +1112,10 @@ index 00000000000..0cb2ac23d7c
 +};
 diff --git a/xbmc/cores/hiplayer/HiCodecAudio.cpp b/xbmc/cores/hiplayer/HiCodecAudio.cpp
 new file mode 100644
-index 00000000000..ccbe832d312
+index 00000000000..5fc82b34dd3
 --- /dev/null
 +++ b/xbmc/cores/hiplayer/HiCodecAudio.cpp
-@@ -0,0 +1,419 @@
+@@ -0,0 +1,481 @@
 +/*
 + *      Copyright (C) 2005-2013 Team XBMC
 + *      http://xbmc.org
@@ -1143,6 +1143,14 @@ index 00000000000..ccbe832d312
 +#include "utils/log.h"
 +
 +#include "system.h"
++extern "C" {
++#include <libavutil/channel_layout.h>
++}
++#if LIBAVCODEC_VERSION_MAJOR < 59
++    #define NB_CHANNELS channels
++#else
++    #define NB_CHANNELS ch_layout.nb_channels
++#endif
 +// the size of the audio_render output port buffers
 +#define AUDIO_DECODE_OUTPUT_BUFFER (32 * 1024)
 +static const char rounded_up_channels_shift[] = {0, 0, 1, 2, 2, 3, 3, 3, 3};
@@ -1210,16 +1218,16 @@ index 00000000000..ccbe832d312
 +//    m_pCodecContext->flags |= AV_CODEC_FLAG_TRUNCATED;
 +
 +  m_channels = 0;
-+  m_pCodecContext->channels = hints.channels;
++  m_pCodecContext->NB_CHANNELS = hints.channels;
 +  m_pCodecContext->sample_rate = hints.samplerate;
 +  m_pCodecContext->block_align = hints.blockalign;
 +  m_pCodecContext->bit_rate = hints.bitrate;
 +  m_pCodecContext->bits_per_coded_sample = hints.bitspersample;
-+  m_pCodecContext->request_channel_layout = AV_CH_LAYOUT_STEREO;
++//  m_pCodecContext->request_channel_layout = AV_CH_LAYOUT_STEREO;
 +
-+  if (m_pCodecContext->request_channel_layout)
++/*  if (m_pCodecContext->request_channel_layout)
 +    CLog::Log(LOGNOTICE, "CDVDAudioCodecHisi::Open() Requesting channel layout of  {}",
-+              (unsigned)m_pCodecContext->request_channel_layout);
++              (unsigned)m_pCodecContext->request_channel_layout); */
 +
 +  if (m_pCodecContext->bits_per_coded_sample == 0)
 +    m_pCodecContext->bits_per_coded_sample = 16;
@@ -1313,7 +1321,7 @@ index 00000000000..ccbe832d312
 +  //   //           "CDVDAudioCodecHisi::Decode(%p,%d) format=%d(%d) chan=%d samples=%d size=%d "
 +  //   //           "data=%p,%p,%p,%p,%p,%p,%p,%p",
 +  //   //           pData, iSize, m_pCodecContext->sample_fmt, m_desiredSampleFormat,
-+  //   //           m_pCodecContext->channels, m_pFrame1->nb_samples, m_pFrame1->linesize[0],
++  //   //           m_pCodecContext->NB_CHANNELS, m_pFrame1->nb_samples, m_pFrame1->linesize[0],
 +  //   //           m_pFrame1->data[0], m_pFrame1->data[1], m_pFrame1->data[2], m_pFrame1->data[3],
 +  //   //           m_pFrame1->data[4], m_pFrame1->data[5], m_pFrame1->data[6], m_pFrame1->data[7]);
 +  // }
@@ -1328,7 +1336,7 @@ index 00000000000..ccbe832d312
 +    return 0;
 +  int inLineSize, outLineSize;
 +  /* input audio is aligned */
-+  int inputSize = av_samples_get_buffer_size(&inLineSize, m_pCodecContext->channels,
++  int inputSize = av_samples_get_buffer_size(&inLineSize, m_pCodecContext->NB_CHANNELS,
 +                                             m_pFrame1->nb_samples, m_pCodecContext->sample_fmt, 0);
 +  /* output audio will be packed */
 +  int outputSize = av_samples_get_buffer_size(&outLineSize, m_desiredchannels,
@@ -1366,22 +1374,33 @@ index 00000000000..ccbe832d312
 +
 +  /* need to convert format */
 +  if (m_pCodecContext->sample_fmt != m_desiredSampleFormat ||
-+      m_pCodecContext->channels != m_desiredchannels)
++      m_pCodecContext->NB_CHANNELS != m_desiredchannels)
 +  {
 +    if (m_pConvert &&
-+        (m_pCodecContext->sample_fmt != m_iSampleFormat || m_channels != m_pCodecContext->channels))
++        (m_pCodecContext->sample_fmt != m_iSampleFormat || m_channels != m_pCodecContext->NB_CHANNELS))
 +    {
 +      swr_free(&m_pConvert);
-+      m_channels = m_pCodecContext->channels;
++      m_channels = m_pCodecContext->NB_CHANNELS;
 +    }
 +
 +    if (!m_pConvert)
 +    {
 +      m_iSampleFormat = m_pCodecContext->sample_fmt;
++
++#if LIBAVCODEC_VERSION_MAJOR < 59
 +      m_pConvert = swr_alloc_set_opts(
 +          NULL, av_get_default_channel_layout(m_desiredchannels), m_desiredSampleFormat,
-+          m_pCodecContext->sample_rate, av_get_default_channel_layout(m_pCodecContext->channels),
++          m_pCodecContext->sample_rate, av_get_default_channel_layout(m_pCodecContext->NB_CHANNELS),
 +          m_pCodecContext->sample_fmt, m_pCodecContext->sample_rate, 0, NULL);
++#else
++      av_channel_layout_default(&m_pCodecContext->ch_layout, m_pCodecContext->NB_CHANNELS);
++      swr_alloc_set_opts2(&m_pConvert,
++                      &m_pCodecContext->ch_layout,
++                      m_desiredSampleFormat, m_pCodecContext->sample_rate,
++                      &m_pCodecContext->ch_layout,
++                      m_pCodecContext->sample_fmt, m_pCodecContext->sample_rate,
++                      0, NULL);
++#endif
 +
 +      if (!m_pConvert || swr_init(m_pConvert) < 0)
 +      {
@@ -1393,7 +1412,7 @@ index 00000000000..ccbe832d312
 +    }
 +
 +    /* use unaligned flag to keep output packed */
-+    uint8_t* out_planes[m_pCodecContext->channels];
++    uint8_t* out_planes[m_pCodecContext->NB_CHANNELS];
 +    if (av_samples_fill_arrays(out_planes, NULL, m_pBufferOutput + m_iBufferOutputUsed,
 +                               m_desiredchannels, m_pFrame1->nb_samples, m_desiredSampleFormat,
 +                               1) < 0 ||
@@ -1408,12 +1427,12 @@ index 00000000000..ccbe832d312
 +  else
 +  {
 +    /* copy to a contiguous buffer */
-+    uint8_t* out_planes[m_pCodecContext->channels];
++    uint8_t* out_planes[m_pCodecContext->NB_CHANNELS];
 +    if (av_samples_fill_arrays(out_planes, NULL, m_pBufferOutput + m_iBufferOutputUsed,
-+                               m_pCodecContext->channels, m_pFrame1->nb_samples,
++                               m_pCodecContext->NB_CHANNELS, m_pFrame1->nb_samples,
 +                               m_desiredSampleFormat, 1) < 0 ||
 +        av_samples_copy(out_planes, m_pFrame1->data, 0, 0, m_pFrame1->nb_samples,
-+                        m_pCodecContext->channels, m_desiredSampleFormat) < 0)
++                        m_pCodecContext->NB_CHANNELS, m_desiredSampleFormat) < 0)
 +    {
 +      outputSize = 0;
 +    }
@@ -1443,7 +1462,7 @@ index 00000000000..ccbe832d312
 +{
 +  if (!m_pCodecContext)
 +    return 0;
-+  return m_pCodecContext->channels;
++  return m_pCodecContext->NB_CHANNELS;
 +}
 +
 +int CDVDAudioCodecHisi::GetSampleRate()
@@ -1475,21 +1494,21 @@ index 00000000000..ccbe832d312
 +  return bits;
 +}
 +
++#if LIBAVCODEC_VERSION_MAJOR < 59
 +void CDVDAudioCodecHisi::BuildChannelMap()
 +{
 +  uint64_t layout;
 +  int bits = count_bits(m_pCodecContext->channel_layout);
-+  if (bits == m_pCodecContext->channels)
++  if (bits == m_pCodecContext->NB_CHANNELS)
 +    layout = m_pCodecContext->channel_layout;
 +  else
 +  {
 +    CLog::Log(LOGINFO,
 +              "CDVDAudioCodecHisi::GetChannelMap - FFmpeg reported {} channels, but the layout "
 +              "contains {} ignoring",
-+              m_pCodecContext->channels, bits);
-+    layout = av_get_default_channel_layout(m_pCodecContext->channels);
++              m_pCodecContext->NB_CHANNELS, bits);
++    layout = av_get_default_channel_layout(m_pCodecContext->NB_CHANNELS);
 +  }
-+
 +  m_channelLayout.Reset();
 +
 +  if (layout & AV_CH_FRONT_LEFT)
@@ -1529,18 +1548,61 @@ index 00000000000..ccbe832d312
 +  if (layout & AV_CH_TOP_BACK_RIGHT)
 +    m_channelLayout += AE_CH_BR;
 +}
++#else
++uint64_t CDVDAudioCodecHisi::BuildChannelMap()
++{
++  bool tryDefault = true;
++  int bits = -1;
++
++  retry:
++  if(m_pCodecContext->ch_layout.order == AV_CHANNEL_ORDER_NATIVE
++      || m_pCodecContext->ch_layout.order == AV_CHANNEL_ORDER_AMBISONIC)
++  {
++    bits = count_bits(m_pCodecContext->ch_layout.u.mask);
++    if (bits == m_pCodecContext->ch_layout.nb_channels)
++    {
++      return m_pCodecContext->ch_layout.u.mask;
++    }
++  }
++
++  if(!tryDefault)
++  {
++    CLog::Log(LOGINFO, "CDVDAudioCodecHisi::GetChannelMap - bad channel layout order");
++    return 0;
++  }
++
++  if(bits == -1)
++  {
++    CLog::Log(LOGINFO, "CDVDAudioCodecHisi::GetChannelMap - FFmpeg reported invalid channel "
++      "layout order ignoring");
++  }
++  else
++  {
++    CLog::Log(LOGINFO, "CDVDAudioCodecHisi::GetChannelMap - FFmpeg reported %d channels, but the "
++      "layout contains %d ignoring", m_pCodecContext->ch_layout.nb_channels, bits);
++  }
++
++  av_channel_layout_default(&m_pCodecContext->ch_layout, m_pCodecContext->ch_layout.nb_channels);
++
++  tryDefault = false;
++  goto retry;
++}
++#endif
++
 +
 +CAEChannelInfo CDVDAudioCodecHisi::GetChannelMap()
 +{
 +  BuildChannelMap();
++#if LIBAVCODEC_VERSION_MAJOR < 59
 +  return m_channelLayout;
++#endif
 +}
 diff --git a/xbmc/cores/hiplayer/HiCodecAudio.h b/xbmc/cores/hiplayer/HiCodecAudio.h
 new file mode 100644
-index 00000000000..fdeec19c5f1
+index 00000000000..7e18151b36c
 --- /dev/null
 +++ b/xbmc/cores/hiplayer/HiCodecAudio.h
-@@ -0,0 +1,93 @@
+@@ -0,0 +1,97 @@
 +#pragma once
 +
 +/*
@@ -1594,7 +1656,11 @@ index 00000000000..fdeec19c5f1
 +  int GetData(BYTE** dst, double& dts, double& pts);
 +  void Reset();
 +  int GetChannels();
++#if LIBAVCODEC_VERSION_MAJOR < 59
 +  void BuildChannelMap();
++#else
++  uint64_t BuildChannelMap();
++#endif
 +  CAEChannelInfo GetChannelMap();
 +  int GetSampleRate();
 +  int GetBitsPerSample();
@@ -19193,7 +19259,7 @@ index 00000000000..1f856824e14
 +#endif /* __HI_TYPE_H__ */
 diff --git a/xbmc/platform/linux/hisi/hi_go_errno.h b/xbmc/platform/linux/hisi/hi_go_errno.h
 new file mode 100644
-index 00000000000..15905a67b10
+index 00000000000..2ee03a1d877
 --- /dev/null
 +++ b/xbmc/platform/linux/hisi/hi_go_errno.h
 @@ -0,0 +1,499 @@
@@ -19659,7 +19725,7 @@ index 00000000000..15905a67b10
 +/** CNcomment:已经设定窗口内存模式 0xB0078005 */
 +#define HIGO_ERR_ALREADYSETMODE HIGO_DEF_ERR(HIGO_MOD_WINC, ERR_WINC_ALREADYSETMODE)
 +
-+/**Error codes of the HiGo surface module*/
++/**Error codes of the HiGo surface module*/
 +/** CNcomment:HiGo Cursor模块错误码 */
 +typedef enum
 +{
@@ -54907,7 +54973,7 @@ index 1f11a4995ee..26cc059e7b2 100644
    m_simpleConditions.emplace("have_libva");
  #endif
 diff --git a/xbmc/settings/Settings.h b/xbmc/settings/Settings.h
-index bfc5e6072cd..9a36e4be547 100644
+index b1124afac16..4531cc876cb 100644
 --- a/xbmc/settings/Settings.h
 +++ b/xbmc/settings/Settings.h
 @@ -129,6 +129,7 @@ public:
