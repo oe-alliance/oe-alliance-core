@@ -2,7 +2,8 @@ LICENSE = "CLOSED"
 require conf/license/license-close.inc
 SRC_URI = "file://rtl8188eufw.bin"
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 PACKAGES = "${PN}"
 FILES:${PN} += "${nonarch_base_libdir}/firmware"
