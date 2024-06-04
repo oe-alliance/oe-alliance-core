@@ -19,7 +19,7 @@ RRECOMMENDS:${PN} = "\
     enigma2-skins \
     enigma2-plugin-systemplugins-serviceapp \
     valgrind \
-    exteplayer3 \
+    \
     sysvinit \
     socketdaemon \
     "
