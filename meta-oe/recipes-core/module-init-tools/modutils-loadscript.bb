@@ -8,7 +8,8 @@ PV = "2"
 INITSCRIPT_NAME = "modload.sh"
 INITSCRIPT_PARAMS = "start 5 S ."
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 inherit update-rc.d
 
@@ -17,5 +18,5 @@ do_compile () {
 
 do_install () {
     install -d ${D}${sysconfdir}/init.d/
-    install -m 0755 ${WORKDIR}/modload.sh ${D}${sysconfdir}/init.d/
+    install -m 0755 ${UNPACKDIR}/modload.sh ${D}${sysconfdir}/init.d/
 }

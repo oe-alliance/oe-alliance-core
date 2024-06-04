@@ -9,6 +9,10 @@ SRC_URI = "file://fake-hwclock \
            file://fake-hwclock.init \
            file://fake-hwclock.default \
 "
+
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
+
 inherit update-rc.d
 
 INITSCRIPT_NAME = "fake-hwclock"
@@ -25,18 +29,18 @@ do_compile() {
 
 do_install() {
     install -d ${D}${base_bindir}
-    install -m 755 ${WORKDIR}/fake-hwclock ${D}${base_bindir}
+    install -m 755 ${UNPACKDIR}/fake-hwclock ${D}${base_bindir}
 
     install -d ${D}${sysconfdir}/default
-    install -m 644 ${WORKDIR}/fake-hwclock.default ${D}${sysconfdir}/default/fake-hwclock
+    install -m 644 ${UNPACKDIR}/fake-hwclock.default ${D}${sysconfdir}/default/fake-hwclock
 
 
 #    if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
 #        install -d ${D}${systemd_system_unitdir}
-#        install -m 0644 ${WORKDIR}/fake-hwclock.service ${D}${systemd_system_unitdir}
+#        install -m 0644 ${UNPACKDIR}/fake-hwclock.service ${D}${systemd_system_unitdir}
 #    else
         install -d ${D}${sysconfdir}/init.d
-        install -m 755 ${WORKDIR}/fake-hwclock.init ${D}${sysconfdir}/init.d/fake-hwclock
+        install -m 755 ${UNPACKDIR}/fake-hwclock.init ${D}${sysconfdir}/init.d/fake-hwclock
 #    fi
 }
 
