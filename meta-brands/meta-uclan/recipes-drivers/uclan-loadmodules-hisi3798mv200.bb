@@ -14,12 +14,13 @@ INITSCRIPT_PARAMS = "start 01 S ."
 
 inherit update-rc.d
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 do_compile() {
 }
 
 do_install() {
     install -d ${D}/etc/init.d/
-    install -m 0755 ${WORKDIR}/uclan-loadmodules-hisi3798mv200.sh ${D}/etc/init.d/uclan-loadmodules
+    install -m 0755 ${UNPACKDIR}/uclan-loadmodules-hisi3798mv200.sh ${D}/etc/init.d/uclan-loadmodules
 }
