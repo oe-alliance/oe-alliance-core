@@ -1,7 +1,7 @@
-From 51a1eaf684017f2e03c264ad9fc45f35a7b6c9cd Mon Sep 17 00:00:00 2001
+From 610b93f08f6af433c56f6d21d66a5b774daad57a Mon Sep 17 00:00:00 2001
 From: Captain <openatv@gmail.com>
 Date: Sat, 18 May 2024 05:18:14 +0200
-Subject: [PATCH 14/14] gst-player
+Subject: [PATCH] gst-player
 
 ---
  cmake/modules/FindGLIB.cmake                  |  102 ++
@@ -30,7 +30,7 @@ Subject: [PATCH 14/14] gst-player
 
 diff --git a/cmake/modules/FindGLIB.cmake b/cmake/modules/FindGLIB.cmake
 new file mode 100644
-index 0000000000..656aa0b7d6
+index 0000000..656aa0b
 --- /dev/null
 +++ b/cmake/modules/FindGLIB.cmake
 @@ -0,0 +1,102 @@
@@ -138,7 +138,7 @@ index 0000000000..656aa0b7d6
 +                                       VERSION_VAR   GLIB_VERSION)
 diff --git a/cmake/modules/FindGstreamer.cmake b/cmake/modules/FindGstreamer.cmake
 new file mode 100644
-index 0000000000..760e7d1321
+index 0000000..760e7d1
 --- /dev/null
 +++ b/cmake/modules/FindGstreamer.cmake
 @@ -0,0 +1,40 @@
@@ -183,7 +183,7 @@ index 0000000000..760e7d1321
 +
 +mark_as_advanced(GSTREAMER_LIBRARY GSTREAMER_INCLUDE_DIR GSTREAMER_LDFLAGS)
 diff --git a/cmake/platform/linux/stb.cmake b/cmake/platform/linux/stb.cmake
-index e1fe54a13d..7d7e14205f 100644
+index e1fe54a..7d7e142 100644
 --- a/cmake/platform/linux/stb.cmake
 +++ b/cmake/platform/linux/stb.cmake
 @@ -1,4 +1,4 @@
@@ -193,7 +193,7 @@ index e1fe54a13d..7d7e14205f 100644
  
  set(STB_RENDER_SYSTEM "" CACHE STRING "Render system to use with STB: \"gl\" or \"gles\"")
 diff --git a/cmake/treedata/common/cores.txt b/cmake/treedata/common/cores.txt
-index 5e5c6cbf80..cbde630e7d 100644
+index 5e5c6cb..cbde630 100644
 --- a/cmake/treedata/common/cores.txt
 +++ b/cmake/treedata/common/cores.txt
 @@ -5,5 +5,6 @@ xbmc/cores/DllLoader/exports           cores/dll-loader/exports
@@ -205,7 +205,7 @@ index 5e5c6cbf80..cbde630e7d 100644
  xbmc/cores/playercorefactory           cores/playercorefactory
 diff --git a/xbmc/cores/GstPlayer/CMakeLists.txt b/xbmc/cores/GstPlayer/CMakeLists.txt
 new file mode 100644
-index 0000000000..1b8adfab36
+index 0000000..1b8adfa
 --- /dev/null
 +++ b/xbmc/cores/GstPlayer/CMakeLists.txt
 @@ -0,0 +1,9 @@
@@ -220,7 +220,7 @@ index 0000000000..1b8adfab36
 +core_add_library(gstplayer)
 diff --git a/xbmc/cores/GstPlayer/GstPlayer.cpp b/xbmc/cores/GstPlayer/GstPlayer.cpp
 new file mode 100644
-index 0000000000..f06760fa08
+index 0000000..f06760f
 --- /dev/null
 +++ b/xbmc/cores/GstPlayer/GstPlayer.cpp
 @@ -0,0 +1,691 @@
@@ -917,7 +917,7 @@ index 0000000000..f06760fa08
 +}
 diff --git a/xbmc/cores/GstPlayer/GstPlayer.h b/xbmc/cores/GstPlayer/GstPlayer.h
 new file mode 100644
-index 0000000000..9a73143443
+index 0000000..9a73143
 --- /dev/null
 +++ b/xbmc/cores/GstPlayer/GstPlayer.h
 @@ -0,0 +1,186 @@
@@ -1109,7 +1109,7 @@ index 0000000000..9a73143443
 +};
 diff --git a/xbmc/cores/GstPlayer/GstPlayerAudio.cpp b/xbmc/cores/GstPlayer/GstPlayerAudio.cpp
 new file mode 100644
-index 0000000000..43078a2f0f
+index 0000000..43078a2
 --- /dev/null
 +++ b/xbmc/cores/GstPlayer/GstPlayerAudio.cpp
 @@ -0,0 +1,151 @@
@@ -1266,7 +1266,7 @@ index 0000000000..43078a2f0f
 +}
 diff --git a/xbmc/cores/GstPlayer/GstPlayerAudio.h b/xbmc/cores/GstPlayer/GstPlayerAudio.h
 new file mode 100644
-index 0000000000..fe6f7008cd
+index 0000000..fe6f700
 --- /dev/null
 +++ b/xbmc/cores/GstPlayer/GstPlayerAudio.h
 @@ -0,0 +1,45 @@
@@ -1317,7 +1317,7 @@ index 0000000000..fe6f7008cd
 +};
 diff --git a/xbmc/cores/GstPlayer/GstPlayerVideo.cpp b/xbmc/cores/GstPlayer/GstPlayerVideo.cpp
 new file mode 100644
-index 0000000000..c48a48774c
+index 0000000..c48a487
 --- /dev/null
 +++ b/xbmc/cores/GstPlayer/GstPlayerVideo.cpp
 @@ -0,0 +1,1405 @@
@@ -2728,7 +2728,7 @@ index 0000000000..c48a48774c
 +
 diff --git a/xbmc/cores/GstPlayer/GstPlayerVideo.h b/xbmc/cores/GstPlayer/GstPlayerVideo.h
 new file mode 100644
-index 0000000000..4a77d63f0f
+index 0000000..4a77d63
 --- /dev/null
 +++ b/xbmc/cores/GstPlayer/GstPlayerVideo.h
 @@ -0,0 +1,181 @@
@@ -2914,7 +2914,7 @@ index 0000000000..4a77d63f0f
 +
 +};
 diff --git a/xbmc/cores/playercorefactory/PlayerCoreConfig.cpp b/xbmc/cores/playercorefactory/PlayerCoreConfig.cpp
-index 6c4718d736..513eed3dbc 100644
+index 6c4718d..513eed3 100644
 --- a/xbmc/cores/playercorefactory/PlayerCoreConfig.cpp
 +++ b/xbmc/cores/playercorefactory/PlayerCoreConfig.cpp
 @@ -22,6 +22,9 @@
@@ -2941,10 +2941,10 @@ index 6c4718d736..513eed3dbc 100644
    {
      player = std::make_shared<CExternalPlayer>(callback);
 diff --git a/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp b/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp
-index 359722ec38..2744daf06e 100644
+index 8cae329..7f29221 100644
 --- a/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp
 +++ b/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp
-@@ -30,6 +30,10 @@
+@@ -32,6 +32,10 @@
  #include <mutex>
  #include <sstream>
  
@@ -2954,8 +2954,8 @@ index 359722ec38..2744daf06e 100644
 +
  #define PLAYERCOREFACTORY_XML "playercorefactory.xml"
  
- CPlayerCoreFactory::CPlayerCoreFactory(const CProfileManager& profileManager)
-@@ -361,6 +365,13 @@ bool CPlayerCoreFactory::LoadConfiguration(const std::string &file, bool clear)
+ using namespace KODI;
+@@ -365,6 +369,13 @@ bool CPlayerCoreFactory::LoadConfiguration(const std::string &file, bool clear)
      m_vecCoreSelectionRules.clear();
  
      // Builtin players
@@ -2969,7 +2969,7 @@ index 359722ec38..2744daf06e 100644
      auto VideoPlayer = std::make_unique<CPlayerCoreConfig>("VideoPlayer", "video", nullptr);
      VideoPlayer->m_bPlaysAudio = true;
      VideoPlayer->m_bPlaysVideo = true;
-@@ -401,6 +412,10 @@ bool CPlayerCoreFactory::LoadConfiguration(const std::string &file, bool clear)
+@@ -405,6 +416,10 @@ bool CPlayerCoreFactory::LoadConfiguration(const std::string &file, bool clear)
          internaltype = "video";
        else if (type == "paplayer")
          internaltype = "music";
@@ -2980,6 +2980,3 @@ index 359722ec38..2744daf06e 100644
        else if (type == "externalplayer")
          internaltype = "external";
        else if (type == "enigma2player")
--- 
-2.45.1.windows.1
-
