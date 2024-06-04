@@ -1,4 +1,4 @@
-From 1f533f53fafb9c1b2a7faffb0a33e8e23a2f5e8b Mon Sep 17 00:00:00 2001
+From 256f92db5a1f8c617d0f30c1eddca56f45e96ebd Mon Sep 17 00:00:00 2001
 From: Captain <openatv@gmail.com>
 Date: Wed, 22 May 2024 21:22:47 +0200
 Subject: [PATCH] e2-player
@@ -17,7 +17,7 @@ Subject: [PATCH] e2-player
  create mode 100644 xbmc/cores/Enigma2Player/Enigma2Player.h
 
 diff --git a/cmake/treedata/common/cores.txt b/cmake/treedata/common/cores.txt
-index d23939d314..5e5c6cbf80 100644
+index d23939d..5e5c6cb 100644
 --- a/cmake/treedata/common/cores.txt
 +++ b/cmake/treedata/common/cores.txt
 @@ -4,5 +4,6 @@ xbmc/cores/DllLoader                   cores/dll-loader
@@ -28,7 +28,7 @@ index d23939d314..5e5c6cbf80 100644
  xbmc/cores/paplayer                    cores/paplayer
  xbmc/cores/playercorefactory           cores/playercorefactory
 diff --git a/system/playercorefactory.xml b/system/playercorefactory.xml
-index f928311cf0..8e2502143e 100644
+index f928311..8e25021 100644
 --- a/system/playercorefactory.xml
 +++ b/system/playercorefactory.xml
 @@ -8,9 +8,17 @@
@@ -61,7 +61,7 @@ index f928311cf0..8e2502143e 100644
      <!-- DVDs -->
 diff --git a/xbmc/cores/Enigma2Player/CMakeLists.txt b/xbmc/cores/Enigma2Player/CMakeLists.txt
 new file mode 100644
-index 0000000000..fc672758ff
+index 0000000..fc67275
 --- /dev/null
 +++ b/xbmc/cores/Enigma2Player/CMakeLists.txt
 @@ -0,0 +1,6 @@
@@ -73,7 +73,7 @@ index 0000000000..fc672758ff
 +
 diff --git a/xbmc/cores/Enigma2Player/Enigma2Player.cpp b/xbmc/cores/Enigma2Player/Enigma2Player.cpp
 new file mode 100644
-index 0000000000..150f3f2ef1
+index 0000000..150f3f2
 --- /dev/null
 +++ b/xbmc/cores/Enigma2Player/Enigma2Player.cpp
 @@ -0,0 +1,802 @@
@@ -881,7 +881,7 @@ index 0000000000..150f3f2ef1
 +
 diff --git a/xbmc/cores/Enigma2Player/Enigma2Player.h b/xbmc/cores/Enigma2Player/Enigma2Player.h
 new file mode 100644
-index 0000000000..d0de424320
+index 0000000..d0de424
 --- /dev/null
 +++ b/xbmc/cores/Enigma2Player/Enigma2Player.h
 @@ -0,0 +1,96 @@
@@ -982,7 +982,7 @@ index 0000000000..d0de424320
 +  CFileItem m_file;
 +};
 diff --git a/xbmc/cores/playercorefactory/PlayerCoreConfig.cpp b/xbmc/cores/playercorefactory/PlayerCoreConfig.cpp
-index 545062e050..6c4718d736 100644
+index 545062e..6c4718d 100644
 --- a/xbmc/cores/playercorefactory/PlayerCoreConfig.cpp
 +++ b/xbmc/cores/playercorefactory/PlayerCoreConfig.cpp
 @@ -21,6 +21,7 @@
@@ -1005,7 +1005,7 @@ index 545062e050..6c4718d736 100644
  #if defined(HAS_UPNP)
    else if (m_type.compare("remote") == 0)
 diff --git a/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp b/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp
-index f9472c027e..359722ec38 100644
+index fae40d8..8cae329 100644
 --- a/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp
 +++ b/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp
 @@ -14,6 +14,7 @@
@@ -1015,8 +1015,8 @@ index f9472c027e..359722ec38 100644
 +#include "cores/Enigma2Player/Enigma2Player.h"
  #include "dialogs/GUIDialogContextMenu.h"
  #include "guilib/LocalizeStrings.h"
- #include "profiles/ProfileManager.h"
-@@ -365,6 +366,11 @@ bool CPlayerCoreFactory::LoadConfiguration(const std::string &file, bool clear)
+ #include "music/MusicFileItemClassify.h"
+@@ -369,6 +370,11 @@ bool CPlayerCoreFactory::LoadConfiguration(const std::string &file, bool clear)
      VideoPlayer->m_bPlaysVideo = true;
      m_vecPlayerConfigs.emplace_back(std::move(VideoPlayer));
  
@@ -1028,7 +1028,7 @@ index f9472c027e..359722ec38 100644
      auto paplayer = std::make_unique<CPlayerCoreConfig>("PAPlayer", "music", nullptr);
      paplayer->m_bPlaysAudio = true;
      m_vecPlayerConfigs.emplace_back(std::move(paplayer));
-@@ -397,6 +403,8 @@ bool CPlayerCoreFactory::LoadConfiguration(const std::string &file, bool clear)
+@@ -401,6 +407,8 @@ bool CPlayerCoreFactory::LoadConfiguration(const std::string &file, bool clear)
          internaltype = "music";
        else if (type == "externalplayer")
          internaltype = "external";
@@ -1037,6 +1037,3 @@ index f9472c027e..359722ec38 100644
  
        int count = 0;
        std::string playername = name;
--- 
-2.45.1.windows.1
-

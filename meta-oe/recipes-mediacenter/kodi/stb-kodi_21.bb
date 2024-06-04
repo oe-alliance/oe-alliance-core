@@ -69,7 +69,7 @@ DEPENDS += " \
           "
 inherit gitpkgv
 # 21.0 Omega
-SRCREV = "068f0f694f28179549fcc3c99df237c26b8876d6"
+SRCREV = "${AUTOREV}"
 
 # 'patch' doesn't support binary diffs
 PATCHTOOL = "git"
@@ -77,15 +77,15 @@ PATCHTOOL = "git"
 PR = "r0"
 
 PV = "21.0+gitr"
-PV_groovy = "4.0.18"
+PV_groovy = "4.0.20"
 PV_commons-lang3 = "3.14.0"
 PV_commons-text = "1.12.0"
 
-SRC_URI[groovy.sha256sum] = "4b03aa472ec7848d272893348a656be05d1b3502b30770ea57efa158e61154a6"
+SRC_URI[groovy.sha256sum] = "fdf70cc57eff997f3fa5aee2b340d311593912e822ad810b3fd6ee403985eb75"
 SRC_URI[commons-lang.sha256sum] = "317c3e3fcd5fcca3781a7996ff1e0c50c13244ee961e94e5f6f6d84b84733b16"
 SRC_URI[commons-text.sha256sum] = "265a149c7e0c1ebfe019bbe0226f8c1f6474811054d459145510ea2eed93a11a"
 
-SRC_URI = "git://github.com/xbmc/xbmc.git;protocol=https;branch=Omega \
+SRC_URI = "git://github.com/xbmc/xbmc.git;protocol=https;branch=master \
            https://archive.apache.org/dist/groovy/${PV_groovy}/distribution/apache-groovy-binary-${PV_groovy}.zip;name=groovy \
            https://dlcdn.apache.org/commons/lang/binaries/commons-lang3-${PV_commons-lang3}-bin.tar.gz;name=commons-lang \
            https://dlcdn.apache.org/commons/text/binaries/commons-text-${PV_commons-text}-bin.tar.gz;name=commons-text \
@@ -101,6 +101,7 @@ SRC_URI = "git://github.com/xbmc/xbmc.git;protocol=https;branch=Omega \
            file://0010-FindLibDvd.cmake-build-with-external-source.patch \
            file://0011-cmake-includedirs.patch \
            file://0012-taglib2.patch \
+           file://0013-DVDDemuxFFmpeg-fixed-compile-against-ffmpeg-7.patch \
            file://0100-e2-player.patch \
            file://0101-gst-player.patch \
           "
@@ -197,9 +198,9 @@ EXTRA_OECMAKE = " \
     -DENABLE_DVDCSS=OFF \
     -DENABLE_DEBUGFISSION=OFF \
     -DCMAKE_BUILD_TYPE=RelWithDebInfo \
-    -Dgroovy_SOURCE_DIR=${WORKDIR}/groovy-${PV_groovy} \
-    -Dapache-commons-lang_SOURCE_DIR=${WORKDIR}/commons-lang3-${PV_commons-lang3} \
-    -Dapache-commons-text_SOURCE_DIR=${WORKDIR}/commons-text-${PV_commons-text} \
+    -Dgroovy_SOURCE_DIR=${UNPACKDIR}/groovy-${PV_groovy} \
+    -Dapache-commons-lang_SOURCE_DIR=${UNPACKDIR}/commons-lang3-${PV_commons-lang3} \
+    -Dapache-commons-text_SOURCE_DIR=${UNPACKDIR}/commons-text-${PV_commons-text} \
 "
 
 # OECMAKE_GENERATOR="Unix Makefiles"
