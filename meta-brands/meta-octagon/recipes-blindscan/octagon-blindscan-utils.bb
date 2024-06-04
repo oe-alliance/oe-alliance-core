@@ -24,7 +24,7 @@ FILES:octagon-blindscan-dvbc-utils = "${bindir}/tda1002x"
 
 do_install() {
     install -d ${D}/${bindir}/
-    install -m 0755 "${S}/tda1002x" "${D}/${bindir}"
+    install -m 0755 "${UNPACKDIR}/tda1002x" "${D}/${bindir}"
 }
 
 SRC_URI[md5sum] = "23cb152a57a99b28f1bb74d95f4c3109"

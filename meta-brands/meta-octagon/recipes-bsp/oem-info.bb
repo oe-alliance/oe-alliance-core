@@ -8,6 +8,9 @@ PV = "1.0"
 
 SRC_URI = "file://oem-info"
 
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
+
 inherit update-rc.d
 
 INITSCRIPT_NAME = "oem-info"
@@ -15,5 +18,5 @@ INITSCRIPT_PARAMS = "start 40 S ."
 
 do_install () {
     install -m 0755 -d ${D}${sysconfdir}/init.d
-    install -m 0755 ${WORKDIR}/oem-info ${D}${sysconfdir}/init.d/oem-info
+    install -m 0755 ${UNPACKDIR}/oem-info ${D}${sysconfdir}/init.d/oem-info
 }

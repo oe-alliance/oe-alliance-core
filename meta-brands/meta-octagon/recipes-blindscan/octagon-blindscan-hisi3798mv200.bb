@@ -14,11 +14,12 @@ PR = "r0"
 
 SRC_URI  = "https://source.mynonpublic.com/octagon/${SOC_FAMILY}-blindscan-${SRCDATE}.zip"
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 do_install() {
     install -d ${D}${bindir}
-    install -m 0755 ${S}/octagon-blindscan ${D}/${bindir}
+    install -m 0755 ${UNPACKDIR}/octagon-blindscan ${D}/${bindir}
 }
 
 do_package_qa() {
