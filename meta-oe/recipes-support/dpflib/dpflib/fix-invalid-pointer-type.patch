@@ -1,0 +1,11 @@
+--- a/python/py_device.c
++++ b/python/py_device.c
+@@ -436,7 +436,7 @@ static PyMethodDef Device_methods[] =
+ //
+ 
+ static PyObject *
+-Device_getattr(DeviceObject *self, char *name)
++Device_getattr(PyObject *self, char *name)
+ {
+ 	return PyObject_GenericGetAttr((PyObject *)self, PyUnicode_FromString(name));
+ }
