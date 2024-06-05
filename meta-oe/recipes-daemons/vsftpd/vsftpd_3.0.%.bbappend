@@ -12,7 +12,7 @@ do_configure:prepend() {
 do_install:append() {
     rm ${D}${sysconfdir}/vsftpd.user_list
     mkdir -p ${D}${sysconfdir}/avahi/services
-    install -m 644 ${WORKDIR}/ftp.service ${D}${sysconfdir}/avahi/services
+    install -m 644 ${UNPACKDIR}/ftp.service ${D}${sysconfdir}/avahi/services
     if ! test -z ${PAMLIB} ; then
     grep -v 'pam_shells.so' ${D}${sysconfdir}/pam.d/vsftpd > $D/tmp/vsftpd
     mv $D/tmp/vsftpd ${D}${sysconfdir}/pam.d/vsftpd
