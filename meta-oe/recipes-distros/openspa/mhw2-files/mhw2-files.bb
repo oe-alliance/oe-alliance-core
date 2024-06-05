@@ -18,9 +18,9 @@ SRC_URI = " \
 
 do_install() {
     install -d ${D}${sysconfdir}
-    install -m 0644 ${WORKDIR}/mhw_Chann.epg ${D}${sysconfdir}/mhw_Chann.epg
-    install -m 0644 ${WORKDIR}/mhw_Equiv.epg ${D}${sysconfdir}/mhw_Equiv.epg
-    install -m 0644 ${WORKDIR}/mhw_Log.epg ${D}${sysconfdir}/mhw_Log.epg
+    install -m 0644 ${S}/mhw_Chann.epg ${D}${sysconfdir}/mhw_Chann.epg
+    install -m 0644 ${S}/mhw_Equiv.epg ${D}${sysconfdir}/mhw_Equiv.epg
+    install -m 0644 ${S}/mhw_Log.epg ${D}${sysconfdir}/mhw_Log.epg
 }
 
 FILES:${PN} = "${sysconfdir}"

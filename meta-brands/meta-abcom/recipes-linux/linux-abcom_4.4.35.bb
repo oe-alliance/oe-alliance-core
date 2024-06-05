@@ -65,12 +65,12 @@ FILES:${KERNEL_PACKAGE_NAME}-image = "/${KERNEL_IMAGEDEST}/findkerneldevice.sh"
 
 kernel_do_configure:prepend() {
     install -d ${B}/usr
-    install -m 0644 ${WORKDIR}/initramfs-subdirboot.cpio.gz ${B}/
+    install -m 0644 ${UNPACKDIR}/initramfs-subdirboot.cpio.gz ${B}/
 }
 
 kernel_do_install:append() {
 	install -d ${D}/${KERNEL_IMAGEDEST}
-	install -m 0755 ${WORKDIR}/findkerneldevice.sh ${D}/${KERNEL_IMAGEDEST}
+	install -m 0755 ${UNPACKDIR}/findkerneldevice.sh ${D}/${KERNEL_IMAGEDEST}
 }
 
 pkg_postinst:kernel-image() {

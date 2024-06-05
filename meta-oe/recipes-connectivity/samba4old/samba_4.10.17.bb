@@ -170,7 +170,7 @@ do_install() {
     done
 
     install -d ${D}${systemd_system_unitdir}
-    install -m 0644 ${S}/bin/default/packaging/systemd/*.service ${D}${systemd_system_unitdir}/
+    install -m 0644 ${UNPACKDIR}/bin/default/packaging/systemd/*.service ${D}${systemd_system_unitdir}/
     sed -e 's,\(ExecReload=\).*\(/kill\),\1${base_bindir}\2,' \
         -e 's,/etc/sysconfig/samba,${sysconfdir}/default/samba,' \
         -i ${D}${systemd_system_unitdir}/*.service
@@ -184,7 +184,7 @@ do_install() {
     echo "d ${localstatedir}/log/samba 0755 root root -" \
         >> ${D}${sysconfdir}/tmpfiles.d/samba.conf
 
-    install -D -m 644 ${WORKDIR}/volatiles.03_samba ${D}${sysconfdir}/default/volatiles/03_samba
+    install -D -m 644 ${S}/volatiles.03_samba ${D}${sysconfdir}/default/volatiles/03_samba
 
     # fix file-rdeps qa warning
     if [ -f ${D}${bindir}/onnode ]; then
@@ -198,22 +198,22 @@ do_install() {
     rm -rf ${D}/run ${D}${localstatedir}/run ${D}${localstatedir}/log
 
     install -d ${D}${sysconfdir}/pam.d
-    install -m 644 ${WORKDIR}/pam.samba ${D}${sysconfdir}/pam.d/samba
+    install -m 644 ${S}/pam.samba ${D}${sysconfdir}/pam.d/samba
 
     install -d ${D}${sysconfdir}/samba
     install -d ${D}${sysconfdir}/samba/distro
     install -d ${D}${sysconfdir}/samba/private
     echo "127.0.0.1 localhost" > ${D}${sysconfdir}/samba/lmhosts
-    install -m 644 ${WORKDIR}/smb.conf ${D}${sysconfdir}/samba
-    install -m 644 ${WORKDIR}/smb-user.conf ${D}${sysconfdir}/samba
-    install -m 644 ${WORKDIR}/smb-branding.conf ${D}${sysconfdir}/samba/distro
-    install -m 644 ${WORKDIR}/smb-global.conf ${D}${sysconfdir}/samba/distro
-    install -m 644 ${WORKDIR}/smb-shares.conf ${D}${sysconfdir}/samba/distro
-    install -m 644 ${WORKDIR}/smb-vmc.samba ${D}${sysconfdir}/samba/distro
-    install -m 644 ${WORKDIR}/smbpasswd ${D}${sysconfdir}/samba/private
-    install -m 644 ${WORKDIR}/users.map ${D}${sysconfdir}/samba/private
+    install -m 644 ${S}/smb.conf ${D}${sysconfdir}/samba
+    install -m 644 ${S}/smb-user.conf ${D}${sysconfdir}/samba
+    install -m 644 ${S}/smb-branding.conf ${D}${sysconfdir}/samba/distro
+    install -m 644 ${S}/smb-global.conf ${D}${sysconfdir}/samba/distro
+    install -m 644 ${S}/smb-shares.conf ${D}${sysconfdir}/samba/distro
+    install -m 644 ${S}/smb-vmc.samba ${D}${sysconfdir}/samba/distro
+    install -m 644 ${S}/smbpasswd ${D}${sysconfdir}/samba/private
+    install -m 644 ${S}/users.map ${D}${sysconfdir}/samba/private
     install -d ${D}${sysconfdir}/init.d
-    install -m 755 ${WORKDIR}/init.samba ${D}${sysconfdir}/init.d/samba
+    install -m 755 ${S}/init.samba ${D}${sysconfdir}/init.d/samba
 
     if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
         perl -i -pe 's:(PIDFile=)/run/(.*?\.pid):${1}${localstatedir}/run/${2}:' ${D}${systemd_system_unitdir}/*.service

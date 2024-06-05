@@ -11,7 +11,8 @@ PR = "r0"
 
 SRC_URI  = "file://Vendor_0508_Product_0110.kl"
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 do_install() {
     install -d ${D}${sysconfdir}/keymap

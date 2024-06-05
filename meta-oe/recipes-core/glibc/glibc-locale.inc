@@ -94,7 +94,7 @@ do_install() {
 		find ${D}${libdir} -type d -empty -delete
 	fi
 	copy_locale_files ${datadir}/locale 0644
-	install -m 0644 ${LOCALETREESRC}/SUPPORTED ${WORKDIR}/SUPPORTED
+	install -m 0644 ${LOCALETREESRC}/SUPPORTED ${S}/SUPPORTED
 }
 
 inherit libc-package

@@ -10,7 +10,8 @@ inherit deploy
 
 PR = "r3"
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 SRC_URI = "file://lcdwaitkey220.bin \
            file://lcdwarning220.bin \
@@ -19,8 +20,8 @@ SRC_URI = "file://lcdwaitkey220.bin \
 ALLOW_EMPTY:${PN} = "1"
 
 do_deploy() {
-    install -m 0644 ${WORKDIR}/lcdwaitkey220.bin ${DEPLOYDIR}/lcdwaitkey220.bin
-    install -m 0644 ${WORKDIR}/lcdwarning220.bin ${DEPLOYDIR}/lcdwarning220.bin
+    install -m 0644 ${S}/lcdwaitkey220.bin ${DEPLOYDIR}/lcdwaitkey220.bin
+    install -m 0644 ${S}/lcdwarning220.bin ${DEPLOYDIR}/lcdwarning220.bin
 }
 
 addtask deploy before do_package after do_install

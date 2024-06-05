@@ -10,7 +10,8 @@ inherit deploy
 SRCDATE = "20230911"
 PR = "${SRCDATE}"
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 SRC_URI = "http://en3homeftp.net/down/dags-partitions-${MACHINEBUILD}_${SRCDATE}.tar.gz \
  file://flash-updater \
@@ -30,7 +31,7 @@ do_install() {
     install -m 0644 ${S}/fastboot.bin ${D}/usr/share/fastboot.bin
     install -m 0644 ${S}/bootargs.bin ${D}/usr/share/bootargs.bin
     install -m 0755 -d ${D}${sysconfdir}/init.d
-    install -m 0755 ${WORKDIR}/flash-updater ${D}${sysconfdir}/init.d/flash-updater
+    install -m 0755 ${S}/flash-updater ${D}${sysconfdir}/init.d/flash-updater
 }
 
 FILES:${PN} = "/usr/share ${sysconfdir}"

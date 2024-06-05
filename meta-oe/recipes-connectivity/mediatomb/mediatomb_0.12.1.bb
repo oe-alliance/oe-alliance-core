@@ -58,7 +58,7 @@ TARGET_CC_ARCH:remove = "-D_TIME_BITS=64"
 do_install() {
     oe_runmake 'DESTDIR=${D}' install
     install -d ${D}${sysconfdir}/mediatomb/
-    install -m 755 ${UNPACKDIR}/config.xml ${D}${sysconfdir}/mediatomb/config.xml
+    install -m 755 ${S}/config.xml ${D}${sysconfdir}/mediatomb/config.xml
     install -d ${D}${sysconfdir}/init.d/
-    install -m 755 ${UNPACKDIR}/init ${D}${sysconfdir}/init.d/${PN}
+    install -m 755 ${S}/init ${D}${sysconfdir}/init.d/${PN}
 }

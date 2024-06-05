@@ -16,7 +16,8 @@ SRC_URI = " \
 DEPENDS += "virtual/kernel module-init-tools"
 RDEPENDS:${PN} += "module-init-tools-depmod"
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 inherit module-base
 

@@ -10,7 +10,8 @@ PR = "r2"
 
 SRC_URI = "https://source.mynonpublic.com/xtrend/${MACHINE_DRIVER}-drivers-kodi-${KV}-${GCCREV}-${SRCDATE}.zip"
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 INHIBIT_PACKAGE_STRIP = "1"
 INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
@@ -23,10 +24,10 @@ do_populate_sysroot() {
 do_install() {
     install -d ${D}/lib/modules/${KV}/extra
     install -d ${D}/${sysconfdir}/modules-load.d
-    install -m 0755 ${WORKDIR}/tpm.ko ${D}/lib/modules/${KV}/extra/tpm-kodi.ko
-    install -m 0755 ${WORKDIR}/modloader.ko ${D}/lib/modules/${KV}/extra/modloader-kodi.ko
-    install -m 0755 ${WORKDIR}/modloader2.ko ${D}/lib/modules/${KV}/extra/modloader2-kodi.ko
-    install -m 0755 ${WORKDIR}/dvb.ko ${D}/lib/modules/${KV}/extra/dvb-kodi.ko
+    install -m 0755 ${S}/tpm.ko ${D}/lib/modules/${KV}/extra/tpm-kodi.ko
+    install -m 0755 ${S}/modloader.ko ${D}/lib/modules/${KV}/extra/modloader-kodi.ko
+    install -m 0755 ${S}/modloader2.ko ${D}/lib/modules/${KV}/extra/modloader2-kodi.ko
+    install -m 0755 ${S}/dvb.ko ${D}/lib/modules/${KV}/extra/dvb-kodi.ko
     touch ${D}/${sysconfdir}/${MACHINE}-kodi
 }
 

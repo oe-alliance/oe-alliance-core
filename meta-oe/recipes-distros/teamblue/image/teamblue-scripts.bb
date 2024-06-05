@@ -14,12 +14,13 @@ SRC_URI = " \
 FILES:${PN} = "/"
 CONFFILES:${PN} = "/usr/script/Standby.sh"
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 do_install() {
     install -d ${D}/usr/script
     for x in /Standby.sh; do
-        install -m 0755 ${WORKDIR}/$x ${D}/usr/script/$x
+        install -m 0755 ${S}/$x ${D}/usr/script/$x
     done
 }
 

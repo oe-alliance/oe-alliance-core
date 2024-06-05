@@ -9,20 +9,21 @@ inherit deploy
 
 SRC_URI = "https://source.mynonpublic.com/maxytec/${MACHINE}-bootargs-${SRCDATE}.zip"
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 ALLOW_EMPTY:${PN} = "1"
 do_configure[nostamp] = "1"
 
 do_install() {
     install -d ${D}/usr/share
-    install -m 0755 ${WORKDIR}/update_bootargs_${MACHINE}.bin ${D}/usr/share/update_bootargs_${MACHINE}.bin
+    install -m 0755 ${S}/update_bootargs_${MACHINE}.bin ${D}/usr/share/update_bootargs_${MACHINE}.bin
 }
 
 do_deploy() {
     install -d ${DEPLOY_DIR_IMAGE}/maxytec-partitions-${MACHINE}/${MACHINE}
-    install -m 0755 ${WORKDIR}/update_bootargs_${MACHINE}.bin ${DEPLOY_DIR_IMAGE}/maxytec-partitions-${MACHINE}
-    install -m 0755 ${WORKDIR}/${MACHINE}/bootargs-8gb.bin ${DEPLOY_DIR_IMAGE}/maxytec-partitions-${MACHINE}/${MACHINE}
+    install -m 0755 ${S}/update_bootargs_${MACHINE}.bin ${DEPLOY_DIR_IMAGE}/maxytec-partitions-${MACHINE}
+    install -m 0755 ${S}/${MACHINE}/bootargs-8gb.bin ${DEPLOY_DIR_IMAGE}/maxytec-partitions-${MACHINE}/${MACHINE}
 }
 
 addtask deploy before do_package after do_install

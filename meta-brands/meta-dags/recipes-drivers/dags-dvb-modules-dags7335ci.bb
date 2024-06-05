@@ -16,7 +16,8 @@ SRC_URI = "http://en3homeftp.net/release/images/oedrivers/bcmlinuxdvb_7335-${KV}
 SRC_URI[md5sum] = "c1768d784809cbe79aa48dfce3fdc894"
 SRC_URI[sha256sum] = "69a2faf3b2c77c707740fb2abc807f21bf2e62f9c80954f2080263b8c1f264d9"
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 INHIBIT_PACKAGE_STRIP = "1"
 INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
@@ -29,7 +30,7 @@ do_populate_sysroot() {
 
 do_install() {
     install -d ${D}/lib/modules/${KV}/extra
-    install -m 0644 ${WORKDIR}/lib/modules/${KV}/extra/bcmlinuxdvb.ko ${D}/lib/modules/${KV}/extra/bcmlinuxdvb.ko
+    install -m 0644 ${S}/lib/modules/${KV}/extra/bcmlinuxdvb.ko ${D}/lib/modules/${KV}/extra/bcmlinuxdvb.ko
     install -d ${D}/${sysconfdir}/modules-load.d
     echo bcmlinuxdvb _hwtype=\$hwtypenum >> ${D}/${sysconfdir}/modules-load.d/_${MACHINEBUILD}.conf
 }

@@ -24,7 +24,7 @@ do_populate_sysroot() {
 do_install() {
     install -d ${D}/lib/modules/${KV}/extra
     install -d ${D}/${sysconfdir}/modules-load.d
-    install -m 0755 ${UNPACKDIR}/linuxtv.ko ${D}/lib/modules/${KV}/extra/linuxtv.ko
+    install -m 0755 ${S}/linuxtv.ko ${D}/lib/modules/${KV}/extra/linuxtv.ko
     echo linuxtv >> ${D}/${sysconfdir}/modules-load.d/_${MACHINE}.conf
 }
 

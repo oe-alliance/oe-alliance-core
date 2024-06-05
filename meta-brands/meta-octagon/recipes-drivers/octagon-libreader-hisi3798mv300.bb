@@ -14,12 +14,13 @@ INITSCRIPT_PARAMS = "start 05 S ."
 
 inherit update-rc.d
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 do_compile() {
 }
 
 do_install() {
     install -d ${D}/etc/init.d/
-    install -m 0755 ${WORKDIR}/octagon-libreader-hisi3798mv300.sh ${D}/etc/init.d/octagon-libreader
+    install -m 0755 ${S}/octagon-libreader-hisi3798mv300.sh ${D}/etc/init.d/octagon-libreader
 }

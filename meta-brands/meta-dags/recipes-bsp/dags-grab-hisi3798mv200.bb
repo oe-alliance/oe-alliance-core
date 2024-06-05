@@ -17,7 +17,8 @@ RCONFLICTS:${PN} = "aio-grab"
 
 SRC_URI = "http://en3homeftp.net/pub/down/${MACHINEBUILD}-grab-${SRCDATE}.tar.gz"
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 do_install() {
     install -d ${D}${bindir}

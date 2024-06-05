@@ -10,7 +10,8 @@ PR = "r1"
 
 NTPD_SYNC_LOC := "${THISDIR}/${PN}"
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 do_install() {
     install -d ${D}${bindir}

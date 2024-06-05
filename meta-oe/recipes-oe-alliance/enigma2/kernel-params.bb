@@ -13,5 +13,5 @@ CONFFILES:${PN} = "/etc/sysctl.conf"
 
 do_install() {
     install -d ${D}/etc
-    install -m 0755 ${WORKDIR}/sysctl.conf ${D}/etc/sysctl.conf
+    install -m 0755 ${S}/sysctl.conf ${D}/etc/sysctl.conf
 }

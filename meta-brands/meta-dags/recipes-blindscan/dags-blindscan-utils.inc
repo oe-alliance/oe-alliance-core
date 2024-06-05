@@ -9,7 +9,8 @@ PR = "r0"
 
 SRC_URI = "http://en3homeftp.net/pub/down/dags_blindscan_${SOC_FAMILY}.tar.gz"
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 PROVIDES += "virtual/blindscan-dvbs"
 RPROVIDES:dags-blindscan-utils-hisi3798mv200 += "virtual-blindscan-dvbs"

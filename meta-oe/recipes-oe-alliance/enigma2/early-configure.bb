@@ -12,5 +12,5 @@ UNPACKDIR = "${S}"
 
 do_install() {
     install -d ${D}/etc/rcS.d
-    install -m 0755 ${UNPACKDIR}/${PN}.sh ${D}/etc/rcS.d/S15${PN}.sh
+    install -m 0755 ${S}/${PN}.sh ${D}/etc/rcS.d/S15${PN}.sh
 }

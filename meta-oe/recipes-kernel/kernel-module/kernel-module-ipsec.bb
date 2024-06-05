@@ -12,9 +12,9 @@ SRC_URI = "file://30-ipsec \
 
 do_install() {
         install -d ${D}${sysconfdir}/modules.d
-        install -m 0644 ${WORKDIR}/30-ipsec ${D}${sysconfdir}/modules.d
-        install -m 0644 ${WORKDIR}/32-ipsec4 ${D}${sysconfdir}/modules.d
-        install -m 0644 ${WORKDIR}/32-ipsec6 ${D}${sysconfdir}/modules.d
+        install -m 0644 ${S}/30-ipsec ${D}${sysconfdir}/modules.d
+        install -m 0644 ${S}/32-ipsec4 ${D}${sysconfdir}/modules.d
+        install -m 0644 ${S}/32-ipsec6 ${D}${sysconfdir}/modules.d
 }
 
 PACKAGES =+ "${PN}4 ${PN}6"

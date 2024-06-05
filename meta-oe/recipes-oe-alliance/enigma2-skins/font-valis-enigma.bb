@@ -15,5 +15,5 @@ FILES:${PN} = "/usr/*"
 
 do_install() {
     install -d ${D}/usr/share/fonts
-    install -m 0644 ${UNPACKDIR}/valis_enigma.ttf    ${D}/usr/share/fonts/valis_enigma.ttf
+    install -m 0644 ${S}/valis_enigma.ttf    ${D}/usr/share/fonts/valis_enigma.ttf
 }

@@ -15,7 +15,8 @@ PR = "r0"
 
 SRC_URI = "https://source.mynonpublic.com/uclan/${MACHINE}-libreader-${SRCDATE}.tar.gz"
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 INSANE_SKIP:${PN} += "already-stripped"
 

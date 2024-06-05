@@ -11,8 +11,8 @@ UNPACKDIR = "${S}"
 
 do_install() {
     install -d ${D}${nonarch_base_libdir}/firmware
-    install -m 0755 ${UNPACKDIR}/dvb-fe-ds300x.fw ${D}${nonarch_base_libdir}/firmware/dvb-fe-ds300x.fw
-    install -m 0755 ${UNPACKDIR}/dvb-fe-ds3103.fw ${D}${nonarch_base_libdir}/firmware/dvb-fe-ds3103.fw
+    install -m 0755 ${S}/dvb-fe-ds300x.fw ${D}${nonarch_base_libdir}/firmware/dvb-fe-ds300x.fw
+    install -m 0755 ${S}/dvb-fe-ds3103.fw ${D}${nonarch_base_libdir}/firmware/dvb-fe-ds3103.fw
 }
 
 PACKAGES = "${PN}"

@@ -19,7 +19,7 @@ inherit cmake
 
 do_install() {
 	install -d ${D}/usr/bin
-	install -m 0755 ${WORKDIR}/build/Simple_VertexShader/Simple_VertexShader ${D}/usr/bin/cube
+	install -m 0755 ${S}/build/Simple_VertexShader/Simple_VertexShader ${D}/usr/bin/cube
 }
 
 do_package_qa() {

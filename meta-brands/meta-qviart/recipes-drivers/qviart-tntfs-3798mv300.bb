@@ -12,7 +12,8 @@ SRC_URI[sha256sum] = "65ca46249bfb7ac5ae18b4b65827fbc24400e337deb6ab9c5c92adf0fa
 
 SRC_URI = "https://source.mynonpublic.com/tntfs/${HICHIPSET}-tntfs-${SRCDATE}.zip"
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 INHIBIT_PACKAGE_STRIP = "1"
 

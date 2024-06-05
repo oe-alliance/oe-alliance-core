@@ -12,7 +12,8 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 URL = "http://www.world-of-satellite.com"
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 PACKAGES = "${PN}"
 

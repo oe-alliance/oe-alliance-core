@@ -28,8 +28,8 @@ do_populate_sysroot() {
 
 do_install() {
     install -d ${D}/lib/modules/${KV}/extra
-    install -m 0644 ${UNPACKDIR}/hiko/*.ko ${D}/lib/modules/${KV}/extra
-    install -m 0755 ${UNPACKDIR}/hiko/load ${D}/lib/modules/${KV}/extra
+    install -m 0644 ${S}/hiko/*.ko ${D}/lib/modules/${KV}/extra
+    install -m 0755 ${S}/hiko/load ${D}/lib/modules/${KV}/extra
     install -d ${D}/${sysconfdir}/modules-load.d
-    install -m 0644 ${UNPACKDIR}/modules ${D}${sysconfdir}/modules-load.d/_${MACHINE}.conf
+    install -m 0644 ${S}/modules ${D}${sysconfdir}/modules-load.d/_${MACHINE}.conf
 }

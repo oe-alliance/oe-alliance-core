@@ -9,7 +9,8 @@ PR = "r0"
 
 SRC_URI = "https://source.mynonpublic.com/ceryon/ceryon-${MACHINE}-dvbdrive-${SRCDATE}.zip"
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 INHIBIT_PACKAGE_STRIP = "1"
 INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
@@ -23,7 +24,7 @@ do_install() {
     install -d ${D}/lib/modules/${KV}/extra
     install -d ${D}/${sysconfdir}/modules-load.d
     echo "dvbdrive" >> ${D}/${sysconfdir}/modules-load.d/dvbdrive.conf
-    install -m 0755 ${WORKDIR}/dvbdrive.ko ${D}/lib/modules/${KV}/extra
+    install -m 0755 ${S}/dvbdrive.ko ${D}/lib/modules/${KV}/extra
     install -d ${D}/etc/rcS.d
 }
 

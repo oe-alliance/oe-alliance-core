@@ -12,7 +12,8 @@ PR = "r2"
 
 SRC_URI = "https://source.mynonpublic.com/skylake/${MACHINE}/${MACHINE}-v3ddriver-${SRCDATE}.zip"
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 # The driver is a set of binary libraries to install
 # there's nothing to configure or compile

@@ -10,7 +10,8 @@ PR = "r0"
 
 PACKAGES = "${PN}"
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 feed_name = "openvix-picon-feed"
 

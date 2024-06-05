@@ -2,7 +2,7 @@ require dags-blindscan-utils.inc
 
 do_install() {
 	install -d "${D}/${bindir}"
-	install -m 0755 "${S}/dags_blindscan_${SOC_FAMILY}" "${D}/${bindir}/dags_blindscan"
+	install -m 0755 "${UNPACKDIR}/dags_blindscan_${SOC_FAMILY}" "${D}/${bindir}/dags_blindscan"
 }
 
 FILES:${PN} = "${bindir}/dags_blindscan"

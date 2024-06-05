@@ -10,7 +10,8 @@ PR = "r2"
 
 SRC_URI = "https://source.mynonpublic.com/octagon/${MACHINE}-drivers-${KV}-${GCCREV}-${SRCDATE}.zip"
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 INHIBIT_PACKAGE_STRIP = "1"
 INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
@@ -23,7 +24,7 @@ do_populate_sysroot() {
 do_install() {
     install -d ${D}/lib/modules/${KV}/extra
     install -d ${D}/${sysconfdir}/modules-load.d
-    install -m 0755 ${WORKDIR}/linuxtv.ko ${D}/lib/modules/${KV}/extra/linuxtv-kodi.ko
+    install -m 0755 ${S}/linuxtv.ko ${D}/lib/modules/${KV}/extra/linuxtv-kodi.ko
     touch ${D}/${sysconfdir}/${MACHINE}-kodi
 }
 

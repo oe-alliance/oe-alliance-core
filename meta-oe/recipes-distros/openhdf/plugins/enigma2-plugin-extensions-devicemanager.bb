@@ -18,7 +18,8 @@ SRC_URI[sha256sum] = "baa3ae2b49d4498c2e618471d49fff7a16ea18c53a4066455c7c9fcdf2
 
 SRC_URI = "http://addons.hdfreaks.cc/feeds/*git/enigma2-plugins-extensions-DeviceManager_1_0_mips32el.tar.gz"
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 FILES:${PN} = "${libdir} "
 

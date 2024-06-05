@@ -19,7 +19,8 @@ SRC_URI  = "https://source.mynonpublic.com/qviart/${SOC_FAMILY}-hihalt-${SRCDATE
     file://suspend.sh \
 "
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 do_install() {
     install -d ${D}${bindir}

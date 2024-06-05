@@ -7,7 +7,8 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PR = "r1-${SRCDATE}"
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 SRC_URI = "https://source.mynonpublic.com/dinobot/${SOC_FAMILY}-partitions-${SRCDATE}.zip \
   file://flash-apploader \
@@ -24,7 +25,7 @@ do_install() {
     install -d ${D}/usr/share
     install -m 0644 ${S}/apploader.bin ${D}/usr/share/apploader.bin
     install -m 0755 -d ${D}${sysconfdir}/init.d
-    install -m 0755 ${WORKDIR}/flash-apploader ${D}${sysconfdir}/init.d/flash-apploader
+    install -m 0755 ${S}/flash-apploader ${D}${sysconfdir}/init.d/flash-apploader
 }
 
 FILES:${PN} = "/usr/share ${sysconfdir}"

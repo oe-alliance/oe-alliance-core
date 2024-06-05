@@ -28,19 +28,19 @@ RPROVIDES:${PN} = "virtual-locale-ar virtual-locale-bg virtual-locale-ca virtual
 
 do_install() {
     install -d ${D}${sysconfdir}/profile.d
-    install -m 0644 ${WORKDIR}/locale.sh ${D}${sysconfdir}/profile.d/locale.sh
+    install -m 0644 ${S}/locale.sh ${D}${sysconfdir}/profile.d/locale.sh
 
     install -d ${D}${LOCALEDIR2}
-    install ${WORKDIR}/locale.alias ${D}${LOCALEDIR2}
+    install ${S}/locale.alias ${D}${LOCALEDIR2}
 
     install -d ${D}${LOCALEDIR}
     cp -rp ${S}/* ${D}/${LOCALEDIR}
 
     install -d ${D}${LOCALEDIR}/C.UTF8
-    install ${WORKDIR}/LC_CTYPE ${D}${LOCALEDIR}/C.UTF8/
+    install ${S}/LC_CTYPE ${D}${LOCALEDIR}/C.UTF8/
 
     install -d ${D}${LOCALEDIR}/fake/LC_MESSAGES
-    install ${WORKDIR}/SYS_LC_MESSAGES ${D}${LOCALEDIR}/fake/LC_MESSAGES/
+    install ${S}/SYS_LC_MESSAGES ${D}${LOCALEDIR}/fake/LC_MESSAGES/
 
     for lang in ${LANGUAGES}; do
         ln -s ../fake/LC_MESSAGES ${D}${LOCALEDIR}/${lang}/LC_MESSAGES

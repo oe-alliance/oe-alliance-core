@@ -17,7 +17,6 @@ SRC_URI="git://github.com/openatv/socketdaemon.git;branch=main;protocol=https"
 
 S = "${WORKDIR}/git"
 
-
 INITSCRIPT_NAME = "${PN}"
 INITSCRIPT_PARAMS = "defaults 60"
 
@@ -25,7 +24,7 @@ FILES:${PN} = "/"
 
 do_install() {
     install -d ${D}/usr/bin
-    install -m 0755 ${WORKDIR}/build/socketdaemon ${D}/usr/bin/socketdaemon
+    install -m 0755 ${S}/../build/socketdaemon ${D}/usr/bin/socketdaemon
     install -d ${D}/etc/init.d
     install -m 0755 ${S}/${PN}.sh ${D}/etc/init.d/${PN}
 }

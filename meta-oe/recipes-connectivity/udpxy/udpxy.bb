@@ -26,7 +26,7 @@ do_compile() {
 
 do_install() {
     install -d ${D}/etc/init.d
-    install -m 755 ${WORKDIR}/udpxy.sh ${D}/etc/init.d/
+    install -m 755 ${S}/udpxy.sh ${D}/etc/init.d/
     install -d ${D}/${bindir}
     install -m 755 ${S}/udpxy ${D}/${bindir}
 }

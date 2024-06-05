@@ -8,7 +8,8 @@ PR = "${SRCDATE}"
 
 SRC_URI = "https://source.mynonpublic.com/abcom/${HICHIPSET}-libs-${SRCDATE}.zip"
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 INHIBIT_PACKAGE_STRIP = "1"
 INHIBIT_PACKAGE_DEBUG_SPLIT = "1"

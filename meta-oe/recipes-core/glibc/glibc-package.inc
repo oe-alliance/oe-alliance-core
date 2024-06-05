@@ -78,7 +78,7 @@ inherit multilib_header
 
 do_install() {
 	oe_runmake install_root=${D} install
-	install -Dm 0644 ${WORKDIR}/etc/ld.so.conf ${D}/${sysconfdir}/ld.so.conf
+	install -Dm 0644 ${S}/etc/ld.so.conf ${D}/${sysconfdir}/ld.so.conf
 	install -d ${D}${localedir}
 	make -f ${WORKDIR}/generate-supported.mk IN="${S}/localedata/SUPPORTED" OUT="${WORKDIR}/SUPPORTED"
 	# get rid of some broken files...
@@ -113,12 +113,12 @@ do_install() {
 
 	install -d ${D}${sysconfdir}/init.d
 	install -d ${D}${localstatedir}/db/nscd
-	install -m 0755 ${S}/nscd/nscd.init ${D}${sysconfdir}/init.d/nscd
-	install -m 0755 ${S}/nscd/nscd.conf ${D}${sysconfdir}/nscd.conf
+	install -m 0755 ${UNPACKDIR}/nscd/nscd.init ${D}${sysconfdir}/init.d/nscd
+	install -m 0755 ${UNPACKDIR}/nscd/nscd.conf ${D}${sysconfdir}/nscd.conf
 	sed -i "s%daemon%start-stop-daemon --start --exec%g" ${D}${sysconfdir}/init.d/nscd
 
 	install -d ${D}${systemd_unitdir}/system
-	install -m 0644 ${S}/nscd/nscd.service ${D}${systemd_unitdir}/system/
+	install -m 0644 ${UNPACKDIR}/nscd/nscd.service ${D}${systemd_unitdir}/system/
 
 	if ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'true', 'false', d)}; then
 		install -d ${D}${sysconfdir}/tmpfiles.d

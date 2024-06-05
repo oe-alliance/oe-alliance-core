@@ -10,7 +10,8 @@ PR = "r1"
 
 PACKAGES = "${PN}"
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 feed_name = "hdfradio-feed"
 

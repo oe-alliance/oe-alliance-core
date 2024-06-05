@@ -22,7 +22,7 @@ do_compile() {
 
 do_install() {
     install -d ${D}${sysconfdir}/opkg
-    install -m 0644 ${UNPACKDIR}${sysconfdir}/opkg/* ${D}${sysconfdir}/opkg
+    install -m 0644 ${S}${sysconfdir}/opkg/* ${D}${sysconfdir}/opkg
 }
 
 RREPLACES:${PN} = "openvix-picon-feed-opkg-conf"

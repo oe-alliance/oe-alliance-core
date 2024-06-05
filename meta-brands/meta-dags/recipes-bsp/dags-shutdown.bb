@@ -12,13 +12,14 @@ INITSCRIPT_PARAMS = "start 89 0 ."
 
 inherit pkgconfig update-rc.d
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 do_install() {
     install -d ${D}/etc/init.d/
-    install -m 0755 ${WORKDIR}/dags-shutdown.sh ${D}/etc/init.d/dags-shutdown
+    install -m 0755 ${S}/dags-shutdown.sh ${D}/etc/init.d/dags-shutdown
     install -d ${D}/usr/bin
-    install -m 0755 ${WORKDIR}/turnoff_power ${D}/usr/bin
+    install -m 0755 ${S}/turnoff_power ${D}/usr/bin
 }
 
 pkg_preinst:${PN}:prepend() {

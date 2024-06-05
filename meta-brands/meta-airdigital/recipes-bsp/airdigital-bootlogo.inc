@@ -9,14 +9,15 @@ inherit deploy
 
 SRC_URI = "https://source.mynonpublic.com/zgemma/zgemma-bootlogo-${HICHIPSET}-${SRCDATE}.zip"
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 ALLOW_EMPTY:${PN} = "1"
 do_configure[nostamp] = "1"
 
 do_deploy() {
     install -d ${DEPLOY_DIR_IMAGE}/zgemma-partitions-${MACHINE}/${MACHINE}
-    install -m 0755 ${WORKDIR}/logo_${MACHINE}.img ${DEPLOY_DIR_IMAGE}/zgemma-partitions-${MACHINE}/${MACHINE}/logo.img
+    install -m 0755 ${S}/logo_${MACHINE}.img ${DEPLOY_DIR_IMAGE}/zgemma-partitions-${MACHINE}/${MACHINE}/logo.img
 }
 
 addtask deploy before do_package after do_install

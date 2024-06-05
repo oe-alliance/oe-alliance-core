@@ -17,7 +17,8 @@ RCONFLICTS:${PN} = "aio-grab"
 
 SRC_URI = "https://source.mynonpublic.com/gigablue/mv200/${MACHINE}-grab-${SRCDATE}.tar.gz"
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 do_install() {
     install -d ${D}${bindir}

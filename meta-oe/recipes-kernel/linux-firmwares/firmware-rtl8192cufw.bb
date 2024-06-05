@@ -17,5 +17,5 @@ SUMMARY = "Firmware for rtl8192cufw_TMSC"
 do_install() {
     install -d ${D}${nonarch_base_libdir}/firmware
     install -d ${D}${nonarch_base_libdir}/firmware/rtlwifi
-    install -m 0644 ${UNPACKDIR}/rtl8192cufw_TMSC.bin ${D}${nonarch_base_libdir}/firmware/rtlwifi
+    install -m 0644 ${S}/rtl8192cufw_TMSC.bin ${D}${nonarch_base_libdir}/firmware/rtlwifi
 }

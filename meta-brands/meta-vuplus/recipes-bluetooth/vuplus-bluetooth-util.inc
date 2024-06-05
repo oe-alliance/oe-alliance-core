@@ -15,7 +15,7 @@ S="${WORKDIR}/vuplus-bluetooth-util-${MACHINE}"
 
 do_install() {
 	install -d ${D}${bindir}
-	install -m 0755 ${S}/* ${D}${bindir}
+	install -m 0755 ${UNPACKDIR}/* ${D}${bindir}
 }
 
 do_package_qa() {
@@ -26,15 +26,15 @@ FILES:${PN}="/"
 
 do_install() {
 	install -d ${D}${bindir}
-	install -m 0755 ${S}/bsa_server ${D}${bindir}
+	install -m 0755 ${UNPACKDIR}/bsa_server ${D}${bindir}
 
 	install -d ${D}/usr/local/modules
-	install -m 0644 ${S}/btusb.ko ${D}/usr/local/modules/btusb.ko
-	install -m 0644 ${S}/bthid.ko ${D}/usr/local/modules/bthid.ko
+	install -m 0644 ${UNPACKDIR}/btusb.ko ${D}/usr/local/modules/btusb.ko
+	install -m 0644 ${UNPACKDIR}/bthid.ko ${D}/usr/local/modules/bthid.ko
 
 	if [ -n "${FIRMWARE_FILE}" ]; then
 		install -d ${D}/lib/firmware/${FIRMWARE_PATH}
-		install -m 0644 ${S}/${FIRMWARE_FILE} ${D}/lib/firmware/${FIRMWARE_PATH}
+		install -m 0644 ${UNPACKDIR}/${FIRMWARE_FILE} ${D}/lib/firmware/${FIRMWARE_PATH}
 	fi
 }
 INHIBIT_PACKAGE_STRIP = "1"

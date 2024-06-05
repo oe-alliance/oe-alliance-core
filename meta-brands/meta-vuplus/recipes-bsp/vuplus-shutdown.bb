@@ -7,7 +7,8 @@ SRC_URI = " \
     file://turnoff_power \
     file://vuplus-shutdown.sh "
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 INITSCRIPT_NAME = "vuplus-shutdown"
 INITSCRIPT_PARAMS = "start 89 0 ."
@@ -16,9 +17,9 @@ inherit pkgconfig update-rc.d
 
 do_install() {
     install -d ${D}/etc/init.d/
-    install -m 0755 ${WORKDIR}/vuplus-shutdown.sh ${D}/etc/init.d/vuplus-shutdown
+    install -m 0755 ${S}/vuplus-shutdown.sh ${D}/etc/init.d/vuplus-shutdown
     install -d ${D}/usr/bin
-    install -m 0755 ${WORKDIR}/turnoff_power ${D}/usr/bin
+    install -m 0755 ${S}/turnoff_power ${D}/usr/bin
 }
 
 pkg_preinst:${PN}:prepend() {

@@ -25,11 +25,11 @@ do_compile() {
 
 do_install() {
     install -d ${D}/usr/bin
-    install -m 755 ${S}/growisofs ${D}/usr/bin
-    install -m 755 ${S}/dvd+rw-booktype ${D}/usr/bin
-    install -m 755 ${S}/dvd+rw-format ${D}/usr/bin
-    install -m 755 ${S}/dvd+rw-mediainfo ${D}/usr/bin
-    install -m 755 ${S}/dvd-ram-control ${D}/usr/bin
+    install -m 755 ${UNPACKDIR}/growisofs ${D}/usr/bin
+    install -m 755 ${UNPACKDIR}/dvd+rw-booktype ${D}/usr/bin
+    install -m 755 ${UNPACKDIR}/dvd+rw-format ${D}/usr/bin
+    install -m 755 ${UNPACKDIR}/dvd+rw-mediainfo ${D}/usr/bin
+    install -m 755 ${UNPACKDIR}/dvd-ram-control ${D}/usr/bin
 }
 
 

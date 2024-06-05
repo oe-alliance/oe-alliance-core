@@ -43,9 +43,9 @@ inherit update-rc.d
 
 do_install() {
     install -d ${D}/etc/init.d
-    install -m 0755 ${UNPACKDIR}/firewall.sh ${D}/etc/init.d/firewall
+    install -m 0755 ${S}/firewall.sh ${D}/etc/init.d/firewall
     install -d ${D}/etc
-    install -m 0755 ${UNPACKDIR}/firewall.users ${D}/etc/firewall.users
+    install -m 0755 ${S}/firewall.users ${D}/etc/firewall.users
     install -d ${D}/${sysconfdir}/modules-load.d
     echo nf_nat_masquerade_ipv4 >> ${D}/${sysconfdir}/modules-load.d/firewall.conf
     echo nf_nat_ipv4 >> ${D}/${sysconfdir}/modules-load.d/firewall.conf

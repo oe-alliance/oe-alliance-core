@@ -16,7 +16,8 @@ SRC_URI[sha256sum] = "796fcf70fae36c212773e7fd6d8f8b2de39b39d4ddac5544cc8a267b5e
 
 SRC_URI = "https://source.mynonpublic.com/xtrend/${MACHINE_DRIVER}-drivers-${KV}-${GCCREV}-${SRCDATE}.zip"
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 INHIBIT_PACKAGE_STRIP = "1"
 
@@ -29,7 +30,7 @@ do_install() {
 	install -d ${D}/lib/modules/${KV}/extra
 	install -d ${D}/${sysconfdir}/modules-load.d
 	for i in tpm modloader modloader2 dvb; do
-		install -m 0755 ${WORKDIR}/$i.ko ${D}/lib/modules/${KV}/extra
+		install -m 0755 ${S}/$i.ko ${D}/lib/modules/${KV}/extra
 		echo $i >> ${D}/${sysconfdir}/modules-load.d/_${MACHINE_DRIVER}.conf
 	done
 }

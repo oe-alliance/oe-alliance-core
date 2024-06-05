@@ -15,7 +15,8 @@ SRC_URI[sha256sum] = "f664e8503e463fc0a2201f0596eab3fca7a3c1fe5faf8e91cd2a8d26b9
 
 SRC_URI = "https://source.mynonpublic.com/ini/ini-422sv-drivers-${KV}-${SRCDATE}.zip"
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 INHIBIT_PACKAGE_STRIP = "1"
 INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
@@ -29,7 +30,7 @@ do_install() {
     install -d ${D}/lib/modules/${KV}/extra
     install -d ${D}/${sysconfdir}/modules-load.d
     for i in dvb; do
-        install -m 0755 ${WORKDIR}/$i.ko ${D}/lib/modules/${KV}/extra/$i.ko
+        install -m 0755 ${S}/$i.ko ${D}/lib/modules/${KV}/extra/$i.ko
         echo $i >> ${D}/${sysconfdir}/modules-load.d/_${MACHINEBUILD}.conf
     done
 }

@@ -29,10 +29,10 @@ do_compile() {
 
 do_install() {
     install -d ${D}${base_bindir}
-    install -m 755 ${UNPACKDIR}/fake-hwclock ${D}${base_bindir}
+    install -m 755 ${S}/fake-hwclock ${D}${base_bindir}
 
     install -d ${D}${sysconfdir}/default
-    install -m 644 ${UNPACKDIR}/fake-hwclock.default ${D}${sysconfdir}/default/fake-hwclock
+    install -m 644 ${S}/fake-hwclock.default ${D}${sysconfdir}/default/fake-hwclock
 
 
 #    if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
@@ -40,7 +40,7 @@ do_install() {
 #        install -m 0644 ${UNPACKDIR}/fake-hwclock.service ${D}${systemd_system_unitdir}
 #    else
         install -d ${D}${sysconfdir}/init.d
-        install -m 755 ${UNPACKDIR}/fake-hwclock.init ${D}${sysconfdir}/init.d/fake-hwclock
+        install -m 755 ${S}/fake-hwclock.init ${D}${sysconfdir}/init.d/fake-hwclock
 #    fi
 }
 

@@ -10,7 +10,8 @@ require conf/license/license-close.inc
 PV = "${IMAGE_VERSION}"
 PR = "r1"
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 INITSCRIPT_NAME = "hubFwUpdaterCLI"
 INITSCRIPT_PARAMS = "start 99 S ."

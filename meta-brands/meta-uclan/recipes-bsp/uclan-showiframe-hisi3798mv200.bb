@@ -22,7 +22,7 @@ UNPACKDIR = "${S}"
 
 do_install() {
     install -d ${D}${bindir}
-    install -m 0755 ${UNPACKDIR}/showiframe ${D}/${bindir}
+    install -m 0755 ${S}/showiframe ${D}/${bindir}
 }
 
 do_package_qa() {

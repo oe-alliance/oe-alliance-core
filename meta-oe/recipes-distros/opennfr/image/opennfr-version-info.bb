@@ -12,7 +12,8 @@ PACKAGE_ARCH = "${MACHINEBUILD}"
 
 URL = "http://www.nachtfalke.biz"
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 PACKAGES = "${PN}"
 

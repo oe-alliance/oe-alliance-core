@@ -6,7 +6,8 @@ inherit allarch
 
 SRC_URI = "file://drxk_a3.tar.gz"
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 do_install() {
     install -d ${D}${nonarch_base_libdir}/firmware
