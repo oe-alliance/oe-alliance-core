@@ -1,7 +1,7 @@
 import os
 if os.path.exists('/dev/lcd2') and os.path.exists('/usr/share/lcdbootlogo.png'): # VuDuo2 lcd
 	from fcntl import ioctl
-	led_fd = open("/dev/lcd2", 'w')
+	led_fd = open("/dev/lcd2", 'rw')
 	ioctl(led_fd, 0x10, 25)
 	led_fd.close()
 
