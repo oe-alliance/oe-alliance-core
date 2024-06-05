@@ -25,8 +25,8 @@ inherit autotools-brokensep pkgconfig gettext
 do_install:append() {
 	install -m 0755 ${S}/tests/t2mi_decap ${D}${bindir}/t2mi_decap
 	install -d ${D}${sysconfdir}/init.d
-	install -m 0755 ${WORKDIR}/astra-sm ${D}${sysconfdir}/init.d/
-	install -m 0644 ${WORKDIR}/astra.conf ${D}${sysconfdir}/astra/
+	install -m 0755 ${UNPACKDIR}/astra-sm ${D}${sysconfdir}/init.d/
+	install -m 0644 ${UNPACKDIR}/astra.conf ${D}${sysconfdir}/astra/
 }
 
 FILES:${PN} += "${sysconfdir}/init.d/"

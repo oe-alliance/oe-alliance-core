@@ -21,7 +21,7 @@ do_install:append() {
 	if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
 		# install systemd unit files
 		install -d ${D}${systemd_unitdir}/system
-		install -m 0644 ${WORKDIR}/crond.service ${D}${systemd_unitdir}/system
+		install -m 0644 ${UNPACKDIR}/crond.service ${D}${systemd_unitdir}/system
 		sed -i -e 's,@BASE_BINDIR@,${base_bindir},g' \
 			-e 's,@SBINDIR@,${sbindir},g' \
 			${D}${systemd_unitdir}/system/crond.service
@@ -32,14 +32,14 @@ do_install:append() {
 	# Only install SysVinit scripts while we have SysVinit
 	if ${@bb.utils.contains('DISTRO_FEATURES','sysvinit','true','false',d)}; then
 		install -d ${D}${sysconfdir}/init.d/
-		install -m 0755 ${WORKDIR}/crond.init ${D}${sysconfdir}/init.d/crond
+		install -m 0755 ${UNPACKDIR}/crond.init ${D}${sysconfdir}/init.d/crond
 		# Fix Redhat path to Debian
 		sed -e 's#CONFIG=/etc/sysconfig/crond#CONFIG=/etc/default/crond#' -i ${D}${sysconfdir}/init.d/crond
 	fi
 
 	# below are necessary for a complete cron environment
 	install -d ${D}${sysconfdir}/cron/crontabs
-	install -m 0755 ${WORKDIR}/crontab ${D}${sysconfdir}/
+	install -m 0755 ${UNPACKDIR}/crontab ${D}${sysconfdir}/
 	mkdir -p ${D}${sysconfdir}/cron.d
 	mkdir -p ${D}${sysconfdir}/cron.hourly
 	mkdir -p ${D}${sysconfdir}/cron.daily
