@@ -39,8 +39,8 @@ INITSCRIPT_PARAMS = "defaults 20"
 FILES:${PN} += "${sysconfdir}/ushare.conf "
 
 do_install:append() {
-    install -D -m 0755 ${WORKDIR}/init ${D}${sysconfdir}/init.d/ushare
-    install -D -m 0644 ${WORKDIR}/ushare.conf ${D}${sysconfdir}/ushare.conf
+    install -D -m 0755 ${UNPACKDIR}/init ${D}${sysconfdir}/init.d/ushare
+    install -D -m 0644 ${UNPACKDIR}/ushare.conf ${D}${sysconfdir}/ushare.conf
 }
 
 INSANE_SKIP:${PN} += "already-stripped"

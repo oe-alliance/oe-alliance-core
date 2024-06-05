@@ -238,7 +238,7 @@ do_install () {
 
 	oe_multilib_header openssl/opensslconf.h
 
-	install -Dm 0755 ${WORKDIR}/openssl-c_rehash.sh ${D}${bindir}/c_rehash
+	install -Dm 0755 ${UNPACKDIR}/openssl-c_rehash.sh ${D}${bindir}/c_rehash
 	sed -i -e 's,/etc/openssl,${sysconfdir}/ssl,g' ${D}${bindir}/c_rehash
 
 	if [ "${@bb.utils.filter('PACKAGECONFIG', 'perl', d)}" ]; then
@@ -283,7 +283,7 @@ do_install:append:class-native () {
 
 do_install:append:class-nativesdk () {
 	mkdir -p ${D}${SDKPATHNATIVE}/environment-setup.d
-	install -m 644 ${WORKDIR}/environment.d-openssl.sh ${D}${SDKPATHNATIVE}/environment-setup.d/openssl.sh
+	install -m 644 ${UNPACKDIR}/environment.d-openssl.sh ${D}${SDKPATHNATIVE}/environment-setup.d/openssl.sh
 }
 
 do_install_ptest () {

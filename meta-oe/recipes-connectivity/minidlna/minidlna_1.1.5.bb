@@ -34,8 +34,8 @@ INITSCRIPT_NAME = "minidlna"
 
 do_install:append() {
 	install -d ${D}${sysconfdir} ${D}${sysconfdir}/init.d/
-	install -m 644 ${WORKDIR}/minidlna.conf ${D}${sysconfdir}/minidlna.conf
-	install -m 755 ${WORKDIR}/init ${D}${sysconfdir}/init.d/${PN}
+	install -m 644 ${UNPACKDIR}/minidlna.conf ${D}${sysconfdir}/minidlna.conf
+	install -m 755 ${UNPACKDIR}/init ${D}${sysconfdir}/init.d/${PN}
 }
 
 pkg_preinst:${PN} () {

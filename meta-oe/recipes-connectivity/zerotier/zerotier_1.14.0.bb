@@ -36,7 +36,7 @@ do_compile:prepend:mipsel() {
 
 do_install:append() {
     install -d ${D}${sysconfdir}/init.d
-    install -m 0755 ${WORKDIR}/zerotier ${D}${sysconfdir}/init.d/zerotier
+    install -m 0755 ${UNPACKDIR}/zerotier ${D}${sysconfdir}/init.d/zerotier
 }
 
 INSANE_SKIP:${PN} = "already-stripped ldflags"

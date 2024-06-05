@@ -50,7 +50,7 @@ RPROVIDES:libcrypto-old = "libcrypto0.9.8"
 RPROVIDES:libssl-old = "libssl0.9.8"
 
 do_configure:prepend() {
-  cp ${WORKDIR}/find.pl ${S}/util/find.pl
+  cp ${UNPACKDIR}/find.pl ${S}/util/find.pl
 }
 
 do_configure:prepend:darwin () {
