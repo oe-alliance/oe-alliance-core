@@ -1,0 +1,20 @@
+--- a/src/common/xmltv/xmltv_channels.c
++++ b/src/common/xmltv/xmltv_channels.c
+@@ -2,6 +2,7 @@
+ #include <libxml/xmlreader.h>
+ #include <string.h>
+ #include <time.h>
++#include <stdlib.h>
+ 
+ #include "../../common.h"
+ 
+--- a/src/common/xmltv/xmltv_parser.c
++++ b/src/common/xmltv/xmltv_parser.c
+@@ -3,6 +3,7 @@
+ #include <libxml/xmlerror.h>
+ #include <string.h>
+ #include <time.h>
++#include <stdlib.h>
+ 
+ #include "../../common.h"
+ 

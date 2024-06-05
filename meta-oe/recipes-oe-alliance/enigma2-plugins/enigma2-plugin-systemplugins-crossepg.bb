@@ -18,6 +18,7 @@ PR = "r4"
 
 SRC_URI = "git://github.com/oe-alliance/e2openplugin-CrossEPG.git;protocol=https;branch=dev \
         file://fix-build-with-fno-common.patch \
+        file://fix-compile-with-gcc14.patch \
         "
 
 inherit ${PYTHON_PN}-dir
