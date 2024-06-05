@@ -16,6 +16,8 @@ S = "${WORKDIR}/git"
 
 inherit autotools-brokensep pkgconfig
 
+CFLAGS += "-Wno-return-mismatch"
+
 do_install() {
     install -d ${D}/usr/plugins
     install -d ${D}/usr/share/fonts
