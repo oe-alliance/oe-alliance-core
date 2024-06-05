@@ -2,13 +2,16 @@ SUMMARY = "Wakelan sends a magic packet to wake up remote PC's"
 LICENSE = "GPL-2.0-or-later"
 LIC_FILES_CHKSUM = "file://COPYING;md5=0636e73ff0215e8d672dc4c32c317bb3"
 
-SRC_URI = "http://www.ibiblio.org/pub/Linux/system/network/misc/${BPN}-${PV}.tar.gz"
+FILESEXTRAPATHS:prepend := "${THISDIR}/$PN}:"
+
+SRC_URI = "http://www.ibiblio.org/pub/Linux/system/network/misc/${BPN}-${PV}.tar.gz \
+            file://fix-headers-gcc14.patch"
 
 inherit autotools-brokensep
 
 do_install () {
         install -d ${D}${bindir}
-        install -m 0755 ${WORKDIR}/${BPN}-${PV}/wakelan ${D}${bindir}/wakelan
+        install -m 0755 ${S}/wakelan ${D}${bindir}/wakelan
 }
 
 FILES:${PN} = "${bindir}/wakelan"
