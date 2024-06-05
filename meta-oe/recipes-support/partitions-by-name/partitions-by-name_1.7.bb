@@ -10,11 +10,12 @@ INITSCRIPT_PARAMS = "start 04 S ."
 
 inherit update-rc.d
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 do_install() {
 	install -d ${D}${sysconfdir}/init.d
-	install -m 0755 ${S}/partitions-by-name.sh ${D}${sysconfdir}/init.d/partitions-by-name
+	install -m 0755 ${UNPACKDIR}/partitions-by-name.sh ${D}${sysconfdir}/init.d/partitions-by-name
 }
 
 do_package_qa() {
