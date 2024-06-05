@@ -15,7 +15,8 @@ PKGV = "1.0"
 
 SRC_URI = "file://process.py"
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 PACKAGES = "${PN} ${PN}-src"
 
@@ -24,5 +25,5 @@ FILES:${PN}-src = "${PYTHON_SITEPACKAGES_DIR}/process.py"
 
 do_install() {
     install -d ${D}${PYTHON_SITEPACKAGES_DIR}
-    install -m 644 ${S}/process.py ${D}${PYTHON_SITEPACKAGES_DIR}/
+    install -m 644 ${UNPACKDIR}/process.py ${D}${PYTHON_SITEPACKAGES_DIR}/
 }
