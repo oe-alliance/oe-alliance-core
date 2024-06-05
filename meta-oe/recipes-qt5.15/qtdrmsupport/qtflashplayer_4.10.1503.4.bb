@@ -6,7 +6,8 @@ PACKAGE_ARCH := "${MACHINE_ARCH}"
 
 SRC_URI = "file://libflashplayer-${PV}_armhf.zip"
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 do_install() {
 	install -d ${D}/usr

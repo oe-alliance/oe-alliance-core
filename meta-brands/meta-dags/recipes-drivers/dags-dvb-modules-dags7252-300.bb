@@ -17,7 +17,8 @@ SRC_URI[sha256sum] = "fe8fbe9084cc82a517226f99f736ad874269478ce52c13e6988bbd2213
 
 SRC_URI = "http://en3homeftp.net/release/images/iqon/bcmlinuxdvb_7252S-300mm-${KV}-${SRCDATE}.tar.gz"
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 INHIBIT_PACKAGE_STRIP = "1"
 INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
@@ -31,7 +32,7 @@ do_populate_sysroot[noexec] = "1"
 
 do_install() {
     install -d ${D}/lib/modules/${KV}/extra
-    install -m 0644 ${WORKDIR}/lib/modules/${KV}/extra/bcmlinuxdvb.ko ${D}/lib/modules/${KV}/extra/bcmlinuxdvb_${MACHINEBUILD}.ko
+    install -m 0644 ${S}/lib/modules/${KV}/extra/bcmlinuxdvb.ko ${D}/lib/modules/${KV}/extra/bcmlinuxdvb_${MACHINEBUILD}.ko
     install -d ${D}/${sysconfdir}/modules-load.d
     echo bcmlinuxdvb_${MACHINEBUILD} _hwtype=\$hwtypenum >> ${D}/${sysconfdir}/modules-load.d/_${MACHINEBUILD}.conf
 }

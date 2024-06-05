@@ -14,7 +14,8 @@ COMPATIBLE_MACHINE = "v8plus|multibox|multiboxse|multiboxpro"
 
 SRC_URI = "https://source.mynonpublic.com/tntfs/${HICHIPSET}-tntfs-${SRCDATE}.zip"
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 INHIBIT_PACKAGE_STRIP = "1"
 

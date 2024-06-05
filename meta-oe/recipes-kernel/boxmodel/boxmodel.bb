@@ -10,7 +10,8 @@ require conf/license/license-gplv2.inc
 
 SRC_URI = "file://boxmodel.c file://Makefile"
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 PV = "1.0"
 
 inherit module

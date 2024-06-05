@@ -86,12 +86,12 @@ FILES:${KERNEL_PACKAGE_NAME}-image:arm = "/${KERNEL_IMAGEDEST}/findkerneldevice.
 
 kernel_do_configure:prepend:arm() {
     install -d ${B}/usr
-    install -m 0644 ${WORKDIR}/initramfs-subdirboot.cpio.gz ${B}/
+    install -m 0644 ${UNPACKDIR}/initramfs-subdirboot.cpio.gz ${B}/
 }
 
 kernel_do_install:append:arm() {
         install -d ${D}/${KERNEL_IMAGEDEST}
-        install -m 0755 ${WORKDIR}/findkerneldevice.sh ${D}/${KERNEL_IMAGEDEST}
+        install -m 0755 ${UNPACKDIR}/findkerneldevice.sh ${D}/${KERNEL_IMAGEDEST}
 }
 
 pkg_postinst:kernel-image:arm () {

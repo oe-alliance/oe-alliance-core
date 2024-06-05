@@ -17,7 +17,8 @@ SRC_URI[sha256sum] = "8679b337125b614b4ed460bf7928a42fc731d24207b28fe74c327f747f
 
 SRC_URI = "http://addons.hdfreaks.cc/feeds/*git/enigma2-plugins-update-MultiQuickButton-Ixuss.tar.gz"
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 FILES:${PN} = "${libdir} /etc/*"
 

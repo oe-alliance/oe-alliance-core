@@ -11,7 +11,7 @@ inherit systemd
 
 do_install() {
 	install -d ${D}/lib/systemd/system
-	install -m 0644 ${WORKDIR}/kodi.service ${D}/lib/systemd/system/ 
+	install -m 0644 ${S}/kodi.service ${D}/lib/systemd/system/ 
 }
 
 SYSTEMD_PACKAGES = "${PN}"

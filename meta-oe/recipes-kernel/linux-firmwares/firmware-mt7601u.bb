@@ -13,5 +13,5 @@ FILES:${PN} += "${nonarch_base_libdir}/firmware"
 
 do_install() {
     install -d ${D}${nonarch_base_libdir}/firmware
-    install -m 0644 ${UNPACKDIR}/mt7601u.bin ${D}${nonarch_base_libdir}/firmware/mt7601u.bin
+    install -m 0644 ${S}/mt7601u.bin ${D}${nonarch_base_libdir}/firmware/mt7601u.bin
 }

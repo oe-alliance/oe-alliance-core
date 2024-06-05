@@ -10,7 +10,8 @@ PR = "r2"
 
 SRC_URI = "https://source.mynonpublic.com/dinobot/${MACHINE}-drivers-${KV}-${SRCDATE}.zip"
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 INITSCRIPT_NAME = "zload-dinobot"
 INITSCRIPT_PARAMS = "start 05 S ."

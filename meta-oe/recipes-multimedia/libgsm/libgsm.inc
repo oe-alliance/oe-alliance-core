@@ -28,7 +28,7 @@ do_install() {
     oe_libinstall -a -C lib libgsm ${D}${libdir}
     oe_libinstall -so -C lib libgsm ${D}${libdir}
     install -d ${D}${includedir}/gsm
-    install -m 0644 ${S}/inc/gsm.h ${D}${includedir}/gsm/
+    install -m 0644 ${UNPACKDIR}/inc/gsm.h ${D}${includedir}/gsm/
     cd ${D}${includedir}
     ln -s gsm/gsm.h gsm.h
 }

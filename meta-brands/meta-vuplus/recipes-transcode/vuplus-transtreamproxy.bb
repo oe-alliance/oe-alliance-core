@@ -35,7 +35,7 @@ S = "${WORKDIR}/git"
 
 do_install() {
     install -d ${D}/usr/bin
-    install -m 0755 ${WORKDIR}/build/src/transtreamproxy ${D}/usr/bin/transtreamproxy
+    install -m 0755 ${S}/build/src/transtreamproxy ${D}/usr/bin/transtreamproxy
 }
 
 pkg_prerm:${PN}() {

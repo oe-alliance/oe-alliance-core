@@ -7,7 +7,8 @@ inherit allarch
 
 SRC_URI = "file://firmware-mn88436.zip"
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 PACKAGES = "${PN}"
 FILES:${PN} += "${nonarch_base_libdir}/firmware"

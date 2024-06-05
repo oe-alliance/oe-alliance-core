@@ -14,11 +14,12 @@ RPROVIDES:${PN} += "virtual-blindscan-dvbs"
 PV = "1.1"
 PR = "r5"
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 do_install() {
     install -d "${D}/${bindir}"
-    install -m 0755 "${WORKDIR}/avl_xtrend_blindscan" "${D}/${bindir}"
+    install -m 0755 "${S}/avl_xtrend_blindscan" "${D}/${bindir}"
 }
 
 do_prepare_recipe_sysroot[noexec] = "1"

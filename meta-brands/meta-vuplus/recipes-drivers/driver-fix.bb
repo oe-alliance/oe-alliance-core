@@ -12,7 +12,7 @@ inherit pkgconfig update-rc.d
 
 do_install() {
     install -d ${D}/etc/init.d/
-    install -m 0755 ${WORKDIR}/driver_fix.sh ${D}/etc/init.d/driver_fix
+    install -m 0755 ${S}/driver_fix.sh ${D}/etc/init.d/driver_fix
 }
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"

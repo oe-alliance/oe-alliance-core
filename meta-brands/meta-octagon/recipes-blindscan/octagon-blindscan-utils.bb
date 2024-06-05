@@ -18,13 +18,14 @@ SRC_URI = "https://source.mynonpublic.com/octagon/octagon-dvbc-blindscan-1.1.zip
 PV = "1.1"
 PR = "r1"
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 FILES:octagon-blindscan-dvbc-utils = "${bindir}/tda1002x"
 
 do_install() {
     install -d ${D}/${bindir}/
-    install -m 0755 "${UNPACKDIR}/tda1002x" "${D}/${bindir}"
+    install -m 0755 "${S}/tda1002x" "${D}/${bindir}"
 }
 
 SRC_URI[md5sum] = "23cb152a57a99b28f1bb74d95f4c3109"

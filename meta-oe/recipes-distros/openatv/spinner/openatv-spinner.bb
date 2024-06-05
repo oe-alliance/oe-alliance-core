@@ -25,7 +25,7 @@ UNPACKDIR = "${S}"
 
 do_install() {
     install -d ${D}${datadir}/enigma2/spinner
-    install -m 0644 ${UNPACKDIR}/*.png ${D}${datadir}/enigma2/spinner
+    install -m 0644 ${S}/*.png ${D}${datadir}/enigma2/spinner
 }
 
 FILES:${PN} = "${datadir}/enigma2"

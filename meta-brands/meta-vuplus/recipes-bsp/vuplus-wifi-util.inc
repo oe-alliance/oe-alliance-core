@@ -16,7 +16,7 @@ S="${WORKDIR}/vuplus-wifi-util-${MACHINE}"
 
 do_install() {
 	install -d ${D}${bindir}
-	install -m 0755 ${S}/* ${D}${bindir}
+	install -m 0755 ${UNPACKDIR}/* ${D}${bindir}
 }
 
 do_package_qa() {
@@ -27,18 +27,18 @@ FILES:${PN}="/"
 
 do_install() {
 	install -d ${D}${bindir}
-	install -m 0755 ${S}/bcmdl ${D}${bindir}
-	install -m 0755 ${S}/wl ${D}${bindir}
-	install -m 0755 ${S}/wl-config.sh ${D}${bindir}
-	install -m 0755 ${S}/wl-down.sh ${D}${bindir}
+	install -m 0755 ${UNPACKDIR}/bcmdl ${D}${bindir}
+	install -m 0755 ${UNPACKDIR}/wl ${D}${bindir}
+	install -m 0755 ${UNPACKDIR}/wl-config.sh ${D}${bindir}
+	install -m 0755 ${UNPACKDIR}/wl-down.sh ${D}${bindir}
 	sed  's!wl ssid $SSID!wl ssid "$SSID"!' -i ${D}${bindir}/wl-config.sh
 
 	install -d ${D}/usr/local/modules
-	install -m 0644 ${S}/dhd.ko ${D}/usr/local/modules/dhd.ko
+	install -m 0644 ${UNPACKDIR}/dhd.ko ${D}/usr/local/modules/dhd.ko
 
 	install -d ${D}/lib/firmware/bcm43569/
-	install -m 0644 ${S}/bcm43569-firmware.bin ${D}/lib/firmware/bcm43569/
-	install -m 0644 ${S}/bcm43569_iton.nvm ${D}/lib/firmware/bcm43569/
+	install -m 0644 ${UNPACKDIR}/bcm43569-firmware.bin ${D}/lib/firmware/bcm43569/
+	install -m 0644 ${UNPACKDIR}/bcm43569_iton.nvm ${D}/lib/firmware/bcm43569/
 
 }
 

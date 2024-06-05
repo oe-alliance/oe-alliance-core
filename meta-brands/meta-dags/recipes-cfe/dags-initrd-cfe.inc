@@ -22,6 +22,7 @@ do_deploy() {
 
 SRC_URI = "http://en3homeftp.net/pub/down/vmlinuz-initrd_${DOWNLOADNAME}_${SRCDATE}.tar.gz"
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 addtask deploy before do_package after do_install

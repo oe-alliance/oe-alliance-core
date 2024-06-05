@@ -19,7 +19,7 @@ UNPACKDIR = "${S}"
 
 do_install() {
     install -d ${D}${bindir}
-    install -m 0755 ${UNPACKDIR}/uclan-blindscan ${D}/${bindir}
+    install -m 0755 ${S}/uclan-blindscan ${D}/${bindir}
 }
 
 do_package_qa() {

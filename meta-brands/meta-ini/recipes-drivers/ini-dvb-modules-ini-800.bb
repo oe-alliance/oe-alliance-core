@@ -16,7 +16,8 @@ SRC_URI[sha256sum] = "242028aa90ace81b62d50ca115801c5d276d8aba6291eb7544831aabaa
 
 SRC_URI = "https://source.mynonpublic.com/ini/ini-800-drivers-${KV}-${SRCDATE}.zip"
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 INHIBIT_PACKAGE_STRIP = "1"
 INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
@@ -30,7 +31,7 @@ do_install() {
     install -d ${D}/lib/modules/${KV}/extra
     install -d ${D}/${sysconfdir}/modules-load.d
     for i in dvb; do
-        install -m 0755 ${WORKDIR}/$i.ko ${D}/lib/modules/${KV}/extra/$i.ko
+        install -m 0755 ${S}/$i.ko ${D}/lib/modules/${KV}/extra/$i.ko
         echo $i >> ${D}/${sysconfdir}/modules-load.d/_${MACHINEBUILD}.conf
     done
     

@@ -2,7 +2,8 @@ LICENSE = "CLOSED"
 require conf/license/license-close.inc
 SRC_URI = "file://rtl8723b_fw.zip"
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 PACKAGES = "${PN}"
 FILES:${PN} += "${base_libdir}/firmware"

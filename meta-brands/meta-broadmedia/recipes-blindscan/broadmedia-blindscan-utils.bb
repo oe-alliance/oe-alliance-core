@@ -18,7 +18,8 @@ SRC_URI = "https://source.mynonpublic.com/broadmedia/broadmedia-dvbc-blindscan-1
 PV = "1.1"
 PR = "r1"
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 FILES:broadmedia-blindscan-dvbc-utils = "${bindir}/tda1002x"
 

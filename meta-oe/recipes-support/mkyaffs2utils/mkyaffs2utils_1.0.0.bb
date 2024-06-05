@@ -14,7 +14,8 @@ SRC_URI = "file://mkyaffs2utils.tar.bz2"
 #INHIBIT_PACKAGE_STRIP = "1"
 #INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 do_compile() {
     cd mkyaffs2image && oe_runmake

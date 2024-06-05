@@ -10,6 +10,7 @@ require conf/license/license-gplv2.inc
 PR = "r0"
 ALLOW_EMPTY:${PN} = "1"
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 addtask deploy before do_package after do_install

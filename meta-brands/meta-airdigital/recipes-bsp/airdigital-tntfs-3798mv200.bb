@@ -14,7 +14,8 @@ COMPATIBLE_MACHINE = "^h9$|^h9se$|^h9combo$|^h9combose$|^h10$|^i55se$|^i55plus$"
 
 SRC_URI = "https://source.mynonpublic.com/tntfs/${HICHIPSET}-tntfs-${SRCDATE}.zip"
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 INHIBIT_PACKAGE_STRIP = "1"
 

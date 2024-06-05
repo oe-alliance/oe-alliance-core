@@ -11,7 +11,7 @@ do_compile() {
 }
 do_install() {
     install -d ${D}/usr/share/nrf52-firmware
-    install -m 644 ${S}/../${CURRENT_FW} ${D}/usr/share/nrf52-firmware
+    install -m 644 ${UNPACKDIR}/../${CURRENT_FW} ${D}/usr/share/nrf52-firmware
 }
 
 FILES:${PN} = "/usr/share/nrf52-firmware"

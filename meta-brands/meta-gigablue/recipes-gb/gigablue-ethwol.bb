@@ -12,7 +12,8 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 SRC_URI = "file://ethwol.sh"
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 inherit update-rc.d
 INITSCRIPT_NAME = "ethwol"
@@ -20,5 +21,5 @@ INITSCRIPT_PARAMS = "stop 32 0 ."
 
 do_install() {
     install -d ${D}/etc/init.d
-    install -m 0755 ${WORKDIR}/ethwol.sh ${D}/etc/init.d/ethwol
+    install -m 0755 ${S}/ethwol.sh ${D}/etc/init.d/ethwol
 }

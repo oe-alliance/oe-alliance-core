@@ -12,7 +12,8 @@ PR = "r0"
 
 SRC_URI = "file://spinner.tgz"
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 FILES:${PN} = "${datadir}/enigma2"
 

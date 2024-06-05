@@ -14,12 +14,13 @@ INITSCRIPT_PARAMS = "start 01 S ."
 
 inherit update-rc.d
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 do_compile() {
 }
 
 do_install() {
     install -d ${D}/etc/init.d/
-    install -m 0755 ${WORKDIR}/amiko-loadmodules-viper4k.sh ${D}/etc/init.d/amiko-loadmodules
+    install -m 0755 ${S}/amiko-loadmodules-viper4k.sh ${D}/etc/init.d/amiko-loadmodules
 }

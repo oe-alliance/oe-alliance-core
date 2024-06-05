@@ -13,7 +13,7 @@ inherit pkgconfig update-rc.d
 
 do_install() {
     install -d ${D}/etc/init.d/
-    install -m 0755 ${WORKDIR}/ceryon-shutdown.sh ${D}/etc/init.d/ceryon-shutdown
+    install -m 0755 ${S}/ceryon-shutdown.sh ${D}/etc/init.d/ceryon-shutdown
 }
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"

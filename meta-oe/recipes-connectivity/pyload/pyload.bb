@@ -49,7 +49,7 @@ do_install() {
     install -m 755 ${S}/systemCheck.py ${D}/usr/pyload
     cp ${UNPACKDIR}/pyload.tar.gz.defaults ${D}/usr/pyload/pyload-defaults.tar.gz
     
-    install -m 0755 ${UNPACKDIR}/pyload.init ${D}/etc/init.d/pyload
+    install -m 0755 ${S}/pyload.init ${D}/etc/init.d/pyload
 }
 
 INSANE_SKIP:${PN} = "build-deps"

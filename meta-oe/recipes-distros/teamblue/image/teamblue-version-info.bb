@@ -14,7 +14,8 @@ URL = "http://www.teamblue.tech"
 
 do_configure[nostamp] = "1"
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 PACKAGES = "${PN}"
 

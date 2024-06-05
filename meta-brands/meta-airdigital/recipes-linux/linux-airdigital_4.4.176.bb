@@ -42,7 +42,7 @@ FILES:${KERNEL_PACKAGE_NAME}-image = "/${KERNEL_IMAGEDEST}/findkerneldevice.sh"
 
 kernel_do_configure:prepend() {
 	install -d ${B}/usr
-	install -m 0644 ${WORKDIR}/initramfs-subdirboot.cpio.gz ${B}/
+	install -m 0644 ${UNPACKDIR}/initramfs-subdirboot.cpio.gz ${B}/
 }
 
 pkg_postinst:kernel-image:hzero() {

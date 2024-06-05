@@ -20,7 +20,7 @@ UNPACKDIR = "${S}"
 
 do_install() {
     install -d ${D}${bindir}
-    install -m 0755 ${UNPACKDIR}/libreader ${D}/${bindir}
+    install -m 0755 ${S}/libreader ${D}/${bindir}
 }
 
 do_package_qa() {

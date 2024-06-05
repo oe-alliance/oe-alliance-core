@@ -9,7 +9,8 @@ PR = "r3"
 
 SRC_URI = "https://source.mynonpublic.com/${MACHINE}/${MACHINE}-drivers-${KV}-${SRCDATE}.zip"
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 INHIBIT_PACKAGE_STRIP = "1"
 INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
@@ -23,7 +24,7 @@ do_install() {
     install -d ${D}/lib/modules/${KV}/extra
     install -d ${D}/${sysconfdir}/modules-load.d
     for i in ${MACHINE}_1 ${MACHINE}_2 ${MACHINE}_3 ${MACHINE}_4; do
-        install -m 0755 ${WORKDIR}/$i.ko ${D}/lib/modules/${KV}/extra
+        install -m 0755 ${S}/$i.ko ${D}/lib/modules/${KV}/extra
         echo $i >> ${D}/${sysconfdir}/modules-load.d/_${MACHINE}.conf
     done
 }

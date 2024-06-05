@@ -20,7 +20,7 @@ FILES:${PN} = "/etc/epgimport"
 
 do_install() {
     install -d ${D}/etc/epgimport
-    install -m 644 ${UNPACKDIR}/rytec.sources.xml ${D}/etc/epgimport/rytec.sources.xml
-    install -m 644 ${UNPACKDIR}/russian.sources.xml ${D}/etc/epgimport/russian.sources.xml
-    install -m 644 ${UNPACKDIR}/spainKoala.sources.xml ${D}/etc/epgimport/spainKoala.sources.xml
+    install -m 644 ${S}/rytec.sources.xml ${D}/etc/epgimport/rytec.sources.xml
+    install -m 644 ${S}/russian.sources.xml ${D}/etc/epgimport/russian.sources.xml
+    install -m 644 ${S}/spainKoala.sources.xml ${D}/etc/epgimport/spainKoala.sources.xml
 }

@@ -14,7 +14,7 @@ inherit pkgconfig
 
 do_install() {
     install -d ${D}/usr/bin
-    install -m 755 ${S}/${PN} ${D}/usr/bin/${PN}
+    install -m 755 ${UNPACKDIR}/${PN} ${D}/usr/bin/${PN}
 }
 
 SRC_URI[md5sum] = "dc771ef0114fcad783df180f1ebfa66b"

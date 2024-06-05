@@ -14,5 +14,5 @@ SRC_URI="file://setup_openvpn.sh"
 
 do_install() {
     install -d ${D}/usr/bin/
-    install -m 0755 ${WORKDIR}/setup_openvpn.sh ${D}/usr/bin/setup_openvpn.sh
+    install -m 0755 ${S}/setup_openvpn.sh ${D}/usr/bin/setup_openvpn.sh
 }

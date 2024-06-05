@@ -13,7 +13,8 @@ SRC_URI = " \
     https://source.mynonpublic.com/xtrend/avrmain-${MACHINE}-${FPVERSION}.zip;name=avrmain \
     "
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 inherit update-rc.d
 

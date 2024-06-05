@@ -30,7 +30,7 @@ do_install() {
     install -m 0644 ${S}/sbl.bin.sig ${D}/usr/share/sbl.bin.sig
     install -m 0644 ${S}/apploader.bin ${D}/usr/share/apploader.bin
     install -m 0755 -d ${D}${sysconfdir}/init.d
-    install -m 0755 ${WORKDIR}/flash-apploader ${D}${sysconfdir}/init.d/flash-apploader
+    install -m 0755 ${S}/flash-apploader ${D}${sysconfdir}/init.d/flash-apploader
 }
 
 FILES:${PN} = "/usr/share ${sysconfdir}"

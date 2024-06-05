@@ -24,9 +24,9 @@ PACKAGE_ARCH = "${TUNE_PKGARCH}"
 do_install() {
     install -d ${D}/${bindir}
     install -d ${D}/usr/softcams
-    install -m 0755 ${WORKDIR}/cccam_versions/CCcam_${PV}_${TARGET_ARCH} ${D}/usr/softcams/${CAMNAME}
+    install -m 0755 ${S}/cccam_versions/CCcam_${PV}_${TARGET_ARCH} ${D}/usr/softcams/${CAMNAME}
     install -d ${D}/etc
-    install -m 0755 ${WORKDIR}/CCcam.cfg ${D}/etc/CCcam.cfg
+    install -m 0755 ${S}/CCcam.cfg ${D}/etc/CCcam.cfg
 }
 
 RDEPENDS:${PN} = "glibc libstdc++ softcam-support"

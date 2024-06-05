@@ -15,7 +15,7 @@ do_compile() {
 
 do_install() {
         install -d ${D}${bindir}
-        install -m 0755 ${WORKDIR}/sshpass-${PV}/sshpass ${D}${bindir}/sshpass
+        install -m 0755 ${S}/sshpass-${PV}/sshpass ${D}${bindir}/sshpass
 }
 
 FILES:${PN} = "${bindir}/sshpass"

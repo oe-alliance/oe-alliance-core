@@ -22,5 +22,5 @@ do_compile() {
 
 do_install() {
     install -d ${D}/etc/init.d/
-    install -m 0755 ${UNPACKDIR}/octagon-libreader-hisi3798mv200.sh ${D}/etc/init.d/octagon-libreader
+    install -m 0755 ${S}/octagon-libreader-hisi3798mv200.sh ${D}/etc/init.d/octagon-libreader
 }

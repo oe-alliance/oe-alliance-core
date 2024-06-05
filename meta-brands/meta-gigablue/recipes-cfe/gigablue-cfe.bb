@@ -10,7 +10,8 @@ inherit deploy
 
 PR = "r35"
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 SRC_URI:gb800solo = " file://burn.bat"
 SRC_URI = "file://warning.bin \

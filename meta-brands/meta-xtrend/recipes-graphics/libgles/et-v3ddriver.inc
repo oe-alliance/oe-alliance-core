@@ -12,7 +12,8 @@ PR = "r2"
 
 SRC_URI = "https://source.mynonpublic.com/xtrend/${MACHINE_DRIVER}-v3ddriver-${SRCDATE}.zip"
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 do_configure() {
 }

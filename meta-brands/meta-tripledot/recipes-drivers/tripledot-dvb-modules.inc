@@ -9,7 +9,8 @@ PR = "r0"
 
 SRC_URI = "https://source.mynonpublic.com/tripledot/${MACHINE}-drivers-${KV}-${SRCDATE}.zip"
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 INHIBIT_PACKAGE_STRIP = "1"
 INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
@@ -22,7 +23,7 @@ do_populate_sysroot() {
 do_install() {
     install -d ${D}/lib/modules/${KV}/extra
     install -d ${D}/${sysconfdir}/modules-load.d
-    install -m 0755 ${WORKDIR}/dvb.ko ${D}/lib/modules/${KV}/extra
+    install -m 0755 ${S}/dvb.ko ${D}/lib/modules/${KV}/extra
     echo dvb >> ${D}/${sysconfdir}/modules-load.d/_${MACHINE}.conf
 }
 

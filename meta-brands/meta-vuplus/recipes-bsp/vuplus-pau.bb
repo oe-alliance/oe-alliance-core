@@ -11,13 +11,14 @@ SRC_URI = " \
     file://pau.sh \
 "
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 do_install() {
     install -d ${D}${sysconfdir}/init.d/
     install -d ${D}${bindir}
-    install -m 0755 ${WORKDIR}/pau ${D}${bindir}
-    install -m 0755 ${WORKDIR}/pau.sh ${D}${sysconfdir}/init.d/
+    install -m 0755 ${S}/pau ${D}${bindir}
+    install -m 0755 ${S}/pau.sh ${D}${sysconfdir}/init.d/
 }
 
 inherit update-rc.d

@@ -14,7 +14,8 @@ PR = "r0"
 
 SRC_URI  = "https://source.mynonpublic.com/amiko/${MACHINE}-blindscan-${SRCDATE}.zip"
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 do_install() {
     install -d ${D}${bindir}

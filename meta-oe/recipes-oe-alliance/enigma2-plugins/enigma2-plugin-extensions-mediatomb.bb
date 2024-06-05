@@ -7,6 +7,7 @@ require conf/license/license-gplv2.inc
 PV = "0.12.1"
 PR = "r0"
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 ALLOW_EMPTY:${PN} = "1"

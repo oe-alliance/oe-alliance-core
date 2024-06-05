@@ -12,12 +12,13 @@ inherit update-rc.d
 INITSCRIPT_NAME = "coldboot"
 INITSCRIPT_PARAMS = "start 50 0 ."
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 do_install() {
     install -d ${D}/etc/init.d ${D}/usr/bin
-    install -m 0755 ${WORKDIR}/coldboot.sh ${D}/etc/init.d/coldboot
-    install -m 0755 ${WORKDIR}/coldboot ${D}/usr/bin/coldboot
+    install -m 0755 ${S}/coldboot.sh ${D}/etc/init.d/coldboot
+    install -m 0755 ${S}/coldboot ${D}/usr/bin/coldboot
 }
 
 pkg_preinst:${PN}:prepend() {
