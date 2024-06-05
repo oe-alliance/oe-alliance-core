@@ -9,17 +9,18 @@ PV = "1.0+git"
 PKGV = "1.0+git${GITPKGV}"
 PR = "r0"
 
-SRC_URI = "git://github.com/OpenPLi/${BPN}.git;protocol=https;branch=master"
+SRC_URI = "git://github.com/OpenPLi/${BPN}.git;protocol=https;branch=master \
+            file://fix-compile-with-gcc14.patch"
 
 S = "${WORKDIR}/git"
 
 inherit autotools
 
 do_configure:prepend() {
-    touch ${S}/NEWS
-    touch ${S}/README
-    touch ${S}/AUTHORS
-    touch ${S}/ChangeLog
+    touch ${UNPACKDIR}/NEWS
+    touch ${UNPACKDIR}/README
+    touch ${UNPACKDIR}/AUTHORS
+    touch ${UNPACKDIR}/ChangeLog
 }
 
 pkg_postinst:${PN} () {
