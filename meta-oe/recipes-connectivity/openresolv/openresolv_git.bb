@@ -30,17 +30,17 @@ do_configure() {
 do_install() {
         oe_runmake "DESTDIR=${D}" install
         install -d ${D}${sysconfdir}
-        install -m 0644 ${WORKDIR}/resolvconf.conf ${D}${sysconfdir}/resolvconf.conf
+        install -m 0644 ${UNPACKDIR}/resolvconf.conf ${D}${sysconfdir}/resolvconf.conf
         install -d ${D}${sysconfdir}/default/volatiles
-        install -m 0644 ${WORKDIR}/volatiles.99_openresolv ${D}${sysconfdir}/default/volatiles/99_openresolv
+        install -m 0644 ${UNPACKDIR}/volatiles.99_openresolv ${D}${sysconfdir}/default/volatiles/99_openresolv
         install -d ${D}${sysconfdir}/network/if-down.d
-        install -m 0755 ${WORKDIR}/resolvconf.if-down ${D}${sysconfdir}/network/if-down.d/resolvconf
+        install -m 0755 ${UNPACKDIR}/resolvconf.if-down ${D}${sysconfdir}/network/if-down.d/resolvconf
         install -d ${D}${sysconfdir}/network/if-up.d
-        install -m 0755 ${WORKDIR}/000resolvconf.if-up ${D}${sysconfdir}/network/if-up.d/000resolvconf
+        install -m 0755 ${UNPACKDIR}/000resolvconf.if-up ${D}${sysconfdir}/network/if-up.d/000resolvconf
         install -d ${D}${sysconfdir}/ppp/ip-down.d
-        install -m 0755 ${WORKDIR}/000resolvconf.ppp.ip-down ${D}${sysconfdir}/ppp/ip-down.d/000resolvconf
+        install -m 0755 ${UNPACKDIR}/000resolvconf.ppp.ip-down ${D}${sysconfdir}/ppp/ip-down.d/000resolvconf
         install -d ${D}${sysconfdir}/ppp/ip-up.d
-        install -m 0755 ${WORKDIR}/000resolvconf.ppp.ip-up ${D}${sysconfdir}/ppp/ip-up.d/000resolvconf
+        install -m 0755 ${UNPACKDIR}/000resolvconf.ppp.ip-up ${D}${sysconfdir}/ppp/ip-up.d/000resolvconf
 }
 
 S = "${WORKDIR}/git"

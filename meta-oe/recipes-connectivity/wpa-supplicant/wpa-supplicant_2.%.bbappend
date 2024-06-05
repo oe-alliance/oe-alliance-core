@@ -23,15 +23,15 @@ do_install:append() {
         rm -rf ${D}${sysconfdir}/network/if-*.d
 
         install -d ${D}${sysconfdir}/wpa_supplicant
-        install -m 755 ${WORKDIR}/action_wpa.sh ${D}${sysconfdir}/wpa_supplicant
-        install -m 755 ${WORKDIR}/functions.sh ${D}${sysconfdir}/wpa_supplicant
-        install -m 755 ${WORKDIR}/ifupdown.sh ${D}${sysconfdir}/wpa_supplicant
+        install -m 755 ${UNPACKDIR}/action_wpa.sh ${D}${sysconfdir}/wpa_supplicant
+        install -m 755 ${UNPACKDIR}/functions.sh ${D}${sysconfdir}/wpa_supplicant
+        install -m 755 ${UNPACKDIR}/ifupdown.sh ${D}${sysconfdir}/wpa_supplicant
 
         install -d ${D}${sbindir}
-        install -m 755 ${WORKDIR}/wpa_action ${D}${sbindir}
+        install -m 755 ${UNPACKDIR}/wpa_action ${D}${sbindir}
 
         install -d ${D}${mandir}/man8
-        install -m 755 ${WORKDIR}/wpa_action.8 ${D}${mandir}/man8
+        install -m 755 ${UNPACKDIR}/wpa_action.8 ${D}${mandir}/man8
 
         install -d ${D}${sysconfdir}/network/if-down.d
         install -d ${D}${sysconfdir}/network/if-post-down.d

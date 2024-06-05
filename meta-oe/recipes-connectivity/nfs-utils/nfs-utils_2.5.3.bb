@@ -113,22 +113,22 @@ HIGH_RLIMIT_NOFILE ??= "4096"
 
 do_install:append () {
 	install -d ${D}${sysconfdir}/init.d
-	install -m 0755 ${WORKDIR}/nfsserver ${D}${sysconfdir}/init.d/nfsserver
-	install -m 0755 ${WORKDIR}/nfscommon ${D}${sysconfdir}/init.d/nfscommon
+	install -m 0755 ${UNPACKDIR}/nfsserver ${D}${sysconfdir}/init.d/nfsserver
+	install -m 0755 ${UNPACKDIR}/nfscommon ${D}${sysconfdir}/init.d/nfscommon
 
-	install -m 0755 ${WORKDIR}/nfs-utils.conf ${D}${sysconfdir}
+	install -m 0755 ${UNPACKDIR}/nfs-utils.conf ${D}${sysconfdir}
 	install -m 0755 ${S}/utils/mount/nfsmount.conf ${D}${sysconfdir}
 
 	install -d ${D}${systemd_unitdir}/system
-	install -m 0644 ${WORKDIR}/nfs-server.service ${D}${systemd_unitdir}/system/
-	install -m 0644 ${WORKDIR}/nfs-mountd.service ${D}${systemd_unitdir}/system/
-	install -m 0644 ${WORKDIR}/nfs-statd.service ${D}${systemd_unitdir}/system/
+	install -m 0644 ${UNPACKDIR}/nfs-server.service ${D}${systemd_unitdir}/system/
+	install -m 0644 ${UNPACKDIR}/nfs-mountd.service ${D}${systemd_unitdir}/system/
+	install -m 0644 ${UNPACKDIR}/nfs-statd.service ${D}${systemd_unitdir}/system/
 	sed -i -e 's,@SBINDIR@,${sbindir},g' \
 		-e 's,@SYSCONFDIR@,${sysconfdir},g' \
 		-e 's,@HIGH_RLIMIT_NOFILE@,${HIGH_RLIMIT_NOFILE},g' \
 		${D}${systemd_unitdir}/system/*.service
 	if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
-		install -m 0644 ${WORKDIR}/proc-fs-nfsd.mount ${D}${systemd_unitdir}/system/
+		install -m 0644 ${UNPACKDIR}/proc-fs-nfsd.mount ${D}${systemd_unitdir}/system/
 		install -d ${D}${systemd_unitdir}/system/sysinit.target.wants/
 		ln -sf ../proc-fs-nfsd.mount ${D}${systemd_unitdir}/system/sysinit.target.wants/proc-fs-nfsd.mount
 	fi

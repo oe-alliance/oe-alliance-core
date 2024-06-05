@@ -33,6 +33,6 @@ do_compile() {
 do_install() {
     install -d ${D}${bindir}
     install -m 755 ${S}/rclone ${D}${bindir}
-    install -m 755 ${WORKDIR}/rclonefs ${D}${bindir}
+    install -m 755 ${UNPACKDIR}/rclonefs ${D}${bindir}
     ln -sf rclone ${D}${bindir}/mount.rclone
 }

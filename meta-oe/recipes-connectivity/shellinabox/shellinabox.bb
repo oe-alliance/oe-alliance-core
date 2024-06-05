@@ -34,15 +34,15 @@ INITSCRIPT_NAME = "shellinabox"
 SYSTEMD_SERVICE = "shellinabox.service"
 
 do_configure:prepend() {
-	cp ${WORKDIR}/styles.css ${S}/shellinabox/styles.css
+	cp ${UNPACKDIR}/styles.css ${S}/shellinabox/styles.css
 }
 
 do_install:append() {
     if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
         install -d ${D}${systemd_unitdir}/system/
-        install -m 0644 ${WORKDIR}/shellinabox.service ${D}${systemd_unitdir}/system/
+        install -m 0644 ${UNPACKDIR}/shellinabox.service ${D}${systemd_unitdir}/system/
     else
         install -d ${D}${sysconfdir}/init.d
-        install -m 755 ${WORKDIR}/shellinabox.init ${D}${sysconfdir}/init.d/shellinabox
+        install -m 755 ${UNPACKDIR}/shellinabox.init ${D}${sysconfdir}/init.d/shellinabox
     fi
 }

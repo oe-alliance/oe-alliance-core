@@ -44,6 +44,6 @@ do_install() {
         perl -i -pe 's:/usr/sbin:${bindir}:' ${D}${systemd_system_unitdir}/*.service
     else
         install -d ${D}${sysconfdir}/init.d
-        install -m 755 ${WORKDIR}/llmnrd.sh ${D}${sysconfdir}/init.d/llmnrd
+        install -m 755 ${UNPACKDIR}/llmnrd.sh ${D}${sysconfdir}/init.d/llmnrd
     fi
 }

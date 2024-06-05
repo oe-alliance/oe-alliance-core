@@ -33,11 +33,11 @@ do_install() {
     install -d ${D}${bindir}
     install -m 755 ${S}/odhcp6c ${D}${bindir}
     install -d ${D}${sysconfdir}/network/if-up.d
-    install -m 755 ${WORKDIR}/ifup ${D}${sysconfdir}/network/if-up.d/odhcp6c
+    install -m 755 ${UNPACKDIR}/ifup ${D}${sysconfdir}/network/if-up.d/odhcp6c
     install -d ${D}${sysconfdir}/network/if-down.d
-    install -m 755 ${WORKDIR}/ifdown ${D}${sysconfdir}/network/if-down.d/odhcp6c
+    install -m 755 ${UNPACKDIR}/ifdown ${D}${sysconfdir}/network/if-down.d/odhcp6c
     install -d ${D}${sbindir}
-    install -m 755 ${WORKDIR}/odhcp6c-update ${D}${sbindir}/odhcp6c-update
+    install -m 755 ${UNPACKDIR}/odhcp6c-update ${D}${sbindir}/odhcp6c-update
 }
 
 # opkg cares shit ...

@@ -38,17 +38,17 @@ EXTRA_OECMAKE += " \
 
 do_install:append() {
     install -d ${D}${sysconfdir}/default
-    install -m 0755 ${WORKDIR}/config ${D}${sysconfdir}/default/transmission-daemon
+    install -m 0755 ${UNPACKDIR}/config ${D}${sysconfdir}/default/transmission-daemon
 
     if ${@bb.utils.contains('DISTRO_FEATURES', 'sysvinit', 'true', 'false', d)}; then
         install -d ${D}${sysconfdir}/init.d
-        install -m 0755 ${WORKDIR}/init ${D}${sysconfdir}/init.d/transmission-daemon
+        install -m 0755 ${UNPACKDIR}/init ${D}${sysconfdir}/init.d/transmission-daemon
         install -d ${D}${localstatedir}/lib/transmission-daemon
     fi
 
     if ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'true', 'false', d)}; then
         install -d ${D}${systemd_unitdir}/system
-        install -m 0644 ${WORKDIR}/service ${D}${systemd_unitdir}/system/transmission-daemon.service
+        install -m 0644 ${UNPACKDIR}/service ${D}${systemd_unitdir}/system/transmission-daemon.service
     fi
 }
 
