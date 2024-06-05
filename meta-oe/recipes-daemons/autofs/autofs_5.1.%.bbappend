@@ -29,9 +29,9 @@ do_install:append() {
         [ -e ${D}/etc/init.d/autofs ] && sed -i 's/sleep 20/sleep 1/' ${D}/etc/init.d/autofs
     fi
     install -d ${D}${sysconfdir}/default/volatiles
-    install -m 644 ${WORKDIR}/volatiles.99_autofs ${D}${sysconfdir}/default/volatiles/99_autofs
-    install -m 644 ${WORKDIR}/auto.network ${D}/etc/auto.network
-    install -m 644 ${WORKDIR}/autofs.default ${D}/etc/default/autofs
+    install -m 644 ${UNPACKDIR}/volatiles.99_autofs ${D}${sysconfdir}/default/volatiles/99_autofs
+    install -m 644 ${UNPACKDIR}/auto.network ${D}/etc/auto.network
+    install -m 644 ${UNPACKDIR}/autofs.default ${D}/etc/default/autofs
 }
 
 CONFFILES:${PN} = "/etc/auto.network"
