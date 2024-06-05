@@ -40,7 +40,7 @@ python populate_packages:prepend () {
         do_split_packages(d, enigma2_skindir, '(.*?)/.*', 'enigma2-plugin-skins-%s', 'Enigma2 Skin: %s', recursive=True, match_path=True, prepend=True)
 
     currentlist = d.getVar('PACKAGES', True)
-    pkgnotwanted = open(d.getVar('S', True) + "/../skinsnotwanted").read()
+    pkgnotwanted = open(d.getVar('UNPACKDIR', True) + "/skinsnotwanted").read()
 #     logger.warning("NOT WANTED %s ", pkgnotwanted)
 
     newlist = currentlist.split(" ")
