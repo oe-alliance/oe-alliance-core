@@ -20,3 +20,5 @@ S = "${WORKDIR}/git"
 inherit setuptools3_legacy
 
 include ${PYTHON_PN}-package-split.inc
+
+CFLAGS += "-Wno-error=int-conversion -Wno-error=implicit-function-declaration -Wno-error=incompatible-pointer-types"
