@@ -1,0 +1,20 @@
+--- a/genisoimage/eltorito.c
++++ b/genisoimage/eltorito.c
+@@ -396,7 +396,7 @@ get_torito_desc(struct eltorito_boot_descriptor *boot_desc)
+ 			    (arch != newarch) ||
+ 			    (current_boot_entry->type & ELTORITO_SECTION_HEADER)) {
+ 			if (last_section_header)
+-				set_721(&last_section_header->entry_count, nentries);
++				set_721(last_section_header->entry_count, nentries);
+ 			nentries = 1;
+ 			last_section_header = (struct eltorito_sectionheader_entry *)
+ 							(de2->table + offset);
+@@ -419,7 +419,7 @@ get_torito_desc(struct eltorito_boot_descriptor *boot_desc)
+ 	}
+ 
+ 	if (last_section_header) {
+-		set_721(&last_section_header->entry_count, nentries);
++		set_721(last_section_header->entry_count, nentries);
+ 		last_section_header->header_id[0] = EL_TORITO_SHDR_ID_LAST_SHDR;
+ 	}
+ 
