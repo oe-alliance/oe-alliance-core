@@ -1,0 +1,10 @@
+--- a/src/utils.c
++++ b/src/utils.c
+@@ -31,6 +31,7 @@
+ #include <arpa/inet.h>
+ #include <ctype.h>
+ #include <errno.h>
++#include <execinfo.h>
+ #include <fcntl.h>
+ #include <limits.h>
+ #include <math.h>
