@@ -1,0 +1,17 @@
+--- a/wakelan.c
++++ b/wakelan.c
+@@ -23,10 +23,14 @@
+ #include <netdb.h>
+ #include <netinet/in.h>
+ #include <sys/socket.h>
++#include <arpa/inet.h>
+ #ifdef HAVE_GETOPT_H
+ #include <getopt.h>
+ #endif
+ #include <errno.h>
++#include <stdlib.h>
++#include <ctype.h>
++#include <string.h>
+ 
+ #ifndef DEFAULTMAC
+ #define DEFAULTMAC "00a0c9852a5f"
