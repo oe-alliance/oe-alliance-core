@@ -10,7 +10,8 @@ PR = "r0"
 
 PACKAGES = "${PN}"
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 feed_name = "oe-alliance-picon-feed"
 
@@ -21,7 +22,7 @@ do_compile() {
 
 do_install() {
     install -d ${D}${sysconfdir}/opkg
-    install -m 0644 ${S}${sysconfdir}/opkg/* ${D}${sysconfdir}/opkg
+    install -m 0644 ${UNPACKDIR}${sysconfdir}/opkg/* ${D}${sysconfdir}/opkg
 }
 
 RREPLACES:${PN} = "openvix-picon-feed-opkg-conf"

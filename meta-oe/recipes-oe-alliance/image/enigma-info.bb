@@ -24,10 +24,8 @@ PR[vardepsexclude] = "DATE"
 
 PACKAGES = "${PN}"
 
-# if DATE in PR changes (next day), workdir name changes too
-# this makes sstate unhappy and breakes many tasks in many weird ways
-
-WORKDIR = "${TMPDIR}/work/${MULTIMACH_TARGET_SYS}/${PN}/${EXTENDPE}${PV}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 inherit python3-dir 
 
