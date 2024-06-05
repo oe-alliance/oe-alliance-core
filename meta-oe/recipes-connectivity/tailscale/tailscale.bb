@@ -2,7 +2,7 @@ SUMMARY = "Tailscale client and daemon for Linux"
 HOMEPAGE = "github.com/tailscale/tailscale"
 SECTION = "net"
 LICENSE = "BSD-3-Clause"
-LIC_FILES_CHKSUM = "file://${GO_SRCURI_DESTSUFFIX}/LICENSE;md5=a672713a9eb730050e491c92edf7984d"
+LIC_FILES_CHKSUM = "file://src/${GO_IMPORT}/LICENSE;md5=a672713a9eb730050e491c92edf7984d"
 
 RRECOMMENDS:${PN} = "kernel-module-tun enigma2-plugin-drivers-iptables"
 
@@ -12,7 +12,7 @@ SRCREV = "ede81e2669bc01d60f52c84eea1d404215b13e16"
 PV = "1.64.2+git"
 PKGV = "1.64.2+git${GITPKGV}"
 
-SRC_URI = "git://github.com/tailscale/tailscale.git;protocol=https;branch=release-branch/1.64 \
+SRC_URI = "git://github.com/tailscale/tailscale.git;protocol=https;branch=release-branch/1.64;destsuffix=${GO_SRCURI_DESTSUFFIX} \
         file://tailscaled.initd \
 "
 
@@ -48,17 +48,17 @@ do_install() {
 
 	if ${@bb.utils.contains('DISTRO_FEATURES', 'sysvinit', 'true', 'false', d)}; then
 		install -d ${D}${sysconfdir}/init.d
-		install -m 0755 ${WORKDIR}/tailscaled.initd ${D}${sysconfdir}/init.d/${INITSCRIPT_NAME}
+		install -m 0755 ${UNPACKDIR}/tailscaled.initd ${D}${sysconfdir}/init.d/${INITSCRIPT_NAME}
 	fi
 
 	if ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'true', 'false', d)}; then
 		install -d ${D}${sysconfdir}/default/
 		install -m 0644
-		${WORKDIR}/build/src/${GO_IMPORT}/cmd/tailscaled/tailscaled.defaults
+		${UNPACKDIR}/build/src/${GO_IMPORT}/cmd/tailscaled/tailscaled.defaults
 		${D}${sysconfdir}/default/tailscaled
 		install -d ${D}${systemd_unitdir}/system
 		install -m 0644
-		${WORKDIR}/build/src/${GO_IMPORT}/cmd/tailscaled/tailscaled.service
+		${UNPACKDIR}/build/src/${GO_IMPORT}/cmd/tailscaled/tailscaled.service
 		${D}${systemd_unitdir}/system/tailscaled.service
 		install -d ${D}${sysconfdir}/systemd/system/multi-user.target.wants/
 		ln -s ${systemd_unitdir}/system/tailscaled.service
