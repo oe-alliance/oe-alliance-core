@@ -9,7 +9,8 @@ PV = "1.4"
 
 SRC_URI = "file://showiframe.c"
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 do_compile() {
     ${CC} -o showiframe showiframe.c
@@ -17,7 +18,7 @@ do_compile() {
 
 do_install() {
     install -d ${D}/${bindir}/
-    install -m 0755 ${S}/showiframe ${D}/${bindir}/
+    install -m 0755 ${UNPACKDIR}/showiframe ${D}/${bindir}/
 }
 
 INSANE_SKIP:${PN} += "ldflags"

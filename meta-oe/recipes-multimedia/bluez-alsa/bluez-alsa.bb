@@ -25,9 +25,9 @@ inherit update-rc.d systemd pkgconfig autotools
 do_install () {
     autotools_do_install
     install -d ${D}${sysconfdir}/init.d/
-    install -m 755 ${WORKDIR}/init ${D}${sysconfdir}/init.d/bluealsa
+    install -m 755 ${UNPACKDIR}/init ${D}${sysconfdir}/init.d/bluealsa
     #install -d ${D}${systemd_unitdir}/system
-    #install -m 0644 ${WORKDIR}/bluez-alsa.service ${D}${systemd_unitdir}/system
+    #install -m 0644 ${UNPACKDIR}/bluez-alsa.service ${D}${systemd_unitdir}/system
 }
 
 INITSCRIPT_PACKAGES = "${PN}"

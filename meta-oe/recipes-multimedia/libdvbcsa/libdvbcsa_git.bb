@@ -26,5 +26,5 @@ do_install:append() {
     install -d ${D}${includedir}/dvbcsa/
     install -d ${D}${libdir}/pkgconfig
     install -m 0644 ${S}/src/dvbcsa/dvbcsa.h ${D}${includedir}/dvbcsa/
-    install -m 0644 ${WORKDIR}/libdvbcsa.pc ${D}${libdir}/pkgconfig/
+    install -m 0644 ${UNPACKDIR}/libdvbcsa.pc ${D}${libdir}/pkgconfig/
 }
