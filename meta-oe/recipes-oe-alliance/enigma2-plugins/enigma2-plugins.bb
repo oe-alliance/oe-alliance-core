@@ -16,7 +16,7 @@ PV = "${IMAGE_VERSION}+gitr"
 PKGV = "${IMAGE_VERSION}+gitr${GITPKGV}"
 PR = "r8"
 
-SRC_URI = "${ENIGMA2_PLUGINS_URI} file://pluginnotwanted"
+SRC_URI = "${ENIGMA2_PLUGINS_URI} file://pluginnotwanted file://fix-missing-function-declaration.patch"
 SRC_URI:append:openatv = " file://EPGSearch.patch"
 
 EXTRA_OECONF = " \
@@ -93,12 +93,12 @@ RDEPENDS:${PN} = "${PYTHON_PN}-ctypes"
 
 python do_patch:append() {
     # alternative method instead of pluginnotwanted.patch
-    s = d.getVar('S', True)
+    s = d.getVar('UNPACKDIR', True)
     import re
     import os
-    notwanted = os.path.exists((pluginnotwantedfile := os.path.join(s, "..", "pluginnotwanted"))) and open(pluginnotwantedfile, "r").read()
+    notwanted = os.path.exists((pluginnotwantedfile := os.path.join(s, "", "pluginnotwanted"))) and open(pluginnotwantedfile, "r").read()
     if notwanted:
-        mfile = os.path.join(s, "Makefile.am")
+        mfile = os.path.join(s, "../git/Makefile.am")
         exp = "|".join([r"\b%s\b(?:(?!\n)\s)*" % x.strip() for x in notwanted.splitlines() if x.strip()])
         newmakefile = "\n".join([re.sub(exp, "", x) if x.strip().startswith("SUBDIRS") else x for x in re.sub("\s*[\\\\]\s*\n\s+", " ", open(mfile, "r").read()).splitlines()])
         open(mfile, "w").write(newmakefile)
