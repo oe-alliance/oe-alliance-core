@@ -19,7 +19,7 @@ S = "${WORKDIR}/git"
 
 do_install:append() {
 	install -d ${D}/usr/share/kodi/system
-	install -m 0755 ${WORKDIR}/advancedsettings.xml ${D}/usr/share/kodi/system
+	install -m 0755 ${UNPACKDIR}/advancedsettings.xml ${D}/usr/share/kodi/system
 }
 
 FILES:${PN} = " \
