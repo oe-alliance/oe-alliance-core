@@ -17,7 +17,7 @@ LICENSE = "GPL-2.0-or-later"
 
 FILESEXTRAPATHS:prepend := "${THISDIR}/debian:"
 
-LIC_FILES_CHKSUM = "file://../copyright;md5=b6e7f553d5b9c366d42bfceaf296636f"
+LIC_FILES_CHKSUM = "file://${UNPACKDIR}/copyright;md5=b6e7f553d5b9c366d42bfceaf296636f"
 
 PV = "1.20"
 
