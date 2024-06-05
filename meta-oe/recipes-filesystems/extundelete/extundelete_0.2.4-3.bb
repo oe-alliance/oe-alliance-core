@@ -15,9 +15,10 @@ SRC_URI = "https://source.mynonpublic.com/extundelete-0.2.4-3.zip"
 SRC_URI[md5sum] = "4634a64214099404fe41699574bab5d7"
 SRC_URI[sha256sum] = "2fc3443f598d45ecda582c84cc1b3e24b9d22d0dcbfae37584d503cb016d436d"
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 do_install () {
 	install -d ${D}/usr/bin
-	install -m 755 ${S}/src/extundelete ${D}/usr/bin
+	install -m 755 ${UNPACKDIR}/src/extundelete ${D}/usr/bin
 }
