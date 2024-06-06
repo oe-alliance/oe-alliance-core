@@ -65,7 +65,7 @@ SRC_URI += "https://source.mynonpublic.com/vuplus/release/kernel/stblinux-4.1-${
     file://fix-build-with-binutils-2.41.patch \
     "
 
-SRC_URI:append = "${@bb.utils.contains("MACHINE_FEATURES", "dvbproxy", " file://linux_dvb_adapter.patch;patch=1;pnum=1", "", d)}"
+SRC_URI:append = "${@bb.utils.contains("MACHINE_FEATURES", "dvbproxy", " file://linux_dvb_adapter.patch;pnum=1", "", d)}"
 
 S = "${WORKDIR}/linux"
 B = "${WORKDIR}/build"

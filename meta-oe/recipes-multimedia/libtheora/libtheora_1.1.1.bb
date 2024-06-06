@@ -1,7 +1,7 @@
 require libtheora.inc
 
  
-SRC_URI += "file://no-docs.patch;patch=1"
+SRC_URI += "file://no-docs.patch"
 
 PROVIDES =+ " libtheora0"
 PACKAGES =+ " libtheora0"
