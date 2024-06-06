@@ -7,11 +7,11 @@ LIC_FILES_CHKSUM = "file://COPYRIGHT;md5=97e265fa1fd10a668bd99c4945fb9200"
 
 
 SRC_URI = "http://user.cs.tu-berlin.de/~jutta/gsm/gsm-${PV}.tar.gz \
-    file://01_makefile.patch;patch=1 \
-    file://02_cplusplus.patch;patch=1 \
-    file://03_config.patch;patch=1 \
-    file://04_includes.patch;patch=1 \
-    file://05_compiler_warnings.patch;patch=1 \
+    file://01_makefile.patch \
+    file://02_cplusplus.patch \
+    file://03_config.patch \
+    file://04_includes.patch \
+    file://05_compiler_warnings.patch \
     "
 
 S = "${WORKDIR}/gsm-1.0-pl12"

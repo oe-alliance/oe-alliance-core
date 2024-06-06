@@ -52,7 +52,7 @@ SRC_URI = "https://source.mynonpublic.com/vuplus/release/kernel/stblinux-${KV}.t
     file://0002-cp1emu-do-not-use-bools-for-arithmetic.patch \
     file://0003-log2-give-up-on-gcc-constant-optimizations.patch \
     file://blindscan2.patch \
-    ${@bb.utils.contains("MACHINE_FEATURES", "dvbproxy", "file://linux_dvb_adapter.patch;patch=1;pnum=1", "", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "dvbproxy", "file://linux_dvb_adapter.patch;pnum=1", "", d)} \
     file://genksyms_fix_typeof_handling.patch \
     file://test.patch \
     file://0001-tuners-tda18273-silicon-tuner-driver.patch \
@@ -66,11 +66,11 @@ SRC_URI = "https://source.mynonpublic.com/vuplus/release/kernel/stblinux-${KV}.t
     file://fix-build-with-binutils-2.41.patch \
     "
 
-SRC_URI:append:vuduo2 = " file://brcm_s3_wol.patch;patch=1;pnum=1 "
-SRC_URI:append:vusolose = " file://brcm_s3_wol.patch;patch=1;pnum=1 \
+SRC_URI:append:vuduo2 = " file://brcm_s3_wol.patch;pnum=1 "
+SRC_URI:append:vusolose = " file://brcm_s3_wol.patch;pnum=1 \
                           file://linux_mtd_bbt_maxblock.patch"
 
-SRC_URI:append:vusolo2 = " file://linux-bcm_ethernet.patch;patch=1;pnum=1 "
+SRC_URI:append:vusolo2 = " file://linux-bcm_ethernet.patch;pnum=1 "
 
 SRC_URI:append:vuzero = " file://linux_nand_bcm.patch "
 

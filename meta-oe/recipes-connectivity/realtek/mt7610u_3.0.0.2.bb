@@ -8,15 +8,15 @@ LIC_FILES_CHKSUM = "file://iwpriv_usage.txt;md5=8876ae2c103446a442658f1cc2a01b76
 inherit module
 
 SRC_URI = "file://mt7610u_wifi_sta_v3002_dpo_20130916.tar.bz2 \
-	file://config.patch;patch=1 \
-	file://change_device_name.patch;patch=1 \
-	file://firmware_file_rename.patch;patch=1 \
-	file://new_devices.patch;patch=1 \
-	file://buildfix.patch;patch=1 \
+	file://config.patch \
+	file://change_device_name.patch \
+	file://firmware_file_rename.patch \
+	file://new_devices.patch \
+	file://buildfix.patch \
 	"
 
-SRC_URI:append:dm900 = " file://fix_build_arm.patch;patch=1"
-SRC_URI:append:dm920 = " file://fix_build_arm.patch;patch=1"
+SRC_URI:append:dm900 = " file://fix_build_arm.patch"
+SRC_URI:append:dm920 = " file://fix_build_arm.patch"
 
 S = "${WORKDIR}/mt7610u_wifi_sta_v3002_dpo_20130916"
 
