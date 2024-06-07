@@ -89,8 +89,8 @@ KERNEL_EXTRA_ARGS = "EXTRA_CFLAGS=-Wno-attribute-alias"
 FILES:${KERNEL_PACKAGE_NAME}-image = "/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz"
 
 do_configure:prepend() {
-    if [ -e ${WORKDIR}/defconfig_proxy ]; then
-    mv ${WORKDIR}/defconfig_proxy ${WORKDIR}/defconfig
+    if [ -e ${WORKDIR}/sources-unpack/defconfig_proxy ]; then
+    mv ${WORKDIR}/sources-unpack/defconfig_proxy ${WORKDIR}/sources-unpack/defconfig
     fi
 }
 
