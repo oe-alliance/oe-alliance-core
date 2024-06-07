@@ -25,7 +25,9 @@ inherit update-rc.d
 
 SRC_URI = "https://source.mynonpublic.com/pyload-src-v${PV}.zip \
   file://pyload.init \
-  file://pyload.tar.gz.defaults"
+  file://pyload.tar.gz.defaults \
+"
+
 SRC_URI[md5sum] = "28876150af22999b6f539c8579d3b415"
 SRC_URI[sha256sum] = "f937631d376216bc830d6ffcd5b4ecb1806afd4012a184849da1a333a7ba0016"
 
@@ -49,7 +51,7 @@ do_install() {
     install -m 755 ${S}/systemCheck.py ${D}/usr/pyload
     cp ${UNPACKDIR}/pyload.tar.gz.defaults ${D}/usr/pyload/pyload-defaults.tar.gz
     
-    install -m 0755 ${S}/pyload.init ${D}/etc/init.d/pyload
+    install -m 0755 ${UNPACKDIR}/pyload.init ${D}/etc/init.d/pyload
 }
 
 INSANE_SKIP:${PN} = "build-deps"
