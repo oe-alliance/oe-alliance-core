@@ -32,14 +32,14 @@ do_populate_sysroot[noexec] = "1"
 
 do_configure:prepend:mipsel() {
     CUR=`pwd`
-    cp ${WORKDIR}/sit2_op.o ${S}/v4l/sit2_op.o
+    cp ${UNPACKDIR}/sit2_op.o ${S}/v4l/sit2_op.o
     make DIR=${STAGING_KERNEL_BUILDDIR} allyesconfig
     cd $CUR
 }
 
 do_configure:prepend:arm() {
     CUR=`pwd`
-    cp ${WORKDIR}/sit2_op.o_150322_arm ${S}/v4l/sit2_op.o
+    cp ${UNPACKDIR}/sit2_op.o_150322_arm ${S}/v4l/sit2_op.o
     make DIR=${STAGING_KERNEL_BUILDDIR} allyesconfig
     cd $CUR
 }
