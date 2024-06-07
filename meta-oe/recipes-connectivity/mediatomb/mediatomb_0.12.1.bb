@@ -55,6 +55,8 @@ EXTRA_OECONF = "--disable-mysql \
 CFLAGS += "-fgnu89-inline"
 TARGET_CC_ARCH:remove = "-D_TIME_BITS=64"
 
+INSANE_SKIP = "32bit-time"
+
 do_install() {
     oe_runmake 'DESTDIR=${D}' install
     install -d ${D}${sysconfdir}/mediatomb/
