@@ -37,6 +37,7 @@ SRC_URI = "http://en3homeftp.net/pub/src/linux-${KV}-${SRCDATE}.tar.gz \
     file://kernel-add-support-for-gcc11.patch \
     file://kernel-add-support-for-gcc12.patch \
     file://kernel-add-support-for-gcc13.patch \
+    file://kernel-add-support-for-gcc14.patch \
     file://build-with-gcc12-fixes.patch \
     file://0001-Support-TBS-USB-drivers-3.9.patch \
     file://0001-STV-Add-PLS-support.patch \

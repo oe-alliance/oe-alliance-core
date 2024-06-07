@@ -25,6 +25,7 @@ SRC_URI += "http://en3homeftp.net/pub/src/linux-3.14.28.tar.xz \
     file://kernel-add-support-for-gcc11.patch \
     file://kernel-add-support-for-gcc12.patch \
     file://kernel-add-support-for-gcc13.patch \
+    file://kernel-add-support-for-gcc14.patch \
     file://build-with-gcc12-fixes.patch \
     file://date-time.patch \
     file://0001.remove_vtuner_index_check.patch \
