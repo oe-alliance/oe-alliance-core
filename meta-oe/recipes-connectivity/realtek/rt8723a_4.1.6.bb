@@ -36,6 +36,7 @@ export KCFLAGS += " -Wno-error=misleading-indentation \
                     -Wno-error=bool-operation \
                     -Wno-error=declaration-after-statement \
                     -Wno-error=incompatible-pointer-types \
+                    -Wno-error=return-mismatch \
                     -Wno-error \
 "
 
