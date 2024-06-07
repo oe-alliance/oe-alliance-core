@@ -37,20 +37,10 @@ libidirectfbimageprovider_jpeg.so \
 libicoreresourcemanager_test.so \
 libdirectfb_vuplus.so"
 
-SRC_FILE = "opera-hbbtv_${SRC_DATE}.tar.gz"
-do_fetch() {
-    if [[ ! -e ${DL_DIR}/${SRC_FILE} && -e /etc/vuplus_browser.pwd ]]; then
-sshpass -f /etc/vuplus_browser.pwd sftp -o StrictHostKeyChecking=no guestuser@code.vuplus.com << +
-get ${SRC_FILE}
-bye
-+
-    fi
-    [ -f ${DL_DIR}/${SRC_FILE} ] && cp -av ${DL_DIR}/${SRC_FILE} ${WORKDIR}/ || true
-}
+SRC_URI = "https://source.mynonpublic.com/opera-hbbtv_${SRC_DATE}.tar.gz"
 
-do_unpack() {
-    [ -f ${DL_DIR}/${SRC_FILE} ] && tar xvfz ${SRC_FILE} || true
-}
+SRC_URI[md5sum] = "aa99fb26e817f8fa49df9c1cd1fcb9fe"
+SRC_URI[sha256sum] = "d85ed5b797cb963b219c7e594d1a57361220e90d7fa7269bb84f2d0e6ef13b3e"
 
 do_compile() {
 }
