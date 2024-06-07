@@ -31,6 +31,20 @@ SRC_URI = " \
     file://fix-build-with-binutils-2.41.patch \
 "
 
+export KCFLAGS = " -Wno-error=incompatible-pointer-types \
+                   -Wno-error=address-of-packed-member \
+                   -Wno-error=unused-result \
+                   -Wno-error=format-overflow \
+                   -Wno-error=stringop-overflow \
+                   -Wno-error=unused-variable \
+                   -Wno-error=int-conversion \
+                   -Wno-error=array-parameter \
+                   -Wno-error=unused-function \
+                   -Wno-error=stringop-overread \
+                   -Wno-error=unused-const-variable \
+                   -Wno-error=maybe-uninitialized \           
+"
+
 SRC_URI[kernel.md5sum] = "967f72983655e2479f951195953e8480"
 SRC_URI[kernel.sha256sum] = "ff3dee6a855873d12487a6f4070ec2f7996d073019171361c955639664baa0c6"
 SRC_URI[stable-patch.md5sum] = "cbd978b714f37b648fbcf92482372223"

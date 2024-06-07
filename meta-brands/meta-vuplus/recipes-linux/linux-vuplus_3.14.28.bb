@@ -63,6 +63,20 @@ SRC_URI += "https://source.mynonpublic.com/vuplus/release/kernel/${KERNELSRC};na
     file://fix-build-with-binutils-2.41.patch \
     "
 
+export KCFLAGS = " -Wno-error=incompatible-pointer-types \
+                   -Wno-error=address-of-packed-member \
+                   -Wno-error=unused-result \
+                   -Wno-error=format-overflow \
+                   -Wno-error=stringop-overflow \
+                   -Wno-error=unused-variable \
+                   -Wno-error=int-conversion \
+                   -Wno-error=array-parameter \
+                   -Wno-error=unused-function \
+                   -Wno-error=stringop-overread \
+                   -Wno-error=unused-const-variable \
+                   -Wno-error=maybe-uninitialized \           
+"
+
 SRC_URI:append:vuuno4k = " file://linux_prevent_usb_dma_from_bmem.patch"
 SRC_URI:append:vusolo4k = " file://linux_rpmb_not_alloc.patch file://fix_mmc_3.14.28-1.10.patch"
 SRC_URI:append:vuultimo4k = " file://bcmsysport_3.14.28-1.12.patch file://linux_prevent_usb_dma_from_bmem.patch"

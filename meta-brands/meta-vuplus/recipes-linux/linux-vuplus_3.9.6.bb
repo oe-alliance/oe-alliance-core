@@ -72,6 +72,20 @@ SRC_URI = "https://source.mynonpublic.com/vuplus/release/kernel/stblinux-${KV}.t
     file://fix-build-with-binutils-2.41.patch \
 "
 
+export KCFLAGS = " -Wno-error=incompatible-pointer-types \
+                   -Wno-error=address-of-packed-member \
+                   -Wno-error=unused-result \
+                   -Wno-error=format-overflow \
+                   -Wno-error=stringop-overflow \
+                   -Wno-error=unused-variable \
+                   -Wno-error=int-conversion \
+                   -Wno-error=array-parameter \
+                   -Wno-error=unused-function \
+                   -Wno-error=stringop-overread \
+                   -Wno-error=unused-const-variable \
+                   -Wno-error=maybe-uninitialized \           
+"
+
 SRC_URI:append:vuultimo = " file://fixed_mtd.patch "
 
 S = "${WORKDIR}/linux"
