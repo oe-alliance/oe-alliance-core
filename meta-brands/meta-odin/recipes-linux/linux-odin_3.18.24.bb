@@ -26,6 +26,7 @@ SRC_URI += "https://source.mynonpublic.com/download/odin-linux-${PV}.tar.xz \
     file://kernel-add-support-for-gcc11.patch \
     file://kernel-add-support-for-gcc12.patch \
     file://kernel-add-support-for-gcc13.patch \
+    file://kernel-add-support-for-gcc14.patch \
     file://0001-Support-TBS-USB-drivers.patch \
     file://0001-STV-Add-PLS-support.patch \
     file://0001-STV-Add-SNR-Signal-report-parameters.patch \

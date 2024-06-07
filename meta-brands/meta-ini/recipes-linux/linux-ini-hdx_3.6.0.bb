@@ -28,6 +28,7 @@ SRC_URI += "https://source.mynonpublic.com/ini/bcm7413-linux-${KV}-${SRCDATE}.ta
     file://kernel-add-support-for-gcc11.patch \
     file://kernel-add-support-for-gcc12.patch \
     file://kernel-add-support-for-gcc13.patch \
+    file://kernel-add-support-for-gcc14.patch \
     file://fix-never-be-null_outside-array-bounds-gcc-12.patch \
     file://0001-Revert-MIPS-mm-Add-compound-tail-page-_mapcount-when.patch \
     file://0001-Revert-MIPS-Add-fast-get_user_pages.patch \
