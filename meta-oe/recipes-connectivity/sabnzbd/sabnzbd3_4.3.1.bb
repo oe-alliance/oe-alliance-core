@@ -47,8 +47,8 @@ do_install() {
     cp -r . ${D}${INSTALLDIR}/
     rm -rf ${D}${INSTALLDIR}/.git
     install -d ${D}/etc/init.d
-    install -m 755 ${S}/sabnzbd ${D}/etc/init.d/sabnzbd
-    install -m 755 ${S}/init-functions ${D}/etc/init.d/init-functions
+    install -m 755 ${UNPACKDIR}/sabnzbd ${D}/etc/init.d/sabnzbd
+    install -m 755 ${UNPACKDIR}/init-functions ${D}/etc/init.d/init-functions
     install -d ${D}/etc/enigma2
-    install -m 644 ${S}/sabnzbd.conf ${D}/etc/enigma2/sabnzbd.conf
+    install -m 644 ${UNPACKDIR}/sabnzbd.conf ${D}/etc/enigma2/sabnzbd.conf
 }
