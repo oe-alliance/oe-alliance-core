@@ -18,7 +18,7 @@ SRCREV_FORMAT = "kernel_wireguard"
 SRC_URI[kernel.md5sum] = "f9e67e2d0ceab518510413f8f4315bc3"
 SRC_URI[kernel.sha256sum] = "45ae717b966a74326fd7297d81b3a17fd5b3962b7704170682a615ca7cdec644"
 
-SRC_URI = "https://source.mynonpublic.com/abcom/linux-${PV}-${SRCDATE}-${ARCH}.tar.gz;name=kernel \
+SRC_URI = "https://source.mynonpublic.com/abcom/abcom-linux-${PV}-${SRCDATE}-${ARCH}.tar.gz;name=kernel \
 	file://defconfig \
 	file://0002-log2-give-up-on-gcc-constant-optimizations.patch \
 	file://0003-dont-mark-register-as-const.patch \
@@ -49,8 +49,7 @@ SRC_URI:append = "\
     git://git.zx2c4.com/wireguard-linux-compat;protocol=https;branch=master;name=wireguard;subpath=src;destsuffix=${S}/net/wireguard \
     file://wg-kconfig.patch \
 "
-
-S = "${WORKDIR}/linux-${PV}"
+S = "${WORKDIR}/sources-unpack/linux-${PV}"
 B = "${WORKDIR}/build"
 
 export OS = "Linux"
