@@ -60,3 +60,5 @@ FILES:${PN}-gui += "${bindir}/transmission-gtk ${datadir}/icons ${datadir}/appli
 CONFFILES:${PN} = "${sysconfdir}/default/transmission-daemon"
 
 SYSTEMD_SERVICE:${PN} = "transmission-daemon.service"
+
+INSANE_SKIP = "32bit-time"
