@@ -8,7 +8,7 @@ inherit module
 PACKAGES_DYNAMIC += "dvb-sky-module-*"
 
 do_configure() {
-    install -m 0644 ${WORKDIR}/defconfig ${S}/v4l/.config
+    install -m 0644 ${UNPACKDIR}/defconfig ${S}/v4l/.config
 }
 
 do_compile() {
