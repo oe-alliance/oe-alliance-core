@@ -15,3 +15,5 @@ SRC_URI = "http://sources.buildroot.net/DirectFB-${PV}.tar.gz \
 
 do_rm_work() {
 }
+
+INSANE_SKIP = "32bit-time"
