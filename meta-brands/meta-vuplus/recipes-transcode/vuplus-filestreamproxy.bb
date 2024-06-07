@@ -20,7 +20,7 @@ S = "${WORKDIR}/git"
 
 do_install() {
     install -d ${D}/usr/bin
-    install -m 0755 ${S}/src/filestreamproxy ${D}/usr/bin
+    install -m 0755 ${S}/../src/filestreamproxy ${D}/usr/bin
 }
 
 pkg_prerm:${PN}() {
