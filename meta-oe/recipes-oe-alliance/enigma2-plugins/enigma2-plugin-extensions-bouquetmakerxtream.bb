@@ -19,7 +19,9 @@ SRC_URI = "git://github.com/kiddac/Bouquet_Maker_Xtream.git;protocol=https;branc
 S = "${WORKDIR}/git"
 
 FILES:${PN} = " ${libdir}/enigma2/python/Plugins/Extensions/BouquetMakerXtream \
-                ${libdir}/enigma2/python/Components/Renderer"
+                ${libdir}/enigma2/python/Components/Renderer \
+                ${sysconfdir}/enigma2/bouquetmakerxtream \
+"
 
 CONFFILES:${PN} = "${sysconfdir}/enigma2/bouquetmakerxtream/playlists.txt"
 
