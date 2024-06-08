@@ -17,11 +17,11 @@ do_compile() {
 do_install() {
     install -d ${D}${sysconfdir}/init.d
     install -d ${D}${sysconfdir}/rcS.d
-    echo '#! /bin/sh' > ${WORKDIR}/ddbootup
-    ${@bb.utils.contains("MACHINE_FEATURES", "gigabluelcd", "echo 'echo 1 > /proc/stb/lcd/mode' >> ${WORKDIR}/ddbootup" , "", d)}
-    echo 'touch /dev/dbox/lcd0' >> ${WORKDIR}/ddbootup
-    echo 'echo "${MACHINEBUILD}" > /proc/stb/info/gbmodel' >> ${WORKDIR}/ddbootup
-    install -m 0755 ${S}/ddbootup ${D}${sysconfdir}/init.d
+    echo '#! /bin/sh' > ${UNPACKDIR}/ddbootup
+    ${@bb.utils.contains("MACHINE_FEATURES", "gigabluelcd", "echo 'echo 1 > /proc/stb/lcd/mode' >> ${UNPACKDIR}/ddbootup" , "", d)}
+    echo 'touch /dev/dbox/lcd0' >> ${UNPACKDIR}/ddbootup
+    echo 'echo "${MACHINEBUILD}" > /proc/stb/info/gbmodel' >> ${UNPACKDIR}/ddbootup
+    install -m 0755 ${UNPACKDIR}/ddbootup ${D}${sysconfdir}/init.d
     ${@bb.utils.contains("MACHINE", "gb7252", "ln -sf ../init.d/ddbootup ${D}${sysconfdir}/rcS.d/S66ddbootup" , "ln -sf ../init.d/ddbootup ${D}${sysconfdir}/rcS.d/S39ddbootup", d)}
 }
 
