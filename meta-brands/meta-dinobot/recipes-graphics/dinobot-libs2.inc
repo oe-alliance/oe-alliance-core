@@ -41,7 +41,7 @@ do_install() {
 	install -m 0755 ${S}/libpng1.6.26.so ${D}${libdir}/
 
 	install -d ${D}${libdir}/pkgconfig
-	cp -r ${WORKDIR}/pkgconfig/*.pc ${D}${libdir}/pkgconfig/
+	cp -r ${UNPACKDIR}/pkgconfig/*.pc ${D}${libdir}/pkgconfig/
 
 	cd ${D}${libdir}
 
