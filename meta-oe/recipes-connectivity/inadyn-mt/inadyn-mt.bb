@@ -29,9 +29,9 @@ do_install() {
     install -d ${D}/usr/bin
     install -m 755 ${S}/bin/linux/inadyn-mt ${D}/usr/bin
     install -d ${D}/etc
-    install -m 644 ${S}/inadyn.conf ${D}/etc/
+    install -m 644 ${UNPACKDIR}/inadyn.conf ${D}/etc/
     install -d ${D}/etc/init.d
-    install -m 755 ${S}/inadyn-mt.sh ${D}/etc/init.d/inadyn-mt
+    install -m 755 ${UNPACKDIR}/inadyn-mt.sh ${D}/etc/init.d/inadyn-mt
 }
 
 INSANE_SKIP:${PN} += "ldflags"
