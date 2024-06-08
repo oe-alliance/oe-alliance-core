@@ -36,5 +36,5 @@ INHIBIT_PACKAGE_STRIP = "1"
 INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
 do_compile[noexec] = "1"
 deltask do_populate_sysroot
-INSANE_SKIP:ceryon-blindscan-dvbc-utils = "file-rdeps"
-INSANE_SKIP:ceryon-blindscan-dvbs-utils = "file-rdeps"
+INSANE_SKIP:ceryon-blindscan-dvbc-utils = "file-rdeps 32bit-time"
+INSANE_SKIP:ceryon-blindscan-dvbs-utils = "file-rdeps 32bit-time"
