@@ -63,7 +63,7 @@ do_configure:prepend() {
     fi
 
     sed -e "${CONF_SED_SCRIPT}" \
-    < '${WORKDIR}/defconfig' >>'${S}/.config'
+    < '${UNPACKDIR}/defconfig' >>'${S}/.config'
 
 }
 
