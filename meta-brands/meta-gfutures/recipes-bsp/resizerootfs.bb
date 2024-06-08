@@ -8,6 +8,9 @@ RDEPENDS:${PN} = "e2fsprogs-resize2fs"
 PV = "1.0"
 PR = "r1"
 
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
+
 SRC_URI = "file://resizerootfs"
 
 inherit update-rc.d
