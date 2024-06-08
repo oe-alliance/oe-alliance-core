@@ -1,1 +1,3 @@
 PACKAGE_NO_LOCALE = "1"
+
+INSANE_SKIP += "32bit-time"
