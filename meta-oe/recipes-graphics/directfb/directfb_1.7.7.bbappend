@@ -30,3 +30,5 @@ EXTRA_DIRECTFB:ip8 = "hisi"
 EXTRA_DIRECTFB:sx88v2 = "hisi"
 
 require directfb-${EXTRA_DIRECTFB}_1.7.7.inc
+
+INSANE_SKIP += "32bit-time"
