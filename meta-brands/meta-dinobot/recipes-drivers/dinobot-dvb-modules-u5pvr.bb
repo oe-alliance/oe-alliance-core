@@ -5,8 +5,8 @@ KOFILES = "kds mali_kbase hi_dbe hi_tuner hi_sci hi_pmoc tntfs"
 
 do_install:append() {
 	install -d ${D}/lib/firmware/brcm
-	install -m 0644 ${S}/brcmfmac4339-sdio.bin ${D}/lib/firmware/brcm
-	install -m 0644 ${S}/brcmfmac4339-sdio.txt ${D}/lib/firmware/brcm
+	install -m 0644 ${UNPACKDIR}/brcmfmac4339-sdio.bin ${D}/lib/firmware/brcm
+	install -m 0644 ${UNPACKDIR}/brcmfmac4339-sdio.txt ${D}/lib/firmware/brcm
 }
 
 FILES:${PN} += "/lib/firmware/brcm"
