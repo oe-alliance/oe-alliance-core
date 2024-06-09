@@ -13,7 +13,7 @@ INITSCRIPT_NAME = "vuplus-wifi-init.sh"
 
 do_install:append() {
 	install -d ${D}${INIT_D_DIR}
-	install -m 0755 ${S}/${INITSCRIPT_NAME} ${D}${INIT_D_DIR}/${INITSCRIPT_NAME}
+	install -m 0755 ${UNPACKDIR}/vuplus-wifi-util-${MACHINE}/${INITSCRIPT_NAME} ${D}${INIT_D_DIR}/${INITSCRIPT_NAME}
 }
 
 SRC_URI[md5sum] = "c2142cf0b0e64707edea9a120220d4a7"
