@@ -12,6 +12,7 @@ SRC_URI = " \
 "
 
 S="${WORKDIR}/vuplus-bluetooth-util-${MACHINE}"
+UNPACKDIR = "${S}"
 
 do_install() {
 	install -d ${D}${bindir}

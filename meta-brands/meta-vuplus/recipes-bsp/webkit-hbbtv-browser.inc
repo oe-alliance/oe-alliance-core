@@ -8,6 +8,9 @@ PV = "1.0"
 PR = "${SRCDATE}"
 SRC_URI = "https://source.mynonpublic.com/vuplus/release/support/webkit-hbbtv-browser_${MACHINE}_${SRCDATE}.tar.gz"
 
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
+
 RDEPENDS:${PN} = "webkit-gtk"
 
 do_install:append() {
@@ -15,9 +18,9 @@ do_install:append() {
 	install -d ${D}/usr/lib/mozilla/plugins
 	install -d ${D}/home/root
 
-	install -m 0755 ${WORKDIR}/webkit-hbbtv-browser/none.html ${D}/home/root
-	install -m 0755 ${WORKDIR}/webkit-hbbtv-browser/browser ${D}/usr/bin
-	install -m 0755 ${WORKDIR}/webkit-hbbtv-browser/libhbbtvplugin.so ${D}/usr/lib/mozilla/plugins/
+	install -m 0755 ${UNPACKDIR}/webkit-hbbtv-browser/none.html ${D}/home/root
+	install -m 0755 ${UNPACKDIR}/webkit-hbbtv-browser/browser ${D}/usr/bin
+	install -m 0755 ${UNPACKDIR}/webkit-hbbtv-browser/libhbbtvplugin.so ${D}/usr/lib/mozilla/plugins/
 }
 
 do_package_qa() {
