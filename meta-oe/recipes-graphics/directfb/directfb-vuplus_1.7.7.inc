@@ -60,13 +60,13 @@ do_install:append:class-target() {
 	install -d ${D}/usr/lib/directfb-${RV}/systems
 	install -d ${D}/usr/lib/directfb-${RV}/gfxdrivers
 
-	install -m 0644 ${WORKDIR}/directfb-vuplus/etc/directfbrc ${D}/etc/directfbrc
-	cp -r --preserve=mode,links ${WORKDIR}/directfb-vuplus/usr/lib/directfb-${RV}/systems/* ${D}/usr/lib/directfb-${RV}/systems/
+	install -m 0644 ${UNPACKDIR}/directfb-vuplus/etc/directfbrc ${D}/etc/directfbrc
+	cp -r --preserve=mode,links ${UNPACKDIR}/directfb-vuplus/usr/lib/directfb-${RV}/systems/* ${D}/usr/lib/directfb-${RV}/systems/
 	rm -f ${D}/usr/lib/directfb-${RV}/systems/libdirectfb_dummy.so
 	rm -f ${D}/usr/lib/directfb-${RV}/systems/libdirectfb_fbdev.so
-	install -m 0755 ${WORKDIR}/directfb-vuplus/usr/lib/directfb-${RV}/gfxdrivers/* ${D}/usr/lib/directfb-${RV}/gfxdrivers/
+	install -m 0755 ${UNPACKDIR}/directfb-vuplus/usr/lib/directfb-${RV}/gfxdrivers/* ${D}/usr/lib/directfb-${RV}/gfxdrivers/
 
-	cp -r --preserve=mode,links ${WORKDIR}/directfb-vuplus/usr/lib/libinit* ${D}/usr/lib/
+	cp -r --preserve=mode,links ${UNPACKDIR}/directfb-vuplus/usr/lib/libinit* ${D}/usr/lib/
 }
 
 do_package_qa() {
