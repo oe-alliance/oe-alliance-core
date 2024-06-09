@@ -66,15 +66,19 @@ SRC_URI = " \
 "
 
 export KCFLAGS = " -Wno-error=incompatible-pointer-types \
-                   -Wno-error=address-of-packed-member \
-                   -Wno-error=unused-result \
-                   -Wno-error=format-overflow \
+                   -Wno-error=declaration-missing-parameter-type \
+                   -Wno-error=unused-label \
+                   -Wno-error=enum-compare \
+                   -Wno-error=implicit-int \
                    -Wno-error=stringop-overflow \
                    -Wno-error=unused-variable \
                    -Wno-error=int-conversion \
+                   -Wno-error=array-bounds \
+                   -Wno-error=dangling-pointer \
+                   -Wno-error=misleading-indentation \
                    -Wno-error=array-parameter \
-                   -Wno-error=unused-function \
                    -Wno-error=stringop-overread \
+                   -Wno-error=int-in-bool-context \
                    -Wno-error=unused-const-variable \
                    -Wno-error=maybe-uninitialized \           
 "
