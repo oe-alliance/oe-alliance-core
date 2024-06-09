@@ -28,7 +28,7 @@ SRC_URI += "https://source.mynonpublic.com/xcore/xcore-linux-${PV}-${SRC}.tar.gz
     file://0001-STV-Add-SNR-Signal-report-parameters.patch \
     file://blindscan2.patch \
     file://0001-stv090x-optimized-TS-sync-control.patch \
-    ${@bb.utils.contains('MACHINE_FEATURES', 'emmc', 'file://findkerneldevice.py', '', d)} \
+    file://findkerneldevice.py \
     file://0001-cp1emu-do-not-use-bools-for-arithmetic.patch \
     file://0002-makefile-disable-warnings.patch \
     file://move-default-dialect-to-SMB3.patch \
@@ -45,7 +45,13 @@ export OS = "Linux"
 KERNEL_OBJECT_SUFFIX = "ko"
 KERNEL_IMAGEDEST = "tmp"
 
-FILES:${KERNEL_PACKAGE_NAME}-image = "${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}*  ${@bb.utils.contains('MACHINE_FEATURES', 'emmc', '${KERNEL_IMAGEDEST}/findkerneldevice.py', '', d)}"
+FILES:${KERNEL_PACKAGE_NAME}-image = "${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}* /${KERNEL_IMAGEDEST}/findkerneldevice.py"
+
+kernel_do_install:append() {
+	install -d ${D}/${KERNEL_IMAGEDEST}
+	install -m 0755 ${KERNEL_OUTPUT} ${D}/${KERNEL_IMAGEDEST}
+	install -m 0755 ${UNPACKDIR}/findkerneldevice.py ${D}/${KERNEL_IMAGEDEST}
+}
 
 pkg_postinst:kernel-image () {
     if [ "x$D" == "x" ]; then
