@@ -43,7 +43,7 @@ do_install() {
     install -m 0755 ${S}/komession ${D}/usr/bin
     install -m 0755  ${S}/load ${D}${nonarch_base_libdir}/modules/${KV}/extra
     install -d ${D}${sysconfdir}/init.d/
-    install -m 0755 ${S}/loadmodules.sh ${D}${sysconfdir}/init.d/loadmodules
+    install -m 0755 ${UNPACKDIR}/loadmodules.sh ${D}${sysconfdir}/init.d/loadmodules
 }
 
 INSANE_SKIP:${PN} += "already-stripped ldflags"
