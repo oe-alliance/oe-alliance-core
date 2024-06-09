@@ -56,7 +56,7 @@ do_install() {
         done
     done
     install -d ${D}/lib
-    install -m 0755 ${S}/libm-2.27.so ${D}/lib
+    install -m 0755 ${UNPACKDIR}/libm-2.27.so ${D}/lib
 }
 
 FILES:${PN} = "/usr/lib/* /lib"
