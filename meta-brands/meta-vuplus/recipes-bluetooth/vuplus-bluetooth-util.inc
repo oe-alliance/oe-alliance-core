@@ -11,13 +11,8 @@ SRC_URI = " \
     https://source.mynonpublic.com/vuplus/release/bt/vuplus-bluetooth-util-${MACHINE}-${PR}.tar.gz \
 "
 
-S="${WORKDIR}/vuplus-bluetooth-util-${MACHINE}"
+S = "${WORKDIR}/sources-unpack"
 UNPACKDIR = "${S}"
-
-do_install() {
-	install -d ${D}${bindir}
-	install -m 0755 ${UNPACKDIR}/* ${D}${bindir}
-}
 
 do_package_qa() {
 }
@@ -27,15 +22,15 @@ FILES:${PN}="/"
 
 do_install() {
 	install -d ${D}${bindir}
-	install -m 0755 ${UNPACKDIR}/bsa_server ${D}${bindir}
+	install -m 0755 ${UNPACKDIR}/vuplus-bluetooth-util-${MACHINE}/bsa_server ${D}${bindir}
 
 	install -d ${D}/usr/local/modules
-	install -m 0644 ${UNPACKDIR}/btusb.ko ${D}/usr/local/modules/btusb.ko
-	install -m 0644 ${UNPACKDIR}/bthid.ko ${D}/usr/local/modules/bthid.ko
+	install -m 0644 ${UNPACKDIR}/vuplus-bluetooth-util-${MACHINE}/btusb.ko ${D}/usr/local/modules/btusb.ko
+	install -m 0644 ${UNPACKDIR}/vuplus-bluetooth-util-${MACHINE}/bthid.ko ${D}/usr/local/modules/bthid.ko
 
 	if [ -n "${FIRMWARE_FILE}" ]; then
 		install -d ${D}/lib/firmware/${FIRMWARE_PATH}
-		install -m 0644 ${UNPACKDIR}/${FIRMWARE_FILE} ${D}/lib/firmware/${FIRMWARE_PATH}
+		install -m 0644 ${UNPACKDIR}/vuplus-bluetooth-util-${MACHINE}/${FIRMWARE_FILE} ${D}/lib/firmware/${FIRMWARE_PATH}
 	fi
 }
 INHIBIT_PACKAGE_STRIP = "1"
