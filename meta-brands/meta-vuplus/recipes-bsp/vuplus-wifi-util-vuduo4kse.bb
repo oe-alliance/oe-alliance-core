@@ -19,10 +19,10 @@ INITSCRIPT_NAME = "vuplus-wifi-init.sh"
 
 do_install:append() {
 	install -d ${D}${sysconfdir}/udev
-	install -m 0755 ${S}/bcmwifi_firmware.sh ${D}${sysconfdir}/udev/
-	install -m 0755 ${S}/bcmwifi_drv.sh ${D}${sysconfdir}/udev/
+	install -m 0755 ${UNPACKDIR}/vuplus-wifi-util-${MACHINE}/bcmwifi_firmware.sh ${D}${sysconfdir}/udev/
+	install -m 0755 ${UNPACKDIR}/vuplus-wifi-util-${MACHINE}/bcmwifi_drv.sh ${D}${sysconfdir}/udev/
 	install -d ${D}${INIT_D_DIR}
-	install -m 0755 ${S}/${INITSCRIPT_NAME} ${D}${INIT_D_DIR}/${INITSCRIPT_NAME}
+	install -m 0755 ${UNPACKDIR}/vuplus-wifi-util-${MACHINE}/${INITSCRIPT_NAME} ${D}${INIT_D_DIR}/${INITSCRIPT_NAME}
 }
 
 SRC_URI[md5sum] = "fc0f909ad46dfb7f4d2ee73607c3dbbd"
