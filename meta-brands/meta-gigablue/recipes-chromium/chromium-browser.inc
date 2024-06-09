@@ -18,7 +18,7 @@ RDEPENDS:${PN} += "gb-v3ddriver-${MACHINE}"
 
 do_install() {
 	install -d ${D}/usr/local/chromium
-	cp -afR ${WORKDIR}/chromium/* ${D}/usr/local/chromium/
+	cp -afR ${UNPACKDIR}/chromium/* ${D}/usr/local/chromium/
 	chmod 755 ${D}/usr/local/chromium/run.sh
 	chmod 755 ${D}/usr/local/chromium/bin/browser_shell
 	chmod 755 ${D}/usr/local/chromium/bin/chrome
