@@ -11,6 +11,9 @@ SRC_URI = "\
    file://wowl.sh \
 "
 
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
+
 do_install() {
     install -d ${D}/etc/init.d \
     ${D}/usr/bin \
