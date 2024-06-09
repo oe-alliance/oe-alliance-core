@@ -27,7 +27,7 @@ SRC_URI = "https://source.mynonpublic.com/zgemma/linux-${PV}-${SRCDATE}-${ARCH}.
 
 SRC_URI:append:h8 = " file://0101-hi3716mv430-dts-move-aon-gpio7-gpio5.patch"
 
-S = "${WORKDIR}/linux-${PV}"
+S = "${WORKDIR}/sources-unpack/linux-${PV}"
 B = "${WORKDIR}/build"
 
 export OS = "Linux"
