@@ -79,7 +79,7 @@ FILES:${KERNEL_PACKAGE_NAME}-image = "/${KERNEL_IMAGEDEST}/zImage /${KERNEL_IMAG
 kernel_do_install:append() {
         install -d ${D}/${KERNEL_IMAGEDEST}
         install -m 0755 ${KERNEL_OUTPUT} ${D}/${KERNEL_IMAGEDEST}
-        install -m 0755 ${WORKDIR}/gbfindkerneldevice.py ${D}/${KERNEL_IMAGEDEST}
+        install -m 0755 ${UNPACKDIR}/gbfindkerneldevice.py ${D}/${KERNEL_IMAGEDEST}
 }
 
 kernel_do_compile() {
