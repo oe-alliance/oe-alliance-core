@@ -27,3 +27,5 @@ INITSCRIPT_NAME = "update_systemconfig.sh"
 INITSCRIPT_PARAMS = "start 90 3 ."
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
+
+INSANE_SKIP:${PN} += "already-stripped"
