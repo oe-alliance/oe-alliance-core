@@ -12,7 +12,7 @@ PR:append = ".2"
 SRC_URI += "file://bp3flash.py"
 
 do_install:append() {
-	install -m 0755 ${WORKDIR}/bp3flash.py ${D}${bindir}
+	install -m 0755 ${UNPACKDIR}/bp3flash.py ${D}${bindir}
 }
 
 S="${WORKDIR}/platform-util-vuduo4k"
