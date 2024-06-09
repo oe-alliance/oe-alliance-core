@@ -6,4 +6,4 @@ kernel_do_install:append() {
     fi
 }
 
-OLDEST_KERNEL = "3.2.0"
+OLDEST_KERNEL = "3.2"
