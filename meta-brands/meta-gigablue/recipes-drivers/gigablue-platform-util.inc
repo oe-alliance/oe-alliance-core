@@ -17,6 +17,7 @@ SRC_URI = " \
 "
 
 S="${WORKDIR}/platform"
+UNPACKDIR = "${S}"
 
 do_install() {
     install -d ${D}/home/root/platform
