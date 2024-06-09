@@ -1,0 +1,15 @@
+diff --git a/gst-libs/gst/gl/egl/gstgldisplay_egl.c b/gst-libs/gst/gl/egl/gstgldisplay_egl.c
+index 902416c..4a3e115 100644
+--- a/gst-libs/gst/gl/egl/gstgldisplay_egl.c
++++ b/gst-libs/gst/gl/egl/gstgldisplay_egl.c
+@@ -62,6 +62,10 @@ GST_DEBUG_CATEGORY_STATIC (gst_gl_display_egl_debug);
+ #ifndef EGL_PLATFORM_ANGLE_ANGLE
+ #define EGL_PLATFORM_ANGLE_ANGLE 0x3202
+ #endif
++#ifndef EGL_MESA_platform_surfaceless
++#define EGL_MESA_platform_surfaceless 0
++#define EGL_PLATFORM_SURFACELESS_MESA 0x31DD
++#endif
+ 
+ typedef EGLDisplay (*_gst_eglGetPlatformDisplay_type) (EGLenum platform,
+     void *native_display, const EGLint * attrib_list);
