@@ -16,12 +16,12 @@ SRC_URI = " \
     file://${INITSCRIPT_NAME}.sysvinit \
 "
 
-S="${WORKDIR}/platform"
+S = "${WORKDIR}/sources-unpack"
 UNPACKDIR = "${S}"
 
 do_install() {
     install -d ${D}/home/root/platform
-    install -m 0755 ${UNPACKDIR}/* ${D}/home/root/platform
+    install -m 0755 ${UNPACKDIR}/platform/* ${D}/home/root/platform
     install -d ${D}/etc/init.d
     install -m 0755 ${UNPACKDIR}/${INITSCRIPT_NAME}.sysvinit ${D}/etc/init.d/${INITSCRIPT_NAME}
 }
