@@ -14,7 +14,7 @@ SRC_URI:append = " \
 
 do_install:append() {
     install -d ${D}${libdir}
-    install -m 0755 ${WORKDIR}/libsystemd.so.0.17.0 ${D}${libdir}/
+    install -m 0755 ${UNPACKDIR}/libsystemd.so.0.17.0 ${D}${libdir}/
     ln -s libsystemd.so.0.17.0 ${D}${libdir}/libsystemd.so.0
 }
 

@@ -29,8 +29,8 @@ inherit update-rc.d
 do_install() {
         install -d ${D}${bindir}
         install -m 0755 tpmd ${D}${bindir}
-        if [ -f ${WORKDIR}/${INITSCRIPT_NAME}.sysvinit ]; then
+        if [ -f ${UNPACKDIR}/${INITSCRIPT_NAME}.sysvinit ]; then
                 install -d ${D}${INIT_D_DIR}
-                install -m 0755 ${S}/${INITSCRIPT_NAME}.sysvinit ${D}${INIT_D_DIR}/${INITSCRIPT_NAME}
+                install -m 0755 ${UNPACKDIR}/${INITSCRIPT_NAME}.sysvinit ${D}${INIT_D_DIR}/${INITSCRIPT_NAME}
         fi
 }
