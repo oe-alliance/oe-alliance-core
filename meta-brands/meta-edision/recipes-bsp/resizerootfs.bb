@@ -24,7 +24,7 @@ do_install () {
     install -m 0755 -d ${D}${sysconfdir}/init.d
     install -m 0755 ${UNPACKDIR}/resizerootfs ${D}${sysconfdir}/init.d/resizerootfs
     install -d ${D}${bindir}
-    install -m 0755 ${WORKDIR}/8gb.sh ${D}${bindir}/8gb.sh
+    install -m 0755 ${UNPACKDIR}/8gb.sh ${D}${bindir}/8gb.sh
 }
 
 FILES:${PN} = "${bindir} ${sysconfdir}"
