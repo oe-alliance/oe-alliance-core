@@ -1,0 +1,15 @@
+diff --git a/editline/editline.c b/editline/editline.c
+index 7bbbcb9..2cdf50b 100644
+--- a/editline/editline.c
++++ b/editline/editline.c
+@@ -155,8 +155,8 @@ int		rl_meta_chars = 0;
+ **  Declarations.
+ */
+ STATIC CHAR	*editinput();
+-extern int	read();
+-extern int	write();
++extern ssize_t	read();
++extern ssize_t	write();
+ #if	defined(USE_TERMCAP)
+ extern char	*getenv();
+ extern char	*tgetstr();
