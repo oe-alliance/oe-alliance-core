@@ -6,7 +6,7 @@ SRC_URI:append:viper4k = " \
 
 do_install:append:viper4k() {
         install -d ${D}${libdir}
-        install -m 0755 ${WORKDIR}/libjpeg.so.62.2.0 ${D}${libdir}/
+        install -m 0755 ${UNPACKDIR}/libjpeg.so.62.2.0 ${D}${libdir}/
 }
 
 INSANE_SKIP:${PN} = "already-stripped 32bit-time"
