@@ -20,7 +20,7 @@ SRC_URI[kernel.sha256sum] = "df83207ddfe34ac41a55e5e42eaae9c3ac3c4ef0750c7868867
 SRC_URI[new.md5sum] = "f0dd43d5adc013d0dd89061e3249855a"
 SRC_URI[new.sha256sum] = "32a8caabfba94d81b649de8dd62cc5b02e1d750cad8d2676e98e242a944273a3"
 
-LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
+LIC_FILES_CHKSUM = "file://COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
 SRC_URI:u5pvr += "https://source.mynonpublic.com/dinobot/dinobot-linux-${PV}-${SRCDATE}.tar.gz;name=kernel \
     file://initramfs-subdirboot.cpio.gz;unpack=0 \
