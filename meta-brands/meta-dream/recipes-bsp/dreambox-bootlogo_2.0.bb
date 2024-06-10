@@ -15,7 +15,7 @@ do_configure() {
 
 do_install () {
     install -d ${D}${sysconfdir}/u-boot.scr.d
-    install -m 0644 ${WORKDIR}/bootlogo.scr ${D}${sysconfdir}/u-boot.scr.d
+    install -m 0644 ${UNPACKDIR}/bootlogo.scr ${D}${sysconfdir}/u-boot.scr.d
     install -d ${D}/boot
     install -m 0644 ${S}/bootlogo.bmp ${D}/boot/bootlogo.bmp
 }
