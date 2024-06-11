@@ -12,7 +12,8 @@ SRC_URI = "https://source.mynonpublic.com/gigablue/mv200/${MACHINE_DRIVER}-hiko-
     file://modules \
 "
 
-S = "${WORKDIR}/hiko"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 INHIBIT_PACKAGE_STRIP = "1"
 INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
@@ -27,8 +28,8 @@ do_populate_sysroot() {
 
 do_install() {
     install -d ${D}/lib/modules/${KV}/extra
-    install -m 0644 ${S}/*.ko ${D}/lib/modules/${KV}/extra
-    install -m 0755  ${S}/load ${D}/lib/modules/${KV}/extra
+    install -m 0644 ${S}/hiko/*.ko ${D}/lib/modules/${KV}/extra
+    install -m 0755 ${S}/hiko/load ${D}/lib/modules/${KV}/extra
     install -d ${D}/${sysconfdir}/modules-load.d
     install -m 0644 ${S}/modules ${D}${sysconfdir}/modules-load.d/_${MACHINE}.conf
 }
