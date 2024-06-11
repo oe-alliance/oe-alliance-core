@@ -19,7 +19,6 @@ do_compile() {
     swig -python -c++ ${UNPACKDIR}/png_util.i
     ${CXX} -O2 -c -fPIC ${UNPACKDIR}/png_util.cpp ${UNPACKDIR}/png_util_wrap.cxx -I${STAGING_INCDIR}/${PYTHON_DIR}
     ${CXX} -shared ${UNPACKDIR}/png_util.o ${UNPACKDIR}/png_util_wrap.o -o _png_util.so -L${STAGING_LIBDIR} -lpng -fPIC
-    mv ${UNPACKDIR}/png_util.py ${UNPACKDIR}
 }
 
 do_install() {
