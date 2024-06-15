@@ -13,7 +13,7 @@ SRCREV = "${AUTOREV}"
 SRC_URI = "git://github.com/oe-mirrors/serviceapp.git;branch=develop;protocol=https"
 SRC_URI:openvix = "git://github.com/OpenViX/serviceapp.git;branch=sigc3;protocol=https"
 SRC_URI:openbh = "git://github.com/BlackHole/serviceapp.git;branch=sigc3;protocol=https"
-SRC_URI:teamblue = "git://github.com/OpenViX/serviceapp.git;branch=sigc3;protocol=https"
+SRC_URI:teamblue = "git://github.com/teamblue-e2/serviceapp.git;branch=develop;protocol=https"
 
 
 S = "${WORKDIR}/git"
