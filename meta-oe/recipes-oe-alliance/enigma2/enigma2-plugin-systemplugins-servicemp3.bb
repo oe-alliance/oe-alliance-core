@@ -85,9 +85,8 @@ RRECOMMENDS:${PN} = "\
 	${GST_UGLY_RDEPS} \
 	"
 
-SRC_URI = "git://github.com/openpli/servicemp3.git;protocol=https;branch=python3"
-SRC_URI:teamblue = "git://github.com/teamblue-e2/servicemp3.git;protocol=https;branch=master \
-                    file://0001-update-ax_python_devel.m4.patch \
+SRC_URI = "git://github.com/openpli/servicemp3.git;protocol=https;branch=master"
+SRC_URI:teamblue = "git://github.com/openpli/servicemp3.git;protocol=https;branch=python3 \
                     file://0001-fix-configure.ac.patch"
 SRCREV = "${AUTOREV}"
 SRCREV:openeight = "c7750c5ab393341f5a65094ceac90fbb6afd12e6"

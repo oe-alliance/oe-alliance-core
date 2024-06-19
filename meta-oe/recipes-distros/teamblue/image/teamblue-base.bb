@@ -6,13 +6,14 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda
 ALLOW_EMPTY:${PN} = "1"
 
 PV = "${IMAGE_VERSION}"
-PR = "r3"
+PR = "r5"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 inherit packagegroup
 
 RDEPENDS:${PN} = "\
+    enigma-info \
     autofs \
     ca-certificates \
     oe-alliance-base \
@@ -33,12 +34,8 @@ RDEPENDS:${PN} = "\
     rtmpdump \
     zip \
     ${@bb.utils.contains("TUNE_FEATURES", "armv", "glibc-compat", "", d)} \
-    ${@bb.utils.contains_any("FLASHSIZE", "64 96 128", "enigma2-plugin-extensions-openwebif-webtv", \
-    " \
-    enigma2-plugin-extensions-openwebif-terminal \
     enigma2-plugin-extensions-openwebif-themes \
     enigma2-plugin-extensions-openwebif-vxg \
-    ", d)} \
     ${@bb.utils.contains_any("FLASHSIZE", "64", "", \
     " \
     packagegroup-base-smbfs-server \
@@ -47,4 +44,5 @@ RDEPENDS:${PN} = "\
     packagegroup-base-smbfs-client \
     ofgwrite \
     wireless-tools \
+    shellinabox \
     "

@@ -7,7 +7,7 @@ ALLOW_EMPTY:${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r4"
+PR = "r7"
 
 inherit packagegroup
 
@@ -23,7 +23,6 @@ RRECOMMENDS:${PN} = "\
     enigma2-plugin-extensions-moviemanager \
     enigma2-plugin-extensions-zaphistorybrowser \
     enigma2-plugin-systemplugins-gbaspectratioswitch \
-    enigma2-plugin-systemplugins-autoresolution \
     enigma2-plugin-systemplugins-devicemanager \
     enigma2-plugin-systemplugins-osdpositionsetup \
     enigma2-plugin-systemplugins-positionersetup \
