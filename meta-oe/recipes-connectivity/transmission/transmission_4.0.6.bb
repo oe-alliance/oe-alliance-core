@@ -6,9 +6,9 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=ba8199e739948e198310093de27175fa"
 
 DEPENDS = "curl libevent gnutls openssl libtool intltool-native glib-2.0-native"
 
-# Transmission release 4.0.5
-SRCREV = "a6fe2a64aa7eca089f96006cf082a12f0cde937f"
-PV = "4.0.5"
+# Transmission release 4.0.6
+SRCREV = "38c164933e9f77c110b48fe745861c3b98e3d83e"
+PV = "4.0.6"
 
 SRC_URI = "gitsm://github.com/transmission/transmission;protocol=https;branch=4.0.x \
         file://init \
@@ -31,9 +31,8 @@ EXTRA_OECMAKE += " \
     -DENABLE-GTK=OFF \
     -DENABLE_MAC=OFF \
     -DENABLE_TESTS=OFF \
+    -DENABLE_CLI=ON \
 "
-
-TARGET_CC_ARCH:remove = "-D_TIME_BITS=64"
 
 do_install:append() {
     install -d ${D}${sysconfdir}/default

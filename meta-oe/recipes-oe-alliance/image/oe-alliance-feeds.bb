@@ -167,6 +167,7 @@ RDEPENDS:${PN} = " \
     ${PYTHON_PN}-tmdbsimple \
     ${PYTHON_PN}-tvdbsimple \
     ${PYTHON_PN}-tmdbv3api \
+    ${PYTHON_PN}-transmission-rpc \
     ${PYTHON_PN}-ujson \
     ${PYTHON_PN}-url-normalize \
     ${PYTHON_PN}-singledispatch \
