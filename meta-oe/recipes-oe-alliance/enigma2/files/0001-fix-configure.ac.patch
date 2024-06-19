@@ -1,0 +1,25 @@
+From 3ddfed17824d11a00fa17542d24fba1d81f7c287 Mon Sep 17 00:00:00 2001
+From: Captain <openatv@gmail.com>
+Date: Wed, 19 Jun 2024 18:20:16 +0200
+Subject: [PATCH] fix configure.ac
+
+---
+ configure.ac | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/configure.ac b/configure.ac
+index c324ba9..83db87e 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -12,7 +12,7 @@ AC_LANG(C++)
+ PKG_CHECK_MODULES(ENIGMA2, enigma2)
+ PKG_CHECK_MODULES(GSTREAMER, gstreamer-1.0 gstreamer-pbutils-1.0)
+ 
+-AX_CXX_COMPILE_STDCXX_17([ext],[mandatory])
++AX_CXX_COMPILE_STDCXX_17
+ 
+ AC_DEFINE([DEBUG])
+ 
+-- 
+2.45.2.windows.1
+
