@@ -1,0 +1,80 @@
+From bf622d035d71285164db12c97086bb73129f8226 Mon Sep 17 00:00:00 2001
+From: Captain <openatv@gmail.com>
+Date: Wed, 19 Jun 2024 16:26:46 +0200
+Subject: [PATCH] build with -latomic on platforms that need it
+
+---
+ cmake/CheckAtomic.cmake        | 43 ++++++++++++++++++++++++++++++++++
+ libtransmission/CMakeLists.txt |  2 ++
+ 2 files changed, 45 insertions(+)
+ create mode 100644 cmake/CheckAtomic.cmake
+
+diff --git a/cmake/CheckAtomic.cmake b/cmake/CheckAtomic.cmake
+new file mode 100644
+index 000000000..9d32a9cb4
+--- /dev/null
++++ b/cmake/CheckAtomic.cmake
+@@ -0,0 +1,43 @@
++# - Try to find if 64-bits atomics need -latomic linking
++# Once done this will define
++#  HAVE_CXX_ATOMICS_WITHOUT_LIB - Whether atomic types work without -latomic
++
++include(CheckCXXSourceCompiles)
++include(CheckLibraryExists)
++
++# Sometimes linking against libatomic is required for atomic ops, if
++# the platform doesn't support lock-free atomics.
++
++function(check_working_cxx_atomics VARNAME)
++    check_cxx_source_compiles("
++        #include <atomic>
++        int main() {
++            std::atomic<long long> x;
++            return std::atomic_is_lock_free(&x);
++        }
++    " ${VARNAME})
++endfunction()
++
++# Check for atomic operations.
++if(MSVC)
++    # This isn't necessary on MSVC.
++    set(HAVE_CXX_ATOMICS_WITHOUT_LIB TRUE)
++else()
++    # First check if atomics work without the library.
++    check_working_cxx_atomics(HAVE_CXX_ATOMICS_WITHOUT_LIB)
++endif()
++
++# If not, check if the library exists, and atomics work with it.
++if(NOT HAVE_CXX_ATOMICS_WITHOUT_LIB)
++    check_library_exists(atomic __atomic_load_8 "" HAVE_LIBATOMIC)
++    if(NOT HAVE_LIBATOMIC)
++        message(STATUS "Host compiler appears to require libatomic, but cannot locate it.")
++    endif()
++
++    list(APPEND CMAKE_REQUIRED_LIBRARIES "atomic")
++    check_working_cxx_atomics(HAVE_CXX_ATOMICS_WITH_LIB)
++    list(REMOVE_ITEM CMAKE_REQUIRED_LIBRARIES "atomic")
++    if(NOT HAVE_CXX_ATOMICS_WITH_LIB)
++        message(FATAL_ERROR "Host compiler must support std::atomic!")
++    endif()
++endif()
+diff --git a/libtransmission/CMakeLists.txt b/libtransmission/CMakeLists.txt
+index 7c2127d56..0de6bbb04 100644
+--- a/libtransmission/CMakeLists.txt
++++ b/libtransmission/CMakeLists.txt
+@@ -1,3 +1,4 @@
++include(CheckAtomic)
+ include(CheckLibraryExists)
+ include(CheckSymbolExists)
+ 
+@@ -294,6 +295,7 @@ target_link_libraries(${TR_NAME}
+         $<$<BOOL:${WIN32}>:crypt32>
+         $<$<BOOL:${WIN32}>:shlwapi>
+         "$<$<BOOL:${APPLE}>:-framework Foundation>"
++        $<$<BOOL:${HAVE_LIBATOMIC}>:atomic>
+     PUBLIC
+         fmt::fmt-header-only
+         libevent::event)
+-- 
+2.45.2.windows.1
+
