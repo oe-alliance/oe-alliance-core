@@ -12,7 +12,7 @@ Subject: [PATCH] hiplayer-21
  xbmc/application/Application.cpp              |   12 +-
  .../application/ApplicationVolumeHandling.cpp |   14 +-
  xbmc/commons/ilog.h                           |    1 +
- xbmc/cores/VideoPlayer/VideoPlayer.cpp        |  127 +-
+ xbmc/cores/VideoPlayer/VideoPlayer.cpp        |  126 +
  xbmc/cores/VideoPlayer/VideoPlayer.h          |    7 +
  .../VideoRenderers/HwDecRender/CMakeLists.txt |    3 +
  .../HwDecRender/RendererHisi.cpp              |  164 ++
@@ -159,7 +159,7 @@ Subject: [PATCH] hiplayer-21
  xbmc/settings/SettingConditions.cpp           |    3 +
  xbmc/settings/Settings.h                      |    1 +
  xbmc/windowing/egl/WinSystemSTBContext.cpp    |    3 +
- 155 files changed, 53623 insertions(+), 7 deletions(-)
+ 155 files changed, 53624 insertions(+), 5 deletions(-)
  create mode 100644 xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/RendererHisi.cpp
  create mode 100644 xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/RendererHisi.h
  create mode 100644 xbmc/cores/hiplayer/CMakeLists.txt
@@ -302,7 +302,7 @@ Subject: [PATCH] hiplayer-21
  create mode 100644 xbmc/platform/linux/hisi/hifb.h
 
 diff --git a/addons/resource.language.en_gb/resources/strings.po b/addons/resource.language.en_gb/resources/strings.po
-index 19774a0091b..36da0a1354f 100644
+index 4068a529d90..9d917e9cabf 100644
 --- a/addons/resource.language.en_gb/resources/strings.po
 +++ b/addons/resource.language.en_gb/resources/strings.po
 @@ -7511,6 +7511,17 @@ msgstr ""
@@ -465,7 +465,7 @@ index 9fe074af414..2c522196a9d 100644
  // extra masks - from bit 5
  constexpr int LOGMASKBIT = 5;
 diff --git a/xbmc/cores/VideoPlayer/VideoPlayer.cpp b/xbmc/cores/VideoPlayer/VideoPlayer.cpp
-index 78e9cc3cdc5..6a75376060a 100644
+index d2568bd7108..1a849e6ff6e 100644
 --- a/xbmc/cores/VideoPlayer/VideoPlayer.cpp
 +++ b/xbmc/cores/VideoPlayer/VideoPlayer.cpp
 @@ -63,6 +63,10 @@
@@ -479,7 +479,7 @@ index 78e9cc3cdc5..6a75376060a 100644
  #include "windowing/WinSystem.h"
  
  #include <iterator>
-@@ -579,11 +583,28 @@ int CSelectionStreams::CountType(StreamType type) const
+@@ -584,9 +588,29 @@ int CSelectionStreams::CountType(StreamType type) const
  
  void CVideoPlayer::CreatePlayers()
  {
@@ -494,8 +494,6 @@ index 78e9cc3cdc5..6a75376060a 100644
    if (m_players_created)
      return;
  
--  m_VideoPlayerVideo = new CVideoPlayerVideo(&m_clock, &m_overlayContainer, m_messenger, m_renderManager, *m_processInfo);
--  m_VideoPlayerAudio = new CVideoPlayerAudio(&m_clock, m_messenger, *m_processInfo);
 +#ifdef USE_HIPLAYER
 +  if(m_hiplayer_mode && m_use_hicodec)
 +  {
@@ -504,15 +502,16 @@ index 78e9cc3cdc5..6a75376060a 100644
 +  }else
 +#endif
 +  {
-+  	m_VideoPlayerVideo = new CVideoPlayerVideo(&m_clock, &m_overlayContainer, m_messenger, m_renderManager, *m_processInfo);
-+  	m_VideoPlayerAudio = new CVideoPlayerAudio(&m_clock, m_messenger, *m_processInfo);
++  	m_VideoPlayerVideo = new CVideoPlayerVideo(&m_clock, &m_overlayContainer, m_messenger, m_renderManager, *m_processInfo, m_messageQueueTimeSize);
++  	m_VideoPlayerAudio = new CVideoPlayerAudio(&m_clock, m_messenger, *m_processInfo, m_messageQueueTimeSize);
 +  }
-   m_VideoPlayerSubtitle = new CVideoPlayerSubtitle(&m_overlayContainer, *m_processInfo);
-   m_VideoPlayerTeletext = new CDVDTeletextData(*m_processInfo);
-   m_VideoPlayerRadioRDS = new CDVDRadioRDSData(*m_processInfo);
-@@ -637,6 +658,16 @@ CVideoPlayer::CVideoPlayer(IPlayerCallback& callback)
-   m_HasAudio = false;
++
+   m_VideoPlayerVideo =
+       new CVideoPlayerVideo(&m_clock, &m_overlayContainer, m_messenger, m_renderManager,
+                             *m_processInfo, m_messageQueueTimeSize);
+@@ -646,6 +670,16 @@ CVideoPlayer::CVideoPlayer(IPlayerCallback& callback)
    m_UpdateStreamDetails = false;
+   m_messageQueueTimeSize = VP_MESSAGE_QUEUE_TIME_SIZE;
  
 +  memset(&m_SpeedState, 0, sizeof(m_SpeedState));
 +
@@ -527,7 +526,7 @@ index 78e9cc3cdc5..6a75376060a 100644
    m_SkipCommercials = true;
  
    m_processInfo.reset(CProcessInfo::CreateInstance());
-@@ -671,6 +702,83 @@ bool CVideoPlayer::OpenFile(const CFileItem& file, const CPlayerOptions &options
+@@ -680,6 +714,83 @@ bool CVideoPlayer::OpenFile(const CFileItem& file, const CPlayerOptions &options
  {
    CLog::Log(LOGINFO, "VideoPlayer::OpenFile: {}", CURL::GetRedacted(file.GetPath()));
  
@@ -611,7 +610,7 @@ index 78e9cc3cdc5..6a75376060a 100644
    if (IsRunning())
    {
      CDVDMsgOpenFile::FileParams params;
-@@ -1536,6 +1644,12 @@ void CVideoPlayer::Process()
+@@ -1545,6 +1656,12 @@ void CVideoPlayer::Process()
        {
          m_VideoPlayerVideo->SendMessage(std::make_shared<CDVDMsg>(CDVDMsg::VIDEO_DRAIN));
        }
@@ -624,7 +623,7 @@ index 78e9cc3cdc5..6a75376060a 100644
  
        m_CurrentAudio.inited = false;
        m_CurrentVideo.inited = false;
-@@ -2636,6 +2750,15 @@ void CVideoPlayer::HandleMessages()
+@@ -2645,6 +2762,15 @@ void CVideoPlayer::HandleMessages()
  
        FlushBuffers(DVD_NOPTS_VALUE, true, true);
        m_renderManager.Flush(false, false);
@@ -641,13 +640,13 @@ index 78e9cc3cdc5..6a75376060a 100644
        m_pSubtitleDemuxer.reset();
        m_subtitleDemuxerMap.clear();
 diff --git a/xbmc/cores/VideoPlayer/VideoPlayer.h b/xbmc/cores/VideoPlayer/VideoPlayer.h
-index 2dfd8f4be31..1080654e192 100644
+index 1300b0fd4ee..6a8008d89a5 100644
 --- a/xbmc/cores/VideoPlayer/VideoPlayer.h
 +++ b/xbmc/cores/VideoPlayer/VideoPlayer.h
-@@ -591,4 +591,11 @@ protected:
-   bool m_UpdateStreamDetails;
- 
+@@ -593,4 +593,11 @@ protected:
    std::atomic<bool> m_displayLost;
+ 
+   double m_messageQueueTimeSize{0.0};
 +  bool m_hiplayer_mode;				// using hiplayer acceleration
 +#ifdef USE_HIPLAYER
 +  bool m_use_hicodec;
@@ -54959,7 +54958,7 @@ index e6e59fe4cca..7eea143c14e 100644
 +#endif
 \ No newline at end of file
 diff --git a/xbmc/settings/SettingConditions.cpp b/xbmc/settings/SettingConditions.cpp
-index 1f11a4995ee..26cc059e7b2 100644
+index e4190a53f7e..7d5bcc25c4c 100644
 --- a/xbmc/settings/SettingConditions.cpp
 +++ b/xbmc/settings/SettingConditions.cpp
 @@ -408,6 +408,9 @@ void CSettingConditions::Initialize()
@@ -55006,5 +55005,5 @@ index 3b4e3e8d661..c70869bbd24 100644
  #else
    CLinuxRendererGL::Register();
 -- 
-2.43.0
+2.45.1
 
