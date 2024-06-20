@@ -68,7 +68,6 @@ NORMAL_IMAGE = "\
     openvix-picon-feed-opkg-conf \
 "
 
-RRECOMMENDS:${PN}:append:et8500 = " enigma2-plugin-extensions-yahooweather"
 RRECOMMENDS:${PN}:append:tmnanoseplus = " enigma2-plugin-systemplugins-tempfancontrol"
 RRECOMMENDS:${PN}:append:tmnanosem2 = " enigma2-plugin-systemplugins-tempfancontrol"
 RRECOMMENDS:${PN}:append:tmnanosem2plus = " enigma2-plugin-systemplugins-tempfancontrol"

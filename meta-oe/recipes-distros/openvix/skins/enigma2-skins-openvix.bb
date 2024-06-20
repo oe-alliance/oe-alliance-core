@@ -16,7 +16,7 @@ PR = "r7"
 
 SRC_URI = "git://github.com/OpenViX/skins.git;protocol=https;branch=master"
 
-DEPENDS += "enigma2 font-valis-hd enigma2-plugin-extensions-yahooweather "
+DEPENDS += "enigma2 font-valis-hd"
 
 # note that enigma2-skins is just an empty package to satisfy silly dependencies.
 ALLOW_EMPTY:${PN} = "1"
