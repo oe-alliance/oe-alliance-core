@@ -12,10 +12,11 @@ PACKAGE_ARCH = "${MACHINEBUILD}"
 SRCREV = "${AUTOREV}"
 PV = "git"
 PKGV = "git${GITPKGV}"
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "git://github.com/oe-alliance/enigma2-display-skins.git;protocol=https;branch=master"
 SRC_URI:openatv = "git://github.com/oe-alliance/enigma2-display-skins.git;protocol=https;branch=openATV"
+SRC_URI:openvix = "git://github.com/oe-alliance/enigma2-display-skins.git;protocol=https;branch=openvix"
 
 # note that enigma2-skins is just an empty package to satisfy silly dependencies.
 ALLOW_EMPTY:${PN} = "1"
