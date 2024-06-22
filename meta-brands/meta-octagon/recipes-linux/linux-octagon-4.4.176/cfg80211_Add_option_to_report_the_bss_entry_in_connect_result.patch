@@ -43,11 +43,10 @@ diff --git a/include/net/cfg80211.h b/include/net/cfg80211.h
 index c8414962683d5..1e008cddd41d4 100644
 --- a/include/net/cfg80211.h
 +++ b/include/net/cfg80211.h
-@@ -4651,6 +4651,32 @@ static inline void cfg80211_testmode_event(struct sk_buff *skb, gfp_t gfp)
- #define CFG80211_TESTMODE_DUMP(cmd)
+@@ -4610,6 +4610,32 @@
  #endif
  
-+/**
+ /**
 + * cfg80211_connect_bss - notify cfg80211 of connection result
 + *
 + * @dev: network device
@@ -73,29 +72,10 @@ index c8414962683d5..1e008cddd41d4 100644
 +			  size_t req_ie_len, const u8 *resp_ie,
 +			  size_t resp_ie_len, u16 status, gfp_t gfp);
 +
- /**
++/**
   * cfg80211_connect_result - notify cfg80211 of connection result
   *
-@@ -4668,10 +4694,15 @@ static inline void cfg80211_testmode_event(struct sk_buff *skb, gfp_t gfp)
-  * It should be called by the underlying driver whenever connect() has
-  * succeeded.
-  */
--void cfg80211_connect_result(struct net_device *dev, const u8 *bssid,
--			     const u8 *req_ie, size_t req_ie_len,
--			     const u8 *resp_ie, size_t resp_ie_len,
--			     u16 status, gfp_t gfp);
-+static inline void
-+cfg80211_connect_result(struct net_device *dev, const u8 *bssid,
-+			const u8 *req_ie, size_t req_ie_len,
-+			const u8 *resp_ie, size_t resp_ie_len,
-+			u16 status, gfp_t gfp)
-+{
-+	cfg80211_connect_bss(dev, bssid, NULL, req_ie, req_ie_len, resp_ie,
-+			     resp_ie_len, status, gfp);
-+}
- 
- /**
-  * cfg80211_roamed - notify cfg80211 of roaming
+  * @dev: network device
 diff --git a/net/wireless/core.h b/net/wireless/core.h
 index 022ccad06cbe2..ac44e77ac2f2d 100644
 --- a/net/wireless/core.h
@@ -112,25 +92,20 @@ diff --git a/net/wireless/sme.c b/net/wireless/sme.c
 index e22e5b83cfa94..d814279fb5560 100644
 --- a/net/wireless/sme.c
 +++ b/net/wireless/sme.c
-@@ -753,19 +753,32 @@ void __cfg80211_connect_result(struct net_device *dev, const u8 *bssid,
- 	kfree(country_ie);
- }
+@@ -792,6 +792,59 @@
+ EXPORT_SYMBOL(cfg80211_connect_result);
  
--void cfg80211_connect_result(struct net_device *dev, const u8 *bssid,
--			     const u8 *req_ie, size_t req_ie_len,
--			     const u8 *resp_ie, size_t resp_ie_len,
--			     u16 status, gfp_t gfp)
-+/* Consumes bss object one way or another */
+ /* Consumes bss object one way or another */
 +void cfg80211_connect_bss(struct net_device *dev, const u8 *bssid,
 +			  struct cfg80211_bss *bss, const u8 *req_ie,
 +			  size_t req_ie_len, const u8 *resp_ie,
 +			  size_t resp_ie_len, u16 status, gfp_t gfp)
- {
- 	struct wireless_dev *wdev = dev->ieee80211_ptr;
- 	struct cfg80211_registered_device *rdev = wiphy_to_rdev(wdev->wiphy);
- 	struct cfg80211_event *ev;
- 	unsigned long flags;
- 
++{
++	struct wireless_dev *wdev = dev->ieee80211_ptr;
++	struct cfg80211_registered_device *rdev = wiphy_to_rdev(wdev->wiphy);
++	struct cfg80211_event *ev;
++	unsigned long flags;
++
 +	if (bss) {
 +		/* Make sure the bss entry provided by the driver is valid. */
 +		struct cfg80211_internal_bss *ibss = bss_from_pub(bss);
@@ -141,34 +116,42 @@ index e22e5b83cfa94..d814279fb5560 100644
 +		}
 +	}
 +
- 	ev = kzalloc(sizeof(*ev) + req_ie_len + resp_ie_len, gfp);
--	if (!ev)
++	ev = kzalloc(sizeof(*ev) + req_ie_len + resp_ie_len, gfp);
 +	if (!ev) {
 +		cfg80211_put_bss(wdev->wiphy, bss);
- 		return;
++ 		return;
 +	}
- 
- 	ev->type = EVENT_CONNECT_RESULT;
- 	if (bssid)
-@@ -780,6 +793,9 @@ void cfg80211_connect_result(struct net_device *dev, const u8 *bssid,
- 		ev->cr.resp_ie_len = resp_ie_len;
- 		memcpy((void *)ev->cr.resp_ie, resp_ie, resp_ie_len);
- 	}
++
++	ev->type = EVENT_CONNECT_RESULT;
++	if (bssid)
++		memcpy(ev->cr.bssid, bssid, ETH_ALEN);
++	if (req_ie_len) {
++		ev->cr.req_ie = ((u8 *)ev) + sizeof(*ev);
++		ev->cr.req_ie_len = req_ie_len;
++		memcpy((void *)ev->cr.req_ie, req_ie, req_ie_len);
++	}
++	if (resp_ie_len) {
++		ev->cr.resp_ie = ((u8 *)ev) + sizeof(*ev) + req_ie_len;
++		ev->cr.resp_ie_len = resp_ie_len;
++		memcpy((void *)ev->cr.resp_ie, resp_ie, resp_ie_len);
++	}
 +	if (bss)
 +		cfg80211_hold_bss(bss_from_pub(bss));
 +	ev->cr.bss = bss;
- 	ev->cr.status = status;
- 
- 	spin_lock_irqsave(&wdev->event_lock, flags);
-@@ -787,7 +803,7 @@ void cfg80211_connect_result(struct net_device *dev, const u8 *bssid,
- 	spin_unlock_irqrestore(&wdev->event_lock, flags);
- 	queue_work(cfg80211_wq, &rdev->event_work);
- }
--EXPORT_SYMBOL(cfg80211_connect_result);
++	ev->cr.status = status;
++
++	spin_lock_irqsave(&wdev->event_lock, flags);
++	list_add_tail(&ev->list, &wdev->event_list);
++	spin_unlock_irqrestore(&wdev->event_lock, flags);
++	queue_work(cfg80211_wq, &rdev->event_work);
++}
 +EXPORT_SYMBOL(cfg80211_connect_bss);
- 
- /* Consumes bss object one way or another */
++
++
++/* Consumes bss object one way or another */
  void __cfg80211_roamed(struct wireless_dev *wdev,
+ 		       struct cfg80211_bss *bss,
+ 		       const u8 *req_ie, size_t req_ie_len,
 diff --git a/net/wireless/util.c b/net/wireless/util.c
 index f36039888eb56..7cfabd6e83c68 100644
 --- a/net/wireless/util.c
