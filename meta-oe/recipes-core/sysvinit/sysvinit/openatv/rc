@@ -49,7 +49,7 @@ startup() {
   [ "$VERBOSE" = very ] && echo "INIT: Running $@..."
 
   case "$1" in
-  	*S04mdev|*S03mountall.sh|*S04partitions-by-name|*S06bootlogo|*S07oem-info|*S38urandom|*S39alsa-state|*S67stb-hwclock)
+  	*S04partitions-by-name|*S06bootlogo|*S07oem-info|*S39alsa-state|*S38urandom|*S67stb-hwclock)
 		(
 			"$@" &
 		)
