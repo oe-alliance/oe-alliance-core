@@ -3,6 +3,9 @@ SRC_URI += "file://use-legacy-path-for-pycs.patch"
 
 PACKAGECONFIG = "readline gdbm ${@bb.utils.filter('DISTRO_FEATURES', 'lto', d)}"
 
+PV = "3.12.4"
+SRC_URI[sha256sum] = "f6d419a6d8743ab26700801b4908d26d97e8b986e14f95de31b32de2b0e79554"
+
 inherit python3-dir
 
 FILES:${PN}-src += " \
