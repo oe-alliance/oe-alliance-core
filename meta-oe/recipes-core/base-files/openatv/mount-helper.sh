@@ -60,10 +60,10 @@ case $ACTION in
 			# detected multiboot sdcard
 			#if [ $stbcheck == "viper4k" ] || [ $stbcheck == "sf8008" ] || [ $stbcheck == "sf8008m" ] || [ $stbcheck == "ustym4kpro" ] || [ $stbcheck == "beyonwizv2" ] || [ $stbcheck == "gbmv200" ]; then
 				DEVCHECK=`expr substr $MDEV 1 3`
-				if [ "${DEVCHECK}" == "sda" ] ; then
-					DEVSIZE=`cat /sys/block/sda/sda1/size`
+				if [ "${DEVCHECK}" == "sda" ] || [ "${DEVCHECK}" == "sdb" ] || [ "${DEVCHECK}" == "sdc" ] || [ "${DEVCHECK}" == "sdd" ] ; then
+					DEVSIZE=`cat /sys/block/${DEVCHECK}/${DEVCHECK}1/size`
 					if [ $DEVSIZE -lt "32769" ]; then
-						BLACKLISTED=`echo ${BLACKLISTED} sda`
+						BLACKLISTED=`echo ${BLACKLISTED} ${DEVCHECK}`
 					fi
 				fi
 			#fi
