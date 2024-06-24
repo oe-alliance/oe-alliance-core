@@ -104,6 +104,7 @@ RDEPENDS:${PN} = " \
     idle3-tools \
     inadyn-mt \
     iperf3 \
+    ipkg-tools \
     joe \
     liba52 \
     lighttpd \
