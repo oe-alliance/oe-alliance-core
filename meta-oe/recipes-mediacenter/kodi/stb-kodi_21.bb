@@ -30,6 +30,7 @@ DEPENDS += " \
             avahi \
             bzip2 \
             curl \
+            exiv2 \
             libdcadec \
             faad2 \
             fontconfig \
