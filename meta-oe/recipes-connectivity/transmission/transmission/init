@@ -19,7 +19,7 @@ ALLOWED="*.*.*.*,*:*:*:*:*:*:*:*"
 [ -f /etc/default/transmission-daemon ] && . /etc/default/transmission-daemon
 NAME="transmission-daemon"
 DAEMON="/bin/nice -n 9 /usr/bin/transmission-daemon"
-ARGS="-c $WATCH_DIR -g $CONFIG_DIR -r :: -a $ALLOWED -w $DOWNLOAD_DIR -p $RPC_PORT -t -u $USERNAME -v $PASSWORD"
+ARGS="-c $WATCH_DIR -g $CONFIG_DIR -r :: -a $ALLOWED -w $DOWNLOAD_DIR -p $RPC_PORT -T -u $USERNAME -v $PASSWORD"
 
 [ -z "$DAEMON_USER" ] || SSDOPTIONS="--chuid $DAEMON_USER:$DAEMON_GROUP"
 
@@ -52,6 +52,10 @@ case $1 in
 		done
 		echo
 		echo  "Restarting $NAME"
+		export CURL_CA_BUNDLE="/etc/ssl/certs/ca-certificates.crt"
+		export TR_CURL_SSL_NO_VERIFY=1
+		sysctl -n -w net.core.rmem_max=4194304
+		sysctl -n -w net.core.wmem_max=1048576
 		start-stop-daemon $SSDOPTIONS -S -b -n $NAME -a $DAEMON -- $ARGS
 		;;
         autostart | enable)
