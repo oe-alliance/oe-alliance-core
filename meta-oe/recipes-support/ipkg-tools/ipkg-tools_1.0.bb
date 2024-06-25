@@ -7,7 +7,7 @@ require conf/license/license-gplv2.inc
 
 RDEPENDS:${PN} = "binutils zstd"
 
-S = "${WORKDIR}"
+S = "${UNPACKDIR}"
 
 SRC_URI="file://ipkg-tools.zip"
 
@@ -18,8 +18,8 @@ FILES:${PN} = "/usr/bin/"
 
 do_install() {
     install -d ${D}/usr/bin
-    install -m 0755 ${WORKDIR}/ipkg-build ${D}/usr/bin/ipkg-build
-    install -m 0755 ${WORKDIR}/ipkg-unbuild ${D}/usr/bin/ipkg-unbuild
+    install -m 0755 ${UNPACKDIR}/ipkg-build ${D}/usr/bin/ipkg-build
+    install -m 0755 ${UNPACKDIR}/ipkg-unbuild ${D}/usr/bin/ipkg-unbuild
 }
 
 INSANE_SKIP:${PN} ="file-rdeps"
