@@ -7,9 +7,9 @@ require conf/python/python3-compileall.inc
 inherit gitpkgv allarch gettext
 
 SRCREV = "${AUTOREV}"
-PV = "7.9.12+git"
-PKGV = "7.9.12+git${GITPKGV}"
-VER = "7.9.12"
+PV = "7.9.30+git"
+PKGV = "7.9.30+git${GITPKGV}"
+VER = "7.9.30"
 
 DEPENDS += "gettext-native"
 RDEPENDS:${PN} = "enigma2-plugin-extensions-oaweather ${PYTHON_PN}-requests ${PYTHON_PN}-pillow enigma2-plugin-systemplugins-mphelp ${PYTHON_PN}-lxml"
@@ -20,6 +20,7 @@ RREPLACES:${PN} += "enigma2-plugin-skins-kravenfhd enigma2-plugin-skins-kravenvb
 RPROVIDES:${PN} += "enigma2-plugin-skins-kravenfhd enigma2-plugin-skins-kravenvb"
 
 SRC_URI = "git://github.com/oerlgrey/KravenHD.git;protocol=https;branch=python3"
+SRC_URI:openatv = "git://github.com/oe-mirrors/KravenHD.git;protocol=https;branch=python3"
 SRC_URI:openhdf = "git://github.com/oerlgrey/KravenHD_openHDF.git;protocol=https;branch=python3"
 SRC_URI:teamblue = "git://github.com/oerlgrey/KravenHD_teamBlue.git;protocol=https;branch=python3"
 
