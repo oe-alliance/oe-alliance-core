@@ -12,8 +12,7 @@ SRCREV = "${AUTOREV}"
 PV = "0.21+git${SRCPV}"
 PKGV = "0.21+git${GITPKGV}"
 
-SRC_URI = "git://github.com/windytan/redsea.git;protocol=http;branch=master;protocol=https \
-            file://remove-hardcoded-build-path.patch"
+SRC_URI = "git://github.com/windytan/redsea.git;protocol=http;branch=master;protocol=https"
 
 S = "${WORKDIR}/git"
 
