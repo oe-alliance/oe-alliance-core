@@ -9,6 +9,7 @@ DEPENDS = "curl libevent gnutls openssl libtool intltool-native glib-2.0-native"
 # Transmission release 4.0.6
 SRCREV = "38c164933e9f77c110b48fe745861c3b98e3d83e"
 PV = "4.0.6"
+PR = "1"
 
 SRC_URI = "gitsm://github.com/transmission/transmission;protocol=https;branch=4.0.x \
         file://0001-build-with-latomic-on-platforms-that-need-it.patch \

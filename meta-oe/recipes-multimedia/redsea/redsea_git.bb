@@ -8,7 +8,7 @@ DEPENDS = "liquid-dsp virtual/libiconv libsndfile1"
 
 inherit gitpkgv
 
-SRCREV = "${AUTOREV}"
+SRCREV = "bf5fcbfe0f41f019c60b95b2178f461103dd13e3"
 PV = "0.21+git"
 PKGV = "0.21+git${GITPKGV}"
 
