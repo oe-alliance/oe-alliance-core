@@ -55,13 +55,11 @@ case $ACTION in
 				exit 0
 			fi
 		fi
-
-                PARTLABEL=$(blkid -s PARTLABEL -o value /dev/$MDEV)
-                if [[ $PARTLABEL =~ "kernel" ]] || [[ $PARTLABEL =~ "rootfs" ]] ; then
-#                       echo "PARTABEL excludes "$PARTLABEL >> $LOG
-                        exit 0
-                fi
-
+		PARTLABEL=$(blkid -s PARTLABEL -o value /dev/$MDEV)
+		if [[ $PARTLABEL =~ "kernel" ]] || [[ $PARTLABEL =~ "rootfs" ]] ; then
+			#echo "PARTABEL excludes "$PARTLABEL >> $LOG
+			exit 0
+		fi
 		if [ -e /proc/stb/info/model ]; then
 			stbcheck=`cat /proc/stb/info/model`
 			# detected multiboot sdcard
