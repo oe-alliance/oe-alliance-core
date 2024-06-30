@@ -36,13 +36,13 @@ RDEPENDS:${PN} = "\
     "
 
 RRECOMMENDS:${PN} = "\
+    ${E2DEFAULTSKIN} \
+    tzdata \
     enigma2-plugin-systemplugins-vix \
     ${@bb.utils.contains("SMALLBOXWIZARD", "1", "${SMALLBOXWIZARD_IMAGE}", "${NORMAL_IMAGE}", d)} \
     "
 
 SMALLBOXWIZARD_IMAGE = "\
-    tzdata \
-    ${E2DEFAULTSKIN} \
     ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", "${NORMAL_IMAGE}", d)} \
 "
 
@@ -55,9 +55,7 @@ NORMAL_IMAGE = "\
     enigma2-plugin-extensions-openwebif-themes \
     enigma2-plugin-extensions-openwebif-vxg \
     ${@bb.utils.contains("MACHINE_FEATURES", "skins1080", "enigma2-plugin-skins-openvix-magic-fhd", "", d)} \
-    enigma2-plugin-skins-openvix-vix-night-hd \
-    enigma2-plugin-skins-openvix-vix-day-hd \
-    ${@bb.utils.contains("MACHINE_FEATURES", "skins1080", "enigma2-plugin-skins-openvix-youvix-blue" , "", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "skins1080", "enigma2-plugin-skins-e2-darkos", "", d)} \
     enigma2-plugin-systemplugins-aboutboxbranding \
     enigma2-plugin-systemplugins-opentvzapper \
     enigma2-plugin-systemplugins-xmlupdate \

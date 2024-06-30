@@ -18,7 +18,7 @@ DEPENDS += "oe-alliance-feeds enigma2-3rdparty-plugins"
 RRECOMMENDS:${PN} = "\
     enigma2-plugin-extensions-blurayplayer \
     enigma2-skins-openvix \
-    enigma2-plugin-skins-e2-darkos \
+    ${@bb.utils.contains("MACHINE_FEATURES", "skins1080", "enigma2-plugin-skins-e2-darkos", "", d)} \
     enigma2-plugin-skins-vix-turquoise-hd \
     enigma2-plugin-skins-simple-gray \
     enigma2-plugin-systemplugins-crossepg \
