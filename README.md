@@ -1,4 +1,4 @@
-oe-alliance-core 5.4
+oe-alliance-core 5.5
 ================
 
 The openembedded alliance core.
@@ -9,13 +9,9 @@ openatv   Support: [https://www.opena.tv/](https://www.opena.tv/)
 
 openbh    Support: [https://openbh.net](https://openbh.net)
 
-opendroid Support: [https://droidsat.org](https://droidsat.org)
-
 openeight Support: [http://www.openeight.de/](http://www.openeight.de/)
 
 openhdf   Support: [https://www.hdfreaks.cc/](https://www.hdfreaks.cc/)
-
-opennfr   Support: [https://www.nachtfalke.biz](https://www.nachtfalke.biz)
 
 openspa   Support: [https://openspa.info/](https://openspa.info/)
 
