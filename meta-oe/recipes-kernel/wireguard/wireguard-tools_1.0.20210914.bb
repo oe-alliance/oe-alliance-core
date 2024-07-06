@@ -13,8 +13,8 @@ PR = "r1"
 LIC_FILES_CHKSUM = "file://../COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 
 SRC_URI = "https://git.zx2c4.com/wireguard-tools/snapshot/wireguard-tools-${PV}.tar.xz"
-SRC_URI[md5sum] = "1d98fb1623817721466152365aec8c45"
-SRC_URI[sha256sum] = "97ff31489217bb265b7ae850d3d0f335ab07d2652ba1feec88b734bc96bd05ac"
+SRC_URI[md5sum] = "7ff37c5f2af02daec68069c9e1c6cae1"
+SRC_URI[sha256sum] = "942ed32d1d6631932c82ff86c91ae8428d4c90bfec231a14ebdf6c29f068e60b"
 
 S = "${WORKDIR}/wireguard-tools-${PV}/src"
 
