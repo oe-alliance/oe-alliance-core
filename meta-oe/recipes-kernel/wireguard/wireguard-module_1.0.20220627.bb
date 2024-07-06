@@ -16,8 +16,8 @@ SRC_URI = "https://git.zx2c4.com/wireguard-linux-compat/snapshot/wireguard-linux
 
 SRC_URI:append:meson64 = " file://version.patch"
 
-SRC_URI[md5sum] = "0499a3315b7013e65a07234dc83dec39"
-SRC_URI[sha256sum] = "362d412693c8fe82de00283435818d5c5def7f15e2433a07a9fe99d0518f63c0"
+SRC_URI[md5sum] = "a407b380b6e4cee3be9a92cdcf5c4a2f"
+SRC_URI[sha256sum] = "19b181e5c7d2260c23ecad4ad324425fd8e88200d97a885a2c7d4bd26cd61461"
 
 S = "${WORKDIR}/wireguard-linux-compat-${PV}/src"
 
