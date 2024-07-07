@@ -6,7 +6,6 @@ SRC_URI += " file://0001-ptrace-protect-ptrace_peeksiginfo_args-from-redefint.pa
              file://0002-fix-build-for-old-libcheader.patch \
              file://0004-sunrpc-use-snprintf-instead-of-an-implied-length-gua.patch \
              file://0005-PATCH-Revert-Linux-Use-32-bit-vDSO-for-clock_gettime.patch \
-             file://0007-set-MAXNS-to-4.patch \
 "
 
 SRC_URI:append:arm = " file://tls-libwidevinecdm.so-since-4.10.2252.0-has-TLS-with.patch \
