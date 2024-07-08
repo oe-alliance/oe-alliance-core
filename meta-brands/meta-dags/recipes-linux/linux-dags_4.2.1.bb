@@ -13,7 +13,7 @@ RPROVIDES:kernel-image = "kernel-${KERNEL_IMAGETYPE}"
 SRC_URI[md5sum] = "48d1c96b3bedcc6a11c34eede6e36bfd"
 SRC_URI[sha256sum] = "ed11d537b1e19d59b132fd643bebc7469bf20e115bdc23e949e2ce14ae53aadc"
 
-LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
+LIC_FILES_CHKSUM = "file://COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
 MACHINE_KERNEL_PR:append = ".3"
 

@@ -15,7 +15,7 @@ SRCREV_FORMAT = "kernel_wireguard"
 SRC_URI[kernel.md5sum] = "4c8f204781ac5a4a83918d5527fbcab0"
 SRC_URI[kernel.sha256sum] = "ce63b433241890fc64df4a21c8fa0dea9d10c4f7100e47485cf687727c1f708d"
 
-LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
+LIC_FILES_CHKSUM = "file://COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
 SRC_URI += "http://en3homeftp.net/pub/down/linux-4.4.35.tar.xz;name=kernel \
 	file://defconfig \
