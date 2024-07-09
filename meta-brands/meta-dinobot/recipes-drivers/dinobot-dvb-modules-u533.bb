@@ -4,10 +4,10 @@ SRCDATE = "20191212"
 do_install:append() {
 	install -d ${D}/lib/firmware/brcm
 	install -d ${D}/${sysconfdir}/modules-load.d
-	install -m 0644 ${WORKDIR}/brcmfmac43455-sdio.bin ${D}/lib/firmware/brcm
-	install -m 0644 ${WORKDIR}/brcmfmac43455-sdio.txt ${D}/lib/firmware/brcm
-	install -m 0644 ${WORKDIR}/*.ko ${D}${nonarch_base_libdir}/modules/${KV}/extra
-	install -m 0644 ${WORKDIR}/*.conf ${D}/${sysconfdir}/modules-load.d
+	install -m 0644 ${UNPACKDIR}/brcmfmac43455-sdio.bin ${D}/lib/firmware/brcm
+	install -m 0644 ${UNPACKDIR}/brcmfmac43455-sdio.txt ${D}/lib/firmware/brcm
+	install -m 0644 ${UNPACKDIR}/*.ko ${D}${nonarch_base_libdir}/modules/${KV}/extra
+	install -m 0644 ${UNPACKDIR}/*.conf ${D}/${sysconfdir}/modules-load.d
 }
 
 FILES:${PN} += "/lib/firmware/brcm"
