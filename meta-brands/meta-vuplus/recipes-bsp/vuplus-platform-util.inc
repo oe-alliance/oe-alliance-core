@@ -18,7 +18,7 @@ S="${WORKDIR}/platform-util-${MACHINE}"
 
 do_install() {
     install -d ${D}${bindir}
-    install -m 0755 ${UNPACKDIR}/* ${D}${bindir}
+    install -m 0755 ${S}/* ${D}${bindir}
     install -d ${D}/etc/init.d
     install -m 0755 ${UNPACKDIR}/${INITSCRIPT_NAME}.sysvinit ${D}/etc/init.d/${INITSCRIPT_NAME}
 }
