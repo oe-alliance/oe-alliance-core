@@ -4,6 +4,8 @@ MAINTAINER = "Eddi openBH"
 require conf/license/license-gplv2.inc
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
+inherit gittag
+
 SRCREV = "${AUTOREV}"
 PV = "git"
 PKGV = "${GITPKGVTAG}"
