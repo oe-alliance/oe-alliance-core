@@ -7,7 +7,7 @@ require conf/license/license-close.inc
 PACKAGE_ARCH = "${MACHINEBUILD}"
 
 SRCDATE = "20210427"
-SRCDATE_openspa = "20190327"
+SRCDATE:openspa = "20190327"
 KV = "4.1.20"
 PV = "${KV}+${SRCDATE}"
 PR = "r0"
@@ -31,7 +31,7 @@ do_populate_sysroot() {
 
 do_install() {
     install -d ${D}/lib/modules/${KV}/extra
-    cp -Rf ${WORKDIR}/lib/modules/${KV}/extra/*.ko ${D}/lib/modules/${KV}/extra/
+    cp -Rf ${UNPACKDIR}/lib/modules/${KV}/extra/*.ko ${D}/lib/modules/${KV}/extra/
 }
 
 FILES:${PN} += "/lib/modules/${KV}/extra"
