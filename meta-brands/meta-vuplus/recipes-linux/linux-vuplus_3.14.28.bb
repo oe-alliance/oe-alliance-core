@@ -124,7 +124,7 @@ pkg_postinst:kernel-image () {
 
             if [ -f "${ROOT_DEST}/${KERNEL_DEST}" ]; then
                 echo "Kernel is located at ${ROOT_DEST}/${KERNEL_DEST}"
-                cp -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE} ${ROOT_DEST}/${DEST}
+                cp -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE} ${ROOT_DEST}/${KERNEL_DEST}
             else
                 echo "Kernel should be on flash"
                 dd if=/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE} of=/dev/${MTD_KERNEL}
