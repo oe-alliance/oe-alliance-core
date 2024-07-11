@@ -76,7 +76,9 @@ export KCFLAGS = " -Wno-error=incompatible-pointer-types \
                    -Wno-error=unused-function \
                    -Wno-error=stringop-overread \
                    -Wno-error=unused-const-variable \
-                   -Wno-error=maybe-uninitialized \           
+                   -Wno-error=maybe-uninitialized \
+                   -Wno-error=implicit-int \
+                   -Wno-error=declaration-missing-parameter-type \
 "
 
 S = "${WORKDIR}/linux-${PV}"
