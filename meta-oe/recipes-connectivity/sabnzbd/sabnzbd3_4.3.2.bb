@@ -19,14 +19,14 @@ RDEPENDS:${PN} = "\
 
 RRECOMMENDS:${PN} = "par2cmdline unrar p7zip-full"
 
-SRC_URI = "https://github.com/sabnzbd/sabnzbd/releases/download/${PV}/SABnzbd-${PV}-src.tar.gz \
+SRC_URI = "https://github.com/sabnzbd/sabnzbd/releases/download/4.3.2/SABnzbd-4.3.2-src.tar.gz \
     file://sabnzbd \
     file://sabnzbd.conf \
     file://init-functions \
     "
 
-SRC_URI[md5sum] = "6cc8ea77a4781c36e6146e90861c4fcf"
-SRC_URI[sha256sum] = "c9902c212df3e6b7208c850e6ceab244afc4b3e173459c425db9be4df902bd44"
+SRC_URI[md5sum] = "a5a98f63f22fcce0e9cb98fa06e2e86c"
+SRC_URI[sha256sum] = "d238ffa957e71ad22c16535922cb32e7e6e84afc79eadd5c8f668ce591e207be"
 
 S = "${WORKDIR}/SABnzbd-${PV}"
 
