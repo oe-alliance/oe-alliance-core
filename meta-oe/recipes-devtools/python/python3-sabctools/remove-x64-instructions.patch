@@ -1,0 +1,73 @@
+diff --git a/setup.py b/setup.py
+index 68ea2a9..52c2009 100644
+--- a/setup.py
++++ b/setup.py
+@@ -185,68 +185,56 @@ class SABCToolsBuild(build_ext):
+             {
+                 "sources": ["src/yencode/encoder_sse2.cc"],
+                 "depends": srcdeps_enc_common + ["encoder_sse_base.h"],
+-                "gcc_x86_flags": ["-msse2"],
+             },
+             {
+                 "sources": ["src/yencode/decoder_sse2.cc"],
+                 "depends": srcdeps_dec_common + ["decoder_sse_base.h"],
+-                "gcc_x86_flags": ["-msse2"],
+             },
+             {
+                 "sources": ["src/yencode/encoder_ssse3.cc"],
+                 "depends": srcdeps_enc_common + ["encoder_sse_base.h"],
+-                "gcc_x86_flags": ["-mssse3"],
+             },
+             {
+                 "sources": ["src/yencode/decoder_ssse3.cc"],
+                 "depends": srcdeps_dec_common + ["decoder_sse_base.h"],
+-                "gcc_x86_flags": ["-mssse3"],
+             },
+             {
+                 "sources": ["src/yencode/crc_folding.cc"],
+                 "depends": srcdeps_crc_common,
+-                "gcc_x86_flags": ["-mssse3", "-msse4.1", "-mpclmul"],
+             },
+             {
+                 "sources": ["src/yencode/crc_folding_256.cc"],
+                 "depends": srcdeps_crc_common,
+-                "gcc_x86_flags": gcc_vpclmulqdq_flags,
+                 "msvc_x86_flags": ["/arch:AVX2"],
+             },
+             {
+                 "sources": ["src/yencode/encoder_avx.cc"],
+                 "depends": srcdeps_enc_common + ["encoder_sse_base.h"],
+-                "gcc_x86_flags": ["-mavx", "-mpopcnt"],
+                 "msvc_x86_flags": ["/arch:AVX"],
+             },
+             {
+                 "sources": ["src/yencode/decoder_avx.cc"],
+                 "depends": srcdeps_dec_common + ["decoder_sse_base.h"],
+-                "gcc_x86_flags": ["-mavx", "-mpopcnt"],
+                 "msvc_x86_flags": ["/arch:AVX"],
+             },
+             {
+                 "sources": ["src/yencode/encoder_avx2.cc"],
+                 "depends": srcdeps_enc_common + ["encoder_avx_base.h"],
+-                "gcc_x86_flags": ["-mavx2", "-mpopcnt", "-mbmi", "-mbmi2", "-mlzcnt"],
+                 "msvc_x86_flags": ["/arch:AVX2"],
+             },
+             {
+                 "sources": ["src/yencode/decoder_avx2.cc"],
+                 "depends": srcdeps_dec_common + ["decoder_avx2_base.h"],
+-                "gcc_x86_flags": ["-mavx2", "-mpopcnt", "-mbmi", "-mbmi2", "-mlzcnt"],
+                 "msvc_x86_flags": ["/arch:AVX2"],
+             },
+             {
+                 "sources": ["src/yencode/encoder_vbmi2.cc"],
+                 "depends": srcdeps_enc_common + ["encoder_avx_base.h"],
+-                "gcc_x86_flags": gcc_vbmi2_flags + gcc_avx10_flags,
+                 "msvc_x86_flags": ["/arch:AVX512"],
+             },
+             {
+                 "sources": ["src/yencode/decoder_vbmi2.cc"],
+                 "depends": srcdeps_dec_common + ["decoder_avx2_base.h"],
+-                "gcc_x86_flags": gcc_vbmi2_flags + gcc_avx10_flags,
+                 "msvc_x86_flags": ["/arch:AVX512"],
+             },
+             {
