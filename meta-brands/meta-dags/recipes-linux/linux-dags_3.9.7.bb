@@ -79,7 +79,7 @@ FILES:${KERNEL_PACKAGE_NAME}-image = "/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.g
 
 do_configure:prepend() {
     install -d ${B}/drivers/media/dvb-frontends
-    cp -rf ${WORKDIR}/sit2_op.o ${B}/drivers/media/dvb-frontends/sit2_op.o
+    cp -rf ${UNPACKDIR}/sit2_op.o ${B}/drivers/media/dvb-frontends/sit2_op.o
 }
 
 kernel_do_install:append() {
