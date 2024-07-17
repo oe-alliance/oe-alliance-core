@@ -1,8 +1,16 @@
 diff --git a/libopkg/opkg_conf.c b/libopkg/opkg_conf.c
-index c2e1c2f..e13ebc1 100644
+index 4dc777b..fac0a76 100644
 --- a/libopkg/opkg_conf.c
 +++ b/libopkg/opkg_conf.c
-@@ -770,8 +770,6 @@ int opkg_conf_load(void)
+@@ -202,7 +202,6 @@ static void opkg_conf_free(void)
+     pkg_hash_deinit();
+ 
+     hash_table_deinit(&opkg_config->file_hash);
+-    hash_table_deinit(&opkg_config->dir_hash);
+     hash_table_deinit(&opkg_config->obs_file_hash);
+ 
+     pkg_src_list_deinit(&opkg_config->pkg_src_list);
+@@ -830,8 +829,6 @@ int opkg_conf_finalize(void)
      pkg_hash_init();
      hash_table_init("file-hash", &opkg_config->file_hash,
                      OPKG_CONF_DEFAULT_HASH_LEN);
@@ -11,15 +19,7 @@ index c2e1c2f..e13ebc1 100644
      hash_table_init("obs-file-hash", &opkg_config->obs_file_hash,
                      OPKG_CONF_DEFAULT_HASH_LEN / 16);
  
-@@ -873,7 +871,6 @@ int opkg_conf_load(void)
-  err4:
-     pkg_hash_deinit();
-     hash_table_deinit(&opkg_config->file_hash);
--    hash_table_deinit(&opkg_config->dir_hash);
-     hash_table_deinit(&opkg_config->obs_file_hash);
- 
-     r = rmdir(opkg_config->tmp_dir);
-@@ -928,13 +925,11 @@ void opkg_conf_deinit(void)
+@@ -951,7 +948,6 @@ void opkg_conf_deinit(void)
      if (opkg_config->verbosity >= DEBUG) {
          hash_print_stats(&opkg_config->pkg_hash);
          hash_print_stats(&opkg_config->file_hash);
@@ -27,14 +27,8 @@ index c2e1c2f..e13ebc1 100644
          hash_print_stats(&opkg_config->obs_file_hash);
      }
  
-     pkg_hash_deinit();
-     hash_table_deinit(&opkg_config->file_hash);
--    hash_table_deinit(&opkg_config->dir_hash);
-     hash_table_deinit(&opkg_config->obs_file_hash);
- 
-     for (i = 0; options[i].name; i++) {
 diff --git a/libopkg/opkg_conf.h b/libopkg/opkg_conf.h
-index 4d84b09..0f43d4c 100644
+index b12672e..1248d83 100644
 --- a/libopkg/opkg_conf.h
 +++ b/libopkg/opkg_conf.h
 @@ -166,7 +166,6 @@ typedef struct opkg_conf {
@@ -46,10 +40,10 @@ index 4d84b09..0f43d4c 100644
  
  enum opkg_option_type {
 diff --git a/libopkg/opkg_remove.c b/libopkg/opkg_remove.c
-index 889c672..09a7c48 100644
+index 5254388..188043d 100644
 --- a/libopkg/opkg_remove.c
 +++ b/libopkg/opkg_remove.c
-@@ -72,20 +72,7 @@ void remove_data_files_and_list(pkg_t * pkg)
+@@ -73,20 +73,7 @@ void remove_data_files_and_list(pkg_t * pkg)
              continue;
  
          if (file_is_dir(file_name)) {
@@ -71,7 +65,7 @@ index 889c672..09a7c48 100644
              continue;
          } else if (file_is_symlink(file_name)) {
              char *link_target;
-@@ -94,21 +81,7 @@ void remove_data_files_and_list(pkg_t * pkg)
+@@ -95,21 +82,7 @@ void remove_data_files_and_list(pkg_t * pkg)
              link_target = realpath(file_name, NULL);
              if (link_target) {
                  if ((xlstat(link_target, &target_stat) == 0) && S_ISDIR(target_stat.st_mode)) {
@@ -95,10 +89,10 @@ index 889c672..09a7c48 100644
                      continue;
                  }
 diff --git a/libopkg/pkg.c b/libopkg/pkg.c
-index 6b1bd8f..a196714 100644
+index d3b95f7..f581b44 100644
 --- a/libopkg/pkg.c
 +++ b/libopkg/pkg.c
-@@ -1434,16 +1434,6 @@ void pkg_info_preinstall_check(void)
+@@ -1427,16 +1427,6 @@ void pkg_info_preinstall_check(void)
                  iter = niter, niter = file_list_next(installed_files, iter)) {
              file_info_t *installed_file = (file_info_t *)iter->data;
              file_hash_set_file_owner(installed_file->path, pkg);
@@ -116,14 +110,13 @@ index 6b1bd8f..a196714 100644
          pkg_free_installed_files(pkg);
      }
 diff --git a/libopkg/pkg_hash.c b/libopkg/pkg_hash.c
-index 3ca1804..1371bb6 100644
+index c11fa7d..431df6a 100644
 --- a/libopkg/pkg_hash.c
 +++ b/libopkg/pkg_hash.c
-@@ -928,33 +928,3 @@ void file_hash_set_file_owner(const char *file_name, pkg_t * owning_pkg)
-         owning_pkg->state_flag |= SF_FILELIST_CHANGED;
+@@ -929,36 +929,6 @@ void file_hash_set_file_owner(const char *file_name, pkg_t * owning_pkg)
      }
  }
--
+ 
 -int dir_hash_get_ref_count(const char* file_name)
 -{
 -    int* current_count = hash_table_get(&opkg_config->dir_hash, file_name);
@@ -153,13 +146,17 @@ index 3ca1804..1371bb6 100644
 -        free(current_count);
 -    }
 -}
+-
+ void
+ file_hash_set_file_owner_with_old(const char *file_name, pkg_t *owning_pkg, pkg_t *old_owning_pkg)
+ {
 diff --git a/libopkg/pkg_hash.h b/libopkg/pkg_hash.h
-index acac797..2ab9356 100644
+index c5f2c31..f9a267f 100644
 --- a/libopkg/pkg_hash.h
 +++ b/libopkg/pkg_hash.h
-@@ -66,10 +66,6 @@ void file_hash_remove(const char *file_name);
- pkg_t *file_hash_get_file_owner(const char *file_name);
+@@ -67,10 +67,6 @@ pkg_t *file_hash_get_file_owner(const char *file_name);
  void file_hash_set_file_owner(const char *file_name, pkg_t * pkg);
+ void file_hash_set_file_owner_with_old(const char *file_name, pkg_t *owning_pkg, pkg_t *old_owning_pkg);
  
 -int dir_hash_get_ref_count(const char* file_name);
 -void dir_hash_add_ref_count(const char* file_name);
@@ -169,7 +166,7 @@ index acac797..2ab9356 100644
  }
  #endif
 diff --git a/tests/Makefile b/tests/Makefile
-index e68a741..d69d041 100644
+index c92e425..6fedc4e 100644
 --- a/tests/Makefile
 +++ b/tests/Makefile
 @@ -87,8 +87,6 @@ REGRESSION_TESTS := core/01_install.py \

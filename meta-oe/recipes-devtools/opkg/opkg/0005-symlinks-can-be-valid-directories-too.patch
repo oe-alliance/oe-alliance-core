@@ -1,4 +1,4 @@
-From dafa11238728d62b516135e086c6ff88327c6134 Mon Sep 17 00:00:00 2001
+From 0cce45fb6d3452a3c5a8961f82fee870c61c7cb7 Mon Sep 17 00:00:00 2001
 From: arn354 <arn354@email.de>
 Date: Sat, 26 Oct 2019 17:24:25 +0200
 Subject: [PATCH] opkg - update
@@ -7,7 +7,6 @@ Subject: [PATCH] opkg - update
  Relax_checks_for_existing_dirs_to_allow_symlinks_too Revert "opkg_install:
  Only allow identical symlinks if the target is a directory" Revert
  "opkg_install: Allow packages to provide the same symlink if it is identical"
-
 ---
  libopkg/file_list.c          | 10 ++----
  libopkg/file_list.h          |  3 +-
@@ -129,10 +128,10 @@ index 87d3944..f51d02f 100644
  int file_link(const char *src, const char *dest);
  int file_copy(const char *src, const char *dest);
 diff --git a/libopkg/opkg_archive.c b/libopkg/opkg_archive.c
-index 03a4afb..c6dd4b7 100644
+index 23575b1..d934a63 100644
 --- a/libopkg/opkg_archive.c
 +++ b/libopkg/opkg_archive.c
-@@ -344,12 +344,7 @@ static int extract_paths_to_stream(struct archive *a, FILE * stream)
+@@ -345,12 +345,7 @@ static int extract_paths_to_stream(struct archive *a, FILE * stream)
  
          path = archive_entry_pathname(entry);
          entry_stat = archive_entry_stat(entry);
@@ -196,7 +195,7 @@ index 0a33cb5..d120203 100644
                  continue;
              }
 diff --git a/libopkg/pkg.c b/libopkg/pkg.c
-index ca4d039..f581b44 100644
+index 5149d23..d3b95f7 100644
 --- a/libopkg/pkg.c
 +++ b/libopkg/pkg.c
 @@ -1206,22 +1206,17 @@ file_list_t *pkg_get_installed_files(pkg_t * pkg)
@@ -240,7 +239,7 @@ index ca4d039..f581b44 100644
          free(line);
      }
  
-@@ -1455,7 +1447,6 @@ static void pkg_write_filelist_helper(const char *key, void *entry_,
+@@ -1465,7 +1457,6 @@ static void pkg_write_filelist_helper(const char *key, void *entry_,
          char *installed_file_name;
          struct stat file_stat;
          mode_t mode = 0;
@@ -248,7 +247,7 @@ index ca4d039..f581b44 100644
          size_t size;
          int unmatched_offline_root = opkg_config->offline_root
                  && !str_starts_with(key, opkg_config->offline_root);
-@@ -1475,19 +1466,13 @@ static void pkg_write_filelist_helper(const char *key, void *entry_,
+@@ -1485,19 +1476,13 @@ static void pkg_write_filelist_helper(const char *key, void *entry_,
  
          if (xlstat(installed_file_name, &file_stat) == 0) {
              mode = file_stat.st_mode;
@@ -272,10 +271,10 @@ index ca4d039..f581b44 100644
      }
  }
 diff --git a/tests/Makefile b/tests/Makefile
-index d69d041..32f0e3b 100644
+index 8453939..c92e425 100644
 --- a/tests/Makefile
 +++ b/tests/Makefile
-@@ -90,7 +90,6 @@ REGRESSION_TESTS := core/01_install.py \
+@@ -92,7 +92,6 @@ REGRESSION_TESTS := core/01_install.py \
  		    regress/issue10777.py \
  		    regress/issue10781.py \
  		    regress/issue11033.py \
