@@ -1,5 +1,5 @@
 SUMMARY = "WiFi devices for Realtek 8852CU chipsets."
-inherit allarch
+inherit allarch nospdx
 
 require conf/license/license-gplv2.inc
 
