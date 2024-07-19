@@ -36,6 +36,7 @@ export KERNEL_VERSION = "${@oe.utils.read_file('${STAGING_KERNEL_BUILDDIR}/kerne
 do_install[nostamp] = "1"
 
 do_install() {
+    YOCTO=`cd "${COREBASE}" && git describe --match=yocto* | cut -d '-' -f 2`
     if [ "${MACHINE}" = "vusolo4k" -o "${MACHINE}" = "vusolo2" -o "${MACHINE}" = "vusolose" -o "${MACHINE}" = "vuduo2" -o "${MACHINE}" = "vuuno4k" -o "${MACHINE}" = "vuuno4kse" -o "${MACHINE}" = "vuultimo4k" -o "${MACHINE}" = "vuzero4k" -o "${MACHINE}" = "vuduo4k" -o "${MACHINE}" = "vuduo4kse" ]; then
         DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-VUPLUS-BASE}/recipes-drivers/vuplus-dvb-proxy-${MACHINE}.bb | cut -b 12-19`
     elif [ "${BRAND_OEM}" = "vuplus" ]; then
@@ -218,6 +219,7 @@ do_install() {
     printf "vfdsymbol=${HAVE_VFDSYMBOL}\n" >> ${D}${INFOFILE}
     printf "wol=${HAVE_WOL}\n" >> ${D}${INFOFILE}
     printf "wwol=${HAVE_WWOL}\n" >> ${D}${INFOFILE}
+    printf "yocto='${YOCTO}'\n" >> ${D}${INFOFILE}
     printf "yuv=${HAVE_YUV}\n" >> ${D}${INFOFILE}
     printf "checksum=%s\n" $(md5sum "${D}${INFOFILE}" | awk '{print $1}') >> ${D}${INFOFILE}
 }
