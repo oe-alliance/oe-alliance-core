@@ -10,7 +10,7 @@ SRCREV = "${AUTOREV}"
 PV = "git"
 PKGV = "${GITPKGVTAG}"
 
-SRC_URI = '${@bb.utils.contains_any("DISTRO_NAME", "openvix openbh", "git://github.com/oe-alliance/kexec-multiboot.git;protocol=https;branch=devel", "git://github.com/oe-alliance/kexec-multiboot.git;protocol=https;branch=main", d)}'
+SRC_URI = "git://github.com/oe-alliance/kexec-multiboot.git;protocol=https;branch=main"
 S = "${WORKDIR}/git"
 
 do_install() {
@@ -18,7 +18,7 @@ do_install() {
     ${@bb.utils.contains_any("DISTRO_NAME", "openvix openbh", "install -d -m 0755 ${D}/etc/init.d", "", d)}    
     install -m 0755 ${S}/${MACHINE}/kernel_auto.bin ${D}${bindir}/kernel_auto.bin
     install -m 0755 ${S}/${MACHINE}/STARTUP_cpio.bin ${D}${bindir}/STARTUP.cpio.gz
-    ${@bb.utils.contains_any("DISTRO_NAME", "openvix openbh", "install -m 0755 ${S}/kexec-multiboot-recovery.sh ${D}/etc/init.d/kexec-multiboot-recovery.sh", "", d)}     
+    ${@bb.utils.contains_any("DISTRO_NAME", "openvix openbh", "install -m 0755 ${S}/kexec-multiboot-recovery.sh ${D}/etc/init.d/kexec-multiboot-recovery", "", d)}     
 }
 
 do_prepare_recipe_sysroot[noexec] = "1"
