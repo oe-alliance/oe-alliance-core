@@ -1,6 +1,0 @@
-FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
-
-PR .= ".1"
-
-SRCREV = "2c507f8c5aac8b50e35291739ffd40676ab08993"
-
