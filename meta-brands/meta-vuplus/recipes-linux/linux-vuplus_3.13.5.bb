@@ -5,7 +5,7 @@ KV = "3.13.5"
 
 COMPATIBLE_MACHINE = "^(vuduo2|vusolo2|vusolose|vuzero)$"
 
-RPROVIDES:kernel-image = "kernel-${KERNEL_IMAGETYPE}"
+RPROVIDES:${KERNEL_PACKAGE_NAME}-image += "kernel-${KERNEL_IMAGETYPE}"
 
 inherit kernel machine_kernel_pr
 
