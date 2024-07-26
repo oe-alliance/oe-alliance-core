@@ -19,6 +19,9 @@ do_install() {
     install -m 0755 ${S}/${MACHINE}/kernel_auto.bin ${D}${bindir}/kernel_auto.bin
     install -m 0755 ${S}/${MACHINE}/STARTUP_cpio.bin ${D}${bindir}/STARTUP.cpio.gz
     ${@bb.utils.contains_any("DISTRO_NAME", "openvix openbh", "install -m 0755 ${S}/kexec-multiboot-recovery.sh ${D}/etc/init.d/kexec-multiboot-recovery", "", d)}     
+
+    #Other distro might want, openvix and openbh prefers to start "/etc/init.d/kexec-multiboot-recovery start" from inside enigma2
+    #update-rc.d -r ${D} kexec-multiboot-recovery start 99 S .
 }
 
 do_prepare_recipe_sysroot[noexec] = "1"
