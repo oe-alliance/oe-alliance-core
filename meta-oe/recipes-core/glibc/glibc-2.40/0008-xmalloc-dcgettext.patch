@@ -1,0 +1,12 @@
+--- a/locale/programs/xmalloc.c
++++ b/locale/programs/xmalloc.c
+@@ -39,9 +39,7 @@ void free ();
+ #include <libintl.h>
+ #include "error.h"
+ 
+-#ifndef _
+ # define _(str) gettext (str)
+-#endif
+ 
+ #ifndef EXIT_FAILURE
+ #define EXIT_FAILURE 4

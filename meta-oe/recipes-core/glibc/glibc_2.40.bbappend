@@ -1,4 +1,4 @@
-FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}-2.39:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}-2.40:"
 
 SRC_URI:remove = "file://0001-CVE-2021-38604.patch file://0002-CVE-2021-38604.patch"
 
@@ -6,6 +6,7 @@ SRC_URI += " file://0001-ptrace-protect-ptrace_peeksiginfo_args-from-redefint.pa
              file://0002-fix-build-for-old-libcheader.patch \
              file://0004-sunrpc-use-snprintf-instead-of-an-implied-length-gua.patch \
              file://0005-PATCH-Revert-Linux-Use-32-bit-vDSO-for-clock_gettime.patch \
+             file://0008-xmalloc-dcgettext.patch \
 "
 
 SRC_URI:append:arm = " file://tls-libwidevinecdm.so-since-4.10.2252.0-has-TLS-with.patch \

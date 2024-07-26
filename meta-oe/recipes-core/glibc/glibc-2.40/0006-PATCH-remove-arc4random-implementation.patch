@@ -5,7 +5,7 @@ Subject: [PATCH] remove arc4random implementation
 
 ---
  NEWS                                          |  12 -
- benchtests/Makefile                           |   5 +-
+ benchtests/Makefile                           |   2 -
  benchtests/bench-hash-funcs-kernel.h          |   1 -
  benchtests/bench-hash-funcs.c                 |   2 +
  benchtests/bench-util.h                       |   7 -
@@ -30,7 +30,7 @@ Subject: [PATCH] remove arc4random implementation
  .../powerpc/powerpc64/be/multiarch/Makefile   |   4 +
  .../powerpc64/be/multiarch/chacha20-ppc.c     |   1 +
  .../powerpc64/be/multiarch/chacha20_arch.h    |  42 ++
- sysdeps/powerpc/powerpc64/power8/Makefile     |   5 +
+ sysdeps/powerpc/powerpc64/power8/Makefile     |   8 +
  .../powerpc/powerpc64/power8/chacha20-ppc.c   | 256 ++++++++
  .../powerpc/powerpc64/power8/chacha20_arch.h  |  37 ++
  sysdeps/s390/s390-64/Makefile                 |   6 +
@@ -75,7 +75,7 @@ Subject: [PATCH] remove arc4random implementation
  sysdeps/x86_64/chacha20-amd64-avx2.S          | 328 ++++++++++
  sysdeps/x86_64/chacha20-amd64-sse2.S          | 311 ++++++++++
  sysdeps/x86_64/chacha20_arch.h                |  55 ++
- 71 files changed, 2265 insertions(+), 221 deletions(-)
+ 71 files changed, 2267 insertions(+), 219 deletions(-)
  create mode 100644 stdlib/chacha20.c
  create mode 100644 sysdeps/aarch64/chacha20-aarch64.S
  create mode 100644 sysdeps/aarch64/chacha20_arch.h
@@ -83,6 +83,7 @@ Subject: [PATCH] remove arc4random implementation
  create mode 100644 sysdeps/powerpc/powerpc64/be/multiarch/Makefile
  create mode 100644 sysdeps/powerpc/powerpc64/be/multiarch/chacha20-ppc.c
  create mode 100644 sysdeps/powerpc/powerpc64/be/multiarch/chacha20_arch.h
+ create mode 100644 sysdeps/powerpc/powerpc64/power8/Makefile
  create mode 100644 sysdeps/powerpc/powerpc64/power8/chacha20-ppc.c
  create mode 100644 sysdeps/powerpc/powerpc64/power8/chacha20_arch.h
  create mode 100644 sysdeps/s390/s390-64/chacha20-s390x.S
@@ -92,10 +93,10 @@ Subject: [PATCH] remove arc4random implementation
  create mode 100644 sysdeps/x86_64/chacha20_arch.h
 
 diff --git a/NEWS b/NEWS
-index 1b89f9c010..36bcd4e6fc 100644
+index 31281ac408..780d8dc83b 100644
 --- a/NEWS
 +++ b/NEWS
-@@ -530,18 +530,6 @@ Major new features:
+@@ -767,18 +767,6 @@ Major new features:
    _GNU_SOURCE macro is defined and the C++20 __cpp_char8_t feature test macro
    is not defined (if __cpp_char8_t is defined, then char8_t is a builtin type).
  
@@ -115,20 +116,17 @@ index 1b89f9c010..36bcd4e6fc 100644
  
  * Support for prelink will be removed in the next release; this includes
 diff --git a/benchtests/Makefile b/benchtests/Makefile
-index 4fb9bae023..190d508c3a 100644
+index 382fb7bae1..b03b52123e 100644
 --- a/benchtests/Makefile
 +++ b/benchtests/Makefile
-@@ -244,10 +244,7 @@ hash-benchset := \
-   nss-hash \
+@@ -251,8 +251,6 @@ hash-benchset := \
    # hash-benchset
  
--stdlib-benchset := \
+ stdlib-benchset := \
 -  arc4random \
--  strtod \
--  # stdlib-benchset
-+stdlib-benchset := strtod
- 
- stdio-common-benchset := sprintf
+-  random-lock \
+   strtod \
+   # stdlib-benchset
  
 diff --git a/benchtests/bench-hash-funcs-kernel.h b/benchtests/bench-hash-funcs-kernel.h
 index 7eaa3665b6..72965e4ad2 100644
@@ -174,7 +172,7 @@ index 91d9089237..e7a5707206 100644
  #ifndef START_ITER
  # define START_ITER (100000000)
 diff --git a/include/stdlib.h b/include/stdlib.h
-index 580da9be15..32040816d1 100644
+index 0cab3f5b56..dd83be3721 100644
 --- a/include/stdlib.h
 +++ b/include/stdlib.h
 @@ -180,15 +180,6 @@ libc_hidden_proto (__ptsname_r)
@@ -228,10 +226,10 @@ index 55ba4e7b83..48bdbb27cf 100644
  
    /* This should come last because it shuts down malloc for this
 diff --git a/manual/math.texi b/manual/math.texi
-index 2f6ee253b9..087f4146bc 100644
+index e4f9122609..6ee966eab1 100644
 --- a/manual/math.texi
 +++ b/manual/math.texi
-@@ -1447,7 +1447,6 @@ systems.
+@@ -1524,7 +1524,6 @@ systems.
  * ISO Random::                  @code{rand} and friends.
  * BSD Random::                  @code{random} and friends.
  * SVID Random::                 @code{drand48} and friends.
@@ -239,7 +237,7 @@ index 2f6ee253b9..087f4146bc 100644
  @end menu
  
  @node ISO Random
-@@ -1986,44 +1985,6 @@ This function is a GNU extension and should not be used in portable
+@@ -2063,44 +2062,6 @@ This function is a GNU extension and should not be used in portable
  programs.
  @end deftypefun
  
@@ -306,7 +304,7 @@ index f35a8369bd..b461285b57 100644
    /* Clear the DTV.  */
    dtv_t *dtv = GET_DTV (TLS_TPADJ (result));
 diff --git a/stdlib/Makefile b/stdlib/Makefile
-index 9898cc5d8a..216ddedcba 100644
+index 8b0ac63ddb..1ab1caf2f6 100644
 --- a/stdlib/Makefile
 +++ b/stdlib/Makefile
 @@ -55,8 +55,6 @@ routines := \
@@ -551,7 +549,7 @@ index 0000000000..2745a81315
 +/* Get the architecture optimized version.  */
 +#include <chacha20_arch.h>
 diff --git a/stdlib/stdlib.h b/stdlib/stdlib.h
-index 414c49d731..7cb7669a16 100644
+index 901926e893..07b22ccfce 100644
 --- a/stdlib/stdlib.h
 +++ b/stdlib/stdlib.h
 @@ -652,19 +652,6 @@ extern int seed48_r (unsigned short int __seed16v[3],
@@ -1125,13 +1123,14 @@ index 0000000000..08494dc045
 +    chacha20_crypt_generic (state, dst, src, bytes);
 +}
 diff --git a/sysdeps/powerpc/powerpc64/power8/Makefile b/sysdeps/powerpc/powerpc64/power8/Makefile
-index 71a59529f3..abb0aa3f11 100644
---- a/sysdeps/powerpc/powerpc64/power8/Makefile
+new file mode 100644
+index 0000000000..abb0aa3f11
+--- /dev/null
 +++ b/sysdeps/powerpc/powerpc64/power8/Makefile
-@@ -1,3 +1,8 @@
- ifeq ($(subdir),string)
- sysdep_routines += strcasestr-ppc64
- endif
+@@ -0,0 +1,8 @@
++ifeq ($(subdir),string)
++sysdep_routines += strcasestr-ppc64
++endif
 +
 +ifeq ($(subdir),stdlib)
 +sysdep_routines += chacha20-ppc
@@ -2337,7 +2336,7 @@ index 2a7585b73f..13d6eae420 100644
 +
  #endif /* NOT_CANCEL_H  */
 diff --git a/sysdeps/unix/sysv/linux/or1k/libc.abilist b/sysdeps/unix/sysv/linux/or1k/libc.abilist
-index c40c843aaf..9efc6ead43 100644
+index 959e59e7e7..a217972edf 100644
 --- a/sysdeps/unix/sysv/linux/or1k/libc.abilist
 +++ b/sysdeps/unix/sysv/linux/or1k/libc.abilist
 @@ -2123,9 +2123,6 @@ GLIBC_2.35 wprintf F
@@ -2407,7 +2406,7 @@ index 8c9efc5a16..0582ad986e 100644
  GLIBC_2.36 fsconfig F
  GLIBC_2.36 fsmount F
 diff --git a/sysdeps/unix/sysv/linux/riscv/rv32/libc.abilist b/sysdeps/unix/sysv/linux/riscv/rv32/libc.abilist
-index f90c94bc35..df61233be0 100644
+index 6397a9cb91..bd4af7c9fb 100644
 --- a/sysdeps/unix/sysv/linux/riscv/rv32/libc.abilist
 +++ b/sysdeps/unix/sysv/linux/riscv/rv32/libc.abilist
 @@ -2379,9 +2379,6 @@ GLIBC_2.35 __memcmpeq F
@@ -2421,7 +2420,7 @@ index f90c94bc35..df61233be0 100644
  GLIBC_2.36 fsconfig F
  GLIBC_2.36 fsmount F
 diff --git a/sysdeps/unix/sysv/linux/riscv/rv64/libc.abilist b/sysdeps/unix/sysv/linux/riscv/rv64/libc.abilist
-index e04ff93bd2..f87ef93139 100644
+index 71bbf94f66..619dc2f113 100644
 --- a/sysdeps/unix/sysv/linux/riscv/rv64/libc.abilist
 +++ b/sysdeps/unix/sysv/linux/riscv/rv64/libc.abilist
 @@ -2579,9 +2579,6 @@ GLIBC_2.35 __memcmpeq F
@@ -2583,7 +2582,7 @@ index 4ab3681914..e1764996d6 100644
  GLIBC_2.36 fsconfig F
  GLIBC_2.36 fsmount F
 diff --git a/sysdeps/x86_64/Makefile b/sysdeps/x86_64/Makefile
-index 0ede447405..6c67009775 100644
+index ce949dba27..40cf1daaee 100644
 --- a/sysdeps/x86_64/Makefile
 +++ b/sysdeps/x86_64/Makefile
 @@ -13,6 +13,13 @@ ifeq ($(subdir),csu)
