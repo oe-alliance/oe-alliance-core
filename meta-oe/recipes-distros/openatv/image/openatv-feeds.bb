@@ -11,10 +11,6 @@ PR = "r56"
 
 inherit packagegroup
 
-#not py3 ready
-#    enigma2-plugin-skins-dmcconcinnityhd 
-
-
 DEPENDS += "oe-alliance-feeds enigma2-3rdparty-plugins"
 
 RRECOMMENDS:${PN} = "\
@@ -43,6 +39,7 @@ RRECOMMENDS:${PN} = "\
     enigma2-plugin-systemplugins-autobouquetsmaker \
     enigma2-plugin-extensions-openatvreader \
     enigma2-plugin-extensions-openatvstatus \
+    enigma2-plugin-extensions-moviearchiver \
     enigma2-plugin-skins-ax-blue-fhd-4atv \
     enigma2-plugin-skins-blue-line-oe-4atv \
     enigma2-plugin-skins-blueaccents-fhd-4atv \
