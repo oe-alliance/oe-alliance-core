@@ -401,6 +401,8 @@ GB X3 H                 MACHINE:  gbx3h
 
 GB Quad 4K              MACHINE:  gbquad4k
 
+GB Quad 4K PRO          MACHINE:  gbquad4kpro
+
 GB UE 4K                MACHINE:  gbue4k
 
 GB TRIO 4K              MACHINE:  gbtrio4k

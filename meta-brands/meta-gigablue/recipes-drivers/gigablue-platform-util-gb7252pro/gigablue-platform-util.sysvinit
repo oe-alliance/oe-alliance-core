@@ -1,0 +1,64 @@
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides:             gbplattform
+# Required-Start:       $volatile
+# Required-Stop:      $volatile
+# Default-Start:        S
+# Default-Stop:        0 6
+# Short-Description:  Start nxServer
+### END INIT INFO
+
+if [ -e /sys/class/net/sys0 ]; then
+  ifconfig sys0 up
+fi
+
+if [ -d /home/root/platform ]; then
+  echo -n "Updating gigablue-platform-util..."
+  mkdir -p /lib/modules/4.1.20-1.9/extra/
+  mkdir -p /usr/share/platform/
+  chmod +x /home/root/platform/*
+  cp -rf /home/root/platform/* /usr/share/platform/
+  cp -rf /usr/share/platform/*.ko /lib/modules/4.1.20-1.9/extra/
+  cp -rf /usr/share/platform/*.so /usr/lib/
+  ln -sf /usr/share/platform/config /usr/bin/config
+  ln -sf /usr/share/platform/dvb_init /usr/bin/dvb_init
+  ln -sf /usr/share/platform/nxserver /usr/bin/nxserver
+  rm -rf /home/root/platform/
+  sync
+  echo -n "gigablue-platform-util updated!"
+fi
+
+case "$1" in
+  start)
+    # first boot?
+    [ -f /etc/dropbear/dropbear_rsa_host_key ]
+    echo -n "Starting gigablue-platform-util..."
+
+    DRV_PATH=/lib/modules/4.1.20-1.9/extra
+    export B_REFSW_BOXMODE=5
+
+    if [ ! -e /tmp/nxserver_ipc ]; then
+      insmod $DRV_PATH/nexus.ko
+      /usr/bin/nxserver &
+      /usr/bin/dvb_init $DRV_PATH/dvb.ko &
+    fi
+
+    while [ ! -c /dev/fb0 ]; do
+      usleep 1000
+    done
+
+    echo -n "gigablue-platform-util is started"
+    ;;
+  stop)
+    ;;
+  restart)
+    $0 stop
+    sleep 1
+    $1 start
+    ;;
+  *)
+    echo "Usage: /etc/init.d/gigablue-platform-util {start|stop|restart}"
+    exit 1
+esac
+
+exit 0

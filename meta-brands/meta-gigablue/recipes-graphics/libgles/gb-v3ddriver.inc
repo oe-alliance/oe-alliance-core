@@ -10,7 +10,7 @@ DEPENDS = "gb-v3ddriver-headers patchelf-native"
 PV = "${SRCDATE}"
 PR = "r2"
 
-SRC_URI = "https://source.mynonpublic.com/gigablue/v3ddriver/${MACHINE}-v3ddriver-${SRCDATE}.zip"
+SRC_URI = "https://source.mynonpublic.com/gigablue/v3ddriver/${MACHINE_DRIVER}-v3ddriver-${SRCDATE}.zip"
 
 S = "${WORKDIR}"
 

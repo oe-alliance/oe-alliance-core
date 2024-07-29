@@ -92,7 +92,7 @@ RDEPENDS:${PN} = " \
     edid-decode \
     extundelete \
     exfatprogs \
-    ${@bb.utils.contains_any("MACHINEBUILD", "gbquad4k gbue4k galaxy4k lunix34k", "enigma2-plugin-extensions-forcefbclnbpower" , "", d)} \
+    ${@bb.utils.contains_any("MACHINEBUILD", "gbquad4k gbquad4kpro gbue4k galaxy4k lunix34k", "enigma2-plugin-extensions-forcefbclnbpower" , "", d)} \
     f2fs-tools \
     fio \
     fuse-exfat \
