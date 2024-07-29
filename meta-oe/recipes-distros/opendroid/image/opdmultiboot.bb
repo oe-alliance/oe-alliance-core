@@ -7,12 +7,12 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 inherit gitpkgv
 
 SRCREV = "${AUTOREV}"
-PV = "1.0+git"
-PKGV = "1.0+git${GITPKGV}"
-PR = "r3"
+PV = "1.4+git"
+PKGV = "1.4+git${GITPKGV}"
+PR = "r2"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-DEPENDS = "freetype"
+DEPENDS = "freetype json-c"
 
 SRC_URI = "git://github.com/formiano/opdmultiboot.git;protocol=https;branch=master"
 
@@ -29,7 +29,8 @@ EXTRA_OEMAKE = " \
     ${@bb.utils.contains("IMAGE_FSTYPES", "jffs2", "-DOPD_FLASH_JFFS2" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "dreambox", "-DOPD_DREAMBOX", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "mmc", "-DOPD_MMCBLK", "", d)} \
-    -DOPD_KERNEL_MTD=\"/dev/${MTD_KERNEL}\"' \
+    -DOPD_KERNEL_MTD=\"/dev/${MTD_KERNEL}\" \
+    -DBOXTYPE=\"${MACHINEBUILD}\"' \
     'LDFLAGS= -lfreetype ${LDFLAGS}' \
     "
 
@@ -63,4 +64,4 @@ pkg_postinst_ontarget:${PN}:openbh() {
 pkg_postrm:${PN}() {
 rm /sbin/init
 ln -s /sbin/init.sysvinit /sbin/init
-} 
+}
