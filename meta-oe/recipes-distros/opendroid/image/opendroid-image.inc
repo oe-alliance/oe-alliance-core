@@ -6,20 +6,21 @@ MAINTAINER = "OpenDroid Team"
 
 require conf/license/license-gplv2.inc
 
+REPRODUCIBLE_TIMESTAMP_ROOTFS = "${@int(time.time()-10000)}"
+
 PV = "${IMAGE_VERSION}"
 PR = "${BUILD_VERSION}"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-image_combine_spdx() {
-}
-
 WORKDIR = "${TMPDIR}/work/${MULTIMACH_TARGET_SYS}/${PN}/${EXTENDPE}${PV}"
 
 do_rootfs[deptask] = "do_rm_work"
-REPRODUCIBLE_TIMESTAMP_ROOTFS = "${@time.strftime('%s')}"
 
+image_combine_spdx() {
+}
+
+SSTATE_ALLOW_OVERLAP_FILES += "${DEPLOY_DIR_IMAGE}"
 IMAGE_INSTALL = "opendroid-base \
-    ${@bb.utils.contains("MACHINE_FEATURES", "dvbc-only", "", "enigma2-plugin-settings-defaultsat", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", \
     " \
     packagegroup-base-smbfs-client \

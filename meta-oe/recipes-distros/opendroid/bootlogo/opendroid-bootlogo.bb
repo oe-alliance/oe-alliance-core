@@ -2,16 +2,17 @@ SUMMARY = "openDroid bootlogo"
 SECTION = "base"
 PRIORITY = "required"
 MAINTAINER = "openDroid Team"
-PACKAGE_ARCH = "${MACHINE_ARCH}"
+PACKAGE_ARCH = "${MACHINEBUILD}"
 
 require conf/license/license-gplv2.inc
 
 RDEPENDS:${PN} += "showiframe"
 
-PV = "7.3"
-PR = "r24"
+PV = "${IMAGE_VERSION}"
+PR = "r1.0"
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 INITSCRIPT_NAME = "bootlogo"
 INITSCRIPT_PARAMS = "start 06 S ."
@@ -102,30 +103,30 @@ do_install:append:vuduo2() {
 
 do_install:append:7100s() {
     install -d ${D}/usr/share
-    install -m 0644 ${WORKDIR}/7100s/lcdwaitkey220.bin ${D}/usr/share/lcdwaitkey.bin
-    install -m 0644 ${WORKDIR}/7100s/lcdwarning220.bin ${D}/usr/share/lcdwarning.bin
-    install -m 0644 ${WORKDIR}/7100s/lcdcomplete220.bin ${D}/usr/share/lcdcomplete.bin
+    install -m 0644 ${S}/7100s/lcdwaitkey220.bin ${D}/usr/share/lcdwaitkey.bin
+    install -m 0644 ${S}/7100s/lcdwarning220.bin ${D}/usr/share/lcdwarning.bin
+    install -m 0644 ${S}/7100s/lcdcomplete220.bin ${D}/usr/share/lcdcomplete.bin
 }
 
 do_install:append:7210s() {
     install -d ${D}/usr/share
-    install -m 0644 ${WORKDIR}/7100s/lcdwaitkey220.bin ${D}/usr/share/lcdwaitkey.bin
-    install -m 0644 ${WORKDIR}/7100s/lcdwarning220.bin ${D}/usr/share/lcdwarning.bin
-    install -m 0644 ${WORKDIR}/7100s/lcdcomplete220.bin ${D}/usr/share/lcdcomplete.bin
+    install -m 0644 ${S}/7100s/lcdwaitkey220.bin ${D}/usr/share/lcdwaitkey.bin
+    install -m 0644 ${S}/7100s/lcdwarning220.bin ${D}/usr/share/lcdwarning.bin
+    install -m 0644 ${S}/7100s/lcdcomplete220.bin ${D}/usr/share/lcdcomplete.bin
 }
 
 do_install:append:7105s() {
     install -d ${D}/usr/share
-    install -m 0644 ${WORKDIR}/7100s/lcdwaitkey220.bin ${D}/usr/share/lcdwaitkey.bin
-    install -m 0644 ${WORKDIR}/7100s/lcdwarning220.bin ${D}/usr/share/lcdwarning.bin
-    install -m 0644 ${WORKDIR}/7100s/lcdcomplete220.bin ${D}/usr/share/lcdcomplete.bin
+    install -m 0644 ${S}/7100s/lcdwaitkey220.bin ${D}/usr/share/lcdwaitkey.bin
+    install -m 0644 ${S}/7100s/lcdwarning220.bin ${D}/usr/share/lcdwarning.bin
+    install -m 0644 ${S}/7100s/lcdcomplete220.bin ${D}/usr/share/lcdcomplete.bin
 }
 
 do_install:append:7215s() {
     install -d ${D}/usr/share
-    install -m 0644 ${WORKDIR}/7100s/lcdwaitkey220.bin ${D}/usr/share/lcdwaitkey.bin
-    install -m 0644 ${WORKDIR}/7100s/lcdwarning220.bin ${D}/usr/share/lcdwarning.bin
-    install -m 0644 ${WORKDIR}/7100s/lcdcomplete220.bin ${D}/usr/share/lcdcomplete.bin
+    install -m 0644 ${S}/7100s/lcdwaitkey220.bin ${D}/usr/share/lcdwaitkey.bin
+    install -m 0644 ${S}/7100s/lcdwarning220.bin ${D}/usr/share/lcdwarning.bin
+    install -m 0644 ${S}/7100s/lcdcomplete220.bin ${D}/usr/share/lcdcomplete.bin
 }
 
 inherit deploy

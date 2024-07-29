@@ -6,19 +6,23 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda
 ALLOW_EMPTY:${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-PV = "7.1"
-PR = "r13"
+PV = "7.5"
+PR = "r14"
 
 inherit packagegroup
 
 RRECOMMENDS:${PN} = " \
     opendroid-version-info \
-    enigma-kernel-module \
+    socketdaemon \
+    enigma-info \
     enigma2-skindefault \
     enigma2-plugin-skins-opd-steampunk \
     enigma2-plugin-extensions-opdboot \
     enigma2-plugin-extensions-vhannibal-autosettings \
+    enigma2-plugin-extensions-imdb \
+    enigma2-plugin-drivers-usbserial \
     enigma2-plugin-extensions-autotimer \
+    enigma2-plugin-extensions-openwebif-webtv \
     enigma2-plugin-extensions-epgsearch \
     enigma2-plugin-extensions-graphmultiepg \
     enigma2-plugin-extensions-epgimport \
@@ -32,10 +36,7 @@ RRECOMMENDS:${PN} = " \
     enigma2-plugin-systemplugins-hotplug \
     enigma2-plugin-extensions-mediaplayer \
     ${@bb.utils.contains("MACHINE_FEATURES", "videoenhancement", "", "enigma2-plugin-systemplugins-videoenhancement", d)} \
-    ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", "enigma2-plugin-extensions-openwebif-terminal", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", "enigma2-plugin-extensions-enhancedmoviecenter", d)} \
-    ${@bb.utils.contains("MACHINE_FEATURES", "dreamboxv1", "enigma2-plugin-extensions-dflash mtd-utils-jffs2", "", d)} \
-    ${@bb.utils.contains("MACHINE_FEATURES", "dreamboxv2", "enigma2-plugin-extensions-dbackup e2fsprogs-badblocks", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "boxmodel", "boxmodel", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "uianimation", "enigma2-plugin-systemplugins-animationsetup" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "osdanimation", "enigma2-plugin-systemplugins-animationsetup" , "", d)} \

@@ -5,23 +5,27 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda
 
 ALLOW_EMPTY:${PN} = "1"
 
-PV = "7.1"
-PR = "r9"
+PV = "7.4"
+PR = "r10"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 inherit packagegroup
 
 RDEPENDS:${PN} = "\
+    enigma-info \
     autofs \
     ca-certificates \
+    ofgwrite \
+    openvpn \
     oe-alliance-base \
     opendroid-enigma2 \
     opdmultiboot \
     opendroid-bootlogo \
     opdboot-files \
     opendroid-spinner \
-    ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", "ntfs-3g ", d)} \
+    packagegroup-base-smbfs-client \
+    openssh-sftp-server \
     hddtemp \
     dosfstools \
     ${PYTHON_PN}-pillow \
@@ -33,11 +37,17 @@ RDEPENDS:${PN} = "\
     ${PYTHON_PN}-beautifulsoup4 \
     rtmpdump \
     unrar \
+    ${@bb.utils.contains("TUNE_FEATURES", "armv", "glibc-compat", "", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", \
+    " \
+    exteplayer3 \
+    ffmpeg \
+    gstplayer \
+    ntfs-3g \
+    packagegroup-base-nfs \
+    packagegroup-base-smbfs-server \
     zip \
     tar \
     curl \
-    packagegroup-base-smbfs-client \
-    ${@bb.utils.contains("MACHINE_FEATURES", "dreamboxv1", "", "ofgwrite", d)} \
-    ${@bb.utils.contains("TUNE_FEATURES", "armv", "glibc-compat", "", d)} \
-    wireless-tools \
+    ", d)} \
     "
