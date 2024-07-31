@@ -31,6 +31,7 @@ RRECOMMENDS:${PN} = "\
     enigma2-plugin-skins-teambluehd \
     enigma2-plugin-skins-pli-hd \
     enigma2-plugin-systemplugins-autobouquetsmaker \
+    enigma2-plugin-systemplugins-terrestrialscan \
     enigma2-skins \
     libbluray \
     libudfread \
