@@ -198,6 +198,9 @@ SUMMARY:enigma2-plugin-extensions-ytdlpwrapper = "Enables support for YT-DLP url
 RDEPENDS:enigma2-plugin-extensions-ytdlpwrapper = "${PYTHON_PN}-yt-dlp"
 RDEPENDS:enigma2-plugin-extensions-filecommander = "${PYTHON_PN}-puremagic"
 
+RREPLACES:enigma2-plugin-systemplugins-lcnscanner:openatv = "enigma2-plugin-systemplugins-terrestrialscan"
+RCONFLICTS:enigma2-plugin-systemplugins-lcnscanner:openatv = "enigma2-plugin-systemplugins-terrestrialscan"
+
 inherit autotools-brokensep gitpkgv pkgconfig ${PYTHON_PN}native python3targetconfig upx-compress
 
 PV = "${IMAGE_VERSION}+git"

@@ -23,6 +23,7 @@ RRECOMMENDS:${PN} = "\
     enigma2-plugin-skins-simple-gray \
     enigma2-plugin-systemplugins-crossepg \
     enigma2-plugin-systemplugins-remotecontrolselection \
+    enigma2-plugin-systemplugins-terrestrialscan \
     oe-alliance-skins \
     openvix-bootlogos-meta \
     openvix-softcams-meta \
