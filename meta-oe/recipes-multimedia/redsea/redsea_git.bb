@@ -8,7 +8,7 @@ DEPENDS = "nlohmann-json liquid-dsp virtual/libiconv libsndfile1"
 
 inherit gittag
 
-SRCREV = "${AUTOREV}"
+SRCREV = "d1d112a3a9e3c2d033500cf1662b7dea5df18244"
 PV = "git${SRCPV}"
 PKGV = "${GITPKGVTAG}"
 
