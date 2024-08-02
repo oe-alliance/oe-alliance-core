@@ -12,7 +12,8 @@ SRC_URI += " \
 "
 
 LICENSE="GPL-3.0-only"
-LIC_FILES_CHKSUM = "file://../NCAM-LICENSE;md5=d32239bcb673463ab874e80d47fae504"
+
+LIC_FILES_CHKSUM = "file://${UNPACKDIR}/NCAM-LICENSE;md5=d32239bcb673463ab874e80d47fae504"
 
 CONFFILES:${PN} ?= "/etc/tuxbox/config/${CAMNAME}"
 
@@ -41,7 +42,7 @@ EXTRA_OECMAKE += "\
 "
 
 do_configure:prepend () {
-	cp ${S}/../init.ncam ${S}/init.${CAMNAME}
+	cp ${UNPACKDIR}/init.ncam ${S}/init.${CAMNAME}
 }
 
 do_install () {
@@ -49,7 +50,7 @@ do_install () {
 	install -d ${D}/usr/softcams
 	install -m 0755 ${WORKDIR}/build/ncam ${D}/usr/softcams/${CAMNAME}
 	install -d ${D}/${sysconfdir}/tuxbox/config/${CAMNAME}
-	[[ -e ${S}/../${CAMNAME} ]] && install 644 ${S}/../${CAMNAME}/* ${D}/${sysconfdir}/tuxbox/config/${CAMNAME} 2>/dev/null || true
+	[[ -e ${UNPACKDIR}/${CAMNAME} ]] && install 644 ${UNPACKDIR}/${CAMNAME}/* ${D}/${sysconfdir}/tuxbox/config/${CAMNAME} 2>/dev/null || true	
 	[[ -e ${D}/${sysconfdir}/tuxbox/config/${CAMNAME}/Sample.configs ]] && rm ${D}/${sysconfdir}/tuxbox/config/${CAMNAME}/Sample.configs 2>/dev/null || true
 }
 
