@@ -21,6 +21,9 @@ CONFFILES:${PN} ?= "/etc/CCcam.cfg"
 
 PACKAGE_ARCH = "${TUNE_PKGARCH}"
 
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
+
 do_install() {
     install -d ${D}/${bindir}
     install -d ${D}/usr/softcams

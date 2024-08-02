@@ -12,7 +12,7 @@ SRC_URI += " \
 "
 
 LICENSE="GPL-3.0-only"
-LIC_FILES_CHKSUM = "file://../OSCAM-LICENSE;md5=d32239bcb673463ab874e80d47fae504"
+LIC_FILES_CHKSUM = "file://${UNPACKDIR}/OSCAM-LICENSE;md5=d32239bcb673463ab874e80d47fae504"
 
 CONFFILES:${PN} ?= "/etc/tuxbox/config/${CAMNAME}"
 
@@ -40,7 +40,7 @@ EXTRA_OECMAKE += "\
 "
 
 do_configure:prepend () {
-	cp ${S}/../init.oscam-generic ${S}/init.${CAMNAME}
+	cp ${UNPACKDIR}/init.oscam-generic ${S}/init.${CAMNAME}
 	perl -i -pe 's:DEFAULT_HTTP_PORT[ \t]*?8888:DEFAULT_HTTP_PORT 83:g' ${S}/oscam-config-global.c
 }
 
@@ -49,10 +49,6 @@ do_install () {
 	install -d ${D}/usr/softcams
 	install -m 0755 ${WORKDIR}/build/oscam ${D}/usr/softcams/${CAMNAME}
 	install -d ${D}/${sysconfdir}/tuxbox/config/${CAMNAME}
-	[[ -e ${S}/../${CAMNAME} ]] && install 644 ${S}/../${CAMNAME}/* ${D}/${sysconfdir}/tuxbox/config/${CAMNAME} 2>/dev/null || true
+	[[ -e ${UNPACKDIR}/${CAMNAME} ]] && install 644 ${UNPACKDIR}/${CAMNAME}/* ${D}/${sysconfdir}/tuxbox/config/${CAMNAME} 2>/dev/null || true
 	[[ -e ${D}/${sysconfdir}/tuxbox/config/${CAMNAME}/Sample.configs ]] && rm ${D}/${sysconfdir}/tuxbox/config/${CAMNAME}/Sample.configs 2>/dev/null || true
-}
-
-do_rmwork () {
-	:
 }
