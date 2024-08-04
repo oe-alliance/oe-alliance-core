@@ -9,7 +9,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r12"
+PR = "r13"
 
 inherit packagegroup
 
@@ -35,4 +35,5 @@ RRECOMMENDS:${PN} = "\
     enigma2-plugin-systemplugins-icetv \
     enigma2-plugin-systemplugins-eitconfig \
     enigma2-plugin-systemplugins-m3uiptv \
+    enigma2-plugin-extensions-oaweather \
     "
