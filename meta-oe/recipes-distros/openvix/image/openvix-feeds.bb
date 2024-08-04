@@ -33,4 +33,5 @@ RRECOMMENDS:${PN} = "\
     enigma2-plugin-extensions-piconsmissing \
     enigma2-plugin-systemplugins-eitconfig \
     enigma2-plugin-systemplugins-m3uiptv \
+    enigma2-plugin-extensions-oaweather \
     "
