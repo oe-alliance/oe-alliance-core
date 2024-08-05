@@ -25,7 +25,7 @@ IMAGE_CMD:jffs2nfi = " \
 	cd ${DEPLOY_DIR_IMAGE}; \
 	rm -Rf ${IMAGE_NAME}_web.zip; \
 	echo ${DISTRO_NAME}-${DISTRO_VERSION}.${BUILD_VERSION} > ${DEPLOY_DIR_IMAGE}/imageversion; \
-	echo "Image for WebBrower Update" >> ${DEPLOY_DIR_IMAGE}/imageversion; \
+	echo "Image for WebBrowser Update" >> ${DEPLOY_DIR_IMAGE}/imageversion; \
 	zip ${IMAGE_NAME}_web.zip ${IMAGE_NAME}.nfi imageversion; \
 	rm -Rf ${IMAGE_NAME}.nfi; \
 	rm -Rf ${IMAGE_NAME}.boot.jffs2; \
@@ -79,7 +79,7 @@ IMAGE_CMD:ubinfi = " \
 	cd ${DEPLOY_DIR_IMAGE}; \
 	rm -Rf ${IMAGE_NAME}.zip; \
 	echo ${DISTRO_NAME}-${DISTRO_VERSION}.${BUILD_VERSION} > ${DEPLOY_DIR_IMAGE}/imageversion; \
-	echo "Image for WebBrower Update" >> ${DEPLOY_DIR_IMAGE}/imageversion; \
+	echo "Image for WebBrowser Update" >> ${DEPLOY_DIR_IMAGE}/imageversion; \
 	zip ${IMAGE_NAME}_web.zip ${IMAGE_NAME}.nfi imageversion; \
 	mkdir -p ${DEPLOY_DIR_IMAGE}/${MACHINE}/${IMAGEDIR}; \
 	cp ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.ubi ${DEPLOY_DIR_IMAGE}/${MACHINE}/${IMAGEDIR}/${ROOTFS_FILE}; \
