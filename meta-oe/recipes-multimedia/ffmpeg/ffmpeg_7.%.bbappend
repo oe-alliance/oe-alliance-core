@@ -1,6 +1,6 @@
 FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 
-PR = "r3"
+PR = "r4"
 
 SRC_URI += "file://0001-makefile-add-demux-header.patch \
             file://0002-fix-mpegts.patch \
@@ -14,6 +14,7 @@ SRC_URI += "file://0001-makefile-add-demux-header.patch \
             file://0011-rtsp.patch \
             file://0012-dxva2.patch \
             file://0013-add-av_stream_get_first_dts-for-chromium.patch \
+            file://0014-fix-build-with-binutils-2.43.patch \
             file://ffmpeg_ac4.patch \
             "
 
