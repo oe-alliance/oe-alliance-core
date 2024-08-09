@@ -24,6 +24,7 @@ RRECOMMENDS:${PN} = "\
     enigma2-plugin-systemplugins-crossepg \
     enigma2-plugin-systemplugins-remotecontrolselection \
     enigma2-plugin-systemplugins-terrestrialscan \
+    enigma2-plugin-systemplugins-terrestrialbouquet \
     oe-alliance-skins \
     openvix-bootlogos-meta \
     openvix-softcams-meta \
