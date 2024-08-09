@@ -9,7 +9,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r13"
+PR = "r14"
 
 inherit packagegroup
 
@@ -26,6 +26,7 @@ RRECOMMENDS:${PN} = "\
     enigma2-plugin-systemplugins-crossepg \
     enigma2-plugin-systemplugins-remotecontrolselection \
     enigma2-plugin-systemplugins-terrestrialscan \
+    enigma2-plugin-systemplugins-terrestrialbouquet \
     enigma2-skins-openvix \
     oe-alliance-skins \
     openssl-old \
