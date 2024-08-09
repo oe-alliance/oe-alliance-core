@@ -27,7 +27,7 @@ This reverts commit 0731889c026bfe8d55c4851422ca5ec9d037f7a0.
  delete mode 100644 gcc/testsuite/gcc.target/arm/pr111235.c
 
 diff --git a/gcc/config/arm/constraints.md b/gcc/config/arm/constraints.md
-index cd159670145..c6159eecf89 100644
+index cd1596701..c6159eecf 100644
 --- a/gcc/config/arm/constraints.md
 +++ b/gcc/config/arm/constraints.md
 @@ -36,7 +36,7 @@
@@ -54,7 +54,7 @@ index cd159670145..c6159eecf89 100644
    "@internal In Thumb-2 state a constant in range 1 to 32"
    (and (match_code "const_int")
 diff --git a/gcc/config/arm/sync.md b/gcc/config/arm/sync.md
-index df8dbe170ca..4f0a13f6c0f 100644
+index 0a8347fc5..4f0a13f6c 100644
 --- a/gcc/config/arm/sync.md
 +++ b/gcc/config/arm/sync.md
 @@ -62,110 +62,68 @@
@@ -66,7 +66,7 @@ index df8dbe170ca..4f0a13f6c0f 100644
 +(define_insn "atomic_load<mode>"
 +  [(set (match_operand:QHSI 0 "register_operand" "=r,r,l")
      (unspec_volatile:QHSI
--      [(match_operand:QHSI 1 "memory_operand" "m,m")]
+-      [(match_operand:QHSI 1 "mem_and_no_t1_wback_op" "m,Uw")]
 -      VUNSPEC_LDR))]
 -  ""
 -  "ldr<sync_sfx>\t%0, %1"
@@ -102,7 +102,7 @@ index df8dbe170ca..4f0a13f6c0f 100644
 +   (set_attr "predicable" "yes")])
  
 -(define_insn "arm_atomic_store<mode>"
--  [(set (match_operand:QHSI 0 "memory_operand" "=m,m")
+-  [(set (match_operand:QHSI 0 "mem_and_no_t1_wback_op" "=m,Uw")
 -    (unspec_volatile:QHSI
 -      [(match_operand:QHSI 1 "register_operand" "r,l")]
 -      VUNSPEC_STR))]
@@ -374,7 +374,7 @@ index df8dbe170ca..4f0a13f6c0f 100644
 +  [(set_attr "arch" "32,v8mb")
 +   (set_attr "predicable" "yes")])
 diff --git a/gcc/config/arm/unspecs.md b/gcc/config/arm/unspecs.md
-index 46ac8b37157..ffc09b2febc 100644
+index 46ac8b371..ffc09b2fe 100644
 --- a/gcc/config/arm/unspecs.md
 +++ b/gcc/config/arm/unspecs.md
 @@ -221,10 +221,8 @@
@@ -391,7 +391,7 @@ index 46ac8b37157..ffc09b2febc 100644
    VUNSPEC_SET_FPSCR_NZCVQC	; Represent assign of FPSCR_nzcvqc content.
 diff --git a/gcc/testsuite/gcc.dg/rtl/arm/stl-cond.c b/gcc/testsuite/gcc.dg/rtl/arm/stl-cond.c
 new file mode 100644
-index 00000000000..e47ca6bf36d
+index 000000000..e47ca6bf3
 --- /dev/null
 +++ b/gcc/testsuite/gcc.dg/rtl/arm/stl-cond.c
 @@ -0,0 +1,61 @@
@@ -457,7 +457,7 @@ index 00000000000..e47ca6bf36d
 +
 +/* { dg-final { scan-assembler "stlne" } } */
 diff --git a/gcc/testsuite/gcc.target/arm/atomic_loaddi_7.c b/gcc/testsuite/gcc.target/arm/atomic_loaddi_7.c
-index 79e36edbb8f..6743663f1e6 100644
+index 79e36edbb..6743663f1 100644
 --- a/gcc/testsuite/gcc.target/arm/atomic_loaddi_7.c
 +++ b/gcc/testsuite/gcc.target/arm/atomic_loaddi_7.c
 @@ -6,4 +6,4 @@
@@ -467,7 +467,7 @@ index 79e36edbb8f..6743663f1e6 100644
 -/* { dg-final { scan-assembler-times "dmb\tish" 2 } } */
 +/* { dg-final { scan-assembler-times "dmb\tish" 1 } } */
 diff --git a/gcc/testsuite/gcc.target/arm/atomic_loaddi_8.c b/gcc/testsuite/gcc.target/arm/atomic_loaddi_8.c
-index 7241d361313..f7bd3e5a2b5 100644
+index 7241d3613..f7bd3e5a2 100644
 --- a/gcc/testsuite/gcc.target/arm/atomic_loaddi_8.c
 +++ b/gcc/testsuite/gcc.target/arm/atomic_loaddi_8.c
 @@ -6,4 +6,4 @@
@@ -478,7 +478,7 @@ index 7241d361313..f7bd3e5a2b5 100644
 +/* { dg-final { scan-assembler-times "dmb\tish" 1 } } */
 diff --git a/gcc/testsuite/gcc.target/arm/pr111235.c b/gcc/testsuite/gcc.target/arm/pr111235.c
 deleted file mode 100644
-index b06a5bfb8e2..00000000000
+index b06a5bfb8..000000000
 --- a/gcc/testsuite/gcc.target/arm/pr111235.c
 +++ /dev/null
 @@ -1,39 +0,0 @@
@@ -522,5 +522,5 @@ index b06a5bfb8e2..00000000000
 -/* { dg-final { scan-assembler-not "strgt" } } */
 -/* { dg-final { scan-assembler-not "strdgt" } } */
 -- 
-2.43.0
+2.45.2
 
