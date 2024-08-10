@@ -38,7 +38,7 @@ start)
 	fi
 	echo -n "Starting $DESC: "
 	ulimit -s 1024
-	$DAEMON --config-dir /etc/tuxbox/config/$CAM --daemon --pidfile $PIDFILE --restart 2 --utf8 2| grep -v "UTF-8 mode"
+	$DAEMON --config-dir /etc/tuxbox/config/$CAM --daemon --pidfile $PIDFILE --restart 2
 	sleep 0.5
 	RETVAL=1
 	[ -e $PIDFILE ] && RETVAL=0
