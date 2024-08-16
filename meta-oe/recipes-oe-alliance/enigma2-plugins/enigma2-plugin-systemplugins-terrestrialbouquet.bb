@@ -6,7 +6,7 @@ inherit gitpkgv allarch ${PYTHON_PN}native gettext
 
 require conf/license/license-gplv2.inc
 
-PV = "1.0+git${SRCPV}"
+PV = "1.0+git"
 PKGV = "1.0+git${GITPKGV}"
 
 SRCREV = "${AUTOREV}"
