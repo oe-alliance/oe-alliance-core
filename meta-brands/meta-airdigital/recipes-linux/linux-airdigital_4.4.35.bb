@@ -76,28 +76,28 @@ kernel_do_configure:prepend() {
 }
 
 kernel_do_install:append:h9se() {
-	install -d ${D}${KERNEL_IMAGEDEST}
-	install -m 0755 ${WORKDIR}/findkerneldevice.sh ${D}${KERNEL_IMAGEDEST}
+	install -d ${D}/${KERNEL_IMAGEDEST}
+	install -m 0755 ${WORKDIR}/findkerneldevice.sh ${D}/${KERNEL_IMAGEDEST}
 }
 
 kernel_do_install:append:h9combo() {
-	install -d ${D}${KERNEL_IMAGEDEST}
-	install -m 0755 ${WORKDIR}/findkerneldevice.sh ${D}${KERNEL_IMAGEDEST}
+	install -d ${D}/${KERNEL_IMAGEDEST}
+	install -m 0755 ${WORKDIR}/findkerneldevice.sh ${D}/${KERNEL_IMAGEDEST}
 }
 
 kernel_do_install:append:h9combose() {
-	install -d ${D}${KERNEL_IMAGEDEST}
-	install -m 0755 ${WORKDIR}/findkerneldevice.sh ${D}${KERNEL_IMAGEDEST}
+	install -d ${D}/${KERNEL_IMAGEDEST}
+	install -m 0755 ${WORKDIR}/findkerneldevice.sh ${D}/${KERNEL_IMAGEDEST}
 }
 
 kernel_do_install:append:h10() {
-	install -d ${D}${KERNEL_IMAGEDEST}
-	install -m 0755 ${WORKDIR}/findkerneldevice.sh ${D}${KERNEL_IMAGEDEST}
+	install -d ${D}/${KERNEL_IMAGEDEST}
+	install -m 0755 ${WORKDIR}/findkerneldevice.sh ${D}/${KERNEL_IMAGEDEST}
 }
 
 kernel_do_install:append:i55se() {
-	install -d ${D}${KERNEL_IMAGEDEST}
-	install -m 0755 ${WORKDIR}/findkerneldevice.sh ${D}${KERNEL_IMAGEDEST}
+	install -d ${D}/${KERNEL_IMAGEDEST}
+	install -m 0755 ${WORKDIR}/findkerneldevice.sh ${D}/${KERNEL_IMAGEDEST}
 }
 
 pkg_postinst:kernel-image:h9() {

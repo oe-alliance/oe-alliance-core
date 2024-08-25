@@ -23,7 +23,7 @@ SRC_URI[vuultimo4k.md5sum] = "2a3a0a7e5cd2a1392f1a26790d1cd8bf"
 SRC_URI[vuultimo4k.sha256sum] = "8284670c28a4dad9e94752b38d37a4368f27ce15e671653a3e2ac83915f37db1"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-SRC_URI += "http://code.vuplus.com/download/release/kernel/${KERNELSRC};name=${MACHINE} \
+SRC_URI += "https://source.mynonpublic.com/vuplus/release/kernel/${KERNELSRC};name=${MACHINE} \
     file://defconfig \
     file://bcm_genet_disable_warn.patch \
     file://linux_dvb-core.patch \

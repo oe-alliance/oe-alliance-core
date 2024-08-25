@@ -8,14 +8,13 @@ DEPENDS = "liquid-dsp virtual/libiconv libsndfile1"
 
 inherit gitpkgv
 
-SRCREV = "${AUTOREV}"
-PV = "0.18+git${SRCPV}"
-PKGV = "0.18+git${GITPKGV}"
+SRCREV = "bf5fcbfe0f41f019c60b95b2178f461103dd13e3"
+PV = "0.21+git${SRCPV}"
+PKGV = "0.21+git${GITPKGV}"
 
-SRC_URI = "git://github.com/windytan/redsea.git;protocol=http;branch=master;protocol=https"
+SRC_URI = "git://github.com/windytan/redsea.git;protocol=http;branch=master;protocol=https \
+            file://remove-hardcoded-build-path.patch"
 
 S = "${WORKDIR}/git"
 
-inherit autotools-brokensep pkgconfig gettext
-
-EXTRA_OECONF += "--disable-tmc --without-macports"
+inherit pkgconfig meson

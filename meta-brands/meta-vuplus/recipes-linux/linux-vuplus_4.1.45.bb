@@ -17,7 +17,7 @@ SRC_URI[sha256sum] = "18ecc79522f6b975c96cca7975eb31db93d2e8cfea6755451bba0a1a28
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-SRC_URI += "http://code.vuplus.com/download/release/kernel/stblinux-${KSRC_VER}.tar.bz2 \
+SRC_URI += "https://source.mynonpublic.com/vuplus/release/kernel/stblinux-${KSRC_VER}.tar.bz2 \
     file://defconfig \
     file://linux_dvb_adapter.patch \
     file://linux_dvb-core.patch \
