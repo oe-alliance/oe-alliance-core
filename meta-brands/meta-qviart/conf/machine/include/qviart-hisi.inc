@@ -44,7 +44,7 @@ DEFAULTTUNE = "cortexa15hf-neon-vfpv4"
 
 PREFERRED_VERSION_linux-qviart = "${LINUX_VERSION}"
 PREFERRED_PROVIDER_virtual/kernel = "linux-qviart"
-PREFERRED_VERSION_wpa-supplicant = "${@bb.utils.contains('MACHINE', 'og2s4k', '2.9' , '2.10', d)}"
+PREFERRED_VERSION_wpa-supplicant = "${@bb.utils.contains('MACHINE', 'og2s4k', '2.9' , '2.11', d)}"
 PREFERRED_PROVIDER_virtual/egl = "qviart-opengl-${SOC_FAMILY}" 
 PREFERRED_PROVIDER_virtual/libgles1 = "qviart-opengl-${SOC_FAMILY}"
 PREFERRED_PROVIDER_virtual/libgles2 = "qviart-opengl-${SOC_FAMILY}"

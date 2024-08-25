@@ -389,7 +389,7 @@ DVBMEDIASINK_CONFIG = "--with-h265 --with-vb8 --with-vb9 --with-spark --with-wma
 PREFERRED_PROVIDER_virtual/kernel = "linux-dinobot"
 PREFERRED_RPROVIDER_showiframe = "dinobot-showiframe-${MACHINE}"
 PREFERRED_RPROVIDER_aio-grab = "dinobot-grab-${MACHINE}"
-PREFERRED_VERSION_wpa-supplicant = "${@bb.utils.contains_any('MACHINE', 'u5pvr u53 u532 u533', '2.9' , '2.10', d)}"
+PREFERRED_VERSION_wpa-supplicant = "${@bb.utils.contains_any('MACHINE', 'u5pvr u53 u532 u533', '2.9' , '2.11', d)}"
 
 OEM_ARCH = "${MACHINEBUILD}"
 
