@@ -40,7 +40,6 @@ RDEPENDS:${PN} = " \
     enigma2-plugin-extensions-et-portal \
     enigma2-plugin-extensions-gerbera \
     enigma2-plugin-extensions-bouquetmakerxtream \
-    enigma2-plugin-extensions-jedimakerxtream \
     enigma2-plugin-extensions-jediepgxtream \
     enigma2-plugin-extensions-lamedbmerger \
     enigma2-plugin-extensions-mediaplayer2 \
