@@ -1,0 +1,78 @@
+From ab38dd8b737b84ab28f4b1cfcb22964d750a7d72 Mon Sep 17 00:00:00 2001
+From: Hains van den Bosch <hainsvdbosch@ziggo.nl>
+Date: Sat, 24 Aug 2024 21:59:04 +0200
+Subject: [PATCH] Revert "dict: Get random seed from system PRNG"
+
+This reverts commit 2e9e758d1ecb52b73a43db79d326c18d7d94c8d7.
+---
+ dict.c | 38 +++++++-------------------------------
+ 1 file changed, 7 insertions(+), 31 deletions(-)
+
+diff --git a/dict.c b/dict.c
+index ccd8b542..f1d66e0f 100644
+--- a/dict.c
++++ b/dict.c
+@@ -19,9 +19,7 @@
+ #define IN_LIBXML
+ #include "libxml.h"
+ 
+-#include <errno.h>
+ #include <limits.h>
+-#include <stdlib.h>
+ #include <string.h>
+ 
+ #include "private/dict.h"
+@@ -951,42 +951,16 @@ static unsigned globalRngState[2];
+ ATTRIBUTE_NO_SANITIZE_INTEGER
+ void
+ xmlInitRandom(void) {
++	int var;
++
+     xmlInitMutex(&xmlRngMutex);
+ 
+-    {
+-#ifdef _WIN32
+-        NTSTATUS status;
+-
+-        status = BCryptGenRandom(NULL, (unsigned char *) globalRngState,
+-                                 sizeof(globalRngState),
+-                                 BCRYPT_USE_SYSTEM_PREFERRED_RNG);
+-        if (!BCRYPT_SUCCESS(status)) {
+-            fprintf(stderr, "libxml2: BCryptGenRandom failed with "
+-                    "error code %lu\n", GetLastError());
+-            abort();
+-        }
+-#elif defined(HAVE_GETENTROPY)
+-        while (1) {
+-            if (getentropy(globalRngState, sizeof(globalRngState)) == 0)
+-                break;
+-
+-            if (errno != EINTR) {
+-                fprintf(stderr, "libxml2: getentropy failed with "
+-                        "error code %d\n", errno);
+-                abort();
+-            }
+-        }
+-#else
+-        int var;
+-
+-        globalRngState[0] =
+-                (unsigned) time(NULL) ^
+-                HASH_ROL((unsigned) ((size_t) &xmlInitRandom & 0xFFFFFFFF), 8);
+-        globalRngState[1] =
+-                HASH_ROL((unsigned) ((size_t) &xmlRngMutex & 0xFFFFFFFF), 16) ^
+-                HASH_ROL((unsigned) ((size_t) &var & 0xFFFFFFFF), 24);
+-#endif
+-    }
++    /* TODO: Get seed values from system PRNG */
++
++    globalRngState[0] = (unsigned) time(NULL) ^
++                        HASH_ROL((unsigned) ((size_t) &xmlInitRandom & 0xFFFFFFFF), 8);
++    globalRngState[1] = HASH_ROL((unsigned) ((size_t) &xmlRngMutex & 0xFFFFFFFF), 16) ^
++                        HASH_ROL((unsigned) ((size_t) &var & 0xFFFFFFFF), 24);
+ }
+ 
+ /*
+-- 
+2.43.0
+
