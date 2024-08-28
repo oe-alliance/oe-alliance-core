@@ -45,6 +45,15 @@ echo "                                                                          
 echo "                                                                            "
 echo "                                                                            "
 echo "                                                                            "
+rm -rf /usr/lib/enigma2/python/Components/Renderer/PliModBackdropX*
+rm -rf /usr/lib/enigma2/python/Components/Renderer/PliModBackdropXDownloadThread*
+rm -rf /usr/lib/enigma2/python/Components/Renderer/PliModNxtEvntX*
+rm -rf /usr/lib/enigma2/python/Components/Renderer/PliModPosterX*
+rm -rf /usr/lib/enigma2/python/Components/Renderer/PliModPosterXDownloadThread*
+rm -rf /usr/share/enigma2/PLi-HD-FullNight_stein17_Mod/allScreens/poster*
+rm -rf /usr/share/enigma2/PLi-HD-FullNight_stein17_Mod/allScreens/skin_Poster*
+rm -rf /usr/share/enigma2/PLi-HD-FullNight_stein17_Mod/preview/preview_poster*
+rm -rf /usr/share/enigma2/PLi-HD-FullNight_stein17_Mod/preview/preview_skin_Poster*
 echo "                                                                 "
 echo "Poster-PLi-HD-FullNight-Mod-stein17 was successfully removed from your receiver"
 echo "                                                                 "
@@ -58,6 +67,15 @@ echo "                                                                          
 echo "                                                                            "
 echo "                                                                            "
 echo "                                                                            "
+rm -rf /usr/lib/enigma2/python/Components/Renderer/PliModBackdropX*
+rm -rf /usr/lib/enigma2/python/Components/Renderer/PliModBackdropXDownloadThread*
+rm -rf /usr/lib/enigma2/python/Components/Renderer/PliModNxtEvntX*
+rm -rf /usr/lib/enigma2/python/Components/Renderer/PliModPosterX*
+rm -rf /usr/lib/enigma2/python/Components/Renderer/PliModPosterXDownloadThread*
+rm -rf /usr/share/enigma2/PLi-HD-FullNight_stein17_Mod/allScreens/poster*
+rm -rf /usr/share/enigma2/PLi-HD-FullNight_stein17_Mod/allScreens/skin_Poster*
+rm -rf /usr/share/enigma2/PLi-HD-FullNight_stein17_Mod/preview/preview_poster*
+rm -rf /usr/share/enigma2/PLi-HD-FullNight_stein17_Mod/preview/preview_skin_Poster*
 echo "                                                   "
 echo "Previous Poster-PLi-HD-FullNight-Mod-stein17 skin installation        "
 echo "    was found and removed successfully!            "
