@@ -12,30 +12,45 @@ Signed-off-by: Marko Lindqvist <cazfi74@gmail.com>
 
 --- a/lib/py-compile
 +++ b/lib/py-compile
-@@ -134,26 +134,6 @@ else
-   import_arg2=
- fi
+@@ -138,40 +138,7 @@ python_minor=`$PYTHON -c 'import sys; print(sys.version_info[1])'`
+ # NB: When adding support for newer versions, prefer copying & adding new cases
+ # rather than try to keep things merged with shell variables.
  
+-# First byte compile (no optimization) all the modules.
+-# This works for all currently known Python versions.
 -$PYTHON -c "
--import sys, os, py_compile, $import_lib
+-import sys, os, py_compile
 -
--files = '''$files'''
+-try:
+-    import importlib
+-except ImportError:
+-    importlib = None
+-
+-# importlib.util.cache_from_source was added in 3.4
+-if (
+-        hasattr(importlib, 'util')
+-        and hasattr(importlib.util, 'cache_from_source')
+-):
+-    destpath = importlib.util.cache_from_source
+-else:
+-    destpath = lambda filepath: filepath + 'c'
 -
 -sys.stdout.write('Byte-compiling python modules...\n')
--for file in files.split():
+-for file in sys.argv[1:]:
 -    $pathtrans
 -    $filetrans
--    if not os.path.exists(filepath) or not (len(filepath) >= 3
--                                            and filepath[-3:] == '.py'):
--	    continue
--    sys.stdout.write(file)
+-    if (
+-            not os.path.exists(filepath)
+-            or not (len(filepath) >= 3 and filepath[-3:] == '.py')
+-     ):
+-        continue
+-    sys.stdout.write(file + ' ')
 -    sys.stdout.flush()
--    if $import_test:
--        py_compile.compile(filepath, $import_call(filepath), path)
--    else:
--        py_compile.compile(filepath, filepath + 'c', path)
--sys.stdout.write('\n')" || exit $?
+-    py_compile.compile(filepath, destpath(filepath), path)
+-sys.stdout.write('\n')" "$@" || exit $?
 -
- # this will fail for python < 1.5, but that doesn't matter ...
+-# Then byte compile w/optimization all the modules.
++# Byte compile w/optimization all the modules.
  $PYTHON -O -c "
- import sys, os, py_compile, $import_lib
+ import sys, os, py_compile
+ 
