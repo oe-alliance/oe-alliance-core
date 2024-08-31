@@ -22,6 +22,7 @@ RRECOMMENDS:${PN} = "\
     enigma2-plugin-skins-e2-darkos \
     enigma2-plugin-extensions-blurayplayer \
     enigma2-plugin-extensions-enhancedmoviecenter \
+    enigma2-plugin-extensions-iptv-org-playlists \
     enigma2-plugin-systemplugins-crossepg \
     enigma2-plugin-systemplugins-remotecontrolselection \
     enigma2-plugin-systemplugins-terrestrialscan \
