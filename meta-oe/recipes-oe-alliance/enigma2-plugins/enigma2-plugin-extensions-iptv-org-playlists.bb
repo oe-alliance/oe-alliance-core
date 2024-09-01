@@ -13,7 +13,9 @@ SRCREV = "${AUTOREV}"
 
 SRC_URI = "git://github.com/Huevos/iptv-org-playlists-plugin-for-enigma2.git;protocol=https;branch=master"
 
-
+RDEPENDS:${PN} = "\
+    ${PYTHON_PN}-requests \
+    "
 
 S = "${WORKDIR}/git"
 
