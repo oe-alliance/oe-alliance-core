@@ -8,7 +8,7 @@ require conf/license/license-gplv2.inc
 require conf/python/python3-compileall.inc
 
 SRCREV="${AUTOREV}"
-PV = "git${SRCPV}"
+PV = "git"
 PKGV = "${GITPKGVTAG}"
 PR = "r4"
 
