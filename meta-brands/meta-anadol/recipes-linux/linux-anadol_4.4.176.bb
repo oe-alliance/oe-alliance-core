@@ -1,6 +1,6 @@
 DESCRIPTION = "Linux kernel for ${MACHINE}"
 SECTION = "kernel"
-LICENSE = "GPLv2"
+LICENSE = "GPL-2.0-only"
 
 KERNEL_RELEASE = "4.4.176"
 
@@ -10,7 +10,7 @@ SRCDATE = "20220302"
 
 inherit kernel machine_kernel_pr
 
-MACHINE_KERNEL_PR:append = "0"
+MACHINE_KERNEL_PR:append = "1"
 
 
 SRC_URI[md5sum] = "96c57616c9e0121a57b34c93e6453824"
