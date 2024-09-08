@@ -2,8 +2,6 @@ include conf/license/license-gplv2.inc
 SUMMARY = "Ralink 3070"
 HOMEPAGE = "http://eng.ralinktech.com.tw/support.php?s=2"
 SECTION = "kernel/modules"
-#LICENSE = "GPLv2"
-
 
 inherit module
 
