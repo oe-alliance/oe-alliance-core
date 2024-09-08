@@ -8,7 +8,7 @@ inherit kernel machine_kernel_pr
 
 COMPATIBLE_MACHINE = "^(dags7362|dags73625)$"
 
-RPROVIDES:kernel-image = "kernel-${KERNEL_IMAGETYPE}"
+RPROVIDES:${KERNEL_PACKAGE_NAME}-image += "kernel-${KERNEL_IMAGETYPE}"
 
 SRC_URI[md5sum] = "48d1c96b3bedcc6a11c34eede6e36bfd"
 SRC_URI[sha256sum] = "ed11d537b1e19d59b132fd643bebc7469bf20e115bdc23e949e2ce14ae53aadc"

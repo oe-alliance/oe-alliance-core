@@ -17,7 +17,7 @@ LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad
 
 MACHINE_KERNEL_PR:append = "3"
 
-RPROVIDES:kernel-image = "kernel-${KERNEL_IMAGETYPE}"
+RPROVIDES:${KERNEL_PACKAGE_NAME}-image += "kernel-${KERNEL_IMAGETYPE}"
 
 SRC_URI += "https://source.mynonpublic.com/broadmedia/broadmedia-linux-${PV}-${SRC}.tar.xz \
     file://defconfig \

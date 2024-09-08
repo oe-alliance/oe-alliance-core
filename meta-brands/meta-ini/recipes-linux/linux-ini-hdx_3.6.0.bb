@@ -14,7 +14,7 @@ inherit kernel machine_kernel_pr
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-RPROVIDES:kernel-image = "kernel-${KERNEL_IMAGETYPE}"
+RPROVIDES:${KERNEL_PACKAGE_NAME}-image += "kernel-${KERNEL_IMAGETYPE}"
 
 SRC_URI += "https://source.mynonpublic.com/ini/bcm7413-linux-${KV}-${SRCDATE}.tar.gz \
     file://defconfig \

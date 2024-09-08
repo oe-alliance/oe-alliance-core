@@ -17,7 +17,7 @@ SRC_URI[sha256sum] = "571438a1c94f5a72903b310682a344757cbf97028e1e5dfbe980472f04
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-RPROVIDES:kernel-image = "kernel-${KERNEL_IMAGETYPE}"
+RPROVIDES:${KERNEL_PACKAGE_NAME}-image += "kernel-${KERNEL_IMAGETYPE}"
 
 SRC_URI += "https://source.mynonpublic.com/xtrend/xtrend-linux-${PV}-${SRCDATE}.tar.xz \
     file://defconfig \

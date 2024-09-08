@@ -16,7 +16,7 @@ MACHINE_KERNEL_PR:append = ".1"
 
 inherit kernel machine_kernel_pr
 
-RPROVIDES:kernel-image = "kernel-${KERNEL_IMAGETYPE}"
+RPROVIDES:${KERNEL_PACKAGE_NAME}-image += "kernel-${KERNEL_IMAGETYPE}"
 
 SRC_URI += "https://source.mynonpublic.com/ini/bcm7362-linux-${KV}-${SRCDATE}.tgz \
     file://defconfig \

@@ -8,7 +8,7 @@ COMPATIBLE_MACHINE = "^(vuuno4kse|vuzero4k)$"
 
 MACHINE_KERNEL_PR:append = "oea4.1-r7"
 
-RPROVIDES:kernel-image = "kernel-${KERNEL_IMAGETYPE}"
+RPROVIDES:${KERNEL_PACKAGE_NAME}-image += "kernel-${KERNEL_IMAGETYPE}"
 
 inherit kernel machine_kernel_pr
 

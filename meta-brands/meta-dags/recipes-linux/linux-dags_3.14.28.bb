@@ -7,7 +7,7 @@ MACHINE_KERNEL_PR:append = "11"
 
 COMPATIBLE_MACHINE = "dags7252"
 
-RPROVIDES:kernel-image = "kernel-${KERNEL_IMAGETYPE}"
+RPROVIDES:${KERNEL_PACKAGE_NAME}-image += "kernel-${KERNEL_IMAGETYPE}"
 
 inherit kernel machine_kernel_pr
 

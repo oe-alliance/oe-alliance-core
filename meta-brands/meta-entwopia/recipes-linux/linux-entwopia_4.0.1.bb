@@ -16,7 +16,7 @@ LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}-base/COPYING;md5=d7810fab7487f
 
 MACHINE_KERNEL_PR:append = ".1"
 
-RPROVIDES:kernel-image = "kernel-${KERNEL_IMAGETYPE}"
+RPROVIDES:${KERNEL_PACKAGE_NAME}-image += "kernel-${KERNEL_IMAGETYPE}"
 
 SRC_URI += "https://source.mynonpublic.com/entwopia/${MACHINE}/${MACHINE}-linux-${PV}-base-${SRCDATE}.tgz \
     file://defconfig \

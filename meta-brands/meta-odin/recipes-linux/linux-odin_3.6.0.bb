@@ -13,7 +13,7 @@ SRC_URI[sha256sum] = "df8c6071cbdd6a709aebb8a272dca60791edb379103597670609ef90e1
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-RPROVIDES:kernel-image = "kernel-${KERNEL_IMAGETYPE}"
+RPROVIDES:${KERNEL_PACKAGE_NAME}-image += "kernel-${KERNEL_IMAGETYPE}"
 
 SRC_URI += "https://source.mynonpublic.com/download/linux-${PV}.tar.gz \
     file://defconfig \
