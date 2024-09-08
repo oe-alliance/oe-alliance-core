@@ -61,7 +61,7 @@ IMAGE_CMD:dagsemmc:append = "\
     mkdir -p ${DEPLOY_DIR_IMAGE}/release/${IMAGEDIR}; \
     cp ${DEPLOY_DIR_IMAGE}/uImage ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${KERNEL_FILE}; \
     cp ${DEPLOY_DIR_IMAGE}/${MACHINEBUILD}-${APPLOADER_FILE} ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${APPLOADER_FILE}; \
-    mv ${IMGDEPLOYDIR}/${IMAGE_NAME}_subrootfs.ext4 ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/rootfs.ext4; \
+    cp -f ${IMGDEPLOYDIR}/${IMAGE_NAME}_subrootfs.ext4 ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/rootfs.ext4; \
     echo ${IMAGE_VER_STRING} > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/imageversion; \
     cd ${DEPLOY_DIR_IMAGE}; \
     zip ${IMAGE_NAME}_restore_mmc.zip ${IMAGEDIR}/*; \
