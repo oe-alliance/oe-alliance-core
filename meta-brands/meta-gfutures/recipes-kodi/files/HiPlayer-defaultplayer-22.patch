@@ -1,0 +1,26 @@
+From d76fcaef0125954c14b1910d208a11deec11f2c8 Mon Sep 17 00:00:00 2001
+From: Captain <openatv@gmail.com>
+Date: Sun, 22 Sep 2024 10:24:44 +0200
+Subject: [PATCH 1/2] HiPlayer-defaultplayer-22
+
+---
+ system/playercorefactory.xml | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/system/playercorefactory.xml b/system/playercorefactory.xml
+index 0ae161cbc9..a8e5b59943 100644
+--- a/system/playercorefactory.xml
++++ b/system/playercorefactory.xml
+@@ -46,5 +46,9 @@
+ 
+     <!-- pvr radio channels should be played by VideoPlayer because they need buffering -->
+     <rule name="radio" filetypes="pvr" filename=".*/radio/.*" player="VideoPlayer" />
++
++  <rules action="prepend">
++    <rule filetypes="dts|mp3|wav|wave|oga|ogg|flac|m4a|mp2|m2a|ac3|mka|aac|ape|alac|mpg|vob|m4v|mkv|avi|divx|dat|flv|mp4|mov|wmv|asf|3gp|3g2|mpeg|mpe|rm|rmvb|ogm|ogv|stream|amr|au|mid|wv|pva|wtv|ts|m2ts" player="HiPlayer" />
++  </rules>
+   </rules>
+ </playercorefactory>
+-- 
+2.45.2.windows.1
+

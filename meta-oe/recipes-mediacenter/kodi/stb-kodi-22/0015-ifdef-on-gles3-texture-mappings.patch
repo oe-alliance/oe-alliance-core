@@ -1,0 +1,66 @@
+From ad60f16de35ac1ae2f848e17e49be7a11b5782ab Mon Sep 17 00:00:00 2001
+From: NickerSK <nickersk@gmail.com>
+Date: Thu, 19 Sep 2024 09:49:16 +0000
+Subject: ifdef protect gles3 texture mapings
+
+Disable GLES 3 mapings
+---
+diff --git a/xbmc/guilib/TextureGLES.cpp b/xbmc/guilib/TextureGLES.cpp
+index e475fecf47d..fd3026c766a 100644
+--- a/xbmc/guilib/TextureGLES.cpp
++++ b/xbmc/guilib/TextureGLES.cpp
+@@ -154,6 +154,7 @@ static const std::map<KD_TEX_FMT, TextureFormat> TextureMappingGLESExtensions
+ #endif
+ };
+ 
++#if defined(GL_ES_VERSION_3_0)
+ static const std::map<KD_TEX_SWIZ, TextureSwizzle> SwizzleMapGLES
+ {
+   {KD_TEX_SWIZ_RGBA, {GL_RED, GL_GREEN, GL_BLUE, GL_ALPHA}},
+@@ -167,6 +168,7 @@ static const std::map<KD_TEX_SWIZ, TextureSwizzle> SwizzleMapGLES
+   {KD_TEX_SWIZ_GGGA, {GL_GREEN, GL_GREEN, GL_GREEN, GL_ALPHA}},
+   {KD_TEX_SWIZ_GGGG, {GL_GREEN, GL_GREEN, GL_GREEN, GL_GREEN}},
+ };
++#endif
+ // clang-format on
+ } // namespace
+ 
+@@ -386,7 +388,6 @@ void CGLESTexture::SetSwizzle(bool swapRB)
+   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_G, swiz.g);
+   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_B, swiz.b);
+   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_A, swiz.a);
+-#endif
+ }
+ 
+ void CGLESTexture::SwapBlueRedSwizzle(GLint& component)
+@@ -395,8 +396,10 @@ void CGLESTexture::SwapBlueRedSwizzle(GLint& component)
+     component = GL_BLUE;
+   else if (component == GL_BLUE)
+     component = GL_RED;
++#endif
+ }
+ 
++
+ TextureFormat CGLESTexture::GetFormatGLES20(KD_TEX_FMT textureFormat)
+ {
+   TextureFormat glFormat;
+diff --git a/xbmc/guilib/TextureGLES.h b/xbmc/guilib/TextureGLES.h
+index fe7af24917a..b9869d6bfda 100644
+--- a/xbmc/guilib/TextureGLES.h
++++ b/xbmc/guilib/TextureGLES.h
+@@ -20,6 +20,7 @@ struct TextureFormat
+   GLenum type{GL_UNSIGNED_BYTE};
+ };
+ 
++#if defined(GL_ES_VERSION_3_0)
+ struct TextureSwizzle
+ {
+   GLint r{GL_RED};
+@@ -27,6 +28,7 @@ struct TextureSwizzle
+   GLint b{GL_BLUE};
+   GLint a{GL_ALPHA};
+ };
++#endif
+ 
+ class CGLESTexture : public CTexture
+ {

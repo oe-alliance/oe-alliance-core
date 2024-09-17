@@ -34,7 +34,7 @@ MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "\
     ${@bb.utils.contains('MACHINE', 'sf8008', 'octagon-bluetooth-keymaps' , '', d)} \
 "
 
-MACHINE_FEATURES += "hisil switchoff hdmicec skins1080 emmc mmc kodi21 alsa hbbtv-browser-webkit qtstalker qtnetflix openhbbtv event0 hisichromium mali HDMISTANDBY"
+MACHINE_FEATURES += "hisil switchoff hdmicec skins1080 emmc mmc kodi22 alsa hbbtv-browser-webkit qtstalker qtnetflix openhbbtv event0 hisichromium mali HDMISTANDBY"
 
 IMAGE_CLASSES  += "octagon-emmc_image"
 IMAGE_FSTYPES += "octagonemmc"
