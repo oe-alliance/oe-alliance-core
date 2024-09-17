@@ -1,0 +1,162 @@
+From b0545731c2c236b38656ccb20e92b970cb2ff2fd Mon Sep 17 00:00:00 2001
+From: NickerSK <nickersk@gmail.com>
+Date: Sun, 30 Jun 2024 05:42:02 +0000
+Subject: [PATCH] cmake revert findatomic findsmbclient
+
+---
+ cmake/modules/FindSmbClient.cmake             | 91 ++++++++-----------
+ cmake/scripts/windows/ArchSetup.cmake         |  2 +-
+ xbmc/network/CMakeLists.txt                   |  2 +-
+ xbmc/platform/posix/filesystem/CMakeLists.txt |  2 +-
+ 5 files changed, 83 insertions(+), 89 deletions(-)
+
+diff --git a/cmake/modules/FindSmbClient.cmake b/cmake/modules/FindSmbClient.cmake
+index 159dae52f77..1cb265036aa 100644
+--- a/cmake/modules/FindSmbClient.cmake
++++ b/cmake/modules/FindSmbClient.cmake
+@@ -3,65 +3,50 @@
+ # -------------
+ # Finds the SMB Client library
+ #
+-# This following imported target will be defined::
++# This will define the following variables::
+ #
+-#   ${APP_NAME_LC}::SmbClient   - The SmbClient library
+-
+-if(NOT TARGET ${APP_NAME_LC}::${CMAKE_FIND_PACKAGE_NAME})
+-
+-  if(WIN32 OR WINDOWS_STORE)
+-    # UWP doesnt have native smb support. It receives it from an addon.
+-    if(NOT CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+-      add_library(${APP_NAME_LC}::${CMAKE_FIND_PACKAGE_NAME} INTERFACE IMPORTED)
+-      set_target_properties(${APP_NAME_LC}::${CMAKE_FIND_PACKAGE_NAME} PROPERTIES
+-                                                                       INTERFACE_COMPILE_DEFINITIONS HAS_FILESYSTEM_SMB)
+-    endif()
+-  else()
+-
+-    find_package(PkgConfig)
+-
+-    if(PKG_CONFIG_FOUND)
+-      pkg_check_modules(SMBCLIENT smbclient QUIET)
+-
+-      # First item is the full path of the library file found
+-      # pkg_check_modules does not populate a variable of the found library explicitly
+-      list(GET SMBCLIENT_LINK_LIBRARIES 0 SMBCLIENT_LIBRARY)
++# SMBCLIENT_FOUND - system has SmbClient
++# SMBCLIENT_INCLUDE_DIRS - the SmbClient include directory
++# SMBCLIENT_LIBRARIES - the SmbClient libraries
++# SMBCLIENT_DEFINITIONS - the SmbClient definitions
++#
++# and the following imported targets::
++#
++#   SmbClient::SmbClient   - The SmbClient library
+ 
+-      # Add link libraries for static lib usage
+-      if(${SMBCLIENT_LIBRARY} MATCHES ".+\.a$" AND SMBCLIENT_LINK_LIBRARIES)
+-        # Remove duplicates
+-        list(REMOVE_DUPLICATES SMBCLIENT_LINK_LIBRARIES)
++find_package(PkgConfig)
+ 
+-        # Remove own library
+-        list(FILTER SMBCLIENT_LINK_LIBRARIES EXCLUDE REGEX ".*smbclient.*\.a$")
+-        set(PC_SMBCLIENT_LINK_LIBRARIES ${SMBCLIENT_LINK_LIBRARIES})
+-      endif()
++if(PKG_CONFIG_FOUND)
++  pkg_check_modules(PC_SMBCLIENT smbclient QUIET)
++endif()
+ 
+-      # pkgconfig sets SMBCLIENT_INCLUDEDIR, map this to our "standard" variable name
+-      set(SMBCLIENT_INCLUDE_DIR ${SMBCLIENT_INCLUDEDIR})
+-      set(SMBCLIENT_VERSION ${PC_SMBCLIENT_VERSION})
+-    else()
+-      find_path(SMBCLIENT_INCLUDE_DIR NAMES libsmbclient.h)
+-      find_library(SMBCLIENT_LIBRARY NAMES smbclient)
+-    endif()
++find_path(SMBCLIENT_INCLUDE_DIR NAMES libsmbclient.h
++                                HINTS ${PC_SMBCLIENT_INCLUDEDIR})
++find_library(SMBCLIENT_LIBRARY NAMES smbclient
++                               HINTS ${PC_SMBCLIENT_LIBDIR})
+ 
+-    include(FindPackageHandleStandardArgs)
+-    find_package_handle_standard_args(SmbClient
+-                                      REQUIRED_VARS SMBCLIENT_LIBRARY SMBCLIENT_INCLUDE_DIR
+-                                      VERSION_VAR SMBCLIENT_VERSION)
++set(SMBCLIENT_VERSION ${PC_SMBCLIENT_VERSION})
+ 
+-    if(SMBCLIENT_FOUND)
+-      add_library(${APP_NAME_LC}::${CMAKE_FIND_PACKAGE_NAME} UNKNOWN IMPORTED)
+-      set_target_properties(${APP_NAME_LC}::${CMAKE_FIND_PACKAGE_NAME} PROPERTIES
+-                                                                       IMPORTED_LOCATION "${SMBCLIENT_LIBRARY}"
+-                                                                       INTERFACE_INCLUDE_DIRECTORIES "${SMBCLIENT_INCLUDE_DIR}"
+-                                                                       INTERFACE_COMPILE_DEFINITIONS HAS_FILESYSTEM_SMB)
++include(FindPackageHandleStandardArgs)
++find_package_handle_standard_args(SmbClient
++                                  REQUIRED_VARS SMBCLIENT_LIBRARY SMBCLIENT_INCLUDE_DIR
++                                  VERSION_VAR SMBCLIENT_VERSION)
+ 
+-      # Add link libraries for static lib usage found from pkg-config
+-      if(PC_SMBCLIENT_LINK_LIBRARIES)
+-        set_target_properties(${APP_NAME_LC}::${CMAKE_FIND_PACKAGE_NAME} PROPERTIES
+-                                                                         INTERFACE_LINK_LIBRARIES "${PC_SMBCLIENT_LINK_LIBRARIES}")
+-      endif()
+-    endif()
++if(SMBCLIENT_FOUND)
++  set(SMBCLIENT_LIBRARIES ${SMBCLIENT_LIBRARY})
++  if(${SMBCLIENT_LIBRARY} MATCHES ".+\.a$" AND PC_SMBCLIENT_STATIC_LIBRARIES)
++    list(APPEND SMBCLIENT_LIBRARIES ${PC_SMBCLIENT_STATIC_LIBRARIES})
++  endif()
++  set(SMBCLIENT_INCLUDE_DIRS ${SMBCLIENT_INCLUDE_DIR})
++  set(SMBCLIENT_DEFINITIONS -DHAS_FILESYSTEM_SMB=1)
++
++  if(NOT TARGET SmbClient::SmbClient)
++    add_library(SmbClient::SmbClient UNKNOWN IMPORTED)
++    set_target_properties(SmbClient::SmbClient PROPERTIES
++                                   IMPORTED_LOCATION "${SMBCLIENT_LIBRARY}"
++                                   INTERFACE_INCLUDE_DIRECTORIES "${SMBCLIENT_INCLUDE_DIR}"
++                                   INTERFACE_COMPILE_DEFINITIONS HAS_FILESYSTEM_SMB=1)
+   endif()
+ endif()
++
++mark_as_advanced(LIBSMBCLIENT_INCLUDE_DIR LIBSMBCLIENT_LIBRARY)
+diff --git a/cmake/scripts/windows/ArchSetup.cmake b/cmake/scripts/windows/ArchSetup.cmake
+index 8be83e6a788..71161962071 100644
+--- a/cmake/scripts/windows/ArchSetup.cmake
++++ b/cmake/scripts/windows/ArchSetup.cmake
+@@ -65,7 +65,7 @@ set(SYSTEM_DEFINES -DWIN32_LEAN_AND_MEAN -DNOMINMAX -DHAS_DX -D__STDC_CONSTANT_M
+                    $<$<CONFIG:Debug>:-DD3D_DEBUG_INFO>)
+ 
+ # Additional SYSTEM_DEFINES
+-list(APPEND SYSTEM_DEFINES -DHAS_WIN32_NETWORK)
++list(APPEND SYSTEM_DEFINES -DHAS_WIN32_NETWORK -DHAS_FILESYSTEM_SMB)
+ 
+ # The /MP option enables /FS by default.
+ if(CMAKE_GENERATOR MATCHES "Visual Studio")
+diff --git a/xbmc/network/CMakeLists.txt b/xbmc/network/CMakeLists.txt
+index ad301ac7de2..d6763dac98e 100644
+--- a/xbmc/network/CMakeLists.txt
++++ b/xbmc/network/CMakeLists.txt
+@@ -43,7 +43,7 @@ if(TARGET ${APP_NAME_LC}::Shairplay)
+   list(APPEND HEADERS AirTunesServer.h)
+ endif()
+ 
+-if(TARGET ${APP_NAME_LC}::SmbClient)
++if(SMBCLIENT_FOUND)
+   list(APPEND HEADERS IWSDiscovery.h)
+ endif()
+ 
+diff --git a/xbmc/platform/posix/filesystem/CMakeLists.txt b/xbmc/platform/posix/filesystem/CMakeLists.txt
+index 2ee8695e80a..badb1a8da8d 100644
+--- a/xbmc/platform/posix/filesystem/CMakeLists.txt
++++ b/xbmc/platform/posix/filesystem/CMakeLists.txt
+@@ -4,7 +4,7 @@ set(SOURCES PosixDirectory.cpp
+ set(HEADERS PosixDirectory.h
+             PosixFile.h)
+ 
+-if(TARGET ${APP_NAME_LC}::SmbClient)
++if(SMBCLIENT_FOUND)
+   list(APPEND SOURCES SMBDirectory.cpp
+                       SMBFile.cpp
+                       SMBWSDiscovery.cpp
+-- 
+2.45.2
+

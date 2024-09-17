@@ -4,83 +4,56 @@ Date: Sat, 18 May 2024 05:13:24 +0200
 Subject: [PATCH 10/14] FindLibDvd.cmake-build-with-external-source
 
 ---
- cmake/modules/FindLibDvd.cmake | 61 ++++++++++++++++++++++------------
- 1 file changed, 40 insertions(+), 21 deletions(-)
+ xbmc/cores/RetroPlayer/messages/savestate.fbs | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/cmake/modules/FindLibDvd.cmake b/cmake/modules/FindLibDvd.cmake
-index dd7d8a26d2..693f83b1ad 100644
---- a/cmake/modules/FindLibDvd.cmake
-+++ b/cmake/modules/FindLibDvd.cmake
-@@ -1,29 +1,48 @@
+diff --git a/xbmc/cores/RetroPlayer/messages/savestate.fbs b/xbmc/cores/RetroPlayer/messages/savestate.fbs
+index 7f8d8056e9..2a63c4dfef 100644
+--- a/xbmc/cores/RetroPlayer/messages/savestate.fbs
++++ b/xbmc/cores/RetroPlayer/messages/savestate.fbs
+@@ -15,7 +15,7 @@ namespace KODI.RETRO;
  
- # Check for existing LIBDVDREAD.
- # Suppress mismatch warning, see https://cmake.org/cmake/help/latest/module/FindPackageHandleStandardArgs.html
--set(FPHSA_NAME_MISMATCHED 1)
--find_package(LibDvdNav MODULE REQUIRED)
--unset(FPHSA_NAME_MISMATCHED)
-+  set(_dvdlibs dvdread dvdnav)
-+  set(_handlevars LIBDVD_INCLUDE_DIRS DVDREAD_LIBRARY DVDNAV_LIBRARY)
-+  if(ENABLE_DVDCSS)
-+    list(APPEND _dvdlibs libdvdcss)
-+    list(APPEND _handlevars DVDCSS_LIBRARY)
-+  endif()
+ file_identifier "SAV_";
  
--set(_dvdlibs ${LIBDVDREAD_LIBRARY} ${LIBDVDCSS_LIBRARY})
-+  if(PKG_CONFIG_FOUND)
-+    pkg_check_modules(PC_DVD ${_dvdlibs} QUIET)
-+  endif()
+-enum SaveType : uint8 {
++enum SaveType : ubyte {
+   Unknown,
+   Auto,
+   Manual
+@@ -23,11 +23,11 @@ enum SaveType : uint8 {
  
--if(NOT CORE_SYSTEM_NAME MATCHES windows)
--  # link a shared dvdnav library that includes the whole archives of dvdread and dvdcss as well
--  # the quotes around _dvdlibs are on purpose, since we want to pass a list to the function that will be unpacked automatically
--  core_link_library(${LIBDVDNAV_LIBRARY} system/players/VideoPlayer/libdvdnav libdvdnav archives "${_dvdlibs}")
--else()
--  set(LIBDVD_TARGET_DIR .)
--  copy_file_to_buildtree(${DEPENDS_PATH}/bin/libdvdnav.dll DIRECTORY ${LIBDVD_TARGET_DIR})
--  set_property(GLOBAL APPEND PROPERTY INTERNAL_DEPS_PROP LibDvdNav::LibDvdNav)
--endif()
-+  find_path(LIBDVD_INCLUDE_DIRS dvdnav/dvdnav.h PATHS ${PC_DVD_INCLUDE_DIRS})
-+  find_library(DVDREAD_LIBRARY NAMES dvdread libdvdread PATHS ${PC_DVD_dvdread_LIBDIR})
-+  find_library(DVDNAV_LIBRARY NAMES dvdnav libdvdnav PATHS ${PC_DVD_dvdnav_LIBDIR})
-+  if(ENABLE_DVDCSS)
-+    find_library(DVDCSS_LIBRARY NAMES dvdcss libdvdcss PATHS ${PC_DVD_libdvdcss_LIBDIR})
-+  endif()
+ table Savestate {
+   // Schema version
+-  version:uint8 (id: 0);
++  version:ubyte (id: 0);
  
--set(LIBDVD_INCLUDE_DIRS ${LIBDVDREAD_INCLUDE_DIR} ${LIBDVDNAV_INCLUDE_DIR})
--set(LIBDVD_LIBRARIES ${LIBDVDNAV_LIBRARY} ${LIBDVDREAD_LIBRARY})
--if(TARGET LibDvdCSS::LibDvdCSS)
--  list(APPEND LIBDVD_LIBRARIES ${LIBDVDCSS_LIBRARY})
--  list(APPEND LIBDVD_INCLUDE_DIRS ${LIBDVDCSS_INCLUDE_DIR})
--endif()
--set(LIBDVD_LIBRARIES ${LIBDVD_LIBRARIES} CACHE STRING "libdvd libraries" FORCE)
--set(LIBDVD_FOUND 1 CACHE BOOL "libdvd found" FORCE)
-+  include(FindPackageHandleStandardArgs)
-+  find_package_handle_standard_args(LibDvd REQUIRED_VARS ${_handlevars})
-+  if(LIBDVD_FOUND)
-+    add_library(dvdnav UNKNOWN IMPORTED)
-+    set_target_properties(dvdnav PROPERTIES
-+                                  FOLDER "External Projects"
-+                                  IMPORTED_LOCATION "${DVDNAV_LIBRARY}")
-+
-+    add_library(dvdread UNKNOWN IMPORTED)
-+    set_target_properties(dvdread PROPERTIES
-+                                  FOLDER "External Projects"
-+                                  IMPORTED_LOCATION "${DVDREAD_LIBRARY}")
-+    add_library(dvdcss UNKNOWN IMPORTED)
-+    set_target_properties(dvdcss PROPERTIES
-+                                  FOLDER "External Projects"
-+                                  IMPORTED_LOCATION "${DVDCSS_LIBRARY}")
-+
-+    set(_linklibs ${DVDREAD_LIBRARY})
-+    if(ENABLE_DVDCSS)
-+      list(APPEND _linklibs ${DVDCSS_LIBRARY})
-+    endif()
-+    set(_linklibs ${DVDNAV_LIBRARY})
-+    set(LIBDVD_LIBRARIES ${DVDNAV_LIBRARY})
-+    mark_as_advanced(LIBDVD_INCLUDE_DIRS LIBDVD_LIBRARIES)
-+  endif()
+   // Savestate properties
+   type:SaveType (id: 1);
+-  slot:uint8 (id: 2);
++  slot:ubyte (id: 2);
+   label:string (id: 3);
+   caption:string (id: 11);
+   created:string (id: 4); // W3C date time [ISO 8601 : 1988 (E)] with timezone info
+@@ -36,8 +36,8 @@ table Savestate {
+   game_file_name:string (id: 5);
  
- mark_as_advanced(LIBDVD_INCLUDE_DIRS LIBDVD_LIBRARIES)
+   // Environment properties
+-  timestamp_frames:uint64 (id: 6);
+-  timestamp_wall_clock_ns:uint64 (id: 7);
++  timestamp_frames:ulong (id: 6);
++  timestamp_wall_clock_ns:ulong (id: 7);
+ 
+   // Emulator properties
+   emulator_addon_id:string (id: 8);
+@@ -58,7 +58,7 @@ table Savestate {
+   rotation_ccw:VideoRotation (id: 21);
+ 
+   // Memory properties
+-  memory_data:[uint8] (id: 10);
++  memory_data:[ubyte] (id: 10);
+ }
+ 
+ root_type Savestate;
 -- 
 2.45.1.windows.1
 

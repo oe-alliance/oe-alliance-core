@@ -1,11 +1,11 @@
-From 610b93f08f6af433c56f6d21d66a5b774daad57a Mon Sep 17 00:00:00 2001
+From 1852d0899221d0c936a8c06832f17ebb94cea35e Mon Sep 17 00:00:00 2001
 From: Captain <openatv@gmail.com>
 Date: Sat, 18 May 2024 05:18:14 +0200
 Subject: [PATCH] gst-player
 
 ---
- cmake/modules/FindGLIB.cmake                  |  102 ++
- cmake/modules/FindGstreamer.cmake             |   40 +
+ cmake/modules/FindGLIB.cmake                  |  104 ++
+ cmake/modules/FindGstreamer.cmake             |   44 +
  cmake/platform/linux/stb.cmake                |    2 +-
  cmake/treedata/common/cores.txt               |    1 +
  xbmc/cores/GstPlayer/CMakeLists.txt           |    9 +
@@ -17,7 +17,7 @@ Subject: [PATCH] gst-player
  xbmc/cores/GstPlayer/GstPlayerVideo.h         |  181 +++
  .../playercorefactory/PlayerCoreConfig.cpp    |    9 +
  .../playercorefactory/PlayerCoreFactory.cpp   |   15 +
- 13 files changed, 2836 insertions(+), 1 deletion(-)
+ 13 files changed, 2842 insertions(+), 1 deletion(-)
  create mode 100644 cmake/modules/FindGLIB.cmake
  create mode 100644 cmake/modules/FindGstreamer.cmake
  create mode 100644 xbmc/cores/GstPlayer/CMakeLists.txt
@@ -30,10 +30,10 @@ Subject: [PATCH] gst-player
 
 diff --git a/cmake/modules/FindGLIB.cmake b/cmake/modules/FindGLIB.cmake
 new file mode 100644
-index 0000000..656aa0b
+index 0000000000..a1d1de6727
 --- /dev/null
 +++ b/cmake/modules/FindGLIB.cmake
-@@ -0,0 +1,102 @@
+@@ -0,0 +1,104 @@
 +# - Try to find Glib and its components (gio, gobject etc)
 +# Once done, this will define
 +#
@@ -77,15 +77,16 @@ index 0000000..656aa0b
 +# OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 +# ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 +
-+FIND_PACKAGE(PkgConfig)
-+PKG_CHECK_MODULES(PC_GLIB QUIET glib-2.0)
-+
++if(NOT TARGET ${APP_NAME_LC}::${CMAKE_FIND_PACKAGE_NAME})
++  FIND_PACKAGE(PkgConfig)
++  if(PKG_CONFIG_FOUND)
++    PKG_CHECK_MODULES(PC_GLIB QUIET glib-2.0)
++  endif()
 +FIND_LIBRARY(GLIB_LIBRARIES
 +    NAMES glib-2.0
 +    HINTS ${PC_GLIB_LIBDIR}
 +          ${PC_GLIB_LIBRARY_DIRS}
 +)
-+
 +# Files in glib's main include path may include glibconfig.h, which,
 +# for some odd reason, is normally in $LIBDIR/glib-2.0/include.
 +GET_FILENAME_COMPONENT(_GLIB_LIBRARY_DIR ${GLIB_LIBRARIES} PATH)
@@ -136,12 +137,13 @@ index 0000000..656aa0b
 +INCLUDE(FindPackageHandleStandardArgs)
 +FIND_PACKAGE_HANDLE_STANDARD_ARGS(GLIB REQUIRED_VARS GLIB_INCLUDE_DIRS GLIB_LIBRARIES ${ADDITIONAL_REQUIRED_VARS}
 +                                       VERSION_VAR   GLIB_VERSION)
++endif()
 diff --git a/cmake/modules/FindGstreamer.cmake b/cmake/modules/FindGstreamer.cmake
 new file mode 100644
-index 0000000..760e7d1
+index 0000000000..9c59309215
 --- /dev/null
 +++ b/cmake/modules/FindGstreamer.cmake
-@@ -0,0 +1,40 @@
+@@ -0,0 +1,44 @@
 +#.rst:
 +# FindGStreamer
 +# -------
@@ -154,36 +156,40 @@ index 0000000..760e7d1
 +# GSTREAMER_LIBRARIES - the GStreamer libraries
 +# GSTREAMER_DEFINITIONS - the GStreamer compile definitions
 +
-+if(PKG_CONFIG_FOUND)
-+  pkg_check_modules(PC_GLIB glib-2.0 QUIET)
-+  pkg_check_modules(PC_GOBJECT gobject-2.0 QUIET)
-+  pkg_check_modules(PC_GSTREAMER gstreamer-1.0 QUIET)
-+  pkg_check_modules(PC_GSTREAMERPBUTILS gstreamer-pbutils-1.0 QUIET)
++if(NOT TARGET ${APP_NAME_LC}::${CMAKE_FIND_PACKAGE_NAME})
++  find_package(PkgConfig)
++  if(PKG_CONFIG_FOUND)
++    pkg_check_modules(PC_GLIB glib-2.0 QUIET)
++    pkg_check_modules(PC_GOBJECT gobject-2.0 QUIET)
++    pkg_check_modules(PC_GSTREAMER gstreamer-1.0 QUIET)
++    pkg_check_modules(PC_GSTREAMERPBUTILS gstreamer-pbutils-1.0 QUIET)
++  endif()
++
++  find_path(GSTREAMER_INCLUDE_DIR NAMES gst/gst.h
++                          HINTS ${PC_GSTREAMER_INCLUDE_DIRS})
++  find_library(GLIB_LIBRARY NAMES glib-2.0
++                         HINTS ${PC_GLIB_LIBDIR})
++  find_library(GOBJECT_LIBRARY NAMES gobject-2.0
++                         HINTS ${PC_GOBJECT_LIBDIR})
++  find_library(GSTREAMER_LIBRARY NAMES gstreamer-1.0
++                         HINTS ${PC_GSTREAMER_LIBDIR})
++  find_library(GSTREAMERPBUTILS_LIBRARY NAMES gstpbutils-1.0
++                         HINTS ${PC_GSTREAMERPBUTILS_LIBDIR})
++
++  include(FindPackageHandleStandardArgs)
++  find_package_handle_standard_args(Gstreamer REQUIRED_VARS GSTREAMER_LIBRARY GSTREAMER_INCLUDE_DIR)
++
++  if(GSTREAMER_FOUND)
++    add_library(${APP_NAME_LC}::${CMAKE_FIND_PACKAGE_NAME} UNKNOWN IMPORTED)
++    set_target_properties(${APP_NAME_LC}::${CMAKE_FIND_PACKAGE_NAME} PROPERTIES
++                                                                     IMPORTED_LOCATION "${GSTREAMER_LIBRARY}"
++                                                                     INTERFACE_INCLUDE_DIRECTORIES "${GSTREAMER_INCLUDE_DIR}"
++                                                                     INTERFACE_COMPILE_DEFINITIONS HAVE_LIBGSTREAMER)
++    target_link_libraries(${APP_NAME_LC}::${CMAKE_FIND_PACKAGE_NAME} INTERFACE glib-2.0 gobject-2.0 gstreamer-1.0 gstpbutils-1.0)
++  endif()
 +endif()
-+
-+find_path(GSTREAMER_INCLUDE_DIR NAMES gst/gst.h
-+                          PATHS ${PC_GSTREAMER_INCLUDE_DIRS})
-+find_library(GLIB_LIBRARY NAMES glib-2.0
-+                         PATHS ${PC_GLIB_LIBDIR})
-+find_library(GOBJECT_LIBRARY NAMES gobject-2.0
-+                         PATHS ${PC_GOBJECT_LIBDIR})
-+find_library(GSTREAMER_LIBRARY NAMES gstreamer-1.0
-+                         PATHS ${PC_GSTREAMER_LIBDIR})
-+find_library(GSTREAMERPBUTILS_LIBRARY NAMES gstpbutils-1.0
-+                         PATHS ${PC_GSTREAMERPBUTILS_LIBDIR})
-+
-+include(FindPackageHandleStandardArgs)
-+find_package_handle_standard_args(Gstreamer REQUIRED_VARS GSTREAMER_LIBRARY GSTREAMER_INCLUDE_DIR)
-+
-+if(GSTREAMER_FOUND)
-+  set(GSTREAMER_LIBRARIES ${GSTREAMER_LIBRARY} ${GSTREAMERPBUTILS_LIBRARY} ${GOBJECT_LIBRARY} ${GLIB_LIBRARY})
-+  set(GSTREAMER_INCLUDE_DIRS ${GSTREAMER_INCLUDE_DIR} ${GSTREAMERPBUTILS_INCLUDE_DIR})
-+  set(GSTREAMER_DEFINITIONS -DHAVE_LIBGSTREAMER=1)
-+endif()
-+
-+mark_as_advanced(GSTREAMER_LIBRARY GSTREAMER_INCLUDE_DIR GSTREAMER_LDFLAGS)
 diff --git a/cmake/platform/linux/stb.cmake b/cmake/platform/linux/stb.cmake
-index e1fe54a..7d7e142 100644
+index e1fe54a13d..7d7e14205f 100644
 --- a/cmake/platform/linux/stb.cmake
 +++ b/cmake/platform/linux/stb.cmake
 @@ -1,4 +1,4 @@
@@ -193,7 +199,7 @@ index e1fe54a..7d7e142 100644
  
  set(STB_RENDER_SYSTEM "" CACHE STRING "Render system to use with STB: \"gl\" or \"gles\"")
 diff --git a/cmake/treedata/common/cores.txt b/cmake/treedata/common/cores.txt
-index 5e5c6cb..cbde630 100644
+index 5e5c6cbf80..cbde630e7d 100644
 --- a/cmake/treedata/common/cores.txt
 +++ b/cmake/treedata/common/cores.txt
 @@ -5,5 +5,6 @@ xbmc/cores/DllLoader/exports           cores/dll-loader/exports
@@ -205,7 +211,7 @@ index 5e5c6cb..cbde630 100644
  xbmc/cores/playercorefactory           cores/playercorefactory
 diff --git a/xbmc/cores/GstPlayer/CMakeLists.txt b/xbmc/cores/GstPlayer/CMakeLists.txt
 new file mode 100644
-index 0000000..1b8adfa
+index 0000000000..1b8adfab36
 --- /dev/null
 +++ b/xbmc/cores/GstPlayer/CMakeLists.txt
 @@ -0,0 +1,9 @@
@@ -220,7 +226,7 @@ index 0000000..1b8adfa
 +core_add_library(gstplayer)
 diff --git a/xbmc/cores/GstPlayer/GstPlayer.cpp b/xbmc/cores/GstPlayer/GstPlayer.cpp
 new file mode 100644
-index 0000000..f06760f
+index 0000000000..f06760fa08
 --- /dev/null
 +++ b/xbmc/cores/GstPlayer/GstPlayer.cpp
 @@ -0,0 +1,691 @@
@@ -917,7 +923,7 @@ index 0000000..f06760f
 +}
 diff --git a/xbmc/cores/GstPlayer/GstPlayer.h b/xbmc/cores/GstPlayer/GstPlayer.h
 new file mode 100644
-index 0000000..9a73143
+index 0000000000..9a73143443
 --- /dev/null
 +++ b/xbmc/cores/GstPlayer/GstPlayer.h
 @@ -0,0 +1,186 @@
@@ -1109,7 +1115,7 @@ index 0000000..9a73143
 +};
 diff --git a/xbmc/cores/GstPlayer/GstPlayerAudio.cpp b/xbmc/cores/GstPlayer/GstPlayerAudio.cpp
 new file mode 100644
-index 0000000..43078a2
+index 0000000000..43078a2f0f
 --- /dev/null
 +++ b/xbmc/cores/GstPlayer/GstPlayerAudio.cpp
 @@ -0,0 +1,151 @@
@@ -1266,7 +1272,7 @@ index 0000000..43078a2
 +}
 diff --git a/xbmc/cores/GstPlayer/GstPlayerAudio.h b/xbmc/cores/GstPlayer/GstPlayerAudio.h
 new file mode 100644
-index 0000000..fe6f700
+index 0000000000..fe6f7008cd
 --- /dev/null
 +++ b/xbmc/cores/GstPlayer/GstPlayerAudio.h
 @@ -0,0 +1,45 @@
@@ -1317,7 +1323,7 @@ index 0000000..fe6f700
 +};
 diff --git a/xbmc/cores/GstPlayer/GstPlayerVideo.cpp b/xbmc/cores/GstPlayer/GstPlayerVideo.cpp
 new file mode 100644
-index 0000000..c48a487
+index 0000000000..c48a48774c
 --- /dev/null
 +++ b/xbmc/cores/GstPlayer/GstPlayerVideo.cpp
 @@ -0,0 +1,1405 @@
@@ -2728,7 +2734,7 @@ index 0000000..c48a487
 +
 diff --git a/xbmc/cores/GstPlayer/GstPlayerVideo.h b/xbmc/cores/GstPlayer/GstPlayerVideo.h
 new file mode 100644
-index 0000000..4a77d63
+index 0000000000..4a77d63f0f
 --- /dev/null
 +++ b/xbmc/cores/GstPlayer/GstPlayerVideo.h
 @@ -0,0 +1,181 @@
@@ -2914,7 +2920,7 @@ index 0000000..4a77d63
 +
 +};
 diff --git a/xbmc/cores/playercorefactory/PlayerCoreConfig.cpp b/xbmc/cores/playercorefactory/PlayerCoreConfig.cpp
-index 6c4718d..513eed3 100644
+index 6c4718d736..513eed3dbc 100644
 --- a/xbmc/cores/playercorefactory/PlayerCoreConfig.cpp
 +++ b/xbmc/cores/playercorefactory/PlayerCoreConfig.cpp
 @@ -22,6 +22,9 @@
@@ -2941,7 +2947,7 @@ index 6c4718d..513eed3 100644
    {
      player = std::make_shared<CExternalPlayer>(callback);
 diff --git a/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp b/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp
-index 8cae329..7f29221 100644
+index 8cae329174..7f29221408 100644
 --- a/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp
 +++ b/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp
 @@ -32,6 +32,10 @@

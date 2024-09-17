@@ -1,4 +1,4 @@
-From 11fc513a6e3ec5552b092a24b620cff5d40d3f1c Mon Sep 17 00:00:00 2001
+From 7f72d039acae756dc6e8eff4c32a158ff844d986 Mon Sep 17 00:00:00 2001
 From: Captain <openatv@gmail.com>
 Date: Wed, 22 May 2024 20:32:48 +0200
 Subject: [PATCH] stb-settings-21
@@ -23,10 +23,10 @@ Subject: [PATCH] stb-settings-21
  create mode 100644 cmake/treedata/common/stb.txt
 
 diff --git a/addons/skin.estuary/xml/Home.xml b/addons/skin.estuary/xml/Home.xml
-index 3cd090d..e18a405 100644
+index 24d032d..6854ffa 100644
 --- a/addons/skin.estuary/xml/Home.xml
 +++ b/addons/skin.estuary/xml/Home.xml
-@@ -1059,7 +1059,7 @@
+@@ -1081,7 +1081,7 @@
  					<align>justify</align>
  					<include content="IconButton">
  						<param name="control_id" value="804" />
@@ -36,7 +36,7 @@ index 3cd090d..e18a405 100644
  						<param name="label" value="$LOCALIZE[33060]" />
  					</include>
 diff --git a/cmake/modules/FindFFMPEG.cmake b/cmake/modules/FindFFMPEG.cmake
-index 76857b0..3b5f1e0 100644
+index 26dd6e8..10940d6 100644
 --- a/cmake/modules/FindFFMPEG.cmake
 +++ b/cmake/modules/FindFFMPEG.cmake
 @@ -48,6 +48,12 @@ macro(buildFFMPEG)
@@ -53,7 +53,7 @@ index 76857b0..3b5f1e0 100644
      set(CROSS_ARGS -DDEPENDS_PATH=${DEPENDS_PATH}
                     -DPKG_CONFIG_EXECUTABLE=${PKG_CONFIG_EXECUTABLE}
 @@ -97,13 +103,13 @@ macro(buildFFMPEG)
-     add_dependencies(ffmpeg dav1d::dav1d)
+     add_dependencies(ffmpeg ${APP_NAME_LC}::Dav1d)
    endif()
  
 -  find_program(BASH_COMMAND bash)
@@ -118,7 +118,7 @@ index 76857b0..3b5f1e0 100644
  # Allows building with external ffmpeg not found in system paths,
 diff --git a/cmake/platform/linux/stb.cmake b/cmake/platform/linux/stb.cmake
 new file mode 100644
-index 0000000..e1fe54a
+index 0000000..eb72bfd
 --- /dev/null
 +++ b/cmake/platform/linux/stb.cmake
 @@ -0,0 +1,69 @@
@@ -159,7 +159,7 @@ index 0000000..e1fe54a
 +elseif(WITH_PLATFORM STREQUAL "vuplus-mipsel")
 +  list(APPEND PLATFORM_DEFINES "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_STB_EXTEND -DTARGET_V3D -DTARGET_VUPLUS -DTARGET_VUPLUS_MIPSEL")
 +  list(APPEND DEPLIBS ${CMAKE_SOURCE_DIR}/xbmc/windowing/egl/gles_init.a EGL GLESv2 dvb_base nxpl xbmc_base dvb_client)
-+  list(APPEND SYSTEM_LDFLAGS -L${CMAKE_SOURCE_DIR}/../xbmc-support)
++  #list(APPEND SYSTEM_LDFLAGS -L${CMAKE_SOURCE_DIR}/../sources-unpack/xbmc-support)
 +elseif(WITH_PLATFORM STREQUAL "v3d-cortexa15")
 +  set(CPU cortexa15)
 +  list(APPEND PLATFORM_DEFINES "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_STB_EXTEND -DTARGET_V3D -DTARGET_V3DNXPL")
@@ -214,7 +214,7 @@ index 0000000..2606a0f
 @@ -0,0 +1 @@
 +xbmc/windowing/egl   windowing/egl    # STB
 diff --git a/system/settings/settings.xml b/system/settings/settings.xml
-index 0f55917..0fc2f4a 100755
+index 7434932..92c5bd7 100755
 --- a/system/settings/settings.xml
 +++ b/system/settings/settings.xml
 @@ -597,7 +597,7 @@
@@ -235,7 +235,7 @@ index 0f55917..0fc2f4a 100755
            <default>DEFAULT</default>
            <constraints>
              <options>charsets</options>
-@@ -3180,7 +3180,7 @@
+@@ -3218,7 +3218,7 @@
          <setting id="audiooutput.processquality" type="integer" label="13505" help="36169">
            <requirement>HAS_AE_QUALITY_LEVELS</requirement>
            <level>2</level>
@@ -244,7 +244,7 @@ index 0f55917..0fc2f4a 100755
            <constraints>
              <options>aequalitylevels</options>
            </constraints>
-@@ -3198,7 +3198,7 @@
+@@ -3236,7 +3236,7 @@
          </setting>
          <setting id="audiooutput.samplerate" type="integer" label="458" help="36523">
            <level>2</level>
@@ -253,7 +253,7 @@ index 0f55917..0fc2f4a 100755
            <dependencies>
              <dependency type="visible">
                <and>
-@@ -3210,10 +3210,6 @@
+@@ -3248,10 +3248,6 @@
            <constraints>
              <options>
                <option label="34124">44100</option>
@@ -264,7 +264,7 @@ index 0f55917..0fc2f4a 100755
                <option label="34129">352800</option>
                <option label="34130">384000</option>
              </options>
-@@ -4034,7 +4030,7 @@
+@@ -4084,7 +4080,7 @@
        <group id="2" label="14270">
          <setting id="locale.country" type="string" label="14271" help="36115">
            <level>0</level>
@@ -472,7 +472,7 @@ index 9d9a04b..295319e 100644
  
    std::string text;
 diff --git a/xbmc/input/InputManager.cpp b/xbmc/input/InputManager.cpp
-index 26641f6..5e80e1e 100644
+index a07a131..45771a0 100644
 --- a/xbmc/input/InputManager.cpp
 +++ b/xbmc/input/InputManager.cpp
 @@ -607,6 +607,18 @@ bool CInputManager::HandleKey(const CKey& key)
