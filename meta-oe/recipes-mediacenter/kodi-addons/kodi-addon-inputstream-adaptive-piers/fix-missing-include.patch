@@ -1,0 +1,10 @@
+--- a/src/decrypters/Helpers.h
++++ b/src/decrypters/Helpers.h
+@@ -11,6 +11,7 @@
+ #include <string>
+ #include <string_view>
+ #include <vector>
++#include <cstdint>
+ 
+ namespace DRM
+ {
