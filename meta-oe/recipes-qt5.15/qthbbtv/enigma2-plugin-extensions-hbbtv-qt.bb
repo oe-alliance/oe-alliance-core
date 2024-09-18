@@ -14,11 +14,11 @@ SRC_URI = "git://github.com/oe-alliance/e2plugins.git;protocol=https;branch=pyth
 PV = "1.0+git"
 PKGV = "1.0+git${GITPKGV}"
 SRCREV = "${AUTOREV}"
-VER ?= "${@bb.utils.contains('MACHINE_FEATURES', 'hisil', '-v2', '', d)}"
+QVERSION ?= "${@bb.utils.contains('MACHINE_FEATURES', 'hisil', '-v2', '', d)}"
 
 RDEPENDS:${PN}  = "qtwebkit"
 
-S = "${WORKDIR}/git/qthbbtv${VER}"
+S = "${WORKDIR}/git/qthbbtv${QVERSION}"
 
 FILES:${PN} =  "${bindir} ${libdir}"
 
