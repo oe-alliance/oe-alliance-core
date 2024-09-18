@@ -1,11 +1,11 @@
 diff --git a/wscript_configure_embedded_heimdal b/wscript_configure_embedded_heimdal
-index 6066f2b..e92caba 100644
+index 45f4772..6c5a4bc 100644
 --- a/wscript_configure_embedded_heimdal
 +++ b/wscript_configure_embedded_heimdal
-@@ -6,3 +6,14 @@ if not conf.env['BISON']:
- 
- conf.define('USING_EMBEDDED_HEIMDAL', 1)
- conf.RECURSE('third_party/heimdal_build')
+@@ -13,3 +13,14 @@ conf.RECURSE('third_party/heimdal_build')
+ # when this will be available also in
+ # system libraries...
+ conf.define('HAVE_CLIENT_GSS_C_CHANNEL_BOUND_FLAG', 1)
 +
 +def check_system_heimdal_binary(name):
 +    if conf.LIB_MAY_BE_BUNDLED(name):
@@ -18,10 +18,10 @@ index 6066f2b..e92caba 100644
 +check_system_heimdal_binary("compile_et")
 +check_system_heimdal_binary("asn1_compile")
 diff --git a/wscript_configure_system_heimdal b/wscript_configure_system_heimdal
-index 5dbb5e4..68f707b 100644
+index b6ca9e9..48aa193 100644
 --- a/wscript_configure_system_heimdal
 +++ b/wscript_configure_system_heimdal
-@@ -27,14 +27,6 @@ if krb5_config:
+@@ -24,14 +24,6 @@ if krb5_config:
  def check_system_heimdal_lib(name, functions='', headers=''):
      # Only use system library if the user requested the bundled one not be
      # used.

@@ -1,4 +1,4 @@
-From 9942bca2e276c7b4c7696a08594258430c4c5bb5 Mon Sep 17 00:00:00 2001
+From ccaf9b6ef1bcf186dc1d6b0c4a46e93f395f2152 Mon Sep 17 00:00:00 2001
 From: Yi Zhao <yi.zhao@windriver.com>
 Date: Thu, 3 Jun 2021 09:39:56 +0800
 Subject: [PATCH] source3/wscript: disable check fcntl RW_HINTS
@@ -16,10 +16,10 @@ Signed-off-by: Yi Zhao <yi.zhao@windriver.com>
  1 file changed, 61 deletions(-)
 
 diff --git a/source3/wscript b/source3/wscript
-index 549580e..521de42 100644
+index 0da9e84..5dce1bb 100644
 --- a/source3/wscript
 +++ b/source3/wscript
-@@ -1152,67 +1152,6 @@ err:
+@@ -1097,67 +1097,6 @@ err:
              execute=True,
              msg="Checking whether fcntl lock supports open file description locks")
  
@@ -87,6 +87,3 @@ index 549580e..521de42 100644
      conf.CHECK_STRUCTURE_MEMBER('struct stat', 'st_mtim.tv_nsec',
                                  define='HAVE_STRUCT_STAT_ST_MTIM_TV_NSEC') # Linux, Solaris
      conf.CHECK_STRUCTURE_MEMBER('struct stat', 'st_mtimensec',
--- 
-2.40.1
-

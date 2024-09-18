@@ -1,4 +1,4 @@
-From 5bd7b5d04435bd593349825973ce32290f5f604d Mon Sep 17 00:00:00 2001
+From 56031734c1bd7720c9adb6bebc92576812039e28 Mon Sep 17 00:00:00 2001
 From: Changqing Li <changqing.li@windriver.com>
 Date: Wed, 25 Jul 2018 09:55:25 +0800
 Subject: [PATCH] samba: cmocka.h: fix musl libc conflicting types error

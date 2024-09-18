@@ -1,5 +1,5 @@
 diff --git a/lib/replace/wscript b/lib/replace/wscript
-index a052693..55955ee 100644
+index be3ee28..482b761 100644
 --- a/lib/replace/wscript
 +++ b/lib/replace/wscript
 @@ -113,8 +113,10 @@ def configure(conf):
@@ -16,17 +16,18 @@ index a052693..55955ee 100644
      conf.CHECK_HEADERS('sys/extattr.h sys/ea.h sys/proplist.h sys/cdefs.h')
      conf.CHECK_HEADERS('utmp.h utmpx.h lastlog.h')
 diff --git a/wscript b/wscript
-index 95ddd9e..53c0bcf 100644
+index d1b8f0b..e38aed7 100644
 --- a/wscript
 +++ b/wscript
-@@ -123,6 +123,10 @@ def options(opt):
-                   help=('Disable kernely keyring support for credential storage'),
-                   action='store_false', dest='enable_keyring')
+@@ -145,6 +145,11 @@ def options(opt):
+ 
+     opt.samba_add_onoff_option('ldap')
  
 +    opt.add_option('--without-valgrind',
 +                   help=("Disable use of the valgrind headers"),
 +                   action="store_true", dest='disable_valgrind', default=False)
 +
-     gr = opt.option_group('developer options')
++
+     opt.option_group('developer options')
  
      opt.load('python') # options for disabling pyc or pyo compilation

@@ -1,6 +1,8 @@
+diff --git a/source3/utils/status.c b/source3/utils/status.c
+index 02a5f6d..6e0b609 100644
 --- a/source3/utils/status.c
 +++ b/source3/utils/status.c
-@@ -1166,7 +1166,6 @@ int main(int argc, const char *argv[])
+@@ -1259,7 +1259,6 @@ int main(int argc, const char *argv[])
  			ret = 0;
  			goto done;
  		} else {
@@ -8,7 +10,7 @@
  			TALLOC_FREE(db_path);
  		}
  
-@@ -1176,6 +1175,8 @@ int main(int argc, const char *argv[])
+@@ -1269,6 +1268,8 @@ int main(int argc, const char *argv[])
  			goto done;
  		}
  
@@ -17,7 +19,7 @@
  		prepare_share_mode(&state);
  		result = share_entry_forall(print_share_mode, &state);
  
-@@ -1194,7 +1195,7 @@ int main(int argc, const char *argv[])
+@@ -1287,7 +1288,7 @@ int main(int argc, const char *argv[])
  			brl_forall(print_brl, &state);
  		}
  

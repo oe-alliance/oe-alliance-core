@@ -9,16 +9,11 @@ Signed-off-by: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
 Rebase to 4.14.4
 Signed-off-by: Yi Zhao <yi.zhao@windriver.com>
 ---
- buildtools/wafsamba/wscript |  7 +++++++
- lib/replace/wscript         | 29 +++++++++++++++--------------
- lib/texpect/wscript         |  8 +++++++-
- 3 files changed, 29 insertions(+), 15 deletions(-)
-
 diff --git a/buildtools/wafsamba/wscript b/buildtools/wafsamba/wscript
-index 1aadb95..e7b47c0 100644
+index e18bc4f..002168a 100644
 --- a/buildtools/wafsamba/wscript
 +++ b/buildtools/wafsamba/wscript
-@@ -88,6 +88,13 @@ def options(opt):
+@@ -148,6 +148,13 @@ Currently the only tested value is 'smbtorture,smbd/smbd' for Samba'''),
                     help=("Disable use of gettext"),
                     action="store_true", dest='disable_gettext', default=False)
  
@@ -33,10 +28,10 @@ index 1aadb95..e7b47c0 100644
  
      gr.add_option('-C',
 diff --git a/lib/replace/wscript b/lib/replace/wscript
-index bc726f7..44ad0d6 100644
+index 77e655b..be3ee28 100644
 --- a/lib/replace/wscript
 +++ b/lib/replace/wscript
-@@ -419,20 +419,21 @@ def configure(conf):
+@@ -443,31 +443,32 @@ def configure(conf):
  
      strlcpy_in_bsd = False
  
@@ -45,6 +40,17 @@ index bc726f7..44ad0d6 100644
 -        if conf.CHECK_FUNCS_IN('strlcpy strlcat', 'bsd', headers='bsd/string.h',
 -                               checklibc=True):
 -            strlcpy_in_bsd = True
+-    elif conf.env.enable_fuzzing:
+-        # Just to complicate it more, some versions of Honggfuzz have
+-        # got strlcpy and strlcat in libc, but not in <string.h>
+-        # (unless it is there coincidentally, on a BSD). Therefore we
+-        # can't use CHECK_FUNCS alone to decide whether to add the
+-        # headers to replace.h.
+-        #
+-        # As this is only known to happen on a fuzzing compiler, we'll
+-        # skip the check when not in fuzzing mode.
+-        conf.CHECK_HEADERS('bsd/string.h')
+-
 -    if not conf.CHECK_FUNCS('getpeereid'):
 -        conf.CHECK_FUNCS_IN('getpeereid', 'bsd', headers='sys/types.h bsd/unistd.h')
 -    if not conf.CHECK_FUNCS_IN('setproctitle', 'setproctitle', headers='setproctitle.h'):
@@ -60,6 +66,17 @@ index bc726f7..44ad0d6 100644
 +            if conf.CHECK_FUNCS_IN('strlcpy strlcat', 'bsd', headers='bsd/string.h',
 +                                   checklibc=True):
 +                strlcpy_in_bsd = True
++        elif conf.env.enable_fuzzing:
++            # Just to complicate it more, some versions of Honggfuzz have
++            # got strlcpy and strlcat in libc, but not in <string.h>
++            # (unless it is there coincidentally, on a BSD). Therefore we
++            # can't use CHECK_FUNCS alone to decide whether to add the
++            # headers to replace.h.
++            #
++            # As this is only known to happen on a fuzzing compiler, we'll
++            # skip the check when not in fuzzing mode.
++            conf.CHECK_HEADERS('bsd/string.h')
++
 +        if not conf.CHECK_FUNCS('getpeereid'):
 +            conf.CHECK_FUNCS_IN('getpeereid', 'bsd', headers='sys/types.h bsd/unistd.h')
 +        if not conf.CHECK_FUNCS_IN('setproctitle', 'setproctitle', headers='setproctitle.h'):
@@ -73,7 +90,7 @@ index bc726f7..44ad0d6 100644
      conf.CHECK_CODE('''
                  struct ucred cred;
 diff --git a/lib/texpect/wscript b/lib/texpect/wscript
-index 82f6b25..33eea64 100644
+index 44f92a8..79e8d09 100644
 --- a/lib/texpect/wscript
 +++ b/lib/texpect/wscript
 @@ -1,7 +1,13 @@
@@ -91,6 +108,3 @@ index 82f6b25..33eea64 100644
  
  def build(bld):
      bld.SAMBA_BINARY('texpect',
--- 
-2.17.1
-

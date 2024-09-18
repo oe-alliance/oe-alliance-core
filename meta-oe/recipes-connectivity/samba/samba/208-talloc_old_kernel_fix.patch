@@ -1,5 +1,5 @@
 diff --git a/lib/replace/tests/testsuite.c b/lib/replace/tests/testsuite.c
-index 2ece953..fa6999b 100644
+index 58624f1..2400bd2 100644
 --- a/lib/replace/tests/testsuite.c
 +++ b/lib/replace/tests/testsuite.c
 @@ -31,9 +31,9 @@

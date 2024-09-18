@@ -1,4 +1,4 @@
-From 4b8f92cef6cb23b8e05e7a43ed0c410dc21bc666 Mon Sep 17 00:00:00 2001
+From 9192ffa0c294e9497bfbae65420d7a21ff47a4fe Mon Sep 17 00:00:00 2001
 From: WanWizard <wanwizard@openpli.org>
 Date: Thu, 18 Oct 2018 14:38:40 +0100
 Subject: [PATCH] Revert "source3/wscript: remove pam_smbpass option as it was
@@ -6,16 +6,15 @@ Subject: [PATCH] Revert "source3/wscript: remove pam_smbpass option as it was
  removed"
 
 This reverts commit 21d0082169bb61417aa7a564050f930808764ac8.
-
 ---
  source3/wscript | 4 ++++
  1 file changed, 4 insertions(+)
 
 diff --git a/source3/wscript b/source3/wscript
-index fee8135..ef709ff 100644
+index 5dce1bb..0d3816e 100644
 --- a/source3/wscript
 +++ b/source3/wscript
-@@ -67,6 +67,7 @@ def options(opt):
+@@ -65,6 +65,7 @@ def options(opt):
      opt.samba_add_onoff_option('cups', with_name="enable", without_name="disable")
      opt.samba_add_onoff_option('iprint', with_name="enable", without_name="disable")
      opt.samba_add_onoff_option('pam')
@@ -23,7 +22,7 @@ index fee8135..ef709ff 100644
      opt.samba_add_onoff_option('quotas', default=None)
      opt.samba_add_onoff_option('sendfile-support', default=None)
      opt.samba_add_onoff_option('utmp')
-@@ -973,6 +974,9 @@ int i; i = PAM_RADIO_TYPE;
+@@ -900,6 +901,9 @@ int i; i = PAM_RADIO_TYPE;
          conf.undefine('HAVE_PAM_PAM_APPL_H')
  
  

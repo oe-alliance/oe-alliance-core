@@ -1,8 +1,8 @@
 diff --git a/source3/lib/messages.c b/source3/lib/messages.c
-index b63652c..014d167 100644
+index b856a28..cdc28c5 100644
 --- a/source3/lib/messages.c
 +++ b/source3/lib/messages.c
-@@ -507,7 +507,7 @@ static NTSTATUS messaging_init_internal(TALLOC_CTX *mem_ctx,
+@@ -501,7 +501,7 @@ static NTSTATUS messaging_init_internal(TALLOC_CTX *mem_ctx,
  		return NT_STATUS_ACCESS_DENIED;
  	}
  
@@ -11,7 +11,7 @@ index b63652c..014d167 100644
  	if (priv_path == NULL) {
  		return NT_STATUS_NO_MEMORY;
  	}
-@@ -670,7 +670,7 @@ NTSTATUS messaging_reinit(struct messaging_context *msg_ctx)
+@@ -664,7 +664,7 @@ NTSTATUS messaging_reinit(struct messaging_context *msg_ctx)
  		msg_ctx->per_process_talloc_ctx,
  		msg_ctx->event_ctx,
  		&msg_ctx->id.unique_id,

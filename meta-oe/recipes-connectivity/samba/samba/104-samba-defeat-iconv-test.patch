@@ -1,4 +1,4 @@
-From 59f7098bfbd63f9b3c19d7d297a8f90870a1893d Mon Sep 17 00:00:00 2001
+From 3e3ff30f01a0fcf017d4d92bd58aea795a1434a0 Mon Sep 17 00:00:00 2001
 From: Joe Slater <joe.slater@windriver.com>
 Date: Mon, 31 May 2021 14:50:38 +0800
 Subject: [PATCH] samba: defeat iconv test
@@ -14,7 +14,7 @@ Signed-off-by: Joe Slater <joe.slater@windriver.com>
  1 file changed, 3 insertions(+)
 
 diff --git a/lib/util/charset/wscript_configure b/lib/util/charset/wscript_configure
-index 9c27fc6..845eb36 100644
+index adae44e..222ae80 100644
 --- a/lib/util/charset/wscript_configure
 +++ b/lib/util/charset/wscript_configure
 @@ -17,6 +17,8 @@ if (conf.CHECK_FUNCS_IN('iconv_open', 'iconv', checklibc=False, headers='iconv.h
@@ -32,8 +32,5 @@ index 9c27fc6..845eb36 100644
                  headers='errno.h iconv.h')
 +"""
  
- if conf.CHECK_CFG(package='icu-i18n',
+ if conf.CHECK_CFG(package='icu-i18n icu-uc',
                 args='--cflags --libs',
--- 
-2.17.1
-

@@ -1,18 +1,5 @@
-diff --git a/lib/ldb/wscript b/lib/ldb/wscript
-index bf6129b..c515deb 100644
---- a/lib/ldb/wscript
-+++ b/lib/ldb/wscript
-@@ -143,7 +143,7 @@ def configure(conf):
-         conf.DEFINE('EXPECTED_SYSTEM_LDB_VERSION_RELEASE', int(v[2]))
- 
-     if conf.env.standalone_ldb:
--        conf.CHECK_XSLTPROC_MANPAGES()
-+        #conf.CHECK_XSLTPROC_MANPAGES()
- 
-         # we need this for the ldap backend
-         if conf.CHECK_FUNCS_IN('ber_flush ldap_open ldap_initialize', 'lber ldap', headers='lber.h ldap.h'):
 diff --git a/lib/talloc/wscript b/lib/talloc/wscript
-index a767477..f754819 100644
+index 8b5e02d..265f937 100644
 --- a/lib/talloc/wscript
 +++ b/lib/talloc/wscript
 @@ -48,7 +48,7 @@ def configure(conf):
@@ -25,7 +12,7 @@ index a767477..f754819 100644
      conf.CHECK_HEADERS('sys/auxv.h')
      conf.CHECK_FUNCS('getauxval')
 diff --git a/lib/tdb/wscript b/lib/tdb/wscript
-index e56ddd0..467dd65 100644
+index 812e598..8fbc4dd 100644
 --- a/lib/tdb/wscript
 +++ b/lib/tdb/wscript
 @@ -95,7 +95,7 @@ def configure(conf):
@@ -37,3 +24,16 @@ index e56ddd0..467dd65 100644
  
      conf.SAMBA_CHECK_PYTHON()
      conf.SAMBA_CHECK_PYTHON_HEADERS()
+diff --git a/wscript b/wscript
+index 8dd6599..d1b8f0b 100644
+--- a/wscript
++++ b/wscript
+@@ -209,7 +209,7 @@ def configure(conf):
+     conf.RECURSE('examples/winexe')
+ 
+     conf.SAMBA_CHECK_PERL(mandatory=True)
+-    conf.CHECK_XSLTPROC_MANPAGES()
++    #conf.CHECK_XSLTPROC_MANPAGES()
+ 
+     if conf.env.disable_python:
+         if not (Options.options.without_ad_dc):

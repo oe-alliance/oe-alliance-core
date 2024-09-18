@@ -63,6 +63,9 @@ CONFFILES:${BPN}-common = "${sysconfdir}/pam.d/samba \
                            ${sysconfdir}/samba/private/users.map \
                            ${sysconfdir}/samba/private/smbpasswd \
                           "
+
+CONFFILES:${PN}:openatv += "${sysconfdir}/samba/smb-local.conf"
+
 RRECOMMENDS:${BPN}-common += "pam-pluginsmbpass"
 INSANE_SKIP:${BPN}-common += "dev-so"
 
@@ -76,6 +79,7 @@ FILES:${PN} = " \
                ${sbindir}/nmbd \
                ${bindir}/smbcontrol \
                ${bindir}/smbstatus \
+               ${bindir}/wspsearch \
                ${sysconfdir}/init.d \
                ${systemd_system_unitdir}/nmb.service \
                ${systemd_system_unitdir}/smb.service \

@@ -1,8 +1,8 @@
 diff --git a/source3/modules/vfs_fruit.c b/source3/modules/vfs_fruit.c
-index b25aebf..3963abb 100644
+index b63fff7..abf4ccc 100644
 --- a/source3/modules/vfs_fruit.c
 +++ b/source3/modules/vfs_fruit.c
-@@ -4942,11 +4942,11 @@ static bool fruit_tmsize_do_dirent(vfs_handle_struct *handle,
+@@ -5303,11 +5303,11 @@ static bool fruit_tmsize_do_dirent(vfs_handle_struct *handle,
  	 * force the precision into target off_t, then we check that
  	 * the total did not overflow either.
  	 */

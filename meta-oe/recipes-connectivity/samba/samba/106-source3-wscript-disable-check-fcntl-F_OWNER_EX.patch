@@ -1,4 +1,4 @@
-From ba6bc5459cf148dd617fd9cd38dd50c3a9b5d706 Mon Sep 17 00:00:00 2001
+From 114d8ff30cde78f1496ceac4ff3954de9c19fcfc Mon Sep 17 00:00:00 2001
 From: Yi Zhao <yi.zhao@windriver.com>
 Date: Mon, 31 May 2021 15:50:48 +0800
 Subject: [PATCH] source3/wscript: disable check fcntl F_OWNER_EX
@@ -16,10 +16,10 @@ Signed-off-by: Yi Zhao <yi.zhao@windriver.com>
  1 file changed, 48 deletions(-)
 
 diff --git a/source3/wscript b/source3/wscript
-index adc31ce..f6de0a6 100644
+index 250ea71..0da9e84 100644
 --- a/source3/wscript
 +++ b/source3/wscript
-@@ -1168,54 +1168,6 @@ err:
+@@ -1101,54 +1101,6 @@ err:
  #include <fcntl.h>
  #include <unistd.h>
  #include <stdlib.h>
@@ -74,6 +74,3 @@ index adc31ce..f6de0a6 100644
  #include <stdint.h>
  
  #define DATA "hinttest.fcntl"
--- 
-2.17.1
-

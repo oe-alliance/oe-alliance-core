@@ -1,10 +1,9 @@
-From fd96d3dee05a477afdfb9c8045aafdf7b83006d6 Mon Sep 17 00:00:00 2001
+From b18a4b1e375a35c7dee23afc9b1f57592a4b8006 Mon Sep 17 00:00:00 2001
 From: WanWizard <wanwizard@openpli.org>
 Date: Thu, 18 Oct 2018 14:33:53 +0100
 Subject: [PATCH] Revert "pam_smbpass: REMOVE this PAM module"
 
 This reverts commit 3c00e8d76a2ef6194a8ce522c15853e5b8e9262b.
-
 ---
  source3/pam_smbpass/CHANGELOG                 |  31 +
  source3/pam_smbpass/INSTALL                   |  64 ++
@@ -2057,10 +2056,10 @@ index 0000000..48ccb32
 +        enabled=bld.env.with_pam_smbpass
 +        )
 diff --git a/source3/wscript_build b/source3/wscript_build
-index 5d04fcb..4046447 100644
+index 824f961..dc71de9 100644
 --- a/source3/wscript_build
 +++ b/source3/wscript_build
-@@ -1401,6 +1401,7 @@ bld.RECURSE('librpc')
+@@ -1305,6 +1305,7 @@ bld.RECURSE('librpc')
  bld.RECURSE('librpc/idl')
  bld.RECURSE('libsmb')
  bld.RECURSE('modules')

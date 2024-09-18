@@ -1,8 +1,8 @@
 diff --git a/source4/lib/messaging/messaging.c b/source4/lib/messaging/messaging.c
-index a00c35b..da641bc 100644
+index 8d76f17..6e500d0 100644
 --- a/source4/lib/messaging/messaging.c
 +++ b/source4/lib/messaging/messaging.c
-@@ -500,7 +500,7 @@ struct imessaging_context *imessaging_init(TALLOC_CTX *mem_ctx,
+@@ -528,7 +528,7 @@ static struct imessaging_context *imessaging_init_internal(
  		goto fail;
  	}
  
