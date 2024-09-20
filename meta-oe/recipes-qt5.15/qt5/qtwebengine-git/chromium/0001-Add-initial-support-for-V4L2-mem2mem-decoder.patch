@@ -10,8 +10,8 @@ Subject: [PATCH] Add initial support for V4L2 mem2mem decoder
 
 diff --git a/chromium/media/filters/ffmpeg_video_decoder.cc b/chromium/media/filters/ffmpeg_video_decoder.cc
 index 21ccdda5ed64..4a4fba3580c2 100644
---- a/chromium/media/filters/ffmpeg_video_decoder.cc
-+++ b/chromium/media/filters/ffmpeg_video_decoder.cc
+--- a/chromium/media/filters/ffmpeg_video_decoder.cc	2024-09-20 08:16:35.408653705 +0000
++++ b/chromium/media/filters/ffmpeg_video_decoder.cc	2024-09-20 08:26:38.970489310 +0000
 @@ -86,7 +86,7 @@
  }
  
@@ -21,24 +21,10 @@ index 21ccdda5ed64..4a4fba3580c2 100644
    DVLOG(1) << __func__;
    thread_checker_.DetachFromThread();
  }
-@@ -319,7 +319,12 @@
-     DCHECK_GT(packet.size, 0);
- 
-     // Let FFmpeg handle presentation timestamp reordering.
--    codec_context_->reordered_opaque = buffer.timestamp().InMicroseconds();
-+    if (decoder_v4l2m2m_) {
-+      packet.pts =
-+      packet.dts = buffer.timestamp().InMicroseconds();
-+    } else {
-+      codec_context_->reordered_opaque = buffer.timestamp().InMicroseconds();
-+    }
-   }
- 
-   switch (decoding_loop_->DecodePacket(
-@@ -356,12 +361,80 @@
+@@ -355,13 +355,80 @@
+     DLOG(ERROR) << "Video frame was produced yet has invalid frame data.";
      return false;
    }
- 
 +  if (decoder_v4l2m2m_) {
 +    const VideoPixelFormat format =
 +        AVPixelFormatToVideoPixelFormat(codec_context_->pix_fmt);
@@ -73,7 +59,7 @@ index 21ccdda5ed64..4a4fba3580c2 100644
 +
 +    if (!video_frame)
 +      return false;
-+
+ 
 +    if (!I420CopyWithPadding(*external_frame, video_frame.get()))
 +      return false;
 +
@@ -102,21 +88,21 @@ index 21ccdda5ed64..4a4fba3580c2 100644
 +      video_frame->set_color_space(video_color_space.ToGfxColorSpace());
 +    }
 +
-+    video_frame->set_timestamp(base::TimeDelta::FromMicroseconds(frame->pts));
++    //video_frame->set_timestamp(base::TimeDelta::FromMicroseconds(frame->pts));
 +    video_frame->metadata()->power_efficient = false;
 +    output_cb_.Run(video_frame);
 +  } else {
    scoped_refptr<VideoFrame> video_frame =
        reinterpret_cast<VideoFrame*>(av_buffer_get_opaque(frame->buf[0]));
-   video_frame->set_timestamp(
-       base::TimeDelta::FromMicroseconds(frame->reordered_opaque));
+ //  video_frame->set_timestamp(
+ //      base::TimeDelta::FromMicroseconds(frame->reordered_opaque));
    video_frame->metadata()->power_efficient = false;
    output_cb_.Run(video_frame);
 +  }
    return true;
  }
  
-@@ -391,7 +464,25 @@
+@@ -391,7 +458,25 @@
    if (decode_nalus_)
      codec_context_->flags2 |= AV_CODEC_FLAG2_CHUNKS;
  
