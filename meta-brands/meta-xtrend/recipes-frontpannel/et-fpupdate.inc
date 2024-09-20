@@ -21,7 +21,7 @@ inherit update-rc.d
 INITSCRIPT_NAME = "fpupdate"
 INITSCRIPT_PARAMS = "start 22 S ."
 
-FILES:${PN} = "/${bindir} /lib/firmware /etc/init.d"
+FILES:${PN} = "${bindir} /lib/firmware /etc/init.d"
 
 do_install() {
     install -d ${D}/${bindir}
