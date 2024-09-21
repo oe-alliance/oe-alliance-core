@@ -16,7 +16,7 @@ PKGV = "1.1+git${GITPKGV}"
 VER="1.1"
 PR = "r1"
 
-RRECOMMENDS:${PN} = "enigma2-plugin-extensions-weathermsn enigma2-plugin-extensions-bitrate"
+RRECOMMENDS:${PN} = "enigma2-plugin-extensions-oaweather enigma2-plugin-extensions-bitrate"
 
 SRC_URI = "git://github.com/formiano/GlamourAuraSky-skin.git;protocol=https;branch=main"
 
