@@ -8,8 +8,8 @@ require conf/machine/include/arm/armv7a/tune-cortexa15.inc
 
 PREFERRED_PROVIDER_virtual/blindscan-dvbc = "gigablue-blindscan-utils-arm"
 PREFERRED_PROVIDER_virtual/blindscan-dvbs = "gigablue-blindscan-utils-arm"
-PREFERRED_PROVIDER_virtual/egl = "gb-v3ddriver-${MACHINE}"
-PREFERRED_PROVIDER_virtual/libgles2 = "gb-v3ddriver-${MACHINE}"
+PREFERRED_PROVIDER_virtual/egl = "gb-v3ddriver-${MACHINE_DRIVER}"
+PREFERRED_PROVIDER_virtual/libgles2 = "gb-v3ddriver-${MACHINE_DRIVER}"
 PREFERRED_PROVIDER_virtual/chromium-browser = "chromium-browser-${MACHINE}"
 
 DVBMEDIASINK_CONFIG = "--with-wma --with-wmv --with-amr --with-pcm --with-dts --with-eac3 \
