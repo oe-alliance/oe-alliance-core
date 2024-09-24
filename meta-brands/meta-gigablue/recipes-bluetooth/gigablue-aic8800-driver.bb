@@ -6,6 +6,8 @@ PACKAGE_ARCH = "${MACHINEBUILD}"
 
 SRCDATE = "20240729"
 
+KV = "4.1.20"
+
 PV = "${KV}+${SRCDATE}"
 PR = "r0"
 
