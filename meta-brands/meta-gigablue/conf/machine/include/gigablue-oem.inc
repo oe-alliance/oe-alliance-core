@@ -251,7 +251,7 @@ MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS += " \
     kernel-module-cifs \
     kernel-module-autofs4 \
     ${@bb.utils.contains('MACHINEBUILD', 'gbtrio4kpro', 'firmware-uwe5621 gigablue-hciattach-${MACHINE} gigablue-bluetooth-keymaps' , '', d)} \
-    ${@bb.utils.contains('MACHINEBUILD', 'gbquad4kpro', 'firmware-aic8800 gigablue-aic8800-driver gigablue-bluetooth-keymaps' , '', d)} \
+    ${@bb.utils.contains('MACHINEBUILD', 'gbquad4kpro', 'firmware-aic8800d80 gigablue-aic8800-driver gigablue-bluetooth-keymaps' , '', d)} \
     ${@bb.utils.contains('MACHINEBUILD', 'gbquad', 'kernel-module-smsc75xx' , '', d)} \
     ${@bb.utils.contains('MACHINE_FEATURES', 'swap', 'gigablue-swapcreate', '',d)} \
     "
