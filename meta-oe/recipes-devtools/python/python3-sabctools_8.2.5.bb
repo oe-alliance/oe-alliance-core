@@ -8,7 +8,7 @@ inherit pypi setuptools3
 
 SRC_URI:append = " file://remove-x64-instructions.patch"
 
-SRC_URI[md5sum] = "eb0ffdd32354b23454f8df74fd50de78"
-SRC_URI[sha256sum] = "70fdc60a9da61a2bed8f203beafaad3bb989c998c778d92f04b976917c4e4f9c"
+SRC_URI[md5sum] = "b26e3c8d48797e6912546dc2519ec064"
+SRC_URI[sha256sum] = "6440bcd77fc9a463c414bfa75ca1405c57d4aeb84408222a38d7b6ecbc12d348"
 
 include ${PYTHON_PN}-package-split.inc
