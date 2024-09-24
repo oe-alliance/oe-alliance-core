@@ -19,7 +19,7 @@ RDEPENDS:${PN} = "\
 
 RRECOMMENDS:${PN} = "par2cmdline unrar p7zip-full"
 
-SRC_URI = "https://github.com/sabnzbd/sabnzbd/releases/download/4.3.2/SABnzbd-4.3.2-src.tar.gz \
+SRC_URI = "https://github.com/sabnzbd/sabnzbd/releases/download/4.3.3/SABnzbd-4.3.3-src.tar.gz \
     file://sabnzbd \
     file://sabnzbd.conf \
     file://init-functions \
