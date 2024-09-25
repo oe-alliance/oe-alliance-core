@@ -13,60 +13,15 @@ SRCREV = "${AUTOREV}"
 PV = "2.0+git"
 PKGV = "2.0+git${GITPKGV}"
 
-SRC_URI = "git://github.com/oe-alliance/tuxtxt.git;protocol=https;branch=master \
-           ${@bb.utils.contains('DISTRO_FEATURES', 'tuxtxtfhd', ' \
-           file://tuxtxt.ttf \
-           file://tuxtxt_nonbold.ttf \
-           ', '', d)} \
-"
-
-SRC_URI:append:AML8726 = " file://0001-add-HBGIC-for-wetek.patch"
-SRC_URI:append:AMLS905 = " file://0001-add-HBGIC-for-wetek.patch"
-SRC_URI:append:AML905D = " file://0001-add-HBGIC-for-wetek.patch"
-
-SRC_URI:append = " \
-    ${@bb.utils.contains('DISTRO_FEATURES', 'tuxtxtfhd', 'file://tuxtxt_FHD.patch', '', d)} \
-    "
+SRC_URI = "git://github.com/oe-alliance/tuxtxt.git;protocol=https;branch=master"
 
 inherit autotools pkgconfig
 
 S = "${WORKDIR}/git/tuxtxt"
 
-EXTRA_OECONF = "--with-boxtype=generic --with-configdir=/etc \
+EXTRA_OECONF = "--with-boxtype=${MACHINE} --with-configdir=/etc \
     ${@bb.utils.contains("MACHINE_FEATURES", "textlcd", "--with-textlcd" , "", d)} \
      "
-
-do_configure:prepend() {
-    touch ${S}/NEWS
-    touch ${S}/README
-    touch ${S}/AUTHORS
-    touch ${S}/ChangeLog
-    if ${@bb.utils.contains('DISTRO_FEATURES', 'tuxtxtfhd', 'true', 'false', d)}; then
-        sed 's/UseTTF 0/UseTTF 1/g' -i ${S}/data/tuxtxt2.conf
-        sed 's/TTFWidthFactor16 28/TTFWidthFactor16 29/g' -i ${S}/data/tuxtxt2.conf
-        sed 's/TTFHeightFactor16 16/TTFHeightFactor16 14/g' -i ${S}/data/tuxtxt2.conf
-    fi
-}
-
-do_configure:prepend:openvix () {
-    sed 's/UseTTF 0/UseTTF 1/g' -i ${S}/data/tuxtxt2.conf
-    sed 's/TTFWidthFactor16 28/TTFWidthFactor16 26/g' -i ${S}/data/tuxtxt2.conf
-    sed 's/TTFHeightFactor16 16/TTFHeightFactor16 14/g' -i ${S}/data/tuxtxt2.conf
-    touch ${S}/NEWS
-    touch ${S}/README
-    touch ${S}/AUTHORS
-    touch ${S}/ChangeLog
-}
-
-do_install:append() {
-    if ${@bb.utils.contains('DISTRO_FEATURES', 'tuxtxtfhd', 'true', 'false', d)}; then
-        install -d ${D}/usr/share/fonts
-        rm -f ${D}/usr/share/fonts/tuxtxt.ttf
-        rm -f ${D}/usr/share/fonts/tuxtxt_nonbold.ttf
-        cp -f ${UNPACKDIR}/tuxtxt.ttf ${D}/usr/share/fonts/tuxtxt.ttf
-        cp -f ${UNPACKDIR}/tuxtxt_nonbold.ttf ${D}/usr/share/fonts/tuxtxt_nonbold.ttf
-    fi
-}
 
 require conf/python/python3-compileall.inc
 
