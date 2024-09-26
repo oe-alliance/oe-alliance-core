@@ -1,4 +1,4 @@
-PR = "r1"
+PR = "r2"
 
 require samba-source.inc
 require samba-waf.inc
