@@ -56,6 +56,10 @@ SRC_URI:append:arm = " \
            file://500-arm-status-segfault-fix.patch \
           "
 
+SRC_URI:append:openatv = " \
+           file://smb-local.conf \
+          "
+
 SRC_URI[md5sum] = "2b65218f037e1ec969f8c0f971267f18"
 SRC_URI[sha256sum] = "c412e3536a5265d04e52983e643bae9e047bcc3eac08683a945b1057ecdf4968"
 UPSTREAM_CHECK_REGEX = "samba\-(?P<pver>4\.15(\.\d+)+).tar.gz"
