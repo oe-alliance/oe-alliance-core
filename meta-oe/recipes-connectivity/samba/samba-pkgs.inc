@@ -64,7 +64,7 @@ CONFFILES:${BPN}-common = "${sysconfdir}/pam.d/samba \
                            ${sysconfdir}/samba/private/smbpasswd \
                           "
 
-CONFFILES:${PN}:openatv += "${sysconfdir}/samba/smb-local.conf"  
+CONFFILES:${BPN}-common:openatv += "${sysconfdir}/samba/smb-local.conf" 
 
 RRECOMMENDS:${BPN}-common += "pam-pluginsmbpass"
 INSANE_SKIP:${BPN}-common += "dev-so"
