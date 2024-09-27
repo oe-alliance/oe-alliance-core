@@ -205,14 +205,6 @@ if [[ $? -ne 0 ]] ; then
     echo 'kids:!:16560:0:99999:7:::' >> $D/etc/shadow
 fi
 
-if [ -e $D/etc/samba/distro/smb-vmc.vmc ]; then
-    rm $D/etc/samba/distro/smb-vmc.conf 2>/dev/null || true
-    ln -s smb-vmc.vmc $D/etc/samba/distro/smb-vmc.conf
-else
-    rm $D/etc/samba/distro/smb-vmc.conf 2>/dev/null || true
-    ln -s smb-vmc.samba $D/etc/samba/distro/smb-vmc.conf
-fi
-
 if [ -z "$D" ]; then
     set +e
     [ -e /etc/samba/private/smbpasswd ] || touch /etc/samba/private/smbpasswd
@@ -238,9 +230,4 @@ pkg_prerm:${BPN}-common:prepend() {
 #!/bin/sh
 grep -v 'pam_smbpass.so' $D/etc/pam.d/common-password > $D/tmp/common-password
 mv $D/tmp/common-password $D/etc/pam.d/common-password
-}
-
-pkg_postrm:${BPN}-common:prepend() {
-#!/bin/sh
-rm $D/etc/samba/distro/smb-vmc.conf 2>/dev/null || true
 }
