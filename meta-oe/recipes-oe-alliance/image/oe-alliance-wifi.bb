@@ -71,6 +71,7 @@ RDEPENDS:${PN} = "\
     ${@bb.utils.contains("MACHINE", "h9combose", "enigma2-plugin-drivers-network-usb-rtl8192eu enigma2-plugin-drivers-network-usb-mt7601u enigma2-plugin-drivers-network-usb-rtl8192fu", "", d)} \
     ${@bb.utils.contains("MACHINE", "h10", "enigma2-plugin-drivers-network-usb-rtl8192eu enigma2-plugin-drivers-network-usb-mt7601u enigma2-plugin-drivers-network-usb-rtl8822bu enigma2-plugin-drivers-network-usb-rtl8192fu", "", d)} \
     ${@bb.utils.contains("MACHINE", "h11", "enigma2-plugin-drivers-network-usb-rtl8192eu enigma2-plugin-drivers-network-usb-mt7601u enigma2-plugin-drivers-network-usb-rtl8822bu enigma2-plugin-drivers-network-usb-rtl8192fu", "", d)} \
+    ${@bb.utils.contains("MACHINE", "h17", "enigma2-plugin-drivers-network-usb-rtl8192eu enigma2-plugin-drivers-network-usb-mt7601u enigma2-plugin-drivers-network-usb-rtl8822bu enigma2-plugin-drivers-network-usb-rtl8192fu", "", d)} \
     ${@bb.utils.contains("MACHINE", "i55plus", "enigma2-plugin-drivers-network-usb-rtl8192eu enigma2-plugin-drivers-network-usb-mt7601u enigma2-plugin-drivers-network-usb-rtl8192fu", "", d)} \
     ${@bb.utils.contains("MACHINE", "i55se", "enigma2-plugin-drivers-network-usb-rtl8192eu enigma2-plugin-drivers-network-usb-mt7601u enigma2-plugin-drivers-network-usb-rtl8192fu", "", d)} \
     ${@bb.utils.contains("MACHINE", "ustym4kpro", "enigma2-plugin-drivers-network-usb-rtl8192eu enigma2-plugin-drivers-network-usb-rtl8822cu", "", d)} \
