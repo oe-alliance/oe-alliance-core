@@ -6,7 +6,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 RDEPENDS:${PN} = "e2fsprogs-resize2fs"
 PV = "1.0"
-PR = "r0"
+PR = "r1"
 
 S = "${WORKDIR}/sources"
 UNPACKDIR = "${S}"
