@@ -210,7 +210,6 @@ do_install() {
     install -m 644 ${UNPACKDIR}/pam.samba ${D}${sysconfdir}/pam.d/samba
 
     install -d ${D}${sysconfdir}/samba
-    install -d ${D}${sysconfdir}/samba/distro
     install -d ${D}${sysconfdir}/samba/private
     echo "127.0.0.1 localhost" > ${D}${sysconfdir}/samba/lmhosts
     install -m 644 ${UNPACKDIR}/smb.conf ${D}${sysconfdir}/samba
@@ -219,6 +218,7 @@ do_install() {
     if ${@bb.utils.contains('DISTRO_NAME','openatv','true','false',d)}; then
         install -m 644 ${UNPACKDIR}/smb-local.conf ${D}${sysconfdir}/samba
     else
+        install -d ${D}${sysconfdir}/samba/distro
         install -m 644 ${UNPACKDIR}/smb-branding.conf ${D}${sysconfdir}/samba/distro
         install -m 644 ${UNPACKDIR}/smb-global.conf ${D}${sysconfdir}/samba/distro
         install -m 644 ${UNPACKDIR}/smb-shares.conf ${D}${sysconfdir}/samba/distro
