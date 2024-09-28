@@ -62,9 +62,7 @@ CONFFILES:${BPN}-common = "${sysconfdir}/pam.d/samba \
                            ${sysconfdir}/samba/smb-user.conf \
                            ${sysconfdir}/samba/private/users.map \
                            ${sysconfdir}/samba/private/smbpasswd \
-                           if ${@bb.utils.contains('DISTRO_NAME','openatv','true','false',d)}; then \
-                               ${sysconfdir}/samba/smb-local.conf \
-                           fi \
+                           ${sysconfdir}/samba/smb-local.conf \
                           "
 
 RRECOMMENDS:${BPN}-common += "pam-pluginsmbpass"
