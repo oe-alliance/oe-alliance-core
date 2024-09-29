@@ -20,6 +20,10 @@ PREFERRED_PROVIDER_virtual/mesa ?= "mesa"
 PREFERRED_PROVIDER_virtual/blindscan-dvbc ?= "airdigital-dvb-modules-${MACHINE}"
 PREFERRED_PROVIDER_virtual/blindscan-dvbs ?= "airdigital-dvb-modules-${MACHINE}"
 
+MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "\
+    ${@bb.utils.contains('MACHINE_FEATURES', 'arm-recovery', 'airdigital-recovery-${MACHINE}' , '', d)} \
+    "
+
 IMAGE_CMD:airdigitalemmc:prepend = " \
     rm -f ${DEPLOY_DIR_IMAGE}/*.ext4; \
     rm -f ${DEPLOY_DIR_IMAGE}/*.manifest; \
