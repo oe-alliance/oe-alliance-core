@@ -12,7 +12,7 @@ EMMC_IMAGE = "${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.emmc.img"
 BLOCK_SIZE="512"
 BLOCK_SECTOR="2"
 BOOT_SIZE="3"
-RESCUE_SIZE="16"
+RESCUE_SIZE="32"
 KERNEL_SIZE="8"
 SWAP_SIZE="256"
 USERDATA_SIZE="0"
@@ -79,7 +79,7 @@ IMAGE_CMD:airdigitalemmc () {
     echo "boot emmcflash0.linuxkernel7 'brcm_cma=520M@248M brcm_cma=192M@768M root=/dev/mmcblk0p12 rootsubdir=linuxrootfs7 kernel=/dev/mmcblk0p9 rw rootwait ${MACHINE}_4.boxmode=12'" > ${WORKDIR}/STARTUP_LINUX_7_BOXMODE_12
     echo "boot emmcflash0.linuxkernel8 'brcm_cma=520M@248M brcm_cma=192M@768M root=/dev/mmcblk0p12 rootsubdir=linuxrootfs8 kernel=/dev/mmcblk0p10 rw rootwait ${MACHINE}_4.boxmode=12'" > ${WORKDIR}/STARTUP_LINUX_8_BOXMODE_12
 
-    echo "boot emmcflash0.recure 'root=/dev/mmcblk0p12 kernel=/dev/mmcblk0p2'" > ${WORKDIR}/STARTUP_RECOVERY
+    echo "boot emmcflash0.rescue 'root=/dev/mmcblk0p12 kernel=/dev/mmcblk0p2 rescuemode ${MACHINE}_4.boxmode=1'" > ${WORKDIR}/STARTUP_RECOVERY
  
     mcopy -i ${WORKDIR}/boot.img -v ${WORKDIR}/STARTUP ::
     mcopy -i ${WORKDIR}/boot.img -v ${WORKDIR}/STARTUP_LINUX_1_BOXMODE_1 ::   
@@ -108,7 +108,7 @@ IMAGE_CMD:airdigitalemmc () {
     START_USERDATA=$(sgdisk -i 12 ${EMMC_IMAGE} | grep "First sector" | awk '{print $3}')
 
     dd if=${WORKDIR}/boot.img of=${EMMC_IMAGE} bs=${BLOCK_SIZE} seek=${START_BOOT} conv=notrunc
-    #dd if=${IMGDEPLOYDIR}/${IMAGE_NAME}.recure of=${EMMC_IMAGE} bs=${BLOCK_SIZE} seek=${START_RESCUE} conv=notrunc
+    dd if=${DEPLOY_DIR_IMAGE}/zgemma-partitions-${MACHINE}/${MACHINE}/recovery.bin of=${EMMC_IMAGE} bs=${BLOCK_SIZE} seek=${START_RESCUE} conv=notrunc
     dd if=${DEPLOY_DIR_IMAGE}/zImage of=${EMMC_IMAGE} bs=${BLOCK_SIZE} seek=${START_KERNEL1} conv=notrunc
     dd if=${IMGDEPLOYDIR}/${IMAGE_NAME}.ext4 of=${EMMC_IMAGE} bs=${BLOCK_SIZE} seek=${START_USERDATA} conv=notrunc
 }

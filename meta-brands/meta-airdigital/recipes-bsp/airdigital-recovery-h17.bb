@@ -1,0 +1,10 @@
+SRCDATE = "20240929"
+
+HICHIPSET="h17"
+
+require airdigital-recovery.inc
+
+SRC_URI[md5sum] = "068c8953e3e883fe1002417b575795c2"
+SRC_URI[sha256sum] = "cfde2069dcc25575a18472e41b85dcd7269d9057a0d55193f18885e2ddf5353e"
+
+COMPATIBLE_MACHINE = "^h17$"
