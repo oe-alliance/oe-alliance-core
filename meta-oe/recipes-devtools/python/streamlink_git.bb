@@ -24,6 +24,7 @@ RDEPENDS:${PN} = "${PYTHON_PN}-core \
     ${PYTHON_PN}-shell \
     ${PYTHON_PN}-singledispatch \
     ${PYTHON_PN}-websocket-client \
+    ${PYTHON_PN}-trio \
     "
 
 PV = "git"
