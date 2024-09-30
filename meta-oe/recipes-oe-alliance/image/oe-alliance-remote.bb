@@ -39,7 +39,7 @@ do_install() {
         done
         install -m 0644 ${S}/hardware/vu.xml ${D}${datadir}/enigma2/hardware/hardware.xml
     elif [ ${RCHARDWARE} == "GB" ] ; then
-        for i in gb0 gb1 gb2 gb3 gb4 gb5 ; do
+        for i in gb0 gb1 gb2 gb3 gb4 gb5 gb6 gb7 ; do
             install -m 0644 ${S}/png/${i}.png ${D}${datadir}/enigma2/hardware
             install -m 0644 ${S}/xml/${i}.xml ${D}${datadir}/enigma2/hardware
         done
