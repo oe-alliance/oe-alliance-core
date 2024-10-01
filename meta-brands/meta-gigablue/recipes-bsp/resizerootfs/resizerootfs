@@ -1,0 +1,45 @@
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides:           resize2fs mmcblk0p3
+# Required-Start:     $local_fs
+# Required-Stop:      $local_fs
+# Default-Start:      S
+# Default-Stop:
+# Short-Description:  Resizes once linuxrootfs and userdata to full partition size
+### END INIT INFO
+
+if [ ! -f "/.resize-linuxrootfs" ] && [ -e "/dev/block/by-name/linuxrootfs" ]
+  then
+    echo "Resizing linuxrootfs partition, Do not unplug power!..."
+    resize2fs /dev/block/by-name/linuxrootfs
+    touch "/.resize-linuxrootfs"
+fi
+
+if [ ! -f "/.resize-userdata" ] && [ -e "/dev/block/by-name/userdata" ] && [ -e "/sbin/blkid" ]; then
+  if blkid /dev/block/by-name/userdata | grep "ext4"; then
+    echo "Resizing userdata partition, Do not unplug power!..."
+
+    PARTITION_NUMBER=$(readlink -f "/dev/block/by-name/userdata" | grep -o '[0-9]\+$')
+    echo "fix Partion No:$PARTITION_NUMBER"
+    rm -f /tmp/parted_info
+    parted --script /dev/mmcblk0 p 2>&1 | tee -a /tmp/parted_info
+    if grep -Eq 'fix the GPT' /tmp/parted_info;then
+       echo -e "Y\nFix\n" | parted ---pretend-input-tty /dev/mmcblk0 print 1>/dev/null
+       rm -f /tmp/parted_info
+    fi
+    rm -f /tmp/parted_info
+    parted --script /dev/mmcblk0 resizepart $PARTITION_NUMBER 100% 2>&1 | tee -a /tmp/parted_info
+    if grep -Eq 'Are you sure you want to continue?' /tmp/parted_info;then
+       echo -e "Yes\n" | parted ---pretend-input-tty /dev/mmcblk0 resizepart $PARTITION_NUMBER 100% 1>/dev/null
+       rm -f /tmp/parted_info
+    fi
+    resize2fs /dev/block/by-name/userdata
+    touch "/.resize-userdata"
+  else
+    echo "userdata partition is not format!..."
+    echo "Setup userdata partitions, Do not unplug power!..."
+    mkfs.ext4 -F /dev/block/by-name/userdata
+    touch "/.resize-userdata"
+  fi
+fi
+: exit 0
