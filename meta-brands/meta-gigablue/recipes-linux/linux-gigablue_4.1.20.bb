@@ -24,7 +24,8 @@ SRC_URI[pro.sha256sum] = "3f90048b6fbf3335959ed4a9ed07a24f6ea6545f11643c7fb7c720
 LIC_FILES_CHKSUM = "file://COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
 SRC_URI += "https://source.mynonpublic.com/gigablue/linux/gigablue-linux-${PV}-${SRC_DATE}.tar.gz;name=${SRC_NAME} \
-    file://defconfig \
+    ${@bb.utils.contains('MACHINE_FEATURES', 'initrd', 'file://defconfig_initrd' , 'file://defconfig', d)} \
+    file://initramfs-subdirboot.cpio.gz;unpack=0 \
     file://gbfindkerneldevice.py \
     file://0002-linux_dvb-core.patch \
     file://0002-bcmgenet-recovery-fix.patch \
@@ -82,6 +83,14 @@ KERNEL_IMAGEDEST = "tmp"
 KERNEL_OUTPUT = "arch/${ARCH}/boot/${KERNEL_IMAGETYPE}"
 
 FILES:${KERNEL_PACKAGE_NAME}-image = "/${KERNEL_IMAGEDEST}/zImage /${KERNEL_IMAGEDEST}/gbfindkerneldevice.py"
+
+kernel_do_configure:prepend() {
+        install -d ${B}/usr
+        install -m 0644 ${WORKDIR}/initramfs-subdirboot.cpio.gz ${B}/
+        if [ -e ${WORKDIR}/defconfig_initrd ]; then
+            mv ${WORKDIR}/defconfig_initrd ${WORKDIR}/defconfig
+        fi
+}
 
 kernel_do_install:append() {
         install -d ${D}/${KERNEL_IMAGEDEST}

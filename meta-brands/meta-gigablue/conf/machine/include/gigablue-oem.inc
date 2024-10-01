@@ -127,7 +127,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'gbx2', 'mtd0' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbultraueh', 'mtd0' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbx3h', 'mtd0' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbquad4k', 'mmcblk0p5' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'gbquad4kpro', 'mmcblk0p5' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'gbquad4kpro', 'mmcblk0p13' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbue4k', 'mmcblk0p5' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbtrio4k', 'mmcblk0p16' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'gbtrio4kpro', 'mmcblk0p16' , '', d)}\
@@ -253,6 +253,7 @@ MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS += " \
     ${@bb.utils.contains('MACHINEBUILD', 'gbtrio4kpro', 'firmware-uwe5621 gigablue-hciattach-${MACHINE} gigablue-bluetooth-keymaps' , '', d)} \
     ${@bb.utils.contains('MACHINEBUILD', 'gbquad4kpro', 'firmware-aic8800d80 gigablue-aic8800-driver gigablue-bluetooth-keymaps' , '', d)} \
     ${@bb.utils.contains('MACHINEBUILD', 'gbquad', 'kernel-module-smsc75xx' , '', d)} \
+    ${@bb.utils.contains('MACHINE_FEATURES', 'initrd', 'resizerootfs' , '', d)} \
     ${@bb.utils.contains('MACHINE_FEATURES', 'swap', 'gigablue-swapcreate', '',d)} \
     "
 
