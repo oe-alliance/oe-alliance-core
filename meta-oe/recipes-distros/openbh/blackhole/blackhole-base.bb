@@ -12,11 +12,13 @@ PR = "r21"
 
 FILES:${PN} = "/"
 
-do_compile() {
-	echo "${MACHINE}" > ${WORKDIR}/bhmachine
-	echo "${DISTRO_NAME} ${DISTRO_VERSION}" > ${WORKDIR}/bhversion
-}
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
+do_compile() {
+    echo "${MACHINE}" > ${S}/bhmachine
+    echo "${DISTRO_NAME} ${DISTRO_VERSION}" > ${S}/bhversion
+}
 
 do_install() {
 
