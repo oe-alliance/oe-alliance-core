@@ -10,8 +10,8 @@ RDEPENDS:${PN} += "${PYTHON_PN}-packaging ${PYTHON_PN}-tomli"
 
 PYPI_PACKAGE = "versioningit"
 
-SRC_URI[md5sum] = "48bdfc0e9e899ba6e5deabb79e30e81a"
-SRC_URI[sha256sum] = "b0ba586e5af08b87dbe3354082910a1d0502c36202d496e1ae60ef3b41ee29c1"
+SRC_URI[md5sum] = "7e25b7db2b9d6c82d910d691b52b211c"
+SRC_URI[sha256sum] = "4db83ed99f56b07d83940bee3445ca46ca120d13b6b304cdb5fb44e5aa4edec0"
 
 inherit pypi python_hatchling
 
