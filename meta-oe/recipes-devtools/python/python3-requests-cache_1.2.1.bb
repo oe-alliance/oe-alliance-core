@@ -8,8 +8,8 @@ PYPI_PACKAGE = "requests_cache"
 
 inherit pypi python_poetry_core
 
-SRC_URI[md5sum] = "6ddc0516be3e76bab56589fe946501df"
-SRC_URI[sha256sum] = "db1c709ca343cc1cd5b6c8b1a5387298eceed02306a6040760db538c885e3838"
+SRC_URI[md5sum] = "27038cb33985f5b144cf32107151921a"
+SRC_URI[sha256sum] = "68abc986fdc5b8d0911318fbb5f7c80eebcd4d01bfacc6685ecf8876052511d1"
 
 RDEPENDS:${PN} = "python3-requests python3-urllib3 python3-appdirs python3-attrs python3-cattrs python3-url-normalize"
 
