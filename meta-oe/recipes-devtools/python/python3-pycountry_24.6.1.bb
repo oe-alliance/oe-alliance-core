@@ -8,7 +8,5 @@ include python3-package-split.inc
 
 inherit pypi python_poetry_core
 
-SRC_URI = "file://version.patch"
-
-SRC_URI[md5sum] = "1bec84be647e68b3ef5f6ef8784bdce0"
-SRC_URI[sha256sum] = "00569d82eaefbc6a490a311bfa84a9c571cff9ddbf8b0a4f4e7b4f868b4ad925"
+SRC_URI[md5sum] = "61111cc27f09e44aa3bace260a8b3089"
+SRC_URI[sha256sum] = "b61b3faccea67f87d10c1f2b0fc0be714409e8fcdcc1315613174f6466c10221"
