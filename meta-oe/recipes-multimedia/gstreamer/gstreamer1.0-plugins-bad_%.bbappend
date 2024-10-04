@@ -16,3 +16,8 @@ PACKAGECONFIG:append = " \
 "
 
 PACKAGECONFIG:remove = "rsvg"
+
+PV = "1.24.8"
+ 
+SRC_URI[md5sum] = "b0791b9671b875b25bb532f62edc6432"
+SRC_URI[sha256sum] = "35ad70de3d7cbca3089f33bb77c45750daad2ae93d79827fdbb469fa8aba84eb"
