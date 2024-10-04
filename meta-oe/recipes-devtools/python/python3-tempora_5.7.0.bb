@@ -5,8 +5,8 @@ LICENSE = "LGPL-3.0-only"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=141643e11c48898150daa83802dbc65f"
 DEPENDS += "${PYTHON_PN}-setuptools-scm-native"
 
-SRC_URI[md5sum] = "a904fca738bc16b31f28472379987e6a"
-SRC_URI[sha256sum] = "a2bb51e2121976d931347b3e433917c364b83fdd5f64ef27336c865bf1fb0f75"
+SRC_URI[md5sum] = "e4ca48a06f4c8b9aa21b8081937353f2"
+SRC_URI[sha256sum] = "888190a2dbe3255ff26dfa9fcecb25f4d38434c0f1943cd61de98bb41c410c50"
 
 inherit pypi python_setuptools_build_meta
 
