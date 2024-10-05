@@ -13,7 +13,7 @@ SRCREV = "${AUTOREV}"
 
 SRC_URI = "git://github.com/DimitarCC/iptv-m3u-reader.git;protocol=https;branch=main"
 
-
+RRECOMMENDS:${PN} = "enigma2-plugin-extensions-tmdb"
 
 S = "${WORKDIR}/git"
 
