@@ -10,4 +10,4 @@ SRC_URI[sha256sum] = "0346c3852c15e5c7d40ea15972c4805689ef2cb8b5206f794c9c194501
 inherit pypi python_setuptools_build_meta
 
 PYPI_PACKAGE = "trio"
-RDEPENDS:${PN} = "python3-idna python3-sniffio"
+RDEPENDS:${PN} = "python3-idna python3-sniffio python3-outcome python3-sortedcontainers"
