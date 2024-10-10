@@ -215,7 +215,7 @@ do_install() {
     install -m 644 ${UNPACKDIR}/smb.conf ${D}${sysconfdir}/samba
     install -m 644 ${UNPACKDIR}/smb-user.conf ${D}${sysconfdir}/samba
 
-    if ${@bb.utils.contains('DISTRO_NAME','openatv','true','false',d)}; then
+    if ${@bb.utils.contains_any('DISTRO_NAME','openatv openvix','true','false',d)}; then
         install -m 644 ${UNPACKDIR}/smb-local.conf ${D}${sysconfdir}/samba
     else
         install -d ${D}${sysconfdir}/samba/distro
