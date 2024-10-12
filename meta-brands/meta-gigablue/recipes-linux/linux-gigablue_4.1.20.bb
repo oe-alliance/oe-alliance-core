@@ -11,15 +11,15 @@ inherit kernel machine_kernel_pr
 MACHINE_KERNEL_PR:append = "r11"
 
 SRC_DATE = "20180206"
-SRC_DATE:gbquad4kpro = "20240729"
+SRC_DATE:gbquad4kpro = "20241007"
 
 SRC_NAME = "legacy"
 SRC_NAME:gbquad4kpro = "pro"
 
 SRC_URI[legacy.md5sum] = "6036c5d722071e72d5d66dbf7ee74992"
 SRC_URI[legacy.sha256sum] = "eff7eecf55dd75ecb44bd8b8fe16f588d19c1eac92125eaed2b6834348d12def"
-SRC_URI[pro.md5sum] = "7280e29239f962717fcf5db4b73ef3be"
-SRC_URI[pro.sha256sum] = "3f90048b6fbf3335959ed4a9ed07a24f6ea6545f11643c7fb7c720a8ca5fd5c7"
+SRC_URI[pro.md5sum]= "50a405104241bf0586c4be317dacd146"
+SRC_URI[pro.sha256sum] = "084d1e324317da82fe34fbdff148fc4b7306bc649b38a59023fe478ca2ff0a22"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 

@@ -20,7 +20,7 @@ if [ ! -f "/.resize-userdata" ] && [ -e "/dev/block/by-name/userdata" ] && [ -e 
     echo "Resizing userdata partition, Do not unplug power!..."
 
     PARTITION_NUMBER=$(readlink -f "/dev/block/by-name/userdata" | grep -o '[0-9]\+$')
-    echo "fix Partion No:$PARTITION_NUMBER"
+    echo "fix Partition No:$PARTITION_NUMBER"
     rm -f /tmp/parted_info
     parted --script /dev/mmcblk0 p 2>&1 | tee -a /tmp/parted_info
     if grep -Eq 'fix the GPT' /tmp/parted_info;then
