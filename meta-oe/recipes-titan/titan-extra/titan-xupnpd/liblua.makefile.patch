@@ -1,0 +1,29 @@
+diff -ruN a/lua-5.3.5/Makefile b/lua-5.3.5/Makefile
+--- a/lua-5.3.5/Makefile	2023-07-29 17:24:50.908791295 +02000
++++ b/lua-5.3.5/Makefile	2023-07-29 17:26:47.276507423 +0200
+@@ -6,13 +6,13 @@
+ # Your platform. See PLATS for possible values.
+ PLAT= none
+ 
+-CC= gcc -std=gnu99
++#CC= gcc -std=gnu99
+ CFLAGS= -O2 -Wall -Wextra -DLUA_COMPAT_5_2 $(SYSCFLAGS) $(MYCFLAGS)
+ LDFLAGS= $(SYSLDFLAGS) $(MYLDFLAGS)
+ LIBS= -lm $(SYSLIBS) $(MYLIBS)
+ 
+-AR= ar rcu
+-RANLIB= ranlib
++#AR= ar rcu
++#RANLIB= ranlib
+ RM= rm -f
+ 
+ SYSCFLAGS=
+@@ -56,7 +56,7 @@
+ a:	$(ALL_A)
+ 
+ $(LUA_A): $(BASE_O)
+-	$(AR) $@ $(BASE_O)
++	$(AR) rcu $@ $(BASE_O)
+ 	$(RANLIB) $@
+ 
+ $(LUA_T): $(LUA_O) $(LUA_A)
