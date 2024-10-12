@@ -4,7 +4,7 @@ PRIORITY = "optional"
 LICENSE = "CLOSED"
 PACKAGE_ARCH = "${MACHINEBUILD}"
 
-SRCDATE = "20240729"
+SRCDATE = "20241011"
 
 KV = "4.1.20"
 
@@ -37,7 +37,7 @@ do_install() {
     echo aic_btusb.ko > ${D}/${sysconfdir}/modules-load.d/aaic_btusb.conf
 }
 
-FILES:${PN} += "${sysconfdir} /lib/modules/${KV}/extra"
+FILES:${PN} += "${sysconfdir} /lib/modules/${KV}"
 
-SRC_URI[md5sum] = "f27c231a9fa5018152d0ce066710e2e8"
-SRC_URI[sha256sum] = "236b607cb3656b5e2840bafa1c3533fe8356aa9d9d49adef6231765e9e74110c"
+SRC_URI[md5sum] = "afa9d00a1aaaf4bc9e48ec3e7c96cd11"
+SRC_URI[sha256sum] = "c32f2094c1a5f8ecc6602b42424a0d3dec9adeac41dd5fc556e6cc2502024408"
