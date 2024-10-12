@@ -20,9 +20,11 @@ WORKDIR = "${TMPDIR}/work/${MULTIMACH_TARGET_SYS}/${PN}/${EXTENDPE}${PV}"
 
 do_rootfs[deptask] = "do_rm_work"
 
+SSTATE_ALLOW_OVERLAP_FILES += "${DEPLOY_DIR_IMAGE}"
+
 IMAGE_INSTALL = "openhdf-base \
     ${@bb.utils.contains("MACHINE_FEATURES", "dvbc-only", "", "enigma2-plugin-settings-defaultsat", d)} \
-    ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", \
+    ${@bb.utils.contains_any("MACHINE_FEATURES", "smallflash singlecore", "", \
     " \
     packagegroup-base-smbfs-client \
     packagegroup-base-smbfs-server \
@@ -33,9 +35,10 @@ IMAGE_INSTALL = "openhdf-base \
 IMAGE_INSTALL += "${@bb.utils.contains_any("FLASHSIZE", "64 96", "", "nano", d)}"
 
 # ... plus mc and helpers on 256 MB or more:
-IMAGE_INSTALL += "${@bb.utils.contains_any("FLASHSIZE", "64 96 128", "", "mc mc-fish mc-helpers", d)}"
+IMAGE_INSTALL += "${@bb.utils.contains_any("FLASHSIZE", "64 96 128", "", "mc mc-shell mc-helpers", d)}"
 
 export IMAGE_BASENAME = "openhdf-image"
+
 # Prevent locales-archive creation to save some space
 IMAGE_LOCALES_ARCHIVE = ""
 
