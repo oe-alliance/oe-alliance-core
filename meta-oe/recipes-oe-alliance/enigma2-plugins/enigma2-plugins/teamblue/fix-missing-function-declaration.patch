@@ -1,5 +1,5 @@
---- a/networkbrowser/src/lib/showmount.h
-+++ b/networkbrowser/src/lib/showmount.h
+--- a/networkbrowserpli/src/lib/showmount.h
++++ b/networkbrowserpli/src/lib/showmount.h
 @@ -35,6 +35,7 @@ typedef struct {
  nfsinfo * newNfsInfo();
  void freeNfsInfo(nfsinfo *nfsInfo);
