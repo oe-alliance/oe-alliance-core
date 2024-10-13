@@ -12,6 +12,11 @@ SRC_URI[sha256sum] = "5b71fecea69ab6f939d4c906c04fee1eda76500d1641117df6ec45b865
 
 inherit pypi python_setuptools_build_meta
 
-include ${PYTHON_PN}-package-split.inc
-
-
+FILES:${PN}-src += " \
+    ${PYTHON_SITEPACKAGES_DIR}/*.py \
+    ${PYTHON_SITEPACKAGES_DIR}/*/*.py \
+    ${PYTHON_SITEPACKAGES_DIR}/*/*/*.py \
+    ${PYTHON_SITEPACKAGES_DIR}/*/*/*/*.py \
+    ${PYTHON_SITEPACKAGES_DIR}/*/*/*/*/*.py \
+    ${PYTHON_SITEPACKAGES_DIR}/*/*/*/*/*/*.py \
+    "
