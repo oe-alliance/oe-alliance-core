@@ -10,7 +10,7 @@ inherit gitpkgv
 SRCREV = "0add775ad4c8a999e3e72228c50e11c1da06d3b5"
 PV = "1.3.2a+git"
 PKGV = "1.3.2a+git${GITPKGV}"
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "git://github.com/jgaeddert/liquid-dsp.git;protocol=https;branch=master"
 
@@ -27,3 +27,6 @@ do_install() {
     install -m 755 -p ${S}/libliquid.a ${D}${libdir}
     install -m 644 -p ${S}/include/liquid.h ${D}${includedir}/liquid
 }
+
+FILES:${PN} = "${libdir}"
+FILES:${PN}-dev = "${includedir} ${libdir}/libliquid.a"
