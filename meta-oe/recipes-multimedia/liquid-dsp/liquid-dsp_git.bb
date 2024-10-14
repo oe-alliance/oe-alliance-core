@@ -30,3 +30,5 @@ do_install() {
 
 FILES:${PN} = "${libdir}"
 FILES:${PN}-dev = "${includedir} ${libdir}/libliquid.a"
+
+INSANE_SKIP:${PN} += "dev-so"
