@@ -18,7 +18,7 @@ DEPENDS = " \
     gstreamer1.0-plugins-base gstreamer1.0 \
     jpeg \
     libdreamdvd libdvbsi++ fribidi libmad libpng giflib libxml2 libxmlccwrap \
-    ${@bb.utils.contains_any("DISTRO_NAME", "openvix openbh teamblue", "libsigc++-3" , "libsigc++-2.0", d)} \
+    ${@bb.utils.contains_any("DISTRO_NAME", "openatv openvix openbh teamblue", "libsigc++-3" , "libsigc++-2.0", d)} \
     openssl avahi libudfread \
     ${PYTHON_PN}-pillow ${PYTHON_PN}-twisted ${PYTHON_PN}-wifi ${PYTHON_PN}-six-native \
     swig-native \
@@ -217,6 +217,16 @@ SRC_URI:append:vuduo = " \
     file://duo_VFD.patch \
     "
 
+do_patch:append:openatv() {
+    bb.build.exec_func('do_usesigc3', d)
+}
+
+do_usesigc3 () {
+sed -i "s/sigc++-2.0/sigc++-3.0/g" ${S}/configure.ac
+sed -i "s/sigc++-2.0/sigc++-3.0/g" ${S}/enigma2.pc.in 
+}
+
+
 S = "${WORKDIR}/git"
 
 FILES:${PN} += "${datadir}/keymaps ${datadir}/icons"
@@ -265,6 +275,7 @@ EXTRA_OECONF = " \
     ${@bb.utils.contains("MACHINE_FEATURES", "hiaccel", "--with-libhiaccel" , "", d)} \
     "
 
+EXTRA_OECONF:append:openatv = " --with-libsigcversion=3.0"
 LDFLAGS:prepend = "${@bb.utils.contains('GST_VERSION', '1.0', ' -lxml2 ', '', d)}"
 SRC_URI:append = "${@bb.utils.contains("MACHINE_FEATURES", "uianimation", " file://use-lv3ddriver.patch" , "", d)}"
 
