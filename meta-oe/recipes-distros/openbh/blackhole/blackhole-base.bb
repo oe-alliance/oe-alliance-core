@@ -8,13 +8,16 @@ require conf/license/license-gplv2.inc
 SRC_URI = "file://Ncam_Ci.sh file://StartBhCam file://Delete_all_Crashlogs.sh file://Ifconfig.sh \
 	file://openvpn.log file://Netstat.sh file://Uptime.sh file://bh_swap file://skin_plugins.xml"
 
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
+
 PR = "r21"
 
 FILES:${PN} = "/"
 
 do_compile() {
-	echo "${MACHINE}" > ${WORKDIR}/bhmachine
-	echo "${DISTRO_NAME} ${DISTRO_VERSION}" > ${WORKDIR}/bhversion
+	echo "${MACHINE}" > ${S}/bhmachine
+	echo "${DISTRO_NAME} ${DISTRO_VERSION}" > ${S}/bhversion
 }
 
 
