@@ -6,10 +6,10 @@ PACKAGE_ARCH = "${MACHINEBUILD}"
 
 SRCDATE = "20241011"
 
-KV = "4.1.20"
+KV = "4.1.20-1.9"
 
 PV = "${KV}+${SRCDATE}"
-PR = "r0"
+PR = "r1"
 
 SRC_URI  = "https://source.mynonpublic.com/gigablue/drivers/aic8800-${SRCDATE}.zip"
 
