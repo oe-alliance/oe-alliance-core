@@ -1,0 +1,15 @@
+diff --git a/backports/lzma/_lzmamodule.c b/backports/lzma/_lzmamodule.c
+index 5b9a777..7d6e071 100644
+--- a/backports/lzma/_lzmamodule.c
++++ b/backports/lzma/_lzmamodule.c
+@@ -521,8 +521,8 @@ spec_add_field(PyObject *spec, _Py_Identifier *key, unsigned PY_LONG_LONG value)
+     if (value_object == NULL)
+         return -1;
+ 
+-#if PY_MAJOR_VERSION >= 3
+-    status = _PyDict_SetItemId(spec, key, value_object);
++#if PY_MAJOR_VERSION <= 3
++    //status = _PyDict_SetItemId(spec, key, value_object);
+ #else
+     /* TODO - Is there some bytes vs unicode confusion here? */
+     status = PyDict_SetItemString(spec, key->string, value_object);

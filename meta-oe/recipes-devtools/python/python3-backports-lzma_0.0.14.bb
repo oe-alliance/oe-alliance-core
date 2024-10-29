@@ -7,7 +7,8 @@ DEPENDS = "xz"
 
 SRC_URI = " \
     https://files.pythonhosted.org/packages/21/0f/1a9990233076d48aa2084100ba289ca162975e73a688f3a56c0ee2bb441a/backports.lzma-${PV}.tar.gz \
-    file://0001-setup.py-Remove-usr-local-references-for-cross-compi.patch"
+    file://0001-setup.py-Remove-usr-local-references-for-cross-compi.patch \
+    file://0002-python-3.13.patch"
 SRC_URI[md5sum] = "ce194b48429f51778e2c391ca4fd1fd4"
 SRC_URI[sha256sum] = "16d8b68e4d3cd4e6c9ddb059850452946da3914c8a8e197a7f2b0954559f2df4"
 
