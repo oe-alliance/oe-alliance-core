@@ -16,7 +16,7 @@ PV = "${IMAGE_VERSION}+gitr"
 PKGV = "${IMAGE_VERSION}+gitr${GITPKGV}"
 PR = "r8"
 
-SRC_URI = "${ENIGMA2_PLUGINS_URI} file://pluginnotwanted file://fix-missing-function-declaration.patch"
+SRC_URI = "${ENIGMA2_PLUGINS_URI} file://pluginnotwanted"
 SRC_URI:append:openatv = " file://EPGSearch.patch"
 
 EXTRA_OECONF = " \
