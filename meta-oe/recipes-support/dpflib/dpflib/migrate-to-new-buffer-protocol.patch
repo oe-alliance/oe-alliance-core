@@ -1,0 +1,148 @@
+diff --git a/python/py_device.c b/python/py_device.c
+index 970c4ed..74fb70d 100644
+--- a/python/py_device.c
++++ b/python/py_device.c
+@@ -115,29 +115,29 @@ Device_readflash(DeviceObject *self, PyObject *args)
+ 	int error;
+ 	unsigned int count;
+ 	ADDR addr;
+-	Py_ssize_t sz;
+ 	PyObject *p;
+-	unsigned char *buf;
++	Py_buffer buffer;
+ 
+ 	if (!PyArg_ParseTuple(args, "II", &addr, &count))
+ 		return NULL;
+ 
+ 	p =  malloc(count);
+ 
+-	error = PyObject_AsWriteBuffer(p, (void**) &buf, &sz);
++	error = PyObject_GetBuffer(p, &buffer, PyBUF_WRITABLE);
+ 	while (error >= 0 && count > MAX_CHUNKSIZE) {
+-		error = flash_read(self->dpf, buf, addr, 0x10000);
++		error = flash_read(self->dpf, buffer.buf, addr, 0x10000);
+ 		addr += MAX_CHUNKSIZE;
+ 		count -= MAX_CHUNKSIZE;
+-		buf += MAX_CHUNKSIZE;
++		buffer.buf += MAX_CHUNKSIZE;
+ 	}
+ 	if (error >= 0) {
+-		error = flash_read(self->dpf, buf, addr, count);
++		error = flash_read(self->dpf, buffer.buf, addr, count);
+ 	}
+ 	if (error < 0) {
+ 		Py_DECREF(p);
+ 		return HANDLE_ERROR(error, "readflash");
+ 	}
++	PyBuffer_Release(&buffer);
+ 	return p;	
+ }
+ 
+@@ -169,22 +169,22 @@ Device_writeflash(DeviceObject *self, PyObject *args)
+ 	int error;
+ 	PyObject *p;
+ 	ADDR addr;
+-	const void *buf;
+-	ssize_t len;
++	Py_buffer buffer;
+ 
+ 	if (!PyArg_ParseTuple(args, "IO", &addr, &p))
+ 		return NULL;
+ 
+-	error = PyObject_AsReadBuffer(p, &buf, &len);
++	error = PyObject_GetBuffer(p, &buffer, PyBUF_WRITABLE);
+ 	if (error < 0) {
+ 		PyErr_SetString(PyExc_TypeError,
+ 			"Could not get pointer to buffer object");
+ 		return NULL;
+ 	}
+ 	
+-	error = flash_write(self->dpf, (const unsigned char *) buf, addr, len);
++	error = flash_write(self->dpf, buffer.buf, addr, buffer.len);
+ 	if (error < 0) return HANDLE_ERROR(error, "writeflash");
+ 
++	PyBuffer_Release(&buffer);
+ 	Py_INCREF(Py_None);
+ 	return Py_None;
+ 
+@@ -246,22 +246,22 @@ Device_writelcd(DeviceObject *self, PyObject *args)
+ {
+ 	int error;
+ 	PyObject *p;
+-	const void *buf;
+-	ssize_t len;
++	Py_buffer buffer;
+ 
+ 	if (!PyArg_ParseTuple(args, "O", &p))
+ 		return NULL;
+ 
+-	error = PyObject_AsReadBuffer(p, &buf, &len);
++	error = PyObject_GetBuffer(p, &buffer, PyBUF_WRITABLE);
+ 	if (error < 0) {
+ 		PyErr_SetString(PyExc_TypeError,
+ 			"Could not get pointer to buffer object");
+ 		return NULL;
+ 	}
+ 	
+-	error = write_screen(self->dpf, buf, len);
++	error = write_screen(self->dpf, buffer.buf, buffer.len);
+ 	if (error < 0) return HANDLE_ERROR(error, "writescreen");
+ 
++	PyBuffer_Release(&buffer);
+ 	Py_INCREF(Py_None);
+ 	return Py_None;
+ }
+@@ -274,23 +274,23 @@ Device_readmem(DeviceObject *self, PyObject *args)
+ 	int error;
+ 	int count;
+ 	ADDR addr;
+-	Py_ssize_t sz;
+ 	PyObject *p;
+-	unsigned char *buf;
++	Py_buffer buffer;
+ 
+ 	if (!PyArg_ParseTuple(args, "Ii", &addr, &count))
+ 		return NULL;
+ 
+ 	p =  malloc(count);
+ 
+-	error = PyObject_AsWriteBuffer(p, (void**) &buf, &sz);
++	error = PyObject_GetBuffer(p, &buffer, PyBUF_WRITABLE);
+ 	if (error >= 0) {
+-		error = read_mem(self->dpf, buf, addr, count);
++		error = read_mem(self->dpf, buffer.buf, addr, count);
+ 	}
+ 	if (error < 0) {
+ 		Py_DECREF(p);
+ 		return HANDLE_ERROR(error, "readmem");
+ 	}
++	PyBuffer_Release(&buffer);
+ 	return p;	
+ }
+ 
+@@ -330,21 +330,21 @@ PyObject *
+ Device_runapp(DeviceObject *self, PyObject *args)
+ {
+ 	int error;
+-	const void *buf;
++	Py_buffer buffer;
+ 	ADDR addr;
+ 	ADDR start;
+ 	PyObject *p;
+-	ssize_t len;
+ 
+ 	if (!PyArg_ParseTuple(args, "IOI", &addr, &p, &start))
+ 		return NULL;
+ 
+-	error = PyObject_AsReadBuffer(p, &buf, &len);
++	error = PyObject_GetBuffer(p, &buffer, PyBUF_WRITABLE);
+ 	if (error < 0) return HANDLE_ERROR(error, "read buffer");
+ 
+-	error = dpf_bootstrap(self->dpf, addr, (unsigned char *) buf, len, start);
++	error = dpf_bootstrap(self->dpf, addr, buffer.buf, buffer.len, start);
+ 	if (error < 0) return HANDLE_ERROR(error, "runapp");
+ 
++	PyBuffer_Release(&buffer);
+ 	Py_INCREF(Py_None);
+ 	return Py_None;
+ 
