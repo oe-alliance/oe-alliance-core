@@ -1,15 +1,19 @@
-From d9735d617229263d3330ed29e82fe92b94368f97 Mon Sep 17 00:00:00 2001
+From 2e0af8fa72a6100927fc526d7cba2923ed70fe4e Mon Sep 17 00:00:00 2001
 From: NickerSK <nickersk@gmail.com>
 Date: Sat, 19 Feb 2022 19:35:54 +0100
 Subject: [PATCH] Revert "Remove twisted.web.client.getPage and friends"
 
 This reverts commit a21a1efce87c77b4acf309db9445643c2a6d8162.
+---
+ src/twisted/web/client.py              |  613 ++++++++++
+ src/twisted/web/test/test_webclient.py | 1445 +++++++++++++++++++++++-
+ 2 files changed, 2054 insertions(+), 4 deletions(-)
 
 diff --git a/src/twisted/web/client.py b/src/twisted/web/client.py
-index eb911ec53..433f4315f 100644
+index cfd945d..8b4c1eb 100644
 --- a/src/twisted/web/client.py
 +++ b/src/twisted/web/client.py
-@@ -27,10 +27,12 @@ from twisted.logger import Logger
+@@ -31,10 +31,12 @@ from twisted.logger import Logger
  from twisted.python.compat import nativeString, networkString
  from twisted.python.components import proxyForInterface
  from twisted.python.deprecate import (
@@ -21,8 +25,8 @@ index eb911ec53..433f4315f 100644
 +from twisted.python.util import InsensitiveDict
  from twisted.web import error, http
  from twisted.web._newclient import _ensureValidMethod, _ensureValidURI
- from twisted.web.http_headers import Headers
-@@ -57,6 +59,552 @@ class PartialDownloadError(error.Error):
+ from twisted.web.http_headers import Headers, _nameEncoder
+@@ -75,6 +77,552 @@ class PartialDownloadError(error.Error):
      """
  
  
@@ -575,7 +579,7 @@ index eb911ec53..433f4315f 100644
  class URI:
      """
      A URI object.
-@@ -229,6 +777,65 @@ def _makeGetterFactory(url, factoryFactory, contextFactory=None, *args, **kwargs
+@@ -247,6 +795,65 @@ def _makeGetterFactory(url, factoryFactory, contextFactory=None, *args, **kwargs
      return factory
  
  
@@ -641,7 +645,7 @@ index eb911ec53..433f4315f 100644
  # The code which follows is based on the new HTTP client implementation.  It
  # should be significantly better than anything above, though it is not yet
  # feature equivalent.
-@@ -1773,8 +2380,14 @@ __all__ = [
+@@ -1799,8 +2406,14 @@ __all__ = [
      "BrowserLikeRedirectAgent",
      "ContentDecoderAgent",
      "CookieAgent",
@@ -657,7 +661,7 @@ index eb911ec53..433f4315f 100644
      "ProxyAgent",
      "readBody",
 diff --git a/src/twisted/web/test/test_webclient.py b/src/twisted/web/test/test_webclient.py
-index 4237598c1..224a822e6 100644
+index 4237598..224a822 100644
 --- a/src/twisted/web/test/test_webclient.py
 +++ b/src/twisted/web/test/test_webclient.py
 @@ -2,14 +2,218 @@
@@ -2127,6 +2131,3 @@ index 4237598c1..224a822e6 100644
 +            io.BytesIO(),
 +        )
 +        downloader.setURL(uri)
--- 
-2.32.0
-
