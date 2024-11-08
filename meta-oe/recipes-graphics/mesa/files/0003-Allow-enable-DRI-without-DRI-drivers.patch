@@ -1,8 +1,8 @@
 --- a/meson.build
 +++ b/meson.build
-@@ -198,7 +198,9 @@ with_gallium_kmsro = system_has_kms_drm and [
-   with_gallium_vc4,
- ].contains(true)
+@@ -280,7 +280,9 @@ if freedreno_kmds.length() != 0 and freedreno_kmds != [ 'msm' ] and with_freedre
+   endif
+ endif
  
 -with_dri = false
 +dri_drivers = get_option('dri-drivers')
@@ -13,7 +13,7 @@
    _egl = get_option('egl')
 --- a/meson_options.txt
 +++ b/meson_options.txt
-@@ -43,6 +43,19 @@ option(
+@@ -52,6 +52,19 @@ option(
    description : 'enable support for dri3'
  )
  
@@ -56,7 +56,7 @@
  static void
 --- a/src/egl/main/eglapi.c
 +++ b/src/egl/main/eglapi.c
-@@ -2814,8 +2814,8 @@ eglGetProcAddress(const char *procname)
+@@ -2827,8 +2827,8 @@ eglGetProcAddress(const char *procname)
           ret = entrypoint->function;
     }
  
