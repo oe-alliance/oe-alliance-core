@@ -27,7 +27,6 @@ RRECOMMENDS:${PN} = "\
     enigma2-plugin-systemplugins-remotecontrolselection \
     enigma2-plugin-systemplugins-terrestrialscan \
     enigma2-plugin-systemplugins-terrestrialbouquet \
-    enigma2-plugin-systemplugins-satscanlcn \
     enigma2-skins-openvix \
     oe-alliance-skins \
     openssl-old \
