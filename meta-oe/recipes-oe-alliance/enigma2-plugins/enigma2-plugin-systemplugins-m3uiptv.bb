@@ -33,7 +33,7 @@ do_install:append() {
 			cc=${filename%%.*}
 			folder=${D}${pluginpath}/locale/${cc}/LC_MESSAGES
 			mkdir -p ${folder}
-			/usr/bin/msgfmt -o ${folder}/eitconfig.mo ${po}
+			/usr/bin/msgfmt -o ${folder}/m3uiptv.mo ${po}
 		done
 	fi
 }
