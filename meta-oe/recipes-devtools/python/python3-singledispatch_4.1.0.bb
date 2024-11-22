@@ -6,7 +6,7 @@ generic functions.  This library is a backport of this functionality to Python 2
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://README.rst;md5=e3d2f2ef3ab5aabf960835703217d8d5"
 
-DEPENDS += " ${PYTHON_PN}-setuptools-scm-native"
+DEPENDS += " python3-setuptools-scm-native"
 
 SRC_URI[md5sum] = "4bf163cc626caa9450856a370815c65e"
 SRC_URI[sha256sum] = "f3430b886d5b4213d07d715096a75da5e4a8105284c497b9aee6d6d48bfe90cb"

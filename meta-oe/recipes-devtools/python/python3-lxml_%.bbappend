@@ -1,3 +1,3 @@
-RDEPENDS:${PN} += "${PYTHON_PN}-cssselect"
+RDEPENDS:${PN} += "python3-cssselect"
 
-include ${PYTHON_PN}-package-split.inc
+include python3-package-split.inc

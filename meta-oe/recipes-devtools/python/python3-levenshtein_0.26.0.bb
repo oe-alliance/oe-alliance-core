@@ -4,7 +4,7 @@ SECTION = "devel/python"
 LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = " file://COPYING;md5=24b9569831c46d4818450b55282476b4"
 
-DEPENDS = "${PYTHON_PN}"
+DEPENDS = "python3"
 
 PYPI_PACKAGE = "python_levenshtein"
 
@@ -14,4 +14,4 @@ S = "${WORKDIR}/python_levenshtein-${PV}"
 
 inherit pypi python_setuptools_build_meta
 
-include ${PYTHON_PN}-package-split.inc
+include python3-package-split.inc

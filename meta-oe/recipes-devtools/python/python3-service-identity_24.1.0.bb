@@ -5,10 +5,10 @@ LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=76edce6a3fa1b82b0bf2b6ce174c19e2"
 
 DEPENDS += " \
-    ${PYTHON_PN}-hatch-vcs-native ${PYTHON_PN}-hatch-fancy-pypi-readme-native \
+    python3-hatch-vcs-native python3-hatch-fancy-pypi-readme-native \
 "
 
-RDEPENDS:${PN} = "${PYTHON_PN}-attrs ${PYTHON_PN}-idna ${PYTHON_PN}-pyasn1 ${PYTHON_PN}-pyasn1-modules ${PYTHON_PN}-pyopenssl"
+RDEPENDS:${PN} = "python3-attrs python3-idna python3-pyasn1 python3-pyasn1-modules python3-pyopenssl"
 
 PYPI_PACKAGE = "service_identity"
 
@@ -17,4 +17,4 @@ inherit pypi python_hatchling
 SRC_URI[md5sum] = "64267a4351ee3c225ee12a11bb29fc44"
 SRC_URI[sha256sum] = "6829c9d62fb832c2e1c435629b0a8c476e1929881f28bee4d20bc24161009221"
 
-include ${PYTHON_PN}-package-split.inc
+include python3-package-split.inc

@@ -5,7 +5,7 @@ PRIORITY = "required"
 inherit allarch
 
 require conf/license/license-gplv2.inc
-require conf/python/${PYTHON_PN}-compileall.inc
+require conf/python/python3-compileall.inc
 
 inherit gitpkgv
 SRCREV = "${AUTOREV}"

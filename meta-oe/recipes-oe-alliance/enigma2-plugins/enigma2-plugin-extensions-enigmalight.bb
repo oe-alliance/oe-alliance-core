@@ -4,7 +4,7 @@ LICENSE = "GPL-3.0-only"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=156f94b2a67a05ad45ff99bec65b2c81"
 
 DEPENDS = "libusb1"
-RRECOMMENDS:${PN} = "${PYTHON_PN}-cheetah libusb1 kernel-module-cdc-acm kernel-module-ftdi-sio kernel-module-usbserial kernel-module-ch341"
+RRECOMMENDS:${PN} = "python3-cheetah libusb1 kernel-module-cdc-acm kernel-module-ftdi-sio kernel-module-usbserial kernel-module-ch341"
 
 inherit gitpkgv
 SRCREV = "${AUTOREV}"

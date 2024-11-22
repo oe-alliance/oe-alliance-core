@@ -7,7 +7,7 @@ LICENSE = "Proprietary"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=84dcc94da3adb52b53ae4fa38fe49e5d"
 require conf/python/python3-compileall.inc
 
-inherit autotools-brokensep gettext gitpkgv ${PYTHON_PN}targetconfig ${PYTHON_PN}native
+inherit autotools-brokensep gettext gitpkgv python3targetconfig python3native
 
 SRCREV = "${AUTOREV}"
 PV = "1.0+git"

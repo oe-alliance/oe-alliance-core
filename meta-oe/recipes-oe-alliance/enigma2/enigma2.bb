@@ -20,7 +20,7 @@ DEPENDS = " \
     libdreamdvd libdvbsi++ fribidi libmad libpng giflib libxml2 libxmlccwrap \
     ${@bb.utils.contains_any("DISTRO_NAME", "openatv openvix openbh teamblue", "libsigc++-3" , "libsigc++-2.0", d)} \
     openssl avahi libudfread \
-    ${PYTHON_PN}-pillow ${PYTHON_PN}-twisted ${PYTHON_PN}-wifi ${PYTHON_PN}-six-native \
+    python3-pillow python3-twisted python3-wifi python3-six-native \
     swig-native \
     tuxtxt-enigma2 \
     ${@bb.utils.contains("DISTRO_NAME", "openspa", "uchardet" , "", d)} \
@@ -78,30 +78,30 @@ NORMAL_IMAGE_RECOMMENDS = "\
 "
 
 PYTHON_RDEPS = " \
-    ${PYTHON_PN}-asyncio \
-    ${PYTHON_PN}-codecs \
-    ${PYTHON_PN}-core \
-    ${PYTHON_PN}-crypt \
-    ${PYTHON_PN}-fcntl \
-    ${PYTHON_PN}-mmap \
-    ${PYTHON_PN}-netclient \
-    ${PYTHON_PN}-netifaces \
-    ${PYTHON_PN}-netserver \
-    ${PYTHON_PN}-pickle \
-    ${PYTHON_PN}-shell \
-    ${PYTHON_PN}-threading \
-    ${PYTHON_PN}-twisted-core \
-    ${PYTHON_PN}-twisted-web \
-    ${PYTHON_PN}-xml \
-    ${PYTHON_PN}-zopeinterface \
-    ${PYTHON_PN}-email \
-    ${PYTHON_PN}-mime \
-    ${PYTHON_PN}-pyusb \
-    ${PYTHON_PN}-process \
-    ${PYTHON_PN}-image \
-    ${PYTHON_PN}-pillow \
-    ${PYTHON_PN}-six \
-    ${PYTHON_PN}-treq \
+    python3-asyncio \
+    python3-codecs \
+    python3-core \
+    python3-crypt \
+    python3-fcntl \
+    python3-mmap \
+    python3-netclient \
+    python3-netifaces \
+    python3-netserver \
+    python3-pickle \
+    python3-shell \
+    python3-threading \
+    python3-twisted-core \
+    python3-twisted-web \
+    python3-xml \
+    python3-zopeinterface \
+    python3-email \
+    python3-mime \
+    python3-pyusb \
+    python3-process \
+    python3-image \
+    python3-pillow \
+    python3-six \
+    python3-treq \
 "
 
 GST_BASE_RDEPS = "\
@@ -175,14 +175,14 @@ DESCRIPTION:append:enigma2-plugin-systemplugins-satelliteequipmentcontrol = "all
 DESCRIPTION:append:enigma2-plugin-systemplugins-satfinder = "helps you to align your dish."
 DESCRIPTION:append:enigma2-plugin-systemplugins-skinselector = "shows a menu with selectable skins."
 DESCRIPTION:append:enigma2-plugin-systemplugins-videomode = "selects advanced video modes"
-RDEPENDS:enigma2-plugin-systemplugins-softwaremanager = "${PYTHON_PN}-twisted-web"
+RDEPENDS:enigma2-plugin-systemplugins-softwaremanager = "python3-twisted-web"
 DESCRIPTION:append:enigma2-plugin-systemplugins-crashlogautosubmit = "automatically send crashlogs to Dream Multimedia"
-RDEPENDS:enigma2-plugin-systemplugins-crashlogautosubmit = "${PYTHON_PN}-twisted-mail ${PYTHON_PN}-twisted-names ${PYTHON_PN}-compression ${PYTHON_PN}-mime ${PYTHON_PN}-email"
+RDEPENDS:enigma2-plugin-systemplugins-crashlogautosubmit = "python3-twisted-mail python3-twisted-names python3-compression python3-mime python3-email"
 DESCRIPTION:append:enigma2-plugin-systemplugins-cleanupwizard = "informs you on low internal memory on system startup."
 DESCRIPTION:append:enigma2-plugin-extensions-modem = "opens a menu to connect to internet via builtin modem."
 RDEPENDS:enigma2-plugin-extensions-modem = "dreambox-modem-ppp-scripts"
 DESCRIPTION:append:enigma2-plugin-systemplugins-wirelesslan = "helps you configuring your wireless lan"
-RDEPENDS:enigma2-plugin-systemplugins-wirelesslan = "wpa-supplicant wireless-tools ${PYTHON_PN}-wifi"
+RDEPENDS:enigma2-plugin-systemplugins-wirelesslan = "wpa-supplicant wireless-tools python3-wifi"
 DESCRIPTION:append:enigma2-plugin-systemplugins-networkwizard = "provides easy step by step network configuration"
 # Note that these tools lack recipes
 RDEPENDS:enigma2-plugin-extensions-dvdburn = "dvd+rw-tools dvdauthor mjpegtools genisoimage replex"
@@ -193,15 +193,15 @@ DESCRIPTION:enigma2-plugin-font-wqy-microhei = "Font wqy-microhei add support fo
 SUMMARY:enigma2-plugin-extensions-streamlinkwrapper = "Enables support for streamlink url scheme in bouquet list."
 RDEPENDS:enigma2-plugin-extensions-streamlinkwrapper = "streamlink"
 SUMMARY:enigma2-plugin-extensions-ytdlwrapper = "Enables support for Youtube-DL url scheme in bouquet list."
-RDEPENDS:enigma2-plugin-extensions-ytdlwrapper = "${PYTHON_PN}-youtube-dl"
+RDEPENDS:enigma2-plugin-extensions-ytdlwrapper = "python3-youtube-dl"
 SUMMARY:enigma2-plugin-extensions-ytdlpwrapper = "Enables support for YT-DLP url scheme in bouquet list."
-RDEPENDS:enigma2-plugin-extensions-ytdlpwrapper = "${PYTHON_PN}-yt-dlp"
-RDEPENDS:enigma2-plugin-extensions-filecommander = "${PYTHON_PN}-puremagic"
+RDEPENDS:enigma2-plugin-extensions-ytdlpwrapper = "python3-yt-dlp"
+RDEPENDS:enigma2-plugin-extensions-filecommander = "python3-puremagic"
 
 RREPLACES:enigma2-plugin-systemplugins-lcnscanner:openatv = "enigma2-plugin-systemplugins-terrestrialscan"
 RCONFLICTS:enigma2-plugin-systemplugins-lcnscanner:openatv = "enigma2-plugin-systemplugins-terrestrialscan"
 
-inherit autotools-brokensep gitpkgv pkgconfig ${PYTHON_PN}native python3targetconfig upx-compress
+inherit autotools-brokensep gitpkgv pkgconfig python3native python3targetconfig upx-compress
 
 PV = "${IMAGE_VERSION}+git"
 PKGV = "${IMAGE_VERSION}+git${GITPKGV}"

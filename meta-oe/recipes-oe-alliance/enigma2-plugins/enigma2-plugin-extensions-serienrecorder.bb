@@ -8,7 +8,7 @@ MAINTAINER = "einfall & w22754 & egn & MacDisein"
 require conf/license/license-gplv2.inc
 require conf/python/python3-compileall.inc
 
-RDEPENDS:${PN} = "${PYTHON_PN}-sqlite3 ${PYTHON_PN}-json ${PYTHON_PN}-xmlrpc ${PYTHON_PN}-email"
+RDEPENDS:${PN} = "python3-sqlite3 python3-json python3-xmlrpc python3-email"
 
 inherit gittag allarch
 

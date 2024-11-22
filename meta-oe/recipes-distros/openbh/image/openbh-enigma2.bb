@@ -15,9 +15,9 @@ inherit packagegroup
 RCONFLICTS:${PN} = "enigma2-plugin-extensions-permanenttimeshift enigma2-plugin-systemplugins-skinselector"
 RREPLACES:${PN} = "enigma2-plugin-extensions-permanenttimeshift enigma2-plugin-systemplugins-skinselector"
 
-# required for obh plugin: ffmpeg ofgwrite ${PYTHON_PN}-process libcrypto-compat-0.9.7 ${PYTHON_PN}-compression zip procps bzip2 mtd-utils mtd-utils-ubifs
+# required for obh plugin: ffmpeg ofgwrite python3-process libcrypto-compat-0.9.7 python3-compression zip procps bzip2 mtd-utils mtd-utils-ubifs
 # requied for ftp access: vsftpd
-DEPENDS = "${PYTHON_PN}-process libcrypto-compat-0.9.7 gettext-native"
+DEPENDS = "python3-process libcrypto-compat-0.9.7 gettext-native"
 
 RDEPENDS:${PN} = "\
     vsftpd \
@@ -25,9 +25,9 @@ RDEPENDS:${PN} = "\
     mtd-utils-ubifs \
     ffmpeg \
     ofgwrite \
-    ${PYTHON_PN}-process \
+    python3-process \
     libcrypto-compat-0.9.7 \
-    ${PYTHON_PN}-compression \
+    python3-compression \
     zip \
     procps \
     bzip2 \

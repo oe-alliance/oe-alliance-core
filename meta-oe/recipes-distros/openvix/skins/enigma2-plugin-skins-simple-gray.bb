@@ -3,7 +3,7 @@ MAINTAINER = "Taapat"
 LICENSE = "GPL-3.0-only"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=1ebbd3e34237af26da5dc08a4e440464"
 
-inherit gitpkgv allarch ${PYTHON_PN}native
+inherit gitpkgv allarch python3native
 
 PV = "1.0+git"
 PKGV = "1.0+git${GITPKGV}"

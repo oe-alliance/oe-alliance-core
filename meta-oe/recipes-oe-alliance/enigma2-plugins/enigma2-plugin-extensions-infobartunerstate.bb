@@ -2,11 +2,11 @@ SUMMARY = "InfoBarTunerState Extentions"
 MAINTAINER = "Betonme"
 SECTION = "extra"
 PRIORITY = "optional"
-DEPENDS = "${PYTHON_PN}-six-native"
+DEPENDS = "python3-six-native"
 require conf/license/license-gplv2.inc
 require conf/python/python3-compileall.inc
 
-inherit autotools gitpkgv ${PYTHON_PN}native
+inherit autotools gitpkgv python3native
 SRCREV = "${AUTOREV}"
 PV = "1.1.+git"
 PKGV = "1.1.+git${GITPKGV}"

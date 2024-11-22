@@ -10,7 +10,7 @@ require conf/license/license-gplv2.inc
 
 SRCNAME = "biplist"
 
-DEPENDS = "${PYTHON_PN}"
+DEPENDS = "python3"
 
 SRC_URI = " https://bitbucket.org/wooster/biplist/downloads/${SRCNAME}-${PV}.tar.gz"
 
@@ -22,4 +22,4 @@ SRC_URI[md5sum] = "e2ff83d5f66e5798801d142eb7c1a07a"
 SRC_URI[sha256sum] = "4c0549764c5fe50b28042ec21aa2e14fe1a2224e239a1dae77d9e7f3932aa4c6"
 
 
-include ${PYTHON_PN}-package-split.inc
+include python3-package-split.inc

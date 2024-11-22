@@ -5,7 +5,7 @@ PRIORITY = "optional"
 require conf/license/license-gplv2.inc
 require conf/python/python3-compileall.inc
 
-RDEPENDS:${PN} = "${PYTHON_PN}-sqlite3 ${PYTHON_PN}-tinytag ${PYTHON_PN}-beautifulsoup4"
+RDEPENDS:${PN} = "python3-sqlite3 python3-tinytag python3-beautifulsoup4"
 
 inherit gitpkgv gettext setuptools3-openplugins
 

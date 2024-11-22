@@ -6,7 +6,7 @@ LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://COPYING.GPLv2;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 require conf/python/python3-compileall.inc
 
-inherit gitpkgv ${PYTHON_PN}native
+inherit gitpkgv python3native
 SRCREV = "${AUTOREV}"
 PV = "1+git"
 PKGV = "1+git${GITPKGV}"
@@ -19,7 +19,7 @@ S = "${WORKDIR}/git"
 
 inherit setuptools3-openplugins
 
-DEPENDS += "${PYTHON_PN}  libbluray libudfread"
+DEPENDS += "python3  libbluray libudfread"
 RDEPENDS:${PN} = "libbluray"
 
 FILES:${PN}-dbg += "/usr/lib/enigma2/python/Plugins/Extensions/BlurayPlayer/.debug"

@@ -4,8 +4,8 @@ MAINTAINER = "OpenBh"
 require conf/license/license-gplv2.inc
 require conf/python/python3-compileall.inc
 
-DEPENDS = "enigma2 ${PYTHON_PN}-process libcrypto-compat-0.9.7 gettext-native"
-RDEPENDS:enigma2-plugin-obh-core = "ffmpeg ofgwrite ${PYTHON_PN}-process libcrypto-compat-0.9.7 ${PYTHON_PN}-compression zip procps ${PYTHON_PN}-beautifulsoup4 bzip2"
+DEPENDS = "enigma2 python3-process libcrypto-compat-0.9.7 gettext-native"
+RDEPENDS:enigma2-plugin-obh-core = "ffmpeg ofgwrite python3-process libcrypto-compat-0.9.7 python3-compression zip procps python3-beautifulsoup4 bzip2"
 
 RCONFLICTS:enigma2-plugin-obh-core = "settings-autorestore"
 RREPLACES:enigma2-plugin-obh-core = "settings-autorestore"
@@ -13,7 +13,7 @@ RREPLACES:enigma2-plugin-obh-core = "settings-autorestore"
 PROVIDES += "openbh-core"
 RPROVIDES:enigma2-plugin-obh-core += "openbh-core"
 
-inherit autotools-brokensep gitpkgv ${PYTHON_PN}native
+inherit autotools-brokensep gitpkgv python3native
 SRCREV = "${AUTOREV}"
 PV = "${IMAGE_VERSION}+git"
 PKGV = "${IMAGE_VERSION}+git${GITPKGV}"

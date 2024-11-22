@@ -17,7 +17,7 @@ SRC_URI:teamblue = "git://github.com/BlackHole/servicehisilicon.git;protocol=htt
 
 S = "${WORKDIR}/git"
 
-inherit autotools gitpkgv ${PYTHON_PN}native pkgconfig ${PYTHON_PN}targetconfig
+inherit autotools gitpkgv python3native pkgconfig python3targetconfig
 
 PV = "git"
 PKGV = "git${GITPKGV}"

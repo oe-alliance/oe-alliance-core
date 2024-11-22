@@ -12,7 +12,7 @@ PKGV = "7.9.30+git${GITPKGV}"
 VER = "7.9.30"
 
 DEPENDS += "gettext-native"
-RDEPENDS:${PN} = "enigma2-plugin-extensions-oaweather ${PYTHON_PN}-requests ${PYTHON_PN}-pillow enigma2-plugin-systemplugins-mphelp ${PYTHON_PN}-lxml"
+RDEPENDS:${PN} = "enigma2-plugin-extensions-oaweather python3-requests python3-pillow enigma2-plugin-systemplugins-mphelp python3-lxml"
 RDEPENDS:${PN}:remove:openhdf = "enigma2-plugin-extensions-oaweather"
 RDEPENDS:${PN}:remove:teamblue = "enigma2-plugin-extensions-oaweather"
 RCONFLICTS:${PN} += "enigma2-plugin-skins-kravenfhd enigma2-plugin-skins-kravenvb"

@@ -5,9 +5,9 @@ AUTHOR = "David Reid <dreid@dreid.org>"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=a5dd67fd17479587f7093769d95ef186"
 
-DEPENDS += "${PYTHON_PN}-incremental-native"
+DEPENDS += "python3-incremental-native"
 
-RDEPENDS:${PN} += "${PYTHON_PN}-attrs ${PYTHON_PN}-hyperlink ${PYTHON_PN}-incremental ${PYTHON_PN}-requests ${PYTHON_PN}-twisted"
+RDEPENDS:${PN} += "python3-attrs python3-hyperlink python3-incremental python3-requests python3-twisted"
 
 PYPI_PACKAGE = "treq"
 
@@ -16,4 +16,4 @@ SRC_URI[sha256sum] = "15da7fc404f3e4ed59d0abe5f8eef4966fabbe618039a2a23bc7c15305
 
 inherit pypi setuptools3
 
-include ${PYTHON_PN}-package-split.inc
+include python3-package-split.inc

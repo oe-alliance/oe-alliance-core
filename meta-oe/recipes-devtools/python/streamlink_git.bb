@@ -5,26 +5,26 @@ SECTION = "devel/python"
 LICENSE = "BSD-2-Clause"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=bdeccdbc612afcae11e2a92dafa75e35"
 
-DEPENDS += "${PYTHON_PN}-versioningit-native"
+DEPENDS += "python3-versioningit-native"
 
 inherit python3-dir setuptools3 gittag
 
-RDEPENDS:${PN} = "${PYTHON_PN}-core \
-    ${PYTHON_PN}-ctypes \
-    ${PYTHON_PN}-exceptiongroup \
-    ${PYTHON_PN}-futures3 \
-    ${PYTHON_PN}-isodate \
-    ${PYTHON_PN}-pycountry \
-    ${PYTHON_PN}-lxml \
-    ${PYTHON_PN}-misc \
-    ${PYTHON_PN}-pkgutil \
-    ${PYTHON_PN}-pycryptodome \
-    ${PYTHON_PN}-pysocks \
-    ${PYTHON_PN}-requests \
-    ${PYTHON_PN}-shell \
-    ${PYTHON_PN}-singledispatch \
-    ${PYTHON_PN}-websocket-client \
-    ${PYTHON_PN}-trio \
+RDEPENDS:${PN} = "python3-core \
+    python3-ctypes \
+    python3-exceptiongroup \
+    python3-futures3 \
+    python3-isodate \
+    python3-pycountry \
+    python3-lxml \
+    python3-misc \
+    python3-pkgutil \
+    python3-pycryptodome \
+    python3-pysocks \
+    python3-requests \
+    python3-shell \
+    python3-singledispatch \
+    python3-websocket-client \
+    python3-trio \
     "
 
 PV = "git"
@@ -56,7 +56,7 @@ do_install:append() {
     rm -rf ${D}${datadir}
 }
 
-include ${PYTHON_PN}-package-split.inc
+include python3-package-split.inc
 
 PACKAGES = "${PN}"
 

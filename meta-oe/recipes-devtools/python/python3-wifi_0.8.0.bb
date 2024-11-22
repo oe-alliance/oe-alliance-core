@@ -4,7 +4,7 @@ SECTION = "devel/python"
 LICENSE = "LGPL-2.0-or-later & GPL-2.0-or-later"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=96054b336a7ea61f1acd5c14acdda526"
 
-RDEPENDS:${PN} = "${PYTHON_PN}-pbkdf2"
+RDEPENDS:${PN} = "python3-pbkdf2"
 
 SRC_URI = "git://github.com/oe-mirrors/wifi.git;branch=master;protocol=https file://no-newlines.patch"
 
@@ -14,4 +14,4 @@ inherit setuptools3
 
 S = "${WORKDIR}/git"
 
-include ${PYTHON_PN}-package-split.inc
+include python3-package-split.inc

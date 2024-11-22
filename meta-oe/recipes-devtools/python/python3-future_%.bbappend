@@ -1,3 +1,3 @@
 PR .= ".2"
 
-include ${PYTHON_PN}-package-split.inc
+include python3-package-split.inc

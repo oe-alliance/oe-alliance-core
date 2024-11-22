@@ -4,4 +4,4 @@ SRC_URI:append = " \
         ${@bb.utils.contains("MACHINE_FEATURES", "legacykernel", "file://define-RTNL_FAMILY_MAX.patch", "", d)} \
 "
 
-include ${PYTHON_PN}-package-split.inc
+include python3-package-split.inc

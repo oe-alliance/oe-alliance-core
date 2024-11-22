@@ -1,6 +1,6 @@
 FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 
-include ${PYTHON_PN}-package-split.inc
+include python3-package-split.inc
 
 DEPENDS += " libwebp "
 

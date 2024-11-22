@@ -19,4 +19,4 @@ S = "${WORKDIR}/git"
 
 inherit setuptools3
 
-include ${PYTHON_PN}-package-split.inc
+include python3-package-split.inc

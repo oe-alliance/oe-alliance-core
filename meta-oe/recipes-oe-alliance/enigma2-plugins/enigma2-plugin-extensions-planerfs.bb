@@ -5,9 +5,9 @@ LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=11a9969bdf1bc48a06dad1fd82c61bf9"
 
 DEPENDS = "enigma2"
-RDEPENDS:${PN} = "${PYTHON_PN}-core ${PYTHON_PN}-icalendar"
+RDEPENDS:${PN} = "python3-core python3-icalendar"
 
-inherit ${PYTHON_PN}-dir gitpkgv ${PYTHON_PN}native gettext
+inherit python3-dir gitpkgv python3native gettext
 
 SRCREV = "${AUTOREV}"
 PV = "1.0+git"

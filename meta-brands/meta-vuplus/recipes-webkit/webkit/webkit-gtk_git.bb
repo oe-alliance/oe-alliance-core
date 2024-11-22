@@ -32,7 +32,7 @@ SRC_URI = "git://github.com/vuplus-com/webkit-r95199-base.git;protocol=https;bra
     file://0001-distutils-are-outdated-use-setuptools.patch \
 "
 
-inherit autotools lib_package gtk-doc pkgconfig perlnative ${PYTHON_PN}native
+inherit autotools lib_package gtk-doc pkgconfig perlnative python3native
 
 S = "${WORKDIR}/git"
 

@@ -5,7 +5,7 @@ PRIORITY = "optional"
 require conf/license/license-gplv2.inc
 require conf/python/python3-compileall.inc
 
-RDEPENDS:${PN} = "${PYTHON_PN}-pillow ${PYTHON_PN}-requests wget"
+RDEPENDS:${PN} = "python3-pillow python3-requests wget"
 
 inherit gittag allarch
 

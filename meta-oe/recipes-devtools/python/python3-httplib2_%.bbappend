@@ -1,6 +1,6 @@
 RDEPENDS:${PN} += "ca-certificates"
 
-inherit ${PYTHON_PN}-dir
+inherit python3-dir
 
 do_install:append() {
     perm_files=`find "${D}${PYTHON_SITEPACKAGES_DIR}/" -name "top_level.txt"`
@@ -14,4 +14,4 @@ do_install:append() {
     ln -s /etc/ssl/certs/ca-certificates.crt ${D}${PYTHON_SITEPACKAGES_DIR}/httplib2/cacerts.txt
 }
 
-include ${PYTHON_PN}-package-split.inc
+include python3-package-split.inc

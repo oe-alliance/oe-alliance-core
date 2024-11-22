@@ -22,15 +22,15 @@ RDEPENDS:${PN} = "\
     openhdf-spinner \
     curl \
     hddtemp \
-    ${PYTHON_PN}-pexpect \
-    ${PYTHON_PN}-requests \
-    ${PYTHON_PN}-mutagen \
-    ${PYTHON_PN}-plistlib \
-    ${PYTHON_PN}-future \
-    ${PYTHON_PN}-six \
-    ${PYTHON_PN}-pillow \
-    ${PYTHON_PN}-netifaces \
-    ${PYTHON_PN}-service-identity \
+    python3-pexpect \
+    python3-requests \
+    python3-mutagen \
+    python3-plistlib \
+    python3-future \
+    python3-six \
+    python3-pillow \
+    python3-netifaces \
+    python3-service-identity \
     unrar \
     ofgwrite \
     rtmpdump \

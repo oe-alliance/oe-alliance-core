@@ -24,14 +24,14 @@ RDEPENDS:${PN} = "\
     openvix-enigma2 \
     openvix-bootlogo \
     openvix-spinner \
-    ${PYTHON_PN}-pillow \
+    python3-pillow \
     ${@bb.utils.contains("TUNE_FEATURES", "armv", "glibc-compat", "", d)} \
-    ${PYTHON_PN}-service-identity \
-    ${PYTHON_PN}-requests \
-    ${PYTHON_PN}-future \
-    ${PYTHON_PN}-pexpect \
-    ${PYTHON_PN}-six \
-    ${PYTHON_PN}-trio \
+    python3-service-identity \
+    python3-requests \
+    python3-future \
+    python3-pexpect \
+    python3-six \
+    python3-trio \
     "
 
 RRECOMMENDS:${PN} = "\

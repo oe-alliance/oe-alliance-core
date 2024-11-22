@@ -15,7 +15,7 @@ VER ?= ""
 
 SRC_URI = "git://github.com/oe-alliance/e2plugins.git;protocol=https;branch=python3"
 
-RDEPENDS:${PN}  = "qtwebkit ${PYTHON_PN}-netifaces" 
+RDEPENDS:${PN}  = "qtwebkit python3-netifaces" 
 
 S = "${WORKDIR}/git/qtstalker${VER}"
 

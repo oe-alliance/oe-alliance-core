@@ -6,7 +6,7 @@ LICENSE = "GPL-2.0-only"
 require conf/license/license-gplv2.inc
 require conf/python/python3-compileall.inc
 
-inherit gitpkgv ${PYTHON_PN}native autotools-brokensep gettext 
+inherit gitpkgv python3native autotools-brokensep gettext 
 
 SRCREV = "${AUTOREV}"
 PV = "1.0+git"
@@ -18,7 +18,7 @@ SRC_URI="git://github.com/openmips/gbremote-client.git;protocol=https;branch=mas
 
 S = "${WORKDIR}/git"
 
-DEPENDS += "${PYTHON_PN} python3-setuptools-native"
+DEPENDS += "python3 python3-setuptools-native"
 
 RDEPENDS:${PN} = "cifs-utils"
 

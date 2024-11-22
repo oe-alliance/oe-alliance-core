@@ -9,7 +9,7 @@ require conf/python/python3-compileall.inc
 
 DEPENDS += "python3-setuptools-native"
 
-inherit autotools-brokensep gettext gitpkgv ${PYTHON_PN}native ${PYTHON_PN}targetconfig
+inherit autotools-brokensep gettext gitpkgv python3native python3targetconfig
 
 SRCREV = "${AUTOREV}"
 PV = "git"
@@ -39,16 +39,16 @@ python populate_packages:prepend() {
         for line in src.split("\n"):
             full_package = package[0] + '-' + package[1] + '-' + package[2] + '-' + package[3]
             if line.startswith('Depends: '):
-                # some plugins still reference twisted-* dependencies, these packages are now called ${PYTHON_PN}-twisted-*
+                # some plugins still reference twisted-* dependencies, these packages are now called python3-twisted-*
                 rdepends = []
                 for depend in line[9:].split(','):
                     depend = depend.strip()
                     if depend.startswith('twisted-'):
-                        rdepends.append(depend.replace('twisted-', '${PYTHON_PN}-twisted-'))
+                        rdepends.append(depend.replace('twisted-', 'python3-twisted-'))
                     elif depend == 'python-re' or depend == 'python-lang' or depend == 'python-textutils':
                         pass
                     elif depend.startswith('python-'):
-                        rdepends.append(depend.replace('python-', '${PYTHON_PN}-'))
+                        rdepends.append(depend.replace('python-', 'python3-'))
                     elif depend.startswith('gst-plugins-'):
                         rdepends.append(depend.replace('gst-plugins-', 'gstreamer1.0-'))
                     elif depend.startswith('enigma2') and not depend.startswith('enigma2-'):

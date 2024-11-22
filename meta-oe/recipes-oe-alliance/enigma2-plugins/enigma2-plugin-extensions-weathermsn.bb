@@ -6,7 +6,7 @@ HOMEPAGE = "www.gisclub.tv"
 require conf/license/license-gplv2.inc
 require conf/python/python3-compileall.inc
 
-inherit gitpkgv ${PYTHON_PN}native
+inherit gitpkgv python3native
 
 SRCREV = "${AUTOREV}"
 PV = "1.3.+git"

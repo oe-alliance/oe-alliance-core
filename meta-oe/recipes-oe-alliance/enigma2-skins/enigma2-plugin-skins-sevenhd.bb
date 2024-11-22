@@ -12,7 +12,7 @@ PV = "3.6.83+git"
 PKGV = "3.6.83+git${GITPKGV}"
 VER="3.6.83"
 
-RDEPENDS:${PN} = "${PYTHON_PN}-requests ${PYTHON_PN}-pillow enigma2-plugin-systemplugins-mphelp ${PYTHON_PN}-lxml"
+RDEPENDS:${PN} = "python3-requests python3-pillow enigma2-plugin-systemplugins-mphelp python3-lxml"
 
 SRC_URI="git://github.com/openatv/SevenHD.git;protocol=https;branch=master"
 

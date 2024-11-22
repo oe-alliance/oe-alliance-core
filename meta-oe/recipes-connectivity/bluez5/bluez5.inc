@@ -99,7 +99,7 @@ do_install:append() {
 
 	# Patch python tools to use Python 3; they should be source compatible, but
 	# still refer to Python 2 in the shebang
-	sed -i -e '1s,#!.*python.*,#!${bindir}/${PYTHON_PN},' ${D}${libdir}/bluez/test/*
+	sed -i -e '1s,#!.*python.*,#!${bindir}/python3,' ${D}${libdir}/bluez/test/*
 }
 
 PACKAGES =+ "${PN}-testtools ${PN}-obex ${PN}-noinst-tools"
@@ -131,8 +131,8 @@ def get_noinst_tools_paths (d, bb, tools):
 
 FILES:${PN}-noinst-tools = "${@get_noinst_tools_paths(d, bb, d.getVar('NOINST_TOOLS'))}"
 
-RDEPENDS:${PN}-testtools += "python3-core ${PYTHON_PN}-dbus"
-RDEPENDS:${PN}-testtools += "${@bb.utils.contains('GI_DATA_ENABLED', 'True', '${PYTHON_PN}-pygobject', '', d)}"
+RDEPENDS:${PN}-testtools += "python3-core python3-dbus"
+RDEPENDS:${PN}-testtools += "${@bb.utils.contains('GI_DATA_ENABLED', 'True', 'python3-pygobject', '', d)}"
 
 SYSTEMD_SERVICE:${PN} = "${@bb.utils.contains('PACKAGECONFIG', 'systemd', 'bluetooth.service', '', d)}"
 INITSCRIPT_PACKAGES = "${PN}"

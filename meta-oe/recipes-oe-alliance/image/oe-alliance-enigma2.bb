@@ -23,10 +23,10 @@ RDEPENDS:${PN} = "\
     bzip2 \
     pbzip2 \
     rsync \
-    ${PYTHON_PN}-compat2 \
-    ${PYTHON_PN}-twisted-protocols \
-    ${PYTHON_PN}-numbers \
-    ${PYTHON_PN}-puremagic \
+    python3-compat2 \
+    python3-twisted-protocols \
+    python3-numbers \
+    python3-puremagic \
     ${@bb.utils.contains("SMALLBOXWIZARD", "1", "${SMALLBOXWIZARD_IMAGE_DEPEND}", "${NORMAL_IMAGE_DEPEND}", d)} \
     "
 

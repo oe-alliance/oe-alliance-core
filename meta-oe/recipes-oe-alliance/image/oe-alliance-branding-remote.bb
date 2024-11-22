@@ -2,11 +2,11 @@ DESCRIPTION = "Additional remote control visuals for the OE-A Branding Lib"
 MAINTAINER = "oe-alliance team"
 PACKAGE_ARCH = "${MACHINEBUILD}"
 
-DEPENDS = "${PYTHON_PN} ${PYTHON_PN}-six-native"
+DEPENDS = "python3 python3-six-native"
 
 require conf/license/license-gplv2.inc
 
-inherit autotools-brokensep gitpkgv ${PYTHON_PN}native
+inherit autotools-brokensep gitpkgv python3native
 
 SRCREV = "${AUTOREV}"
 PV = "${IMAGE_VERSION}+git"

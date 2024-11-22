@@ -3,7 +3,7 @@ MAINTAINER = "oe-alliance"
 LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 
-inherit gitpkgv ${PYTHON_PN}native gettext ${@bb.utils.contains("PYTHON_PN", "python3", "python3targetconfig", "", d)}
+inherit gitpkgv python3native gettext ${@bb.utils.contains("PYTHON_PN", "python3", "python3targetconfig", "", d)}
 
 SRCREV = "${AUTOREV}"
 PV = "1.3+git"
@@ -16,7 +16,7 @@ S = "${WORKDIR}/git"
 
 inherit autotools-brokensep
 
-DEPENDS = "${PYTHON_PN} lzo"
+DEPENDS = "python3 lzo"
 
 RDEPENDS:${PN} = "kernel-module-nandsim openmultiboot enigma2 lzo"
 

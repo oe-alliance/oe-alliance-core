@@ -15,10 +15,10 @@ inherit packagegroup
 RRECOMMENDS:${PN} = "\
     openatv-enigma2 \
     openatv-spinner \
-    ${PYTHON_PN}-pillow \
-    ${PYTHON_PN}-service-identity \
-    ${PYTHON_PN}-requests \
-    ${PYTHON_PN}-future \
-    ${PYTHON_PN}-pexpect \
-    ${PYTHON_PN}-six \
+    python3-pillow \
+    python3-service-identity \
+    python3-requests \
+    python3-future \
+    python3-pexpect \
+    python3-six \
 "

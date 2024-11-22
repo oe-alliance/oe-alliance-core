@@ -33,13 +33,13 @@ RDEPENDS:${PN} = "\
 NORMAL_GUI = "\
     openatv-enigma2 \
     openatv-spinner \
-    ${PYTHON_PN}-pillow \
-    ${PYTHON_PN}-service-identity \
-    ${PYTHON_PN}-requests \
-    ${PYTHON_PN}-future \
-    ${PYTHON_PN}-pexpect \
-    ${PYTHON_PN}-six \
-    ${PYTHON_PN}-trio \
+    python3-pillow \
+    python3-service-identity \
+    python3-requests \
+    python3-future \
+    python3-pexpect \
+    python3-six \
+    python3-trio \
 "
 
 SMALLBOXWIZARD_IMAGE = "\

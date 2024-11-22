@@ -2,7 +2,7 @@ SUMMARY = "SpecialJump - Fast manual skipping of commercials, and more..."
 MAINTAINER = "www.opena.tv Fischreiher"
 SECTION = "base"
 LICENSE = "proprietary"
-DEPENDS = "${PYTHON_PN}-six-native"
+DEPENDS = "python3-six-native"
 require conf/license/license-gplv2.inc
 require conf/python/python3-compileall.inc
 

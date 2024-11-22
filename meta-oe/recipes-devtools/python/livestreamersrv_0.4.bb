@@ -7,9 +7,9 @@ require conf/license/license-gplv2.inc
 
 inherit allarch
 
-RDEPENDS:${PN} = "${PYTHON_PN}-core streamlink"
+RDEPENDS:${PN} = "python3-core streamlink"
 
-inherit ${PYTHON_PN}-dir gitpkgv
+inherit python3-dir gitpkgv
 
 SRCREV = "${AUTOREV}"
 

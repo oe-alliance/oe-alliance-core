@@ -6,7 +6,7 @@ PACKAGE_ARCH = "${MACHINEBUILD}"
 
 ALLOW_EMPTY:${PN} = "1"
 
-inherit gitpkgv  ${PYTHON_PN}native
+inherit gitpkgv  python3native
 
 SRCREV = "${AUTOREV}"
 

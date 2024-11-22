@@ -15,7 +15,7 @@ RRECOMMENDS:${PN} = " \
     enigma-info \
     openhdf-version-info \
     enigma2-skindefault \
-    ${PYTHON_PN}-compression \
+    python3-compression \
     enigma2-plugin-skins-xionhdf \
     enigma2-plugin-extensions-autotimer \
     enigma2-plugin-extensions-epgsearch \

@@ -1,7 +1,7 @@
 DESCRIPTION = "Merge lamedb files from /tmp into /etc/enigma2/lamedb settings file"
 MAINTAINER = "Huevos"
 
-inherit gitpkgv allarch ${PYTHON_PN}native
+inherit gitpkgv allarch python3native
 
 require conf/license/license-gplv2.inc
 

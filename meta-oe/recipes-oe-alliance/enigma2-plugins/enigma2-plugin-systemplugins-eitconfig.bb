@@ -1,7 +1,7 @@
 DESCRIPTION = "tool to set up EIT config files"
 MAINTAINER = "Huevos"
 
-inherit gitpkgv allarch ${PYTHON_PN}native gettext
+inherit gitpkgv allarch python3native gettext
 
 require conf/license/license-gplv2.inc
 

@@ -4,12 +4,12 @@ LICENSE = "LGPL-2.1-only"
 LIC_FILES_CHKSUM = "file://LICENSE.TXT;md5=4fbd65380cdd255951079008b364516c"
 require conf/python/python3-compileall.inc
 
-DEPENDS += "curl libxml2 ${PYTHON_PN} swig-native zlib"
-RDEPENDS:${PN} += "enigma2 libcurl ${PYTHON_PN}-core ${PYTHON_PN}-compression xz"
+DEPENDS += "curl libxml2 python3 swig-native zlib"
+RDEPENDS:${PN} += "enigma2 libcurl python3-core python3-compression xz"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-inherit gitpkgv ${PYTHON_PN}native
+inherit gitpkgv python3native
 
 SRCREV = "${AUTOREV}"
 PV = "0.9.1+gitr"
@@ -21,7 +21,7 @@ SRC_URI = "git://github.com/oe-alliance/e2openplugin-CrossEPG.git;protocol=https
         file://fix-compile-with-gcc14.patch \
         "
 
-inherit ${PYTHON_PN}-dir
+inherit python3-dir
 
 S = "${WORKDIR}/git"
 

@@ -15,8 +15,8 @@ VER ="${IMAGE_VERSION}"
 PR = "r1"
 
 
-RDEPENDS:${PN} = "${PYTHON_PN}-requests \
-                  ${PYTHON_PN}-lxml\
+RDEPENDS:${PN} = "python3-requests \
+                  python3-lxml\
 "
 
 SRC_URI="git://github.com/teamblue-e2/skin.git;protocol=https;branch=master"

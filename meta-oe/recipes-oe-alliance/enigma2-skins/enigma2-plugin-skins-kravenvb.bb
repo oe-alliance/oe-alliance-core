@@ -4,7 +4,7 @@ require conf/license/license-gplv2.inc
 require conf/python/python3-compileall.inc
 
 DEPENDS += "gettext-native"
-RDEPENDS:${PN} += "${PYTHON_PN}-pillow ${PYTHON_PN}-requests ${PYTHON_PN}-lxml enigma2-plugin-systemplugins-mphelp"
+RDEPENDS:${PN} += "python3-pillow python3-requests python3-lxml enigma2-plugin-systemplugins-mphelp"
 
 inherit gitpkgv allarch gettext
 

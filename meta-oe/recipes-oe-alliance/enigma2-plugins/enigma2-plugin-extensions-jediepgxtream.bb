@@ -6,7 +6,7 @@ require conf/license/license-gplv2.inc
 
 require conf/python/python3-compileall.inc
 
-DEPENDS = "${PYTHON_PN}-backports-lzma"
+DEPENDS = "python3-backports-lzma"
 
 SRCREV = "${AUTOREV}"
 PV = "git"

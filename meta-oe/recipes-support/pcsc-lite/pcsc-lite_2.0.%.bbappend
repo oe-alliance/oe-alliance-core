@@ -1,11 +1,11 @@
 FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
 
-DEPENDS += "libusb1 ${PYTHON_PN}"
-RDEPENDS:${PN} += "libusb1 ${PYTHON_PN}"
+DEPENDS += "libusb1 python3"
+RDEPENDS:${PN} += "libusb1 python3"
 
 SRC_URI:append = " file://pcscd.init"
 
-RDEPENDS:${PN}-spy += "${PYTHON_PN}"
+RDEPENDS:${PN}-spy += "python3"
 
 PACKAGECONFIG = ""
 

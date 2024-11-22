@@ -4,11 +4,11 @@ HOMEPAGE = "https://github.com/emlid/bluetool"
 LICENSE = "GPL-3.0-only"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=4fe869ee987a340198fb0d54c55c47f1"
 
-RDEPENDS:${PN} = "${PYTHON_PN}-dbus ${PYTHON_PN}-tcpbridge ${PYTHON_PN}-pygobject"
+RDEPENDS:${PN} = "python3-dbus python3-tcpbridge python3-pygobject"
 
 inherit pypi setuptools3
 
 SRC_URI[md5sum] = "f65c673c45c5291bce8a0b8755986b9f"
 SRC_URI[sha256sum] = "09aca1174ea9d8b402f2231aa2277726174c30482710fc887ebbda7eb820f614"
 
-include ${PYTHON_PN}-package-split.inc
+include python3-package-split.inc

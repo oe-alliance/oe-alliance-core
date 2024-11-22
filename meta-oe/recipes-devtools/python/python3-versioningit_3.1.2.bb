@@ -4,9 +4,9 @@ AUTHOR = "John Thorvald Wodder II <versioningit@varonathe.org>"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=98f24e40391b9cd0b42e3d703bd0c332"
 
-DEPENDS += "${PYTHON_PN}-setuptools-scm-native ${PYTHON_PN}-hatchling-native ${PYTHON_PN}-hatch-fancy-pypi-readme-native"
+DEPENDS += "python3-setuptools-scm-native python3-hatchling-native python3-hatch-fancy-pypi-readme-native"
 
-RDEPENDS:${PN} += "${PYTHON_PN}-packaging ${PYTHON_PN}-tomli"
+RDEPENDS:${PN} += "python3-packaging python3-tomli"
 
 PYPI_PACKAGE = "versioningit"
 

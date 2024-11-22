@@ -57,7 +57,7 @@ DEPENDS = "\
     ${@bb.utils.contains('MACHINE_FEATURES', 'blindscan-dvbc', 'virtual/blindscan-dvbc' , '', d)} \
     ${@bb.utils.contains('MACHINE_FEATURES', 'blindscan-dvbs', 'virtual/blindscan-dvbs' , '', d)} \
     ${@bb.utils.contains('MACHINE_FEATURES', 'transcoding', 'virtual/transtreamproxy' , '', d)} \
-    ${PYTHON_PN}-dnspython ${PYTHON_PN}-beautifulsoup4 ${PYTHON_PN}-lxml ${PYTHON_PN}-simplejson ${PYTHON_PN}-pyamf ${PYTHON_PN}-icalendar ${PYTHON_PN}-pyusb ${PYTHON_PN}-six-native ${PYTHON_PN}-yt-dlp \
+    python3-dnspython python3-beautifulsoup4 python3-lxml python3-simplejson python3-pyamf python3-icalendar python3-pyusb python3-six-native python3-yt-dlp \
     djmount \
     dpflib \
     rtmpdump \
@@ -85,7 +85,7 @@ DEPENDS = "\
 DESCRIPTION:enigma2-plugin-systemplugins-audioeffect = "Audio Effect setup"
 DESCRIPTION:enigma2-plugin-systemplugins-aboutboxbranding = "View Boxbranding data from the GUI"
 DESCRIPTION:enigma2-plugin-extensions-btdevicesmanager = "this is bt devices manger to pair e.x keyboard or mouse"
-RDEPENDS:enigma2-plugin-extensions-btdevicesmanager = "bluez5-testtools bluez5 bluez-hcidump bluez-conf bluez-hidd bluez-alsa alsa-utils-aplay ${PYTHON_PN}-pexpect"
+RDEPENDS:enigma2-plugin-extensions-btdevicesmanager = "bluez5-testtools bluez5 bluez-hcidump bluez-conf bluez-hidd bluez-alsa alsa-utils-aplay python3-pexpect"
 DESCRIPTION:enigma2-plugin-systemplugins-blindscan = "blindscan..."
 RRECOMMENDS:enigma2-plugin-systemplugins-blindscan = "virtual-blindscan-dvbs"
 DESCRIPTION:enigma2-plugin-extensions-dlnabrowser = "this is dlna/upnp browser using djmount"
@@ -106,7 +106,7 @@ DESCRIPTION:enigma2-plugin-systemplugins-remotecontrolcode = "Change Remote Cont
 RDEPENDS:enigma2-plugin-systemplugins-3gmodemmanager = "ppp usb-modeswitch usb-modeswitch-data wvdial wvstreams libwvutils4.6 libwvstreams-extras libuniconf4.6 kernel-module-ppp-async kernel-module-ppp-deflate kernel-module-ppp-synctty kernel-module-ppp-generic kernel-module-slhc kernel-module-usbserial kernel-module-cdc-acm kernel-module-ppp-mppe kernel-module-pppoe kernel-module-pppox kernel-module-option kernel-module-bsd-comp usbutils"
 FILES:enigma2-plugin-systemplugins-3gmodemmanager:append = "/etc/ppp/"
 DESCRIPTION:enigma2-plugin-extensions-webbrowser = "Webbrowser launcher"
-RDEPENDS:enigma2-plugin-extensions-webbrowser = "${PYTHON_PN}-gdata-python3 libqtwebkite4 webbrowser-utils qt4-embedded-fonts qt4-embedded-plugin-imageformat-gif qt4-embedded-plugin-imageformat-ico qt4-embedded-plugin-imageformat-jpeg qt4-embedded-plugin-imageformat-mng qt4-embedded-plugin-imageformat-svg qt4-embedded-plugin-imageformat-tiff qt4-embedded-plugin-iconengine-svgicon"
+RDEPENDS:enigma2-plugin-extensions-webbrowser = "python3-gdata-python3 libqtwebkite4 webbrowser-utils qt4-embedded-fonts qt4-embedded-plugin-imageformat-gif qt4-embedded-plugin-imageformat-ico qt4-embedded-plugin-imageformat-jpeg qt4-embedded-plugin-imageformat-mng qt4-embedded-plugin-imageformat-svg qt4-embedded-plugin-imageformat-tiff qt4-embedded-plugin-iconengine-svgicon"
 FILES:enigma2-plugin-extensions-webbrowser:append = "${datadir}/keymaps"
 DESCRIPTION:enigma2-plugin-extensions-openuitzendinggemist = "Watch NL-IP TV"
 DESCRIPTION:enigma2-plugin-systemplugins-satipclient = "Satip Client setup"
@@ -121,26 +121,26 @@ DESCRIPTION:enigma2-plugin-systemplugins-transcodingsetup = "Setup transcoding o
 RDEPENDS:enigma2-plugin-systemplugins-transcodingsetup = "virtual-transtreamproxy"
 DESCRIPTION:enigma2-plugin-systemplugins-multitranscodingsetup = "Setup multitranscoding"
 DESCRIPTION:enigma2-plugin-systemplugins-micomupgrade = "micomupgrade"
-RDEPENDS:enigma2-plugin-extensions-ondemand = "${PYTHON_PN}-dnspython ${PYTHON_PN}-beautifulsoup4 ${PYTHON_PN}-lxml ${PYTHON_PN}-simplejson ${PYTHON_PN}-pyamf"
+RDEPENDS:enigma2-plugin-extensions-ondemand = "python3-dnspython python3-beautifulsoup4 python3-lxml python3-simplejson python3-pyamf"
 DESCRIPTION:enigma2-plugin-extensions-ondemand = "Watch on demand TV."
 DESCRIPTION:enigma2-plugin-extensions-fempa = "Norwegian P4 FEM PAA radio show player."
 DESCRIPTION:enigma2-plugin-extensions-lcd4linux = "Web/DPF/Samsung LCD Ansteuerung"
 DEPENDS:enigma2-plugin-extensions-lcd4linux = "png-util"
-RDEPENDS:enigma2-plugin-extensions-lcd4linux = "enigma2-plugin-extensions-lcd4linux-src dpflib ${PYTHON_PN}-icalendar ${PYTHON_PN}-pyusb ${PYTHON_PN}-codecs ${PYTHON_PN}-datetime ${PYTHON_PN}-pillow ${PYTHON_PN}-image ${PYTHON_PN}-shell ${PYTHON_PN}-ctypes libusb-0.1-4 ${PYTHON_PN}-mutagen ${PYTHON_PN}-email ${PYTHON_PN}-simplejson ${PYTHON_PN}-soco"
+RDEPENDS:enigma2-plugin-extensions-lcd4linux = "enigma2-plugin-extensions-lcd4linux-src dpflib python3-icalendar python3-pyusb python3-codecs python3-datetime python3-pillow python3-image python3-shell python3-ctypes libusb-0.1-4 python3-mutagen python3-email python3-simplejson python3-soco"
 RDEPENDS:enigma2-plugin-extensions-lcd4linux:append:vuduo2 = " png-util"
 FILES:enigma2-plugin-extensions-lcd4linux:append = " /usr/lib/enigma2/python/Components/Renderer/*.pyc"  
 FILES:enigma2-plugin-extensions-lcd4linux-src:append = " /usr/lib/enigma2/python/Components/Renderer/*.py"
 DESCRIPTION:enigma2-plugin-extensions-remotechannelstreamconverter = "Fetch channels from remote bouquets and make them available locally"
-RDEPENDS:enigma2-plugin-extensions-remotechannelstreamconverter = "${PYTHON_PN}-shell"
+RDEPENDS:enigma2-plugin-extensions-remotechannelstreamconverter = "python3-shell"
 RREPLACES:enigma2-plugin-extensions-remotechannelstreamconverter = "enigma2-plugin-extensions-remotestreamconvert"
 DESCRIPTION:enigma2-plugin-extensions-tmdb = "Show TMDb information"
-RDEPENDS:enigma2-plugin-extensions-tmdb = "${PYTHON_PN}-json ${PYTHON_PN}-requests ${PYTHON_PN}-tmdbsimple"
+RDEPENDS:enigma2-plugin-extensions-tmdb = "python3-json python3-requests python3-tmdbsimple"
 DESCRIPTION:enigma2-plugin-systemplugins-wirelessaccesspoint = "Using a Wireless module as AP."
 RDEPENDS:enigma2-plugin-systemplugins-wirelessaccesspoint = "hostapd bridge-utils"
 DESCRIPTION:enigma2-plugin-extensions-rcuselect = "Change Remote for Wetek"
 DESCRIPTION:enigma2-plugin-extensions-rezap = "ReZap Sync Tool for Wetek"
 DESCRIPTION:enigma2-plugin-extensions-piconsupdater = "Download and install new Picons for your current bouquet channels. PiconsUpdater coded by svox and jbleyel, idea by arn354 and picons by mike99"
-RDEPENDS:enigma2-plugin-extensions-piconsupdater = "${PYTHON_PN}-pillow ${PYTHON_PN}-io ${PYTHON_PN}-compression pngquant"
+RDEPENDS:enigma2-plugin-extensions-piconsupdater = "python3-pillow python3-io python3-compression pngquant"
 DESCRIPTION:enigma2-plugin-systemplugins-bluetoothsetup = "E2 bluetooth plugin"
 RDEPENDS:enigma2-plugin-systemplugins-bluetoothsetup = "libcurl libsqlite3 libssl libcrypto libudev libusb-compat libusb1 ${@bb.utils.contains("MACHINE_FEATURES", "vubluetooth", "vuplus-bluetooth-util", "", d)} ${@bb.utils.contains("MACHINE_FEATURES", "gbbluetooth", "gb-bluetooth-util", "", d)} "
 DESCRIPTION:enigma2-plugin-extensions-chromium = "E2 Chromium Plugin"
@@ -148,14 +148,14 @@ RDEPENDS:enigma2-plugin-extensions-chromium = "chromium-browser"
 DESCRIPTION:enigma2-plugin-extensions-libvupldemo = "Plugin for libvupl Demo"
 RDEPENDS:enigma2-plugin-extensions-libvupldemo = "libvupl-example-cube"
 DESCRIPTION:enigma2-plugin-extensions-witaispeechtotext = "Vuplus wit.ai speech to text plugin"
-RDEPENDS:enigma2-plugin-extensions-witaispeechtotext = "${PYTHON_PN}-requests"
+RDEPENDS:enigma2-plugin-extensions-witaispeechtotext = "python3-requests"
 DESCRIPTION:enigma2-plugin-extensions-webkithbbtv = "E2 HbbTV Plugin"
 RDEPENDS:enigma2-plugin-extensions-webkithbbtv = "vuplus-webkithbbtv-dumpait webkit-hbbtv-browser libupnp1.6"
 DESCRIPTION:enigma2-plugin-extensions-stalkerclient = "E2 Staker Client Plugin"
 DESCRIPTION:enigma2-plugin-extensions-tvspielfilm = "TVSpielfilm Plugin"
-RDEPENDS:enigma2-plugin-extensions-tvspielfilm = "${PYTHON_PN}-yt-dlp"
+RDEPENDS:enigma2-plugin-extensions-tvspielfilm = "python3-yt-dlp"
 
-inherit autotools-brokensep gitpkgv gettext ${PYTHON_PN}targetconfig
+inherit autotools-brokensep gitpkgv gettext python3targetconfig
 
 SRCREV = "${AUTOREV}"
 PV = "${IMAGE_VERSION}+gitr"

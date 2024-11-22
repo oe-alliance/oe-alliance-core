@@ -93,7 +93,7 @@ SRCREV:openeight = "c7750c5ab393341f5a65094ceac90fbb6afd12e6"
 
 S = "${WORKDIR}/git"
 
-inherit autotools gitpkgv ${PYTHON_PN}native pkgconfig ${PYTHON_PN}targetconfig
+inherit autotools gitpkgv python3native pkgconfig python3targetconfig
 
 PV = "git"
 PKGV = "git${GITPKGV}"

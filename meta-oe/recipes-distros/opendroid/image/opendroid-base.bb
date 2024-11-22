@@ -28,13 +28,13 @@ RDEPENDS:${PN} = "\
     openssh-sftp-server \
     hddtemp \
     dosfstools \
-    ${PYTHON_PN}-pillow \
-    ${PYTHON_PN}-service-identity \
-    ${PYTHON_PN}-requests \
-    ${PYTHON_PN}-future \
-    ${PYTHON_PN}-pexpect \
-    ${PYTHON_PN}-six \
-    ${PYTHON_PN}-beautifulsoup4 \
+    python3-pillow \
+    python3-service-identity \
+    python3-requests \
+    python3-future \
+    python3-pexpect \
+    python3-six \
+    python3-beautifulsoup4 \
     rtmpdump \
     unrar \
     ${@bb.utils.contains("TUNE_FEATURES", "armv", "glibc-compat", "", d)} \

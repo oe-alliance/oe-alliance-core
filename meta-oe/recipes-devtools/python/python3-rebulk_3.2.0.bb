@@ -4,7 +4,7 @@ SECTION = "devel/python"
 LICENSE = "BSD-4-Clause"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=df5f9321c8784271adb6c95a3da69f82"
 
-RDEPENDS:${PN} = "${PYTHON_PN}-regex"
+RDEPENDS:${PN} = "python3-regex"
 
 SRC_URI += "file://disable-test.patch"
 
@@ -13,4 +13,4 @@ SRC_URI[sha256sum] = "0d30bf80fca00fa9c697185ac475daac9bde5f646ce3338c9ff5d5dc1e
 
 inherit pypi setuptools3
 
-include ${PYTHON_PN}-package-split.inc
+include python3-package-split.inc

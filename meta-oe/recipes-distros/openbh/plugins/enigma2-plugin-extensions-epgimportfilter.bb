@@ -4,8 +4,8 @@ DESCRIPTION = "EPGImport Filter"
 require conf/license/license-gplv2.inc
 
 RDEPENDS:${PN} = "\
-	${PYTHON_PN}-difflib \
-	${PYTHON_PN}-shell \
+	python3-difflib \
+	python3-shell \
 	"
 
 inherit setuptools3-openplugins gitpkgv

@@ -5,7 +5,7 @@ SECTION = "devel/python"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://setup.py;md5=52d82042b8abd821ed37352d5cc179c3"
 
-RDEPENDS:${PN} = "${PYTHON_PN}-circuits"
+RDEPENDS:${PN} = "python3-circuits"
 
 SRC_URI = "https://files.pythonhosted.org/packages/93/bd/a5400ce8f393b921bd471e6816fdea1abb5be3b50adc07dd8fe1810743fe/circuits-bricks-${PV}.tar.gz \
     file://importlib.patch \
@@ -18,4 +18,4 @@ S = "${WORKDIR}/circuits-bricks-${PV}"
 
 inherit setuptools3_legacy
 
-include ${PYTHON_PN}-package-split.inc
+include python3-package-split.inc

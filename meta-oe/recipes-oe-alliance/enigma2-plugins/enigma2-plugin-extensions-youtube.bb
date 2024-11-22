@@ -5,9 +5,9 @@ MAINTAINER = "Taapat"
 require conf/license/license-gplv2.inc
 
 DEPENDS += "enigma2"
-RDEPENDS:${PN} = "${PYTHON_PN}-core ${PYTHON_PN}-codecs ${PYTHON_PN}-json ${PYTHON_PN}-netclient ${PYTHON_PN}-twisted ${PYTHON_PN}-twisted-web"
+RDEPENDS:${PN} = "python3-core python3-codecs python3-json python3-netclient python3-twisted python3-twisted-web"
 
-inherit ${PYTHON_PN}-dir gitpkgv ${PYTHON_PN}native gettext
+inherit python3-dir gitpkgv python3native gettext
 
 SRCREV = "${AUTOREV}"
 PV = "git"

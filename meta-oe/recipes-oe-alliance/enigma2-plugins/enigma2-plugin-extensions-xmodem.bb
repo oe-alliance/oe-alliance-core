@@ -7,12 +7,12 @@ SRC_URI = "git://github.com/oe-mirrors/enigma2-plugin-extensions-xmodem.git;prot
 
 require conf/python/python3-compileall.inc
 
-DEPENDS += "${PYTHON_PN}-future-native"
+DEPENDS += "python3-future-native"
 
 S = "${WORKDIR}/git"
 
 SRCREV = "${AUTOREV}"
-inherit gitpkgv ${PYTHON_PN}native
+inherit gitpkgv python3native
 PV = "1+git"
 PKGV = "1+git${GITPKGV}"
 

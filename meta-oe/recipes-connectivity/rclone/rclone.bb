@@ -11,7 +11,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=bed161b82a1ecab65ff7ba3c3b960439"
 DEPENDS += "go-cross-${TUNE_PKGARCH}"
 
 RDEPENDS:${PN} += "bash"
-RDEPENDS:${PN}-dev += "bash ${PYTHON_PN}-core"
+RDEPENDS:${PN}-dev += "bash python3-core"
 
 inherit gitpkgv upx-compress
 

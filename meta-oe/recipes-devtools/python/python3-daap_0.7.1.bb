@@ -4,7 +4,7 @@ PRIORITY = "optional"
 LICENSE = "LGPL-2.1-only"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=fbc093901857fcd118f065f900982c24"
 
-RDEPENDS:${PN} = "${PYTHON_PN}-compression"
+RDEPENDS:${PN} = "python3-compression"
 
 inherit gitpkgv
 
@@ -19,6 +19,6 @@ S = "${WORKDIR}/git"
 
 inherit setuptools3_legacy
 
-include ${PYTHON_PN}-package-split.inc
+include python3-package-split.inc
 
 CFLAGS += "-Wno-error=int-conversion -Wno-error=implicit-function-declaration -Wno-error=incompatible-pointer-types"

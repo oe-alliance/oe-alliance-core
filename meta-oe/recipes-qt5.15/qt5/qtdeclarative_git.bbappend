@@ -6,4 +6,4 @@ INSANE_SKIP:${PN}-tools += "file-rdeps"
 INSANE_SKIP:${PN}-qmlplugins += "file-rdeps"
 
 #### sets PYTHON_BASEVERSION to "2.7"
-inherit ${PYTHON_PN}-dir ${PYTHON_PN}native
+inherit python3-dir python3native

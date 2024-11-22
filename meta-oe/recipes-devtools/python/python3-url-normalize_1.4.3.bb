@@ -12,6 +12,6 @@ SRC_URI[sha256sum] = "d23d3a070ac52a67b83a1c59a0e68f8608d1cd538783b401bc9de2c0fa
 
 S = "${WORKDIR}/url-normalize-1.4.3"
 
-RDEPENDS:${PN} = "${PYTHON_PN}-six"
+RDEPENDS:${PN} = "python3-six"
 
-include ${PYTHON_PN}-package-split.inc
+include python3-package-split.inc

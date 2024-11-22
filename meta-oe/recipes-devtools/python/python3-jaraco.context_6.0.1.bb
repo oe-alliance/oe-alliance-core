@@ -3,7 +3,7 @@ HOMEPAGE = "https://github.com/jaraco/jaraco.context"
 SECTION = "devel/python"
 LICENSE = "LGPL-3.0-only"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=141643e11c48898150daa83802dbc65f"
-DEPENDS += "${PYTHON_PN}-setuptools-scm-native"
+DEPENDS += "python3-setuptools-scm-native"
 
 PYPI_PACKAGE = "jaraco_context"
 

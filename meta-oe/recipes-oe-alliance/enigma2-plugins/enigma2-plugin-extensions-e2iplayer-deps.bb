@@ -3,9 +3,9 @@ MAINTAINER = "samsamsam"
 require conf/license/license-gplv2.inc
 require conf/python/python3-compileall.inc
 
-inherit gitpkgv ${PYTHON_PN}-dir
+inherit gitpkgv python3-dir
 
-DEPENDS = "${PYTHON_PN} curl ffmpeg openssl zlib"
+DEPENDS = "python3 curl ffmpeg openssl zlib"
 RRECOMMENDS:${PN} = " \
     ffmpeg \
     \

@@ -1,7 +1,7 @@
 DESCRIPTION = "Select any remote from oe-mirrors branding module"
 MAINTAINER = "Huevos"
 
-inherit gitpkgv allarch ${PYTHON_PN}native
+inherit gitpkgv allarch python3native
 
 require conf/license/license-gplv2.inc
 

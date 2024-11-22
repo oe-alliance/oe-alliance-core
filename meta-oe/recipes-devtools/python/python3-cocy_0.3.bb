@@ -5,7 +5,7 @@ SECTION = "devel/python"
 LICENSE = "GPL-1.0-only"
 LIC_FILES_CHKSUM = "file://setup.py;md5=552ebae154a08bed6e46b2207714d6a6"
 
-RDEPENDS:${PN} = "${PYTHON_PN}-circuits ${PYTHON_PN}-circuits-bricks ${PYTHON_PN}-rbtranslations ${PYTHON_PN}-tenjin"
+RDEPENDS:${PN} = "python3-circuits python3-circuits-bricks python3-rbtranslations python3-tenjin"
 
 inherit gitpkgv
 
@@ -22,4 +22,4 @@ inherit setuptools3
 # txt file which should go into -doc
 FILES:${PN}-doc += "${datadir}/pypi-overview.rst"
 
-include ${PYTHON_PN}-package-split.inc
+include python3-package-split.inc

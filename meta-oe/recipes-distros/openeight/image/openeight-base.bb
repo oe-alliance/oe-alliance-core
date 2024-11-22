@@ -23,6 +23,6 @@ RDEPENDS:${PN} = "\
     ofgwrite \
     enigma2-plugin-drivers-dvb-usb-af9035 \
     ca-certificates \
-    ${PYTHON_PN}-pexpect \
+    python3-pexpect \
     wireless-tools \
     "

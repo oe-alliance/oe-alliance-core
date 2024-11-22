@@ -18,14 +18,14 @@ PR = "r0"
 
 inherit setuptools3-openplugins gettext
 
-DEPENDS += "gettext-native ${PYTHON_PN}-future-native ${PYTHON_PN}"
+DEPENDS += "gettext-native python3-future-native python3"
 RRECOMMENDS:${PN} = " \
         enigma2-plugin-extensions-e2iplayer-deps \
-        ${PYTHON_PN}-compression \
-        ${PYTHON_PN}-core \
-        ${PYTHON_PN}-html \
-        ${PYTHON_PN}-json \
-        ${PYTHON_PN}-shell \
+        python3-compression \
+        python3-core \
+        python3-html \
+        python3-json \
+        python3-shell \
         "
 
 RDEPENDS:{PN}-src = "${PN}"

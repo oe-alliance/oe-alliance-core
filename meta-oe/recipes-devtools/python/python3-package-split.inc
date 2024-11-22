@@ -1,4 +1,4 @@
-inherit ${PYTHON_PN}-dir
+inherit python3-dir
 
 RDEPENDS:{PN}-src = "${PN}"
 

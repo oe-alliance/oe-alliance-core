@@ -6,7 +6,7 @@ PRIORITY = "optional"
 require conf/license/license-gplv2.inc
 require conf/python/python3-compileall.inc
 
-inherit gitpkgv gettext autotools-brokensep ${PYTHON_PN}native
+inherit gitpkgv gettext autotools-brokensep python3native
 SRCREV = "${AUTOREV}"
 PV = "inofficial-3.2.+git"
 PKGV = "inofficial-3.2.+git${GITPKGV}"

@@ -2,7 +2,7 @@
 SRCREV:pn-enigma2-plugin-skins-magic ?= "${AUTOREV}"
 SRCREV:pn-aio-grab ?= "${AUTOREV}"
 SRCREV:pn-ambx ?= "${AUTOREV}"
-SRCREV:pn-${PYTHON_PN}-pyambx ?= "${AUTOREV}"
+SRCREV:pn-python3-pyambx ?= "${AUTOREV}"
 SRCREV:pn-enigma2-plugin-extensions-ambx ?= "${AUTOREV}"
 SRCREV:pn-enigma2-pliplugins ?= "${AUTOREV}"
 SRCREV:pn-enigma2-plugin-extensions-epgimport ?= "${AUTOREV}"

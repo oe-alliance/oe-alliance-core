@@ -2,7 +2,7 @@ SUMMARY = "PNG Assistant"
 LICENSE = "proprietary"
 require conf/license/license-gplv2.inc
 
-DEPENDS = "swig-native libpng ${PYTHON_PN}"
+DEPENDS = "swig-native libpng python3"
 
 SRC_URI = "\
     file://png_util.cpp \
@@ -13,7 +13,7 @@ SRC_URI = "\
 S = "${WORKDIR}/${P}"
 UNPACKDIR = "${S}"
 
-inherit setuptools3-base ${PYTHON_PN}-dir
+inherit setuptools3-base python3-dir
 
 do_compile() {
     swig -python -c++ ${UNPACKDIR}/png_util.i
