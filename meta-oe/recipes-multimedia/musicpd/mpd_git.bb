@@ -9,7 +9,7 @@ DEPENDS += "audiofile boost curl dbus expat faad2 flac fmt icu libao \
 
 inherit gitpkgv
 
-SRCREV = "965c466e9bda262790e76edd5272e9e74b407ff3"
+SRCREV = "78e643150f826ebea0a2c369d758a1866fd49709"
 PV = "0.23.15+git"
 PKGV = "0.23.15+git${GITPKGV}"
 
