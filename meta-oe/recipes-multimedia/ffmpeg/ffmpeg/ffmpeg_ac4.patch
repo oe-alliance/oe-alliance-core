@@ -15,7 +15,7 @@ new file mode 100644
 index 0000000..e139f0f
 --- /dev/null
 +++ b/libavcodec/ac4dec.c
-@@ -0,0 +1,5909 @@
+@@ -0,0 +1,5910 @@
 +/*
 + * AC-4 Audio Decoder
 + *
@@ -50,6 +50,7 @@ index 0000000..e139f0f
 +#include "libavutil/thread.h"
 +#include "libavutil/qsort.h"
 +#include "libavutil/opt.h"
++#include "libavutil/mem.h"
 +
 +#include "ac4dec_data.h"
 +#include "avcodec.h"
