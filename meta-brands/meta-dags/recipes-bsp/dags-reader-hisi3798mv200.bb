@@ -13,7 +13,7 @@ SRCDATE = "20230516"
 PV = "${SRCDATE}"
 PR = "r0"
 
-SRC_URI = "http://en3homeftp.net/pub/down/hisi3798mv200-libreader-${SRCDATE}.tar.gz"
+SRC_URI = "https://source.mynonpublic.com/dags/hisi3798mv200-libreader-${SRCDATE}.tar.gz"
 
 S = "${WORKDIR}/sources"
 UNPACKDIR = "${S}"

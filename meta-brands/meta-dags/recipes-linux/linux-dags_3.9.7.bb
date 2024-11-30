@@ -18,7 +18,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
 MACHINE_KERNEL_PR:append = ".1"
 
-SRC_URI = "http://en3homeftp.net/pub/src/linux-${KV}-${SRCDATE}.tar.gz \
+SRC_URI = "https://source.mynonpublic.com/dags/linux-${KV}-${SRCDATE}.tar.gz \
     file://defconfig \
     file://dmx_demux.patch \
     file://fix_fuse_for_linux_mips_3-9.patch \

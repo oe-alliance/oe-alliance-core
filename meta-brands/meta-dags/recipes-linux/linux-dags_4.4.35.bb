@@ -17,7 +17,7 @@ SRC_URI[kernel.sha256sum] = "ce63b433241890fc64df4a21c8fa0dea9d10c4f7100e47485cf
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-SRC_URI += "http://en3homeftp.net/pub/down/linux-4.4.35.tar.xz;name=kernel \
+SRC_URI += "https://source.mynonpublic.com/dags/linux-4.4.35.tar.xz;name=kernel \
 	file://defconfig \
 	file://findkerneldevice.sh \
 	file://0002-log2-give-up-on-gcc-constant-optimizations.patch \

@@ -16,7 +16,7 @@ SRC_URI[sha256sum] = "eb56d7e99ab9e869b6abfb2a0463015e7d7b2e8610b7b9d05285edb8e8
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-SRC_URI += "http://en3homeftp.net/pub/src/linux-3.14.28.tar.xz \
+SRC_URI += "https://source.mynonpublic.com/dags/linux-3.14.28.tar.xz \
     file://defconfig \
     file://kernel-add-support-for-gcc7.patch \
     file://kernel-add-support-for-gcc8.patch \

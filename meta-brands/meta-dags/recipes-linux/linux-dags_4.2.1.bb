@@ -17,7 +17,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
 MACHINE_KERNEL_PR:append = ".3"
 
-SRC_URI += "http://en3homeftp.net/pub/src/dags-linux-${PV}-${SRCDATE}.tar.gz \
+SRC_URI += "https://source.mynonpublic.com/dags/dags-linux-${PV}-${SRCDATE}.tar.gz \
     file://defconfig \
     file://0002-add-brcm-chips.patch \
     file://kernel-add-support-for-gcc6.patch \

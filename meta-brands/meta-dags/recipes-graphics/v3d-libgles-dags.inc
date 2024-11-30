@@ -11,7 +11,7 @@ PROVIDES = "virtual/libgles2 virtual/egl"
 
 DEPENDS = "patchelf-native"
 
-SRC_URI = "http://en3homeftp.net/pub/down/libgles-arm-${SRCDATE}.tar.gz"
+SRC_URI = "https://source.mynonpublic.com/dags/libgles-arm-${SRCDATE}.tar.gz"
 
 S = "${WORKDIR}/libgles"
 
