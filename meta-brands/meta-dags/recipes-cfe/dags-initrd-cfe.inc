@@ -20,7 +20,7 @@ do_deploy() {
     fi
 }
 
-SRC_URI = "http://en3homeftp.net/pub/down/vmlinuz-initrd_${DOWNLOADNAME}_${SRCDATE}.tar.gz"
+SRC_URI = "https://source.mynonpublic.com/dags/vmlinuz-initrd_${DOWNLOADNAME}_${SRCDATE}.tar.gz"
 
 S = "${WORKDIR}"
 

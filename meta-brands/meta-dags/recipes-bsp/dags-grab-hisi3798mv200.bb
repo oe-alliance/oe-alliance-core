@@ -15,7 +15,7 @@ RPROVIDES:${PN}  = "aio-grab"
 RREPLACES:${PN}  = "aio-grab"
 RCONFLICTS:${PN} = "aio-grab"
 
-SRC_URI = "http://en3homeftp.net/pub/down/${MACHINEBUILD}-grab-${SRCDATE}.tar.gz"
+SRC_URI = "https://source.mynonpublic.com/dags/${MACHINEBUILD}-grab-${SRCDATE}.tar.gz"
 
 S = "${WORKDIR}"
 

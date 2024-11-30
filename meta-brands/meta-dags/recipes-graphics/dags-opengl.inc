@@ -11,7 +11,7 @@ RPROVIDES:${PN} = "virtual-libgles1 virtual-libgles2 virtual-egl libEGL.so libGL
 
 DEPENDS = "patchelf-native"
 
-SRC_URI = "http://en3homeftp.net/pub/down/hisi3798mv200-opengl-${SRCDATE}.tar.gz"
+SRC_URI = "https://source.mynonpublic.com/dags/hisi3798mv200-opengl-${SRCDATE}.tar.gz"
 
 S = "${WORKDIR}/usr"
 

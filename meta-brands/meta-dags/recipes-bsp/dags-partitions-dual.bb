@@ -12,7 +12,7 @@ PR = "${SRCDATE}"
 
 S = "${WORKDIR}"
 
-SRC_URI = "http://en3homeftp.net/down/dags-partitions-${MACHINEBUILD}_${SRCDATE}.tar.gz \
+SRC_URI = "https://source.mynonpublic.com/dags/dags-partitions-${MACHINEBUILD}_${SRCDATE}.tar.gz \
  file://flash-updater \
 "
 

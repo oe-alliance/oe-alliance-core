@@ -7,7 +7,7 @@ PACKAGE_ARCH := "${MACHINE_ARCH}"
 PV = "1.0"
 PR = "r0"
 
-SRC_URI = "http://en3homeftp.net/pub/down/dags_blindscan_${SOC_FAMILY}.tar.gz"
+SRC_URI = "https://source.mynonpublic.com/dags/dags_blindscan_${SOC_FAMILY}.tar.gz"
 
 S = "${WORKDIR}"
 

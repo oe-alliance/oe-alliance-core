@@ -17,7 +17,7 @@ INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
 SOLIBS = ".so"
 FILES_SOLIBSDEV = ""
 
-SRC_URI = "http://en3homeftp.net/pub/down/hisi3798mv200-hilib-${SRCDATE}.tar.gz"
+SRC_URI = "https://source.mynonpublic.com/dags/hisi3798mv200-hilib-${SRCDATE}.tar.gz"
 
 S = "${WORKDIR}/hilib"
 
