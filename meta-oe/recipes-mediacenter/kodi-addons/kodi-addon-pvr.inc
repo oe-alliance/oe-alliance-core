@@ -1,6 +1,6 @@
 LICENSE = "GPL-2.0-or-later"
 require conf/license/license-gplv2.inc
-require kodi-piers.inc
+require kodi-omega.inc 
 
 DEPENDS += " \
             zip-native \
