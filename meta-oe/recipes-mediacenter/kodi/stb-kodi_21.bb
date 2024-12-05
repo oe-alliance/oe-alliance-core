@@ -16,6 +16,7 @@ DEPENDS += " \
             rapidjson \
             crossguid \
             libdvdnav libdvdcss libdvdread libudfread \
+            ffmpeg \
             git-native \
             curl-native \
             gperf-native \
@@ -26,20 +27,16 @@ DEPENDS += " \
             yasm-native \
             zip-native \
             \
-            autoconf-native \
-            automake-native \
             avahi \
             bzip2 \
             curl \
             exiv2 \
             libdcadec \
             faad2 \
-            ffmpeg-6.1.1 \
             fontconfig \
             fribidi \
             glib-2.0 \
             giflib \
-            gnutls \
             libass \
             libcdio \
             libcec \
@@ -47,7 +44,7 @@ DEPENDS += " \
             libbluray \
             libmicrohttpd \
             libnfs \
-            libpcre2 \
+            libpcre \
             libplist \
             libsquish \
             libssh \
@@ -72,7 +69,7 @@ DEPENDS += " \
             gstreamer1.0-plugins-base \
           "
 inherit gitpkgv
-# 22.0 Piers
+# 21.0 Omega
 SRCREV = "${AUTOREV}"
 
 # 'patch' doesn't support binary diffs
@@ -80,13 +77,13 @@ PATCHTOOL = "git"
 
 PR = "r0"
 
-PV = "22.0+gitr"
-PV_groovy = "4.0.23"
-PV_commons-lang3 = "3.17.0"
+PV = "21.0+gitr"
+PV_groovy = "4.0.20"
+PV_commons-lang3 = "3.14.0"
 PV_commons-text = "1.12.0"
 
-SRC_URI[groovy.sha256sum] = "7089dd7a1e84adc814d616f5ec2f7d7dac2044a0a0457f3341b3b92d30204229"
-SRC_URI[commons-lang.sha256sum] = "08b93712bed7f48725d93c44d70c71e7e661af390f22f0f3e6ba61e3af3cea36"
+SRC_URI[groovy.sha256sum] = "fdf70cc57eff997f3fa5aee2b340d311593912e822ad810b3fd6ee403985eb75"
+SRC_URI[commons-lang.sha256sum] = "317c3e3fcd5fcca3781a7996ff1e0c50c13244ee961e94e5f6f6d84b84733b16"
 SRC_URI[commons-text.sha256sum] = "265a149c7e0c1ebfe019bbe0226f8c1f6474811054d459145510ea2eed93a11a"
 
 SRC_URI = "git://github.com/xbmc/xbmc.git;protocol=https;branch=master \
@@ -102,13 +99,12 @@ SRC_URI = "git://github.com/xbmc/xbmc.git;protocol=https;branch=master \
            file://0007-adapt-window-system-registration.patch \
            file://0008-reinstate-system-h.patch \
            file://0009-reinstate-platform-defines.patch \
+           file://0010-FindLibDvd.cmake-build-with-external-source.patch \
            file://0011-cmake-includedirs.patch \
            file://0012-taglib2.patch \
            file://0013-DVDDemuxFFmpeg-fixed-compile-against-ffmpeg-7.patch \
-           file://0014-cmake-findsmbclient.patch \
-           file://0015-revert-GL-GLES-texture-formats-mapping.patch \
-           ${@bb.utils.contains_any('MACHINE_FEATURES', 'hisil-3798mv200 hisil-3798mv310 hisi hisil', '' , 'file://0100-e2-player.patch', d)} \
-           ${@bb.utils.contains_any('MACHINE_FEATURES', 'hisil-3798mv200 hisil-3798mv310 hisi hisil', '' , 'file://0101-gst-player.patch', d)} \
+           file://0100-e2-player.patch \
+           file://0101-gst-player.patch \
           "
 
 S = "${WORKDIR}/git"
@@ -123,6 +119,8 @@ WINDOWSYSTEM ?= "stb"
 #[cmake] only use APP_RENDER_SYSTEM
 #https://github.com/xbmc/xbmc/commit/d159837cf736c9ba17772ba52e4ce95aa3625528
 APPRENDERSYSTEM ?= "gles"
+
+TOOLCHAIN:arm ?= "clang"
 
 PACKAGECONFIG ?= "${ACCEL} ${WINDOWSYSTEM} pulseaudio lcms lto \
                    ${@bb.utils.contains('TOOLCHAIN', 'clang', 'clang', '', d)} \
@@ -157,8 +155,7 @@ PACKAGECONFIG[lto] = "-DUSE_LTO=${@oe.utils.cpu_count()},-DUSE_LTO=OFF"
 
 LDFLAGS += "${TOOLCHAIN_OPTIONS}"
 LDFLAGS:append:mipsarch = " -latomic"
-EXTRA_OECMAKE:append:mipsarch = " -DWITH_ARCH=${TARGET_ARCH} \
-                                -DCMAKE_CXX_FLAGS=-latomic"
+EXTRA_OECMAKE:append:mipsarch = " -DWITH_ARCH=${TARGET_ARCH}"
 
 KODI_DISABLE_INTERNAL_LIBRARIES = " \
   -DENABLE_INTERNAL_CROSSGUID=OFF \
@@ -167,14 +164,14 @@ KODI_DISABLE_INTERNAL_LIBRARIES = " \
   -DENABLE_INTERNAL_FSTRCMP=0 \
   -DENABLE_INTERNAL_RapidJSON=OFF \
   -DENABLE_INTERNAL_SPDLOG=OFF \
+  -DENABLE_INTERNAL_FFMPEG=OFF \
 "
 
 # Allow downloads during internals build
 do_compile[network] = "1"
 
-# Options to choose toolchain other than gcc
-#TOOLCHAIN:arm ?= "clang"
-#RUNTIME:arm ?= "llvm"
+RUNTIME:arm ?= "llvm"
+
 RUNTIME_NM = "${@bb.utils.contains('RUNTIME', 'llvm', '${TARGET_PREFIX}llvm-nm', '${TARGET_PREFIX}gcc-nm', d)}"
 
 EXTRA_OECMAKE = " \
@@ -193,7 +190,7 @@ EXTRA_OECMAKE = " \
     -DCMAKE_NM=${STAGING_BINDIR_NATIVE}/${TARGET_SYS}/${RUNTIME_NM} \
     \
     -DFFMPEG_PATH=${STAGING_DIR_TARGET} \
-    -DLIBDVD_INCLUDE_DIR=${STAGING_INCDIR} \
+    -DLIBDVD_INCLUDE_DIRS=${STAGING_INCDIR} \
     -DNFS_INCLUDE_DIR=${STAGING_INCDIR} \
     -DSHAIRPLAY_INCLUDE_DIR=${STAGING_INCDIR} \
     \
@@ -207,7 +204,7 @@ EXTRA_OECMAKE = " \
     -Dapache-commons-text_SOURCE_DIR=${UNPACKDIR}/commons-text-${PV_commons-text} \
 "
 
-OECMAKE_GENERATOR = "Unix Makefiles"
+# OECMAKE_GENERATOR="Unix Makefiles"
 # PARALLEL_MAKE = " "
 
 FULL_OPTIMIZATION:armv7a = "-fomit-frame-pointer -O3 -ffast-math"
@@ -283,8 +280,8 @@ RRECOMMENDS:${PN}:append = " libcec \
                              tzdata-europe \
                              tzdata-pacific \
                              xkeyboard-config \
-                             kodi-addon-inputstream-adaptive-piers \
-                             kodi-addon-inputstream-rtmp-piers \
+                             kodi-addon-inputstream-adaptive-omega \
+                             kodi-addon-inputstream-rtmp-omega \
                              alsa-plugins \
                            "
 
