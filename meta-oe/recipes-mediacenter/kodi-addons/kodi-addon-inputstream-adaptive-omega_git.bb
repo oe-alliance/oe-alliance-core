@@ -11,8 +11,8 @@ DEPENDS += "expat pugixml"
 RDEPENDS:${PN} += "ldd"
 RRECOMMENDS:${PN} = "kernel-module-ext2"
 
-SRCREV = "b19e01120d628794ca08b65fb428b6d83422f10c"
-PV = "21.4.9+gitr"
+SRCREV = "b585676accf876f29c496062a57ce55d1cd77e42"
+PV = "21.5.7+gitr"
 
 KODIADDONBRANCH = "Omega"
 

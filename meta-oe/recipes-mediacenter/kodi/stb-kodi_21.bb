@@ -70,7 +70,7 @@ DEPENDS += " \
           "
 inherit gitpkgv
 # 21.0 Omega
-SRCREV = "${AUTOREV}"
+SRCREV = "183eb85f108c3d8b44a578de80f575f27afe9b9a"
 
 # 'patch' doesn't support binary diffs
 PATCHTOOL = "git"
@@ -86,7 +86,7 @@ SRC_URI[groovy.sha256sum] = "fdf70cc57eff997f3fa5aee2b340d311593912e822ad810b3fd
 SRC_URI[commons-lang.sha256sum] = "317c3e3fcd5fcca3781a7996ff1e0c50c13244ee961e94e5f6f6d84b84733b16"
 SRC_URI[commons-text.sha256sum] = "265a149c7e0c1ebfe019bbe0226f8c1f6474811054d459145510ea2eed93a11a"
 
-SRC_URI = "git://github.com/xbmc/xbmc.git;protocol=https;branch=master \
+SRC_URI = "git://github.com/xbmc/xbmc.git;protocol=https;branch=Omega \
            https://archive.apache.org/dist/groovy/${PV_groovy}/distribution/apache-groovy-binary-${PV_groovy}.zip;name=groovy \
            https://dlcdn.apache.org/commons/lang/binaries/commons-lang3-${PV_commons-lang3}-bin.tar.gz;name=commons-lang \
            https://dlcdn.apache.org/commons/text/binaries/commons-text-${PV_commons-text}-bin.tar.gz;name=commons-text \
@@ -120,7 +120,7 @@ WINDOWSYSTEM ?= "stb"
 #https://github.com/xbmc/xbmc/commit/d159837cf736c9ba17772ba52e4ce95aa3625528
 APPRENDERSYSTEM ?= "gles"
 
-TOOLCHAIN:arm ?= "clang"
+# TOOLCHAIN:arm ?= "clang"
 
 PACKAGECONFIG ?= "${ACCEL} ${WINDOWSYSTEM} pulseaudio lcms lto \
                    ${@bb.utils.contains('TOOLCHAIN', 'clang', 'clang', '', d)} \
@@ -170,7 +170,7 @@ KODI_DISABLE_INTERNAL_LIBRARIES = " \
 # Allow downloads during internals build
 do_compile[network] = "1"
 
-RUNTIME:arm ?= "llvm"
+# RUNTIME:arm ?= "llvm"
 
 RUNTIME_NM = "${@bb.utils.contains('RUNTIME', 'llvm', '${TARGET_PREFIX}llvm-nm', '${TARGET_PREFIX}gcc-nm', d)}"
 
@@ -190,7 +190,7 @@ EXTRA_OECMAKE = " \
     -DCMAKE_NM=${STAGING_BINDIR_NATIVE}/${TARGET_SYS}/${RUNTIME_NM} \
     \
     -DFFMPEG_PATH=${STAGING_DIR_TARGET} \
-    -DLIBDVD_INCLUDE_DIRS=${STAGING_INCDIR} \
+    -DLIBDVD_INCLUDE_DIR=${STAGING_INCDIR} \
     -DNFS_INCLUDE_DIR=${STAGING_INCDIR} \
     -DSHAIRPLAY_INCLUDE_DIR=${STAGING_INCDIR} \
     \
@@ -204,7 +204,7 @@ EXTRA_OECMAKE = " \
     -Dapache-commons-text_SOURCE_DIR=${UNPACKDIR}/commons-text-${PV_commons-text} \
 "
 
-# OECMAKE_GENERATOR="Unix Makefiles"
+OECMAKE_GENERATOR = "Unix Makefiles"
 # PARALLEL_MAKE = " "
 
 FULL_OPTIMIZATION:armv7a = "-fomit-frame-pointer -O3 -ffast-math"
