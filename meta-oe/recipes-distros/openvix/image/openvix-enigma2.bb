@@ -51,7 +51,7 @@ NORMAL_IMAGE = "\
     enigma2-plugin-extensions-epgimport \
     enigma2-plugin-extensions-epgsearch \
     enigma2-plugin-extensions-openwebif-webtv \
-    enigma2-plugin-extensions-imdb \
+    enigma2-plugin-extensions-tmdb \
     enigma2-plugin-extensions-openwebif-themes \
     enigma2-plugin-extensions-openwebif-vxg \
     enigma2-plugin-systemplugins-aboutboxbranding \
