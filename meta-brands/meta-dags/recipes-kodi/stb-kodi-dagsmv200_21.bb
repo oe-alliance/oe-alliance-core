@@ -1,7 +1,5 @@
 require recipes-mediacenter/kodi/stb-kodi_${PV}.bb
 
-SRC_URI:append = "file://hiplayer-21.patch"
-
 DEPENDS += "dags-libs-${SOC_FAMILY}"
 PROVIDES += "virtual/kodi"
 RPROVIDES:${PN} += "virtual-kodi"
