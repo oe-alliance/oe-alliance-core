@@ -69,7 +69,7 @@ DEPENDS += " \
             gstreamer1.0-plugins-base \
           "
 inherit gitpkgv
-# 21.0 Omega
+# 21.1 Omega
 SRCREV = "183eb85f108c3d8b44a578de80f575f27afe9b9a"
 
 # 'patch' doesn't support binary diffs
@@ -103,8 +103,7 @@ SRC_URI = "git://github.com/xbmc/xbmc.git;protocol=https;branch=Omega \
            file://0011-cmake-includedirs.patch \
            file://0012-taglib2.patch \
            file://0013-DVDDemuxFFmpeg-fixed-compile-against-ffmpeg-7.patch \
-           file://0100-e2-player.patch \
-           file://0101-gst-player.patch \
+           file://0100-stb-player.patch\
           "
 
 S = "${WORKDIR}/git"
