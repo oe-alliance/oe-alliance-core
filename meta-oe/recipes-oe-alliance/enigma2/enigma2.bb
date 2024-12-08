@@ -209,6 +209,8 @@ PKGV = "${IMAGE_VERSION}+git${GITPKGV}"
 SRCREV ?= "${AUTOREV}"
 SRC_URI = "${ENIGMA2_URI}"
 
+SRC_URI:append:openatv = " file://swig-4.3.patch"
+
 #SRC_URI_append_spycatminiv2 = " \
 #    file://enigma2-dinobotplayer.patch \
 #    "
