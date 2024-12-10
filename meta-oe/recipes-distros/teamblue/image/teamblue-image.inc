@@ -30,10 +30,8 @@ IMAGE_INSTALL += "${@bb.utils.contains_any("FLASHSIZE", "64 96", "", "iproute2",
 IMAGE_LOCALES_ARCHIVE = ""
 
 # 64 or 128MB of flash: No language files, above: German
-IMAGE_LINGUAS  = "${@bb.utils.contains_any("FLASHSIZE", "64 96 128", "", "de-de en-gb", d)}"
-
 # Add more languages for 512 or more MB of flash:
-IMAGE_LINGUAS += "${@bb.utils.contains_any("FLASHSIZE", "64 96 128 256", "", "es-es fr-fr it-it nl-nl pt-pt tr-tr", d)}"
+IMAGE_LINGUAS  = "${@bb.utils.contains_any("FLASHSIZE", "64 96 128 256", "de-de en-gb", "de-de en-gb es-es fr-fr it-it nl-nl pt-pt tr-tr", d)}"
 
 IMAGE_FEATURES += "package-management"
 
