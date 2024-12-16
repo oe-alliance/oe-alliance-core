@@ -1,7 +1,7 @@
-From 049d97a7be4456509121533bb856febb9961c8c2 Mon Sep 17 00:00:00 2001
+From b06207c8e5878fa85d8ea1710d97d9c5a5dcb0f1 Mon Sep 17 00:00:00 2001
 From: luisteraar/listener <fake@fake.com>
-Date: Sat, 9 Nov 2024 20:08:42 +0100
-Subject: [PATCH] STBPlayer
+Date: Sat, 14 Dec 2024 17:11:36 +0100
+Subject: [PATCH] STBsink
 
 ---
  .../resources/strings.po                      |  11 +
@@ -11,7 +11,7 @@ Subject: [PATCH] STBPlayer
  xbmc/cores/DvbPlayer/CMakeLists.txt           |  31 +
  xbmc/cores/DvbPlayer/DvbCodecVideo.cpp        | 470 +++++++++
  xbmc/cores/DvbPlayer/DvbCodecVideo.h          |  97 ++
- xbmc/cores/DvbPlayer/DvbDecoder.cpp           | 534 ++++++++++
+ xbmc/cores/DvbPlayer/DvbDecoder.cpp           | 543 ++++++++++
  xbmc/cores/DvbPlayer/DvbDecoder.h             | 109 ++
  xbmc/cores/DvbPlayer/DvbPlayerVideo.cpp       | 985 ++++++++++++++++++
  xbmc/cores/DvbPlayer/DvbPlayerVideo.h         | 160 +++
@@ -38,11 +38,11 @@ Subject: [PATCH] STBPlayer
  xbmc/cores/VideoPlayer/VideoPlayerAudio.cpp   |   2 +-
  xbmc/cores/VideoPlayer/VideoPlayerAudio.h     |   2 +-
  xbmc/cores/VideoPlayer/VideoPlayerVideo.cpp   |   3 +-
- xbmc/cores/VideoPlayer/VideoPlayerVideo.h     |   3 +-
+ xbmc/cores/VideoPlayer/VideoPlayerVideo.h     |   5 +-
  xbmc/settings/SettingConditions.cpp           |   3 +
  xbmc/settings/Settings.h                      |   3 +
  xbmc/windowing/egl/WinSystemSTBContext.cpp    |   4 +
- 38 files changed, 7007 insertions(+), 7 deletions(-)
+ 38 files changed, 7017 insertions(+), 8 deletions(-)
  create mode 100644 xbmc/cores/DvbPlayer/CMakeLists.txt
  create mode 100644 xbmc/cores/DvbPlayer/DvbCodecVideo.cpp
  create mode 100644 xbmc/cores/DvbPlayer/DvbCodecVideo.h
@@ -747,10 +747,10 @@ index 00000000000..f0161c1f371
 +};
 diff --git a/xbmc/cores/DvbPlayer/DvbDecoder.cpp b/xbmc/cores/DvbPlayer/DvbDecoder.cpp
 new file mode 100644
-index 00000000000..b6c551cfe58
+index 00000000000..0de929b83bf
 --- /dev/null
 +++ b/xbmc/cores/DvbPlayer/DvbDecoder.cpp
-@@ -0,0 +1,534 @@
+@@ -0,0 +1,543 @@
 +/*
 + *      Copyright (C) 2005-2013 Team XBMC
 + *      http://xbmc.org
@@ -1016,6 +1016,9 @@ index 00000000000..b6c551cfe58
 +   avOut.height     =  hints.height; //videoTrack->height;
 +   avOut.Encoding    = codec;
 +
++   if(AV_CODEC_ID_HEVC == hints.codec)
++       avOut.infoFlags = 1;
++
 +   CLog::Log(LOGDEBUG, "\t|Framerate : {}",avOut.frameRate);
 +   CLog::Log(LOGDEBUG, "\t|Timesca;e : {}",avOut.timeScale);
 +   CLog::Log(LOGDEBUG, "\t|Wight : {}",avOut.width);
@@ -1136,13 +1139,14 @@ index 00000000000..b6c551cfe58
 +
 +double DvbAvDecoder::GetPicturePts()
 +{
-+uint64_t pts;
++double pts;
 +  if (!m_opened)
 +    return DVD_NOPTS_VALUE;
 +
-+pts = DvbGetPts();
++  pts = DvbGetPts();
 +
-+  pts = pts * DVD_TIME_BASE /PTS_FREQ;
++  pts *= 11.111; 
++
 +  if (pts < m_seekpts){
 +     pts = DVD_NOPTS_VALUE;
 +     }
@@ -1151,15 +1155,16 @@ index 00000000000..b6c551cfe58
 +
 +double DvbAvDecoder::VideoCurrentPts()
 +{
-+uint64_t pts;
-+//CLog::Log(LOGINFO, "DvbCodec::VideoCurrentPts");
++double pts;
 +
 +  if (!m_opened)
 +    return DVD_NOPTS_VALUE;
 +
-+pts = DvbGetPts();
-+  pts = pts * DVD_TIME_BASE /PTS_FREQ;
-+return pts;
++  pts = DvbGetPts();
++  
++  pts *= 11.111;
++  
++  return pts;
 +}
 +
 +bool DvbAvDecoder::VideoPlayStarted()
@@ -1208,13 +1213,15 @@ index 00000000000..b6c551cfe58
 +
 +bool DvbAvDecoder::VideoWrite(uint8_t* pData, size_t iSize, double pts_ms,uint8_t* extradata,size_t extralen)
 +{
-+if (pts_ms < m_seekpts)
-+return true;
++  double pts;
++  
++  if (pts_ms < m_seekpts)
++     return true;
 +
-+  uint64_t pts;
 +
 +  if (!m_video_opend)
 +    return false;
++    
 +  avOut.data = pData;
 +  avOut.len = iSize;
 +
@@ -1226,23 +1233,25 @@ index 00000000000..b6c551cfe58
 +  else
 +      avOut.extralen = 0;
 +
-+  pts_ms = round(pts_ms*PTS_FREQ/DVD_TIME_BASE);
++  pts_ms = pts_ms * 9LL / 100; 
++ 
 +  avOut.pts = pts_ms;
 +  avOut.dts = pts_ms;
 +
 +  if (WriteDvb(&avOut) != 0)
 +      {
-+          fprintf(stderr,"writing data to video device failed\n");
++      CLog::Log(LOGINFO,"writing data to video device failed");
 +      }
 +
 +  pts = DvbGetPts();
-+  pts = pts * DVD_TIME_BASE /PTS_FREQ;
++  pts *= 11.111 ;
++
 +  if ((pts) != m_video_1st_pts)
 +  {
 +
 +
 +  if (m_vptsQueue.empty()){
-+        m_video_1st_pts = (double)pts;
++        m_video_1st_pts = pts;
 +        }
 +      m_vptsQueue.push_back(pts);
 +  }
@@ -7208,7 +7217,7 @@ index 00000000000..4b4ae22b286
 + }
 +#endif
 diff --git a/xbmc/cores/VideoPlayer/VideoPlayer.cpp b/xbmc/cores/VideoPlayer/VideoPlayer.cpp
-index f3d3db772cc..1359389bd80 100644
+index f3d3db772cc..50b2f6deb78 100644
 --- a/xbmc/cores/VideoPlayer/VideoPlayer.cpp
 +++ b/xbmc/cores/VideoPlayer/VideoPlayer.cpp
 @@ -61,6 +61,10 @@
@@ -7227,7 +7236,7 @@ index f3d3db772cc..1359389bd80 100644
    if (m_players_created)
      return;
 +    
-+ #ifdef TARGET_STB
++#ifdef TARGET_STB
 +  if(m_stbplayer_mode && m_use_stbcodec)
 +  {
 +          m_VideoPlayerVideo = new CDvbPlayerVideo(&m_clock, &m_overlayContainer, m_messenger, m_renderManager, *m_processInfo, m_messageQueueTimeSize);
@@ -7255,7 +7264,7 @@ index f3d3db772cc..1359389bd80 100644
    m_UpdateStreamDetails = false;
  
 +  const int tenthsSeconds = CServiceBroker::GetSettingsComponent()->GetSettings()->GetInt(
-+    CSettings::SETTING_VIDEOPLAYER_QUEUETIMESIZE);
++      CSettings::SETTING_VIDEOPLAYER_QUEUETIMESIZE);
 +
 +  m_messageQueueTimeSize = static_cast<double>(tenthsSeconds) / 10.0;
 +
@@ -7337,16 +7346,18 @@ index c42f8f3dd7b..918dce2a73d 100644
  , IDVDStreamPlayerVideo(processInfo)
  , m_messageQueue("video")
 diff --git a/xbmc/cores/VideoPlayer/VideoPlayerVideo.h b/xbmc/cores/VideoPlayer/VideoPlayerVideo.h
-index d0c83172f07..466af720227 100644
+index d0c83172f07..dbb81baa2ba 100644
 --- a/xbmc/cores/VideoPlayer/VideoPlayerVideo.h
 +++ b/xbmc/cores/VideoPlayer/VideoPlayerVideo.h
-@@ -49,7 +49,8 @@ public:
+@@ -48,8 +48,9 @@ public:
+   CVideoPlayerVideo(CDVDClock* pClock
                   ,CDVDOverlayContainer* pOverlayContainer
                   ,CDVDMessageQueue& parent
-                  ,CRenderManager& renderManager,
+-                 ,CRenderManager& renderManager,
 -                 CProcessInfo &processInfo);
-+                 CProcessInfo &processInfo,
-+                 double messageQueueTimeSize);
++                 ,CRenderManager& renderManager
++                 ,CProcessInfo &processInfo
++                 ,double messageQueueTimeSize);
    ~CVideoPlayerVideo() override;
  
    bool OpenStream(CDVDStreamInfo hint) override;
