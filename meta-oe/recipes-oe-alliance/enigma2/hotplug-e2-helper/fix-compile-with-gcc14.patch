@@ -1,0 +1,47 @@
+--- a/bdpoll.c
++++ b/bdpoll.c
+@@ -33,6 +33,7 @@
+ #include <linux/cdrom.h>
+ #include <sys/stat.h>
+ #include <sys/types.h>
++#include <ctype.h>
+ 
+ enum {
+ 	MEDIA_STATUS_UNKNOWN = 0,
+@@ -274,7 +275,7 @@ static bool poll_for_media(const char devname[], bool is_cdrom, bool support_med
+ 			fd = open(device_file, O_RDONLY | O_NONBLOCK);
+ 		}
+ 		if (fd < 0) {
+-			err("%s: %s", device_file, strerror(errno));
++			printf("%s: %s", device_file, strerror(errno));
+ 			return false;
+ 		}
+ 
+@@ -322,7 +323,7 @@ static bool poll_for_media(const char devname[], bool is_cdrom, bool support_med
+ 				}
+ 				break;
+ 			case -1:
+-				err("%s: CDROM_DRIVE_STATUS: %s", device_file, strerror(errno));
++				printf("%s: CDROM_DRIVE_STATUS: %s", device_file, strerror(errno));
+ 				break;
+ 		}
+ 		close(fd);
+@@ -334,7 +335,7 @@ static bool poll_for_media(const char devname[], bool is_cdrom, bool support_med
+ 			got_media = true;
+ 			close(fd);
+ 		} else {
+-			err("%s: %s", device_file, strerror(errno));
++			printf("%s: %s", device_file, strerror(errno));
+ 			return false;
+ 		}
+ 	}
+--- a/hotplug.c
++++ b/hotplug.c
+@@ -7,6 +7,7 @@
+ #include <netdb.h>
+ #include <fcntl.h>
+ #include <string.h>
++#include <unistd.h>
+ 
+ int main(int argc, char *argv[])
+ {

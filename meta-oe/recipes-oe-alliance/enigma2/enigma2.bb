@@ -33,12 +33,12 @@ RDEPENDS:${PN} = " \
     alsa-conf \
     libdreamdvd \
     enigma2-fonts \
-    hotplug-e2-helper \
     font-valis-enigma \
     ethtool \
     glibc-gconv-iso8859-15 \
     glibc-gconv-cp1250 \
     ${PYTHON_RDEPS} \
+    ${@bb.utils.contains("DISTRO_FEATURES", "e2hotplug", "" , "hotplug-e2-helper", d)} \
     ${@bb.utils.contains("DISTRO_NAME", "openatv", "openatv-autorestore socketdaemon" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "uianimation", "vuplus-libgles-${MACHINE} libvugles2" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "hiaccel", "dinobot-libs-${MACHINE}" , "", d)} \
