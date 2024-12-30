@@ -1,4 +1,4 @@
-PV = "1.24.8"
+PV = "1.24.10"
  
-SRC_URI[md5sum] = "b837f86e94071fa79126bb4ec0f936ea"
-SRC_URI[sha256sum] = "1e4a8fd537621d236442cf90a6e9ad5e00f87bffffdaeb1fd8bfd23719de8c75"
+SRC_URI[md5sum] = "e2b1a143a638720cd0925b945cd3d317"
+SRC_URI[sha256sum] = "4cf2e2d8204e54ba8af9519a8b9b7ffa6e951a7087afa0dfe83c125d49bbb5fb"
