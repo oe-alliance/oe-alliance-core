@@ -229,6 +229,8 @@ do_install() {
     install -d ${D}${sysconfdir}/init.d
     install -m 755 ${UNPACKDIR}/init.samba ${D}${sysconfdir}/init.d/samba
     install -m 755 ${UNPACKDIR}/init.wsdd ${D}${sysconfdir}/init.d/wsdd
+    install -d ${D}${sysconfdir}/samba/shares
+    install -m 644 ${UNPACKDIR}/share.template ${D}${sysconfdir}/samba/shares
 
     if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
         perl -i -pe 's:(PIDFile=)/run/(.*?\.pid):${1}${localstatedir}/run/${2}:' ${D}${systemd_system_unitdir}/*.service

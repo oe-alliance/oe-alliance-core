@@ -39,6 +39,7 @@ NORMAL_GUI = "\
     ${PYTHON_PN}-future \
     ${PYTHON_PN}-pexpect \
     ${PYTHON_PN}-six \
+    ${PYTHON_PN}-trio \
 "
 
 SMALLBOXWIZARD_IMAGE = "\

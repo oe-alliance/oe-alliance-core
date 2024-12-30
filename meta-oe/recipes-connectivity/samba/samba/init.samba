@@ -11,84 +11,110 @@
 ### END INIT INFO
 
 WSDD_DISABLED="Yes"
-smbd=/usr/sbin/smbd
-test -x "$smbd" || exit 0
-nmbd=/usr/sbin/nmbd
-test -x "$nmbd" || exit 0
-wsdd=/usr/sbin/wsdd
-test -x "$wsdd" && WSDD_DISABLED="No"
+SMBD="/usr/sbin/smbd"
+NMBD="/usr/sbin/nmbd"
+WSDD="/usr/sbin/wsdd"
 
-if [ ! -e /var/log/samba ]; then
-    mkdir /var/log/samba
-fi
+# Check if executables exist
+[ -x "$SMBD" ] || exit 0
+[ -x "$NMBD" ] || exit 0
+[ -x "$WSDD" ] && WSDD_DISABLED="No"
+
+# Ensure the log directory exists
+[ -d /var/log/samba ] || mkdir /var/log/samba
+
+# Remove old share config file and create a new one if shares are defined
+prepare_shares() {
+    [ -d /etc/samba/shares ] || return
+
+    echo "Activating share definitions"
+    [ -f /etc/samba/smb-shares.conf ] && rm /etc/samba/smb-shares.conf
+
+    for FILE in /etc/samba/shares/*.conf; do
+        path=$(grep "path\s*=\s*" "$FILE" | tr -d " \t\n\r" | cut -d'=' -f2)
+        if [ -n "$path" ] && [ -d "$path" ]; then
+            echo "include = $FILE" >> /etc/samba/smb-shares.conf
+        else
+            # Remove invalid share files
+            rm "$FILE"
+        fi
+    done
+}
 
 case "$1" in
   start)
+    # Clean up lock directory
+    [ -d /var/lib/samba/msg.lock ] && rm -rf /var/lib/samba/msg.lock
+    
+    prepare_shares
+    
     echo -n "Starting Samba: smbd"
-    $smbd
-    NMBD_DISABLED=`testparm -s --parameter-name='disable netbios' 2>/dev/null || true`
+    start-stop-daemon --start --quiet --exec $SMBD
+    
+    NMBD_DISABLED=$(testparm -s --parameter-name='disable netbios' 2>/dev/null || echo "No")
     if [ "$NMBD_DISABLED" != "Yes" ]; then
       echo -n " nmbd"
-      $nmbd
+      start-stop-daemon --start --quiet --exec $NMBD
     fi
+    
     if [ "$WSDD_DISABLED" != "Yes" ]; then
       echo -n " wsdd"
       /etc/init.d/wsdd &
-      #start-stop-daemon --start --quiet --exec $wsdd
     fi
+    
     echo "."
     ;;
+    
   stop)
     echo -n "Stopping Samba: smbd"
     start-stop-daemon --stop --quiet --pidfile /var/run/smbd.pid
+    
     echo -n " nmbd"
     start-stop-daemon --stop --quiet --pidfile /var/run/nmbd.pid
+    
     echo -n " wsdd"
     start-stop-daemon --stop --quiet --pidfile /var/run/wsdd.pid
+    
     echo "."
     ;;
+    
   reload|force-reload)
+    echo "Reloading Samba configuration"
+
+    prepare_shares
+    
+    start-stop-daemon --stop --quiet --signal 1 --exec $SMBD
+    start-stop-daemon --stop --quiet --signal 1 --exec $NMBD
+    
     if [ "$WSDD_DISABLED" != "Yes" ]; then
       start-stop-daemon --stop --quiet --pidfile /var/run/wsdd.pid
-    fi
-    start-stop-daemon --stop --quiet --signal 1 --exec $smbd
-    start-stop-daemon --stop --quiet --signal 1 --exec $nmbd
-    if [ "$WSDD_DISABLED" != "Yes" ]; then
       sleep 1
-      start-stop-daemon --start --quiet --exec $wsdd
+      start-stop-daemon --start --quiet --exec $WSDD
     fi
     ;;
+    
   restart)
-    echo -n "Stopping Samba: smbd"
-    start-stop-daemon --stop --quiet --pidfile /var/run/smbd.pid
-    echo -n " nmbd"
-    start-stop-daemon --stop --quiet --pidfile /var/run/nmbd.pid
-    echo -n " wsdd"
-    start-stop-daemon --stop --quiet --pidfile /var/run/wsdd.pid
-    echo ""
-    echo -n "Waiting for samba processes to die off"
-    for i in 1 2 3 ;
-    do
-        sleep 1
-        echo -n "."
+    echo -n "Restarting Samba: "
+    
+    # Stop all services
+    $0 stop
+    
+    # Wait for processes to terminate
+    echo -n "Waiting for processes to terminate"
+    for i in 1 2 3; do
+      sleep 1
+      echo -n "."
     done
     echo ""
-    echo -n "Starting Samba: smbd"
-    start-stop-daemon --start --quiet --exec $smbd
-    NMBD_DISABLED=`testparm -s --parameter-name='disable netbios' 2>/dev/null || true`
-    if [ "$NMBD_DISABLED" != "Yes" ]; then
-      echo -n " nmbd"
-      start-stop-daemon --start --quiet --exec $nmbd
-    fi
-    if [ "$WSDD_DISABLED" != "Yes" ]; then
-      echo -n " wsdd"
-      start-stop-daemon --start --quiet --exec $wsdd
-    fi
-    echo "."
+    
+    # Start all services
+    $0 start
     ;;
+    
   *)
     echo "Usage: /etc/init.d/samba {start|stop|reload|restart|force-reload}"
     exit 1
+    ;;
 esac
 
 exit 0

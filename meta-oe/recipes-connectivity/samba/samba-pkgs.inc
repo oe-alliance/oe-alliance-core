@@ -56,6 +56,7 @@ FILES:${BPN}-common = "${sysconfdir}/default \
                        ${sysconfdir}/tmpfiles.d \
                        ${localstatedir}/lib/samba \
                        ${localstatedir}/spool/samba \
+                       ${sysconfdir}/samba/shares/share.template \
                       "
 
 CONFFILES:${BPN}-common = "${sysconfdir}/pam.d/samba \
@@ -63,6 +64,7 @@ CONFFILES:${BPN}-common = "${sysconfdir}/pam.d/samba \
                            ${sysconfdir}/samba/private/users.map \
                            ${sysconfdir}/samba/private/smbpasswd \
                            ${sysconfdir}/samba/smb-local.conf \
+                           ${sysconfdir}/samba/shares/share.template \
                           "
 
 RRECOMMENDS:${BPN}-common += "pam-pluginsmbpass"

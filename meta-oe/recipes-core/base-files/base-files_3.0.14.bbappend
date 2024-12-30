@@ -9,7 +9,6 @@ FILESEXTRAPATHS:prepend := "${THISDIR}/${MACHINEBUILD}:"
 
 SRC_URI += "file://editor.sh"
 SRC_URI += "file://terminfo.sh"
-SRC_URI += "file://mount-helper.sh"
 SRC_URI += "file://filesystems"
 
 hostname = "${MACHINEBUILD}"
@@ -24,14 +23,10 @@ do_install:append() {
     rm -fr ${D}/tmp
     mkdir ${D}/media/net
     install -d ${D}${sysconfdir}/udev
-    install -m 0755 ${S}/mount-helper.sh       ${D}${sysconfdir}/udev
     install -d ${D}${sysconfdir}/profile.d
     install -m 0644 ${S}/editor.sh   ${D}${sysconfdir}/profile.d/editor.sh
     install -m 0644 ${S}/terminfo.sh ${D}${sysconfdir}/profile.d/terminfo.sh
     install -m 0644 ${S}/filesystems ${D}${sysconfdir}/filesystems
-
-    # Inject machine specific blacklists into mount-helper:
-    perl -i -pe 's:(\@BLACKLISTED\@):${MTD_BLACK}:s' ${D}${sysconfdir}/udev/mount-helper.sh
 
     # For machines that should mount their boot partition, inject it (Set MTD_BOOTFS and MACHINE_FEATURES+="mountboot" in machine config!
     if ${@bb.utils.contains('MACHINE_FEATURES','mountboot','true','false',d)}; then

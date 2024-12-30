@@ -1,0 +1,40 @@
+# There are a number of modifiers that are allowed to be used in some
+# of the different fields. They provide the following subsitutions:
+#
+# %n the "kernel number" of the device.
+#    For example, 'sda3' has a "kernel number" of '3'
+# %e the smallest number for that name which does not matches an existing node
+# %k the kernel name for the device
+# %M the kernel major number for the device
+# %m the kernel minor number for the device
+# %b the bus id for the device
+# %c the string returned by the PROGRAM
+# %s{filename} the content of a sysfs attribute
+# %% the '%' char itself
+#
+
+# The first rtc device is symlinked to /dev/rtc
+KERNEL=="rtc0", SYMLINK+="rtc"
+KERNEL=="rtc0", MODE="0666", OWNER="root", GROUP="root", SYMLINK+="misc/rtc"
+
+# Legacy paths for dbox devices
+KERNEL=="oled0", SYMLINK+="dbox/oled0"
+KERNEL=="fp0", SYMLINK+="dbox/fp0"
+KERNEL=="lcd0", SYMLINK+="dbox/lcd0"
+KERNEL=="dboxlcd", SYMLINK+="dbox/lcd0"
+KERNEL=="vtuner[0-9]*", SYMLINK+="misc/vtuner%n"
+KERNEL=="pvr", SYMLINK+="misc/pvr"
+KERNEL=="hsm0", SYMLINK+="misc/hsm0"
+KERNEL=="dp", SYMLINK+="misc/dp"
+KERNEL=="ni2c", SYMLINK+="misc/ni2c"
+KERNEL=="i2c-[0-9]*", SYMLINK+="i2c/%n"
+KERNEL=="dvb[0-9]*", SUBSYSTEM=="dvb", MODE="0660", OWNER="root", GROUP="root", SYMLINK+="dvb/adapter%n/%s{dev}"
+
+# The first framebuffer is symlinked to /dev/fb
+KERNEL=="fb0", SYMLINK+="fb/0"
+
+# Make all input devices read-write to the input group
+SUBSYSTEM=="input", GROUP="input", MODE="660"
+
+# Realtek 8852au Wifi AX USB
+SUBSYSTEM=="usb", ATTR{idVendor}=="0bda", ATTR{idProduct}=="1a2b", MODE="0664", RUN+="/usr/sbin/usb_modeswitch -K -v 0bda -p 1a2b"

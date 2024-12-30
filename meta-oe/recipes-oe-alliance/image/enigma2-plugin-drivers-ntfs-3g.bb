@@ -2,7 +2,7 @@ SUMMARY = "Allow writes to NTFS file systems"
 
 require conf/license/license-gplv2.inc
 
-RDEPENDS:${PN} = "ntfs-3g"
+RDEPENDS:${PN} = "ntfs-3g ntfsprogs"
 
 PV = "1.0"
 PR = "r0"
