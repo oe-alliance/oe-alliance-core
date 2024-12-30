@@ -1,4 +1,4 @@
-oe-alliance-core 5.5
+oe-alliance-core 5.5.1
 ================
 
 The openembedded alliance core.
