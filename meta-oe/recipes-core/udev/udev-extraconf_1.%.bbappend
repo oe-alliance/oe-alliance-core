@@ -1,6 +1,7 @@
 FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/${DISTRO_NAME}:"
 
-PR .= ".15"
+PR .= ".16"
 
 SRC_URI += " \
     file://mount.sh \
