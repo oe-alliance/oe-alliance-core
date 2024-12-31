@@ -11,10 +11,9 @@ LOG="/tmp/mount.log"
 # File for known devices
 KNOWN_DEVICES_FILE="/etc/udev/known_devices"
 
-for line in `grep -h -v ^# /etc/udev/mount.ignorelist /etc/udev/mount.ignorelist.d/*`
+for line in $(grep -h -v ^# /etc/udev/mount.ignorelist /etc/udev/mount.ignorelist.d/*)
 do
-	if [ ` expr match "$DEVNAME" "$line" ` -gt 0 ];
-	then
+	if [ "$(expr match "$DEVNAME" "$line")" -gt 0 ]; then
 		log "udev/mount.sh" "[$DEVNAME] is blacklisted, ignoring"
 		exit 0
 	fi
@@ -238,8 +237,7 @@ automount() {
 	# remove the concurrency lock
 	unlock
 
-	if ! $MOUNT $DEVNAME "/media/$LABEL"
-	then
+	if ! $MOUNT $DEVNAME "/media/$LABEL"; then
 		log "mount.sh/automount" "$MOUNT $DEVNAME \"/media/$LABEL\" failed!"
 		rm_dir "/media/$LABEL"
 	else
@@ -253,8 +251,7 @@ automount() {
 
 rm_dir() {
 	# We do not want to rm -r populated directories
-	if test "`find "$1" | wc -l | tr -d " "`" -lt 2 -a -d "$1"
-	then
+	if test "`find "$1" | wc -l | tr -d " "`" -lt 2 -a -d "$1"; then
 		! test -z "$1" && rm -r "$1"
 	else
 		log "mount.sh/automount" "Not removing non-empty directory [$1]"
