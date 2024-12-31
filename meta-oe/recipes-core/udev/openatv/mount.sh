@@ -6,6 +6,7 @@
 
 MOUNT="/bin/mount"
 UMOUNT="/bin/umount"
+LOG="/tmp/mount.log"
 
 # File for known devices
 KNOWN_DEVICES_FILE="/etc/udev/known_devices"
@@ -43,9 +44,11 @@ log() {
 	return
 
 	if [ $# -eq 1 ]; then
-		logger "udev/mount.sh" "$1"
+		echo "udev/mount.sh" "$1" >> $LOG
+		#logger "udev/mount.sh" "$1"
 	else
-		logger "udev/mount.sh" "$DEVNAME: $1 $2"
+		echo "udev/mount.sh" "$DEVNAME: $1 $2" >> $LOG
+		#logger "udev/mount.sh" "$DEVNAME: $1 $2"
 	fi
 }
 
@@ -281,7 +284,17 @@ if [ "$ACTION" = "add" ] && [ -n "$DEVNAME" ] && [ -n "$ID_FS_TYPE" -o "$media_t
 		log "PARTLABEL excludes $ID_PART_ENTRY_NAME"
 		exit 0
 	fi
+	# Check if the device is already in /etc/fstab
+	if grep -qs "$DEVNAME" /etc/fstab; then
+		log "Device $DEVNAME is already in /etc/fstab, skipping mount."
+		exit 0
+	fi
 
+	# Check if the device is already in /etc/fstab
+	if grep -qs "UUID=$ID_FS_UUID" /etc/fstab; then
+		log "UUID $ID_FS_UUID is already in /etc/fstab, skipping mount."
+		exit 0
+	fi
 
 	# blacklist boot device
 	BOOTDEV=$(cat /proc/cmdline | sed -e 's/^.*root=\/dev\///' -e 's/ .*$//')
