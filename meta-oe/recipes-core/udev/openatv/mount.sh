@@ -95,6 +95,9 @@ samba_share() {
 				echo "[$mountpoint]" > /etc/samba/shares/${mountpoint}.conf
 				echo "  comment = $model" >> /etc/samba/shares/${mountpoint}.conf
 				echo "  path = $path" >> /etc/samba/shares/${mountpoint}.conf
+				if grep -q "^config.samba.autoShareAccess=0" /etc/enigma2/settings; then
+					echo "  read only = yes" >> /etc/samba/shares/${mountpoint}.conf
+				fi
 				cat /etc/samba/shares/share.template >> /etc/samba/shares/${mountpoint}.conf
 				log ">" "share for $path created"
 			else
