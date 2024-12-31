@@ -245,7 +245,7 @@ automount() {
 	else
 		log "mount.sh/automount" "Auto-mount of [/media/$LABEL] successful"
 		touch "/tmp/.automount-$LABEL"
-		if ! grep -q "^config.samba.enableautoshare=" /etc/enigma2/settings; then
+		if ! grep -q "^config.samba.enableAutoShare=" /etc/enigma2/settings; then
 			samba_share "/media/$LABEL" "$MODEL"
 		fi
 	fi
