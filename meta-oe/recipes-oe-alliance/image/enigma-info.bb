@@ -184,7 +184,9 @@ do_install() {
     printf "imglanguage='${LANGUAGE}'\n" >> ${D}${INFOFILE}
     printf "imgrevision='${BUILD_VERSION}'\n" >> ${D}${INFOFILE}
     printf "imgversion='${IMAGE_VERSION}'\n" >> ${D}${INFOFILE}
-    printf "kernel='${PREFERRED_VERSION_${PREFERRED_PROVIDER_virtual/kernel}}'\n" >> ${D}${INFOFILE}
+    variable="${PREFERRED_VERSION_${PREFERRED_PROVIDER_virtual/kernel}}"
+    cleaned_variable="${variable//.%/}"
+    printf "kernel='%s'\n" "$cleaned_variable" >> ${D}${INFOFILE}
     printf "kexecmb=${HAVE_KEXECMB}\n" >> ${D}${INFOFILE}
     printf "kernelfile='${KERNEL_FILE}'\n" >> ${D}${INFOFILE}
     printf "machinebuild='${MACHINEBUILD}'\n" >> ${D}${INFOFILE}
