@@ -40,7 +40,9 @@ unlock() {
 
 log() {
 	# comment to enable logging
-	return
+	if [ ! -f /dev/mount.debug ]; then
+		return
+	fi
 
 	if [ $# -eq 1 ]; then
 		echo "udev/mount.sh" "$1" >> $LOG
@@ -262,7 +264,7 @@ rm_dir() {
 name="`basename "$DEVNAME"`"
 [ -e /sys/block/$name/device/media ] && media_type=`cat /sys/block/$name/device/media`
 
-if [ "$ACTION" = "add" ] && [ -n "$DEVNAME" ] && [ -n "$ID_FS_TYPE" -o "$media_type" = "cdrom" ]; then
+if [ "$ACTION" = "add" ]; then
 	FLASHEXPANDERDEV=`cat /proc/mounts | grep '.FlashExpander' | cut -d " " -f1`
 	if [ -n "$FLASHEXPANDERDEV" ]; then
 		MOUNTPOINT=`cat /proc/mounts | grep ${FLASHEXPANDERDEV} | cut -d " " -f2`
@@ -272,7 +274,7 @@ if [ "$ACTION" = "add" ] && [ -n "$DEVNAME" ] && [ -n "$ID_FS_TYPE" -o "$media_t
 
 	if [ -z "$ID_FS_TYPE" ]; then
 		log "Filesystem not exist. $DEVNAME"
-		exit 0
+		#exit 0
 	fi
 
 	# check if already mounted
@@ -354,13 +356,11 @@ if [ "$ACTION" = "add" ] && [ -n "$DEVNAME" ] && [ -n "$ID_FS_TYPE" -o "$media_t
 
 	# inform E2 of the hotplug action only for partitions
 	# Check if enigma2 process is running
-	if [ "$DEVTYPE" = "partition" ]; then
-		if ps aux | grep -v grep | grep -q enigma2; then
-			log "enigma2 running"
-			notify true
-		else
-			notify false
-		fi
+	if ps aux | grep -v grep | grep -q enigma2; then
+		log "enigma2 running"
+		notify true
+	else
+		notify false
 	fi
 fi
 
@@ -378,13 +378,11 @@ if [ "$ACTION" = "remove" ] || [ "$ACTION" = "change" ] && [ -x "$UMOUNT" ] && [
 
 	# inform E2 of the hotplug action only for partitions
 	# Check if enigma2 process is running
-	if [ "$DEVTYPE" = "partition" ]; then
-		if ps aux | grep -v grep | grep -q enigma2; then
-			log "enigma2 running"
-			notify true
-		else
-			notify false
-		fi
+	if ps aux | grep -v grep | grep -q enigma2; then
+		log "enigma2 running"
+		notify true
+	else
+		notify false
 	fi
 fi
 
