@@ -141,6 +141,8 @@ automount() {
 	# Get the device model
 	if [ -f /sys/block/$DEVBASE/device/model ]; then
 		MODEL=`cat /sys/block/$DEVBASE/device/model`
+	elif [ -f /sys/block/$DEVBASE/device/name ]; then
+		MODEL=`cat /sys/block/$DEVBASE/device/name`
 	else
 		MODEL="unknown device"
 	fi
@@ -274,7 +276,7 @@ if [ "$ACTION" = "add" ]; then
 
 	if [ -z "$ID_FS_TYPE" ]; then
 		log "Filesystem not exist. $DEVNAME"
-		#exit 0
+	#	exit 0
 	fi
 
 	# check if already mounted
@@ -294,10 +296,14 @@ if [ "$ACTION" = "add" ]; then
 		exit 0
 	fi
 
-	# Check if the device is already in /etc/fstab
-	if grep -qs "UUID=$ID_FS_UUID" /etc/fstab; then
-		log "UUID $ID_FS_UUID is already in /etc/fstab, skipping mount."
-		exit 0
+	# Check if the device is already in /etc/fstab and UUID not empty
+	if [ -z "$ID_FS_UUID" ]; then
+		log "UUID is empty, skipping /etc/fstab check."
+	else
+		if grep -qs "UUID=$ID_FS_UUID" /etc/fstab; then
+			log "UUID $ID_FS_UUID is already in /etc/fstab, skipping mount."
+			exit 0
+		fi
 	fi
 
 	# blacklist boot device
@@ -314,7 +320,6 @@ if [ "$ACTION" = "add" ]; then
 	if [ ! -d /sys/block/${DEVBASE} ]; then
 		DEVBASE=${NAME:0:3}
 	fi
-	log ">" "DEVBASE = $DEVBASE"
 
 	# blacklist partitions on the same device as the boot device
 	if [[ $BOOTDEV == $DEVBASE* ]]; then
@@ -337,21 +342,18 @@ if [ "$ACTION" = "add" ]; then
 		exit 0
 	fi
 
-	# Get the device model
-	if [ -f /sys/block/$DEVBASE/device/model ]; then
-		MODEL=`cat /sys/block/$DEVBASE/device/model`
-	else
-		MODEL="unknown device"
-	fi
-	log ">" "MODEL = $MODEL"
-
-	# If the device isn't mounted at this point, it isn't
-	# configured in fstab (note the root filesystem can show up as
-	# /dev/root in /proc/mounts, so check the device number too)
-	if ! ps aux | grep -v grep | grep -q enigma2; then
-		if expr $MAJOR "*" 256 + $MINOR != `stat -c %d /`; then
-			grep -q "^$DEVNAME " /proc/mounts || automount
+	# Check if a filesystem is present
+	if [ -n "$ID_FS_TYPE" ]; then
+		# If the device isn't mounted at this point, it isn't
+		# configured in fstab (note the root filesystem can show up as
+		# /dev/root in /proc/mounts, so check the device number too)
+		if ! ps aux | grep -v grep | grep -q enigma2; then
+			if expr $MAJOR "*" 256 + $MINOR != `stat -c %d /`; then
+				grep -q "^$DEVNAME " /proc/mounts || automount
+			fi
 		fi
+	else
+		log "No filesystem detected for device $DEVNAME, skipping."
 	fi
 
 	# inform E2 of the hotplug action only for partitions
