@@ -38,7 +38,7 @@ RDEPENDS:${PN} = " \
     glibc-gconv-iso8859-15 \
     glibc-gconv-cp1250 \
     ${PYTHON_RDEPS} \
-    ${@bb.utils.contains("DISTRO_FEATURES", "e2hotplug", "" , "hotplug-e2-helper", d)} \
+    ${@bb.utils.contains("DISTRO_FEATURES", "e2hotplug", "checkinternet" , "hotplug-e2-helper", d)} \
     ${@bb.utils.contains("DISTRO_NAME", "openatv", "openatv-autorestore socketdaemon" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "uianimation", "vuplus-libgles-${MACHINE} libvugles2" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "hiaccel", "dinobot-libs-${MACHINE}" , "", d)} \
@@ -188,7 +188,7 @@ DESCRIPTION:append:enigma2-plugin-systemplugins-networkwizard = "provides easy s
 RDEPENDS:enigma2-plugin-extensions-dvdburn = "dvd+rw-tools dvdauthor mjpegtools genisoimage replex"
 RRECOMMENDS:enigma2-plugin-extensions-dvdburn = "kernel-module-sg"
 RRECOMMENDS:enigma2-plugin-extensions-dvdplayer = "kernel-module-cdrom kernel-module-sr-mod"
-RDEPENDS:enigma2-plugin-systemplugins-hotplug = "${@bb.utils.contains("DISTRO_FEATURES", "e2hotplug", "" , "hotplug-e2-helper", d)}"
+RDEPENDS:enigma2-plugin-systemplugins-hotplug = "${@bb.utils.contains("DISTRO_FEATURES", "e2hotplug", "checkinternet" , "hotplug-e2-helper", d)}"
 DESCRIPTION:enigma2-plugin-font-wqy-microhei = "Font wqy-microhei add support for China EPG"
 SUMMARY:enigma2-plugin-extensions-streamlinkwrapper = "Enables support for streamlink url scheme in bouquet list."
 RDEPENDS:enigma2-plugin-extensions-streamlinkwrapper = "streamlink"
