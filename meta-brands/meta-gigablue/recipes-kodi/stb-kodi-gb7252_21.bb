@@ -7,7 +7,7 @@ PROVIDES += "virtual/kodi"
 RPROVIDES:${PN} += "virtual-kodi"
 PROVIDES += "kodi"
 RPROVIDES:${PN} += "kodi"
-RDEPENDS:${PN} += "gb-v3ddriver-${MACHINE}"
+RDEPENDS:${PN} += "gb-v3ddriver-${MACHINE_DRIVER}"
 RDEPENDS:${PN} += "glibc-gconv-iso8859-1"
 
 FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
