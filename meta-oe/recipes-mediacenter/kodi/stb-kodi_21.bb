@@ -88,7 +88,7 @@ SRC_URI[commons-text.sha256sum] = "265a149c7e0c1ebfe019bbe0226f8c1f6474811054d45
 
 SRC_URI = "git://github.com/xbmc/xbmc.git;protocol=https;branch=Omega \
            https://archive.apache.org/dist/groovy/${PV_groovy}/distribution/apache-groovy-binary-${PV_groovy}.zip;name=groovy \
-           https://dlcdn.apache.org/commons/lang/binaries/commons-lang3-${PV_commons-lang3}-bin.tar.gz;name=commons-lang \
+           https://mirrors.huaweicloud.com/apache/commons/lang/binaries/commons-lang3-${PV_commons-lang3}-bin.tar.gz;name=commons-lang \
            https://dlcdn.apache.org/commons/text/binaries/commons-text-${PV_commons-text}-bin.tar.gz;name=commons-text \
            file://0001-flatbuffers-21.patch \
            file://0002-readd-Touchscreen-settings.patch \
