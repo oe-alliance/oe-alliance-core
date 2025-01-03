@@ -8,7 +8,7 @@ ALLOW_EMPTY:${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r9"
+PR = "r10"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
@@ -40,6 +40,7 @@ RDEPENDS:${PN} = "\
     ${PYTHON_PN}-future \
     ${PYTHON_PN}-pexpect \
     ${PYTHON_PN}-six \
+    ${PYTHON_PN}-trio \
     rtmpdump \
     zip \
     ${@bb.utils.contains_any("FLASHSIZE", "64 96", "", " \
