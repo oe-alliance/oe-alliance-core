@@ -2,8 +2,3 @@ PACKAGECONFIG:append = " \
     cdio dvdread \
 "
 PACKAGE_NO_LOCALE = "1"
-
-PV = "1.24.10"
- 
-SRC_URI[md5sum] = "ac9685bcd9ae4e0d7a760a7e3185d560"
-SRC_URI[sha256sum] = "9df6fd85a7256241efbb25f84b337575e3b345266f5dab3849371e4694779f18"
