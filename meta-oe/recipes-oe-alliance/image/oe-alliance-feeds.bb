@@ -37,7 +37,6 @@ RDEPENDS:${PN} = " \
     enigma2-plugin-extensions-bouquetcleanup \
     enigma2-plugin-extensions-e2m3u2bouquet \
     enigma2-plugin-extensions-e2piconizer \
-    enigma2-plugin-extensions-et-portal \
     enigma2-plugin-extensions-gerbera \
     enigma2-plugin-extensions-bouquetmakerxtream \
     enigma2-plugin-extensions-jediepgxtream \
