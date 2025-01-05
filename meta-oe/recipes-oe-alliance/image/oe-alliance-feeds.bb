@@ -129,7 +129,7 @@ RDEPENDS:${PN} = " \
     openssh \
     openvpn \
     easy-rsa \
-    p7zip \
+    7zip \
     packagegroup-base-samba \
     parted \
     patchelf \

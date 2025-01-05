@@ -7,7 +7,7 @@ LICENSE = "GPL-2.0-only"
 require conf/license/license-gplv2.inc
 require conf/python/python3-compileall.inc
 
-RDEPENDS:${PN} = "p7zip"
+RDEPENDS:${PN} = "7zip"
 
 inherit gitpkgv gettext
 

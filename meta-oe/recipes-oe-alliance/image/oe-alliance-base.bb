@@ -41,7 +41,7 @@ RDEPENDS:${PN} = "\
     parted \
     procps \
     rc-local \
-    p7zip \
+    7zip \
     packagegroup-base \
     packagegroup-core-boot \
     util-linux-sfdisk \

@@ -17,7 +17,7 @@ RDEPENDS:${PN} = "\
     python3-jaraco.functools python3-jaraco.collections python3-jaraco.text python3-jaraco.classes python3-sabctools python3-apprise \
     "
 
-RRECOMMENDS:${PN} = "par2cmdline unrar p7zip-full"
+RRECOMMENDS:${PN} = "par2cmdline unrar 7zip-full"
 
 SRC_URI = "https://github.com/sabnzbd/sabnzbd/releases/download/4.4.1/SABnzbd-4.4.1-src.tar.gz \
     file://sabnzbd \
