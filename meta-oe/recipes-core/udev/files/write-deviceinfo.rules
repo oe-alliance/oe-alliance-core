@@ -1,3 +1,3 @@
-SUBSYSTEM=="block", ACTION=="add", ENV{ID_FS_TYPE}!="", RUN+="/etc/udev/scripts/device-info.sh add $env{DEVNAME} $env{ID_FS_UUID} $env{ID_FS_TYPE} $env{ID_PART_ENTRY_SIZE}"
+SUBSYSTEM=="block", ACTION=="add", ENV{ID_FS_TYPE}!="", RUN+="/etc/udev/scripts/device-info.sh add $env{DEVNAME} $env{ID_FS_UUID} $env{ID_FS_TYPE} $env{ID_PART_ENTRY_SIZE} $env{ID_FS_LABEL}"
 SUBSYSTEM=="block", ACTION=="remove", RUN+="/etc/udev/scripts/device-info.sh remove $env{DEVNAME}"
-SUBSYSTEM=="block", ACTION=="change", ENV{ID_FS_TYPE}!="", RUN+="/etc/udev/scripts/device-info.sh change $env{DEVNAME} $env{ID_FS_UUID} $env{ID_FS_TYPE} $env{ID_PART_ENTRY_SIZE}"
+SUBSYSTEM=="block", ACTION=="change", ENV{ID_FS_TYPE}!="", RUN+="/etc/udev/scripts/device-info.sh change $env{DEVNAME} $env{ID_FS_UUID} $env{ID_FS_TYPE} $env{ID_PART_ENTRY_SIZE} $env{ID_FS_LABEL}"

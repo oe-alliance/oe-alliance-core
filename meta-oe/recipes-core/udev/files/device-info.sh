@@ -5,9 +5,11 @@ DEV=$2
 UUID=$3
 FSTYPE=$4
 SIZE=$5
+LABEL=$6
 FSTYPE_DIR="/dev/fstype"
 UUID_DIR="/dev/uuid"
 SIZE_DIR="/dev/size"
+LABEL_DIR="/dev/label"
 BASENAME=$(basename "$DEV")
 DEVBASE=${BASENAME:0:7}
 if [ ! -d /sys/block/${DEVBASE} ]; then
@@ -16,6 +18,7 @@ fi
 UUID_FILE="$UUID_DIR/$BASENAME"
 FSTYPE_FILE="$FSTYPE_DIR/$BASENAME"
 SIZE_FILE="$SIZE_DIR/$BASENAME"
+LABEL_FILE="$LABEL_DIR/$BASENAME"
 
 if [ -z "$SIZE" ]; then
 	if [ -f "/sys/block/$DEVBASE/$BASENAME/size" ]; then
@@ -30,6 +33,7 @@ case "$ACTION" in
     mkdir -p "$FSTYPE_DIR"
     mkdir -p "$UUID_DIR"
     mkdir -p "$SIZE_DIR"
+    mkdir -p "$LABEL_DIR"
     if [ -n "$UUID" ]; then
       echo "$UUID" > "$UUID_FILE"
     fi
@@ -39,6 +43,7 @@ case "$ACTION" in
     if [ -n "$SIZE" ]; then
       echo "$SIZE" > "$SIZE_FILE"
     fi
+    echo "$LABEL" > "$LABEL_FILE"
     ;;
   remove)
     if [ -f "$UUID_FILE" ]; then
@@ -49,6 +54,9 @@ case "$ACTION" in
     fi
     if [ -f "$SIZE_FILE" ]; then
       rm -f "$SIZE_FILE"
+    fi
+    if [ -f "$LABEL_FILE" ]; then
+      rm -f "$LABEL_FILE"
     fi
     ;;
 esac
