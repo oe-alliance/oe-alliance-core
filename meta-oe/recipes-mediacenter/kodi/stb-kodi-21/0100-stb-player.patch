@@ -1,7 +1,7 @@
-From b06207c8e5878fa85d8ea1710d97d9c5a5dcb0f1 Mon Sep 17 00:00:00 2001
+From a83cad86f05771c67577ed2779a8ec04395a0c87 Mon Sep 17 00:00:00 2001
 From: luisteraar/listener <fake@fake.com>
-Date: Sat, 14 Dec 2024 17:11:36 +0100
-Subject: [PATCH] STBsink
+Date: Sun, 5 Jan 2025 11:35:27 +0100
+Subject: [PATCH 16/16] STBsink
 
 ---
  .../resources/strings.po                      |  11 +
@@ -33,16 +33,13 @@ Subject: [PATCH] STBsink
  xbmc/cores/DvbPlayer/STBplayer/wmv.c          | 190 ++++
  xbmc/cores/DvbPlayer/STBplayer/writer.c       | 377 +++++++
  xbmc/cores/DvbPlayer/STBplayer/writer.h       | 280 +++++
- xbmc/cores/VideoPlayer/VideoPlayer.cpp        |  40 +-
- xbmc/cores/VideoPlayer/VideoPlayer.h          |   7 +
- xbmc/cores/VideoPlayer/VideoPlayerAudio.cpp   |   2 +-
- xbmc/cores/VideoPlayer/VideoPlayerAudio.h     |   2 +-
- xbmc/cores/VideoPlayer/VideoPlayerVideo.cpp   |   3 +-
- xbmc/cores/VideoPlayer/VideoPlayerVideo.h     |   5 +-
+ xbmc/cores/VideoPlayer/VideoPlayer.cpp        |  27 +-
+ xbmc/cores/VideoPlayer/VideoPlayer.h          |   5 +
+ .../platform/linux/input/LibInputKeyboard.cpp |  18 +-
  xbmc/settings/SettingConditions.cpp           |   3 +
- xbmc/settings/Settings.h                      |   3 +
+ xbmc/settings/Settings.h                      |   1 +
  xbmc/windowing/egl/WinSystemSTBContext.cpp    |   4 +
- 38 files changed, 7017 insertions(+), 8 deletions(-)
+ 35 files changed, 7012 insertions(+), 2 deletions(-)
  create mode 100644 xbmc/cores/DvbPlayer/CMakeLists.txt
  create mode 100644 xbmc/cores/DvbPlayer/DvbCodecVideo.cpp
  create mode 100644 xbmc/cores/DvbPlayer/DvbCodecVideo.h
@@ -70,10 +67,10 @@ Subject: [PATCH] STBsink
  create mode 100644 xbmc/cores/DvbPlayer/STBplayer/writer.h
 
 diff --git a/addons/resource.language.en_gb/resources/strings.po b/addons/resource.language.en_gb/resources/strings.po
-index c99ae80f5dc..4fdb17916e7 100644
+index 4e0f3266998..56eeb56effa 100644
 --- a/addons/resource.language.en_gb/resources/strings.po
 +++ b/addons/resource.language.en_gb/resources/strings.po
-@@ -7486,6 +7486,17 @@ msgctxt "#13454"
+@@ -7600,6 +7600,17 @@ msgctxt "#13454"
  msgid "Enable this option to use hardware acceleration for the VP8 codec. If disabled the CPU will be used instead."
  msgstr ""
  
@@ -101,7 +98,7 @@ index d23939d314e..d1c714afedd 100644
  xbmc/cores/playercorefactory           cores/playercorefactory
 +xbmc/cores/DvbPlayer                   cores/dvbplayer
 diff --git a/system/settings/settings.xml b/system/settings/settings.xml
-index 432486fe6ec..12ea4b85d82 100755
+index d63843cf12e..26f7a77b012 100755
 --- a/system/settings/settings.xml
 +++ b/system/settings/settings.xml
 @@ -60,6 +60,12 @@
@@ -7217,21 +7214,20 @@ index 00000000000..4b4ae22b286
 + }
 +#endif
 diff --git a/xbmc/cores/VideoPlayer/VideoPlayer.cpp b/xbmc/cores/VideoPlayer/VideoPlayer.cpp
-index f3d3db772cc..50b2f6deb78 100644
+index c4ab6dcb948..4186dc18848 100644
 --- a/xbmc/cores/VideoPlayer/VideoPlayer.cpp
 +++ b/xbmc/cores/VideoPlayer/VideoPlayer.cpp
-@@ -61,6 +61,10 @@
+@@ -61,6 +61,9 @@
  #include "utils/log.h"
  #include "video/Bookmark.h"
  #include "video/VideoInfoTag.h"
 +#ifdef TARGET_STB
 +#include "cores/DvbPlayer/DvbPlayerVideo.h"
 +#endif
-+#include "windowing/GraphicContext.h"
+ #include "windowing/GraphicContext.h"
  #include "windowing/WinSystem.h"
  
- #include <iterator>
-@@ -578,9 +582,25 @@ void CVideoPlayer::CreatePlayers()
+@@ -599,12 +602,25 @@ void CVideoPlayer::CreatePlayers()
  {
    if (m_players_created)
      return;
@@ -7248,26 +7244,19 @@ index f3d3db772cc..50b2f6deb78 100644
 +  }
 +#else   
  
--  m_VideoPlayerVideo = new CVideoPlayerVideo(&m_clock, &m_overlayContainer, m_messenger, m_renderManager, *m_processInfo);
--  m_VideoPlayerAudio = new CVideoPlayerAudio(&m_clock, m_messenger, *m_processInfo);
-+  m_VideoPlayerVideo =
-+      new CVideoPlayerVideo(&m_clock, &m_overlayContainer, m_messenger, m_renderManager,
-+                            *m_processInfo, m_messageQueueTimeSize);
-+  m_VideoPlayerAudio =
-+      new CVideoPlayerAudio(&m_clock, m_messenger, *m_processInfo, m_messageQueueTimeSize);
+   m_VideoPlayerVideo =
+       new CVideoPlayerVideo(&m_clock, &m_overlayContainer, m_messenger, m_renderManager,
+                             *m_processInfo, m_messageQueueTimeSize);
+   m_VideoPlayerAudio =
+       new CVideoPlayerAudio(&m_clock, m_messenger, *m_processInfo, m_messageQueueTimeSize);
 +#endif
    m_VideoPlayerSubtitle = new CVideoPlayerSubtitle(&m_overlayContainer, *m_processInfo);
    m_VideoPlayerTeletext = new CDVDTeletextData(*m_processInfo);
    m_VideoPlayerRadioRDS = new CDVDRadioRDSData(*m_processInfo);
-@@ -634,6 +654,18 @@ CVideoPlayer::CVideoPlayer(IPlayerCallback& callback)
-   m_HasAudio = false;
-   m_UpdateStreamDetails = false;
+@@ -663,6 +679,13 @@ CVideoPlayer::CVideoPlayer(IPlayerCallback& callback)
  
-+  const int tenthsSeconds = CServiceBroker::GetSettingsComponent()->GetSettings()->GetInt(
-+      CSettings::SETTING_VIDEOPLAYER_QUEUETIMESIZE);
-+
-+  m_messageQueueTimeSize = static_cast<double>(tenthsSeconds) / 10.0;
-+
+   m_messageQueueTimeSize = static_cast<double>(tenthsSeconds) / 10.0;
+ 
 +#ifdef TARGET_STB
 +  m_stbplayer_mode		= CServiceBroker::GetSettingsComponent()->GetSettings()->GetBool(CSettings::SETTING_VIDEOPLAYER_USESTBPLAYER);
 +  m_use_stbcodec			= m_stbplayer_mode;
@@ -7278,7 +7267,7 @@ index f3d3db772cc..50b2f6deb78 100644
    m_SkipCommercials = true;
  
    m_processInfo.reset(CProcessInfo::CreateInstance());
-@@ -4971,7 +5003,9 @@ void CVideoPlayer::UpdatePlayState(double timeout)
+@@ -5011,7 +5034,9 @@ void CVideoPlayer::UpdatePlayState(double timeout)
    }
    else
    {
@@ -7290,79 +7279,57 @@ index f3d3db772cc..50b2f6deb78 100644
    }
  
 diff --git a/xbmc/cores/VideoPlayer/VideoPlayer.h b/xbmc/cores/VideoPlayer/VideoPlayer.h
-index 01cbca01197..6b927fb78ce 100644
+index 15465058300..d56e000fa31 100644
 --- a/xbmc/cores/VideoPlayer/VideoPlayer.h
 +++ b/xbmc/cores/VideoPlayer/VideoPlayer.h
-@@ -589,4 +589,11 @@ protected:
-   bool m_UpdateStreamDetails;
- 
+@@ -596,4 +596,9 @@ protected:
    std::atomic<bool> m_displayLost;
-+
-+  double m_messageQueueTimeSize{0.0};
+ 
+   double m_messageQueueTimeSize{0.0};
 +  bool m_stbplayer_mode;				// using hiplayer acceleration
 +#ifdef TARGET_STB
 +  bool m_use_stbcodec;
 +  friend class CDvbPlayerVideo;
 +#endif
  };
-diff --git a/xbmc/cores/VideoPlayer/VideoPlayerAudio.cpp b/xbmc/cores/VideoPlayer/VideoPlayerAudio.cpp
-index d7795f7311c..76365e057f1 100644
---- a/xbmc/cores/VideoPlayer/VideoPlayerAudio.cpp
-+++ b/xbmc/cores/VideoPlayer/VideoPlayerAudio.cpp
-@@ -44,7 +44,7 @@ public:
- };
+diff --git a/xbmc/platform/linux/input/LibInputKeyboard.cpp b/xbmc/platform/linux/input/LibInputKeyboard.cpp
+index a81525e017f..24c0ab3b567 100644
+--- a/xbmc/platform/linux/input/LibInputKeyboard.cpp
++++ b/xbmc/platform/linux/input/LibInputKeyboard.cpp
+@@ -437,7 +437,7 @@ void CLibInputKeyboard::ProcessKey(libinput_event_keyboard *e)
+   if (scancode > std::numeric_limits<unsigned char>::max())
+   {
+     // Kodi scancodes are limited to unsigned char, pretend the scancode is unknown on overflow
+-    scancode = 0;
++    // scancode = 0;//allow stb strange codes
+   }
  
+   // flush composer if set (after a finished sequence)
+@@ -481,6 +481,22 @@ void CLibInputKeyboard::ProcessKey(libinput_event_keyboard *e)
  
--CVideoPlayerAudio::CVideoPlayerAudio(CDVDClock* pClock, CDVDMessageQueue& parent, CProcessInfo &processInfo)
-+CVideoPlayerAudio::CVideoPlayerAudio(CDVDClock* pClock, CDVDMessageQueue& parent, CProcessInfo &processInfo, double messageQueueTimeSize)
- : CThread("VideoPlayerAudio"), IDVDStreamPlayerAudio(processInfo)
- , m_messageQueue("audio")
- , m_messageParent(parent)
-diff --git a/xbmc/cores/VideoPlayer/VideoPlayerAudio.h b/xbmc/cores/VideoPlayer/VideoPlayerAudio.h
-index f550cb8e636..6bb68af6899 100644
---- a/xbmc/cores/VideoPlayer/VideoPlayerAudio.h
-+++ b/xbmc/cores/VideoPlayer/VideoPlayerAudio.h
-@@ -30,7 +30,7 @@ class CDVDAudioCodec;
- class CVideoPlayerAudio : public CThread, public IDVDStreamPlayerAudio
+ XBMCKey CLibInputKeyboard::XBMCKeyForKeysym(xkb_keysym_t sym, uint32_t scancode)
  {
- public:
--  CVideoPlayerAudio(CDVDClock* pClock, CDVDMessageQueue& parent, CProcessInfo &processInfo);
-+  CVideoPlayerAudio(CDVDClock* pClock, CDVDMessageQueue& parent, CProcessInfo &processInfo, double messageQueueTimeSize);
-   ~CVideoPlayerAudio() override;
- 
-   bool OpenStream(CDVDStreamInfo hints) override;
-diff --git a/xbmc/cores/VideoPlayer/VideoPlayerVideo.cpp b/xbmc/cores/VideoPlayer/VideoPlayerVideo.cpp
-index c42f8f3dd7b..918dce2a73d 100644
---- a/xbmc/cores/VideoPlayer/VideoPlayerVideo.cpp
-+++ b/xbmc/cores/VideoPlayer/VideoPlayerVideo.cpp
-@@ -48,7 +48,8 @@ CVideoPlayerVideo::CVideoPlayerVideo(CDVDClock* pClock
-                                 ,CDVDOverlayContainer* pOverlayContainer
-                                 ,CDVDMessageQueue& parent
-                                 ,CRenderManager& renderManager
--                                ,CProcessInfo &processInfo)
-+                                ,CProcessInfo &processInfo
-+                                ,double messageQueueTimeSize)
- : CThread("VideoPlayerVideo")
- , IDVDStreamPlayerVideo(processInfo)
- , m_messageQueue("video")
-diff --git a/xbmc/cores/VideoPlayer/VideoPlayerVideo.h b/xbmc/cores/VideoPlayer/VideoPlayerVideo.h
-index d0c83172f07..dbb81baa2ba 100644
---- a/xbmc/cores/VideoPlayer/VideoPlayerVideo.h
-+++ b/xbmc/cores/VideoPlayer/VideoPlayerVideo.h
-@@ -48,8 +48,9 @@ public:
-   CVideoPlayerVideo(CDVDClock* pClock
-                  ,CDVDOverlayContainer* pOverlayContainer
-                  ,CDVDMessageQueue& parent
--                 ,CRenderManager& renderManager,
--                 CProcessInfo &processInfo);
-+                 ,CRenderManager& renderManager
-+                 ,CProcessInfo &processInfo
-+                 ,double messageQueueTimeSize);
-   ~CVideoPlayerVideo() override;
- 
-   bool OpenStream(CDVDStreamInfo hint) override;
++
++  if(scancode == 352){ //OK key
++     scancode = XKB_KEY_Return;
++     return XBMCK_RETURN;
++     }
++
++   if(scancode == 0x008b){ //menu key
++     scancode = XKB_KEY_Menu;
++     return XBMCK_MENU;
++     }
++
++   if(scancode == 0x00ae){ //exit key
++     scancode = XKB_KEY_BackSpace;
++     return XBMCK_BACKSPACE;
++     }
++
+   if (sym >= 'A' && sym <= 'Z')
+   {
+     return static_cast<XBMCKey> (sym + 'a' - 'A');
 diff --git a/xbmc/settings/SettingConditions.cpp b/xbmc/settings/SettingConditions.cpp
-index 1f11a4995ee..c2b34a9964f 100644
+index e4190a53f7e..28996d5076f 100644
 --- a/xbmc/settings/SettingConditions.cpp
 +++ b/xbmc/settings/SettingConditions.cpp
 @@ -408,6 +408,9 @@ void CSettingConditions::Initialize()
@@ -7376,10 +7343,10 @@ index 1f11a4995ee..c2b34a9964f 100644
    m_simpleConditions.emplace("have_libva");
  #endif
 diff --git a/xbmc/settings/Settings.h b/xbmc/settings/Settings.h
-index bfc5e6072cd..6916ec942fa 100644
+index adf040f49c0..0f4168984f5 100644
 --- a/xbmc/settings/Settings.h
 +++ b/xbmc/settings/Settings.h
-@@ -129,6 +129,7 @@ public:
+@@ -131,6 +131,7 @@ public:
    static constexpr auto SETTING_VIDEOPLAYER_USEVDPAUMPEG4 = "videoplayer.usevdpaumpeg4";
    static constexpr auto SETTING_VIDEOPLAYER_USEVDPAUVC1 = "videoplayer.usevdpauvc1";
    static constexpr auto SETTING_VIDEOPLAYER_USEDXVA2 = "videoplayer.usedxva2";
@@ -7387,15 +7354,6 @@ index bfc5e6072cd..6916ec942fa 100644
    static constexpr auto SETTING_VIDEOPLAYER_USEVTB = "videoplayer.usevtb";
    static constexpr auto SETTING_VIDEOPLAYER_USEPRIMEDECODER = "videoplayer.useprimedecoder";
    static constexpr auto SETTING_VIDEOPLAYER_USESTAGEFRIGHT = "videoplayer.usestagefright";
-@@ -136,6 +137,8 @@ public:
-   static constexpr auto SETTING_VIDEOPLAYER_SUPPORTMVC = "videoplayer.supportmvc";
-   static constexpr auto SETTING_VIDEOPLAYER_CONVERTDOVI = "videoplayer.convertdovi";
-   static constexpr auto SETTING_VIDEOPLAYER_ALLOWEDHDRFORMATS = "videoplayer.allowedhdrformats";
-+  static constexpr auto SETTING_VIDEOPLAYER_QUEUETIMESIZE = "videoplayer.queuetimesize";
-+  static constexpr auto SETTING_VIDEOPLAYER_QUEUEDATASIZE = "videoplayer.queuedatasize";
-   static constexpr auto SETTING_MYVIDEOS_SELECTACTION = "myvideos.selectaction";
-   static constexpr auto SETTING_MYVIDEOS_SELECTDEFAULTVERSION = "myvideos.selectdefaultversion";
-   static constexpr auto SETTING_MYVIDEOS_PLAYACTION = "myvideos.playaction";
 diff --git a/xbmc/windowing/egl/WinSystemSTBContext.cpp b/xbmc/windowing/egl/WinSystemSTBContext.cpp
 index 3b4e3e8d661..337b53cb70f 100644
 --- a/xbmc/windowing/egl/WinSystemSTBContext.cpp
@@ -7422,5 +7380,5 @@ index 3b4e3e8d661..337b53cb70f 100644
  #endif
    return true;
 -- 
-2.45.2
+2.43.0
 
