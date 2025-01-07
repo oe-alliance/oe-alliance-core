@@ -6,7 +6,7 @@
 
 MOUNT="/bin/mount"
 UMOUNT="/bin/umount"
-LOG="/tmp/mount.log"
+LOG="/var/volatile/log/udev.log"
 
 # File for known devices
 KNOWN_DEVICES_FILE="/etc/udev/known_devices"
@@ -40,7 +40,7 @@ unlock() {
 
 log() {
 	# comment to enable logging
-	if [ ! -f /dev/mount.debug ]; then
+	if [ ! -f /etc/udev/udev.debug ]; then
 		return
 	fi
 
