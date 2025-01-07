@@ -293,7 +293,7 @@ if [ "$ACTION" = "add" ]; then
 	# Check if the device is already in /etc/fstab
 	if grep -qs "$DEVNAME" /etc/fstab; then
 		log "Device $DEVNAME is already in /etc/fstab, skipping mount."
-		exit 0
+		#exit 0
 	fi
 
 	# Check if the device is already in /etc/fstab and UUID not empty
@@ -302,7 +302,7 @@ if [ "$ACTION" = "add" ]; then
 	else
 		if grep -qs "UUID=$ID_FS_UUID" /etc/fstab; then
 			log "UUID $ID_FS_UUID is already in /etc/fstab, skipping mount."
-			exit 0
+			#exit 0
 		fi
 	fi
 
