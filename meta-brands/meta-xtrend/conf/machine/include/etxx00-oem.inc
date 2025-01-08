@@ -62,7 +62,7 @@ MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS += "\
     kernel-module-cdfs \
 	${@bb.utils.contains('MACHINE_FEATURES', 'v3d', 'et-v3ddriver-${MACHINE}', '',d)} \
 	${@bb.utils.contains('MACHINE_FEATURES', 'v3d', 'platform-util-${MACHINE}', '',d)} \
-	${@bb.utils.contains_any('MACHINE_FEATURES', 'kodi21', 'mkswapdev-${MACHINE}', '',d)} \
+	${@bb.utils.contains_any('MACHINE_FEATURES', 'kodi22', 'mkswapdev-${MACHINE}', '',d)} \
     "
 
 MACHINE_EXTRA_RRECOMMENDS += " \
