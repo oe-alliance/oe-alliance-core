@@ -274,6 +274,11 @@ if [ "$ACTION" = "add" ]; then
 		MOUNTPOINT=""
 	fi
 
+	if [ ${name:0:2} == "sr" ]; then
+		log "CD/DVD Detectet. $DEVNAME"
+		exit 0
+	fi
+
 	if [ -z "$ID_FS_TYPE" ]; then
 		log "Filesystem not exist. $DEVNAME"
 	#	exit 0
