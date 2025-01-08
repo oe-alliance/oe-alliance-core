@@ -377,6 +377,11 @@ if [ "$ACTION" = "remove" ] || [ "$ACTION" = "change" ] && [ -x "$UMOUNT" ] && [
 		$UMOUNT $mnt
 	done
 
+	if [ ${name:0:2} == "sr" ]; then
+		log "CD/DVD Detectet. $DEVNAME"
+		exit 0
+	fi
+
 	LABEL=`echo $mnt | cut -c 8-`
 	log "!" "remove device $LABEL"
 	samba_share "/media/$LABEL" ""
