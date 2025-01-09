@@ -6,7 +6,7 @@
 
 MOUNT="/bin/mount"
 UMOUNT="/bin/umount"
-LOG="/var/volatile/log/udev.log"
+LOG="/tmp/udev.log"
 
 # File for known devices
 KNOWN_DEVICES_FILE="/etc/udev/known_devices"
@@ -296,18 +296,18 @@ if [ "$ACTION" = "add" ]; then
 		exit 0
 	fi
 	# Check if the device is already in /etc/fstab
-	if grep -qs "$DEVNAME" /etc/fstab; then
+	if grep -qs "$DEVNAME" /etc/fstab && ! ps aux | grep -v grep | grep -q enigma2; then
 		log "Device $DEVNAME is already in /etc/fstab, skipping mount."
-		#exit 0
+		exit 0
 	fi
 
 	# Check if the device is already in /etc/fstab and UUID not empty
 	if [ -z "$ID_FS_UUID" ]; then
 		log "UUID is empty, skipping /etc/fstab check."
 	else
-		if grep -qs "UUID=$ID_FS_UUID" /etc/fstab; then
+		if grep -qs "UUID=$ID_FS_UUID" /etc/fstab && ! ps aux | grep -v grep | grep -q enigma2; then
 			log "UUID $ID_FS_UUID is already in /etc/fstab, skipping mount."
-			#exit 0
+			exit 0
 		fi
 	fi
 
@@ -376,6 +376,7 @@ if [ "$ACTION" = "remove" ] || [ "$ACTION" = "change" ] && [ -x "$UMOUNT" ] && [
 	do
 		$UMOUNT $mnt
 	done
+	
 
 	if [ ${name:0:2} == "sr" ]; then
 		log "CD/DVD Detectet. $DEVNAME"
