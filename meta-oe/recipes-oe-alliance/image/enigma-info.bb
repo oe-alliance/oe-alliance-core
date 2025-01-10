@@ -197,6 +197,9 @@ do_install() {
     printf "mtdbootfs='${MTD_BOOTFS}'\n" >> ${D}${INFOFILE}
     printf "mtdkernel='${MTD_KERNEL}'\n" >> ${D}${INFOFILE}
     printf "mtdrootfs='${MTD_ROOTFS}'\n" >> ${D}${INFOFILE}
+    if [ -z "${MTD_BLACK}" ]; then
+        MTD_BLACK="mtd"
+    fi
     printf "mtdblack='${MTD_BLACK}'\n" >> ${D}${INFOFILE}
     printf "multilib=${HAVE_MULTILIB}\n" >> ${D}${INFOFILE}
     printf "multitranscoding=${HAVE_MULTITRANSCODING}\n" >> ${D}${INFOFILE}
