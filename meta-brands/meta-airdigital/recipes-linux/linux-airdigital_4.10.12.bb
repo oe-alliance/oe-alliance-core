@@ -15,7 +15,7 @@ SRC_URI[arm.sha256sum] = "67a3ac98727595a399d5c399d3b66a7fadbe8136ac517e08decba5
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR:append = "17"
+MACHINE_KERNEL_PR:append = "18"
 
 SRC_URI += "https://source.mynonpublic.com/zgemma/linux-${PV}-${ARCH}.tar.gz;name=${ARCH} \
     file://defconfig \
@@ -37,6 +37,7 @@ SRC_URI += "https://source.mynonpublic.com/zgemma/linux-${PV}-${ARCH}.tar.gz;nam
     file://0006-dvb-media-tda18250-support-for-new-silicon-tuner.patch \
     file://fix-multiple-defs-yyloc.patch \
     file://fix-build-with-binutils-2.41.patch \
+    file://Hauppauge-dualHD.patch \
     "
 
 SRC_URI:append:mipsel = " \
