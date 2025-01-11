@@ -1,3 +1,3 @@
 FILESEXTRAPATHS:append := "${THISDIR}/files"
 
-SRC_URI += "file://add-missing-keys.patch"
+#SRC_URI += "file://add-missing-keys.patch"
