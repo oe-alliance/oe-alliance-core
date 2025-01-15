@@ -1,13 +1,11 @@
-diff --git a/src/redsea.cc b/src/redsea.cc
-index 12ca917..eb75c2c 100644
---- a/src.redsea.cc
+--- a/src/redsea.cc
 +++ b/src/redsea.cc
-@@ -18,7 +18,7 @@
+@@ -19,7 +19,7 @@
  #include <iostream>
  #include <memory>
  
 -#include "config.h"
 +#include "../build/config.h"
  #include "src/channel.h"
- #include "src/common.h"
  #include "src/dsp/subcarrier.h"
+ #include "src/groups.h"
