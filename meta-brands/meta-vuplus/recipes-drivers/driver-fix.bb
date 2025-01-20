@@ -10,6 +10,9 @@ INITSCRIPT_PARAMS = "start 99 2 3 4 5 ."
 
 inherit pkgconfig update-rc.d
 
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
+
 do_install() {
     install -d ${D}/etc/init.d/
     install -m 0755 ${S}/driver_fix.sh ${D}/etc/init.d/driver_fix
