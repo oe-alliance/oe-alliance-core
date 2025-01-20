@@ -8,7 +8,7 @@ SRC_URI = "file://driver_fix.sh"
 INITSCRIPT_NAME = "driver_fix"
 INITSCRIPT_PARAMS = "start 99 2 3 4 5 ."
 
-inherit pkgconfig update-rc.d
+inherit update-rc.d
 
 S = "${WORKDIR}/sources"
 UNPACKDIR = "${S}"
