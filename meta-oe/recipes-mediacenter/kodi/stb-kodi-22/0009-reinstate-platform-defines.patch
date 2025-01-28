@@ -1,7 +1,7 @@
 From 29c1f8ad40ddaf1f4c0125a886664827b993a8c6 Mon Sep 17 00:00:00 2001
 From: Captain <openatv@gmail.com>
 Date: Sat, 18 May 2024 05:12:04 +0200
-Subject: [PATCH 09/14] reinstate-platform-defines
+Subject: [PATCH] reinstate-platform-defines
 
 ---
  cmake/scripts/common/ArchSetup.cmake | 4 ++++

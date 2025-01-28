@@ -1,7 +1,7 @@
 From ee64fa198bf25ac208e1706dd53d7ba2b77202f3 Mon Sep 17 00:00:00 2001
 From: Captain <openatv@gmail.com>
 Date: Sat, 18 May 2024 05:02:29 +0200
-Subject: [PATCH 03/14] shader-nopow-21
+Subject: [PATCH] shader-nopow-22
 
 ---
  .../shaders/GLES/2.0/gles_yuv2rgb_basic.frag  | 22 +++++++++++++++--

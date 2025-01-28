@@ -1,7 +1,7 @@
 From 01a708f99be106e4560e733c56b940dbf250c84c Mon Sep 17 00:00:00 2001
 From: Captain <openatv@gmail.com>
 Date: Sat, 18 May 2024 05:09:21 +0200
-Subject: [PATCH 07/14] adapt-window-system-registration
+Subject: [PATCH] adapt-window-system-registration
 
 ---
  xbmc/platform/linux/PlatformLinux.cpp | 12 ++++++++++++

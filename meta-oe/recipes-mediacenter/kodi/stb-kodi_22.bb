@@ -3,19 +3,20 @@ SUMMARY = "Kodi Media Center"
 LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://LICENSE.md;md5=7b423f1c9388eae123332e372451a4f7"
 
-FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}-21:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}-22:"
 
 PACKAGE_ARCH = "${MACHINE}"
 
 inherit ccache cmake gettext pkgconfig python3targetconfig
 
 DEPENDS += " \
+            autoconf-native automake-native \
             fmt \
             flatbuffers flatbuffers-native \
             fstrcmp \
             rapidjson \
             crossguid \
-            libdvdnav libdvdcss libdvdread libudfread \
+            libudfread \
             ffmpeg \
             git-native \
             curl-native \
@@ -56,7 +57,7 @@ DEPENDS += " \
             libxslt \
             lzo \
             mpeg2dec \
-            ${PYTHON_PN} \
+            python3 \
             samba \
             sqlite3 \
             taglib \
@@ -69,41 +70,47 @@ DEPENDS += " \
             gstreamer1.0-plugins-base \
           "
 inherit gitpkgv
-# 21.1 Omega
-SRCREV = "183eb85f108c3d8b44a578de80f575f27afe9b9a"
+# 22.0 Piers
+SRCREV = "12245d0921025b159f605d6d11b47a13f861657e"
 
 # 'patch' doesn't support binary diffs
 PATCHTOOL = "git"
 
 PR = "r0"
 
-PV = "21.0+gitr"
-PV_groovy = "4.0.20"
-PV_commons-lang3 = "3.14.0"
+PV = "22.0+gitr"
+PV_groovy = "4.0.23"
+PV_commons-lang3 = "3.17.0"
 PV_commons-text = "1.12.0"
 
-SRC_URI[groovy.sha256sum] = "fdf70cc57eff997f3fa5aee2b340d311593912e822ad810b3fd6ee403985eb75"
-SRC_URI[commons-lang.sha256sum] = "317c3e3fcd5fcca3781a7996ff1e0c50c13244ee961e94e5f6f6d84b84733b16"
+SRC_URI[groovy.sha256sum] = "7089dd7a1e84adc814d616f5ec2f7d7dac2044a0a0457f3341b3b92d30204229"
+SRC_URI[commons-lang.sha256sum] = "08b93712bed7f48725d93c44d70c71e7e661af390f22f0f3e6ba61e3af3cea36"
 SRC_URI[commons-text.sha256sum] = "265a149c7e0c1ebfe019bbe0226f8c1f6474811054d459145510ea2eed93a11a"
+SRC_URI[libdvdcss.sha256sum] = "f38c4a4e7a4f4da6d8e83b8852489aa3bb6588a915dc41f5ee89d9aad305a06e"
+SRC_URI[libdvdread.sha256sum] = "719130091e3adc9725ba72df808f24a14737a009dca5a4c38c601c0c76449b62"
+SRC_URI[libdvdnav.sha256sum] = "584f62a3896794408d46368e2ecf2c6217ab9c676ce85921b2d68b8961f49dfc"
 
-SRC_URI = "git://github.com/xbmc/xbmc.git;protocol=https;branch=Omega \
-           https://archive.apache.org/dist/groovy/${PV_groovy}/distribution/apache-groovy-binary-${PV_groovy}.zip;name=groovy \
-           https://mirrors.huaweicloud.com/apache/commons/lang/binaries/commons-lang3-${PV_commons-lang3}-bin.tar.gz;name=commons-lang \
-           https://mirrors.huaweicloud.com/apache/commons/text/binaries/commons-text-${PV_commons-text}-bin.tar.gz;name=commons-text \
-           file://0001-flatbuffers-21.patch \
+SRC_URI = "git://github.com/xbmc/xbmc.git;protocol=https;branch=master \
+           https://groovy.jfrog.io/artifactory/dist-release-local/groovy-zips/apache-groovy-binary-${PV_groovy}.zip;name=groovy \
+           https://dlcdn.apache.org/commons/lang/binaries/commons-lang3-${PV_commons-lang3}-bin.tar.gz;name=commons-lang \
+           https://dlcdn.apache.org/commons/text/binaries/commons-text-${PV_commons-text}-bin.tar.gz;name=commons-text \
+           https://github.com/xbmc/libdvdcss/archive/refs/tags/1.4.3-Next-Nexus-Alpha2-2.tar.gz;name=libdvdcss;downloadfilename=libdvdcss.tar.gz;unpack=0 \
+           https://github.com/xbmc/libdvdread/archive/refs/tags/6.1.3-Next-Nexus-Alpha2-2.tar.gz;name=libdvdread;downloadfilename=libdvdread.tar.gz;unpack=0 \
+           https://github.com/xbmc/libdvdnav/archive/refs/tags/6.1.1-Next-Nexus-Alpha2-2.tar.gz;name=libdvdnav;downloadfilename=libdvdnav.tar.gz;unpack=0 \
+           file://0001-flatbuffers-22.patch \
            file://0002-readd-Touchscreen-settings.patch \
-           file://0003-shader-nopow-21.patch \
-           file://0004-stb-settings-21.patch \
-           file://0005-stb-support-21.patch \
+           file://0003-shader-nopow-22.patch \
+           file://0004-stb-settings-22.patch \
+           file://0005-stb-support-22.patch \
            file://0006-add-winsystemfactory-windowing-init.patch \
            file://0007-adapt-window-system-registration.patch \
            file://0008-reinstate-system-h.patch \
            file://0009-reinstate-platform-defines.patch \
-           file://0010-FindLibDvd.cmake-build-with-external-source.patch \
-           file://0011-cmake-includedirs.patch \
-           file://0012-taglib2.patch \
-           file://0013-DVDDemuxFFmpeg-fixed-compile-against-ffmpeg-7.patch \
-           file://0100-stb-player.patch\
+           file://0010-older-gles.patch \
+           file://0011-FindSmbClient-dont-use-pkgconfig-includedir.patch \
+           file://0100-stb-player.patch \
+           ${@bb.utils.contains_any('MACHINE_FEATURES', 'hisil-3798mv200 hisil-3798mv310 hisi hisil', '' , 'file://0101-e2-player.patch', d)} \
+           ${@bb.utils.contains_any('MACHINE_FEATURES', 'hisil-3798mv200 hisil-3798mv310 hisi hisil', '' , 'file://0102-gst-player.patch', d)} \
           "
 
 S = "${WORKDIR}/git"
@@ -119,9 +126,9 @@ WINDOWSYSTEM ?= "stb"
 #https://github.com/xbmc/xbmc/commit/d159837cf736c9ba17772ba52e4ce95aa3625528
 APPRENDERSYSTEM ?= "gles"
 
-# TOOLCHAIN:arm ?= "clang"
+#TOOLCHAIN:arm ?= "clang"
 
-PACKAGECONFIG ?= "${ACCEL} ${WINDOWSYSTEM} pulseaudio lcms lto \
+PACKAGECONFIG ?= "${ACCEL} ${WINDOWSYSTEM} pulseaudio samba lcms lto \
                    ${@bb.utils.contains('TOOLCHAIN', 'clang', 'clang', '', d)} \
                    ${@bb.utils.contains('DISTRO_FEATURES', 'ld-is-lld', 'lld', '', d)} \
                    ${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'x11', '', d)} \
@@ -143,6 +150,7 @@ PACKAGECONFIG[vaapi] = "-DENABLE_VAAPI=ON,-DENABLE_VAAPI=OFF,libva"
 PACKAGECONFIG[vdpau] = "-DENABLE_VDPAU=ON,-DENABLE_VDPAU=OFF,libvdpau"
 PACKAGECONFIG[mysql] = "-DENABLE_MYSQLCLIENT=ON,-DENABLE_MYSQLCLIENT=OFF,mysql5"
 PACKAGECONFIG[pulseaudio] = "-DENABLE_PULSEAUDIO=ON,-DENABLE_PULSEAUDIO=OFF,pulseaudio"
+PACKAGECONFIG[samba] = ",,samba"
 PACKAGECONFIG[lcms] = ",,lcms"
 
 # Compilation tunes
@@ -152,6 +160,7 @@ PACKAGECONFIG[clang] = "-DENABLE_CLANGFORMAT=ON -DENABLE_CLANGTIDY=ON,-DENABLE_C
 PACKAGECONFIG[gold] = "-DENABLE_GOLD=ON,-DENABLE_GOLD=OFF"
 PACKAGECONFIG[lto] = "-DUSE_LTO=${@oe.utils.cpu_count()},-DUSE_LTO=OFF"
 
+CXXFLAGS:append:mipsarch = " -latomic"
 LDFLAGS += "${TOOLCHAIN_OPTIONS}"
 LDFLAGS:append:mipsarch = " -latomic"
 EXTRA_OECMAKE:append:mipsarch = " -DWITH_ARCH=${TARGET_ARCH}"
@@ -169,7 +178,7 @@ KODI_DISABLE_INTERNAL_LIBRARIES = " \
 # Allow downloads during internals build
 do_compile[network] = "1"
 
-# RUNTIME:arm ?= "llvm"
+#RUNTIME:arm ?= "llvm"
 
 RUNTIME_NM = "${@bb.utils.contains('RUNTIME', 'llvm', '${TARGET_PREFIX}llvm-nm', '${TARGET_PREFIX}gcc-nm', d)}"
 
@@ -201,9 +210,12 @@ EXTRA_OECMAKE = " \
     -Dgroovy_SOURCE_DIR=${UNPACKDIR}/groovy-${PV_groovy} \
     -Dapache-commons-lang_SOURCE_DIR=${UNPACKDIR}/commons-lang3-${PV_commons-lang3} \
     -Dapache-commons-text_SOURCE_DIR=${UNPACKDIR}/commons-text-${PV_commons-text} \
+    -DLIBDVDNAV_URL=${UNPACKDIR}/libdvdnav.tar.gz \
+    -DLIBDVDREAD_URL=${UNPACKDIR}/libdvdread.tar.gz \
+    -DLIBDVDCSS_URL=${UNPACKDIR}/libdvdcss.tar.gz \
 "
 
-OECMAKE_GENERATOR = "Unix Makefiles"
+OECMAKE_GENERATOR="Unix Makefiles"
 # PARALLEL_MAKE = " "
 
 FULL_OPTIMIZATION:armv7a = "-fomit-frame-pointer -O3 -ffast-math"
@@ -229,6 +241,7 @@ do_configure:prepend() {
 }
 
 INSANE_SKIP:${PN} = "rpaths already-stripped textrel"
+INSANE_SKIP = "src-uri-bad"
 
 FILES:${PN} = "${libdir}/kodi ${libdir}/xbmc"
 FILES:${PN} += "${bindir}/kodi ${bindir}/xbmc ${bindir}/kodi-TexturePacker"
@@ -247,28 +260,18 @@ RRECOMMENDS:${PN}:append = " libcec \
                              os-release \
                              ${@bb.utils.contains('PACKAGECONFIG', 'x11', 'xrandr xinit mesa-demos', '', d)} \
                              ${PYTHON_PN} \
-                             ${PYTHON_PN}-compression \
-                             ${PYTHON_PN}-crypt \
                              ${PYTHON_PN}-ctypes \
-                             ${PYTHON_PN}-datetime \
-                             ${PYTHON_PN}-db \
-                             ${PYTHON_PN}-image \
-                             ${PYTHON_PN}-difflib \
-                             ${PYTHON_PN}-html \
-                             ${PYTHON_PN}-json \
-                             ${PYTHON_PN}-mechanize \
-                             ${PYTHON_PN}-multiprocessing \
                              ${PYTHON_PN}-netclient \
-                             ${PYTHON_PN}-pillow \
-                             ${PYTHON_PN}-profile \
-                             ${PYTHON_PN}-pycryptodome \
-                             ${PYTHON_PN}-pycryptodomex \
-                             ${PYTHON_PN}-regex \
-                             ${PYTHON_PN}-setuptools \
+                             ${PYTHON_PN}-html \
+                             ${PYTHON_PN}-difflib \
+                             ${PYTHON_PN}-json \
                              ${PYTHON_PN}-shell \
-                             ${PYTHON_PN}-six \
                              ${PYTHON_PN}-sqlite3 \
+                             ${PYTHON_PN}-compression \
                              ${PYTHON_PN}-xmlrpc \
+                             ${PYTHON_PN}-pycryptodomex \
+                             ${PYTHON_PN}-mechanize \
+                             ${PYTHON_PN}-profile \
                              tzdata-africa \
                              tzdata-americas \
                              tzdata-antarctica \
@@ -279,8 +282,8 @@ RRECOMMENDS:${PN}:append = " libcec \
                              tzdata-europe \
                              tzdata-pacific \
                              xkeyboard-config \
-                             kodi-addon-inputstream-adaptive-omega \
-                             kodi-addon-inputstream-rtmp-omega \
+                             kodi-addon-inputstream-adaptive-piers \
+                             kodi-addon-inputstream-rtmp-piers \
                              alsa-plugins \
                            "
 

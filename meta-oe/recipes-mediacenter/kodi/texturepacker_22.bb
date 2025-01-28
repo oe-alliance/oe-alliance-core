@@ -3,7 +3,7 @@ LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM ?= "file:///${WORKDIR}/git/LICENSE.md;md5=7b423f1c9388eae123332e372451a4f7"
 
 SRCREV = "${AUTOREV}"
-PV = "21.0+gitr"
+PV = "22.0+gitr"
 SRC_URI = "git://github.com/xbmc/xbmc.git;protocol=https;branch=master"
 
 inherit cmake gettext python3-dir python3native

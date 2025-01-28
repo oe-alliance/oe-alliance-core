@@ -1,7 +1,7 @@
 From 1ad4b471387cd0fd8167a9db33a875e97dc8f862 Mon Sep 17 00:00:00 2001
 From: Captain <openatv@gmail.com>
 Date: Sat, 18 May 2024 05:10:43 +0200
-Subject: [PATCH 08/14] reinstate-system-h
+Subject: [PATCH] reinstate-system-h
 
 ---
  xbmc/system.h | 12 ++++++++++++

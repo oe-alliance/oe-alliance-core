@@ -1,7 +1,7 @@
 From 69da7de54e25dd5a7d700e86ec0fbd214c4371f4 Mon Sep 17 00:00:00 2001
 From: Captain <openatv@gmail.com>
 Date: Sat, 18 May 2024 04:56:50 +0200
-Subject: [PATCH 01/14] flatbuffers-21
+Subject: [PATCH] flatbuffers-22
 
 ---
  xbmc/cores/RetroPlayer/messages/savestate.fbs | 12 ++++++------

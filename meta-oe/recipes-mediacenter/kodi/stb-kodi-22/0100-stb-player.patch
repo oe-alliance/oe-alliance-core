@@ -1,7 +1,7 @@
 From a83cad86f05771c67577ed2779a8ec04395a0c87 Mon Sep 17 00:00:00 2001
 From: luisteraar/listener <fake@fake.com>
 Date: Sun, 5 Jan 2025 11:35:27 +0100
-Subject: [PATCH 16/16] STBsink
+Subject: [PATCH] STBsink
 
 ---
  .../resources/strings.po                      |  11 +
@@ -35,11 +35,11 @@ Subject: [PATCH 16/16] STBsink
  xbmc/cores/DvbPlayer/STBplayer/writer.h       | 280 +++++
  xbmc/cores/VideoPlayer/VideoPlayer.cpp        |  27 +-
  xbmc/cores/VideoPlayer/VideoPlayer.h          |   5 +
- .../platform/linux/input/LibInputKeyboard.cpp |  18 +-
+ .../platform/linux/input/LibInputKeyboard.cpp |  21 +
  xbmc/settings/SettingConditions.cpp           |   3 +
  xbmc/settings/Settings.h                      |   1 +
  xbmc/windowing/egl/WinSystemSTBContext.cpp    |   4 +
- 35 files changed, 7012 insertions(+), 2 deletions(-)
+ 35 files changed, 7016 insertions(+), 1 deletion(-)
  create mode 100644 xbmc/cores/DvbPlayer/CMakeLists.txt
  create mode 100644 xbmc/cores/DvbPlayer/DvbCodecVideo.cpp
  create mode 100644 xbmc/cores/DvbPlayer/DvbCodecVideo.h
@@ -67,10 +67,10 @@ Subject: [PATCH 16/16] STBsink
  create mode 100644 xbmc/cores/DvbPlayer/STBplayer/writer.h
 
 diff --git a/addons/resource.language.en_gb/resources/strings.po b/addons/resource.language.en_gb/resources/strings.po
-index 4e0f3266998..56eeb56effa 100644
+index 78140440268..7ccb115f039 100644
 --- a/addons/resource.language.en_gb/resources/strings.po
 +++ b/addons/resource.language.en_gb/resources/strings.po
-@@ -7600,6 +7600,17 @@ msgctxt "#13454"
+@@ -7618,6 +7618,17 @@ msgctxt "#13454"
  msgid "Enable this option to use hardware acceleration for the VP8 codec. If disabled the CPU will be used instead."
  msgstr ""
  
@@ -98,7 +98,7 @@ index d23939d314e..d1c714afedd 100644
  xbmc/cores/playercorefactory           cores/playercorefactory
 +xbmc/cores/DvbPlayer                   cores/dvbplayer
 diff --git a/system/settings/settings.xml b/system/settings/settings.xml
-index d63843cf12e..26f7a77b012 100755
+index 4a1ad930c9d..4d4f50ffe4b 100755
 --- a/system/settings/settings.xml
 +++ b/system/settings/settings.xml
 @@ -60,6 +60,12 @@
@@ -7214,7 +7214,7 @@ index 00000000000..4b4ae22b286
 + }
 +#endif
 diff --git a/xbmc/cores/VideoPlayer/VideoPlayer.cpp b/xbmc/cores/VideoPlayer/VideoPlayer.cpp
-index c4ab6dcb948..4186dc18848 100644
+index 32d7789febe..6a2dfc1d304 100644
 --- a/xbmc/cores/VideoPlayer/VideoPlayer.cpp
 +++ b/xbmc/cores/VideoPlayer/VideoPlayer.cpp
 @@ -61,6 +61,9 @@
@@ -7227,7 +7227,7 @@ index c4ab6dcb948..4186dc18848 100644
  #include "windowing/GraphicContext.h"
  #include "windowing/WinSystem.h"
  
-@@ -599,12 +602,25 @@ void CVideoPlayer::CreatePlayers()
+@@ -688,12 +691,25 @@ void CVideoPlayer::CreatePlayers()
  {
    if (m_players_created)
      return;
@@ -7253,7 +7253,7 @@ index c4ab6dcb948..4186dc18848 100644
    m_VideoPlayerSubtitle = new CVideoPlayerSubtitle(&m_overlayContainer, *m_processInfo);
    m_VideoPlayerTeletext = new CDVDTeletextData(*m_processInfo);
    m_VideoPlayerRadioRDS = new CDVDRadioRDSData(*m_processInfo);
-@@ -663,6 +679,13 @@ CVideoPlayer::CVideoPlayer(IPlayerCallback& callback)
+@@ -752,6 +768,13 @@ CVideoPlayer::CVideoPlayer(IPlayerCallback& callback)
  
    m_messageQueueTimeSize = static_cast<double>(tenthsSeconds) / 10.0;
  
@@ -7267,7 +7267,7 @@ index c4ab6dcb948..4186dc18848 100644
    m_SkipCommercials = true;
  
    m_processInfo.reset(CProcessInfo::CreateInstance());
-@@ -5011,7 +5034,9 @@ void CVideoPlayer::UpdatePlayState(double timeout)
+@@ -5098,7 +5121,9 @@ void CVideoPlayer::UpdatePlayState(double timeout)
    }
    else
    {
@@ -7293,19 +7293,22 @@ index 15465058300..d56e000fa31 100644
 +#endif
  };
 diff --git a/xbmc/platform/linux/input/LibInputKeyboard.cpp b/xbmc/platform/linux/input/LibInputKeyboard.cpp
-index a81525e017f..24c0ab3b567 100644
+index 985aefb148e..3827fdc41e5 100644
 --- a/xbmc/platform/linux/input/LibInputKeyboard.cpp
 +++ b/xbmc/platform/linux/input/LibInputKeyboard.cpp
-@@ -437,7 +437,7 @@ void CLibInputKeyboard::ProcessKey(libinput_event_keyboard *e)
-   if (scancode > std::numeric_limits<unsigned char>::max())
-   {
-     // Kodi scancodes are limited to unsigned char, pretend the scancode is unknown on overflow
--    scancode = 0;
-+    // scancode = 0;//allow stb strange codes
+@@ -434,6 +434,11 @@ void CLibInputKeyboard::ProcessKey(libinput_event_keyboard *e)
    }
  
+   const uint32_t scancode = libinput_event_keyboard_get_key(e);
++  if (scancode > std::numeric_limits<unsigned char>::max())
++  {
++    // Kodi scancodes are limited to unsigned char, pretend the scancode is unknown on overflow
++    // scancode = 0;//allow stb strange codes
++  }
+ 
    // flush composer if set (after a finished sequence)
-@@ -481,6 +481,22 @@ void CLibInputKeyboard::ProcessKey(libinput_event_keyboard *e)
+   if (flushComposer)
+@@ -476,6 +481,22 @@ void CLibInputKeyboard::ProcessKey(libinput_event_keyboard *e)
  
  XBMCKey CLibInputKeyboard::XBMCKeyForKeysym(xkb_keysym_t sym, uint32_t scancode)
  {
@@ -7329,7 +7332,7 @@ index a81525e017f..24c0ab3b567 100644
    {
      return static_cast<XBMCKey> (sym + 'a' - 'A');
 diff --git a/xbmc/settings/SettingConditions.cpp b/xbmc/settings/SettingConditions.cpp
-index e4190a53f7e..28996d5076f 100644
+index e450229e50b..522c2e65479 100644
 --- a/xbmc/settings/SettingConditions.cpp
 +++ b/xbmc/settings/SettingConditions.cpp
 @@ -408,6 +408,9 @@ void CSettingConditions::Initialize()
@@ -7343,7 +7346,7 @@ index e4190a53f7e..28996d5076f 100644
    m_simpleConditions.emplace("have_libva");
  #endif
 diff --git a/xbmc/settings/Settings.h b/xbmc/settings/Settings.h
-index adf040f49c0..0f4168984f5 100644
+index c3bff84a84e..1613133e766 100644
 --- a/xbmc/settings/Settings.h
 +++ b/xbmc/settings/Settings.h
 @@ -131,6 +131,7 @@ public:
@@ -7380,5 +7383,5 @@ index 3b4e3e8d661..337b53cb70f 100644
  #endif
    return true;
 -- 
-2.43.0
+2.47.1
 

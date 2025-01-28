@@ -1,7 +1,7 @@
 From 34e26c8174ba4646f6a4f8aa7a5561ce18f82647 Mon Sep 17 00:00:00 2001
 From: Captain <openatv@gmail.com>
 Date: Sat, 18 May 2024 05:07:54 +0200
-Subject: [PATCH 06/14] add-winsystemfactory-windowing-init
+Subject: [PATCH] add-winsystemfactory-windowing-init
 
 ---
  xbmc/windowing/egl/WinSystemSTBContext.cpp | 16 ++++++++++++++--

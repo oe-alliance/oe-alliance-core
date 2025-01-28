@@ -1,0 +1,51 @@
+From b97736fc13aea7903306c4fdd9a56ef968c6cf66 Mon Sep 17 00:00:00 2001
+From: NickerSK <nickersk@gmail.com>
+Date: Wed, 8 Jan 2025 18:37:36 +0000
+Subject: [PATCH] older gles
+
+---
+ xbmc/guilib/TextureGLES.h | 13 +++++++++++++
+ xbmc/utils/EGLUtils.h     |  3 +++
+ 2 files changed, 16 insertions(+)
+
+diff --git a/xbmc/guilib/TextureGLES.h b/xbmc/guilib/TextureGLES.h
+index fe7af24917a..3d13a570526 100644
+--- a/xbmc/guilib/TextureGLES.h
++++ b/xbmc/guilib/TextureGLES.h
+@@ -20,6 +20,19 @@ struct TextureFormat
+   GLenum type{GL_UNSIGNED_BYTE};
+ };
+ 
++#ifndef GL_RED
++#define GL_RED    0x1903
++#endif
++#ifndef GL_GREEN
++#define GL_GREEN  0x1904
++#endif
++#ifndef GL_BLUE
++#define GL_BLUE   0x1905
++#endif
++#ifndef GL_ALPHA
++#define GL_ALPHA  0x1906
++#endif
++
+ struct TextureSwizzle
+ {
+   GLint r{GL_RED};
+diff --git a/xbmc/utils/EGLUtils.h b/xbmc/utils/EGLUtils.h
+index 2fda9f690f2..93c16519818 100644
+--- a/xbmc/utils/EGLUtils.h
++++ b/xbmc/utils/EGLUtils.h
+@@ -243,6 +243,9 @@ private:
+   EGLContext m_eglUploadContext{EGL_NO_CONTEXT};
+   mutable CCriticalSection m_textureUploadLock;
+ 
++#ifndef PFNEGLSETDAMAGEREGIONKHRPROC
++  typedef EGLBoolean (EGLAPIENTRYP PFNEGLSETDAMAGEREGIONKHRPROC) (EGLDisplay dpy, EGLSurface surface, EGLint *rects, EGLint n_rects);
++#endif
+   PFNEGLSETDAMAGEREGIONKHRPROC m_eglSetDamageRegionKHR{nullptr};
+   bool m_partialUpdateSupport{false};
+   bool m_bufferAgeSupport{false};
+-- 
+2.47.1
+

@@ -4,7 +4,7 @@ LIC_FILES_CHKSUM = "file://JsonSchemaBuilder.cpp;beginline=2;endline=18;md5=1f67
 
 SRCREV = "${AUTOREV}"
 
-PV = "21.0+gitr"
+PV = "22.0+gitr"
 SRC_URI = "git://github.com/xbmc/xbmc.git;branch=master;protocol=https"
 
 inherit autotools-brokensep gettext native
