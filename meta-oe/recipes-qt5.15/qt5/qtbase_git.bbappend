@@ -14,8 +14,8 @@ SRC_URI += " \
 	${@bb.utils.contains('MACHINE_FEATURES', 'vu-eglfs', 'file://0001-Add-eglfs-libvupl-support-for-INTEGRITY.patch' , '', d)} \
 	${@bb.utils.contains('MACHINE_FEATURES', 'gb-eglfs', 'file://0001-eglfs-brcm-nexus-nx-platform.patch' , '', d)} \
 "
-DEPENDS:append = "${@bb.utils.contains('MACHINE_FEATURES', 'vu-eglfs', 'libvupl libgles' , '', d)}"
-RDEPENDS:${PN}:append = "${@bb.utils.contains('MACHINE_FEATURES', 'vu-eglfs', 'libvupl libgles' , '', d)}"
+DEPENDS:append = " ${@bb.utils.contains('MACHINE_FEATURES', 'vu-eglfs', 'libvupl libgles' , '', d)}"
+RDEPENDS:${PN}:append = " ${@bb.utils.contains('MACHINE_FEATURES', 'vu-eglfs', 'libvupl libgles' , '', d)}"
 
 PACKAGECONFIG_GL = " "
 PACKAGECONFIG_OPENSSL = "openssl"
