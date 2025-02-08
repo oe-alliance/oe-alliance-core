@@ -29,9 +29,9 @@ SRC_URI = "http://nodejs.org/dist/v${PV}/node-v${PV}.tar.xz \
            file://0001-mips-Use-32bit-cast-for-operand-on-mips32.patch \
            file://run-ptest \
            file://remove-distutils.patch \
+           file://fix-mips-build.patch \
+           file://0001-build-support-python-3.13.patch \
            "
-
-SRC_URI:append:mipsel = " file://fix-mips-build.patch"
 
 SRC_URI:append:class-target = " \
            file://0001-Using-native-binaries.patch \
@@ -42,7 +42,7 @@ SRC_URI:append:toolchain-clang:x86 = " \
 SRC_URI:append:toolchain-clang:powerpc64le = " \
            file://0001-ppc64-Do-not-use-mminimal-toc-with-clang.patch \
            "
-SRC_URI[sha256sum] = "f215cf03d0f00f07ac0b674c6819f804c1542e16f152da04980022aeccf5e65a"
+SRC_URI[sha256sum] = "c669b48b632fa6797d4f5fa7bbd2b476ec961120957864402226cc9fd8ebbc0e"
 
 S = "${WORKDIR}/node-v${PV}"
 

@@ -1,0 +1,40 @@
+From 92896945b88dc07c2b375955abfc3fe49dff4005 Mon Sep 17 00:00:00 2001
+From: Chengzhong Wu <chengzhong.wcz@alibaba-inc.com>
+Date: Thu, 30 May 2024 23:09:16 +0100
+Subject: [PATCH] build: support python 3.13
+
+PR-URL: https://github.com/nodejs/node/pull/53190
+Reviewed-By: Moshe Atlow <moshe@atlow.co.il>
+Reviewed-By: Christian Clauss <cclauss@me.com>
+Reviewed-By: Marco Ippolito <marcoippolito54@gmail.com>
+Reviewed-By: Mohammed Keyvanzadeh <mohammadkeyvanzade94@gmail.com>
+Reviewed-By: Luigi Pinca <luigipinca@gmail.com>
+Reviewed-By: Yagiz Nizipli <yagiz.nizipli@sentry.io>
+---
+ configure | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/configure b/configure
+index 711a3014b9..29ebe882b0 100755
+--- a/configure
++++ b/configure
+@@ -4,6 +4,7 @@
+ # Note that the mix of single and double quotes is intentional,
+ # as is the fact that the ] goes on a new line.
+ _=[ 'exec' '/bin/sh' '-c' '''
++command -v python3.13 >/dev/null && exec python3.13 "$0" "$@"
+ command -v python3.12 >/dev/null && exec python3.12 "$0" "$@"
+ command -v python3.11 >/dev/null && exec python3.11 "$0" "$@"
+ command -v python3.10 >/dev/null && exec python3.10 "$0" "$@"
+@@ -24,7 +25,7 @@ except ImportError:
+   from distutils.spawn import find_executable as which
+ 
+ print('Node.js configure: Found Python {}.{}.{}...'.format(*sys.version_info))
+-acceptable_pythons = ((3, 12), (3, 11), (3, 10), (3, 9), (3, 8), (3, 7), (3, 6))
++acceptable_pythons = ((3, 13), (3, 12), (3, 11), (3, 10), (3, 9), (3, 8), (3, 7), (3, 6))
+ if sys.version_info[:2] in acceptable_pythons:
+   import configure
+ else:
+-- 
+2.45.2.windows.1
+
