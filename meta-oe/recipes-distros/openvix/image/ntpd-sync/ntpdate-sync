@@ -16,8 +16,9 @@ if [ "$METHOD" = loopback ]; then
 fi
 
 # Avoid running more than one at a time
+# Don't use /var/lock, as it might not yet be there if running udev.
 #
-LOCKFILE=/var/lock/ntpdate
+LOCKFILE=/tmp/lock-ntpdate
 TFILE=$LOCKFILE.$$
 
 touch $TFILE
