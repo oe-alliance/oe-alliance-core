@@ -35,6 +35,13 @@ INHIBIT_DEFAULT_DEPS = "1"
 
 inherit image
 
+image_preprocess() {
+    # Set root password to blank
+    sed 's%^root:[^:]*:%root::%' < ${IMAGE_ROOTFS}/etc/shadow > ${IMAGE_ROOTFS}/etc/shadow.new
+    mv ${IMAGE_ROOTFS}/etc/shadow.new ${IMAGE_ROOTFS}/etc/shadow
+}
+IMAGE_PREPROCESS_COMMAND += "image_preprocess; "
+
 do_package_index[nostamp] = "1"
 do_package_index[depends] += "${PACKAGEINDEXDEPS}"
 
