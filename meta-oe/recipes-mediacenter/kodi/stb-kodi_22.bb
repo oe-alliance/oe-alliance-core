@@ -108,9 +108,7 @@ SRC_URI = "git://github.com/xbmc/xbmc.git;protocol=https;branch=master \
            file://0009-reinstate-platform-defines.patch \
            file://0010-older-gles.patch \
            file://0011-FindSmbClient-dont-use-pkgconfig-includedir.patch \
-           file://0100-stb-player.patch \
-           ${@bb.utils.contains_any('MACHINE_FEATURES', 'hisil-3798mv200 hisil-3798mv310 hisi hisil', '' , 'file://0101-e2-player.patch', d)} \
-           ${@bb.utils.contains_any('MACHINE_FEATURES', 'hisil-3798mv200 hisil-3798mv310 hisi hisil', '' , 'file://0102-gst-player.patch', d)} \
+           file://0012-stb-player.patch \
           "
 
 S = "${WORKDIR}/git"
