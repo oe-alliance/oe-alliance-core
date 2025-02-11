@@ -1,15 +1,15 @@
 DESCRIPTION = "nodeJS Evented I/O for V8 JavaScript"
 HOMEPAGE = "http://nodejs.org"
 LICENSE = "MIT & ISC & BSD-2-Clause & BSD-3-Clause & Artistic-2.0 & Apache-2.0"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=bc1f9ebe76be76f163e3b675303ad9cd"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=ce095b5cae771b11878190eaea818d59"
 
 CVE_PRODUCT = "nodejs node.js"
 
-DEPENDS = "openssl file-replacement-native python3-packaging-native"
+DEPENDS = "openssl openssl-native file-replacement-native python3-packaging-native"
 DEPENDS:append:class-target = " qemu-native"
 DEPENDS:append:class-native = " c-ares-native"
 
-inherit pkgconfig python3native qemu ptest
+inherit pkgconfig python3native qemu ptest siteinfo
 
 COMPATIBLE_MACHINE:armv4 = "(!.*armv4).*"
 COMPATIBLE_MACHINE:armv5 = "(!.*armv5).*"
@@ -28,7 +28,6 @@ SRC_URI = "http://nodejs.org/dist/v${PV}/node-v${PV}.tar.xz \
            file://0001-liftoff-Correct-function-signatures.patch \
            file://0001-mips-Use-32bit-cast-for-operand-on-mips32.patch \
            file://run-ptest \
-           file://remove-distutils.patch \
            file://fix-mips-build.patch \
            file://0001-build-support-python-3.13.patch \
            "
@@ -45,6 +44,8 @@ SRC_URI:append:toolchain-clang:powerpc64le = " \
 SRC_URI[sha256sum] = "c669b48b632fa6797d4f5fa7bbd2b476ec961120957864402226cc9fd8ebbc0e"
 
 S = "${WORKDIR}/node-v${PV}"
+
+CVE_PRODUCT += "node.js"
 
 # v8 errors out if you have set CCACHE
 CCACHE = ""
@@ -70,27 +71,13 @@ ARCHFLAGS ?= ""
 
 PACKAGECONFIG ??= "ares brotli icu zlib"
 
-PACKAGECONFIG[ares] = "--shared-cares,,c-ares"
-PACKAGECONFIG[brotli] = "--shared-brotli,,brotli"
-PACKAGECONFIG[icu] = "--with-intl=system-icu,--without-intl,icu"
+PACKAGECONFIG[ares] = "--shared-cares,,c-ares c-ares-native"
+PACKAGECONFIG[brotli] = "--shared-brotli,,brotli brotli-native"
+PACKAGECONFIG[icu] = "--with-intl=system-icu,--without-intl,icu icu-native"
 PACKAGECONFIG[libuv] = "--shared-libuv,,libuv"
 PACKAGECONFIG[nghttp2] = "--shared-nghttp2,,nghttp2"
 PACKAGECONFIG[shared] = "--shared"
 PACKAGECONFIG[zlib] = "--shared-zlib,,zlib"
-
-# We don't want to cross-compile during target compile,
-# and we need to use the right flags during host compile,
-# too.
-EXTRA_OEMAKE = "\
-    CC.host='${CC} -pie -fPIE' \
-    CFLAGS.host='${CPPFLAGS} ${CFLAGS}' \
-    CXX.host='${CXX} -pie -fPIE' \
-    CXXFLAGS.host='${CPPFLAGS} ${CXXFLAGS}' \
-    LDFLAGS.host='${LDFLAGS}' \
-    AR.host='${AR}' \
-    \
-    builddir_name=./ \
-"
 
 EXTRANATIVEPATH += "file-native"
 
@@ -114,9 +101,11 @@ do_unpack[postfuncs] += "prune_sources"
 # V8's JIT infrastructure requires binaries such as mksnapshot and
 # mkpeephole to be run in the host during the build. However, these
 # binaries must have the same bit-width as the target (e.g. a x86_64
-# host targeting ARMv6 needs to produce a 32-bit binary). Instead of
-# depending on a third Yocto toolchain, we just build those binaries
-# for the target and run them on the host with QEMU.
+# host targeting ARMv6 needs to produce a 32-bit binary).
+# 1. If host and target have the different bit width, run those
+#    binaries for the target and run them on the host with QEMU.
+# 2. If host and target have the same bit width, enable upstream
+#    cross compile support and no QEMU 
 python do_create_v8_qemu_wrapper () {
     """Creates a small wrapper that invokes QEMU to run some target V8 binaries
     on the host."""
@@ -124,6 +113,10 @@ python do_create_v8_qemu_wrapper () {
                     d.expand('${STAGING_DIR_HOST}${base_libdir}')]
     qemu_cmd = qemu_wrapper_cmdline(d, d.getVar('STAGING_DIR_HOST'),
                                     qemu_libdirs)
+
+    if d.getVar("HOST_AND_TARGET_SAME_WIDTH") == "1":
+        qemu_cmd = ""
+
     wrapper_path = d.expand('${B}/v8-qemu-wrapper.sh')
     with open(wrapper_path, 'w') as wrapper_file:
         wrapper_file.write("""#!/bin/sh
@@ -141,6 +134,14 @@ do_create_v8_qemu_wrapper[dirs] = "${B}"
 addtask create_v8_qemu_wrapper after do_configure before do_compile
 
 LDFLAGS:append:x86 = " -latomic"
+
+export CC_host
+export CFLAGS_host
+export CXX_host
+export CXXFLAGS_host
+export LDFLAGS_host
+export AR_host
+export HOST_AND_TARGET_SAME_WIDTH
 
 CROSS_FLAGS = "--cross-compiling"
 CROSS_FLAGS:class-native = "--no-cross-compiling"
@@ -184,5 +185,37 @@ RDEPENDS:${PN}-npm = "bash python3-core python3-shell python3-datetime \
 
 PACKAGES =+ "${PN}-systemtap"
 FILES:${PN}-systemtap = "${datadir}/systemtap"
+
+do_configure[prefuncs] += "set_gyp_variables"
+do_compile[prefuncs] += "set_gyp_variables"
+do_install[prefuncs] += "set_gyp_variables"
+python set_gyp_variables () {
+    if d.getVar("HOST_AND_TARGET_SAME_WIDTH") == "0":
+        # We don't want to cross-compile during target compile,
+        # and we need to use the right flags during host compile,
+        # too.
+        d.setVar("CC_host", d.getVar("CC") + " -pie -fPIE")
+        d.setVar("CFLAGS_host", d.getVar("CFLAGS"))
+        d.setVar("CXX_host", d.getVar("CXX") + " -pie -fPIE")
+        d.setVar("CXXFLAGS_host", d.getVar("CXXFLAGS"))
+        d.setVar("LDFLAGS_host", d.getVar("LDFLAGS"))
+        d.setVar("AR_host", d.getVar("AR"))
+    elif d.getVar("HOST_AND_TARGET_SAME_WIDTH") == "1":
+        # Enable upstream cross compile support
+        d.setVar("CC_host", d.getVar("BUILD_CC"))
+        d.setVar("CFLAGS_host", d.getVar("BUILD_CFLAGS"))
+        d.setVar("CXX_host", d.getVar("BUILD_CXX"))
+        d.setVar("CXXFLAGS_host", d.getVar("BUILD_CXXFLAGS"))
+        d.setVar("LDFLAGS_host", d.getVar("BUILD_LDFLAGS"))
+        d.setVar("AR_host", d.getVar("BUILD_AR"))
+}
+
+python __anonymous () {
+    # 32 bit target and 64 bit host (x86-64 or aarch64) have different bit width
+    if d.getVar("SITEINFO_BITS") == "32" and "64" in d.getVar("BUILD_ARCH"):
+        d.setVar("HOST_AND_TARGET_SAME_WIDTH", "0")
+    else:
+        d.setVar("HOST_AND_TARGET_SAME_WIDTH", "1")
+}
 
 BBCLASSEXTEND = "native"
