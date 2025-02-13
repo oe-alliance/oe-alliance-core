@@ -76,7 +76,7 @@ SRCREV = "12245d0921025b159f605d6d11b47a13f861657e"
 # 'patch' doesn't support binary diffs
 PATCHTOOL = "git"
 
-PR = "r0"
+PR = "r1"
 
 PV = "22.0+gitr"
 PV_groovy = "4.0.23"
@@ -108,6 +108,7 @@ SRC_URI = "git://github.com/xbmc/xbmc.git;protocol=https;branch=master \
            file://0009-reinstate-platform-defines.patch \
            file://0010-older-gles.patch \
            file://0011-FindSmbClient-dont-use-pkgconfig-includedir.patch \
+           file://0012-libinput-disable-udev.patch \
            file://0100-stb-player.patch \
            ${@bb.utils.contains_any('MACHINE_FEATURES', 'hisil-3798mv200 hisil-3798mv310 hisi hisil', '' , 'file://0101-e2-player.patch', d)} \
            ${@bb.utils.contains_any('MACHINE_FEATURES', 'hisil-3798mv200 hisil-3798mv310 hisi hisil', '' , 'file://0102-gst-player.patch', d)} \

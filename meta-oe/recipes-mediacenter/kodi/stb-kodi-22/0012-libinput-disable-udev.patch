@@ -1,0 +1,24 @@
+From 92105b468459774a28c7a316b85c0b9fd28a9c99 Mon Sep 17 00:00:00 2001
+From: Captain <openatv@gmail.com>
+Date: Thu, 13 Feb 2025 09:28:31 +0100
+Subject: [PATCH] libinput disable udev
+
+---
+ xbmc/platform/linux/input/LibInputHandler.cpp | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/xbmc/platform/linux/input/LibInputHandler.cpp b/xbmc/platform/linux/input/LibInputHandler.cpp
+index 9d548face0..c92e591b4d 100644
+--- a/xbmc/platform/linux/input/LibInputHandler.cpp
++++ b/xbmc/platform/linux/input/LibInputHandler.cpp
+@@ -70,6 +70,7 @@ static void LogHandler(libinput  __attribute__((unused)) *libinput, libinput_log
+ 
+ CLibInputHandler::CLibInputHandler() : CThread("libinput")
+ {
++  return;
+   m_udev = udev_new();
+   if (!m_udev)
+   {
+-- 
+2.45.2.windows.1
+
