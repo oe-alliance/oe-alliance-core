@@ -193,6 +193,7 @@ RDEPENDS:${PN} = " \
     tmux \
     transmission \
     uhubctl \
+    upx \
     ushare \
     vim \
     wakelan \

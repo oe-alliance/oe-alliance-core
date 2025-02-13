@@ -9,11 +9,11 @@ SRC_URI[sha256sum] = "5ed6561607d27fb4ef346fc19f08a93696fa8fa127081e7a7114068306
 
 S = "${UNPACKDIR}/upx-${PV}-src"
 
-inherit native
-
 do_install(){
     install -d ${D}${bindir}
     install -m 0755 ${S}/build/release/upx ${D}${bindir}/
 }
 
 CLEANBROKEN = "1"
+
+BBCLASSEXTEND = "native"
