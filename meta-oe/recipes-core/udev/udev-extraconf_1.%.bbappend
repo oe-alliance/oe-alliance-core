@@ -1,7 +1,7 @@
 FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
 FILESEXTRAPATHS:prepend := "${THISDIR}/${DISTRO_NAME}:"
 
-PR .= ".28"
+PR .= ".23"
 
 SRC_URI += " \
     file://mount.sh \
@@ -17,4 +17,16 @@ do_install:append() {
     fi
     install -m 0644 ${S}/write-deviceinfo.rules    ${D}${sysconfdir}/udev/rules.d/write-deviceinfo.rules
     install -m 0755 ${S}/device-info.sh ${D}${sysconfdir}/udev/scripts/device-info.sh
+
+# OpenVix:
+# We only want udev to bring up interfaces marked as auto
+# (If every distro want this an edit of the base network.sh script
+# should be done, and this removed).
+#
+    if ${@bb.utils.contains_any('DISTRO_NAME','openvix','true','false',d)}; then
+# \ needs escaping even within ''
+# and the + (for 1-or-more) needs quoting for "normal" regexes.
+#
+        sed -i 's/iface \\+$INTERFACE/auto \\+$INTERFACE/' ${D}${sysconfdir}/udev/scripts/network.sh
+    fi
 }
