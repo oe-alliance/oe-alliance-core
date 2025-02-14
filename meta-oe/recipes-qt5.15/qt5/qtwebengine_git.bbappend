@@ -13,7 +13,7 @@ SRC_URI:append:osmio4kplus = " \
 "
 
 DEPENDS += " \
-    libnss-mdns \
+    avahi-libnss-mdns \
     libxkbcommon \
     libwebp-native \
 "
