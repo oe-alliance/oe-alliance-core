@@ -9,7 +9,7 @@ RDEPENDS:${PN} = "${PYTHON_PN}-pillow ${PYTHON_PN}-multiprocessing ${PYTHON_PN}-
 
 inherit gittag allarch
 
-SRCREV = "3af46908ff2a3c849dd71046f65a08ef69e42a4e"
+SRCREV = "${AUTOREV}"
 PV = "git"
 PKGV = "${GITPKGVTAG}"
 PR = "r1"
