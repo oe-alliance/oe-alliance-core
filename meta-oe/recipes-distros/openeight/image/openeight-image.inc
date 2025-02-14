@@ -20,7 +20,7 @@ IMAGE_INSTALL = "openeight-base"
 export IMAGE_BASENAME = "openeight-image"
 IMAGE_LINGUAS = ""
 
-IMAGE_FEATURES += "package-management"
+IMAGE_FEATURES += "package-management allow-empty-password empty-root-password allow-root-login"
 
 INHIBIT_DEFAULT_DEPS = "1"
 REPRODUCIBLE_TIMESTAMP_ROOTFS = "${@time.strftime('%s')}"

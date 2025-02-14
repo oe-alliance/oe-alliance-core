@@ -24,7 +24,7 @@ IMAGE_INSTALL += "${@bb.utils.contains_any("FLASHSIZE", "64 96 128", "", "mc mc-
 export IMAGE_BASENAME = "openbh-image"
 IMAGE_LINGUAS = ""
 
-IMAGE_FEATURES += "package-management"
+IMAGE_FEATURES += "package-management allow-empty-password empty-root-password allow-root-login"
 
 INHIBIT_DEFAULT_DEPS = "1"
 

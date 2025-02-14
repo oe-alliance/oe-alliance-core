@@ -47,7 +47,7 @@ IMAGE_LINGUAS  = "${@bb.utils.contains_any("FLASHSIZE", "64 96 128", "", "es-es 
 # Add more languages for 512 or more MB of flash:
 IMAGE_LINGUAS += "${@bb.utils.contains_any("FLASHSIZE", "64 96 128 256", "", "de-de it-it nl-nl pt-pt", d)}"
 
-IMAGE_FEATURES += "package-management"
+IMAGE_FEATURES += "package-management allow-empty-password empty-root-password allow-root-login"
 
 INHIBIT_DEFAULT_DEPS = "1"
 
