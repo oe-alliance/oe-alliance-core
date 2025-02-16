@@ -1,7 +1,7 @@
 FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
 FILESEXTRAPATHS:prepend := "${THISDIR}/${DISTRO_NAME}:"
 
-PR .= ".29"
+PR .= ".30"
 
 SRC_URI += " \
     file://mount.sh \
@@ -18,12 +18,12 @@ do_install:append() {
     install -m 0644 ${S}/write-deviceinfo.rules    ${D}${sysconfdir}/udev/rules.d/write-deviceinfo.rules
     install -m 0755 ${S}/device-info.sh ${D}${sysconfdir}/udev/scripts/device-info.sh
 
-# OpenVix:
+# OpenVix, OpenBh:
 # We only want udev to bring up interfaces marked as auto
 # (If every distro want this an edit of the base network.sh script
 # should be done, and this removed).
 #
-    if ${@bb.utils.contains_any('DISTRO_NAME','openvix','true','false',d)}; then
+    if ${@bb.utils.contains_any('DISTRO_NAME','openvix openbh','true','false',d)}; then
 # \ needs escaping even within ''
 # and the + (for 1-or-more) needs quoting for "normal" regexes.
 #
