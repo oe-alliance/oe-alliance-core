@@ -1,95 +1,66 @@
 #!/bin/sh
 # Interlude script to set the time using time servers.
 #
-Logfile=/tmp/ntpdatex_log
-Logit=$Logfile.$$ 
-exec 3>&1 4>&2
-trap 'exec 2>&4 1>&3' 0 1 2 3
-exec 1>$Logit 2>&1
-set -x
-# Everything below will go to the file 'log.out':
-echo "0000 =====ntpdate-sync this is newlog4 ====="
 PATH=/sbin:/bin:/usr/sbin:/usr/bin
 
 # If this isn't present then we are doomed...
 #
 [ -x /usr/sbin/ntpd ] || exit 1
 
-# 
-# code originaly originally via  if-up.d script but moved due to lock issues
+# We don't want more than one process running this at a time, so
+# implement a simple mutex.
 #
-#echo "000 =====ntpdate-sync METHOD: $METHOD IFACE:$IFACE ====="
-#[ "$IFACE" != "lo" ] || exit 0
-# [ "$METHOD" != "loopback" ] || exit 0
+LOCKFILE=/var/lock/ntpdate
+TFILE=$LOCKFILE.$$
 
+touch $TFILE
+ln $TFILE $LOCKFILE     # Try to make hard-link (atomic)
+status=$?               # Remember the result
+rm -f $TFILE            # Remove the per-process one
 
-# At boot time we'll check whether the external Internet is reachable.
+# If we failed to link it then it already exists. So we exit.
+# Someone else got here first.
 #
-check_online() {
-    count=0
-    while [ $count -lt 5 ]; do
-        sleep 0.5
-# No point in pinging by-name to test whether the network is up as that
-# requires the network to be up to resolve the name!!
-#   So instead ping a known DNS server address.
-#   Possible ipv4/ipv6 choices (May 2022) are:
-# Google:
-#       8.8.8.8 or 2001:4860:4860::8888
-# Quad9
-#       9.9.9.9 or 2620:fe::fe:9
-# Cloudfare
-#       1.1.1.1 or 2606:4700:4700::1111
+[ $status -ne 0 ] && exit 0
+
+# Ensure we'll remove the lock file when we exit
 #
-# Only send 1 packet (-c) and only wait for 3s (-W)
-        if ping -4 -c 1 -W 3 8.8.8.8 >/dev/null 2>&1 ||
-           ping -6 -c 1 -W 3 2001:4860:4860::8888 >/dev/null 2>&1; then
-            return 0
-        fi
-        count=$((count+1))
-    done
-    exit 0
+free_lock() {
+    rm -f $LOCKFILE
 }
+trap free_lock 0
 
+# This can be run at boot time from rc3.d (no arg), or from enigma2 (arg)
+# Either way, we will set a 5s timeout for the attempt, which will catch
+# any name-resolution or network access failures in one go.
+#
 # Find out which NTP server to use....
 # Historically this file could set NTPV4 to an NTP server,
 #
-echo "0 =====ntpdate-sync from /usr/bin at `date` ====="
 [ -f /var/tmp/ntpv4.local ] && . /var/tmp/ntpv4.local
-if [ -n "$NTPV4" ]; then # ntpv4.local setting
-    NTPSERVER="$NTPV4"
-    echo "0a =====ntpdate-sync at `date` NTPSERVER: $NTPSERVER ====="
-else # Any enigma2 setting?
-    NTPSERVER="`awk -F= '$1 == "config.misc.NTPserver" {print $2; exit;}' /etc/enigma2/settings`"
-    echo "0b =====ntpdate-sync at `date` NTPSERVER: $NTPSERVER ====="
-    if [ -z "$NTPSERVER" ]; then
-    	NTPSERVER="pool.ntp.org" # The default....
-        echo "0c =====ntpdate-sync at `date` NTPSERVER: $NTPSERVER ====="
-    fi
-fi
-echo "1 =====ntpdate-sync at `date` NTPSERVER: $NTPSERVER ====="
-# Interfaces are usually brought up during boot, but then we need to
-# check that the Internet is reachable as well.
+
+# If we were called with a parameter, use it.
+# We can set enigma2 to send its config.misc.NTPserver
 #
-DELAY=""
-if [ "$0" = "/etc/network/if-up.d/ntpdate-sync" ]; then
-    DELAY="check_online"
+if [ -n "$1" ]; then
+    NTPSERVER="$1"
+elif [ -n "$NTPV4" ]; then  # ntpv4.local setting
+    NTPSERVER="$NTPV4"
+else                        # Any enigma2 setting?
+    NTPSERVER="`awk -F= '$1 == "config.misc.NTPserver" {print $2; exit;}' /etc/enigma2/settings`"
+fi
+[ -z "$NTPSERVER" ] && NTPSERVER="pool.ntp.org" # The fall-back....
+
+# Now do the work - allow 5 seconds, kill after 7 seconds, if still there.
+#
+if timeout -k 7 5 /usr/sbin/ntpd -nq -p $NTPSERVER 2>/dev/null; then
+    if [ "$UPDATE_HWCLOCK" = "yes" ] && [ -x /sbin/stb-hwclock ]; then
+        /sbin/stb-hwclock --systohc
+    fi
 fi
 
-(
-    $DELAY      # No-op if empty....
-    if /usr/sbin/ntpd -nq -p $NTPSERVER 2>/dev/null; then
-        echo "2a =====ntpdate-sync at UPDATE_HWCLOCK: $UPDATE_HWCLOCK ====="
-        if [ "$UPDATE_HWCLOCK" = "yes" ] && [ -x /sbin/stb-hwclock ]; then
-            echo "2b =====ntpdate-sync at UPDATE_HWCLOCK: $UPDATE_HWCLOCK ====="
-            /sbin/stb-hwclock --systohc
-        fi
-    fi
-    echo "3 =====ntpdate-sync at `date` ====="
-    exit 0
-)
-echo "final exit ===== Done at `date` ====="
 # wait for all subprocesses to finish
-# this is required when using systemd service as ntpd will start before ntpdate finishes
-# and results in a bind error (port 123)
+# This is required when using systemd service as ntpd will start before
+# ntpdate finishes and results in a bind error (port 123)
 #
 wait
