@@ -1,0 +1,26 @@
+#!/bin/sh
+#
+
+### BEGIN INIT INFO
+# Provides:          ntp-setdate
+# Required-Start:    udev
+# Required-Stop:
+# Default-Start:     3
+# Default-Stop:
+# Short-Description: Run script to set clock from NTP
+### END INIT INFO
+
+# Add this as /etc/rc3.d/S95ntp-setdate
+# It must follow the network start-up script (but that is now
+# done by udev on rcS.d)
+# This is to get a valid system time ASAP, but we also need to allow
+# for Wifi to stabilize, hence the 95.
+#
+
+case "$1" in
+start)
+    /usr/bin/ntpdate-sync
+    ;;
+esac
+
+exit 0
