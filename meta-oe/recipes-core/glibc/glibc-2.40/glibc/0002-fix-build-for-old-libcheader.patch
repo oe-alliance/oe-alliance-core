@@ -1,0 +1,26 @@
+--- a/sysdeps/unix/sysv/linux/configure
++++ b/sysdeps/unix/sysv/linux/configure
+@@ -30,9 +30,8 @@ _ACEOF
+ if ac_fn_c_try_cpp "$LINENO"
+ then :
+   libc_cv_linux320='3.2.0 or later'
+-else case e in #(
+-  e) libc_cv_linux320='missing or too old!' ;;
+-esac
++else
++  libc_cv_linux320='3.2.0 or later'
+ fi
+ rm -f conftest.err conftest.i conftest.$ac_ext ;;
+ esac
+@@ -93,9 +92,8 @@ _ACEOF
+ if ac_fn_c_try_cpp "$LINENO"
+ then :
+   libc_minimum_kernel=ok
+-else case e in #(
+-  e) libc_minimum_kernel='too old!' ;;
+-esac
++else
++  libc_minimum_kernel=ok
+ fi
+ rm -f conftest.err conftest.i conftest.$ac_ext
+ { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $libc_minimum_kernel" >&5
