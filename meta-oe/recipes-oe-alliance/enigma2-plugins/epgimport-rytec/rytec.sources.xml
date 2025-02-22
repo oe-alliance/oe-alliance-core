@@ -2,7 +2,7 @@
 <sources>
 
 <!--
-Version: 2024-10-09
+Version: 2025-02-15
 -->
 
 <!--
@@ -35,6 +35,7 @@ The description must be unique for each source, and is displayed on the UI.
 			<url>http://rytecepg.wanwizard.eu/azman.channels.xml.xz</url>
 
 			<url>http://epg.vuplus-community.net/azman.channels.xml.xz</url>
+			<url>http://zukon.pl/xml_epg/azman.channels.xml.xz</url>
 		</channel>
 	</mappings>
 
@@ -359,6 +360,7 @@ The description must be unique for each source, and is displayed on the UI.
 			<url>http://rytecepg.wanwizard.eu/azman_basic.xml.xz</url>
 
 			<url>http://epg.vuplus-community.net/azman_basic.xml.xz</url>
+			<url>http://zukon.pl/xml_epg/azman_basic.xml.xz</url>
 		</source>
 
 		<source type="gen_xmltv" channels="azman.channels.xml.xz">
@@ -369,6 +371,7 @@ The description must be unique for each source, and is displayed on the UI.
 			<url>http://rytecepg.wanwizard.eu/azman_misc.xml.xz</url>
 
 			<url>http://epg.vuplus-community.net/azman_misc.xml.xz</url>
+			<url>http://zukon.pl/xml_epg/azman_misc.xml.xz</url>
 		</source>
 
 		<source type="gen_xmltv" channels="azman.channels.xml.xz">
@@ -379,6 +382,7 @@ The description must be unique for each source, and is displayed on the UI.
 			<url>http://rytecepg.wanwizard.eu/azman_iptv.xml.xz</url>
 
 			<url>http://epg.vuplus-community.net/azman_iptv.xml.xz</url>
+			<url>http://zukon.pl/xml_epg/azman_iptv.xml.xz</url>
 		</source>
 
 		<source type="gen_xmltv" channels="azman.channels.xml.xz">
@@ -389,6 +393,7 @@ The description must be unique for each source, and is displayed on the UI.
 			<url>http://rytecepg.wanwizard.eu/azman_radio.xml.xz</url>
 
 			<url>http://epg.vuplus-community.net/azman_radio.xml.xz</url>
+			<url>http://zukon.pl/xml_epg/azman_radio.xml.xz</url>
 		</source>
 	</sourcecat>
 
