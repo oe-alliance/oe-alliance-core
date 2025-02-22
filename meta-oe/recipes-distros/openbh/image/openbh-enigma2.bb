@@ -8,7 +8,7 @@ ALLOW_EMPTY:${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r31"
+PR = "r32"
 
 inherit packagegroup
 
@@ -42,6 +42,7 @@ RRECOMMENDS:${PN} = "\
     enigma2-plugin-extensions-epgsearch \
     enigma2-plugin-extensions-imdb \
     enigma2-plugin-extensions-mediaplayer \
+    enigma2-plugin-extensions-openbhvip \
     enigma2-plugin-systemplugins-crossepg \
     enigma2-plugin-systemplugins-obh \
     enigma2-plugin-drivers-ntfs-3g \
