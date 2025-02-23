@@ -7,56 +7,57 @@ PATH=/sbin:/bin:/usr/sbin:/usr/bin
 #
 [ -x /usr/sbin/ntpd ] || exit 1
 
-# We don't want more than one process running this at a time, so
-# implement a simple mutex.
+# At boot time we'll check whether the external Internet is reachable.
 #
-LOCKFILE=/var/lock/ntpdate
-TFILE=$LOCKFILE.$$
-
-touch $TFILE
-ln $TFILE $LOCKFILE     # Try to make hard-link (atomic)
-status=$?               # Remember the result
-rm -f $TFILE            # Remove the per-process one
-
-# If we failed to link it then it already exists. So we exit.
-# Someone else got here first.
+check_online() {
+    count=0
+    while [ $count -lt 5 ]; do
+        sleep 0.5
+# No point in pinging by-name to test whether the network is up as that
+# requires the network to be up to resolve the name!!
+#   So instead ping a known DNS server address.
+#   Possible ipv4/ipv6 choices (May 2022) are:
+# Google:
+#       8.8.8.8 or 2001:4860:4860::8888
+# Quad9
+#       9.9.9.9 or 2620:fe::fe:9
+# Cloudfare
+#       1.1.1.1 or 2606:4700:4700::1111
 #
-[ $status -ne 0 ] && exit 0
-
-# Ensure we'll remove the lock file when we exit
-#
-free_lock() {
-    rm -f $LOCKFILE
+# Only send 1 packet (-c) and only wait for 3s (-W)
+        if ping -4 -c 1 -W 3 8.8.8.8 >/dev/null 2>&1 ||
+           ping -6 -c 1 -W 3 2001:4860:4860::8888 >/dev/null 2>&1; then
+            return 0
+        fi
+        count=$((count+1))
+    done
+    exit 0
 }
-trap free_lock 0
 
-# This can be run at boot time from rc3.d (no arg), or from enigma2 (arg)
-# Either way, we will set a 5s timeout for the attempt, which will catch
-# any name-resolution or network access failures in one go.
-#
 # Find out which NTP server to use....
 # Historically this file could set NTPV4 to an NTP server,
 #
 [ -f /var/tmp/ntpv4.local ] && . /var/tmp/ntpv4.local
-
-# If we were called with a parameter, use it.
-# We can set enigma2 to send its config.misc.NTPserver
-#
-if [ -n "$1" ]; then
-    NTPSERVER="$1"
-elif [ -n "$NTPV4" ]; then  # ntpv4.local setting
-    NTPSERVER="$NTPV4"
-else                        # Any enigma2 setting?
-    NTPSERVER="`awk -F= '$1 == "config.misc.NTPserver" {print $2; exit;}' /etc/enigma2/settings`"
+if [ -n "$NTPV4" ]; then # ntpv4.local setting
+NTPSERVER="$NTPV4"
+else # Any enigma2 setting?
+NTPSERVER="`awk -F= '$1 == "config.misc.NTPserver" {print $2; exit;}' /etc/enigma2/settings`"
 fi
 [ -z "$NTPSERVER" ] && NTPSERVER="pool.ntp.org" # The fall-back....
 
+# Interfaces are usually brought up during boot, but then we need to
+# check that the Internet is reachable as well.
+#
+
+DELAY="check_online"
+
 # Now do the work - allow 5 seconds, kill after 7 seconds, if still there.
 #
+$DELAY
 if timeout -k 7 5 /usr/sbin/ntpd -nq -p $NTPSERVER 2>/dev/null; then
-    if [ "$UPDATE_HWCLOCK" = "yes" ] && [ -x /sbin/stb-hwclock ]; then
-        /sbin/stb-hwclock --systohc
-    fi
+if [ "$UPDATE_HWCLOCK" = "yes" ] && [ -x /sbin/stb-hwclock ]; then
+/sbin/stb-hwclock --systohc
+fi
 fi
 
 # wait for all subprocesses to finish
