@@ -9,9 +9,9 @@ key 0x0c00b2 167 #rec
 key 0x0c000c 158 #recall
 key 0x0c000d 168 #groups unknown
 key 0x0c0008 388 #vod unknown
-key 0x0c000a 138w #series unknown
+key 0x0c000a 138 #series unknown
 key 0x0c000e 208 #radio unknown
-key 0x0c000f 368 #youtube search
+key 0x0c000f 359 #youtube search
 key 0x0c0221 370 #mic search
 key 0x0c0042 103 #up
 key 0x0c0043 108 #down
@@ -26,7 +26,7 @@ key 0x0c00e9 115 #vol+
 key 0x0c00ea 114 #vol-
 key 0x0c009c 402 #ch+
 key 0x0c009d 403 #ch-
-key 0x0c0223 396 #home
+key 0x0c0223 393 #home
 key 0x0c0007 377 #livetv
 key 0x0c001e 2 #1
 key 0x0c001f 3 #2
