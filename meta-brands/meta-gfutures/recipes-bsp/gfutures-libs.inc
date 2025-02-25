@@ -3,8 +3,9 @@ SECTION = "base"
 PRIORITY = "required"
 LICENSE = "CLOSED"
 DEPENDS = "zlib libpng freetype curl libxml2 libjpeg-turbo harfbuzz"
-RDEPENDS:${PN} = "libbluray"
-PR = "${SRCDATE}"
+RDEPENDS:${PN} = "libbluray openssl10"
+REV = "r1"
+PR = "${SRCDATE}.${REV}"
 LIBSVER ?= "${@bb.utils.contains('TARGET_ARCH', 'aarch64', '64' , '', d)}"
 
 SRC_URI = "https://source.mynonpublic.com/gfutures/gfutures-libs${LIBSVER}-${HICHIPSET}-${SRCDATE}.zip"
@@ -29,6 +30,7 @@ do_install() {
 	install -m 0755 ${S}/ffmpeg/* ${D}${libdir}/hisilicon
 	install -d ${D}/lib
 	ln -sf /lib/ld-linux-armhf.so.3 ${D}${libdir}/hisilicon/ld-linux.so
+	rm -f ${D}${libdir}/hisilicon/libcrypto.so.* ${D}${libdir}/hisilicon/libssl.so.*
 }
 
 do_package_qa() {
