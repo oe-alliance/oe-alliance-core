@@ -15,7 +15,7 @@ RDEPENDS:${PN}-dev += "bash python3-core"
 
 inherit gitpkgv upx-compress
 
-SRCREV = "${AUTOREV}"
+SRCREV = "0010090d0517976248894bbd48a9bb1ac5bc0182"
 PV = "V1.66.0+git"
 PKGV = "V1.66.0+git${GITPKGV}"
 
