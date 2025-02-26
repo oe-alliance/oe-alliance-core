@@ -1,4 +1,4 @@
-SUMMARY = "openATV Status v1.9 - view status of OpenATV-buildserver"
+SUMMARY = "openATV Status v2.6 - view status of OpenATV-buildserver"
 MAINTAINER = "Mr.Servo"
 SECTION = "extra"
 
@@ -7,9 +7,9 @@ require conf/python/python3-compileall.inc
 
 inherit gettext gitpkgv
 SRCREV = "${AUTOREV}"
-PV = "2.1+git"
-PKGV = "2.1+git${GITPKGV}"
-VER ="2.1"
+PV = "2.6+git"
+PKGV = "2.6+git${GITPKGV}"
+VER ="2.6"
 PR = "r0"
 
 SRC_URI="git://github.com/openatv/openatvstatus.git;branch=main;protocol=https"
