@@ -6,33 +6,29 @@ DESCRIPTION = "Rclone is a command line program to sync files and directories to
     ownCloud pCloud put.io QingStor Rackspace Cloud Files Scaleway SFTP Wasabi WebDAV Yandex Disk The local filesystem"
 HOMEPAGE = "https://rclone.org/"
 LICENSE = "MIT"
-LIC_FILES_CHKSUM = "file://COPYING;md5=bed161b82a1ecab65ff7ba3c3b960439"
+LIC_FILES_CHKSUM = "file://src/${GO_IMPORT}/COPYING;md5=bed161b82a1ecab65ff7ba3c3b960439"
 
-DEPENDS += "go-cross-${TUNE_PKGARCH}"
+RDEPENDS:${PN} = "bash"
+RDEPENDS:${PN}-dev = "bash python3-core"
 
-RDEPENDS:${PN} += "bash"
-RDEPENDS:${PN}-dev += "bash python3-core"
-
-inherit gitpkgv upx-compress
+inherit gittag go-mod upx-compress
 
 SRCREV = "0010090d0517976248894bbd48a9bb1ac5bc0182"
-PV = "V1.66.0+git"
-PKGV = "V1.66.0+git${GITPKGV}"
+PV = "git"
+PKGV = "${GITPKGVTAG}"
 
-SRC_URI = "git://github.com/rclone/rclone;protocol=https;branch=master \
+SRC_URI = "git://github.com/rclone/rclone.git;protocol=https;branch=master;destsuffix=${GO_SRCURI_DESTSUFFIX} \
            file://rclonefs"
 
-S = "${WORKDIR}/git"
-
-do_compile[network] = "1"
-
-do_compile() {
-    ${TARGET_PREFIX}go build
-}
-
 do_install() {
-    install -d ${D}${bindir}
-    install -m 755 ${S}/rclone ${D}${bindir}
-    install -m 755 ${UNPACKDIR}/rclonefs ${D}${bindir}
-    ln -sf rclone ${D}${bindir}/mount.rclone
+	install -d ${D}${bindir}
+	if [ -d ${B}/bin/linux_mipsle ]; then
+		install -m 755 ${B}/bin/linux_mipsle/rclone ${D}${bindir}
+	elif [ -d ${B}/bin/linux_arm64 ]; then
+		install -m 755 ${B}/bin/linux_arm64/rclone ${D}${bindir}
+	else
+		install -m 755 ${B}/bin/linux_${TARGET_ARCH}/rclone ${D}${bindir}
+	fi
+	install -m 755 ${UNPACKDIR}/rclonefs ${D}${bindir}
+	ln -sf rclone ${D}${bindir}/mount.rclone
 }

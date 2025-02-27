@@ -1,13 +1,16 @@
-# This build uses go, which will download modules and, by default,
-# place them in the HOME of build user!
-# It will even make some of them read-only!!!
-# So put them within the build tree, and undo the read-only setting.
-#
+GO_IMPORT = "rclone.org"
+GO_INSTALL = "${GO_IMPORT}"
 
-GOPATH = "${TMPDIR}/go/"
-export GOPATH
-export GOPROXY = "https://proxy.golang.org,direct"
+# generate standalone executable without dependencies to any shared objects at runtime
+GO_LINKSHARED = ""
 
-do_compile:append() {
-    chmod -R +w "$GOPATH"
-}
+# Reduce go compiled binary file size
+GO_EXTRA_LDFLAGS = "-s"
+GOBUILDFLAGS:remove = "-buildmode=pie"
+export CGO_ENABLED = "0"
+
+# Speed up compression time for go compiled binaries
+UPX_ARGS += "--lzma"
+
+# Allow downloads during compile
+do_compile[network] = "1"
