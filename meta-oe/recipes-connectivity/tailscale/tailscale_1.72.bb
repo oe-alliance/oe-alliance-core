@@ -6,31 +6,17 @@ LIC_FILES_CHKSUM = "file://src/${GO_IMPORT}/LICENSE;md5=a672713a9eb730050e491c92
 
 RRECOMMENDS:${PN} = "kernel-module-tun enigma2-plugin-drivers-iptables"
 
-inherit gitpkgv
+inherit gittag go-mod update-rc.d systemd upx-compress
 
-SRCREV = "ede81e2669bc01d60f52c84eea1d404215b13e16"
-PV = "1.64.2+git"
-PKGV = "1.64.2+git${GITPKGV}"
+SRCREV = "${AUTOREV}"
+PV = "git"
+PKGV = "${GITPKGVTAG}"
 
-SRC_URI = "git://github.com/tailscale/tailscale.git;protocol=https;branch=release-branch/1.64;destsuffix=${GO_SRCURI_DESTSUFFIX} \
+SRC_URI = "git://github.com/tailscale/tailscale.git;protocol=https;branch=release-branch/1.72;destsuffix=${GO_SRCURI_DESTSUFFIX} \
         file://tailscaled.initd \
 "
 
-inherit go-mod update-rc.d systemd upx-compress
-
-GO_IMPORT = "tailscale.com"
-GO_WORKDIR = "${GO_IMPORT}"
-GO_INSTALL = "${GO_IMPORT}/cmd/tailscale ${GO_IMPORT}/cmd/tailscaled"
-export GOPROXY = "https://proxy.golang.org,direct"
-
-# Fixes duplicated definition of symbols errors by linking for arm arch
-GO_DYNLINK:arm = ""
-GO_DYNLINK:aarch64 = ""
-
 FILES:${PN} += "${systemd_unitdir} ${sysconfdir}"
-
-# Allow downloads during compile
-do_compile[network] = "1"
 
 do_install() {
 	install -d ${D}${bindir}
