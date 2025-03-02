@@ -25,7 +25,7 @@ CXXFLAGS += "${@bb.utils.contains_any("DISTRO_NAME", "openatv openvix openbh tea
 PV = "0.5+git"
 PKGV = "0.5+git${GITPKGV}"
 
-PR = "r4"
+PR = "r5"
 
 EXTRA_OECONF = "\
 	BUILD_SYS=${BUILD_SYS} \
