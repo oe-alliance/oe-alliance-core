@@ -30,14 +30,13 @@ DEPENDS = "fontconfig glib-2.0 libpng pixman zlib"
 
 SRC_URI = "http://cairographics.org/releases/cairo-${PV}.tar.xz \
            file://cairo-get_bitmap_surface-bsc1036789-CVE-2017-7475.diff \
-           file://CVE-2018-19876.patch \
            file://CVE-2019-6461.patch \
            file://CVE-2019-6462.patch \
            file://CVE-2020-35492.patch \
           "
 
-SRC_URI[md5sum] = "f19e0353828269c22bd72e271243a552"
-SRC_URI[sha256sum] = "5e7b29b3f113ef870d1e3ecf8adf21f923396401604bda16d44be45e66052331"
+SRC_URI[md5sum] = "bf9d0d324ecbd350d0e9308125fa4ce0"
+SRC_URI[sha256sum] = "74b24c1ed436bbe87499179a3b27c43f4143b8676d8ad237a6fa787401959705"
 
 inherit autotools pkgconfig upstream-version-is-even gtk-doc multilib_script
 
