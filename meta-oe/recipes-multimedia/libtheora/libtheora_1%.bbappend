@@ -1,0 +1,1 @@
+PROVIDES =+ " libtheora0"
