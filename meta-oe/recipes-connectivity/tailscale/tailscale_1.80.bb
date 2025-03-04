@@ -12,7 +12,7 @@ SRCREV = "${AUTOREV}"
 PV = "git"
 PKGV = "${GITPKGVTAG}"
 
-SRC_URI = "git://github.com/tailscale/tailscale.git;protocol=https;branch=release-branch/1.72;destsuffix=${GO_SRCURI_DESTSUFFIX} \
+SRC_URI = "git://github.com/tailscale/tailscale.git;protocol=https;branch=release-branch/1.80;destsuffix=${GO_SRCURI_DESTSUFFIX} \
         file://tailscaled.initd \
 "
 
