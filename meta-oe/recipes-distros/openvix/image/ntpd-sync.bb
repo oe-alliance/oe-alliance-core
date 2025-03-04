@@ -6,7 +6,7 @@ require conf/license/license-gplv2.inc
 inherit allarch update-rc.d
 
 PV = "${IMAGE_VERSION}"
-PR = "r3"
+PR = "r4"
 
 NTPD_SYNC_LOC := "${THISDIR}/${PN}"
 
