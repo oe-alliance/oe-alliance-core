@@ -19,6 +19,8 @@ PR = "r0"
 
 EXTRA_OECONF = "--with-gstversion=${GSTVERSION}"
 
+EXTRA_AUTORECONF += "-I m4"
+
 do_configure:prepend() {
         sed -i 's/AC_INIT.*$/AC_INIT(gst-plugin-subsink, 1.0.0, @pli4)/' ${S}/configure.ac
         sed -i 's/AM_INIT_AUTOMAKE.*$/AM_INIT_AUTOMAKE([foreign subdir-objects])/' ${S}/configure.ac
