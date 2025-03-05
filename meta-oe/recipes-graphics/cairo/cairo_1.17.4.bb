@@ -6,8 +6,8 @@ with various join and cap styles. All colors may be specified with \
 optional translucence (opacity/alpha) and combined using the \
 extended Porter/Duff compositing algebra as found in the X Render \
 Extension."
-HOMEPAGE = "http://cairographics.org"
-BUGTRACKER = "http://bugs.freedesktop.org"
+HOMEPAGE = "https://cairographics.org"
+BUGTRACKER = "https://bugs.freedesktop.org"
 SECTION = "libs"
 
 LICENSE = "(MPL-1.1 | LGPL-2.1-only) & GPL-3.0-or-later"
@@ -28,7 +28,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=e73e999e0c72b5ac9012424fa157ad77 \
 
 DEPENDS = "fontconfig glib-2.0 libpng pixman zlib"
 
-SRC_URI = "http://cairographics.org/releases/cairo-${PV}.tar.xz \
+SRC_URI = "https://cairographics.org/releases/cairo-${PV}.tar.xz \
            file://cairo-get_bitmap_surface-bsc1036789-CVE-2017-7475.diff \
            file://CVE-2019-6461.patch \
            file://CVE-2019-6462.patch \
