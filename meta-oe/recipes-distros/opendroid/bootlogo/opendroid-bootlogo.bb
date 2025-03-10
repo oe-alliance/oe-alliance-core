@@ -82,7 +82,7 @@ do_install() {
     ${@bb.utils.contains("MACHINE_FEATURES", "dreamboxv1", "install -m 0755 ${S}/dreambox-bootlogo_${BINARY_VERSION}_${PRECOMPILED_ARCH}/bootlogo-${PRECOMPILED_ARCH}.elf.gz ${D}/boot/; install -m 0755 ${S}/splash1280.jpg ${D}/boot/bootlogo-${PRECOMPILED_ARCH}.jpg", "", d)}
     install -d ${D}/usr/share
     if [ "${BRAND_OEM}" = "dreambox" ]; then
-        install -m 0644 bootlogo_hd.mvi ${D}/usr/share/bootlogo.mvi
+        install -m 0644 bootlogo.mvi ${D}/usr/share/bootlogo.mvi
     else
         install -m 0644 bootlogo_fhd.mvi ${D}/usr/share/bootlogo.mvi
     fi
