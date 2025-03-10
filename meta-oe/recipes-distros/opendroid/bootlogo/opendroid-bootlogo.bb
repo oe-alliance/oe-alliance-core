@@ -9,7 +9,7 @@ require conf/license/license-gplv2.inc
 RDEPENDS:${PN} += "showiframe"
 
 PV = "${IMAGE_VERSION}"
-PR = "r1.0"
+PR = "r1.1"
 
 S = "${WORKDIR}/sources"
 UNPACKDIR = "${S}"
@@ -81,7 +81,11 @@ do_install() {
     ${@bb.utils.contains("MACHINE_FEATURES", "dreamboxv1", "install -d ${D}/boot", "", d)}
     ${@bb.utils.contains("MACHINE_FEATURES", "dreamboxv1", "install -m 0755 ${S}/dreambox-bootlogo_${BINARY_VERSION}_${PRECOMPILED_ARCH}/bootlogo-${PRECOMPILED_ARCH}.elf.gz ${D}/boot/; install -m 0755 ${S}/splash1280.jpg ${D}/boot/bootlogo-${PRECOMPILED_ARCH}.jpg", "", d)}
     install -d ${D}/usr/share
-    install -m 0644 bootlogo.mvi ${D}/usr/share/bootlogo.mvi
+    if [ "${BRAND_OEM}" = "dreambox" ]; then
+        install -m 0644 bootlogo_hd.mvi ${D}/usr/share/bootlogo.mvi
+    else
+        install -m 0644 bootlogo_fhd.mvi ${D}/usr/share/bootlogo.mvi
+    fi
     ln -sf /usr/share/bootlogo.mvi ${D}/usr/share/backdrop.mvi
     install -d ${D}/usr/share/enigma2
     install -m 0644 radio.mvi ${D}/usr/share/enigma2/radio.mvi
@@ -91,7 +95,6 @@ do_install() {
     ${@bb.utils.contains("MACHINE_FEATURES", "gigabluelcd400", "install -m 0644 lcdwarning400.bin ${D}/usr/share/lcdwarning.bin" , "", d)}
     ${@bb.utils.contains("MACHINE_FEATURES", "gigabluelcd220", "install -m 0644 lcdwaitkey220.bin ${D}/usr/share/lcdwaitkey.bin" , "", d)}
     ${@bb.utils.contains("MACHINE_FEATURES", "gigabluelcd220", "install -m 0644 lcdwarning220.bin ${D}/usr/share/lcdwarning.bin" , "", d)}
-}
 
 do_install:append:vuduo2() {
     install -m 0644 lcdbootlogo.png ${D}/usr/share/lcdbootlogo.png
