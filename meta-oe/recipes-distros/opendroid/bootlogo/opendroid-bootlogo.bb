@@ -9,7 +9,7 @@ require conf/license/license-gplv2.inc
 RDEPENDS:${PN} += "showiframe"
 
 PV = "${IMAGE_VERSION}"
-PR = "r1.1"
+PR = "r1.2"
 
 S = "${WORKDIR}/sources"
 UNPACKDIR = "${S}"
@@ -81,11 +81,7 @@ do_install() {
     ${@bb.utils.contains("MACHINE_FEATURES", "dreamboxv1", "install -d ${D}/boot", "", d)}
     ${@bb.utils.contains("MACHINE_FEATURES", "dreamboxv1", "install -m 0755 ${S}/dreambox-bootlogo_${BINARY_VERSION}_${PRECOMPILED_ARCH}/bootlogo-${PRECOMPILED_ARCH}.elf.gz ${D}/boot/; install -m 0755 ${S}/splash1280.jpg ${D}/boot/bootlogo-${PRECOMPILED_ARCH}.jpg", "", d)}
     install -d ${D}/usr/share
-    if [ "${BRAND_OEM}" = "dreambox" ]; then
-        install -m 0644 bootlogo.mvi ${D}/usr/share/bootlogo.mvi
-    else
-        install -m 0644 bootlogo_fhd.mvi ${D}/usr/share/bootlogo.mvi
-    fi
+    install -m 0644 bootlogo.mvi ${D}/usr/share/bootlogo.mvi
     ln -sf /usr/share/bootlogo.mvi ${D}/usr/share/backdrop.mvi
     install -d ${D}/usr/share/enigma2
     install -m 0644 radio.mvi ${D}/usr/share/enigma2/radio.mvi
