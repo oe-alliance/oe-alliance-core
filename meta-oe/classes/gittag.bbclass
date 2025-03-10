@@ -46,6 +46,11 @@ GITPKGVTAG = "${@get_git_pkgv(d, True)}"
 GITPKGV_TAG_REGEXP ??= "(\d.*)-(.*)-g(.*)"
 GITPKGV_PREFIX ??= "git"
 
+# Force disabling shallow cloning so that a full bare clone repository is still created in url.localpath (sources/git2/repo_name) to preserve git tag information.
+# Behavior changed in https://github.com/openembedded/bitbake/commit/457288b2fda86fd00cdcaefac616129b0029e1f9
+# Documented in https://github.com/openembedded/bitbake/commit/b92c95fab631156e8c7ecc4ab18e4b16f7e590dc
+BB_GIT_SHALLOW = "0"
+
 def gitpkgv_drop_tag_prefix(d, version):
     import re
 
