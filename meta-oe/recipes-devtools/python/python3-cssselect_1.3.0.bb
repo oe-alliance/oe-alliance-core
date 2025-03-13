@@ -5,8 +5,8 @@ AUTHOR = "Ian Bicking <ianb@colorstudy.com>"
 LICENSE = "BSD-3-Clause"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=952026b3fd2f625f2a3c0aa21da2493d"
 
-SRC_URI[md5sum] = "27fbafacce5447cb867acb240d35002a"
-SRC_URI[sha256sum] = "666b19839cfaddb9ce9d36bfe4c969132c647b92fc9088c4e23f786b30f1b3dc"
+SRC_URI[md5sum] = "e0148abb13430399cbdbc173c3fa1c80"
+SRC_URI[sha256sum] = "57f8a99424cfab289a1b6a816a43075a4b00948c86b4dcf3ef4ee7e15f7ab0c7"
 
 inherit pypi setuptools3
 
