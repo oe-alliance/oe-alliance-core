@@ -14,7 +14,7 @@ PYPI_PACKAGE = "service_identity"
 
 inherit pypi python_hatchling
 
-SRC_URI[md5sum] = "64267a4351ee3c225ee12a11bb29fc44"
-SRC_URI[sha256sum] = "6829c9d62fb832c2e1c435629b0a8c476e1929881f28bee4d20bc24161009221"
+SRC_URI[md5sum] = "e575db51719742ec39191c896e4c2971"
+SRC_URI[sha256sum] = "b8683ba13f0d39c6cd5d625d2c5f65421d6d707b013b375c355751557cbe8e09"
 
 include python3-package-split.inc
