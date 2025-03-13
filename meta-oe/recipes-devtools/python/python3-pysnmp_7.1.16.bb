@@ -10,7 +10,7 @@ S = "${WORKDIR}/pysnmp-${PV}"
 
 inherit pypi python_poetry_core
 
-SRC_URI[md5sum] = "9d1ba65a734a613e68d616f3f4c24b6f"
-SRC_URI[sha256sum] = "4ec7fd78cb7437ad64644108dea603cad8e49f065da3dd3e0539dda68bad320c"
+SRC_URI[md5sum] = "a6c2189839202b7ab76144743d7824b8"
+SRC_URI[sha256sum] = "51581c70e410e456eb3faa24c42a094c82acfa961d16ad659b57c5818379dfcb"
 
 include python3-package-split.inc
