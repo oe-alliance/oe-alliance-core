@@ -1,0 +1,32 @@
+#!/bin/sh
+
+MEDIAMTXD=/usr/bin/mediamtx
+MEDIAMTXCONF=/etc/mediamtx/mediamtx.yml
+
+test -f $MEDIAMTXD || exit 0
+
+case "$1" in
+	start)
+		echo "Starting mediamtxd"
+		start-stop-daemon -b --start --startas $MEDIAMTXD -- $MEDIAMTXCONF
+		echo "done"
+		;;
+	stop)
+		echo "Stopping mediamtxd"
+		start-stop-daemon -K -x $MEDIAMTXD
+		echo "done"
+		;;
+	restart|reload|force-reload)
+		echo "Restarting mediamtxd"
+		start-stop-daemon --stop --retry 5 --startas $MEDIAMTXD
+		sleep 5
+		start-stop-daemon --start --startas $MEDIAMTXD -- $MEDIAMTXCONF
+		echo "done"
+		;;
+	*)
+		echo "Usage: /etc/init.d/mediamtxd {start|stop|restart|reload|force-reload}"
+		exit 1
+		;;
+esac
+
+exit 0 

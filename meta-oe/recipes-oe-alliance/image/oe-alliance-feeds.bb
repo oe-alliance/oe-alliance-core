@@ -111,6 +111,7 @@ RDEPENDS:${PN} = " \
     streamlink \
     llmnr-query \
     mc \
+    mediamtx \
     mergerfs \
     minidlna \
     minisatip \

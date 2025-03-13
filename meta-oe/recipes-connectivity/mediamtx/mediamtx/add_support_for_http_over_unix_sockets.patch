@@ -1,0 +1,73 @@
+From d2f9ea8aba0eb88dab9f312b92e6f2b4967504c1 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Krystian=20Chachu=C5=82a?= <krystian@krystianch.com>
+Date: Sun, 9 Feb 2025 22:23:53 +0100
+Subject: [PATCH] add support for HTTP over unix sockets
+
+This adds support for using unix scheme in xxxAddress config options.
+For example `hlsAddress: "unix://hls.sock"`.
+---
+ internal/protocols/httpp/server.go      | 15 +++++++++++++++
+ internal/protocols/httpp/server_test.go | 14 ++++++++++++++
+ 2 files changed, 29 insertions(+)
+
+diff --git a/internal/protocols/httpp/server.go b/internal/protocols/httpp/server.go
+index 519246e0836..998799710b0 100644
+--- a/internal/protocols/httpp/server.go
++++ b/internal/protocols/httpp/server.go
+@@ -8,6 +8,8 @@ import (
+ 	"log"
+ 	"net"
+ 	"net/http"
++	"os"
++	"strings"
+ 	"time"
+ 
+ 	"github.com/bluenviron/mediamtx/internal/certloader"
+@@ -61,12 +63,25 @@ func (s *Server) Initialize() error {
+ 		}
+ 	}
+ 
++	if strings.HasPrefix(s.Network, "tcp") {
++		var isunix bool
++		s.Address, isunix = strings.CutPrefix(s.Address, "unix://")
++		if isunix {
++			s.Network = "unix"
++			os.Remove(s.Address)
++		}
++	}
++
+ 	var err error
+ 	s.ln, err = net.Listen(s.Network, s.Address)
+ 	if err != nil {
+ 		return err
+ 	}
+ 
++	if s.Network == "unix" {
++		os.Chmod(s.Address, 0775)
++	}
++
+ 	h := s.Handler
+ 	h = &handlerFilterRequests{h}
+ 	h = &handlerFilterRequests{h}
+diff --git a/internal/protocols/httpp/server_test.go b/internal/protocols/httpp/server_test.go
+index a8ace896913..14319845660 100644
+--- a/internal/protocols/httpp/server_test.go
++++ b/internal/protocols/httpp/server_test.go
+@@ -36,3 +36,17 @@ func TestFilterEmptyPath(t *testing.T) {
+ 	_, err = io.ReadFull(conn, buf)
+ 	require.NoError(t, err)
+ }
++
++func TestUnixSocket(t *testing.T) {
++	s := &Server{
++		Network:     "tcp",
++		Address:     "unix://http.sock",
++		ReadTimeout: 10 * time.Second,
++		Parent:      test.NilLogger,
++	}
++	err := s.Initialize()
++	require.NoError(t, err)
++	defer s.Close()
++
++	require.Equal(t, s.Network, "unix")
++}
