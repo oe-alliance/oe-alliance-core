@@ -19,8 +19,8 @@ RDEPENDS:${PN} = "python3-twisted \
     python3-h2 \
 "
 
-SRC_URI[md5sum] = "7edc65f079f24f8b11e28f5464bced13"
-SRC_URI[sha256sum] = "dfbd565384fc3fffeba121f5a3a2d0899ac1f756d41432ca0879933fbfb3401d"
+SRC_URI[md5sum] = "17c13179ca0fd249a9e4a4b91ee3d9ee"
+SRC_URI[sha256sum] = "d66d6e76009b12447604196875a463b61d10721140032a8084a0a52df7f4788f"
 
 inherit pypi setuptools3_legacy
 
