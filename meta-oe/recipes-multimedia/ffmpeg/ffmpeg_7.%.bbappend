@@ -17,7 +17,7 @@ SRC_URI += "file://0001-makefile-add-demux-header.patch \
             file://ffmpeg_ac4.patch \
             "
 
-PACKAGECONFIG:append = " gpl libbluray dav1d libfreetype librtmp libxml2 openssl x264"
+PACKAGECONFIG:append = " gpl libbluray dav1d libfreetype librtmp libxml2 openssl x264 x265 srt"
 
 PACKAGECONFIG[libbluray] = "--enable-libbluray --enable-protocol=bluray,--disable-libbluray,libbluray"
 PACKAGECONFIG[dav1d] = "--enable-libdav1d,--disable-libdav1d,dav1d"
@@ -54,7 +54,9 @@ EXTRA_FFCONF = " \
     --disable-x86asm \
     --disable-fast-unaligned \
     --enable-protocol=http \
+    --enable-protocol=rtmp \
     --enable-demuxer=dash \
+    --enable-demuxer=rtsp \
     \
     --disable-muxers \
     --enable-muxer=adts \
@@ -72,6 +74,7 @@ EXTRA_FFCONF = " \
     --enable-muxer=mpegts \
     --enable-muxer=asf \
     --enable-muxer=spdif \
+    --enable-muxer=rtsp \
     --disable-encoders \
     --enable-encoder=ac3 \
     --enable-encoder=aac \
