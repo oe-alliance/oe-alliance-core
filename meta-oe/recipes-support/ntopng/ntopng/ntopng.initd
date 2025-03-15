@@ -1,0 +1,34 @@
+#!/bin/sh
+echo "ntopng - High-Speed Web-based Traffic Analysis and Flow Collection Tool"
+NTOPNGD=/usr/bin/ntopng
+NTOPNGCONF="-e -w 3000"
+
+test -f $NTOPNGD || exit 0
+
+sysctl vm.overcommit_memory=1
+
+case "$1" in
+	start)
+		echo "Starting ntopngd"
+		start-stop-daemon -b --start --startas $NTOPNGD -- $NTOPNGCONF
+		echo "done"
+		;;
+	stop)
+		echo "Stopping ntopngd"
+		start-stop-daemon -K -x $NTOPNGD
+		echo "done"
+		;;
+	restart|reload|force-reload)
+		echo "Restarting ntopngd"
+		start-stop-daemon --stop --retry 5 --startas $NTOPNGD
+		sleep 5
+		start-stop-daemon --start --startas $NTOPNGD -- $NTOPNGCONF
+		echo "done"
+		;;
+	*)
+		echo "Usage: /etc/init.d/ntopngd {start|stop|restart|reload|force-reload}"
+		exit 1
+		;;
+esac
+
+exit 0 
