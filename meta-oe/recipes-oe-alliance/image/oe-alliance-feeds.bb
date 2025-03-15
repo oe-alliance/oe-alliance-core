@@ -194,6 +194,7 @@ RDEPENDS:${PN} = " \
     tmux \
     transmission \
     tsanalyze \
+    tsduck \
     uhubctl \
     upx \
     ushare \
