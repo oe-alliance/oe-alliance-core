@@ -193,6 +193,7 @@ RDEPENDS:${PN} = " \
     tcpdump \
     tmux \
     transmission \
+    tsanalyze \
     uhubctl \
     upx \
     ushare \
