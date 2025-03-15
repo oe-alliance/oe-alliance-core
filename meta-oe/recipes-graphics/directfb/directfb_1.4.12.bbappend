@@ -8,3 +8,5 @@ EXTRA_OECONF = "\
   --disable-vnc \
   --disable-x11 \
 "
+
+TARGET_CFLAGS += "-Wa,--noexecstack"

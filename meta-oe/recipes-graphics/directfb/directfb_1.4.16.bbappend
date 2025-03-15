@@ -17,3 +17,4 @@ do_rm_work() {
 }
 
 INSANE_SKIP += "32bit-time"
+TARGET_CFLAGS += "-Wa,--noexecstack"
