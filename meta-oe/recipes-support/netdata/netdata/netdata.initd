@@ -1,0 +1,72 @@
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides:          netdata
+# Required-Start:    $remote_fs $syslog
+# Required-Stop:     $remote_fs $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Start Netdata at boot time
+# Description:       Netdata is a real-time performance monitoring tool.
+### END INIT INFO
+
+DAEMON=/usr/sbin/netdata
+PIDFILE=/var/run/netdata.pid
+CONFIG_FILE=/etc/netdata/netdata.conf
+
+start() {
+    echo "Starting Netdata..."
+    if [ -f "$PIDFILE" ]; then
+        echo "Netdata is already running!"
+    else
+        $DAEMON -D -c "$CONFIG_FILE" &
+        echo $! > "$PIDFILE"
+        echo "Netdata started with config: $CONFIG_FILE"
+    fi
+}
+
+stop() {
+    echo "Stopping Netdata..."
+    if [ -f "$PIDFILE" ]; then
+        kill "$(cat "$PIDFILE")"
+        rm -f "$PIDFILE"
+        echo "Netdata stopped."
+    else
+        echo "Netdata is not running!"
+    fi
+}
+
+restart() {
+    stop
+    sleep 2
+    start
+}
+
+status() {
+    if [ -f "$PIDFILE" ]; then
+        echo "Netdata is running with PID $(cat "$PIDFILE")."
+    else
+        echo "Netdata is not running."
+    fi
+}
+
+case "$1" in
+    start)
+        start
+        ;;
+    stop)
+        stop
+        ;;
+    restart)
+        restart
+        ;;
+    status)
+        status
+        ;;
+    *)
+        echo "Usage: $0 {start|stop|restart|status}"
+        exit 1
+        ;;
+esac
+
+exit 0
+
