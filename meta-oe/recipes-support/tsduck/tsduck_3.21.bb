@@ -8,7 +8,7 @@ LIC_FILES_CHKSUM = "file://LICENSE.txt;beginline=1;endline=1;md5=c3af740e8628bb4
 SRC_URI = "git://github.com/tsduck/tsduck.git;protocol=https;branch=master"
 SRCREV = "0fbbc7e06460abb1fe1358233b66ae15b4fce122" 
 
-DEPENDS = "gettext curl"
+DEPENDS = "gettext curl libedit"
 
 S = "${WORKDIR}/git"
 
