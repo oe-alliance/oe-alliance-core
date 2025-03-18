@@ -27,7 +27,7 @@ index a1595a8..4823ca7 100644
 +++ b/Makefile
 @@ -1,4 +1,4 @@
 -VERSION=v2.4
-+VERSION='2.4, KSV patch 2015-12-15'
++VERSION='2.6, KSV patch 2015-12-15'
  
  prefix=/usr/local
  
@@ -649,10 +649,10 @@ diff --git a/librtmp/rtmp.c b/librtmp/rtmp.c
 index 0865689..7086254 100644
 --- a/librtmp/rtmp.c
 +++ b/librtmp/rtmp.c
-@@ -28,6 +28,7 @@
- #include <string.h>
+@@ -29,6 +29,7 @@
  #include <assert.h>
  #include <time.h>
+ #include <limits.h>
 +#include <math.h>
  
  #include "rtmp_sys.h"
