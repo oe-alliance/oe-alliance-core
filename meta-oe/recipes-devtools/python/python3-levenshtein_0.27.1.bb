@@ -16,3 +16,5 @@ S = "${WORKDIR}/levenshtein-${PV}"
 inherit pypi python_setuptools_build_meta
 
 include ${PYTHON_PN}-package-split.inc
+
+INSANE_SKIP:${PN} = "already-stripped"
