@@ -18,6 +18,8 @@ S = "${WORKDIR}/git"
 
 inherit autotools-brokensep
 
+do_configure[noexec] = "1"
+
 do_install() {
     install -d ${D}/usr/bin
     install -m 0755 ${S}/pngquant ${D}/usr/bin/pngquant

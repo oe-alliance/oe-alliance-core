@@ -28,8 +28,7 @@ INITSCRIPT_PARAMS = "defaults 80"
 
 CXXFLAGS = " -std=c++11"
 
-do_configure:prepend () {
-}
+do_configure[noexec] = "1"
 
 do_install () {
     install -d -m 0755 ${D}/${bindir}

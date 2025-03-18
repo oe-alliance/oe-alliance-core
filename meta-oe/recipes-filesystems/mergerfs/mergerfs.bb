@@ -20,6 +20,8 @@ S = "${WORKDIR}/git"
 
 EXTRA_OEMAKE += "CONFIGURE_FLAGS='--host=${HOST_SYS} --build=${BUILD_SYS} --target=${TARGET_SYS} --with-libtool-sysroot=${STAGING_DIR_HOST} --prefix=${prefix}'"
 
+do_configure[noexec] = "1"
+
 do_compile () {
     #Automake dir is not correctly detected in cross compilation case
     export AUTOMAKE_DIR="$(automake --print-libdir)"

@@ -33,13 +33,7 @@ EXTRA_OECONF = " \
         DEVLIB=${S} \
 "
 
-do_configure:prepend() {
-    export BUILD_SYS=${BUILD_SYS}
-    export HOST_SYS=${HOST_SYS}
-    export STAGING_INCDIR=${STAGING_INCDIR}
-    export STAGING_LIBDIR=${STAGING_LIBDIR}
-    export DEVLIB=${S}
-}
+do_configure[noexec] = "1"
 
 do_compile:prepend() {
     export BUILD_SYS=${BUILD_SYS}

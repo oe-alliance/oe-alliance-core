@@ -12,6 +12,8 @@ S = "${WORKDIR}/${BPN}-${PV}"
 
 EXTRA_OEMAKE = "'CC=${CC}' 'RANLIB=${RANLIB}' 'AR=${AR}' 'CFLAGS=${CFLAGS} -I${S}/include -I${S}/ubi-utils/include -I=${includedir}/glib-2.0 -I=/usr/lib/glib-2.0/include -I=${includedir}/c++ -I=${includedir}/c++/mipsel-oe-linux -DWITHOUT_XATTR' 'BUILDDIR=${S}'"
 
+do_configure[noexec] = "1"
+
 do_compile() {
    make -f ${S}/Makefile idle3ctl
 }
