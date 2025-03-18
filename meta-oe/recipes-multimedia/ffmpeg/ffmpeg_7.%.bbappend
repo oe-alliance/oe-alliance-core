@@ -50,7 +50,6 @@ EXTRA_FFCONF = " \
     --disable-fma4 \
     --disable-avx2 \
     --disable-inline-asm \
-    --disable-yasm \
     --disable-x86asm \
     --disable-fast-unaligned \
     --enable-protocol=http \
