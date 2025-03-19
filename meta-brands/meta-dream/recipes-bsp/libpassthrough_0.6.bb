@@ -13,4 +13,4 @@ FILES_SOLIBSDEV = ""
 
 DEBIAN_NOAUTONAME:${PN} = "1"
 
-INSANE_SKIP:${PN} += "file-rdeps"
+INSANE_SKIP:${PN} += "file-rdeps ldflags"
