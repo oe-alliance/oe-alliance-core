@@ -34,3 +34,5 @@ do_install() {
                 install -m 0755 ${UNPACKDIR}/${INITSCRIPT_NAME}.sysvinit ${D}${INIT_D_DIR}/${INITSCRIPT_NAME}
         fi
 }
+
+INSANE_SKIP:${PN} += "ldflags"

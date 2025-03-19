@@ -27,6 +27,6 @@ FILES:${PN}-src += " \
     /lib/systemd/system/tpmd.service \
 "
 
-INSANE_SKIP:${PN} += "file-rdeps"
+INSANE_SKIP:${PN} += "file-rdeps ldflags"
 
 COMPATIBLE_MACHINE = "^(dreamone|dreamtwo)$"

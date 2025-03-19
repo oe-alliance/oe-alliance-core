@@ -17,6 +17,6 @@ FILES:${PN}-src += " \
     /lib/systemd/system/tpmd.service \
 "
 
-INSANE_SKIP:${PN} += "file-rdeps"
+INSANE_SKIP:${PN} += "file-rdeps ldflags"
 
 COMPATIBLE_MACHINE = "^(dm520|dm820|dm7080|dm900|dm920)$"
