@@ -4,10 +4,10 @@ index 12ca917..eb75c2c 100644
 +++ b/src/redsea.cc
 @@ -18,7 +18,7 @@
  #include <iostream>
- #include <memory>
+ #include <vector>
  
 -#include "config.h"
 +#include "../build/config.h"
- #include "src/channel.h"
- #include "src/common.h"
- #include "src/dsp/subcarrier.h"
+ #include "src/channel.hh"
+ #include "src/dsp/subcarrier.hh"
+ #include "src/groups.hh"
