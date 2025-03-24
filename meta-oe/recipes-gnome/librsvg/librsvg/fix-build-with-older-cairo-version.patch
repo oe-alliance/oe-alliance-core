@@ -1,0 +1,53 @@
+diff --git a/meson.build b/meson.build
+index 2dae10c3..113a134a 100644
+--- a/meson.build
++++ b/meson.build
+@@ -50,7 +50,7 @@ py = import('python')
+ python = py.find_installation()
+ 
+ # Required versions for dependencies - Please update devel_environment.rst with version numbers if these change
+-cairo_required         = '>= 1.18.0'
++cairo_required         = '>= 1.17.0'
+ dav1d_required         = '>= 1.3.0'
+ ft2_cmake_required     = '>= 2.8.0'   # Actual FreeType version required
+ freetype2_required     = '>= 20.0.14' # Corresponds to ft2_cmake_required
+diff --git a/rsvg/Cargo.toml b/rsvg/Cargo.toml
+index a9c00163..8dd5b4fc 100644
+--- a/rsvg/Cargo.toml
++++ b/rsvg/Cargo.toml
+@@ -16,12 +16,12 @@ rustc-args = ["--cfg", "docsrs"]
+ rustdoc-args = ["--cfg", "docsrs"]
+ 
+ [package.metadata.system-deps]
+-cairo = "1.18"
+-cairo-gobject = "1.18"
+-cairo-png = "1.18"
+-cairo-pdf = { version = "1.18", optional = true }
+-cairo-ps = { version = "1.18", optional = true }
+-cairo-svg = { version = "1.18", optional = true }
++cairo = "1.17"
++cairo-gobject = "1.17"
++cairo-png = "1.17"
++cairo-pdf = { version = "1.17", optional = true }
++cairo-ps = { version = "1.17", optional = true }
++cairo-svg = { version = "1.17", optional = true }
+ freetype2 = "20.0.14"
+ gio = { name = "gio-2.0", version = "2.24" }
+ glib = { name = "glib-2.0", version = "2.50" }
+diff --git a/rsvg_convert/Cargo.toml b/rsvg_convert/Cargo.toml
+index 379d240d..8e2f9df7 100644
+--- a/rsvg_convert/Cargo.toml
++++ b/rsvg_convert/Cargo.toml
+@@ -13,9 +13,9 @@ rust-version.workspace = true
+ autobins = false
+ 
+ [package.metadata.system-deps]
+-cairo-pdf = { version = "1.18", optional = true }
+-cairo-ps = { version = "1.18", optional = true }
+-cairo-svg = { version = "1.18", optional = true }
++cairo-pdf = { version = "1.17", optional = true }
++cairo-ps = { version = "1.17", optional = true }
++cairo-svg = { version = "1.17", optional = true }
+ 
+ [dependencies]
+ cairo-rs = { workspace = true, features = [
