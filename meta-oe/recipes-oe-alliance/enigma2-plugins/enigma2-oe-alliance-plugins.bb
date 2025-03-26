@@ -173,6 +173,7 @@ EXTRA_OECONF = " \
     --with-arch=${TARGET_ARCH} \
     --with-pythonver=python3 \
     ${@bb.utils.contains("MACHINE_FEATURES", "aml-plugins", "--with-amlplugins" , "", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "inibt", "--with-btsupport" , "", d)} \
     "
 
 ALLOW_EMPTY:${PN} = "1"
