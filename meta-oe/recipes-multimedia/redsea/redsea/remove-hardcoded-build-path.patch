@@ -1,7 +1,7 @@
 --- a/src/redsea.cc
 +++ b/src/redsea.cc
 @@ -19,7 +19,7 @@
- #include <iostream>
+ #include <memory>
  #include <vector>
  
 -#include "config.h"
