@@ -3,7 +3,7 @@ SUMMARY:${PN} = "OSCam-emu ${PKGV}"
 DESCRIPTION:${PN} = "OSCam Open Source Softcam\n \
 - with emu support"
 
-SRC_URI="git://github.com/TwolDE2/oscam-emu.git;protocol=https;branch=master"
+SRC_URI="git://github.com/oscam-mirror/oscam-emu.git;protocol=https;branch=master"
 
 CAMNAME = "oscam-emu"
 
@@ -19,7 +19,7 @@ SRCREV = "${AUTOREV}"
 
 PV = "1.30+git"
 PKGV = "1.30+git${GITPKGV}"
-PR = "r2"
+PR = "r3"
 
 S = "${WORKDIR}/git"
 UNPACKDIR = "${WORKDIR}/sources-unpack"
