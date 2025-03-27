@@ -1,9 +1,7 @@
-diff --git a/src/redsea.cc b/src/redsea.cc
-index 12ca917..eb75c2c 100644
---- a/src.redsea.cc
+--- a/src/redsea.cc
 +++ b/src/redsea.cc
-@@ -18,7 +18,7 @@
- #include <iostream>
+@@ -19,7 +19,7 @@
+ #include <memory>
  #include <vector>
  
 -#include "config.h"
