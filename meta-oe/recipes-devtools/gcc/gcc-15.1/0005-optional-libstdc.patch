@@ -47,7 +47,7 @@ diff --git a/gcc/c-family/c.opt b/gcc/c-family/c.opt
 index 403abc1f2..29a8d73cb 100644
 --- a/gcc/c-family/c.opt
 +++ b/gcc/c-family/c.opt
-@@ -2419,6 +2419,10 @@ nostdinc++
+@@ -2527,6 +2527,10 @@ nostdinc++
  C++ ObjC++
  Do not search standard system include directories for C++.
  
@@ -70,7 +70,7 @@ index bea965fbd..036bf9e78 100644
  -fext-numeric-literals
  -flang-info-include-translate@r{[}=@var{header}@r{]}
  -flang-info-include-translate-not
-@@ -704,7 +705,7 @@ Objective-C and Objective-C++ Dialects}.
+@@ -724,7 +725,7 @@ Objective-C and Objective-C++ Dialects}.
  -pie  -pthread  -r  -rdynamic
  -s  -static  -static-pie  -static-libgcc  -static-libstdc++
  -static-libasan  -static-libtsan  -static-liblsan  -static-libubsan
@@ -79,7 +79,7 @@ index bea965fbd..036bf9e78 100644
  -T @var{script}  -Wl,@var{option}  -Xlinker @var{option}
  -u @var{symbol}  -z @var{keyword}}
  
-@@ -18736,6 +18737,11 @@ Specify that the program entry point is @var{entry}.  The argument is
+@@ -19152,6 +19153,11 @@ Specify that the program entry point is @var{entry}.  The argument is
  interpreted by the linker; the GNU linker accepts either a symbol name
  or an address.
  
@@ -95,9 +95,9 @@ diff --git a/gcc/gcc.cc b/gcc/gcc.cc
 index 1a1ca0506..bdbb5b133 100644
 --- a/gcc/gcc.cc
 +++ b/gcc/gcc.cc
-@@ -1172,6 +1172,7 @@ proper position among the other output files.  */
+@@ -1182,6 +1182,7 @@ proper position among the other output files.  */
      " STACK_SPLIT_SPEC "\
-     %{fprofile-arcs|fcondition-coverage|fprofile-generate*|coverage:-lgcov} " SANITIZER_SPEC " \
+     %{fprofile-arcs|fcondition-coverage|fpath-coverage|fprofile-generate*|coverage:-lgcov} " SANITIZER_SPEC " \
      %{!nostdlib:%{!r:%{!nodefaultlibs:%(link_ssp) %(link_gcc_c_sequence)}}}\
 +    %{!nostdlib++:}\
      %{!nostdlib:%{!r:%{!nostartfiles:%E}}} %{T*}  \n%(post_link) }}}}}}"
