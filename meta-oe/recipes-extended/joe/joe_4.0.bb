@@ -10,6 +10,8 @@ SRC_URI[sha256sum] = "c556adff77fd97bf1b86198de6cb82e0b92cda18579c4fef6c83b608d2
 
 inherit autotools update-alternatives
 
+CFLAGS += "-std=gnu17"
+
 RDEPENDS:${PN} = "ncurses-terminfo"
 
 EXTRA_OECONF:prepend="--bindir=/bin"

@@ -20,6 +20,8 @@ SRC_URI[sha256sum] = "374398699ac3fd802d98d642486cf6b0edc082a119c9c9c499945a0bc7
 
 S = "${WORKDIR}/js/src"
 
+CFLAGS += "-std=gnu17"
+
 # use local autoconf script to generate a usable jsautocfg.h
 # don't bother with automake
 inherit autotools-brokensep

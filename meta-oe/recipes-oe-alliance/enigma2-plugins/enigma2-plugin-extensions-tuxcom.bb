@@ -16,7 +16,7 @@ S = "${WORKDIR}/git"
 
 inherit autotools-brokensep pkgconfig
 
-CFLAGS += "-Wno-return-mismatch"
+CFLAGS += "-std=gnu17 -Wno-return-mismatch"
 
 do_install() {
     install -d ${D}/usr/plugins

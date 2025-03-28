@@ -32,6 +32,8 @@ CONFFILES:${PN} = "${sysconfdir}/minidlna.conf"
 
 INITSCRIPT_NAME = "minidlna"
 
+CFLAGS += "-std=gnu17"
+
 do_install:append() {
 	install -d ${D}${sysconfdir} ${D}${sysconfdir}/init.d/
 	install -m 644 ${UNPACKDIR}/minidlna.conf ${D}${sysconfdir}/minidlna.conf

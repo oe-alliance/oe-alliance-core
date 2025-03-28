@@ -21,6 +21,8 @@ inherit autotools-brokensep update-rc.d
 INITSCRIPT_NAME = "inadyn-mt"
 CONFFILES:${PN} = "/etc/inadyn.conf"
 
+CFLAGS += "-std=gnu17"
+
 do_compile() {
     make -f makefile-deprecated
 }

@@ -37,7 +37,8 @@ SRC_URI[sha256sum] = "d034f6c6d9578fe2addfaeceaa101584a4a1fc9f27d825c340baebd345
 inherit module machine_kernel_pr
 
 # need only for dreambox linux-meson64 4.9
-export KCFLAGS += " -Wno-error=misleading-indentation \
+export KCFLAGS += " -std=gnu17 \
+                    -Wno-error=misleading-indentation \
                     -Wno-error=aggressive-loop-optimizations \
                     -Wno-error=int-to-pointer-cast \
                     -Wno-error=restrict \

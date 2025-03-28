@@ -15,4 +15,6 @@ SRC_URI = "git://github.com/OpenVisionE2/dvbsnoop.git;protocol=https;branch=mast
 
 S = "${WORKDIR}/git"
 
+CFLAGS += "-std=gnu17"
+
 inherit autotools

@@ -71,6 +71,8 @@ export ac_cv_lib_bfd_bfd_openr="no"
 # Ensure we don't depend on LZO
 export ac_cv_lib_lzo2_lzo2a_decompress="no"
 
+CFLAGS += "-std=gnu17"
+
 do_install:append () {
 	rm -rf ${D}${bindir}/cairo-sphinx
 	rm -rf ${D}${libdir}/cairo/cairo-fdr*

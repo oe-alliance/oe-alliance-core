@@ -22,6 +22,8 @@ inherit autotools pkgconfig
 
 S = "${WORKDIR}/streamripper-1.64.6"
 
+CFLAGS += "-std=gnu17"
+
 do_configure:prepend() {
     touch ${S}/NEWS
     touch ${S}/AUTHORS

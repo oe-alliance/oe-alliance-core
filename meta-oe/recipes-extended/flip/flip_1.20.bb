@@ -30,10 +30,12 @@ SRC_URI = "http://http.debian.net/debian/pool/main/f/flip/flip_${PV}.orig.tar.gz
 SRC_URI[md5sum] = "beaf2ec0c986fec9862539da72fbbc62"
 SRC_URI[sha256sum] = "4cd45e581c71d7bcf1ab824a47fb9263fe5371ce702879a7d2efa08d27253471"
 
+CFLAGS += "-std=gnu17"
+
 do_compile() {
 	cd ${S}
-	${CC} -D_FORTIFY_SOURCE=2 -g -O2 -fPIE -fstack-protector-strong -Wformat -Werror=format-security -Wall -pedantic -DBSD -DIX -DSTDINCLUDE -c -DNDEBUG -O -DVERSION=\"1.20\" flip.c
-	${CC} -fPIE -pie -Wl,-z,relro -Wl,-z,now -Wl,--as-needed flip.o -o flip
+	${CC} -D_FORTIFY_SOURCE=2 -g -O2 ${CFLAGS} -fPIE -fstack-protector-strong -Wformat -Werror=format-security -Wall -pedantic -DBSD -DIX -DSTDINCLUDE -c -DNDEBUG -O -DVERSION=\"1.20\" flip.c
+	${CC} ${CFLAGS} -fPIE -pie -Wl,-z,relro -Wl,-z,now -Wl,--as-needed flip.o -o flip
 }
 
 do_install() {

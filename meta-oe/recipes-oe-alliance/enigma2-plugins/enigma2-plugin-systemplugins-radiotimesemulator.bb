@@ -19,6 +19,8 @@ SRC_URI = "git://github.com/LraiZer/RadiotimesXmltvEmulator.git;branch=gui-plugi
 
 S = "${WORKDIR}/git"
 
+CFLAGS += "-std=gnu17"
+
 # fixes parallel compilation races
 PARALLEL_MAKE = ""
 

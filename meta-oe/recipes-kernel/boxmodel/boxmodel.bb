@@ -16,8 +16,10 @@ PV = "1.0"
 
 inherit module
 
-# need only for dreambox linux-meson64 4.9
-export KCFLAGS += " -Wno-error=unused-variable"
+# need for dreambox linux-meson64 4.9 and gcc-15
+export KCFLAGS += " -std=gnu17 \
+                    -Wno-error=unused-variable \
+"
 
 do_compile () {  
     unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS

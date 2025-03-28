@@ -21,4 +21,4 @@ inherit setuptools3_legacy
 
 include python3-package-split.inc
 
-CFLAGS += "-Wno-error=int-conversion -Wno-error=implicit-function-declaration -Wno-error=incompatible-pointer-types"
+CFLAGS += "-std=gnu17 -Wno-error=int-conversion -Wno-error=implicit-function-declaration -Wno-error=incompatible-pointer-types"
