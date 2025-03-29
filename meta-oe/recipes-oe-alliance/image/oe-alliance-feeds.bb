@@ -100,6 +100,7 @@ RDEPENDS:${PN} = " \
     hdparm \
     htop \
     idle3-tools \
+    ifuse \
     inadyn-mt \
     iperf3 \
     ipkg-tools \
