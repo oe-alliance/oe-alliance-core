@@ -71,6 +71,7 @@ DEPENDS = "\
     bluez-conf \
     bluez-hidd \
     bluez-alsa \
+    btinit \
     ${@bb.utils.contains('MACHINE_FEATURES', 'legacykernel', '' , 'hostapd bridge-utils', d)} \
     wvdial wvstreams \
     ${@bb.utils.contains("MACHINE_FEATURES", "chromiumos", "chromium-browser", "", d)} \
@@ -85,7 +86,7 @@ DEPENDS = "\
 DESCRIPTION:enigma2-plugin-systemplugins-audioeffect = "Audio Effect setup"
 DESCRIPTION:enigma2-plugin-systemplugins-aboutboxbranding = "View Boxbranding data from the GUI"
 DESCRIPTION:enigma2-plugin-extensions-btdevicesmanager = "this is bt devices manger to pair e.x keyboard or mouse"
-RDEPENDS:enigma2-plugin-extensions-btdevicesmanager = "bluez5-testtools bluez5 bluez-hcidump bluez-conf bluez-hidd bluez-alsa alsa-utils-aplay ${PYTHON_PN}-pexpect"
+RDEPENDS:enigma2-plugin-extensions-btdevicesmanager = "btinit bluez5-testtools bluez5 bluez-hcidump bluez-conf bluez-hidd bluez-alsa alsa-utils-aplay ${PYTHON_PN}-pexpect"
 DESCRIPTION:enigma2-plugin-systemplugins-blindscan = "blindscan..."
 RRECOMMENDS:enigma2-plugin-systemplugins-blindscan = "virtual-blindscan-dvbs"
 DESCRIPTION:enigma2-plugin-extensions-dlnabrowser = "this is dlna/upnp browser using djmount"
@@ -160,7 +161,7 @@ inherit autotools-brokensep gitpkgv gettext ${PYTHON_PN}targetconfig
 SRCREV = "${AUTOREV}"
 PV = "${IMAGE_VERSION}+gitr"
 PKGV = "${IMAGE_VERSION}+gitr${GITPKGV}"
-PR = "r2"
+PR = "r3"
 
 SRC_URI = "${OEA_PLUGINS_URI}"
 
