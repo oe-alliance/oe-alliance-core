@@ -22,6 +22,17 @@ log() {
 
 if [ -f "$SETTINGS_FILE" ]; then
     AUDIO_ADDRESS=$(grep -m 1 '^config.btdevicesmanager.audioaddress=' "$SETTINGS_FILE" | cut -d'=' -f2 | tr -d "'\"")
+    AUDIO_CONNECT=$(grep -m 1 '^config.btdevicesmanager.audioconnect=' "$SETTINGS_FILE" | cut -d'=' -f2 | tr -d "'\"")
+fi
+
+# If AUDIO_ADDRESS is empty, set AUDIO_CONNECT to False
+if [ -z "$AUDIO_ADDRESS" ]; then
+    AUDIO_CONNECT="False"
+fi
+
+# If AUDIO_CONNECT is not set or is not True, default to False
+if [ -z "$AUDIO_CONNECT" ] || [ "$AUDIO_CONNECT" != "True" ]; then
+    AUDIO_CONNECT="False"
 fi
 
 if [ -f "$INFO_FILE" ]; then
@@ -52,8 +63,13 @@ start() {
     done) &
 
     if [ -f "$BTAUDIO_FILE" ] && [ -n "$AUDIO_ADDRESS" ]; then
-        log "Connecting to audio device: $AUDIO_ADDRESS"
-        "$COMMANDCONNECT" "$AUDIO_ADDRESS" &
+        if [ "$AUDIO_CONNECT" = "True" ]; then
+            log "Connecting to audio device: $AUDIO_ADDRESS"
+            "$COMMANDCONNECT" "$AUDIO_ADDRESS" &
+        else
+            log "Connecting to audio device default"
+            "$COMMANDCONNECT" &
+        fi
     fi
 }
 
