@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<sources>
+
+<!--
+You can list as many <source> entries in a file as you wish.
+Files or urls for sources and channels ending in '.gz' will be treated as
+gzipped and decompressed while processing.
+Use the "type" attribute to set the python module that handles the file,
+currently type="gen_xmltv" and type="epg.dat" are supported, more will follow once this plugin
+gets more popular.
+The channels property is the local file or URL with channel ID to service ref
+mappings. The default is the same filename but with .channels.xml as extension.
+Each source may use a different channels definition, or multiple sources may use
+the same, whatever is convenient.
+The description must be unique for each source, and is displayed on the UI.
+-->
+
+	<sourcecat sourcecatname="Rytec TURKEY XMLTV">
+		<source type="gen_xmltv" channels="https://www.open-epg.com/files/turkey1.xml">
+			<description>Open-EPG - Turkey1 (xml)</description>
+			<url>https://www.open-epg.com/files/turkey1.xml.gz</url>
+		</source>
+		<source type="gen_xmltv" channels="https://www.open-epg.com/files/turkey2.xml">
+			<description>Open-EPG - Turkey2 (xml)</description>
+			<url>https://www.open-epg.com/files/turkey2.xml.gz</url>
+		</source>
+		<source type="gen_xmltv" channels="https://www.open-epg.com/files/turkey3.xml">
+			<description>Open-EPG - Turkey3 (xml)</description>
+			<url>https://www.open-epg.com/files/turkey3.xml.gz</url>
+		</source>
+		<source type="gen_xmltv" channels="https://www.open-epg.com/files/turkey4.xml">
+			<description>Open-EPG - Turkey4 (xml)</description>
+			<url>https://www.open-epg.com/files/turkey4.xml.gz</url>
+		</source>
+		<source type="gen_xmltv" channels="https://epgshare01.online/epgshare01/epg_ripper_TR1.xml">
+			<description>EPG-Ripper - TR1-TR3 (xml)</description>
+			<url>https://epgshare01.online/epgshare01/epg_ripper_TR1.xml.gz</url>
+			<url>https://epgshare01.online/epgshare01/epg_ripper_TR3.xml.gz</url>
+		</source>
+		<source type="gen_xmltv" channels="https://epg.tvcdn.net/guide/tr-guide.xml">
+			<description>TVCDN - TR1-TR3 (xml)</description>
+			<url>https://epgshare01.online/epgshare01/epg_ripper_TR1.xml.gz</url>
+			<url>https://epgshare01.online/epgshare01/epg_ripper_TR3.xml.gz</url>
+		</source>
+	</sourcecat>
+</sources>
