@@ -7,7 +7,7 @@ require conf/license/license-gplv2.inc
 
 PV = "20250331"
 PR = "r0"
-SRC_URI = "file://rytec.sources.xml file://russian.sources.xml file://spainKoala.sources.xml \
+SRC_URI = "file://rytec.sources.xml file://russian.sources.xml file://spainKoala.sources.xml file://turkish.sources.xml \
     "
 
 S = "${WORKDIR}"
@@ -22,4 +22,5 @@ do_install() {
     install -m 644 ${S}/rytec.sources.xml ${D}/etc/epgimport/rytec.sources.xml
     install -m 644 ${S}/russian.sources.xml ${D}/etc/epgimport/russian.sources.xml
     install -m 644 ${S}/spainKoala.sources.xml ${D}/etc/epgimport/spainKoala.sources.xml
+    install -m 644 ${S}/spainKoala.sources.xml ${D}/etc/epgimport/turkish.sources.xml
 }
