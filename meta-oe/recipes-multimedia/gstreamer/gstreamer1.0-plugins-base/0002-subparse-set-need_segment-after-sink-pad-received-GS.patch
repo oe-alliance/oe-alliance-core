@@ -25,9 +25,9 @@ new mode 100755
 index 7aa922c..2a6595d
 --- a/gst/subparse/gstsubparse.c
 +++ b/gst/subparse/gstsubparse.c
-@@ -275,24 +275,20 @@ gst_sub_parse_src_event (GstPad * pad, GstObject * parent, GstEvent * event)
-         goto beach;
-       }
+@@ -278,24 +278,20 @@ gst_sub_parse_src_event (GstPad * pad, GstObject * parent, GstEvent * event)
+       if (ret)
+         break;
  
 +      /* Apply the seek to our segment */
 +      gst_segment_do_seek (&self->segment, rate, format, flags,
@@ -58,7 +58,7 @@ index 7aa922c..2a6595d
          GST_WARNING_OBJECT (self, "seek to 0 bytes failed");
        }
  
-@@ -1806,10 +1802,12 @@ gst_sub_parse_sink_event (GstPad * pad, GstObject * parent, GstEvent * event)
+@@ -1814,10 +1810,12 @@ gst_sub_parse_sink_event (GstPad * pad, GstObject * parent, GstEvent * event)
        gst_event_parse_segment (event, &s);
        if (s->format == GST_FORMAT_TIME)
          gst_event_copy_segment (event, &self->segment);
