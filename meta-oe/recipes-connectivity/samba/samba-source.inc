@@ -1,4 +1,4 @@
-PV = "4.21.0"
+PV = "4.21.5"
 HOMEPAGE = "https://www.samba.org/"
 SECTION = "console/network"
 
@@ -68,5 +68,5 @@ SRC_URI:append:opendroid = " \
            file://smb-local.conf \
           "
 
-SRC_URI[sha256sum] = "09bb56db4ce003cafdbebe9bad368c4f4ff1945f732d18077d52f36ab20cef88"
+SRC_URI[sha256sum] = "ad04d02cc5bb9bdff75cebd7dc68b004339df8bfb3a86c4c0f970b9ea36524e5"
 UPSTREAM_CHECK_REGEX = "samba\-(?P<pver>4\.21(\.\d+)+).tar.gz"

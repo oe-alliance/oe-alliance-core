@@ -40,6 +40,7 @@ EXTRA_OECONF += "--disable-cups \
                  --without-ad-dc \
                  --without-json \
                  --without-libarchive \
+                 --without-ldb-lmdb \
                  --disable-python --nopyc --nopyo \
                  --without-ads \
                  --without-ldap \
