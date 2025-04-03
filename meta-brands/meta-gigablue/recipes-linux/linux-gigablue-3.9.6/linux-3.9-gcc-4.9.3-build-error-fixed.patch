@@ -6,7 +6,7 @@ index 6f7978f..446a039 100644
  endif
  cflags-y += $(call cc-option, -mno-check-zero-division)
  
-+GCC_VERSION = $(shell $(CC) --version | grep ^mipsel-oe-linux-gcc | sed 's/^.* //g' | sed -e 's/\.\([0-9][0-9]\)/\1/g' -e 's/\.\([0-9]\)/0\1/g' -e 's/^[0-9]\{3,4\}$$/&00/')
++GCC_VERSION = $(shell $(CC) --version | grep -m1 "" | sed -e 's/^.*[^0-9]\([0-9]*\.[0-9]*\.[0-9]*\).*$$/\1/' -e 's/\.\([0-9]\)/0\1/g' -e 's/^[0-9]\{3,4\}$$/&00/')
 +GCC_GTEQ_493 = $(shell expr $(GCC_VERSION) \>= 40903)
 +ifeq ($(GCC_GTEQ_493),1)
 +  # oskwon fixed.

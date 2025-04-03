@@ -13,7 +13,7 @@ SRC_URI[sha256sum] = "738896d2682211d2079eeaa1c7b8bdd0fe75eb90cd12dff2fc5aeb3cc0
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR:prepend = "2"
+MACHINE_KERNEL_PR = "r3"
 
 RPROVIDES:${KERNEL_PACKAGE_NAME}-image += "kernel-${KERNEL_IMAGETYPE}"
 
@@ -34,7 +34,7 @@ KERNEL_IMAGEDEST = "tmp"
 KERNEL_OUTPUT = "vmlinux"
 KERNEL_IMAGETYPE = "vmlinux"
 
-KERNEL_EXTRA_ARGS = "EXTRA_CFLAGS=-Wno-attribute-alias"
+KERNEL_EXTRA_ARGS = 'EXTRA_CFLAGS="-std=gnu17 -Wno-attribute-alias"'
 
 FILES:${KERNEL_PACKAGE_NAME}-image = "/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}*"
 

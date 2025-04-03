@@ -57,7 +57,8 @@ SRC_URI = " \
     file://fix-build-with-binutils-2.41.patch \
 "
 
-export KCFLAGS = " -Wno-error=incompatible-pointer-types \
+export KCFLAGS = " -std=gnu17 \
+                   -Wno-error=incompatible-pointer-types \
                    -Wno-error=declaration-missing-parameter-type \
                    -Wno-error=unused-label \
                    -Wno-error=enum-compare \
@@ -72,7 +73,7 @@ export KCFLAGS = " -Wno-error=incompatible-pointer-types \
                    -Wno-error=stringop-overread \
                    -Wno-error=int-in-bool-context \
                    -Wno-error=unused-const-variable \
-                   -Wno-error=maybe-uninitialized \           
+                   -Wno-error=maybe-uninitialized \
 "
 
 

@@ -44,7 +44,8 @@ SRC_URI += "https://source.mynonpublic.com/dags/linux-3.14.28.tar.xz \
     file://fix-build-with-binutils-2.41.patch \
 "
 
-export KCFLAGS = " -Wno-error=incompatible-pointer-types \
+export KCFLAGS = " -std=gnu17 \
+                   -Wno-error=incompatible-pointer-types \
                    -Wno-error=address-of-packed-member \
                    -Wno-error=unused-result \
                    -Wno-error=format-overflow \

@@ -16,7 +16,7 @@ SRC_URI[sha256sum] = "b3131a4de50892127eecbeaf869ac5d31e8602473b9cd214c515050ea6
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-brcmstb-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR:append = ".6"
+MACHINE_KERNEL_PR = "r7"
 
 SRC_URI += "https://source.mynonpublic.com/xcore/xcore-linux-${PV}-${SRC}.tar.gz \
     file://defconfig \
@@ -45,6 +45,8 @@ export OS = "Linux"
 KERNEL_OBJECT_SUFFIX = "ko"
 KERNEL_IMAGEDEST = "tmp"
 KERNEL_OUTPUT = "arch/${ARCH}/boot/${KERNEL_IMAGETYPE}"
+
+KERNEL_EXTRA_ARGS = 'EXTRA_CFLAGS="-std=gnu17 -Wno-attribute-alias"'
 
 FILES:${KERNEL_PACKAGE_NAME}-image = "${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}* /${KERNEL_IMAGEDEST}/findkerneldevice.py"
 

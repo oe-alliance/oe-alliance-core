@@ -23,7 +23,8 @@ SRC_URI = " \
     file://fix-build-with-binutils-2.41.patch \
 "
 
-export KCFLAGS = " -Wno-error=incompatible-pointer-types \
+export KCFLAGS = " -std=gnu17 \
+                   -Wno-error=incompatible-pointer-types \
                    -Wno-error=address-of-packed-member \
                    -Wno-error=unused-result \
                    -Wno-error=format-overflow \
@@ -34,7 +35,7 @@ export KCFLAGS = " -Wno-error=incompatible-pointer-types \
                    -Wno-error=unused-function \
                    -Wno-error=stringop-overread \
                    -Wno-error=unused-const-variable \
-                   -Wno-error=maybe-uninitialized \           
+                   -Wno-error=maybe-uninitialized \
 "
 
 SRC_URI[kernel.md5sum] = "967f72983655e2479f951195953e8480"

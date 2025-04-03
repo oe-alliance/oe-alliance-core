@@ -67,7 +67,8 @@ SRC_URI += "https://source.mynonpublic.com/xtrend/xtrend-linux-${PV}.tar.gz \
     file://fix-build-with-binutils-2.41.patch \
     "
 
-export KCFLAGS = " -Wno-error=incompatible-pointer-types \
+export KCFLAGS = " -std=gnu17 \
+                   -Wno-error=incompatible-pointer-types \
                    -Wno-error=address-of-packed-member \
                    -Wno-error=unused-result \
                    -Wno-error=format-overflow \

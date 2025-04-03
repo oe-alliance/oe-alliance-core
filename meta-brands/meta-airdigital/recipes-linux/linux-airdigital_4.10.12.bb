@@ -15,7 +15,7 @@ SRC_URI[arm.sha256sum] = "67a3ac98727595a399d5c399d3b66a7fadbe8136ac517e08decba5
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR:append = "18"
+MACHINE_KERNEL_PR = "r19"
 
 SRC_URI += "https://source.mynonpublic.com/zgemma/linux-${PV}-${ARCH}.tar.gz;name=${ARCH} \
     file://defconfig \
@@ -62,7 +62,7 @@ export OS = "Linux"
 KERNEL_OBJECT_SUFFIX = "ko"
 KERNEL_IMAGEDEST = "tmp"
 
-KERNEL_EXTRA_ARGS = "EXTRA_CFLAGS=-Wno-attribute-alias"
+KERNEL_EXTRA_ARGS = 'EXTRA_CFLAGS="-std=gnu17 -Wno-attribute-alias"'
 
 # Linux MIPS Models
 

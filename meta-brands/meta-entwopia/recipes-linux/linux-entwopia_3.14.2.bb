@@ -62,7 +62,8 @@ SRC_URI += "https://source.mynonpublic.com/entwopia/${MACHINE}/${MACHINE}-linux-
     file://0007-overlayfs.patch \
     "
 
-export KCFLAGS = " -Wno-error=incompatible-pointer-types \
+export KCFLAGS = " -std=gnu17 \
+                   -Wno-error=incompatible-pointer-types \
                    -Wno-error=address-of-packed-member \
                    -Wno-error=unused-result \
                    -Wno-error=format-overflow \
