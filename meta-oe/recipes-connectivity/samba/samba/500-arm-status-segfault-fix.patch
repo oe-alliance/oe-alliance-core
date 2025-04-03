@@ -17,7 +17,7 @@ index 02a5f6d..6e0b609 100644
 +		TALLOC_FREE(db);
 +
  		prepare_share_mode(&state);
- 		result = share_entry_forall(print_share_mode, &state);
+ 		result = share_entry_forall_read(print_share_mode, &state);
  
 @@ -1287,7 +1288,7 @@ int main(int argc, const char *argv[])
  			brl_forall(print_brl, &state);

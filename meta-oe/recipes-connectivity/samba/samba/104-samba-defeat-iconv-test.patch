@@ -32,5 +32,5 @@ index adae44e..222ae80 100644
                  headers='errno.h iconv.h')
 +"""
  
- if conf.CHECK_CFG(package='icu-i18n icu-uc',
-                args='--cflags --libs',
+ # Since commit 86c7688 (MR !3447), the required ICU libraries are discovered
+ # as a single group. This had the benefit of working around ICU-22610, and also

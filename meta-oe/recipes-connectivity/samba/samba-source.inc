@@ -1,4 +1,4 @@
-PV = "4.21.5"
+PV = "4.22.0"
 HOMEPAGE = "https://www.samba.org/"
 SECTION = "console/network"
 
@@ -22,7 +22,6 @@ SRC_URI = "${SAMBA_MIRROR}/stable/samba-${PV}.tar.gz \
            file://011-source4-msgsock-nvram-fix.patch \
            file://101-do-not-check-xsltproc-manpages.patch \
            file://102-add-options-to-configure-the-use-of-libbsd.patch \
-           file://103-tmsize-overflow-fix.patch \
            file://104-samba-defeat-iconv-test.patch \
            file://106-source3-wscript-disable-check-fcntl-F_OWNER_EX.patch \
            file://107-source3-wscript-disable-check-fcntl-RW_HINTS.patch \
@@ -68,5 +67,5 @@ SRC_URI:append:opendroid = " \
            file://smb-local.conf \
           "
 
-SRC_URI[sha256sum] = "ad04d02cc5bb9bdff75cebd7dc68b004339df8bfb3a86c4c0f970b9ea36524e5"
+SRC_URI[sha256sum] = "b39242e1ac1f5469e634c94b2e472045e5060975c2dd6c4cdcdfce0c5586cd76"
 UPSTREAM_CHECK_REGEX = "samba\-(?P<pver>4\.21(\.\d+)+).tar.gz"

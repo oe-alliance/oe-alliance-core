@@ -2,9 +2,9 @@ diff --git a/lib/util/charset/wscript_configure b/lib/util/charset/wscript_confi
 index 222ae80..841e6fe 100644
 --- a/lib/util/charset/wscript_configure
 +++ b/lib/util/charset/wscript_configure
-@@ -40,14 +40,14 @@ conf.CHECK_CODE('''
-                 headers='errno.h iconv.h')
- """
+@@ -44,14 +44,14 @@ conf.CHECK_CODE('''
+ # as a single group. This had the benefit of working around ICU-22610, and also
+ # works with the fix that was merged to ICU main in commit 199bc827.
  
 -if conf.CHECK_CFG(package='icu-i18n icu-uc',
 -               args='--cflags --libs',
