@@ -34,7 +34,7 @@ do_install:append() {
     rm -f ${D}${PYTHON_SITEPACKAGES_DIR}/youtube_dl*egg-info/SOURCES.txt
     rm -f ${D}${PYTHON_SITEPACKAGES_DIR}/youtube_dl*egg-info/dependency_links.txt
     rm -f ${D}${PYTHON_SITEPACKAGES_DIR}/youtube_dl*egg-info/top_level.txt
-    rm -f ${D}${PYTHON_SITEPACKAGES_DIR}/youtube_dl*dist-info/*
+    rm -rf ${D}${PYTHON_SITEPACKAGES_DIR}/youtube_dl*dist-info/*
     chmod 755 ${D}/usr/bin/youtube-dl
 }
 
