@@ -8,7 +8,7 @@ inherit update-rc.d
 INITSCRIPT_NAME = "BTInit.sh"
 INITSCRIPT_PARAMS = "defaults 60 "
 
-PR = "r0"
+PR = "r1"
 
 SRC_URI  = "file://${INITSCRIPT_NAME}"
 
