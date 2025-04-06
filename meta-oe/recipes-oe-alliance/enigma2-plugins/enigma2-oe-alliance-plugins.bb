@@ -37,7 +37,6 @@ PROVIDES += " \
     enigma2-plugin-extensions-libvupldemo \
     enigma2-plugin-extensions-witaispeechtotext \
     enigma2-plugin-extensions-webkithbbtv \
-    enigma2-plugin-extensions-stalkerclient \
     ${@bb.utils.contains('MACHINE_FEATURES', 'operahbbtv', 'enigma2-plugin-extensions-hbbtv ' , ' ', d)} \
     enigma2-plugin-systemplugins-transcodingsetup \
     enigma2-plugin-systemplugins-micomupgrade \
@@ -152,7 +151,6 @@ DESCRIPTION:enigma2-plugin-extensions-witaispeechtotext = "Vuplus wit.ai speech 
 RDEPENDS:enigma2-plugin-extensions-witaispeechtotext = "${PYTHON_PN}-requests"
 DESCRIPTION:enigma2-plugin-extensions-webkithbbtv = "E2 HbbTV Plugin"
 RDEPENDS:enigma2-plugin-extensions-webkithbbtv = "vuplus-webkithbbtv-dumpait webkit-hbbtv-browser libupnp1.6"
-DESCRIPTION:enigma2-plugin-extensions-stalkerclient = "E2 Staker Client Plugin"
 DESCRIPTION:enigma2-plugin-extensions-tvspielfilm = "TVSpielfilm Plugin"
 RDEPENDS:enigma2-plugin-extensions-tvspielfilm = "${PYTHON_PN}-yt-dlp"
 
