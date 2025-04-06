@@ -152,7 +152,6 @@ DESCRIPTION:enigma2-plugin-extensions-witaispeechtotext = "Vuplus wit.ai speech 
 RDEPENDS:enigma2-plugin-extensions-witaispeechtotext = "python3-requests"
 DESCRIPTION:enigma2-plugin-extensions-webkithbbtv = "E2 HbbTV Plugin"
 RDEPENDS:enigma2-plugin-extensions-webkithbbtv = "vuplus-webkithbbtv-dumpait webkit-hbbtv-browser libupnp1.6"
-DESCRIPTION:enigma2-plugin-extensions-stalkerclient = "E2 Staker Client Plugin"
 DESCRIPTION:enigma2-plugin-extensions-tvspielfilm = "TVSpielfilm Plugin"
 RDEPENDS:enigma2-plugin-extensions-tvspielfilm = "python3-yt-dlp"
 
