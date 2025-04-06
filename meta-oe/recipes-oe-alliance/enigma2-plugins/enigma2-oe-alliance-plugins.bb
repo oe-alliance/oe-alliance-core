@@ -37,7 +37,6 @@ PROVIDES += " \
     enigma2-plugin-extensions-libvupldemo \
     enigma2-plugin-extensions-witaispeechtotext \
     enigma2-plugin-extensions-webkithbbtv \
-    enigma2-plugin-extensions-stalkerclient \
     ${@bb.utils.contains('MACHINE_FEATURES', 'operahbbtv', 'enigma2-plugin-extensions-hbbtv ' , ' ', d)} \
     enigma2-plugin-systemplugins-transcodingsetup \
     enigma2-plugin-systemplugins-micomupgrade \
