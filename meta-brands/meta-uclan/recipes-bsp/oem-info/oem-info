@@ -8,9 +8,9 @@
 # Short-Description:  change enigma.info on the fly for oem build
 ### END INIT INFO
 
-if [ -f "/.oem-info" ]; then
-  exit
-fi
+#if [ -f "/.oem-info" ]; then
+#  exit
+#fi
 
 # default build info
 #displaymodel=Ustym 4K PRO
@@ -29,4 +29,4 @@ fi
 
 sed -i '/checksum=/d' $INFO
 printf "checksum=%s\n" $(md5sum $INFO | cut -d ' ' -f 1) >> $INFO
-touch "/.oem-info"
+#touch "/.oem-info"

@@ -4,7 +4,7 @@ require conf/license/license-gplv2.inc
 COMPATIBLE_MACHINE = "dm520"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-PV = "1.0"
+PV = "1.1"
 
 SRC_URI = "file://oem-info"
 

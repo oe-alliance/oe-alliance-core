@@ -4,7 +4,7 @@ require conf/license/license-gplv2.inc
 COMPATIBLE_MACHINE = "^(et7x00|et4x00|et5x00|et6x00|et9x00)$"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-PV = "1.0"
+PV = "1.1"
 
 SRC_URI = "file://oem-info"
 
