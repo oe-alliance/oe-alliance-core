@@ -12,7 +12,7 @@ COMPATIBLE_MACHINE = "^(ch62lc|ew7356|ew7358|ew7362)$"
 
 inherit kernel machine_kernel_pr
 
-MACHINE_KERNEL_PR:append = ".3"
+MACHINE_KERNEL_PR = "r4"
 
 SRC_URI[ew7356.md5sum] = "15f56eb97fcc3512b031fffec7046f99"
 SRC_URI[ew7356.sha256sum] = "060093585e4de86cf5c1f717d1f6fca486a633675e94fa5a07fab566ec074e33"
@@ -45,16 +45,7 @@ SRC_URI += "https://source.mynonpublic.com/entwopia/${MACHINE}/${MACHINE}-linux-
     file://timedate.patch \
     file://linux-3.14.2-gcc-4.9.3-build-error-fixed.patch \
     file://rtl8712-fix-warnings.patch \
-    file://kernel-add-support-for-gcc-5.patch \
-    file://kernel-add-support-for-gcc6.patch \
-    file://kernel-add-support-for-gcc7.patch \
-    file://kernel-add-support-for-gcc8.patch \
-    file://kernel-add-support-for-gcc9.patch \
-    file://kernel-add-support-for-gcc10.patch \
-    file://kernel-add-support-for-gcc11.patch \
-    file://kernel-add-support-for-gcc12.patch \
-    file://kernel-add-support-for-gcc13.patch \
-    file://kernel-add-support-for-gcc14.patch \
+    ${GCC_KERNEL_PATCH} \
     file://build-with-gcc12-fixes.patch \
     file://0001-Support-TBS-USB-drivers.patch \
     file://0001-STV-Add-PLS-support.patch \

@@ -12,7 +12,7 @@ SRC_URI[sha256sum] = "badb5446dad5f9d4454b300677c760c388751867c7728fe9cc1a1b3098
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR:append = ".1"
+MACHINE_KERNEL_PR = "r2"
 
 inherit kernel machine_kernel_pr
 
@@ -39,16 +39,7 @@ SRC_URI += "https://source.mynonpublic.com/ini/bcm7358-linux-${KV}-${SRCDATE}.tg
     file://rt2800usb_fix_warn_tx_status_timeout_to_dbg.patch \
     file://linux-3.12.1-gcc-4.9.3-build-error-fixed.patch \
     file://rtl8712-fix-warnings.patch \
-    file://kernel-add-support-for-gcc-5.patch \
-    file://kernel-add-support-for-gcc6.patch \
-    file://kernel-add-support-for-gcc7.patch \
-    file://kernel-add-support-for-gcc8.patch \
-    file://kernel-add-support-for-gcc9.patch \
-    file://kernel-add-support-for-gcc10.patch \
-    file://kernel-add-support-for-gcc11.patch \
-    file://kernel-add-support-for-gcc12.patch \
-    file://kernel-add-support-for-gcc13.patch \
-    file://kernel-add-support-for-gcc14.patch \
+    ${GCC_KERNEL_PATCH} \
     file://build-with-gcc12-fixes.patch \
     file://0001-Support-TBS-USB-drivers.patch \
     file://0001-STV-Add-PLS-support.patch \

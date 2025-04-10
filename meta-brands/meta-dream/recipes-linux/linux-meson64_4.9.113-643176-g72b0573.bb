@@ -4,7 +4,7 @@ PE = "1"
 
 inherit kernel machine_kernel_pr
 
-MACHINE_KERNEL_PR:append = ".2"
+MACHINE_KERNEL_PR = "r3"
 
 require linux-dreambox-4.9.inc
 
@@ -12,8 +12,6 @@ SRC_URI = "https://source.mynonpublic.com/dreambox/${BPN}-v${PV}.tar.xz \
            file://dmmaml_cec2.patch \
            file://ge2d.patch \
            file://hdmi_tx_spdif.patch \	 
-           file://support-for-gcc12.patch \
-           file://support-for-gcc13.patch \
            file://defconfig \
            file://fix-multiple-defs-yyloc_v1.patch \
            file://0003-cp1emu-do-not-use-bools-for-arithmetic.patch \
@@ -21,6 +19,7 @@ SRC_URI = "https://source.mynonpublic.com/dreambox/${BPN}-v${PV}.tar.xz \
            file://hide_sdcardfs_info.patch \
            file://use_address-of_operator_on_section_symbols.patch \
            file://fix-build-with-binutils-2.41.patch \
+           ${GCC_KERNEL_PATCH} \
 "
 
 SRC_URI[md5sum] = "2b77df9bf64f825925172790c54f8ead"

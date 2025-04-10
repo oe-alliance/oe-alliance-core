@@ -9,7 +9,7 @@ RPROVIDES:${KERNEL_PACKAGE_NAME}-image += "kernel-${KERNEL_IMAGETYPE}"
 
 inherit kernel machine_kernel_pr
 
-MACHINE_KERNEL_PR:append = "oea4.3-r5"
+MACHINE_KERNEL_PR = "r6"
 
 SRC_URI[md5sum] = "19e9956653437b99b4fa6ec3e16a3e99"
 SRC_URI[sha256sum] = "ef7fb307582ff243aacff8a13025fe028634aaf650ada309991ae03622962f61"
@@ -20,16 +20,7 @@ KERNEL_CONFIG = "${@bb.utils.contains("MACHINE_FEATURES", "dvbproxy", "defconfig
 
 SRC_URI = "https://source.mynonpublic.com/vuplus/release/kernel/stblinux-${KV}.tar.bz2 \
     file://${KERNEL_CONFIG} \
-    file://kernel-add-support-for-gcc5.patch \
-    file://kernel-add-support-for-gcc6.patch \
-    file://kernel-add-support-for-gcc7.patch \
-    file://kernel-add-support-for-gcc8.patch \
-    file://kernel-add-support-for-gcc9.patch \
-    file://kernel-add-support-for-gcc10.patch \
-    file://kernel-add-support-for-gcc11.patch \
-    file://kernel-add-support-for-gcc12.patch \
-    file://kernel-add-support-for-gcc13.patch \
-    file://kernel-add-support-for-gcc14.patch \
+    ${GCC_KERNEL_PATCH} \
     file://build-with-gcc12-fixes.patch \
     file://rt2800usb_fix_warn_tx_status_timeout_to_dbg.patch \
     file://add-dmx-source-timecode.patch \

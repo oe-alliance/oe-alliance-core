@@ -14,7 +14,7 @@ COMPATIBLE_MACHINE = "^(jj7362|vg1000|vg2000|vg5000|yh62tc|yh7362)$"
 
 inherit kernel machine_kernel_pr
 
-MACHINE_KERNEL_PR:append = ".4"
+MACHINE_KERNEL_PR = "r5"
 
 SRC_URI[jj7362.md5sum] = "8e0385481057a214f0635c8b947dbb7d"
 SRC_URI[jj7362.sha256sum] = "6c782f1003a48c508832660b1053d68f3c616f5b1ece373d06125a0e7f47d23a"
@@ -50,16 +50,7 @@ SRC_URI += "https://source.mynonpublic.com/tripledot/${MACHINE}-linux-${PV}-base
         file://tda18271-advertise-supported-delsys.patch \
         file://timedate.patch \
         file://linux-3.14.2-gcc-4.9.3-build-error-fixed.patch \
-        file://kernel-add-support-for-gcc-5.patch \
-        file://kernel-add-support-for-gcc6.patch \
-        file://kernel-add-support-for-gcc7.patch \
-        file://kernel-add-support-for-gcc8.patch \
-        file://kernel-add-support-for-gcc9.patch \
-        file://kernel-add-support-for-gcc10.patch \
-        file://kernel-add-support-for-gcc11.patch \
-        file://kernel-add-support-for-gcc12.patch \
-        file://kernel-add-support-for-gcc13.patch \
-        file://kernel-add-support-for-gcc14.patch \
+        ${GCC_KERNEL_PATCH} \
         file://build-with-gcc12-fixes.patch \
         file://rtl8712-fix-warnings.patch \
         file://0001-Support-TBS-USB-drivers.patch \

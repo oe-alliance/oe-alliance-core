@@ -4,7 +4,7 @@ LICENSE = "GPL-2.0-only"
 
 inherit kernel machine_kernel_pr
 
-MACHINE_KERNEL_PR:append = "2"
+MACHINE_KERNEL_PR = "r3"
 KERNEL_RELEASE = "3.8.7"
 
 COMPATIBLE_MACHINE = "^(et5x00|et6x00|et9x00)$"
@@ -19,7 +19,6 @@ RPROVIDES:${KERNEL_PACKAGE_NAME}-image += "kernel-${KERNEL_IMAGETYPE}"
 SRC_URI += "https://source.mynonpublic.com/xtrend/xtrend-linux-${PV}.tar.gz \
     file://defconfig \
     file://Kernelupdate13.patch \
-    file://0001-kernel-add-support-for-gcc-5.patch \
     file://0001-Revert-default-authentication-needs-to-be-at-least-n.patch \
     file://0001-Revert-MIPS-mm-Add-compound-tail-page-_mapcount-when.patch \
     file://0001-Revert-MIPS-Add-fast-get_user_pages.patch \
@@ -50,15 +49,7 @@ SRC_URI += "https://source.mynonpublic.com/xtrend/xtrend-linux-${PV}.tar.gz \
     file://rtl8187se-fix-warnings.patch \
     file://em28xx-dvb-enable-LNA-by-default-for-PCTV290e.patch \
     file://zl10353-output-full-range-SNR.patch \
-    file://kernel-add-support-for-gcc6.patch \
-    file://kernel-add-support-for-gcc7.patch \
-    file://kernel-add-support-for-gcc8.patch \
-    file://kernel-add-support-for-gcc9.patch \
-    file://kernel-add-support-for-gcc10.patch \
-    file://kernel-add-support-for-gcc11.patch \
-    file://kernel-add-support-for-gcc12.patch \
-    file://kernel-add-support-for-gcc13.patch \
-    file://kernel-add-support-for-gcc14.patch \
+    ${GCC_KERNEL_PATCH} \
     file://build-with-gcc12-fixes.patch \
     file://stv0900-Multistream-support.patch \
     file://0001-STV-Add-PLS-support.patch \

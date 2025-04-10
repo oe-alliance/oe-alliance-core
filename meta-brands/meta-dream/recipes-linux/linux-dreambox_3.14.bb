@@ -1,6 +1,6 @@
 inherit kernel machine_kernel_pr
 
-MACHINE_KERNEL_PR:append = ".26"
+MACHINE_KERNEL_PR = "r27"
 
 COMPATIBLE_MACHINE = "^(dm900|dm920)$"
 
@@ -32,6 +32,7 @@ SRC_URI = " \
     file://move-default-dialect-to-SMB3.patch \
     file://fix-multiple-defs-yyloc.patch \
     file://fix-build-with-binutils-2.41.patch \
+    ${GCC_KERNEL_PATCH} \
 "
 
 SRC_URI[kernel.md5sum] = "b621207b3f6ecbb67db18b13258f8ea8"

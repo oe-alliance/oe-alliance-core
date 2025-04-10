@@ -1,6 +1,6 @@
 inherit kernel machine_kernel_pr
 
-MACHINE_KERNEL_PR:append = ".14"
+MACHINE_KERNEL_PR = "r15"
 
 COMPATIBLE_MACHINE = "^(dm520|dm820|dm7080)$"
 
@@ -12,15 +12,7 @@ SRC_URI = " \
     ${KERNELORG_MIRROR}/linux/kernel/v3.x/patch-${PV}.${PATCHLEVEL}.xz;apply=yes;name=stable-patch \
     https://source.mynonpublic.com/dreambox/linux-dreambox-${PV}-${PATCHREV}.patch.xz;apply=yes;name=dream-patch \
     file://dvb_frontend-Multistream-support-3.4.patch \
-    file://kernel-add-support-for-gcc6.patch \
-    file://kernel-add-support-for-gcc7.patch \
-    file://kernel-add-support-for-gcc8.patch \
-    file://kernel-add-support-for-gcc9.patch \
-    file://kernel-add-support-for-gcc10.patch \
-    file://kernel-add-support-for-gcc11.patch \
-    file://kernel-add-support-for-gcc12.patch \
-    file://kernel-add-support-for-gcc13.patch \
-    file://kernel-add-support-for-gcc14.patch \
+    ${GCC_KERNEL_PATCH} \
     file://build-with-gcc12-fixes.patch \
     file://genksyms_fix_typeof_handling.patch \
     file://defconfig \

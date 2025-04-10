@@ -6,7 +6,7 @@ MODULE = "linux-4.1.20"
 
 COMPATIBLE_MACHINE = "^(vuuno4kse|vuzero4k)$"
 
-MACHINE_KERNEL_PR:append = "oea4.1-r7"
+MACHINE_KERNEL_PR = "r8"
 
 RPROVIDES:${KERNEL_PACKAGE_NAME}-image += "kernel-${KERNEL_IMAGETYPE}"
 
@@ -24,7 +24,6 @@ SRC_URI += "https://source.mynonpublic.com/vuplus/release/kernel/stblinux-4.1-${
     file://linux_dvb-core.patch \
     file://bcmgenet-recovery-fix.patch \
     file://linux_4_1_1_9_dvbs2x.patch \
-    file://kernel-add-support-for-gcc6.patch \
     file://0001-regmap-add-regmap_write_bits.patch \
     file://0002-af9035-fix-device-order-in-ID-list.patch \
     file://0003-Add-support-for-dvb-usb-stick-Hauppauge-WinTV-soloHD.patch \
@@ -44,14 +43,7 @@ SRC_URI += "https://source.mynonpublic.com/vuplus/release/kernel/stblinux-4.1-${
     file://0017-mn88472-finalize-driver.patch \
     file://0018-Add-support-for-dvb-usb-stick-Hauppauge-WinTV-dualHD.patch \
     file://0001-dvb-usb-fix-a867.patch \
-    file://kernel-add-support-for-gcc7.patch \
-    file://kernel-add-support-for-gcc8.patch \
-    file://kernel-add-support-for-gcc9.patch \
-    file://kernel-add-support-for-gcc10.patch \
-    file://kernel-add-support-for-gcc11.patch \
-    file://kernel-add-support-for-gcc12.patch \
-    file://kernel-add-support-for-gcc13.patch \
-    file://kernel-add-support-for-gcc14.patch \
+    ${GCC_KERNEL_PATCH} \
     file://0001-Support-TBS-USB-drivers-for-4.1-kernel.patch \
     file://0001-TBS-fixes-for-4.1-kernel.patch \
     file://0001-STV-Add-PLS-support.patch \

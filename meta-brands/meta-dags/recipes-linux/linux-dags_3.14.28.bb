@@ -3,7 +3,7 @@ LICENSE = "GPL-2.0-only"
 SECTION = "kernel"
 
 KV = "3.14.28"
-MACHINE_KERNEL_PR:append = "11"
+MACHINE_KERNEL_PR = "r12"
 
 COMPATIBLE_MACHINE = "dags7252"
 
@@ -18,14 +18,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
 SRC_URI += "https://source.mynonpublic.com/dags/linux-3.14.28.tar.xz \
     file://defconfig \
-    file://kernel-add-support-for-gcc7.patch \
-    file://kernel-add-support-for-gcc8.patch \
-    file://kernel-add-support-for-gcc9.patch \
-    file://kernel-add-support-for-gcc10.patch \
-    file://kernel-add-support-for-gcc11.patch \
-    file://kernel-add-support-for-gcc12.patch \
-    file://kernel-add-support-for-gcc13.patch \
-    file://kernel-add-support-for-gcc14.patch \
+    ${GCC_KERNEL_PATCH} \
     file://build-with-gcc12-fixes.patch \
     file://date-time.patch \
     file://0001.remove_vtuner_index_check.patch \

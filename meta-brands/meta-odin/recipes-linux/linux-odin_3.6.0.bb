@@ -13,11 +13,12 @@ SRC_URI[sha256sum] = "df8c6071cbdd6a709aebb8a272dca60791edb379103597670609ef90e1
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
+MACHINE_KERNEL_PR = "r2"
+
 RPROVIDES:${KERNEL_PACKAGE_NAME}-image += "kernel-${KERNEL_IMAGETYPE}"
 
 SRC_URI += "https://source.mynonpublic.com/download/linux-${PV}.tar.gz \
     file://defconfig \
-    file://0001-kernel-add-support-for-gcc-5.patch \
     file://0001-Revert-MIPS-mm-Add-compound-tail-page-_mapcount-when.patch \
     file://0001-Revert-MIPS-Add-fast-get_user_pages.patch \
     file://add-dmx-source-timecode.patch \
@@ -43,15 +44,7 @@ SRC_URI += "https://source.mynonpublic.com/download/linux-${PV}.tar.gz \
     file://nfs-max-rwsize-8k.patch \
     file://rtl8712-fix-warnings.patch \
     file://rtl8187se-fix-warnings.patch \
-    file://kernel-add-support-for-gcc6.patch \
-    file://kernel-add-support-for-gcc7.patch \
-    file://kernel-add-support-for-gcc8.patch \
-    file://kernel-add-support-for-gcc9.patch \
-    file://kernel-add-support-for-gcc10.patch \
-    file://kernel-add-support-for-gcc11.patch \
-    file://kernel-add-support-for-gcc12.patch \
-    file://kernel-add-support-for-gcc13.patch \
-    file://kernel-add-support-for-gcc14.patch \
+    ${GCC_KERNEL_PATCH} \
     file://fix-never-be-null_outside-array-bounds-gcc-12.patch \
     file://dvb_frontend-Multistream-support-3.6.patch \
     file://timeconst_perl5.patch \

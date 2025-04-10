@@ -16,7 +16,7 @@ SRC_URI[sha256sum] = "47799db9e2658906e532981ec8111a915426b8453762561029733f2406
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR:append = "oea4.1-r3"
+MACHINE_KERNEL_PR = "r4"
 
 SRC_URI = "https://source.mynonpublic.com/vuplus/release/kernel/stblinux-${KV}.tar.bz2 \
     file://defconfig \
@@ -39,16 +39,7 @@ SRC_URI = "https://source.mynonpublic.com/vuplus/release/kernel/stblinux-${KV}.t
     file://fix_fuse_for_linux_mips_3-9.patch \
     file://rt2800usb_fix_warn_tx_status_timeout_to_dbg.patch \
     file://linux-3.9-gcc-4.9.3-build-error-fixed.patch \
-    file://kernel-add-support-for-gcc-5.patch \
-    file://kernel-add-support-for-gcc6.patch \
-    file://kernel-add-support-for-gcc7.patch \
-    file://kernel-add-support-for-gcc8.patch \
-    file://kernel-add-support-for-gcc9.patch \
-    file://kernel-add-support-for-gcc10.patch \
-    file://kernel-add-support-for-gcc11.patch \
-    file://kernel-add-support-for-gcc12.patch \
-    file://kernel-add-support-for-gcc13.patch \
-    file://kernel-add-support-for-gcc14.patch \
+    ${GCC_KERNEL_PATCH} \
     file://build-with-gcc12-fixes.patch \
     file://rtl8712-fix-warnings.patch \
     file://rtl8187se-fix-warnings.patch \

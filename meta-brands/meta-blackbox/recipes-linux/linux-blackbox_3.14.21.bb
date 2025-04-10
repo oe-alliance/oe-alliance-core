@@ -15,7 +15,7 @@ SRC_URI[md5sum] = "f7edd5923ead4c334840c62eab3e79f0"
 SRC_URI[sha256sum] = "05c7315ec1703db9598f641b9ee5483218f89e207217e5b9c7d52300d123d88e"
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR:append = ".2"
+MACHINE_KERNEL_PR = "r3"
 
 RPROVIDES:${KERNEL_PACKAGE_NAME}-image += "kernel-${KERNEL_IMAGETYPE}"
 
@@ -24,16 +24,7 @@ SRC_URI += "https://source.mynonpublic.com/unibox/linux-${KV}-${SRCDATE}.tar.gz 
     file://nfs-max-rwsize-8k.patch \
     file://linux-3.14.21-gcc-4.9.3-build-error-fixed.patch \
     file://rtl8712-fix-warnings.patch \
-    file://kernel-add-support-for-gcc-5.patch \
-    file://kernel-add-support-for-gcc6.patch \
-    file://kernel-add-support-for-gcc7.patch \
-    file://kernel-add-support-for-gcc8.patch \
-    file://kernel-add-support-for-gcc9.patch \
-    file://kernel-add-support-for-gcc10.patch \
-    file://kernel-add-support-for-gcc11.patch \
-    file://kernel-add-support-for-gcc12.patch \
-    file://kernel-add-support-for-gcc13.patch \
-    file://kernel-add-support-for-gcc14.patch \
+    ${GCC_KERNEL_PATCH} \
     file://build-with-gcc12-fixes.patch \
     file://0001-Support-TBS-USB-drivers.patch \
     file://0001-STV-Add-PLS-support.patch \

@@ -6,7 +6,7 @@ MODULE = "linux-3.14.28"
 
 COMPATIBLE_MACHINE = "^(vusolo4k|vuultimo4k|vuuno4k)$"
 
-MACHINE_KERNEL_PR:append = "oea4.2-r4"
+MACHINE_KERNEL_PR = "r5"
 
 RPROVIDES:${KERNEL_PACKAGE_NAME}-image += "kernel-${KERNEL_IMAGETYPE}"
 
@@ -30,15 +30,7 @@ SRC_URI += "https://source.mynonpublic.com/vuplus/release/kernel/${KERNELSRC};na
     file://rt2800usb_fix_warn_tx_status_timeout_to_dbg.patch \
     file://usb_core_hub_msleep.patch \
     file://rtl8712_fix_build_error.patch \
-    file://kernel-add-support-for-gcc6.patch \
-    file://kernel-add-support-for-gcc7.patch \
-    file://kernel-add-support-for-gcc8.patch \
-    file://kernel-add-support-for-gcc9.patch \
-    file://kernel-add-support-for-gcc10.patch \
-    file://kernel-add-support-for-gcc11.patch \
-    file://kernel-add-support-for-gcc12.patch \
-    file://kernel-add-support-for-gcc13.patch \
-    file://kernel-add-support-for-gcc14.patch \
+    ${GCC_KERNEL_PATCH} \
     file://build-with-gcc12-fixes.patch \
     file://0001-Support-TBS-USB-drivers.patch \
     file://0001-STV-Add-PLS-support.patch \

@@ -1,11 +1,11 @@
-diff --git a/include/linux/compiler-gcc7.h b/include/linux/compiler-gcc7.h
+diff --git a/include/linux/compiler-gcc15.h b/include/linux/compiler-gcc15.h
 new file mode 100644
-index 0000000..ba064fa
+index 00000000..f708e75a
 --- /dev/null
-+++ b/include/linux/compiler-gcc7.h
++++ b/include/linux/compiler-gcc15.h
 @@ -0,0 +1,59 @@
 +#ifndef __LINUX_COMPILER_H
-+#error "Please don't include <linux/compiler-gcc7.h> directly, include <linux/compiler.h> instead."
++#error "Please don't include <linux/compiler-gcc11.h> directly, include <linux/compiler.h> instead."
 +#endif
 +
 +#define __used				__attribute__((__used__))
@@ -62,6 +62,48 @@ index 0000000..ba064fa
 +#define __HAVE_BUILTIN_BSWAP16__
 +#endif /* CONFIG_ARCH_USE_BUILTIN_BSWAP */
 +
-+#define KASAN_ABI_VERSION 4
--- 
-2.1.0
++#define KASAN_ABI_VERSION 5
+diff --git a/scripts/unifdef.c b/scripts/unifdef.c
+index db00e3e30a59..1cc31448fd10 100644
+--- a/scripts/unifdef.c
++++ b/scripts/unifdef.c
+@@ -203,7 +203,7 @@  static int              depth;			/* current #if nesting */
+ static int              delcount;		/* count of deleted lines */
+ static unsigned         blankcount;		/* count of blank lines */
+ static unsigned         blankmax;		/* maximum recent blankcount */
+-static bool             constexpr;		/* constant #if expression */
++static bool             constexpression;	/* constant #if expression */
+ static bool             zerosyms = true;	/* to format symdepth output */
+ static bool             firstsym;		/* ditto */
+ 
+@@ -877,7 +877,7 @@  eval_unary(const struct ops *ops, int *valp, const char **cpp)
+ 		cp = skipcomment(cp);
+ 		if (defparen && *cp++ != ')')
+ 			return (LT_ERROR);
+-		constexpr = false;
++		constexpression = false;
+ 	} else if (!endsym(*cp)) {
+ 		debug("eval%d symbol", ops - eval_ops);
+ 		sym = findsym(cp);
+@@ -895,7 +895,7 @@  eval_unary(const struct ops *ops, int *valp, const char **cpp)
+ 			lt = *valp ? LT_TRUE : LT_FALSE;
+ 			cp = skipargs(cp);
+ 		}
+-		constexpr = false;
++		constexpression = false;
+ 	} else {
+ 		debug("eval%d bad expr", ops - eval_ops);
+ 		return (LT_ERROR);
+@@ -955,10 +955,10 @@  ifeval(const char **cpp)
+ 	int val = 0;
+ 
+ 	debug("eval %s", *cpp);
+-	constexpr = killconsts ? false : true;
++	constexpression = killconsts ? false : true;
+ 	ret = eval_table(eval_ops, &val, cpp);
+ 	debug("eval = %d", val);
+-	return (constexpr ? LT_IF : ret == LT_ERROR ? LT_IF : ret);
++	return (constexpression ? LT_IF : ret == LT_ERROR ? LT_IF : ret);
+ }
+ 
+ /*

@@ -12,6 +12,8 @@ SRC_URI[sha256sum] = "a2e7e6a3b9344412e33855372a71f6c1f2e12a598ca8c8cc6b1b0a929a
 
 inherit kernel machine_kernel_pr
 
+MACHINE_KERNEL_PR = "r2"
+
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
 RPROVIDES:${KERNEL_PACKAGE_NAME}-image += "kernel-${KERNEL_IMAGETYPE}"
@@ -19,16 +21,7 @@ RPROVIDES:${KERNEL_PACKAGE_NAME}-image += "kernel-${KERNEL_IMAGETYPE}"
 SRC_URI += "https://source.mynonpublic.com/ini/bcm7413-linux-${KV}-${SRCDATE}.tar.gz \
     file://defconfig \
     file://mtd_nor_nand.patch \
-    file://0001-kernel-add-support-for-gcc-5.patch \
-    file://kernel-add-support-for-gcc6.patch \
-    file://kernel-add-support-for-gcc7.patch \
-    file://kernel-add-support-for-gcc8.patch \
-    file://kernel-add-support-for-gcc9.patch \
-    file://kernel-add-support-for-gcc10.patch \
-    file://kernel-add-support-for-gcc11.patch \
-    file://kernel-add-support-for-gcc12.patch \
-    file://kernel-add-support-for-gcc13.patch \
-    file://kernel-add-support-for-gcc14.patch \
+    ${GCC_KERNEL_PATCH} \
     file://fix-never-be-null_outside-array-bounds-gcc-12.patch \
     file://0001-Revert-MIPS-mm-Add-compound-tail-page-_mapcount-when.patch \
     file://0001-Revert-MIPS-Add-fast-get_user_pages.patch \

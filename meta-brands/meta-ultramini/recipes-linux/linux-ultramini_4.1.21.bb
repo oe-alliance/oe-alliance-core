@@ -12,7 +12,7 @@ SRC_URI[sha256sum] = "88f648e462e9d37c6ed9401b33ee1dd08495e9f66b9c653aefd9fd0a4f
 
 LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR:append = "2"
+MACHINE_KERNEL_PR = "r3"
 
 RPROVIDES:${KERNEL_PACKAGE_NAME}-image += "kernel-${KERNEL_IMAGETYPE}"
 
@@ -35,15 +35,7 @@ SRC_URI += "https://source.mynonpublic.com/xtrend/linux-${PV}.tar.xz \
     file://0015-staging-media-mn88472-simplify-NULL-tests.patch \
     file://0016-mn88472-fix-typo.patch \
     file://0017-mn88472-finalize-driver.patch \
-    file://kernel-add-support-for-gcc6.patch \
-    file://kernel-add-support-for-gcc7.patch \
-    file://kernel-add-support-for-gcc8.patch \
-    file://kernel-add-support-for-gcc9.patch \
-    file://kernel-add-support-for-gcc10.patch \
-    file://kernel-add-support-for-gcc11.patch \
-    file://kernel-add-support-for-gcc12.patch \
-    file://kernel-add-support-for-gcc13.patch \
-    file://kernel-add-support-for-gcc14.patch \
+    ${GCC_KERNEL_PATCH} \
     file://0001-Support-TBS-USB-drivers-for-4.1-kernel.patch \
     file://0001-TBS-fixes-for-4.1-kernel.patch \
     file://0001-STV-Add-PLS-support.patch \

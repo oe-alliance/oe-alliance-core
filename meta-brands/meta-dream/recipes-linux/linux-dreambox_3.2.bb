@@ -10,7 +10,7 @@ COMPATIBLE_MACHINE = "^(dm500hd|dm500hdv2|dm800se|dm800sev2|dm7020hd|dm7020hdv2|
 
 inherit kernel machine_kernel_pr
 
-MACHINE_KERNEL_PR:append = ".7"
+MACHINE_KERNEL_PR = "r8"
 
 PATCHREV = "3c7230bc0819495db75407c365f4d1db70008044"
 PATCHLEVEL = "68"
@@ -44,15 +44,7 @@ SRC_URI = " \
     file://dvb-usb-smsdvb_fix_frontend.patch \
     file://0001-it913x-backport-changes-to-3.2-kernel.patch \
     file://defconfig \
-    file://kernel-add-support-for-gcc6.patch \
-    file://kernel-add-support-for-gcc7.patch \
-    file://kernel-add-support-for-gcc8.patch \
-    file://kernel-add-support-for-gcc9.patch \
-    file://kernel-add-support-for-gcc10.patch \
-    file://kernel-add-support-for-gcc11.patch \
-    file://kernel-add-support-for-gcc12.patch \
-    file://kernel-add-support-for-gcc13.patch \
-    file://kernel-add-support-for-gcc14.patch \
+    ${GCC_KERNEL_PATCH} \
     file://build-with-gcc12-fixes.patch \
     file://misc_latin1_to_utf8_conversions.patch \
     file://0001-dvb_frontend-backport-multistream-support.patch \

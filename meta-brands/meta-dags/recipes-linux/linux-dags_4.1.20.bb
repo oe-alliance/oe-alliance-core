@@ -4,7 +4,7 @@ SECTION = "kernel"
 
 KV = "4.1.20"
 DATETIME = "20180321"
-MACHINE_KERNEL_PR:append = "1"
+MACHINE_KERNEL_PR = "r2"
 
 COMPATIBLE_MACHINE = "dags72604"
 
@@ -19,13 +19,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
 SRC_URI = "https://source.mynonpublic.com/dags/linux-${KV}-${DATETIME}.tar.xz \
     file://defconfig \
-    file://kernel-add-support-for-gcc8.patch \
-    file://kernel-add-support-for-gcc9.patch \
-    file://kernel-add-support-for-gcc10.patch \
-    file://kernel-add-support-for-gcc11.patch \
-    file://kernel-add-support-for-gcc12.patch \
-    file://kernel-add-support-for-gcc13.patch \
-    file://kernel-add-support-for-gcc14.patch \
+    ${GCC_KERNEL_PATCH} \
     file://0002-log2-give-up-on-gcc-constant-optimizations.patch \
     file://0003-uaccess-dont-mark-register-as-const.patch \
     file://move-default-dialect-to-SMB3.patch \

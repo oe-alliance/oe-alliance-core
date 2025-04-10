@@ -15,20 +15,12 @@ SRC_URI[sha256sum] = "ed11d537b1e19d59b132fd643bebc7469bf20e115bdc23e949e2ce14ae
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR:append = ".3"
+MACHINE_KERNEL_PR = "r4"
 
 SRC_URI += "https://source.mynonpublic.com/dags/dags-linux-${PV}-${SRCDATE}.tar.gz \
     file://defconfig \
     file://0002-add-brcm-chips.patch \
-    file://kernel-add-support-for-gcc6.patch \
-    file://kernel-add-support-for-gcc7.patch \
-    file://kernel-add-support-for-gcc8.patch \
-    file://kernel-add-support-for-gcc9.patch \
-    file://kernel-add-support-for-gcc10.patch \
-    file://kernel-add-support-for-gcc11.patch \
-    file://kernel-add-support-for-gcc12.patch \
-    file://kernel-add-support-for-gcc13.patch \
-    file://kernel-add-support-for-gcc14.patch \
+    ${GCC_KERNEL_PATCH} \
     file://0001-Support-TBS-USB-drivers-for-4.2-kernel.patch \
     file://0001-TBS-fixes-for-4.2-kernel.patch \
     file://0001-STV-Add-PLS-support.patch \

@@ -6,7 +6,7 @@ MODULE = "linux-4.1.45"
 
 COMPATIBLE_MACHINE = "^(vuduo4k|vuduo4kse)$"
 
-MACHINE_KERNEL_PR:append = "oea4.2-r7"
+MACHINE_KERNEL_PR = "r8"
 
 inherit kernel machine_kernel_pr
 
@@ -43,15 +43,7 @@ SRC_URI += "https://source.mynonpublic.com/vuplus/release/kernel/stblinux-${KSRC
     file://0017-mn88472-finalize-driver.patch \
     file://0018-Add-support-for-dvb-usb-stick-Hauppauge-WinTV-dualHD.patch \
     file://0001-dvb-usb-fix-a867.patch \
-    file://kernel-add-support-for-gcc6.patch \
-    file://kernel-add-support-for-gcc7.patch \
-    file://kernel-add-support-for-gcc8.patch \
-    file://kernel-add-support-for-gcc9.patch \
-    file://kernel-add-support-for-gcc10.patch \
-    file://kernel-add-support-for-gcc11.patch \
-    file://kernel-add-support-for-gcc12.patch \
-    file://kernel-add-support-for-gcc13.patch \
-    file://kernel-add-support-for-gcc14.patch \
+    ${GCC_KERNEL_PATCH} \
     file://0001-Support-TBS-USB-drivers-for-4.1-kernel.patch \
     file://0001-TBS-fixes-for-4.1-kernel.patch \
     file://0001-STV-Add-PLS-support.patch \
