@@ -16,6 +16,8 @@ BTAUDIO_FILE=/proc/stb/audio/btaudio
 COMMANDCONNECT="/usr/lib/enigma2/python/Plugins/Extensions/BTDevicesManager/BTAudioConnect"
 LOG_TAG="BluetoothManager"
 
+rm -rf /run/dbus/pid
+
 log() {
     logger -t "$LOG_TAG" "$1"
 }

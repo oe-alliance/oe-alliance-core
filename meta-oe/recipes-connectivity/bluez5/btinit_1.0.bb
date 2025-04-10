@@ -6,9 +6,9 @@ require conf/license/license-gplv2.inc
 
 inherit update-rc.d
 INITSCRIPT_NAME = "BTInit.sh"
-INITSCRIPT_PARAMS = "defaults 60 "
+INITSCRIPT_PARAMS = "start 60 S ."
 
-PR = "r0"
+PR = "r1"
 
 SRC_URI  = "file://${INITSCRIPT_NAME}"
 
