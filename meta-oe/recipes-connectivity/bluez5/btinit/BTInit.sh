@@ -51,11 +51,6 @@ if [ "$MODEL" = "gbmv200" ]; then
     hciattach_sprd /dev/ttyBT0 sprd > /var/log/hciattach.log &
 fi
 
-if [ ! -e /sys/class/bluetooth/hci0 ]; then
-    log "No Bluetooth device found. Exiting."
-    exit 1
-fi
-
 start() {
     log "Starting..."
     
