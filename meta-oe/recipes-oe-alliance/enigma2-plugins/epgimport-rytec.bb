@@ -5,23 +5,27 @@ LICENSE = "WTFPL"
 
 require conf/license/license-gplv2.inc
 
-PV = "20250331"
-PR = "r0"
-SRC_URI = "file://rytec.sources.xml file://russian.sources.xml file://spainKoala.sources.xml file://turkish.sources.xml \
-    "
+inherit gitpkgv allarch
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+SRCREV="${AUTOREV}"
+PV = "git${SRCPV}"
+PKGV = "git${GITPKGV}"
+
+SRC_ORIGIN ?= "git://github.com/oe-alliance/EPGImport-Sources.git;protocol=https;branch=main"
+SRC_URI := "${SRC_ORIGIN} "
+
+S = "${WORKDIR}/git"
 
 DEPENDS = "enigma2-plugin-extensions-epgimport"
 PACKAGES = "${PN}"
 
-FILES:${PN} = "/etc/epgimport"
+FILES_${PN} = "${sysconfdir}/epgimport"
 
 do_install() {
-    install -d ${D}/etc/epgimport
-    install -m 644 ${S}/rytec.sources.xml ${D}/etc/epgimport/rytec.sources.xml
-    install -m 644 ${S}/russian.sources.xml ${D}/etc/epgimport/russian.sources.xml
-    install -m 644 ${S}/spainKoala.sources.xml ${D}/etc/epgimport/spainKoala.sources.xml
-    install -m 644 ${S}/turkish.sources.xml ${D}/etc/epgimport/turkish.sources.xml
+	install -d ${D}${sysconfdir}/epgimport
+	install -m 644 ${S}/rytec.sources.xml ${D}${sysconfdir}/epgimport/rytec.sources.xml
+	install -m 644 ${S}/russian.sources.xml ${D}/etc/epgimport/russian.sources.xml
+	install -m 644 ${S}/turkish.sources.xml ${D}${sysconfdir}/epgimport/turkish.sources.xml
+	install -m 644 ${S}/spainKoala.sources.xml ${D}${sysconfdir}/epgimport/spainKoala.sources.xml
+	install -m 644 ${S}/polandAzman.sources.xml ${D}${sysconfdir}/epgimport/polandAzman.sources.xml
 }
