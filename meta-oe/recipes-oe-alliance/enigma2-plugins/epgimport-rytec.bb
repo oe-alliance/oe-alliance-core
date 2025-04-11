@@ -5,7 +5,7 @@ LICENSE = "WTFPL"
 
 require conf/license/license-gplv2.inc
 
-inherit gitpkgv allarch
+inherit gittag allarch
 
 SRCREV="${AUTOREV}"
 PV = "git${SRCPV}"
