@@ -46,11 +46,6 @@ if [ "$MODEL" = "inihdp" ]; then
     modprobe rtk_btusb &
 fi
 
-if [ ! -e /sys/class/bluetooth/hci0 ]; then
-    log "No Bluetooth device found. Exiting."
-    exit 1
-fi
-
 start() {
     log "Starting..."
     
