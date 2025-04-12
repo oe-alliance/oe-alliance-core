@@ -14,21 +14,7 @@ CXXFLAGS:append = "${@bb.utils.contains_any("SOC_FAMILY", "hisi3716mv430 hisi379
 
 EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR} KDIR=${STAGING_KERNEL_DIR}"
 
-# need only for dreambox linux-meson64 4.9
-export KCFLAGS += " -Wno-error=misleading-indentation \
-                    -Wno-error=aggressive-loop-optimizations \
-                    -Wno-error=int-to-pointer-cast \
-                    -Wno-error=restrict \
-                    -Wno-error=int-conversion \
-                    -Wno-error=maybe-uninitialized \
-                    -Wno-error=discarded-qualifiers \
-                    -Wno-error=switch-unreachable \
-                    -Wno-error=bool-operation \
-                    -Wno-error=declaration-after-statement \
-                    -Wno-error=incompatible-pointer-types \
-                    -Wno-error=return-mismatch \
-                    -Wno-error \
-"
+require kcflags.inc
 
 S = "${WORKDIR}/git"
 

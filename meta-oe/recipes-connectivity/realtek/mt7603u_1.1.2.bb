@@ -11,6 +11,8 @@ SRC_URI = "git://github.com/atvcaptain/mt7603u.git;protocol=https;branch=master"
 
 EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR} KDIR=${STAGING_KERNEL_DIR}"
 
+require kcflags.inc
+
 S = "${WORKDIR}/git"
 
 do_install() {

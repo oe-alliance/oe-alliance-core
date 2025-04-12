@@ -9,11 +9,13 @@ SRC_URI = "git://github.com/edision-open/RTL8723DS_WiFi_linux.git;protocol=https
 
 SRCREV = "94eef3f7cb762b7309824be6cd2b6af75ac80bbd"
 
-S = "${WORKDIR}/git"
-
 inherit module
 
 EXTRA_OEMAKE = 'KSRC="${STAGING_KERNEL_BUILDDIR}" USER_EXTRA_CFLAGS="-Wno-date-time" CONFIG_RTW_DEBUG=n'
+
+require kcflags.inc
+
+S = "${WORKDIR}/git"
 
 do_install() {
     install -d ${D}${nonarch_base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/net/wireless

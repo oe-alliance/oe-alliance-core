@@ -35,6 +35,8 @@ S = "${WORKDIR}/AX88179_178A_LINUX_DRIVER_v1.4.1_SOURCE"
 
 EXTRA_OEMAKE = "KDIR=${STAGING_KERNEL_DIR}"
 
+export KCFLAGS += " -std=gnu17"
+
 do_compile () {
     unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS CC LD CPP
     oe_runmake -C "${STAGING_KERNEL_DIR}" M="${S}" modules

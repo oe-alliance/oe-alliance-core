@@ -15,9 +15,11 @@ SRC_URI = "https://source.mynonpublic.com/rtl871x-01112013.tar.gz \
 SRC_URI[md5sum] = "5faf6a314a63e1f3be9b227157bb76a1"
 SRC_URI[sha256sum] = "e0fd28318dc0b2846e869d69a95b0a7a7d2fe182964448e4e1d74bdd12e4418f"
 
-S = "${WORKDIR}/rtl871x"
-
 EXTRA_OEMAKE = "KERNDIR=${STAGING_KERNEL_DIR} KDIR=${STAGING_KERNEL_DIR}"
+
+require kcflags.inc
+
+S = "${WORKDIR}/rtl871x"
 
 do_compile () {
     unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS CC LD CPP

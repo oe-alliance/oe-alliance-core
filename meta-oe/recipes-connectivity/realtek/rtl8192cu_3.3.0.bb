@@ -14,11 +14,13 @@ SRC_URI = "http://downloads.pli-images.org/misc/rtl8188C_8192C_8192D_usb_linux_v
     file://rtl8192cu-gcc5.patch \
     "
 
-S = "${WORKDIR}/rtl8188C_8192C_8192D_usb_linux_v3.3.0_2971.20111128"
-
 inherit module
 
 EXTRA_OEMAKE = "KSRC=${STAGING_KERNEL_DIR} KDIR=${STAGING_KERNEL_DIR}"
+
+require kcflags.inc
+
+S = "${WORKDIR}/rtl8188C_8192C_8192D_usb_linux_v3.3.0_2971.20111128"
 
 do_install() {
     install -d ${D}${nonarch_base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/net/wireless

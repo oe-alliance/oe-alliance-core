@@ -14,6 +14,9 @@ SRC_URI = "https://source.mynonpublic.com/ini/8723AE_8723AU_Linux_BT_20140623.ta
 inherit module
 
 EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR} KDIR=${STAGING_KERNEL_DIR}"
+
+require kcflags.inc
+
 S = "${WORKDIR}/8723AE_8723AU_Linux_BT_20140623"
 
 FILES:${PN} = "${nonarch_base_libdir}/firmware/"

@@ -13,6 +13,8 @@ SRC_URI = "https://source.mynonpublic.com/rpi-rtl8188eu-20092013.tar.gz"
 
 EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR} KDIR=${STAGING_KERNEL_DIR}"
 
+require kcflags.inc
+
 S = "${WORKDIR}/rpi-rtl8188eu"
 
 do_install() {

@@ -16,6 +16,8 @@ SRC_URI = "https://source.mynonpublic.com/rtl8812AU-driver-4.3.14.zip \
 
 EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR} KDIR=${STAGING_KERNEL_DIR}"
 
+require kcflags.inc
+
 S = "${WORKDIR}/rtl8812AU-driver-4.3.14"
 
 do_compile () {
