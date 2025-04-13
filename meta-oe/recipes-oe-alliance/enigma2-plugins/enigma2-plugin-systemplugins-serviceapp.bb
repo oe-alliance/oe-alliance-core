@@ -15,6 +15,7 @@ SRC_URI:openvix = "git://github.com/OpenViX/serviceapp.git;branch=sigc3;protocol
 SRC_URI:openbh = "git://github.com/BlackHole/serviceapp.git;branch=sigc3;protocol=https"
 SRC_URI:openatv = "git://github.com/oe-mirrors/serviceapp.git;branch=sig3;protocol=https"
 SRC_URI:teamblue = "git://github.com/teamblue-e2/serviceapp.git;branch=7.4;protocol=https"
+SRC_URI:opendroid = "git://github.com/opendroid-Team/serviceapp.git;branch=sig3;protocol=https"
 
 S = "${WORKDIR}/git"
 
