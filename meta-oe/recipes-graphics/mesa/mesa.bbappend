@@ -4,6 +4,10 @@ SRC_URI += "file://0003-Allow-enable-DRI-without-DRI-drivers.patch"
 
 PACKAGECONFIG[dri-no-drivers] = "-Ddri=true -Ddri-drivers=${@strip_comma('${DRIDRIVERS}')}, -Ddri=false -Ddri-drivers='', xorgproto libdrm"
 
+do_compile:prepend() {
+    ln -sfr ${S}/src/gallium/frontends/dri/dri_util.h ${S}/src/egl/drivers/dri2/dri_util.h
+}
+
 do_install:append() {
     # Remove Mesa libraries (EGL, GLESv1, GLESv2, GBM)
     # provided by SOC
@@ -23,7 +27,7 @@ PROVIDES += "virtual/egl-native virtual/nativesdk-egl"
 REQUIRED_DISTRO_FEATURES = ""
 ANY_OF_DISTRO_FEATURES:class-target = ""
 
-PACKAGECONFIG:class-target = "opengl egl gles gbm dri-no-drivers"
+PACKAGECONFIG:class-target = "opengl egl gles gbm dri-no-drivers gallium"
 
 RREPLACES:${PN} = "airdigital-mali-utgard-headers airdigital-v3ddriver-headers hd-v3ddriver-headers gfutures-mali-utgard-headers ceryon-v3ddriver-headers xtrend-v3ddriver-headers skylake-v3ddriver-headers formuler-v3ddriver-headers ax-v3ddriver-headers"
 RCONFLICTS:${PN} = "airdigital-mali-utgard-headers airdigital-v3ddriver-headers hd-v3ddriver-headers gfutures-mali-utgard-headers ceryon-v3ddriver-headers xtrend-v3ddriver-headers skylake-v3ddriver-headers formuler-v3ddriver-headers ax-v3ddriver-headers"

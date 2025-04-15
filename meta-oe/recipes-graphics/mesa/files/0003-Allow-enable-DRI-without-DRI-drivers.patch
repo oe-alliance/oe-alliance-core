@@ -1,6 +1,6 @@
 --- a/meson.build
 +++ b/meson.build
-@@ -280,7 +280,9 @@ if freedreno_kmds.length() != 0 and freedreno_kmds != [ 'msm' ] and with_freedre
+@@ -292,7 +292,9 @@ if freedreno_kmds.length() != 0 and freedreno_kmds != [ 'msm' ] and with_freedre
    endif
  endif
  
@@ -13,8 +13,8 @@
    _egl = get_option('egl')
 --- a/meson_options.txt
 +++ b/meson_options.txt
-@@ -52,6 +52,19 @@ option(
-   description : 'enable support for dri3'
+@@ -51,6 +51,19 @@ option(
+   description : 'Use Android\'s libbacktrace',
  )
  
 +option(
@@ -36,7 +36,7 @@
 --- a/src/egl/drivers/dri2/egl_dri2.c
 +++ b/src/egl/drivers/dri2/egl_dri2.c
 @@ -45,7 +45,8 @@
- #include <GL/internal/dri_interface.h>
+ #include "mesa_interface.h"
  #include <sys/stat.h>
  #include <sys/types.h>
 -#include "dri_screen.h"
@@ -45,31 +45,31 @@
  
  #ifdef HAVE_WAYLAND_PLATFORM
  #include "linux-dmabuf-unstable-v1-client-protocol.h"
-@@ -139,7 +140,7 @@ dri_set_background_context(void *loaderPrivate)
+@@ -99,7 +100,7 @@ dri_set_background_context(void *loaderPrivate)
  static void
  dri2_gl_flush_get(_glapi_proc *glFlush)
  {
--   *glFlush = _glapi_get_proc_address("glFlush");
-+//   *glFlush = _glapi_get_proc_address("glFlush");
+-   *glFlush = _mesa_glapi_get_proc_address("glFlush");
++//   *glFlush = _mesa_glapi_get_proc_address("glFlush");
  }
  
  static void
 --- a/src/egl/main/eglapi.c
 +++ b/src/egl/main/eglapi.c
-@@ -2827,8 +2827,8 @@ eglGetProcAddress(const char *procname)
+@@ -2869,8 +2869,8 @@ eglGetProcAddress(const char *procname)
           ret = entrypoint->function;
     }
  
 -   if (!ret)
--      ret = _glapi_get_proc_address(procname);
+-      ret = _mesa_glapi_get_proc_address(procname);
 +//  if (!ret)
-+//     ret = _glapi_get_proc_address(procname);
++//     ret = _mesa_glapi_get_proc_address(procname);
  
     RETURN_EGL_SUCCESS(NULL, ret);
  }
 --- a/src/egl/meson.build
 +++ b/src/egl/meson.build
-@@ -63,6 +63,7 @@ files_egl = files(
+@@ -49,6 +49,7 @@ files_egl = files(
    'main/egltypedefs.h',
  )
  
@@ -77,7 +77,7 @@
  g_egldispatchstubs_c = custom_target(
    'g_egldispatchstubs.c',
    input : [
-@@ -103,7 +104,7 @@ if with_dri2
+@@ -90,7 +91,7 @@ if with_dri2
    incs_for_egl += inc_gallium
    incs_for_egl += inc_gallium_aux
    incs_for_egl += inc_mesa
@@ -86,12 +86,3 @@
  
    files_egl += files(
      'drivers/dri2/platform_device.c',
-@@ -201,7 +202,7 @@ libegl = shared_library(
-   cpp_args : [cpp_args_for_egl],
-   gnu_symbol_visibility : 'hidden',
-   include_directories : incs_for_egl,
--  link_with : [link_for_egl, libglapi],
-+  link_with : [link_for_egl],
-   link_args : [ld_args_bsymbolic, ld_args_gc_sections],
-   dependencies : [deps_for_egl, dep_dl, dep_libdrm, dep_clock, dep_thread, idep_mesautil],
-   install : true,
