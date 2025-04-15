@@ -81,11 +81,11 @@ PR = "r2"
 PV = "22.0+gitr"
 PV_groovy = "4.0.23"
 PV_commons-lang3 = "3.17.0"
-PV_commons-text = "1.12.0"
+PV_commons-text = "1.13.1"
 
 SRC_URI[groovy.sha256sum] = "7089dd7a1e84adc814d616f5ec2f7d7dac2044a0a0457f3341b3b92d30204229"
 SRC_URI[commons-lang.sha256sum] = "08b93712bed7f48725d93c44d70c71e7e661af390f22f0f3e6ba61e3af3cea36"
-SRC_URI[commons-text.sha256sum] = "265a149c7e0c1ebfe019bbe0226f8c1f6474811054d459145510ea2eed93a11a"
+SRC_URI[commons-text.sha256sum] = "51236deae067ec2d97826f515a495e57002d749cfd9bdd0a19cc35cbeaaccb6d"
 SRC_URI[libdvdcss.sha256sum] = "f38c4a4e7a4f4da6d8e83b8852489aa3bb6588a915dc41f5ee89d9aad305a06e"
 SRC_URI[libdvdread.sha256sum] = "719130091e3adc9725ba72df808f24a14737a009dca5a4c38c601c0c76449b62"
 SRC_URI[libdvdnav.sha256sum] = "584f62a3896794408d46368e2ecf2c6217ab9c676ce85921b2d68b8961f49dfc"
@@ -241,7 +241,7 @@ do_configure:prepend() {
 #    sed -i -e 's:CMAKE_NM}:}${TARGET_PREFIX}gcc-nm:' ${S}/xbmc/cores/DllLoader/exports/CMakeLists.txt
 }
 
-INSANE_SKIP:${PN} = "rpaths already-stripped textrel"
+INSANE_SKIP:${PN} = "rpaths already-stripped textrel installed-vs-shipped"
 INSANE_SKIP = "src-uri-bad"
 
 FILES:${PN} = "${libdir}/kodi ${libdir}/xbmc"
