@@ -12,6 +12,6 @@ PKGV = "2.0+git${GITPKGV}"
 
 SRC_URI = "git://github.com/oe-mirrors/MovieManager.git;protocol=https;branch=master"
 
-S="${WORKDIR}/git"
+S = "${WORKDIR}/git"
 
 inherit setuptools3-openplugins

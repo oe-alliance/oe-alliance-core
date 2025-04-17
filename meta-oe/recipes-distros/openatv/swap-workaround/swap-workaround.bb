@@ -9,7 +9,7 @@ require conf/license/license-gplv2.inc
 PV = "1.0"
 PR = "r1"
 
-SRC_URI="file://swapfile"
+SRC_URI = "file://swapfile"
 
 do_install() {
     install -d ${D}${sysconfdir}/init.d

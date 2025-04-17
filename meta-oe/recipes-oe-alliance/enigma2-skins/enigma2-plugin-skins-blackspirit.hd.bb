@@ -10,11 +10,11 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "0.60rc2+git"
 PKGV = "0.60rc2+git${GITPKGV}"
-VER="0.60rc2"
+VER = "0.60rc2"
 
 RDEPENDS:${PN} = "enigma2-plugin-systemplugins-extnumberzap"
 
-SRC_URI="git://github.com/DeadEyE-OpenATV/BlackSpirit.HD.git;protocol=https;branch=master"
+SRC_URI = "git://github.com/DeadEyE-OpenATV/BlackSpirit.HD.git;protocol=https;branch=master"
 
 FILES:${PN} = "/usr/*"
 

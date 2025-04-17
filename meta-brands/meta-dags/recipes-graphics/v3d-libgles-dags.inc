@@ -5,7 +5,7 @@ LICENSE = "CLOSED"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 require conf/license/license-close.inc
 
-PR="${SRCDATE}.${SRCDATE_PR}"
+PR = "${SRCDATE}.${SRCDATE_PR}"
 
 PROVIDES = "virtual/libgles2 virtual/egl"
 

@@ -13,7 +13,7 @@ DEPENDS += "gettext-native"
 SRCREV = "${AUTOREV}"
 PV = "2.1+git"
 PKGV = "2.1+git${GITPKGV}"
-VER ="2.1"
+VER = "2.1"
 PR = "r0"
 
 PACKAGES =+ "enigma2-plugin-skins-metrix-spa-fhd-icons enigma2-plugin-skins-metrix-spa-uhd-icons"
@@ -21,7 +21,7 @@ PROVIDES =+ "enigma2-plugin-skins-metrix-spa-fhd-icons enigma2-plugin-skins-metr
 RPROVIDES:enigma2-plugin-skins-metrix-spa-fhd-icons += "enigma2-plugin-skins-metrix-spa-fhd-icons"
 RPROVIDES:enigma2-plugin-skins-metrix-spa-uhd-icons += "enigma2-plugin-skins-metrix-spa-uhd-icons"
 
-SRC_URI="git://github.com/openspa/MetrixHD.git;protocol=https;branch=py3"
+SRC_URI = "git://github.com/openspa/MetrixHD.git;protocol=https;branch=py3"
 
 S = "${WORKDIR}/git"
 

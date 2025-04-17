@@ -1,6 +1,6 @@
 FILES:${PN} += "${datadir}/icons/hicolor"
 
-DEPENDS +=" ${@['hicolor-icon-theme', '']['${BPN}' == 'hicolor-icon-theme']} gtk+3-native"
+DEPENDS += " ${@['hicolor-icon-theme', '']['${BPN}' == 'hicolor-icon-theme']} gtk+3-native"
 
 PACKAGE_WRITE_DEPS += "gtk+3-native gdk-pixbuf-native"
 

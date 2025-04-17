@@ -5,8 +5,8 @@ LICENSE = "CLOSED"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 require conf/license/license-close.inc
 
-PV="15.1"
-PR="${SRCDATE}.${SRCDATE_PR}"
+PV = "15.1"
+PR = "${SRCDATE}.${SRCDATE_PR}"
 
 PROVIDES = "virtual/libgles1 virtual/libgles2 virtual/egl libgles"
 RPROVIDES:${PN} = "virtual-libgles1 virtual-libgles2 virtual-egl libEGL.so libGLESv2.so libgles"

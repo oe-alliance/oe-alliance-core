@@ -9,11 +9,11 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "2.2+git"
 PKGV = "2.2+git${GITPKGV}"
-VER="2.2"
+VER = "2.2"
 
 RDEPENDS:${PN} = "enigma2-plugin-systemplugins-weathercomponenthandler, enigma2-plugin-skincomponents-weathercomponent"
 
-SRC_URI="git://github.com/stein17/Skins-for-openHDF.git;protocol=https;branch=Python3"
+SRC_URI = "git://github.com/stein17/Skins-for-openHDF.git;protocol=https;branch=Python3"
 
 FILES:${PN} = "${libdir} ${datadir}"
 

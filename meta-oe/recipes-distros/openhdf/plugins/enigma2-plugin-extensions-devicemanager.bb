@@ -9,7 +9,7 @@ require conf/python/python3-compileall.inc
 
 inherit gitpkgv
 SRCREV = "${AUTOREV}"
-VER ="1.0"
+VER = "1.0"
 PR = "r2"
 
 SRC_URI[md5sum] = "ae81ab4e3917cec8f0429da513385402"

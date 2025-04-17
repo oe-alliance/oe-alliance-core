@@ -1,4 +1,4 @@
-DESCRIPTION="blackbox7405 mac checker - flasher"
+DESCRIPTION = "blackbox7405 mac checker - flasher"
 LICENSE = "Gpl2"
 LICENSE = "CLOSED"
 require conf/license/license-close.inc
@@ -6,7 +6,7 @@ require conf/license/license-close.inc
 PR = "r6"
 PV = "0.1"
 
-SRC_URI="file://blackbox7405_mac_check \
+SRC_URI = "file://blackbox7405_mac_check \
 	file://blackbox7405-mac-check.sh \
 "
 S = "${WORKDIR}/sources"

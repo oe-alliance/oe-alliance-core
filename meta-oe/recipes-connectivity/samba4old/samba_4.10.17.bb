@@ -40,13 +40,13 @@ PACKAGECONFIG[ad-dc] = "--with-experimental-mit-ad-dc,--without-ad-dc --without-
 PACKAGECONFIG[mitkrb5] = "--with-system-mitkrb5 --with-system-mitkdc=/usr/sbin/krb5kdc,,krb5,"
 PACKAGECONFIG[netbios] = " "
 
-SAMBA4_AUTH_MODULES_STATIC="auth_builtin,auth_sam,auth_unix"
-SAMBA4_AUTH_MODULES_SHARED="auth_script"
-SAMBA4_PDB_MODULES_STATIC="pdb_smbpasswd,pdb_tdbsam"
-SAMBA4_VFS_MODULES_STATIC="vfs_default"
-SAMBA4_VFS_MODULES_SHARED="vfs_widelinks"
-SAMBA4_MODULES_STATIC="${SAMBA4_AUTH_MODULES_STATIC},${SAMBA4_PDB_MODULES_STATIC},${SAMBA4_VFS_MODULES_STATIC}"
-SAMBA4_MODULES_SHARED="${SAMBA4_AUTH_MODULES_SHARED},${SAMBA4_VFS_MODULES_SHARED}"
+SAMBA4_AUTH_MODULES_STATIC = "auth_builtin,auth_sam,auth_unix"
+SAMBA4_AUTH_MODULES_SHARED = "auth_script"
+SAMBA4_PDB_MODULES_STATIC = "pdb_smbpasswd,pdb_tdbsam"
+SAMBA4_VFS_MODULES_STATIC = "vfs_default"
+SAMBA4_VFS_MODULES_SHARED = "vfs_widelinks"
+SAMBA4_MODULES_STATIC = "${SAMBA4_AUTH_MODULES_STATIC},${SAMBA4_PDB_MODULES_STATIC},${SAMBA4_VFS_MODULES_STATIC}"
+SAMBA4_MODULES_SHARED = "${SAMBA4_AUTH_MODULES_SHARED},${SAMBA4_VFS_MODULES_SHARED}"
 
 # These libraries are supposed to replace others supplied by packages, but decorate the names of
 # .so files so there will not be a conflict.  This is not done consistantly, so be very careful

@@ -16,7 +16,7 @@ DEPENDS = "glib-2.0 glib-2.0-native gettext-native enchant2 libsoup-2.4 curl lib
 SRCREV = "${AUTOREV}"
 PV = "1.1+git"
 PKGV = "1.1+git${GITPKGV}"
-VER ="1.1"
+VER = "1.1"
 PR = "r0"
 
 SRC_URI = "git://github.com/oe-alliance/webkit.org.git;protocol=https;branch=master \

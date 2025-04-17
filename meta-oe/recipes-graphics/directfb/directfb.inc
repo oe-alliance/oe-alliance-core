@@ -17,7 +17,7 @@ SRC_URI = "http://directfb.org/downloads/Core/DirectFB-1.4/DirectFB-${PV}.tar.gz
 
 S = "${WORKDIR}/DirectFB-${PV}"
 
-LDFLAGS:append =" -lts -lm"
+LDFLAGS:append = " -lts -lm"
 
 inherit autotools binconfig pkgconfig
 

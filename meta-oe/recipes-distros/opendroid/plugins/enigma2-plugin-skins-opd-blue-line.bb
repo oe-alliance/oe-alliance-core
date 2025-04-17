@@ -8,11 +8,11 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "1.8+git${SRCPV}"
 PKGV = "1.8+git${GITPKGV}"
-VER="1.8"
+VER = "1.8"
 
 RDEPENDS:${PN} = "enigma2-plugin-systemplugins-weathercomponenthandler, enigma2-plugin-skincomponents-weathercomponent"
 
-SRC_URI="git://github.com/stein17/Skins-for-openOPD.git;protocol=https;branch=python3"
+SRC_URI = "git://github.com/stein17/Skins-for-openOPD.git;protocol=https;branch=python3"
 
 FILES:${PN} = "/"
 

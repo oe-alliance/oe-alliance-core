@@ -31,7 +31,7 @@ do_package_qa() {
 do_populate_sysroot() {
 }
 
-FILES:${PN}="/home/root/platform /etc/init.d"
+FILES:${PN} = "/home/root/platform /etc/init.d"
 
 inherit update-rc.d
 

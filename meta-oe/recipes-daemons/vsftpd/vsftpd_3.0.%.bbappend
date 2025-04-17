@@ -3,7 +3,8 @@ inherit upx-compress
 FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
 SRC_URI += "file://ftp.service"
 
-LDFLAGS:append =" -lssl -lcrypto"
+CFLAGS += "-std=gnu17"
+LDFLAGS:append = " -lssl -lcrypto"
 
 do_configure:prepend() {
     sed -i 's#undef VSF_BUILD_SSL#define VSF_BUILD_SSL#' ${S}/builddefs.h

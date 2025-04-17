@@ -6,7 +6,7 @@ FILESEXTRAPATHSDIR:prepend := "${THISDIR}/${PN}:"
 
 DEPENDS = "libusb-compat libusb1 python3"
 
-SRC_URI="git://github.com/atvcaptain/dpf-ax.git;branch=dreamlayers;protocol=https \
+SRC_URI = "git://github.com/atvcaptain/dpf-ax.git;branch=dreamlayers;protocol=https \
         file://set-lib-version-to-python-3.13.patch \
         file://fix-invalid-pointer-type.patch \
         file://migrate-to-new-buffer-protocol.patch \

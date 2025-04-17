@@ -216,7 +216,7 @@ EXTRA_OECMAKE = " \
     -DLIBDVDCSS_URL=${UNPACKDIR}/libdvdcss.tar.gz \
 "
 
-OECMAKE_GENERATOR="Unix Makefiles"
+OECMAKE_GENERATOR = "Unix Makefiles"
 # PARALLEL_MAKE = " "
 
 FULL_OPTIMIZATION:armv7a = "-fomit-frame-pointer -O3 -ffast-math"

@@ -8,7 +8,7 @@ require conf/license/license-gplv2.inc
 
 inherit gitpkgv
 SRCREV = "${AUTOREV}"
-VER ="1.0"
+VER = "1.0"
 PR = "r2"
 
 SRC_URI[md5sum] = "bc742ba41c4f8dd4ed4930541be2fe87"

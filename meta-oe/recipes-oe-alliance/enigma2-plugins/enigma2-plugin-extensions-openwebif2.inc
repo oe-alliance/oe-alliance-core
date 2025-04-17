@@ -5,7 +5,7 @@ LIC_FILES_CHKSUM = "file://README;firstline=10;lastline=12;md5=eb66cb719ed579d65
 
 FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 
-BRANCH="main"
+BRANCH = "main"
 
 DEPENDS += "python3-cheetah-native"
 RDEPENDS:${PN} = "\
@@ -34,7 +34,7 @@ PKGV = "${GITPKGVTAG}"
 SRC_URI = "git://github.com/oe-alliance/${MODULE}.git;protocol=https;branch=${BRANCH} \
            file://setuptools-auto-discovery.patch"
 
-S="${WORKDIR}/git"
+S = "${WORKDIR}/git"
 
 # Just a quick hack to "compile" it
 do_compile() {

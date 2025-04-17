@@ -12,7 +12,7 @@ PKGV = "${GITPKGVTAG}"
 
 RDEPENDS:${PN} = "enigma2-plugin-extensions-oaweather"
 
-SRC_URI="git://github.com/m4dhouse/MadMax-Atv.git;protocol=https;branch=main"
+SRC_URI = "git://github.com/m4dhouse/MadMax-Atv.git;protocol=https;branch=main"
 
 FILES:${PN} = "${libdir} /usr/share"
 

@@ -1,6 +1,6 @@
 SRCDATE = "20170927"
 SRCDATE_PR = "r0"
-PV="16.2"
+PV = "16.2"
 
 require platform-util.inc
 

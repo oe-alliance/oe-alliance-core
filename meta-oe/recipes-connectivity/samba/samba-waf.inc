@@ -2,7 +2,7 @@ inherit qemu
 
 #cross_compile cannot use preforked process, since fork process earlier than point subproces.popen
 #to cross Popen
-export WAF_NO_PREFORK="yes"
+export WAF_NO_PREFORK = "yes"
 
 # Three methods for waf cross compile:
 # 1. answers:
@@ -25,8 +25,8 @@ export WAF_NO_PREFORK="yes"
 # to help generate the cross answer when adding new board support.
 CROSS_METHOD ?= "answer"
 
-export COMPILE_ET="${STAGING_DIR_NATIVE}${bindir}/compile_et"
-export ASN1_COMPILE="${STAGING_DIR_NATIVE}${bindir}/asn1_compile"
+export COMPILE_ET = "${STAGING_DIR_NATIVE}${bindir}/compile_et"
+export ASN1_COMPILE = "${STAGING_DIR_NATIVE}${bindir}/asn1_compile"
 
 do_configure() {
     perl -i -pe 's#lp_private_dir#lp_pid_directory#' ${S}/source3/lib/messages.c

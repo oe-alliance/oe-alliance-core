@@ -15,7 +15,7 @@ INHIBIT_PACKAGE_STRIP = "1"
 
 ALLOW_EMPTY:${PN} = "1"
 
-S="${WORKDIR}/git/files"
+S = "${WORKDIR}/git/files"
 
 do_install() {
 	install -d ${D}/usr

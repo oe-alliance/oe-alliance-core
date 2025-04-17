@@ -13,7 +13,7 @@ PV = "${IMAGE_VERSION}+gitr"
 PKGV = "${IMAGE_VERSION}+gitr${GITPKGV}"
 PR = "r23"
 
-SRC_URI="git://github.com/oe-alliance/3rdparty-plugins-python3.git;branch=main;protocol=https"
+SRC_URI = "git://github.com/oe-alliance/3rdparty-plugins-python3.git;branch=main;protocol=https"
 
 EXTRA_OECONF = " \
     BUILD_SYS=${BUILD_SYS} \

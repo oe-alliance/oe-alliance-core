@@ -1,4 +1,4 @@
-PV="4.10.17"
+PV = "4.10.17"
 HOMEPAGE = "https://www.samba.org/"
 SECTION = "console/network"
 

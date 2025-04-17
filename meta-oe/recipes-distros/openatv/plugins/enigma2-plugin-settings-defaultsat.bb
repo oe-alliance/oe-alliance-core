@@ -10,10 +10,10 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "${IMAGE_VERSION}+git"
 PKGV = "${IMAGE_VERSION}+git${GITPKGV}"
-VER ="${IMAGE_VERSION}"
+VER = "${IMAGE_VERSION}"
 PR = "r0"
 
-SRC_URI="git://github.com/openatv/enigma2-plugin-settings-defaultsat.git;protocol=https;branch=master"
+SRC_URI = "git://github.com/openatv/enigma2-plugin-settings-defaultsat.git;protocol=https;branch=master"
 
 S = "${WORKDIR}/git"
 

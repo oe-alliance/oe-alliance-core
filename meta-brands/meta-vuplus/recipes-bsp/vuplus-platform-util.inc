@@ -7,14 +7,14 @@ require conf/license/license-close.inc
 
 RDEPENDS:${PN} += "gptfdisk"
 
-PR="${SRCDATE}.${SRCDATE_PR}"
+PR = "${SRCDATE}.${SRCDATE_PR}"
 
 SRC_URI = " \
     https://source.mynonpublic.com/vuplus/release/platform-util/platform-util-${MACHINE}-${PV}-${SRCDATE}.${SRCDATE_PR}.tar.gz \
     file://${INITSCRIPT_NAME}.sysvinit \
 "
 
-S="${WORKDIR}/platform-util-${MACHINE}"
+S = "${WORKDIR}/platform-util-${MACHINE}"
 
 do_install() {
     install -d ${D}${bindir}
@@ -26,7 +26,7 @@ do_install() {
 do_package_qa() {
 }
 
-FILES:${PN}="/"
+FILES:${PN} = "/"
 
 inherit update-rc.d
 

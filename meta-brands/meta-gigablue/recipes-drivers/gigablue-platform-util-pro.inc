@@ -15,7 +15,7 @@ SRC_URI = " \
     https://source.mynonpublic.com/gigablue/drivers/platform-util-${MACHINE}pro-${KV}-${SRCDATE}.zip \
     file://${INITSCRIPT_NAME}.sysvinit \
 "
-S="${WORKDIR}/platform"
+S = "${WORKDIR}/platform"
 
 do_install() {
     install -d ${D}/home/root/platform
@@ -29,7 +29,7 @@ do_package_qa() {
 do_populate_sysroot() {
 }
 
-FILES:${PN}="/home/root/platform /etc/init.d"
+FILES:${PN} = "/home/root/platform /etc/init.d"
 
 inherit update-rc.d
 

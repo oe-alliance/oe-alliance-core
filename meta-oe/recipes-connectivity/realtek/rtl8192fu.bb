@@ -3,7 +3,7 @@ HOMEPAGE = "http://www.realtek.com/"
 LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=7fc9206801c1cb9a93c37d7dc0667d87"
 
-DEPENDS ="bc-native"
+DEPENDS = "bc-native"
 
 SRC_URI = "git://github.com/atvcaptain/RTL8192FU.git;protocol=https;branch=main"
 

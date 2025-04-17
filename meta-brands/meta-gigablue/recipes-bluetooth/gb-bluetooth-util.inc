@@ -5,19 +5,19 @@ require conf/license/license-close.inc
 PROVIDES += "gb-bluetooth-util"
 RPROVIDES:${PN} += "gb-bluetooth-util"
 
-PR="${SRCDATE}.${SRCDATE_PR}"
+PR = "${SRCDATE}.${SRCDATE_PR}"
 
 SRC_URI = " \
     https://source.mynonpublic.com/gigablue/bluetooth/gb-bluetooth-util-${MACHINE}-${PR}.tar.gz \
 "
 
-S="${WORKDIR}/gb-bluetooth-util-${MACHINE}"
+S = "${WORKDIR}/gb-bluetooth-util-${MACHINE}"
 
 do_package_qa() {
 }
 
 PACKAGE_ARCH := "${MACHINE_ARCH}"
-FILES:${PN}="/"
+FILES:${PN} = "/"
 
 do_install() {
 	install -d ${D}/usr/local/bin

@@ -53,7 +53,7 @@ NORMAL_IMAGE = "\
     ${@bb.utils.contains("MACHINE_FEATURES", "fcc", "enigma2-plugin-systemplugins-fastchannelchange", "", d)} \
 "
 
-USBBOOT= "\
+USBBOOT = "\
     ${@bb.utils.contains_any("MACHINE", "dm800se dm500hd", "", "enigma2-plugin-extensions-dflash", d)} \
 "
 

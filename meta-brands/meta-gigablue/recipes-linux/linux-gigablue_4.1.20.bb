@@ -18,7 +18,7 @@ SRC_NAME:gbquad4kpro = "pro"
 
 SRC_URI[legacy.md5sum] = "6036c5d722071e72d5d66dbf7ee74992"
 SRC_URI[legacy.sha256sum] = "eff7eecf55dd75ecb44bd8b8fe16f588d19c1eac92125eaed2b6834348d12def"
-SRC_URI[pro.md5sum]= "7854cbc1984e9723c7d46d6923de9295"
+SRC_URI[pro.md5sum] = "7854cbc1984e9723c7d46d6923de9295"
 SRC_URI[pro.sha256sum] = "6a97857446c41b94de5a5fc618afa68a493b7cc6f7f0bca14b880d95be7966ad"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"

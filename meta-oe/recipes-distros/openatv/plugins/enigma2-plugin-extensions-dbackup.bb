@@ -11,10 +11,10 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "2.8+git"
 PKGV = "2.8+git${GITPKGV}"
-VER ="2.8"
+VER = "2.8"
 PR = "r0"
 
-SRC_URI="git://github.com/openatv/enigma2-plugin-extensions-dbackup.git;branch=python3;protocol=https"
+SRC_URI = "git://github.com/openatv/enigma2-plugin-extensions-dbackup.git;branch=python3;protocol=https"
 
 S = "${WORKDIR}/git"
 

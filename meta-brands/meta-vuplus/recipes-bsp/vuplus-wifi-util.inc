@@ -5,8 +5,8 @@ require conf/license/license-close.inc
 PROVIDES += "vuplus-wifi-util"
 RPROVIDES:${PN} += "vuplus-wifi-util"
 
-PV="16.1"
-PR="${SRCDATE}.${SRCDATE_PR}"
+PV = "16.1"
+PR = "${SRCDATE}.${SRCDATE_PR}"
 
 SRC_URI = " \
     https://source.mynonpublic.com/vuplus/release/wifi/vuplus-wifi-util-${MACHINE}-${PV}-${PR}.tar.gz \
@@ -19,7 +19,7 @@ do_package_qa() {
 }
 
 PACKAGE_ARCH := "${MACHINE_ARCH}"
-FILES:${PN}="/"
+FILES:${PN} = "/"
 
 do_install() {
 	install -d ${D}${bindir}

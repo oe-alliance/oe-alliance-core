@@ -9,11 +9,11 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "1.5+git"
 PKGV = "1.5+git${GITPKGV}"
-VER="1.5"
+VER = "1.5"
 
 RDEPENDS:${PN} = "enigma2-plugin-extensions-oaweather"
 
-SRC_URI="git://github.com/stein17/Skins-for-openATV.git;protocol=https;branch=python3"
+SRC_URI = "git://github.com/stein17/Skins-for-openATV.git;protocol=https;branch=python3"
 
 FILES:${PN} = "${libdir} /usr/share"
 

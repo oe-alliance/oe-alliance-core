@@ -9,10 +9,10 @@ inherit gettext gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "2.6+git"
 PKGV = "2.6+git${GITPKGV}"
-VER ="2.6"
+VER = "2.6"
 PR = "r0"
 
-SRC_URI="git://github.com/openatv/openatvstatus.git;branch=main;protocol=https"
+SRC_URI = "git://github.com/openatv/openatvstatus.git;branch=main;protocol=https"
 
 S = "${WORKDIR}/git"
 

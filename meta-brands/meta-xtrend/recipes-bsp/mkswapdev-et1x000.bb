@@ -7,7 +7,7 @@ require conf/license/license-gplv2.inc
 PV = "1.0"
 PR = "r1"
 
-SRC_URI="file://mkswapdev.sh"
+SRC_URI = "file://mkswapdev.sh"
 
 S = "${WORKDIR}/sources"
 UNPACKDIR = "${S}"

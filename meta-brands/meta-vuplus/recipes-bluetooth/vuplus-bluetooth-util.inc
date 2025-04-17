@@ -5,7 +5,7 @@ require conf/license/license-close.inc
 PROVIDES += "vuplus-bluetooth-util"
 RPROVIDES:${PN} += "vuplus-bluetooth-util"
 
-PR="${SRCDATE}.${SRCDATE_PR}"
+PR = "${SRCDATE}.${SRCDATE_PR}"
 
 SRC_URI = " \
     https://source.mynonpublic.com/vuplus/release/bt/vuplus-bluetooth-util-${MACHINE}-${PR}.tar.gz \
@@ -18,7 +18,7 @@ do_package_qa() {
 }
 
 PACKAGE_ARCH := "${MACHINE_ARCH}"
-FILES:${PN}="/"
+FILES:${PN} = "/"
 
 do_install() {
 	install -d ${D}${bindir}

@@ -2,8 +2,8 @@ require vuplus-bluetooth-util.inc
 
 COMPATIBLE_MACHINE = "^(vuuno4k)$"
 
-FIRMWARE_PATH="bcm20705"
-FIRMWARE_FILE="BCM20705B0.hcd"
+FIRMWARE_PATH = "bcm20705"
+FIRMWARE_FILE = "BCM20705B0.hcd"
 
 SRCDATE = "20171114"
 SRCDATE_PR = "r0"

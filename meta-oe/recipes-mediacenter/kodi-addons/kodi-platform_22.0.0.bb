@@ -21,7 +21,7 @@ S = "${WORKDIR}/git"
 
 inherit cmake pkgconfig
 
-OECMAKE_GENERATOR="Unix Makefiles"
+OECMAKE_GENERATOR = "Unix Makefiles"
 EXTRA_OECMAKE = " -DCMAKE_INSTALL_PREFIX_TOOLCHAIN=${STAGING_DIR_HOST}${prefix} \
                   -DCMAKE_INSTALL_LIBDIR=${libdir} \
                   -DCMAKE_INSTALL_LIBDIR_NOARCH=${libdir} \

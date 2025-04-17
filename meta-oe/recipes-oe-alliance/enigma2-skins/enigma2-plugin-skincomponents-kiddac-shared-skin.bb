@@ -11,7 +11,7 @@ SRCREV = "${AUTOREV}"
 PV = "git"
 PKGV = "${GITPKGVTAG}"
 
-SRC_URI="git://github.com/kiddac/shared-skin-components.git;protocol=https;branch=master"
+SRC_URI = "git://github.com/kiddac/shared-skin-components.git;protocol=https;branch=master"
 
 S = "${WORKDIR}/git/kiddac-shared-skin-components"
 

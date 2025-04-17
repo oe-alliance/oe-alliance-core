@@ -67,9 +67,9 @@ EXTRA_OECONF += " \
 "
 
 # We don't depend on binutils so we need to disable this
-export ac_cv_lib_bfd_bfd_openr="no"
+export ac_cv_lib_bfd_bfd_openr = "no"
 # Ensure we don't depend on LZO
-export ac_cv_lib_lzo2_lzo2a_decompress="no"
+export ac_cv_lib_lzo2_lzo2a_decompress = "no"
 
 CFLAGS += "-std=gnu17"
 

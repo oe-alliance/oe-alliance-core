@@ -10,10 +10,10 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "3.0+git"
 PKGV = "3.0+git${GITPKGV}"
-VER ="3.0"
+VER = "3.0"
 PR = "r1"
 
-SRC_URI="git://bitbucket.org/beyonwiz/picons-australia.git;protocol=https;branch=master"
+SRC_URI = "git://bitbucket.org/beyonwiz/picons-australia.git;protocol=https;branch=master"
 
 S = "${WORKDIR}/git"
 

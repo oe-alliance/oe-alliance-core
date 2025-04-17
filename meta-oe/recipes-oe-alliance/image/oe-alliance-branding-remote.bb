@@ -12,12 +12,12 @@ SRCREV = "${AUTOREV}"
 PV = "${IMAGE_VERSION}+git"
 PKGV = "${IMAGE_VERSION}+git${GITPKGV}"
 
-BRANCH="master"
+BRANCH = "master"
 
 do_configure[nostamp] = "1"
 
 FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
-SRC_URI="git://github.com/oe-mirrors/branding-module.git;protocol=https;branch=${BRANCH}"
+SRC_URI = "git://github.com/oe-mirrors/branding-module.git;protocol=https;branch=${BRANCH}"
 #SRC_URI_append_openatv=" \
 #	file://openatv_mappings.patch \
 #"

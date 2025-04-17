@@ -14,7 +14,7 @@ RDEPENDS:${PN} = "enigma2-tools-weatherinfo ${@bb.utils.contains_any("FLASHSIZE"
 SRCREV = "${AUTOREV}"
 PV = "${DISTRO_VERSION}+git"
 PKGV = "${DISTRO_VERSION}+git${GITPKGV}"
-VER ="${DISTRO_VERSION}"
+VER = "${DISTRO_VERSION}"
 PR = "r1"
 
 METRIX_URI ?= "git://github.com/openatv/MetrixHD.git;branch=7.5;protocol=https"

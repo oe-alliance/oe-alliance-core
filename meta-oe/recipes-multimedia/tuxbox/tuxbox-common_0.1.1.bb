@@ -9,7 +9,7 @@ SRCREV = "${AUTOREV}"
 PV = "1.0+git"
 PKGV = "1.0+git${GITPKGV}"
 
-SRC_URI="git://github.com/oe-alliance/oe-alliance-tuxbox-common.git;protocol=https;branch=master"
+SRC_URI = "git://github.com/oe-alliance/oe-alliance-tuxbox-common.git;protocol=https;branch=master"
 
 FILES:${PN} = "/"
 

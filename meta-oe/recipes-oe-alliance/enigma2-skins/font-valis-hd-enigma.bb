@@ -9,7 +9,7 @@ PR = "r0"
 PACKAGES = "font-valis-hd"
 PROVIDES = "font-valis-hd"
 
-SRC_URI="file://hd.ttf file://hdi.ttf"
+SRC_URI = "file://hd.ttf file://hdi.ttf"
 
 FILES:font-valis-hd = "/usr/*"
 

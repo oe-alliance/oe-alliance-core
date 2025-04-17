@@ -12,10 +12,10 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "1.0+git"
 PKGV = "1.0+git${GITPKGV}"
-VER ="1.0"
+VER = "1.0"
 PR = "r6"
 
-SRC_URI="git://github.com/KravenHD/XionHDF.git;branch=python3;protocol=https"
+SRC_URI = "git://github.com/KravenHD/XionHDF.git;branch=python3;protocol=https"
 
 S = "${WORKDIR}/git"
 

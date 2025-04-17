@@ -17,7 +17,7 @@ SRC_URI = "git://github.com/Taapat/enigma2-plugin-youtube.git;protocol=https;bra
     file://0001-distutils-are-outdated-use-setuptools.patch \
 "
 
-S="${WORKDIR}/git"
+S = "${WORKDIR}/git"
 
 # Just a quick hack to "compile" it
 do_compile() {

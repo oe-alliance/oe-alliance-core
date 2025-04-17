@@ -28,7 +28,7 @@ do_package_qa() {
 INSANE_SKIP:${PN} += "already-stripped"
 INHIBIT_PACKAGE_STRIP = "1"
 
-FILES:${PN}="${libdir} ${bindir}"
+FILES:${PN} = "${libdir} ${bindir}"
 FILES:${PN}-dev = "${includedir}"
 
 PACKAGE_ARCH = "${MACHINE}"

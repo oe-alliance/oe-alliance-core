@@ -10,10 +10,10 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "1.0+git"
 PKGV = "1.0+git${GITPKGV}"
-VER ="1.0"
+VER = "1.0"
 PR = "r2"
 
-SRC_URI="git://github.com/atom89/srp.220x132.dark-on-white-delta.git;protocol=https;branch=master"
+SRC_URI = "git://github.com/atom89/srp.220x132.dark-on-white-delta.git;protocol=https;branch=master"
 
 S = "${WORKDIR}/git"
 

@@ -16,10 +16,10 @@ DEPENDS = "hostperl-runtime-native"
 DEPENDS:append:class-target = " openssl-native"
 
 PROVIDES += "libcrypto1.0.2 libssl1.0.2 openssl-conf1.0.2 openssl1.0.2"
-RPROVIDES:libcrypto10 ="libcrypto1.0.2"
-RPROVIDES:libssl10 ="libssl1.0.2"
-RPROVIDES:openssl-conf10 ="openssl-conf1.0.2"
-RPROVIDES:${PN} ="openssl1.0.2"
+RPROVIDES:libcrypto10 = "libcrypto1.0.2"
+RPROVIDES:libssl10 = "libssl1.0.2"
+RPROVIDES:openssl-conf10 = "openssl-conf1.0.2"
+RPROVIDES:${PN} = "openssl1.0.2"
 
 SRC_URI = "http://www.openssl.org/source/openssl-${PV}.tar.gz \
            file://run-ptest \

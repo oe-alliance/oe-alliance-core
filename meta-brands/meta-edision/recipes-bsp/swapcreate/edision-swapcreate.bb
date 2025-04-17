@@ -7,7 +7,7 @@ require conf/license/license-gplv2.inc
 PV = "1.0"
 PR = "r1"
 
-SRC_URI="file://createswap.sh"
+SRC_URI = "file://createswap.sh"
 
 S = "${WORKDIR}/sources"
 UNPACKDIR = "${S}"

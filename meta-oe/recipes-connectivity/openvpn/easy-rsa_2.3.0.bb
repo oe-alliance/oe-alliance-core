@@ -15,7 +15,7 @@ PKGV = "2.3.0"
 
 inherit allarch
 
-SRC_URI="https://build.openvpn.net/downloads/releases/easy-rsa-${PV}_master.tar.gz"
+SRC_URI = "https://build.openvpn.net/downloads/releases/easy-rsa-${PV}_master.tar.gz"
 
 SRC_URI[md5sum] = "2c0e3263327d51d6f3b3ac337cec27c4"
 SRC_URI[sha256sum] = "35710bd7d884d8749af0432b26a95594cfb691f427fb672ec5c9a6eefaf01641"

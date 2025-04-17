@@ -17,7 +17,7 @@ PV = "0.9.0+git"
 PKGV = "0.9.0+git${GITPKGV}"
 PR = "r1"
 
-SRC_URI="git://github.com/oe-mirrors/e2m3u2bouquet-plugin.git;protocol=https;branch=master"
+SRC_URI = "git://github.com/oe-mirrors/e2m3u2bouquet-plugin.git;protocol=https;branch=master"
 
 S = "${WORKDIR}/git"
 

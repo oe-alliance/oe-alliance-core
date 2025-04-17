@@ -13,7 +13,7 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "1.1+git${SRCPV}"
 PKGV = "1.1+git${GITPKGV}"
-VER="1.1"
+VER = "1.1"
 PR = "r1"
 
 RRECOMMENDS:${PN} = "enigma2-plugin-extensions-oaweather enigma2-plugin-extensions-bitrate"

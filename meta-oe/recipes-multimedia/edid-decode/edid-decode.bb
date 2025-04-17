@@ -13,7 +13,7 @@ PR = "r3"
 # edid-decode repo has been moved and merged with v4l-utils (git://linuxtv.org/v4l-utils.git)
 # SRC_URI = "git://git.linuxtv.org/edid-decode.git;protocol=https;branch=master"
 
-SRC_URI="git://github.com/oe-mirrors/edid-decode.git;protocol=https;branch=master"
+SRC_URI = "git://github.com/oe-mirrors/edid-decode.git;protocol=https;branch=master"
 
 S = "${WORKDIR}/git"
 

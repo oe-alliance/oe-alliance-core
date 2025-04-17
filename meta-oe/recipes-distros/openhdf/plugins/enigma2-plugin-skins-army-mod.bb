@@ -12,10 +12,10 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "1.0+git"
 PKGV = "1.0+git${GITPKGV}"
-VER ="1.0"
+VER = "1.0"
 PR = "r4"
 
-SRC_URI="git://github.com/openhdf/army-mod-skin.git;protocol=https;branch=master"
+SRC_URI = "git://github.com/openhdf/army-mod-skin.git;protocol=https;branch=master"
 
 S = "${WORKDIR}/git"
 

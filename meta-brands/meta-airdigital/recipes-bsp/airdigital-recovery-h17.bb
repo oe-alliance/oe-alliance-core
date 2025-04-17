@@ -1,6 +1,6 @@
 SRCDATE = "20240930"
 
-HICHIPSET="h17"
+HICHIPSET = "h17"
 
 require airdigital-recovery.inc
 

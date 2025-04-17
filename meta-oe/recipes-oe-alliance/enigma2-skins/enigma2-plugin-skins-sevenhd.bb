@@ -10,11 +10,11 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "3.6.83+git"
 PKGV = "3.6.83+git${GITPKGV}"
-VER="3.6.83"
+VER = "3.6.83"
 
 RDEPENDS:${PN} = "python3-requests python3-pillow enigma2-plugin-systemplugins-mphelp python3-lxml"
 
-SRC_URI="git://github.com/openatv/SevenHD.git;protocol=https;branch=master"
+SRC_URI = "git://github.com/openatv/SevenHD.git;protocol=https;branch=master"
 
 FILES:${PN} = "/usr/*"
 

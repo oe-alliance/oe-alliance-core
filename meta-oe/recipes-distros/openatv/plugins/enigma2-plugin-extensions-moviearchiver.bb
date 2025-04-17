@@ -12,7 +12,7 @@ PV = "0.3.+git"
 PKGV = "0.3.+git${GITPKGV}"
 PR = "r0"
 
-SRC_URI="git://github.com/oe-mirrors/enigma2-plugin-extensions-moviearchiver.git;protocol=https;branch=master"
+SRC_URI = "git://github.com/oe-mirrors/enigma2-plugin-extensions-moviearchiver.git;protocol=https;branch=master"
 
 S = "${WORKDIR}/git"
 

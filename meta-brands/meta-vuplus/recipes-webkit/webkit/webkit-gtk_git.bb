@@ -16,8 +16,8 @@ DEPENDS = "glib-2.0 glib-2.0-native gettext-native zlib enchant2 libsoup-2.4 cur
 PR = "r6"
 PV = "r95199"
 
-BRANCH="vuplus-webkit"
-SRCREV="9eed47d1f873a13759d3fd8ead72739b328d710a"
+BRANCH = "vuplus-webkit"
+SRCREV = "9eed47d1f873a13759d3fd8ead72739b328d710a"
 
 SRC_URI = "git://github.com/vuplus-com/webkit-r95199-base.git;protocol=https;branch=${BRANCH};rev=${SRCREV} \
     file://0001-bison-3.patch \

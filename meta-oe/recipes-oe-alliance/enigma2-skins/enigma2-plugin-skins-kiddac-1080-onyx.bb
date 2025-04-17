@@ -12,7 +12,7 @@ SRCREV = "${AUTOREV}"
 PV = "git"
 PKGV = "${GITPKGVTAG}"
 
-SRC_URI="git://github.com/kiddac/Slyk_Onyx_1080.git;protocol=https;branch=master"
+SRC_URI = "git://github.com/kiddac/Slyk_Onyx_1080.git;protocol=https;branch=master"
 
 S = "${WORKDIR}/git/Slyk_Onyx_1080"
 

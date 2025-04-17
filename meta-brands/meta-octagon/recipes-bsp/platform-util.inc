@@ -5,7 +5,7 @@ LICENSE = "CLOSED"
 PACKAGE_ARCH := "${MACHINE_ARCH}"
 require conf/license/license-close.inc
 
-PR="${SRCDATE}.${SRCDATE_PR}"
+PR = "${SRCDATE}.${SRCDATE_PR}"
 
 SRC_URI = " \
     https://source.mynonpublic.com/octagon/platform-util-${MACHINE}-${PV}-${PR}.tar.gz \
@@ -25,7 +25,7 @@ do_install() {
 do_package_qa() {
 }
 
-FILES:${PN}="/"
+FILES:${PN} = "/"
 
 inherit update-rc.d
 

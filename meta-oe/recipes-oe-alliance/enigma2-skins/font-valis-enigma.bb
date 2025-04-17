@@ -6,7 +6,7 @@ inherit allarch
 PV = "2009.11.12"
 PR = "r0"
 
-SRC_URI="file://valis_enigma.ttf"
+SRC_URI = "file://valis_enigma.ttf"
 
 S = "${WORKDIR}/sources"
 UNPACKDIR = "${S}"

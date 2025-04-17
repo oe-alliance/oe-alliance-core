@@ -1,6 +1,6 @@
 GO_IMPORT = "github.com/bluenviron/mediamtx"
 GO_INSTALL = "${GO_IMPORT}"
-GOARCH=""
+GOARCH = ""
 
 # generate standalone executable without dependencies to any shared objects at runtime
 GO_LINKSHARED = ""

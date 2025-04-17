@@ -9,9 +9,9 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "1.0+git"
 PKGV = "1.0+git${GITPKGV}"
-VER="1.0"
+VER = "1.0"
 
-SRC_URI="git://github.com/stein17/Skins-for-openHDF.git;protocol=https;branch=Python3"
+SRC_URI = "git://github.com/stein17/Skins-for-openHDF.git;protocol=https;branch=Python3"
 
 FILES:${PN} = "/"
 

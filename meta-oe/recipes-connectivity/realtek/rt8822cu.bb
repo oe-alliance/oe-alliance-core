@@ -4,7 +4,7 @@ SECTION = "kernel/modules"
 LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://ifcfg-wlan0;md5=6061d24ec65e191716f64bb3fe580790"
 
-DEPENDS ="bc-native"
+DEPENDS = "bc-native"
 
 inherit module
 SRCREV = "${AUTOREV}"

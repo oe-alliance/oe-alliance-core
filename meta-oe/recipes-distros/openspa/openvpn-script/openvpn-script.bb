@@ -10,7 +10,7 @@ require conf/license/license-gplv2.inc
 PV = "1.0"
 PR = "r3"
 
-SRC_URI="file://setup_openvpn.sh"
+SRC_URI = "file://setup_openvpn.sh"
 
 do_install() {
     install -d ${D}/usr/bin/

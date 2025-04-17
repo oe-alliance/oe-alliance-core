@@ -4,7 +4,7 @@ COMPATIBLE_MACHINE = "^(vuduo4kse)$"
 
 SRCDATE = "20210527"
 SRCDATE_PR = "r0"
-PV="17.1"
+PV = "17.1"
 
 S = "${WORKDIR}/libgles-vuduo4kse"
 

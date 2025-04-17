@@ -16,10 +16,10 @@ PR:openatv = "r3-${MACHINEBUILD}"
 
 SSTATE_SKIP_CREATION = "1"
 
-BRANCH="master"
+BRANCH = "master"
 
 FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
-SRC_URI="git://github.com/oe-mirrors/branding-module.git;protocol=https;branch=${BRANCH}"
+SRC_URI = "git://github.com/oe-mirrors/branding-module.git;protocol=https;branch=${BRANCH}"
 
 S = "${WORKDIR}/git"
 

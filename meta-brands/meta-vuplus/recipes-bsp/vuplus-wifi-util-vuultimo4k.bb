@@ -2,7 +2,7 @@ require vuplus-wifi-util.inc
 
 COMPATIBLE_MACHINE = "^(vuultimo4k)$"
 
-PV="16.1"
+PV = "16.1"
 SRCDATE = "20230613"
 SRCDATE_PR = "r0"
 
