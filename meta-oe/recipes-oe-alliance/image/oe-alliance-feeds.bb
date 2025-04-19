@@ -82,6 +82,7 @@ RDEPENDS:${PN} = " \
     cups \
     davfs2 \
     cdtextinfo \
+    dabstreamer \
     djmount \
     dosfstools \
     dvb-apps \
@@ -89,6 +90,7 @@ RDEPENDS:${PN} = " \
     dvbsnoop \
     dvdfs \
     edid-decode \
+    eti-tools \
     extundelete \
     exfatprogs \
     ${@bb.utils.contains_any("MACHINEBUILD", "gbquad4k gbquad4kpro gbue4k galaxy4k lunix34k", "enigma2-plugin-extensions-forcefbclnbpower" , "", d)} \
@@ -188,6 +190,7 @@ RDEPENDS:${PN} = " \
     sshpass \
     streamproxy \
     strongswan \
+    tsniv2ni \
     tailscale \
     tcpdump \
     tmux \
