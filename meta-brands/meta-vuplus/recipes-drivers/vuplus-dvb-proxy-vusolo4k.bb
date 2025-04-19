@@ -1,7 +1,7 @@
 PV = "3.14.28"
 KV = "${PV}-1.8"
 SRCDATE = "20190424"
-SRCDATE_PR = "r0"
+SRCDATE_PR = "r1"
 
 require vuplus-dvb-proxy.inc
 
