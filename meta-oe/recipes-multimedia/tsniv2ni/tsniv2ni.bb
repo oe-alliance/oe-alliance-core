@@ -16,3 +16,5 @@ S = "${WORKDIR}/git"
 inherit autotools-brokensep pkgconfig
 
 TARGET_CC_ARCH += "${LDFLAGS}"
+
+do_configure[noexec] = "1"

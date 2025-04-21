@@ -20,3 +20,6 @@ S = "${WORKDIR}/git"
 inherit autotools-brokensep pkgconfig
 
 PARALLEL_MAKE = ""
+CFLAGS:append = " -std=gnu17 -Wno-incompatible-pointer-types"
+
+do_configure[noexec] = "1"
