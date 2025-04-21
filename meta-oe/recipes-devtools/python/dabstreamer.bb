@@ -5,7 +5,7 @@ HOMEPAGE = "www.satdreamgr.com"
 inherit allarch
 
 require conf/license/license-gplv2.inc
-RDEPENDS_${PN} = "eti-tools ${PYTHON_PN}-core tsniv2ni"
+RDEPENDS:${PN} = "eti-tools ${PYTHON_PN}-core tsniv2ni"
 
 SRC_URI = "git://github.com/satdreamgr/dabstreamer.git;protocol=https;branch=master"
 S = "${WORKDIR}/git"
