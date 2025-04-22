@@ -46,14 +46,14 @@ if [ "$MODEL" = "inihdp" ]; then
     modprobe rtk_btusb &
 fi
 
-if [ "$MODEL" = "gbmv200" ]; then
-    log "Attaching HCI for sprd"
-    hciattach_sprd /dev/ttyBT0 sprd > /var/log/hciattach.log &
-fi
-
 start() {
     log "Starting..."
-    
+
+    #if [ "$MODEL" = "gbmv200" ]; then
+    #    log "Attaching HCI for sprd"
+    #    hciattach_sprd /dev/ttyBT0 sprd > /var/log/hciattach.log &
+    #fi
+
     hciconfig hci0 up > /dev/null 2>&1 && log "Attaching hci0"
     (hcitool dev | awk 'NR==2 {print $2}' | while read -r BT_MAC; do
         log "Bluetooth MAC: $BT_MAC"
