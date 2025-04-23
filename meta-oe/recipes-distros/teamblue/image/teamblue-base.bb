@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda
 ALLOW_EMPTY:${PN} = "1"
 
 PV = "${IMAGE_VERSION}"
-PR = "r8"
+PR = "r9"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
@@ -20,7 +20,6 @@ RDEPENDS:${PN} = "\
     dosfstools \
     oe-alliance-base \
     teamblue-bootlogo \
-    teamblue-scripts \
     openssh-sftp-server \
     hdparm \
     smartmontools \
