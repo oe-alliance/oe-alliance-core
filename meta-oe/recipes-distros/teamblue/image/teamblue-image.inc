@@ -18,12 +18,20 @@ do_rootfs[deptask] = "do_rm_work"
 
 SSTATE_ALLOW_OVERLAP_FILES += "${DEPLOY_DIR_IMAGE}"
 
-export IMAGE_BASENAME = "teamblue-image"
-
-IMAGE_INSTALL = "teamblue-base"
+IMAGE_INSTALL = "teamblue-base \
+    ${@bb.utils.contains("MACHINE_FEATURES", "dvbc-only", "", "enigma2-plugin-settings-defaultsat", d)} \
+    ${@bb.utils.contains_any("MACHINE_FEATURES", "smallflash singlecore", "", \
+    " \
+    packagegroup-base-smbfs-client \
+    packagegroup-base-smbfs-server \
+    packagegroup-base-nfs \
+    ", d)} \
+    "
 
 # Some additional comfort on the shell: Pre-install nano on boxes with 128 MB or more:
 IMAGE_INSTALL += "${@bb.utils.contains_any("FLASHSIZE", "64 96", "", "iproute2", d)}"
+
+export IMAGE_BASENAME = "teamblue-image"
 
 # Prevent locales-archive creation to save some space
 IMAGE_LOCALES_ARCHIVE = ""
