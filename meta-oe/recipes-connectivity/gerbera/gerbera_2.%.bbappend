@@ -24,6 +24,6 @@ FILES:${PN} += "${sysconfdir}"
 
 CONFFILES:${PN} = "${sysconfdir}/gerbera/config.xml"
 
-PV = "2.4.1"
+PV = "2.5.0"
 
-SRCREV = "870dd32d42f626dc2246d34b2224ffb6fd73e205"
+SRCREV = "92261f4994b0875a60c6288592fc8bbe953eea25"
