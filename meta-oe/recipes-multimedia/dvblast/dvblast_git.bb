@@ -14,7 +14,7 @@ SRCREV = "${AUTOREV}"
 PV = "3.4+git"
 PKGV = "3.4+git${GITPKGV}"
 
-SRC_URI = "git://code.videolan.org/videolan/dvblast.git;protocol=https;branch=master"
+SRC_URI = "git://github.com/videolan/dvblast.git;protocol=https;branch=master"
 
 S = "${WORKDIR}/git"
 
