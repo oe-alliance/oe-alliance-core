@@ -8,10 +8,10 @@ DEPENDS = "libgcrypt libgpg-error bison-native"
 inherit gitpkgv
 
 SRCREV = "${AUTOREV}"
-PV = "0.10.0+git"
-PKGV = "0.10.0+git${GITPKGV}"
+PV = "0.11.1+git"
+PKGV = "0.11.1+git${GITPKGV}"
 
-SRC_URI = "git://code.videolan.org/videolan/${BPN}.git;protocol=https;branch=master \
+SRC_URI = "git://github.com/oe-alliance-mirrors/${BPN}.git;protocol=https;branch=master \
         file://libgcrypt-gpg-error-use-pkgconfig.patch"
 
 S = "${WORKDIR}/git"
