@@ -11,7 +11,7 @@ SRCREV = "b093bbe7d9bc642c8f24067cbdcc73bb43562eab"
 
 PV = "r2970+git"
 
-SRC_URI = "git://code.videolan.org/videolan/x264;protocol=https;branch=master \
+SRC_URI = "git://github.com/oe-alliance-mirrors/x264;protocol=https;branch=master \
            file://don-t-default-to-cortex-a9-with-neon.patch \
            file://Fix-X32-build-by-disabling-asm.patch \
            "
