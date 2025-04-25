@@ -4,7 +4,7 @@ SECTION = "kernel"
 
 KV = "4.1.20"
 DATETIME = "20180321"
-MACHINE_KERNEL_PR:append = "1"
+MACHINE_KERNEL_PR:append = "2"
 
 COMPATIBLE_MACHINE = "dags72604"
 
