@@ -30,7 +30,7 @@ RDEPENDS:${PN} = "python3-core \
 PV = "git"
 PKGV = "${GITPKGVTAG}"
 
-SRCREV_streamlink = "${AUTOREV}"
+SRCREV_streamlink = "8f330ba5bc82f58adfb1c07a86c6b1923f16106d"
 SRCREV_plugins = "${AUTOREV}"
 
 SRCREV_FORMAT = "streamlink_plugins"
