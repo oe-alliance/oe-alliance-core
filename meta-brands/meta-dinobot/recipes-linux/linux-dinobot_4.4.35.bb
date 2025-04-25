@@ -10,7 +10,7 @@ COMPATIBLE_MACHINE = "^(u41|u42|u43|u45|u5|u51|u52|u53|u54|u55|u56|u57|u532|u533
 
 inherit kernel machine_kernel_pr
 
-MACHINE_KERNEL_PR:append = "32"
+MACHINE_KERNEL_PR:append = "33"
 
 SRCREV_FORMAT = "kernel_wireguard"
 
@@ -23,7 +23,7 @@ SRC_URI[new.sha256sum] = "32a8caabfba94d81b649de8dd62cc5b02e1d750cad8d2676e98e24
 LIC_FILES_CHKSUM = "file://COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
 SRC_URI:u5pvr += "https://source.mynonpublic.com/dinobot/dinobot-linux-${PV}-${SRCDATE}.tar.gz;name=kernel \
-    file://initramfs-subdirboot.cpio.gz;unpack=0 \
+    file://initramfs-chkroot.cpio.xz;unpack=0 \
     file://defconfig \
     file://sdio-platform.patch \
     file://accelmem.patch \
@@ -42,7 +42,7 @@ SRC_URI:u5pvr += "https://source.mynonpublic.com/dinobot/dinobot-linux-${PV}-${S
 "
 
 SRC_URI = "https://source.mynonpublic.com/dinobot/dinobot-linux-${PV}-${SRCDATE}.tar.gz;name=new \
-    file://initramfs-subdirboot.cpio.gz;unpack=0 \
+    file://initramfs-chkroot.cpio.xz;unpack=0 \
     file://defconfig \
     file://410dts.patch \
     file://0001-mmc-switch-1.8V.patch \
@@ -79,7 +79,7 @@ KERNEL_OUTPUT = "arch/${ARCH}/boot/${KERNEL_IMAGETYPE}"
 
 kernel_do_configure:prepend() {
 	install -d ${B}/usr
-	install -m 0644 ${UNPACKDIR}/initramfs-subdirboot.cpio.gz ${B}/
+	install -m 0644 ${UNPACKDIR}/initramfs-chkroot.cpio.xz ${B}/
 }
 
 kernel_do_install:append() {

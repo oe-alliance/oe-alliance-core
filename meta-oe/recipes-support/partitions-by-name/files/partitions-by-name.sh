@@ -46,3 +46,10 @@ if [ -e "/sys/block/mtdblock2/device/name" ]; then
       ln -sf /dev/mtdblock2 /dev/block/by-name/$devname
     fi
 fi
+
+if  [ -e "/dev/block/by-name/other1" ] && [ -e "/dev/block/by-name/other2" ]; then
+    echo 0 > /sys/block/mmcblk0boot1/force_ro
+    if [ ! -e /dev/block/by-name/others ]; then
+      ln -sf /dev/mmcblk0boot1 /dev/block/by-name/others
+    fi
+fi
