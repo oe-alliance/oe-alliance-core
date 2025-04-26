@@ -34,7 +34,7 @@ do_install() {
     install -m 0755 ${UNPACKDIR}/flash-apploader ${D}${sysconfdir}/init.d/flash-apploader
 }
 
-FILES_${PN} = "/usr/share ${sysconfdir}"
+FILES:${PN} = "/usr/share ${sysconfdir}"
 
 do_deploy() {
     install -d ${DEPLOY_DIR_IMAGE}/${MACHINE}-partitions
