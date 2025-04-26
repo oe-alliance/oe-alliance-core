@@ -193,3 +193,5 @@ python populate_packages:prepend() {
 
 do_package_qa() {
 }
+
+INSANE_SKIP:${PN} = "already-stripped"
