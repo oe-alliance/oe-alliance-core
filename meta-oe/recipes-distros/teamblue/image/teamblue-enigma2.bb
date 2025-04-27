@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r15"
+PR = "r18"
 
 inherit packagegroup
 
@@ -27,7 +27,6 @@ NORMAL_IMAGE = " \
     enigma2-plugin-drivers-exfat \
     enigma2-plugin-drivers-ntfs-3g \
     enigma2-plugin-drivers-usbserial \
-    enigma2-plugin-extensions-atilehd \
     enigma2-plugin-extensions-autotimer \
     enigma2-plugin-extensions-cutlisteditor \
     enigma2-plugin-extensions-dvdplayer \
@@ -40,7 +39,6 @@ NORMAL_IMAGE = " \
     enigma2-plugin-extensions-moviemanager \
     enigma2-plugin-extensions-openwebif-themes \
     enigma2-plugin-extensions-openwebif-vxg \
-    enigma2-plugin-extensions-volume-adjust \
     enigma2-plugin-extensions-zaphistorybrowser \
     enigma2-plugin-systemplugins-devicemanager \
     enigma2-plugin-systemplugins-gbaspectratioswitch \
@@ -50,7 +48,6 @@ NORMAL_IMAGE = " \
     enigma2-plugin-systemplugins-videomode \
     enigma2-plugin-systemplugins-videotune \
     ${@bb.utils.contains("MACHINE_FEATURES", "boxmodel", "boxmodel", "", d)} \
-    ${@bb.utils.contains("MACHINE_FEATURES", "dvbc-only", "", "enigma2-plugin-extensions-programmlistenupdater", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "dvd", "bdremux replex mjpegtools dvdauthor dvd+rw-tools genisoimage cdfs cdtextinfo enigma2-plugin-extensions-cdinfo enigma2-plugin-extensions-dvdburn enigma2-plugin-extensions-dvdplayer ${GST_BASE_DVD}", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "fcc", "enigma2-plugin-systemplugins-fastchannelchange", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "grautec", "enigma2-plugin-extensions-grautec", "", d)} \
