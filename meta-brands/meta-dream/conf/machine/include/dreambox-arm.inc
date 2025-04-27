@@ -9,7 +9,7 @@ DVBSKYPROVIDER = "kernel"
 
 GLIBC_EXTRA_OECONF = "--with-tls --with-__thread"
 
-DVBMEDIASINK_CONFIG = "--with-dreambox --with-pcm --with-wma --with-wmv --with-dts=no --with-dtsdownmix --with-eac3 --with-vb6 --with-vb8 --with-vb9 --with-spark --with-h265"
+DVBMEDIASINK_CONFIG = "--with-pcm --with-wma --with-wmv --with-dts=no --with-dtsdownmix --with-eac3 --with-vb6 --with-vb8 --with-vb9 --with-spark --with-h265"
 
 include conf/machine/include/autoload-filesystems.inc
 require conf/machine/include/soc-family.inc
