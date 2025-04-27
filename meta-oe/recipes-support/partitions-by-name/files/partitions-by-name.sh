@@ -53,3 +53,13 @@ if  [ -e "/dev/block/by-name/other1" ] && [ -e "/dev/block/by-name/other2" ]; th
       ln -sf /dev/mmcblk0boot1 /dev/block/by-name/others
     fi
 fi
+
+if grep -q -E "dm820|dm7080|dm900|dm920" /proc/stb/info/model; then
+    if [ -e "/dev/block/by-name/-mmcblk0p1" ] && [ -e "/dev/block/by-name/-mmcblk0p2" ]; then
+        echo 0 > /sys/block/mmcblk0boot1/force_ro
+        if [ ! -e /dev/block/by-name/others ]; then
+            ln -sf /dev/mmcblk0boot1 /dev/block/by-name/others
+        fi
+    fi
+fi
+

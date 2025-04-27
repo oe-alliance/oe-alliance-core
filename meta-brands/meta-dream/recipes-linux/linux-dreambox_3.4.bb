@@ -1,6 +1,6 @@
 inherit kernel machine_kernel_pr
 
-MACHINE_KERNEL_PR:append = ".14"
+MACHINE_KERNEL_PR:append = ".15"
 
 COMPATIBLE_MACHINE = "^(dm520|dm820|dm7080)$"
 
@@ -29,6 +29,7 @@ SRC_URI = " \
     file://0003-makefile-silence-packed-not-aligned-warn.patch \
     file://0004-fcrypt-fix-bitoperation-for-gcc.patch \
     file://fix-build-with-binutils-2.41.patch \
+    file://chkroot-multiboot.cpio.xz;unpack=0 \
 "
 
 export KCFLAGS = " -Wno-error=incompatible-pointer-types \
@@ -68,6 +69,11 @@ CMDLINE = "${@bb.utils.contains('MACHINE', 'dm520', \
     'bmem=192M@64M console=ttyS0,1000000 ubi.mtd=rootfs root=ubi0:dreambox-rootfs rootfstype=ubifs rw', \
     'bmem=512M@512M memc1=768M console=ttyS0,1000000 root=/dev/mmcblk0p1 rootwait rootfstype=ext4', d)} \
 "
+
+kernel_do_configure:prepend() {
+	install -d ${B}/usr
+	install -m 0644 ${UNPACKDIR}/chkroot-multiboot.cpio.xz ${B}/
+}
 
 BRCM_PATCHLEVEL = "4.0"
 
