@@ -2,7 +2,7 @@
 +++ b/container/container_ffmpeg.c
 @@ -972,7 +972,7 @@ static void FFMPEGThread(Context_t *context)
                  }
-                 
+ 
                  pcmPrivateData_t pcmExtradata;
 -                pcmExtradata.channels              = get_codecpar(audioTrack->stream)->channels;
 +                pcmExtradata.channels              = get_codecpar(audioTrack->stream)->ch_layout.nb_channels;
@@ -24,20 +24,20 @@
                              }
 -                            out_channel_layout = c->channel_layout;
 +                            out_channel_layout = (uint64_t)&c->ch_layout;
-                             
+ 
                              uint8_t downmix = stereo_software_decoder && out_channels > 2 ? 1 : 0;
  #ifdef __sh__
 @@ -1134,7 +1134,7 @@ static void FFMPEGThread(Context_t *context)
                                  out_channels = 2;
                              }
-                             
+ 
 -                            av_opt_set_int(swr, "in_channel_layout",	c->channel_layout,	0);
 +                            av_opt_set_int(swr, "in_channel_layout",	(uint64_t)&c->ch_layout,0);
                              av_opt_set_int(swr, "out_channel_layout",	out_channel_layout,	0);
                              av_opt_set_int(swr, "in_sample_rate",		c->sample_rate,		0);
                              av_opt_set_int(swr, "out_sample_rate",		out_sample_rate,	0);
 @@ -1173,7 +1173,7 @@ static void FFMPEGThread(Context_t *context)
-                         
+ 
                          //////////////////////////////////////////////////////////////////////
                          // Update pcmExtradata according to decode parameters
 -                        pcmExtradata.channels              = av_get_channel_layout_nb_channels(out_channel_layout);
