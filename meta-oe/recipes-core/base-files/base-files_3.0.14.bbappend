@@ -1,6 +1,6 @@
 PACKAGE_ARCH = "${MACHINEBUILD}"
 
-PR:append = ".9"
+PR:append = ".10"
 
 FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 FILESEXTRAPATHS:prepend := "${THISDIR}/${DISTRO_NAME}:"
@@ -41,15 +41,20 @@ do_install:append() {
         perl -i -pe 's:(\@rootfs\@):rootfs\t:s' ${D}${sysconfdir}/fstab
     #fi
 
-    if [ "${MACHINEBUILD}" = "sf4008" -o "${MACHINEBUILD}" = "sf5008" ]; then
+    if [ "${MACHINEBUILD}" = "sf4008" ]; then
         printf "/dev/mmcblk0p5\t\tnone\t\tswap\t\tsw\t\t\t\t\t0  0\n" >> ${D}${sysconfdir}/fstab
-    fi
-    if [ "${DISTRO}" = "egami" ]; then
-        printf "/dev/sda1\t\t/media/hdd\tauto\t\tdefaults\t\t\t\t0  0\n" >> ${D}${sysconfdir}/fstab
     fi
     if [ "${MACHINEBUILD}" = "dreamone" -o "${MACHINEBUILD}" = "dreamtwo" ]; then
         mkdir ${D}/data
         printf '/dev/dreambox-data\t/data\t\tauto\tdefaults\t\t\t\t0 0\n' >> ${D}${sysconfdir}/fstab
+    fi
+    if [ "${MACHINEBUILD}" = "dm820" -o "${MACHINEBUILD}" = "dm7080" ]; then
+        mkdir ${D}/data
+        printf '/dev/mmcblk0p2\t/data\t\tauto\tdefaults\t\t\t\t0 0\n' >> ${D}${sysconfdir}/fstab
+    fi
+    if [ "${MACHINEBUILD}" = "dm900" -o "${MACHINEBUILD}" = "dm920" ]; then
+        mkdir ${D}/data
+        printf '/dev/mmcblk0p3\t/data\t\tauto\tdefaults\t\t\t\t0 0\n' >> ${D}${sysconfdir}/fstab
     fi
 }
 
