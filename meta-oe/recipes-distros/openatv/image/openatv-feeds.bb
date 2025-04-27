@@ -58,6 +58,7 @@ RRECOMMENDS:${PN} = "\
     ncdu \
     ${@bb.utils.contains("MACHINE_FEATURES", "nogui", "packagegroup-openatv-nogui", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "packagegroup-openatv-small", "", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "dreamboxv2", "enigma2-plugin-extensions-dbackup", "", d)} \
     "
 
 # remove close cant update to py3
