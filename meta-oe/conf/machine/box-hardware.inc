@@ -48,6 +48,7 @@ HAVE_MIDDLEFLASH = "${@bb.utils.contains("MACHINE_FEATURES", "middleflash", "Tru
 HAVE_MULTILIB = "${@bb.utils.contains("MACHINE_FEATURES", "multilib", "True", "False", d)}"
 HAVE_VFDSYMBOL = "${@bb.utils.contains("MACHINE_FEATURES", "vfdsymbol", "True", "False", d)}"
 HAVE_KEXECMB = "${@bb.utils.contains("MACHINE_FEATURES", "kexecmb", "True", "False", d)}"
+HAVE_CHKROOTMB = "${@bb.utils.contains("MACHINE_FEATURES", "chkrootmb", "True", "False", d)}"
 
 RCTYPE ??= "0"
 RCNAME ??= "dmm1"
