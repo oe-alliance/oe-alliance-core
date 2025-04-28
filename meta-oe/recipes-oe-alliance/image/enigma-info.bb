@@ -156,6 +156,7 @@ do_install() {
     printf "avjack=${HAVE_AV_JACK}\n" >> ${D}${INFOFILE}
     printf "blindscanbinary='${BLINDSCAN_BINARY}'\n" >> ${D}${INFOFILE}
     printf "brand='${BRAND_OEM}'\n" >> ${D}${INFOFILE}
+    printf "chkrootmb=${HAVE_CHKROOTMB}\n" >> ${D}${INFOFILE}
     printf "ci=${HAVE_CI}\n" >> ${D}${INFOFILE}
     printf "compiledate='${DATE}'\n" >> ${D}${INFOFILE}
     printf "dboxlcd=${SUPPORT_DBOXLCD}\n" >> ${D}${INFOFILE}
