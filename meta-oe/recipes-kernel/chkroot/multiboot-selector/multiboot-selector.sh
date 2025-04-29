@@ -88,7 +88,25 @@ ROOT_PARTITIONS=()
 KERNEL_PATHS=()
 ROOT_SUBDIRS=()
 
-BOOT="/dev/mmcblk0boot1"
+if grep -q -E "dm820|dm7080|dm900|dm920" /proc/stb/info/model || grep -q -E "beyonwizu4|et11000|sf4008" /proc/stb/info/boxtype; then
+	BOOT="/dev/mmcblk0boot1"
+else
+	for i in /sys/block/mmcblk0/mmcblk0p*; do
+		if [ -f "$i/uevent" ]; then
+			partname=$(grep '^PARTNAME=' "$i/uevent" | cut -d '=' -f 2)
+			devname=`cat /$i/uevent | grep DEVNAME | cut -d '=' -f 2`
+			case "$partname" in
+			  others)
+				BOOT="/dev/$devname"
+				;;
+			  other2)
+				BOOT="/dev/mmcblk0boot1"
+				;;
+			esac
+		fi
+	done
+fi
+echo "BOOT found:$BOOT"
 
 echo 0 > /sys/block/mmcblk0boot1/force_ro
 mount -t vfat "$BOOT" /boot 2>/dev/null
@@ -173,7 +191,7 @@ cp "/boot/$STARTUP_FILE" "/boot/STARTUP"
 # Display selected options for debugging or logging
 echo "Selected ROOT partition: $ROOT_PARTITION"
 echo "Selected ROOTSUBDIR: $ROOT_SUBDIR"
-
+sync
 echo "Script finished."
 
 
