@@ -24,11 +24,38 @@ do_install() {
     if [ -f "${S}/box/${MACHINEBUILD}.svg" ] ; then
         install -m 0644 "${S}/box/${MACHINEBUILD}.svg" ${D}${datadir}/enigma2/logos/boxlogo.svg
     fi
+    if [ -f "${S}/box/${MACHINEBUILD}.png" ] ; then
+        install -m 0644 "${S}/box/${MACHINEBUILD}.png" ${D}${datadir}/enigma2/logos/boxlogo.png
+    fi
+    if [ -f "${S}/box/${MACHINEBUILD}_large.png" ] ; then
+        install -m 0644 "${S}/box/${MACHINEBUILD}_large.png" ${D}${datadir}/enigma2/logos/boxlogo_large.png
+    fi
+    if [ -f "${S}/box/${MACHINEBUILD}_medium.png" ] ; then
+        install -m 0644 "${S}/box/${MACHINEBUILD}_medium.png" ${D}${datadir}/enigma2/logos/boxlogo_medium.png
+    fi
     if [ -f "${S}/brand/${MACHINE_BRAND}.svg" ] ; then
         install -m 0644 "${S}/brand/${MACHINE_BRAND}.svg" ${D}${datadir}/enigma2/logos/brandlogo.svg
     fi
+    if [ -f "${S}/brand/${MACHINE_BRAND}.png" ] ; then
+        install -m 0644 "${S}/brand/${MACHINE_BRAND}.png" ${D}${datadir}/enigma2/logos/brandlogo.png
+    fi
+    if [ -f "${S}/brand/${MACHINE_BRAND}_large.png" ] ; then
+        install -m 0644 "${S}/brand/${MACHINE_BRAND}_large.png" ${D}${datadir}/enigma2/logos/brandlogo_large.png
+    fi
+    if [ -f "${S}/brand/${MACHINE_BRAND}_medium.png" ] ; then
+        install -m 0644 "${S}/brand/${MACHINE_BRAND}_medium.png" ${D}${datadir}/enigma2/logos/brandlogo_medium.png
+    fi
     if [ -f "${S}/distro/${DISTRO_NAME}.svg" ] ; then
         install -m 0644 "${S}/distro/${DISTRO_NAME}.svg" ${D}${datadir}/enigma2/logos/distrologo.svg
+    fi
+    if [ -f "${S}/distro/${DISTRO_NAME}.png" ] ; then
+        install -m 0644 "${S}/distro/${DISTRO_NAME}.png" ${D}${datadir}/enigma2/logos/distrologo.png
+    fi
+    if [ -f "${S}/distro/${DISTRO_NAME}_large.png" ] ; then
+        install -m 0644 "${S}/distro/${DISTRO_NAME}_large.png" ${D}${datadir}/enigma2/logos/distrologo_large.png
+    fi
+    if [ -f "${S}/distro/${DISTRO_NAME}_medium.png" ] ; then
+        install -m 0644 "${S}/distro/${DISTRO_NAME}_medium.png" ${D}${datadir}/enigma2/logos/distrologo_medium.png
     fi
     install -d ${D}${libdir}/enigma2/python/Components/Renderer
     cp -r ${S}/Renderer/* ${D}${libdir}/enigma2/python/Components/Renderer
