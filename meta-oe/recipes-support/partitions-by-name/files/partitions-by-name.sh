@@ -63,3 +63,21 @@ if grep -q -E "dm820|dm7080|dm900|dm920" /proc/stb/info/model; then
     fi
 fi
 
+if grep -q -E "et11000|sf4008" /proc/stb/info/boxtype; then
+    if [ -e "/dev/block/by-name/-mmcblk0p1" ] && [ -e "/dev/block/by-name/-mmcblk0p2" ]; then
+        echo 0 > /sys/block/mmcblk0boot1/force_ro
+        if [ ! -e /dev/block/by-name/others ]; then
+            ln -sf /dev/mmcblk0boot1 /dev/block/by-name/others
+        fi
+    fi
+fi
+
+if grep -q -E "beyonwizu4" /proc/stb/info/boxtype; then
+    if [ -e "/dev/block/by-name/update" ] && [ -e "/dev/block/by-name/splash" ]; then
+        echo 0 > /sys/block/mmcblk0boot1/force_ro
+        if [ ! -e /dev/block/by-name/others ]; then
+            ln -sf /dev/mmcblk0boot1 /dev/block/by-name/others
+        fi
+    fi
+fi
+

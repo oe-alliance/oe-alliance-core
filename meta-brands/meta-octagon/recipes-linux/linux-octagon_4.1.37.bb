@@ -52,6 +52,7 @@ SRC_URI += "https://source.mynonpublic.com/octagon/octagon-linux-${PV}-${SRC}.ta
     file://fix-multiple-defs-yyloc.patch \
     file://linux3.4-ARM-8933-1-replace-Sun-Solaris-style-flag-on-section.patch \
     file://fix-build-with-binutils-2.41.patch \
+    file://initramfs-chkroot.cpio.xz;unpack=0 \
     "
 
 S = "${WORKDIR}/linux-${PV}"
@@ -64,6 +65,11 @@ KERNEL_IMAGEDEST = "tmp"
 KERNEL_OUTPUT = "arch/${ARCH}/boot/${KERNEL_IMAGETYPE}"
 
 FILES:${KERNEL_PACKAGE_NAME}-image = "/${KERNEL_IMAGEDEST}/zImage"
+
+kernel_do_configure:prepend() {
+	install -d ${B}/usr
+	install -m 0644 ${UNPACKDIR}/initramfs-chkroot.cpio.xz ${B}/
+}
 
 kernel_do_install:append() {
         install -d ${D}/${KERNEL_IMAGEDEST}

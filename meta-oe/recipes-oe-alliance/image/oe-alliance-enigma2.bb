@@ -72,7 +72,7 @@ NORMAL_IMAGE_RECOMMENDS = "\
     ${@bb.utils.contains("MACHINE_FEATURES", "minitv", "enigma2-plugin-extensions-minitv" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "fcc", "enigma2-plugin-systemplugins-fastchannelchange" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "himedia", "enigma2-plugin-systemplugins-servicehisilicon" , "", d)} \
-    ${@bb.utils.contains("MACHINE_FEATURES", "dreamboxv2", "multiboot-selector", "", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "chkrootmb", "multiboot-selector", "", d)} \
     enigma2-plugin-systemplugins-hotplug \
     enigma2-plugin-extensions-mediascanner \
     enigma2-plugin-extensions-pictureplayer \
