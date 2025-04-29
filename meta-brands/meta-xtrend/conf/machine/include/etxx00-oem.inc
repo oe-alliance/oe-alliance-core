@@ -60,10 +60,11 @@ DVBSKYPROVIDER = "kernel"
 
 MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS += "\
     kernel-module-cdfs \
-	${@bb.utils.contains('MACHINE_FEATURES', 'v3d', 'et-v3ddriver-${MACHINE}', '',d)} \
-	${@bb.utils.contains('MACHINE_FEATURES', 'v3d', 'platform-util-${MACHINE}', '',d)} \
-	${@bb.utils.contains_any('MACHINE_FEATURES', 'kodi22', 'mkswapdev-${MACHINE}', '',d)} \
-    "
+    ${@bb.utils.contains('MACHINE_FEATURES', 'v3d', 'et-v3ddriver-${MACHINE}', '',d)} \
+    ${@bb.utils.contains('MACHINE_FEATURES', 'v3d', 'platform-util-${MACHINE}', '',d)} \
+    ${@bb.utils.contains_any('MACHINE_FEATURES', 'kodi22', 'mkswapdev-${MACHINE}', '',d)} \
+    ${@bb.utils.contains('MACHINEBUILD', 'beyonwizu4', 'enigma2-plugin-drivers-dvb-usb-dib0700 enigma2-plugin-drivers-ct2-dvb-usb-dualhd' , '', d)} \
+"
 
 MACHINE_EXTRA_RRECOMMENDS += " \
     gstreamer1.0-plugin-dvbmediasink \
