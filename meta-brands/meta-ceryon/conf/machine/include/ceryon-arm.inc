@@ -11,7 +11,7 @@ IMAGE_ROOTFS_SIZE ?= "589824"
 TARGET_ARCH = "arm"
 DEFAULTTUNE = "cortexa15hf-neon-vfpv4"
 
-PREFERRED_VERSION_linux-ceryon= "4.10.12"
+PREFERRED_VERSION_linux-ceryon = "4.10.12"
 
 IMAGE_CMD:ceryonemmc:prepend = " \
     rm -f ${DEPLOY_DIR_IMAGE}/*.ext4; \
