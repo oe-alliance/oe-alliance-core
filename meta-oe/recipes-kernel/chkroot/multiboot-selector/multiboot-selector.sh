@@ -10,6 +10,9 @@
 # It dynamically detects available STARTUP and STARTUP_* files
 # and validates images by mounting their corresponding root device.
 #
+# You can pass a image/slot number via parameter to avoid user
+# interaction.
+# 
 # ===============================================================
 
 # Multiboot Selector
@@ -144,14 +147,17 @@ if [ ${#images[@]} -eq 0 ]; then
     exit 1
 fi
 
-# Show available options
-echo "Please select an image:"
-for i in "${!images[@]}"; do
-    echo "${choices[$i]}) ${images[$i]}"
-done
+# Show available options when no image/slot number is passed as a parameter
+image_choice=$1
+if [ -z "$image_choice" ]; then
+    echo "Please select an image:"
+    for i in "${!images[@]}"; do
+        echo "${choices[$i]}) ${images[$i]}"
+    done
 
-# User selection
-read -p "Select an image (1-8): " image_choice
+    # User selection
+    read -p "Select an image (1-${#images[@]}): " image_choice
+fi
 
 # Check if the selection is valid
 valid_choice=false
@@ -193,10 +199,3 @@ echo "Selected ROOT partition: $ROOT_PARTITION"
 echo "Selected ROOTSUBDIR: $ROOT_SUBDIR"
 sync
 echo "Script finished."
-
-
-
-
-
-
-
