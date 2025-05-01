@@ -1,0 +1,29 @@
+https://codeberg.org/flk/meta-kodi/rawhttps://codeberg.org/flk/meta-kodi/raw/braFrom 638e3bf2f18f308bea5c0242de8ddd6f359f20e9 Mon Sep 17 00:00:00 2001
+From: Markus Volk <f_l_k@t-online.de>
+Date: Wed, 26 Mar 2025 07:06:57 +0100
+Subject: [PATCH] texturepacker: dont build internal for linux
+
+Signed-off-by: Markus Volk <f_l_k@t-online.de>
+
+Upstream-Status: Pending
+---
+ cmake/modules/buildtools/FindTexturePacker.cmake | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/cmake/modules/buildtools/FindTexturePacker.cmake b/cmake/modules/buildtools/FindTexturePacker.cmake
+index 5379a2f9949..66f434c860d 100644
+--- a/cmake/modules/buildtools/FindTexturePacker.cmake
++++ b/cmake/modules/buildtools/FindTexturePacker.cmake
+@@ -52,8 +52,8 @@ if(NOT TARGET TexturePacker::TexturePacker::Executable)
+       endif()
+     endif()
+ 
+-    # Ship TexturePacker only on Linux and FreeBSD
+-    if(CMAKE_SYSTEM_NAME STREQUAL "FreeBSD" OR CMAKE_SYSTEM_NAME STREQUAL "Linux")
++    # Ship TexturePacker only on FreeBSD
++    if(CMAKE_SYSTEM_NAME STREQUAL "FreeBSD")
+       # But skip shipping it if build architecture can be executed on host
+       # and TEXTUREPACKER_EXECUTABLE is found
+       if(NOT (HOST_CAN_EXECUTE_TARGET AND TEXTUREPACKER_EXECUTABLE))
+-- 
+2.49.0
