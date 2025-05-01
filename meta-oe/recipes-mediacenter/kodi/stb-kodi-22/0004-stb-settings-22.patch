@@ -7,7 +7,7 @@ Subject: [PATCH] stb-settings-22
  addons/skin.estuary/xml/Home.xml           |  2 +-
  cmake/modules/FindFFMPEG.cmake             | 48 +++++++++------
  cmake/platform/linux/stb.cmake             | 69 ++++++++++++++++++++++
- cmake/scripts/linux/ArchSetup.cmake        |  4 ++
+ cmake/scripts/linux/ArchSetup.cmake        |  7 +++
  cmake/treedata/common/stb.txt              |  1 +
  system/settings/settings.xml               | 14 ++---
  tools/Linux/kodi.sh.in                     | 52 ++++++++++++----
@@ -18,7 +18,7 @@ Subject: [PATCH] stb-settings-22
  xbmc/guilib/guiinfo/SystemGUIInfo.cpp      |  3 +
  xbmc/input/InputManager.cpp                | 12 ++++
  xbmc/view/ViewStateSettings.cpp            |  2 +-
- 14 files changed, 203 insertions(+), 47 deletions(-)
+ 14 files changed, 206 insertions(+), 47 deletions(-)
  create mode 100644 cmake/platform/linux/stb.cmake
  create mode 100644 cmake/treedata/common/stb.txt
 
@@ -36,7 +36,7 @@ index df6e2c3cf5f..791230ce914 100644
  						<param name="label" value="$LOCALIZE[33060]" />
  					</include>
 diff --git a/cmake/modules/FindFFMPEG.cmake b/cmake/modules/FindFFMPEG.cmake
-index 49f18ca9c2a..10940d6c1b3 100644
+index 1c86ac2a20d..516aa91fc8d 100644
 --- a/cmake/modules/FindFFMPEG.cmake
 +++ b/cmake/modules/FindFFMPEG.cmake
 @@ -48,6 +48,12 @@ macro(buildFFMPEG)
@@ -53,7 +53,7 @@ index 49f18ca9c2a..10940d6c1b3 100644
      set(CROSS_ARGS -DDEPENDS_PATH=${DEPENDS_PATH}
                     -DPKG_CONFIG_EXECUTABLE=${PKG_CONFIG_EXECUTABLE}
 @@ -97,13 +103,13 @@ macro(buildFFMPEG)
-     add_dependencies(ffmpeg ${APP_NAME_LC}::Dav1d)
+     add_dependencies(${${CMAKE_FIND_PACKAGE_NAME}_MODULE_LC} ${APP_NAME_LC}::Dav1d)
    endif()
  
 -  find_program(BASH_COMMAND bash)
@@ -192,19 +192,22 @@ index 00000000000..e1fe54a13d2
 +
 +list(APPEND PLATFORM_DEFINES -DMESA_EGL_NO_X11_HEADERS)
 diff --git a/cmake/scripts/linux/ArchSetup.cmake b/cmake/scripts/linux/ArchSetup.cmake
-index ab142177c81..07f3d6aef04 100644
+index c3192c63e87..0dd0b140305 100644
 --- a/cmake/scripts/linux/ArchSetup.cmake
 +++ b/cmake/scripts/linux/ArchSetup.cmake
-@@ -46,6 +46,10 @@ else()
-   elseif(CPU MATCHES loongarch64)
-     set(ARCH loongarch64)
-     set(NEON False)
+@@ -37,6 +37,13 @@ else()
+   elseif(CPU MATCHES aarch64 OR CPU MATCHES arm64)
+     set(ARCH aarch64)
+     set(NEON True)
++  elseif(CPU MATCHES loongarch64)
++    set(ARCH loongarch64)
++    set(NEON False)
 +  elseif(CPU MATCHES "cortexa15")
 +    set(ARCH arm)
 +    set(NEON True)
 +    set(NEON_FLAGS "-Wno-psabi -Wa,-march=armv7ve -mtune=cortex-a15 -mfpu=neon-vfpv4 -mvectorize-with-neon-quad -fPIC -mcpu=cortex-a15 -mfloat-abi=hard")
    else()
-     message(SEND_ERROR "Unknown CPU: ${CPU}")
+     set(ARCH ${CPU})
    endif()
 diff --git a/cmake/treedata/common/stb.txt b/cmake/treedata/common/stb.txt
 new file mode 100644
@@ -214,10 +217,10 @@ index 00000000000..2606a0f9995
 @@ -0,0 +1 @@
 +xbmc/windowing/egl   windowing/egl    # STB
 diff --git a/system/settings/settings.xml b/system/settings/settings.xml
-index d96133149e6..4a1ad930c9d 100755
+index 1445b4bcb35..fb2343bb026 100755
 --- a/system/settings/settings.xml
 +++ b/system/settings/settings.xml
-@@ -613,7 +613,7 @@
+@@ -619,7 +619,7 @@
            <control type="list" format="string" />
          </setting>
          <setting id="subtitles.fontname" type="string" label="14089" help="36185">
@@ -226,7 +229,7 @@ index d96133149e6..4a1ad930c9d 100755
            <default>DEFAULT</default>
            <constraints>
              <options>subtitlesfonts</options>
-@@ -810,7 +810,7 @@
+@@ -816,7 +816,7 @@
            <control type="spinner" format="integer" delayed="true"/>
          </setting>
          <setting id="subtitles.charset" type="string" label="735" help="36189">
@@ -235,7 +238,7 @@ index d96133149e6..4a1ad930c9d 100755
            <default>DEFAULT</default>
            <constraints>
              <options>charsets</options>
-@@ -3249,7 +3249,7 @@
+@@ -3243,7 +3243,7 @@
          <setting id="audiooutput.processquality" type="integer" label="13505" help="36169">
            <requirement>HAS_AE_QUALITY_LEVELS</requirement>
            <level>2</level>
@@ -244,7 +247,7 @@ index d96133149e6..4a1ad930c9d 100755
            <constraints>
              <options>aequalitylevels</options>
            </constraints>
-@@ -3267,7 +3267,7 @@
+@@ -3261,7 +3261,7 @@
          </setting>
          <setting id="audiooutput.samplerate" type="integer" label="458" help="36523">
            <level>2</level>
@@ -253,7 +256,7 @@ index d96133149e6..4a1ad930c9d 100755
            <dependencies>
              <dependency type="visible">
                <and>
-@@ -3279,10 +3279,6 @@
+@@ -3273,10 +3273,6 @@
            <constraints>
              <options>
                <option label="34124">44100</option>
@@ -264,7 +267,7 @@ index d96133149e6..4a1ad930c9d 100755
                <option label="34129">352800</option>
                <option label="34130">384000</option>
              </options>
-@@ -4115,7 +4111,7 @@
+@@ -4109,7 +4105,7 @@
        <group id="2" label="14270">
          <setting id="locale.country" type="string" label="14271" help="36115">
            <level>0</level>
@@ -495,10 +498,10 @@ index a07a1316ee6..45771a03d44 100644
      {
        // use the virtualkeyboard section of the keymap, and send keyboard-specific or navigation
 diff --git a/xbmc/view/ViewStateSettings.cpp b/xbmc/view/ViewStateSettings.cpp
-index 00130efe77f..ac103e32885 100644
+index 755d0dc65df..69bfdb61d05 100644
 --- a/xbmc/view/ViewStateSettings.cpp
 +++ b/xbmc/view/ViewStateSettings.cpp
-@@ -118,7 +118,7 @@ bool CViewStateSettings::Load(const TiXmlNode *settings)
+@@ -121,7 +121,7 @@ bool CViewStateSettings::Load(const TiXmlNode *settings)
      if (XMLUtils::GetInt(pElement, XML_SETTINGLEVEL, settingLevel, static_cast<int>(SettingLevel::Basic), static_cast<int>(SettingLevel::Expert)))
        m_settingLevel = (SettingLevel)settingLevel;
      else

@@ -56,7 +56,10 @@ DEPENDS += " \
             libxml2 \
             libxslt \
             lzo \
+            pcre2 \
+            nlohmann-json \
             mpeg2dec \
+            openssl \
             python3 \
             samba \
             sqlite3 \
@@ -71,7 +74,7 @@ DEPENDS += " \
           "
 inherit gitpkgv
 # 22.0 Piers
-SRCREV = "12245d0921025b159f605d6d11b47a13f861657e"
+SRCREV = "df13cf98556cdf9c240a634b459b443997ed2d89"
 
 # 'patch' doesn't support binary diffs
 PATCHTOOL = "git"
@@ -108,7 +111,8 @@ SRC_URI = "git://github.com/xbmc/xbmc.git;protocol=https;branch=master \
            file://0009-reinstate-platform-defines.patch \
            file://0010-older-gles.patch \
            file://0011-FindSmbClient-dont-use-pkgconfig-includedir.patch \
-           file://0012-libinput-disable-udev.patch \
+           file://0012-sigintfix-and-libinput-fix.patch \
+           file://0013-texturepacker-dont-build-internal.patch \
            file://0100-stb-player.patch \
            file://0101-e2-player.patch \
            file://0102-gst-player.patch \
@@ -161,6 +165,7 @@ PACKAGECONFIG[clang] = "-DENABLE_CLANGFORMAT=ON -DENABLE_CLANGTIDY=ON,-DENABLE_C
 PACKAGECONFIG[gold] = "-DENABLE_GOLD=ON,-DENABLE_GOLD=OFF"
 PACKAGECONFIG[lto] = "-DUSE_LTO=${@oe.utils.cpu_count()},-DUSE_LTO=OFF"
 
+CFLAGS += "-lssl -lcrypto -lz"
 CXXFLAGS:append:mipsarch = " -latomic"
 LDFLAGS += "${TOOLCHAIN_OPTIONS}"
 LDFLAGS:append:mipsarch = " -latomic"

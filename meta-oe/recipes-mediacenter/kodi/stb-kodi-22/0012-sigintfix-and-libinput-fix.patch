@@ -1,0 +1,57 @@
+From b6004430cea2c368e213638e6b42ea7779ffaf0f Mon Sep 17 00:00:00 2001
+From: atvcaptain <openatv@gmail.com>
+Date: Wed, 30 Apr 2025 11:18:58 +0200
+Subject: [PATCH 12/15] sigintfix and libinput fix
+
+---
+ xbmc/platform/linux/input/LibInputHandler.cpp | 10 ++++++++--
+ xbmc/windowing/egl/WinSystemstb.cpp           |  4 ++--
+ 2 files changed, 10 insertions(+), 4 deletions(-)
+
+diff --git a/xbmc/platform/linux/input/LibInputHandler.cpp b/xbmc/platform/linux/input/LibInputHandler.cpp
+index 9d548face0..5bc89aa52d 100644
+--- a/xbmc/platform/linux/input/LibInputHandler.cpp
++++ b/xbmc/platform/linux/input/LibInputHandler.cpp
+@@ -70,6 +70,9 @@ static void LogHandler(libinput  __attribute__((unused)) *libinput, libinput_log
+ 
+ CLibInputHandler::CLibInputHandler() : CThread("libinput")
+ {
++m_udev = NULL;
++return; //Cap
++
+   m_udev = udev_new();
+   if (!m_udev)
+   {
+@@ -106,9 +109,12 @@ CLibInputHandler::~CLibInputHandler()
+ {
+   CServiceBroker::GetAnnouncementManager()->RemoveAnnouncer(this);
+   StopThread();
++if (m_udev)
++  {
++   libinput_unref(m_li);
++   udev_unref(m_udev);
++  }
+ 
+-  libinput_unref(m_li);
+-  udev_unref(m_udev);
+ }
+ 
+ void CLibInputHandler::Announce(ANNOUNCEMENT::AnnouncementFlag flag,
+diff --git a/xbmc/windowing/egl/WinSystemstb.cpp b/xbmc/windowing/egl/WinSystemstb.cpp
+index 896ad21d1a..036751e692 100644
+--- a/xbmc/windowing/egl/WinSystemstb.cpp
++++ b/xbmc/windowing/egl/WinSystemstb.cpp
+@@ -201,8 +201,8 @@ bool CWinSystemstb::DestroyWindowSystem()
+   delete m_egl;
+   m_egl = NULL;
+ 
+-  CWinSystemBase::DestroyWindowSystem();
+-  //return true;
++//  CWinSystemBase::DestroyWindowSystem();
++  return true;
+ }
+ bool CWinSystemstb::CreateNewWindow(const std::string& name,
+                                     bool fullScreen,
+-- 
+2.45.2.windows.1
+
