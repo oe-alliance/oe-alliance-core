@@ -23,7 +23,8 @@ PACKAGES =+ "${PN}-po"
 FILES:${PN} += "${libdir}/enigma2/python/Components/*/*.pyc ${libdir}/enigma2/python/Plugins/Extensions/OAWeather/*.pyc \
                 ${libdir}/enigma2/python/Plugins/Extensions/OAWeather/*.xml ${libdir}/enigma2/python/Plugins/Extensions/OAWeather/*.png \
                 ${libdir}/enigma2/python/Plugins/Extensions/OAWeather/locale/*/*/*.mo \
-                ${libdir}/enigma2/python/Plugins/Extensions/OAWeather/Images/*.png ${libdir}/enigma2/python/Plugins/Extensions/OAWeather/Icons/*.png"
+                ${libdir}/enigma2/python/Plugins/Extensions/OAWeather/Images/*.png ${libdir}/enigma2/python/Plugins/Extensions/OAWeather/Icons/*.png \
+                ${libdir}/enigma2/python/Plugins/Extensions/OAWeather/Images/moonphases/*.png"
 FILES:${PN}-src += "${libdir}/enigma2/python/Components/*/*.py {libdir}/enigma2/python/Plugins/Extensions/OAWeather/*.py"
 #FILES:${PN}-po += "${libdir}/enigma2/python/Plugins/Extensions/OAWeather/locale/*.po ${libdir}/enigma2/python/Plugins/Extensions/OAWeather/locale/*.pot"
 
