@@ -7,7 +7,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 inherit deploy
 
-SRC_URI = "http://downloads.mutant-digital.net/${MACHINE}/${MACHINE}-recovery-${SRCDATE}.zip"
+SRC_URI = "https://source.mynonpublic.com/gfutures/${MACHINE}-recovery-${SRCDATE}.zip"
 
 S = "${WORKDIR}/sources"
 UNPACKDIR = "${S}"

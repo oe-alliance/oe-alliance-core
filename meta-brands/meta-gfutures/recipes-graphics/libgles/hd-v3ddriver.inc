@@ -10,7 +10,7 @@ DEPENDS = "libdrm mesa patchelf-native"
 PV = "${SRCDATE}"
 PR = "r2"
 
-SRC_URI = "http://downloads.mutant-digital.net/v3ddriver/${MACHINE}-v3ddriver-${SRCDATE}.zip"
+SRC_URI = "https://source.mynonpublic.com/gfutures/${MACHINE}-v3ddriver-${SRCDATE}.zip"
 
 S = "${WORKDIR}/sources"
 UNPACKDIR = "${S}"
