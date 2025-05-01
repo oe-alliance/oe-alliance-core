@@ -4,28 +4,23 @@ SECTION = "multimedia"
 LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe"
 
-DEPENDS += "audiofile boost curl dbus expat faad2 flac icu libao \
-            libmikmod libogg libvorbis sqlite3 virtual/libiconv yajl zlib"
+DEPENDS += "audiofile boost curl dbus expat faad2 flac fmt icu libao \
+            libmikmod libogg libvorbis nlohmann-json sqlite3 virtual/libiconv yajl zlib"
 
 inherit gitpkgv
 
-SRCREV = "b1677bf79c437e6de937da9f82260a1d24ad6bd2"
-PV = "0.23.16+git"
-PKGV = "0.23.16+git${GITPKGV}"
+SRCREV = "063abb31a68f7ee92a246256eec4234ab8b7ed8b"
+PV = "0.24.3+git"
+PKGV = "0.24.3+git${GITPKGV}"
 
 SRC_URI = "git://github.com/MusicPlayerDaemon/MPD;branch=master;protocol=https \
-           https://github.com/mesonbuild/wrapdb/releases/download/fmt_11.0.2-1/fmt-11.0.2.tar.gz;name=fmt;subdir=git/subprojects \
-           https://wrapdb.mesonbuild.com/v2/fmt_11.0.2-1/get_patch;downloadfilename=fmt_11.0.2-1_patch.zip;name=fmt-meson;subdir=git/subprojects \
            file://mpd.conf \
            file://mpd.init \
           "
 
-SRC_URI[fmt.sha256sum] = "6cb1e6d37bdcb756dbbe59be438790db409cdb4868c66e888d5df9f13f7c027f"
-SRC_URI[fmt-meson.sha256sum] = "90c9e3b8e8f29713d40ca949f6f93ad115d78d7fb921064112bc6179e6427c5e"
-
 S = "${WORKDIR}/git"
 
-inherit meson pkgconfig update-rc.d
+inherit meson pkgconfig update-rc.d upx-compress
 
 INITSCRIPT_NAME = "mpd"
 
