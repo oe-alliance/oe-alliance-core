@@ -33,6 +33,8 @@ EXTRA_OEMAKE:append = " \
     KERNELDIR=${STAGING_KERNEL_DIR} \
     "
 
+export KCFLAGS += "-std=gnu17"
+
 MAKE_TARGETS = "module"
 
 RRECOMMENDS:${PN} = "kernel-module-xt-hashlimit"
