@@ -1,0 +1,1 @@
+CFLAGS += "-std=gnu17"
