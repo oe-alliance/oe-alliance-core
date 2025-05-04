@@ -64,7 +64,7 @@ KERNEL_IMAGEDEST = "tmp"
 KERNEL_OUTPUT:mips = "vmlinux"
 KERNEL_IMAGETYPE:mips = "vmlinux"
 
-KERNEL_EXTRA_ARGS = "EXTRA_CFLAGS=-Wno-attribute-alias"
+KERNEL_EXTRA_ARGS = 'EXTRA_CFLAGS="-std=gnu17 -Wno-attribute-alias"'
 
 FILES:${KERNEL_PACKAGE_NAME}-image:mips = "/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}*"
 
