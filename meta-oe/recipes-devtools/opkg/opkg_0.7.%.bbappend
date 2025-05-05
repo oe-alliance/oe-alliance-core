@@ -1,6 +1,4 @@
 
-PACKAGECONFIG ??= ""
-
 SRC_URI += " \
     file://0001-sanity-check-provides.patch \
     file://0002-stop_deprecated_version_message.patch \
@@ -21,4 +19,4 @@ do_install:prepend() {
     install -m 755 ${UNPACKDIR}/modprobe ${D}${datadir}/opkg/intercept/
 }
 
-PR = "r9"
+PR = "r10"

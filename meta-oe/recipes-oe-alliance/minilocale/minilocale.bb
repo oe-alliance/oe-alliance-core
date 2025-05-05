@@ -25,6 +25,9 @@ RPROVIDES:${PN} += "${@" ".join("virtual-locale-%s" % p.split('_')[0] for p in d
 RPROVIDES:${PN} += "${@" ".join(map(lambda s: "locale-base-%s" % s, d.getVar('LANGUAGES').split())).lower().replace('_','-')}"
 RCONFLICTS:${PN} = "${@" ".join(map(lambda s: "locale-base-%s" % s, d.getVar('LANGUAGES').split())).lower().replace('_','-')}"
 RREPLACES:${PN}  = "${@" ".join(map(lambda s: "locale-base-%s" % s, d.getVar('LANGUAGES').split())).lower().replace('_','-')}"
+RPROVIDES:${PN} += "${@" ".join(map(lambda s: "glibc-binary-localedata-%s" % s, d.getVar('LANGUAGES').split())).lower().replace('_','-')}"
+RCONFLICTS:${PN} = "${@" ".join(map(lambda s: "glibc-binary-localedata-%s" % s, d.getVar('LANGUAGES').split())).lower().replace('_','-')}"
+RREPLACES:${PN}  = "${@" ".join(map(lambda s: "glibc-binary-localedata-%s" % s, d.getVar('LANGUAGES').split())).lower().replace('_','-')}"
 
 do_install() {
 	install -d ${D}${sysconfdir}/profile.d
