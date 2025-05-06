@@ -307,6 +307,7 @@ FILES:${PN}-src = "\
     ${libdir}/enigma2/python/NavigationInstance.py \
     ${libdir}/enigma2/python/PowerTimer.py \
     ${libdir}/enigma2/python/RecordTimer.py \
+    ${libdir}/enigma2/python/Scheduler.py \
     ${libdir}/enigma2/python/ServiceReference.py \
     ${@bb.utils.contains_any("DISTRO_NAME", "openvix openbh", "${libdir}/enigma2/python/Session.py", "", d)} \
     ${libdir}/enigma2/python/skin.py \
