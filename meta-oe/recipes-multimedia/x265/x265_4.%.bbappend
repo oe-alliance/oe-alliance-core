@@ -1,8 +1,6 @@
 FILESEXTRAPATHS:prepend := "${THISDIR}/${BPN}:"
 
-SRC_URI += "file://set-multilib-paths.patch \
-            file://build-with-gcc15.patch \
-           "
+SRC_URI += "file://set-multilib-paths.patch"
 
 OECMAKE_GENERATOR = "Unix Makefiles"
 
