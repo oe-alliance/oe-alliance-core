@@ -138,6 +138,7 @@ RDEPENDS:${PN} = " \
     pngquant \
     pcsc-lite \
     pcsc-tools \
+    libpcsc-perl \
     procps \
     pyload \
     python3-aiohttp \
