@@ -86,3 +86,17 @@
  
    files_egl += files(
      'drivers/dri2/platform_device.c',
+diff --git a/src/egl/drivers/dri2/platform_surfaceless.c b/src/egl/drivers/dri2/platform_surfaceless.c
+index d981f559..f7705723 100644
+--- a/src/egl/drivers/dri2/platform_surfaceless.c
++++ b/src/egl/drivers/dri2/platform_surfaceless.c
+@@ -40,7 +40,8 @@
+ #include "loader.h"
+ #include "loader_dri_helper.h"
+ #include "dri_util.h"
+-#include "dri_screen.h"
++//#include "dri_screen.h"
++#include <gallium/frontends/dri/dri_screen.h>
+ 
+ static struct dri_image *
+ surfaceless_alloc_image(struct dri2_egl_display *dri2_dpy,
