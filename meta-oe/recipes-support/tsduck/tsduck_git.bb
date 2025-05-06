@@ -1,10 +1,18 @@
 SUMMARY = "MPEG Transport Stream Toolkit"
 DESCRIPTION = "TSDuck is an extensible toolkit for MPEG/DVB transport streams.\
 	TSDuck is used in digital television systems for test, monitoring, integration, debug, lab, demo."
+MAINTAINER = "https://tsduck.io/"
+LICENSE = "BSD-2-Clause"
+LIC_FILES_CHKSUM = "file://LICENSE.txt;beginline=1;endline=1;md5=c3af740e8628bb461ed34cc1b4bba078"
 
-require tsduck.inc
+SRC_URI = "git://github.com/tsduck/tsduck.git;protocol=https;branch=master"
 
-DEPENDS = "gettext curl libedit tsxml-native"
+SRCREV = "${AUTOREV}"
+PV = "git"
+PKGV = "${GITPKGVTAG}"
+PR = "r0"
+
+DEPENDS = "gettext curl libedit"
 
 inherit gittag autotools-brokensep pkgconfig upx-compress
 
@@ -13,14 +21,9 @@ EXTRA_OEMAKE = "CXXFLAGS_EXTRA=-Wno-maybe-uninitialized \
 				MAIN_ARCH=${TUNE_PKGARCH} SYSROOT=${D} \
 				NOTEST=1 NOPCSC=1 NODTAPI=1 NOSRT=1 NODOC=1 NOVATEK=1 NOPCSTD=1"
 
-do_configure[noexec] = "1"
+S = "${WORKDIR}/git"
 
-do_compile:prepend() {
-	# point TSXML variable to native tsxml binary
-	sed -i -e \
-		"s|TSXML='LD_LIBRARY_PATH.*|TSXML='LD_LIBRARY_PATH=${RECIPE_SYSROOT_NATIVE}/usr/lib ${RECIPE_SYSROOT_NATIVE}/usr/bin/tsxml'|" \
-		${S}/scripts/make-config.sh
-}
+do_configure[noexec] = "1"
 
 do_install:append() {
 	rm -rf ${D}${datadir}/bash-completion
