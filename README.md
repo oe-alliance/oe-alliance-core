@@ -582,8 +582,6 @@ SF8 HD                  MACHINE:  sf8
 
 XP1000 +                MACHINE:  xp1000plus
 
-F1                      MACHINE:  formuler1
-
 SF108 E2 HD             MACHINE:  sf108
 
 SF3038                  MACHINE:  sf3038
@@ -616,7 +614,7 @@ SX88x v2 4K             MACHINE:  sx88v2
 MARAM9                  MACHINE:  maram9
 
 
-###Optibox
+### Optibox
 
 EVO                     MACHINE:  evo
 
@@ -764,7 +762,7 @@ Alpha plus              MACHINE:  tiviaraplus
 GalaxyM6                MACHINE:  galaxym6
 
 
-###uClan
+### uClan
 
 Ustym 4K PRO            MACHINE:  ustym4kpro
 
