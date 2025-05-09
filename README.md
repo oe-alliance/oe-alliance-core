@@ -100,6 +100,10 @@ Zgemma H9 TWIN SE       MACHINE:  zgemmah9twinse
 
 Zgemma H10 COMBO        MACHINE:  zgemmah10combo
 
+Zgemma H10 2S           MACHINE:  zgemmah102s
+
+Zgemma H10 2H           MACHINE:  zgemmah102h
+
 Zgemma H11S             MACHINE:  zgemmah11s
 
 
@@ -360,6 +364,10 @@ GI ET-7000 Mini         MACHINE:  et7x00mini
 
 GI ET-11000             MACHINE:  gi11000
 
+Genius                  MACHINE:  genius
+
+Genius E3HD             MACHINE:  geniuse3hd
+
 
 ### Gigablue
 
@@ -428,6 +436,8 @@ HITUBE 4K combo         MACHINE:  hitube4k
 
 HITUBE 4K PRO           MACHINE:  hitube4kpro
 
+HITUBE 4K PLUS          MACHINE:  hitube4kplus
+
 
 ### Jamesdonkey
 
@@ -470,6 +480,8 @@ IZIBOX ONE 4K Plus      MACHINE:  iziboxone4kplus
 IZIBOX ECO TWIN HD      MACHINE:  iziboxecohd
 
 IZIBOX X3               MACHINE:  iziboxx3
+
+IZIBOX X4               MACHINE:  iziboxx4
 
 IZIBOX Elite 4K         MACHINE:  iziboxelite4k
 
@@ -655,6 +667,11 @@ Lunix CO                MACHINE:  lunixco
 
 DUAL 4K UHD             MACHINE:  dual
 
+OG2 S 4K                MACHINE:  og2s4k
+
+OG2 OTT 4K              MACHINE:  og2ott4k
+
+
 
 ### RedEagle
 
@@ -719,6 +736,8 @@ TMNANO2 SUPER           MACHINE:  tmnano2super
 
 TMNANOSE                MACHINE:  tmnanose
 
+TMNANOSE PLUS           MACHINE:  tmnanoseplus
+
 TMNANOSE M2             MACHINE:  tmnanosem2
 
 TMNANOSE COMBO          MACHINE:  tmnanosecombo
@@ -753,12 +772,16 @@ Ustym 4K PRO            MACHINE:  ustym4kpro
 
 Ustym 4K OTT            MACHINE:  ustym4kottpremium
 
+Ustym 4K S2 OTT X       MACHINE:  ustym4ks2ottx
+
 
 ### Venton Unibox
 
 VENTONHDX               MACHINE:  ventonhdx
 
 UniBox ECO              MACHINE:  uniboxhde
+
+Sogno HD 8800 TWIN      MACHINE:  sogno8800hd
 
 
 ### Vimastec
