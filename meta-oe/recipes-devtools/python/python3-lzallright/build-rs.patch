@@ -1,0 +1,13 @@
+--- a/lzokay-sys/build.rs	2024-11-19 00:12:36.000000000 +0100
++++ b/lzokay-sys/build.rs	2025-05-03 08:19:36.000000000 +0200
+@@ -19,8 +19,9 @@
+ 
+     #[cfg(target_os = "linux")]
+     {
++        let cxx = env::var("CXX").unwrap_or_else(|_| "c++".to_string());
+         let out = String::from_utf8(
+-            std::process::Command::new("c++")
++            std::process::Command::new(&cxx)
+                 .args(["-v"])
+                 .output()
+                 .expect("Cannot find C++ compiler")
