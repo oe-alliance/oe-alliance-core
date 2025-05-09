@@ -96,6 +96,7 @@ RDEPENDS:${PN} = " \
     f2fs-tools \
     fio \
     fuse-exfat \
+    gstplayer2 \
     gptfdisk \
     hddtemp \
     hdparm \
