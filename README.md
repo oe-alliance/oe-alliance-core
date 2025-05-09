@@ -102,8 +102,6 @@ Zgemma H10 COMBO        MACHINE:  zgemmah10combo
 
 Zgemma H11S             MACHINE:  zgemmah11s
 
-Zgemma H112H            MACHINE:  zgemmah112h
-
 
 ### Amiko
 
@@ -210,10 +208,6 @@ HIS C 4K                MACHINE:  axashisc4k
 
 HIS TWIN +              MACHINE:  axashistwinplus
 
-4K COMBO                MACHINE:  axas4kcombo
-
-4K TWIN                MACHINE:  axas4ktwin
-
 
 ### Beyonwiz
 
@@ -237,8 +231,6 @@ DINOBOT 4K SE           MACHINE:  dinobot4kse
 DINOBOT 4K plus         MACHINE:  dinobot4kplus
 
 DINOBOT 4K PRO          MACHINE:  dinobot4kpro
-
-DINOBOT 4K ELITE        MACHINE:  dinobot4kelite
 
 DINOBOT 4K mini         MACHINE:  dinobot4kmini
 
@@ -492,13 +484,6 @@ Mediabox HD LX          MACHINE:  mediabox
 XP1000                  MACHINE:  xp1000max
 
 
-### Medialink
-
-IxussOne                MACHINE:  ixussone
-
-IxussZero               MACHINE:  ixusszero
-
-
 ### MaXytec
 
 MaXytec Multi 4K        MACHINE:  maxytecmulti
@@ -604,7 +589,7 @@ SF8008 MINI 4K UHD      MACHINE:  sf8008m
 
 SX988 4K DUAL OS        MACHINE:  sx988
 
-SXF60x8 HD              MACHINE:  stx6008
+SXF60x8 HD              MACHINE:  sfx6008
 
 SX88x v2 4K             MACHINE:  sx88v2
 
