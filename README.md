@@ -100,9 +100,11 @@ Zgemma H9 TWIN SE       MACHINE:  zgemmah9twinse
 
 Zgemma H10 COMBO        MACHINE:  zgemmah10combo
 
-Zgemma H11S             MACHINE:  zgemmah11s
+Zgemma H10 2S           MACHINE:  zgemmah102s
 
-Zgemma H112H            MACHINE:  zgemmah112h
+Zgemma H10 2H           MACHINE:  zgemmah102h
+
+Zgemma H11S             MACHINE:  zgemmah11s
 
 
 ### Amiko
@@ -210,10 +212,6 @@ HIS C 4K                MACHINE:  axashisc4k
 
 HIS TWIN +              MACHINE:  axashistwinplus
 
-4K COMBO                MACHINE:  axas4kcombo
-
-4K TWIN                MACHINE:  axas4ktwin
-
 
 ### Beyonwiz
 
@@ -237,8 +235,6 @@ DINOBOT 4K SE           MACHINE:  dinobot4kse
 DINOBOT 4K plus         MACHINE:  dinobot4kplus
 
 DINOBOT 4K PRO          MACHINE:  dinobot4kpro
-
-DINOBOT 4K ELITE        MACHINE:  dinobot4kelite
 
 DINOBOT 4K mini         MACHINE:  dinobot4kmini
 
@@ -368,6 +364,10 @@ GI ET-7000 Mini         MACHINE:  et7x00mini
 
 GI ET-11000             MACHINE:  gi11000
 
+Genius                  MACHINE:  genius
+
+Genius E3HD             MACHINE:  geniuse3hd
+
 
 ### Gigablue
 
@@ -436,6 +436,8 @@ HITUBE 4K combo         MACHINE:  hitube4k
 
 HITUBE 4K PRO           MACHINE:  hitube4kpro
 
+HITUBE 4K PLUS          MACHINE:  hitube4kplus
+
 
 ### Jamesdonkey
 
@@ -479,6 +481,8 @@ IZIBOX ECO TWIN HD      MACHINE:  iziboxecohd
 
 IZIBOX X3               MACHINE:  iziboxx3
 
+IZIBOX X4               MACHINE:  iziboxx4
+
 IZIBOX Elite 4K         MACHINE:  iziboxelite4k
 
 
@@ -490,13 +494,6 @@ Mediabox HD LX          MACHINE:  mediabox
 ### Maxdigital
 
 XP1000                  MACHINE:  xp1000max
-
-
-### Medialink
-
-IxussOne                MACHINE:  ixussone
-
-IxussZero               MACHINE:  ixusszero
 
 
 ### MaXytec
@@ -582,8 +579,6 @@ SF8 HD                  MACHINE:  sf8
 
 XP1000 +                MACHINE:  xp1000plus
 
-F1                      MACHINE:  formuler1
-
 SF108 E2 HD             MACHINE:  sf108
 
 SF3038                  MACHINE:  sf3038
@@ -606,7 +601,7 @@ SF8008 MINI 4K UHD      MACHINE:  sf8008m
 
 SX988 4K DUAL OS        MACHINE:  sx988
 
-SXF60x8 HD              MACHINE:  stx6008
+SXF60x8 HD              MACHINE:  sfx6008
 
 SX88x v2 4K             MACHINE:  sx88v2
 
@@ -616,7 +611,7 @@ SX88x v2 4K             MACHINE:  sx88v2
 MARAM9                  MACHINE:  maram9
 
 
-###Optibox
+### Optibox
 
 EVO                     MACHINE:  evo
 
@@ -671,6 +666,11 @@ Lunix3 4K               MACHINE:  lunix34k
 Lunix CO                MACHINE:  lunixco
 
 DUAL 4K UHD             MACHINE:  dual
+
+OG2 S 4K                MACHINE:  og2s4k
+
+OG2 OTT 4K              MACHINE:  og2ott4k
+
 
 
 ### RedEagle
@@ -736,6 +736,8 @@ TMNANO2 SUPER           MACHINE:  tmnano2super
 
 TMNANOSE                MACHINE:  tmnanose
 
+TMNANOSE PLUS           MACHINE:  tmnanoseplus
+
 TMNANOSE M2             MACHINE:  tmnanosem2
 
 TMNANOSE COMBO          MACHINE:  tmnanosecombo
@@ -764,11 +766,13 @@ Alpha plus              MACHINE:  tiviaraplus
 GalaxyM6                MACHINE:  galaxym6
 
 
-###uClan
+### uClan
 
 Ustym 4K PRO            MACHINE:  ustym4kpro
 
 Ustym 4K OTT            MACHINE:  ustym4kottpremium
+
+Ustym 4K S2 OTT X       MACHINE:  ustym4ks2ottx
 
 
 ### Venton Unibox
@@ -776,6 +780,8 @@ Ustym 4K OTT            MACHINE:  ustym4kottpremium
 VENTONHDX               MACHINE:  ventonhdx
 
 UniBox ECO              MACHINE:  uniboxhde
+
+Sogno HD 8800 TWIN      MACHINE:  sogno8800hd
 
 
 ### Vimastec
