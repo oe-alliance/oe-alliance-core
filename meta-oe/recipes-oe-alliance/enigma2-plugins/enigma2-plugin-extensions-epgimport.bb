@@ -18,7 +18,7 @@ S = "${WORKDIR}/git/src"
 inherit setuptools3-openplugins
 
 RDEPENDS:${PN} = "${PYTHON_PN}-compression ${PYTHON_PN}-shell ${PYTHON_PN}-backports-lzma ${PYTHON_PN}-pkgutil"
-RRECOMMENDS:${PN} = "epgimport-rytec"
+RRECOMMENDS:${PN} = "epgimport-sources"
 
 PACKAGES = "${PN}-src ${PN}-dbg ${PN}"
 
