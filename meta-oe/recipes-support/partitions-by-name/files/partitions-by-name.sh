@@ -33,6 +33,15 @@ fi
 if [ -d "/sys/block/sda" ]; then
     search "/sys/block/sda/sda*"
 fi
+if [ -d "/sys/block/sdb" ]; then
+    search "/sys/block/sdb/sdb*"
+fi
+if [ -d "/sys/block/sdc" ]; then
+    search "/sys/block/sdc/sdc*"
+fi
+if [ -d "/sys/block/sdd" ]; then
+    search "/sys/block/sdd/sdd*"
+fi
 if [ -e "/dev/block/by-name/flag" ]; then
     if [ ! -e /dev/block/by-name/bootoptions ]; then
       ln -sf /boot/ /dev/block/by-name/bootoptions
