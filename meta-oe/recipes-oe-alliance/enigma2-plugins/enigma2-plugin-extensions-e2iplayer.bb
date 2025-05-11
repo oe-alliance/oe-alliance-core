@@ -28,7 +28,7 @@ RRECOMMENDS:${PN} = " \
         python3-shell \
         "
 
-RDEPENDS:{PN}-src = "${PN}"
+RDEPENDS:${PN}-src = "${PN}"
 FILES:${PN}-src = " \
         ${libdir}/enigma2/python/Plugins/*/*.py \
         ${libdir}/enigma2/python/Plugins/*/*/*.py \

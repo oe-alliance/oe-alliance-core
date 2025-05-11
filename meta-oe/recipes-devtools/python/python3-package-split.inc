@@ -1,6 +1,6 @@
 inherit python3-dir
 
-RDEPENDS:{PN}-src = "${PN}"
+RDEPENDS:${PN}-src = "${PN}"
 
 SSTATE_ALLOW_OVERLAP_FILES += "${STAGING_LIBDIR}/${PYTHON_DIR}/site-packages/tests/__init__.py ${STAGING_LIBDIR}/${PYTHON_DIR}/site-packages/tests/__init__.pyc"
 

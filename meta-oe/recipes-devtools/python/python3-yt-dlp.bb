@@ -45,7 +45,7 @@ RDEPENDS:${PN} = " \
     python3-html \
     "
 
-RDEPENDS:{PN}-src = "${PN}"
+RDEPENDS:${PN}-src = "${PN}"
 FILES:${PN}-src = " \
     ${PYTHON_SITEPACKAGES_DIR}/*/*.py \
     ${PYTHON_SITEPACKAGES_DIR}/*/*/*.py \
