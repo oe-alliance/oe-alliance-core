@@ -21,5 +21,3 @@ do_install:append:og2s4k() {
     install -m 0755 ${UNPACKDIR}/libjpeg.so.8.2.2 ${D}${libdir}/
     ln -s libjpeg.so.8.2.2 ${D}${libdir}/libjpeg.so.8
 }
-
-INSANE_SKIP:${PN} = "already-stripped 32bit-time"
