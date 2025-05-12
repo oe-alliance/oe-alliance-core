@@ -204,7 +204,7 @@ automount() {
 	fi
 
 	# rewrite first sata device to hdd if none in fstab present
-	if  [ $LABEL = "sda1" ]; then
+	if  [[ $LABEL = "sd"* ]]; then
 		if ! grep -qs "/media/hdd" /etc/fstab; then
 			LABEL=hdd
 		fi
