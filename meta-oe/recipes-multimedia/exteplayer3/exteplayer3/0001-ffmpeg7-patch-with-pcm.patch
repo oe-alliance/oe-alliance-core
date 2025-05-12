@@ -1,0 +1,94 @@
+From 432547d858a4888d71536f76f399c31839f45b96 Mon Sep 17 00:00:00 2001
+From: listener/luisteraar <fake@fake.com>
+Date: Mon, 12 May 2025 20:20:02 +0200
+Subject: [PATCH] ffmpeg7-patch-with-pcm
+
+---
+ container/container_ffmpeg.c | 30 +++++++++++++++---------------
+ 1 file changed, 15 insertions(+), 15 deletions(-)
+
+diff --git a/container/container_ffmpeg.c b/container/container_ffmpeg.c
+index 6c0c857..de90a4a 100755
+--- a/container/container_ffmpeg.c
++++ b/container/container_ffmpeg.c
+@@ -618,7 +618,7 @@ static void FFMPEGThread(Context_t *context)
+     AVFrame *decoded_frame = NULL;
+     int32_t out_sample_rate = 44100;
+     int32_t out_channels = 2;
+-    uint64_t out_channel_layout = AV_CH_LAYOUT_STEREO;
++    AVChannelLayout out_channel_layout = AV_CHANNEL_LAYOUT_STEREO;
+     uint32_t cAVIdx = 0;
+ 
+     // for seek
+@@ -977,7 +977,7 @@ static void FFMPEGThread(Context_t *context)
+                 }
+ 
+                 pcmPrivateData_t pcmExtradata;
+-                pcmExtradata.channels              = get_codecpar(audioTrack->stream)->channels;
++                pcmExtradata.channels              = get_codecpar(audioTrack->stream)->ch_layout.nb_channels;
+                 pcmExtradata.bits_per_coded_sample = get_codecpar(audioTrack->stream)->bits_per_coded_sample;
+                 pcmExtradata.sample_rate           = get_codecpar(audioTrack->stream)->sample_rate;
+                 pcmExtradata.bit_rate              = get_codecpar(audioTrack->stream)->bit_rate;
+@@ -1117,13 +1117,13 @@ static void FFMPEGThread(Context_t *context)
+                             }
+ 
+                             swr = swr_alloc();
+-                            out_channels = c->channels;
++                            out_channels = c->ch_layout.nb_channels;
+ 
+-                            if (c->channel_layout == 0)
++                            if (&c->ch_layout == 0)
+                             {
+-                                c->channel_layout = av_get_default_channel_layout( c->channels );
++                                av_channel_layout_default(&c->ch_layout,  c->ch_layout.nb_channels );
+                             }
+-                            out_channel_layout = c->channel_layout;
++                            out_channel_layout = c->ch_layout;
+ 
+                             uint8_t downmix = stereo_software_decoder && out_channels > 2 ? 1 : 0;
+ #ifdef __sh__
+@@ -1135,16 +1135,16 @@ static void FFMPEGThread(Context_t *context)
+ #endif
+                             if(downmix)
+                             {
+-                                out_channel_layout = AV_CH_LAYOUT_STEREO_DOWNMIX;
+                                 out_channels = 2;
+                             }
++                            
++                            av_opt_set_chlayout  (swr, "in_chlayout",       &c->ch_layout,      0);
++                            av_opt_set_int       (swr, "in_sample_rate",    c->sample_rate,    0);
++                            av_opt_set_sample_fmt(swr, "in_sample_fmt",     c->sample_fmt, 0);
++                            av_opt_set_chlayout  (swr, "out_chlayout",      &out_channel_layout,      0);
++                            av_opt_set_int       (swr, "out_sample_rate",   out_sample_rate,    0);
++                            av_opt_set_sample_fmt(swr, "out_sample_fmt",    AV_SAMPLE_FMT_S16,     0);
+ 
+-                            av_opt_set_int(swr, "in_channel_layout",	c->channel_layout,	0);
+-                            av_opt_set_int(swr, "out_channel_layout",	out_channel_layout,	0);
+-                            av_opt_set_int(swr, "in_sample_rate",		c->sample_rate,		0);
+-                            av_opt_set_int(swr, "out_sample_rate",		out_sample_rate,	0);
+-                            av_opt_set_int(swr, "in_sample_fmt",		c->sample_fmt,		0);
+-                            av_opt_set_int(swr, "out_sample_fmt",		AV_SAMPLE_FMT_S16,	0);
+ 
+ 
+                             e = swr_init(swr);
+@@ -1178,7 +1178,7 @@ static void FFMPEGThread(Context_t *context)
+ 
+                         //////////////////////////////////////////////////////////////////////
+                         // Update pcmExtradata according to decode parameters
+-                        pcmExtradata.channels              = av_get_channel_layout_nb_channels(out_channel_layout);
++                        pcmExtradata.channels              = out_channel_layout.nb_channels;
+                         pcmExtradata.bits_per_coded_sample = 16;
+                         pcmExtradata.sample_rate           = out_sample_rate;
+                         // The data described by the sample format is always in native-endian order
+@@ -2341,7 +2341,7 @@ int32_t container_ffmpeg_update_tracks(Context_t *context, char *filename, int32
+ 
+                             int32_t object_type = 2; // LC
+                             int32_t sample_index = aac_get_sample_rate_index(get_codecpar(stream)->sample_rate);
+-                            int32_t chan_config = get_chan_config(get_codecpar(stream)->channels);
++                            int32_t chan_config = get_chan_config(get_codecpar(stream)->ch_layout.nb_channels);
+                             ffmpeg_printf(1,"aac object_type %d\n", object_type);
+                             ffmpeg_printf(1,"aac sample_index %d\n", sample_index);
+                             ffmpeg_printf(1,"aac chan_config %d\n", chan_config);
+-- 
+2.43.0
+
