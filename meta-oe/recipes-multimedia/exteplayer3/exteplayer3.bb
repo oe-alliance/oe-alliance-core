@@ -16,7 +16,7 @@ PKGV = "67+gitr${GITPKGV}"
 
 SRCREV = "${AUTOREV}"
 SRC_URI = "git://github.com/oe-mirrors/exteplayer3.git;branch=master;protocol=https \
-            file://port-to-ffmpeg7.patch"
+           file://0001-ffmpeg7-patch-with-pcm.patch"
 
 S = "${WORKDIR}/git"
 
