@@ -14,6 +14,9 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 WORKDIR = "${TMPDIR}/work/${MULTIMACH_TARGET_SYS}/${PN}/${EXTENDPE}${PV}"
 
+# We need to add machine rootfs directory to pseudo path after https://github.com/openembedded/openembedded-core/commit/2502da81709f25de499277b28d33c915638c45f6
+PSEUDO_INCLUDE_PATHS .= ",${TMPDIR}/rootfs/${MACHINE}"
+
 do_rootfs[deptask] = "do_rm_work"
 
 SSTATE_ALLOW_OVERLAP_FILES += "${DEPLOY_DIR_IMAGE}"
