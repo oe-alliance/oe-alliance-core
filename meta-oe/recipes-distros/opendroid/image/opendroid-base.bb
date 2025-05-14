@@ -14,6 +14,7 @@ inherit packagegroup
 
 RDEPENDS:${PN} = "\
     enigma-info \
+    wait-for-dhcp \
     autofs \
     ca-certificates \
     ofgwrite \
