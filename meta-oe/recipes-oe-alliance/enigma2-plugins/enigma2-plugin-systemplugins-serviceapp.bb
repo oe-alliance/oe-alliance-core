@@ -21,7 +21,7 @@ S = "${WORKDIR}/git"
 
 inherit autotools gitpkgv python3native pkgconfig gettext python3targetconfig
 
-CXXFLAGS += "${@bb.utils.contains_any("DISTRO_NAME", "openatv openvix openbh teamblue", "" , " -std=c++11", d)}"
+CXXFLAGS += "${@bb.utils.contains_any("DISTRO_NAME", "openatv openvix openbh teamblue opendroid", "" , " -std=c++11", d)}"
 
 PV = "0.5+git"
 PKGV = "0.5+git${GITPKGV}"
