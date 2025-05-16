@@ -152,6 +152,7 @@ GST_BAD_RDEPS = "\
     gstreamer1.0-plugins-bad-hls \
     gstreamer1.0-plugins-bad-videoparsersbad \
     gstreamer1.0-plugins-bad-autoconvert \
+    gstreamer1.0-plugins-bad-subenc \
 "
 
 GST_BAD_OPUS = " \
