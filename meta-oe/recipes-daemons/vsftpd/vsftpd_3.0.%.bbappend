@@ -24,6 +24,10 @@ do_install:append() {
     fi
 }
 
+pkg_postinst_ontarget:${PN}:append () {
+#!/bin/sh
+chown root /etc/vsftpd.conf
+}
 
 pkg_postinst:${PN}:append() {
 #!/bin/sh
