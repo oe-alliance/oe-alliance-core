@@ -90,3 +90,10 @@ if grep -q -E "beyonwizu4" /proc/stb/info/boxtype; then
     fi
 fi
 
+if grep -q -E "u57" /proc/stb/info/boxtype; then
+        echo 0 > /sys/block/mmcblk0boot1/force_ro
+        if [ ! -e /dev/block/by-name/others ]; then
+            ln -sf /dev/mmcblk0boot1 /dev/block/by-name/others
+        fi
+fi
+
