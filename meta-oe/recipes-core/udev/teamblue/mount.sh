@@ -203,10 +203,24 @@ automount() {
 		LABEL="$NAME"
 	fi
 
+	# Check if it's a USB device and hdd mountpoint exists
+	IS_USB=0
+	if [ "$EXTERNAL" -ne 0 ]; then
+		IS_USB=1
+	fi
+
 	# rewrite first sata device to hdd if none in fstab present
-	if  [[ $LABEL = "sd"* ]]; then
+	if [[ $LABEL = "sd"* ]]; then
 		if ! grep -qs "/media/hdd" /etc/fstab; then
-			LABEL=hdd
+			# Check if hdd exists as mountpoint
+			if [ -d "/media/hdd" ]; then
+				# If it's a USB device and /media/usb doesn't exist, use 'usb' label
+				if [ "$IS_USB" -eq 1 ] && [ ! -d "/media/usb" ]; then
+					LABEL="usb"
+				fi
+			else
+				LABEL="hdd"
+			fi
 		fi
 	fi
 
