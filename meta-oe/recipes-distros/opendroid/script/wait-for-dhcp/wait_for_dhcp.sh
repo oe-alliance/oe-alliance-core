@@ -9,18 +9,18 @@ log_message() {
 }
 
 check_ipv4() {
-    ip -4 addr show "$1" | grep -oP 'inet \K[\d.]+' | head -n 1
+    ip -4 addr show dev "$1" | grep -oP '(?<=inet\s)\d+(\.\d+){3}' | head -n 1
 }
 
 check_ipv6() {
-    ip -6 addr show "$1" scope global | grep -oP 'inet6 \K[0-9a-f:]+' | head -n 1
+    ip -6 -o addr show dev "$1" scope global | awk '{print $4}' | cut -d/ -f1 | head -n 1
 }
 
 wait_for_seconds() {
     sleep "$1"
 }
 
-# Controlla se ci sono softcam attive (esclude softcam.None)
+# Check if there are active softcams (excludes softcam.None)
 if find /etc/init.d/ -maxdepth 1 -type f -name "softcam.*" ! -name "softcam.None" | grep -q .; then
     log_message "Active Softcam detected. Starting network check..."
 
@@ -30,8 +30,9 @@ if find /etc/init.d/ -maxdepth 1 -type f -name "softcam.*" ! -name "softcam.None
                grep -qi "iface $iface inet6 dhcp" /etc/network/interfaces; then
 
                 log_message "Interface $iface configured for DHCP.."
+
                 ATTEMPTS=0
-                MAX_ATTEMPTS=10
+                MAX_ATTEMPTS=20
 
                 while [ "$ATTEMPTS" -lt "$MAX_ATTEMPTS" ]; do
                     IPV4=$(check_ipv4 "$iface")
@@ -43,7 +44,7 @@ if find /etc/init.d/ -maxdepth 1 -type f -name "softcam.*" ! -name "softcam.None
                     fi
 
                     log_message "$ATTEMPTS: No IP yet for $iface, retrying..."
-                    wait_for_seconds 0.5
+                    wait_for_seconds 1
                     ATTEMPTS=$((ATTEMPTS + 1))
                 done
 
