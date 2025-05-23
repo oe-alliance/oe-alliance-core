@@ -9,11 +9,11 @@ log_message() {
 }
 
 check_ipv4() {
-    ip -4 addr show dev "$1" | grep -oP '(?<=inet\s)\d+(\.\d+){3}' | head -n 1
+    ifconfig "$1" 2>/dev/null | awk '/inet addr:/ {gsub("addr:", "", $2); print $2}' | head -n 1
 }
 
 check_ipv6() {
-    ip -6 -o addr show dev "$1" scope global | awk '{print $4}' | cut -d/ -f1 | head -n 1
+    ifconfig "$1" 2>/dev/null | awk '/inet6 addr:/ {print $3}' | head -n 1
 }
 
 wait_for_seconds() {
