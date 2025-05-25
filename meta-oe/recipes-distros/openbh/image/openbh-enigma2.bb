@@ -53,6 +53,7 @@ RRECOMMENDS:${PN} = "\
     ${@bb.utils.contains("MACHINE_FEATURES", "quadpip", "enigma2-plugin-systemplugins-quadpip", "", d)} \
     ${@bb.utils.contains("TARGET_ARCH", "arm", "glibc-compat", "", d)} \
     openbh-picon-feed-opkg-conf \
+    openbh-extra-feed-opkg-conf \
     "
 
 RRECOMMENDS:${PN}:append:vuduo2 = "enigma2-plugin-extensions-openmultiboot openmultiboot"
