@@ -1,6 +1,6 @@
 --- a/meson.build
 +++ b/meson.build
-@@ -292,7 +292,9 @@ if freedreno_kmds.length() != 0 and freedreno_kmds != [ 'msm' ] and with_freedre
+@@ -287,7 +287,9 @@ if freedreno_kmds.length() != 0 and freedreno_kmds != [ 'msm' ] and with_freedre
    endif
  endif
  
@@ -11,8 +11,8 @@
  if with_gallium and system_has_kms_drm
    _glx = get_option('glx')
    _egl = get_option('egl')
---- a/meson_options.txt
-+++ b/meson_options.txt
+--- a/meson.options
++++ b/meson.options
 @@ -51,6 +51,19 @@ option(
    description : 'Use Android\'s libbacktrace',
  )
@@ -45,18 +45,9 @@
  
  #ifdef HAVE_WAYLAND_PLATFORM
  #include "linux-dmabuf-unstable-v1-client-protocol.h"
-@@ -99,7 +100,7 @@ dri_set_background_context(void *loaderPrivate)
- static void
- dri2_gl_flush_get(_glapi_proc *glFlush)
- {
--   *glFlush = _mesa_glapi_get_proc_address("glFlush");
-+//   *glFlush = _mesa_glapi_get_proc_address("glFlush");
- }
- 
- static void
 --- a/src/egl/main/eglapi.c
 +++ b/src/egl/main/eglapi.c
-@@ -2869,8 +2869,8 @@ eglGetProcAddress(const char *procname)
+@@ -2816,8 +2816,8 @@ eglGetProcAddress(const char *procname)
           ret = entrypoint->function;
     }
  
@@ -77,7 +68,7 @@
  g_egldispatchstubs_c = custom_target(
    'g_egldispatchstubs.c',
    input : [
-@@ -90,7 +91,7 @@ if with_dri2
+@@ -91,7 +92,7 @@ if with_dri2
    incs_for_egl += inc_gallium
    incs_for_egl += inc_gallium_aux
    incs_for_egl += inc_mesa
