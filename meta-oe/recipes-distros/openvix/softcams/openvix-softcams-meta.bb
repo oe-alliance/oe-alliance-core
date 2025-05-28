@@ -15,4 +15,4 @@ DEPENDS = "\
     ${@bb.utils.contains("MACHINE_FEATURES", "hisil-3716mv430", "enigma2-plugin-softcams-cccam82", "enigma2-plugin-softcams-cccam", d)} \    
     "
 
-PR = "r15"
+PR = "r16"

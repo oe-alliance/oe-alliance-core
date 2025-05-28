@@ -3,7 +3,7 @@ SUMMARY:${PN} = "NCam ${PKGV}"
 DESCRIPTION:${PN} = "NCam Open Source Softcam\n \
 - latest git revision"
 
-SRC_URI="git://github.com/fairbird/NCam.git;protocol=https;branch=master"
+SRC_URI = "git://github.com/fairbird/NCam.git;protocol=https;branch=master"
 
 CAMNAME = "ncam"
 

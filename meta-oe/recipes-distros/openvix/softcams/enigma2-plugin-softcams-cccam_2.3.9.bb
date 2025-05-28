@@ -1,4 +1,4 @@
-CAMNAME="CCcam"
+CAMNAME = "CCcam"
 
 require cccam-common.inc
 SUMMARY:${PN}:append = " (Sky-DE patched)"

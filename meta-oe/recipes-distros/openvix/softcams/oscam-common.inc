@@ -11,7 +11,7 @@ SRC_URI += " \
             file://${CAMNAME}/ \
 "
 
-LICENSE="GPL-3.0-only"
+LICENSE = "GPL-3.0-only"
 LIC_FILES_CHKSUM = "file://${UNPACKDIR}/OSCAM-LICENSE;md5=d32239bcb673463ab874e80d47fae504"
 
 CONFFILES:${PN} ?= "/etc/tuxbox/config/${CAMNAME}"
