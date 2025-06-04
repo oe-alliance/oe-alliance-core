@@ -7,11 +7,11 @@ LIC_FILES_CHKSUM = "file://../etc/epgimport/readme.txt;startline=1;endline=4;md5
 
 inherit gitpkgv gettext ${PYTHON_PN}native
 
-PV = "1.0+git"
-PKGV = "1.0+git${GITPKGV}"
+PV = "1.1+git"
+PKGV = "1.1+git${GITPKGV}"
 PR = "r0"
 
-SRC_URI = "git://github.com/oe-alliance/XMLTV-Import.git;protocol=https;branch=python3"
+SRC_URI = "git://github.com/oe-alliance/XMLTV-Import.git;protocol=https;branch=master"
 
 S = "${WORKDIR}/git/src"
 
