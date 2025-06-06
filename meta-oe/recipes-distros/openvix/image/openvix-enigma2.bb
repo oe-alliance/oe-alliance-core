@@ -54,7 +54,6 @@ NORMAL_IMAGE = "\
     enigma2-plugin-extensions-imdb \
     enigma2-plugin-extensions-openwebif-themes \
     enigma2-plugin-extensions-openwebif-vxg \
-    enigma2-plugin-systemplugins-aboutboxbranding \
     enigma2-plugin-systemplugins-opentvzapper \
     enigma2-plugin-systemplugins-xmlupdate \
     enigma2-plugin-drivers-ntfs-3g \

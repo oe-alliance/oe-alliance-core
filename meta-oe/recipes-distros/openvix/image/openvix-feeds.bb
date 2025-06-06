@@ -37,4 +37,5 @@ RRECOMMENDS:${PN} = "\
     enigma2-plugin-systemplugins-wanip \
     enigma2-plugin-extensions-oaweather \
     enigma2-plugin-extensions-iptv-org-playlists \
+    enigma2-plugin-systemplugins-aboutboxbranding \
     "
