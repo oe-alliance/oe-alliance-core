@@ -32,7 +32,7 @@ do_install() {
     fi
     install -d ${D}${libdir}/enigma2/python/Components/Renderer
     cp -r ${S}/Renderer/* ${D}${libdir}/enigma2/python/Components/Renderer
-    python3 -m compileall -o2 -b ${D}${libdir}/enigma2/python/Components/Renderer
+    python3 -m compileall -o2 -b ${D}${libdir}/enigma2/python/Components/Renderer -d /
 }
 
 FILES:${PN} = "${datadir}/enigma2/logos ${libdir}/enigma2/python/Components/Renderer/"

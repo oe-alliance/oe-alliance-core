@@ -19,7 +19,7 @@ S = "${WORKDIR}/git"
 do_install() {
 	install -d ${D}${prefix}
 	cp -r ${S}${prefix}/* ${D}${prefix}/
-	python3 -m compileall -o2 -b ${D}
+	python3 -m compileall -o2 -b ${D} -d /
 }
 
 FILES:${PN} = "${prefix}/"

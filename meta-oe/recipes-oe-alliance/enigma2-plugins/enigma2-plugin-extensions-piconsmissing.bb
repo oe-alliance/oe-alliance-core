@@ -21,7 +21,7 @@ pluginpath = "/usr/lib/enigma2/python/Plugins/Extensions/PiconsMissing"
 do_install:append() {
 	install -d ${D}${pluginpath}
 	cp -r ${S}/src/* ${D}${pluginpath}/
-	python3 -m compileall -o2 -b ${D}
+	python3 -m compileall -o2 -b ${D} -d /
 }
 
 FILES:${PN} = "${pluginpath}/"

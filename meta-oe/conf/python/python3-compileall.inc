@@ -25,5 +25,5 @@ FILES:${PN}-src += " \
     "
 
 do_install:append:class-target () {
-    python3 -m compileall -o2 -b ${D}
+    python3 -m compileall -o2 -b ${D} -d /
 }

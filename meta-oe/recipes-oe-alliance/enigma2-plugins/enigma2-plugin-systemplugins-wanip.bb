@@ -23,7 +23,7 @@ pluginpath = "/usr/lib/enigma2/python/Plugins/SystemPlugins/WanIP"
 do_install:append() {
 	install -d ${D}${pluginpath}
 	cp -r ${S}/src/* ${D}${pluginpath}/
-	python3 -m compileall -o2 -b ${D}
+	python3 -m compileall -o2 -b ${D} -d /
 	if [ -f /usr/bin/msgfmt ] ; then
 		find ${S}/po/ -maxdepth 1 -type f -name '*.po' | while read po ; do
 			## remove everything before and including the "/"
