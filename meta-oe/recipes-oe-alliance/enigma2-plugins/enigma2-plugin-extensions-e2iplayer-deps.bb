@@ -8,7 +8,7 @@ inherit gitpkgv python3-dir
 DEPENDS = "python3 curl ffmpeg openssl zlib"
 RRECOMMENDS:${PN} = " \
     ffmpeg \
-    \
+    exteplayer3 \
     gstplayer \
     wget \
     gst-ifdsrc \
@@ -20,7 +20,7 @@ RRECOMMENDS:${PN} = " \
 SRCREV = "${AUTOREV}"
 PV = "1.0+git"
 PKGV = "1.0+git${GITPKGV}"
-PR = "r2"
+PR = "r3"
 
 SRC_URI = "git://github.com/oe-mirrors/e2iplayer-deps.git;protocol=https;branch=master"
 
