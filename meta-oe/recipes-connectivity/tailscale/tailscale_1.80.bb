@@ -11,6 +11,7 @@ inherit gittag go-mod update-rc.d systemd upx-compress
 SRCREV = "${AUTOREV}"
 PV = "git"
 PKGV = "${GITPKGVTAG}"
+PR = "r1"
 
 SRC_URI = "git://github.com/tailscale/tailscale.git;protocol=https;branch=release-branch/1.80;destsuffix=${GO_SRCURI_DESTSUFFIX} \
         file://tailscaled.initd \

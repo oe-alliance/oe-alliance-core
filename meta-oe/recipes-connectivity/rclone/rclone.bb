@@ -16,6 +16,7 @@ inherit gittag go-mod upx-compress
 SRCREV = "15510c66d401e6737a2b15a0dba988e04ffb4ddd"
 PV = "git"
 PKGV = "${GITPKGVTAG}"
+PR = "r1"
 
 SRC_URI = "git://github.com/rclone/rclone.git;protocol=https;branch=master;destsuffix=${GO_SRCURI_DESTSUFFIX} \
            file://rclonefs"
