@@ -15,12 +15,13 @@ RRECOMMENDS:${PN} = " \
     rtmpdump \
     duktape \
     uchardet \
+    python3-pycurl \
     "
 
 SRCREV = "${AUTOREV}"
 PV = "1.0+git"
 PKGV = "1.0+git${GITPKGV}"
-PR = "r3"
+PR = "r4"
 
 SRC_URI = "git://github.com/oe-mirrors/e2iplayer-deps.git;protocol=https;branch=master"
 
