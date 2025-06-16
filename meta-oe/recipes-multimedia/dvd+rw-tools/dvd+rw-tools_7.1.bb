@@ -3,7 +3,7 @@ LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=8ca43cbc842c2336e835926c2166c28b"
 DEPENDS += "m4-native"
 RDEPENDS:${PN} += "genisoimage dirsplit"
-SRC_URI = "http://fy.chalmers.se/~appro/linux/DVD+RW/tools/dvd+rw-tools-${PV}.tar.gz \
+SRC_URI = "https://source.mynonpublic.com/dvd+rw-tools-${PV}.tar.gz \
            file://01-growisofs-pioneer.dpatch;apply=yes \
            file://02-growisofs-manpage.dpatch;apply=yes \
            file://03-growisofs-dvd-dl.dpatch;apply=yes \
