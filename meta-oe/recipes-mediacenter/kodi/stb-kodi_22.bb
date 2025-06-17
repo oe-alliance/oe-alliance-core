@@ -74,12 +74,12 @@ DEPENDS += " \
           "
 inherit gitpkgv
 # 22.0 Piers
-SRCREV = "df13cf98556cdf9c240a634b459b443997ed2d89"
+SRCREV = "4434c17e410287ca609bee8622d4b6841bf24a31"
 
 # 'patch' doesn't support binary diffs
 PATCHTOOL = "git"
 
-PR = "r2"
+PR = "r3"
 
 PV = "22.0+gitr"
 PV_groovy = "4.0.23"
