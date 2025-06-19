@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda
 ALLOW_EMPTY:${PN} = "1"
 
 PV = "1.0"
-PR = "r48"
+PR = "r49"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
@@ -40,6 +40,7 @@ RDEPENDS:${PN} = "\
     ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", \
     " \
     ntfs-3g \
+    ntfsprogs \
     enigma2-plugin-extensions-openwebif-themes \
     enigma2-plugin-extensions-openwebif-webtv \
     enigma2-plugin-extensions-openwebif-vxg \
