@@ -161,7 +161,7 @@ PV = "${IMAGE_VERSION}+gitr"
 PKGV = "${IMAGE_VERSION}+gitr${GITPKGV}"
 PR = "r3"
 
-SRC_URI = "${OEA_PLUGINS_URI}"
+SRC_URI = "${OEA_PLUGINS_URI} file://pluginnotwanted"
 
 EXTRA_OECONF = " \
     BUILD_SYS=${BUILD_SYS} \
@@ -180,6 +180,19 @@ PACKAGES += "${PN}-meta"
 FILES:${PN}-meta = "${datadir}/meta"
 
 S = "${WORKDIR}/git"
+
+python do_patch:append() {
+    # alternative method instead of pluginnotwanted.patch
+    s = d.getVar('UNPACKDIR', True)
+    import re
+    import os
+    notwanted = os.path.exists((pluginnotwantedfile := os.path.join(s, "", "pluginnotwanted"))) and open(pluginnotwantedfile, "r").read()
+    if notwanted:
+        mfile = os.path.join(s, "../git/Makefile.am")
+        exp = "|".join([r"\b%s\b(?:(?!\n)\s)*" % x.strip() for x in notwanted.splitlines() if x.strip()])
+        newmakefile = "\n".join([re.sub(exp, "", x) if x.strip().startswith("SUBDIRS") else x for x in re.sub("\s*[\\\\]\s*\n\s+", " ", open(mfile, "r").read()).splitlines()])
+        open(mfile, "w").write(newmakefile)
+}
 
 python populate_packages:prepend() {
     enigma2_plugindir = bb.data.expand('${libdir}/enigma2/python/Plugins', d)
