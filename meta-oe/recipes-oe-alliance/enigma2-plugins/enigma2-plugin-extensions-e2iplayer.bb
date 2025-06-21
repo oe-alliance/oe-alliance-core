@@ -26,6 +26,7 @@ RRECOMMENDS:${PN} = " \
         python3-html \
         python3-json \
         python3-shell \
+        python3-websocket-client \
         "
 
 RDEPENDS:${PN}-src = "${PN}"
