@@ -26,6 +26,7 @@ RRECOMMENDS:${PN} = " \
         ${PYTHON_PN}-html \
         ${PYTHON_PN}-json \
         ${PYTHON_PN}-shell \
+        ${PYTHON_PN}-websocket-client \
         "
 
 RDEPENDS:{PN}-src = "${PN}"
