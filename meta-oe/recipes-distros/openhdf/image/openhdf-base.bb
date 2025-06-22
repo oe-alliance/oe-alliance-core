@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda
 ALLOW_EMPTY:${PN} = "1"
 
 PV = "1.0"
-PR = "r50"
+PR = "r51"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
@@ -43,9 +43,7 @@ RDEPENDS:${PN} = "\
     ntfsprogs \
     exfat-mkfs \
     enigma2-plugin-extensions-openwebif-themes \
-    enigma2-plugin-extensions-openwebif-webtv \
     enigma2-plugin-extensions-openwebif-vxg \
-    enigma2-plugin-extensions-openwebif-terminal \
     exteplayer3 \
     gstplayer \
     ffmpeg \

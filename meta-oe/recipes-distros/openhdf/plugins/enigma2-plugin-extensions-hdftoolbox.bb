@@ -27,4 +27,6 @@ FILES:${PN} = "${libdir}"
 do_install() {
     install -d ${D}${libdir}
     cp -rp ${S}/usr/lib/* ${D}${libdir}/
+    chown -R root:root ${D}${libdir}
+    chmod -R 755 ${D}${libdir}
 }

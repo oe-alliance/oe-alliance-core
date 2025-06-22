@@ -24,4 +24,6 @@ FILES:${PN} = "/usr/share"
 do_install() {
 	install -d ${D}/usr/share
 	cp -rp ${S}/usr/share/* ${D}/usr/share/
+        chown -R root:root ${D}${libdir}
+        chmod -R 755 ${D}${libdir}
 }

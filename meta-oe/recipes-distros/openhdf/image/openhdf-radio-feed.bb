@@ -8,6 +8,8 @@ inherit allarch
 PV = "${IMAGE_VERSION}"
 PR = "r3"
 
+PR[vardepsexclude] += "DATE DATETIME"
+
 PACKAGES = "${PN}"
 
 S = "${WORKDIR}/sources"
