@@ -13,7 +13,7 @@ SRCREV = "${AUTOREV}"
 PV = "1.0+git"
 PKGV = "1.0+git${GITPKGV}"
 VER ="1.0"
-PR = "r5"
+PR = "r6"
 
 SRC_URI="git://github.com/openhdf/army-mod-skin.git;protocol=https;branch=master"
 
@@ -24,6 +24,6 @@ FILES:${PN} = "/usr/share"
 do_install() {
 	install -d ${D}/usr/share
 	cp -rp ${S}/usr/share/* ${D}/usr/share/
-        chown -R root:root ${D}$/usr/share/enigma2/Army.HDF.Mod
+        chown -R root:root ${D}/usr/share/enigma2/Army.HDF.Mod
         chmod -R 755 ${D}/usr/share/enigma2/Army.HDF.Mod
 }
