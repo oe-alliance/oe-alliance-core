@@ -17,7 +17,7 @@ SRC_URI = "git://github.com/stein17/Skins-for-openOPD.git;protocol=https;branch=
 
 FILES:${PN} = "${libdir} /usr/share"
 
-S = "${WORKDIR}/git/Ultimate-HD-Skin-4OPD"
+S = "${UNPACKDIR}/Ultimate-HD-Skin-4OPD"
 
 do_install() {
     install -d ${D}${libdir}

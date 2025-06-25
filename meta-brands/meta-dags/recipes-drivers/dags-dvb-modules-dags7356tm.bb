@@ -16,8 +16,7 @@ SRC_URI[sha256sum] = "88fdb1d1f341f38893c33ab31bee69af1ee1e13f6e50636718964dcfaa
 
 SRC_URI = "https://source.mynonpublic.com/dags/bcmlinuxdvb_7356-${KV}-tmnano3t-${SRCDATE}.tar.gz"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 INHIBIT_PACKAGE_STRIP = "1"
 INHIBIT_PACKAGE_DEBUG_SPLIT = "1"

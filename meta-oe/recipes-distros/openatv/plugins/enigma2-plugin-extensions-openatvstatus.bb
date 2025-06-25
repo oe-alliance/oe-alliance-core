@@ -14,8 +14,6 @@ PR = "r0"
 
 SRC_URI = "git://github.com/openatv/openatvstatus.git;branch=main;protocol=https"
 
-S = "${WORKDIR}/git"
-
 PLUGIN = "${libdir}/enigma2/python/Plugins/Extensions/OpenATVstatus"
 
 FILES:${PN} = "${PLUGIN}"

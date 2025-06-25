@@ -16,7 +16,7 @@ PR = "r3"
 
 SRC_URI = "git://github.com/BlackHole/skins.git;protocol=https;branch=master"
 
-S = "${WORKDIR}/git/BlackShadowSE_P"
+S = "${UNPACKDIR}/BlackShadowSE_P"
 
 FILES:${PN} = "/usr/*"
 

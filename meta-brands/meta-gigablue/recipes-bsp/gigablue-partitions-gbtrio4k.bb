@@ -10,8 +10,7 @@ inherit deploy
 SRCDATE = "20221111"
 PR = "${SRCDATE}"
 
-S = "${WORKDIR}/sources-unpack"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 SRC_URI = "https://source.mynonpublic.com/gigablue/mv200/${MACHINEBUILD}-partitions-${SRCDATE}.zip \
   file://flash-apploader \

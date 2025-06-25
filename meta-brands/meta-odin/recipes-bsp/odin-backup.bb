@@ -10,8 +10,7 @@ COMPATIBLE_MACHINE = "^(odinm7$|odinm9)$"
 PV = "1.0"
 PR = "r5"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 SRC_URI = "file://odin-backup.sh"
 

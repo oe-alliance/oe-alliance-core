@@ -16,7 +16,7 @@ SRC_URI = "git://github.com/m4dhouse/MadMax-Atv.git;protocol=https;branch=main"
 
 FILES:${PN} = "${libdir} /usr/share"
 
-S = "${WORKDIR}/git/MadMax-Impossible-Skin"
+S = "${UNPACKDIR}/${BP}/MadMax-Impossible-Skin"
 
 do_install() {
     install -d ${D}${libdir}

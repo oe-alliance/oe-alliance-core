@@ -16,7 +16,7 @@ PROVIDES += "virtual/blindscan-dvbc virtual/blindscan-dvbs"
 RPROVIDES:gigablue-blindscan-dvbc-utils-${MACHINE} += "virtual-blindscan-dvbc"
 RPROVIDES:gigablue-blindscan-dvbs-utils-${MACHINE} += "virtual-blindscan-dvbs"
 
-S = "${WORKDIR}/blindscan-utils"
+S = "${UNPACKDIR}/blindscan-utils"
 
 do_install() {
     install -d "${D}/${bindir}"

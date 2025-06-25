@@ -16,7 +16,7 @@ SRC_URI = "git://github.com/stein17/Skins-for-openATV.git;protocol=https;branch=
 
 FILES:${PN} = "/"
 
-S = "${WORKDIR}/git/BlueAccents-FHD"
+S = "${UNPACKDIR}/${BP}/BlueAccents-FHD"
 
 do_install() {
     install -d ${D}${libdir}

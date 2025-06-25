@@ -11,8 +11,6 @@ SRCREV = "b79d25bddd83941e6f95c30e3d184e959b83417f"
 
 PV = "1.13+git"
 
-S = "${WORKDIR}/git"
-
 do_install(){
     install -d ${D}/${includedir}/rapidxml
     install -m 0644 ${S}/*.hpp ${D}/${includedir}/rapidxml/

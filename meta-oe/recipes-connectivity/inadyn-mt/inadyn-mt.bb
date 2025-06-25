@@ -14,7 +14,7 @@ SRC_URI = "https://source.mynonpublic.com/${BPN}.${PV}.tar.gz \
 SRC_URI[md5sum] = "0652d99aab1249d6a3afe4d65861e77b"
 SRC_URI[sha256sum] = "f894b5ab92ed4ec4cae2eccc99efef1aa18c0f5f02de66025e50833cc9063c3c"
 
-S = "${WORKDIR}/${BPN}.${PV}"
+S = "${UNPACKDIR}/${BPN}.${PV}"
 
 inherit autotools-brokensep update-rc.d
 

@@ -15,8 +15,6 @@ PR = "r1"
 
 SRC_URI = "git://github.com/Taapat/enigma2-plugin-blurayplayer.git;protocol=https;branch=${BRANCH}"
 
-S = "${WORKDIR}/git"
-
 inherit setuptools3-openplugins
 
 DEPENDS += "python3  libbluray libudfread"

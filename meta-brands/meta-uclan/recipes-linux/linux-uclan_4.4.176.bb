@@ -20,7 +20,7 @@ SRC_URI[mv200.sha256sum] = "2a9ab0dc82d9fe4e0a8a551a6323b177be11f2679bc43233c034
 SRC_URI[mv300.md5sum] = "9c400b45c9bc7949c97ddb5bf6714b1e"
 SRC_URI[mv300.sha256sum] = "e5604bb3576ead02b23861b0dde082a2b219fe7a622d973f7a52aaafbc56f7bb"
 
-LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
+LIC_FILES_CHKSUM = "file://${UNPACKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
 SRC_URI += "https://source.mynonpublic.com/uclan/uclan-linux-${PV}-${SRCDATE}.tar.gz;name=${KVTYPE} \
     file://defconfig \
@@ -31,7 +31,7 @@ SRC_URI += "https://source.mynonpublic.com/uclan/uclan-linux-${PV}-${SRCDATE}.ta
     file://cfg80211_Add_option_to_report_the_bss_entry_in_connect_result.patch \
 "
 
-S = "${WORKDIR}/linux-${PV}"
+S = "${UNPACKDIR}/linux-${PV}"
 B = "${WORKDIR}/build"
 
 export OS = "Linux"

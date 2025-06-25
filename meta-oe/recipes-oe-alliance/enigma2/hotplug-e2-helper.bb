@@ -12,8 +12,6 @@ PR = "r0"
 SRC_URI = "git://github.com/OpenPLi/${BPN}.git;protocol=https;branch=master \
             file://fix-compile-with-gcc14.patch"
 
-S = "${WORKDIR}/git"
-
 inherit autotools
 
 do_configure:prepend() {

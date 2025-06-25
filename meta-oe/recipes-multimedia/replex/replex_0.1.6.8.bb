@@ -9,10 +9,9 @@ SRC_URI = "https://people.freebsd.org/~dinoex/distfiles/${BPN}-${PV}.tar.gz \
 SRC_URI[md5sum] = "de02c1b55bc7863f811adffe611f1c71"
 SRC_URI[sha256sum] = "68718d6671570815e8576b6e0b595195f5cea435194209ee5528721cb8737b63"
 
-
 CFLAGS = '-D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_LARGEFILE64_SOURCE -DVERSION=\\"${PV}\\"'
 
-S = "${WORKDIR}/${BPN}-${PV}"
+S = "${UNPACKDIR}/${BPN}-${PV}"
 
 do_install() {
   install -d 0755 ${D}/${bindir}

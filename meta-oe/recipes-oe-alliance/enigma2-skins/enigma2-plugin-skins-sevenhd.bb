@@ -18,7 +18,7 @@ SRC_URI = "git://github.com/openatv/SevenHD.git;protocol=https;branch=master"
 
 FILES:${PN} = "/usr/*"
 
-S = "${WORKDIR}/git/data"
+S = "${UNPACKDIR}/data"
 
 do_install() {
     install -d ${D}/usr/share/enigma2

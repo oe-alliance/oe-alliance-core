@@ -11,7 +11,6 @@ PV = "git"
 PKGV = "${GITPKGVTAG}"
 
 SRC_URI = "git://github.com/oe-alliance/kexec-multiboot.git;protocol=https;branch=main"
-S = "${WORKDIR}/git"
 
 do_install() {
     install -d ${D}${bindir}

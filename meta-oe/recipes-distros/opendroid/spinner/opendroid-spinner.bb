@@ -5,7 +5,6 @@ LICENSE = "proprietary"
 inherit allarch
 require conf/license/license-gplv2.inc
 
-
 PV = "7.3"
 PR = "r10"
 
@@ -23,8 +22,7 @@ SRC_URI = "file://wait1.png \
         file://wait12.png \
         file://wait13.png \
         "
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 do_install() {
     install -d ${D}${datadir}/enigma2/spinner

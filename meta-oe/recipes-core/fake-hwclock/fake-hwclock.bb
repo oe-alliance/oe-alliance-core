@@ -10,8 +10,7 @@ SRC_URI = "file://fake-hwclock \
            file://fake-hwclock.default \
 "
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 inherit update-rc.d
 
@@ -33,7 +32,6 @@ do_install() {
 
     install -d ${D}${sysconfdir}/default
     install -m 644 ${S}/fake-hwclock.default ${D}${sysconfdir}/default/fake-hwclock
-
 
 #    if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
 #        install -d ${D}${systemd_system_unitdir}

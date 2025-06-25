@@ -12,10 +12,6 @@ SRCREV = "${AUTOREV}"
 
 SRC_URI = "git://github.com/Huevos/PiconsMissing.git;protocol=https;branch=master"
 
-
-
-S = "${WORKDIR}/git"
-
 pluginpath = "/usr/lib/enigma2/python/Plugins/Extensions/PiconsMissing"
 
 do_install:append() {

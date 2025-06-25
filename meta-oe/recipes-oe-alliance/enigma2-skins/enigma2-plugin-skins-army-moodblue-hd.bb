@@ -15,8 +15,6 @@ SRC_URI = "git://github.com/Taykun345/skin-PLi-Army-MoodBlueHD-mod.git;protocol=
 
 FILES:${PN} = "/usr/share/enigma2/Army_MoodBlue_mod"
 
-S = "${WORKDIR}/git"
-
 do_install() {
     install -d ${D}/usr/
     cp -rp ${S}/usr/* ${D}/usr/

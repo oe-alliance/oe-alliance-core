@@ -3,14 +3,13 @@ SUMMARY = "Ralink RT5370"
 HOMEPAGE = "http://eng.ralinktech.com.tw/support.php?s=2"
 SECTION = "kernel/modules"
 
-
 inherit module
 
 SRC_URI = "https://source.mynonpublic.com/gigablue/wlan/RT3070_RT3370_RT5370_RT5372.tar.gz"
 
 EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR} KDIR=${STAGING_KERNEL_DIR}"
 
-S = "${WORKDIR}/RT3070_RT3370_RT5370_RT5372"
+S = "${UNPACKDIR}/RT3070_RT3370_RT5370_RT5372"
 
 do_install() {
     install -d ${D}${nonarch_base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/net/wireless

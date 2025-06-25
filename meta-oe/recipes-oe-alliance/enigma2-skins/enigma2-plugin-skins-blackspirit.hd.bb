@@ -18,8 +18,6 @@ SRC_URI = "git://github.com/DeadEyE-OpenATV/BlackSpirit.HD.git;protocol=https;br
 
 FILES:${PN} = "/usr/*"
 
-S = "${WORKDIR}/git"
-
 do_install() {
     install -d ${D}/usr/share/enigma2
     cp -rp ${S}/usr ${D}/

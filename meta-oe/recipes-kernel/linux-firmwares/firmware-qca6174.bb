@@ -6,8 +6,7 @@ inherit allarch
 
 SRC_URI = "https://source.mynonpublic.com/edision/firmware-qca6174_v2.zip"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 PR = "r2"
 
 PACKAGES = "${PN}"

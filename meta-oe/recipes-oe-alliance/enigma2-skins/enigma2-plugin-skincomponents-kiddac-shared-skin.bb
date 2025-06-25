@@ -13,7 +13,7 @@ PKGV = "${GITPKGVTAG}"
 
 SRC_URI = "git://github.com/kiddac/shared-skin-components.git;protocol=https;branch=master"
 
-S = "${WORKDIR}/git/kiddac-shared-skin-components"
+S = "${UNPACKDIR}/${BP}/kiddac-shared-skin-components"
 
 FILES:${PN} = "${libdir} ${datadir}"
 

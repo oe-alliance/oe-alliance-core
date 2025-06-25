@@ -15,8 +15,6 @@ do_configure[nostamp] = "1"
 
 SRC_URI = "git://github.com/oe-alliance/remotes;protocol=https;branch=master"
 
-S = "${WORKDIR}/git"
-
 do_install() {
     install -d ${D}${datadir}/enigma2
     install -d ${D}${datadir}/enigma2/hardware

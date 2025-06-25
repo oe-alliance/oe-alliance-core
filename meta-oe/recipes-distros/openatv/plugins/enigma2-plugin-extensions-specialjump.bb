@@ -15,8 +15,6 @@ PR = "r0"
 
 SRC_URI = "git://github.com/openatv/SpecialJump.git;branch=python3;protocol=https"
 
-S = "${WORKDIR}/git"
-
 FILES:${PN} = "${libdir}"
 
 CONFFILES:${PN} = "/usr/lib/enigma2/python/Plugins/Extensions/SpecialJump/keymap_user.xml"

@@ -4,11 +4,9 @@ require conf/license/license-close.inc
 
 inherit allarch
 
-
 SRC_URI = "file://firmware-mn88436.zip"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 PACKAGES = "${PN}"
 FILES:${PN} += "${nonarch_base_libdir}/firmware"

@@ -12,11 +12,10 @@ inherit kernel machine_kernel_pr
 
 MACHINE_KERNEL_PR:append = "1"
 
-
 SRC_URI[md5sum] = "96c57616c9e0121a57b34c93e6453824"
 SRC_URI[sha256sum] = "fd113f78998a63702e6e0ea62e9133d7865edb0e5172f79ab2779c5ae850fb71"
 
-LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
+LIC_FILES_CHKSUM = "file://${UNPACKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
 SRC_URI += "https://source.mynonpublic.com/anadol/anadol-linux-${PV}-${SRCDATE}.tar.gz \
     file://defconfig \
@@ -27,7 +26,7 @@ SRC_URI += "https://source.mynonpublic.com/anadol/anadol-linux-${PV}-${SRCDATE}.
     file://cfg80211_Add_option_to_report_the_bss_entry_in_connect_result.patch \
 "
 
-S = "${WORKDIR}/linux-${PV}"
+S = "${UNPACKDIR}/linux-${PV}"
 B = "${WORKDIR}/build"
 
 export OS = "Linux"

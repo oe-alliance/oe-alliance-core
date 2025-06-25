@@ -5,8 +5,6 @@ SRCREV = "d9396c07f1ddfcbacec70350604fea0d3ccae821"
 
 inherit autotools gitpkgv
 
-S = "${WORKDIR}/git"
-
 VERSION := "${PV}"
 PV = "${VERSION}+git"
 PKGV = "${VERSION}+git${GITPKGV}"

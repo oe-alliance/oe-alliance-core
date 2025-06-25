@@ -54,7 +54,7 @@ SRC_URI:append:i55se = " \
 	file://0001-mmc-switch-1.8V.patch \
 "
 
-S = "${WORKDIR}/sources-unpack/linux-${PV}"
+S = "${UNPACKDIR}/linux-${PV}"
 B = "${WORKDIR}/build"
 
 export OS = "Linux"

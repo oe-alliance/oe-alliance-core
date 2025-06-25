@@ -18,8 +18,6 @@ INHIBIT_PACKAGE_STRIP = "1"
 
 SRC_URI = "git://github.com/openatv/grautec.git;protocol=https;branch=master"
 
-S = "${WORKDIR}/git"
-
 FILES:${PN} = "/usr/* ${sysconfdir}"
 FILES:${PN}-dbg = "${sysconfdir}/grautec/*/.debug/*.ko"
 

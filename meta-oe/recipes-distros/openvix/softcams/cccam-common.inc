@@ -21,8 +21,7 @@ CONFFILES:${PN} ?= "/etc/CCcam.cfg"
 
 PACKAGE_ARCH = "${TUNE_PKGARCH}"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 do_install() {
     install -d ${D}/${bindir}

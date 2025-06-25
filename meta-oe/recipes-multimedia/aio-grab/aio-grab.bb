@@ -15,6 +15,4 @@ PKGV = "1.1+git${GITPKGV}"
 
 SRC_URI = "git://github.com/oe-alliance/aio-grab.git;protocol=https;branch=master"
 
-S = "${WORKDIR}/git"
-
 inherit autotools pkgconfig

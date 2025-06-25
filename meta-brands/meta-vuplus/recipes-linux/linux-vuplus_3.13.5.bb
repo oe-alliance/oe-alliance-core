@@ -14,7 +14,7 @@ MACHINE_KERNEL_PR = "r6"
 SRC_URI[md5sum] = "19e9956653437b99b4fa6ec3e16a3e99"
 SRC_URI[sha256sum] = "ef7fb307582ff243aacff8a13025fe028634aaf650ada309991ae03622962f61"
 
-LIC_FILES_CHKSUM = "file://${WORKDIR}/linux/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
+LIC_FILES_CHKSUM = "file://${UNPACKDIR}/linux/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
 KERNEL_CONFIG = "${@bb.utils.contains("MACHINE_FEATURES", "dvbproxy", "defconfig_proxy", "defconfig", d)}"
 
@@ -81,7 +81,7 @@ SRC_URI:append:vusolo2 = " file://linux-bcm_ethernet.patch;striplevel=1 "
 
 SRC_URI:append:vuzero = " file://linux_nand_bcm.patch "
 
-S = "${WORKDIR}/linux"
+S = "${UNPACKDIR}/linux"
 B = "${WORKDIR}/build"
 
 export OS = "Linux"
@@ -95,8 +95,8 @@ KERNEL_EXTRA_ARGS = "EXTRA_CFLAGS=-Wno-attribute-alias"
 FILES:${KERNEL_PACKAGE_NAME}-image = "/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz"
 
 do_configure:prepend() {
-    if [ -e ${WORKDIR}/sources-unpack/defconfig_proxy ]; then
-    mv ${WORKDIR}/sources-unpack/defconfig_proxy ${WORKDIR}/sources-unpack/defconfig
+    if [ -e ${WORKDIR}/defconfig_proxy ]; then
+    mv ${WORKDIR}/defconfig_proxy ${WORKDIR}/defconfig
     fi
 }
 

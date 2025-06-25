@@ -50,7 +50,7 @@ SRC_URI:append = "\
                     file://wg-kconfig.patch \
 "
 
-S = "${WORKDIR}/sources-unpack/linux-${PV}"
+S = "${UNPACKDIR}/linux-${PV}"
 B = "${WORKDIR}/build"
 
 export OS = "Linux"

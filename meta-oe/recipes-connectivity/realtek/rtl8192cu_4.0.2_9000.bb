@@ -13,7 +13,7 @@ SRC_URI = " \
     file://CHECKSM_IPV6_H.patch \
     "
 
-S = "${WORKDIR}/rtl8188C_8192C_usb_linux_v4.0.2_9000.20130911"
+S = "${UNPACKDIR}/rtl8188C_8192C_usb_linux_v4.0.2_9000.20130911"
 
 inherit module siteinfo
 

@@ -16,8 +16,6 @@ PR = "r1"
 
 SRC_URI = "git://github.com/oerlgrey/TeamBlueHD.git;protocol=https;branch=master"
 
-S = "${WORKDIR}/git"
-
 FILES:${PN} = "/usr/*"
 
 do_install() {

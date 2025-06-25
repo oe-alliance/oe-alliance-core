@@ -25,7 +25,7 @@ SRC_URI = "git://github.com/${PVRGIT}/pvr.${KODIADDONPLUGIN}.git;destsuffix=pvr.
 
 inherit cmake pkgconfig gettext gitpkgv
 
-S = "${WORKDIR}/pvr.${KODIADDONPLUGIN}"
+S = "${UNPACKDIR}/pvr.${KODIADDONPLUGIN}"
 
 OECMAKE_GENERATOR = "Unix Makefiles"
 
@@ -50,7 +50,6 @@ do_compile:prepend() {
 	sed -i -e 's:-pipe:${HOST_CC_ARCH} ${TOOLCHAIN_OPTIONS} -pipe:g'\
 	          ${B}/CMakeFiles/*/link.txt
 }
-
 
 # Make zip package for manual installation
 do_install:append() {

@@ -23,11 +23,8 @@ RPROVIDES:enigma2-plugin-skins-metrix-spa-uhd-icons += "enigma2-plugin-skins-met
 
 SRC_URI = "git://github.com/openspa/MetrixHD.git;protocol=https;branch=py3"
 
-S = "${WORKDIR}/git"
-
 FILES:enigma2-plugin-skins-metrix-spa-fhd-icons = "/usr/share/enigma2/MetrixHD/FHD"
 FILES:enigma2-plugin-skins-metrix-spa-uhd-icons = "/usr/share/enigma2/MetrixHD/UHD"
-
 
 FILES:${PN} = "${libdir} /usr/share ${sysconfdir}"
 

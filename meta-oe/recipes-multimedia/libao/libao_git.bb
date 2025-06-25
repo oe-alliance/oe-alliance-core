@@ -16,8 +16,6 @@ PR = "r0"
 
 SRC_URI = "git://gitlab.xiph.org/xiph/libao.git;protocol=https;branch=master"
 
-S = "${WORKDIR}/git"
-
 inherit autotools pkgconfig
 
 EXTRA_OECONF = "\

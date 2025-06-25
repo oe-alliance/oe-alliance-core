@@ -10,8 +10,7 @@ PR = "r1"
 DOWNLOADMACHINE ?= "${MACHINE}"
 SRC_URI = "https://source.mynonpublic.com/vuplus/release/vuplus-dvb-modules/vuplus-dvb-modules-${DOWNLOADMACHINE}-${PV}-${SRCDATE}.tar.gz"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 INHIBIT_PACKAGE_STRIP = "1"
 INHIBIT_PACKAGE_DEBUG_SPLIT = "1"

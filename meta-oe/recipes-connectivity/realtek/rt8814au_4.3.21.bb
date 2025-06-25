@@ -10,7 +10,7 @@ SRC_URI = "https://source.mynonpublic.com/rtl8814AU-driver-4.3.21-20211103.zip"
 
 EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR} KDIR=${STAGING_KERNEL_DIR}"
 
-S = "${WORKDIR}/rtl8814AU"
+S = "${UNPACKDIR}/rtl8814AU"
 
 do_compile () {
     unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS CC LD CPP

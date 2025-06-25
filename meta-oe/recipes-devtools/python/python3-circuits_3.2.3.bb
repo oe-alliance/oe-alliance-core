@@ -10,8 +10,6 @@ DEPENDS = "python3-setuptools-scm-native"
 SRCREV = "4c9496fe79edaa4e1e2ae4f92776c29bab80117f"
 SRC_URI = "git://github.com/circuits/circuits.git;protocol=https;branch=master"
 
-S = "${WORKDIR}/git"
-
 inherit setuptools3
 
 include python3-package-split.inc

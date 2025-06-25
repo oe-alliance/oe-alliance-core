@@ -9,7 +9,7 @@ SRC_URI = "https://files.pythonhosted.org/packages/31/8f/53d4140a5100ce21fef6294
 SRC_URI[md5sum] = "61ee558b14ed9c845a9894ad9d56cbbf"
 SRC_URI[sha256sum] = "a5e044f3e2c0fc5f5f1162273d541b8f592036c7f9ef99444ff540704e404697"
 
-S = "${WORKDIR}/Tenjin-${PV}"
+S = "${UNPACKDIR}/Tenjin-${PV}"
 
 inherit setuptools3
 

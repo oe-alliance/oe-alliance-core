@@ -12,8 +12,7 @@ INITSCRIPT_PARAMS = "start 89 0 ."
 
 inherit pkgconfig update-rc.d
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 do_install() {
     install -d ${D}/etc/init.d/

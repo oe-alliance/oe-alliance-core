@@ -18,8 +18,7 @@ RDEPENDS:${PN} = "python3-difflib openssl python3-pyopenssl"
 
 SRC_URI = "http://addons.hdfreaks.cc/feeds/*git/enigma2-plugins-web_package_mips32el.tar.gz"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 FILES:${PN} = "${libdir} /etc/*"
 

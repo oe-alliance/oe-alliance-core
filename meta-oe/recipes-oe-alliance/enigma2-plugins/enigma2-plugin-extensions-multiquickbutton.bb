@@ -19,8 +19,6 @@ SRC_URI = "git://github.com/oe-alliance/e2openplugin-MultiQuickButton.git;protoc
         file://ax-python-devel-dont-check-for-distutils.patch \
         file://LICENSE.GPLv2"
 
-S = "${WORKDIR}/git"
-
 PACKAGES =+ "${PN}-po"
 FILES:${PN} = "/tmp /etc ${libdir}"
 FILES:${PN}-src = " \

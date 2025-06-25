@@ -18,7 +18,7 @@ PKGV = "${GITPKGVTAG}"
 
 SRC_URI = "git://github.com/einfall/serienrecorder.git;protocol=https;branch=master"
 
-S = "${WORKDIR}/git/src"
+S = "${UNPACKDIR}/${BP}/src"
 
 PLUGINPATH = "${libdir}/enigma2/python/Plugins/Extensions/serienrecorder"
 

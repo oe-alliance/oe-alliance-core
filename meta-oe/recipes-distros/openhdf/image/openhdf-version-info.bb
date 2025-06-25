@@ -12,8 +12,7 @@ PACKAGE_ARCH = "${MACHINEBUILD}"
 
 URL = "http://www.hdfreaks.cc"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 PACKAGES = "${PN}"
 

@@ -15,8 +15,6 @@ PR = "r1"
 
 SRC_URI = "git://bitbucket.org/beyonwiz/picons-australia.git;protocol=https;branch=master"
 
-S = "${WORKDIR}/git"
-
 PACKAGES = "${PN}"
 
 FILES:${PN} = "/picon/* /piconlcd/*"

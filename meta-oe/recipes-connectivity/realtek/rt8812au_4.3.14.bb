@@ -6,7 +6,6 @@ LIC_FILES_CHKSUM = "file://ifcfg-wlan0;md5=6061d24ec65e191716f64bb3fe580790"
 
 inherit module
 
-
 MACHINE_KERNEL_PR:append = ".1"
 
 SRC_URI = "https://source.mynonpublic.com/rtl8812AU-driver-4.3.14.zip \
@@ -18,7 +17,7 @@ EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR} KDIR=${STAGING_KERNEL_DIR}"
 
 require kcflags.inc
 
-S = "${WORKDIR}/rtl8812AU-driver-4.3.14"
+S = "${UNPACKDIR}/rtl8812AU-driver-4.3.14"
 
 do_compile () {
     unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS CC LD CPP
@@ -42,5 +41,4 @@ do_install() {
 
 SRC_URI[md5sum] = "0f36c65f154971c3b305a1705f9e500f"
 SRC_URI[sha256sum] = "e1ab86b4aca9ee599141d2d23dd5c989e0a6d004c8b87a487b370e80a4aba7e2"
-
 

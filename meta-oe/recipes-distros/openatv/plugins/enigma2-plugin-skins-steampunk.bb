@@ -14,7 +14,7 @@ RDEPENDS:${PN} = "enigma2-plugin-systemplugins-weathercomponenthandler, enigma2-
 
 SRC_URI = "git://github.com/stein17/Skins-for-openATV.git;protocol=https;branch=python3"
 
-S = "${WORKDIR}/git/Steampunk"
+S = "${UNPACKDIR}/${BP}/Steampunk"
 
 do_install() {
     install -d ${D}${libdir}

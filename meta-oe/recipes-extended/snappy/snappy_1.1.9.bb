@@ -14,8 +14,6 @@ SRC_URI = "gitsm://github.com/google/snappy.git;protocol=https;branch=main \
     file://0001-Add-inline-with-SNAPPY_ATTRIBUTE_ALWAYS_INLINE.patch \
 "
 SRCREV = "2b63814b15a2aaae54b7943f0cd935892fae628f"
-S = "${WORKDIR}/git"
-
 
 inherit cmake pkgconfig
 

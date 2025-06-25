@@ -15,8 +15,6 @@ PKGV = "3.3.1+git${GITPKGV}"
 
 SRC_URI = "git://github.com/oe-mirrors/yampmusicplayer.git;protocol=https;branch=main"
 
-S = "${WORKDIR}/git"
-
 PLUGINPATH = "${libdir}/enigma2/python/Plugins/Extensions/YampMusicPlayer"
 do_install() {
     install -d ${D}${PLUGINPATH}

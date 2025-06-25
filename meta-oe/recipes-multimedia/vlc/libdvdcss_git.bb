@@ -12,8 +12,6 @@ PKGV = "1.4.3+git${GITPKGV}"
 
 SRC_URI = "git://github.com/oe-alliance-mirrors/libdvdcss.git;protocol=https;branch=master"
 
-S = "${WORKDIR}/git"
-
 inherit autotools
 
 EXTRA_OECONF = "--disable-doc"

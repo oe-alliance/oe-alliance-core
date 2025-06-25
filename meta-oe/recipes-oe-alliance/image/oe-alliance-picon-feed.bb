@@ -10,8 +10,7 @@ PR = "r0"
 
 PACKAGES = "${PN}"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 feed_name = "oe-alliance-picon-feed"
 

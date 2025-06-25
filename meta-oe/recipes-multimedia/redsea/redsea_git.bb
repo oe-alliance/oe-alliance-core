@@ -15,6 +15,4 @@ PKGV = "${GITPKGVTAG}"
 SRC_URI = "git://github.com/windytan/redsea.git;protocol=http;branch=master;protocol=https \
             file://remove-hardcoded-build-path.patch"
 
-S = "${WORKDIR}/git"
-
 inherit pkgconfig meson gettext

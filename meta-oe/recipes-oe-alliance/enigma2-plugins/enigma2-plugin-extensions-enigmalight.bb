@@ -14,8 +14,6 @@ PR = "r12"
 
 SRC_URI = "git://github.com/oe-mirrors/enigmalight.git;protocol=https;branch=python3"
 
-S = "${WORKDIR}/git"
-
 inherit autotools-brokensep pkgconfig
 
 do_install:append() {
@@ -24,14 +22,14 @@ do_install:append() {
     cp -R ${S}/python/plugin/EnigmaLight ${D}${libdir}/enigma2/python/Plugins/Extensions
 
     install -d ${D}/home/elight-addons
-    cp -R ${WORKDIR}/git/elight-addons/config_samples ${D}/home/elight-addons
+    cp -R ${S}/elight-addons/config_samples ${D}/home/elight-addons
 
     install -d ${D}/home/elight-addons/profiles_empty
     cp ${S}/python/plugin/EnigmaLight/profiles/* ${D}/home/elight-addons/profiles_empty
 
     install -d ${D}/home/elight-addons/wifilight
-    cp -R ${WORKDIR}/git/elight-addons/wifilight ${D}/home/elight-addons/
-    cp -R ${WORKDIR}/git/elight-addons/config_samples ${D}/home/elight-addons/wifilight
+    cp -R ${S}/elight-addons/wifilight ${D}/home/elight-addons/
+    cp -R ${S}/elight-addons/config_samples ${D}/home/elight-addons/wifilight
 }
 
 require conf/python/python3-compileall.inc

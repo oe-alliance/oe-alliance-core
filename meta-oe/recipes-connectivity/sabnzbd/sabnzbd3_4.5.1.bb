@@ -6,7 +6,6 @@ LICENSE = "GPL-2.0-or-later"
 LIC_FILES_CHKSUM = "file://COPYRIGHT.txt;md5=696e8c6166d0824d6e7c0554d03301db"
 require conf/python/python3-compileall.inc
 
-
 DEPENDS = "python3"
 RDEPENDS:${PN} = "\
     python3-cheetah python3-compression python3-core python3-crypt python3-ctypes python3-email python3-html \
@@ -29,7 +28,7 @@ SRC_URI = "https://github.com/sabnzbd/sabnzbd/releases/download/${PV}/SABnzbd-${
 SRC_URI[md5sum] = "842b3b3b598a89987a3ce173ea9b7607"
 SRC_URI[sha256sum] = "fa1ec07a20769bcd863099cc40e8f20a336221505137bb1b52d981506333fc1c"
 
-S = "${WORKDIR}/SABnzbd-${PV}"
+S = "${UNPACKDIR}/SABnzbd-${PV}"
 
 INSTALLDIR = "${libdir}/${PN}"
 

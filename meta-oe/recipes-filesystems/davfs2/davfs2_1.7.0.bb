@@ -28,8 +28,8 @@ EXTRA_OECONF = "--with-neon \
 CONFFILES:${PN} = "${sysconfdir}/davfs2/davfs2.conf ${sysconfdir}/davfs2/secrets"
 
 do_install:prepend () {
-	cp ${WORKDIR}/davfs2-${PV}/etc/davfs2.conf ${WORKDIR}/build/etc
-	cp ${WORKDIR}/davfs2-${PV}/etc/secrets ${WORKDIR}/build/etc
+	cp ${S}/etc/davfs2.conf ${WORKDIR}/build/etc
+	cp ${S}/etc/secrets ${WORKDIR}/build/etc
 }
 
 do_install:append () {

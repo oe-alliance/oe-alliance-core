@@ -30,8 +30,6 @@ RPROVIDES:${PN}  = "enigma2-plugin-skinpacks-dreamplex-bluemod-fhd enigma2-plugi
 RREPLACES:${PN}  = "enigma2-plugin-skinpacks-dreamplex-bluemod-fhd enigma2-plugin-skinpacks-dreamplex-bluemod"
 RCONFLICTS:${PN} = "enigma2-plugin-skinpacks-dreamplex-bluemod-fhd enigma2-plugin-skinpacks-dreamplex-bluemod"
 
-S = "${WORKDIR}/git"
-
 python populate_packages:prepend() {
     enigma2_plugindir = bb.data.expand('${libdir}/enigma2/python/Plugins', d)
     do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/[a-zA-Z0-9_]+.*$', 'enigma2-plugin-%s', '%s', recursive=True, match_path=True, prepend=True, extra_depends="enigma2")

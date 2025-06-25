@@ -11,7 +11,7 @@ inherit kernel machine_kernel_pr
 SRC_URI[md5sum] = "e5d32dd03b742e6101fde917dcba837d"
 SRC_URI[sha256sum] = "2997b825996beabc25d2428d37d680f56e4fa971500eabd2033a6fc13cf5765e"
 
-LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
+LIC_FILES_CHKSUM = "file://${UNPACKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
 MACHINE_KERNEL_PR = "r4"
 
@@ -42,7 +42,7 @@ SRC_URI += "https://source.mynonpublic.com/ax/linux-${PV}-${ARCH}.tar.gz \
     file://fix-build-with-binutils-2.41.patch \
     "
 
-S = "${WORKDIR}/linux-${PV}"
+S = "${UNPACKDIR}/linux-${PV}"
 B = "${WORKDIR}/build"
 
 export OS = "Linux"

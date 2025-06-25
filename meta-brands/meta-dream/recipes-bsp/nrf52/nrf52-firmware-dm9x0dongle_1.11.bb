@@ -4,4 +4,3 @@ include nrf52-firmware.inc
 
 COMPATIBLE_MACHINE = "^(dm900|dm920)$"
 
-

@@ -17,8 +17,7 @@ SRC_URI[sha256sum] = "fe8fbe9084cc82a517226f99f736ad874269478ce52c13e6988bbd2213
 
 SRC_URI = "https://source.mynonpublic.com/dags/bcmlinuxdvb_7252S-300mm-${KV}-${SRCDATE}.tar.gz"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 INHIBIT_PACKAGE_STRIP = "1"
 INHIBIT_PACKAGE_DEBUG_SPLIT = "1"

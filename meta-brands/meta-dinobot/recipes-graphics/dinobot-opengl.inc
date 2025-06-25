@@ -15,7 +15,7 @@ SRC_URI = "https://source.mynonpublic.com/dinobot/${SOC_FAMILY}-opengl-armhf-${S
  file://libm-2.27.so.zip \
 "
 
-S = "${WORKDIR}/usr"
+S = "${UNPACKDIR}/usr"
 
 SOLIBS = ".so"
 FILES_SOLIBSDEV = ""

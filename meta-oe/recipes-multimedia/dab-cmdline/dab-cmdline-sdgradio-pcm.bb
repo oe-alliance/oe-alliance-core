@@ -21,12 +21,12 @@ NEON = "-DNEON_AVAILABLE=ON"
 EXTRA_OECMAKE ?= "-DRTLSDR=ON -DCMAKE_INSTALL_PREFIX=/usr/bin"
 EXTRA_OECMAKE:arm = "-DRTLSDR=ON ${NEON} -DCMAKE_INSTALL_PREFIX=/usr/bin"
 
-S = "${WORKDIR}/git/sdgradio"
+S = "${UNPACKDIR}/${BP}/sdgradio"
 
 inherit cmake pkgconfig
 
 do_configure:prepend() {
-    sed -i -e 's:librtlsdr.so:librtlsdr.so.2:g' ${WORKDIR}/git/devices/rtlsdr-handler/rtlsdr-handler.cpp
+    sed -i -e 's:librtlsdr.so:librtlsdr.so.2:g' ${S}/../devices/rtlsdr-handler/rtlsdr-handler.cpp
 }
 
 do_install:append() {

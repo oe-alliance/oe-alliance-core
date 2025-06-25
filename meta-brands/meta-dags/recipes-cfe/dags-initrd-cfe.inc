@@ -22,7 +22,6 @@ do_deploy() {
 
 SRC_URI = "https://source.mynonpublic.com/dags/vmlinuz-initrd_${DOWNLOADNAME}_${SRCDATE}.tar.gz"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 addtask deploy before do_package after do_install

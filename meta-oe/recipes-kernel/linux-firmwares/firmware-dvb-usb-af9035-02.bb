@@ -2,8 +2,7 @@ LICENSE = "CLOSED"
 require conf/license/license-close.inc
 SRC_URI = "file://dvb-usb-af9035-02.fw-30092013.tar.gz"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 PACKAGES = "${PN}"
 FILES:${PN} += "${nonarch_base_libdir}/firmware"

@@ -25,9 +25,6 @@ EXTRA_OECONF = " \
 ALLOW_EMPTY:${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-S = "${WORKDIR}/git"
-
-
 THIRDPARTY_PLUGINS = " \
     enigma2-plugin-extensions-ipchecker_004_all.ipk \
     enigma2-plugin-extensions-netspeedtest_2.1.5_all.ipk \

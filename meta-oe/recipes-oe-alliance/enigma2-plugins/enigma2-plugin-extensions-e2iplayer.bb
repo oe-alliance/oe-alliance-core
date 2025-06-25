@@ -8,8 +8,6 @@ require conf/python/python3-compileall.inc
 
 SRC_URI = "git://github.com/oe-mirrors/e2iplayer.git;protocol=http;branch=python3;protocol=https"
 
-S = "${WORKDIR}/git"
-
 inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "git"

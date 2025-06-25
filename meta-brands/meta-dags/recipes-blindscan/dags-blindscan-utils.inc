@@ -9,8 +9,7 @@ PR = "r0"
 
 SRC_URI = "https://source.mynonpublic.com/dags/dags_blindscan_${SOC_FAMILY}.tar.gz"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 PROVIDES += "virtual/blindscan-dvbs"
 RPROVIDES:dags-blindscan-utils-hisi3798mv200 += "virtual-blindscan-dvbs"

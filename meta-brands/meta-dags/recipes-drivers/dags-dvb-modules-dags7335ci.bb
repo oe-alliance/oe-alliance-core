@@ -16,8 +16,7 @@ SRC_URI = "https://source.mynonpublic.com/dags/bcmlinuxdvb_7335-${KV}-1ci-${SRCD
 SRC_URI[md5sum] = "c1768d784809cbe79aa48dfce3fdc894"
 SRC_URI[sha256sum] = "69a2faf3b2c77c707740fb2abc807f21bf2e62f9c80954f2080263b8c1f264d9"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 INHIBIT_PACKAGE_STRIP = "1"
 INHIBIT_PACKAGE_DEBUG_SPLIT = "1"

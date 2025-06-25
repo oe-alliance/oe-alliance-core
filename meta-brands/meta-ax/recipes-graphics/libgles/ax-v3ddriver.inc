@@ -12,8 +12,7 @@ PR = "r0"
 
 SRC_URI = "https://source.mynonpublic.com/ax/${MACHINE}-v3ddriver-${SRCDATE}.zip"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 do_configure() {
 }

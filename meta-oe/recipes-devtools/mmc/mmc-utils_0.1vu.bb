@@ -13,8 +13,6 @@ SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/cjb/mmc-utils.git;branc
            "
 UPSTREAM_CHECK_COMMITS = "1"
 
-S = "${WORKDIR}/git"
-
 CFLAGS:append:powerpc64 = " -D__SANE_USERSPACE_TYPES__"
 CFLAGS:append:mipsarchn64 = " -D__SANE_USERSPACE_TYPES__"
 CFLAGS:append:mipsarchn32 = " -D__SANE_USERSPACE_TYPES__"

@@ -34,8 +34,6 @@ SRC_URI = "git://github.com/vuplus-com/webkit-r95199-base.git;protocol=https;bra
 
 inherit autotools lib_package gtk-doc pkgconfig perlnative python3native
 
-S = "${WORKDIR}/git"
-
 EXTRA_OECONF = "\
 	--enable-debug=no \
 	--with-gtk=2.0 \

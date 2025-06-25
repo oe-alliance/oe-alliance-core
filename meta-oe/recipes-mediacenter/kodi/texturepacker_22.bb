@@ -8,7 +8,7 @@ SRC_URI = "git://github.com/xbmc/xbmc.git;protocol=https;branch=master"
 
 inherit cmake gettext python3-dir python3native
 
-S = "${WORKDIR}/git/tools/depends/native/TexturePacker/src"
+S = "${UNPACKDIR}/tools/depends/native/TexturePacker/src"
 
 DEPENDS = " \
     giflib \

@@ -17,8 +17,7 @@ SRC_URI[sha256sum] = "8ce7d977174d5c317211e3a42c911c3cc06a20a3a585fb695183b074d5
 RDEPENDS:${PN}  = "qtwebkit virtual-libgles2"
 RDEPENDS:${PN} += "gb-v3ddriver-${MACHINE_DRIVER}"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 PLUGINPATH = "${libdir}/enigma2/python/Plugins/Extensions/HbbTV"
 
@@ -33,7 +32,6 @@ do_install(){
     install -d ${D}${libdir}/mozilla/plugins
     install -m 0755 ${S}/libhbbtvbrowserplugin.so ${D}${libdir}/mozilla/plugins
 }
-
 
 pkg_postinst_ontarget:${PN}(){
 #!/bin/sh

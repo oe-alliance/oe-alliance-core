@@ -14,8 +14,7 @@ RPROVIDES:odin-blindscan-dvbs-utils-${MACHINE} += "virtual/blindscan-dvbs"
 
 SRC_URI = "https://source.mynonpublic.com/download/odin-blindscan-utils-${MACHINE}-${PV}-${SRC}.tar.gz"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 do_install() {
     install -d "${D}/${bindir}"

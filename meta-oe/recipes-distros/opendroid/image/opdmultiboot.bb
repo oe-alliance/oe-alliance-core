@@ -18,8 +18,6 @@ SRC_URI = "git://github.com/formiano/opdmultiboot.git;protocol=https;branch=mast
 
 inherit autotools-brokensep pkgconfig
 
-S = "${WORKDIR}/git"
-
 EXTRA_OEMAKE = " \
     'CFLAGS=${CFLAGS} \
     -I=${includedir}/freetype2 \

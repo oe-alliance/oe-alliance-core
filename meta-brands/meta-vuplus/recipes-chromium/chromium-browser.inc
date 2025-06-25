@@ -17,7 +17,7 @@ PREFERRED_VERSION_nss = "3.17.3"
 DEPENDS = "nss" 
 RDEPENDS:${PN} = "libcrypto-compat-1.0.0 nspr nss libxslt libcurl libudev"
 
-S = "${WORKDIR}/chromium"
+S = "${UNPACKDIR}/chromium"
 
 do_install() {
 	install -d ${D}/usr/local/chromium

@@ -11,8 +11,6 @@ SRCREV = "${AUTOREV}"
 
 SRC_URI = "git://github.com/athoik/unjffs2.git;protocol=https;branch=master"
 
-S = "${WORKDIR}/git"
-
 do_compile() {
 	oe_runmake
 }

@@ -26,12 +26,9 @@ RPROVIDES:enigma2-plugin-skins-metrix-atv-uhd-icons += "enigma2-plugin-skins-met
 RPROVIDES:enigma2-plugin-skins-metrix-atv-weather-icons += "enigma2-plugin-skins-metrix-atv-weather-icons"
 SRC_URI = "${METRIX_URI}"
 
-S = "${WORKDIR}/git"
-
 FILES:enigma2-plugin-skins-metrix-atv-fhd-icons = "/usr/share/enigma2/MetrixHD/FHD"
 FILES:enigma2-plugin-skins-metrix-atv-uhd-icons = "/usr/share/enigma2/MetrixHD/UHD"
 FILES:enigma2-plugin-skins-metrix-atv-weather-icons = "/usr/share/enigma2/MetrixHD/animated_weather_icons"
-
 
 FILES:${PN} = "${libdir} /usr/share"
 

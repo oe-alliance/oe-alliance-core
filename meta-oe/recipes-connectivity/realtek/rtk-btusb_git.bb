@@ -7,8 +7,6 @@ inherit module
 SRCREV = "${AUTOREV}"
 SRC_URI = "git://github.com/atvcaptain/LINUX_BT_USB_DRIVER.git;protocol=https;branch=main"
 
-S = "${WORKDIR}/git"
-
 EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR} KDIR=${STAGING_KERNEL_DIR}"
 
 require kcflags.inc

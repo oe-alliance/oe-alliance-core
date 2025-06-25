@@ -17,7 +17,7 @@ SRC_URI = "http://www.openssl.org/source/openssl-${PV}.tar.gz \
 		   file://multilib.patch \
           "
 
-S = "${WORKDIR}/openssl-${PV}"
+S = "${UNPACKDIR}/openssl-${PV}"
 
 #AR_append = " r"
 CFLAG = "${@oe.utils.conditional('SITEINFO_ENDIANNESS', 'le', '-DL_ENDIAN', '-DB_ENDIAN', d)} \
@@ -155,7 +155,6 @@ do_install () {
 	rm -f ${D}${base_libdir}/*.so ${D}${libdir}/*.so
 	rm -rf ${D}${libdir}/engines
 }
-
 
 LIC_FILES_CHKSUM = "file://LICENSE;md5=f9a8f968107345e0b75aa8c2ecaa7ec8"
 

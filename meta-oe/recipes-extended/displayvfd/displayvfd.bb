@@ -14,8 +14,6 @@ PV = "1.0+git"
 
 SRC_URI = "git://github.com/oe-alliance/displayvfd.git;protocol=https;branch=main"
 
-S = "${WORKDIR}/git"
-
 CXXFLAGS += "-I${STAGING_INCDIR}"
 LDFLAGS += "-lpng"
 

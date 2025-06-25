@@ -16,8 +16,6 @@ PR = "r1"
 
 SRC_URI = "git://github.com/kiddac/XStreamity.git;branch=master;protocol=https"
 
-S = "${WORKDIR}/git"
-
 FILES:${PN} = " ${libdir}/enigma2/python/Components/Converter/* \
                 ${libdir}/enigma2/python/Components/Renderer/* \
                 ${libdir}/enigma2/python/Plugins/Extensions/XStreamity/*"

@@ -10,8 +10,7 @@ DEPENDS = "libdrm mesa patchelf-native"
 
 SRC_URI = "https://source.mynonpublic.com/abcom/${HICHIPSET}-mali-${SRCDATE}.zip"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 do_configure() {
 }

@@ -21,9 +21,6 @@ PV = "1.30+git"
 PKGV = "1.30+git${GITPKGV}"
 PR = "r3"
 
-S = "${WORKDIR}/git"
-UNPACKDIR = "${WORKDIR}/sources-unpack"
-
 RPROVIDES:${PN} += "enigma2-plugin-softcams-oscam-openvix-emu"
 RREPLACES:${PN} += "enigma2-plugin-softcams-oscam-openvix-emu"
 RCONFLICTS:${PN} += "enigma2-plugin-softcams-oscam-openvix-emu"

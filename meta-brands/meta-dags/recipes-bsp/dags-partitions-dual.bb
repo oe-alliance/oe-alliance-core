@@ -10,8 +10,7 @@ inherit deploy
 SRCDATE = "20230911"
 PR = "${SRCDATE}"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 SRC_URI = "https://source.mynonpublic.com/dags/dags-partitions-${MACHINEBUILD}_${SRCDATE}.tar.gz \
  file://flash-updater \

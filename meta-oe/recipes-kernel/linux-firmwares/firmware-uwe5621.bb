@@ -5,8 +5,7 @@ inherit allarch
 
 SRC_URI = "file://uwe5621.zip"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 FILES:${PN} += "${nonarch_base_libdir}/firmware"
 

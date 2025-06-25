@@ -24,8 +24,7 @@ PR[vardepsexclude] = "DATE"
 
 PACKAGES = "${PN}"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 inherit python3-dir 
 

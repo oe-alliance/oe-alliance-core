@@ -8,8 +8,7 @@ PR = "r0"
 
 SRC_URI = "file://valis_enigma.ttf"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 FILES:${PN} = "/usr/*"
 

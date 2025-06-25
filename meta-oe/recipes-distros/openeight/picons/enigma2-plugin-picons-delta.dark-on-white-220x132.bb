@@ -15,8 +15,6 @@ PR = "r2"
 
 SRC_URI = "git://github.com/atom89/srp.220x132.dark-on-white-delta.git;protocol=https;branch=master"
 
-S = "${WORKDIR}/git"
-
 PACKAGES = "${PN}"
 
 FILES:${PN} = "/picon/*"

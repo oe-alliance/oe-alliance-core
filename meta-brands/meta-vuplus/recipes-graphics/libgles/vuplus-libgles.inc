@@ -15,7 +15,7 @@ DEPENDS = "patchelf-native"
 
 SRC_URI = "https://source.mynonpublic.com/vuplus/release/libgles/libgles-${MACHINE}-${PV}-${PR}.tar.gz"
 
-S = "${WORKDIR}/libgles-${MACHINE}"
+S = "${UNPACKDIR}/libgles-${MACHINE}"
 
 INSANE_SKIP:${PN} += "already-stripped dev-so ldflags"
 INHIBIT_PACKAGE_STRIP = "1"

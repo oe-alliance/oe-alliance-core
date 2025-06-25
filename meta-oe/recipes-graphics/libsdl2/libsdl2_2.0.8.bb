@@ -21,8 +21,7 @@ SRC_URI = " \
     file://add-missing-keysold.patch \
 "
 
-
-S = "${WORKDIR}/SDL2-${PV}"
+S = "${UNPACKDIR}/SDL2-${PV}"
 
 SRC_URI[md5sum] = "3800d705cef742c6a634f202c37f263f"
 SRC_URI[sha256sum] = "edc77c57308661d576e843344d8638e025a7818bff73f8fbfab09c3c5fd092ec"

@@ -9,15 +9,11 @@ SRC_URI = "git://github.com/atvcaptain/RTL8192FU.git;protocol=https;branch=main"
 
 SRCREV = "${AUTOREV}"
 
-S = "${WORKDIR}/git"
-
 inherit module
 
 EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR} KDIR=${STAGING_KERNEL_DIR} KSRC=${STAGING_KERNEL_DIR}"
 
 require kcflags.inc
-
-S = "${WORKDIR}/git"
 
 do_install() {
         install -d ${D}${nonarch_base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/net/wireless

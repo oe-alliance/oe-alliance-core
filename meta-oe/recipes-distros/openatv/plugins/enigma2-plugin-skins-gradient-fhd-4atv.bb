@@ -17,7 +17,7 @@ SRC_URI = "git://github.com/stein17/Skins-for-openATV.git;protocol=https;branch=
 
 FILES:${PN} = "${libdir} /usr/share"
 
-S = "${WORKDIR}/git/GradientFHD"
+S = "${UNPACKDIR}/${BP}/GradientFHD"
 
 do_install() {
     install -d ${D}${libdir}

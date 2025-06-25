@@ -14,7 +14,7 @@ SRC_URI = " \
     file://${INITSCRIPT_NAME}.sysvinit \
 "
 
-S = "${WORKDIR}/platform-util-${MACHINE}"
+S = "${UNPACKDIR}/platform-util-${MACHINE}"
 
 do_install() {
     install -d ${D}${bindir}

@@ -26,8 +26,7 @@ fi
 EOF
 }
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 inherit update-rc.d
 INITSCRIPT_NAME = "ethwol"

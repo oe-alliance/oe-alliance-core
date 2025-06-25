@@ -9,8 +9,7 @@ PV = "0.1"
 SRC_URI = "file://blackbox7405_mac_check \
 	file://blackbox7405-mac-check.sh \
 "
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 inherit pkgconfig update-rc.d
 

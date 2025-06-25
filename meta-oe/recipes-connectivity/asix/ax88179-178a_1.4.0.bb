@@ -3,7 +3,6 @@ HOMEPAGE = "http://www.asix.com.tw/"
 SECTION = "kernel/modules"
 LICENSE = "GPL-2.0-only"
 
-
 inherit module
 
 LIC_FILES_CHKSUM = "file://readme;endline=19;md5=f87a675da5e11ab9def922704bdda58b"
@@ -31,7 +30,7 @@ SRC_URI:append:dm500hdv2 = " \
 SRC_URI:append:dm800sev2 = " \
             file://dreambox.patch \
             "
-S = "${WORKDIR}/AX88179_178A_LINUX_DRIVER_v1.4.1_SOURCE"
+S = "${UNPACKDIR}/AX88179_178A_LINUX_DRIVER_v1.4.1_SOURCE"
 
 EXTRA_OEMAKE = "KDIR=${STAGING_KERNEL_DIR}"
 
@@ -46,7 +45,6 @@ do_install() {
     install -d ${D}${nonarch_base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/net
     install -m 0644 ${S}/*.ko ${D}${nonarch_base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/net
 }
-
 
 SRC_URI[md5sum] = "584c80be94c4d945cee30881c410b58d"
 SRC_URI[sha256sum] = "e084fbe1b4de7b4dd703a92e643642e876d2757e8936619f99864e9ad6ffb582"

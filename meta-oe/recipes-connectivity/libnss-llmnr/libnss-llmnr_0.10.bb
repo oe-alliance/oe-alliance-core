@@ -13,14 +13,11 @@ PKGV = "git${GITPKGV}"
 
 SRC_URI = "git://github.com/jmaggard10/nss-llmnr.git;protocol=https;branch=master"
 
-S = "${WORKDIR}/git"
-
 EXTRA_OECONF = "--libdir=${base_libdir} --disable-lynx"
 
 # suppress warning, but don't bother with autonamer
 LEAD_SONAME = "libnss_llmnr.so"
 DEBIANNAME:${PN} = "libnss-llmnr"
-
 
 do_configure:prepend() {
 	sed -e 's/SUBDIRS=src doc/SUBDIRS\=src/' -i ${S}/Makefile.am

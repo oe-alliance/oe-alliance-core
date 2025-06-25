@@ -15,10 +15,6 @@ SRCREV = "${AUTOREV}"
 
 SRC_URI = "git://github.com/DimitarCC/iptv-m3u-reader.git;protocol=https;branch=main"
 
-
-
-S = "${WORKDIR}/git"
-
 pluginpath = "/usr/lib/enigma2/python/Plugins/SystemPlugins/M3UIPTV"
 
 do_install:append() {

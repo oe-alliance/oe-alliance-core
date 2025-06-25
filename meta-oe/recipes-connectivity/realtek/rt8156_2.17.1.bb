@@ -14,8 +14,6 @@ EXTRA_OEMAKE = "KDIR=${STAGING_KERNEL_DIR}"
 
 require kcflags.inc
 
-S = "${WORKDIR}/git"
-
 do_compile () {
     unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS CC LD CPP
     oe_runmake -C "${STAGING_KERNEL_DIR}" M="${S}" modules

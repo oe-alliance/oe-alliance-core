@@ -14,7 +14,7 @@ SRCREV = ""
 SRC_URI[md5sum] = "33142378c8387a87190156be1cb1a254"
 SRC_URI[sha256sum] = "47799db9e2658906e532981ec8111a915426b8453762561029733f2406c3e297"
 
-LIC_FILES_CHKSUM = "file://${WORKDIR}/linux/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
+LIC_FILES_CHKSUM = "file://${UNPACKDIR}/linux/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
 MACHINE_KERNEL_PR = "r4"
 
@@ -80,7 +80,7 @@ export KCFLAGS = " -std=gnu17 \
 
 SRC_URI:append:vuultimo = " file://fixed_mtd.patch "
 
-S = "${WORKDIR}/linux"
+S = "${UNPACKDIR}/linux"
 B = "${WORKDIR}/build"
 
 export OS = "Linux"

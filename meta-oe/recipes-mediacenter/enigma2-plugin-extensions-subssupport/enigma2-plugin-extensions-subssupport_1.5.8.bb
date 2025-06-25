@@ -14,8 +14,6 @@ PKGV = "1.5.8+git${GITPKGV}"
 VER = "1.5.8"
 SRC_URI = "git://github.com/oe-mirrors/subssupport;protocol=https;branch=master"
 
-S = "${WORKDIR}/git"
-
 FILES:${PN} = "${libdir}/enigma2/python/Plugins/Extensions/SubsSupport \
 ${localstatedir}/lib/subssupport"
 

@@ -16,8 +16,6 @@ PV = "1.2+git"
 SRC_URI = "git://git.yoctoproject.org/matchbox-window-manager;branch=master \
            file://kbdconfig"
 
-S = "${WORKDIR}/git"
-
 inherit autotools pkgconfig
 
 FILES:${PN} = "${bindir}/* \

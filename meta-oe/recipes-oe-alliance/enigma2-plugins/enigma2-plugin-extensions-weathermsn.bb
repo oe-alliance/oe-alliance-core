@@ -16,8 +16,6 @@ SRC_URI = "git://github.com/oe-mirrors/enigma2-plugins.git;protocol=https;branch
 
 FILES:${PN} = "/usr/lib/enigma2/"
 
-S = "${WORKDIR}/git"
-
 do_install() {
 	install -d ${D}/usr/lib/enigma2/python/Plugins/Extensions
 	cp -r --preserve=mode,links ${S}/python/Plugins/Extensions/WeatherMSN ${D}/usr/lib/enigma2/python/Plugins/Extensions/

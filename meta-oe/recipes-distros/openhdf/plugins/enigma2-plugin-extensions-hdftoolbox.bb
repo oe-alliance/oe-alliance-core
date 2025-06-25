@@ -20,8 +20,6 @@ PR = "r3"
 
 SRC_URI = "git://github.com/openhdf/hdftoolbox.git;protocol=https;branch=master"
 
-S = "${WORKDIR}/git"
-
 FILES:${PN} = "${libdir}"
 
 do_install() {

@@ -14,7 +14,7 @@ inherit kernel machine_kernel_pr
 SRC_URI[md5sum] = "314b8c61217557f05ea2678313af8a9e"
 SRC_URI[sha256sum] = "b3131a4de50892127eecbeaf869ac5d31e8602473b9cd214c515050ea6825f6e"
 
-LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-brcmstb-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
+LIC_FILES_CHKSUM = "file://${UNPACKDIR}/linux-brcmstb-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
 MACHINE_KERNEL_PR = "r7"
 
@@ -38,7 +38,7 @@ SRC_URI += "https://source.mynonpublic.com/xcore/xcore-linux-${PV}-${SRC}.tar.gz
     file://fix-build-with-binutils-2.41.patch \
     "
 
-S = "${WORKDIR}/linux-brcmstb-${PV}"
+S = "${UNPACKDIR}/linux-brcmstb-${PV}"
 B = "${WORKDIR}/build"
 
 export OS = "Linux"

@@ -14,14 +14,11 @@ PKGV = "${IMAGE_VERSION}+git${GITPKGV}"
 VER = "${IMAGE_VERSION}"
 PR = "r1"
 
-
 RDEPENDS:${PN} = "python3-requests \
                   python3-lxml\
 "
 
 SRC_URI = "git://github.com/teamblue-e2/skin.git;protocol=https;branch=master"
-
-S = "${WORKDIR}/git"
 
 FILES:${PN} = "/usr/*"
 

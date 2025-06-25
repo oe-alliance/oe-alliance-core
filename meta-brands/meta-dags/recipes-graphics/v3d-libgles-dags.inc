@@ -13,7 +13,7 @@ DEPENDS = "patchelf-native"
 
 SRC_URI = "https://source.mynonpublic.com/dags/libgles-arm-${SRCDATE}.tar.gz"
 
-S = "${WORKDIR}/libgles"
+S = "${UNPACKDIR}/libgles"
 
 do_configure() {
 }

@@ -14,8 +14,6 @@ DEPENDS = "libdvbsi++"
 
 SRC_URI = "git://github.com/oe-alliance/dumpait-legacy.git;protocol=https;branch=master"
 
-
-S = "${WORKDIR}/git"
 DESTDIR = "enigma2/python/Plugins/Extensions/HbbTV"
 
 do_install() {

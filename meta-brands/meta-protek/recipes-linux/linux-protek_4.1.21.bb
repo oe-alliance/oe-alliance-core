@@ -13,7 +13,7 @@ SRCDATE = "20160407"
 SRC_URI[md5sum] = "e7ba35d427bfa40d78cd6e23db7872a2"
 SRC_URI[sha256sum] = "88f648e462e9d37c6ed9401b33ee1dd08495e9f66b9c653aefd9fd0a4f5afb26"
 
-LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
+LIC_FILES_CHKSUM = "file://${UNPACKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
 MACHINE_KERNEL_PR = "r3"
 
@@ -60,7 +60,7 @@ SRC_URI += "https://source.mynonpublic.com/protek/protek-linux-${PV}-${SRCDATE}.
     file://fix-build-with-binutils-2.41.patch \
 "
 
-S = "${WORKDIR}/linux-${PV}"
+S = "${UNPACKDIR}/linux-${PV}"
 B = "${WORKDIR}/build"
 
 export OS = "Linux"

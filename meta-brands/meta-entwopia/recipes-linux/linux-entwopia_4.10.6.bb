@@ -12,7 +12,7 @@ inherit kernel machine_kernel_pr
 SRC_URI[md5sum] = "cb28a0056279ad46af776fd5cdbcf88f"
 SRC_URI[sha256sum] = "a147b639445206ce85a56e155667ada38db1512e1c78fe9d4fd6d4be6f5a2e0e"
 
-LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}-base/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
+LIC_FILES_CHKSUM = "file://${UNPACKDIR}/linux-${PV}-base/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
 MACHINE_KERNEL_PR = "r4"
 
@@ -41,7 +41,7 @@ SRC_URI += "https://source.mynonpublic.com/entwopia/${MACHINE}/${MACHINE}-linux-
     file://fix-build-with-binutils-2.41.patch \
     "
 
-S = "${WORKDIR}/linux-${PV}-base"
+S = "${UNPACKDIR}/linux-${PV}-base"
 B = "${WORKDIR}/build"
 
 export OS = "Linux"

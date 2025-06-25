@@ -12,7 +12,7 @@ SRCDATE = "20140904"
 SRC_URI[md5sum] = "0cb37745787e0ff5070e14a7bbf3dc5c"
 SRC_URI[sha256sum] = "018d9792c6ba00400d7779568bc096cd1df2edb8d57501d3477c4734655c6e0f"
 
-LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
+LIC_FILES_CHKSUM = "file://${UNPACKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
 MACHINE_KERNEL_PR = "r5"
 
@@ -73,7 +73,7 @@ export KCFLAGS = " -std=gnu17 \
                    -Wno-error=maybe-uninitialized \           
 "
 
-S = "${WORKDIR}/linux-${KV}"
+S = "${UNPACKDIR}/linux-${KV}"
 B = "${WORKDIR}/build"
 
 export OS = "Linux"

@@ -231,9 +231,6 @@ sed -i "s/sigc++-2.0/sigc++-3.0/g" ${S}/configure.ac
 sed -i "s/sigc++-2.0/sigc++-3.0/g" ${S}/enigma2.pc.in 
 }
 
-
-S = "${WORKDIR}/git"
-
 FILES:${PN} += "${datadir}/keymaps ${datadir}/icons"
 FILES:${PN}-meta = "${datadir}/meta"
 PACKAGES += "${PN}-meta"

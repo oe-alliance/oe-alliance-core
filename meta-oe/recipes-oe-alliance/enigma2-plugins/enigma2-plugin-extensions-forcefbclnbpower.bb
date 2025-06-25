@@ -10,8 +10,6 @@ SRC_URI = "git://github.com/Dima73/ForceFbcLNBpower.git;branch=master;protocol=h
 
 require conf/python/python3-compileall.inc
 
-S = "${WORKDIR}/git"
-
 inherit gitpkgv setuptools3-openplugins
 
 PV = "1+git"

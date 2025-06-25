@@ -6,7 +6,6 @@ LIC_FILES_CHKSUM = "file://README.md;md5=7967f55fbefa3330942afef996a272db"
 
 inherit module
 
-
 MACHINE_KERNEL_PR:append = ".0"
 
 SRC_URI = "https://source.mynonpublic.com/rtl8723bu_v4.3.6.11_12942.20141204_BTCOEX20140507-4E40.zip \
@@ -14,8 +13,7 @@ SRC_URI = "https://source.mynonpublic.com/rtl8723bu_v4.3.6.11_12942.20141204_BTC
 "
 
 EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR} KDIR=${STAGING_KERNEL_DIR}"
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 do_compile () {
     unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS CC LD CPP
@@ -40,5 +38,4 @@ do_install() {
 
 SRC_URI[md5sum] = "dee476779b809962be52dc884a8947db"
 SRC_URI[sha256sum] = "8948749f706cb1937511a0b6af0d1d656e182146b66fc6758e5d522643dea630"
-
 

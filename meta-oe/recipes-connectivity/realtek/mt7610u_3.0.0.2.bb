@@ -4,7 +4,6 @@ SECTION = "kernel/modules"
 LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://iwpriv_usage.txt;md5=8876ae2c103446a442658f1cc2a01b76"
 
-
 inherit module
 
 SRC_URI = "file://mt7610u_wifi_sta_v3002_dpo_20130916.tar.bz2 \
@@ -18,7 +17,7 @@ SRC_URI = "file://mt7610u_wifi_sta_v3002_dpo_20130916.tar.bz2 \
 SRC_URI:append:dm900 = " file://fix_build_arm.patch"
 SRC_URI:append:dm920 = " file://fix_build_arm.patch"
 
-S = "${WORKDIR}/mt7610u_wifi_sta_v3002_dpo_20130916"
+S = "${UNPACKDIR}/mt7610u_wifi_sta_v3002_dpo_20130916"
 
 EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR}"
 

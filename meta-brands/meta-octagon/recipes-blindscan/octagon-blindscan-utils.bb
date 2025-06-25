@@ -18,8 +18,7 @@ SRC_URI = "https://source.mynonpublic.com/octagon/octagon-dvbc-blindscan-1.1.zip
 PV = "1.1"
 PR = "r1"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 FILES:octagon-blindscan-dvbc-utils = "${bindir}/tda1002x"
 

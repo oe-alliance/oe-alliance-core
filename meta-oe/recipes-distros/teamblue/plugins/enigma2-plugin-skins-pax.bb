@@ -16,8 +16,6 @@ PR = "r4"
 
 SRC_URI = "${@bb.utils.contains("DISTRO_TYPE", "release", "git://github.com/teamblue-e2/skin.git;protocol=https;branch=master", "git://github.com/teamblue-e2/skin.git;protocol=https;branch=DEV", d)}"
 
-S = "${WORKDIR}/git"
-
 FILES:${PN} = "/usr/*"
 
 do_install() {

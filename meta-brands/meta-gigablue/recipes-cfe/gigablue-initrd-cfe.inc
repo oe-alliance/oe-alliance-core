@@ -35,7 +35,6 @@ do_deploy() {
 
 SRC_URI = "https://source.mynonpublic.com/gigablue/initrd/initrd_${MACHINEBUILD}_${SRCDATE}.zip"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 addtask deploy before do_package after do_install

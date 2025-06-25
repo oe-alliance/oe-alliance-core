@@ -15,8 +15,6 @@ SRC_URI:openvix = "git://github.com/OpenViX/servicehisilicon.git;protocol=https;
 SRC_URI:openbh = "git://github.com/BlackHole/servicehisilicon.git;protocol=https;branch=sigc3"
 SRC_URI:teamblue = "git://github.com/BlackHole/servicehisilicon.git;protocol=https;branch=sigc3"
 
-S = "${WORKDIR}/git"
-
 inherit autotools gitpkgv python3native pkgconfig python3targetconfig
 
 PV = "git"

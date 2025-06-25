@@ -12,8 +12,6 @@ SRC_URI = "git://github.com/atvcaptain/dpf-ax.git;branch=dreamlayers;protocol=ht
         file://migrate-to-new-buffer-protocol.patch \
 "
 
-S = "${WORKDIR}/git"
-
 inherit pkgconfig gitpkgv autotools-brokensep python3native
 
 SRCREV = "${AUTOREV}"

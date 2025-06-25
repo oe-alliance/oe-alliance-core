@@ -22,8 +22,6 @@ SRC_URI = "git://github.com/oe-mirrors/branding-module.git;protocol=https;branch
 #	file://openatv_mappings.patch \
 #"
 
-S = "${WORKDIR}/git"
-
 EXTRA_OECONF = " \
     BUILD_SYS=${BUILD_SYS} \
     HOST_SYS=${HOST_SYS} \

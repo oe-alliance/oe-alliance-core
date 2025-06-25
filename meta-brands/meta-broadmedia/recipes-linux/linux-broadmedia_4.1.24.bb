@@ -13,7 +13,7 @@ KERNEL_RELEASE = "4.1.24"
 SRC_URI[md5sum] = "7167a90b414af721440a3b6c607f86d5"
 SRC_URI[sha256sum] = "fec6155b017d8bfc705ff21deee85a21af1dff33282f8f0727536d864af4c6c8"
 
-LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
+LIC_FILES_CHKSUM = "file://${UNPACKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
 MACHINE_KERNEL_PR = "r4"
 
@@ -52,7 +52,7 @@ SRC_URI += "https://source.mynonpublic.com/broadmedia/broadmedia-linux-${PV}-${S
     file://fix-build-with-binutils-2.41.patch \
     "
 
-S = "${WORKDIR}/linux-${PV}"
+S = "${UNPACKDIR}/linux-${PV}"
 B = "${WORKDIR}/build"
 
 export OS = "Linux"

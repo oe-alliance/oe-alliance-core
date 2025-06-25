@@ -12,7 +12,6 @@ ALLOW_EMPTY:${PN} = "1"
 
 SRC_URI = "https://source.mynonpublic.com/octagon/vmlinuz-initrd-${MACHINE}-${SRCDATE}.zip"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 addtask deploy before do_package after do_install

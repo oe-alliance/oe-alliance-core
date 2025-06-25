@@ -11,7 +11,6 @@ PACKAGES = "${PN}"
 PV = "${IMAGE_VERSION}"
 PR = "r1"
 
-
 RRECOMMENDS:${PN} = " \
     enigma2-locale-meta \
     aio-grab \

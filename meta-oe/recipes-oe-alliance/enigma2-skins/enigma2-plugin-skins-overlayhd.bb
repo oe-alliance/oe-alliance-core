@@ -19,8 +19,6 @@ PKGV = "${GITPKGVTAG}"
 
 SRC_URI = "git://github.com/IanSav/OverlayHD.git;protocol=https;branch=master"
 
-S = "${WORKDIR}/git"
-
 FILES:${PN} = "${libdir} ${datadir}"
 
 do_compile() {

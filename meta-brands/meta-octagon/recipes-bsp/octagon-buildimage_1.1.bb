@@ -4,8 +4,7 @@ require conf/license/license-close.inc
 
 SRC_URI = "file://buildimage.zip"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 do_install () {
         install -d ${D}/${sbindir}

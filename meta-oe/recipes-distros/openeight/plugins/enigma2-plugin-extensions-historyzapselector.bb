@@ -3,7 +3,6 @@ HOMEPAGE = "https://github.com/Dima73/enigma2-plugin-extensions-historyzapselect
 LICENSE = "PD"
 LIC_FILES_CHKSUM = "file://README;md5=b5f3c7ed409cbcc6d849e694f25729ba"
 SRC_URI = "git://github.com/Dima73/enigma2-plugin-extensions-historyzapselector.git;branch=master;protocol=https"
-S = "${WORKDIR}/git"
 require conf/python/python3-compileall.inc
 
 inherit gitpkgv

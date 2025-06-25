@@ -13,8 +13,7 @@ SRC_URI  = "file://Vendor_0508_Product_0110.kl \
             file://Vendor_0525_Product_0001.kl \
 "
 
-S = "${WORKDIR}sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}sources"
 
 do_install() {
     install -d ${D}${sysconfdir}/keymap
@@ -26,5 +25,4 @@ do_package_qa() {
 }
 
 FILES:${PN}  = "${sysconfdir}"
-
 

@@ -11,8 +11,6 @@ GSTVERSION = "1.0"
 
 SRC_URI = "git://github.com/christophecvr/gstreamer1.0-plugin-multibox-dvbmediasink;branch=openatv-dev;protocol=https"
 
-S = "${WORKDIR}/git"
-
 inherit gitpkgv
 
 PV = "${GSTVERSION}+git"

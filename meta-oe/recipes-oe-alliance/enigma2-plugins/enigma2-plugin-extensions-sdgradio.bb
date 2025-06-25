@@ -10,8 +10,6 @@ require conf/python/python3-compileall.inc
 
 SRC_URI = "git://github.com/oe-mirrors/SDGRadio.git;branch=master;protocol=https"
 
-S = "${WORKDIR}/git"
-
 inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "1+git"

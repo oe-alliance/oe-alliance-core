@@ -6,8 +6,6 @@ SRC_URI = "git://github.com/edision-open/linux-firmware.git;branch=master;protoc
 
 SRCREV = "824e8de5b7a048eaf49221f7ba788dbb79123715"
 
-S = "${WORKDIR}/git"
-
 inherit allarch
 
 do_install() {

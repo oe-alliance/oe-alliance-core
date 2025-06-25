@@ -18,8 +18,6 @@ SRC_URI = "git://github.com/MusicPlayerDaemon/MPD;branch=master;protocol=https \
            file://mpd.init \
           "
 
-S = "${WORKDIR}/git"
-
 inherit meson pkgconfig update-rc.d upx-compress
 
 INITSCRIPT_NAME = "mpd"

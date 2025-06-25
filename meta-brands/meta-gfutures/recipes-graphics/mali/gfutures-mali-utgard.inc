@@ -11,8 +11,7 @@ DEPENDS = "libdrm mesa patchelf-native"
 
 SRC_URI = "https://source.mynonpublic.com/gfutures/gfutures-mali${MALIVER}-3798mv200-${SRCDATE}.zip"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 do_configure() {
 }

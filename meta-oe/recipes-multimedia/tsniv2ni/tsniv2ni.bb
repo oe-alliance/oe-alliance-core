@@ -11,8 +11,6 @@ SRC_URI = "git://github.com/satdreamgr/tsniv2ni.git;protocol=https;branch=master
 "
 SRCREV = "${AUTOREV}"
 
-S = "${WORKDIR}/git"
-
 inherit autotools-brokensep pkgconfig
 
 TARGET_CC_ARCH += "${LDFLAGS}"

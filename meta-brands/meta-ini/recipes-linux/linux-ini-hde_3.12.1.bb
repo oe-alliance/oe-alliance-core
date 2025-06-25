@@ -10,7 +10,7 @@ COMPATIBLE_MACHINE = "inihde"
 SRC_URI[md5sum] = "b1c8d624f2ee1f304e56cedc2c69112d"
 SRC_URI[sha256sum] = "badb5446dad5f9d4454b300677c760c388751867c7728fe9cc1a1b3098642ae8"
 
-LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
+LIC_FILES_CHKSUM = "file://${UNPACKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
 MACHINE_KERNEL_PR = "r2"
 
@@ -70,7 +70,7 @@ export KCFLAGS = " -std=gnu17 \
                    -Wno-error=maybe-uninitialized \           
 "
 
-S = "${WORKDIR}/linux-${PV}"
+S = "${UNPACKDIR}/linux-${PV}"
 B = "${WORKDIR}/build"
 
 export OS = "Linux"

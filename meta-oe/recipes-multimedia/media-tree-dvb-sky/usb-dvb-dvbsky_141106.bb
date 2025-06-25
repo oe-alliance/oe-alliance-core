@@ -24,7 +24,7 @@ SRC_URI:append:arm = " file://vu_backport.patch \
 
 PR = "r2"
 
-S = "${WORKDIR}/media_build-bst-14"
+S = "${UNPACKDIR}/media_build-bst-14"
 
 EXTRA_OEMAKE = "KDIR=${STAGING_KERNEL_DIR} SRCDIR=${STAGING_KERNEL_DIR} OUTDIR=${STAGING_KERNEL_BUILDDIR}"
 

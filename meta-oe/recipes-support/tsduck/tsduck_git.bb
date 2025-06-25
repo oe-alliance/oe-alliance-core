@@ -21,8 +21,6 @@ EXTRA_OEMAKE = "CXXFLAGS_EXTRA=-Wno-maybe-uninitialized \
 				MAIN_ARCH=${TUNE_PKGARCH} SYSROOT=${D} STRIP=/bin/true \
 				NOTEST=1 NOPCSC=1 NODTAPI=1 NOSRT=1 NODOC=1 NOVATEK=1 NOPCSTD=1"
 
-S = "${WORKDIR}/git"
-
 do_configure[noexec] = "1"
 
 do_install:append() {

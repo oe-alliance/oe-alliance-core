@@ -13,7 +13,7 @@ RPROVIDES:${PN} = "virtual-libgles1 virtual-libgles2 virtual-egl libEGL.so libGL
 
 SRC_URI = "https://source.mynonpublic.com/octagon/${SOC_FAMILY}-opengl-${SRCDATE}.tar.gz"
 
-S = "${WORKDIR}/usr"
+S = "${UNPACKDIR}/usr"
 
 do_configure() {
 }

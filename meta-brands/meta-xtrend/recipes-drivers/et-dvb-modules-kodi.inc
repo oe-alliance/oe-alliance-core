@@ -10,8 +10,7 @@ PR = "r2"
 
 SRC_URI = "https://source.mynonpublic.com/xtrend/${MACHINE_DRIVER}-drivers-kodi-${KV}-${GCCREV}-${SRCDATE}.zip"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 INHIBIT_PACKAGE_STRIP = "1"
 INHIBIT_PACKAGE_DEBUG_SPLIT = "1"

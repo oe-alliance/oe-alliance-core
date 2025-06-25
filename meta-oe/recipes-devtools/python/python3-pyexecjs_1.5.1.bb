@@ -9,7 +9,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=70f9df77ea55ba7d1f19e18f62cf5bb6"
 
 SRC_URI = "https://files.pythonhosted.org/packages/ba/8e/aedef81641c8dca6fd0fb7294de5bed9c45f3397d67fddf755c1042c2642/PyExecJS-${PV}.tar.gz"
 
-S = "${WORKDIR}/PyExecJS-${PV}"
+S = "${UNPACKDIR}/PyExecJS-${PV}"
 
 inherit setuptools3_legacy
 

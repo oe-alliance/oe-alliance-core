@@ -7,7 +7,7 @@ PV = "0.0+cvs${SRCDATE}"
 
 SRC_URI = "cvs://anonymous@dvbtools.cvs.sourceforge.net/cvsroot/dvbtools;module=dvbtune"
 
-S = "${WORKDIR}/dvbtune"
+S = "${UNPACKDIR}/dvbtune"
 
 CFLAGS += "\$(shell xml2-config --cflags)"
 LDFLAGS += "\$(shell xml2-config --libs)"

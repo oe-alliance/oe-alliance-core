@@ -12,8 +12,7 @@ inherit update-rc.d
 INITSCRIPT_NAME = "coldboot"
 INITSCRIPT_PARAMS = "start 30 0 ."
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 do_install() {
     install -d ${D}/etc/init.d ${D}/usr/bin

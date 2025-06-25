@@ -32,8 +32,6 @@ RDEPENDS:${PN}-meta = ""
 
 inherit autotools-brokensep
 
-S = "${WORKDIR}/git"
-
 python populate_packages:prepend () {
     if bb.data.expand('${REL_MINOR}', d) != "4":
         enigma2_skindir = bb.data.expand('${datadir}/enigma2', d)

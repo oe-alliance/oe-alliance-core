@@ -11,8 +11,7 @@ RDEPENDS:${PN} += "showiframe"
 PV = "${IMAGE_VERSION}"
 PR = "r1.2"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 INITSCRIPT_NAME = "bootlogo"
 INITSCRIPT_PARAMS = "start 06 S ."

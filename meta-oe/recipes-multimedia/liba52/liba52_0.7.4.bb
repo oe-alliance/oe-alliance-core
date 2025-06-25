@@ -18,7 +18,7 @@ SRC_URI[sha256sum] = "a21d724ab3b3933330194353687df82c475b5dfb997513eef4c25de6c8
 
 UPSTREAM_CHECK_URI = "http://liba52.sourceforge.net/downloads.html"
 
-S = "${WORKDIR}/a52dec-${PV}"
+S = "${UNPACKDIR}/a52dec-${PV}"
 
 EXTRA_OECONF = " --enable-shared "
 

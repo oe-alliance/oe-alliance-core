@@ -14,8 +14,7 @@ RPROVIDES:${PN} += "virtual-blindscan-dvbc"
 PV = "1.6"
 PR = "r2"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 do_install() {
 	install -d "${D}/${bindir}"

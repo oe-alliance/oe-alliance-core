@@ -15,8 +15,6 @@ PKGV = "1.0+git${GITPKGV}"
 
 SRC_URI = "git://github.com/oe-mirrors/PlanerFS.git;protocol=https;branch=main"
 
-S = "${WORKDIR}/git"
-
 # Just a quick hack to "compile" it
 do_compile() {
     cd ${S}

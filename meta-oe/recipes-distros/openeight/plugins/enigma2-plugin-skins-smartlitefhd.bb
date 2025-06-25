@@ -16,8 +16,6 @@ PR = "r2"
 
 SRC_URI = "git://github.com/Openeight/SmartLiteFHD.git;protocol=https;branch=master"
 
-S = "${WORKDIR}/git"
-
 FILES:${PN} = "/usr"
 
 do_package_qa[noexec] = "1"

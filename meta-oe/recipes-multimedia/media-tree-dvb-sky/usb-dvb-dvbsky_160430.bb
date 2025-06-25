@@ -7,7 +7,6 @@ do_configure[depends] += "virtual/kernel:do_shared_workdir"
 SRC_URI[md5sum] = "66990bd8b8aa3759d764552a7ccac013"
 SRC_URI[sha256sum] = "b3c612d792834d14c981c400022ec923c154e10161121cf730a09b4ed4e35b04"
 
-
 SRC_URI = "http://dvbsky.net/download/linux/media_build-bst-160430.tar.gz \
            file://vu_kernel_4.1.20.patch \
            file://defconfig \
@@ -16,7 +15,7 @@ SRC_URI = "http://dvbsky.net/download/linux/media_build-bst-160430.tar.gz \
 
 PR = "r0"
 
-S = "${WORKDIR}/media_build-bst-160430"
+S = "${UNPACKDIR}/media_build-bst-160430"
 
 EXTRA_OEMAKE = "KDIR=${STAGING_KERNEL_DIR} SRCDIR=${STAGING_KERNEL_DIR} OUTDIR=${STAGING_KERNEL_BUILDDIR}"
 

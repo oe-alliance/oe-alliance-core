@@ -16,8 +16,7 @@ SRC_URI[sha256sum] = "242028aa90ace81b62d50ca115801c5d276d8aba6291eb7544831aabaa
 
 SRC_URI = "https://source.mynonpublic.com/ini/ini-800-drivers-${KV}-${SRCDATE}.zip"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 INHIBIT_PACKAGE_STRIP = "1"
 INHIBIT_PACKAGE_DEBUG_SPLIT = "1"

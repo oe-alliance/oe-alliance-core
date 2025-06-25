@@ -59,7 +59,7 @@ export KCFLAGS = " -std=gnu17 \
                    -Wno-error=maybe-uninitialized \           
 "
 
-S = "${WORKDIR}/linux"
+S = "${UNPACKDIR}/linux"
 B = "${WORKDIR}/build"
 
 export OS = "Linux"

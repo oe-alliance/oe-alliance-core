@@ -12,8 +12,7 @@ PR = "r2"
 
 SRC_URI = "https://source.mynonpublic.com/zgemma/${MACHINE}-v3ddriver-${SRCDATE}.zip"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 # The driver is a set of binary libraries to install
 # there's nothing to configure or compile

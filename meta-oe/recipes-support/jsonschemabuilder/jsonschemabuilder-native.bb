@@ -8,6 +8,4 @@ PV = "1.0"
 SRCREV = "ffb8504d08ec3d17560ba0d66ed935eb30b2cea0"
 SRC_URI = "git://github.com/mx3L/JsonSchemaBuilder;protocol=https;branch=master"
 
-S = "${WORKDIR}/git"
-
 inherit autotools native

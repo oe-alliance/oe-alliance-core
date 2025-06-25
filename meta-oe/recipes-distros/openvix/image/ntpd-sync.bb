@@ -10,8 +10,7 @@ PR = "r3"
 
 NTPD_SYNC_LOC := "${THISDIR}/${PN}"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 # 95 seems to be the earliest useful point for some Wifi systems
 #

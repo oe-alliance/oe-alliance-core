@@ -57,7 +57,6 @@ USBBOOT = "\
     ${@bb.utils.contains_any("MACHINE", "dm800se dm500hd", "", "enigma2-plugin-extensions-dflash", d)} \
 "
 
-
 GST_BASE_DVD = "\
     gstreamer1.0-plugins-bad-videoparsersbad \
     gstreamer1.0-plugins-bad-mpegtsmux \

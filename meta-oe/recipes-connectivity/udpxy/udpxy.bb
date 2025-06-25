@@ -16,7 +16,7 @@ inherit autotools-brokensep pkgconfig
 SRC_URI = "git://github.com/pcherenkov/udpxy.git;protocol=https;branch=master file://udpxy.sh"
 CFLAGS:append = " -Wno-format-truncation "
 
-S = "${WORKDIR}/git/chipmunk"
+S = "${UNPACKDIR}/chipmunk"
 
 FILES:${PN} = "${bindir}/* /etc/init.d/udpxy.sh"
 

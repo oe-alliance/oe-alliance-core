@@ -25,7 +25,6 @@ do_install:append() {
 do_package_qa() {
 }
 
-
 FILES:${PN} += " ${bindir} ${sysconfdir}/init.d"
 
 INSANE_SKIP:${PN} += "already-stripped ldflags dev-deps"

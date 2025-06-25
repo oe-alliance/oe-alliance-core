@@ -17,8 +17,6 @@ SRC_URI:openatv = "git://github.com/oe-mirrors/serviceapp.git;branch=sig3;protoc
 SRC_URI:teamblue = "git://github.com/teamblue-e2/serviceapp.git;branch=7.4;protocol=https"
 SRC_URI:opendroid = "git://github.com/opendroid-Team/serviceapp.git;branch=sig3;protocol=https"
 
-S = "${WORKDIR}/git"
-
 inherit autotools gitpkgv python3native pkgconfig gettext python3targetconfig
 
 CXXFLAGS += "${@bb.utils.contains_any("DISTRO_NAME", "openatv openvix openbh teamblue opendroid", "" , " -std=c++11", d)}"

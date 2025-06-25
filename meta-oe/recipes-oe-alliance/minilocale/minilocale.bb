@@ -11,7 +11,7 @@ require conf/license/license-gplv2.inc
 
 SRC_URI = "file://locales.tar.gz file://locale.alias file://c-utf-8.tar.gz file://locale.sh"
 
-S = "${WORKDIR}/usr/lib/locale"
+S = "${UNPACKDIR}/usr/lib/locale"
 
 LOCALEDIR = "${libdir}/locale"
 LOCALEDIR2 = "/usr/share/locale"

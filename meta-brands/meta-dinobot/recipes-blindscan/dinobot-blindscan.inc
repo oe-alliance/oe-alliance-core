@@ -11,8 +11,7 @@ PR = "r0"
 
 SRC_URI  = "https://source.mynonpublic.com/dinobot/dinobot-blindscan-${SRCDATE}-${MACHINE}.tar.gz"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 do_install() {
     install -d ${D}${bindir}

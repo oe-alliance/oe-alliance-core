@@ -15,8 +15,6 @@ SRC_URI = "git://github.com/oe-mirrors/cdparanoia.git;protocol=https;branch=mast
      file://paranoia_Makefile.in.patch \
      file://configure.in.patch"
 
-S = "${WORKDIR}/git"
-
 PARALLEL_MAKE = ""
 
 inherit autotools-brokensep pkgconfig gitpkgv

@@ -17,8 +17,6 @@ PR = "r0"
 
 SRC_URI = "git://github.com/openatv/enigma2-plugin-extensions-dflash.git;branch=python3;protocol=https"
 
-S = "${WORKDIR}/git"
-
 FILES:${PN} = "${libdir} /usr/sbin"
 
 do_install() {

@@ -13,13 +13,9 @@ PKGV = "7.6+git${GITPKGV}"
 VER = "7.6"
 PR = "r0"
 
-
 SRC_URI = "git://github.com/openatv/enigma2-plugin-extensions-cooltvguide.git;protocol=https;branch=master"
 
-S = "${WORKDIR}/git"
-
 FILES:${PN} = "${libdir}"
-
 
 do_install() {
     install -d ${D}${libdir}

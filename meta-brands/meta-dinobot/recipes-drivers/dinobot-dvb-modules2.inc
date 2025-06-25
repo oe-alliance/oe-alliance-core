@@ -12,7 +12,7 @@ SRC_URI = "https://source.mynonpublic.com/dinobot/${MACHINE}-drivers-${KV}-${SRC
     file://loadmodules.sh \
 "
 
-S = "${WORKDIR}/hiko"
+S = "${UNPACKDIR}/hiko"
 
 INITSCRIPT_NAME = "loadmodules"
 INITSCRIPT_PARAMS = "start 05 S ."

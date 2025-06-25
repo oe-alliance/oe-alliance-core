@@ -6,7 +6,6 @@ LIC_FILES_CHKSUM = "file://ifcfg-wlan0;md5=a84acae65af4b2d44d5035aa9f63cd85"
 
 inherit module
 
-
 MACHINE_KERNEL_PR:append = ".0"
 
 SRC_URI = "https://source.mynonpublic.com/rpi-rtl8188eu-20092013.tar.gz"
@@ -15,7 +14,7 @@ EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR} KDIR=${STAGING_KERNEL_DIR}"
 
 require kcflags.inc
 
-S = "${WORKDIR}/rpi-rtl8188eu"
+S = "${UNPACKDIR}/rpi-rtl8188eu"
 
 do_install() {
     install -d ${D}${nonarch_base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/net/wireless

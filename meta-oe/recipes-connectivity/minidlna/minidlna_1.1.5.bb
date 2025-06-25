@@ -8,7 +8,6 @@ DEPENDS = "libexif libjpeg-turbo libid3tag flac libvorbis sqlite3 ffmpeg util-li
 # NLS causes autoconfigure problems - we don't need the extra languages anyway, so disable nls
 EXTRA_OECONF:append = " --disable-nls "
 
-
 SRC_URI = "https://mirrors.omniosce.org/minidlna//minidlna-${PV}.tar.gz  \
 		file://0001_default_sqlite_caches.diff \
                 file://0002-fix-build-with-fno-common.patch \
@@ -20,7 +19,7 @@ SRC_URI = "https://mirrors.omniosce.org/minidlna//minidlna-${PV}.tar.gz  \
 SRC_URI[md5sum] = "1970e553a1eb8a3e7e302e2ce292cbc4"
 SRC_URI[sha256sum] = "8477ad0416bb2af5cd8da6dde6c07ffe1a413492b7fe40a362bc8587be15ab9b"
 
-S = "${WORKDIR}/${BPN}-${PV}"
+S = "${UNPACKDIR}/${BPN}-${PV}"
 
 inherit autotools-brokensep gettext update-rc.d
 

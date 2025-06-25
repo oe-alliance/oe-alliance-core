@@ -12,8 +12,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 URL = "http://www.openbh.net"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 PACKAGES = "${PN}"
 

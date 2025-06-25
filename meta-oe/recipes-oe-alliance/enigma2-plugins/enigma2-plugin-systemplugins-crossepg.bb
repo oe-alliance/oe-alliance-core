@@ -23,8 +23,6 @@ SRC_URI = "git://github.com/oe-alliance/e2openplugin-CrossEPG.git;protocol=https
 
 inherit python3-dir
 
-S = "${WORKDIR}/git"
-
 CFLAGS:prepend = "-std=gnu17"
 CFLAGS:append = " -I${STAGING_INCDIR}/libxml2/ -I${STAGING_INCDIR}/${PYTHON_DIR}/"
 CFLAGS:append = " ${@bb.utils.contains('BRAND_OEM', 'xtrend', ' -DNO_DVB_POLL' , '', d)}"

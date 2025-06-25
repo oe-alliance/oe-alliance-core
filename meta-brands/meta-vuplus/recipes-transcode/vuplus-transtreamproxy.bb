@@ -31,11 +31,9 @@ EXTRA_OECONF:dags7252 += " --enable-ext-pid "
 
 CXXFLAGS += "-std=gnu++11"
 
-S = "${WORKDIR}/git"
-
 do_install() {
     install -d ${D}/usr/bin
-    install -m 0755 ${S}/../build/src/transtreamproxy ${D}/usr/bin/transtreamproxy
+    install -m 0755 ${B}/src/transtreamproxy ${D}/usr/bin/transtreamproxy
 }
 
 pkg_prerm:${PN}() {

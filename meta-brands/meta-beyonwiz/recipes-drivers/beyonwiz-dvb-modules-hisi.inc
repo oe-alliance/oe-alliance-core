@@ -12,8 +12,7 @@ SRC_URI = "https://source.mynonpublic.com/beyonwiz/${MACHINE}-hiko-${SRCDATE}.zi
     file://modules \
 "
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 INHIBIT_PACKAGE_STRIP = "1"
 INHIBIT_PACKAGE_DEBUG_SPLIT = "1"

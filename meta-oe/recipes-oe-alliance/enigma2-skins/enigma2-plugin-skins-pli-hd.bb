@@ -14,8 +14,6 @@ SRC_URI = "git://github.com/littlesat/skin-PLiHD.git;protocol=https;branch=maste
 
 FILES:${PN} = "/usr/share/enigma2/"
 
-S = "${WORKDIR}/git"
-
 do_compile() {
 }
 

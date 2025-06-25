@@ -24,8 +24,6 @@ INSANE_SKIP:${PN} += "already-stripped ldflags"
 
 SRC_URI = "git://github.com/LraiZer/AutoBouquets.git;branch=${AUTOBOUQUETS_BRANCH};protocol=https"
 
-S = "${WORKDIR}/git"
-
 FILES:${PN} = "/usr/lib/enigma2/python/Plugins/Extensions/AutoBouquets"
 D_FILES_PN = "${D}${FILES:${PN}}"
 

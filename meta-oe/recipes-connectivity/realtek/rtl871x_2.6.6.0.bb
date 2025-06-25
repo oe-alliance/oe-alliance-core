@@ -4,9 +4,7 @@ SECTION = "kernel/modules"
 LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://../COPYING;md5=94d55d512a9ba36caa9b7df079bae19f"
 
-
 inherit module
-
 
 SRC_URI = "https://source.mynonpublic.com/rtl871x-01112013.tar.gz \
            file://rtl871x-gcc5.patch \
@@ -19,7 +17,7 @@ EXTRA_OEMAKE = "KERNDIR=${STAGING_KERNEL_DIR} KDIR=${STAGING_KERNEL_DIR}"
 
 require kcflags.inc
 
-S = "${WORKDIR}/rtl871x"
+S = "${UNPACKDIR}/rtl871x"
 
 do_compile () {
     unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS CC LD CPP

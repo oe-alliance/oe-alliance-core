@@ -20,8 +20,7 @@ SRC_URI[openspa.sha256sum] = "8d04837bc5f9b0366c4bd20c6fde9c0abee380d68d33033c01
 SRC_URI = "https://source.mynonpublic.com/dags/bcmlinuxdvb_73625-${KV}-${SRCDATE}.tar.gz"
 SRC_URI:openspa = "https://openspa.webhop.info/drivers/qviart/openspa_bcmlinuxdvb_73625-${KV}-${SRCDATE_openspa}.tar.gz;name=openspa"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 INHIBIT_PACKAGE_STRIP = "1"
 INHIBIT_PACKAGE_DEBUG_SPLIT = "1"

@@ -29,7 +29,7 @@ SRC_URI[yh7362.sha256sum] = "bf31e5b1c6e9295bdcd531b94a0f327f70b07bc901cd68dbc17
 SRC_URI[yh62tc.md5sum] = "23781bce0ab453e7c18092f1f6dd2e2b"
 SRC_URI[yh62tc.sha256sum] = "bf31e5b1c6e9295bdcd531b94a0f327f70b07bc901cd68dbc1730f04274a86d4"
 
-LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}-base/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
+LIC_FILES_CHKSUM = "file://${UNPACKDIR}/linux-${PV}-base/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
 RPROVIDES:${KERNEL_PACKAGE_NAME}-image += "kernel-${KERNEL_IMAGETYPE}"
 
@@ -82,7 +82,7 @@ export KCFLAGS = " -std=gnu17 \
                    -Wno-error=maybe-uninitialized \           
 "
 
-S = "${WORKDIR}/linux-${PV}-base"
+S = "${UNPACKDIR}/linux-${PV}-base"
 B = "${WORKDIR}/build"
 
 export OS = "Linux"

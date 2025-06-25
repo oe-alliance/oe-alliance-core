@@ -17,8 +17,6 @@ SRC_URI = "git://github.com/xbmc/kodi-platform.git;protocol=https;branch=master 
            file://kodi-platform-03_pkgconfig.patch \
           "
 
-S = "${WORKDIR}/git"
-
 inherit cmake pkgconfig
 
 OECMAKE_GENERATOR = "Unix Makefiles"

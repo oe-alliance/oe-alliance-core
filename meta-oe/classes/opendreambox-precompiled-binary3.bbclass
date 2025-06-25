@@ -6,7 +6,7 @@ PRECOMPILED_URI ?= "https://source.mynonpublic.com/dreambox/${@precompiledPath(d
 
 SRC_URI += "${PRECOMPILED_URI}"
 
-S = "${WORKDIR}/${PRECOMPILED_NAME}_${PRECOMPILED_VERSION}_${PRECOMPILED_ARCH}"
+S = "${UNPACKDIR}/${PRECOMPILED_NAME}_${PRECOMPILED_VERSION}_${PRECOMPILED_ARCH}"
 
 def precompiledPath(d):
     pn = d.getVar('PRECOMPILED_NAME', True)

@@ -19,8 +19,7 @@ SRC_URI = "file://tda1002x file://blackbox_blindscan"
 PV = "2.1"
 PR = "r6"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 FILES:blackbox-blindscan-dvbs-utils = "${bindir}/*_blindscan"
 FILES:blackbox-blindscan-dvbc-utils = "${bindir}/tda1002x"

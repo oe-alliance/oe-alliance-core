@@ -11,8 +11,7 @@ RDEPENDS:${PN} += "showiframe"
 PV = "1.0"
 PR = "r5"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 INITSCRIPT_NAME = "bootlogo"
 INITSCRIPT_PARAMS = "start 06 S ."
@@ -56,7 +55,6 @@ do_deploy() {
 }
 
 addtask deploy before do_package after do_install
-
 
 PACKAGE_ARCH := "${MACHINE_ARCH}"
 FILES:${PN} = "/boot /usr/share /etc/init.d"

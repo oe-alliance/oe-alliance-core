@@ -60,7 +60,7 @@ SRC_URI += "https://source.mynonpublic.com/vuplus/release/kernel/stblinux-4.1-${
 
 SRC_URI:append = "${@bb.utils.contains("MACHINE_FEATURES", "dvbproxy", " file://linux_dvb_adapter.patch;striplevel=1", "", d)}"
 
-S = "${WORKDIR}/linux"
+S = "${UNPACKDIR}/linux"
 B = "${WORKDIR}/build"
 
 export OS = "Linux"

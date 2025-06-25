@@ -19,8 +19,7 @@ SRC_URI = "file://wait1.png \
         file://wait8.png \
         "
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 do_install() {
     install -d ${D}${datadir}/enigma2/spinner

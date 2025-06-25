@@ -2,11 +2,9 @@ LICENSE = "CLOSED"
 require conf/license/license-close.inc
 SRC_URI = "file://rtk8822cbtusb.zip"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 PACKAGES = "${PN}"
-
 
 SUMMARY = "Firmware for rtk8822cbtusb"
 

@@ -15,8 +15,7 @@ SRC_URI[sha256sum] = "828cad036e93703099c38706bc61e0bfe2b64ed89b5fbf933d221dc3cd
 
 SRC_URI = "https://source.mynonpublic.com/ini/ini-840t4-drivers-${KV}-${SRCDATE}.zip"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 INHIBIT_PACKAGE_STRIP = "1"
 INHIBIT_PACKAGE_DEBUG_SPLIT = "1"

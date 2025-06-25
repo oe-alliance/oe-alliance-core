@@ -18,8 +18,6 @@ SRC_URI = "git://github.com/oe-alliance/openmultiboot.git;protocol=https;branch=
 
 inherit autotools-brokensep pkgconfig
 
-S = "${WORKDIR}/git"
-
 #temp workaround for dreambox add fake mtd2 for kernel
 MTD_KERNEL:dm500hd = "mtd2"
 MTD_KERNEL:dm500hdv2 = "mtd2"

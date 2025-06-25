@@ -2,7 +2,7 @@ require conf/license/license-close.inc
 
 SRC_URI += "https://source.mynonpublic.com/dreambox/${PN}_${PV}_${PACKAGE_ARCH}.tar.bz2;name=${PACKAGE_ARCH}"
 
-S = "${WORKDIR}/${PN}_${PV}_${PACKAGE_ARCH}"
+S = "${UNPACKDIR}/${PN}_${PV}_${PACKAGE_ARCH}"
 
 PACKAGES = "${PN}"
 

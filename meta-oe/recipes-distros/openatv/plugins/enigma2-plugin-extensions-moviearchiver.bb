@@ -14,8 +14,6 @@ PR = "r0"
 
 SRC_URI = "git://github.com/oe-mirrors/enigma2-plugin-extensions-moviearchiver.git;protocol=https;branch=master"
 
-S = "${WORKDIR}/git"
-
 PACKAGES =+ "${PN}-po"
 FILES:${PN} = "${libdir}"
 FILES:${PN}-src = "${libdir}/enigma2/python/Plugins/Extensions/MovieArchiver/*.py"

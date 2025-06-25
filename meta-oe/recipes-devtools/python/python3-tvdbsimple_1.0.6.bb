@@ -15,8 +15,6 @@ SRC_URI = "git://github.com/phate89/tvdbsimple.git;protocol=https;branch=master 
     file://0001-remove-version-check.patch \
 "
 
-S = "${WORKDIR}/git"
-
 inherit setuptools3
 
 include python3-package-split.inc

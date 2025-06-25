@@ -9,7 +9,7 @@ SRC_URI = "https://files.pythonhosted.org/packages/dc/bc/cf94114b9a01ab78d911a8e
 SRC_URI[md5sum] = "bb9b32785abb7ce4852892ae0e49637e"
 SRC_URI[sha256sum] = "05270ead06b80f3c1f879b9fe62cc39ab8da32d7e6eac28ed1c55fdae8969728"
 
-S = "${WORKDIR}/rbtranslations-${PV}"
+S = "${UNPACKDIR}/rbtranslations-${PV}"
 
 inherit setuptools3
 

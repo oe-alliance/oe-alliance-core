@@ -18,8 +18,6 @@ SRCREV = "${AUTOREV}"
 SRC_URI = "git://github.com/oe-mirrors/exteplayer3.git;branch=master;protocol=https \
             file://port-to-ffmpeg7.patch"
 
-S = "${WORKDIR}/git"
-
 SOURCE_FILES = "main/exteplayer.c"
 SOURCE_FILES =+ "container/container.c"
 SOURCE_FILES =+ "container/container_ffmpeg.c"

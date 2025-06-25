@@ -15,6 +15,4 @@ KODIADDONBRANCH = "Piers"
 
 SRC_URI = "git://github.com/xbmc/inputstream.rtmp.git;protocol=https;branch=${KODIADDONBRANCH}"
 
-S = "${WORKDIR}/git"
-
 KODIADDONNAME = "inputstream.rtmp"

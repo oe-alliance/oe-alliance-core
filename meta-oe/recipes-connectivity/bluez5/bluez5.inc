@@ -53,7 +53,7 @@ SRC_URI = "\
     file://0001-test-gatt-Fix-hung-issue.patch \
     file://fix-build-with-glibc-2.34.patch \
 "
-S = "${WORKDIR}/bluez-${PV}"
+S = "${UNPACKDIR}/bluez-${PV}"
 
 CVE_PRODUCT = "bluez"
 

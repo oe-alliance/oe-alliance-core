@@ -7,8 +7,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 PV = "1.0"
 PR = "r0"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 SRC_URI = "file://bootargs-mmc.bin \
    file://bootargs-nand.bin \

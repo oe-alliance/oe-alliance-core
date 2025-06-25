@@ -12,8 +12,6 @@ PR = "r0"
 
 SRC_URI = "git://github.com/sklnet/tuxterm-enigma2-plugin.git;protocol=https;branch=master"
 
-S = "${WORKDIR}/git"
-
 inherit gitpkgv autotools-brokensep
 
 FILES:${PN} = "/"

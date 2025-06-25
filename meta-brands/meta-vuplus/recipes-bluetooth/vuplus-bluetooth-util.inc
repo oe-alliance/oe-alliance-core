@@ -11,8 +11,7 @@ SRC_URI = " \
     https://source.mynonpublic.com/vuplus/release/bt/vuplus-bluetooth-util-${MACHINE}-${PR}.tar.gz \
 "
 
-S = "${WORKDIR}/sources-unpack"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 do_package_qa() {
 }

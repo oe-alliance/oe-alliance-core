@@ -31,7 +31,7 @@ SRC_URI = "https://source.mynonpublic.com/pyload-src-v${PV}.zip \
 SRC_URI[md5sum] = "28876150af22999b6f539c8579d3b415"
 SRC_URI[sha256sum] = "f937631d376216bc830d6ffcd5b4ecb1806afd4012a184849da1a333a7ba0016"
 
-S = "${WORKDIR}/pyload"
+S = "${UNPACKDIR}/pyload"
 
 FILES:${PN} = "/usr/pyload/* /etc/*"
 

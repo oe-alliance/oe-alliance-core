@@ -16,8 +16,6 @@ PKGV = "${GITPKGVTAG}"
 
 SRC_URI = "git://github.com/oe-alliance/OAWeather;protocol=https;branch=main"
 
-S = "${WORKDIR}/git"
-
 PACKAGES =+ "${PN}-po"
 
 FILES:${PN} += "${libdir}/enigma2/python/Components/*/*.pyc ${libdir}/enigma2/python/Plugins/Extensions/OAWeather/*.pyc \
@@ -28,7 +26,6 @@ FILES:${PN} += "${libdir}/enigma2/python/Components/*/*.pyc ${libdir}/enigma2/py
 FILES:${PN}-src += "${libdir}/enigma2/python/Components/*/*.py {libdir}/enigma2/python/Plugins/Extensions/OAWeather/*.py"
 #FILES:${PN}-po += "${libdir}/enigma2/python/Plugins/Extensions/OAWeather/locale/*.po ${libdir}/enigma2/python/Plugins/Extensions/OAWeather/locale/*.pot"
 
-
 do_compile() {
     # generate translation .mo files
 	mkdir -p ${S}/locale
@@ -38,7 +35,6 @@ do_compile() {
 		msgfmt -o ${S}/locale/${l%}/LC_MESSAGES/OAWeather.mo ${S}/po/$l.po
 	done
 }
-
 
 do_install() {
     install -d ${D}${libdir}/enigma2/python

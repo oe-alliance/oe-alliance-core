@@ -10,8 +10,7 @@ inherit deploy
 SRCDATE = "20210831"
 PR = "${SRCDATE}"
 
-S = "${WORKDIR}/sources-unpack"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 SRC_URI = "https://source.mynonpublic.com/octagon/${MACHINE}-partitions-${SRCDATE}.zip \
   file://flash-apploader \

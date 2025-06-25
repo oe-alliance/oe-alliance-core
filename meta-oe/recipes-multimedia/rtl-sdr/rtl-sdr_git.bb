@@ -14,8 +14,6 @@ PKGV = "2.0.1+git${GITPKGV}"
 
 SRC_URI = "git://gitea.osmocom.org/sdr/rtl-sdr;protocol=https;branch=master"
 
-S = "${WORKDIR}/git"
-
 EXTRA_OECMAKE += " -DDETACH_KERNEL_DRIVER=ON -DLIB_INSTALL_DIR=${libdir}"
 
 inherit cmake pkgconfig

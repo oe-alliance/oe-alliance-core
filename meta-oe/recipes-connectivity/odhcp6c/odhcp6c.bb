@@ -16,8 +16,6 @@ SRC_URI = "git://github.com/openwrt/odhcp6c.git;protocol=https;branch=master \
            file://odhcp6c-update \
           "
 
-S = "${WORKDIR}/git"
-
 inherit pkgconfig
 
 EXTRA_OEMAKE = " \

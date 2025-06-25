@@ -11,7 +11,7 @@ SRC_URI = "https://files.pythonhosted.org/packages/a6/3d/12044a9a927559b2fe09d60
 SRC_URI[md5sum] = "545068ac44efdf087ba39ee08b124a99"
 SRC_URI[sha256sum] = "7c5ef94554e0d6ee7de7cd0d42051526e716ce6c0357679ee0b82c49e189e2ef"
 
-S = "${WORKDIR}/cfscrape-${PV}"
+S = "${UNPACKDIR}/cfscrape-${PV}"
 
 inherit setuptools3
 

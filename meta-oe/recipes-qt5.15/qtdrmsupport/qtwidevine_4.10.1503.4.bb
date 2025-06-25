@@ -6,8 +6,7 @@ PACKAGE_ARCH := "${MACHINE_ARCH}"
 
 SRC_URI = "file://libwidevinecdm-${PV}_armhf.zip"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 do_install() {
 	install -d ${D}/usr

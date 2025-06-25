@@ -9,8 +9,7 @@ PR = "r0"
 
 SRC_URI = "file://multiboot-selector.sh"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 do_compile() {
 }

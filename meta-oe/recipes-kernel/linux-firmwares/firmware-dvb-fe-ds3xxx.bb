@@ -6,8 +6,7 @@ inherit allarch
 
 SRC_URI = "file://fw-ds3xxx.tar.gz"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 do_install() {
     install -d ${D}${nonarch_base_libdir}/firmware

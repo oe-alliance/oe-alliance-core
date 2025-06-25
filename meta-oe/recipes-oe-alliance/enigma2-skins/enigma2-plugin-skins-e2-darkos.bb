@@ -14,8 +14,6 @@ SRCREV = "${AUTOREV}"
 
 SRC_URI = "git://github.com/DimitarCC/E2-DarkOS-skin.git;protocol=https;branch=main"
 
-S = "${WORKDIR}/git"
-
 do_install() {
 	install -d ${D}${prefix}
 	cp -r ${S}${prefix}/* ${D}${prefix}/

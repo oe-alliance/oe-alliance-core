@@ -18,8 +18,7 @@ SRC_URI = "file://dags_blindscan"
 PV = "1.0"
 PR = "r0"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 FILES:dags-blindscan-dvbs-utils = "${bindir}/*_blindscan"
 

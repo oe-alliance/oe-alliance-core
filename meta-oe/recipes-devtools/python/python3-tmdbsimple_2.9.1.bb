@@ -8,7 +8,7 @@ SRC_URI = "https://files.pythonhosted.org/packages/a1/87/3309cb03df1c9f9895fccd8
 SRC_URI[md5sum] = "65ff24381fded5c5430f30022f367584"
 SRC_URI[sha256sum] = "636eaaaec82027929e8a91c2166e01f552ec63f869bf1fcd65aa561b705c7464"
 
-S = "${WORKDIR}/tmdbsimple-2.9.1"
+S = "${UNPACKDIR}/tmdbsimple-2.9.1"
 
 RDEPENDS:${PN} = "python3-requests"
 

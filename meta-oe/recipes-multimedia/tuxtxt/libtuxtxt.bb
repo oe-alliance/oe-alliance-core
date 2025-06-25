@@ -14,7 +14,7 @@ PKGV = "2.0+git${GITPKGV}"
 
 SRC_URI = "git://github.com/oe-alliance/tuxtxt.git;protocol=https;branch=master"
 
-S = "${WORKDIR}/git/libtuxtxt"
+S = "${UNPACKDIR}/${BP}/libtuxtxt"
 
 EXTRA_OECONF = "--with-boxtype=${MACHINE}"
 

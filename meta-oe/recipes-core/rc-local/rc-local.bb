@@ -7,8 +7,7 @@ SRC_URI = "file://rc.local.etc \
            file://rc-local.service \
            file://debian.conf"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 inherit update-rc.d
 

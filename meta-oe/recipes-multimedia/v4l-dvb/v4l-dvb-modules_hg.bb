@@ -50,6 +50,6 @@ SRC_URI = "hg://linuxtv.org/hg/;module=v4l-dvb;rev=${SRCREV} \
 "
 
 SRCREV = "6e0befab696a"
-S = "${WORKDIR}/v4l-dvb"
+S = "${UNPACKDIR}/v4l-dvb"
 
 require v4l-dvb-modules.inc

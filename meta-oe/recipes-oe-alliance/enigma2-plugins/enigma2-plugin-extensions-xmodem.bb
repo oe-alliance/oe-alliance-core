@@ -9,8 +9,6 @@ require conf/python/python3-compileall.inc
 
 DEPENDS += "python3-future-native"
 
-S = "${WORKDIR}/git"
-
 SRCREV = "${AUTOREV}"
 inherit gitpkgv python3native
 PV = "1+git"

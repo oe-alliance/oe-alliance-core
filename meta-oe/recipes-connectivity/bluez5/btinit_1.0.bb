@@ -12,8 +12,7 @@ PR = "r3"
 
 SRC_URI  = "file://${INITSCRIPT_NAME}"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 do_install() {
     install -d ${D}${sysconfdir}/init.d

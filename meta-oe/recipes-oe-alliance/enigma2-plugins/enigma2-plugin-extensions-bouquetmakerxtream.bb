@@ -16,8 +16,6 @@ inherit gittag allarch
 
 SRC_URI = "git://github.com/kiddac/Bouquet_Maker_Xtream.git;protocol=https;branch=master"
 
-S = "${WORKDIR}/git"
-
 FILES:${PN} = " ${libdir}/enigma2/python/Plugins/Extensions/BouquetMakerXtream \
                 ${libdir}/enigma2/python/Components/Renderer \
                 ${sysconfdir}/enigma2/bouquetmakerxtream \

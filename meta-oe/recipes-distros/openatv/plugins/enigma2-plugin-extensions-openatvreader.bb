@@ -14,8 +14,6 @@ PR = "r0"
 
 SRC_URI = "git://github.com/openatv/openatvreader.git;branch=master;protocol=https"
 
-S = "${WORKDIR}/git"
-
 PLUGIN = "${libdir}/enigma2/python/Plugins/Extensions/OpenATVreader"
 
 FILES:${PN} = "${PLUGIN}"

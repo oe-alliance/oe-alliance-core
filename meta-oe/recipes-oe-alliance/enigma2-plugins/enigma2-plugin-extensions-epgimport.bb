@@ -13,7 +13,7 @@ PR = "r0"
 
 SRC_URI = "git://github.com/oe-alliance/XMLTV-Import.git;protocol=https;branch=master"
 
-S = "${WORKDIR}/git/src"
+S = "${UNPACKDIR}/${BP}/src"
 
 inherit setuptools3-openplugins
 

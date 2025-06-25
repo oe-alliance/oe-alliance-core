@@ -13,8 +13,6 @@ PKGV = "${GITPKGVTAG}"
 
 SRC_URI = "git://github.com/kiddac/E2_Piconizer.git;protocol=https;branch=master"
 
-S = "${WORKDIR}/git"
-
 FILES:${PN} = "${sysconfdir} ${libdir}"
 
 do_install () {

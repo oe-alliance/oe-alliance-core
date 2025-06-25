@@ -9,7 +9,7 @@ SRC_URI = "https://source.mynonpublic.com/dreambox/${BPN}.${PV}-${SRCREV}.tar.xz
 SRC_URI[md5sum] = "6c4425868dd86785f1986ce7642685f1"
 SRC_URI[sha256sum] = "177af925bc2e7130e59dc56b0e6f13b992fee8ab57e7b221671e5cb2ec37e008"
 
-S = "${WORKDIR}/${BPN}.${PV}"
+S = "${UNPACKDIR}/${BPN}.${PV}"
 
 COMPATIBLE_MACHINE = "^(meson64)$"
 

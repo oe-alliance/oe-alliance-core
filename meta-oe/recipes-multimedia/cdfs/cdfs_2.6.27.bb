@@ -63,4 +63,3 @@ do_install() {
         oe_runmake -C "${STAGING_KERNEL_BUILDDIR}" M="${S}" DEPMOD=echo INSTALL_MOD_PATH="${D}" modules_install
 }
 
-

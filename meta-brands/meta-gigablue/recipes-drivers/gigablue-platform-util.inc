@@ -16,8 +16,7 @@ SRC_URI = " \
     file://${INITSCRIPT_NAME}.sysvinit \
 "
 
-S = "${WORKDIR}/sources-unpack"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 do_install() {
     install -d ${D}/home/root/platform

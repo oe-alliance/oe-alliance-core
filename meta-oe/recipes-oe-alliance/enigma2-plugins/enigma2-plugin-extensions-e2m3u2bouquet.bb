@@ -19,8 +19,6 @@ PR = "r1"
 
 SRC_URI = "git://github.com/oe-mirrors/e2m3u2bouquet-plugin.git;protocol=https;branch=master"
 
-S = "${WORKDIR}/git"
-
 PLUGINPATH = "${libdir}/enigma2/python/Plugins/Extensions/E2m3u2bouquet"
 FILES:${PN} = "${PLUGINPATH}"
 D_FILES_PN = "${D}${FILES:${PN}}"

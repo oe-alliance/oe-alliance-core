@@ -21,8 +21,6 @@ SRC_URI = "git://bitbucket.org/prl/icetv.git;protocol=https;branch=master \
 
 PACKAGES += "${PN}-meta"
 
-S = "${WORKDIR}/git"
-
 FILES:${PN} = "${libdir}/enigma2/python/Plugins/SystemPlugins/IceTV"
 FILES:${PN}-meta = "${datadir}/meta"
 

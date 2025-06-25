@@ -6,8 +6,7 @@ inherit allarch
 
 SRC_URI = "https://source.mynonpublic.com/gigablue/firmware-aic8800D80.zip"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 PR = "r0"
 
 PACKAGES = "${PN}"

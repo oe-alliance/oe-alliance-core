@@ -11,8 +11,7 @@ SRC_URI = " \
     file://update_systemconfig.sh \
 "
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 do_install() {
     install -d ${D}${sysconfdir}/init.d/

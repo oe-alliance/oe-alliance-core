@@ -22,7 +22,7 @@ PV = "4.4"
 PV:arm = "5.1"
 PR = "r11"
 
-S = "${WORKDIR}/blindscan-utils"
+S = "${UNPACKDIR}/blindscan-utils"
 
 FILES:vuplus-blindscan-dvbs-utils = "${bindir}/*_blindscan"
 FILES:vuplus-blindscan-dvbc-utils = "${bindir}/tda1002x ${bindir}/ssh108* ${bindir}/tt3l10* ${bindir}/tt2l08* ${bindir}/bcm3*"

@@ -8,8 +8,7 @@ require conf/license/license-gplv2.inc
 SRC_URI = "file://Ncam_Ci.sh file://StartBhCam file://Delete_all_Crashlogs.sh file://Ifconfig.sh \
 	file://openvpn.log file://Netstat.sh file://Uptime.sh file://bh_swap file://skin_plugins.xml"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 PR = "r21"
 
@@ -19,7 +18,6 @@ do_compile() {
 	echo "${MACHINE}" > ${S}/bhmachine
 	echo "${DISTRO_NAME} ${DISTRO_VERSION}" > ${S}/bhversion
 }
-
 
 do_install() {
 
@@ -34,12 +32,10 @@ do_install() {
 	install -d ${D}/usr/share/enigma2
 	install -m 0644 ${S}/skin_plugins.xml ${D}/usr/share/enigma2/skin_plugins.xml
 
-
 	install -d ${D}/usr/bin
 	for x in /StartBhCam; do
 		install -m 0755 ${S}/$x ${D}/usr/bin/$x
 	done
-
 
 	install -d ${D}/usr/camscript
 	install -m 0755 ${S}/Ncam_Ci.sh ${D}/usr/camscript/Ncam_Ci.sh

@@ -4,7 +4,6 @@ SECTION = "kernel/modules"
 LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://iwpriv_usage.txt;md5=8876ae2c103446a442658f1cc2a01b76"
 
-
 inherit module
 
 SRC_URI = "https://source.mynonpublic.com/ini/rt5572_2.6.1.4.tar.gz \
@@ -14,7 +13,7 @@ EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR} KDIR=${STAGING_KERNEL_DIR}"
 
 require kcflags.inc
 
-S = "${WORKDIR}/RT5572"
+S = "${UNPACKDIR}/RT5572"
 
 do_install() {
     install -d ${D}${nonarch_base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/net/wireless

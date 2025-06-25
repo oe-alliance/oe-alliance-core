@@ -11,8 +11,7 @@ PR = "r4"
 
 SRC_URI = "file://spinners/"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 do_install() {
     install -d ${D}${datadir}/enigma2/spinner

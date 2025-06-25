@@ -76,7 +76,7 @@ SRC_URI:append:vuultimo4k = " file://bcmsysport_3.14.28-1.12.patch file://linux_
 
 SRC_URI:append = "${@bb.utils.contains("MACHINE_FEATURES", "dvbproxy", " file://linux_dvb_adapter.patch;striplevel=1", "", d)}"
 
-S = "${WORKDIR}/linux"
+S = "${UNPACKDIR}/linux"
 B = "${WORKDIR}/build"
 
 export OS = "Linux"

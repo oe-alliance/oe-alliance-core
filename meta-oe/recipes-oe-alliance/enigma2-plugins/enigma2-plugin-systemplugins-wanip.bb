@@ -16,8 +16,6 @@ RDEPENDS:${PN} = "\
     python3-requests \
     "
 
-S = "${WORKDIR}/git"
-
 pluginpath = "/usr/lib/enigma2/python/Plugins/SystemPlugins/WanIP"
 
 do_install:append() {

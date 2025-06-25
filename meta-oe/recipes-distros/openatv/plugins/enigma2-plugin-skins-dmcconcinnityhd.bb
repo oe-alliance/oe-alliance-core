@@ -16,8 +16,6 @@ PR = "r0"
 
 SRC_URI = "git://github.com/openatv/enigma2-plugin-skins-dmcconcinnityhd.git;protocol=https;branch=master"
 
-S = "${WORKDIR}/git"
-
 FILES:${PN} = "${libdir} /usr/share"
 
 do_install() {

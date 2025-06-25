@@ -15,7 +15,6 @@ SRCREV = "${AUTOREV}"
 PV = "V1.6+git"
 PKGV = "V1.6+git${GITPKGV}"
 
-S = "${WORKDIR}/git"
 #BUILD = "${WORKDIR}/git"
 #UNPACKDIR = "${S}"
 

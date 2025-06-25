@@ -7,7 +7,6 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe"
 DEPENDS = "audiofile boost curl dbus expat faad2 flac icu libao libmikmod libogg libvorbis sqlite3 virtual/libiconv yajl zlib \
            ${@oe.utils.conditional('ENTERPRISE_DISTRO', '1', '', 'lame libid3tag libmad', d)}"
 
-
 inherit gitpkgv
 
 SRCREV = "9274bc15bc41bbe490fde847f8422468cc20375d"
@@ -18,8 +17,6 @@ SRC_URI = "git://github.com/MusicPlayerDaemon/MPD;branch=master;protocol=https \
         file://mpd_0.20.22.conf \
         file://mpd.init \
         "
-
-S = "${WORKDIR}/git"
 
 inherit autotools pkgconfig update-rc.d
 

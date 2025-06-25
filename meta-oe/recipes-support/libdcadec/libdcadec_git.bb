@@ -10,8 +10,6 @@ PKGV = "0.2+git${GITPKGV}"
 
 SRC_URI = "git://github.com/foo86/dcadec.git;protocol=https;branch=master"
 
-S = "${WORKDIR}/git"
-
 inherit lib_package
 
 EXTRA_OEMAKE = "CONFIG_SHARED=1"

@@ -22,8 +22,6 @@ SRC_URI = "git://github.com/formiano/GlamourAuraSky-skin.git;protocol=https;bran
 
 FILES:${PN} = "/usr"
 
-S = "${WORKDIR}/git"
-
 do_compile() {
 }
 

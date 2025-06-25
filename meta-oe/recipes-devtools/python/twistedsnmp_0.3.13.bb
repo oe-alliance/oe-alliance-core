@@ -12,7 +12,7 @@ SRCNAME = "TwistedSNMP"
 SRC_URI = "${SOURCEFORGE_MIRROR}/${BPN}/${SRCNAME}-${PV}.tar.gz \
             file://py3.patch"
 
-S = "${WORKDIR}/${SRCNAME}-${PV}"
+S = "${UNPACKDIR}/${SRCNAME}-${PV}"
 
 inherit setuptools3
 

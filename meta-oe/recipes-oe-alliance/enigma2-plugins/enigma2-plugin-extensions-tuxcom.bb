@@ -12,8 +12,6 @@ PR = "r0"
 SRC_URI = "git://github.com/oe-mirrors/tuxcom.git;protocol=https;branch=master \
     file://add_advanced_rc.diff"
 
-S = "${WORKDIR}/git"
-
 inherit autotools-brokensep pkgconfig
 
 CFLAGS += "-std=gnu17 -Wno-return-mismatch"

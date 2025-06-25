@@ -20,7 +20,7 @@ EXTRA_OECONF = "--disable-oggtest \
 
 inherit autotools pkgconfig
 
-S = "${WORKDIR}/streamripper-1.64.6"
+S = "${UNPACKDIR}/streamripper-1.64.6"
 
 CFLAGS += "-std=gnu17"
 

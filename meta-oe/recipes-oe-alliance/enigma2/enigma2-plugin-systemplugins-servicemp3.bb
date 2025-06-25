@@ -91,8 +91,6 @@ SRC_URI:teamblue = "git://github.com/openpli/servicemp3.git;protocol=https;branc
 SRCREV = "${AUTOREV}"
 SRCREV:openeight = "c7750c5ab393341f5a65094ceac90fbb6afd12e6"
 
-S = "${WORKDIR}/git"
-
 inherit autotools gitpkgv python3native pkgconfig python3targetconfig
 
 PV = "git"

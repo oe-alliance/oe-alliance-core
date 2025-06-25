@@ -11,6 +11,6 @@ SRC_URI = "https://files.pythonhosted.org/packages/5a/8d/27969852f4e664525c3d070
 SRC_URI[md5sum] = "cc282daf57f57061a9309f2567bff052"
 SRC_URI[sha256sum] = "dc9cd4b880b898d774c47fe9775167404af8a85dd889d58f9008035109acce49"
 
-S = "${WORKDIR}/iso-639-0.4.5"
+S = "${UNPACKDIR}/iso-639-0.4.5"
 
 inherit setuptools3

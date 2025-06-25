@@ -17,8 +17,6 @@ PKGV = "0.8+git${GITPKGV}"
 
 SRC_URI = "git://github.com/oe-mirrors/mediaplayer2.git;protocol=https;branch=master"
 
-S = "${WORKDIR}/git"
-
 python populate_packages:prepend() {
     e2_pdir = bb.data.expand('${libdir}/enigma2/python/Plugins', d)
     do_split_packages(d, e2_pdir, '^(\w+/\w+)/.*\/.*\.po$', 'enigma2-plugin-%s-po', '%s (translations)', recursive=True, match_path=True, prepend=True)

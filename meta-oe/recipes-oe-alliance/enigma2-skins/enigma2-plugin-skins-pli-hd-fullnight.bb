@@ -16,8 +16,6 @@ SRC_URI = "git://github.com/littlesat/PLi-HD-FullNight.git;protocol=https;branch
 
 FILES:${PN} = "/usr/share/enigma2/"
 
-S = "${WORKDIR}/git"
-
 do_compile() {
 }
 

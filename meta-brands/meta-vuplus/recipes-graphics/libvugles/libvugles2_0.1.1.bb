@@ -10,7 +10,6 @@ require libvugles2-${TARGET_ARCH}.inc
 
 INHIBIT_PACKAGE_STRIP = "1"
 INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
-S = "${WORKDIR}/${PN}-${PV}"
 
 inherit pkgconfig
 

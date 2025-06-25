@@ -11,7 +11,7 @@ RDEPENDS:${PN} = "libvupl libgles"
 
 SRC_URI = "https://source.mynonpublic.com/vuplus/release/support/${BPN}-${PV}.${PR}.tar.gz"
 
-S = "${WORKDIR}/${BPN}-${PV}"
+S = "${UNPACKDIR}/${BPN}-${PV}"
 
 EXTRA_OECMAKE += "-DVUPLUS=1"
 

@@ -13,11 +13,8 @@ SRC_URI = "git://github.com/oe-alliance/oe-alliance-tuxbox-common.git;protocol=h
 
 FILES:${PN} = "/"
 
-S = "${WORKDIR}/git"
-
 DVB-S_LISTS = "satellites.xml"
 DVB-T_LISTS = "terrestrial.xml cables.xml atsc.xml"
-
 
 do_install() {
     install -d ${D}/etc/tuxbox/

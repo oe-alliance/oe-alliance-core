@@ -14,7 +14,7 @@ PR = "r47_${SRC_DATE}"
 
 GSTVER = "1.4.5"
 
-S = "${WORKDIR}/opera-hbbtv"
+S = "${UNPACKDIR}/opera-hbbtv"
 
 INHIBIT_PACKAGE_STRIP = "1"
 INHIBIT_PACKAGE_DEBUG_SPLIT = "1"

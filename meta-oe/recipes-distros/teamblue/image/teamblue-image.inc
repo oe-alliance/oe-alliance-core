@@ -25,7 +25,6 @@ IMAGE_INSTALL = "teamblue-base"
 # Some additional comfort on the shell: Pre-install nano on boxes with 128 MB or more:
 IMAGE_INSTALL += "${@bb.utils.contains_any("FLASHSIZE", "64 96", "", "iproute2", d)}"
 
-
 # Prevent locales-archive creation to save some space
 IMAGE_LOCALES_ARCHIVE = ""
 

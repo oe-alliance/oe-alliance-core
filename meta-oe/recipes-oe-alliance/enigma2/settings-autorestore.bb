@@ -13,8 +13,7 @@ FILES_${PN} = " \
     ${base_bindir} \
 "
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 # Not inheriting from rc-update because the script commits suicide, which
 # confuses the pkg scripts.

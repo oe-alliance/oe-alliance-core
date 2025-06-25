@@ -12,8 +12,6 @@ RCONFLICTS:${PN} = "kernel-module-8812au kernel-module-8814au"
 SRCREV = "${AUTOREV}"
 SRC_URI = "git://github.com/atvcaptain/rtl8812au.git;protocol=https;branch=v5.6.4.2"
 
-S = "${WORKDIR}/git"
-
 EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR} KDIR=${STAGING_KERNEL_DIR}"
 
 do_compile () {

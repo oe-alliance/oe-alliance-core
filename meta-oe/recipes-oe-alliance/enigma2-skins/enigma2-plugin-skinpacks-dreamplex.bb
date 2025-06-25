@@ -29,8 +29,6 @@ FILES:${EPSM}-youplex-green = "/usr/lib/enigma2/python/Plugins/Extensions/DreamP
 FILES:${EPSM}-youplex-purple = "/usr/lib/enigma2/python/Plugins/Extensions/DreamPlex/skins/YouPlex-Purple"
 FILES:${EPSM}-plex-experience = "/usr/lib/enigma2/python/Plugins/Extensions/DreamPlex/skins/Plex_Experience"
 
-S = "${WORKDIR}/git"
-
 do_install() {
     install -d ${D}/usr/lib/enigma2/python/Plugins/Extensions/DreamPlex/skins/
     cp -rp ${S}/* ${D}/usr/lib/enigma2/python/Plugins/Extensions/DreamPlex/skins/

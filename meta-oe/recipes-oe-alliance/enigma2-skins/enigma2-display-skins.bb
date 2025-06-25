@@ -26,8 +26,6 @@ RDEPENDS:${PN}-meta = ""
 
 inherit autotools-brokensep
 
-S = "${WORKDIR}/git"
-
 EXTRA_OECONF += "\
     ${@bb.utils.contains("MACHINE_FEATURES", "textlcd", "--with-textlcd" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "colorlcd", "--with-colorlcd" , "", d)} \

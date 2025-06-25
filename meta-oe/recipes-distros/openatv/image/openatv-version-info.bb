@@ -4,7 +4,6 @@ PRIORITY = "required"
 LICENSE = "proprietary"
 MAINTAINER = "OpenATV"
 
-
 require conf/license/license-gplv2.inc
 
 deltask fetch
@@ -22,8 +21,7 @@ SSTATE_SKIP_CREATION = "1"
 
 URL = "http://www.opena.tv"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 PACKAGES = "${PN}"
 

@@ -29,7 +29,7 @@ SRC_URI = "https://source.mynonpublic.com/dags/linux-${KV}-${DATETIME}.tar.xz \
     file://fix-build-with-binutils-2.41.patch \
 "
 
-S = "${WORKDIR}/linux"
+S = "${UNPACKDIR}/linux"
 B = "${WORKDIR}/build"
 
 export OS = "Linux"

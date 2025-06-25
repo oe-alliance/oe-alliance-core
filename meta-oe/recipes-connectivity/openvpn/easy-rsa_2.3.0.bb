@@ -20,7 +20,7 @@ SRC_URI = "https://build.openvpn.net/downloads/releases/easy-rsa-${PV}_master.ta
 SRC_URI[md5sum] = "2c0e3263327d51d6f3b3ac337cec27c4"
 SRC_URI[sha256sum] = "35710bd7d884d8749af0432b26a95594cfb691f427fb672ec5c9a6eefaf01641"
 
-S = "${WORKDIR}/easy-rsa-${PV}_master"
+S = "${UNPACKDIR}/easy-rsa-${PV}_master"
 
 do_install() {
     install -d ${D}/${datadir}/easy-rsa

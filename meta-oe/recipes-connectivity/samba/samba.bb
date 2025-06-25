@@ -109,8 +109,6 @@ CONFIGUREOPTS = " --prefix=${prefix} \
                   ${PACKAGECONFIG_CONFARGS} \
                 "
 
-
-
 do_configure:prepend () {
     # un-bundle dnspython
     sed '/"dns.resolver":/d' ${S}/third_party/wscript

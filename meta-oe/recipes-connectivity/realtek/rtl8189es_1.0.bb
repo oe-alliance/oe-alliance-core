@@ -14,7 +14,7 @@ EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR} KDIR=${STAGING_KERNEL_DIR} KSRC=
 
 require kcflags.inc
 
-S = "${WORKDIR}/rtl8189ES_linux"
+S = "${UNPACKDIR}/rtl8189ES_linux"
 
 do_compile () {
     unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS CC LD CPP

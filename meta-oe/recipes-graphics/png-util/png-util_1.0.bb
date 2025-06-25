@@ -10,8 +10,7 @@ SRC_URI = "\
     file://png_util.i \
 "
 
-S = "${WORKDIR}/${P}"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}/${P}"
 
 inherit setuptools3-base python3-dir
 

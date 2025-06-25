@@ -5,7 +5,6 @@ PRIORITY = "optional"
 LICENSE = "libgsm"
 LIC_FILES_CHKSUM = "file://COPYRIGHT;md5=97e265fa1fd10a668bd99c4945fb9200"
 
-
 SRC_URI = "http://user.cs.tu-berlin.de/~jutta/gsm/gsm-${PV}.tar.gz \
     file://01_makefile.patch \
     file://02_cplusplus.patch \
@@ -14,7 +13,7 @@ SRC_URI = "http://user.cs.tu-berlin.de/~jutta/gsm/gsm-${PV}.tar.gz \
     file://05_compiler_warnings.patch \
     "
 
-S = "${WORKDIR}/gsm-1.0-pl12"
+S = "${UNPACKDIR}/gsm-1.0-pl12"
 
 CFLAGS += "-c -g -fPIC -Wall -D_GNU_SOURCE -D_REENTRANT -DNeedFunctionPrototypes=1 -DWAV49 -I./inc"
 

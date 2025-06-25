@@ -12,7 +12,7 @@ CFLAGS:append = " -Wall -I${S} -I${S}/lib -I${STAGING_INCDIR}/glib-2.0 -I${STAGI
 
 SRC_URI = "https://source.mynonpublic.com/bluez-hidd-1.4.zip"
 
-S = "${WORKDIR}/bluez-hidd"
+S = "${UNPACKDIR}/bluez-hidd"
 
 inherit pkgconfig
 

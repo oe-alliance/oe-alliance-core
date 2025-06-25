@@ -15,8 +15,6 @@ SRCREV = "${AUTOREV}"
 
 SRC_URI = "git://github.com/oe-mirrors/livestreamersrv;protocol=https;branch=master"
 
-S = "${WORKDIR}/git"
-
 do_install:append() {
     install -d ${D}${sbindir}
     install -d ${D}${datadir}

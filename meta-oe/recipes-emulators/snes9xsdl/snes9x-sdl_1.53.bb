@@ -16,7 +16,7 @@ PV = "1.53+git"
 PKGV = "1.53+git${GITPKGV}"
 VER = "1.53"
 
-S = "${WORKDIR}/git/sdl"
+S = "${UNPACKDIR}/sdl"
 
 DEPENDS = "libsdl"
 

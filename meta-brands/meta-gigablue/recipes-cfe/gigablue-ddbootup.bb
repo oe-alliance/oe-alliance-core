@@ -8,8 +8,7 @@ PACKAGE_ARCH = "${MACHINEBUILD}"
 PV = "1.0"
 PR = "r1"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 do_compile() {
 }

@@ -11,8 +11,7 @@ RDEPENDS:${PN} += "showiframe"
 PV = "${IMAGE_VERSION}"
 PR = "r22"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 INITSCRIPT_NAME = "bootlogo"
 INITSCRIPT_PARAMS = "start 06 S ."
@@ -57,7 +56,6 @@ SRC_URI:append:multibox = " file://logo.img"
 SRC_URI:append:gbmv200 = " file://logo.img"
 SRC_URI:append:beyonwizv2 = " file://logo.img"
 SRC_URI:append:viper4k = " file://logo.img"
-
 
 FILES:${PN} = "/usr/share /usr/share/enigma2 /etc/init.d"
 

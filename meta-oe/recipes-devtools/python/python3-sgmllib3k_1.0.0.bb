@@ -8,7 +8,7 @@ SRC_URI = "https://files.pythonhosted.org/packages/9e/bd/3704a8c3e0942d711c1299e
 SRC_URI[md5sum] = "d70efde06e40797f37e867123aa080ec"
 SRC_URI[sha256sum] = "7868fb1c8bfa764c1ac563d3cf369c381d1325d36124933a726f29fcdaa812e9"
 
-S = "${WORKDIR}/sgmllib3k-${PV}"
+S = "${UNPACKDIR}/sgmllib3k-${PV}"
 
 inherit setuptools3
 

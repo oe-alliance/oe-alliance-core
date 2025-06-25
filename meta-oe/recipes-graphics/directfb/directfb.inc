@@ -15,7 +15,7 @@ SRC_URI = "http://directfb.org/downloads/Core/DirectFB-1.4/DirectFB-${PV}.tar.gz
            file://directfb-1.2.x-fix-pkgconfig-cflags.patch \
            file://configurefix.patch"
 
-S = "${WORKDIR}/DirectFB-${PV}"
+S = "${UNPACKDIR}/DirectFB-${PV}"
 
 LDFLAGS:append = " -lts -lm"
 
@@ -41,8 +41,6 @@ EXTRA_OECONF = "\
 #}
 
 # NOTE: monolithic packaging for now, should improve that eventually
-
-
 
 FILES:${PN}-dbg += "\
   ${libdir}/directfb-${RV}/*/*/.debug/*.so \

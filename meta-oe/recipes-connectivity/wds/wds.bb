@@ -16,8 +16,6 @@ PR = "r1"
 SRC_URI = "git://github.com/01org/wds.git;protocol=https;branch=master"
 SRCREV = "${AUTOREV}"
 
-S = "${WORKDIR}/git"
-
 do_install:append() {
 	install -d ${D}${bindir}
 	install -m 0755 ${B}/desktop_source/desktop-source-test ${D}${bindir}

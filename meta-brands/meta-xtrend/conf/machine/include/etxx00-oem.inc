@@ -42,7 +42,6 @@ ${@bb.utils.contains('MACHINEBUILD', 'viper4k51', '504' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'beyonwizu4', '507' , '', d)}\
 "
 
-
 MTD_ROOTFS = "mmcblk0p4"
 MTD_KERNEL = "mmcblk0p3"
 KERNEL_FILE = "kernel.bin"

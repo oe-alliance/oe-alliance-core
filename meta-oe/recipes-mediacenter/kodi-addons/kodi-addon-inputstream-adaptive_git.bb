@@ -17,6 +17,4 @@ PV = "2.4.7+gitr"
 SRC_URI = "git://github.com/xbmc/inputstream.adaptive.git;protocol=https;branch=${KODIADDONBRANCH} \
           "
 
-S = "${WORKDIR}/git"
-
 KODIADDONNAME = "inputstream.adaptive"

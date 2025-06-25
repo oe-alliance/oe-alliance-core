@@ -18,7 +18,7 @@ SRC_URI = "http://libmpeg2.sourceforge.net/files/libmpeg2-${PV}.tar.gz \
            file://0001-Import-revision-1206-from-upstream-to-fix-PIE-build.patch \
            "
 
-S = "${WORKDIR}/libmpeg2-${PV}"
+S = "${UNPACKDIR}/libmpeg2-${PV}"
 
 SRC_URI[md5sum] = "0f92c7454e58379b4a5a378485bbd8ef"
 SRC_URI[sha256sum] = "dee22e893cb5fc2b2b6ebd60b88478ab8556cb3b93f9a0d7ce8f3b61851871d4"

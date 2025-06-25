@@ -18,8 +18,6 @@ SRC_URI = "git://github.com/gort818/qtwebflix.git;protocol=https;name=qtwebflix;
            file://0001-change-useragent.patch \
            "
 
-S = "${WORKDIR}/git"
-
 inherit qmake5 pkgconfig
 
 do_install() {

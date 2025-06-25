@@ -11,8 +11,6 @@ SRCREV = "${AUTOREV}"
 
 SRC_URI = "git://github.com/oe-mirrors/iptvplayer-bin-components.git;protocol=http;branch=master"
 
-S = "${WORKDIR}/git"
-
 do_compile() {
     cd ${S}/gstplayer/gst-1.0
     ${CC} *.c ../common/*.c -I../common/ `pkg-config --cflags --libs gstreamer-1.0 gstreamer-pbutils-1.0` -o gstplayer2 ${LDFLAGS}

@@ -9,7 +9,6 @@ RPROVIDES:${PN} += "kodi"
 RDEPENDS:${PN} += "amiko-libs-${MACHINE}"
 RDEPENDS:${PN} += "amiko-opengl-${MACHINE}"
 
-
 EXTRA_OECMAKE += " \
     -DWITH_PLATFORM=clap-cortexa15 \
     -DWITH_FFMPEG=stb \

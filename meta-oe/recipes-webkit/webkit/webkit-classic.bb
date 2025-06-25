@@ -26,8 +26,6 @@ SRC_URI = "git://github.com/oe-alliance/webkit.org.git;protocol=https;branch=mas
 
 inherit autotools lib_package gtk-doc pkgconfig perlnative python3native gitpkgv
 
-S = "${WORKDIR}/git"
-
 EXTRA_OECONF = "\
 	--enable-debug=no \
 	--with-gtk=2.0 \

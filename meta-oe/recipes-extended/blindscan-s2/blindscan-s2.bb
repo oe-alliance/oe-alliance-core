@@ -14,8 +14,6 @@ SRCREV = "2989816405c72af5beb5f354809566170a0755af"
 PV = "1+git"
 PKGV = "1+git${GITPKGV}"
 
-S = "${WORKDIR}/git"
-
 do_install () {
 	install -d ${D}/${bindir}
 	install -m 755 ${S}/blindscan-s2 ${D}/${bindir}

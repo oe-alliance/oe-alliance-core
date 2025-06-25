@@ -9,8 +9,7 @@ inherit deploy
 
 SRC_URI = "https://source.mynonpublic.com/gfutures/${MACHINE}-recovery-${SRCDATE}.zip"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 ALLOW_EMPTY:${PN} = "1"
 do_configure[nostamp] = "1"

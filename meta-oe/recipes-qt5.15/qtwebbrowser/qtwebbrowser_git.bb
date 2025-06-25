@@ -20,8 +20,6 @@ SRCREV = "93637d1b4f32a1f73613f70b29544f232059d600"
 SRC_URI = "git://code.qt.io/qt-apps/qtwebbrowser.git;protocol=git;branch=${BRANCH} \
 "
 
-S = "${WORKDIR}/git"
-
 inherit qmake5
 
 # Install qtwebbrowser under /usr/bin
@@ -31,7 +29,6 @@ install -d ${D}${datadir}/examples/webengine/webbrowser/src
 install -m 0755 src/qtwebbrowser ${D}${bindir}/qtwebbrowser
 cp -R --no-dereference --preserve=mode,links ${S}/* ${D}${datadir}/examples/webengine/webbrowser/.
 }
-
 
 FILES:${PN} += "${bindir}/qtwebbrowser"
 FILES:${PN}-examples += "${datadir}/examples/webengine/webbrowser/*"

@@ -17,8 +17,6 @@ PKGV = "${GITPKGVTAG}"
 
 SRC_URI = "git://github.com/ytdl-org/youtube-dl.git;protocol=https;branch=master"
 
-S = "${WORKDIR}/git"
-
 EXTRA_OEMAKE = "PYTHON=${PYTHON}"
 
 do_compile:prepend() {

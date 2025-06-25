@@ -14,6 +14,4 @@ PKGV = "0.11.1+git${GITPKGV}"
 SRC_URI = "git://github.com/oe-alliance-mirrors/${BPN}.git;protocol=https;branch=master \
         file://libgcrypt-gpg-error-use-pkgconfig.patch"
 
-S = "${WORKDIR}/git"
-
 inherit autotools-brokensep lib_package pkgconfig

@@ -6,8 +6,6 @@ require conf/license/license-close.inc
 SRCREV = "${AUTOREV}"
 SRC_URI = "git://github.com/atvcaptain/linux-firmware.git;protocol=https;branch=main"
 
-S = "${WORKDIR}/git"
-
 inherit allarch
 
 do_install() {

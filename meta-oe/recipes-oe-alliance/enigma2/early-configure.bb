@@ -7,8 +7,7 @@ require conf/license/license-gplv2.inc
 
 SRC_URI = "file://${BPN}.sh"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 do_install() {
     install -d ${D}/etc/rcS.d

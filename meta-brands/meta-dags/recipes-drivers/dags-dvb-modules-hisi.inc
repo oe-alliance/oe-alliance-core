@@ -11,7 +11,7 @@ PR = "r1"
 SRC_URI = "https://source.mynonpublic.com/dags/${MACHINEBUILD}-hiko-${SRCDATE}.tar.gz \
 	file://modules"
 
-S = "${WORKDIR}/lib/modules/${KV}/extra"
+S = "${UNPACKDIR}/lib/modules/${KV}/extra"
 
 INHIBIT_PACKAGE_STRIP = "1"
 INHIBIT_PACKAGE_DEBUG_SPLIT = "1"

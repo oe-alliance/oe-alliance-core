@@ -3,7 +3,6 @@ SECTION = "kernel"
 
 LICENSE = "CLOSED"
 
-
 PE = "1"
 
 SRC_URI = "file://ap6212-wifi-firmware.zip \
@@ -12,13 +11,12 @@ SRC_URI = "file://ap6212-wifi-firmware.zip \
            file://ap6212-default \
 "
 
-S = "${WORKDIR}/6212"
+S = "${UNPACKDIR}/6212"
 
 inherit allarch update-alternatives update-rc.d
 
 INITSCRIPT_NAME = "ap6212"
 INITSCRIPT_PARAMS = "defaults 10"
-
 
 do_compile() {
     :

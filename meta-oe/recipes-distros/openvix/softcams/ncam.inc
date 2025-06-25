@@ -11,9 +11,6 @@ EXTRA_OECMAKE += "\
 	-DHAVE_PCSC=0 \
 "
 
-S = "${WORKDIR}/git"
-UNPACKDIR = "${WORKDIR}/sources-unpack"
-
 require ncam-common.inc
 
 inherit gitpkgv

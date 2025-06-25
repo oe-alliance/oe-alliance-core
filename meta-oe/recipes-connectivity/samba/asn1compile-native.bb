@@ -1,6 +1,6 @@
 require samba-source.inc
 
-S = "${WORKDIR}/samba-${PV}"
+S = "${UNPACKDIR}/samba-${PV}"
 
 inherit pkgconfig cpan-base perlnative python3native native
 

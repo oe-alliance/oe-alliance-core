@@ -18,7 +18,7 @@ SRC_URI = "http://ftp.mozilla.org/pub/mozilla.org/js/js-1.8.0-rc1.tar.gz \
 SRC_URI[md5sum] = "eaad8815dcc66a717ddb87e9724d964e"
 SRC_URI[sha256sum] = "374398699ac3fd802d98d642486cf6b0edc082a119c9c9c499945a0bc73e3413"
 
-S = "${WORKDIR}/js/src"
+S = "${UNPACKDIR}/js/src"
 
 CFLAGS += "-std=gnu17"
 

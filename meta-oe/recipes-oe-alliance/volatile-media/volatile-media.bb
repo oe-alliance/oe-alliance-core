@@ -9,8 +9,7 @@ PR = "r0"
 
 SRC_URI = "file://volatile-media.sh"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 PACKAGES = "${PN}"
 

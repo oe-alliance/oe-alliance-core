@@ -6,8 +6,7 @@ PR = "r0"
 SRC_URI = " \
     file://ceryon-shutdown.sh "
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 INITSCRIPT_NAME = "ceryon-shutdown"
 INITSCRIPT_PARAMS = "start 31 0 ."

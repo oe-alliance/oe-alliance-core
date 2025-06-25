@@ -14,8 +14,6 @@ SRC_URI = "git://github.com/kornelski/pngquant.git;protocol=https;branch=main \
            file://readonly.patch \
 "
 
-S = "${WORKDIR}/git"
-
 inherit autotools-brokensep
 
 do_configure[noexec] = "1"

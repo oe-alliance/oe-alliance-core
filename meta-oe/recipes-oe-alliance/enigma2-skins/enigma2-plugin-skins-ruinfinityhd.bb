@@ -16,8 +16,6 @@ PR = "r0"
 
 SRC_URI = "git://github.com/openmips/ru_infinity_hd.git;protocol=https;branch=master"
 
-S = "${WORKDIR}/git"
-
 FILES:${PN} = "/usr/*"
 
 do_install() {

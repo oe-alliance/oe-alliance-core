@@ -12,8 +12,7 @@ inherit update-rc.d
 INITSCRIPT_NAME = "ethwol"
 INITSCRIPT_PARAMS = "stop 32 0 ."
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 do_install() {
     install -d ${D}/etc/init.d

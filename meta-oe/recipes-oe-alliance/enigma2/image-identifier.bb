@@ -13,8 +13,7 @@ PACKAGE_ARCH = "${MACHINEBUILD}"
 
 PACKAGES = "${PN}"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 do_compile() {
     mkdir -p ${S}/usr/lib/enigma2/python

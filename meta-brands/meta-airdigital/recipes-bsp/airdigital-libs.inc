@@ -9,8 +9,7 @@ PR = "${SRCDATE}.${REV}"
 
 SRC_URI = "https://source.mynonpublic.com/zgemma/zgemma-libs-${HICHIPSET}-${SRCDATE}.zip"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 INHIBIT_PACKAGE_STRIP = "1"
 INHIBIT_PACKAGE_DEBUG_SPLIT = "1"

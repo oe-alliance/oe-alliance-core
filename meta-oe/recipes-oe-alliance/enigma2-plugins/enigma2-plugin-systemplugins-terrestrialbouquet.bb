@@ -13,10 +13,6 @@ SRCREV = "${AUTOREV}"
 
 SRC_URI = "git://github.com/Huevos/TerrestrialBouquet.git;protocol=https;branch=master"
 
-
-
-S = "${WORKDIR}/git"
-
 pluginpath = "/usr/lib/enigma2/python/Plugins/SystemPlugins/TerrestrialBouquet"
 
 do_install:append() {

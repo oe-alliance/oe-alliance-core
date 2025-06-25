@@ -46,7 +46,6 @@ FILES:${PN}-src += " \
     ${libdir}/enigma2/python/*/*/*/*/*/*.py \
     "
 
-
 FILES:${PN}-test += " \
     ${PYTHON_SITEPACKAGES_DIR}/test \
     ${PYTHON_SITEPACKAGES_DIR}/tests \

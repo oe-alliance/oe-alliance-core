@@ -8,7 +8,7 @@ require conf/license/license-close.inc
 
 SRC_URI = "file://lctimelocales.tar.gz file://locale.alias file://SYS_LC_MESSAGES file://LC_CTYPE file://locale.sh"
 
-S = "${WORKDIR}/locales"
+S = "${UNPACKDIR}/locales"
 
 LOCALEDIR = "${libdir}/locale"
 LOCALEDIR2 = "/usr/share/locale"

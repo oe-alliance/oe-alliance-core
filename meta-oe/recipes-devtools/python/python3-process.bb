@@ -15,8 +15,7 @@ PKGV = "1.0"
 
 SRC_URI = "file://process.py"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 PACKAGES = "${PN} ${PN}-src"
 

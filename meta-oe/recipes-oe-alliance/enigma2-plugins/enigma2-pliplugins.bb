@@ -23,8 +23,6 @@ PR = "r0"
 
 SRC_URI = "git://github.com/oe-alliance/openpli-plugins.git;protocol=https;branch=master"
 
-S = "${WORKDIR}/git"
-
 inherit autotools-brokensep
 
 EXTRA_OECONF = "--with-boxtype=${MACHINE} \

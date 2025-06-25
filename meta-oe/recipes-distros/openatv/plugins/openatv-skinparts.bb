@@ -27,8 +27,6 @@ RDEPENDS:${PN}-meta = ""
 
 inherit autotools-brokensep
 
-S = "${WORKDIR}/git"
-
 python populate_packages:prepend () {
     enigma2_skinpartsdir = bb.data.expand('${datadir}/enigma2/skinparts', d)
     do_split_packages(d, enigma2_skinpartsdir, '(.*?)/.*', 'enigma2-plugin-skincomponents-%s', 'Enigma2 Skinpart: %s', recursive=True, match_path=True, prepend=True, extra_depends='')

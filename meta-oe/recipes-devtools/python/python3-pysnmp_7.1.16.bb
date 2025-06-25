@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://LICENSE.rst;md5=1e9586cd38e6fa7f15d53da03ebf70ec"
 
 RDEPENDS:${PN} = "python3-core"
 
-S = "${WORKDIR}/pysnmp-${PV}"
+S = "${UNPACKDIR}/pysnmp-${PV}"
 
 inherit pypi python_poetry_core
 

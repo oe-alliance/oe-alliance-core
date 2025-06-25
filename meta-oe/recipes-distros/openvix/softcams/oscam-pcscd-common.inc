@@ -4,8 +4,6 @@ require softcam.inc
 inherit cmake
 
 PV = "1.30+git"
-S = "${WORKDIR}/git"
-UNPACKDIR = "${WORKDIR}/sources"
 
 FILESEXTRAPATHS:prepend := "${THISDIR}/enigma2-plugin-softcams-oscam:"
 
@@ -24,7 +22,6 @@ PACKAGE_ARCH = "${TUNE_PKGARCH}"
 
 DEPENDS += "libusb openssl pcsc-lite"
 # RDEPENDS:enigma2-plugin-softcams-oscam-pcscd = "pcsc-lite"
-
 
 EXTRA_OECMAKE += "\
     -DOSCAM_SYSTEM_NAME=Tuxbox \

@@ -7,8 +7,7 @@ BBCLASSEXTEND = "native"
 SRC_URI = "file://pointercal \
            file://COPYING"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 do_install() {
 	# Only install file if it has a contents

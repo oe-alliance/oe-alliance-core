@@ -8,8 +8,7 @@ PV = "2"
 INITSCRIPT_NAME = "modload.sh"
 INITSCRIPT_PARAMS = "start 5 S ."
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 inherit update-rc.d
 

@@ -17,8 +17,7 @@ SRC_URI = "git://github.com/stein17/Skins-for-openOPD.git;protocol=https;branch=
 
 FILES:${PN} = "/"
 
-S = "${WORKDIR}/git/Steampunk"
-
+S = "${UNPACKDIR}/Steampunk"
 
 do_install() {
     install -d ${D}${libdir}
@@ -85,6 +84,5 @@ echo "                                                                          
 echo "Steampunk Skin by stein17 is now being removed from your receiver...      "
 echo "                                                                           "
 }
-
 
 do_package_qa[noexec] = "1"

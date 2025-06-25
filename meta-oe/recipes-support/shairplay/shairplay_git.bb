@@ -9,8 +9,6 @@ SRC_URI = "git://github.com/juhovh/shairplay.git;branch=master;protocol=https"
 
 SRCREV = "498bc5bcdd305e04721f94a04b9f26a7da72673f"
 
-S = "${WORKDIR}/git"
-
 do_install:append(){
     install -d ${D}/${includedir}/shairplay
     install -m 0644 ${S}/include/shairplay/*.h ${D}/${includedir}/shairplay/

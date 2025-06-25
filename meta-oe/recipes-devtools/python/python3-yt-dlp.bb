@@ -11,14 +11,11 @@ DEPENDS = "libxml2 bash-completion"
 
 inherit python3-dir python_hatchling gittag
 
-
 SRCREV = "${AUTOREV}"
 PV = "git"
 PKGV = "${GITPKGVTAG}"
 
 SRC_URI = "git://github.com/yt-dlp/yt-dlp;protocol=https;branch=master"
-
-S = "${WORKDIR}/git"
 
 EXTRA_OEMAKE = "PYTHON=${PYTHON}"
 

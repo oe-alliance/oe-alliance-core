@@ -13,7 +13,7 @@ PR = "r1"
 
 SRC_URI = "git://gitlab.com/samsamsam/iptvplayer-bin-components.git;protocol=https;branch=master"
 
-S = "${WORKDIR}/git/gst-ifdsrc/gst-ifdsrc"
+S = "${UNPACKDIR}/${BP}/gst-ifdsrc/gst-ifdsrc"
 
 inherit autotools pkgconfig
 

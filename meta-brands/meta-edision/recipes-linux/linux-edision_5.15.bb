@@ -12,7 +12,7 @@ inherit kernel machine_kernel_pr
 SRC_URI[md5sum] = "c0d2fc41c606b3bc3d13ef4551cdf593"
 SRC_URI[sha256sum] = "db0b1e2786161ebdd9e237e9d0376b08858b90d294ed9bf8ba32cf1f2d742037"
 
-LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-brcmstb-${PV}/COPYING;md5=6bc538ed5bd9a7fc9398086aedcd7e46"
+LIC_FILES_CHKSUM = "file://${UNPACKDIR}/linux-brcmstb-${PV}/COPYING;md5=6bc538ed5bd9a7fc9398086aedcd7e46"
 
 DEPENDS += "flex-native bison-native openssl-native coreutils-native"
 
@@ -24,7 +24,7 @@ SRC_URI += "https://source.mynonpublic.com/edision/linux-edision-${PV}.tar.gz \
     file://0001-ata-ahci-fix-enum-constants-for-gcc-13.patch \
     "
 
-S = "${WORKDIR}/linux-brcmstb-${PV}"
+S = "${UNPACKDIR}/linux-brcmstb-${PV}"
 B = "${WORKDIR}/build"
 
 export OS = "Linux"

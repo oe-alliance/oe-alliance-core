@@ -19,7 +19,7 @@ PR = "r1"
 
 SRC_URI = "git://github.com/s3n0/e2plugins;protocol=https;branch=master"
 
-S = "${WORKDIR}/git/ChocholousekPicons/src"
+S = "${UNPACKDIR}/${BP}/ChocholousekPicons/src"
 
 do_compile() {
     # generate translation .mo files

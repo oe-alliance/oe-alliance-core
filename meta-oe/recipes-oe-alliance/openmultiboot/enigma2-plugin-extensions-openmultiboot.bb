@@ -12,7 +12,6 @@ PR = "r4"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 SRC_URI = "git://github.com/oe-alliance/openmultibootmanager.git;protocol=https;branch=main"
-S = "${WORKDIR}/git"
 
 inherit autotools-brokensep
 

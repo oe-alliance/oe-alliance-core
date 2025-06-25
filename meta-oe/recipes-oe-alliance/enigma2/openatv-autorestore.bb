@@ -12,7 +12,8 @@ PV = "git"
 PKGV = "git${GITPKGV}"
 
 SRC_URI = "git://github.com/openatv/autorestore.git;protocol=https;branch=master"
-S = "${WORKDIR}/git/src"
+
+S = "${UNPACKDIR}/${BP}/src"
 
 RDEPENDS:${PN} += "bash"
 

@@ -17,8 +17,6 @@ SRC_URI = "git://github.com/openatv/iflat.git;protocol=https;branch=master"
 
 FILES:${PN} = "${libdir} /usr/share"
 
-S = "${WORKDIR}/git"
-
 do_install() {
     install -d ${D}${libdir}
     install -d ${D}/usr/share

@@ -17,8 +17,6 @@ PR = "r6"
 
 SRC_URI = "git://github.com/KravenHD/XionHDF.git;branch=python3;protocol=https"
 
-S = "${WORKDIR}/git"
-
 FILES:${PN} = "/usr/share ${libdir}"
 
 do_install() {
@@ -49,9 +47,6 @@ if [ -f /usr/${libdir}/enigma2/python/Plugins/Extensions/XionHDF/plugin.py ]; th
 		echo "                                                           "
 fi
 
-
-
-
 echo "                                                           "
 echo "         The Skin XionHDF is now being installed...        "
 echo "                                                           "
@@ -70,7 +65,6 @@ echo "             ...Skin successful installed.                "
 echo "                                                          "
 exit 0
 }
-
 
 pkg_postrm:${PN} () {
 #!/bin/sh

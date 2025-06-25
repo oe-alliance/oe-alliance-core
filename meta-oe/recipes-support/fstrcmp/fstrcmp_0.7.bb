@@ -10,7 +10,7 @@ SRC_URI = "http://fstrcmp.sourceforge.net/fstrcmp-${PV}.D001.tar.gz \
 SRC_URI[md5sum] = "9c440bbdfcad9fd22e38f2388715b0cc"
 SRC_URI[sha256sum] = "e4018e850f80700acee8da296e56e15b1eef711ab15157e542e7d7e1237c3476"
 
-S = "${WORKDIR}/${BPN}-${PV}.D001"
+S = "${UNPACKDIR}/${BPN}-${PV}.D001"
 
 inherit autotools-brokensep manpages
 

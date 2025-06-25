@@ -14,8 +14,6 @@ PKGV = "v1.3.4+git${GITPKGV}"
 
 SRC_URI = "gitsm://code.videolan.org/videolan/libbluray.git;protocol=https;branch=master"
 
-S = "${WORKDIR}/git"
-
 EXTRA_OECONF = " \
     --disable-bdjava-jar \
     --disable-doxygen-doc \

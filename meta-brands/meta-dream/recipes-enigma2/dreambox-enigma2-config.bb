@@ -13,8 +13,7 @@ SRC_URI = "file://skin_box.xml"
 PACKAGES = "${PN}"
 FILES:${PN} = "/usr/share/enigma2"
 inherit allarch
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 do_install() {
     install -d ${D}/usr/share/enigma2

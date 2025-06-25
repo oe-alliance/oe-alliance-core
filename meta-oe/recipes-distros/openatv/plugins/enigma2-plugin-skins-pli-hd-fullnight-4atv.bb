@@ -13,7 +13,7 @@ SRC_URI = "git://github.com/stein17/Skins-for-openATV.git;protocol=https;branch=
 
 FILES:${PN} = "/"
 
-S = "${WORKDIR}/git/PLi-HD-FullNight_stein17_Mod"
+S = "${UNPACKDIR}/${BP}/PLi-HD-FullNight_stein17_Mod"
 
 do_install() {
     install -d ${D}${libdir}

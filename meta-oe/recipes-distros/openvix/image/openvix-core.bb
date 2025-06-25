@@ -21,8 +21,6 @@ PR = "r8"
 
 SRC_URI = "git://github.com/OpenViX/vix-core.git;protocol=https;branch=master"
 
-S = "${WORKDIR}/git"
-
 EXTRA_OECONF = "\
     BUILD_SYS=${BUILD_SYS} \
     HOST_SYS=${HOST_SYS} \
@@ -39,5 +37,4 @@ FILES:enigma2-plugin-vix-core-src = "${libdir}/enigma2/python/Plugins/SystemPlug
 FILES:enigma2-plugin-vix-core-dbg = "${libdir}/enigma2/python/Plugins/SystemPlugins/ViX/*.debug"
 FILES:enigma2-plugin-vix-core-po = "${libdir}/enigma2/python/Plugins/SystemPlugins/ViX/locale/*.po"
 FILES:enigma2-plugin-vix-core-doc = "/usr/share/enigma2/README*"
-
 

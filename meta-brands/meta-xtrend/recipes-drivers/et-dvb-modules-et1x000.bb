@@ -16,8 +16,7 @@ SRC_URI[sha256sum] = "690e121c4fdbe2a0a7b259307518bf8adec28b534a472582493bea0326
 
 SRC_URI = "https://source.mynonpublic.com/xtrend/${MACHINE_DRIVER}-drivers-${KV}-${GCCREV}-${SRCDATE}.zip"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 INHIBIT_PACKAGE_STRIP = "1"
 

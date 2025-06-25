@@ -10,7 +10,7 @@ require conf/license/license-close.inc
 
 PR = "r0"
 
-S = "${WORKDIR}/dreambox-secondstage_${PV}_${MACHINE}"
+S = "${UNPACKDIR}/dreambox-secondstage_${PV}_${MACHINE}"
 
 SRC_URI[dm820.md5sum] = "597f55dbc5b87133d305690db41c0c8e"
 SRC_URI[dm820.sha256sum] = "26afa1d0922f95bedf3856b8ad7866453c2ffc1da2d2cee17b79f11fa077afe6"

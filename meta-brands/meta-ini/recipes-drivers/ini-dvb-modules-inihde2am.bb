@@ -16,8 +16,7 @@ SRC_URI[sha256sum] = "1877059e3c53d7d5c66e0578d0e4efdff4ace03ecd54cec319be09a00e
 
 SRC_URI = "https://source.mynonpublic.com/ini/ini-422-drivers-${KV}-${SRCDATE}.zip"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 INHIBIT_PACKAGE_STRIP = "1"
 INHIBIT_PACKAGE_DEBUG_SPLIT = "1"

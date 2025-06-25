@@ -15,8 +15,7 @@ PR = "r0"
 
 SRC_URI = "https://source.mynonpublic.com/dags/hisi3798mv200-libreader-${SRCDATE}.tar.gz"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 do_compile() {
 }

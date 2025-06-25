@@ -9,7 +9,7 @@ SRC_URI = "git://github.com/xbmc/xbmc.git;branch=master;protocol=https"
 
 inherit autotools-brokensep gettext native
 
-S = "${WORKDIR}/git/tools/depends/native/JsonSchemaBuilder/src"
+S = "${UNPACKDIR}/tools/depends/native/JsonSchemaBuilder/src"
 
 do_compile:prepend() {
     for i in $(find . -name "Makefile") ; do

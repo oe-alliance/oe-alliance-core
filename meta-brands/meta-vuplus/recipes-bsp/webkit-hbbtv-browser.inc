@@ -8,8 +8,7 @@ PV = "1.0"
 PR = "${SRCDATE}"
 SRC_URI = "https://source.mynonpublic.com/vuplus/release/support/webkit-hbbtv-browser_${MACHINE}_${SRCDATE}.tar.gz"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 RDEPENDS:${PN} = "webkit-gtk"
 

@@ -22,8 +22,6 @@ SRC_URI:openspa = "git://github.com/openspa/oe-alliance-e2-skindefault.git;proto
 SRC_URI:openvix = "git://github.com/OpenViX/oe-alliance-e2-skindefault.git;protocol=https;branch=scalable"
 SRC_URI:openbh = "git://github.com/BlackHole/oe-alliance-e2-skindefault.git;protocol=https;branch=scalable"
 
-S = "${WORKDIR}/git"
-
 DESCRIPTION:font-roboto-enigma = "Roboto enigma font"
 
 PACKAGES =+ " font-roboto-enigma"

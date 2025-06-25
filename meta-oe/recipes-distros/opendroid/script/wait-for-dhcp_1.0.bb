@@ -6,8 +6,7 @@ require conf/license/license-gplv2.inc
 SRC_URI = "file://wait_for_dhcp.sh \
            file://waitfordhcp"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 do_install() {
     install -d ${D}/usr/bin

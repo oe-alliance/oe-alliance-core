@@ -1,5 +1,3 @@
-S = "${WORKDIR}/git"
-
 inherit gitpkgv
 
 VERSION := "${PV}"

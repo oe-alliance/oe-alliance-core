@@ -3,14 +3,13 @@ DEPENDS = "directfb"
 SECTION = "libs"
 LICENSE = "GPL"
 
-
 SRC_URI = " \
     http://www.directfb.org/downloads/Extras/DirectFB-examples-${PV}.tar.gz \
 "
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=ecf6fd2b19915afc4da56043926ca18f"
 
-S = "${WORKDIR}/DirectFB-examples-${PV}"
+S = "${UNPACKDIR}/DirectFB-examples-${PV}"
 
 inherit autotools pkgconfig
 

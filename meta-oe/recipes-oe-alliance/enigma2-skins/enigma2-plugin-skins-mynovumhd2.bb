@@ -18,9 +18,6 @@ SRC_URI = "git://github.com/oe-alliance/oe-alliance-skins.git;protocol=https;bra
 
 FILES:${PN} = "/usr/share/enigma2/myNOVUM_HD2"
 
-
-S = "${WORKDIR}/git"
-
 do_install() {
    install -d ${D}/usr/share/enigma2
    cp -rp ${S}/Nashu/myNOVUM_HD2 ${D}/usr/share/enigma2/

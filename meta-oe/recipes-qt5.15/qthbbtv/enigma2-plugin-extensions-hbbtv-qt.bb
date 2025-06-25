@@ -18,7 +18,7 @@ QVERSION ?= "${@bb.utils.contains('MACHINE_FEATURES', 'hisil', '-v2', '', d)}"
 
 RDEPENDS:${PN}  = "qtwebkit"
 
-S = "${WORKDIR}/git/qthbbtv${QVERSION}"
+S = "${UNPACKDIR}/qthbbtv${QVERSION}"
 
 FILES:${PN} =  "${bindir} ${libdir}"
 

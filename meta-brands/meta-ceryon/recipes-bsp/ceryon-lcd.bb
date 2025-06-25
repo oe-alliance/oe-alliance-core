@@ -10,8 +10,7 @@ inherit deploy
 
 PR = "r3"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 SRC_URI = "file://lcdwaitkey220.bin \
            file://lcdwarning220.bin \

@@ -13,7 +13,7 @@ PR = "${SRCDATE}.${SRCDATE_PR}"
 
 SRC_URI = "https://source.mynonpublic.com/vuplus/release/libvupl/libvupl-${PV}-${MACHINE}-${PR}.tar.gz"
 
-S = "${WORKDIR}/libvupl-${PV}-${MACHINE}"
+S = "${UNPACKDIR}/libvupl-${PV}-${MACHINE}"
 
 inherit pkgconfig
 

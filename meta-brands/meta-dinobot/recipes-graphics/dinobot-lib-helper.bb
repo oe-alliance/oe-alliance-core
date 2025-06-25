@@ -3,8 +3,7 @@ require conf/license/license-gplv2.inc
 PV = "1.0"
 PR = "r3"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 do_install() {
     install -d ${D}${sysconfdir}/init.d

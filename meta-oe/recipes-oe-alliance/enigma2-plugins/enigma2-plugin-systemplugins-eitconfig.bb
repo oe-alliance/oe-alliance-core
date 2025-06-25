@@ -12,10 +12,6 @@ SRCREV = "${AUTOREV}"
 
 SRC_URI = "git://github.com/Huevos/EITConfig.git;protocol=https;branch=master"
 
-
-
-S = "${WORKDIR}/git"
-
 pluginpath = "/usr/lib/enigma2/python/Plugins/SystemPlugins/EITConfig"
 
 do_install:append() {

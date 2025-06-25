@@ -7,8 +7,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PR = "r1-${SRCDATE}"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 SRC_URI = "https://source.mynonpublic.com/dinobot/${SOC_FAMILY}-partitions-${SRCDATE}.zip \
   file://flash-apploader \

@@ -16,8 +16,6 @@ PR = "r4"
 
 SRC_URI = "git://github.com/opendroid-Team/vhannibal-autosettings.git;protocol=https;branch=master"
 
-S = "${WORKDIR}/git"
-
 FILES:${PN} = "${libdir}"
 
 do_install() {

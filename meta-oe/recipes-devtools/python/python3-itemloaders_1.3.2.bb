@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=786239b0f3b0d9c9403f6eecf35820dd"
 SRC_URI[md5sum] = "07e11fabfc7d85ff84d6e22abcb26eb5"
 SRC_URI[sha256sum] = "4faf5b3abe83bf014476e3fd9ccf66867282971d9f1d4e96d9a61b60c3786770"
 
-S = "${WORKDIR}/itemloaders-${PV}"
+S = "${UNPACKDIR}/itemloaders-${PV}"
 
 inherit pypi setuptools3
 

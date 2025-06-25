@@ -15,8 +15,6 @@ SRC_URI = "git://github.com/abdelgmartinezl/PythonDaap;protocol=https;branch=mas
            file://0001-The-member-ob_type-is-not-present-in-the-pcapobject-.patch \
 "
 
-S = "${WORKDIR}/git"
-
 inherit setuptools3_legacy
 
 include python3-package-split.inc

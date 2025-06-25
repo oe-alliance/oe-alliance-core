@@ -9,8 +9,7 @@ PR = "r2"
 
 SRC_URI = "file://createswap.sh"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 do_install() {
     install -d ${D}${sysconfdir}/init.d

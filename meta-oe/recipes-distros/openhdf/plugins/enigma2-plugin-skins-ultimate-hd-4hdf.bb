@@ -17,7 +17,7 @@ SRC_URI = "git://github.com/stein17/Skins-for-openHDF.git;protocol=https;branch=
 
 FILES:${PN} = "${libdir} ${datadir}"
 
-S = "${WORKDIR}/git/Ultimate-HD-Skin-4HDF"
+S = "${UNPACKDIR}/Ultimate-HD-Skin-4HDF"
 
 do_install() {
     install -d ${D}${libdir}

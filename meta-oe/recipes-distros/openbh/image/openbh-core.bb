@@ -21,8 +21,6 @@ PR = "r9"
 
 SRC_URI = "git://github.com/BlackHole/obh-core.git;protocol=https;branch=master"
 
-S = "${WORKDIR}/git"
-
 EXTRA_OECONF = "\
     BUILD_SYS=${BUILD_SYS} \
     HOST_SYS=${HOST_SYS} \

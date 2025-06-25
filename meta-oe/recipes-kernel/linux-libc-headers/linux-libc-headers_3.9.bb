@@ -1,6 +1,5 @@
 require recipes-kernel/linux-libc-headers/linux-libc-headers.inc
 
-
 SRC_URI += " \
         file://001-fix_kernel_build_xargs.patch \
 "

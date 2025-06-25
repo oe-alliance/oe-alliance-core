@@ -7,8 +7,7 @@ SRC_URI = " \
     file://turnoff_power \
     file://vuplus-shutdown.sh "
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 INITSCRIPT_NAME = "vuplus-shutdown"
 INITSCRIPT_PARAMS = "start 89 0 ."

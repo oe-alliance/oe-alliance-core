@@ -17,10 +17,7 @@ SRC_URI = "git://github.com/stein17/Skins-for-openATV.git;protocol=https;branch=
 
 FILES:${PN} = "/"
 
-
-
-S = "${WORKDIR}/git/Blue-Line-OE-4ATV"
-
+S = "${UNPACKDIR}/${BP}/Blue-Line-OE-4ATV"
 
 do_install() {
     install -d ${D}${libdir}

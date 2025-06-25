@@ -16,7 +16,7 @@ DEPENDS = "nss"
 RDEPENDS:${PN} = "nspr nss libxslt libcurl libudev libcrypto-compat-1.0.0"
 RDEPENDS:${PN} += "gb-v3ddriver-${MACHINE_DRIVER}"
 
-S = "${WORKDIR}/sources-unpack"
+S = "${UNPACKDIR}"
 
 do_install() {
 	install -d ${D}/usr/local/chromium

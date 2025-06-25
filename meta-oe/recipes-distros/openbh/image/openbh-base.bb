@@ -51,4 +51,3 @@ RDEPENDS:${PN} = "\
 RDEPENDS:${PN}:append:vuduo = " zram"
 RDEPENDS:${PN}:append:vusolo = " zram"
 
-

@@ -6,8 +6,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 PV = "1.0"
 PR = "r3"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 SRC_URI = "file://checkinternet"
 

@@ -17,8 +17,7 @@ RCONFLICTS:${PN} = "aio-grab"
 
 SRC_URI = "https://source.mynonpublic.com/dags/${MACHINEBUILD}-grab-${SRCDATE}.tar.gz"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 do_install() {
     install -d ${D}${bindir}

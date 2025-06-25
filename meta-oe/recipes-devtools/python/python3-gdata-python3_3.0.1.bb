@@ -6,7 +6,7 @@ HOMEPAGE = "http://code.google.com/p/gdata-python-client/"
 SRC_URI[md5sum] = "bdabfdb150b1e94c848bd1ff8c9bf9aa"
 SRC_URI[sha256sum] = "b77301becfb3bf42e9a459169e75e6ff4c20cc7b7e247d4d84988e8c8ac6d898"
 
-S = "${WORKDIR}/gdata-python3-${PV}"
+S = "${UNPACKDIR}/gdata-python3-${PV}"
 
 inherit pypi setuptools3
 

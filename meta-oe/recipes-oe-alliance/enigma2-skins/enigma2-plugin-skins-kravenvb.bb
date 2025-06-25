@@ -17,8 +17,6 @@ SRC_URI = "git://github.com/atvcaptain/KravenVB.git;protocol=https;branch=master
 
 FILES:${PN} = "/usr/*"
 
-S = "${WORKDIR}/git"
-
 do_compile() {
     for f in $(find ${S}/locale -name *.po ); do
         l=$(echo ${f%} | sed 's/\.po//' | sed 's/.*locale\///')

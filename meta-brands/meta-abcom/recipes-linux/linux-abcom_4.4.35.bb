@@ -49,7 +49,7 @@ SRC_URI:append = "\
     git://git.zx2c4.com/wireguard-linux-compat;protocol=https;branch=master;name=wireguard;subpath=src;destsuffix=${S}/net/wireguard \
     file://wg-kconfig.patch \
 "
-S = "${WORKDIR}/sources-unpack/linux-${PV}"
+S = "${UNPACKDIR}/linux-${PV}"
 B = "${WORKDIR}/build"
 
 export OS = "Linux"

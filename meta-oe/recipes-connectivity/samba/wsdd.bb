@@ -13,8 +13,7 @@ SRC_URI = " \
 
 PV = "1.08"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 do_compile() {
     make -f Makefile

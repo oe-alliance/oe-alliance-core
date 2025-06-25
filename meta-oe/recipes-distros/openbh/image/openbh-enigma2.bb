@@ -60,4 +60,3 @@ RRECOMMENDS:${PN}:append:vusolo2 = "enigma2-plugin-extensions-openmultiboot open
 RRECOMMENDS:${PN}:append:vuzero = "enigma2-plugin-extensions-openmultiboot openmultiboot"
 RRECOMMENDS:${PN}:append:vuultimo = "enigma2-plugin-extensions-openmultiboot openmultiboot"
 
-

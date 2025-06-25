@@ -10,7 +10,6 @@ RRECOMMENDS:${PN} = " \
     firmware-dvb-fe-ds3xxx \
 "
 
-
 PV = "1.0"
 PR = "r0"
 

@@ -9,11 +9,10 @@ SRC_URI = "https://files.pythonhosted.org/packages/7e/2c/0c15b29a1b5940250bfdc4a
 SRC_URI[md5sum] = "1c9351fa5cebd12e76488737a7c78f2e"
 SRC_URI[sha256sum] = "6026f61089b73fa1b5ee737e95314f41cb512609b393530385ed281d0b46c062"
 
-S = "${WORKDIR}/setuptools_scm_git_archive-${PV}"
+S = "${UNPACKDIR}/setuptools_scm_git_archive-${PV}"
 
 inherit setuptools3
 
 include python3-package-split.inc
-
 
 BBCLASSEXTEND = "native nativesdk"

@@ -13,7 +13,7 @@ SRC_URI[mips32el-nf.sha256sum] = "83b8b3e61c3695e527f42e446628e4b9a8d23dcfe8a194
 
 SRC_URI = "https://source.mynonpublic.com/dreambox/${BPN}_${PV}_${PACKAGE_ARCH}.tar.bz2;name=${PACKAGE_ARCH}"
 
-S = "${WORKDIR}/${PN}_${PV}_${PACKAGE_ARCH}"
+S = "${UNPACKDIR}/${PN}_${PV}_${PACKAGE_ARCH}"
 
 INHIBIT_PACKAGE_STRIP = "1"
 

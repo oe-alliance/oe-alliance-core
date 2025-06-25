@@ -16,8 +16,6 @@ PR = "r0"
 
 SRC_URI = "git://github.com/openatv/enigma2-plugin-extensions-dbackup.git;branch=python3;protocol=https"
 
-S = "${WORKDIR}/git"
-
 FILES:${PN} = "${libdir}"
 
 do_install:mipsel() {

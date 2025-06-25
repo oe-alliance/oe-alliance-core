@@ -15,8 +15,7 @@ PR = "r0"
 
 SRC_URI = "https://source.mynonpublic.com/anadol/${MACHINE}-libreader-${SRCDATE}.tar.gz"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 do_install() {
     install -d ${D}${bindir}

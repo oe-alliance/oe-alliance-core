@@ -15,7 +15,7 @@ PR = "r0"
 
 SRC_URI = "git://github.com/stein17/Skins-for-openATV.git;branch=python3;protocol=https"
 
-S = "${WORKDIR}/git/Skincomponents-Poster-Pli-HD-FullNight-stein17_Mod"
+S = "${UNPACKDIR}/${BP}/Skincomponents-Poster-Pli-HD-FullNight-stein17_Mod"
 
 FILES:${PN} = "/usr"
 

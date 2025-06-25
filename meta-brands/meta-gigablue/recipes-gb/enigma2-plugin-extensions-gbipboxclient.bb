@@ -16,8 +16,6 @@ PR = "r1"
 
 SRC_URI = "git://github.com/oe-mirrors/gbremote-client.git;protocol=https;branch=master"
 
-S = "${WORKDIR}/git"
-
 RDEPENDS:${PN} = "cifs-utils"
 
 EXTRA_OECONF = "\

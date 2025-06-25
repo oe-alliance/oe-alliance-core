@@ -8,8 +8,6 @@ inherit allarch opendreambox-git
 
 OPENDREAMBOX_PROJECT = "bootlogo"
 
-S = "${WORKDIR}/git"
-
 do_configure() {
 }
 

@@ -16,8 +16,6 @@ PR = "r1"
 
 SRC_URI = "git://github.com/stein17/Octagon-HD-Style-Dark.git;protocol=https;branch=master"
 
-S = "${WORKDIR}/git"
-
 FILES:${PN} = "/usr"
 
 do_package_qa[noexec] = "1"

@@ -4,8 +4,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 SRC_URI = " file://${CURRENT_FW}"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 RPROVIDES:${PN} += " nrf52-firmware"
 

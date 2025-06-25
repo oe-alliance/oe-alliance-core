@@ -14,8 +14,6 @@ PKGV = "1.6.2+git${GITPKGV}"
 
 SRC_URI = "git://github.com/LudovicRousseau/pcsc-tools.git;protocol=https;branch=master"
 
-S = "${WORKDIR}/git"
-
 inherit autotools gettext pkgconfig
 
 FILES:${PN} += "${datadir}"

@@ -12,8 +12,6 @@ PKGV = "0.9.0+git${GITPKGV}"
 
 SRC_URI = "git://github.com/juhovh/shairplay.git;protocol=https;branch=master"
 
-S = "${WORKDIR}/git"
-
 inherit autotools pkgconfig
 
 # needed for configure to find dns_sd header in nonstandard includes path

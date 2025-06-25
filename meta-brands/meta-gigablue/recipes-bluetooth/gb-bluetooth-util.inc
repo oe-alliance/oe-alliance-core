@@ -11,7 +11,7 @@ SRC_URI = " \
     https://source.mynonpublic.com/gigablue/bluetooth/gb-bluetooth-util-${MACHINE}-${PR}.tar.gz \
 "
 
-S = "${WORKDIR}/gb-bluetooth-util-${MACHINE}"
+S = "${UNPACKDIR}/gb-bluetooth-util-${MACHINE}"
 
 do_package_qa() {
 }

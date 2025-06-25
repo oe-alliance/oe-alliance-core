@@ -14,8 +14,6 @@ PKGV = "1.0.0+git${GITPKGV}"
 
 SRC_URI = "git://aomedia.googlesource.com/aom;branch=master;protocol=https"
 
-S = "${WORKDIR}/git"
-
 inherit cmake
 
 OECMAKE_GENERATOR = "Unix Makefiles"

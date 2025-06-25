@@ -8,8 +8,7 @@ PV = "1.1"
 
 SRC_URI = "file://oem-info"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 inherit update-rc.d
 

@@ -16,7 +16,7 @@ SRC_URI = "git://github.com/stein17/Skins-for-openOPD.git;protocol=https;branch=
 
 FILES:${PN} = "/"
 
-S = "${WORKDIR}/git/OPD-Blue-Line"
+S = "${UNPACKDIR}/OPD-Blue-Line"
 
 do_install() {
     install -d ${D}${libdir}

@@ -13,8 +13,7 @@ SRC_URI = "https://source.mynonpublic.com/dreambox/uboot-bin_3.3.r1.zip"
 SRC_URI[md5sum] = "8ff80679877987823ea89c8d3ecec07b"
 SRC_URI[sha256sum] = "69d5dab3c4b670e182fbff9824c4b08583d15cc92df3cf1908f9ac6df74a6a45"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 INHIBIT_PACKAGE_STRIP = "1"
 INHIBIT_PACKAGE_DEBUG_SPLIT = "1"

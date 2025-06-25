@@ -3,7 +3,6 @@ inherit packagegroup
 
 require conf/license/license-gplv2.inc
 
-
 ALLOW_EMPTY:${PN} = "1"
 
 RDEPENDS:${PN} = " \

@@ -14,7 +14,7 @@ inherit lib_package pkgconfig
 
 SRC_URI = "https://source.mynonpublic.com/dinobot/${MACHINE}-libs-${SRCDATE}.zip"
 
-S = "${WORKDIR}/hilib"
+S = "${UNPACKDIR}/hilib"
 
 SOLIBS = ".so"
 FILES_SOLIBSDEV = ""

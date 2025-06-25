@@ -6,7 +6,6 @@ LIC_FILES_CHKSUM = "file://Makefile;md5=6325fabe3996c2783285cc021ee13c96"
 
 inherit module
 
-
 MACHINE_KERNEL_PR:append = ".0"
 
 SRC_URI = "https://source.mynonpublic.com/ini/rtl8723A_WiFi_linux_v4.1.6_7336.20140624.tar.gz \
@@ -26,7 +25,7 @@ EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR} KDIR=${STAGING_KERNEL_DIR}"
 
 require kcflags.inc
 
-S = "${WORKDIR}/rtl8723A_WiFi_linux_v4.1.6_7336.20140624"
+S = "${UNPACKDIR}/rtl8723A_WiFi_linux_v4.1.6_7336.20140624"
 
 do_compile () {
     unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS CC LD CPP
@@ -51,5 +50,4 @@ do_install() {
 
 SRC_URI[md5sum] = "922f8fb001ee8d58f87737453834e2b7"
 SRC_URI[sha256sum] = "b6efcb3f2100065117ed910a7e1fbba1fec2b7b968441719b75c4a3f7b12a7e0"
-
 

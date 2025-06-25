@@ -13,8 +13,6 @@ PKGV = "1.4+git${GITPKGV}"
 
 SRC_URI = "git://github.com/videolan/bitstream.git;protocol=https;branch=master"
 
-S = "${WORKDIR}/git"
-
 inherit autotools-brokensep pkgconfig
 
 do_configure[noexec] = "1"

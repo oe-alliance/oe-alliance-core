@@ -9,8 +9,7 @@ PR = "20220402"
 
 SRC_URI = "https://source.mynonpublic.com/dags/dags-bootoptions-${PR}.zip"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 do_compile() {
 }

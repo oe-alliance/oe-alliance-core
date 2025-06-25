@@ -15,8 +15,6 @@ PKGV = "${GITPKGVTAG}"
 
 SRC_URI = "git://github.com/oe-alliance/EPGImport-Sources.git;protocol=https;branch=main"
 
-S = "${WORKDIR}/git"
-
 FILES:${PN} = "${sysconfdir}/epgimport"
 
 do_install() {

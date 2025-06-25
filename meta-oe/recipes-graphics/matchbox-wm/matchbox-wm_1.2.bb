@@ -11,7 +11,7 @@ SRC_URI = "http://downloads.yoctoproject.org/releases/matchbox/matchbox-window-m
 SRC_URI[md5sum] = "3e158dcf57823b55c926d95b245500fb"
 SRC_URI[sha256sum] = "81a23a4af797cf350759fd5ac738797015a66dd5dba2f3d9f3c6908506c1ceff"
 
-S = "${WORKDIR}/matchbox-window-manager-${PV}"
+S = "${UNPACKDIR}/matchbox-window-manager-${PV}"
 
 inherit autotools pkgconfig
 
@@ -27,7 +27,6 @@ EXTRA_OECONF = " --enable-startup-notification \
                  --enable-expat \
                  --with-expat-lib=${STAGING_LIBDIR} \
                  --with-expat-includes=${STAGING_INCDIR}"
-
 
 do_configure:prepend () {
         cp ${WORKDIR}/gconf-2.m4 ${S}/

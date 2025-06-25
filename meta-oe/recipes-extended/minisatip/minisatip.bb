@@ -16,7 +16,6 @@ SRCREV = "${AUTOREV}"
 PV = "V1.3+git"
 PKGV = "V1.3+git${GITPKGV}"
 
-S = "${WORKDIR}/git"
 BUILD = "${WORKDIR}/git"
 
 inherit gitpkgv autotools-brokensep

@@ -15,7 +15,7 @@ SRC_URI = " \
     https://source.mynonpublic.com/gigablue/drivers/platform-util-${MACHINE}pro-${KV}-${SRCDATE}.zip \
     file://${INITSCRIPT_NAME}.sysvinit \
 "
-S = "${WORKDIR}/platform"
+S = "${UNPACKDIR}/platform"
 
 do_install() {
     install -d ${D}/home/root/platform

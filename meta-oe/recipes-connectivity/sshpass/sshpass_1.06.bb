@@ -7,15 +7,13 @@ SRC_URI = "http://downloads.sourceforge.net/project/sshpass/sshpass/${PV}/sshpas
 
 inherit autotools-brokensep
 
-S = "${WORKDIR}/sshpass-${PV}"
-
 do_compile() {
     oe_runmake
 }
 
 do_install() {
         install -d ${D}${bindir}
-        install -m 0755 ${WORKDIR}/sshpass-${PV}/sshpass ${D}${bindir}/sshpass
+        install -m 0755 ${S}/sshpass ${D}${bindir}/sshpass
 }
 
 FILES:${PN} = "${bindir}/sshpass"

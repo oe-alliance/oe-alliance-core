@@ -16,8 +16,7 @@ SRC_URI  = "https://source.mynonpublic.com/dinobot/${MACHINE}-hihalt-${SRCDATE}.
     file://timerTask.py3 \
 "
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 do_install() {
     install -d ${D}${bindir}

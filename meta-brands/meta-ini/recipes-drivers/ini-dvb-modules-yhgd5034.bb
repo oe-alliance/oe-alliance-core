@@ -16,8 +16,7 @@ SRC_URI[sha256sum] = "80997180ab4092afbbefe1e42914ff1c66fe9de861789e9c4b86027dbd
 
 SRC_URI = "https://source.mynonpublic.com/ini/yhgd5034-drivers-${KV}-${SRCDATE}.zip"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 INHIBIT_PACKAGE_STRIP = "1"
 INHIBIT_PACKAGE_DEBUG_SPLIT = "1"

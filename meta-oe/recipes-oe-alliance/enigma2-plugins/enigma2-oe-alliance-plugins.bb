@@ -80,8 +80,6 @@ DEPENDS = "\
     ${@bb.utils.contains("MACHINE_FEATURES", "vuglesdemo", "libvupl-example-cube", "", d)} \
     "
 
-
-
 DESCRIPTION:enigma2-plugin-systemplugins-audioeffect = "Audio Effect setup"
 DESCRIPTION:enigma2-plugin-systemplugins-aboutboxbranding = "View Boxbranding data from the GUI"
 DESCRIPTION:enigma2-plugin-extensions-btdevicesmanager = "this is bt devices manger to pair e.x keyboard or mouse"
@@ -178,8 +176,6 @@ EXTRA_OECONF = " \
 ALLOW_EMPTY:${PN} = "1"
 PACKAGES += "${PN}-meta"
 FILES:${PN}-meta = "${datadir}/meta"
-
-S = "${WORKDIR}/git"
 
 python do_patch:append() {
     # alternative method instead of pluginnotwanted.patch

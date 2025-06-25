@@ -7,7 +7,7 @@ DEPENDS = "zlib expat brotli libinih"
 SRCREV = "04207b9c39bf7b3b1a7144f7ed4e4f16b4f29ef6"
 SRC_URI = "git://github.com/Exiv2/exiv2;protocol=https;branch=0.28.x"
 
-S = "${UNPACKDIR}/git"
+S = "${UNPACKDIR}"
 
 inherit cmake gettext
 

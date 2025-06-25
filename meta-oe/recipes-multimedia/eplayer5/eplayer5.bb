@@ -14,8 +14,7 @@ inherit pkgconfig
 
 SRC_URI = "file://eplayer5.c file://Makefile"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 FILES:${PN} = "${bindir}/*"
 

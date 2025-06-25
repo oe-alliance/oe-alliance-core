@@ -7,7 +7,7 @@ DEPENDS = "pngcrush-native"
 
 PACKAGES_DYNAMIC = "enigma2-plugin-picons-*"
 
-S = "${WORKDIR}/picons"
+S = "${UNPACKDIR}/picons"
 
 do_install() {
     install -d ${D}/picon

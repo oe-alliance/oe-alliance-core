@@ -7,7 +7,7 @@ SRC_URI = "git://github.com/edision-open/LINUX_BT_DRIVER_RTL8723D.git;branch=mas
 
 SRCREV = "6a68bd988096b6fc801cda9a2fed1e86164d0c1c"
 
-S = "${WORKDIR}/git/uart/rtk_hciattach"
+S = "${UNPACKDIR}/uart/rtk_hciattach"
 
 EXTRA_OEMAKE = 'CC="${CC}"'
 

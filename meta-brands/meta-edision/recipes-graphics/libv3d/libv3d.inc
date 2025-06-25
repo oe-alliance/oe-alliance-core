@@ -11,7 +11,7 @@ DEPENDS = "patchelf-native"
 
 SRC_URI = "https://source.mynonpublic.com/edision/edision-libv3d-${PV}.tar.xz"
 
-S = "${WORKDIR}/edision-libv3d-${PV}"
+S = "${UNPACKDIR}/edision-libv3d-${PV}"
 
 ARCH_DIR:aarch64 = "lib64"
 ARCH_DIR:arm = "lib"

@@ -16,8 +16,6 @@ PKGV = "3.4+git${GITPKGV}"
 
 SRC_URI = "git://github.com/videolan/dvblast.git;protocol=https;branch=master"
 
-S = "${WORKDIR}/git"
-
 inherit autotools-brokensep
 
 do_configure[noexec] = "1"

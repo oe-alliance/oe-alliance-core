@@ -1,7 +1,7 @@
 SUMMARY = "Linux kernel for ${MACHINE}"
 SECTION = "kernel"
 LICENSE = "GPL-2.0-only"
-LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
+LIC_FILES_CHKSUM = "file://${UNPACKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
 PRECOMPILED_ARCH = "${MACHINE}"
 PRECOMPILED_ARCH:dm7020hdv2 = "dm7020hd"
@@ -76,7 +76,6 @@ export KCFLAGS = " -std=gnu17 \
                    -Wno-error=maybe-uninitialized \
 "
 
-
 PACKAGES_DYNAMIC = "kernel-*"
 
 # For packages that RDEPEND on particular kernel modules, list the ones built into
@@ -104,7 +103,7 @@ SRC_URI[dream-patch.sha256sum] = "8914df36eb1f6a270d2b32c46d93cb81bbaae02604fba6
 SRC_URI[unionfs.md5sum] = "06e7c9f6cafd49b72184be851116c511"
 SRC_URI[unionfs.sha256sum] = "ce6ffa3c17a11dcca24196c11f6efc95c59b65a5b99958e73e8d4cc8e4b1f1ef"
 
-S = "${WORKDIR}/linux-3.2"
+S = "${UNPACKDIR}/linux-3.2"
 B = "${WORKDIR}/build"
 
 export OS = "Linux"

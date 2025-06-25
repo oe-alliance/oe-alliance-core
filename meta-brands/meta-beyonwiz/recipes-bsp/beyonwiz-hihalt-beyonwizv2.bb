@@ -19,8 +19,7 @@ SRC_URI  = "https://source.mynonpublic.com/beyonwiz/${MACHINE}-hihalt-${SRCDATE}
     file://suspend.sh \
 "
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 do_install() {
     install -d ${D}${bindir}

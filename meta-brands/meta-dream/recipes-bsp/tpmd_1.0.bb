@@ -17,7 +17,7 @@ SRC_URI = "https://source.mynonpublic.com/dreambox/${BPN}_${PV}_${PACKAGE_ARCH}.
         file://${INITSCRIPT_NAME}.sysvinit \
 "
 
-S = "${WORKDIR}/${PN}_${PV}_${PACKAGE_ARCH}"
+S = "${UNPACKDIR}/${PN}_${PV}_${PACKAGE_ARCH}"
 INITSCRIPT_NAME = "${PN}"
 INHIBIT_PACKAGE_STRIP = "1"
 INITSCRIPT_PARAMS = "start 60 S ."

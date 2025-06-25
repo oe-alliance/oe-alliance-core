@@ -11,8 +11,6 @@ PR = "r0"
 
 SRC_URI = "git://github.com/sklnet/tuxterm.git;protocol=https;branch=master"
 
-S = "${WORKDIR}/git"
-
 inherit autotools
 
 FILES:${PN} = "/"

@@ -12,8 +12,6 @@ PKGV = "1.0+git${GITPKGV}"
 
 SRC_URI = "git://github.com/oe-alliance/FPClock;protocol=https;branch=main"
 
-S = "${WORKDIR}/git"
-
 INITSCRIPT_NAME = "fpclock"
 INITSCRIPT_PARAMS = "defaults 10"
 

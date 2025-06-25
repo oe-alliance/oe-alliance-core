@@ -17,7 +17,7 @@ SRC_URI = "git://github.com/oe-alliance/e2plugins.git;protocol=https;branch=pyth
 
 RDEPENDS:${PN}  = "qtwebkit python3-netifaces" 
 
-S = "${WORKDIR}/git/qtstalker${VER}"
+S = "${UNPACKDIR}/qtstalker${VER}"
 
 FILES:${PN} =  "${bindir} ${libdir} /usr/share/stalker"
 

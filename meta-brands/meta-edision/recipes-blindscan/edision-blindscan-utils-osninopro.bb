@@ -18,8 +18,7 @@ PV = "20190805"
 
 SRC_URI = "https://source.mynonpublic.com/edision/edision-blindscan-utils-${MACHINE}-${PV}.zip"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 FILES:edision-blindscan-dvbs-utils-${MACHINE} = "${bindir}/blindscan"
 FILES:edision-blindscan-dvbc-utils-${MACHINE} = "${bindir}/tda1002x"

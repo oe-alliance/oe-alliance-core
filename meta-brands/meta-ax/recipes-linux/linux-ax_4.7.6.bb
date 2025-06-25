@@ -8,7 +8,7 @@ COMPATIBLE_MACHINE = "ultrabox"
 
 SRC_URI[md5sum] = "7704898cdd7284bdf680b73162fdeca4"
 SRC_URI[sha256sum] = "8821d8bde5014cfd0999dc62d1eb655bb47a2f4f6694d565b51037d3d6875098"
-LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
+LIC_FILES_CHKSUM = "file://${UNPACKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
 MACHINE_KERNEL_PR = "r3"
 
@@ -32,7 +32,7 @@ SRC_URI += "https://source.mynonpublic.com/ax/linux-${PV}-${ARCH}.tar.gz \
 
 inherit kernel machine_kernel_pr
 
-S = "${WORKDIR}/linux-${PV}"
+S = "${UNPACKDIR}/linux-${PV}"
 B = "${WORKDIR}/build"
 
 export OS = "Linux"

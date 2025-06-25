@@ -10,8 +10,7 @@ DEPENDS = "libdrm mesa patchelf-native"
 
 SRC_URI = "https://source.mynonpublic.com/zgemma/zgemma-mali-${HICHIPSET}-${SRCDATE}.zip"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 do_configure() {
 }

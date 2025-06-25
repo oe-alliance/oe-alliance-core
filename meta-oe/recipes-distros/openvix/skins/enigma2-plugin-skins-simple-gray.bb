@@ -14,8 +14,6 @@ SRC_URI = "git://github.com/Huevos/skin-SimpleGray.git;protocol=https;branch=mas
 
 FILES:${PN} = "${prefix}/"
 
-S = "${WORKDIR}/git"
-
 do_install() {
 	install -d ${D}${prefix}
 	cp -r ${S}${prefix}/* ${D}${prefix}/

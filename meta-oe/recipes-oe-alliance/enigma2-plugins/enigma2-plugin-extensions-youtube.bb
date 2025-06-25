@@ -17,8 +17,6 @@ SRC_URI = "git://github.com/Taapat/enigma2-plugin-youtube.git;protocol=https;bra
     file://0001-distutils-are-outdated-use-setuptools.patch \
 "
 
-S = "${WORKDIR}/git"
-
 # Just a quick hack to "compile" it
 do_compile() {
     cd ${S}
@@ -42,7 +40,6 @@ do_install:append() {
 require conf/python/python3-compileall.inc
 
 CONFFILES = "/etc/enigma2/YouTube.key"
-
 
 python populate_packages:prepend() {
     enigma2_plugindir = bb.data.expand('${libdir}/enigma2/python/Plugins', d)

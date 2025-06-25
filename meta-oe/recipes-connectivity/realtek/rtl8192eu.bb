@@ -9,15 +9,11 @@ SRC_URI = "git://github.com/atvcaptain/RTL8192EU.git;protocol=https;branch=maste
 
 SRCREV = "${AUTOREV}"
 
-S = "${WORKDIR}/git"
-
 inherit module
 
 EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR} KDIR=${STAGING_KERNEL_DIR}"
 
 require kcflags.inc
-
-S = "${WORKDIR}/git"
 
 do_compile () {
     unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS CC LD CPP

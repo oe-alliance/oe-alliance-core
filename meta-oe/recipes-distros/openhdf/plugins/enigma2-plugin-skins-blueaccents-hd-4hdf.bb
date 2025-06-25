@@ -15,7 +15,7 @@ SRC_URI = "git://github.com/stein17/Skins-for-openHDF.git;protocol=https;branch=
 
 FILES:${PN} = "/"
 
-S = "${WORKDIR}/git/BlueAccents-HD-4HDF"
+S = "${UNPACKDIR}/BlueAccents-HD-4HDF"
 
 do_install() {
     install -d ${D}${libdir}

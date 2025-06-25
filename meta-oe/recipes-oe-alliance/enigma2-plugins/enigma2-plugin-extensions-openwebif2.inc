@@ -34,8 +34,6 @@ PKGV = "${GITPKGVTAG}"
 SRC_URI = "git://github.com/oe-alliance/${MODULE}.git;protocol=https;branch=${BRANCH} \
            file://setuptools-auto-discovery.patch"
 
-S = "${WORKDIR}/git"
-
 # Just a quick hack to "compile" it
 do_compile() {
 	cheetah-compile -R --nobackup ${S}/plugin

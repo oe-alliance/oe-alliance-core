@@ -26,8 +26,6 @@ SRC_URI:teamblue = "git://github.com/oerlgrey/KravenHD_teamBlue.git;protocol=htt
 
 FILES:${PN} = "/usr/*"
 
-S = "${WORKDIR}/git"
-
 do_compile() {
     for f in $(find ${S}/locale -name *.po ); do
         l=$(echo ${f%} | sed 's/\.po//' | sed 's/.*locale\///')

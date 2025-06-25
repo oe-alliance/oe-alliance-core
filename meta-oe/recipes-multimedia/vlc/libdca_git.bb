@@ -12,6 +12,4 @@ PKGV = "0.0.7+git${GITPKGV}"
 SRC_URI = "git://github.com/oe-alliance-mirrors/libdca.git;protocol=https;branch=master \
         file://fix-libdts-link-path.patch"
 
-S = "${WORKDIR}/git"
-
 inherit autotools

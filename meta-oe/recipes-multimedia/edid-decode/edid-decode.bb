@@ -15,6 +15,4 @@ PR = "r3"
 
 SRC_URI = "git://github.com/oe-mirrors/edid-decode.git;protocol=https;branch=master"
 
-S = "${WORKDIR}/git"
-
 inherit meson pkgconfig

@@ -17,7 +17,7 @@ SRC_URI = "git://github.com/oe-alliance/tuxtxt.git;protocol=https;branch=master"
 
 inherit autotools pkgconfig
 
-S = "${WORKDIR}/git/tuxtxt"
+S = "${UNPACKDIR}/${BP}/tuxtxt"
 
 EXTRA_OECONF = "--with-boxtype=${MACHINE} --with-configdir=/etc \
     ${@bb.utils.contains("MACHINE_FEATURES", "textlcd", "--with-textlcd" , "", d)} \

@@ -17,7 +17,7 @@ inherit gittag allarch
 
 SRC_URI = "git://github.com/kiddac/Jedi-EPG-XStream.git;protocol=https;branch=main"
 
-S = "${WORKDIR}/git/JediEPGXtream"
+S = "${UNPACKDIR}/${BP}/JediEPGXtream"
 
 do_install () {
     install -d ${D}${libdir}

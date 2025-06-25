@@ -4,11 +4,9 @@ require conf/license/license-close.inc
 
 inherit allarch
 
-
 SRC_URI = "file://firmware-ap6210.zip"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 PACKAGES = "${PN}"
 FILES:${PN} += "${nonarch_base_libdir}/firmware/brcm"

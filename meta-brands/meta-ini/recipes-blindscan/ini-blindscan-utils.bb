@@ -19,8 +19,7 @@ SRC_URI = "file://tda1002x file://ini_blindscan"
 PV = "2.1"
 PR = "r4"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 FILES:ini-blindscan-dvbs-utils = "${bindir}/*_blindscan"
 FILES:ini-blindscan-dvbc-utils = "${bindir}/tda1002x"

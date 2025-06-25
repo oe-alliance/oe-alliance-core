@@ -13,7 +13,7 @@ DEPENDS = "patchelf-native"
 
 SRC_URI = "https://source.mynonpublic.com/beyonwiz/${MACHINE}-opengl-${SRCDATE}.tar.gz"
 
-S = "${WORKDIR}/usr"
+S = "${UNPACKDIR}/usr"
 
 do_configure() {
 }

@@ -10,8 +10,7 @@ INITSCRIPT_PARAMS = "start 99 2 3 4 5 ."
 
 inherit update-rc.d
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 do_install() {
     install -d ${D}/etc/init.d/

@@ -13,7 +13,7 @@ DEPENDS = "patchelf-native"
 
 SRC_URI = "https://source.mynonpublic.com/gigablue/mv200/${MACHINE}-opengl-${SRCDATE}.tar.gz"
 
-S = "${WORKDIR}/usr"
+S = "${UNPACKDIR}/usr"
 
 do_configure() {
 }

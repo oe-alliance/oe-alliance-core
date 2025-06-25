@@ -9,7 +9,7 @@ SRC_URI = "https://files.pythonhosted.org/packages/02/c0/6a2376ae81beb82eda645a0
 SRC_URI[md5sum] = "40cda566f61420490206597243dd869f"
 SRC_URI[sha256sum] = "ac6397369f128212c43064a2b4878038dab78dab41875364554aaf2a684e6979"
 
-S = "${WORKDIR}/pbkdf2-${PV}"
+S = "${UNPACKDIR}/pbkdf2-${PV}"
 
 inherit setuptools3
 

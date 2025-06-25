@@ -13,8 +13,7 @@ SRCREV = ""
 
 SRC_URI = "file://blackholesocker.tar.gz"
 
-
-S = "${WORKDIR}/blackholesocker"
+S = "${UNPACKDIR}/blackholesocker"
 S2 = "${WORKDIR}/build"
 
 inherit autotools update-rc.d

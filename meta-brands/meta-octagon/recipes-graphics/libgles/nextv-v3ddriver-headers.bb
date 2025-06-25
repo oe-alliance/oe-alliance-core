@@ -8,8 +8,7 @@ SRC_URI = "https://source.mynonpublic.com/octagon/nextv-v3ddriver-headers.tar.gz
 SRC_URI[md5sum] = "7d4fac1d19d5b96e8ecb77663b91faab"
 SRC_URI[sha256sum] = "46b5f4d7a19024f1f757a9291395d043fbe618c8fcf98c48760a4d77caaa6432"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 do_compile() {
 }

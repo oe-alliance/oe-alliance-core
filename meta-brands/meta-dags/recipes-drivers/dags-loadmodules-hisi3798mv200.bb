@@ -14,8 +14,7 @@ INITSCRIPT_PARAMS = "start 01 S ."
 
 inherit update-rc.d
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 do_compile() {
 }

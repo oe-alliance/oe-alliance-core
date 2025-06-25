@@ -16,10 +16,9 @@ VER = "0.1"
 
 SRC_URI = "git://github.com/emulatorE2/snes_manager.git;protocol=https;branch=master"
 
-S = "${WORKDIR}/git/src"
+S = "${UNPACKDIR}/src"
 
 FILES:${PN} = "/usr/* "
-
 
 do_install() {
     cp -rp ${S}/usr ${D}/

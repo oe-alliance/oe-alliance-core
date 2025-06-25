@@ -14,8 +14,6 @@ SRC_URI = "git://github.com/Huevos/RemoteControlSelection.git;protocol=https;bra
 
 FILES:${PN} = "${prefix}/"
 
-S = "${WORKDIR}/git"
-
 do_install:append() {
 	install -d ${D}${prefix}
 	cp -r ${S}${prefix}/* ${D}${prefix}/

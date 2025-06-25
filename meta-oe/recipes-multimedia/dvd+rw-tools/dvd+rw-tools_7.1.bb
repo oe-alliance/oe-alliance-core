@@ -32,6 +32,5 @@ do_install() {
     install -m 755 ${S}/dvd-ram-control ${D}/usr/bin
 }
 
-
 SRC_URI[md5sum] = "8acb3c885c87f6838704a0025e435871"
 SRC_URI[sha256sum] = "f8d60f822e914128bcbc5f64fbe3ed131cbff9045dca7e12c5b77b26edde72ca"

@@ -17,8 +17,7 @@ SRC_URI  = "https://source.mynonpublic.com/gigablue/mv200/${MACHINE}-hciattach-$
             file://${INITSCRIPT_NAME} \
 "
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 do_install() {
     install -d ${D}${bindir}

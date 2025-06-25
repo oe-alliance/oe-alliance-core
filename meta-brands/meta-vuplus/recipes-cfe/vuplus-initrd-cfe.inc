@@ -12,5 +12,4 @@ ALLOW_EMPTY:${PN} = "1"
 
 SRC_URI = "https://source.mynonpublic.com/vuplus/release/kernel/vmlinuz-initrd_${MACHINE}_${SRCDATE}.tar.gz"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"

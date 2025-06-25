@@ -14,8 +14,6 @@ PR = "r0"
 
 SRC_URI = "git://github.com/openatv/WeatherInfo.git;branch=main;protocol=https"
 
-S = "${WORKDIR}/git"
-
 FILES:${PN} = "${libdir}"
 
 do_install() {

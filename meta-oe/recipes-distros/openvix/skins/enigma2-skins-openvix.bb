@@ -73,8 +73,6 @@ DESCRIPTION:enigma2-plugin-skins-openvix-simple_ten_eighty = "1080 skin for Open
 
 inherit autotools-brokensep
 
-S = "${WORKDIR}/git"
-
 EXTRA_OECONF += "\
    ${@bb.utils.contains("MACHINE_FEATURES", "skins1080", "--with-skins1080" , "", d)} \
     "

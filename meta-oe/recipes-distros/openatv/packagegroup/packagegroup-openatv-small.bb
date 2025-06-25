@@ -11,7 +11,6 @@ PACKAGES = "${PN}"
 PV = "${IMAGE_VERSION}"
 PR = "r0"
 
-
 RRECOMMENDS:${PN} = " \
     oe-alliance-base-small \
     oe-alliance-enigma2-small \

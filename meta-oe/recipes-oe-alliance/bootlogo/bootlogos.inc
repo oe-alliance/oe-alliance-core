@@ -5,8 +5,7 @@ RDEPENDS:${PN} += "showiframe"
 
 INHIBIT_PACKAGE_STRIP = "1"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 do_install() {
     install -d ${D}/etc/enigma2

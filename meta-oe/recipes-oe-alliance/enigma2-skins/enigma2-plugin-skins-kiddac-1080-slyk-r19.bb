@@ -14,7 +14,7 @@ PKGV = "${GITPKGVTAG}"
 
 SRC_URI = "git://github.com/kiddac/Slyk_R19_1080.git;protocol=https;branch=master"
 
-S = "${WORKDIR}/git/Slyk_1080_R19"
+S = "${UNPACKDIR}/${BP}/Slyk_1080_R19"
 
 FILES:${PN} = "${datadir}"
 

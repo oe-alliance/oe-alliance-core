@@ -16,7 +16,7 @@ SRC_URI = "http://downloads.sourceforge.net/project/lirc/LIRC/${PV}/lirc-${PV}.t
 SRC_URI[md5sum] = "3b78c3cc872d5e2fa78b796c2efd46db"
 SRC_URI[sha256sum] = "465e65abc893c305ec347b771e2b98bbc3465ca9ba8c1dcf4cd243107ac2536d"
 
-S = "${WORKDIR}/lirc-${PV}"
+S = "${UNPACKDIR}/lirc-${PV}"
 
 EXTRA_OECONF = "--with-kerneldir=${STAGING_KERNEL_BUILDDIR} --with-driver=userspace"
 

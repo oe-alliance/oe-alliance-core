@@ -43,8 +43,6 @@ do_install() {
         install -m 0755 ${UNPACKDIR}/000resolvconf.ppp.ip-up ${D}${sysconfdir}/ppp/ip-up.d/000resolvconf
 }
 
-S = "${WORKDIR}/git"
-
 RPROVIDES:${PN} = "resolvconf"
 
 RCONFLICTS:${PN} = "resolvconf"

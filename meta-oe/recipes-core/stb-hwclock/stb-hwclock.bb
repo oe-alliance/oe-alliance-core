@@ -9,8 +9,7 @@ SRC_URI = "file://stb-hwclock \
            file://stb-hwclock.init \
 "
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 inherit update-rc.d
 

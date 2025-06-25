@@ -28,8 +28,6 @@ SRC_URI = "git://github.com/anthonywong/rtl8723bs.git;protocol=https;branch=mast
     file://add-5.15-support.patch \
     "
 
-S = "${WORKDIR}/git"
-
 inherit module
 
 require kcflags.inc

@@ -14,4 +14,3 @@ SRC_URI = "git://code.videolan.org/videolan/libudfread;protocol=https;branch=mas
 
 inherit autotools-brokensep pkgconfig
 
-S = "${WORKDIR}/git"

@@ -12,8 +12,7 @@ SRC_URI = " \
     https://source.mynonpublic.com/vuplus/release/wifi/vuplus-wifi-util-${MACHINE}-${PV}-${PR}.tar.gz \
 "
 
-S = "${WORKDIR}/sources-unpack"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 do_package_qa() {
 }

@@ -11,8 +11,6 @@ require conf/license/license-gplv2.inc
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/curlftpfs/${BP}.tar.gz"
 
-S = "${WORKDIR}/${BP}"
-
 inherit autotools pkgconfig
 
 SRC_URI[md5sum] = "b452123f755114cd4461d56c648d9f12"

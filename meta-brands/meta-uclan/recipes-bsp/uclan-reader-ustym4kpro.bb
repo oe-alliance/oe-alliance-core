@@ -15,8 +15,7 @@ PR = "r2"
 
 SRC_URI = "https://source.mynonpublic.com/uclan/${MACHINE}-libreader-${SRCDATE}.zip"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 INSANE_SKIP:${PN} += "already-stripped"
 
