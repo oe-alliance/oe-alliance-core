@@ -117,7 +117,7 @@ python populate_packages:prepend() {
             #so the foldername is still ac3lipsync
             if packagename == 'audiosync':
                 packagename = 'ac3lipsync'
-            src = open(mydir + packagename + "/CONTROL/control").read()
+            src = open(mydir + packagename + "${BB_GIT_DEFAULT_DESTSUFFIX}/CONTROL/control").read()
         except IOError:
             return
         for line in src.split("\n"):
@@ -152,7 +152,7 @@ python populate_packages:prepend() {
             elif line.startswith('Maintainer: '):
                 d.setVar('MAINTAINER_' + full_package, line[12:])
 
-    mydir = d.getVar('D', True) + "/../git/"
+    mydir = d.getVar('S', True) + "/"
     for package in d.getVar('PACKAGES', d, 1).split():
         getControlLines(mydir, d, package.split('-'))
 }
