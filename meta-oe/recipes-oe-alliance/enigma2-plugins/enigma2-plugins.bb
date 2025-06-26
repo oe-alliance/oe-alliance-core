@@ -117,7 +117,7 @@ python populate_packages:prepend() {
             #so the foldername is still ac3lipsync
             if packagename == 'audiosync':
                 packagename = 'ac3lipsync'
-            src = open(mydir + packagename + "${BB_GIT_DEFAULT_DESTSUFFIX}/CONTROL/control").read()
+            src = open(mydir + packagename + "/CONTROL/control").read()
         except IOError:
             return
         for line in src.split("\n"):
