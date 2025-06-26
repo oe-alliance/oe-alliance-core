@@ -17,6 +17,8 @@ RRECOMMENDS:${PN} = " \
     socketdaemon \
     enigma2-plugin-systemplugins-hotplug \
     enigma2-plugin-systemplugins-softwaremanager \
+    enigma2-plugin-systemplugins-mphelp \
+    enigma2-plugin-systemplugins-toolkit \
     ${@bb.utils.contains("SMALLBOXWIZARD", "1", "${SMALLBOXWIZARD_IMAGE}", "${NORMAL_IMAGE}", d)} \
     "
 
