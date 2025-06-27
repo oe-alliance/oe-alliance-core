@@ -1,0 +1,18 @@
+diff --git a/src/google/protobuf/port_def.inc b/src/google/protobuf/port_def.inc
+index edd6d51225..8e2bbb0aa7 100644
+--- a/src/google/protobuf/port_def.inc
++++ b/src/google/protobuf/port_def.inc
+@@ -234,7 +234,12 @@ static_assert(PROTOBUF_ABSL_MIN(20230125, 3),
+ #ifdef PROTOBUF_TAILCALL
+ #error PROTOBUF_TAILCALL was previously defined
+ #endif
+-#if ABSL_HAVE_CPP_ATTRIBUTE(clang::musttail) && !defined(__arm__) &&  \
++#if defined(__GNUC__)
++  #if __GNUC__ >= 15
++  #define PROTOBUF_MUSTTAIL
++  #define PROTOBUF_TAILCALL false
++  #endif
++#elif ABSL_HAVE_CPP_ATTRIBUTE(clang::musttail) && !defined(__arm__) && \
+     !defined(_ARCH_PPC) && !defined(__wasm__) &&                      \
+     !(defined(_MSC_VER) && defined(_M_IX86)) && !defined(__i386__)
+ // Compilation fails on ARM32: b/195943306
