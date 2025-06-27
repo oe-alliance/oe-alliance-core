@@ -13,11 +13,14 @@ inherit packagegroup
 
 RRECOMMENDS:${PN} = "\
     enigma2 \
+    libdreamdvd \
+    exteplayer3 \
     enigma-info \
     opkg-arch-config \
     enigma2-plugin-skins-metrix-atv \
     enigma2-skins \
     enigma2-plugin-systemplugins-serviceapp \
+    enigma2-plugin-extensions-advancedeventlibrary \
     valgrind \
     \
     sysvinit \
