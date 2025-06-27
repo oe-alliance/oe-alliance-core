@@ -13,12 +13,12 @@ SRC_URI  = "file://Vendor_0508_Product_0110.kl \
             file://Vendor_0525_Product_0001.kl \
 "
 
-S = "${UNPACKDIR}sources"
+S = "${UNPACKDIR}"
 
 do_install() {
     install -d ${D}${sysconfdir}/keymap
-    install -m 0755 ${UNPACKDIR}/Vendor_0508_Product_0110.kl ${D}${sysconfdir}/keymap/
-    install -m 0755 ${UNPACKDIR}/Vendor_0525_Product_0001.kl ${D}${sysconfdir}/keymap/
+    install -m 0755 ${S}/Vendor_0508_Product_0110.kl ${D}${sysconfdir}/keymap/
+    install -m 0755 ${S}/Vendor_0525_Product_0001.kl ${D}${sysconfdir}/keymap/
 }
 
 do_package_qa() {
