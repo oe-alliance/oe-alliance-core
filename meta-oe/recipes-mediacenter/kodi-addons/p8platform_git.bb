@@ -4,12 +4,12 @@ HOMEPAGE = "http://libcec.pulse-eight.com/"
 PACKAGE_ARCH = "${MACHINE}"
 
 LICENSE = "GPL-2.0-or-later"
-LIC_FILES_CHKSUM = "file://src/os.h;md5=752555fa94e82005d45fd201fee5bd33"
+LIC_FILES_CHKSUM = "file://src/os.h;md5=91686c8014183e8b66aa3a582d9bfd9b"
 
 PV = "2.2.0"
 
 SRC_URI = "git://github.com/Pulse-Eight/platform.git;branch=master;protocol=https"
-SRCREV = "5a786dd580972a2dc89941ea60dc08c0314e0e4d"
+SRCREV = "2748be52ae27e6007ef548b697d4a03ff7de4291"
 
 inherit cmake pkgconfig
 

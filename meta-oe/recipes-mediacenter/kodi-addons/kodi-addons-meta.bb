@@ -18,9 +18,7 @@ RDEPENDS:${PN} = " \
     kodi-addon-pvr-iptvsimple \
     kodi-addon-pvr-nextpvr \
     kodi-addon-pvr-dvbviewer \
+    kodi-addon-pvr-stalker \
+    kodi-addon-pvr-filmon \
+    kodi-addon-pvr-pctv \
     "
-
-# fixme
-#    kodi-addon-pvr-stalker
-#    kodi-addon-pvr-filmon
-#    kodi-addon-pvr-pctv
