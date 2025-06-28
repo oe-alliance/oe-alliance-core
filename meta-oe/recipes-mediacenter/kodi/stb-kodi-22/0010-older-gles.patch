@@ -46,6 +46,24 @@ index 2fda9f690f2..93c16519818 100644
    PFNEGLSETDAMAGEREGIONKHRPROC m_eglSetDamageRegionKHR{nullptr};
    bool m_partialUpdateSupport{false};
    bool m_bufferAgeSupport{false};
+diff --git a/xbmc/cores/RetroPlayer/shaders/gles/ShaderPresetGLES.h
+index 2fda9f690f2..93c16519818 100644
+--- a/xbmc/cores/RetroPlayer/shaders/gles/ShaderPresetGLES.h	2025-06-28 10:59:53.292209473 +0000
++++ b/xbmc/cores/RetroPlayer/shaders/gles/ShaderPresetGLES.h	2025-06-28 11:03:18.767072378 +0000
+@@ -10,6 +10,13 @@
+ 
+ #include "cores/RetroPlayer/shaders/ShaderPreset.h"
+ 
++#ifndef GL_SRGB8_ALPHA8
++#define GL_SRGB8_ALPHA8    0x8C43
++#endif
++#ifndef GL_RGBA32F
++#define GL_RGBA32F  0x8814
++#endif
++
+ namespace KODI
+ {
+ namespace RETRO
 -- 
 2.47.1
 
