@@ -70,7 +70,7 @@ export KCFLAGS = " -std=gnu17 \
                    -Wno-error=unused-function \
                    -Wno-error=stringop-overread \
                    -Wno-error=unused-const-variable \
-                   -Wno-error=maybe-uninitialized \           
+                   -Wno-error=maybe-uninitialized \
 "
 
 SRC_URI:append:vuduo2 = " file://brcm_s3_wol.patch;striplevel=1 "
@@ -95,8 +95,8 @@ KERNEL_EXTRA_ARGS = "EXTRA_CFLAGS=-Wno-attribute-alias"
 FILES:${KERNEL_PACKAGE_NAME}-image = "/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz"
 
 do_configure:prepend() {
-    if [ -e ${WORKDIR}/defconfig_proxy ]; then
-    mv ${WORKDIR}/defconfig_proxy ${WORKDIR}/defconfig
+    if [ -e ${UNPACKDIR}/defconfig_proxy ]; then
+    mv ${UNPACKDIR}/defconfig_proxy ${UNPACKDIR}/defconfig
     fi
 }
 
