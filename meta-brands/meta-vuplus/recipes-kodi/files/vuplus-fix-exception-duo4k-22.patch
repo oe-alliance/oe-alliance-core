@@ -11,24 +11,24 @@ diff --git a/xbmc/utils/StringUtils.cpp b/xbmc/utils/StringUtils.cpp
 index c9c5e31916..98a44bb185 100644
 --- a/xbmc/utils/StringUtils.cpp
 +++ b/xbmc/utils/StringUtils.cpp
-@@ -1070,6 +1070,7 @@ int64_t StringUtils::AlphaNumericCompare(const wchar_t* left, const wchar_t* rig
-   const wchar_t *ld, *rd;
+@@ -1231,6 +1231,7 @@
    wchar_t lc, rc;
+   unsigned char bytes;
    int64_t lnum, rnum;
 +try {
    bool lsym, rsym;
-   while (*l != 0 && *r != 0)
-   {
-@@ -1162,6 +1163,9 @@ int64_t StringUtils::AlphaNumericCompare(const wchar_t* left, const wchar_t* rig
-     }
-     l++; r++;
+   int ld, rd;
+   int i = 0;
+@@ -1330,6 +1331,9 @@
+     i++;
+     j++;
    }
 +} catch (const std::exception &e) {
 +  return 0;
 +}
-   if (*r)
-   { // r is longer
-     return -1;
+   // Compared characters of shortest are the same as longest, length determines order
+   return (nKey1 - nKey2);
+ }
 -- 
 2.32.0.windows.1
 
