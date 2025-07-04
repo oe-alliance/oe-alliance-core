@@ -7,7 +7,7 @@ ALLOW_EMPTY:${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "1.0"
-PR = "r92"
+PR = "r93"
 
 inherit packagegroup
 
@@ -23,6 +23,8 @@ RRECOMMENDS:${PN} = " \
     ${@bb.utils.contains("MACHINE_FEATURES", "webkithbbtv", "enigma2-plugin-extensions-webkithbbtv", "", d)} \
     ${PYTHON_PN}-compression \
     enigma-info \
+    enigma2-plugin-drivers-exfat \
+    enigma2-plugin-drivers-ntfs-3g \
     enigma2-plugin-extensions-atilehd \
     enigma2-plugin-extensions-audiosync \
     enigma2-plugin-extensions-autotimer \
