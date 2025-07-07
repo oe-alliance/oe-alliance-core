@@ -69,8 +69,8 @@ case "$1" in
             udevadm settle
             
             # workaround for boxes on which coldplug doesn't work
-            if [ ! -d /dev/block ]; then
-        	    find /sys/block -name "uevent" -exec sh -c 'echo "add" > {}' \;
+            if [ -d /dev/block ] && [ "$(ls -1 /dev/block | wc -l)" -lt 2 ]; then
+                find /sys/block -name "uevent" -exec sh -c 'echo "add" > {}' \;
             fi
     fi
     ;;
