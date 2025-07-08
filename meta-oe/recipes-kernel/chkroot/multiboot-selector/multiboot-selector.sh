@@ -15,81 +15,24 @@
 # 
 # ===============================================================
 
-# Multiboot Selector
+#!/bin/sh
 echo "Multiboot Selector - Starting..."
 
-# Function to select the correct ROOT, KERNEL, and Subdirectory
 select_image() {
-    case $image_choice in
-        1)
-            echo "Image 1 selected"
-            ROOT_PARTITION="${ROOT_PARTITIONS[0]}"
-            KERNEL_PATH="${KERNEL_PATHS[0]}"
-            ROOT_SUBDIR="${ROOT_SUBDIRS[0]}"
-            STARTUP_FILE="STARTUP_1"
-            ;;
-        2)
-            echo "Image 2 selected"
-            ROOT_PARTITION="${ROOT_PARTITIONS[1]}"
-            KERNEL_PATH="${KERNEL_PATHS[1]}"
-            ROOT_SUBDIR="${ROOT_SUBDIRS[1]}"
-            STARTUP_FILE="STARTUP_2"
-            ;;
-        3)
-            echo "Image 3 selected"
-            ROOT_PARTITION="${ROOT_PARTITIONS[2]}"
-            KERNEL_PATH="${KERNEL_PATHS[2]}"
-            ROOT_SUBDIR="${ROOT_SUBDIRS[2]}"
-            STARTUP_FILE="STARTUP_3"
-            ;;
-        4)
-            echo "Image 4 selected"
-            ROOT_PARTITION="${ROOT_PARTITIONS[3]}"
-            KERNEL_PATH="${KERNEL_PATHS[3]}"
-            ROOT_SUBDIR="${ROOT_SUBDIRS[3]}"
-            STARTUP_FILE="STARTUP_4"
-            ;;
-        5)
-            echo "Image 5 selected"
-            ROOT_PARTITION="${ROOT_PARTITIONS[4]}"
-            KERNEL_PATH="${KERNEL_PATHS[4]}"
-            ROOT_SUBDIR="${ROOT_SUBDIRS[4]}"
-            STARTUP_FILE="STARTUP_5"
-            ;;
-        6)
-            echo "Image 6 selected"
-            ROOT_PARTITION="${ROOT_PARTITIONS[5]}"
-            KERNEL_PATH="${KERNEL_PATHS[5]}"
-            ROOT_SUBDIR="${ROOT_SUBDIRS[5]}"
-            STARTUP_FILE="STARTUP_6"
-            ;;
-        7)
-            echo "Image 7 selected"
-            ROOT_PARTITION="${ROOT_PARTITIONS[6]}"
-            KERNEL_PATH="${KERNEL_PATHS[6]}"
-            ROOT_SUBDIR="${ROOT_SUBDIRS[6]}"
-            STARTUP_FILE="STARTUP_7"
-            ;;
-        8)
-            echo "Image 8 selected"
-            ROOT_PARTITION="${ROOT_PARTITIONS[7]}"
-            KERNEL_PATH="${KERNEL_PATHS[7]}"
-            ROOT_SUBDIR="${ROOT_SUBDIRS[7]}"
-            STARTUP_FILE="STARTUP_8"
-            ;;
-        *)
-            echo "Unknown selection."
-            exit 1
-            ;;
-    esac
+    idx=$1
+    echo "Image ${choices[$idx]} selected"
+    ROOT_PARTITION="${ROOT_PARTITIONS[$idx]}"
+    KERNEL_PATH="${KERNEL_PATHS[$idx]}"
+    ROOT_SUBDIR="${ROOT_SUBDIRS[$idx]}"
+    STARTUP_FILE="${STARTUP_FILES[$idx]}"
 }
 
-# List of available options
 images=()
 choices=()
 ROOT_PARTITIONS=()
 KERNEL_PATHS=()
 ROOT_SUBDIRS=()
+STARTUP_FILES=()
 
 if grep -q -E "dm820|dm7080|dm900|dm920" /proc/stb/info/model || grep -q -E "beyonwizu4|et11000|sf4008" /proc/stb/info/boxtype; then
 	BOOT="/dev/mmcblk0boot1"
@@ -97,105 +40,130 @@ else
 	for i in /sys/block/mmcblk0/mmcblk0p*; do
 		if [ -f "$i/uevent" ]; then
 			partname=$(grep '^PARTNAME=' "$i/uevent" | cut -d '=' -f 2)
-			devname=`cat /$i/uevent | grep DEVNAME | cut -d '=' -f 2`
+			devname=$(grep DEVNAME "$i/uevent" | cut -d '=' -f 2)
 			case "$partname" in
-			  others)
-				BOOT="/dev/$devname"
-				;;
-			  other2)
-				BOOT="/dev/mmcblk0boot1"
-				;;
+				others|startup)
+					BOOT="/dev/$devname"
+					;;
+				other2)
+					BOOT="/dev/mmcblk0boot1"
+					;;
 			esac
 		fi
 	done
 fi
-echo "BOOT found:$BOOT"
+
+if [ -z "$BOOT" ]; then
+	for dev in /dev/sd[a-d]1; do
+		label=$(blkid -s LABEL -o value "$dev" 2>/dev/null)
+		if [ "$label" = "STARTUP" ]; then
+			BOOT="$dev"
+			break
+		fi
+	done
+fi
+
+echo "BOOT found: $BOOT"
 
 echo 0 > /sys/block/mmcblk0boot1/force_ro
+mkdir -p /boot 2>/dev/null
 mount -t vfat "$BOOT" /boot 2>/dev/null
 
-# Check all possible STARTUP files and partitions
-for i in {1..8}; do
-    STARTUP_FILE="/boot/STARTUP_$i"
-    if [ -f "$STARTUP_FILE" ]; then
-        # Read and parse the STARTUP_X file
+FILE="/boot/STARTUP_FLASH"
+if [ -f "$FILE" ]; then
+    ROOT=""
+    ROOTSUBDIR=""
+    KERNEL=""
+
+    while IFS= read -r line || [ -n "$line" ]; do
+        ROOT=$(echo "$line" | sed -n 's/.*root=\([^ ]*\).*/\1/p')
+        ROOTSUBDIR=$(echo "$line" | sed -n 's/.*rootsubdir=\([^ ]*\).*/\1/p')
+        KERNEL=$(echo "$line" | sed -n 's/.*kernel=\([^ ]*\).*/\1/p')
+    done < "$FILE"
+
+    if [ -n "$ROOT" ] && [ -n "$KERNEL" ]; then
+        images+=("Image 0 (Flash)")
+        choices+=("0")
+        ROOT_PARTITIONS+=("$ROOT")
+        KERNEL_PATHS+=("$KERNEL")
+        ROOT_SUBDIRS+=("$ROOTSUBDIR")
+        STARTUP_FILES+=("STARTUP_FLASH")
+    fi
+fi
+
+for i in $(seq 1 15); do
+    FILE="/boot/STARTUP_$i"
+    if [ -f "$FILE" ]; then
         ROOT=""
         ROOTSUBDIR=""
         KERNEL=""
-        
+
         while IFS= read -r line || [ -n "$line" ]; do
-            # Extract root, rootsubdir and kernel
             ROOT=$(echo "$line" | sed -n 's/.*root=\([^ ]*\).*/\1/p')
             ROOTSUBDIR=$(echo "$line" | sed -n 's/.*rootsubdir=\([^ ]*\).*/\1/p')
             KERNEL=$(echo "$line" | sed -n 's/.*kernel=\([^ ]*\).*/\1/p')
-        done < "$STARTUP_FILE"
-        
-        if [ -n "$ROOT" ] && [ -n "$ROOTSUBDIR" ] && [ -n "$KERNEL" ]; then
-            # Add to available images if valid
+        done < "$FILE"
+
+        if [ -n "$ROOT" ] && [ -n "$KERNEL" ]; then
             images+=("Image $i")
             choices+=("$i")
             ROOT_PARTITIONS+=("$ROOT")
             KERNEL_PATHS+=("$KERNEL")
             ROOT_SUBDIRS+=("$ROOTSUBDIR")
+            STARTUP_FILES+=("STARTUP_$i")
         fi
     fi
 done
 
-# No available images
 if [ ${#images[@]} -eq 0 ]; then
     echo "No available images to select from."
+    umount /boot 2>/dev/null
     exit 1
 fi
 
-# Show available options when no image/slot number is passed as a parameter
-image_choice=$1
+image_choice="$1"
 if [ -z "$image_choice" ]; then
     echo "Please select an image:"
     for i in "${!images[@]}"; do
         echo "${choices[$i]}) ${images[$i]}"
     done
-
-    # User selection
-    read -p "Select an image (1-${#images[@]}): " image_choice
+    read -p "Select an image (number): " image_choice
 fi
 
-# Check if the selection is valid
 valid_choice=false
 for i in "${!choices[@]}"; do
-    if [ "${choices[$i]}" == "$image_choice" ]; then
+    if [ "${choices[$i]}" = "$image_choice" ]; then
+        choice_index="$i"
         valid_choice=true
         break
     fi
 done
 
 if ! $valid_choice; then
-    echo "Invalid selection. Please try again."
+    echo "Invalid selection: $image_choice"
+    umount /boot 2>/dev/null
     exit 1
 fi
 
-# Select the image and set the correct partition, kernel, subfolder, and startup file
-select_image
+select_image "$choice_index"
 
-# Unmount existing mounts (if any)
 if mountpoint -q "/tmp/root"; then
-    echo "Unmounting existing mount from /tmp/root..."
+    echo "Unmounting /tmp/root..."
     umount /tmp/root
 fi
-
-# Unmount the temporary root partitions if still mounted
-for i in {1..8}; do
+for i in $(seq 1 15); do
     if mountpoint -q "/var/volatile/tmp/root$i"; then
-        echo "Unmounting existing mount from /var/volatile/tmp/root$i..."
+        echo "Unmounting /var/volatile/tmp/root$i..."
         umount "/var/volatile/tmp/root$i"
     fi
 done
 
-# Copy the selected STARTUP file from /boot
 echo "Copying /boot/$STARTUP_FILE to /boot/STARTUP..."
 cp "/boot/$STARTUP_FILE" "/boot/STARTUP"
 
-# Display selected options for debugging or logging
 echo "Selected ROOT partition: $ROOT_PARTITION"
 echo "Selected ROOTSUBDIR: $ROOT_SUBDIR"
 sync
 echo "Script finished."
+
+umount /boot 2>/dev/null
