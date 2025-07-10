@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://LICENSE.txt;beginline=1;endline=1;md5=c3af740e8628bb4
 
 SRC_URI = "git://github.com/tsduck/tsduck.git;protocol=https;branch=master"
 
-SRCREV = "dd0d017e46e0c371229e1b4b064730dfe7464895"
+SRCREV = "b18489209c7871a35a49af98be431699b85df9c0"
 PV = "git"
 PKGV = "${GITPKGVTAG}"
 PR = "r0"
