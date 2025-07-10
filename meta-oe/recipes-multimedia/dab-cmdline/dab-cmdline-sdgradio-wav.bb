@@ -16,7 +16,7 @@ PR = "r1"
 
 SRC_URI = "git://github.com/satdreamgr/dab-cmdline.git;protocol=https;branch=sdgradio"
 
-EXTRA_OECMAKE = "-DAAC_OUT=ON -DRAWFILES=ON -DCMAKE_INSTALL_PREFIX=/usr/bin"
+EXTRA_OECMAKE = "-DAAC_OUT=ON -DRAWFILES=ON -DCMAKE_INSTALL_PREFIX=/usr/bin -DCMAKE_POLICY_VERSION_MINIMUM=3.5"
 
 S = "${UNPACKDIR}/${BP}/sdgradio"
 

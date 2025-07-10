@@ -13,7 +13,7 @@ SRC_URI = "https://source.mynonpublic.com/vuplus/release/support/${BPN}-${PV}.${
 
 S = "${UNPACKDIR}/${BPN}-${PV}"
 
-EXTRA_OECMAKE += "-DVUPLUS=1"
+EXTRA_OECMAKE += "-DVUPLUS=1 -DCMAKE_POLICY_VERSION_MINIMUM=3.5"
 
 inherit cmake
 
