@@ -6,9 +6,11 @@ LIC_FILES_CHKSUM = "file://license.txt;md5=fc9c335ec05a5f36764ef9ce7a79daa1"
 HOMEPAGE = "http://www.rarlab.com/"
 
 SRC_URI = "https://ftp.osuosl.org/pub/blfs/conglomeration/unrarsrc/unrarsrc-${PV}.tar.gz \
-        file://makefile-nostrip.patch"
-SRC_URI[md5sum] = "de5017a63a610cb82dba7d33bd826fb6"
-SRC_URI[sha256sum] = "a7029942006cbcced3f3b7322ec197683f8e7be408972ca08099b196c038f518"
+        file://makefile-nostrip.patch \
+"
+SRC_URI[sha256sum] = "9ec7765a948140758af12ed29e3e47db425df79a9c5cbb71b28769b256a7a014"
+
+inherit upx-compress
 
 S = "${UNPACKDIR}/unrar"
 

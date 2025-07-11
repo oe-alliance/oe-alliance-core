@@ -1,12 +1,14 @@
+diff --git a/makefile b/makefile
+index f7fe61a3..9faad364 100644
 --- a/makefile
 +++ b/makefile
-@@ -2,12 +2,12 @@
- # Makefile for UNIX - unrar
- 
- # Linux using GCC
+@@ -5,12 +5,12 @@
+ # 2024.08.19: -march=native isn't recognized on some platforms such as RISCV64.
+ # Thus we removed it. Clang ARM users can add -march=armv8-a+crypto to enable
+ # ARM NEON crypto.
 -CXX=c++
 +#CXX=c++
- CXXFLAGS=-O2 -Wno-logical-op-parentheses -Wno-switch -Wno-dangling-else
+ CXXFLAGS=-O2 -std=c++11 -Wno-logical-op-parentheses -Wno-switch -Wno-dangling-else
  LIBFLAGS=-fPIC
  DEFINES=-D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DRAR_SMP
 -STRIP=strip
