@@ -1,0 +1,2 @@
+SUBSYSTEM=="block", ACTION=="add", ENV{ID_FS_TYPE}!="", RUN+="/etc/udev/scripts/startup.sh add $env{DEVNAME} $env{ID_PART_ENTRY_NAME}"
+SUBSYSTEM=="block", ACTION=="remove", RUN+="/etc/udev/scripts/startup.sh remove $env{DEVNAME}"
