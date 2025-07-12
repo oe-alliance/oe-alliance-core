@@ -41,24 +41,13 @@ KERNEL_MODULE_AUTOLOAD += "mali"
 
 PREFERRED_VERSION_linux-airdigital = "4.4.35"
 
-IMAGE_CMD:ubifs:prepend = " \
-	mkdir -p ${IMAGE_ROOTFS}/usr/lib; \
-	if [ "${PACKAGE_LIST}" = "1" ]; then \
-        cp ${IMAGE_MANIFEST} ${IMAGE_ROOTFS}/usr/lib/package.lst; \
-    fi; \
-    "
-
-IMAGE_CMD:tar:prepend = "\
-	mkdir -p ${IMAGE_ROOTFS}/usr/lib; \
-	if [ "${PACKAGE_LIST}" = "1" ]; then \
-        cp ${IMAGE_MANIFEST} ${IMAGE_ROOTFS}/usr/lib/package.lst; \
-    fi; \
-    "
-
 IMAGE_CMD:ubi:append = " \
     mkdir -p ${DEPLOY_DIR_IMAGE}/${MACHINE}/${IMAGEDIR}; \
     mv ${IMGDEPLOYDIR}/${IMAGE_NAME}.ubi ${DEPLOY_DIR_IMAGE}/${MACHINE}/${IMAGEDIR}/${ROOTFS_FILE}; \
     cp ${DEPLOY_DIR_IMAGE}/uImage ${DEPLOY_DIR_IMAGE}/${MACHINE}/${IMAGEDIR}/${KERNEL_FILE}; \
+    if [ "${PACKAGE_LIST}" = "1" ]; then \
+        cp ${IMAGE_MANIFEST} ${IMAGE_ROOTFS}/usr/lib/package.lst; \
+    fi; \
     /usr/bin/fakeroot tar -cvf ${DEPLOY_DIR_IMAGE}/rootfs.tar -C ${IMAGE_ROOTFS} .; \
     mv ${DEPLOY_DIR_IMAGE}/rootfs.tar ${DEPLOY_DIR_IMAGE}/${MACHINE}/${IMAGEDIR}/rootfs.tar; \
     bzip2 ${DEPLOY_DIR_IMAGE}/${MACHINE}/${IMAGEDIR}/rootfs.tar; \
@@ -123,6 +112,9 @@ IMAGE_CMD:zgemmafastboot8gb:append = " \
     rm -Rf ${DEPLOY_DIR_IMAGE}/${IMAGEDIRRECOVERY}; \
     mkdir -p ${DEPLOY_DIR_IMAGE}/${MACHINE}/${IMAGEDIR}; \
     cp ${DEPLOY_DIR_IMAGE}/uImage ${DEPLOY_DIR_IMAGE}/${MACHINE}/${IMAGEDIR}/uImage; \
+    if [ "${PACKAGE_LIST}" = "1" ]; then \
+        cp ${IMAGE_MANIFEST} ${IMAGE_ROOTFS}/usr/lib/package.lst; \
+    fi; \
     /usr/bin/fakeroot tar -cvf ${DEPLOY_DIR_IMAGE}/rootfs.tar -C ${IMAGE_ROOTFS} .; \
     mv ${DEPLOY_DIR_IMAGE}/rootfs.tar ${DEPLOY_DIR_IMAGE}/${MACHINE}/${IMAGEDIR}/rootfs.tar; \
     bzip2 ${DEPLOY_DIR_IMAGE}/${MACHINE}/${IMAGEDIR}/rootfs.tar; \
