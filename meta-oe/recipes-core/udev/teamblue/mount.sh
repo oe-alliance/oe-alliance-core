@@ -242,7 +242,7 @@ automount() {
 	ntfs)
 		MOUNTPOINT=/sys/fs/fuse/connections
 		mount -t fusectl fusectl $MOUNTPOINT >/dev/null 2>&1
-		MOUNT="$MOUNT -t fuseblk"
+		MOUNT="mount.ntfs-3g"
 		;;
 	ext2|ext3)
 		# ext2 and ext3 devices need to be mounted with the ext4 driver
