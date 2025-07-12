@@ -13,12 +13,12 @@ SRC_URI = " \
     "
 
 SRCREV = "${AUTOREV}"
-PV = "V1.3+git"
-PKGV = "V1.3+git${GITPKGV}"
+PV = "git"
+PKGV = "${GITPKGVTAG}"
 
-BUILD = "${WORKDIR}/git"
+#S = "${UNPACKDIR}/${BPN}-${PV}"
 
-inherit gitpkgv autotools-brokensep
+inherit gittag autotools-brokensep
 
 INITSCRIPT_NAME = "minisatip"
 EXTRA_OECONF = "--disable-netcv"
