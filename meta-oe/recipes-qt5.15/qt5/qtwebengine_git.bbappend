@@ -5,6 +5,7 @@ SRC_URI += " \
     file://0002-ffmpeg-5.patch \
     file://chromium/0002-Replace-hbbtv-responses-with-application-xhtml-xml.patch;patchdir=src/3rdparty \
     file://chromium/0024-ffmpeg7-upgrade.patch;patchdir=src/3rdparty \
+    file://chromium/0030-rollup3-compatibility.patch;patchdir=src/3rdparty \
 "
 SRC_URI:append:osmio4k = " \
     file://chromium/0001-Add-initial-support-for-V4L2-mem2mem-decoder.patch;patchdir=src/3rdparty \

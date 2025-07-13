@@ -1,0 +1,13 @@
+diff --git a/chromium/third_party/devtools-frontend/src/inspector_overlay/BUILD.gn b/chromium/third_party/devtools-frontend/src/inspector_overlay/BUILD.gn
+index 83041bcb8..2c1adcdf4 100644
+--- a/chromium/third_party/devtools-frontend/src/inspector_overlay/BUILD.gn
++++ b/chromium/third_party/devtools-frontend/src/inspector_overlay/BUILD.gn
+@@ -72,7 +72,7 @@ action("build_inspector_overlay") {
+   ]
+   if (use_rollup) {
+     args += [
+-      "--rollup_plugin",
++      "--bundleConfigAsCjs --rollup_plugin",
+       rebase_path("loadCSS.rollup.js", root_build_dir),
+     ]
+   }
