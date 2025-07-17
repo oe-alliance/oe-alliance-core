@@ -16,7 +16,7 @@ PR = "r3"
 
 SRC_URI = "git://github.com/BlackHole/skins.git;protocol=https;branch=master"
 
-S = "${UNPACKDIR}/MX_Slim-Line_NP"
+S = "${UNPACKDIR}/${BP}/MX_Slim-Line_NP"
 
 FILES:${PN} = "/usr/*"
 
