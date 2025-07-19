@@ -1,9 +1,8 @@
 SUMMARY = "OpenBh Image"
-MAINTAINER = "OpenBh"
 SECTION = "base"
 PRIORITY = "required"
 LICENSE = "proprietary"
-PACKAGE_ARCH = "${MACHINE_ARCH}"
+MAINTAINER = "OpenBh"
 
 require conf/license/license-gplv2.inc
 
@@ -13,13 +12,16 @@ PR_NUM = "${@bb.utils.contains("DISTRO_TYPE", "release", "${BUILD_VERSION}.000",
 
 PV = "${IMAGE_VERSION}"
 PR = "r${PR_NUM}"
+PACKAGE_ARCH = "${MACHINE_ARCH}"
+
+# We need to add machine rootfs directory to pseudo path after https://github.com/openembedded/openembedded-core/commit/2502da81709f25de499277b28d33c915638c45f6
+PSEUDO_INCLUDE_PATHS .= ",${TMPDIR}/rootfs"
+
+do_rootfs[deptask] = "do_rm_work"
 
 SSTATE_ALLOW_OVERLAP_FILES += "${DEPLOY_DIR_IMAGE}"
 
 IMAGE_INSTALL = "openbh-base"
-
-# ... plus mc and helpers on 256 MB or more:
-IMAGE_INSTALL += "${@bb.utils.contains_any("FLASHSIZE", "64 96 128", "", "mc mc-shell mc-helpers", d)}"
 
 export IMAGE_BASENAME = "openbh-image"
 IMAGE_LINGUAS = ""
