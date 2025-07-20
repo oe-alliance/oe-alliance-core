@@ -40,6 +40,7 @@ RRECOMMENDS:${PN} = " \
     ${@bb.utils.contains("MACHINE_FEATURES", "fcc", "enigma2-plugin-systemplugins-fastchannelchange", "", d)} \
     shellinabox \
     enigma2-plugin-extensions-enhancedmoviecenter \
+    ffmpeg  \
     "
 
 GST_BASE_DVD = "\
