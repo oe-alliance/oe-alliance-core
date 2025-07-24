@@ -9,7 +9,7 @@ require conf/license/license-gplv2.inc
 RDEPENDS:${PN} += "showiframe"
 
 PV = "${IMAGE_VERSION}"
-PR = "r36"
+PR = "r37"
 
 S = "${WORKDIR}/sources"
 UNPACKDIR = "${S}"
@@ -26,6 +26,7 @@ INITSCRIPT_PARAMS:vuultimo4k = "start 70 S ."
 INITSCRIPT_PARAMS:vuzero4k = "start 70 S ."
 INITSCRIPT_PARAMS:vuduo4k = "start 70 S ."
 INITSCRIPT_PARAMS:vuduo4kse = "start 70 S ."
+INITSCRIPT_PARAMS:gb7252 = "start 70 S ."
 
 inherit update-rc.d
 
@@ -42,9 +43,11 @@ SRC_URI:append:novaler4kpro = " file://logo.img"
 SRC_URI:append:gbmv200 = " file://logo.img"
 SRC_URI:append:dagsmv200 = " file://logo.img"
 
-FILES:${PN} = "/boot /usr/share /etc/init.d"
+FILES:${PN} = "/boot /usr/share /usr/share/enigma2 /etc/init.d"
 
 do_install() {
+    install -d ${D}/${sysconfdir}/init.d
+    install -m 0755 bootlogo.sh ${D}/${sysconfdir}/init.d/bootlogo
     install -d ${D}/usr/share
     install -m 0644 bootlogo.mvi ${D}/usr/share/bootlogo.mvi
     install -m 0644 backdrop.mvi ${D}/usr/share/backdrop.mvi
@@ -55,6 +58,7 @@ do_install() {
 }
 
 do_install:append:vuduo2() {
+    install -d ${D}/usr/share
     install -m 0644 lcdbootlogo.png ${D}/usr/share/lcdbootlogo.png
     install -m 0644 bootlogo.py ${D}/${sysconfdir}/init.d/bootlogo.py
 }
