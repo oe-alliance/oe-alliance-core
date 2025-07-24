@@ -15,41 +15,49 @@
 # 
 # =================================================================
 
-#!/bin/sh
 echo "Multiboot Selector - Starting..."
 
-known_distros='
-"beyonwiz": "Beyonwiz",
-"blackhole": "Black Hole",
-"egami": "EGAMI",
-"openatv": "OpenATV",
-"openbh": "OpenBH",
-"opendroid": "OpenDroid",
-"openeight": "OpenEight",
-"openhdf": "OpenHDF",
-"opennfr": "OpenNFR",
-"openpli": "OpenPLi",
-"openspa": "OpenSpa",
-"openvision": "Open Vision",
-"openvix": "OpenViX",
-"sif": "Sif",
-"teamblue": "teamBlue",
-"vti": "VTi",
-"newnigma2": "Newnigma2",
-"Dreambox": "DreamOS",
-"opendreambox": "OpenDreambox",
-"unknown": "Unknown Image/Distro",
-'
+declare -A known_distros=(
+    ["beyonwiz"]="Beyonwiz"
+    ["blackhole"]="Black Hole"
+    ["egami"]="EGAMI"
+    ["openatv"]="OpenATV"
+    ["openbh"]="OpenBH"
+    ["opendroid"]="OpenDroid"
+    ["openeight"]="OpenEight"
+    ["openhdf"]="OpenHDF"
+    ["opennfr"]="OpenNFR"
+    ["openpli"]="OpenPLi"
+    ["openspa"]="OpenSpa"
+    ["openvision"]="Open Vision"
+    ["openvix"]="OpenViX"
+    ["sif"]="Sif"
+    ["teamblue"]="teamBlue"
+    ["vti"]="VTi"
+    ["newnigma2"]="Newnigma2"
+    ["Dreambox"]="DreamOS"
+    ["opendreambox"]="OpenDreambox"
+    ["unknown"]="Unknown Image/Distro"
+)
+
 image_info() {
     idx=$1
     ROOT_PARTITION="${ROOT_PARTITIONS[$idx]}"
     ROOT_SUBDIR="${ROOT_SUBDIRS[$idx]}"
     ROOTFS_TYPE="${ROOTFS_TYPES[$idx]}"
     STARTUP_FILE="${STARTUP_FILES[$idx]}"
+    IMAGE_INFO_RESULT=""
 
-    tmpdir="$(mktemp -d)/"
-    [ "$ROOTFS_TYPE" == "ubifs" -o "$ROOTFS_TYPE" == "ext4" ] && mount_option="-t $ROOTFS_TYPE"
-    mount $mount_option "$ROOT_PARTITION" "$tmpdir" &>/dev/null
+    if [ "$ROOT_PARTITION" != "$LAST_ROOT_PARTITION" ]; then
+        mountpoint -q "$LAST_TMPDIR" && umount -f "$LAST_TMPDIR" &>/dev/null && rm -rf "$LAST_TMPDIR"
+
+        tmpdir="$(mktemp -d)/"
+        [ "$ROOTFS_TYPE" == "ubifs" -o "$ROOTFS_TYPE" == "ext4" ] && mount_option="-t $ROOTFS_TYPE"
+        mount $mount_option "$ROOT_PARTITION" "$tmpdir" &>/dev/null
+
+        LAST_ROOT_PARTITION="$ROOT_PARTITION"
+        LAST_TMPDIR="$tmpdir"
+    fi
 
     if [[ "$STARTUP_FILE" == *FLASH* ]] && [ "$ROOTFS_TYPE" == "ubifs" ]; then
         type="UBI"
@@ -70,6 +78,7 @@ image_info() {
     distro_file_image="$tmpdir$ROOT_SUBDIR/etc/image-version"
     distro_file_issue="$tmpdir$ROOT_SUBDIR/etc/issue"
     distro="unknown"
+    cmp -s "/boot/STARTUP" "/boot/$STARTUP_FILE" && current=' - Current' || current=''
 
     if [ -f "$enigma_file_binary" ]; then
         e2date=$(stat -c %z "$enigma_file_binary" | cut -d ' ' -f 1 | xargs)
@@ -84,18 +93,16 @@ image_info() {
             version=$(grep '^version=' "$distro_file_image" | cut -d '=' -f 2 | xargs)
         fi
 
-        [ -z "$date" ] && date="$e2date"
-        [ -z "$distro" ] && distro=$(cat "$distro_file_issue" | head -n 1 | cut -d ' ' -f 1 | xargs)
-        dmatch=$(echo "$known_distros" | grep -oi "\"$distro\": \"[^\"]*\"")
-        [ -n "$dmatch" ] && distro=$(echo "$dmatch" | sed -E 's/.*: "(.*)"/\1/')
-        [ -z "$version" ] && version=$(cat "$distro_file_issue" | head -n 1 | cut -d ' ' -f 2 | xargs)
-
-        cmp -s "/boot/STARTUP" "/boot/$STARTUP_FILE" &>/dev/null && current=' - Current'
-        printf "Slot $type: $(echo $distro $version | xargs) ($date)$current"
+        date="${date:-$e2date}"
+        distro="${distro:-$(head -n 1 "$distro_file_issue" | cut -d ' ' -f 1 | xargs)}"
+        distro="${known_distros[$distro]:-$distro}"
+        version="${version:-$(head -n 1 "$distro_file_issue" | cut -d ' ' -f 2 | xargs)}"
+        IMAGE_INFO_RESULT="Slot $type: $(echo $distro $version | xargs) ($date)$current"
     else
-        printf "Slot $type: Empty"
+        oem=$(basename "$STARTUP_FILE" | awk -F'_' '{print $NF}')
+        [[ "$oem" =~ ^[0-9]+$ ]] && distro="Empty" || distro="$oem OEM"
+        IMAGE_INFO_RESULT="Slot $type: $distro$current"
     fi
-    umount -f "$tmpdir" &>/dev/null && rm -rf "$tmpdir"
 }
 
 select_image() {
@@ -116,16 +123,11 @@ KERNEL_PATHS=()
 ROOT_SUBDIRS=()
 STARTUP_FILES=()
 
+# chkroot - special multiboot machines
 if grep -q -E "dm820|dm7080|dm900|dm920" /proc/stb/info/model 2>/dev/null || grep -q -E "beyonwizu4|et11000|sf4008" /proc/stb/info/boxtype 2>/dev/null; then
     BOOT="/dev/mmcblk0boot1"
-elif grep -q 'kexec=1' /proc/cmdline; then
-    for dev in /dev/mmcblk0p{4,7,9}; do
-        type=$(blkid -s TYPE -o value "$dev" 2>/dev/null)
-        if [ -n "$type" ]; then
-            BOOT="$dev"
-            break
-        fi
-    done
+    MB_TYPE="chkroot"
+# chkroot - emmc multiboot machines
 else
     for i in /sys/block/mmcblk0/mmcblk0p*; do
         if [ -f "$i/uevent" ]; then
@@ -134,82 +136,58 @@ else
             case "$partname" in
                 others|startup)
                     BOOT="/dev/$devname"
+                    MB_TYPE="chkroot"
                     ;;
                 other2)
                     BOOT="/dev/mmcblk0boot1"
+                    MB_TYPE="chkroot"
                     ;;
             esac
         fi
     done
 fi
 
+# chkroot - ubifs multiboot machines
 if [ -z "$BOOT" ]; then
     for dev in /dev/sd[a-d]1; do
         label=$(blkid -s LABEL -o value "$dev" 2>/dev/null)
         if [ "$label" = "STARTUP" ]; then
             BOOT="$dev"
+            MB_TYPE="chkroot"
             break
         fi
     done
 fi
 
-echo "BOOT found: $BOOT"
+# kexec - multiboot machines
+if [ -z "$BOOT" ]; then
+    if grep -q 'kexec=1' /proc/cmdline; then
+        for dev in /dev/mmcblk0p{4,7,9}; do
+            type=$(blkid -s TYPE -o value "$dev" 2>/dev/null)
+            if [ -n "$type" ]; then
+                BOOT="$dev"
+                MB_TYPE="kexec"
+                break
+            fi
+        done
+    fi
+fi
+
+# oem supported - multiboot machines
+if [ -z "$BOOT" ]; then
+    BOOT=$(blkid | awk -F: '/TYPE="vfat"/ {print $1}' | grep '/dev/mmcblk0p')
+    MB_TYPE="oem"
+fi
+
+echo "BOOT $MB_TYPE found: $BOOT"
 
 (echo 0 > /sys/block/mmcblk0boot1/force_ro) 2>/dev/null
 mkdir -p /boot 2>/dev/null
 mount -t vfat "$BOOT" /boot 2>/dev/null
 
-FILE="/boot/STARTUP_FLASH"
-if [ -f "$FILE" ]; then
-    ROOT=""
-    ROOTSUBDIR=""
-    KERNEL=""
-
-    while IFS= read -r line || [ -n "$line" ]; do
-        ROOT=$(echo "$line" | sed -n 's/.*root=\([^ ]*\).*/\1/p')
-        ROOTSUBDIR=$(echo "$line" | sed -n 's/.*rootsubdir=\([^ ]*\).*/\1/p')
-        ROOTFSTYPE=$(echo "$line" | sed -n 's/.*rootfstype=\([^ ]*\).*/\1/p')
-        KERNEL=$(echo "$line" | sed -n 's/.*kernel=\([^ ]*\).*/\1/p')
-    done < "$FILE"
-
-    if [ -n "$ROOT" ] && [ -n "$KERNEL" ]; then
-        choices+=("F")
-        ROOT_PARTITIONS+=("$ROOT")
-        KERNEL_PATHS+=("$KERNEL")
-        ROOT_SUBDIRS+=("$ROOTSUBDIR")
-        ROOTFS_TYPES+=("$ROOTFSTYPE")
-        STARTUP_FILES+=("STARTUP_FLASH")
-        images+=("$(image_info "0")")
-    fi
-fi
-
-FILE="/boot/STARTUP_RECOVERY"
-if [ -f "$FILE" ]; then
-    ROOT=""
-    ROOTSUBDIR=""
-    KERNEL=""
-
-    while IFS= read -r line || [ -n "$line" ]; do
-        ROOT=$(echo "$line" | sed -n 's/.*root=\([^ ]*\).*/\1/p')
-        ROOTSUBDIR=$(echo "$line" | sed -n 's/.*rootsubdir=\([^ ]*\).*/\1/p')
-        ROOTFSTYPE=$(echo "$line" | sed -n 's/.*rootfstype=\([^ ]*\).*/\1/p')
-        KERNEL=$(echo "$line" | sed -n 's/.*kernel=\([^ ]*\).*/\1/p')
-    done < "$FILE"
-
-    if [ -n "$ROOT" ] && [ -n "$KERNEL" ]; then
-        choices+=("R")
-        ROOT_PARTITIONS+=("$ROOT")
-        KERNEL_PATHS+=("$KERNEL")
-        grep -q 'kexec=1' /proc/cmdline && ROOT_SUBDIRS+=("") || ROOT_SUBDIRS+=("$ROOTSUBDIR")
-        ROOTFS_TYPES+=("$ROOTFSTYPE")
-        STARTUP_FILES+=("STARTUP_RECOVERY")
-        images+=("$(image_info "0")")
-    fi
-fi
-
-for i in $(seq 1 15); do
-    FILE="/boot/STARTUP_$i"
-    if [ -f "$FILE" ]; then
+idx=0
+for FILE in $(ls -v /boot/STARTUP_*); do
+    if [ -r "$FILE" ] && [[ ! "$FILE" == *DISABLE* ]]; then
         ROOT=""
         ROOTSUBDIR=""
         KERNEL=""
@@ -221,17 +199,23 @@ for i in $(seq 1 15); do
             KERNEL=$(echo "$line" | sed -n 's/.*kernel=\([^ ]*\).*/\1/p')
         done < "$FILE"
 
-        if [ -n "$ROOT" ] && [ -n "$KERNEL" ]; then
-            choices+=("$i")
-            ROOT_PARTITIONS+=("$ROOT")
-            KERNEL_PATHS+=("$KERNEL")
-            ROOT_SUBDIRS+=("$ROOTSUBDIR")
-            ROOTFS_TYPES+=("$ROOTFSTYPE")
-            STARTUP_FILES+=("STARTUP_$i")
-            images+=("$(image_info "$((${#choices[@]} - 1))")")
-        fi
+        choices+=("$(basename "$FILE" | awk -F'_' '{
+                        if ($NF ~ /^[0-9]+$/)
+                            print $NF;
+                        else
+                            print substr($NF, 1, 1);
+        }')")
+        ROOT_PARTITIONS+=("${ROOT:-OEM}")
+        KERNEL_PATHS+=("$KERNEL")
+        grep -q 'kexec=1' /proc/cmdline && { [[ ! "$KERNEL" == *$ROOTSUBDIR* ]] && ROOT_SUBDIRS+=("") || ROOT_SUBDIRS+=("$ROOTSUBDIR"); } || ROOT_SUBDIRS+=("$ROOTSUBDIR")
+        ROOTFS_TYPES+=("$ROOTFSTYPE")
+        STARTUP_FILES+=("$(basename $FILE)")
+        image_info "$idx"; images+=("$IMAGE_INFO_RESULT")
+        idx=$((idx + 1))
     fi
 done
+
+mountpoint -q "$LAST_TMPDIR" && umount -f "$LAST_TMPDIR" &>/dev/null && rm -rf "$LAST_TMPDIR"
 
 if [ ${#images[@]} -eq 0 ]; then
     echo "No available images to select from."
@@ -269,10 +253,12 @@ if mountpoint -q "/tmp/root"; then
     echo "Unmounting /tmp/root..."
     umount /tmp/root
 fi
-for i in $(seq 1 15); do
-    if mountpoint -q "/var/volatile/tmp/root$i"; then
-        echo "Unmounting /var/volatile/tmp/root$i..."
-        umount "/var/volatile/tmp/root$i"
+for i in "${!choices[@]}"; do
+    if [[ "${choices[$i]}" =~ ^[0-9]+$ ]]; then
+        if mountpoint -q "/var/volatile/tmp/root${choices[$i]}"; then
+            echo "Unmounting /var/volatile/tmp/root${choices[$i]}..."
+            umount "/var/volatile/tmp/root${choices[$i]}"
+        fi
     fi
 done
 
