@@ -66,6 +66,8 @@ KERNEL_IMAGEDEST = "tmp"
 
 KERNEL_EXTRA_ARGS = 'EXTRA_CFLAGS="-std=gnu17 -Wno-attribute-alias"'
 
+RPROVIDES:${KERNEL_PACKAGE_NAME}-image:mipsel += "kernel-${KERNEL_IMAGETYPE}"
+
 # Linux MIPS Models
 
 KERNEL_OUTPUT:mipsel = "vmlinux"
