@@ -26,7 +26,7 @@ do_install() {
     install -d ${D}/usr/bin/
     install -m 0755 ${S}/multiboot-selector.sh ${D}/usr/bin/multiboot-selector.sh
     install -d ${D}${datadir}/multiboot-legacy/
-    tar --exclude='Makefile.am' -cJvf ${D}${datadir}/multiboot-legacy/MultiBootSelector.tar.gz -C ${S}/${BP}/src . --transform 's,^,MultiBootSelector/,'
+    install ${S}/${BP}/src/*.py ${S}/${BP}/src/*.png ${D}${datadir}/multiboot-legacy/
 }
 
 INSANE_SKIP = "file-rdeps"
