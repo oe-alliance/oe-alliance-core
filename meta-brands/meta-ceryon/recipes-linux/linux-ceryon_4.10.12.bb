@@ -68,6 +68,8 @@ KERNEL_IMAGETYPE:mipsel = "vmlinux"
 
 KERNEL_EXTRA_ARGS = "EXTRA_CFLAGS=-Wno-attribute-alias"
 
+RPROVIDES:${KERNEL_PACKAGE_NAME}-image:mipsel += "kernel-${KERNEL_IMAGETYPE}"
+
 FILES:${KERNEL_PACKAGE_NAME}-image:mipsel = "/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}*"
 
 kernel_do_configure:prepend:mipsel() {
