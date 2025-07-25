@@ -55,6 +55,8 @@ SRC_URI = " \
     file://0015-fcrypt-fix-bitoperation-for-gcc.patch \
     file://devinitdata-gcc11.patch \
     file://fix-build-with-binutils-2.41.patch \
+    file://vtbl-ubi.patch \
+    file://initramfs-mipsel.cpio.xz;unpack=0 \
 "
 
 export KCFLAGS = " -std=gnu17 \
@@ -113,6 +115,11 @@ KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_IMAGEDEST = "boot"
 
 FILES:${KERNEL_PACKAGE_NAME}-image = "${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz"
+
+kernel_do_configure:prepend() {
+	install -d ${B}/usr
+	install -m 0644 ${UNPACKDIR}/initramfs-mipsel.cpio.xz ${B}/
+}
 
 do_install:append() {
         ${STRIP} ${D}/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}
@@ -175,7 +182,7 @@ pkg_postrm:kernel () {
 
 CMDLINE_CONSOLE = "console=${@d.getVar("KERNEL_CONSOLE") or "ttyS0"}"
 CMDLINE_JFFS2 = "root=/dev/mtdblock3 rootfstype=jffs2 rw ${CMDLINE_CONSOLE}"
-CMDLINE_UBI = "ubi.mtd=root root=ubi0:rootfs rootfstype=ubifs rw ${CMDLINE_CONSOLE}"
+CMDLINE_UBI = "ubi.mtd=root root=ubi0:rootfs rootfstype=ubifs rw usbcore.autosuspend=-1 ${CMDLINE_CONSOLE}"
 CMDLINE = "${@bb.utils.contains('IMAGE_FSTYPES', 'ubinfi', '${CMDLINE_UBI}', '${CMDLINE_JFFS2}', d)}"
 
 do_rm_work() {

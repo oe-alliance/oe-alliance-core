@@ -37,6 +37,12 @@ SRC_URI += "https://source.mynonpublic.com/gfutures/linux-${PV}-${ARCH}.tar.gz;n
     file://fix-build-with-binutils-2.41.patch \
     "
 
+SRC_URI:append:mipsel = " \
+    file://block2mtd.patch \
+    file://initramfs-mipsel.cpio.xz;unpack=0 \
+    "
+
+
 SRC_URI:append:arm = " \
     file://findkerneldevice.sh \
     file://initramfs-subdirboot.cpio.gz;unpack=0 \
@@ -53,20 +59,25 @@ KERNEL_IMAGEDEST = "tmp"
 
 # Linux MIPS Models
 
-KERNEL_OUTPUT:mips = "vmlinux"
-KERNEL_IMAGETYPE:mips = "vmlinux"
+KERNEL_OUTPUT:mipsel = "vmlinux"
+KERNEL_IMAGETYPE:mipsel = "vmlinux"
 
 KERNEL_EXTRA_ARGS = 'EXTRA_CFLAGS="-std=gnu17 -Wno-attribute-alias"'
 
-FILES:${KERNEL_PACKAGE_NAME}-image:mips = "/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}*"
+FILES:${KERNEL_PACKAGE_NAME}-image:mipsel = "/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}*"
 
-kernel_do_install:append:mips () {
+kernel_do_configure:prepend:mipsel() {
+	install -d ${B}/usr
+	install -m 0644 ${UNPACKDIR}/initramfs-mipsel.cpio.xz ${B}/
+}
+
+kernel_do_install:append:mipsel () {
 	${STRIP} ${D}/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}
 	gzip -9c ${D}/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION} > ${D}/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz
 	rm ${D}/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}
 }
 
-pkg_postinst:kernel-image:mips () {
+pkg_postinst:kernel-image:mipsel () {
 	if [ "x$D" == "x" ]; then
 		if [ -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz ] ; then
 			flash_erase /dev/${MTD_KERNEL} 0 0

@@ -332,18 +332,12 @@ ${@bb.utils.contains('MACHINEBUILD', 'axas4kcombo', 'axas2' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'axas4ktwin', 'axas2' , '', d)}\
 "
 
-KERNEL_MODULE_AUTOLOAD += "xhci-plat-hcd"
-KERNEL_MODULE_AUTOLOAD += "ehci-platform"
-KERNEL_MODULE_AUTOLOAD += "ohci-platform"
 KERNEL_MODULE_AUTOLOAD += "cfg80211"
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "\
     dinobot-dvb-modules-${MACHINE} \
-    kernel-module-xhci-plat-hcd \
-    kernel-module-ehci-platform \
-    kernel-module-ohci-platform \
     ${@bb.utils.contains_any("MACHINE_FEATURES", "kodi22", 'dinobot-opengl-${SOC_FAMILY}', '',d)} \
-    ${@bb.utils.contains('MACHINE_FEATURES', 'emmc', 'resizerootfs' , '', d)} \
+    ${@bb.utils.contains('MACHINE_FEATURES', 'mmc', 'resizerootfs' , '', d)} \
     dinobot-partitions-${SOC_FAMILY} \
     dinobot-libs-${MACHINE} \
     dinobot-hihalt-${MACHINE} \

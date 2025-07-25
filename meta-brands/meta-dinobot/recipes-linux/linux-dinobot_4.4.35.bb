@@ -43,6 +43,8 @@ SRC_URI:u5pvr += "https://source.mynonpublic.com/dinobot/dinobot-linux-${PV}-${S
 
 SRC_URI = "https://source.mynonpublic.com/dinobot/dinobot-linux-${PV}-${SRCDATE}.tar.gz;name=new \
     file://initramfs-chkroot.cpio.xz;unpack=0 \
+    file://initramfs-nand-arm.cpio.xz;unpack=0 \
+    file://initramfs-arm-a9-nand.cpio.xz;unpack=0 \
     file://defconfig \
     file://410dts.patch \
     file://0001-mmc-switch-1.8V.patch \
@@ -56,6 +58,7 @@ SRC_URI = "https://source.mynonpublic.com/dinobot/dinobot-linux-${PV}-${SRCDATE}
     file://Backport_minimal_compiler_attributes_h_to_support_GCC_9.patch \
     file://fix-build-with-binutils-2.41.patch \
     file://cfg80211_Add_option_to_report_the_bss_entry_in_connect_result.patch \
+    file://block2mtd.patch \
 "
 
 # wireguard v1.0.20220627
@@ -80,6 +83,8 @@ KERNEL_OUTPUT = "arch/${ARCH}/boot/${KERNEL_IMAGETYPE}"
 kernel_do_configure:prepend() {
 	install -d ${B}/usr
 	install -m 0644 ${UNPACKDIR}/initramfs-chkroot.cpio.xz ${B}/
+	install -m 0644 ${UNPACKDIR}/initramfs-nand-arm.cpio.xz ${B}/
+	install -m 0644 ${UNPACKDIR}/initramfs-arm-a9-nand.cpio.xz ${B}/
 }
 
 kernel_do_install:append() {

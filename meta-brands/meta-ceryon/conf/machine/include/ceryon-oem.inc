@@ -207,7 +207,7 @@ MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS += " \
 MACHINE_EXTRA_RRECOMMENDS += " \
     ${@bb.utils.contains('MACHINE', '8100s', '' , 'ceryon-shutdown', d)} \
     gstreamer1.0-plugin-dvbmediasink \
-    ${@bb.utils.contains('MACHINE_FEATURES', 'emmc', 'resizerootfs' , '', d)} \
+    ${@bb.utils.contains('MACHINE_FEATURES', 'mmc', 'resizerootfs' , '', d)} \
     gstreamer1.0-libav \
         ${@bb.utils.contains('MACHINE_FEATURES', 'oem-info', 'oem-info', '',d)} \
     "

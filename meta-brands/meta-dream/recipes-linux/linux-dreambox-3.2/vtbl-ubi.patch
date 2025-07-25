@@ -1,0 +1,56 @@
+--- a/drivers/mtd/ubi/build.c	2025-05-09 19:09:52.704087443 +0000
++++ b/drivers/mtd/ubi/build.c	2025-05-09 19:10:03.646094305 +0000
+@@ -849,8 +849,8 @@
+ 			ubi_err("cannot auto-resize volume %d", vol_id);
+ 	}
+ 
+-	if (err)
+-		return err;
++	//if (err)
++	//	return err;
+ 
+ 	ubi_msg("volume %d (\"%s\") re-sized from %d to %d LEBs", vol_id,
+ 		vol->name, old_reserved_pebs, vol->reserved_pebs);
+--- a/drivers/mtd/ubi/vtbl.c	2025-05-09 13:31:09.241144808 +0000
++++ b/drivers/mtd/ubi/vtbl.c	2025-05-09 13:30:58.345129078 +0000
+@@ -248,7 +248,7 @@
+ 			dbg_err("too large reserved_pebs %d, good PEBs %d",
+ 				reserved_pebs, ubi->good_peb_count);
+ 			err = 9;
+-			goto bad;
++			//goto bad;
+ 		}
+ 
+ 		if (name_len > UBI_VOL_NAME_MAX) {
+--- a/drivers/mtd/ubi/eba.c	2025-05-09 17:48:00.827322274 +0000
++++ b/drivers/mtd/ubi/eba.c	2025-05-09 17:49:11.203361267 +0000
+@@ -1272,7 +1272,7 @@
+ 			ubi_err("%d PEBs are corrupted and not used",
+ 				ubi->corr_peb_count);
+ 		err = -ENOSPC;
+-		goto out_free;
++		//goto out_free;
+ 	}
+ 	ubi->avail_pebs -= EBA_RESERVED_PEBS;
+ 	ubi->rsvd_pebs += EBA_RESERVED_PEBS;
+--- a/drivers/mtd/ubi/wl.c	2025-05-09 18:35:49.586538897 +0000
++++ b/drivers/mtd/ubi/wl.c	2025-05-09 18:36:31.043598587 +0000
+@@ -1512,15 +1512,15 @@
+ 		if (ubi->corr_peb_count)
+ 			ubi_err("%d PEBs are corrupted and not used",
+ 				ubi->corr_peb_count);
+-		goto out_free;
++		//goto out_free;
+ 	}
+ 	ubi->avail_pebs -= WL_RESERVED_PEBS;
+ 	ubi->rsvd_pebs += WL_RESERVED_PEBS;
+ 
+ 	/* Schedule wear-leveling if needed */
+ 	err = ensure_wear_leveling(ubi);
+-	if (err)
+-		goto out_free;
++	//if (err)
++	//	goto out_free;
+ 
+ 	return 0;
+ 

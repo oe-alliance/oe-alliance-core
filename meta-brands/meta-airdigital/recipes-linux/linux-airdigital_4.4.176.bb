@@ -19,10 +19,12 @@ SRC_URI[sha256sum] = "6448ea7093cea5e30fcd9ceea357eee3ad98d1b3e7a2367a41fae990f3
 SRC_URI = "https://source.mynonpublic.com/zgemma/linux-${PV}-${SRCDATE}-${ARCH}.tar.gz \
 	file://defconfig \
 	file://initramfs-subdirboot.cpio.gz;unpack=0 \
+	file://initramfs-arm-a7-nand.cpio.xz;unpack=0 \
 	file://findkerneldevice.sh \
 	file://fix-multiple-defs-yyloc.patch \
 	file://fix-build-with-binutils-2.41.patch \
 	file://cfg80211_Add_option_to_report_the_bss_entry_in_connect_result.patch \
+	file://block2mtd.patch \
 "
 
 SRC_URI:append:h8 = " file://0101-hi3716mv430-dts-move-aon-gpio7-gpio5.patch"
@@ -43,6 +45,7 @@ FILES:${KERNEL_PACKAGE_NAME}-image = "/${KERNEL_IMAGEDEST}/findkerneldevice.sh"
 kernel_do_configure:prepend() {
 	install -d ${B}/usr
 	install -m 0644 ${UNPACKDIR}/initramfs-subdirboot.cpio.gz ${B}/
+	install -m 0644 ${UNPACKDIR}/initramfs-arm-a7-nand.cpio.xz ${B}/
 }
 
 pkg_postinst:kernel-image:hzero() {

@@ -17,6 +17,18 @@ DVB_CYPRESS ?= "kernel-module"
 
 MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS += "\
     kernel-module-cdfs \
+    kernel-module-cfg80211 \
+    kernel-module-hid \
+    kernel-module-isofs \
+    kernel-module-udf \
+    kernel-module-nfs \
+    kernel-module-nfsv2 \
+    kernel-module-nfsv3 \
+    kernel-module-nfsv4 \
+    kernel-module-nfsd \
+    kernel-module-cifs \
+    kernel-module-usbhid \
+    kernel-module-exportfs \
     "
 
 MACHINE_EXTRA_RRECOMMENDS += " \

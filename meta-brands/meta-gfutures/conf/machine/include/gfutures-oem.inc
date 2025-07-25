@@ -183,7 +183,7 @@ MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS += "\
     kernel-module-cdfs \
     ${@bb.utils.contains('MACHINE_FEATURES', 'swap', 'hd-swapcreate', '',d)} \
     ${@bb.utils.contains('MACHINE_FEATURES', 'gfwol', 'gfutures-ethwol' , '', d)} \
-    ${@bb.utils.contains('MACHINE_FEATURES', 'emmc', 'resizerootfs' , '', d)} \
+    ${@bb.utils.contains('MACHINE_FEATURES', 'mmc', 'resizerootfs' , '', d)} \
     ${@bb.utils.contains('MACHINE_FEATURES', 'v3d-nxpl', 'hd-v3ddriver-${MACHINE}' , '', d)} \
     "
 
