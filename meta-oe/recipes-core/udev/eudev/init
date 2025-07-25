@@ -41,6 +41,7 @@ case "$1" in
     LANG=C awk '$2 == "/dev" && ($3 == "devtmpfs") { exit 1 }' /proc/mounts && {
             mount -n -o mode=0755 -t devtmpfs none "/dev"
     }
+    mkdir -p /dev/fstype /dev/uuid /dev/size /dev/label /dev/block
     [ -e /dev/pts ] || mkdir -m 0755 /dev/pts
     [ -e /dev/shm ] || mkdir -m 1777 /dev/shm
     # the automount rule for udev needs /tmp directory available, as /tmp is a symlink
