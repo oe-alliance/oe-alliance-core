@@ -15,7 +15,8 @@ SRC_URI = " \
 
 inherit gitpkgv
 
-S = "${UNPACKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 do_compile() {
 }
