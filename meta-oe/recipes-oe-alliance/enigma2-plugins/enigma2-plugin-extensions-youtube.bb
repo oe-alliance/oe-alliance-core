@@ -31,8 +31,8 @@ do_compile() {
 PLUGINPATH = "${libdir}/enigma2/python/Plugins/Extensions/${MODULE}"
 do_install:append() {
     install -d ${D}${PLUGINPATH}
-    cp -rp ${S}/src/* ${D}${PLUGINPATH}
-    cp -rp ${S}/po/* ${D}${PLUGINPATH}/locale
+    cp --no-preserve=ownership --recursive ${S}/src/* ${D}${PLUGINPATH}
+    cp --no-preserve=ownership --recursive ${S}/po/* ${D}${PLUGINPATH}/locale
     install -d ${D}/etc/enigma2
     install -m 0644 ${S}/YouTube.key ${D}/etc/enigma2/YouTube.key
 }

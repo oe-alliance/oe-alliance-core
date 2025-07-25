@@ -29,7 +29,7 @@ do_install:append() {
     install -d ${D}${libdir}/${DESTDIR}
     
     # Python Files
-    cp -aRf ${S}/HbbTV/* ${D}${libdir}/${DESTDIR}
+    cp -aRf --no-preserve=ownership ${S}/HbbTV/* ${D}${libdir}/${DESTDIR}
 }
 
 require conf/python/python3-compileall.inc

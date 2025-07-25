@@ -36,7 +36,7 @@ do_install() {
 	install ${UNPACKDIR}/locale.alias ${D}${LOCALEDIR2}
 
 	install -d ${D}${LOCALEDIR}
-	cp -rp ${S}/* ${D}/${LOCALEDIR}
+	cp --no-preserve=ownership --recursive ${S}/* ${D}/${LOCALEDIR}
 
 	for langpath in $(find ${D}${LOCALEDIR}/* -maxdepth 1 -type d); do
 		lang=$(basename $langpath)
