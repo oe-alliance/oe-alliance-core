@@ -22,8 +22,6 @@ RDEPENDS:${PN} = "\
     ${@bb.utils.contains("MACHINE_FEATURES", "iniwol", "ini-coldboot ini-ethwol", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "gbwol", "gigablue-ethwol", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "gbsoftwol", "gigablue-ethsoftwol", "", d)} \
-    ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "" , "nmap", d)} \
-    ${@bb.utils.contains("MACHINE_FEATURES", "emmc", "dosfstools mtools e2fsprogs-resize2fs partitions-by-name gptfdisk" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "fastboot", "dosfstools mtools android-tools" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "recovery", "recovery" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "gbbluetooth", "enigma2-plugin-systemplugins-bluetoothsetup", "", d)} \
@@ -70,8 +68,10 @@ NORMAL_IMAGE = "\
     llmnrd \
     sdparm \
     vsftpd \
+    nmap \
     mtd-utils \
     mtd-utils-ubifs \
+    ${@bb.utils.contains("MACHINE_FEATURES", "emmc", "dosfstools mtools e2fsprogs-resize2fs partitions-by-name gptfdisk" , "", d)} \
 "
 
 # The following RRECOMMENDS ensure that images on boxes with very limited

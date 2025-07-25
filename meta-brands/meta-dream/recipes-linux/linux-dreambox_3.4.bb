@@ -29,7 +29,9 @@ SRC_URI = " \
     file://0003-makefile-silence-packed-not-aligned-warn.patch \
     file://0004-fcrypt-fix-bitoperation-for-gcc.patch \
     file://fix-build-with-binutils-2.41.patch \
+    file://vtbl-ubi.patch \
     file://chkroot-multiboot.cpio.xz;unpack=0 \
+    file://initramfs-mipsel.cpio.xz;unpack=0 \
 "
 
 export KCFLAGS = " -Wno-error=incompatible-pointer-types \
@@ -73,6 +75,7 @@ CMDLINE = "${@bb.utils.contains('MACHINE', 'dm520', \
 kernel_do_configure:prepend() {
 	install -d ${B}/usr
 	install -m 0644 ${UNPACKDIR}/chkroot-multiboot.cpio.xz ${B}/
+	install -m 0644 ${UNPACKDIR}/initramfs-mipsel.cpio.xz ${B}/
 }
 
 BRCM_PATCHLEVEL = "4.0"

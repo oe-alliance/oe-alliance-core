@@ -1,0 +1,218 @@
+--- a/drivers/mtd/devices/block2mtd.c	2013-03-08 15:04:13.272322463 +0100
++++ b/drivers/mtd/devices/block2mtd.c	2013-03-08 15:04:13.272322463 +0100
+@@ -22,6 +22,8 @@
+ #include <linux/slab.h>
+ #include <linux/major.h>
+ 
++extern int del_mtd_device(struct mtd_info *mtd);
++
+ /* Info for the block device */
+ struct block2mtd_dev {
+ 	struct list_head list;
+@@ -209,7 +211,7 @@
+ }
+ 
+ 
+-static struct block2mtd_dev *add_device(char *devname, int erase_size)
++static struct block2mtd_dev *add_device(char *devname, int erase_size, int write_size)
+ {
+ 	const fmode_t mode = FMODE_READ | FMODE_WRITE | FMODE_EXCL;
+ 	struct block_device *bdev;
+@@ -265,7 +267,7 @@
+ 
+ 	dev->mtd.size = dev->blkdev->bd_inode->i_size & PAGE_MASK;
+ 	dev->mtd.erasesize = erase_size;
+-	dev->mtd.writesize = 1;
++	dev->mtd.writesize = write_size;
+ 	dev->mtd.writebufsize = PAGE_SIZE;
+ 	dev->mtd.type = MTD_RAM;
+ 	dev->mtd.flags = MTD_CAP_RAM;
+@@ -281,10 +283,11 @@
+ 		goto err_destroy_mutex;
+ 	}
+ 	list_add(&dev->list, &blkmtd_device_list);
+-	pr_info("mtd%d: [%s] erase_size = %dKiB [%d]\n",
++	pr_info("mtd%d: [%s] erase_size = %dKiB [%d] write_size = %dKiB [%d]\n",
+ 		dev->mtd.index,
+ 		dev->mtd.name + strlen("block2mtd: "),
+-		dev->mtd.erasesize >> 10, dev->mtd.erasesize);
++		dev->mtd.erasesize >> 10, dev->mtd.erasesize,
++		dev->mtd.writesize >> 10, dev->mtd.writesize);
+ 	return dev;
+ 
+ err_destroy_mutex:
+@@ -348,16 +351,44 @@
+ 
+ #ifndef MODULE
+ static int block2mtd_init_called = 0;
+-static char block2mtd_paramline[80 + 12]; /* 80 for device, 12 for erase size */
++static char block2mtd_paramline[80 + 12 + 12]; /* 80 for device, 12 for erase size , 12 for writesize*/
+ #endif
+ 
++static void remove_device_by_name(const char *name)
++{
++	struct list_head *pos, *next;
++	int name_offset = strlen("block2mtd: ");
++
++	list_for_each_safe(pos, next, &blkmtd_device_list) {
++		struct block2mtd_dev *dev = list_entry(pos, typeof(*dev), list);
++		if (!strcmp(name, dev->mtd.name + name_offset)) {
++			int err;
++			block2mtd_sync(&dev->mtd);
++			err = del_mtd_device(&dev->mtd);
++			if (err == 0) {
++				pr_info("mtd%d: [%s] removed",
++						dev->mtd.index, name);
++				list_del(&dev->list);
++				block2mtd_free_device(dev);
++			} else
++				pr_err("mtd%d: [%s] cannot remove: %d",
++						dev->mtd.index, name, err);
++
++			return;
++		}
++	}
++	pr_err("no such device: %s", name);
++}
++
++
+ static int block2mtd_setup2(const char *val)
+ {
+-	char buf[80 + 12]; /* 80 for device, 12 for erase size */
++	char buf[80 + 12 + 12]; /* 80 for device, 12 for erase size , 12 for writesize*/
+ 	char *str = buf;
+-	char *token[2];
++	char *token[3];
+ 	char *name;
+ 	size_t erase_size = PAGE_SIZE;
++	size_t write_size = 1;
+ 	int i, ret;
+ 
+ 	if (strnlen(val, sizeof(buf)) >= sizeof(buf)) {
+@@ -368,7 +399,7 @@
+ 	strcpy(str, val);
+ 	kill_final_newline(str);
+ 
+-	for (i = 0; i < 2; i++)
++	for (i = 0; i < 3; i++)
+ 		token[i] = strsep(&str, ",");
+ 
+ 	if (str) {
+@@ -388,6 +419,10 @@
+ 	}
+ 
+ 	if (token[1]) {
++		if (!strcmp("remove", token[1])) {
++			remove_device_by_name(name);
++			return 0;
++		}
+ 		ret = parse_num(&erase_size, token[1]);
+ 		if (ret) {
+ 			pr_err("illegal erase size\n");
+@@ -395,7 +430,14 @@
+ 		}
+ 	}
+ 
+-	add_device(name, erase_size);
++	if (token[2]) {
++		ret = parse_num(&write_size, token[2]);
++		if (ret) {
++			pr_err("illegal write size");
++		}
++	}
++
++	add_device(name, erase_size, write_size);
+ 
+ 	return 0;
+ }
+@@ -429,7 +471,7 @@
+ 
+ 
+ module_param_call(block2mtd, block2mtd_setup, NULL, NULL, 0200);
+-MODULE_PARM_DESC(block2mtd, "Device to use. \"block2mtd=<dev>[,<erasesize>]\"");
++MODULE_PARM_DESC(block2mtd, "Device to use. \"block2mtd=<dev>[,<erasesize>],<writesize>\"");
+ 
+ static int __init block2mtd_init(void)
+ {
+--- a/drivers/mtd/mtdcore.c.org	2017-02-01 06:08:50.000000000 +0100
++++ a/drivers/mtd/mtdcore.c	2025-05-03 18:30:01.740014600 +0200
+@@ -522,6 +522,7 @@
+ 	mutex_unlock(&mtd_table_mutex);
+ 	return ret;
+ }
++EXPORT_SYMBOL_GPL(del_mtd_device);
+ 
+ /**
+  * mtd_device_parse_register - parse partitions and register an MTD device.
+--- a/drivers/mtd/ubi/eba.c	2017-02-01 06:08:50.000000000 +0100
++++ b/drivers/mtd/ubi/eba.c	2025-05-03 23:27:03.623899200 +0200
+@@ -1423,17 +1423,18 @@
+ 		}
+ 	}
+ 
+-	if (ubi->avail_pebs < EBA_RESERVED_PEBS) {
+-		ubi_err(ubi, "no enough physical eraseblocks (%d, need %d)",
+-			ubi->avail_pebs, EBA_RESERVED_PEBS);
++	int eba_reserved_pebs = EBA_RESERVED_PEBS;
++
++	if (ubi->avail_pebs < eba_reserved_pebs) {
++		ubi_warn(ubi, "WARNING: not enough physical eraseblocks (%d < %d), continuing anyway!",
++			ubi->avail_pebs, eba_reserved_pebs);
+ 		if (ubi->corr_peb_count)
+-			ubi_err(ubi, "%d PEBs are corrupted and not used",
++			ubi_warn(ubi, "%d PEBs are corrupted and not used",
+ 				ubi->corr_peb_count);
+-		err = -ENOSPC;
+-		goto out_free;
++		eba_reserved_pebs = ubi->avail_pebs;
+ 	}
+-	ubi->avail_pebs -= EBA_RESERVED_PEBS;
+-	ubi->rsvd_pebs += EBA_RESERVED_PEBS;
++	ubi->avail_pebs -= eba_reserved_pebs;
++	ubi->rsvd_pebs  += eba_reserved_pebs;
+ 
+ 	if (ubi->bad_allowed) {
+ 		ubi_calculate_reserved(ubi);
+--- a/drivers/mtd/ubi/build.c	2017-02-01 06:08:50.000000000 +0100
++++ b/drivers/mtd/ubi/build.c	2025-05-08 19:43:39.967135300 +0200
+@@ -831,19 +831,19 @@
+ 		vtbl_rec = ubi->vtbl[vol_id];
+ 		err = ubi_change_vtbl_record(ubi, vol_id, &vtbl_rec);
+ 		if (err)
+-			ubi_err(ubi, "cannot clean auto-resize flag for volume %d",
++			ubi_warn(ubi, "cannot clean auto-resize flag for volume %d",
+ 				vol_id);
+ 	} else {
+ 		desc.vol = vol;
+ 		err = ubi_resize_volume(&desc,
+ 					old_reserved_pebs + ubi->avail_pebs);
+ 		if (err)
+-			ubi_err(ubi, "cannot auto-resize volume %d",
++			ubi_warn(ubi, "cannot auto-resize volume %d",
+ 				vol_id);
+ 	}
+ 
+ 	if (err)
+-		return err;
++		return 0;
+ 
+ 	ubi_msg(ubi, "volume %d (\"%s\") re-sized from %d to %d LEBs",
+ 		vol_id, vol->name, old_reserved_pebs, vol->reserved_pebs);
+--- a/drivers/mtd/ubi/wl.c	2017-02-01 06:08:50.000000000 +0100
++++ b/drivers/mtd/ubi/wl.c	2025-05-03 21:51:56.252423900 +0200
+@@ -1979,12 +1979,12 @@
+ #endif
+ 
+ 	if (ubi->avail_pebs < reserved_pebs) {
+-		ubi_err(ubi, "no enough physical eraseblocks (%d, need %d)",
++		ubi_warn(ubi, "WARNING: not enough physical eraseblocks (%d < %d), continuing anyway!",
+ 			ubi->avail_pebs, reserved_pebs);
+ 		if (ubi->corr_peb_count)
+-			ubi_err(ubi, "%d PEBs are corrupted and not used",
++			ubi_warn(ubi, "%d PEBs are corrupted and not used",
+ 				ubi->corr_peb_count);
+-		goto out_free;
++		reserved_pebs = ubi->avail_pebs;
+ 	}
+ 	ubi->avail_pebs -= reserved_pebs;
+ 	ubi->rsvd_pebs += reserved_pebs;

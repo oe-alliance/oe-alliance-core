@@ -66,6 +66,8 @@ SRC_URI += "https://source.mynonpublic.com/protek/protek-linux-${PV}-${SRCDATE}.
     file://fix-never-be-null_outside-array-bounds-gcc-12.patch \
     file://linux3.4-ARM-8933-1-replace-Sun-Solaris-style-flag-on-section.patch \
     file://fix-build-with-binutils-2.41.patch \
+    file://block2mtd.patch \
+    file://initramfs-mipsel.cpio.xz;unpack=0 \
 "
 
 S = "${WORKDIR}/linux-${PV}"
@@ -78,6 +80,11 @@ KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_IMAGEDEST = "tmp"
 
 FILES:${KERNEL_PACKAGE_NAME}-image = "/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz"
+
+kernel_do_configure:prepend() {
+	install -d ${B}/usr
+	install -m 0644 ${UNPACKDIR}/initramfs-mipsel.cpio.xz ${B}/
+}
 
 kernel_do_install:append() {
     ${STRIP} ${D}/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}

@@ -46,6 +46,8 @@ SRC_URI += "https://source.mynonpublic.com/unibox/linux-${KV}-${SRCDATE}.tar.gz 
     file://move-default-dialect-to-SMB3.patch \
     file://linux3.4-ARM-8933-1-replace-Sun-Solaris-style-flag-on-section.patch \
     file://fix-build-with-binutils-2.41.patch \
+    file://block2mtd.patch \
+    file://initramfs-mipsel.cpio.xz;unpack=0 \
     "
 
 export KCFLAGS = " -Wno-error=incompatible-pointer-types \
@@ -82,6 +84,8 @@ do_configure:prepend() {
     rm -rf ${STAGING_KERNEL_DIR}/include/generated
     rm -rf ${STAGING_KERNEL_DIR}/include/config
     rm -rf ${STAGING_KERNEL_DIR}/arch/mips/include/generated
+    install -d ${B}/usr
+    install -m 0644 ${UNPACKDIR}/initramfs-mipsel.cpio.xz ${B}/
 }
 
 kernel_do_install:append() {

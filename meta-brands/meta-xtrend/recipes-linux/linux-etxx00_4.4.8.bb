@@ -35,6 +35,8 @@ SRC_URI += "https://source.mynonpublic.com/xtrend/xtrend-linux-${PV}-${SRCDATE}.
     file://fix-never-be-null_outside-array-bounds-gcc-12.patch \
     file://fix-build-with-binutils-2.41.patch \
     file://cfg80211_Add_option_to_report_the_bss_entry_in_connect_result.patch \
+    file://block2mtd.patch \
+    file://initramfs-mipsel.cpio.xz;unpack=0 \
     "
 
 S = "${WORKDIR}/linux-${PV}"
@@ -49,6 +51,11 @@ KERNEL_IMAGEDEST = "tmp"
 FILES:${KERNEL_PACKAGE_NAME}-image = "/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz"
 
 KERNEL_EXTRA_ARGS = "EXTRA_CFLAGS=-Wno-attribute-alias"
+
+kernel_do_configure:prepend() {
+	install -d ${B}/usr
+	install -m 0644 ${UNPACKDIR}/initramfs-mipsel.cpio.xz ${B}/
+}
 
 kernel_do_install:append() {
     ${STRIP} ${D}/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}

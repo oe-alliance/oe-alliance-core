@@ -26,6 +26,7 @@ SRC_URI = "https://source.mynonpublic.com/zgemma/linux-${PV}-${SRCDATE}-${ARCH}.
     file://dvb-usb-linux_4.4.179.patch \
     file://wifi-linux_4.4.183.patch \
     file://initramfs-subdirboot.cpio.gz;unpack=0 \
+    file://initramfs-nand-arm.cpio.xz;unpack=0 \
     file://findkerneldevice.sh \
     file://move-default-dialect-to-SMB3.patch \
     file://0004-linux-fix-buffer-size-warning-error.patch \
@@ -39,6 +40,7 @@ SRC_URI = "https://source.mynonpublic.com/zgemma/linux-${PV}-${SRCDATE}-${ARCH}.
     file://fix-multiple-defs-yyloc.patch \
     file://fix-build-with-binutils-2.41.patch \
     file://cfg80211_Add_option_to_report_the_bss_entry_in_connect_result.patch \
+    file://block2mtd.patch \
 "
 
 SRC_URI:append:h9 = " \
@@ -74,6 +76,7 @@ FILES:${KERNEL_PACKAGE_NAME}-image = "/${KERNEL_IMAGEDEST}/findkerneldevice.sh"
 kernel_do_configure:prepend() {
 	install -d ${B}/usr
 	install -m 0644 ${UNPACKDIR}/initramfs-subdirboot.cpio.gz ${B}/
+	install -m 0644 ${UNPACKDIR}/initramfs-nand-arm.cpio.xz ${B}/
 }
 
 kernel_do_install:append:h9se() {
