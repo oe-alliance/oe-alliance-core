@@ -12,6 +12,11 @@ MTD_BLACK  = "mmcblk0"
 MTD_KERNEL = "mmcblk0p27"
 MTD_ROOTFS = "mmcblk0p30"
 
+MACHINE_EXTRA_RRECOMMENDS += " \
+    gstreamer1.0-plugin-dvbmediasink \
+    gstreamer1.0-libav \
+    "
+
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS += " \
 	dags-reader-${SOC_FAMILY} \
 	dags-libreader-${SOC_FAMILY} \

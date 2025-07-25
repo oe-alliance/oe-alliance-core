@@ -514,11 +514,6 @@ MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS += "\
     ${@bb.utils.contains('MACHINE_FEATURES', 'swap', 'swapcreate-${MACHINE}', '',d)} \
     "
 
-MACHINE_EXTRA_RRECOMMENDS += " \
-    gstreamer1.0-plugin-dvbmediasink \
-    gstreamer1.0-libav \
-    "
-
 include conf/machine/include/autoload-filesystems.inc
 
 GLIBC_EXTRA_OECONF = "--with-tls"
