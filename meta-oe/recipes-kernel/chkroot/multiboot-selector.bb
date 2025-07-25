@@ -9,14 +9,13 @@ PR = "r3"
 SRCREV = "${AUTOREV}"
 
 SRC_URI = " \
-        git://github.com/oe-alliance/MultiBootSelectorPlugin.git;protocol=https;branch=master \
+        git://github.com/oe-alliance/MultiBootSelectorPlugin.git;protocol=https;branch=master;subdir=${BP} \
         file://multiboot-selector.sh \
 "
 
 inherit gitpkgv
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 do_compile() {
 }
@@ -27,7 +26,7 @@ do_install() {
     install -d ${D}/usr/bin/
     install -m 0755 ${S}/multiboot-selector.sh ${D}/usr/bin/multiboot-selector.sh
     install -d ${D}${datadir}/multiboot-legacy/
-    tar --exclude='Makefile.am' -cJvf ${D}${datadir}/multiboot-legacy/MultiBootSelector.tar.gz -C ${S}/${BP}/src . --transform 's,^,MultiBootSelector/,'
+    install ${S}/${BP}/src/*.py ${S}/${BP}/src/*.png ${D}${datadir}/multiboot-legacy/
 }
 
 INSANE_SKIP = "file-rdeps"
