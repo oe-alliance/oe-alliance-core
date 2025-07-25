@@ -29,7 +29,7 @@ do_compile() {
 PLUGINPATH = "${libdir}/enigma2/python/Plugins/Extensions/${MODULE}"
 do_install:append() {
     install -d ${D}${PLUGINPATH}
-    cp -rp ${S}/* ${D}${PLUGINPATH}
+    cp --no-preserve=ownership --recursive ${S}/* ${D}${PLUGINPATH}
 }
 
 require conf/python/python3-compileall.inc

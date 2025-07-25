@@ -1,5 +1,5 @@
---- a/src/utils.c
-+++ b/src/utils.c
+--- a/src/utils.cpp
++++ b/src/utils.cpp
 @@ -32,6 +32,7 @@
  #include <ctype.h>
  #include <dirent.h>

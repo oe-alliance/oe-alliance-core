@@ -1,5 +1,7 @@
 FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 
+PR .= ".1"
+
 SRC_URI += "file://udev-builtin-input_id.patch \
 	file://init \
 	file://60-ssd-scheduler.rules \

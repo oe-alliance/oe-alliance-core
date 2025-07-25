@@ -42,6 +42,7 @@ RRECOMMENDS:${PN} = " \
     shellinabox \
     enigma2-plugin-extensions-enhancedmoviecenter \
     nmap \
+    ffmpeg  \
     "
 
 GST_BASE_DVD = "\

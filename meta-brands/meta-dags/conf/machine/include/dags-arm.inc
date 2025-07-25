@@ -1,5 +1,10 @@
 include conf/machine/include/dags-oem.inc
 
+MACHINE_EXTRA_RRECOMMENDS += " \
+    gstreamer1.0-plugin-dvbmediasink \
+    gstreamer1.0-libav \
+    "
+
 PACKAGECONFIG_GL:pn-qtbase = "gles2 eglfs linuxfb"
 PACKAGECONFIG_FB:pn-qtbase = " "
 

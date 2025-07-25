@@ -12,6 +12,11 @@ MTD_BLACK  = "mmcblk0"
 MTD_KERNEL = "mmcblk0p27"
 MTD_ROOTFS = "mmcblk0p30"
 
+MACHINE_EXTRA_RRECOMMENDS += " \
+    gstreamer1.0-plugin-dvbmediasink \
+    gstreamer1.0-libav \
+    "
+
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS += " \
 	dags-reader-${SOC_FAMILY} \
 	dags-libreader-${SOC_FAMILY} \
@@ -49,13 +54,6 @@ PREFERRED_PROVIDER_virtual/blindscan-dvbs = "dags-blindscan-utils-${SOC_FAMILY}"
 
 require conf/machine/include/arm/armv7a/tune-cortexa15.inc
 
-IMAGE_CMD:tar:prepend = "\
-	mkdir -p ${IMAGE_ROOTFS}/usr/lib; \
-	if [ "${PACKAGE_LIST}" = "1" ]; then \
-        cp ${IMAGE_MANIFEST} ${IMAGE_ROOTFS}/usr/lib/package.lst; \
-    fi; \
-    "
-
 IMAGE_CMD:dagsemmc:append = "\
     mkdir -p ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}; \
     mkdir -p ${DEPLOY_DIR_IMAGE}/release/${IMAGEDIR}; \
@@ -65,6 +63,9 @@ IMAGE_CMD:dagsemmc:append = "\
     echo ${IMAGE_VER_STRING} > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/imageversion; \
     cd ${DEPLOY_DIR_IMAGE}; \
     zip ${IMAGE_NAME}_restore_mmc.zip ${IMAGEDIR}/*; \
+    if [ "${PACKAGE_LIST}" = "1" ]; then \
+        cp ${IMAGE_MANIFEST} ${IMAGE_ROOTFS}/usr/lib/package.lst; \
+    fi; \
     cd ${IMAGE_ROOTFS}; \
     /usr/bin/fakeroot tar -cvf ${DEPLOY_DIR_IMAGE}/rootfs.tar -C ${IMAGE_ROOTFS} .; \
     mv ${DEPLOY_DIR_IMAGE}/rootfs.tar ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/rootfs.tar; \

@@ -20,8 +20,8 @@ PACKAGES = "${PN}"
 FILES:${PN} = "/picon/* /piconlcd/*"
 
 do_install() {
-    cp -rp ${S}/picon ${D}/
-    cp -rp ${S}/piconlcd ${D}/
+    cp --no-preserve=ownership --recursive ${S}/picon ${D}/
+    cp --no-preserve=ownership --recursive ${S}/piconlcd ${D}/
 }
 
 do_package_qa[noexec] = "1"
