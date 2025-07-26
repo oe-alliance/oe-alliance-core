@@ -24,6 +24,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
 SRC_URI:u5pvr += "https://source.mynonpublic.com/dinobot/dinobot-linux-${PV}-${SRCDATE}.tar.gz;name=kernel \
     file://initramfs-chkroot.cpio.xz;unpack=0 \
+    file://initramfs-nand-arm.cpio.xz;unpack=0 \
+    file://initramfs-arm-a9-nand.cpio.xz;unpack=0 \
     file://defconfig \
     file://sdio-platform.patch \
     file://accelmem.patch \
