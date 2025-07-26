@@ -77,7 +77,7 @@ image_info() {
     distro_file_enigma="$tmpdir$ROOT_SUBDIR/usr/lib/enigma.info"
     distro_file_image="$tmpdir$ROOT_SUBDIR/etc/image-version"
     distro_file_issue="$tmpdir$ROOT_SUBDIR/etc/issue"
-    distro="unknown"
+    local distro
     cmp -s "/boot/STARTUP" "/boot/$STARTUP_FILE" && current=' - Current' || current=''
 
     if [ -f "$enigma_file_binary" ]; then
@@ -150,8 +150,13 @@ fi
 # chkroot - ubifs multiboot machines
 if [ -z "$BOOT" ]; then
     for dev in /dev/sd[a-d]1; do
-        label=$(blkid -s LABEL -o value "$dev" 2>/dev/null)
-        if [ "$label" = "STARTUP" ]; then
+        label_type=$(blkid -s LABEL -s TYPE -o value "$dev" 2>/dev/null)
+        if [[ "$label_type" == *STARTUP* ]]; then
+            BOOT="$dev"
+            MB_TYPE="chkroot"
+            break
+        fi
+        if [[ "$label_type" == *vfat* ]]; then
             BOOT="$dev"
             MB_TYPE="chkroot"
             break
@@ -175,11 +180,10 @@ fi
 
 # oem supported - multiboot machines
 if [ -z "$BOOT" ]; then
-    BOOT=$(blkid | awk -F: '/TYPE="vfat"/ {print $1}' | grep '/dev/mmcblk0p')
-    MB_TYPE="oem"
+    BOOT=$(blkid | awk -F: '/TYPE="vfat"/ {print $1}' | grep '/dev/mmcblk0p') && MB_TYPE="oem"
 fi
 
-echo "BOOT $MB_TYPE found: $BOOT"
+echo "BOOT ${MB_TYPE:-device not} found${BOOT:+: $BOOT}"
 
 (echo 0 > /sys/block/mmcblk0boot1/force_ro) 2>/dev/null
 mkdir -p /boot 2>/dev/null
