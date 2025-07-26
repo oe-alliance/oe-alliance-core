@@ -21,7 +21,7 @@ S = "${UNPACKDIR}/chromium"
 
 do_install() {
 	install -d ${D}/usr/local/chromium
-	cp -afR --no-preserve=ownership ${D}/usr/local/chromium/
+	cp -afR --no-preserve=ownership ${S}/* ${D}/usr/local/chromium/
 	chmod 755 ${D}/usr/local/chromium/run.sh
 	chmod 755 ${D}/usr/local/chromium/bin/browser_shell
 	chmod 755 ${D}/usr/local/chromium/bin/chrome
