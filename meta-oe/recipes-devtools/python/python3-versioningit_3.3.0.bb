@@ -2,7 +2,7 @@ SUMMARY = "Versioning It with your Version In Git"
 HOMEPAGE = "https://github.com/jwodder/versioningit"
 AUTHOR = "John Thorvald Wodder II <versioningit@varonathe.org>"
 LICENSE = "MIT"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=98f24e40391b9cd0b42e3d703bd0c332"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=d295714bdb97baf413d05ad9bf79f827"
 
 DEPENDS += "python3-setuptools-scm-native python3-hatchling-native python3-hatch-fancy-pypi-readme-native"
 
@@ -10,8 +10,8 @@ RDEPENDS:${PN} += "python3-packaging python3-tomli"
 
 PYPI_PACKAGE = "versioningit"
 
-SRC_URI[md5sum] = "7e25b7db2b9d6c82d910d691b52b211c"
-SRC_URI[sha256sum] = "4db83ed99f56b07d83940bee3445ca46ca120d13b6b304cdb5fb44e5aa4edec0"
+SRC_URI[md5sum] = "2a4674421f849eeb2c443723b7db9309"
+SRC_URI[sha256sum] = "b91ad7d73e73d21220e69540f20213f2b729a1f9b35c04e9e137eaf28d2214da"
 
 inherit pypi python_hatchling
 

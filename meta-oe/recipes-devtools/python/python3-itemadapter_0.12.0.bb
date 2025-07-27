@@ -4,9 +4,11 @@ SECTION = "devel/python"
 LICENSE = "BSD-3-Clause"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=a669d9fc44456c80ce6829e1b809742c"
 
-SRC_URI[md5sum] = "098605736b3b553bb43b7119912b0819"
-SRC_URI[sha256sum] = "3b0f27f4c5e2e8ae415d83e3d60d33adb7ba09b98c30638bc606fb1dff2ecdd2"
+DEPENDS += "python3-hatch-vcs-native"
 
-inherit pypi setuptools3
+SRC_URI[md5sum] = "60f9143ef897b4605ef612c0abc94e59"
+SRC_URI[sha256sum] = "a5088243e88efe3098f1720855e707176e7355ad87d1d20e2b03297f5d15d1be"
+
+inherit pypi python_hatchling
 
 include python3-package-split.inc

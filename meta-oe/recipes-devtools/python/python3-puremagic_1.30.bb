@@ -2,10 +2,10 @@ SUMMARY = "Pure python implementation of magic file detection"
 HOMEPAGE = "https://github.com/cdgriffith/puremagic"
 SECTION = "devel/python"
 LICENSE = "LGPL-3.0-only"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=1f89f26c6b96eb604330943284cc7bb7"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=ac85ec1f210835a5806bc00df0be30d7"
 
-SRC_URI[md5sum] = "de0256a7110744de7f2a3528e964a0ab"
-SRC_URI[sha256sum] = "195893fc129657f611b86b959aab337207d6df7f25372209269ed9e303c1a8c0"
+SRC_URI[md5sum] = "6dffa5de27c361c21492c74a7d97a119"
+SRC_URI[sha256sum] = "f9ff7ac157d54e9cf3bff1addfd97233548e75e685282d84ae11e7ffee1614c9"
 
 inherit pypi setuptools3
 

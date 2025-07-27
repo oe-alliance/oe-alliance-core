@@ -4,11 +4,13 @@ SECTION = "devel/python"
 LICENSE = "BSD-3-Clause"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=8a9dbf92a1904187a362d3fe098d4a1f"
 
-SRC_URI[md5sum] = "14c25b6f39478e5483a2f0ae42fcfeb1"
-SRC_URI[sha256sum] = "2855162096cf0230510890b354379ea1c0ff19d105d3147d349d2433bb222b08"
+DEPENDS += "python3-hatch-vcs-native"
+
+SRC_URI[md5sum] = "a30a7c7600a403eef1108c6ed5477ae7"
+SRC_URI[sha256sum] = "582bc65514481100b0539bd671da6b355b878869cfc77d92c63b75fcc9cf8e27"
 
 S = "${UNPACKDIR}/queuelib-${PV}"
 
-inherit pypi setuptools3
+inherit pypi python_hatchling
 
 include python3-package-split.inc

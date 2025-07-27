@@ -4,8 +4,10 @@ SECTION = "devel/python"
 LICENSE = "LGPL-3.0-only"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=3396ea30f9d21389d7857719816f83b5"
 
-SRC_URI[md5sum] = "48da05632079828fd2e89e238192bb69"
-SRC_URI[sha256sum] = "2cd7fad1009c31cc9fb6a035108509e6547547a7a738374f10bd49a09eb3ee3b"
+PYPI_PACKAGE = "more_itertools"
+
+SRC_URI[md5sum] = "62eb0a088624e979ae594a2de094ca1c"
+SRC_URI[sha256sum] = "9fddd5403be01a94b204faadcff459ec3568cf110265d3c54323e1e866ad29d3"
 
 inherit pypi python_setuptools_build_meta
 
