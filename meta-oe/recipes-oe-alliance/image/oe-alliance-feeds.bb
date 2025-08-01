@@ -115,6 +115,7 @@ RDEPENDS:${PN} = " \
     mc \
     mergerfs \
     minidlna \
+    minilocale \
     minisatip \
     mpd \
     mtd-utils \
