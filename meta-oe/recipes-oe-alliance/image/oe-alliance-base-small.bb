@@ -9,7 +9,7 @@ ALLOW_EMPTY:${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r0"
+PR = "r1"
 
 RRECOMMENDS:${PN} = " \
     tzdata \
@@ -20,6 +20,7 @@ RRECOMMENDS:${PN} = " \
     libavahi-client \
     libcrypto-compat-0.9.7 \
     libcrypto-compat-1.0.0 \
+    elfutils \
     libxcrypt-compat \
     avahi-daemon \
     cronie \
