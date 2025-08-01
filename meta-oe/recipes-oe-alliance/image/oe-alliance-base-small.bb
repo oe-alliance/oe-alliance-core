@@ -20,7 +20,6 @@ RRECOMMENDS:${PN} = " \
     libavahi-client \
     libcrypto-compat-0.9.7 \
     libcrypto-compat-1.0.0 \
-    elfutils \
     libxcrypt-compat \
     avahi-daemon \
     cronie \
