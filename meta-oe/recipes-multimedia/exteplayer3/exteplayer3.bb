@@ -11,12 +11,14 @@ RDEPENDS:${PN} = "ffmpeg libbluray"
 
 inherit gitpkgv upx-compress
 
-PV = "67+gitr"
-PKGV = "67+gitr${GITPKGV}"
-
 SRCREV = "${AUTOREV}"
-SRC_URI = "git://github.com/oe-mirrors/exteplayer3.git;branch=master;protocol=https \
-            file://port-to-ffmpeg7.patch"
+PV = "179+git"
+PKGV = "179+git${GITPKGV}"
+VER = "179"
+PR = "r0"
+
+SRC_URI = "git://github.com/oe-alliance/exteplayer3.git;branch=master;protocol=https"
+BB_GIT_SHALLOW = "0"
 
 SOURCE_FILES = "main/exteplayer.c"
 SOURCE_FILES =+ "container/container.c"
@@ -44,6 +46,8 @@ SOURCE_FILES =+ "external/flv2mpeg4/src/flv2mpeg4.c"
 SOURCE_FILES =+ "external/plugins/src/png.c"
 
 SOURCE_FILES =+ " \
+tools/debug.c \
+tools/strbuffer.c \
 output/linuxdvb_mipsel.c \
 output/writer/mipsel/writer.c \
 output/writer/mipsel/aac.c \
