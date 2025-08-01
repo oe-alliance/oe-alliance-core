@@ -172,6 +172,7 @@ do_install() {
     printf "fhdskin=${HAVE_FHDSKIN}\n" >> ${D}${INFOFILE}
     printf "fpu='${TARGET_FPU}'\n" >> ${D}${INFOFILE}
     printf "friendlyfamily='${FRIENDLY_FAMILY}'\n" >> ${D}${INFOFILE}
+    printf "hasUBIMB=${HAVE_UBIMB}\n" >> ${D}${INFOFILE}
     printf "hdmi=${HAVE_HDMI}\n" >> ${D}${INFOFILE}
     printf "hdmifhdin=${HAVE_HDMI_IN_FHD}\n" >> ${D}${INFOFILE}
     printf "hdmihdin=${HAVE_HDMI_IN_HD}\n" >> ${D}${INFOFILE}
