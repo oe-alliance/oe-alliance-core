@@ -33,6 +33,7 @@ RDEPENDS:${PN} = "\
     cronie \
     dropbear \
     early-configure \
+    elfutils \
     e2fsprogs-mke2fs \
     modutils-loadscript \
     opkg \
