@@ -117,6 +117,7 @@ RDEPENDS:${PN} = " \
     mediamtx \
     mergerfs \
     minidlna \
+    minilocale \
     minisatip \
     mpd \
     mtd-utils \
