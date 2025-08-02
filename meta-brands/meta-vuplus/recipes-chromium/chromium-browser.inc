@@ -6,7 +6,7 @@ require conf/license/license-close.inc
 PACKAGE_ARCH := "${MACHINE_ARCH}"
 
 PV = "1.3"
-PR = "${SRCDATE}-r0"
+PR = "${SRCDATE}-r1"
 
 SRC_URI = "https://source.mynonpublic.com/vuplus/chromium/chromium-vuplus_${MACHINE}_${SRCDATE}.tar.gz \
            file://run.patch;striplevel=0"

@@ -1,6 +1,6 @@
-SRCDATE = "20201020_r0"
-SRC_URI[md5sum] = "964fa415fc9faca02453b9d53133fc86"
-SRC_URI[sha256sum] = "fe8818f39a2b353fe83275571bebb5d19c465d4a50e6774c806d25081c927fd7"
+SRCDATE = "20201020_r1"
+SRC_URI[md5sum] = "5c9a3b98044fbcf947a59dff0f6dbf3d"
+SRC_URI[sha256sum] = "fea909ebb8654f99b189b6c4ed544d3572071ea96939b31e89a0ed5c9f1cc63c"
 
 require chromium-browser.inc
 
