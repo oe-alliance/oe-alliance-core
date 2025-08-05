@@ -1,0 +1,65 @@
+--- a/fs/proc/inode.c	2025-08-05 15:02:10.472486252 +0000
++++ b/fs/proc/inode.c	2025-08-05 15:02:29.486529973 +0000
+@@ -213,20 +213,51 @@
+ 	return rv;
+ }
+ 
+-static ssize_t proc_reg_write(struct file *file, const char __user *buf, size_t count, loff_t *ppos)
++static ssize_t proc_reg_write(struct file *file, const char __user *buf,
++                              size_t count, loff_t *ppos)
+ {
+-	ssize_t (*write)(struct file *, const char __user *, size_t, loff_t *);
+-	struct proc_dir_entry *pde = PDE(file_inode(file));
+-	ssize_t rv = -EIO;
+-	if (use_pde(pde)) {
+-		write = pde->proc_fops->write;
+-		if (write)
+-			rv = write(file, buf, count, ppos);
+-		unuse_pde(pde);
+-	}
+-	return rv;
++    struct proc_dir_entry *pde = PDE(file_inode(file));
++    ssize_t rv = -EIO;
++    ssize_t (*writefn)(struct file *, const char __user *, size_t, loff_t *);
++    void __user *ubuf = buf;
++    char *kbuf = NULL;
++
++    if (!use_pde(pde))
++        return -EIO;
++
++    writefn = pde->proc_fops->write;
++    if (!writefn) {
++        unuse_pde(pde);
++        return -EIO;
++    }
++
++    /* Check alignment */
++    if (((unsigned long)buf & (sizeof(long)-1)) != 0) {
++        kbuf = kmalloc(count, GFP_KERNEL);
++        if (!kbuf) {
++            unuse_pde(pde);
++            return -ENOMEM;
++        }
++
++        if (copy_from_user(kbuf, buf, count)) {
++            kfree(kbuf);
++            unuse_pde(pde);
++            return -EFAULT;
++        }
++
++        /* Cast Kernel buffer to __user to keep driver happy */
++        ubuf = (void __user *)kbuf;
++    }
++
++    rv = writefn(file, ubuf, count, ppos);
++
++    kfree(kbuf);
++    unuse_pde(pde);
++
++    return rv;
+ }
+ 
++
+ static unsigned int proc_reg_poll(struct file *file, struct poll_table_struct *pts)
+ {
+ 	struct proc_dir_entry *pde = PDE(file_inode(file));
