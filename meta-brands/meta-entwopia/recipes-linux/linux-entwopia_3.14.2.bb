@@ -71,6 +71,7 @@ SRC_URI += "https://source.mynonpublic.com/entwopia/${MACHINE}/${MACHINE}-linux-
     file://0007-overlayfs.patch \
     file://block2mtd.patch \
     file://initramfs-mipsel.cpio.xz;unpack=0 \
+    file://procfs.patch \
     "
 
 export KCFLAGS = " -Wno-error=incompatible-pointer-types \
