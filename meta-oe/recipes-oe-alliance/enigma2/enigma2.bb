@@ -6,10 +6,7 @@ LIC_FILES_CHKSUM:teamblue = "file://LICENSE;md5=b234ee4d69f5fce4486a80fdaf4a4263
 LIC_FILES_CHKSUM:openatv = "file://LICENSE;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 LIC_FILES_CHKSUM:openvix = "file://LICENSE;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 LIC_FILES_CHKSUM:openbh = "file://LICENSE;md5=b234ee4d69f5fce4486a80fdaf4a4263"
-LIC_FILES_CHKSUM:beyonwiz = "file://LICENSE;md5=b234ee4d69f5fce4486a80fdaf4a4263"
-LIC_FILES_CHKSUM:openeight = "file://LICENSE;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 LIC_FILES_CHKSUM:opendroid = "file://LICENSE;md5=b234ee4d69f5fce4486a80fdaf4a4263"
-LIC_FILES_CHKSUM:openspa = "file://LICENSE;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 
 DEPENDS = " \
     curl \
@@ -23,7 +20,6 @@ DEPENDS = " \
     python3-pillow python3-twisted python3-wifi python3-six-native \
     swig-native \
     tuxtxt-enigma2 \
-    ${@bb.utils.contains("DISTRO_NAME", "openspa", "uchardet" , "", d)} \
     ${@bb.utils.contains("DISTRO_NAME", "openatv", "ffmpeg" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "uianimation", "vuplus-libgles-${MACHINE} libvugles2" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "hiaccel", "dinobot-libs-${MACHINE}" , "", d)} \

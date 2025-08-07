@@ -11,11 +11,7 @@ openbh    Support: [https://openbh.net](https://openbh.net)
 
 opendroid Support: [https://droidsat.org](https://droidsat.org)
 
-openeight Support: [http://www.openeight.de/](http://www.openeight.de/)
-
 openhdf   Support: [https://www.hdfreaks.cc/](https://www.hdfreaks.cc/)
-
-openspa   Support: [https://openspa.info/](https://openspa.info/)
 
 openvix   Support: [https://www.world-of-satellite.com](https://www.world-of-satellite.com)
 
