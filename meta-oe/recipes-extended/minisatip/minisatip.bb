@@ -13,8 +13,8 @@ SRC_URI = " \
     "
 
 SRCREV = "${AUTOREV}"
-PV = "V1.3+git"
-PKGV = "V1.3+git${GITPKGV}"
+PV = "V2.0+git"
+PKGV = "V2.0+git${GITPKGV}"
 
 S = "${WORKDIR}/git"
 BUILD = "${WORKDIR}/git"
@@ -25,6 +25,7 @@ INITSCRIPT_NAME = "minisatip"
 EXTRA_OECONF = "--disable-netcv"
 
 do_configure:prepend () {
+    sed -i 's/-std=c++23/-std=c++20/g' ${S}/configure.ac
 }
 
 do_install () {
