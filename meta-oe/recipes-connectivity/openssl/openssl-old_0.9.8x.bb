@@ -14,14 +14,15 @@ DEPENDS = "hostperl-runtime-native"
 
 SRC_URI = "http://www.openssl.org/source/openssl-${PV}.tar.gz \
            file://find.pl \
-		   file://multilib.patch \
+            file://multilib.patch \
+            file://termios.patch \
           "
 
 S = "${UNPACKDIR}/openssl-${PV}"
 
 #AR_append = " r"
 CFLAG = "${@oe.utils.conditional('SITEINFO_ENDIANNESS', 'le', '-DL_ENDIAN', '-DB_ENDIAN', d)} \
-	-DTERMIO ${FULL_OPTIMIZATION} -Wall"
+    -DTERMIOS ${FULL_OPTIMIZATION} -Wall"
 
 # Avoid binaries being marked as requiring an executable stack (which causes 
 # issues with SELinux on the host)
