@@ -91,8 +91,7 @@ EXTRA_OEMAKE = "${@bb.utils.contains('PACKAGECONFIG', 'manpages', '', 'OE_DISABL
 
 export OE_LDFLAGS = "${LDFLAGS}"
 
-TERMIO ?= "-DTERMIO"
-TERMIO:libc-musl = "-DTERMIOS"
+TERMIO ?= "-DTERMIOS"
 EXTRA_OECONF:append:libc-musl:powerpc64 = " no-asm"
 
 CFLAG = "${@oe.utils.conditional('SITEINFO_ENDIANNESS', 'le', '-DL_ENDIAN', '-DB_ENDIAN', d)} \
