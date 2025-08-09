@@ -1,0 +1,79 @@
+--- a/ext/hls/gsthlsdemux.c	2025-08-07 20:06:46.000000000 +0200
++++ b/ext/hls/gsthlsdemux.c	2025-08-09 18:28:56.000000000 +0200
+@@ -42,6 +42,7 @@
+ #endif
+ 
+ #include <string.h>
++#include <stdio.h>
+ #include <gst/base/gsttypefindhelper.h>
+ #include "gsthlselements.h"
+ #include "gsthlsdemux.h"
+@@ -487,9 +488,10 @@
+   return GST_FLOW_OK;
+ }
+ 
++
+ static void
+ create_stream_for_playlist (GstAdaptiveDemux * demux, GstM3U8 * playlist,
+-    gboolean is_primary_playlist, gboolean selected)
++    gboolean is_primary_playlist, gboolean selected, GstHLSMedia *media)
+ {
+   GstHLSDemux *hlsdemux = GST_HLS_DEMUX_CAST (demux);
+   GstHLSDemuxStream *hlsdemux_stream;
+@@ -517,6 +519,22 @@
+ 
+   hlsdemux_stream->do_typefind = TRUE;
+   hlsdemux_stream->reset_pts = TRUE;
++
++	if (media && media->mtype == GST_HLS_MEDIA_TYPE_SUBTITLES && (media->lang || media->name)) {
++	  GstTagList *tags = gst_tag_list_new_empty ();
++
++	  if (media->lang)
++	    gst_tag_list_add (tags, GST_TAG_MERGE_APPEND, GST_TAG_LANGUAGE_CODE, media->lang, NULL);
++	  if (media->name)
++	    gst_tag_list_add (tags, GST_TAG_MERGE_APPEND, GST_TAG_TITLE, media->name, NULL);
++
++	  GST_DEBUG_OBJECT (demux, "Sending tags on pad: lang=%s, title=%s",
++	                    media->lang ? media->lang : "NULL",
++	                    media->name ? media->name : "NULL");
++
++    if (media->mtype == GST_HLS_MEDIA_TYPE_SUBTITLES)
++      stream->pending_tags = tags;
++  }
+ }
+ 
+ static GstHLSDemuxStream *
+@@ -660,7 +678,9 @@
+   gst_hls_demux_clear_all_pending_data (hlsdemux);
+ 
+   /* 1 output for the main playlist */
+-  create_stream_for_playlist (demux, playlist->m3u8, TRUE, TRUE);
++  create_stream_for_playlist (demux, playlist->m3u8, TRUE, TRUE, NULL);
++  int audio_streams = 0;
++  FILE *f = fopen("/tmp/gsthlsaudiometa.info", "w");
+ 
+   for (i = 0; i < GST_HLS_N_MEDIA_TYPES; ++i) {
+     GList *mlist = playlist->media[i];
+@@ -679,11 +699,21 @@
+           gst_hls_media_type_get_name (i), media->name, media->uri);
+       create_stream_for_playlist (demux, media->playlist, FALSE,
+           (media->mtype == GST_HLS_MEDIA_TYPE_VIDEO
+-              || media->mtype == GST_HLS_MEDIA_TYPE_AUDIO));
++              || media->mtype == GST_HLS_MEDIA_TYPE_AUDIO
++              || media->mtype == GST_HLS_MEDIA_TYPE_SUBTITLES), media);
++      if (media->mtype == GST_HLS_MEDIA_TYPE_AUDIO) {
++        if (f) {
++            fprintf(f, "index=%d\nlang=%s\ntitle=%s\n---\n", audio_streams, media->lang ? media->lang : "", media->name ? media->name : "");
++        }
++        audio_streams++;
++
++      }
+ 
+       mlist = mlist->next;
+     }
+   }
++  if (f)
++    fclose(f);
+ 
+   return TRUE;
+ 
