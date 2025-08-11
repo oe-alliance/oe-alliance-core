@@ -237,7 +237,6 @@ do_install() {
 }
 
 do_install[vardepsexclude] += " DATE DATETIME IMAGE_BUILD MACHINEBUILD"
-do_install[depends] += "rust-native:do_populate_sysroot upx-native:do_populate_sysroot"
 
 FILES:${PN}:append = " /usr"
 
