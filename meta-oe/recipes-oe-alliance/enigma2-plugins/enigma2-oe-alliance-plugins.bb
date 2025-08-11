@@ -48,7 +48,6 @@ PROVIDES += " \
     enigma2-plugin-extensions-remotechannelstreamconverter \
     enigma2-plugin-extensions-tmdb \
     enigma2-plugin-extensions-tvspielfilm \
-    enigma2-plugin-extensions-plutotv \
     ${@bb.utils.contains('MACHINE_FEATURES', 'legacykernel', '' , 'enigma2-plugin-systemplugins-wirelessaccesspoint', d)} \
     ${@bb.utils.contains('MACHINE_FEATURES', 'aml-plugins', 'enigma2-plugin-extensions-rcuselect enigma2-plugin-extensions-rezap' , ' ', d)} \
      "
@@ -154,8 +153,6 @@ DESCRIPTION:enigma2-plugin-extensions-webkithbbtv = "E2 HbbTV Plugin"
 RDEPENDS:enigma2-plugin-extensions-webkithbbtv = "vuplus-webkithbbtv-dumpait webkit-hbbtv-browser libupnp1.6"
 DESCRIPTION:enigma2-plugin-extensions-tvspielfilm = "TVSpielfilm Plugin"
 RDEPENDS:enigma2-plugin-extensions-tvspielfilm = "${PYTHON_PN}-yt-dlp"
-DESCRIPTION:enigma2-plugin-extensions-plutotv = "PlutoTV Plugin"
-RDEPENDS:enigma2-plugin-extensions-plutotv = "enigma2-plugin-systemplugins-serviceapp"
 
 inherit autotools-brokensep gitpkgv gettext ${PYTHON_PN}targetconfig
 
