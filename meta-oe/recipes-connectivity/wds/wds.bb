@@ -27,7 +27,7 @@ do_install:append() {
 	install -m 0755 ${B}/mirac_network/gst-test ${D}${bindir}
 }
 
-EXTRA_OECMAKE:append = " -DCMAKE_SKIP_RPATH=ON"
+EXTRA_OECMAKE:append = " -DCMAKE_SKIP_RPATH=ON -DCMAKE_POLICY_VERSION_MINIMUM=3.5"
 
 inherit cmake lib_package
 
