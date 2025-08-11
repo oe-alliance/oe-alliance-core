@@ -8,10 +8,10 @@ require conf/python/python3-compileall.inc
 
 SRC_URI = "git://github.com/oe-mirrors/e2iplayer.git;protocol=http;branch=python3;protocol=https"
 
-inherit gitpkgv
+inherit gittag
 SRCREV = "${AUTOREV}"
 PV = "git"
-PKGV = "git${GITPKGV}"
+PKGV = "${GITPKGVTAG}"
 PR = "r0"
 
 inherit setuptools3-openplugins gettext
