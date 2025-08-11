@@ -16,3 +16,17 @@ setuptools3_legacy_do_install:append() {
 }
 
 FILES:${PN} += "${libdir}/enigma2/python/Plugins"
+
+# hack for missing locate for some old plugins
+do_install:append() {
+  found_locale=0
+  for dir in ${S}/build/lib/Extensions/*/locale; do
+    if [ -d "$dir" ]; then
+      found_locale=1
+      break
+    fi
+  done
+  if [ "$found_locale" -eq 1 ]; then
+    cp -rf ${S}/build/lib/* ${D}/usr/lib/enigma2/python/Plugins
+  fi
+}
