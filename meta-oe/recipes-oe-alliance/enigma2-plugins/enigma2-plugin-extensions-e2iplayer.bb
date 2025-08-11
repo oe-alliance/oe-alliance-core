@@ -10,10 +10,10 @@ SRC_URI = "git://github.com/oe-mirrors/e2iplayer.git;protocol=http;branch=python
 
 S = "${WORKDIR}/git"
 
-inherit gitpkgv
+inherit gittag
 SRCREV = "${AUTOREV}"
 PV = "git"
-PKGV = "git${GITPKGV}"
+PKGV = "${GITPKGVTAG}"
 PR = "r0"
 
 inherit setuptools3-openplugins gettext
