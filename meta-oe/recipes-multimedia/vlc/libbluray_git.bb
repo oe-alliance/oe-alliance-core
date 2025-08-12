@@ -9,8 +9,8 @@ RDEPENDS:${PN} = "libaacs libdca libdvdcss"
 
 inherit gitpkgv
 SRCREV = "${AUTOREV}"
-PV = "v1.3.4+git"
-PKGV = "v1.3.4+git${GITPKGV}"
+PV = "v1.4.0+git"
+PKGV = "v1.4.0+git${GITPKGV}"
 
 SRC_URI = "gitsm://code.videolan.org/videolan/libbluray.git;protocol=https;branch=master"
 
@@ -24,7 +24,7 @@ EXTRA_OECONF = " \
     --without-fontconfig \
 "
 
-inherit autotools-brokensep pkgconfig
+inherit meson pkgconfig
 
 FILES:${PN} = "/"
 
