@@ -29,6 +29,7 @@ DEPENDS = " \
 RDEPENDS:${PN} = " \
     alsa-conf \
     libdreamdvd \
+    libudfread \
     enigma2-fonts \
     font-valis-enigma \
     ethtool \
@@ -207,6 +208,7 @@ PKGV = "${IMAGE_VERSION}+git${GITPKGV}"
 
 SRCREV ?= "${AUTOREV}"
 SRC_URI = "${ENIGMA2_URI}"
+PR = "r1"
 
 SRC_URI:append:openatv = " file://swig-4.3.patch"
 
