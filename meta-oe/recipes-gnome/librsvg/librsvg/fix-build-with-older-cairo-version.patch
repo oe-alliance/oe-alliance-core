@@ -5,7 +5,7 @@ index 2dae10c3..113a134a 100644
 @@ -50,7 +50,7 @@ py = import('python')
  python = py.find_installation()
  
- # Required versions for dependencies - Please update devel_environment.rst with version numbers if these change
+ # Required versions for dependencies - Please update _build_dependencies.rst with version numbers if these change
 -cairo_required         = '>= 1.18.0'
 +cairo_required         = '>= 1.17.0'
  dav1d_required         = '>= 1.3.0'
