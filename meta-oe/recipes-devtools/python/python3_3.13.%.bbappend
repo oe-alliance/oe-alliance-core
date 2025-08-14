@@ -1,9 +1,6 @@
 FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 SRC_URI += "file://use-legacy-path-for-pycs.patch"
 
-PV = "3.13.6"
-SRC_URI[sha256sum] = "17ba5508819d8736a14fbfc47d36e184946a877851b2e9c4b6c43acb44a3b104"
-
 PACKAGECONFIG = "readline gdbm ${@bb.utils.filter('DISTRO_FEATURES', 'lto', d)}"
 
 inherit python3-dir
