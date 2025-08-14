@@ -14,7 +14,7 @@ SRCDATE = "20211220"
 PV = "${SRCDATE}"
 PR = "r0"
 
-SRC_URI  = "https://source.mynonpublic.com/uclan/${SOC_FAMILY}-blindscan-${SRCDATE}.zip"
+SRC_URI  = "https://source.mynonpublic.com/uclan/uclan-${SOC_FAMILY}-blindscan-${SRCDATE}.zip"
 
 S = "${UNPACKDIR}"
 

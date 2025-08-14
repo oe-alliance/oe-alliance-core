@@ -14,7 +14,7 @@ SRCDATE = "20230710"
 PV = "${SRCDATE}"
 PR = "r0"
 
-SRC_URI  = "https://source.mynonpublic.com/qviart/${SOC_FAMILY}-blindscan-${SRCDATE}.zip"
+SRC_URI  = "https://source.mynonpublic.com/qviart/qviart-${SOC_FAMILY}-blindscan-${SRCDATE}.zip"
 
 S = "${UNPACKDIR}"
 
