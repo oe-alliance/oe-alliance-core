@@ -15,7 +15,7 @@ SRCREV = "${AUTOREV}"
 PV = "179+git"
 PKGV = "179+git${GITPKGV}"
 VER = "179"
-PR = "r0"
+PR = "r1"
 
 SRC_URI = "git://github.com/oe-alliance/exteplayer3.git;branch=master;protocol=https"
 BB_GIT_SHALLOW = "0"
