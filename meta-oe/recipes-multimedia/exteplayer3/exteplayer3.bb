@@ -13,6 +13,7 @@ inherit gitpkgv upx-compress
 
 PV = "67+gitr"
 PKGV = "67+gitr${GITPKGV}"
+PR = "r1"
 
 SRCREV = "${AUTOREV}"
 SRC_URI = "git://github.com/oe-mirrors/exteplayer3.git;branch=master;protocol=https \
