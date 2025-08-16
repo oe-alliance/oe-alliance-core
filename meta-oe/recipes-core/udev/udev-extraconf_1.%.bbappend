@@ -1,7 +1,7 @@
 FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
 FILESEXTRAPATHS:prepend := "${THISDIR}/${DISTRO_NAME}:"
 
-PR .= ".31"
+PR .= ".32"
 
 SRC_URI += " \
     file://mount.sh \
@@ -11,6 +11,7 @@ SRC_URI += " \
     file://device-info.sh \
     file://startup.sh \
     file://startup.rules \
+    file://40-realtek-zerocd.rules \
 "
 
 do_install:append() {
@@ -21,6 +22,7 @@ do_install:append() {
     install -m 0755 ${S}/device-info.sh ${D}${sysconfdir}/udev/scripts/device-info.sh
     install -m 0644 ${S}/startup.rules    ${D}${sysconfdir}/udev/rules.d/startup.rules
     install -m 0755 ${S}/startup.sh ${D}${sysconfdir}/udev/scripts/startup.sh
+    install -m 0644 ${S}/40-realtek-zerocd.rules   ${D}${sysconfdir}/udev/rules.d/startup.rules
 
 # OpenVix, OpenBh:
 # We only want udev to bring up interfaces marked as auto
