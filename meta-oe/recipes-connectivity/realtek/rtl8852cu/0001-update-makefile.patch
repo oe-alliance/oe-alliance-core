@@ -1,0 +1,36 @@
+From 3fb697a64fec6accb6a425be29aa81f88e348197 Mon Sep 17 00:00:00 2001
+From: atvcaptain <openatv@gmail.com>
+Date: Sat, 16 Aug 2025 05:56:49 +0200
+Subject: [PATCH] update makefile
+
+---
+ Makefile  | 2 +-
+ common.mk | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/Makefile b/Makefile
+index 3307a98..a0fda63 100644
+--- a/Makefile
++++ b/Makefile
+@@ -676,7 +676,7 @@ include $(src)/phl/phl.mk
+ 
+ 
+ obj-$(CONFIG_RTL8852CU) := $(MODULE_NAME).o
+-obj-$(CONFIG_RTL8852CU) := $(MODULE_NAME).o
++$(MODULE_NAME)-y = $(OBJS_COMMON)
+ $(MODULE_NAME)-y = $(OBJS)
+ 
+ ############# MEMORY MANAGMENT #############
+diff --git a/common.mk b/common.mk
+index f1149b8..235ee66 100644
+--- a/common.mk
++++ b/common.mk
+@@ -148,4 +148,4 @@ ifeq ($(CONFIG_RTW_MBO), y)
+ _CORE_FILES +=	core/rtw_mbo.o core/rtw_ft.o core/rtw_wnm.o
+ endif
+ 
+-OBJS += $(_OS_INTFS_FILES) $(_CORE_FILES)
++OBJS_COMMON += $(_OS_INTFS_FILES) $(_CORE_FILES)
+-- 
+2.45.2.windows.1
+

@@ -6,7 +6,9 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 
 inherit module
 SRCREV = "a246437004417a999aa07be85a9674f3b0bbf4bd"
-SRC_URI = "git://github.com/lwfinger/rtw8852cu.git;protocol=https;branch=main"
+SRC_URI = "git://github.com/lwfinger/rtw8852cu.git;protocol=https;branch=main \
+          file://0001-update-makefile.patch \
+"
 
 EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR} KDIR=${STAGING_KERNEL_DIR}"
 
