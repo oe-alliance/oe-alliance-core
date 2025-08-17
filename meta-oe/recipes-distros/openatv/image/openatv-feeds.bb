@@ -23,7 +23,7 @@ RRECOMMENDS:${PN} = "\
     oe-alliance-skins \
     enigma2-skins \
     enigma2-plugin-systemplugins-crossepg \
-    curlftpfs \
+    curlftpfs-ng \
     cdfs \
     tvheadend \
     openssl-old \

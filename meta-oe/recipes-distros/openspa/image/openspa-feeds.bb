@@ -22,7 +22,7 @@ RRECOMMENDS:${PN} = "\
     enigma2-plugin-extensions-epgimport \
     enigma2-plugin-systemplugins-crossepg \
     enigma2-plugin-extensions-filecommander \
-    curlftpfs \
+    curlftpfs-ng \
     cdfs \
     tvheadend \
     openssl-old \

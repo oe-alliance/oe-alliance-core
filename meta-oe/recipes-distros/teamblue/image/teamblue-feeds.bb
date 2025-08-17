@@ -17,7 +17,7 @@ RRECOMMENDS:${PN} = "\
     ${@bb.utils.contains("MACHINE_FEATURES", "nogui", "packagegroup-teamblue-nogui", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "packagegroup-teamblue-small", "", d)} \
     astra-sm \
-    curlftpfs \
+    curlftpfs-ng \
     dvblast \
     enigma2-pliplugins \
     enigma2-plugin-extensions-blurayplayer \
