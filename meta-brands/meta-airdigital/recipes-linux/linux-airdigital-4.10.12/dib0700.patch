@@ -1,0 +1,138 @@
+--- a/drivers/media/usb/dvb-usb/dib0700_core.c	2025-08-17 07:16:43.290543264 +0000
++++ b/drivers/media/usb/dvb-usb/dib0700_core.c	2025-08-17 07:19:30.984866026 +0000
+@@ -8,6 +8,12 @@
+  */
+ #include "dib0700.h"
+ 
++/* Warm-boot buffer fallback to avoid ENOMEM when device stays in warm state */
++static int warm_nb_packet_buffer_size = 192;
++module_param(warm_nb_packet_buffer_size, int, 0644);
++MODULE_PARM_DESC(warm_nb_packet_buffer_size,
++       "Packet buffer size used on warm boot if full dual-adapter init fails (default 192)");
++
+ /* debug */
+ int dvb_usb_dib0700_debug;
+ module_param_named(debug,dvb_usb_dib0700_debug, int, 0644);
+@@ -864,12 +870,103 @@
+ static int dib0700_probe(struct usb_interface *intf,
+ 		const struct usb_device_id *id)
+ {
+-	int i;
++	int i, ifnum = 0, has_iface1 = 0;
+ 	struct dvb_usb_device *dev;
+ 
+-	for (i = 0; i < dib0700_device_count; i++)
+-		if (dvb_usb_device_init(intf, &dib0700_devices[i], THIS_MODULE,
+-		    &dev, adapter_nr) == 0) {
++	struct usb_device *udev = interface_to_usbdev(intf);
++	const struct usb_host_config *cfg;
++
++	if (intf->cur_altsetting)
++		ifnum = intf->cur_altsetting->desc.bInterfaceNumber;
++
++	/* Detect if interface 1 exists in active configuration */
++	cfg = udev->actconfig;
++	if (cfg) {
++		int n;
++		for (n = 0; n < cfg->desc.bNumInterfaces; n++) {
++			const struct usb_interface *uif = cfg->interface[n];
++			if (uif && uif->cur_altsetting &&
++			    uif->cur_altsetting->desc.bInterfaceNumber == 1) {
++				has_iface1 = 1;
++				break;
++			}
++		}
++	}
++
++	for (i = 0; i < dib0700_device_count; i++) {
++		struct dvb_usb_device_properties *props = &dib0700_devices[i];
++		struct dvb_usb_device_properties props_local;
++		struct dvb_usb_device_description *desc = NULL;
++		int cold = 1;
++		int ret = -ENODEV;
++
++		if (props->identify_state)
++			props->identify_state(udev, props, &desc, &cold);
++
++		if (cold) {
++			/* Cold: only interface 0 performs full init (both adapters) */
++			if (ifnum != 0) {
++				dev_info(&intf->dev,
++					 "dib0700: cold state -> ignore interface %u (handled by iface 0)\n",
++					 ifnum);
++				continue;
++			}
++			ret = dvb_usb_device_init(intf, props, THIS_MODULE, &dev, adapter_nr);
++		} else {
++			/* Warm path */
++			if (has_iface1) {
++				/* Preferred: split dual-adapter devices across iface0/iface1 */
++				props_local = *props;  /* clone */
++                /* small settle window helps warm-boot robustness */
++                msleep(250);
++				if (props_local.num_adapters > 1) {
++					int want = (ifnum == 0) ? 0 : 1;
++					if (want >= props_local.num_adapters)
++						continue;
++					props_local.adapter[0]   = props_local.adapter[want];
++					props_local.num_adapters = 1;
++					ret = dvb_usb_device_init(intf, &props_local, THIS_MODULE, &dev, adapter_nr);
++				} else {
++					ret = dvb_usb_device_init(intf, props, THIS_MODULE, &dev, adapter_nr);
++				}
++			} else {
++				/* Single-interface warm state: try full init with reduced buffers */
++				int saved_nb = nb_packet_buffer_size;
++
++				if (ifnum != 0) {
++					dev_info(&intf->dev,
++						 "dib0700: warm state (single iface) -> ignore interface %u\n",
++						 ifnum);
++					continue;
++				}
++
++				if (warm_nb_packet_buffer_size > 0 &&
++				    warm_nb_packet_buffer_size < nb_packet_buffer_size)
++					nb_packet_buffer_size = warm_nb_packet_buffer_size;
++
++				/* settle before full init on warm */
++				msleep(300);
++
++				ret = dvb_usb_device_init(intf, props, THIS_MODULE, &dev, adapter_nr);
++
++				/* Restore for future attaches */
++				nb_packet_buffer_size = saved_nb;
++
++				if (ret != 0 && props->num_adapters > 1) {
++					/* Fallback: start with one adapter to keep at least one tuner working */
++					props_local = *props;
++					props_local.adapter[0]   = props_local.adapter[0];
++					props_local.num_adapters = 1;
++					msleep(150);
++					ret = dvb_usb_device_init(intf, &props_local, THIS_MODULE, &dev, adapter_nr);
++					if (ret == 0)
++						dev_warn(&intf->dev,
++							 "dib0700: warm (single iface): full init failed, started with one adapter; consider lowering warm_nb_packet_buffer_size further\n");
++				}
++			}
++		}
++
++		if (ret == 0) {
+ 			struct dib0700_state *st = dev->priv;
+ 			u32 hwversion, romversion, fw_version, fwtype;
+ 
+@@ -888,10 +985,13 @@
+ 			else
+ 				dev->props.rc.core.bulk_mode = false;
+ 
+-			dib0700_rc_setup(dev, intf);
++			/* RC only on iface 0 to avoid duplicates */
++			if (ifnum == 0)
++				dib0700_rc_setup(dev, intf);
+ 
+ 			return 0;
+ 		}
++	}
+ 
+ 	return -ENODEV;
+ }
