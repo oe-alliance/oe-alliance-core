@@ -38,6 +38,8 @@ SRC_URI += "https://source.mynonpublic.com/zgemma/linux-${PV}-${ARCH}.tar.gz;nam
     file://fix-multiple-defs-yyloc.patch \
     file://fix-build-with-binutils-2.41.patch \
     file://Hauppauge-dualHD.patch \
+    file://quirks.patch \
+    file://dib0700.patch \
     "
 
 SRC_URI:append:mipsel = " \
