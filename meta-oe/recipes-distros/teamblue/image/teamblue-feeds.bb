@@ -16,7 +16,7 @@ DEPENDS += "oe-alliance-feeds enigma2-3rdparty-plugins"
 
 RRECOMMENDS:${PN} = "\
     astra-sm \
-    curlftpfs \
+    curlftpfs-ng \
     dvblast \
     enigma2-plugin-extensions-blurayplayer \
     enigma2-plugin-extensions-cooltvguide \

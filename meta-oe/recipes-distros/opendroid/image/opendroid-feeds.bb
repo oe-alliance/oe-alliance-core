@@ -18,7 +18,7 @@ RRECOMMENDS:${PN} = "\
     enigma2-skins \
     enigma2-display-skins \
     cdfs \
-    curlftpfs \
+    curlftpfs-ng \
     enigma2-plugin-extensions-epgimport \
     enigma2-plugin-extensions-vhannibal-autosettings \
     enigma2-plugin-systemplugins-crossepg \

@@ -17,7 +17,7 @@ DEPENDS += "oe-alliance-feeds enigma2-3rdparty-plugins"
 
 RRECOMMENDS:${PN} = "\
     cdfs \
-    curlftpfs \
+    curlftpfs-ng \
     enigma2-display-skins \
     enigma2-plugin-skins-e2-darkos \
     enigma2-plugin-extensions-blurayplayer \
