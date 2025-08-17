@@ -1,0 +1,126 @@
+#! /bin/sh
+### BEGIN INIT INFO
+# Provides:          dbus-1 dbus
+# Required-Start:    $local_fs $remote_fs $syslog
+# Should-Start:      $network
+# Required-Stop:     $remote_fs $syslog
+# Default-Start:     S 2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: D-Bus systemwide message bus
+# Description:       Start the D-Bus system message bus.
+### END INIT INFO
+
+PATH=/sbin:/bin:/usr/sbin:/usr/bin
+
+NAME=dbus-1
+DESC="D-Bus system message bus"
+DAEMON=/usr/bin/dbus-daemon
+PIDFILE=${PIDFILE:-/run/dbus/pid}
+SOCKET=${SOCKET:-/run/dbus/system_bus_socket}
+EVENTDIR=/etc/dbus-1/event.d
+DAEMONUSER=${DAEMONUSER:-messagebus}
+
+# Fallback user if 'messagebus' doesn't exist (common on STBs)
+id "$DAEMONUSER" >/dev/null 2>&1 || DAEMONUSER=root
+
+# Basic logging helpers (avoid dependency on lsb-init-functions on BusyBox)
+log_daemon_msg() { echo "$@"; }
+log_end_msg() { [ "$1" = 0 ] && echo "   ...done." || echo "   ...failed ($1)."; }
+
+pre_start_cleanup() {
+    install -d -m 0755 /run/dbus
+    [ -L /var/run ] || ln -sfn /run /var/run
+
+    # Remove stale PIDFILE if process is gone
+    if [ -f "$PIDFILE" ]; then
+        if ! kill -0 "$(cat "$PIDFILE" 2>/dev/null)" 2>/dev/null; then
+            rm -f "$PIDFILE"
+        fi
+    fi
+
+    # Remove stale socket (prevents "Connection refused" loops)
+    [ -S "$SOCKET" ] && rm -f "$SOCKET"
+
+    # Ensure machine-id exists (dbus will fail without it)
+    [ -s /etc/machine-id ] || dbus-uuidgen --ensure=/etc/machine-id || dbus-uuidgen --ensure
+}
+
+do_start() {
+    # If already running, do nothing (non-blocking)
+    if [ -f "$PIDFILE" ] && kill -0 "$(cat "$PIDFILE" 2>/dev/null)" 2>/dev/null; then
+        return 0
+    fi
+
+    pre_start_cleanup
+
+    log_daemon_msg "Starting $DESC:" "$NAME"
+    # dbus-daemon backgrounds itself with --fork, so this returns immediately
+    start-stop-daemon --start --quiet --oknodo \
+        --exec "$DAEMON" -- --system --fork
+    rc=$?
+    log_end_msg $rc
+
+    # Fire-and-forget event hooks; don't block boot on these
+    if [ -d "$EVENTDIR" ]; then
+        ( run-parts --arg=start "$EVENTDIR" ) >/dev/null 2>&1 &
+    fi
+    return $rc
+}
+
+do_stop() {
+    log_daemon_msg "Stopping $DESC:" "$NAME"
+
+    # Try a short, bounded stop to avoid blocking other scripts
+    if [ -f "$PIDFILE" ]; then
+        start-stop-daemon --stop --quiet --oknodo --pidfile "$PIDFILE" --retry=TERM/3/KILL/2
+        rc=$?
+    else
+        # Fallback: try by name (bounded)
+        start-stop-daemon --stop --quiet --oknodo --exec "$DAEMON" --retry=TERM/3/KILL/2
+        rc=$?
+    fi
+
+    # Clean up runtime artifacts regardless
+    rm -f "$PIDFILE" "$SOCKET"
+    log_end_msg ${rc:-0}
+    return ${rc:-0}
+}
+
+do_status() {
+    if [ -f "$PIDFILE" ]; then
+        pid="$(cat "$PIDFILE" 2>/dev/null)"
+        if [ -n "$pid" ] && kill -0 "$pid" 2>/dev/null; then
+            echo "$DAEMON ($pid) is running"
+            return 0
+        fi
+    fi
+    # Fallback check
+    if pidof "$DAEMON" >/dev/null 2>&1; then
+        echo "$DAEMON is running"
+        return 0
+    fi
+    echo "$DAEMON is stopped"
+    return 3
+}
+
+case "$1" in
+  start)   do_start   ;;
+  stop)    do_stop    ;;
+  status)  do_status  ;;
+  restart|force-reload)
+           do_stop
+           sleep 1
+           do_start
+           ;;
+  reload)  # D-Bus doesn't need a special reload; restart quickly
+           do_stop
+           sleep 1
+           do_start
+           ;;
+  *)
+        echo "Usage: /etc/init.d/$NAME {start|stop|status|restart|reload|force-reload}" >&2
+        exit 1
+        ;;
+esac
+
+exit 0
