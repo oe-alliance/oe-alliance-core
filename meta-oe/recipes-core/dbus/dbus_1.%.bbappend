@@ -1,4 +1,8 @@
+FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
+
 inherit upx-compress
+
+PR .= ".1"
 
 # there is --with-system-socket=/run/dbus/system_bus_socket in EXTRA_OECONF in OE-core layer
 # but /run/dbus does not exist, so dbus (and dependant avahi services) wont start
