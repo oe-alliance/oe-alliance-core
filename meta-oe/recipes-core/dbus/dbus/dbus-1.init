@@ -28,7 +28,8 @@ log_daemon_msg() { echo "$@"; }
 log_end_msg() { [ "$1" = 0 ] && echo "   ...done." || echo "   ...failed ($1)."; }
 
 pre_start_cleanup() {
-    install -d -m 0755 /run/dbus
+    mkdir -p /run/dbus /var/run/dbus
+    chmod 0755 /run /run/dbus /var/run /var/run/dbus 2>/dev/null || true
     [ -L /var/run ] || ln -sfn /run /var/run
 
     # Remove stale PIDFILE if process is gone
