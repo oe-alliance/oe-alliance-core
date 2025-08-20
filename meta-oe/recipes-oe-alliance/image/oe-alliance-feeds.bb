@@ -214,7 +214,7 @@ RDEPENDS:${PN} = " \
     zerotier \
     "
 
-WIREGUARD_MODULE = "${@bb.utils.contains_any("MACHINE", "osmini4k osmio4k osmio4kplus", "", "wireguard-module", d)}"
+WIREGUARD_MODULE = "${@bb.utils.contains_any("MACHINE", "osmini4k osmio4k osmio4kplus u5pvr", "", "wireguard-module", d)}"
 
 GST_BASE_DVD = "\
     gstreamer1.0-plugins-bad-videoparsersbad \
