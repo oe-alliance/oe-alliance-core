@@ -18,7 +18,7 @@ DEPENDS = " \
     gstreamer1.0-plugins-base gstreamer1.0 \
     jpeg \
     libdreamdvd libdvbsi++ fribidi libmad libpng giflib libxml2 libxmlccwrap \
-    ${@bb.utils.contains_any("DISTRO_NAME", "openatv openvix openbh teamblue", "libsigc++-3" , "libsigc++-2.0", d)} \
+    ${@bb.utils.contains_any("DISTRO_NAME", "openatv openvix openbh openspa teamblue", "libsigc++-3" , "libsigc++-2.0", d)} \
     openssl avahi libudfread \
     ${PYTHON_PN}-pillow ${PYTHON_PN}-twisted ${PYTHON_PN}-wifi ${PYTHON_PN}-six-native \
     swig-native \
@@ -220,6 +220,10 @@ SRC_URI:append:vuduo = " \
     "
 
 do_patch:append:openatv() {
+    bb.build.exec_func('do_usesigc3', d)
+}
+
+do_patch:append:openspa() {
     bb.build.exec_func('do_usesigc3', d)
 }
 

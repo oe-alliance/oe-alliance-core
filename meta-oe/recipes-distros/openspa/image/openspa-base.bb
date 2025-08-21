@@ -5,7 +5,7 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda
 
 ALLOW_EMPTY:${PN} = "1"
 
-PV = "8.3"
+PV = "8.5"
 PR = "r0"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
@@ -13,28 +13,51 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 inherit packagegroup
 
 RDEPENDS:${PN} = " \
+    enigma-info \
+    openspa-version-info \
     autofs \
-    ca-certificates \
     chrony \
-    flip \
-    hddtemp \
-    wireless-tools \
+    dosfstools \
+    libdvbcsa \
+    mhw2-files \
     oe-alliance-base \
     openspa-bootlogo \
+    openssh-sftp-server \
+    hdparm \
+    smartmontools \
+    ${@bb.utils.contains("MACHINE_FEATURES", "nogui", "", "${NORMAL_GUI}", d)} \
+    ${@bb.utils.contains("TUNE_FEATURES", "armv", "glibc-compat", "", d)} \
+    ${@bb.utils.contains("SMALLBOXWIZARD", "1", "${SMALLBOXWIZARD_IMAGE}", "${NORMAL_IMAGE}", d)} \
+"
+
+NORMAL_GUI = "\
     openspa-enigma2 \
-    ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", "openssh-sftp-server ", d)} \
-    packagegroup-base-smbfs-client \
     ${PYTHON_PN}-pillow \
     ${PYTHON_PN}-service-identity \
     ${PYTHON_PN}-requests \
     ${PYTHON_PN}-future \
     ${PYTHON_PN}-pexpect \
+    ${PYTHON_PN}-pkg-resources \
     ${PYTHON_PN}-six \
+    ${PYTHON_PN}-trio \
+"
+
+SMALLBOXWIZARD_IMAGE = "\
+    ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", "${NORMAL_IMAGE}", d)} \
+"
+
+NORMAL_IMAGE = "\
+    ntfs-3g \
+    unrar \
+    iproute2 \
+    tar \
+    ca-certificates \
+    flip \
+    hddtemp \
+    wireless-tools \
     rtmpdump \
-    ${@bb.utils.contains("TUNE_FEATURES", "armv", "glibc-compat", "", d)} \
+    zip \
     ofgwrite \
-    ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", "iproute2 tar", d)} \
-    ${@bb.utils.contains_any("FLASHSIZE", "64 96", "", "ntfs-3g unrar zip", d)} \
     openvpn-script \
-    mhw2-files \
-    "
+    openssh-sftp-server \
+"

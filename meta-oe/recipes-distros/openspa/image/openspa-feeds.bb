@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda
 ALLOW_EMPTY:${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-PV = "8.3"
+PV = "8.5"
 PR = "r0"
 
 inherit packagegroup
@@ -16,27 +16,34 @@ DEPENDS += "oe-alliance-feeds enigma2-3rdparty-plugins"
 RRECOMMENDS:${PN} = "\
     chrony \
     fpclock \
-    openspa-skins \
+    enigma2-pliplugins \
+    enigma2-display-skins \
     openspa-display-skins \
+    openspa-skins \
+    oe-alliance-skins \
     enigma2-skins \
-    enigma2-plugin-extensions-epgimport \
     enigma2-plugin-systemplugins-crossepg \
-    enigma2-plugin-extensions-filecommander \
     curlftpfs-ng \
     cdfs \
     tvheadend \
     openssl-old \
     ${@bb.utils.contains_any('TARGET_ARCH', 'arm aarch64', 'sysbench', '', d)} \
-    enigma2-plugin-extensions-bmediacenter \
     enigma2-plugin-extensions-enhancedmoviecenter \
+    enigma2-plugin-extensions-bmediacenter \
+    enigma2-plugin-settings-defaultsat \
     enigma2-plugin-extensions-specialjump \
     enigma2-plugin-extensions-gbipboxclient \
     enigma2-plugin-extensions-blurayplayer \
     enigma2-plugin-extensions-sdgradio \
-    enigma2-plugin-extensions-subssupport \
+    enigma2-plugin-extensions-epgimport \
     enigma2-plugin-systemplugins-autobouquetsmaker \
+    enigma2-plugin-extensions-chocholousek-picons \
+    enigma2-plugin-systemplugins-m3uiptv \
     mediainfo \
     ncdu \
+    ${@bb.utils.contains("MACHINE_FEATURES", "nogui", "packagegroup-openspa-nogui", "", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "packagegroup-openspa-small", "", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "dreamboxv2", "enigma2-plugin-extensions-dbackup", "", d)} \
     "
 
 RRECOMMENDS:${PN}:append:gb800solo = " enigma2-plugin-extensions-gbipboxclient"
