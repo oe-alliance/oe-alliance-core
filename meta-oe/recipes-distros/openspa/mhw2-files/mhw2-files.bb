@@ -16,6 +16,9 @@ SRC_URI = " \
     file://mhw_Log.epg \
     "
 
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
+
 do_install() {
     install -d ${D}${sysconfdir}
     install -m 0644 ${S}/mhw_Chann.epg ${D}${sysconfdir}/mhw_Chann.epg
