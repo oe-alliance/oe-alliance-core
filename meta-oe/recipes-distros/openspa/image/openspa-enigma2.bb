@@ -43,7 +43,7 @@ NORMAL_IMAGE = "\
     enigma2-plugin-extensions-openwebif-themes \
     enigma2-plugin-extensions-openwebif-vxg \
     enigma2-plugin-extensions-openwebif-webtv \
-    enigma2-plugin-extensions-plutotv \
+    enigma2-plugin-extensions-plutotv-spa \
     enigma2-plugin-extensions-volume-adjust \
     enigma2-plugin-extensions-atilehd \
     enigma2-plugin-systemplugins-videotune \
