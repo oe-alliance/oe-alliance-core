@@ -19,8 +19,11 @@ RRECOMMENDS:${PN} = " \
     enigma2-skindefault \
     openspa-version-info \
     enigma-info \
+    enigma2-plugin-extensions-iptosat \
+    enigma2-plugin-extensions-spzremotechannels \
     enigma2-plugin-systemplugins-hotplug \
     enigma2-plugin-systemplugins-softwaremanager \
+    enigma2-plugin-systemplugins-spzaddiptv \
     ${@bb.utils.contains("SMALLBOXWIZARD", "1", "${SMALLBOXWIZARD_IMAGE}", "${NORMAL_IMAGE}", d)} \
     "
 
@@ -36,9 +39,11 @@ NORMAL_IMAGE = "\
     enigma2-plugin-extensions-epgsearch \
     enigma2-plugin-extensions-filecommander \
     enigma2-plugin-extensions-imdb \
+    enigma2-plugin-extensions-mytube-spa \
     enigma2-plugin-extensions-openwebif-themes \
     enigma2-plugin-extensions-openwebif-vxg \
     enigma2-plugin-extensions-openwebif-webtv \
+    enigma2-plugin-extensions-plutotv \
     enigma2-plugin-extensions-volume-adjust \
     enigma2-plugin-extensions-atilehd \
     enigma2-plugin-systemplugins-videotune \

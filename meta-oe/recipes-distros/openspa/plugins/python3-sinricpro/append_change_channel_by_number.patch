@@ -1,0 +1,11 @@
+--- a/sinric/_tvcontorller.py	2022-05-29 21:43:18.311283693 +0200
++++ b/sinric/_tvcontorller.py	2022-06-02 20:59:06.943050312 +0200
+@@ -36,7 +36,7 @@
+         return callback(jsn.get("payload").get(JSON_COMMANDS.get('DEVICEID')), inp)
+ 
+     async def changeChannel(self, jsn, callback):
+-        return callback(jsn.get("payload").get(JSON_COMMANDS.get('DEVICEID')), jsn.get("payload").get('value').get('channel').get('name'))
++        return callback(jsn.get("payload").get(JSON_COMMANDS.get('DEVICEID')), jsn.get("payload").get('value').get('channel').get('name'),jsn.get("payload").get('value').get('channel').get('number'))
+ 
+     async def skipChannels(self, jsn, callback):
+         return callback(jsn.get("payload").get(JSON_COMMANDS.get('DEVICEID')), jsn.get("payload").get(JSON_COMMANDS.get('VALUE')).get('channelCount'))

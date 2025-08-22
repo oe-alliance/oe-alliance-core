@@ -31,14 +31,25 @@ RRECOMMENDS:${PN} = "\
     enigma2-plugin-extensions-enhancedmoviecenter \
     enigma2-plugin-extensions-bmediacenter \
     enigma2-plugin-settings-defaultsat \
-    enigma2-plugin-extensions-specialjump \
     enigma2-plugin-extensions-gbipboxclient \
     enigma2-plugin-extensions-blurayplayer \
     enigma2-plugin-extensions-sdgradio \
     enigma2-plugin-extensions-epgimport \
     enigma2-plugin-systemplugins-autobouquetsmaker \
     enigma2-plugin-extensions-chocholousek-picons \
+    enigma2-plugin-extensions-oaweather \
+    enigma2-plugin-extensions-footonsat-spa \
+    enigma2-plugin-extensions-iptosat \
+    enigma2-plugin-extensions-mytube-spa \
+    enigma2-plugin-extensions-openspanettest-spa \
+    enigma2-plugin-extensions-permanentevent-spa \
+    enigma2-plugin-extensions-plutotv \
+    enigma2-plugin-extensions-sinriconnect \
+    enigma2-plugin-extensions-spzremotechannels \
+    enigma2-plugin-extensions-tailscale \
+    enigma2-plugin-extensions-xtraevent-spa \
     enigma2-plugin-systemplugins-m3uiptv \
+    enigma2-plugin-systemplugins-spzaddiptv \
     mediainfo \
     ncdu \
     ${@bb.utils.contains("MACHINE_FEATURES", "nogui", "packagegroup-openspa-nogui", "", d)} \

@@ -1,0 +1,11 @@
+--- a/sinric/_sinricpro.py	2022-06-28 21:47:03.207491000 +0200
++++ b/sinric/_sinricpro.py	2022-06-28 21:47:51.327750353 +0200
+@@ -13,7 +13,7 @@
+ import re
+ import sys
+ 
+-logger.add("{}.log".format("sinricpro_logfile"), rotation="10 MB")
++logger.add("{}.log".format("/tmp/sinricpro_logfile"), rotation="10 MB")
+ 
+ 
+ class SinricPro:
