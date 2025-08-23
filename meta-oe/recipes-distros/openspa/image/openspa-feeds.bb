@@ -17,7 +17,6 @@ RRECOMMENDS:${PN} = "\
     chrony \
     fpclock \
     enigma2-pliplugins \
-    enigma2-display-skins \
     openspa-display-skins \
     openspa-skins \
     oe-alliance-skins \
