@@ -1,8 +1,14 @@
 FILESEXTRAPATHS:append := "${THISDIR}/wget"
 
+PR:append = ".1"
+
 SRC_URI:append = " \
            file://0002-Strip-long-version-output.patch \
           "
+
+do_install:append() {
+    printf '\nprefer-family = IPv4\n' >> "${D}${sysconfdir}/wgetrc"
+}  
 
 PACKAGE_NO_LOCALE = "1"
 DEPENDS:remove = "gnutls"
