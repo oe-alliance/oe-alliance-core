@@ -21,8 +21,6 @@ PROVIDES += " \
     enigma2-plugin-systemplugins-channelsimporter \
     enigma2-plugin-extensions-dlnabrowser \
     enigma2-plugin-extensions-dlnaserver \
-    enigma2-plugin-systemplugins-firmwareupgrade \
-    enigma2-plugin-systemplugins-fpgaupgrade \
     enigma2-plugin-systemplugins-vfdcontrol \
     enigma2-plugin-extensions-streamtv \
     enigma2-plugin-systemplugins-tempfancontrol \
@@ -90,8 +88,6 @@ DESCRIPTION:enigma2-plugin-extensions-dlnabrowser = "this is dlna/upnp browser u
 RDEPENDS:enigma2-plugin-extensions-dlnabrowser = "djmount fuse-utils libfuse2 libupnp1.6 libneon27"
 DESCRIPTION:enigma2-plugin-extensions-dlnaserver = "this is dlna server using minidlna"
 RDEPENDS:enigma2-plugin-extensions-dlnaserver = "minidlna"
-DESCRIPTION:enigma2-plugin-systemplugins-firmwareupgrade = "Upgrade your system Firmware"
-DESCRIPTION:enigma2-plugin-systemplugins-fpgaupgrade = "Upgrade your system FPGA"
 DESCRIPTION:enigma2-plugin-systemplugins-vfdcontrol = "vfd controller"
 DESCRIPTION:enigma2-plugin-extensions-streamtv = "iptv player"
 RDEPENDS:enigma2-plugin-extensions-streamtv = "rtmpdump"
