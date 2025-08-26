@@ -30,3 +30,14 @@ FILES:${PN} = "/"
 
 do_package_qa() {
 }
+
+pkg_postinst}:${PN}:append () {
+if [ -z "$D" ]; then
+	if [ ! -e "${libdir}/libbluray.so.2" ] && [ ! -L "${libdir}/libbluray.so.2" ]; then
+		sofile="$(basename "$(readlink -f ${libdir}/libbluray.so.*.*.* || true)")"
+		if [ -n "$sofile" ]; then
+			ln -s "$sofile" "${libdir}/libbluray.so.2"
+		fi
+	fi
+fi
+}
