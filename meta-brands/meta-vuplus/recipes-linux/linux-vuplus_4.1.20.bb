@@ -64,6 +64,7 @@ SRC_URI += "https://source.mynonpublic.com/vuplus/release/kernel/stblinux-4.1-${
     file://fix-multiple-defs-yyloc.patch \
     file://linux3.4-ARM-8933-1-replace-Sun-Solaris-style-flag-on-section.patch \
     file://fix-build-with-binutils-2.41.patch \
+    file://si2168-d60.patch \
     "
 
 SRC_URI:append = "${@bb.utils.contains("MACHINE_FEATURES", "dvbproxy", " file://linux_dvb_adapter.patch;striplevel=1", "", d)}"
