@@ -1,0 +1,35 @@
+--- a/drivers/media/dvb-frontends/si2168_priv.h	2025-08-26 05:55:12.464185181 +0000
++++ b/drivers/media/dvb-frontends/si2168_priv.h	2025-08-26 05:54:58.247177205 +0000
+@@ -25,6 +25,7 @@
+ #define SI2168_A20_FIRMWARE "dvb-demod-si2168-a20-01.fw"
+ #define SI2168_A30_FIRMWARE "dvb-demod-si2168-a30-01.fw"
+ #define SI2168_B40_FIRMWARE "dvb-demod-si2168-b40-01.fw"
++#define SI2168_D60_FIRMWARE "dvb-demod-si2168-d60-01.fw"
+ #define SI2168_B40_FIRMWARE_FALLBACK "dvb-demod-si2168-02.fw"
+ 
+ /* state struct */
+--- a/drivers/media/dvb-frontends/si2168.c	2025-08-26 05:49:34.960001710 +0000
++++ b/drivers/media/dvb-frontends/si2168.c	2025-08-26 05:54:59.118177694 +0000
+@@ -438,6 +438,7 @@
+ 	#define SI2168_A20 ('A' << 24 | 68 << 16 | '2' << 8 | '0' << 0)
+ 	#define SI2168_A30 ('A' << 24 | 68 << 16 | '3' << 8 | '0' << 0)
+ 	#define SI2168_B40 ('B' << 24 | 68 << 16 | '4' << 8 | '0' << 0)
++	#define SI2168_D60 ('D' << 24 | 68 << 16 | '6' << 8 | '0' << 0)
+ 
+ 	switch (chip_id) {
+ 	case SI2168_A20:
+@@ -449,6 +450,9 @@
+ 	case SI2168_B40:
+ 		fw_name = SI2168_B40_FIRMWARE;
+ 		break;
++	case SI2168_D60:
++		fw_name = SI2168_D60_FIRMWARE;
++		break;
+ 	default:
+ 		dev_err(&client->dev, "unknown chip version Si21%d-%c%c%c\n",
+ 				cmd.args[2], cmd.args[1],
+@@ -782,3 +786,4 @@
+ MODULE_FIRMWARE(SI2168_A20_FIRMWARE);
+ MODULE_FIRMWARE(SI2168_A30_FIRMWARE);
+ MODULE_FIRMWARE(SI2168_B40_FIRMWARE);
++MODULE_FIRMWARE(SI2168_D60_FIRMWARE);

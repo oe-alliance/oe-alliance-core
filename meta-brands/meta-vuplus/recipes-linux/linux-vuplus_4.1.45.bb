@@ -58,6 +58,7 @@ SRC_URI += "https://source.mynonpublic.com/vuplus/release/kernel/stblinux-${KSRC
     file://fix-multiple-defs-yyloc.patch \
     file://linux3.4-ARM-8933-1-replace-Sun-Solaris-style-flag-on-section.patch \
     file://fix-build-with-binutils-2.41.patch \
+    file://si2168-d60.patch \
     "
 
 S = "${UNPACKDIR}/linux"
