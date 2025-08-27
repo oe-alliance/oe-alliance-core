@@ -15,7 +15,8 @@ SRCREV = "1f5eb31e72cb63b5c861170aa8dee488212cc84b"
 
 SRC_URI = "git://github.com/sinricpro/python-sdk;protocol=https;branch=master \
           file://append_change_channel_by_number.patch \
-          file://set_log_folder_to_tmp.patch"
+          file://set_log_folder_to_tmp.patch \
+          file://support_for_websocket_with_version_higher_than_10.1.patch"
 
 S = "${WORKDIR}/git"
 

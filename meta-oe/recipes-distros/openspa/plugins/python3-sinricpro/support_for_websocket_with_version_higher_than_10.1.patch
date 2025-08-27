@@ -1,0 +1,11 @@
+--- a/setup.py	2025-08-27 14:59:46.514836997 +0200
++++ b/setup.py	2025-08-27 15:00:56.549818790 +0200
+@@ -25,7 +25,7 @@
+     long_description=long_description,
+     url="https://github.com/sinricpro/python-sdk",
+     packages=['sinric'],
+-    install_requires=["websockets==10.1","loguru"],
++    install_requires=["websockets>=10.1","loguru"],
+     keywords=['sinric', 'sinric-pro'],
+     classifiers=[
+         "Programming Language :: Python :: 3",
