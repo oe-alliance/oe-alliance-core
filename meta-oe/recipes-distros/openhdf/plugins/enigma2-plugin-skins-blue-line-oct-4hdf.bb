@@ -17,7 +17,7 @@ SRC_URI = "git://github.com/stein17/Skins-for-openHDF.git;protocol=https;branch=
 
 FILES:${PN} = "${libdir} ${datadir}"
 
-S = "${UNPACKDIR}/Blue-Line-OCT-4HDF"
+S = "${UNPACKDIR}/${BP}/Blue-Line-OCT-4HDF"
 
 do_install() {
     install -d ${D}${libdir}
