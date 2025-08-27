@@ -1,26 +1,28 @@
-From 3fb697a64fec6accb6a425be29aa81f88e348197 Mon Sep 17 00:00:00 2001
+From f69d28ede1dcb5fc8b4b8e69a2bda1c70b5b7f70 Mon Sep 17 00:00:00 2001
 From: atvcaptain <openatv@gmail.com>
 Date: Sat, 16 Aug 2025 05:56:49 +0200
 Subject: [PATCH] update makefile
 
 ---
- Makefile  | 2 +-
+ Makefile  | 4 ++--
  common.mk | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/Makefile b/Makefile
-index 3307a98..a0fda63 100644
+index 3307a98..b22c156 100644
 --- a/Makefile
 +++ b/Makefile
-@@ -676,7 +676,7 @@ include $(src)/phl/phl.mk
+@@ -676,8 +676,8 @@ include $(src)/phl/phl.mk
  
  
  obj-$(CONFIG_RTL8852CU) := $(MODULE_NAME).o
 -obj-$(CONFIG_RTL8852CU) := $(MODULE_NAME).o
+-$(MODULE_NAME)-y = $(OBJS)
 +$(MODULE_NAME)-y = $(OBJS_COMMON)
- $(MODULE_NAME)-y = $(OBJS)
++$(MODULE_NAME)-y += $(OBJS)
  
  ############# MEMORY MANAGMENT #############
+ ifneq ($(CONFIG_RTKM), n)
 diff --git a/common.mk b/common.mk
 index f1149b8..235ee66 100644
 --- a/common.mk
