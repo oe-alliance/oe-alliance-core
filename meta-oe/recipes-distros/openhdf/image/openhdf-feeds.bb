@@ -7,7 +7,7 @@ ALLOW_EMPTY:${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "1.0"
-PR = "r34"
+PR = "r35"
 
 inherit packagegroup
 
@@ -20,6 +20,7 @@ RRECOMMENDS:${PN} = "\
     enigma2-display-skins \
     enigma2-plugin-extensions-project-valerie \
     enigma2-plugin-extensions-epgimport \
+    enigma2-plugin-extensions-pluto \
     enigma2-plugin-systemplugins-crossepg \
     enigma2-plugin-skins-xionhdf \
     enigma2-plugin-skins-army-mod \

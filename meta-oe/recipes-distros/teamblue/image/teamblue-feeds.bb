@@ -7,7 +7,7 @@ ALLOW_EMPTY:${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r8"
+PR = "r9"
 
 inherit packagegroup
 
@@ -25,6 +25,7 @@ RRECOMMENDS:${PN} = "\
     enigma2-plugin-extensions-enhancedmoviecenter \
     enigma2-plugin-extensions-epgimport \
     enigma2-plugin-extensions-gbipboxclient \
+    enigma2-plugin-extensions-pluto \
     enigma2-plugin-skins-gb-fhd \
     enigma2-plugin-skins-gbuniverse \
     enigma2-plugin-skins-pax \
