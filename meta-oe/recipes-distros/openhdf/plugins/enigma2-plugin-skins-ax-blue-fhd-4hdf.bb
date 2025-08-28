@@ -17,7 +17,7 @@ SRC_URI = "git://github.com/stein17/Skins-for-openHDF.git;protocol=https;branch=
 
 FILES:${PN} = "${libdir} ${datadir}"
 
-S = "${UNPACKDIR}/AX-Blue-FHD-4HDF"
+S = "${UNPACKDIR}/${BP}/AX-Blue-FHD-4HDF"
 
 do_install() {
     install -d ${D}${libdir}
