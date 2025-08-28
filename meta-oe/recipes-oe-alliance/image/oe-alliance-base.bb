@@ -34,6 +34,7 @@ RDEPENDS:${PN} = "\
     early-configure \
     elfutils \
     e2fsprogs-mke2fs \
+    tzdata \
     minilocale \
     modutils-loadscript \
     opkg \
