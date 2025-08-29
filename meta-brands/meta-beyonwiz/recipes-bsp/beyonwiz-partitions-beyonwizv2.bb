@@ -7,7 +7,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 inherit deploy
 
-SRCDATE = "20201218"
+SRCDATE = "20250829"
 PR = "${SRCDATE}"
 
 S = "${WORKDIR}/sources-unpack"
@@ -51,8 +51,8 @@ do_deploy() {
 
 addtask deploy before do_package after do_install
 
-SRC_URI[md5sum] = "a843de0d42cbb237119df2f30a7a6dd1"
-SRC_URI[sha256sum] = "609430fdb06ac63f005a5544db52adfa9cad1bf6fe454b01069ff35f0a899417"
+SRC_URI[md5sum] = "bcb0c1413c038ae73915681bbd291f6c"
+SRC_URI[sha256sum] = "082860fbdbbdbf5257d9f5d5469ebab697a3315081008b7c23ac22d8514c6cd5"
 
 INSANE_SKIP:${PN} += "already-stripped"
 
