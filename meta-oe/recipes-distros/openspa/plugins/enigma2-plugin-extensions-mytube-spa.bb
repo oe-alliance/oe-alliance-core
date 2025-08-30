@@ -5,7 +5,7 @@ SECTION = "extra"
 HOMEPAGE = "http://openspa.info"
 PRIORITY = "optional"
 DEPENDS += "${PYTHON_PN}"
-RDEPENDS:${PN} = "${PYTHON_PN}-google-api-client ${PYTHON_PN}-oauth2client ${PYTHON_PN}-youtube-dl"
+RDEPENDS:${PN} = "${PYTHON_PN}-google-api-client ${PYTHON_PN}-oauth2client ${PYTHON_PN}-yt-dlp"
 
 require assume-gplv2.inc
 require conf/python/python3-compileall.inc
