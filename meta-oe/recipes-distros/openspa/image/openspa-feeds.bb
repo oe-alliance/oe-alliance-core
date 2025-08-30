@@ -44,6 +44,7 @@ RRECOMMENDS:${PN} = "\
     enigma2-plugin-extensions-permanentevent-spa \
     enigma2-plugin-extensions-plutotv-spa \
     enigma2-plugin-extensions-sinriconnect \
+    enigma2-plugin-extensions-spzcamd \
     enigma2-plugin-extensions-spzremotechannels \
     enigma2-plugin-extensions-tailscale \
     enigma2-plugin-extensions-xtraevent-spa \

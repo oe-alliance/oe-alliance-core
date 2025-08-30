@@ -20,6 +20,7 @@ RRECOMMENDS:${PN} = " \
     openspa-version-info \
     enigma-info \
     enigma2-plugin-extensions-iptosat \
+    enigma2-plugin-extensions-spzcamd \
     enigma2-plugin-extensions-spzremotechannels \
     enigma2-plugin-systemplugins-hotplug \
     enigma2-plugin-systemplugins-softwaremanager \
