@@ -25,6 +25,7 @@ RRECOMMENDS:${PN} = "\
     curlftpfs-ng \
     cdfs \
     tvheadend \
+    openspa-softcams-meta \
     openssl-old \
     ${@bb.utils.contains_any('TARGET_ARCH', 'arm aarch64', 'sysbench', '', d)} \
     enigma2-plugin-extensions-enhancedmoviecenter \

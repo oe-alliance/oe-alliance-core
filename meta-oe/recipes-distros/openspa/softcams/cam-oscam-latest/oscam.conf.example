@@ -1,0 +1,19 @@
+# oscam.conf generated automatically by Streamboard OSCAM 1.20-unstable_svn
+# Read more: http://www.streamboard.tv/svn/oscam/trunk/Distribution/doc/txt/oscam.conf.txt
+
+[global]
+logfile                       = stdout
+lb_save                       = 100
+disablecrccws_only_for        = 1708:000000;1811:003311,003315;09C4:000000;098D:000000;0500:030B00,042820;0604:000000;1819:00006D;0100:00006D;1810:000000;1884:000000;0E00:000000
+
+[dvbapi]
+enabled                       = 1
+au                            = 1
+user                          = dvbapi
+
+[webif]
+httpport                      = 8080
+httpuser                      = user
+httppwd                       = pass
+httppollrefresh               = 10
+httpallowed                   = 127.0.0.1,192.168.1.1-192.168.1.255

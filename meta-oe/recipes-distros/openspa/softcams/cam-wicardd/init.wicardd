@@ -1,0 +1,55 @@
+#!/bin/sh
+
+CAMD_ID=1793
+CAMD_NAME="WiCardd 1.19"
+INFOFILE_A=ecm0.info
+INFOFILE_B=ecm1.info
+INFOFILE_C=ecm2.info
+INFOFILE_D=ecm3.info
+INFOFILE_E=ecm4.info
+INFOFILE_F=ecm5.info
+#Expert window
+INFOFILE_LINES=1111111111000000
+#Zapp after start
+REZAPP=0
+
+remove_tmp () {
+	rm -rf /tmp/cainfo.* /tmp/camd.* /tmp/sc.* /tmp/*.info* /tmp/*.tmp* /tmp/wicardd*
+	[ -e /tmp/.wicardd ] && rm -rf /tmp/.wicardd
+	[ -e /tmp/.emu.info ] && rm -rf /tmp/.emu.info
+	[ -e /tmp/wicardd.mem ] && rm -rf /tmp/wicardd.mem
+}
+
+case "$1" in
+start)
+    echo "[SCRIPT] $1: $CAMNAME"
+		remove_tmp
+		touch /tmp/.emu.info
+		echo "WiCard 1.19" > /tmp/.emu.info
+    ulimit -s 1024
+    exec start-stop-daemon -S -x /usr/bin/wicardd -- -d -c /etc/tuxbox/config/wicardd/wicardd.conf
+    ;;
+stop)
+    exec start-stop-daemon -K -R 2 -x /usr/bin/wicardd &
+    sleep 2
+    killall -9 wicardd 2>/dev/null
+    sleep 2
+    rm -rf /tmp/.wicardd
+    ;;
+restart|reload)
+    $0 stop
+    sleep 1
+    $0 start
+    ;;
+version)
+    echo "wicardd"
+    ;;
+info)
+    echo "wicardd 1.19"
+    ;;
+*)
+    echo "Usage: $0 start|stop|restart"
+    exit 1
+    ;;
+esac
+exit 0

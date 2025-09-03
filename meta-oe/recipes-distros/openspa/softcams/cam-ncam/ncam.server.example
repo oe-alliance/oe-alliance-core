@@ -1,0 +1,168 @@
+################# Enable Reader #########################
+# To enable Reader Using : enable       = 1
+# To Disable Reader Using : enable      = 0
+####################### SoftCams ########################
+
+[reader]
+label                         = emulator (SoftCam.key)
+enable                        = 0
+protocol                      = emu
+device                        = emulator
+disablecrccws_only_for        = 0E00:000000
+caid                          = 0500,0604,0D00,0E00,1010,1801,2600,2602,2610
+detect                        = cd
+ident                         = 0500:020A00,021110;0604:000000;0D00:0000C0;0E00:000000;1010:000000;1801:000000,001101,002111,007301;2600:000000;2602:000000;2610:000000
+group                         = 1
+emmcache                      = 2,1,2,1
+emu_auproviders               = 0604:010200;0E00:000000;1010:000000;2610:000000
+group                         = 1
+emmcache                      = 2,1,2,1
+emu_auproviders               = 0604:010200;0E00:000000;1010:000000;4AE1:000011,000014,0000FE
+
+[reader]
+label                         = constant.cw
+enable                        = 0
+protocol                      = constcw
+device                        = /etc/tuxbox/config/ncam/constant.cw
+caid                          = 2600,0B00,0500,0963,06AD,0940
+group                         = 1
+audisabled                    = 0
+
+####################### Card ############################
+
+[reader]
+label                         = upper_card
+enable                        = 0
+protocol                      = internal
+device                        = /dev/sci1
+#ecmwhitelist                  = 0100@00006A:64
+#ecmheaderwhitelist            = 800061006A00075C00,800061006A01075C00,803061006A00075C00,803061006A01075C00,810061006A00075C00,810061006A01075C00,813061006A00075C00,813061006A01075C00
+detect                        = cd
+group                         = 1
+emmcache                      = 1,3,15
+audisabled                    = 0
+mhz                           = 357
+cardmhz                       = 2700
+ratelimitecm                  = 4
+ratelimittime                 = 10000
+ecmunique                     = 1
+srvidholdtime                 = 2000
+cooldown                      = 30,600
+
+[reader]
+label                         = lower_card
+enable                        = 0
+protocol                      = internal
+device                        = /dev/sci0
+#ecmwhitelist                  = 0100@00006A:64
+#ecmheaderwhitelist            = 800061006A00075C00,800061006A01075C00,803061006A00075C00,803061006A01075C00,810061006A00075C00,810061006A01075C00,813061006A00075C00,813061006A01075C00
+detect                        = cd
+group                         = 1
+emmcache                      = 1,3,15
+audisabled                    = 0
+mhz                           = 357
+cardmhz                       = 2700
+ratelimitecm                  = 4
+ratelimittime                 = 10000
+ecmunique                     = 1
+srvidholdtime                 = 2000
+cooldown                      = 30,600
+
+#[reader]
+#label                         = Card_Blanca
+#enable                        = 0
+#protocol                      = internal
+#device                        = /dev/sci0
+#services                      = canal+ esp
+#caid                          = 1810
+#ecmwhitelist                  = 1810@1F1F1F:89
+#detect                        = cd
+#nagra_read                    = 2
+#mhz                           = 500
+#cardmhz                       = 368
+#ident                         = 1810:000000,004001,004101
+#group                         = 3
+#emmcache                      = 1,3,2,0
+
+####################### CCcam ############################
+
+[reader]
+label                         = Cline1
+enable                        = 1
+protocol                      = cccam
+device                        = host,port
+user                          = user
+password                      = password
+inactivitytimeout             = 30
+group                         = 1,2,3,4,5,6,7,8,9,10,64
+emmcache                      = 1,1,2
+cccversion                    = 2.1.3
+cccmaxhops                    = 2
+ccckeepalive                  = 1
+cccreshare                    = 3
+disablecrccws                 = 1
+cccwantemu                    = 1
+blockemm-unknown              = 1
+blockemm-u                    = 1
+blockemm-s                    = 1
+blockemm-g                    = 1
+audisabled                    = 1
+services                      = !powervu_fake,!tandberg_fake,!biss_fake,!afn_fake,1708:000000
+disablecrccws_only_for        = 1709:000000;1708:000000;1811:003311,003315;09C4:000000;0500:030B00,042820;0604:000000;1819:00006D;0100:00006D;1810:000000;1884:000000;0E00:000000
+
+[reader]
+label                         = Cline2
+enable                        = 0
+protocol                      = cccam
+device                        = host,port
+user                          = user
+password                      = pass
+group                         = 1,2,3,4,5,6,7,8,9,10,64
+emmcache                      = 2,1,2,1
+cccversion                    = 2.0.11
+ccckeepalive                  = 1
+cccmaxhops                    = 2 # dont use higher than 3 !!!
+disablecrccws                 = 1
+cccwantemu                    = 1
+blockemm-unknown              = 1
+blockemm-u                    = 1
+blockemm-s                    = 1
+blockemm-g                    = 1
+audisabled                    = 1
+services                      = !powervu_fake,!tandberg_fake,!biss_fake,!afn_fake,1708:000000
+disablecrccws_only_for        = 1709:000000;1708:000000;1811:003311,003315;09C4:000000;0500:030B00,042820;0604:000000;1819:00006D;0100:00006D;1810:000000;1884:000000;0E00:000000
+
+####################### MgCamd ############################
+
+[reader]
+label                         = mgcamd_server
+enable                        = 0
+protocol                      = mgcamd
+device                        = host,port
+key                           = 0102030405060708091011121314
+user                          = user
+password                      = pass
+services                      = !powervu_fake,!tandberg_fake,!biss_fake,!afn_fake,1708:000000
+inactivitytimeout             = -1
+group                         = 1,2,3,4,5,6,7,8,9,10,64
+fallback                      = 1
+disablecrccws                 = 1
+audisabled                    = 1
+disablecrccws_only_for        = 1709:000000;1708:000000;1811:003311,003315;09C4:000000;0500:030B00,042820;0604:000000;1819:00006D;0100:00006D;1810:000000;1884:000000;0E00:000000
+
+####################### Newcamd ############################
+
+[reader]
+label                         = newcamd_server
+enable                        = 0
+protocol                      = newcamd
+device                        = host,port
+key                           = 0102030405060708091011121314
+user                          = user
+password                      = pass
+services                      = !powervu_fake,!tandberg_fake,!biss_fake,!afn_fake,1708:000000
+fallback                      = 1
+group                         = 1,2,3,4,5,6,7,8,9,10,64
+disablecrccws                 = 1
+audisabled                    = 1
+disablecrccws_only_for        = 1709:000000;1708:000000;1811:003311,003315;09C4:000000;0500:030B00,042820;0604:000000;1819:00006D;0100:00006D;1810:000000;1884:000000;0E00:000000
