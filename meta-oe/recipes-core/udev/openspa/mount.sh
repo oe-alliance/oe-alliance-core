@@ -8,6 +8,24 @@ MOUNT="/bin/mount"
 PMOUNT="/usr/bin/pmount"
 UMOUNT="/bin/umount"
 
+# File for known devices
+KNOWN_DEVICES_FILE="/etc/udev/known_devices"
+
+log() {
+	# comment to enable logging
+	if [ ! -f /etc/udev/udev.debug ]; then
+		return
+	fi
+
+	if [ $# -eq 1 ]; then
+		echo "udev/mount.sh" "$1" >> $LOG
+		#logger "udev/mount.sh" "$1"
+	else
+		echo "udev/mount.sh" "$DEVNAME: $1 $2" >> $LOG
+		#logger "udev/mount.sh" "$DEVNAME: $1 $2"
+	fi
+}
+
 for line in `grep -h -v ^# /etc/udev/mount.ignorelist /etc/udev/mount.ignorelist.d/*`
 do
 	if [ ` expr match "$DEVNAME" "$line" ` -gt 0 ];
@@ -16,6 +34,11 @@ do
 		exit 0
 	fi
 done
+
+if [[ $ID_PART_ENTRY_NAME =~ ^(kernel[0-9]*|linuxkernel[0-9]*|rootfs[0-9]*|startup|userdata|dreambox-rootfs)$ ]] ; then
+	log "PARTLABEL excludes $ID_PART_ENTRY_NAME"
+	exit 0
+fi
 
 lock() {
 	LOCKFILE=/tmp/udevmount.lock
@@ -34,17 +57,6 @@ lock() {
 unlock() {
 	flock -u 200
 	rm -f $LOCKFILE
-}
-
-log() {
-	# comment to enable logging
-	return
-
-	if [ $# -eq 1 ]; then
-		echo "$1" >> /home/root/udev.log
-	else
-		echo "$DEVNAME: $1 $2" >> /home/root/udev.log
-	fi
 }
 
 notify() {
@@ -152,28 +164,57 @@ automount() {
 		exit 0
 	fi
 
+	if [ "${DEVBASE:0:6}" == "mmcblk" ] ; then
+		PARTNUM=`expr substr $NAME 9 1`
+	else
+		PARTNUM=`expr substr $NAME 4 1`
+	fi
+	
+	log ">" "PARTNUM = $PARTNUM"
+
 	# Get the device model
 	if [ -f /sys/block/$DEVBASE/device/model ]; then
 		MODEL=`cat /sys/block/$DEVBASE/device/model`
 	else
 		MODEL="unknown device"
 	fi
+	if [ -f /sys/block/$DEVBASE/device/type ]; then
+		MODEL1=`cat /sys/block/$DEVBASE/device/type`
+	else
+		MODEL1="unknown device"
+	fi
 	log ">" "MODEL = $MODEL"
+	log ">" "TYPE = $MODEL1"
 
 	# external?
 	readlink -fn /sys/block/$DEVBASE/device | grep -qs 'pci\|ahci\|sata'
 	EXTERNAL=$?
+	REMOVABLE=`cat /sys/block/$DEVBASE/removable`
+	
+	log ">" "EXTERNAL = $EXTERNAL"
+	log ">" "REMOVABLE = $REMOVABLE"
 
 	# make sure this next bit doesn't run concurrently
 	lock
 
 	# Figure out a mount point to use
-	LABEL=${ID_FS_LABEL}
+	UUID=$ID_FS_UUID
+	KNOWNMOUNT=$(grep "^$UUID" "$KNOWN_DEVICES_FILE" | cut -d ':' -f2)
+
+	if [ -z "$KNOWNMOUNT" ]; then
+		log "UUID $UUID not found in known devices, using default logic"
+	elif [ "$KNOWNMOUNT" = "None" ]; then
+		log "UUID $UUID found with None, Skip mounting"
+		exit 0
+	else
+		LABEL="`basename "$KNOWNMOUNT"`"
+		log "UUID $UUID found with mount point: $LABEL"
+	fi
 
 	# If no label, try to come up with one
 	if [[ -z "${LABEL}" ]]; then
 
-		if [ "${EXTERNAL}" -eq "0" ]; then
+		if [ "${REMOVABLE}" -eq "0" -a $EXTERNAL -eq 0 ]; then
 			# we assume it's the internal harddisk
 			LABEL="hdd"
 		else
@@ -199,12 +240,48 @@ automount() {
 					LABEL="mmc"
 				elif [ "$MODEL" == "MS/MS-Pro       " ]; then
 					LABEL="mmc"
+				elif [ "$MODEL1" == "SD	            " ]; then
+					LABEL="mmc"
+				elif [ "$MODEL1" == "SD              " ]; then
+					LABEL="mmc"
+				elif [ "$MODEL1" == "SD" ]; then
+					LABEL="mmc"
 				else
-					LABEL="usb"
+					#echo "[mdev-mount.sh] USB device found" >> $LOG
+					if [ $PARTNUM -eq "1" -o $PARTNUM -eq "5" ] ; then
+						#echo "[mdev-mount.sh] 1st partition found" >> $LOG
+						if grep -q "/media/hdd" /proc/mounts ; then
+							#echo "[mdev-mount.sh] /media/hdd exists" >> $LOG
+							if grep -q "/media/usb" /proc/mounts ; then
+								#echo "[mdev-mount.sh] /media/usb exists" >> $LOG
+								LABEL=$NAME
+							else
+								LABEL="usb"
+							fi
+						else
+							# mount the first removable device on /media/hdd only when no other internal hdd is present
+							LABEL="hdd"
+							DEVLIST=`ls -1 /sys/block | grep "sd[a-z]\|mmcblk[0-9]"`
+							for DEV in $DEVLIST; do
+								DEVBASE=`expr substr $DEV 1 3`
+								if [ "${REMOVABLE}" -eq "0" -a $EXTERNAL -eq 0 ] ; then
+									LABEL="usb"
+									#echo "[mdev-mount.sh] internal sdx detected -> mount as USB" >> $LOG
+									break
+								fi
+							done
+						fi
+					else
+						#echo "[mdev-mount.sh] next partition $PARTNUM of USB device found" >> $LOG
+						# Mount next partition as detected device
+						LABEL=$NAME
+					fi
 				fi
 			fi
 		fi
 	fi
+
+	log ">" "LABEL = $LABEL"
 
 	# label may not be a used mountpoint or local directory
 	if [ ! -z "${LABEL}" ] && [ -d /media/$LABEL ]; then
@@ -277,18 +354,104 @@ rm_dir() {
 name="`basename "$DEVNAME"`"
 [ -e /sys/block/$name/device/media ] && media_type=`cat /sys/block/$name/device/media`
 
-if [ "$ACTION" = "add" ] && [ -n "$DEVNAME" ] && [ -n "$ID_FS_TYPE" -o "$media_type" = "cdrom" ]; then
-	if [ -x "$PMOUNT" ]; then
-		$PMOUNT $DEVNAME 2> /dev/null
-	elif [ -x $MOUNT ]; then
-		$MOUNT $DEVNAME 2> /dev/null
+if [ "$ACTION" = "add" ]; then
+	FLASHEXPANDERDEV=`cat /proc/mounts | grep '.FlashExpander' | cut -d " " -f1`
+	if [ -n "$FLASHEXPANDERDEV" ]; then
+		MOUNTPOINT=`cat /proc/mounts | grep ${FLASHEXPANDERDEV} | cut -d " " -f2`
+	else
+		MOUNTPOINT=""
 	fi
 
-	# If the device isn't mounted at this point, it isn't
-	# configured in fstab (note the root filesystem can show up as
-	# /dev/root in /proc/mounts, so check the device number too)
-	if expr $MAJOR "*" 256 + $MINOR != `stat -c %d /`; then
-		grep -q "^$DEVNAME " /proc/mounts || automount
+	if [ ${name:0:2} == "sr" ]; then
+		log "CD/DVD Detectet. $DEVNAME"
+		exit 0
+	fi
+
+	if [ -z "$ID_FS_TYPE" ]; then
+		log "Filesystem not exist. $DEVNAME"
+	#	exit 0
+	fi
+
+	# check if already mounted
+	if grep -q "^${DEVNAME} " /proc/mounts ; then
+		if [ ! "${FLASHEXPANDERDEV}" == "${DEVNAME}" ] || [[ "$MOUNTPOINT"  =~ .*"/media/"* ]]; then 
+			log  "Already mounted: ${DEVNAME}"
+			exit 0
+		fi
+	fi
+	# Check if the device is already in /etc/fstab
+	if grep -qs "$DEVNAME" /etc/fstab && ! ps aux | grep -v grep | grep -q enigma2; then
+		log "Device $DEVNAME is already in /etc/fstab, skipping mount."
+		exit 0
+	fi
+
+	# Check if the device is already in /etc/fstab and UUID not empty
+	if [ -z "$ID_FS_UUID" ]; then
+		log "UUID is empty, skipping /etc/fstab check."
+	else
+		if grep -qs "UUID=$ID_FS_UUID" /etc/fstab && ! ps aux | grep -v grep | grep -q enigma2; then
+			log "UUID $ID_FS_UUID is already in /etc/fstab, skipping mount."
+			exit 0
+		fi
+	fi
+
+	# blacklist boot device
+	BOOTDEV=$(cat /proc/cmdline | sed -e 's/^.*root=\/dev\///' -e 's/ .*$//')
+	log ">" "BOOTDEV = $BOOTDEV"
+	if [ "$DEVNAME" == "$BOOTDEV" ]; then
+		log "!" "exit, boot device is blacklisted"
+		exit 0
+	fi
+
+	# Device name and base device
+	NAME="`basename "$DEVNAME"`"
+	DEVBASE=${NAME:0:7}
+	if [ ! -d /sys/block/${DEVBASE} ]; then
+		DEVBASE=${NAME:0:3}
+	fi
+
+	# blacklist partitions on the same device as the boot device
+	if [[ $BOOTDEV == $DEVBASE* ]]; then
+		log "!" "exit, boot device partition blacklisted"
+		exit 0
+	fi
+
+	# check for "please don't mount it" file
+	if [ -f "/dev/nomount.${DEVBASE}" ]; then
+		# blocked
+		log "!" "exit, due to a no-mount flag for $DEVBASE"
+		exit 0
+	fi
+
+	# Activate swap space
+	if [ "$ID_FS_TYPE" == "swap" ] ; then
+		if ! grep -q "^/dev/${NAME} " /proc/swaps ; then
+			swapon /dev/${NAME}
+		fi
+		exit 0
+	fi
+
+	# Check if a filesystem is present
+	if [ -n "$ID_FS_TYPE" ]; then
+		# If the device isn't mounted at this point, it isn't
+		# configured in fstab (note the root filesystem can show up as
+		# /dev/root in /proc/mounts, so check the device number too)
+		if ! ps aux | grep -v grep | grep -q enigma2; then
+			if expr $MAJOR "*" 256 + $MINOR != `stat -c %d /`; then
+				grep -q "^$DEVNAME " /proc/mounts || automount
+			fi
+		fi
+	else
+		log "No filesystem detected for device $DEVNAME, skipping."
+	fi
+
+	# inform E2 of the hotplug action only for partitions
+	# Check if enigma2 process is running
+	if ps aux | grep -v grep | grep -q enigma2; then
+		log "enigma2 running"
+		notify true
+	else
+		notify false
 	fi
 fi
 
@@ -297,13 +460,26 @@ if [ "$ACTION" = "remove" ] || [ "$ACTION" = "change" ] && [ -x "$UMOUNT" ] && [
 	do
 		$UMOUNT $mnt
 	done
+	
+
+	if [ ${name:0:2} == "sr" ]; then
+		log "CD/DVD Detectet. $DEVNAME"
+		exit 0
+	fi
 
 	LABEL=`echo $mnt | cut -c 8-`
-	# logger "remove device $LABEL"
+	log "!" "remove device $LABEL"
 	samba_share "/media/$LABEL" ""
 	# Remove empty directories from auto-mounter
 	test -e "/tmp/.automount-$LABEL" && rm_dir "/media/$LABEL"
+
+	# inform E2 of the hotplug action only for partitions
+	# Check if enigma2 process is running
+	if ps aux | grep -v grep | grep -q enigma2; then
+		log "enigma2 running"
+		notify true
+	else
+		notify false
+	fi
 fi
 
-# inform E2 of the hotplug action
-notify
