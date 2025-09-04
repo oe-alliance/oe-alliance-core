@@ -49,9 +49,6 @@ exit 0
 pkg_prerm:${PN}() {
 #!/bin/sh
 
-killall -9 ${CAMNAME} 2>/dev/null
-sleep 10
-
 exit 0
 }
 

@@ -46,9 +46,6 @@ exit 0
 pkg_prerm:${PN}() {
 #!/bin/sh
 
-killall -9 wicardd 2>/dev/null
-sleep 10
-
 exit 0
 }
 

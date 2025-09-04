@@ -68,9 +68,6 @@ do_install() {
 pkg_prerm:${PN}() {
 #!/bin/sh
 
-killall -9 ncam 2>/dev/null
-sleep 10
-
 exit 0
 }
 
