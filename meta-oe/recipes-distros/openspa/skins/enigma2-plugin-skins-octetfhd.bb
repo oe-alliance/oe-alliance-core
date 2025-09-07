@@ -22,7 +22,7 @@ FILES:${PN} = "/usr/share/enigma2 /usr/lib/enigma2/python/Components"
 
 FILES:${PN}-src += "${libdir}/enigma2/python/Components/Converter/RunningEvents.py"
 
-PACKAGES = "${PN}-src ${PN}"
+PACKAGES = "${PN}"
 
 do_install:append() {
         install -d ${D}${libdir}/enigma2/python/Components

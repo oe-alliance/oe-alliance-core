@@ -15,6 +15,8 @@ SRC_URI = "git://github.com/OpenSPA/openspa-enigma2-skins.git;protocol=https;bra
 
 FILES:${PN} = "/usr/share/enigma2 /usr/lib/enigma2/python/Components"
 
+PACKAGES = "${PN}"
+
 S = "${WORKDIR}/git"
 
 do_install() {

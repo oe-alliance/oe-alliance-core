@@ -4,6 +4,8 @@ SRCREV:pn-${PN} ?= "${AUTOREV}"
 
 SRC_URI="git://github.com/OpenSPA/SpaOpenPlugins;protocol=https;branch=8.4"
 
+PACKAGES = "${PN}"
+
 inherit gitpkgv gettext
 
 python do_translate() {

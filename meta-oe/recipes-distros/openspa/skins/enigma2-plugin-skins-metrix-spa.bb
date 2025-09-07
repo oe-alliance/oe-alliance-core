@@ -28,8 +28,9 @@ S = "${WORKDIR}/git"
 FILES:enigma2-plugin-skins-metrix-spa-fhd-icons = "/usr/share/enigma2/MetrixHD/FHD"
 FILES:enigma2-plugin-skins-metrix-spa-uhd-icons = "/usr/share/enigma2/MetrixHD/UHD"
 
-
 FILES:${PN} = "${libdir} /usr/share ${sysconfdir}"
+
+PACKAGES = "${PN}"
 
 do_compile() {
 	for f in $(find ${S}/locale -name *.po ); do

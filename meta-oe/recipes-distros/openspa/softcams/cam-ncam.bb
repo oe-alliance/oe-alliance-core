@@ -26,8 +26,9 @@ SRC_URI = "git://github.com/fairbird/NCam.git;protocol=https;branch=master \
 S = "${WORKDIR}/git"
 UNPACKDIR = "${WORKDIR}/sources-unpack"
 
-FILES:${PN} = "/usr/bin/ /usr/script/ /var/volatile/log/ncam/ /etc/tuxbox/config/ncam/"
+FILES:${PN} = "/usr/bin/ /usr/script/ /var/volatile/log/ncam/ /etc/tuxbox/config/ncam/*"
 
+PACKAGES = "${PN}"
 PACKAGE_ARCH = "${TUNE_PKGARCH}"
 
 LDFLAGS:prepend = "-ldvbcsa "

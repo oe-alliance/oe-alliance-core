@@ -30,6 +30,7 @@ UNPACKDIR = "${WORKDIR}/sources"
 
 FILES:${PN} = "/usr/bin/ /usr/script/ /var/volatile/log/${CAMNAME}/ /etc/tuxbox/config/${CAMNAME}/"
 
+PACKAGES = "${PN}"
 PACKAGE_ARCH = "${TUNE_PKGARCH}"
 
 LDFLAGS:prepend = "-ldvbcsa "
@@ -91,8 +92,15 @@ pkg_postrm:${PN}() {
 rm -rf /etc/tuxbox/config/${CAMNAME}/oscam.conf.example > /dev/null 2>&1
 rm -rf /etc/tuxbox/config/${CAMNAME}/oscam.server.example > /dev/null 2>&1
 rm -rf /etc/tuxbox/config/${CAMNAME}/oscam.user.example > /dev/null 2>&1
+rm -rf /usr/bin/list_smargo > /dev/null 2>&1
 rm -rf /usr/bin/${CAMNAME} > /dev/null 2>&1
 rm -rf /usr/script/Oscam-pcscd-latest_cam.sh > /dev/null 2>&1
 
 exit 0
 }
+
+do_prepare_recipe_sysroot[noexec] = "1"
+INHIBIT_PACKAGE_STRIP = "1"
+INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
+deltask do_populate_sysroot
+deltask do_package_qa

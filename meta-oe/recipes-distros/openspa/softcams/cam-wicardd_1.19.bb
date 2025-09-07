@@ -22,6 +22,7 @@ UNPACKDIR = "${S}"
 
 FILES:${PN} = "/usr/bin/ /usr/script/ /etc/tuxbox/config/wicardd/"
 
+PACKAGES = "${PN}"
 PACKAGE_ARCH = "${TUNE_PKGARCH}"
 
 do_install() {

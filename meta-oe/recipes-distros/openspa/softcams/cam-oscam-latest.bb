@@ -30,6 +30,7 @@ UNPACKDIR = "${WORKDIR}/sources"
 
 FILES:${PN} = "/usr/bin/ /usr/script/ /var/volatile/log/${CAMNAME}/ /etc/tuxbox/config/${CAMNAME}/"
 
+PACKAGES = "${PN}"
 PACKAGE_ARCH = "${TUNE_PKGARCH}"
 
 LDFLAGS:prepend = "-ldvbcsa "
@@ -59,7 +60,6 @@ do_install() {
     install -m 0755 ${UNPACKDIR}/init ${D}/usr/script/Oscam-latest_cam.sh
     install -d ${D}/usr/bin
     install -m 0755 ${WORKDIR}/build/oscam ${D}/usr/bin/${CAMNAME}
-    install -m 0755 ${WORKDIR}/build/utils/list_smargo ${D}/usr/bin/list_smargo
     install -d ${D}/etc/tuxbox/config/${CAMNAME}
     install -m 0644 ${UNPACKDIR}/oscam.conf.example ${D}/etc/tuxbox/config/${CAMNAME}
     install -m 0644 ${UNPACKDIR}/oscam.server.example ${D}/etc/tuxbox/config/${CAMNAME}
@@ -93,3 +93,9 @@ rm -rf /usr/script/Oscam-latest_cam.sh > /dev/null 2>&1
 
 exit 0
 }
+
+do_prepare_recipe_sysroot[noexec] = "1"
+INHIBIT_PACKAGE_STRIP = "1"
+INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
+deltask do_populate_sysroot
+deltask do_package_qa

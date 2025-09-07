@@ -17,6 +17,7 @@ DEPENDS += "\
     cam-oscam-latest \
     cam-oscam-pcscd-latest \
     cam-ncam \
+    cam-cccam-config \
     ${@bb.utils.contains("MACHINE_FEATURES", "hisil-3716mv430", "cam-cccam82", "cam-cccam232 cam-cccam239 cam-wicardd",  d)} \
     "
 
