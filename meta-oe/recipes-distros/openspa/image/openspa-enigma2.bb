@@ -46,6 +46,7 @@ NORMAL_IMAGE = "\
     enigma2-plugin-extensions-openwebif-webtv \
     enigma2-plugin-extensions-plutotv-spa \
     enigma2-plugin-extensions-volume-adjust \
+    enigma2-plugin-extensions-xtraevent-spa \
     enigma2-plugin-extensions-atilehd \
     enigma2-plugin-systemplugins-videotune \
     enigma2-plugin-drivers-ntfs-3g \
@@ -53,7 +54,6 @@ NORMAL_IMAGE = "\
     ${@bb.utils.contains("MACHINE_FEATURES", "videoenhancement", "", "enigma2-plugin-systemplugins-videoenhancement", d)} \
     enigma2-plugin-extensions-mediaplayer \
     ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", "shellinabox", d)} \
-    ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", "enigma2-plugin-extensions-enhancedmoviecenter", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "dreamboxv1", "${USBBOOT} mtd-utils-jffs2", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "dreamboxv2", "e2fsprogs-badblocks", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "boxmodel", "boxmodel", "", d)} \
