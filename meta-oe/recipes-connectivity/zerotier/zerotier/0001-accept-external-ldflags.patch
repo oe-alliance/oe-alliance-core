@@ -11,7 +11,7 @@ diff --git a/make-linux.mk b/make-linux.mk
 index bfa416aa0..11c7ca620 100644
 --- a/make-linux.mk
 +++ b/make-linux.mk
-@@ -26,8 +26,8 @@ TIMESTAMP=$(shell date +"%Y%m%d%H%M")
+@@ -41,8 +41,8 @@ TIMESTAMP=$(shell date +"%Y%m%d%H%M")
  # otherwise build into binary as done on Mac and Windows.
  ONE_OBJS+=osdep/PortMapper.o
  override DEFS+=-DZT_USE_MINIUPNPC
@@ -22,7 +22,7 @@ index bfa416aa0..11c7ca620 100644
  ifeq ($(MINIUPNPC_IS_NEW_ENOUGH),1)
  	override DEFS+=-DZT_USE_SYSTEM_MINIUPNPC
  	LDLIBS+=-lminiupnpc
-@@ -35,7 +35,7 @@ else
+@@ -50,7 +50,7 @@ else
  	override DEFS+=-DMINIUPNP_STATICLIB -DMINIUPNPC_SET_SOCKET_TIMEOUT -DMINIUPNPC_GET_SRC_ADDR -D_BSD_SOURCE -D_DEFAULT_SOURCE -D_XOPEN_SOURCE=600 -DOS_STRING="\"Linux\"" -DMINIUPNPC_VERSION_STRING="\"2.0\"" -DUPNP_VERSION_STRING="\"UPnP/1.1\"" -DENABLE_STRNATPMPERR
  	ONE_OBJS+=ext/miniupnpc/connecthostport.o ext/miniupnpc/igd_desc_parse.o ext/miniupnpc/minisoap.o ext/miniupnpc/minissdpc.o ext/miniupnpc/miniupnpc.o ext/miniupnpc/miniwget.o ext/miniupnpc/minixml.o ext/miniupnpc/portlistingparse.o ext/miniupnpc/receivedata.o ext/miniupnpc/upnpcommands.o ext/miniupnpc/upnpdev.o ext/miniupnpc/upnperrors.o ext/miniupnpc/upnpreplyparse.o
  endif
@@ -31,7 +31,7 @@ index bfa416aa0..11c7ca620 100644
  	ONE_OBJS+=ext/libnatpmp/natpmp.o ext/libnatpmp/getgateway.o
  else
  	LDLIBS+=-lnatpmp
-@@ -71,7 +71,8 @@ else
+@@ -86,7 +86,8 @@ else
  	override CFLAGS+=-Wall -Wno-deprecated -pthread $(INCLUDES) -DNDEBUG $(DEFS)
  	CXXFLAGS?=-O3 -fstack-protector
  	override CXXFLAGS+=-Wall -Wno-deprecated -std=c++17 -pthread $(INCLUDES) -DNDEBUG $(DEFS)
@@ -41,7 +41,7 @@ index bfa416aa0..11c7ca620 100644
  	ZT_CARGO_FLAGS=--release
  endif
  
-@@ -333,7 +334,7 @@ ifeq ($(ZT_CONTROLLER),1)
+@@ -359,7 +360,7 @@ ifeq ($(ZT_CONTROLLER),1)
  endif
  
  # ARM32 hell -- use conservative CFLAGS
@@ -50,7 +50,7 @@ index bfa416aa0..11c7ca620 100644
  	ifeq ($(shell if [ -e /usr/bin/dpkg ]; then dpkg --print-architecture; fi),armel)
  		override CFLAGS+=-march=armv5t -mfloat-abi=soft -msoft-float -mno-unaligned-access -marm
  		override CXXFLAGS+=-march=armv5t -mfloat-abi=soft -msoft-float -mno-unaligned-access -marm
-@@ -360,8 +361,8 @@ ifeq ($(ZT_USE_ARM32_NEON_ASM_CRYPTO),1)
+@@ -390,8 +391,8 @@ ifeq ($(ZT_USE_ARM32_NEON_ASM_CRYPTO),1)
  endif
  
  # Position Independence
@@ -60,4 +60,4 @@ index bfa416aa0..11c7ca620 100644
 +# override CXXFLAGS+=-fPIC -fPIE
  
  # Non-executable stack
- override ASFLAGS+=--noexecstack
+ override LDFLAGS+=-Wl,-z,noexecstack
