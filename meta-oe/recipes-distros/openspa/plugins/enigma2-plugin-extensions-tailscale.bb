@@ -24,6 +24,10 @@ do_install() {
     cp -r ${S}/git/${FOLDER}/plugin/* ${D}${PLUGINPATH}
 }
 
+do_install:append() {
+    find ${D}${PLUGINPATH} -name "*.py" -delete
+}
+
 pkg_postinst:${PN}() {
 #!/bin/sh
 

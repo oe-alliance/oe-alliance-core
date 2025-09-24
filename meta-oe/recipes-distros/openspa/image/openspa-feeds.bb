@@ -49,6 +49,7 @@ RRECOMMENDS:${PN} = "\
     enigma2-plugin-extensions-spzcamd \
     enigma2-plugin-extensions-spzremotechannels \
     enigma2-plugin-extensions-tailscale \
+    enigma2-plugin-extensions-weatherplugin-spa \
     enigma2-plugin-extensions-xtraevent-spa \
     enigma2-plugin-systemplugins-m3uiptv \
     enigma2-plugin-systemplugins-spzaddiptv \

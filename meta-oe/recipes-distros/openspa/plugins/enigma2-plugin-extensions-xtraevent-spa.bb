@@ -26,6 +26,9 @@ do_install() {
     cp -r ${S}/git/${FOLDER}/Components/* ${D}${PYFILES}
 }
 
+do_install:append() {
+    find ${D}${PLUGINPATH} -name "*.py" -delete
+    find ${D}${PYFILES} -name "*.py" -delete
+}
+
 FILES:${PN} = "${PLUGINPATH} ${PYFILES}"
-
-

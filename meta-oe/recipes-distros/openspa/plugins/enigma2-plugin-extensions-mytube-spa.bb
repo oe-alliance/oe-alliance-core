@@ -26,6 +26,10 @@ do_install() {
     cp -r ${S}/git/${FOLDER}/plugin/* ${D}${PLUGINPATH}
 }
 
+do_install:append() {
+    find ${D}${PLUGINPATH} -name "*.py" -delete
+}
+
 FILES:${PN} = "${PLUGINPATH}"
 
 addtask translate after do_configure before do_compile

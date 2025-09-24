@@ -15,6 +15,7 @@ inherit packagegroup
 RDEPENDS:${PN} = " \
     enigma-info \
     openspa-version-info \
+    oe-alliance-picon-feed \
     autofs \
     chrony \
     dosfstools \

@@ -1,30 +1,31 @@
-NAME = "FootOnSat"
-SUMMARY = "For football fans"
+NAME = "WeatherPlugin"
+SUMMARY = "WeatherPlugin by Dr.Best modified by OpenSPA"
 MAINTAINER = "OpenSPA Team"
 SECTION = "extra"
 PRIORITY = "optional"
 HOMEPAGE = "http://openspa.info"
-RDEPENDS:${PN} = "${PYTHON_PN}-sqlite3 alsa-utils-aplay"
+LICENSE = "GPL-3.0-only"
+LIC_FILES_CHKSUM = "file://git/weatherplugin/LICENSE;md5=1ebbd3e34237af26da5dc08a4e440464"
+RDEPENDS:${PN} = "${PYTHON_PN}-twisted-web"
 
-require assume-gplv2.inc
 require conf/python/python3-compileall.inc
 require spaopenplugins.inc
 
-PV = "1.7+git"
-FOLDER = "footonsat"
+PV = "1.0+git"
+FOLDER = "weatherplugin"
 
 S = "${WORKDIR}/${P}"
 UNPACKDIR = "${S}"
 
 PLUGINPATH = "${libdir}/enigma2/python/Plugins/Extensions/${NAME}"
-PYFILES = "${libdir}/enigma2/python/Components"
+PYFILES = "/usr"
 
 do_install() {
     install -d ${D}${PLUGINPATH}
     install -d ${D}${PYFILES}
 
     cp -r ${S}/git/${FOLDER}/plugin/* ${D}${PLUGINPATH}
-    cp -r ${S}/git/${FOLDER}/Components/* ${D}${PYFILES}
+    cp -r ${S}/git/${FOLDER}/usr/* ${D}${PYFILES}
 }
 
 do_install:append() {
