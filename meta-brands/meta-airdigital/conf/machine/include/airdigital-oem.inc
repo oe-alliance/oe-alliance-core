@@ -174,7 +174,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'zgemmah5ac', 'h5' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah32tc', 'h3' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah7', 'h7' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah17combo', 'h17' , '', d)}\
-${@bb.utils.contains('MACHINEBUILD', 'zgemmah17twin', 'h17' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmah17twin', 'h17twin' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah52splus', 'h5' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah2splus', 'h3' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah9s', 'h9' , '', d)}\
