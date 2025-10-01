@@ -98,6 +98,16 @@ stop() {
         log "inihdp: Stopping driver"
         rmmod rtk_btusb &
     fi
+    log "Checking for existing aplay process"
+    if [ -f /var/run/aplay.pid ]; then
+        PID=$(cat /var/run/aplay.pid)
+        log "Stopping existing aplay process (PID: $PID)"
+        kill $PID
+        while ps -p $PID > /dev/null; do
+            sleep 1
+        done
+        log "Previous aplay process stopped"
+    fi
 }
 
 case "$1" in
