@@ -73,13 +73,22 @@ start() {
         log "Bluetooth MAC: $BT_MAC"
     done) &
 
-    if [ -f "$BTAUDIO_FILE" ] && [ -n "$AUDIO_ADDRESS" ]; then
-        if [ "$AUDIO_CONNECT" = "True" ]; then
-            log "Connecting to audio device: $AUDIO_ADDRESS"
-            "$COMMANDCONNECT" "$AUDIO_ADDRESS" &
+    if [ -n "$AUDIO_ADDRESS" ]; then
+        i=0
+        while [ ! -f "$BTAUDIO_FILE" ] && [ $i -lt 10 ]; do
+            sleep 1
+            i=$((i+1))
+        done
+        if [ -f "$BTAUDIO_FILE" ]; then
+            if [ "$AUDIO_CONNECT" = "True" ]; then
+                log "Connecting to audio device: $AUDIO_ADDRESS"
+                "$COMMANDCONNECT" "$AUDIO_ADDRESS" &
+            else
+                log "Connecting to audio device default"
+                "$COMMANDCONNECT" &
+            fi
         else
-            log "Connecting to audio device default"
-            "$COMMANDCONNECT" &
+            log "BTAUDIO_FILE not found after timeout"
         fi
     fi
 }
