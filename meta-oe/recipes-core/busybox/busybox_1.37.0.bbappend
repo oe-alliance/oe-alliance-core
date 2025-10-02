@@ -5,6 +5,7 @@ SRC_URI += " \
             file://telnetd \
             file://inetd \
             file://inetd.conf \
+            file://syslog-startup.conf \
             file://vi.sh \
             file://ntp.script \
             file://0001-Prevent-telnet-connections-from-the-internet-to-the-.patch \
