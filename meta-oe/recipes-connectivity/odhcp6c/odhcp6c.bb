@@ -11,7 +11,6 @@ PV = "git"
 PKGV = "git${GITPKGV}"
 
 SRC_URI = "git://github.com/openwrt/odhcp6c.git;protocol=https;branch=master \
-           file://0001-allow-build-with-cmake-4.patch \
            file://ifup \
            file://ifdown \
            file://odhcp6c-update \
