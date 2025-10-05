@@ -2,9 +2,9 @@ diff --git a/meson.build b/meson.build
 index 9cd9026d..655cc1cc 100644
 --- a/meson.build
 +++ b/meson.build
-@@ -214,7 +214,7 @@ libthai_req    = '>= 0.1.9'
+@@ -215,7 +215,7 @@ libthai_req    = '>= 0.1.9'
  harfbuzz_req   = '>= 8.4.0'
- fontconfig_req = '>= 2.15.0'
+ fontconfig_req = '>= 2.17.0'
  xft_req        = '>= 2.0.0'
 -cairo_req      = '>= 1.18.0'
 +cairo_req      = '>= 1.16.0'
