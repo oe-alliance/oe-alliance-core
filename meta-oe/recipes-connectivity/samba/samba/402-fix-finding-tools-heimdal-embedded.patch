@@ -3,9 +3,9 @@ index 45f4772..6c5a4bc 100644
 --- a/wscript_configure_embedded_heimdal
 +++ b/wscript_configure_embedded_heimdal
 @@ -15,3 +15,14 @@ conf.RECURSE('third_party/heimdal_build')
- conf.define('HAVE_CLIENT_GSS_C_CHANNEL_BOUND_FLAG', 1)
-
+ 
  conf.define('HAVE_KRB5_INIT_CREDS_STEP', 1)
+ conf.define('HAVE_GSS_KEY_VALUE_SET_DESC', 1)
 +
 +def check_system_heimdal_binary(name):
 +    if conf.LIB_MAY_BE_BUNDLED(name):
