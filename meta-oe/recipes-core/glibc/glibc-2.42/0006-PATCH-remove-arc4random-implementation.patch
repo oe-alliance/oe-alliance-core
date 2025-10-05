@@ -95,7 +95,7 @@ diff --git a/NEWS b/NEWS
 index 0fef024e..22f0187b 100644
 --- a/NEWS
 +++ b/NEWS
-@@ -1056,18 +1056,6 @@ Major new features:
+@@ -1251,18 +1251,6 @@ Major new features:
    _GNU_SOURCE macro is defined and the C++20 __cpp_char8_t feature test macro
    is not defined (if __cpp_char8_t is defined, then char8_t is a builtin type).
  
@@ -118,7 +118,7 @@ diff --git a/benchtests/Makefile b/benchtests/Makefile
 index b18a9505..e382c9b7 100644
 --- a/benchtests/Makefile
 +++ b/benchtests/Makefile
-@@ -275,9 +275,7 @@ hash-benchset := \
+@@ -293,9 +293,7 @@ hash-benchset := \
    # hash-benchset
  
  stdlib-benchset := \
@@ -195,7 +195,7 @@ diff --git a/malloc/malloc.c b/malloc/malloc.c
 index 27dfd1eb..80206e6a 100644
 --- a/malloc/malloc.c
 +++ b/malloc/malloc.c
-@@ -255,7 +255,6 @@
+@@ -258,7 +258,6 @@
  /* For tcache double-free check.  */
  #include <random-bits.h>
  #include <sys/random.h>
@@ -203,7 +203,7 @@ index 27dfd1eb..80206e6a 100644
  
  /*
    Debugging:
-@@ -3142,8 +3141,8 @@ static void
+@@ -3151,8 +3151,8 @@ static void
  tcache_key_initialize (void)
  {
    /* We need to use the _nostatus version here, see BZ 29624.  */
@@ -212,8 +212,8 @@ index 27dfd1eb..80206e6a 100644
 +  if (__getrandom (&tcache_key, sizeof(tcache_key),
 +				     GRND_NONBLOCK)
        != sizeof (tcache_key))
-     {
-       tcache_key = random_bits ();
+     tcache_key = 0;
+ 
 diff --git a/malloc/thread-freeres.c b/malloc/thread-freeres.c
 index c7ec9f99..e8e02dc8 100644
 --- a/malloc/thread-freeres.c
@@ -231,7 +231,7 @@ diff --git a/manual/math.texi b/manual/math.texi
 index def85a97..672e4a72 100644
 --- a/manual/math.texi
 +++ b/manual/math.texi
-@@ -1624,7 +1624,6 @@ systems.
+@@ -1700,7 +1700,6 @@ systems.
  * ISO Random::                  @code{rand} and friends.
  * BSD Random::                  @code{random} and friends.
  * SVID Random::                 @code{drand48} and friends.
@@ -239,7 +239,7 @@ index def85a97..672e4a72 100644
  @end menu
  
  @node ISO Random
-@@ -2163,44 +2162,6 @@ This function is a GNU extension and should not be used in portable
+@@ -2239,44 +2238,6 @@ This function is a GNU extension and should not be used in portable
  programs.
  @end deftypefun
  
@@ -318,7 +318,7 @@ index 1c4fa238..4b81c25c 100644
    at_quick_exit \
    atof \
    atoi \
-@@ -263,9 +261,6 @@ tests := \
+@@ -266,9 +264,6 @@ tests := \
    testrand \
    testsort \
    tst-abs \
@@ -328,7 +328,7 @@ index 1c4fa238..4b81c25c 100644
    tst-at_quick_exit \
    tst-atexit \
    tst-atof1 \
-@@ -396,8 +391,6 @@ LDLIBS-test-cxa_atexit-race = $(shared-thread-library)
+@@ -407,8 +402,6 @@ LDLIBS-test-cxa_atexit-race = $(shared-thread-library)
  LDLIBS-test-cxa_atexit-race2 = $(shared-thread-library)
  LDLIBS-test-on_exit-race = $(shared-thread-library)
  LDLIBS-tst-canon-bz26341 = $(shared-thread-library)
@@ -578,7 +578,7 @@ diff --git a/sysdeps/aarch64/Makefile b/sysdeps/aarch64/Makefile
 index 4b7f8a5c..fe7471d0 100644
 --- a/sysdeps/aarch64/Makefile
 +++ b/sysdeps/aarch64/Makefile
-@@ -57,6 +57,10 @@ gen-as-const-headers += \
+@@ -60,6 +60,10 @@ gen-as-const-headers += \
    rtld-global-offsets.sym
  endif
  
@@ -1037,7 +1037,7 @@ diff --git a/sysdeps/mach/hurd/i386/libc.abilist b/sysdeps/mach/hurd/i386/libc.a
 index 40f35ee0..b205edd3 100644
 --- a/sysdeps/mach/hurd/i386/libc.abilist
 +++ b/sysdeps/mach/hurd/i386/libc.abilist
-@@ -2340,9 +2340,6 @@ GLIBC_2.35 __memcmpeq F
+@@ -2382,9 +2382,6 @@ GLIBC_2.35 __memcmpeq F
  GLIBC_2.35 _dl_find_object F
  GLIBC_2.35 close_range F
  GLIBC_2.35 posix_spawn_file_actions_addtcsetpgrp_np F
@@ -1447,7 +1447,7 @@ diff --git a/sysdeps/s390/s390-64/Makefile b/sysdeps/s390/s390-64/Makefile
 index 66ed844e..96c110f4 100644
 --- a/sysdeps/s390/s390-64/Makefile
 +++ b/sysdeps/s390/s390-64/Makefile
-@@ -67,3 +67,9 @@ tests-container += tst-glibc-hwcaps-cache
+@@ -90,3 +90,9 @@ tests-container += tst-glibc-hwcaps-cache
  endif
  
  endif # $(subdir) == elf
@@ -2315,7 +2315,7 @@ diff --git a/sysdeps/unix/sysv/linux/not-cancel.h b/sysdeps/unix/sysv/linux/not-
 index ece32971..8a0737cb 100644
 --- a/sysdeps/unix/sysv/linux/not-cancel.h
 +++ b/sysdeps/unix/sysv/linux/not-cancel.h
-@@ -106,4 +106,7 @@ __poll_infinity_nocancel (struct pollfd *fds, nfds_t nfds)
+@@ -102,4 +102,7 @@ __poll_infinity_nocancel (struct pollfd *fds, nfds_t nfds)
    return INLINE_SYSCALL_CALL (ppoll, fds, nfds, NULL, NULL, 0);
  }
  
