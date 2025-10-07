@@ -14,4 +14,4 @@ PKGV = "${GITPKGVTAG}"
 
 inherit setuptools3-openplugins
 
-SRC_URI = "git://github.com/oe-alliance/PlutoTV.git;protocol=https;branch=main"
+SRC_URI = "git://github.com/oe-alliance/PlutoTV.git;protocol=https;branch=20250802"
