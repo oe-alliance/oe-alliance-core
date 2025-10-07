@@ -4,13 +4,14 @@ require conf/python/python3-compileall.inc
 
 RDEPENDS:${PN} = "enigma2-plugin-systemplugins-serviceapp"
 
-inherit gittag
+inherit gitpkgv
 
 S = "${WORKDIR}/git/src"
 
 SRCREV = "${AUTOREV}"
-PV = "git"
-PKGV = "${GITPKGVTAG}"
+PV = "20250802+git"
+PKGV = "20250802+git${GITPKGV}"
+PR = "r0"
 
 inherit setuptools3-openplugins
 
