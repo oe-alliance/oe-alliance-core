@@ -1,5 +1,3 @@
-PR = "r3"
-
 require samba-source.inc
 require samba-waf.inc
 
