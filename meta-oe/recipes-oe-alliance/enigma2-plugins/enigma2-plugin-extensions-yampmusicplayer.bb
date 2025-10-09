@@ -7,11 +7,11 @@ require conf/python/python3-compileall.inc
 
 RDEPENDS:${PN} = "python3-sqlite3 python3-tinytag python3-beautifulsoup4"
 
-inherit gitpkgv gettext setuptools3-openplugins
+inherit gittag gettext setuptools3-openplugins
 
 SRCREV = "${AUTOREV}"
-PV = "3.3.1+git"
-PKGV = "3.3.1+git${GITPKGV}"
+PV = "git"
+PKGV = "${GITPKGVTAG}"
 
 SRC_URI = "git://github.com/oe-mirrors/yampmusicplayer.git;protocol=https;branch=main"
 
