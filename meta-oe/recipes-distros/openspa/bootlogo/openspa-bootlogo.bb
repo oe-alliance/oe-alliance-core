@@ -9,7 +9,7 @@ require conf/license/license-gplv2.inc
 RDEPENDS:${PN} += "showiframe"
 
 PV = "${IMAGE_VERSION}"
-PR = "r2.13"
+PR = "r2.14"
 
 S = "${WORKDIR}/sources"
 UNPACKDIR = "${S}"
