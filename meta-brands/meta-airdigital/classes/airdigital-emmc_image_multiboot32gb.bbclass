@@ -55,10 +55,10 @@ IMAGE_CMD:airdigitalemmc () {
     sgdisk -n 8::+${KERNEL_SIZE}MiB -c 8:linuxkernel6 ${EMMC_IMAGE}
     sgdisk -n 9::+${KERNEL_SIZE}MiB -c 9:linuxkernel7 ${EMMC_IMAGE}
     sgdisk -n 10::+${KERNEL_SIZE}MiB -c 10:linuxkernel8 ${EMMC_IMAGE}
-    sgdisk -n 11::+${KERNEL_SIZE}MiB -c 11:linuxkernel8 ${EMMC_IMAGE}
-    sgdisk -n 12::+${KERNEL_SIZE}MiB -c 12:linuxkernel8 ${EMMC_IMAGE}
-    sgdisk -n 13::+${KERNEL_SIZE}MiB -c 13:linuxkernel8 ${EMMC_IMAGE}
-    sgdisk -n 14::+${KERNEL_SIZE}MiB -c 14:linuxkernel8 ${EMMC_IMAGE}
+    sgdisk -n 11::+${KERNEL_SIZE}MiB -c 11:linuxkernel9 ${EMMC_IMAGE}
+    sgdisk -n 12::+${KERNEL_SIZE}MiB -c 12:linuxkernel10 ${EMMC_IMAGE}
+    sgdisk -n 13::+${KERNEL_SIZE}MiB -c 13:linuxkernel11 ${EMMC_IMAGE}
+    sgdisk -n 14::+${KERNEL_SIZE}MiB -c 14:linuxkernel12 ${EMMC_IMAGE}
     sgdisk -n 15::+${SWAP_SIZE}MiB -c 15:swap ${EMMC_IMAGE}
     sgdisk -n 16::0 -c 16:userdata ${EMMC_IMAGE}
 
