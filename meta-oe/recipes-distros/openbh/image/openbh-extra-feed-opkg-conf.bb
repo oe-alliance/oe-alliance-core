@@ -10,8 +10,7 @@ PR = "r1"
 
 PACKAGES = "${PN}"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 feed_name = "openbh-extra-feed"
 
