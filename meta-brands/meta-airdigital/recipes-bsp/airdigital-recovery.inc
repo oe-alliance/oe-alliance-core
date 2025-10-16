@@ -15,8 +15,8 @@ ALLOW_EMPTY:${PN} = "1"
 do_configure[nostamp] = "1"
 
 do_deploy() {
-    install -d ${DEPLOY_DIR_IMAGE}/zgemma-partitions-${MACHINE}/${MACHINE}
-    install -m 0755 ${S}/recovery-${MACHINE}.bin ${DEPLOY_DIR_IMAGE}/zgemma-partitions-${MACHINE}/${MACHINE}/recovery.bin
+    install -d ${DEPLOY_DIR_IMAGE}/zgemma-partitions-${MACHINE_DRIVER}/${MACHINE_DRIVER}
+    install -m 0755 ${S}/recovery-${MACHINE_DRIVER}.bin ${DEPLOY_DIR_IMAGE}/zgemma-partitions-${MACHINE_DRIVER}/${MACHINE_DRIVER}/recovery.bin
 }
 
 addtask deploy before do_package after do_install
