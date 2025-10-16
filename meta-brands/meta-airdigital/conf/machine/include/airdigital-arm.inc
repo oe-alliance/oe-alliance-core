@@ -21,7 +21,7 @@ PREFERRED_PROVIDER_virtual/blindscan-dvbc ?= "airdigital-dvb-modules-${MACHINE_D
 PREFERRED_PROVIDER_virtual/blindscan-dvbs ?= "airdigital-dvb-modules-${MACHINE_DRIVER}"
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "\
-    ${@bb.utils.contains('MACHINE_FEATURES', 'arm-recovery', 'airdigital-recovery-${MACHINE}' , '', d)} \
+    ${@bb.utils.contains('MACHINE_FEATURES', 'arm-recovery', 'airdigital-recovery-${MACHINE_DRIVER}' , '', d)} \
     "
 
 IMAGE_CMD:airdigitalemmc:prepend = " \

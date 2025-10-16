@@ -108,7 +108,7 @@ IMAGE_CMD:airdigitalemmc () {
     START_USERDATA=$(sgdisk -i 12 ${EMMC_IMAGE} | grep "First sector" | awk '{print $3}')
 
     dd if=${WORKDIR}/boot.img of=${EMMC_IMAGE} bs=${BLOCK_SIZE} seek=${START_BOOT} conv=notrunc
-    dd if=${DEPLOY_DIR_IMAGE}/zgemma-partitions-${MACHINE}/${MACHINE}/recovery.bin of=${EMMC_IMAGE} bs=${BLOCK_SIZE} seek=${START_RESCUE} conv=notrunc
+    dd if=${DEPLOY_DIR_IMAGE}/zgemma-partitions-${MACHINE_DRIVER}/${MACHINE_DRIVER}/recovery.bin of=${EMMC_IMAGE} bs=${BLOCK_SIZE} seek=${START_RESCUE} conv=notrunc
     dd if=${DEPLOY_DIR_IMAGE}/zImage of=${EMMC_IMAGE} bs=${BLOCK_SIZE} seek=${START_KERNEL1} conv=notrunc
     dd if=${IMGDEPLOYDIR}/${IMAGE_NAME}.ext4 of=${EMMC_IMAGE} bs=${BLOCK_SIZE} seek=${START_USERDATA} conv=notrunc
 }
