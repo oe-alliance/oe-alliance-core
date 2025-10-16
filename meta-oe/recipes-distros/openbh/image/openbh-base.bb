@@ -8,7 +8,7 @@ ALLOW_EMPTY:${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r10"
+PR = "r11"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
@@ -48,6 +48,5 @@ RDEPENDS:${PN} = "\
         wireless-tools \
     ", d)} \
     "
-RDEPENDS:${PN}:append:vuduo = " zram"
-RDEPENDS:${PN}:append:vusolo = " zram"
+
 
