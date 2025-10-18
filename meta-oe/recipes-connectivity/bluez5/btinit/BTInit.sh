@@ -16,8 +16,6 @@ BTAUDIO_FILE=/proc/stb/audio/btaudio
 COMMANDCONNECT="/usr/lib/enigma2/python/Plugins/Extensions/BTDevicesManager/BTAudioConnect"
 LOG_TAG="BluetoothManager"
 
-rm -rf /run/dbus/pid
-
 log() {
     logger -t "$LOG_TAG" "$1"
 }
@@ -46,15 +44,6 @@ if [ -f "$INFO_FILE" ]; then
     MACHINEBUILD=$(grep -m 1 '^machinebuild=' "$INFO_FILE" | cut -d'=' -f2 | tr -d "'\"")
 fi
 
-if [ "$MACHINEBUILD" = "gbquad4kpro" ]; then
-    log "gbquad4kpro: enable AUDIO_CONNECT"
-    log "gbquad4kpro: set /proc/stb/audio/btaudio to on"
-    AUDIO_CONNECT="True"
-    if [ "$BTAUDIO_STATE" = "True" ]; then
-        echo on > /proc/stb/audio/btaudio
-    fi
-fi
-
 if [ "$MODEL" = "inihdp" ]; then
     log "inihdp: Loading driver"
     modprobe rtk_btusb &
@@ -63,10 +52,16 @@ fi
 start() {
     log "Starting..."
 
-    #if [ "$MODEL" = "gbmv200" ]; then
-    #    log "Attaching HCI for sprd"
-    #    hciattach_sprd /dev/ttyBT0 sprd > /var/log/hciattach.log &
-    #fi
+    if [ "$MACHINEBUILD" = "gbquad4kpro" ]; then
+        log "gbquad4kpro: enable AUDIO_CONNECT"
+        if [ "$BTAUDIO_STATE" = "True" ]; then
+            log "gbquad4kpro: set /proc/stb/audio/btaudio to on"
+            echo on > /proc/stb/audio/btaudio
+        else
+            log "gbquad4kpro: set /proc/stb/audio/btaudio to off"
+            echo off > /proc/stb/audio/btaudio
+        fi
+    fi
 
     hciconfig hci0 up > /dev/null 2>&1 && log "Attaching hci0"
     (hcitool dev | awk 'NR==2 {print $2}' | while read -r BT_MAC; do
@@ -98,15 +93,31 @@ stop() {
         log "inihdp: Stopping driver"
         rmmod rtk_btusb &
     fi
-    log "Checking for existing aplay process"
+
+    if [ "$BTAUDIO_STATE" = "True" ]; then
+        log "set /proc/stb/audio/btaudio to off"
+        echo off > /proc/stb/audio/btaudio
+    fi
+
+    log "Stopping aplay if running"
     if [ -f /var/run/aplay.pid ]; then
-        PID=$(cat /var/run/aplay.pid)
-        log "Stopping existing aplay process (PID: $PID)"
-        kill $PID
-        while ps -p $PID > /dev/null; do
-            sleep 1
-        done
-        log "Previous aplay process stopped"
+        PID=$(cat /var/run/aplay.pid 2>/dev/null)
+        if [ -n "$PID" ] && kill -0 "$PID" 2>/dev/null; then
+            log "Stopping existing aplay process (PID: $PID)"
+            kill "$PID"
+            /usr/bin/killall -q aplay 2>/dev/null
+            for i in 1 2 3; do
+                kill -0 "$PID" 2>/dev/null || break
+                sleep 1
+            done
+            kill -9 "$PID" 2>/dev/null || true
+            /usr/bin/killall -9 aplay 2>/dev/null || true
+            log "aplay stopped"
+        fi
+        rm -f /var/run/aplay.pid
+    else
+        /usr/bin/killall -q aplay 2>/dev/null || true
+        /usr/bin/killall -9 aplay 2>/dev/null || true
     fi
 }
 
