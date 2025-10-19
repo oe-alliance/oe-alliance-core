@@ -1,4 +1,4 @@
-From 1852d0899221d0c936a8c06832f17ebb94cea35e Mon Sep 17 00:00:00 2001
+From 967080c00470da5857d7225a110fefd5b0aa110a Mon Sep 17 00:00:00 2001
 From: Captain <openatv@gmail.com>
 Date: Sat, 18 May 2024 05:18:14 +0200
 Subject: [PATCH] gst-player
@@ -199,16 +199,17 @@ index e1fe54a13d..7d7e14205f 100644
  
  set(STB_RENDER_SYSTEM "" CACHE STRING "Render system to use with STB: \"gl\" or \"gles\"")
 diff --git a/cmake/treedata/common/cores.txt b/cmake/treedata/common/cores.txt
-index 5e5c6cbf80..cbde630e7d 100644
+index 44f06094ac..b73fe666ef 100644
 --- a/cmake/treedata/common/cores.txt
 +++ b/cmake/treedata/common/cores.txt
-@@ -5,5 +5,6 @@ xbmc/cores/DllLoader/exports           cores/dll-loader/exports
+@@ -5,6 +5,7 @@ xbmc/cores/DllLoader/exports           cores/dll-loader/exports
  xbmc/cores/DllLoader/exports/util      cores/dll-loader/exports/util
  xbmc/cores/ExternalPlayer              cores/externalplayer
  xbmc/cores/Enigma2Player               cores/enigma2player
 +xbmc/cores/GstPlayer                   cores/gstplayer
  xbmc/cores/paplayer                    cores/paplayer
  xbmc/cores/playercorefactory           cores/playercorefactory
+ xbmc/cores/DvbPlayer                   cores/dvbplayer
 diff --git a/xbmc/cores/GstPlayer/CMakeLists.txt b/xbmc/cores/GstPlayer/CMakeLists.txt
 new file mode 100644
 index 0000000000..1b8adfab36
@@ -1323,7 +1324,7 @@ index 0000000000..fe6f7008cd
 +};
 diff --git a/xbmc/cores/GstPlayer/GstPlayerVideo.cpp b/xbmc/cores/GstPlayer/GstPlayerVideo.cpp
 new file mode 100644
-index 0000000000..c48a48774c
+index 0000000000..dc6be2b626
 --- /dev/null
 +++ b/xbmc/cores/GstPlayer/GstPlayerVideo.cpp
 @@ -0,0 +1,1405 @@
@@ -1583,7 +1584,7 @@ index 0000000000..c48a48774c
 +		{
 +			if (m_pInputStream->Open())
 +			{
-+				m_length = (gsize) m_item.m_dwSize;
++				m_length = (gsize) m_item.GetSize();
 +				//m_length = (gsize) abs(m_pInputStream->GetLength());
 +				m_offset = 0;
 +				m_pInputStream->Seek(0, SEEK_SET);
@@ -2947,7 +2948,7 @@ index 6c4718d736..513eed3dbc 100644
    {
      player = std::make_shared<CExternalPlayer>(callback);
 diff --git a/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp b/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp
-index 8cae329174..7f29221408 100644
+index cc538d4326..c48f41cb2f 100644
 --- a/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp
 +++ b/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp
 @@ -32,6 +32,10 @@

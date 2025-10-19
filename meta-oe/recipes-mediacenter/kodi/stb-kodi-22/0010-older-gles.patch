@@ -1,15 +1,34 @@
-From b97736fc13aea7903306c4fdd9a56ef968c6cf66 Mon Sep 17 00:00:00 2001
+From 82ab9689fee8fab75e01c427f33181b3dd195379 Mon Sep 17 00:00:00 2001
 From: NickerSK <nickersk@gmail.com>
 Date: Wed, 8 Jan 2025 18:37:36 +0000
 Subject: [PATCH] older gles
 
 ---
- xbmc/guilib/TextureGLES.h | 13 +++++++++++++
- xbmc/utils/EGLUtils.h     |  3 +++
- 2 files changed, 16 insertions(+)
+ .../RetroPlayer/shaders/gles/ShaderPresetGLES.h     |  7 +++++++
+ xbmc/guilib/TextureGLES.h                           | 13 +++++++++++++
+ xbmc/utils/EGLUtils.h                               |  3 +++
+ 3 files changed, 23 insertions(+)
 
+diff --git a/xbmc/cores/RetroPlayer/shaders/gles/ShaderPresetGLES.h b/xbmc/cores/RetroPlayer/shaders/gles/ShaderPresetGLES.h
+index 9f7f1d0262..eaed6564a4 100644
+--- a/xbmc/cores/RetroPlayer/shaders/gles/ShaderPresetGLES.h
++++ b/xbmc/cores/RetroPlayer/shaders/gles/ShaderPresetGLES.h
+@@ -10,6 +10,13 @@
+ 
+ #include "cores/RetroPlayer/shaders/ShaderPreset.h"
+ 
++#ifndef GL_SRGB8_ALPHA8
++#define GL_SRGB8_ALPHA8    0x8C43
++#endif
++#ifndef GL_RGBA32F
++#define GL_RGBA32F  0x8814
++#endif
++
+ namespace KODI
+ {
+ namespace RETRO
 diff --git a/xbmc/guilib/TextureGLES.h b/xbmc/guilib/TextureGLES.h
-index fe7af24917a..3d13a570526 100644
+index 634760c813..9c3dfa32d4 100644
 --- a/xbmc/guilib/TextureGLES.h
 +++ b/xbmc/guilib/TextureGLES.h
 @@ -20,6 +20,19 @@ struct TextureFormat
@@ -33,7 +52,7 @@ index fe7af24917a..3d13a570526 100644
  {
    GLint r{GL_RED};
 diff --git a/xbmc/utils/EGLUtils.h b/xbmc/utils/EGLUtils.h
-index 2fda9f690f2..93c16519818 100644
+index 9f6c3c19cd..ebc99e0876 100644
 --- a/xbmc/utils/EGLUtils.h
 +++ b/xbmc/utils/EGLUtils.h
 @@ -243,6 +243,9 @@ private:
@@ -46,24 +65,3 @@ index 2fda9f690f2..93c16519818 100644
    PFNEGLSETDAMAGEREGIONKHRPROC m_eglSetDamageRegionKHR{nullptr};
    bool m_partialUpdateSupport{false};
    bool m_bufferAgeSupport{false};
-diff --git a/xbmc/cores/RetroPlayer/shaders/gles/ShaderPresetGLES.h
-index 2fda9f690f2..93c16519818 100644
---- a/xbmc/cores/RetroPlayer/shaders/gles/ShaderPresetGLES.h	2025-06-28 10:59:53.292209473 +0000
-+++ b/xbmc/cores/RetroPlayer/shaders/gles/ShaderPresetGLES.h	2025-06-28 11:03:18.767072378 +0000
-@@ -10,6 +10,13 @@
- 
- #include "cores/RetroPlayer/shaders/ShaderPreset.h"
- 
-+#ifndef GL_SRGB8_ALPHA8
-+#define GL_SRGB8_ALPHA8    0x8C43
-+#endif
-+#ifndef GL_RGBA32F
-+#define GL_RGBA32F  0x8814
-+#endif
-+
- namespace KODI
- {
- namespace RETRO
--- 
-2.47.1
-

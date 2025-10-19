@@ -1,4 +1,4 @@
-From 69da7de54e25dd5a7d700e86ec0fbd214c4371f4 Mon Sep 17 00:00:00 2001
+From 6ef4e39187e664f1c8ff774bca767514a8f3d52c Mon Sep 17 00:00:00 2001
 From: Captain <openatv@gmail.com>
 Date: Sat, 18 May 2024 04:56:50 +0200
 Subject: [PATCH] flatbuffers-22
@@ -8,10 +8,10 @@ Subject: [PATCH] flatbuffers-22
  1 file changed, 6 insertions(+), 6 deletions(-)
 
 diff --git a/xbmc/cores/RetroPlayer/messages/savestate.fbs b/xbmc/cores/RetroPlayer/messages/savestate.fbs
-index 7f8d8056e9..2a63c4dfef 100644
+index 325ab1c383..beab3ef981 100644
 --- a/xbmc/cores/RetroPlayer/messages/savestate.fbs
 +++ b/xbmc/cores/RetroPlayer/messages/savestate.fbs
-@@ -15,7 +15,7 @@ namespace KODI.RETRO;
+@@ -15,7 +15,7 @@ namespace KODI.RETRO.SAVESTATE;
  
  file_identifier "SAV_";
  
@@ -54,6 +54,3 @@ index 7f8d8056e9..2a63c4dfef 100644
  }
  
  root_type Savestate;
--- 
-2.45.1.windows.1
-

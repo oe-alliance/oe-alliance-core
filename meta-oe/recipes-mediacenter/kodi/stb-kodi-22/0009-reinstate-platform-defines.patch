@@ -1,4 +1,4 @@
-From 29c1f8ad40ddaf1f4c0125a886664827b993a8c6 Mon Sep 17 00:00:00 2001
+From 573f5334b2e7ae75ef5e8c35a6eedd5b06b83884 Mon Sep 17 00:00:00 2001
 From: Captain <openatv@gmail.com>
 Date: Sat, 18 May 2024 05:12:04 +0200
 Subject: [PATCH] reinstate-platform-defines
@@ -8,10 +8,10 @@ Subject: [PATCH] reinstate-platform-defines
  1 file changed, 4 insertions(+)
 
 diff --git a/cmake/scripts/common/ArchSetup.cmake b/cmake/scripts/common/ArchSetup.cmake
-index a83d2ae198..7a18d06afc 100644
+index 0461496bf5..3199410c23 100644
 --- a/cmake/scripts/common/ArchSetup.cmake
 +++ b/cmake/scripts/common/ArchSetup.cmake
-@@ -156,6 +156,10 @@ if(NOT DEFINED NEON OR NEON)
+@@ -155,6 +155,10 @@ if(NOT DEFINED NEON OR NEON)
    endif()
  endif()
  
@@ -22,6 +22,3 @@ index a83d2ae198..7a18d06afc 100644
  if(NOT MSVC)
    # these options affect all code built by cmake including external projects.
    add_options(ALL_LANGUAGES ALL_BUILDS
--- 
-2.45.1.windows.1
-

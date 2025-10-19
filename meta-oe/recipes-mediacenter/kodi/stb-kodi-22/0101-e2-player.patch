@@ -1,4 +1,4 @@
-From 256f92db5a1f8c617d0f30c1eddca56f45e96ebd Mon Sep 17 00:00:00 2001
+From 6eea9f084e092c7b75595cf8f35bba179be4e945 Mon Sep 17 00:00:00 2001
 From: Captain <openatv@gmail.com>
 Date: Wed, 22 May 2024 21:22:47 +0200
 Subject: [PATCH] e2-player
@@ -17,18 +17,19 @@ Subject: [PATCH] e2-player
  create mode 100644 xbmc/cores/Enigma2Player/Enigma2Player.h
 
 diff --git a/cmake/treedata/common/cores.txt b/cmake/treedata/common/cores.txt
-index d23939d..5e5c6cb 100644
+index d1c714afed..44f06094ac 100644
 --- a/cmake/treedata/common/cores.txt
 +++ b/cmake/treedata/common/cores.txt
-@@ -4,5 +4,6 @@ xbmc/cores/DllLoader                   cores/dll-loader
+@@ -4,6 +4,7 @@ xbmc/cores/DllLoader                   cores/dll-loader
  xbmc/cores/DllLoader/exports           cores/dll-loader/exports
  xbmc/cores/DllLoader/exports/util      cores/dll-loader/exports/util
  xbmc/cores/ExternalPlayer              cores/externalplayer
 +xbmc/cores/Enigma2Player               cores/enigma2player
  xbmc/cores/paplayer                    cores/paplayer
  xbmc/cores/playercorefactory           cores/playercorefactory
+ xbmc/cores/DvbPlayer                   cores/dvbplayer
 diff --git a/system/playercorefactory.xml b/system/playercorefactory.xml
-index f928311..8e25021 100644
+index f928311cf0..8e2502143e 100644
 --- a/system/playercorefactory.xml
 +++ b/system/playercorefactory.xml
 @@ -8,9 +8,17 @@
@@ -61,7 +62,7 @@ index f928311..8e25021 100644
      <!-- DVDs -->
 diff --git a/xbmc/cores/Enigma2Player/CMakeLists.txt b/xbmc/cores/Enigma2Player/CMakeLists.txt
 new file mode 100644
-index 0000000..fc67275
+index 0000000000..fc672758ff
 --- /dev/null
 +++ b/xbmc/cores/Enigma2Player/CMakeLists.txt
 @@ -0,0 +1,6 @@
@@ -73,7 +74,7 @@ index 0000000..fc67275
 +
 diff --git a/xbmc/cores/Enigma2Player/Enigma2Player.cpp b/xbmc/cores/Enigma2Player/Enigma2Player.cpp
 new file mode 100644
-index 0000000..150f3f2
+index 0000000000..150f3f2ef1
 --- /dev/null
 +++ b/xbmc/cores/Enigma2Player/Enigma2Player.cpp
 @@ -0,0 +1,802 @@
@@ -120,7 +121,7 @@ index 0000000..150f3f2
 +#include "utils/JSONVariantParser.h"
 +#include "TextureCache.h"
 +#include "filesystem/SpecialProtocol.h"
-+#include "utils/JobManager.h"
++#include "jobs/JobManager.h"
 +
 +// If the process ends in less than this time (ms), we assume it's a launcher
 +// and wait for manual intervention before continuing
@@ -194,7 +195,7 @@ index 0000000..150f3f2
 +    CVariant listItemVariant;
 +    listItemVariant["label"] = file.GetLabel();
 +    listItemVariant["label2"] = file.GetLabel2();
-+    listItemVariant["Fanart"] = file.GetArt();
++    listItemVariant["Fanart"] = file.GetArt("thumb");
 +    listItemVariant["CacheThumb"] = thumb;
 +    variant["listItem"] = listItemVariant;
 +
@@ -881,7 +882,7 @@ index 0000000..150f3f2
 +
 diff --git a/xbmc/cores/Enigma2Player/Enigma2Player.h b/xbmc/cores/Enigma2Player/Enigma2Player.h
 new file mode 100644
-index 0000000..d0de424
+index 0000000000..d0de424320
 --- /dev/null
 +++ b/xbmc/cores/Enigma2Player/Enigma2Player.h
 @@ -0,0 +1,96 @@
@@ -982,7 +983,7 @@ index 0000000..d0de424
 +  CFileItem m_file;
 +};
 diff --git a/xbmc/cores/playercorefactory/PlayerCoreConfig.cpp b/xbmc/cores/playercorefactory/PlayerCoreConfig.cpp
-index 545062e..6c4718d 100644
+index 545062e050..6c4718d736 100644
 --- a/xbmc/cores/playercorefactory/PlayerCoreConfig.cpp
 +++ b/xbmc/cores/playercorefactory/PlayerCoreConfig.cpp
 @@ -21,6 +21,7 @@
@@ -1005,7 +1006,7 @@ index 545062e..6c4718d 100644
  #if defined(HAS_UPNP)
    else if (m_type.compare("remote") == 0)
 diff --git a/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp b/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp
-index fae40d8..8cae329 100644
+index 0ee8c65676..cc538d4326 100644
 --- a/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp
 +++ b/xbmc/cores/playercorefactory/PlayerCoreFactory.cpp
 @@ -14,6 +14,7 @@

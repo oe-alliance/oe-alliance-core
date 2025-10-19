@@ -1,4 +1,4 @@
-From ee64fa198bf25ac208e1706dd53d7ba2b77202f3 Mon Sep 17 00:00:00 2001
+From c9ec3603d61f7a631a951f62cd2147446983f700 Mon Sep 17 00:00:00 2001
 From: Captain <openatv@gmail.com>
 Date: Sat, 18 May 2024 05:02:29 +0200
 Subject: [PATCH] shader-nopow-22
@@ -87,10 +87,10 @@ index a82de9d8db..e5078ad8c2 100644
  #if defined(KODI_TONE_MAPPING_REINHARD)
    float luma = dot(rgb.rgb, m_coefsDst);
 diff --git a/xbmc/cores/VideoPlayer/VideoRenderers/VideoShaders/YUV2RGBShaderGLES.cpp b/xbmc/cores/VideoPlayer/VideoRenderers/VideoShaders/YUV2RGBShaderGLES.cpp
-index 63e4d304a4..6d2c20eda0 100644
+index 5f4e63090a..5a6b7528bc 100644
 --- a/xbmc/cores/VideoPlayer/VideoRenderers/VideoShaders/YUV2RGBShaderGLES.cpp
 +++ b/xbmc/cores/VideoPlayer/VideoRenderers/VideoShaders/YUV2RGBShaderGLES.cpp
-@@ -53,6 +53,8 @@ BaseYUV2RGBGLSLShader::BaseYUV2RGBGLSLShader(EShaderFormat format,
+@@ -54,6 +54,8 @@ BaseYUV2RGBGLSLShader::BaseYUV2RGBGLSLShader(EShaderFormat format,
    {
      m_colorConversion = true;
      m_defines += "#define XBMC_COL_CONVERSION\n";
@@ -99,6 +99,3 @@ index 63e4d304a4..6d2c20eda0 100644
    }
  
    if (toneMap)
--- 
-2.45.1.windows.1
-

@@ -1,0 +1,34 @@
+From 82ab9689fee8fab75e01c427f33181b3dd195379 Mon Sep 17 00:00:00 2001
+From: NickerSK <nickersk@gmail.com>
+Date: Wed, 8 Jan 2025 18:37:36 +0000
+Subject: [PATCH] older gles
+---
+--- a/xbmc/utils/GLUtils.cpp
++++ b/xbmc/utils/GLUtils.cpp
+@@ -42,6 +42,26 @@ constexpr auto glErrors = make_map<GLenum, std::string_view>({
+ #endif
+ });
+ 
++#ifndef GL_DEBUG_SOURCE_API_KHR
++#define GL_DEBUG_SOURCE_API_KHR           0x8246
++#define GL_DEBUG_SEVERITY_HIGH_KHR        0x9146
++#define GL_DEBUG_SEVERITY_MEDIUM_KHR      0x9147
++#define GL_DEBUG_SEVERITY_LOW_KHR         0x9148
++#define GL_DEBUG_SEVERITY_NOTIFICATION_KHR 0x826B
++#define GL_DEBUG_SOURCE_WINDOW_SYSTEM_KHR 0x8247
++#define GL_DEBUG_SOURCE_SHADER_COMPILER_KHR 0x8248
++#define GL_DEBUG_SOURCE_THIRD_PARTY_KHR   0x8249
++#define GL_DEBUG_SOURCE_APPLICATION_KHR   0x824A
++#define GL_DEBUG_SOURCE_OTHER_KHR         0x824B
++#define GL_DEBUG_TYPE_ERROR_KHR           0x824C
++#define GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR_KHR 0x824D
++#define GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR_KHR 0x824E
++#define GL_DEBUG_TYPE_PORTABILITY_KHR     0x824F
++#define GL_DEBUG_TYPE_PERFORMANCE_KHR     0x8250
++#define GL_DEBUG_TYPE_OTHER_KHR           0x8251
++#define GL_DEBUG_TYPE_MARKER_KHR          0x8268
++#endif
++
+ #ifdef TARGET_LINUX
+ constexpr auto glErrorSource = make_map<GLenum, std::string_view>({
+ #ifdef HAS_GLES

@@ -1,4 +1,4 @@
-From 11fc513a6e3ec5552b092a24b620cff5d40d3f1c Mon Sep 17 00:00:00 2001
+From fb26d73adf5c70ff20c90be3aa64995ef94be207 Mon Sep 17 00:00:00 2001
 From: Captain <openatv@gmail.com>
 Date: Wed, 22 May 2024 20:32:48 +0200
 Subject: [PATCH] stb-settings-22
@@ -23,10 +23,10 @@ Subject: [PATCH] stb-settings-22
  create mode 100644 cmake/treedata/common/stb.txt
 
 diff --git a/addons/skin.estuary/xml/Home.xml b/addons/skin.estuary/xml/Home.xml
-index df6e2c3cf5f..791230ce914 100644
+index 5d6e149e4b..430411eca0 100644
 --- a/addons/skin.estuary/xml/Home.xml
 +++ b/addons/skin.estuary/xml/Home.xml
-@@ -1081,7 +1081,7 @@
+@@ -1085,7 +1085,7 @@
  					<align>justify</align>
  					<include content="IconButton">
  						<param name="control_id" value="804" />
@@ -36,7 +36,7 @@ index df6e2c3cf5f..791230ce914 100644
  						<param name="label" value="$LOCALIZE[33060]" />
  					</include>
 diff --git a/cmake/modules/FindFFMPEG.cmake b/cmake/modules/FindFFMPEG.cmake
-index 1c86ac2a20d..516aa91fc8d 100644
+index 2a6d565e95..4350680616 100644
 --- a/cmake/modules/FindFFMPEG.cmake
 +++ b/cmake/modules/FindFFMPEG.cmake
 @@ -48,6 +48,12 @@ macro(buildFFMPEG)
@@ -53,7 +53,7 @@ index 1c86ac2a20d..516aa91fc8d 100644
      set(CROSS_ARGS -DDEPENDS_PATH=${DEPENDS_PATH}
                     -DPKG_CONFIG_EXECUTABLE=${PKG_CONFIG_EXECUTABLE}
 @@ -97,13 +103,13 @@ macro(buildFFMPEG)
-     add_dependencies(${${CMAKE_FIND_PACKAGE_NAME}_MODULE_LC} ${APP_NAME_LC}::Dav1d)
+     add_dependencies(${${${CMAKE_FIND_PACKAGE_NAME}_MODULE}_BUILD_NAME} ${APP_NAME_LC}::Dav1d)
    endif()
  
 -  find_program(BASH_COMMAND bash)
@@ -118,7 +118,7 @@ index 1c86ac2a20d..516aa91fc8d 100644
  # Allows building with external ffmpeg not found in system paths,
 diff --git a/cmake/platform/linux/stb.cmake b/cmake/platform/linux/stb.cmake
 new file mode 100644
-index 00000000000..e1fe54a13d2
+index 0000000000..e1fe54a13d
 --- /dev/null
 +++ b/cmake/platform/linux/stb.cmake
 @@ -0,0 +1,69 @@
@@ -192,7 +192,7 @@ index 00000000000..e1fe54a13d2
 +
 +list(APPEND PLATFORM_DEFINES -DMESA_EGL_NO_X11_HEADERS)
 diff --git a/cmake/scripts/linux/ArchSetup.cmake b/cmake/scripts/linux/ArchSetup.cmake
-index c3192c63e87..0dd0b140305 100644
+index c3192c63e8..0dd0b14030 100644
 --- a/cmake/scripts/linux/ArchSetup.cmake
 +++ b/cmake/scripts/linux/ArchSetup.cmake
 @@ -37,6 +37,13 @@ else()
@@ -211,16 +211,16 @@ index c3192c63e87..0dd0b140305 100644
    endif()
 diff --git a/cmake/treedata/common/stb.txt b/cmake/treedata/common/stb.txt
 new file mode 100644
-index 00000000000..2606a0f9995
+index 0000000000..2606a0f999
 --- /dev/null
 +++ b/cmake/treedata/common/stb.txt
 @@ -0,0 +1 @@
 +xbmc/windowing/egl   windowing/egl    # STB
 diff --git a/system/settings/settings.xml b/system/settings/settings.xml
-index 1445b4bcb35..fb2343bb026 100755
+index 446b1ee830..5944830832 100755
 --- a/system/settings/settings.xml
 +++ b/system/settings/settings.xml
-@@ -619,7 +619,7 @@
+@@ -613,7 +613,7 @@
            <control type="list" format="string" />
          </setting>
          <setting id="subtitles.fontname" type="string" label="14089" help="36185">
@@ -229,7 +229,7 @@ index 1445b4bcb35..fb2343bb026 100755
            <default>DEFAULT</default>
            <constraints>
              <options>subtitlesfonts</options>
-@@ -816,7 +816,7 @@
+@@ -810,7 +810,7 @@
            <control type="spinner" format="integer" delayed="true"/>
          </setting>
          <setting id="subtitles.charset" type="string" label="735" help="36189">
@@ -238,7 +238,7 @@ index 1445b4bcb35..fb2343bb026 100755
            <default>DEFAULT</default>
            <constraints>
              <options>charsets</options>
-@@ -3243,7 +3243,7 @@
+@@ -3237,7 +3237,7 @@
          <setting id="audiooutput.processquality" type="integer" label="13505" help="36169">
            <requirement>HAS_AE_QUALITY_LEVELS</requirement>
            <level>2</level>
@@ -247,7 +247,7 @@ index 1445b4bcb35..fb2343bb026 100755
            <constraints>
              <options>aequalitylevels</options>
            </constraints>
-@@ -3261,7 +3261,7 @@
+@@ -3255,7 +3255,7 @@
          </setting>
          <setting id="audiooutput.samplerate" type="integer" label="458" help="36523">
            <level>2</level>
@@ -256,7 +256,7 @@ index 1445b4bcb35..fb2343bb026 100755
            <dependencies>
              <dependency type="visible">
                <and>
-@@ -3273,10 +3273,6 @@
+@@ -3267,10 +3267,6 @@
            <constraints>
              <options>
                <option label="34124">44100</option>
@@ -267,7 +267,7 @@ index 1445b4bcb35..fb2343bb026 100755
                <option label="34129">352800</option>
                <option label="34130">384000</option>
              </options>
-@@ -4109,7 +4105,7 @@
+@@ -4103,7 +4099,7 @@
        <group id="2" label="14270">
          <setting id="locale.country" type="string" label="14271" help="36115">
            <level>0</level>
@@ -277,7 +277,7 @@ index 1445b4bcb35..fb2343bb026 100755
              <options>regions</options>
            </constraints>
 diff --git a/tools/Linux/kodi.sh.in b/tools/Linux/kodi.sh.in
-index 3d86c86834f..b585ea0c1d0 100644
+index 3d86c86834..b585ea0c1d 100644
 --- a/tools/Linux/kodi.sh.in
 +++ b/tools/Linux/kodi.sh.in
 @@ -26,8 +26,11 @@ exec_prefix="@exec_prefix@"
@@ -361,7 +361,7 @@ index 3d86c86834f..b585ea0c1d0 100644
  
  exit $RET
 diff --git a/tools/depends/target/ffmpeg/CMakeLists.txt b/tools/depends/target/ffmpeg/CMakeLists.txt
-index 8924dc8c730..078e48660b9 100644
+index 8924dc8c73..078e48660b 100644
 --- a/tools/depends/target/ffmpeg/CMakeLists.txt
 +++ b/tools/depends/target/ffmpeg/CMakeLists.txt
 @@ -12,6 +12,36 @@ else()
@@ -402,7 +402,7 @@ index 8924dc8c730..078e48660b9 100644
    set(pkgconf "PKG_CONFIG_LIBDIR=${DEPENDS_PATH}/lib/pkgconfig")
    list(APPEND ffmpeg_conf --pkg-config=${PKG_CONFIG_EXECUTABLE}
 diff --git a/tools/depends/target/libdvdcss/Makefile b/tools/depends/target/libdvdcss/Makefile
-index 308661aafa9..eac0612af3c 100644
+index 308661aafa..eac0612af3 100644
 --- a/tools/depends/target/libdvdcss/Makefile
 +++ b/tools/depends/target/libdvdcss/Makefile
 @@ -3,7 +3,7 @@ include LIBDVDCSS-VERSION
@@ -424,7 +424,7 @@ index 308661aafa9..eac0612af3c 100644
  include ../../download-files.include
  all: .installed-$(PLATFORM)
 diff --git a/tools/depends/target/libdvdnav/Makefile b/tools/depends/target/libdvdnav/Makefile
-index a43c9072f64..1bc9baa34bf 100644
+index a43c9072f6..1bc9baa34b 100644
 --- a/tools/depends/target/libdvdnav/Makefile
 +++ b/tools/depends/target/libdvdnav/Makefile
 @@ -3,11 +3,11 @@ include LIBDVDNAV-VERSION
@@ -442,7 +442,7 @@ index a43c9072f64..1bc9baa34bf 100644
    ROOT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
    PREFIX := $(ROOT_DIR)/dvdnav-install
 diff --git a/tools/depends/target/libdvdread/Makefile b/tools/depends/target/libdvdread/Makefile
-index ac32ac445fa..657de6a21ba 100644
+index ac32ac445f..657de6a21b 100644
 --- a/tools/depends/target/libdvdread/Makefile
 +++ b/tools/depends/target/libdvdread/Makefile
 @@ -3,11 +3,12 @@ include LIBDVDREAD-VERSION
@@ -461,7 +461,7 @@ index ac32ac445fa..657de6a21ba 100644
    ROOT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
    PREFIX := $(ROOT_DIR)/dvdread-install
 diff --git a/xbmc/guilib/guiinfo/SystemGUIInfo.cpp b/xbmc/guilib/guiinfo/SystemGUIInfo.cpp
-index 4b9daa7520e..78fdd8290ef 100644
+index caee566ef2..d2081256c4 100644
 --- a/xbmc/guilib/guiinfo/SystemGUIInfo.cpp
 +++ b/xbmc/guilib/guiinfo/SystemGUIInfo.cpp
 @@ -62,6 +62,9 @@ std::string CSystemGUIInfo::GetSystemHeatInfo(int info) const
@@ -475,10 +475,10 @@ index 4b9daa7520e..78fdd8290ef 100644
  
    std::string text;
 diff --git a/xbmc/input/InputManager.cpp b/xbmc/input/InputManager.cpp
-index a07a1316ee6..45771a03d44 100644
+index b0872bdc66..c35462f570 100644
 --- a/xbmc/input/InputManager.cpp
 +++ b/xbmc/input/InputManager.cpp
-@@ -607,6 +607,18 @@ bool CInputManager::HandleKey(const CKey& key)
+@@ -604,6 +604,18 @@ bool CInputManager::HandleKey(const CKey& key)
            useKeyboard = true;
        }
      }
@@ -498,7 +498,7 @@ index a07a1316ee6..45771a03d44 100644
      {
        // use the virtualkeyboard section of the keymap, and send keyboard-specific or navigation
 diff --git a/xbmc/view/ViewStateSettings.cpp b/xbmc/view/ViewStateSettings.cpp
-index 755d0dc65df..69bfdb61d05 100644
+index 16dfc563bb..54339476cb 100644
 --- a/xbmc/view/ViewStateSettings.cpp
 +++ b/xbmc/view/ViewStateSettings.cpp
 @@ -121,7 +121,7 @@ bool CViewStateSettings::Load(const TiXmlNode *settings)
