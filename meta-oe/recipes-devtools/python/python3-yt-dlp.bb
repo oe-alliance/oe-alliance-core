@@ -12,7 +12,7 @@ DEPENDS = "libxml2 bash-completion"
 inherit python3-dir python_hatchling gittag
 
 
-SRCREV = "${AUTOREV}"
+SRCREV = "a886cf3e900f4a2ec00af705f883539269545609"
 PV = "git${SRCPV}"
 PKGV = "${GITPKGVTAG}"
 

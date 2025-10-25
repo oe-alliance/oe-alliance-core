@@ -9,8 +9,8 @@ RDEPENDS:${PN} = "libaacs libdca libdvdcss"
 
 inherit gitpkgv
 SRCREV = "${AUTOREV}"
-PV = "v1.3.4+git${SRCPV}"
-PKGV = "v1.3.4+git${GITPKGV}"
+PV = "v1.4.0+git"
+PKGV = "v1.4.0+git${GITPKGV}"
 
 SRC_URI = "gitsm://code.videolan.org/videolan/libbluray.git;protocol=https;branch=master"
 
@@ -24,9 +24,20 @@ EXTRA_OECONF = " \
     --without-fontconfig \
 "
 
-inherit autotools-brokensep pkgconfig
+inherit meson pkgconfig
 
 FILES:${PN} = "/"
 
 do_package_qa() {
+}
+
+pkg_postinst}:${PN}:append () {
+if [ -z "$D" ]; then
+	if [ ! -e "${libdir}/libbluray.so.2" ] && [ ! -L "${libdir}/libbluray.so.2" ]; then
+		sofile="$(basename "$(readlink -f ${libdir}/libbluray.so.*.*.* || true)")"
+		if [ -n "$sofile" ]; then
+			ln -s "$sofile" "${libdir}/libbluray.so.2"
+		fi
+	fi
+fi
 }

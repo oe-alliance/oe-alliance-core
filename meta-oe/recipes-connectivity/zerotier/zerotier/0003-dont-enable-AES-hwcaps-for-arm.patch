@@ -12,11 +12,11 @@ diff --git a/node/AES.hpp b/node/AES.hpp
 index dc0130ad..0ff4f3b7 100644
 --- a/node/AES.hpp
 +++ b/node/AES.hpp
-@@ -24,9 +24,6 @@
- #if !defined(ZT_AES_NO_ACCEL) && defined(ZT_ARCH_X64)
+@@ -18,9 +18,6 @@
+ #if ! defined(ZT_AES_NO_ACCEL) && defined(ZT_ARCH_X64)
  #define ZT_AES_AESNI 1
  #endif
--#if !defined(ZT_AES_NO_ACCEL) && defined(ZT_ARCH_ARM_HAS_NEON) && defined(ZT_ARCH_ARM_HAS_CRYPTO)
+-#if ! defined(ZT_AES_NO_ACCEL) && defined(ZT_ARCH_ARM_HAS_NEON) && defined(ZT_ARCH_ARM_HAS_CRYPTO)
 -#define ZT_AES_NEON 1
 -#endif
  
@@ -26,11 +26,11 @@ diff --git a/node/Utils.cpp b/node/Utils.cpp
 index a0bf0707..d8b49a81 100644
 --- a/node/Utils.cpp
 +++ b/node/Utils.cpp
-@@ -116,15 +116,6 @@ Utils::ARMCapabilities::ARMCapabilities() noexcept
- 		this->pmull = (hwcaps2 & HWCAP2_PMULL) != 0;
+@@ -112,16 +112,6 @@ Utils::ARMCapabilities::ARMCapabilities() noexcept
  		this->sha1 = (hwcaps2 & HWCAP2_SHA1) != 0;
  		this->sha2 = (hwcaps2 & HWCAP2_SHA2) != 0;
--	} else {
+ 	}
+-	else {
 -#endif
 -		const long hwcaps = getauxval(AT_HWCAP);
 -		this->aes = (hwcaps & HWCAP_AES) != 0;
@@ -39,9 +39,10 @@ index a0bf0707..d8b49a81 100644
 -		this->sha1 = (hwcaps & HWCAP_SHA1) != 0;
 -		this->sha2 = (hwcaps & HWCAP_SHA2) != 0;
 -#ifdef HWCAP2_AES
- 	}
+-	}
  #endif
  
+ #endif	 // __APPLE__
 -- 
 2.33.0.windows.2
 
