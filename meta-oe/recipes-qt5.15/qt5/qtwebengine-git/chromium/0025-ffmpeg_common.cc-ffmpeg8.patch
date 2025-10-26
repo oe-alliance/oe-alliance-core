@@ -1,0 +1,165 @@
+--- a/chromium/media/ffmpeg/ffmpeg_common.cc.orig	2025-06-03 13:06:38.000000000 -0500
++++ b/chromium/media/ffmpeg/ffmpeg_common.cc	2025-08-23 12:56:31.995565831 -0500
+@@ -237,22 +237,22 @@ AVCodecID VideoCodecToCodecID(VideoCodec
+ static VideoCodecProfile ProfileIDToVideoCodecProfile(int profile) {
+   // Clear out the CONSTRAINED & INTRA flags which are strict subsets of the
+   // corresponding profiles with which they're used.
+-  profile &= ~FF_PROFILE_H264_CONSTRAINED;
+-  profile &= ~FF_PROFILE_H264_INTRA;
++  profile &= ~AV_PROFILE_H264_CONSTRAINED;
++  profile &= ~AV_PROFILE_H264_INTRA;
+   switch (profile) {
+-    case FF_PROFILE_H264_BASELINE:
++    case AV_PROFILE_H264_BASELINE:
+       return H264PROFILE_BASELINE;
+-    case FF_PROFILE_H264_MAIN:
++    case AV_PROFILE_H264_MAIN:
+       return H264PROFILE_MAIN;
+-    case FF_PROFILE_H264_EXTENDED:
++    case AV_PROFILE_H264_EXTENDED:
+       return H264PROFILE_EXTENDED;
+-    case FF_PROFILE_H264_HIGH:
++    case AV_PROFILE_H264_HIGH:
+       return H264PROFILE_HIGH;
+-    case FF_PROFILE_H264_HIGH_10:
++    case AV_PROFILE_H264_HIGH_10:
+       return H264PROFILE_HIGH10PROFILE;
+-    case FF_PROFILE_H264_HIGH_422:
++    case AV_PROFILE_H264_HIGH_422:
+       return H264PROFILE_HIGH422PROFILE;
+-    case FF_PROFILE_H264_HIGH_444_PREDICTIVE:
++    case AV_PROFILE_H264_HIGH_444_PREDICTIVE:
+       return H264PROFILE_HIGH444PREDICTIVEPROFILE;
+     default:
+       DVLOG(1) << "Unknown profile id: " << profile;
+@@ -263,23 +263,23 @@ static VideoCodecProfile ProfileIDToVide
+ static int VideoCodecProfileToProfileID(VideoCodecProfile profile) {
+   switch (profile) {
+     case H264PROFILE_BASELINE:
+-      return FF_PROFILE_H264_BASELINE;
++      return AV_PROFILE_H264_BASELINE;
+     case H264PROFILE_MAIN:
+-      return FF_PROFILE_H264_MAIN;
++      return AV_PROFILE_H264_MAIN;
+     case H264PROFILE_EXTENDED:
+-      return FF_PROFILE_H264_EXTENDED;
++      return AV_PROFILE_H264_EXTENDED;
+     case H264PROFILE_HIGH:
+-      return FF_PROFILE_H264_HIGH;
++      return AV_PROFILE_H264_HIGH;
+     case H264PROFILE_HIGH10PROFILE:
+-      return FF_PROFILE_H264_HIGH_10;
++      return AV_PROFILE_H264_HIGH_10;
+     case H264PROFILE_HIGH422PROFILE:
+-      return FF_PROFILE_H264_HIGH_422;
++      return AV_PROFILE_H264_HIGH_422;
+     case H264PROFILE_HIGH444PREDICTIVEPROFILE:
+-      return FF_PROFILE_H264_HIGH_444_PREDICTIVE;
++      return AV_PROFILE_H264_HIGH_444_PREDICTIVE;
+     default:
+       DVLOG(1) << "Unknown VideoCodecProfile: " << profile;
+   }
+-  return FF_PROFILE_UNKNOWN;
++  return AV_PROFILE_UNKNOWN;
+ }
+ 
+ SampleFormat AVSampleFormatToSampleFormat(AVSampleFormat sample_format,
+@@ -415,7 +415,7 @@ bool AVCodecContextToAudioDecoderConfig(
+   // TODO(dalecurtis): Just use the profile from the codec context if ffmpeg
+   // ever starts supporting xHE-AAC.
+   constexpr uint8_t kXHEAAc = 41;
+-  if (codec == kCodecAAC && codec_context->profile == FF_PROFILE_UNKNOWN ||
++  if (codec == kCodecAAC && codec_context->profile == AV_PROFILE_UNKNOWN ||
+       codec_context->profile == kXHEAAc) {
+     // Errors aren't fatal here, so just drop any MediaLog messages.
+     NullMediaLog media_log;
+@@ -537,16 +537,16 @@ bool AVStreamToVideoDecoderConfig(const
+       break;
+     case kCodecVP9:
+       switch (codec_context->profile) {
+-        case FF_PROFILE_VP9_0:
++        case AV_PROFILE_VP9_0:
+           profile = VP9PROFILE_PROFILE0;
+           break;
+-        case FF_PROFILE_VP9_1:
++        case AV_PROFILE_VP9_1:
+           profile = VP9PROFILE_PROFILE1;
+           break;
+-        case FF_PROFILE_VP9_2:
++        case AV_PROFILE_VP9_2:
+           profile = VP9PROFILE_PROFILE2;
+           break;
+-        case FF_PROFILE_VP9_3:
++        case AV_PROFILE_VP9_3:
+           profile = VP9PROFILE_PROFILE3;
+           break;
+         default:
+@@ -645,9 +645,10 @@ bool AVStreamToVideoDecoderConfig(const
+                      coded_size, visible_rect, natural_size, extra_data,
+                      GetEncryptionScheme(stream));
+ 
+-  if (stream->nb_side_data) {
+-    for (int i = 0; i < stream->nb_side_data; ++i) {
+-      AVPacketSideData side_data = stream->side_data[i];
++  const AVCodecParameters* codecpar = stream->codecpar;
++  if (codecpar->nb_coded_side_data) {
++    for (int i = 0; i < codecpar->nb_coded_side_data; ++i) {
++      const AVPacketSideData& side_data = codecpar->coded_side_data[i];
+       if (side_data.type != AV_PKT_DATA_MASTERING_DISPLAY_METADATA)
+         continue;
+ 
+--- a/chromium/media/filters/ffmpeg_aac_bitstream_converter.cc	2025-10-24 18:36:46.787560000 +0200
++++ b/chromium/media/filters/ffmpeg_aac_bitstream_converter.cc	2025-10-25 15:43:42.781415354 +0200
+@@ -63,17 +63,17 @@ bool GenerateAdtsHeader(int codec,
+   hdr[1] |= 1;
+ 
+   switch (audio_profile) {
+-    case FF_PROFILE_AAC_MAIN:
++    case AV_PROFILE_AAC_MAIN:
+       break;
+-    case FF_PROFILE_AAC_HE:
+-    case FF_PROFILE_AAC_HE_V2:
+-    case FF_PROFILE_AAC_LOW:
++    case AV_PROFILE_AAC_HE:
++    case AV_PROFILE_AAC_HE_V2:
++    case AV_PROFILE_AAC_LOW:
+       hdr[2] |= (1 << 6);
+       break;
+-    case FF_PROFILE_AAC_SSR:
++    case AV_PROFILE_AAC_SSR:
+       hdr[2] |= (2 << 6);
+       break;
+-    case FF_PROFILE_AAC_LTP:
++    case AV_PROFILE_AAC_LTP:
+       hdr[2] |= (3 << 6);
+       break;
+     default:
+--- a/chromium/media/filters/ffmpeg_aac_bitstream_converter_unittest.cc	2025-10-24 18:36:46.787560000 +0200
++++ b/chromium/media/filters/ffmpeg_aac_bitstream_converter_unittest.cc	2025-10-25 15:51:19.725317697 +0200
+@@ -28,7 +28,7 @@ class FFmpegAACBitstreamConverterTest :
+     // Set up reasonable aac parameters
+     memset(&test_parameters_, 0, sizeof(AVCodecParameters));
+     test_parameters_.codec_id = AV_CODEC_ID_AAC;
+-    test_parameters_.profile = FF_PROFILE_AAC_MAIN;
++    test_parameters_.profile = AV_PROFILE_AAC_MAIN;
+     test_parameters_.ch_layout.nb_channels = 2;
+     test_parameters_.extradata = extradata_header_;
+     test_parameters_.extradata_size = sizeof(extradata_header_);
+@@ -114,7 +114,7 @@ TEST_F(FFmpegAACBitstreamConverterTest,
+ 
+   EXPECT_EQ(profile, kAacMainProfile);
+ 
+-  test_parameters_.profile = FF_PROFILE_AAC_HE;
++  test_parameters_.profile = AV_PROFILE_AAC_HE;
+   FFmpegAACBitstreamConverter converter_he(&test_parameters_);
+ 
+   test_packet.reset(new AVPacket());
+@@ -127,7 +127,7 @@ TEST_F(FFmpegAACBitstreamConverterTest,
+ 
+   EXPECT_EQ(profile, kAacLowComplexityProfile);
+ 
+-  test_parameters_.profile = FF_PROFILE_AAC_ELD;
++  test_parameters_.profile = AV_PROFILE_AAC_ELD;
+   FFmpegAACBitstreamConverter converter_eld(&test_parameters_);
+ 
+   test_packet.reset(new AVPacket());
