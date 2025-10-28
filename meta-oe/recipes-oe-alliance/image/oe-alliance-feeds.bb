@@ -9,9 +9,14 @@ ALLOW_EMPTY:${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r22"
+PR = "r23"
 
-DEPENDS = "enigma2-plugin-drivers-usbserial enigma2-plugin-systemplugins-radiotimesemulator enigma2-plugin-systemplugins-hrtunerproxy"
+DEPENDS = " \
+    enigma2-plugin-drivers-usbserial \
+    enigma2-plugin-systemplugins-radiotimesemulator \
+    enigma2-plugin-systemplugins-hrtunerproxy \
+    ${@bb.utils.contains("THIRD_PARTY_FEED", "1", "enigma2-3rdparty-plugins", "", d)} \
+    "
 
 RDEPENDS:${PN} = " \
     packagegroup-openplugins \
