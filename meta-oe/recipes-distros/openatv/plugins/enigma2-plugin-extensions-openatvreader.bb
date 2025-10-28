@@ -2,15 +2,15 @@ SUMMARY = "openATV Reader for forum opena.tv"
 MAINTAINER = "Mr.Servo"
 SECTION = "extra"
 
+RDEPENDS:${PN} = "python3-beautifulsoup4"
+
 require conf/license/license-gplv2.inc
 require conf/python/python3-compileall.inc
 
-inherit gitpkgv
+inherit gittag
 SRCREV = "${AUTOREV}"
-PV = "1.1+git"
-PKGV = "1.1+git${GITPKGV}"
-VER = "1.1"
-PR = "r0"
+PV = "git"
+PKGV = "${GITPKGVTAG}"
 
 SRC_URI = "git://github.com/openatv/openatvreader.git;branch=master;protocol=https"
 
