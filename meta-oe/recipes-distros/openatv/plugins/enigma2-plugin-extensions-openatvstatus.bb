@@ -5,12 +5,10 @@ SECTION = "extra"
 require conf/license/license-gplv2.inc
 require conf/python/python3-compileall.inc
 
-inherit gettext gitpkgv
+inherit gettext gittag
 SRCREV = "${AUTOREV}"
-PV = "2.7+git"
-PKGV = "2.7+git${GITPKGV}"
-VER = "2.7"
-PR = "r0"
+PV = "git"
+PKGV = "${GITPKGVTAG}"
 
 SRC_URI = "git://github.com/openatv/openatvstatus.git;branch=main;protocol=https"
 
