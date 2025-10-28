@@ -11,7 +11,7 @@ PR = "r57"
 
 inherit packagegroup
 
-DEPENDS += "oe-alliance-feeds"
+DEPENDS += "oe-alliance-feeds enigma2-3rdparty-plugins"
 
 RRECOMMENDS:${PN} = "\
     chrony \
