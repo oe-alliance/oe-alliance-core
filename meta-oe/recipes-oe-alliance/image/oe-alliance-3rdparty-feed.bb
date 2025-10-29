@@ -1,0 +1,30 @@
+SUMMARY = "oe-alliance 3rdparty feed opkg conf"
+PRIORITY = "required"
+MAINTAINER = "oe-alliance team"
+
+require conf/license/license-gplv2.inc
+inherit allarch
+
+PV = "1.0"
+PR = "r0"
+
+PACKAGES = "${PN}"
+
+S = "${UNPACKDIR}"
+
+feed_name = "oe-alliance-3rdparty-feed"
+
+do_compile() {
+    mkdir -p ${S}${sysconfdir}/opkg
+    echo "src/gz ${feed_name} https://raw.githubusercontent.com/oe-alliance/3rdparty-feed/gh-pages" > ${S}${sysconfdir}/opkg/${feed_name}.conf
+}
+
+do_install() {
+    install -d ${D}${sysconfdir}/opkg
+    install -m 0644 ${S}${sysconfdir}/opkg/* ${D}${sysconfdir}/opkg
+}
+
+RREPLACES:${PN} = "enigma2-3rdparty-plugins"
+RCONFLICTS:${PN} = "enigma2-3rdparty-plugins"
+
+CONFFILES:${PN} += "${sysconfdir}/opkg/${feed_name}.conf"

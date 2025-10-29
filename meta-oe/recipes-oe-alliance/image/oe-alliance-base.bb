@@ -14,6 +14,7 @@ PR = "r4"
 
 RDEPENDS:${PN} = "\
     oe-alliance-feeds-configs \
+    oe-alliance-3rdparty-feed \
     oe-alliance-botfeed-configs \
     ${@bb.utils.contains("MACHINE_FEATURES", "nogui", "", "oe-alliance-enigma2", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "wol", "vuplus-coldboot vuplus-ethwol", "", d)} \

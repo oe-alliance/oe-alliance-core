@@ -13,7 +13,7 @@ PR = "r5"
 
 inherit packagegroup
 
-DEPENDS += "oe-alliance-feeds enigma2-3rdparty-plugins"
+DEPENDS += "oe-alliance-feeds"
 
 RRECOMMENDS:${PN} = "\
     enigma2-plugin-extensions-blurayplayer \
