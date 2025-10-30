@@ -1,0 +1,14 @@
+#!/bin/sh
+
+for pid in $(ps | grep '[u]dhcpc' | awk '{print $1}'); do
+    cmd=$(tr '\0' ' ' < /proc/$pid/cmdline 2>/dev/null)
+    case "$cmd" in
+        *hostname:\(none\)*)
+            kill "$pid" 2>/dev/null
+            ;;
+    esac
+done
+
+killall odhcp6c 2>/dev/null
+
+exit 0
