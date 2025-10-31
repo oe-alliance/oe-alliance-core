@@ -1,9 +1,9 @@
 PV = "3.14.28"
 KV = "${PV}-1.12"
-SRCDATE = "20190424"
+SRCDATE = "20250706"
 SRCDATE_PR = "r1"
 
 require vuplus-dvb-proxy.inc
 
-SRC_URI[md5sum] = "2ed5000dbfd564402491bd5a7233a492"
-SRC_URI[sha256sum] = "cb1e5f4d571633b541fdb6ce47e49edf05c0e2bfdf0c56211fb7d706a6bd588f"
+SRC_URI[md5sum] = "80a777b9dd55773028ffd24780445dfe"
+SRC_URI[sha256sum] = "80ced172df7a61488267bff6fa545ca33659ccf01084871b18b0fb23819ed995"
