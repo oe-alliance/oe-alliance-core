@@ -1,0 +1,88 @@
+#!/bin/sh
+# udhcpc default script with Enigma2 dnsMode support
+# Handles IPv4/IPv6 DNS order and filtering based on /etc/enigma2/settings
+
+[ -z "$1" ] && echo "Error: should be called from udhcpc" && exit 1
+
+RESOLV_CONF="/etc/resolv.conf"
+SETTINGS_FILE="/etc/enigma2/settings"
+[ -n "$broadcast" ] && BROADCAST="broadcast $broadcast"
+[ -n "$subnet" ] && NETMASK="netmask $subnet"
+
+# Read config.usage.dnsMode (default = prefer IPv4)
+get_dns_mode() {
+	if [ -f "$SETTINGS_FILE" ]; then
+		grep -m1 '^config\.usage\.dnsMode=' "$SETTINGS_FILE" | cut -d= -f2
+	else
+		echo ""
+	fi
+}
+
+case "$1" in
+	deconfig)
+		if [ -x /sbin/resolvconf ]; then
+			/sbin/resolvconf -d "${interface}.udhcpc"
+		fi
+		ip addr flush dev $interface scope global
+		ip link set dev $interface up
+		;;
+
+	renew|bound)
+		if [ -z "$BROADCAST" ]; then
+			BROADCAST="broadcast +"
+		fi
+		ip addr add dev $interface local $ip/$mask $BROADCAST
+
+		if [ -n "$router" ]; then
+			while ip route del default 2>/dev/null; do :; done
+			metric=0
+			for i in $router; do
+				ip route add default via $i metric $metric
+				metric=$(($metric + 1))
+			done
+		fi
+
+		DNSMODE=$(get_dns_mode)
+		echo "$0: Using dnsMode=$DNSMODE"
+
+		IPV4_DNS=""
+		IPV6_DNS=""
+		for i in $dns; do
+			case "$i" in
+				*:* ) IPV6_DNS="${IPV6_DNS}nameserver $i
+" ;;
+				*   ) IPV4_DNS="${IPV4_DNS}nameserver $i
+" ;;
+			esac
+		done
+
+		R=""
+		[ -n "$domain" ] && R="domain $domain
+"
+
+		case "$DNSMODE" in
+			1) # Prefer IPv6
+				R="${R}${IPV6_DNS}${IPV4_DNS}"
+				;;
+			2) # IPv4 only
+				R="${R}${IPV4_DNS}"
+				;;
+			3) # IPv6 only
+				R="${R}${IPV6_DNS}"
+				;;
+			*) # Default (prefer IPv4)
+				R="${R}${IPV4_DNS}${IPV6_DNS}"
+				;;
+		esac
+
+		if [ -x /sbin/resolvconf ]; then
+			echo -n "$R" | /sbin/resolvconf -a "${interface}.udhcpc"
+		else
+			echo -n "$R" > "$RESOLV_CONF"
+		fi
+		;;
+esac
+
+exit 0
+
+
