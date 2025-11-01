@@ -1,14 +1,35 @@
 #!/bin/sh
+# Find extra udhcpc or odhcp6c processes and kill those not matching their -p pidfile.
 
-for pid in $(ps | grep '[u]dhcpc' | awk '{print $1}'); do
+for pid in $(ps -aux 2>/dev/null | grep -E '[uo]dhcp' | grep -v grep | awk '{print $2}'); do
+    [ -r "/proc/$pid/cmdline" ] || continue
+
     cmd=$(tr '\0' ' ' < /proc/$pid/cmdline 2>/dev/null)
-    case "$cmd" in
-        *hostname:\(none\)*)
-            kill "$pid" 2>/dev/null
-            ;;
-    esac
+
+    pidfile=$(echo "$cmd" | sed -n 's/.*-p[[:space:]]\+\([^[:space:]]\+\).*/\1/p')
+
+    if [ -z "$pidfile" ]; then
+        echo "PID $pid: no -p parameter found, skipping"
+        continue
+    fi
+
+    if [ ! -f "$pidfile" ]; then
+        echo "PID $pid: pidfile $pidfile not found -> kill -9 $pid"
+        kill -9 "$pid" 2>/dev/null
+        continue
+    fi
+
+    filepid=$(cat "$pidfile" 2>/dev/null | tr -d '[:space:]')
+    if [ -z "$filepid" ]; then
+        echo "PID $pid: pidfile empty -> kill -9 $pid"
+        kill -9 "$pid" 2>/dev/null
+        continue
+    fi
+
+    if [ "$filepid" != "$pid" ]; then
+        echo "PID $pid: not matching $pidfile (contains $filepid) -> kill -9 $pid"
+        kill -9 "$pid" 2>/dev/null
+    else
+        echo "PID $pid: ok ($pidfile)"
+    fi
 done
-
-killall odhcp6c 2>/dev/null
-
-exit 0
