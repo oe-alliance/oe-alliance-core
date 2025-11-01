@@ -9,6 +9,7 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "git"
 PKGV = "git${GITPKGV}"
+PR = "1"
 
 SRC_URI = "git://github.com/openwrt/odhcp6c.git;protocol=https;branch=master \
            file://ifup \
