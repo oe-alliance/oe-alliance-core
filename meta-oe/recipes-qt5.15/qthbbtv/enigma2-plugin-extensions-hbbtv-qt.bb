@@ -16,7 +16,7 @@ PKGV = "1.0+git${GITPKGV}"
 SRCREV = "${AUTOREV}"
 QVERSION ?= "${@bb.utils.contains('MACHINE_FEATURES', 'hisil', '-v2', '', d)}"
 
-RDEPENDS:${PN}  = "qtwebkit"
+RDEPENDS:${PN}  = "qtwebkit libxml2-qt"
 
 S = "${UNPACKDIR}/${BB_GIT_DEFAULT_DESTSUFFIX}/qthbbtv${QVERSION}"
 
