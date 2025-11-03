@@ -109,6 +109,7 @@ RDEPENDS:${PN} = " \
     ipkg-tools \
     joe \
     liba52 \
+    libxml2-qt \
     lighttpd \
     livestreamersrv \
     streamlinksrv \
