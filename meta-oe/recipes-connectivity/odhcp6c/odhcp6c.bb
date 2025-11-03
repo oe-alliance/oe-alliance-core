@@ -6,7 +6,7 @@ DEPENDS = "cmake-native"
 
 inherit gitpkgv
 
-SRCREV = "${AUTOREV}"
+SRCREV = "f2521b296b21df207cac1ec513c7a56235ad10fc"
 PV = "git${SRCPV}"
 PKGV = "git${GITPKGV}"
 
