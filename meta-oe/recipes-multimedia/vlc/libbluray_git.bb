@@ -12,7 +12,7 @@ SRCREV = "${AUTOREV}"
 PV = "v1.3.4+git"
 PKGV = "v1.3.4+git${GITPKGV}"
 
-SRC_URI = "git://github.com/oe-mirrors/libbluray.git;protocol=https;branch=master"
+SRC_URI = "gitsm://github.com/oe-mirrors/libbluray.git;protocol=https;branch=master"
 
 S="${WORKDIR}/git"
 
