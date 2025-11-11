@@ -15,7 +15,7 @@ SRC_URI = "https://source.mynonpublic.com/vuplus/chromium/chromium-vuplus_${MACH
 PREFERRED_VERSION_nss = "3.17.3"
 
 DEPENDS = "nss" 
-RDEPENDS:${PN} = "libcrypto-compat-1.0.0 nspr nss libxslt libcurl libudev"
+RDEPENDS:${PN} = "libcrypto-compat-1.0.0 nspr nss libxslt libcurl libudev libxml2-qt"
 
 S = "${UNPACKDIR}/chromium"
 

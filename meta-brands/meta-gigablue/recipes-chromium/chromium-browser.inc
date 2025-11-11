@@ -13,7 +13,7 @@ SRC_URI = "https://source.mynonpublic.com/gigablue/chromium/chromium-gigablue-${
 PREFERRED_VERSION_nss = "3.17.3"
 
 DEPENDS = "nss"
-RDEPENDS:${PN} = "nspr nss libxslt libcurl libudev libcrypto-compat-1.0.0"
+RDEPENDS:${PN} = "nspr nss libxslt libcurl libudev libcrypto-compat-1.0.0 libxml2-qt"
 RDEPENDS:${PN} += "gb-v3ddriver-${MACHINE_DRIVER}"
 
 S = "${UNPACKDIR}"
