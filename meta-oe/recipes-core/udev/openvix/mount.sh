@@ -11,6 +11,21 @@ LOG="/tmp/udev.log"
 # File for known devices
 KNOWN_DEVICES_FILE="/etc/udev/known_devices"
 
+log() {
+	# comment to enable logging
+	if [ ! -f /etc/udev/udev.debug ]; then
+		return
+	fi
+
+	if [ $# -eq 1 ]; then
+		echo "udev/mount.sh" "$1" >> $LOG
+		#logger "udev/mount.sh" "$1"
+	else
+		echo "udev/mount.sh" "$DEVNAME: $1 $2" >> $LOG
+		#logger "udev/mount.sh" "$DEVNAME: $1 $2"
+	fi
+}
+
 for line in $(grep -h -v ^# /etc/udev/mount.ignorelist /etc/udev/mount.ignorelist.d/*)
 do
 	if [ "$(expr match "$DEVNAME" "$line")" -gt 0 ]; then
@@ -18,6 +33,11 @@ do
 		exit 0
 	fi
 done
+
+if [[ $ID_PART_ENTRY_NAME =~ ^(kernel[0-9]*|linuxkernel[0-9]*|rootfs[0-9]*|startup|userdata|dreambox-rootfs)$ ]] ; then
+	log "PARTLABEL excludes $ID_PART_ENTRY_NAME"
+	exit 0
+fi
 
 lock() {
 	LOCKFILE=/var/volatile/tmp/udevmount.lock
@@ -36,21 +56,6 @@ lock() {
 unlock() {
 	flock -u 200
 	rm -f $LOCKFILE
-}
-
-log() {
-	# comment to enable logging
-	if [ ! -f /etc/udev/udev.debug ]; then
-		return
-	fi
-
-	if [ $# -eq 1 ]; then
-		echo "udev/mount.sh" "$1" >> $LOG
-		#logger "udev/mount.sh" "$1"
-	else
-		echo "udev/mount.sh" "$DEVNAME: $1 $2" >> $LOG
-		#logger "udev/mount.sh" "$DEVNAME: $1 $2"
-	fi
 }
 
 notify() {
@@ -291,10 +296,6 @@ if [ "$ACTION" = "add" ]; then
 			exit 0
 		fi
 	fi
-	if [[ $ID_PART_ENTRY_NAME =~ ^(kernel[0-9]*|linuxkernel[0-9]*|rootfs[0-9]*|userdata|dreambox-rootfs)$ ]] ; then
-		log "PARTLABEL excludes $ID_PART_ENTRY_NAME"
-		exit 0
-	fi
 	# Check if the device is already in /etc/fstab
 	if grep -qs "$DEVNAME" /etc/fstab && ! ps aux | grep -v grep | grep -q enigma2; then
 		log "Device $DEVNAME is already in /etc/fstab, skipping mount."
@@ -302,13 +303,14 @@ if [ "$ACTION" = "add" ]; then
 	fi
 
 	# Check if the device is already in /etc/fstab and UUID not empty
-	if [ -z "$ID_FS_UUID" ]; then
-		log "UUID is empty, skipping /etc/fstab check."
-	else
-		if grep -qs "UUID=$ID_FS_UUID" /etc/fstab && ! ps aux | grep -v grep | grep -q enigma2; then
-			log "UUID $ID_FS_UUID is already in /etc/fstab, skipping mount."
-			exit 0
-		fi
+	if [ -z "$ID_FS_UUID" ] || [ "$ID_FS_UUID" = "(null)" ]; then
+		log "UUID is empty or invalid for $DEVNAME — skipping mount and fstab entry."
+		exit 0
+	fi
+
+	if grep -qs "UUID=$ID_FS_UUID" /etc/fstab && ! ps aux | grep -v grep | grep -q enigma2; then
+		log "UUID $ID_FS_UUID is already in /etc/fstab, skipping mount."
+		exit 0
 	fi
 
 	# blacklist boot device
@@ -376,6 +378,7 @@ if [ "$ACTION" = "remove" ] || [ "$ACTION" = "change" ] && [ -x "$UMOUNT" ] && [
 	do
 		$UMOUNT $mnt
 	done
+	
 
 	if [ ${name:0:2} == "sr" ]; then
 		log "CD/DVD Detectet. $DEVNAME"
