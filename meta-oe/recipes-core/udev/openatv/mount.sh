@@ -303,13 +303,14 @@ if [ "$ACTION" = "add" ]; then
 	fi
 
 	# Check if the device is already in /etc/fstab and UUID not empty
-	if [ -z "$ID_FS_UUID" ]; then
-		log "UUID is empty, skipping /etc/fstab check."
-	else
-		if grep -qs "UUID=$ID_FS_UUID" /etc/fstab && ! ps aux | grep -v grep | grep -q enigma2; then
-			log "UUID $ID_FS_UUID is already in /etc/fstab, skipping mount."
-			exit 0
-		fi
+	if [ -z "$ID_FS_UUID" ] || [ "$ID_FS_UUID" = "(null)" ]; then
+		log "UUID is empty or invalid for $DEVNAME — skipping mount and fstab entry."
+		exit 0
+	fi
+
+	if grep -qs "UUID=$ID_FS_UUID" /etc/fstab && ! ps aux | grep -v grep | grep -q enigma2; then
+		log "UUID $ID_FS_UUID is already in /etc/fstab, skipping mount."
+		exit 0
 	fi
 
 	# blacklist boot device
