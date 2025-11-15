@@ -85,6 +85,7 @@ EXTRA_FFCONF = " \
     --enable-encoder=png \
     --enable-encoder=rawvideo \
     --enable-encoder=wmav2 \
+    --enable-encoder=pcm_s16le \
     --enable-decoder=truehd \
     --enable-decoder=mlp \
     \
