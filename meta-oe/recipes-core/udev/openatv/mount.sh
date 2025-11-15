@@ -18,7 +18,7 @@ log() {
 	fi
 
 	if [ $# -eq 1 ]; then
-		echo "udev/mount.sh" "$1" >> $LOG
+		echo "udev/mount.sh" "$DEVNAME: $1" >> $LOG
 		#logger "udev/mount.sh" "$1"
 	else
 		echo "udev/mount.sh" "$DEVNAME: $1 $2" >> $LOG
@@ -29,7 +29,7 @@ log() {
 for line in $(grep -h -v ^# /etc/udev/mount.ignorelist /etc/udev/mount.ignorelist.d/*)
 do
 	if [ "$(expr match "$DEVNAME" "$line")" -gt 0 ]; then
-		log "udev/mount.sh" "[$DEVNAME] is blacklisted, ignoring"
+		log ">" " is blacklisted, ignoring"
 		exit 0
 	fi
 done
@@ -303,8 +303,8 @@ if [ "$ACTION" = "add" ]; then
 	fi
 
 	# Check if the device is already in /etc/fstab and UUID not empty
-	if [ -z "$ID_FS_UUID" ] || [ "$ID_FS_UUID" = "(null)" ]; then
-		log "UUID is empty or invalid for $DEVNAME — skipping mount and fstab entry."
+	if [ -z "$ID_FS_UUID" ]; then
+		log "UUID is empty for $DEVNAME — skipping mount and fstab entry."
 		exit 0
 	fi
 
@@ -378,7 +378,6 @@ if [ "$ACTION" = "remove" ] || [ "$ACTION" = "change" ] && [ -x "$UMOUNT" ] && [
 	do
 		$UMOUNT $mnt
 	done
-	
 
 	if [ ${name:0:2} == "sr" ]; then
 		log "CD/DVD Detectet. $DEVNAME"
