@@ -29,10 +29,10 @@ do_install(){
 	install -d ${D}/${bindir}
 	install -m 0755 ${S}/stalker* ${D}/${bindir}
 
-	cp -rp ${S}/plugin/locale ${D}${libdir}/enigma2/python/Plugins/Extensions/Stalker
+	cp --no-preserve=ownership --recursive ${S}/plugin/locale ${D}${libdir}/enigma2/python/Plugins/Extensions/Stalker
 
 	install -d ${D}/usr/share/stalker
-	cp -rp ${S}/usr/share/stalker/* ${D}/usr/share/stalker/
+	cp --no-preserve=ownership --recursive  ${S}/usr/share/stalker/* ${D}/usr/share/stalker/
 	chmod -R a+rX ${D}/usr/share/stalker/
 }
 
