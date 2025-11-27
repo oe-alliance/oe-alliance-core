@@ -5,9 +5,10 @@ require conf/license/license-gplv2.inc
 
 RRECOMMENDS:${PN} = " \
         rt8822bu \
+        firmware-rtl8192eu \
 "
 
 PV = "1.0"
-PR = "r0"
+PR = "r1"
 
 ALLOW_EMPTY:${PN} = "1"
