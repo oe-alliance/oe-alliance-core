@@ -12,9 +12,9 @@ RDEPENDS:${PN} = "ffmpeg libbluray"
 inherit gitpkgv upx-compress
 
 SRCREV = "${AUTOREV}"
-PV = "179+git"
-PKGV = "179+git${GITPKGV}"
-VER = "179"
+PV = "181+git"
+PKGV = "181+git${GITPKGV}"
+VER = "181"
 PR = "r1"
 
 SRC_URI = "git://github.com/oe-alliance/exteplayer3.git;branch=master;protocol=https"
