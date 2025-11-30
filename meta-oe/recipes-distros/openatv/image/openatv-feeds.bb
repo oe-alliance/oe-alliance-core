@@ -36,6 +36,7 @@ RRECOMMENDS:${PN} = "\
     enigma2-plugin-extensions-blurayplayer \
     enigma2-plugin-extensions-sdgradio \
     enigma2-plugin-extensions-epgimport \
+    enigma2-plugin-extensions-skymultiview \
     enigma2-plugin-systemplugins-autobouquetsmaker \
     enigma2-plugin-extensions-openatvreader \
     enigma2-plugin-extensions-openatvstatus \
