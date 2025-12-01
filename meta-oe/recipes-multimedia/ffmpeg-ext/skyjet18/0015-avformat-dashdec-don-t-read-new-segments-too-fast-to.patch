@@ -1,0 +1,40 @@
+From c6f5877a16d31fbcddb0b434b17b5a7ca75642fc Mon Sep 17 00:00:00 2001
+From: skyjet18 <57456827+skyjet18@users.noreply.github.com>
+Date: Fri, 31 May 2024 20:13:32 +0200
+Subject: [PATCH 15/33] avformat/dashdec don't read new segments too fast to
+ avoid HTTP 404 error
+
+---
+ libavformat/dashdec.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/libavformat/dashdec.c b/libavformat/dashdec.c
+index 84b6c5cb7d..fefe7c5019 100644
+--- a/libavformat/dashdec.c
++++ b/libavformat/dashdec.c
+@@ -1657,6 +1657,7 @@ static struct fragment *get_current_fragment(struct representation *pls)
+     struct fragment *seg_ptr = NULL;
+     DASHContext *c = pls->parent->priv_data;
+ 
++try_again:
+     while (( !ff_check_interrupt(c->interrupt_callback)&& pls->n_fragments > 0)) {
+         if (pls->cur_seq_no < pls->n_fragments) {
+             seg_ptr = pls->fragments[pls->cur_seq_no];
+@@ -1689,7 +1690,13 @@ static struct fragment *get_current_fragment(struct representation *pls)
+             av_log(pls->parent, AV_LOG_VERBOSE, "old fragment: cur[%"PRId64"] min[%"PRId64"] max[%"PRId64"]\n", (int64_t)pls->cur_seq_no, min_seq_no, max_seq_no);
+             pls->cur_seq_no = calc_cur_seg_no(pls->parent, pls);
+         } else if (pls->cur_seq_no > max_seq_no) {
+-            av_log(pls->parent, AV_LOG_VERBOSE, "new fragment: min[%"PRId64"] max[%"PRId64"]\n", min_seq_no, max_seq_no);
++            av_log(pls->parent, AV_LOG_VERBOSE, "new fragment: cur[%"PRId64"] min[%"PRId64"] max[%"PRId64"]\n", (int64_t)pls->cur_seq_no, min_seq_no, max_seq_no);
++
++            /* we are reading data too fast - wait and try again later, because we will get HTTP 404 ...*/
++            av_usleep(100*1000);
++            goto try_again;
++        } else {
++            av_log(pls->parent, AV_LOG_VERBOSE, "cur fragment: cur[%"PRId64"] min[%"PRId64"] max[%"PRId64"]\n", (int64_t)pls->cur_seq_no, min_seq_no, max_seq_no);
+         }
+         seg = av_mallocz(sizeof(struct fragment));
+         if (!seg) {
+-- 
+2.45.2.windows.1
+

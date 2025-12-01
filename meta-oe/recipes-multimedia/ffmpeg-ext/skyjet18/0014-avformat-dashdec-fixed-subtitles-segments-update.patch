@@ -1,0 +1,40 @@
+From ed8c49f44d2a29552cb56afd6963335aba7028b7 Mon Sep 17 00:00:00 2001
+From: skyjet18 <57456827+skyjet18@users.noreply.github.com>
+Date: Fri, 31 May 2024 20:11:51 +0200
+Subject: [PATCH 14/33] avformat/dashdec fixed subtitles segments update
+
+---
+ libavformat/dashdec.c | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+
+diff --git a/libavformat/dashdec.c b/libavformat/dashdec.c
+index 4e87d92f2b..84b6c5cb7d 100644
+--- a/libavformat/dashdec.c
++++ b/libavformat/dashdec.c
+@@ -1609,6 +1609,23 @@ static int refresh_manifest(AVFormatContext *s)
+         }
+     }
+ 
++    for (i = 0; i < n_subtitles; i++) {
++        struct representation *cur_subtitle = subtitles[i];
++        struct representation *ccur_subtitle = c->subtitles[i];
++        if (cur_subtitle->timelines) {
++            // calc current time
++            int64_t currentTime = get_segment_start_time_based_on_timeline(cur_subtitle, cur_subtitle->cur_seq_no) / cur_subtitle->fragment_timescale;
++            // update segments
++            ccur_subtitle->cur_seq_no = calc_next_seg_no_from_timelines(ccur_subtitle, currentTime * cur_subtitle->fragment_timescale - 1);
++            if (ccur_subtitle->cur_seq_no >= 0) {
++                move_timelines(ccur_subtitle, cur_subtitle, c);
++            }
++        }
++        if (cur_subtitle->fragments) {
++            move_segments(ccur_subtitle, cur_subtitle, c);
++        }
++    }
++
+ finish:
+     // restore context
+     if (c->base_url)
+-- 
+2.45.2.windows.1
+

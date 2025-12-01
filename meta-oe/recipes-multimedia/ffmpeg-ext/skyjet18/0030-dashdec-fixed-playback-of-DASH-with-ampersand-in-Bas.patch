@@ -1,0 +1,30 @@
+From d68268532319d5be8a5f98e9838254233e03c835 Mon Sep 17 00:00:00 2001
+From: skyjet18 <57456827+skyjet18@users.noreply.github.com>
+Date: Mon, 30 Jun 2025 11:38:00 +0200
+Subject: [PATCH 30/33] dashdec: fixed playback of DASH with ampersand in
+ BaseURL
+
+https://trac.ffmpeg.org/ticket/7395
+---
+ libavformat/dashdec.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/libavformat/dashdec.c b/libavformat/dashdec.c
+index cc2fe2b0db..f1ff16764c 100644
+--- a/libavformat/dashdec.c
++++ b/libavformat/dashdec.c
+@@ -818,8 +818,10 @@ static int resolve_content_path(AVFormatContext *s, const char *url, int *max_ur
+                 memset(p + 1, 0, strlen(p));
+             }
+             av_strlcat(tmp_str, text + start, tmp_max_url_size);
+-            xmlNodeSetContent(baseurl_nodes[i], tmp_str);
++            xmlChar *escaped = xmlEncodeSpecialChars(NULL, tmp_str);
++            xmlNodeSetContent(baseurl_nodes[i], escaped);
+             updated = 1;
++            xmlFree(escaped);
+             xmlFree(text);
+         }
+     }
+-- 
+2.45.2.windows.1
+

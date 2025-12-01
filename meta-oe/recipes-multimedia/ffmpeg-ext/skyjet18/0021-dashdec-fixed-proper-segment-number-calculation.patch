@@ -1,0 +1,77 @@
+From 84ac881bac7ea45932b80561c2c54693161ef574 Mon Sep 17 00:00:00 2001
+From: skyjet18 <57456827+skyjet18@users.noreply.github.com>
+Date: Sat, 15 Feb 2025 18:59:47 +0100
+Subject: [PATCH 21/33] dashdec: fixed proper segment number calculation
+
+When using timelines in live mode, where segment segment start is fixed and only r is updating, segment number calculation is wrong. This change ties to fix this state.
+---
+ libavformat/dashdec.c | 36 +++++++++++++++++++++++++++++++++---
+ 1 file changed, 33 insertions(+), 3 deletions(-)
+
+diff --git a/libavformat/dashdec.c b/libavformat/dashdec.c
+index 7db298abe1..19c4b67342 100644
+--- a/libavformat/dashdec.c
++++ b/libavformat/dashdec.c
+@@ -1594,8 +1594,18 @@ static int refresh_manifest(AVFormatContext *s)
+         if (cur_video->timelines) {
+             // calc current time
+             int64_t currentTime = get_segment_start_time_based_on_timeline(cur_video, cur_video->cur_seq_no) / cur_video->fragment_timescale;
++            int64_t next_seg_no = calc_next_seg_no_from_timelines(ccur_video, currentTime * cur_video->fragment_timescale - 1) + cur_video->first_seq_no;
++
+             // update segments
+-            ccur_video->cur_seq_no = calc_next_seg_no_from_timelines(ccur_video, currentTime * cur_video->fragment_timescale - 1);
++            if( cur_video->cur_seq_no > next_seg_no || cur_video->cur_seq_no < calc_min_seg_no(s, ccur_video) )
++            {
++                ccur_video->cur_seq_no = next_seg_no;
++            }
++            else
++            {
++                ccur_video->cur_seq_no = cur_video->cur_seq_no;
++            }
++
+             if (ccur_video->cur_seq_no >= 0) {
+                 move_timelines(ccur_video, cur_video, c);
+             }
+@@ -1610,8 +1620,18 @@ static int refresh_manifest(AVFormatContext *s)
+         if (cur_audio->timelines) {
+             // calc current time
+             int64_t currentTime = get_segment_start_time_based_on_timeline(cur_audio, cur_audio->cur_seq_no) / cur_audio->fragment_timescale;
++            int64_t next_seg_no = calc_next_seg_no_from_timelines(ccur_audio, currentTime * cur_audio->fragment_timescale - 1) + cur_audio->first_seq_no;
++
+             // update segments
+-            ccur_audio->cur_seq_no = calc_next_seg_no_from_timelines(ccur_audio, currentTime * cur_audio->fragment_timescale - 1);
++            if( cur_audio->cur_seq_no > next_seg_no || cur_audio->cur_seq_no < calc_min_seg_no(s, ccur_audio))
++            {
++                ccur_audio->cur_seq_no = next_seg_no;
++            }
++            else
++            {
++                ccur_audio->cur_seq_no = cur_audio->cur_seq_no;
++            }
++
+             if (ccur_audio->cur_seq_no >= 0) {
+                 move_timelines(ccur_audio, cur_audio, c);
+             }
+@@ -1627,8 +1647,18 @@ static int refresh_manifest(AVFormatContext *s)
+         if (cur_subtitle->timelines) {
+             // calc current time
+             int64_t currentTime = get_segment_start_time_based_on_timeline(cur_subtitle, cur_subtitle->cur_seq_no) / cur_subtitle->fragment_timescale;
++            int64_t next_seg_no = calc_next_seg_no_from_timelines(ccur_subtitle, currentTime * cur_subtitle->fragment_timescale - 1) + cur_subtitle->first_seq_no;
++
+             // update segments
+-            ccur_subtitle->cur_seq_no = calc_next_seg_no_from_timelines(ccur_subtitle, currentTime * cur_subtitle->fragment_timescale - 1);
++            if( cur_subtitle->cur_seq_no > next_seg_no || cur_subtitle->cur_seq_no < calc_min_seg_no(s, ccur_subtitle))
++            {
++                ccur_subtitle->cur_seq_no = next_seg_no;
++            }
++            else
++            {
++                ccur_subtitle->cur_seq_no = cur_subtitle->cur_seq_no;
++            }
++
+             if (ccur_subtitle->cur_seq_no >= 0) {
+                 move_timelines(ccur_subtitle, cur_subtitle, c);
+             }
+-- 
+2.45.2.windows.1
+

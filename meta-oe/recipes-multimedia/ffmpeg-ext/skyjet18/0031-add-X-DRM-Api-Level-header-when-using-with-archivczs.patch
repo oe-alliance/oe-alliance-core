@@ -1,0 +1,30 @@
+From 6053745f848df0b518903494e7a6b0735f1a63a8 Mon Sep 17 00:00:00 2001
+From: skyjet18 <57456827+skyjet18@users.noreply.github.com>
+Date: Tue, 17 Jun 2025 10:18:44 +0200
+Subject: [PATCH 31/33] add X-DRM-Api-Level header when using with archivczsk
+
+---
+ fftools/ffmpeg_demux.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/fftools/ffmpeg_demux.c b/fftools/ffmpeg_demux.c
+index 350f233ab7..4f194619f1 100644
+--- a/fftools/ffmpeg_demux.c
++++ b/fftools/ffmpeg_demux.c
+@@ -1481,6 +1481,13 @@ int ifile_open(const OptionsContext *o, const char *filename)
+         av_dict_set(&o->g->format_opts, "scan_all_pmts", "1", AV_DICT_DONT_OVERWRITE);
+         scan_all_pmts_set = 1;
+     }
++
++    if( strncmp(filename, "http://127.0.0.1", 16) == 0 )
++    {
++        /* when using with ArchivCZSK, then indicate DRM support */
++        av_dict_set(&o->g->format_opts, "headers", "X-DRM-Api-Level: 1\r\n", AV_DICT_APPEND);
++    }
++
+     /* open the input file with generic avformat function */
+     err = avformat_open_input(&ic, filename, file_iformat, &o->g->format_opts);
+     if (err < 0) {
+-- 
+2.45.2.windows.1
+

@@ -1,0 +1,39 @@
+From 81054700ce4db048aa08f00b28a1b4862b6c8461 Mon Sep 17 00:00:00 2001
+From: skyjet18 <57456827+skyjet18@users.noreply.github.com>
+Date: Thu, 11 Apr 2024 19:22:14 +0200
+Subject: [PATCH 08/33] [FFmpeg-devel,1/2] avformat hls fix to seek logic
+
+https://patchwork.ffmpeg.org/project/ffmpeg/patch/20200424152042.29383-2-hello.vectronic@gmail.com/
+---
+ libavformat/hls.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
+
+diff --git a/libavformat/hls.c b/libavformat/hls.c
+index cf1f551b93..024aaeaf4b 100644
+--- a/libavformat/hls.c
++++ b/libavformat/hls.c
+@@ -2378,8 +2378,10 @@ static int hls_read_packet(AVFormatContext *s, AVPacket *pkt)
+                     ts_diff = av_rescale_rnd(pls->pkt->dts, AV_TIME_BASE,
+                                             tb.den, AV_ROUND_DOWN) -
+                             pls->seek_timestamp;
+-                    if (ts_diff >= 0 && (pls->seek_flags  & AVSEEK_FLAG_ANY ||
+-                                        pls->pkt->flags & AV_PKT_FLAG_KEY)) {
++                    /* If AVSEEK_FLAG_ANY, keep reading until ts_diff is greater than 0
++                     * otherwise return the first keyframe encountered */
++                    if ((ts_diff >= 0 && (pls->seek_flags & AVSEEK_FLAG_ANY)) ||
++                        (!(pls->seek_flags & AVSEEK_FLAG_ANY) && (pls->pkt->flags & AV_PKT_FLAG_KEY)))  {
+                         pls->seek_timestamp = AV_NOPTS_VALUE;
+                         break;
+                     }
+@@ -2530,7 +2532,7 @@ static int hls_read_seek(AVFormatContext *s, int stream_index,
+         pb->eof_reached = 0;
+         /* Clear any buffered data */
+         pb->buf_end = pb->buf_ptr = pb->buffer;
+-        /* Reset the pos, to let the mpegts demuxer know we've seeked. */
++        /* Reset the pos, to let the mpegts/mov demuxer know we've seeked. */
+         pb->pos = 0;
+         /* Flush the packet queue of the subdemuxer. */
+         ff_read_frame_flush(pls->ctx);
+-- 
+2.45.2.windows.1
+

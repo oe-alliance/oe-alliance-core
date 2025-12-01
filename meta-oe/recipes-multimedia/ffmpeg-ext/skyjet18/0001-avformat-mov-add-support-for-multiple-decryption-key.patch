@@ -1,0 +1,495 @@
+From f461169f82deaf2ea5d147ed09cccd2e5efd8203 Mon Sep 17 00:00:00 2001
+From: skyjet18 <57456827+skyjet18@users.noreply.github.com>
+Date: Tue, 2 Apr 2024 11:25:22 +0200
+Subject: [PATCH 01/33] avformat/mov: add support for multiple decryption keys
+
+https://patchwork.ffmpeg.org/project/ffmpeg/patch/20231113084019.5081-1-adrien@guinet.me/
+---
+ doc/demuxers.texi                          | 12 +++-
+ libavformat/dashdec.c                      |  6 +-
+ libavformat/isom.h                         |  5 +-
+ libavformat/mov.c                          | 80 ++++++++++++++++++----
+ tests/fate/mov.mak                         | 12 ++++
+ tests/ref/fate/mov-3elist-encrypted-kid    | 57 +++++++++++++++
+ tests/ref/fate/mov-frag-encrypted-kid      | 57 +++++++++++++++
+ tests/ref/fate/mov-tenc-only-encrypted-kid | 57 +++++++++++++++
+ 8 files changed, 269 insertions(+), 17 deletions(-)
+ create mode 100644 tests/ref/fate/mov-3elist-encrypted-kid
+ create mode 100644 tests/ref/fate/mov-frag-encrypted-kid
+ create mode 100644 tests/ref/fate/mov-tenc-only-encrypted-kid
+
+diff --git a/doc/demuxers.texi b/doc/demuxers.texi
+index ca1563abb0..9d0ab6025c 100644
+--- a/doc/demuxers.texi
++++ b/doc/demuxers.texi
+@@ -281,7 +281,11 @@ This demuxer accepts the following option:
+ @table @option
+ 
+ @item cenc_decryption_key
+-16-byte key, in hex, to decrypt files encrypted using ISO Common Encryption (CENC/AES-128 CTR; ISO/IEC 23001-7).
++Default 16-byte key, in hex, to decrypt files encrypted using ISO Common Encryption (CENC/AES-128 CTR; ISO/IEC 23001-7).
++
++@item cenc_decryption_keys
++Dictionary of 16-byte key ID => 16-byte key, both in hex, to decrypt files encrypted using ISO Common Encryption
++(CENC/AES-128 CTR; ISO/IEC 23001-7).
+ 
+ @end table
+ 
+@@ -769,7 +773,11 @@ Fixed key used for handling Audible AAX/AAX+ files. It has been pre-set so shoul
+ specify.
+ 
+ @item decryption_key
+-16-byte key, in hex, to decrypt files encrypted using ISO Common Encryption (CENC/AES-128 CTR; ISO/IEC 23001-7).
++Default 16-byte key, in hex, to decrypt files encrypted using ISO Common Encryption (CENC/AES-128 CTR; ISO/IEC 23001-7).
++
++@item decryption_keys
++Dictionary of 16-byte key ID => 16-byte key, both in hex, to decrypt files encrypted using ISO Common Encryption
++(CENC/AES-128 CTR; ISO/IEC 23001-7).
+ 
+ @item max_stts_delta
+ Very high sample deltas written in a trak's stts box may occasionally be intended but usually they are written in
+diff --git a/libavformat/dashdec.c b/libavformat/dashdec.c
+index 1215407f3c..091deac854 100644
+--- a/libavformat/dashdec.c
++++ b/libavformat/dashdec.c
+@@ -153,6 +153,7 @@ typedef struct DASHContext {
+     AVDictionary *avio_opts;
+     int max_url_size;
+     char *cenc_decryption_key;
++    char *cenc_decryption_keys;
+ 
+     /* Flags for init section*/
+     int is_init_section_common_video;
+@@ -1903,6 +1904,8 @@ static int reopen_demux_for_component(AVFormatContext *s, struct representation
+ 
+     if (c->cenc_decryption_key)
+         av_dict_set(&in_fmt_opts, "decryption_key", c->cenc_decryption_key, 0);
++    if (c->cenc_decryption_keys)
++        av_dict_set(&in_fmt_opts, "decryption_keys", c->cenc_decryption_keys, 0);
+ 
+     // provide additional information from mpd if available
+     ret = avformat_open_input(&pls->ctx, "", in_fmt, &in_fmt_opts); //pls->init_section->url
+@@ -2344,7 +2347,8 @@ static const AVOption dash_options[] = {
+         OFFSET(allowed_extensions), AV_OPT_TYPE_STRING,
+         {.str = "aac,m4a,m4s,m4v,mov,mp4,webm,ts"},
+         INT_MIN, INT_MAX, FLAGS},
+-    { "cenc_decryption_key", "Media decryption key (hex)", OFFSET(cenc_decryption_key), AV_OPT_TYPE_STRING, {.str = NULL}, INT_MIN, INT_MAX, .flags = FLAGS },
++    { "cenc_decryption_key", "Media default decryption key (hex)", OFFSET(cenc_decryption_key), AV_OPT_TYPE_STRING, {.str = NULL}, INT_MIN, INT_MAX, .flags = FLAGS },
++    { "cenc_decryption_keys", "Media decryption keys by KID (hex)", OFFSET(cenc_decryption_keys), AV_OPT_TYPE_STRING, {.str = NULL}, INT_MIN, INT_MAX, .flags = FLAGS },
+     {NULL}
+ };
+ 
+diff --git a/libavformat/isom.h b/libavformat/isom.h
+index 3d375d7a46..83bacb96a1 100644
+--- a/libavformat/isom.h
++++ b/libavformat/isom.h
+@@ -312,8 +312,8 @@ typedef struct MOVContext {
+     void *audible_iv;
+     int audible_iv_size;
+     struct AVAES *aes_decrypt;
+-    uint8_t *decryption_key;
+-    int decryption_key_len;
++    uint8_t *decryption_default_key;
++    int decryption_default_key_len;
+     int enable_drefs;
+     int32_t movie_display_matrix[3][3]; ///< display matrix from mvhd
+     int have_read_mfra_size;
+@@ -328,6 +328,7 @@ typedef struct MOVContext {
+     } *avif_info;
+     int avif_info_size;
+     int interleaved_read;
++    AVDictionary* decryption_keys;
+ } MOVContext;
+ 
+ int ff_mp4_read_descr_len(AVIOContext *pb);
+diff --git a/libavformat/mov.c b/libavformat/mov.c
+index d3418beab1..b0cae7b636 100644
+--- a/libavformat/mov.c
++++ b/libavformat/mov.c
+@@ -7144,19 +7144,62 @@ static int mov_read_dfla(MOVContext *c, AVIOContext *pb, MOVAtom atom)
+     return 0;
+ }
+ 
++static int get_key_from_kid(uint8_t* out, int len, MOVContext *c, AVEncryptionInfo *sample) {
++    AVDictionaryEntry *key_entry_hex;
++    char kid_hex[16*2+1];
++
++    if (c->decryption_default_key && c->decryption_default_key_len != len) {
++        av_log(c->fc, AV_LOG_ERROR, "invalid default decryption key length: got %d, expected %d\n", c->decryption_default_key_len, len);
++        return -1;
++    }
++
++    if (!c->decryption_keys) {
++        av_assert0(c->decryption_default_key);
++        memcpy(out, c->decryption_default_key, len);
++        return 0;
++    }
++
++    if (sample->key_id_size != 16) {
++        av_log(c->fc, AV_LOG_ERROR, "invalid key ID size: got %u, expected 16\n", sample->key_id_size);
++        return -1;
++    }
++
++    ff_data_to_hex(kid_hex, sample->key_id, 16, 1);
++    key_entry_hex = av_dict_get(c->decryption_keys, kid_hex, NULL, AV_DICT_DONT_STRDUP_KEY|AV_DICT_DONT_STRDUP_VAL);
++    if (!key_entry_hex) {
++        if (!c->decryption_default_key) {
++            av_log(c->fc, AV_LOG_ERROR, "unable to find KID %s\n", kid_hex);
++            return -1;
++        }
++        memcpy(out, c->decryption_default_key, len);
++        return 0;
++    }
++    if (strlen(key_entry_hex->value) != len*2) {
++        return -1;
++    }
++    ff_hex_to_data(out, key_entry_hex->value);
++    return 0;
++}
++
+ static int cenc_scheme_decrypt(MOVContext *c, MOVStreamContext *sc, AVEncryptionInfo *sample, uint8_t *input, int size)
+ {
+     int i, ret;
+     int bytes_of_protected_data;
++    uint8_t decryption_key[AES_CTR_KEY_SIZE];
+ 
+     if (!sc->cenc.aes_ctr) {
++        ret = get_key_from_kid(decryption_key, sizeof(decryption_key), c, sample);
++        if (ret < 0) {
++            return ret;
++        }
++
+         /* initialize the cipher */
+         sc->cenc.aes_ctr = av_aes_ctr_alloc();
+         if (!sc->cenc.aes_ctr) {
+             return AVERROR(ENOMEM);
+         }
+ 
+-        ret = av_aes_ctr_init(sc->cenc.aes_ctr, c->decryption_key);
++        ret = av_aes_ctr_init(sc->cenc.aes_ctr, decryption_key);
+         if (ret < 0) {
+             return ret;
+         }
+@@ -7202,15 +7245,21 @@ static int cbc1_scheme_decrypt(MOVContext *c, MOVStreamContext *sc, AVEncryption
+     int i, ret;
+     int num_of_encrypted_blocks;
+     uint8_t iv[16];
++    uint8_t decryption_key[16];
+ 
+     if (!sc->cenc.aes_ctx) {
++        ret = get_key_from_kid(decryption_key, sizeof(decryption_key), c, sample);
++        if (ret < 0) {
++            return ret;
++        }
++
+         /* initialize the cipher */
+         sc->cenc.aes_ctx = av_aes_alloc();
+         if (!sc->cenc.aes_ctx) {
+             return AVERROR(ENOMEM);
+         }
+ 
+-        ret = av_aes_init(sc->cenc.aes_ctx, c->decryption_key, 16 * 8, 1);
++        ret = av_aes_init(sc->cenc.aes_ctx, decryption_key, 16 * 8, 1);
+         if (ret < 0) {
+             return ret;
+         }
+@@ -7261,15 +7310,21 @@ static int cens_scheme_decrypt(MOVContext *c, MOVStreamContext *sc, AVEncryption
+ {
+     int i, ret, rem_bytes;
+     uint8_t *data;
++    uint8_t decryption_key[AES_CTR_KEY_SIZE];
+ 
+     if (!sc->cenc.aes_ctr) {
++        ret = get_key_from_kid(decryption_key, sizeof(decryption_key), c, sample);
++        if (ret < 0) {
++            return ret;
++        }
++
+         /* initialize the cipher */
+         sc->cenc.aes_ctr = av_aes_ctr_alloc();
+         if (!sc->cenc.aes_ctr) {
+             return AVERROR(ENOMEM);
+         }
+ 
+-        ret = av_aes_ctr_init(sc->cenc.aes_ctr, c->decryption_key);
++        ret = av_aes_ctr_init(sc->cenc.aes_ctr, decryption_key);
+         if (ret < 0) {
+             return ret;
+         }
+@@ -7327,15 +7382,21 @@ static int cbcs_scheme_decrypt(MOVContext *c, MOVStreamContext *sc, AVEncryption
+     int i, ret, rem_bytes;
+     uint8_t iv[16];
+     uint8_t *data;
++    uint8_t decryption_key[16];
+ 
+     if (!sc->cenc.aes_ctx) {
++        ret = get_key_from_kid(decryption_key, sizeof(decryption_key), c, sample);
++        if (ret < 0) {
++            return ret;
++        }
++
+         /* initialize the cipher */
+         sc->cenc.aes_ctx = av_aes_alloc();
+         if (!sc->cenc.aes_ctx) {
+             return AVERROR(ENOMEM);
+         }
+ 
+-        ret = av_aes_init(sc->cenc.aes_ctx, c->decryption_key, 16 * 8, 1);
++        ret = av_aes_init(sc->cenc.aes_ctx, decryption_key, 16 * 8, 1);
+         if (ret < 0) {
+             return ret;
+         }
+@@ -7478,7 +7539,7 @@ static int cenc_filter(MOVContext *mov, AVStream* st, MOVStreamContext *sc, AVPa
+             return AVERROR_INVALIDDATA;
+         }
+ 
+-        if (mov->decryption_key) {
++        if (mov->decryption_keys || mov->decryption_default_key) {
+             return cenc_decrypt(mov, sc, encrypted_sample, pkt->data, pkt->size);
+         } else {
+             size_t size;
+@@ -8627,12 +8688,6 @@ static int mov_read_header(AVFormatContext *s)
+     MOVAtom atom = { AV_RL32("root") };
+     int i;
+ 
+-    if (mov->decryption_key_len != 0 && mov->decryption_key_len != AES_CTR_KEY_SIZE) {
+-        av_log(s, AV_LOG_ERROR, "Invalid decryption key len %d expected %d\n",
+-            mov->decryption_key_len, AES_CTR_KEY_SIZE);
+-        return AVERROR(EINVAL);
+-    }
+-
+     mov->fc = s;
+     mov->trak_index = -1;
+     /* .mov and .mp4 aren't streamable anyway (only progressive download if moov is before mdat) */
+@@ -9331,7 +9386,8 @@ static const AVOption mov_options[] = {
+         "Fixed key used for handling Audible AAX files", OFFSET(audible_fixed_key),
+         AV_OPT_TYPE_BINARY, {.str="77214d4b196a87cd520045fd20a51d67"},
+         .flags = AV_OPT_FLAG_DECODING_PARAM },
+-    { "decryption_key", "The media decryption key (hex)", OFFSET(decryption_key), AV_OPT_TYPE_BINARY, .flags = AV_OPT_FLAG_DECODING_PARAM },
++    { "decryption_key", "The default media decryption key (hex)", OFFSET(decryption_default_key), AV_OPT_TYPE_BINARY, .flags = AV_OPT_FLAG_DECODING_PARAM },
++    { "decryption_keys", "The media decryption keys by KID (hex)", OFFSET(decryption_keys), AV_OPT_TYPE_DICT, .flags = AV_OPT_FLAG_DECODING_PARAM },
+     { "enable_drefs", "Enable external track support.", OFFSET(enable_drefs), AV_OPT_TYPE_BOOL,
+         {.i64 = 0}, 0, 1, FLAGS },
+     { "max_stts_delta", "treat offsets above this value as invalid", OFFSET(max_stts_delta), AV_OPT_TYPE_INT, {.i64 = UINT_MAX-48000*10 }, 0, UINT_MAX, .flags = AV_OPT_FLAG_DECODING_PARAM },
+diff --git a/tests/fate/mov.mak b/tests/fate/mov.mak
+index 6cb493ceab..c420d8ab10 100644
+--- a/tests/fate/mov.mak
++++ b/tests/fate/mov.mak
+@@ -8,6 +8,9 @@ FATE_MOV = fate-mov-3elist \
+            fate-mov-3elist-encrypted \
+            fate-mov-frag-encrypted \
+            fate-mov-tenc-only-encrypted \
++           fate-mov-3elist-encrypted-kid \
++           fate-mov-frag-encrypted-kid \
++           fate-mov-tenc-only-encrypted-kid \
+            fate-mov-invalid-elst-entry-count \
+            fate-mov-gpmf-remux \
+            fate-mov-440hz-10ms \
+@@ -57,6 +60,15 @@ fate-mov-frag-encrypted: CMD = framemd5 -decryption_key 123456789012345678901234
+ # Full-sample encryption and constant IV using only tenc atom (no senc/saio/saiz).
+ fate-mov-tenc-only-encrypted: CMD = framemd5 -decryption_key 12345678901234567890123456789012 -i $(TARGET_SAMPLES)/mov/mov-tenc-only-encrypted.mp4
+ 
++# Edit list with encryption, using the decryption_keys option.
++fate-mov-3elist-encrypted-kid: CMD = framemd5 -decryption_keys 12345678901234567890123456789012=12345678901234567890123456789012 -i $(TARGET_SAMPLES)/mov/mov-3elist-encrypted.mov
++
++# Fragmented encryption with senc boxes in movie fragments, using the decryption_keys option.
++fate-mov-frag-encrypted-kid: CMD = framemd5 -decryption_keys abba271e8bcf552bbd2e86a434a9a5d9=12345678901234567890123456789012 -i $(TARGET_SAMPLES)/mov/mov-frag-encrypted.mp4
++
++# Full-sample encryption and constant IV using only tenc atom (no senc/saio/saiz), using the decryption_keys option.
++fate-mov-tenc-only-encrypted-kid: CMD = framemd5 -decryption_keys abba271e8bcf552bbd2e86a434a9a5d9=12345678901234567890123456789012 -i $(TARGET_SAMPLES)/mov/mov-tenc-only-encrypted.mp4
++
+ # Makes sure that the CTTS is also modified when we fix avindex in mov.c while parsing edit lists.
+ fate-mov-elist-starts-ctts-2ndsample: CMD = framemd5 -i $(TARGET_SAMPLES)/mov/mov-elist-starts-ctts-2ndsample.mov
+ 
+diff --git a/tests/ref/fate/mov-3elist-encrypted-kid b/tests/ref/fate/mov-3elist-encrypted-kid
+new file mode 100644
+index 0000000000..daf4927e0f
+--- /dev/null
++++ b/tests/ref/fate/mov-3elist-encrypted-kid
+@@ -0,0 +1,57 @@
++#format: frame checksums
++#version: 2
++#hash: MD5
++#tb 0: 1/24
++#media_type 0: video
++#codec_id 0: rawvideo
++#dimensions 0: 640x480
++#sar 0: 0/1
++#stream#, dts,        pts, duration,     size, hash
++0,          0,          0,        1,   460800, 80fbbdec589e15e6c493b44d243f92a9
++0,          1,          1,        1,   460800, f4b23293bb2ecf69cc3570853d8c56a1
++0,          2,          2,        1,   460800, 0c03ce2c1c6ec405d7455465ecd559a3
++0,          3,          3,        1,   460800, 7921791695537fba2c3c123da4834cb9
++0,          4,          4,        1,   460800, 30c8e2903a561b84d4cbaf95c668d236
++0,          5,          5,        1,   460800, 7ff42e998217c17592ddf6b584f26cef
++0,          6,          6,        1,   460800, 5e402c48bf097db2d31b82bb4194a382
++0,          7,          7,        1,   460800, 824c49e92c8ae6d99a0207b514dd756c
++0,          8,          8,        1,   460800, 24f189216a1d9cf2313b2d6dbe3dbdd3
++0,          9,          9,        1,   460800, 519179a8e74275d26b183374637e003f
++0,         10,         10,        1,   460800, f18331ddcef0adf5b069bfa98baf8db4
++0,         11,         11,        1,   460800, 081f61688690d47dbdddd5384e5d5a70
++0,         12,         12,        1,   460800, 90dbf019b9035433371a8df41a9268b7
++0,         13,         13,        1,   460800, bb5adfb9c66732898b34186eca1667ba
++0,         14,         14,        1,   460800, cc08cfd64f37783ecddaf143f6ad78bc
++0,         15,         15,        1,   460800, b8ae21d024fe4df903d56f4521993c72
++0,         16,         16,        1,   460800, b45a99907f045dcadf0a2befc11555e3
++0,         17,         17,        1,   460800, 603ba935845e65ab6cccbbec88bbf60d
++0,         18,         18,        1,   460800, df80c8d3e6a77258a306903f17995a18
++0,         19,         19,        1,   460800, 4b7e90c0a5fd0e0cd958d47f0afac636
++0,         20,         20,        1,   460800, 9feb6e36182f1745be6387edea240eb6
++0,         21,         21,        1,   460800, 86e6de4bd0a5ff7558f4cf6c1ec3930d
++0,         22,         22,        1,   460800, 726b69df77edbe7b503d4698656d1320
++0,         23,         23,        1,   460800, d282fb7a953ac205b0a43d00c2d60a33
++0,         24,         24,        1,   460800, eece3daa70cc20208dd75d91ac84c8fd
++0,         25,         25,        1,   460800, c86d23e73bcce351fc315fb1f13348da
++0,         26,         26,        1,   460800, 93497b4f7c5ad9d61212239b7c9d2770
++0,         27,         27,        1,   460800, eb217d2c12de67903835a8c58f620488
++0,         28,         28,        1,   460800, d966480867bb54c8cd044f18388ed486
++0,         29,         29,        1,   460800, 3ea6207942b3181fdd8e8aa6cae1062a
++0,         30,         30,        1,   460800, 2620df54aca086ec0fb9527c6e6f5135
++0,         31,         31,        1,   460800, 43bb7320f0bb583188dc965ddbfade90
++0,         32,         32,        1,   460800, 0cddaa04645f804e02f65b0836412113
++0,         33,         33,        1,   460800, 83b2dc95807289d7f4a4632bf18c2e97
++0,         34,         34,        1,   460800, 98134d0e41e6dd12827049ccf33b4669
++0,         35,         35,        1,   460800, 56f55631731fa39c7acbab0afeb2eb1b
++0,         36,         36,        1,   460800, 379c1105be09d836a515dc909455ddf4
++0,         37,         37,        1,   460800, 1df87c47e9d98731faf1c3885b77e5da
++0,         38,         38,        1,   460800, 9a8734bcbfdb4d97e530683b8b556a26
++0,         39,         39,        1,   460800, c7a7990d0cddc5adfbe27da7a42e025e
++0,         40,         40,        1,   460800, 0c81e46011e03be410feaf056207fd55
++0,         41,         41,        1,   460800, ca76e4e63016ff29d8aeeb9cb053bb6c
++0,         42,         42,        1,   460800, cebfbe299c17c1f8fc1e6b189555c3c2
++0,         43,         43,        1,   460800, 4f002c5feca5e75f07089e0df47507dd
++0,         44,         44,        1,   460800, c5fd83fc4a745abee9b3d9a6eec9dd3e
++0,         45,         45,        1,   460800, 57d9bad9b45aa2746de5d8bdc2c24969
++0,         46,         46,        1,   460800, 9831673ad7dec167af4a959f64258949
++0,         47,         47,        1,   460800, 77a1cb208f70f51bcb01e28d8cba73b4
+diff --git a/tests/ref/fate/mov-frag-encrypted-kid b/tests/ref/fate/mov-frag-encrypted-kid
+new file mode 100644
+index 0000000000..e6c109b566
+--- /dev/null
++++ b/tests/ref/fate/mov-frag-encrypted-kid
+@@ -0,0 +1,57 @@
++#format: frame checksums
++#version: 2
++#hash: MD5
++#tb 0: 1/24
++#media_type 0: video
++#codec_id 0: rawvideo
++#dimensions 0: 120x52
++#sar 0: 544/545
++#stream#, dts,        pts, duration,     size, hash
++0,          0,          0,        1,     9360, 920bdc277a6a31c1daed9aca44b10caf
++0,          1,          1,        1,     9360, f1c0b61fef593de57cb97be7fa846569
++0,          2,          2,        1,     9360, 6ef32d9d4398355aebf6d3fb11d51d3f
++0,          3,          3,        1,     9360, d38fd3ef1e5a92fc109b8dd9eb6dadeb
++0,          4,          4,        1,     9360, 54cc0c8a25d2f14f32663837d5e646f1
++0,          5,          5,        1,     9360, b4b6829726dc3decb8b80ba0c35bcf30
++0,          6,          6,        1,     9360, fca3f941e60a2f0a4ce30d5e0efbec3c
++0,          7,          7,        1,     9360, cda6e26b6c1039ff3d229b262c9210c3
++0,          8,          8,        1,     9360, f0d69255e3a27a8b4ae8a4b7b210929d
++0,          9,          9,        1,     9360, 12cb23dd4e32af9c3b35f943714e3fdd
++0,         10,         10,        1,     9360, 082aaf3216124ddcecb422fe5c832e82
++0,         11,         11,        1,     9360, ff37bb8cd6bd0412a3b3cb45db54afc9
++0,         12,         12,        1,     9360, dfb9085441575732844b6c2f05d5f542
++0,         13,         13,        1,     9360, 0017100feaaa9fc7eacd2447d50d7542
++0,         14,         14,        1,     9360, 4e2f1b8c4e04c59934c2f58541e62613
++0,         15,         15,        1,     9360, 27a44dfea7cd2d30e488194c34ab473c
++0,         16,         16,        1,     9360, fc7b56bd95e990a33cf575d1ef820902
++0,         17,         17,        1,     9360, fa2d1609e69714dffc410e65f3c8b755
++0,         18,         18,        1,     9360, 705d7429f447cb13febe202d567795f2
++0,         19,         19,        1,     9360, 234802ce86e868faaf2cd40a286846ea
++0,         20,         20,        1,     9360, 2f0354b40d211d0a4ade4568bea4f85e
++0,         21,         21,        1,     9360, e96af3b6c0cc931463ca77d6be0f1148
++0,         22,         22,        1,     9360, 04a904d798361959971361401879c7e4
++0,         23,         23,        1,     9360, 2f119642340df6d25362b5590ded46b7
++0,         24,         24,        1,     9360, 5993fca2e60050706f857ac76e48f386
++0,         25,         25,        1,     9360, 2ff3b5775fed3d527bfbbeea786787fe
++0,         26,         26,        1,     9360, 42024dbe23d3fb5b0d8987ae1ce390a8
++0,         27,         27,        1,     9360, d804204f0bd9db5f6a758e2c934d9e38
++0,         28,         28,        1,     9360, e322712e6e34c58ec1a2ab5e2c1e3bfe
++0,         29,         29,        1,     9360, 3975bd1a5f6a6b6260276777f9de611e
++0,         30,         30,        1,     9360, 4388f0412efc6310706a7cdedc859ea9
++0,         31,         31,        1,     9360, b4b9a11b0b86635267345a569640e8d4
++0,         32,         32,        1,     9360, 31879c7b8d6b67a4209ffde786bb8cb4
++0,         33,         33,        1,     9360, 4b6dc02d7c889fe4abd4e013b25f585a
++0,         34,         34,        1,     9360, dc73aae82bd39a1220d1106c8d3e8252
++0,         35,         35,        1,     9360, 54c7dfbd49f312806f6c1a89f7c2c36f
++0,         36,         36,        1,     9360, 150abc64f8994d444a521ea90570443c
++0,         37,         37,        1,     9360, d277cdc7dcadbe0016f2e950459e7ebf
++0,         38,         38,        1,     9360, 2196bf338ead90ea54687b85c73c8229
++0,         39,         39,        1,     9360, 53ce5da5365abc0bd3217dd98e7c465d
++0,         40,         40,        1,     9360, 34ee9832aea55c0c4e6f4381c413c10e
++0,         41,         41,        1,     9360, 1769c7b5849e4681119067a06ac29a4f
++0,         42,         42,        1,     9360, 71f53df739ef283a5184c91ef4b158e8
++0,         43,         43,        1,     9360, d2d394739e9a59c06f0354c16843cb63
++0,         44,         44,        1,     9360, d8e458e92ae29344505a24a3059fc584
++0,         45,         45,        1,     9360, 0f1b11a09911851b798df2ef76253a7f
++0,         46,         46,        1,     9360, 5c4a9f22baecf4e749c0d5c65a4f1007
++0,         47,         47,        1,     9360, 3e2b7e7262fdca08d9d1ef6070125c4b
+diff --git a/tests/ref/fate/mov-tenc-only-encrypted-kid b/tests/ref/fate/mov-tenc-only-encrypted-kid
+new file mode 100644
+index 0000000000..1d57aa6a80
+--- /dev/null
++++ b/tests/ref/fate/mov-tenc-only-encrypted-kid
+@@ -0,0 +1,57 @@
++#format: frame checksums
++#version: 2
++#hash: MD5
++#tb 0: 1/24
++#media_type 0: video
++#codec_id 0: rawvideo
++#dimensions 0: 1024x436
++#sar 0: 1/1
++#stream#, dts,        pts, duration,     size, hash
++0,          0,          0,        1,   669696, f48f296a85eda5ba069dc851a3228bef
++0,          1,          1,        1,   669696, a50c5f69bfa3387d49b5bdf738e6529c
++0,          2,          2,        1,   669696, 05061299003760f6a4795b408f72aa31
++0,          3,          3,        1,   669696, 2572119f0b0cdd83f8a7e06252cecd3b
++0,          4,          4,        1,   669696, 29fe6a6bdb4a69018e318886a297f07e
++0,          5,          5,        1,   669696, e8233c7fbaecfbff965c7dfdd3982b1b
++0,          6,          6,        1,   669696, d9259df9880ff5d4a4b38282e67f407b
++0,          7,          7,        1,   669696, 3e8d795195038993503ea9ab6984c915
++0,          8,          8,        1,   669696, bc4e2d253b715a34f85aae1b080e3460
++0,          9,          9,        1,   669696, 09aba8b3a96f53f9268e7420a10bfab6
++0,         10,         10,        1,   669696, 179447977dd580da8b35fb5310a809ca
++0,         11,         11,        1,   669696, 7a0eea9d54577990345f5705ab9882be
++0,         12,         12,        1,   669696, 5bb96eb76f461825740e5938456df759
++0,         13,         13,        1,   669696, bd4ac4a760ead774b9422a27dc071964
++0,         14,         14,        1,   669696, 1cc05f760a9b751fc89e77f2bcc97259
++0,         15,         15,        1,   669696, 825d0dee6f0174ba7102892c7de30b4d
++0,         16,         16,        1,   669696, d26a2ef5267f6bb03c4e1d8514eee0df
++0,         17,         17,        1,   669696, c916ffdeadca76596a8f7fd47914b5ef
++0,         18,         18,        1,   669696, 6e085acfa7fee0658ea0ae6188274c17
++0,         19,         19,        1,   669696, 1e95fa5b3561283f05bf0bd44cb91721
++0,         20,         20,        1,   669696, 37e3d135aba9dfb8b87e441753115374
++0,         21,         21,        1,   669696, 9c398310e8564491de624393c16265ce
++0,         22,         22,        1,   669696, c87209e4d2617bc2ab40a75f455f09da
++0,         23,         23,        1,   669696, 2679c2f8d1d1af21982e245945c1ee60
++0,         24,         24,        1,   669696, 6151ab4781f31c5beb66b356ad547122
++0,         25,         25,        1,   669696, f7ef6293bfb3a6a329061cb6a5ed5a38
++0,         26,         26,        1,   669696, 2f6e666d14dfc407ca0c0f347b13eb08
++0,         27,         27,        1,   669696, 3454fa1730d79b1aa8dbbc865dc150f4
++0,         28,         28,        1,   669696, e93dc683e2453419a0419ab9af0f8f95
++0,         29,         29,        1,   669696, 031eb3154f7f83cf86d42bee66be9cf7
++0,         30,         30,        1,   669696, 1205c36723e88811206c68892d3aaed6
++0,         31,         31,        1,   669696, 7dd7a8a19dcd73b31ddc6a6d0c597a42
++0,         32,         32,        1,   669696, 7c91115368ea2531262a1197468bc3f4
++0,         33,         33,        1,   669696, 3cf6d9ba385e0fff76da33299ed5380c
++0,         34,         34,        1,   669696, 859fc8c3ef049e3c1175a85fb0a90a3d
++0,         35,         35,        1,   669696, 1d09ce6c7027103d99a4d5799f6e72ab
++0,         36,         36,        1,   669696, 3dcb8357408ac88abd734128d8f5dd6f
++0,         37,         37,        1,   669696, 4dafce137a0a5178f6efaec878e64d36
++0,         38,         38,        1,   669696, 44c478f29a1399ed03275a7357f57d48
++0,         39,         39,        1,   669696, 6e9edaac7414c0e14591ac3d4d0b1ac4
++0,         40,         40,        1,   669696, 522e4aaeea0825da27f631a9e690d654
++0,         41,         41,        1,   669696, 85f2502a718440834c40051d30f8a65e
++0,         42,         42,        1,   669696, ae8816f7bd4645ef1a17ee6d09b4c8d2
++0,         43,         43,        1,   669696, 914b006fa92f1eb3e590245749f6810d
++0,         44,         44,        1,   669696, 9406901542e94c429dff46108782ed69
++0,         45,         45,        1,   669696, 324c13641c39eef5c476023e358c0391
++0,         46,         46,        1,   669696, 4058e886e17c22e4eb9da1dd0d6ad891
++0,         47,         47,        1,   669696, 9edf9cd15eea985b42fd1f5035b1d693
+-- 
+2.45.2.windows.1
+

@@ -1,0 +1,117 @@
+From fff4f0aeb0f005d5a1de7874ad5ad892a3059d61 Mon Sep 17 00:00:00 2001
+From: skyjet18 <57456827+skyjet18@users.noreply.github.com>
+Date: Tue, 2 Apr 2024 11:25:36 +0200
+Subject: [PATCH 03/33] added support for parsing cenc key(s) from MPD playlist
+
+also added possiblity to set individual video and audio decryption key
+---
+ libavformat/dashdec.c | 50 +++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 48 insertions(+), 2 deletions(-)
+
+diff --git a/libavformat/dashdec.c b/libavformat/dashdec.c
+index 091deac854..84a1d140c3 100644
+--- a/libavformat/dashdec.c
++++ b/libavformat/dashdec.c
+@@ -117,6 +117,9 @@ struct representation {
+     uint32_t init_sec_buf_read_offset;
+     int64_t cur_timestamp;
+     int is_restart_needed;
++
++    char *cenc_decryption_key;
++    char *cenc_decryption_keys;
+ };
+ 
+ typedef struct DASHContext {
+@@ -154,6 +157,8 @@ typedef struct DASHContext {
+     int max_url_size;
+     char *cenc_decryption_key;
+     char *cenc_decryption_keys;
++    char *cenc_decryption_video_key;
++    char *cenc_decryption_audio_key;
+ 
+     /* Flags for init section*/
+     int is_init_section_common_video;
+@@ -365,6 +370,8 @@ static void free_representation(struct representation *pls)
+     av_freep(&pls->url_template);
+     av_freep(&pls->lang);
+     av_freep(&pls->id);
++    av_freep(&pls->cenc_decryption_key);
++    av_freep(&pls->cenc_decryption_keys);
+     av_freep(&pls);
+ }
+ 
+@@ -878,6 +885,7 @@ static int parse_manifest_representation(AVFormatContext *s, const char *url,
+             return AVERROR(ENOMEM);
+         }
+     }
++
+     rep->parent = s;
+     representation_segmenttemplate_node = find_child_node_by_name(representation_node, "SegmentTemplate");
+     representation_baseurl_node = find_child_node_by_name(representation_node, "BaseURL");
+@@ -891,6 +899,37 @@ static int parse_manifest_representation(AVFormatContext *s, const char *url,
+             goto enomem;
+     }
+ 
++    val = xmlGetProp(representation_node, "cenc_decryption_key");
++    if (val) {
++        rep->cenc_decryption_key = av_strdup(val);
++        av_log(s, AV_LOG_INFO, "Setting key %s for %s\n", rep->cenc_decryption_key, rep->id);
++        xmlFree(val);
++        if (!rep->cenc_decryption_key)
++            goto enomem;
++    }
++    else
++    {
++        if (type == AVMEDIA_TYPE_VIDEO && c->cenc_decryption_video_key != NULL)
++        {
++            rep->cenc_decryption_key = av_strdup(c->cenc_decryption_video_key);
++            av_log(s, AV_LOG_INFO, "Setting video key %s for %s\n", rep->cenc_decryption_key, rep->id);
++        }
++        else if (type == AVMEDIA_TYPE_AUDIO && c->cenc_decryption_audio_key != NULL)
++        {
++            rep->cenc_decryption_key = av_strdup(c->cenc_decryption_audio_key);
++            av_log(s, AV_LOG_INFO, "Setting audio key %s for %s\n", rep->cenc_decryption_key, rep->id);
++        }
++    }
++
++    val = xmlGetProp(representation_node, "cenc_decryption_keys");
++    if (val) {
++        rep->cenc_decryption_keys = av_strdup(val);
++        av_log(s, AV_LOG_INFO, "Setting keys %s for %s\n", rep->cenc_decryption_keys, rep->id);
++        xmlFree(val);
++        if (!rep->cenc_decryption_keys)
++            goto enomem;
++    }
++
+     baseurl_nodes[0] = mpd_baseurl_node;
+     baseurl_nodes[1] = period_baseurl_node;
+     baseurl_nodes[2] = adaptionset_baseurl_node;
+@@ -1902,9 +1941,14 @@ static int reopen_demux_for_component(AVFormatContext *s, struct representation
+     pls->ctx->pb = &pls->pb.pub;
+     pls->ctx->io_open  = nested_io_open;
+ 
+-    if (c->cenc_decryption_key)
++    if (pls->cenc_decryption_key)
++        av_dict_set(&in_fmt_opts, "decryption_key", pls->cenc_decryption_key, 0);
++    else if (c->cenc_decryption_key)
+         av_dict_set(&in_fmt_opts, "decryption_key", c->cenc_decryption_key, 0);
+-    if (c->cenc_decryption_keys)
++
++    if (pls->cenc_decryption_keys)
++        av_dict_set(&in_fmt_opts, "decryption_keys", pls->cenc_decryption_keys, 0);
++    else if (c->cenc_decryption_keys)
+         av_dict_set(&in_fmt_opts, "decryption_keys", c->cenc_decryption_keys, 0);
+ 
+     // provide additional information from mpd if available
+@@ -2349,6 +2393,8 @@ static const AVOption dash_options[] = {
+         INT_MIN, INT_MAX, FLAGS},
+     { "cenc_decryption_key", "Media default decryption key (hex)", OFFSET(cenc_decryption_key), AV_OPT_TYPE_STRING, {.str = NULL}, INT_MIN, INT_MAX, .flags = FLAGS },
+     { "cenc_decryption_keys", "Media decryption keys by KID (hex)", OFFSET(cenc_decryption_keys), AV_OPT_TYPE_STRING, {.str = NULL}, INT_MIN, INT_MAX, .flags = FLAGS },
++    { "cenc_decryption_video_key", "Media decryption video key scheme_cenc (hex)", OFFSET(cenc_decryption_video_key), AV_OPT_TYPE_STRING, {.str = NULL}, INT_MIN, INT_MAX, .flags = FLAGS },
++    { "cenc_decryption_audio_key", "Media decryption audio key scheme_cenc (hex)", OFFSET(cenc_decryption_audio_key), AV_OPT_TYPE_STRING, {.str = NULL}, INT_MIN, INT_MAX, .flags = FLAGS },
+     {NULL}
+ };
+ 
+-- 
+2.45.2.windows.1
+

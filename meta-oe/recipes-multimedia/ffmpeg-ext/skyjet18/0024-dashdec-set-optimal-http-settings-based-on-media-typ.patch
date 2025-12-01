@@ -1,0 +1,40 @@
+From 1f89c47a6c07c33516bbad01c54ee6e038b433ba Mon Sep 17 00:00:00 2001
+From: skyjet18 <57456827+skyjet18@users.noreply.github.com>
+Date: Sat, 15 Feb 2025 19:00:08 +0100
+Subject: [PATCH 24/33] dashdec: set optimal http settings based on media type
+
+---
+ libavformat/dashdec.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
+
+diff --git a/libavformat/dashdec.c b/libavformat/dashdec.c
+index 28eb383c0b..662ef95724 100644
+--- a/libavformat/dashdec.c
++++ b/libavformat/dashdec.c
+@@ -1821,13 +1821,22 @@ static int open_input(DASHContext *c, struct representation *pls, struct fragmen
+         av_dict_set_int(&opts, "end_offset", seg->url_offset + seg->size, 0);
+     }
+ 
+-    if(seg->seekable && pls->type != AVMEDIA_TYPE_SUBTITLE)
++    if( pls->type == AVMEDIA_TYPE_SUBTITLE )
+     {
++        /* disable seeking for subtitles - subtitles are small and many servers doesn't support byterange for subtitles */
++        av_dict_set(&opts, "seekable", "0", 0);
++    }
++    else if(seg->seekable)
++    {
++        /* single big segment - allow seeking and reconnect if needed */
+         av_dict_set(&opts, "seekable", "1", 0);
++        av_dict_set(&opts, "reconnect", "1", 0);
+     }
+     else
+     {
++        /* many smaller segments - disable seeking and allow keep-alive connection */
+         av_dict_set(&opts, "seekable", "0", 0);
++        av_dict_set(&opts, "multiple_requests", "1", 0);
+     }
+ 
+     ff_make_absolute_url(url, c->max_url_size, c->base_url, seg->url);
+-- 
+2.45.2.windows.1
+

@@ -1,0 +1,26 @@
+From 1b4f04975f6812bdd019ea17a5fe21ee6e9a3886 Mon Sep 17 00:00:00 2001
+From: skyjet18 <57456827+skyjet18@users.noreply.github.com>
+Date: Fri, 17 May 2024 21:02:56 +0200
+Subject: [PATCH 12/33] fixed segfault in hls subtitle handling
+
+---
+ libavformat/hls.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/libavformat/hls.c b/libavformat/hls.c
+index ac1972aa27..7ba8dbd4a1 100644
+--- a/libavformat/hls.c
++++ b/libavformat/hls.c
+@@ -1766,7 +1766,8 @@ restart:
+     if (ret < 0)
+         return ret;
+ 
+-    if (!v->input && !v->ctx) {
++//    if (!v->input && !v->ctx) {
++    if (!v->ctx) {
+         ret = init_subtitle_context(v);
+         if (ret < 0)
+             return ret;
+-- 
+2.45.2.windows.1
+

@@ -1,0 +1,25 @@
+From a49bcd9d46039c82568dac5489572133d7cde3e9 Mon Sep 17 00:00:00 2001
+From: skyjet18 <57456827+skyjet18@users.noreply.github.com>
+Date: Tue, 21 Oct 2025 18:52:19 +0200
+Subject: [PATCH 33/33] dashdec: fixed playback of some live streams
+
+---
+ libavformat/dashdec.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/libavformat/dashdec.c b/libavformat/dashdec.c
+index 97a6f31cf9..3dedaf7b68 100644
+--- a/libavformat/dashdec.c
++++ b/libavformat/dashdec.c
+@@ -2034,7 +2034,7 @@ static int reopen_demux_for_component(AVFormatContext *s, struct representation
+     ffio_init_context(&pls->pb, avio_ctx_buffer, INITIAL_BUFFER_SIZE, 0,
+                       pls, read_data, NULL, c->is_live && !c->is_startover ? NULL : seek_data);
+ 
+-    if(pls->type == AVMEDIA_TYPE_SUBTITLE || pls->n_timelines || pls->n_fragments > 1)
++    if(pls->type == AVMEDIA_TYPE_SUBTITLE || pls->n_timelines || pls->n_fragments > 1 || c->is_live)
+     {
+         pls->pb.pub.seekable = 0;
+     }
+-- 
+2.45.2.windows.1
+

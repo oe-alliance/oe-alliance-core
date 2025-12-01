@@ -1,0 +1,25 @@
+From 6b2070271ff771ebdd7749030ce1c1038abf3e6a Mon Sep 17 00:00:00 2001
+From: skyjet18 <57456827+skyjet18@users.noreply.github.com>
+Date: Tue, 2 Apr 2024 11:25:45 +0200
+Subject: [PATCH 05/33] changed default user agent
+
+---
+ libavformat/http.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/libavformat/http.c b/libavformat/http.c
+index c0fe7c36d9..df8f72b66e 100644
+--- a/libavformat/http.c
++++ b/libavformat/http.c
+@@ -142,7 +142,7 @@ typedef struct HTTPContext {
+ #define OFFSET(x) offsetof(HTTPContext, x)
+ #define D AV_OPT_FLAG_DECODING_PARAM
+ #define E AV_OPT_FLAG_ENCODING_PARAM
+-#define DEFAULT_USER_AGENT "Lavf/" AV_STRINGIFY(LIBAVFORMAT_VERSION)
++#define DEFAULT_USER_AGENT "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36"
+ 
+ static const AVOption options[] = {
+     { "seekable", "control seekability of connection", OFFSET(seekable), AV_OPT_TYPE_BOOL, { .i64 = -1 }, -1, 1, D },
+-- 
+2.45.2.windows.1
+

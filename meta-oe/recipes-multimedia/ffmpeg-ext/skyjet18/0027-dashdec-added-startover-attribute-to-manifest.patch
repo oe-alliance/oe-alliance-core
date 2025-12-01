@@ -1,0 +1,90 @@
+From e751ab546fcdbb4f662f8da76c618fe6ed161c62 Mon Sep 17 00:00:00 2001
+From: skyjet18 <57456827+skyjet18@users.noreply.github.com>
+Date: Sun, 16 Feb 2025 21:17:11 +0100
+Subject: [PATCH 27/33] dashdec: added startover attribute to manifest
+
+Startover attribute determines how live stream is started. When is set to 1, then stream starts from beginning of timeshift buffer and seeking within timeshift buffer is possible. When this mode is not set, then normal live mode is used without seeking.
+---
+ libavformat/dashdec.c | 22 ++++++++++++++++------
+ 1 file changed, 16 insertions(+), 6 deletions(-)
+
+diff --git a/libavformat/dashdec.c b/libavformat/dashdec.c
+index d76e1ef4f8..ff2a4ff41f 100644
+--- a/libavformat/dashdec.c
++++ b/libavformat/dashdec.c
+@@ -154,6 +154,7 @@ typedef struct DASHContext {
+     char *adaptionset_lang;
+ 
+     int is_live;
++    int is_startover;
+     AVIOInterruptCB *interrupt_callback;
+     char *allowed_extensions;
+     AVDictionary *avio_opts;
+@@ -1347,6 +1348,9 @@ static int parse_manifest(AVFormatContext *s, const char *url, AVIOContext *in)
+             } else if (!av_strcasecmp(attr->name, "mediaPresentationDuration")) {
+                 c->media_presentation_duration = get_duration_insec(s, val);
+                 av_log(s, AV_LOG_TRACE, "c->media_presentation_duration = [%"PRId64"]\n", c->media_presentation_duration);
++            } else if (!av_strcasecmp(attr->name, "startover")) {
++                c->is_startover = (av_strcasecmp(val, "1") == 0);
++                av_log(s, AV_LOG_TRACE, "c->is_startover = [%d]\n", c->is_startover);
+             }
+             attr = attr->next;
+             xmlFree(val);
+@@ -1427,7 +1431,7 @@ static int64_t calc_cur_seg_no(AVFormatContext *s, struct representation *pls)
+     int64_t num = 0;
+     int64_t start_time_offset = 0;
+ 
+-    if (c->is_live) {
++    if (c->is_live && !c->is_startover) {
+         if (pls->n_fragments) {
+             av_log(s, AV_LOG_TRACE, "in n_fragments mode\n");
+             num = pls->first_seq_no;
+@@ -1720,7 +1724,10 @@ try_again:
+             return seg;
+         } else if (c->is_live) {
+             refresh_manifest(pls->parent);
+-            pls->parent->duration = (int64_t) c->time_shift_buffer_depth * AV_TIME_BASE;
++            if(c->is_startover)
++            {
++                pls->parent->duration = (int64_t) c->time_shift_buffer_depth * AV_TIME_BASE;
++            }
+         } else {
+             break;
+         }
+@@ -1731,7 +1738,10 @@ try_again:
+ 
+         if (pls->timelines || pls->fragments) {
+             refresh_manifest(pls->parent);
+-            pls->parent->duration = (int64_t) c->time_shift_buffer_depth * AV_TIME_BASE;
++            if(c->is_startover)
++            {
++                pls->parent->duration = (int64_t) c->time_shift_buffer_depth * AV_TIME_BASE;
++            }
+         }
+         if (pls->cur_seq_no < min_seq_no) {
+             av_log(pls->parent, AV_LOG_VERBOSE, "old fragment: cur[%"PRId64"] min[%"PRId64"] max[%"PRId64"]\n", (int64_t)pls->cur_seq_no, min_seq_no, max_seq_no);
+@@ -2020,7 +2030,7 @@ static int reopen_demux_for_component(AVFormatContext *s, struct representation
+         goto fail;
+     }
+     ffio_init_context(&pls->pb, avio_ctx_buffer, INITIAL_BUFFER_SIZE, 0,
+-                      pls, read_data, NULL, seek_data);
++                      pls, read_data, NULL, c->is_live && !c->is_startover ? NULL : seek_data);
+ 
+     if(pls->type == AVMEDIA_TYPE_SUBTITLE || pls->n_timelines || pls->n_fragments > 1)
+     {
+@@ -2471,10 +2481,10 @@ static int dash_read_seek(AVFormatContext *s, int stream_index, int64_t timestam
+                                            s->streams[stream_index]->time_base.den,
+                                            flags & AVSEEK_FLAG_BACKWARD ?
+                                            AV_ROUND_DOWN : AV_ROUND_UP);
+-    if ((flags & AVSEEK_FLAG_BYTE) || c->is_live)
++    if ((flags & AVSEEK_FLAG_BYTE))
+         return AVERROR(ENOSYS);
+ 
+-    if (c->is_live && c->time_shift_buffer_depth <=0)
++    if (c->is_live && (!c->is_startover || c->time_shift_buffer_depth <=0) )
+     {
+         return AVERROR(ENOSYS);
+     }
+-- 
+2.45.2.windows.1
+

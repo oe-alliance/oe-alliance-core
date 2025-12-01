@@ -1,0 +1,43 @@
+From 5d4fd527d313a229a475758bea6cf4b8cd11abd0 Mon Sep 17 00:00:00 2001
+From: skyjet18 <57456827+skyjet18@users.noreply.github.com>
+Date: Sun, 16 Feb 2025 22:28:57 +0100
+Subject: [PATCH 28/33] dashdec: check borders when seeking in live mode
+
+---
+ libavformat/dashdec.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
+
+diff --git a/libavformat/dashdec.c b/libavformat/dashdec.c
+index ff2a4ff41f..cc2fe2b0db 100644
+--- a/libavformat/dashdec.c
++++ b/libavformat/dashdec.c
+@@ -2409,6 +2409,7 @@ static int dash_close(AVFormatContext *s)
+ 
+ static int dash_seek(AVFormatContext *s, struct representation *pls, int64_t seek_pos_msec, int flags, int dry_run)
+ {
++    DASHContext *c = s->priv_data;
+     int ret = 0;
+     int i = 0;
+     int j = 0;
+@@ -2434,6 +2435,18 @@ static int dash_seek(AVFormatContext *s, struct representation *pls, int64_t see
+         int64_t num = pls->first_seq_no;
+         seek_pos_msec += (pls->first_pts / pls->fragment_timescale) * 1000;
+ 
++        if(c->is_live)
++        {
++            /* don't allow to jump after last available segment */
++            int64_t seek_limit = (get_segment_start_time_based_on_timeline(pls, 0xFFFFFFFF) / pls->fragment_timescale) - (2 * c->min_buffer_time);
++            seek_limit *= 1000;
++
++            if( seek_limit < seek_pos_msec )
++            {
++                seek_pos_msec = seek_limit;
++            }
++        }
++
+         av_log(pls->parent, AV_LOG_VERBOSE, "dash_seek with SegmentTimeline start n_timelines[%d] "
+                "last_seq_no[%"PRId64"].\n",
+                (int)pls->n_timelines, (int64_t)pls->last_seq_no);
+-- 
+2.45.2.windows.1
+

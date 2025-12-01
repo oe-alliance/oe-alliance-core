@@ -1,0 +1,47 @@
+From 996ced1b377674c31b1fdf6f6101752d5cd3e21c Mon Sep 17 00:00:00 2001
+From: skyjet18 <57456827+skyjet18@users.noreply.github.com>
+Date: Thu, 23 Jan 2025 08:54:18 +0100
+Subject: [PATCH 20/33] subtitles: fixed subtitle search after seek
+
+---
+ libavformat/subtitles.c | 19 +++++++++++++++++--
+ 1 file changed, 17 insertions(+), 2 deletions(-)
+
+diff --git a/libavformat/subtitles.c b/libavformat/subtitles.c
+index 3413763c7b..1f65d59cdc 100644
+--- a/libavformat/subtitles.c
++++ b/libavformat/subtitles.c
+@@ -273,13 +273,28 @@ int ff_subtitles_queue_seek(FFDemuxSubtitlesQueue *q, AVFormatContext *s, int st
+ 
+         if (idx < 0)
+             return idx;
+-        for (i = idx; i < q->nb_subs && q->subs[i]->pts < min_ts; i++)
++        for (i = idx; i < q->nb_subs; i++)
++        {
+             if (stream_index == -1 || q->subs[i]->stream_index == stream_index)
+                 idx = i;
+-        for (i = idx; i > 0 && q->subs[i]->pts > max_ts; i--)
++
++            if(q->subs[i]->pts >= min_ts)
++            {
++                break;
++            }
++        }
++
++        for (i = idx; i > 0; i--)
++        {
+             if (stream_index == -1 || q->subs[i]->stream_index == stream_index)
+                 idx = i;
+ 
++            if(q->subs[i]->pts <= max_ts)
++            {
++                break;
++            }
++        }
++
+         ts_selected = q->subs[idx]->pts;
+         if (ts_selected < min_ts || ts_selected > max_ts)
+             return AVERROR(ERANGE);
+-- 
+2.45.2.windows.1
+

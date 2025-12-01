@@ -1,0 +1,49 @@
+From 64400d28c0c0ef7b485dc746ed3a32104b7f200b Mon Sep 17 00:00:00 2001
+From: skyjet18 <57456827+skyjet18@users.noreply.github.com>
+Date: Fri, 31 May 2024 20:10:58 +0200
+Subject: [PATCH 13/33] avformat/dashdec don't reload manifest often then
+ needed
+
+---
+ libavformat/dashdec.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/libavformat/dashdec.c b/libavformat/dashdec.c
+index 84a1d140c3..4e87d92f2b 100644
+--- a/libavformat/dashdec.c
++++ b/libavformat/dashdec.c
+@@ -165,6 +165,7 @@ typedef struct DASHContext {
+     int is_init_section_common_audio;
+     int is_init_section_common_subtitle;
+ 
++    uint64_t playlist_load_time;
+ } DASHContext;
+ 
+ static int ishttp(char *url)
+@@ -1281,6 +1282,7 @@ static int parse_manifest(AVFormatContext *s, const char *url, AVIOContext *in)
+         if (ret == 0)
+             ret = AVERROR_INVALIDDATA;
+     } else {
++        c->playlist_load_time = get_current_time_in_sec();
+         LIBXML_TEST_VERSION
+ 
+         doc = xmlReadMemory(buf.str, buf.len, c->base_url, NULL, 0);
+@@ -1535,6 +1537,15 @@ static int refresh_manifest(AVFormatContext *s)
+     struct representation **subtitles = c->subtitles;
+     char *base_url = c->base_url;
+ 
++    uint64_t cur_time = get_current_time_in_sec();
++//    uint64_t publish_time = c->publish_time > 0 ? c->publish_time : c->playlist_load_time;
++    uint64_t publish_time = c->playlist_load_time;
++
++    if ( publish_time > 0 && (publish_time + c->minimum_update_period) >= cur_time) {
++        av_log(s, AV_LOG_TRACE, "Manifest refresh not needed - current one is still %llus valid\n", (publish_time + c->minimum_update_period) - cur_time);
++        return 0;
++    }
++
+     c->base_url = NULL;
+     c->n_videos = 0;
+     c->videos = NULL;
+-- 
+2.45.2.windows.1
+

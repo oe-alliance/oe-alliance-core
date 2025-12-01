@@ -1,0 +1,32 @@
+From f25a1ecc7e45adcb4bb365d4342e54373eb2f926 Mon Sep 17 00:00:00 2001
+From: skyjet18 <57456827+skyjet18@users.noreply.github.com>
+Date: Sun, 16 Feb 2025 21:15:09 +0100
+Subject: [PATCH 26/33] dashdec: fix integer overflow by seeking
+
+---
+ libavformat/dashdec.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/libavformat/dashdec.c b/libavformat/dashdec.c
+index 3dc35fbfe6..d76e1ef4f8 100644
+--- a/libavformat/dashdec.c
++++ b/libavformat/dashdec.c
+@@ -2432,13 +2432,13 @@ static int dash_seek(AVFormatContext *s, struct representation *pls, int64_t see
+                 duration = pls->timelines[i]->starttime;
+             }
+             duration += pls->timelines[i]->duration;
+-            if (seek_pos_msec < ((duration * 1000) /  pls->fragment_timescale)) {
++            if (seek_pos_msec < ((duration / pls->fragment_timescale) * 1000) ) {
+                 goto set_seq_num;
+             }
+             for (j = 0; j < pls->timelines[i]->repeat; j++) {
+                 duration += pls->timelines[i]->duration;
+                 num++;
+-                if (seek_pos_msec < ((duration * 1000) /  pls->fragment_timescale)) {
++                if (seek_pos_msec < ((duration / pls->fragment_timescale) * 1000) ) {
+                     goto set_seq_num;
+                 }
+             }
+-- 
+2.45.2.windows.1
+

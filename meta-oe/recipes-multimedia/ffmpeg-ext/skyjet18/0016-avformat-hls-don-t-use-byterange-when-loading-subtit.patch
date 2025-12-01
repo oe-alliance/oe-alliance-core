@@ -1,0 +1,40 @@
+From eda1143e3cfe119bf14b3298e9ecdfa5456b27bc Mon Sep 17 00:00:00 2001
+From: skyjet18 <57456827+skyjet18@users.noreply.github.com>
+Date: Thu, 6 Jun 2024 14:13:47 +0200
+Subject: [PATCH 16/33] avformat/hls: don't use byterange when loading
+ subtitles or playlist
+
+Some servers don't like requests with byterange and will respond with HTTP 416, so disable byterange requests for playlists and for subtitles
+---
+ libavformat/hls.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/libavformat/hls.c b/libavformat/hls.c
+index 7ba8dbd4a1..b1349a7de4 100644
+--- a/libavformat/hls.c
++++ b/libavformat/hls.c
+@@ -774,6 +774,9 @@ static int parse_playlist(HLSContext *c, const char *url,
+         if (c->http_persistent)
+             av_dict_set(&opts, "multiple_requests", "1", 0);
+ 
++        // don't use byterange when loading playlist - some servers don't like that and return HTTP 416
++        av_dict_set(&opts, "seekable", "0", 0);
++
+         ret = c->ctx->io_open(c->ctx, &in, url, AVIO_FLAG_READ, &opts);
+         av_dict_free(&opts);
+         if (ret < 0)
+@@ -1295,6 +1298,11 @@ static int open_input(HLSContext *c, struct playlist *pls, struct segment *seg,
+         av_dict_set_int(&opts, "end_offset", seg->url_offset + seg->size, 0);
+     }
+ 
++    if (pls->is_subtitle) {
++        // don't try to load subtitles using byterange - some servers will respond with HTTP 416
++        av_dict_set(&opts, "seekable", "0", 0);
++    }
++
+     av_log(pls->parent, AV_LOG_VERBOSE, "HLS request for url '%s', offset %"PRId64", playlist %d\n",
+            seg->url, seg->url_offset, pls->index);
+ 
+-- 
+2.45.2.windows.1
+

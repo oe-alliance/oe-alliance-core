@@ -1,0 +1,267 @@
+From d14a625f71e671e1940ded429941645198275d5f Mon Sep 17 00:00:00 2001
+From: atvcaptain <openatv@gmail.com>
+Date: Sun, 30 Nov 2025 09:10:27 +0100
+Subject: [PATCH] decryption key extention
+
+---
+ libavcodec/mf_utils.h     |  1 +
+ libavformat/dashdec.c     | 47 ++++++++++++++++++++++++++++++++++++---
+ libavformat/internal.h    |  1 +
+ libavformat/isom.h        |  4 ++++
+ libavformat/mov.c         | 46 +++++++++++++++++++++++++++++++++++++-
+ libavformat/tls_openssl.c |  2 ++
+ 6 files changed, 97 insertions(+), 4 deletions(-)
+
+diff --git a/libavcodec/mf_utils.h b/libavcodec/mf_utils.h
+index aebfb9ad21..3cbfba0719 100644
+--- a/libavcodec/mf_utils.h
++++ b/libavcodec/mf_utils.h
+@@ -29,6 +29,7 @@
+ // mf*.h headers below indirectly include strmif.h.)
+ #include <icodecapi.h>
+ #else
++#include <wchar.h>
+ #define NO_DSHOW_STRSAFE
+ #include <dshow.h>
+ // Older versions of mingw-w64 need codecapi.h explicitly included, while newer
+diff --git a/libavformat/dashdec.c b/libavformat/dashdec.c
+index 3dedaf7b68..dcfca5cc94 100644
+--- a/libavformat/dashdec.c
++++ b/libavformat/dashdec.c
+@@ -163,6 +163,10 @@ typedef struct DASHContext {
+     char *cenc_decryption_keys;
+     char *cenc_decryption_video_key;
+     char *cenc_decryption_audio_key;
++    int audioRepIdx;
++    int videoRepIdx;
++    int audio_rep_index;
++    int video_rep_index;
+ 
+     /* Flags for init section*/
+     int is_init_section_common_video;
+@@ -390,6 +394,7 @@ static void free_video_list(DASHContext *c)
+     }
+     av_freep(&c->videos);
+     c->n_videos = 0;
++    c->videoRepIdx = 0;
+ }
+ 
+ static void free_audio_list(DASHContext *c)
+@@ -401,6 +406,7 @@ static void free_audio_list(DASHContext *c)
+     }
+     av_freep(&c->audios);
+     c->n_audios = 0;
++    c->audioRepIdx = 0;
+ }
+ 
+ static void free_subtitle_list(DASHContext *c)
+@@ -1127,12 +1133,37 @@ static int parse_manifest_representation(AVFormatContext *s, const char *url,
+ 
+     switch (type) {
+     case AVMEDIA_TYPE_VIDEO:
+-        ret = av_dynarray_add_nofree(&c->videos, &c->n_videos, rep);
++        if((c->video_rep_index < 0) || (c->videoRepIdx == c->video_rep_index))
++        {
++          ret = av_dynarray_add_nofree(&c->videos, &c->n_videos, rep);
++          c->videoRepIdx++;   
++        }
++        else 
++        {
++          c->videoRepIdx++;  
++          ret = 0;  
++          goto free;
++        }
+         break;
+     case AVMEDIA_TYPE_AUDIO:
+-        ret = av_dynarray_add_nofree(&c->audios, &c->n_audios, rep);
++        if((c->audio_rep_index < 0) || (c->audioRepIdx == c->audio_rep_index))
++        {
++          ret = av_dynarray_add_nofree(&c->audios, &c->n_audios, rep);
++          c->audioRepIdx++;   
++        }
++        else 
++        {
++          c->audioRepIdx++;  
++          ret = 0;  
++          goto free;
++        }
+         break;
+     case AVMEDIA_TYPE_SUBTITLE:
++        if((c->video_rep_index >= 0) || (c->audio_rep_index >= 0)) // skeep subtitle
++        {  
++          ret = 0;  
++          goto free;
++        }
+         ret = av_dynarray_add_nofree(&c->subtitles, &c->n_subtitles, rep);
+         break;
+     }
+@@ -1573,6 +1604,8 @@ static int refresh_manifest(AVFormatContext *s)
+     c->audios = NULL;
+     c->n_subtitles = 0;
+     c->subtitles = NULL;
++    c->audioRepIdx = 0;
++    c->videoRepIdx = 0;
+     ret = parse_manifest(s, s->url, NULL);
+     if (ret)
+         goto finish;
+@@ -2065,7 +2098,11 @@ static int reopen_demux_for_component(AVFormatContext *s, struct representation
+         av_dict_set(&in_fmt_opts, "decryption_key", pls->cenc_decryption_key, 0);
+     else if (c->cenc_decryption_key)
+         av_dict_set(&in_fmt_opts, "decryption_key", c->cenc_decryption_key, 0);
+-
++    if (c->cenc_decryption_video_key)
++        av_dict_set(&in_fmt_opts, "decryption_video_key", c->cenc_decryption_video_key, 0);
++    if (c->cenc_decryption_audio_key)
++        av_dict_set(&in_fmt_opts, "decryption_audio_key", c->cenc_decryption_audio_key, 0); 
++ 
+     if (pls->cenc_decryption_keys)
+         av_dict_set(&in_fmt_opts, "decryption_keys", pls->cenc_decryption_keys, 0);
+     else if (c->cenc_decryption_keys)
+@@ -2547,6 +2584,10 @@ static const AVOption dash_options[] = {
+         OFFSET(allowed_extensions), AV_OPT_TYPE_STRING,
+         {.str = "aac,m4a,m4s,m4v,mov,mp4,webm,ts"},
+         INT_MIN, INT_MAX, FLAGS},
++    {"audio_rep_index", "audio representation index to be used",
++        OFFSET(audio_rep_index), AV_OPT_TYPE_INT, {.i64 = -1}, INT_MIN, INT_MAX, FLAGS},
++    {"video_rep_index", "video representation index to be used",
++        OFFSET(video_rep_index), AV_OPT_TYPE_INT, {.i64 = -1}, INT_MIN, INT_MAX, FLAGS}, 
+     { "cenc_decryption_key", "Media default decryption key (hex)", OFFSET(cenc_decryption_key), AV_OPT_TYPE_STRING, {.str = NULL}, INT_MIN, INT_MAX, .flags = FLAGS },
+     { "cenc_decryption_keys", "Media decryption keys by KID (hex)", OFFSET(cenc_decryption_keys), AV_OPT_TYPE_STRING, {.str = NULL}, INT_MIN, INT_MAX, .flags = FLAGS },
+     { "cenc_decryption_video_key", "Media decryption video key scheme_cenc (hex)", OFFSET(cenc_decryption_video_key), AV_OPT_TYPE_STRING, {.str = NULL}, INT_MIN, INT_MAX, .flags = FLAGS },
+diff --git a/libavformat/internal.h b/libavformat/internal.h
+index 7702986c9c..684a67f610 100644
+--- a/libavformat/internal.h
++++ b/libavformat/internal.h
+@@ -32,6 +32,7 @@
+ /** size of probe buffer, for guessing file type from file contents */
+ #define PROBE_BUF_MIN 2048
+ #define PROBE_BUF_MAX (1 << 20)
++#define UUID_BUF_SIZE 36
+ 
+ #ifdef DEBUG
+ #    define hex_dump_debug(class, buf, size) av_hex_dump_log(class, AV_LOG_DEBUG, buf, size)
+diff --git a/libavformat/isom.h b/libavformat/isom.h
+index 83bacb96a1..55029f9f3f 100644
+--- a/libavformat/isom.h
++++ b/libavformat/isom.h
+@@ -314,6 +314,10 @@ typedef struct MOVContext {
+     struct AVAES *aes_decrypt;
+     uint8_t *decryption_default_key;
+     int decryption_default_key_len;
++    uint8_t *decryption_video_key;
++    int decryption_video_key_len;
++    uint8_t *decryption_audio_key;
++    int decryption_audio_key_len;
+     int enable_drefs;
+     int32_t movie_display_matrix[3][3]; ///< display matrix from mvhd
+     int have_read_mfra_size;
+diff --git a/libavformat/mov.c b/libavformat/mov.c
+index 43cbc22f82..4decbe987e 100644
+--- a/libavformat/mov.c
++++ b/libavformat/mov.c
+@@ -7193,6 +7193,7 @@ static int cenc_scheme_decrypt(MOVContext *c, MOVStreamContext *sc, AVEncryption
+     int i, ret;
+     int bytes_of_protected_data;
+     uint8_t decryption_key[AES_CTR_KEY_SIZE];
++	AVStream *st = NULL;
+ 
+     if (!sc->cenc.aes_ctr) {
+         ret = get_key_from_kid(decryption_key, sizeof(decryption_key), c, sample);
+@@ -7200,6 +7201,34 @@ static int cenc_scheme_decrypt(MOVContext *c, MOVStreamContext *sc, AVEncryption
+             return ret;
+         }
+ 
++       if (sc->ffindex >= 0 && sc->ffindex < c->fc->nb_streams)
++            st = c->fc->streams[sc->ffindex];
++
++        if (st && st->codecpar) {
++            if (st->codecpar->codec_type == AVMEDIA_TYPE_VIDEO &&
++                c->decryption_video_key) {
++
++                if (c->decryption_video_key_len != AES_CTR_KEY_SIZE) {
++                    av_log(c->fc, AV_LOG_ERROR,
++                           "invalid video decryption key length: got %d, expected %d\n",
++                           c->decryption_video_key_len, AES_CTR_KEY_SIZE);
++                    return AVERROR_INVALIDDATA;
++                }
++                memcpy(decryption_key, c->decryption_video_key, AES_CTR_KEY_SIZE);
++
++            } else if (st->codecpar->codec_type == AVMEDIA_TYPE_AUDIO &&
++                       c->decryption_audio_key) {
++
++                if (c->decryption_audio_key_len != AES_CTR_KEY_SIZE) {
++                    av_log(c->fc, AV_LOG_ERROR,
++                           "invalid audio decryption key length: got %d, expected %d\n",
++                           c->decryption_audio_key_len, AES_CTR_KEY_SIZE);
++                    return AVERROR_INVALIDDATA;
++                }
++                memcpy(decryption_key, c->decryption_audio_key, AES_CTR_KEY_SIZE);
++            }
++        }
++
+         /* initialize the cipher */
+         sc->cenc.aes_ctr = av_aes_ctr_alloc();
+         if (!sc->cenc.aes_ctr) {
+@@ -7211,6 +7240,7 @@ static int cenc_scheme_decrypt(MOVContext *c, MOVStreamContext *sc, AVEncryption
+             return ret;
+         }
+     }
++    
+ 
+     av_aes_ctr_set_full_iv(sc->cenc.aes_ctr, sample->iv);
+ 
+@@ -7546,7 +7576,7 @@ static int cenc_filter(MOVContext *mov, AVStream* st, MOVStreamContext *sc, AVPa
+             return AVERROR_INVALIDDATA;
+         }
+ 
+-        if (mov->decryption_keys || mov->decryption_default_key) {
++        if (mov->decryption_keys || mov->decryption_default_key || mov->decryption_video_key || mov->decryption_audio_key) {
+             return cenc_decrypt(mov, sc, encrypted_sample, pkt->data, pkt->size);
+         } else {
+             size_t size;
+@@ -8695,6 +8725,18 @@ static int mov_read_header(AVFormatContext *s)
+     MOVAtom atom = { AV_RL32("root") };
+     int i;
+ 
++    if (mov->decryption_video_key_len != 0 && mov->decryption_video_key_len != AES_CTR_KEY_SIZE) {
++        av_log(s, AV_LOG_ERROR, "Invalid decryption video key len %d expected %d\n",
++            mov->decryption_video_key_len, AES_CTR_KEY_SIZE);
++        return AVERROR(EINVAL);
++    }
++ 
++    if (mov->decryption_audio_key_len != 0 && mov->decryption_audio_key_len != AES_CTR_KEY_SIZE) {
++        av_log(s, AV_LOG_ERROR, "Invalid decryption audio key len %d expected %d\n",
++            mov->decryption_audio_key_len, AES_CTR_KEY_SIZE);
++        return AVERROR(EINVAL);
++    }
++
+     mov->fc = s;
+     mov->trak_index = -1;
+     /* .mov and .mp4 aren't streamable anyway (only progressive download if moov is before mdat) */
+@@ -9427,6 +9469,8 @@ static const AVOption mov_options[] = {
+         .flags = AV_OPT_FLAG_DECODING_PARAM },
+     { "decryption_key", "The default media decryption key (hex)", OFFSET(decryption_default_key), AV_OPT_TYPE_BINARY, .flags = AV_OPT_FLAG_DECODING_PARAM },
+     { "decryption_keys", "The media decryption keys by KID (hex)", OFFSET(decryption_keys), AV_OPT_TYPE_DICT, .flags = AV_OPT_FLAG_DECODING_PARAM },
++    { "decryption_video_key", "The media decryption video key (hex)", OFFSET(decryption_video_key), AV_OPT_TYPE_BINARY, .flags = AV_OPT_FLAG_DECODING_PARAM },
++    { "decryption_audio_key", "The media decryption audio key (hex)", OFFSET(decryption_audio_key), AV_OPT_TYPE_BINARY, .flags = AV_OPT_FLAG_DECODING_PARAM },
+     { "enable_drefs", "Enable external track support.", OFFSET(enable_drefs), AV_OPT_TYPE_BOOL,
+         {.i64 = 0}, 0, 1, FLAGS },
+     { "max_stts_delta", "treat offsets above this value as invalid", OFFSET(max_stts_delta), AV_OPT_TYPE_INT, {.i64 = UINT_MAX-48000*10 }, 0, UINT_MAX, .flags = AV_OPT_FLAG_DECODING_PARAM },
+diff --git a/libavformat/tls_openssl.c b/libavformat/tls_openssl.c
+index 8bf766c01f..858be8ac69 100644
+--- a/libavformat/tls_openssl.c
++++ b/libavformat/tls_openssl.c
+@@ -313,8 +313,10 @@ static int tls_open(URLContext *h, const char *uri, int flags, AVDictionary **op
+     bio->ptr = p;
+ #endif
+     SSL_set_bio(p->ssl, bio, bio);
++#ifdef SSL_CTRL_SET_TLSEXT_HOSTNAME
+     if (!c->listen && !c->numerichost)
+         SSL_set_tlsext_host_name(p->ssl, c->host);
++#endif
+     ret = c->listen ? SSL_accept(p->ssl) : SSL_connect(p->ssl);
+     if (ret == 0) {
+         av_log(h, AV_LOG_ERROR, "Unable to negotiate TLS/SSL session\n");
+-- 
+2.45.2.windows.1
+

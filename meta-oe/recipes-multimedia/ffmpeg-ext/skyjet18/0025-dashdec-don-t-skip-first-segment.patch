@@ -1,0 +1,25 @@
+From 05ccafb9c6a69f932d9078eed7a3732bc2f67448 Mon Sep 17 00:00:00 2001
+From: skyjet18 <57456827+skyjet18@users.noreply.github.com>
+Date: Sat, 15 Feb 2025 19:01:10 +0100
+Subject: [PATCH 25/33] dashdec: don't skip first segment
+
+---
+ libavformat/dashdec.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/libavformat/dashdec.c b/libavformat/dashdec.c
+index 662ef95724..3dc35fbfe6 100644
+--- a/libavformat/dashdec.c
++++ b/libavformat/dashdec.c
+@@ -1733,7 +1733,7 @@ try_again:
+             refresh_manifest(pls->parent);
+             pls->parent->duration = (int64_t) c->time_shift_buffer_depth * AV_TIME_BASE;
+         }
+-        if (pls->cur_seq_no <= min_seq_no) {
++        if (pls->cur_seq_no < min_seq_no) {
+             av_log(pls->parent, AV_LOG_VERBOSE, "old fragment: cur[%"PRId64"] min[%"PRId64"] max[%"PRId64"]\n", (int64_t)pls->cur_seq_no, min_seq_no, max_seq_no);
+             pls->cur_seq_no = calc_cur_seg_no(pls->parent, pls);
+         } else if (pls->cur_seq_no > max_seq_no) {
+-- 
+2.45.2.windows.1
+

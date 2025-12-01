@@ -1,0 +1,50 @@
+From cfe2aafe2ddf7d2e8726a841845977b230c849e1 Mon Sep 17 00:00:00 2001
+From: skyjet18 <57456827+skyjet18@users.noreply.github.com>
+Date: Tue, 2 Apr 2024 11:25:32 +0200
+Subject: [PATCH 02/33] added debug logs for multiple decryption keys
+
+---
+ libavformat/mov.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/libavformat/mov.c b/libavformat/mov.c
+index b0cae7b636..827780021b 100644
+--- a/libavformat/mov.c
++++ b/libavformat/mov.c
+@@ -7156,6 +7156,7 @@ static int get_key_from_kid(uint8_t* out, int len, MOVContext *c, AVEncryptionIn
+     if (!c->decryption_keys) {
+         av_assert0(c->decryption_default_key);
+         memcpy(out, c->decryption_default_key, len);
++        av_log(c->fc, AV_LOG_DEBUG, "Returning default decryption key\n");
+         return 0;
+     }
+ 
+@@ -7166,18 +7167,24 @@ static int get_key_from_kid(uint8_t* out, int len, MOVContext *c, AVEncryptionIn
+ 
+     ff_data_to_hex(kid_hex, sample->key_id, 16, 1);
+     key_entry_hex = av_dict_get(c->decryption_keys, kid_hex, NULL, AV_DICT_DONT_STRDUP_KEY|AV_DICT_DONT_STRDUP_VAL);
++
+     if (!key_entry_hex) {
+         if (!c->decryption_default_key) {
+             av_log(c->fc, AV_LOG_ERROR, "unable to find KID %s\n", kid_hex);
+             return -1;
+         }
+         memcpy(out, c->decryption_default_key, len);
++        av_log(c->fc, AV_LOG_DEBUG, "Returning default decryption key\n");
+         return 0;
+     }
+-    if (strlen(key_entry_hex->value) != len*2) {
++
++    size_t key_entry_len;
++    if (key_entry_len = strlen(key_entry_hex->value) != len*2) {
++        av_log(c->fc, AV_LOG_ERROR, "wrong key length: %lu\n", (long unsigned) key_entry_len);
+         return -1;
+     }
+     ff_hex_to_data(out, key_entry_hex->value);
++    av_log(c->fc, AV_LOG_DEBUG, "Returning decryption key %s for kid %s\n", key_entry_hex->value, kid_hex);
+     return 0;
+ }
+ 
+-- 
+2.45.2.windows.1
+

@@ -4,21 +4,16 @@ SECTION = "multimedia"
 LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/GPL-2.0-only;md5=801f80980d171dd6425610833a22dbe6"
 
-FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
-
-DEPENDS = "ffmpeg libbluray"
-RDEPENDS:${PN} = "ffmpeg libbluray"
+DEPENDS = "ffmpeg-ext zlib bzip2 libxml2 xz libbluray openssl librtmp libudfread"
+RDEPENDS:${PN} += "ffmpeg-ext-libs libxml2 zlib bzip2 liblzma libbluray openssl librtmp libudfread"
 
 inherit gitpkgv upx-compress
 
 SRCREV = "${AUTOREV}"
-PV = "179+git"
-PKGV = "179+git${GITPKGV}"
-VER = "179"
-PR = "r1"
+PV = "181+git"
+PKGV = "181+git${GITPKGV}"
 
 SRC_URI = "git://github.com/oe-alliance/exteplayer3.git;branch=master;protocol=https"
-BB_GIT_SHALLOW = "0"
 
 SOURCE_FILES = "main/exteplayer.c"
 SOURCE_FILES =+ "container/container.c"
@@ -68,8 +63,29 @@ output/writer/mipsel/vp.c \
 output/writer/mipsel/wmv.c \
 output/writer/mipsel/vc1.c"
 
+LDFLAGS:append = " \
+    -L${STAGING_LIBDIR}/ffmpeg-ext \
+    -Wl,-rpath,/usr/lib/ffmpeg-ext \
+    -Wl,-rpath-link,${STAGING_LIBDIR}/ffmpeg-ext \
+"
+
 do_compile() {
-    ${CC} ${SOURCE_FILES} -D_FILE_OFFSET_BITS=64 -D_LARGEFILE64_SOURCE -D_LARGEFILE_SOURCE -DHAVE_FLV2MPEG4_CONVERTER -I${S}/include -I${S}/external -I${S}/external/flv2mpeg4 -I${D}/${libdir} -I${D}/${includedir} ${@bb.utils.contains('TARGET_ARCH', 'aarch64', '-lasound' , '', d)} -lswscale -ldl -lpthread -lavformat -lavcodec -lavutil -lswresample -o exteplayer3 ${LDFLAGS}
+    ${CC} ${CFLAGS} ${SOURCE_FILES} \
+        -D_FILE_OFFSET_BITS=64 \
+        -D_LARGEFILE64_SOURCE \
+        -D_LARGEFILE_SOURCE \
+        -DHAVE_FLV2MPEG4_CONVERTER \
+        -I${S}/include \
+        -I${S}/external \
+        -I${S}/external/flv2mpeg4 \
+        -I${STAGING_INCDIR} \
+        ${LDFLAGS} \
+        ${@bb.utils.contains('TARGET_ARCH', 'aarch64', '-lasound', '', d)} \
+        -lavformat -lavcodec -lavutil -lswresample -lswscale \
+        -lxml2 -lz -lbz2 -llzma \
+        -lbluray -lssl -lcrypto -lrtmp -ludfread \
+        -ldl -lpthread -lm \
+        -o exteplayer3
 }
 
 do_install() {
@@ -77,4 +93,4 @@ do_install() {
     install -m 0755 ${S}/exteplayer3 ${D}${bindir}
 }
 
-INSANE_SKIP:${PN} += "ldflags"
+INSANE_SKIP:${PN} += "ldflags rpaths"

@@ -1,0 +1,38 @@
+From 6da8f5c32d5eeb43191c796f4ab31df036b19db4 Mon Sep 17 00:00:00 2001
+From: skyjet18 <57456827+skyjet18@users.noreply.github.com>
+Date: Fri, 5 Apr 2024 11:17:46 +0200
+Subject: [PATCH 07/33] fixed parsing webvtt with STYLE and REGION block
+
+---
+ libavformat/webvttdec.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/libavformat/webvttdec.c b/libavformat/webvttdec.c
+index 0b2fc77168..dacf0915aa 100644
+--- a/libavformat/webvttdec.c
++++ b/libavformat/webvttdec.c
+@@ -94,7 +94,10 @@ static int webvtt_read_header(AVFormatContext *s)
+         /* ignore header chunk */
+         if (!strncmp(p, "\xEF\xBB\xBFWEBVTT", 9) ||
+             !strncmp(p, "WEBVTT", 6) ||
+-            !strncmp(p, "NOTE", 4))
++            !strncmp(p, "NOTE", 4) ||
++            !strncmp(p, "STYLE", 5) ||
++            !strncmp(p, "REGION", 6))
++
+             continue;
+ 
+         /* optional cue identifier (can be a number like in SRT or some kind of
+@@ -116,6 +119,9 @@ static int webvtt_read_header(AVFormatContext *s)
+                 p++;
+         }
+ 
++        if (strstr(p, "-->") == NULL)
++            continue;
++
+         /* cue timestamps */
+         if ((ts_start = read_ts(p)) == AV_NOPTS_VALUE)
+             break;
+-- 
+2.45.2.windows.1
+
