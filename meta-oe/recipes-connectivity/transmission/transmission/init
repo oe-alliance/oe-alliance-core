@@ -13,67 +13,77 @@ DOWNLOAD_DIR="${DIRECTORY}/download"
 CONFIG_DIR="${DIRECTORY}/config"
 WATCH_DIR="${DIRECTORY}/watch"
 RPC_PORT=9091
+
+# These are no longer used, but kept in case /etc/default/transmission-daemon sources them
 USERNAME="root"
 PASSWORD="enigma2"
-ALLOWED="*.*.*.*,*:*:*:*:*:*:*:*"
+
+# IMPORTANT: do NOT force any RPC whitelist from here for 4.1.x
+ALLOWED=""
+
 [ -f /etc/default/transmission-daemon ] && . /etc/default/transmission-daemon
+
 NAME="transmission-daemon"
 DAEMON="/bin/nice -n 9 /usr/bin/transmission-daemon"
-ARGS="-c $WATCH_DIR -g $CONFIG_DIR -r :: -a $ALLOWED -w $DOWNLOAD_DIR -p $RPC_PORT -T -u $USERNAME -v $PASSWORD"
+
+# ARGS:
+# - no "-a $ALLOWED"  -> let settings.json control whitelist; we will disable it there
+# - no "-u/-v"        -> avoid forcing auth in 4.1.x
+# - bind IPv4 0.0.0.0 (you can change to 127.0.0.1 if you only want local)
+ARGS="-c $WATCH_DIR -g $CONFIG_DIR -r 0.0.0.0 -w $DOWNLOAD_DIR -p $RPC_PORT -T"
 
 [ -z "$DAEMON_USER" ] || SSDOPTIONS="--chuid $DAEMON_USER:$DAEMON_GROUP"
 
 PATH=/usr/sbin:/usr/bin:/sbin:/bin
 
-if [ ! -d $DOWNLOAD_DIR ] ; then mkdir -p $DOWNLOAD_DIR; fi
-if [ ! -d $CONFIG_DIR ] ; then mkdir -p $CONFIG_DIR; fi
-if [ ! -d $WATCH_DIR ] ; then mkdir -p $WATCH_DIR; fi
-
+if [ ! -d "$DOWNLOAD_DIR" ] ; then mkdir -p "$DOWNLOAD_DIR"; fi
+if [ ! -d "$CONFIG_DIR" ] ; then mkdir -p "$CONFIG_DIR"; fi
+if [ ! -d "$WATCH_DIR" ] ; then mkdir -p "$WATCH_DIR"; fi
 
 case $1 in
-	start)
-		echo  "Starting $NAME"
-		export CURL_CA_BUNDLE="/etc/ssl/certs/ca-certificates.crt"
-		export TR_CURL_SSL_NO_VERIFY=1
-		sysctl -n -w net.core.rmem_max=4194304
-		sysctl -n -w net.core.wmem_max=1048576
-		start-stop-daemon $SSDOPTIONS -S -b -n $NAME -a $DAEMON -- $ARGS
-		;;
-	stop)
-		echo  "Stopping $NAME"
-		start-stop-daemon --stop --quiet --exec /usr/bin/transmission-daemon
-		;;
-	restart)
-		echo -n "Stopping $NAME"
-		start-stop-daemon --stop --quiet --exec /usr/bin/transmission-daemon
-		for i in 1 2 3 ; do
-			sleep 1
-			echo -n "."
-		done
-		echo
-		echo  "Restarting $NAME"
-		export CURL_CA_BUNDLE="/etc/ssl/certs/ca-certificates.crt"
-		export TR_CURL_SSL_NO_VERIFY=1
-		sysctl -n -w net.core.rmem_max=4194304
-		sysctl -n -w net.core.wmem_max=1048576
-		start-stop-daemon $SSDOPTIONS -S -b -n $NAME -a $DAEMON -- $ARGS
-		;;
-        autostart | enable)
-		echo
-        	update-rc.d transmission-daemon defaults 60
-		sleep 2
-		echo
-		;;
-        noautostart | disable)
-		echo
-        	update-rc.d -f transmission-daemon remove
-		sleep 2
-		echo
-		;;
-
-	*)
-		echo "Usage: $0 {start|restart|stop|enable|disable}"
-		exit 1
+    start)
+        echo "Starting $NAME"
+        export CURL_CA_BUNDLE="/etc/ssl/certs/ca-certificates.crt"
+        export TR_CURL_SSL_NO_VERIFY=1
+        sysctl -n -w net.core.rmem_max=4194304
+        sysctl -n -w net.core.wmem_max=1048576
+        start-stop-daemon $SSDOPTIONS -S -b -n "$NAME" -a $DAEMON -- $ARGS
+        ;;
+    stop)
+        echo "Stopping $NAME"
+        start-stop-daemon --stop --quiet --exec /usr/bin/transmission-daemon
+        ;;
+    restart)
+        echo -n "Stopping $NAME"
+        start-stop-daemon --stop --quiet --exec /usr/bin/transmission-daemon
+        for i in 1 2 3 ; do
+            sleep 1
+            echo -n "."
+        done
+        echo
+        echo "Restarting $NAME"
+        export CURL_CA_BUNDLE="/etc/ssl/certs/ca-certificates.crt"
+        export TR_CURL_SSL_NO_VERIFY=1
+        sysctl -n -w net.core.rmem_max=4194304
+        sysctl -n -w net.core.wmem_max=1048576
+        start-stop-daemon $SSDOPTIONS -S -b -n "$NAME" -a $DAEMON -- $ARGS
+        ;;
+    autostart | enable)
+        echo
+        update-rc.d transmission-daemon defaults 60
+        sleep 2
+        echo
+        ;;
+    noautostart | disable)
+        echo
+        update-rc.d -f transmission-daemon remove
+        sleep 2
+        echo
+        ;;
+    *)
+        echo "Usage: $0 {start|restart|stop|enable|disable}"
+        exit 1
+        ;;
 esac
 
 exit 0

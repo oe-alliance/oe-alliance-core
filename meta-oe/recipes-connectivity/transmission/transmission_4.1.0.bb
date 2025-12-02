@@ -9,7 +9,7 @@ DEPENDS = "curl libevent gnutls openssl libtool intltool-native glib-2.0-native"
 # Transmission release 4.1.0
 SRCREV = "9e15394c65ecddf1b15f7225fa7a4fa29e302505"
 PV = "4.1.0"
-PR = "1"
+PR = "2"
 
 SRC_URI = "gitsm://github.com/transmission/transmission;protocol=https;branch=main \
         file://init \
