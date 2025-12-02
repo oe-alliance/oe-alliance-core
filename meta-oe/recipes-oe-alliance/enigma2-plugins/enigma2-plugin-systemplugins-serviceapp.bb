@@ -5,7 +5,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 require conf/python/python3-compileall.inc
 
 DEPENDS = "enigma2 uchardet openssl"
-RDEPENDS:${PN} = "enigma2 uchardet openssl exteplayer3 python3-json"
+RDEPENDS:${PN} = "enigma2 uchardet openssl exteplayer3 gstplayer2 python3-json"
 RCONFLICTS:${PN} = "enigma2-plugin-extensions-serviceapp"
 RREPLACES:${PN} = "enigma2-plugin-extensions-serviceapp"
 
@@ -13,18 +13,19 @@ SRCREV = "${AUTOREV}"
 SRC_URI = "git://github.com/oe-mirrors/serviceapp.git;branch=develop;protocol=https"
 SRC_URI:openvix = "git://github.com/OpenViX/serviceapp.git;branch=sigc3;protocol=https"
 SRC_URI:openbh = "git://github.com/BlackHole/serviceapp.git;branch=sigc3;protocol=https"
-SRC_URI:openatv = "git://github.com/oe-mirrors/serviceapp.git;branch=sig3;protocol=https"
+SRC_URI:openatv = "git://github.com/oe-mirrors/serviceapp.git;branch=openATV;protocol=https"
+SRC_URI:openspa = "git://github.com/oe-mirrors/serviceapp.git;branch=openATV;protocol=https"
 SRC_URI:teamblue = "git://github.com/teamblue-e2/serviceapp.git;branch=7.4;protocol=https"
 SRC_URI:opendroid = "git://github.com/opendroid-Team/serviceapp.git;branch=sig3;protocol=https"
 
 inherit autotools gitpkgv python3native pkgconfig gettext python3targetconfig
 
-CXXFLAGS += "${@bb.utils.contains_any("DISTRO_NAME", "openatv openvix openbh teamblue opendroid", "" , " -std=c++11", d)}"
+CXXFLAGS += "${@bb.utils.contains_any("DISTRO_NAME", "openatv openspa openvix openbh teamblue opendroid", "" , " -std=c++11", d)}"
 
 PV = "0.5+git"
 PKGV = "0.5+git${GITPKGV}"
 
-PR = "r6"
+PR = "r7"
 
 EXTRA_OECONF = "\
 	BUILD_SYS=${BUILD_SYS} \
