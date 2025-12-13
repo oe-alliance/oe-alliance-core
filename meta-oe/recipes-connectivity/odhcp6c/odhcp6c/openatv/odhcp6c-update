@@ -1,6 +1,12 @@
 #!/bin/sh
 # shellcheck shell=dash
-# odhcp6c update script with Enigma2 dnsMode support
+#
+# odhcp6c update script (IPv6) with Enigma2 dnsMode support
+#
+# Optional override:
+#   If /etc/enigma2/nameserversdns.conf exists and contains "nameserver ..." lines,
+#   these nameservers are used instead of DHCP/RA-provided DNS.
+#
 # dnsMode values:
 #   (missing) or 0 = prefer IPv4
 #   1 = prefer IPv6
@@ -15,8 +21,12 @@ DEBUG=0
 
 DOMAINS=${DOMAINS:=""}
 SETTINGS_FILE="/etc/enigma2/settings"
+OVERRIDE_NS_FILE="/etc/enigma2/nameserversdns.conf"
+RESOLV_CONF="/etc/resolv.conf"
 
-# Read dnsMode (default = prefer IPv4)
+STATE_DIR="/var/run/enigma2-resolv"
+SRC_FILE="${STATE_DIR}/20-${IFACE}-v6.conf"
+
 get_dns_mode() {
 	if [ -f "$SETTINGS_FILE" ]; then
 		grep -m1 '^config\.usage\.dnsMode=' "$SETTINGS_FILE" | cut -d= -f2
@@ -25,102 +35,153 @@ get_dns_mode() {
 	fi
 }
 
-update_resolv() {
-	sysconfdir='/etc'
-	localstatedir='/var/run/odhcp6c'
+# Echo override nameserver addresses (one per line), if file exists and has entries.
+# Output format: "<addr>\n"
+get_override_nameservers() {
+	[ -f "$OVERRIDE_NS_FILE" ] || return 1
+	# Accept lines: "nameserver <addr>", ignore comments/blank lines
+	awk '
+		$1=="nameserver" && $2!="" { print $2; found=1 }
+		END { exit(found?0:1) }
+	' "$OVERRIDE_NS_FILE"
+}
 
-	RE_NSV4='^nameserver  *\([0-9]\{1,3\}\.\)\{3,3\}[0-9]\{1,3\} *$'
+merge_resolv() {
+	mkdir -p "$STATE_DIR" 2>/dev/null || true
 
-	resolvconf="$sysconfdir/resolv.conf"
-	myresolvconf="$localstatedir/resolv.${IFACE}.conf"
-	lockfile="$localstatedir/resolv.lock"
+	lockdir="${STATE_DIR}/.lock.d"
+	tmp="${STATE_DIR}/resolv.conf.$$"
+	search_tmp="${STATE_DIR}/search.$$"
+	ns_tmp="${STATE_DIR}/ns.$$"
+	opts_tmp="${STATE_DIR}/opts.$$"
 
-	mkdir -p $localstatedir
-
-	count=0
-	while [ -e $lockfile ]; do
-		sleep 1
-		count=$((count + 1))
-		[ $count -ge 30 ] && break
-	done
-	touch "$lockfile"
-
-	limit=3
-	dns4count=$(grep -c "$RE_NSV4" $resolvconf 2>/dev/null || true)
-	[ "$dns4count" -ge 1 ] && limit=2
-	[ "$dns4count" -ge 2 ] && limit=1
-
-	set -- "$ALL_DOMAINS"
-	DOMAIN="$1"
-	if [ -n "$DOMAIN" ]; then
-		echo "domain $DOMAIN" > "$myresolvconf"
-	else
-		grep "^domain " $resolvconf | head -n 1 > "$myresolvconf"
+	if ! mkdir "$lockdir" 2>/dev/null; then
+		return 0
 	fi
 
-	rm "$myresolvconf.search" 2>/dev/null || true
-	touch "$myresolvconf.search"
-	for domain in $ALL_DOMAINS; do
-		echo "search $DOMAIN" >> "$myresolvconf.search"
-	done
-	grep "^search" $resolvconf >> "$myresolvconf.search"
+	trap 'rm -f "$tmp" "$search_tmp" "$ns_tmp" "$opts_tmp" 2>/dev/null; rmdir "$lockdir" 2>/dev/null' EXIT INT TERM
 
-	sort "$myresolvconf.search" | uniq >> "$myresolvconf"
-	rm "$myresolvconf.search" 2>/dev/null || true
+	: > "$search_tmp"
+	: > "$ns_tmp"
+	: > "$opts_tmp"
 
-	grep -E -v "^domain|^nameserver|^search|^ *$" $resolvconf >> "$myresolvconf"
+	grep -E -v '^(domain|nameserver|search)[[:space:]]|^[[:space:]]*$' "$RESOLV_CONF" 2>/dev/null >> "$opts_tmp" || true
 
-	# --- Enigma2 dnsMode logic ---
-	DNSMODE=$(get_dns_mode)
-	echo "$0: Using dnsMode=$DNSMODE"
+	domain_v4=""
+	domain_v6=""
 
-	IPV4_DNS=""
-	IPV6_DNS=""
+	set -- "$STATE_DIR"/*.conf
+	if [ -e "$1" ]; then
+		for f in "$STATE_DIR"/*.conf; do
+			[ -f "$f" ] || continue
 
-	for dns in $ALL_DNS; do
-		case "$dns" in
-								   
-			*:* ) IPV6_DNS="${IPV6_DNS}nameserver $dns
-" ;;
-			*   ) IPV4_DNS="${IPV4_DNS}nameserver $dns
-									  
-					 
-			 
-							
-" ;;
+			d="$(grep '^domain ' "$f" 2>/dev/null | head -n 1 | awk '{print $2}')"
+			case "$f" in
+				*-v4.conf) [ -n "$d" ] && domain_v4="$d" ;;
+				*-v6.conf) [ -n "$d" ] && domain_v6="$d" ;;
+				*) : ;;
+			esac
+
+			grep '^search ' "$f" 2>/dev/null >> "$search_tmp" || true
+			grep '^nameserver ' "$f" 2>/dev/null >> "$ns_tmp" || true
+		done
+	fi
+
+	: > "$tmp"
+
+	domain_line="${domain_v4:-$domain_v6}"
+	[ -n "$domain_line" ] && printf 'domain %s\n' "$domain_line" >> "$tmp"
+
+	if [ -s "$search_tmp" ]; then
+		if sort -u "$search_tmp" >/dev/null 2>&1; then
+			sort -u "$search_tmp" >> "$tmp"
+		else
+			sort "$search_tmp" | uniq >> "$tmp"
+		fi
+	fi
+
+	cat "$opts_tmp" >> "$tmp" 2>/dev/null || true
+
+	DNSMODE="$(get_dns_mode)"
+	NS_LIMIT=3
+	NS_COUNT=0
+
+	NS_SEEN=""
+	V4_LIST=""
+	V6_LIST=""
+
+	while read -r k addr; do
+		[ "x$k" = "xnameserver" ] || continue
+		[ -n "$addr" ] || continue
+		case " $NS_SEEN " in
+			*" $addr "*) continue ;;
 		esac
-	  
-		
-	
-	done
-																		   
+		NS_SEEN="$NS_SEEN $addr"
+		case "$addr" in
+			*:* ) V6_LIST="$V6_LIST $addr" ;;
+			*   ) V4_LIST="$V4_LIST $addr" ;;
+		esac
+	done < "$ns_tmp"
 
-	EXISTING_V4="$(grep "$RE_NSV4" $resolvconf 2>/dev/null || true)"
-	[ -n "$EXISTING_V4" ] && IPV4_DNS="${IPV4_DNS}${EXISTING_V4}
-"
+	emit_list() {
+		_list="$1"
+		for a in $_list; do
+			[ "$NS_COUNT" -ge "$NS_LIMIT" ] && return 0
+			printf 'nameserver %s\n' "$a" >> "$tmp"
+			NS_COUNT=$((NS_COUNT + 1))
+		done
+	}
 
 	case "$DNSMODE" in
-		1)
-			echo -n "$IPV6_DNS$IPV4_DNS" >> "$myresolvconf"
-			;;
-		2)
-			echo -n "$IPV4_DNS" >> "$myresolvconf"
-			;;
-		3)
-			echo -n "$IPV6_DNS" >> "$myresolvconf"
-			;;
-		*)
-			echo -n "$IPV4_DNS$IPV6_DNS" >> "$myresolvconf"
-			;;
+		1) emit_list "$V6_LIST"; emit_list "$V4_LIST" ;;
+		2) emit_list "$V4_LIST" ;;
+		3) emit_list "$V6_LIST" ;;
+		*) emit_list "$V4_LIST"; emit_list "$V6_LIST" ;;
 	esac
-	# --- end Enigma2 dnsMode logic ---
 
-	if diff "$resolvconf" "$myresolvconf" >/dev/null 2>&1; then
-		rm "$myresolvconf"
+	if diff -q "$RESOLV_CONF" "$tmp" >/dev/null 2>&1; then
+		rm -f "$tmp"
 	else
-		mv -f "$myresolvconf" "$resolvconf"
+		mv -f "$tmp" "$RESOLV_CONF"
 	fi
-	rm -f "$lockfile"
+
+	trap - EXIT INT TERM
+	rm -f "$search_tmp" "$ns_tmp" "$opts_tmp" 2>/dev/null || true
+	rmdir "$lockdir" 2>/dev/null || true
+}
+
+write_v6_source_and_merge() {
+	mkdir -p "$STATE_DIR" 2>/dev/null || true
+	tmp="${SRC_FILE}.$$"
+
+	: > "$tmp"
+
+	set -- $ALL_DOMAINS
+	if [ -n "$1" ]; then
+		printf 'domain %s\n' "$1" >> "$tmp"
+	fi
+	for d in $ALL_DOMAINS; do
+		printf 'search %s\n' "$d" >> "$tmp"
+	done
+
+	# Nameservers: override file wins if present and non-empty; otherwise use ALL_DNS
+	if get_override_nameservers >/dev/null 2>&1; then
+		get_override_nameservers | while read -r ns; do
+			[ -n "$ns" ] && printf 'nameserver %s\n' "$ns" >> "$tmp"
+		done
+	else
+		for ns in $ALL_DNS; do
+			printf 'nameserver %s\n' "$ns" >> "$tmp"
+		done
+	fi
+
+	mv -f "$tmp" "$SRC_FILE"
+	merge_resolv
+}
+
+remove_v6_source_and_merge() {
+	rm -f "$SRC_FILE" 2>/dev/null || true
+	merge_resolv
 }
 
 setup_interface () {
@@ -129,11 +190,11 @@ setup_interface () {
 	local prefixpart=""
 	for entry in $PREFIXES; do
 		local addr="${entry%%,*}"
-                entry="${entry#*,}"
-                local preferred="${entry%%,*}"
-                entry="${entry#*,}"
-                local valid="${entry%%,*}"
-                entry="${entry#*,}"
+		entry="${entry#*,}"
+		local preferred="${entry%%,*}"
+		entry="${entry#*,}"
+		local valid="${entry%%,*}"
+		entry="${entry#*,}"
 		[ "$entry" = "$valid" ] && entry=
 
 		local class=""
@@ -154,18 +215,14 @@ setup_interface () {
 		done
 
 		local prefix="{\"address\": \"$addr\", \"preferred\": $preferred, \"valid\": $valid $class $excluded}"
-		
+
 		if [ -z "$prefixpart" ]; then
 			prefixpart="$prefix"
 		else
 			prefixpart="$prefixpart, $prefix"
 		fi
-
-														
-									  
 	done
 
-				  
 	for entry in $RA_ADDRESSES; do
 		local duplicate=0
 		local addr="${entry%%/*}"
@@ -188,7 +245,6 @@ setup_interface () {
 		if [ "x$realip" = "x/sbin/ip.iproute2" ]; then
 			ip -6 address replace "$addr" dev "$device" preferred_lft "$preferred" valid_lft "$valid"
 		else
-											 
 			ip -6 address replace "$addr" dev "$device"
 		fi
 	done
@@ -200,12 +256,9 @@ teardown_interface() {
 	for oldaddr in $OLDADDRS; do
 		ip -6 addr delete "$oldaddr" dev "$device"
 	done
-													   
 }
 
 read_auto() {
-														
-
 	DHCP_CONF=$(awk -v par="$IFACE" '
 	/^iface/ && $2==par && $3=="inet6" && $4=="auto" {f=1}
 	/^iface/ && $2==par && $3=="inet" {f=0}
@@ -215,8 +268,6 @@ read_auto() {
 }
 
 read_static() {
-																			 
-
 	RA_CONF=$(awk -v par="$IFACE" '
 	/^iface/ && $2==par && $3=="inet6" && $4=="static" {f=1}
 	/^iface/ && $2==par && $3=="inet" {f=0}
@@ -226,8 +277,6 @@ read_static() {
 }
 
 read_dhcp() {
-																		   
-
 	RA_CONF=$(awk -v par="$IFACE" '
 	/^iface/ && $2==par && $3=="inet6" && $4=="dhcp" {f=1}
 	/^iface/ && $2==par && $3=="inet" {f=0}
@@ -235,7 +284,6 @@ read_dhcp() {
 	f && /^\s*autoconf/ {print $2; f=0}' /etc/network/interfaces)
 	[ "x$RA_CONF" = "x" ] && RA_CONF=1
 }
-
 
 get_config() {
 	METHOD=""
@@ -247,61 +295,23 @@ get_config() {
 		DHCP_ADDR=0
 	else
 		case $METHOD in
-			auto)
-				DHCP_ADDR=0
-				RA_CONF=1
-				read_auto
-				return
-				;;
-			dhcp)
-				DHCP_ADDR=1
-				DHCP_CONF=1
-				read_dhcp
-				return
-				;;
-			manual)
-				DHCP_ADDR=0
-				DHCP_CONF=0
-				RA_CONF=0
-				return
-				;;
-			static)
-				DHCP_ADDR=0
-				DHCP_CONF=0
-				read_static
-				return
-				;;
-			*)
-				return
-				;;
+			auto)   DHCP_ADDR=0; RA_CONF=1; read_auto; return ;;
+			dhcp)   DHCP_ADDR=1; DHCP_CONF=1; read_dhcp; return ;;
+			manual) DHCP_ADDR=0; DHCP_CONF=0; RA_CONF=0; return ;;
+			static) DHCP_ADDR=0; DHCP_CONF=0; read_static; return ;;
+			*) return ;;
 		esac
 	fi
 }
 
-
 merge_dhcp_ra() {
 	if [ "x$DHCP_CONF" = "x0" ] && [ "x$RA_CONF" = "x0" ]; then
-
-						 
-
-		ALL_DNS=""
-		ALL_DOMAINS=""
+		ALL_DNS=""; ALL_DOMAINS=""
 	elif [ "x$DHCP_CONF" = "x0" ]; then
-
-		   
-
-		ALL_DNS=$RA_DNS
-		ALL_DOMAINS=$RA_DOMAINS
+		ALL_DNS=$RA_DNS; ALL_DOMAINS=$RA_DOMAINS
 	elif [ "x$RA_CONF" = "x0" ]; then
-
-			 
-
-		ALL_DNS=$RDNSS
-		ALL_DOMAINS=$DOMAINS
+		ALL_DNS=$RDNSS; ALL_DOMAINS=$DOMAINS
 	else
-
-									 
-
 		for dns in $RDNSS; do
 			local duplicate=0
 			for radns in $RA_DNS; do
@@ -323,31 +333,21 @@ merge_dhcp_ra() {
 	fi
 
 	dnscount=0
-	for dns in $ALL_DNS; do
-		dnscount=$((dnscount + 1))
-	done
+	for dns in $ALL_DNS; do dnscount=$((dnscount + 1)); done
 
 	if [ $dnscount -gt 1 ]; then
 		NEW_DNS=""
 		for dns in $ALL_DNS; do
 			case $dns in
-			        fe80*)
-		                	;;
-			        *)
-					NEW_DNS="$NEW_DNS $dns"
-					;;
+				fe80*) ;;
+				*) NEW_DNS="$NEW_DNS $dns" ;;
 			esac
 		done
 		dnscount=0
-		for dns in $NEW_DNS; do
-			dnscount=$((dnscount + 1))
-		done
+		for dns in $NEW_DNS; do dnscount=$((dnscount + 1)); done
 		[ $dnscount -ge 1 ] && ALL_DNS=$NEW_DNS
 	fi
 }
-
-
-
 
 DHCP_ADDR=0
 DHCP_CONF=0
@@ -359,43 +359,17 @@ ALL_DOMAINS=""
 get_config
 merge_dhcp_ra
 
-if [ "x$DEBUG" = "x1" ]; then
-	echo
-	echo New advertisement:
-	echo "State:         $STATE"
-	echo "DHCP Domains:  $DOMAINS"
-	echo "DHCP DNSS:     $RDNSS"
-	echo "RA Domains:    $RA_DOMAINS"
-	echo "RA DNS:        $RA_DNS"
-	echo "Joint domains: $ALL_DOMAINS"
-	echo "Joint DNSS:    $ALL_DNS"
-	echo
-	echo "RA Routes:     $RA_ROUTES"
-	echo "RA Adresses:   $RA_ADDRESSES"
-	echo "DHCP Adresses: $ADDRESSES"
-fi
-
 case $STATE in
-	bound)
+	bound|informed|updated|rebound|ra-updated|started)
 		if [ "x$DHCP_ADDR" = "x1" ]; then
 			teardown_interface "$IFACE"
 			setup_interface "$IFACE"
 		fi
-		[ "x$ALL_DNS" = "x" ] || update_resolv
-		;;
-	informed|updated|rebound|ra-updated)
-		if [ "x$DHCP_ADDR" = "x1" ]; then
-			teardown_interface "$IFACE"
-			setup_interface "$IFACE"
-		fi
-		[ "x$ALL_DNS" = "x" ] || update_resolv
+		write_v6_source_and_merge
 		;;
 	stopped|unbound)
 		[ "x$DHCP_ADDR" = "x1" ] && teardown_interface "$IFACE"
-		;;
-	started)
-		[ "x$DHCP_ADDR" = "x1" ] && teardown_interface "$IFACE"
-		[ "x$ALL_DNS" = "x" ] || update_resolv
+		remove_v6_source_and_merge
 		;;
 esac
 

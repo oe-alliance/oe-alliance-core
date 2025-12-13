@@ -1,15 +1,31 @@
 #!/bin/sh
-# udhcpc default script with Enigma2 dnsMode support
-# Handles IPv4/IPv6 DNS order and filtering based on /etc/enigma2/settings
+# shellcheck shell=dash
+#
+# udhcpc default script (IPv4) with Enigma2 dnsMode support
+#
+# Optional override:
+#   If /etc/enigma2/nameserversdns.conf exists and contains "nameserver ..." lines,
+#   these nameservers are used instead of DHCP-provided DNS.
+#
+# dnsMode values:
+#   (missing) or 0 = prefer IPv4
+#   1 = prefer IPv6
+#   2 = IPv4 only
+#   3 = IPv6 only
 
 [ -z "$1" ] && echo "Error: should be called from udhcpc" && exit 1
 
 RESOLV_CONF="/etc/resolv.conf"
 SETTINGS_FILE="/etc/enigma2/settings"
-[ -n "$broadcast" ] && BROADCAST="broadcast $broadcast"
-[ -n "$subnet" ] && NETMASK="netmask $subnet"
+OVERRIDE_NS_FILE="/etc/enigma2/nameserversdns.conf"
+DEBUG=0
 
-# Read config.usage.dnsMode (default = prefer IPv4)
+STATE_DIR="/var/run/enigma2-resolv"
+SRC_FILE="${STATE_DIR}/10-${interface}-v4.conf"
+
+[ -n "$broadcast" ] && BROADCAST="brd $broadcast" || BROADCAST=""
+[ -n "$subnet" ] && NETMASK="netmask $subnet" || NETMASK=""
+
 get_dns_mode() {
 	if [ -f "$SETTINGS_FILE" ]; then
 		grep -m1 '^config\.usage\.dnsMode=' "$SETTINGS_FILE" | cut -d= -f2
@@ -18,71 +34,176 @@ get_dns_mode() {
 	fi
 }
 
+get_override_nameservers() {
+	[ -f "$OVERRIDE_NS_FILE" ] || return 1
+	awk '
+		$1=="nameserver" && $2!="" { print $2; found=1 }
+		END { exit(found?0:1) }
+	' "$OVERRIDE_NS_FILE"
+}
+
+merge_resolv() {
+	mkdir -p "$STATE_DIR" 2>/dev/null || true
+
+	lockdir="${STATE_DIR}/.lock.d"
+	tmp="${STATE_DIR}/resolv.conf.$$"
+	search_tmp="${STATE_DIR}/search.$$"
+	ns_tmp="${STATE_DIR}/ns.$$"
+	opts_tmp="${STATE_DIR}/opts.$$"
+
+	if ! mkdir "$lockdir" 2>/dev/null; then
+		return 0
+	fi
+
+	trap 'rm -f "$tmp" "$search_tmp" "$ns_tmp" "$opts_tmp" 2>/dev/null; rmdir "$lockdir" 2>/dev/null' EXIT INT TERM
+
+	: > "$search_tmp"
+	: > "$ns_tmp"
+	: > "$opts_tmp"
+
+	grep -E -v '^(domain|nameserver|search)[[:space:]]|^[[:space:]]*$' "$RESOLV_CONF" 2>/dev/null >> "$opts_tmp" || true
+
+	domain_v4=""
+	domain_v6=""
+
+	set -- "$STATE_DIR"/*.conf
+	if [ -e "$1" ]; then
+		for f in "$STATE_DIR"/*.conf; do
+			[ -f "$f" ] || continue
+
+			d="$(grep '^domain ' "$f" 2>/dev/null | head -n 1 | awk '{print $2}')"
+			case "$f" in
+				*-v4.conf) [ -n "$d" ] && domain_v4="$d" ;;
+				*-v6.conf) [ -n "$d" ] && domain_v6="$d" ;;
+				*) : ;;
+			esac
+
+			grep '^search ' "$f" 2>/dev/null >> "$search_tmp" || true
+			grep '^nameserver ' "$f" 2>/dev/null >> "$ns_tmp" || true
+		done
+	fi
+
+	: > "$tmp"
+
+	domain_line="${domain_v4:-$domain_v6}"
+	[ -n "$domain_line" ] && printf 'domain %s\n' "$domain_line" >> "$tmp"
+
+	if [ -s "$search_tmp" ]; then
+		if sort -u "$search_tmp" >/dev/null 2>&1; then
+			sort -u "$search_tmp" >> "$tmp"
+		else
+			sort "$search_tmp" | uniq >> "$tmp"
+		fi
+	fi
+
+	cat "$opts_tmp" >> "$tmp" 2>/dev/null || true
+
+	DNSMODE="$(get_dns_mode)"
+	NS_LIMIT=3
+	NS_COUNT=0
+
+	NS_SEEN=""
+	V4_LIST=""
+	V6_LIST=""
+
+	while read -r k addr; do
+		[ "x$k" = "xnameserver" ] || continue
+		[ -n "$addr" ] || continue
+		case " $NS_SEEN " in
+			*" $addr "*) continue ;;
+		esac
+		NS_SEEN="$NS_SEEN $addr"
+		case "$addr" in
+			*:* ) V6_LIST="$V6_LIST $addr" ;;
+			*   ) V4_LIST="$V4_LIST $addr" ;;
+		esac
+	done < "$ns_tmp"
+
+	emit_list() {
+		_list="$1"
+		for a in $_list; do
+			[ "$NS_COUNT" -ge "$NS_LIMIT" ] && return 0
+			printf 'nameserver %s\n' "$a" >> "$tmp"
+			NS_COUNT=$((NS_COUNT + 1))
+		done
+	}
+
+	case "$DNSMODE" in
+		1) emit_list "$V6_LIST"; emit_list "$V4_LIST" ;;
+		2) emit_list "$V4_LIST" ;;
+		3) emit_list "$V6_LIST" ;;
+		*) emit_list "$V4_LIST"; emit_list "$V6_LIST" ;;
+	esac
+
+	if diff -q "$RESOLV_CONF" "$tmp" >/dev/null 2>&1; then
+		rm -f "$tmp"
+	else
+		mv -f "$tmp" "$RESOLV_CONF"
+	fi
+
+	trap - EXIT INT TERM
+	rm -f "$search_tmp" "$ns_tmp" "$opts_tmp" 2>/dev/null || true
+	rmdir "$lockdir" 2>/dev/null || true
+}
+
+write_v4_source_and_merge() {
+	mkdir -p "$STATE_DIR" 2>/dev/null || true
+	tmp="${SRC_FILE}.$$"
+
+	: > "$tmp"
+
+	[ -n "$domain" ] && printf 'domain %s\n' "$domain" >> "$tmp"
+
+	# Nameservers: override file wins if present and non-empty; otherwise use $dns
+	if get_override_nameservers >/dev/null 2>&1; then
+		get_override_nameservers | while read -r ns; do
+			[ -n "$ns" ] && printf 'nameserver %s\n' "$ns" >> "$tmp"
+		done
+	else
+		for ns in $dns; do
+			printf 'nameserver %s\n' "$ns" >> "$tmp"
+		done
+	fi
+
+	mv -f "$tmp" "$SRC_FILE"
+	merge_resolv
+}
+
+remove_v4_source_and_merge() {
+	rm -f "$SRC_FILE" 2>/dev/null || true
+	merge_resolv
+}
+
 case "$1" in
 	deconfig)
-		if [ -x /sbin/resolvconf ]; then
-			/sbin/resolvconf -d "${interface}.udhcpc"
-		fi
-		ip addr flush dev $interface scope global
-		ip link set dev $interface up
+		ip -4 addr flush dev "$interface" scope global 2>/dev/null || true
+		ip link set dev "$interface" up 2>/dev/null || true
+		remove_v4_source_and_merge
 		;;
-
 	renew|bound)
-		if [ -z "$BROADCAST" ]; then
-			BROADCAST="broadcast +"
+		if ip -4 addr replace "$ip/$mask" dev "$interface" $BROADCAST 2>/dev/null; then
+			:
+		else
+			ip -4 addr flush dev "$interface" scope global 2>/dev/null || true
+			[ -z "$BROADCAST" ] && BROADCAST="brd +"
+			ip -4 addr add "$ip/$mask" dev "$interface" $BROADCAST 2>/dev/null || true
 		fi
-		ip addr add dev $interface local $ip/$mask $BROADCAST
 
 		if [ -n "$router" ]; then
-			while ip route del default 2>/dev/null; do :; done
+			for _n in 1 2 3 4 5; do
+				ip route del default dev "$interface" 2>/dev/null || break
+			done
+
 			metric=0
-			for i in $router; do
-				ip route add default via $i metric $metric
-				metric=$(($metric + 1))
+			for gw in $router; do
+				ip route replace default via "$gw" dev "$interface" metric "$metric" 2>/dev/null || \
+					ip route add default via "$gw" dev "$interface" metric "$metric" 2>/dev/null || true
+				metric=$((metric + 1))
 			done
 		fi
 
-		DNSMODE=$(get_dns_mode)
-		echo "$0: Using dnsMode=$DNSMODE"
-
-		IPV4_DNS=""
-		IPV6_DNS=""
-		for i in $dns; do
-			case "$i" in
-				*:* ) IPV6_DNS="${IPV6_DNS}nameserver $i
-" ;;
-				*   ) IPV4_DNS="${IPV4_DNS}nameserver $i
-" ;;
-			esac
-		done
-
-		R=""
-		[ -n "$domain" ] && R="domain $domain
-"
-
-		case "$DNSMODE" in
-			1) # Prefer IPv6
-				R="${R}${IPV6_DNS}${IPV4_DNS}"
-				;;
-			2) # IPv4 only
-				R="${R}${IPV4_DNS}"
-				;;
-			3) # IPv6 only
-				R="${R}${IPV6_DNS}"
-				;;
-			*) # Default (prefer IPv4)
-				R="${R}${IPV4_DNS}${IPV6_DNS}"
-				;;
-		esac
-
-		if [ -x /sbin/resolvconf ]; then
-			echo -n "$R" | /sbin/resolvconf -a "${interface}.udhcpc"
-		else
-			echo -n "$R" > "$RESOLV_CONF"
-		fi
+		write_v4_source_and_merge
 		;;
 esac
 
 exit 0
-
-
