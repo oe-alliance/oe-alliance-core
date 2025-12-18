@@ -9,7 +9,7 @@ RDEPENDS:${PN} = "ppp"
 
 inherit pkgconfig
 
-SRC_URI = "http://${BPN}.googlecode.com/files/${BP}.tar.bz2 \
+SRC_URI = "https://source.mynonpublic.com/${BP}.tar.bz2 \
            file://typo_pon.wvdial.1.patch \
           "
 
