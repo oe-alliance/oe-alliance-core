@@ -1,0 +1,75 @@
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides:          dnscrypt-proxy
+# Required-Start:    $network
+# Required-Stop:     $network
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: dnscrypt-proxy encrypted DNS client proxy
+### END INIT INFO
+
+DAEMON=/usr/bin/dnscrypt-proxy
+CONF=/etc/dnscrypt-proxy/dnscrypt-proxy.toml
+PIDFILE=/var/run/dnscrypt-proxy.pid
+RESOLVCONF=/etc/resolv.conf
+
+start() {
+    echo "Starting dnscrypt-proxy..."
+
+    if [ ! -x "$DAEMON" ]; then
+        echo "ERROR: $DAEMON not found"
+        return 1
+    fi
+
+    if [ ! -r "$RESOLVCONF" ]; then
+        echo "Skipping start: $RESOLVCONF not readable"
+        return 0
+    fi
+
+    # Start only if /etc/resolv.conf contains "nameserver 127.0.0.1"
+    if ! grep -q '^[[:space:]]*nameserver[[:space:]]\{1,\}127\.0\.0\.1\([[:space:]]\{1,\}.*\)\?$' "$RESOLVCONF"; then
+        echo "Skipping start: $RESOLVCONF does not contain 'nameserver 127.0.0.1'"
+        return 0
+    fi
+
+    $DAEMON -config "$CONF" -pidfile "$PIDFILE" >/dev/null 2>&1 &
+    return $?
+}
+
+stop() {
+    echo "Stopping dnscrypt-proxy..."
+    if [ -f "$PIDFILE" ]; then
+        kill "$(cat "$PIDFILE")" >/dev/null 2>&1 || true
+        rm -f "$PIDFILE"
+    else
+        killall dnscrypt-proxy >/dev/null 2>&1 || true
+    fi
+    return 0
+}
+
+case "$1" in
+  start)
+    start
+    ;;
+  stop)
+    stop
+    ;;
+  restart)
+    stop
+    start
+    ;;
+  status)
+    if [ -f "$PIDFILE" ] && kill -0 "$(cat "$PIDFILE")" >/dev/null 2>&1; then
+        echo "dnscrypt-proxy is running (pid $(cat "$PIDFILE"))."
+        exit 0
+    fi
+    echo "dnscrypt-proxy is not running."
+    exit 1
+    ;;
+  *)
+    echo "Usage: $0 {start|stop|restart|status}"
+    exit 1
+    ;;
+esac
+
+exit 0
