@@ -8,9 +8,6 @@ SRC_URI:append = " \
            file://0004-add-missing-mesa-define.patch \
 "
 
-SRC_URI:append:dreamone = "file://alsasink-dream-specific-av-sync.patch"
-SRC_URI:append:dreamtwo = "file://alsasink-dream-specific-av-sync.patch"
-
 PACKAGECONFIG:append = " \
     cdparanoia gio opus tremor \
 "
