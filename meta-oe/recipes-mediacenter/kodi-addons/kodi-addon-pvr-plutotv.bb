@@ -2,6 +2,6 @@ SUMMARY = "Kodi Media Center PVR plugins"
 
 PKGV = "${PV}"
 
-KODIADDONPLUGIN = "mediaportal.tvserver"
+KODIADDONPLUGIN = "plutotv"
 
 require kodi-addon-pvr.inc

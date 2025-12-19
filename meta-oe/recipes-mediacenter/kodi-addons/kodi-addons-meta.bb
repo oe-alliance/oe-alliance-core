@@ -21,4 +21,8 @@ RDEPENDS:${PN} = " \
     kodi-addon-pvr-stalker \
     kodi-addon-pvr-filmon \
     kodi-addon-pvr-pctv \
+    kodi-addon-pvr-plutotv \
+    kodi-addon-pvr-argustv \
+    kodi-addon-pvr-mediaportal.tvserver \
+    kodi-addon-pvr-vdr.vnsi \
     "
