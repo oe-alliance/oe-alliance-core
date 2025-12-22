@@ -38,14 +38,17 @@ start() {
 
 stop() {
     echo "Stopping dnscrypt-proxy..."
+
     if [ -f "$PIDFILE" ]; then
-        kill "$(cat "$PIDFILE")" >/dev/null 2>&1 || true
+        pid="$(cat "$PIDFILE" 2>/dev/null)"
+        if [ -n "$pid" ] && kill -0 "$pid" >/dev/null 2>&1; then
+            kill "$pid" >/dev/null 2>&1 || true
+        fi
         rm -f "$PIDFILE"
-    else
-        killall dnscrypt-proxy >/dev/null 2>&1 || true
     fi
     return 0
 }
+
 
 case "$1" in
   start)
