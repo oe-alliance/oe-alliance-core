@@ -69,7 +69,7 @@ ipv6_servers = false
 dnscrypt_servers = true
 
 # Use servers implementing the DNS-over-HTTPS protocol
-doh_servers = true
+doh_servers = false
 
 # Use servers implementing the Oblivious DoH protocol
 odoh_servers = false
@@ -371,7 +371,7 @@ ignore_system_dns = true
 ## Use 0 to not test for connectivity at all (not recommended),
 ## and -1 to wait as much as possible.
 
-netprobe_timeout = 60
+netprobe_timeout = 10
 
 ## Address and port to try initializing a connection to, just to check
 ## if the network is up. It can be any address and any port, even if
@@ -770,7 +770,7 @@ urls = [
 ]
 cache_file = 'public-resolvers.md'
 minisign_key = 'RWQf6LRCGA9i53mlYecO4IzT51TGPpvWucNSCh1CBM0QTaLn73Y7GFO3'
-refresh_delay = 73
+refresh_delay = 168
 prefix = ''
 
 ### Anonymized DNS relays
@@ -782,7 +782,7 @@ urls = [
 ]
 cache_file = 'relays.md'
 minisign_key = 'RWQf6LRCGA9i53mlYecO4IzT51TGPpvWucNSCh1CBM0QTaLn73Y7GFO3'
-refresh_delay = 73
+refresh_delay = 168
 prefix = ''
 
 ### ODoH (Oblivious DoH) servers and relays
