@@ -15,7 +15,7 @@ PR = "r0"
 
 SRC_URI = "git://github.com/norhap/Turquoise-HD.git;protocol=https;branch=master"
 
-FILES:${PN} += " ${datadir}/enigma2 ${libdir}/enigma2/python/Components/Converter/BTVInfo.pyo ${libdir}/enigma2/python/Components/Converter/BTVDevicesInfo.pyo ${libdir}/enigma2/python/Components/Converter/BTVCpuUsage.pyo ${libdir}/enigma2/python/Components/Converter/BTVRunning14Events.pyo ${libdir}/enigma2/python/Components/Renderer/DRRunningText.pyo ${libdir}/enigma2/python/Components/Renderer/poster.pyo"
+FILES:${PN} += " ${datadir}/enigma2 ${libdir}/enigma2/python/Components"
 
 EXTRA_OECONF = "\
     BUILD_SYS=${BUILD_SYS} \
@@ -25,7 +25,6 @@ EXTRA_OECONF = "\
     "
 
 do_install() {
-	find ${S}/usr/lib/enigma2/python/Components/ -name "*.py" -exec rm -rf {} \;
 	install -d ${D}/usr/share
 	cp -r --preserve=mode,links ${S}/usr/share/* ${D}/usr/share/
 	chmod -R a+rX ${D}/usr/share/enigma2/
