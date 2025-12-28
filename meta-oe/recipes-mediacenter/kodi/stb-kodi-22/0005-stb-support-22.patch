@@ -1,6 +1,6 @@
-From c0507f3bf14b96e52db02f5f4f649628f7dc2117 Mon Sep 17 00:00:00 2001
-From: Captain <openatv@gmail.com>
-Date: Sat, 18 May 2024 05:06:22 +0200
+From f295819578cb7f09a194355e8befcd37cf417427 Mon Sep 17 00:00:00 2001
+From: atvcaptain <openatv@gmail.com>
+Date: Sun, 28 Dec 2025 15:14:23 +0100
 Subject: [PATCH] stb-support-22
 
 ---
@@ -21,7 +21,7 @@ Subject: [PATCH] stb-support-22
  xbmc/windowing/egl/EGLNativeType.h            |  152 ++
  xbmc/windowing/egl/EGLNativeTypeDags.cpp      |  337 ++++
  xbmc/windowing/egl/EGLNativeTypeDags.h        |  199 ++
- xbmc/windowing/egl/EGLNativeTypeDreambox.cpp  |  196 ++
+ xbmc/windowing/egl/EGLNativeTypeDreambox.cpp  |  253 +++
  xbmc/windowing/egl/EGLNativeTypeDreambox.h    |   61 +
  xbmc/windowing/egl/EGLNativeTypeEdision.cpp   |  174 ++
  xbmc/windowing/egl/EGLNativeTypeEdision.h     |   61 +
@@ -38,7 +38,7 @@ Subject: [PATCH] stb-support-22
  xbmc/windowing/egl/EGLNativeTypeVuplus.cpp    |  177 ++
  xbmc/windowing/egl/EGLNativeTypeVuplus.h      |   60 +
  xbmc/windowing/egl/EGLQuirks.h                |   42 +
- xbmc/windowing/egl/EGLWrapper.cpp             |  451 +++++
+ xbmc/windowing/egl/EGLWrapper.cpp             |  489 +++++
  xbmc/windowing/egl/EGLWrapper.h               |   76 +
  xbmc/windowing/egl/WinEventsSTB.cpp           |   92 +
  xbmc/windowing/egl/WinEventsSTB.h             |   47 +
@@ -46,7 +46,7 @@ Subject: [PATCH] stb-support-22
  xbmc/windowing/egl/WinSystemSTBContext.h      |   43 +
  xbmc/windowing/egl/WinSystemstb.cpp           |  547 ++++++
  xbmc/windowing/egl/WinSystemstb.h             |   79 +
- 43 files changed, 6356 insertions(+), 3 deletions(-)
+ 42 files changed, 6442 insertions(+), 2 deletions(-)
  create mode 100644 xbmc/platform/linux/input/Keymap.h
  create mode 100644 xbmc/platform/linux/input/LinuxInputDevices.cpp
  create mode 100644 xbmc/platform/linux/input/LinuxInputDevices.h
@@ -83,7 +83,7 @@ Subject: [PATCH] stb-support-22
  create mode 100644 xbmc/windowing/egl/WinSystemstb.h
 
 diff --git a/xbmc/addons/addoninfo/AddonInfoBuilder.cpp b/xbmc/addons/addoninfo/AddonInfoBuilder.cpp
-index fc762dc1236..f4cd72e7c00 100644
+index 55662c2467..fe497e9780 100644
 --- a/xbmc/addons/addoninfo/AddonInfoBuilder.cpp
 +++ b/xbmc/addons/addoninfo/AddonInfoBuilder.cpp
 @@ -782,6 +782,12 @@ const char* CAddonInfoBuilder::GetPlatformLibraryName(const tinyxml2::XMLElement
@@ -113,7 +113,7 @@ index fc762dc1236..f4cd72e7c00 100644
      "freebsd",
  #elif defined(TARGET_LINUX)
 diff --git a/xbmc/cores/VideoPlayer/VideoRenderers/CMakeLists.txt b/xbmc/cores/VideoPlayer/VideoRenderers/CMakeLists.txt
-index 5467be87ef0..7e017f7e28d 100644
+index 5467be87ef..7e017f7e28 100644
 --- a/xbmc/cores/VideoPlayer/VideoRenderers/CMakeLists.txt
 +++ b/xbmc/cores/VideoPlayer/VideoRenderers/CMakeLists.txt
 @@ -47,6 +47,7 @@ if(TARGET ${APP_NAME_LC}::OpenGLES AND ("android" IN_LIST CORE_PLATFORM_NAME_LC
@@ -125,7 +125,7 @@ index 5467be87ef0..7e017f7e28d 100644
                              "wayland" IN_LIST CORE_PLATFORM_NAME_LC))
    list(APPEND SOURCES LinuxRendererGLES.cpp
 diff --git a/xbmc/cores/VideoPlayer/VideoRenderers/VideoShaders/CMakeLists.txt b/xbmc/cores/VideoPlayer/VideoRenderers/VideoShaders/CMakeLists.txt
-index 4cf1269214d..6301c7d583c 100644
+index 4cf1269214..6301c7d583 100644
 --- a/xbmc/cores/VideoPlayer/VideoRenderers/VideoShaders/CMakeLists.txt
 +++ b/xbmc/cores/VideoPlayer/VideoRenderers/VideoShaders/CMakeLists.txt
 @@ -34,6 +34,7 @@ if(TARGET ${APP_NAME_LC}::OpenGLES AND ("android" IN_LIST CORE_PLATFORM_NAME_LC
@@ -137,7 +137,7 @@ index 4cf1269214d..6301c7d583c 100644
                              "wayland" IN_LIST CORE_PLATFORM_NAME_LC))
    list(APPEND SOURCES VideoFilterShaderGLES.cpp
 diff --git a/xbmc/cores/VideoPlayer/VideoRenderers/VideoShaders/VideoFilterShaderGLES.cpp b/xbmc/cores/VideoPlayer/VideoRenderers/VideoShaders/VideoFilterShaderGLES.cpp
-index c1cb6aa9a6b..ed6c086381e 100644
+index c1cb6aa9a6..ed6c086381 100644
 --- a/xbmc/cores/VideoPlayer/VideoRenderers/VideoShaders/VideoFilterShaderGLES.cpp
 +++ b/xbmc/cores/VideoPlayer/VideoRenderers/VideoShaders/VideoFilterShaderGLES.cpp
 @@ -90,6 +90,10 @@ ConvolutionFilterShader::ConvolutionFilterShader(ESCALINGMETHOD method)
@@ -160,7 +160,7 @@ index c1cb6aa9a6b..ed6c086381e 100644
    CLog::Log(LOGDEBUG, "GLES: using scaling method: {}", m_method);
    CLog::Log(LOGDEBUG, "GLES: using shader: {}", shadername);
 diff --git a/xbmc/platform/linux/input/CMakeLists.txt b/xbmc/platform/linux/input/CMakeLists.txt
-index 6f3bb68eee8..d2c6da2c769 100644
+index 6f3bb68eee..d2c6da2c76 100644
 --- a/xbmc/platform/linux/input/CMakeLists.txt
 +++ b/xbmc/platform/linux/input/CMakeLists.txt
 @@ -6,8 +6,8 @@ if(TARGET ${APP_NAME_LC}::LircClient)
@@ -189,7 +189,7 @@ index 6f3bb68eee8..d2c6da2c769 100644
  endif()
 diff --git a/xbmc/platform/linux/input/Keymap.h b/xbmc/platform/linux/input/Keymap.h
 new file mode 100644
-index 00000000000..dda17585581
+index 0000000000..dda1758558
 --- /dev/null
 +++ b/xbmc/platform/linux/input/Keymap.h
 @@ -0,0 +1,36 @@
@@ -231,7 +231,7 @@ index 00000000000..dda17585581
 +};
 diff --git a/xbmc/platform/linux/input/LinuxInputDevices.cpp b/xbmc/platform/linux/input/LinuxInputDevices.cpp
 new file mode 100644
-index 00000000000..af088c5f40b
+index 0000000000..af088c5f40
 --- /dev/null
 +++ b/xbmc/platform/linux/input/LinuxInputDevices.cpp
 @@ -0,0 +1,1593 @@
@@ -1830,7 +1830,7 @@ index 00000000000..af088c5f40b
 +*/
 diff --git a/xbmc/platform/linux/input/LinuxInputDevices.h b/xbmc/platform/linux/input/LinuxInputDevices.h
 new file mode 100644
-index 00000000000..5e2885f5ff6
+index 0000000000..5e2885f5ff
 --- /dev/null
 +++ b/xbmc/platform/linux/input/LinuxInputDevices.h
 @@ -0,0 +1,125 @@
@@ -1960,7 +1960,7 @@ index 00000000000..5e2885f5ff6
 +
 +#endif /* LINUXINPUTDEVICES_H_ */
 diff --git a/xbmc/system_gl.h b/xbmc/system_gl.h
-index ff7ead6b429..18446f79c92 100644
+index ff7ead6b42..18446f79c9 100644
 --- a/xbmc/system_gl.h
 +++ b/xbmc/system_gl.h
 @@ -33,6 +33,9 @@
@@ -1974,10 +1974,10 @@ index ff7ead6b429..18446f79c92 100644
  #include <GLES2/gl2.h>
  #include <GLES2/gl2ext.h>
 diff --git a/xbmc/utils/CMakeLists.txt b/xbmc/utils/CMakeLists.txt
-index 55de98d1902..f7e160898b5 100644
+index 3f979510f9..a47f645bc0 100644
 --- a/xbmc/utils/CMakeLists.txt
 +++ b/xbmc/utils/CMakeLists.txt
-@@ -186,10 +186,17 @@ set(HEADERS ActorProtocol.h
+@@ -187,10 +187,17 @@ set(HEADERS ActorProtocol.h
              XMLUtils.h
              XTimeUtils.h)
  
@@ -1997,7 +1997,7 @@ index 55de98d1902..f7e160898b5 100644
                        EGLFence.cpp)
 diff --git a/xbmc/utils/DreamboxUtils.cpp b/xbmc/utils/DreamboxUtils.cpp
 new file mode 100644
-index 00000000000..2e77071c46c
+index 0000000000..2e77071c46
 --- /dev/null
 +++ b/xbmc/utils/DreamboxUtils.cpp
 @@ -0,0 +1,103 @@
@@ -2106,7 +2106,7 @@ index 00000000000..2e77071c46c
 +
 diff --git a/xbmc/utils/DreamboxUtils.h b/xbmc/utils/DreamboxUtils.h
 new file mode 100644
-index 00000000000..3f845cbfc44
+index 0000000000..3f845cbfc4
 --- /dev/null
 +++ b/xbmc/utils/DreamboxUtils.h
 @@ -0,0 +1,25 @@
@@ -2136,7 +2136,7 @@ index 00000000000..3f845cbfc44
 +bool dreambox_mode_to_resolution(const char *mode, RESOLUTION_INFO *res);
 +
 diff --git a/xbmc/utils/EGLUtils.cpp b/xbmc/utils/EGLUtils.cpp
-index 1d7ba977412..0d280fe147f 100644
+index 1832271663..77d91ccd55 100644
 --- a/xbmc/utils/EGLUtils.cpp
 +++ b/xbmc/utils/EGLUtils.cpp
 @@ -26,6 +26,19 @@
@@ -2219,7 +2219,7 @@ index 1d7ba977412..0d280fe147f 100644
                                    EGL_NO_CONTEXT, contextAttribs.Get());
 diff --git a/xbmc/windowing/egl/CMakeLists.txt b/xbmc/windowing/egl/CMakeLists.txt
 new file mode 100644
-index 00000000000..10650326d68
+index 0000000000..10650326d6
 --- /dev/null
 +++ b/xbmc/windowing/egl/CMakeLists.txt
 @@ -0,0 +1,62 @@
@@ -2287,7 +2287,7 @@ index 00000000000..10650326d68
 +core_add_library(windowing_egl)
 diff --git a/xbmc/windowing/egl/EGLNativeType.h b/xbmc/windowing/egl/EGLNativeType.h
 new file mode 100644
-index 00000000000..48987ada456
+index 0000000000..48987ada45
 --- /dev/null
 +++ b/xbmc/windowing/egl/EGLNativeType.h
 @@ -0,0 +1,152 @@
@@ -2445,7 +2445,7 @@ index 00000000000..48987ada456
 +};
 diff --git a/xbmc/windowing/egl/EGLNativeTypeDags.cpp b/xbmc/windowing/egl/EGLNativeTypeDags.cpp
 new file mode 100644
-index 00000000000..fd67de6c1fc
+index 0000000000..fd67de6c1f
 --- /dev/null
 +++ b/xbmc/windowing/egl/EGLNativeTypeDags.cpp
 @@ -0,0 +1,337 @@
@@ -2788,7 +2788,7 @@ index 00000000000..fd67de6c1fc
 +}
 diff --git a/xbmc/windowing/egl/EGLNativeTypeDags.h b/xbmc/windowing/egl/EGLNativeTypeDags.h
 new file mode 100644
-index 00000000000..9d2176a942f
+index 0000000000..9d2176a942
 --- /dev/null
 +++ b/xbmc/windowing/egl/EGLNativeTypeDags.h
 @@ -0,0 +1,199 @@
@@ -2993,10 +2993,10 @@ index 00000000000..9d2176a942f
 +};
 diff --git a/xbmc/windowing/egl/EGLNativeTypeDreambox.cpp b/xbmc/windowing/egl/EGLNativeTypeDreambox.cpp
 new file mode 100644
-index 00000000000..9873942e946
+index 0000000000..97c98ab288
 --- /dev/null
 +++ b/xbmc/windowing/egl/EGLNativeTypeDreambox.cpp
-@@ -0,0 +1,196 @@
+@@ -0,0 +1,253 @@
 +/*
 + *      Copyright (C) 2011-2013 Team XBMC
 + *      http://xbmc.org
@@ -3022,13 +3022,30 @@ index 00000000000..9873942e946
 +#include "utils/DreamboxUtils.h"
 +#include "utils/StringUtils.h"
 +#include "platform/linux/SysfsPath.h"
++#include <fstream>
 +
 +#include <dlfcn.h>
 +#include <stdio.h>
 +#include <stdlib.h>
 +#include <linux/fb.h>
++#include <sys/mman.h>
++#include <string.h>
 +#include <sys/ioctl.h>
 +#include <EGL/egl.h>
++
++#include <cstdlib>
++#include <string>
++
++static void AppendMesaExtensionOverride(const char* extra)
++{
++  const char* cur = std::getenv("MESA_EXTENSION_OVERRIDE");
++  std::string v = cur ? cur : "";
++  if (!v.empty())
++    v += " ";
++  v += extra;
++  setenv("MESA_EXTENSION_OVERRIDE", v.c_str(), 1);
++}
++
 +
 +CEGLNativeTypeDreambox::CEGLNativeTypeDreambox()
 +{
@@ -3042,12 +3059,13 @@ index 00000000000..9873942e946
 +bool CEGLNativeTypeDreambox::CheckCompatibility()
 +{
 +  CSysfsPath model{"/proc/stb/info/model"};
-+  name = model.Get<std::string>();
++  std::string name = model.Get<std::string>().value_or("");
 +  return name == "dm820" || name == "dm900" || name == "dm920" || name == "dm7080";
 +}
 +
 +void CEGLNativeTypeDreambox::Initialize()
 +{
++	AppendMesaExtensionOverride("-GL_EXT_discard_framebuffer");
 +}
 +
 +void CEGLNativeTypeDreambox::Destroy()
@@ -3148,7 +3166,13 @@ index 00000000000..9873942e946
 +
 +bool CEGLNativeTypeDreambox::ShowWindow(bool show)
 +{
-+  SysfsUtils::SetInt("/proc/stb/video/alpha", show ? 255 : 0);
++  // SysfsUtils was removed/renamed upstream; CSysfsPath is read-only in current Kodi docs.
++  // Write directly to procfs.
++  std::ofstream alpha("/proc/stb/video/alpha");
++  if (alpha.is_open())
++  {
++    alpha << (show ? 255 : 0);
++  }
 +  return true;
 +}
 +
@@ -3156,10 +3180,19 @@ index 00000000000..9873942e946
 +{
 +  // switch display resolution
 +  CSysfsPath videomode{"/proc/stb/video/videomode"};
-+  mode = videomode.Get<std::string>().value_or("");
++  // If caller provided a mode, write it to procfs; otherwise use current mode.
++  if (mode && mode[0] != '\0')
++  {
++    std::ofstream vm("/proc/stb/video/videomode");
++    if (vm.is_open())
++      vm << mode;
++  }
++
++  std::string currentMode = videomode.Get<std::string>().value_or("");
++  const char* activeMode = (mode && mode[0] != '\0') ? mode : currentMode.c_str();
 +
 +  RESOLUTION_INFO res;
-+  dreambox_mode_to_resolution(mode, &res);
++  dreambox_mode_to_resolution(activeMode, &res);
 +  SetFramebufferResolution(res);
 +
 +  return true;
@@ -3181,13 +3214,37 @@ index 00000000000..9873942e946
 +    struct fb_var_screeninfo vinfo;
 +    if (ioctl(fd, FBIOGET_VSCREENINFO, &vinfo) == 0)
 +    {
++      // Preserve existing page count (dreambox uses triple buffering: yres_virtual = yres * 3)
++      const int oldYres = vinfo.yres;
++      const int oldYresVirtual = vinfo.yres_virtual;
++      int pages = 2;
++      //if (oldYres > 0 && oldYresVirtual >= oldYres)
++      //  pages = (int)(oldYresVirtual / oldYres);
++      //if (pages < 2) pages = 2;
 +      vinfo.xres = width;
 +      vinfo.yres = height;
 +      vinfo.xres_virtual = width;
-+      vinfo.yres_virtual = height * 2;
++      vinfo.yres_virtual = height * pages;
 +      vinfo.bits_per_pixel = 32;
-+      vinfo.activate = FB_ACTIVATE_ALL;
-+      ioctl(fd, FBIOPUT_VSCREENINFO, &vinfo);
++      vinfo.xoffset = 0;
++      vinfo.yoffset = 0;
++      vinfo.activate = FB_ACTIVATE_NOW;
++
++      if (ioctl(fd, FBIOPUT_VSCREENINFO, &vinfo) == 0)
++      {
++        // Ensure page 0 is visible. This avoids showing an "old" page after mode changes.
++        ioctl(fd, FBIOPAN_DISPLAY, &vinfo);
++
++        // Optional: clear framebuffer memory once after reconfig to avoid stale artifacts
++        const size_t bpp = (size_t)vinfo.bits_per_pixel / 8;
++        const size_t fbSize = (size_t)vinfo.xres_virtual * (size_t)vinfo.yres_virtual * bpp;
++        void* fb = mmap(nullptr, fbSize, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
++        if (fb != MAP_FAILED)
++        {
++          memset(fb, 0x00, fbSize);
++          munmap(fb, fbSize);
++        }
++      }
 +    }
 +    close(fd);
 +  }
@@ -3195,7 +3252,7 @@ index 00000000000..9873942e946
 +
 diff --git a/xbmc/windowing/egl/EGLNativeTypeDreambox.h b/xbmc/windowing/egl/EGLNativeTypeDreambox.h
 new file mode 100644
-index 00000000000..eb032063e7f
+index 0000000000..eb032063e7
 --- /dev/null
 +++ b/xbmc/windowing/egl/EGLNativeTypeDreambox.h
 @@ -0,0 +1,61 @@
@@ -3262,7 +3319,7 @@ index 00000000000..eb032063e7f
 +};
 diff --git a/xbmc/windowing/egl/EGLNativeTypeEdision.cpp b/xbmc/windowing/egl/EGLNativeTypeEdision.cpp
 new file mode 100644
-index 00000000000..30768484a21
+index 0000000000..30768484a2
 --- /dev/null
 +++ b/xbmc/windowing/egl/EGLNativeTypeEdision.cpp
 @@ -0,0 +1,174 @@
@@ -3442,7 +3499,7 @@ index 00000000000..30768484a21
 +}
 diff --git a/xbmc/windowing/egl/EGLNativeTypeEdision.h b/xbmc/windowing/egl/EGLNativeTypeEdision.h
 new file mode 100644
-index 00000000000..c3b7624809a
+index 0000000000..c3b7624809
 --- /dev/null
 +++ b/xbmc/windowing/egl/EGLNativeTypeEdision.h
 @@ -0,0 +1,61 @@
@@ -3509,7 +3566,7 @@ index 00000000000..c3b7624809a
 +};
 diff --git a/xbmc/windowing/egl/EGLNativeTypeGB.cpp b/xbmc/windowing/egl/EGLNativeTypeGB.cpp
 new file mode 100644
-index 00000000000..4e4f862aa22
+index 0000000000..4e4f862aa2
 --- /dev/null
 +++ b/xbmc/windowing/egl/EGLNativeTypeGB.cpp
 @@ -0,0 +1,190 @@
@@ -3705,7 +3762,7 @@ index 00000000000..4e4f862aa22
 +}
 diff --git a/xbmc/windowing/egl/EGLNativeTypeGB.h b/xbmc/windowing/egl/EGLNativeTypeGB.h
 new file mode 100644
-index 00000000000..ecf78813d03
+index 0000000000..ecf78813d0
 --- /dev/null
 +++ b/xbmc/windowing/egl/EGLNativeTypeGB.h
 @@ -0,0 +1,56 @@
@@ -3767,7 +3824,7 @@ index 00000000000..ecf78813d03
 +};
 diff --git a/xbmc/windowing/egl/EGLNativeTypeMali.cpp b/xbmc/windowing/egl/EGLNativeTypeMali.cpp
 new file mode 100644
-index 00000000000..2b39d2fbaa8
+index 0000000000..2b39d2fbaa
 --- /dev/null
 +++ b/xbmc/windowing/egl/EGLNativeTypeMali.cpp
 @@ -0,0 +1,149 @@
@@ -3922,7 +3979,7 @@ index 00000000000..2b39d2fbaa8
 +
 diff --git a/xbmc/windowing/egl/EGLNativeTypeMali.h b/xbmc/windowing/egl/EGLNativeTypeMali.h
 new file mode 100644
-index 00000000000..083749a5924
+index 0000000000..083749a592
 --- /dev/null
 +++ b/xbmc/windowing/egl/EGLNativeTypeMali.h
 @@ -0,0 +1,53 @@
@@ -3981,7 +4038,7 @@ index 00000000000..083749a5924
 +};
 diff --git a/xbmc/windowing/egl/EGLNativeTypeNexTV.cpp b/xbmc/windowing/egl/EGLNativeTypeNexTV.cpp
 new file mode 100644
-index 00000000000..c08ba055c7d
+index 0000000000..c08ba055c7
 --- /dev/null
 +++ b/xbmc/windowing/egl/EGLNativeTypeNexTV.cpp
 @@ -0,0 +1,226 @@
@@ -4213,7 +4270,7 @@ index 00000000000..c08ba055c7d
 +}
 diff --git a/xbmc/windowing/egl/EGLNativeTypeNexTV.h b/xbmc/windowing/egl/EGLNativeTypeNexTV.h
 new file mode 100644
-index 00000000000..4151347862c
+index 0000000000..4151347862
 --- /dev/null
 +++ b/xbmc/windowing/egl/EGLNativeTypeNexTV.h
 @@ -0,0 +1,196 @@
@@ -4415,7 +4472,7 @@ index 00000000000..4151347862c
 +};
 diff --git a/xbmc/windowing/egl/EGLNativeTypeV3D.cpp b/xbmc/windowing/egl/EGLNativeTypeV3D.cpp
 new file mode 100644
-index 00000000000..4543d66e6aa
+index 0000000000..4543d66e6a
 --- /dev/null
 +++ b/xbmc/windowing/egl/EGLNativeTypeV3D.cpp
 @@ -0,0 +1,174 @@
@@ -4595,7 +4652,7 @@ index 00000000000..4543d66e6aa
 +}
 diff --git a/xbmc/windowing/egl/EGLNativeTypeV3D.h b/xbmc/windowing/egl/EGLNativeTypeV3D.h
 new file mode 100644
-index 00000000000..c3b7624809a
+index 0000000000..c3b7624809
 --- /dev/null
 +++ b/xbmc/windowing/egl/EGLNativeTypeV3D.h
 @@ -0,0 +1,61 @@
@@ -4662,7 +4719,7 @@ index 00000000000..c3b7624809a
 +};
 diff --git a/xbmc/windowing/egl/EGLNativeTypeV3DNXPL.cpp b/xbmc/windowing/egl/EGLNativeTypeV3DNXPL.cpp
 new file mode 100644
-index 00000000000..e9396636cfe
+index 0000000000..e9396636cf
 --- /dev/null
 +++ b/xbmc/windowing/egl/EGLNativeTypeV3DNXPL.cpp
 @@ -0,0 +1,205 @@
@@ -4873,7 +4930,7 @@ index 00000000000..e9396636cfe
 +}
 diff --git a/xbmc/windowing/egl/EGLNativeTypeV3DNXPL.h b/xbmc/windowing/egl/EGLNativeTypeV3DNXPL.h
 new file mode 100644
-index 00000000000..a1745107247
+index 0000000000..a174510724
 --- /dev/null
 +++ b/xbmc/windowing/egl/EGLNativeTypeV3DNXPL.h
 @@ -0,0 +1,129 @@
@@ -5008,7 +5065,7 @@ index 00000000000..a1745107247
 +};
 diff --git a/xbmc/windowing/egl/EGLNativeTypeVuplus.cpp b/xbmc/windowing/egl/EGLNativeTypeVuplus.cpp
 new file mode 100644
-index 00000000000..bf1df30525d
+index 0000000000..bf1df30525
 --- /dev/null
 +++ b/xbmc/windowing/egl/EGLNativeTypeVuplus.cpp
 @@ -0,0 +1,177 @@
@@ -5191,7 +5248,7 @@ index 00000000000..bf1df30525d
 +
 diff --git a/xbmc/windowing/egl/EGLNativeTypeVuplus.h b/xbmc/windowing/egl/EGLNativeTypeVuplus.h
 new file mode 100644
-index 00000000000..9f0ff93dea9
+index 0000000000..9f0ff93dea
 --- /dev/null
 +++ b/xbmc/windowing/egl/EGLNativeTypeVuplus.h
 @@ -0,0 +1,60 @@
@@ -5257,7 +5314,7 @@ index 00000000000..9f0ff93dea9
 +};
 diff --git a/xbmc/windowing/egl/EGLQuirks.h b/xbmc/windowing/egl/EGLQuirks.h
 new file mode 100644
-index 00000000000..6624f23e01f
+index 0000000000..6624f23e01
 --- /dev/null
 +++ b/xbmc/windowing/egl/EGLQuirks.h
 @@ -0,0 +1,42 @@
@@ -5305,10 +5362,10 @@ index 00000000000..6624f23e01f
 +#define EGL_QUIRK_RECREATE_DISPLAY_ON_CREATE_WINDOW (1 << 3)
 diff --git a/xbmc/windowing/egl/EGLWrapper.cpp b/xbmc/windowing/egl/EGLWrapper.cpp
 new file mode 100644
-index 00000000000..a780614f04c
+index 0000000000..3eb1f9b42a
 --- /dev/null
 +++ b/xbmc/windowing/egl/EGLWrapper.cpp
-@@ -0,0 +1,451 @@
+@@ -0,0 +1,489 @@
 +/*
 + *      Copyright (C) 2005-2013 Team XBMC
 + *      http://xbmc.org
@@ -5329,6 +5386,19 @@ index 00000000000..a780614f04c
 + *
 + */
 +#include "system.h"
++
++#if defined(TARGET_DREAMBOX)
++// Some EGL header sets (esp. embedded) may not define these, even if the driver supports them.
++#ifndef EGL_SWAP_BEHAVIOR
++#define EGL_SWAP_BEHAVIOR 0x3093
++#endif
++#ifndef EGL_BUFFER_PRESERVED
++#define EGL_BUFFER_PRESERVED 0x3094
++#endif
++#ifndef EGL_BUFFER_DESTROYED
++#define EGL_BUFFER_DESTROYED 0x3095
++#endif
++#endif
 +
 +#ifdef HAS_EGL
 +#include "utils/log.h"
@@ -5730,6 +5800,31 @@ index 00000000000..a780614f04c
 +{
 +  if ((display == EGL_NO_DISPLAY) || (surface == EGL_NO_SURFACE))
 +    return;
++#if defined(TARGET_DREAMBOX)
++  // On some fbdev/embedded EGL stacks the default swap behavior is BUFFER_DESTROYED.
++  // That can lead to undefined backbuffer contents after eglSwapBuffers(), which
++  // manifests as sporadically missing GUI elements (fonts/icons) while the background
++  // may still look stable.
++  static bool s_triedSwapBehavior = false;
++  if (!s_triedSwapBehavior)
++  {
++#ifdef EGL_SWAP_BEHAVIOR
++#ifdef EGL_BUFFER_PRESERVED
++    if (eglSurfaceAttrib(display, surface, EGL_SWAP_BEHAVIOR, EGL_BUFFER_PRESERVED) == EGL_FALSE)
++    {
++      EGLint err = eglGetError();
++      CLog::Log(LOGWARNING, "EGL: failed to set EGL_SWAP_BEHAVIOR=EGL_BUFFER_PRESERVED (err={:x})", err);
++    }
++    else
++    {
++      CLog::Log(LOGINFO, "EGL: EGL_SWAP_BEHAVIOR set to EGL_BUFFER_PRESERVED");
++    }
++#endif
++#endif
++    s_triedSwapBehavior = true;
++  }
++#endif
++
 +  eglSwapBuffers(display, surface);
 +}
 +
@@ -5762,7 +5857,7 @@ index 00000000000..a780614f04c
 +
 diff --git a/xbmc/windowing/egl/EGLWrapper.h b/xbmc/windowing/egl/EGLWrapper.h
 new file mode 100644
-index 00000000000..3a73b3e5d75
+index 0000000000..3a73b3e5d7
 --- /dev/null
 +++ b/xbmc/windowing/egl/EGLWrapper.h
 @@ -0,0 +1,76 @@
@@ -5844,7 +5939,7 @@ index 00000000000..3a73b3e5d75
 +};
 diff --git a/xbmc/windowing/egl/WinEventsSTB.cpp b/xbmc/windowing/egl/WinEventsSTB.cpp
 new file mode 100644
-index 00000000000..4c5d04ccf16
+index 0000000000..4c5d04ccf1
 --- /dev/null
 +++ b/xbmc/windowing/egl/WinEventsSTB.cpp
 @@ -0,0 +1,92 @@
@@ -5942,7 +6037,7 @@ index 00000000000..4c5d04ccf16
 +//#endif
 diff --git a/xbmc/windowing/egl/WinEventsSTB.h b/xbmc/windowing/egl/WinEventsSTB.h
 new file mode 100644
-index 00000000000..d1540687d34
+index 0000000000..d1540687d3
 --- /dev/null
 +++ b/xbmc/windowing/egl/WinEventsSTB.h
 @@ -0,0 +1,47 @@
@@ -5995,7 +6090,7 @@ index 00000000000..d1540687d34
 +
 diff --git a/xbmc/windowing/egl/WinSystemSTBContext.cpp b/xbmc/windowing/egl/WinSystemSTBContext.cpp
 new file mode 100644
-index 00000000000..c1cfb331d4f
+index 0000000000..c1cfb331d4
 --- /dev/null
 +++ b/xbmc/windowing/egl/WinSystemSTBContext.cpp
 @@ -0,0 +1,112 @@
@@ -6113,7 +6208,7 @@ index 00000000000..c1cfb331d4f
 +
 diff --git a/xbmc/windowing/egl/WinSystemSTBContext.h b/xbmc/windowing/egl/WinSystemSTBContext.h
 new file mode 100644
-index 00000000000..f8efc14f85e
+index 0000000000..f8efc14f85
 --- /dev/null
 +++ b/xbmc/windowing/egl/WinSystemSTBContext.h
 @@ -0,0 +1,43 @@
@@ -6162,7 +6257,7 @@ index 00000000000..f8efc14f85e
 +};
 diff --git a/xbmc/windowing/egl/WinSystemstb.cpp b/xbmc/windowing/egl/WinSystemstb.cpp
 new file mode 100644
-index 00000000000..896ad21d1aa
+index 0000000000..896ad21d1a
 --- /dev/null
 +++ b/xbmc/windowing/egl/WinSystemstb.cpp
 @@ -0,0 +1,547 @@
@@ -6715,7 +6810,7 @@ index 00000000000..896ad21d1aa
 +
 diff --git a/xbmc/windowing/egl/WinSystemstb.h b/xbmc/windowing/egl/WinSystemstb.h
 new file mode 100644
-index 00000000000..c2d176c0171
+index 0000000000..c2d176c017
 --- /dev/null
 +++ b/xbmc/windowing/egl/WinSystemstb.h
 @@ -0,0 +1,79 @@
@@ -6799,5 +6894,5 @@ index 00000000000..c2d176c0171
 +  std::unique_ptr<CLibInputHandler> m_libinput;
 +};
 -- 
-2.51.0
+2.45.2.windows.1
 

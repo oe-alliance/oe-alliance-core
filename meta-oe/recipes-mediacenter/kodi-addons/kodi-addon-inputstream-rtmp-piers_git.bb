@@ -7,9 +7,10 @@ inherit kodi-addon
 
 DEPENDS += "expat"
 
-SRCREV = "74d1e7654eb19dac9203a6e4e64bf06d5a7250c4"
+#SRCREV = "74d1e7654eb19dac9203a6e4e64bf06d5a7250c4"
+SRCREV = "4cf0d41bf26f673fda458c20467fd66db6d1a54d"
 
-PV = "22.0.0+gitr"
+PV = "22.0.1+gitr"
 
 KODIADDONBRANCH = "Piers"
 
