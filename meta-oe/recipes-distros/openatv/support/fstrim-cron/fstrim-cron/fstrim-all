@@ -1,0 +1,33 @@
+#!/bin/sh
+# Trim mounted filesystems (BusyBox-compatible). Logs results via stdout.
+
+# Filesystemtypen, die man typischerweise NICHT trimmt:
+SKIP_FS="proc sysfs devtmpfs devpts tmpfs overlay squashfs ramfs rootfs \
+cgroup cgroup2 pstore securityfs debugfs tracefs configfs fusectl mqueue \
+autofs binfmt_misc nsfs"
+
+is_skip_fs() {
+    for t in $SKIP_FS; do
+        [ "$1" = "$t" ] && return 0
+    done
+    return 1
+}
+
+# /proc/mounts: device mountpoint fstype options ...
+while read -r dev mnt fstype opts rest; do
+    if is_skip_fs "$fstype"; then
+        continue
+    fi
+
+    [ -d "$mnt" ] || continue
+
+    # Optional: Skip read-only mounts (ro in options)
+    case ",$opts," in
+        *,ro,*) continue ;;
+    esac
+
+    out="$(fstrim -v "$mnt" 2>/dev/null)"
+    [ -n "$out" ] && echo "$out"
+done < /proc/mounts
+
+exit 0

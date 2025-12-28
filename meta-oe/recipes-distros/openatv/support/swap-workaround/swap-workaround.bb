@@ -9,6 +9,8 @@ require conf/license/license-gplv2.inc
 PV = "1.0"
 PR = "r1"
 
+S = "${UNPACKDIR}"
+
 SRC_URI = "file://swapfile"
 
 do_install() {
