@@ -1,13 +1,14 @@
-From 3800361a64cc6f62a3f437595c9b98caaeab0c2d Mon Sep 17 00:00:00 2001
+From 71745e4c9fc93d5e57509e8012349d40bd34a6c3 Mon Sep 17 00:00:00 2001
 From: atvcaptain <openatv@gmail.com>
 Date: Mon, 29 Dec 2025 00:32:50 +0100
 Subject: [PATCH] older gles
 
 ---
  .../RetroPlayer/shaders/gles/ShaderPresetGLES.h     | 11 +++++++++++
+ .../VideoShaders/VideoFilterShaderGLES.cpp          |  4 ++++
  xbmc/guilib/TextureGLES.h                           | 13 +++++++++++++
  xbmc/utils/EGLUtils.h                               |  3 +++
- 3 files changed, 27 insertions(+)
+ 4 files changed, 31 insertions(+)
 
 diff --git a/xbmc/cores/RetroPlayer/shaders/gles/ShaderPresetGLES.h b/xbmc/cores/RetroPlayer/shaders/gles/ShaderPresetGLES.h
 index 9f7f1d0262..a6deb6bba5 100644
@@ -31,6 +32,21 @@ index 9f7f1d0262..a6deb6bba5 100644
  namespace KODI
  {
  namespace RETRO
+diff --git a/xbmc/cores/VideoPlayer/VideoRenderers/VideoShaders/VideoFilterShaderGLES.cpp b/xbmc/cores/VideoPlayer/VideoRenderers/VideoShaders/VideoFilterShaderGLES.cpp
+index ed6c086381..1109833a56 100644
+--- a/xbmc/cores/VideoPlayer/VideoRenderers/VideoShaders/VideoFilterShaderGLES.cpp
++++ b/xbmc/cores/VideoPlayer/VideoRenderers/VideoShaders/VideoFilterShaderGLES.cpp
+@@ -19,6 +19,10 @@
+ #include <math.h>
+ #include <string>
+ 
++#ifndef GL_RGBA16F_EXT
++#define GL_RGBA16F_EXT 0x881A
++#endif
++
+ using namespace Shaders::GLES;
+ 
+ //////////////////////////////////////////////////////////////////////
 diff --git a/xbmc/guilib/TextureGLES.h b/xbmc/guilib/TextureGLES.h
 index 634760c813..9c3dfa32d4 100644
 --- a/xbmc/guilib/TextureGLES.h
