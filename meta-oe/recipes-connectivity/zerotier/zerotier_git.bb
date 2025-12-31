@@ -10,11 +10,11 @@ LIC_FILES_CHKSUM = "file://LICENSE-MPL.txt;md5=9741c346eef56131163e13b9db1241b3"
 DEPENDS = "miniupnpd"
 RRECOMMENDS:${PN} = "kernel-module-tun"
 
-inherit gitpkgv
+inherit gittag
 
 SRCREV = "${AUTOREV}"
-PV = "1.14.0+git"
-PKGV = "1.14.0+git${GITPKGV}"
+PV = "git"
+PKGV = "${GITPKGVTAG}"
 
 SRC_URI = "git://github.com/zerotier/ZeroTierOne.git;protocol=https;branch=main \
         file://zerotier \
