@@ -22,5 +22,5 @@ do_install:append() {
 
 INSANE_SKIP:libgstgl-1.0 += "file-rdeps"
 
-PV = "1.26.9"
-SRC_URI[sha256sum] = "11db4ec9ae5be2194ff8ccf2b5fecdc069252fe4416921b083a921ef71dd000a"
+PV = "1.26.10"
+SRC_URI[sha256sum] = "1c1531dd8f2d480c89c57b08a930545a3375077391789762e40e490cdbbf03fd"
