@@ -1,7 +1,7 @@
 SUMMARY = "Flexible DNS proxy with support for DNSCrypt v2, DoH, Anonymized DNSCrypt and ODoH"
 HOMEPAGE = "https://github.com/DNSCrypt/dnscrypt-proxy"
 LICENSE = "ISC"
-LIC_FILES_CHKSUM = "file://${UNPACKDIR}/${GO_SRCURI_DESTSUFFIX}/LICENSE;md5=ab28537c54beaee1dff55cf590239a91"
+LIC_FILES_CHKSUM = "file://${UNPACKDIR}/${GO_SRCURI_DESTSUFFIX}/LICENSE;md5=ea9f5f8d90c27d6576d8aa0f8314706f"
 
 SRCREV = "${AUTOREV}"
 PV = "git"
