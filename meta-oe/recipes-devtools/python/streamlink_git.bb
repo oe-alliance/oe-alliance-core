@@ -3,7 +3,7 @@ DESCRIPTION = "Streamlink is a command-line utility that pipes video streams fro
 HOMEPAGE = "https://github.com/streamlink/streamlink"
 SECTION = "devel/python"
 LICENSE = "BSD-2-Clause"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=bdeccdbc612afcae11e2a92dafa75e35"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=ca97af75b78809a5c401f63ead0f59f2"
 
 DEPENDS += "python3-versioningit-native"
 
@@ -25,12 +25,15 @@ RDEPENDS:${PN} = "python3-core \
     python3-singledispatch \
     python3-websocket-client \
     python3-trio \
+    python3-certifi \
+    python3-urllib3 \
+    python3-trio-websocket \
     "
 
 PV = "git"
 PKGV = "${GITPKGVTAG}"
 
-SRCREV_streamlink = "8f330ba5bc82f58adfb1c07a86c6b1923f16106d"
+SRCREV_streamlink = "${AUTOREV}"
 SRCREV_plugins = "${AUTOREV}"
 
 SRCREV_FORMAT = "streamlink_plugins"
