@@ -37,6 +37,7 @@ EXTRA_OECMAKE += "\
 	-DMODULE_CONSTCW=1 \
 	-DMODULE_STREAMRELAY=1 \
 	-DHAVE_LIBDVBCSA=1 \
+	-DWITH_EXTENDED_CW=1 \
 "
 
 do_configure:prepend () {
