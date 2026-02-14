@@ -25,7 +25,3 @@ FILES:${PN} += "${sysconfdir} /usr/share/bash-completion"
 CONFFILES:${PN} = "${sysconfdir}/gerbera/config.xml"
 
 DEPENDS += "jsoncpp icu"
-
-PV = "2.6.1"
-
-SRCREV = "89b37a28d9f648502c617d15a0194669d0e54a94"
