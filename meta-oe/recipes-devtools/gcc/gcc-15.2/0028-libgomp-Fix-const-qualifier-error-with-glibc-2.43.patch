@@ -1,0 +1,33 @@
+From 68ec60c4a377b532ec2d265ea542107c36b1d15c Mon Sep 17 00:00:00 2001
+From: Jakub Jelinek <jakub@redhat.com>
+Date: Wed, 29 Jan 2026 09:41:32 +0100
+Subject: [PATCH] libgomp: Fix GCC build after glibc strchr C23 changes
+
+glibc 2.43 implements C23 const-preserving macros for strchr and similar
+functions, which means strchr now returns const char * when given a
+const char * input. This causes a -Wdiscarded-qualifiers error in
+affinity-fmt.c when building with -Werror.
+
+Fix by changing the variable type to const char *.
+
+Upstream-Status: Backport
+Signed-off-by: Jakub Jelinek <jakub@redhat.com>
+---
+ libgomp/affinity-fmt.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/libgomp/affinity-fmt.c b/libgomp/affinity-fmt.c
+index 4184204866..68ec60c4a3 100644
+--- a/libgomp/affinity-fmt.c
++++ b/libgomp/affinity-fmt.c
+@@ -327,7 +327,7 @@ gomp_display_affinity (char *buffer, size_t size,
+ 	      }
+ 	  if (c == '{')
+ 	    {
+-	      char *q = strchr (p + 1, '}');
++	      const char *q = strchr (p + 1, '}');
+ 	      if (q)
+ 		gomp_fatal ("unsupported long type name '%.*s' in affinity "
+ 			    "format", (int) (q - (p + 1)), p + 1);
+--
+2.43.0
