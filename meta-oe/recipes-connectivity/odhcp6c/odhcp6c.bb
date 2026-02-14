@@ -19,6 +19,8 @@ SRC_URI = "git://github.com/openwrt/odhcp6c.git;protocol=https;branch=master \
 
 inherit pkgconfig
 
+TARGET_CFLAGS:append = " -Wno-error=discarded-qualifiers"
+
 EXTRA_OEMAKE = " \
     'CC=${CC}' \
 "
