@@ -1,9 +1,6 @@
 FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 SRC_URI += "file://use-legacy-path-for-pycs.patch"
 
-PV = "3.13.11"
-SRC_URI[sha256sum] = "16ede7bb7cdbfa895d11b0642fa0e523f291e6487194d53cf6d3b338c3a17ea2"
-
 PACKAGECONFIG = "readline gdbm ${@bb.utils.filter('DISTRO_FEATURES', 'lto', d)}"
 
 inherit python3-dir
@@ -31,9 +28,6 @@ do_install:prepend() {
 do_install:append() {
     if [ -e ${D}/usr/lib/${PYTHON_DIR}/test ]; then
       rm -rf ${D}/usr/lib/${PYTHON_DIR}/test
-    fi
-    if [ -e ${D}/usr/lib/${PYTHON_DIR}/lib2to3/tests ]; then
-      rm -rf ${D}/usr/lib/${PYTHON_DIR}/lib2to3/tests
     fi
 }
 
@@ -109,5 +103,7 @@ python(){
     d.setVar('PACKAGES', ' '.join(packages))
     d.setVar('ALLOW_EMPTY:${PN}-modules', '1')
     d.setVar('ALLOW_EMPTY:${PN}-pkgutil', '1')
-}
 
+    # Python 3.14: _datetime is now a static built-in module
+    d.setVar('ALLOW_EMPTY:' + pn + '-datetime', '1')
+}
