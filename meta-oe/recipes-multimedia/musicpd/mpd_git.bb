@@ -16,6 +16,8 @@ PKGV = "0.24.3+git${GITPKGV}"
 SRC_URI = "git://github.com/MusicPlayerDaemon/MPD;branch=master;protocol=https \
            file://mpd.conf \
            file://mpd.init \
+           file://0001-fix-openat2-glibc-2.43.patch \
+           file://0002-fix-fmt-localtime-fmt11.patch \
           "
 
 inherit meson pkgconfig update-rc.d upx-compress
