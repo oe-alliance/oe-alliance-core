@@ -1,15 +1,30 @@
+diff --git a/Source/JavaScriptCore/wtf/gobject/GOwnPtr.h b/Source/JavaScriptCore/wtf/gobject/GOwnPtr.h
+--- a/Source/JavaScriptCore/wtf/gobject/GOwnPtr.h
++++ b/Source/JavaScriptCore/wtf/gobject/GOwnPtr.h
+@@ -27,8 +27,7 @@
+ #include <algorithm>
+ #include <wtf/Assertions.h>
+ #include <wtf/Noncopyable.h>
+-
+-extern "C" void g_free(void*);
++#include <glib.h>
+
+ namespace WTF {
+
+diff --git a/Source/JavaScriptCore/wtf/gobject/GRefPtr.h b/Source/JavaScriptCore/wtf/gobject/GRefPtr.h
 --- a/Source/JavaScriptCore/wtf/gobject/GRefPtr.h
 +++ b/Source/JavaScriptCore/wtf/gobject/GRefPtr.h
 @@ -30,9 +30,6 @@
  #include "RefPtr.h"
  #include <algorithm>
- 
+
 -extern "C" void g_object_unref(gpointer);
 -extern "C" gpointer g_object_ref_sink(gpointer);
 -
  namespace WTF {
- 
+
  enum GRefPtrAdoptType { GRefPtrAdopt };
+diff --git a/Source/WebCore/accessibility/gtk/AccessibilityObjectWrapperAtk.cpp b/Source/WebCore/accessibility/gtk/AccessibilityObjectWrapperAtk.cpp
 --- a/Source/WebCore/accessibility/gtk/AccessibilityObjectWrapperAtk.cpp
 +++ b/Source/WebCore/accessibility/gtk/AccessibilityObjectWrapperAtk.cpp
 @@ -835,7 +835,7 @@ static void webkit_accessible_class_init(AtkObjectClass* klass)
@@ -18,17 +33,18 @@
  {
 -    static volatile gsize type_volatile = 0;
 +    static gsize type_volatile = 0;
- 
+
      if (g_once_init_enter(&type_volatile)) {
          static const GTypeInfo tinfo = {
+diff --git a/Source/WebCore/accessibility/gtk/WebKitAccessibleHyperlink.cpp b/Source/WebCore/accessibility/gtk/WebKitAccessibleHyperlink.cpp
 --- a/Source/WebCore/accessibility/gtk/WebKitAccessibleHyperlink.cpp
 +++ b/Source/WebCore/accessibility/gtk/WebKitAccessibleHyperlink.cpp
 @@ -363,7 +363,7 @@ static void webkitAccessibleHyperlinkInit(AtkHyperlink* link)
- 
+
  GType webkitAccessibleHyperlinkGetType()
  {
 -    static volatile gsize typeVolatile = 0;
 +    static gsize typeVolatile = 0;
- 
+
      if (g_once_init_enter(&typeVolatile)) {
          static const GTypeInfo tinfo = {
