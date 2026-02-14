@@ -6,6 +6,8 @@ Subject: [PATCH] tests: use a dictionaries for environment
 meson environment() can't be passed to configure_file and it is needed for installed_tests,
 use a dictionary as this is simplest solution to install the environment.
 
+Adapted for GStreamer 1.28.0.
+
 Upstream-Status: Submitted [https://gitlab.freedesktop.org/gstreamer/gstreamer/-/merge_requests/789]
 
 Signed-off-by: Jose Quaresma <quaresma.jose@gmail.com>
@@ -17,10 +19,10 @@ diff --git a/tests/check/meson.build b/tests/check/meson.build
 index 08f8fd8..330abaa 100644
 --- a/tests/check/meson.build
 +++ b/tests/check/meson.build
-@@ -161,14 +161,19 @@ foreach t : core_tests
+@@ -165,14 +165,19 @@ foreach t : core_tests
        install: installed_tests_enabled,
      )
- 
+
 -    env = environment()
 -    env.set('GST_PLUGIN_PATH_1_0', meson.project_build_root())
 -    env.set('GST_PLUGIN_SYSTEM_PATH_1_0', '')
@@ -42,6 +44,6 @@ index 08f8fd8..330abaa 100644
 +      'GST_PLUGIN_SCANNER_1_0': gst_scanner_dir + '/gst-plugin-scanner',
 +      'GST_PLUGIN_LOADING_WHITELIST': 'gstreamer',
 +    }
- 
+
      if installed_tests_enabled
        test_conf = configuration_data()

@@ -7,6 +7,8 @@ Subject: [PATCH] tests: add helper script to run the installed_tests
 with some of the environment variables used in the meson
 testing framework.
 
+Adapted for GStreamer 1.28.0.
+
 Upstream-Status: Submitted [https://gitlab.freedesktop.org/gstreamer/gstreamer/-/merge_requests/789]
 
 Signed-off-by: Jose Quaresma <quaresma.jose@gmail.com>
@@ -43,7 +45,7 @@ index 330abaa..5d383b1 100644
 +        configuration : env,
 +      )
      endif
- 
+
      test(test_name, exe, env: env, timeout : 3 * 60)
 diff --git a/tests/check/template.sh.in b/tests/check/template.sh.in
 new file mode 100755
