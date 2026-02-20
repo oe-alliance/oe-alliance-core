@@ -30,7 +30,8 @@ inherit python3-dir
 
 INFOFILE = "${libdir}/enigma.info"
 
-do_populate_sysroot[depends] += "rust-native:do_populate_sysroot upx-native:do_populate_sysroot"
+RUST_VER = "${@d.getVar('RUSTVERSION').replace('%', '')}"
+UPX_VER = "${@d.getVar('PREFERRED_VERSION_upx').replace('%', '')}"
 
 do_install[nostamp] = "1"
 
@@ -150,13 +151,6 @@ do_install() {
     else
         DRIVERSDATE='N/A'
     fi
-    if [ -e ${COMPONENTS_DIR}/${BUILD_ARCH}/upx-native${bindir}/upx ]; then
-        UPX_VER=`${COMPONENTS_DIR}/${BUILD_ARCH}/upx-native${bindir}/upx --version | awk 'NR==1{print $2}'`
-    fi
-    if [ -e ${COMPONENTS_DIR}/${BUILD_ARCH}/rust-native${bindir}/rustc ]; then
-        RUST_VER=`${COMPONENTS_DIR}/${BUILD_ARCH}/rust-native${bindir}/rustc --version | awk 'NR==1{print $2}'`
-    fi
-
     install -d ${D}${libdir}
     printf "architecture='${DEFAULTTUNE}'\n" > ${D}${INFOFILE}
     printf "avjack=${HAVE_AV_JACK}\n" >> ${D}${INFOFILE}
