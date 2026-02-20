@@ -1,4 +1,4 @@
-PR .= ".7"
+PR .= ".8"
 
 FILESEXTRAPATHS:prepend := "${THISDIR}/${P}:"
 
@@ -11,6 +11,7 @@ RRECOMMENDS:${PN} = ""
 SRC_URI += "file://hotplug.sh \
             file://nocam.sh \
             file://nocard.sh \
+            file://mountnfs.sh \
 "
 
 do_install:append() {
@@ -22,7 +23,6 @@ do_install:append() {
     ln -sf        ../init.d/hotplug.sh      ${D}${sysconfdir}/rcS.d/S06hotplug.sh
 
     perl -i -pe 's:mount -a.+?$:mount -a -t nonfs,nfs4,smbfs,cifs,ncp,ncpfs,coda,ocfs2,gfs,gfs2,ceph -O no_netdev 2>/dev/null:' ${D}${sysconfdir}/init.d/mountall.sh
-    perl -i -pe 's:(mount -a).*?$:$1:' ${D}${sysconfdir}/init.d/mountnfs.sh
 
     # run bootmisc.sh after S37populate-volatile.sh  to fix /tmp issue
     update-rc.d -f -r ${D} bootmisc.sh remove
