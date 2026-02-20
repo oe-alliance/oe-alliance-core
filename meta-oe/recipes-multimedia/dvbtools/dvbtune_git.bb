@@ -3,10 +3,14 @@ PRIORITY = "optional"
 LICENSE = "GPL-2.0-only"
 DEPENDS = "libxml2"
 SRCDATE = "20090621"
-PV = "0.0+cvs${SRCDATE}"
 
-SRC_URI = "cvs://anonymous@dvbtools.cvs.sourceforge.net/cvsroot/dvbtools;module=dvbtune"
+inherit gitpkgv
 
+SRCREV = "${AUTOREV}"
+PV = "0.0+git${SRCDATE}"
+PKGV = "0.0+git${GITPKGV}"
+
+SRC_URI = "git://github.com/linuxstb/dvbtools;protocol=https;branch=master"
 S = "${UNPACKDIR}/dvbtune"
 
 CFLAGS += "\$(shell xml2-config --cflags)"
