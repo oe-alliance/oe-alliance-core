@@ -1,11 +1,11 @@
 --- a/src/redsea.cc
 +++ b/src/redsea.cc
-@@ -19,7 +19,7 @@
+@@ -21,7 +21,7 @@
  #include <memory>
  #include <vector>
- 
+
 -#include "config.h"
 +#include "../build/config.h"
  #include "src/channel.hh"
  #include "src/dsp/subcarrier.hh"
- #include "src/groups.hh"
+ #include "src/group.hh"
