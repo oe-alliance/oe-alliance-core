@@ -1,0 +1,22 @@
+--- a/Source/JavaScriptCore/wtf/gobject/GOwnPtr.h
++++ b/Source/JavaScriptCore/wtf/gobject/GOwnPtr.h
+@@ -27,7 +27,7 @@
+ #include <wtf/Assertions.h>
+ #include <wtf/Noncopyable.h>
+ 
+-extern "C" void g_free(void*);
++#include <glib.h>
+ 
+ namespace WTF {
+ 
+--- a/Source/JavaScriptCore/wtf/unicode/glib/UnicodeGLib.h
++++ b/Source/JavaScriptCore/wtf/unicode/glib/UnicodeGLib.h
+@@ -95,7 +95,7 @@
+ 
+     Mark_NonSpacing = U_MASK(G_UNICODE_NON_SPACING_MARK),
+     Mark_Enclosing = U_MASK(G_UNICODE_ENCLOSING_MARK),
+-    Mark_SpacingCombining = U_MASK(G_UNICODE_COMBINING_MARK),
++    Mark_SpacingCombining = U_MASK(G_UNICODE_SPACING_MARK),
+ 
+     Number_DecimalDigit = U_MASK(G_UNICODE_DECIMAL_NUMBER),
+     Number_Letter = U_MASK(G_UNICODE_LETTER_NUMBER),

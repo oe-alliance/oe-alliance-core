@@ -22,7 +22,8 @@ PR = "r0"
 SRC_URI = "git://github.com/oe-alliance/webkit.org.git;protocol=https;branch=master \
         file://0001-fix-build-with-bison-3.7.patch \
         file://0002-fix-build-with-gcc11.patch \
-        file://0003-fix-build-with-glib-2.7x.patch"
+        file://0003-fix-build-with-glib-2.7x.patch \
+        file://0004-fix-build-with-glib-2.80.patch"
 
 inherit autotools lib_package gtk-doc pkgconfig perlnative python3native gitpkgv
 
@@ -60,7 +61,7 @@ CPPFLAGS += "-I${STAGING_INCDIR}/pango-1.0 \
             -I${STAGING_LIBDIR}/glib-2.0/include \
             -I${STAGING_INCDIR}/glib-2.0" 
 
-CXXFLAGS += " -std=gnu++98 -Wno-expansion-to-defined -Wno-deprecated-copy -Wno-class-memaccess -Wno-unused-local-typedefs -Wno-cast-align -Wno-c++11-compat"
+CXXFLAGS += " -std=gnu++98 -Wno-expansion-to-defined -Wno-deprecated-copy -Wno-class-memaccess -Wno-unused-local-typedefs -Wno-cast-align -Wno-c++11-compat -Wno-template-id-cdtor"
 
 OECMAKE_GENERATOR = "Unix Makefiles"
 

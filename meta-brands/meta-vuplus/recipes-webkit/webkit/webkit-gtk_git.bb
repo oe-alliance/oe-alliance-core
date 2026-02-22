@@ -28,6 +28,7 @@ SRC_URI = "git://github.com/vuplus-com/webkit-r95199-base.git;protocol=https;bra
     file://webkit-gtk_fixed_crash_error.patch \
     file://maketokenizer.patch \
     file://0003-fix-build-with-glib-2.7x.patch \
+    file://0004-fix-build-with-glib-2.80.patch \
     file://0004-replace-removed-deprecated-SoupRequester.patch \
     file://0001-distutils-are-outdated-use-setuptools.patch \
 "
@@ -68,7 +69,7 @@ CPPFLAGS += "-I${STAGING_INCDIR}/pango-1.0 \
             -I${STAGING_LIBDIR}/glib-2.0/include \
             -I${STAGING_INCDIR}/glib-2.0"
 
-CXXFLAGS += " -std=gnu++98 -Wno-expansion-to-defined -Wno-deprecated-copy -Wno-class-memaccess -Wno-unused-local-typedefs -Wno-cast-align -Wno-c++11-compat"
+CXXFLAGS += " -std=gnu++98 -Wno-expansion-to-defined -Wno-deprecated-copy -Wno-class-memaccess -Wno-unused-local-typedefs -Wno-cast-align -Wno-c++11-compat -Wno-template-id-cdtor"
 
 OECMAKE_GENERATOR = "Unix Makefiles"
 
