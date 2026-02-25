@@ -14,7 +14,7 @@ SRC_URI = "git://github.com/oe-mirrors/tuxcom.git;protocol=https;branch=master \
 
 inherit autotools-brokensep pkgconfig
 
-CFLAGS += "-std=gnu17 -Wno-return-mismatch"
+CFLAGS += "-std=gnu17 -Wno-return-mismatch -Wno-error=format-security"
 
 do_install() {
     install -d ${D}/usr/plugins

@@ -11,8 +11,8 @@ SRC_URI[sha256sum] = "864f143d7686377f8ab94d91283c696ebd906bf256b2eacc7e9fb4dddc
 
 inherit autotools gettext pkgconfig
 
-CFLAGS += "-std=gnu17"
-CXXFLAGS += "-Wno-template-body"
+CFLAGS += "-std=gnu17 -Wno-error=format-security"
+CXXFLAGS += "-Wno-template-body -Wno-error=format-security"
 
 EXTRA_OECONF = " \
         --without-libquicktime \

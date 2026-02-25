@@ -29,6 +29,8 @@ do_configure () {
             --cross-compile
 }
 
+CFLAGS += "-Wno-error=format-security"
+
 SRC_URI[md5sum] = "5bbcdbf1ff85a9710fa3d4e82ccaa251"
 SRC_URI[sha256sum] = "7b9b85c79968d4f4560f02a99e33c6a33ff58f9d41d8faea79e31cce2ee78665"
 

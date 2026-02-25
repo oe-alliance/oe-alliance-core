@@ -19,6 +19,8 @@ PARALLEL_MAKE = ""
 
 inherit autotools-brokensep pkgconfig gitpkgv
 
+CFLAGS += "-Wno-error=format-security"
+
 PACKAGES += "libcdparanoia libcdparanoia-dev libcdparanoia-static"
 
 FILES:${PN} = "${bindir}/*"
