@@ -3,6 +3,8 @@ PRIORITY = "required"
 LICENSE = "GPL-3.0-only"
 LIC_FILES_CHKSUM = "file://LICENSE.GPLv3;md5=5ed852a46d22220a8b07a68e564d84c7"
 
+FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
+
 inherit autotools-brokensep pkgconfig gitpkgv
 
 SRCREV = "${AUTOREV}"
@@ -12,7 +14,8 @@ PR = "r11"
 
 DEPENDS = "libdvbsi++"
 
-SRC_URI = "git://github.com/vuplus-com/dumpait.git;protocol=https;branch=master"
+SRC_URI = "git://github.com/vuplus-com/dumpait.git;protocol=https;branch=master \
+            file://scanner-add-file-mode.patch"
 
 DESTDIR = "enigma2/python/Plugins/Extensions/HbbTV"
 
