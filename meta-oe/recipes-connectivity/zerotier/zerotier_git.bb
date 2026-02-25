@@ -39,4 +39,4 @@ do_install:append() {
     install -m 0755 ${UNPACKDIR}/zerotier ${D}${sysconfdir}/init.d/zerotier
 }
 
-INSANE_SKIP:${PN} = "already-stripped ldflags"
+INSANE_SKIP:${PN} = "already-stripped ldflags textrel"
