@@ -86,6 +86,7 @@ PACKAGECONFIG[perl] = ",,,"
 # Remove this to enable SSLv3. SSLv3 is defaulted to disabled due to the POODLE
 # vulnerability
 EXTRA_OECONF = "no-ssl3"
+EXTRA_OECONF:remove = " --disable-static"
 
 EXTRA_OEMAKE = "${@bb.utils.contains('PACKAGECONFIG', 'manpages', '', 'OE_DISABLE_MANPAGES=1', d)}"
 

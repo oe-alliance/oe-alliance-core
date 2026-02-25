@@ -188,6 +188,7 @@ SRC_URI[md5sum] = "ee17e9bc805c8cc7d0afac3b0ef78eda"
 SRC_URI[sha256sum] = "7ce0c7f2c451070b4497ea7ca6f23eba6cef1a56db2e86e433f65926a7bc7497"
 
 EXTRA_OECONF += "no-idea no-mdc2 no-rc5"
+EXTRA_OECONF:remove = " --disable-static"
 
 PARALLEL_MAKEINST = ""
 

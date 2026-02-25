@@ -89,6 +89,8 @@ EXTRA_OECONF += "--disable-cups \
                  --with-pam_smbpass \
                 "
 
+EXTRA_OECONF:remove = " --disable-static"
+
 LDFLAGS += "-Wl,-z,relro,-z,now ${@bb.utils.contains('DISTRO_FEATURES', 'ld-is-gold', ' -fuse-ld=bfd ', '', d)}"
 
 CONFIGUREOPTS = " --prefix=${prefix} \
