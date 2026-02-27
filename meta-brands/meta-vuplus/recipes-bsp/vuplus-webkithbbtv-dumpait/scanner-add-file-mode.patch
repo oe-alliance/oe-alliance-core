@@ -1,0 +1,11 @@
+--- a/src/scanner.cpp
++++ b/src/scanner.cpp
+@@ -228,7 +228,7 @@ int ScanAIT(eDemux& demux, long aitid, ApplicationInformationSectionMultiVector
+ 						DA_DEBUG("last_section_number %d > section_number %d", buffer[7], buffer[6]);
+ 						buffer[7] = buffer[6];
+ 					}
+-					int fd = ::open(filename, O_RDWR | O_CREAT | O_TRUNC);
++					int fd = ::open(filename, O_RDWR | O_CREAT | O_TRUNC, 0600);
+ 					if(fd >= 0) {
+ 						::write(fd, buffer, len);
+ 						::close(fd);
