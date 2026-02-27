@@ -14,7 +14,8 @@ PR = "r0"
 
 DEPENDS = "libdvbsi++"
 
-SRC_URI = "git://github.com/oe-alliance/dumpait-legacy.git;protocol=https;branch=master"
+SRC_URI = "git://github.com/oe-alliance/dumpait-legacy.git;protocol=https;branch=master \
+            file://scanner-add-file-mode.patch"
 
 DESTDIR = "enigma2/python/Plugins/Extensions/HbbTV"
 
