@@ -34,7 +34,7 @@ do_install() {
     install ${S}/locale.alias ${D}${LOCALEDIR2}
 
     install -d ${D}${LOCALEDIR}
-    cp -rp ${S}/* ${D}/${LOCALEDIR}
+    cp -r --no-preserve=ownership ${S}/* ${D}/${LOCALEDIR}
 
     install -d ${D}${LOCALEDIR}/C.UTF8
     install ${S}/LC_CTYPE ${D}${LOCALEDIR}/C.UTF8/

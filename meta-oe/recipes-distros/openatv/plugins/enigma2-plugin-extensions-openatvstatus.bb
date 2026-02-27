@@ -28,7 +28,7 @@ do_compile() {
 
 do_install() {
     install -d ${D}${PLUGIN}
-    cp -rp ${S}/src/* ${D}${PLUGIN}
+    cp -r --no-preserve=ownership ${S}/src/* ${D}${PLUGIN}
 
     install -d ${D}${PLUGIN}/locale/
     cp -rf ${S}/locale/* ${D}${PLUGIN}/locale/

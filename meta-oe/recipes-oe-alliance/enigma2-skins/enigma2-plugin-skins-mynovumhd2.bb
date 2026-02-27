@@ -20,7 +20,7 @@ FILES:${PN} = "/usr/share/enigma2/myNOVUM_HD2"
 
 do_install() {
    install -d ${D}/usr/share/enigma2
-   cp -rp ${S}/Nashu/myNOVUM_HD2 ${D}/usr/share/enigma2/
+   cp -r --no-preserve=ownership ${S}/Nashu/myNOVUM_HD2 ${D}/usr/share/enigma2/
    chmod -R a+rX ${D}/usr/share/enigma2/
 }
 

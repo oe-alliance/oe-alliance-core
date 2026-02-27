@@ -25,6 +25,6 @@ FILES:${PN} = "${libdir} /etc/*"
 do_install() {
 	install -d ${D}${libdir}
 	install -d ${D}/etc
-	cp -rp ${S}/usr/lib/* ${D}${libdir}/
-	cp -rp ${S}/etc/* ${S}/etc/
+	cp -r --no-preserve=ownership ${S}/usr/lib/* ${D}${libdir}/
+	cp -r --no-preserve=ownership ${S}/etc/* ${S}/etc/
 }

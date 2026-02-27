@@ -22,8 +22,8 @@ S = "${UNPACKDIR}/${BP}/Steampunk-HD-Skin-4HDF"
 do_install() {
     install -d ${D}${libdir}
     install -d ${D}${datadir}
-    cp -rp ${S}/usr/lib/* ${D}${libdir}/
-    cp -rp ${S}/${datadir}/* ${D}${datadir}
+    cp -r --no-preserve=ownership ${S}/usr/lib/* ${D}${libdir}/
+    cp -r --no-preserve=ownership ${S}/${datadir}/* ${D}${datadir}
     chmod -R a+rX ${D}${datadir}/enigma2/
 }
 

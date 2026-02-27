@@ -22,7 +22,7 @@ FILES:${PN} = "${libdir} /usr/sbin"
 
 do_install() {
     install -d ${D}${libdir}
-    cp -rp ${S}/usr/lib/* ${D}${libdir}/
+    cp -r --no-preserve=ownership ${S}/usr/lib/* ${D}${libdir}/
     install -d ${D}/usr/sbin
     install -m 0755 ${S}/bin/nand_check ${D}/usr/sbin/nand_check
     install -m 0755 ${S}/bin/nfiwrite ${D}/usr/sbin/nfiwrite

@@ -20,15 +20,15 @@ FILES:${PN} = "${libdir}"
 
 do_install:mipsel() {
     install -d ${D}${libdir}
-    cp -rp ${S}/usr/lib/* ${D}${libdir}/
-    cp -rp ${S}/mipsel/* ${D}${libdir}/enigma2/python/Plugins/Extensions/dBackup/
+    cp -r --no-preserve=ownership ${S}/usr/lib/* ${D}${libdir}/
+    cp -r --no-preserve=ownership ${S}/mipsel/* ${D}${libdir}/enigma2/python/Plugins/Extensions/dBackup/
     chmod -R 777 ${D}${libdir}/enigma2/python/Plugins/Extensions/dBackup
 }
 
 do_install:arm() {
     install -d ${D}${libdir}
-    cp -rp ${S}/usr ${D}/
-    cp -rp ${S}/arm/* ${D}${libdir}/enigma2/python/Plugins/Extensions/dBackup/
+    cp -r --no-preserve=ownership ${S}/usr ${D}/
+    cp -r --no-preserve=ownership ${S}/arm/* ${D}${libdir}/enigma2/python/Plugins/Extensions/dBackup/
     chmod -R 777 ${D}${libdir}/enigma2/python/Plugins/Extensions/dBackup
 }
 

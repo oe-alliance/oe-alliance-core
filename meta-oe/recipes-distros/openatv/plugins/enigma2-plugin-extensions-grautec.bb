@@ -26,7 +26,7 @@ do_install() {
     install -d ${D}${sysconfdir}/rc3.d
 	install -d ${D}${sysconfdir}/rc6.d
     chmod -R 777 ${S}/dreambox
-    cp -rp ${S}/dreambox/* ${D}/
+    cp -r --no-preserve=ownership ${S}/dreambox/* ${D}/
 	ln -sf ../init.d/usbtftdisplay.sh ${D}${sysconfdir}/rc3.d/S90usbtftdisplay
 	ln -sf ../init.d/killusbtftdisplay.sh ${D}${sysconfdir}/rc6.d/K50killusbtftdisplay
 }

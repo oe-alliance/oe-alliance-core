@@ -17,7 +17,7 @@ FILES:${PN} = "/usr/share/enigma2/Army_MoodBlue_mod"
 
 do_install() {
     install -d ${D}/usr/
-    cp -rp ${S}/usr/* ${D}/usr/
+    cp -r --no-preserve=ownership ${S}/usr/* ${D}/usr/
 }
 
 do_package_qa[noexec] = "1"

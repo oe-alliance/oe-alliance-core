@@ -19,7 +19,7 @@ SRC_URI = "git://github.com/oerlgrey/TeamBlueHD.git;protocol=https;branch=master
 FILES:${PN} = "/usr/*"
 
 do_install() {
-    cp -rp ${S}/usr ${D}/
+    cp -r --no-preserve=ownership ${S}/usr ${D}/
 }
 
 pkg_prerm:${PN} () {

@@ -22,7 +22,7 @@ S = "${UNPACKDIR}/data"
 
 do_install() {
     install -d ${D}/usr/share/enigma2
-    cp -rp ${S}/usr ${D}/
+    cp -r --no-preserve=ownership ${S}/usr ${D}/
     chmod -R a+rX ${D}/usr/share/enigma2/
 }
 

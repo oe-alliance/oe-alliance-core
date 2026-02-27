@@ -21,7 +21,7 @@ FILES:${PN} = "/usr"
 
 do_install() {
     install -d ${D}/usr
-    cp -rp ${S}/usr/* ${D}/usr
+    cp -r --no-preserve=ownership ${S}/usr/* ${D}/usr
 }
 
 do_populate_sysroot[noexec] = "1"

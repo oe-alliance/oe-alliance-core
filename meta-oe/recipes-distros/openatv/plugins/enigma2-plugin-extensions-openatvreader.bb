@@ -20,7 +20,7 @@ FILES:${PN} = "${PLUGIN}"
 
 do_install() {
     install -d ${D}${PLUGIN}
-    cp -rp ${S}/src/* ${D}${PLUGIN}
+    cp -r --no-preserve=ownership ${S}/src/* ${D}${PLUGIN}
 }
 
 pkg_postrm:${PN}() {

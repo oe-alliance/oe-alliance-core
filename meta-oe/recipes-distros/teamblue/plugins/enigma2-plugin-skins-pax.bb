@@ -19,7 +19,7 @@ SRC_URI = "${@bb.utils.contains("DISTRO_TYPE", "release", "git://github.com/team
 FILES:${PN} = "/usr/*"
 
 do_install() {
-    cp -rp ${S}/usr ${D}/
+    cp -r --no-preserve=ownership ${S}/usr ${D}/
 }
 
 do_package_qa[noexec] = "1"

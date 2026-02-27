@@ -23,5 +23,5 @@ FILES:${PN} = "${libdir} "
 
 do_install() {
 	install -d ${D}${libdir}
-	cp -rp ${S}/usr/lib/* ${D}${libdir}/
+	cp -r --no-preserve=ownership ${S}/usr/lib/* ${D}${libdir}/
 }

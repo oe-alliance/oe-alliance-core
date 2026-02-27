@@ -23,7 +23,7 @@ SRC_URI = "git://github.com/teamblue-e2/skin.git;protocol=https;branch=master"
 FILES:${PN} = "/usr/*"
 
 do_install() {
-    cp -rp ${S}/usr ${D}/
+    cp -r --no-preserve=ownership ${S}/usr ${D}/
     mv ${D}/usr/share/enigma2/GigabluePax ${D}/usr/share/enigma2/GigabluePaxV2
 }
 

@@ -21,7 +21,7 @@ CONFFILES:${PN} = "/usr/lib/enigma2/python/Plugins/Extensions/SpecialJump/keymap
 
 do_install() {
     install -d ${D}${libdir}
-    cp -rp ${S}/usr/lib/* ${D}${libdir}/
+    cp -r --no-preserve=ownership ${S}/usr/lib/* ${D}${libdir}/
 }
 
 pkg_postrm:${PN}() {

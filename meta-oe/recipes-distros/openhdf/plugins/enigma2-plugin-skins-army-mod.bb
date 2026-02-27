@@ -21,5 +21,5 @@ FILES:${PN} = "/usr/share"
 
 do_install() {
 	install -d ${D}/usr/share
-	cp -rp ${S}/usr/share/* ${D}/usr/share/
+	cp -r --no-preserve=ownership ${S}/usr/share/* ${D}/usr/share/
 }

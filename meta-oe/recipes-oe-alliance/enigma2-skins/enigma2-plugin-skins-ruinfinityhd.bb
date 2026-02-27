@@ -19,7 +19,7 @@ SRC_URI = "git://github.com/openmips/ru_infinity_hd.git;protocol=https;branch=ma
 FILES:${PN} = "/usr/*"
 
 do_install() {
-    cp -rp ${S}/usr ${D}/
+    cp -r --no-preserve=ownership ${S}/usr ${D}/
 }
 
 do_package_qa[noexec] = "1"

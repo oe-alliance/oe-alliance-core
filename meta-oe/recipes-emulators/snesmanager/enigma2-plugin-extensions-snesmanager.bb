@@ -21,7 +21,7 @@ S = "${UNPACKDIR}/src"
 FILES:${PN} = "/usr/* "
 
 do_install() {
-    cp -rp ${S}/usr ${D}/
+    cp -r --no-preserve=ownership ${S}/usr ${D}/
     chmod 777 ${D}/usr/bin/snes_run.sh
 }
 

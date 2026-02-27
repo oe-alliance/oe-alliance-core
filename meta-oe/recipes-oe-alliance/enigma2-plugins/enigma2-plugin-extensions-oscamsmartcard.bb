@@ -20,7 +20,7 @@ SRC_URI = "git://github.com/gigablue-support-org/oscamsmartcard.git;protocol=htt
 FILES:${PN} = "/usr/*"
 
 do_install() {
-    cp -rp ${S}/usr ${D}/
+    cp -r --no-preserve=ownership ${S}/usr ${D}/
 }
 
 pkg_postrm:${PN}() {

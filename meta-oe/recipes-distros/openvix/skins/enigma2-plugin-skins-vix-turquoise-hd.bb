@@ -29,7 +29,7 @@ do_install() {
 	cp -r --preserve=mode,links ${S}/usr/share/* ${D}/usr/share/
 	chmod -R a+rX ${D}/usr/share/enigma2/
 	install -d ${D}${libdir}/enigma2/python/Components
-	cp -rp ${S}/usr/lib/enigma2/python/Components/* ${D}${libdir}/enigma2/python/Components
+	cp -r --no-preserve=ownership ${S}/usr/lib/enigma2/python/Components/* ${D}${libdir}/enigma2/python/Components
 }
 
 do_package_qa[noexec] = "1"

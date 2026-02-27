@@ -21,8 +21,8 @@ FILES:${PN} = "${libdir} /usr/share"
 do_install() {
     install -d ${D}${libdir}
     install -d ${D}/usr/share
-    cp -rp ${S}/usr/lib/* ${D}${libdir}/
-    cp -rp ${S}/usr/share/* ${D}/usr/share/
+    cp -r --no-preserve=ownership ${S}/usr/lib/* ${D}${libdir}/
+    cp -r --no-preserve=ownership ${S}/usr/share/* ${D}/usr/share/
 }
 
 do_populate_sysroot[noexec] = "1"
