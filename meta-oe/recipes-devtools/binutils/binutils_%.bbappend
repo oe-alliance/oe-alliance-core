@@ -1,3 +1,4 @@
 PACKAGE_NO_LOCALE = "1"
 
-GPROFNG_ALTS:aarch64 = ""
+EXTRA_OECONF:append = " --disable-gprofng"
+GPROFNGS = ""
