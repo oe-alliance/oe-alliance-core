@@ -1,1 +1,1 @@
-LDFLAGS:append:mipsarch = " -libatomic"
+LDFLAGS:append:mipsarch = " -latomic"
