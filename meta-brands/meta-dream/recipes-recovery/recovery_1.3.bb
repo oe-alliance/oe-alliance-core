@@ -1,8 +1,8 @@
 require recovery.inc
 
 SRCREV = "81ff8d40bbe21ec4bff1e397e4afdd2f1f3337e3"
-SRCREV:dreamone = "f7d7761af56c4f8d79815dd82e937061a31a94d5"
-SRCREV:dreamtwo = "f7d7761af56c4f8d79815dd82e937061a31a94d5"
+SRCREV:dreamone = "b9d58904bdd329503de42b8c4ffc8273b60fdf63"
+SRCREV:dreamtwo = "b9d58904bdd329503de42b8c4ffc8273b60fdf63"
 
 inherit opendreambox-git
 

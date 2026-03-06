@@ -109,6 +109,8 @@ FILES:flash-scripts = " \
 
 FILES:flash-scripts:append:meson64 = " \
     ${sbindir}/force-fsbl \
+    ${sbindir}/flash-dtb \
+    ${sbindir}/flash-sd \
 "
 
 INITSCRIPT_PACKAGES = "${PN}-autoflashd ${PN}-fbscaled"
