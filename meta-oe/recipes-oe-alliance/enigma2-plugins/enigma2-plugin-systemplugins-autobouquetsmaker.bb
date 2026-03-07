@@ -8,8 +8,8 @@ require conf/python/python3-compileall.inc
 inherit autotools-brokensep gettext gitpkgv python3targetconfig python3native
 
 SRCREV = "${AUTOREV}"
-PV = "3.4+git"
-PKGV = "3.4+git${GITPKGV}"
+PV = "3.5+git"
+PKGV = "3.5+git${GITPKGV}"
 PR = "r0"
 
 SRC_URI = "git://github.com/oe-alliance/AutoBouquetsMaker.git;protocol=https;branch=master"
