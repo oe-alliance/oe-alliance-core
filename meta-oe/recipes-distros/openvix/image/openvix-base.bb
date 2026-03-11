@@ -24,6 +24,7 @@ RDEPENDS:${PN} = "\
     openvix-enigma2 \
     openvix-bootlogo \
     openvix-spinner \
+    fstrim-cron \
     python3-pillow \
     ${@bb.utils.contains("TUNE_FEATURES", "armv", "glibc-compat", "", d)} \
     python3-service-identity \
