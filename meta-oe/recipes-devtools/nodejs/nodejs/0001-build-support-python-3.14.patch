@@ -1,0 +1,57 @@
+--- a/configure	2025-03-27 01:56:40.000000000 +0100
++++ a/configure	2026-03-13 15:51:16.000000000 +0100
+@@ -4,6 +4,7 @@
+ # Note that the mix of single and double quotes is intentional,
+ # as is the fact that the ] goes on a new line.
+ _=[ 'exec' '/bin/sh' '-c' '''
++command -v python3.14 >/dev/null && exec python3.14 "$0" "$@"
+ command -v python3.13 >/dev/null && exec python3.13 "$0" "$@"
+ command -v python3.12 >/dev/null && exec python3.12 "$0" "$@"
+ command -v python3.11 >/dev/null && exec python3.11 "$0" "$@"
+@@ -25,7 +26,7 @@
+   from distutils.spawn import find_executable as which
+ 
+ print('Node.js configure: Found Python {}.{}.{}...'.format(*sys.version_info))
+-acceptable_pythons = ((3, 13), (3, 12), (3, 11), (3, 10), (3, 9), (3, 8), (3, 7), (3, 6))
++acceptable_pythons = ((3, 14), (3, 13), (3, 12), (3, 11), (3, 10), (3, 9), (3, 8), (3, 7), (3, 6))
+ if sys.version_info[:2] in acceptable_pythons:
+   import configure
+ else:
+--- a/tools/configure.d/nodedownload.py	2025-03-27 01:56:44.000000000 +0100
++++ b/tools/configure.d/nodedownload.py	2026-03-13 16:02:40.000000000 +0100
+@@ -7,10 +7,7 @@
+ import zipfile
+ import tarfile
+ import contextlib
+-try:
+-    from urllib.request import FancyURLopener, URLopener
+-except ImportError:
+-    from urllib import FancyURLopener, URLopener
++from urllib.request import build_opener, install_opener, urlretrieve
+ 
+ def formatSize(amt):
+     """Format a size as a string in MB"""
+@@ -21,11 +18,6 @@
+     spin = ".:|'"
+     return (spin[c % len(spin)])
+ 
+-class ConfigOpener(FancyURLopener):
+-    """fancy opener used by retrievefile. Set a UA"""
+-    # append to existing version (UA)
+-    version = '%s node.js/configure' % URLopener.version
+-
+ def reporthook(count, size, total):
+     """internal hook used by retrievefile"""
+     sys.stdout.write(' Fetch: %c %sMB total, %sMB downloaded   \r' %
+@@ -38,7 +30,10 @@
+     try:
+         sys.stdout.write(' <%s>\nConnecting...\r' % url)
+         sys.stdout.flush()
+-        ConfigOpener().retrieve(url, targetfile, reporthook=reporthook)
++        opener = build_opener()
++        opener.addheaders = [('User-agent', f'Python-urllib/{sys.version_info.major}.{sys.version_info.minor} node.js/configure')]
++        install_opener(opener)
++        urlretrieve(url, targetfile, reporthook=reporthook)
+         print('')  # clear the line
+         return targetfile
+     except IOError as err:

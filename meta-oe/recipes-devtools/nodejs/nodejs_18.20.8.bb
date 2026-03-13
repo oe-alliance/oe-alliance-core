@@ -20,7 +20,6 @@ COMPATIBLE_HOST:riscv32 = "null"
 COMPATIBLE_HOST:powerpc = "null"
 
 SRC_URI = "http://nodejs.org/dist/v${PV}/node-v${PV}.tar.xz \
-           file://0001-Disable-running-gyp-files-for-bundled-deps.patch \
            file://0004-v8-don-t-override-ARM-CFLAGS.patch \
            file://big-endian.patch \
            file://mips-less-memory.patch \
@@ -30,7 +29,7 @@ SRC_URI = "http://nodejs.org/dist/v${PV}/node-v${PV}.tar.xz \
            file://run-ptest \
            file://fix-mips-build.patch \
            file://fix-build-with-icu-76.patch \
-           file://0001-build-support-python-3.13.patch \
+           file://0001-build-support-python-3.14.patch \
            file://fix-build-with-gcc15.patch \
            "
 
@@ -43,7 +42,7 @@ SRC_URI:append:toolchain-clang:x86 = " \
 SRC_URI:append:toolchain-clang:powerpc64le = " \
            file://0001-ppc64-Do-not-use-mminimal-toc-with-clang.patch \
            "
-SRC_URI[sha256sum] = "c669b48b632fa6797d4f5fa7bbd2b476ec961120957864402226cc9fd8ebbc0e"
+SRC_URI[sha256sum] = "36a7bf1a76d62ce4badd881ee5974a323c70e1d8d19165732684e145632460d9"
 
 S = "${UNPACKDIR}/node-v${PV}"
 
