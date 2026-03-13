@@ -11,6 +11,8 @@ inherit pypi setuptools3
 
 RDEPENDS:${PN} += "python3-attrs"
 
-RDEPENDS:${PN} += "python3-asyncio python3-core python3-pytest python3-typing-extensions"
+RDEPENDS:${PN} += "python3-asyncio python3-core python3-typing-extensions"
 
 PYPI_PACKAGE = "outcome"
+
+include python3-package-split.inc

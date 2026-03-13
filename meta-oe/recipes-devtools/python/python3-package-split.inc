@@ -46,18 +46,22 @@ FILES:${PN}-test += " \
     ${PYTHON_SITEPACKAGES_DIR}/Test \
     ${PYTHON_SITEPACKAGES_DIR}/Tests \
     ${PYTHON_SITEPACKAGES_DIR}/_test \
+    ${PYTHON_SITEPACKAGES_DIR}/_tests \
     ${PYTHON_SITEPACKAGES_DIR}/*/test \
     ${PYTHON_SITEPACKAGES_DIR}/*/tests \
     ${PYTHON_SITEPACKAGES_DIR}/*/Test \
     ${PYTHON_SITEPACKAGES_DIR}/*/Tests \
     ${PYTHON_SITEPACKAGES_DIR}/*/_test \
+    ${PYTHON_SITEPACKAGES_DIR}/*/_tests \
     ${PYTHON_SITEPACKAGES_DIR}/*/*/test \
     ${PYTHON_SITEPACKAGES_DIR}/*/*/_test \
+    ${PYTHON_SITEPACKAGES_DIR}/*/*/_tests \
     ${PYTHON_SITEPACKAGES_DIR}/*/*/tests \
     ${PYTHON_SITEPACKAGES_DIR}/*/*/Test \
     ${PYTHON_SITEPACKAGES_DIR}/*/*/Tests \
     ${PYTHON_SITEPACKAGES_DIR}/*/*/*/test \
     ${PYTHON_SITEPACKAGES_DIR}/*/*/*/_test \
+    ${PYTHON_SITEPACKAGES_DIR}/*/*/*/_tests \
     ${PYTHON_SITEPACKAGES_DIR}/*/*/*/tests \
     ${PYTHON_SITEPACKAGES_DIR}/*/*/*/Test \
     ${PYTHON_SITEPACKAGES_DIR}/*/*/*/Tests \
@@ -83,6 +87,8 @@ FILES:${PN}-doc += " \
     ${PYTHON_SITEPACKAGES_DIR}/*/*/*/*/*/*/*/*/*/*.txt \
     ${PYTHON_SITEPACKAGES_DIR}/doc \
     ${PYTHON_SITEPACKAGES_DIR}/*/doc \
+    ${PYTHON_SITEPACKAGES_DIR}/docs \
+    ${PYTHON_SITEPACKAGES_DIR}/*/docs \
     ${PYTHON_SITEPACKAGES_DIR}/LICENSE \
     ${PYTHON_SITEPACKAGES_DIR}/README \
     ${PYTHON_SITEPACKAGES_DIR}/*/*.misc \

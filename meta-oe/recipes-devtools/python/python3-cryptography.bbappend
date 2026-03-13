@@ -8,4 +8,6 @@ SRC_URI:append:mips32el = " \
 
 SRC_URI[portable-atomic-1.6.0.sha256sum] = "7170ef9988bc169ba16dd36a7fa041e5c4cbeb6a35b76d4c03daded371eae7c0"
 
+PACKAGES =+ "${PN}-test"
+
 include python3-package-split.inc
