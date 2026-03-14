@@ -23,7 +23,7 @@ RDEPENDS:${PN} = "\
     ca-certificates \
     curl \
     dvbsnoop \
-    fstrim-cron \
+    fstrim-cron-obh \
     hddtemp \
     inadyn-mt \
     libcrypto-compat-0.9.7 \
