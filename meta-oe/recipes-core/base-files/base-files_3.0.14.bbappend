@@ -13,6 +13,34 @@ SRC_URI += "file://filesystems"
 
 hostname = "${MACHINEBUILD}"
 
+# Detect rootfs filesystem type from IMAGE_FSTYPES (machine configs can override ROOTFS_FSTYPE / ROOTFS_MOUNTOPTS)
+def get_rootfs_fstype(d):
+    fstypes = (d.getVar('IMAGE_FSTYPES') or '').lower()
+    if 'ubi' in fstypes and 'emmc' not in fstypes and 'fastboot' not in fstypes:
+        return 'ubifs'
+    if 'jffs2' in fstypes:
+        return 'jffs2'
+    if 'emmc' in fstypes or 'fastboot' in fstypes or 'ext4' in fstypes:
+        return 'ext4'
+    return 'auto'
+
+def get_rootfs_mountopts(d):
+    fstype = get_rootfs_fstype(d)
+    provider = d.getVar('PREFERRED_PROVIDER_virtual/kernel') or ''
+    kver = (d.getVar('PREFERRED_VERSION_' + provider) or '').replace('%', '0')
+    has_lazytime = bb.utils.vercmp_string_op(kver, '4.0', '>=') if kver else False
+    if fstype == 'ext4':
+        opts = 'defaults,noatime,commit=60'
+        if has_lazytime:
+            opts += ',lazytime'
+        return opts
+    if fstype == 'ubifs':
+        return 'defaults,noatime,bulk_read'
+    return 'defaults,noatime'
+
+ROOTFS_FSTYPE ?= "${@get_rootfs_fstype(d)}"
+ROOTFS_MOUNTOPTS ?= "${@get_rootfs_mountopts(d)}"
+
 do_install:append() {
     rm -rf ${D}/autofs
     rm -rf ${D}/mnt
@@ -40,6 +68,10 @@ do_install:append() {
         # ... replace the place holder @rootfs@ by the verbatim label "rootfs" (plus one tab)
         perl -i -pe 's:(\@rootfs\@):rootfs\t:s' ${D}${sysconfdir}/fstab
     #fi
+
+    # Optimize rootfs mount options based on storage type (ROOTFS_FSTYPE/ROOTFS_MOUNTOPTS)
+    perl -i -pe 's/auto/${ROOTFS_FSTYPE}/ if /^rootfs/' ${D}${sysconfdir}/fstab
+    perl -i -pe 's/defaults/${ROOTFS_MOUNTOPTS}/ if /^rootfs/' ${D}${sysconfdir}/fstab
 
     if [ "${MACHINEBUILD}" = "sf4008" ]; then
         printf "/dev/mmcblk0p5\t\tnone\t\tswap\t\tsw\t\t\t\t\t0  0\n" >> ${D}${sysconfdir}/fstab
