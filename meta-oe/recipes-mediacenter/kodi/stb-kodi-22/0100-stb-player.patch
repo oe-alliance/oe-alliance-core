@@ -1,6 +1,6 @@
-From 6947ab496105797351eb852074a169837c1340a7 Mon Sep 17 00:00:00 2001
-From: luisteraar/listener <fake@fake.com>
-Date: Sun, 5 Jan 2025 11:35:27 +0100
+From d53cf2a893b5d9661ebcdb5c93047b1b5d00e8d6 Mon Sep 17 00:00:00 2001
+From: atvcaptain <openatv@gmail.com>
+Date: Sun, 15 Mar 2026 17:22:49 +0100
 Subject: [PATCH] STBsink
 
 ---
@@ -13,9 +13,9 @@ Subject: [PATCH] STBsink
  xbmc/cores/DvbPlayer/DvbCodecVideo.h          |  97 ++
  xbmc/cores/DvbPlayer/DvbDecoder.cpp           | 543 ++++++++++
  xbmc/cores/DvbPlayer/DvbDecoder.h             | 109 ++
- xbmc/cores/DvbPlayer/DvbPlayerVideo.cpp       | 985 ++++++++++++++++++
+ xbmc/cores/DvbPlayer/DvbPlayerVideo.cpp       | 986 ++++++++++++++++++
  xbmc/cores/DvbPlayer/DvbPlayerVideo.h         | 160 +++
- xbmc/cores/DvbPlayer/DvbVdec.cpp              | 376 +++++++
+ xbmc/cores/DvbPlayer/DvbVdec.cpp              | 377 +++++++
  xbmc/cores/DvbPlayer/DvbVdec.h                | 100 ++
  xbmc/cores/DvbPlayer/Renderer/RendererDvb.cpp | 144 +++
  xbmc/cores/DvbPlayer/Renderer/RendererDvb.h   |  56 +
@@ -39,7 +39,7 @@ Subject: [PATCH] STBsink
  xbmc/settings/SettingConditions.cpp           |   3 +
  xbmc/settings/Settings.h                      |   1 +
  xbmc/windowing/egl/WinSystemSTBContext.cpp    |   4 +
- 35 files changed, 7016 insertions(+), 1 deletion(-)
+ 35 files changed, 7018 insertions(+), 1 deletion(-)
  create mode 100644 xbmc/cores/DvbPlayer/CMakeLists.txt
  create mode 100644 xbmc/cores/DvbPlayer/DvbCodecVideo.cpp
  create mode 100644 xbmc/cores/DvbPlayer/DvbCodecVideo.h
@@ -67,10 +67,10 @@ Subject: [PATCH] STBsink
  create mode 100644 xbmc/cores/DvbPlayer/STBplayer/writer.h
 
 diff --git a/addons/resource.language.en_gb/resources/strings.po b/addons/resource.language.en_gb/resources/strings.po
-index 164b58b05fd..ea693bb3c9a 100644
+index 798ca1ff86..ea8ba4f0b7 100644
 --- a/addons/resource.language.en_gb/resources/strings.po
 +++ b/addons/resource.language.en_gb/resources/strings.po
-@@ -7637,6 +7637,17 @@ msgctxt "#13454"
+@@ -7634,6 +7634,17 @@ msgctxt "#13454"
  msgid "Enable this option to use hardware acceleration for the VP8 codec. If disabled the CPU will be used instead."
  msgstr ""
  
@@ -89,7 +89,7 @@ index 164b58b05fd..ea693bb3c9a 100644
  msgctxt "#13455"
  msgid "Use VP9 VAAPI"
 diff --git a/cmake/treedata/common/cores.txt b/cmake/treedata/common/cores.txt
-index d23939d314e..d1c714afedd 100644
+index d23939d314..d1c714afed 100644
 --- a/cmake/treedata/common/cores.txt
 +++ b/cmake/treedata/common/cores.txt
 @@ -6,3 +6,4 @@ xbmc/cores/DllLoader/exports/util      cores/dll-loader/exports/util
@@ -98,7 +98,7 @@ index d23939d314e..d1c714afedd 100644
  xbmc/cores/playercorefactory           cores/playercorefactory
 +xbmc/cores/DvbPlayer                   cores/dvbplayer
 diff --git a/system/settings/settings.xml b/system/settings/settings.xml
-index 966b239129d..5b6cdb03419 100755
+index ad636f35b5..4698bba685 100755
 --- a/system/settings/settings.xml
 +++ b/system/settings/settings.xml
 @@ -60,6 +60,12 @@
@@ -115,7 +115,7 @@ index 966b239129d..5b6cdb03419 100755
            <dependencies>
              <dependency type="visible">
 diff --git a/xbmc/commons/ilog.h b/xbmc/commons/ilog.h
-index 9fe074af414..2c522196a9d 100644
+index 77f1f11a66..a8c7565872 100644
 --- a/xbmc/commons/ilog.h
 +++ b/xbmc/commons/ilog.h
 @@ -21,6 +21,7 @@ constexpr int LOGWARNING = 2;
@@ -128,7 +128,7 @@ index 9fe074af414..2c522196a9d 100644
  constexpr int LOGMASKBIT = 5;
 diff --git a/xbmc/cores/DvbPlayer/CMakeLists.txt b/xbmc/cores/DvbPlayer/CMakeLists.txt
 new file mode 100644
-index 00000000000..2aeeb30e73f
+index 0000000000..2aeeb30e73
 --- /dev/null
 +++ b/xbmc/cores/DvbPlayer/CMakeLists.txt
 @@ -0,0 +1,31 @@
@@ -165,7 +165,7 @@ index 00000000000..2aeeb30e73f
 +core_add_library(dvbplayer)
 diff --git a/xbmc/cores/DvbPlayer/DvbCodecVideo.cpp b/xbmc/cores/DvbPlayer/DvbCodecVideo.cpp
 new file mode 100644
-index 00000000000..a32b5fcad44
+index 0000000000..a32b5fcad4
 --- /dev/null
 +++ b/xbmc/cores/DvbPlayer/DvbCodecVideo.cpp
 @@ -0,0 +1,470 @@
@@ -641,7 +641,7 @@ index 00000000000..a32b5fcad44
 +}
 diff --git a/xbmc/cores/DvbPlayer/DvbCodecVideo.h b/xbmc/cores/DvbPlayer/DvbCodecVideo.h
 new file mode 100644
-index 00000000000..f0161c1f371
+index 0000000000..f0161c1f37
 --- /dev/null
 +++ b/xbmc/cores/DvbPlayer/DvbCodecVideo.h
 @@ -0,0 +1,97 @@
@@ -744,7 +744,7 @@ index 00000000000..f0161c1f371
 +};
 diff --git a/xbmc/cores/DvbPlayer/DvbDecoder.cpp b/xbmc/cores/DvbPlayer/DvbDecoder.cpp
 new file mode 100644
-index 00000000000..0de929b83bf
+index 0000000000..0de929b83b
 --- /dev/null
 +++ b/xbmc/cores/DvbPlayer/DvbDecoder.cpp
 @@ -0,0 +1,543 @@
@@ -1293,7 +1293,7 @@ index 00000000000..0de929b83bf
 +
 diff --git a/xbmc/cores/DvbPlayer/DvbDecoder.h b/xbmc/cores/DvbPlayer/DvbDecoder.h
 new file mode 100644
-index 00000000000..4038700638d
+index 0000000000..4038700638
 --- /dev/null
 +++ b/xbmc/cores/DvbPlayer/DvbDecoder.h
 @@ -0,0 +1,109 @@
@@ -1408,10 +1408,10 @@ index 00000000000..4038700638d
 +};
 diff --git a/xbmc/cores/DvbPlayer/DvbPlayerVideo.cpp b/xbmc/cores/DvbPlayer/DvbPlayerVideo.cpp
 new file mode 100644
-index 00000000000..bf4ff3205ef
+index 0000000000..252611dc1d
 --- /dev/null
 +++ b/xbmc/cores/DvbPlayer/DvbPlayerVideo.cpp
-@@ -0,0 +1,985 @@
+@@ -0,0 +1,986 @@
 +/*
 + *      Copyright (C) 2005-2013 Team XBMC
 + *      http://xbmc.org
@@ -2193,12 +2193,13 @@ index 00000000000..bf4ff3205ef
 +{
 +  std::string stereo_mode;
 +
-+  switch (CMediaSettings::GetInstance().GetDefaultVideoSettings().m_StereoMode)
-+  {
-+    case RENDER_STEREO_MODE_SPLIT_VERTICAL:
++   switch (static_cast<RenderStereoMode>(
++       CMediaSettings::GetInstance().GetDefaultVideoSettings().m_StereoMode))
++   {
++    case RenderStereoMode::SPLIT_VERTICAL:
 +      stereo_mode = "left_right";
 +      break;
-+    case RENDER_STEREO_MODE_SPLIT_HORIZONTAL:
++    case RenderStereoMode::SPLIT_HORIZONTAL:
 +      stereo_mode = "top_bottom";
 +      break;
 +    default:
@@ -2306,18 +2307,18 @@ index 00000000000..bf4ff3205ef
 +{
 +  CRect SrcRect = InSrcRect, DestRect = InDestRect;
 +  unsigned flags = GetFlagsStereoMode(GetStereoMode());
-+  RENDER_STEREO_MODE video_stereo_mode =
-+      (flags & CONF_FLAGS_STEREO_MODE_SBS)   ? RENDER_STEREO_MODE_SPLIT_VERTICAL
-+      : (flags & CONF_FLAGS_STEREO_MODE_TAB) ? RENDER_STEREO_MODE_SPLIT_HORIZONTAL
-+                                             : RENDER_STEREO_MODE_OFF;
++  RenderStereoMode video_stereo_mode =
++      (flags & CONF_FLAGS_STEREO_MODE_SBS)   ? RenderStereoMode::SPLIT_VERTICAL
++      : (flags & CONF_FLAGS_STEREO_MODE_TAB) ? RenderStereoMode::SPLIT_HORIZONTAL
++                                             : RenderStereoMode::OFF;
 +  bool stereo_invert = (flags & CONF_FLAGS_STEREO_CADANCE_RIGHT_LEFT) ? true : false;
 +
-+  RENDER_STEREO_MODE display_stereo_mode =
++  RenderStereoMode display_stereo_mode =
 +      CServiceBroker::GetWinSystem()->GetGfxContext().GetStereoMode();
 +
 +  // ignore video stereo mode when 3D display mode is disabled
-+  if (display_stereo_mode == RENDER_STEREO_MODE_OFF)
-+    video_stereo_mode = RENDER_STEREO_MODE_OFF;
++  if (display_stereo_mode == RenderStereoMode::OFF)
++    video_stereo_mode = RenderStereoMode::OFF;
 +
 +  // fix up transposed video
 +  if (m_hints.orientation == 90 || m_hints.orientation == 270)
@@ -2370,13 +2371,13 @@ index 00000000000..bf4ff3205ef
 +  CRect display(0, 0, CDisplaySettings::GetInstance().GetResolutionInfo(res).iScreenWidth,
 +                CDisplaySettings::GetInstance().GetResolutionInfo(res).iScreenHeight);
 +
-+  if (display_stereo_mode == RENDER_STEREO_MODE_SPLIT_VERTICAL)
++  if (display_stereo_mode == RenderStereoMode::SPLIT_VERTICAL)
 +  {
 +    float width = DestRect.x2 - DestRect.x1;
 +    DestRect.x1 *= 2.0f;
 +    DestRect.x2 = DestRect.x1 + 2.0f * width;
 +  }
-+  else if (display_stereo_mode == RENDER_STEREO_MODE_SPLIT_HORIZONTAL)
++  else if (display_stereo_mode == RenderStereoMode::SPLIT_HORIZONTAL)
 +  {
 +    float height = DestRect.y2 - DestRect.y1;
 +    DestRect.y1 *= 2.0f;
@@ -2399,7 +2400,7 @@ index 00000000000..bf4ff3205ef
 +}
 diff --git a/xbmc/cores/DvbPlayer/DvbPlayerVideo.h b/xbmc/cores/DvbPlayer/DvbPlayerVideo.h
 new file mode 100644
-index 00000000000..02aba625fe7
+index 0000000000..f3e2202615
 --- /dev/null
 +++ b/xbmc/cores/DvbPlayer/DvbPlayerVideo.h
 @@ -0,0 +1,160 @@
@@ -2556,8 +2557,8 @@ index 00000000000..02aba625fe7
 +
 +  CRect m_src_rect;
 +  CRect m_dst_rect;
-+  RENDER_STEREO_MODE m_video_stereo_mode;
-+  RENDER_STEREO_MODE m_display_stereo_mode;
++  RenderStereoMode m_video_stereo_mode{RenderStereoMode::OFF};
++  RenderStereoMode m_display_stereo_mode{RenderStereoMode::OFF};
 +  bool m_StereoInvert;
 +  double m_start_pts;
 +
@@ -2565,10 +2566,10 @@ index 00000000000..02aba625fe7
 +};
 diff --git a/xbmc/cores/DvbPlayer/DvbVdec.cpp b/xbmc/cores/DvbPlayer/DvbVdec.cpp
 new file mode 100644
-index 00000000000..f00625b22b6
+index 0000000000..3992c03a1b
 --- /dev/null
 +++ b/xbmc/cores/DvbPlayer/DvbVdec.cpp
-@@ -0,0 +1,376 @@
+@@ -0,0 +1,377 @@
 +/*
 + *      Copyright (C) 2005-2013 Team XBMC
 + *      http://xbmc.org
@@ -2592,6 +2593,7 @@ index 00000000000..f00625b22b6
 +
 +#include "DvbVdec.h"
 +
++#include "ServiceBroker.h"
 +#include "guilib/GUIComponent.h"
 +#include "guilib/GUIWindowManager.h"
 +#include "guilib/GUIControl.h"
@@ -2947,7 +2949,7 @@ index 00000000000..f00625b22b6
 +}
 diff --git a/xbmc/cores/DvbPlayer/DvbVdec.h b/xbmc/cores/DvbPlayer/DvbVdec.h
 new file mode 100644
-index 00000000000..05c272d5d1f
+index 0000000000..934e7ba61e
 --- /dev/null
 +++ b/xbmc/cores/DvbPlayer/DvbVdec.h
 @@ -0,0 +1,100 @@
@@ -3030,8 +3032,8 @@ index 00000000000..05c272d5d1f
 +  CRect m_display_rect;
 +  int m_view_mode;
 +
-+  RENDER_STEREO_MODE m_stereo_mode;
-+  RENDER_STEREO_VIEW m_stereo_view;
++  RenderStereoMode m_stereo_mode{RenderStereoMode::OFF};
++  RenderStereoView m_stereo_view;
 +
 +  float m_zoom;
 +  int m_contrast;
@@ -3053,7 +3055,7 @@ index 00000000000..05c272d5d1f
 +};
 diff --git a/xbmc/cores/DvbPlayer/Renderer/RendererDvb.cpp b/xbmc/cores/DvbPlayer/Renderer/RendererDvb.cpp
 new file mode 100644
-index 00000000000..867b61c1504
+index 0000000000..867b61c150
 --- /dev/null
 +++ b/xbmc/cores/DvbPlayer/Renderer/RendererDvb.cpp
 @@ -0,0 +1,144 @@
@@ -3203,7 +3205,7 @@ index 00000000000..867b61c1504
 +}
 diff --git a/xbmc/cores/DvbPlayer/Renderer/RendererDvb.h b/xbmc/cores/DvbPlayer/Renderer/RendererDvb.h
 new file mode 100644
-index 00000000000..2158de59e02
+index 0000000000..2158de59e0
 --- /dev/null
 +++ b/xbmc/cores/DvbPlayer/Renderer/RendererDvb.h
 @@ -0,0 +1,56 @@
@@ -3265,7 +3267,7 @@ index 00000000000..2158de59e02
 +};
 diff --git a/xbmc/cores/DvbPlayer/STBplayer/bcm_ioctls.h b/xbmc/cores/DvbPlayer/STBplayer/bcm_ioctls.h
 new file mode 100644
-index 00000000000..e0a7eef5b6b
+index 0000000000..e0a7eef5b6
 --- /dev/null
 +++ b/xbmc/cores/DvbPlayer/STBplayer/bcm_ioctls.h
 @@ -0,0 +1,86 @@
@@ -3357,7 +3359,7 @@ index 00000000000..e0a7eef5b6b
 +
 diff --git a/xbmc/cores/DvbPlayer/STBplayer/divx3.c b/xbmc/cores/DvbPlayer/STBplayer/divx3.c
 new file mode 100644
-index 00000000000..4d37572d299
+index 0000000000..4d37572d29
 --- /dev/null
 +++ b/xbmc/cores/DvbPlayer/STBplayer/divx3.c
 @@ -0,0 +1,174 @@
@@ -3537,7 +3539,7 @@ index 00000000000..4d37572d299
 +};
 diff --git a/xbmc/cores/DvbPlayer/STBplayer/h264.c b/xbmc/cores/DvbPlayer/STBplayer/h264.c
 new file mode 100644
-index 00000000000..dcc833669ad
+index 0000000000..dcc833669a
 --- /dev/null
 +++ b/xbmc/cores/DvbPlayer/STBplayer/h264.c
 @@ -0,0 +1,476 @@
@@ -4019,7 +4021,7 @@ index 00000000000..dcc833669ad
 +};
 diff --git a/xbmc/cores/DvbPlayer/STBplayer/h265.c b/xbmc/cores/DvbPlayer/STBplayer/h265.c
 new file mode 100644
-index 00000000000..ddf6777d5e3
+index 0000000000..ddf6777d5e
 --- /dev/null
 +++ b/xbmc/cores/DvbPlayer/STBplayer/h265.c
 @@ -0,0 +1,328 @@
@@ -4353,7 +4355,7 @@ index 00000000000..ddf6777d5e3
 +};
 diff --git a/xbmc/cores/DvbPlayer/STBplayer/mjpeg.c b/xbmc/cores/DvbPlayer/STBplayer/mjpeg.c
 new file mode 100644
-index 00000000000..41403c0d8be
+index 0000000000..41403c0d8b
 --- /dev/null
 +++ b/xbmc/cores/DvbPlayer/STBplayer/mjpeg.c
 @@ -0,0 +1,246 @@
@@ -4605,7 +4607,7 @@ index 00000000000..41403c0d8be
 +
 diff --git a/xbmc/cores/DvbPlayer/STBplayer/mpeg2.c b/xbmc/cores/DvbPlayer/STBplayer/mpeg2.c
 new file mode 100644
-index 00000000000..c773cbc923c
+index 0000000000..c773cbc923
 --- /dev/null
 +++ b/xbmc/cores/DvbPlayer/STBplayer/mpeg2.c
 @@ -0,0 +1,279 @@
@@ -4890,7 +4892,7 @@ index 00000000000..c773cbc923c
 +};
 diff --git a/xbmc/cores/DvbPlayer/STBplayer/mpeg4.c b/xbmc/cores/DvbPlayer/STBplayer/mpeg4.c
 new file mode 100644
-index 00000000000..d77871e09b7
+index 0000000000..d77871e09b
 --- /dev/null
 +++ b/xbmc/cores/DvbPlayer/STBplayer/mpeg4.c
 @@ -0,0 +1,162 @@
@@ -5058,7 +5060,7 @@ index 00000000000..d77871e09b7
 +};
 diff --git a/xbmc/cores/DvbPlayer/STBplayer/stbplayer.c b/xbmc/cores/DvbPlayer/STBplayer/stbplayer.c
 new file mode 100644
-index 00000000000..aebe3fe1e7f
+index 0000000000..aebe3fe1e7
 --- /dev/null
 +++ b/xbmc/cores/DvbPlayer/STBplayer/stbplayer.c
 @@ -0,0 +1,476 @@
@@ -5540,7 +5542,7 @@ index 00000000000..aebe3fe1e7f
 +
 diff --git a/xbmc/cores/DvbPlayer/STBplayer/stm_ioctls.h b/xbmc/cores/DvbPlayer/STBplayer/stm_ioctls.h
 new file mode 100644
-index 00000000000..21b2ac7bdd5
+index 0000000000..21b2ac7bdd
 --- /dev/null
 +++ b/xbmc/cores/DvbPlayer/STBplayer/stm_ioctls.h
 @@ -0,0 +1,324 @@
@@ -5870,7 +5872,7 @@ index 00000000000..21b2ac7bdd5
 +#endif /* H_DVB_STM_H */
 diff --git a/xbmc/cores/DvbPlayer/STBplayer/vc1.c b/xbmc/cores/DvbPlayer/STBplayer/vc1.c
 new file mode 100644
-index 00000000000..1c32ca62966
+index 0000000000..1c32ca6296
 --- /dev/null
 +++ b/xbmc/cores/DvbPlayer/STBplayer/vc1.c
 @@ -0,0 +1,184 @@
@@ -6060,7 +6062,7 @@ index 00000000000..1c32ca62966
 +};
 diff --git a/xbmc/cores/DvbPlayer/STBplayer/vp.c b/xbmc/cores/DvbPlayer/STBplayer/vp.c
 new file mode 100644
-index 00000000000..1620453ecfd
+index 0000000000..1620453ecf
 --- /dev/null
 +++ b/xbmc/cores/DvbPlayer/STBplayer/vp.c
 @@ -0,0 +1,284 @@
@@ -6350,7 +6352,7 @@ index 00000000000..1620453ecfd
 +};
 diff --git a/xbmc/cores/DvbPlayer/STBplayer/wmv.c b/xbmc/cores/DvbPlayer/STBplayer/wmv.c
 new file mode 100644
-index 00000000000..0bd4ba3b284
+index 0000000000..0bd4ba3b28
 --- /dev/null
 +++ b/xbmc/cores/DvbPlayer/STBplayer/wmv.c
 @@ -0,0 +1,190 @@
@@ -6546,7 +6548,7 @@ index 00000000000..0bd4ba3b284
 +};
 diff --git a/xbmc/cores/DvbPlayer/STBplayer/writer.c b/xbmc/cores/DvbPlayer/STBplayer/writer.c
 new file mode 100644
-index 00000000000..65c7aa46f87
+index 0000000000..65c7aa46f8
 --- /dev/null
 +++ b/xbmc/cores/DvbPlayer/STBplayer/writer.c
 @@ -0,0 +1,377 @@
@@ -6929,7 +6931,7 @@ index 00000000000..65c7aa46f87
 +
 diff --git a/xbmc/cores/DvbPlayer/STBplayer/writer.h b/xbmc/cores/DvbPlayer/STBplayer/writer.h
 new file mode 100644
-index 00000000000..4b4ae22b286
+index 0000000000..4b4ae22b28
 --- /dev/null
 +++ b/xbmc/cores/DvbPlayer/STBplayer/writer.h
 @@ -0,0 +1,280 @@
@@ -7214,7 +7216,7 @@ index 00000000000..4b4ae22b286
 + }
 +#endif
 diff --git a/xbmc/cores/VideoPlayer/VideoPlayer.cpp b/xbmc/cores/VideoPlayer/VideoPlayer.cpp
-index b0a72f7f48a..372666f8c10 100644
+index 72435cd35e..dd978725f6 100644
 --- a/xbmc/cores/VideoPlayer/VideoPlayer.cpp
 +++ b/xbmc/cores/VideoPlayer/VideoPlayer.cpp
 @@ -61,6 +61,9 @@
@@ -7227,7 +7229,7 @@ index b0a72f7f48a..372666f8c10 100644
  #include "windowing/GraphicContext.h"
  #include "windowing/WinSystem.h"
  
-@@ -689,12 +692,25 @@ void CVideoPlayer::CreatePlayers()
+@@ -691,12 +694,25 @@ void CVideoPlayer::CreatePlayers()
  {
    if (m_players_created)
      return;
@@ -7253,7 +7255,7 @@ index b0a72f7f48a..372666f8c10 100644
    m_VideoPlayerSubtitle =
        std::make_unique<CVideoPlayerSubtitle>(&m_overlayContainer, *m_processInfo);
    m_VideoPlayerTeletext = std::make_unique<CDVDTeletextData>(*m_processInfo);
-@@ -754,6 +770,13 @@ CVideoPlayer::CVideoPlayer(IPlayerCallback& callback)
+@@ -755,6 +771,13 @@ CVideoPlayer::CVideoPlayer(IPlayerCallback& callback)
  
    m_messageQueueTimeSize = static_cast<double>(tenthsSeconds) / 10.0;
  
@@ -7267,7 +7269,7 @@ index b0a72f7f48a..372666f8c10 100644
    m_SkipCommercials = true;
  
    m_processInfo.reset(CProcessInfo::CreateInstance());
-@@ -5154,7 +5177,9 @@ void CVideoPlayer::UpdatePlayState(double timeout)
+@@ -5272,7 +5295,9 @@ void CVideoPlayer::UpdatePlayState(double timeout)
    }
    else
    {
@@ -7279,10 +7281,10 @@ index b0a72f7f48a..372666f8c10 100644
    }
  
 diff --git a/xbmc/cores/VideoPlayer/VideoPlayer.h b/xbmc/cores/VideoPlayer/VideoPlayer.h
-index 3d18e1bcfd9..d0509c79397 100644
+index e486f5a63e..e32e9f83de 100644
 --- a/xbmc/cores/VideoPlayer/VideoPlayer.h
 +++ b/xbmc/cores/VideoPlayer/VideoPlayer.h
-@@ -599,4 +599,9 @@ protected:
+@@ -619,4 +619,9 @@ protected:
    std::atomic<bool> m_displayLost;
  
    double m_messageQueueTimeSize{0.0};
@@ -7293,10 +7295,10 @@ index 3d18e1bcfd9..d0509c79397 100644
 +#endif
  };
 diff --git a/xbmc/platform/linux/input/LibInputKeyboard.cpp b/xbmc/platform/linux/input/LibInputKeyboard.cpp
-index 319132c31bf..af433bb49c9 100644
+index 93718d6e7a..33d3583bc1 100644
 --- a/xbmc/platform/linux/input/LibInputKeyboard.cpp
 +++ b/xbmc/platform/linux/input/LibInputKeyboard.cpp
-@@ -430,6 +430,11 @@ void CLibInputKeyboard::ProcessKey(libinput_event_keyboard *e)
+@@ -439,6 +439,11 @@ void CLibInputKeyboard::ProcessKey(libinput_event_keyboard *e)
    }
  
    const uint32_t scancode = libinput_event_keyboard_get_key(e);
@@ -7308,7 +7310,7 @@ index 319132c31bf..af433bb49c9 100644
  
    // flush composer if set (after a finished sequence)
    if (flushComposer)
-@@ -472,6 +477,22 @@ void CLibInputKeyboard::ProcessKey(libinput_event_keyboard *e)
+@@ -481,6 +486,22 @@ void CLibInputKeyboard::ProcessKey(libinput_event_keyboard *e)
  
  XBMCKey CLibInputKeyboard::XBMCKeyForKeysym(xkb_keysym_t sym, uint32_t scancode)
  {
@@ -7332,7 +7334,7 @@ index 319132c31bf..af433bb49c9 100644
    {
      return static_cast<XBMCKey> (sym + 'a' - 'A');
 diff --git a/xbmc/settings/SettingConditions.cpp b/xbmc/settings/SettingConditions.cpp
-index 6f41c01d557..63c42be93fb 100644
+index 45dee9ee2e..e03e23446d 100644
 --- a/xbmc/settings/SettingConditions.cpp
 +++ b/xbmc/settings/SettingConditions.cpp
 @@ -381,6 +381,9 @@ void CSettingConditions::Initialize()
@@ -7346,7 +7348,7 @@ index 6f41c01d557..63c42be93fb 100644
    m_simpleConditions.emplace("have_libva");
  #endif
 diff --git a/xbmc/settings/Settings.h b/xbmc/settings/Settings.h
-index f70a19900c4..28b66f04249 100644
+index 0bb0711d26..0fc9ab4b7d 100644
 --- a/xbmc/settings/Settings.h
 +++ b/xbmc/settings/Settings.h
 @@ -129,6 +129,7 @@ public:
@@ -7358,7 +7360,7 @@ index f70a19900c4..28b66f04249 100644
    static constexpr auto SETTING_VIDEOPLAYER_USEPRIMEDECODER = "videoplayer.useprimedecoder";
    static constexpr auto SETTING_VIDEOPLAYER_USESTARFISHDECODER = "videoplayer.usestarfishdecoder";
 diff --git a/xbmc/windowing/egl/WinSystemSTBContext.cpp b/xbmc/windowing/egl/WinSystemSTBContext.cpp
-index 3b4e3e8d661..337b53cb70f 100644
+index c1cfb331d4..768542db05 100644
 --- a/xbmc/windowing/egl/WinSystemSTBContext.cpp
 +++ b/xbmc/windowing/egl/WinSystemSTBContext.cpp
 @@ -21,6 +21,8 @@
@@ -7370,7 +7372,7 @@ index 3b4e3e8d661..337b53cb70f 100644
  #include "cores/VideoPlayer/VideoRenderers/RenderFactory.h"
  #include "guilib/GUIComponent.h"
  #include "guilib/GUIWindowManager.h"
-@@ -58,9 +60,11 @@ bool CWinSystemSTBContext::InitWindowSystem()
+@@ -46,9 +48,11 @@ bool CWinSystemSTBContext::InitWindowSystem()
    VIDEOPLAYER::CRendererFactory::ClearRenderer();
  #ifdef HAS_GLES
    CLinuxRendererGLES::Register();
@@ -7382,3 +7384,6 @@ index 3b4e3e8d661..337b53cb70f 100644
    RETRO::CRPProcessInfo::RegisterRendererFactory(new RETRO::CRendererFactoryOpenGL);
  #endif
    return true;
+-- 
+2.45.2.windows.1
+

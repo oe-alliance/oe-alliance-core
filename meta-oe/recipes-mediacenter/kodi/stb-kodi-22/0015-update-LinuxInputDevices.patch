@@ -1,0 +1,25 @@
+From a3b5ae96b1ff462c2d661fb9a7a243254e09c2d8 Mon Sep 17 00:00:00 2001
+From: atvcaptain <openatv@gmail.com>
+Date: Sun, 15 Mar 2026 18:29:36 +0100
+Subject: [PATCH] update LinuxInputDevices
+
+---
+ xbmc/platform/linux/input/LinuxInputDevices.cpp | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/xbmc/platform/linux/input/LinuxInputDevices.cpp b/xbmc/platform/linux/input/LinuxInputDevices.cpp
+index af088c5f40..6be2c02304 100644
+--- a/xbmc/platform/linux/input/LinuxInputDevices.cpp
++++ b/xbmc/platform/linux/input/LinuxInputDevices.cpp
+@@ -32,6 +32,8 @@
+ 
+ #include "system.h"
+ #include "ServiceBroker.h"
++#include "windowing/WinSystem.h"
++#include "windowing/GraphicContext.h"
+ 
+ //#if defined(HAS_LINUX_EVENTS)
+ 
+-- 
+2.45.2.windows.1
+

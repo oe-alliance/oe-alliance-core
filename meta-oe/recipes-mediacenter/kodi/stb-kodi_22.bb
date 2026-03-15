@@ -25,7 +25,7 @@ DEPENDS += " \
             nasm-native \
             swig-native \
             unzip-native \
-            yasm-native \
+            nasm-native \
             zip-native \
             \
             avahi \
@@ -75,7 +75,7 @@ DEPENDS += " \
           "
 inherit gitpkgv
 # 22.0 Piers
-SRCREV = "3e08130c51dc8337a8de47d150088d65c20ab5d8"
+SRCREV = "8cac2964b71aa460321592b606eebe6504630320"
 
 # 'patch' doesn't support binary diffs
 PATCHTOOL = "git"
@@ -116,6 +116,7 @@ SRC_URI = "git://github.com/xbmc/xbmc.git;protocol=https;branch=master \
            file://0012-sigintfix-and-libinput-fix.patch \
            file://0013-texturepacker-dont-build-internal.patch \
            file://0014-older-gl.patch \
+           file://0015-update-LinuxInputDevices.patch \
            file://0100-stb-player.patch \
            file://0101-e2-player.patch \
            file://0102-gst-player.patch \

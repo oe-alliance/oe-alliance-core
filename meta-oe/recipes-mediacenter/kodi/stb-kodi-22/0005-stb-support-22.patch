@@ -1,6 +1,6 @@
-From f295819578cb7f09a194355e8befcd37cf417427 Mon Sep 17 00:00:00 2001
+From 79e2f9ed65269edbcd14a906290180903f748e82 Mon Sep 17 00:00:00 2001
 From: atvcaptain <openatv@gmail.com>
-Date: Sun, 28 Dec 2025 15:14:23 +0100
+Date: Sun, 15 Mar 2026 17:08:23 +0100
 Subject: [PATCH] stb-support-22
 
 ---
@@ -83,10 +83,10 @@ Subject: [PATCH] stb-support-22
  create mode 100644 xbmc/windowing/egl/WinSystemstb.h
 
 diff --git a/xbmc/addons/addoninfo/AddonInfoBuilder.cpp b/xbmc/addons/addoninfo/AddonInfoBuilder.cpp
-index 55662c2467..fe497e9780 100644
+index f464d37250..3a0a65d56d 100644
 --- a/xbmc/addons/addoninfo/AddonInfoBuilder.cpp
 +++ b/xbmc/addons/addoninfo/AddonInfoBuilder.cpp
-@@ -782,6 +782,12 @@ const char* CAddonInfoBuilder::GetPlatformLibraryName(const tinyxml2::XMLElement
+@@ -793,6 +793,12 @@ const char* CAddonInfoBuilder::GetPlatformLibraryName(const tinyxml2::XMLElement
  #if defined(TARGET_FREEBSD)
    libraryName = element->Attribute("library_freebsd");
    if (libraryName == nullptr)
@@ -99,7 +99,7 @@ index 55662c2467..fe497e9780 100644
  #endif
    libraryName = element->Attribute("library_linux");
  #elif defined(TARGET_WINDOWS_DESKTOP)
-@@ -821,6 +827,12 @@ bool CAddonInfoBuilder::PlatformSupportsAddon(const AddonInfoPtr& addon)
+@@ -832,6 +838,12 @@ bool CAddonInfoBuilder::PlatformSupportsAddon(const AddonInfoPtr& addon)
  #else
      #warning no architecture dependant platform tag
  #endif
@@ -6257,7 +6257,7 @@ index 0000000000..f8efc14f85
 +};
 diff --git a/xbmc/windowing/egl/WinSystemstb.cpp b/xbmc/windowing/egl/WinSystemstb.cpp
 new file mode 100644
-index 0000000000..896ad21d1a
+index 0000000000..9713e8fdbc
 --- /dev/null
 +++ b/xbmc/windowing/egl/WinSystemstb.cpp
 @@ -0,0 +1,547 @@
@@ -6317,7 +6317,7 @@ index 0000000000..896ad21d1a
 +  m_displayWidth = 0;
 +  m_displayHeight = 0;
 +
-+  m_stereo_mode = RENDER_STEREO_MODE_OFF;
++  m_stereo_mode = RenderStereoMode::OFF;
 +  m_delayDispReset = false;
 +
 +  m_egl = new CEGLWrapper;
@@ -6473,7 +6473,7 @@ index 0000000000..896ad21d1a
 +{
 +  RESOLUTION_INFO current_resolution;
 +  current_resolution.iWidth = current_resolution.iHeight = 0;
-+  RENDER_STEREO_MODE stereo_mode = CServiceBroker::GetWinSystem()->GetGfxContext().GetStereoMode();
++  RenderStereoMode stereo_mode = CServiceBroker::GetWinSystem()->GetGfxContext().GetStereoMode();
 +
 +  m_nWidth        = res.iWidth;
 +  m_nHeight       = res.iHeight;
@@ -6810,7 +6810,7 @@ index 0000000000..896ad21d1a
 +
 diff --git a/xbmc/windowing/egl/WinSystemstb.h b/xbmc/windowing/egl/WinSystemstb.h
 new file mode 100644
-index 0000000000..c2d176c017
+index 0000000000..8e6fbfd10a
 --- /dev/null
 +++ b/xbmc/windowing/egl/WinSystemstb.h
 @@ -0,0 +1,79 @@
@@ -6878,7 +6878,7 @@ index 0000000000..c2d176c017
 +  EGLSurface            m_surface;
 +  EGLContext            m_context;
 +  EGLConfig             m_config;
-+  RENDER_STEREO_MODE    m_stereo_mode;
++  RenderStereoMode      m_stereo_mode{RenderStereoMode::OFF};
 +
 +  std::string           m_extensions;
 +
