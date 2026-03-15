@@ -2,6 +2,9 @@ DEPENDS += " upx-native"
 
 UPX_ARGS ?= "--best"
 
+# Ensure sstate separates packages when upx version differs
+do_upx[vardeps] += "PREFERRED_VERSION_upx-native"
+
 do_upx() {
     echo "UPX - Binary compression"
     find "${WORKDIR}/packages-split" -type f -executable | while read line
