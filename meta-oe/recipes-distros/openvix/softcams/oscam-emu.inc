@@ -13,12 +13,11 @@ EXTRA_OECMAKE += "\
 
 require oscam-common.inc
 
-inherit gitpkgv
+inherit gittag
 
 SRCREV = "${AUTOREV}"
 
-PV = "1.30+git"
-PKGV = "1.30+git${GITPKGV}"
+PKGV = "${GITPKGVTAG}"
 PR = "r3"
 
 RPROVIDES:${PN} += "enigma2-plugin-softcams-oscam-openvix-emu"
