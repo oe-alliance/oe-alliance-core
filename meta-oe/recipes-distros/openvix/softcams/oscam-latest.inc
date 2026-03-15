@@ -1,3 +1,5 @@
+require oscam-common.inc
+
 SRCREV = "${AUTOREV}"
 CAMNAME = "oscam-latest"
 SUMMARY:${PN} = "OSCam-latest ${PKGV}"
