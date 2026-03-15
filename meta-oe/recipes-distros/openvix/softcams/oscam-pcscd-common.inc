@@ -30,6 +30,7 @@ EXTRA_OECMAKE += "\
     -DWITH_SSL=1 \
     -DCLOCKFIX=0 \
     -DHAVE_PCSC=1 \
+    ${@bb.utils.contains_any("TUNE_FEATURES", "neon simd", "-DWITH_ARM_NEON=1", "", d)} \
 "
 
 do_configure:prepend () {
