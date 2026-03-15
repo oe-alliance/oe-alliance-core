@@ -16,11 +16,12 @@ hostname = "${MACHINEBUILD}"
 # Detect rootfs filesystem type from IMAGE_FSTYPES (machine configs can override ROOTFS_FSTYPE / ROOTFS_MOUNTOPTS)
 def get_rootfs_fstype(d):
     fstypes = (d.getVar('IMAGE_FSTYPES') or '').lower()
+    mtd_rootfs = (d.getVar('MTD_ROOTFS') or '').lower()
     if 'ubi' in fstypes and 'emmc' not in fstypes and 'fastboot' not in fstypes:
         return 'ubifs'
     if 'jffs2' in fstypes:
         return 'jffs2'
-    if 'emmc' in fstypes or 'fastboot' in fstypes or 'ext4' in fstypes:
+    if 'emmc' in fstypes or 'fastboot' in fstypes or 'ext4' in fstypes or 'mmcblk' in mtd_rootfs:
         return 'ext4'
     return 'auto'
 
