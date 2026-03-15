@@ -7,6 +7,10 @@ DESCRIPTION:${PN} = "OSCam Open Source Softcam\n \
 - latest trunk"
 PR = "r3"
 
+inherit gittag
+
+PKGV = "${GITPKGVTAG}"
+
 RPROVIDES:${PN} += "enigma2-plugin-softcams-oscam-openvix"
 RREPLACES:${PN} += "enigma2-plugin-softcams-oscam-openvix"
 RCONFLICTS:${PN} += "enigma2-plugin-softcams-oscam-openvix"
