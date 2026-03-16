@@ -1,9 +1,13 @@
 SRCREV = "${AUTOREV}"
 CAMNAME = "oscam-pcscd-latest"
-SUMMARY:${PN} = "OSCam-pscd ${PKGV}"
+SUMMARY:${PN} = "OSCam-pcscd ${PKGV}"
 DESCRIPTION:${PN} = "OSCam Open Source Softcam\n \
-- pscd latest trunk"
+- pcscd latest trunk"
 PR = "r1"
+
+inherit gittag
+
+PKGV = "${GITPKGVTAG}"
 
 RPROVIDES:${PN} += "enigma2-plugin-softcams-oscam-pcscd-latest"
 RREPLACES:${PN} += "enigma2-plugin-softcams-oscam-pcscd-latest"

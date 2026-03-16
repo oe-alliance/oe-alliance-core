@@ -3,8 +3,6 @@
 require softcam.inc
 inherit cmake
 
-PV = "1.30+git"
-
 FILESEXTRAPATHS:prepend := "${THISDIR}/enigma2-plugin-softcams-oscam:"
 
 SRC_URI += " \
@@ -20,18 +18,30 @@ CONFFILES:${PN} ?= "/etc/tuxbox/config/${CAMNAME}"
 
 PACKAGE_ARCH = "${TUNE_PKGARCH}"
 
-DEPENDS += "libusb openssl pcsc-lite"
+DEPENDS += "libusb openssl pcsc-lite libdvbcsa"
+RDEPENDS:${PN} += "libdvbcsa libusb1"
 # RDEPENDS:enigma2-plugin-softcams-oscam-pcscd = "pcsc-lite"
+
+LDFLAGS:prepend = "-ldvbcsa "
 
 EXTRA_OECMAKE += "\
     -DOSCAM_SYSTEM_NAME=Tuxbox \
     -DWEBIF=1 \
+    -DWEBIF_LIVELOG=1 \
+    -DWEBIF_JQUERY=1 \
+    -DLCDSUPPORT=1 \
+    -DLEDSUPPORT=1 \
     -DWITH_STAPI=0 \
     -DHAVE_LIBUSB=1 \
     -DSTATIC_LIBUSB=1 \
     -DWITH_SSL=1 \
     -DCLOCKFIX=0 \
     -DHAVE_PCSC=1 \
+    -DMODULE_CONSTCW=1 \
+    -DMODULE_STREAMRELAY=1 \
+    -DHAVE_LIBDVBCSA=1 \
+    -DWITH_EXTENDED_CW=1 \
+    ${@bb.utils.contains_any("TUNE_FEATURES", "neon simd", "-DWITH_ARM_NEON=1", "", d)} \
 "
 
 do_configure:prepend () {
