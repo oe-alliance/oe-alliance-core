@@ -1,23 +1,26 @@
 SUMMARY = "Yet Another Flash File System"
 DESCRIPTION = "Tools for managing 'yaffs' file systems for bootmenu."
-
 LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = " "
-PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 inherit pkgconfig
 
-PV = "1.0.0"
-
-SRC_URI = "file://mkyaffs2utils.tar.bz2"
-
-#INHIBIT_PACKAGE_STRIP = "1"
-#INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
+SRC_URI = "file://mkyaffs2utils.zip"
 
 S = "${UNPACKDIR}"
 
 do_compile() {
-    cd mkyaffs2image && oe_runmake
+    oe_runmake -C mkyaffs2image \
+        CC="${CC}" \
+        CFLAGS="${CFLAGS}" \
+        LDFLAGS="${LDFLAGS}"
+}
+
+do_compile:class-native() {
+    oe_runmake -C mkyaffs2image \
+        CC="${BUILD_CC}" \
+        CFLAGS="${BUILD_CFLAGS}" \
+        LDFLAGS="${BUILD_LDFLAGS}"
 }
 
 FILES:${PN} += "${bindir}"
@@ -25,9 +28,6 @@ FILES:${PN} += "${bindir}"
 do_install() {
 	install -d ${D}${bindir}
 	install -m 0755 mkyaffs2image/mkyaffs ${D}${bindir}
-}
-
-do_package_qa() {
 }
 
 BBCLASSEXTEND = "native"
