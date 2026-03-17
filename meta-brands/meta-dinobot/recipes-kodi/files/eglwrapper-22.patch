@@ -1,17 +1,17 @@
-From 669114edd7e6a0fdb3763f2f5ca3544af80dc6b3 Mon Sep 17 00:00:00 2001
-From: Captain <captain.onboard@web.de>
-Date: Sun, 25 Jul 2021 05:55:30 +0200
-Subject: [PATCH] epgwrapper-20
+From f1f51794cf6faa32105fab71c1abeb6d969e8d1e Mon Sep 17 00:00:00 2001
+From: atvcaptain <openatv@gmail.com>
+Date: Tue, 17 Mar 2026 18:54:08 +0100
+Subject: [PATCH] epgwrapper-22
 
 ---
  xbmc/windowing/egl/EGLWrapper.cpp | 7 +++++++
  1 file changed, 7 insertions(+)
 
 diff --git a/xbmc/windowing/egl/EGLWrapper.cpp b/xbmc/windowing/egl/EGLWrapper.cpp
-index 2f6288db84..94ed909ae2 100644
+index 3eb1f9b42a..bab03a6e0d 100644
 --- a/xbmc/windowing/egl/EGLWrapper.cpp
 +++ b/xbmc/windowing/egl/EGLWrapper.cpp
-@@ -216,11 +216,14 @@ bool CEGLWrapper::GetNativeResolution(RESOLUTION_INFO *res)
+@@ -229,11 +229,14 @@ bool CEGLWrapper::GetNativeResolution(RESOLUTION_INFO *res)
    return m_nativeTypes->GetNativeResolution(res);
  }
  
@@ -26,7 +26,7 @@ index 2f6288db84..94ed909ae2 100644
    return m_nativeTypes->ShowWindow(show);
  }
  
-@@ -419,6 +422,10 @@ void CEGLWrapper::SwapBuffers(EGLDisplay display, EGLSurface surface)
+@@ -432,6 +435,10 @@ void CEGLWrapper::SwapBuffers(EGLDisplay display, EGLSurface surface)
  {
    if ((display == EGL_NO_DISPLAY) || (surface == EGL_NO_SURFACE))
      return;
@@ -34,9 +34,9 @@ index 2f6288db84..94ed909ae2 100644
 +  if( !g_isShow )
 +    return;
 +
-   eglSwapBuffers(display, surface);
- }
- 
+ #if defined(TARGET_DREAMBOX)
+   // On some fbdev/embedded EGL stacks the default swap behavior is BUFFER_DESTROYED.
+   // That can lead to undefined backbuffer contents after eglSwapBuffers(), which
 -- 
-2.32.0.windows.2
+2.45.2.windows.1
 

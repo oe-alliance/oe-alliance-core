@@ -6,7 +6,7 @@ PROVIDES += "kodi"
 RPROVIDES:${PN} += "kodi"
 RDEPENDS:${PN} += "dinobot-opengl-${SOC_FAMILY}"
 
-SRC_URI:append = " file://eglwrapper-20.patch "
+SRC_URI:append = " file://eglwrapper-22.patch "
 
 EXTRA_OECMAKE += " \
     -DWITH_PLATFORM=mali-cortexa15 \
