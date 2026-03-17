@@ -95,7 +95,7 @@ diff --git a/NEWS b/NEWS
 index 0fef024e..22f0187b 100644
 --- a/NEWS
 +++ b/NEWS
-@@ -1251,18 +1251,6 @@ Major new features:
+@@ -1474,18 +1474,6 @@ Major new features:
    _GNU_SOURCE macro is defined and the C++20 __cpp_char8_t feature test macro
    is not defined (if __cpp_char8_t is defined, then char8_t is a builtin type).
  
@@ -118,7 +118,7 @@ diff --git a/benchtests/Makefile b/benchtests/Makefile
 index b18a9505..e382c9b7 100644
 --- a/benchtests/Makefile
 +++ b/benchtests/Makefile
-@@ -293,9 +293,7 @@ hash-benchset := \
+@@ -318,9 +318,7 @@ hash-benchset := \
    # hash-benchset
  
  stdlib-benchset := \
@@ -169,8 +169,8 @@ index 02180c38..c8836329 100644
 -    __v;					  \
 -  })
  
- #ifndef START_ITER
- # define START_ITER (100000000)
+ #if __GNUC_PREREQ (4, 4) || __glibc_has_attribute (__optimize__)
+ # define attribute_optimize(level) __attribute__ ((optimize (level)))
 diff --git a/include/stdlib.h b/include/stdlib.h
 index 57f4ab85..824d51ff 100644
 --- a/include/stdlib.h
@@ -195,7 +195,7 @@ diff --git a/malloc/malloc.c b/malloc/malloc.c
 index 27dfd1eb..80206e6a 100644
 --- a/malloc/malloc.c
 +++ b/malloc/malloc.c
-@@ -258,7 +258,6 @@
+@@ -257,7 +257,6 @@
  /* For tcache double-free check.  */
  #include <random-bits.h>
  #include <sys/random.h>
@@ -203,7 +203,7 @@ index 27dfd1eb..80206e6a 100644
  
  /*
    Debugging:
-@@ -3151,8 +3151,8 @@ static void
+@@ -2975,8 +2974,8 @@ static void
  tcache_key_initialize (void)
  {
    /* We need to use the _nostatus version here, see BZ 29624.  */
@@ -296,7 +296,7 @@ index 9c1a72bc..431e8326 100644
  #include <intprops.h>
  #include <setvmaname.h>
  
-@@ -130,7 +129,7 @@ get_cached_stack (size_t *sizep, void **memp)
+@@ -134,7 +133,7 @@ get_cached_stack (size_t *sizep, void **memp)
  
    result->exiting = false;
    __libc_lock_init (result->exit_lock);
@@ -309,7 +309,7 @@ diff --git a/stdlib/Makefile b/stdlib/Makefile
 index 1c4fa238..4b81c25c 100644
 --- a/stdlib/Makefile
 +++ b/stdlib/Makefile
-@@ -55,8 +55,6 @@ routines := \
+@@ -56,8 +56,6 @@ routines := \
    a64l \
    abort \
    abs \
@@ -318,7 +318,7 @@ index 1c4fa238..4b81c25c 100644
    at_quick_exit \
    atof \
    atoi \
-@@ -266,9 +264,6 @@ tests := \
+@@ -268,9 +266,6 @@ tests := \
    testrand \
    testsort \
    tst-abs \
@@ -328,7 +328,7 @@ index 1c4fa238..4b81c25c 100644
    tst-at_quick_exit \
    tst-atexit \
    tst-atof1 \
-@@ -407,8 +402,6 @@ LDLIBS-test-cxa_atexit-race = $(shared-thread-library)
+@@ -417,8 +412,6 @@ LDLIBS-test-cxa_atexit-race = $(shared-thread-library)
  LDLIBS-test-cxa_atexit-race2 = $(shared-thread-library)
  LDLIBS-test-on_exit-race = $(shared-thread-library)
  LDLIBS-tst-canon-bz26341 = $(shared-thread-library)
@@ -554,7 +554,7 @@ diff --git a/stdlib/stdlib.h b/stdlib/stdlib.h
 index 975f5aeb..215f2c0a 100644
 --- a/stdlib/stdlib.h
 +++ b/stdlib/stdlib.h
-@@ -652,19 +652,6 @@ extern int seed48_r (unsigned short int __seed16v[3],
+@@ -656,19 +656,6 @@ extern int seed48_r (unsigned short int __seed16v[3],
  extern int lcong48_r (unsigned short int __param[7],
  		      struct drand48_data *__buffer)
       __THROW __nonnull ((1, 2));
@@ -578,7 +578,7 @@ diff --git a/sysdeps/aarch64/Makefile b/sysdeps/aarch64/Makefile
 index 4b7f8a5c..fe7471d0 100644
 --- a/sysdeps/aarch64/Makefile
 +++ b/sysdeps/aarch64/Makefile
-@@ -60,6 +60,10 @@ gen-as-const-headers += \
+@@ -56,6 +56,10 @@ gen-as-const-headers += \
    rtld-global-offsets.sym
  endif
  
@@ -1037,7 +1037,7 @@ diff --git a/sysdeps/mach/hurd/i386/libc.abilist b/sysdeps/mach/hurd/i386/libc.a
 index 40f35ee0..b205edd3 100644
 --- a/sysdeps/mach/hurd/i386/libc.abilist
 +++ b/sysdeps/mach/hurd/i386/libc.abilist
-@@ -2382,9 +2382,6 @@ GLIBC_2.35 __memcmpeq F
+@@ -2444,9 +2444,6 @@ GLIBC_2.35 __memcmpeq F
  GLIBC_2.35 _dl_find_object F
  GLIBC_2.35 close_range F
  GLIBC_2.35 posix_spawn_file_actions_addtcsetpgrp_np F
@@ -2573,8 +2573,8 @@ diff --git a/sysdeps/x86_64/Makefile b/sysdeps/x86_64/Makefile
 index 9d31685e..6653fb79 100644
 --- a/sysdeps/x86_64/Makefile
 +++ b/sysdeps/x86_64/Makefile
-@@ -13,6 +13,13 @@ ifeq ($(subdir),csu)
- gen-as-const-headers += link-defines.sym
+@@ -14,6 +14,13 @@ gen-as-const-headers += link-defines.sym
+ gen-as-const-headers += tlsdesc.sym rtld-offsets.sym
  endif
  
 +ifeq ($(subdir),stdlib)
