@@ -21,6 +21,7 @@ DEPENDS = "\
     enigma2-plugin-drivers-dvb-usb-rtl2832 \
     enigma2-plugin-drivers-dvb-usb-tbs \
     enigma2-plugin-drivers-dvb-usb-tbs5520 \
+    enigma2-plugin-drivers-dvb-usb-tbs5520se \
     enigma2-plugin-drivers-dvb-usb-opticombo \
     enigma2-plugin-drivers-ct2-dvb-usb-geniatech-t230 \
     enigma2-plugin-drivers-s2-dvb-usb-s960 \
