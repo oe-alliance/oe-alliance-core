@@ -7,7 +7,7 @@ SRCDATE = "20170831"
 
 COMPATIBLE_MACHINE = "^(ch625dt|ch625lc|yh625dt|yh625tc|yh73625)$"
 
-inherit kernel machine_kernel_pr
+inherit kernel machine_kernel_pr kernel-fixups
 
 SRC_URI[md5sum] = "cb28a0056279ad46af776fd5cdbcf88f"
 SRC_URI[sha256sum] = "a147b639445206ce85a56e155667ada38db1512e1c78fe9d4fd6d4be6f5a2e0e"
@@ -20,25 +20,13 @@ RPROVIDES:${KERNEL_PACKAGE_NAME}-image += "kernel-${KERNEL_IMAGETYPE}"
 
 SRC_URI += "https://source.mynonpublic.com/entwopia/${MACHINE}/${MACHINE}-linux-${PV}-base-${SRCDATE}.tgz \
     file://defconfig \
-    file://0001-add-dmx-source-timecode.patch \
-    file://0002-nand-ecc-strength-and-bitflip.patch \
-    file://TBS-fixes-for-4.10-kernel.patch \
-    file://0001-Support-TBS-USB-drivers-for-4.6-kernel.patch \
-    file://0001-TBS-fixes-for-4.6-kernel.patch \
-    file://0001-STV-Add-PLS-support.patch \
-    file://0001-STV-Add-SNR-Signal-report-parameters.patch \
-    file://blindscan2.patch \
-    file://0001-stv090x-optimized-TS-sync-control.patch \
-    file://0001-revert-xhci-plat.patch \
-    file://noforce_correct_pointer_usage.patch \
+    ${KERNEL_PATCHES_SERIES_4_10} \
+    ${KERNEL_PATCH_DVB_DMX_TIMECODE} \
+    ${KERNEL_PATCH_BRCM_NAND_ECC} \
+    ${KERNEL_PATCH_MISC_REVERT_XHCI} \
+    ${KERNEL_PATCH_FIX_NOFORCE_POINTER} \
     file://0003-cp1emu-do-not-use-bools-for-arithmetic.patch \
-    file://move-default-dialect-to-SMB3.patch \
-    file://add-more-devices-rtl8xxxu.patch \
     file://0005-xbox-one-tuner-4.10.patch \
-    file://0006-dvb-media-tda18250-support-for-new-silicon-tuner.patch \
-    file://fix-multiple-defs-yyloc.patch \
-    file://fix-never-be-null_outside-array-bounds-gcc-12.patch \
-    file://fix-build-with-binutils-2.41.patch \
     file://block2mtd.patch \
     file://initramfs-mipsel.cpio.xz;unpack=0 \
     "

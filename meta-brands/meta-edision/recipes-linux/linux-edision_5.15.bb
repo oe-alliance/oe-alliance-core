@@ -7,7 +7,7 @@ KERNEL_RELEASE = "5.15"
 
 COMPATIBLE_MACHINE = "^(osmini4k|osmio4k|osmio4kplus)$"
 
-inherit kernel machine_kernel_pr
+inherit kernel machine_kernel_pr kernel-fixups
 
 SRC_URI[md5sum] = "c0d2fc41c606b3bc3d13ef4551cdf593"
 SRC_URI[sha256sum] = "db0b1e2786161ebdd9e237e9d0376b08858b90d294ed9bf8ba32cf1f2d742037"

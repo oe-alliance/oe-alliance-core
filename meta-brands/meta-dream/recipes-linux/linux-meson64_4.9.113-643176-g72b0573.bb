@@ -2,7 +2,7 @@ DEPENDS = "libgcc"
 PROVIDES = "linux-dreambox"
 PE = "1"
 
-inherit kernel machine_kernel_pr
+inherit kernel machine_kernel_pr kernel-fixups
 
 MACHINE_KERNEL_PR = "r3"
 
@@ -15,11 +15,11 @@ SRC_URI = "https://source.mynonpublic.com/dreambox/${BPN}-v${PV}.tar.xz \
            file://defconfig \
            file://fix-multiple-defs-yyloc_v1.patch \
            file://0003-cp1emu-do-not-use-bools-for-arithmetic.patch \
-           file://move-default-dialect-to-SMB3.patch \
            file://hide_sdcardfs_info.patch \
            file://use_address-of_operator_on_section_symbols.patch \
-           file://fix-build-with-binutils-2.41.patch \
-           ${GCC_KERNEL_PATCH} \
+           ${KERNEL_PATCH_BINUTILS241_V4} \
+           ${KERNEL_PATCH_FIX_HEADER} \
+           ${KERNEL_PATCH_FIX_CONSTEXPR} \
 "
 
 SRC_URI[md5sum] = "2b77df9bf64f825925172790c54f8ead"

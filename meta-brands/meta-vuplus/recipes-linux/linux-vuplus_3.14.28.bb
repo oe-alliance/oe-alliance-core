@@ -10,7 +10,7 @@ MACHINE_KERNEL_PR = "r5"
 
 RPROVIDES:${KERNEL_PACKAGE_NAME}-image += "kernel-${KERNEL_IMAGETYPE}"
 
-inherit kernel machine_kernel_pr
+inherit kernel machine_kernel_pr kernel-fixups
 
 KERNELSRC = "stblinux-3.14-1.12.tar.bz2"
 KERNELSRC:vusolo4k = "stblinux-3.14-1.8.tar.bz2"
@@ -30,29 +30,21 @@ SRC_URI += "https://source.mynonpublic.com/vuplus/release/kernel/${KERNELSRC};na
     file://rt2800usb_fix_warn_tx_status_timeout_to_dbg.patch \
     file://usb_core_hub_msleep.patch \
     file://rtl8712_fix_build_error.patch \
-    ${GCC_KERNEL_PATCH} \
-    file://build-with-gcc12-fixes.patch \
-    file://0001-Support-TBS-USB-drivers.patch \
-    file://0001-STV-Add-PLS-support.patch \
-    file://0001-STV-Add-SNR-Signal-report-parameters.patch \
-    file://0001-stv090x-optimized-TS-sync-control.patch \
-    file://blindscan2.patch \
+    ${KERNEL_PATCH_GCC_SERIES} \
+    ${KERNEL_PATCH_FIX_EXTABLE} \
+    ${KERNEL_PATCH_TBS_USB_314A} \
+    ${KERNEL_PATCHES_DVB_STV_SERIES} \
     file://genksyms_fix_typeof_handling.patch \
-    file://0001-tuners-tda18273-silicon-tuner-driver.patch \
-    file://01-10-si2157-Silicon-Labs-Si2157-silicon-tuner-driver.patch \
-    file://02-10-si2168-Silicon-Labs-Si2168-DVB-T-T2-C-demod-driver.patch \
+    ${KERNEL_PATCHES_DVB_TDA18273} \
+    ${KERNEL_PATCHES_DVB_SI2157_OLD} \
+    ${KERNEL_PATCHES_DVB_SI2168_OLD} \
     file://0003-cxusb-Geniatech-T230-support.patch \
     file://CONFIG_DVB_SP2.patch \
     file://dvbsky.patch \
     file://rtl2832u-2.patch \
-    file://0004-log2-give-up-on-gcc-constant-optimizations.patch \
-    file://0005-uaccess-dont-mark-register-as-const.patch \
     file://0006-makefile-disable-warnings.patch \
-    file://move-default-dialect-to-SMB3.patch \
-    file://fix-multiple-defs-yyloc.patch \
-    file://fix-linker-issue-undefined-reference.patch \
-    file://linux3.4-ARM-8933-1-replace-Sun-Solaris-style-flag-on-section.patch \
-    file://fix-build-with-binutils-2.41.patch \
+    ${KERNEL_PATCH_MISC_FIX_LINKER} \
+    ${KERNEL_PATCH_BINUTILS241_V1} \
     "
 
 export KCFLAGS = " -std=gnu17 \

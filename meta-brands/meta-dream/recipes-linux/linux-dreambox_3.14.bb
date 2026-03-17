@@ -1,4 +1,4 @@
-inherit kernel machine_kernel_pr
+inherit kernel machine_kernel_pr kernel-fixups
 
 MACHINE_KERNEL_PR:append = ".27"
 
@@ -12,27 +12,20 @@ SRC_URI = " \
     ${KERNELORG_MIRROR}/linux/kernel/v3.x/patch-${PV}.${PATCHLEVEL}.xz;apply=yes;name=stable-patch \
     https://source.mynonpublic.com/dreambox/linux-dreambox-${PV}-${PATCHREV}.patch.xz;apply=yes;name=dream-patch \
     file://defconfig \
-    file://0001-Support-TBS-USB-drivers.patch \
-    file://0001-STV-Add-PLS-support.patch \
-    file://0001-STV-Add-SNR-Signal-report-parameters.patch \
-    file://0001-stv090x-optimized-TS-sync-control.patch \
+    ${KERNEL_PATCH_TBS_USB_314A} \
+    ${KERNEL_PATCHES_DVB_STV_SERIES} \
     file://genksyms_fix_typeof_handling.patch \
-    file://blindscan2.patch \
-    file://0001-tuners-tda18273-silicon-tuner-driver.patch \
-    file://01-10-si2157-Silicon-Labs-Si2157-silicon-tuner-driver.patch \
-    file://02-10-si2168-Silicon-Labs-Si2168-DVB-T-T2-C-demod-driver.patch \
+    ${KERNEL_PATCHES_DVB_TDA18273} \
+    ${KERNEL_PATCHES_DVB_SI2157_OLD} \
+    ${KERNEL_PATCHES_DVB_SI2168_OLD} \
     file://0003-cxusb-Geniatech-T230-support.patch \
     file://CONFIG_DVB_SP2.patch \
     file://dvbsky.patch \
     file://rtl2832u-2.patch \
-    file://0004-log2-give-up-on-gcc-constant-optimizations.patch \
-    file://0005-uaccess-dont-mark-register-as-const.patch \
     file://0006-makefile-silence-packed-not-aligned-warn.patch \
     file://0007-overlayfs.patch \
-    file://move-default-dialect-to-SMB3.patch \
-    file://fix-multiple-defs-yyloc.patch \
-    file://fix-build-with-binutils-2.41.patch \
-    ${GCC_KERNEL_PATCH} \
+    ${KERNEL_PATCH_BINUTILS241_V6} \
+    ${KERNEL_PATCH_GCC_SERIES} \
     file://chkroot-multiboot.cpio.xz;unpack=0 \
 "
 

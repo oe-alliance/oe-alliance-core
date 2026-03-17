@@ -6,7 +6,7 @@ KERNEL_RELEASE = "4.10.12"
 
 COMPATIBLE_MACHINE = "xp1000"
 
-inherit kernel machine_kernel_pr
+inherit kernel machine_kernel_pr kernel-fixups
 
 SRC_URI[md5sum] = "3c42df14db9d12041802f4c8fec88e17"
 SRC_URI[sha256sum] = "738896d2682211d2079eeaa1c7b8bdd0fe75eb90cd12dff2fc5aeb3cc02562bc"
@@ -19,10 +19,8 @@ RPROVIDES:${KERNEL_PACKAGE_NAME}-image += "kernel-${KERNEL_IMAGETYPE}"
 
 SRC_URI += "https://source.mynonpublic.com/xp1000/linux-${PV}-${ARCH}.tar.gz \
     file://defconfig \
-    file://move-default-dialect-to-SMB3.patch \
-    file://fix-multiple-defs-yyloc.patch \
-    file://fix-never-be-null_outside-array-bounds-gcc-12.patch \
-    file://fix-build-with-binutils-2.41.patch \
+    ${KERNEL_PATCH_FIX_NEVER_NULL} \
+    ${KERNEL_PATCH_BINUTILS241_V5} \
     file://block2mtd.patch \
     file://initramfs-mipsel.cpio.xz;unpack=0 \
     "

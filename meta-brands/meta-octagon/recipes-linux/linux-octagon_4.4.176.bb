@@ -9,7 +9,7 @@ SRCDATE:sx88v2 = "20221203"
 
 COMPATIBLE_MACHINE = "^(sf8008opt|sfx6008|sx988|sx88v2)$"
 
-inherit kernel machine_kernel_pr
+inherit kernel machine_kernel_pr kernel-fixups
 
 MACHINE_KERNEL_PR:append = "1"
 
@@ -28,9 +28,8 @@ SRC_URI += "https://source.mynonpublic.com/octagon/octagon-linux-${PV}-${SRCDATE
     file://initramfs-subdirboot.cpio.gz;unpack=0 \
     file://initramfs.cpio.gz;unpack=0 \
     file://findkerneldevice.sh \
-    file://fix-multiple-defs-yyloc.patch \
-    file://fix-build-with-binutils-2.41.patch \
-    file://cfg80211_Add_option_to_report_the_bss_entry_in_connect_result.patch \
+    ${KERNEL_PATCH_BINUTILS241_V7} \
+    ${KERNEL_PATCH_WIFI_CFG80211} \
 "
 
 S = "${UNPACKDIR}/linux-${PV}"

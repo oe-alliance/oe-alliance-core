@@ -2,7 +2,7 @@ SUMMARY = "Linux kernel for ${MACHINE}"
 SECTION = "kernel"
 LICENSE = "GPL-2.0-only"
 
-inherit kernel machine_kernel_pr
+inherit kernel machine_kernel_pr kernel-fixups
 
 MACHINE_KERNEL_PR = "r3"
 KERNEL_RELEASE = "3.8.7"
@@ -20,9 +20,9 @@ SRC_URI += "https://source.mynonpublic.com/xtrend/xtrend-linux-${PV}.tar.gz \
     file://defconfig \
     file://Kernelupdate13.patch \
     file://0001-Revert-default-authentication-needs-to-be-at-least-n.patch \
-    file://0001-Revert-MIPS-mm-Add-compound-tail-page-_mapcount-when.patch \
-    file://0001-Revert-MIPS-Add-fast-get_user_pages.patch \
-    file://0001-Revert-MIPS-Fix-potencial-corruption.patch \
+    ${KERNEL_PATCH_MIPS_REVERT_COMPOUND} \
+    ${KERNEL_PATCH_MIPS_REVERT_FAST_GUP} \
+    ${KERNEL_PATCH_MIPS_REVERT_CORRUPTION} \
     file://add-dmx-source-timecode.patch \
     file://af9015-output-full-range-SNR.patch \
     file://af9033-output-full-range-SNR.patch \
@@ -35,13 +35,12 @@ SRC_URI += "https://source.mynonpublic.com/xtrend/xtrend-linux-${PV}.tar.gz \
     file://dvb_usb_disable_rc_polling.patch \
     file://em28xx_add_terratec_h5_rev3.patch \
     file://fix-proc-cputype.patch \
-    file://fixme-hardfloat.patch \
+    ${KERNEL_PATCH_MIPS_HARDFLOAT} \
     file://iosched-slice_idle-1.patch \
     file://it913x-switch-off-PID-filter-by-default.patch \
     file://tda18271-advertise-supported-delsys.patch \
     file://dvb-usb-siano-always-load-smsdvb-v2.patch \
     file://mxl5007t-add-no_probe-and-no_reset-parameters.patch \
-    file://nfs-max-rwsize-8k.patch \
     file://0001-rt2800usb-add-support-for-rt55xx.patch \
     file://rtl28xxu-and-tuners-update-to-latest-version-09-09-2013.patch \
     file://rtl2832-scale-SNR-to-full-range.patch \
@@ -49,22 +48,19 @@ SRC_URI += "https://source.mynonpublic.com/xtrend/xtrend-linux-${PV}.tar.gz \
     file://rtl8187se-fix-warnings.patch \
     file://em28xx-dvb-enable-LNA-by-default-for-PCTV290e.patch \
     file://zl10353-output-full-range-SNR.patch \
-    ${GCC_KERNEL_PATCH} \
-    file://build-with-gcc12-fixes.patch \
+    ${KERNEL_PATCH_GCC_SERIES} \
+    ${KERNEL_PATCH_FIX_EXTABLE} \
     file://stv0900-Multistream-support.patch \
-    file://0001-STV-Add-PLS-support.patch \
-    file://0001-STV-Add-SNR-Signal-report-parameters.patch \
-    file://0001-stv090x-optimized-TS-sync-control.patch \
+    ${KERNEL_PATCHES_DVB_STV_PLS} \
+    ${KERNEL_PATCHES_DVB_STV_SNR} \
+    ${KERNEL_PATCHES_DVB_STV_TS_SYNC} \
     file://2-2-stv090x-on-tuning-lock-return-correct-tuned-paramaters-like-freq-sr-fec-rolloff-etc.patch \
-    file://0001-Support-TBS-USB-drivers.patch \
+    ${KERNEL_PATCH_TBS_USB_38} \
     file://genksyms_fix_typeof_handling.patch \
     file://0002-cp1emu-do-not-use-bools-for-arithmetic.patch \
-    file://0003-log2-give-up-on-gcc-constant-optimizations.patch \
-    file://add-attributes-fix-modules-compile.patch \
-    file://makefile-silence-warnings.patch \
-    file://move-default-dialect-to-SMB2.patch \
-    file://linux3.4-ARM-8933-1-replace-Sun-Solaris-style-flag-on-section.patch \
-    file://fix-build-with-binutils-2.41.patch \
+    ${KERNEL_PATCH_FIX_MODULE_ATTRIBUTES} \
+    ${KERNEL_PATCH_FIX_SILENCE_WARNINGS} \
+    ${KERNEL_PATCH_BINUTILS241_V1} \
     file://block2mtd.patch \
     file://initramfs-mipsel.cpio.xz;unpack=0 \
     "

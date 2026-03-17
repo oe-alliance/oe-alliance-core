@@ -3,7 +3,7 @@ SECTION = "kernel"
 LICENSE = "GPL-2.0-only"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-inherit kernel machine_kernel_pr
+inherit kernel machine_kernel_pr kernel-fixups
 
 KERNEL_RELEASE = "4.4.8"
 SRCDATE = "20160504"
@@ -25,16 +25,11 @@ SRC_URI += "https://source.mynonpublic.com/xtrend/xtrend-linux-${PV}-${SRCDATE}.
     file://iosched-slice_idle-1.patch \
     file://0001-Support-TBS-USB-drivers-for-4.3-kernel.patch \
     file://0001-TBS-fixes-for-4.3-kernel.patch \
-    file://0001-STV-Add-PLS-support.patch \
-    file://0001-STV-Add-SNR-Signal-report-parameters.patch \
-    file://blindscan2.patch \
-    file://0001-stv090x-optimized-TS-sync-control.patch \
-    file://0002-log2-give-up-on-gcc-constant-optimizations.patch \
-    file://0003-dont-mark-register-as-const.patch \
-    file://move-default-dialect-to-SMB3.patch \
-    file://fix-never-be-null_outside-array-bounds-gcc-12.patch \
-    file://fix-build-with-binutils-2.41.patch \
-    file://cfg80211_Add_option_to_report_the_bss_entry_in_connect_result.patch \
+    ${KERNEL_PATCHES_DVB_STV_SERIES} \
+    ${KERNEL_PATCH_FIX_NEVER_NULL} \
+    ${KERNEL_PATCH_BINUTILS241_V3} \
+    ${KERNEL_PATCH_FIX_LOG2} \
+    ${KERNEL_PATCH_WIFI_CFG80211} \
     file://block2mtd.patch \
     file://initramfs-mipsel.cpio.xz;unpack=0 \
     "

@@ -11,7 +11,7 @@ COMPATIBLE_MACHINE = "dags72604"
 
 RPROVIDES:${KERNEL_PACKAGE_NAME}-image += "kernel-${KERNEL_IMAGETYPE}"
 
-inherit kernel machine_kernel_pr
+inherit kernel machine_kernel_pr kernel-fixups
 
 SRC_URI[md5sum] = "710b7af46d7ac1c78e3ef683c5c0a6ad"
 SRC_URI[sha256sum] = "1bb6b4f0d559885b3bd5f18c66a50a8ff39a284a81ad4da16188d08b9461ec55"
@@ -20,13 +20,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
 SRC_URI = "https://source.mynonpublic.com/dags/linux-${KV}-${DATETIME}.tar.xz \
     file://defconfig \
-    ${GCC_KERNEL_PATCH} \
-    file://0002-log2-give-up-on-gcc-constant-optimizations.patch \
-    file://0003-uaccess-dont-mark-register-as-const.patch \
-    file://move-default-dialect-to-SMB3.patch \
-    file://fix-multiple-defs-yyloc.patch \
-    file://linux3.4-ARM-8933-1-replace-Sun-Solaris-style-flag-on-section.patch \
-    file://fix-build-with-binutils-2.41.patch \
+    ${KERNEL_PATCH_GCC_SERIES} \
+    ${KERNEL_PATCH_BINUTILS241_V2} \
 "
 
 S = "${UNPACKDIR}/linux"

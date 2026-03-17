@@ -1,4 +1,4 @@
-inherit kernel machine_kernel_pr
+inherit kernel machine_kernel_pr kernel-fixups
 
 MACHINE_KERNEL_PR:append = ".15"
 
@@ -12,15 +12,13 @@ SRC_URI = " \
     ${KERNELORG_MIRROR}/linux/kernel/v3.x/patch-${PV}.${PATCHLEVEL}.xz;apply=yes;name=stable-patch \
     https://source.mynonpublic.com/dreambox/linux-dreambox-${PV}-${PATCHREV}.patch.xz;apply=yes;name=dream-patch \
     file://dvb_frontend-Multistream-support-3.4.patch \
-    ${GCC_KERNEL_PATCH} \
-    file://build-with-gcc12-fixes.patch \
+    ${KERNEL_PATCH_GCC_SERIES} \
     file://genksyms_fix_typeof_handling.patch \
     file://defconfig \
-    file://0001-log2-give-up-on-gcc-constant-optimizations.patch \
     file://0002-cp1emu-do-not-use-bools-for-arithmetic.patch \
     file://0003-makefile-silence-packed-not-aligned-warn.patch \
     file://0004-fcrypt-fix-bitoperation-for-gcc.patch \
-    file://fix-build-with-binutils-2.41.patch \
+    ${KERNEL_PATCH_BINUTILS241_V6} \
     file://vtbl-ubi.patch \
     file://chkroot-multiboot.cpio.xz;unpack=0 \
     file://initramfs-mipsel.cpio.xz;unpack=0 \

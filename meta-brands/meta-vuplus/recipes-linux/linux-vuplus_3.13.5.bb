@@ -7,7 +7,7 @@ COMPATIBLE_MACHINE = "^(vuduo2|vusolo2|vusolose|vuzero)$"
 
 RPROVIDES:${KERNEL_PACKAGE_NAME}-image += "kernel-${KERNEL_IMAGETYPE}"
 
-inherit kernel machine_kernel_pr
+inherit kernel machine_kernel_pr kernel-fixups
 
 MACHINE_KERNEL_PR = "r6"
 
@@ -20,8 +20,8 @@ KERNEL_CONFIG = "${@bb.utils.contains("MACHINE_FEATURES", "dvbproxy", "defconfig
 
 SRC_URI = "https://source.mynonpublic.com/vuplus/release/kernel/stblinux-${KV}.tar.bz2 \
     file://${KERNEL_CONFIG} \
-    ${GCC_KERNEL_PATCH} \
-    file://build-with-gcc12-fixes.patch \
+    ${KERNEL_PATCH_GCC_SERIES} \
+    ${KERNEL_PATCH_FIX_EXTABLE} \
     file://rt2800usb_fix_warn_tx_status_timeout_to_dbg.patch \
     file://add-dmx-source-timecode.patch \
     file://af9015-output-full-range-SNR.patch \
@@ -38,24 +38,18 @@ SRC_URI = "https://source.mynonpublic.com/vuplus/release/kernel/stblinux-${KV}.t
     file://linux-3.13-gcc-4.9.3-build-error-fixed.patch \
     file://rtl8712-fix-warnings.patch \
     file://0001-Support-TBS-USB-drivers-3.13.patch \
-    file://0001-STV-Add-PLS-support.patch \
-    file://0001-STV-Add-SNR-Signal-report-parameters.patch \
-    file://0001-stv090x-optimized-TS-sync-control.patch \
+    ${KERNEL_PATCHES_DVB_STV_SERIES} \
     file://0002-cp1emu-do-not-use-bools-for-arithmetic.patch \
-    file://0003-log2-give-up-on-gcc-constant-optimizations.patch \
-    file://blindscan2.patch \
     ${@bb.utils.contains("MACHINE_FEATURES", "dvbproxy", "file://linux_dvb_adapter.patch;striplevel=1", "", d)} \
     file://genksyms_fix_typeof_handling.patch \
     file://test.patch \
-    file://0001-tuners-tda18273-silicon-tuner-driver.patch \
+    ${KERNEL_PATCHES_DVB_TDA18273} \
     file://T220-kern-13.patch \
     file://01-10-si2157-Silicon-Labs-Si2157-silicon-tuner-driver.patch \
     file://02-10-si2168-Silicon-Labs-Si2168-DVB-T-T2-C-demod-driver.patch \
     file://CONFIG_DVB_SP2.patch \
     file://dvbsky.patch \
-    file://move-default-dialect-to-SMB3.patch \
-    file://linux3.4-ARM-8933-1-replace-Sun-Solaris-style-flag-on-section.patch \
-    file://fix-build-with-binutils-2.41.patch \
+    ${KERNEL_PATCH_BINUTILS241_V1} \
     file://block2mtd.patch \
     file://initramfs-mipsel.cpio.xz;unpack=0 \
     "

@@ -3,7 +3,7 @@ SECTION = "kernel"
 LICENSE = "GPL-2.0-only"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-inherit kernel machine_kernel_pr
+inherit kernel machine_kernel_pr kernel-fixups
 
 KERNEL_RELEASE = "4.8.17"
 
@@ -20,17 +20,13 @@ RPROVIDES:${KERNEL_PACKAGE_NAME}-image += "kernel-${KERNEL_IMAGETYPE}"
 
 SRC_URI += "https://source.mynonpublic.com/edision/linux-edision-${PV}.tar.xz \
     file://defconfig \
-    file://0001-Support-TBS-USB-drivers-for-4.6-kernel.patch \
-    file://0001-TBS-fixes-for-4.6-kernel.patch \
-    file://0001-STV-Add-PLS-support.patch \
-    file://0001-STV-Add-SNR-Signal-report-parameters.patch \
-    file://blindscan2.patch \
-    file://0001-stv090x-optimized-TS-sync-control.patch \
-    file://0002-log2-give-up-on-gcc-constant-optimizations.patch \
+    ${KERNEL_PATCH_TBS_USB_46} \
+    ${KERNEL_PATCH_TBS_USB_ENUM} \
+    ${KERNEL_PATCHES_DVB_STV_SERIES} \
     file://0003-cp1emu-do-not-use-bools-for-arithmetic.patch \
-    file://move-default-dialect-to-SMB3.patch \
-    file://fix-never-be-null_outside-array-bounds-gcc-12.patch \
-    file://fix-build-with-binutils-2.41.patch \
+    ${KERNEL_PATCH_FIX_LOG2} \
+    ${KERNEL_PATCH_FIX_NEVER_NULL} \
+    ${KERNEL_PATCH_BINUTILS241_V4} \
     file://block2mtd.patch \
     file://initramfs-mipsel.cpio.xz;unpack=0 \
     "

@@ -3,7 +3,7 @@ LICENSE = "GPL-2.0-only"
 SECTION = "kernel"
 KV = "3.9.7-r2"
 
-inherit kernel machine_kernel_pr
+inherit kernel machine_kernel_pr kernel-fixups
 
 COMPATIBLE_MACHINE = "^(dags7335|dags7356|dags7362)$"
 
@@ -21,26 +21,20 @@ MACHINE_KERNEL_PR = "r2"
 SRC_URI = "https://source.mynonpublic.com/dags/linux-${KV}-${SRCDATE}.tar.gz \
     file://defconfig \
     file://dmx_demux.patch \
-    file://fix_fuse_for_linux_mips_3-9.patch \
+    ${KERNEL_PATCH_MIPS_FUSE_FIX} \
     file://rt2800usb_fix_warn_tx_status_timeout_to_dbg.patch \
     file://linux-3.9.7-gcc-4.9.3-build-error-fixed.patch \
     file://rtl8712-fix-warnings.patch \
     file://rtl8187se-fix-warnings.patch \
     ${@bb.utils.contains("DISTRO_NAME", "openvix", "file://dmx_delete_e2stb.patch", "", d)} \
     file://sit2_op.o \
-    ${GCC_KERNEL_PATCH} \
-    file://build-with-gcc12-fixes.patch \
-    file://0001-Support-TBS-USB-drivers-3.9.patch \
-    file://0001-STV-Add-PLS-support.patch \
-    file://0001-STV-Add-SNR-Signal-report-parameters.patch \
-    file://0001-stv090x-optimized-TS-sync-control.patch \
-    file://blindscan2.patch \
+    ${KERNEL_PATCH_GCC_SERIES} \
+    ${KERNEL_PATCH_FIX_EXTABLE} \
+    ${KERNEL_PATCH_TBS_USB_39} \
+    ${KERNEL_PATCHES_DVB_STV_SERIES} \
     file://genksyms_fix_typeof_handling.patch \
-    file://0002-log2-give-up-on-gcc-constant-optimizations.patch \
     file://0003-cp1emu-do-not-use-bools-for-arithmetic.patch \
-    file://move-default-dialect-to-SMB2.patch \
-    file://linux3.4-ARM-8933-1-replace-Sun-Solaris-style-flag-on-section.patch \
-    file://fix-build-with-binutils-2.41.patch \
+    ${KERNEL_PATCH_BINUTILS241_V1} \
     file://block2mtd.patch \
     file://initramfs-mipsel.cpio.xz;unpack=0 \
     "

@@ -5,7 +5,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 COMPATIBLE_MACHINE = "^(e3hd|odinm7)$"
 
-inherit kernel machine_kernel_pr
+inherit kernel machine_kernel_pr kernel-fixups
 
 SRC_URI[md5sum] = "76b7b50307cddf1b30ba63c16af95e52"
 SRC_URI[sha256sum] = "35ec09f2c959c891fd8916430043be11a46493844708225f64680b9d25d7411b"
@@ -18,18 +18,12 @@ RPROVIDES:${KERNEL_PACKAGE_NAME}-image += "kernel-${KERNEL_IMAGETYPE}"
 
 SRC_URI += "https://source.mynonpublic.com/download/odin-linux-${PV}.tar.xz \
     file://defconfig \
-    ${GCC_KERNEL_PATCH} \
-    file://0001-Support-TBS-USB-drivers.patch \
-    file://0001-STV-Add-PLS-support.patch \
-    file://0001-STV-Add-SNR-Signal-report-parameters.patch \
-    file://0001-stv090x-optimized-TS-sync-control.patch \
-    file://blindscan2.patch \
+    ${KERNEL_PATCH_GCC_SERIES} \
+    ${KERNEL_PATCH_TBS_USB_314A} \
+    ${KERNEL_PATCHES_DVB_STV_SERIES} \
     file://0002-makefile-disable-warnings.patch \
     file://0003-cp1emu-do-not-use-bools-for-arithmetic.patch \
-    file://0004-log2-give-up-on-gcc-constant-optimizations.patch \
-    file://move-default-dialect-to-SMB3.patch \
-    file://linux3.4-ARM-8933-1-replace-Sun-Solaris-style-flag-on-section.patch \
-    file://fix-build-with-binutils-2.41.patch \
+    ${KERNEL_PATCH_BINUTILS241_V1} \
     file://block2mtd.patch \
     file://initramfs-mipsel.cpio.xz;unpack=0 \
 "

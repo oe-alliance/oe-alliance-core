@@ -6,7 +6,7 @@ KERNEL_RELEASE = "4.4.35"
 
 COMPATIBLE_MACHINE = "dagsmv200"
 
-inherit kernel machine_kernel_pr
+inherit kernel machine_kernel_pr kernel-fixups
 
 MACHINE_KERNEL_PR:append = "2"
 
@@ -20,24 +20,21 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 SRC_URI += "https://source.mynonpublic.com/dags/linux-4.4.35.tar.xz;name=kernel \
 	file://defconfig \
 	file://findkerneldevice.sh \
-	file://0002-log2-give-up-on-gcc-constant-optimizations.patch \
 	file://initramfs-subdirboot.cpio.gz;unpack=0 \
-	file://wifi-linux_4.4.183.patch \
-	file://0003-dont-mark-register-as-const.patch \
+	${KERNEL_PATCH_WIFI_COMPAT} \
 	file://vmap.patch \
-	file://move-default-dialect-to-SMB3.patch \
 	file://0004_swifthooking.patch \
-	file://fix-multiple-defs-yyloc.patch \
-	file://Backport_minimal_compiler_attributes_h_to_support_GCC_9.patch \
-	file://fix-build-with-binutils-2.41.patch \
-	file://cfg80211_Add_option_to_report_the_bss_entry_in_connect_result.patch \
+	${KERNEL_PATCH_FIX_ATTRIBUTES_GCC9} \
+	${KERNEL_PATCH_FIX_LOG2} \
+	${KERNEL_PATCH_BINUTILS241_V3} \
+	${KERNEL_PATCH_WIFI_CFG80211} \
 	"
 
 # wireguard v1.0.20220627
 SRCREV_wireguard = "18fbcd68a35a892527345dc5679d0b2d860ee004"
 SRC_URI:append = "\
     git://git.zx2c4.com/wireguard-linux-compat;protocol=https;branch=master;name=wireguard;subpath=src;destsuffix=${S}/net/wireguard \
-    file://wg-kconfig.patch \
+    ${KERNEL_PATCH_MISC_WG_KCONFIG} \
 "
 
 S = "${UNPACKDIR}/linux-${PV}"

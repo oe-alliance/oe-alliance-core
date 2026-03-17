@@ -5,7 +5,7 @@ KV = "3.9.6"
 
 RPROVIDES:${KERNEL_PACKAGE_NAME}-image += "kernel-${KERNEL_IMAGETYPE}"
 
-inherit kernel machine_kernel_pr
+inherit kernel machine_kernel_pr kernel-fixups
 
 COMPATIBLE_MACHINE = "^(vuduo|vusolo|vuultimo|vuuno)$"
 
@@ -33,34 +33,27 @@ SRC_URI = "https://source.mynonpublic.com/vuplus/release/kernel/stblinux-${KV}.t
     file://tda18271-advertise-supported-delsys.patch \
     file://fix-dvb-siano-sms-order.patch \
     file://mxl5007t-add-no_probe-and-no_reset-parameters.patch \
-    file://nfs-max-rwsize-8k.patch \
     file://0001-rt2800usb-add-support-for-rt55xx.patch \
-    file://linux-sata_bcm.patch \
-    file://fix_fuse_for_linux_mips_3-9.patch \
+    ${KERNEL_PATCH_BRCM_SATA} \
+    ${KERNEL_PATCH_MIPS_FUSE_FIX} \
     file://rt2800usb_fix_warn_tx_status_timeout_to_dbg.patch \
-    file://linux-3.9-gcc-4.9.3-build-error-fixed.patch \
-    ${GCC_KERNEL_PATCH} \
-    file://build-with-gcc12-fixes.patch \
+    ${KERNEL_PATCH_FIX_GCC493_39} \
+    ${KERNEL_PATCH_GCC_SERIES} \
+    ${KERNEL_PATCH_FIX_EXTABLE} \
     file://rtl8712-fix-warnings.patch \
     file://rtl8187se-fix-warnings.patch \
-    file://0001-Support-TBS-USB-drivers-3.9.patch \
-    file://0001-STV-Add-PLS-support.patch \
-    file://0001-STV-Add-SNR-Signal-report-parameters.patch \
-    file://0001-stv090x-optimized-TS-sync-control.patch \
-    file://blindscan2.patch \
+    ${KERNEL_PATCH_TBS_USB_39} \
+    ${KERNEL_PATCHES_DVB_STV_SERIES} \
     file://genksyms_fix_typeof_handling.patch \
-    file://0002-log2-give-up-on-gcc-constant-optimizations.patch \
     file://0003-cp1emu-do-not-use-bools-for-arithmetic.patch \
     file://test.patch \
     file://01-10-si2157-Silicon-Labs-Si2157-silicon-tuner-driver.patch \
     file://02-10-si2168-Silicon-Labs-Si2168-DVB-T-T2-C-demod-driver.patch \
     file://CONFIG_DVB_SP2.patch \
     file://dvbsky-t330.patch \
-    file://add-attributes-fix-modules-compile.patch \
-    file://makefile-silence-warnings.patch \
-    file://move-default-dialect-to-SMB2.patch \
-    file://linux3.4-ARM-8933-1-replace-Sun-Solaris-style-flag-on-section.patch \
-    file://fix-build-with-binutils-2.41.patch \
+    ${KERNEL_PATCH_FIX_MODULE_ATTRIBUTES} \
+    ${KERNEL_PATCH_FIX_SILENCE_WARNINGS} \
+    ${KERNEL_PATCH_BINUTILS241_V1} \
     file://block2mtd.patch \
     file://initramfs-mipsel.cpio.xz;unpack=0 \
 "

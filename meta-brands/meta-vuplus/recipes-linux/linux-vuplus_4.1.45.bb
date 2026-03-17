@@ -8,7 +8,7 @@ COMPATIBLE_MACHINE = "^(vuduo4k|vuduo4kse)$"
 
 MACHINE_KERNEL_PR = "r8"
 
-inherit kernel machine_kernel_pr
+inherit kernel machine_kernel_pr kernel-fixups
 
 KSRC_VER = "4.1-1.17"
 
@@ -41,24 +41,16 @@ SRC_URI += "https://source.mynonpublic.com/vuplus/release/kernel/stblinux-${KSRC
     file://0015-staging-media-mn88472-simplify-NULL-tests.patch \
     file://0016-mn88472-fix-typo.patch \
     file://0017-mn88472-finalize-driver.patch \
-    file://0018-Add-support-for-dvb-usb-stick-Hauppauge-WinTV-dualHD.patch \
-    file://0001-dvb-usb-fix-a867.patch \
-    ${GCC_KERNEL_PATCH} \
-    file://0001-Support-TBS-USB-drivers-for-4.1-kernel.patch \
-    file://0001-TBS-fixes-for-4.1-kernel.patch \
-    file://0001-STV-Add-PLS-support.patch \
-    file://0001-STV-Add-SNR-Signal-report-parameters.patch \
-    file://blindscan2.patch \
-    file://0001-stv090x-optimized-TS-sync-control.patch \
-    file://0002-log2-give-up-on-gcc-constant-optimizations.patch \
-    file://0003-uaccess-dont-mark-register-as-const.patch \
-    file://move-default-dialect-to-SMB3.patch \
+    ${KERNEL_PATCH_DVB_WINTV_DUALHD} \
+    ${KERNEL_PATCH_DVB_USB_A867} \
+    ${KERNEL_PATCH_GCC_SERIES} \
+    ${KERNEL_PATCH_TBS_USB_41} \
+    ${KERNEL_PATCH_TBS_USB_ENUM} \
+    ${KERNEL_PATCHES_DVB_STV_SERIES} \
     file://v3-1-2-em28xx-Ignore-errors-while-reading-from-eeprom.patch \
     file://v3-2-2-em28xx-add-support-for-new-of-Terratec-H6.patch \
-    file://fix-multiple-defs-yyloc.patch \
-    file://linux3.4-ARM-8933-1-replace-Sun-Solaris-style-flag-on-section.patch \
-    file://fix-build-with-binutils-2.41.patch \
-    file://si2168-d60.patch \
+    ${KERNEL_PATCH_BINUTILS241_V1} \
+    ${KERNEL_PATCHES_DVB_SI2168_D60} \
     "
 
 S = "${UNPACKDIR}/linux"
