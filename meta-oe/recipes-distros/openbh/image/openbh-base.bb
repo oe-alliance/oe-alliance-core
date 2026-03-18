@@ -8,7 +8,7 @@ ALLOW_EMPTY:${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r11"
+PR = "r12"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
@@ -23,6 +23,7 @@ RDEPENDS:${PN} = "\
     ca-certificates \
     curl \
     dvbsnoop \
+    fstrim-cron-obh \
     hddtemp \
     inadyn-mt \
     libcrypto-compat-0.9.7 \
