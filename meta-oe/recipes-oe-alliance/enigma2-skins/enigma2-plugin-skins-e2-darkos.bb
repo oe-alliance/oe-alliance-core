@@ -3,21 +3,20 @@ MAINTAINER = "DimitarCC"
 LICENSE = "GPL-3.0-only"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=1ebbd3e34237af26da5dc08a4e440464"
 
+require conf/python/python3-compileall.inc
 inherit gitpkgv allarch python3native
 
-PV = "1.0+git"
-PKGV = "1.0+git${GITPKGV}"
+SRCREV = "${AUTOREV}"
+PV = "1.1+git"
+PKGV = "1.1+git${GITPKGV}"
 
 RRECOMMENDS:${PN} = "enigma2-boxlogos"
-
-SRCREV = "${AUTOREV}"
 
 SRC_URI = "git://github.com/DimitarCC/E2-DarkOS-skin.git;protocol=https;branch=main"
 
 do_install() {
 	install -d ${D}${prefix}
-	cp -r ${S}${prefix}/* ${D}${prefix}/
-	python3 -m compileall -o2 -b ${D} -d /
+	cp -r --no-preserve=ownership ${S}${prefix}/* ${D}${prefix}/
 }
 
 FILES:${PN} = "${prefix}/"
