@@ -1,0 +1,62 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: OpenATV <openatv@openatv.org>
+Date: Tue, 18 Mar 2026 00:00:00 +0100
+Subject: [PATCH] Fix Installed-Time not being written with libsolv solver
+
+With the libsolv solver, opkg_install_pkg() sets installed_time on
+a temporary package object that is not propagated back to the package
+hash. This causes Installed-Time to be missing from the status file
+for all packages.
+
+Fix by:
+- pkg_print_status(): set installed_time if unset when writing status
+- pkg_merge(): preserve installed_time during package hash merges
+- Fix printf format strings for 64-bit time_t on 32-bit platforms
+
+---
+ libopkg/pkg.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/libopkg/pkg.c b/libopkg/pkg.c
+--- a/libopkg/pkg.c
++++ b/libopkg/pkg.c
+@@ -27,6 +27,7 @@
+ #include <libgen.h>
+ #include <stdlib.h>
+ #include <sys/stat.h>
++#include <time.h>
+ 
+ #include "pkg.h"
+ 
+@@ -398,6 +399,8 @@
+         oldpkg->size = newpkg->size;
+     if (!oldpkg->installed_size)
+         oldpkg->installed_size = newpkg->installed_size;
++    if (!oldpkg->installed_time)
++        oldpkg->installed_time = newpkg->installed_time;
+     if (!oldpkg->priority)
+         oldpkg->priority = xstrdup(newpkg->priority);
+ 
+@@ -673,11 +676,11 @@
+     case 'I':
+         if (strcasecmp(field, "Installed-Size") == 0) {
+             if (pkg->installed_size) {
+-                fprintf(fp, "Installed-Size: %ld\n", pkg->installed_size);
++                fprintf(fp, "Installed-Size: %lld\n", (long long)pkg->installed_size);
+             }
+         } else if (strcasecmp(field, "Installed-Time") == 0) {
+             if (pkg->installed_time) {
+-                fprintf(fp, "Installed-Time: %lu\n", pkg->installed_time);
++                fprintf(fp, "Installed-Time: %lld\n", (long long)pkg->installed_time);
+             }
+         } else {
+             goto UNKNOWN_FMT_FIELD;
+@@ -937,6 +940,8 @@
+         pkg_formatted_field(file, pkg, "Description", NULL);
+     }
+     if (is_installed) {
++        if (!pkg->installed_time)
++            time(&pkg->installed_time);
+         pkg_formatted_field(file, pkg, "Installed-Size", NULL);
+         pkg_formatted_field(file, pkg, "Installed-Time", NULL);
+         pkg_formatted_field(file, pkg, "Auto-Installed", NULL);
