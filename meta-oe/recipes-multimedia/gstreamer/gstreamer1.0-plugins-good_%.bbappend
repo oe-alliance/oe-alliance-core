@@ -8,18 +8,18 @@ SRC_URI:append = " \
 "
 
 PACKAGECONFIG:remove = "soup3"
-PACKAGECONFIG_SOUP = "soup2"
 RDEPENDS:${PN}-soup += "libsoup-2.4"
 
-PACKAGECONFIG[soup2]      = "-Dsoup=enabled,,libsoup-2.4,,,soup3"
-PACKAGECONFIG[soup3]      = "-Dsoup=enabled,,libsoup,,,soup2"
-PACKAGECONFIG[soup3]      = "-Dsoup=enabled,-Dsoup=disabled,libsoup"
+PACKAGECONFIG[soup2] = "-Dsoup=enabled,-Dsoup=disabled,libsoup-2.4"
 
 PACKAGECONFIG:append = " \
-    ${PACKAGECONFIG_SOUP} \
+    soup2 \
     ${@bb.utils.contains('MACHINE_FEATURES', 'novp9', '', 'vpx',d)} \
     wavpack gudev amrnb amrwb \
 "
+
+PACKAGECONFIG_CONFARGS:remove = "-Dsoup=disabled"
+EXTRA_OEMESON:append = " -Dsoup=enabled"
 
 PV = "1.28.1"
 SRC_URI[sha256sum] = "738e26aee41b7a62050e40b81adc017a110a7f32d1ec49fa6a0300846c44368d"
