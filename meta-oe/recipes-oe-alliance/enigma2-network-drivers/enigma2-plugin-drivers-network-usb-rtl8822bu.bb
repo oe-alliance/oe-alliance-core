@@ -4,7 +4,7 @@ inherit allarch
 require conf/license/license-gplv2.inc
 
 RRECOMMENDS:${PN} = " \
-        rt8822bu \
+        ${@bb.utils.contains("MACHINE_FEATURES", "linuxwifi", "rtl88x2bu", "rt8822bu", d)} \
         firmware-rtl8192eu \
 "
 
