@@ -1,6 +1,8 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 795b6c77..fa09a7c6 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -23,7 +23,7 @@ include(CheckFunctionExists)
+@@ -66,7 +66,7 @@ include(CheckFunctionExists)
  option(ENABLE_SDL "Enable SDL" ON)
  
  if (ENABLE_SDL)
@@ -8,29 +10,9 @@
 +	find_package(SDL)
  endif()
  
- find_package(Threads REQUIRED)
---- a/configure.ac
-+++ b/configure.ac
-@@ -311,8 +311,8 @@ if eval "test x$enable_dec265 = xyes" || eval "test x$enable_sherlock265 = xyes"
- fi
- 
- if eval "test x$enable_dec265 = xyes" ; then
--   PKG_CHECK_MODULES([SDL], [sdl2],
--                     [AC_DEFINE([HAVE_SDL], [1], [Whether libsdl2 was found.])
-+   PKG_CHECK_MODULES([SDL], [sdl],
-+                     [AC_DEFINE([HAVE_SDL], [1], [Whether libsdl was found.])
-                       AC_SUBST(SDL_CFLAGS)
-                       AC_SUBST(SDL_LIBS)
-                       have_sdl="yes"],
-@@ -335,7 +335,7 @@ AM_CONDITIONAL([HAVE_SWSCALE], [test "x$have_swscale" = "xyes"])
- AM_CONDITIONAL([HAVE_SDL], [test "x$have_sdl" = "xyes"])
- 
- if eval "test $enable_dec265 = yes" && eval "test $have_videogfx != yes" && eval "test $have_sdl != yes" ; then
--  AC_MSG_WARN([Did not find libvideogfx or libsdl2, video output of dec265 will be disabled.])
-+  AC_MSG_WARN([Did not find libvideogfx or libsdl, video output of dec265 will be disabled.])
- fi
- 
- if eval "test $enable_sherlock265 = yes" && eval "test $have_videogfx != yes" && eval "test $have_swscale != yes" ; then
+ CHECK_INCLUDE_FILE(malloc.h HAVE_MALLOC_H)
+diff --git a/dec265/CMakeLists.txt b/dec265/CMakeLists.txt
+index d87cce86..1c5c90cd 100644
 --- a/dec265/CMakeLists.txt
 +++ b/dec265/CMakeLists.txt
 @@ -2,15 +2,15 @@ add_executable (dec265 dec265.cc)
@@ -39,7 +21,7 @@
  
 -if(SDL2_FOUND)
 +if(SDL_FOUND)
-   target_sources(dec265 PRIVATE sdl.cc)
+   target_sources(dec265 PRIVATE sdl-display.cc)
    target_compile_definitions(dec265 PRIVATE HAVE_SDL)
 -  target_include_directories (dec265 PRIVATE "${SDL2_INCLUDE_DIRS}")
 -  target_link_libraries (dec265 PRIVATE ${SDL2_LIBRARIES})
@@ -53,8 +35,10 @@
      ../extra/getopt.c
      ../extra/getopt_long.c
    )
---- a/dec265/sdl.cc
-+++ b/dec265/sdl.cc
+diff --git a/dec265/sdl-display.cc b/dec265/sdl-display.cc
+index c5b4201a..4c594562 100644
+--- a/dec265/sdl-display.cc
++++ b/dec265/sdl-display.cc
 @@ -37,49 +37,51 @@ bool SDL_YUV_Display::init(int frame_width, int frame_height, enum SDL_Chroma ch
  
    mChroma = chroma;
@@ -293,8 +277,10 @@
    SDL_Quit();
  
    mWindowOpen=false;
---- a/dec265/sdl.hh
-+++ b/dec265/sdl.hh
+diff --git a/dec265/sdl-display.h b/dec265/sdl-display.h
+index f94aad66..08f9578c 100644
+--- a/dec265/sdl-display.h
++++ b/dec265/sdl-display.h
 @@ -48,13 +48,10 @@ public:
    bool isOpen() const { return mWindowOpen; }
  
@@ -310,10 +296,13 @@
 -  int mStride = 0;
  
    SDL_Chroma mChroma;
-
+ 
+diff --git a/scripts/ci-before-install-linux.sh b/scripts/ci-before-install-linux.sh
+index c66582c9..db4ac559 100755
 --- a/scripts/ci-before-install-linux.sh
 +++ b/scripts/ci-before-install-linux.sh
-@@ -32,6 +32,6 @@
+@@ -29,7 +29,7 @@ while true; do echo "Still alive at $(date) ..."; sleep 60; kill -0 "$$" || exit
+ if [ -z "$TARGET_HOST" ]; then
      INSTALL_PACKAGES="$INSTALL_PACKAGES \
          valgrind \
 -        libsdl2-dev \
@@ -321,4 +310,3 @@
          qtbase5-dev \
          libswscale-dev \
          "
- 
