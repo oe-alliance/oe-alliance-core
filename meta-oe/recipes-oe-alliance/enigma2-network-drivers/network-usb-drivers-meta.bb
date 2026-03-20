@@ -1,4 +1,5 @@
 SUMMARY = "meta file for USB Network drivers"
+PACKAGE_ARCH = "${MACHINE_ARCH}"
 inherit packagegroup
 
 require conf/license/license-gplv2.inc
