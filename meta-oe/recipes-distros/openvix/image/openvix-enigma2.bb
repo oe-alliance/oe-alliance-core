@@ -8,7 +8,7 @@ ALLOW_EMPTY:${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r31"
+PR = "r32"
 
 inherit packagegroup
 
@@ -63,7 +63,7 @@ NORMAL_IMAGE = "\
     ${@bb.utils.contains("MACHINE_FEATURES", "osdanimation", "enigma2-plugin-systemplugins-animationsetup" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "webkithbbtv", "enigma2-plugin-extensions-webkithbbtv", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "quadpip", "enigma2-plugin-systemplugins-quadpip", "", d)} \
-    openvix-picon-feed-opkg-conf \
+    oe-alliance-picon-feed \
 "
 
 RRECOMMENDS:${PN}:append:tmnanoseplus = " enigma2-plugin-systemplugins-tempfancontrol"
