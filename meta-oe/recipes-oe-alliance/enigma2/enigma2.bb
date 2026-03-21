@@ -41,29 +41,21 @@ RDEPENDS:${PN} = " \
     ${@bb.utils.contains("MACHINE_FEATURES", "uianimation", "vuplus-libgles-${MACHINE} libvugles2" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "hiaccel", "dinobot-libs-${MACHINE}" , "", d)} \
     oe-alliance-branding \
-    ${@bb.utils.contains("SMALLBOXWIZARD", "1", "${SMALLBOXWIZARD_NORMAL_IMAGE}", "${NORMAL_IMAGE_DEPEND}", d)} \
-"
-
-SMALLBOXWIZARD_NORMAL_IMAGE = "\
-    ${@bb.utils.contains_any("MACHINE_FEATURES", "smallflash", "", "${NORMAL_IMAGE_DEPEND}", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", "${NORMAL_IMAGE_DEPEND}", d)} \
 "
 
 NORMAL_IMAGE_DEPEND = "\
     ${E2DEFAULTSKIN} \
     enigma2-plugin-font-wqy-microhei \
-    ${@bb.utils.contains("MACHINE_FEATURES", "blindscan-dvbc", "virtual-blindscan-dvbc" , "", d)} \
-    ${@bb.utils.contains("DISTRO_NAME", "openatv", "ffmpeg" , "", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "blindscan-dvbc", "virtual-blindscan-dvbc", "", d)} \
+    ${@bb.utils.contains("DISTRO_NAME", "openatv", "ffmpeg", "", d)} \
 "
 
 RRECOMMENDS:${PN} = " \
     libdvdcss \
     glib-networking \
     glibc-gconv-utf-16 \
-    ${@bb.utils.contains("SMALLBOXWIZARD", "1", "${SMALLBOXWIZARD_IMAGE_RECOMMENDS}", "${NORMAL_IMAGE_RECOMMENDS}", d)} \
-"
-
-SMALLBOXWIZARD_IMAGE_RECOMMENDS = "\
-    ${@bb.utils.contains_any("MACHINE_FEATURES", "smallflash", "", "${NORMAL_IMAGE_RECOMMENDS}", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", "${NORMAL_IMAGE_RECOMMENDS}", d)} \
 "
 
 NORMAL_IMAGE_RECOMMENDS = "\
