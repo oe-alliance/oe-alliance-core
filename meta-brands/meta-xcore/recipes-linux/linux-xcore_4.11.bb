@@ -9,7 +9,7 @@ KERNEL_RELEASE = "4.11"
 
 COMPATIBLE_MACHINE = "^(xc7346|xc7362)$"
 
-inherit kernel machine_kernel_pr
+inherit kernel machine_kernel_pr kernel-fixups
 
 SRC_URI[md5sum] = "314b8c61217557f05ea2678313af8a9e"
 SRC_URI[sha256sum] = "b3131a4de50892127eecbeaf869ac5d31e8602473b9cd214c515050ea6825f6e"
@@ -20,22 +20,17 @@ MACHINE_KERNEL_PR = "r7"
 
 SRC_URI += "https://source.mynonpublic.com/xcore/xcore-linux-${PV}-${SRC}.tar.gz \
     file://defconfig \
-    file://noforce_correct_pointer_usage.patch \
+    ${KERNEL_PATCH_FIX_NOFORCE_POINTER} \
     file://TBS-fixes-for-4.11-kernel.patch \
-    file://0001-Support-TBS-USB-drivers-for-4.6-kernel.patch \
-    file://0001-TBS-fixes-for-4.6-kernel.patch \
-    file://0001-STV-Add-PLS-support.patch \
-    file://0001-STV-Add-SNR-Signal-report-parameters.patch \
-    file://blindscan2.patch \
-    file://0001-stv090x-optimized-TS-sync-control.patch \
+    ${KERNEL_PATCH_TBS_USB_46} \
+    ${KERNEL_PATCH_TBS_USB_ENUM} \
+    ${KERNEL_PATCHES_DVB_STV_SERIES} \
     file://findkerneldevice.py \
     file://0001-cp1emu-do-not-use-bools-for-arithmetic.patch \
     file://0002-makefile-disable-warnings.patch \
-    file://move-default-dialect-to-SMB3.patch \
-    file://fix-multiple-defs-yyloc.patch \
-    file://fix-never-be-null_outside-array-bounds-gcc-12.patch \
+    ${KERNEL_PATCH_FIX_NEVER_NULL} \
     file://use-address-of-operator-on-section-symbols-gcc-12.patch \
-    file://fix-build-with-binutils-2.41.patch \
+    ${KERNEL_PATCH_BINUTILS241_V5} \
     file://block2mtd.patch \
     file://initramfs-mipsel.cpio.xz;unpack=0 \
     "

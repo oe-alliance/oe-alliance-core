@@ -3,7 +3,7 @@ SECTION = "kernel"
 LICENSE = "GPL-2.0-only"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-inherit kernel machine_kernel_pr
+inherit kernel machine_kernel_pr kernel-fixups
 
 KV = "3.14.21"
 
@@ -21,22 +21,15 @@ RPROVIDES:${KERNEL_PACKAGE_NAME}-image += "kernel-${KERNEL_IMAGETYPE}"
 
 SRC_URI += "https://source.mynonpublic.com/unibox/linux-${KV}-${SRCDATE}.tar.gz \
     file://defconfig \
-    file://nfs-max-rwsize-8k.patch \
     file://linux-3.14.21-gcc-4.9.3-build-error-fixed.patch \
     file://rtl8712-fix-warnings.patch \
-    ${GCC_KERNEL_PATCH} \
-    file://build-with-gcc12-fixes.patch \
-    file://0001-Support-TBS-USB-drivers.patch \
-    file://0001-STV-Add-PLS-support.patch \
-    file://0001-STV-Add-SNR-Signal-report-parameters.patch \
-    file://0001-stv090x-optimized-TS-sync-control.patch \
-    file://blindscan2.patch \
+    ${KERNEL_PATCH_GCC_SERIES} \
+    ${KERNEL_PATCH_FIX_EXTABLE} \
+    ${KERNEL_PATCH_TBS_USB_314A} \
+    ${KERNEL_PATCHES_DVB_STV_SERIES} \
     file://genksyms_fix_typeof_handling.patch \
     file://0002-cp1emu-do-not-use-bools-for-arithmetic.patch \
-    file://0003-log2-give-up-on-gcc-constant-optimizations.patch \
-    file://move-default-dialect-to-SMB3.patch \
-    file://linux3.4-ARM-8933-1-replace-Sun-Solaris-style-flag-on-section.patch \
-    file://fix-build-with-binutils-2.41.patch \
+    ${KERNEL_PATCH_BINUTILS241_V1} \
     file://block2mtd.patch \
     file://initramfs-mipsel.cpio.xz;unpack=0 \
     "

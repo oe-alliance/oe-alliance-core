@@ -9,7 +9,7 @@ SRCDATE = "20200508"
 
 COMPATIBLE_MACHINE = "^(h8|h9|h9se|h9combo|h9combose|h10|hzero|i55plus|i55se)$"
 
-inherit kernel machine_kernel_pr
+inherit kernel machine_kernel_pr kernel-fixups
 
 MACHINE_KERNEL_PR:append = "34"
 
@@ -18,42 +18,28 @@ SRC_URI[sha256sum] = "45ae717b966a74326fd7297d81b3a17fd5b3962b7704170682a615ca7c
 
 SRC_URI = "https://source.mynonpublic.com/zgemma/linux-${PV}-${SRCDATE}-${ARCH}.tar.gz \
     file://defconfig \
-    file://0002-log2-give-up-on-gcc-constant-optimizations.patch \
-    file://0003-dont-mark-register-as-const.patch \
-    file://0001-remote.patch \
-    file://HauppaugeWinTV-dualHD.patch \
-    file://dib7000-linux_4.4.179.patch \
-    file://dvb-usb-linux_4.4.179.patch \
-    file://wifi-linux_4.4.183.patch \
+    ${KERNEL_PATCHES_SERIES_4_4_35} \
     file://initramfs-subdirboot.cpio.gz;unpack=0 \
     file://initramfs-nand-arm.cpio.xz;unpack=0 \
     file://findkerneldevice.sh \
-    file://move-default-dialect-to-SMB3.patch \
-    file://0004-linux-fix-buffer-size-warning-error.patch \
-    file://modules_mark__inittest__exittest_as__maybe_unused.patch \
-    file://includelinuxmodule_h_copy__init__exit_attrs_to_initcleanup_module.patch \
-    file://Backport_minimal_compiler_attributes_h_to_support_GCC_9.patch \
-    file://0005-xbox-one-tuner-4.4.patch \
-    file://0006-dvb-media-tda18250-support-for-new-silicon-tuner.patch \
-    file://0007-dvb-mn88472-staging.patch \
-    file://mn88472_reset_stream_ID_reg_if_no_PLP_given.patch \
-    file://fix-multiple-defs-yyloc.patch \
-    file://fix-build-with-binutils-2.41.patch \
-    file://cfg80211_Add_option_to_report_the_bss_entry_in_connect_result.patch \
+    ${KERNEL_PATCH_MISC_BUFFER_SIZE} \
+    ${KERNEL_PATCH_MISC_MODULES_UNUSED} \
+    ${KERNEL_PATCH_MISC_MODULE_INIT} \
+    ${KERNEL_PATCH_FIX_ATTRIBUTES_GCC9} \
     file://block2mtd.patch \
 "
 
 SRC_URI:append:h9 = " \
-	file://0001-mmc-switch-1.8V.patch \
+	${KERNEL_PATCH_BRCM_MMC_18V} \
 "
 SRC_URI:append:h9se = " \
-	file://0001-mmc-switch-1.8V.patch \
+	${KERNEL_PATCH_BRCM_MMC_18V} \
 "
 SRC_URI:append:i55plus = " \
-	file://0001-mmc-switch-1.8V.patch \
+	${KERNEL_PATCH_BRCM_MMC_18V} \
 "
 SRC_URI:append:i55se = " \
-	file://0001-mmc-switch-1.8V.patch \
+	${KERNEL_PATCH_BRCM_MMC_18V} \
 "
 
 S = "${UNPACKDIR}/linux-${PV}"

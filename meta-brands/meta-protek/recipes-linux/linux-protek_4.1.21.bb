@@ -3,7 +3,7 @@ SECTION = "kernel"
 LICENSE = "GPL-2.0-only"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-inherit kernel machine_kernel_pr
+inherit kernel machine_kernel_pr kernel-fixups
 
 COMPATIBLE_MACHINE = "9900lx"
 
@@ -24,40 +24,21 @@ SRC_URI += "https://source.mynonpublic.com/protek/protek-linux-${PV}-${SRCDATE}.
     file://0001-regmap-add-regmap_write_bits.patch \
     file://0002-af9035-fix-device-order-in-ID-list.patch \
     file://0003-Add-support-for-dvb-usb-stick-Hauppauge-WinTV-soloHD.patch \
-    file://0004-af9035-add-USB-ID-07ca-0337-AVerMedia-HD-Volar-A867.patch \
-    file://0005-Add-support-for-EVOLVEO-XtraTV-stick.patch \
-    file://0006-dib8000-Add-support-for-Mygica-Geniatech-S2870.patch \
-    file://0007-dib0700-add-USB-ID-for-another-STK8096-PVR-ref-desig.patch \
-    file://0008-add-Hama-Hybrid-DVB-T-Stick-support.patch \
-    file://0009-Add-Terratec-H7-Revision-4-to-DVBSky-driver.patch \
-    file://0010-media-Added-support-for-the-TerraTec-T1-DVB-T-USB-tu.patch \
-    file://0011-media-tda18250-support-for-new-silicon-tuner.patch \
-    file://0012-media-dib0700-add-support-for-Xbox-One-Digital-TV-Tu.patch \
-    file://0013-mn88472-Fix-possible-leak-in-mn88472_init.patch \
-    file://0014-staging-media-Remove-unneeded-parentheses.patch \
-    file://0015-staging-media-mn88472-simplify-NULL-tests.patch \
-    file://0016-mn88472-fix-typo.patch \
-    file://0017-mn88472-finalize-driver.patch \
+    ${KERNEL_PATCHES_DVB_USB_SERIES} \
     file://add-dmx-source-timecode.patch \
     file://af9015-output-full-range-SNR.patch \
     file://cxd2820r-output-full-range-SNR.patch \
     file://fix-proc-cputype.patch \
     file://iosched-slice_idle-1.patch \
     file://tda18271-advertise-supported-delsys.patch \
-    ${GCC_KERNEL_PATCH} \
-    file://0001-Support-TBS-USB-drivers-for-4.1-kernel.patch \
-    file://0001-TBS-fixes-for-4.1-kernel.patch \
-    file://0001-STV-Add-PLS-support.patch \
-    file://0001-STV-Add-SNR-Signal-report-parameters.patch \
-    file://blindscan2.patch \
-    file://0001-stv090x-optimized-TS-sync-control.patch \
-    file://0002-log2-give-up-on-gcc-constant-optimizations.patch \
+    ${KERNEL_PATCH_GCC_SERIES} \
+    ${KERNEL_PATCH_TBS_USB_41} \
+    ${KERNEL_PATCH_TBS_USB_ENUM} \
+    ${KERNEL_PATCHES_DVB_STV_SERIES} \
     file://0003-cp1emu-do-not-use-bools-for-arithmetic.patch \
     file://0004-makefile-disable-warnings.patch \
-    file://move-default-dialect-to-SMB3.patch \
-    file://fix-never-be-null_outside-array-bounds-gcc-12.patch \
-    file://linux3.4-ARM-8933-1-replace-Sun-Solaris-style-flag-on-section.patch \
-    file://fix-build-with-binutils-2.41.patch \
+    ${KERNEL_PATCH_FIX_NEVER_NULL} \
+    ${KERNEL_PATCH_BINUTILS241_V1} \
     file://block2mtd.patch \
     file://initramfs-mipsel.cpio.xz;unpack=0 \
 "

@@ -6,7 +6,7 @@ KERNEL_RELEASE = "4.0.1"
 
 COMPATIBLE_MACHINE = "^(7000s|7005s|7100s|7105s|7210s|7215s|7220s|7225s|7300s|7400s)$"
 
-inherit kernel machine_kernel_pr
+inherit kernel machine_kernel_pr kernel-fixups
 
 SRC_URI[md5sum] = "53d1614e476bc1141b35266cb31ba091"
 SRC_URI[sha256sum] = "385d8efec92b5d3bc8e16c37673e4a2a38a6541b684311650040aa5d67508c3e"
@@ -20,20 +20,14 @@ RPROVIDES:${KERNEL_PACKAGE_NAME}-image += "kernel-${KERNEL_IMAGETYPE}"
 SRC_URI += "https://source.mynonpublic.com/ceryon/ceryon-linux-${PV}.tgz \
         file://defconfig \
         file://dvb-usb-i2c_duplicate.patch \
-        ${GCC_KERNEL_PATCH} \
-        file://0001-Support-TBS-USB-drivers-for-4.0.1-kernel.patch \
-        file://0001-TBS-fixes-for-4.0.1-kernel.patch \
-        file://0001-STV-Add-PLS-support.patch \
-        file://0001-STV-Add-SNR-Signal-report-parameters.patch \
-        file://blindscan2.patch \
-        file://0001-stv090x-optimized-TS-sync-control.patch \
-        file://0002-add-brcm-chips.patch \
+        ${KERNEL_PATCH_GCC_SERIES} \
+        ${KERNEL_PATCH_TBS_USB_401} \
+        ${KERNEL_PATCH_TBS_USB_ENUM} \
+        ${KERNEL_PATCHES_DVB_STV_SERIES} \
+        ${KERNEL_PATCH_BRCM_CHIPS} \
         file://0003-cp1emu-do-not-use-bools-for-arithmetic.patch \
-        file://0004-log2-give-up-on-gcc-constant-optimizations.patch \
-        file://move-default-dialect-to-SMB3.patch \
-        file://fix-never-be-null_outside-array-bounds-gcc-12.patch \
-        file://linux3.4-ARM-8933-1-replace-Sun-Solaris-style-flag-on-section.patch \
-        file://fix-build-with-binutils-2.41.patch \
+        ${KERNEL_PATCH_FIX_NEVER_NULL} \
+        ${KERNEL_PATCH_BINUTILS241_V1} \
         file://block2mtd.patch \
         file://initramfs-mipsel.cpio.xz;unpack=0 \
 "

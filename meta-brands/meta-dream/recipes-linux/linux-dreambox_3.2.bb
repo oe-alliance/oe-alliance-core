@@ -8,7 +8,7 @@ PRECOMPILED_ARCH:dm7020hdv2 = "dm7020hd"
 
 COMPATIBLE_MACHINE = "^(dm500hd|dm500hdv2|dm800se|dm800sev2|dm7020hd|dm7020hdv2|dm8000)$"
 
-inherit kernel machine_kernel_pr
+inherit kernel machine_kernel_pr kernel-fixups
 
 MACHINE_KERNEL_PR = "r8"
 
@@ -21,7 +21,7 @@ SRC_URI = " \
     https://source.mynonpublic.com/dreambox/${P}-${PATCHREV}.patch.bz2;name=dream-patch \
     http://download.filesystems.org/unionfs/unionfs-2.x/unionfs-2.5.11_for_3.2.2.diff.gz;name=unionfs \
     file://0001-correctly-initiate-nand-flash-ecc-config-when-old-2n.patch \
-    file://0001-Revert-MIPS-Fix-potencial-corruption.patch \
+    ${KERNEL_PATCH_MIPS_REVERT_CORRUPTION} \
     file://fadvise_dontneed_change.patch \
     file://fix-proc-cputype.patch \
     file://rtl8712-backport-b.patch \
@@ -41,20 +41,18 @@ SRC_URI = " \
     file://dvb-usb-a867.patch \
     file://dvb-usb-rtl2832.patch \
     file://dvb_usb_disable_rc_polling.patch \
-    file://dvb-usb-smsdvb_fix_frontend.patch \
+    ${KERNEL_PATCH_DVB_SMSDVB_FRONTEND} \
     file://0001-it913x-backport-changes-to-3.2-kernel.patch \
     file://defconfig \
-    ${GCC_KERNEL_PATCH} \
-    file://build-with-gcc12-fixes.patch \
+    ${KERNEL_PATCH_GCC_SERIES} \
     file://misc_latin1_to_utf8_conversions.patch \
     file://0001-dvb_frontend-backport-multistream-support.patch \
     file://genksyms_fix_typeof_handling.patch \
-    file://0012-log2-give-up-on-gcc-constant-optimizations.patch \
     file://0013-cp1emu-do-not-use-bools-for-arithmetic.patch \
     file://0014-makefile-silence-packed-not-aligned-warn.patch \
     file://0015-fcrypt-fix-bitoperation-for-gcc.patch \
-    file://devinitdata-gcc11.patch \
-    file://fix-build-with-binutils-2.41.patch \
+    ${KERNEL_PATCH_FIX_DEVINITDATA} \
+    ${KERNEL_PATCH_BINUTILS241_V6} \
     file://vtbl-ubi.patch \
     file://initramfs-mipsel.cpio.xz;unpack=0 \
 "

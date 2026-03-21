@@ -4,7 +4,7 @@ LICENSE = "GPL-2.0-only"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 SRC = "20171113"
 
-inherit kernel machine_kernel_pr
+inherit kernel machine_kernel_pr kernel-fixups
 
 COMPATIBLE_MACHINE = "et13000"
 
@@ -21,15 +21,10 @@ RPROVIDES:${KERNEL_PACKAGE_NAME}-image += "kernel-${KERNEL_IMAGETYPE}"
 
 SRC_URI += "https://source.mynonpublic.com/xtrend/linux-${PV}-${SRC}.tar.xz \
     file://defconfig \
-    file://0001-Support-TBS-USB-drivers-for-4.6-kernel.patch \
-    file://0001-TBS-fixes-for-4.6-kernel.patch \
-    file://0001-STV-Add-PLS-support.patch \
-    file://0001-STV-Add-SNR-Signal-report-parameters.patch \
-    file://blindscan2.patch \
-    file://0001-stv090x-optimized-TS-sync-control.patch \
-    file://move-default-dialect-to-SMB3.patch \
-    file://fix-multiple-defs-yyloc.patch \
-    file://fix-build-with-binutils-2.41.patch \
+    ${KERNEL_PATCH_TBS_USB_46} \
+    ${KERNEL_PATCH_TBS_USB_ENUM} \
+    ${KERNEL_PATCHES_DVB_STV_SERIES} \
+    ${KERNEL_PATCH_BINUTILS241_V5} \
     file://initramfs-chkroot.cpio.xz;unpack=0 \
     "
 

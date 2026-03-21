@@ -4,7 +4,7 @@ SECTION = "kernel"
 
 SRCDATE = "20151022"
 
-inherit kernel machine_kernel_pr
+inherit kernel machine_kernel_pr kernel-fixups
 
 COMPATIBLE_MACHINE = "^(dags7362|dags73625)$"
 
@@ -19,21 +19,15 @@ MACHINE_KERNEL_PR = "r4"
 
 SRC_URI += "https://source.mynonpublic.com/dags/dags-linux-${PV}-${SRCDATE}.tar.gz \
     file://defconfig \
-    file://0002-add-brcm-chips.patch \
-    ${GCC_KERNEL_PATCH} \
-    file://0001-Support-TBS-USB-drivers-for-4.2-kernel.patch \
+    ${KERNEL_PATCH_BRCM_CHIPS} \
+    ${KERNEL_PATCH_GCC_SERIES} \
+    ${KERNEL_PATCH_TBS_USB_42} \
     file://0001-TBS-fixes-for-4.2-kernel.patch \
-    file://0001-STV-Add-PLS-support.patch \
-    file://0001-STV-Add-SNR-Signal-report-parameters.patch \
-    file://blindscan2.patch \
-    file://0001-stv090x-optimized-TS-sync-control.patch \
-    file://0003-log2-give-up-on-gcc-constant-optimizations.patch \
+    ${KERNEL_PATCHES_DVB_STV_SERIES} \
     file://0004-cp1emu-do-not-use-bools-for-arithmetic.patch \
     file://dvbskyt330_si2168_demod.patch \
-    file://move-default-dialect-to-SMB3.patch \
-    file://fix-never-be-null_outside-array-bounds-gcc-12.patch \
-    file://linux3.4-ARM-8933-1-replace-Sun-Solaris-style-flag-on-section.patch \
-    file://fix-build-with-binutils-2.41.patch \
+    ${KERNEL_PATCH_FIX_NEVER_NULL} \
+    ${KERNEL_PATCH_BINUTILS241_V1} \
     file://block2mtd.patch \
     file://initramfs-mipsel.cpio.xz;unpack=0 \
     "

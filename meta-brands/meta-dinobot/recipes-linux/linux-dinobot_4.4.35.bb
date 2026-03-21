@@ -8,7 +8,7 @@ SRCDATE = "20180828"
 
 COMPATIBLE_MACHINE = "^(u41|u42|u43|u45|u5|u51|u52|u53|u54|u55|u56|u57|u532|u533|u571|u5pvr)$"
 
-inherit kernel machine_kernel_pr
+inherit kernel machine_kernel_pr kernel-fixups
 
 MACHINE_KERNEL_PR:append = "33"
 
@@ -32,15 +32,12 @@ SRC_URI:u5pvr += "https://source.mynonpublic.com/dinobot/dinobot-linux-${PV}-${S
     file://cma.patch \
     file://ahci-clock.patch \
     ${@bb.utils.contains('SOC_FAMILY', 'hisi3798mv200', 'file://led.patch' , '', d)} \
-    file://0002-log2-give-up-on-gcc-constant-optimizations.patch \
-    file://0003-uaccess-dont-mark-register-as-const.patch \
     file://0004-makefile-disable-warnings.patch \
     file://0005-kallsyms-allow-bigger-ksym_name_len.patch \
-    file://move-default-dialect-to-SMB3.patch \
-    file://fix-multiple-defs-yyloc.patch \
-    file://Backport_minimal_compiler_attributes_h_to_support_GCC_9.patch \
-    file://fix-build-with-binutils-2.41.patch \
-    file://cfg80211_Add_option_to_report_the_bss_entry_in_connect_result.patch \
+    ${KERNEL_PATCH_FIX_ATTRIBUTES_GCC9} \
+    ${KERNEL_PATCH_FIX_LOG2} \
+    ${KERNEL_PATCH_BINUTILS241_V3} \
+    ${KERNEL_PATCH_WIFI_CFG80211} \
 "
 
 SRC_URI = "https://source.mynonpublic.com/dinobot/dinobot-linux-${PV}-${SRCDATE}.tar.gz;name=new \
@@ -49,17 +46,15 @@ SRC_URI = "https://source.mynonpublic.com/dinobot/dinobot-linux-${PV}-${SRCDATE}
     file://initramfs-arm-a9-nand.cpio.xz;unpack=0 \
     file://defconfig \
     file://410dts.patch \
-    file://0001-mmc-switch-1.8V.patch \
-    file://wifi-linux_4.4.183.patch \
-    file://0002-log2-give-up-on-gcc-constant-optimizations.patch \
-    file://0003-uaccess-dont-mark-register-as-const.patch \
+    ${KERNEL_PATCH_BRCM_MMC_18V} \
+    ${KERNEL_PATCH_WIFI_COMPAT} \
     file://0004-makefile-disable-warnings.patch \
     file://0005-kallsyms-allow-bigger-ksym_name_len.patch \
     file://cmav2.patch \
-    file://fix-multiple-defs-yyloc.patch \
-    file://Backport_minimal_compiler_attributes_h_to_support_GCC_9.patch \
-    file://fix-build-with-binutils-2.41.patch \
-    file://cfg80211_Add_option_to_report_the_bss_entry_in_connect_result.patch \
+    ${KERNEL_PATCH_FIX_ATTRIBUTES_GCC9} \
+    ${KERNEL_PATCH_FIX_LOG2} \
+    ${KERNEL_PATCH_BINUTILS241_V3} \
+    ${KERNEL_PATCH_WIFI_CFG80211} \
     file://block2mtd.patch \
 "
 
@@ -67,7 +62,7 @@ SRC_URI = "https://source.mynonpublic.com/dinobot/dinobot-linux-${PV}-${SRCDATE}
 SRCREV_wireguard = "18fbcd68a35a892527345dc5679d0b2d860ee004"
 SRC_URI:append = "\
     git://git.zx2c4.com/wireguard-linux-compat;protocol=https;branch=master;name=wireguard;subpath=src;destsuffix=${S}/net/wireguard \
-    file://wg-kconfig.patch \
+    ${KERNEL_PATCH_MISC_WG_KCONFIG} \
 "
 
 S = "${UNPACKDIR}/linux-${PV}"

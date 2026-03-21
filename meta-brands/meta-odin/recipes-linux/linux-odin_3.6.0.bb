@@ -2,7 +2,7 @@ SUMMARY = "Linux kernel for ${MACHINE}"
 SECTION = "kernel"
 LICENSE = "GPL-2.0-only"
 
-inherit kernel machine_kernel_pr
+inherit kernel machine_kernel_pr kernel-fixups
 
 KERNEL_RELEASE = "3.6.0"
 
@@ -19,8 +19,8 @@ RPROVIDES:${KERNEL_PACKAGE_NAME}-image += "kernel-${KERNEL_IMAGETYPE}"
 
 SRC_URI += "https://source.mynonpublic.com/download/linux-${PV}.tar.gz \
     file://defconfig \
-    file://0001-Revert-MIPS-mm-Add-compound-tail-page-_mapcount-when.patch \
-    file://0001-Revert-MIPS-Add-fast-get_user_pages.patch \
+    ${KERNEL_PATCH_MIPS_REVERT_COMPOUND} \
+    ${KERNEL_PATCH_MIPS_REVERT_FAST_GUP} \
     file://add-dmx-source-timecode.patch \
     file://af9015-output-full-range-SNR.patch \
     file://af9033-output-full-range-SNR.patch \
@@ -34,27 +34,24 @@ SRC_URI += "https://source.mynonpublic.com/download/linux-${PV}.tar.gz \
     file://dvb_usb_disable_rc_polling.patch \
     file://em28xx_add_terratec_h5_rev3.patch \
     file://fix-proc-cputype.patch \
-    file://fixme-hardfloat.patch \
+    ${KERNEL_PATCH_MIPS_HARDFLOAT} \
     file://iosched-slice_idle-1.patch \
     file://it913x-switch-off-PID-filter-by-default.patch \
     file://tda18271-advertise-supported-delsys.patch \
     file://fix-dvb-siano-sms-order.patch \
     file://${MACHINE}-board.patch \
     file://mxl5007t-add-no_probe-and-no_reset-parameters.patch \
-    file://nfs-max-rwsize-8k.patch \
     file://rtl8712-fix-warnings.patch \
     file://rtl8187se-fix-warnings.patch \
-    ${GCC_KERNEL_PATCH} \
-    file://fix-never-be-null_outside-array-bounds-gcc-12.patch \
-    file://dvb_frontend-Multistream-support-3.6.patch \
-    file://timeconst_perl5.patch \
+    ${KERNEL_PATCH_GCC_SERIES} \
+    ${KERNEL_PATCH_FIX_NEVER_NULL} \
+    ${KERNEL_PATCH_DVB_MULTISTREAM_36} \
+    ${KERNEL_PATCH_MISC_TIMECONST_PERL5} \
     file://genksyms_fix_typeof_handling.patch \
     file://0002-makefile-disable-warnings.patch \
     file://0003-cp1emu-do-not-use-bools-for-arithmetic.patch \
-    file://0004-log2-give-up-on-gcc-constant-optimizations.patch \
-    file://devinitdata-gcc11.patch \
-    file://linux3.4-ARM-8933-1-replace-Sun-Solaris-style-flag-on-section.patch \
-    file://fix-build-with-binutils-2.41.patch \
+    ${KERNEL_PATCH_FIX_DEVINITDATA} \
+    ${KERNEL_PATCH_BINUTILS241_V1} \
     file://block2mtd.patch \
     file://initramfs-mipsel.cpio.xz;unpack=0 \
     "

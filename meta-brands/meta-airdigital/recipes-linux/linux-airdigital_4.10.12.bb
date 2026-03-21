@@ -6,7 +6,7 @@ KERNEL_RELEASE = "4.10.12"
 
 COMPATIBLE_MACHINE = "^(sh1|h3|h4|h5|h6|h7|h17|lc|i55)$"
 
-inherit kernel machine_kernel_pr
+inherit kernel machine_kernel_pr kernel-fixups
 
 SRC_URI[mips.md5sum] = "3c42df14db9d12041802f4c8fec88e17"
 SRC_URI[mips.sha256sum] = "738896d2682211d2079eeaa1c7b8bdd0fe75eb90cd12dff2fc5aeb3cc02562bc"
@@ -19,34 +19,22 @@ MACHINE_KERNEL_PR = "r19"
 
 SRC_URI += "https://source.mynonpublic.com/zgemma/linux-${PV}-${ARCH}.tar.gz;name=${ARCH} \
     file://defconfig \
-    file://TBS-fixes-for-4.10-kernel.patch \
-    file://0001-Support-TBS-USB-drivers-for-4.6-kernel.patch \
-    file://0001-TBS-fixes-for-4.6-kernel.patch \
-    file://0001-STV-Add-PLS-support.patch \
-    file://0001-STV-Add-SNR-Signal-report-parameters.patch \
-    file://blindscan2.patch \
-    file://0001-stv090x-optimized-TS-sync-control.patch \
-    file://v3-1-3-media-si2157-Add-support-for-Si2141-A10.patch \
-    file://v3-2-3-media-si2168-add-support-for-Si2168-D60.patch \
-    file://v3-3-3-media-dvbsky-MyGica-T230C-support.patch \
-    file://v3-3-4-media-dvbsky-MyGica-T230C-support.patch \
-    file://v3-3-5-media-dvbsky-MyGica-T230C-support.patch \
-    file://add-more-devices-rtl8xxxu.patch \
-    file://move-default-dialect-to-SMB3.patch \
+    ${KERNEL_PATCHES_SERIES_4_10} \
+    ${KERNEL_PATCHES_DVB_SI2157} \
+    ${KERNEL_PATCHES_DVB_SI2168} \
+    ${KERNEL_PATCHES_DVB_MYGICA_V333} \
+    ${KERNEL_PATCHES_DVB_MYGICA_V334} \
+    ${KERNEL_PATCHES_DVB_MYGICA_V335} \
     file://0005-xbox-one-tuner-4.10.patch \
-    file://0006-dvb-media-tda18250-support-for-new-silicon-tuner.patch \
-    file://fix-multiple-defs-yyloc.patch \
-    file://fix-build-with-binutils-2.41.patch \
     file://Hauppauge-dualHD.patch \
     file://quirks.patch \
     file://dib0700.patch \
     "
 
 SRC_URI:append:mipsel = " \
-    file://0001-add-dmx-source-timecode.patch \
-    file://0002-nand-ecc-strength-and-bitflip.patch \
-    file://sdio-pinmux.patch \
-    file://fix-never-be-null_outside-array-bounds-gcc-12.patch \
+    ${KERNEL_PATCH_DVB_DMX_TIMECODE} \
+    ${KERNEL_PATCH_BRCM_NAND_ECC} \
+    ${KERNEL_PATCH_BRCM_SDIO_PINMUX} \
     file://block2mtd.patch \
     file://initramfs-mipsel.cpio.xz;unpack=0 \
     "
@@ -54,7 +42,7 @@ SRC_URI:append:mipsel = " \
 SRC_URI:append:arm = " \
     file://export_pmpoweroffprepare.patch \
     file://findkerneldevice.sh \
-    file://reserve_dvb_adapter_0.patch \
+    ${KERNEL_PATCH_DVB_RESERVE} \
     file://blacklist_mmc0.patch \
     file://initramfs-subdirboot.cpio.gz;unpack=0 \
     "

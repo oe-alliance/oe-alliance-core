@@ -4,7 +4,7 @@ LICENSE = "GPL-2.0-only"
 
 KERNEL_RELEASE = "4.10.12"
 
-inherit kernel machine_kernel_pr
+inherit kernel machine_kernel_pr kernel-fixups
 
 COMPATIBLE_MACHINE = "^(hd11|hd51|hd500c|hd530c|hd1100|hd1200|hd1265|hd1500|vs1000|vs1500)$"
 
@@ -20,21 +20,9 @@ MACHINE_KERNEL_PR = "r4"
 SRC_URI += "https://source.mynonpublic.com/gfutures/linux-${PV}-${ARCH}.tar.gz;name=${ARCH} \
     file://defconfig \
     file://export_pmpoweroffprepare.patch \
-    file://TBS-fixes-for-4.10-kernel.patch \
-    file://0001-Support-TBS-USB-drivers-for-4.6-kernel.patch \
-    file://0001-TBS-fixes-for-4.6-kernel.patch \
-    file://0001-STV-Add-PLS-support.patch \
-    file://0001-STV-Add-SNR-Signal-report-parameters.patch \
-    file://blindscan2.patch \
-    file://0001-stv090x-optimized-TS-sync-control.patch \
+    ${KERNEL_PATCHES_SERIES_4_10} \
     file://t230c2.patch \
-    file://add-more-devices-rtl8xxxu.patch \
-    file://move-default-dialect-to-SMB3.patch \
     file://0005-xbox-one-tuner-4.10.patch \
-    file://0006-dvb-media-tda18250-support-for-new-silicon-tuner.patch \
-    file://fix-multiple-defs-yyloc.patch \
-    file://fix-never-be-null_outside-array-bounds-gcc-12.patch \
-    file://fix-build-with-binutils-2.41.patch \
     "
 
 SRC_URI:append:mipsel = " \
@@ -46,7 +34,7 @@ SRC_URI:append:mipsel = " \
 SRC_URI:append:arm = " \
     file://findkerneldevice.sh \
     file://initramfs-subdirboot.cpio.gz;unpack=0 \
-    file://reserve_dvb_adapter_0.patch \
+    ${KERNEL_PATCH_DVB_RESERVE} \
     file://blacklist_mmc0.patch \
     "
 

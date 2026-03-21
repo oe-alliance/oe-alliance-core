@@ -8,7 +8,7 @@ COMPATIBLE_MACHINE = "viper4k"
 
 SRCDATE = "20181224"
 
-inherit kernel machine_kernel_pr
+inherit kernel machine_kernel_pr kernel-fixups
 
 MACHINE_KERNEL_PR:append = "30"
 
@@ -19,25 +19,11 @@ LIC_FILES_CHKSUM = "file://${UNPACKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0a
 
 SRC_URI += "https://source.mynonpublic.com/amiko/amiko-linux-${PV}-${SRCDATE}.tar.gz \
     file://defconfig \
-    file://0001-remote.patch \
-    file://HauppaugeWinTV-dualHD.patch \
-    file://dib7000-linux_4.4.179.patch \
-    file://dvb-usb-linux_4.4.179.patch \
+    ${KERNEL_PATCHES_SERIES_4_4_35} \
+    ${KERNEL_PATCH_DVB_CORE_FIX} \
     file://initramfs-subdirboot.cpio.gz;unpack=0 \
     file://findkerneldevice.sh \
-    file://0002-log2-give-up-on-gcc-constant-optimizations.patch \
-    file://0003-dont-mark-register-as-const.patch \
-    file://wifi-linux_4.4.183.patch \
-    file://move-default-dialect-to-SMB3.patch \
-    file://fix-dvbcore.patch \
-    file://0005-xbox-one-tuner-4.4.patch \
-    file://0006-dvb-media-tda18250-support-for-new-silicon-tuner.patch \
-    file://0007-dvb-mn88472-staging.patch \
-    file://mn88472_reset_stream_ID_reg_if_no_PLP_given.patch \
-    file://fix-multiple-defs-yyloc.patch \
     file://extend_modules_space.patch \
-    file://fix-build-with-binutils-2.41.patch \
-    file://cfg80211_Add_option_to_report_the_bss_entry_in_connect_result.patch \
 "
 
 S = "${UNPACKDIR}/linux-${PV}"
