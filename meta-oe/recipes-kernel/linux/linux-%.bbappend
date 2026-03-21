@@ -6,4 +6,8 @@ kernel_do_install:append() {
     fi
 }
 
+do_kernel_link_images:prepend() {
+    mkdir -p ${B}/arch/${ARCH}/boot
+}
+
 OLDEST_KERNEL = "3.2"
