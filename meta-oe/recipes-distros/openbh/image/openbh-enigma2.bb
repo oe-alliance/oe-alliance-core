@@ -8,7 +8,7 @@ ALLOW_EMPTY:${PN} = "1"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r32"
+PR = "r33"
 
 inherit packagegroup
 
@@ -52,6 +52,6 @@ RRECOMMENDS:${PN} = "\
     ${@bb.utils.contains("MACHINE_FEATURES", "osdanimation", "enigma2-plugin-systemplugins-animationsetup" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "quadpip", "enigma2-plugin-systemplugins-quadpip", "", d)} \
     ${@bb.utils.contains("TARGET_ARCH", "arm", "glibc-compat", "", d)} \
-    openbh-picon-feed-opkg-conf \
+    oe-alliance-picon-feed \
     openbh-extra-feed-opkg-conf \
     "
