@@ -44,7 +44,7 @@ OPENATV_EXTENDED = "\
     enigma2-plugin-extensions-dvdplayer \
     enigma2-plugin-extensions-filecommander \
     enigma2-plugin-extensions-atilehd \
-    ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", "enigma2-plugin-extensions-enhancedmoviecenter", d)} \
+    enigma2-plugin-extensions-enhancedmoviecenter \
     ${@bb.utils.contains("MACHINE_FEATURES", "dreamboxv1", "${USBBOOT} mtd-utils-jffs2", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "dreamboxv2", "e2fsprogs-badblocks", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "grautec", "enigma2-plugin-extensions-grautec", "", d)} \

@@ -10,6 +10,10 @@ inherit packagegroup
 ALLOW_EMPTY:${PN} = "1"
 
 RRECOMMENDS:${PN} = "\
+    ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", "${PLUGINS_CORE_EXTENDED}", d)} \
+    " 
+
+PLUGINS_CORE_EXTENDED = "\
     enigma2-plugin-drivers-usbserial \
     enigma2-plugin-drivers-ntfs-3g \
     enigma2-plugin-drivers-exfat \
