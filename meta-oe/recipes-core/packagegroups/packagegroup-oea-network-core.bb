@@ -5,6 +5,7 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda
 
 inherit packagegroup
 
+PACKAGE_ARCH = "${MACHINE_ARCH}"
 ALLOW_EMPTY:${PN} = "1"
 
 RDEPENDS:${PN} = "\
@@ -12,7 +13,6 @@ RDEPENDS:${PN} = "\
     openssh-sftp-server \
     wget \
     avahi-daemon \
-    libavahi-client \
     llmnrd \
     ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", "${NETWORK_CORE_EXTENDED}", d)} \
     "
