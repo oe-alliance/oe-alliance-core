@@ -29,11 +29,11 @@ RDEPENDS:${PN} = "\
     util-linux-flock \
     volatile-media \
     ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", "${LINUX_CORE_EXTENDED}", d)} \
-    ${@bb.utils.contains("MACHINE_FEATURES", "emmc", "dosfstools mtools e2fsprogs-resize2fs partitions-by-name gptfdisk", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "fastboot", "dosfstools mtools android-tools", "", d)} \
     "
 
 LINUX_CORE_EXTENDED = "\
+    ${@bb.utils.contains("MACHINE_FEATURES", "emmc", "dosfstools mtools e2fsprogs-resize2fs partitions-by-name gptfdisk", "", d)} \
     e2fsprogs-e2fsck \
     e2fsprogs-tune2fs \
     sdparm \

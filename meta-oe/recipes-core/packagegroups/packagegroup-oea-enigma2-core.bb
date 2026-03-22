@@ -27,10 +27,6 @@ RDEPENDS:${PN} = "\
     enigma2-plugin-systemplugins-networkwizard \
     enigma2-plugin-systemplugins-wirelesslan \
     enigma2-plugin-systemplugins-hotplug \
-    enigma2-plugin-extensions-mediascanner \
-    enigma2-plugin-extensions-pictureplayer \
-    enigma2-plugin-extensions-openwebif \
-    enigma2-plugin-systemplugins-satfinder \
     ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", "${ENIGMA2_CORE_EXTENDED}", d)} \
     "
 
@@ -38,6 +34,10 @@ ENIGMA2_CORE_EXTENDED = "\
     aio-grab \
     ${@bb.utils.contains("TARGET_ARCH", "arm", "edid-decode", "", d)} \
     ${@bb.utils.contains("TARGET_ARCH", "aarch64", "edid-decode", "", d)} \
+    enigma2-plugin-extensions-pictureplayer \
+    enigma2-plugin-systemplugins-satfinder \
+    enigma2-plugin-extensions-openwebif \
+    enigma2-plugin-extensions-mediascanner \
     enigma2-plugin-systemplugins-networkbrowser \
     autofs \
     enigma2-locale-meta \
@@ -50,7 +50,7 @@ ENIGMA2_CORE_EXTENDED = "\
     ${@bb.utils.contains("DISTRO_FEATURES", "no-autobouquetsmaker", "", "enigma2-plugin-systemplugins-autobouquetsmaker", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "dvbc-only", "", "enigma2-plugin-systemplugins-positionersetup", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "blindscan-dvbs", "enigma2-plugin-systemplugins-blindscan", "", d)} \
-${@bb.utils.contains("MACHINE_FEATURES", "dvb-c", "enigma2-plugin-systemplugins-cablescan", "", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "dvb-c", "enigma2-plugin-systemplugins-cablescan", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "fastscan", "enigma2-plugin-systemplugins-fastscan", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "frontprocessor", "enigma2-plugin-systemplugins-frontprocessorupgrade", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "ci", "enigma2-plugin-systemplugins-commoninterfaceassignment", "", d)} \

@@ -8,6 +8,10 @@ inherit packagegroup
 ALLOW_EMPTY:${PN} = "1"
 
 RDEPENDS:${PN} = "\
+    ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", "${OEA_CORE_EXTENDED}", d)} \
+    "
+
+OEA_CORE_EXTENDED = "\
     gstreamer1.0-plugin-subsink \
     ${GST_BASE_RDEPS} \
     ${GST_GOOD_RDEPS} \
