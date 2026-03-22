@@ -15,6 +15,9 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 WORKDIR = "${TMPDIR}/work/${MULTIMACH_TARGET_SYS}/${PN}/${EXTENDPE}${PV}"
 
+# Required for pseudo to set file ownership in rootfs
+PSEUDO_INCLUDE_PATHS .= ",${TMPDIR}/rootfs"
+
 do_rootfs[deptask] = "do_rm_work"
 
 SSTATE_ALLOW_OVERLAP_FILES += "${DEPLOY_DIR_IMAGE}"
