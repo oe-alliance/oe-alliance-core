@@ -245,6 +245,7 @@ EXTRA_OECONF = " \
     --enable-dependency-tracking \
     --with-gstversion=1.0 \
     --with-e2rev=${GITPKGV} \
+    --with-oarev=${@bb.process.run('git -C %s rev-parse --short HEAD' % d.getVar('OEA-META-OE-BASE'))[0].strip()} \
     ${@bb.utils.contains("MACHINE_FEATURES", "fcc", "--with-fcc" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "textlcd", "--with-textlcd" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "colorlcd", "--with-colorlcd" , "", d)} \
