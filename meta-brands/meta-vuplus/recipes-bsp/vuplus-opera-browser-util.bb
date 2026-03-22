@@ -3,9 +3,10 @@ SECTION = "base"
 PRIORITY = "optional"
 LICENSE = "CLOSED"
 require conf/license/license-close.inc
+PACKAGE_ARCH := "${MACHINE_ARCH}"
 
 DEPENDS = "sshpass-native tslib mpfr gmp libcrypto0.9.8 gstreamer1.0"
-RDEPENDS:${PN} = "libsysfs2 libgmp10 libmpfr4 vuplus-opera-dumpait libcrypto0.9.8"
+RDEPENDS:${PN} = "libsysfs2 libgmp10 libmpfr4 vuplus-opera-dumpait libcrypto0.9.8 ${@bb.utils.contains('MACHINE_FEATURES', 'feature2', ' bcm-au' , '', d)}"
 
 SRC_DATE = "20181116_0"
 SRC_URI = ""
@@ -56,6 +57,11 @@ do_install() {
         mv ${D}/usr/local/hbb-browser/root/video/videobackend-gst-${GSTVER}.so ${D}/usr/local/hbb-browser/root/video/videobackend.so
         rm -f ${D}/usr/local/hbb-browser/root/video/videobackend-gst*.so
     fi
+    sed  's!http://www.vuplus.com!http://www.google.com!' -i ${D}/usr/local/hbb-browser/root/jsplugins/controller.so
+    sed  's!http://www.vuplus.com!http://www.google.com!' -i ${D}/usr/local/hbb-browser/home/setting.ini
+    sed  's!Vu+ Box!Enigma2!' -i ${D}/usr/local/hbb-browser/lib/hbbtv.app
+    sed  's!Vu+ box!Enigma2!' -i ${D}/usr/local/hbb-browser/lib/hbbtv.app
+    sed  's!http://www.vuplus.com!http://www.google.com!' -i ${D}/usr/local/hbb-browser/lib/hbbtv.app
 }
 
 package_do_shlibs:append() {

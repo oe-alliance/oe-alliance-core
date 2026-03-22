@@ -1,0 +1,33 @@
+From c5cb59f6881d2a15b1a36ef0bdc4153b2a94f8bb Mon Sep 17 00:00:00 2001
+From: hbbtv <hbbtv@hbbtv.org>
+Date: Sat, 16 Jan 2016 09:49:49 +0100
+Subject: [PATCH] stop check model
+
+---
+ src/main.cpp | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/src/main.cpp b/src/main.cpp
+index 5b896dd..dbd00cd 100644
+--- a/src/main.cpp
++++ b/src/main.cpp
+@@ -40,11 +40,11 @@ bool is_hex_str(char* str);
+ 
+ int main(int argc, char *argv[])
+ {
+-#ifdef USE_VERIFY_MODEL
+-	if (!verify()) {
+-		exit(0);
+-	}
+-#endif
++//#ifdef USE_VERIFY_MODEL
++//	if (!verify()) {
++//		exit(0);
++//	}
++//#endif
+ 
+ 	int param_dmxid   = -1;
+ 	int param_pmtid = -1;
+-- 
+2.10.0.windows.1
+

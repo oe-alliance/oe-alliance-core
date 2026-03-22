@@ -15,7 +15,9 @@ PR = "r11"
 DEPENDS = "libdvbsi++"
 
 SRC_URI = "git://github.com/vuplus-com/dumpait.git;protocol=https;branch=master \
-            file://scanner-add-file-mode.patch"
+           file://0001-stop-check-model.patch \
+           file://scanner-add-file-mode.patch \
+"
 
 DESTDIR = "enigma2/python/Plugins/Extensions/HbbTV"
 
