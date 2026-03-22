@@ -64,7 +64,7 @@ RDEPENDS:${PN} = "\
     ${@bb.utils.contains("MACHINE_FEATURES", "webkithbbtv", "enigma2-plugin-extensions-webkithbbtv", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "hbbtv-browser-webkit", "enigma2-plugin-extensions-hbbtv-webkit", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "chromiumos", "enigma2-plugin-extensions-chromium", "", d)} \
-    ${@bb.utils.contains('MACHINE_FEATURES', 'hisichromium', 'enigma2-plugin-extensions-chromium2' , '', d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "hisichromium", "enigma2-plugin-extensions-chromium2" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "vuglesdemo", "enigma2-plugin-extensions-libvupldemo", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "wifi-direct", "wds", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "vubluetooth", "enigma2-plugin-systemplugins-bluetoothsetup enigma2-plugin-extensions-witaispeechtotext", "", d)} \
