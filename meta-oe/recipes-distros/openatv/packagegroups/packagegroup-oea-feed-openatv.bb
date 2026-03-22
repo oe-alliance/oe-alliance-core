@@ -69,6 +69,7 @@ RRECOMMENDS:${PN} = "\
     enigma2-plugin-skins-army-moodblue-hd \
     enigma2-plugin-skins-kravenhd \
     enigma2-plugin-skins-pli-hd-fullnight \
+    ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "packagegroup-oea-smallflash-openatv", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "dreamboxv2", "enigma2-plugin-extensions-dbackup", "", d)} \
     "
 

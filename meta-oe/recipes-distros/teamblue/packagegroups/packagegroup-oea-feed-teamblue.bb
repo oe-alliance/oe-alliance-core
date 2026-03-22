@@ -31,6 +31,7 @@ RRECOMMENDS:${PN} = "\
     enigma2-plugin-skins-pli-hd \
     enigma2-plugin-skins-teambluehd \
     enigma2-plugin-systemplugins-autobouquetsmaker \
+    ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "packagegroup-oea-smallflash-teamblue", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "quadpip", "enigma2-plugin-systemplugins-quadpip", "", d)} \
     enigma2-plugin-systemplugins-terrestrialscan \
     enigma2-skins \
