@@ -6,8 +6,8 @@ LIC_FILES_CHKSUM = "file://LICENSE.rst;md5=07b0e2ca9ac77cd65cd4edf2e13367ea"
 
 RDEPENDS:${PN} = "python3-requests"
 
-SRC_URI[md5sum] = "770929f66be76dcbae363ac97238ff6e"
-SRC_URI[sha256sum] = "a9c8ddb53836d18a0bbb881224cc6818e1ef1b28791637378ab25ff1eb1a87c3"
+SRC_URI[md5sum] = "b6b1591941b7c516c371f037c1ac299a"
+SRC_URI[sha256sum] = "850a26481cb924dfb956fd020552c7df2bab3b321513101d6a804c24a598fa26"
 
 inherit pypi setuptools3
 
