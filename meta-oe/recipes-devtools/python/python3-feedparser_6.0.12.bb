@@ -2,10 +2,10 @@ SUMMARY = "Universal feed parser, handles RSS 0.9x, RSS 1.0, RSS 2.0, CDF, Atom 
 HOMEPAGE = "https://feedparser.readthedocs.io/en/latest/"
 SECTION = "devel/python"
 LICENSE = "LGPL-3.0-only"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=62b06546e31ac3ab18cf54be0a1aa5ec"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=1b8df8e9646d66df8f19d9b646bd1270"
 
-SRC_URI[md5sum] = "47be8c47a93fff8994d50e7e1f1dd97e"
-SRC_URI[sha256sum] = "c9d0407b64c6f2a065d0ebb292c2b35c01050cc0dc33757461aaabdc4c4184d5"
+SRC_URI[md5sum] = "5f3c26e0f17ce73c31f875cdb4324b66"
+SRC_URI[sha256sum] = "64f76ce90ae3e8ef5d1ede0f8d3b50ce26bcce71dd8ae5e82b1cd2d4a5f94228"
 
 inherit pypi setuptools3
 
