@@ -8,8 +8,8 @@ DEPENDS += "python3-hatch-vcs-native"
 
 inherit pypi python_hatchling
 
-SRC_URI[md5sum] = "58b4144b2420e9512f7c29c8d8181d7c"
-SRC_URI[sha256sum] = "c914b734e0f2d59e5b720d145ee010f1fd9a13ee93900922a2f3f9d593b8382c"
+SRC_URI[md5sum] = "0dfeb8a55487c3aa7ae27489b72f0c68"
+SRC_URI[sha256sum] = "fa239e0f0ec0715ba34852ce813986dfed1e12117e209b816ab87401271cdd40"
 
 RDEPENDS:${PN} = "python3-attrs"
 
