@@ -4,13 +4,9 @@ PRIORITY = "optional"
 LICENSE = "BSD-3-Clause"
 LIC_FILES_CHKSUM = "file://LICENSE.rst;md5=d4aed8ba2a0ff36c85e2753b66c36b45"
 
-RDEPENDS:${PN} = "python3-core"
-
-S = "${UNPACKDIR}/pysnmp-${PV}"
-
 inherit pypi python_poetry_core
 
-SRC_URI[md5sum] = "c22169870bd1c36a2eb66801f5ed7e26"
-SRC_URI[sha256sum] = "d5fa54cf2021af1c93a439eec66ce716fc8df425c55ecc7ed5bca9f35e8145b2"
+SRC_URI[md5sum] = "33203585898e346a35bd49c2344deb5b"
+SRC_URI[sha256sum] = "37ac595c7f0c1c00514505939b4dcf5b4fd5a9ffe51b0349f60bb640c11b0f77"
 
 include python3-package-split.inc
