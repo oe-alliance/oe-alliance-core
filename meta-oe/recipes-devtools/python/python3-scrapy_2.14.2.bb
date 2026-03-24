@@ -4,6 +4,8 @@ SECTION = "devel/python"
 LICENSE = "BSD-3-Clause"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=786239b0f3b0d9c9403f6eecf35820dd"
 
+DEPENDS += "python3-hatch-vcs-native"
+
 RDEPENDS:${PN} = "python3-twisted \
     python3-cryptography \
     python3-cssselect \
@@ -17,11 +19,15 @@ RDEPENDS:${PN} = "python3-twisted \
     python3-protego \
     python3-itemadapter \
     python3-h2 \
+    python3-defusedxml \
+    python3-lxml \
+    python3-packaging \
+    python3-tldextract \
 "
 
-SRC_URI[md5sum] = "17c13179ca0fd249a9e4a4b91ee3d9ee"
-SRC_URI[sha256sum] = "d66d6e76009b12447604196875a463b61d10721140032a8084a0a52df7f4788f"
+SRC_URI[md5sum] = "193d87287c778d7924f534404056168c"
+SRC_URI[sha256sum] = "23bf5d37503ad16973bd09604b9c36249bd4bbc282c48ddedbf58105d4639337"
 
-inherit pypi setuptools3_legacy
+inherit pypi python_hatchling
 
 include python3-package-split.inc
