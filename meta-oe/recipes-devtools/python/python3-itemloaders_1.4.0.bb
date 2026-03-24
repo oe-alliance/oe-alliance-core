@@ -4,11 +4,13 @@ SECTION = "devel/python"
 LICENSE = "BSD-3-Clause"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=786239b0f3b0d9c9403f6eecf35820dd"
 
-SRC_URI[md5sum] = "07e11fabfc7d85ff84d6e22abcb26eb5"
-SRC_URI[sha256sum] = "4faf5b3abe83bf014476e3fd9ccf66867282971d9f1d4e96d9a61b60c3786770"
+DEPENDS += "python3-hatch-vcs-native"
 
-S = "${UNPACKDIR}/itemloaders-${PV}"
+RDEPENDS:${PN} = "python3-itemadapter python3-parsel python3-jmespath"
 
-inherit pypi setuptools3
+SRC_URI[md5sum] = "d202bdce0b5fd068614f110e88f3715e"
+SRC_URI[sha256sum] = "b5338308a819098f43525b7afc5f7d46ba338ba4710f5ebe7a21b3b47bb29929"
+
+inherit pypi python_hatchling
 
 include python3-package-split.inc
