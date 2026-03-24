@@ -2,13 +2,13 @@ SUMMARY = "Module for text manipulation"
 HOMEPAGE = "https://github.com/jaraco/jaraco.text"
 SECTION = "devel/python"
 LICENSE = "LGPL-3.0-only"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=141643e11c48898150daa83802dbc65f"
-DEPENDS += "python3-setuptools-scm-native"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=2e21c3f75eb8d9427c8a611a8e83e9d6"
+DEPENDS += "python3-setuptools-scm-native python3-coherent-licensed-native"
 
 PYPI_PACKAGE = "jaraco_text"
 
-SRC_URI[md5sum] = "3c519c7a49d6448e6dc2073d466afd39"
-SRC_URI[sha256sum] = "5b71fecea69ab6f939d4c906c04fee1eda76500d1641117df6ec45b865f10db0"
+SRC_URI[md5sum] = "651066dde8eb1d40523454fd88d280e5"
+SRC_URI[sha256sum] = "194e386aa5b15a6616019df87a6b29c00fd3c9c8b0475731b64633ca7afd495b"
 
 inherit pypi python_setuptools_build_meta
 
