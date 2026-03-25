@@ -24,6 +24,7 @@ DEPENDS = " \
     ${@bb.utils.contains("MACHINE_FEATURES", "uianimation", "vuplus-libgles-${MACHINE} libvugles2" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "hiaccel", "dinobot-libs-${MACHINE}" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "alsamixer", "ffmpeg" , "", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "e2egl", "virtual/egl virtual/libgles2" , "", d)} \
     "
 
 RDEPENDS:${PN} = " \
@@ -268,6 +269,7 @@ EXTRA_OECONF = " \
     ${@bb.utils.contains("MACHINE_FEATURES", "uianimation", "--with-libvugles2" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "osdanimation", "--with-osdanimation" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "hiaccel", "--with-libhiaccel" , "", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "e2egl", "--with-egl" , "", d)} \
     "
 
 CPPFLAGS += "-Wno-error=format-security"
