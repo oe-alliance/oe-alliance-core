@@ -8,10 +8,9 @@ This commit causes audio/video asynchrony on some streams.
 Reverts commit eaf918df0366975c05003b4c2a98e077b0106483.
 
 diff --git a/gst/mpegtsdemux/tsdemux.c b/gst/mpegtsdemux/tsdemux.c
-index 18f5ab9..8bd357a 100644
 --- a/gst/mpegtsdemux/tsdemux.c
 +++ b/gst/mpegtsdemux/tsdemux.c
-@@ -75,13 +75,6 @@
+@@ -76,13 +76,6 @@
  /* latency in msecs */
  #define DEFAULT_LATENCY (700)
  
@@ -25,7 +24,7 @@ index 18f5ab9..8bd357a 100644
  GST_DEBUG_CATEGORY_STATIC (ts_demux_debug);
  #define GST_CAT_DEFAULT ts_demux_debug
  
-@@ -2738,7 +2731,7 @@ gst_ts_demux_queue_data (GstTSDemux * demux, TSDemuxStream * stream,
+@@ -2930,7 +2923,7 @@ gst_ts_demux_queue_data (GstTSDemux * demux, TSDemuxStream * stream,
        if (G_UNLIKELY (stream->current_size + size > stream->allocated_size)) {
          GST_LOG_OBJECT (demux, "resizing buffer");
          do {
@@ -34,8 +33,7 @@ index 18f5ab9..8bd357a 100644
          } while (stream->current_size + size > stream->allocated_size);
          stream->data = g_realloc (stream->data, stream->allocated_size);
        }
-@@ -3544,18 +3537,11 @@ gst_ts_demux_push_pending_data (GstTSDemux * demux, TSDemuxStream * stream,
-   }
+@@ -3885,17 +3878,10 @@
  
  beach:
 -  /* Reset the PES payload collection, but don't clear the state,
@@ -57,23 +55,7 @@ index 18f5ab9..8bd357a 100644
    stream->current_size = 0;
  
    return res;
-@@ -3573,26 +3559,18 @@ gst_ts_demux_handle_packet (GstTSDemux * demux, TSDemuxStream * stream,
-       FLAGS_CONTINUITY_COUNTER (packet->scram_afc_cc), packet->payload);
- 
-   if (G_UNLIKELY (packet->payload_unit_start_indicator) &&
--      FLAGS_HAS_PAYLOAD (packet->scram_afc_cc)) {
-+      FLAGS_HAS_PAYLOAD (packet->scram_afc_cc))
-     /* Flush previous data */
-     res = gst_ts_demux_push_pending_data (demux, stream, NULL);
--    if (res != GST_FLOW_REWINDING) {
--      /* Tell the data collecting to expect this header. We don't do this when
--       * rewinding since the states will have been resetted accordingly */
--      stream->state = PENDING_PACKET_HEADER;
--    }
--  }
- 
-   if (packet->payload && (res == GST_FLOW_OK || res == GST_FLOW_NOT_LINKED)
-       && stream->pad) {
+@@ -3923,11 +3909,9 @@
      gst_ts_demux_queue_data (demux, stream, packet);
      GST_LOG_OBJECT (demux, "current_size:%d, expected_size:%d",
          stream->current_size, stream->expected_size);
