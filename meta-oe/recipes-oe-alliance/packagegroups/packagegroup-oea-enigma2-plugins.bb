@@ -22,7 +22,6 @@ PLUGINS_CORE_EXTENDED = "\
     enigma2-plugin-extensions-imdb \
     enigma2-plugin-extensions-mediaplayer \
     enigma2-plugin-extensions-openwebif-themes \
-    enigma2-plugin-extensions-openwebif-vxg \
     enigma2-plugin-systemplugins-videotune \
     ${@bb.utils.contains("MACHINE_FEATURES", "videoenhancement", "", "enigma2-plugin-systemplugins-videoenhancement", d)} \
     ${@bb.utils.contains_any("MACHINE_FEATURES", "uianimation osdanimation", "enigma2-plugin-systemplugins-animationsetup", "", d)} \
