@@ -14,6 +14,8 @@ inherit packagegroup
 DEPENDS += "packagegroup-oea-feed-core"
 
 RRECOMMENDS:${PN} = "\
+    dhrystone \
+    streambench \
     chrony \
     fpclock \
     crontab-clearmen \

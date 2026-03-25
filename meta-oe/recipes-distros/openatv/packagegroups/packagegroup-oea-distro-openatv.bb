@@ -32,6 +32,8 @@ RDEPENDS:${PN} = "\
     "
 
 OPENATV_EXTENDED = "\
+    dhrystone \
+    streambench \
     ntfs-3g \
     unrar \
     tar \
