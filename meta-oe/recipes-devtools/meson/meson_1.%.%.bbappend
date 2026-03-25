@@ -1,8 +1,3 @@
-FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
-
-SRC_URI += "file://c1db93be859b360b64fe20d49a286278b56df64e.patch"
-
-
 # for importlib patch
 # add dummy __pycache__ files to make rm happy later...
 do_install:prepend() {
