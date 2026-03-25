@@ -58,6 +58,7 @@ RRECOMMENDS:${PN} = "\
     enigma2-plugin-systemplugins-m3uiptv \
     enigma2-plugin-extensions-plutotv \
     enigma2-plugin-extensions-bootlogoswitcher \
+    enigma2-plugin-extensions-openwebif-vxg \
     mediainfo \
     ncdu \
     ${@bb.utils.contains("MACHINE_FEATURES", "nogui", "packagegroup-openatv-nogui", "", d)} \
