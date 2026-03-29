@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(grep -r linux-libc-headers /c/Users/Marcel/OneDrive/Dokumente/GitHub/oe-alliance-core-original --include=*.conf --include=*.bb --exclude-dir=linux-libc-headers)"
+    ]
+  }
+}
