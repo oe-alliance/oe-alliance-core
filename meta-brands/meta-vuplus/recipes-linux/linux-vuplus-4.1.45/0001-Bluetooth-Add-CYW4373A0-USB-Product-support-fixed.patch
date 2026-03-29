@@ -1,0 +1,151 @@
+diff --git a/drivers/bluetooth/btbcm.c b/drivers/bluetooth/btbcm.c
+index 3f146c99..ef924f26 100644
+--- a/drivers/bluetooth/btbcm.c
++++ b/drivers/bluetooth/btbcm.c
+@@ -265,9 +265,98 @@ static const struct {
+ 	{ 0x410e, "BCM20702B0"	},	/* 002.001.014 */
+ 	{ 0x6109, "BCM4335C0"	},	/* 003.001.009 */
+ 	{ 0x610c, "BCM4354"	},	/* 003.001.012 */
++	{ 0x2119, "BCM4373A0"   },	/* 001.001.025 */
+ 	{ }
+ };
+ 
++static int btbcm_poke_arm32(struct hci_dev *hdev, u32 addr, u32 data)
++{
++    int err = 0;
++    struct sk_buff *skb;
++    u8 buf[10];
++
++    buf[0] = 8;
++    addr = cpu_to_le32(addr);
++    memcpy(&buf[1], &addr, 4);
++    buf[5] = 0;
++    data = cpu_to_le32(data);
++    memcpy(&buf[6], &data, 4);
++
++    skb = __hci_cmd_sync(hdev, 0xfc0c, 10, buf, HCI_INIT_TIMEOUT);
++    if (IS_ERR(skb)) {
++        err = PTR_ERR(skb);
++        bt_dev_err(hdev, "BCM: poke arm32 failed! (%d)",
++                err);
++        goto done;
++    }
++    kfree_skb(skb);
++done:
++    return err;
++}
++
++static int btbcm_write_ram(struct hci_dev *hdev, u32 addr, const u8 * data, u32 count)
++{
++    int err = 0;
++    struct sk_buff *skb;
++    u8 * buf;
++
++    buf = kmalloc(count + 4, GFP_KERNEL);
++    addr = cpu_to_le32(addr);
++    memcpy(buf, &addr, 4);
++    memcpy(&buf[4], data, count);
++
++    skb = __hci_cmd_sync(hdev, 0xfc4c, count+4, buf, HCI_INIT_TIMEOUT);
++    if (IS_ERR(skb)) {
++        err = PTR_ERR(skb);
++        bt_dev_err(hdev, "BCM: write_ram failed! (%d)",
++                err);
++        goto done;
++    }
++    kfree_skb(skb);
++done:
++    kfree(buf);
++    return err;
++}
++
++static const u8 brcm_cypress_patch[] = {
++    0x22, 0xF6, 0xE5, 0xF8, 0x28, 0x46, 0x00, 0xF0,
++    0x0A, 0xF8, 0x45, 0xF6, 0xDD, 0xB8, 0x00, 0x00,
++    0x3C, 0x71, 0x4B, 0xF6, 0x5D, 0xFF, 0x4B, 0xF6,
++    0xA3, 0xFC, 0x4B, 0xF6, 0x4D, 0xBB, 0x00, 0x28,
++    0x03, 0xDA, 0x80, 0x01, 0x01, 0xD5, 0x45, 0xF6,
++    0x83, 0xBB, 0x70, 0x47
++};
++
++int btbcm_cypress_apply_patch(struct hci_dev *hdev)
++{
++    struct sk_buff *skb;
++    int err = 0;
++    u8 opcode;
++
++    btbcm_poke_arm32(hdev, 0x310000, 0x29531);
++    btbcm_poke_arm32(hdev, 0x260000, 0xBF1CF1BA);
++    btbcm_poke_arm32(hdev, 0x310004, 0x2AE6A);
++    btbcm_poke_arm32(hdev, 0x260004, 0xBCB2F1B4);
++    btbcm_poke_arm32(hdev, 0x310008, 0x11B17);
++    btbcm_poke_arm32(hdev, 0x260008, 0x3DEF04F);
++    btbcm_poke_arm32(hdev, 0x310304, 0x7);
++
++    btbcm_write_ram(hdev, 0x260300, brcm_cypress_patch, sizeof(brcm_cypress_patch));
++
++    opcode = 1;
++    skb = __hci_cmd_sync(hdev, 0xfd3d, 1, &opcode, HCI_INIT_TIMEOUT);
++    if (IS_ERR(skb)) {
++        err = PTR_ERR(skb);
++        bt_dev_err(hdev, "BCM: Write_USB_Config failed (%d)",
++                err);
++        goto done;
++    }
++    kfree_skb(skb);
++
++done:
++    return err;
++}
++
+ int btbcm_setup_patchram(struct hci_dev *hdev)
+ {
+ 	char fw_name[64];
+@@ -332,6 +421,8 @@ int btbcm_setup_patchram(struct hci_dev *hdev)
+ 
+ 		snprintf(fw_name, sizeof(fw_name), "brcm/%s-%4.4x-%4.4x.hcd",
+ 			 hw_name ? : "BCM", vid, pid);
++		if ((vid == 0x04b4) && (pid == 0x640c))
++			btbcm_cypress_apply_patch(hdev);
+ 		break;
+ 	default:
+ 		return 0;
+diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
+index 0c13dfd1..77395ce2 100644
+--- a/drivers/bluetooth/btusb.c
++++ b/drivers/bluetooth/btusb.c
+@@ -59,6 +59,7 @@ static struct usb_driver btusb_driver;
+ #define BTUSB_QCA_ROME		0x8000
+ #define BTUSB_BCM_APPLE		0x10000
+ #define BTUSB_REALTEK		0x20000
++#define BTUSB_CYPRESS_PATCHRAM  0x200000
+ 
+ static const struct usb_device_id btusb_table[] = {
+ 	/* Generic Bluetooth USB device */
+@@ -152,6 +153,10 @@ static const struct usb_device_id btusb_table[] = {
+ 	{ USB_DEVICE(0x8087, 0x0a5a),
+ 	  .driver_info = BTUSB_INTEL_BOOT | BTUSB_BROKEN_ISOC },
+ 
++	/* CYW4373A0 USB Module */
++        { USB_VENDOR_AND_INTERFACE_INFO(0x04b4, 0xff, 0x01, 0x01),
++          .driver_info = BTUSB_CYPRESS_PATCHRAM },
++
+ 	{ }	/* Terminating entry */
+ };
+ 
+@@ -3266,6 +3271,15 @@ static int btusb_probe(struct usb_interface *intf,
+ 		}
+ 	}
+ 
++	if (id->driver_info & BTUSB_CYPRESS_PATCHRAM) {
++            hdev->setup = btbcm_setup_patchram;
++            // hdev->set_diag = btusb_bcm_set_diag;
++            hdev->set_bdaddr = btbcm_set_bdaddr;
++
++	    /* Interface numbers are hardcoded in the specification */
++	    // data->isoc = usb_ifnum_to_if(data->udev, ifnum_base + 2);
++	}
++
+ 	if (data->isoc) {
+ 		err = usb_driver_claim_interface(&btusb_driver,
+ 						 data->isoc, data);
