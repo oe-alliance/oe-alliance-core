@@ -24,6 +24,7 @@ SRC_URI += "https://source.mynonpublic.com/vuplus/release/kernel/stblinux-${KSRC
     file://linux_4_1_45_dvbs2x.patch \
     file://bcmsysport_4_1_45.patch \
     file://linux_usb_hub.patch \
+    file://0001-Bluetooth-Add-CYW4373A0-USB-Product-support-fixed.patch \
     file://0001-regmap-add-regmap_write_bits.patch \
     file://0002-af9035-fix-device-order-in-ID-list.patch \
     file://0003-Add-support-for-dvb-usb-stick-Hauppauge-WinTV-soloHD.patch \
