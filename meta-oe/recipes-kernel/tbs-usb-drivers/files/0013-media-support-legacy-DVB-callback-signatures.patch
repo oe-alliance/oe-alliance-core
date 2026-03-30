@@ -1,0 +1,64 @@
+From 6460cc0e9952608844412401c7253ce14c6a1bec Mon Sep 17 00:00:00 2001
+From: Codex <codex@local>
+Date: Sun, 30 Aug 2026 13:09:20 +0200
+Subject: [PATCH] media: support legacy DVB callback signatures
+
+---
+ drivers/media/dvb-frontends/stv091x.c | 10 +++++++++-
+ drivers/media/tuners/stv6120.c        |  8 +++++++-
+ 2 files changed, 16 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/media/dvb-frontends/stv091x.c b/drivers/media/dvb-frontends/stv091x.c
+index b253598..9aa8a7f 100644
+--- a/drivers/media/dvb-frontends/stv091x.c
++++ b/drivers/media/dvb-frontends/stv091x.c
+@@ -1238,9 +1238,17 @@ static int set_parameters(struct dvb_frontend *fe)
+ 	return stat;
+ }
+ 
+-static int get_frontend(struct dvb_frontend *fe, struct dtv_frontend_properties *p)
++#ifdef TBS_LEGACY_GET_FRONTEND_CALLBACK
++static int get_frontend(struct dvb_frontend *fe)
++#else
++static int get_frontend(struct dvb_frontend *fe,
++			struct dtv_frontend_properties *p)
++#endif
+ {
+ 	struct stv *state = fe->demodulator_priv;
++#ifdef TBS_LEGACY_GET_FRONTEND_CALLBACK
++	struct dtv_frontend_properties *p = &fe->dtv_property_cache;
++#endif
+ 	u8 tmp;
+ 
+ 	if (state->ReceiveMode == Mode_DVBS2) {
+diff --git a/drivers/media/tuners/stv6120.c b/drivers/media/tuners/stv6120.c
+index 143ba02..a70cdda 100644
+--- a/drivers/media/tuners/stv6120.c
++++ b/drivers/media/tuners/stv6120.c
+@@ -319,7 +319,11 @@ static int init(struct dvb_frontend *fe)
+ 	return 0;
+ }
+ 
++#ifdef TBS_LEGACY_TUNER_RELEASE_CALLBACK
++static int release(struct dvb_frontend *fe)
++#else
+ static void release(struct dvb_frontend *fe)
++#endif
+ {
+ 	struct stv *state = fe->tuner_priv;
+ 
+@@ -331,6 +335,9 @@ static void release(struct dvb_frontend *fe)
+ 	}
+ 	kfree(state);
+ 	fe->tuner_priv = NULL;
++#ifdef TBS_LEGACY_TUNER_RELEASE_CALLBACK
++	return 0;
++#endif
+ }
+ 
+ #if 0
+@@ -613,4 +620,3 @@ EXPORT_SYMBOL_GPL(stv6120_attach);
+ MODULE_DESCRIPTION("STV6120 driver");
+ MODULE_AUTHOR("Luis Alves");
+ MODULE_LICENSE("GPL");
+-

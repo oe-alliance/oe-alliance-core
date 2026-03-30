@@ -1,0 +1,97 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: OpenATV <openatv@gmail.com>
+Date: Sat, 29 Aug 2026 00:00:00 +0000
+Subject: [PATCH] stv091x: use upstream DVB frontend API
+
+The TBS media tree carries private DVB frontend API additions for MODCOD
+filtering and board SPI/EEPROM access.  They are not part of the kernel media
+ABI used by receiver images and are not needed by the TBS5927.
+
+Enable all MODCODs when tuning, report the two code rates which are absent in
+older DVB APIs as AUTO, and omit the private callbacks.
+---
+ drivers/media/dvb-frontends/stv091x.c | 47 +++------------------------
+ 1 file changed, 4 insertions(+), 43 deletions(-)
+
+diff --git a/drivers/media/dvb-frontends/stv091x.c b/drivers/media/dvb-frontends/stv091x.c
+index 111111111111..222222222222 100644
+--- a/drivers/media/dvb-frontends/stv091x.c
++++ b/drivers/media/dvb-frontends/stv091x.c
+@@ -1012,7 +1012,8 @@ static int Start(struct stv *state, struct dtv_frontend_properties *p)
+ 	if (p->scrambling_sequence_index)
+ 		SetPLS(state, 1, p->scrambling_sequence_index);
+ 
+-	SetModcode(state, p->modcode);
++	/* The upstream DVB API has no private TBS MODCOD filter property. */
++	SetModcode(state, ~0U);
+ 
+ 	/* Set the Init Symbol rate*/
+ 	symb = MulDiv32(p->symbol_rate, 65536, state->base->mclk);
+@@ -1253,7 +1254,7 @@ static int get_frontend(struct dvb_frontend *fe, struct dtv_frontend_properties
+ 			APSK_32, 
+ 		};
+ 		enum fe_code_rate modcod2fec[0x20] = {
+-			FEC_NONE, FEC_1_4, FEC_1_3, FEC_2_5,
++			FEC_NONE, FEC_AUTO, FEC_AUTO, FEC_2_5,
+ 			FEC_1_2, FEC_3_5, FEC_2_3, FEC_3_4,
+ 			FEC_4_5, FEC_5_6, FEC_8_9, FEC_9_10,
+ 			FEC_3_5, FEC_2_3, FEC_3_4, FEC_5_6,
+@@ -1637,45 +1638,6 @@ static int read_ucblocks(struct dvb_frontend *fe, u32 *ucblocks)
+ 	return 0;
+ }
+ 
+-static void spi_read(struct dvb_frontend *fe, struct ecp3_info *ecp3inf)
+-{
+-	struct stv *state = fe->demodulator_priv;
+-	struct i2c_adapter *adapter = state->base->i2c;
+-
+-	state->base->read_properties(adapter,ecp3inf->reg, &(ecp3inf->data));
+-	/*pr_info("stv0910: spi_read %x=%x\n",ecp3inf->reg,ecp3inf->data);*/
+-	return ;
+-}
+-
+-static void spi_write(struct dvb_frontend *fe,struct ecp3_info *ecp3inf)
+-{
+-	struct stv *state = fe->demodulator_priv;
+-	struct i2c_adapter *adapter = state->base->i2c;
+-	/*printk("stv0910: spi_write %x == %x\n",ecp3inf->reg, ecp3inf->data);*/
+-	state->base->write_properties(adapter,ecp3inf->reg, ecp3inf->data);
+-	return ;
+-}
+-
+-static void eeprom_read(struct dvb_frontend *fe, struct eeprom_info *eepinf)
+-{
+-	struct stv *state = fe->demodulator_priv;
+-	struct i2c_adapter *adapter = state->base->i2c;
+-
+-	if (state->base->read_eeprom)
+-		state->base->read_eeprom(adapter,eepinf->reg, &(eepinf->data));
+-	return ;
+-}
+-
+-static void eeprom_write(struct dvb_frontend *fe,struct eeprom_info *eepinf)
+-{
+-	struct stv *state = fe->demodulator_priv;
+-	struct i2c_adapter *adapter = state->base->i2c;
+-
+-	if (state->base->write_eeprom)
+-		state->base->write_eeprom(adapter,eepinf->reg, eepinf->data);
+-	return ;
+-}
+-
+ static struct dvb_frontend_ops stv091x_ops = {
+ 	.delsys = { SYS_DVBS, SYS_DVBS2, SYS_DSS },
+ 	.info = {
+@@ -1708,10 +1670,6 @@ static struct dvb_frontend_ops stv091x_ops = {
+ 	.read_snr			= read_snr,
+ 	.read_ber			= read_ber,
+ 	.read_ucblocks			= read_ucblocks,
+-	.spi_read			= spi_read,
+-	.spi_write			= spi_write,
+-	.eeprom_read			= eeprom_read,
+-	.eeprom_write			= eeprom_write,
+ };
+ 
+ static struct stv_base *match_base(struct i2c_adapter  *i2c, u8 adr)
+-- 
+2.43.0

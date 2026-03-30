@@ -1,0 +1,557 @@
+From 47f64c47eedfb6ec3e8871f212e7c07367751200 Mon Sep 17 00:00:00 2001
+From: OpenATV <openatv@gmail.com>
+Date: Sun, 30 Aug 2026 11:36:28 +0200
+Subject: [PATCH] tbs media: use upstream DVB API
+
+---
+ drivers/media/dvb-frontends/cxd2878.c   | 52 ++------------------
+ drivers/media/dvb-frontends/gx1133.c    | 47 ++----------------
+ drivers/media/dvb-frontends/m88rs6060.c | 65 +++----------------------
+ drivers/media/dvb-frontends/si2183.c    | 61 ++++-------------------
+ drivers/media/dvb-frontends/tas2101.c   | 44 +----------------
+ drivers/media/dvb-frontends/tbs_priv.c  | 23 ---------
+ 6 files changed, 26 insertions(+), 266 deletions(-)
+
+diff --git a/drivers/media/dvb-frontends/cxd2878.c b/drivers/media/dvb-frontends/cxd2878.c
+index c432fe5..c92dc59 100644
+--- a/drivers/media/dvb-frontends/cxd2878.c
++++ b/drivers/media/dvb-frontends/cxd2878.c
+@@ -3796,9 +3796,11 @@ static int cxd2878_tune(struct dvb_frontend*fe,bool re_tune,
+ 	return 0;
+ }
+ 
+-static int cxd2878_set_property(struct dvb_frontend*fe,
+-		u32 cmd,u32 data)
++static int cxd2878_set_property(struct dvb_frontend *fe,
++		struct dtv_property *tvp)
+ {
++	u32 cmd = tvp->cmd;
++	u32 data = tvp->u.data;
+ 	int ret = 0;
+ 	switch(cmd){
+ 		case DTV_DELIVERY_SYSTEM:
+@@ -3884,46 +3886,6 @@ static int cxd2878_read_ucblocks(struct dvb_frontend *fe,u32 *ucblocks)
+ 
+ 	return 0;
+ }
+-static void cxd2878_spi_read(struct dvb_frontend *fe, struct ecp3_info *ecp3inf)
+-{
+-
+-	struct cxd2878_dev *dev = fe->demodulator_priv;
+-
+-
+-	if (dev->base->config->read_properties)
+-		dev->base->config->read_properties(dev->base->i2c,ecp3inf->reg, &(ecp3inf->data));
+-
+-	return ;
+-}
+-
+-static void cxd2878_spi_write(struct dvb_frontend *fe,struct ecp3_info *ecp3inf)
+-{
+-
+-	struct cxd2878_dev *dev = fe->demodulator_priv;
+-
+-
+-	if (dev->base->config->write_properties)
+-		dev->base->config->write_properties(dev->base->i2c,ecp3inf->reg, ecp3inf->data);
+-	return ;
+-}
+-static void cxd2878_eeprom_read(struct dvb_frontend *fe, struct eeprom_info *eepinf)
+-{
+-	struct cxd2878_dev *dev = fe->demodulator_priv;
+-
+-	if (dev->base->config->read_eeprom)
+-		dev->base->config->read_eeprom(dev->base->i2c,eepinf->reg, &(eepinf->data));
+-	return ;
+-}
+-
+-static void cxd2878_eeprom_write(struct dvb_frontend *fe,struct eeprom_info *eepinf)
+-{
+-	struct cxd2878_dev *dev = fe->demodulator_priv;
+-
+-	if (dev->base->config->write_eeprom)
+-		dev->base->config->write_eeprom(dev->base->i2c,eepinf->reg, eepinf->data);
+-
+-	return ;
+-}
+ static void cxd2878_release (struct dvb_frontend*fe)
+ {
+ 	struct cxd2878_dev *dev = fe->demodulator_priv;
+@@ -3978,11 +3940,6 @@ static const struct dvb_frontend_ops cxd2878_ops = {
+ 			.read_ucblocks			= cxd2878_read_ucblocks,
+ 
+ 			.set_property			= cxd2878_set_property,
+-			
+-			.spi_read				= cxd2878_spi_read,
+-			.spi_write				= cxd2878_spi_write,
+-			.eeprom_read		= cxd2878_eeprom_read,
+-			.eeprom_write		= cxd2878_eeprom_write,
+ };
+ 
+ static struct cxd_base *match_base(struct i2c_adapter *i2c,u8 adr)
+@@ -4112,4 +4069,3 @@ MODULE_AUTHOR("Davin zhang<Davin@tbsdtv.com>");
+ MODULE_DESCRIPTION("sony cxd2878 family Demodulator+Tuner driver");
+ MODULE_LICENSE("GPL");
+ 
+-
+diff --git a/drivers/media/dvb-frontends/gx1133.c b/drivers/media/dvb-frontends/gx1133.c
+index 6d616de..c2efee2 100644
+--- a/drivers/media/dvb-frontends/gx1133.c
++++ b/drivers/media/dvb-frontends/gx1133.c
+@@ -24,6 +24,7 @@
+ #include <linux/moduleparam.h>
+ #include <linux/init.h>
+ #include <linux/i2c-mux.h>
++#include <linux/version.h>
+ 
+ #include <media/dvb_frontend.h>
+ 
+@@ -505,24 +506,6 @@ static int gx1133_read_status(struct dvb_frontend *fe, enum fe_status *status)
+ 	return ret;
+ }
+ 
+-static void gx1133_spi_read(struct dvb_frontend *fe, struct ecp3_info *ecp3inf)
+-{
+-
+-	struct gx1133_priv *priv = fe->demodulator_priv;
+-	struct i2c_adapter *adapter = priv->i2c;
+-	if (priv->cfg->read_properties)
+-		priv->cfg->read_properties(adapter,ecp3inf->reg, &(ecp3inf->data));
+-	return;
+-}
+-static void gx1133_spi_write(struct dvb_frontend *fe,struct ecp3_info *ecp3inf)
+-{
+-	struct gx1133_priv *priv = fe->demodulator_priv;
+-	struct i2c_adapter *adapter = priv->i2c;
+-	if (priv->cfg->write_properties)
+-		priv->cfg->write_properties(adapter,ecp3inf->reg, ecp3inf->data);
+-	return ;
+-}
+-
+ static int gx1133_set_voltage(struct dvb_frontend *fe,
+ 	enum fe_sec_voltage voltage)
+ {
+@@ -810,10 +793,10 @@ struct dvb_frontend *gx1133_attach(const struct gx1133_config *cfg,
+ 		goto err1;
+ 	}
+ 	priv->muxc->priv = priv;
+-	ret = i2c_mux_add_adapter(priv->muxc, 0, 0);
++	ret = i2c_mux_add_adapter(priv->muxc, 0, 0, 0);
+ 	if (ret)
+ 		goto err1;
+-	ret = i2c_mux_add_adapter(priv->muxc, 0, 1);
++	ret = i2c_mux_add_adapter(priv->muxc, 0, 1, 0);
+ 	if (ret)
+ 		goto err1;
+ 	priv->i2c_demod = priv->muxc->adapter[0];
+@@ -1447,7 +1430,7 @@ static int gx1133_set_frontend(struct dvb_frontend *fe)
+ 	struct dtv_frontend_properties *c = &fe->dtv_property_cache;
+ 	enum fe_status tunerstat;
+ 	int ret, i;
+-	u32 s, pls_mode, pls_code, modcode;
++	u32 s, pls_mode, pls_code;
+ 	u8 isi;
+ 	u8 buf[4],temp;
+ 
+@@ -1570,22 +1553,7 @@ static int gx1133_set_frontend(struct dvb_frontend *fe)
+ 				gx1133_wr(priv,DVB_S2,GX1133_LDPC_TSID_CTRL,temp);
+ 				gx1133_wr(priv,DVB_S2,GX1133_LDPC_TSID_CFG,isi);
+ 
+-				/* Setup MODCODE filtering */
+-				gx1133_rd(priv,DVB_S2,GX1133_LDPC_PLS_CTRL,&temp);
+-				if (c->modcode == MODCODE_ALL)
+-					temp&=0xfe;
+-				else
+-				{
+-					modcode = c->modcode;
+-					for (i = 1; i < 29; i++)
+-					{
+-						modcode = modcode>>1;
+-						if (modcode&1)
+-							break;
+-					}
+-					temp = (1<<7) | (i<<1) | 1 ;
+-				}
+-				gx1133_wr(priv,DVB_S2,GX1133_LDPC_PLS_CTRL,temp);
++				/* The upstream DVB API has no MODCODE filter property. */
+ 			}
+ 			return 0;
+ 		}
+@@ -1712,14 +1680,9 @@ static struct dvb_frontend_ops gx1133_ops = {
+ 	.set_frontend = gx1133_set_frontend,
+ 	.get_frontend = gx1133_get_frontend,
+ 
+-	.spi_read			= gx1133_spi_read,
+-	.spi_write			= gx1133_spi_write,
+-
+-
+ };
+ 
+ MODULE_DESCRIPTION("DVB Frontend module for Nationalchip gx1133");
+ MODULE_AUTHOR("Davin zhang(smiledavin@gmail.com)");
+ MODULE_LICENSE("GPL");
+ MODULE_VERSION("1.0");
+-
+diff --git a/drivers/media/dvb-frontends/m88rs6060.c b/drivers/media/dvb-frontends/m88rs6060.c
+index 4525f75..ece91a8 100644
+--- a/drivers/media/dvb-frontends/m88rs6060.c
++++ b/drivers/media/dvb-frontends/m88rs6060.c
+@@ -3266,57 +3266,6 @@ static int m88rs6060_get_frontend(struct dvb_frontend *fe, struct dtv_frontend_p
+ 
+  return 0;
+ }
+-static void m88rs6060_spi_read(struct dvb_frontend *fe,
+-			       struct ecp3_info *ecp3inf)
+-{
+-	struct i2c_client *client = fe->demodulator_priv;
+-	struct m88rs6060_dev *dev = i2c_get_clientdata(client);
+-	struct i2c_adapter *i2c = dev->base->i2c;
+-
+-	if (dev->config.read_properties)
+-		dev->config.read_properties(i2c, ecp3inf->reg,
+-				     &(ecp3inf->data));
+-
+-	return;
+-}
+-
+-static void m88rs6060_spi_write(struct dvb_frontend *fe,
+-				struct ecp3_info *ecp3inf)
+-{
+-		struct i2c_client *client = fe->demodulator_priv;
+-	struct m88rs6060_dev *dev = i2c_get_clientdata(client);
+-	struct i2c_adapter *i2c = dev->base->i2c;
+-
+-	if (dev->config.write_properties)
+-		dev->config.write_properties(i2c, ecp3inf->reg,
+-				      ecp3inf->data);
+-	return;
+-}
+-
+-static void m88rs6060_eeprom_read(struct dvb_frontend *fe, struct eeprom_info *eepinf)
+-{
+-	struct i2c_client *client = fe->demodulator_priv;
+-	struct m88rs6060_dev *dev = i2c_get_clientdata(client);
+-	struct i2c_adapter *i2c = dev->base->i2c;
+-
+-	if (dev->config.read_eeprom)
+-		dev->config.read_eeprom(i2c, eepinf->reg,
+-				      &(eepinf->data));
+-	return ;
+-}
+-
+-static void m88rs6060_eeprom_write(struct dvb_frontend *fe,struct eeprom_info *eepinf)
+-{
+-	struct i2c_client *client = fe->demodulator_priv;
+-	struct m88rs6060_dev *dev = i2c_get_clientdata(client);
+-	struct i2c_adapter *i2c = dev->base->i2c;
+-
+-	if (dev->config.write_eeprom)
+-		dev->config.write_eeprom(i2c, eepinf->reg,
+-				      eepinf->data);
+-	return ;
+-}
+-
+ static const struct dvb_frontend_ops m88rs6060_ops = {
+ 	.delsys = {SYS_DVBS, SYS_DVBS2},
+ 	.info = {
+@@ -3349,11 +3298,6 @@ static const struct dvb_frontend_ops m88rs6060_ops = {
+ 	.set_tone = m88rs6060_set_tone,
+ 	.diseqc_send_burst = m88rs6060_diseqc_send_burst,
+ 	.diseqc_send_master_cmd = m88rs6060_diseqc_send_master_cmd,
+-	.spi_read = m88rs6060_spi_read,
+-	.spi_write = m88rs6060_spi_write,
+-	.eeprom_read = m88rs6060_eeprom_read,
+-	.eeprom_write = m88rs6060_eeprom_write,
+-
+ };
+ static int m88rs6060_ready(struct m88rs6060_dev *dev)
+ {
+@@ -3394,7 +3338,7 @@ static int m88rs6060_ready(struct m88rs6060_dev *dev)
+ 	if (ret)
+ 		goto err_release_firmware;
+ 
+-	dev_dbg(&i2c->dev, " firmware size  = %lu data %02x %02x %02x\n",
++	dev_dbg(&i2c->dev, " firmware size  = %zu data %02x %02x %02x\n",
+ 		 firmware->size, firmware->data[0], firmware->data[1],
+ 		 firmware->data[2]);
+ 
+@@ -3463,7 +3407,8 @@ static struct si5351_base*match_si5351_base(struct i2c_adapter*i2c,int clk_port)
+ 	return NULL;
+ 
+ }
+-static int m88rs6060_probe(struct i2c_client *client)
++static int m88rs6060_probe(struct i2c_client *client,
++		const struct i2c_device_id *id)
+ {
+ 	struct m88rs6060_cfg *cfg = client->dev.platform_data;
+ 	struct m88rs6060_dev *dev;
+@@ -3476,6 +3421,7 @@ static int m88rs6060_probe(struct i2c_client *client)
+ 	};
+ 
+ 	dev_dbg(&client->dev, "\n");
++	(void)id;
+ 
+ 	dev = kzalloc(sizeof(*dev), GFP_KERNEL);
+ 	if (!dev) {
+@@ -3613,7 +3559,7 @@ static int m88rs6060_probe(struct i2c_client *client)
+ 	return ret;
+ }
+ 
+-static void m88rs6060_remove(struct i2c_client *client)
++static int m88rs6060_remove(struct i2c_client *client)
+ {
+ 	struct m88rs6060_dev *dev = i2c_get_clientdata(client);
+ 	
+@@ -3637,6 +3583,7 @@ static void m88rs6060_remove(struct i2c_client *client)
+ 	dev->fe.demodulator_priv = NULL;
+ 
+ 	kfree(dev);
++	return 0;
+ }
+ 
+ static const struct i2c_device_id m88rs6060_id_table[] = {
+diff --git a/drivers/media/dvb-frontends/si2183.c b/drivers/media/dvb-frontends/si2183.c
+index 075819f..ede45c0 100644
+--- a/drivers/media/dvb-frontends/si2183.c
++++ b/drivers/media/dvb-frontends/si2183.c
+@@ -16,6 +16,7 @@
+ #include <media/dvb_frontend.h>
+ #include <linux/firmware.h>
+ #include <linux/i2c-mux.h>
++#include <linux/version.h>
+ 
+ #if LINUX_VERSION_CODE >= KERNEL_VERSION(3, 7, 0)
+ #define SI2183_USE_I2C_MUX
+@@ -1440,8 +1441,10 @@ static enum dvbfe_algo si2183_get_algo(struct dvb_frontend *fe)
+ }
+ 
+ static int si2183_set_property(struct dvb_frontend *fe,
+-		u32 cmd, u32 data)
++		struct dtv_property *tvp)
+ {
++	u32 cmd = tvp->cmd;
++	u32 data = tvp->u.data;
+ 	int ret = 0;
+ 
+ 	switch (cmd) {
+@@ -1584,48 +1587,6 @@ err:
+ 	return ret;
+ }
+ 
+-static void spi_read(struct dvb_frontend *fe, struct ecp3_info *ecp3inf)
+-{
+-	struct i2c_client *client = fe->demodulator_priv;
+-	struct si2183_dev *dev = i2c_get_clientdata(client);
+-
+-
+-	if (dev->read_properties)
+-		dev->read_properties(client->adapter,ecp3inf->reg, &(ecp3inf->data));
+-
+-	return ;
+-}
+-
+-static void spi_write(struct dvb_frontend *fe,struct ecp3_info *ecp3inf)
+-{
+-	struct i2c_client *client = fe->demodulator_priv;
+-	struct si2183_dev *dev = i2c_get_clientdata(client);
+-
+-	if (dev->write_properties)
+-		dev->write_properties(client->adapter,ecp3inf->reg, ecp3inf->data);
+-	return ;
+-}
+-
+-static void eeprom_read(struct dvb_frontend *fe, struct eeprom_info *eepinf)
+-{
+-	struct i2c_client *client = fe->demodulator_priv;
+-	struct si2183_dev *dev = i2c_get_clientdata(client);
+-
+-	if (dev->read_eeprom)
+-		dev->read_eeprom(client->adapter,eepinf->reg, &(eepinf->data));
+-	return ;
+-}
+-
+-static void eeprom_write(struct dvb_frontend *fe,struct eeprom_info *eepinf)
+-{
+-	struct i2c_client *client = fe->demodulator_priv;
+-	struct si2183_dev *dev = i2c_get_clientdata(client);
+-
+-	if (dev->write_eeprom)
+-		dev->write_eeprom(client->adapter,eepinf->reg, eepinf->data);
+-	return ;
+-}
+-
+ static const struct dvb_frontend_ops si2183_ops = {
+ 	.delsys = {SYS_DVBT, SYS_DVBT2,
+ 		   SYS_ISDBT,
+@@ -1680,11 +1641,6 @@ static const struct dvb_frontend_ops si2183_ops = {
+ #ifndef SI2183_USE_I2C_MUX
+ 	.i2c_gate_ctrl		= i2c_gate_ctrl,
+ #endif
+-
+-	.spi_read			= spi_read,
+-	.spi_write			= spi_write,
+-	.eeprom_read		= eeprom_read,
+-	.eeprom_write		= eeprom_write,
+ };
+ 
+ 
+@@ -1698,7 +1654,8 @@ static struct si_base *match_base(struct i2c_adapter *i2c, u8 adr)
+ 	return NULL;
+ }
+ 
+-static int si2183_probe(struct i2c_client *client)
++static int si2183_probe(struct i2c_client *client,
++		const struct i2c_device_id *id)
+ {
+ 	struct si2183_config *config = client->dev.platform_data;
+ 	struct si2183_dev *dev;
+@@ -1706,6 +1663,7 @@ static int si2183_probe(struct i2c_client *client)
+ 	int ret;
+ 
+ 	dev_dbg(&client->dev, "\n");
++	(void)id;
+ 	
+ 	dev = kzalloc(sizeof(*dev), GFP_KERNEL);
+ 	if (!dev) {
+@@ -1740,7 +1698,7 @@ static int si2183_probe(struct i2c_client *client)
+ 			goto err_base_kfree;
+ 		}
+ 		base->muxc->priv = client;
+-		ret = i2c_mux_add_adapter(base->muxc, 0, 0);
++		ret = i2c_mux_add_adapter(base->muxc, 0, 0, 0);
+ 		if (ret)
+ 			goto err_base_kfree;
+ 		base->tuner_adapter = base->muxc->adapter[0];
+@@ -1801,7 +1759,7 @@ err:
+ 	return ret;
+ }
+ 
+-static void si2183_remove(struct i2c_client *client)
++static int si2183_remove(struct i2c_client *client)
+ {
+ 	struct si2183_dev *dev = i2c_get_clientdata(client);
+ 
+@@ -1824,6 +1782,7 @@ static void si2183_remove(struct i2c_client *client)
+ 	dev->fe.demodulator_priv = NULL;
+ 
+ 	kfree(dev);
++	return 0;
+ }
+ 
+ static const struct i2c_device_id si2183_id_table[] = {
+diff --git a/drivers/media/dvb-frontends/tas2101.c b/drivers/media/dvb-frontends/tas2101.c
+index ef2211d..374e615 100644
+--- a/drivers/media/dvb-frontends/tas2101.c
++++ b/drivers/media/dvb-frontends/tas2101.c
+@@ -24,6 +24,7 @@
+ #include <linux/moduleparam.h>
+ #include <linux/init.h>
+ #include <linux/i2c-mux.h>
++#include <linux/version.h>
+ 
+ #include <media/dvb_frontend.h>
+ 
+@@ -316,44 +317,6 @@ static int tas2101_read_ucblocks(struct dvb_frontend *fe, u32 *ucblocks)
+ 	return 0;
+ }
+ 
+-static void tas2101_spi_read(struct dvb_frontend *fe, struct ecp3_info *ecp3inf)
+-{
+-
+-	struct tas2101_priv *priv = fe->demodulator_priv;
+-	struct i2c_adapter *adapter = priv->i2c;
+-	if (priv->cfg->read_properties)
+-		priv->cfg->read_properties(adapter,ecp3inf->reg, &(ecp3inf->data));
+-	return;
+-}
+-static void tas2101_spi_write(struct dvb_frontend *fe,struct ecp3_info *ecp3inf)
+-{
+-	struct tas2101_priv *priv = fe->demodulator_priv;
+-	struct i2c_adapter *adapter = priv->i2c;
+-	if (priv->cfg->write_properties)
+-		priv->cfg->write_properties(adapter,ecp3inf->reg, ecp3inf->data);
+-	return ;
+-}
+-
+-static void tas2101_eeprom_read(struct dvb_frontend *fe, struct eeprom_info *eepinf)
+-{
+-	struct tas2101_priv *priv = fe->demodulator_priv;
+-	struct i2c_adapter *adapter = priv->i2c;
+-
+-	if (priv->cfg->read_eeprom)
+-		priv->cfg->read_eeprom(adapter,eepinf->reg, &(eepinf->data));
+-	return ;
+-}
+-
+-static void tas2101_eeprom_write(struct dvb_frontend *fe,struct eeprom_info *eepinf)
+-{
+-	struct tas2101_priv *priv = fe->demodulator_priv;
+-	struct i2c_adapter *adapter = priv->i2c;
+-
+-	if (priv->cfg->write_eeprom)
+-		priv->cfg->write_eeprom(adapter,eepinf->reg, eepinf->data);
+-	return ;
+-}
+-
+ static int tas2101_set_voltage(struct dvb_frontend *fe,
+ 	enum fe_sec_voltage voltage)
+ {
+@@ -944,14 +907,9 @@ static struct dvb_frontend_ops tas2101_ops = {
+ 	.set_frontend = tas2101_set_frontend,
+ 	.get_frontend = tas2101_get_frontend,
+ 
+-	.spi_read			= tas2101_spi_read,
+-	.spi_write			= tas2101_spi_write,
+-	.eeprom_read		= tas2101_eeprom_read,
+-	.eeprom_write		= tas2101_eeprom_write,
+ };
+ 
+ MODULE_DESCRIPTION("DVB Frontend module for Tmax TAS2101");
+ MODULE_AUTHOR("Luis Alves (ljalvs@gmail.com)");
+ MODULE_LICENSE("GPL");
+ MODULE_VERSION("1.0");
+-
+diff --git a/drivers/media/dvb-frontends/tbs_priv.c b/drivers/media/dvb-frontends/tbs_priv.c
+index cbf5e17..a88bc38 100644
+--- a/drivers/media/dvb-frontends/tbs_priv.c
++++ b/drivers/media/dvb-frontends/tbs_priv.c
+@@ -73,25 +73,6 @@ static int tbs_init(struct dvb_frontend *fe)
+ 	return 0;
+ }
+ 
+-static void tbs_spi_read(struct dvb_frontend *fe, struct ecp3_info *ecp3inf)
+-{
+-
+-	struct tbs_dev *priv = fe->demodulator_priv;
+-	struct i2c_adapter *adapter = priv->i2c;
+-	if (priv->read_properties)
+-		priv->read_properties(adapter,ecp3inf->reg, &(ecp3inf->data));
+-
+-	return;
+-}
+-static void tbs_spi_write(struct dvb_frontend *fe,struct ecp3_info *ecp3inf)
+-{
+-	struct tbs_dev *priv = fe->demodulator_priv;
+-	struct i2c_adapter *adapter = priv->i2c;
+-	if (priv->write_properties)
+-		priv->write_properties(adapter,ecp3inf->reg, ecp3inf->data);
+-
+-	return ;
+-}
+ static int tbs_set_tone(struct dvb_frontend *fe,
+ 	enum fe_sec_tone_mode tone)
+ {
+@@ -172,10 +153,6 @@ static struct dvb_frontend_ops tbs_ops = {
+ 	.set_tone = tbs_set_tone,
+ 	.set_voltage = tbs_set_voltage,
+ 
+-	.spi_read			= tbs_spi_read,
+-	.spi_write			= tbs_spi_write,
+-
+-
+ };
+ 
+ struct dvb_frontend *tbs_attach(struct i2c_adapter*i2c,
+-- 
+2.45.2.windows.1
+

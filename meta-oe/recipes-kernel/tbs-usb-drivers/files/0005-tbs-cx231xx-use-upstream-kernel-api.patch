@@ -1,0 +1,36 @@
+From a56147e97a1013e1d88747cb35314728a3c6a799 Mon Sep 17 00:00:00 2001
+From: OpenATV <openatv@gmail.com>
+Date: Sun, 30 Aug 2026 12:05:33 +0200
+Subject: [PATCH] media: adapt CX231xx stack to upstream APIs
+
+---
+ drivers/media/usb/cx231xx/cx231xx-dvb.c | 2 --
+ drivers/media/usb/cx231xx/cx231xx-i2c.c | 2 +-
+ 2 files changed, 1 insertion(+), 3 deletions(-)
+
+diff --git a/drivers/media/usb/cx231xx/cx231xx-dvb.c b/drivers/media/usb/cx231xx/cx231xx-dvb.c
+index 10823fb..4fb30d3 100644
+--- a/drivers/media/usb/cx231xx/cx231xx-dvb.c
++++ b/drivers/media/usb/cx231xx/cx231xx-dvb.c
+@@ -1188,8 +1188,6 @@ static int dvb_init(struct cx231xx *dev)
+ 		tda18212_config.if_dvbt2_7 = 4000;
+ 		tda18212_config.if_dvbt2_8 = 4000;
+ 		tda18212_config.if_dvbc = 5000;
+-		tda18212_config.loop_through = 1;
+-		tda18212_config.xtout = 1;
+ 		/* perform probe/init/attach */
+ 		client = dvb_module_probe("tda18212", NULL, tuner_i2c,
+ 						dev->board.tuner_addr + i*3,
+diff --git a/drivers/media/usb/cx231xx/cx231xx-i2c.c b/drivers/media/usb/cx231xx/cx231xx-i2c.c
+index 0ff4c7a..9f27d44 100644
+--- a/drivers/media/usb/cx231xx/cx231xx-i2c.c
++++ b/drivers/media/usb/cx231xx/cx231xx-i2c.c
+@@ -599,7 +599,7 @@ int cx231xx_i2c_mux_create(struct cx231xx *dev)
+ 
+ int cx231xx_i2c_mux_register(struct cx231xx *dev, int mux_no)
+ {
+-	return i2c_mux_add_adapter(dev->muxc, 0, mux_no);
++	return i2c_mux_add_adapter(dev->muxc, 0, mux_no, 0);
+ }
+ 
+ void cx231xx_i2c_mux_unregister(struct cx231xx *dev)

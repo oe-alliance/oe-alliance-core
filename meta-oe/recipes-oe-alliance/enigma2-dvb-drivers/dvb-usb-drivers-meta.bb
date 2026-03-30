@@ -4,6 +4,25 @@ inherit packagegroup
 
 require conf/license/license-gplv2.inc
 
+TBS_OUT_OF_TREE_USB_DRIVERS_SUPPORTED = " \
+    enigma2-plugin-drivers-dvb-usb-tbs5520se \
+    enigma2-plugin-drivers-dvb-usb-tbs5530 \
+    enigma2-plugin-drivers-dvb-usb-tbs5580 \
+    enigma2-plugin-drivers-dvb-usb-tbs5590-v2 \
+    enigma2-plugin-drivers-dvb-usb-tbs5881 \
+    enigma2-plugin-drivers-dvb-usb-tbs5925 \
+    enigma2-plugin-drivers-dvb-usb-tbs5927 \
+    enigma2-plugin-drivers-dvb-usb-tbs5930-lite \
+    enigma2-plugin-drivers-dvb-usb-tbs5980 \
+    enigma2-plugin-drivers-dvb-usb-tbs5990 \
+    "
+
+# The current TBS vendor sources require DVBv5 frontend statistics which are
+# absent from the receiver kernels tested at 3.2 and 3.4.  Linux 3.13 is the
+# oldest successfully built API baseline.  Keep the legacy in-kernel TBS
+# packages below available on older receivers.
+TBS_OUT_OF_TREE_USB_DRIVERS = "${@d.getVar('TBS_OUT_OF_TREE_USB_DRIVERS_SUPPORTED') if bb.utils.vercmp_string_op(d.getVar('KERNEL_VERSION') or '0', '3.13', '>=') else ''}"
+
 DEPENDS = "\
     enigma2-plugin-drivers-atsc-usb-hauppauge \
     enigma2-plugin-drivers-atsc-950q-usb-hauppauge \
@@ -22,6 +41,7 @@ DEPENDS = "\
     enigma2-plugin-drivers-dvb-usb-rtl2832 \
     enigma2-plugin-drivers-dvb-usb-tbs \
     enigma2-plugin-drivers-dvb-usb-tbs5520 \
+    ${TBS_OUT_OF_TREE_USB_DRIVERS} \
     enigma2-plugin-drivers-dvb-usb-opticombo \
     enigma2-plugin-drivers-ct2-dvb-usb-geniatech-t230 \
     enigma2-plugin-drivers-s2-dvb-usb-s960 \

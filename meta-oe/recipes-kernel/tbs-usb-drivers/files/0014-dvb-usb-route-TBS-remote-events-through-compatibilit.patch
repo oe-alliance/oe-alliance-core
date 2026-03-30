@@ -1,0 +1,64 @@
+From 403d22b981c869021d487c8fda43261d91e25ed8 Mon Sep 17 00:00:00 2001
+From: Codex <codex@local>
+Date: Sun, 30 Aug 2026 13:13:35 +0200
+Subject: [PATCH] dvb-usb: route TBS remote events through compatibility helper
+
+---
+ drivers/media/usb/dvb-usb/tbs-qbox2ci.c | 2 +-
+ drivers/media/usb/dvb-usb/tbs5881.c     | 2 +-
+ drivers/media/usb/dvb-usb/tbs5925.c     | 2 +-
+ drivers/media/usb/dvb-usb/tbs5927.c     | 2 +-
+ 4 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/media/usb/dvb-usb/tbs-qbox2ci.c b/drivers/media/usb/dvb-usb/tbs-qbox2ci.c
+index b32ee85..8cda599 100644
+--- a/drivers/media/usb/dvb-usb/tbs-qbox2ci.c
++++ b/drivers/media/usb/dvb-usb/tbs-qbox2ci.c
+@@ -629,7 +629,7 @@ static int tbsqbox2ci_rc_query(struct dvb_usb_device *d)
+ 	if (d->props.i2c_algo->master_xfer(&d->i2c_adap, &msg, 1) == 1) {
+ 		if (key[1] != 0xff) {
+ 			deb_xfer("RC code: 0x%02X !\n", key[1]);
+-			rc_keydown(d->rc_dev, RC_PROTO_UNKNOWN, key[1],
++			tbs_rc_keydown(d->rc_dev, RC_PROTO_UNKNOWN, key[1],
+ 				   0);
+ 		}
+ 	}
+diff --git a/drivers/media/usb/dvb-usb/tbs5881.c b/drivers/media/usb/dvb-usb/tbs5881.c
+index 97f7ee7..aa0ee2d 100644
+--- a/drivers/media/usb/dvb-usb/tbs5881.c
++++ b/drivers/media/usb/dvb-usb/tbs5881.c
+@@ -608,7 +608,7 @@ static int tbs5881_rc_query(struct dvb_usb_device *d)
+ 	if (d->props.i2c_algo->master_xfer(&d->i2c_adap, &msg, 1) == 1) {
+ 		if (key[1] != 0xff) {
+ 			deb_xfer("RC code: 0x%02X !\n", key[1]);
+-			rc_keydown(d->rc_dev, RC_PROTO_UNKNOWN, key[1],
++			tbs_rc_keydown(d->rc_dev, RC_PROTO_UNKNOWN, key[1],
+ 				   0);
+ 		}
+ 	}
+diff --git a/drivers/media/usb/dvb-usb/tbs5925.c b/drivers/media/usb/dvb-usb/tbs5925.c
+index 7dda43d..f69be9b 100644
+--- a/drivers/media/usb/dvb-usb/tbs5925.c
++++ b/drivers/media/usb/dvb-usb/tbs5925.c
+@@ -310,7 +310,7 @@ static int tbs5925_rc_query(struct dvb_usb_device *d)
+ 	if (d->props.i2c_algo->master_xfer(&d->i2c_adap, &msg, 1) == 1) {
+ 		if (key[1] != 0xff) {
+ 			deb_xfer("RC code: 0x%02X !\n", key[1]);
+-			rc_keydown(d->rc_dev, RC_PROTO_UNKNOWN, key[1],
++			tbs_rc_keydown(d->rc_dev, RC_PROTO_UNKNOWN, key[1],
+ 				   0);
+ 		}
+ 	}
+diff --git a/drivers/media/usb/dvb-usb/tbs5927.c b/drivers/media/usb/dvb-usb/tbs5927.c
+index d801734..71deb2a 100644
+--- a/drivers/media/usb/dvb-usb/tbs5927.c
++++ b/drivers/media/usb/dvb-usb/tbs5927.c
+@@ -317,7 +317,7 @@ static int tbs5927_rc_query(struct dvb_usb_device *d)
+ 	if (d->props.i2c_algo->master_xfer(&d->i2c_adap, &msg, 1) == 1) {
+ 		if (key[1] != 0xff) {
+ 			deb_xfer("RC code: 0x%02X !\n", key[1]);
+-			rc_keydown(d->rc_dev, RC_PROTO_UNKNOWN, key[1],
++			tbs_rc_keydown(d->rc_dev, RC_PROTO_UNKNOWN, key[1],
+ 				   0);
+ 		}
+ 	}

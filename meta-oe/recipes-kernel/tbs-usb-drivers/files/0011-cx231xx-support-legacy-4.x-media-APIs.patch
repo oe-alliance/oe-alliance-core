@@ -1,0 +1,128 @@
+From ce8420b91095b5530a7a8aa6f4a74830fb5d2bc1 Mon Sep 17 00:00:00 2001
+From: Codex <codex@local>
+Date: Sun, 30 Aug 2026 12:53:46 +0200
+Subject: [PATCH] cx231xx: support legacy 4.x media APIs
+
+---
+ drivers/media/usb/cx231xx/cx231xx-cards.c |  6 ++++
+ drivers/media/usb/cx231xx/cx231xx-i2c.c   | 40 +++++++++++++++++++++++
+ 2 files changed, 46 insertions(+)
+
+diff --git a/drivers/media/usb/cx231xx/cx231xx-cards.c b/drivers/media/usb/cx231xx/cx231xx-cards.c
+index a6f9e1f..967f901 100644
+--- a/drivers/media/usb/cx231xx/cx231xx-cards.c
++++ b/drivers/media/usb/cx231xx/cx231xx-cards.c
+@@ -18,7 +18,11 @@
+ #include <media/tveeprom.h>
+ #include <media/v4l2-common.h>
+ 
++#ifdef TBS_LEGACY_CX25840_HEADER
++#include <media/cx25840.h>
++#else
+ #include <media/drv-intf/cx25840.h>
++#endif
+ #include <media/dvb-usb-ids.h>
+ #include "xc5000.h"
+ #include "tda18271.h"
+@@ -1406,6 +1410,7 @@ void cx231xx_card_setup(struct cx231xx *dev)
+ 		dev->tuner_addr = cx231xx_boards[dev->model].tuner_addr;
+ 
+ 	/* request some modules */
++#ifndef TBS_CX231XX_5990_ONLY
+ 	if (dev->board.decoder == CX231XX_AVDECODER) {
+ 		dev->sd_cx25840 = v4l2_i2c_new_subdev(&dev->v4l2_dev,
+ 					cx231xx_get_i2c_adap(dev, I2C_0),
+@@ -1416,6 +1421,7 @@ void cx231xx_card_setup(struct cx231xx *dev)
+ 		cx25840_call(dev, core, load_fw);
+ 
+ 	}
++#endif
+ 
+ 	/* Initialize the tuner */
+ 	if (dev->board.tuner_type != TUNER_ABSENT) {
+diff --git a/drivers/media/usb/cx231xx/cx231xx-i2c.c b/drivers/media/usb/cx231xx/cx231xx-i2c.c
+index 9f27d44..7c359f9 100644
+--- a/drivers/media/usb/cx231xx/cx231xx-i2c.c
++++ b/drivers/media/usb/cx231xx/cx231xx-i2c.c
+@@ -580,31 +580,63 @@ void cx231xx_i2c_unregister(struct cx231xx_i2c *bus)
+  * cx231xx_i2c_mux_select()
+  * switch i2c master number 1 between port1 and port3
+  */
++#ifdef TBS_LEGACY_I2C_MUX_API
++static int cx231xx_i2c_mux_select(struct i2c_adapter *adap, void *mux_priv,
++				  u32 chan_id)
++{
++	struct cx231xx *dev = mux_priv;
++
++	return cx231xx_enable_i2c_port_3(dev, chan_id);
++}
++#else
+ static int cx231xx_i2c_mux_select(struct i2c_mux_core *muxc, u32 chan_id)
+ {
+ 	struct cx231xx *dev = i2c_mux_priv(muxc);
+ 
+ 	return cx231xx_enable_i2c_port_3(dev, chan_id);
+ }
++#endif
+ 
+ int cx231xx_i2c_mux_create(struct cx231xx *dev)
+ {
++#ifdef TBS_LEGACY_I2C_MUX_API
++	return 0;
++#else
+ 	dev->muxc = i2c_mux_alloc(&dev->i2c_bus[1].i2c_adap, dev->dev, 2, 0, 0,
+ 				  cx231xx_i2c_mux_select, NULL);
+ 	if (!dev->muxc)
+ 		return -ENOMEM;
+ 	dev->muxc->priv = dev;
+ 	return 0;
++#endif
+ }
+ 
+ int cx231xx_i2c_mux_register(struct cx231xx *dev, int mux_no)
+ {
++#ifdef TBS_LEGACY_I2C_MUX_API
++	dev->i2c_mux_adap[mux_no] = i2c_add_mux_adapter(
++		&dev->i2c_bus[1].i2c_adap, dev->dev, dev, 0, mux_no, 0,
++		cx231xx_i2c_mux_select, NULL);
++	return dev->i2c_mux_adap[mux_no] ? 0 : -ENOMEM;
++#else
+ 	return i2c_mux_add_adapter(dev->muxc, 0, mux_no, 0);
++#endif
+ }
+ 
+ void cx231xx_i2c_mux_unregister(struct cx231xx *dev)
+ {
++#ifdef TBS_LEGACY_I2C_MUX_API
++	int i;
++
++	for (i = 0; i < ARRAY_SIZE(dev->i2c_mux_adap); i++) {
++		if (!dev->i2c_mux_adap[i])
++			continue;
++		i2c_del_mux_adapter(dev->i2c_mux_adap[i]);
++		dev->i2c_mux_adap[i] = NULL;
++	}
++#else
+ 	i2c_mux_del_adapters(dev->muxc);
++#endif
+ }
+ 
+ struct i2c_adapter *cx231xx_get_i2c_adap(struct cx231xx *dev, int i2c_port)
+@@ -617,9 +649,17 @@ struct i2c_adapter *cx231xx_get_i2c_adap(struct cx231xx *dev, int i2c_port)
+ 	case I2C_2:
+ 		return &dev->i2c_bus[2].i2c_adap;
+ 	case I2C_1_MUX_1:
++#ifdef TBS_LEGACY_I2C_MUX_API
++		return dev->i2c_mux_adap[0];
++#else
+ 		return dev->muxc->adapter[0];
++#endif
+ 	case I2C_1_MUX_3:
++#ifdef TBS_LEGACY_I2C_MUX_API
++		return dev->i2c_mux_adap[1];
++#else
+ 		return dev->muxc->adapter[1];
++#endif
+ 	default:
+ 		BUG();
+ 	}

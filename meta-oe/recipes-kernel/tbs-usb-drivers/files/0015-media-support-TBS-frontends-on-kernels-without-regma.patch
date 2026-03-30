@@ -1,0 +1,224 @@
+From dcfce5ff86b9c97d39c6e556624631aa12574f00 Mon Sep 17 00:00:00 2001
+From: Codex <codex@local>
+Date: Sun, 30 Aug 2026 13:21:59 +0200
+Subject: [PATCH] media: support TBS frontends on kernels without regmap
+
+---
+ drivers/media/dvb-frontends/m88rs6060.c      | 160 ++++++++++++++++++-
+ drivers/media/dvb-frontends/m88rs6060_priv.h |   2 +
+ drivers/media/usb/dvb-usb/tbs5881.c          |   2 +
+ 3 files changed, 163 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/media/dvb-frontends/m88rs6060.c b/drivers/media/dvb-frontends/m88rs6060.c
+index 914a014..ce08023 100644
+--- a/drivers/media/dvb-frontends/m88rs6060.c
++++ b/drivers/media/dvb-frontends/m88rs6060.c
+@@ -11,6 +11,157 @@
+ #include <linux/mutex.h>
+ #define HWTUNE
+ 
++#ifdef TBS_LEGACY_REGMAP
++/*
++ * Some older receiver kernels provide the regmap headers but were built
++ * without CONFIG_REGMAP/CONFIG_REGMAP_I2C.  Keep this optional frontend
++ * usable without requiring a replacement kernel by using its native 8-bit
++ * I2C register protocol directly in that configuration.
++ */
++struct tbs_regmap {
++	struct i2c_client *client;
++	struct mutex lock;
++};
++
++struct tbs_regmap_config {
++	unsigned int reg_bits;
++	unsigned int val_bits;
++};
++
++struct tbs_reg_sequence {
++	unsigned int reg;
++	unsigned int def;
++	unsigned int delay_us;
++};
++
++static struct tbs_regmap *tbs_regmap_init_i2c(
++		struct i2c_client *client,
++		const struct tbs_regmap_config *config)
++{
++	struct tbs_regmap *map;
++
++	(void)config;
++	map = kzalloc(sizeof(*map), GFP_KERNEL);
++	if (!map)
++		return ERR_PTR(-ENOMEM);
++
++	map->client = client;
++	mutex_init(&map->lock);
++	return map;
++}
++
++static void tbs_regmap_exit(struct tbs_regmap *map)
++{
++	kfree(map);
++}
++
++static int tbs_regmap_read(struct tbs_regmap *map, unsigned int reg,
++		unsigned int *val)
++{
++	u8 reg_buf = reg;
++	u8 val_buf = 0;
++	struct i2c_msg msg[] = {
++		{
++			.addr = map->client->addr,
++			.flags = 0,
++			.len = 1,
++			.buf = &reg_buf,
++		}, {
++			.addr = map->client->addr,
++			.flags = I2C_M_RD,
++			.len = 1,
++			.buf = &val_buf,
++		}
++	};
++	int ret;
++
++	mutex_lock(&map->lock);
++	ret = i2c_transfer(map->client->adapter, msg, ARRAY_SIZE(msg));
++	mutex_unlock(&map->lock);
++	if (ret != ARRAY_SIZE(msg))
++		return ret < 0 ? ret : -EREMOTEIO;
++
++	*val = val_buf;
++	return 0;
++}
++
++static int tbs_regmap_bulk_write(struct tbs_regmap *map, unsigned int reg,
++		const void *val, size_t val_count)
++{
++	struct i2c_msg msg;
++	u8 *buf;
++	int ret;
++
++	buf = kmalloc(val_count + 1, GFP_KERNEL);
++	if (!buf)
++		return -ENOMEM;
++
++	buf[0] = reg;
++	memcpy(buf + 1, val, val_count);
++	msg.addr = map->client->addr;
++	msg.flags = 0;
++	msg.len = val_count + 1;
++	msg.buf = buf;
++
++	mutex_lock(&map->lock);
++	ret = i2c_transfer(map->client->adapter, &msg, 1);
++	mutex_unlock(&map->lock);
++	kfree(buf);
++
++	return ret == 1 ? 0 : (ret < 0 ? ret : -EREMOTEIO);
++}
++
++static int tbs_regmap_write(struct tbs_regmap *map, unsigned int reg,
++		unsigned int val)
++{
++	u8 value = val;
++
++	return tbs_regmap_bulk_write(map, reg, &value, 1);
++}
++
++static int tbs_regmap_update_bits(struct tbs_regmap *map, unsigned int reg,
++		unsigned int mask, unsigned int val)
++{
++	unsigned int current;
++	int ret;
++
++	ret = tbs_regmap_read(map, reg, &current);
++	if (ret)
++		return ret;
++
++	current = (current & ~mask) | (val & mask);
++	return tbs_regmap_write(map, reg, current);
++}
++
++static int tbs_regmap_multi_reg_write(struct tbs_regmap *map,
++		const struct tbs_reg_sequence *regs, int num_regs)
++{
++	int i;
++	int ret;
++
++	for (i = 0; i < num_regs; i++) {
++		ret = tbs_regmap_write(map, regs[i].reg, regs[i].def);
++		if (ret)
++			return ret;
++		if (regs[i].delay_us)
++			udelay(regs[i].delay_us);
++	}
++
++	return 0;
++}
++
++#define regmap tbs_regmap
++#define regmap_config tbs_regmap_config
++#define reg_sequence tbs_reg_sequence
++#define regmap_init_i2c tbs_regmap_init_i2c
++#define regmap_exit tbs_regmap_exit
++#define regmap_read tbs_regmap_read
++#define regmap_write tbs_regmap_write
++#define regmap_bulk_write tbs_regmap_bulk_write
++#define regmap_update_bits tbs_regmap_update_bits
++#define regmap_multi_reg_write tbs_regmap_multi_reg_write
++#endif
++
+ static LIST_HEAD(m88rs6060list);
+ static LIST_HEAD(si5351list);
+ struct si5351_base{
+@@ -3188,12 +3339,19 @@ static int m88rs6060_tune(struct dvb_frontend *fe, bool re_tune,
+ 
+ 	return 0;
+ }
+-static int m88rs6060_get_frontend(struct dvb_frontend *fe, struct dtv_frontend_properties *p)
++static int m88rs6060_get_frontend(struct dvb_frontend *fe
++#ifndef TBS_LEGACY_GET_FRONTEND_CALLBACK
++		, struct dtv_frontend_properties *p
++#endif
++		)
+ {
+ 	struct i2c_client *client = fe->demodulator_priv;
+ 	struct m88rs6060_dev *dev = i2c_get_clientdata(client);
+ 	struct i2c_adapter *i2c = dev->base->i2c;
+ 	struct MT_FE_CHAN_INFO_DVBS2 p_info;
++#ifdef TBS_LEGACY_GET_FRONTEND_CALLBACK
++	struct dtv_frontend_properties *p = &fe->dtv_property_cache;
++#endif
+ 	
+ 	
+ 	m88rs6060_get_channel_info(dev,&p_info);
+diff --git a/drivers/media/dvb-frontends/m88rs6060_priv.h b/drivers/media/dvb-frontends/m88rs6060_priv.h
+index 7e1c828..57db8a0 100644
+--- a/drivers/media/dvb-frontends/m88rs6060_priv.h
++++ b/drivers/media/dvb-frontends/m88rs6060_priv.h
+@@ -2,7 +2,9 @@
+ #define _M88RS6060_PRIV_H_
+ #include <media/dvb_frontend.h>
+ 
++#ifndef TBS_LEGACY_REGMAP
+ #include <linux/regmap.h>
++#endif
+ #include <linux/firmware.h>
+ #include <linux/math64.h>
+ 
+diff --git a/drivers/media/usb/dvb-usb/tbs5881.c b/drivers/media/usb/dvb-usb/tbs5881.c
+index aa0ee2d..816fc98 100644
+--- a/drivers/media/usb/dvb-usb/tbs5881.c
++++ b/drivers/media/usb/dvb-usb/tbs5881.c
+@@ -504,7 +504,9 @@ static int tbs5881_frontend_attach(struct dvb_usb_adapter *adap)
+ 	si2168_config.i2c_adapter = &adapter;
+ 	si2168_config.fe = &adap->fe_adap[0].fe;
+ 	si2168_config.ts_mode = SI2168_TS_SERIAL;
++#ifndef TBS_NO_SI2168_TS_CLOCK_GAPPED
+ 	si2168_config.ts_clock_gapped = true;
++#endif
+ 	si2168_config.ts_clock_inv = true;
+ 	memset(&info, 0, sizeof(struct i2c_board_info));
+ 	strscpy(info.type, "si2168", I2C_NAME_SIZE);
+-- 
+2.45.2.windows.1

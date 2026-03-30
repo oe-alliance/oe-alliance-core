@@ -1,0 +1,343 @@
+From c589d2e07b157608d55511372d1b8b125e98fb44 Mon Sep 17 00:00:00 2001
+From: OpenATV <openatv@gmail.com>
+Date: Sun, 30 Aug 2026 11:53:23 +0200
+Subject: [PATCH] media: use DVB-USB multi-frontend API for combo tuners
+
+---
+ drivers/media/usb/dvb-usb/tbs5520se.c | 36 +++++++++++---------
+ drivers/media/usb/dvb-usb/tbs5580.c   | 44 +++++++++++++++++-------
+ drivers/media/usb/dvb-usb/tbs5590.c   | 48 +++++++++++++++++++--------
+ 3 files changed, 86 insertions(+), 42 deletions(-)
+
+diff --git a/drivers/media/usb/dvb-usb/tbs5520se.c b/drivers/media/usb/dvb-usb/tbs5520se.c
+index 770400d..0961304 100644
+--- a/drivers/media/usb/dvb-usb/tbs5520se.c
++++ b/drivers/media/usb/dvb-usb/tbs5520se.c
+@@ -24,6 +24,7 @@
+ struct tbs5520se_state {
+ 	struct i2c_client *i2c_client_demod;
+ 	struct i2c_client *i2c_client_tuner; 
++	struct dvb_frontend secondary_fe;
+ 	u32 last_key_pressed;
+ };
+ 
+@@ -219,6 +220,10 @@ static int tbs5520se_frontend_attach(struct dvb_usb_adapter *adap)
+ 	struct si2157_config si2157_config;
+ 	u8 buf[20];
+ 
++	/* The first call attaches both frontends. The DVB-USB core calls us
++	 * again while it registers the second frontend. */
++	if (adap->num_frontends_initialized)
++		return adap->fe_adap[1].fe ? 0 : -ENODEV;
+ 
+ 	/* attach frontend */
+ 	memset(&si2183_config,0,sizeof(si2183_config));
+@@ -248,8 +253,9 @@ static int tbs5520se_frontend_attach(struct dvb_usb_adapter *adap)
+ 	/* dvb core doesn't support 2 tuners for 1 demod so
+ 	   we split the adapter in 2 frontends */
+ 
+-	adap->fe_adap[0].fe2 = &adap->fe_adap[0]._fe2;
+-	memcpy(adap->fe_adap[0].fe2, adap->fe_adap[0].fe, sizeof(struct dvb_frontend));
++	adap->fe_adap[1].fe = &st->secondary_fe;
++	memcpy(adap->fe_adap[1].fe, adap->fe_adap[0].fe,
++	       sizeof(struct dvb_frontend));
+ 
+ 	/* terrestrial tuner */
+ 	memset(adap->fe_adap[0].fe->ops.delsys, 0, MAX_DELSYS);
+@@ -283,13 +289,12 @@ static int tbs5520se_frontend_attach(struct dvb_usb_adapter *adap)
+ 
+ 	st->i2c_client_tuner = client_tuner;
+ 
+-	memset(adap->fe_adap[0].fe2->ops.delsys, 0, MAX_DELSYS);
+-	adap->fe_adap[0].fe2->ops.delsys[0] = SYS_DVBS;
+-	adap->fe_adap[0].fe2->ops.delsys[1] = SYS_DVBS2;
+-	adap->fe_adap[0].fe2->ops.delsys[2] = SYS_DSS;
+-	adap->fe_adap[0].fe2->id = 1;
++	memset(adap->fe_adap[1].fe->ops.delsys, 0, MAX_DELSYS);
++	adap->fe_adap[1].fe->ops.delsys[0] = SYS_DVBS;
++	adap->fe_adap[1].fe->ops.delsys[1] = SYS_DVBS2;
++	adap->fe_adap[1].fe->ops.delsys[2] = SYS_DSS;
+ 
+-	if (dvb_attach(av201x_attach, adap->fe_adap[0].fe2, &tbs5520se_av201x_cfg,
++	if (dvb_attach(av201x_attach, adap->fe_adap[1].fe, &tbs5520se_av201x_cfg,
+ 			adapter) == NULL) {
+ 		return -ENODEV;
+ 	}
+@@ -299,7 +304,7 @@ static int tbs5520se_frontend_attach(struct dvb_usb_adapter *adap)
+ 		tbs5520se_op_rw(d->udev, 0x8a, 0, 0,
+ 					buf, 2, TBS5520SE_WRITE_MSG);
+ 		
+-		adap->fe_adap[0].fe2->ops.set_voltage = tbs5520se_set_voltage;
++		adap->fe_adap[1].fe->ops.set_voltage = tbs5520se_set_voltage;
+ 		
+ 	}
+ 
+@@ -314,8 +319,8 @@ static int tbs5520se_frontend_attach(struct dvb_usb_adapter *adap)
+ 
+ 	strscpy(adap->fe_adap[0].fe->ops.info.name,d->props.devices[0].name,52);
+ 	strcat(adap->fe_adap[0].fe->ops.info.name," DVB-T/T2/C/C2/ISDB-T");
+-	strscpy(adap->fe_adap[0].fe2->ops.info.name,d->props.devices[0].name,52);
+-	strcat(adap->fe_adap[0].fe2->ops.info.name," DVB-S/S2/S2X");
++	strscpy(adap->fe_adap[1].fe->ops.info.name,d->props.devices[0].name,52);
++	strcat(adap->fe_adap[1].fe->ops.info.name," DVB-S/S2/S2X");
+ 
+ 	return 0;
+ }
+@@ -400,7 +405,7 @@ static struct dvb_usb_device_properties tbs5520se_properties = {
+ 	.download_firmware = tbs5520se_load_firmware,
+ 	.read_mac_address = tbs5520se_read_mac_address,
+ 	.adapter = {{
+-		.num_frontends = 1,
++		.num_frontends = 2,
+ 		.fe = {{
+ 			.frontend_attach = tbs5520se_frontend_attach,
+ 			.streaming_ctrl = NULL,
+@@ -415,9 +420,8 @@ static struct dvb_usb_device_properties tbs5520se_properties = {
+ 					}
+ 				}
+ 			},
+-		},
+-/*			{
+-				.frontend_attach = tbs5520se_satfrontend_attach,
++		}, {
++				.frontend_attach = tbs5520se_frontend_attach,
+ 				.streaming_ctrl = NULL,
+ 				.tuner_attach = NULL,
+ 				.stream = {
+@@ -430,7 +434,7 @@ static struct dvb_usb_device_properties tbs5520se_properties = {
+ 						}
+ 					}
+ 				},
+-			},*/
++			},
+ 
+ 		},
+ 		
+diff --git a/drivers/media/usb/dvb-usb/tbs5580.c b/drivers/media/usb/dvb-usb/tbs5580.c
+index ce1531b..5dd4ca9 100644
+--- a/drivers/media/usb/dvb-usb/tbs5580.c
++++ b/drivers/media/usb/dvb-usb/tbs5580.c
+@@ -25,6 +25,7 @@
+ struct tbs5580_state {
+ 	struct i2c_client *i2c_client_demod;
+ 	struct i2c_client *i2c_client_tuner; 
++	struct dvb_frontend secondary_fe;
+ 	struct dvb_ca_en50221 ca;
+ 	struct mutex ca_mutex;
+ };
+@@ -517,6 +518,11 @@ static int tbs5580_frontend_attach(struct dvb_usb_adapter *adap)
+ 	struct si2157_config si2157_config;
+ 	u8 buf[20];
+ 
++	/* The first call attaches both frontends. The DVB-USB core calls us
++	 * again while it registers the second frontend. */
++	if (adap->num_frontends_initialized)
++		return adap->fe_adap[1].fe ? 0 : -ENODEV;
++
+ 	mutex_init(&st->ca_mutex);
+ 	/* attach frontend */
+ 	memset(&si2183_config,0,sizeof(si2183_config));
+@@ -545,8 +551,9 @@ static int tbs5580_frontend_attach(struct dvb_usb_adapter *adap)
+ 	/* dvb core doesn't support 2 tuners for 1 demod so
+ 	   we split the adapter in 2 frontends */
+ 
+-	adap->fe_adap[0].fe2 = &adap->fe_adap[0]._fe2;
+-	memcpy(adap->fe_adap[0].fe2, adap->fe_adap[0].fe, sizeof(struct dvb_frontend));
++	adap->fe_adap[1].fe = &st->secondary_fe;
++	memcpy(adap->fe_adap[1].fe, adap->fe_adap[0].fe,
++	       sizeof(struct dvb_frontend));
+ 
+ 	/* terrestrial tuner */
+ 	memset(adap->fe_adap[0].fe->ops.delsys, 0, MAX_DELSYS);
+@@ -581,13 +588,12 @@ static int tbs5580_frontend_attach(struct dvb_usb_adapter *adap)
+ 	st->i2c_client_tuner = client_tuner;
+ 
+ 	/*attach SAT tuner*/
+-	memset(adap->fe_adap[0].fe2->ops.delsys, 0, MAX_DELSYS);
+-	adap->fe_adap[0].fe2->ops.delsys[0] = SYS_DVBS;
+-	adap->fe_adap[0].fe2->ops.delsys[1] = SYS_DVBS2;
+-	adap->fe_adap[0].fe2->ops.delsys[2] = SYS_DSS;
+-	adap->fe_adap[0].fe2->id = 1;
++	memset(adap->fe_adap[1].fe->ops.delsys, 0, MAX_DELSYS);
++	adap->fe_adap[1].fe->ops.delsys[0] = SYS_DVBS;
++	adap->fe_adap[1].fe->ops.delsys[1] = SYS_DVBS2;
++	adap->fe_adap[1].fe->ops.delsys[2] = SYS_DSS;
+ 
+-	if (dvb_attach(av201x_attach, adap->fe_adap[0].fe2, &tbs5580_av201x_cfg,
++	if (dvb_attach(av201x_attach, adap->fe_adap[1].fe, &tbs5580_av201x_cfg,
+ 			    adapter) == NULL) {
+ 			return -ENODEV;
+ 		}
+@@ -597,7 +603,7 @@ static int tbs5580_frontend_attach(struct dvb_usb_adapter *adap)
+ 		tbs5580_op_rw(d->udev, 0x8a, 0, 0,
+ 					buf, 2, TBS5580_WRITE_MSG);
+ 		
+-		adap->fe_adap[0].fe2->ops.set_voltage = tbs5580_set_voltage;
++		adap->fe_adap[1].fe->ops.set_voltage = tbs5580_set_voltage;
+ 		
+ 	}
+ 
+@@ -614,8 +620,8 @@ static int tbs5580_frontend_attach(struct dvb_usb_adapter *adap)
+ 	
+ 	strscpy(adap->fe_adap[0].fe->ops.info.name,d->props.devices[0].name,52);
+ 	strcat(adap->fe_adap[0].fe->ops.info.name," DVB-T/T2/C/C2/ISDB-T");
+-	strscpy(adap->fe_adap[0].fe2->ops.info.name,d->props.devices[0].name,52);
+-	strcat(adap->fe_adap[0].fe2->ops.info.name," DVB-S/S2/S2X");
++	strscpy(adap->fe_adap[1].fe->ops.info.name,d->props.devices[0].name,52);
++	strcat(adap->fe_adap[1].fe->ops.info.name," DVB-S/S2/S2X");
+ 
+ 	return 0;
+ }
+@@ -700,7 +706,7 @@ static struct dvb_usb_device_properties tbs5580_properties = {
+ 	.download_firmware = tbs5580_load_firmware,
+ 	.read_mac_address = tbs5580_read_mac_address,
+ 	.adapter = {{
+-		.num_frontends = 1,
++		.num_frontends = 2,
+ 		.fe = {{
+ 			.frontend_attach = tbs5580_frontend_attach,
+ 			.streaming_ctrl = NULL,
+@@ -715,6 +721,20 @@ static struct dvb_usb_device_properties tbs5580_properties = {
+ 					}
+ 				}
+ 			},
++		}, {
++			.frontend_attach = tbs5580_frontend_attach,
++			.streaming_ctrl = NULL,
++			.tuner_attach = NULL,
++			.stream = {
++				.type = USB_BULK,
++				.count = 8,
++				.endpoint = 0x82,
++				.u = {
++					.bulk = {
++						.buffersize = 4096,
++					}
++				}
++			},
+ 		}},
+ 	}},
+ 
+diff --git a/drivers/media/usb/dvb-usb/tbs5590.c b/drivers/media/usb/dvb-usb/tbs5590.c
+index 2a73129..b568c70 100644
+--- a/drivers/media/usb/dvb-usb/tbs5590.c
++++ b/drivers/media/usb/dvb-usb/tbs5590.c
+@@ -35,6 +35,7 @@
+ struct tbs5590_state {
+ 	struct i2c_client *i2c_client_demod;
+ 	struct i2c_client *i2c_client_tuner; 
++	struct dvb_frontend secondary_fe;
+ 	u32 last_key_pressed;
+ };
+ 
+@@ -385,6 +386,11 @@ static int tbs5590_frontend_attach(struct dvb_usb_adapter *adap)
+ 	u8 buf[20];
+ 	u16 hardware_ver;
+ 
++	/* The first call attaches both frontends. The DVB-USB core calls us
++	 * again while it registers the second frontend. */
++	if (adap->num_frontends_initialized)
++		return adap->fe_adap[1].fe ? 0 : -ENODEV;
++
+ 	buf[0] = 1+2;   //lenth
+ 	buf[1] = 0x50; //chipaddr
+ 	buf[2] = 0x2;      //ecp3 register addr
+@@ -440,8 +446,9 @@ static int tbs5590_frontend_attach(struct dvb_usb_adapter *adap)
+ 	/* dvb core doesn't support 2 tuners for 1 demod so
+ 	   we split the adapter in 2 frontends */
+ 
+-	adap->fe_adap[0].fe2 = &adap->fe_adap[0]._fe2;
+-	memcpy(adap->fe_adap[0].fe2, adap->fe_adap[0].fe, sizeof(struct dvb_frontend));
++	adap->fe_adap[1].fe = &st->secondary_fe;
++	memcpy(adap->fe_adap[1].fe, adap->fe_adap[0].fe,
++	       sizeof(struct dvb_frontend));
+ 
+ 	/* terrestrial tuner */
+ 	memset(adap->fe_adap[0].fe->ops.delsys, 0, MAX_DELSYS);
+@@ -475,13 +482,12 @@ static int tbs5590_frontend_attach(struct dvb_usb_adapter *adap)
+ 
+ 	st->i2c_client_tuner = client_tuner;
+ 
+-	memset(adap->fe_adap[0].fe2->ops.delsys, 0, MAX_DELSYS);
+-	adap->fe_adap[0].fe2->ops.delsys[0] = SYS_DVBS;
+-	adap->fe_adap[0].fe2->ops.delsys[1] = SYS_DVBS2;
+-	adap->fe_adap[0].fe2->ops.delsys[2] = SYS_DSS;
+-	adap->fe_adap[0].fe2->id = 1;
++	memset(adap->fe_adap[1].fe->ops.delsys, 0, MAX_DELSYS);
++	adap->fe_adap[1].fe->ops.delsys[0] = SYS_DVBS;
++	adap->fe_adap[1].fe->ops.delsys[1] = SYS_DVBS2;
++	adap->fe_adap[1].fe->ops.delsys[2] = SYS_DSS;
+ 
+-	if (dvb_attach(av201x_attach, adap->fe_adap[0].fe2, &tbs5590_av201x_cfg,
++	if (dvb_attach(av201x_attach, adap->fe_adap[1].fe, &tbs5590_av201x_cfg,
+ 			adapter) == NULL) {
+ 		return -ENODEV;
+ 	}
+@@ -491,7 +497,7 @@ static int tbs5590_frontend_attach(struct dvb_usb_adapter *adap)
+ 		tbs5590_op_rw(d->udev, 0x8a, 0, 0,
+ 					buf, 2, TBS5590_WRITE_MSG);
+ 		
+-		adap->fe_adap[0].fe2->ops.set_voltage = tbs5590_set_voltage;
++		adap->fe_adap[1].fe->ops.set_voltage = tbs5590_set_voltage;
+ 		
+ 	}
+ 
+@@ -506,7 +512,7 @@ static int tbs5590_frontend_attach(struct dvb_usb_adapter *adap)
+ 	
+ 	/* attach satellite frontend */
+ 	memset(&m88rs6060_config,0,sizeof(m88rs6060_config));
+-	m88rs6060_config.fe = &adap->fe_adap[0].fe2;
++	m88rs6060_config.fe = &adap->fe_adap[1].fe;
+ 	m88rs6060_config.clk = 27000000;
+ 	m88rs6060_config.i2c_wr_max = 33;
+ 	m88rs6060_config.ts_mode = MtFeTsOutMode_Parallel;
+@@ -538,7 +544,7 @@ static int tbs5590_frontend_attach(struct dvb_usb_adapter *adap)
+ //	tbs5590_op_rw(d->udev, 0x8a, 0, 0,
+ //				buf, 2, TBS5590_WRITE_MSG);
+ 	
+-	adap->fe_adap[0].fe2->ops.set_voltage = tbs5590_set_voltage;
++	adap->fe_adap[1].fe->ops.set_voltage = tbs5590_set_voltage;
+ 	}
+ 
+ 	buf[0] = 0;
+@@ -554,8 +560,8 @@ static int tbs5590_frontend_attach(struct dvb_usb_adapter *adap)
+ 	
+ 	strscpy(adap->fe_adap[0].fe->ops.info.name,d->props.devices[0].name,52);
+ 	strcat(adap->fe_adap[0].fe->ops.info.name," DVB-T/T2/C/C2/ISDB-T");
+-	strscpy(adap->fe_adap[0].fe2->ops.info.name,d->props.devices[0].name,52);
+-	strcat(adap->fe_adap[0].fe2->ops.info.name," DVB-S/S2/S2X");
++	strscpy(adap->fe_adap[1].fe->ops.info.name,d->props.devices[0].name,52);
++	strcat(adap->fe_adap[1].fe->ops.info.name," DVB-S/S2/S2X");
+ 
+ 	return 0;
+ }
+@@ -657,7 +663,7 @@ static struct dvb_usb_device_properties tbs5590_properties = {
+ 	.download_firmware = tbs5590_load_firmware,
+ 	.read_mac_address = tbs5590_read_mac_address,
+ 	.adapter = {{
+-		.num_frontends = 1,
++		.num_frontends = 2,
+ 		.fe = {{
+ 			.frontend_attach = tbs5590_frontend_attach,
+ 			.streaming_ctrl = NULL,
+@@ -672,6 +678,20 @@ static struct dvb_usb_device_properties tbs5590_properties = {
+ 					}
+ 				}
+ 			},
++		}, {
++			.frontend_attach = tbs5590_frontend_attach,
++			.streaming_ctrl = NULL,
++			.tuner_attach = NULL,
++			.stream = {
++				.type = USB_BULK,
++				.count = 8,
++				.endpoint = 0x82,
++				.u = {
++					.bulk = {
++						.buffersize = 4096,
++					}
++				}
++			},
+ 		},},
+ 			
+ 	},{

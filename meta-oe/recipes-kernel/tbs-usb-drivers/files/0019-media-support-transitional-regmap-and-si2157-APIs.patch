@@ -1,0 +1,52 @@
+From 1dbbf5d39d21b68676d245dbb42e398d695c534a Mon Sep 17 00:00:00 2001
+From: Codex <codex@local>
+Date: Sun, 30 Aug 2026 20:17:31 +0200
+Subject: [PATCH] media: support transitional regmap and si2157 APIs
+
+---
+ drivers/media/dvb-frontends/m88rs6060.c | 7 ++++++-
+ drivers/media/usb/dvb-usb/tbs5881.c     | 2 ++
+ 2 files changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/media/dvb-frontends/m88rs6060.c b/drivers/media/dvb-frontends/m88rs6060.c
+index 44b9c26..aa7d1db 100644
+--- a/drivers/media/dvb-frontends/m88rs6060.c
++++ b/drivers/media/dvb-frontends/m88rs6060.c
+@@ -11,6 +11,11 @@
+ #include <linux/mutex.h>
+ #define HWTUNE
+ 
++#if defined(TBS_LEGACY_REG_SEQUENCE) && !defined(TBS_LEGACY_REGMAP)
++/* Linux 3.14 still uses struct reg_default for multi-register writes. */
++#define reg_sequence reg_default
++#endif
++
+ #ifdef TBS_LEGACY_REGMAP
+ /*
+  * Some older receiver kernels provide the regmap headers but were built
+@@ -2108,7 +2113,7 @@ static int m88rs6060_set_frontend(struct dvb_frontend *fe)
+ 	int ret;
+ 	u32 symbol_rate_KSs;
+ 	unsigned tmp, tmp1;
+-	static const struct reg_sequence reset_buf[] = {
++	static struct reg_sequence reset_buf[] = {
+ 		{0x7, 0x80}, {0x7, 0x0}
+ 
+ 	};
+diff --git a/drivers/media/usb/dvb-usb/tbs5881.c b/drivers/media/usb/dvb-usb/tbs5881.c
+index 816fc98..d90b349 100644
+--- a/drivers/media/usb/dvb-usb/tbs5881.c
++++ b/drivers/media/usb/dvb-usb/tbs5881.c
+@@ -525,7 +525,9 @@ static int tbs5881_frontend_attach(struct dvb_usb_adapter *adap)
+ 	/* attach tuner */
+ 	memset(&si2157_config, 0, sizeof(si2157_config));
+ 	si2157_config.fe = adap->fe_adap[0].fe;
++#ifndef TBS_NO_SI2157_IF_PORT
+ 	si2157_config.if_port = 1;
++#endif
+ 	memset(&info, 0, sizeof(struct i2c_board_info));
+ 	strscpy(info.type, "si2157", I2C_NAME_SIZE);
+ 	info.addr = 0x60;
+-- 
+2.45.2.windows.1
+

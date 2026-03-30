@@ -1,0 +1,77 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Codex <codex@local>
+Date: Sun, 30 Aug 2026 12:35:09 +0200
+Subject: [PATCH] cx231xx: build DVB path for TBS5990 only
+
+---
+ drivers/media/usb/cx231xx/cx231xx-dvb.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/drivers/media/usb/cx231xx/cx231xx-dvb.c b/drivers/media/usb/cx231xx/cx231xx-dvb.c
+index 4fb30d3..7c4b307 100644
+--- a/drivers/media/usb/cx231xx/cx231xx-dvb.c
++++ b/drivers/media/usb/cx231xx/cx231xx-dvb.c
+@@ -743,6 +743,7 @@ static void unregister_dvb(struct cx231xx_dvb *dvb)
+ 	dvb_frontend_detach(dvb->frontend[0]);
+ 	dvb_unregister_adapter(&dvb->adapter);
+ 
++#ifndef TBS_CX231XX_5990_ONLY
+ 	/* remove I2C tuner */
+ 	dvb_module_release(dvb->i2c_client_tuner);
+ 	dvb->i2c_client_tuner = NULL;
+@@ -751,6 +752,7 @@ static void unregister_dvb(struct cx231xx_dvb *dvb)
+ 	dvb->i2c_client_demod[1] = NULL;
+ 	dvb_module_release(dvb->i2c_client_demod[0]);
+ 	dvb->i2c_client_demod[0] = NULL;
++#endif
+ }
+ 
+ static int tbs_cx_mac(struct i2c_adapter *i2c_adap, u8 count, u8 *mac)
+@@ -819,6 +821,7 @@ static int dvb_init(struct cx231xx *dev)
+ 	cx231xx_demod_reset(dev);
+ 	/* init frontend */
+ 	switch (dev->model) {
++#ifndef TBS_CX231XX_5990_ONLY
+ 	case CX231XX_BOARD_CNXT_CARRAERA:
+ 	case CX231XX_BOARD_CNXT_RDE_250:
+ 
+@@ -1248,6 +1251,7 @@ static int dvb_init(struct cx231xx *dev)
+ 
+ 		break;
+ 	}
++#endif
+ 	case CX231XX_BOARD_TBS_5990:
+ 	{
+ 		tbs_reset_fe(dev, i ? 20 : 24);
+@@ -1281,6 +1285,7 @@ static int dvb_init(struct cx231xx *dev)
+ 
+ 		break;
+ 	}
++#ifndef TBS_CX231XX_5990_ONLY
+ 	case CX231XX_BOARD_HAUPPAUGE_935C:
+ 	{
+ 		struct si2157_config si2157_config = {};
+@@ -1400,6 +1405,7 @@ static int dvb_init(struct cx231xx *dev)
+ 			"%s/2: The frontend of your DVB/ATSC card isn't supported yet\n",
+ 			dev->name);
+ 		break;
++#endif
+ 	}
+ 	if (!dvb->frontend[0]) {
+ 		dev_err(dev->dev,
+@@ -1424,6 +1430,7 @@ ret:
+ 	return result;
+ 
+ out_free:
++#ifndef TBS_CX231XX_5990_ONLY
+ 	/* remove I2C tuner */
+ 	dvb_module_release(dvb->i2c_client_tuner);
+ 	dvb->i2c_client_tuner = NULL;
+@@ -1432,6 +1439,7 @@ out_free:
+ 	dvb->i2c_client_demod[1] = NULL;
+ 	dvb_module_release(dvb->i2c_client_demod[0]);
+ 	dvb->i2c_client_demod[0] = NULL;
++#endif
+ 	kfree(dvb);
+ 	dev->dvb[i] = NULL;
+ 	goto ret;

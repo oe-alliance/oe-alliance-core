@@ -1,0 +1,33 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Codex <codex@local>
+Date: Sun, 30 Aug 2026 12:45:56 +0200
+Subject: [PATCH] cx231xx: omit encoder state from TBS5990 core
+
+---
+ drivers/media/usb/cx231xx/cx231xx.h | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/drivers/media/usb/cx231xx/cx231xx.h b/drivers/media/usb/cx231xx/cx231xx.h
+index e934749..7d1302c 100644
+--- a/drivers/media/usb/cx231xx/cx231xx.h
++++ b/drivers/media/usb/cx231xx/cx231xx.h
+@@ -18,7 +18,9 @@
+ #include <linux/mutex.h>
+ #include <linux/usb.h>
+ 
++#ifndef TBS_CX231XX_5990_ONLY
+ #include <media/drv-intf/cx2341x.h>
++#endif
+ 
+ #include <media/videobuf2-vmalloc.h>
+ #include <media/v4l2-device.h>
+@@ -620,7 +622,9 @@ struct cx231xx {
+ 	struct v4l2_subdev *sd_tuner;
+ 	struct v4l2_ctrl_handler ctrl_handler;
+ 	struct v4l2_ctrl_handler radio_ctrl_handler;
++#ifndef TBS_CX231XX_5990_ONLY
+ 	struct cx2341x_handler mpeg_ctrl_handler;
++#endif
+ 
+ 	struct work_struct wq_trigger;		/* Trigger to start/stop audio for alsa module */
+ 	atomic_t	   stream_started;	/* stream should be running if true */

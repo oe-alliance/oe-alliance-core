@@ -1,0 +1,32 @@
+From 59d98bf98aaf3e7e62ad086fa9255607d3a72bc0 Mon Sep 17 00:00:00 2001
+From: Codex <codex@local>
+Date: Sun, 30 Aug 2026 13:29:16 +0200
+Subject: [PATCH] cx231xx: omit analog video buffer for TBS5990
+
+---
+ drivers/media/usb/cx231xx/cx231xx.h | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/media/usb/cx231xx/cx231xx.h b/drivers/media/usb/cx231xx/cx231xx.h
+index f757419..45ce671 100644
+--- a/drivers/media/usb/cx231xx/cx231xx.h
++++ b/drivers/media/usb/cx231xx/cx231xx.h
+@@ -235,6 +235,7 @@ struct cx231xx_fmt {
+ };
+ 
+ /* buffer for one video frame */
++#ifndef TBS_CX231XX_5990_ONLY
+ struct cx231xx_buffer {
+ 	/* common v4l buffer stuff -- must be first */
+ 	struct vb2_v4l2_buffer vb;
+@@ -243,6 +244,7 @@ struct cx231xx_buffer {
+ 	int top_field;
+ 	int receiving;
+ };
++#endif
+ 
+ enum ps_package_head {
+ 	CX231XX_NEED_ADD_PS_PACKAGE_HEAD = 0,
+-- 
+2.45.2.windows.1
+

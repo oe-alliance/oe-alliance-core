@@ -1,0 +1,39 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: OpenATV <openatv@gmail.com>
+Date: Sun, 30 Aug 2026 00:00:00 +0000
+Subject: [PATCH] tbs5925, tbs5980: use upstream STV090x API
+
+The lock LED callback is a private extension of the TBS media tree and is not
+part of the upstream stv090x_config ABI.  Drop the optional callback when the
+USB bridges are built against receiver kernels.
+---
+ drivers/media/usb/dvb-usb/tbs-qbox2ci.c | 1 -
+ drivers/media/usb/dvb-usb/tbs5925.c     | 1 -
+ 2 files changed, 2 deletions(-)
+
+diff --git a/drivers/media/usb/dvb-usb/tbs5925.c b/drivers/media/usb/dvb-usb/tbs5925.c
+index 111111111111..222222222222 100644
+--- a/drivers/media/usb/dvb-usb/tbs5925.c
++++ b/drivers/media/usb/dvb-usb/tbs5925.c
+@@ -190,7 +190,6 @@ static struct stv090x_config stv0900_config = {
+ 	.tuner_set_bandwidth    = stb6100_set_bandwidth,
+ 	.tuner_get_bandwidth    = stb6100_get_bandwidth,
+ 
+-	.set_lock_led = tbs5925_led_ctrl,
+ };
+ 
+ static struct stb6100_config stb6100_config = {
+diff --git a/drivers/media/usb/dvb-usb/tbs-qbox2ci.c b/drivers/media/usb/dvb-usb/tbs-qbox2ci.c
+index 333333333333..444444444444 100644
+--- a/drivers/media/usb/dvb-usb/tbs-qbox2ci.c
++++ b/drivers/media/usb/dvb-usb/tbs-qbox2ci.c
+@@ -497,7 +497,6 @@ static struct stv090x_config earda_config = {
+ 	.tuner_set_bandwidth    = stb6100_set_bandwidth,
+ 	.tuner_get_bandwidth    = stb6100_get_bandwidth,
+ 
+-	.set_lock_led = tbsqbox2ci_led_ctrl,
+ };
+ 
+ static struct stb6100_config qbox2_stb6100_config = {
+-- 
+2.43.0

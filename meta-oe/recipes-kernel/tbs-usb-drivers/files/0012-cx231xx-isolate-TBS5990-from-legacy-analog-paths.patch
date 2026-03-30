@@ -1,0 +1,85 @@
+From 8c4d4cdf8e6ef9899e099aa216e4d641d14f0b56 Mon Sep 17 00:00:00 2001
+From: Codex <codex@local>
+Date: Sun, 30 Aug 2026 12:59:02 +0200
+Subject: [PATCH] cx231xx: isolate TBS5990 from legacy analog paths
+
+---
+ drivers/media/usb/cx231xx/cx231xx-cards.c | 16 ++++++++++++----
+ 1 file changed, 12 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/media/usb/cx231xx/cx231xx-cards.c b/drivers/media/usb/cx231xx/cx231xx-cards.c
+index 967f901..9cfe742 100644
+--- a/drivers/media/usb/cx231xx/cx231xx-cards.c
++++ b/drivers/media/usb/cx231xx/cx231xx-cards.c
+@@ -58,6 +58,7 @@ static struct cx231xx_reg_seq RDE250_XCV_TUNER[] = {
+  *  Board definitions
+  */
+ struct cx231xx_board cx231xx_boards[] = {
++#ifndef TBS_CX231XX_5990_ONLY
+ 	[CX231XX_BOARD_UNKNOWN] = {
+ 		.name = "Unknown CX231xx video grabber",
+ 		.tuner_type = TUNER_ABSENT,
+@@ -985,6 +986,7 @@ struct cx231xx_board cx231xx_boards[] = {
+ 			.gpio = NULL,
+ 		} },
+ 	},
++#endif
+ 	[CX231XX_BOARD_TBS_5990] = {
+ 		.name = "TurboSight TBS 5990",
+ 		.tuner_type = TUNER_ABSENT,
+@@ -1024,6 +1026,7 @@ struct cx231xx_board cx231xx_boards[] = {
+ 			.gpio = NULL,
+ 		} },
+ 	},
++#ifndef TBS_CX231XX_5990_ONLY
+ 	[CX231XX_BOARD_THE_IMAGING_SOURCE_DFG_USB2_PRO] = {
+ 		.name = "The Imaging Source DFG/USB2pro",
+ 		.tuner_type = TUNER_ABSENT,
+@@ -1131,6 +1134,7 @@ struct cx231xx_board cx231xx_boards[] = {
+ 			.gpio = NULL,
+ 		} },
+ 	},
++#endif
+ };
+ const unsigned int cx231xx_bcount = ARRAY_SIZE(cx231xx_boards);
+ 
+@@ -1495,7 +1499,8 @@ void cx231xx_config_i2c(struct cx231xx *dev)
+ 
+ static void cx231xx_unregister_media_device(struct cx231xx *dev)
+ {
+-#ifdef CONFIG_MEDIA_CONTROLLER
++#if defined(CONFIG_MEDIA_CONTROLLER) && \
++	!defined(TBS_LEGACY_MEDIA_CONTROLLER_API)
+ 	if (dev->media_dev) {
+ 		media_device_unregister(dev->media_dev);
+ 		media_device_cleanup(dev->media_dev);
+@@ -1535,7 +1540,8 @@ void cx231xx_release_resources(struct cx231xx *dev)
+ static int cx231xx_media_device_init(struct cx231xx *dev,
+ 				      struct usb_device *udev)
+ {
+-#ifdef CONFIG_MEDIA_CONTROLLER
++#if defined(CONFIG_MEDIA_CONTROLLER) && \
++	!defined(TBS_LEGACY_MEDIA_CONTROLLER_API)
+ 	struct media_device *mdev;
+ 
+ 	mdev = kzalloc(sizeof(*mdev), GFP_KERNEL);
+@@ -1965,7 +1971,8 @@ static int cx231xx_usb_probe(struct usb_interface *interface,
+ 	}
+ 
+ 	/* Create v4l2 device */
+-#ifdef CONFIG_MEDIA_CONTROLLER
++#if defined(CONFIG_MEDIA_CONTROLLER) && \
++	!defined(TBS_LEGACY_MEDIA_CONTROLLER_API)
+ 	dev->v4l2_dev.mdev = dev->media_dev;
+ #endif
+ 	retval = v4l2_device_register(&interface->dev, &dev->v4l2_dev);
+@@ -2083,7 +2090,8 @@ static int cx231xx_usb_probe(struct usb_interface *interface,
+ 	/* load other modules required */
+ 	request_modules(dev);
+ 
+-#ifdef CONFIG_MEDIA_CONTROLLER
++#if defined(CONFIG_MEDIA_CONTROLLER) && \
++	!defined(TBS_LEGACY_MEDIA_CONTROLLER_API)
+ 	/* Init entities at the Media Controller */
+ 	cx231xx_v4l2_create_entities(dev);
+ 

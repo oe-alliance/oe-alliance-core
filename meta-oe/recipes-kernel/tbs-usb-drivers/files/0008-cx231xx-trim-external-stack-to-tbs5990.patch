@@ -1,0 +1,168 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Codex <codex@local>
+Date: Sun, 30 Aug 2026 12:41:00 +0200
+Subject: [PATCH] cx231xx: trim external stack to TBS5990
+
+---
+ drivers/media/usb/cx231xx/cx231xx-cards.c |  7 +++++++
+ drivers/media/usb/cx231xx/cx231xx-dvb.c   |  8 ++++++++
+ drivers/media/usb/cx231xx/cx231xx.h       | 22 +++++++++++++++++++++-
+ 3 files changed, 36 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/media/usb/cx231xx/cx231xx-cards.c b/drivers/media/usb/cx231xx/cx231xx-cards.c
+index 3aeaca0..a6f9e1f 100644
+--- a/drivers/media/usb/cx231xx/cx231xx-cards.c
++++ b/drivers/media/usb/cx231xx/cx231xx-cards.c
+@@ -1132,6 +1132,10 @@ const unsigned int cx231xx_bcount = ARRAY_SIZE(cx231xx_boards);
+ 
+ /* table of devices that work with this driver */
+ struct usb_device_id cx231xx_id_table[] = {
++#ifdef TBS_CX231XX_5990_ONLY
++	{USB_DEVICE(0x734c, 0x5990),
++	 .driver_info = CX231XX_BOARD_TBS_5990},
++#else
+ 	{USB_DEVICE(0x1D19, 0x6109),
+ 	.driver_info = CX231XX_BOARD_PV_XCAPTURE_USB},
+ 	{USB_DEVICE(0x0572, 0x5A3C),
+@@ -1215,6 +1219,7 @@ struct usb_device_id cx231xx_id_table[] = {
+ 	 .driver_info = CX231XX_BOARD_TBS_5990},
+ 	{USB_DEVICE(0x199e, 0x8002),
+ 	 .driver_info = CX231XX_BOARD_THE_IMAGING_SOURCE_DFG_USB2_PRO},
++#endif
+ 	{},
+ };
+ 
+@@ -1427,6 +1432,7 @@ void cx231xx_card_setup(struct cx231xx *dev)
+ 			cx231xx_config_tuner(dev);
+ 	}
+ 
++#ifndef TBS_CX231XX_5990_ONLY
+ 	switch (dev->model) {
+ 	case CX231XX_BOARD_HAUPPAUGE_930C_HD_1113xx:
+ 	case CX231XX_BOARD_HAUPPAUGE_930C_HD_1114xx:
+@@ -1455,6 +1461,7 @@ void cx231xx_card_setup(struct cx231xx *dev)
+ 			break;
+ 		}
+ 	}
++#endif
+ 
+ }
+ 
+diff --git a/drivers/media/usb/cx231xx/cx231xx-dvb.c b/drivers/media/usb/cx231xx/cx231xx-dvb.c
+index 7c4b307..4b248d9 100644
+--- a/drivers/media/usb/cx231xx/cx231xx-dvb.c
++++ b/drivers/media/usb/cx231xx/cx231xx-dvb.c
+@@ -19,6 +19,7 @@
+ #include <media/v4l2-common.h>
+ #include <media/tuner.h>
+ 
++#ifndef TBS_CX231XX_5990_ONLY
+ #include "xc5000.h"
+ #include "s5h1432.h"
+ #include "tda18271.h"
+@@ -33,6 +34,7 @@
+ #include "mn88473.h"
+ #include "tda18212.h"
+ #include "cxd2820r.h"
++#endif
+ #include "tas2101.h"
+ #include "av201x.h"
+ #include "tbscxci.h"
+@@ -51,6 +53,7 @@ DVB_DEFINE_MOD_OPT_ADAPTER_NR(adapter_nr);
+ #define CX231XX_DVB_MAX_PACKETSIZE 564
+ #define CX231XX_DVB_MAX_PACKETS 64
+ 
++#ifndef TBS_CX231XX_5990_ONLY
+ static struct s5h1432_config dvico_s5h1432_config = {
+ 	.output_mode   = S5H1432_SERIAL_OUTPUT,
+ 	.gpio          = S5H1432_GPIO_ON,
+@@ -149,6 +152,7 @@ static struct r820t_config astrometa_t2hybrid_r820t_config = {
+ 	.rafael_chip		= CHIP_R828D,
+ 	.max_i2c_msg_len	= 2,
+ };
++#endif
+ 
+ static void tbs_reset_fe(struct cx231xx *dev, int reset_pin)
+ {
+@@ -486,6 +490,7 @@ static int cx231xx_dvb_bus_ctrl(struct dvb_frontend *fe, int acquire)
+ 
+ /* ------------------------------------------------------------------ */
+ 
++#ifndef TBS_CX231XX_5990_ONLY
+ static struct xc5000_config cnxt_rde250_tunerconfig = {
+ 	.i2c_address = 0x61,
+ 	.if_khz = 4000,
+@@ -494,6 +499,7 @@ static struct xc5000_config cnxt_rdu250_tunerconfig = {
+ 	.i2c_address = 0x61,
+ 	.if_khz = 3250,
+ };
++#endif
+ 
+ /* ------------------------------------------------------------------ */
+ #if 0
+@@ -791,8 +797,10 @@ static int dvb_init(struct cx231xx *dev)
+ 	struct cx231xx_dvb *dvb;
+ 	struct i2c_adapter *tuner_i2c;
+ 	struct i2c_adapter *demod_i2c;
++#ifndef TBS_CX231XX_5990_ONLY
+ 	struct i2c_client *client;
+ 	struct i2c_adapter *adapter;
++#endif
+ 
+ 	if (!dev->board.has_dvb) {
+ 		/* This device does not support the extension */
+diff --git a/drivers/media/usb/cx231xx/cx231xx.h b/drivers/media/usb/cx231xx/cx231xx.h
+index fecc31b..e934749 100644
+--- a/drivers/media/usb/cx231xx/cx231xx.h
++++ b/drivers/media/usb/cx231xx/cx231xx.h
+@@ -931,8 +931,16 @@ int cx231xx_gpio_set(struct cx231xx *dev, struct cx231xx_reg_seq *gpio);
+ 
+ /* Device list functions */
+ void cx231xx_release_resources(struct cx231xx *dev);
++#ifndef TBS_CX231XX_5990_ONLY
+ void cx231xx_release_analog_resources(struct cx231xx *dev);
+ int cx231xx_register_analog_devices(struct cx231xx *dev);
++#else
++static inline void cx231xx_release_analog_resources(struct cx231xx *dev) {}
++static inline int cx231xx_register_analog_devices(struct cx231xx *dev)
++{
++	return 0;
++}
++#endif
+ void cx231xx_remove_from_devlist(struct cx231xx *dev);
+ void cx231xx_add_into_devlist(struct cx231xx *dev);
+ void cx231xx_init_extension(struct cx231xx *dev);
+@@ -972,7 +980,11 @@ int cx231xx_register_extension(struct cx231xx_ops *dev);
+ void cx231xx_unregister_extension(struct cx231xx_ops *dev);
+ void cx231xx_init_extension(struct cx231xx *dev);
+ void cx231xx_close_extension(struct cx231xx *dev);
++#ifndef TBS_CX231XX_5990_ONLY
+ void cx231xx_v4l2_create_entities(struct cx231xx *dev);
++#else
++static inline void cx231xx_v4l2_create_entities(struct cx231xx *dev) {}
++#endif
+ int cx231xx_querycap(struct file *file, void *priv,
+ 			   struct v4l2_capability *cap);
+ int cx231xx_g_tuner(struct file *file, void *priv, struct v4l2_tuner *t);
+@@ -1000,12 +1012,20 @@ extern const unsigned int cx231xx_bcount;
+ int cx231xx_tuner_callback(void *ptr, int component, int command, int arg);
+ 
+ /* cx23885-417.c                                               */
++#ifndef TBS_CX231XX_5990_ONLY
+ extern int cx231xx_417_register(struct cx231xx *dev);
+ extern void cx231xx_417_unregister(struct cx231xx *dev);
++#else
++static inline int cx231xx_417_register(struct cx231xx *dev)
++{
++	return 0;
++}
++static inline void cx231xx_417_unregister(struct cx231xx *dev) {}
++#endif
+ 
+ /* cx23885-input.c                                             */
+ 
+-#if defined(CONFIG_VIDEO_CX231XX_RC)
++#if defined(CONFIG_VIDEO_CX231XX_RC) && !defined(TBS_CX231XX_5990_ONLY)
+ int cx231xx_ir_init(struct cx231xx *dev);
+ void cx231xx_ir_exit(struct cx231xx *dev);
+ #else

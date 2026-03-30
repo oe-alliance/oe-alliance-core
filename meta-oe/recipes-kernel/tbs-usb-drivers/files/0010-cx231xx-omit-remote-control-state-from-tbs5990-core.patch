@@ -1,0 +1,35 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Codex <codex@local>
+Date: Sun, 30 Aug 2026 12:48:19 +0200
+Subject: [PATCH] cx231xx: omit remote control state from TBS5990 core
+
+---
+ drivers/media/usb/cx231xx/cx231xx.h | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/drivers/media/usb/cx231xx/cx231xx.h b/drivers/media/usb/cx231xx/cx231xx.h
+index 7d1302c..f757419 100644
+--- a/drivers/media/usb/cx231xx/cx231xx.h
++++ b/drivers/media/usb/cx231xx/cx231xx.h
+@@ -26,8 +26,10 @@
+ #include <media/v4l2-device.h>
+ #include <media/v4l2-ctrls.h>
+ #include <media/v4l2-fh.h>
++#ifndef TBS_CX231XX_5990_ONLY
+ #include <media/rc-core.h>
+ #include <media/i2c/ir-kbd-i2c.h>
++#endif
+ 
+ #include <media/dvbdev.h>
+ #include <media/dmxdev.h>
+@@ -605,8 +607,10 @@ struct cx231xx {
+ 	struct cx231xx_board board;
+ 
+ 	/* For I2C IR support */
++#ifndef TBS_CX231XX_5990_ONLY
+ 	struct IR_i2c_init_data    init_data;
+ 	struct i2c_client          *ir_i2c_client;
++#endif
+ 
+ 	unsigned int stream_on:1;	/* Locks streams */
+ 	unsigned int vbi_stream_on:1;	/* Locks streams for VBI */

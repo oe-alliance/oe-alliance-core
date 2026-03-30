@@ -1,0 +1,41 @@
+From 6de637394451d10e00d909cc1aa73b9d14c23aa0 Mon Sep 17 00:00:00 2001
+From: Codex <codex@local>
+Date: Sun, 30 Aug 2026 22:15:00 +0200
+Subject: [PATCH] av201x: support legacy tuner release callback
+
+Some receiver kernels retain the older tuner_ops release callback returning
+int.  Use the API feature detected by the module recipe, as already done by
+the TBS stv6120 tuner.
+
+---
+ drivers/media/tuners/av201x.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/drivers/media/tuners/av201x.c b/drivers/media/tuners/av201x.c
+index 8f02109..f9e9af0 100644
+--- a/drivers/media/tuners/av201x.c
++++ b/drivers/media/tuners/av201x.c
+@@ -110,7 +110,11 @@ static int av201x_wrtable(struct av201x_priv *priv,
+ 	return 0;
+ }
+ 
++#ifdef TBS_LEGACY_TUNER_RELEASE_CALLBACK
++static int av201x_release(struct dvb_frontend *fe)
++#else
+ static void av201x_release(struct dvb_frontend *fe)
++#endif
+ {
+ 	struct av201x_priv *priv = fe->tuner_priv;
+ 	dev_dbg(&priv->i2c->dev, "%s()\n", __func__);
+@@ -118,5 +122,9 @@ static void av201x_release(struct dvb_frontend *fe)
+ 	kfree(fe->tuner_priv);
+ 	fe->tuner_priv = NULL;
++
++#ifdef TBS_LEGACY_TUNER_RELEASE_CALLBACK
++	return 0;
++#endif
+ }
+ 
+ static int av201x_init(struct dvb_frontend *fe)
+-- 
+2.45.2.windows.1

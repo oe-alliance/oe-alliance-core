@@ -1,0 +1,76 @@
+From 3543484fe38d53ad5444a104ec95e2394ab33366 Mon Sep 17 00:00:00 2001
+From: Codex <codex@local>
+Date: Sun, 30 Aug 2026 12:30:45 +0200
+Subject: [PATCH] media: support legacy DVB frontend properties
+
+---
+ drivers/media/dvb-frontends/gx1133.c    | 2 ++
+ drivers/media/dvb-frontends/m88rs6060.c | 2 ++
+ drivers/media/dvb-frontends/si2183.c    | 4 ++--
+ drivers/media/dvb-frontends/stv091x.c   | 2 ++
+ 4 files changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/media/dvb-frontends/gx1133.c b/drivers/media/dvb-frontends/gx1133.c
+index c2efee2..de9aaec 100644
+--- a/drivers/media/dvb-frontends/gx1133.c
++++ b/drivers/media/dvb-frontends/gx1133.c
+@@ -1446,10 +1446,12 @@ static int gx1133_set_frontend(struct dvb_frontend *fe)
+ 		pls_code = 1;
+ 	}
+ 
++#ifndef TBS_NO_SCRAMBLING_SEQUENCE_INDEX
+ 	if (c->scrambling_sequence_index) {
+ 		pls_mode = 1;
+ 		pls_code = c->scrambling_sequence_index;
+ 	}
++#endif
+ 
+ 	dev_dbg(&priv->i2c->dev, "%s()\n", __func__);
+ 
+diff --git a/drivers/media/dvb-frontends/m88rs6060.c b/drivers/media/dvb-frontends/m88rs6060.c
+index ece91a8..914a014 100644
+--- a/drivers/media/dvb-frontends/m88rs6060.c
++++ b/drivers/media/dvb-frontends/m88rs6060.c
+@@ -2126,10 +2126,12 @@ static int m88rs6060_set_frontend(struct dvb_frontend *fe)
+ 		pls_code = 1;
+ 	}
+ 
++#ifndef TBS_NO_SCRAMBLING_SEQUENCE_INDEX
+ 	if (c->scrambling_sequence_index) {
+ 		pls_mode = 1;
+ 		pls_code = c->scrambling_sequence_index;
+ 	}
++#endif
+ 
+ 	if (pls_mode)
+ 		m88rs6060_calc_PLS_gold_code(pls, pls_code);
+diff --git a/drivers/media/dvb-frontends/si2183.c b/drivers/media/dvb-frontends/si2183.c
+index ede45c0..bc8f590 100644
+--- a/drivers/media/dvb-frontends/si2183.c
++++ b/drivers/media/dvb-frontends/si2183.c
+@@ -1453,8 +1453,8 @@ static int si2183_set_property(struct dvb_frontend *fe,
+ 		case SYS_DVBS:
+ 		case SYS_DVBS2:
+ 		case SYS_DSS:
+-			fe->ops.info.frequency_min_hz = 950 * MHz;
+-			fe->ops.info.frequency_max_hz = 2150 * MHz;
++			fe->ops.info.frequency_min_hz = 950 * TBS_SAT_MHZ;
++			fe->ops.info.frequency_max_hz = 2150 * TBS_SAT_MHZ;
+ 			fe->ops.info.frequency_stepsize_hz = 0;
+ 			break;
+ 		case SYS_ISDBT:
+diff --git a/drivers/media/dvb-frontends/stv091x.c b/drivers/media/dvb-frontends/stv091x.c
+index b31c588..b253598 100644
+--- a/drivers/media/dvb-frontends/stv091x.c
++++ b/drivers/media/dvb-frontends/stv091x.c
+@@ -1009,8 +1009,10 @@ static int Start(struct stv *state, struct dtv_frontend_properties *p)
+ 	SetMIS(state, p->stream_id);
+ 
+ 	/* Set Gold code > 0 */
++#ifndef TBS_NO_SCRAMBLING_SEQUENCE_INDEX
+ 	if (p->scrambling_sequence_index)
+ 		SetPLS(state, 1, p->scrambling_sequence_index);
++#endif
+ 
+ 	/* The upstream DVB API has no private TBS MODCOD filter property. */
+ 	SetModcode(state, ~0U);
