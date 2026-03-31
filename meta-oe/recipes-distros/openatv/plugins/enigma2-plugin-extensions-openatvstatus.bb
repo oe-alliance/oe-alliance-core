@@ -5,6 +5,8 @@ SECTION = "extra"
 require conf/license/license-gplv2.inc
 require conf/python/python3-compileall.inc
 
+RDEPENDS:${PN} = "python3-zoneinfo"
+
 inherit gettext gittag
 SRCREV = "${AUTOREV}"
 PV = "git"
