@@ -4,7 +4,6 @@ AUTHOR = "The Py3AMF Project <yhbu@stdc.so>"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=f078cf548d49a50c4b44150d5a30585a"
 
-# provide python3-pyamf for enigma2-oe-alliance-plugins
 PROVIDES += "python3-pyamf"
 RPROVIDES:${PN} += "python3-pyamf"
 

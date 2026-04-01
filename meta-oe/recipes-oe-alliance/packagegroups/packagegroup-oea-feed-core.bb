@@ -21,51 +21,77 @@ RDEPENDS:${PN} = "\
     ${@bb.utils.contains("MACHINE_FEATURES", "skins1080", "dreamplex-skins-meta", "", d)} \
     meta-enigma2-dvdburn \
     enigma2-plugins \
-    enigma2-plugin-drivers-ntfs-3g \
     enigma2-plugin-drivers-exfat \
-    enigma2-plugin-drivers-usbserial \
-    enigma2-plugin-extensions-tuxcom \
     enigma2-plugin-drivers-iptables \
-    enigma2-plugin-extensions-enigmalight \
-    enigma2-plugin-extensions-enigmawelt \
-    enigma2-plugin-extensions-mediatomb \
-    enigma2-plugin-extensions-dreamplex \
-    enigma2-plugin-extensions-youtube \
+    enigma2-plugin-drivers-ntfs-3g \
+    enigma2-plugin-drivers-usbserial \
+    enigma2-plugin-extensions-autoblchanger \
     enigma2-plugin-extensions-autobouquets \
     enigma2-plugin-extensions-bouquetcleanup \
-    enigma2-plugin-extensions-e2embyclient \
-    enigma2-plugin-extensions-e2piconizer \
-    enigma2-plugin-extensions-gerbera \
     enigma2-plugin-extensions-bouquetmakerxtream \
-    enigma2-plugin-extensions-jediepgxtream \
-    enigma2-plugin-extensions-lamedbmerger \
-    enigma2-plugin-extensions-mediaplayer2 \
-    enigma2-plugin-extensions-serienrecorder \
-    enigma2-plugin-systemplugins-misplslcnscan \
-    enigma2-plugin-extensions-planerfs \
-    enigma2-plugin-extensions-picturecenterfs \
-    enigma2-plugin-systemplugins-radiotimesemulator \
-    enigma2-plugin-extensions-subssupport \
-    enigma2-plugin-extensions-xstreamity \
-    enigma2-plugin-extensions-yampmusicplayer \
-    enigma2-plugin-systemplugins-satscanlcn \
-    enigma2-plugin-extensions-openwebif-vxg \
-    exteplayer3 \
-    eplayer5 \
-    enigma2-plugin-systemplugins-serviceapp \
-    enigma2-plugin-extensions-moviemanager \
-    enigma2-plugin-systemplugins-hrtunerproxy \
-    enigma2-plugin-extensions-xmodem \
+    enigma2-plugin-extensions-chefkoch \
+    enigma2-plugin-extensions-clevertanken \
+    enigma2-plugin-extensions-dlnabrowser \
+    enigma2-plugin-extensions-dlnaserver \
+    enigma2-plugin-extensions-dreamplex \
+    enigma2-plugin-extensions-e2embyclient \
     enigma2-plugin-extensions-e2iplayer \
     enigma2-plugin-extensions-e2iplayer-deps \
+    enigma2-plugin-extensions-e2piconizer \
+    enigma2-plugin-extensions-enigmalight \
+    enigma2-plugin-extensions-enigmawelt \
+    enigma2-plugin-extensions-epgtranslator \
     enigma2-plugin-extensions-estalker \
+    enigma2-plugin-extensions-fempa \
+    enigma2-plugin-extensions-gerbera \
+    enigma2-plugin-extensions-jediepgxtream \
+    enigma2-plugin-extensions-lamedbmerger \
+    enigma2-plugin-extensions-lcd4linux \
+    enigma2-plugin-extensions-lottoextended \
+    enigma2-plugin-extensions-mediaplayer2 \
+    enigma2-plugin-extensions-mediatomb \
+    enigma2-plugin-extensions-moviemanager \
+    ${@bb.utils.contains_any("DISTRO_NAME", "openvix openbh", "", "enigma2-plugin-extensions-ondemand", d)} \
+    enigma2-plugin-extensions-openwebif-vxg \
+    enigma2-plugin-extensions-piconmanager \
+    enigma2-plugin-extensions-piconsupdater \
+    enigma2-plugin-extensions-picturecenterfs \
+    enigma2-plugin-extensions-planerfs \
+    enigma2-plugin-extensions-remotechannelstreamconverter \
+    enigma2-plugin-extensions-serienrecorder \
+    enigma2-plugin-extensions-streamtv \
+    enigma2-plugin-extensions-subssupport \
+    enigma2-plugin-extensions-tmdb \
+    enigma2-plugin-extensions-tunerserver \
+    enigma2-plugin-extensions-tuxcom \
+    ${@bb.utils.contains_any("DISTRO_NAME", "openvix openbh", "", "enigma2-plugin-extensions-tvspielfilm", d)} \
+    enigma2-plugin-extensions-xmodem \
+    enigma2-plugin-extensions-xstreamity \
+    enigma2-plugin-extensions-yampmusicplayer \
+    enigma2-plugin-extensions-youtube \
+    enigma2-plugin-systemplugins-3gmodemmanager \
+    enigma2-plugin-systemplugins-abmcustommiximporter \
+    enigma2-plugin-systemplugins-aboutboxbranding \
+    enigma2-plugin-systemplugins-blindscan \
+    enigma2-plugin-systemplugins-channelsimporter \
+    enigma2-plugin-systemplugins-hrtunerproxy \
+    enigma2-plugin-systemplugins-misplslcnscan \
+    enigma2-plugin-systemplugins-radiotimesemulator \
+    enigma2-plugin-systemplugins-satipclient \
+    enigma2-plugin-systemplugins-satscanlcn \
+    enigma2-plugin-systemplugins-serviceapp \
+    enigma2-plugin-systemplugins-wirelessaccesspoint \
+    enigma2-plugin-systemplugins-xmlupdate \
+    eplayer5 \
+    exteplayer3 \
     ${@bb.utils.contains("MACHINE_FEATURES", "legacykernel", "", "gdb v4l-utils evtest strace", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "omb", "enigma2-plugin-extensions-openmultiboot openmultiboot", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "webkithbbtv", "enigma2-plugin-extensions-webkithbbtv", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "hbbtv-browser-webkit", "enigma2-plugin-extensions-hbbtv-webkit", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "chromiumos", "enigma2-plugin-extensions-chromium", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "hisichromium", "enigma2-plugin-extensions-chromium2" , "", d)} \
-    ${@bb.utils.contains("MACHINE_FEATURES", "vuglesdemo", "enigma2-plugin-extensions-libvupldemo", "", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "vufirmware", "enigma2-plugin-systemplugins-firmwareupgrade enigma2-plugin-systemplugins-fpgaupgrade", "", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "gbanimation", "enigma2-plugin-systemplugins-animation-setup", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "wifi-direct", "wds", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "vubluetooth", "enigma2-plugin-systemplugins-bluetoothsetup enigma2-plugin-extensions-witaispeechtotext", "", d)} \
     ${@bb.utils.contains("STATIC_FEED", "0", "${STATIC_FEED_BUILD}", "${STATIC_FEED_DEPENDS}", d)} \

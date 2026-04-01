@@ -9,7 +9,7 @@ inherit packagegroup
 
 ALLOW_EMPTY:${PN} = "1"
 
-DEPENDS = "enigma2 enigma2-locale-meta enigma2-plugins enigma2-oe-alliance-plugins"
+DEPENDS = "enigma2 enigma2-locale-meta enigma2-plugins"
 
 RDEPENDS:${PN} = "\
     packagegroup-base \
