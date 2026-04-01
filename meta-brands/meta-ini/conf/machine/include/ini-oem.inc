@@ -221,8 +221,8 @@ DEFAULTTUNE = "mips32el"
 GLIBC_EXTRA_OECONF = "--with-tls"
 DVBMEDIASINK_CONFIG = "--with-wma --with-wmv --with-pcm --with-dts"
 
-VIRTUAL-RUNTIME_blindscan_dvbs = "ini-blindscan-utils"
-VIRTUAL-RUNTIME_blindscan_dvbc = "ini-blindscan-utils"
+VIRTUAL-RUNTIME_blindscan_dvbs = "ini-blindscan-dvbs-utils"
+VIRTUAL-RUNTIME_blindscan_dvbc = "ini-blindscan-dvbc-utils"
 
 KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_OUTPUT = "${KERNEL_IMAGETYPE}"

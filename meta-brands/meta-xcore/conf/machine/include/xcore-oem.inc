@@ -121,8 +121,8 @@ DVBMEDIASINK_CONFIG = "--with-wma --with-wmv --with-pcm --with-dts --with-eac3  
     ${@bb.utils.contains('MACHINE', 'xc7439', '--with-h265 --with-vb6 --with-vb8 --with-vb9 --with-spark' , '', d)} \
 "
 
-VIRTUAL-RUNTIME_blindscan_dvbs = "xcore-blindscan-utils"
-VIRTUAL-RUNTIME_blindscan_dvbc = "xcore-blindscan-utils"
+VIRTUAL-RUNTIME_blindscan_dvbs = "xcore-blindscan-dvbs-utils"
+VIRTUAL-RUNTIME_blindscan_dvbc = "xcore-blindscan-dvbc-utils"
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-xcore"
 PREFERRED_PROVIDER_virtual/egl = "xcore-v3ddriver-${MACHINE}" 

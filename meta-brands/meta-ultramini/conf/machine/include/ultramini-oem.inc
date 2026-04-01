@@ -76,7 +76,6 @@ DEFAULTTUNE = "mips32el"
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-ultramini"
 VIRTUAL-RUNTIME_blindscan_dvbc = "ultramini-blindscan-utils-dvbc"
-VIRTUAL-RUNTIME_blindscan_dvbs = "ultramini-blindscan-utils-dvbs"
 
 KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_OUTPUT = "${KERNEL_IMAGETYPE}"

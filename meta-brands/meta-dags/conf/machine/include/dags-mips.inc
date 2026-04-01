@@ -3,8 +3,7 @@ include conf/machine/include/dags-oem.inc
 PACKAGECONFIG_GL:pn-qtbase = "gles2 eglfs linuxfb"
 PACKAGECONFIG_FB:pn-qtbase = " "
 
-VIRTUAL-RUNTIME_blindscan_dvbs = "vuplus-blindscan-utils"
-VIRTUAL-RUNTIME_blindscan_dvbc = "vuplus-blindscan-utils"
+VIRTUAL-RUNTIME_blindscan_dvbs = "dags-blindscan-dvbs-utils"
 
 KERNEL_FILE = "oe_kernel.bin"
 ROOTFS_FILE = "oe_rootfs.bin"

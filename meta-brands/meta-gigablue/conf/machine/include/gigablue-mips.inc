@@ -6,8 +6,8 @@ KERNEL_IMAGETYPE = "vmlinux"
 
 MACHINE_FEATURES += " omb boxmodel feature1 feature2"
 
-VIRTUAL-RUNTIME_blindscan_dvbc = "gigablue-blindscan-utils-mips"
-VIRTUAL-RUNTIME_blindscan_dvbs = "gigablue-blindscan-utils-mips"
+VIRTUAL-RUNTIME_blindscan_dvbc = "gigablue-blindscan-dvbs-utils-mips"
+VIRTUAL-RUNTIME_blindscan_dvbs = "gigablue-blindscan-dvbc-utils-mips"
 PREFERRED_PROVIDER_virtual/egl = "gb-v3ddriver-${MACHINE_DRIVER}"
 PREFERRED_PROVIDER_virtual/libgles2 = "gb-v3ddriver-${MACHINE_DRIVER}"
 

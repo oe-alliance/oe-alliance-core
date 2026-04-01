@@ -40,8 +40,8 @@ MACHINE_EXTRA_RRECOMMENDS += " \
 include conf/machine/include/autoload-filesystems.inc
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-vuplus"
-VIRTUAL-RUNTIME_blindscan_dvbc = "vuplus-blindscan-utils"
-VIRTUAL-RUNTIME_blindscan_dvbs = "vuplus-blindscan-utils"
+VIRTUAL-RUNTIME_blindscan_dvbc = "vuplus-blindscan-dvbc-utils"
+VIRTUAL-RUNTIME_blindscan_dvbs = "vuplus-blindscan-dvbs-utils"
 PREFERRED_PROVIDER_virtual/transtreamproxy = "vuplus-transtreamproxy"
 PREFERRED_PROVIDER_virtual/egl ?= "vuplus-libgles-${MACHINE}"
 PREFERRED_PROVIDER_virtual/libgles1 ?= "vuplus-libgles-${MACHINE}"

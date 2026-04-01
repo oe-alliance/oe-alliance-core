@@ -93,8 +93,7 @@ DEFAULTTUNE = "mips32el"
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-broadmedia"
 
-VIRTUAL-RUNTIME_blindscan_dvbs = "broadmedia-blindscan-utils"
-VIRTUAL-RUNTIME_blindscan_dvbc = "broadmedia-blindscan-utils"
+VIRTUAL-RUNTIME_blindscan_dvbc = "broadmedia-blindscan-dvbc-utils"
 
 KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_OUTPUT = "${KERNEL_IMAGETYPE}"

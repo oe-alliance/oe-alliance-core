@@ -5,4 +5,6 @@ SRC_URI[sha256sum] = "805889447809196d91fb657466945e3535938ffb228cea40dde8ed2fcc
 
 SRC_URI = "https://source.mynonpublic.com/gigablue/blindscan/gigablue-blindscan-utils-arm-${SRCDATE}.zip"
 
+PACKAGES = "gigablue-blindscan-dvbs-utils-arm gigablue-blindscan-dvbc-utils-arm"
+
 require gigablue-blindscan-utils.inc

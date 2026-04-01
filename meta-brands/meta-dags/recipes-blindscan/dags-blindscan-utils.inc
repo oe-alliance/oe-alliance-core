@@ -11,9 +11,6 @@ SRC_URI = "https://source.mynonpublic.com/dags/dags_blindscan_${SOC_FAMILY}.tar.
 
 S = "${UNPACKDIR}"
 
-PROVIDES += "virtual/blindscan-dvbs"
-RPROVIDES:dags-blindscan-utils-hisi3798mv200 += "virtual-blindscan-dvbs"
-
 do_prepare_recipe_sysroot[noexec] = "1"
 INHIBIT_PACKAGE_STRIP = "1"
 INHIBIT_PACKAGE_DEBUG_SPLIT = "1"

@@ -233,8 +233,8 @@ PREFERRED_PROVIDER_virtual/mesa ?= "mesa"
 PREFERRED_PROVIDER_virtual/kernel = "linux-ceryon"
 PREFERRED_PROVIDER_virtual/kodi = "stb-kodi-${MACHINE}"
 
-VIRTUAL-RUNTIME_blindscan_dvbs = "ceryon-blindscan-utils"
-VIRTUAL-RUNTIME_blindscan_dvbc = "ceryon-blindscan-utils"
+VIRTUAL-RUNTIME_blindscan_dvbs = "ceryon-blindscan-dvbs-utils"
+VIRTUAL-RUNTIME_blindscan_dvbc = "ceryon-blindscan-dvbc-utils"
 
 MACHINE_FEATURES += "3dtv alsa hdmicec switchoff videoenhancement skins1080 blindscan-tbs HDMI \
     ${@bb.utils.contains('MACHINEBUILD', 'e4hdhybrid', 'dvb-c dvbc-only' , '', d)} \

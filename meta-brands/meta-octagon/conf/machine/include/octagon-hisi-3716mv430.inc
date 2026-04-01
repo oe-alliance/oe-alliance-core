@@ -44,7 +44,7 @@ DEFAULTTUNE = "cortexa7hf"
 PREFERRED_VERSION_linux-octagon = "${LINUX_VERSION}"
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-octagon"
-PREFERRED_PROVIDER_virtual/blindscan-dvbs = "octagon-blindscan-${SOC_FAMILY}"
+VIRTUAL-RUNTIME_blindscan_dvbs = "octagon-blindscan-${SOC_FAMILY}"
 
 PREFERRED_RPROVIDER_showiframe = "octagon-showiframe-${SOC_FAMILY}"
 PREFERRED_RPROVIDER_aio-grab = "octagon-grab-${SOC_FAMILY}"

@@ -50,7 +50,7 @@ PREFERRED_PROVIDER_virtual/libgl ?= "mesa"
 PREFERRED_PROVIDER_virtual/mesa ?= "mesa"
 PREFERRED_RPROVIDER_aio-grab = "dags-grab-${SOC_FAMILY}"
 
-PREFERRED_PROVIDER_virtual/blindscan-dvbs = "dags-blindscan-utils-${SOC_FAMILY}"
+VIRTUAL-RUNTIME_blindscan_dvbs = "dags-blindscan-utils-${SOC_FAMILY}"
 
 require conf/machine/include/arm/armv7a/tune-cortexa15.inc
 
