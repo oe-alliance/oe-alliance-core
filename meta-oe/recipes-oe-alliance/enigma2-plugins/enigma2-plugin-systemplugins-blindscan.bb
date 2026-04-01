@@ -2,7 +2,7 @@ DESCRIPTION = "blindscan..."
 require conf/license/license-gplv2.inc
 require conf/python/python3-compileall.inc
 
-RRECOMMENDS:${PN} += "${@bb.utils.contains('MACHINE_FEATURES', 'blindscan-dvbs', 'virtual-blindscan-dvbs', '', d)}"
+RRECOMMENDS:${PN} += "${@bb.utils.contains('MACHINE_FEATURES', 'blindscan-dvbs', d.getVar('VIRTUAL-RUNTIME_blindscan_dvbs') or '', '', d)}"
 
 inherit gittag
 

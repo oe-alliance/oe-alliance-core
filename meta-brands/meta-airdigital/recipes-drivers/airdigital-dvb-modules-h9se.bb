@@ -2,7 +2,6 @@ KV = "4.4.35"
 SRCDATE = "20211207"
 
 RDEPENDS:${PN} = "libjpeg-turbo pulseaudio-lib-rtp"
-PROVIDES += " virtual/blindscan-dvbc virtual/blindscan-dvbs"
 
 require airdigital-dvb-himodules.inc
 

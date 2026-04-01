@@ -80,8 +80,8 @@ IMAGE_FSTYPES =+ "tar.bz2"
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-etxx00"
 
-PREFERRED_PROVIDER_virtual/blindscan-dvbs = "et-blindscan-utils-${MACHINE}"
-PREFERRED_PROVIDER_virtual/blindscan-dvbc = "et-blindscan-utils-${MACHINE}"
+VIRTUAL-RUNTIME_blindscan_dvbs = "et-blindscan-utils-${MACHINE}"
+VIRTUAL-RUNTIME_blindscan_dvbc = "et-blindscan-utils-${MACHINE}"
 
 PREFERRED_PROVIDER_virtual/egl = "et-v3ddriver-${MACHINE}"
 PREFERRED_PROVIDER_virtual/libgles2 = "et-v3ddriver-${MACHINE}"

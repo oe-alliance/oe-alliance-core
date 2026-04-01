@@ -5,8 +5,6 @@ LICENSE = "CLOSED"
 require conf/license/license-close.inc
 MODULESVER ?= "${@bb.utils.contains('TARGET_ARCH', 'aarch64', '64' , '', d)}"
 
-RPROVIDES:${PN} = "virtual-blindscan-dvbs virtual-blindscan-dvbc"
-
 PV = "${KV}+${SRCDATE}"
 PR = "r0"
 

@@ -64,8 +64,8 @@ MACHINEOVERRIDES .= ":dreambox"
 
 PREFERRED_PROVIDER_virtual/kodi = "stb-kodi-${SOC_FAMILY}"
 
-PREFERRED_PROVIDER_virtual/blindscan-dvbs = "dreambox-blindscan-utils"
-PREFERRED_PROVIDER_virtual/blindscan-dvbc = "dreambox-blindscan-utils"
+VIRTUAL-RUNTIME_blindscan_dvbs = "dreambox-blindscan-utils"
+VIRTUAL-RUNTIME_blindscan_dvbc = "dreambox-blindscan-utils"
 PREFERRED_PROVIDER_jpeg = "libjpeg-turbo"
 PREFERRED_PROVIDER_jpeg-native = "libjpeg-turbo-native"
 PREFERRED_PROVIDER_virtual/fftw = "fftw"
