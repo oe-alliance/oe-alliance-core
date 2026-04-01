@@ -4,7 +4,7 @@ require conf/python/python3-compileall.inc
 
 PN = "enigma2-plugin-systemplugins-remotecontrolcode"
 
-COMPATIBLE_MACHINE = "^(et5x00|et6x00|et9x00|et1x000|et7x00|et8500|et13000|et4x00|et8000|et10000|hd1100|hd1200|hd1265|hd500c|hd530c|hd2400|xp1000)$"
+COMPATIBLE_MACHINE = "^(et5x00|et6x00|et9x00|et1x000|et7x00|et8500|et13000|et4x00|et8000|et10000|hd1100|hd11|hd51|hd60|hd61|hd66se|hd1100|hd1500|vs1000|vs1500|hd1200|hd1265|hd500c|hd530c|hd2400|xp1000)$"
 
 inherit gittag
 
