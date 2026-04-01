@@ -32,7 +32,6 @@ PROVIDES += " \
     enigma2-plugin-systemplugins-bluetoothsetup \
     enigma2-plugin-extensions-chromium \
     enigma2-plugin-extensions-tunerserver \
-    enigma2-plugin-extensions-libvupldemo \
     enigma2-plugin-extensions-witaispeechtotext \
     enigma2-plugin-extensions-webkithbbtv \
     ${@bb.utils.contains('MACHINE_FEATURES', 'operahbbtv', 'enigma2-plugin-extensions-hbbtv ' , ' ', d)} \
@@ -47,8 +46,7 @@ PROVIDES += " \
     enigma2-plugin-extensions-tmdb \
     enigma2-plugin-extensions-tvspielfilm \
     ${@bb.utils.contains('MACHINE_FEATURES', 'legacykernel', '' , 'enigma2-plugin-systemplugins-wirelessaccesspoint', d)} \
-    ${@bb.utils.contains('MACHINE_FEATURES', 'aml-plugins', 'enigma2-plugin-extensions-rcuselect enigma2-plugin-extensions-rezap' , ' ', d)} \
-     "
+    "
 
 DEPENDS = "\
     ${@bb.utils.contains('MACHINE_FEATURES', 'blindscan-dvbc', 'virtual/blindscan-dvbc' , '', d)} \
@@ -75,7 +73,6 @@ DEPENDS = "\
     ${@bb.utils.contains("MACHINE_FEATURES", "gbbluetooth", "gb-bluetooth-util", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "vubluetooth", "vuplus-bluetooth-util", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "webkithbbtv", "vuplus-webkithbbtv-dumpait webkit-hbbtv-browser", "", d)} \
-    ${@bb.utils.contains("MACHINE_FEATURES", "vuglesdemo", "libvupl-example-cube", "", d)} \
     "
 
 DESCRIPTION:enigma2-plugin-systemplugins-audioeffect = "Audio Effect setup"
@@ -131,16 +128,12 @@ DESCRIPTION:enigma2-plugin-extensions-tmdb = "Show TMDb information"
 RDEPENDS:enigma2-plugin-extensions-tmdb = "python3-json python3-requests python3-tmdbsimple"
 DESCRIPTION:enigma2-plugin-systemplugins-wirelessaccesspoint = "Using a Wireless module as AP."
 RDEPENDS:enigma2-plugin-systemplugins-wirelessaccesspoint = "hostapd bridge-utils"
-DESCRIPTION:enigma2-plugin-extensions-rcuselect = "Change Remote for Wetek"
-DESCRIPTION:enigma2-plugin-extensions-rezap = "ReZap Sync Tool for Wetek"
 DESCRIPTION:enigma2-plugin-extensions-piconsupdater = "Download and install new Picons for your current bouquet channels. PiconsUpdater coded by svox and jbleyel, idea by arn354 and picons by mike99"
 RDEPENDS:enigma2-plugin-extensions-piconsupdater = "python3-pillow python3-io python3-compression pngquant"
 DESCRIPTION:enigma2-plugin-systemplugins-bluetoothsetup = "E2 bluetooth plugin"
 RDEPENDS:enigma2-plugin-systemplugins-bluetoothsetup = "libcurl libsqlite3 libssl libcrypto libudev libusb-compat libusb1 ${@bb.utils.contains("MACHINE_FEATURES", "vubluetooth", "vuplus-bluetooth-util", "", d)} ${@bb.utils.contains("MACHINE_FEATURES", "gbbluetooth", "gb-bluetooth-util", "", d)} "
 DESCRIPTION:enigma2-plugin-extensions-chromium = "E2 Chromium Plugin"
 RDEPENDS:enigma2-plugin-extensions-chromium = "chromium-browser"
-DESCRIPTION:enigma2-plugin-extensions-libvupldemo = "Plugin for libvupl Demo"
-RDEPENDS:enigma2-plugin-extensions-libvupldemo = "libvupl-example-cube"
 DESCRIPTION:enigma2-plugin-extensions-witaispeechtotext = "Vuplus wit.ai speech to text plugin"
 RDEPENDS:enigma2-plugin-extensions-witaispeechtotext = "python3-requests"
 DESCRIPTION:enigma2-plugin-extensions-webkithbbtv = "E2 HbbTV Plugin"
@@ -164,8 +157,6 @@ EXTRA_OECONF = " \
     STAGING_LIBDIR=${STAGING_LIBDIR} \
     --with-boxtype=${MACHINE} \
     --with-arch=${TARGET_ARCH} \
-    --with-pythonver=python3 \
-    ${@bb.utils.contains("MACHINE_FEATURES", "aml-plugins", "--with-amlplugins" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "inibt", "--with-btsupport" , "", d)} \
     "
 
