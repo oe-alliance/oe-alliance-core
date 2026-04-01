@@ -48,7 +48,7 @@ RDEPENDS:${PN} = " \
 NORMAL_IMAGE_DEPEND = "\
     ${E2DEFAULTSKIN} \
     enigma2-plugin-font-wqy-microhei \
-    ${@bb.utils.contains("MACHINE_FEATURES", "blindscan-dvbc", "virtual-blindscan-dvbc", "", d)} \
+    ${@bb.utils.contains('MACHINE_FEATURES', 'blindscan-dvbc', d.getVar('VIRTUAL-RUNTIME_blindscan_dvbc') or '', '', d)} \
     ${@bb.utils.contains("DISTRO_NAME", "openatv", "ffmpeg", "", d)} \
 "
 
