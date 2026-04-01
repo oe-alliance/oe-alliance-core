@@ -2,7 +2,7 @@ DESCRIPTION = "3GModemManager"
 require conf/license/license-gplv2.inc
 require conf/python/python3-compileall.inc
 
-RDEPENDS:${PN} = "ppp usb-modeswitch usb-modeswitch-data wvdial wvstreams libwvstreams-base libwvstreams-extras libuniconf kernel-module-ppp-async kernel-module-ppp-deflate kernel-module-ppp-synctty kernel-module-ppp-generic kernel-module-slhc kernel-module-usbserial kernel-module-cdc-acm kernel-module-ppp-mppe kernel-module-pppoe kernel-module-pppox kernel-module-option kernel-module-bsd-comp usbutils"
+RRECOMMENDS:${PN} = "ppp usb-modeswitch usb-modeswitch-data wvdial wvstreams libwvstreams-base libwvstreams-extras libuniconf kernel-module-ppp-async kernel-module-ppp-deflate kernel-module-ppp-synctty kernel-module-ppp-generic kernel-module-slhc kernel-module-usbserial kernel-module-cdc-acm kernel-module-ppp-mppe kernel-module-pppoe kernel-module-pppox kernel-module-option kernel-module-bsd-comp usbutils"
 
 inherit gittag
 

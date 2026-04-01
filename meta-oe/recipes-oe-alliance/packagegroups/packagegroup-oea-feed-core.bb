@@ -51,7 +51,7 @@ RDEPENDS:${PN} = "\
     enigma2-plugin-extensions-mediaplayer2 \
     enigma2-plugin-extensions-mediatomb \
     enigma2-plugin-extensions-moviemanager \
-    ${@bb.utils.contains_any("DISTRO_NAME", "openvix openbh", "", "enigma2-plugin-extensions-ondemand", d)} \
+    ${@bb.utils.contains_any("DISTRO_NAME", "openvix openbh openatv", "", "enigma2-plugin-extensions-ondemand", d)} \
     enigma2-plugin-extensions-openwebif-vxg \
     enigma2-plugin-extensions-piconmanager \
     enigma2-plugin-extensions-piconsupdater \
