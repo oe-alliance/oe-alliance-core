@@ -72,7 +72,6 @@ RDEPENDS:${PN} = "\
     enigma2-plugin-systemplugins-3gmodemmanager \
     enigma2-plugin-systemplugins-abmcustommiximporter \
     enigma2-plugin-systemplugins-aboutboxbranding \
-    enigma2-plugin-systemplugins-blindscan \
     enigma2-plugin-systemplugins-channelsimporter \
     enigma2-plugin-systemplugins-hrtunerproxy \
     enigma2-plugin-systemplugins-misplslcnscan \
