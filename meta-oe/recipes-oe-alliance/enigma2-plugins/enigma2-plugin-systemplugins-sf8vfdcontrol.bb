@@ -22,7 +22,7 @@ SRC_URI = "git://github.com/oe-alliance-plugins/SF8VFDControl.git;protocol=https
 
 do_install:append() {
     install -d ${D}/usr/lib/enigma2/python/Plugins/SystemPlugins/VFDControl
-    install -m 0755 ${S}/VFDControl/led7ctrl ${D}/usr/lib/enigma2/python/Plugins/SystemPlugins/VFDControl/led7ctrl
+    install -m 0755 ${S}/SF8VFDControl/led7ctrl ${D}/usr/lib/enigma2/python/Plugins/SystemPlugins/VFDControl/led7ctrl
 }
 
 FILES:${PN} += "/usr/lib/enigma2/python/Plugins/SystemPlugins/VFDControl/led7ctrl"

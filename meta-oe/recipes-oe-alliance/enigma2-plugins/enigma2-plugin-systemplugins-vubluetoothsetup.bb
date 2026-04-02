@@ -24,7 +24,7 @@ SRC_URI = "git://github.com/oe-alliance-plugins/VuBluetoothSetup.git;protocol=ht
 
 do_install:append() {
     install -d ${D}/usr/lib/enigma2/python/Plugins/Extensions/BluetoothSetup
-    install -m 0755 ${S}/BluetoothSetup/${MACHINE}/_vubt.so ${D}/usr/lib/enigma2/python/Plugins/Extensions/BluetoothSetup/_vubt.so
+    install -m 0755 ${S}/VuBluetoothSetup/${MACHINE}/_vubt.so ${D}/usr/lib/enigma2/python/Plugins/Extensions/BluetoothSetup/_vubt.so
 }
 
 FILES:${PN} += "/usr/lib/enigma2/python/Plugins/Extensions/BluetoothSetup/"
