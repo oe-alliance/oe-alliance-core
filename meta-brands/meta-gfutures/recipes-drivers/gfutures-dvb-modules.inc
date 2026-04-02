@@ -4,8 +4,6 @@ PRIORITY = "required"
 LICENSE = "CLOSED"
 require conf/license/license-close.inc
 
-RPROVIDES:${PN} = "virtual-blindscan-dvbs virtual-blindscan-dvbc"
-
 PV = "${KV}+${SRCDATE}"
 PR = "r0"
 
