@@ -8,3 +8,7 @@ SRC_URI = "https://source.mynonpublic.com/gigablue/blindscan/gigablue-blindscan-
 PACKAGES = "gigablue-blindscan-dvbs-utils-arm gigablue-blindscan-dvbc-utils-arm"
 
 require gigablue-blindscan-utils.inc
+
+FILES:gigablue-blindscan-dvbc-utils-arm = "${bindir}/tda1002x"
+FILES:gigablue-blindscan-dvbs-utils-arm = "${bindir}/gigablue_blindscan"
+
