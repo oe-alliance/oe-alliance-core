@@ -11,10 +11,6 @@ require conf/license/license-close.inc
 PACKAGES = "vuplus-blindscan-dvbs-utils vuplus-blindscan-dvbc-utils \
             vuplus-blindscan-dvbs-utils-doc vuplus-blindscan-dvbc-utils-doc"
 
-PROVIDES += "virtual/blindscan-dvbs virtual/blindscan-dvbc"
-RPROVIDES:vuplus-blindscan-dvbs-utils += "virtual-blindscan-dvbs"
-RPROVIDES:vuplus-blindscan-dvbc-utils += "virtual-blindscan-dvbc"
-
 SRC_URI = "https://source.mynonpublic.com/vuplus/release/utils/vuplus-blindscan-utils-${PV}.tar.bz2"
 SRC_URI:arm = "https://source.mynonpublic.com/vuplus/release/utils/vuplus-blindscan-utils-${PV}_arm.tar.bz2;name=arm"
 

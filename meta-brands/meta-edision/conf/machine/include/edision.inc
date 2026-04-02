@@ -33,8 +33,8 @@ DEFAULTTUNE = "mips32el"
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-edision"
 
-PREFERRED_PROVIDER_virtual/blindscan-dvbs = "edision-blindscan-utils-${MACHINE}"
-PREFERRED_PROVIDER_virtual/blindscan-dvbc = "edision-blindscan-utils-${MACHINE}"
+VIRTUAL-RUNTIME_blindscan_dvbs = "edision-blindscan-dvbs-utils-${MACHINE}"
+VIRTUAL-RUNTIME_blindscan_dvbc = "edision-blindscan-dvbc-utils-${MACHINE}"
 
 KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_OUTPUT = "${KERNEL_IMAGETYPE}"

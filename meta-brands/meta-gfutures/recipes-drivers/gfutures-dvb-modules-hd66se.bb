@@ -2,7 +2,6 @@ KV = "4.4.35"
 SRCDATE = "20221213"
 
 RDEPENDS:${PN} = "libjpeg-turbo pulseaudio-lib-rtp"
-PROVIDES = "virtual/blindscan-dvbs"
 
 require gfutures-dvb-modules.inc
 

@@ -6,9 +6,6 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 COMPATIBLE_MACHINE = "sfx6008"
 
-PROVIDES += "virtual/blindscan-dvbs"
-RPROVIDES:${PN} += "virtual-blindscan-dvbs"
-
 SRCDATE = "20220305"
 
 PV = "${SRCDATE}"

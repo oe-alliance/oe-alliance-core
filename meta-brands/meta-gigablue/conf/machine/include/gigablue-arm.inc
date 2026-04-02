@@ -6,8 +6,8 @@ IMAGE_FSTYPES =+ "tar.bz2"
 
 require conf/machine/include/arm/armv7a/tune-cortexa15.inc
 
-PREFERRED_PROVIDER_virtual/blindscan-dvbc = "gigablue-blindscan-utils-arm"
-PREFERRED_PROVIDER_virtual/blindscan-dvbs = "gigablue-blindscan-utils-arm"
+VIRTUAL-RUNTIME_blindscan_dvbc = "gigablue-blindscan-dvbc-utils-arm"
+VIRTUAL-RUNTIME_blindscan_dvbs = "gigablue-blindscan-dvbs-utils-arm"
 PREFERRED_PROVIDER_virtual/egl = "gb-v3ddriver-${MACHINE_DRIVER}"
 PREFERRED_PROVIDER_virtual/libgles2 = "gb-v3ddriver-${MACHINE_DRIVER}"
 PREFERRED_PROVIDER_virtual/chromium-browser = "chromium-browser-${MACHINE}"

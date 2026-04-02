@@ -49,7 +49,7 @@ PREFERRED_PROVIDER_virtual/egl = "uclan-opengl-${SOC_FAMILY}"
 PREFERRED_PROVIDER_virtual/libgles1 = "uclan-opengl-${SOC_FAMILY}"
 PREFERRED_PROVIDER_virtual/libgles2 = "uclan-opengl-${SOC_FAMILY}"
 PREFERRED_PROVIDER_virtual/kodi = "stb-kodi-${MACHINE}"
-PREFERRED_PROVIDER_virtual/blindscan-dvbs = "uclan-blindscan-${SOC_FAMILY}"
+VIRTUAL-RUNTIME_blindscan_dvbs = "uclan-blindscan-${SOC_FAMILY}"
 
 PREFERRED_RPROVIDER_showiframe = "uclan-showiframe-${SOC_FAMILY}"
 PREFERRED_RPROVIDER_aio-grab = "uclan-grab-${SOC_FAMILY}"

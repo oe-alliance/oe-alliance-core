@@ -8,10 +8,6 @@ PR = "r2"
 
 PACKAGES = "odin-blindscan-dvbs-utils-${MACHINE} odin-blindscan-dvbc-utils-${MACHINE}"
 
-PROVIDES += "virtual/blindscan-dvbc virtual/blindscan-dvbs"
-RPROVIDES:odin-blindscan-dvbc-utils-${MACHINE} += "virtual/blindscan-dvbc"
-RPROVIDES:odin-blindscan-dvbs-utils-${MACHINE} += "virtual/blindscan-dvbs"
-
 SRC_URI = "https://source.mynonpublic.com/download/odin-blindscan-utils-${MACHINE}-${PV}-${SRC}.tar.gz"
 
 S = "${UNPACKDIR}"

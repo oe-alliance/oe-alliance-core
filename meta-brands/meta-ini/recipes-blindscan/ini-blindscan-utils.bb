@@ -10,10 +10,6 @@ require conf/license/license-close.inc
 
 PACKAGES = "ini-blindscan-dvbs-utils ini-blindscan-dvbc-utils"
 
-PROVIDES += "virtual/blindscan-dvbs virtual/blindscan-dvbc"
-RPROVIDES:ini-blindscan-dvbs-utils += "virtual-blindscan-dvbs"
-RPROVIDES:ini-blindscan-dvbc-utils += "virtual-blindscan-dvbc"
-
 SRC_URI = "file://tda1002x file://ini_blindscan"
 
 PV = "2.1"

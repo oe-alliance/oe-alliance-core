@@ -52,8 +52,8 @@ DEFAULTTUNE = "mips32el"
 
 GLIBC_EXTRA_OECONF = "--with-tls --with-__thread"
 
-PREFERRED_PROVIDER_virtual/blindscan-dvbs = "blackbox-blindscan-utils"
-PREFERRED_PROVIDER_virtual/blindscan-dvbc = "blackbox-blindscan-utils"
+VIRTUAL-RUNTIME_blindscan_dvbs = "blackbox-blindscan-dvbs-utils"
+VIRTUAL-RUNTIME_blindscan_dvbc = "blackbox-blindscan-dvbc-utils"
 
 KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_OUTPUT = "${KERNEL_IMAGETYPE}"

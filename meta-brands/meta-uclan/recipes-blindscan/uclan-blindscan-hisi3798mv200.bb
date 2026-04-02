@@ -6,9 +6,6 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 COMPATIBLE_MACHINE = "ustym4kpro"
 
-PROVIDES += "virtual/blindscan-dvbs"
-RPROVIDES:${PN} += "virtual-blindscan-dvbs"
-
 SRCDATE = "20190305"
 
 PV = "${SRCDATE}"

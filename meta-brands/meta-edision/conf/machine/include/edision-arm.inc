@@ -37,8 +37,8 @@ MACHINE_EXTRA_RRECOMMENDS += " \
 include conf/machine/include/autoload-filesystems.inc
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-edision"
-PREFERRED_PROVIDER_virtual/blindscan-dvbs = "edision-blindscan-utils-${MACHINE}"
-PREFERRED_PROVIDER_virtual/blindscan-dvbc = "edision-blindscan-utils-${MACHINE}"
+VIRTUAL-RUNTIME_blindscan_dvbs = "edision-blindscan-dvbs-utils-${MACHINE}"
+VIRTUAL-RUNTIME_blindscan_dvbc = "edision-blindscan-dvbc-utils-${MACHINE}"
 
 KERNEL_CONSOLE = "ttyS0,115200n8"
 

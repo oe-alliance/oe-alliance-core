@@ -2,7 +2,6 @@ KV = "4.4.35"
 SRCDATE = "20220504"
 
 RDEPENDS:${PN} = "libjpeg-turbo pulseaudio-lib-rtp"
-PROVIDES = "virtual/blindscan-dvbs"
 
 require abcom-dvb-modules.inc
 

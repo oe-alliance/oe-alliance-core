@@ -36,7 +36,7 @@ PREFERRED_VERSION_wpa-supplicant = "${@bb.utils.contains('MACHINE', 'gbmv200', '
 PREFERRED_PROVIDER_virtual/egl = "gigablue-opengl-${MACHINE}" 
 PREFERRED_PROVIDER_virtual/libgles1 = "gigablue-opengl-${MACHINE}"
 PREFERRED_PROVIDER_virtual/libgles2 = "gigablue-opengl-${MACHINE}"
-PREFERRED_PROVIDER_virtual/blindscan-dvbs = "gigablue-blindscan-${MACHINE}"
+VIRTUAL-RUNTIME_blindscan_dvbs = "gigablue-blindscan-${MACHINE}"
 
 PREFERRED_RPROVIDER_showiframe = "gigablue-showiframe-${MACHINE}"
 PREFERRED_RPROVIDER_aio-grab = "gigablue-grab-${MACHINE}"

@@ -28,9 +28,18 @@ RDEPENDS:${PN} = " \
     enigma2-plugin-drivers-usbserial \
     enigma2-plugin-extensions-tuxcom \
     enigma2-plugin-drivers-iptables \
+    enigma2-plugin-extensions-autoblchanger \
     enigma2-plugin-extensions-enigmalight \
     enigma2-plugin-extensions-enigmawelt \
     enigma2-plugin-extensions-mediatomb \
+    enigma2-plugin-extensions-chefkoch \
+    enigma2-plugin-extensions-clevertanken \
+    enigma2-plugin-extensions-dlnabrowser \
+    enigma2-plugin-extensions-dlnaserver \
+    enigma2-plugin-extensions-epgtranslator \
+    enigma2-plugin-extensions-fempa \
+    enigma2-plugin-extensions-lcd4linux \
+    enigma2-plugin-extensions-lottoextended \
     enigma2-plugin-extensions-dreamplex \
     enigma2-plugin-extensions-youtube \
     enigma2-plugin-extensions-autobouquets \
@@ -60,12 +69,22 @@ RDEPENDS:${PN} = " \
     enigma2-plugin-extensions-e2iplayer \
     enigma2-plugin-extensions-e2iplayer-deps \
     enigma2-plugin-extensions-estalker \
+    enigma2-plugin-extensions-piconmanager \
+    enigma2-plugin-extensions-piconsupdater \
+    enigma2-plugin-extensions-remotechannelstreamconverter \
+    enigma2-plugin-extensions-streamtv \
+    enigma2-plugin-extensions-tmdb \
+    enigma2-plugin-extensions-tunerserver \
+    enigma2-plugin-systemplugins-wirelessaccesspoint \
+    enigma2-plugin-systemplugins-xmlupdate \
+    ${@bb.utils.contains_any("DISTRO_NAME", "openvix openbh openatv", "", "enigma2-plugin-extensions-ondemand", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "legacykernel", "" , "gdb v4l-utils evtest strace", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "omb", "enigma2-plugin-extensions-openmultiboot openmultiboot", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "webkithbbtv", "enigma2-plugin-extensions-webkithbbtv", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "hbbtv-browser-webkit", " enigma2-plugin-extensions-hbbtv-webkit", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "chromiumos", "enigma2-plugin-extensions-chromium", "", d)} \
-    ${@bb.utils.contains("MACHINE_FEATURES", "vuglesdemo", "enigma2-plugin-extensions-libvupldemo", "", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "vufirmware", "enigma2-plugin-systemplugins-firmwareupgrade enigma2-plugin-systemplugins-fpgaupgrade", "", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "gbanimation", "enigma2-plugin-systemplugins-animation-setup", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "wifi-direct", "wds", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "dvd", "bdremux replex mjpegtools dvdauthor dvd+rw-tools genisoimage cdfs enigma2-plugin-extensions-cdinfo enigma2-plugin-extensions-dvdburn enigma2-plugin-extensions-dvdplayer ${GST_BASE_DVD}", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "vubluetooth", "enigma2-plugin-systemplugins-bluetoothsetup enigma2-plugin-extensions-witaispeechtotext", "", d)} \

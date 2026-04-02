@@ -43,8 +43,8 @@ PREFERRED_PROVIDER_virtual/libgl ?= "mesa"
 PREFERRED_PROVIDER_virtual/mesa ?= "mesa"
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-etxx00"
-PREFERRED_PROVIDER_virtual/blindscan-dvbs = "et-blindscan-dvbs-utils"
-PREFERRED_PROVIDER_virtual/blindscan-dvbc = "et-blindscan-dvbc-utils-${MACHINE}"
+VIRTUAL-RUNTIME_blindscan_dvbs = "et-blindscan-dvbs-utils"
+VIRTUAL-RUNTIME_blindscan_dvbc = "et-blindscan-dvbc-utils-${MACHINE}"
 PREFERRED_PROVIDER_virtual/kodi = "stb-kodi-${MACHINE}"
 
 KERNEL_IMAGETYPE = "vmlinux"

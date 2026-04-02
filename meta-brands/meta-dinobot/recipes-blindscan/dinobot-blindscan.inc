@@ -3,9 +3,6 @@ SECTION = "base"
 PRIORITY = "optional"
 LICENSE = "CLOSED"
 
-PROVIDES += "virtual/blindscan-dvbs"
-RPROVIDES:${PN} += "virtual-blindscan-dvbs"
-
 PV = "${SRCDATE}"
 PR = "r0"
 

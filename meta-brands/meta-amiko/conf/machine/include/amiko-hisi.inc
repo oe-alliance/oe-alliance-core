@@ -56,7 +56,7 @@ PREFERRED_PROVIDER_virtual/egl = "amiko-opengl-${MACHINE}"
 PREFERRED_PROVIDER_virtual/libgles1 = "amiko-opengl-${MACHINE}"
 PREFERRED_PROVIDER_virtual/libgles2 = "amiko-opengl-${MACHINE}"
 PREFERRED_PROVIDER_virtual/kodi = "stb-kodi-${MACHINE}"
-PREFERRED_PROVIDER_virtual/blindscan-dvbs = "amiko-blindscan-${MACHINE}"
+VIRTUAL-RUNTIME_blindscan_dvbs = "amiko-blindscan-${MACHINE}"
 
 PREFERRED_RPROVIDER_showiframe = "amiko-showiframe-${MACHINE}"
 PREFERRED_RPROVIDER_aio-grab = "amiko-grab-${MACHINE}"

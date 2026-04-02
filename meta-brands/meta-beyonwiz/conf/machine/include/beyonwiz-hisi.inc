@@ -56,7 +56,6 @@ PREFERRED_PROVIDER_virtual/egl = "beyonwiz-opengl-${MACHINE}"
 PREFERRED_PROVIDER_virtual/libgles1 = "beyonwiz-opengl-${MACHINE}"
 PREFERRED_PROVIDER_virtual/libgles2 = "beyonwiz-opengl-${MACHINE}"
 PREFERRED_PROVIDER_virtual/kodi = "stb-kodi-${MACHINE}"
-PREFERRED_PROVIDER_virtual/blindscan-dvbs = "beyonwiz-blindscan-${MACHINE}"
 
 PREFERRED_RPROVIDER_showiframe = "beyonwiz-showiframe-${MACHINE}"
 PREFERRED_RPROVIDER_aio-grab = "beyonwiz-grab-${MACHINE}"

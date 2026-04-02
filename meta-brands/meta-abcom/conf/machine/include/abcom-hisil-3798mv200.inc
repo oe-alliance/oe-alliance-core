@@ -18,8 +18,6 @@ PREFERRED_PROVIDER_virtual/libgles2 ?= "abcom-mali-${HICHIPSET}"
 PREFERRED_PROVIDER_virtual/libgbm ?= "abcom-mali-${HICHIPSET}"
 PREFERRED_PROVIDER_virtual/libgl ?= "mesa"
 PREFERRED_PROVIDER_virtual/mesa ?= "mesa"
-PREFERRED_PROVIDER_virtual/blindscan-dvbc ?= "abcom-dvb-modules-${MACHINE}"
-PREFERRED_PROVIDER_virtual/blindscan-dvbs ?= "abcom-dvb-modules-${MACHINE}"
 PREFERRED_PROVIDER_virtual/kernel = "linux-abcom"
 PREFERRED_PROVIDER_virtual/kodi = "stb-kodi-${MACHINE}"
 

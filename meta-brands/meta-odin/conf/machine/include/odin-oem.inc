@@ -134,8 +134,8 @@ TARGET_ARCH = "mipsel"
 DEFAULTTUNE = "mips32el"
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-odin"
-PREFERRED_PROVIDER_virtual/blindscan-dvbc = "odin-blindscan-utils-${MACHINE}"
-PREFERRED_PROVIDER_virtual/blindscan-dvbs = "odin-blindscan-utils-${MACHINE}"
+VIRTUAL-RUNTIME_blindscan_dvbc = "odin-blindscan-dvbc-utils-${MACHINE}"
+VIRTUAL-RUNTIME_blindscan_dvbs = "odin-blindscan-dvbs-utils-${MACHINE}"
 
 KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_OUTPUT = "${KERNEL_IMAGETYPE}"

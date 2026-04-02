@@ -359,7 +359,7 @@ PREFERRED_PROVIDER_virtual/egl = "dinobot-opengl-${SOC_FAMILY}"
 PREFERRED_PROVIDER_virtual/libgles1 = "dinobot-opengl-${SOC_FAMILY}"
 PREFERRED_PROVIDER_virtual/libgles2 = "dinobot-opengl-${SOC_FAMILY}"
 PREFERRED_PROVIDER_virtual/kodi = "stb-kodi-${MACHINE}"
-PREFERRED_PROVIDER_virtual/blindscan-dvbs = "dinobot-blindscan-${MACHINE}"
+VIRTUAL-RUNTIME_blindscan_dvbs = "dinobot-blindscan-${MACHINE}"
 
 MACHINE_EXTRA_RRECOMMENDS += " \
     gstreamer1.0-plugin-dvbmediasink \
