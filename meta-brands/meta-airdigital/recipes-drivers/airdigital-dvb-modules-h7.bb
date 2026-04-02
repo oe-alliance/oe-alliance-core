@@ -1,8 +1,6 @@
 KV = "4.10.12"
 SRCDATE = "20250706"
 
-PROVIDES = "virtual/blindscan-dvbs"
-
 require airdigital-dvb-modules.inc
 
 SRC_URI[md5sum] = "f28c75fdae01453e657b78e1bd7d5a30"

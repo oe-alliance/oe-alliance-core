@@ -49,7 +49,7 @@ PREFERRED_PROVIDER_virtual/egl = "qviart-opengl-${SOC_FAMILY}"
 PREFERRED_PROVIDER_virtual/libgles1 = "qviart-opengl-${SOC_FAMILY}"
 PREFERRED_PROVIDER_virtual/libgles2 = "qviart-opengl-${SOC_FAMILY}"
 PREFERRED_PROVIDER_virtual/kodi = "stb-kodi-${MACHINE}"
-PREFERRED_PROVIDER_virtual/blindscan-dvbs = "qviart-blindscan-${SOC_FAMILY}"
+VIRTUAL-RUNTIME_blindscan_dvbs = "qviart-blindscan-${SOC_FAMILY}"
 
 PREFERRED_RPROVIDER_showiframe = "qviart-showiframe-${SOC_FAMILY}"
 PREFERRED_RPROVIDER_aio-grab = "qviart-grab-${SOC_FAMILY}"

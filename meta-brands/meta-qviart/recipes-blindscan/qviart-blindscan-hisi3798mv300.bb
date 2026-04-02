@@ -6,9 +6,6 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 COMPATIBLE_MACHINE = "og2s4k"
 
-PROVIDES += "virtual/blindscan-dvbs"
-RPROVIDES:${PN} += "virtual-blindscan-dvbs"
-
 SRCDATE = "20230710"
 
 PV = "${SRCDATE}"
