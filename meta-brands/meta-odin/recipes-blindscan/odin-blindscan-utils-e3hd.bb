@@ -1,6 +1,11 @@
 PV = "3.6.0"
 SRC = "1213"
 
+COMPATIBLE_MACHINE = "e3hd"
+
+PACKAGES = "odin-blindscan-dvbs-utils-e3hd odin-blindscan-dvbc-utils-e3hd"
+
+
 require odin-blindscan-utils.inc
 
 SRC_URI[md5sum] = "e6718bcdb6d451d7cb7b9cd1ddaa6721"
