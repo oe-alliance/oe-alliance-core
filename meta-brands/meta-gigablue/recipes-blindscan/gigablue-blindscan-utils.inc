@@ -10,8 +10,6 @@ PV = "4.0"
 
 PR = "r13"
 
-PACKAGES = "gigablue-blindscan-dvbs-utils-${MACHINE} gigablue-blindscan-dvbc-utils-${MACHINE}"
-
 S = "${UNPACKDIR}/blindscan-utils"
 
 do_install() {
