@@ -1,6 +1,11 @@
 PV = "3.6.0"
 SRC = "1213"
 
+COMPATIBLE_MACHINE = "odinm7"
+
+PACKAGES = "odin-blindscan-dvbs-utils-odinm7 odin-blindscan-dvbc-utils-odinm7"
+
+
 require odin-blindscan-utils.inc
 
 SRC_URI[md5sum] = "ad68cc1977fb9566f77e1b16d907b849"
