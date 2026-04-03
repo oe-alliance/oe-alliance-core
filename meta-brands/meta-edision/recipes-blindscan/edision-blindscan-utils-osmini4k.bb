@@ -10,7 +10,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 LICENSE = "CLOSED"
 require conf/license/license-close.inc
 
-PACKAGES = "edision-blindscan-dvbs-utils-${MACHINE} edision-blindscan-dvbc-utils-${MACHINE}"
+PACKAGES = "edision-blindscan-dvbs-utils-osmini4k edision-blindscan-dvbc-utils-osmini4k"
 
 PV = "20200313"
 
@@ -18,8 +18,8 @@ SRC_URI = "https://source.mynonpublic.com/edision/edision-blindscan-utils-${MACH
 
 S = "${UNPACKDIR}"
 
-FILES:edision-blindscan-dvbs-utils-${MACHINE} = "${bindir}/blindscan"
-FILES:edision-blindscan-dvbc-utils-${MACHINE} = "${bindir}/tda1002x"
+FILES:edision-blindscan-dvbs-utils-osmini4k = "${bindir}/blindscan"
+FILES:edision-blindscan-dvbc-utils-osmini4k = "${bindir}/tda1002x"
 
 do_install() {
 	install -d ${D}${bindir}
@@ -35,5 +35,5 @@ INHIBIT_PACKAGE_STRIP = "1"
 INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
 do_compile[noexec] = "1"
 deltask do_populate_sysroot
-INSANE_SKIP:edision-blindscan-dvbs-utils-${MACHINE} = "file-rdeps already-stripped 32bit-time"
-INSANE_SKIP:edision-blindscan-dvbc-utils-${MACHINE} = "file-rdeps already-stripped 32bit-time"
+INSANE_SKIP:edision-blindscan-dvbs-utils-osmini4k = "file-rdeps already-stripped 32bit-time"
+INSANE_SKIP:edision-blindscan-dvbc-utils-osmini4k = "file-rdeps already-stripped 32bit-time"
