@@ -77,6 +77,7 @@ RDEPENDS:${PN} = " \
     enigma2-plugin-extensions-tunerserver \
     enigma2-plugin-systemplugins-wirelessaccesspoint \
     enigma2-plugin-systemplugins-xmlupdate \
+    enigma2-plugin-extensions-worldcam \
     ${@bb.utils.contains_any("DISTRO_NAME", "openvix openbh openatv", "", "enigma2-plugin-extensions-ondemand", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "legacykernel", "" , "gdb v4l-utils evtest strace", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "omb", "enigma2-plugin-extensions-openmultiboot openmultiboot", "", d)} \
