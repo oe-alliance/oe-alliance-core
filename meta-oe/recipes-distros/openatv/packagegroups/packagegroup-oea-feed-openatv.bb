@@ -59,6 +59,7 @@ RRECOMMENDS:${PN} = "\
     enigma2-plugin-systemplugins-m3uiptv \
     enigma2-plugin-extensions-plutotv \
     enigma2-plugin-extensions-bootlogoswitcher \
+    enigma2-plugin-extensions-tvspielfilm \
     mediainfo \
     ncdu \
     enigma2-plugin-skins-mynovumhd2 \
