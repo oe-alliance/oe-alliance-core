@@ -19,7 +19,7 @@ inherit autotools gitpkgv python3native pkgconfig python3targetconfig
 
 PV = "git"
 PKGV = "git${GITPKGV}"
-PR = ".3"
+PR = "r3"
 
 EXTRA_OECONF = " \
 	BUILD_SYS=${BUILD_SYS} \
