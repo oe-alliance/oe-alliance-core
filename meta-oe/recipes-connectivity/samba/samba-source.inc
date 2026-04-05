@@ -1,4 +1,4 @@
-PV = "4.24.0rc3"
+PV = "4.24.0"
 HOMEPAGE = "https://www.samba.org/"
 SECTION = "console/network"
 
@@ -16,7 +16,7 @@ ${SAMBA_MIRROR}    http://www.mirrorservice.org/sites/ftp.samba.org \n \
 export PYTHONHASHSEED = "1"
 
 FILESEXTRAPATHS:prepend := "${THISDIR}/samba:"
-SRC_URI = "${SAMBA_MIRROR}/rc/samba-${PV}.tar.gz \
+SRC_URI = "${SAMBA_MIRROR}/stable/samba-${PV}.tar.gz \
            file://001-samba-4.14-pam.patch \
            file://010-source3-msgsock-nvram-fix.patch \
            file://011-source4-msgsock-nvram-fix.patch \
@@ -67,5 +67,5 @@ SRC_URI:append:opendroid = " \
            file://smb-local.conf \
           "
 
-SRC_URI[sha256sum] = "f12906b4106323ccb6c1e7f87ef71d3517e7673a754fe1ddffa96095d0732276"
+SRC_URI[sha256sum] = "1b1e457fd651a612cd08226cc6efd04e5d01e36d918c8b4c4e470e74e86881ea"
 UPSTREAM_CHECK_REGEX = "samba\-(?P<pver>4\.24(\.\d+)+).tar.gz"
