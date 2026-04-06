@@ -230,6 +230,8 @@ PACKAGES += "${PN}-meta"
 PACKAGE_ARCH = "${MACHINEBUILD}"
 
 PACKAGES =+ "enigma2-plugin-font-wqy-microhei enigma2-fonts"
+PACKAGES_DYNAMIC += "^enigma2-plugin-.*"
+PACKAGES_DYNAMIC += "^enigma2-locale-.*"
 FILES:enigma2-plugin-font-wqy-microhei = "${datadir}/fonts/wqy-microhei.ttc ${datadir}/fonts/fallback.font"
 FILES:enigma2-fonts = "${datadir}/fonts"
 
