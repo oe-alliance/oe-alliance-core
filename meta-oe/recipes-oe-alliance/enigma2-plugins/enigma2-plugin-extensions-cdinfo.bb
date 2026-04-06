@@ -1,8 +1,8 @@
-DESCRIPTION = "Show the tuner state as infobar popup"
+DESCRIPTION = "read audio CD-Text or query CDDB for album and track info"
 require conf/license/license-gplv2.inc
 require conf/python/python3-compileall.inc
 
-RDEPENDS:${PN} = "python3-shell"
+RDEPENDS:${PN} = "cdtextinfo"
 
 inherit gittag
 
@@ -14,4 +14,4 @@ PKGV = "V${GITPKGVTAG}"
 
 inherit setuptools3-openplugins
 
-SRC_URI = "git://github.com/oe-alliance-plugins/InfoBarTunerState.git;protocol=https;branch=main"
+SRC_URI = "git://github.com/oe-alliance-plugins/CDInfo.git;protocol=https;branch=main"

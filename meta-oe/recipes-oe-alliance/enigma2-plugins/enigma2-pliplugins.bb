@@ -1,9 +1,6 @@
 LICENSE = "GPL-2.0-or-later"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=751419260aa954499f7abaabaa882bbe"
 
-# we cannot use PACKAGES_DYNAMIC = "enigma2-plugin-.*"  here, because enigma2-plugins already has it,
-# so we only publish enigma2-plugin-pli-.* here (as a result, only those can occur in any RDEPENDS)
-
 PACKAGES_DYNAMIC = "enigma2-plugin-pli-.*"
 
 # add custom PROVIDES for plugins which do not match PACKAGES_DYNAMIC

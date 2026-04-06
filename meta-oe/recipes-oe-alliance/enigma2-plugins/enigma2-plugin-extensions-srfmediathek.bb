@@ -1,8 +1,8 @@
-DESCRIPTION = "Show the tuner state as infobar popup"
+DESCRIPTION = "Zugriff auf die SRF-Mediathek"
 require conf/license/license-gplv2.inc
 require conf/python/python3-compileall.inc
 
-RDEPENDS:${PN} = "python3-shell"
+RDEPENDS:${PN} = "python3-twisted-web"
 
 inherit gittag
 
@@ -14,4 +14,4 @@ PKGV = "V${GITPKGVTAG}"
 
 inherit setuptools3-openplugins
 
-SRC_URI = "git://github.com/oe-alliance-plugins/InfoBarTunerState.git;protocol=https;branch=main"
+SRC_URI = "git://github.com/oe-alliance-plugins/SRFMediathek.git;protocol=https;branch=main"

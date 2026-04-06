@@ -9,7 +9,7 @@ inherit packagegroup
 
 ALLOW_EMPTY:${PN} = "1"
 
-DEPENDS = "enigma2 enigma2-plugins network-usb-drivers-meta"
+DEPENDS = "enigma2 network-usb-drivers-meta"
 
 OPTIONAL_WIFIDRIVERS = "${@bb.utils.contains("MACHINE_FEATURES", "wifiusblegacy", "enigma2-plugin-drivers-network-usb-rt3070", " \
     enigma2-plugin-drivers-network-usb-ath9k-htc \
