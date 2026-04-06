@@ -9,8 +9,6 @@ inherit packagegroup
 
 ALLOW_EMPTY:${PN} = "1"
 
-DEPENDS = "enigma2-pliplugins"
-
 RDEPENDS:${PN} = "\
     ${@bb.utils.contains_any("MACHINE_FEATURES", "smallflash singlecore", "", "packagegroup-oea-network-server", d)} \
     enigma-info \

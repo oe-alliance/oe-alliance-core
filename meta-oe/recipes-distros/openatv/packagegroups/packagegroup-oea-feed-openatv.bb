@@ -19,7 +19,6 @@ RRECOMMENDS:${PN} = "\
     chrony \
     fpclock \
     crontab-clearmen \
-    enigma2-pliplugins \
     enigma2-display-skins \
     openatv-skinparts \
     enigma2-skins \
@@ -121,6 +120,7 @@ RRECOMMENDS:${PN} = "\
     enigma2-plugin-extensions-webinterface \
     enigma2-plugin-extensions-webadmin \
     enigma2-plugin-extensions-webbouqueteditor \
+    enigma2-plugin-extensions-ushare \
     mediainfo \
     ncdu \
     enigma2-plugin-skins-mynovumhd2 \

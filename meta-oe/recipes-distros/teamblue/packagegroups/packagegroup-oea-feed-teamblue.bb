@@ -17,7 +17,7 @@ RRECOMMENDS:${PN} = "\
     astra-sm \
     curlftpfs-ng \
     dvblast \
-    enigma2-pliplugins \
+    enigma2-plugin-extensions-ushare \
     enigma2-plugin-extensions-blurayplayer \
     enigma2-plugin-extensions-cooltvguide \
     enigma2-plugin-extensions-enhancedmoviecenter \
