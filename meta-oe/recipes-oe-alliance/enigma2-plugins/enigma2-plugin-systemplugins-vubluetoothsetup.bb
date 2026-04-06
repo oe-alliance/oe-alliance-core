@@ -23,11 +23,11 @@ inherit setuptools3-openplugins
 SRC_URI = "git://github.com/oe-alliance-plugins/VuBluetoothSetup.git;protocol=https;branch=main"
 
 do_install:append() {
-    install -d ${D}/usr/lib/enigma2/python/Plugins/Extensions/BluetoothSetup
-    install -m 0755 ${S}/VuBluetoothSetup/${MACHINE}/_vubt.so ${D}/usr/lib/enigma2/python/Plugins/Extensions/BluetoothSetup/_vubt.so
+    install -d ${D}/usr/lib/enigma2/python/Plugins/SystemPlugins/BluetoothSetup
+    install -m 0755 ${S}/VuBluetoothSetup/${MACHINE}/_vubt.so ${D}/usr/lib/enigma2/python/Plugins/SystemPlugins/BluetoothSetup/_vubt.so
 }
 
-FILES:${PN} += "/usr/lib/enigma2/python/Plugins/Extensions/BluetoothSetup/"
+FILES:${PN} += "/usr/lib/enigma2/python/Plugins/SystemPlugins/BluetoothSetup/"
 
 INHIBIT_PACKAGE_STRIP = "1"
 INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
