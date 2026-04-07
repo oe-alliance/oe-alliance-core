@@ -22,7 +22,6 @@ RDEPENDS:${PN} = " \
     picons-enigma2-meta \
     ${@bb.utils.contains("MACHINE_FEATURES", "skins1080", "dreamplex-skins-meta", "", d)} \
     meta-enigma2-dvdburn \
-    enigma2-plugins \
     enigma2-plugin-drivers-ntfs-3g \
     enigma2-plugin-drivers-exfat \
     enigma2-plugin-drivers-usbserial \

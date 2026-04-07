@@ -1,5 +1,3 @@
-# goes in oe-alliance-core/meta-oe/recipes-oe-alliance/enigma2-plugins/
-# add RDEPENDS to oe-alliance-core/meta-oe/recipes-oe-alliance/image/oe-alliance-feeds.bb
 SUMMARY = "Automatically build and update a terrestrial bouquet from the DVB stream."
 DESCRIPTION = "Automatically build and update a terrestrial bouquet from the DVB stream."
 MAINTAINER = "Huevos"

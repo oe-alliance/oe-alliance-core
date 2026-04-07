@@ -1,5 +1,3 @@
-# goes in oe-alliance-core/meta-oe/recipes-oe-alliance/enigma2-plugins/
-# add RDEPENDS to oe-alliance-core/meta-oe/recipes-oe-alliance/image/oe-alliance-feeds.bb
 SUMMARY = "Grab LCN bouquets from the DVB stream."
 DESCRIPTION = "Simple tool to grab and inspect LCN bouquets available on the DVB stream."
 MAINTAINER = "Huevos"

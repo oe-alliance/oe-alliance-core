@@ -10,8 +10,6 @@ PR = "r15"
 
 inherit packagegroup
 
-DEPENDS = "enigma2-pliplugins"
-
 RRECOMMENDS:${PN} = " \
     socketdaemon \
     enigma2-plugin-systemplugins-hotplug \

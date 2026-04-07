@@ -25,7 +25,7 @@ OPTIONAL_WIFIDRIVERS = "${@bb.utils.contains("MACHINE_FEATURES", "wifiusblegacy"
     enigma2-plugin-drivers-network-usb-r8712u \
     "
 
-DEPENDS = "enigma2 enigma2-plugins network-usb-drivers-meta"
+DEPENDS = "enigma2 network-usb-drivers-meta"
 
 RDEPENDS:${PN} = "\
     ${@bb.utils.contains("MACHINE", "vuduo2", "enigma2-plugin-drivers-network-usb-rt3070", "", d)} \

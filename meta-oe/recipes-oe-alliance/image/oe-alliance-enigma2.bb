@@ -12,7 +12,7 @@ PACKAGES = "${PN}"
 PV = "${IMAGE_VERSION}"
 PR = "r3"
 
-DEPENDS = "enigma2 enigma2-locale-meta enigma2-plugins oe-alliance-wifi"
+DEPENDS = "enigma2 enigma2-locale-meta oe-alliance-wifi"
 
 RDEPENDS:${PN} = "\
     oe-alliance-branding \

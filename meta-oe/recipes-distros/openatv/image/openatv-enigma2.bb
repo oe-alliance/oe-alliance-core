@@ -10,8 +10,6 @@ PR = "r73"
 
 inherit packagegroup
 
-DEPENDS = "enigma2-pliplugins"
-
 RRECOMMENDS:${PN} = " \
     enigma2-skindefault \
     socketdaemon \
