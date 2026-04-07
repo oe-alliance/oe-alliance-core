@@ -1,5 +1,8 @@
 SRCDATE = "20151013"
 
+RREPLACES:gigablue-blindscan-dvbc-utils-mips = "gigablue-blindscan-dvbc-utils-${MACHINE}"
+RCONFLICTS:gigablue-blindscan-dvbs-utils-mips = "gigablue-blindscan-dvbs-utils-${MACHINE}"
+
 PACKAGES = "gigablue-blindscan-dvbs-utils-mips gigablue-blindscan-dvbc-utils-mips"
 
 SRC_URI[md5sum] = "c51ad24b8fcd74671bf9790707485c7b"
