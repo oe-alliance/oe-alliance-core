@@ -7,7 +7,7 @@ KERNEL_RELEASE = "4.4.35"
 
 SRCDATE = "20200508"
 
-COMPATIBLE_MACHINE = "^(h8|h9|h9se|h9combo|h9combose|h10|hzero|i55plus|i55se)$"
+COMPATIBLE_MACHINE = "^(h8se|h8|h9|h9se|h9combo|h9combose|h10|hzero|i55plus|i55se)$"
 
 inherit kernel machine_kernel_pr kernel-fixups
 
@@ -27,6 +27,10 @@ SRC_URI = "https://source.mynonpublic.com/zgemma/linux-${PV}-${SRCDATE}-${ARCH}.
     ${KERNEL_PATCH_MISC_MODULE_INIT} \
     ${KERNEL_PATCH_FIX_ATTRIBUTES_GCC9} \
     file://block2mtd.patch \
+"
+
+SRC_URI:append:h8se = " \
+	${KERNEL_PATCH_BRCM_MMC_18V} \
 "
 
 SRC_URI:append:h9 = " \
@@ -57,6 +61,7 @@ FILES:${KERNEL_PACKAGE_NAME}-image:h9 = " "
 FILES:${KERNEL_PACKAGE_NAME}-image:i5plus = " "
 FILES:${KERNEL_PACKAGE_NAME}-image:hzero = " "
 FILES:${KERNEL_PACKAGE_NAME}-image:h8 = " "
+FILES:${KERNEL_PACKAGE_NAME}-image:h8se = " "
 FILES:${KERNEL_PACKAGE_NAME}-image = "/${KERNEL_IMAGEDEST}/findkerneldevice.sh"
 
 kernel_do_configure:prepend() {
@@ -88,6 +93,16 @@ kernel_do_install:append:h10() {
 kernel_do_install:append:i55se() {
 	install -d ${D}/${KERNEL_IMAGEDEST}
 	install -m 0755 ${UNPACKDIR}/findkerneldevice.sh ${D}/${KERNEL_IMAGEDEST}
+}
+
+pkg_postinst:kernel-image:h8se() {
+	if [ "x$D" == "x" ]; then
+		if [ -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE} ] ; then
+			flash_erase /dev/${MTD_KERNEL} 0 0
+			nandwrite -p /dev/${MTD_KERNEL} /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}
+		fi
+	fi
+	true
 }
 
 pkg_postinst:kernel-image:h9() {

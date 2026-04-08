@@ -49,6 +49,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'zgemmah102h', 'H10.2H' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmahzeros', 'Hzero S' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah82h', 'H8.2H' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah82hplus', 'H8.2H Plus' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmah8se', 'H8.2H SE' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah11s', 'H11.S' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah112h', 'H11.2H' , '', d)}\
 "
@@ -98,6 +99,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'zgemmah102h', 'Zgemma' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmahzeros', 'Zgemma' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah82h', 'Zgemma' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah82hplus', 'Zgemma' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmah8se', 'Zgemma' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah11s', 'Zgemma' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah112h', 'Zgemma' , '', d)}\
 "
@@ -147,6 +149,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'zgemmah102h', 'h10' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmahzeros', 'hzero' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah82h', 'h8' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah82hplus', 'h8' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmah8se', 'h8se' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah11s', 'h11' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah112h', 'h11' , '', d)}\
 "
@@ -196,6 +199,7 @@ ${@bb.utils.contains('MACHINEBUILD', 'zgemmah102h', 'h10' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmahzeros', 'hzero' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah82h', 'h8' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah82hplus', 'h8' , '', d)}\
+${@bb.utils.contains('MACHINEBUILD', 'zgemmah8se', 'h8se' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah11s', 'h11' , '', d)}\
 ${@bb.utils.contains('MACHINEBUILD', 'zgemmah112h', 'h11' , '', d)}\
 "
@@ -238,6 +242,7 @@ DVBMEDIASINK_CONFIG = "--with-wma --with-wmv --with-pcm --with-dts --with-eac3 \
     ${@bb.utils.contains('MACHINE', 'h11', '--with-h265 --with-vb6 --with-vb8 --with-vb9 --with-spark' , '', d)} \
     ${@bb.utils.contains('MACHINE', 'hzero', '--with-h265 --with-vb6 --with-vb8 -with-spark' , '', d)} \
     ${@bb.utils.contains('MACHINE', 'h8', '--with-h265 --with-vb6 --with-vb8 -with-spark' , '', d)} \
+    ${@bb.utils.contains('MACHINE', 'h8se', '--with-h265 --with-vb6 --with-vb8 --with-vb9 --with-spark' , '', d)} \
     "
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-airdigital"
