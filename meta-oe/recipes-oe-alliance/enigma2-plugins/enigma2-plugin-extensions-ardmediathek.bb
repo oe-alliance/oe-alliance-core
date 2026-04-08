@@ -14,4 +14,4 @@ PKGV = "V${GITPKGVTAG}"
 
 inherit setuptools3-openplugins
 
-SRC_URI = "git://github.com/oe-alliance-plugins/ardmediathek.git;protocol=https;branch=main"
+SRC_URI = "git://github.com/oe-alliance-plugins/ArdMediathek.git;protocol=https;branch=main"
