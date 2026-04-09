@@ -3,5 +3,5 @@ PACKAGECONFIG:append = " \
 "
 PACKAGE_NO_LOCALE = "1"
 
-PV = "1.28.1"
-SRC_URI[sha256sum] = "4082f3cb063fccc3ffc04e5ab0854bafde82d1b373eb3c9eaa28115dd3f95a78"
+PV = "1.28.2"
+SRC_URI[sha256sum] = "fe39a5ee7115e37de9eb65d899ec84c93e6e26ed3ffe25c6d5176cececbab572"
