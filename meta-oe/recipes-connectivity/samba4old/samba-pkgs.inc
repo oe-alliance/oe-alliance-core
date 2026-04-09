@@ -15,7 +15,7 @@ INITSCRIPT_NAME:${PN} = "samba"
 INITSCRIPT_PARAMS:${PN} = "defaults"
 
 SYSTEMD_PACKAGES = "${PN} ${PN}-ad-dc winbind"
-SYSTEMD_SERVICE:${PN} = "${@bb.utils.contains('DISTRO_FEATURES_BACKFILL_CONSIDERED', 'sysvinit', 'nmb.service smb.service', '', d)}"
+SYSTEMD_SERVICE:${PN} = "${@bb.utils.contains('DISTRO_FEATURES_OPTED_OUT', 'sysvinit', 'nmb.service smb.service', '', d)}"
 SYSTEMD_SERVICE:${PN}-ad-dc = "${@bb.utils.contains('PACKAGECONFIG', 'ad-dc', 'samba.service', '', d)}"
 SYSTEMD_SERVICE:winbind = "winbind.service"
 

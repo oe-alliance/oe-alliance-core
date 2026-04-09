@@ -232,7 +232,7 @@ do_install() {
 
     if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
         perl -i -pe 's:(PIDFile=)/run/(.*?\.pid):${1}${localstatedir}/run/${2}:' ${D}${systemd_system_unitdir}/*.service
-        if ${@bb.utils.contains('DISTRO_FEATURES_BACKFILL_CONSIDERED','sysvinit','true','false',d)}; then
+        if ${@bb.utils.contains('DISTRO_FEATURES_OPTED_OUT','sysvinit','true','false',d)}; then
             :
         else
             rm -f ${D}${systemd_system_unitdir}/smb.service
