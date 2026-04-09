@@ -73,7 +73,7 @@ PREFERRED_PROVIDER_virtual/fftw = "fftw"
 PREFERRED_PROVIDER_virtual/kernel = "linux-${SOC_FAMILY}"
 PREFERRED_VERSION_linux-${SOC_FAMILY} = "4.9.%"
 
-MACHINE_FEATURES_BACKFILL_CONSIDERED = "rtc gobject-introspection-data"
+MACHINE_FEATURES_OPTED_OUT = "rtc gobject-introspection-data"
 
 # Add "MACHINEBUILD" override for recipes
 MACHINEOVERRIDES =. "${@['', '${MACHINEBUILD}:']['${MACHINEBUILD}' != '']}"
