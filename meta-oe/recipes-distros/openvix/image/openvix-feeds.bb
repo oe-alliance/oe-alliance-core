@@ -18,6 +18,7 @@ DEPENDS += "oe-alliance-feeds"
 RRECOMMENDS:${PN} = "\
     enigma2-plugin-extensions-blurayplayer \
     enigma2-plugin-extensions-plutotv-vix \
+    enigma2-plugin-systemplugins-vps-vix \
     enigma2-skins-openvix \
     ${@bb.utils.contains("MACHINE_FEATURES", "skins1080", "enigma2-plugin-skins-e2-darkos", "", d)} \
     enigma2-plugin-skins-vix-turquoise-hd \
