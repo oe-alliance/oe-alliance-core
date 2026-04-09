@@ -9,7 +9,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r17"
+PR = "r18"
 
 inherit packagegroup
 
@@ -22,7 +22,7 @@ RRECOMMENDS:${PN} = "\
     enigma2-plugin-skins-e2-darkos \
     enigma2-plugin-extensions-blurayplayer \
     enigma2-plugin-extensions-pluto \
-	enigma2-plugin-systemplugins-vps \
+	enigma2-plugin-systemplugins-vps-orig \
     enigma2-plugin-systemplugins-crossepg \
     enigma2-plugin-systemplugins-remotecontrolselection \
     enigma2-plugin-systemplugins-terrestrialscan \
