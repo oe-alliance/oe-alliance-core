@@ -1,10 +1,7 @@
 DESCRIPTION = "Skinparts packs"
 SUMMARY = "Skinparts"
 MAINTAINER = "www.opena.tv Fischreiher"
-LICENSE = "proprietary"
 PACKAGES = "${PN}-meta ${PN}"
-PACKAGES_DYNAMIC = "enigma2-plugin-skincomponents-*"
-PACKAGE_ARCH = "all"
 
 require conf/license/license-gplv2.inc
 
@@ -21,7 +18,6 @@ SRC_URI = "git://github.com/openatv/skin-parts.git;protocol=https;branch=master"
 # openatv-skinparts is an empty package, dependencies are avoided by do_split_packages( [...] extra_depends='')
 ALLOW_EMPTY:${PN} = "1"
 
-FILES:${PN} = "/usr/share/enigma2/skinparts"
 FILES:${PN}-meta = "${datadir}/meta"
 RDEPENDS:${PN}-meta = ""
 
