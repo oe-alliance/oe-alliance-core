@@ -67,6 +67,7 @@ RDEPENDS:${PN} = "\
     enigma2-plugin-extensions-xstreamity \
     enigma2-plugin-extensions-yampmusicplayer \
     enigma2-plugin-extensions-youtube \
+    enigma2-plugin-extensions-mediathekviewweb \
     enigma2-plugin-systemplugins-3gmodemmanager \
     enigma2-plugin-systemplugins-abmcustommiximporter \
     enigma2-plugin-systemplugins-aboutboxbranding \
