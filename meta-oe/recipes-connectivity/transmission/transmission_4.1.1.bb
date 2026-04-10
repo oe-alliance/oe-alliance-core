@@ -2,16 +2,14 @@ DESCRIPTION = "Transmission is a BitTorrent client w/ a built-in Ajax-Powered We
 SECTION = "network"
 HOMEPAGE = "www.transmissionbt.com/"
 LICENSE = "GPL-2.0-or-later & GPL-3.0-or-later"
-LIC_FILES_CHKSUM = "file://COPYING;md5=fc328124a2512ae83320a48cdbfeb8f8"
+LIC_FILES_CHKSUM = "file://COPYING;md5=d54f298b276b8cc5f20168e43a0e8103"
 
 DEPENDS = "curl libevent gnutls openssl libtool intltool-native glib-2.0-native"
 
-# Transmission release 4.1.0
-SRCREV = "9e15394c65ecddf1b15f7225fa7a4fa29e302505"
-PV = "4.1.0"
-PR = "2"
+# Transmission release 4.1.1
+SRCREV = "4.1.1"
 
-SRC_URI = "gitsm://github.com/transmission/transmission;protocol=https;branch=main \
+SRC_URI = "gitsm://github.com/transmission/transmission;protocol=https;branch=4.1.x \
         file://init \
         file://service \
         file://config \
