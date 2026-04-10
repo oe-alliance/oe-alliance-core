@@ -58,6 +58,7 @@ SRC_URI:append:7215s = " file://lcdsplash220.bin file://7100s/lcdwaitkey220.bin 
 SRC_URI:append:8100s = " file://7100s/lcdwarning220.bin"
 SRC_URI:append:hzero = " file://logo.img"
 SRC_URI:append:h8 = " file://logo.img"
+SRC_URI:append:h8se = " file://logo.img"
 SRC_URI:append:h9 = " file://logo.img"
 SRC_URI:append:h10 = " file://logo.img"
 SRC_URI:append:h11 = " file://logo.img"
