@@ -1,12 +1,11 @@
 FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 
 SRC_URI:append = " \
-                file://fix-build-linking-order.patch \
                 file://config.xml \
                 file://init \
 "
 
-inherit update-rc.d
+inherit update-rc.d gitpkgv
 
 INITSCRIPT_NAME = "gerbera"
 INITSCRIPT_PARAMS = "defaults 90"
@@ -20,8 +19,11 @@ do_install:append() {
     fi
 }
 
-FILES:${PN} += "${sysconfdir} /usr/share/bash-completion"
+FILES:${PN} += "${sysconfdir}"
 
 CONFFILES:${PN} = "${sysconfdir}/gerbera/config.xml"
 
-DEPENDS += "jsoncpp icu"
+DEPENDS += "libzip libzippp cxxopts"
+
+PV = "3.2.1"
+SRCREV = "a6a2bb2991d197a52755a488fc943566d654d3bd"
