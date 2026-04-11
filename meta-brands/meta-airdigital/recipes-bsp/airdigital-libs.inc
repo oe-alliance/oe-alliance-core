@@ -7,6 +7,7 @@ RDEPENDS:${PN} = "libbluray openssl10"
 REV = "r1"
 PR = "${SRCDATE}.${REV}"
 
+SRC_URI:h8se = "https://source.mynonpublic.com/zgemma/zgemma-libs-${HICHIPSET}-${SRCDATE}.zip;name=${MACHINE}"
 SRC_URI = "https://source.mynonpublic.com/zgemma/zgemma-libs-${HICHIPSET}-${SRCDATE}.zip"
 
 S = "${UNPACKDIR}"
