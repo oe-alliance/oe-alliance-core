@@ -74,8 +74,8 @@ DEPENDS += " \
             gstreamer1.0-plugins-base \
           "
 inherit gitpkgv
-# 22.0 Piers
-SRCREV = "8cac2964b71aa460321592b606eebe6504630320"
+# 22.0 Piers Alpha 3
+SRCREV = "27cedf1fb4c30fcb0b73c63d48472e3325910f1a"
 
 # 'patch' doesn't support binary diffs
 PATCHTOOL = "git"
@@ -101,7 +101,6 @@ SRC_URI = "git://github.com/xbmc/xbmc.git;protocol=https;branch=master \
            https://github.com/xbmc/libdvdcss/archive/refs/tags/1.4.3-Next-Nexus-Alpha2-2.tar.gz;name=libdvdcss;downloadfilename=libdvdcss.tar.gz;unpack=0 \
            https://github.com/xbmc/libdvdread/archive/refs/tags/6.1.3-Next-Nexus-Alpha2-2.tar.gz;name=libdvdread;downloadfilename=libdvdread.tar.gz;unpack=0 \
            https://github.com/xbmc/libdvdnav/archive/refs/tags/6.1.1-Next-Nexus-Alpha2-2.tar.gz;name=libdvdnav;downloadfilename=libdvdnav.tar.gz;unpack=0 \
-           file://0001-revert-FFMPEG-8.0.patch \
            file://0001-flatbuffers-22.patch \
            file://0002-readd-Touchscreen-settings.patch \
            file://0003-shader-nopow-22.patch \
@@ -138,12 +137,10 @@ APPRENDERSYSTEM ?= "gles"
 PACKAGECONFIG ?= "${ACCEL} ${WINDOWSYSTEM} pulseaudio samba lcms lto \
                    ${@bb.utils.contains('TOOLCHAIN', 'clang', 'clang', '', d)} \
                    ${@bb.utils.contains('DISTRO_FEATURES', 'ld-is-lld', 'lld', '', d)} \
-                   ${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'x11', '', d)} \
                    ${@bb.utils.contains('DISTRO_FEATURES', 'opengl', 'opengl', 'openglesv2', d)}"
 
 # Core windowing system choices
 
-PACKAGECONFIG[x11] = "-DCORE_PLATFORM_NAME=x11,,libxinerama libxmu libxrandr libxtst glew"
 PACKAGECONFIG[gbm] = "-DCORE_PLATFORM_NAME=gbm -DGBM_RENDER_SYSTEM=gles,,"
 PACKAGECONFIG[stb] = "-DCORE_PLATFORM_NAME=stb,,"
 PACKAGECONFIG[raspberrypi] = "-DCORE_PLATFORM_NAME=rbpi,,userland"
@@ -205,7 +202,7 @@ EXTRA_OECMAKE = " \
     -DENABLE_STATIC_LIBS=FALSE \
     -DCMAKE_NM=${STAGING_BINDIR_NATIVE}/${TARGET_SYS}/${RUNTIME_NM} \
     \
-    -DFFMPEG_PATH=${STAGING_DIR_TARGET} \
+    -DFFMPEG_PATH=${RECIPE_SYSROOT}${prefix} \
     -DLIBDVD_INCLUDE_DIR=${STAGING_INCDIR} \
     -DNFS_INCLUDE_DIR=${STAGING_INCDIR} \
     -DSHAIRPLAY_INCLUDE_DIR=${STAGING_INCDIR} \
@@ -270,7 +267,6 @@ RRECOMMENDS:${PN}:append = " libcec \
                              libnfs \
                              nss \
                              os-release \
-                             ${@bb.utils.contains('PACKAGECONFIG', 'x11', 'xrandr xinit mesa-demos', '', d)} \
                              ${PYTHON_PN} \
                              ${PYTHON_PN}-ctypes \
                              ${PYTHON_PN}-netclient \

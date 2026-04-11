@@ -8,7 +8,6 @@ RDEPENDS:${PN}:append = "et-v3ddriver-${MACHINE} platform-util-${MACHINE} et-dvb
 
 EXTRA_OECMAKE += " \
     -DWITH_PLATFORM=nextv-cortexa15 \
-    -DWITH_FFMPEG=stb \
 "
 
 INSANE_SKIP:${PN} += "file-rdeps"

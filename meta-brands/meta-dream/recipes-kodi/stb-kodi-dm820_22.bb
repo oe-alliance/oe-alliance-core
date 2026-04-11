@@ -7,5 +7,4 @@ RPROVIDES:${PN} += "kodi"
 
 EXTRA_OECMAKE += " \
     -DWITH_PLATFORM=dreambox-mipsel \
-    -DWITH_FFMPEG=stb \
 "

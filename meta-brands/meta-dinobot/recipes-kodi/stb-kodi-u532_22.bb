@@ -10,6 +10,5 @@ SRC_URI:append = " file://eglwrapper-22.patch "
 
 EXTRA_OECMAKE += " \
     -DWITH_PLATFORM=mali-cortexa15 \
-    -DWITH_FFMPEG=stb \
 "
 

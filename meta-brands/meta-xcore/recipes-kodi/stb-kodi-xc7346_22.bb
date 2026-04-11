@@ -9,6 +9,5 @@ INSANE_SKIP:${PN} += "file-rdeps"
 
 EXTRA_OECMAKE += " \
     -DWITH_PLATFORM=xcore-mipsel \
-    -DWITH_FFMPEG=stb \
 "
 

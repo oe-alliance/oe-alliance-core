@@ -12,7 +12,6 @@ SRC_URI:append = " \
 
 EXTRA_OECMAKE += " \
     -DWITH_PLATFORM=dags-cortexa15 \
-    -DWITH_FFMPEG=stb \
 "
 
 INSANE_SKIP:${PN} += "file-rdeps"

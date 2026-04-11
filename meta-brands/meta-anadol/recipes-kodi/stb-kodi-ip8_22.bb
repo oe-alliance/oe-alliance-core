@@ -11,5 +11,4 @@ RDEPENDS:${PN} += "anadol-opengl-${SOC_FAMILY}"
 
 EXTRA_OECMAKE += " \
     -DWITH_PLATFORM=clap-cortexa15 \
-    -DWITH_FFMPEG=stb \
 "

@@ -18,7 +18,6 @@ SRC_URI:append = " \
 
 EXTRA_OECMAKE += " \
     -DWITH_PLATFORM=GB-cortexa15 \
-    -DWITH_FFMPEG=stb \
 "
 
 SRC_URI[xbmc-support.md5sum] = "c9e208f1adf4da2afa2f924be9895f81"

@@ -18,7 +18,6 @@ SRC_URI:append = " \
 
 EXTRA_OECMAKE += " \
     -DWITH_PLATFORM=vuplus-mipsel \
-    -DWITH_FFMPEG=stb \
 "
 
 SRC_URI[xbmc-support.md5sum] = "e29a91b185133ec60a59e94a8229d2b4"

@@ -8,5 +8,4 @@ RDEPENDS:${PN} += "skylake-v3ddriver-${MACHINE}"
 
 EXTRA_OECMAKE += " \
     -DWITH_PLATFORM=v3d-mipsel \
-    -DWITH_FFMPEG=stb \
 "
