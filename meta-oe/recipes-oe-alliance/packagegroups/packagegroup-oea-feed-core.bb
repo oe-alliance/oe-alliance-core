@@ -9,10 +9,7 @@ inherit packagegroup
 
 ALLOW_EMPTY:${PN} = "1"
 
-DEPENDS = "enigma2-plugin-drivers-usbserial enigma2-plugin-systemplugins-radiotimesemulator enigma2-plugin-systemplugins-hrtunerproxy"
-
 RDEPENDS:${PN} = "\
-    packagegroup-openplugins \
     bootlogos-enigma2-meta \
     dvb-usb-drivers-meta \
     network-usb-drivers-meta \
@@ -50,6 +47,7 @@ RDEPENDS:${PN} = "\
     enigma2-plugin-extensions-mediaplayer2 \
     enigma2-plugin-extensions-mediatomb \
     enigma2-plugin-extensions-moviemanager \
+    enigma2-plugin-extensions-openwebif \
     enigma2-plugin-extensions-openwebif-vxg \
     enigma2-plugin-extensions-piconmanager \
     enigma2-plugin-extensions-piconsupdater \
@@ -80,6 +78,22 @@ RDEPENDS:${PN} = "\
     enigma2-plugin-systemplugins-serviceapp \
     enigma2-plugin-systemplugins-wirelessaccesspoint \
     enigma2-plugin-systemplugins-xmlupdate \
+    enigma2-plugin-extensions-addstreamurl \
+    enigma2-plugin-extensions-antilogo \
+    enigma2-plugin-extensions-bitrate \
+    enigma2-plugin-extensions-magentamusik360 \
+    enigma2-plugin-extensions-newsreader \
+    enigma2-plugin-extensions-permanentvfdclock \
+    enigma2-plugin-extensions-ppanel \
+    enigma2-plugin-extensions-shootyourscreen \
+    enigma2-plugin-extensions-simpleumount \
+    enigma2-plugin-extensions-streaminterface \
+    enigma2-plugin-extensions-telekomsport \
+    enigma2-plugin-extensions-wakeonlan \
+    enigma2-plugin-extensions-setpicon \
+    enigma2-plugin-extensions-xpower \
+    enigma2-plugin-extensions-systemtools \
+    enigma2-plugin-extensions-cacheflush \
     eplayer5 \
     exteplayer3 \
     ${@bb.utils.contains("MACHINE_FEATURES", "legacykernel", "", "gdb v4l-utils evtest strace", d)} \
