@@ -122,6 +122,7 @@ RRECOMMENDS:${PN} = "\
     enigma2-plugin-extensions-webbouqueteditor \
     enigma2-plugin-extensions-ushare \
     enigma2-plugin-extensions-mediathekviewweb \
+    enigma2-plugin-extensions-dreamexplorer \
     mediainfo \
     ncdu \
     ${@bb.utils.contains("MACHINE_FEATURES", "nogui", "packagegroup-openatv-nogui", "", d)} \
