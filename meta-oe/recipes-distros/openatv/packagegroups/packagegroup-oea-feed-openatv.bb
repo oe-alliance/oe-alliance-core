@@ -122,6 +122,9 @@ RRECOMMENDS:${PN} = "\
     enigma2-plugin-extensions-webbouqueteditor \
     enigma2-plugin-extensions-ushare \
     enigma2-plugin-extensions-justwatch \
+    enigma2-plugin-extensions-webradiofs \
+    enigma2-plugin-extensions-timfs \
+    enigma2-plugin-extensions-mspfs \
     mediainfo \
     ncdu \
     enigma2-plugin-skins-mynovumhd2 \
