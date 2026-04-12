@@ -126,6 +126,7 @@ RRECOMMENDS:${PN} = "\
     enigma2-plugin-extensions-timfs \
     enigma2-plugin-extensions-mspfs \
     enigma2-plugin-extensions-dreamexplorer \
+    enigma2-plugin-extensions-oemediathek \
     mediainfo \
     ncdu \
     enigma2-plugin-skins-mynovumhd2 \
