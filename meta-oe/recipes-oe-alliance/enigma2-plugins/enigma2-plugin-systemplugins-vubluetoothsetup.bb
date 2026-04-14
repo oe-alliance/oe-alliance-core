@@ -8,7 +8,7 @@ COMPATIBLE_MACHINE = "^(vusolo4k|vuuno4k|vuzero4k|vuuno4kse|vuultimo4k|vuduo4k|v
 PN = "enigma2-plugin-systemplugins-bluetoothsetup"
 
 DEPENDS = "libusb-compat"
-RDEPENDS:${PN} = "libusb-compat"
+RDEPENDS:${PN} = "libusb-compat vuplus-bluetooth-util-${MACHINE}"
 
 inherit gittag
 
