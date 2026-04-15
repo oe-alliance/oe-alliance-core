@@ -12,8 +12,8 @@ ALLOW_EMPTY:${PN} = "1"
 RDEPENDS:${PN} = "\
     bootlogos-enigma2-meta \
     dvb-usb-drivers-meta \
-    network-usb-drivers-meta \
     extrahw-drivers-meta \
+    network-usb-drivers-meta \
     picons-enigma2-meta \
     ${@bb.utils.contains("MACHINE_FEATURES", "skins1080", "dreamplex-skins-meta", "", d)} \
     meta-enigma2-dvdburn \
@@ -22,9 +22,13 @@ RDEPENDS:${PN} = "\
     enigma2-plugin-drivers-ntfs-3g \
     enigma2-plugin-drivers-usbserial \
     enigma2-plugin-extensions-autoblchanger \
+    enigma2-plugin-extensions-antilogo \
+    enigma2-plugin-extensions-autoblchanger \
     enigma2-plugin-extensions-autobouquets \
+    enigma2-plugin-extensions-bitrate \
     enigma2-plugin-extensions-bouquetcleanup \
     enigma2-plugin-extensions-bouquetmakerxtream \
+    enigma2-plugin-extensions-cacheflush \
     enigma2-plugin-extensions-chefkoch \
     enigma2-plugin-extensions-clevertanken \
     enigma2-plugin-extensions-dlnabrowser \
@@ -44,28 +48,40 @@ RDEPENDS:${PN} = "\
     enigma2-plugin-extensions-lamedbmerger \
     enigma2-plugin-extensions-lcd4linux \
     enigma2-plugin-extensions-lottoextended \
+    enigma2-plugin-extensions-magentamusik360 \
     enigma2-plugin-extensions-mediaplayer2 \
+    enigma2-plugin-extensions-mediathekviewweb \
     enigma2-plugin-extensions-mediatomb \
     enigma2-plugin-extensions-moviemanager \
+    enigma2-plugin-extensions-newsreader \
     enigma2-plugin-extensions-openwebif \
     enigma2-plugin-extensions-openwebif-vxg \
+    enigma2-plugin-extensions-permanentvfdclock \
     enigma2-plugin-extensions-piconmanager \
     enigma2-plugin-extensions-piconsupdater \
     enigma2-plugin-extensions-picturecenterfs \
     enigma2-plugin-extensions-planerfs \
+    enigma2-plugin-extensions-ppanel \
     enigma2-plugin-extensions-remotechannelstreamconverter \
     enigma2-plugin-extensions-serienrecorder \
+    enigma2-plugin-extensions-setpicon \
+    enigma2-plugin-extensions-shootyourscreen \
+    enigma2-plugin-extensions-simpleumount \
+    enigma2-plugin-extensions-streaminterface \
     enigma2-plugin-extensions-streamtv \
     enigma2-plugin-extensions-subssupport \
+    enigma2-plugin-extensions-systemtools \
+    enigma2-plugin-extensions-telekomsport \
     enigma2-plugin-extensions-tmdb \
     enigma2-plugin-extensions-tunerserver \
     enigma2-plugin-extensions-tuxcom \
+    enigma2-plugin-extensions-wakeonlan \
     enigma2-plugin-extensions-worldcam \
     enigma2-plugin-extensions-xmodem \
+    enigma2-plugin-extensions-xpower \
     enigma2-plugin-extensions-xstreamity \
     enigma2-plugin-extensions-yampmusicplayer \
     enigma2-plugin-extensions-youtube \
-    enigma2-plugin-extensions-mediathekviewweb \
     enigma2-plugin-systemplugins-3gmodemmanager \
     enigma2-plugin-systemplugins-abmcustommiximporter \
     enigma2-plugin-systemplugins-aboutboxbranding \
@@ -78,22 +94,6 @@ RDEPENDS:${PN} = "\
     enigma2-plugin-systemplugins-serviceapp \
     enigma2-plugin-systemplugins-wirelessaccesspoint \
     enigma2-plugin-systemplugins-xmlupdate \
-    enigma2-plugin-extensions-addstreamurl \
-    enigma2-plugin-extensions-antilogo \
-    enigma2-plugin-extensions-bitrate \
-    enigma2-plugin-extensions-magentamusik360 \
-    enigma2-plugin-extensions-newsreader \
-    enigma2-plugin-extensions-permanentvfdclock \
-    enigma2-plugin-extensions-ppanel \
-    enigma2-plugin-extensions-shootyourscreen \
-    enigma2-plugin-extensions-simpleumount \
-    enigma2-plugin-extensions-streaminterface \
-    enigma2-plugin-extensions-telekomsport \
-    enigma2-plugin-extensions-wakeonlan \
-    enigma2-plugin-extensions-setpicon \
-    enigma2-plugin-extensions-xpower \
-    enigma2-plugin-extensions-systemtools \
-    enigma2-plugin-extensions-cacheflush \
     eplayer5 \
     exteplayer3 \
     ${@bb.utils.contains("MACHINE_FEATURES", "legacykernel", "", "gdb v4l-utils evtest strace", d)} \
