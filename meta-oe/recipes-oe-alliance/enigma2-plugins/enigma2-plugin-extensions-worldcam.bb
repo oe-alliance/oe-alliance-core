@@ -14,7 +14,7 @@ SRCREV = "${AUTOREV}"
 PV = "git"
 PKGV = "V${GITPKGVTAG}"
 
-SRC_URI = "git://github.com/Belfagor2005/WorldCam.git;branch=main;protocol=https"
+SRC_URI = "git://github.com/OwnerPlugins/WorldCam.git;branch=main;protocol=https"
 
 FILES:${PN} = "${libdir}"
 
