@@ -30,6 +30,12 @@ IMAGE_CMD:tar:prepend = "\
     ${@bb.utils.contains("MACHINE_FEATURES", "bootsplash", "cp ${DEPLOY_DIR_IMAGE}/${BOOTLOGO_FILENAME} ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${BOOTLOGO_FILENAME};" , "", d)} \
     cp ${DEPLOY_DIR_IMAGE}/${MACHINEBUILD}_boot.bin ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/boot.bin; \
     cp ${DEPLOY_DIR_IMAGE}/${MACHINEBUILD}_gpt.bin ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/gpt.bin; \
+    if [ -e ${DEPLOY_DIR_IMAGE}/${MACHINEBUILD}_boot4.bin ]; then \
+        cp -f ${DEPLOY_DIR_IMAGE}/${MACHINEBUILD}_boot4.bin ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/boot4.bin; \
+    fi; \
+    if [ -e ${DEPLOY_DIR_IMAGE}/${MACHINEBUILD}_gpt4.bin ]; then \
+        cp -f ${DEPLOY_DIR_IMAGE}/${MACHINEBUILD}_gpt4.bin ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/gpt4.bin; \
+    fi; \
     cp ${DEPLOY_DIR_IMAGE}/${MACHINEBUILD}_rescue.bin ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/rescue.bin; \
     ${@bb.utils.contains("MACHINE_FEATURES", "bolt", "cp ${DEPLOY_DIR_IMAGE}/${MACHINEBUILD}_bolt_${SRCDATE_BOLT}.bin ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/bolt_${SRCDATE_BOLT}.bin;" , "", d)} \
     cp ${DEPLOY_DIR_IMAGE}/zImage ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${KERNEL_FILE}; \

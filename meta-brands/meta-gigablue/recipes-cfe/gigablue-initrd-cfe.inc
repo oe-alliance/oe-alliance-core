@@ -22,8 +22,14 @@ do_deploy() {
     if [ -e boot.bin  ]; then
     install -m 0644 boot.bin  ${DEPLOYDIR}/${MACHINEBUILD}_boot.bin
     fi
+    if [ -e boot4.bin  ]; then
+    install -m 0644 boot4.bin  ${DEPLOYDIR}/${MACHINEBUILD}_boot4.bin
+    fi
     if [ -e gpt.bin  ]; then
     install -m 0644 gpt.bin  ${DEPLOYDIR}/${MACHINEBUILD}_gpt.bin
+    fi
+    if [ -e gpt4.bin  ]; then
+    install -m 0644 gpt4.bin  ${DEPLOYDIR}/${MACHINEBUILD}_gpt4.bin
     fi
     if [ -e rescue.bin  ]; then
     install -m 0644 rescue.bin  ${DEPLOYDIR}/${MACHINEBUILD}_rescue.bin
