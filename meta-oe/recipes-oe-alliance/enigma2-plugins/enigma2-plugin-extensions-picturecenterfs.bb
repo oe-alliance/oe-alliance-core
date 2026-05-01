@@ -1,47 +1,16 @@
-MODULE = "PictureCenterFS"
-DESCRIPTION = "Show, manage and edit pictures and slideshows on enigma2."
-MAINTAINER = "jbleyel"
-LICENSE = "MIT"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=11a9969bdf1bc48a06dad1fd82c61bf9"
-
-DEPENDS = "enigma2"
-RDEPENDS:${PN} = "python3-core"
-
-inherit python3-dir gitpkgv python3native gettext
-
-SRCREV = "${AUTOREV}"
-PV = "1.0+git"
-PKGV = "1.0+git${GITPKGV}"
-
-SRC_URI = "git://github.com/oe-mirrors/PictureCenterFS.git;protocol=https;branch=main"
-
-# Just a quick hack to "compile" it
-do_compile() {
-    cd ${S}
-    for f in $(find ./po -name *.po ); do
-        l=$(echo ${f%} | sed 's/\.po//' | sed 's/.*po\///')
-        mkdir -p ${S}/locale/${l%}/LC_MESSAGES
-        msgfmt -o ${S}/locale/${l%}/LC_MESSAGES/PictureCenterFS.mo ./po/$l.po
-    done
-    cd -
-}
-
-PLUGINPATH = "${libdir}/enigma2/python/Plugins/Extensions/${MODULE}"
-do_install:append() {
-    install -d ${D}${PLUGINPATH}
-    cp --no-preserve=ownership --recursive ${S}/* ${D}${PLUGINPATH}
-}
-
+DESCRIPTION = "PictureCenterFS"
+require conf/license/license-gplv2.inc
 require conf/python/python3-compileall.inc
 
-python populate_packages:prepend() {
-    enigma2_plugindir = bb.data.expand('${libdir}/enigma2/python/Plugins', d)
-    do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/[a-zA-Z0-9_]+.*$', 'enigma2-plugin-%s', '%s', recursive=True, match_path=True, prepend=True, extra_depends="enigma2")
-    do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/.*\.la$', 'enigma2-plugin-%s-dev', '%s (development)', recursive=True, match_path=True, prepend=True)
-    do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/.*\.a$', 'enigma2-plugin-%s-staticdev', '%s (static development)', recursive=True, match_path=True, prepend=True)
-    do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/(.*/)?\.debug/.*$', 'enigma2-plugin-%s-dbg', '%s (debug)', recursive=True, match_path=True, prepend=True)
-    do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/.*\/.*\.po$', 'enigma2-plugin-%s-po', '%s (translations)', recursive=True, match_path=True, prepend=True)
-    do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/.*\/.*\.pot$', 'enigma2-plugin-%s-po', '%s (translations)', recursive=True, match_path=True, prepend=True)
-}
+inherit gittag
 
-do_package_qa[noexec] = "1"
+S = "${UNPACKDIR}/${BP}/src"
+
+SRCREV = "${AUTOREV}"
+PV = "git"
+PKGV = "V${GITPKGVTAG}"
+
+inherit setuptools3-openplugins
+
+SRC_URI = "git://github.com/oe-alliance-plugins/PictureCenterFS.git;protocol=https;branch=main"
+

@@ -1,15 +1,16 @@
-DESCRIPTION = "Plugin for copy or move more files at once"
-MAINTAINER = "ims"
-LICENSE = "Proprietary"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=9432c1f3d564948269193fd19a0ad0fd"
+DESCRIPTION = "copy, move and delete more files at once"
+require conf/license/license-gplv2.inc
 require conf/python/python3-compileall.inc
 
-inherit gitpkgv
+inherit gittag
+
+S = "${UNPACKDIR}/${BP}/src"
 
 SRCREV = "${AUTOREV}"
-PV = "2.0+git"
-PKGV = "2.0+git${GITPKGV}"
-
-SRC_URI = "git://github.com/oe-mirrors/MovieManager.git;protocol=https;branch=master"
+PV = "git"
+PKGV = "V${GITPKGVTAG}"
 
 inherit setuptools3-openplugins
+
+SRC_URI = "git://github.com/oe-alliance-plugins/MovieManager.git;protocol=https;branch=main"
+
