@@ -1,0 +1,47 @@
+From: OpenEmbedded <oe@oe-alliance.org>
+Date: 2026-05-02
+Subject: [PATCH] openssl plugin: fix build with OpenSSL 4.0
+
+OpenSSL 4.0 made ASN1 string types opaque. Use accessor functions
+instead of direct struct member access.
+
+Upstream-Status: Pending
+Signed-off-by: OpenEmbedded <oe@oe-alliance.org>
+
+diff -urN a/src/libstrongswan/plugins/openssl/openssl_util.c b/src/libstrongswan/plugins/openssl/openssl_util.c
+--- a/src/libstrongswan/plugins/openssl/openssl_util.c	2026-05-02 18:00:35.427648339 +0200
++++ b/src/libstrongswan/plugins/openssl/openssl_util.c	2026-05-02 18:00:35.443613546 +0200
+@@ -335,11 +335,11 @@
+ 	if (time)
+ 	{
+ 		chunk = openssl_asn1_str2chunk(time);
+-		switch (time->type)
++		switch (ASN1_STRING_type(time))
+ 		{
+ 			case V_ASN1_UTCTIME:
+ 			case V_ASN1_GENERALIZEDTIME:
+-				return asn1_to_time(&chunk, time->type);
++				return asn1_to_time(&chunk, ASN1_STRING_type(time));
+ 			default:
+ 				break;
+ 		}
+diff -urN a/src/libstrongswan/plugins/openssl/openssl_x509.c b/src/libstrongswan/plugins/openssl/openssl_x509.c
+--- a/src/libstrongswan/plugins/openssl/openssl_x509.c	2026-05-02 18:00:35.431674011 +0200
++++ b/src/libstrongswan/plugins/openssl/openssl_x509.c	2026-05-02 18:00:35.452392793 +0200
+@@ -725,12 +725,12 @@
+ 	usage = X509V3_EXT_d2i(ext);
+ 	if (usage)
+ 	{
+-		if (usage->length > 0)
++		if (ASN1_STRING_length(usage) > 0)
+ 		{
+-			int flags = usage->data[0];
+-			if (usage->length > 1)
++			int flags = ASN1_STRING_get0_data(usage)[0];
++			if (ASN1_STRING_length(usage) > 1)
+ 			{
+-				flags |= usage->data[1] << 8;
++				flags |= ASN1_STRING_get0_data(usage)[1] << 8;
+ 			}
+ 			if (flags & X509v3_KU_CRL_SIGN)
+ 			{
