@@ -8,12 +8,11 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=8f0e2cd40e05189ec81232da84bd6e1a"
 DEPENDS = "gettext-native neon"
 RRECOMMENDS:${PN} = "kernel-module-coda"
 
-SRC_URI = "https://source.mynonpublic.com/${BP}.tar.gz \
-           file://0001-allow-building-against-newer-neon.patch \
+SRC_URI = "https://download.savannah.nongnu.org/releases/${BPN}/${BP}.tar.gz \
            file://neon-config \
            file://volatiles"
 
-SRC_URI[sha256sum] = "251db75a27380cca1330b1b971700c5e5dcc0c90e5a47622285f0140edfe3a2f"
+SRC_URI[sha256sum] = "a5368161eb5055651d7e5e8180c1606da95e78c941b6bb8a9286df7923cfcba9"
 
 inherit autotools pkgconfig useradd
 
