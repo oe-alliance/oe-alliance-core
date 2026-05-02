@@ -2,6 +2,8 @@ PR .= ".1"
 
 inherit upx-compress
 
+PARALLEL_MAKEINST = ""
+
 FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 
 DEPENDS += "openssl"
@@ -13,6 +15,7 @@ SRC_URI += " \
         file://wpa_action \
         file://wpa_action.8 \
         file://fix-build-openssl102q.patch \
+        file://openssl40-opaque-asn1.patch \
 "
 
 do_configure:append() {
