@@ -17,7 +17,7 @@ inherit setuptools3-base python3-dir
 do_compile() {
     swig -python -c++ ${UNPACKDIR}/png_util.i
     ${CXX} -O2 -c -fPIC ${UNPACKDIR}/png_util.cpp ${UNPACKDIR}/png_util_wrap.cxx -I${STAGING_INCDIR}/${PYTHON_DIR}
-    ${CXX} -shared ${S}/png_util.o ${S}/png_util_wrap.o -o _png_util.so -L${STAGING_LIBDIR} -lpng -fPIC
+    ${CXX} -shared ${S}/png_util.o ${S}/png_util_wrap.o -o _png_util.so -L${STAGING_LIBDIR} -lpng -fPIC ${LDFLAGS}
 }
 
 do_install() {
