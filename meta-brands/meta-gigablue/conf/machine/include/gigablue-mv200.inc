@@ -1,7 +1,5 @@
 require conf/machine/include/gigablue-oem.inc
 
-DISTRO_FEATURES:remove = "x11 wayland"
-
 MTD_BLACK  = "mmcblk0"
 
 VER = "-gbmv200"

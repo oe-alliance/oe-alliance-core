@@ -4,8 +4,6 @@ PACKAGECONFIG_FB:pn-qtbase = " "
 # We know about rtc
 include conf/machine/include/build-extras.inc
 
-DISTRO_FEATURES:remove = "x11 wayland"
-
 BRAND_OEM = "anadol"
 
 IMAGEDIR = "anadol/${MACHINE}"
