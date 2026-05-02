@@ -1,0 +1,40 @@
+From: OpenEmbedded <oe@oe-alliance.org>
+Date: 2026-04-30
+Subject: [PATCH] _ssl: disable removed TLS version-specific methods for OpenSSL 4.0
+
+OpenSSL 4.0 removed the legacy TLS version-specific method functions
+(TLSv1_method, TLSv1_1_method, TLSv1_2_method, SSLv3_method).
+These functions were deprecated since OpenSSL 1.1.0 and are no longer
+present in OpenSSL 4.0.
+
+Python 3.14.4's _ssl.c guards these with OPENSSL_NO_*_METHOD macros,
+but OpenSSL 4.0 doesn't define those macros even though the functions
+are gone, causing "undefined symbol" errors at runtime.
+
+This is a backport of the fix from CPython PR #146217 (merged 2026-03-25)
+which will be included in Python 3.14.5.
+
+Upstream-Status: Backport [https://github.com/python/cpython/pull/146217]
+Signed-off-by: OpenEmbedded <oe@oe-alliance.org>
+
+--- a/Modules/_ssl.c
++++ b/Modules/_ssl.c
+@@ -133,6 +133,18 @@
+ #else
+ #error Unsupported OpenSSL version
+ #endif
++
++/* OpenSSL 4.0 removed legacy protocol support and method functions */
++#if (OPENSSL_VERSION_NUMBER >= 0x40000000L)
++# define OPENSSL_NO_SSL3
++# define OPENSSL_NO_TLS1
++# define OPENSSL_NO_TLS1_1
++# define OPENSSL_NO_TLS1_2
++# define OPENSSL_NO_SSL3_METHOD
++# define OPENSSL_NO_TLS1_METHOD
++# define OPENSSL_NO_TLS1_1_METHOD
++# define OPENSSL_NO_TLS1_2_METHOD
++#endif
+
+ /* OpenSSL API 1.1.0+ does not include version methods */
+ #ifndef OPENSSL_NO_SSL3_METHOD

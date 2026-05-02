@@ -1,5 +1,6 @@
 FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 SRC_URI += "file://use-legacy-path-for-pycs.patch"
+SRC_URI += "file://openssl40-ssl-module.patch"
 
 PACKAGECONFIG = "readline gdbm ${@bb.utils.filter('DISTRO_FEATURES', 'lto', d)}"
 
