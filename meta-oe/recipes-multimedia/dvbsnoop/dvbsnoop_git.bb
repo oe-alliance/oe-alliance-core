@@ -8,8 +8,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f"
 inherit gitpkgv
 
 SRCREV = "${AUTOREV}"
-PV = "1.4.55+git"
-PKGV = "1.4.55+git${GITPKGV}"
+PV = "1.4.56+git"
+PKGV = "1.4.56+git${GITPKGV}"
 
 SRC_URI = "git://github.com/OpenVisionE2/dvbsnoop.git;protocol=https;branch=master"
 
