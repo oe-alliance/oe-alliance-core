@@ -1,0 +1,37 @@
+From: OpenEmbedded <oe@oe-alliance.org>
+Date: 2026-05-02
+Subject: [PATCH] openssl: fix build with OpenSSL 4.0
+
+OpenSSL 4.0 removed SSLv3_client_method() and SSLv23_client_method().
+Use TLS_client_method() with appropriate version constraints instead,
+guarded by OPENSSL_VERSION_NUMBER >= 0x10100000L.
+
+Upstream-Status: Pending
+Signed-off-by: OpenEmbedded <oe@oe-alliance.org>
+
+diff -urN a/src/openssl.c b/src/openssl.c
+--- a/src/openssl.c	2026-05-02 17:20:53.406679801 +0200
++++ b/src/openssl.c	2026-05-02 17:21:10.165242688 +0200
+@@ -226,14 +226,21 @@
+       break;
+ 
+     case secure_protocol_sslv3:
+-#ifndef OPENSSL_NO_SSL3_METHOD
++#if !defined(LIBRESSL_VERSION_NUMBER) && (OPENSSL_VERSION_NUMBER >= 0x10100000L)
++      meth = TLS_client_method();
++      ssl_proto_version = SSL3_VERSION;
++#elif !defined OPENSSL_NO_SSL3_METHOD
+       meth = SSLv3_client_method ();
+ #endif
+       break;
+ 
+     case secure_protocol_auto:
+     case secure_protocol_pfs:
++#if !defined(LIBRESSL_VERSION_NUMBER) && (OPENSSL_VERSION_NUMBER >= 0x10100000L)
++      meth = TLS_client_method();
++#else
+       meth = SSLv23_client_method ();
++#endif
+       ssl_options |= SSL_OP_NO_SSLv2 | SSL_OP_NO_SSLv3;
+       break;
+     case secure_protocol_tlsv1:

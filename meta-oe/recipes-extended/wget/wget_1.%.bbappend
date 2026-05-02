@@ -4,6 +4,7 @@ PR:append = ".1"
 
 SRC_URI:append = " \
            file://0002-Strip-long-version-output.patch \
+           file://openssl40-removed-methods.patch \
           "
 
 do_install:append() {
