@@ -8,7 +8,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=8f0e2cd40e05189ec81232da84bd6e1a"
 DEPENDS = "gettext-native neon"
 RRECOMMENDS:${PN} = "kernel-module-coda"
 
-SRC_URI = "http://download.savannah.nongnu.org/releases/davfs2/${BP}.tar.gz \
+SRC_URI = "https://source.mynonpublic.com/${BP}.tar.gz \
            file://0001-allow-building-against-newer-neon.patch \
            file://neon-config \
            file://volatiles"
