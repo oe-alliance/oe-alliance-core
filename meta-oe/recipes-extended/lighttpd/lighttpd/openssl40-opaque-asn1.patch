@@ -1,0 +1,24 @@
+From: OpenEmbedded <oe@oe-alliance.org>
+Date: 2026-05-02
+Subject: [PATCH] mod_openssl: fix build with OpenSSL 4.0
+
+OpenSSL 4.0 made ASN1 string types opaque. Use accessor functions
+instead of direct struct member access.
+
+Upstream-Status: Pending
+Signed-off-by: OpenEmbedded <oe@oe-alliance.org>
+
+diff -urN a/src/mod_openssl.c b/src/mod_openssl.c
+--- a/src/mod_openssl.c	2026-05-02 18:13:23.201376046 +0200
++++ b/src/mod_openssl.c	2026-05-02 18:13:23.222811817 +0200
+@@ -4860,8 +4860,8 @@
+             if (prelen+len >= sizeof(key)) continue;
+             memcpy(key+prelen, xobjsn, len); /*(not '\0'-terminated)*/
+             http_header_env_set(r, key, prelen+len,
+-                                (const char*)X509_NAME_ENTRY_get_data(xe)->data,
+-                                X509_NAME_ENTRY_get_data(xe)->length);
++                                (const char*)ASN1_STRING_get0_data(X509_NAME_ENTRY_get_data(xe)),
++                                ASN1_STRING_length(X509_NAME_ENTRY_get_data(xe)));
+         }
+     }
+ }
