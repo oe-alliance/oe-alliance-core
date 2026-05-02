@@ -1,0 +1,242 @@
+From: Eddie Kovsky <ekovsky@gmail.com>
+Subject: [PATCH v2] Add support for OpenSSL Provider API
+
+The Engine API has been deprecated since the release of OpenSSL 3.0,
+and end users have been advised to migrate to the new Provider
+interface. Several distributions have already removed support for
+engines, which is preventing u-boot from being compiled in those
+environments.
+
+Add support for the Provider API while continuing to support the
+existing Engine API on distros shipping older releases of OpenSSL.
+
+Tested with the FIT signature verification vboot tests on Fedora 42
+and Debian 13.
+
+Upstream-Status: Pending [https://www.mail-archive.com/u-boot@lists.denx.de/msg557371.html]
+Signed-off-by: Eddie Kovsky <ekovsky@gmail.com>
+
+--- a/lib/rsa/rsa-sign.c
++++ b/lib/rsa/rsa-sign.c
+@@ -19,7 +19,43 @@
+ #include <openssl/err.h>
+ #include <openssl/ssl.h>
+ #include <openssl/evp.h>
++#ifdef CONFIG_OPENSSL_NO_DEPRECATED
++#include <err.h>
++#include <openssl/provider.h>
++#include <openssl/store.h>
++#else
+ #include <openssl/engine.h>
++#endif
++
++#ifdef CONFIG_OPENSSL_NO_DEPRECATED
++#define ERR(cond, fmt, ...)                            \
++       do {                                            \
++               bool __cond = (cond);                   \
++               drain_openssl_errors(__LINE__, 0);      \
++               if (__cond) {                           \
++                       errx(1, fmt, ## __VA_ARGS__);   \
++               }                                       \
++       } while (0)
++
++static void drain_openssl_errors(int l, int silent)
++{
++       const char *file;
++       char buf[120];
++       int e, line;
++
++       if (ERR_peek_error() == 0)
++               return;
++       if (!silent)
++               fprintf(stderr, "At main.c:%d:\n", l);
++
++       while ((e = ERR_peek_error_line(&file, &line))) {
++               ERR_error_string(e, buf);
++               if (!silent)
++                       fprintf(stderr, "- SSL %s: %s:%d\n", buf, file, line);
++               ERR_get_error();
++       }
++}
++#endif
+
+ static int rsa_err(const char *msg)
+ {
+@@ -98,6 +134,7 @@ err_cert:
+  * @evpp	Returns EVP_PKEY object, or NULL on failure
+  * Return: 0 if ok, -ve on error (in which case *evpp will be set to NULL)
+  */
++#ifndef CONFIG_OPENSSL_NO_DEPRECATED
+ static int rsa_engine_get_pub_key(const char *keydir, const char *name,
+ 				  ENGINE *engine, EVP_PKEY **evpp)
+ {
+@@ -157,6 +194,7 @@ static int rsa_engine_get_pub_key(const char *keydir, const char *name,
+
+ 	return 0;
+ }
++#endif
+
+ /**
+  * rsa_get_pub_key() - read a public key
+@@ -170,8 +208,10 @@ static int rsa_engine_get_pub_key(const char *keydir, const char *name,
+ static int rsa_get_pub_key(const char *keydir, const char *name,
+ 			   ENGINE *engine, EVP_PKEY **evpp)
+ {
++#ifndef CONFIG_OPENSSL_NO_DEPRECATED
+ 	if (engine)
+ 		return rsa_engine_get_pub_key(keydir, name, engine, evpp);
++#endif
+ 	return rsa_pem_get_pub_key(keydir, name, evpp);
+ }
+
+@@ -207,6 +247,37 @@ static int rsa_pem_get_priv_key(const char *keydir, const char *name,
+ 		return -ENOENT;
+ 	}
+
++#ifdef CONFIG_OPENSSL_NO_DEPRECATED
++	EVP_PKEY *private_key = NULL;
++	OSSL_STORE_CTX *store;
++
++	if (!OSSL_PROVIDER_try_load(NULL, "pkcs11", true))
++		ERR(1, "OSSL_PROVIDER_try_load(pkcs11)");
++	if (!OSSL_PROVIDER_try_load(NULL, "default", true))
++		ERR(1, "OSSL_PROVIDER_try_load(default)");
++
++	store = OSSL_STORE_open(path, NULL, NULL, NULL, NULL);
++	ERR(!store, "OSSL_STORE_open");
++
++	while (!OSSL_STORE_eof(store)) {
++		OSSL_STORE_INFO *info = OSSL_STORE_load(store);
++
++		if (!info) {
++			drain_openssl_errors(__LINE__, 0);
++			continue;
++		}
++		if (OSSL_STORE_INFO_get_type(info) == OSSL_STORE_INFO_PKEY) {
++			private_key = OSSL_STORE_INFO_get1_PKEY(info);
++			ERR(!private_key, "OSSL_STORE_INFO_get1_PKEY");
++		}
++		OSSL_STORE_INFO_free(info);
++		if (private_key)
++			break;
++	}
++	OSSL_STORE_close(store);
++
++	*evpp = private_key;
++#else
+ 	if (!PEM_read_PrivateKey(f, evpp, NULL, path)) {
+ 		rsa_err("Failure reading private key");
+ 		fclose(f);
+@@ -214,6 +285,7 @@ static int rsa_pem_get_priv_key(const char *keydir, const char *name,
+ 	}
+ 	fclose(f);
+
++#endif
+ 	return 0;
+ }
+
+@@ -226,6 +298,7 @@ static int rsa_pem_get_priv_key(const char *keydir, const char *name,
+  * @evpp	Returns EVP_PKEY object, or NULL on failure
+  * Return: 0 if ok, -ve on error (in which case *evpp will be set to NULL)
+  */
++#ifndef CONFIG_OPENSSL_NO_DEPRECATED
+ static int rsa_engine_get_priv_key(const char *keydir, const char *name,
+ 				   const char *keyfile,
+ 				   ENGINE *engine, EVP_PKEY **evpp)
+@@ -293,6 +366,7 @@ static int rsa_engine_get_priv_key(const char *keydir, const char *name,
+
+ 	return 0;
+ }
++#endif
+
+ /**
+  * rsa_get_priv_key() - read a private key
+@@ -306,9 +380,11 @@ static int rsa_engine_get_priv_key(const char *keydir, const char *name,
+ static int rsa_get_priv_key(const char *keydir, const char *name,
+ 			    const char *keyfile, ENGINE *engine, EVP_PKEY **evpp)
+ {
++#ifndef CONFIG_OPENSSL_NO_DEPRECATED
+ 	if (engine)
+ 		return rsa_engine_get_priv_key(keydir, name, keyfile, engine,
+ 					       evpp);
++#endif
+ 	return rsa_pem_get_priv_key(keydir, name, keyfile, evpp);
+ }
+
+@@ -325,6 +401,7 @@ static int rsa_init(void)
+ 	return 0;
+ }
+
++#ifndef CONFIG_OPENSSL_NO_DEPRECATED
+ static int rsa_engine_init(const char *engine_id, ENGINE **pe)
+ {
+ 	const char *key_pass;
+@@ -380,6 +457,7 @@ static void rsa_engine_remove(ENGINE *e)
+ 		ENGINE_free(e);
+ 	}
+ }
++#endif
+
+ static int rsa_sign_with_key(EVP_PKEY *pkey, struct padding_algo *padding_algo,
+ 			     struct checksum_algo *checksum_algo,
+@@ -480,11 +558,13 @@ int rsa_sign(struct image_sign_info *info,
+ 	if (ret)
+ 		return ret;
+
++#ifndef CONFIG_OPENSSL_NO_DEPRECATED
+ 	if (info->engine_id) {
+ 		ret = rsa_engine_init(info->engine_id, &e);
+ 		if (ret)
+ 			return ret;
+ 	}
++#endif
+
+ 	ret = rsa_get_priv_key(info->keydir, info->keyname, info->keyfile,
+ 			       e, &pkey);
+@@ -496,16 +576,21 @@ int rsa_sign(struct image_sign_info *info,
+ 		goto err_sign;
+
+ 	EVP_PKEY_free(pkey);
++
++#ifndef CONFIG_OPENSSL_NO_DEPRECATED
+ 	if (info->engine_id)
+ 		rsa_engine_remove(e);
++#endif
+
+ 	return ret;
+
+ err_sign:
+ 	EVP_PKEY_free(pkey);
+ err_priv:
++#ifndef CONFIG_OPENSSL_NO_DEPRECATED
+ 	if (info->engine_id)
+ 		rsa_engine_remove(e);
++#endif
+ 	return ret;
+ }
+
+@@ -645,11 +730,13 @@ int rsa_add_verify_data(struct image_sign_info *info, void *keydest)
+ 	ENGINE *e = NULL;
+
+ 	debug("%s: Getting verification data\n", __func__);
++#ifndef CONFIG_OPENSSL_NO_DEPRECATED
+ 	if (info->engine_id) {
+ 		ret = rsa_engine_init(info->engine_id, &e);
+ 		if (ret)
+ 			return ret;
+ 	}
++#endif
+ 	ret = rsa_get_pub_key(info->keydir, info->keyname, e, &pkey);
+ 	if (ret)
+ 		goto err_get_pub_key;
+@@ -726,8 +813,10 @@ done:
+ err_get_params:
+ 	EVP_PKEY_free(pkey);
+ err_get_pub_key:
++#ifndef CONFIG_OPENSSL_NO_DEPRECATED
+ 	if (info->engine_id)
+ 		rsa_engine_remove(e);
++#endif
+
+ 	if (ret)
+ 		return ret;
