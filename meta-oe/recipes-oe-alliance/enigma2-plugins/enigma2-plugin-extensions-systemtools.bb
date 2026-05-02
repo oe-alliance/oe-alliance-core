@@ -17,6 +17,5 @@ SRC_URI = "git://github.com/oe-alliance-plugins/SystemTools.git;protocol=https;b
 FILES:${PN} += "${libdir}/enigma2/python/Plugins/Extensions/SystemTools"
 
 do_install:append() {
-    install -d ${D}${bindir}
     install -m 0755 ${S}/SystemTools/memorysimple.sh ${D}${libdir}/enigma2/python/Plugins/Extensions/SystemTools/memorysimple.sh
 }
