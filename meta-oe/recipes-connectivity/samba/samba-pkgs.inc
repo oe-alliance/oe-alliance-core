@@ -67,6 +67,7 @@ CONFFILES:${BPN}-common = "${sysconfdir}/pam.d/samba \
                            ${sysconfdir}/samba/shares/share.template \
                           "
 
+RDEPENDS:${BPN}-common += "libpam-runtime"
 RRECOMMENDS:${BPN}-common += "pam-pluginsmbpass"
 INSANE_SKIP:${BPN}-common += "dev-so"
 
