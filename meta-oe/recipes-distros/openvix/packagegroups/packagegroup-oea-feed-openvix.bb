@@ -73,6 +73,7 @@ RRECOMMENDS:${PN} = "\
     enigma2-plugin-systemplugins-aspectratioswitch \
     enigma2-plugin-systemplugins-automaticcleanup \
     enigma2-plugin-systemplugins-automatictimerlistcleanup \
+    enigma2-plugin-systemplugins-automaticvolumeadjustment \
     enigma2-plugin-systemplugins-autoresolution \
     enigma2-plugin-systemplugins-crossepg \
     enigma2-plugin-systemplugins-eitconfig \
