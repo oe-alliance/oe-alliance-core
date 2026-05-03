@@ -23,6 +23,7 @@ RRECOMMENDS:${PN} = "\
     ${@bb.utils.contains("MACHINE_FEATURES", "skins1080", "enigma2-plugin-skins-e2-darkos", "", d)} \
     enigma2-plugin-skins-vix-turquoise-hd \
     enigma2-plugin-skins-simple-gray \
+    enigma2-plugin-systemplugins-automaticvolumeadjustment \
     enigma2-plugin-systemplugins-crossepg \
     enigma2-plugin-systemplugins-remotecontrolselection \
     enigma2-plugin-systemplugins-terrestrialscan \
