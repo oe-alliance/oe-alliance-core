@@ -1,0 +1,149 @@
+From: OpenATV <openatv@opena.tv>
+Subject: [PATCH] fix build with OpenSSL 4.0 (opaque ASN1 types)
+
+OpenSSL 4.0 makes ASN1_STRING and derived types opaque. Replace direct
+struct member access with accessor functions. Fix const correctness for
+X509_EXTENSION, X509_NAME, and X509_NAME_ENTRY pointers.
+
+Upstream-Status: Inappropriate [OE specific]
+
+--- a/deps/ncrypto/ncrypto.cc	2026-05-04 16:30:29.287140824 +0200
++++ b/deps/ncrypto/ncrypto.cc	2026-05-04 16:30:43.184964250 +0200
+@@ -643,11 +643,11 @@
+     // Note that the preferred name syntax (see RFCs 5280 and 1034) with
+     // wildcards is a subset of what we consider "safe", so spec-compliant DNS
+     // names will never need to be escaped.
+-    PrintAltName(out, reinterpret_cast<const char*>(name->data), name->length);
++    PrintAltName(out, reinterpret_cast<const char*>(ASN1_STRING_get0_data(name)), ASN1_STRING_length(name));
+   } else if (gen->type == GEN_EMAIL) {
+     ASN1_IA5STRING* name = gen->d.rfc822Name;
+     BIO_write(out.get(), "email:", 6);
+-    PrintAltName(out, reinterpret_cast<const char*>(name->data), name->length);
++    PrintAltName(out, reinterpret_cast<const char*>(ASN1_STRING_get0_data(name)), ASN1_STRING_length(name));
+   } else if (gen->type == GEN_URI) {
+     ASN1_IA5STRING* name = gen->d.uniformResourceIdentifier;
+     BIO_write(out.get(), "URI:", 4);
+@@ -655,7 +655,7 @@
+     // with a few exceptions, most notably URIs that contains commas (see
+     // RFC 2396). In other words, most legitimate URIs will not require
+     // escaping.
+-    PrintAltName(out, reinterpret_cast<const char*>(name->data), name->length);
++    PrintAltName(out, reinterpret_cast<const char*>(ASN1_STRING_get0_data(name)), ASN1_STRING_length(name));
+   } else if (gen->type == GEN_DIRNAME) {
+     // Earlier versions of Node.js used X509_NAME_oneline to print the X509_NAME
+     // object. The format was non standard and should be avoided. The use of
+@@ -688,17 +688,17 @@
+   } else if (gen->type == GEN_IPADD) {
+     BIO_printf(out.get(), "IP Address:");
+     const ASN1_OCTET_STRING* ip = gen->d.ip;
+-    const unsigned char* b = ip->data;
+-    if (ip->length == 4) {
++    const unsigned char* b = ASN1_STRING_get0_data(ip);
++    if (ASN1_STRING_length(ip) == 4) {
+       BIO_printf(out.get(), "%d.%d.%d.%d", b[0], b[1], b[2], b[3]);
+-    } else if (ip->length == 16) {
++    } else if (ASN1_STRING_length(ip) == 16) {
+       for (unsigned int j = 0; j < 8; j++) {
+         uint16_t pair = (b[2 * j] << 8) | b[2 * j + 1];
+         BIO_printf(out.get(), (j == 0) ? "%X" : ":%X", pair);
+       }
+     } else {
+ #if OPENSSL_VERSION_MAJOR >= 3
+-      BIO_printf(out.get(), "<invalid length=%d>", ip->length);
++      BIO_printf(out.get(), "<invalid length=%d>", ASN1_STRING_length(ip));
+ #else
+       BIO_printf(out.get(), "<invalid>");
+ #endif
+@@ -748,15 +748,15 @@
+       if (unicode) {
+         auto name = gen->d.otherName->value->value.utf8string;
+         PrintAltName(out,
+-                     reinterpret_cast<const char*>(name->data),
+-                     name->length,
++                     reinterpret_cast<const char*>(ASN1_STRING_get0_data(name)),
++                     ASN1_STRING_length(name),
+                      AltNameOption::UTF8,
+                      prefix);
+       } else {
+         auto name = gen->d.otherName->value->value.ia5string;
+         PrintAltName(out,
+-                     reinterpret_cast<const char*>(name->data),
+-                     name->length,
++                     reinterpret_cast<const char*>(ASN1_STRING_get0_data(name)),
++                     ASN1_STRING_length(name),
+                      AltNameOption::NONE,
+                      prefix);
+       }
+@@ -777,7 +777,7 @@
+ }
+ }  // namespace
+ 
+-bool SafeX509SubjectAltNamePrint(const BIOPointer& out, X509_EXTENSION* ext) {
++bool SafeX509SubjectAltNamePrint(const BIOPointer& out, const X509_EXTENSION* ext) {
+   auto ret = OBJ_obj2nid(X509_EXTENSION_get_object(ext));
+   NCRYPTO_ASSERT_EQUAL(ret, NID_subject_alt_name, "unexpected extension type");
+ 
+@@ -800,7 +800,7 @@
+   return ok;
+ }
+ 
+-bool SafeX509InfoAccessPrint(const BIOPointer& out, X509_EXTENSION* ext) {
++bool SafeX509InfoAccessPrint(const BIOPointer& out, const X509_EXTENSION* ext) {
+   auto ret = OBJ_obj2nid(X509_EXTENSION_get_object(ext));
+   NCRYPTO_ASSERT_EQUAL(ret, NID_info_access, "unexpected extension type");
+ 
+@@ -937,7 +937,7 @@
+   if (cert_ == nullptr) return {};
+   BIOPointer bio(BIO_new(BIO_s_mem()));
+   if (!bio) return {};
+-  ASN1_TIME_print(bio.get(), X509_get_notBefore(cert_));
++  ASN1_TIME_print(bio.get(), X509_get0_notBefore(cert_));
+   return bio;
+ }
+ 
+@@ -946,7 +946,7 @@
+   if (cert_ == nullptr) return {};
+   BIOPointer bio(BIO_new(BIO_s_mem()));
+   if (!bio) return {};
+-  ASN1_TIME_print(bio.get(), X509_get_notAfter(cert_));
++  ASN1_TIME_print(bio.get(), X509_get0_notAfter(cert_));
+   return bio;
+ }
+ 
+--- a/deps/ncrypto/ncrypto.h	2026-05-04 16:30:29.287221845 +0200
++++ b/deps/ncrypto/ncrypto.h	2026-05-04 16:30:43.188915010 +0200
+@@ -1009,8 +1009,8 @@
+ 
+ int PasswordCallback(char* buf, int size, int rwflag, void* u);
+ 
+-bool SafeX509SubjectAltNamePrint(const BIOPointer& out, X509_EXTENSION* ext);
+-bool SafeX509InfoAccessPrint(const BIOPointer& out, X509_EXTENSION* ext);
++bool SafeX509SubjectAltNamePrint(const BIOPointer& out, const X509_EXTENSION* ext);
++bool SafeX509InfoAccessPrint(const BIOPointer& out, const X509_EXTENSION* ext);
+ 
+ // ============================================================================
+ // SPKAC
+--- a/src/crypto/crypto_x509.cc	2026-05-04 16:30:29.287273733 +0200
++++ b/src/crypto/crypto_x509.cc	2026-05-04 16:30:43.194938270 +0200
+@@ -596,10 +596,10 @@
+ // Convert an X509_NAME* into a JavaScript object.
+ // Each entry of the name is converted into a property of the object.
+ // The property value may be a single string or an array of strings.
+-template <X509_NAME* get_name(const X509*)>
++template <const X509_NAME* get_name(const X509*)>
+ static MaybeLocal<Value> GetX509NameObject(Environment* env,
+                                            const X509View& cert) {
+-  X509_NAME* name = get_name(cert.get());
++  const X509_NAME* name = get_name(cert.get());
+   CHECK_NOT_NULL(name);
+ 
+   int cnt = X509_NAME_entry_count(name);
+@@ -613,7 +613,7 @@
+   if (result.IsEmpty()) return {};
+ 
+   for (int i = 0; i < cnt; i++) {
+-    X509_NAME_ENTRY* entry = X509_NAME_get_entry(name, i);
++    const X509_NAME_ENTRY* entry = X509_NAME_get_entry(name, i);
+     CHECK_NOT_NULL(entry);
+ 
+     if (!ToV8Value(env->context(), X509_NAME_ENTRY_get_object(entry))

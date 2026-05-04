@@ -20,24 +20,25 @@ COMPATIBLE_HOST:riscv32 = "null"
 COMPATIBLE_HOST:powerpc = "null"
 
 SRC_URI = "http://nodejs.org/dist/v${PV}/node-v${PV}.tar.xz \
-           file://0004-v8-don-t-override-ARM-CFLAGS.patch \
+           file://0004-v8-don-t-override-ARM-CFLAGS-node18.patch \
            file://big-endian.patch \
            file://mips-less-memory.patch \
-           file://system-c-ares.patch \
-           file://0001-liftoff-Correct-function-signatures.patch \
+           file://system-c-ares-node18.patch \
+           file://0001-liftoff-Correct-function-signatures-node18.patch \
            file://0001-mips-Use-32bit-cast-for-operand-on-mips32.patch \
-           file://run-ptest \
+           file://run-ptest-node18 \
            file://fix-mips-build.patch \
            file://fix-build-with-icu-76.patch \
            file://0001-build-support-python-3.14.patch \
            file://fix-build-with-gcc15.patch \
+           file://openssl40-opaque-asn1-node18.patch \
            "
 
 SRC_URI:append:class-target = " \
-           file://0001-Using-native-binaries.patch \
+           file://0001-Using-native-binaries-node18.patch \
            "
 SRC_URI:append:toolchain-clang:x86 = " \
-           file://libatomic.patch \
+           file://libatomic-node18.patch \
            "
 SRC_URI:append:toolchain-clang:powerpc64le = " \
            file://0001-ppc64-Do-not-use-mminimal-toc-with-clang.patch \
@@ -47,6 +48,9 @@ SRC_URI[sha256sum] = "36a7bf1a76d62ce4badd881ee5974a323c70e1d8d19165732684e14563
 S = "${UNPACKDIR}/node-v${PV}"
 
 CVE_PRODUCT += "node.js"
+
+# Suppress OpenSSL 3.0 deprecation warnings (legacy API still functional in 4.0)
+CXXFLAGS:append = " -Wno-deprecated-declarations"
 
 # v8 errors out if you have set CCACHE
 CCACHE = ""
