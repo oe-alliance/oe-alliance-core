@@ -22,6 +22,7 @@ SRC_URI += "https://source.mynonpublic.com/edision/linux-edision-${PV}.tar.gz \
     file://defconfig \
     file://findkerneldevice.py \
     file://0001-ata-ahci-fix-enum-constants-for-gcc-13.patch \
+    file://openssl.patch \
     "
 
 S = "${UNPACKDIR}/linux-brcmstb-${PV}"

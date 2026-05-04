@@ -1,0 +1,12 @@
+--- a/scripts/extract-cert.c	2026-05-04 21:30:22.215972221 +0200
++++ b/scripts/extract-cert.c	2026-05-04 21:31:31.023491775 +0200
+@@ -21,6 +21,9 @@
+ #include <openssl/bio.h>
+ #include <openssl/pem.h>
+ #include <openssl/err.h>
++#ifndef OPENSSL_ENGINE_STUBS
++#define OPENSSL_ENGINE_STUBS
++#endif
+ #include <openssl/engine.h>
+ 
+ #define PKEY_ID_PKCS7 2
