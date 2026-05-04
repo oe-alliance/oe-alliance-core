@@ -16,8 +16,8 @@ SRC_URI = "https://source.mynonpublic.com/edision/edision-blindscan-utils-${MACH
 
 S = "${UNPACKDIR}"
 
-FILES:edision-blindscan-dvbs-utils-${MACHINE} = "${bindir}/blindscan"
-FILES:edision-blindscan-dvbc-utils-${MACHINE} = "${bindir}/tda1002x"
+FILES:edision-blindscan-dvbs-utils-osninopro = "${bindir}/blindscan"
+FILES:edision-blindscan-dvbc-utils-osninopro = "${bindir}/tda1002x"
 
 do_install() {
 	install -d ${D}${bindir}
