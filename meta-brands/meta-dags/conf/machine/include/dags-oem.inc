@@ -525,7 +525,6 @@ DVBMEDIASINK_CONFIG = "--with-pcm --with-eac3 --with-amr --with-wmv \
 "
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-dags"
-PREFERRED_PROVIDER_virtual/transtreamproxy = "vuplus-transtreamproxy"
 
 PREFERRED_PROVIDER_virtual/kodi = "stb-kodi-${MACHINE}"
 
