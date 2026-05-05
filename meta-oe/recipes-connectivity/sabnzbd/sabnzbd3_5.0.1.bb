@@ -25,8 +25,8 @@ SRC_URI = "https://github.com/sabnzbd/sabnzbd/releases/download/${PV}/SABnzbd-${
     file://init-functions \
     "
 
-SRC_URI[md5sum] = "eac8409603ff89fe08d0e135dc363237"
-SRC_URI[sha256sum] = "ecb833671cdbba164bf5ac362c354ddb56d6bd64e9d30894658c9b263bec036d"
+SRC_URI[md5sum] = "97c11f3d89e78a615ef9cdab5074c82c"
+SRC_URI[sha256sum] = "5db4871356b57e7e731304e03ceb8ac32971648110688d52e5ae1446e92c9d7b"
 
 S = "${UNPACKDIR}/SABnzbd-${PV}"
 
