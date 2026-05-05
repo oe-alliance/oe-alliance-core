@@ -275,7 +275,6 @@ EXTRA_OECONF = " \
     "
 
 CPPFLAGS += "-Wno-error=format-security"
-LIBS:append:mipsel = " -latomic"
 LDFLAGS:prepend = "${@bb.utils.contains('GST_VERSION', '1.0', ' -lxml2 ', '', d)}"
 SRC_URI:append = "${@bb.utils.contains("MACHINE_FEATURES", "uianimation", " file://use-lv3ddriver.patch" , "", d)}"
 
