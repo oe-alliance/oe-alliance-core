@@ -52,6 +52,8 @@ RRECOMMENDS:${PN} = "\
     enigma2-plugin-extensions-hdftoolbox \
     enigma2-plugin-extensions-cutlisteditor \
     enigma2-plugin-extensions-dvdplayer \
+    enigma2-plugin-extensions-enhancedmoviecenter \
+    enigma2-plugin-extensions-volume-adjust \
     enigma2-plugin-systemplugins-devicemanager \
     enigma2-plugin-systemplugins-videotune \
     enigma2-plugin-extensions-moviecut \
@@ -65,6 +67,7 @@ RRECOMMENDS:${PN} = "\
     ${@bb.utils.contains("MACHINE_FEATURES", "dreamboxv2", "e2fsprogs-badblocks", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "webkithbbtv", "enigma2-plugin-extensions-webkithbbtv", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "grautec", "enigma2-plugin-extensions-grautec", "", d)} \
+    pcsc-lite-lib libdvbcsa \
     "
 
 RRECOMMENDS:${PN}:append:dags7335 = " enigma2-plugin-systemplugins-osd3dsetup"

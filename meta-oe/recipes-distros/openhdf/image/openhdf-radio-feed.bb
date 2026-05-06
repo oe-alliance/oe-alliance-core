@@ -6,7 +6,7 @@ require conf/license/license-gplv2.inc
 inherit allarch
 
 PV = "${IMAGE_VERSION}"
-PR = "r3"
+PR = "r4"
 
 PACKAGES = "${PN}"
 
@@ -20,6 +20,9 @@ do_compile() {
     mkdir -p ${S}/${sysconfdir}/opkg
 
       case "${BRANCH}" in
+        "6.0")
+            URI="https://feed.hdfreaks.cc/hdfradio/python3.14_hdf_8.0"
+            ;;
         "5.6")
             URI="https://feed.hdfreaks.cc/hdfradio/python3.13_hdf_7.6"
             ;;
