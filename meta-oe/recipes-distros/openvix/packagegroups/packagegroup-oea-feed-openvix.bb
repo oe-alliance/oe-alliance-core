@@ -32,6 +32,7 @@ RRECOMMENDS:${PN} = "\
     enigma2-plugin-extensions-epgrefresh \
     enigma2-plugin-extensions-epgsearch \
     enigma2-plugin-extensions-esame \
+    enigma2-plugin-extensions-filecommander-orig \
     enigma2-plugin-extensions-fritzcall \
     enigma2-plugin-extensions-ftpbrowser \
     enigma2-plugin-extensions-imdb \
