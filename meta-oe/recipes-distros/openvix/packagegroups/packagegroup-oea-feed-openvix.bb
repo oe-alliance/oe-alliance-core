@@ -67,7 +67,6 @@ RRECOMMENDS:${PN} = "\
     ${@bb.utils.contains("MACHINE_FEATURES", "skins1080", "enigma2-plugin-skins-kiddac-1080-onyx", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "skins1080", "enigma2-plugin-skins-kiddac-1080-slyk-q", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "skins1080", "enigma2-plugin-skins-kiddac-1080-slyk-r19", "", d)} \
-    enigma2-plugin-skins-pli-hd-fullnight \
     enigma2-plugin-skins-simple-gray \
     enigma2-plugin-skins-vix-turquoise-hd \
     enigma2-plugin-systemplugins-aboutboxbranding \
