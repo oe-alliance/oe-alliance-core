@@ -26,6 +26,7 @@ RRECOMMENDS:${PN} = "\
     enigma2-plugin-extensions-bitrateviewer \
     enigma2-plugin-extensions-blurayplayer \
     enigma2-plugin-extensions-bmediacenter \
+    enigma2-plugin-extensions-dreamexplorer \
     enigma2-plugin-extensions-dvdbackup \
     enigma2-plugin-extensions-epgbackup \
     enigma2-plugin-extensions-epgexport \
