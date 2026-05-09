@@ -43,3 +43,11 @@ else
 	echo "No cache file found, continuing."
 fi
 }
+
+pkg_prerm:${PN}() {
+#!/bin/sh
+echo " Deleting ABM's providers.cache file because it will not be removed when uninstalling the plugin. It was not created by opkg."
+
+rm -f /usr/lib/enigma2/python/Plugins/SystemPlugins/AutoBouquetsMaker/providers/providers.cache
+
+}
