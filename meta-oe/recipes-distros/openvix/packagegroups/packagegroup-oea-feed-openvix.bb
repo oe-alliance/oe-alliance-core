@@ -42,6 +42,7 @@ RRECOMMENDS:${PN} = "\
     enigma2-plugin-extensions-logomanager \
     enigma2-plugin-extensions-mediadownloader \
     enigma2-plugin-extensions-moviecut \
+    enigma2-plugin-extensions-movieorganisor \
     enigma2-plugin-extensions-movietagger \
     enigma2-plugin-extensions-multirc \
     enigma2-plugin-extensions-namezap \
