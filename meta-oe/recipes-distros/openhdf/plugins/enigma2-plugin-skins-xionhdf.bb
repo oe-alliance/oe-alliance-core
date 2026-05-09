@@ -15,7 +15,7 @@ PKGV = "1.0+git${GITPKGV}"
 VER = "1.0"
 PR = "r7"
 
-SRC_URI="git://github.com/openhdf/XionHDF.git;branch=python3;protocol=https"
+SRC_URI = "git://github.com/openhdf/XionHDF.git;branch=python3;protocol=https"
 
 FILES:${PN} = "/usr/share ${libdir}"
 
