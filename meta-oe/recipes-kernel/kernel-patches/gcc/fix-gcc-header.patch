@@ -1,11 +1,11 @@
-diff --git a/include/linux/compiler-gcc15.h b/include/linux/compiler-gcc15.h
+diff --git a/include/linux/compiler-gcc16.h b/include/linux/compiler-gcc16.h
 new file mode 100644
-index 00000000..f708e75a
+index 00000000..f708e75b
 --- /dev/null
-+++ b/include/linux/compiler-gcc15.h
++++ b/include/linux/compiler-gcc16.h
 @@ -0,0 +1,59 @@
 +#ifndef __LINUX_COMPILER_H
-+#error "Please don't include <linux/compiler-gcc15.h> directly, include <linux/compiler.h> instead."
++#error "Please don't include <linux/compiler-gcc16.h> directly, include <linux/compiler.h> instead."
 +#endif
 +
 +#define __used				__attribute__((__used__))
