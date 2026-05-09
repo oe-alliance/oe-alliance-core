@@ -6,10 +6,10 @@ LICENSE = "BSD-2-Clause"
 LIC_FILES_CHKSUM = "file://LICENSE.txt;beginline=1;endline=1;md5=c3af740e8628bb461ed34cc1b4bba078"
 
 SRC_URI = "git://github.com/tsduck/tsduck.git;protocol=https;branch=master \
-           file://openssl40-remove-atexit.patch \
+           file://openssl4-compat.patch \
            "
 
-SRCREV = "b18489209c7871a35a49af98be431699b85df9c0"
+SRCREV = "65dfa7eda118317b0b124a63d84ddaea23af4907"
 PV = "git"
 PKGV = "${GITPKGVTAG}"
 PR = "r0"

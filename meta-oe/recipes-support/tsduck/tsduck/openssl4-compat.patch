@@ -1,0 +1,57 @@
+From: OpenEmbedded <oe@oe-alliance.org>
+Subject: [PATCH] OpenSSL 4.0 compatibility
+
+Two changes for building against OpenSSL 4.0:
+
+1. tsOpenSSL.cpp: OPENSSL_atexit() was removed. Use standard atexit().
+
+2. tsTLSConnectionGuts.cpp: SSL_set1_host() / SSL_add1_host() are
+   deprecated. Use X509_VERIFY_PARAM_set1_host() /
+   X509_VERIFY_PARAM_add1_host() on the verify param of the SSL
+   connection - this is the canonical replacement and was the
+   underlying implementation of the SSL-level wrappers.
+
+Upstream-Status: Pending
+Signed-off-by: OpenEmbedded <oe@oe-alliance.org>
+
+--- a/src/libtscore/system/unix/tsOpenSSL.cpp
++++ b/src/libtscore/system/unix/tsOpenSSL.cpp
+@@ -9,6 +9,7 @@
+ #include "tsOpenSSL.h"
+ #include "tsCerrReport.h"
+ #include "tsEnvironment.h"
++#include <cstdlib>
+ 
+ // Some OpenSSL macros use C-style casts and we need to disable warnings.
+ TS_LLVM_NOWARNING(old-style-cast)
+@@ -172,7 +173,7 @@
+ {
+     active = true;
+ #if !defined(TS_NO_OPENSSL)
+-    OPENSSL_atexit(exitHandler);
++    atexit(exitHandler);
+ #endif
+ }
+ 
+--- a/src/libtscore/network/unix/tsTLSConnectionGuts.cpp
++++ b/src/libtscore/network/unix/tsTLSConnectionGuts.cpp
+@@ -178,14 +178,15 @@
+ 
+     // Set DNS names for verification of the server's certificate.
+     if (_verify_peer && !_server_name.empty()) {
++        X509_VERIFY_PARAM* param = ::SSL_get0_param(_guts->ssl);
+         // Set main server name.
+-        if (!::SSL_set1_host(_guts->ssl, _server_name.toUTF8().c_str())) {
+-            return _guts->abort(u"error setting TLS server name (SSL_set1_host)");
++        if (!::X509_VERIFY_PARAM_set1_host(param, _server_name.toUTF8().c_str(), 0)) {
++            return _guts->abort(u"error setting TLS server name (X509_VERIFY_PARAM_set1_host)");
+         }
+         // Set additional names.
+         for (const auto& name : _additional_names) {
+-            if (!name.empty() && !::SSL_add1_host(_guts->ssl, name.toUTF8().c_str())) {
+-                return _guts->abort(u"error setting TLS additional server name (SSL_add1_host)");
++            if (!name.empty() && !::X509_VERIFY_PARAM_add1_host(param, name.toUTF8().c_str(), 0)) {
++                return _guts->abort(u"error setting TLS additional server name (X509_VERIFY_PARAM_add1_host)");
+             }
+         }
+     }
