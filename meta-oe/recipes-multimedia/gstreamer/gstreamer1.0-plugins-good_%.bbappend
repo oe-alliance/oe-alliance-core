@@ -20,3 +20,7 @@ PACKAGECONFIG:append = " \
 
 PACKAGECONFIG_CONFARGS:remove = "-Dsoup=disabled"
 EXTRA_OEMESON:append = " -Dsoup=enabled"
+
+PV = "1.28.3"
+ 
+SRC_URI[sha256sum] = "47f78f500cbd900f758f9ba74288fda0e2ca5a7855096025641e121ffec40a5d"
