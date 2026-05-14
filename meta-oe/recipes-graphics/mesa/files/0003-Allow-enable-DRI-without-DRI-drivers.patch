@@ -1,8 +1,8 @@
 --- a/meson.build
 +++ b/meson.build
-@@ -287,7 +287,9 @@ if freedreno_kmds.length() != 0 and freedreno_kmds != [ 'msm' ] and with_freedre
-   endif
- endif
+@@ -333,7 +333,9 @@ with_vdrm = [
+   with_asahi_vk,
+ ].contains(true)
  
 -with_dri = false
 +dri_drivers = get_option('dri-drivers')
@@ -13,8 +13,8 @@
    _egl = get_option('egl')
 --- a/meson.options
 +++ b/meson.options
-@@ -51,6 +51,19 @@ option(
-   description : 'Use Android\'s libbacktrace',
+@@ -57,6 +57,19 @@ option(
+   description : 'Use Android\'s libperfetto',
  )
  
 +option(
@@ -45,40 +45,6 @@
  
  #ifdef HAVE_WAYLAND_PLATFORM
  #include "linux-dmabuf-unstable-v1-client-protocol.h"
---- a/src/egl/main/eglapi.c
-+++ b/src/egl/main/eglapi.c
-@@ -2816,8 +2816,8 @@ eglGetProcAddress(const char *procname)
-          ret = entrypoint->function;
-    }
- 
--   if (!ret)
--      ret = _mesa_glapi_get_proc_address(procname);
-+//  if (!ret)
-+//     ret = _mesa_glapi_get_proc_address(procname);
- 
-    RETURN_EGL_SUCCESS(NULL, ret);
- }
---- a/src/egl/meson.build
-+++ b/src/egl/meson.build
-@@ -49,6 +49,7 @@ files_egl = files(
-   'main/egltypedefs.h',
- )
- 
-+genCommon_py = files('../mapi/new/genCommon.py')
- g_egldispatchstubs_c = custom_target(
-   'g_egldispatchstubs.c',
-   input : [
-@@ -91,7 +92,7 @@ if with_dri2
-   incs_for_egl += inc_gallium
-   incs_for_egl += inc_gallium_aux
-   incs_for_egl += inc_mesa
--  incs_for_egl += inc_st_dri
-+#  incs_for_egl += inc_st_dri
- 
-   files_egl += files(
-     'drivers/dri2/platform_device.c',
-diff --git a/src/egl/drivers/dri2/platform_surfaceless.c b/src/egl/drivers/dri2/platform_surfaceless.c
-index d981f559..f7705723 100644
 --- a/src/egl/drivers/dri2/platform_surfaceless.c
 +++ b/src/egl/drivers/dri2/platform_surfaceless.c
 @@ -40,7 +40,8 @@
@@ -91,3 +57,35 @@ index d981f559..f7705723 100644
  
  static struct dri_image *
  surfaceless_alloc_image(struct dri2_egl_display *dri2_dpy,
+--- a/src/egl/main/eglapi.c
++++ b/src/egl/main/eglapi.c
+@@ -2786,8 +2786,8 @@ eglGetProcAddress(const char *procname)
+          ret = entrypoint->function;
+    }
+ 
+-   if (!ret)
+-      ret = _mesa_glapi_get_proc_address(procname);
++//  if (!ret)
++//     ret = _mesa_glapi_get_proc_address(procname);
+ 
+    RETURN_EGL_SUCCESS(NULL, ret);
+ }
+--- a/src/egl/meson.build
++++ b/src/egl/meson.build
+@@ -56,6 +56,7 @@ if with_wayland_bind_display
+     gen_args += [ '--bind-wl-display' ]
+ endif
+ 
++genCommon_py = files('../mapi/new/genCommon.py')
+ g_egldispatchstubs_c = custom_target(
+   'g_egldispatchstubs.c',
+   input : [
+@@ -97,7 +98,7 @@ if with_dri
+   incs_for_egl += inc_gallium
+   incs_for_egl += inc_gallium_aux
+   incs_for_egl += inc_mesa
+-  incs_for_egl += inc_st_dri
++#  incs_for_egl += inc_st_dri
+ 
+   files_egl += files(
+     'drivers/dri2/platform_device.c',
