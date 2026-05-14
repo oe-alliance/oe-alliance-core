@@ -1,0 +1,103 @@
+--- a/gst/mpegtsdemux/mpegtspacketizer.c	2026-02-26 02:44:06.000000000 +0100
++++ b/gst/mpegtsdemux/mpegtspacketizer.c
+@@ -1984,12 +1984,37 @@
+   PCROffsetCurrent *current = pcrtable->current;
+   PCROffsetGroup *group = current->group;
+ 
++  /* Reset skew-calibration state so pts_to_ts recalibrates from the
++   * first PCR of the new segment after a discontinuity flush.
++   *
++   * Without last_pcrtime reset: ABSDIFF(new_pts, stale_pcrtime) > 15s
++   * causes pts_to_ts to return NONE for every buffer (~8s hang).
++   *
++   * Without base_time/base_pcrtime reset: stale base_pcrtime > base_time
++   * triggers the fallback path in pts_to_ts_internal, also returning NONE
++   * even after the ABSDIFF guard is bypassed.  Resetting all three forces
++   * calculate_skew to reinitialise from the first PCR of the new segment.
++   *
++   * Without PCR_GROUP_FLAG_RESET on the old group: pts_to_ts_internal's
++   * calculate_offset fallback uses the old group (first_pcr=0, pcr_offset=0)
++   * and returns pts+0=0 for the first audio buffer that arrives before the
++   * new PCR -- writing PTS=0 into the PES header while the hardware STC is
++   * already non-zero, triggering a TSM failure and an extra stall.  Setting
++   * RESET makes that path return NONE so dvbmediasink writes PES without
++   * PTS (hardware free-runs) until calculate_skew re-establishes base_time. */
++  pcrtable->last_pcrtime = GST_CLOCK_TIME_NONE;
++  pcrtable->base_time = GST_CLOCK_TIME_NONE;
++  pcrtable->base_pcrtime = GST_CLOCK_TIME_NONE;
++
+   if (group == NULL)
+     return;
+   GST_DEBUG ("Closing group and resetting current");
+ 
+   /* Store last values */
+   _append_group_values (group, current->pending[current->last]);
++  /* Mark old group RESET so pts_to_ts_internal's calculate_offset path
++   * returns NONE (not stale 0) for pre-PCR buffers of the new segment. */
++  group->flags |= PCR_GROUP_FLAG_RESET;
+   memset (current, 0, sizeof (PCROffsetCurrent));
+   /* And re-evaluate all groups */
+ }
+@@ -2322,8 +2347,12 @@
+         GST_TIME_ARGS (pcrtable->pcroffset));
+     res = pts + pcrtable->pcroffset + packetizer->extra_shift;
+ 
+-    /* Don't return anything if we differ too much against last seen PCR */
++    /* Don't return anything if we differ too much against last seen PCR.
++     * Skip check when last_pcrtime is NONE (no PCR seen yet after a
++     * discontinuity flush) so new-segment PTS values are accepted
++     * immediately without waiting for the first new PCR packet. */
+     if (G_UNLIKELY (check_diff && pcr_pid != 0x1fff &&
++            GST_CLOCK_TIME_IS_VALID (pcrtable->last_pcrtime) &&
+             ABSDIFF (res, pcrtable->last_pcrtime) > 15 * GST_SECOND)) {
+       res = GST_CLOCK_TIME_NONE;
+     } else {
+--- a/gst/mpegtsdemux/tsdemux.c	2026-02-26 02:44:06.000000000 +0100
++++ b/gst/mpegtsdemux/tsdemux.c
+@@ -3645,6 +3645,10 @@
+   GstBuffer *buffer = NULL;
+   GstBufferList *buffer_list = NULL;
+ 
++  /* Guard: streams with no pad (stream_type 0xff etc.) must not reach
++   * GST_DEBUG_OBJECT(stream->pad) which asserts on NULL. */
++  if (G_UNLIKELY (stream->pad == NULL))
++    return GST_FLOW_OK;
+ 
+   GST_DEBUG_OBJECT (stream->pad,
+       "stream:%p, pid:0x%04x stream_type:%d state:%d", stream, bs->pid,
+@@ -3913,6 +3917,12 @@
+       packet->pid, packet->payload_unit_start_indicator,
+       packet->scram_afc_cc & 0x30, cc, packet->payload);
+ 
++  /* Restore AFC discontinuity indicator: encoder signals CC counter reset
++   * at ad/content splice points.  Without this, valid streams appear as
++   * CC errors and all packets are silently dropped until CC re-aligns. */
++  if (G_UNLIKELY (packet->afc_flags & MPEGTS_AFC_DISCONTINUITY_FLAG))
++    stream->continuity_counter = CONTINUITY_UNSET;
++
+   /* Check continuity */
+   if (stream->continuity_counter != CONTINUITY_UNSET) {
+     if (((stream->continuity_counter + 1) % 16) != cc) {
+@@ -3930,7 +3940,9 @@
+         g_free (pad_name);
+ #endif
+         /* Clear pending state and don't process packet */
+-        stream->continuity_counter = cc;
++        /* Reset to UNSET not to cc: locking to the wrong value makes
++         * every subsequent packet appear as an error and drops PUSI. */
++        stream->continuity_counter = CONTINUITY_UNSET;
+         if (G_UNLIKELY (stream->data)) {
+           g_free (stream->data);
+           stream->data = NULL;
+@@ -3942,7 +3954,10 @@
+         }
+         stream->state = PENDING_PACKET_EMPTY;
+ 
+-        return GST_FLOW_OK;
++        /* Allow PUSI packets through to recover the PES header
++         * immediately without waiting for the next PUSI. */
++        if (!(packet->payload_unit_start_indicator))
++          return GST_FLOW_OK;
+       }
+     }
+   }
