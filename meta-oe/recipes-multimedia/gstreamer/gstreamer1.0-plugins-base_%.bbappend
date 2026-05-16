@@ -12,6 +12,8 @@ PACKAGECONFIG:append = " \
     cdparanoia gio opus tremor \
 "
 
+CFLAGS:append = "${@' -mthumb' if d.getVar('TARGET_ARCH') == 'arm' else ''}"
+
 PACKAGECONFIG[gio]          = "-Dgio=enabled,-Dgio=disabled,glib-2.0"
 
 # files installed by both gstreamer1.0-plugins-base and kodi
@@ -22,5 +24,6 @@ do_install:append() {
 
 INSANE_SKIP:libgstgl-1.0 += "file-rdeps"
 
-PV = "1.26.11"
-SRC_URI[sha256sum] = "fc50f885d41f5d0407ce0876ec7235d9e7b82d48db2f4bc72c5f244a4ac79263"
+PV = "1.28.3"
+ 
+SRC_URI[sha256sum] = "27880f3d87efa3bb5aa5f99f7ef6e4be7c95229f44eee928c1633d32e87d0099"

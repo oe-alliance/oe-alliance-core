@@ -10,6 +10,7 @@ SRC_URI:append = " \
         file://0006-dvbapi5-fix-old-kernel.patch \
         file://0007-hls-main-thread-block.patch \
         file://0008-gsthlsaudiometa.patch \
+        file://0009-tsdemux-cc-recovery-hls.patch \
 "
 
 PACKAGECONFIG:append = " \
@@ -18,5 +19,6 @@ PACKAGECONFIG:append = " \
 
 PACKAGECONFIG:remove = "rsvg"
 
-PV = "1.26.11"
-SRC_URI[sha256sum] = "110fb82795f0e569b1e27b12ab9699d35c7762e1ff4db95335d6ac8d1442af3d"
+PV = "1.28.3"
+ 
+SRC_URI[sha256sum] = "4213f43ddb875bb141e5040e97735579d74665bec3d17b51052aade395b83f00"

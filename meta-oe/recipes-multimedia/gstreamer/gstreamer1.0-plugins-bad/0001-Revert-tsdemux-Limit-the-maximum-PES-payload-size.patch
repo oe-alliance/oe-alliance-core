@@ -55,7 +55,7 @@ diff --git a/gst/mpegtsdemux/tsdemux.c b/gst/mpegtsdemux/tsdemux.c
    stream->current_size = 0;
  
    return res;
-@@ -3923,11 +3909,9 @@
+@@ -3967,11 +3953,9 @@ gst_ts_demux_handle_packet (GstTSDemux * demux, TSDemuxStream * stream,
      gst_ts_demux_queue_data (demux, stream, packet);
      GST_LOG_OBJECT (demux, "current_size:%d, expected_size:%d",
          stream->current_size, stream->expected_size);
