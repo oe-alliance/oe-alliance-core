@@ -9,7 +9,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 PACKAGES = "${PN}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r18"
+PR = "r19"
 
 inherit packagegroup
 
@@ -23,6 +23,8 @@ RRECOMMENDS:${PN} = "\
     enigma2-plugin-extensions-blurayplayer \
     enigma2-plugin-extensions-pluto \
 	enigma2-plugin-systemplugins-vps-orig \
+    enigma2-plugin-extensions-filecommander-orig \
+    enigma2-plugin-extensions-movieorganisor \
     enigma2-plugin-systemplugins-crossepg \
     enigma2-plugin-systemplugins-remotecontrolselection \
     enigma2-plugin-systemplugins-terrestrialscan \
@@ -37,6 +39,7 @@ RRECOMMENDS:${PN} = "\
     enigma2-plugin-systemplugins-icetv \
     enigma2-plugin-systemplugins-eitconfig \
     enigma2-plugin-systemplugins-m3uiptv \
+    enigma2-plugin-systemplugins-wanip \
     enigma2-plugin-extensions-iptv-org-playlists \
     enigma2-plugin-extensions-oaweather \
     enigma2-plugin-extensions-bitrateviewer \
