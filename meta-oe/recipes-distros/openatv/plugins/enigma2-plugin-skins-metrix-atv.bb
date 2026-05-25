@@ -58,6 +58,9 @@ fi
 done
 echo "... done"
 echo "remove mySkin ..."
+if [ -f /etc/enigma2/settings ] && grep -qF "config.skin.primary_skin=MetrixHD/skin.MySkin.xml" /etc/enigma2/settings; then
+    touch /etc/.restore_skins
+fi
 rm -f /usr/share/enigma2/MetrixHD/skinfiles/*.mySkin.xml
 rm -f /usr/share/enigma2/MetrixHD/skin.MySkin.xml
 echo "... done"
