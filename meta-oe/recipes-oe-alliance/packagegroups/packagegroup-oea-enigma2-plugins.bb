@@ -25,5 +25,4 @@ PLUGINS_CORE_EXTENDED = "\
     enigma2-plugin-systemplugins-videotune \
     ${@bb.utils.contains("MACHINE_FEATURES", "videoenhancement", "", "enigma2-plugin-systemplugins-videoenhancement", d)} \
     ${@bb.utils.contains_any("MACHINE_FEATURES", "uianimation osdanimation", "enigma2-plugin-systemplugins-animationsetup", "", d)} \
-    ${@bb.utils.contains("MACHINE_FEATURES", "quadpip", "enigma2-plugin-systemplugins-quadpip", "", d)} \
     "
