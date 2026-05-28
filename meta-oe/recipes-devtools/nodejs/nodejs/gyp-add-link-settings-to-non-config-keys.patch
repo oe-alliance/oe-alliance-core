@@ -1,0 +1,22 @@
+Subject: [PATCH] gyp: add link_settings to base_non_configuration_keys
+
+GYP's SetUpConfigurations() iterates over the target dict and copies
+any key not listed in base_non_configuration_keys into every
+configuration dict. link_settings is missing from the list, so when
+a target has a top-level link_settings (e.g. v8.gyp's
+v8_base_without_compiler conditionally adds '-latomic' for arm),
+it gets propagated into Debug/Release configurations and then
+invalid_configuration_keys validation rejects it.
+
+Upstream-Status: Pending [also missing in nodejs/gyp-next master]
+
+--- a/tools/gyp/pylib/gyp/input.py
++++ b/tools/gyp/pylib/gyp/input.py
+@@ -91,6 +91,7 @@
+     "dependencies",
+     "dependencies_original",
+     "libraries",
++    "link_settings",
+     "postbuilds",
+     "product_dir",
+     "product_extension",
