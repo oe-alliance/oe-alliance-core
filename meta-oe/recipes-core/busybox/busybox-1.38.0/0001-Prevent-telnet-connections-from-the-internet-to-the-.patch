@@ -1,23 +1,8 @@
-From 7c47267e131d04edbc8989206c0530409cf5223e Mon Sep 17 00:00:00 2001
-From: Betacentauri <betacentauri@arcor.de>
-Date: Tue, 6 Dec 2016 13:18:48 +0100
-Subject: [PATCH] Prevent telnet connections from the internet to the box
-
-Connection requests from LAN or via VPN tunnel still work.
-telnet is unsecure! Passwords are sent unencrypted.
-Use ssh instead.
----
- networking/telnetd.c | 162 +++++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 162 insertions(+)
-
-diff --git a/networking/telnetd.c b/networking/telnetd.c
-index f06e958..27e6c93 100644
 --- a/networking/telnetd.c
 +++ b/networking/telnetd.c
-@@ -637,6 +637,161 @@ static void handle_sigchld(int sig UNUSED_PARAM)
+@@ -985,6 +985,162 @@
+ };
  
- 	errno = save_errno;
- }
 +#include <ifaddrs.h>
 +int is_permitted_ipv4_connection(unsigned long ipv4)
 +{
@@ -173,23 +158,22 @@ index f06e958..27e6c93 100644
 +
 +	return ret;
 +}
- 
- int telnetd_main(int argc, char **argv) MAIN_EXTERNALLY_VISIBLE;
- int telnetd_main(int argc UNUSED_PARAM, char **argv)
-@@ -796,6 +951,13 @@ int telnetd_main(int argc UNUSED_PARAM, char **argv)
- 			goto again;
++
+ static int accept_conn__can_accept(void *this UNUSED_PARAM)
+ {
+ 	return 1;
+ }
+@@ -1000,7 +1156,13 @@ static int accept_conn__accept(void *this)
+ 	if (fd >= 0) {
  		close_on_exec_on(fd);
- 
 +		/* Don't allow connections from the internet (except via VPN) as telnet traffic is not encrypted */
 +		if (!is_permitted_connection(fd))
 +		{
 +			close(fd);
-+			goto again;
++			return 0;
 +		}
-+
- 		/* Create a new session and link it into active list */
- 		new_ts = make_new_session(fd);
- 		if (new_ts) {
--- 
-1.9.1
-
+ 		/* Create two new pipes and insert them into ioloop */
+ 		make_new_session(ts->io, fd);
+ 	}
+ 	return 0;
+ }

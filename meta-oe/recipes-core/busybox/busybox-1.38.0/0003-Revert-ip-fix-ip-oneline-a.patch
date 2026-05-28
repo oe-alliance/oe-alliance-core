@@ -1,6 +1,6 @@
 --- a/networking/libiproute/ipaddress.c
 +++ b/networking/libiproute/ipaddress.c
-@@ -572,10 +572,8 @@ int FAST_FUNC ipaddr_list_or_flush(char **argv, int flush)
+@@ -588,10 +588,8 @@ int FAST_FUNC ipaddr_list_or_flush(char **argv, int flush)
  	}
  
  	for (l = linfo; l; l = l->next) {

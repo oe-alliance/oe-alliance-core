@@ -2,7 +2,7 @@ diff --git a/networking/ifupdown.c b/networking/ifupdown.c
 index 8bdc21b..8b89944 100644
 --- a/networking/ifupdown.c
 +++ b/networking/ifupdown.c
-@@ -457,9 +457,49 @@ static int execute(const char *command, struct interface_defn_t *ifd, execfn *ex
+@@ -451,9 +451,49 @@ static int execute(const char *command, struct interface_defn_t *ifd, execfn *ex
  
  #endif /* FEATURE_IFUPDOWN_IPV4 || FEATURE_IFUPDOWN_IPV6 */
  
@@ -52,7 +52,7 @@ index 8bdc21b..8b89944 100644
  static int FAST_FUNC loopback_up6(struct interface_defn_t *ifd, execfn *exec)
  {
  # if ENABLE_FEATURE_IFUPDOWN_IP
-@@ -481,36 +521,221 @@ static int FAST_FUNC loopback_down6(struct interface_defn_t *ifd, execfn *exec)
+@@ -475,36 +515,221 @@ static int FAST_FUNC loopback_down6(struct interface_defn_t *ifd, execfn *exec)
  # endif
  }
  
@@ -289,7 +289,7 @@ index 8bdc21b..8b89944 100644
  }
  
  # if ENABLE_FEATURE_IFUPDOWN_IP
-@@ -528,7 +753,11 @@ static int FAST_FUNC v4tunnel_up(struct interface_defn_t *ifd, execfn *exec)
+@@ -522,7 +747,11 @@ static int FAST_FUNC v4tunnel_up(struct interface_defn_t *ifd, execfn *exec)
  
  static int FAST_FUNC v4tunnel_down(struct interface_defn_t * ifd, execfn * exec)
  {
@@ -302,7 +302,7 @@ index 8bdc21b..8b89944 100644
  }
  # endif
  
-@@ -536,8 +765,10 @@ static const struct method_t methods6[] ALIGN_PTR = {
+@@ -530,8 +759,10 @@ static const struct method_t methods6[] ALIGN_PTR = {
  # if ENABLE_FEATURE_IFUPDOWN_IP
  	{ "v4tunnel" , v4tunnel_up     , v4tunnel_down   , },
  # endif
@@ -314,7 +314,7 @@ index 8bdc21b..8b89944 100644
  	{ "loopback" , loopback_up6    , loopback_down6  , },
  };
  
-@@ -568,7 +799,7 @@ static int FAST_FUNC loopback_down(struct interface_defn_t *ifd, execfn *exec)
+@@ -562,7 +793,7 @@ static int FAST_FUNC loopback_down(struct interface_defn_t *ifd, execfn *exec)
  {
  # if ENABLE_FEATURE_IFUPDOWN_IP
  	int result;
@@ -323,7 +323,7 @@ index 8bdc21b..8b89944 100644
  	result += execute("ip link set %iface% down", ifd, exec);
  	return ((result == 2) ? 2 : 0);
  # else
-@@ -598,28 +829,6 @@ static int FAST_FUNC static_up(struct interface_defn_t *ifd, execfn *exec)
+@@ -592,28 +823,6 @@ static int FAST_FUNC static_up(struct interface_defn_t *ifd, execfn *exec)
  # endif
  }
  
