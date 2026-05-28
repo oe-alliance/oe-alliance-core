@@ -2,7 +2,7 @@ diff --git a/libavcodec/Makefile b/libavcodec/Makefile
 index 113adb2..75d8867 100644
 --- a/libavcodec/Makefile
 +++ b/libavcodec/Makefile
-@@ -63,6 +63,7 @@ OBJS = ac3_parser.o                                                     \
+@@ -65,6 +65,7 @@ OBJS = ac3_parser.o                                                     \
         xiph.o                                                           \
  
  SHLIBOBJS = float_scalarproduct.o                                       \
@@ -10,14 +10,14 @@ index 113adb2..75d8867 100644
              timecode_internal.o                                         \
  
  # subsystems
-@@ -215,6 +215,7 @@ OBJS-$(CONFIG_AC3_ENCODER)             += ac3enc_float.o ac3enc.o ac3tab.o \
+@@ -219,6 +219,7 @@
                                            ac3.o kbdwin.o
  OBJS-$(CONFIG_AC3_FIXED_ENCODER)       += ac3enc_fixed.o ac3enc.o ac3tab.o ac3.o kbdwin.o
  OBJS-$(CONFIG_AC3_MF_ENCODER)          += mfenc.o mf_utils.o
 +OBJS-$(CONFIG_AC4_DECODER)             += ac4dec.o kbdwin.o
  OBJS-$(CONFIG_ACELP_KELVIN_DECODER)    += g729dec.o lsp.o celp_filters.o acelp_filters.o acelp_pitch_delay.o acelp_vectors.o g729postfilter.o
  OBJS-$(CONFIG_AGM_DECODER)             += agm.o jpegquanttables.o
- OBJS-$(CONFIG_AIC_DECODER)             += aic.o
+ OBJS-$(CONFIG_AHX_DECODER)             += mpegaudiodec_float.o
 diff --git a/libavcodec/ac4dec.c b/libavcodec/ac4dec.c
 new file mode 100644
 index 00000000..ae54b819
@@ -8412,14 +8412,14 @@ diff --git a/libavcodec/allcodecs.c b/libavcodec/allcodecs.c
 index 2386b45..da6c152 100644
 --- a/libavcodec/allcodecs.c
 +++ b/libavcodec/allcodecs.c
-@@ -433,6 +433,7 @@ extern const FFCodec ff_ac3_encoder;
+@@ -438,6 +438,7 @@
  extern const FFCodec ff_ac3_decoder;
  extern const FFCodec ff_ac3_fixed_encoder;
  extern const FFCodec ff_ac3_fixed_decoder;
 +extern const FFCodec ff_ac4_decoder;
  extern const FFCodec ff_acelp_kelvin_decoder;
+ extern const FFCodec ff_ahx_decoder;
  extern const FFCodec ff_alac_encoder;
- extern const FFCodec ff_alac_decoder;
 diff --git a/libavcodec/float_fmul_reverse.c b/libavcodec/float_fmul_reverse.c
 new file mode 100644
 index 00000000..ae54b819
