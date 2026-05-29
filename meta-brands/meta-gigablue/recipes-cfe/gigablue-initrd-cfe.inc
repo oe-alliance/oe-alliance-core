@@ -7,12 +7,21 @@ PACKAGE_ARCH := "${MACHINEBUILD}"
 
 require conf/license/license-gplv2.inc
 
-PR = "r3"
+PR = "r4"
 ALLOW_EMPTY:${PN} = "1"
 
 do_install() {
     install -d ${D}/usr/share
     install -m 0644 ${S}/gpt.bin ${D}/usr/share/gpt.bin
+    if [ -e ${S}/gpt4.bin  ]; then
+    install -m 0644 ${S}/gpt4.bin  ${D}/usr/share/gpt4.bin
+    fi
+    if [ -e ${S}/boot.bin  ]; then
+    install -m 0644 ${S}/boot.bin  ${D}/usr/share/boot.bin
+    fi
+    if [ -e ${S}/boot4.bin  ]; then
+    install -m 0644 ${S}/boot4.bin  ${D}/usr/share/boot4.bin
+    fi
 }
 
 FILES:${PN} = "/usr/share"
