@@ -40,6 +40,7 @@ SRC_URI:append:class-target = " \
 SRC_URI:append:toolchain-clang:x86 = " \
            file://libatomic-node18.patch \
            "
+SRC_URI:append:mipsel = " file://v8-heap-mipsel-gcc16-O0.patch"
 SRC_URI:append:toolchain-clang:powerpc64le = " \
            file://0001-ppc64-Do-not-use-mminimal-toc-with-clang.patch \
            "
