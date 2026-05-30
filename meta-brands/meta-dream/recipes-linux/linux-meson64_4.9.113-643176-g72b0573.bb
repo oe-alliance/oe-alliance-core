@@ -11,7 +11,8 @@ require linux-dreambox-4.9.inc
 SRC_URI = "https://source.mynonpublic.com/dreambox/${BPN}-v${PV}.tar.xz \
            file://dmmaml_cec2.patch \
            file://ge2d.patch \
-           file://hdmi_tx_spdif.patch \	 
+           file://hdmi_tx_spdif.patch \
+           file://aml_spdif_boot_silence.patch \
            file://defconfig \
            file://fix-multiple-defs-yyloc_v1.patch \
            file://0003-cp1emu-do-not-use-bools-for-arithmetic.patch \
