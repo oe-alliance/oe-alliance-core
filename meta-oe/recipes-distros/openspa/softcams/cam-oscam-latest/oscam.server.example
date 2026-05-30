@@ -1,0 +1,19 @@
+################# Enable Reader #########################
+# To enable Reader Using : enable       = 1
+# To Disable Reader Using : enable      = 0
+####################### SoftCams ########################
+
+[reader]
+label                         = Cline1
+enable                        = 1
+protocol                      = cccam
+device                        = IP-DYNDNS,PUERTO
+user                          = USER
+password                      = PASS
+inactivitytimeout             = 30
+group                         = 1
+emmcache                      = 1,1,2
+cccversion                    = 2.1.3
+cccmaxhops                    = 2
+ccckeepalive                  = 1
+cccreshare                    = 3

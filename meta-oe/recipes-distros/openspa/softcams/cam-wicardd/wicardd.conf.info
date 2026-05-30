@@ -1,0 +1,112 @@
+[global]
+active = 1
+log_udp = 0.0.0.0:514 # donde 0.0.0.0 poner la IP del receptor
+log_size = 300
+log = /tmp/wicardd.log
+log_rb_size = 200
+syslog = 1
+debug = 3
+daemon = 1
+
+[webif]
+active = 1
+port = 7358
+debug = 3
+
+[dvb]
+active = 1
+type = auto
+filter = dvb,dvb1,dvb2
+debug = 3
+ecm_info = 1
+emm_filter_mode = 1
+
+[filter]
+name = dvb
+rule = caid=0500;ident=042400,041700,043800,042300,023800,042800,032830,041200,050F00;accept
+rule = caid=0500;ident=040810;accept
+rule = caid=0500;ident=060A00,050C00;accept
+rule = caid=0100;ident=000068;accept
+rule = caid=1803;ident=000000,007001,007101;accept
+rule = caid=0D02;ident=0,A0;accept
+rule = caid=0BAA;ident=000000;accept
+rule = caid=0B00;ident=000000;accept
+rule = caid=1830;ident=000000;accept
+rule = caid=0963;ident=000000;accept
+rule = next
+ 
+[filter]
+name = dvb1
+rule = caid=1880;ident=000000,002011,002111;accept
+rule = caid=0B00;ident=000000;accept
+rule = caid=0940;ident=000000;accept
+rule = caid=5581;ident=000000;accept
+rule = caid=1810;ident=000000;accept
+rule = caid=1884;ident=000000;accept
+rule = caid=0B01;ident=000000;accept
+rule = caid=0D96;ident=00,04,08,0C,10,24,28;accept
+rule = caid=0B02;ident=000000;accept
+rule = caid=1802;ident=000000;accept
+rule = caid=4AEE;ident=000000;accept
+rule = next
+ 
+[filter]
+name = dvb2
+rule = caid=0100;ident=00006A;accept
+rule = caid=0B00;ident=000000;accept
+rule = caid=0602;ident=00,1A,02,05,06,15;accept
+rule = caid=1843;ident=000000;accept
+rule = caid=0D95;ident=000004;accept
+rule = caid=183D;ident=000000;accept
+rule = caid=09C4;ident=000000;accept
+rule = caid=0B01;ident=0;accept
+rule = caid=0D97;ident=0,4,8,10,C;accept
+rule = caid=2600;ident=000000;sid=000D,0001,000 C,0008,0003,0004,0009,000B,17E8,17ED,19D 2,17DE,1AFE,1B4E,1B03,1A18,1C36,0065,000 5,0640,06A4,1D33;accept=BISS
+rule = reject
+
+
+[reader]
+active = 0 #para activarlo poner a valor 1
+name = cs378x_OSCam
+type = cs378x
+provider = 0500:032830,042800;0500@00000000:032830,042800@00000000,032830,042800@00000000;1811:003315,003311@00000000;0963:0;0963@000000@00000000;4aee:0000,0015;4aee@000000,000015@00000000;4ae0:0;4ae0@000000@00000000;4ae1:0,3,14;4ae1@000000,0003,0014@00000000;0d96:0,04,08,0C,10,24,28;0d96@0,04,08,0C,10,24,28@00000000;0d97:0,4,8,10,C;0d97@0,4,8,10,C@00000000;1802:0,000004;1802@000000,000004@00000000;0b00:0;0b00@000000@00000000;0b02:0;0b02@000000@00000000;1815:0;1815@000000@00000000
+account = usuario_oscam_dvbapi:contraseña@IPreceptor:puertocs378x
+debug = 3  
+recalc_cw_checksum = 1 
+
+
+[reader]
+active = 0 #para activarlo poner a valor 1
+name = cs357x_OSCam
+type = cs357x
+provider = 1810:004001,0,004101;1810@00000000:004001@00000000,000000@00000000,004101;0b01:0;0b01@000000@00000000;0100:000068@000068,00006a@00000000;1830:0;1830@000000@00000000;4aee:0000,0015;4aee@000000,000015@00000000;0624:0000@00000000:0000@00000000,000000@00000000;0648:0000@00000000:0000@00000000,000000@00000000
+account = usuario_oscam_dvbapi:contraseña@IPreceptor:puertocs357x
+debug = 3 
+recalc_cw_checksum = 1
+
+
+[reader]
+active = 0 #para activarlo poner a valor 1
+name = CCcam_server
+type = cccam
+account = user:contraseña@hostname:puertocccam
+debug = 3
+auto_provider = all
+auto_caid = 1
+auto_idents = 0
+auto_update = 0
+force_crypted_cw = 1
+emm_cache = 1
+
+[reader]
+active = 0 #para activarlo poner a valor 1
+name = CCcam_server1
+type = cccam
+account = user:contraseña@hostname:puertocccam
+debug = 3
+auto_provider = all
+auto_caid = 1
+auto_idents = 0
+auto_update = 0
+force_crypted_cw = 1
+emm_cache = 1 

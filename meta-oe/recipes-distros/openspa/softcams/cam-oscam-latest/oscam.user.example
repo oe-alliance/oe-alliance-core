@@ -1,0 +1,5 @@
+# oscam.user generated automatically by Streamboard OSCAM 1.30-unstable_svn
+
+[account]
+user                          = dvbapi
+group                         = 1

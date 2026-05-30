@@ -1,0 +1,29 @@
+#!/bin/sh
+STAMP="/var/lib/fstrim.last"
+LOGTAG="fstrim"
+NOW="$(date +%s)"
+
+# If ext4 root is mounted with discard, skip trimming
+# (Extend this check if you also want to skip for /media/hdd, etc.)
+if awk '$2=="/" && $3=="ext4" {print $4}' /proc/mounts | grep -q 'discard'; then
+    logger -t "$LOGTAG" "skip: / is ext4 with discard"
+    exit 0
+fi
+
+LAST=0
+if [ -f "$STAMP" ]; then
+    LAST="$(cat "$STAMP" 2>/dev/null)"
+    case "$LAST" in
+        ''|*[!0-9]*) LAST=0 ;;
+    esac
+fi
+
+# 7 days = 604800 seconds
+if [ $((NOW - LAST)) -lt 604800 ]; then
+    exit 0
+fi
+
+/usr/sbin/fstrim-all 2>&1 | logger -t "$LOGTAG"
+echo "$NOW" > "$STAMP"
+exit 0
+

@@ -1,0 +1,62 @@
+[global]
+logfile                       = stdout
+clienttimeout                 = 12000
+fallbacktimeout               = 3000
+bindwait                      = 60
+netprio                       = 1
+lb_save                       = 300
+lb_nbest_readers              = 2
+lb_max_ecmcount               = 200
+lb_force_reopen_always        = 1
+lb_max_readers                = 2
+lb_savepath                   = /tmp/ncamstadisticas.log
+double_check_caid             = 18
+ecmfmt                        = P: c:p:s:d:i:0 #ECM_L:l #CW=w HOP:j
+disablecrccws_only_for        = 1708:000000;1811:003311,003315;09C4:000000;098D:000000;0500:030B00,042820;0604:000000;1819:00006D;0100:00006D;1810:000000;1884:000000;0E00:000000
+
+[cache]
+max_time = 15
+max_hit_time = 13
+
+[newcamd]
+port                          = 12121@
+key                           = 0102030405060708091011121314
+mgclient                      = 1
+
+[cccam]
+port                          = 12000
+nodeid                        = 24D5EF28108C14E0
+version                       = 2.3.0
+reshare                       = 0
+
+[streamrelay]
+stream_ecm_delay              = 5
+stream_relay_ctab             = 098D,0960,0961,0963,0919,093B,09CD
+stream_relay_enabled          = 1
+stream_emm_enabled            = 5
+stream_relay_buffer_time      = 1
+
+[dvbapi]
+enabled                       = 1
+au                            = 1
+pmt_mode                      = 0       #[ Use 6 the Best value for (opensource) images only. Other images just 4 or 0]
+delayer                       = 60
+request_mode                  = 1
+ecminfo_type                  = 4
+user                          = dvbapiau
+read_sdt                      = 1
+write_sdt_prov                = 1
+extended_cw_api               = 2       #[ (1) = OE2.2/2.5-ARM AND (2) = OE2.0-MPISEL ]
+boxtype                       = dreambox   #[ For enigma2 use (dreambox) And For spark or neutrino use (duckbox) ]
+
+[webif]
+httpport                      = 8181
+httpuser                      = user
+httppwd                       = pass
+httphelplang                  = es
+httprefresh                   = 10
+httpshowmeminfo               = 0
+httpshowcacheexinfo           = 0
+httpallowed                   = 10.0.0.0-10.255.255.255,172.16.0.0-172.31.255.255,192.168.0.0-192.168.255.255,127.0.0.1
+httputf8                      = 0
+http_status_log               = 0

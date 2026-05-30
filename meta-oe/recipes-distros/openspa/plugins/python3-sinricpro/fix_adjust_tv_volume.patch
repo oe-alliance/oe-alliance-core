@@ -1,0 +1,11 @@
+--- a/sinricpro/devices/sinric_pro_tv.py	2026-05-19 21:21:23.165683265 +0200
++++ b/sinricpro/devices/sinric_pro_tv.py	2026-05-19 21:21:38.175415457 +0200
+@@ -114,7 +114,7 @@
+ 
+         # Handle adjustVolume action
+         elif action == ACTION_ADJUST_VOLUME:
+-            volume_delta = request.request_value.get("volumeDelta", 0)
++            volume_delta = request.request_value.get("volume", 0)
+             success, response_value = await self.handle_adjust_volume_request(volume_delta, self)
+             request.response_value = response_value
+             return success
