@@ -40,8 +40,10 @@ static GstStaticPadTemplate sink_template = GST_STATIC_PAD_TEMPLATE(
     GST_PAD_SINK,
     GST_PAD_ALWAYS,
     GST_STATIC_CAPS(
-        "audio/mpeg, mpegversion=(int){ 1, 2 }, parsed=(boolean)true; "
-        "audio/mpeg, mpegversion=(int)4, framed=(boolean)true; "
+        "audio/mpeg, mpegversion=(int)1, parsed=(boolean)true; "        /* MP1/2/3 */
+        "audio/mpeg, mpegversion=(int)2, parsed=(boolean)true; "        /* MPEG-2 audio (MP2 ext) */
+        "audio/mpeg, mpegversion=(int)2, framed=(boolean)true; "        /* MPEG-2 AAC */
+        "audio/mpeg, mpegversion=(int)4, framed=(boolean)true; "        /* MPEG-4 AAC */
         "audio/x-ac3, framed=(boolean)true; "
         "audio/x-eac3, framed=(boolean)true; "
         "audio/x-dts, framed=(boolean)true"
@@ -68,7 +70,14 @@ static gint codec_id_from_caps(const GstCaps *caps)
             gst_structure_get_int(s, "layer", &layer);
             return (layer == 3) ? AV_CODEC_ID_MP3 : AV_CODEC_ID_MP2;
         }
-        if (mv == 2 || mv == 4) return AV_CODEC_ID_AAC;
+        if (mv == 2) {
+            /* MPEG-2 audio (MP1/2/3) carries layer; MPEG-2 AAC doesn't. */
+            gint layer = 0;
+            if (gst_structure_get_int(s, "layer", &layer) && layer != 0)
+                return (layer == 3) ? AV_CODEC_ID_MP3 : AV_CODEC_ID_MP2;
+            return AV_CODEC_ID_AAC;
+        }
+        if (mv == 4) return AV_CODEC_ID_AAC;
     }
     return -1;
 }
@@ -151,18 +160,19 @@ gst_dream_audio_sink_set_caps(GstBaseSink *bsink, GstCaps *caps)
     gint codec = codec_id_from_caps(caps);
     if (codec < 0) { GST_WARNING_OBJECT(self, "unsupported caps"); return FALSE; }
 
-    gint sr = 0, ch = 0;
+    gint ch = 0;
     const GstStructure *s = gst_caps_get_structure(caps, 0);
-    gst_structure_get_int(s, "rate",     &sr);
     gst_structure_get_int(s, "channels", &ch);
-    if (sr <= 0) sr = 48000;
     if (ch <= 0) ch = 2;
 
     if (self->decoder && self->codec_id == codec) return TRUE;
 
     if (self->decoder) { dream_decoder_free(self->decoder); self->decoder = NULL; }
 
-    self->decoder = dream_decoder_new(codec, sr, ch,
+    /* Force ALSA output rate to 48 kHz — AMlogic HW rejects exotic rates
+     * (e.g. 24 kHz from some AAC streams). swresample in the decoder
+     * upconverts from the actual codec rate. */
+    self->decoder = dream_decoder_new(codec, 48000, ch,
                                       gst_dream_audio_sink_decoder_cb, self);
     if (!self->decoder) {
         GST_ERROR_OBJECT(self, "decoder_new failed codec=%d", codec);
