@@ -23,6 +23,7 @@ require conf/machine/include/arm/arch-armv8a.inc
 MACHINE_EXTRA_RRECOMMENDS += "\
     ffmpeg \
     enigma2-plugin-systemplugins-serviceapp \
+    gst-plugin-dreamaudiosink \
     gstreamer1.0-dreamsinks \
     gstreamer1.0-libav \
     kernel-module-cifs \
