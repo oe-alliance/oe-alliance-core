@@ -75,7 +75,15 @@ DreamAvsync *dream_avsync_new(DreamAvsyncMode mode)
 void dream_avsync_free(DreamAvsync *a)
 {
     if (!a) return;
-    /* leave tsync enabled - other parts of the system rely on it */
+    /* Re-enable kernel tsync if we disabled it on init. Other paths
+     * (Live-TV via enigma2 eAlsaOutput, kernel video decoder for the
+     * next service) expect tsync at its default enabled state — leaving
+     * it disabled means the next pipeline reads stale pts_video and
+     * sees pathological drift on the first audio frames. */
+    if (a->mode == DREAM_AVSYNC_MODE_VMASTER) {
+        write_int(TSYNC_ENABLE, 1);
+        AVSYNC_DBG("free: kernel tsync re-enabled");
+    }
     free(a);
 }
 
