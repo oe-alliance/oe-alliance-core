@@ -14,10 +14,10 @@ SRC_URI:append = " \
 "
 
 PACKAGECONFIG:append = " \
-    assrender faac faad libde265 neon opusparse resindvd rtmp srt \
+    assrender faac faad libde265 neon nettle opusparse resindvd rtmp srt \
 "
 
-PACKAGECONFIG:remove = "rsvg"
+PACKAGECONFIG:remove = "rsvg openssl"
 
 PV = "1.28.3"
  
