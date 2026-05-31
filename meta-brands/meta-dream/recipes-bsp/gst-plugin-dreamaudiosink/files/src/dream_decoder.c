@@ -343,18 +343,22 @@ int dream_decoder_decode(DreamDecoder *d,
         dream_set_digital_codec(0);
     }
 
+    /* HLS chunks often have a bad frame at the boundary — skip, don't
+     * abort the pipeline. */
     int rc = avcodec_send_packet(d->codec_ctx, d->avpkt);
     if (rc < 0 && rc != AVERROR(EAGAIN)) {
-        DEC_DBG("avcodec_send_packet: %d", rc);
-        return -1;
+        DEC_DBG("avcodec_send_packet: %d (skipping packet)", rc);
+        av_packet_unref(d->avpkt);
+        return 0;
     }
 
     while (1) {
         rc = avcodec_receive_frame(d->codec_ctx, d->frame);
         if (rc == AVERROR(EAGAIN) || rc == AVERROR_EOF) break;
         if (rc < 0) {
-            DEC_DBG("avcodec_receive_frame: %d", rc);
-            return -1;
+            DEC_DBG("avcodec_receive_frame: %d (skipping frame)", rc);
+            av_frame_unref(d->frame);
+            break;
         }
 
         if (d->frame->pts != AV_NOPTS_VALUE)
