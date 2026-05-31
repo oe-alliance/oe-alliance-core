@@ -30,9 +30,13 @@ typedef struct DreamDecoder DreamDecoder;
  * what the decoder reports per frame.
  * cb: invoked once per decoded output chunk.
  */
+/* extradata: codec_data (AudioSpecificConfig for AAC, etc.) — required for
+ * raw demuxed AAC streams. May be NULL/0 for codecs that don't need it. */
 DreamDecoder *dream_decoder_new(int codec_id,
                                 int sample_rate,
                                 int channels,
+                                const void *extradata,
+                                int extradata_size,
                                 DreamDecoderOutputCallback cb,
                                 void *user_data);
 

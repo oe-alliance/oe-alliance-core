@@ -98,6 +98,8 @@ static void dream_set_digital_codec(int v)
 DreamDecoder *dream_decoder_new(int codec_id,
                                 int sample_rate,
                                 int channels,
+                                const void *extradata,
+                                int extradata_size,
                                 DreamDecoderOutputCallback cb,
                                 void *user_data)
 {
@@ -129,6 +131,19 @@ DreamDecoder *dream_decoder_new(int codec_id,
 
     d->codec_ctx->sample_fmt = AV_SAMPLE_FMT_S16;
     av_channel_layout_default(&d->codec_ctx->ch_layout, 2);
+
+    /* Pass codec_data through to FFmpeg (AAC AudioSpecificConfig etc). */
+    if (extradata && extradata_size > 0) {
+        d->codec_ctx->extradata = av_mallocz(extradata_size + AV_INPUT_BUFFER_PADDING_SIZE);
+        if (!d->codec_ctx->extradata) {
+            DEC_DBG("extradata alloc failed");
+            avcodec_free_context(&d->codec_ctx);
+            free(d);
+            return NULL;
+        }
+        memcpy(d->codec_ctx->extradata, extradata, extradata_size);
+        d->codec_ctx->extradata_size = extradata_size;
+    }
 
     int rc = avcodec_open2(d->codec_ctx, d->codec, NULL);
     if (rc < 0) {

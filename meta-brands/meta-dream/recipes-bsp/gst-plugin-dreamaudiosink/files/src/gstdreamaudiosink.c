@@ -169,11 +169,23 @@ gst_dream_audio_sink_set_caps(GstBaseSink *bsink, GstCaps *caps)
 
     if (self->decoder) { dream_decoder_free(self->decoder); self->decoder = NULL; }
 
-    /* Force ALSA output rate to 48 kHz — AMlogic HW rejects exotic rates
-     * (e.g. 24 kHz from some AAC streams). swresample in the decoder
-     * upconverts from the actual codec rate. */
+    /* codec_data from caps = AAC AudioSpecificConfig etc. Without it,
+     * FFmpeg AAC rejects every raw frame as INVALIDDATA. */
+    const void *extradata = NULL;
+    gsize extradata_size = 0;
+    GstMapInfo cd_mi = {0};
+    const GValue *cd_val = gst_structure_get_value(s, "codec_data");
+    GstBuffer *cd_buf = cd_val ? gst_value_get_buffer(cd_val) : NULL;
+    if (cd_buf && gst_buffer_map(cd_buf, &cd_mi, GST_MAP_READ)) {
+        extradata = cd_mi.data;
+        extradata_size = cd_mi.size;
+    }
+
+    /* Force ALSA output rate to 48 kHz — AMlogic HW rejects exotic rates. */
     self->decoder = dream_decoder_new(codec, 48000, ch,
+                                      extradata, (int)extradata_size,
                                       gst_dream_audio_sink_decoder_cb, self);
+    if (cd_buf) gst_buffer_unmap(cd_buf, &cd_mi);
     if (!self->decoder) {
         GST_ERROR_OBJECT(self, "decoder_new failed codec=%d", codec);
         return FALSE;
