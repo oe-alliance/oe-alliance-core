@@ -66,6 +66,9 @@ SRC_URI:append:openvix = " \
 SRC_URI:append:opendroid = " \
            file://smb-local.conf \
           "
+SRC_URI:append:openspa = " \
+           file://smb-local.conf \
+          "
 
 SRC_URI[sha256sum] = "ac24583f271a82ac324f7c6fad7327f65b591ad3492e1dccfee988e2c1c81dd1"
 UPSTREAM_CHECK_REGEX = "samba\-(?P<pver>4\.24(\.\d+)+).tar.gz"

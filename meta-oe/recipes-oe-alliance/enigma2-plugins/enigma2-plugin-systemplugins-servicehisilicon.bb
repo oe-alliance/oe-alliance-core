@@ -11,11 +11,12 @@ SRCREV = "${AUTOREV}"
 SRC_URI = "git://github.com/oe-mirrors/servicehisilicon.git;protocol=https;branch=master"
 SRC_URI:openatv = "git://github.com/oe-mirrors/servicehisilicon.git;protocol=https;branch=openatv"
 SRC_URI:openhdf = "git://github.com/oe-mirrors/servicehisilicon.git;protocol=https;branch=openatv"
+SRC_URI:openspa = "git://github.com/openspa/servicehisilicon.git;protocol=https;branch=py3"
 SRC_URI:openvix = "git://github.com/OpenViX/servicehisilicon.git;protocol=https;branch=sigc3"
 SRC_URI:openbh = "git://github.com/BlackHole/servicehisilicon.git;protocol=https;branch=sigc3"
 SRC_URI:teamblue = "git://github.com/BlackHole/servicehisilicon.git;protocol=https;branch=sigc3"
 
-inherit autotools gitpkgv python3native pkgconfig python3targetconfig
+inherit autotools gitpkgv python3native pkgconfig python3targetconfig gettext
 
 PV = "git"
 PKGV = "git${GITPKGV}"
@@ -32,7 +33,12 @@ FILES:${PN} = "\
 	${libdir}/enigma2/python/Plugins/SystemPlugins/ServiceHisilicon/*.pyc \
 	${libdir}/enigma2/python/Plugins/SystemPlugins/ServiceHisilicon/servicehisilicon.so \
 	"
-
+FILES:${PN}:openspa = "\
+	${libdir}/enigma2/python/Plugins/SystemPlugins/ServiceHisilicon/*.pyc \
+	${libdir}/enigma2/python/Plugins/SystemPlugins/ServiceHisilicon/servicehisilicon.so \
+	${libdir}/enigma2/python/Plugins/SystemPlugins/ServiceHisilicon/*.png \
+	${libdir}/enigma2/python/Plugins/SystemPlugins/ServiceHisilicon/locale/*/*/*.mo \
+	"
 FILES:${PN}-dev = "\
 	${libdir}/enigma2/python/Plugins/SystemPlugins/ServiceHisilicon/*.py \
 	${libdir}/enigma2/python/Plugins/SystemPlugins/ServiceHisilicon/servicehisilicon.la \

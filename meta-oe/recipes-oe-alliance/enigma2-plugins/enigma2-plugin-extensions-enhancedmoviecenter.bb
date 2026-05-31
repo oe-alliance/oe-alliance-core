@@ -18,6 +18,7 @@ SRC_URI = "git://github.com/oe-mirrors/e2openplugin-EnhancedMovieCenter.git;bran
 SRC_URI:openatv ?= "git://github.com/oe-mirrors/EnhancedMovieCenter.git;protocol=https;branch=master"
 SRC_URI:opendroid ?= "git://github.com/oe-mirrors/EnhancedMovieCenter.git;protocol=https;branch=master"
 SRC_URI:openhdf ?= "git://github.com/oe-mirrors/EnhancedMovieCenter.git;protocol=https;branch=master"
+SRC_URI:openspa ?= "git://github.com/oe-mirrors/EnhancedMovieCenter.git;protocol=https;branch=master"
 
 EXTRA_OECONF = " \
     BUILD_SYS=${BUILD_SYS} \
