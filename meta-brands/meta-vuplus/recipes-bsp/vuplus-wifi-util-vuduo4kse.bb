@@ -35,7 +35,6 @@ do_install:append() {
 	install -m 0644 ${UNPACKDIR}/vuplus-wifi-util-${MACHINE}/cyfmac4373.bin ${D}/lib/firmware/cypress/
 	install -m 0644 ${UNPACKDIR}/vuplus-wifi-util-${MACHINE}/cyfmac4373.clm_blob ${D}/lib/firmware/cypress/
 	install -m 0644 ${UNPACKDIR}/vuplus-wifi-util-${MACHINE}/brcmfmac4373-usb.txt ${D}/lib/firmware/cypress/
-	install -m 0644 ${UNPACKDIR}/vuplus-wifi-util-${MACHINE}/regulatory.db ${D}/lib/firmware/
 }
 
 SRC_URI[md5sum] = "afa959f5c55172198c86ee7802276719"
