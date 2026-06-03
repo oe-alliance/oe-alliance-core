@@ -149,6 +149,36 @@ int dream_alsa_set_params(DreamAlsa *a,
         return -1;
     }
 
+    /* sw_params: silence-pad on underrun instead of XRUN.
+     *
+     * snd_pcm_set_params sets stop_threshold=buffer_size, so an empty buffer
+     * triggers XRUN and the next writei returns -EPIPE. With silence_size at
+     * boundary and stop_threshold at boundary the HW stream never stops; ALSA
+     * tops up with zeros when data runs low. A brief decoder hiccup plays a
+     * few ms of silence (inaudible vs a click) instead of forcing a recover()
+     * cycle. Real data resumes writing into a never-stopped stream — no EPIPE,
+     * no audible glitch at the snd_pcm layer. */
+    snd_pcm_uframes_t period_size = 0;
+    snd_pcm_hw_params_t *hw;
+    snd_pcm_hw_params_alloca(&hw);
+    if (snd_pcm_hw_params_current(a->handle, hw) < 0 ||
+        snd_pcm_hw_params_get_period_size(hw, &period_size, NULL) < 0 ||
+        period_size == 0)
+        period_size = 1024;  /* sane fallback for sw_params silence */
+
+    snd_pcm_sw_params_t *sw;
+    snd_pcm_sw_params_alloca(&sw);
+    if (snd_pcm_sw_params_current(a->handle, sw) == 0) {
+        snd_pcm_uframes_t boundary = 0;
+        snd_pcm_sw_params_get_boundary(sw, &boundary);
+        snd_pcm_sw_params_set_stop_threshold(a->handle, sw, boundary);
+        snd_pcm_sw_params_set_silence_threshold(a->handle, sw, period_size);
+        snd_pcm_sw_params_set_silence_size(a->handle, sw, period_size);
+        int sw_err = snd_pcm_sw_params(a->handle, sw);
+        if (sw_err < 0)
+            ALSA_DBG("sw_params (silence-pad): %s", snd_strerror(sw_err));
+    }
+
     a->rate             = sample_rate;
     a->channels         = channels;
     a->bytes_per_sample = bytes_per_sample;
