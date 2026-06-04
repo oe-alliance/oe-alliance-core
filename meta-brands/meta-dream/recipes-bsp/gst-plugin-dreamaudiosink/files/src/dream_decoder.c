@@ -158,7 +158,7 @@ static int read_enigma2_setting(const char *key, char *out, size_t out_sz)
     return hit;
 }
 
-/* === AAC -> AC3 transcode helpers =================================== */
+/* === AAC / EAC3 -> AC3 transcode helpers ============================ */
 
 /* Lightweight read of one enigma2 setting key without bringing in any
  * enigma2 headers. The plugin is plain C and runs in the GStreamer
@@ -167,6 +167,14 @@ static int read_aac_transcode_setting(void)
 {
     char val[64];
     if (!read_enigma2_setting("config.av.transcodeaac", val, sizeof(val)))
+        return 0;
+    return strcmp(val, "force_ac3") == 0;
+}
+
+static int read_ac3plus_transcode_setting(void)
+{
+    char val[64];
+    if (!read_enigma2_setting("config.av.transcodeac3plus", val, sizeof(val)))
         return 0;
     return strcmp(val, "force_ac3") == 0;
 }
@@ -604,15 +612,18 @@ DreamDecoder *dream_decoder_new(int codec_id,
             d->codec->long_name ? d->codec->long_name : "?",
             d->out_sample_rate, d->out_channels);
 
-    /* AAC -> AC3 transcode if the user picked "Convert to AC3" in
-     * Audio Settings AND the codec is AAC / AAC-LATM. Failure is
-     * non-fatal — falls back to normal PCM decode + dream_alsa. */
+    /* AAC / EAC3 -> AC3 transcode if the user picked "Convert to AC3"
+     * in Audio Settings AND the codec matches. Failure is non-fatal —
+     * falls back to normal PCM decode + dream_alsa. */
     d->saved_digital_raw   = -1;
     d->saved_digital_codec = -1;
-    if ((codec_id == AV_CODEC_ID_AAC || codec_id == AV_CODEC_ID_AAC_LATM)
-        && read_aac_transcode_setting())
     {
-        if (start_aac_to_ac3_encoder(d) == 0)
+        const int aac_force  = (codec_id == AV_CODEC_ID_AAC
+                             || codec_id == AV_CODEC_ID_AAC_LATM)
+                            && read_aac_transcode_setting();
+        const int eac3_force = (codec_id == AV_CODEC_ID_EAC3)
+                            && read_ac3plus_transcode_setting();
+        if ((aac_force || eac3_force) && start_aac_to_ac3_encoder(d) == 0)
             d->transcode_aac_to_ac3 = 1;
     }
 
