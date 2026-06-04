@@ -13,10 +13,14 @@
 #include <unistd.h>
 
 #include <libavcodec/avcodec.h>
+#include <libavformat/avformat.h>
+#include <libavformat/avio.h>
 #include <libavutil/opt.h>
 #include <libavutil/channel_layout.h>
 #include <libavutil/samplefmt.h>
 #include <libavutil/audio_fifo.h>
+#include <libavutil/dict.h>
+#include <libavutil/mem.h>
 #include <libswresample/swresample.h>
 #include <alsa/asoundlib.h>
 
@@ -74,7 +78,26 @@ struct DreamDecoder {
      * saved (transcode never engaged). */
     int               saved_digital_raw;
     int               saved_digital_codec;
+
+    /* HBR passthrough state (TrueHD, DTS-HD MA). libavformat's spdif muxer
+     * handles MAT wrapping (TrueHD) / repetition + start-code framing
+     * (DTS-HD) — we feed raw AVPackets in, capture IEC61937 bytes via the
+     * custom AVIOContext write callback, and emit at 192k/8ch S16 through
+     * the existing PCM callback. dream_alsa opens hw at 192k/8ch and AML
+     * kernel routes onto the HDMI HBR IEC60958 carrier. */
+    int               hbr_mode;
+    AVFormatContext  *spdif_fmt;
+    AVIOContext      *spdif_avio;
+    AVStream         *spdif_stream;
+    int               hbr_header_written;
+    uint8_t          *hbr_out_buf;          /* dynamic byte accumulator */
+    size_t            hbr_out_size;
+    size_t            hbr_out_cap;
+    int               hbr_digital_codec;    /* 5=DTS-HD, 7=TrueHD */
 };
+
+#define HBR_AVIO_BUFSIZE   (128 * 1024)
+#define HBR_OUT_INIT_CAP   (128 * 1024)
 
 static int read_sysfs_int(const char *path)
 {
@@ -112,6 +135,28 @@ static void dream_set_digital_codec(int v)
         write_sysfs_int("/sys/class/audiodsp/digital_codec", v);
 }
 
+/* Read one enigma2 setting key as a string into out (sized at out_sz).
+ * Returns 1 if the key was found, 0 otherwise (out untouched on miss). */
+static int read_enigma2_setting(const char *key, char *out, size_t out_sz)
+{
+    FILE *f = fopen("/etc/enigma2/settings", "r");
+    if (!f) return 0;
+    char line[256];
+    const size_t klen = strlen(key);
+    int hit = 0;
+    while (fgets(line, sizeof(line), f)) {
+        if (strncmp(line, key, klen) != 0) continue;
+        if (line[klen] != '=') continue;
+        const char *val = line + klen + 1;
+        char *nl = strchr((char *)val, '\n'); if (nl) *nl = 0;
+        snprintf(out, out_sz, "%s", val);
+        hit = 1;
+        break;
+    }
+    fclose(f);
+    return hit;
+}
+
 /* === AAC -> AC3 transcode helpers =================================== */
 
 /* Lightweight read of one enigma2 setting key without bringing in any
@@ -119,21 +164,218 @@ static void dream_set_digital_codec(int v)
  * thread; tsparser-side equivalent lives in lib/dvb/tsparser.cpp. */
 static int read_aac_transcode_setting(void)
 {
-    FILE *f = fopen("/etc/enigma2/settings", "r");
+    char val[64];
+    if (!read_enigma2_setting("config.av.transcodeaac", val, sizeof(val)))
+        return 0;
+    return strcmp(val, "force_ac3") == 0;
+}
+
+/* === HBR (TrueHD / DTS-HD MA) helpers ================================ */
+
+/* Mirror lib/dvb/audiomanager: scan aud_cap for a codec tag. Returns 1 if
+ * the EDID-advertised list contains the format, 0 otherwise. Codec name
+ * matches the prefix at the start of each aud_cap line. */
+static int sink_has_codec(const char *name)
+{
+    FILE *f = fopen("/sys/class/amhdmitx/amhdmitx0/aud_cap", "r");
     if (!f) return 0;
     char line[256];
-    int want = 0;
+    int hit = 0;
+    const size_t nlen = strlen(name);
     while (fgets(line, sizeof(line), f)) {
-        const char *prefix = "config.av.transcodeaac=";
-        const size_t plen = strlen(prefix);
-        if (strncmp(line, prefix, plen) != 0) continue;
-        char *val = line + plen;
-        char *nl = strchr(val, '\n'); if (nl) *nl = 0;
-        if (strcmp(val, "force_ac3") == 0) want = 1;
-        break;
+        const char *p = line;
+        while (*p == ' ' || *p == '\t') ++p;
+        if (strncmp(p, name, nlen) == 0 && (p[nlen] == ',' || p[nlen] == ' '))
+            { hit = 1; break; }
     }
     fclose(f);
-    return want;
+    return hit;
+}
+
+/* True when this codec + user setting + sink-cap combo wants HBR passthrough.
+ *   TrueHD: config.av.truehd in {passthrough, hdmi_best} AND sink has TrueHD.
+ *   DTS    : config.av.dtshd  in {passthrough, hdmi_best} AND sink has DTS-HD
+ *            (DTS-HD MA upgrade — core-only DTS uses the standard path). */
+static int codec_wants_hbr(int codec_id)
+{
+    char val[32] = {0};
+    if (codec_id == AV_CODEC_ID_TRUEHD) {
+        if (!read_enigma2_setting("config.av.truehd", val, sizeof(val)))
+            return 1;  /* TrueHD streams have no fallback — assume PT wanted. */
+        if (strcmp(val, "downmix") == 0) return 0;
+        return sink_has_codec("TrueHD") || sink_has_codec("MAT");
+    }
+    if (codec_id == AV_CODEC_ID_DTS) {
+        if (!read_enigma2_setting("config.av.dtshd", val, sizeof(val)))
+            return 0;
+        if (strcmp(val, "downmix") == 0) return 0;
+        return sink_has_codec("DTS-HD");
+    }
+    return 0;
+}
+
+static int hbr_write_cb(void *opaque, const uint8_t *buf, int buf_size)
+{
+    DreamDecoder *d = (DreamDecoder *)opaque;
+    size_t need = d->hbr_out_size + (size_t)buf_size;
+    if (need > d->hbr_out_cap) {
+        size_t ncap = d->hbr_out_cap ? d->hbr_out_cap * 2 : HBR_OUT_INIT_CAP;
+        while (ncap < need) ncap *= 2;
+        uint8_t *nb = realloc(d->hbr_out_buf, ncap);
+        if (!nb) return AVERROR(ENOMEM);
+        d->hbr_out_buf = nb;
+        d->hbr_out_cap = ncap;
+    }
+    memcpy(d->hbr_out_buf + d->hbr_out_size, buf, buf_size);
+    d->hbr_out_size += buf_size;
+    return buf_size;
+}
+
+static int start_hbr_muxer(DreamDecoder *d, int codec_id)
+{
+    enum AVCodecID strm;
+    if (codec_id == AV_CODEC_ID_TRUEHD) {
+        d->hbr_digital_codec = 7;
+        strm = AV_CODEC_ID_TRUEHD;
+    } else if (codec_id == AV_CODEC_ID_DTS) {
+        d->hbr_digital_codec = 5;   /* DTS-HD */
+        strm = AV_CODEC_ID_DTS;
+    } else return -1;
+
+    /* Save current sysfs so dream_decoder_free restores PCM-safe values. */
+    d->saved_digital_raw   = dream_get_digital_raw();
+    d->saved_digital_codec = dream_get_digital_codec();
+    write_sysfs_int("/sys/class/audiodsp/digital_raw", DIGITAL_RAW_SPDIF);
+    dream_set_digital_codec(d->hbr_digital_codec);
+    {
+        /* Audio spdif format mixer enum: 5=DTS-HD, 7=TrueHD. */
+        snd_ctl_t *ctl = NULL;
+        if (snd_ctl_open(&ctl, "hw:0", 0) == 0) {
+            snd_ctl_elem_id_t    *id;  snd_ctl_elem_id_alloca(&id);
+            snd_ctl_elem_value_t *val; snd_ctl_elem_value_alloca(&val);
+            snd_ctl_elem_id_set_interface(id, SND_CTL_ELEM_IFACE_MIXER);
+            snd_ctl_elem_id_set_name(id, "Audio spdif format");
+            snd_ctl_elem_value_set_id(val, id);
+            snd_ctl_elem_value_set_enumerated(val, 0, (unsigned int)d->hbr_digital_codec);
+            snd_ctl_elem_write(ctl, val);
+            snd_ctl_close(ctl);
+        }
+    }
+
+    int rc = avformat_alloc_output_context2(&d->spdif_fmt, NULL, "spdif", NULL);
+    if (rc < 0 || !d->spdif_fmt) {
+        DEC_DBG("HBR: alloc spdif muxer: %d", rc);
+        return -1;
+    }
+    d->spdif_stream = avformat_new_stream(d->spdif_fmt, NULL);
+    if (!d->spdif_stream) {
+        avformat_free_context(d->spdif_fmt); d->spdif_fmt = NULL;
+        return -1;
+    }
+    d->spdif_stream->codecpar->codec_type   = AVMEDIA_TYPE_AUDIO;
+    d->spdif_stream->codecpar->codec_id     = strm;
+    d->spdif_stream->codecpar->sample_rate  = 48000;
+    av_channel_layout_default(&d->spdif_stream->codecpar->ch_layout,
+                              strm == AV_CODEC_ID_TRUEHD ? 8 : 6);
+
+    uint8_t *avio_buf = av_malloc(HBR_AVIO_BUFSIZE);
+    if (!avio_buf) {
+        avformat_free_context(d->spdif_fmt); d->spdif_fmt = NULL;
+        return -1;
+    }
+    d->spdif_avio = avio_alloc_context(avio_buf, HBR_AVIO_BUFSIZE, 1, d,
+                                       NULL, hbr_write_cb, NULL);
+    if (!d->spdif_avio) {
+        av_free(avio_buf);
+        avformat_free_context(d->spdif_fmt); d->spdif_fmt = NULL;
+        return -1;
+    }
+    d->spdif_fmt->pb = d->spdif_avio;
+    d->spdif_fmt->flags |= AVFMT_FLAG_CUSTOM_IO;
+
+    AVDictionary *opts = NULL;
+    if (strm == AV_CODEC_ID_DTS)
+        av_dict_set(&opts, "dtshd_rate", "192000", 0);
+    rc = avformat_write_header(d->spdif_fmt, &opts);
+    av_dict_free(&opts);
+    if (rc < 0) {
+        DEC_DBG("HBR: avformat_write_header: %d", rc);
+        return -1;
+    }
+    d->hbr_header_written = 1;
+    d->hbr_out_cap = HBR_OUT_INIT_CAP;
+    d->hbr_out_buf = malloc(d->hbr_out_cap);
+    if (!d->hbr_out_buf) return -1;
+
+    /* Tell the sink to open ALSA at HBR rate. */
+    d->out_sample_rate = 192000;
+    d->out_channels    = 8;
+
+    DEC_DBG("HBR: start codec=%d (digital_codec=%d) 192k/8ch",
+            codec_id, d->hbr_digital_codec);
+    return 0;
+}
+
+static void stop_hbr_muxer(DreamDecoder *d)
+{
+    if (d->spdif_fmt && d->hbr_header_written) {
+        av_write_trailer(d->spdif_fmt);
+        d->hbr_header_written = 0;
+    }
+    if (d->spdif_avio) {
+        uint8_t *live = d->spdif_avio->buffer;
+        avio_context_free(&d->spdif_avio);
+        if (live) av_free(live);
+    }
+    if (d->spdif_fmt) {
+        avformat_free_context(d->spdif_fmt);
+        d->spdif_fmt = NULL;
+    }
+    d->spdif_stream = NULL;
+    free(d->hbr_out_buf);
+    d->hbr_out_buf = NULL;
+    d->hbr_out_size = 0;
+    d->hbr_out_cap  = 0;
+}
+
+/* Push one TrueHD / DTS-HD frame through the spdif muxer; emit accumulated
+ * IEC61937 bytes via the sink callback (at HBR rate). Output is in 16-byte
+ * HBR ALSA frames (8 ch * S16). We only emit whole frames; any byte tail
+ * stays in hbr_out_buf for the next push. */
+static int hbr_push_packet(DreamDecoder *d, const uint8_t *data, int size)
+{
+    if (!d->spdif_fmt) return -1;
+
+    AVPacket *pkt = av_packet_alloc();
+    if (!pkt) return -1;
+    if (av_new_packet(pkt, size) < 0) { av_packet_free(&pkt); return -1; }
+    memcpy(pkt->data, data, size);
+    pkt->stream_index = d->spdif_stream->index;
+    pkt->pts = d->last_pts;
+    pkt->dts = d->last_pts;
+
+    int rc = av_write_frame(d->spdif_fmt, pkt);
+    av_packet_free(&pkt);
+    if (rc < 0) {
+        char eb[128]; av_strerror(rc, eb, sizeof(eb));
+        DEC_DBG("HBR: av_write_frame: %s", eb);
+        return -1;
+    }
+    avio_flush(d->spdif_avio);
+
+    /* Emit whole 16-byte HBR ALSA frames to the sink. */
+    size_t frames = d->hbr_out_size / 16;
+    if (frames == 0) return 0;
+    size_t bytes  = frames * 16;
+    d->cb(DREAM_DECODER_OUTPUT_IEC61937, 192000, 8,
+          d->hbr_out_buf, bytes, d->last_pts, d->cb_user);
+
+    /* Shift any tail down. */
+    if (bytes < d->hbr_out_size)
+        memmove(d->hbr_out_buf, d->hbr_out_buf + bytes,
+                d->hbr_out_size - bytes);
+    d->hbr_out_size -= bytes;
+    return 0;
 }
 
 /* Build IEC61937 burst from an encoded AC3 packet and emit through the
@@ -356,12 +598,26 @@ DreamDecoder *dream_decoder_new(int codec_id,
             d->transcode_aac_to_ac3 = 1;
     }
 
+    /* HBR passthrough for TrueHD / DTS-HD MA. Set up the spdif muxer +
+     * sysfs upfront; dream_decoder_decode then bypasses the decoder and
+     * routes raw packets straight through the muxer. Failure falls back
+     * to PCM decode through libavcodec. */
+    if (codec_wants_hbr(codec_id)) {
+        if (start_hbr_muxer(d, codec_id) == 0)
+            d->hbr_mode = 1;
+        else
+            stop_hbr_muxer(d);   /* cleanup whatever was partly set up */
+    }
+
     return d;
 }
 
 void dream_decoder_free(DreamDecoder *d)
 {
     if (!d) return;
+    /* Flush HBR muxer trailer before sysfs restore so the muxer's last
+     * MAT padding burst makes it to the sink. */
+    if (d->hbr_mode) stop_hbr_muxer(d);
     /* Flush any pending PCM through the encoder before tearing it down so
      * the final IEC61937 burst makes it to the sink. */
     if (d->transcode_aac_to_ac3) drain_encoder_fifo(d, 1);
@@ -564,6 +820,16 @@ int dream_decoder_decode(DreamDecoder *d,
     d->avpkt->size = size;
     d->avpkt->pts  = pts;
     d->avpkt->dts  = dts;
+
+    /* HBR passthrough: bypass libavcodec entirely, feed raw TrueHD /
+     * DTS-HD frames into the spdif muxer. The muxer emits IEC61937
+     * bytes via hbr_write_cb and hbr_push_packet forwards them to
+     * dream_alsa at 192k/8ch S16. */
+    if (d->hbr_mode) {
+        if (pts != AV_NOPTS_VALUE) d->last_pts = pts;
+        hbr_push_packet(d, data, size);
+        return 0;
+    }
 
     /* Passthrough path: feed IEC61937 frame without invoking the decoder. */
     const int dgraw = dream_get_digital_raw();
