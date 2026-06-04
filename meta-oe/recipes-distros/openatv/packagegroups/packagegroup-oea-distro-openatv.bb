@@ -24,6 +24,7 @@ RDEPENDS:${PN} = "\
     smartmontools \
     enigma2-skindefault \
     socketdaemon \
+    coreutils-stdbuf \
     enigma2-plugin-systemplugins-hotplug \
     enigma2-plugin-systemplugins-softwaremanager \
     ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", "${OPENATV_EXTENDED}", d)} \
