@@ -132,6 +132,9 @@ gst_dream_audio_sink_start(GstBaseSink *bsink)
     self->alsa = dream_alsa_new(self->device);
     if (!self->alsa) return FALSE;
 
+    /* Apply pre-start volume — PROP_VOLUME setter no-ops when alsa is NULL. */
+    dream_alsa_set_volume(self->alsa, (int)(self->volume * 100.0 + 0.5));
+
     self->avsync = dream_avsync_new((DreamAvsyncMode)self->tsync_mode);
 
     self->codec_id     = -1;
