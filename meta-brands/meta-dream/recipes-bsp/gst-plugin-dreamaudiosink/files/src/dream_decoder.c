@@ -16,7 +16,9 @@
 #include <libavutil/opt.h>
 #include <libavutil/channel_layout.h>
 #include <libavutil/samplefmt.h>
+#include <libavutil/audio_fifo.h>
 #include <libswresample/swresample.h>
+#include <alsa/asoundlib.h>
 
 #define DEC_DBG(...) do { fprintf(stderr, "[dream_decoder] " __VA_ARGS__); fputc('\n', stderr); } while (0)
 
@@ -57,6 +59,21 @@ struct DreamDecoder {
 
     DreamDecoderOutputCallback cb;
     void                       *cb_user;
+
+    /* AAC -> AC3 transcode path. All NULL when not transcoding. */
+    int               transcode_aac_to_ac3;
+    AVCodecContext   *enc_ctx;
+    AVFrame          *enc_frame;
+    AVPacket         *enc_pkt;
+    AVAudioFifo      *enc_fifo;
+    SwrContext       *enc_swr;
+    int64_t           enc_next_pts;
+    /* AML bitstream-mode sysfs state at start_aac_to_ac3_encoder() time;
+     * restored to PCM-safe values in dream_decoder_free so the downstream
+     * Live-TV path sees a clean PCM pipeline on channel switch. -1 = not
+     * saved (transcode never engaged). */
+    int               saved_digital_raw;
+    int               saved_digital_codec;
 };
 
 static int read_sysfs_int(const char *path)
@@ -93,6 +110,167 @@ static void dream_set_digital_codec(int v)
 {
     if (dream_get_digital_codec() != v)
         write_sysfs_int("/sys/class/audiodsp/digital_codec", v);
+}
+
+/* === AAC -> AC3 transcode helpers =================================== */
+
+/* Lightweight read of one enigma2 setting key without bringing in any
+ * enigma2 headers. The plugin is plain C and runs in the GStreamer
+ * thread; tsparser-side equivalent lives in lib/dvb/tsparser.cpp. */
+static int read_aac_transcode_setting(void)
+{
+    FILE *f = fopen("/etc/enigma2/settings", "r");
+    if (!f) return 0;
+    char line[256];
+    int want = 0;
+    while (fgets(line, sizeof(line), f)) {
+        const char *prefix = "config.av.transcodeaac=";
+        const size_t plen = strlen(prefix);
+        if (strncmp(line, prefix, plen) != 0) continue;
+        char *val = line + plen;
+        char *nl = strchr(val, '\n'); if (nl) *nl = 0;
+        if (strcmp(val, "force_ac3") == 0) want = 1;
+        break;
+    }
+    fclose(f);
+    return want;
+}
+
+/* Build IEC61937 burst from an encoded AC3 packet and emit through the
+ * callback. Mirrors build_spdif_ac3 but takes a plain AVPacket — needed
+ * because the encoder produces fresh AVPackets, not the input AVPacket. */
+static void emit_iec61937_ac3(DreamDecoder *d, const AVPacket *p)
+{
+    if (SPDIF_AC3_BUF_BYTES < p->size + 8) return;
+    dream_set_digital_codec(2);
+
+    uint16_t *out = d->spdif;
+    out[0] = SYNCWORD1;
+    out[1] = SYNCWORD2;
+    out[2] = (uint16_t)(IEC61937_AC3 | (p->data[5] & 0x07) << 8);
+    out[3] = (uint16_t)(p->size * 8);
+    swab((const char *)p->data, (char *)(out + 4), p->size);
+    memset(out + 4 + p->size / 2, 0, SPDIF_AC3_BUF_BYTES - 8 - p->size);
+
+    d->cb(DREAM_DECODER_OUTPUT_IEC61937, d->out_sample_rate, d->out_channels,
+          (const uint8_t *)out, SPDIF_AC3_BUF_BYTES, d->last_pts, d->cb_user);
+}
+
+static int drain_encoder_fifo(DreamDecoder *d, int flush)
+{
+    if (!d->enc_ctx || !d->enc_fifo) return -1;
+    const int fsz = d->enc_ctx->frame_size;
+    while (av_audio_fifo_size(d->enc_fifo) >= fsz ||
+           (flush && av_audio_fifo_size(d->enc_fifo) > 0)) {
+        int take = av_audio_fifo_size(d->enc_fifo);
+        if (take > fsz) take = fsz;
+        av_frame_unref(d->enc_frame);
+        d->enc_frame->nb_samples  = fsz;  /* AC3 wants exact frame_size */
+        d->enc_frame->format      = AV_SAMPLE_FMT_FLTP;
+        d->enc_frame->sample_rate = 48000;
+        av_channel_layout_copy(&d->enc_frame->ch_layout, &d->enc_ctx->ch_layout);
+        if (av_frame_get_buffer(d->enc_frame, 0) < 0) return -1;
+        if (av_audio_fifo_read(d->enc_fifo, (void **)d->enc_frame->data, take) < take)
+            return -1;
+        if (take < fsz) {
+            const int pad_bytes = (fsz - take) * sizeof(float);
+            memset(d->enc_frame->data[0] + take * sizeof(float), 0, pad_bytes);
+            memset(d->enc_frame->data[1] + take * sizeof(float), 0, pad_bytes);
+        }
+        d->enc_frame->pts = d->enc_next_pts;
+        d->enc_next_pts  += fsz;
+
+        if (avcodec_send_frame(d->enc_ctx, d->enc_frame) < 0) {
+            DEC_DBG("transcode: send_frame(AC3) failed");
+            continue;
+        }
+        while (avcodec_receive_packet(d->enc_ctx, d->enc_pkt) == 0) {
+            emit_iec61937_ac3(d, d->enc_pkt);
+            av_packet_unref(d->enc_pkt);
+        }
+    }
+    return 0;
+}
+
+static int feed_encoder_with_pcm(DreamDecoder *d, AVFrame *pcm)
+{
+    if (!d->enc_ctx || !d->enc_fifo) return -1;
+    const int in_rate = pcm->sample_rate ? pcm->sample_rate : d->codec_ctx->sample_rate;
+    AVChannelLayout in_chl;
+    if (pcm->ch_layout.nb_channels) av_channel_layout_copy(&in_chl, &pcm->ch_layout);
+    else if (d->codec_ctx->ch_layout.nb_channels)
+        av_channel_layout_copy(&in_chl, &d->codec_ctx->ch_layout);
+    else av_channel_layout_default(&in_chl, 2);
+
+    AVChannelLayout out_chl;
+    av_channel_layout_copy(&out_chl, &d->enc_ctx->ch_layout);
+
+    if (!d->enc_swr) d->enc_swr = swr_alloc();
+    if (!d->enc_swr) return -1;
+    swr_close(d->enc_swr);
+    av_opt_set_chlayout    (d->enc_swr, "in_chlayout",     &in_chl,     0);
+    av_opt_set_int         (d->enc_swr, "in_sample_rate",   in_rate,    0);
+    av_opt_set_sample_fmt  (d->enc_swr, "in_sample_fmt",    (enum AVSampleFormat)pcm->format, 0);
+    av_opt_set_chlayout    (d->enc_swr, "out_chlayout",    &out_chl,    0);
+    av_opt_set_int         (d->enc_swr, "out_sample_rate",  48000,      0);
+    av_opt_set_sample_fmt  (d->enc_swr, "out_sample_fmt",   AV_SAMPLE_FMT_FLTP, 0);
+    av_opt_set_double      (d->enc_swr, "rematrix_maxval",  1.0,        0);
+    if (swr_init(d->enc_swr) < 0) return -1;
+
+    const int out_max = swr_get_out_samples(d->enc_swr, pcm->nb_samples);
+    if (out_max <= 0) return 0;
+
+    uint8_t *out[2] = { NULL, NULL };
+    int linesize = 0;
+    if (av_samples_alloc(out, &linesize, 2, out_max, AV_SAMPLE_FMT_FLTP, 0) < 0) return -1;
+    const uint8_t *src[AV_NUM_DATA_POINTERS] = { 0 };
+    for (int i = 0; i < AV_NUM_DATA_POINTERS; ++i) src[i] = pcm->extended_data[i];
+    int got = swr_convert(d->enc_swr, out, out_max, src, pcm->nb_samples);
+    if (got > 0) av_audio_fifo_write(d->enc_fifo, (void **)out, got);
+    av_freep(&out[0]);
+    return drain_encoder_fifo(d, 0);
+}
+
+static int start_aac_to_ac3_encoder(DreamDecoder *d)
+{
+    const AVCodec *enc = avcodec_find_encoder(AV_CODEC_ID_AC3);
+    if (!enc) { DEC_DBG("transcode: AC3 encoder not built into libavcodec"); return -1; }
+    d->enc_ctx = avcodec_alloc_context3(enc);
+    if (!d->enc_ctx) return -1;
+    d->enc_ctx->sample_fmt  = AV_SAMPLE_FMT_FLTP;
+    d->enc_ctx->sample_rate = 48000;
+    d->enc_ctx->bit_rate    = 192000;
+    av_channel_layout_default(&d->enc_ctx->ch_layout, 2);
+    if (avcodec_open2(d->enc_ctx, enc, NULL) < 0) {
+        DEC_DBG("transcode: avcodec_open2(AC3 enc) failed");
+        avcodec_free_context(&d->enc_ctx);
+        return -1;
+    }
+    d->enc_fifo  = av_audio_fifo_alloc(AV_SAMPLE_FMT_FLTP, 2,
+                                       d->enc_ctx->frame_size > 0 ? d->enc_ctx->frame_size * 4 : 8192);
+    d->enc_pkt   = av_packet_alloc();
+    d->enc_frame = av_frame_alloc();
+    if (!d->enc_fifo || !d->enc_pkt || !d->enc_frame) {
+        DEC_DBG("transcode: encoder alloc failed");
+        if (d->enc_fifo)  { av_audio_fifo_free(d->enc_fifo); d->enc_fifo  = NULL; }
+        if (d->enc_pkt)   { av_packet_free(&d->enc_pkt); }
+        if (d->enc_frame) { av_frame_free(&d->enc_frame); }
+        avcodec_free_context(&d->enc_ctx);
+        return -1;
+    }
+    /* Force AML kernel into AC3 bitstream mode for the duration of this
+     * decoder instance. Save the original values so dream_decoder_free
+     * can restore them — otherwise the next channel's PCM data plays
+     * through a kernel still configured for AC3 bitstream and the AVR
+     * gets silence/garbage. */
+    d->saved_digital_raw   = dream_get_digital_raw();
+    d->saved_digital_codec = dream_get_digital_codec();
+    write_sysfs_int("/sys/class/audiodsp/digital_raw", DIGITAL_RAW_SPDIF);
+    dream_set_digital_codec(2);  /* AC3 */
+    d->enc_next_pts = 0;
+    DEC_DBG("transcode: AAC -> AC3 active (frame_size=%d, bitrate=%d)",
+            d->enc_ctx->frame_size, (int)d->enc_ctx->bit_rate);
+    return 0;
 }
 
 DreamDecoder *dream_decoder_new(int codec_id,
@@ -166,12 +344,52 @@ DreamDecoder *dream_decoder_new(int codec_id,
             d->codec->long_name ? d->codec->long_name : "?",
             d->out_sample_rate, d->out_channels);
 
+    /* AAC -> AC3 transcode if the user picked "Convert to AC3" in
+     * Audio Settings AND the codec is AAC / AAC-LATM. Failure is
+     * non-fatal — falls back to normal PCM decode + dream_alsa. */
+    d->saved_digital_raw   = -1;
+    d->saved_digital_codec = -1;
+    if ((codec_id == AV_CODEC_ID_AAC || codec_id == AV_CODEC_ID_AAC_LATM)
+        && read_aac_transcode_setting())
+    {
+        if (start_aac_to_ac3_encoder(d) == 0)
+            d->transcode_aac_to_ac3 = 1;
+    }
+
     return d;
 }
 
 void dream_decoder_free(DreamDecoder *d)
 {
     if (!d) return;
+    /* Flush any pending PCM through the encoder before tearing it down so
+     * the final IEC61937 burst makes it to the sink. */
+    if (d->transcode_aac_to_ac3) drain_encoder_fifo(d, 1);
+    if (d->enc_ctx)   avcodec_free_context(&d->enc_ctx);
+    if (d->enc_frame) av_frame_free(&d->enc_frame);
+    if (d->enc_pkt)   av_packet_free(&d->enc_pkt);
+    if (d->enc_fifo)  { av_audio_fifo_free(d->enc_fifo); d->enc_fifo = NULL; }
+    if (d->enc_swr)   swr_free(&d->enc_swr);
+    /* Restore bitstream-mode sysfs to whatever the rest of the system
+     * expects. Without this the next AC3 channel's PCM gets played as
+     * AC3 bitstream → AVR mutes / TV plays static. Also reset the
+     * spdif format mixer to 2CH PCM in case it was bumped. */
+    if (d->saved_digital_raw >= 0) {
+        write_sysfs_int("/sys/class/audiodsp/digital_raw",   d->saved_digital_raw);
+        write_sysfs_int("/sys/class/audiodsp/digital_codec", d->saved_digital_codec);
+        snd_ctl_t *ctl = NULL;
+        if (snd_ctl_open(&ctl, "hw:0", 0) == 0) {
+            snd_ctl_elem_id_t    *id;  snd_ctl_elem_id_alloca(&id);
+            snd_ctl_elem_value_t *val; snd_ctl_elem_value_alloca(&val);
+            snd_ctl_elem_id_set_interface(id, SND_CTL_ELEM_IFACE_MIXER);
+            snd_ctl_elem_id_set_name(id, "Audio spdif format");
+            snd_ctl_elem_value_set_id(val, id);
+            snd_ctl_elem_value_set_enumerated(val, 0, 0);  /* 2 CH PCM */
+            snd_ctl_elem_write(ctl, val);
+            snd_ctl_close(ctl);
+        }
+    }
+
     if (d->codec_ctx) avcodec_free_context(&d->codec_ctx);
     if (d->frame)     av_frame_free(&d->frame);
     if (d->avpkt)     av_packet_free(&d->avpkt);
@@ -379,7 +597,10 @@ int dream_decoder_decode(DreamDecoder *d,
         if (d->frame->pts != AV_NOPTS_VALUE)
             d->last_pts = d->frame->pts;
 
-        emit_pcm_from_frame(d);
+        if (d->transcode_aac_to_ac3)
+            feed_encoder_with_pcm(d, d->frame);
+        else
+            emit_pcm_from_frame(d);
         av_frame_unref(d->frame);
     }
 
