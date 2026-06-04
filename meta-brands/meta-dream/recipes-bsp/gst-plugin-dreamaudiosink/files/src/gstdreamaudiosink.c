@@ -31,7 +31,11 @@ static guint gst_dream_audio_sink_signals[SIGNAL_LAST] = { 0 };
 
 #define DEFAULT_E2_SYNC               TRUE
 #define DEFAULT_E2_ASYNC              FALSE
-#define DEFAULT_DEVICE                "default"
+/* "dreamhdmi" is the same ALSA device eAlsaOutput uses for Live-TV PCM.
+ * Going through "default" (plug → dreamhdmi → softvol → dmix) instead
+ * of "dreamhdmi" (softvol → dmix) directly caused movie audio to be
+ * silently dropped — writes succeeded but never reached hw:0,0. */
+#define DEFAULT_DEVICE                "dreamhdmi"
 #define DEFAULT_TSYNC_MODE            0     /* VMASTER = kernel tsync disabled */
 #define DEFAULT_SOFTDECODER_DELAY_MS  0
 
@@ -44,10 +48,19 @@ static GstStaticPadTemplate sink_template = GST_STATIC_PAD_TEMPLATE(
         "audio/mpeg, mpegversion=(int)2, parsed=(boolean)true; "        /* MPEG-2 audio (MP2 ext) */
         "audio/mpeg, mpegversion=(int)2, framed=(boolean)true; "        /* MPEG-2 AAC */
         "audio/mpeg, mpegversion=(int)4, framed=(boolean)true; "        /* MPEG-4 AAC */
+        /* ac3parse / dcaparse exist as gstreamer elements and frame the
+         * bitstream cleanly. Require framed=true so the autoplugger
+         * inserts them between matroskademux and us — without that the
+         * decoder gets unframed bytes and rejects every packet with
+         * AVERROR_INVALIDDATA. */
         "audio/x-ac3, framed=(boolean)true; "
         "audio/x-eac3, framed=(boolean)true; "
         "audio/x-dts, framed=(boolean)true; "
-        "audio/x-true-hd, framed=(boolean)true"
+        /* No mlpparse in this build. Accept unframed TrueHD and let our
+         * dream_decoder slice access units via libavcodec's MLP parser
+         * (av_parser_init). Without AVR this falls back to libavcodec
+         * PCM decode. */
+        "audio/x-true-hd"
     ));
 
 G_DEFINE_TYPE(GstDreamAudioSink, gst_dream_audio_sink, GST_TYPE_BASE_SINK)
@@ -360,4 +373,14 @@ gst_dream_audio_sink_init(GstDreamAudioSink *self)
     self->volume               = 1.0;
     self->codec_id             = -1;
     self->last_pts_90k         = AV_NOPTS_VALUE;
+
+    /* Disable GstBaseSink's late-buffer drop. With file playback (non-
+     * live) BaseSink's default max-lateness=20ms drops audio buffers that
+     * arrive too late vs the pipeline clock. Combined with the 300+ms
+     * drift our dream_avsync calibration measures, this dropped every
+     * buffer after the initial preroll — explained the "1 second audio,
+     * then silence" symptom on local MKV files (Tagesschau HLS bypasses
+     * this because live pipelines disable lateness checks). */
+    gst_base_sink_set_max_lateness(GST_BASE_SINK(self), -1);
+    gst_base_sink_set_sync(GST_BASE_SINK(self), TRUE);
 }

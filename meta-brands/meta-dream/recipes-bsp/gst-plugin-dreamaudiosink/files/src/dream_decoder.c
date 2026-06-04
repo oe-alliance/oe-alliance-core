@@ -47,6 +47,7 @@ enum IEC61937 {
 struct DreamDecoder {
     const AVCodec    *codec;
     AVCodecContext   *codec_ctx;
+    AVCodecParserContext *parser;   /* NULL for codecs without parser */
     SwrContext       *swr_ctx;
     AVFrame          *frame;
     AVPacket         *avpkt;
@@ -172,10 +173,13 @@ static int read_aac_transcode_setting(void)
 
 /* === HBR (TrueHD / DTS-HD MA) helpers ================================ */
 
-/* Mirror lib/dvb/audiomanager: scan aud_cap for a codec tag. Returns 1 if
- * the EDID-advertised list contains the format, 0 otherwise. Codec name
- * matches the prefix at the start of each aud_cap line. */
-static int sink_has_codec(const char *name)
+/* Mirror lib/dvb/audiomanager: scan aud_cap for a codec line. If
+ * require_192k is 0, just verify the codec is listed at all. If 1, also
+ * require "192" in the line's freq portion — that's the EDID signal for
+ * true HBR capability. TVs without an AVR typically list DTS-HD up to
+ * 96 kHz only (HR / Express, fits standard 48k/2ch IEC958) and lack
+ * TrueHD entirely; only AVRs advertise 192 kHz for those codecs. */
+static int sink_has_codec(const char *name, int require_192k)
 {
     FILE *f = fopen("/sys/class/amhdmitx/amhdmitx0/aud_cap", "r");
     if (!f) return 0;
@@ -185,31 +189,34 @@ static int sink_has_codec(const char *name)
     while (fgets(line, sizeof(line), f)) {
         const char *p = line;
         while (*p == ' ' || *p == '\t') ++p;
-        if (strncmp(p, name, nlen) == 0 && (p[nlen] == ',' || p[nlen] == ' '))
-            { hit = 1; break; }
+        if (strncmp(p, name, nlen) == 0 && (p[nlen] == ',' || p[nlen] == ' ')) {
+            if (!require_192k || strstr(line, "192")) hit = 1;
+            break;
+        }
     }
     fclose(f);
     return hit;
 }
 
-/* True when this codec + user setting + sink-cap combo wants HBR passthrough.
- *   TrueHD: config.av.truehd in {passthrough, hdmi_best} AND sink has TrueHD.
- *   DTS    : config.av.dtshd  in {passthrough, hdmi_best} AND sink has DTS-HD
- *            (DTS-HD MA upgrade — core-only DTS uses the standard path). */
+/* True when this codec + user setting + sink HBR-cap combo wants HBR
+ * passthrough. Defaults err on the side of NO HBR — without an AVR that
+ * advertises 192 kHz for the codec, ALSA hw open at 192k/8ch fails
+ * (-EINVAL) and the stream goes silent. Falling back to libavcodec PCM
+ * decode + standard 48k/2ch output keeps audio audible on TV-only setups. */
 static int codec_wants_hbr(int codec_id)
 {
     char val[32] = {0};
     if (codec_id == AV_CODEC_ID_TRUEHD) {
-        if (!read_enigma2_setting("config.av.truehd", val, sizeof(val)))
-            return 1;  /* TrueHD streams have no fallback — assume PT wanted. */
-        if (strcmp(val, "downmix") == 0) return 0;
-        return sink_has_codec("TrueHD") || sink_has_codec("MAT");
+        if (read_enigma2_setting("config.av.truehd", val, sizeof(val))
+            && strcmp(val, "downmix") == 0)
+            return 0;
+        return sink_has_codec("TrueHD", 1) || sink_has_codec("MAT", 1);
     }
     if (codec_id == AV_CODEC_ID_DTS) {
         if (!read_enigma2_setting("config.av.dtshd", val, sizeof(val)))
             return 0;
         if (strcmp(val, "downmix") == 0) return 0;
-        return sink_has_codec("DTS-HD");
+        return sink_has_codec("DTS-HD", 1);
     }
     return 0;
 }
@@ -581,6 +588,17 @@ DreamDecoder *dream_decoder_new(int codec_id,
         return NULL;
     }
 
+    /* No av_parser path right now. AC3/EAC3/DTS/AAC arrive framed via
+     * gstreamer's audioparsers (a52parse/dcaparse/aacparse with
+     * framed=true caps); routing them through our own av_parser just
+     * corrupted their decoder state (test5.mkv cut after ~1 s). TrueHD
+     * has no gst mlpparse in this build, but libavcodec's mlp_parser
+     * rejected every matroska block ("mlpparse: Parity check failed")
+     * — the demuxer hands out blocks that aren't aligned to MLP access
+     * units. Send raw blocks straight to the decoder and live with the
+     * "Stream parameters not seen" warnings until major sync appears. */
+    d->parser = NULL;
+
     DEC_DBG("init codec=%s (%s) rate=%u ch=%u",
             avcodec_get_name((enum AVCodecID)codec_id),
             d->codec->long_name ? d->codec->long_name : "?",
@@ -646,6 +664,7 @@ void dream_decoder_free(DreamDecoder *d)
         }
     }
 
+    if (d->parser)    { av_parser_close(d->parser); d->parser = NULL; }
     if (d->codec_ctx) avcodec_free_context(&d->codec_ctx);
     if (d->frame)     av_frame_free(&d->frame);
     if (d->avpkt)     av_packet_free(&d->avpkt);
@@ -842,34 +861,70 @@ int dream_decoder_decode(DreamDecoder *d,
         dream_set_digital_codec(0);
     }
 
-    /* HLS chunks often have a bad frame at the boundary — skip, don't
-     * abort the pipeline. */
-    int rc = avcodec_send_packet(d->codec_ctx, d->avpkt);
-    if (rc < 0 && rc != AVERROR(EAGAIN)) {
-        DEC_DBG("avcodec_send_packet: %d (skipping packet)", rc);
-        av_packet_unref(d->avpkt);
-        return 0;
-    }
+    /* Walk one packet through the parser (if any) and feed each complete
+     * frame to the decoder. With no parser this is a single pass with
+     * data/size as-is. */
+    const uint8_t *in_data = data;
+    int            in_size = size;
+    int64_t        in_pts  = pts;
+    int64_t        in_dts  = dts;
 
-    while (1) {
-        rc = avcodec_receive_frame(d->codec_ctx, d->frame);
-        if (rc == AVERROR(EAGAIN) || rc == AVERROR_EOF) break;
-        if (rc < 0) {
-            DEC_DBG("avcodec_receive_frame: %d (skipping frame)", rc);
-            av_frame_unref(d->frame);
-            break;
+    while (in_size > 0 || !d->parser) {
+        uint8_t *frame_data = (uint8_t *)in_data;
+        int      frame_size = in_size;
+        int      consumed   = in_size;
+
+        if (d->parser) {
+            consumed = av_parser_parse2(d->parser, d->codec_ctx,
+                                        &frame_data, &frame_size,
+                                        in_data, in_size,
+                                        in_pts, in_dts, 0);
+            if (consumed < 0) break;
+            if (consumed == 0 && frame_size == 0) break;  /* no progress → bail */
+            in_data += consumed;
+            in_size -= consumed;
+            in_pts   = AV_NOPTS_VALUE;
+            in_dts   = AV_NOPTS_VALUE;
+            if (frame_size == 0) {
+                if (in_size == 0) break;       /* parser swallowed all */
+                continue;                       /* needs more bytes for a frame */
+            }
         }
 
-        if (d->frame->pts != AV_NOPTS_VALUE)
-            d->last_pts = d->frame->pts;
+        d->avpkt->data = frame_data;
+        d->avpkt->size = frame_size;
+        d->avpkt->pts  = d->parser ? d->parser->pts : pts;
+        d->avpkt->dts  = d->parser ? d->parser->dts : dts;
 
-        if (d->transcode_aac_to_ac3)
-            feed_encoder_with_pcm(d, d->frame);
-        else
-            emit_pcm_from_frame(d);
-        av_frame_unref(d->frame);
+        /* HLS chunks often have a bad frame at the boundary — skip,
+         * don't abort the pipeline. */
+        int rc = avcodec_send_packet(d->codec_ctx, d->avpkt);
+        if (rc < 0 && rc != AVERROR(EAGAIN)) {
+            DEC_DBG("avcodec_send_packet: %d (skipping packet)", rc);
+            av_packet_unref(d->avpkt);
+            if (!d->parser) break;
+            continue;
+        }
+
+        while (1) {
+            rc = avcodec_receive_frame(d->codec_ctx, d->frame);
+            if (rc == AVERROR(EAGAIN) || rc == AVERROR_EOF) break;
+            if (rc < 0) {
+                DEC_DBG("avcodec_receive_frame: %d (skipping frame)", rc);
+                av_frame_unref(d->frame);
+                break;
+            }
+            if (d->frame->pts != AV_NOPTS_VALUE)
+                d->last_pts = d->frame->pts;
+            if (d->transcode_aac_to_ac3)
+                feed_encoder_with_pcm(d, d->frame);
+            else
+                emit_pcm_from_frame(d);
+            av_frame_unref(d->frame);
+        }
+        av_packet_unref(d->avpkt);
+
+        if (!d->parser) break;   /* one-shot for non-parser codecs */
     }
-
-    av_packet_unref(d->avpkt);
     return 0;
 }
