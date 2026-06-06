@@ -6,7 +6,7 @@ require conf/license/license-gplv2.inc
 inherit allarch
 
 PV = "${IMAGE_VERSION}"
-PR = "r2"
+PR = "r3"
 
 PACKAGES = "${PN}"
 
@@ -16,7 +16,7 @@ feed_name = "openbh-extra-feed"
 
 do_compile() {
     mkdir -p ${S}/${sysconfdir}/opkg
-    echo "src/gz ${feed_name} http://feeds.openbh.net/extra/5.6/" > ${S}/${sysconfdir}/opkg/${feed_name}.conf
+    echo "src/gz ${feed_name} http://feeds.openbh.net/extra/6.0/" > ${S}/${sysconfdir}/opkg/${feed_name}.conf
 }
 
 do_install() {
