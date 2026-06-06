@@ -5,7 +5,7 @@ HOMEPAGE = "https://sinric.pro"
 LICENSE = "GPLv2+"
 require conf/license/license-gplv2.inc
 
-RDEPENDS:${PN} = "python3-websockets python3-asyncio"
+RDEPENDS:${PN} = "python3-websockets python3-asyncio python3-aiohttp"
 
 PV = "5.2.1"
 
