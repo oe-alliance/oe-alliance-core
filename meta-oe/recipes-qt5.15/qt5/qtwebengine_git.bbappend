@@ -18,6 +18,7 @@ DEPENDS += " \
     avahi-libnss-mdns \
     libxkbcommon \
     libwebp-native \
+    libxdamage \
 "
 
 FILESEXTRAPATHS:prepend := "${THISDIR}/qtwebengine-git:"
@@ -26,5 +27,18 @@ PACKAGECONFIG[alsa] = "-feature-webengine-alsa,-no-feature-webengine-alsa,alsa-l
 PACKAGECONFIG[extensions] = "-feature-webengine-extensions,-no-feature-webengine-extensions"
 
 PACKAGECONFIG:append = " libwebp ffmpeg opus libvpx alsa proprietary-codecs pepper-plugins webrtc"
+
+# Fix seccomp vs glibc >= 2.31
+python do_patch:append () {
+    import os
+    sec_file = d.expand("${S}/src/3rdparty/chromium/sandbox/linux/system_headers/linux_seccomp.h")
+    if os.path.exists(sec_file):
+        with open(sec_file, "r") as f:
+            lines = f.readlines()
+        with open(sec_file, "w") as f:
+            for line in lines:
+                if "#define SYS_SECCOMP" not in line:
+                    f.write(line)
+}
 
 INSANE_SKIP:${PN} += "file-rdeps"
