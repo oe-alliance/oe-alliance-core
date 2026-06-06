@@ -25,6 +25,7 @@ struct _GstDreamAudioSink
     gint        tsync_mode;
     gint        softdecoder_delay_ms;
     gdouble     volume;
+    gboolean    volume_set_explicitly;  /* TRUE = upstream called PROP_VOLUME setter */
 
     /* runtime - SW decode + ALSA (Kodi/CoreELEC AESinkALSA pattern). */
     DreamDecoder *decoder;

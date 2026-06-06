@@ -169,7 +169,7 @@ gst_dream_audio_sink_start(GstBaseSink *bsink)
     self->alsa = dream_alsa_new(self->device);
     if (!self->alsa) return FALSE;
 
-    if (self->volume >= 1.0) {
+    if (!self->volume_set_explicitly) {
         int v = read_user_volume_setting();
         if (v >= 0) self->volume = (gdouble)v / 100.0;
     }
@@ -279,6 +279,7 @@ gst_dream_audio_sink_set_property(GObject *o, guint id, const GValue *v, GParamS
             if (vol < 0.0) vol = 0.0;
             if (vol > 1.0) vol = 1.0;
             self->volume = vol;
+            self->volume_set_explicitly = TRUE;
             if (self->alsa)
                 dream_alsa_set_volume(self->alsa, (int)(vol * 100.0 + 0.5));
             break;
