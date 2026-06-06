@@ -13,7 +13,7 @@ LT_INIT([disable-static])
 GST_REQUIRED=1.0.0
 PKG_CHECK_MODULES(GST, [gstreamer-1.0 >= $GST_REQUIRED gstreamer-base-1.0 >= $GST_REQUIRED])
 PKG_CHECK_MODULES(ALSA, [alsa])
-PKG_CHECK_MODULES(AV,   [libavcodec libavutil libswresample])
+PKG_CHECK_MODULES(AV,   [libavcodec libavformat libavutil libswresample])
 
 plugindir="\$(libdir)/gstreamer-1.0"
 AC_SUBST(plugindir)

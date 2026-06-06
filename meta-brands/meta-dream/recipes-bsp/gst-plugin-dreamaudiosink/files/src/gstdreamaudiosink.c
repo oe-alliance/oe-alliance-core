@@ -4,6 +4,9 @@
 
 #include "gstdreamaudiosink.h"
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <libavcodec/codec_id.h>
 #include <libavutil/avutil.h>
 
@@ -31,7 +34,11 @@ static guint gst_dream_audio_sink_signals[SIGNAL_LAST] = { 0 };
 
 #define DEFAULT_E2_SYNC               TRUE
 #define DEFAULT_E2_ASYNC              FALSE
-#define DEFAULT_DEVICE                "default"
+/* "dreamhdmi" is the same ALSA device eAlsaOutput uses for Live-TV PCM.
+ * Going through "default" (plug → dreamhdmi → softvol → dmix) instead
+ * of "dreamhdmi" (softvol → dmix) directly caused movie audio to be
+ * silently dropped — writes succeeded but never reached hw:0,0. */
+#define DEFAULT_DEVICE                "dreamhdmi"
 #define DEFAULT_TSYNC_MODE            0     /* VMASTER = kernel tsync disabled */
 #define DEFAULT_SOFTDECODER_DELAY_MS  0
 
@@ -44,9 +51,19 @@ static GstStaticPadTemplate sink_template = GST_STATIC_PAD_TEMPLATE(
         "audio/mpeg, mpegversion=(int)2, parsed=(boolean)true; "        /* MPEG-2 audio (MP2 ext) */
         "audio/mpeg, mpegversion=(int)2, framed=(boolean)true; "        /* MPEG-2 AAC */
         "audio/mpeg, mpegversion=(int)4, framed=(boolean)true; "        /* MPEG-4 AAC */
+        /* ac3parse / dcaparse exist as gstreamer elements and frame the
+         * bitstream cleanly. Require framed=true so the autoplugger
+         * inserts them between matroskademux and us — without that the
+         * decoder gets unframed bytes and rejects every packet with
+         * AVERROR_INVALIDDATA. */
         "audio/x-ac3, framed=(boolean)true; "
         "audio/x-eac3, framed=(boolean)true; "
-        "audio/x-dts, framed=(boolean)true"
+        "audio/x-dts, framed=(boolean)true; "
+        /* No mlpparse in this build. Accept unframed TrueHD and let our
+         * dream_decoder slice access units via libavcodec's MLP parser
+         * (av_parser_init). Without AVR this falls back to libavcodec
+         * PCM decode. */
+        "audio/x-true-hd"
     ));
 
 G_DEFINE_TYPE(GstDreamAudioSink, gst_dream_audio_sink, GST_TYPE_BASE_SINK)
@@ -59,9 +76,10 @@ static gint codec_id_from_caps(const GstCaps *caps)
     const GstStructure *s = gst_caps_get_structure(caps, 0);
     const gchar *name = gst_structure_get_name(s);
 
-    if (g_str_equal(name, "audio/x-ac3"))  return AV_CODEC_ID_AC3;
-    if (g_str_equal(name, "audio/x-eac3")) return AV_CODEC_ID_EAC3;
-    if (g_str_equal(name, "audio/x-dts"))  return AV_CODEC_ID_DTS;
+    if (g_str_equal(name, "audio/x-ac3"))     return AV_CODEC_ID_AC3;
+    if (g_str_equal(name, "audio/x-eac3"))    return AV_CODEC_ID_EAC3;
+    if (g_str_equal(name, "audio/x-dts"))     return AV_CODEC_ID_DTS;
+    if (g_str_equal(name, "audio/x-true-hd")) return AV_CODEC_ID_TRUEHD;
     if (g_str_equal(name, "audio/mpeg")) {
         gint mv = 0;
         gst_structure_get_int(s, "mpegversion", &mv);
@@ -122,6 +140,25 @@ gst_dream_audio_sink_decoder_cb(DreamDecoderOutputType type,
     dream_alsa_write(self->alsa, data, size);
 }
 
+static int read_user_volume_setting(void)
+{
+    FILE *f = fopen("/etc/enigma2/settings", "r");
+    if (!f) return -1;
+    char line[256];
+    int vol = -1;
+    while (fgets(line, sizeof(line), f)) {
+        const char *prefix = "config.volumeControl.volume=";
+        const size_t plen = strlen(prefix);
+        if (strncmp(line, prefix, plen) != 0) continue;
+        vol = atoi(line + plen);
+        break;
+    }
+    fclose(f);
+    if (vol < 0)   vol = 0;
+    if (vol > 100) vol = 100;
+    return vol;
+}
+
 /* ---------- GstBaseSink vmethods ---------- */
 
 static gboolean
@@ -132,6 +169,10 @@ gst_dream_audio_sink_start(GstBaseSink *bsink)
     self->alsa = dream_alsa_new(self->device);
     if (!self->alsa) return FALSE;
 
+    if (self->volume >= 1.0) {
+        int v = read_user_volume_setting();
+        if (v >= 0) self->volume = (gdouble)v / 100.0;
+    }
     /* Apply pre-start volume — PROP_VOLUME setter no-ops when alsa is NULL. */
     dream_alsa_set_volume(self->alsa, (int)(self->volume * 100.0 + 0.5));
 
@@ -358,4 +399,14 @@ gst_dream_audio_sink_init(GstDreamAudioSink *self)
     self->volume               = 1.0;
     self->codec_id             = -1;
     self->last_pts_90k         = AV_NOPTS_VALUE;
+
+    /* Disable GstBaseSink's late-buffer drop. With file playback (non-
+     * live) BaseSink's default max-lateness=20ms drops audio buffers that
+     * arrive too late vs the pipeline clock. Combined with the 300+ms
+     * drift our dream_avsync calibration measures, this dropped every
+     * buffer after the initial preroll — explained the "1 second audio,
+     * then silence" symptom on local MKV files (Tagesschau HLS bypasses
+     * this because live pipelines disable lateness checks). */
+    gst_base_sink_set_max_lateness(GST_BASE_SINK(self), -1);
+    gst_base_sink_set_sync(GST_BASE_SINK(self), TRUE);
 }
