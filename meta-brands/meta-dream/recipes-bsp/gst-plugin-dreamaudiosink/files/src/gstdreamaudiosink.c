@@ -4,6 +4,9 @@
 
 #include "gstdreamaudiosink.h"
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <libavcodec/codec_id.h>
 #include <libavutil/avutil.h>
 
@@ -137,6 +140,25 @@ gst_dream_audio_sink_decoder_cb(DreamDecoderOutputType type,
     dream_alsa_write(self->alsa, data, size);
 }
 
+static int read_user_volume_setting(void)
+{
+    FILE *f = fopen("/etc/enigma2/settings", "r");
+    if (!f) return -1;
+    char line[256];
+    int vol = -1;
+    while (fgets(line, sizeof(line), f)) {
+        const char *prefix = "config.volumeControl.volume=";
+        const size_t plen = strlen(prefix);
+        if (strncmp(line, prefix, plen) != 0) continue;
+        vol = atoi(line + plen);
+        break;
+    }
+    fclose(f);
+    if (vol < 0)   vol = 0;
+    if (vol > 100) vol = 100;
+    return vol;
+}
+
 /* ---------- GstBaseSink vmethods ---------- */
 
 static gboolean
@@ -147,6 +169,10 @@ gst_dream_audio_sink_start(GstBaseSink *bsink)
     self->alsa = dream_alsa_new(self->device);
     if (!self->alsa) return FALSE;
 
+    if (self->volume >= 1.0) {
+        int v = read_user_volume_setting();
+        if (v >= 0) self->volume = (gdouble)v / 100.0;
+    }
     /* Apply pre-start volume — PROP_VOLUME setter no-ops when alsa is NULL. */
     dream_alsa_set_volume(self->alsa, (int)(self->volume * 100.0 + 0.5));
 
