@@ -4,7 +4,7 @@ PE = "1"
 
 inherit kernel machine_kernel_pr kernel-fixups
 
-MACHINE_KERNEL_PR = "r3"
+MACHINE_KERNEL_PR = "r4"
 
 require linux-dreambox-4.9.inc
 
@@ -18,6 +18,7 @@ SRC_URI = "https://source.mynonpublic.com/dreambox/${BPN}-v${PV}.tar.xz \
            file://0003-cp1emu-do-not-use-bools-for-arithmetic.patch \
            file://hide_sdcardfs_info.patch \
            file://use_address-of_operator_on_section_symbols.patch \
+           file://aml_tsync_chrdev_ioctl.patch \
            ${KERNEL_PATCH_BINUTILS241_V4} \
            ${KERNEL_PATCH_FIX_HEADER} \
            ${KERNEL_PATCH_FIX_CONSTEXPR} \
