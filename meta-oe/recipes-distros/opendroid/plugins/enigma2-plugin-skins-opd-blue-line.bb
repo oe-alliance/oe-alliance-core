@@ -14,17 +14,18 @@ RDEPENDS:${PN} = "enigma2-plugin-systemplugins-weathercomponenthandler, enigma2-
 
 SRC_URI = "git://github.com/stein17/Skins-for-openOPD.git;protocol=https;branch=python3"
 
-FILES:${PN} = "/"
+FILES:${PN} = "${libdir} ${datadir}"
 
-S = "${UNPACKDIR}/OPD-Blue-Line"
+S = "${UNPACKDIR}/${BP}/OPD-Blue-Line"
 
 do_install() {
     install -d ${D}${libdir}
-    install -d ${D}/usr/share
+    install -d ${D}${datadir}
     cp -r --no-preserve=ownership ${S}/usr/lib/* ${D}${libdir}/
     cp -r --no-preserve=ownership ${S}/usr/share/* ${D}/usr/share/
     chmod -R a+rX ${D}/usr/share/enigma2/
 }
+
 pkg_postinst:${PN} () {
 #!/bin/sh
 echo "                                                          "

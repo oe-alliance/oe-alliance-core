@@ -21,7 +21,7 @@ SSTATE_SKIP_CREATION = "1"
 
 URL = "https://droidsat.org"
 
-WORKDIR = "${TMPDIR}/work/${MULTIMACH_TARGET_SYS}/${PN}/${EXTENDPE}${PV}"
+S = "${UNPACKDIR}"
 
 PACKAGES = "${PN}"
 

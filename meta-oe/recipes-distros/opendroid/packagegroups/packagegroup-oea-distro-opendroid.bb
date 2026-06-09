@@ -17,8 +17,6 @@ RDEPENDS:${PN} = "\
     enigma-info \
     enigma2-skindefault \
     wait-for-dhcp \
-    opdmultiboot \
-    opdboot-files \
     ca-certificates \
     ofgwrite \
     openvpn \
