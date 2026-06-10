@@ -2,7 +2,7 @@ FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 
 RRECOMMENDS:alsa-state:append = " libasound-module-ctl-oss libasound-module-pcm-oss"
 
-PR:append = ".8"
+PR:append = ".9"
 PACKAGE_ARCH := "${MACHINE_ARCH}"
 
 EXTRA_ALSA ?= "empty"
