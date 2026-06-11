@@ -1,4 +1,4 @@
-AC_INIT([gst-plugin-dreamaudiosink], [0.1.0], [openatv@gmail.com])
+AC_INIT([gst-plugin-dreamaudiosink], [0.2.0], [openatv@gmail.com])
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_SRCDIR([src/plugin.c])
 AC_CONFIG_HEADERS([config.h])

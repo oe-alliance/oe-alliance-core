@@ -3,12 +3,13 @@
 #endif
 
 #include "dream_avsync.h"
+#include "dream_log.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-#define AVSYNC_DBG(...) do { fprintf(stderr, "[dream_avsync] " __VA_ARGS__); fputc('\n', stderr); } while (0)
+#define AVSYNC_DBG(...) dream_log("avsync", __VA_ARGS__)
 
 #define TSYNC_ENABLE            "/sys/class/tsync/enable"
 #define TSYNC_MODE              "/sys/class/tsync/mode"
@@ -31,13 +32,6 @@ static void write_int(const char *path, int v)
 {
     char buf[32];
     snprintf(buf, sizeof(buf), "%d", v);
-    write_str(path, buf);
-}
-
-static void write_hex_u32(const char *path, uint32_t v)
-{
-    char buf[32];
-    snprintf(buf, sizeof(buf), "0x%x", v);
     write_str(path, buf);
 }
 
@@ -89,8 +83,9 @@ void dream_avsync_free(DreamAvsync *a)
 
 void dream_avsync_checkin_audio_pts(DreamAvsync *a, uint32_t pts_90khz)
 {
+    /* No-op: writing pts_audio fights kernel pcrmaster. */
     (void)a;
-    write_hex_u32(TSYNC_PTS_AUDIO, pts_90khz);
+    (void)pts_90khz;
 }
 
 void dream_avsync_signal_discontinuity(DreamAvsync *a)

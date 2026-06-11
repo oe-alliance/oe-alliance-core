@@ -10,36 +10,30 @@ extern "C" {
 
 typedef struct DreamAlsa DreamAlsa;
 
-/*
- * device may be NULL -> defaults to "default".
- * Opens lazily; first set_params() actually configures hardware.
- */
+/* device NULL → "default". HW configured lazily on first set_params(). */
 DreamAlsa *dream_alsa_new(const char *device);
 void       dream_alsa_free(DreamAlsa *a);
 
-/*
- * Configure / reconfigure hardware. Safe to call repeatedly; tears down
- * and reopens if rate / channels changed.
- * passthrough != 0 disables software volume / S16 conversion expectations
- * (caller passes already-framed IEC61937 bytes).
- */
+/* Reconfigure if any param changed. passthrough != 0 = IEC61937 bytes. */
 int dream_alsa_set_params(DreamAlsa *a,
                           unsigned int sample_rate,
                           unsigned int channels,
                           unsigned int bytes_per_sample,
                           int passthrough);
 
-/*
- * Blocking write. Returns bytes written or negative on hard error.
- * Recovers from XRUN automatically.
- */
-int dream_alsa_write(DreamAlsa *a, const uint8_t *data, size_t size);
+/* Blocking write with auto XRUN recovery. pts_90k = -1 if unknown.
+ * Runs anchor + tier drift correction against /sys/class/tsync/pts_video. */
+int dream_alsa_write(DreamAlsa *a, const uint8_t *data, size_t size, int64_t pts_90k);
 
-void dream_alsa_drop(DreamAlsa *a);    /* discard buffered audio */
+void dream_alsa_drop(DreamAlsa *a);
 
-/* Software volume scaler applied to S16 PCM in dream_alsa_write.
- * level: 0..100 (linear). AMLogic Master mixer is pinned at max so
- * this is the only effective volume control. No-op for passthrough. */
+/* Re-arm anchor on stream / seek / codec change. */
+void dream_alsa_reset_anchor(DreamAlsa *a);
+
+/* ALSA queue depth in 90 kHz ticks. 0 if not configured. */
+int64_t dream_alsa_get_delay_pts(DreamAlsa *a);
+
+/* SW volume 0..100 for S16 PCM. No-op for passthrough. */
 void dream_alsa_set_volume(DreamAlsa *a, int level);
 
 #ifdef __cplusplus

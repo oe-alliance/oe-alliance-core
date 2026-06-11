@@ -8,6 +8,7 @@ libgstdreamaudiosink_la_SOURCES = \
     dream_decoder.h \
     dream_alsa.c \
     dream_alsa.h \
+    dream_log.h \
     dream_avsync.c \
     dream_avsync.h
 

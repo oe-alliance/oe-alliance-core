@@ -27,6 +27,7 @@ SRC_URI = " \
     file://src/dream_alsa.h;subdir=${BP} \
     file://src/dream_avsync.c;subdir=${BP} \
     file://src/dream_avsync.h;subdir=${BP} \
+    file://src/dream_log.h;subdir=${BP} \
 "
 
 S = "${UNPACKDIR}/${BP}"

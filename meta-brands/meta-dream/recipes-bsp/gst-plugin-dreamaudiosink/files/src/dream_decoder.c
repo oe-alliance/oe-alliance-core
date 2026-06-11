@@ -6,6 +6,7 @@
 #define _XOPEN_SOURCE 700
 
 #include "dream_decoder.h"
+#include "dream_log.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -24,7 +25,7 @@
 #include <libswresample/swresample.h>
 #include <alsa/asoundlib.h>
 
-#define DEC_DBG(...) do { fprintf(stderr, "[dream_decoder] " __VA_ARGS__); fputc('\n', stderr); } while (0)
+#define DEC_DBG(...) dream_log("decoder", __VA_ARGS__)
 
 #define SYNCWORD1 0xF872
 #define SYNCWORD2 0x4E1F
@@ -578,6 +579,13 @@ DreamDecoder *dream_decoder_new(int codec_id,
         }
         memcpy(d->codec_ctx->extradata, extradata, extradata_size);
         d->codec_ctx->extradata_size = extradata_size;
+    }
+
+    /* AC3/EAC3 loudness normalisation against the encoded dialnorm value.
+     * -24 dBFS = ATSC A/85 broadcast-loud reference. */
+    if (codec_id == AV_CODEC_ID_AC3 || codec_id == AV_CODEC_ID_EAC3) {
+        av_opt_set_int(d->codec_ctx, "target_level", -24, AV_OPT_SEARCH_CHILDREN);
+        av_opt_set_int(d->codec_ctx, "heavy_compr", 1, AV_OPT_SEARCH_CHILDREN);
     }
 
     int rc = avcodec_open2(d->codec_ctx, d->codec, NULL);
