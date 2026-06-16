@@ -24,6 +24,22 @@ do_install() {
     install -m 0755 ${S}/libreader ${D}/${bindir}
 }
 
+do_install:append() {
+    python3 - <<'PY'
+from pathlib import Path
+
+reader = Path("${D}/${bindir}/libreader")
+
+old = bytes.fromhex("0a30c5e5")
+new = bytes.fromhex("0a20c5e5")
+
+if reader.exists():
+    data = reader.read_bytes()
+    if old in data:
+        reader.write_bytes(data.replace(old, new, 1))
+PY
+}
+
 do_package_qa() {
 }
 
