@@ -44,6 +44,11 @@ struct DreamAlsa {
     int64_t       last_huge_gap_ms;           /* 1s throttle in anchor branch */
     int64_t       drift_outside_since_ms;     /* when |av| left ±1000ms (0 = inside) */
     int64_t       last_sync_log_ms;           /* 30s heartbeat cadence */
+
+    /* Lead = (apts−first_apts) − (vpts−first_vpts) — cross-epoch safe. */
+    int           delta_baseline_armed;
+    int64_t       first_apts;
+    int64_t       first_vpts;
 };
 
 static int64_t monotonic_ms(void);
@@ -67,6 +72,9 @@ void dream_alsa_reset_anchor(DreamAlsa *a)
     a->anchor_armed = 1;
     a->skip_bytes_remaining = 0;
     a->last_sync_log_ms = monotonic_ms();
+    a->delta_baseline_armed = 1;
+    a->first_apts = 0;
+    a->first_vpts = 0;
 }
 
 /* Cached-fd reader for /sys/class/tsync/pts_video. -1 on failure. */
@@ -233,6 +241,9 @@ int dream_alsa_set_params(DreamAlsa *a,
     a->anchor_armed     = 1;
     a->skip_bytes_remaining = 0;
     a->last_sync_log_ms = monotonic_ms();
+    a->delta_baseline_armed = 1;
+    a->first_apts       = 0;
+    a->first_vpts       = 0;
 
     ALSA_DBG("configured: rate=%u ch=%u bps=%u passthrough=%d",
              a->rate, a->channels, a->bytes_per_sample, a->passthrough);
@@ -272,9 +283,19 @@ int dream_alsa_write(DreamAlsa *a, const uint8_t *data, size_t size, int64_t pts
     if (a->anchor_armed && apts_speaker >= 0 && a->rate && !a->passthrough) {
         int64_t pts_v = read_pts_video(a);
         if (pts_v >= 0) {
-            int32_t lead_ms = (int32_t)((uint32_t)apts_speaker - (uint32_t)pts_v) / 90;
-            ALSA_DBG("anchor: lead=%+dms vpts=%lx apts=%lx",
-                     lead_ms, (long)pts_v, (long)apts_speaker);
+            if (a->delta_baseline_armed) {
+                a->first_apts = apts_speaker;
+                a->first_vpts = pts_v;
+                a->delta_baseline_armed = 0;
+                ALSA_DBG("anchor: delta baseline first_apts=%lx first_vpts=%lx",
+                         (long)a->first_apts, (long)a->first_vpts);
+            }
+            int64_t apts_delta = apts_speaker - a->first_apts;
+            int64_t vpts_delta = pts_v        - a->first_vpts;
+            int32_t lead_ms = (int32_t)((uint32_t)apts_delta - (uint32_t)vpts_delta) / 90;
+            ALSA_DBG("anchor: lead=%+dms vpts=%lx apts=%lx (Δv=%+lldms Δa=%+lldms)",
+                     lead_ms, (long)pts_v, (long)apts_speaker,
+                     (long long)(vpts_delta / 90), (long long)(apts_delta / 90));
             /* HUGE-gap throttled 1s — PlutoTV stitched-HLS keeps feeding
              * stale-PTS audio post-stitch; unthrottled flush loop = mute. */
             int64_t now_ms_hg = monotonic_ms();
@@ -308,10 +329,14 @@ int dream_alsa_write(DreamAlsa *a, const uint8_t *data, size_t size, int64_t pts
     }
 
     /* Post-anchor: sustained-lag recovery only. */
-    if (!a->anchor_armed && apts_speaker >= 0 && a->rate && !a->passthrough) {
+    if (!a->anchor_armed && apts_speaker >= 0 && a->rate && !a->passthrough
+        && !a->delta_baseline_armed)
+    {
         int64_t pts_v = read_pts_video(a);
         if (pts_v >= 0) {
-            int32_t av_ms = (int32_t)((uint32_t)apts_speaker - (uint32_t)pts_v) / 90;
+            int64_t apts_delta = apts_speaker - a->first_apts;
+            int64_t vpts_delta = pts_v        - a->first_vpts;
+            int32_t av_ms = (int32_t)((uint32_t)apts_delta - (uint32_t)vpts_delta) / 90;
             int64_t now_ms = monotonic_ms();
 
             /* 30s heartbeat. */

@@ -36,8 +36,8 @@ static guint gst_dream_audio_sink_signals[SIGNAL_LAST] = { 0 };
 #define DEFAULT_E2_ASYNC              FALSE
 /* Direct dmix slave; going via "default" silently dropped movie audio. */
 #define DEFAULT_DEVICE                "dreamhdmi"
-/* PCRMASTER: kernel paces video, dream_alsa pace audio against pts_video. */
-#define DEFAULT_TSYNC_MODE            2
+/* VMASTER: kernel tsync disabled, dream_alsa userspace anchor drives sync. */
+#define DEFAULT_TSYNC_MODE            0
 #define DEFAULT_SOFTDECODER_DELAY_MS  0
 
 static GstStaticPadTemplate sink_template = GST_STATIC_PAD_TEMPLATE(
