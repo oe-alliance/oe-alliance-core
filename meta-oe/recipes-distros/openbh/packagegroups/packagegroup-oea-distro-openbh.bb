@@ -57,3 +57,14 @@ RRECOMMENDS:${PN} = "\
     enigma2-plugin-drivers-exfat \
     ${@bb.utils.contains("MACHINE_FEATURES", "videoenhancement", "", "enigma2-plugin-systemplugins-videoenhancement", d)} \
     "
+
+RRECOMMENDS:${PN}:append:vuultimo4k = " enigma2-plugin-systemplugins-hdrdetect"
+RRECOMMENDS:${PN}:append:vuduo4kse = " enigma2-plugin-systemplugins-hdrdetect"
+RRECOMMENDS:${PN}:append:vuduo4k = " enigma2-plugin-systemplugins-hdrdetect"
+RRECOMMENDS:${PN}:append:vuuno4kse = " enigma2-plugin-systemplugins-hdrdetect"
+RRECOMMENDS:${PN}:append:vuuno4k = " enigma2-plugin-systemplugins-hdrdetect"
+RRECOMMENDS:${PN}:append:vusolo4k = " enigma2-plugin-systemplugins-hdrdetect"
+RRECOMMENDS:${PN}:append:vuzero4k = " enigma2-plugin-systemplugins-hdrdetect"
+RRECOMMENDS:${PN}:append:gb7252 = " enigma2-plugin-systemplugins-hdrdetect"
+RRECOMMENDS:${PN}:append:zgemmah17twin = " enigma2-plugin-systemplugins-hdrdetect"
+RRECOMMENDS:${PN}:append:zgemmah7 = " enigma2-plugin-systemplugins-hdrdetect"
