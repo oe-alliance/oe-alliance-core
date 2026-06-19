@@ -269,3 +269,19 @@ diff -Naur a/include/linux/amlogic/media/frame_sync/tsync.h b/include/linux/amlo
  enum avevent_e {
  	VIDEO_START,
  	VIDEO_PAUSE,
+diff -Naur a/drivers/amlogic/media/frame_sync/tsync_pcr.c b/drivers/amlogic/media/frame_sync/tsync_pcr.c
+--- a/drivers/amlogic/media/frame_sync/tsync_pcr.c	2026-06-19 22:00:00.000000000 +0200
++++ b/drivers/amlogic/media/frame_sync/tsync_pcr.c	2026-06-19 22:00:00.000000000 +0200
+@@ -1282,6 +1282,12 @@
+
+ int tsync_pcr_start(void)
+ {
++	/* Idempotency guard: tsync_pcr_start does init_timer + add_timer
++	 * unconditionally. If called twice without an intervening
++	 * tsync_pcr_stop, add_timer corrupts the kernel timer wheel. */
++	if (tsync_pcr_started)
++		return 0;
++
+ 	timestamp_pcrscr_enable(0);
+ 	timestamp_pcrscr_set(0);
+
