@@ -1,3 +1,6 @@
+test -n "${hdmimode}"   || setenv hdmimode 1080p50hz
+test -n "${outputmode}" || setenv outputmode 1080p50hz
+
 setenv logo_width 1280
 setenv logo_height 720
 setenv logo_bpp 16
