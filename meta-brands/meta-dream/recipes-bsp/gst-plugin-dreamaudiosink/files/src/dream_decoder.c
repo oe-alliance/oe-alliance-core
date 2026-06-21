@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 #include <unistd.h>
 
 #include <libavcodec/avcodec.h>
@@ -96,6 +97,11 @@ struct DreamDecoder {
     size_t            hbr_out_size;
     size_t            hbr_out_cap;
     int               hbr_digital_codec;    /* 5=DTS-HD, 7=TrueHD */
+
+    /* AC-4 immersive probe: latch full layout when ch[1+] peak reaches
+     * >= 30% of ch[0] peak for 8 consecutive frames; otherwise force mono. */
+    int               ac4_immersive_ok;
+    int               ac4_probe_streak;
 };
 
 #define HBR_AVIO_BUFSIZE   (128 * 1024)
@@ -805,6 +811,46 @@ static int emit_pcm_from_frame(DreamDecoder *d)
     else
         av_channel_layout_default(&in_chl, 2);
 
+    /* UNSPEC = no downmix matrix in swresample → promote to default. */
+    if (in_chl.order == AV_CHANNEL_ORDER_UNSPEC && in_chl.nb_channels > 0) {
+        const int n = in_chl.nb_channels;
+        av_channel_layout_uninit(&in_chl);
+        av_channel_layout_default(&in_chl, n);
+    }
+    /* librempeg leaves ch[1+] full of low-level junk for immersive — latch
+     * full layout only when their peak reaches >= 30% of ch[0] peak for 8
+     * consecutive frames; otherwise fall back to mono. */
+    if (d->codec_ctx->codec_id == AV_CODEC_ID_AC4 && in_chl.nb_channels > 2) {
+        const enum AVSampleFormat in_fmt_probe = (enum AVSampleFormat)d->frame->format;
+        if (!d->ac4_immersive_ok && in_fmt_probe == AV_SAMPLE_FMT_FLTP) {
+            const int probe = (d->frame->nb_samples < 1024) ? d->frame->nb_samples : 1024;
+            float peak0 = 0.0f, peak_rest = 0.0f;
+            const float *p0 = (const float *)d->frame->extended_data[0];
+            if (p0) for (int i = 0; i < probe; ++i) {
+                float a = fabsf(p0[i]); if (a > peak0) peak0 = a;
+            }
+            for (int c = 1; c < in_chl.nb_channels; ++c) {
+                const float *p = (const float *)d->frame->extended_data[c];
+                if (!p) continue;
+                for (int i = 0; i < probe; ++i) {
+                    float a = fabsf(p[i]); if (a > peak_rest) peak_rest = a;
+                }
+            }
+            if (peak0 > 0.01f && peak_rest > peak0 * 0.3f) {
+                if (++d->ac4_probe_streak >= 8) {
+                    d->ac4_immersive_ok = 1;
+                    DEC_DBG("AC-4 immersive live (peak0=%.3f rest=%.3f), full layout", peak0, peak_rest);
+                }
+            } else {
+                d->ac4_probe_streak = 0;
+            }
+        }
+        if (!d->ac4_immersive_ok) {
+            av_channel_layout_uninit(&in_chl);
+            av_channel_layout_default(&in_chl, 1);
+        }
+    }
+
     AVChannelLayout out_chl = AV_CHANNEL_LAYOUT_STEREO;
 
     if (!d->swr_ctx) d->swr_ctx = swr_alloc();
@@ -817,6 +863,9 @@ static int emit_pcm_from_frame(DreamDecoder *d)
     av_opt_set_chlayout   (d->swr_ctx, "out_chlayout",    &out_chl,  0);
     av_opt_set_int        (d->swr_ctx, "out_sample_rate",  out_rate, 0);
     av_opt_set_sample_fmt (d->swr_ctx, "out_sample_fmt",   out_fmt,  0);
+    /* Matrix peak cap: 1.0 anti-clips 5.1; 3.0 keeps 7.1.4 audible. */
+    av_opt_set_double     (d->swr_ctx, "rematrix_maxval",
+                           (in_chl.nb_channels >= 10) ? 3.0 : 1.0, 0);
     if (swr_init(d->swr_ctx) < 0) return -1;
 
     const int out_max = swr_get_out_samples(d->swr_ctx, d->frame->nb_samples);
@@ -830,11 +879,11 @@ static int emit_pcm_from_frame(DreamDecoder *d)
     if (av_samples_alloc(&out, &out_linesize, out_nb_ch, out_max, out_fmt, 0) < 0)
         return -1;
 
-    const uint8_t *src[AV_NUM_DATA_POINTERS] = { 0 };
-    for (int i = 0; i < AV_NUM_DATA_POINTERS; ++i)
-        src[i] = d->frame->extended_data[i];
-
-    int got = swr_convert(d->swr_ctx, &out, out_max, src, d->frame->nb_samples);
+    /* extended_data is sized for nb_channels; local AV_NUM_DATA_POINTERS=8
+     * copy would overflow for 7.1.4 (12 channels). */
+    int got = swr_convert(d->swr_ctx, &out, out_max,
+                          (const uint8_t **)d->frame->extended_data,
+                          d->frame->nb_samples);
     if (got > 0) {
         const size_t bytes = (size_t)got * out_nb_ch * out_bps;
         d->cb(DREAM_DECODER_OUTPUT_PCM,
