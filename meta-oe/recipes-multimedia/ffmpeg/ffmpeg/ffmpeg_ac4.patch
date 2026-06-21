@@ -23,7 +23,7 @@ new file mode 100644
 index 00000000..ae54b819
 --- /dev/null
 +++ b/libavcodec/ac4dec.c
-@@ -0,0 +1,6709 @@
+@@ -0,0 +1,6761 @@
 +/*
 + * AC-4 Audio Decoder
 + *
@@ -56,7 +56,6 @@ index 00000000..ae54b819
 +#include "libavutil/thread.h"
 +#include "libavutil/qsort.h"
 +#include "libavutil/opt.h"
-+#include "libavutil/float_dsp.h"
 +
 +#include "ac4dec_data.h"
 +#include "avcodec.h"
@@ -68,7 +67,8 @@ index 00000000..ae54b819
 +
 +#define MAX_QMF_TSLOTS 32
 +#define MAX_QMF_BANDS 64
-+#define MAX_SBG_NOISE 6
++#define MAX_SBG_NOISE 5
++#define MAX_ATSG_NOISE 2
 +#define MAX_ASPX_SIGNAL 5
 +
 +/* Number of model bits */
@@ -148,7 +148,7 @@ index 00000000..ae54b819
 +
 +    uint8_t ms_used[16][128];
 +    uint8_t sap_coeff_used[16][128];
-+    int     dpcm_alpha_q[16][128];
++    uint8_t dpcm_alpha_q[16][128];
 +
 +    int     delta_code_time;
 +
@@ -174,11 +174,9 @@ index 00000000..ae54b819
 +
 +    int     aspx_int_class;
 +    int     aspx_num_noise;
-+    int     aspx_num_noise_prev;
 +    int     aspx_num_rel_left;
 +    int     aspx_num_rel_right;
 +    int     aspx_num_env;
-+    int     aspx_num_env_prev;
 +    int     num_atsg_sig;
 +    int     num_atsg_sig_prev;
 +    int     num_atsg_noise;
@@ -203,9 +201,8 @@ index 00000000..ae54b819
 +    int     aspx_balance;
 +
 +    uint8_t atsg_freqres[MAX_ASPX_SIGNAL];
-+    uint8_t atsg_freqres_prev[MAX_ASPX_SIGNAL];
-+    uint8_t atsg_sig[MAX_SBG_NOISE];
-+    uint8_t atsg_noise[MAX_ASPX_SIGNAL + 1];
++    uint8_t atsg_sig[MAX_ASPX_SIGNAL+1];
++    uint8_t atsg_noise[MAX_ASPX_SIGNAL];
 +    int     previous_stop_pos;
 +
 +    int     sbg_noise[MAX_SBG_NOISE];
@@ -225,13 +222,13 @@ index 00000000..ae54b819
 +    int16_t aspx_data[2][MAX_ASPX_SIGNAL][MAX_QMF_BANDS];
 +
 +    int8_t  qscf_prev[MAX_ASPX_SIGNAL][MAX_QMF_BANDS];
-+    int8_t  qscf_noise_prev[2][MAX_QMF_BANDS];
++    int8_t  qscf_noise_prev[MAX_ATSG_NOISE][MAX_SBG_NOISE];
 +    int8_t  qscf_sig_sbg[MAX_ASPX_SIGNAL][MAX_QMF_BANDS];
 +    int8_t  qscf_sig_sbg_prev[MAX_ASPX_SIGNAL][MAX_QMF_BANDS];
 +    float   scf_sig_sbg[MAX_ASPX_SIGNAL][MAX_QMF_BANDS];
 +    float   scf_sig_sb[MAX_ASPX_SIGNAL][MAX_QMF_BANDS];
-+    int8_t  qscf_noise_sbg[2][MAX_QMF_BANDS];
-+    float   scf_noise_sbg[MAX_ASPX_SIGNAL][MAX_QMF_BANDS];
++    int8_t  qscf_noise_sbg[MAX_ATSG_NOISE][MAX_SBG_NOISE];
++    float   scf_noise_sbg[MAX_ATSG_NOISE][MAX_SBG_NOISE];
 +    float   scf_noise_sb[MAX_ASPX_SIGNAL][MAX_QMF_BANDS];
 +
 +    float   gain_vec[MAX_QMF_BANDS];
@@ -339,7 +336,7 @@ index 00000000..ae54b819
 +    uint8_t coding_config;
 +    uint8_t mdct_stereo_proc[8];
 +    float   matrix_stereo[16][128][2][2];
-+    float   alpha_q[16][128];
++    int8_t  alpha_q[16][128];
 +
 +    int     spec_frontend_l;
 +    int     spec_frontend_r;
@@ -412,11 +409,21 @@ index 00000000..ae54b819
 +    int     back_channels_present;
 +    int     centre_present;
 +    int     top_channels_present;
++
++    int lfe;
++    int static_dmx;
++    int audio_ndot[4];
++    int n_fullband_dmx_signals;
++    int n_fullband_upmix_signals;
++
++    int n_objects;
++
 +    Metadata meta;
 +} SubstreamInfo;
 +
 +typedef struct SubstreamGroupInfo {
 +    int           channel_coded;
++    int           ajoc;
 +    int           group_index;
 +    SubstreamInfo ssinfo;
 +} SubstreamGroupInfo;
@@ -440,7 +447,7 @@ index 00000000..ae54b819
 +    int     hsf_ext;
 +    EMDFInfo emdf[32];
 +    PresentationSubstreamInfo psinfo;
-+    SubstreamInfo ssinfo;
++    SubstreamInfo ssinfo[4];
 +} PresentationInfo;
 +
 +typedef struct AC4DecodeContext {
@@ -490,8 +497,8 @@ index 00000000..ae54b819
 +    DECLARE_ALIGNED(32, float, cos_stab)[MAX_QMF_BANDS*2][MAX_QMF_BANDS];
 +    DECLARE_ALIGNED(32, float, sin_stab)[MAX_QMF_BANDS*2][MAX_QMF_BANDS];
 +
-+    PresentationInfo   pinfo[8];
-+    SubstreamGroupInfo ssgroup[8];
++    PresentationInfo   pinfo[16];
++    SubstreamGroupInfo ssgroup[16];
 +    Substream          substream;
 +} AC4DecodeContext;
 +
@@ -568,25 +575,6 @@ index 00000000..ae54b819
 +    GAMMA6,
 +};
 +
-+static const AVRational resampling_ratios[] = {
-+    {25025, 24000},
-+    {25, 24},
-+    {15, 16},
-+    {25025, 24000},
-+    {25, 24},
-+    {25025, 24000},
-+    {25, 24},
-+    {15, 16},
-+    {25025, 24000},
-+    {25, 24},
-+    {15, 16},
-+    {25025, 24000},
-+    {25, 24},
-+    {1, 1},
-+    {1, 1},
-+    {1, 1},
-+};
-+
 +static const uint16_t decode_delays[] = {
 +    288,
 +    288,
@@ -625,7 +613,7 @@ index 00000000..ae54b819
 +    {
 +        .nb_channels = 12,
 +        .order = AV_CHANNEL_ORDER_NATIVE,
-+        .u.mask = AV_CH_LAYOUT_7POINT0_FRONT | AV_CH_LOW_FREQUENCY |
++        .u.mask = AV_CH_LAYOUT_7POINT0 | AV_CH_LOW_FREQUENCY |
 +                  AV_CH_TOP_FRONT_LEFT | AV_CH_TOP_FRONT_RIGHT |
 +                  AV_CH_TOP_BACK_LEFT | AV_CH_TOP_BACK_RIGHT,
 +    },
@@ -917,38 +905,17 @@ index 00000000..ae54b819
 +static int emdf_protection(AC4DecodeContext *s, EMDFInfo *e)
 +{
 +    GetBitContext *gb = &s->gbc;
-+    int first, second;
++    int first, second, skip = 0;
 +
 +    first = get_bits(gb, 2);
 +    second = get_bits(gb, 2);
 +
-+    switch (first) {
-+    case 0:
-+        break;
-+    case 1:
-+        skip_bits(gb, 8);
-+        break;
-+    case 2:
-+        skip_bits_long(gb, 32);
-+        break;
-+    case 3:
-+        skip_bits_long(gb, 128);
-+        break;
-+    }
++    if (first > 0)
++        skip += 1 << (2 * (first - 1));
++    if (second > 0)
++        skip += 1 << (2 * (second - 1));
 +
-+    switch (second) {
-+    case 0:
-+        break;
-+    case 1:
-+        skip_bits(gb, 8);
-+        break;
-+    case 2:
-+        skip_bits_long(gb, 32);
-+        break;
-+    case 3:
-+        skip_bits_long(gb, 128);
-+        break;
-+    }
++    skip_bits_long(gb, 8 * skip);
 +
 +    return 0;
 +}
@@ -1040,8 +1007,10 @@ index 00000000..ae54b819
 +    if (get_bits1(gb))
 +        content_type(s, p);
 +
-+    for (int i = 0; i < p->frame_rate_factor; i++)
++    for (int i = 0; i < p->frame_rate_factor; i++) {
 +        ssi->iframe[i] = get_bits1(gb);
++        av_log(s->avctx, AV_LOG_DEBUG, "iframe[%d]: %d\n", i, ssi->iframe[i]);
++    }
 +
 +    ssi->substream_index = get_bits(gb, 2);
 +    if (ssi->substream_index == 3)
@@ -1076,9 +1045,9 @@ index 00000000..ae54b819
 +    p->single_substream = get_bits1(gb);
 +    if (p->single_substream != 1) {
 +        p->presentation_config = get_bits(gb, 3);
-+        if (p->presentation_config == 0x7) {
++        if (p->presentation_config == 7)
 +            p->presentation_config += variable_bits(gb, 2);
-+        }
++        av_log(s->avctx, AV_LOG_DEBUG, "presentation config: %d\n", p->presentation_config);
 +    }
 +
 +    p->presentation_version = get_unary(gb, 0, 31);
@@ -1099,22 +1068,31 @@ index 00000000..ae54b819
 +        emdf_info(s, &p->emdf[0]);
 +
 +        if (p->single_substream == 1) {
-+            ret = ac4_substream_info(s, p, &p->ssinfo);
++            ret = ac4_substream_info(s, p, &p->ssinfo[0]);
 +            if (ret < 0)
 +                return ret;
 +        } else {
 +            p->hsf_ext = get_bits1(gb);
 +            switch (p->presentation_config) {
 +            case 0:
-+                ret = ac4_substream_info(s, p, &p->ssinfo);
++                ret = ac4_substream_info(s, p, &p->ssinfo[0]);
 +                if (ret < 0)
 +                    return ret;
-+                ret = ac4_hsf_ext_substream_info(s, &p->ssinfo, 1);
++                if (p->hsf_ext) {
++                    ret = ac4_hsf_ext_substream_info(s, &p->ssinfo[0], 1);
++                    if (ret < 0)
++                        return ret;
++                }
++                ret = ac4_substream_info(s, p, &p->ssinfo[1]);
 +                if (ret < 0)
 +                    return ret;
-+                ret = ac4_substream_info(s, p, &p->ssinfo);
-+                if (ret < 0)
-+                    return ret;
++                break;
++            case 1:
++            case 2:
++            case 3:
++            case 4:
++            case 5:
++                //FIXME
 +                break;
 +            default:
 +                presentation_config_ext_info(s);
@@ -1240,7 +1218,7 @@ index 00000000..ae54b819
 +
 +    ssi->sus_ver = sus_ver;
 +    ssi->channel_mode = get_vlc2(gb, channel_mode_vlc.table, channel_mode_vlc.bits, 3);
-+    av_log(s->avctx, AV_LOG_DEBUG, "channel mode: %d\n", ssi->channel_mode);
++    av_log(s->avctx, AV_LOG_DEBUG, "channel_mode: %d\n", ssi->channel_mode);
 +    if (ssi->channel_mode < 0)
 +        return AVERROR_INVALIDDATA;
 +
@@ -1278,8 +1256,10 @@ index 00000000..ae54b819
 +        ssi->channel_mode == 10)
 +        ssi->add_ch_base = get_bits1(gb);
 +
-+    for (int i = 0; i < s->pinfo[0].frame_rate_factor; i++)
++    for (int i = 0; i < s->pinfo[0].frame_rate_factor; i++) {
 +        ssi->iframe[i] = get_bits1(gb);
++        av_log(s->avctx, AV_LOG_DEBUG, "iframe[%d]: %d\n", i, ssi->iframe[i]);
++    }
 +
 +    if (substreams_present) {
 +        ssi->substream_index = get_bits(gb, 2);
@@ -1343,28 +1323,27 @@ index 00000000..ae54b819
 +static int ac4_substream_info_ajoc(AC4DecodeContext *s, SubstreamInfo *ssi, int substreams_present)
 +{
 +    GetBitContext *gb = &s->gbc;
-+    int n_fullband_dmx_signals;
-+    int n_fullband_upmix_signals;
 +
-+    skip_bits1(gb); //b_lfe
++    ssi->lfe = get_bits1(gb);
++    ssi->static_dmx = get_bits1(gb);
 +
-+    if (get_bits1(gb)) { // b_static_dmx
-+        n_fullband_dmx_signals = 5;
++    if (ssi->static_dmx) {
++        ssi->n_fullband_dmx_signals = 5;
 +    } else {
-+        n_fullband_dmx_signals = get_bits(gb, 4) + 1;
-+        ac4_bed_dyn_obj_assignment(s, n_fullband_dmx_signals);
++        ssi->n_fullband_dmx_signals = get_bits(gb, 4) + 1;
++        ac4_bed_dyn_obj_assignment(s, ssi->n_fullband_dmx_signals);
 +    }
 +
 +    if (get_bits1(gb)) //b_oamd_common_data_present
 +        ac4_oamd_common_data(s);
 +
-+    n_fullband_upmix_signals = get_bits(gb, 4) + 1;
-+    if (n_fullband_upmix_signals == 16)
-+        n_fullband_upmix_signals += variable_bits(gb, 3);
-+    if (n_fullband_upmix_signals > 4096) /* arbitary value to prevent slowdowns */
++    ssi->n_fullband_upmix_signals = get_bits(gb, 4) + 1;
++    if (ssi->n_fullband_upmix_signals == 16)
++        ssi->n_fullband_upmix_signals += variable_bits(gb, 3);
++    if (ssi->n_fullband_upmix_signals > 4096) /* arbitary value to prevent slowdowns */
 +        return AVERROR_INVALIDDATA;
 +
-+    ac4_bed_dyn_obj_assignment(s, n_fullband_upmix_signals);
++    ac4_bed_dyn_obj_assignment(s, ssi->n_fullband_upmix_signals);
 +
 +    if (s->fs_index == 1) {
 +        if (get_bits1(gb)) //b_sf_multiplier;
@@ -1374,9 +1353,8 @@ index 00000000..ae54b819
 +    if (get_bits1(gb)) //b_bitrate_info;
 +        ssi->bitrate_indicator = get_vlc2(gb, bitrate_indicator_vlc.table, bitrate_indicator_vlc.bits, 1);
 +
-+    for (int i = 0; i < s->pinfo[0].frame_rate_factor; i++) {
-+        skip_bits1(gb); //b_audio_ndot
-+    }
++    for (int i = 0; i < s->pinfo[0].frame_rate_factor; i++)
++        ssi->audio_ndot[i] = get_bits1(gb);
 +
 +    if (substreams_present) {
 +       ssi->substream_index = get_bits(gb, 2);
@@ -1387,11 +1365,25 @@ index 00000000..ae54b819
 +    return 0;
 +}
 +
-+static void ac4_substream_info_obj(AC4DecodeContext *s, SubstreamInfo *ssi, int substreams_present)
++static int ac4_substream_info_obj(AC4DecodeContext *s, SubstreamInfo *ssi, int substreams_present)
 +{
 +    GetBitContext *gb = &s->gbc;
++    int n_objects_code;
 +
-+    skip_bits(gb, 3); //n_objects_code
++    n_objects_code = get_bits(gb, 3);
++    switch (n_objects_code) {
++    case 0:
++    case 1:
++    case 2:
++    case 3:
++        ssi->n_objects = ssi->lfe + n_objects_code;
++        break;
++    case 4:
++        ssi->n_objects = ssi->lfe + 5;
++        break;
++    default:
++        return AVERROR_INVALIDDATA;
++    }
 +
 +    if (get_bits1(gb)) { //b_dynamic_objects;
 +        skip_bits1(gb); //b_lfe
@@ -1437,6 +1429,8 @@ index 00000000..ae54b819
 +       if (ssi->substream_index == 3)
 +           ssi->substream_index += variable_bits(gb, 2);
 +    }
++
++    return 0;
 +}
 +
 +static int ac4_substream_group_info(AC4DecodeContext *s,
@@ -1463,6 +1457,7 @@ index 00000000..ae54b819
 +    }
 +
 +    g->channel_coded = get_bits1(gb);
++    g->ajoc = 0;
 +    if (g->channel_coded) {
 +        for (int sus = 0; sus < n_lf_substreams; sus++) {
 +            if (s->version == 1) {
@@ -1482,6 +1477,7 @@ index 00000000..ae54b819
 +            oamd_substream_info(s, g, substreams_present);
 +        for (int sus = 0; sus < n_lf_substreams; sus++) {
 +            if (get_bits1(gb)) {
++                g->ajoc = 1;
 +                if ((ret = ac4_substream_info_ajoc(s, &g->ssinfo, substreams_present)) < 0)
 +                    return ret;
 +            } else {
@@ -1535,6 +1531,7 @@ index 00000000..ae54b819
 +
 +    if (single_substream_group != 1 && p->presentation_config == 6) {
 +        p->add_emdf_substreams = 1;
++        av_log(s->avctx, AV_LOG_DEBUG, "add_emdf_substreams\n");
 +    } else {
 +        if (s->version != 1)
 +            p->mdcompat = get_bits(gb, 3);
@@ -1551,6 +1548,7 @@ index 00000000..ae54b819
 +
 +        if (single_substream_group == 1) {
 +            ac4_sgi_specifier(s, &s->ssgroup[0]);
++            av_log(s->avctx, AV_LOG_DEBUG, "single substream group\n");
 +            p->n_substream_groups = 1;
 +        } else {
 +            p->multi_pid = get_bits1(gb);
@@ -1714,7 +1712,7 @@ index 00000000..ae54b819
 +                return ret;
 +        }
 +
-+        if (s->total_groups > FF_ARRAY_ELEMS(s->ssgroup))
++        if (s->total_groups + 1 >= FF_ARRAY_ELEMS(s->ssgroup))
 +            return AVERROR_INVALIDDATA;
 +
 +        av_log(s->avctx, AV_LOG_DEBUG, "total_groups: %d\n", s->total_groups + 1);
@@ -2300,6 +2298,7 @@ index 00000000..ae54b819
 +    int n_msfb_bits = get_msfb_bits(ssch->scp.transf_length[0]);
 +    int n_grp_bits = get_grp_bits(s, ssch);
 +
++    av_log(s->avctx, AV_LOG_DEBUG, "n_grp_bits: %d\n", n_grp_bits);
 +    if (n_grp_bits < 0)
 +        return n_grp_bits;
 +
@@ -2360,6 +2359,7 @@ index 00000000..ae54b819
 +    GetBitContext *gb = &s->gbc;
 +
 +    memset(ssch->sap_coeff_used, 0, sizeof(ssch->sap_coeff_used));
++    memset(ssch->dpcm_alpha_q, 0, sizeof(ssch->dpcm_alpha_q));
 +
 +    if (!get_bits1(gb)) {
 +        for (int g = 0; g < ssch->scp.num_window_groups; g++) {
@@ -2394,10 +2394,12 @@ index 00000000..ae54b819
 +        av_assert2(max_sfb_g <= FF_ARRAY_ELEMS(ssch->sap_coeff_used[0]));
 +        for (int sfb = 0; sfb < max_sfb_g; sfb += 2) {
 +            if (ssch->sap_coeff_used[g][sfb]) {
-+                ssch->dpcm_alpha_q[g][sfb] = get_vlc2(gb, scale_factors_vlc.table,
-+                                                      scale_factors_vlc.bits, 3);
-+                if (ssch->dpcm_alpha_q[g][sfb] < 0)
++                int v = get_vlc2(gb, scale_factors_vlc.table,
++                                 scale_factors_vlc.bits, 3);
++                if (v < 0)
 +                    return AVERROR_INVALIDDATA;
++
++                ssch->dpcm_alpha_q[g][sfb] = v;
 +            }
 +        }
 +    }
@@ -2612,6 +2614,10 @@ index 00000000..ae54b819
 +
 +    memset(ssch->sect_cb, 0, sizeof(ssch->sect_cb));
 +    memset(ssch->sfb_cb, 0, sizeof(ssch->sfb_cb));
++    memset(ssch->sect_start, 0, sizeof(ssch->sect_start));
++    memset(ssch->sect_end, 0, sizeof(ssch->sect_end));
++    memset(ssch->num_sec_lsf, 0, sizeof(ssch->num_sec_lsf));
++    memset(ssch->num_sec, 0, sizeof(ssch->num_sec));
 +
 +    for (int g = 0; g < ssch->scp.num_window_groups; g++) {
 +        int gidx;
@@ -2648,6 +2654,8 @@ index 00000000..ae54b819
 +            }
 +
 +            sect_len += sect_len_incr;
++            av_assert2(i < FF_ARRAY_ELEMS(ssch->sect_start[g]));
++            av_assert2(i < FF_ARRAY_ELEMS(ssch->sect_end[g]));
 +            ssch->sect_start[g][i] = k;
 +            ssch->sect_end[g][i] = k + sect_len;
 +
@@ -2701,8 +2709,11 @@ index 00000000..ae54b819
 +        for (int i = 0; i < ssch->num_sec_lsf[g]; i++) {
 +            int sect_start_line, sect_end_line, cb;
 +
-+            if (ssch->sect_cb[g][i] == 0 || ssch->sect_cb[g][i] > 11)
++            if (ssch->sect_cb[g][i] == 0 || ssch->sect_cb[g][i] > 11) {
++                if (ssch->sect_cb[g][i])
++                    av_log(s->avctx, AV_LOG_DEBUG, "invalid codebook %d\n", ssch->sect_cb[g][i]);
 +                continue;
++            }
 +
 +            sect_start_line = ssch->sect_sfb_offset[g][ssch->sect_start[g][i]];
 +            sect_end_line = ssch->sect_sfb_offset[g][ssch->sect_end[g][i]];
@@ -2733,8 +2744,8 @@ index 00000000..ae54b819
 +                    ssch->quant_spec[k+3] = cb_idx - cb_off;
 +
 +                    if (asf_codebook_unsigned[cb]) {
-+                        if (ssch->quant_spec[k] && get_bits1(gb))
-+                            ssch->quant_spec[k]   = -ssch->quant_spec[k];
++                        if (ssch->quant_spec[k+0] && get_bits1(gb))
++                            ssch->quant_spec[k+0] = -ssch->quant_spec[k];
 +                        if (ssch->quant_spec[k+1] && get_bits1(gb))
 +                            ssch->quant_spec[k+1] = -ssch->quant_spec[k+1];
 +                        if (ssch->quant_spec[k+2] && get_bits1(gb))
@@ -3057,11 +3068,16 @@ index 00000000..ae54b819
 +{
 +    int num_atsg_sig, num_atsg_noise;
 +
++    memset(ssch->atsg_freqres, 0, sizeof(ssch->atsg_freqres));
++    memset(ssch->atsg_sig, 0, sizeof(ssch->atsg_sig));
++
 +    ssch->num_atsg_sig_prev = ssch->num_atsg_sig;
 +    ssch->num_atsg_noise_prev = ssch->num_atsg_noise;
 +
 +    num_atsg_sig = ssch->num_atsg_sig = ssch->aspx_num_env;
 +    num_atsg_noise = ssch->num_atsg_noise = ssch->aspx_num_noise;
++    if (ssch->num_atsg_sig_prev == 0)
++        ssch->num_atsg_sig_prev = ssch->num_atsg_sig;
 +
 +    if (ssch->previous_stop_pos == 0)
 +        ssch->previous_stop_pos = s->num_aspx_timeslots;
@@ -3117,7 +3133,6 @@ index 00000000..ae54b819
 +
 +    ssch->previous_stop_pos = ssch->atsg_sig[num_atsg_sig];
 +
-+    av_assert0(num_atsg_sig > 0 && num_atsg_sig <= 5);
 +    for (int atsg = 0; atsg < num_atsg_sig; atsg++) {
 +        av_log(s->avctx, AV_LOG_DEBUG, "atsg_sig[%d]: %d\n", atsg, ssch->atsg_sig[atsg]);
 +
@@ -3135,20 +3150,19 @@ index 00000000..ae54b819
 +    return 0;
 +}
 +
-+static int aspx_framing(AC4DecodeContext *s, Substream *ss, int ch_id, int iframe)
++static int aspx_framing(AC4DecodeContext *s, Substream *ss, SubstreamChannel *ssch, const int iframe)
 +{
-+    SubstreamChannel *ssch = &ss->ssch[ch_id];
 +    GetBitContext *gb = &s->gbc;
 +
 +    ssch->aspx_num_rel_left = 0;
 +    ssch->aspx_num_rel_right = 0;
 +
++    memset(ssch->aspx_freq_res, 0, sizeof(ssch->aspx_freq_res));
++
 +    ssch->aspx_int_class = get_vlc2(gb, aspx_int_class_vlc.table,
 +                                    aspx_int_class_vlc.bits, 3);
 +    if (ssch->aspx_int_class < 0)
 +        return AVERROR_INVALIDDATA;
-+
-+    ssch->aspx_num_env_prev = FFMAX(1, ssch->aspx_num_env);
 +
 +    switch (ssch->aspx_int_class) {
 +    case FIXFIX:
@@ -3206,19 +3220,10 @@ index 00000000..ae54b819
 +                ssch->aspx_freq_res[env] = get_bits1(gb);
 +    }
 +
-+    ssch->aspx_num_noise_prev = ssch->aspx_num_noise;
-+
 +    if (ssch->aspx_num_env > 1)
 +        ssch->aspx_num_noise = 2;
 +    else
 +        ssch->aspx_num_noise = 1;
-+
-+    if (!ssch->aspx_num_env_prev)
-+        ssch->aspx_num_env_prev = ssch->aspx_num_env;
-+    ssch->aspx_num_env_prev = FFMAX(1, ssch->aspx_num_env_prev);
-+
-+    if (!ssch->aspx_num_noise_prev)
-+        ssch->aspx_num_noise_prev = ssch->aspx_num_noise;
 +
 +    av_log(s->avctx, AV_LOG_DEBUG, "aspx_num_sig: %d\n", ssch->aspx_num_env);
 +    av_log(s->avctx, AV_LOG_DEBUG, "aspx_num_noise: %d\n", ssch->aspx_num_noise);
@@ -3457,6 +3462,8 @@ index 00000000..ae54b819
 +        }
 +    }
 +
++    av_log(s->avctx, AV_LOG_DEBUG, "num_sbg_master: %d\n", ssch->num_sbg_master);
++
 +    ssch->sba = ssch->sbg_master[0];
 +    ssch->sbz = ssch->sbg_master[ssch->num_sbg_master];
 +
@@ -3633,7 +3640,7 @@ index 00000000..ae54b819
 +    if (ret < 0)
 +        return ret;
 +
-+    ret = aspx_framing(s, ss, ch_id[0], iframe);
++    ret = aspx_framing(s, ss, ssch0, iframe);
 +    if (ret < 0)
 +        return ret;
 +
@@ -3644,7 +3651,7 @@ index 00000000..ae54b819
 +    ssch0->aspx_balance = ssch1->aspx_balance = get_bits1(gb);
 +
 +    if (ssch0->aspx_balance == 0) {
-+        ret = aspx_framing(s, ss, ch_id[1], iframe);
++        ret = aspx_framing(s, ss, ssch1, iframe);
 +        if (ret < 0)
 +            return ret;
 +        ssch1->aspx_qmode_env = ss->aspx_quant_mode_env;
@@ -3753,7 +3760,7 @@ index 00000000..ae54b819
 +    if (ret < 0)
 +        return ret;
 +
-+    ret = aspx_framing(s, ss, ch_id, iframe);
++    ret = aspx_framing(s, ss, ssch, iframe);
 +    if (ret < 0)
 +        return ret;
 +
@@ -4161,7 +4168,7 @@ index 00000000..ae54b819
 +}
 +
 +static int two_channel_data(AC4DecodeContext *s, Substream *ss,
-+                            uint8_t ch_id[2], int x, int iframe)
++                            const uint8_t ch_id[2], int x, int iframe)
 +{
 +    SubstreamChannel *ssch0 = &ss->ssch[ch_id[0]];
 +    SubstreamChannel *ssch1 = &ss->ssch[ch_id[1]];
@@ -4169,6 +4176,7 @@ index 00000000..ae54b819
 +    int ret;
 +
 +    ss->mdct_stereo_proc[x] = get_bits1(gb);
++    av_log(s->avctx, AV_LOG_DEBUG, "mdct_stereo_proc[%d]: %d\n", x, ss->mdct_stereo_proc[x]);
 +    if (ss->mdct_stereo_proc[x]) {
 +        ret = sf_info(s, ss, ch_id[0], SF_ASF, 0, 0);
 +        if (ret < 0)
@@ -4254,23 +4262,47 @@ index 00000000..ae54b819
 +
 +static int immers_cfg(AC4DecodeContext *s, Substream *ss)
 +{
-+    if (ss->codec_mode != IM_SCPL)
++    if (ss->im_codec_mode != IM_SCPL)
 +        aspx_config(s, ss);
 +
-+    if (ss->codec_mode == IM_ASPX_ACPL_1)
++    if (ss->im_codec_mode == IM_ASPX_ACPL_1)
 +        acpl_config_1ch(s, ss, ACPL_PARTIAL);
 +
-+    if (ss->codec_mode == IM_ASPX_ACPL_2)
++    if (ss->im_codec_mode == IM_ASPX_ACPL_2)
 +        acpl_config_1ch(s, ss, ACPL_FULL);
 +
 +    return 0;
 +}
++
++static const uint8_t immersive_ch_index[2][2][2] = {
++    {
++        { 0, 1 },
++        { 3, 4 },
++    },
++    {
++        { 0, 3 },
++        { 1, 4 },
++    },
++};
 +
 +static int immersive_channel_element(AC4DecodeContext *s, int lfe, int fronts, int iframe)
 +{
 +    GetBitContext *gb = &s->gbc;
 +    Substream *ss = &s->substream;
 +    int ret;
++
++    s->ch_map[AV_CHAN_FRONT_LEFT]      = 0;
++    s->ch_map[AV_CHAN_FRONT_RIGHT]     = 1;
++    s->ch_map[AV_CHAN_FRONT_CENTER]    = 2;
++    s->ch_map[AV_CHAN_LOW_FREQUENCY]   = 7;
++    s->ch_map[AV_CHAN_SIDE_LEFT]       = 3;
++    s->ch_map[AV_CHAN_SIDE_RIGHT]      = 4;
++    s->ch_map[AV_CHAN_BACK_LEFT]       = 5;
++    s->ch_map[AV_CHAN_BACK_RIGHT]      = 6;
++    s->ch_map[AV_CHAN_TOP_FRONT_LEFT]  = 8;
++    s->ch_map[AV_CHAN_TOP_FRONT_RIGHT] = 9;
++    s->ch_map[AV_CHAN_TOP_BACK_LEFT]   = 10;
++    s->ch_map[AV_CHAN_TOP_BACK_RIGHT]  = 11;
 +
 +    ss->im_codec_mode = get_bits1(gb);
 +    if (!ss->im_codec_mode)
@@ -4296,13 +4328,13 @@ index 00000000..ae54b819
 +    switch (ss->core_5ch_grouping) {
 +    case 0:
 +        ss->mode_2ch = get_bits1(gb);
-+        ret = two_channel_data(s, ss, (uint8_t []){0, 1}, 0, iframe);
++        ret = two_channel_data(s, ss, immersive_ch_index[ss->mode_2ch][0], 0, iframe);
 +        if (ret < 0)
 +            return ret;
-+        ret = two_channel_data(s, ss, (uint8_t []){2, 3}, 1, iframe);
++        ret = two_channel_data(s, ss, immersive_ch_index[ss->mode_2ch][1], 1, iframe);
 +        if (ret < 0)
 +            return ret;
-+        ret = mono_data(s, ss, 4, 0, iframe);
++        ret = mono_data(s, ss, 2, 0, iframe);
 +        break;
 +    case 1:
 +        ret = three_channel_data(s, ss, (uint8_t []){0, 1, 2}, iframe);
@@ -4336,11 +4368,11 @@ index 00000000..ae54b819
 +            ret = chparam_info(s, ss, 6);
 +            if (ret < 0)
 +                return ret;
-+
-+            ret = two_channel_data(s, ss, (uint8_t []){5, 6}, 2, iframe);
-+            if (ret < 0)
-+                return ret;
 +        }
++
++        ret = two_channel_data(s, ss, (uint8_t []){5, 6}, 2, iframe);
++        if (ret < 0)
++            return ret;
 +    }
 +
 +    if (ss->im_codec_mode == IM_ASPX_SCPL) {
@@ -4377,17 +4409,17 @@ index 00000000..ae54b819
 +        ret = aspx_data_2ch(s, ss, (uint8_t []){0, 1}, iframe);
 +        if (ret < 0)
 +            return ret;
-+        ret = aspx_data_2ch(s, ss, (uint8_t []){2, 3}, iframe);
++        ret = aspx_data_2ch(s, ss, (uint8_t []){3, 4}, iframe);
 +        if (ret < 0)
 +            return ret;
 +
 +        if (ss->im_codec_mode != IM_ASPX_AJCC) {
-+            ret = aspx_data_2ch(s, ss, (uint8_t []){4, 5}, iframe);
++            ret = aspx_data_2ch(s, ss, (uint8_t []){5, 6}, iframe);
 +            if (ret < 0)
 +                return ret;
 +        }
 +
-+        ret = aspx_data_1ch(s, ss, 6, iframe);
++        ret = aspx_data_1ch(s, ss, 2, iframe);
 +        if (ret < 0)
 +            return ret;
 +    }
@@ -4591,6 +4623,8 @@ index 00000000..ae54b819
 +        switch (ss->coding_config) {
 +        case 0:
 +            ss->mode_2ch = get_bits1(gb);
++
++            av_log(s->avctx, AV_LOG_DEBUG, "mode_2ch: %d\n", ss->mode_2ch);
 +
 +            if (ss->mode_2ch) {
 +                s->ch_map[AV_CHAN_FRONT_LEFT]  = 0;
@@ -4811,7 +4845,9 @@ index 00000000..ae54b819
 +    return ret;
 +}
 +
-+static int ac4_substream(AC4DecodeContext *s, SubstreamInfo *ssinfo,
++static int ac4_substream(AC4DecodeContext *s,
++                         SubstreamGroupInfo *ssginfo,
++                         SubstreamInfo *ssinfo,
 +                         int substream_size)
 +{
 +    GetBitContext *gb = &s->gbc;
@@ -4831,7 +4867,17 @@ index 00000000..ae54b819
 +    align_get_bits(gb);
 +
 +    offset = get_bits_count(gb) >> 3;
-+    ret = audio_data(s, ssinfo->channel_mode, ssinfo->iframe[0]);
++    if (ssginfo->channel_coded) {
++        ret = audio_data(s, ssinfo->channel_mode, ssinfo->iframe[0]);
++    } else {
++        if (ssginfo->ajoc) {
++            //audio_data_ajoc();
++        } else {
++            //audio_data_objs();
++        }
++
++        ret = AVERROR_PATCHWELCOME;
++    }
 +    if (ret < 0)
 +        return ret;
 +
@@ -5152,12 +5198,12 @@ index 00000000..ae54b819
 +                m[0][1] =
 +                m[1][0] =  1;
 +                m[1][1] = -1;
-+            } else { // sap_mode == 3
++            } else if (ssch0->sap_mode == 3) {
 +                if (ssch0->sap_coeff_used[g][sfb]) { // setup alpha_q[g][sfb]
 +                    if (sfb & 1) {
 +                        ss->alpha_q[g][sfb] = ss->alpha_q[g][sfb-1];
 +                    } else {
-+                        float delta = ssch0->dpcm_alpha_q[g][sfb] - 60;
++                        int delta = ssch0->dpcm_alpha_q[g][sfb] - 60;
 +                        int code_delta;
 +
 +                        if ((g == 0) || (max_sfb_g != max_sfb_prev)) {
@@ -5507,38 +5553,49 @@ index 00000000..ae54b819
 +    memcpy(ssch->qscf_sig_sbg_prev, ssch->qscf_sig_sbg, sizeof(ssch->qscf_sig_sbg));
 +    memset(ssch->qscf_sig_sbg, 0, sizeof(ssch->qscf_sig_sbg));
 +
-+    ssch->num_atsg_sig_prev = FFMAX(1, ssch->num_atsg_sig_prev);
++    if (ssch->num_atsg_sig_prev <= 0)
++        return AVERROR_INVALIDDATA;
 +
 +    /* Loop over Envelopes */
 +    for (int atsg = 0; atsg < ssch->num_atsg_sig; atsg++) {
++        int freqres_prev;
++
++        if (atsg == 0) {
++            freqres_prev = ssch->atsg_freqres[ssch->num_atsg_sig_prev - 1];
++        } else {
++            freqres_prev = ssch->atsg_freqres[atsg-1];
++        }
++
 +        /* Loop over scale factor subband groups */
-+        for (int sbg = 0; sbg < ssch->num_sbg_sig[ssch->atsg_freqres[atsg]]; sbg++) {
-+            if (atsg == 0) {
-+                ssch->atsg_freqres_prev[atsg] = ssch->atsg_freqres[ssch->num_atsg_sig_prev - 1];
-+                ssch->qscf_prev[atsg][sbg] = ssch->qscf_sig_sbg_prev[ssch->num_atsg_sig_prev - 1][sbg];
-+            } else {
-+                ssch->atsg_freqres_prev[atsg] = ssch->atsg_freqres[atsg-1];
-+                ssch->qscf_prev[atsg][sbg] = ssch->qscf_sig_sbg[atsg-1][sbg];
-+            }
-+            if (ssch->aspx_sig_delta_dir[atsg] == 0) { /* FREQ */
-+                ssch->qscf_sig_sbg[atsg][sbg] = 0;
-+                for (int i = 0; i <= sbg; i++)
-+                    ssch->qscf_sig_sbg[atsg][sbg] += delta * ssch->aspx_data[0][atsg][i];
-+            } else { /* TIME */
-+                if (ssch->atsg_freqres[atsg] == ssch->atsg_freqres_prev[atsg]) {
-+                    ssch->qscf_sig_sbg[atsg][sbg]  = ssch->qscf_prev[atsg][sbg];
-+                    ssch->qscf_sig_sbg[atsg][sbg] += delta * ssch->aspx_data[0][atsg][sbg];
-+                } else if ((ssch->atsg_freqres[atsg] == 0) && (ssch->atsg_freqres_prev[atsg] == 1)) {
-+                    ssch->qscf_sig_sbg[atsg][sbg]  = ssch->qscf_prev[atsg][sbg_idx_low2high[sbg]];
-+                    ssch->qscf_sig_sbg[atsg][sbg] += delta * ssch->aspx_data[0][atsg][sbg];
-+                } else if ((ssch->atsg_freqres[atsg] == 1) && (ssch->atsg_freqres_prev[atsg] == 0)) {
-+                    ssch->qscf_sig_sbg[atsg][sbg]  = ssch->qscf_prev[atsg][sbg_idx_high2low[sbg]];
-+                    ssch->qscf_sig_sbg[atsg][sbg] += delta * ssch->aspx_data[0][atsg][sbg];
-+                }
++        for (int sbg = 0; sbg < ssch->num_sbg_sig[atsg]; sbg++) {
++            int sbg_prev, v;
++
++            if (ssch->atsg_freqres[atsg] == freqres_prev) {
++                sbg_prev = sbg;
++            } else if (ssch->atsg_freqres[atsg] == 0 && freqres_prev == 1) {
++                sbg_prev = sbg_idx_low2high[sbg];
++            } else if (ssch->atsg_freqres[atsg] == 1 && freqres_prev == 0) {
++                sbg_prev = sbg_idx_high2low[sbg];
 +            }
 +
-+            av_assert2(ssch->qscf_sig_sbg[atsg][sbg] >= -63);
-+            av_assert2(ssch->qscf_sig_sbg[atsg][sbg] <=  63);
++            if (atsg == 0) {
++                ssch->qscf_prev[atsg][sbg] = ssch->qscf_sig_sbg_prev[ssch->num_atsg_sig_prev-1][sbg_prev];
++            } else {
++                ssch->qscf_prev[atsg][sbg] = ssch->qscf_sig_sbg[atsg-1][sbg_prev];
++            }
++
++            if (ssch->aspx_sig_delta_dir[atsg] == 0) { /* FREQ */
++                v = 0;
++                for (int i = 0; i <= sbg; i++)
++                    v += delta * ssch->aspx_data[0][atsg][i];
++            } else { /* TIME */
++                v  = ssch->qscf_prev[atsg][sbg];
++                v += delta * ssch->aspx_data[0][atsg][sbg];
++            }
++
++            av_assert2(v >= -128);
++            av_assert2(v <=  128);
++            ssch->qscf_sig_sbg[atsg][sbg] = v;
 +        }
 +    }
 +
@@ -6207,11 +6264,11 @@ index 00000000..ae54b819
 +    if (s->first_frame) {
 +        index = 1;
 +    } else {
-+        index = (ssch->sine_idx_prev[ts][sb] + 1) % 4;
++        index = (ssch->sine_idx_prev[ts][sb] + 1) & 3;
 +    }
 +    index += ts - ssch->atsg_sig[0];
 +
-+    return index % 4;
++    return index & 3;
 +}
 +
 +static int noise_idx(int sb, int ts, Substream *ss, SubstreamChannel *ssch)
@@ -6226,10 +6283,10 @@ index 00000000..ae54b819
 +    index += ssch->num_sb_aspx * (ts - ssch->atsg_sig[0]);
 +    index += sb + 1;
 +
-+    return index % 512;
++    return index & 511;
 +}
 +
-+static int generate_noise(AC4DecodeContext *s, Substream *ss, int ch_id)
++static void generate_noise(AC4DecodeContext *s, Substream *ss, int ch_id)
 +{
 +    SubstreamChannel *ssch = &ss->ssch[ch_id];
 +
@@ -6251,18 +6308,14 @@ index 00000000..ae54b819
 +            av_assert2(sb < FF_ARRAY_ELEMS(ssch->qmf_noise[0][0]));
 +
 +            ssch->noise_idx_prev[ts][sb] = idx = noise_idx(sb, ts, ss, ssch);
-+            if (idx < 0)
-+                return AVERROR_INVALIDDATA;
 +
 +            ssch->qmf_noise[0][ts][sb] = ssch->noise_lev_sb_adj[atsg][sb] * aspx_noise[idx][0];
 +            ssch->qmf_noise[1][ts][sb] = ssch->noise_lev_sb_adj[atsg][sb] * aspx_noise[idx][1];
 +        }
 +    }
-+
-+    return 0;
 +}
 +
-+static int generate_tones(AC4DecodeContext *s, Substream *ss, int ch_id)
++static void generate_tones(AC4DecodeContext *s, Substream *ss, int ch_id)
 +{
 +    SubstreamChannel *ssch = &ss->ssch[ch_id];
 +
@@ -6288,8 +6341,6 @@ index 00000000..ae54b819
 +            av_assert2(sb < FF_ARRAY_ELEMS(ssch->sine_lev_sb_adj[0]));
 +
 +            ssch->sine_idx_prev[ts][sb] = idx = sine_idx(sb, ts, s, ssch);
-+            if (idx < 0)
-+                return AVERROR_INVALIDDATA;
 +
 +            ssch->qmf_sine[0][ts][sb]  = ssch->sine_lev_sb_adj[atsg][sb];
 +            ssch->qmf_sine[0][ts][sb] *= aspx_sine[0][idx];
@@ -6297,8 +6348,6 @@ index 00000000..ae54b819
 +            ssch->qmf_sine[1][ts][sb] *= aspx_sine[1][idx];
 +        }
 +    }
-+
-+    return 0;
 +}
 +
 +static void assemble_hf_signal(AC4DecodeContext *s, Substream *ss, int ch_id)
@@ -6332,8 +6381,7 @@ index 00000000..ae54b819
 +        av_assert2(ts + ts_offset_hfadj < FF_ARRAY_ELEMS(ssch->Q_high[0]));
 +        /* Loop over QMF subbands */
 +        for (int sb = 0; sb < ssch->num_sb_aspx; sb++) {
-+            ssch->Y[0][ts][sb] = ssch->sig_gain_sb_adj[atsg][sb];
-+            ssch->Y[1][ts][sb] = 0;
++            ssch->Y[1][ts][sb] = ssch->Y[0][ts][sb] = ssch->sig_gain_sb_adj[atsg][sb];
 +            fcomplex_mul(&ssch->Y[0][ts][sb], &ssch->Y[1][ts][sb],
 +                         ssch->Y[0][ts][sb], ssch->Y[1][ts][sb],
 +                         ssch->Q_high[0][ts + ts_offset_hfadj][sb + sbx],
@@ -6381,8 +6429,6 @@ index 00000000..ae54b819
 +
 +static int channels_aspx_processing(AC4DecodeContext *s, Substream *ss, int nb_ch)
 +{
-+    int ret;
-+
 +    if (s->substream.codec_mode < CM_ASPX)
 +        return 0;
 +
@@ -6426,16 +6472,10 @@ index 00000000..ae54b819
 +        map_signoise(s, ss, ch);
 +    for (int ch = 0; ch < nb_ch; ch++)
 +        add_sinusoids(s, ss, ch);
-+    for (int ch = 0; ch < nb_ch; ch++) {
-+        ret = generate_tones(s, ss, ch);
-+        if (ret < 0)
-+            return ret;
-+    }
-+    for (int ch = 0; ch < nb_ch; ch++) {
-+        ret = generate_noise(s, ss, ch);
-+        if (ret < 0)
-+            return ret;
-+    }
++    for (int ch = 0; ch < nb_ch; ch++)
++        generate_tones(s, ss, ch);
++    for (int ch = 0; ch < nb_ch; ch++)
++        generate_noise(s, ss, ch);
 +    for (int ch = 0; ch < nb_ch; ch++)
 +        assemble_hf_signal(s, ss, ch);
 +
@@ -6567,7 +6607,8 @@ index 00000000..ae54b819
 +
 +    if (avpkt->size < 8) {
 +        av_log(s->avctx, AV_LOG_ERROR, "invalid packet size: %d\n", avpkt->size);
-+        return AVERROR_INVALIDDATA;
++        ret = AVERROR_INVALIDDATA;
++        goto error;
 +    }
 +
 +    header = AV_RB16(avpkt->data);
@@ -6580,29 +6621,31 @@ index 00000000..ae54b819
 +    }
 +
 +    if ((ret = init_get_bits8(gb, avpkt->data, avpkt->size)) < 0)
-+        return ret;
++        goto error;
 +    av_log(s->avctx, AV_LOG_DEBUG, "packet_size: %d\n", avpkt->size);
 +    skip_bits_long(gb, start_offset * 8);
 +
 +    ret = ac4_toc(s);
 +    if (ret < 0)
-+        return ret;
++        goto error;
 +
 +    if (!s->have_iframe)
 +        return avpkt->size;
 +
 +    if (s->version == 2 && !s->ssgroup[0].channel_coded) {
 +        avpriv_report_missing_feature(s->avctx, "object coding");
-+        return AVERROR_PATCHWELCOME;
++        ret = AVERROR_PATCHWELCOME;
++        goto error;
 +    }
 +
 +    presentation = FFMIN(s->target_presentation, FFMAX(0, s->nb_presentations - 1));
-+    ssinfo = s->version == 2 ? &s->ssgroup[0].ssinfo : &s->pinfo[presentation].ssinfo;
++    ssinfo = s->version == 2 ? &s->ssgroup[0].ssinfo : &s->pinfo[presentation].ssinfo[0];
 +    avctx->sample_rate = s->fs_index ? 48000 : 44100;
 +
 +    if (ssinfo->channel_mode >= FF_ARRAY_ELEMS(channel_mode_layouts)) {
 +        av_log(s->avctx, AV_LOG_ERROR, "invalid channel mode: %d\n", ssinfo->channel_mode);
-+        return AVERROR_INVALIDDATA;
++        ret = AVERROR_INVALIDDATA;
++        goto error;
 +    }
 +
 +    av_channel_layout_copy(&avctx->ch_layout, &channel_mode_layouts[ssinfo->channel_mode]);
@@ -6610,8 +6653,6 @@ index 00000000..ae54b819
 +                                    s->resampling_ratio.den,
 +                                    s->resampling_ratio.num);
 +    frame->nb_samples = s->frame_len_base;
-+    if ((ret = ff_get_buffer(avctx, frame, 0)) < 0)
-+        return ret;
 +
 +    skip_bits_long(gb, s->payload_base * 8);
 +
@@ -6620,7 +6661,7 @@ index 00000000..ae54b819
 +
 +        switch (substream_type) {
 +        case ST_SUBSTREAM:
-+            ret = ac4_substream(s, ssinfo, s->substream_size[i]);
++            ret = ac4_substream(s, &s->ssgroup[0], ssinfo, s->substream_size[i]);
 +            break;
 +        case ST_PRESENTATION:
 +            skip_bits_long(gb, s->substream_size[i] * 8);
@@ -6630,7 +6671,8 @@ index 00000000..ae54b819
 +        }
 +
 +        if (ret < 0)
-+            return ret;
++            goto error;
++
 +        if (substream_type == ST_SUBSTREAM)
 +            break;
 +    }
@@ -6661,10 +6703,13 @@ index 00000000..ae54b819
 +
 +    ret = channels_aspx_processing(s, &s->substream, avctx->ch_layout.nb_channels);
 +    if (ret < 0)
-+        return ret;
++        goto error;
 +
 +    if (get_bits_left(gb) > 0)
 +        av_log(s->avctx, AV_LOG_DEBUG, "underread %d\n", get_bits_left(gb));
++
++    if ((ret = ff_get_buffer(avctx, frame, 0)) < 0)
++        return ret;
 +
 +    for (int ch = 0; ch < avctx->ch_layout.nb_channels; ch++) {
 +        const int sch = av_channel_layout_channel_from_index(&avctx->ch_layout, ch);
@@ -6681,6 +6726,13 @@ index 00000000..ae54b819
 +    *got_frame_ptr = 1;
 +
 +    return avpkt->size;
++
++error:
++    s->have_iframe = 0;
++
++    *got_frame_ptr = 0;
++
++    return ret;
 +}
 +
 +static av_cold void ac4_flush(AVCodecContext *avctx)
@@ -6738,7 +6790,7 @@ new file mode 100644
 index 00000000..85001d14
 --- /dev/null
 +++ b/libavcodec/ac4dec_data.h
-@@ -0,0 +1,1669 @@
+@@ -0,0 +1,1688 @@
 +/*
 + * AC-4 Audio Decoder
 + *
@@ -6764,6 +6816,25 @@ index 00000000..85001d14
 +
 +#include <stdint.h>
 +#include <libavutil/mem.h>
++
++static const AVRational resampling_ratios[] = {
++    {25025, 24000},
++    {25, 24},
++    {15, 16},
++    {25025, 24000},
++    {25, 24},
++    {25025, 24000},
++    {25, 24},
++    {15, 16},
++    {25025, 24000},
++    {25, 24},
++    {15, 16},
++    {25025, 24000},
++    {25, 24},
++    {1, 1},
++    {1, 1},
++    {1, 1},
++};
 +
 +static const uint8_t aspx_hcb_env_level_15_f0_bits[71] = {
 +     7,  9,  9,  9,  9,  8,  8,  7,  7,  7,  7,  7,  6,  6,  6,  6,
