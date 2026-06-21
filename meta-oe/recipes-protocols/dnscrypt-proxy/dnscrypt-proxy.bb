@@ -3,7 +3,7 @@ HOMEPAGE = "https://github.com/DNSCrypt/dnscrypt-proxy"
 LICENSE = "ISC"
 LIC_FILES_CHKSUM = "file://${UNPACKDIR}/${GO_SRCURI_DESTSUFFIX}/LICENSE;md5=ea9f5f8d90c27d6576d8aa0f8314706f"
 
-SRCREV = "${AUTOREV}"
+SRCREV = "307e379896234229a65971c12abddb3ef8be47a3"
 PV = "git"
 PKGV = "${GITPKGVTAG}"
 
