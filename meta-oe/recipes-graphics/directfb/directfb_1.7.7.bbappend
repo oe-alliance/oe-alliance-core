@@ -33,6 +33,3 @@ require directfb-${EXTRA_DIRECTFB}_1.7.7.inc
 
 INSANE_SKIP += "32bit-time"
 TARGET_CFLAGS += "-Wa,--noexecstack"
-
-
-SRC_URI:append = " file://TaskManager-const-comparator.patch"
