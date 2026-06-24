@@ -8,7 +8,9 @@ SRC_URI:append = " \
 "
 
 PACKAGECONFIG:remove = "soup3"
-RDEPENDS:${PN}-soup += "libsoup-2.4"
+
+RDEPENDS:${PN}-soup:remove = "${MLPREFIX}libsoup"
+RDEPENDS:${PN}-soup += "${MLPREFIX}${@bb.utils.contains('PACKAGECONFIG', 'soup2', 'libsoup-2.4', 'libsoup', d)}"
 
 PACKAGECONFIG[soup2] = "-Dsoup=enabled,-Dsoup=disabled,libsoup-2.4"
 
