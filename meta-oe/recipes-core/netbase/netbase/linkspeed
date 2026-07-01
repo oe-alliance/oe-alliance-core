@@ -1,0 +1,58 @@
+#!/bin/sh
+
+PATH=/usr/sbin:/sbin:/usr/bin:/bin
+
+[ "x$IFACE" = "x" ] && IFACE="$1"
+
+[ "x$IFACE" = "x" ] && exit 0
+[ "x$IFACE" = "x--all" ] && exit 0
+[ "x$IFACE" = "xlo" ] && exit 0
+
+CONFIG="/etc/enigma2/${IFACE}_linkspeed"
+
+[ -f "$CONFIG" ] || exit 0
+
+LINKSPEED=`cat "$CONFIG" 2>/dev/null | tr -d ' 	\r\n' | tr 'A-F' 'a-f'`
+
+[ "x$LINKSPEED" = "x" ] && exit 0
+
+case "$LINKSPEED" in
+	off|none|disable|disabled|0|0x0|0x00|0x000)
+		exit 0
+		;;
+	auto|default)
+		LINKSPEED="0x02f"
+		;;
+	0x*)
+		;;
+	*)
+		# Allow decimal values written by UI, for example 8 instead of 0x08.
+		LINKSPEED=`printf "0x%03x" "$LINKSPEED" 2>/dev/null` || exit 0
+		;;
+esac
+
+ETHTOOL=`command -v ethtool 2>/dev/null`
+[ "x$ETHTOOL" = "x" ] && exit 0
+
+logger -t linkspeed "set $IFACE advertise $LINKSPEED autoneg on" 2>/dev/null || :
+
+ip link set "$IFACE" up 2>/dev/null || busybox ip link set "$IFACE" up 2>/dev/null || :
+
+# Important: keep autonegotiation ON.
+"$ETHTOOL" -s "$IFACE" advertise "$LINKSPEED" autoneg on 2>/dev/null || {
+	logger -t linkspeed "failed to set $IFACE advertise $LINKSPEED" 2>/dev/null || :
+	exit 0
+}
+
+# Restart link negotiation before DHCP starts.
+"$ETHTOOL" -r "$IFACE" 2>/dev/null || :
+
+# Wait a little so DHCP starts after renegotiation.
+i=0
+while [ "$i" -lt 10 ]; do
+	"$ETHTOOL" "$IFACE" 2>/dev/null | grep -q "Link detected: yes" && break
+	sleep 1
+	i=`expr "$i" + 1`
+done
+
+exit 0
