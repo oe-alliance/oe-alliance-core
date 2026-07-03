@@ -45,7 +45,7 @@ RPROVIDES:${PN} = "virtual-libgles2 virtual-egl libv3dplatform.so libv3ddriver.s
 
 INHIBIT_PACKAGE_STRIP = "1"
 INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
-INSANE_SKIP:${PN} += "already-stripped dev-so"
+INSANE_SKIP:${PN} += "already-stripped dev-so ldflags"
 
 SRC_URI[md5sum] = "01a809640eed5ecd660bd147990a1793"
 SRC_URI[sha256sum] = "ba2939f19f5976f5360ff81829cc1407627f6445fb6c115d4d16b9e68b35c008"
