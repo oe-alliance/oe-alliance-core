@@ -3,6 +3,8 @@ SECTION = "base"
 PRIORITY = "optional"
 RDEPENDS:${PN} = "ncurses"
 
+COMPATIBLE_MACHINE = "osninopro"
+
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 LICENSE = "CLOSED"
