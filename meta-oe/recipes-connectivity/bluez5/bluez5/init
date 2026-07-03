@@ -21,6 +21,7 @@ set -e
 
 start_uarts() {
 	[ -r /etc/bluetooth/uart.conf ] || return
+	grep -qvwE '^[[:space:]]*(#|$)' /etc/bluetooth/uart.conf || return
 	grep -vwE '^[[:space:]]*(#|$)' /etc/bluetooth/uart.conf | while read i; do
 		$i > /dev/null 2>&1
 	done
