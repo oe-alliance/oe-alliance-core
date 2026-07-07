@@ -12,13 +12,13 @@ inherit update-rc.d
 INITSCRIPT_NAME = "pcscd"
 INITSCRIPT_PARAMS = "defaults"
 
-EXTRA_OECONF = " \
-    --enable-libusb \
-    --enable-usbdropdir=${libdir}/pcsc/drivers \
+EXTRA_OEMESON:remove = "-Dlibusb=false"
+EXTRA_OEMESON = " \
+    -Dlibusb=true \
+    -Dusbdropdir=${libdir}/pcsc/drivers \
 "
 
-do_install() {
-    oe_runmake DESTDIR=${D} install
+do_install:append() {
     install -d ${D}/${sysconfdir}/init.d
     install -m 755 ${UNPACKDIR}/pcscd.init ${D}/${sysconfdir}/init.d/pcscd
 }
