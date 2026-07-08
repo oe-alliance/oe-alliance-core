@@ -17,6 +17,7 @@ RRECOMMENDS:${PN} = "\
     dhrystone \
     streambench \
     chrony \
+    chronyc \
     fpclock \
     crontab-clearmen \
     enigma2-display-skins \

@@ -19,6 +19,7 @@ RDEPENDS:${PN} = "\
     oe-alliance-picon-feed \
     fstrim-cron \
     chrony \
+    chronyc \
     dosfstools \
     hdparm \
     smartmontools \
