@@ -1,1 +1,1 @@
-DEPENDS += "zlib"
+DEPENDS += "eudev zlib"
