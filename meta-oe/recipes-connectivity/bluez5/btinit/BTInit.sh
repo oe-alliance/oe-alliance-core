@@ -15,9 +15,75 @@ INFO_FILE=/usr/lib/enigma.info
 BTAUDIO_FILE=/proc/stb/audio/btaudio
 COMMANDCONNECT="/usr/lib/enigma2/python/Plugins/Extensions/BTDevicesManager/BTAudioConnect"
 LOG_TAG="BluetoothManager"
+DBUS_INIT=/etc/init.d/dbus-1
+BLUETOOTH_INIT=/etc/init.d/bluetooth
+DBUS_WAS_STARTED=0
+RETRY_SECONDS=30
 
 log() {
     logger -t "$LOG_TAG" "$1"
+}
+
+dbus_ready() {
+    [ -S /run/dbus/system_bus_socket ] || return 1
+    dbus-send --system --dest=org.freedesktop.DBus --type=method_call --print-reply / org.freedesktop.DBus.ListNames >/dev/null 2>&1
+}
+
+start_dbus() {
+    dbus_ready && return 0
+    DBUS_WAS_STARTED=1
+    [ -x "$DBUS_INIT" ] && "$DBUS_INIT" start >/dev/null 2>&1 || true
+    i=0
+    while [ $i -lt $RETRY_SECONDS ]; do
+        dbus_ready && return 0
+        sleep 1
+        i=$((i+1))
+    done
+    log "D-Bus system bus not ready"
+    return 1
+}
+
+start_bluetoothd() {
+    if [ "$DBUS_WAS_STARTED" = "1" ] && pidof bluetoothd >/dev/null 2>&1; then
+        "$BLUETOOTH_INIT" restart >/dev/null 2>&1 || true
+        return 0
+    fi
+    pidof bluetoothd >/dev/null 2>&1 && return 0
+    [ -x "$BLUETOOTH_INIT" ] && "$BLUETOOTH_INIT" start >/dev/null 2>&1 || true
+    i=0
+    while [ $i -lt $RETRY_SECONDS ]; do
+        pidof bluetoothd >/dev/null 2>&1 && return 0
+        sleep 1
+        i=$((i+1))
+    done
+    log "bluetoothd not running"
+    return 1
+}
+
+ensure_bluetooth_stack() {
+    start_dbus || return 1
+    start_bluetoothd || return 1
+}
+
+connect_audio() {
+    ensure_bluetooth_stack || return 0
+
+    i=0
+    while [ ! -f "$BTAUDIO_FILE" ] && [ $i -lt 10 ]; do
+        sleep 1
+        i=$((i+1))
+    done
+    if [ -f "$BTAUDIO_FILE" ]; then
+        if [ "$AUDIO_CONNECT" = "True" ]; then
+            log "Connecting to audio device: $AUDIO_ADDRESS"
+            "$COMMANDCONNECT" "$AUDIO_ADDRESS" &
+        else
+            log "Connecting to audio device default"
+            "$COMMANDCONNECT" &
+        fi
+    else
+        log "BTAUDIO_FILE not found after timeout"
+    fi
 }
 
 if [ -f "$SETTINGS_FILE" ]; then
@@ -69,22 +135,7 @@ start() {
     done) &
 
     if [ -n "$AUDIO_ADDRESS" ]; then
-        i=0
-        while [ ! -f "$BTAUDIO_FILE" ] && [ $i -lt 10 ]; do
-            sleep 1
-            i=$((i+1))
-        done
-        if [ -f "$BTAUDIO_FILE" ]; then
-            if [ "$AUDIO_CONNECT" = "True" ]; then
-                log "Connecting to audio device: $AUDIO_ADDRESS"
-                "$COMMANDCONNECT" "$AUDIO_ADDRESS" &
-            else
-                log "Connecting to audio device default"
-                "$COMMANDCONNECT" &
-            fi
-        else
-            log "BTAUDIO_FILE not found after timeout"
-        fi
+        connect_audio &
     fi
 }
 
