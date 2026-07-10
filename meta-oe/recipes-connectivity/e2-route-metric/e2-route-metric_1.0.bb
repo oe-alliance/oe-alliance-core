@@ -20,7 +20,6 @@ INITSCRIPT_NAME = "e2-route-metric"
 INITSCRIPT_PARAMS = "start 35 2 3 4 5 . stop 65 0 1 6 ."
 
 RDEPENDS:${PN} = "busybox iproute2"
-PACKAGE_ARCH = "all"
 
 do_install() {
     install -d ${D}${sbindir}
