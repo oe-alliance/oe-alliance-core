@@ -25,6 +25,7 @@ RDEPENDS:${PN} = "\
     enigma2-skindefault \
     socketdaemon \
     coreutils-stdbuf \
+    e2-route-metric \
     enigma2-plugin-systemplugins-hotplug \
     enigma2-plugin-systemplugins-softwaremanager \
     ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", "${OPENATV_EXTENDED}", d)} \

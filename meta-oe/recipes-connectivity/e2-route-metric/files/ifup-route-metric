@@ -1,0 +1,13 @@
+#!/bin/sh
+
+MANAGER=/usr/sbin/e2-route-metric
+
+[ -x "$MANAGER" ] || exit 0
+[ "x$IFACE" = "xlo" ] && exit 0
+[ "x$IFACE" = "x--all" ] && exit 0
+
+# Static gateways are read from /etc/network/interfaces. DHCP is completed by
+# the udhcpc hook. Running here also reacts immediately to Enigma2 UI changes.
+"$MANAGER" apply
+
+exit 0

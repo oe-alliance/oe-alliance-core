@@ -1,0 +1,18 @@
+#!/bin/sh
+
+# udhcpc runs this after 50default, with lease data in environment variables.
+MANAGER=/usr/sbin/e2-route-metric
+
+[ -x "$MANAGER" ] || exit 0
+[ -n "$interface" ] || exit 0
+
+case "$1" in
+    bound|renew)
+        "$MANAGER" dhcp4-update "$interface" "$router"
+        ;;
+    deconfig)
+        "$MANAGER" drop "$interface"
+        ;;
+esac
+
+exit 0

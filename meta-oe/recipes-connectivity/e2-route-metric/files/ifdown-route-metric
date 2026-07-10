@@ -1,0 +1,11 @@
+#!/bin/sh
+
+MANAGER=/usr/sbin/e2-route-metric
+
+[ -x "$MANAGER" ] || exit 0
+[ "x$IFACE" = "xlo" ] && exit 0
+[ "x$IFACE" = "x--all" ] && exit 0
+
+"$MANAGER" drop "$IFACE"
+
+exit 0

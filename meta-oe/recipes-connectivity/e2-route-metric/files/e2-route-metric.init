@@ -1,0 +1,48 @@
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides:          e2-route-metric
+# Required-Start:    $network
+# Required-Stop:     $network
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Prefer wired routes when LAN and WLAN are active
+### END INIT INFO
+
+DAEMON=/usr/sbin/e2-route-metric
+PIDFILE=/var/run/e2-route-metricd.pid
+
+[ -x "$DAEMON" ] || exit 0
+
+case "$1" in
+    start)
+        echo -n "Starting e2-route-metric: "
+        start-stop-daemon -S -b -m -p "$PIDFILE" -x "$DAEMON" -- daemon
+        echo "done"
+        ;;
+    stop)
+        echo -n "Stopping e2-route-metric: "
+        start-stop-daemon -K -o -p "$PIDFILE"
+        rm -f "$PIDFILE"
+        "$DAEMON" cleanup
+        echo "done"
+        ;;
+    restart|force-reload)
+        "$0" stop
+        "$0" start
+        ;;
+    status)
+        if [ -r "$PIDFILE" ] && kill -0 "$(cat "$PIDFILE")" 2>/dev/null; then
+            echo "e2-route-metric is running"
+            "$DAEMON" status
+        else
+            echo "e2-route-metric is not running"
+            exit 1
+        fi
+        ;;
+    *)
+        echo "Usage: $0 {start|stop|restart|force-reload|status}"
+        exit 1
+        ;;
+esac
+
+exit 0
