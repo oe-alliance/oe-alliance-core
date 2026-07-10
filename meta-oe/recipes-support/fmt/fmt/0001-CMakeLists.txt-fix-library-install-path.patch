@@ -1,25 +1,27 @@
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -341,7 +341,7 @@ target_include_directories(fmt-header-only ${FMT_SYSTEM_HEADERS_ATTRIBUTE} INTER
- # Install targets.
- if (FMT_INSTALL)
+@@ -432,7 +432,7 @@ if (FMT_INSTALL)
    include(CMakePackageConfigHelpers)
--  set_verbose(FMT_CMAKE_DIR ${CMAKE_INSTALL_LIBDIR}/cmake/fmt CACHE STRING
-+  set_verbose(FMT_CMAKE_DIR ${BASE_LIB_PATH}/cmake/fmt CACHE STRING
-               "Installation directory for cmake files, a relative path that "
-               "will be joined with ${CMAKE_INSTALL_PREFIX} or an absolute "
-               "path.")
-@@ -350,11 +350,11 @@ if (FMT_INSTALL)
-   set(pkgconfig ${PROJECT_BINARY_DIR}/fmt.pc)
+   set_verbose(
+     FMT_CMAKE_DIR
+-    ${CMAKE_INSTALL_LIBDIR}/cmake/fmt
++    ${BASE_LIB_PATH}/cmake/fmt
+     CACHE
+     STRING
+     "Installation directory for cmake files, a relative path that "
+@@ -444,13 +444,13 @@ if (FMT_INSTALL)
    set(targets_export_name fmt-targets)
  
--  set_verbose(FMT_LIB_DIR ${CMAKE_INSTALL_LIBDIR} CACHE STRING
-+  set_verbose(FMT_LIB_DIR ${BASE_LIB_PATH} CACHE STRING
-               "Installation directory for libraries, a relative path that "
-               "will be joined to ${CMAKE_INSTALL_PREFIX} or an absolute path.")
+   set_verbose(
+-    FMT_LIB_DIR ${CMAKE_INSTALL_LIBDIR} CACHE STRING
++    FMT_LIB_DIR ${BASE_LIB_PATH} CACHE STRING
+     "Installation directory for libraries, a relative path that "
+     "will be joined to ${CMAKE_INSTALL_PREFIX} or an absolute path.")
  
--  set_verbose(FMT_PKGCONFIG_DIR ${CMAKE_INSTALL_LIBDIR}/pkgconfig CACHE STRING
-+  set_verbose(FMT_PKGCONFIG_DIR ${BASE_LIB_PATH}/pkgconfig CACHE STRING
-               "Installation directory for pkgconfig (.pc) files, a relative "
-               "path that will be joined with ${CMAKE_INSTALL_PREFIX} or an "
-               "absolute path.")
+   set_verbose(
+     FMT_PKGCONFIG_DIR
+-    ${CMAKE_INSTALL_LIBDIR}/pkgconfig
++    ${BASE_LIB_PATH}/pkgconfig
+     CACHE
+     STRING
+     "Installation directory for pkgconfig (.pc) files, a relative "
