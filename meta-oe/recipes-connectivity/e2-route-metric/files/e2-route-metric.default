@@ -1,0 +1,17 @@
+# Routing table and rule used only while at least two gateways are usable.
+TABLE_ID=201
+RULE_PRIORITY=10000
+
+# Lower metric means higher priority.
+LAN_METRIC=100
+WLAN_METRIC=600
+
+# The daemon also catches IPv6 Router Advertisement renewals.
+POLL_INTERVAL=5
+
+# Optional space-separated overrides for drivers without wireless sysfs data.
+FORCE_LAN_INTERFACES=""
+FORCE_WLAN_INTERFACES=""
+
+# Set to 1 for diagnostic logger messages.
+DEBUG=0

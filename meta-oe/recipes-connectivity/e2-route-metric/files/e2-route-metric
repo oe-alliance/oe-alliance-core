@@ -1,0 +1,495 @@
+#!/bin/sh
+# SPDX-License-Identifier: MIT
+
+PATH=/usr/sbin:/usr/bin:/sbin:/bin
+
+CONFIG=${CONFIG:-/etc/default/e2-route-metric}
+[ -r "$CONFIG" ] && . "$CONFIG"
+
+TABLE_ID=${TABLE_ID:-201}
+RULE_PRIORITY=${RULE_PRIORITY:-10000}
+LAN_METRIC=${LAN_METRIC:-100}
+WLAN_METRIC=${WLAN_METRIC:-600}
+POLL_INTERVAL=${POLL_INTERVAL:-5}
+FORCE_LAN_INTERFACES=${FORCE_LAN_INTERFACES:-}
+FORCE_WLAN_INTERFACES=${FORCE_WLAN_INTERFACES:-}
+DEBUG=${DEBUG:-0}
+INTERFACES_FILE=${INTERFACES_FILE:-/etc/network/interfaces}
+INTERFACES_DIR=${INTERFACES_DIR:-/etc/network/interfaces.d}
+
+STATE_DIR=${STATE_DIR:-/var/run/e2-route-metric}
+DHCP4_DIR=$STATE_DIR/dhcp4
+LOCK_DIR=$STATE_DIR/apply.lock
+
+is_uint() {
+    case "$1" in
+        ""|*[!0-9]*) return 1 ;;
+        *) return 0 ;;
+    esac
+}
+
+is_uint "$TABLE_ID" || TABLE_ID=201
+is_uint "$RULE_PRIORITY" || RULE_PRIORITY=10000
+is_uint "$LAN_METRIC" || LAN_METRIC=100
+is_uint "$WLAN_METRIC" || WLAN_METRIC=600
+is_uint "$POLL_INTERVAL" || POLL_INTERVAL=5
+[ "$POLL_INTERVAL" -gt 0 ] 2>/dev/null || POLL_INTERVAL=5
+
+debug() {
+    [ "$DEBUG" = "1" ] || return 0
+    logger -t e2-route-metric -- "$*" 2>/dev/null || echo "e2-route-metric: $*" >&2
+}
+
+warn() {
+    logger -t e2-route-metric -- "$*" 2>/dev/null || echo "e2-route-metric: $*" >&2
+}
+
+valid_iface() {
+    case "$1" in
+        ""|*[!A-Za-z0-9_.:-]*) return 1 ;;
+        *) return 0 ;;
+    esac
+}
+
+in_list() {
+    local needle item
+    needle="$1"
+    shift
+    for item in "$@"; do
+        [ "$needle" = "$item" ] && return 0
+    done
+    return 1
+}
+
+is_wireless() {
+    local iface
+    iface="$1"
+
+    # Explicit configuration wins over automatic detection.
+    # shellcheck disable=SC2086
+    in_list "$iface" $FORCE_LAN_INTERFACES && return 1
+    # shellcheck disable=SC2086
+    in_list "$iface" $FORCE_WLAN_INTERFACES && return 0
+
+    [ -d "/sys/class/net/$iface/wireless" ] && return 0
+    [ -e "/sys/class/net/$iface/phy80211" ] && return 0
+
+    case "$iface" in
+        wlan*|wl*|ra*|ath*) return 0 ;;
+    esac
+    return 1
+}
+
+interface_usable() {
+    local family iface carrier flags
+    family="$1"
+    iface="$2"
+
+    [ -e "/sys/class/net/$iface" ] || return 1
+
+    flags=$(ip -o link show dev "$iface" 2>/dev/null |
+        sed -n 's/^[^<]*<\([^>]*\)>.*/\1/p')
+    case ",$flags," in
+        *,UP,*) ;;
+        *) return 1 ;;
+    esac
+
+    if [ -r "/sys/class/net/$iface/carrier" ]; then
+        carrier=$(cat "/sys/class/net/$iface/carrier" 2>/dev/null || echo 0)
+        [ "$carrier" = "1" ] || return 1
+    fi
+
+    ip "-$family" -o addr show dev "$iface" scope global 2>/dev/null | grep -q .
+}
+
+acquire_lock() {
+    local oldpid
+    mkdir -p "$STATE_DIR" "$DHCP4_DIR" 2>/dev/null || return 1
+
+    if mkdir "$LOCK_DIR" 2>/dev/null; then
+        echo "$$" > "$LOCK_DIR/pid"
+        return 0
+    fi
+
+    if [ -r "$LOCK_DIR/pid" ]; then
+        oldpid=$(cat "$LOCK_DIR/pid" 2>/dev/null)
+        if ! is_uint "$oldpid" || ! kill -0 "$oldpid" 2>/dev/null; then
+            rm -rf "$LOCK_DIR" 2>/dev/null
+            if mkdir "$LOCK_DIR" 2>/dev/null; then
+                echo "$$" > "$LOCK_DIR/pid"
+                return 0
+            fi
+        fi
+    fi
+
+    return 1
+}
+
+release_lock() {
+    rm -rf "$LOCK_DIR" 2>/dev/null
+}
+
+remove_rule() {
+    local family
+    family="$1"
+    while ip "-$family" rule del pref "$RULE_PRIORITY" table "$TABLE_ID" >/dev/null 2>&1; do
+        :
+    done
+}
+
+ensure_rule() {
+    local family
+    family="$1"
+    if ! ip "-$family" rule show 2>/dev/null |
+        awk -v pref="$RULE_PRIORITY" -v table="$TABLE_ID" '
+            $1 == pref ":" {
+                for (i = 1; i <= NF; i++) {
+                    if ($i == "lookup" && $(i + 1) == table) found = 1
+                }
+            }
+            END { exit(found ? 0 : 1) }
+        '
+    then
+        ip "-$family" rule add pref "$RULE_PRIORITY" table "$TABLE_ID" || return 1
+    fi
+    return 0
+}
+
+flush_family() {
+    local family
+    family="$1"
+    remove_rule "$family"
+    ip "-$family" route flush table "$TABLE_ID" >/dev/null 2>&1 || true
+}
+
+append_live_defaults() {
+    local family output
+    family="$1"
+    output="$2"
+
+    ip "-$family" route show table main default 2>/dev/null |
+        awk '
+            {
+                gateway = ""
+                device = ""
+                for (i = 1; i <= NF; i++) {
+                    if ($i == "via") gateway = $(i + 1)
+                    if ($i == "dev") device = $(i + 1)
+                }
+                if (gateway != "" && device != "")
+                    print device "|" gateway
+            }
+        ' >> "$output"
+}
+
+append_static_gateways() {
+    local family output config
+    family="$1"
+    output="$2"
+
+    for config in "$INTERFACES_FILE" "$INTERFACES_DIR"/*; do
+        [ -f "$config" ] || continue
+        awk -v wanted="$family" '
+            $1 == "iface" {
+                active = 0
+                iface = $2
+                if (wanted == "4" && $3 == "inet" && $4 == "static") active = 1
+                if (wanted == "6" && $3 == "inet6" && $4 == "static") active = 1
+                next
+            }
+            active && $1 == "gateway" && $2 != "" {
+                print iface "|" $2
+            }
+        ' "$config" >> "$output"
+    done
+}
+
+append_dhcp4_gateways() {
+    local output state iface gateway
+    output="$1"
+
+    for state in "$DHCP4_DIR"/*; do
+        [ -f "$state" ] || continue
+        iface=${state##*/}
+        gateway=$(sed -n '1p' "$state" 2>/dev/null)
+        valid_iface "$iface" || continue
+        [ -n "$gateway" ] || continue
+        echo "$iface|$gateway" >> "$output"
+    done
+}
+
+gather_candidates() {
+    local family output raw iface gateway
+    family="$1"
+    output="$2"
+    raw="$STATE_DIR/candidates${family}.raw.$$"
+
+    : > "$raw"
+
+    # Prefer the currently installed main-table route, then remembered DHCPv4
+    # lease data, then static Enigma2 configuration.
+    append_live_defaults "$family" "$raw"
+    [ "$family" = "4" ] && append_dhcp4_gateways "$raw"
+    append_static_gateways "$family" "$raw"
+
+    awk -F '|' '!seen[$1]++ && $1 != "" && $2 != "" { print $1 "|" $2 }' "$raw" |
+        sort > "${output}.all"
+    : > "$output"
+
+    while IFS='|' read -r iface gateway; do
+        valid_iface "$iface" || continue
+        interface_usable "$family" "$iface" || continue
+        echo "$iface|$gateway" >> "$output"
+    done < "${output}.all"
+
+    rm -f "$raw"
+}
+
+add_ipv4_connected_routes() {
+    local iface metric line prefix source previous token
+    iface="$1"
+    metric="$2"
+
+    ip -4 route show table main dev "$iface" scope link 2>/dev/null |
+        while IFS= read -r line; do
+            set -- $line
+            prefix="$1"
+            source=""
+            previous=""
+            for token in $line; do
+                if [ "$previous" = "src" ]; then
+                    source="$token"
+                    break
+                fi
+                previous="$token"
+            done
+
+            case "$prefix" in
+                ""|default|local|broadcast|unreachable|blackhole|prohibit|throw) continue ;;
+            esac
+
+            if [ -n "$source" ]; then
+                ip -4 route add table "$TABLE_ID" "$prefix" dev "$iface" \
+                    scope link src "$source" metric "$metric" >/dev/null 2>&1 || true
+            else
+                ip -4 route add table "$TABLE_ID" "$prefix" dev "$iface" \
+                    scope link metric "$metric" >/dev/null 2>&1 || true
+            fi
+        done
+}
+
+add_ipv6_connected_routes() {
+    local iface metric line prefix
+    iface="$1"
+    metric="$2"
+
+    ip -6 route show table main dev "$iface" 2>/dev/null |
+        while IFS= read -r line; do
+            set -- $line
+            prefix="$1"
+
+            case "$prefix" in
+                ""|default|local|broadcast|unreachable|blackhole|prohibit|throw) continue ;;
+            esac
+
+            case " $line " in
+                *" via "*) continue ;;
+            esac
+
+            ip -6 route add table "$TABLE_ID" "$prefix" dev "$iface" \
+                metric "$metric" >/dev/null 2>&1 || true
+        done
+
+    # A link-local next hop needs an explicit route in the policy table.
+    ip -6 route add table "$TABLE_ID" fe80::/64 dev "$iface" \
+        metric "$metric" >/dev/null 2>&1 || true
+}
+
+managed_default_count() {
+    local family
+    family="$1"
+    ip "-$family" route show table "$TABLE_ID" default 2>/dev/null |
+        awk '
+            {
+                for (i = 1; i <= NF; i++) {
+                    if ($i == "dev") print $(i + 1)
+                }
+            }
+        ' | sort -u | wc -l | tr -d ' '
+}
+
+apply_family() {
+    local family candidates configured_count usable_count lan_offset wlan_offset iface gateway metric kind installed
+    family="$1"
+    candidates="$STATE_DIR/candidates${family}.$$"
+
+    gather_candidates "$family" "$candidates"
+    configured_count=$(wc -l < "${candidates}.all" | tr -d ' ')
+    usable_count=$(wc -l < "$candidates" | tr -d ' ')
+
+    if [ "$configured_count" -le 1 ]; then
+        debug "IPv$family: $configured_count configured gateway interface(s), policy disabled"
+        flush_family "$family"
+        rm -f "$candidates" "${candidates}.all"
+        return 0
+    fi
+
+    if [ "$usable_count" -eq 0 ]; then
+        debug "IPv$family: no usable gateway interfaces, policy disabled"
+        flush_family "$family"
+        rm -f "$candidates" "${candidates}.all"
+        return 0
+    fi
+
+    # Keep the rule installed while rebuilding. An empty policy table falls
+    # through to the main table, so there is no routing black hole.
+    ip "-$family" route flush table "$TABLE_ID" >/dev/null 2>&1 || true
+
+    lan_offset=0
+    wlan_offset=0
+
+    while IFS='|' read -r iface gateway; do
+        if is_wireless "$iface"; then
+            metric=$((WLAN_METRIC + wlan_offset))
+            wlan_offset=$((wlan_offset + 1))
+            kind=WLAN
+        else
+            metric=$((LAN_METRIC + lan_offset))
+            lan_offset=$((lan_offset + 1))
+            kind=LAN
+        fi
+
+        if [ "$family" = "4" ]; then
+            add_ipv4_connected_routes "$iface" "$metric"
+            ip -4 route add table "$TABLE_ID" default via "$gateway" \
+                dev "$iface" metric "$metric" >/dev/null 2>&1 || \
+                warn "IPv4 default via $gateway dev $iface could not be installed"
+        else
+            add_ipv6_connected_routes "$iface" "$metric"
+            ip -6 route add table "$TABLE_ID" default via "$gateway" \
+                dev "$iface" metric "$metric" >/dev/null 2>&1 || \
+                warn "IPv6 default via $gateway dev $iface could not be installed"
+        fi
+
+        debug "IPv$family: $kind $iface via $gateway metric $metric"
+    done < "$candidates"
+
+    installed=$(managed_default_count "$family")
+    if [ "$installed" -ge 1 ]; then
+        ensure_rule "$family" || {
+            warn "IPv$family policy rule could not be installed"
+            flush_family "$family"
+        }
+    else
+        warn "IPv$family: only $installed managed default route(s), policy disabled"
+        flush_family "$family"
+    fi
+
+    rm -f "$candidates" "${candidates}.all"
+}
+
+apply_all() {
+    acquire_lock || return 0
+    trap 'release_lock' EXIT INT TERM
+
+    apply_family 4
+    apply_family 6
+
+    release_lock
+    trap - EXIT INT TERM
+}
+
+dhcp4_update() {
+    local iface routers gateway temporary
+    iface="$1"
+    routers="$2"
+
+    valid_iface "$iface" || return 1
+    mkdir -p "$DHCP4_DIR" || return 1
+
+    gateway=${routers%% *}
+    if [ -n "$gateway" ]; then
+        temporary="$DHCP4_DIR/$iface.$$"
+        printf '%s\n' "$gateway" > "$temporary" && mv -f "$temporary" "$DHCP4_DIR/$iface"
+    else
+        rm -f "$DHCP4_DIR/$iface"
+    fi
+
+    apply_all
+}
+
+drop_interface() {
+    local iface
+    iface="$1"
+    valid_iface "$iface" || return 1
+    rm -f "$DHCP4_DIR/$iface"
+    apply_all
+}
+
+cleanup_all() {
+    flush_family 4
+    flush_family 6
+    rm -rf "$LOCK_DIR" "$STATE_DIR"/candidates* 2>/dev/null
+}
+
+show_status() {
+    local candidates
+    echo "Configuration: table=$TABLE_ID rule-priority=$RULE_PRIORITY LAN=$LAN_METRIC WLAN=$WLAN_METRIC"
+    echo "IPv4 candidates:"
+    candidates="$STATE_DIR/status4.$$"
+    mkdir -p "$STATE_DIR" "$DHCP4_DIR"
+    gather_candidates 4 "$candidates"
+    sed 's/^/  /' "$candidates"
+    rm -f "$candidates" "${candidates}.all"
+    echo "IPv4 policy rule:"
+    ip -4 rule show | grep "lookup $TABLE_ID" | sed 's/^/  /'
+    echo "IPv4 policy routes:"
+    ip -4 route show table "$TABLE_ID" | sed 's/^/  /'
+
+    echo "IPv6 candidates:"
+    candidates="$STATE_DIR/status6.$$"
+    gather_candidates 6 "$candidates"
+    sed 's/^/  /' "$candidates"
+    rm -f "$candidates" "${candidates}.all"
+    echo "IPv6 policy rule:"
+    ip -6 rule show | grep "lookup $TABLE_ID" | sed 's/^/  /'
+    echo "IPv6 policy routes:"
+    ip -6 route show table "$TABLE_ID" | sed 's/^/  /'
+}
+
+run_daemon() {
+    trap 'exit 0' INT TERM
+
+    while :; do
+        apply_all
+        sleep "$POLL_INTERVAL" &
+        wait $!
+    done
+}
+
+case "$1" in
+    apply|once)
+        apply_all
+        ;;
+    dhcp4-update)
+        dhcp4_update "$2" "$3"
+        ;;
+    drop)
+        drop_interface "$2"
+        ;;
+    cleanup)
+        cleanup_all
+        ;;
+    status)
+        show_status
+        ;;
+    daemon)
+        run_daemon
+        ;;
+    *)
+        echo "Usage: $0 {apply|dhcp4-update IFACE ROUTERS|drop IFACE|cleanup|status|daemon}" >&2
+        exit 1
+        ;;
+esac
+
+exit 0
