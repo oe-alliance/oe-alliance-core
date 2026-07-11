@@ -10,7 +10,6 @@ TABLE_ID=${TABLE_ID:-201}
 RULE_PRIORITY=${RULE_PRIORITY:-10000}
 LAN_METRIC=${LAN_METRIC:-100}
 WLAN_METRIC=${WLAN_METRIC:-600}
-POLL_INTERVAL=${POLL_INTERVAL:-5}
 FORCE_LAN_INTERFACES=${FORCE_LAN_INTERFACES:-}
 FORCE_WLAN_INTERFACES=${FORCE_WLAN_INTERFACES:-}
 DEBUG=${DEBUG:-0}
@@ -32,8 +31,6 @@ is_uint "$TABLE_ID" || TABLE_ID=201
 is_uint "$RULE_PRIORITY" || RULE_PRIORITY=10000
 is_uint "$LAN_METRIC" || LAN_METRIC=100
 is_uint "$WLAN_METRIC" || WLAN_METRIC=600
-is_uint "$POLL_INTERVAL" || POLL_INTERVAL=5
-[ "$POLL_INTERVAL" -gt 0 ] 2>/dev/null || POLL_INTERVAL=5
 
 debug() {
     [ "$DEBUG" = "1" ] || return 0
@@ -390,13 +387,11 @@ apply_family() {
 
 apply_all() {
     acquire_lock || return 0
-    trap 'release_lock' EXIT INT TERM
 
     apply_family 4
     apply_family 6
 
     release_lock
-    trap - EXIT INT TERM
 }
 
 dhcp4_update() {
@@ -457,16 +452,6 @@ show_status() {
     ip -6 route show table "$TABLE_ID" | sed 's/^/  /'
 }
 
-run_daemon() {
-    trap 'exit 0' INT TERM
-
-    while :; do
-        apply_all
-        sleep "$POLL_INTERVAL" &
-        wait $!
-    done
-}
-
 case "$1" in
     apply|once)
         apply_all
@@ -483,11 +468,8 @@ case "$1" in
     status)
         show_status
         ;;
-    daemon)
-        run_daemon
-        ;;
     *)
-        echo "Usage: $0 {apply|dhcp4-update IFACE ROUTERS|drop IFACE|cleanup|status|daemon}" >&2
+        echo "Usage: $0 {apply|dhcp4-update IFACE ROUTERS|drop IFACE|cleanup|status}" >&2
         exit 1
         ;;
 esac

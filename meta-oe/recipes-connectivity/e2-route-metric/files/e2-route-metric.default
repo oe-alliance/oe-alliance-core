@@ -6,8 +6,8 @@ RULE_PRIORITY=10000
 LAN_METRIC=100
 WLAN_METRIC=600
 
-# The daemon also catches IPv6 Router Advertisement renewals.
-POLL_INTERVAL=5
+# Coalesce a burst of kernel network events before recalculating routes.
+EVENT_DEBOUNCE_MS=250
 
 # Optional space-separated overrides for drivers without wireless sysfs data.
 FORCE_LAN_INTERFACES=""
