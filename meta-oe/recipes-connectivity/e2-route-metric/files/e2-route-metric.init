@@ -8,22 +8,33 @@
 # Short-Description: Prefer wired routes when LAN and WLAN are active
 ### END INIT INFO
 
-DAEMON=/usr/sbin/e2-route-metric
+DAEMON=/usr/sbin/e2-route-metric-monitor
+MANAGER=/usr/sbin/e2-route-metric
 PIDFILE=/var/run/e2-route-metricd.pid
+CONFIG=/etc/default/e2-route-metric
+
+[ -r "$CONFIG" ] && . "$CONFIG"
+
+TABLE_ID=${TABLE_ID:-201}
+EVENT_DEBOUNCE_MS=${EVENT_DEBOUNCE_MS:-250}
 
 [ -x "$DAEMON" ] || exit 0
+[ -x "$MANAGER" ] || exit 0
 
 case "$1" in
     start)
         echo -n "Starting e2-route-metric: "
-        start-stop-daemon -S -b -m -p "$PIDFILE" -x "$DAEMON" -- daemon
+        start-stop-daemon -S -b -m -p "$PIDFILE" -x "$DAEMON" -- \
+            --table "$TABLE_ID" \
+            --debounce-ms "$EVENT_DEBOUNCE_MS" \
+            --manager "$MANAGER"
         echo "done"
         ;;
     stop)
         echo -n "Stopping e2-route-metric: "
         start-stop-daemon -K -o -p "$PIDFILE"
         rm -f "$PIDFILE"
-        "$DAEMON" cleanup
+        "$MANAGER" cleanup
         echo "done"
         ;;
     restart|force-reload)
@@ -33,7 +44,7 @@ case "$1" in
     status)
         if [ -r "$PIDFILE" ] && kill -0 "$(cat "$PIDFILE")" 2>/dev/null; then
             echo "e2-route-metric is running"
-            "$DAEMON" status
+            "$MANAGER" status
         else
             echo "e2-route-metric is not running"
             exit 1
