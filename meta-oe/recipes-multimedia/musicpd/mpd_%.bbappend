@@ -3,6 +3,7 @@ FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 inherit gitpkgv
 
 SRC_URI = "git://github.com/MusicPlayerDaemon/MPD;branch=master;protocol=https \
+           file://0001-libfmt-12.2.0-support-use-fmt-format.h-not-fmt-core.h.patch \
            file://mpd.conf.in \
            file://mpd.init \
            "
