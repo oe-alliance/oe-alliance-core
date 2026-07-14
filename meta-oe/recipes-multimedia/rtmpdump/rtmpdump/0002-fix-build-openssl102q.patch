@@ -1,7 +1,7 @@
-From cd0daf93605c2843af5c05881b91b11f1a077bbc Mon Sep 17 00:00:00 2001
+From d315ac35b0b15471a4db0916d4e473c8c503c15e Mon Sep 17 00:00:00 2001
 From: Captain <captain.onboard@web.de>
 Date: Thu, 8 Apr 2021 13:49:17 +0200
-Subject: [PATCH 2/3] fix build openssl102q
+Subject: [PATCH] fix build openssl102q
 
 ---
  librtmp/hashswf.c | 5 +++++
@@ -9,10 +9,10 @@ Subject: [PATCH 2/3] fix build openssl102q
  2 files changed, 10 insertions(+)
 
 diff --git a/librtmp/hashswf.c b/librtmp/hashswf.c
-index 01b97e2..e05d60b 100644
+index 40aba37..296b52f 100644
 --- a/librtmp/hashswf.c
 +++ b/librtmp/hashswf.c
-@@ -57,6 +57,11 @@
+@@ -62,6 +62,11 @@
  #include <openssl/ssl.h>
  #include <openssl/sha.h>
  #include <openssl/hmac.h>
@@ -25,11 +25,11 @@ index 01b97e2..e05d60b 100644
  #if OPENSSL_VERSION_NUMBER >= 0x10100000
  #define HMAC_CTX HMAC_CTX *
 diff --git a/librtmp/rtmp.c b/librtmp/rtmp.c
-index 7086254..269ac55 100644
+index 58111ef..d429877 100644
 --- a/librtmp/rtmp.c
 +++ b/librtmp/rtmp.c
-@@ -60,6 +60,11 @@ static const char *my_dhm_G = "4";
- #include <nettle/md5.h>
+@@ -61,6 +61,11 @@ static const char *my_dhm_G = "4";
+ #include <nettle/version.h>
  #else	/* USE_OPENSSL */
  #include <openssl/ssl.h>
 +#if OPENSSL_VERSION_NUMBER < 0x10100000L
@@ -40,6 +40,3 @@ index 7086254..269ac55 100644
  #include <openssl/rc4.h>
  #include <openssl/md5.h>
  #include <openssl/bio.h>
--- 
-2.31.1.windows.1
-
