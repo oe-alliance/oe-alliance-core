@@ -52,6 +52,7 @@ SRC_URI = "\
     file://0001-tests-add-a-target-for-building-tests-without-runnin.patch \
     file://0001-test-gatt-Fix-hung-issue.patch \
     file://fix-build-with-glibc-2.34.patch \
+    file://0001-build-Support-libical-4.0.patch \
 "
 S = "${UNPACKDIR}/bluez-${PV}"
 
