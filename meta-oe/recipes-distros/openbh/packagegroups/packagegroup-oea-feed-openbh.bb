@@ -59,6 +59,7 @@ RRECOMMENDS:${PN} = "\
     enigma2-plugin-extensions-remotetimer \
     enigma2-plugin-extensions-series2folder \
     enigma2-plugin-extensions-shoutcast \
+    enigma2-plugin-extensions-showclock \
     enigma2-plugin-extensions-simplerss \
     enigma2-plugin-extensions-spdyn \
     enigma2-plugin-extensions-srfmediathek \
