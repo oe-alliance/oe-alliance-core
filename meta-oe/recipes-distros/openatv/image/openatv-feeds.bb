@@ -53,7 +53,6 @@ RRECOMMENDS:${PN} = "\
     enigma2-plugin-skins-madmax-impossible \
     enigma2-plugin-skins-overlayhd \
     enigma2-plugin-skincomponents-mediaportal-atv-metrix-style \
-    enigma2-plugin-extensions-chocholousek-picons \
     enigma2-plugin-extensions-oaweather \
     mediainfo \
     ncdu \
