@@ -1,0 +1,11 @@
+--- a/netsurf/Makefile	2023-01-08 18:27:33.117853056 +0100
++++ a/netsurf/Makefile.patched	2023-01-08 18:25:05.000000000 +0100
+@@ -149,7 +149,7 @@
+ VQ=@
+ 
+ # Override this only if the host compiler is called something different
+-BUILD_CC := cc
++BUILD_CC := gcc
+ 
+ ifeq ($(TARGET),riscos)
+   ifeq ($(HOST),riscos)

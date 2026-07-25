@@ -1,0 +1,129 @@
+--- a/netsurf/frontends/framebuffer/fbtk/osk.c
++++ b/netsurf/frontends/framebuffer/fbtk/osk.c
+@@ -44,6 +44,7 @@
+ 	enum nsfb_key_code_e keycode;
+ };
+ 
++/* orig
+ #define KEYCOUNT 58
+ 
+ static struct kbd_button_s kbdbase[KEYCOUNT] = {
+@@ -106,10 +107,78 @@
+ 	{ 270,  67,  20,  15, "\xe2\x96\xb6", NSFB_KEY_RIGHT},
+ 	{ 250,  75,  20,  15, "\xe2\x96\xbc", NSFB_KEY_DOWN},
+ };
++*/
++
++#define KEYCOUNT 59
++static struct kbd_button_s kbdbase[KEYCOUNT] = {
++	{   0,  0,  10,  6, "`", NSFB_KEY_BACKQUOTE},
++	{  10,  0,  10,  6, "1", NSFB_KEY_1},
++	{  20,  0,  10,  6, "2", NSFB_KEY_2},
++	{  30,  0,  10,  6, "3", NSFB_KEY_3},
++	{  40,  0,  10,  6, "4", NSFB_KEY_4},
++	{  50,  0,  10,  6, "5", NSFB_KEY_5},
++	{  60,  0,  10,  6, "6", NSFB_KEY_6},
++	{  70,  0,  10,  6, "7", NSFB_KEY_7},
++	{  80,  0,  10,  6, "8", NSFB_KEY_8},
++	{  90,  0,  10,  6, "9", NSFB_KEY_9},
++	{ 100,  0,  10,  6, "0", NSFB_KEY_0},
++	{ 110,  0,  10,  6, "-", NSFB_KEY_MINUS},
++	{ 120,  0,  10,  6, "=", NSFB_KEY_EQUALS},
++	{ 130,  0,  10,  6, "<-", NSFB_KEY_BACKSPACE},
++
++	{   0,  6,  10,  6, "tab", NSFB_KEY_TAB},
++	{  10,  6,  10,  6, "q", NSFB_KEY_q},
++	{  20,  6,  10,  6, "w", NSFB_KEY_w},
++	{  30,  6,  10,  6, "e", NSFB_KEY_e},
++	{  40,  6,  10,  6, "r", NSFB_KEY_r},
++	{  50,  6,  10,  6, "t", NSFB_KEY_t},
++	{  60,  6,  10,  6, "y", NSFB_KEY_y},
++	{  70,  6,  10,  6, "u", NSFB_KEY_u},
++	{  80,  6,  10,  6, "i", NSFB_KEY_i},
++	{  90,  6,  10,  6, "o", NSFB_KEY_o},
++	{ 100,  6,  10,  6, "p", NSFB_KEY_p},
++	{ 110,  6,  10,  6, "[", NSFB_KEY_LEFTBRACKET},
++	{ 120,  6,  10,  6, "]", NSFB_KEY_RIGHTBRACKET},
++	{ 130,  6,  10, 18, "", NSFB_KEY_RETURN},
++
++	{   0, 12,  10,  6, "a", NSFB_KEY_a},
++	{  10, 12,  10,  6, "s", NSFB_KEY_s},
++	{  20, 12,  10,  6, "d", NSFB_KEY_d},
++	{  30, 12,  10,  6, "f", NSFB_KEY_f},
++	{  40, 12,  10,  6, "g", NSFB_KEY_g},
++	{  50, 12,  10,  6, "h", NSFB_KEY_h},
++	{  60, 12,  10,  6, "j", NSFB_KEY_j},
++	{  70, 12,  10,  6, "k", NSFB_KEY_k},
++	{  80, 12,  10,  6, "l", NSFB_KEY_l},
++	{  90, 12,  10,  6, ";", NSFB_KEY_SEMICOLON},
++	{ 100, 12,  10,  6, "'", NSFB_KEY_l},
++	{ 110, 12,  10,  6, "#", NSFB_KEY_HASH},
++	{ 120, 12,  10,  6, "@", NSFB_KEY_AT},
++
++	{   0, 18,  10,  6, "shift", NSFB_KEY_LSHIFT},
++	{  10, 18,  10,  6, "\\", NSFB_KEY_SLASH},
++	{  20, 18,  10,  6, "z", NSFB_KEY_z},
++	{  30, 18,  10,  6, "x", NSFB_KEY_x},
++	{  40, 18,  10,  6, "c", NSFB_KEY_c},
++	{  50, 18,  10,  6, "v", NSFB_KEY_v},
++	{  60, 18,  10,  6, "b", NSFB_KEY_b},
++	{  70, 18,  10,  6, "n", NSFB_KEY_n},
++	{  80, 18,  10,  6, "m", NSFB_KEY_m},
++	{  90, 18,  10,  6, ",", NSFB_KEY_COMMA},
++	{ 100, 18,  10,  6, ".", NSFB_KEY_PERIOD},
++	{ 110, 18,  10,  6, "/", NSFB_KEY_BACKSLASH},
++	{ 120, 18,  10,  6, "shift", NSFB_KEY_RSHIFT},
++
++	{   0, 24,  90,  6, "space", NSFB_KEY_SPACE},
++	{  90, 24,  10,  6, "right", NSFB_KEY_RIGHT},
++	{ 100, 24,  10,  6, "up", NSFB_KEY_UP},
++	{ 110, 24,  10,  6, "left", NSFB_KEY_LEFT},
++	{ 120, 24,  10,  6, "down", NSFB_KEY_DOWN},
++};
+ 
+ static fbtk_widget_t *osk;
+ 
+-static int
++int
+ osk_close(fbtk_widget_t *widget, fbtk_callback_info *cbi)
+ {
+ 	if (cbi->event->type != NSFB_EVENT_KEY_UP)
+@@ -144,7 +213,6 @@
+ 	int ww;
+ 	int wh;
+ 	fbtk_widget_t *root = fbtk_get_root_widget(fbtk);
+-	int furniture_width = 18;
+ 
+ 	for (kloop=0; kloop < KEYCOUNT; kloop++) {
+ 		if ((kbdbase[kloop].x + kbdbase[kloop].w) > maxx)
+@@ -153,12 +221,12 @@
+ 			maxy=kbdbase[kloop].y + kbdbase[kloop].h;
+ 	}
+ 
+-	ww = fbtk_get_width(root);
++	ww = (fbtk_get_width(root) / 2) - 5;
+ 
+ 	/* scale window height apropriately */
+ 	wh = (maxy * ww) / maxx;
+ 
+-	osk = fbtk_create_window(root, 0, fbtk_get_height(root) - wh, 0, wh, 0xff202020);
++	osk = fbtk_create_window(root, 0, (fbtk_get_height(root) - wh) - 30, ww, wh, 0xff202020);
+ 
+ 	for (kloop=0; kloop < KEYCOUNT; kloop++) {
+ 		widget = fbtk_create_text_button(osk,
+@@ -174,10 +242,10 @@
+ 	}
+ 
+ 	widget = fbtk_create_button(osk,
+-			fbtk_get_width(osk) - furniture_width,
+-			fbtk_get_height(osk) - furniture_width,
+-			furniture_width,
+-			furniture_width,
++			fbtk_get_width(osk) - (kbdbase[0].w * ww) / maxx,
++			fbtk_get_height(osk) - 1 - (kbdbase[0].h * ww) / maxx,
++			(kbdbase[0].w * ww) / maxx,
++			(kbdbase[0].h * ww) / maxx,
+ 			FB_FRAME_COLOUR,
+ 			&osk_image,
+ 			osk_close,
+

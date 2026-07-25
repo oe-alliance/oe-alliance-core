@@ -1,0 +1,269 @@
+diff -ruN a/src/output.c a/src/output.c.patched
+--- a/src/output.c	2020-12-14 16:50:56.990432574 +0100
++++ a/src/output.c.patched	2020-12-14 17:08:49.566441852 +0100
+@@ -39,6 +39,9 @@
+ #include "output_module.h"
+ #ifdef HAVE_GST
+ #include "output_gstreamer.h"
++//obi start
++#include <math.h>
++//obi end
+ #endif
+ #include "output.h"
+ 
+@@ -194,13 +197,28 @@
+ }
+ 
+ int output_get_volume(float *value) {
++//obi start
++//	printf("1output_get_volume: %f\n",*value);
++//obi end
+ 	if (output_module && output_module->get_volume) {
++//obi start
++	//		printf("2output_get_volume: %f\n",*value);		
++//obi end
+ 		return output_module->get_volume(value);
+ 	}
+ 	return -1;
+ }
+ int output_set_volume(float value) {
++//obi start
++//	printf("1output_set_volume: %f\n",value);
++	int ret = 63 - (int)ceil((float)(value * 100)) * 63 / 100;
++//	printf("2output_set_volume ret: %d\n",ret);
++	writesys("/proc/stb/avs/0/volume", oitoa(ret), 0);
++//obi end
+ 	if (output_module && output_module->set_volume) {
++//obi start
++//		printf("9output_set_volume: %f\n",value);
++//obi end
+ 		return output_module->set_volume(value);
+ 	}
+ 	return -1;
+@@ -217,3 +235,120 @@
+ 	}
+ 	return -1;
+ }
++
++//obi strat
++char* ostrcat(char* value1, char* value2, int free1, int free2)
++{
++	int len = 0, len1 = 0, len2 = 0;
++	char* buf = NULL;
++
++	if(value1 == NULL && value2 == NULL) return NULL;
++
++	if(value1 != NULL) len1 = strlen(value1);
++	if(value2 != NULL) len2 = strlen(value2);
++
++	len = len1 + len2 + 1;
++
++	if(free1 == 1)
++		buf = realloc(value1, len);
++	else
++		buf = malloc(len);
++	if(buf == NULL)
++	{
++		if(free1 == 1) free(value1);
++		if(free2 == 1) free(value2);
++		return NULL;
++	}
++
++	if(free1 == 0 && len1 > 0) memcpy(buf, value1, len1);
++	if(len2 > 0) memcpy(buf + len1, value2, len2);
++	buf[len - 1] = '\0';
++
++	if(free2 == 1) free(value2);
++
++	//helpfull for memleak detect
++	//if(buf != NULL && strlen(buf) == 0x0b - 0x01)
++	//	printf("******** memleak string (%s) (%p) ********\n", buf, buf);
++
++	return buf;
++}
++
++int writesys(const char *filename, char *value, int flag)
++{
++	FILE *fd = NULL;
++	char* tmpstr = NULL;
++	int ret;
++
++	if(value == NULL)
++	{
++//		err("NULL detect");
++		return 1;
++	}
++
++	if(flag == 2 || flag == 3)
++		fd = fopen(filename, "a");
++	else
++		fd = fopen(filename, "w");
++	if(fd == NULL)
++	{
++//		perr("can't open %s", filename);
++		return 1;
++	}
++
++	if(flag == 1 || flag == 3)
++		tmpstr = ostrcat(value, "\n", 0, 0);
++	else
++		tmpstr = ostrcat(value, NULL, 0, 0);
++
++	ret = fwrite(tmpstr, strlen(tmpstr), 1, fd);
++	if(ret != 1)
++	{
++//		perr("writting to %s", filename);
++		free(tmpstr);
++		fclose(fd);
++		return 1;
++	}
++
++	free(tmpstr);
++	fclose(fd);
++	return 0;
++}
++
++char* oitoa(int value)
++{
++	char *buf = NULL;
++
++	buf = malloc(4096);
++	if(buf == NULL)
++	{
++//		err("no mem");
++		return NULL;
++	}
++
++	sprintf(buf, "%d", value);
++	buf = ostrshrink(buf);
++
++	return buf;
++}
++
++char* ostrshrink(char* value)
++{
++	int len = 0;
++	char* buf = NULL;
++
++	if(value == NULL) return NULL;
++
++	len = strlen(value);
++	if(len == 0) return value;
++
++	buf = malloc(len + 1);
++	if(buf == NULL)
++		return value;
++
++	memcpy(buf, value, len);
++	free(value);
++	buf[len] = '\0';
++
++	return buf;
++}
++//obi end
+diff -ruN a/src/output_gstreamer.c a/src/output_gstreamer.c.patched
+--- a/src/output_gstreamer.c	2020-12-14 16:50:56.990432574 +0100
++++ a/src/src/output_gstreamer.c.patched	2020-12-14 17:12:00.426436380 +0100
+@@ -36,6 +36,9 @@
+ #include <string.h>
+ #include <unistd.h>
+ #include <inttypes.h>
++// obi start
++#include <fcntl.h>
++// obi end
+ 
+ #include "logging.h"
+ #include "upnp_connmgr.h"
+@@ -158,7 +161,61 @@
+ 	SongMetaData_clear(&song_meta_);
+ }
+ 
++// obi start
++int ostrcasecmp(char* value1, char* value2)
++{
++	int ret = 1;
++
++	if(value1 != NULL && value2 != NULL)
++		ret = strcasecmp(value1, value2);
++
++	return ret;
++}
++
++int cmpfilenameext(char* filename, char* ext)
++{
++	char* zeichen = NULL;
++
++	if(filename == NULL) return 1;
++
++	zeichen = strrchr(filename, '.');
++	if(zeichen != NULL)
++	{
++		if(ostrcasecmp(zeichen, ext) == 0) return 0;
++	}
++
++	return 1;
++}
++
++int output_picture(char* pic)
++{
++	int fifo = -1;
++
++	if(pic == NULL) return -1;
++
++	fifo = open("/tmp/gmediarender", O_WRONLY);
++
++	if(fifo > -1)
++		write(fifo, pic, strlen(pic) + 1);
++
++	close(fifo);
++	return 0;
++}
++// obi end
++
+ static int output_gstreamer_play(output_transition_cb_t callback) {
++//obi start
++	//send pic to titan
++	if(gsuri_ != NULL && (cmpfilenameext(gsuri_, ".jpg") == 0 || cmpfilenameext(gsuri_, ".png") == 0))
++	{
++		output_picture(gsuri_);
++		return 0;
++	}
++	else if(gsuri_ != NULL && (cmpfilenameext(gsuri_, ".mp3") == 0 || cmpfilenameext(gsuri_, ".wma") == 0 || cmpfilenameext(gsuri_, ".ogg") == 0 || cmpfilenameext(gsuri_, ".flac") == 0 || cmpfilenameext(gsuri_, ".wav") == 0))
++		output_picture("saver.png");
++	else
++		output_picture("clear.png");
++// obi end
+ 	play_trans_callback_ = callback;
+ 	if (get_current_player_state() != GST_STATE_PAUSED) {
+ 		if (gst_element_set_state(player_, GST_STATE_READY) ==
+diff -ruN a/src/output_gstreamer.h a/src/src/output_gstreamer.h.patched
+--- a/src/output_gstreamer.h	2020-12-14 16:50:56.990432574 +0100
++++ a/src/src/output_gstreamer.h.patched	2020-12-14 16:59:39.606449951 +0100
+@@ -26,4 +26,10 @@
+ 
+ extern struct output_module gstreamer_output;
+ 
++// obi start
++int ostrcasecmp(char* value1, char* value2);
++int cmpfilenameext(char* filename, char* ext);
++int output_picture(char* pic);
++// obi end
++
+ #endif /*  _OUTPUT_GSTREAMER_H */
+diff -ruN a/src/output.h a/src/output.h.patched
+--- a/src/output.h	2020-12-14 16:50:56.990432574 +0100
++++ a/src/output.h.patched	2020-12-14 17:00:27.654449942 +0100
+@@ -27,6 +27,13 @@
+ #include <glib.h>
+ #include "song-meta-data.h"
+ 
++//obi start
++int writesys(const char *filename, char *value, int flag);
++char* ostrcat(char* value1, char* value2, int free1, int free2);
++char* oitoa(int value);
++char* ostrshrink(char* value);
++//obi end
++
+ // Feedback for the controlling part what is happening with the
+ // output.
+ enum PlayFeedback {

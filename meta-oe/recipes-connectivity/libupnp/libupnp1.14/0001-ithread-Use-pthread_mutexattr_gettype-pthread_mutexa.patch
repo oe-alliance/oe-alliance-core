@@ -1,0 +1,17 @@
+--- a/upnp/inc/ithread.h	2023-07-20 01:13:23.550852623 +0200
++++ b/upnp/inc/ithread.h	2023-07-26 01:50:47.115869395 +0200
+@@ -329,12 +329,8 @@
+  *      Always returns 0.
+  *      See man page for pthread_mutexattr_getkind_np
+  *****************************************************************************/
+-#if defined(PTHREAD_MUTEX_RECURSIVE) || defined(__DragonFly__)
+-	#define ithread_mutexattr_getkind_np pthread_mutexattr_gettype
+-#else
+-	#define ithread_mutexattr_getkind_np pthread_mutexattr_getkind_np
+-#endif /* UPNP_USE_RWLOCK */
+-
++#define ithread_mutexattr_setkind_np pthread_mutexattr_settype
++#define ithread_mutexattr_settype pthread_mutexattr_settype
+ /****************************************************************************
+  * Function: ithread_mutex_init
+  *
