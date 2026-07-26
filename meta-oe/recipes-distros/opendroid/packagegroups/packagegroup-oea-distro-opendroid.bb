@@ -53,7 +53,6 @@ RRECOMMENDS:${PN} = "\
     enigma2-plugin-extensions-filecommander \
     enigma2-plugin-extensions-cutlisteditor \
     enigma2-plugin-extensions-openwebif-themes \
-    enigma2-plugin-extensions-openwebif-vxg \
     enigma2-plugin-systemplugins-videotune \
     enigma2-plugin-systemplugins-softwaremanager \
     enigma2-plugin-systemplugins-hotplug \
