@@ -42,7 +42,6 @@ RRECOMMENDS:${PN} = "\
     enigma2-plugin-extensions-openweather \
     enigma2-plugin-extensions-subssupport \
     enigma2-plugin-systemplugins-autobouquetsmaker \
-    enigma2-plugin-extensions-openwebif-vxg \
     enigma2-plugin-extensions-bitrateviewer \
     enigma2-plugin-extensions-ardmediathek \
     enigma2-plugin-extensions-autotimer \

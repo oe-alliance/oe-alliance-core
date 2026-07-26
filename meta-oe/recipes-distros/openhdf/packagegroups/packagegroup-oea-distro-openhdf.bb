@@ -37,7 +37,6 @@ OPENHDF_EXTENDED = "\
     ntfs-3g \
     enigma2-plugin-extensions-openwebif-themes \
     enigma2-plugin-extensions-openwebif-webtv \
-    enigma2-plugin-extensions-openwebif-vxg \
     enigma2-plugin-extensions-openwebif-terminal \
     exteplayer3 \
     gstplayer \

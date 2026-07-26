@@ -55,7 +55,6 @@ RDEPENDS:${PN} = "\
     enigma2-plugin-extensions-moviemanager \
     enigma2-plugin-extensions-newsreader \
     enigma2-plugin-extensions-openwebif \
-    enigma2-plugin-extensions-openwebif-vxg \
     enigma2-plugin-extensions-permanentvfdclock \
     enigma2-plugin-extensions-piconmanager \
     enigma2-plugin-extensions-piconsupdater \
