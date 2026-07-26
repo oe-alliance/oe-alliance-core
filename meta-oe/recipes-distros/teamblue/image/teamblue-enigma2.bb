@@ -37,7 +37,6 @@ NORMAL_IMAGE = " \
     enigma2-plugin-extensions-mediaplayer \
     enigma2-plugin-extensions-moviemanager \
     enigma2-plugin-extensions-openwebif-themes \
-    enigma2-plugin-extensions-openwebif-vxg \
     enigma2-plugin-extensions-volume-adjust \
     enigma2-plugin-extensions-zaphistorybrowser \
     enigma2-plugin-systemplugins-devicemanager \

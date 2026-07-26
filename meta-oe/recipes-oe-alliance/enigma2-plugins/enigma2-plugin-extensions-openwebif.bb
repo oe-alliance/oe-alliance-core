@@ -51,7 +51,6 @@ require conf/python/python3-compileall.inc
 python populate_packages:prepend() {
     enigma2_plugindir = bb.data.expand('${libdir}/enigma2/python/Plugins', d)
     do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/public/themes/.*$', 'enigma2-plugin-%s-themes', '%s (Additional themes for OpenWebif)', recursive=True, match_path=True, prepend=True, extra_depends="${PN}")
-    do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/public/vxg/.*$', 'enigma2-plugin-%s-vxg', '%s (WebTV for Google Chrome)', recursive=True, match_path=True, prepend=True, extra_depends="${PN}")
     do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/[a-zA-Z0-9_]+.*$', 'enigma2-plugin-%s', '%s', recursive=True, match_path=True, prepend=True, extra_depends="enigma2")
     do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/(.*/)?\.debug/.*$', 'enigma2-plugin-%s-dbg', '%s (debug)', recursive=True, match_path=True, prepend=True)
     do_split_packages(d, enigma2_plugindir, '^(\w+/\w+)/.*\/.*\.po$', 'enigma2-plugin-%s-po', '%s (translations)', recursive=True, match_path=True, prepend=True)
@@ -62,12 +61,11 @@ FILES:${PN}-themes += " ${libdir}/enigma2/python/Plugins/Extensions/OpenWebif/pu
                         ${libdir}/enigma2/python/Plugins/Extensions/OpenWebif/controllers/views/responsive \
 "
 
-RPROVIDES:${PN}  = "${PN}-terminal ${PN}-webtv"
-RREPLACES:${PN}  = "${PN}-terminal ${PN}-webtv"
-RCONFLICTS:${PN} = "${PN}-terminal ${PN}-webtv"
+RPROVIDES:${PN}  = "${PN}-terminal ${PN}-webtv ${PN}-vxg"
+RREPLACES:${PN}  = "${PN}-terminal ${PN}-webtv ${PN}-vxg"
+RCONFLICTS:${PN} = "${PN}-terminal ${PN}-webtv ${PN}-vxg"
 
 INSANE_SKIP:${PN} += "build-deps"
-INSANE_SKIP:${PN}-vxg += "build-deps"
 
 PACKAGES =+ "${PN}-themes"
 RDEPENDS:${PN}-themes = "${PN}"
