@@ -1,5 +1,10 @@
-# Routing table and rule used only while at least two gateways are usable.
+# Dedicated table used when at least two gateway interfaces are configured.
 TABLE_ID=201
+
+# Two consecutive policy-rule priorities are used:
+#   RULE_PRIORITY     -> main table without its default route
+#   RULE_PRIORITY + 1 -> managed default-route table
+# This preserves connected, static and VPN routes from the main table.
 RULE_PRIORITY=10000
 
 # Lower metric means higher priority.

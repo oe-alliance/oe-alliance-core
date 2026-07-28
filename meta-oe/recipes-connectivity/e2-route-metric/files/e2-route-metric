@@ -126,36 +126,79 @@ release_lock() {
     rm -rf "$LOCK_DIR" 2>/dev/null
 }
 
-remove_rule() {
-    local family
+managed_rule_priority() {
+    echo $((RULE_PRIORITY + 1))
+}
+
+remove_rules() {
+    local family managed_priority
     family="$1"
+    managed_priority=$(managed_rule_priority)
+
+    # Remove the rule layout used by version 1.1, if it is still present.
     while ip "-$family" rule del pref "$RULE_PRIORITY" table "$TABLE_ID" >/dev/null 2>&1; do
+        :
+    done
+
+    # Remove the two-rule layout used by this version.
+    while ip "-$family" rule del pref "$RULE_PRIORITY" table main \
+        suppress_prefixlength 0 >/dev/null 2>&1; do
+        :
+    done
+    while ip "-$family" rule del pref "$managed_priority" table "$TABLE_ID" >/dev/null 2>&1; do
         :
     done
 }
 
-ensure_rule() {
-    local family
+rule_priority_in_use() {
+    local family priority
     family="$1"
-    if ! ip "-$family" rule show 2>/dev/null |
-        awk -v pref="$RULE_PRIORITY" -v table="$TABLE_ID" '
-            $1 == pref ":" {
-                for (i = 1; i <= NF; i++) {
-                    if ($i == "lookup" && $(i + 1) == table) found = 1
-                }
-            }
+    priority="$2"
+
+    ip "-$family" rule show 2>/dev/null |
+        awk -v wanted="$priority" '
+            $1 == wanted ":" { found = 1 }
             END { exit(found ? 0 : 1) }
         '
-    then
-        ip "-$family" rule add pref "$RULE_PRIORITY" table "$TABLE_ID" || return 1
+}
+
+ensure_rules() {
+    local family managed_priority
+    family="$1"
+    managed_priority=$(managed_rule_priority)
+
+    remove_rules "$family"
+
+    # Do not create ambiguous rule ordering if another component already uses
+    # one of our configured priorities.
+    if rule_priority_in_use "$family" "$RULE_PRIORITY" ||
+       rule_priority_in_use "$family" "$managed_priority"; then
+        warn "IPv$family: policy-rule priority $RULE_PRIORITY or $managed_priority is already in use"
+        return 1
     fi
+
+    # First consult every non-default route in the main table. This keeps
+    # connected, static, VPN and other more-specific routes effective.
+    ip "-$family" rule add pref "$RULE_PRIORITY" table main \
+        suppress_prefixlength 0 || return 1
+
+    # Only unresolved traffic reaches the managed table, where the competing
+    # default gateways are ordered by route metric.
+    if ! ip "-$family" rule add pref "$managed_priority" table "$TABLE_ID"; then
+        while ip "-$family" rule del pref "$RULE_PRIORITY" table main \
+            suppress_prefixlength 0 >/dev/null 2>&1; do
+            :
+        done
+        return 1
+    fi
+
     return 0
 }
 
 flush_family() {
     local family
     family="$1"
-    remove_rule "$family"
+    remove_rules "$family"
     ip "-$family" route flush table "$TABLE_ID" >/dev/null 2>&1 || true
 }
 
@@ -373,8 +416,8 @@ apply_family() {
 
     installed=$(managed_default_count "$family")
     if [ "$installed" -ge 1 ]; then
-        ensure_rule "$family" || {
-            warn "IPv$family policy rule could not be installed"
+        ensure_rules "$family" || {
+            warn "IPv$family policy rules could not be installed"
             flush_family "$family"
         }
     else
@@ -436,8 +479,10 @@ show_status() {
     gather_candidates 4 "$candidates"
     sed 's/^/  /' "$candidates"
     rm -f "$candidates" "${candidates}.all"
-    echo "IPv4 policy rule:"
-    ip -4 rule show | grep "lookup $TABLE_ID" | sed 's/^/  /'
+    echo "IPv4 policy rules:"
+    ip -4 rule show | awk -v first="$RULE_PRIORITY" -v second="$(managed_rule_priority)" '
+        $1 == first ":" || $1 == second ":" { print "  " $0 }
+    '
     echo "IPv4 policy routes:"
     ip -4 route show table "$TABLE_ID" | sed 's/^/  /'
 
@@ -446,8 +491,10 @@ show_status() {
     gather_candidates 6 "$candidates"
     sed 's/^/  /' "$candidates"
     rm -f "$candidates" "${candidates}.all"
-    echo "IPv6 policy rule:"
-    ip -6 rule show | grep "lookup $TABLE_ID" | sed 's/^/  /'
+    echo "IPv6 policy rules:"
+    ip -6 rule show | awk -v first="$RULE_PRIORITY" -v second="$(managed_rule_priority)" '
+        $1 == first ":" || $1 == second ":" { print "  " $0 }
+    '
     echo "IPv6 policy routes:"
     ip -6 route show table "$TABLE_ID" | sed 's/^/  /'
 }

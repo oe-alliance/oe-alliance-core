@@ -1,5 +1,5 @@
 SUMMARY = "Automatic LAN/WLAN route preference for Enigma2"
-DESCRIPTION = "Maintains a dedicated policy-routing table when multiple IPv4 or IPv6 gateways are active. Wired interfaces are preferred over wireless interfaces without modifying Enigma2's generated network configuration."
+DESCRIPTION = "Maintains a dedicated policy-routing table when multiple IPv4 or IPv6 gateway interfaces are configured. Wired interfaces are preferred over wireless interfaces while existing connected, static and VPN routes in the main table remain effective. Enigma2's generated network configuration is not modified."
 SECTION = "base"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda2f7b4f302"
@@ -14,7 +14,7 @@ SRC_URI = "file://e2-route-metric \
 "
 
 S = "${UNPACKDIR}"
-PR = "r2"
+PR = "r0"
 
 inherit update-rc.d
 
