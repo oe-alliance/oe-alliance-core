@@ -8,7 +8,7 @@ RPROVIDES:${PN} += "gb-bluetooth-util"
 PR = "${SRCDATE}.${SRCDATE_PR}"
 
 SRC_URI = " \
-    https://source.mynonpublic.com/gigablue/bluetooth/gb-bluetooth-util-${MACHINE}-${PR}.tar.gz \
+    https://source.mynonpublic.com/gigablue/bluetooth/gb-bluetooth-util-${MACHINE}-${PR}.zip \
 "
 
 S = "${UNPACKDIR}/gb-bluetooth-util-${MACHINE}"
