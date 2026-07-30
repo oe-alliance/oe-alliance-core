@@ -1,5 +1,5 @@
 SUMMARY = "unjffs2 is a very simple jffs2 unpacker"
-LICENSE = "GPL"
+LICENSE = "GPL-2.0-or-later"
 
 LIC_FILES_CHKSUM = "file://unjffs2.cpp;beginline=19;endline=19;md5=bde85ed4c68e51358abcb6073c25cbdc"
 

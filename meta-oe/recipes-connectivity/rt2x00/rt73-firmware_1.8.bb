@@ -1,5 +1,6 @@
 SUMMARY = "Firmware for rt73 based USB wifi adaptors"
-LICENSE = "unknown"
+LICENSE = "LicenseRef-CLOSED"
+require conf/license/license-close.inc
 
 SRC_URI = "http://www.ralinktech.com.tw/data/RT71W_Firmware_V${PV}.zip"
 

@@ -2,7 +2,7 @@ SUMMARY = "GSM Audio Library"
 SECTION = "libs"
 PRIORITY = "optional"
 #DEPENDS = ""
-LICENSE = "libgsm"
+LICENSE = "BSD-3-Clause"
 LIC_FILES_CHKSUM = "file://COPYRIGHT;md5=97e265fa1fd10a668bd99c4945fb9200"
 
 SRC_URI = "http://user.cs.tu-berlin.de/~jutta/gsm/gsm-${PV}.tar.gz \

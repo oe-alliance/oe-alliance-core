@@ -1,7 +1,7 @@
 DESCRIPTION = "DirectFB extra providers"
 DEPENDS = "directfb"
 SECTION = "libs"
-LICENSE = "GPL"
+LICENSE = "GPL-2.0-or-later"
 
 SRC_URI = " \
     http://www.directfb.org/downloads/Extras/DirectFB-examples-${PV}.tar.gz \
