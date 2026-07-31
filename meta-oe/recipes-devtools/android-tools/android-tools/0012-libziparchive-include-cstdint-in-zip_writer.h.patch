@@ -1,0 +1,21 @@
+From: OpenEmbedded <oe@oe-alliance.org>
+Subject: [PATCH] libziparchive: add missing <cstdint> to zip_writer.h
+
+GCC 15+ no longer transitively includes <cstdint> through other standard
+headers, so uint8_t / uint16_t / uint32_t are no longer available in
+zip_writer.h. The header itself uses these types (e.g. FileEntry struct
+members, method signatures), so include <cstdint> explicitly.
+
+Upstream-Status: Pending
+Signed-off-by: OpenEmbedded <oe@oe-alliance.org>
+
+--- a/system/libziparchive/include/ziparchive/zip_writer.h
++++ b/system/libziparchive/include/ziparchive/zip_writer.h
+@@ -18,6 +18,7 @@
+
+ #include <cstdio>
+ #include <ctime>
++#include <cstdint>
+
+ #include <gtest/gtest_prod.h>
+ #include <memory>
