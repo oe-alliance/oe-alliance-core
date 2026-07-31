@@ -1,6 +1,6 @@
 SUMMARY = "Simple user interface for Dreambox rescue mode"
 HOMEPAGE = "http://dreamboxupdate.com/"
-LICENSE = "CLOSED"
+require conf/license/license-close.inc
 DEPENDS = "libmnl xz"
 SRCREV = "1cd69394b3702a06cadfce078289dd351a07b152"
 SRCREV:dm820 = "dm7080"

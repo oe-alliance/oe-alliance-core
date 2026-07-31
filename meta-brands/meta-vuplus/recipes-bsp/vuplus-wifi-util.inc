@@ -1,5 +1,4 @@
 SECTION = "base"
-LICENSE = "CLOSED"
 require conf/license/license-close.inc
 
 PROVIDES += "vuplus-wifi-util"

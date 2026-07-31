@@ -1,7 +1,7 @@
 DESCRIPTION = "${HICHIPSET} libraries"
 SECTION = "base"
 PRIORITY = "required"
-LICENSE = "CLOSED"
+require conf/license/license-close.inc
 DEPENDS = "zlib libpng freetype curl libxml2 libjpeg-turbo harfbuzz"
 RDEPENDS:${PN} = "libbluray openssl10"
 REV = "r1"

@@ -1,7 +1,7 @@
 SUMMARY = "halt for AMIKO Model ${MACHINE}"
 SECTION = "base"
 PRIORITY = "optional"
-LICENSE = "CLOSED"
+require conf/license/license-close.inc
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 RDEPENDS:${PN} = "harfbuzz"

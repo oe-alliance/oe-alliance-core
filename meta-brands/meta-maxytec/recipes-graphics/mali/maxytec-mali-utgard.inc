@@ -1,7 +1,7 @@
 DESCRIPTION = "Mali OpenGL"
 SECTION = "base"
 PRIORITY = "required"
-LICENSE = "CLOSED"
+require conf/license/license-close.inc
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 MALIVER ?= "${@bb.utils.contains('TARGET_ARCH', 'aarch64', '64' , '', d)}"
 

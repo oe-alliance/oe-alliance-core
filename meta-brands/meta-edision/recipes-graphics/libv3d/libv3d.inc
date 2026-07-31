@@ -1,7 +1,6 @@
 DESCRIPTION = "GLES/EGL files for ${MACHINE}"
 SECTION = "libs"
 PRIORITY = "required"
-LICENSE = "CLOSED"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 require conf/license/license-close.inc
 

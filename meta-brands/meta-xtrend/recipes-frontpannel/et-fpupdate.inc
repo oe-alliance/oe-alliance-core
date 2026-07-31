@@ -1,7 +1,6 @@
 SUMMARY = "frontpanel update"
 SECTION = "base"
 PRIORITY = "optional"
-LICENSE = "CLOSED"
 require conf/license/license-close.inc
 
 PR = "r4"

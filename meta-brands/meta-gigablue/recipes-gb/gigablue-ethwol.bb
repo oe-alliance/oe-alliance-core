@@ -1,6 +1,5 @@
 SUMMARY = "S3 set eth0 wol"
 MAINTAINER = "GigaBlue"
-LICENSE = "CLOSED"
 require conf/license/license-close.inc
 
 COMPATIBLE_MACHINE = "^(gb7356$|gb7362$|gb73625)$"

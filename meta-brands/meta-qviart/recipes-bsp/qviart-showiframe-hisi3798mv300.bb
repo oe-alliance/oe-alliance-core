@@ -1,7 +1,7 @@
 SUMMARY = "showiframe for qviart Model ${SOC_FAMILY}"
 SECTION = "base"
 PRIORITY = "optional"
-LICENSE = "CLOSED"
+require conf/license/license-close.inc
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 COMPATIBLE_MACHINE = "^(og2s4k)$"

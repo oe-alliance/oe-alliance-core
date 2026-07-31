@@ -1,7 +1,6 @@
 SUMMARY = "Dreambox TPM Daemon"
 SECTION = "base"
 PRIORITY = "required"
-LICENSE = "CLOSED"
 RDEPENDS:${PN} = "dreambox-compat wdog libssl0.9.8"
 PR = "r6"
 require conf/license/license-close.inc

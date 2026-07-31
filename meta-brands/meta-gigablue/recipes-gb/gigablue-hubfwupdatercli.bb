@@ -1,7 +1,6 @@
 SUMMARY = "GigaBlue hubFwUpdaterCLI for ${MACHINEBUILD}"
 SECTION = "base"
 PRIORITY = "required"
-LICENSE = "CLOSED"
 MAINTAINER = "GigaBlue"
 PACKAGE_ARCH = "${MACHINEBUILD}"
 

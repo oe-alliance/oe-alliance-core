@@ -1,7 +1,7 @@
 SUMMARY = "libgles for ${SOC_FAMILY}"
 SECTION = "base"
 PRIORITY = "required"
-LICENSE = "CLOSED"
+require conf/license/license-close.inc
 PACKAGE_ARCH := "${MACHINE_ARCH}"
 
 DEPENDS = "patchelf-native"

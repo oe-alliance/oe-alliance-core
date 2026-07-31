@@ -1,7 +1,7 @@
 SUMMARY = "libreader for Gigablue Model ${MACHINEBUILD}"
 SECTION = "base"
 PRIORITY = "optional"
-LICENSE = "CLOSED"
+require conf/license/license-close.inc
 PACKAGE_ARCH = "${MACHINEBUILD}"
 
 RDEPENDS:${PN} = "libsdl"

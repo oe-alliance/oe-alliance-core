@@ -1,7 +1,6 @@
 SUMMARY = "Hardware drivers for Atemio 6x00"
 SECTION = "base"
 PRIORITY = "required"
-LICENSE = "CLOSED"
 PACKAGE_ARCH = "${MACHINEBUILD}"
 require conf/license/license-close.inc
 

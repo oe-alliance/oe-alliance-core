@@ -1,7 +1,6 @@
 SUMMARY = "Hardware drivers for ${MACHINE_DRIVER}"
 SECTION = "base"
 PRIORITY = "required"
-LICENSE = "CLOSED"
 require conf/license/license-close.inc
 MODULESVER ?= "${@bb.utils.contains('TARGET_ARCH', 'aarch64', '64' , '', d)}"
 

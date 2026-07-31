@@ -1,7 +1,6 @@
 SUMMARY = "Hardware drivers for Bwidow X-1"
 SECTION = "base"
 PRIORITY = "required"
-LICENSE = "CLOSED"
 PACKAGE_ARCH = "${MACHINEBUILD}"
 require conf/license/license-close.inc
 

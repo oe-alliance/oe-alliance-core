@@ -1,4 +1,4 @@
-LICENSE = "CLOSED"
+require conf/license/license-close.inc
 SRC_URI = "file://mn8847x.zip"
 
 S = "${UNPACKDIR}"

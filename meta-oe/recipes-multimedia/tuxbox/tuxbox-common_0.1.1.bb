@@ -1,5 +1,4 @@
 SUMMARY = "Tuxbox common files"
-LICENSE = "CLOSED"
 MAINTAINER = "OE-Alliance team"
 require conf/license/license-close.inc
 inherit allarch

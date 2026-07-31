@@ -1,5 +1,4 @@
 SUMMARY = "Firmware files for mn88436"
-LICENSE = "CLOSED"
 require conf/license/license-close.inc
 
 inherit allarch

@@ -1,6 +1,5 @@
 SUMMARY = "Hardware drivers for Dreambox"
 SECTION = "base"
-LICENSE = "CLOSED"
 DEPENDS += "virtual/kernel"
 PRIORITY = "required"
 INC_PR = "r8"

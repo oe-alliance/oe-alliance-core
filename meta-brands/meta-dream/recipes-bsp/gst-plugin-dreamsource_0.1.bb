@@ -1,6 +1,6 @@
 SUMMARY = "dreambox video and audio encoder source elements for Gstreamer"
 SECTION = "multimedia"
-LICENSE = "CLOSED"
+require conf/license/license-close.inc
 DEPENDS = "glib-2.0-native gstreamer1.0 gstreamer1.0-plugins-base"
 
 inherit autotools pkgconfig

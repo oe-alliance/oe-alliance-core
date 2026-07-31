@@ -1,4 +1,3 @@
-LICENSE = "CLOSED"
 require conf/license/license-close.inc
 SRC_URI = "file://fw-isdbt_rio.tar.gz"
 

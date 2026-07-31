@@ -1,7 +1,6 @@
 SUMMARY = "Hardware drivers for Miraclebox MINI, Sezam 1000HD, Xpeed LX12"
 SECTION = "base"
 PRIORITY = "required"
-LICENSE = "CLOSED"
 PACKAGE_ARCH = "${MACHINEBUILD}"
 require conf/license/license-close.inc
 

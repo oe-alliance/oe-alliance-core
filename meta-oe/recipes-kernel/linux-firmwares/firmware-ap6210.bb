@@ -1,5 +1,4 @@
 SUMMARY = "Firmware files for bcm40181a2/ap6210"
-LICENSE = "CLOSED"
 require conf/license/license-close.inc
 
 inherit allarch

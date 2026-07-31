@@ -1,5 +1,5 @@
 DESCRIPTION = "libgles v3ddriver headers"
-LICENSE = "CLOSED"
+require conf/license/license-close.inc
 
 PR = "r0"
 

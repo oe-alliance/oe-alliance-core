@@ -1,7 +1,7 @@
 SUMMARY = "Firmware files for use with Linux kernel"
 SECTION = "kernel"
 
-LICENSE = "CLOSED"
+require conf/license/license-close.inc
 
 PE = "1"
 

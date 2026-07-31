@@ -1,4 +1,3 @@
-LICENSE = "CLOSED"
 require conf/license/license-close.inc
 
 SUMMARY = "Firmware for ds3xxx dvb frontend"

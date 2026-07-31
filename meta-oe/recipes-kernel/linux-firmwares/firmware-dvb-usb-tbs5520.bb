@@ -1,5 +1,5 @@
 DESCRIPTION = "Firmware for TBS 5520"
-LICENSE = "CLOSED"
+require conf/license/license-close.inc
 
 SRC_URI = "file://dvb-usb-tbsqbox-id5520.zip"
 

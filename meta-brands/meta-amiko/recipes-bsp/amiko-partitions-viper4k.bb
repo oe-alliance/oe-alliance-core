@@ -1,7 +1,6 @@
 SUMMARY = "viper4k partitions files"
 SECTION = "base"
 PRIORITY = "required"
-LICENSE = "CLOSED"
 require conf/license/license-close.inc
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 

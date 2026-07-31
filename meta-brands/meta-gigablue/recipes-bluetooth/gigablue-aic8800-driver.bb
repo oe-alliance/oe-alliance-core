@@ -1,7 +1,7 @@
 SUMMARY = "Gigablue Drivers for AIC8800 for ${MACHINEBUID}"
 SECTION = "base"
 PRIORITY = "optional"
-LICENSE = "CLOSED"
+require conf/license/license-close.inc
 PACKAGE_ARCH = "${MACHINEBUILD}"
 
 SRCDATE = "20241011"

@@ -1,6 +1,6 @@
 SUMMARY = "Hardware drivers and firmware for Edision edicombo Tuner"
 SECTION = "base"
-LICENSE = "CLOSED"
+require conf/license/license-close.inc
 PACKAGE_ARCH := "${MACHINE_ARCH}"
 
 FW_SRCDATE = "20170526"

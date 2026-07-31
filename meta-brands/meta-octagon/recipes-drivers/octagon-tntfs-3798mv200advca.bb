@@ -1,7 +1,6 @@
 SUMMARY = "Hardware drivers for TNTFS"
 SECTION = "base"
 PRIORITY = "required"
-LICENSE = "CLOSED"
 require conf/license/license-close.inc
 
 KV = "4.4.176"

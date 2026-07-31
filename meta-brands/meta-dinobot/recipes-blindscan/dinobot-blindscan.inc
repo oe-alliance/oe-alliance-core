@@ -1,7 +1,7 @@
 SUMMARY = "blindscan for dinobot"
 SECTION = "base"
 PRIORITY = "optional"
-LICENSE = "CLOSED"
+require conf/license/license-close.inc
 
 PV = "${SRCDATE}"
 PR = "r0"

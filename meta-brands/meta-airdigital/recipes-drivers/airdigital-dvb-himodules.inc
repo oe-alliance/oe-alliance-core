@@ -1,7 +1,6 @@
 SUMMARY = "Hardware drivers for ${MACHINE_DRIVER}"
 SECTION = "base"
 PRIORITY = "required"
-LICENSE = "CLOSED"
 require conf/license/license-close.inc
 
 PV = "${KV}+${SRCDATE}"

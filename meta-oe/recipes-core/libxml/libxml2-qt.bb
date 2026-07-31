@@ -1,7 +1,6 @@
 SUMMARY = "XML C Parser Library and Toolkit for old Close QT Plugins"
 SECTION = "base"
 PRIORITY = "optional"
-LICENSE = "CLOSED"
 require conf/license/license-close.inc
 
 S = "${UNPACKDIR}/lib"

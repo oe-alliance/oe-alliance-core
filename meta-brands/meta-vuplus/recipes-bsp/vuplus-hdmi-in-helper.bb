@@ -1,6 +1,5 @@
 SUMMARY = "vuplus-hdmi-in-helper"
 PRIORITY = "required"
-LICENSE = "CLOSED"
 require conf/license/license-close.inc
 
 PV = "1.0"

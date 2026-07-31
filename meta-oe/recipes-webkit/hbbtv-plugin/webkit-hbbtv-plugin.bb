@@ -1,7 +1,6 @@
 DESCRIPTION = "E2 Webkit HbbTV Plugin"
 SECTION = "base"
 PRIORITY = "required"
-LICENSE = "CLOSED"
 require conf/license/license-close.inc
 
 RDEPENDS:${PN} = "\

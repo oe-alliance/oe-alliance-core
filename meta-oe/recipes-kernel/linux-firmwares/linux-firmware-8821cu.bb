@@ -1,6 +1,5 @@
 SUMMARY = "Realtek 8821CU firmware"
 HOMEPAGE = "https://www.realtek.com/"
-LICENSE = "CLOSED"
 require conf/license/license-close.inc
 
 SRCREV = "${AUTOREV}"

@@ -1,7 +1,7 @@
 SUMMARY = "Activate eth0 wol function"
 SECTION = "base"
 PRIORITY = "required"
-LICENSE = "CLOSED"
+require conf/license/license-close.inc
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PR = "r0"

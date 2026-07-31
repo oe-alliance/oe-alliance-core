@@ -5,7 +5,6 @@ RDEPENDS:${PN} = "ncurses"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-LICENSE = "CLOSED"
 require conf/license/license-close.inc
 
 PACKAGES = "ceryon-blindscan-dvbs-utils ceryon-blindscan-dvbc-utils"

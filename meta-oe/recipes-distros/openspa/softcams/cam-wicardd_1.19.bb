@@ -1,6 +1,5 @@
 SUMMARY:${PN} = "wicardd ${PKGV}"
 DESCRIPTION:${PN} = "An outdated binary only softcam"
-LICENSE = "CLOSED"
 require conf/license/license-close.inc
 
 PR = "r0"

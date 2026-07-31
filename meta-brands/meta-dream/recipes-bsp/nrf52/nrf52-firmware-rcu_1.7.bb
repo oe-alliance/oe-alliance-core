@@ -1,4 +1,4 @@
-LICENSE = "CLOSED"
+require conf/license/license-close.inc
 
 CURRENT_FW = "update_full20210715-1.7.zip"
 SRC_URI = " file://${CURRENT_FW}"

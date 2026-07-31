@@ -1,6 +1,5 @@
 SUMMARY = "Realtek Bluetooth USB driver"
 HOMEPAGE = "https://www.realtek.com/"
-LICENSE = "CLOSED"
 require conf/license/license-close.inc
 
 inherit module

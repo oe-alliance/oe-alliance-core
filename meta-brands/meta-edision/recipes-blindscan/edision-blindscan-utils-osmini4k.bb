@@ -7,7 +7,6 @@ COMPATIBLE_MACHINE = "osmini4k"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-LICENSE = "CLOSED"
 require conf/license/license-close.inc
 
 PACKAGES = "edision-blindscan-dvbs-utils-osmini4k edision-blindscan-dvbc-utils-osmini4k"

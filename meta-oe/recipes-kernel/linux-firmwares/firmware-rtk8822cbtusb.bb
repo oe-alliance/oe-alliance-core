@@ -1,4 +1,3 @@
-LICENSE = "CLOSED"
 require conf/license/license-close.inc
 SRC_URI = "file://rtk8822cbtusb.zip"
 

@@ -1,7 +1,7 @@
 DESCRIPTION = "Utils for blindscan"
 SECTION = "base"
 PRIORITY = "optional"
-LICENSE = "CLOSED"
+require conf/license/license-close.inc
 PACKAGE_ARCH := "${MACHINE_ARCH}"
 
 PV = "1.0"

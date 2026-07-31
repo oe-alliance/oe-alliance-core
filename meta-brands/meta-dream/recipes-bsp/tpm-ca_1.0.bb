@@ -1,6 +1,6 @@
 SUMMARY = "Shows some properties of the TPM configuration area"
 SECTION = "console/utils"
-LICENSE = "CLOSED"
+require conf/license/license-close.inc
 
 DEPENDS = "tpmd"
 

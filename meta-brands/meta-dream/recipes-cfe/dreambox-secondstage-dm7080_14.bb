@@ -1,6 +1,5 @@
 SUMMARY = "Dreambox second stage bootloader"
 SECTION = "base"
-LICENSE = "CLOSED"
 PRIORITY = "required"
 PROVIDES = "virtual/bootloader"
 RPROVIDES:${PN} += "dreambox-secondstage"

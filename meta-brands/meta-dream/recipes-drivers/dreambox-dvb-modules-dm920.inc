@@ -1,6 +1,5 @@
 SUMMARY = "Hardware drivers for Dreambox"
 SECTION = "base"
-LICENSE = "CLOSED"
 PRIORITY = "required"
 INC_PR = "r0"
 require conf/license/license-close.inc

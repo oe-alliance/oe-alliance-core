@@ -1,6 +1,5 @@
 SUMMARY = "GigaBlue software wol"
 MAINTAINER = "GigaBlue"
-LICENSE = "CLOSED"
 require conf/license/license-close.inc
 
 PV = "1.0"

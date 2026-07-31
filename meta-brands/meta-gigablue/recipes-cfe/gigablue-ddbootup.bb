@@ -1,7 +1,6 @@
 SUMMARY = "ddbootup for ${MACHINEBUILD}"
 SECTION = "base"
 PRIORITY = "required"
-LICENSE = "CLOSED"
 require conf/license/license-close.inc
 PACKAGE_ARCH = "${MACHINEBUILD}"
 

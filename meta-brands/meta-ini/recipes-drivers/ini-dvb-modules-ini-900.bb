@@ -1,7 +1,6 @@
 SUMMARY = "Hardware drivers for ${MACHINEBUILD}"
 SECTION = "base"
 PRIORITY = "required"
-LICENSE = "CLOSED"
 PACKAGE_ARCH = "${MACHINEBUILD}"
 require conf/license/license-close.inc
 

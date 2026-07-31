@@ -1,5 +1,4 @@
 SUMMARY = "Firmware files for uwe5621"
-LICENSE = "CLOSED"
 require conf/license/license-close.inc
 inherit allarch
 

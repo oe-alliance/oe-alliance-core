@@ -4,7 +4,6 @@ DESCRIPTION:${PN} = "An outdated binary only softcam"
 
 PR = "r1-de"
 
-LICENSE = "CLOSED"
 require conf/license/license-close.inc
 
 FILESEXTRAPATHS:prepend := "${THISDIR}/enigma2-plugin-softcams-cccam:"

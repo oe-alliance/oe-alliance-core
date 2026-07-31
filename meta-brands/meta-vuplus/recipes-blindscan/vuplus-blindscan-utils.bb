@@ -5,7 +5,6 @@ RDEPENDS:${PN} = "ncurses"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-LICENSE = "CLOSED"
 require conf/license/license-close.inc
 
 PACKAGES = "vuplus-blindscan-dvbs-utils vuplus-blindscan-dvbc-utils \

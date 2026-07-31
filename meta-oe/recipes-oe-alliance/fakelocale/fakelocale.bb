@@ -1,5 +1,4 @@
 SUMMARY = "LC_TIME locale support"
-LICENSE = "CLOSED"
 SECTION = "base"
 PRIORITY = "required"
 MAINTAINER = "OpenPli team"

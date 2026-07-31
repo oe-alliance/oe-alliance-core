@@ -1,6 +1,6 @@
 SUMMARY = "Realtek 8723B firmware"
 HOMEPAGE = "https://www.realtek.com/"
-LICENSE = "CLOSED"
+require conf/license/license-close.inc
 
 SRC_URI = "git://github.com/edision-open/linux-firmware.git;branch=master;protocol=https"
 

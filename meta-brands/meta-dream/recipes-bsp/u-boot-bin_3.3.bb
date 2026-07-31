@@ -1,6 +1,5 @@
 SUMMARY = "dreambox u-boot-bin"
 SECTION = "base"
-LICENSE = "CLOSED"
 require conf/license/license-close.inc
 PR = "r1"
 

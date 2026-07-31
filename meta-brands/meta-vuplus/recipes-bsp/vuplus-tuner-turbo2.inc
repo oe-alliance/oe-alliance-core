@@ -1,6 +1,6 @@
 SUMMARY = "Hardware drivers and blindscan util for Vuplus Tuner Turbo2"
 SECTION = "base"
-LICENSE = "CLOSED"
+require conf/license/license-close.inc
 PACKAGE_ARCH := "${MACHINE_ARCH}"
 
 SRCDATE = "20201207"

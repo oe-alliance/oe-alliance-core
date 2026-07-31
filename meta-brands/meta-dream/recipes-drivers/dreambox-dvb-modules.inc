@@ -1,6 +1,5 @@
 SUMMARY = "Hardware drivers for Dreambox"
 SECTION = "base"
-LICENSE = "CLOSED"
 DEPENDS = "virtual/kernel ${MLPREFIX}gcc-cross-${TARGET_ARCH}"
 PRIORITY = "required"
 INC_PR = "r8"

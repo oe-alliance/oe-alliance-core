@@ -1,6 +1,5 @@
 SUMMARY:${PN} = "cccam-config"
 DESCRIPTION:${PN} = "Example CCcam.cfg file"
-LICENSE = "CLOSED"
 require conf/license/license-close.inc
 
 PR = "r1"

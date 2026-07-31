@@ -1,7 +1,7 @@
 SUMMARY = "Hardware drivers for Beyonwiz T2"
 SECTION = "base"
 PRIORITY = "required"
-LICENSE = "CLOSED"
+require conf/license/license-close.inc
 PACKAGE_ARCH = "${MACHINEBUILD}"
 
 KV = "3.14.2"

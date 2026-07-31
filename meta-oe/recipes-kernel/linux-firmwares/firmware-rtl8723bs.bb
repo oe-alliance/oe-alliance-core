@@ -1,4 +1,3 @@
-LICENSE = "CLOSED"
 require conf/license/license-close.inc
 SRC_URI = "file://firmware_rtlwifi.zip"
 

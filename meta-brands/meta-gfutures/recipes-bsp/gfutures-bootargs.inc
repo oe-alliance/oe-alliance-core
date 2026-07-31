@@ -1,7 +1,7 @@
 SUMMARY = "${MACHINE} partitions bootargs files"
 SECTION = "base"
 PRIORITY = "required"
-LICENSE = "CLOSED"
+require conf/license/license-close.inc
 PR = "${SRCDATE}"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 

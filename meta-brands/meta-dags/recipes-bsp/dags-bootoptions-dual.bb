@@ -1,5 +1,4 @@
 SUMMARY = "Multiboot for Hisilicon ${MACHINEBUILD}"
-LICENSE = "CLOSED"
 PRIORITY = "required"
 SECTION = "base"
 PACKAGE_ARCH = "${MACHINEBUILD}"
