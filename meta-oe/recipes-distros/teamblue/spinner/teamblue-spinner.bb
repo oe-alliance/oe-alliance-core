@@ -1,7 +1,7 @@
 DESCRIPTION = "teamblue-spinner"
 MAINTAINER = "teamBlue Team"
 SECTION = "base"
-LICENSE = "proprietary"
+LICENSE = "LicenseRef-proprietary"
 inherit allarch
 
 require conf/license/license-gplv2.inc

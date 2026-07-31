@@ -3,7 +3,7 @@
 SUMMARY = "Grab LCN bouquets from the DVB stream."
 DESCRIPTION = "Simple tool to grab and inspect LCN bouquets available on the DVB stream."
 MAINTAINER = "Huevos"
-LICENSE = "Proprietary"
+LICENSE = "LicenseRef-Proprietary"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=84dcc94da3adb52b53ae4fa38fe49e5d"
 require conf/python/python3-compileall.inc
 

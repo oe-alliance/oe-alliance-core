@@ -2,7 +2,7 @@ SUMMARY = "Poster-for-PLi-HD-FullNight - Mod by stein17"
 MAINTAINER = "stein17"
 SECTION = "base"
 PRIORITY = "required"
-LICENSE = "proprietary"
+LICENSE = "LicenseRef-proprietary"
 
 require conf/license/license-gplv2.inc
 

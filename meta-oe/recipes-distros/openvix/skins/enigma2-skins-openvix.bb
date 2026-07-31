@@ -3,7 +3,7 @@ MAINTAINER = "openvix"
 PACKAGES = "${PN} ${PN}-meta"
 PACKAGES_DYNAMIC = "enigma2-plugin-skins-openvix-*"
 
-LICENSE = "Proprietary"
+LICENSE = "LicenseRef-Proprietary"
 LIC_FILES_CHKSUM = "file://README.md;startline=1;endline=6;md5=f9196ec9a7923f62b4ebd01baef09a1d"
 
 inherit gitpkgv

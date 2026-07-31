@@ -1,7 +1,7 @@
 SUMMARY = "swap workaround for box with low memory"
 MAINTAINER = "ATV Team"
 SECTION = "base"
-LICENSE = "proprietary"
+LICENSE = "LicenseRef-proprietary"
 inherit allarch
 
 require conf/license/license-gplv2.inc

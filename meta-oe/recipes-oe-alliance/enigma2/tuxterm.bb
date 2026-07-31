@@ -2,7 +2,7 @@ SUMMARY = "TuxTerm"
 MAINTAINER = "Sven Karschewski <seddi@i-have-a-dreambox.com>"
 DEPENDS = "freetype"
 
-LICENSE = "PD"
+LICENSE = "LicenseRef-PD"
 LIC_FILES_CHKSUM = "file://COPYING;md5=7968df00b3e6be507316ed9cfc8be290"
 
 PN = "tuxterm"

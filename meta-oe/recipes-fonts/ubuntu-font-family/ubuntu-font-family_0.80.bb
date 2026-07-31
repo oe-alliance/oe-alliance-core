@@ -1,6 +1,6 @@
 SUMMARY = "The Ubuntu Font Family"
 HOMEPAGE = "http://font.ubuntu.com"
-LICENSE = "Ubuntu-Font-1.0"
+LICENSE = "Ubuntu-font-1.0"
 LIC_FILES_CHKSUM = "file://LICENCE.txt;md5=325a1a9029112a2405e743c7f816427b"
 
 SRC_URI = "http://font.ubuntu.com/download/${BPN}-${PV}.zip"

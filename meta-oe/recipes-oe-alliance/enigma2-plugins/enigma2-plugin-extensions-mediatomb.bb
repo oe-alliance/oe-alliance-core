@@ -1,6 +1,6 @@
 SUMMARY = "UPnP media server"
 RDEPENDS:${PN} = "mediatomb expat ffmpeg sqlite3 libexif js zlib file id3lib curl"
-LICENSE = "proprietary"
+LICENSE = "LicenseRef-proprietary"
 
 require conf/license/license-gplv2.inc
 

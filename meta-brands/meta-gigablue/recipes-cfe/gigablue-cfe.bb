@@ -1,7 +1,7 @@
 SUMMARY = "GigaBlue CFE AddOn"
 SECTION = "base"
 PRIORITY = "required"
-LICENSE = "proprietary"
+LICENSE = "LicenseRef-proprietary"
 MAINTAINER = "Gigablue"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 

@@ -2,7 +2,7 @@ SUMMARY = "2nd bootloader support"
 SECTION = "base"
 PRIORITY = "required"
 MAINTAINER = "Gigablue"
-LICENSE = "proprietary"
+LICENSE = "LicenseRef-proprietary"
 PACKAGE_ARCH := "${MACHINEBUILD}"
 
 require conf/license/license-gplv2.inc

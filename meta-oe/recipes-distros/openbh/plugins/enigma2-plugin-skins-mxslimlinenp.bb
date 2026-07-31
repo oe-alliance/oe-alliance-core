@@ -2,7 +2,7 @@ SUMMARY = "Enigma2 Skin MX_Slim-Line_NP"
 MAINTAINER = "OpenBh Team"
 SECTION = "base"
 PRIORITY = "required"
-LICENSE = "proprietary"
+LICENSE = "LicenseRef-proprietary"
 inherit allarch
 
 require conf/license/license-gplv2.inc

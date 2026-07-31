@@ -2,7 +2,7 @@ SUMMARY = "Firmware for QCA9377"
 inherit allarch
 
 LIC_FILES_CHKSUM = "file://LICENSE.qca_firmware;md5=2a397c0e988f4c52d3d526133b617c8d"
-LICENSE = "Proprietary"
+LICENSE = "LicenseRef-Proprietary"
 
 SRC_URI = "https://source.mynonpublic.com/xcore/firmware-qca9377-linux_linux_proprietary_firmware.zip"
 SRC_URI[md5sum] = "beb7ca4a7dd6ee268627b3feca71c8a8"

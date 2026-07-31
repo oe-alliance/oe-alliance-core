@@ -2,7 +2,7 @@ SUMMARY = "Enigma2 Skin Metrix HD"
 MAINTAINER = "https://opena.tv"
 SECTION = "base"
 PRIORITY = "required"
-LICENSE = "proprietary"
+LICENSE = "LicenseRef-proprietary"
 
 require conf/license/license-gplv2.inc
 require conf/python/python3-compileall.inc

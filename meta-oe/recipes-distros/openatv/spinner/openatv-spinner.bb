@@ -1,7 +1,7 @@
 SUMMARY = "openatv-spinner"
 MAINTAINER = "ATV Team"
 SECTION = "base"
-LICENSE = "proprietary"
+LICENSE = "LicenseRef-proprietary"
 inherit allarch
 
 require conf/license/license-gplv2.inc

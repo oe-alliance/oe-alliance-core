@@ -1,7 +1,7 @@
 SUMMARY = "Image identifier to help multiboot"
 SECTION = "base"
 PRIORITY = "required"
-LICENSE = "proprietary"
+LICENSE = "LicenseRef-proprietary"
 MAINTAINER = "oe-alliance team"
 
 require conf/license/license-gplv2.inc

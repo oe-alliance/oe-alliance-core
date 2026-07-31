@@ -1,7 +1,7 @@
 SUMMARY = "OpenATV version info"
 SECTION = "base"
 PRIORITY = "required"
-LICENSE = "proprietary"
+LICENSE = "LicenseRef-proprietary"
 MAINTAINER = "OpenATV"
 
 require conf/license/license-gplv2.inc

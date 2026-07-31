@@ -1,7 +1,7 @@
 SUMMARY = "teamBlue version info"
 SECTION = "base"
 PRIORITY = "required"
-LICENSE = "proprietary"
+LICENSE = "LicenseRef-proprietary"
 MAINTAINER = "teamBlue"
 
 require conf/license/license-gplv2.inc

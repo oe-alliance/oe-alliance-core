@@ -1,5 +1,5 @@
 SUMMARY = "PNG Assistant"
-LICENSE = "proprietary"
+LICENSE = "LicenseRef-proprietary"
 require conf/license/license-gplv2.inc
 
 DEPENDS = "swig-native libpng python3"

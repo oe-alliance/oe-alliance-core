@@ -2,7 +2,7 @@ SUMMARY = "MediaPlayer 2 for Enigma2"
 DESCRIPTION = "mediaplayer plugin with added support for subssupport plugin for enhanced subtitles support."
 HOMEPAGE = "https://github.com/oe-mirrors/mediaplayer2.git"
 AUTHOR = "Maroš Ondrášek <mx3ldev@gmail.com> and OE-A"
-LICENSE = "Proprietary"
+LICENSE = "LicenseRef-Proprietary"
 require conf/license/license-gplv2.inc
 require conf/python/python3-compileall.inc
 

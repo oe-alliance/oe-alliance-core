@@ -1,7 +1,7 @@
 SUMMARY = "3rd Party plugins for Enigma2"
 MAINTAINER = "oe-alliance team"
 
-LICENSE = "Proprietary"
+LICENSE = "LicenseRef-Proprietary"
 LIC_FILES_CHKSUM = "file://COPYING;md5=8e37f34d0e40d32ea2bc90ee812c9131"
 
 inherit gitpkgv deploy

@@ -1,7 +1,7 @@
 SUMMARY = "OpenSPA version info"
 SECTION = "base"
 PRIORITY = "required"
-LICENSE = "proprietary"
+LICENSE = "LicenseRef-proprietary"
 MAINTAINER = "OpenSPA Team"
 
 

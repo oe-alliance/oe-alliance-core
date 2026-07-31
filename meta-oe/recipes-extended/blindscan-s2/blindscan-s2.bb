@@ -1,7 +1,7 @@
 SUMMARY = "Blindscan dvb-s(2) satellites using stv090x devices"
 SECTION = "base"
 PRIORITY = "optional"
-LICENSE = "PD"
+LICENSE = "LicenseRef-PD"
 LIC_FILES_CHKSUM = "file://README.md;md5=f084bf390249474bef1b8817e83757fa"
 
 SRC_URI = "git://bitbucket.org/majortom/blindscan-s2.git;protocol=http;branch=master \

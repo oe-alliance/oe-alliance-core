@@ -2,7 +2,7 @@ SUMMARY = "dBackup Plugin direct backup and Flashing"
 MAINTAINER = "gutemine <gutemine@oozoon.de>"
 SECTION = "base"
 PRIORITY = "required"
-LICENSE = "proprietary"
+LICENSE = "LicenseRef-proprietary"
 
 require conf/license/license-gplv2.inc
 

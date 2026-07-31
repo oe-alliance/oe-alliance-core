@@ -2,7 +2,7 @@ SUMMARY = "Enigma2 Skin ru_infinity HD"
 MAINTAINER = "openmips"
 SECTION = "base"
 PRIORITY = "required"
-LICENSE = "proprietary"
+LICENSE = "LicenseRef-proprietary"
 inherit allarch
 
 require conf/license/license-gplv2.inc

@@ -1,6 +1,6 @@
 SUMMARY = "Dhrystone CPU benchmark"
 HOMEPAGE = "https://en.wikipedia.org/wiki/Dhrystone"
-LICENSE = "PD"
+LICENSE = "LicenseRef-PD"
 LIC_FILES_CHKSUM = "file://${COREBASE}/meta/files/common-licenses/PD;md5=b3597d12946881e13cb3b548d1173851"
 
 SRC_URI[sha256sum] = "427bd0b580d06bc06cf1713e560384cf6b45a7e9b3d9dcd783cda04ac48eb0fd"

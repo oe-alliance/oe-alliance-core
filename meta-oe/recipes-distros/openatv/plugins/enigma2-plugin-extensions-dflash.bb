@@ -2,7 +2,7 @@ SUMMARY = "direct Flashing and Backup for Enigma2"
 MAINTAINER = "gutemine <gutemine@oozoon.de>"
 SECTION = "base"
 PRIORITY = "required"
-LICENSE = "proprietary"
+LICENSE = "LicenseRef-proprietary"
 
 RDEPENDS:${PN} = "dreambox-buildimage"
 

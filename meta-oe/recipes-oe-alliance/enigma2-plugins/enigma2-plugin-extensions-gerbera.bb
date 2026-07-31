@@ -1,6 +1,6 @@
 SUMMARY = "Gerbera - UPnP Media Server"
 RDEPENDS:${PN} = "gerbera"
-LICENSE = "proprietary"
+LICENSE = "LicenseRef-proprietary"
 
 require conf/license/license-gplv2.inc
 

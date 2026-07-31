@@ -1,7 +1,7 @@
 SUMMARY = "Script for automating key generation in OpenVPN"
 MAINTAINER = "OpenSPA"
 SECTION = "base"
-LICENSE = "proprietary"
+LICENSE = "LicenseRef-proprietary"
 
 inherit allarch
 
