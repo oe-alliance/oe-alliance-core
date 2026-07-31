@@ -1,6 +1,5 @@
 SUMMARY = "Simple user interface for Dreambox rescue mode"
 HOMEPAGE = "http://dreamboxupdate.com/"
-require conf/license/license-close.inc
 DEPENDS = "libmnl xz libnexus-ui"
 PROVIDES = "recovery-ui"
 

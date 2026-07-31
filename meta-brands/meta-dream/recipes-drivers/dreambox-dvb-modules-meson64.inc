@@ -1,6 +1,5 @@
 SUMMARY = "Hardware drivers for Dreambox"
 SECTION = "base"
-require conf/license/license-close.inc
 DEPENDS += "virtual/kernel"
 PRIORITY = "required"
 

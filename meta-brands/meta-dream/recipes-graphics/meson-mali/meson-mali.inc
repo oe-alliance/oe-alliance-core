@@ -1,5 +1,4 @@
 SUMMARY = "amlogic mali opengl provider"
-require conf/license/license-close.inc
 PROVIDES = "virtual/egl virtual/libgles2"
 
 RRECOMMENDS:${PN} = "${PN}-module-bifrost-r12p0"
