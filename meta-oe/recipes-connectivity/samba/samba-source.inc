@@ -1,4 +1,4 @@
-PV = "4.24.2"
+PV = "4.24.5"
 HOMEPAGE = "https://www.samba.org/"
 SECTION = "console/network"
 
@@ -70,5 +70,5 @@ SRC_URI:append:openspa = " \
            file://smb-local.conf \
           "
 
-SRC_URI[sha256sum] = "ac24583f271a82ac324f7c6fad7327f65b591ad3492e1dccfee988e2c1c81dd1"
+SRC_URI[sha256sum] = "6d5d7ee82f5ce9da4135086c9b184e47a58b4b023565f58abbb1f8c8a922306b"
 UPSTREAM_CHECK_REGEX = "samba\-(?P<pver>4\.24(\.\d+)+).tar.gz"
