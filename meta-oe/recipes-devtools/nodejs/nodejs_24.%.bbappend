@@ -1,6 +1,5 @@
 FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
-SRC_URI += "file://gyp-add-link-settings-to-non-config-keys.patch \
-            file://v8-int64-lowering-gcc16-template.patch"
+SRC_URI += "file://gyp-add-link-settings-to-non-config-keys.patch"
 
 # ARMv7/NEON fix
 CFLAGS:append:arm = " -flax-vector-conversions"
