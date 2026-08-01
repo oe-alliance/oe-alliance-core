@@ -19,6 +19,6 @@ PACKAGECONFIG:append = " \
 
 PACKAGECONFIG:remove = "rsvg openssl"
 
-PV = "1.28.4"
+PV = "1.28.5"
  
-SRC_URI[sha256sum] = "332b7320f30c60f2d5941446d03b9d05e3781f2c2561befbe88718bd777f0e47"
+SRC_URI[sha256sum] = "d8af55faef2958c1a8663751475ee46f5164877cf4d8c5913ea906ef180aeb71"
