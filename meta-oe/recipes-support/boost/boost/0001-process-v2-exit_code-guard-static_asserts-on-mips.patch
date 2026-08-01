@@ -1,0 +1,53 @@
+From: WXbet <57314510+WXbet@users.noreply.github.com>
+Subject: [PATCH] process/v2/exit_code: guard static_asserts on MIPS
+
+boost/process/v2/exit_code.hpp guards its still_active constant with
+four static_assert calls on WIFSTOPPED / WIFEXITED / WIFSIGNALED /
+WIFCONTINUED. These fail to compile on MIPS with
+
+  error: non-constant condition for static assertion
+  error: call to non-'constexpr' function 'int __WIFSTOPPED(int)'
+
+whenever env.cpp (or any other TU pulling exit_code.hpp) is compiled.
+
+Root cause: glibc 2.44 added a MIPS-specific
+sysdeps/unix/sysv/linux/mips/bits/waitstatus.h (introduced by commit
+c19cdbf66ff62a4578ac2117d43ebb306ae36aeb, prior releases used the
+generic macro-based header on MIPS as well). The new file defines
+__WIFSTOPPED and __WIFSIGNALED as `static inline int` functions rather
+than macros so that MIPS's SIGRTMAX=127 special-case (status 0x7f)
+can be handled correctly. Those inline functions are not constexpr,
+so the static_asserts cannot evaluate them.
+
+The asserts are compile-time sanity checks on Boost's own still_active
+constant (0x17f); the semantics on MIPS are unchanged (WIFSTOPPED
+returns true, the other three return false, as intended). Guard the
+block with `#ifndef __mips__` so the checks keep firing on every port
+where they can, and are skipped only on the arch where glibc has
+implemented the underlying primitives as inline functions.
+
+Upstream-Status: Submitted [https://github.com/boostorg/process/pull/565]
+
+Signed-off-by: WXbet <57314510+WXbet@users.noreply.github.com>
+
+--- a/boost/process/v2/exit_code.hpp	2026-08-01 12:33:51.628201500 +0200
++++ b/boost/process/v2/exit_code.hpp	2026-08-01 14:26:21.823659200 +0200
+@@ -73,10 +73,18 @@
+ namespace detail
+ {
+ constexpr native_exit_code_type still_active = 0x17f;
++// glibc 2.44 introduced sysdeps/unix/sysv/linux/mips/bits/waitstatus.h
++// which defines WIFSTOPPED and WIFSIGNALED as non-constexpr `static
++// inline int` functions instead of macros, so that MIPS's SIGRTMAX=127
++// special-case (status 0x7f) can be handled. Earlier glibc used the
++// generic macro-based header on MIPS too. Skip the compile-time
++// sanity checks on the one arch where they can no longer compile.
++#ifndef __mips__
+ static_assert(WIFSTOPPED(still_active), "Expected still_active to indicate WIFSTOPPED");
+ static_assert(!WIFEXITED(still_active), "Expected still_active to not indicate WIFEXITED");
+ static_assert(!WIFSIGNALED(still_active), "Expected still_active to not indicate WIFSIGNALED");
+ static_assert(!WIFCONTINUED(still_active), "Expected still_active to not indicate WIFCONTINUED");
++#endif
+ }
+ 
+ inline bool process_is_running(int code)
