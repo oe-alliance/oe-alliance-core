@@ -3,7 +3,7 @@ SUMMARY:${PN} = "OSCam-emu ${PKGV}"
 DESCRIPTION:${PN} = "OSCam Open Source Softcam\n \
 - with emu support"
 
-SRC_URI = "gitsm://github.com/oscam-mirror/oscam-emu.git;protocol=https;branch=master"
+SRC_URI += "gitsm://github.com/oscam-mirror/oscam-emu.git;protocol=https;branch=master"
 
 CAMNAME = "oscam-emu"
 

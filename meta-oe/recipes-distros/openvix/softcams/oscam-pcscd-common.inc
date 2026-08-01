@@ -20,7 +20,6 @@ PACKAGE_ARCH = "${TUNE_PKGARCH}"
 
 DEPENDS += "libusb openssl pcsc-lite libdvbcsa"
 RDEPENDS:${PN} += "libdvbcsa libusb1"
-# RDEPENDS:enigma2-plugin-softcams-oscam-pcscd = "pcsc-lite"
 
 LDFLAGS:prepend = "-ldvbcsa "
 
