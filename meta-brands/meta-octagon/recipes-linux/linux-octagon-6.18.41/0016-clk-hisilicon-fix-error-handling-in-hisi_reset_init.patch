@@ -1,0 +1,63 @@
+From c06bf29b2e6ae9accc8ea15cdb6a6ba2365453a7 Mon Sep 17 00:00:00 2001
+From: Tillmann Severin <tillmann.severin@mailbox.org>
+Date: Sat, 1 Aug 2026 23:12:34 +0200
+Subject: [PATCH 16/22] clk: hisilicon: fix error handling in hisi_reset_init()
+
+hisi_reset_init() allocates the controller with devm_kmalloc(), which
+does not zero the allocation, and then ignores the return value of
+reset_controller_register().
+
+reset_controller_register() rejects a controller that has both of_node
+and of_args set:
+
+	if (rcdev->of_node && rcdev->of_args)
+		return -EINVAL;
+
+Since of_args is left holding whatever happened to be on the heap, the
+registration can fail.  The failure goes unnoticed, hisi_reset_init()
+returns a seemingly valid pointer, and rcdev.list is never initialised
+by the list_add() in reset_controller_register().
+
+If the caller then unwinds - as the CRG drivers do when register_clks()
+fails - hisi_reset_exit() calls reset_controller_unregister(), which
+does a list_del() on that uninitialised list head and dereferences
+garbage:
+
+  Unable to handle kernel paging request at virtual address 0001ac7c
+  PC is at reset_controller_unregister+0x24/0x48
+  reset_controller_unregister from hi3798mv200_crg_probe+0x88/0x98
+
+Use devm_kzalloc() so the whole controller starts out zeroed, and
+propagate a registration failure to the caller.
+
+Fixes: 25824d52caa8 ("reset: hisilicon: add reset controller driver for hisilicon SOCs")
+---
+ drivers/clk/hisilicon/reset.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/clk/hisilicon/reset.c b/drivers/clk/hisilicon/reset.c
+index 93cee17db8b1..90d9eb372cbe 100644
+--- a/drivers/clk/hisilicon/reset.c
++++ b/drivers/clk/hisilicon/reset.c
+@@ -91,7 +91,7 @@ struct hisi_reset_controller *hisi_reset_init(struct platform_device *pdev)
+ {
+ 	struct hisi_reset_controller *rstc;
+ 
+-	rstc = devm_kmalloc(&pdev->dev, sizeof(*rstc), GFP_KERNEL);
++	rstc = devm_kzalloc(&pdev->dev, sizeof(*rstc), GFP_KERNEL);
+ 	if (!rstc)
+ 		return NULL;
+ 
+@@ -105,7 +105,8 @@ struct hisi_reset_controller *hisi_reset_init(struct platform_device *pdev)
+ 	rstc->rcdev.of_node = pdev->dev.of_node;
+ 	rstc->rcdev.of_reset_n_cells = 2;
+ 	rstc->rcdev.of_xlate = hisi_reset_of_xlate;
+-	reset_controller_register(&rstc->rcdev);
++	if (reset_controller_register(&rstc->rcdev))
++		return NULL;
+ 
+ 	return rstc;
+ }
+-- 
+2.56.0
+

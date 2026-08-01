@@ -1,0 +1,32 @@
+From 717eee97a570dee619239c6b41c5152e118f1a85 Mon Sep 17 00:00:00 2001
+From: Tillmann Severin <tillmann.severin@mailbox.org>
+Date: Sat, 19 Sep 2026 11:26:31 +0200
+Subject: [PATCH 21/22] phy: hisi-inno-usb2: wait long enough for the UTMI
+ reset
+
+UTMI_RST_COMPLETE_TIME is documented as a millisecond value but is
+passed to udelay(), so the driver only waits 2us instead of the 2ms the
+PHY needs for its compensation circuit to settle after the port reset
+has been released.  Use msleep() to wait for the documented time.
+
+Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>
+---
+ drivers/phy/hisilicon/phy-hisi-inno-usb2.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/phy/hisilicon/phy-hisi-inno-usb2.c b/drivers/phy/hisilicon/phy-hisi-inno-usb2.c
+index 71917f88aa55..6dd60458d334 100644
+--- a/drivers/phy/hisilicon/phy-hisi-inno-usb2.c
++++ b/drivers/phy/hisilicon/phy-hisi-inno-usb2.c
+@@ -175,7 +175,7 @@ static int hisi_inno_phy_init(struct phy *phy)
+ 	hisi_inno_phy_setup(priv);
+ 
+ 	reset_control_deassert(port->utmi_rst);
+-	udelay(UTMI_RST_COMPLETE_TIME);
++	msleep(UTMI_RST_COMPLETE_TIME);
+ 
+ 	return 0;
+ }
+-- 
+2.56.0
+

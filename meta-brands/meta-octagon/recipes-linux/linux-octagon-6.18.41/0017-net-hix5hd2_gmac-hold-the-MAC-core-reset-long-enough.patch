@@ -1,0 +1,59 @@
+From 6db59f768d8e555de6a11d37299e1b21c974ba8d Mon Sep 17 00:00:00 2001
+From: Tillmann Severin <tillmann.severin@mailbox.org>
+Date: Sun, 2 Aug 2026 01:26:48 +0200
+Subject: [PATCH 17/22] net: hix5hd2_gmac: hold the MAC core reset long enough
+
+hix5hd2_mac_core_reset() asserts and immediately deasserts the MAC core
+reset.  Both operations are a single read-modify-write of one CRG
+register, so the reset is only held for the handful of cycles between
+the two stores.
+
+On the Hi3798MV200 that pulse is too short for the MAC to act on.  The
+core comes up in an undefined state and its MDIO block never drives the
+bus, so every management read returns all ones and no PHY is ever
+discovered:
+
+  mdio_bus f9840000.ethernet-mii: MDIO device at address 3 is missing.
+
+Follow the reset sequence the vendor driver uses: start from a known
+deasserted state, then hold the reset asserted for 50us before releasing
+it again.  The extra 100us only happens once per probe.
+
+Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>
+---
+ drivers/net/ethernet/hisilicon/hix5hd2_gmac.c | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/net/ethernet/hisilicon/hix5hd2_gmac.c b/drivers/net/ethernet/hisilicon/hix5hd2_gmac.c
+index 0665f1cd9da3..89ab8dfe128d 100644
+--- a/drivers/net/ethernet/hisilicon/hix5hd2_gmac.c
++++ b/drivers/net/ethernet/hisilicon/hix5hd2_gmac.c
+@@ -1050,12 +1050,24 @@ static void hix5hd2_destroy_sg_desc_queue(struct hix5hd2_priv *priv)
+ 	}
+ }
+ 
+-static inline void hix5hd2_mac_core_reset(struct hix5hd2_priv *priv)
++static void hix5hd2_mac_core_reset(struct hix5hd2_priv *priv)
+ {
+ 	if (!priv->mac_core_rst)
+ 		return;
+ 
++	/*
++	 * Start from a known deasserted state and hold the reset long
++	 * enough for it to take effect.  Asserting and deasserting back
++	 * to back only produces a pulse a few register writes wide, which
++	 * is too short for the MAC to act on, and leaves its MDIO block
++	 * wedged so that every read returns all ones.
++	 */
++	reset_control_deassert(priv->mac_core_rst);
++	usleep_range(50, 60);
++
+ 	reset_control_assert(priv->mac_core_rst);
++	usleep_range(50, 60);
++
+ 	reset_control_deassert(priv->mac_core_rst);
+ }
+ 
+-- 
+2.56.0
+

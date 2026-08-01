@@ -1,0 +1,40 @@
+From c2d8d5987d5254b7d755bbb03a989ec92c99e2be Mon Sep 17 00:00:00 2001
+From: Tillmann Severin <tillmann.severin@mailbox.org>
+Date: Sat, 1 Aug 2026 15:17:30 +0200
+Subject: [PATCH 03/22] net: hix5hd2_gmac: accept the RGMII internal delay
+ modes
+
+hix5hd2_set_desc_depth()'s caller configures the MAC interface from
+priv->phy_mode, but the switch statement only ever matched
+PHY_INTERFACE_MODE_RGMII.  A board that describes its link as
+"rgmii-id", "rgmii-rxid" or "rgmii-txid" therefore fell through to the
+default case, was rejected as "not supported mode" and got configured
+for MII at 10 Mbit/s instead of RGMII.
+
+The *-id variants only tell the PHY driver to enable its internal RX
+and/or TX delay lines; from the MAC's point of view they are plain
+RGMII and need exactly the same configuration.  Let them share the
+RGMII case.
+
+Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>
+---
+ drivers/net/ethernet/hisilicon/hix5hd2_gmac.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/drivers/net/ethernet/hisilicon/hix5hd2_gmac.c b/drivers/net/ethernet/hisilicon/hix5hd2_gmac.c
+index e3e7f2270560..0665f1cd9da3 100644
+--- a/drivers/net/ethernet/hisilicon/hix5hd2_gmac.c
++++ b/drivers/net/ethernet/hisilicon/hix5hd2_gmac.c
+@@ -292,6 +292,9 @@ static void hix5hd2_config_port(struct net_device *dev, u32 speed, u32 duplex)
+ 
+ 	switch (priv->phy_mode) {
+ 	case PHY_INTERFACE_MODE_RGMII:
++	case PHY_INTERFACE_MODE_RGMII_ID:
++	case PHY_INTERFACE_MODE_RGMII_RXID:
++	case PHY_INTERFACE_MODE_RGMII_TXID:
+ 		if (speed == SPEED_1000)
+ 			val = RGMII_SPEED_1000;
+ 		else if (speed == SPEED_100)
+-- 
+2.56.0
+

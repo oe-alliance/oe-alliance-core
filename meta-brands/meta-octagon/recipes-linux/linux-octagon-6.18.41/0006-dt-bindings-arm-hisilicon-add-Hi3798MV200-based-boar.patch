@@ -1,0 +1,33 @@
+From 9fb25dc3178d168fa235486deadf204b63f60ad6 Mon Sep 17 00:00:00 2001
+From: Tillmann Severin <tillmann.severin@mailbox.org>
+Date: Sat, 1 Aug 2026 15:29:01 +0200
+Subject: [PATCH 06/22] dt-bindings: arm: hisilicon: add Hi3798MV200 based
+ boards
+
+Add the root compatible for the Hi3798MV200 SoC and its first user, the
+Octagon SF8008 satellite receiver.
+
+Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>
+---
+ .../devicetree/bindings/arm/hisilicon/hisilicon.yaml         | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.yaml b/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.yaml
+index 540876322040..38ee16e2ebe5 100644
+--- a/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.yaml
++++ b/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.yaml
+@@ -30,6 +30,11 @@ properties:
+           - const: hisilicon,hi3798cv200-poplar
+           - const: hisilicon,hi3798cv200
+ 
++      - description: Hi3798mv200 based boards.
++        items:
++          - const: octagon,sf8008
++          - const: hisilicon,hi3798mv200
++
+       - description: Hi4511 Board
+         items:
+           - const: hisilicon,hi3620-hi4511
+-- 
+2.56.0
+

@@ -1,0 +1,178 @@
+From 91a6b46aee23e94671b8684f52d2e00ecf90d98e Mon Sep 17 00:00:00 2001
+From: Tillmann Severin <tillmann.severin@mailbox.org>
+Date: Sat, 19 Sep 2026 11:26:22 +0200
+Subject: [PATCH 20/22] phy: hisi-inno-usb2: add Hi3798MV200 support
+
+The Hi3798MV200 does not have the serial test interface the other SoCs
+use to get at the INNO PHY register file.  Its register file is mapped
+into the address space instead, one 32bit word per PHY register, with
+the second port at offset 0x400 from the first one.  Add a third PHY
+type for that access method.
+
+The register file is clocked by the test logic, so its reset has to be
+released before the first access and the clock has to be given time to
+settle afterwards.  The reset is optional so that the existing SoCs keep
+working unchanged.
+
+Apply the analogue trimming the vendor BSP programs on this SoC as well.
+Only the pre-emphasis, the disconnect detection threshold, the Rcomp DC
+level and the HS driver slew rate are touched; the PHY clock enable in
+register 0x06 is preserved.
+
+Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>
+---
+ drivers/phy/hisilicon/phy-hisi-inno-usb2.c | 80 +++++++++++++++++++++-
+ 1 file changed, 79 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/phy/hisilicon/phy-hisi-inno-usb2.c b/drivers/phy/hisilicon/phy-hisi-inno-usb2.c
+index c843923252aa..71917f88aa55 100644
+--- a/drivers/phy/hisilicon/phy-hisi-inno-usb2.c
++++ b/drivers/phy/hisilicon/phy-hisi-inno-usb2.c
+@@ -21,9 +21,20 @@
+ #define PHY_CLK_STABLE_TIME	2	/* unit:ms */
+ #define UTMI_RST_COMPLETE_TIME	2	/* unit:ms */
+ #define POR_RST_COMPLETE_TIME	300	/* unit:us */
++#define TEST_RST_COMPLETE_TIME	200	/* unit:us */
++#define PHY_WRITE_COMPLETE_TIME	20	/* unit:us */
+ 
+ #define PHY_TYPE_0	0
+ #define PHY_TYPE_1	1
++#define PHY_TYPE_2	2
++
++/*
++ * Type 2 does not have a test interface at all.  The PHY register file is
++ * mapped straight into the address space instead, one 32bit word per PHY
++ * register, with the second port at a fixed offset from the first one.
++ */
++#define PHY2_PORT_OFFSET	0x400
++#define PHY2_REG_SHIFT		2
+ 
+ #define PHY_TEST_DATA		GENMASK(7, 0)
+ #define PHY_TEST_ADDR_OFFSET	8
+@@ -51,10 +62,35 @@ struct hisi_inno_phy_priv {
+ 	void __iomem *mmio;
+ 	struct clk *ref_clk;
+ 	struct reset_control *por_rst;
++	struct reset_control *test_rst;
++	struct reset_control *test2_rst;
+ 	unsigned int type;
+ 	struct hisi_inno_phy_port ports[INNO_PHY_PORT_NUM];
+ };
+ 
++struct hisi_inno_phy_reg {
++	u8 port;
++	u8 addr;
++	u8 data;
++};
++
++/*
++ * Analogue trimming for the Hi3798MV200, taken from the vendor BSP.
++ * Register 0x00 turns the EOP pre-emphasis off and the data pre-emphasis
++ * on, 0x1e tunes the HS driver slew rate, 0x0a sets the disconnect
++ * detection threshold and {0x06[1:0], 0x05[7]} raises the Rcomp DC level.
++ * Bit 2 of register 0x06 is the PHY clock enable and has to stay set.
++ */
++static const struct hisi_inno_phy_reg hi3798mv200_phy_setup[] = {
++	{ 0, 0x00, 0x1c },
++	{ 0, 0x1e, 0x14 },
++	{ 0, 0x0a, 0x1b },
++	{ 0, 0x06, 0x07 },
++	{ 0, 0x05, 0x92 },
++	{ 1, 0x00, 0x1c },
++	{ 1, 0x0a, 0x1b },
++};
++
+ static void hisi_inno_phy_write_reg(struct hisi_inno_phy_priv *priv,
+ 				    u8 port, u32 addr, u32 data)
+ {
+@@ -62,6 +98,13 @@ static void hisi_inno_phy_write_reg(struct hisi_inno_phy_priv *priv,
+ 	u32 val;
+ 	u32 value;
+ 
++	if (priv->type == PHY_TYPE_2) {
++		writel(data, reg + port * PHY2_PORT_OFFSET +
++			     (addr << PHY2_REG_SHIFT));
++		udelay(PHY_WRITE_COMPLETE_TIME);
++		return;
++	}
++
+ 	if (priv->type == PHY_TYPE_0)
+ 		val = (data & PHY_TEST_DATA) |
+ 		      ((addr << PHY_TEST_ADDR_OFFSET) & PHY0_TEST_ADDR) |
+@@ -86,9 +129,28 @@ static void hisi_inno_phy_write_reg(struct hisi_inno_phy_priv *priv,
+ 
+ static void hisi_inno_phy_setup(struct hisi_inno_phy_priv *priv)
+ {
+-	/* The phy clk is controlled by the port0 register 0x06. */
++	unsigned int i;
++
++	if (priv->type != PHY_TYPE_2) {
++		/* The phy clk is controlled by the port0 register 0x06. */
++		hisi_inno_phy_write_reg(priv, 0, 0x06, PHY_CLK_ENABLE);
++		msleep(PHY_CLK_STABLE_TIME);
++		return;
++	}
++
++	/*
++	 * The PHY register file of type 2 is clocked by the test logic, so
++	 * give it time to settle once its reset has been released.
++	 */
++	msleep(TEST_CLK_STABLE_TIME);
++
+ 	hisi_inno_phy_write_reg(priv, 0, 0x06, PHY_CLK_ENABLE);
+ 	msleep(PHY_CLK_STABLE_TIME);
++
++	for (i = 0; i < ARRAY_SIZE(hi3798mv200_phy_setup); i++)
++		hisi_inno_phy_write_reg(priv, hi3798mv200_phy_setup[i].port,
++					hi3798mv200_phy_setup[i].addr,
++					hi3798mv200_phy_setup[i].data);
+ }
+ 
+ static int hisi_inno_phy_init(struct phy *phy)
+@@ -102,6 +164,10 @@ static int hisi_inno_phy_init(struct phy *phy)
+ 		return ret;
+ 	udelay(REF_CLK_STABLE_TIME);
+ 
++	reset_control_deassert(priv->test_rst);
++	reset_control_deassert(priv->test2_rst);
++	udelay(TEST_RST_COMPLETE_TIME);
++
+ 	reset_control_deassert(priv->por_rst);
+ 	udelay(POR_RST_COMPLETE_TIME);
+ 
+@@ -121,6 +187,8 @@ static int hisi_inno_phy_exit(struct phy *phy)
+ 
+ 	reset_control_assert(port->utmi_rst);
+ 	reset_control_assert(priv->por_rst);
++	reset_control_assert(priv->test_rst);
++	reset_control_assert(priv->test2_rst);
+ 	clk_disable_unprepare(priv->ref_clk);
+ 
+ 	return 0;
+@@ -159,6 +227,14 @@ static int hisi_inno_phy_probe(struct platform_device *pdev)
+ 	if (IS_ERR(priv->por_rst))
+ 		return PTR_ERR(priv->por_rst);
+ 
++	priv->test_rst = devm_reset_control_get_optional_exclusive(dev, "test");
++	if (IS_ERR(priv->test_rst))
++		return PTR_ERR(priv->test_rst);
++
++	priv->test2_rst = devm_reset_control_get_optional_exclusive(dev, "test2");
++	if (IS_ERR(priv->test2_rst))
++		return PTR_ERR(priv->test2_rst);
++
+ 	priv->type = (uintptr_t) of_device_get_match_data(dev);
+ 
+ 	for_each_child_of_node_scoped(np, child) {
+@@ -197,6 +273,8 @@ static const struct of_device_id hisi_inno_phy_of_match[] = {
+ 	  .data = (void *) PHY_TYPE_0 },
+ 	{ .compatible = "hisilicon,hi3798mv100-usb2-phy",
+ 	  .data = (void *) PHY_TYPE_1 },
++	{ .compatible = "hisilicon,hi3798mv200-usb2-phy",
++	  .data = (void *) PHY_TYPE_2 },
+ 	{ },
+ };
+ MODULE_DEVICE_TABLE(of, hisi_inno_phy_of_match);
+-- 
+2.56.0
+

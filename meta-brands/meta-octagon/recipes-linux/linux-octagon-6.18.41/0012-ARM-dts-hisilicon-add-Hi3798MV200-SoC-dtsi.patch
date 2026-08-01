@@ -1,0 +1,520 @@
+From 9180afab05cc8920db9bb7f1d343a84341d643bd Mon Sep 17 00:00:00 2001
+From: Tillmann Severin <tillmann.severin@mailbox.org>
+Date: Sat, 1 Aug 2026 20:01:16 +0200
+Subject: [PATCH 12/22] ARM: dts: hisilicon: add Hi3798MV200 SoC dtsi
+
+Describe the Hi3798MV200 for AArch32.  This is the same hardware as the
+arm64 arch/arm64/boot/dts/hisilicon/hi3798mv200.dtsi and everything from
+the soc node down is identical to it; only the parts that have to change
+for a 32-bit boot differ:
+
+  - single address and size cells,
+  - no psci node, and an enable-method of "hisilicon,hi3798mv200-smp"
+    on the cpus node, because the 32-bit boot chain has no PSCI,
+  - "arm,armv7-timer" for the generic timer.
+
+Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>
+---
+ arch/arm/boot/dts/hisilicon/hi3798mv200.dtsi | 490 +++++++++++++++++++
+ 1 file changed, 490 insertions(+)
+ create mode 100644 arch/arm/boot/dts/hisilicon/hi3798mv200.dtsi
+
+diff --git a/arch/arm/boot/dts/hisilicon/hi3798mv200.dtsi b/arch/arm/boot/dts/hisilicon/hi3798mv200.dtsi
+new file mode 100644
+index 000000000000..250e3111abe5
+--- /dev/null
++++ b/arch/arm/boot/dts/hisilicon/hi3798mv200.dtsi
+@@ -0,0 +1,490 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * DTS file for HiSilicon Hi3798MV200 SoC, 32-bit (AArch32) variant.
++ *
++ * Hi3798MV200 is a quad Cortex-A53 part.  The SoC is capable of running in
++ * AArch64 and there is an arm64 description of it in
++ * arch/arm64/boot/dts/hisilicon/hi3798mv200.dtsi, but products such as the
++ * Octagon SF8008 ship a 32-bit only boot chain (HiSilicon "Fastboot"), which
++ * leaves the CPUs in AArch32 and provides no PSCI implementation.  This file
++ * describes the same hardware for those boards; the two are kept in sync.
++ *
++ * Because there is no PSCI, the secondary cores are released by mach-hisi
++ * itself, see the "hisilicon,hi3798mv200-smp" enable-method in
++ * arch/arm/mach-hisi/platsmp.c.
++ *
++ * Everything below the soc node is identical to the arm64 description.  See
++ * that file for the list of blocks that are intentionally not described.
++ */
++
++#include <dt-bindings/clock/histb-clock.h>
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/interrupt-controller/arm-gic.h>
++
++/ {
++	compatible = "hisilicon,hi3798mv200";
++	interrupt-parent = <&gic>;
++	#address-cells = <1>;
++	#size-cells = <1>;
++
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		enable-method = "hisilicon,hi3798mv200-smp";
++
++		cpu@0 {
++			compatible = "arm,cortex-a53";
++			device_type = "cpu";
++			reg = <0>;
++			next-level-cache = <&L2>;
++		};
++
++		cpu@1 {
++			compatible = "arm,cortex-a53";
++			device_type = "cpu";
++			reg = <1>;
++			next-level-cache = <&L2>;
++		};
++
++		cpu@2 {
++			compatible = "arm,cortex-a53";
++			device_type = "cpu";
++			reg = <2>;
++			next-level-cache = <&L2>;
++		};
++
++		cpu@3 {
++			compatible = "arm,cortex-a53";
++			device_type = "cpu";
++			reg = <3>;
++			next-level-cache = <&L2>;
++		};
++
++		L2: l2-cache {
++			compatible = "cache";
++			cache-unified;
++			cache-level = <2>;
++		};
++	};
++
++	/*
++	 * The vendor kernel clocks the PL011 UARTs from a fixed 75MHz rail
++	 * rather than from a gate, so do the same here.  This also keeps the
++	 * console alive independently of the CRG driver probing.
++	 */
++	clk_75m: clock-75000000 {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <75000000>;
++	};
++
++	gic: interrupt-controller@f1001000 {
++		compatible = "arm,gic-400";
++		reg = <0xf1001000 0x1000>,  /* GICD */
++		      <0xf1002000 0x2000>,  /* GICC */
++		      <0xf1004000 0x2000>,  /* GICH */
++		      <0xf1006000 0x2000>;  /* GICV */
++		interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(4) |
++			      IRQ_TYPE_LEVEL_HIGH)>;
++		#address-cells = <0>;
++		#interrupt-cells = <3>;
++		interrupt-controller;
++	};
++
++	timer {
++		compatible = "arm,armv7-timer";
++		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) |
++			      IRQ_TYPE_LEVEL_LOW)>,
++			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(4) |
++			      IRQ_TYPE_LEVEL_LOW)>,
++			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) |
++			      IRQ_TYPE_LEVEL_LOW)>,
++			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) |
++			      IRQ_TYPE_LEVEL_LOW)>;
++		clock-frequency = <24000000>;
++		/*
++		 * The boot loader leaves CNTFRQ and CNTVOFF alone on the
++		 * cores it releases, and the kernel runs in SVC mode so it
++		 * cannot program CNTVOFF itself.  Stay on the physical
++		 * counter, which has no per-CPU offset to get wrong.
++		 */
++		arm,cpu-registers-not-fw-configured;
++	};
++
++		soc: soc@f0000000 {
++		compatible = "simple-bus";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0x0 0xf0000000 0x10000000>;
++		dma-ranges = <0x0 0x0 0x40000000>;
++
++		crg: clock-reset-controller@8a22000 {
++			compatible = "hisilicon,hi3798mv200-crg", "syscon",
++				     "simple-mfd";
++			reg = <0x8a22000 0x1000>;
++			#clock-cells = <1>;
++			#reset-cells = <2>;
++		};
++
++		sysctrl: system-controller@8000000 {
++			compatible = "hisilicon,hi3798mv200-sysctrl", "syscon";
++			reg = <0x8000000 0x1000>;
++			#clock-cells = <1>;
++			#reset-cells = <2>;
++		};
++
++		perictrl: peripheral-controller@8a20000 {
++			compatible = "hisilicon,hi3798cv200-perictrl", "syscon",
++				     "simple-mfd";
++			reg = <0x8a20000 0x1000>;
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges = <0x0 0x8a20000 0x1000>;
++		};
++
++		pmx0: pinconf@8a21000 {
++			compatible = "pinconf-single";
++			reg = <0x8a21000 0x180>;
++			pinctrl-single,register-width = <32>;
++			pinctrl-single,function-mask = <7>;
++			#pinctrl-cells = <1>;
++		};
++
++		uart0: serial@8b00000 {
++			compatible = "arm,pl011", "arm,primecell";
++			arm,primecell-periphid = <0x00241011>;
++			reg = <0x8b00000 0x1000>;
++			interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&clk_75m>, <&clk_75m>;
++			clock-names = "uartclk", "apb_pclk";
++			status = "disabled";
++		};
++
++		uart2: serial@8b02000 {
++			compatible = "arm,pl011", "arm,primecell";
++			arm,primecell-periphid = <0x00241011>;
++			reg = <0x8b02000 0x1000>;
++			interrupts = <GIC_SPI 51 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&clk_75m>, <&clk_75m>;
++			clock-names = "uartclk", "apb_pclk";
++			status = "disabled";
++		};
++
++		uart3: serial@8b03000 {
++			compatible = "arm,pl011", "arm,primecell";
++			arm,primecell-periphid = <0x00241011>;
++			reg = <0x8b03000 0x1000>;
++			interrupts = <GIC_SPI 52 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&clk_75m>, <&clk_75m>;
++			clock-names = "uartclk", "apb_pclk";
++			status = "disabled";
++		};
++
++		i2c0: i2c@8b10000 {
++			compatible = "hisilicon,hix5hd2-i2c";
++			reg = <0x8b10000 0x1000>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			interrupts = <GIC_SPI 38 IRQ_TYPE_LEVEL_HIGH>;
++			clock-frequency = <400000>;
++			clocks = <&crg HISTB_I2C0_CLK>;
++			status = "disabled";
++		};
++
++		i2c1: i2c@8b11000 {
++			compatible = "hisilicon,hix5hd2-i2c";
++			reg = <0x8b11000 0x1000>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			interrupts = <GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>;
++			clock-frequency = <400000>;
++			clocks = <&crg HISTB_I2C1_CLK>;
++			status = "disabled";
++		};
++
++		i2c2: i2c@8b12000 {
++			compatible = "hisilicon,hix5hd2-i2c";
++			reg = <0x8b12000 0x1000>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			interrupts = <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>;
++			clock-frequency = <400000>;
++			clocks = <&crg HISTB_I2C2_CLK>;
++			status = "disabled";
++		};
++
++		spi0: spi@8b1a000 {
++			compatible = "arm,pl022", "arm,primecell";
++			arm,primecell-periphid = <0x00041022>;
++			reg = <0x8b1a000 0x1000>;
++			interrupts = <GIC_SPI 45 IRQ_TYPE_LEVEL_HIGH>;
++			num-cs = <2>;
++			clocks = <&crg HISTB_SPI0_CLK>, <&crg HISTB_SPI0_CLK>;
++			clock-names = "sspclk", "apb_pclk";
++			#address-cells = <1>;
++			#size-cells = <0>;
++			status = "disabled";
++		};
++
++		sd0: mmc@9820000 {
++			compatible = "hisilicon,hi3798mv200-dw-mshc";
++			reg = <0x9820000 0x10000>;
++			interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&crg HISTB_SDIO0_CIU_CLK>,
++				 <&crg HISTB_SDIO0_BIU_CLK>,
++				 <&crg HISTB_SDIO0_SAMPLE_CLK>,
++				 <&crg HISTB_SDIO0_DRV_CLK>;
++			clock-names = "ciu", "biu", "ciu-sample", "ciu-drive";
++			resets = <&crg 0x9c 4>;
++			reset-names = "reset";
++			hisilicon,sap-dll-reg = <&crg 0x3a4>;
++			status = "disabled";
++		};
++
++		emmc: mmc@9830000 {
++			compatible = "hisilicon,hi3798mv200-dw-mshc";
++			reg = <0x9830000 0x10000>;
++			interrupts = <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&crg HISTB_MMC_CIU_CLK>,
++				 <&crg HISTB_MMC_BIU_CLK>,
++				 <&crg HISTB_MMC_SAMPLE_CLK>,
++				 <&crg HISTB_MMC_DRV_CLK>;
++			clock-names = "ciu", "biu", "ciu-sample", "ciu-drive";
++			resets = <&crg 0xa0 4>;
++			reset-names = "reset";
++			hisilicon,sap-dll-reg = <&crg 0x39c>;
++			status = "disabled";
++		};
++
++		gpio0: gpio@8b20000 {
++			compatible = "arm,pl061", "arm,primecell";
++			arm,primecell-periphid = <0x00041061>;
++			reg = <0x8b20000 0x1000>;
++			interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>;
++			gpio-controller;
++			#gpio-cells = <2>;
++			interrupt-controller;
++			#interrupt-cells = <2>;
++			clocks = <&crg HISTB_APB_CLK>;
++			clock-names = "apb_pclk";
++			status = "disabled";
++		};
++
++		gpio1: gpio@8b21000 {
++			compatible = "arm,pl061", "arm,primecell";
++			arm,primecell-periphid = <0x00041061>;
++			reg = <0x8b21000 0x1000>;
++			interrupts = <GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH>;
++			gpio-controller;
++			#gpio-cells = <2>;
++			interrupt-controller;
++			#interrupt-cells = <2>;
++			clocks = <&crg HISTB_APB_CLK>;
++			clock-names = "apb_pclk";
++			status = "disabled";
++		};
++
++		gpio2: gpio@8b22000 {
++			compatible = "arm,pl061", "arm,primecell";
++			arm,primecell-periphid = <0x00041061>;
++			reg = <0x8b22000 0x1000>;
++			interrupts = <GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>;
++			gpio-controller;
++			#gpio-cells = <2>;
++			interrupt-controller;
++			#interrupt-cells = <2>;
++			clocks = <&crg HISTB_APB_CLK>;
++			clock-names = "apb_pclk";
++			status = "disabled";
++		};
++
++		gpio3: gpio@8b23000 {
++			compatible = "arm,pl061", "arm,primecell";
++			arm,primecell-periphid = <0x00041061>;
++			reg = <0x8b23000 0x1000>;
++			interrupts = <GIC_SPI 111 IRQ_TYPE_LEVEL_HIGH>;
++			gpio-controller;
++			#gpio-cells = <2>;
++			interrupt-controller;
++			#interrupt-cells = <2>;
++			clocks = <&crg HISTB_APB_CLK>;
++			clock-names = "apb_pclk";
++			status = "disabled";
++		};
++
++		gpio4: gpio@8b24000 {
++			compatible = "arm,pl061", "arm,primecell";
++			arm,primecell-periphid = <0x00041061>;
++			reg = <0x8b24000 0x1000>;
++			interrupts = <GIC_SPI 112 IRQ_TYPE_LEVEL_HIGH>;
++			gpio-controller;
++			#gpio-cells = <2>;
++			interrupt-controller;
++			#interrupt-cells = <2>;
++			clocks = <&crg HISTB_APB_CLK>;
++			clock-names = "apb_pclk";
++			status = "disabled";
++		};
++
++		gpio5: gpio@8004000 {
++			compatible = "arm,pl061", "arm,primecell";
++			arm,primecell-periphid = <0x00041061>;
++			reg = <0x8004000 0x1000>;
++			interrupts = <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>;
++			gpio-controller;
++			#gpio-cells = <2>;
++			interrupt-controller;
++			#interrupt-cells = <2>;
++			clocks = <&crg HISTB_APB_CLK>;
++			clock-names = "apb_pclk";
++			status = "disabled";
++		};
++
++		gpio6: gpio@8b26000 {
++			compatible = "arm,pl061", "arm,primecell";
++			arm,primecell-periphid = <0x00041061>;
++			reg = <0x8b26000 0x1000>;
++			interrupts = <GIC_SPI 114 IRQ_TYPE_LEVEL_HIGH>;
++			gpio-controller;
++			#gpio-cells = <2>;
++			interrupt-controller;
++			#interrupt-cells = <2>;
++			clocks = <&crg HISTB_APB_CLK>;
++			clock-names = "apb_pclk";
++			status = "disabled";
++		};
++
++		gpio7: gpio@8b27000 {
++			compatible = "arm,pl061", "arm,primecell";
++			arm,primecell-periphid = <0x00041061>;
++			reg = <0x8b27000 0x1000>;
++			interrupts = <GIC_SPI 115 IRQ_TYPE_LEVEL_HIGH>;
++			gpio-controller;
++			#gpio-cells = <2>;
++			interrupt-controller;
++			#interrupt-cells = <2>;
++			clocks = <&crg HISTB_APB_CLK>;
++			clock-names = "apb_pclk";
++			status = "disabled";
++		};
++
++		gpio8: gpio@8b28000 {
++			compatible = "arm,pl061", "arm,primecell";
++			arm,primecell-periphid = <0x00041061>;
++			reg = <0x8b28000 0x1000>;
++			interrupts = <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>;
++			gpio-controller;
++			#gpio-cells = <2>;
++			interrupt-controller;
++			#interrupt-cells = <2>;
++			clocks = <&crg HISTB_APB_CLK>;
++			clock-names = "apb_pclk";
++			status = "disabled";
++		};
++
++		gpio9: gpio@8b29000 {
++			compatible = "arm,pl061", "arm,primecell";
++			arm,primecell-periphid = <0x00041061>;
++			reg = <0x8b29000 0x1000>;
++			interrupts = <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>;
++			gpio-controller;
++			#gpio-cells = <2>;
++			interrupt-controller;
++			#interrupt-cells = <2>;
++			clocks = <&crg HISTB_APB_CLK>;
++			clock-names = "apb_pclk";
++			status = "disabled";
++		};
++
++		watchdog0: watchdog@8a2c000 {
++			compatible = "arm,sp805", "arm,primecell";
++			arm,primecell-periphid = <0x00141805>;
++			reg = <0x8a2c000 0x1000>;
++			clocks = <&crg HISTB_OSC_CLK>, <&crg HISTB_OSC_CLK>;
++			clock-names = "wdog_clk", "apb_pclk";
++			status = "disabled";
++		};
++
++		gmac0: ethernet@9840000 {
++			compatible = "hisilicon,hi3798mv200-gmac",
++				     "hisilicon,hisi-gmac-v2";
++			reg = <0x9840000 0x1000>,
++			      <0x984300c 0x4>;
++			interrupts = <GIC_SPI 71 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&crg HISTB_ETH0_MAC_CLK>,
++				 <&crg HISTB_ETH0_MACIF_CLK>;
++			clock-names = "mac_core", "mac_ifc";
++			resets = <&crg 0xcc 0>,
++				 <&crg 0xcc 2>,
++				 <&crg 0xcc 5>;
++			reset-names = "mac_core", "mac_ifc", "phy";
++			status = "disabled";
++		};
++
++		ir: ir@8001000 {
++			compatible = "hisilicon,hix5hd2-ir";
++			reg = <0x8001000 0x1000>;
++			interrupts = <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&sysctrl HISTB_IR_CLK>;
++			status = "disabled";
++		};
++
++		usb2_phy: usb2-phy@9865000 {
++			compatible = "hisilicon,hi3798mv200-usb2-phy";
++			reg = <0x9865000 0x800>;
++			clocks = <&crg HISTB_USB2_PHY1_REF_CLK>;
++			resets = <&crg 0xbc 4>, <&crg 0xbc 16>, <&crg 0xbc 15>;
++			reset-names = "por", "test", "test2";
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			usb2_phy_port0: phy@0 {
++				reg = <0>;
++				#phy-cells = <0>;
++				resets = <&crg 0xbc 8>;
++			};
++
++			usb2_phy_port1: phy@1 {
++				reg = <1>;
++				#phy-cells = <0>;
++				resets = <&crg 0xbc 9>;
++			};
++		};
++
++		ohci: usb@9880000 {
++			compatible = "generic-ohci";
++			reg = <0x9880000 0x10000>;
++			interrupts = <GIC_SPI 67 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&crg HISTB_USB2_BUS_CLK>,
++				 <&crg HISTB_USB2_12M_CLK>,
++				 <&crg HISTB_USB2_48M_CLK>,
++				 <&crg HISTB_USB2_OTG_UTMI_CLK>;
++			clock-names = "bus", "clk12", "clk48", "otg-utmi";
++			resets = <&crg 0xb8 12>;
++			reset-names = "bus";
++			phys = <&usb2_phy_port0>, <&usb2_phy_port1>;
++			phy-names = "usb";
++			status = "disabled";
++		};
++
++		ehci: usb@9890000 {
++			compatible = "generic-ehci";
++			reg = <0x9890000 0x10000>;
++			interrupts = <GIC_SPI 66 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&crg HISTB_USB2_BUS_CLK>,
++				 <&crg HISTB_USB2_PHY_CLK>,
++				 <&crg HISTB_USB2_UTMI_CLK>,
++				 <&crg HISTB_USB2_UTMI1_CLK>;
++			clock-names = "bus", "phy", "utmi", "utmi1";
++			resets = <&crg 0xb8 12>,
++				 <&crg 0xb8 16>,
++				 <&crg 0xb8 17>,
++				 <&crg 0xb8 13>,
++				 <&crg 0xb8 14>;
++			reset-names = "bus", "hst-phy", "otg-phy", "utmi", "utmi1";
++			phys = <&usb2_phy_port0>, <&usb2_phy_port1>;
++			phy-names = "usb";
++			status = "disabled";
++		};
++	};
++};
+-- 
+2.56.0
+

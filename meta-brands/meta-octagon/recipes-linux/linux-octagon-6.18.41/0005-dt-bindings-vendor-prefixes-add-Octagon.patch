@@ -1,0 +1,29 @@
+From d3fef9937671667cb7d05164fbdf942939268fa0 Mon Sep 17 00:00:00 2001
+From: Tillmann Severin <tillmann.severin@mailbox.org>
+Date: Sat, 1 Aug 2026 15:29:01 +0200
+Subject: [PATCH 05/22] dt-bindings: vendor-prefixes: add Octagon
+
+Octagon builds set-top boxes and satellite receivers, among them the
+SF8008 which is based on a HiSilicon Hi3798MV200.
+
+Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>
+---
+ Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+index a9cf85fd6fbe..4e0eb8f31c42 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
++++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+@@ -1161,6 +1161,8 @@ patternProperties:
+     description: Orient Chip Technology Co., Ltd.
+   "^oct,.*":
+     description: Octavo Systems LLC
++  "^octagon,.*":
++    description: Octagon Germany GmbH
+   "^okaya,.*":
+     description: Okaya Electric America, Inc.
+   "^oki,.*":
+-- 
+2.56.0
+

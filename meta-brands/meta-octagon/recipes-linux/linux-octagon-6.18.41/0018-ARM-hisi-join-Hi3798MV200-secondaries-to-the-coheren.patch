@@ -1,0 +1,129 @@
+From 56c8ac892875481b3d72c7039abd14e6393b606e Mon Sep 17 00:00:00 2001
+From: Tillmann Severin <tillmann.severin@mailbox.org>
+Date: Sun, 2 Aug 2026 17:30:40 +0200
+Subject: [PATCH 18/22] ARM: hisi: join Hi3798MV200 secondaries to the
+ coherency domain
+
+The secondary cores are entered directly at secondary_startup(), which
+assumes the CPU already participates in cache coherency.  On the
+Hi3798MV200 that assumption does not hold.  Its Cortex-A53 cores come
+out of reset with CPUECTLR.SMPEN clear, so they neither snoop nor are
+snooped by the rest of the cluster.  The boot loader sets the bit for
+the CPU it starts and there is no firmware to do it for the others.
+
+A secondary brought up this way therefore sees stale memory for
+everything the boot CPU still holds dirty in its caches, including
+pointers the boot CPU published while setting up the interrupt
+controller.  The first interrupt taken on the secondary then branches
+through one of them and dies before the core has run any real work:
+
+  Internal error: Oops: 80000005 [#1] SMP ARM
+  CPU: 1 UID: 0 PID: 0 Comm: swapper/1
+  PC is at 0x0
+  LR is at gic_handle_arch_irq+0x38/0x4c
+  Call trace:
+   generic_handle_arch_irq from call_with_stack+0x18/0x20
+   call_with_stack from __irq_svc+0x98/0xb0
+   __irq_svc from default_idle_call+0x40/0xb8
+   default_idle_call from do_idle+0xbc/0x134
+   do_idle from cpu_startup_entry+0x30/0x34
+   cpu_startup_entry from secondary_start_kernel+0x124/0x148
+  Code: bad PC value
+  Kernel panic - not syncing: Fatal exception in interrupt
+
+Enter the secondaries through a small stub that sets SMPEN on itself
+before branching to secondary_startup(), so each core is coherent before
+it turns on its caches and the MMU.  This matches what the vendor kernel
+does in arch/arm/mach-hi3798mv2x/headsmp.S.
+
+Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>
+---
+ arch/arm/mach-hisi/Makefile  |  3 ++-
+ arch/arm/mach-hisi/core.h    |  1 +
+ arch/arm/mach-hisi/headsmp.S | 27 +++++++++++++++++++++++++++
+ arch/arm/mach-hisi/platsmp.c |  5 ++++-
+ 4 files changed, 34 insertions(+), 2 deletions(-)
+ create mode 100644 arch/arm/mach-hisi/headsmp.S
+
+diff --git a/arch/arm/mach-hisi/Makefile b/arch/arm/mach-hisi/Makefile
+index 39476355e568..2e37932a9d24 100644
+--- a/arch/arm/mach-hisi/Makefile
++++ b/arch/arm/mach-hisi/Makefile
+@@ -7,4 +7,5 @@ CFLAGS_platmcpm.o	:= -march=armv7-a
+ 
+ obj-y	+= hisilicon.o
+ obj-$(CONFIG_MCPM)		+= platmcpm.o
+-obj-$(CONFIG_SMP)		+= platsmp.o hotplug.o
++smp-$(CONFIG_ARCH_HI3798MV200)	+= headsmp.o
++obj-$(CONFIG_SMP)		+= platsmp.o hotplug.o $(smp-y)
+diff --git a/arch/arm/mach-hisi/core.h b/arch/arm/mach-hisi/core.h
+index 61245274fdaf..29220407ae45 100644
+--- a/arch/arm/mach-hisi/core.h
++++ b/arch/arm/mach-hisi/core.h
+@@ -7,6 +7,7 @@
+ extern void hi3xxx_set_cpu_jump(int cpu, void *jump_addr);
+ extern int hi3xxx_get_cpu_jump(int cpu);
+ extern void secondary_startup(void);
++extern void hi3798mv200_secondary_startup(void);
+ 
+ extern void hi3xxx_cpu_die(unsigned int cpu);
+ extern int hi3xxx_cpu_kill(unsigned int cpu);
+diff --git a/arch/arm/mach-hisi/headsmp.S b/arch/arm/mach-hisi/headsmp.S
+new file mode 100644
+index 000000000000..002f6e79381e
+--- /dev/null
++++ b/arch/arm/mach-hisi/headsmp.S
+@@ -0,0 +1,27 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Secondary CPU entry point for the Hi3798MV200.
++ */
++
++#include <linux/linkage.h>
++#include <linux/init.h>
++#include <asm/assembler.h>
++
++	.arch armv7-a
++
++/*
++ * The Cortex-A53 comes out of reset with CPUECTLR.SMPEN cleared, which
++ * leaves it outside the cluster's coherency domain: it neither snoops
++ * nor is snooped, so it sees stale memory for anything the boot CPU
++ * still holds dirty in its caches.  The boot loader only sets the bit
++ * for the CPU it starts, and there is no firmware here to do it for the
++ * others, so each secondary has to set it on itself before it enables
++ * its caches and the MMU in secondary_startup().
++ */
++ENTRY(hi3798mv200_secondary_startup)
++	mrrc	p15, 1, r0, r1, c15		@ CPU Extended Control Register
++	orr	r0, r0, #(1 << 6)		@ SMPEN
++	mcrr	p15, 1, r0, r1, c15
++	isb
++	b	secondary_startup
++ENDPROC(hi3798mv200_secondary_startup)
+diff --git a/arch/arm/mach-hisi/platsmp.c b/arch/arm/mach-hisi/platsmp.c
+index e275e4acf091..4ace0a167c62 100644
+--- a/arch/arm/mach-hisi/platsmp.c
++++ b/arch/arm/mach-hisi/platsmp.c
+@@ -192,6 +192,9 @@ static const struct smp_operations hip01_smp_ops __initconst = {
+  * Register offsets are relative to the CRG block and were taken from
+  * arch/arm/mach-hi3798mv2x/include/mach/platform.h of the vendor Linux 4.4
+  * tree (REG_BASE_CPU_LP 0xf8a22048, CPU_REG_BASE_RST 0xf8a22050).
++ *
++ * The cores are entered through hi3798mv200_secondary_startup(), which joins
++ * them to the coherency domain before handing over to secondary_startup().
+  */
+ #define HI3798MV200_BOOT_ADDRESS	0xffff0000
+ #define HI3798MV200_CRG_CPU_LP		0x48
+@@ -237,7 +240,7 @@ static int hi3798mv200_boot_secondary(unsigned int cpu, struct task_struct *idle
+ 		return -ENODEV;
+ 
+ 	hix5hd2_set_scu_boot_addr(HI3798MV200_BOOT_ADDRESS,
+-				  __pa_symbol(secondary_startup));
++				  __pa_symbol(hi3798mv200_secondary_startup));
+ 
+ 	/* Select 400MHz before starting the slave core. */
+ 	lp = readl_relaxed(hi3798mv200_crg_base + HI3798MV200_CRG_CPU_LP);
+-- 
+2.56.0
+
