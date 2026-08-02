@@ -13,7 +13,7 @@ PKGV = "1.1+git${GITPKGV}"
 VER = "1.1"
 PR = "r0"
 
-SRC_URI = "git://github.com/openatv/socketdaemon.git;branch=main;protocol=https"
+SRC_URI = "git://github.com/openatv/socketdaemon.git;branch=8.0;protocol=https"
 
 B = "${WORKDIR}/build"
 
