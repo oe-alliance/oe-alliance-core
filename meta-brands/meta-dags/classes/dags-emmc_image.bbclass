@@ -7,6 +7,8 @@ do_image_dagsemmc[depends] = " \
     dosfstools-native:do_populate_sysroot \
     mtools-native:do_populate_sysroot \
     virtual/kernel:do_populate_sysroot \
+    e2fsprogs-native:do_populate_sysroot \
+    e2fsprogs-ext4sparse-native:do_populate_sysroot \
     android-tools-native:do_populate_sysroot \
     dags-buildimage-native:do_populate_sysroot \
     "
@@ -30,5 +32,13 @@ IMAGE_CMD:dagsemmc () {
         eval COUNT=\"$MIN_COUNT\"
     fi
 
-  make_ext4fs -s -l 6968M ${IMGDEPLOYDIR}/${IMAGE_NAME}_subrootfs.ext4 ${IMGDEPLOYDIR}/rootfs
+    truncate -s 6968M ${IMGDEPLOYDIR}/${IMAGE_NAME}_subrootfs.ext4.raw
+    mkfs.ext4 -F -O ^has_journal -m 0 \
+        -d ${IMGDEPLOYDIR}/rootfs \
+        ${IMGDEPLOYDIR}/${IMAGE_NAME}_subrootfs.ext4.raw
+    ext2simg_android \
+        ${IMGDEPLOYDIR}/${IMAGE_NAME}_subrootfs.ext4.raw \
+        ${IMGDEPLOYDIR}/${IMAGE_NAME}_subrootfs.ext4
+    rm ${IMGDEPLOYDIR}/${IMAGE_NAME}_subrootfs.ext4.raw
+    rm -rf ${IMGDEPLOYDIR}/rootfs
 }
