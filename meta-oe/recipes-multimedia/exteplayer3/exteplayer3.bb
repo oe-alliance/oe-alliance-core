@@ -13,6 +13,7 @@ SRCREV = "${AUTOREV}"
 PV = "181+git"
 PKGV = "181+git${GITPKGV}"
 
+SRC_URI:openbh = "git://github.com/BlackHole/exteplayer3.git;branch=master;protocol=https"
 SRC_URI = "git://github.com/oe-alliance/exteplayer3.git;branch=master;protocol=https"
 
 EXTRA_OECONF = ""
