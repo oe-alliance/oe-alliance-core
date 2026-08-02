@@ -7,6 +7,7 @@ IMAGE_CMD:zgemmafastboot8gb[vardepsexclude] += "DATE DATETIME"
 
 do_image_zgemmafastboot8gb[depends] = " \
 	e2fsprogs-native:do_populate_sysroot \
+	e2fsprogs-ext4sparse-native:do_populate_sysroot \
 	android-tools-native:do_populate_sysroot \
 	dosfstools-native:do_populate_sysroot \
 	mtools-native:do_populate_sysroot \
@@ -61,5 +62,5 @@ IMAGE_CMD:zgemmafastboot8gb () {
 	cp ${WORKDIR}/bootoptions.img ${IMGDEPLOYDIR}/bootoptions.img
 	echo boot-recovery > ${WORKDIR}/misc-boot.img
 	cp ${WORKDIR}/misc-boot.img ${IMGDEPLOYDIR}/misc-boot.img
-	ext2simg ${IMGDEPLOYDIR}/${IMAGE_NAME}.ext4 ${IMGDEPLOYDIR}/${IMAGE_NAME}.userdata.ext4
+	ext2simg_android ${IMGDEPLOYDIR}/${IMAGE_NAME}.ext4 ${IMGDEPLOYDIR}/${IMAGE_NAME}.userdata.ext4
 }
