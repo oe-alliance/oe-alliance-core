@@ -7,7 +7,6 @@ do_image_hdfastboot8gb[vardepsexclude] = "DATE DATETIME"
 
 do_image_hdfastboot8gb[depends] = " \
 	e2fsprogs-native:do_populate_sysroot \
-	android-tools-native:do_populate_sysroot \
 	dosfstools-native:do_populate_sysroot \
 	mtools-native:do_populate_sysroot \
 "

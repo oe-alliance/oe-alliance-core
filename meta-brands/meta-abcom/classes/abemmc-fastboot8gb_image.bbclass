@@ -5,7 +5,6 @@ BOOTOPTIONS_PARTITION_SIZE = "2048"
 
 do_image_abfastboot8gb[depends] = " \
 	e2fsprogs-native:do_populate_sysroot \
-	android-tools-native:do_populate_sysroot \
 	dosfstools-native:do_populate_sysroot \
 	mtools-native:do_populate_sysroot \
 "
