@@ -14,8 +14,8 @@ SRC_URI += " \
 	${@bb.utils.contains('MACHINE_FEATURES', 'vu-eglfs', 'file://0001-Add-eglfs-libvupl-support-for-INTEGRITY.patch' , '', d)} \
 	${@bb.utils.contains('MACHINE_FEATURES', 'gb-eglfs', 'file://0001-eglfs-brcm-nexus-nx-platform.patch' , '', d)} \
 "
-DEPENDS:append = " ${@bb.utils.contains('MACHINE_FEATURES', ' vu-eglfs', ' libvupl libgles' , '', d)}"
-RDEPENDS:${PN}:append = " ${@bb.utils.contains('MACHINE_FEATURES', ' vu-eglfs', ' libvupl libgles' , '', d)}"
+DEPENDS:append = " ${@bb.utils.contains('MACHINE_FEATURES', 'vu-eglfs', 'libvupl libgles' , '', d)}"
+RDEPENDS:${PN}:append = " ${@bb.utils.contains('MACHINE_FEATURES', 'vu-eglfs', 'libvupl libgles' , '', d)}"
 
 PACKAGECONFIG_GL = " "
 PACKAGECONFIG_OPENSSL = "openssl"
@@ -27,10 +27,12 @@ PACKAGECONFIG:append = " \
 "
 
 SET_QT_QPA_DEFAULT_PLATFORM = "${@bb.utils.contains('MACHINE_FEATURES', 'no-opengl', 'linuxfb', 'eglfs', d)}"
-SET_QT_QPA_EGLFS_INTEGRATION = "${@bb.utils.contains('MACHINE_FEATURES', 'mali', 'eglfs_mali', '', d)}"
-SET_QT_QPA_EGLFS_INTEGRATION = "${@bb.utils.contains('MACHINE_FEATURES', 'v3d-nxpl', 'eglfs_nxpl', '', d)}"
-SET_QT_QPA_EGLFS_INTEGRATION = "${@bb.utils.contains('MACHINE_FEATURES', 'vu-eglfs', 'eglfs_libvupl', '', d)}"
-SET_QT_QPA_EGLFS_INTEGRATION = "${@bb.utils.contains('MACHINE_FEATURES', 'gb-eglfs', 'eglfs_brcm_nx', '', d)}"
+SET_QT_QPA_EGLFS_INTEGRATION = "${@\
+    'eglfs_mali' if bb.utils.contains('MACHINE_FEATURES', 'mali', True, False, d) else \
+    'eglfs_nxpl' if bb.utils.contains('MACHINE_FEATURES', 'v3d-nxpl', True, False, d) else \
+    'eglfs_libvupl' if bb.utils.contains('MACHINE_FEATURES', 'vu-eglfs', True, False, d) else \
+    'eglfs_brcm_nx' if bb.utils.contains('MACHINE_FEATURES', 'gb-eglfs', True, False, d) else \
+    ''}"
 
 
 do_configure:prepend() {
