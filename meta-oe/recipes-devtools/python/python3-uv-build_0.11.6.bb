@@ -13,9 +13,11 @@ LIC_FILES_CHKSUM = "file://LICENSE-APACHE;md5=86d3f3a95c324c9479bd8986968f4327 \
 
 SRC_URI[sha256sum] = "3ca25d4fca52e0598084fab352a4cafe737043f5682e3cb654164f033ba6d736"
 
+DEPENDS += "pkgconf-native zstd-native"
+
 require ${BPN}-crates.inc
 
-inherit pypi python_maturin cargo-update-recipe-crates
+inherit pypi python_maturin cargo-update-recipe-crates pkgconfig
 
 PYPI_PACKAGE = "uv_build"
 
