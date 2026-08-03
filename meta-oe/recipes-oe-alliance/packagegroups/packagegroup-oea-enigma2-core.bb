@@ -30,8 +30,7 @@ RDEPENDS:${PN} = "\
 
 ENIGMA2_CORE_EXTENDED_RDEPENDS = "\
     aio-grab \
-    ${@bb.utils.contains("TARGET_ARCH", "arm", "edid-decode", "", d)} \
-    ${@bb.utils.contains("TARGET_ARCH", "aarch64", "edid-decode", "", d)} \
+    ${@bb.utils.contains_any("TARGET_ARCH", "arm aarch64", "edid-decode", "", d)} \
     enigma2-plugin-extensions-pictureplayer \
     enigma2-plugin-systemplugins-satfinder \
     enigma2-plugin-extensions-openwebif \

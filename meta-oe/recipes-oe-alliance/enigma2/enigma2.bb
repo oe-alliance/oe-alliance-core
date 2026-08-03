@@ -22,7 +22,7 @@ DEPENDS = " \
     swig-native \
     tuxtxt-enigma2 \
     ${@bb.utils.contains("DISTRO_NAME", "openspa", "uchardet" , "", d)} \
-    ${@bb.utils.contains("DISTRO_NAME", "openatv openspa", "ffmpeg" , "", d)} \
+    ${@bb.utils.contains_any("DISTRO_NAME", "openatv openspa", "ffmpeg" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "uianimation", "vuplus-libgles-${MACHINE} libvugles2" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "hiaccel", "dinobot-libs-${MACHINE}" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "alsamixer", "ffmpeg" , "", d)} \

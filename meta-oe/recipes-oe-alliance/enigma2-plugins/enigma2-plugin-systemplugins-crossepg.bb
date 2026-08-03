@@ -23,14 +23,9 @@ SRC_URI = "git://github.com/oe-alliance/e2openplugin-CrossEPG.git;protocol=https
 
 inherit python3-dir
 
-CFLAGS:prepend = "-std=gnu17"
+CFLAGS:prepend = "-std=gnu17 "
 CFLAGS:append = " -I${STAGING_INCDIR}/libxml2/ -I${STAGING_INCDIR}/${PYTHON_DIR}/"
-CFLAGS:append = " ${@bb.utils.contains('BRAND_OEM', 'xtrend', ' -DNO_DVB_POLL' , '', d)}"
-CFLAGS:append = " ${@bb.utils.contains('BRAND_OEM', 'xp', ' -DNO_DVB_POLL' , '', d)}"
-CFLAGS:append = " ${@bb.utils.contains('BRAND_OEM', 'skylake', ' -DNO_DVB_POLL' , '', d)}"
-CFLAGS:append = " ${@bb.utils.contains('BRAND_OEM', 'gfutures', ' -DNO_DVB_POLL' , '', d)}"
-CFLAGS:append = " ${@bb.utils.contains('BRAND_OEM', 'formuler', ' -DNO_DVB_POLL' , '', d)}"
-CFLAGS:append = " ${@bb.utils.contains('BRAND_OEM', 'airdigital', ' -DNO_DVB_POLL' , '', d)}"
+CFLAGS:append = " ${@bb.utils.contains_any('BRAND_OEM', 'xtrend xp skylake gfutures formuler airdigital', ' -DNO_DVB_POLL' , '', d)}"
 
 do_compile() {
     echo ${PV} > ${S}/VERSION
