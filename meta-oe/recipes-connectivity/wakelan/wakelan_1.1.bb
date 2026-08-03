@@ -2,7 +2,7 @@ SUMMARY = "Wakelan sends a magic packet to wake up remote PC's"
 LICENSE = "GPL-2.0-or-later"
 LIC_FILES_CHKSUM = "file://COPYING;md5=0636e73ff0215e8d672dc4c32c317bb3"
 
-FILESEXTRAPATHS:prepend := "${THISDIR}/$PN}:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 
 SRC_URI = "http://www.ibiblio.org/pub/Linux/system/network/misc/${BPN}-${PV}.tar.gz \
             file://fix-headers-gcc14.patch"
