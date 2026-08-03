@@ -7,7 +7,7 @@ DEPENDS = "libdvbcsa openssl"
 RDEPENDS:${PN} = "libdvbcsa openssl"
 
 SRC_URI = " \
-    git://github.com/catalinii/minisatip.git;protocol=http;branch=master;protocol=https \
+    git://github.com/catalinii/minisatip.git;protocol=https;branch=master \
     file://add-missing-execinfo-include.patch \
     file://minisatip.init \
     "

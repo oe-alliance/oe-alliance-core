@@ -12,7 +12,7 @@ SRCREV = "${AUTOREV}"
 PV = "git${SRCPV}"
 PKGV = "${GITPKGVTAG}"
 
-SRC_URI = "git://github.com/windytan/redsea.git;protocol=http;branch=master;protocol=https \
+SRC_URI = "git://github.com/windytan/redsea.git;protocol=https;branch=master \
             file://remove-hardcoded-build-path.patch"
 
 inherit pkgconfig meson gettext

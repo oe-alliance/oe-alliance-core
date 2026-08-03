@@ -9,7 +9,7 @@ inherit pkgconfig
 
 SRCREV = "${AUTOREV}"
 
-SRC_URI = "git://github.com/oe-mirrors/iptvplayer-bin-components.git;protocol=http;branch=master"
+SRC_URI = "git://github.com/oe-mirrors/iptvplayer-bin-components.git;protocol=https;branch=master"
 
 do_compile() {
     cd ${S}/gstplayer/gst-1.0
