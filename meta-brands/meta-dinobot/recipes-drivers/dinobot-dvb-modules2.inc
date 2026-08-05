@@ -16,7 +16,7 @@ S = "${UNPACKDIR}/hiko"
 INITSCRIPT_NAME = "loadmodules"
 INITSCRIPT_PARAMS = "start 05 S ."
 
-inherit update-rc.d
+inherit update-rc.d hisi-hifb-wqhd
 
 INHIBIT_PACKAGE_STRIP = "1"
 INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
@@ -41,6 +41,7 @@ do_install() {
     install -m 0644 ${S}/dvbmodule ${D}${nonarch_base_libdir}/modules/${KV}/extra
     install -m 0755 ${S}/komession ${D}/usr/bin
     install -m 0755  ${S}/load ${D}${nonarch_base_libdir}/modules/${KV}/extra
+    hisi_hifb_wqhd_patch "${D}${nonarch_base_libdir}/modules/${KV}/extra/hi_fb.ko" "${D}${nonarch_base_libdir}/modules/${KV}/extra/load"
     install -d ${D}${sysconfdir}/init.d/
     install -m 0755 ${UNPACKDIR}/loadmodules.sh ${D}${sysconfdir}/init.d/loadmodules
 }

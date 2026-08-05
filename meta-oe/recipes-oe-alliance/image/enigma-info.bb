@@ -168,6 +168,7 @@ do_install() {
     printf "distro='${DISTRO_NAME}'\n" >> ${D}${INFOFILE}
     printf "driversdate='${DRIVERSDATE}'\n" >> ${D}${INFOFILE}
     printf "dvi=${HAVE_DVI}\n" >> ${D}${INFOFILE}
+    printf "e2egl=${HAVE_E2EGL}\n" >> ${D}${INFOFILE}
     printf "feedsurl='${DISTRO_FEED_URI}'\n" >> ${D}${INFOFILE}
     printf "fhdskin=${HAVE_FHDSKIN}\n" >> ${D}${INFOFILE}
     printf "fpu='${TARGET_FPU}'\n" >> ${D}${INFOFILE}
@@ -227,6 +228,7 @@ do_install() {
     printf "vfdsymbol=${HAVE_VFDSYMBOL}\n" >> ${D}${INFOFILE}
     printf "wol=${HAVE_WOL}\n" >> ${D}${INFOFILE}
     printf "wwol=${HAVE_WWOL}\n" >> ${D}${INFOFILE}
+    printf "wqhdskin=${HAVE_WQHDSKIN}\n" >> ${D}${INFOFILE}
     printf "yocto='${YOCTO_VERSION}'\n" >> ${D}${INFOFILE}
     printf "yuv=${HAVE_YUV}\n" >> ${D}${INFOFILE}
     printf "checksum=%s\n" $(md5sum "${D}${INFOFILE}" | awk '{print $1}') >> ${D}${INFOFILE}

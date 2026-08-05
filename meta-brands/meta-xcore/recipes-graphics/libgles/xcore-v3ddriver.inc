@@ -35,10 +35,23 @@ do_install:append() {
 			install -m 0644 $f ${D}${includedir}/$d/
 		done
 	done
+	install -d ${D}${libdir}/pkgconfig
+	cat > ${D}${libdir}/pkgconfig/v3dplatform.pc <<EOF
+prefix=${prefix}
+exec_prefix=${exec_prefix}
+libdir=${libdir}
+includedir=${includedir}
+
+Name: v3dplatform
+Description: Broadcom V3D platform layer
+Version: ${PV}
+Libs: -L${libdir} -lv3dplatform
+Cflags: -I${includedir}
+EOF
 }
 
 FILES:${PN} = "/usr/lib/*"
-FILES:${PN}-dev = "/usr/include/*"
+FILES:${PN}-dev = "/usr/include/* ${libdir}/pkgconfig/*"
 
 RPROVIDES:${PN} = "virtual-libgles2 virtual-egl libv3dplatform.so libv3ddriver.so libGLESv2.so libEGL.so"
 

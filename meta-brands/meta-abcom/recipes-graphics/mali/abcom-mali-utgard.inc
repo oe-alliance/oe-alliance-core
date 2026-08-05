@@ -38,7 +38,7 @@ do_install:append() {
 }
 
 FILES:${PN} = "${libdir} /etc/udev/rules.d/50-mali.rules"
-FILES:${PN}-dev = "${incdir}"
+FILES:${PN}-dev = "${includedir}/*"
 
 INHIBIT_PACKAGE_STRIP = "1"
 INHIBIT_PACKAGE_DEBUG_SPLIT = "1"

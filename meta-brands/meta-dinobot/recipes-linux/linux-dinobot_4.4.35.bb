@@ -29,6 +29,7 @@ SRC_URI:u5pvr += "https://source.mynonpublic.com/dinobot/dinobot-linux-${PV}-${S
     file://defconfig \
     file://sdio-platform.patch \
     file://accelmem.patch \
+    ${@bb.utils.contains('MACHINE_FEATURES', 'e2egl', 'file://hifb-wqhd.patch', '', d)} \
     file://cma.patch \
     file://ahci-clock.patch \
     ${@bb.utils.contains('SOC_FAMILY', 'hisi3798mv200', 'file://led.patch' , '', d)} \

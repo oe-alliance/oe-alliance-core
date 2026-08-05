@@ -36,10 +36,23 @@ do_install() {
 			install -m 0644 $f ${D}${includedir}/$d/
 		done
 	done
+	install -d ${D}${libdir}/pkgconfig
+	cat > ${D}${libdir}/pkgconfig/nxpl.pc <<EOF
+prefix=${prefix}
+exec_prefix=${exec_prefix}
+libdir=${libdir}
+includedir=${includedir}
+
+Name: NXPL
+Description: Broadcom Nexus platform layer
+Version: ${PV}
+Libs: -L${libdir} -lnxpl -lnxclient -lnexus
+Cflags: -I${includedir}
+EOF
 }
 
 FILES:${PN} = "/usr/lib/*"
-FILES:${PN}-dev = "/usr/include/*"
+FILES:${PN}-dev = "/usr/include/* ${libdir}/pkgconfig/*"
 
 RPROVIDES:${PN} = "virtual-libgles2 virtual-egl libnxpl.so libnexus.so libv3ddriver.so libGLESv2.so libEGL.so libnxclient.so"
 

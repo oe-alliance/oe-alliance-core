@@ -3,6 +3,7 @@ SECTION = "libs"
 require conf/license/license-close.inc
 PACKAGE_ARCH := "${MACHINE_ARCH}"
 
+DEPENDS = "vuplus-libgles-${MACHINE}"
 RDEPENDS:${PN} = "vuplus-libgles-${MACHINE}"
 
 PROVIDES += "libvupl"
@@ -23,6 +24,7 @@ do_install() {
 	install -m 755 ${S}/lib/*.so ${D}${libdir}/
 	install -d ${D}${libdir}/pkgconfig
 	cp -r ${S}/lib/pkgconfig/*.pc ${D}${libdir}/pkgconfig/
+	sed -i -e 's/^Requires:.*/Requires: libgles nxpl/' ${D}${libdir}/pkgconfig/libvupl.pc
 }
 
 INHIBIT_PACKAGE_STRIP = "1"

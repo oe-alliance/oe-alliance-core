@@ -19,6 +19,7 @@ SRC_URI = "https://source.mynonpublic.com/dreambox/${BPN}-v${PV}.tar.xz \
            file://hide_sdcardfs_info.patch \
            file://use_address-of_operator_on_section_symbols.patch \
            file://aml_tsync_chrdev_ioctl.patch \
+           file://wqhd.patch \
            ${KERNEL_PATCH_BINUTILS241_V4} \
            ${KERNEL_PATCH_FIX_HEADER} \
            ${KERNEL_PATCH_FIX_CONSTEXPR} \

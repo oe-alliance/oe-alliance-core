@@ -29,10 +29,23 @@ do_install:append() {
 	patchelf --set-soname libv3ddriver.so ${D}${libdir}/libv3ddriver.so
 	ln -s libv3ddriver.so ${D}${libdir}/libEGL.so
 	ln -s libv3ddriver.so ${D}${libdir}/libGLESv2.so
+	install -d ${D}${libdir}/pkgconfig
+	cat > ${D}${libdir}/pkgconfig/nxpl.pc <<EOF
+prefix=${prefix}
+exec_prefix=${exec_prefix}
+libdir=${libdir}
+includedir=${includedir}
+
+Name: NXPL
+Description: Broadcom Nexus platform layer
+Version: ${PV}
+Libs: -L${libdir} -lnxpl -lnxclient -lnexus
+Cflags: -I${includedir}
+EOF
 }
 
 FILES:${PN} = "/usr/lib/*"
-FILES:${PN}-dev = "/usr/include/*"
+FILES:${PN}-dev = "/usr/include/* ${libdir}/pkgconfig/*"
 
 RPROVIDES:${PN} = "virtual-libgles2 virtual-egl libnexus.so libnxclient.so libnxpl.so libv3ddriver.so libGLESv2.so libEGL.so"
 

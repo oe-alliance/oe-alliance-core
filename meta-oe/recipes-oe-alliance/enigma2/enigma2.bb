@@ -23,10 +23,10 @@ DEPENDS = " \
     tuxtxt-enigma2 \
     ${@bb.utils.contains("DISTRO_NAME", "openspa", "uchardet" , "", d)} \
     ${@bb.utils.contains_any("DISTRO_NAME", "openatv openspa", "ffmpeg" , "", d)} \
-    ${@bb.utils.contains("MACHINE_FEATURES", "uianimation", "vuplus-libgles-${MACHINE} libvugles2" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "hiaccel", "dinobot-libs-${MACHINE}" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "alsamixer", "ffmpeg" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "e2egl", "virtual/egl virtual/libgles2" , "", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "e2egl", bb.utils.contains_any("MACHINE", "vuduo2 vusolo2 vusolose", "libvupl" , "", d), "", d)} \
     "
 
 RDEPENDS:${PN} = " \
@@ -41,8 +41,8 @@ RDEPENDS:${PN} = " \
     ${PYTHON_RDEPS} \
     ${@bb.utils.contains("DISTRO_FEATURES", "e2hotplug", "" , "hotplug-e2-helper", d)} \
     ${@bb.utils.contains("DISTRO_NAME", "openatv", "openatv-autorestore socketdaemon" , "", d)} \
-    ${@bb.utils.contains("MACHINE_FEATURES", "uianimation", "vuplus-libgles-${MACHINE} libvugles2" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "hiaccel", "dinobot-libs-${MACHINE}" , "", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "e2egl", bb.utils.contains_any("MACHINE", "vuduo2 vusolo2 vusolose", "libvupl-${MACHINE}" , "", d), "", d)} \
     oe-alliance-branding \
     ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", "${NORMAL_IMAGE_DEPEND}", d)} \
 "
@@ -276,16 +276,12 @@ EXTRA_OECONF = " \
     ${@bb.utils.contains("MACHINE_FEATURES", "gigabluelcd", "--with-gigabluelcd" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "nolcd", "--with-nolcd" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "7segment", "--with-7segment" , "", d)} \
-    ${@bb.utils.contains("MACHINE_FEATURES", "uianimation", "--with-libvugles2" , "", d)} \
-    ${@bb.utils.contains("MACHINE_FEATURES", "osdanimation", "--with-osdanimation" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "hiaccel", "--with-libhiaccel" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "e2egl", "--with-egl" , "", d)} \
     "
 
 CPPFLAGS += "-Wno-error=format-security"
 LDFLAGS:prepend = "${@bb.utils.contains('GST_VERSION', '1.0', ' -lxml2 ', '', d)}"
-SRC_URI:append = "${@bb.utils.contains("MACHINE_FEATURES", "uianimation", " file://use-lv3ddriver.patch" , "", d)}"
-
 # Swig generated 200k enigma.py file has no purpose for end users
 FILES:${PN}-dbg += "\
     ${libdir}/enigma2/python/enigma.py \

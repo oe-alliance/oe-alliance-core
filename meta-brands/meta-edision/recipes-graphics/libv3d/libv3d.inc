@@ -45,4 +45,19 @@ do_install() {
 			install -m 0644 $f ${D}${includedir}/$d
 		done
 	done
+	install -m 0755 -d ${D}${libdir}/pkgconfig
+	cat > ${D}${libdir}/pkgconfig/v3dplatform.pc <<EOF
+prefix=${prefix}
+exec_prefix=${exec_prefix}
+libdir=${libdir}
+includedir=${includedir}
+
+Name: v3dplatform
+Description: Broadcom V3D platform layer
+Version: ${PV}
+Libs: -L${libdir} -lv3dplatform
+Cflags: -I${includedir}
+EOF
 }
+
+FILES:${PN}-dev += "${includedir}/* ${libdir}/pkgconfig/*"

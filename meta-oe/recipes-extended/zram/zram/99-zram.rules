@@ -1,0 +1,1 @@
+ACTION=="add", SUBSYSTEM=="block", KERNEL=="zram0", GROUP="disk", MODE="0660", RUN+="/usr/sbin/zram-setup"

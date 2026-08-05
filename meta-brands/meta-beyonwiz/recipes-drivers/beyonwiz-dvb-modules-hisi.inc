@@ -4,6 +4,8 @@ PRIORITY = "required"
 require conf/license/license-close.inc
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
+inherit hisi-hifb-wqhd
+
 PV = "${KV}+${SRCDATE}"
 PR = "r1"
 
@@ -28,6 +30,7 @@ do_install() {
     install -d ${D}/lib/modules/${KV}/extra
     install -m 0644 ${S}/hiko/*.ko ${D}/lib/modules/${KV}/extra
     install -m 0755 ${S}/hiko/load ${D}/lib/modules/${KV}/extra
+    hisi_hifb_wqhd_patch "${D}/lib/modules/${KV}/extra/hi_fb.ko" "${D}/lib/modules/${KV}/extra/load"
     install -d ${D}/${sysconfdir}/modules-load.d
     install -m 0644 ${S}/modules ${D}${sysconfdir}/modules-load.d/_${MACHINE}.conf
 }

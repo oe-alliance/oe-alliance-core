@@ -1,0 +1,37 @@
+#!/bin/sh
+set -e
+
+PATH=/sbin:/bin:/usr/sbin:/usr/bin
+export PATH
+
+device=/dev/zram0
+sysfs=/sys/block/zram0
+lock=/run/zram-setup.lock
+
+grep -q "^${device}[[:space:]]" /proc/swaps && exit 0
+
+# A manual udev trigger can overlap the original add event.
+mkdir "$lock" 2>/dev/null || exit 0
+trap 'rmdir "$lock" 2>/dev/null || true' 0 1 2 3 15
+
+grep -q "^${device}[[:space:]]" /proc/swaps && exit 0
+[ -b "$device" ] && [ -e "$sysfs/disksize" ] || exit 1
+
+FACTOR=50
+[ -r /etc/default/zram ] && . /etc/default/zram
+case "$FACTOR" in
+	''|*[!0-9]*) FACTOR=50 ;;
+esac
+[ "$FACTOR" -gt 0 ] || exit 0
+
+memtotal=$(awk '/MemTotal/ { print $2; exit }' /proc/meminfo)
+disksize=$((memtotal * FACTOR / 100 * 1024))
+
+current_disksize=$(cat "$sysfs/disksize")
+if [ "$current_disksize" -eq 0 ]; then
+	echo "$disksize" > "$sysfs/disksize"
+fi
+mkswap "$device"
+swapon -p 100 "$device"
+
+logger -t zram "enabled ${disksize} bytes with priority 100" || true

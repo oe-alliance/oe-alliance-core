@@ -38,10 +38,23 @@ do_install:append() {
     && ln -sf libGLESv2.so.2 libGLESv2.so)
     (cd ${D}/${libdir} && ln -sf libv3ddriver.so libgbm.so.1 \
     && ln -sf libgbm.so.1 libgbm.so)
+    install -d ${D}${libdir}/pkgconfig
+    cat > ${D}${libdir}/pkgconfig/nxpl.pc <<EOF
+prefix=${prefix}
+exec_prefix=${exec_prefix}
+libdir=${libdir}
+includedir=${includedir}
+
+Name: NXPL
+Description: Broadcom Nexus platform layer
+Version: ${PV}
+Libs: -L${libdir} -lnxpl -lnexus
+Cflags: -I${includedir}
+EOF
 }
 
 FILES:${PN} = "/usr/lib/*"
-FILES:${PN}-dev = "/usr/include/*"
+FILES:${PN}-dev = "/usr/include/* ${libdir}/pkgconfig/*"
 
 RPROVIDES:${PN} = "virtual-libgles2 virtual-libgles1 virtual-egl virtual-libgbm libnxpl.so libnexus.so libv3ddriver.so libEGL.so.1.4 libEGL.so.1 libEGL.so libGLESv1_CM.so.1.1 libGLESv1_CM.so.1 libGLESv1_CM.so libGLESv2.so.2.0 libGLESv2.so.2 libGLESv2.so libgbm.so libgbm.so.1"
 
