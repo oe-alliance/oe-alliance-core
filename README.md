@@ -72,11 +72,13 @@ Zgemma H7 AC            MACHINE:  zgemmah7
 
 Zgemma H17 COMBO        MACHINE:  zgemmah17combo
 
-Zgemma H17 TWIN        MACHINE:  zgemmah17twin
+Zgemma H17 TWIN         MACHINE:  zgemmah17twin
 
 Zgemma H8.2H            MACHINE:  zgemmah82h
 
 Zgemma H8.2H Plus       MACHINE:  zgemmah82hplus
+
+Zgemma H8.2H SE         MACHINE:  zgemmah82hse
 
 Zgemma H9S              MACHINE:  zgemmah9s
 
@@ -829,6 +831,8 @@ VU ZERO4K               MACHINE:  vuzero4k
 VU DUO4K                MACHINE:  vuduo4k
 
 VU DUO4KSE              MACHINE:  vuduo4kse
+
+VU DUO4KLITE              MACHINE:  vuduo4klite
 
 
 ### World Vision

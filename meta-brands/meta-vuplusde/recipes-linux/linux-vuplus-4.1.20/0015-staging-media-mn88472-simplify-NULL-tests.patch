@@ -1,0 +1,68 @@
+From 3231374811780f951027b1f94aa12885f3db0ca8 Mon Sep 17 00:00:00 2001
+From: Eva Rachel Retuya <eraretuya@gmail.com>
+Date: Sat, 27 Feb 2016 20:39:22 +0800
+Subject: [PATCH 15/17] staging: [media] mn88472: simplify NULL tests
+
+Replace direct comparisons to NULL i.e. 'x == NULL' with '!x' for
+consistency. Coccinelle semantic patch used:
+
+@@
+identifier func;
+expression x;
+statement Z;
+@@
+
+x = func(...);
+
+if (
+(
++	!
+	x
+-	== NULL
+|
++	!
+-	NULL ==
+	x
+)
+   ) Z
+
+Signed-off-by: Eva Rachel Retuya <eraretuya@gmail.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ drivers/staging/media/mn88472/mn88472.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/staging/media/mn88472/mn88472.c b/drivers/staging/media/mn88472/mn88472.c
+index daed047..c1842df 100644
+--- a/drivers/staging/media/mn88472/mn88472.c
++++ b/drivers/staging/media/mn88472/mn88472.c
+@@ -456,7 +456,7 @@ static int mn88472_probe(struct i2c_client *client,
+ 	}
+ 
+ 	dev = kzalloc(sizeof(*dev), GFP_KERNEL);
+-	if (dev == NULL) {
++	if (!dev) {
+ 		ret = -ENOMEM;
+ 		goto err;
+ 	}
+@@ -483,7 +483,7 @@ static int mn88472_probe(struct i2c_client *client,
+ 	 * 0x1a and 0x1c, in order to get own I2C client for each register page.
+ 	 */
+ 	dev->client[1] = i2c_new_dummy(client->adapter, 0x1a);
+-	if (dev->client[1] == NULL) {
++	if (!dev->client[1]) {
+ 		ret = -ENODEV;
+ 		dev_err(&client->dev, "I2C registration failed\n");
+ 		if (ret)
+@@ -497,7 +497,7 @@ static int mn88472_probe(struct i2c_client *client,
+ 	i2c_set_clientdata(dev->client[1], dev);
+ 
+ 	dev->client[2] = i2c_new_dummy(client->adapter, 0x1c);
+-	if (dev->client[2] == NULL) {
++	if (!dev->client[2]) {
+ 		ret = -ENODEV;
+ 		dev_err(&client->dev, "2nd I2C registration failed\n");
+ 		if (ret)
+-- 
+2.1.4
+

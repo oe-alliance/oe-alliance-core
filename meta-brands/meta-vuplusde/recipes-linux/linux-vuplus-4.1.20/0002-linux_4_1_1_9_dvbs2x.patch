@@ -1,0 +1,102 @@
+From 953f3e913ce4817ea567d945b931d377dafe8348 Mon Sep 17 00:00:00 2001
+From: arn354 <arn354@email.de>
+Date: Fri, 15 Feb 2019 22:01:22 +0100
+Subject: [PATCH] linux_4_1_1_9_dvbs2x.patch
+
+---
+ drivers/media/dvb-core/dvb_frontend.c |  5 +++++
+ include/uapi/linux/dvb/frontend.h     | 20 ++++++++++++++++++++
+ 2 files changed, 25 insertions(+)
+
+diff --git a/drivers/media/dvb-core/dvb_frontend.c b/drivers/media/dvb-core/dvb_frontend.c
+index 3ab87470..78c1b249 100644
+--- a/drivers/media/dvb-core/dvb_frontend.c
++++ b/drivers/media/dvb-core/dvb_frontend.c
+@@ -170,6 +170,7 @@ static enum dvbv3_emulation_type dvbv3_type(u32 delivery_system)
+ 		return DVBV3_QAM;
+ 	case SYS_DVBS:
+ 	case SYS_DVBS2:
++	case SYS_DVBS2X:
+ 	case SYS_TURBO:
+ 	case SYS_ISDBS:
+ 	case SYS_DSS:
+@@ -1008,6 +1009,7 @@ static int dvb_frontend_check_parameters(struct dvb_frontend *fe)
+ 	switch (c->delivery_system) {
+ 	case SYS_DVBS:
+ 	case SYS_DVBS2:
++	case SYS_DVBS2X:
+ 	case SYS_TURBO:
+ 	case SYS_DVBC_ANNEX_A:
+ 	case SYS_DVBC_ANNEX_C:
+@@ -1074,6 +1076,7 @@ static int dvb_frontend_clear_cache(struct dvb_frontend *fe)
+ 	switch (c->delivery_system) {
+ 	case SYS_DVBS:
+ 	case SYS_DVBS2:
++	case SYS_DVBS2X:
+ 	case SYS_TURBO:
+ 		c->modulation = QPSK;   /* implied for DVB-S in legacy API */
+ 		c->rolloff = ROLLOFF_35;/* implied for DVB-S */
+@@ -2200,6 +2203,7 @@ static int dtv_set_frontend(struct dvb_frontend *fe)
+ 		rolloff = 135;
+ 		break;
+ 	case SYS_DVBS2:
++	case SYS_DVBS2X:
+ 		switch (c->rolloff) {
+ 		case ROLLOFF_20:
+ 			rolloff = 120;
+@@ -2240,6 +2244,7 @@ static int dtv_set_frontend(struct dvb_frontend *fe)
+ 		switch (c->delivery_system) {
+ 		case SYS_DVBS:
+ 		case SYS_DVBS2:
++		case SYS_DVBS2X:
+ 		case SYS_ISDBS:
+ 		case SYS_TURBO:
+ 		case SYS_DVBC_ANNEX_A:
+diff --git a/include/uapi/linux/dvb/frontend.h b/include/uapi/linux/dvb/frontend.h
+index c56d77c4..5aebaa9b 100644
+--- a/include/uapi/linux/dvb/frontend.h
++++ b/include/uapi/linux/dvb/frontend.h
+@@ -165,6 +165,24 @@ typedef enum fe_code_rate {
+ 	FEC_3_5,
+ 	FEC_9_10,
+ 	FEC_2_5,
++	FEC_13_45=13,
++	FEC_9_20=14,
++	FEC_11_20=15,
++	FEC_23_36=16,
++	FEC_25_36=17,
++	FEC_13_18=18,
++	FEC_26_45=19,
++	FEC_28_45=20,
++	FEC_7_9=21,
++	FEC_77_90=22,
++	FEC_32_45=23,
++	FEC_11_15=24,
++	FEC_1_2_L=25,
++	FEC_8_15_L=26,
++	FEC_3_5_L=27,
++	FEC_2_3_L=28,
++	FEC_5_9_L=29,
++	FEC_26_45_L=30
+ } fe_code_rate_t;
+ 
+ 
+@@ -183,6 +201,7 @@ typedef enum fe_modulation {
+ 	APSK_32,
+ 	DQPSK,
+ 	QAM_4_NR,
++	APSK_8,
+ } fe_modulation_t;
+ 
+ typedef enum fe_transmit_mode {
+@@ -410,6 +429,7 @@ typedef enum fe_delivery_system {
+ 	SYS_DVBT2,
+ 	SYS_TURBO,
+ 	SYS_DVBC_ANNEX_C,
++	SYS_DVBS2X = 21,
+ } fe_delivery_system_t;
+ 
+ /* backward compatibility */
+-- 
+2.20.1.windows.1
+

@@ -1,0 +1,100 @@
+diff -upr linux/drivers/media/tuners/mxl5007t.h linux.new/drivers/media/tuners/mxl5007t.h
+--- linux/drivers/media/tuners/mxl5007t.h	2012-08-14 05:45:22.000000000 +0200
++++ linux.new/drivers/media/tuners/mxl5007t.h	2013-01-10 19:19:11.204379581 +0100
+@@ -73,8 +73,10 @@ struct mxl5007t_config {
+ 	enum mxl5007t_xtal_freq xtal_freq_hz;
+ 	enum mxl5007t_if_freq if_freq_hz;
+ 	unsigned int invert_if:1;
+-	unsigned int loop_thru_enable:1;
++	unsigned int loop_thru_enable:3;
+ 	unsigned int clk_out_enable:1;
++	unsigned int no_probe:1;
++	unsigned int no_reset:1;
+ };
+ 
+ #if defined(CONFIG_MEDIA_TUNER_MXL5007T) || (defined(CONFIG_MEDIA_TUNER_MXL5007T_MODULE) && defined(MODULE))
+diff -upr linux/drivers/media/usb/dvb-usb-v2/af9035.c linux.new/drivers/media/usb/dvb-usb-v2/af9035.c
+--- linux/drivers/media/usb/dvb-usb-v2/af9035.c	2013-01-07 05:45:57.000000000 +0100
++++ linux.new/drivers/media/usb/dvb-usb-v2/af9035.c	2013-01-12 00:30:57.557310465 +0100
+@@ -886,13 +886,17 @@ static struct mxl5007t_config af9035_mxl
+ 		.loop_thru_enable = 0,
+ 		.clk_out_enable = 0,
+ 		.clk_out_amp = MxL_CLKOUT_AMP_0_94V,
++		.no_probe = 1,
++		.no_reset = 1,
+ 	}, {
+ 		.xtal_freq_hz = MxL_XTAL_24_MHZ,
+ 		.if_freq_hz = MxL_IF_4_57_MHZ,
+ 		.invert_if = 0,
+-		.loop_thru_enable = 1,
++		.loop_thru_enable = 3,
+ 		.clk_out_enable = 1,
+ 		.clk_out_amp = MxL_CLKOUT_AMP_0_94V,
++		.no_probe = 1,
++		.no_reset = 1,
+ 	}
+ };
+ 
+--- linux-3.19.1/drivers/media/tuners/mxl5007t.c.org	2015-03-16 12:21:47.872324952 +0100
++++ linux-3.19.1/drivers/media/tuners/mxl5007t.c	2015-03-16 12:22:07.208325224 +0100
+@@ -530,6 +530,13 @@
+ 	struct reg_pair_t *init_regs;
+ 	int ret;
+ 
++	if (!state->config->no_reset) {
++		ret = mxl5007t_soft_reset(state);
++		if (mxl_fail(ret))
++		goto fail;
++	}
++
++
+ 	/* calculate initialization reg array */
+ 	init_regs = mxl5007t_calc_init_regs(state, mode);
+ 
+@@ -882,7 +889,12 @@
+ 		if (fe->ops.i2c_gate_ctrl)
+ 			fe->ops.i2c_gate_ctrl(fe, 1);
+ 
+-		ret = mxl5007t_get_chip_id(state);
++		if (!state->config->no_probe)
++			ret = mxl5007t_get_chip_id(state);
++
++		ret = mxl5007t_write_reg(state, 0x04,
++			state->config->loop_thru_enable);
++
+ 
+ 		if (fe->ops.i2c_gate_ctrl)
+ 			fe->ops.i2c_gate_ctrl(fe, 0);
+@@ -895,32 +907,7 @@
+ 		/* existing tuner instance */
+ 		break;
+ 	}
+-
+-	if (fe->ops.i2c_gate_ctrl)
+-		fe->ops.i2c_gate_ctrl(fe, 1);
+-
+-	ret = mxl5007t_soft_reset(state);
+-
+-	if (fe->ops.i2c_gate_ctrl)
+-		fe->ops.i2c_gate_ctrl(fe, 0);
+-
+-	if (mxl_fail(ret))
+-		goto fail;
+-
+-	if (fe->ops.i2c_gate_ctrl)
+-		fe->ops.i2c_gate_ctrl(fe, 1);
+-
+-	ret = mxl5007t_write_reg(state, 0x04,
+-		state->config->loop_thru_enable);
+-
+-	if (fe->ops.i2c_gate_ctrl)
+-		fe->ops.i2c_gate_ctrl(fe, 0);
+-
+-	if (mxl_fail(ret))
+-		goto fail;
+-
+ 	fe->tuner_priv = state;
+-
+ 	mutex_unlock(&mxl5007t_list_mutex);
+ 
+ 	memcpy(&fe->ops.tuner_ops, &mxl5007t_tuner_ops,

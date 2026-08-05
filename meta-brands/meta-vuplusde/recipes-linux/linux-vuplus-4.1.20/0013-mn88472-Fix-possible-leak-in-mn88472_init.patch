@@ -1,0 +1,40 @@
+From e2acd4b72a5e00d6063401627d9974f5d1815592 Mon Sep 17 00:00:00 2001
+From: Christian Engelmayer <cengelma@gmx.at>
+Date: Sat, 2 May 2015 18:59:29 -0300
+Subject: [PATCH 13/17] mn88472: Fix possible leak in mn88472_init()
+
+Commit 307e95c92257 ("[media] mn88472: implement firmware parity check")
+introduced the usage of exit paths that do not free the already allocated
+firmware data in case the parity handling fails. Go through the correct
+exit paths. Detected by Coverity CID 1295989.
+
+Signed-off-by: Christian Engelmayer <cengelma@gmx.at>
+Acked-by: Benjamin Larsson <benjamin@southpole.se>
+Signed-off-by: Antti Palosaari <crope@iki.fi>
+Signed-off-by: Mauro Carvalho Chehab <mchehab@osg.samsung.com>
+---
+ drivers/staging/media/mn88472/mn88472.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/staging/media/mn88472/mn88472.c b/drivers/staging/media/mn88472/mn88472.c
+index a4cfcf5..6863c43 100644
+--- a/drivers/staging/media/mn88472/mn88472.c
++++ b/drivers/staging/media/mn88472/mn88472.c
+@@ -344,12 +344,12 @@ static int mn88472_init(struct dvb_frontend *fe)
+ 	if (ret) {
+ 		dev_err(&client->dev,
+ 				"parity reg read failed=%d\n", ret);
+-		goto err;
++		goto firmware_release;
+ 	}
+ 	if (tmp & 0x10) {
+ 		dev_err(&client->dev,
+ 				"firmware parity check failed=0x%x\n", tmp);
+-		goto err;
++		goto firmware_release;
+ 	}
+ 	dev_err(&client->dev, "firmware parity check succeeded=0x%x\n", tmp);
+ 
+-- 
+2.1.4
+

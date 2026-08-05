@@ -1,0 +1,49 @@
+From affda9891f2e39a17290e53e009fd81e61ca95d5 Mon Sep 17 00:00:00 2001
+From: arn354 <arn354@email.de>
+Date: Fri, 15 Feb 2019 21:59:00 +0100
+Subject: [PATCH] linux_dvb_adapter.patch
+
+---
+ drivers/media/dvb-core/dvbdev.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/media/dvb-core/dvbdev.c b/drivers/media/dvb-core/dvbdev.c
+index 13bb57f0..81f43753 100644
+--- a/drivers/media/dvb-core/dvbdev.c
++++ b/drivers/media/dvb-core/dvbdev.c
+@@ -438,9 +438,9 @@ static int dvbdev_check_free_adapter_num(int num)
+ 	return 1;
+ }
+ 
+-static int dvbdev_get_free_adapter_num (void)
++static int dvbdev_get_free_adapter_num (int start_num)
+ {
+-	int num = 0;
++	int num = start_num;
+ 
+ 	while (num < DVB_MAX_ADAPTERS) {
+ 		if (dvbdev_check_free_adapter_num(num))
+@@ -457,17 +457,18 @@ int dvb_register_adapter(struct dvb_adapter *adap, const char *name,
+ 			 short *adapter_nums)
+ {
+ 	int i, num;
++	char *gb_name = strstr(name, "_gigablue_");
+ 
+ 	mutex_lock(&dvbdev_register_lock);
+ 
+ 	for (i = 0; i < DVB_MAX_ADAPTERS; ++i) {
+ 		num = adapter_nums[i];
+-		if (num >= 0  &&  num < DVB_MAX_ADAPTERS) {
++		if (num >= (gb_name? 0:1)  &&  num < DVB_MAX_ADAPTERS) {
+ 		/* use the one the driver asked for */
+ 			if (dvbdev_check_free_adapter_num(num))
+ 				break;
+ 		} else {
+-			num = dvbdev_get_free_adapter_num();
++			num = dvbdev_get_free_adapter_num(gb_name? 0:1);
+ 			break;
+ 		}
+ 		num = -1;
+-- 
+2.20.1.windows.1
+
