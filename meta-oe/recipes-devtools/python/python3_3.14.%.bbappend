@@ -2,8 +2,12 @@ FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 SRC_URI += "file://use-legacy-path-for-pycs.patch"
 SRC_URI += "file://openssl40-ssl-module.patch"
 
-PV = "3.14.6"
-SRC_URI[sha256sum] = "143b1dddefaec3bd2e21e3b839b34a2b7fb9842272883c576420d605e9f30c63"
+PV = "3.14.7"
+SRC_URI[sha256sum] = "3b48dac8fb59f62eaa67ac83c1eb12bda1b7a08406dd286e252c11a66be27f81"
+
+# CVE-2026-11940, CVE-2026-11972, CVE-2026-4360 fixed upstream in 3.14.7;
+# drop oe-core's now-reverse-applying patches.
+SRC_URI:remove = "file://CVE-2026-11940.patch file://CVE-2026-11972.patch file://CVE-2026-4360.patch"
 
 PACKAGECONFIG = "readline gdbm ${@bb.utils.filter('DISTRO_FEATURES', 'lto', d)}"
 
