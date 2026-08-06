@@ -31,4 +31,4 @@ FILES:${PN} += "/usr/lib/enigma2/python/Plugins/SystemPlugins/BluetoothSetup/"
 
 INHIBIT_PACKAGE_STRIP = "1"
 INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
-INSANE_SKIP:${PN} += "32bit-time ldflags"
+INSANE_SKIP:${PN} += "32bit-time ldflags already-stripped"
