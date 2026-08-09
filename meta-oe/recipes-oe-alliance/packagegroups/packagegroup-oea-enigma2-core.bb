@@ -9,6 +9,8 @@ inherit packagegroup
 
 ALLOW_EMPTY:${PN} = "1"
 
+require transcoding.inc
+
 DEPENDS = "enigma2 enigma2-locale-meta"
 
 RDEPENDS:${PN} = "\
@@ -42,6 +44,7 @@ ENIGMA2_CORE_EXTENDED_RDEPENDS = "\
     wireless-tools \
     nmap \
     network-usb-drivers-meta \
+    ${@get_transcoding_plugin_package(d)} \
     ${@bb.utils.contains("MACHINEBUILD", "gbquad", "enigma2-plugin-drivers-network-usb-smsc75xx", "", d)} \
     ${@bb.utils.contains("MACHINEBUILD", "gbquadplus", "enigma2-plugin-drivers-network-usb-smsc75xx", "", d)} \
     ${@bb.utils.contains("DISTRO_FEATURES", "no-autobouquetsmaker", "", "enigma2-plugin-systemplugins-autobouquetsmaker", d)} \
@@ -52,8 +55,6 @@ ENIGMA2_CORE_EXTENDED_RDEPENDS = "\
     ${@bb.utils.contains("MACHINE_FEATURES", "ci", "enigma2-plugin-systemplugins-commoninterfaceassignment", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "fanctrl", "enigma2-plugin-systemplugins-fancontrol", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "fan", "enigma2-plugin-systemplugins-tempfancontrol", "", d)} \
-    ${@bb.utils.contains("MACHINE_FEATURES", "transcoding", "enigma2-plugin-systemplugins-transcodingsetup", "", d)} \
-    ${@bb.utils.contains("MACHINE_FEATURES", "multitranscoding", "enigma2-plugin-systemplugins-multitranscodingsetup", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "inibt", "enigma2-plugin-extensions-btdevicesmanager", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "himedia", "enigma2-plugin-systemplugins-servicehisilicon", "", d)} \
     "
