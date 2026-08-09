@@ -15,6 +15,8 @@ SRC_URI = " \
             file://modules \
 "
 
+S = "${UNPACKDIR}"
+
 do_compile() {
 }
 do_populate_sysroot() {

@@ -22,7 +22,6 @@ PR = "r9"
 do_install() {
         install -d ${D}${base_libdir}
         ln -sf libgcc_s.so.1 ${D}${base_libdir}/libgcc_s_nof.so.1
-        install -d ${D}${libdir}
 }
 
 pkg_postinst:${PN}() {
