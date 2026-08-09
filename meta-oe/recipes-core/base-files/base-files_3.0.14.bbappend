@@ -1,6 +1,9 @@
 PACKAGE_ARCH = "${MACHINEBUILD}"
 
-PR:append = ".10"
+# Trigger opkg update on the box when distro-versions repo bumps DISTRO_VERSION.
+# Tilde (~) turns pre-release suffixes into a proper "older than release" marker
+# for opkg's dpkg-style compare (e.g. 800~beta < 800).
+PR = "r${@(d.getVar('DISTRO_VERSION') or 'nover').replace('-','~').replace('.','')}"
 
 FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 FILESEXTRAPATHS:prepend := "${THISDIR}/${DISTRO_NAME}:"
