@@ -1,6 +1,6 @@
 SUMMARY = "Enigma2 Live555 RTSP/HLS D-Bus streaming daemon"
 SECTION = "multimedia"
-LICENSE = "CLOSED"
+require conf/license/license-gplv2.inc
 
 DEPENDS = "glib-2.0 gstreamer1.0 gstreamer1.0-plugins-base live555 openssl"
 
