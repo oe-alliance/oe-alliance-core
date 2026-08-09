@@ -25,8 +25,12 @@ export WAF_NO_PREFORK = "yes"
 # to help generate the cross answer when adding new board support.
 CROSS_METHOD ?= "answer"
 
-export COMPILE_ET = "${STAGING_DIR_NATIVE}${bindir}/compile_et"
-export ASN1_COMPILE = "${STAGING_DIR_NATIVE}${bindir}/asn1_compile"
+# QEMU_EXEC for the heimdal wrappers / HEIMDAL_ASN1 waf rule (patch 403):
+# target compile_et / asn1_compile run through qemu-native. Needed in both
+# do_compile and do_install (make install re-runs waf tasks).
+export QEMU_EXEC = "${@qemu_target_binary(d)} -L ${STAGING_DIR_HOST}"
+# STAGING_DIR_HOST contains ${MACHINE}: without excluding it we'd get a per-MACHINE sstate hash
+QEMU_EXEC[vardepsexclude] = "STAGING_DIR_HOST"
 
 do_configure() {
     perl -i -pe 's#lp_private_dir#lp_pid_directory#' ${S}/source3/lib/messages.c

@@ -4,7 +4,7 @@ require samba-waf.inc
 #inherit cpan-base perlnative python3native pkgconfig
 inherit  cpan-base perlnative perl-version pkgconfig
 
-DEPENDS += "asn1compile-native libparse-yapp-perl-native bison-native qemu-native libxslt-native docbook-xsl-stylesheets-native e2fsprogs jansson readline zlib popt gnutls libtalloc libtasn1"
+DEPENDS += "libparse-yapp-perl-native bison-native qemu-native libxslt-native docbook-xsl-stylesheets-native e2fsprogs jansson readline zlib popt gnutls libtalloc libtasn1"
 
 inherit features_check
 REQUIRED_DISTRO_FEATURES = "pam"
@@ -83,7 +83,7 @@ EXTRA_OECONF += "--disable-cups \
                  --with-modulesdir=${libdir} \
                  --with-static-modules=${SAMBA4_MODULES_STATIC},!DEFAULT,!FORCED \
                  --with-shared-modules=${SAMBA4_MODULES_SHARED},!DEFAULT,!FORCED \
-                 --bundled-libraries=NONE,tevent,tevent-util,texpect,tdb,ldb,tdr,libquic,libngtcp2_crypto_gnutls,cmocka,replace,roken,wind,hx509,asn1,heimbase,hcrypto,krb5,gssapi,heimntlm,hdb,kdc,!asn1_compile,!compile_et \
+                 --bundled-libraries=heimdal,libquic,NONE,tevent,tevent-util,texpect,tdb,ldb,tdr,libngtcp2_crypto_gnutls,cmocka,replace \
                  --private-libraries=tevent,tevent-util,texpect,tdb,ldb,tdr,cmocka,replace \
                  --with-pam --with-pammodulesdir=${base_libdir}/security \
                  --with-pam_smbpass \

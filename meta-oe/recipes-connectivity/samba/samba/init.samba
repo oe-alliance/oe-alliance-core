@@ -31,6 +31,7 @@ prepare_shares() {
     [ -f /etc/samba/smb-shares.conf ] && rm /etc/samba/smb-shares.conf
 
     for FILE in /etc/samba/shares/*.conf; do
+        [ -e "$FILE" ] || continue
         path=$(grep "path\s*=\s*" "$FILE" | tr -d " \t\n\r" | cut -d'=' -f2)
         if [ -n "$path" ] && [ -d "$path" ]; then
             echo "include = $FILE" >> /etc/samba/smb-shares.conf

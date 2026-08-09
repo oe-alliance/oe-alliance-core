@@ -1,4 +1,5 @@
 PV = "4.24.5"
+PR = "r1"
 HOMEPAGE = "https://www.samba.org/"
 SECTION = "console/network"
 
@@ -36,7 +37,7 @@ SRC_URI = "${SAMBA_MIRROR}/stable/samba-${PV}.tar.gz \
            file://302-dynamically-create-a-samba-account-if-needed.patch \
            file://400-samba-4.14-remove-getpwent_r.patch \
            file://401-cmocka-uintptr_t.patch \
-           file://402-fix-finding-tools-heimdal-embedded.patch \
+           file://403-heimdal-wrappers-use-qemu.patch \
            file://500-SO_REUSEPORT-socket-option-nofail.patch \
            file://smb.conf \
            file://smb-user.conf \
