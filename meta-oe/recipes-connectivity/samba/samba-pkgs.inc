@@ -96,7 +96,7 @@ FILES:${PN} = " \
                ${libexecdir}/samba/rpcd_classic \
                ${libexecdir}/samba/rpcd_winreg \
               "
-RDEPENDS:${PN} += "${BPN}-common wsdd"
+RDEPENDS:${PN} += "${BPN}-common wsdd2"
 INSANE_SKIP:${PN} += "dev-so"
 
 # Server admin tools that are not needed in our image

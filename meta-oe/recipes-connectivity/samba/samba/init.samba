@@ -7,13 +7,13 @@
 # Default-Stop:      0 1 6
 # Should-Start:      slapd cups
 # Should-Stop:       slapd cups
-# Short-Description: start Samba SMB daemons (smbd/wsdd/nmbd)
+# Short-Description: start Samba SMB daemons (smbd/wsdd2/nmbd)
 ### END INIT INFO
 
 WSDD_DISABLED="Yes"
 SMBD="/usr/sbin/smbd"
 NMBD="/usr/sbin/nmbd"
-WSDD="/usr/sbin/wsdd"
+WSDD="/usr/sbin/wsdd2"
 
 # Check if executables exist
 [ -x "$SMBD" ] || exit 0
@@ -59,8 +59,8 @@ case "$1" in
     fi
     
     if [ "$WSDD_DISABLED" != "Yes" ]; then
-      echo -n " wsdd"
-      /etc/init.d/wsdd &
+      echo -n " wsdd2"
+      /etc/init.d/wsdd2 &
     fi
     
     echo "."
@@ -73,8 +73,8 @@ case "$1" in
     echo -n " nmbd"
     start-stop-daemon --stop --quiet --pidfile /var/run/nmbd.pid
     
-    echo -n " wsdd"
-    start-stop-daemon --stop --quiet --pidfile /var/run/wsdd.pid
+    echo -n " wsdd2"
+    start-stop-daemon --stop --quiet --exec $WSDD
     
     echo "."
     ;;
@@ -88,7 +88,7 @@ case "$1" in
     start-stop-daemon --stop --quiet --signal 1 --exec $NMBD
     
     if [ "$WSDD_DISABLED" != "Yes" ]; then
-      start-stop-daemon --stop --quiet --pidfile /var/run/wsdd.pid
+      start-stop-daemon --stop --quiet --exec $WSDD
       sleep 1
       start-stop-daemon --start --quiet --exec $WSDD
     fi

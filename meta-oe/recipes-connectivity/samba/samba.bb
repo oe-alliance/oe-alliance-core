@@ -226,7 +226,6 @@ do_install() {
     install -m 644 ${UNPACKDIR}/users.map ${D}${sysconfdir}/samba/private
     install -d ${D}${sysconfdir}/init.d
     install -m 755 ${UNPACKDIR}/init.samba ${D}${sysconfdir}/init.d/samba
-    install -m 755 ${UNPACKDIR}/init.wsdd ${D}${sysconfdir}/init.d/wsdd
     install -d ${D}${sysconfdir}/samba/shares
     install -m 644 ${UNPACKDIR}/share.template ${D}${sysconfdir}/samba/shares
 
