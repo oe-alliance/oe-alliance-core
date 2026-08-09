@@ -60,7 +60,6 @@ FILES:${BPN}-common = "${sysconfdir}/default \
                       "
 
 CONFFILES:${BPN}-common = "${sysconfdir}/pam.d/samba \
-                           ${sysconfdir}/samba/smb-user.conf \
                            ${sysconfdir}/samba/private/users.map \
                            ${sysconfdir}/samba/private/smbpasswd \
                            ${sysconfdir}/samba/smb-local.conf \

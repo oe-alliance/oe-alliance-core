@@ -211,7 +211,6 @@ do_install() {
     install -d ${D}${sysconfdir}/samba/private
     echo "127.0.0.1 localhost" > ${D}${sysconfdir}/samba/lmhosts
     install -m 644 ${UNPACKDIR}/smb.conf ${D}${sysconfdir}/samba
-    install -m 644 ${UNPACKDIR}/smb-user.conf ${D}${sysconfdir}/samba
 
     if ${@bb.utils.contains_any('DISTRO_NAME','openatv openvix opendroid openspa','true','false',d)}; then
         install -m 644 ${UNPACKDIR}/smb-local.conf ${D}${sysconfdir}/samba

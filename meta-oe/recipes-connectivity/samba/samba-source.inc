@@ -40,7 +40,6 @@ SRC_URI = "${SAMBA_MIRROR}/stable/samba-${PV}.tar.gz \
            file://403-heimdal-wrappers-use-qemu.patch \
            file://500-SO_REUSEPORT-socket-option-nofail.patch \
            file://smb.conf \
-           file://smb-user.conf \
            file://smb-branding.conf \
            file://smb-global.conf \
            file://smb-shares.conf \
