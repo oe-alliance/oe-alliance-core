@@ -38,14 +38,16 @@ def _oea_yocto_codename(d):
 
 YOCTO_CODENAME = "${@_oea_yocto_codename(d)}"
 
-# BRAND_LAYER: derive from BBLAYERS by picking any entry under meta-brands/.
+# BRAND_LAYER: layer in BBLAYERS that provides conf/machine/${MACHINE}.conf.
 def _oea_brand_layer(d):
     import os
-    return ' '.join(
-        os.path.basename(l)
-        for l in (d.getVar('BBLAYERS') or '').split()
-        if '/meta-brands/' in l
-    )
+    machine = d.getVar('MACHINE') or ''
+    if not machine:
+        return ''
+    for l in (d.getVar('BBLAYERS') or '').split():
+        if os.path.isfile(os.path.join(l, 'conf', 'machine', machine + '.conf')):
+            return os.path.basename(l)
+    return ''
 
 BRAND_LAYER = "${@_oea_brand_layer(d)}"
 
@@ -107,6 +109,16 @@ def oea_repositories_info(d):
             except Exception:
                 pass
             try:
+                b, _ = bb.process.run(['git', '-C', p, 'rev-parse',
+                                       '--abbrev-ref', 'HEAD@{upstream}'])
+                b = b.strip()
+                if b.startswith('origin/'):
+                    b = b[len('origin/'):]
+                if b:
+                    return b
+            except Exception:
+                pass
+            try:
                 r, _ = bb.process.run(['git', '-C', p, 'for-each-ref',
                                        '--points-at', 'HEAD',
                                        '--format=%(refname:short)',
@@ -128,7 +140,17 @@ def oea_repositories_info(d):
                     return b
             except Exception:
                 pass
-            return 'detached'
+            try:
+                b, _ = bb.process.run(['git', '-C', p, 'symbolic-ref',
+                                       '--short', 'refs/remotes/origin/HEAD'])
+                b = b.strip()
+                if b.startswith('origin/'):
+                    b = b[len('origin/'):]
+                if b:
+                    return b
+            except Exception:
+                pass
+            return ''
 
         def _dirty(p):
             env = os.environ.copy()
@@ -149,11 +171,14 @@ def oea_repositories_info(d):
             u = (url or '').strip().rstrip('/')
             if u.endswith('.git'):
                 u = u[:-4]
-            m = re.match(r'(?:git@[^:]+:|https?://[^/]+/|ssh://[^/]+/)(.+)$', u)
+            m = re.match(r'(?:git@([^:]+):|https?://([^/]+)/|ssh://([^/]+)/)(.+)$', u)
             if not m:
                 return ''
-            parts = m.group(1).split('/')
-            return parts[-2] if len(parts) >= 2 else ''
+            host = m.group(1) or m.group(2) or m.group(3) or ''
+            parts = m.group(4).split('/')
+            if len(parts) >= 2:
+                return parts[-2]
+            return host
 
         def _origin_url(p):
             try:
@@ -192,8 +217,8 @@ def oea_repositories_info(d):
         rows = []
         for name, full, url in entries:
             b, r = _branch(full, name), _rev(full)
-            rows.append((name, '%s:%s' % (b, r), _org(url),
-                         _date(full), _dirty(full)))
+            bs = ('%s:%s' % (b, r)) if b else r
+            rows.append((name, bs, _org(url), _date(full), _dirty(full)))
 
         # enigma2 (or per-distro fork) tip — read from BitBake's own
         # BB_URI_HEADREVS persistent cache, populated during recipe parse
