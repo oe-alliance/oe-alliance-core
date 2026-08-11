@@ -8,7 +8,7 @@
 +dri_drivers = get_option('dri-drivers')
 +
 +with_dri = get_option('dri') or (dri_drivers.length() != 0 and dri_drivers != [''])
- if with_gallium and (system_has_kms_drm or (freedreno_kmds.contains('kgsl') and with_gallium_zink))
+ if with_gallium and (system_has_kms_drm or (with_gallium_zink and (freedreno_kmds.contains('kgsl') or host_machine.system() == 'darwin')))
    _glx = get_option('glx')
    _egl = get_option('egl')
 --- a/meson.options
