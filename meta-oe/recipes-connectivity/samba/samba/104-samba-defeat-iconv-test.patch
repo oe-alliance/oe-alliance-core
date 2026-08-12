@@ -14,7 +14,7 @@ Signed-off-by: Joe Slater <joe.slater@windriver.com>
  1 file changed, 3 insertions(+)
 
 diff --git a/lib/util/charset/wscript_configure b/lib/util/charset/wscript_configure
-index adae44e..222ae80 100644
+index 451f7f7..bec69e2 100644
 --- a/lib/util/charset/wscript_configure
 +++ b/lib/util/charset/wscript_configure
 @@ -17,6 +17,8 @@ if (conf.CHECK_FUNCS_IN('iconv_open', 'iconv', checklibc=False, headers='iconv.h

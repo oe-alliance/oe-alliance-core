@@ -1,5 +1,5 @@
 diff --git a/lib/util/charset/wscript_configure b/lib/util/charset/wscript_configure
-index 222ae80..841e6fe 100644
+index bec69e2..76b8a78 100644
 --- a/lib/util/charset/wscript_configure
 +++ b/lib/util/charset/wscript_configure
 @@ -44,14 +44,14 @@ conf.CHECK_CODE('''

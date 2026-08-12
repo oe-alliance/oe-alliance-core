@@ -13,10 +13,10 @@ See: https://www.spinics.net/lists/samba/msg175560.html, https://bugzilla.samba.
  1 file changed, 2 deletions(-)
 
 diff --git a/source3/lib/util_sock.c b/source3/lib/util_sock.c
-index 5ff875c..be87524 100644
+index ce6d646..bd77499 100644
 --- a/source3/lib/util_sock.c
 +++ b/source3/lib/util_sock.c
-@@ -284,7 +284,6 @@ int open_socket_in(
+@@ -285,7 +285,6 @@ int open_socket_in_protocol(
  		ret = -errno;
  		DBG_DEBUG("setsockopt(SO_REUSEADDR) failed: %s\n",
  			  strerror(errno));
@@ -24,7 +24,7 @@ index 5ff875c..be87524 100644
  	}
  
  #ifdef SO_REUSEPORT
-@@ -294,7 +293,6 @@ int open_socket_in(
+@@ -295,7 +294,6 @@ int open_socket_in_protocol(
  		ret = -errno;
  		DBG_DEBUG("setsockopt(SO_REUSEPORT) failed: %s\n",
  			  strerror(errno));

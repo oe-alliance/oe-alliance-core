@@ -16,10 +16,10 @@ Signed-off-by: Yi Zhao <yi.zhao@windriver.com>
  1 file changed, 48 deletions(-)
 
 diff --git a/source3/wscript b/source3/wscript
-index 250ea71..0da9e84 100644
+index 7a4f43b..b611a64 100644
 --- a/source3/wscript
 +++ b/source3/wscript
-@@ -1101,54 +1101,6 @@ err:
+@@ -1138,54 +1138,6 @@ err:
  #include <fcntl.h>
  #include <unistd.h>
  #include <stdlib.h>

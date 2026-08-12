@@ -10,10 +10,10 @@ Rebase to 4.14.4
 Signed-off-by: Yi Zhao <yi.zhao@windriver.com>
 ---
 diff --git a/buildtools/wafsamba/wscript b/buildtools/wafsamba/wscript
-index e18bc4f..002168a 100644
+index 1f69510..ab35009 100644
 --- a/buildtools/wafsamba/wscript
 +++ b/buildtools/wafsamba/wscript
-@@ -148,6 +148,13 @@ Currently the only tested value is 'smbtorture,smbd/smbd' for Samba'''),
+@@ -155,6 +155,13 @@ Currently the only tested value is 'smbtorture,smbd/smbd' for Samba'''),
                     help=("Disable use of gettext"),
                     action="store_true", dest='disable_gettext', default=False)
  
@@ -28,10 +28,10 @@ index e18bc4f..002168a 100644
  
      gr.add_option('-C',
 diff --git a/lib/replace/wscript b/lib/replace/wscript
-index 77e655b..be3ee28 100644
+index be2a6ae..c069cbf 100644
 --- a/lib/replace/wscript
 +++ b/lib/replace/wscript
-@@ -443,31 +443,32 @@ def configure(conf):
+@@ -464,31 +464,32 @@ def configure(conf):
  
      strlcpy_in_bsd = False
  

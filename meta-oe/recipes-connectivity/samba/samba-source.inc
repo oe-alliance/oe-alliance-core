@@ -1,5 +1,7 @@
-PV = "4.24.5"
-PR = "r1"
+PV = "4.25.0"
+PR = "r0~rc1"
+UPSTREAM_PV = "4.25.0rc1"
+S = "${UNPACKDIR}/samba-${UPSTREAM_PV}"
 HOMEPAGE = "https://www.samba.org/"
 SECTION = "console/network"
 
@@ -17,7 +19,7 @@ ${SAMBA_MIRROR}    http://www.mirrorservice.org/sites/ftp.samba.org \n \
 export PYTHONHASHSEED = "1"
 
 FILESEXTRAPATHS:prepend := "${THISDIR}/samba:"
-SRC_URI = "${SAMBA_MIRROR}/stable/samba-${PV}.tar.gz \
+SRC_URI = "${SAMBA_MIRROR}/rc/samba-${UPSTREAM_PV}.tar.gz \
            file://001-samba-4.14-pam.patch \
            file://010-source3-msgsock-nvram-fix.patch \
            file://011-source4-msgsock-nvram-fix.patch \
@@ -52,10 +54,6 @@ SRC_URI = "${SAMBA_MIRROR}/stable/samba-${PV}.tar.gz \
            file://share.template \
            "
 
-SRC_URI:append:arm = " \
-           file://500-arm-status-segfault-fix.patch \
-          "
-
 SRC_URI:append:openatv = " \
            file://smb-local.conf \
           "
@@ -69,5 +67,5 @@ SRC_URI:append:openspa = " \
            file://smb-local.conf \
           "
 
-SRC_URI[sha256sum] = "6d5d7ee82f5ce9da4135086c9b184e47a58b4b023565f58abbb1f8c8a922306b"
-UPSTREAM_CHECK_REGEX = "samba\-(?P<pver>4\.24(\.\d+)+).tar.gz"
+SRC_URI[sha256sum] = "4674c2ddac1488477c75992b7e59fa56ca25e4bd133332db708bda49fdd4e3df"
+UPSTREAM_CHECK_REGEX = "samba\-(?P<pver>4\.25(\.\d+)+).tar.gz"

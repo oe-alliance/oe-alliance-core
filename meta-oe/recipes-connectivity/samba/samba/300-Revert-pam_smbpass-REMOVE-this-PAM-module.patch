@@ -2056,10 +2056,10 @@ index 0000000..48ccb32
 +        enabled=bld.env.with_pam_smbpass
 +        )
 diff --git a/source3/wscript_build b/source3/wscript_build
-index 824f961..dc71de9 100644
+index 24d9666..ac6e913 100644
 --- a/source3/wscript_build
 +++ b/source3/wscript_build
-@@ -1305,6 +1305,7 @@ bld.RECURSE('librpc')
+@@ -1287,6 +1287,7 @@ bld.RECURSE('librpc')
  bld.RECURSE('librpc/idl')
  bld.RECURSE('libsmb')
  bld.RECURSE('modules')

@@ -12,7 +12,21 @@ handlers for the target arch.
 
 Upstream-Status: Inappropriate [OE cross-compile specific]
 
+diff --git a/third_party/heimdal_build/asn1_compile_wrapper.sh b/third_party/heimdal_build/asn1_compile_wrapper.sh
+index c449bf8..32227fd 100755
+--- a/third_party/heimdal_build/asn1_compile_wrapper.sh
++++ b/third_party/heimdal_build/asn1_compile_wrapper.sh
+@@ -49,7 +49,7 @@ cd ${BUILDDIR} && {
+ }
+ 
+ cd ${DESTDIR} && {
+-	${ABS_BUILDDIR}/${CMD} ${OPTIONS} ${FILE} ${NAME} >&2 || exit 1;
++	${QEMU_EXEC:-} ${ABS_BUILDDIR}/${CMD} ${OPTIONS} ${FILE} ${NAME} >&2 || exit 1;
+ 	cd ${CURDIR}
+ } || {
+ 	echo "${SELF}:cannot cd into '${BUILDDIR}'" >&2;
 diff --git a/third_party/heimdal_build/et_compile_wrapper.sh b/third_party/heimdal_build/et_compile_wrapper.sh
+index 939b434..8977ac6 100755
 --- a/third_party/heimdal_build/et_compile_wrapper.sh
 +++ b/third_party/heimdal_build/et_compile_wrapper.sh
 @@ -37,7 +37,7 @@ cd "${DESTDIR}" && {
@@ -24,36 +38,25 @@ diff --git a/third_party/heimdal_build/et_compile_wrapper.sh b/third_party/heimd
  	cd "${CURDIR}"
  	TMP="${SOURCE}.$$"
  	mv "${SOURCE}" "${TMP}" && {
-diff --git a/third_party/heimdal_build/asn1_compile_wrapper.sh b/third_party/heimdal_build/asn1_compile_wrapper.sh
---- a/third_party/heimdal_build/asn1_compile_wrapper.sh
-+++ b/third_party/heimdal_build/asn1_compile_wrapper.sh
-@@ -48,7 +48,7 @@ cd ${BUILDDIR} && {
- }
-
- cd ${DESTDIR} && {
--	${ABS_BUILDDIR}/${CMD} ${OPTIONS} ${FILE} ${NAME} >&2 || exit 1;
-+	${QEMU_EXEC:-} ${ABS_BUILDDIR}/${CMD} ${OPTIONS} ${FILE} ${NAME} >&2 || exit 1;
- 	cd ${CURDIR}
- } || {
- 	echo "${SELF}:cannot cd into '${BUILDDIR}'" >&2;
 diff --git a/third_party/heimdal_build/wscript_build b/third_party/heimdal_build/wscript_build
+index ebbf943..46b864f 100644
 --- a/third_party/heimdal_build/wscript_build
 +++ b/third_party/heimdal_build/wscript_build
 @@ -5,6 +5,8 @@ from samba_utils import SET_TARGET_TYPE
  from samba_autoconf import CURRENT_CFLAGS
  from samba_utils import LOAD_ENVIRONMENT, TO_LIST
-
+ 
 +QEMU_EXEC = os.environ.get('QEMU_EXEC', '')
 +
  def heimdal_path(p, absolute=False):
      hpath = os.path.join("../heimdal", p)
      if not absolute:
-@@ -65,7 +67,7 @@ def HEIMDAL_ASN1(name, source,
-
+@@ -66,7 +68,7 @@ def HEIMDAL_ASN1(name, source,
+ 
      asn1_rule = cd_rule + \
          no_leak_check + \
 -        ' "${ASN1_COMPILE}" ${OPTION_FILE} ${ASN1OPTIONS} ' \
 +        ' ' + QEMU_EXEC + ' "${ASN1_COMPILE}" ${OPTION_FILE} ${ASN1OPTIONS} ' \
          + template_str \
          + ' --one-code-file "${SRC[0].abspath(env)}" ${ASN1NAME}'
-
+ 

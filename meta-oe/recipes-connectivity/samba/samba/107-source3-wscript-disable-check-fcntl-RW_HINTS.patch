@@ -16,10 +16,10 @@ Signed-off-by: Yi Zhao <yi.zhao@windriver.com>
  1 file changed, 61 deletions(-)
 
 diff --git a/source3/wscript b/source3/wscript
-index 0da9e84..5dce1bb 100644
+index b611a64..7f4e41a 100644
 --- a/source3/wscript
 +++ b/source3/wscript
-@@ -1097,67 +1097,6 @@ err:
+@@ -1134,67 +1134,6 @@ err:
              execute=True,
              msg="Checking whether fcntl lock supports open file description locks")
  
