@@ -4,8 +4,7 @@ LICENSE = "GPL-2.0-only"
 SECTION = "base"
 PRIORITY = "required"
 
-PKGV = "0.13"
-#PR = "r0"
+PKGV = "2.44"
 
 require conf/license/license-gplv2.inc
 
@@ -227,7 +226,6 @@ do_install() {
 
 	# it_IT
 	link_locale it_IT it_CH
-	link_locale it_IT ro_RO
 
 	# tr_TR
 	link_locale tr_TR ku_KU
