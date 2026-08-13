@@ -18,6 +18,6 @@ inherit setuptools3-openplugins
 
 SRC_URI = "git://github.com/oe-alliance-plugins/STBKodiLauncher.git;protocol=https;branch=main"
 
-RPROVIDES:${PN} += "enigma2-plugin-extensions-kodi"
-RREPLACES:${PN} += "enigma2-plugin-extensions-kodi"
-RCONFLICTS:${PN} += "enigma2-plugin-extensions-kodi"
+RPROVIDES:${PN} = "enigma2-plugin-extensions-kodi"
+RREPLACES:${PN} = "enigma2-plugin-extensions-kodi"
+RCONFLICTS:${PN} = "enigma2-plugin-extensions-kodi"

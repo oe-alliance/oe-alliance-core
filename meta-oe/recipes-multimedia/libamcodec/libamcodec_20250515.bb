@@ -1,6 +1,6 @@
 SUMMARY = "Amlogic vendor codec userspace library"
 DESCRIPTION = "AArch64 libamcodec ABI used by the Amlogic 4.9 hardware decoder stack"
-LICENSE = "CLOSED"
+require conf/license/license-close.inc
 
 LIBAMCODEC_REV = "d28bf07facc8727de52ba1f70c1362f9e19adc25"
 
