@@ -1,0 +1,28 @@
+From 9a8a66ca3a48648cc763360501d3cd55444ac637 Mon Sep 17 00:00:00 2001
+From: OpenATV STB Kodi <noreply@openatv.invalid>
+Date: Sat, 8 Aug 2026 22:10:00 +0200
+Subject: [PATCH] settings: default SMB minimum protocol to SMB2_02
+
+Older NAS devices can support SMB2_02 without supporting SMB2_10.  Keep
+SMB1 disabled while allowing those devices to work with the default STB
+Kodi configuration.  Users can still select a stricter minimum protocol
+in the services settings.
+---
+ system/settings/settings.xml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/system/settings/settings.xml b/system/settings/settings.xml
+index 627c10d76d..a29a8cc4bd 100755
+--- a/system/settings/settings.xml
++++ b/system/settings/settings.xml
+@@ -2574,7 +2574,7 @@
+         </setting>
+         <setting id="smb.minprotocol" type="integer" label="36628" help="36629">
+           <level>2</level>
+-          <default>21</default>
++          <default>2</default>
+           <constraints>
+             <options>smbversions</options>
+           </constraints>
+--
+2.39.5

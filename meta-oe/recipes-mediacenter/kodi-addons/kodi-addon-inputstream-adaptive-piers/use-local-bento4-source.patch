@@ -1,0 +1,38 @@
+From: OpenATV STB Kodi Team
+Subject: [PATCH] cmake: allow a pre-fetched Bento4 source directory
+
+BitBake fetches and verifies all sources before configure.  Let the internal
+Bento4 ExternalProject consume that checkout without accessing the network
+during do_compile.
+
+---
+ FindBento4.cmake | 15 +++++++++++++--
+ 1 file changed, 13 insertions(+), 2 deletions(-)
+
+diff --git a/FindBento4.cmake b/FindBento4.cmake
+index 14db6d7..756d316 100644
+--- a/FindBento4.cmake
++++ b/FindBento4.cmake
+@@ -34,7 +34,18 @@ if(ENABLE_INTERNAL_BENTO4)
+   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
++  if(BENTO4_SOURCE_DIR)
++    get_filename_component(BENTO4_SOURCE_DIR "${BENTO4_SOURCE_DIR}" ABSOLUTE)
++    set(BENTO4_SOURCE_ARGS
++        SOURCE_DIR ${BENTO4_SOURCE_DIR}
++        DOWNLOAD_COMMAND ""
++        UPDATE_COMMAND "")
++  else()
++    set(BENTO4_SOURCE_ARGS
++        URL ${BENTO4_URL}
++        DOWNLOAD_DIR ${CMAKE_BINARY_DIR}/download)
++  endif()
++
+   externalproject_add(bento4
+-                      URL ${BENTO4_URL}
+-                      DOWNLOAD_DIR ${CMAKE_BINARY_DIR}/download
++                      ${BENTO4_SOURCE_ARGS}
+                       PREFIX ${CMAKE_BINARY_DIR}/bento4
+                       PATCH_COMMAND ${PATCH_COMMAND}
+                       CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/bento4/install
+-- 
+2.50.1

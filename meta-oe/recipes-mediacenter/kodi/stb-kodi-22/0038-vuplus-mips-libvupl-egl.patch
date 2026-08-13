@@ -1,0 +1,426 @@
+From 16d0bb579982b6bc39db761ec1d3b7e6617ba841 Mon Sep 17 00:00:00 2001
+From: OE-Alliance <oe-alliance@users.noreply.github.com>
+Date: Sun, 9 Aug 2026 22:30:00 +0200
+Subject: [PATCH] vuplus mips: use libvupl EGL platform directly
+
+The old Kodi support archive wraps the VUGLES API in gles_init.a and tears
+that wrapper down while EGL is already being destroyed.  Use the public
+libvupl interface directly, keep the vendor platform alive for the process
+lifetime, and derive the selectable HDMI modes from procfs.
+
+This is the MIPSel equivalent of the runtime native-window path used on newer
+VU+ ARM receivers, but deliberately uses eglvuplus.h rather than the different
+NXPL client ABI.
+---
+ cmake/platform/linux/stb.cmake             |   3 +-
+ xbmc/windowing/egl/EGLNativeTypeVuplus.cpp | 302 ++++++++++++++++++++++-------
+ 2 files changed, 239 insertions(+), 66 deletions(-)
+
+diff --git a/cmake/platform/linux/stb.cmake b/cmake/platform/linux/stb.cmake
+index b7a5a1be599..b82e9142fa8 100644
+--- a/cmake/platform/linux/stb.cmake
++++ b/cmake/platform/linux/stb.cmake
+@@ -36,8 +36,7 @@ elseif(WITH_PLATFORM STREQUAL "vuplus-cortexa15")
+   list(APPEND DEPLIBS EGL GLESv2 KodiGLESPL dvb_base nxpl dvb_client)
+ elseif(WITH_PLATFORM STREQUAL "vuplus-mipsel")
+   list(APPEND PLATFORM_DEFINES "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_STB_EXTEND -DTARGET_V3D -DTARGET_VUPLUS -DTARGET_VUPLUS_MIPSEL")
+-  list(APPEND DEPLIBS ${CMAKE_SOURCE_DIR}/xbmc/windowing/egl/gles_init.a EGL GLESv2 dvb_base nxpl xbmc_base dvb_client)
+-  list(APPEND SYSTEM_LDFLAGS -L${CMAKE_SOURCE_DIR}/../xbmc-support)
++  list(APPEND DEPLIBS EGL GLESv2 vupl nxpl)
+ elseif(WITH_PLATFORM STREQUAL "v3d-cortexa15")
+   set(CPU cortexa15)
+   list(APPEND PLATFORM_DEFINES "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_STB_EXTEND -DTARGET_V3D -DTARGET_V3DNXPL")
+diff --git a/xbmc/windowing/egl/EGLNativeTypeVuplus.cpp b/xbmc/windowing/egl/EGLNativeTypeVuplus.cpp
+index bf1df30525d..fa8c09d8c31 100644
+--- a/xbmc/windowing/egl/EGLNativeTypeVuplus.cpp
++++ b/xbmc/windowing/egl/EGLNativeTypeVuplus.cpp
+@@ -31,14 +31,126 @@
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
++#include <fstream>
++#include <sstream>
+ #if defined(TARGET_VUPLUS_ARM)
+ #include "KodiGLESPL.h"
+ #else
+-#include "gles_init.h"
++#include <eglvuplus.h>
+ #endif
+ 
+ using namespace std;
+ 
++#if defined(TARGET_VUPLUS_MIPSEL)
++namespace
++{
++VUGLES_PlatformHandle g_vuplPlatform = nullptr;
++unsigned int g_vuplClientId = 0;
++bool g_vuplReady = false;
++
++bool ReadProcString(const char* path, std::string& value)
++{
++  std::ifstream input(path);
++  if (!input)
++    return false;
++  std::getline(input, value);
++  while (!value.empty() &&
++         (value.back() == '\n' || value.back() == '\r' || value.back() == ' ' ||
++          value.back() == '\t'))
++    value.pop_back();
++  return !value.empty();
++}
++
++bool WriteProcString(const char* path, const std::string& value)
++{
++  std::ofstream output(path);
++  if (!output)
++    return false;
++  output << value;
++  return output.good();
++}
++
++bool ParseVuVideoMode(const std::string& mode,
++                      unsigned int& outputWidth,
++                      unsigned int& outputHeight,
++                      float& refreshRate,
++                      bool& interlaced)
++{
++  if (mode == "pal")
++  {
++    outputWidth = 720;
++    outputHeight = 576;
++    refreshRate = 50.0f;
++    interlaced = true;
++    return true;
++  }
++  if (mode == "ntsc")
++  {
++    outputWidth = 720;
++    outputHeight = 480;
++    refreshRate = 59.94f;
++    interlaced = true;
++    return true;
++  }
++
++  const size_t scanIndex = mode.find_first_of("pi");
++  if (scanIndex == std::string::npos || scanIndex == 0)
++    return false;
++  outputHeight = static_cast<unsigned int>(
++      std::strtoul(mode.substr(0, scanIndex).c_str(), nullptr, 10));
++  switch (outputHeight)
++  {
++    case 480:
++    case 576:
++      outputWidth = 720;
++      break;
++    case 720:
++      outputWidth = 1280;
++      break;
++    case 1080:
++      outputWidth = 1920;
++      break;
++    default:
++      return false;
++  }
++
++  interlaced = mode[scanIndex] == 'i';
++  const unsigned int namedRate =
++      scanIndex + 1 < mode.size()
++          ? static_cast<unsigned int>(std::strtoul(mode.c_str() + scanIndex + 1, nullptr, 10))
++          : (outputHeight == 576 ? 50U : 60U);
++  switch (namedRate)
++  {
++    case 24:
++      refreshRate = 23.976f;
++      break;
++    case 30:
++      refreshRate = 29.97f;
++      break;
++    case 60:
++      refreshRate = 59.94f;
++      break;
++    default:
++      refreshRate = static_cast<float>(namedRate);
++      break;
++  }
++  return namedRate != 0;
++}
++
++void FillNativeWindowInfo(VUGLES_NativeWindowInfo& nativeWindow, int width, int height)
++{
++  VUGLES_GetDefaultNativeWindowInfo(&nativeWindow);
++  nativeWindow.width = width;
++  nativeWindow.height = height;
++  nativeWindow.x = 0;
++  nativeWindow.y = 0;
++  nativeWindow.stretch = true;
++  nativeWindow.clientID = 0;
++  nativeWindow.zOrder = 0;
++}
++} // unnamed namespace
++#endif
++
+ bool CEGLNativeTypeVuplus::CheckCompatibility()
+ {
+   return true;
+@@ -46,6 +158,18 @@ bool CEGLNativeTypeVuplus::CheckCompatibility()
+ 
+ void CEGLNativeTypeVuplus::Initialize()
+ {
++#if defined(TARGET_VUPLUS_MIPSEL)
++  m_desktopRes.bFullScreen = true;
++  m_desktopRes.iWidth = 1920;
++  m_desktopRes.iHeight = 1080;
++  m_desktopRes.iScreenWidth = 1920;
++  m_desktopRes.iScreenHeight = 1080;
++  m_desktopRes.dwFlags = D3DPRESENTFLAG_PROGRESSIVE;
++  m_desktopRes.fRefreshRate = 50.0f;
++  m_desktopRes.iSubtitles = static_cast<int>(0.965 * m_desktopRes.iHeight);
++  m_desktopRes.strId = "1080p50";
++  m_desktopRes.strMode = "1920x1080 @ 50.000 - Full Screen (1080p50)";
++#endif
+ }
+ 
+ void CEGLNativeTypeVuplus::Destroy()
+@@ -54,15 +177,53 @@ void CEGLNativeTypeVuplus::Destroy()
+ 
+ bool CEGLNativeTypeVuplus::CreateNativeDisplay()
+ {
++#if defined(TARGET_VUPLUS_MIPSEL)
++  if (!g_vuplReady)
++  {
++    float aspect = 1.0f;
++    const vuInitResult result = VUGLES_InitPlatformAndDefaultDisplay(
++        "Kodi", &aspect, m_desktopRes.iWidth, m_desktopRes.iHeight);
++    if (result != vuInitSuccess)
++    {
++      CLog::Log(LOGERROR, "VU+ MIPSel: VUGLES platform init failed: {}",
++                static_cast<int>(result));
++      return false;
++    }
++    VUGLES_RegisterDisplayPlatform(&g_vuplPlatform);
++    if (!g_vuplPlatform)
++    {
++      CLog::Log(LOGERROR, "VU+ MIPSel: VUGLES display registration failed");
++      return false;
++    }
++    g_vuplReady = true;
++    CLog::Log(LOGINFO, "VU+ MIPSel: VUGLES platform ready for {}x{}", m_desktopRes.iWidth,
++              m_desktopRes.iHeight);
++  }
++  m_nativeDisplay = 0;
++  return true;
++#else
+   GLES_Native_Init();
+   return GLES_Native_CreateNativeDisplay(&m_nativeDisplay);
++#endif
+ }
+ 
+ bool CEGLNativeTypeVuplus::CreateNativeWindow()
+ {
++#if defined(TARGET_VUPLUS_MIPSEL)
++  VUGLES_NativeWindowInfo nativeWindow{};
++  FillNativeWindowInfo(nativeWindow, m_desktopRes.iWidth, m_desktopRes.iHeight);
++  m_nativeWindow = VUGLES_CreateNativeWindow(&nativeWindow);
++  if (m_nativeWindow)
++    g_vuplClientId = VUGLES_GetClientID(m_nativeWindow);
++#else
+   m_nativeWindow = GLES_Native_CreateNativeWindow();
++#endif
+   if (!m_nativeWindow) {
+ 	  return false;
+   }
++#if defined(TARGET_VUPLUS_MIPSEL)
++  CLog::Log(LOGINFO, "VU+ MIPSel: native window {}x{}, client {}", nativeWindow.width,
++            nativeWindow.height, g_vuplClientId);
++#endif
+   return true;
+ }
+@@ -81,13 +240,23 @@ bool CEGLNativeTypeVuplus::GetNativeWindow(XBNativeDisplayType **nativeWindow) c
+ 
+ bool CEGLNativeTypeVuplus::DestroyNativeDisplay()
+ {
++#if defined(TARGET_VUPLUS_MIPSEL)
++  // The vendor compositor objects belong to this process.  Let process exit
++  // release them; tearing the platform down after EGL is unsafe on old VU+.
++  m_nativeDisplay = 0;
++#else
+   GLES_Native_DestroyNativeDisplay();
++#endif
+   return true;
+ }
+ 
+ bool CEGLNativeTypeVuplus::DestroyNativeWindow()
+ {
++#if defined(TARGET_VUPLUS_MIPSEL)
++  m_nativeWindow = 0;
++#else
+   GLES_Native_DestroyNativeWindow();
++#endif
+   return true;
+ }
+ 
+@@ -98,67 +267,108 @@ bool CEGLNativeTypeVuplus::GetNativeResolution(RESOLUTION_INFO *res) const
+ 
+ bool CEGLNativeTypeVuplus::SetNativeResolution(const RESOLUTION_INFO &res)
+ {
++#if defined(TARGET_VUPLUS_MIPSEL)
++  std::string driverMode = res.strId;
++  const size_t stereoSuffix = driverMode.rfind('-');
++  if (stereoSuffix != std::string::npos)
++    driverMode.erase(stereoSuffix);
++  std::string currentDriverMode = m_desktopRes.strId;
++  const size_t currentStereoSuffix = currentDriverMode.rfind('-');
++  if (currentStereoSuffix != std::string::npos)
++    currentDriverMode.erase(currentStereoSuffix);
++  if (!driverMode.empty() && driverMode != currentDriverMode &&
++      !WriteProcString("/proc/stb/video/videomode", driverMode))
++  {
++    CLog::Log(LOGERROR, "VU+ MIPSel: failed to set HDMI mode '{}'", driverMode);
++    return false;
++  }
++  // Keep the VUGLES native window stable across refresh-only HDMI changes.
++  // Every exposed mode deliberately uses a 1920x1080 GUI surface, so updating
++  // the vendor window here is redundant.  On BCM7425 it invalidates the new
++  // EGL surface/client association and the renderer never completes its reset.
++  CLog::Log(LOGINFO, "VU+ MIPSel: HDMI mode {} at {:.3f} Hz", driverMode,
++            res.fRefreshRate);
++#endif
+   m_desktopRes = res;
+   return true;
+ }
+ 
+ bool CEGLNativeTypeVuplus::ProbeResolutions(std::vector<RESOLUTION_INFO> &resolutions)
+ {
+   resolutions.clear();
+-
+-  m_desktopResAll[0].bFullScreen  = true;
+-  m_desktopResAll[0].iWidth       = 1280;
+-  m_desktopResAll[0].iHeight      = 720;
+-  m_desktopResAll[0].iScreenWidth = 1280;
+-  m_desktopResAll[0].iScreenHeight= 720;
+-  m_desktopResAll[0].dwFlags      =  D3DPRESENTFLAG_PROGRESSIVE;
+-  m_desktopResAll[0].fRefreshRate = 50;
+-  m_desktopResAll[0].strMode = StringUtils::Format("{:d}x{:d}", 1280, 720);
+-  m_desktopResAll[0].strMode = StringUtils::Format("{} @ {:.2f}{} - Full Screen", m_desktopRes.strMode.c_str(), (float)50,m_desktopRes.dwFlags & D3DPRESENTFLAG_INTERLACED ? "i" : "");
+-
+-  m_desktopResAll[0].iSubtitles   = (int)(0.965 * m_desktopResAll[0].iHeight);
+-
+-  CLog::Log(LOGDEBUG, "EGL initial desktop resolution {}\n", m_desktopResAll[0].strMode.c_str());
+-
+-  resolutions.push_back(m_desktopResAll[0]);
+-
+-  m_desktopResAll[1].bFullScreen  = true;
+-  m_desktopResAll[1].iWidth       = 1280;
+-  m_desktopResAll[1].iHeight      = 720;
+-  m_desktopResAll[1].iScreenWidth = 1280;
+-  m_desktopResAll[1].iScreenHeight= 720;
+-  m_desktopResAll[1].dwFlags      =  D3DPRESENTFLAG_PROGRESSIVE;
+-
+-  m_desktopResAll[1].dwFlags      |=  D3DPRESENTFLAG_MODE3DSBS;
+-  m_desktopResAll[1].fRefreshRate = 50;
+-  m_desktopResAll[1].strMode = StringUtils::Format("{:d}x{:d}", 1280, 720);
+-  m_desktopResAll[1].strMode = StringUtils::Format("{} @ {:.2f}{} - Full Screen 3DSBS", m_desktopResAll[1].strMode.c_str(), (float)50,m_desktopResAll[1].dwFlags & D3DPRESENTFLAG_INTERLACED ? "i" : "");
+-
+-  m_desktopResAll[1].iSubtitles   = (int)(0.965 * m_desktopResAll[1].iHeight);
+-
+-  CLog::Log(LOGDEBUG, "EGL initial desktop resolution {}\n", m_desktopResAll[1].strMode.c_str());
+-
+-  resolutions.push_back(m_desktopResAll[1]);
+-
+-  m_desktopResAll[2].bFullScreen  = true;
+-  m_desktopResAll[2].iWidth       = 1280;
+-  m_desktopResAll[2].iHeight      = 720;
+-  m_desktopResAll[2].iScreenWidth = 1280;
+-  m_desktopResAll[2].iScreenHeight= 720;
+-  m_desktopResAll[2].dwFlags      =  D3DPRESENTFLAG_PROGRESSIVE;
+-
+-  m_desktopResAll[2].dwFlags      |=  D3DPRESENTFLAG_MODE3DTB;
+-  m_desktopResAll[2].fRefreshRate = 50;
+-  m_desktopResAll[2].strMode = StringUtils::Format("{:d}x{:d}", 1280, 720);
+-  m_desktopResAll[2].strMode = StringUtils::Format("{} @ {:.2f}{} - Full Screen 3DTB", m_desktopResAll[2].strMode.c_str(), (float)50,m_desktopResAll[2].dwFlags & D3DPRESENTFLAG_INTERLACED ? "i" : "");
+-
+-  m_desktopResAll[2].iSubtitles   = (int)(0.965 * m_desktopResAll[2].iHeight);
+-
+-  CLog::Log(LOGDEBUG, "EGL initial desktop resolution {}\n", m_desktopResAll[2].strMode.c_str());
+-
+-  resolutions.push_back(m_desktopResAll[2]);
+-
+-  m_desktopRes = m_desktopResAll[0];
++  std::string currentMode;
++  std::string modeChoices;
++  ReadProcString("/proc/stb/video/videomode", currentMode);
++  if (!ReadProcString("/proc/stb/video/videomode_choices", modeChoices))
++    modeChoices = "720p50 720p60 1080p24 1080p25 1080p30 1080p50 1080p60";
++
++  bool foundCurrent = false;
++  bool foundPreferred = false;
++  std::istringstream choices(modeChoices);
++  std::string modeName;
++  while (choices >> modeName)
++  {
++    unsigned int outputWidth = 0;
++    unsigned int outputHeight = 0;
++    float refreshRate = 0.0f;
++    bool interlaced = false;
++    if (!ParseVuVideoMode(modeName, outputWidth, outputHeight, refreshRate, interlaced) ||
++        interlaced || outputHeight < 720 || outputWidth > 1920 || outputHeight > 1080)
++      continue;
++    if (modeName == "1080p" && modeChoices.find("1080p60") != std::string::npos)
++      continue;
++
++    RESOLUTION_INFO resolution;
++    resolution.bFullScreen = true;
++    resolution.iWidth = 1920;
++    resolution.iHeight = 1080;
++    resolution.iScreenWidth = outputWidth;
++    resolution.iScreenHeight = outputHeight;
++    resolution.dwFlags = D3DPRESENTFLAG_PROGRESSIVE;
++    resolution.fRefreshRate = refreshRate;
++    resolution.iSubtitles = static_cast<int>(0.965 * resolution.iHeight);
++    resolution.strId = modeName;
++    resolution.strMode = StringUtils::Format("{}x{} @ {:.3f} - Full Screen ({})", outputWidth,
++                                              outputHeight, refreshRate, modeName);
++    resolutions.push_back(resolution);
++    if (modeName == currentMode)
++    {
++      m_desktopRes = resolution;
++      foundCurrent = true;
++    }
++    if (modeName == "1080p50")
++    {
++      m_desktopResAll[0] = resolution;
++      foundPreferred = true;
++    }
++  }
++
++  if (resolutions.empty())
++  {
++    resolutions.push_back(m_desktopRes);
++    m_desktopResAll[0] = m_desktopRes;
++    foundCurrent = true;
++    foundPreferred = true;
++  }
++  if (!foundPreferred)
++    m_desktopResAll[0] = resolutions.front();
++  if (!foundCurrent)
++    m_desktopRes = m_desktopResAll[0];
++
++  m_desktopResAll[1] = m_desktopResAll[0];
++  m_desktopResAll[1].dwFlags |= D3DPRESENTFLAG_MODE3DSBS;
++  m_desktopResAll[1].strId += "-sbs";
++  m_desktopResAll[1].strMode += " 3DSBS";
++  resolutions.push_back(m_desktopResAll[1]);
++
++  m_desktopResAll[2] = m_desktopResAll[0];
++  m_desktopResAll[2].dwFlags |= D3DPRESENTFLAG_MODE3DTB;
++  m_desktopResAll[2].strId += "-tab";
++  m_desktopResAll[2].strMode += " 3DTB";
++  resolutions.push_back(m_desktopResAll[2]);
++
++  CLog::Log(LOGINFO, "VU+ MIPSel: exposed {} HDMI modes up to FHD, current '{}'",
++            resolutions.size(), currentMode);
+ 
+   return true;
+ }
+-- 
+2.51.0

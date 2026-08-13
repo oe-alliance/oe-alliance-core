@@ -1,0 +1,37 @@
+From: OpenATV STB Kodi Team <oe.patch@openatv.example>
+Date: Thu, 13 Aug 2026 10:30:00 +0200
+Subject: [PATCH] GLES: force the GLES2 renderer path on HiSilicon CV200
+
+Kodi requests an EGL_CONTEXT_CLIENT_VERSION 2 context on the STB windowing
+backend and is built with OPENGLES_FORCE_GLES2.  The HiSilicon CV200 Mali-T720
+driver still reports "OpenGL ES 3.1" through GL_VERSION.  Kodi consequently
+selects its GLES 3.1 shaders and texture handling at runtime, which renders
+transparent GUI images with a black background while text remains correct.
+
+Keep the actual driver string in the graphics log, but expose GLES 2.0 to
+Kodi's renderer selection on the affected CV200 receivers.  Other HiSilicon
+SoCs and hardware video composition remain unchanged.
+
+diff --git a/xbmc/rendering/gles/RenderSystemGLES.cpp b/xbmc/rendering/gles/RenderSystemGLES.cpp
+--- a/xbmc/rendering/gles/RenderSystemGLES.cpp
++++ b/xbmc/rendering/gles/RenderSystemGLES.cpp
+@@ -59,6 +59,17 @@ bool CRenderSystemGLES::InitRenderSystem()
+       sscanf(ver, "%*s %*s %d.%d", &m_RenderVersionMajor, &m_RenderVersionMinor);
+     m_RenderVersion = ver;
+   }
++#if defined(TARGET_HISI_CV200)
++  if (m_RenderVersionMajor >= 3)
++  {
++    CLog::Log(LOGINFO,
++              "HiSilicon CV200 GLES compatibility: driver reports {}, forcing Kodi's GLES 2.0 "
++              "renderer path",
++              m_RenderVersion);
++    m_RenderVersionMajor = 2;
++    m_RenderVersionMinor = 0;
++  }
++#endif
+ 
+   // Get our driver vendor and renderer
+   const char *tmpVendor = (const char*) glGetString(GL_VENDOR);
+-- 
+2.45.2.windows.1

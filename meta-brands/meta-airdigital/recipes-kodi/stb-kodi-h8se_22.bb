@@ -6,7 +6,9 @@ PROVIDES += "kodi"
 RPROVIDES:${PN} += "kodi"
 RDEPENDS:${PN} += "airdigital-mali-${HICHIPSET}"
 
+PR:append = ".1"
+
 EXTRA_OECMAKE += " \
     -DWITH_PLATFORM=mali-cortexa15 \
+    -DOPENGLES_FORCE_GLES2=ON \
 "
-

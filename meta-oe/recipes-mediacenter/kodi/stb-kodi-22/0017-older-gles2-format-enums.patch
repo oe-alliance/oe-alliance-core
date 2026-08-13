@@ -1,0 +1,30 @@
+From: OpenATV STB Kodi Team <oe.patch@openatv.example>
+Date: Sat, 8 Aug 2026 13:00:00 +0200
+Subject: [PATCH] GLES2: define format enums missing from legacy STB headers
+
+Some vendor GLES2 header sets used by STBs predate the GL_RED, GL_RG and
+GL_R16F enum definitions. Kodi 22's generic GL format helpers reference these
+values even when compiled for GLES2. The R16F upload already has a GLES2
+luminance fallback when the driver rejects the format. Keep the compatibility
+definitions in the central GL include wrapper so all GLES users see the same
+guarded values without pretending that the runtime supports GLES3.
+
+diff --git a/xbmc/system_gl.h b/xbmc/system_gl.h
+--- a/xbmc/system_gl.h
++++ b/xbmc/system_gl.h
+@@ -41,3 +41,15 @@
+ #endif
+ #endif
+ #endif
++
++#ifdef HAS_GLES
++#ifndef GL_RED
++#define GL_RED 0x1903
++#endif
++#ifndef GL_RG
++#define GL_RG 0x8227
++#endif
++#ifndef GL_R16F
++#define GL_R16F 0x822D
++#endif
++#endif

@@ -1,0 +1,43 @@
+From b0af01206e55bb91278a04820ef2537cdf9e85e2 Mon Sep 17 00:00:00 2001
+From: OpenATV STB Kodi <noreply@openatv.local>
+Date: Mon, 10 Aug 2026 19:45:00 +0200
+Subject: [PATCH] ALSA: avoid blocking drain on Dreambox MIPS sink switches
+
+The BCM7435 PCM implementation used by DM7080 and DM820 can block in
+snd_pcm_drain() while ActiveAE changes from the GUI stream to a movie stream.
+ActiveAE gives the synchronous CONFIGURE request five seconds, so the late
+reply leaves its state machine out of sequence and audio packets subsequently
+time out or play in short stalled bursts.
+
+The old stream is closed immediately after Drain().  Drop its queued frames
+and prepare it instead of waiting in the vendor drain implementation.  This
+matches the workaround already proven on the related VuPlus Broadcom PCM path
+but is selected separately for Dreambox MIPS builds.
+---
+ xbmc/cores/AudioEngine/Sinks/AESinkALSA.cpp | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
+
+diff --git a/xbmc/cores/AudioEngine/Sinks/AESinkALSA.cpp b/xbmc/cores/AudioEngine/Sinks/AESinkALSA.cpp
+index 872def41f1..5f24070e91 100644
+--- a/xbmc/cores/AudioEngine/Sinks/AESinkALSA.cpp
++++ b/xbmc/cores/AudioEngine/Sinks/AESinkALSA.cpp
+@@ -991,8 +991,15 @@ void CAESinkALSA::Drain()
+   if (!m_pcm)
+     return;
+ 
+-  snd_pcm_drain(m_pcm);
+-  snd_pcm_prepare(m_pcm);
++  /* Dreambox MIPS vendor PCM may wait indefinitely here.  OpenSink() calls
++   * Drain() synchronously while ActiveAE's CONFIGURE request has a five-second
++   * timeout.  The sink is deinitialized immediately afterwards, so queued
++   * samples do not need to be played to completion. */
++  const int dropResult = snd_pcm_drop(m_pcm);
++  if (dropResult < 0)
++    CLog::Log(LOGWARNING, "CAESinkALSA::Drain - snd_pcm_drop returned {} ({})", dropResult,
++              snd_strerror(dropResult));
++  snd_pcm_prepare(m_pcm);
+ }
+ 
+ void CAESinkALSA::AppendParams(std::string &device, const std::string &params)
+-- 
+2.50.1

@@ -1,0 +1,46 @@
+From: OpenATV STB Kodi Team <oe.patch@openatv.example>
+Date: Sat, 8 Aug 2026 12:30:00 +0200
+Subject: [PATCH] cmake: keep private libdvd pkg-config paths outside OE sysroot
+
+OpenEmbedded exports PKG_CONFIG_SYSROOT_DIR for target packages. Kodi's
+internally built libdvd libraries, however, install into the absolute private
+DEPENDS_PATH. When libdvdnav resolves the freshly built dvdread.pc, pkg-config
+otherwise prepends the OE sysroot to that absolute path and the headers and
+library can no longer be found.
+
+Unset the variable only for the isolated internal Meson configure processes.
+The compiler sysroot remains supplied by the generated Meson cross file.
+
+diff --git a/cmake/modules/FindLibDvdCSS.cmake b/cmake/modules/FindLibDvdCSS.cmake
+--- a/cmake/modules/FindLibDvdCSS.cmake
++++ b/cmake/modules/FindLibDvdCSS.cmake
+@@ -44,6 +44,7 @@ if(NOT TARGET LIBRARY::${CMAKE_FIND_PACKAGE_NAME})
+ 
+     if(${CMAKE_VERSION} VERSION_GREATER_EQUAL 3.26)
+       set(configure_env_mod ${CMAKE_COMMAND} -E env --modify NINJA=set:${NINJA_EXECUTABLE}
++                                                    --unset=PKG_CONFIG_SYSROOT_DIR
+                                                     ${additional_env_mod})
+     endif()
+ 
+diff --git a/cmake/modules/FindLibDvdNav.cmake b/cmake/modules/FindLibDvdNav.cmake
+--- a/cmake/modules/FindLibDvdNav.cmake
++++ b/cmake/modules/FindLibDvdNav.cmake
+@@ -39,6 +39,7 @@ if(NOT TARGET LIBRARY::${CMAKE_FIND_PACKAGE_NAME})
+ 
+     if(${CMAKE_VERSION} VERSION_GREATER_EQUAL 3.26)
+       set(configure_env_mod ${CMAKE_COMMAND} -E env --modify NINJA=set:${NINJA_EXECUTABLE}
++                                                    --unset=PKG_CONFIG_SYSROOT_DIR
+                                                     ${additional_env_mod})
+     endif()
+ 
+diff --git a/cmake/modules/FindLibDvdRead.cmake b/cmake/modules/FindLibDvdRead.cmake
+--- a/cmake/modules/FindLibDvdRead.cmake
++++ b/cmake/modules/FindLibDvdRead.cmake
+@@ -51,6 +51,7 @@ if(NOT TARGET LIBRARY::${CMAKE_FIND_PACKAGE_NAME})
+ 
+     if(${CMAKE_VERSION} VERSION_GREATER_EQUAL 3.26)
+       set(configure_env_mod ${CMAKE_COMMAND} -E env --modify NINJA=set:${NINJA_EXECUTABLE}
++                                                    --unset=PKG_CONFIG_SYSROOT_DIR
+                                                     ${additional_env_mod})
+     endif()
+ 

@@ -1,0 +1,32 @@
+From: OpenATV STB Kodi Team <oe.patch@openatv.example>
+Date: Sat, 8 Aug 2026 18:30:00 +0200
+Subject: [PATCH] cmake: allow legacy STB drivers to force GLES2
+
+Some vendor sysroots provide Mesa's GLES3 headers alongside a binary GLES2
+implementation.  Detecting the header alone makes Kodi compile and link the
+GLES3 capture path even though the driver does not export core GLES3 entry
+points such as glBlitFramebuffer.
+
+Add an explicit opt-in for those platforms.  The default auto-detection stays
+unchanged, while legacy drivers can select Kodi's existing GLES2 rendering and
+capture paths.
+
+---
+ cmake/modules/FindOpenGLES.cmake | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/cmake/modules/FindOpenGLES.cmake b/cmake/modules/FindOpenGLES.cmake
+--- a/cmake/modules/FindOpenGLES.cmake
++++ b/cmake/modules/FindOpenGLES.cmake
+@@ -49,7 +49,7 @@ if(NOT TARGET ${APP_NAME_LC}::${CMAKE_FIND_PACKAGE_NAME})
+                                               INTERFACE_INCLUDE_DIRECTORIES "${OPENGLES_INCLUDE_DIR}"
+                                               IMPORTED_NO_SONAME TRUE)
+ 
+-      if(OPENGLES3_INCLUDE_DIR)
++      if(OPENGLES3_INCLUDE_DIR AND NOT OPENGLES_FORCE_GLES2)
+         set_property(TARGET ${APP_NAME_LC}::${CMAKE_FIND_PACKAGE_NAME} APPEND PROPERTY
+                                                                             INTERFACE_INCLUDE_DIRECTORIES "${OPENGLES3_INCLUDE_DIR}")
+         set_target_properties(${APP_NAME_LC}::${CMAKE_FIND_PACKAGE_NAME} PROPERTIES
+-- 
+2.45.2.windows.1
+

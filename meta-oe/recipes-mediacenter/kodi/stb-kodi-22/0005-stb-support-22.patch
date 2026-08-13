@@ -86,7 +86,7 @@ diff --git a/xbmc/addons/addoninfo/AddonInfoBuilder.cpp b/xbmc/addons/addoninfo/
 index f464d37250..3a0a65d56d 100644
 --- a/xbmc/addons/addoninfo/AddonInfoBuilder.cpp
 +++ b/xbmc/addons/addoninfo/AddonInfoBuilder.cpp
-@@ -793,6 +793,12 @@ const char* CAddonInfoBuilder::GetPlatformLibraryName(const tinyxml2::XMLElement
+@@ -802,6 +802,12 @@ const char* CAddonInfoBuilder::GetPlatformLibraryName(const tinyxml2::XMLElement
  #if defined(TARGET_FREEBSD)
    libraryName = element->Attribute("library_freebsd");
    if (libraryName == nullptr)
@@ -99,7 +99,7 @@ index f464d37250..3a0a65d56d 100644
  #endif
    libraryName = element->Attribute("library_linux");
  #elif defined(TARGET_WINDOWS_DESKTOP)
-@@ -832,6 +838,12 @@ bool CAddonInfoBuilder::PlatformSupportsAddon(const AddonInfoPtr& addon)
+@@ -841,6 +847,12 @@ bool CAddonInfoBuilder::PlatformSupportsAddon(const AddonInfoPtr& addon)
  #else
      #warning no architecture dependant platform tag
  #endif
@@ -116,7 +116,7 @@ diff --git a/xbmc/cores/VideoPlayer/VideoRenderers/CMakeLists.txt b/xbmc/cores/V
 index 5467be87ef..7e017f7e28 100644
 --- a/xbmc/cores/VideoPlayer/VideoRenderers/CMakeLists.txt
 +++ b/xbmc/cores/VideoPlayer/VideoRenderers/CMakeLists.txt
-@@ -47,6 +47,7 @@ if(TARGET ${APP_NAME_LC}::OpenGLES AND ("android" IN_LIST CORE_PLATFORM_NAME_LC
+@@ -41,6 +41,7 @@ if(TARGET ${APP_NAME_LC}::OpenGLES AND ("android" IN_LIST CORE_PLATFORM_NAME_LC
                              "ios" IN_LIST CORE_PLATFORM_NAME_LC OR
                              "tvos" IN_LIST CORE_PLATFORM_NAME_LC OR
                              "gbm" IN_LIST CORE_PLATFORM_NAME_LC OR
@@ -140,7 +140,7 @@ diff --git a/xbmc/cores/VideoPlayer/VideoRenderers/VideoShaders/VideoFilterShade
 index c1cb6aa9a6..ed6c086381 100644
 --- a/xbmc/cores/VideoPlayer/VideoRenderers/VideoShaders/VideoFilterShaderGLES.cpp
 +++ b/xbmc/cores/VideoPlayer/VideoRenderers/VideoShaders/VideoFilterShaderGLES.cpp
-@@ -90,6 +90,10 @@ ConvolutionFilterShader::ConvolutionFilterShader(ESCALINGMETHOD method)
+@@ -91,6 +91,10 @@ ConvolutionFilterShader::ConvolutionFilterShader(ESCALINGMETHOD method, bool dit
      shadername = "gles_convolution-6x6.frag";
    }
  
@@ -151,14 +151,14 @@ index c1cb6aa9a6..ed6c086381 100644
    if (m_floattex)
    {
      m_internalformat = GL_RGBA16F_EXT;
-@@ -99,6 +103,7 @@ ConvolutionFilterShader::ConvolutionFilterShader(ESCALINGMETHOD method)
+@@ -100,6 +104,7 @@ ConvolutionFilterShader::ConvolutionFilterShader(ESCALINGMETHOD method, bool dit
    {
      m_internalformat = GL_RGBA;
    }
 +#endif
  
-   CLog::Log(LOGDEBUG, "GLES: using scaling method: {}", m_method);
-   CLog::Log(LOGDEBUG, "GLES: using shader: {}", shadername);
+   if (m_dither)
+     defines += "#define XBMC_DITHER\n";
 diff --git a/xbmc/platform/linux/input/CMakeLists.txt b/xbmc/platform/linux/input/CMakeLists.txt
 index 6f3bb68eee..d2c6da2c76 100644
 --- a/xbmc/platform/linux/input/CMakeLists.txt
@@ -174,8 +174,8 @@ index 6f3bb68eee..d2c6da2c76 100644
      list(APPEND SOURCES LibInputHandler.cpp
                          LibInputKeyboard.cpp
                          LibInputPointer.cpp
-@@ -22,6 +22,12 @@ if("gbm" IN_LIST CORE_PLATFORM_NAME_LC)
-   endif()
+@@ -28,6 +28,12 @@ if(("gbm" IN_LIST CORE_PLATFORM_NAME_LC AND TARGET ${APP_NAME_LC}::LibInput) OR
+                       XkbCompat.h)
  endif()
  
 +if("stb" IN_LIST CORE_PLATFORM_NAME_LC)
@@ -1977,7 +1977,7 @@ diff --git a/xbmc/utils/CMakeLists.txt b/xbmc/utils/CMakeLists.txt
 index 3f979510f9..a47f645bc0 100644
 --- a/xbmc/utils/CMakeLists.txt
 +++ b/xbmc/utils/CMakeLists.txt
-@@ -187,10 +187,17 @@ set(HEADERS ActorProtocol.h
+@@ -191,10 +191,17 @@ set(HEADERS ActorProtocol.h
              XMLUtils.h
              XTimeUtils.h)
  
@@ -6895,4 +6895,3 @@ index 0000000000..8e6fbfd10a
 +};
 -- 
 2.45.2.windows.1
-

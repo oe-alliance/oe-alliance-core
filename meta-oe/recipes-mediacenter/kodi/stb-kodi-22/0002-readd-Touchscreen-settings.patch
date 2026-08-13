@@ -12,7 +12,7 @@ diff --git a/xbmc/settings/AdvancedSettings.cpp b/xbmc/settings/AdvancedSettings
 index 54b9fc0624..03f95d13f9 100644
 --- a/xbmc/settings/AdvancedSettings.cpp
 +++ b/xbmc/settings/AdvancedSettings.cpp
-@@ -355,6 +355,12 @@ void CAdvancedSettings::Initialize()
+@@ -445,6 +445,12 @@ void CAdvancedSettings::Initialize()
    m_iEdlCommBreakAutowait = 0;             // Off by default
    m_iEdlCommBreakAutowind = 0;             // Off by default
  
@@ -25,7 +25,7 @@ index 54b9fc0624..03f95d13f9 100644
    m_curlconnecttimeout = 30;
    m_curllowspeedtime = 20;
    m_curlretries = 2;
-@@ -957,6 +963,16 @@ void CAdvancedSettings::ParseSettingsFile(const std::string &file)
+@@ -1060,6 +1066,16 @@ void CAdvancedSettings::ParseSettingsFile(const std::string &file)
      XMLUtils::GetInt(pElement, "commbreakautowind", m_iEdlCommBreakAutowind, -60, 60);        // Between -60 and 60 seconds
    }
  
@@ -40,15 +40,15 @@ index 54b9fc0624..03f95d13f9 100644
 +  }
 +
    // picture exclude regexps
-   TiXmlElement* pPictureExcludes = pRootElement->FirstChildElement("pictureexcludes");
+   const TiXmlElement* pPictureExcludes = pRootElement->FirstChildElement("pictureexcludes");
    if (pPictureExcludes)
 diff --git a/xbmc/settings/AdvancedSettings.h b/xbmc/settings/AdvancedSettings.h
 index ac83af65d2..bd25d396c6 100644
 --- a/xbmc/settings/AdvancedSettings.h
 +++ b/xbmc/settings/AdvancedSettings.h
-@@ -322,6 +322,12 @@ class CAdvancedSettings : public ISettingCallback, public ISettingsHandler
-     std::string m_cpuTempCmd;
-     std::string m_gpuTempCmd;
+@@ -356,6 +356,12 @@ class CAdvancedSettings : public ISettingCallback, public ISettingsHandler
+     std::string m_suspendCommand;
+     std::string m_hibernateCommand;
  
 +    // Touchscreen
 +    int m_screenAlign_xOffset;

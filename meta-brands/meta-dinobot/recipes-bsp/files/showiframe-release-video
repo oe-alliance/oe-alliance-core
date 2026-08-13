@@ -1,0 +1,31 @@
+#!/bin/sh
+
+# Dinobot showiframe keeps a hardware decoder allocated after Enigma2 has
+# stopped.  Patched packages map SIGUSR1 to releasing only that video channel,
+# while the daemon and its HDMI/GLES setup stay active for standalone Kodi.
+PID_FILE=/dev/si.pid
+
+[ -r "${PID_FILE}" ] || exit 0
+# The vendor daemon writes the PID without a trailing newline.  BusyBox read
+# assigns the value but returns EOF in that case, so use command substitution.
+PID="$(cat "${PID_FILE}" 2>/dev/null)"
+
+case "${PID}" in
+    ''|*[!0-9]*) exit 0 ;;
+esac
+
+[ -d "/proc/${PID}" ] || exit 0
+[ "$(readlink "/proc/${PID}/exe" 2>/dev/null)" = "/usr/bin/showiframe" ] || exit 0
+
+# Avoid delivering SIGUSR1 twice: the vendor close path is not specified as
+# idempotent, while absence of vdec00 already means Kodi can proceed.
+[ -e /proc/hisi/msp/vdec00 ] || exit 0
+kill -USR1 "${PID}" || exit 1
+
+COUNT=0
+while [ -e /proc/hisi/msp/vdec00 ] && [ "${COUNT}" -lt 20 ]; do
+    sleep 0.1
+    COUNT=$((COUNT + 1))
+done
+
+[ ! -e /proc/hisi/msp/vdec00 ]

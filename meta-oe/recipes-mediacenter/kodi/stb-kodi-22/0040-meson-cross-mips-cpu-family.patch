@@ -1,0 +1,40 @@
+From: OpenATV STB Kodi Team <oe.patch@openatv.example>
+Date: Mon, 10 Aug 2026 23:05:00 +0200
+Subject: [PATCH] cmake: describe MIPS targets in generated Meson cross files
+
+Kodi's Meson cross-file helper only maps ARM, x86 and WebAssembly CPU
+families.  OpenEmbedded supplies mipsel through CMAKE_SYSTEM_PROCESSOR, while
+the Kodi-specific CPU variable is empty.  The generated libdvd cross files
+therefore contain an empty cpu_family and Meson aborts before compiling.
+
+Fall back to CMAKE_SYSTEM_PROCESSOR and map both 32-bit and 64-bit MIPS names
+to the corresponding Meson CPU families.  This keeps the existing compiler
+and endian flags supplied by the OpenEmbedded toolchain file.
+
+diff --git a/cmake/scripts/common/ModuleHelpers.cmake b/cmake/scripts/common/ModuleHelpers.cmake
+--- a/cmake/scripts/common/ModuleHelpers.cmake
++++ b/cmake/scripts/common/ModuleHelpers.cmake
+@@ -834,7 +834,11 @@ function(create_mesonhostmachine)
+   if(CMAKE_C_COMPILER_ARCHITECTURE_ID)
+     string(TOUPPER "${CMAKE_C_COMPILER_ARCHITECTURE_ID}" UPPER_C_ARCH)
+   else()
+-    string(TOUPPER "${CPU}" UPPER_C_ARCH)
++    if(CPU)
++      string(TOUPPER "${CPU}" UPPER_C_ARCH)
++    else()
++      string(TOUPPER "${CMAKE_SYSTEM_PROCESSOR}" UPPER_C_ARCH)
++    endif()
+   endif()
+ 
+   # Non-exhaustive list to map cmake CPU to meson cpu names
+@@ -849,6 +853,10 @@ function(create_mesonhostmachine)
+     set(meson_cpu_family x86)
+   elseif("${UPPER_C_ARCH}" MATCHES "WASM")
+     set(meson_cpu_family wasm32)
++  elseif("${UPPER_C_ARCH}" MATCHES "^MIPS64")
++    set(meson_cpu_family mips64)
++  elseif("${UPPER_C_ARCH}" MATCHES "^MIPS")
++    set(meson_cpu_family mips)
+   endif()
+ 
+   # Non-exhaustive list to map cmake to meson os names

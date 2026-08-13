@@ -1,0 +1,186 @@
+From: OpenATV STB Kodi Team <oe.patch@openatv.example>
+Date: Wed, 12 Aug 2026 09:50:00 +0200
+Subject: [PATCH] Amlogic: separate HDMI timing from fixed fbdev GUI geometry
+
+DreamOne/Two uses a fixed 1280x720 Mali fbdev surface even when HDMI runs at
+1920x1080.  Enumerating only fb0/modes loses all HDMI refresh rates, while
+using the framebuffer size as the physical screen also leaves the amvideo
+plane at 1280x720.  Expose the real Amlogic HDMI modes but retain the active
+fbdev size as Kodi's GUI surface.
+
+diff --git a/xbmc/windowing/egl/EGLNativeTypeMali.cpp b/xbmc/windowing/egl/EGLNativeTypeMali.cpp
+index 612e626..8e44805 100644
+--- a/xbmc/windowing/egl/EGLNativeTypeMali.cpp
++++ b/xbmc/windowing/egl/EGLNativeTypeMali.cpp
+@@ -20,8 +20,12 @@
+ #include "EGLNativeTypeMali.h"
+ #include <EGL/egl.h>
+ #include "utils/log.h"
++#if defined(TARGET_AMLOGIC)
++#include "utils/AMLUtils.h"
++#endif
+ 
+ #include <algorithm>
++#include <cmath>
+ #include <cstdio>
+ #include <cstring>
+ #include <linux/fb.h>
+@@ -85,6 +89,28 @@ void FillResolution(RESOLUTION_INFO& res, unsigned int width, unsigned int height)
+   res.strMode = res.strId;
+ }
+ 
++void SetGuiGeometry(RESOLUTION_INFO& res, unsigned int width, unsigned int height)
++{
++  res.iWidth = width;
++  res.iHeight = height;
++  res.Overscan.left = 0;
++  res.Overscan.top = 0;
++  res.Overscan.right = width;
++  res.Overscan.bottom = height;
++  res.iSubtitles = static_cast<int>(0.965f * height);
++}
++
++bool IsDuplicateDisplayMode(const std::vector<RESOLUTION_INFO>& resolutions,
++                            const RESOLUTION_INFO& mode)
++{
++  return std::any_of(resolutions.cbegin(), resolutions.cend(), [&mode](const auto& candidate) {
++    return candidate.iScreenWidth == mode.iScreenWidth &&
++           candidate.iScreenHeight == mode.iScreenHeight &&
++           std::fabs(candidate.fRefreshRate - mode.fRefreshRate) < 0.01f &&
++           candidate.strId == mode.strId;
++  });
++}
++
+ bool IsDuplicateResolution(const std::vector<RESOLUTION_INFO>& resolutions,
+                            unsigned int width,
+                            unsigned int height)
+@@ -110,7 +136,14 @@ bool CEGLNativeTypeMali::_GetNativeResolution(RESOLUTION_INFO *res) const {
+   }
+   close(fd);
+ 
++#if defined(TARGET_AMLOGIC)
++  if (!aml_get_native_resolution(res))
++    FillResolution(*res, vinfo.xres, vinfo.yres);
++  else
++    SetGuiGeometry(*res, vinfo.xres, vinfo.yres);
++#else
+   FillResolution(*res, vinfo.xres, vinfo.yres);
++#endif
+ 
+   return true;
+ }
+@@ -202,6 +235,33 @@ bool CEGLNativeTypeMali::SetNativeResolution(const RESOLUTION_INFO &res) {
+   if (res.iWidth <= 0 || res.iHeight <= 0)
+     return false;
+ 
++#if defined(TARGET_AMLOGIC)
++  {
++    RESOLUTION_INFO target = res;
++    RESOLUTION_INFO parsed;
++    if (!aml_mode_to_resolution(target.strId.c_str(), &parsed))
++    {
++      RESOLUTION_INFO current;
++      if (!aml_get_native_resolution(&current))
++        return false;
++      target.strId = current.strId;
++      target.strMode = current.strMode;
++      target.iScreenWidth = current.iScreenWidth;
++      target.iScreenHeight = current.iScreenHeight;
++      target.fRefreshRate = current.fRefreshRate;
++      target.dwFlags = current.dwFlags;
++    }
++    const bool modeApplied = aml_set_display_resolution(target, "fb0", false);
++    if (modeApplied)
++    {
++      aml_handle_scale(target);
++      m_fbdevWindow.width = static_cast<unsigned short>(target.iWidth);
++      m_fbdevWindow.height = static_cast<unsigned short>(target.iHeight);
++    }
++    return modeApplied;
++  }
++#endif
++
+   const int fd = open("/dev/fb0", O_RDWR, 0);
+   if (fd < 0)
+   {
+@@ -280,6 +340,23 @@ bool CEGLNativeTypeMali::ProbeResolutions(std::vector<RESOLUTION_INFO> &resolutions) {
+   CLog::Log(LOGDEBUG, "CEGLNativeTypeMali::ProbeResolutions()\n");
+   resolutions.clear();
+ 
++#if defined(TARGET_AMLOGIC)
++  {
++    RESOLUTION_INFO current;
++    std::vector<RESOLUTION_INFO> displayModes;
++    if (!_GetNativeResolution(&current) || !aml_probe_resolutions(displayModes))
++      return false;
++
++    for (auto& mode : displayModes)
++    {
++      SetGuiGeometry(mode, current.iWidth, current.iHeight);
++      if (!IsDuplicateDisplayMode(resolutions, mode))
++        resolutions.emplace_back(mode);
++    }
++    return !resolutions.empty();
++  }
++#endif
++
+   if (IsHiSiliconHifb())
+   {
+     RESOLUTION_INFO current;
+@@ -326,6 +403,9 @@ bool CEGLNativeTypeMali::GetPreferredResolution(RESOLUTION_INFO *res) const {
+   CLog::Log(LOGDEBUG, "CEGLNativeTypeMali::GetPreferredResolution()\n");
++#if defined(TARGET_AMLOGIC)
++  return _GetNativeResolution(res);
++#endif
+   if (IsHiSiliconHifb())
+     return _GetNativeResolution(res);
+ 
+   std::vector<RESOLUTION_INFO> resolutions;
+   if (const_cast<CEGLNativeTypeMali*>(this)->ProbeResolutions(resolutions))
+diff --git a/xbmc/cores/VideoPlayer/DVDCodecs/Video/RendererSTB.cpp b/xbmc/cores/VideoPlayer/DVDCodecs/Video/RendererSTB.cpp
+index a5703d2478..54d3647870 100644
+--- a/xbmc/cores/VideoPlayer/DVDCodecs/Video/RendererSTB.cpp
++++ b/xbmc/cores/VideoPlayer/DVDCodecs/Video/RendererSTB.cpp
+@@ -5,6 +5,7 @@
+ 
+ #include "RendererSTB.h"
+ 
++#include "settings/DisplaySettings.h"
+ #include "cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodec.h"
+ #include "cores/VideoPlayer/VideoRenderers/RenderFactory.h"
+ #include "cores/VideoPlayer/VideoRenderers/RenderFlags.h"
+@@ -147,14 +148,30 @@ void CRendererSTB::ManageRenderArea()
+   if (m_sourceRect == m_appliedSource && m_destRect == m_appliedDestination)
+     return;
+ 
++  CRect physicalDestination = m_destRect;
++  const RESOLUTION_INFO& resolution =
++      CDisplaySettings::GetInstance().GetCurrentResolutionInfo();
++  if (resolution.iWidth > 0 && resolution.iHeight > 0 &&
++      (resolution.iScreenWidth != resolution.iWidth ||
++       resolution.iScreenHeight != resolution.iHeight))
++  {
++    const float xScale = static_cast<float>(resolution.iScreenWidth) / resolution.iWidth;
++    const float yScale = static_cast<float>(resolution.iScreenHeight) / resolution.iHeight;
++    physicalDestination.x1 *= xScale;
++    physicalDestination.x2 *= xScale;
++    physicalDestination.y1 *= yScale;
++    physicalDestination.y2 *= yScale;
++  }
++
+   const struct stbp_rect source{static_cast<int32_t>(std::lround(m_sourceRect.x1)),
+                                 static_cast<int32_t>(std::lround(m_sourceRect.y1)),
+                                 static_cast<int32_t>(std::lround(m_sourceRect.Width())),
+                                 static_cast<int32_t>(std::lround(m_sourceRect.Height()))};
+-  const struct stbp_rect destination{static_cast<int32_t>(std::lround(m_destRect.x1)),
+-                                     static_cast<int32_t>(std::lround(m_destRect.y1)),
+-                                     static_cast<int32_t>(std::lround(m_destRect.Width())),
+-                                     static_cast<int32_t>(std::lround(m_destRect.Height()))};
++  const struct stbp_rect destination{
++      static_cast<int32_t>(std::lround(physicalDestination.x1)),
++      static_cast<int32_t>(std::lround(physicalDestination.y1)),
++      static_cast<int32_t>(std::lround(physicalDestination.Width())),
++      static_cast<int32_t>(std::lround(physicalDestination.Height()))};
+   if (m_session->SetVideoRect(source, destination) == STBP_OK)
+   {
+     m_appliedSource = m_sourceRect;

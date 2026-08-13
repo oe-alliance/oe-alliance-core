@@ -7,7 +7,7 @@ PACKAGE_ARCH := "${MACHINE_ARCH}"
 PR = "r5-${SRCDATE}"
 
 PROVIDES = "virtual/libgles1 virtual/libgles2 virtual/egl"
-RPROVIDES:${PN} = "virtual-libgles1 virtual-libgles2 virtual-egl libEGL.so libGLESv2.so libmali.so"
+RPROVIDES:${PN} = "virtual-libgles1 virtual-libgles2 virtual-egl libMali.so libmali.so libEGL.so.1.4 libEGL.so.1 libEGL.so libGLESv1_CM.so.1.1 libGLESv1_CM.so.1 libGLESv1_CM.so libGLESv2.so.2.0 libGLESv2.so.2 libGLESv2.so"
 
 DEPENDS = "patchelf-native"
 

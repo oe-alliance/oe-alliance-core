@@ -14,7 +14,10 @@ LIBEGLRDEP:bcm7252s = "libvc5driver"
 
 RDEPENDS:${PN} = "${LIBEGLRDEP}"
 
-RPROVIDES:${PN} = "libegl libegl1 libgles2 libglesv2-2"
+# Keep the virtual runtime aliases declared above.  Assigning here used to
+# overwrite virtual-egl/virtual-libgles2, which made Kodi add-ons (and thus the
+# DM9x0 Kodi recipe itself) unbuildable even though libvc5dream provides GLES.
+RPROVIDES:${PN} += "libegl libegl1 libgles2 libglesv2-2"
 RPROVIDES:${PN}-dev = "libegl-dev libgles2-dev"
 
 RCONFLICTS:${PN} = "libegl libegl1 libgles2 libglesv2-2"

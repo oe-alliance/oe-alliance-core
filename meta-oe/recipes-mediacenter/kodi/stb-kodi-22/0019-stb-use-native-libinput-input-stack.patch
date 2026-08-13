@@ -1,0 +1,75 @@
+From: OpenATV STB Kodi Team <oe.patch@openatv.example>
+Date: Sat, 8 Aug 2026 15:20:00 +0200
+Subject: [PATCH] stb: use Kodi's native libinput input stack
+
+The historical STB window system instantiated both Kodi's current libinput
+handler and the old direct evdev reader.  A later workaround disabled the
+libinput constructor, but still started its thread with an invalid fd.  That
+produced an EPOLL_CTL_ADD/EBADF error and, more importantly, disabled native
+keyboard, pointer, touch and air-mouse support.
+
+Keep the STB message pump inert and let CLibInputHandler deliver all input
+through Kodi's normal application port.  The STB platform already selects the
+evdev key mapping, so remote-control keys remain on the native Kodi path too.
+
+---
+ xbmc/windowing/egl/WinEventsSTB.cpp | 31 +++----------------------------
+ 1 file changed, 3 insertions(+), 28 deletions(-)
+
+diff --git a/xbmc/windowing/egl/WinEventsSTB.cpp b/xbmc/windowing/egl/WinEventsSTB.cpp
+index 4c5d04ccf1..b3b1ac74a9 100644
+--- a/xbmc/windowing/egl/WinEventsSTB.cpp
++++ b/xbmc/windowing/egl/WinEventsSTB.cpp
+@@ -38,48 +38,24 @@ CLinuxInputDevices CWinEventsSTB::m_devices;
+ 
+ void CWinEventsSTB::RefreshDevices()
+ {
+-  m_devices.InitAvailable();
+ }
+ 
+ bool CWinEventsSTB::IsRemoteLowBattery()
+ {
+-  return m_devices.IsRemoteLowBattery();
+   return false;
+ }
+ 
+ bool CWinEventsSTB::MessagePump()
+ {
+-  std::shared_ptr<CAppInboundProtocol> appPort = CServiceBroker::GetAppPort();
+-
+   if (!m_initialized)
+-  {
+-    m_devices.InitAvailable();
+-    m_checkHotplug = std::unique_ptr<CLinuxInputDevicesCheckHotplugged>(new CLinuxInputDevicesCheckHotplugged(m_devices));
+     m_initialized = true;
+-  }
+-
+-  bool ret = false;
+-  XBMC_Event event = XBMC_Event();
+-  while (1)
+-  {
+-    event = m_devices.ReadEvent();
+-    if (event.type != XBMC_NOEVENT)
+-    {
+-      if (appPort)
+-         ret |= appPort->OnEvent(event);
+-    }
+-    else
+-    {
+-      break;
+-    }
+-  }
+ 
+-  return ret;
++  return false;
+ }
+ 
+ size_t CWinEventsSTB::GetQueueSize()
+ {
+-  return m_devices.Size();
++  return 0;
+ }
+ 
+ void CWinEventsSTB::MessagePush(XBMC_Event *ev)
+-- 
+2.45.2.windows.1

@@ -8,5 +8,5 @@ RDEPENDS:${PN} += "gfutures-mali-${HICHIPSET}"
 
 EXTRA_OECMAKE += " \
     -DWITH_PLATFORM=mali-cortexa15 \
+    -DOPENGLES_FORCE_GLES2=ON \
 "
-

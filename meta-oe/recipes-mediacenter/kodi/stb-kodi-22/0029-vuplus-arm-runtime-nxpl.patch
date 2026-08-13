@@ -1,0 +1,316 @@
+From c56d477982f480977262cb3422f352ebf721452f Mon Sep 17 00:00:00 2001
+From: OE-Alliance <oe-alliance@users.noreply.github.com>
+Date: Sun, 9 Aug 2026 18:00:00 +0200
+Subject: [PATCH] vuplus arm: use runtime NXPL initialization
+
+Use the VU+ initialization sequence already proven by the Chromium BCM
+backend.  Join the running Nexus server, register NXPL and create a scalable
+native window without the closed KodiGLESPL compatibility library.
+
+Keep the vendor platform objects and their dlopen handles alive until process
+exit.  Older VU+ Nexus stacks are not safe to tear down after EGL, so this
+also removes the legacy explicit native close path.
+---
+ cmake/platform/linux/stb.cmake             |   2 +-
+ xbmc/windowing/egl/EGLNativeTypeVuplus.cpp | 201 +++++++++++++++++++--
+ 2 files changed, 185 insertions(+), 18 deletions(-)
+
+diff --git a/cmake/platform/linux/stb.cmake b/cmake/platform/linux/stb.cmake
+index b7a5a1be599..1db7e555fbc 100644
+--- a/cmake/platform/linux/stb.cmake
++++ b/cmake/platform/linux/stb.cmake
+@@ -31,7 +31,7 @@ elseif(WITH_PLATFORM STREQUAL "dreambox-mipsel")
+ elseif(WITH_PLATFORM STREQUAL "vuplus-cortexa15")
+   set(CPU cortexa15)
+   list(APPEND PLATFORM_DEFINES "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_STB_EXTEND -DTARGET_V3D -DTARGET_VUPLUS -DTARGET_VUPLUS_ARM")
+-  list(APPEND DEPLIBS EGL GLESv2 KodiGLESPL dvb_base nxpl dvb_client)
++  list(APPEND DEPLIBS EGL GLESv2 ${CMAKE_DL_LIBS})
+ elseif(WITH_PLATFORM STREQUAL "vuplus-mipsel")
+   list(APPEND PLATFORM_DEFINES "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_STB_EXTEND -DTARGET_V3D -DTARGET_VUPLUS -DTARGET_VUPLUS_MIPSEL")
+   list(APPEND DEPLIBS ${CMAKE_SOURCE_DIR}/xbmc/windowing/egl/gles_init.a EGL GLESv2 dvb_base nxpl xbmc_base dvb_client)
+diff --git a/xbmc/windowing/egl/EGLNativeTypeVuplus.cpp b/xbmc/windowing/egl/EGLNativeTypeVuplus.cpp
+index bf1df30525d..a0381abe356 100644
+--- a/xbmc/windowing/egl/EGLNativeTypeVuplus.cpp
++++ b/xbmc/windowing/egl/EGLNativeTypeVuplus.cpp
+@@ -32,13 +32,133 @@
+ #include <stdlib.h>
+ #include <string.h>
+ #if defined(TARGET_VUPLUS_ARM)
+-#include "KodiGLESPL.h"
++#include <EGL/egl.h>
++#include <dlfcn.h>
++#include <stdint.h>
+ #else
+ #include "gles_init.h"
+ #endif
+ 
+ using namespace std;
+ 
++#if defined(TARGET_VUPLUS_ARM)
++namespace
++{
++using NxClientJoinProc = unsigned (*)(const void*);
++using NexusJoinProc = int (*)(const void*);
++using RegisterDisplayProc = void (*)(void**, void*);
++using GetDefaultWindowInfoProc = void (*)(void*);
++using CreateWindowProc = void* (*)(const void*);
++
++enum BcmNexusBlendFactor
++{
++  BCM_NEXUS_BLEND_FACTOR_ZERO = 0,
++};
++
++struct BcmNexusBlendEquation
++{
++  BcmNexusBlendFactor a;
++  BcmNexusBlendFactor b;
++  bool subtract_cd;
++  BcmNexusBlendFactor c;
++  BcmNexusBlendFactor d;
++  bool subtract_e;
++  BcmNexusBlendFactor e;
++};
++
++struct BcmNxplNativeWindowInfo
++{
++  uint32_t width;
++  uint32_t height;
++  uint32_t x;
++  uint32_t y;
++  bool stretch;
++  uint32_t clientID;
++  uint32_t zOrder;
++  BcmNexusBlendEquation colorBlend;
++  BcmNexusBlendEquation alphaBlend;
++  uint32_t magic;
++};
++
++void* s_nxplHandle = nullptr;
++GetDefaultWindowInfoProc s_getDefaultWindowInfo = nullptr;
++CreateWindowProc s_createWindow = nullptr;
++bool s_platformReady = false;
++bool s_platformFailed = false;
++
++void LoadOptionalLibrary(const char* name)
++{
++  // Retain successful handles for the process lifetime. Old Nexus/NXPL
++  // stacks can crash when their libraries are unloaded after EGL teardown.
++  dlopen(name, RTLD_LAZY | RTLD_GLOBAL);
++}
++
++bool InitializeVuplusPlatform()
++{
++  if (s_platformReady)
++    return true;
++  if (s_platformFailed)
++    return false;
++
++  LoadOptionalLibrary("libnexus.so");
++  LoadOptionalLibrary("libdvb_base.so");
++  LoadOptionalLibrary("libdvb_client.so");
++  LoadOptionalLibrary("libnxclient.so");
++  LoadOptionalLibrary("libnxpl.so");
++
++  const auto nxclientJoin =
++      reinterpret_cast<NxClientJoinProc>(dlsym(RTLD_DEFAULT, "NxClient_Join"));
++  const auto nexusJoin = reinterpret_cast<NexusJoinProc>(
++      dlsym(RTLD_DEFAULT, "NEXUS_Platform_AuthenticatedJoin"));
++  const auto registerDisplay = reinterpret_cast<RegisterDisplayProc>(
++      dlsym(RTLD_DEFAULT, "NXPL_RegisterNexusDisplayPlatform"));
++  s_getDefaultWindowInfo = reinterpret_cast<GetDefaultWindowInfoProc>(
++      dlsym(RTLD_DEFAULT, "NXPL_GetDefaultNativeWindowInfoEXT"));
++  s_createWindow = reinterpret_cast<CreateWindowProc>(
++      dlsym(RTLD_DEFAULT, "NXPL_CreateNativeWindowEXT"));
++
++  if (!registerDisplay || !s_getDefaultWindowInfo || !s_createWindow)
++  {
++    CLog::Log(LOGERROR, "VU+ NXPL: required native-window symbols are unavailable");
++    s_platformFailed = true;
++    return false;
++  }
++
++  bool joined = false;
++  const char* joinMethod = "none";
++  if (nxclientJoin)
++  {
++    const unsigned error = nxclientJoin(nullptr);
++    joined = error == 0;
++    if (joined)
++      joinMethod = "NxClient";
++    else
++      CLog::Log(LOGWARNING, "VU+ NXPL: NxClient_Join failed: {}", error);
++  }
++  if (!joined && nexusJoin)
++  {
++    const int error = nexusJoin(nullptr);
++    joined = error == 0;
++    if (joined)
++      joinMethod = "Authenticated";
++    else
++      CLog::Log(LOGWARNING, "VU+ NXPL: authenticated join failed: {}", error);
++  }
++  if (!joined)
++  {
++    CLog::Log(LOGERROR, "VU+ NXPL: unable to join the Nexus server");
++    s_platformFailed = true;
++    return false;
++  }
++
++  registerDisplay(&s_nxplHandle, nullptr);
++  s_platformReady = true;
++  CLog::Log(LOGINFO, "VU+ NXPL: platform ready using {} join", joinMethod);
++  return true;
++}
++} // unnamed namespace
++#endif
++
+ bool CEGLNativeTypeVuplus::CheckCompatibility()
+ {
+   return true;
+@@ -46,6 +165,17 @@ bool CEGLNativeTypeVuplus::CheckCompatibility()
+ 
+ void CEGLNativeTypeVuplus::Initialize()
+ {
++#if defined(TARGET_VUPLUS_ARM)
++  m_desktopRes.bFullScreen = true;
++  m_desktopRes.iWidth = 1920;
++  m_desktopRes.iHeight = 1080;
++  m_desktopRes.iScreenWidth = 1920;
++  m_desktopRes.iScreenHeight = 1080;
++  m_desktopRes.dwFlags = D3DPRESENTFLAG_PROGRESSIVE;
++  m_desktopRes.fRefreshRate = 50.0f;
++  m_desktopRes.iSubtitles = static_cast<int>(0.965 * m_desktopRes.iHeight);
++  m_desktopRes.strMode = "1920x1080 @ 50.00 - Full Screen";
++#endif
+ }
+ 
+ void CEGLNativeTypeVuplus::Destroy()
+@@ -54,13 +184,38 @@ void CEGLNativeTypeVuplus::Destroy()
+ 
+ bool CEGLNativeTypeVuplus::CreateNativeDisplay()
+ {
++#if defined(TARGET_VUPLUS_ARM)
++  if (!InitializeVuplusPlatform())
++    return false;
++  m_nativeDisplay = EGL_DEFAULT_DISPLAY;
++  return true;
++#else
+   GLES_Native_Init();
+   return GLES_Native_CreateNativeDisplay(&m_nativeDisplay);
++#endif
+ }
+ 
+ bool CEGLNativeTypeVuplus::CreateNativeWindow()
+ {
++#if defined(TARGET_VUPLUS_ARM)
++  if (!InitializeVuplusPlatform())
++    return false;
++
++  BcmNxplNativeWindowInfo nativeWindow = {};
++  s_getDefaultWindowInfo(&nativeWindow);
++  nativeWindow.x = 0;
++  nativeWindow.y = 0;
++  nativeWindow.width = m_desktopRes.iWidth > 0 ? m_desktopRes.iWidth : 1920;
++  nativeWindow.height = m_desktopRes.iHeight > 0 ? m_desktopRes.iHeight : 1080;
++  nativeWindow.stretch = true;
++  nativeWindow.clientID = 0;
++  nativeWindow.zOrder = 0;
++  m_nativeWindow = s_createWindow(&nativeWindow);
++  CLog::Log(LOGINFO, "VU+ NXPL: native window {}x{} stretch=1", nativeWindow.width,
++            nativeWindow.height);
++#else
+   m_nativeWindow = GLES_Native_CreateNativeWindow();
++#endif
+   if (!m_nativeWindow) {
+ 	  return false;
+   }
+@@ -81,13 +236,24 @@ bool CEGLNativeTypeVuplus::GetNativeWindow(XBNativeDisplayType **nativeWindow) c
+ 
+ bool CEGLNativeTypeVuplus::DestroyNativeDisplay()
+ {
++#if defined(TARGET_VUPLUS_ARM)
++  // Nexus/NXPL belongs to the process lifetime on VU+. Do not unregister or
++  // unload it after EGL teardown.
++  m_nativeDisplay = 0;
++#else
+   GLES_Native_DestroyNativeDisplay();
++#endif
+   return true;
+ }
+ 
+ bool CEGLNativeTypeVuplus::DestroyNativeWindow()
+ {
++#if defined(TARGET_VUPLUS_ARM)
++  // See DestroyNativeDisplay(): deliberately retain the vendor object.
++  m_nativeWindow = 0;
++#else
+   GLES_Native_DestroyNativeWindow();
++#endif
+   return true;
+ }
+ 
+@@ -108,14 +274,14 @@ bool CEGLNativeTypeVuplus::ProbeResolutions(std::vector<RESOLUTION_INFO> &resolu
+   resolutions.clear();
+ 
+   m_desktopResAll[0].bFullScreen  = true;
+-  m_desktopResAll[0].iWidth       = 1280;
+-  m_desktopResAll[0].iHeight      = 720;
+-  m_desktopResAll[0].iScreenWidth = 1280;
+-  m_desktopResAll[0].iScreenHeight= 720;
++  m_desktopResAll[0].iWidth       = 1920;
++  m_desktopResAll[0].iHeight      = 1080;
++  m_desktopResAll[0].iScreenWidth = 1920;
++  m_desktopResAll[0].iScreenHeight= 1080;
+   m_desktopResAll[0].dwFlags      =  D3DPRESENTFLAG_PROGRESSIVE;
+   m_desktopResAll[0].fRefreshRate = 50;
+-  m_desktopResAll[0].strMode = StringUtils::Format("{:d}x{:d}", 1280, 720);
+-  m_desktopResAll[0].strMode = StringUtils::Format("{} @ {:.2f}{} - Full Screen", m_desktopRes.strMode.c_str(), (float)50,m_desktopRes.dwFlags & D3DPRESENTFLAG_INTERLACED ? "i" : "");
++  m_desktopResAll[0].strMode = StringUtils::Format("{:d}x{:d}", 1920, 1080);
++  m_desktopResAll[0].strMode = StringUtils::Format("{} @ {:.2f}{} - Full Screen", m_desktopResAll[0].strMode.c_str(), (float)50,m_desktopResAll[0].dwFlags & D3DPRESENTFLAG_INTERLACED ? "i" : "");
+ 
+   m_desktopResAll[0].iSubtitles   = (int)(0.965 * m_desktopResAll[0].iHeight);
+ 
+@@ -124,15 +290,15 @@ bool CEGLNativeTypeVuplus::ProbeResolutions(std::vector<RESOLUTION_INFO> &resolu
+   resolutions.push_back(m_desktopResAll[0]);
+ 
+   m_desktopResAll[1].bFullScreen  = true;
+-  m_desktopResAll[1].iWidth       = 1280;
+-  m_desktopResAll[1].iHeight      = 720;
+-  m_desktopResAll[1].iScreenWidth = 1280;
+-  m_desktopResAll[1].iScreenHeight= 720;
++  m_desktopResAll[1].iWidth       = 1920;
++  m_desktopResAll[1].iHeight      = 1080;
++  m_desktopResAll[1].iScreenWidth = 1920;
++  m_desktopResAll[1].iScreenHeight= 1080;
+   m_desktopResAll[1].dwFlags      =  D3DPRESENTFLAG_PROGRESSIVE;
+ 
+   m_desktopResAll[1].dwFlags      |=  D3DPRESENTFLAG_MODE3DSBS;
+   m_desktopResAll[1].fRefreshRate = 50;
+-  m_desktopResAll[1].strMode = StringUtils::Format("{:d}x{:d}", 1280, 720);
++  m_desktopResAll[1].strMode = StringUtils::Format("{:d}x{:d}", 1920, 1080);
+   m_desktopResAll[1].strMode = StringUtils::Format("{} @ {:.2f}{} - Full Screen 3DSBS", m_desktopResAll[1].strMode.c_str(), (float)50,m_desktopResAll[1].dwFlags & D3DPRESENTFLAG_INTERLACED ? "i" : "");
+ 
+   m_desktopResAll[1].iSubtitles   = (int)(0.965 * m_desktopResAll[1].iHeight);
+@@ -142,15 +308,15 @@ bool CEGLNativeTypeVuplus::ProbeResolutions(std::vector<RESOLUTION_INFO> &resolu
+   resolutions.push_back(m_desktopResAll[1]);
+ 
+   m_desktopResAll[2].bFullScreen  = true;
+-  m_desktopResAll[2].iWidth       = 1280;
+-  m_desktopResAll[2].iHeight      = 720;
+-  m_desktopResAll[2].iScreenWidth = 1280;
+-  m_desktopResAll[2].iScreenHeight= 720;
++  m_desktopResAll[2].iWidth       = 1920;
++  m_desktopResAll[2].iHeight      = 1080;
++  m_desktopResAll[2].iScreenWidth = 1920;
++  m_desktopResAll[2].iScreenHeight= 1080;
+   m_desktopResAll[2].dwFlags      =  D3DPRESENTFLAG_PROGRESSIVE;
+ 
+   m_desktopResAll[2].dwFlags      |=  D3DPRESENTFLAG_MODE3DTB;
+   m_desktopResAll[2].fRefreshRate = 50;
+-  m_desktopResAll[2].strMode = StringUtils::Format("{:d}x{:d}", 1280, 720);
++  m_desktopResAll[2].strMode = StringUtils::Format("{:d}x{:d}", 1920, 1080);
+   m_desktopResAll[2].strMode = StringUtils::Format("{} @ {:.2f}{} - Full Screen 3DTB", m_desktopResAll[2].strMode.c_str(), (float)50,m_desktopResAll[2].dwFlags & D3DPRESENTFLAG_INTERLACED ? "i" : "");
+ 
+   m_desktopResAll[2].iSubtitles   = (int)(0.965 * m_desktopResAll[2].iHeight);
+-- 
+2.43.0

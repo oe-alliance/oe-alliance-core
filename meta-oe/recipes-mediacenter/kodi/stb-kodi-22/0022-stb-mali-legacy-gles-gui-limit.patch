@@ -1,0 +1,521 @@
+From 9e4d9ef65eb4eab49bfd8c389b18a27d61f3ebaa Mon Sep 17 00:00:00 2001
+From: OpenATV <oe-alliance@users.noreply.github.com>
+Date: Sat, 8 Aug 2026 17:00:00 +0200
+Subject: [PATCH] stb: restore stable Mali GLES mode and separate GUI size
+
+HiSilicon's Mali EGL surface represents the physical Full-HD display and is
+not a switchable Kodi window. Writing fb0 and exposing both HIFB geometries as
+Kodi modes lets the display settings page persist a stale resolution index;
+the GUI is then magnified or cropped while the video plane remains correct.
+
+Restore the legacy fbdev behaviour: never change fb0 and expose one stable
+physical mode. Carry the independently selectable GUI size in iWidth/iHeight,
+using Kodi's existing videoscreen.limitguisize setting. Full HD is the default
+and 720p remains available as a manual low-resource OSD choice.
+
+---
+ system/settings/linux.xml                    |  10 +-
+ xbmc/windowing/egl/EGLNativeTypeMali.cpp     | 222 ++++++++-----------
+ xbmc/windowing/egl/WinSystemstb.cpp          | 115 +---------
+ 3 files changed, 106 insertions(+), 241 deletions(-)
+
+diff --git a/xbmc/windowing/egl/EGLNativeTypeMali.cpp b/xbmc/windowing/egl/EGLNativeTypeMali.cpp
+index 76d663b..6bbb709 100644
+--- a/xbmc/windowing/egl/EGLNativeTypeMali.cpp
++++ b/xbmc/windowing/egl/EGLNativeTypeMali.cpp
+@@ -19,9 +19,11 @@
+  */
+ #include "EGLNativeTypeMali.h"
+ #include <EGL/egl.h>
++#include "ServiceBroker.h"
++#include "settings/Settings.h"
++#include "settings/SettingsComponent.h"
+ #include "utils/log.h"
+ 
+-#include <algorithm>
+ #include <cstdio>
+ #include <cstring>
+ #include <linux/fb.h>
+@@ -31,6 +33,8 @@
+ 
+ namespace
+ {
++constexpr const char* SETTING_VIDEOSCREEN_LIMITGUISIZE = "videoscreen.limitguisize";
++
+ float GetOutputRefreshRate()
+ {
+   char mode[64] = {};
+@@ -54,63 +58,110 @@ float GetOutputRefreshRate()
+   return 60.0f;
+ }
+ 
+-bool IsHiSiliconHifb()
++int GetGuiSizeLimit()
+ {
+-  struct fb_fix_screeninfo finfo = {};
+-  const int fd = open("/dev/fb0", O_RDONLY, 0);
+-  if (fd < 0)
++  const auto settingsComponent = CServiceBroker::GetSettingsComponent();
++  if (!settingsComponent)
++    return 0;
++
++  const auto settings = settingsComponent->GetSettings();
++  return settings ? settings->GetInt(SETTING_VIDEOSCREEN_LIMITGUISIZE) : 0;
++}
++
++bool HasFramebufferMode(unsigned int width, unsigned int height)
++{
++  FILE* modes = fopen("/sys/class/graphics/fb0/modes", "r");
++  if (!modes)
+     return false;
+-  const bool isHifb = ioctl(fd, FBIOGET_FSCREENINFO, &finfo) == 0 &&
+-                      strcmp(finfo.id, "hifb") == 0;
+-  close(fd);
+-  return isHifb;
++
++  bool found = false;
++  char line[128];
++  while (fgets(line, sizeof(line), modes))
++  {
++    unsigned int modeWidth = 0;
++    unsigned int modeHeight = 0;
++    if (sscanf(line, "%*[^:]:%ux%u", &modeWidth, &modeHeight) == 2 &&
++        modeWidth == width && modeHeight == height)
++    {
++      found = true;
++      break;
++    }
++  }
++  fclose(modes);
++  return found;
+ }
+ 
+-void FillResolution(RESOLUTION_INFO& res, unsigned int width, unsigned int height)
++void FillResolution(RESOLUTION_INFO& res,
++                    unsigned int screenWidth,
++                    unsigned int screenHeight)
+ {
++  const float refreshRate = GetOutputRefreshRate();
++  const int guiLimit = GetGuiSizeLimit();
++  unsigned int guiWidth = screenWidth;
++  unsigned int guiHeight = screenHeight;
++
++  if (screenWidth >= 1920 && screenHeight >= 1080)
++  {
++    if (guiLimit == 1 || (guiLimit == 2 && refreshRate > 30.0f))
++    {
++      guiWidth = 1280;
++      guiHeight = 720;
++    }
++    else if (guiLimit == 3 || (guiLimit == 4 && refreshRate > 30.0f))
++    {
++      guiWidth = 1920;
++      guiHeight = 1080;
++    }
++  }
++
+   res.bFullScreen = true;
+   res.dwFlags = 0;
+-  res.fRefreshRate = GetOutputRefreshRate();
+-  res.iWidth = width;
+-  res.iHeight = height;
+-  res.iScreenWidth = width;
+-  res.iScreenHeight = height;
++  res.fRefreshRate = refreshRate;
++  res.iWidth = guiWidth;
++  res.iHeight = guiHeight;
++  res.iScreenWidth = screenWidth;
++  res.iScreenHeight = screenHeight;
+   res.Overscan.left = 0;
+   res.Overscan.top = 0;
+-  res.Overscan.right = width;
+-  res.Overscan.bottom = height;
++  res.Overscan.right = guiWidth;
++  res.Overscan.bottom = guiHeight;
+   res.fPixelRatio = 1.0f;
+-  res.iSubtitles = static_cast<int>(0.965f * height);
+-  res.strId = std::to_string(width) + "x" + std::to_string(height);
++  res.iSubtitles = static_cast<int>(0.965f * guiHeight);
++  res.strId = std::to_string(screenWidth) + "x" + std::to_string(screenHeight);
+   res.strMode = res.strId;
+-}
+ 
+-bool IsDuplicateResolution(const std::vector<RESOLUTION_INFO>& resolutions,
+-                           unsigned int width,
+-                           unsigned int height)
+-{
+-  return std::any_of(resolutions.cbegin(), resolutions.cend(),
+-                     [width, height](const RESOLUTION_INFO& candidate) {
+-                       return candidate.iWidth == static_cast<int>(width) &&
+-                              candidate.iHeight == static_cast<int>(height);
+-                     });
++  CLog::Log(LOGINFO, "CEGLNativeTypeMali: native display {}x{}, GUI {}x{} (limit {})",
++            screenWidth, screenHeight, guiWidth, guiHeight, guiLimit);
+ }
+ } // unnamed namespace
+ 
+ bool CEGLNativeTypeMali::_GetNativeResolution(RESOLUTION_INFO *res) const {
+-  struct fb_var_screeninfo vinfo;
++  struct fb_var_screeninfo vinfo = {};
++  struct fb_fix_screeninfo finfo = {};
+   const int fd = open("/dev/fb0", O_RDONLY, 0);
+   if (fd < 0) {
+     return false;
+   }
+   
+-  if (ioctl(fd, FBIOGET_VSCREENINFO, &vinfo) < 0) {
++  if (ioctl(fd, FBIOGET_VSCREENINFO, &vinfo) < 0 ||
++      ioctl(fd, FBIOGET_FSCREENINFO, &finfo) < 0) {
+     close(fd);
+     return false;
+   }
+   close(fd);
+ 
+-  FillResolution(*res, vinfo.xres, vinfo.yres);
++  unsigned int screenWidth = vinfo.xres;
++  unsigned int screenHeight = vinfo.yres;
++  if (strcmp(finfo.id, "hifb") == 0 && HasFramebufferMode(1920, 1080))
++  {
++    // HiSilicon's Mali window surface is fixed at Full HD even when Enigma2
++    // leaves the framebuffer geometry at 720p. Keep the legacy framebuffer
++    // untouched and describe the real EGL/display size to Kodi instead.
++    screenWidth = 1920;
++    screenHeight = 1080;
++  }
++
++  FillResolution(*res, screenWidth, screenHeight);
+ 
+   return true;
+ }
+@@ -182,141 +233,28 @@ bool CEGLNativeTypeMali::GetNativeResolution(RESOLUTION_INFO *res) const {
+ }
+ 
+ bool CEGLNativeTypeMali::SetNativeResolution(const RESOLUTION_INFO &res) {
+-  CLog::Log(LOGDEBUG, "CEGLNativeTypeMali::SetNativeResolution({}x{})", res.iWidth,
+-            res.iHeight);
+-
+-  if (res.iWidth <= 0 || res.iHeight <= 0)
+-    return false;
+-
+-  const int fd = open("/dev/fb0", O_RDWR, 0);
+-  if (fd < 0)
+-  {
+-    CLog::Log(LOGERROR, "CEGLNativeTypeMali: cannot open /dev/fb0 for mode switch");
+-    return false;
+-  }
+-
+-  struct fb_var_screeninfo vinfo = {};
+-  struct fb_fix_screeninfo finfo = {};
+-  if (ioctl(fd, FBIOGET_VSCREENINFO, &vinfo) < 0 ||
+-      ioctl(fd, FBIOGET_FSCREENINFO, &finfo) < 0)
+-  {
+-    CLog::Log(LOGERROR, "CEGLNativeTypeMali: cannot query framebuffer geometry");
+-    close(fd);
+-    return false;
+-  }
+-
+-  static bool firstModeSet = true;
+-  const bool primeHifbScaler = firstModeSet && strcmp(finfo.id, "hifb") == 0 &&
+-                               res.iWidth == 1920 && res.iHeight == 1080;
+-  firstModeSet = false;
+-  const unsigned int targetWidth = primeHifbScaler ? 1280u : res.iWidth;
+-  const unsigned int targetHeight = primeHifbScaler ? 720u : res.iHeight;
+-  if (primeHifbScaler)
+-    CLog::Log(LOGINFO,
+-              "CEGLNativeTypeMali: priming HiSilicon HIFB scaler at 1280x720 before FHD EGL surface");
+-
+-  const unsigned int bytesPerPixel = std::max(1u, vinfo.bits_per_pixel / 8u);
+-  const unsigned long long requiredBytes =
+-      static_cast<unsigned long long>(targetWidth) * targetHeight * 2u * bytesPerPixel;
+-  if (requiredBytes > finfo.smem_len)
+-  {
+-    CLog::Log(LOGERROR,
+-              "CEGLNativeTypeMali: requested {}x{} double-buffer exceeds framebuffer memory",
+-              targetWidth, targetHeight);
+-    close(fd);
+-    return false;
+-  }
+-
+-  CLog::Log(LOGINFO, "CEGLNativeTypeMali: switching OSD framebuffer {}x{} -> {}x{}",
+-            vinfo.xres, vinfo.yres, targetWidth, targetHeight);
+-  vinfo.xres = targetWidth;
+-  vinfo.yres = targetHeight;
+-  vinfo.xres_virtual = targetWidth;
+-  vinfo.yres_virtual = targetHeight * 2;
+-  vinfo.xoffset = 0;
+-  vinfo.yoffset = 0;
+-  vinfo.activate = FB_ACTIVATE_NOW | FB_ACTIVATE_FORCE;
+-
+-  if (ioctl(fd, FBIOPUT_VSCREENINFO, &vinfo) < 0 ||
+-      ioctl(fd, FBIOGET_VSCREENINFO, &vinfo) < 0)
+-  {
+-    CLog::Log(LOGWARNING, "CEGLNativeTypeMali: framebuffer rejected {}x{}", targetWidth,
+-              targetHeight);
+-    close(fd);
+-    return false;
+-  }
+-  close(fd);
+-
+-  const bool applied = vinfo.xres == targetWidth && vinfo.yres == targetHeight;
+-  if (!applied)
+-    CLog::Log(LOGWARNING, "CEGLNativeTypeMali: driver kept OSD framebuffer at {}x{}",
+-              vinfo.xres, vinfo.yres);
+-  return applied;
++  CLog::Log(LOGDEBUG,
++            "CEGLNativeTypeMali::SetNativeResolution({}x{}): preserving native framebuffer",
++            res.iWidth, res.iHeight);
++  return res.iWidth > 0 && res.iHeight > 0;
+ }
+ 
+ bool CEGLNativeTypeMali::ProbeResolutions(std::vector<RESOLUTION_INFO> &resolutions) {
+   CLog::Log(LOGDEBUG, "CEGLNativeTypeMali::ProbeResolutions()\n");
+   resolutions.clear();
+ 
+-  FILE* modes = fopen("/sys/class/graphics/fb0/modes", "r");
+-  if (modes)
+-  {
+-    char line[128];
+-    while (fgets(line, sizeof(line), modes))
+-    {
+-      unsigned int width = 0;
+-      unsigned int height = 0;
+-      if (sscanf(line, "%*[^:]:%ux%u", &width, &height) == 2 && width > 0 && height > 0 &&
+-          !IsDuplicateResolution(resolutions, width, height))
+-      {
+-        RESOLUTION_INFO candidate;
+-        FillResolution(candidate, width, height);
+-        resolutions.emplace_back(candidate);
+-      }
+-    }
+-    fclose(modes);
+-  }
++  RESOLUTION_INFO native;
++  if (!_GetNativeResolution(&native))
++    return false;
+ 
+-  RESOLUTION_INFO current;
+-  if (_GetNativeResolution(&current) &&
+-      !IsDuplicateResolution(resolutions, current.iWidth, current.iHeight))
+-    resolutions.emplace_back(current);
+-
+-  std::sort(resolutions.begin(), resolutions.end(),
+-            [](const RESOLUTION_INFO& left, const RESOLUTION_INFO& right) {
+-              return left.iWidth * left.iHeight < right.iWidth * right.iHeight;
+-            });
+-
+-  // HiSilicon's Mali EGL surface is fixed to the physical HIFB size. Exposing
+-  // the 720p priming mode as a second Kodi resolution creates two modes with
+-  // one EGL surface and lets video refresh adjustment restore a stale 720p
+-  // viewport. Keep only the physical preferred mode; SetNativeResolution()
+-  // still performs the required internal 720p scaler activation.
+-  if (IsHiSiliconHifb() && resolutions.size() > 1)
+-  {
+-    const auto fullHd = std::find_if(
+-        resolutions.cbegin(), resolutions.cend(), [](const RESOLUTION_INFO& candidate) {
+-          return candidate.iWidth == 1920 && candidate.iHeight == 1080;
+-        });
+-    const RESOLUTION_INFO physical =
+-        fullHd != resolutions.cend() ? *fullHd : resolutions.back();
+-    resolutions.assign(1, physical);
+-  }
+-  return !resolutions.empty();
++  // Report one stable physical mode. GUI resolution is carried inside the
++  // mode through iWidth/iHeight, matching Kodi's GBM limitguisize design.
++  resolutions.emplace_back(native);
++  return true;
+ }
+ 
+ bool CEGLNativeTypeMali::GetPreferredResolution(RESOLUTION_INFO *res) const {
+   CLog::Log(LOGDEBUG, "CEGLNativeTypeMali::GetPreferredResolution()\n");
+-  std::vector<RESOLUTION_INFO> resolutions;
+-  if (const_cast<CEGLNativeTypeMali*>(this)->ProbeResolutions(resolutions))
+-  {
+-    const auto fullHd = std::find_if(
+-        resolutions.cbegin(), resolutions.cend(), [](const RESOLUTION_INFO& candidate) {
+-          return candidate.iWidth == 1920 && candidate.iHeight == 1080;
+-        });
+-    *res = fullHd != resolutions.cend() ? *fullHd : resolutions.back();
+-    return true;
+-  }
+   return _GetNativeResolution(res);
+ }
+ 
+@@ -324,4 +262,3 @@ bool CEGLNativeTypeMali::ShowWindow(bool show) {
+   CLog::Log(LOGDEBUG, "CEGLNativeTypeMali::ShowWindow()\n");
+   return false;
+ }
+-
+diff --git a/xbmc/windowing/egl/WinSystemstb.cpp b/xbmc/windowing/egl/WinSystemstb.cpp
+index 95b81fe..e7251f4 100644
+--- a/xbmc/windowing/egl/WinSystemstb.cpp
++++ b/xbmc/windowing/egl/WinSystemstb.cpp
+@@ -319,38 +319,10 @@ bool CWinSystemstb::CreateWindow(RESOLUTION_INFO &res)
+     return false;
+   }
+ 
+-  CLog::Log(LOGINFO, "{}: created EGL surface {}x{} for requested GUI {}x{}", __FUNCTION__,
+-            width, height, res.iWidth, res.iHeight);
+-
+-  // Keep the initial framebuffer geometry until the first EGL surface has
+-  // been made current. HiSilicon's hifb scaler only latches this transition
+-  // reliably when the surface is subsequently recreated at the physical size.
+-  RESOLUTION_INFO native;
+-  const bool synchronizeFramebuffer =
+-      m_egl->GetNativeResolution(&native) &&
+-      (native.iWidth != width || native.iHeight != height);
+-
+-  if (width != res.iWidth || height != res.iHeight)
+-  {
+-    CLog::Log(LOGWARNING,
+-              "{}: EGL surface differs from requested GUI size; using actual {}x{} to avoid cropped OSD",
+-              __FUNCTION__, width, height);
+-    res.iWidth = width;
+-    res.iHeight = height;
+-    res.iScreenWidth = width;
+-    res.iScreenHeight = height;
+-    res.Overscan.left = 0;
+-    res.Overscan.top = 0;
+-    res.Overscan.right = width;
+-    res.Overscan.bottom = height;
+-    res.iSubtitles = static_cast<int>(0.965f * height);
+-    res.strId = std::to_string(width) + "x" + std::to_string(height);
+-    res.strMode = res.strId;
+-    m_nWidth = width;
+-    m_nHeight = height;
+-    m_displayWidth = width;
+-    m_displayHeight = height;
+-  }
++  CLog::Log(LOGINFO,
++            "{}: EGL surface {}x{}, GUI {}x{}, physical display {}x{}",
++            __FUNCTION__, width, height, res.iWidth, res.iHeight,
++            res.iScreenWidth, res.iScreenHeight);
+ 
+   EGLint contextAttrs[] =
+   {
+@@ -389,91 +361,6 @@ bool CWinSystemstb::CreateWindow(RESOLUTION_INFO &res)
+       CLog::Log(LOGDEBUG, "{}: Could not set EGL_SWAP_BEHAVIOR",__FUNCTION__);
+   }
+ 
+-  if (synchronizeFramebuffer)
+-  {
+-    RESOLUTION_INFO surfaceResolution = res;
+-    surfaceResolution.iWidth = width;
+-    surfaceResolution.iHeight = height;
+-    surfaceResolution.iScreenWidth = width;
+-    surfaceResolution.iScreenHeight = height;
+-    surfaceResolution.Overscan.left = 0;
+-    surfaceResolution.Overscan.top = 0;
+-    surfaceResolution.Overscan.right = width;
+-    surfaceResolution.Overscan.bottom = height;
+-    surfaceResolution.iSubtitles = static_cast<int>(0.965f * height);
+-
+-    CLog::Log(LOGINFO, "{}: syncing framebuffer {}x{} to EGL surface {}x{} after first context bind",
+-              __FUNCTION__, native.iWidth, native.iHeight, width, height);
+-    if (!m_egl->SetNativeResolution(surfaceResolution))
+-    {
+-      CLog::Log(LOGWARNING, "{}: could not synchronize framebuffer to EGL surface", __FUNCTION__);
+-    }
+-    else
+-    {
+-      CLog::Log(LOGINFO, "{}: recreating EGL surface after framebuffer sync", __FUNCTION__);
+-      m_egl->ReleaseContext(m_display);
+-      if (!m_egl->DestroySurface(m_surface, m_display))
+-      {
+-        CLog::Log(LOGERROR, "{}: could not destroy the initial EGL surface", __FUNCTION__);
+-        return false;
+-      }
+-      m_surface = EGL_NO_SURFACE;
+-
+-      if (!m_egl->CreateSurface(m_display, m_config, &m_surface))
+-      {
+-        CLog::Log(LOGERROR, "{}: could not recreate EGL surface after framebuffer sync", __FUNCTION__);
+-        return false;
+-      }
+-
+-      int recreatedWidth = 0;
+-      int recreatedHeight = 0;
+-      if (!m_egl->GetSurfaceSize(m_display, m_surface, &recreatedWidth, &recreatedHeight))
+-      {
+-        CLog::Log(LOGERROR, "{}: recreated EGL surface is invalid", __FUNCTION__);
+-        return false;
+-      }
+-
+-      CLog::Log(LOGINFO, "{}: recreated EGL surface is {}x{}", __FUNCTION__, recreatedWidth,
+-                recreatedHeight);
+-      if (!m_egl->BindContext(m_display, m_surface, m_context))
+-      {
+-        CLog::Log(LOGERROR, "{}: could not bind context to recreated EGL surface", __FUNCTION__);
+-        return false;
+-      }
+-
+-      if (guiAlgorithmDirtyRegions == DIRTYREGION_SOLVER_COST_REDUCTION ||
+-          guiAlgorithmDirtyRegions == DIRTYREGION_SOLVER_UNION)
+-      {
+-        if (!m_egl->SurfaceAttrib(m_display, m_surface, EGL_SWAP_BEHAVIOR, EGL_BUFFER_PRESERVED))
+-          CLog::Log(LOGDEBUG, "{}: could not restore EGL_SWAP_BEHAVIOR", __FUNCTION__);
+-      }
+-
+-      width = recreatedWidth;
+-      height = recreatedHeight;
+-      if (width != res.iWidth || height != res.iHeight)
+-      {
+-        CLog::Log(LOGWARNING,
+-                  "{}: recreated EGL surface differs from GUI size; using actual {}x{}",
+-                  __FUNCTION__, width, height);
+-        res.iWidth = width;
+-        res.iHeight = height;
+-        res.iScreenWidth = width;
+-        res.iScreenHeight = height;
+-        res.Overscan.left = 0;
+-        res.Overscan.top = 0;
+-        res.Overscan.right = width;
+-        res.Overscan.bottom = height;
+-        res.iSubtitles = static_cast<int>(0.965f * height);
+-        res.strId = std::to_string(width) + "x" + std::to_string(height);
+-        res.strMode = res.strId;
+-        m_nWidth = width;
+-        m_nHeight = height;
+-        m_displayWidth = width;
+-        m_displayHeight = height;
+-      }
+-    }
+-  }
+-
+   m_bWindowCreated = true;
+ 
+   return true;
+@@ -662,4 +549,3 @@ bool CWinSystemstb::MessagePump()
+ {
+   return m_winEvents->MessagePump();
+ }
+-
+diff --git a/system/settings/linux.xml b/system/settings/linux.xml
+index 9c7b440..46db284 100644
+--- a/system/settings/linux.xml
++++ b/system/settings/linux.xml
+@@ -217,7 +217,7 @@
+         <setting id="videoscreen.limitguisize" type="integer" label="37021" help="36548">
+           <visible>true</visible>
+           <level>3</level>
+-          <default>0</default>
++          <default>3</default>
+           <constraints>
+             <options>
+               <option label="37030">0</option> <!-- Unlimited -->
+@@ -227,14 +227,6 @@
+               <option label="13467">4</option> <!-- Unlimited / 1080 (>30Hz) -->
+             </options>
+           </constraints>
+-          <dependencies>
+-            <dependency type="visible">
+-              <and>
+-                <condition setting="videoplayer.useprimedecoder" operator="is">true</condition>
+-                <condition setting="videoplayer.useprimerenderer" operator="is">0</condition>
+-              </and>
+-            </dependency>
+-          </dependencies>
+           <control type="list" format="string" />
+         </setting>
+         <setting id="videoscreen.limitedrange" type="boolean" label="36042" help="36359">
+-- 
+2.45.2

@@ -1,0 +1,177 @@
+From 2cf19a9b21c2d48b22822a2346d1aa9f179be037 Mon Sep 17 00:00:00 2001
+From: OE-Alliance <oe-alliance@users.noreply.github.com>
+Date: Mon, 10 Aug 2026 16:00:00 +0200
+Subject: [PATCH] stb: import E2 volume and select platform master control
+
+Import the live Enigma2 volume and mute state for every STB Kodi build.
+Use the DVB attenuation mixer on BCM, VU+ and HiSilicon receivers, while
+Dream Amlogic uses its ALSA Master element. Fall back to ActiveAE software
+volume when the platform control is unavailable.
+---
+ xbmc/application/ApplicationVolumeHandling.cpp | 132 ++++++++++++++++++++++++-
+ 1 file changed, 131 insertions(+), 1 deletion(-)
+
+diff --git a/xbmc/application/ApplicationVolumeHandling.cpp b/xbmc/application/ApplicationVolumeHandling.cpp
+index 25229be7da..1f28e15246 100644
+--- a/xbmc/application/ApplicationVolumeHandling.cpp
++++ b/xbmc/application/ApplicationVolumeHandling.cpp
+@@ -21,9 +21,124 @@
+ #include "settings/lib/Setting.h"
+ #include "utils/Variant.h"
+ #include "utils/XMLUtils.h"
++#include "utils/log.h"
+ 
++#include <cstdlib>
++#if defined(TARGET_AMLOGIC)
++#include <alsa/asoundlib.h>
++#else
++#include <fcntl.h>
++#include <linux/dvb/audio.h>
++#include <sys/ioctl.h>
++#include <unistd.h>
++#endif
+ #include <tinyxml.h>
+ 
++namespace
++{
++bool ReadInitialPercentage(const char* name, float& result)
++{
++  const char* text = std::getenv(name);
++  if (text == nullptr || *text == '\0')
++    return false;
++
++  char* end = nullptr;
++  const long percentage = std::strtol(text, &end, 10);
++  if (end == text || *end != '\0' || percentage < 0 || percentage > 100)
++    return false;
++
++  result = static_cast<float>(percentage) / 100.0f;
++  return true;
++}
++
++#if defined(TARGET_AMLOGIC)
++bool SetStbAlsaVolume(float volume)
++{
++  constexpr const char* cards[] = {"default", "hw:0"};
++
++  for (const char* card : cards)
++  {
++    snd_mixer_t* mixer = nullptr;
++    if (snd_mixer_open(&mixer, 0) < 0)
++      continue;
++
++    if (snd_mixer_attach(mixer, card) < 0 || snd_mixer_selem_register(mixer, nullptr, nullptr) < 0 ||
++        snd_mixer_load(mixer) < 0)
++    {
++      snd_mixer_close(mixer);
++      continue;
++    }
++
++    snd_mixer_selem_id_t* id = nullptr;
++    snd_mixer_selem_id_alloca(&id);
++    snd_mixer_selem_id_set_index(id, 0);
++    snd_mixer_selem_id_set_name(id, "Master");
++    snd_mixer_elem_t* element = snd_mixer_find_selem(mixer, id);
++    if (element == nullptr || !snd_mixer_selem_has_playback_volume(element))
++    {
++      snd_mixer_close(mixer);
++      continue;
++    }
++
++    long minimum = 0;
++    long maximum = 0;
++    snd_mixer_selem_get_playback_volume_range(element, &minimum, &maximum);
++    const long level = minimum +
++                       std::lroundf(volume * static_cast<float>(maximum - minimum));
++    const int result = snd_mixer_selem_set_playback_volume_all(
++        element, std::clamp(level, minimum, maximum));
++    snd_mixer_close(mixer);
++
++    if (result >= 0)
++      return true;
++  }
++
++  CLog::Log(LOGWARNING, "STB volume: Amlogic ALSA Master control is unavailable");
++  return false;
++}
++#else
++bool SetStbDvbVolume(float volume)
++{
++  const int fd = open("/dev/dvb/adapter0/audio0", O_RDWR | O_CLOEXEC);
++  if (fd < 0)
++  {
++    CLog::Log(LOGWARNING, "STB volume: cannot open DVB audio device");
++    return false;
++  }
++
++  // Enigma2's DVB master uses attenuation: 0 is full volume and 63 is silent.
++  constexpr int maxAttenuation = 63;
++  const int mixerLevel =
++      std::clamp(static_cast<int>(std::lroundf((1.0f - volume) * maxAttenuation)),
++                 0, maxAttenuation);
++  audio_mixer_t mixer{};
++  mixer.volume_left = mixerLevel;
++  mixer.volume_right = mixerLevel;
++  const bool success = ioctl(fd, AUDIO_SET_MIXER, &mixer) >= 0;
++  if (!success)
++    CLog::Log(LOGWARNING, "STB volume: AUDIO_SET_MIXER failed");
++  close(fd);
++  return success;
++}
++#endif
++
++bool SetStbPlatformVolume(float volume)
++{
++  // Some legacy HiSilicon firedtv drivers dereference an uninitialised audio
++  // player when AUDIO_SET_MIXER is issued before playback.  Their wrapper
++  // requests ActiveAE software volume so Kodi can still import and track the
++  // Enigma2 level without crashing the kernel during GUI startup.
++  if (std::getenv("KODI_STB_SOFTWARE_VOLUME") != nullptr)
++    return false;
++
++#if defined(TARGET_AMLOGIC)
++  return SetStbAlsaVolume(volume);
++#else
++  return SetStbDvbVolume(volume);
++#endif
++}
++} // unnamed namespace
++
+ float CApplicationVolumeHandling::GetVolumePercent() const
+ {
+   // converts the hardware volume to a percentage
+@@ -39,9 +154,11 @@ void CApplicationVolumeHandling::SetHardwareVolume(float hardwareVolume)
+ {
+   m_volumeLevel = std::clamp(hardwareVolume, VOLUME_MINIMUM, VOLUME_MAXIMUM);
+ 
++  const bool platformVolumeSet = SetStbPlatformVolume(m_volumeLevel);
++
+   IAE* ae = CServiceBroker::GetActiveAE();
+   if (ae)
+-    ae->SetVolume(m_volumeLevel);
++    ae->SetVolume(platformVolumeSet ? VOLUME_MAXIMUM : m_volumeLevel);
+ }
+ 
+ void CApplicationVolumeHandling::VolumeChanged()
+@@ -161,6 +278,19 @@ bool CApplicationVolumeHandling::Load(const TiXmlNode* settings)
+       m_volumeLevel = VOLUME_MAXIMUM;
+   }
+ 
++  float initialVolume = 0.0f;
++  if (ReadInitialPercentage("KODI_STB_INITIAL_VOLUME", initialVolume))
++  {
++    m_volumeLevel = initialVolume;
++    CLog::Log(LOGINFO, "STB volume: imported Enigma2 master level {:.0f}%",
++              m_volumeLevel * 100.0f);
++  }
++
++  const char* initialMute = std::getenv("KODI_STB_INITIAL_MUTED");
++  if (initialMute != nullptr && (*initialMute == '0' || *initialMute == '1') &&
++      initialMute[1] == '\0')
++    m_muted = *initialMute == '1';
++
+   return true;
+ }
+ 
+-- 
+2.51.0

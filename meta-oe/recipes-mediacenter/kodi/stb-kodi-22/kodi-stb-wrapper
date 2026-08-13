@@ -1,0 +1,21 @@
+#!/bin/sh
+
+# The Enigma2 launcher records the live master volume before it exits. Export
+# the hand-off state for Kodi's common STB volume layer. Platform-specific
+# output is selected in Kodi: DVB attenuation on normal STBs and ALSA Master
+# on Amlogic.
+if [ -r /tmp/stb-kodi-e2-audio ]; then
+    IFS=' ' read -r KODI_STB_INITIAL_VOLUME KODI_STB_INITIAL_MUTED < /tmp/stb-kodi-e2-audio
+    case "${KODI_STB_INITIAL_VOLUME:-}" in
+        ''|*[!0-9]*) unset KODI_STB_INITIAL_VOLUME ;;
+        *) export KODI_STB_INITIAL_VOLUME ;;
+    esac
+    case "${KODI_STB_INITIAL_MUTED:-}" in
+        0|1) export KODI_STB_INITIAL_MUTED ;;
+        *) unset KODI_STB_INITIAL_MUTED ;;
+    esac
+fi
+
+. /usr/lib/kodi/kodi-stb-runtime.sh
+stb_kodi_run /usr/bin/kodi.real "$@"
+exit $?

@@ -1,0 +1,131 @@
+From 7a9fe91ff303e327e3a17d52ac7eb251395894bb Mon Sep 17 00:00:00 2001
+From: OE-Alliance <oe-alliance@users.noreply.github.com>
+Date: Sun, 9 Aug 2026 14:00:00 +0200
+Subject: [PATCH] stb: use Kodi 22 resolution model
+
+Keep RES_DESKTOP separate and publish every probed mode as a custom
+resolution. Kodi 22 only offers RES_CUSTOM and above in the resolution
+setting. Storing the first STB mode directly in RES_DESKTOP therefore
+excluded the normal mode and made opening the setting select a 3D mode,
+causing an unnecessary resolution confirmation and EGL recreation.
+
+Also clear stale custom entries before rebuilding the mode list and apply
+saved calibrations after the rebuild, matching Kodi's current window-system
+implementations.
+---
+ xbmc/windowing/egl/WinSystemstb.cpp | 80 ++++++++++++-------------------------
+ 1 file changed, 27 insertions(+), 53 deletions(-)
+
+diff --git a/xbmc/windowing/egl/WinSystemstb.cpp b/xbmc/windowing/egl/WinSystemstb.cpp
+--- a/xbmc/windowing/egl/WinSystemstb.cpp
++++ b/xbmc/windowing/egl/WinSystemstb.cpp
+@@ -433,80 +433,54 @@ void CWinSystemstb::UpdateResolutions()
+ {
+   CWinSystemBase::UpdateResolutions();
+ 
+-  RESOLUTION_INFO resDesktop, curDisplay;
++  RESOLUTION_INFO resDesktop;
+   std::vector<RESOLUTION_INFO> resolutions;
+ 
+   if (!m_egl->ProbeResolutions(resolutions) || resolutions.empty())
+   {
+-    CLog::Log(LOGWARNING, "{}: ProbeResolutions failed. Trying safe default.",__FUNCTION__);
++    CLog::Log(LOGWARNING, "{}: ProbeResolutions failed. Trying safe default.", __FUNCTION__);
+ 
+     RESOLUTION_INFO fallback;
+     if (m_egl->GetPreferredResolution(&fallback))
+     {
+       resolutions.push_back(fallback);
+     }
+     else
+     {
+-      CLog::Log(LOGERROR, "{}: Fatal Error, GetPreferredResolution failed",__FUNCTION__);
++      CLog::Log(LOGERROR, "{}: Fatal Error, GetPreferredResolution failed", __FUNCTION__);
+       return;
+     }
+   }
+ 
+-  /* ProbeResolutions includes already all resolutions.
+-   * Only get desktop resolution so we can replace xbmc's desktop res
+-   */
+-  if (m_egl->GetNativeResolution(&curDisplay))
+-    resDesktop = curDisplay;
+-
+-  RESOLUTION ResDesktop = RES_INVALID;
+-  RESOLUTION res_index  = RES_DESKTOP;
++  // Keep RES_DESKTOP separate from the selectable custom modes. Kodi's
++  // resolution setting only lists RES_CUSTOM and above.
++  if (!m_egl->GetNativeResolution(&resDesktop))
++    resDesktop = resolutions.front();
+ 
+-  for (size_t i = 0; i < resolutions.size(); i++)
++  CDisplaySettings::GetInstance().ClearCustomResolutions();
++
++  bool desktopFound = false;
++  for (auto& resolution : resolutions)
+   {
+-    // if this is a new setting,
+-    // create a new empty setting to fill in.
+-    if ((int)CDisplaySettings::GetInstance().ResolutionInfoSize() <= res_index)
+-    {
+-      RESOLUTION_INFO res;
+-      CDisplaySettings::GetInstance().AddResolutionInfo(res);
+-    }
+-
+-    CServiceBroker::GetWinSystem()->GetGfxContext().ResetOverscan(resolutions[i]);
+-    CDisplaySettings::GetInstance().GetResolutionInfo(res_index) = resolutions[i];
+-
+- /*   CLog::Log(LOGINFO, "Found resolution {:d} x {:d} for display {:d} with {:d} x {:d}{} @ {:f} Hz\n",
+-      resolutions[i].iWidth,
+-      resolutions[i].iHeight,
+-      resolutions[i].iScreenWidth,
+-      resolutions[i].iScreenHeight,
+-      resolutions[i].dwFlags & D3DPRESENTFLAG_INTERLACED ? "i" : "",
+-      resolutions[i].fRefreshRate);*/
+-
+-    if(resDesktop.iWidth == resolutions[i].iWidth &&
+-       resDesktop.iHeight == resolutions[i].iHeight &&
+-       resDesktop.iScreenWidth == resolutions[i].iScreenWidth &&
+-       resDesktop.iScreenHeight == resolutions[i].iScreenHeight &&
+-       (resDesktop.dwFlags & D3DPRESENTFLAG_MODEMASK) == (resolutions[i].dwFlags & D3DPRESENTFLAG_MODEMASK) &&
+-       fabs(resDesktop.fRefreshRate - resolutions[i].fRefreshRate) < FLT_EPSILON)
++    CServiceBroker::GetWinSystem()->GetGfxContext().ResetOverscan(resolution);
++    CDisplaySettings::GetInstance().AddResolutionInfo(resolution);
++
++    if (resDesktop.iWidth == resolution.iWidth &&
++        resDesktop.iHeight == resolution.iHeight &&
++        resDesktop.iScreenWidth == resolution.iScreenWidth &&
++        resDesktop.iScreenHeight == resolution.iScreenHeight &&
++        (resDesktop.dwFlags & D3DPRESENTFLAG_MODEMASK) ==
++            (resolution.dwFlags & D3DPRESENTFLAG_MODEMASK) &&
++        fabs(resDesktop.fRefreshRate - resolution.fRefreshRate) < FLT_EPSILON)
+     {
+-      ResDesktop = res_index;
++      CDisplaySettings::GetInstance().GetResolutionInfo(RES_DESKTOP) = resolution;
++      desktopFound = true;
+     }
+-
+-    res_index = (RESOLUTION)((int)res_index + 1);
+   }
+ 
+-  // swap desktop index for desktop res if available
+-  if (ResDesktop != RES_INVALID)
+-  {
+-    CLog::Log(LOGINFO, "Found ({:d}x{:d}{}@{:f}) at {:d}, setting to RES_DESKTOP at {:d}",
+-      resDesktop.iWidth, resDesktop.iHeight,
+-      resDesktop.dwFlags & D3DPRESENTFLAG_INTERLACED ? "i" : "",
+-      resDesktop.fRefreshRate,
+-      (int)ResDesktop, (int)RES_DESKTOP);
+-
+-    RESOLUTION_INFO desktop = CDisplaySettings::GetInstance().GetResolutionInfo(RES_DESKTOP);
+-    CDisplaySettings::GetInstance().GetResolutionInfo(RES_DESKTOP) = CDisplaySettings::GetInstance().GetResolutionInfo(ResDesktop);
+-    CDisplaySettings::GetInstance().GetResolutionInfo(ResDesktop) = desktop;
+-  }
++  if (!desktopFound)
++    CDisplaySettings::GetInstance().GetResolutionInfo(RES_DESKTOP) = resDesktop;
++
++  CDisplaySettings::GetInstance().ApplyCalibrations();
+ }
+ 
+-- 
+2.51.0

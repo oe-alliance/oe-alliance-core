@@ -1,0 +1,286 @@
+From 7d8b944a4b5f317c18998bb84810eea90db5d364 Mon Sep 17 00:00:00 2001
+From: OpenATV <oe-alliance@users.noreply.github.com>
+Date: Sun, 9 Aug 2026 20:30:00 +0200
+Subject: [PATCH] hisi: switch HDMI refresh without changing HIFB GLES size
+
+Expose refresh-rate variants only for the physical output resolution selected
+by Enigma2 at Kodi startup. Switch the HDMI timing through videomode while
+keeping the HIFB and Mali EGL GUI surface fixed, so 23.976 fps playback can use
+24 Hz without reintroducing the cropped or unstable Kodi OSD.
+
+---
+diff --git a/xbmc/windowing/egl/EGLNativeTypeMali.cpp b/xbmc/windowing/egl/EGLNativeTypeMali.cpp
+index f5c26b8..49fffc2 100644
+--- a/xbmc/windowing/egl/EGLNativeTypeMali.cpp
++++ b/xbmc/windowing/egl/EGLNativeTypeMali.cpp
+@@ -19,11 +19,15 @@
+  */
+ #include "EGLNativeTypeMali.h"
+ #include <EGL/egl.h>
++#include "utils/StringUtils.h"
+ #include "utils/log.h"
+ 
+ #include <algorithm>
+ #include <cstdio>
++#include <cstdlib>
+ #include <cstring>
++#include <fstream>
++#include <sstream>
+ #include <linux/fb.h>
+ #include <fcntl.h>
+ #include <sys/ioctl.h>
+@@ -31,27 +35,93 @@
+ 
+ namespace
+ {
+-float GetOutputRefreshRate()
++bool ReadProcString(const char* path, std::string& value)
++{
++  std::ifstream input(path);
++  if (!input)
++    return false;
++  std::getline(input, value);
++  while (!value.empty() &&
++         (value.back() == '\n' || value.back() == '\r' || value.back() == ' ' ||
++          value.back() == '\t'))
++    value.pop_back();
++  return !value.empty();
++}
++
++bool WriteProcString(const char* path, const std::string& value)
+ {
+-  char mode[64] = {};
+-  const int fd = open("/proc/stb/video/videomode", O_RDONLY);
+-  if (fd >= 0)
++  std::ofstream output(path);
++  if (!output)
++    return false;
++  output << value;
++  return output.good();
++}
++
++bool ParseOutputMode(const std::string& mode,
++                     unsigned int& outputWidth,
++                     unsigned int& outputHeight,
++                     float& refreshRate,
++                     bool& interlaced)
++{
++  const size_t scanIndex = mode.find_first_of("pi");
++  if (scanIndex == std::string::npos || scanIndex == 0)
++    return false;
++
++  outputHeight = static_cast<unsigned int>(
++      std::strtoul(mode.substr(0, scanIndex).c_str(), nullptr, 10));
++  switch (outputHeight)
+   {
+-    const ssize_t bytes = read(fd, mode, sizeof(mode) - 1);
+-    close(fd);
+-    if (bytes > 0)
+-      mode[bytes] = '\0';
++    case 480:
++    case 576:
++      outputWidth = 720;
++      break;
++    case 720:
++      outputWidth = 1280;
++      break;
++    case 1080:
++      outputWidth = 1920;
++      break;
++    case 2160:
++      outputWidth = 3840;
++      break;
++    default:
++      return false;
+   }
+ 
+-  if (strstr(mode, "24"))
+-    return 24.0f;
+-  if (strstr(mode, "25"))
+-    return 25.0f;
+-  if (strstr(mode, "30"))
+-    return 30.0f;
+-  if (strstr(mode, "50") || strstr(mode, "pal") || strstr(mode, "576"))
+-    return 50.0f;
+-  return 60.0f;
++  interlaced = mode[scanIndex] == 'i';
++  const unsigned int namedRate =
++      scanIndex + 1 < mode.size()
++          ? static_cast<unsigned int>(std::strtoul(mode.c_str() + scanIndex + 1, nullptr, 10))
++          : (outputHeight == 576 ? 50U : 60U);
++  switch (namedRate)
++  {
++    case 24:
++      refreshRate = 23.976f;
++      break;
++    case 30:
++      refreshRate = 29.97f;
++      break;
++    case 60:
++      refreshRate = 59.94f;
++      break;
++    default:
++      refreshRate = static_cast<float>(namedRate);
++      break;
++  }
++  return namedRate != 0;
++}
++
++float GetOutputRefreshRate()
++{
++  std::string mode;
++  unsigned int outputWidth = 0;
++  unsigned int outputHeight = 0;
++  float refreshRate = 50.0f;
++  bool interlaced = false;
++  if (ReadProcString("/proc/stb/video/videomode", mode) &&
++      ParseOutputMode(mode, outputWidth, outputHeight, refreshRate, interlaced))
++    return refreshRate;
++  return 50.0f;
+ }
+ 
+ bool IsHiSiliconHifb()
+@@ -85,6 +155,24 @@ void FillResolution(RESOLUTION_INFO& res, unsigned int width, unsigned int heigh
+   res.strMode = res.strId;
+ }
+ 
++void FillHiSiliconResolution(RESOLUTION_INFO& res,
++                             unsigned int guiWidth,
++                             unsigned int guiHeight,
++                             unsigned int outputWidth,
++                             unsigned int outputHeight,
++                             float refreshRate,
++                             const std::string& driverMode)
++{
++  FillResolution(res, guiWidth, guiHeight);
++  res.dwFlags = 0;
++  res.fRefreshRate = refreshRate;
++  res.iScreenWidth = outputWidth;
++  res.iScreenHeight = outputHeight;
++  res.strId = driverMode;
++  res.strMode = StringUtils::Format("{}x{} @ {:.3f} - Full Screen ({})", outputWidth,
++                                    outputHeight, refreshRate, driverMode);
++}
++
+ bool IsDuplicateResolution(const std::vector<RESOLUTION_INFO>& resolutions,
+                            unsigned int width,
+                            unsigned int height)
+@@ -207,6 +295,26 @@ bool CEGLNativeTypeMali::SetNativeResolution(const RESOLUTION_INFO &res) {
+ 
+   if (strcmp(finfo.id, "hifb") == 0)
+   {
++    std::string driverMode = res.strId;
++    unsigned int outputWidth = 0;
++    unsigned int outputHeight = 0;
++    float refreshRate = 0.0f;
++    bool interlaced = false;
++    if (ParseOutputMode(driverMode, outputWidth, outputHeight, refreshRate, interlaced))
++    {
++      std::string currentMode;
++      ReadProcString("/proc/stb/video/videomode", currentMode);
++      if (driverMode != currentMode &&
++          !WriteProcString("/proc/stb/video/videomode", driverMode))
++      {
++        CLog::Log(LOGERROR, "CEGLNativeTypeMali: failed to set HiSilicon HDMI mode '{}'",
++                  driverMode);
++        close(fd);
++        return false;
++      }
++      CLog::Log(LOGINFO, "CEGLNativeTypeMali: HiSilicon HDMI mode {} at {:.3f} Hz",
++                driverMode, refreshRate);
++    }
+     CLog::Log(LOGINFO,
+               "CEGLNativeTypeMali: preserving initial HiSilicon HIFB/EGL mode {}x{}",
+               vinfo.xres, vinfo.yres);
+@@ -262,12 +370,60 @@ bool CEGLNativeTypeMali::ProbeResolutions(std::vector<RESOLUTION_INFO> &resoluti
+ 
+   if (IsHiSiliconHifb())
+   {
+-    RESOLUTION_INFO current;
+-    if (!_GetNativeResolution(&current))
++    RESOLUTION_INFO guiResolution;
++    if (!_GetNativeResolution(&guiResolution))
+       return false;
+ 
+-    resolutions.emplace_back(current);
+-    return true;
++    std::string currentMode;
++    std::string modeChoices;
++    ReadProcString("/proc/stb/video/videomode", currentMode);
++    if (!ReadProcString("/proc/stb/video/videomode_choices", modeChoices))
++      modeChoices = "1080p24 1080p25 1080p30 1080p50 1080p60";
++
++    unsigned int maximumOutputWidth = guiResolution.iWidth;
++    unsigned int maximumOutputHeight = guiResolution.iHeight;
++    float currentRefreshRate = guiResolution.fRefreshRate;
++    bool currentInterlaced = false;
++    if (!ParseOutputMode(currentMode, maximumOutputWidth, maximumOutputHeight,
++                         currentRefreshRate, currentInterlaced))
++    {
++      maximumOutputWidth = guiResolution.iWidth;
++      maximumOutputHeight = guiResolution.iHeight;
++    }
++
++    std::istringstream choices(modeChoices);
++    std::string modeName;
++    while (choices >> modeName)
++    {
++      unsigned int outputWidth = 0;
++      unsigned int outputHeight = 0;
++      float refreshRate = 0.0f;
++      bool interlaced = false;
++      if (!ParseOutputMode(modeName, outputWidth, outputHeight, refreshRate, interlaced) ||
++          interlaced || outputWidth != maximumOutputWidth ||
++          outputHeight != maximumOutputHeight)
++        continue;
++
++      if (modeName == "1080p" && modeChoices.find("1080p60") != std::string::npos)
++        continue;
++
++      RESOLUTION_INFO candidate;
++      FillHiSiliconResolution(candidate, guiResolution.iWidth, guiResolution.iHeight,
++                              outputWidth, outputHeight, refreshRate, modeName);
++      resolutions.emplace_back(candidate);
++    }
++
++    if (resolutions.empty())
++    {
++      guiResolution.strId = currentMode;
++      guiResolution.strMode = currentMode;
++      resolutions.emplace_back(guiResolution);
++    }
++
++    CLog::Log(LOGINFO,
++              "CEGLNativeTypeMali: exposed {} HiSilicon HDMI modes at {}x{}, current '{}'",
++              resolutions.size(), maximumOutputWidth, maximumOutputHeight, currentMode);
++    return !resolutions.empty();
+   }
+ 
+   FILE* modes = fopen("/sys/class/graphics/fb0/modes", "r");
+@@ -305,7 +461,20 @@ bool CEGLNativeTypeMali::ProbeResolutions(std::vector<RESOLUTION_INFO> &resoluti
+ bool CEGLNativeTypeMali::GetPreferredResolution(RESOLUTION_INFO *res) const {
+   CLog::Log(LOGDEBUG, "CEGLNativeTypeMali::GetPreferredResolution()\n");
+   if (IsHiSiliconHifb())
+-    return _GetNativeResolution(res);
++  {
++    std::vector<RESOLUTION_INFO> resolutions;
++    if (!const_cast<CEGLNativeTypeMali*>(this)->ProbeResolutions(resolutions))
++      return _GetNativeResolution(res);
++
++    std::string currentMode;
++    ReadProcString("/proc/stb/video/videomode", currentMode);
++    const auto current = std::find_if(
++        resolutions.cbegin(), resolutions.cend(), [&currentMode](const RESOLUTION_INFO& candidate) {
++          return candidate.strId == currentMode;
++        });
++    *res = current != resolutions.cend() ? *current : resolutions.front();
++    return true;
++  }
+ 
+   std::vector<RESOLUTION_INFO> resolutions;
+   if (const_cast<CEGLNativeTypeMali*>(this)->ProbeResolutions(resolutions))
+@@ -324,4 +493,3 @@ bool CEGLNativeTypeMali::ShowWindow(bool show) {
+   CLog::Log(LOGDEBUG, "CEGLNativeTypeMali::ShowWindow()\n");
+   return false;
+ }
+-

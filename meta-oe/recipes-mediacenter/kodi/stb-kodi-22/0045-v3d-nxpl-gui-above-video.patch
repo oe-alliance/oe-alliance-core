@@ -1,0 +1,32 @@
+From 5f5b5b7df107f0c5a84612a8273f1b195b02dbda Mon Sep 17 00:00:00 2001
+From: OE-Alliance <oe-alliance@users.noreply.github.com>
+Date: Mon, 10 Aug 2026 23:59:00 +0200
+Subject: [PATCH] v3d nxpl: place the GLES GUI above the DVB video plane
+
+The Broadcom DVB decoder and the NXPL native window both default to z-order
+zero.  On the V3D/NXPL MIPS implementation this leaves their relative order
+undefined and the opaque parts of Kodi's EGL surface can hide decoded video.
+
+Use the established NXPL GUI z-order of one.  The DVB video plane remains at
+zero, while the EGL alpha channel still lets video show through Kodi's
+transparent fullscreen background and keeps OSD/subtitles above it.
+---
+ xbmc/windowing/egl/EGLNativeTypeV3DNXPL.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/xbmc/windowing/egl/EGLNativeTypeV3DNXPL.cpp b/xbmc/windowing/egl/EGLNativeTypeV3DNXPL.cpp
+index 67857b033d..f622e2c76a 100644
+--- a/xbmc/windowing/egl/EGLNativeTypeV3DNXPL.cpp
++++ b/xbmc/windowing/egl/EGLNativeTypeV3DNXPL.cpp
+@@ -178,7 +178,7 @@ bool CEGLNativeTypeV3D::CreateNativeWindow()
+   nativeWindow.height = 720;
+   nativeWindow.stretch = false;
+   nativeWindow.clientID = 0;
+-  nativeWindow.zOrder = 0;
++  nativeWindow.zOrder = 1;
+ 
+   m_nativeWindow = NXPL_CreateNativeWindowEXT(&nativeWindow);
+   if (!m_nativeWindow)
+-- 
+2.51.0
+

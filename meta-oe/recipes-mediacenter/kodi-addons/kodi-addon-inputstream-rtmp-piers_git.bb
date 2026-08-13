@@ -5,12 +5,13 @@ require conf/license/license-gplv2.inc
 
 inherit kodi-addon
 
-DEPENDS += "expat"
+DEPENDS += "expat openssl rtmpdump zlib"
 
-#SRCREV = "74d1e7654eb19dac9203a6e4e64bf06d5a7250c4"
-SRCREV = "4cf0d41bf26f673fda458c20467fd66db6d1a54d"
+# Published Piers tag used by CoreELEC 22/LibreELEC.  Prefer the released tag
+# over unreleased commits on the moving Piers branch.
+SRCREV = "228dbc36ae2666f6e43f023fa083bd3e612af7a2"
 
-PV = "22.0.1+gitr"
+PV = "22.1.2+gitr"
 
 KODIADDONBRANCH = "Piers"
 

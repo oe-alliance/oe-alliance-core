@@ -125,3 +125,5 @@ SRC_URI[sha256sum] = "757956166e132ec60ade4c74ea56b1fe237727cda095c7cf998cabf697
 
 INHIBIT_PACKAGE_STRIP = "1"
 INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
+
+require dinobot-showiframe-kodi.inc

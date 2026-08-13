@@ -4,29 +4,12 @@ Date: Wed, 22 May 2024 20:32:48 +0200
 Subject: [PATCH] stb-settings-22
 
 ---
- addons/skin.estuary/xml/Home.xml           |  2 +-
- cmake/modules/FindFFMPEG.cmake             | 48 +++++++++------
- cmake/platform/linux/stb.cmake             | 69 ++++++++++++++++++++++
- cmake/scripts/linux/ArchSetup.cmake        |  7 +++
- cmake/treedata/common/stb.txt              |  1 +
- system/settings/settings.xml               | 14 ++---
- tools/Linux/kodi.sh.in                     | 52 ++++++++++++----
- tools/depends/target/ffmpeg/CMakeLists.txt | 30 ++++++++++
- tools/depends/target/libdvdcss/Makefile    |  4 +-
- tools/depends/target/libdvdnav/Makefile    |  4 +-
- tools/depends/target/libdvdread/Makefile   |  5 +-
- xbmc/guilib/guiinfo/SystemGUIInfo.cpp      |  3 +
- xbmc/input/InputManager.cpp                | 12 ++++
- xbmc/view/ViewStateSettings.cpp            |  2 +-
- 14 files changed, 206 insertions(+), 47 deletions(-)
- create mode 100644 cmake/platform/linux/stb.cmake
- create mode 100644 cmake/treedata/common/stb.txt
 
 diff --git a/addons/skin.estuary/xml/Home.xml b/addons/skin.estuary/xml/Home.xml
 index 5d6e149e4b..430411eca0 100644
 --- a/addons/skin.estuary/xml/Home.xml
 +++ b/addons/skin.estuary/xml/Home.xml
-@@ -1085,7 +1085,7 @@
+@@ -1103,7 +1103,7 @@
  					<align>justify</align>
  					<include content="IconButton">
  						<param name="control_id" value="804" />
@@ -95,13 +78,13 @@ index 0000000000..e1fe54a13d
 +  list(APPEND DEPLIBS EGL GLESv2 nxpl nexus nxclient)
 +elseif(WITH_PLATFORM STREQUAL "mali-cortexa15")
 +  set(CPU cortexa15)
-+  list(APPEND PLATFORM_DEFINES "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_STB_EXTEND -DTARGET_MALI -DHAS_HIPLAYER")
++  list(APPEND PLATFORM_DEFINES "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_STB_EXTEND -DTARGET_MALI")
 +  list(APPEND DEPLIBS EGL GLESv2 mali)
 +elseif(WITH_PLATFORM STREQUAL "edision-cortexa15")
 +  list(APPEND PLATFORM_DEFINES "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_STB_EXTEND -DTARGET_V3D -DTARGET_EDISION")
 +  list(APPEND DEPLIBS EGL GLESv2 v3dplatform)
 +elseif(WITH_PLATFORM STREQUAL "clap-cortexa15")
-+  list(APPEND PLATFORM_DEFINES "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_MALI -DUSE_HIPLAYER")
++  list(APPEND PLATFORM_DEFINES "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_MALI")
 +#  list(APPEND DEPLIBS ${CMAKE_SOURCE_DIR}xbmc/cores/hiplayer/hiplayer.a ${CMAKE_SOURCE_DIR}xbmc/linux/hisi/hiadp.a)
 +#  list(APPEND DEPLIBS EGL GLESv2 jpeg hi_common hi_msp)
 +  list(APPEND DEPLIBS EGL GLESv2 jpeg)
@@ -139,7 +122,7 @@ diff --git a/system/settings/settings.xml b/system/settings/settings.xml
 index 446b1ee830..5944830832 100755
 --- a/system/settings/settings.xml
 +++ b/system/settings/settings.xml
-@@ -613,7 +613,7 @@
+@@ -652,7 +652,7 @@
            <control type="list" format="string" />
          </setting>
          <setting id="subtitles.fontname" type="string" label="14089" help="36185">
@@ -148,7 +131,7 @@ index 446b1ee830..5944830832 100755
            <default>DEFAULT</default>
            <constraints>
              <options>subtitlesfonts</options>
-@@ -810,7 +810,7 @@
+@@ -849,7 +849,7 @@
            <control type="spinner" format="integer" delayed="true"/>
          </setting>
          <setting id="subtitles.charset" type="string" label="735" help="36189">
@@ -157,36 +140,7 @@ index 446b1ee830..5944830832 100755
            <default>DEFAULT</default>
            <constraints>
              <options>charsets</options>
-@@ -3237,7 +3237,7 @@
-         <setting id="audiooutput.processquality" type="integer" label="13505" help="36169">
-           <requirement>HAS_AE_QUALITY_LEVELS</requirement>
-           <level>2</level>
--          <default>30</default> <!-- AE_QUALITY_MID -->
-+          <default>20</default> <!-- AE_QUALITY_MID -->
-           <constraints>
-             <options>aequalitylevels</options>
-           </constraints>
-@@ -3255,7 +3255,7 @@
-         </setting>
-         <setting id="audiooutput.samplerate" type="integer" label="458" help="36523">
-           <level>2</level>
--          <default>48000</default>
-+          <default>44100</default>
-           <dependencies>
-             <dependency type="visible">
-               <and>
-@@ -3267,10 +3267,6 @@
-           <constraints>
-             <options>
-               <option label="34124">44100</option>
--              <option label="34125">48000</option>
--              <option label="34126">88200</option>
--              <option label="34127">96000</option>
--              <option label="34128">192000</option>
-               <option label="34129">352800</option>
-               <option label="34130">384000</option>
-             </options>
-@@ -4103,7 +4099,7 @@
+@@ -4196,7 +4196,7 @@
        <group id="2" label="14270">
          <setting id="locale.country" type="string" label="14271" help="36115">
            <level>0</level>
@@ -195,98 +149,11 @@ index 446b1ee830..5944830832 100755
            <constraints>
              <options>regions</options>
            </constraints>
-diff --git a/tools/Linux/kodi.sh.in b/tools/Linux/kodi.sh.in
-index 3d86c86834..b585ea0c1d 100644
---- a/tools/Linux/kodi.sh.in
-+++ b/tools/Linux/kodi.sh.in
-@@ -26,8 +26,11 @@ exec_prefix="@exec_prefix@"
- datarootdir="@datarootdir@"
- LIBDIR="@libdir@"
- APP_BINARY=$LIBDIR/${bin_name}/@APP_BINARY@
--CRASHLOG_DIR=${CRASHLOG_DIR:-$HOME}
--KODI_DATA=${KODI_DATA:-"${HOME}/.${bin_name}"} # mapped to special://home/
-+#CRASHLOG_DIR=${CRASHLOG_DIR:-$HOME}
-+#KODI_DATA=${KODI_DATA:-"${HOME}/.${bin_name}"} # mapped to special://home/
-+
-+export KODI_TEMP="/tmp/kodi"
-+CRASHLOG_DIR=${CRASHLOG_DIR:-$KODI_TEMP}
- 
- # Workaround for high CPU load with nvidia GFX
- export __GL_YIELD=USLEEP
-@@ -35,6 +38,33 @@ export __GL_YIELD=USLEEP
- # Fix wasting RAM due to fragmentation
- export MALLOC_MMAP_THRESHOLD_=131072
- 
-+check_media_hdd() {
-+    [ -e /proc/mounts ] || return 0
-+    [ -d /media/mmc ] && export HOME="/media/mmc"
-+    [ -d /media/hdd ] && export HOME="/media/hdd"
-+
-+    exec 9<&0 < /proc/mounts
-+    while read DEV MTPT REST; do
-+        case $DEV in
-+            /dev/sd[a-z][0-9])
-+            if [ "$MTPT" == "/media/hdd" ]; then
-+                export HOME="$MTPT"
-+                break
-+            fi
-+            ;;
-+            /dev/mmcblk[0-9]p[0-9])
-+            if [ "$MTPT" == "/media/mmc" ]; then
-+            	export HOME="$MTPT"
-+            fi
-+        ;;
-+        esac
-+    done
-+    exec 0<&9 9<&-
-+}
-+
-+check_media_hdd
-+KODI_DATA="${HOME}/.${bin_name}"
-+
- # Check for some options used by this script
- while [ "$#" -gt "0" ]
- do
-@@ -90,8 +120,8 @@ print_crash_report()
-   uname -rvs >> $FILE
-   printf " Release: " >> $FILE
-   if [ -f /etc/os-release ]; then
--	  . /etc/os-release
--	  echo $NAME $VERSION >> $FILE
-+    . /etc/os-release
-+    echo $NAME $VERSION >> $FILE
-   elif command_exists lsb_release; then
-     echo >> $FILE
-     lsb_release -a 2> /dev/null | sed -e 's/^/    /' >> $FILE
-@@ -215,13 +245,13 @@ do
-   CHILD=$!
-   wait "${CHILD}"
-   RET=$?
--  if [ $RET -eq 65 ]
--  then # User requested to restart app
--    LOOP=1
--  elif [ $RET -ge 131 ] && [ $RET -le 136 ] || [ $RET -eq 139 ]
--  then # Crashed with core dump
--    print_crash_report
--  fi
-+#  if [ $RET -eq 65 ]
-+#  then # User requested to restart app
-+#    LOOP=1
-+#  elif [ $RET -ge 131 ] && [ $RET -le 136 ] || [ $RET -eq 139 ]
-+#  then # Crashed with core dump
-+#    print_crash_report
-+#  fi
- done
- 
- exit $RET
 diff --git a/tools/depends/target/ffmpeg/CMakeLists.txt b/tools/depends/target/ffmpeg/CMakeLists.txt
 index 8924dc8c73..078e48660b 100644
 --- a/tools/depends/target/ffmpeg/CMakeLists.txt
 +++ b/tools/depends/target/ffmpeg/CMakeLists.txt
-@@ -12,6 +12,36 @@ else()
-                 )
- endif()
- 
+@@ -16,0 +17,30 @@ set(env_vars ${EXTRA_ENV_VARS})
 +if(FFMPEG_TARGET STREQUAL "stb")
 +  set(pkgconf "PKG_CONFIG_LIBDIR=${CMAKE_BINARY_DIR}/lib/pkgconfig")
 +  list(APPEND ffmpeg_conf --pkg-config=${CMAKE_BINARY_DIR}/lib/pkgconfig --pkg-config-flags=--static)
@@ -317,73 +184,11 @@ index 8924dc8c73..078e48660b 100644
 +  endif()
 +endif()
 +
- if(CROSSCOMPILING)
-   set(pkgconf "PKG_CONFIG_LIBDIR=${DEPENDS_PATH}/lib/pkgconfig")
-   list(APPEND ffmpeg_conf --pkg-config=${PKG_CONFIG_EXECUTABLE}
-diff --git a/tools/depends/target/libdvdcss/Makefile b/tools/depends/target/libdvdcss/Makefile
-index 308661aafa..eac0612af3 100644
---- a/tools/depends/target/libdvdcss/Makefile
-+++ b/tools/depends/target/libdvdcss/Makefile
-@@ -3,7 +3,7 @@ include LIBDVDCSS-VERSION
- DEPS = LIBDVDCSS-VERSION Makefile ../../download-files.include
- 
- ifeq ($(CROSS_COMPILING), yes)
--  DEPS += ../../Makefile.include
-+#  DEPS += ../../Makefile.include
- else
-   ROOT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
-   PREFIX := $(ROOT_DIR)/dvdcss-install
-@@ -20,7 +20,7 @@ else
- endif
- 
- # configuration settings
--config = --prefix=$(PREFIX) --disable-shared --enable-static --with-pic
-+config = --build=$(BUILD_SYS) --host=$(HOST_SYS) --prefix=$(PREFIX) --disable-shared --enable-static --with-pic
- 
- include ../../download-files.include
- all: .installed-$(PLATFORM)
-diff --git a/tools/depends/target/libdvdnav/Makefile b/tools/depends/target/libdvdnav/Makefile
-index a43c9072f6..1bc9baa34b 100644
---- a/tools/depends/target/libdvdnav/Makefile
-+++ b/tools/depends/target/libdvdnav/Makefile
-@@ -3,11 +3,11 @@ include LIBDVDNAV-VERSION
- DEPS = LIBDVDNAV-VERSION Makefile ../../download-files.include
- 
- # configuration settings
--config = --prefix=$(PREFIX) --disable-shared --enable-static --with-pic
-+config = --build=$(BUILD_SYS) --host=$(HOST_SYS) --prefix=$(PREFIX) --disable-shared --enable-static --with-pic
- EXTRA_CFLAGS = -D_XBMC -DHAVE_DVDCSS_DVDCSS_H
- 
- ifeq ($(CROSS_COMPILING), yes)
--  DEPS += ../../Makefile.include
-+#  DEPS += ../../Makefile.include
- else
-   ROOT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
-   PREFIX := $(ROOT_DIR)/dvdnav-install
-diff --git a/tools/depends/target/libdvdread/Makefile b/tools/depends/target/libdvdread/Makefile
-index ac32ac445f..657de6a21b 100644
---- a/tools/depends/target/libdvdread/Makefile
-+++ b/tools/depends/target/libdvdread/Makefile
-@@ -3,11 +3,12 @@ include LIBDVDREAD-VERSION
- DEPS = LIBDVDREAD-VERSION Makefile ../../download-files.include
- 
- # configuration settings
--config = --prefix=$(PREFIX) --disable-shared --enable-static --with-pic --with-libdvdcss
-+#config = --prefix=$(PREFIX) --disable-shared --enable-static --with-pic --with-libdvdcss
-+config = --build=$(BUILD_SYS) --host=$(HOST_SYS) --prefix=$(PREFIX) --disable-shared --enable-static --with-pic
- EXTRA_CFLAGS = -D_XBMC -DHAVE_DVDCSS_DVDCSS_H
- 
- ifeq ($(CROSS_COMPILING), yes)
--  DEPS += ../../Makefile.include
-+#  DEPS += ../../Makefile.include
- else
-   ROOT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
-   PREFIX := $(ROOT_DIR)/dvdread-install
 diff --git a/xbmc/guilib/guiinfo/SystemGUIInfo.cpp b/xbmc/guilib/guiinfo/SystemGUIInfo.cpp
 index caee566ef2..d2081256c4 100644
 --- a/xbmc/guilib/guiinfo/SystemGUIInfo.cpp
 +++ b/xbmc/guilib/guiinfo/SystemGUIInfo.cpp
-@@ -62,6 +62,9 @@ std::string CSystemGUIInfo::GetSystemHeatInfo(int info) const
+@@ -65,6 +65,9 @@ std::string CSystemGUIInfo::GetSystemHeatInfo(int info) const
      {
        m_gpuInfo->GetTemperature(m_gpuTemp);
      }
@@ -397,7 +202,7 @@ diff --git a/xbmc/input/InputManager.cpp b/xbmc/input/InputManager.cpp
 index b0872bdc66..c35462f570 100644
 --- a/xbmc/input/InputManager.cpp
 +++ b/xbmc/input/InputManager.cpp
-@@ -604,6 +604,18 @@ bool CInputManager::HandleKey(const CKey& key)
+@@ -626,6 +626,18 @@ bool CInputManager::HandleKey(const CKey& key)
            useKeyboard = true;
        }
      }
@@ -420,7 +225,7 @@ diff --git a/xbmc/view/ViewStateSettings.cpp b/xbmc/view/ViewStateSettings.cpp
 index 16dfc563bb..54339476cb 100644
 --- a/xbmc/view/ViewStateSettings.cpp
 +++ b/xbmc/view/ViewStateSettings.cpp
-@@ -121,7 +121,7 @@ bool CViewStateSettings::Load(const TiXmlNode *settings)
+@@ -123,7 +123,7 @@ bool CViewStateSettings::Load(const TiXmlNode *settings)
      if (XMLUtils::GetInt(pElement, XML_SETTINGLEVEL, settingLevel, static_cast<int>(SettingLevel::Basic), static_cast<int>(SettingLevel::Expert)))
        m_settingLevel = (SettingLevel)settingLevel;
      else

@@ -1,0 +1,154 @@
+From 61a96df2a1f149d54e17d4cf4129a6cfe2997535 Mon Sep 17 00:00:00 2001
+From: OpenATV <openatv@gmail.com>
+Date: Sun, 9 Aug 2026 20:00:00 +0200
+Subject: [PATCH] Dreambox: align DM9x0 GLES setup with tested fbdev path
+
+Keep the libvc5dream default native window, use a bounded framebuffer mapping,
+and follow Enigma2's three/two/one page fallback.  Keep the logical Kodi GUI at
+FHD for UHD output modes and expose fractional broadcast refresh rates.
+---
+ xbmc/utils/DreamboxUtils.cpp                 | 18 ++++++--
+ xbmc/windowing/egl/EGLNativeTypeDreambox.cpp | 47 ++++++++++++++------
+ 2 files changed, 49 insertions(+), 16 deletions(-)
+
+diff --git a/xbmc/utils/DreamboxUtils.cpp b/xbmc/utils/DreamboxUtils.cpp
+index 2e77071c46..8cc95351aa 100644
+--- a/xbmc/utils/DreamboxUtils.cpp
++++ b/xbmc/utils/DreamboxUtils.cpp
+@@ -32,6 +32,8 @@ bool dreambox_mode_to_resolution(const char *mode, RESOLUTION_INFO *res)
+   res->iHeight = 0;
+   res->iScreenWidth = 0;
+   res->iScreenHeight = 0;
++  res->fRefreshRate = 60.0f;
++  res->dwFlags = 0;
+ 
+   if (!mode)
+     return false;
+@@ -60,10 +62,18 @@ bool dreambox_mode_to_resolution(const char *mode, RESOLUTION_INFO *res)
+     } else {
+       res->iScreenHeight = StringUtils::ReturnDigits(t1);
+ 
+-      if (t2.empty())
+-        res->fRefreshRate = 60;
+-      else if (StringUtils::IsInteger(t2))
+-        res->fRefreshRate = StringUtils::ReturnDigits(t2);
++      if (!t2.empty() && StringUtils::IsInteger(t2))
++      {
++        const int rate = StringUtils::ReturnDigits(t2);
++        if (rate == 23)
++          res->fRefreshRate = 23.976f;
++        else if (rate == 29)
++          res->fRefreshRate = 29.97f;
++        else if (rate == 59)
++          res->fRefreshRate = 59.94f;
++        else
++          res->fRefreshRate = static_cast<float>(rate);
++      }
+ 
+       if (types[i] == 'p')
+         res->dwFlags = D3DPRESENTFLAG_PROGRESSIVE;
+@@ -98,7 +108,7 @@ bool dreambox_mode_to_resolution(const char *mode, RESOLUTION_INFO *res)
+   res->iSubtitles    = (int)(0.965 * res->iHeight);
+   res->fPixelRatio   = 1.0f;
+   res->strId         = fromMode;
+-  res->strMode       = StringUtils::Format("{:d}x{:d} @ %.2f{} - Full Screen", res->iScreenWidth, res->iScreenHeight, res->fRefreshRate,
++  res->strMode       = StringUtils::Format("{}x{} @ {:.2f}{} - Full Screen", res->iScreenWidth, res->iScreenHeight, res->fRefreshRate,
+     res->dwFlags & D3DPRESENTFLAG_INTERLACED ? "i" : "");
+ 
+   return res->iWidth > 0 && res->iHeight> 0;
+diff --git a/xbmc/windowing/egl/EGLNativeTypeDreambox.cpp b/xbmc/windowing/egl/EGLNativeTypeDreambox.cpp
+index 97c98ab288..15e235712f 100644
+--- a/xbmc/windowing/egl/EGLNativeTypeDreambox.cpp
++++ b/xbmc/windowing/egl/EGLNativeTypeDreambox.cpp
+@@ -191,7 +191,9 @@ bool CEGLNativeTypeDreambox::SetDisplayResolution(const char *mode)
+ 
+ void CEGLNativeTypeDreambox::SetFramebufferResolution(const RESOLUTION_INFO &res) const
+ {
+-  SetFramebufferResolution(res.iScreenWidth, res.iScreenHeight);
++  // The default libvc5dream surface renders at the framebuffer size.  UHD is
++  // therefore a physical output mode while Kodi's logical GUI stays at FHD.
++  SetFramebufferResolution(res.iWidth, res.iHeight);
+ }
+ 
+ void CEGLNativeTypeDreambox::SetFramebufferResolution(int width, int height) const
+@@ -204,37 +207,56 @@ void CEGLNativeTypeDreambox::SetFramebufferResolution(int width, int height) con
+   {
+     struct fb_var_screeninfo vinfo;
+     if (ioctl(fd, FBIOGET_VSCREENINFO, &vinfo) == 0)
+     {
+-      // Preserve existing page count (dreambox uses triple buffering: yres_virtual = yres * 3)
+-      const int oldYres = vinfo.yres;
+-      const int oldYresVirtual = vinfo.yres_virtual;
+-      int pages = 2;
+-      //if (oldYres > 0 && oldYresVirtual >= oldYres)
+-      //  pages = (int)(oldYresVirtual / oldYres);
+-      //if (pages < 2) pages = 2;
++      if (width <= 0 || height <= 0)
++      {
++        close(fd);
++        return;
++      }
++
+       vinfo.xres = width;
+       vinfo.yres = height;
+       vinfo.xres_virtual = width;
+-      vinfo.yres_virtual = height * pages;
+       vinfo.bits_per_pixel = 32;
+       vinfo.xoffset = 0;
+       vinfo.yoffset = 0;
+-      vinfo.activate = FB_ACTIVATE_NOW;
++      vinfo.activate = FB_ACTIVATE_ALL;
+ 
+-      if (ioctl(fd, FBIOPUT_VSCREENINFO, &vinfo) == 0)
++      // DM900/DM920 use CONFIG_ION and Enigma2 requests three pages.  Some
++      // driver/memory combinations only accept two or one, so fall back just
++      // like fbClass::SetMode does.
++      bool configured = false;
++      for (int pages = 3; pages >= 1; --pages)
+       {
+-        // Ensure page 0 is visible. This avoids showing an "old" page after mode changes.
+-        ioctl(fd, FBIOPAN_DISPLAY, &vinfo);
+-
+-        // Optional: clear framebuffer memory once after reconfig to avoid stale artifacts
+-        const size_t bpp = (size_t)vinfo.bits_per_pixel / 8;
+-        const size_t fbSize = (size_t)vinfo.xres_virtual * (size_t)vinfo.yres_virtual * bpp;
+-        void* fb = mmap(nullptr, fbSize, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
+-        if (fb != MAP_FAILED)
+-        {
+-          memset(fb, 0x00, fbSize);
+-          munmap(fb, fbSize);
+-        }
++        vinfo.yres_virtual = height * pages;
++        if (ioctl(fd, FBIOPUT_VSCREENINFO, &vinfo) == 0)
++        {
++          configured = true;
++          break;
++        }
++      }
++
++      if (configured)
++      {
++        // Query the accepted geometry/stride and never map beyond smem_len.
++        ioctl(fd, FBIOGET_VSCREENINFO, &vinfo);
++        vinfo.xoffset = 0;
++        vinfo.yoffset = 0;
++        ioctl(fd, FBIOPAN_DISPLAY, &vinfo);
++
++        struct fb_fix_screeninfo finfo;
++        if (ioctl(fd, FBIOGET_FSCREENINFO, &finfo) == 0)
++        {
++          size_t fbSize = static_cast<size_t>(finfo.line_length) * vinfo.yres_virtual;
++          if (finfo.smem_len > 0 && fbSize > finfo.smem_len)
++            fbSize = finfo.smem_len;
++          void* fb = mmap(nullptr, fbSize, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
++          if (fb != MAP_FAILED)
++          {
++            memset(fb, 0x00, fbSize);
++            munmap(fb, fbSize);
++          }
++        }
+       }
+     }
+     close(fd);
+-- 
+2.45.1

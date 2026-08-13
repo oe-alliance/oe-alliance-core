@@ -1,0 +1,280 @@
+From 64b29dccb55ed8ca5a2d4e4e297d098176bc148f Mon Sep 17 00:00:00 2001
+From: OE-Alliance <oe-alliance@users.noreply.github.com>
+Date: Sun, 9 Aug 2026 18:45:00 +0200
+Subject: [PATCH] vuplus arm: expose and switch real HDMI video modes
+
+The legacy VU+ EGL type advertised only a synthetic 50 Hz mode and merely
+updated an in-memory structure when Kodi requested another resolution.  As a
+result 23.976/24 Hz material was always output as 1080p50 and showed severe
+cadence judder even though the video was decoded in hardware.
+
+Read the progressive HD/UHD modes published by the DVB driver, retain a
+1920x1080 logical NXPL surface for the GUI, and use the physical dimensions
+and refresh rate for Kodi's mode matching.  Never expose a mode above the
+Enigma2 output resolution active at Kodi startup; 4K material can therefore
+still be hardware decoded and downscaled on a 1080p display without causing
+HDMI signal loss. Apply selected modes through the driver's videomode proc
+node. Keep the two legacy stereo flags available.
+---
+ xbmc/windowing/egl/EGLNativeTypeVuplus.cpp | 197 ++++++++++++++++++---
+ 1 file changed, 172 insertions(+), 25 deletions(-)
+
+diff --git a/xbmc/windowing/egl/EGLNativeTypeVuplus.cpp b/xbmc/windowing/egl/EGLNativeTypeVuplus.cpp
+index a0381abe356..520c10153cd 100644
+--- a/xbmc/windowing/egl/EGLNativeTypeVuplus.cpp
++++ b/xbmc/windowing/egl/EGLNativeTypeVuplus.cpp
+@@ -34,6 +34,8 @@
+ #if defined(TARGET_VUPLUS_ARM)
+ #include <EGL/egl.h>
+ #include <dlfcn.h>
++#include <fstream>
++#include <sstream>
+ #include <stdint.h>
+ #else
+ #include "gles_init.h"
+@@ -77,5 +79,98 @@ bool s_platformReady = false;
+ bool s_platformFailed = false;
+ 
++bool ReadProcString(const char* path, std::string& value)
++{
++  std::ifstream input(path);
++  if (!input)
++    return false;
++  std::getline(input, value);
++  while (!value.empty() &&
++         (value.back() == '\n' || value.back() == '\r' || value.back() == ' ' ||
++          value.back() == '\t'))
++    value.pop_back();
++  return !value.empty();
++}
++
++bool WriteProcString(const char* path, const std::string& value)
++{
++  std::ofstream output(path);
++  if (!output)
++    return false;
++  output << value;
++  return output.good();
++}
++
++bool ParseVuVideoMode(const std::string& mode,
++                      unsigned int& outputWidth,
++                      unsigned int& outputHeight,
++                      float& refreshRate,
++                      bool& interlaced)
++{
++  if (mode == "pal")
++  {
++    outputWidth = 720;
++    outputHeight = 576;
++    refreshRate = 50.0f;
++    interlaced = true;
++    return true;
++  }
++  if (mode == "ntsc")
++  {
++    outputWidth = 720;
++    outputHeight = 480;
++    refreshRate = 59.94f;
++    interlaced = true;
++    return true;
++  }
++
++  const size_t scanIndex = mode.find_first_of("pi");
++  if (scanIndex == std::string::npos || scanIndex == 0)
++    return false;
++
++  outputHeight = static_cast<unsigned int>(std::strtoul(mode.substr(0, scanIndex).c_str(),
++                                                         nullptr, 10));
++  switch (outputHeight)
++  {
++    case 480:
++    case 576:
++      outputWidth = 720;
++      break;
++    case 720:
++      outputWidth = 1280;
++      break;
++    case 1080:
++      outputWidth = 1920;
++      break;
++    case 2160:
++      outputWidth = 3840;
++      break;
++    default:
++      return false;
++  }
++
++  interlaced = mode[scanIndex] == 'i';
++  const unsigned int namedRate =
++      scanIndex + 1 < mode.size()
++          ? static_cast<unsigned int>(std::strtoul(mode.c_str() + scanIndex + 1, nullptr, 10))
++          : (outputHeight == 576 ? 50U : 60U);
++  switch (namedRate)
++  {
++    case 24:
++      refreshRate = 23.976f;
++      break;
++    case 30:
++      refreshRate = 29.97f;
++      break;
++    case 60:
++      refreshRate = 59.94f;
++      break;
++    default:
++      refreshRate = static_cast<float>(namedRate);
++      break;
++  }
++  return namedRate != 0;
++}
++
+ void LoadOptionalLibrary(const char* name)
+ {
+   // Retain successful handles for the process lifetime. Old Nexus/NXPL
+@@ -258,12 +353,136 @@ bool CEGLNativeTypeVuplus::GetNativeResolution(RESOLUTION_INFO *res) const
+ 
+ bool CEGLNativeTypeVuplus::SetNativeResolution(const RESOLUTION_INFO &res)
+ {
++#if defined(TARGET_VUPLUS_ARM)
++  std::string driverMode = res.strId;
++  const size_t stereoSuffix = driverMode.rfind('-');
++  if (stereoSuffix != std::string::npos)
++    driverMode.erase(stereoSuffix);
++  std::string currentDriverMode = m_desktopRes.strId;
++  const size_t currentStereoSuffix = currentDriverMode.rfind('-');
++  if (currentStereoSuffix != std::string::npos)
++    currentDriverMode.erase(currentStereoSuffix);
++  if (!driverMode.empty() && driverMode != currentDriverMode &&
++      !WriteProcString("/proc/stb/video/videomode", driverMode))
++  {
++    CLog::Log(LOGERROR, "VU+ NXPL: failed to set HDMI mode '{}'", driverMode);
++    return false;
++  }
++  CLog::Log(LOGINFO, "VU+ NXPL: HDMI mode {} at {:.3f} Hz", driverMode, res.fRefreshRate);
++#endif
+   m_desktopRes = res;
+   return true;
+ }
+ 
+ bool CEGLNativeTypeVuplus::ProbeResolutions(std::vector<RESOLUTION_INFO> &resolutions)
+ {
++#if defined(TARGET_VUPLUS_ARM)
++  std::string currentMode;
++  std::string modeChoices;
++  ReadProcString("/proc/stb/video/videomode", currentMode);
++  if (!ReadProcString("/proc/stb/video/videomode_choices", modeChoices))
++    modeChoices = "1080p24 1080p25 1080p30 1080p50 1080p60";
++
++  unsigned int maximumOutputWidth = 1920;
++  unsigned int maximumOutputHeight = 1080;
++  float currentRefreshRate = 50.0f;
++  bool currentInterlaced = false;
++  if (!ParseVuVideoMode(currentMode, maximumOutputWidth, maximumOutputHeight,
++                        currentRefreshRate, currentInterlaced))
++  {
++    maximumOutputWidth = 1920;
++    maximumOutputHeight = 1080;
++  }
++
++  resolutions.clear();
++  bool foundCurrent = false;
++  bool foundPreferred = false;
++  std::istringstream choices(modeChoices);
++  std::string modeName;
++  while (choices >> modeName)
++  {
++    unsigned int outputWidth = 0;
++    unsigned int outputHeight = 0;
++    float refreshRate = 0.0f;
++    bool interlaced = false;
++    if (!ParseVuVideoMode(modeName, outputWidth, outputHeight, refreshRate, interlaced) ||
++        interlaced || outputHeight < 720 || outputWidth > maximumOutputWidth ||
++        outputHeight > maximumOutputHeight)
++      continue;
++
++    // Prefer explicit 1080p60 over the equivalent legacy 1080p alias.
++    if (modeName == "1080p" && modeChoices.find("1080p60") != std::string::npos)
++      continue;
++
++    RESOLUTION_INFO resolution;
++    resolution.bFullScreen = true;
++    // Keep Kodi's GLES GUI at FHD while NXPL stretches it to the physical
++    // HDMI mode. The independent hardware video plane retains UHD output.
++    resolution.iWidth = 1920;
++    resolution.iHeight = 1080;
++    resolution.iScreenWidth = outputWidth;
++    resolution.iScreenHeight = outputHeight;
++    resolution.dwFlags = D3DPRESENTFLAG_PROGRESSIVE;
++    resolution.fRefreshRate = refreshRate;
++    resolution.iSubtitles = static_cast<int>(0.965 * resolution.iHeight);
++    resolution.strId = modeName;
++    resolution.strMode = StringUtils::Format("{}x{} @ {:.3f} - Full Screen ({})", outputWidth,
++                                              outputHeight, refreshRate, modeName);
++    resolutions.push_back(resolution);
++
++    if (modeName == currentMode)
++    {
++      m_desktopRes = resolution;
++      foundCurrent = true;
++    }
++    if (modeName == "1080p50")
++    {
++      m_desktopResAll[0] = resolution;
++      foundPreferred = true;
++    }
++  }
++
++  if (resolutions.empty())
++  {
++    RESOLUTION_INFO fallback;
++    fallback.bFullScreen = true;
++    fallback.iWidth = 1920;
++    fallback.iHeight = 1080;
++    fallback.iScreenWidth = 1920;
++    fallback.iScreenHeight = 1080;
++    fallback.dwFlags = D3DPRESENTFLAG_PROGRESSIVE;
++    fallback.fRefreshRate = 50.0f;
++    fallback.iSubtitles = static_cast<int>(0.965 * fallback.iHeight);
++    fallback.strId = "1080p50";
++    fallback.strMode = "1920x1080 @ 50.000 - Full Screen (1080p50)";
++    resolutions.push_back(fallback);
++    m_desktopResAll[0] = fallback;
++    m_desktopRes = fallback;
++    foundCurrent = true;
++    foundPreferred = true;
++  }
++  if (!foundPreferred)
++    m_desktopResAll[0] = resolutions.front();
++  if (!foundCurrent)
++    m_desktopRes = m_desktopResAll[0];
++
++  // Preserve Kodi's legacy stereo-mode choices using the preferred FHD mode.
++  m_desktopResAll[1] = m_desktopResAll[0];
++  m_desktopResAll[1].dwFlags |= D3DPRESENTFLAG_MODE3DSBS;
++  m_desktopResAll[1].strId += "-sbs";
++  m_desktopResAll[1].strMode += " 3DSBS";
++  resolutions.push_back(m_desktopResAll[1]);
++
++  m_desktopResAll[2] = m_desktopResAll[0];
++  m_desktopResAll[2].dwFlags |= D3DPRESENTFLAG_MODE3DTB;
++  m_desktopResAll[2].strId += "-tab";
++  m_desktopResAll[2].strMode += " 3DTB";
++  resolutions.push_back(m_desktopResAll[2]);
++
++  CLog::Log(LOGINFO, "VU+ NXPL: exposed {} HDMI modes up to {}x{}, current '{}'",
++            resolutions.size(), maximumOutputWidth, maximumOutputHeight, currentMode);
++  return true;
++#else
+   resolutions.clear();
+ 
+   m_desktopResAll[0].bFullScreen  = true;
+@@ -331,6 +550,7 @@ bool CEGLNativeTypeVuplus::ProbeResolutions(std::vector<RESOLUTION_INFO> &resolu
+   m_desktopRes = m_desktopResAll[0];
+ 
+   return true;
++#endif
+ }
+ 
+ bool CEGLNativeTypeVuplus::GetPreferredResolution(RESOLUTION_INFO *res) const
+-- 
+2.51.0

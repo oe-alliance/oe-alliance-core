@@ -59,7 +59,7 @@ MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "\
     u-boot-bin \
 "
 
-MACHINE_FEATURES += "dreambox alsa usbhost 3dtv switchoff blindscan-dvbs"
+MACHINE_FEATURES += "dreambox alsa usbhost 3dtv switchoff blindscan-dvbs kodi22"
 # Add "dreambox" override for recipes
 MACHINEOVERRIDES .= ":dreambox"
 

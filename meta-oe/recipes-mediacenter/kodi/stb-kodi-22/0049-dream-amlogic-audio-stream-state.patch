@@ -1,0 +1,73 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: OE-Alliance <dev@oe-alliance.com>
+Date: Wed, 12 Aug 2026 15:30:00 +0200
+Subject: [PATCH] VideoPlayer: expose active audio-stream state to STB codecs
+
+The decoder name is reset to the literal "unknown" when no audio stream is
+open, so it cannot be used to distinguish video-only media.  Publish the
+actual selected-stream state through CProcessInfo instead.  This state is
+also what Kodi uses for its player stream list.
+---
+ xbmc/cores/VideoPlayer/Process/ProcessInfo.cpp | 12 ++++++++++++
+ xbmc/cores/VideoPlayer/Process/ProcessInfo.h   |  3 +++
+ xbmc/cores/VideoPlayer/VideoPlayer.cpp         |  1 +
+ 3 files changed, 16 insertions(+)
+
+diff --git a/xbmc/cores/VideoPlayer/Process/ProcessInfo.cpp b/xbmc/cores/VideoPlayer/Process/ProcessInfo.cpp
+index f6bde2e6af..5143034c2b 100644
+--- a/xbmc/cores/VideoPlayer/Process/ProcessInfo.cpp
++++ b/xbmc/cores/VideoPlayer/Process/ProcessInfo.cpp
+@@ -379,6 +379,18 @@ void CProcessInfo::SetPixFormats(std::vector<AVPixelFormat> &formats)
+ //******************************************************************************
+ // player audio info
+ //******************************************************************************
++void CProcessInfo::SetAudioStreamActive(bool active)
++{
++  std::unique_lock lock(m_audioCodecSection);
++  m_audioStreamActive = active;
++}
++
++bool CProcessInfo::IsAudioStreamActive()
++{
++  std::unique_lock lock(m_audioCodecSection);
++  return m_audioStreamActive;
++}
++
+ void CProcessInfo::ResetAudioCodecInfo()
+ {
+   std::unique_lock lock(m_audioCodecSection);
+diff --git a/xbmc/cores/VideoPlayer/Process/ProcessInfo.h b/xbmc/cores/VideoPlayer/Process/ProcessInfo.h
+index fe77c7c0ad..ad394908f1 100644
+--- a/xbmc/cores/VideoPlayer/Process/ProcessInfo.h
++++ b/xbmc/cores/VideoPlayer/Process/ProcessInfo.h
+@@ -68,6 +68,8 @@ public:
+ 
+   // player audio info
+   void ResetAudioCodecInfo();
++  void SetAudioStreamActive(bool active);
++  bool IsAudioStreamActive();
+   void SetAudioDecoderName(const std::string &name);
+   std::string GetAudioDecoderName();
+   void SetAudioChannels(const std::string &channels);
+@@ -164,6 +166,7 @@ protected:
+   std::vector<AVPixelFormat> m_pixFormats;
+ 
+   // player audio info
++  bool m_audioStreamActive{false};
+   std::string m_audioDecoderName;
+   std::string m_audioChannels;
+   int m_audioSampleRate;
+diff --git a/xbmc/cores/VideoPlayer/VideoPlayer.cpp b/xbmc/cores/VideoPlayer/VideoPlayer.cpp
+index 56a71bd910..b5327a0546 100644
+--- a/xbmc/cores/VideoPlayer/VideoPlayer.cpp
++++ b/xbmc/cores/VideoPlayer/VideoPlayer.cpp
+@@ -1042,6 +1042,7 @@ void CVideoPlayer::UpdateHasVideoAudio()
+     m_HasVideo = false;
+   if (m_CurrentAudio.id < 0)
+     m_HasAudio = false;
++  m_processInfo->SetAudioStreamActive(m_CurrentAudio.id >= 0);
+ }
+ 
+ void CVideoPlayer::OpenDefaultStreams(bool reset)
+-- 
+2.43.0

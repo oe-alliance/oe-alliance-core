@@ -1,0 +1,111 @@
+From 0e0780eb2b495913796abdfb25ff60a3a6be7aac Mon Sep 17 00:00:00 2001
+From: OpenATV <oe-alliance@users.noreply.github.com>
+Date: Sat, 8 Aug 2026 18:00:00 +0200
+Subject: [PATCH] stb: lock HiSilicon to its initial EGL mode
+
+HiSilicon HIFB determines the Mali EGL surface size when the first surface is
+created. FBIOPUT_VSCREENINFO can change fb0 afterwards, but EGL keeps its
+initial dimensions. Kodi then renders a new GUI size into the old EGL surface,
+cropping or offsetting the OSD until the receiver is rebooted.
+
+Expose only the initial HIFB mode, never change it after Kodi starts, and mark
+the STB window system as fullscreen-only. Other Mali fbdev platforms retain
+their existing mode handling.
+
+---
+ xbmc/windowing/egl/EGLNativeTypeMali.cpp | 49 ++++++++++++------------
+ xbmc/windowing/egl/WinSystemstb.h        |  1 +
+ 2 files changed, 25 insertions(+), 26 deletions(-)
+
+diff --git a/xbmc/windowing/egl/EGLNativeTypeMali.cpp b/xbmc/windowing/egl/EGLNativeTypeMali.cpp
+index 76d663b..9cbc503 100644
+--- a/xbmc/windowing/egl/EGLNativeTypeMali.cpp
++++ b/xbmc/windowing/egl/EGLNativeTypeMali.cpp
+@@ -205,15 +205,17 @@ bool CEGLNativeTypeMali::SetNativeResolution(const RESOLUTION_INFO &res) {
+     return false;
+   }
+ 
+-  static bool firstModeSet = true;
+-  const bool primeHifbScaler = firstModeSet && strcmp(finfo.id, "hifb") == 0 &&
+-                               res.iWidth == 1920 && res.iHeight == 1080;
+-  firstModeSet = false;
+-  const unsigned int targetWidth = primeHifbScaler ? 1280u : res.iWidth;
+-  const unsigned int targetHeight = primeHifbScaler ? 720u : res.iHeight;
+-  if (primeHifbScaler)
+-    CLog::Log(LOGINFO,
+-              "CEGLNativeTypeMali: priming HiSilicon HIFB scaler at 1280x720 before FHD EGL surface");
++  if (strcmp(finfo.id, "hifb") == 0)
++  {
++    CLog::Log(LOGINFO,
++              "CEGLNativeTypeMali: preserving initial HiSilicon HIFB/EGL mode {}x{}",
++              vinfo.xres, vinfo.yres);
++    close(fd);
++    return true;
++  }
++
++  const unsigned int targetWidth = res.iWidth;
++  const unsigned int targetHeight = res.iHeight;
+ 
+   const unsigned int bytesPerPixel = std::max(1u, vinfo.bits_per_pixel / 8u);
+   const unsigned long long requiredBytes =
+@@ -258,6 +260,16 @@ bool CEGLNativeTypeMali::ProbeResolutions(std::vector<RESOLUTION_INFO> &resoluti
+   CLog::Log(LOGDEBUG, "CEGLNativeTypeMali::ProbeResolutions()\n");
+   resolutions.clear();
+ 
++  if (IsHiSiliconHifb())
++  {
++    RESOLUTION_INFO current;
++    if (!_GetNativeResolution(&current))
++      return false;
++
++    resolutions.emplace_back(current);
++    return true;
++  }
++
+   FILE* modes = fopen("/sys/class/graphics/fb0/modes", "r");
+   if (modes)
+   {
+@@ -287,26 +299,14 @@ bool CEGLNativeTypeMali::ProbeResolutions(std::vector<RESOLUTION_INFO> &resoluti
+               return left.iWidth * left.iHeight < right.iWidth * right.iHeight;
+             });
+ 
+-  // HiSilicon's Mali EGL surface is fixed to the physical HIFB size. Exposing
+-  // the 720p priming mode as a second Kodi resolution creates two modes with
+-  // one EGL surface and lets video refresh adjustment restore a stale 720p
+-  // viewport. Keep only the physical preferred mode; SetNativeResolution()
+-  // still performs the required internal 720p scaler activation.
+-  if (IsHiSiliconHifb() && resolutions.size() > 1)
+-  {
+-    const auto fullHd = std::find_if(
+-        resolutions.cbegin(), resolutions.cend(), [](const RESOLUTION_INFO& candidate) {
+-          return candidate.iWidth == 1920 && candidate.iHeight == 1080;
+-        });
+-    const RESOLUTION_INFO physical =
+-        fullHd != resolutions.cend() ? *fullHd : resolutions.back();
+-    resolutions.assign(1, physical);
+-  }
+   return !resolutions.empty();
+ }
+ 
+ bool CEGLNativeTypeMali::GetPreferredResolution(RESOLUTION_INFO *res) const {
+   CLog::Log(LOGDEBUG, "CEGLNativeTypeMali::GetPreferredResolution()\n");
++  if (IsHiSiliconHifb())
++    return _GetNativeResolution(res);
++
+   std::vector<RESOLUTION_INFO> resolutions;
+   if (const_cast<CEGLNativeTypeMali*>(this)->ProbeResolutions(resolutions))
+   {
+diff --git a/xbmc/windowing/egl/WinSystemstb.h b/xbmc/windowing/egl/WinSystemstb.h
+index 0c701b2..727d89c 100644
+--- a/xbmc/windowing/egl/WinSystemstb.h
++++ b/xbmc/windowing/egl/WinSystemstb.h
+@@ -32,6 +32,7 @@ public:
+ 
+   bool InitWindowSystem() override;
+   bool DestroyWindowSystem() override;
++  bool CanDoWindowed() override { return false; }
+ 
+   bool CreateNewWindow(const std::string& name,
+                        bool fullScreen,
+-- 
+2.45.2

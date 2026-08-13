@@ -1,13 +1,11 @@
 From df770c6284881e97e9a9d64709efd91dcb697f5a Mon Sep 17 00:00:00 2001
 From: Markus Volk <f_l_k@t-online.de>
 Date: Wed, 17 Jul 2024 10:57:18 +0200
-Subject: [PATCH] FindSmbClient: dont use pkgconfig includedir
+Subject: [PATCH] FindSmbClient: use sysroot-aware pkgconfig include dirs
 
-This will map to host includes and lead to:
-| CMake Error in xbmc/network/httprequesthandler/python/CMakeLists.txt:
-|   Imported target "kodi::SmbClient" includes non-existent path
-|
-|     "/usr/include/samba-4.0"
+SMBCLIENT_INCLUDEDIR contains the unrelocated /usr path from the .pc file.
+SMBCLIENT_INCLUDE_DIRS is rewritten by pkg-config for the recipe sysroot and
+therefore points at the cross-compiled Samba headers.
 ---
  cmake/modules/FindSmbClient.cmake | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
@@ -21,10 +19,9 @@ index 159dae52f77..8873002a246 100644
  
        # pkgconfig sets SMBCLIENT_INCLUDEDIR, map this to our "standard" variable name
 -      set(SMBCLIENT_INCLUDE_DIR ${SMBCLIENT_INCLUDEDIR})
-+      #set(SMBCLIENT_INCLUDE_DIR ${SMBCLIENT_INCLUDEDIR})
++      set(SMBCLIENT_INCLUDE_DIR ${SMBCLIENT_INCLUDE_DIRS})
        set(SMBCLIENT_VERSION ${PC_SMBCLIENT_VERSION})
      else()
        find_path(SMBCLIENT_INCLUDE_DIR NAMES libsmbclient.h)
 -- 
 2.45.1
-

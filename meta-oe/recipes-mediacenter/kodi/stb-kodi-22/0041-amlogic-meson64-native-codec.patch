@@ -1,0 +1,234 @@
+From: OpenATV STB Kodi Team <oe.patch@openatv.example>
+Date: Mon, 10 Aug 2026 12:00:00 +0200
+Subject: [PATCH] Amlogic: add native meson64 amcodec playback
+
+Use the proven Amlogic 4.9 libamcodec decoder and renderer while keeping
+OpenATV's STB windowing/input stack. DreamOne and DreamTwo Mali fbdev EGL
+requires a persistent, non-null two-field native window.
+
+diff --git a/cmake/modules/FindAML.cmake b/cmake/modules/FindAML.cmake
+new file mode 100644
+index 0000000..0d28812
+--- /dev/null
++++ b/cmake/modules/FindAML.cmake
+@@ -0,0 +1,50 @@
++#.rst:
++# FindAML
++# -------
++# Finds the Amlogic 4.9 amcodec userspace headers.  Kodi loads libamcodec
++# dynamically, so no link library is required here.
++#
++# This defines the following target:
++#
++#   ${APP_NAME_LC}::AML - The Amlogic amcodec interface
++
++if(NOT TARGET ${APP_NAME_LC}::${CMAKE_FIND_PACKAGE_NAME})
++  find_path(AML_INCLUDE_DIR NAMES amcodec/codec_error.h)
++
++  if(NOT VERBOSE_FIND)
++    set(${CMAKE_FIND_PACKAGE_NAME}_FIND_QUIETLY TRUE)
++  endif()
++
++  include(FindPackageHandleStandardArgs)
++  find_package_handle_standard_args(AML REQUIRED_VARS AML_INCLUDE_DIR)
++
++  if(AML_FOUND)
++    include(CheckCSourceCompiles)
++    set(AML_INCLUDE_DIRS "${AML_INCLUDE_DIR};${AML_INCLUDE_DIR}/amcodec")
++    set(CMAKE_REQUIRED_INCLUDES "${AML_INCLUDE_DIRS}")
++    check_c_source_compiles("#include <amcodec/codec.h>
++int main(void)
++{
++  int format = VIDEO_DEC_FORMAT_VP9;
++  return format;
++}
++" AML_HAS_VP9)
++    unset(CMAKE_REQUIRED_INCLUDES)
++
++    set(AML_DEFINITIONS -DHAS_LIBAMCODEC=1)
++    if(AML_HAS_VP9)
++      list(APPEND AML_DEFINITIONS -DHAS_LIBAMCODEC_VP9=1)
++    endif()
++
++    add_library(${APP_NAME_LC}::${CMAKE_FIND_PACKAGE_NAME} INTERFACE IMPORTED)
++    set_target_properties(${APP_NAME_LC}::${CMAKE_FIND_PACKAGE_NAME} PROPERTIES
++      INTERFACE_INCLUDE_DIRECTORIES "${AML_INCLUDE_DIRS}"
++      INTERFACE_COMPILE_DEFINITIONS "HAS_LIBAMCODEC=1")
++    if(AML_HAS_VP9)
++      set_property(TARGET ${APP_NAME_LC}::${CMAKE_FIND_PACKAGE_NAME} APPEND PROPERTY
++        INTERFACE_COMPILE_DEFINITIONS "HAS_LIBAMCODEC_VP9=1")
++    endif()
++  endif()
++endif()
++
++mark_as_advanced(AML_INCLUDE_DIR)
+diff --git a/cmake/platform/linux/stb.cmake b/cmake/platform/linux/stb.cmake
+index b7a5a1b..845bbad 100644
+--- a/cmake/platform/linux/stb.cmake
++++ b/cmake/platform/linux/stb.cmake
+@@ -50,6 +50,11 @@ elseif(WITH_PLATFORM STREQUAL "nextv-cortexa15")
+   set(CPU cortexa15)
+   list(APPEND PLATFORM_DEFINES "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_STB_EXTEND -DTARGET_V3D -DTARGET_NEXTV")
+   list(APPEND DEPLIBS EGL GLESv2 nxpl nexus nxclient)
++elseif(WITH_PLATFORM STREQUAL "amlogic-meson64")
++  set(CPU aarch64)
++  list(APPEND PLATFORM_REQUIRED_DEPS AML)
++  list(APPEND PLATFORM_DEFINES "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_STB_EXTEND -DTARGET_MALI -DTARGET_AMLOGIC")
++  list(APPEND DEPLIBS EGL GLESv2)
+ elseif(WITH_PLATFORM STREQUAL "mali-cortexa15")
+   set(CPU cortexa15)
+   list(APPEND PLATFORM_DEFINES "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_STB_EXTEND -DTARGET_MALI")
+diff --git a/xbmc/cores/VideoPlayer/DVDCodecs/Video/CMakeLists.txt b/xbmc/cores/VideoPlayer/DVDCodecs/Video/CMakeLists.txt
+index 331de0c..38d24ad 100644
+--- a/xbmc/cores/VideoPlayer/DVDCodecs/Video/CMakeLists.txt
++++ b/xbmc/cores/VideoPlayer/DVDCodecs/Video/CMakeLists.txt
+@@ -7,6 +7,13 @@ set(HEADERS AddonVideoCodec.h
+             DVDVideoCodecFFmpeg.h
+             DVDVideoPP.h)
+ 
++if(TARGET ${APP_NAME_LC}::AML)
++  list(APPEND SOURCES AMLCodec.cpp
++                      DVDVideoCodecAmlogic.cpp)
++  list(APPEND HEADERS AMLCodec.h
++                      DVDVideoCodecAmlogic.h)
++endif()
++
+ if(TARGET ${APP_NAME_LC}::Stbplayer)
+   list(APPEND SOURCES DVDVideoCodecSTB.cpp
+                       RendererSTB.cpp
+diff --git a/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/CMakeLists.txt b/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/CMakeLists.txt
+index 101517c..5d92f56 100644
+--- a/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/CMakeLists.txt
++++ b/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/CMakeLists.txt
+@@ -1,3 +1,8 @@
++if(TARGET ${APP_NAME_LC}::AML)
++  list(APPEND SOURCES RendererAML.cpp)
++  list(APPEND HEADERS RendererAML.h)
++endif()
++
+ if(CORE_SYSTEM_NAME STREQUAL windows OR CORE_SYSTEM_NAME STREQUAL windowsstore)
+   list(APPEND SOURCES DXVAHD.cpp)
+   list(APPEND SOURCES DXVAEnumeratorHD.cpp)
+diff --git a/xbmc/utils/CMakeLists.txt b/xbmc/utils/CMakeLists.txt
+index a249687..fc13571 100644
+--- a/xbmc/utils/CMakeLists.txt
++++ b/xbmc/utils/CMakeLists.txt
+@@ -197,6 +197,11 @@ if (WITH_PLATFORM STREQUAL "dreambox-cortexa15" OR WITH_PLATFORM STREQUAL "dream
+   list(APPEND HEADERS DreamboxUtils.h)
+ endif()
+ 
++if(TARGET ${APP_NAME_LC}::AML)
++  list(APPEND SOURCES AMLUtils.cpp)
++  list(APPEND HEADERS AMLUtils.h)
++endif()
++
+ if(TARGET ${APP_NAME_LC}::XSLT)
+   list(APPEND SOURCES XSLTUtils.cpp)
+   list(APPEND HEADERS XSLTUtils.h)
+diff --git a/xbmc/windowing/egl/CMakeLists.txt b/xbmc/windowing/egl/CMakeLists.txt
+index 996a895..e39b83f 100644
+--- a/xbmc/windowing/egl/CMakeLists.txt
++++ b/xbmc/windowing/egl/CMakeLists.txt
+@@ -50,6 +50,7 @@ if (WITH_PLATFORM STREQUAL "nextv-cortexa15")
+   list(APPEND HEADERS EGLNativeTypeNexTV.h)
+ endif()
+-if (WITH_PLATFORM STREQUAL "mali-cortexa15" OR WITH_PLATFORM STREQUAL "clap-cortexa15")
++if (WITH_PLATFORM STREQUAL "mali-cortexa15" OR WITH_PLATFORM STREQUAL "clap-cortexa15" OR
++    WITH_PLATFORM STREQUAL "amlogic-meson64")
+   list(APPEND SOURCES EGLNativeTypeMali.cpp)
+   list(APPEND HEADERS EGLNativeTypeMali.h)
+ endif()
+diff --git a/xbmc/windowing/egl/EGLNativeTypeMali.cpp b/xbmc/windowing/egl/EGLNativeTypeMali.cpp
+index f5c26b8..612e626 100644
+--- a/xbmc/windowing/egl/EGLNativeTypeMali.cpp
++++ b/xbmc/windowing/egl/EGLNativeTypeMali.cpp
+@@ -144,7 +144,21 @@ bool CEGLNativeTypeMali::CreateNativeDisplay() {
+ 
+ bool CEGLNativeTypeMali::CreateNativeWindow() {
+   CLog::Log(LOGDEBUG, "CEGLNativeTypeMali::CreateNativeWindow()\n");
++#if defined(TARGET_AMLOGIC)
++  RESOLUTION_INFO resolution;
++  if (!_GetNativeResolution(&resolution))
++  {
++    CLog::Log(LOGERROR, "CEGLNativeTypeMali: cannot query Amlogic framebuffer geometry");
++    return false;
++  }
++  m_fbdevWindow.width = static_cast<unsigned short>(resolution.iWidth);
++  m_fbdevWindow.height = static_cast<unsigned short>(resolution.iHeight);
++  m_nativeWindow = reinterpret_cast<XBNativeWindowType>(&m_fbdevWindow);
++  CLog::Log(LOGINFO, "CEGLNativeTypeMali: Amlogic fbdev window {}x{}",
++            m_fbdevWindow.width, m_fbdevWindow.height);
++#else
+   m_nativeWindow = EGL_DEFAULT_DISPLAY;
++#endif
+   return true;
+ }
+ 
+@@ -253,6 +267,13 @@ bool CEGLNativeTypeMali::SetNativeResolution(const RESOLUTION_INFO &res) {
+   if (!applied)
+     CLog::Log(LOGWARNING, "CEGLNativeTypeMali: driver kept OSD framebuffer at {}x{}",
+               vinfo.xres, vinfo.yres);
++#if defined(TARGET_AMLOGIC)
++  if (applied)
++  {
++    m_fbdevWindow.width = static_cast<unsigned short>(vinfo.xres);
++    m_fbdevWindow.height = static_cast<unsigned short>(vinfo.yres);
++  }
++#endif
+   return applied;
+ }
+ 
+@@ -324,4 +345,3 @@ bool CEGLNativeTypeMali::ShowWindow(bool show) {
+   CLog::Log(LOGDEBUG, "CEGLNativeTypeMali::ShowWindow()\n");
+   return false;
+ }
+-
+diff --git a/xbmc/windowing/egl/EGLNativeTypeMali.h b/xbmc/windowing/egl/EGLNativeTypeMali.h
+index 083749a..56cca52 100644
+--- a/xbmc/windowing/egl/EGLNativeTypeMali.h
++++ b/xbmc/windowing/egl/EGLNativeTypeMali.h
+@@ -50,4 +50,12 @@ public:
+ 
+  private:
+   bool _GetNativeResolution(RESOLUTION_INFO *res) const;
++#if defined(TARGET_AMLOGIC)
++  struct AmlogicFbdevWindow
++  {
++    unsigned short width;
++    unsigned short height;
++  };
++  AmlogicFbdevWindow m_fbdevWindow{1280, 720};
++#endif
+ };
+diff --git a/xbmc/windowing/egl/WinSystemSTBContext.cpp b/xbmc/windowing/egl/WinSystemSTBContext.cpp
+index 5d10d3c..08218dd 100644
+--- a/xbmc/windowing/egl/WinSystemSTBContext.cpp
++++ b/xbmc/windowing/egl/WinSystemSTBContext.cpp
+@@ -13,6 +13,11 @@
+ #include "cores/VideoPlayer/VideoRenderers/RenderFactory.h"
+ #include "cores/RetroPlayer/process/RPProcessInfo.h"
+ 
++#if defined(TARGET_AMLOGIC)
++#include "cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecAmlogic.h"
++#include "cores/VideoPlayer/VideoRenderers/HwDecRender/RendererAML.h"
++#endif
++
+ #ifdef HAS_GLES
+ #include "cores/RetroPlayer/rendering/VideoRenderers/RPRendererOpenGLES.h"
+ #include "cores/VideoPlayer/VideoRenderers/LinuxRendererGLES.h"
+@@ -62,6 +67,10 @@ bool CWinSystemSTBContext::InitWindowSystem()
+ #else
+   CLinuxRendererGL::Register();
+   RETRO::CRPProcessInfo::RegisterRendererFactory(new RETRO::CRendererFactoryOpenGL);
++#endif
++#if defined(TARGET_AMLOGIC)
++  CDVDVideoCodecAmlogic::Register();
++  CRendererAML::Register();
+ #endif
+   return true;
+ }
+@@ -120,4 +129,3 @@ EGLConfig  CWinSystemSTBContext::GetEGLConfig()
+   return pVSync;
+     return false;
+ }*/
+-

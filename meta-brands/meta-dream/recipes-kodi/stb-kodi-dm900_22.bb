@@ -6,5 +6,5 @@ PROVIDES += "kodi"
 RPROVIDES:${PN} += "kodi"
 
 EXTRA_OECMAKE += " \
-    -DWITH_PLATFORM=dreambox-mipsel \
+    -DWITH_PLATFORM=dreambox-cortexa15 \
 "

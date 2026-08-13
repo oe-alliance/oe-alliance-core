@@ -1,0 +1,36 @@
+From 91525942130c4c73910e13d4371612e79a7799cb Mon Sep 17 00:00:00 2001
+From: OpenATV STB Kodi <noreply@openatv.local>
+Date: Sun, 9 Aug 2026 22:45:00 +0200
+Subject: [PATCH] ALSA: open DM9x0 PCM nonblocking before configuration
+
+The DM900/DM920 vendor PCM driver can sleep uninterruptibly in its open
+callback when ALSA opens the playback device in blocking mode.  ActiveAE then
+times out after ten seconds, keeps only the control device open and cannot
+create audio streams.  Video playback consequently waits for an audio clock.
+
+Dream's working ALSA users use the standard two-stage sequence: open with
+SND_PCM_NONBLOCK, configure hardware and software parameters, then switch the
+handle to blocking mode.  CAESinkALSA already performs the final
+snd_pcm_nonblock(m_pcm, 0), so only its initial open mode needs changing.
+
+This patch is selected only for ARM DM900/DM920 recipes.
+---
+ xbmc/cores/AudioEngine/Sinks/AESinkALSA.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/xbmc/cores/AudioEngine/Sinks/AESinkALSA.cpp b/xbmc/cores/AudioEngine/Sinks/AESinkALSA.cpp
+index 872def41f1..47bcd848ec 100644
+--- a/xbmc/cores/AudioEngine/Sinks/AESinkALSA.cpp
++++ b/xbmc/cores/AudioEngine/Sinks/AESinkALSA.cpp
+@@ -1032,7 +1032,7 @@ bool CAESinkALSA::TryDevice(const std::string &name, snd_pcm_t **pcmp, snd_confi
+     *pcmp = NULL;
+   }
+ 
+-  int err = snd_pcm_open_lconf(pcmp, name.c_str(), SND_PCM_STREAM_PLAYBACK, ALSA_OPTIONS, lconf);
++  int err = snd_pcm_open_lconf(pcmp, name.c_str(), SND_PCM_STREAM_PLAYBACK, ALSA_OPTIONS | SND_PCM_NONBLOCK, lconf);
+   if (err < 0)
+   {
+     CLog::Log(LOGINFO, "CAESinkALSA - Unable to open device \"{}\" for playback", name);
+-- 
+2.50.1
+

@@ -1,14 +1,14 @@
-do_configure:prepend() {
-    cp -av ${UNPACKDIR}/xbmc-support/gles_init.* ${S}/xbmc/windowing/egl/
-    cp -av ${UNPACKDIR}/xbmc-support/libxbmc_base.so ${STAGING_LIBDIR}/
-}
-
 do_install:append(){
     install -d ${D}${bindir}
     install -m 0755 ${UNPACKDIR}/xbmc-support/xbmc.helper ${D}${bindir}
-    install -m 0755 ${UNPACKDIR}/xbmc-support/libxbmc_base.so ${D}${libdir}
 }
 
-FILES:${PN}:append = " ${bindir}/xbmc.helper ${libdir}/libxbmc_base.so"
+FILES:${PN}:append = " ${bindir}/xbmc.helper"
+
+# VU+ MIPSel uses the machine-specific libvupl package as its native EGL
+# platform.  Its dependency chain also supplies the matching EGL/GLES/NXPL
+# libraries, so a standalone Kodi IPK installation must pull it in explicitly.
+RDEPENDS:${PN}:append = "${@' libvupl-${MACHINE}' if d.getVar('TARGET_ARCH') == 'mipsel' else ''}"
+PR:append = "${@'.1' if d.getVar('TARGET_ARCH') == 'mipsel' else ''}"
 
 INSANE_SKIP:${PN} += "file-rdeps"

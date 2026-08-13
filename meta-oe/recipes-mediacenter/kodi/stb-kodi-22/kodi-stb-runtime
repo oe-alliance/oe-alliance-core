@@ -1,0 +1,176 @@
+#!/bin/sh
+
+# Common standalone Kodi runtime support for all receiver platforms.
+# Platform wrappers prepare their decoder/audio environment and then call
+# stb_kodi_run instead of replacing the shell with kodi.real.
+
+stb_kodi_add_preload()
+{
+    _stb_kodi_library="$1"
+    [ -r "${_stb_kodi_library}" ] || return 0
+
+    case ":${LD_PRELOAD:-}:" in
+        *:"${_stb_kodi_library}":*) ;;
+        *)
+            if [ -n "${LD_PRELOAD:-}" ]; then
+                LD_PRELOAD="${_stb_kodi_library}:${LD_PRELOAD}"
+            else
+                LD_PRELOAD="${_stb_kodi_library}"
+            fi
+            export LD_PRELOAD
+            ;;
+    esac
+}
+
+stb_kodi_prepare_widevine()
+{
+    # ChromeOS AArch64 Widevine CDMs reference two out-of-line GCC atomic
+    # helpers which normal libgcc_s does not export. Prefer Kodi's own open
+    # compatibility object, while accepting the optional Chromium CDM package
+    # location for images which already provide it there.
+    if [ -r /usr/lib/kodi/libwidevine-aarch64-atomic.so ]; then
+        stb_kodi_add_preload /usr/lib/kodi/libwidevine-aarch64-atomic.so
+    elif [ -r /usr/share/netflix/libwidevine-aarch64-atomic.so ]; then
+        stb_kodi_add_preload /usr/share/netflix/libwidevine-aarch64-atomic.so
+    fi
+}
+
+stb_kodi_stop_lcdd()
+{
+    if [ -n "${STB_KODI_LCDD_PID:-}" ] && kill -0 "${STB_KODI_LCDD_PID}" 2>/dev/null; then
+        kill "${STB_KODI_LCDD_PID}" 2>/dev/null || true
+        wait "${STB_KODI_LCDD_PID}" 2>/dev/null || true
+    fi
+    STB_KODI_LCDD_PID=""
+}
+
+stb_kodi_load_hardware_state()
+{
+    STB_KODI_LED_BLINK=""
+    STB_KODI_LED_BRIGHTNESS=""
+    STB_KODI_LED_COLOR=""
+    STB_KODI_LED_FADE=""
+    STB_KODI_AML_FREERUN_MODE=""
+    STB_KODI_AML_DEC_CONTROL=""
+    STB_KODI_AML_NAL_SKIP_POLICY=""
+    STB_KODI_AML_DI_DEBUG_FLAG=""
+    STB_KODI_AML_TSYNC_ENABLE=""
+    STB_KODI_AML_FRAC_RATE_POLICY=""
+    STB_KODI_AML_DISPLAY_MODE=""
+
+    [ -r /tmp/stb-kodi-e2-hardware ] || return 0
+    while IFS='=' read -r _stb_kodi_key _stb_kodi_value; do
+        case "${_stb_kodi_key}" in
+            led_blink) STB_KODI_LED_BLINK="${_stb_kodi_value}" ;;
+            led_brightness) STB_KODI_LED_BRIGHTNESS="${_stb_kodi_value}" ;;
+            led_color) STB_KODI_LED_COLOR="${_stb_kodi_value}" ;;
+            led_fade) STB_KODI_LED_FADE="${_stb_kodi_value}" ;;
+            aml_freerun_mode) STB_KODI_AML_FREERUN_MODE="${_stb_kodi_value}" ;;
+            aml_dec_control) STB_KODI_AML_DEC_CONTROL="${_stb_kodi_value}" ;;
+            aml_nal_skip_policy) STB_KODI_AML_NAL_SKIP_POLICY="${_stb_kodi_value}" ;;
+            aml_di_debug_flag) STB_KODI_AML_DI_DEBUG_FLAG="${_stb_kodi_value}" ;;
+            aml_tsync_enable) STB_KODI_AML_TSYNC_ENABLE="${_stb_kodi_value}" ;;
+            aml_frac_rate_policy) STB_KODI_AML_FRAC_RATE_POLICY="${_stb_kodi_value}" ;;
+            aml_display_mode) STB_KODI_AML_DISPLAY_MODE="${_stb_kodi_value}" ;;
+        esac
+    done < /tmp/stb-kodi-e2-hardware
+    rm -f /tmp/stb-kodi-e2-hardware
+}
+
+stb_kodi_write_hex()
+{
+    _stb_kodi_path="$1"
+    _stb_kodi_value="$2"
+    case "${_stb_kodi_value}" in
+        ''|*[!0-9a-fA-F]*) return 0 ;;
+    esac
+    [ -w "${_stb_kodi_path}" ] && printf '%s' "${_stb_kodi_value}" > "${_stb_kodi_path}"
+}
+
+stb_kodi_write_number()
+{
+    _stb_kodi_path="$1"
+    _stb_kodi_value="$2"
+    case "${_stb_kodi_value}" in
+        ''|*[!0-9-]*) return 0 ;;
+    esac
+    [ -w "${_stb_kodi_path}" ] && printf '%s' "${_stb_kodi_value}" > "${_stb_kodi_path}"
+}
+
+stb_kodi_restore_frontpanel()
+{
+    stb_kodi_write_hex /proc/stb/fp/led_blink "${STB_KODI_LED_BLINK:-}"
+    stb_kodi_write_hex /proc/stb/fp/led_brightness "${STB_KODI_LED_BRIGHTNESS:-}"
+    stb_kodi_write_hex /proc/stb/fp/led_color "${STB_KODI_LED_COLOR:-}"
+    stb_kodi_write_hex /proc/stb/fp/led_fade "${STB_KODI_LED_FADE:-}"
+}
+
+stb_kodi_restore_amlogic_video()
+{
+    stb_kodi_write_number /sys/module/amvdec_h264/parameters/dec_control \
+        "${STB_KODI_AML_DEC_CONTROL:-}"
+    stb_kodi_write_number /sys/module/amvdec_h265/parameters/nal_skip_policy \
+        "${STB_KODI_AML_NAL_SKIP_POLICY:-}"
+    stb_kodi_write_number /sys/module/di/parameters/di_debug_flag \
+        "${STB_KODI_AML_DI_DEBUG_FLAG:-}"
+    stb_kodi_write_number /sys/class/video/freerun_mode \
+        "${STB_KODI_AML_FREERUN_MODE:-}"
+    stb_kodi_write_number /sys/class/tsync/enable \
+        "${STB_KODI_AML_TSYNC_ENABLE:-}"
+    stb_kodi_write_number /sys/class/amhdmitx/amhdmitx0/frac_rate_policy \
+        "${STB_KODI_AML_FRAC_RATE_POLICY:-}"
+
+    case "${STB_KODI_AML_DISPLAY_MODE:-}" in
+        ''|*[!0-9a-zA-Z_-]*) ;;
+        *)
+            [ -w /sys/class/display/mode ] && \
+                printf '%s' "${STB_KODI_AML_DISPLAY_MODE}" > /sys/class/display/mode
+            ;;
+    esac
+}
+
+stb_kodi_forward_signal()
+{
+    if [ -n "${STB_KODI_PLAYER_PID:-}" ] && kill -0 "${STB_KODI_PLAYER_PID}" 2>/dev/null; then
+        kill -TERM "${STB_KODI_PLAYER_PID}" 2>/dev/null || true
+    fi
+    stb_kodi_stop_lcdd
+}
+
+stb_kodi_run()
+{
+    STB_KODI_LCDD_PID=""
+    STB_KODI_PLAYER_PID=""
+
+    stb_kodi_load_hardware_state
+    stb_kodi_prepare_widevine
+
+    # Enigma2 may change the Dream front-panel registers while shutting down.
+    # Reapply the values captured by the launcher so Kodi keeps the identical
+    # steady power-LED state.
+    stb_kodi_restore_frontpanel
+
+    # Enigma2 is stopped while Kodi owns the receiver. Run the LCDproc bridge
+    # only for this lifetime so both applications never write the front panel
+    # concurrently. Boxes without a supported display exit the helper cleanly.
+    if [ -x /usr/bin/stb-lcdd ] && \
+       { [ -e /dev/dbox/lcd0 ] || [ -e /dev/dbox/oled0 ] || [ -e /dev/lcd2 ] || [ -e /dev/fb1 ]; }; then
+        /usr/bin/stb-lcdd >>/tmp/stb-lcdd.log 2>&1 &
+        STB_KODI_LCDD_PID=$!
+    fi
+
+    trap 'stb_kodi_forward_signal' HUP INT TERM
+    "$@" &
+    STB_KODI_PLAYER_PID=$!
+    stb_kodi_restore_frontpanel
+    wait "${STB_KODI_PLAYER_PID}"
+    _stb_kodi_status=$?
+    STB_KODI_PLAYER_PID=""
+    trap - HUP INT TERM
+    stb_kodi_stop_lcdd
+    # Restore the receiver state even if Kodi terminated abnormally.  Normal
+    # video closes also restore these controls inside CAMLCodec.
+    stb_kodi_restore_amlogic_video
+    stb_kodi_restore_frontpanel
+    return "${_stb_kodi_status}"
+}

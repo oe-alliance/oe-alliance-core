@@ -1,0 +1,93 @@
+From c0e0af241a3e1a6e2b9a3d6e1539d9209e4a96d1 Mon Sep 17 00:00:00 2001
+From: OpenATV STB Kodi <noreply@openatv.local>
+Date: Sun, 9 Aug 2026 23:10:00 +0200
+Subject: [PATCH] Dreambox: cap HDMI modes to initial Enigma2 output
+
+DM900/DM920 advertise every driver timing, including UHD, even when Enigma2
+started on an FHD display. Persisted Kodi refresh-rate settings can therefore
+request 2160p directly and disable HDMI on a 1080p television.
+
+Capture the physical Enigma2 output at construction time, filter probed modes
+to that ceiling, and reject stale direct requests above it. A receiver started
+in UHD retains its UHD modes.
+
+diff --git a/xbmc/windowing/egl/EGLNativeTypeDreambox.cpp b/xbmc/windowing/egl/EGLNativeTypeDreambox.cpp
+index 9bfb29d..c9cda83 100644
+--- a/xbmc/windowing/egl/EGLNativeTypeDreambox.cpp
++++ b/xbmc/windowing/egl/EGLNativeTypeDreambox.cpp
+@@ -22,6 +22,7 @@
+ #include "guilib/gui3d.h"
+ #include "utils/DreamboxUtils.h"
+ #include "utils/StringUtils.h"
++#include "utils/log.h"
+ #include "platform/linux/SysfsPath.h"
+ #include <fstream>
+ 
+@@ -37,6 +38,19 @@
+ #include <cstdlib>
+ #include <string>
+ 
++namespace
++{
++unsigned int g_maximumOutputWidth = 1920;
++unsigned int g_maximumOutputHeight = 1080;
++
++bool FitsInitialOutput(const RESOLUTION_INFO& res)
++{
++  return res.iScreenWidth > 0 && res.iScreenHeight > 0 &&
++         static_cast<unsigned int>(res.iScreenWidth) <= g_maximumOutputWidth &&
++         static_cast<unsigned int>(res.iScreenHeight) <= g_maximumOutputHeight;
++}
++}
++
+ static void AppendMesaExtensionOverride(const char* extra)
+ {
+   const char* cur = std::getenv("MESA_EXTENSION_OVERRIDE");
+@@ -51,6 +65,16 @@ static void AppendMesaExtensionOverride(const char* extra)
+ CEGLNativeTypeDreambox::CEGLNativeTypeDreambox()
+ {
+   m_nativeWindow = (XBNativeWindowType)0L;
++
++  // Enigma2 has already selected a mode supported by the connected display.
++  // Keep it as Kodi's physical ceiling so stale settings cannot switch an
++  // FHD television to a UHD timing. A box started in UHD retains UHD modes.
++  RESOLUTION_INFO current;
++  if (GetNativeResolution(&current))
++  {
++    g_maximumOutputWidth = current.iScreenWidth;
++    g_maximumOutputHeight = current.iScreenHeight;
++  }
+ }
+ 
+ CEGLNativeTypeDreambox::~CEGLNativeTypeDreambox()
+@@ -125,6 +149,15 @@ bool CEGLNativeTypeDreambox::GetNativeResolution(RESOLUTION_INFO *res) const
+ 
+ bool CEGLNativeTypeDreambox::SetNativeResolution(const RESOLUTION_INFO &res)
+ {
++  if (!FitsInitialOutput(res))
++  {
++    CLog::Log(LOGWARNING,
++              "Dreambox: rejecting HDMI mode '{}' ({}x{}), initial output limit is {}x{}",
++              res.strId, res.iScreenWidth, res.iScreenHeight, g_maximumOutputWidth,
++              g_maximumOutputHeight);
++    return false;
++  }
++
+   // Don't set the same mode as current
+   std::string mode;
+   CSysfsPath videomode{"/proc/stb/video/videomode"};
+@@ -146,7 +179,7 @@ bool CEGLNativeTypeDreambox::ProbeResolutions(std::vector<RESOLUTION_INFO> &reso
+   RESOLUTION_INFO res;
+   for (std::vector<std::string>::const_iterator i = probe_str.begin(); i != probe_str.end(); ++i)
+   {
+-    if (dreambox_mode_to_resolution(i->c_str(), &res))
++    if (dreambox_mode_to_resolution(i->c_str(), &res) && FitsInitialOutput(res))
+       resolutions.push_back(res);
+   }
+ 
+@@ -271,4 +304,3 @@ void CEGLNativeTypeDreambox::SetFramebufferResolution(int width, int height) con
+     close(fd);
+   }
+ }
+-
+

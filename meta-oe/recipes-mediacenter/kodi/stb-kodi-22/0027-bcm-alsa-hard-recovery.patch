@@ -1,0 +1,91 @@
+From 6b2e853ab3fd8fc2a1f2104c7cf6e2c03b4e1f8a Mon Sep 17 00:00:00 2001
+From: OpenATV STB Kodi <noreply@openatv.local>
+Date: Sun, 9 Aug 2026 12:00:00 +0200
+Subject: [PATCH] ALSA: prebuffer and recover Broadcom PCM streams
+
+The Broadcom vendor PCM starts too early when Kodi explicitly starts it after
+the first small period.  Menu sounds and small audio packets then underrun the
+9600-frame hardware buffer immediately, while larger movie packets sometimes
+hide the problem.  Repeated recovery can block and lets the player clock run
+30-60 seconds ahead.
+
+Let ALSA start automatically after the hardware buffer has been prefilled to
+one period below capacity.  After EPIPE or EIO, drop and prepare the PCM so the
+same prebuffer sequence is used again and ActiveAE retries the same frames.
+---
+ xbmc/cores/AudioEngine/Sinks/AESinkALSA.cpp | 34 ++++++++++++++++++++++-------
+ 1 file changed, 26 insertions(+), 8 deletions(-)
+
+diff --git a/xbmc/cores/AudioEngine/Sinks/AESinkALSA.cpp b/xbmc/cores/AudioEngine/Sinks/AESinkALSA.cpp
+index 3d1c9a80d7..872def41f1 100644
+--- a/xbmc/cores/AudioEngine/Sinks/AESinkALSA.cpp
++++ b/xbmc/cores/AudioEngine/Sinks/AESinkALSA.cpp
+@@ -838,12 +838,18 @@ bool CAESinkALSA::InitializeSW(const ALSAConfig &inconfig)
+ {
+   snd_pcm_sw_params_t *sw_params;
+   snd_pcm_uframes_t boundary;
++  snd_pcm_uframes_t startThreshold;
+ 
+   snd_pcm_sw_params_alloca(&sw_params);
+   memset(sw_params, 0, snd_pcm_sw_params_sizeof());
+ 
+   snd_pcm_sw_params_current              (m_pcm, sw_params);
+-  snd_pcm_sw_params_set_start_threshold  (m_pcm, sw_params, INT_MAX);
++  /* Broadcom STB PCM needs enough queued audio before it starts. Starting
++   * explicitly after one short period races the vendor DMA and causes an
++   * immediate XRUN, especially for GUI sounds. */
++  startThreshold = m_bufferSize > inconfig.periodSize
++                       ? m_bufferSize - inconfig.periodSize : m_bufferSize;
++  snd_pcm_sw_params_set_start_threshold  (m_pcm, sw_params, startThreshold);
+   snd_pcm_sw_params_set_silence_threshold(m_pcm, sw_params, 0);
+   snd_pcm_sw_params_get_boundary         (sw_params, &boundary);
+   snd_pcm_sw_params_set_silence_size     (m_pcm, sw_params, boundary);
+@@ -923,6 +929,12 @@ unsigned int CAESinkALSA::AddPackets(uint8_t **data, unsigned int frames, unsign
+       CLog::Log(LOGERROR, "CAESinkALSA - snd_pcm_writei({}) {} - trying to recover", ret,
+                 snd_strerror(ret));
+-      ret = snd_pcm_recover(m_pcm, ret, 1);
++      if (ret == -EPIPE || ret == -EIO)
++      {
++        HandleError("snd_pcm_writei(reset)", ret);
++        ret = 0;
++      }
++      else
++        ret = snd_pcm_recover(m_pcm, ret, 1);
+       if(ret < 0)
+       {
+         HandleError("snd_pcm_writei(1)", ret);
+@@ -939,9 +951,6 @@ unsigned int CAESinkALSA::AddPackets(uint8_t **data, unsigned int frames, unsign
+       }
+     }
+ 
+-    if ( ret > 0 && snd_pcm_state(m_pcm) == SND_PCM_STATE_PREPARED)
+-      snd_pcm_start(m_pcm);
+-
+     if (ret <= 0)
+       break;
+ 
+@@ -954,10 +963,19 @@ void CAESinkALSA::HandleError(const char* name, int err)
+   switch(err)
+   {
+     case -EPIPE:
+-      CLog::Log(LOGERROR, "CAESinkALSA::HandleError({}) - underrun", name);
++    case -EIO:
++      CLog::Log(LOGWARNING,
++                "CAESinkALSA::HandleError({}) - hard PCM reset after {} ({})", name, err,
++                snd_strerror(err));
++      err = snd_pcm_drop(m_pcm);
++      if (err < 0 && err != -EBADFD)
++        CLog::Log(LOGWARNING,
++                  "CAESinkALSA::HandleError({}) - snd_pcm_drop returned {} ({})", name, err,
++                  snd_strerror(err));
+       if ((err = snd_pcm_prepare(m_pcm)) < 0)
+-        CLog::Log(LOGERROR, "CAESinkALSA::HandleError({}) - snd_pcm_prepare returned {} ({})", name,
+-                  err, snd_strerror(err));
++        CLog::Log(LOGERROR,
++                  "CAESinkALSA::HandleError({}) - snd_pcm_prepare returned {} ({})", name, err,
++                  snd_strerror(err));
+       break;
+ 
+     case -ESTRPIPE:
+-- 
+2.50.1

@@ -1,0 +1,23 @@
+From: OpenATV STB Kodi Team <oe.patch@openatv.example>
+Date: Sat, 8 Aug 2026 14:00:00 +0200
+Subject: [PATCH] input: link evdev key mapping for the STB libinput path
+
+The STB platform enables LibInputKeyboard through the legacy STB support
+patch. Current Kodi's keyboard implementation calls CEvdevKeyMapping, but its
+source is only selected for GBM and Wayland. Select the mapping for STB when
+libinput is enabled as well. This keeps remote-control, keyboard and air-mouse
+input on Kodi's native input stack and resolves the final link failure.
+
+diff --git a/xbmc/platform/linux/input/CMakeLists.txt b/xbmc/platform/linux/input/CMakeLists.txt
+--- a/xbmc/platform/linux/input/CMakeLists.txt
++++ b/xbmc/platform/linux/input/CMakeLists.txt
+@@ -22,7 +22,8 @@ if("gbm" IN_LIST CORE_PLATFORM_NAME_LC)
+   endif()
+ endif()
+ 
+-if(("gbm" IN_LIST CORE_PLATFORM_NAME_LC AND TARGET ${APP_NAME_LC}::LibInput) OR "wayland" IN_LIST CORE_PLATFORM_NAME_LC)
++if((("gbm" IN_LIST CORE_PLATFORM_NAME_LC OR "stb" IN_LIST CORE_PLATFORM_NAME_LC) AND TARGET ${APP_NAME_LC}::LibInput)
++   OR "wayland" IN_LIST CORE_PLATFORM_NAME_LC)
+   list(APPEND SOURCES EvdevKeyMapping.cpp)
+   list(APPEND HEADERS EvdevKeyMapping.h
+                       XkbCompat.h)

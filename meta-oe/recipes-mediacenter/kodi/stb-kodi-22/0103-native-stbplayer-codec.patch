@@ -1,0 +1,1272 @@
+From: OpenATV STB Kodi Team <oe.patch@openatv.example>
+Date: Sat, 8 Aug 2026 12:00:00 +0200
+Subject: [PATCH] VideoPlayer: add native libstbplayer hardware codec
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 306ab4c69c..02ee00887c 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -287,6 +287,7 @@ set(optional_deps Alsa>=1.0.27
+                   Python
+                   SmbClient
+                   Sndio
++                  Stbplayer
+                   UDEV
+                   Udfread
+                   XSLT
+diff --git a/cmake/modules/FindStbplayer.cmake b/cmake/modules/FindStbplayer.cmake
+new file mode 100644
+index 0000000000..6a0f7eab41
+--- /dev/null
++++ b/cmake/modules/FindStbplayer.cmake
+@@ -0,0 +1,29 @@
++#.rst:
++# FindStbplayer
++# -------------
++# Finds the versioned STB hardware-video backend loader.
++#
++# This defines the following target:
++#
++#   ${APP_NAME_LC}::Stbplayer - The libstbplayer loader library
++
++if(NOT TARGET ${APP_NAME_LC}::${CMAKE_FIND_PACKAGE_NAME})
++  find_path(STBPLAYER_INCLUDE_DIR NAMES stbplayer/loader.h)
++  find_library(STBPLAYER_LIBRARY NAMES stbplayer)
++
++  if(NOT VERBOSE_FIND)
++    set(${CMAKE_FIND_PACKAGE_NAME}_FIND_QUIETLY TRUE)
++  endif()
++
++  include(FindPackageHandleStandardArgs)
++  find_package_handle_standard_args(Stbplayer
++                                    REQUIRED_VARS STBPLAYER_LIBRARY STBPLAYER_INCLUDE_DIR)
++
++  if(Stbplayer_FOUND)
++    add_library(${APP_NAME_LC}::${CMAKE_FIND_PACKAGE_NAME} UNKNOWN IMPORTED)
++    set_target_properties(${APP_NAME_LC}::${CMAKE_FIND_PACKAGE_NAME} PROPERTIES
++      IMPORTED_LOCATION "${STBPLAYER_LIBRARY}"
++      INTERFACE_INCLUDE_DIRECTORIES "${STBPLAYER_INCLUDE_DIR}"
++      INTERFACE_COMPILE_DEFINITIONS "HAVE_STBPLAYER")
++  endif()
++endif()
+diff --git a/xbmc/cores/VideoPlayer/DVDCodecs/DVDFactoryCodec.cpp b/xbmc/cores/VideoPlayer/DVDCodecs/DVDFactoryCodec.cpp
+index 99285d6bf5..9008225ab5 100644
+--- a/xbmc/cores/VideoPlayer/DVDCodecs/DVDFactoryCodec.cpp
++++ b/xbmc/cores/VideoPlayer/DVDCodecs/DVDFactoryCodec.cpp
+@@ -22,6 +22,9 @@
+ #include "Video/AddonVideoCodec.h"
+ #include "Video/DVDVideoCodec.h"
+ #include "Video/DVDVideoCodecFFmpeg.h"
++#if defined(HAVE_STBPLAYER)
++#include "Video/DVDVideoCodecSTB.h"
++#endif
+ #include "addons/AddonProvider.h"
+ #include "cores/VideoPlayer/DVDCodecs/DVDCodecs.h"
+ #include "utils/StringUtils.h"
+@@ -71,6 +74,11 @@ std::unique_ptr<CDVDVideoCodec> CDVDFactoryCodec::CreateVideoCodec(CDVDStreamInf
+   // platform specific video decoders
+   if (!(hint.codecOptions & CODEC_FORCE_SOFTWARE))
+   {
++#if defined(HAVE_STBPLAYER)
++    pCodec = std::make_unique<CDVDVideoCodecSTB>(processInfo);
++    if (pCodec->Open(hint, options))
++      return pCodec;
++#endif
+     for (auto &codec : m_hwVideoCodecs)
+     {
+       pCodec = CreateVideoCodecHW(codec.first, processInfo);
+@@ -287,4 +295,3 @@ std::unique_ptr<CDVDOverlayCodec> CDVDFactoryCodec::CreateOverlayCodec(CDVDStrea
+ 
+   return nullptr;
+ }
+-
+diff --git a/xbmc/cores/VideoPlayer/DVDCodecs/Video/CMakeLists.txt b/xbmc/cores/VideoPlayer/DVDCodecs/Video/CMakeLists.txt
+index 07a0b78baf..331de0cd9a 100644
+--- a/xbmc/cores/VideoPlayer/DVDCodecs/Video/CMakeLists.txt
++++ b/xbmc/cores/VideoPlayer/DVDCodecs/Video/CMakeLists.txt
+@@ -7,6 +7,15 @@ set(HEADERS AddonVideoCodec.h
+             DVDVideoCodecFFmpeg.h
+             DVDVideoPP.h)
+ 
++if(TARGET ${APP_NAME_LC}::Stbplayer)
++  list(APPEND SOURCES DVDVideoCodecSTB.cpp
++                      RendererSTB.cpp
++                      STBVideoSession.cpp)
++  list(APPEND HEADERS DVDVideoCodecSTB.h
++                      RendererSTB.h
++                      STBVideoSession.h)
++endif()
++
+ if(TARGET ffmpeg::libpostproc)
+   list(APPEND SOURCES DVDVideoPPFFmpeg.cpp)
+   list(APPEND HEADERS DVDVideoPPFFmpeg.h)
+diff --git a/xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecSTB.cpp b/xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecSTB.cpp
+new file mode 100644
+index 0000000000..edc64a4e15
+--- /dev/null
++++ b/xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecSTB.cpp
+@@ -0,0 +1,539 @@
++/*
++ *  Copyright (C) 2026 OE-Alliance contributors
++ *  SPDX-License-Identifier: GPL-2.0-or-later
++ */
++
++#include "DVDVideoCodecSTB.h"
++
++#include "RendererSTB.h"
++#include "cores/VideoPlayer/Interface/TimingConstants.h"
++#include "utils/BitstreamConverter.h"
++#include "utils/log.h"
++
++#include <algorithm>
++#include <cmath>
++#include <cstdlib>
++#include <limits>
++#include <mutex>
++#include <vector>
++
++namespace
++{
++bool HasAnnexBStartCode(const uint8_t* data, size_t size)
++{
++  return data != nullptr &&
++         ((size >= 4 && data[0] == 0 && data[1] == 0 && data[2] == 0 && data[3] == 1) ||
++          (size >= 3 && data[0] == 0 && data[1] == 0 && data[2] == 1));
++}
++
++bool ConvertHEVCDecoderConfiguration(const uint8_t* data,
++                                     size_t size,
++                                     std::vector<uint8_t>& annexB)
++{
++  static constexpr uint8_t startCode[] = {0, 0, 0, 1};
++  if (data == nullptr || size < 23 || data[0] != 1)
++    return false;
++
++  annexB.clear();
++  size_t offset = 23;
++  const unsigned int arrayCount = data[22];
++  for (unsigned int array = 0; array < arrayCount; ++array)
++  {
++    if (offset + 3 > size)
++      return false;
++    ++offset; // array completeness and NAL unit type
++    const unsigned int nalCount = (static_cast<unsigned int>(data[offset]) << 8) |
++                                  static_cast<unsigned int>(data[offset + 1]);
++    offset += 2;
++    for (unsigned int nal = 0; nal < nalCount; ++nal)
++    {
++      if (offset + 2 > size)
++        return false;
++      const size_t nalSize = (static_cast<size_t>(data[offset]) << 8) |
++                             static_cast<size_t>(data[offset + 1]);
++      offset += 2;
++      if (nalSize == 0 || nalSize > size - offset)
++        return false;
++      annexB.insert(annexB.end(), startCode, startCode + sizeof(startCode));
++      annexB.insert(annexB.end(), data + offset, data + offset + nalSize);
++      offset += nalSize;
++    }
++  }
++  return !annexB.empty();
++}
++
++uint32_t UpperFourCC(uint32_t tag)
++{
++  uint32_t result = 0;
++  for (unsigned int shift = 0; shift < 32; shift += 8)
++  {
++    uint32_t value = (tag >> shift) & 0xffU;
++    if (value >= 'a' && value <= 'z')
++      value -= 'a' - 'A';
++    result |= value << shift;
++  }
++  return result;
++}
++
++constexpr uint32_t FourCC(char a, char b, char c, char d)
++{
++  return static_cast<uint32_t>(a) | (static_cast<uint32_t>(b) << 8) |
++         (static_cast<uint32_t>(c) << 16) | (static_cast<uint32_t>(d) << 24);
++}
++} // namespace
++
++CDVDVideoCodecSTB::CDVDVideoCodecSTB(CProcessInfo& processInfo) : CDVDVideoCodec(processInfo)
++{
++}
++
++CDVDVideoCodecSTB::~CDVDVideoCodecSTB()
++{
++  // Renderer buffers deliberately keep the session alive until the render thread
++  // releases them.  The DVB decoder itself must not stay open that long: Kodi can
++  // construct the codec for the next file first and /dev/dvb/.../video0 is exclusive.
++  // Close the backend here while the session object remains safe for stale buffers.
++  if (m_session)
++    m_session->Close();
++  m_open = false;
++  m_pictures.clear();
++  m_bufferPool.reset();
++  m_session.reset();
++}
++
++enum stbp_codec CDVDVideoCodecSTB::MapCodec(const CDVDStreamInfo& hints)
++{
++  switch (hints.codec)
++  {
++    case AV_CODEC_ID_MPEG1VIDEO:
++      return STBP_CODEC_MPEG1;
++    case AV_CODEC_ID_MPEG2VIDEO:
++      return STBP_CODEC_MPEG2;
++    case AV_CODEC_ID_MPEG4:
++      switch (UpperFourCC(hints.codec_tag))
++      {
++        case FourCC('X', 'V', 'I', 'D'):
++          return STBP_CODEC_XVID;
++        case FourCC('D', 'I', 'V', 'X'):
++          return STBP_CODEC_DIVX4;
++        case FourCC('D', 'X', '5', '0'):
++          return STBP_CODEC_DIVX5;
++        default:
++          break;
++      }
++      return STBP_CODEC_MPEG4_PART2;
++    case AV_CODEC_ID_MSMPEG4V3:
++      return STBP_CODEC_MSMPEG4V3;
++    case AV_CODEC_ID_H263:
++    case AV_CODEC_ID_H263P:
++    case AV_CODEC_ID_H263I:
++      return STBP_CODEC_H263;
++    case AV_CODEC_ID_H264:
++      return STBP_CODEC_H264;
++    case AV_CODEC_ID_HEVC:
++      return STBP_CODEC_HEVC;
++    case AV_CODEC_ID_VC1:
++      return STBP_CODEC_VC1;
++    case AV_CODEC_ID_WMV3:
++      return STBP_CODEC_WMV3;
++    case AV_CODEC_ID_VP8:
++      return STBP_CODEC_VP8;
++    case AV_CODEC_ID_VP9:
++      return STBP_CODEC_VP9;
++    case AV_CODEC_ID_VP6:
++    case AV_CODEC_ID_VP6F:
++    case AV_CODEC_ID_VP6A:
++      return STBP_CODEC_VP6;
++    case AV_CODEC_ID_FLV1:
++      return STBP_CODEC_FLV1;
++    case AV_CODEC_ID_MJPEG:
++      return STBP_CODEC_MJPEG;
++    case AV_CODEC_ID_CAVS:
++      return STBP_CODEC_AVS;
++    case AV_CODEC_ID_AVS2:
++      return STBP_CODEC_AVS2;
++    default:
++      return STBP_CODEC_UNKNOWN;
++  }
++}
++
++int64_t CDVDVideoCodecSTB::To90k(double kodiTime)
++{
++  if (kodiTime == DVD_NOPTS_VALUE || !std::isfinite(kodiTime))
++    return STBP_PTS_NONE;
++  constexpr double scale = 90000.0 / static_cast<double>(DVD_TIME_BASE);
++  const double converted = std::round(kodiTime * scale);
++  if (converted > static_cast<double>(std::numeric_limits<int64_t>::max()) ||
++      converted < static_cast<double>(std::numeric_limits<int64_t>::min()))
++    return STBP_PTS_NONE;
++  return static_cast<int64_t>(converted);
++}
++
++double CDVDVideoCodecSTB::From90k(int64_t pts90k)
++{
++  if (pts90k == STBP_PTS_NONE)
++    return DVD_NOPTS_VALUE;
++  return static_cast<double>(pts90k) * static_cast<double>(DVD_TIME_BASE) / 90000.0;
++}
++
++bool CDVDVideoCodecSTB::ConfigureBitstream(const CDVDStreamInfo& hints,
++                                           const uint8_t*& extraData,
++                                           size_t& extraDataSize,
++                                           uint32_t& streamFlags)
++{
++  extraData = hints.extradata.GetData();
++  extraDataSize = hints.extradata.GetSize();
++  if (hints.codec != AV_CODEC_ID_H264 && hints.codec != AV_CODEC_ID_HEVC)
++    return true;
++
++  streamFlags |= STBP_STREAM_ANNEX_B;
++  if (extraDataSize > 0)
++  {
++    if (hints.codec == AV_CODEC_ID_HEVC && !HasAnnexBStartCode(extraData, extraDataSize) &&
++        !ConvertHEVCDecoderConfiguration(extraData, extraDataSize, m_codecData))
++      return false;
++    m_bitstream = std::make_unique<CBitstreamConverter>();
++    if (m_bitstream->Open(hints.codec, const_cast<uint8_t*>(extraData),
++                          static_cast<int>(extraDataSize), true))
++    {
++      // Pass the converted Annex-B parameter sets to the backend as codec data as well.
++      // Some STB decoders require SPS/PPS before an initial SEI NAL, while the converter
++      // otherwise inserts them immediately before the IDR later in the same packet.
++      if (hints.codec == AV_CODEC_ID_HEVC && !m_codecData.empty())
++      {
++        // CBitstreamConverter deliberately retains only VPS/SPS/PPS from hvcC. Dream's
++        // hardware parser also submits configuration Prefix-SEI arrays; HDR metadata and
++        // some encoder configuration therefore disappear unless we preserve every array.
++        extraData = m_codecData.data();
++        extraDataSize = m_codecData.size();
++      }
++      else
++      {
++        extraData = m_bitstream->GetExtraData();
++        extraDataSize = static_cast<size_t>(m_bitstream->GetExtraSize());
++      }
++      if (extraData == nullptr || extraDataSize == 0)
++      {
++        m_bitstream.reset();
++        return false;
++      }
++      return true;
++    }
++    m_bitstream.reset();
++    if (!HasAnnexBStartCode(extraData, extraDataSize))
++      return false;
++  }
++  return true;
++}
++
++bool CDVDVideoCodecSTB::Open(CDVDStreamInfo& hints, CDVDCodecOptions& options)
++{
++  (void)options;
++  const enum stbp_codec codec = MapCodec(hints);
++  const char* configuredBackend = std::getenv("KODI_STBPLAYER_BACKEND");
++  const std::string backendName =
++      configuredBackend != nullptr && configuredBackend[0] != '\0' ? configuredBackend : "hisi-dvb";
++  const uint8_t* extraData = nullptr;
++  size_t extraDataSize = 0;
++  uint32_t streamFlags = hints.interlaced ? STBP_STREAM_INTERLACED : 0;
++  struct stbp_stream_config stream{};
++  struct stbp_clock_config clock{};
++  std::string error;
++
++  if (codec == STBP_CODEC_UNKNOWN || hints.cryptoSession || hints.width <= 0 || hints.height <= 0)
++    return false;
++  if (backendName == "dream-aml" && hints.codec == AV_CODEC_ID_MPEG2VIDEO &&
++      hints.profile == AV_PROFILE_MPEG2_422)
++  {
++    CLog::Log(LOGINFO,
++              "CDVDVideoCodecSTB: MPEG-2 4:2:2 is unsupported by Dream Amlogic; "
++              "using FFmpeg software decoding");
++    return false;
++  }
++  if (!ConfigureBitstream(hints, extraData, extraDataSize, streamFlags))
++    return false;
++
++  m_session = std::make_shared<CSTBVideoSession>();
++  if (!m_session->Load(backendName, error))
++  {
++    CLog::Log(LOGDEBUG, "CDVDVideoCodecSTB: backend '{}' unavailable: {}", backendName, error);
++    m_session.reset();
++    return false;
++  }
++  if ((m_session->Capabilities().codec_mask & STBP_CODEC_BIT(codec)) == 0)
++  {
++    CLog::Log(LOGDEBUG, "CDVDVideoCodecSTB: codec {} is not supported by '{}'",
++              static_cast<int>(codec), backendName);
++    m_session.reset();
++    return false;
++  }
++  if ((m_session->Capabilities().max_width != 0 &&
++       static_cast<uint32_t>(hints.width) > m_session->Capabilities().max_width) ||
++      (m_session->Capabilities().max_height != 0 &&
++       static_cast<uint32_t>(hints.height) > m_session->Capabilities().max_height))
++  {
++    CLog::Log(LOGDEBUG, "CDVDVideoCodecSTB: stream size {}x{} exceeds '{}' capabilities",
++              hints.width, hints.height, backendName);
++    m_session.reset();
++    return false;
++  }
++
++  stream.struct_size = sizeof(stream);
++  stream.codec = codec;
++  stream.codec_profile = hints.profile;
++  stream.codec_level = hints.level;
++  stream.width = hints.width;
++  stream.height = hints.height;
++  stream.frame_rate.numerator = hints.fpsrate;
++  stream.frame_rate.denominator = hints.fpsscale;
++  stream.pixel_aspect.numerator = 1;
++  stream.pixel_aspect.denominator = 1;
++  stream.flags = streamFlags;
++  stream.extra_data = extraData;
++  stream.extra_data_size = extraDataSize;
++  clock.struct_size = sizeof(clock);
++  clock.initial_pts_90k = STBP_PTS_NONE;
++  clock.kodi_is_clock_master = 1;
++
++  const enum stbp_result openResult = m_session->Open(stream, clock);
++  if (openResult != STBP_OK)
++  {
++    CLog::Log(LOGWARNING, "CDVDVideoCodecSTB: opening '{}' failed: {}", backendName,
++              stbp_result_string(openResult));
++    m_session.reset();
++    return false;
++  }
++
++  static std::once_flag rendererRegistration;
++  std::call_once(rendererRegistration, [] { CRendererSTB::Register(); });
++
++  m_hints = hints;
++  m_bufferPool = std::make_shared<CVideoBufferPoolSTB>(m_session);
++  m_defaultDuration = hints.fpsrate > 0 && hints.fpsscale > 0
++                          ? static_cast<double>(DVD_TIME_BASE) * hints.fpsscale / hints.fpsrate
++                          : 0.0;
++  m_name = "stbplayer/" + m_session->BackendName();
++  m_feedAheadPictures = m_session->BackendName() == "dream-aml" ? 48U : 0U;
++  m_processInfo.SetVideoDecoderName(m_name, true);
++  m_processInfo.SetVideoDimensions(hints.width, hints.height);
++  m_processInfo.SetVideoFps(hints.fpsrate > 0 && hints.fpsscale > 0
++                                ? static_cast<float>(hints.fpsrate) / hints.fpsscale
++                                : 0.0f);
++  m_processInfo.SetVideoDAR(hints.aspect > 0.0 ? static_cast<float>(hints.aspect)
++                                               : static_cast<float>(hints.width) / hints.height);
++  m_processInfo.SetVideoInterlaced(hints.interlaced);
++  m_open = true;
++  m_failed = false;
++  CLog::Log(LOGINFO, "CDVDVideoCodecSTB: using backend '{}' for codec {}", m_session->BackendName(),
++            static_cast<int>(codec));
++  return true;
++}
++
++bool CDVDVideoCodecSTB::AddData(const DemuxPacket& packet)
++{
++  struct stbp_buffer_state bufferState{};
++  struct stbp_packet backendPacket{};
++  const uint8_t* data = packet.pData;
++  int size = packet.iSize;
++  double pts = m_hints.ptsinvalid ? DVD_NOPTS_VALUE : packet.pts;
++  enum stbp_result result;
++
++  if (!m_open)
++    return false;
++  if (m_failed)
++    return true;
++  if (packet.iSize < 0 || (packet.pData == nullptr && packet.iSize != 0))
++  {
++    CLog::Log(LOGERROR, "CDVDVideoCodecSTB: invalid demux packet");
++    m_failed = true;
++    return true;
++  }
++  if (packet.iSize == 0)
++    return true;
++  bufferState.struct_size = sizeof(bufferState);
++  result = m_session->GetBufferState(bufferState);
++  if (result == STBP_AGAIN || (result == STBP_OK && !bufferState.can_accept_packet))
++    return false;
++  if (result != STBP_OK)
++  {
++    CLog::Log(LOGERROR, "CDVDVideoCodecSTB: buffer state failed: {}",
++              stbp_result_string(result));
++    m_failed = true;
++    return true;
++  }
++
++  if (m_bitstream && packet.iSize > 0)
++  {
++    if (!m_bitstream->Convert(packet.pData, packet.iSize))
++    {
++      CLog::Log(LOGERROR, "CDVDVideoCodecSTB: bitstream conversion failed");
++      m_failed = true;
++      return true;
++    }
++    data = m_bitstream->GetConvertBuffer();
++    size = m_bitstream->GetConvertSize();
++  }
++  if (pts == DVD_NOPTS_VALUE)
++    pts = packet.dts;
++
++  backendPacket.struct_size = sizeof(backendPacket);
++  backendPacket.data = data;
++  backendPacket.size = static_cast<size_t>(size);
++  backendPacket.pts_90k = To90k(pts);
++  backendPacket.dts_90k = To90k(packet.dts);
++  backendPacket.duration_90k = To90k(packet.duration);
++  if (packet.recoveryPoint)
++    backendPacket.flags |= STBP_PACKET_KEYFRAME;
++  if (m_codecControl & DVD_CODEC_CTRL_DROP)
++    backendPacket.flags |= STBP_PACKET_DROP;
++  if (!m_processInfo.IsAudioStreamActive())
++    backendPacket.flags |= STBP_PACKET_VIDEO_ONLY;
++
++  result = m_session->QueuePacket(backendPacket);
++  if (result == STBP_AGAIN)
++    return false;
++  if (result != STBP_OK)
++  {
++    CLog::Log(LOGERROR, "CDVDVideoCodecSTB: queue failed: {}", stbp_result_string(result));
++    m_failed = true;
++    return true;
++  }
++
++  if ((backendPacket.flags & STBP_PACKET_DROP) == 0)
++  {
++    m_pictures.push_back({pts, packet.dts,
++                          packet.duration > 0.0 ? packet.duration : m_defaultDuration, false});
++  }
++  if (backendPacket.pts_90k != STBP_PTS_NONE)
++    m_lastSubmittedPts90k = backendPacket.pts_90k;
++  m_drainStarted = false;
++  return true;
++}
++
++void CDVDVideoCodecSTB::Reset()
++{
++  if (!m_open)
++    return;
++  const enum stbp_result result = m_session->Flush(STBP_PTS_NONE);
++  if (result != STBP_OK)
++  {
++    CLog::Log(LOGWARNING, "CDVDVideoCodecSTB: flush failed: {}", stbp_result_string(result));
++    m_failed = true;
++  }
++  else
++    m_failed = false;
++  m_pictures.clear();
++  m_lastSubmittedPts90k = STBP_PTS_NONE;
++  m_drainStarted = false;
++  m_firstPictureOutput = false;
++  if (m_bitstream)
++    m_bitstream->ResetStartDecode();
++}
++
++CDVDVideoCodec::VCReturn CDVDVideoCodecSTB::GetPicture(VideoPicture* picture)
++{
++  if (!m_open || picture == nullptr)
++    return VC_ERROR;
++  if (m_failed)
++    return VC_ERROR;
++  if (!m_pictures.empty())
++  {
++    if (m_firstPictureOutput && m_feedAheadPictures != 0U &&
++        (m_codecControl & DVD_CODEC_CTRL_DRAIN) == 0 &&
++        m_pictures.size() <= m_feedAheadPictures)
++    {
++      struct stbp_buffer_state state{};
++      state.struct_size = sizeof(state);
++      if (m_session->GetBufferState(state) == STBP_OK && state.can_accept_packet)
++        return VC_BUFFER;
++    }
++    const PictureInfo info = m_pictures.front();
++    m_pictures.pop_front();
++    picture->Reset();
++    picture->pts = info.pts;
++    picture->dts = info.dts;
++    picture->iDuration = info.duration;
++    picture->iFlags = info.dropped ? DVP_FLAG_DROPPED : 0;
++    if (m_hints.interlaced)
++      picture->iFlags |= DVP_FLAG_INTERLACED;
++    picture->iWidth = m_hints.width;
++    picture->iHeight = m_hints.height;
++    picture->iDisplayHeight = m_hints.height;
++    picture->iDisplayWidth = m_hints.aspect > 0.0
++                                 ? static_cast<unsigned int>(std::round(m_hints.height * m_hints.aspect))
++                                 : m_hints.width;
++    picture->pixelFormat = AV_PIX_FMT_NONE;
++    picture->color_space = m_hints.colorSpace;
++    picture->color_range = m_hints.colorRange == AVCOL_RANGE_JPEG ? 1 : 0;
++    picture->color_primaries = m_hints.colorPrimaries;
++    picture->m_originalColorPrimaries = m_hints.colorPrimaries;
++    picture->color_transfer = m_hints.colorTransferCharacteristic;
++    picture->colorBits = std::max(m_hints.bitdepth, 8);
++    picture->stereoMode = m_hints.stereo_mode;
++    picture->hdrType = m_hints.hdrType;
++    if (m_hints.masteringMetadata)
++    {
++      picture->hasDisplayMetadata = true;
++      picture->displayMetadata = *m_hints.masteringMetadata;
++    }
++    if (m_hints.contentLightMetadata)
++    {
++      picture->hasLightMetadata = true;
++      picture->lightMetadata = *m_hints.contentLightMetadata;
++    }
++    picture->videoBuffer = m_bufferPool->Get();
++    m_firstPictureOutput = true;
++    return VC_PICTURE;
++  }
++
++  if (m_codecControl & DVD_CODEC_CTRL_DRAIN)
++  {
++    if (!m_drainStarted)
++    {
++      const enum stbp_result result = m_session->Drain();
++      if (result != STBP_ERROR_UNSUPPORTED && result != STBP_OK && result != STBP_AGAIN)
++        return VC_ERROR;
++      m_drainStarted = true;
++    }
++    struct stbp_buffer_state state{};
++    state.struct_size = sizeof(state);
++    if (m_session->GetBufferState(state) == STBP_OK && state.queued_bytes == 0)
++      return VC_EOF;
++    return VC_NONE;
++  }
++
++  struct stbp_buffer_state state{};
++  state.struct_size = sizeof(state);
++  if (m_session->GetBufferState(state) == STBP_OK && state.can_accept_packet)
++    return VC_BUFFER;
++  return VC_NONE;
++}
++
++void CDVDVideoCodecSTB::SetSpeed(int speed)
++{
++  if (!m_open)
++    return;
++  if (speed == DVD_PLAYSPEED_PAUSE)
++  {
++    (void)m_session->SetPaused(true);
++    return;
++  }
++  (void)m_session->SetPaused(false);
++  struct stbp_rational rate{speed, DVD_PLAYSPEED_NORMAL};
++  const enum stbp_result result = m_session->SetSpeed(rate);
++  if (result != STBP_OK && result != STBP_ERROR_UNSUPPORTED)
++    CLog::Log(LOGWARNING, "CDVDVideoCodecSTB: speed change failed: {}", stbp_result_string(result));
++}
++
++bool CDVDVideoCodecSTB::GetCodecStats(double& pts, int& droppedFrames, int& skippedPics)
++{
++  struct stbp_status status{};
++  status.struct_size = sizeof(status);
++  if (!m_open || m_session->GetStatus(status) != STBP_OK)
++    return false;
++  pts = From90k(status.presentation_pts_90k);
++  droppedFrames = status.packets_dropped > static_cast<uint64_t>(std::numeric_limits<int>::max())
++                      ? std::numeric_limits<int>::max()
++                      : static_cast<int>(status.packets_dropped);
++  skippedPics = -1;
++  return pts != DVD_NOPTS_VALUE;
++}
+diff --git a/xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecSTB.h b/xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecSTB.h
+new file mode 100644
+index 0000000000..53ebb98a45
+--- /dev/null
++++ b/xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecSTB.h
+@@ -0,0 +1,66 @@
++/*
++ *  Copyright (C) 2026 OE-Alliance contributors
++ *  SPDX-License-Identifier: GPL-2.0-or-later
++ */
++
++#pragma once
++
++#include "DVDVideoCodec.h"
++#include "STBVideoSession.h"
++#include "cores/VideoPlayer/DVDStreamInfo.h"
++
++#include <deque>
++#include <memory>
++#include <string>
++#include <vector>
++
++class CBitstreamConverter;
++
++class CDVDVideoCodecSTB final : public CDVDVideoCodec
++{
++public:
++  explicit CDVDVideoCodecSTB(CProcessInfo& processInfo);
++  ~CDVDVideoCodecSTB() override;
++
++  bool Open(CDVDStreamInfo& hints, CDVDCodecOptions& options) override;
++  bool AddData(const DemuxPacket& packet) override;
++  void Reset() override;
++  VCReturn GetPicture(VideoPicture* picture) override;
++  void SetSpeed(int speed) override;
++  const char* GetName() override { return m_name.c_str(); }
++  bool GetCodecStats(double& pts, int& droppedFrames, int& skippedPics) override;
++  void SetCodecControl(int flags) override { m_codecControl = flags; }
++
++private:
++  struct PictureInfo
++  {
++    double pts{DVD_NOPTS_VALUE};
++    double dts{DVD_NOPTS_VALUE};
++    double duration{0.0};
++    bool dropped{false};
++  };
++
++  static enum stbp_codec MapCodec(const CDVDStreamInfo& hints);
++  static int64_t To90k(double kodiTime);
++  static double From90k(int64_t pts90k);
++  bool ConfigureBitstream(const CDVDStreamInfo& hints,
++                          const uint8_t*& extraData,
++                          size_t& extraDataSize,
++                          uint32_t& streamFlags);
++
++  CDVDStreamInfo m_hints;
++  std::shared_ptr<CSTBVideoSession> m_session;
++  std::shared_ptr<CVideoBufferPoolSTB> m_bufferPool;
++  std::unique_ptr<CBitstreamConverter> m_bitstream;
++  std::vector<uint8_t> m_codecData;
++  std::deque<PictureInfo> m_pictures;
++  size_t m_feedAheadPictures{0U};
++  std::string m_name{"stbplayer"};
++  int m_codecControl{0};
++  double m_defaultDuration{0.0};
++  int64_t m_lastSubmittedPts90k{STBP_PTS_NONE};
++  bool m_open{false};
++  bool m_failed{false};
++  bool m_drainStarted{false};
++  bool m_firstPictureOutput{false};
++};
+diff --git a/xbmc/cores/VideoPlayer/DVDCodecs/Video/RendererSTB.cpp b/xbmc/cores/VideoPlayer/DVDCodecs/Video/RendererSTB.cpp
+new file mode 100644
+index 0000000000..a5703d2478
+--- /dev/null
++++ b/xbmc/cores/VideoPlayer/DVDCodecs/Video/RendererSTB.cpp
+@@ -0,0 +1,164 @@
++/*
++ *  Copyright (C) 2026 OE-Alliance contributors
++ *  SPDX-License-Identifier: GPL-2.0-or-later
++ */
++
++#include "RendererSTB.h"
++
++#include "cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodec.h"
++#include "cores/VideoPlayer/VideoRenderers/RenderFactory.h"
++#include "cores/VideoPlayer/VideoRenderers/RenderFlags.h"
++
++#include <cmath>
++
++CRendererSTB::~CRendererSTB()
++{
++  UnInit();
++}
++
++CBaseRenderer* CRendererSTB::Create(CVideoBuffer* buffer)
++{
++  return dynamic_cast<CVideoBufferSTB*>(buffer) != nullptr ? new CRendererSTB() : nullptr;
++}
++
++void CRendererSTB::Register()
++{
++  VIDEOPLAYER::CRendererFactory::RegisterRenderer("stbplayer", CRendererSTB::Create);
++}
++
++bool CRendererSTB::Configure(const VideoPicture& picture, float fps, unsigned int orientation)
++{
++  auto* buffer = dynamic_cast<CVideoBufferSTB*>(picture.videoBuffer);
++  if (buffer == nullptr)
++    return false;
++  m_session = buffer->Session();
++  m_format = AV_PIX_FMT_NONE;
++  m_sourceWidth = picture.iWidth;
++  m_sourceHeight = picture.iHeight;
++  m_displayWidth = picture.iDisplayWidth;
++  m_displayHeight = picture.iDisplayHeight;
++  m_renderOrientation = orientation;
++  m_fps = fps;
++  m_iFlags = GetFlagsChromaPosition(picture.chroma_position) |
++             GetFlagsColorMatrix(picture.color_space, picture.iWidth, picture.iHeight) |
++             GetFlagsColorPrimaries(picture.color_primaries) |
++             GetFlagsStereoMode(picture.stereoMode);
++  CalculateFrameAspectRatio(picture.iDisplayWidth, picture.iDisplayHeight);
++  SetViewMode(m_videoSettings.m_ViewMode);
++  ManageRenderArea();
++  (void)m_session->SetVisible(true);
++  m_configured = true;
++  return true;
++}
++
++void CRendererSTB::AddVideoPicture(const VideoPicture& picture, int index)
++{
++  if (index < 0 || static_cast<size_t>(index) >= m_buffers.size())
++    return;
++  ReleaseBuffer(index);
++  auto* buffer = dynamic_cast<CVideoBufferSTB*>(picture.videoBuffer);
++  if (buffer != nullptr)
++  {
++    buffer->Acquire();
++    m_buffers[index] = buffer;
++    m_session = buffer->Session();
++  }
++}
++
++void CRendererSTB::UnInit()
++{
++  for (size_t index = 0; index < m_buffers.size(); ++index)
++    ReleaseBuffer(static_cast<int>(index));
++  if (m_session)
++    (void)m_session->SetVisible(false);
++  m_session.reset();
++  m_configured = false;
++}
++
++bool CRendererSTB::Flush(bool saveBuffers)
++{
++  if (!saveBuffers)
++  {
++    for (size_t index = 0; index < m_buffers.size(); ++index)
++      ReleaseBuffer(static_cast<int>(index));
++  }
++  return saveBuffers;
++}
++
++void CRendererSTB::ReleaseBuffer(int index)
++{
++  if (index < 0 || static_cast<size_t>(index) >= m_buffers.size())
++    return;
++  if (m_buffers[index] != nullptr)
++  {
++    m_buffers[index]->Release();
++    m_buffers[index] = nullptr;
++  }
++}
++
++CRenderInfo CRendererSTB::GetRenderInfo()
++{
++  CRenderInfo info;
++  info.max_buffer_size = 4;
++  info.formats.push_back(AV_PIX_FMT_NONE);
++  return info;
++}
++
++void CRendererSTB::Update()
++{
++}
++
++void CRendererSTB::RenderUpdate(int index,
++                                int index2,
++                                bool clear,
++                                unsigned int flags,
++                                unsigned int alpha)
++{
++  (void)index;
++  (void)index2;
++  (void)clear;
++  (void)flags;
++  (void)alpha;
++  if (m_configured)
++    ManageRenderArea();
++}
++
++bool CRendererSTB::ConfigChanged(const VideoPicture& picture)
++{
++  const auto* buffer = dynamic_cast<CVideoBufferSTB*>(picture.videoBuffer);
++  return buffer == nullptr || buffer->Session() != m_session || picture.iWidth != m_sourceWidth ||
++         picture.iHeight != m_sourceHeight || picture.iDisplayWidth != m_displayWidth ||
++         picture.iDisplayHeight != m_displayHeight;
++}
++
++bool CRendererSTB::Supports(ERENDERFEATURE feature) const
++{
++  if (!m_session || !m_session->Supports(STBP_FEATURE_VIDEO_RECT))
++    return false;
++  return feature == RENDERFEATURE_ZOOM || feature == RENDERFEATURE_STRETCH ||
++         feature == RENDERFEATURE_PIXEL_RATIO || feature == RENDERFEATURE_VERTICAL_SHIFT;
++}
++
++void CRendererSTB::ManageRenderArea()
++{
++  CBaseRenderer::ManageRenderArea();
++  if (!m_session || !m_session->Supports(STBP_FEATURE_VIDEO_RECT) || m_sourceRect.IsEmpty() ||
++      m_destRect.IsEmpty())
++    return;
++  if (m_sourceRect == m_appliedSource && m_destRect == m_appliedDestination)
++    return;
++
++  const struct stbp_rect source{static_cast<int32_t>(std::lround(m_sourceRect.x1)),
++                                static_cast<int32_t>(std::lround(m_sourceRect.y1)),
++                                static_cast<int32_t>(std::lround(m_sourceRect.Width())),
++                                static_cast<int32_t>(std::lround(m_sourceRect.Height()))};
++  const struct stbp_rect destination{static_cast<int32_t>(std::lround(m_destRect.x1)),
++                                     static_cast<int32_t>(std::lround(m_destRect.y1)),
++                                     static_cast<int32_t>(std::lround(m_destRect.Width())),
++                                     static_cast<int32_t>(std::lround(m_destRect.Height()))};
++  if (m_session->SetVideoRect(source, destination) == STBP_OK)
++  {
++    m_appliedSource = m_sourceRect;
++    m_appliedDestination = m_destRect;
++  }
++}
+diff --git a/xbmc/cores/VideoPlayer/DVDCodecs/Video/RendererSTB.h b/xbmc/cores/VideoPlayer/DVDCodecs/Video/RendererSTB.h
+new file mode 100644
+index 0000000000..9af6ef6c4b
+--- /dev/null
++++ b/xbmc/cores/VideoPlayer/DVDCodecs/Video/RendererSTB.h
+@@ -0,0 +1,54 @@
++/*
++ *  Copyright (C) 2026 OE-Alliance contributors
++ *  SPDX-License-Identifier: GPL-2.0-or-later
++ */
++
++#pragma once
++
++#include "STBVideoSession.h"
++#include "cores/VideoPlayer/VideoRenderers/BaseRenderer.h"
++
++#include <array>
++
++class CRendererSTB final : public CBaseRenderer
++{
++public:
++  ~CRendererSTB() override;
++  static CBaseRenderer* Create(CVideoBuffer* buffer);
++  static void Register();
++
++  bool Configure(const VideoPicture& picture, float fps, unsigned int orientation) override;
++  bool IsConfigured() override { return m_configured; }
++  void AddVideoPicture(const VideoPicture& picture, int index) override;
++  void UnInit() override;
++  bool Flush(bool saveBuffers) override;
++  void ReleaseBuffer(int index) override;
++  CRenderInfo GetRenderInfo() override;
++  void Update() override;
++  void RenderUpdate(int index,
++                    int index2,
++                    bool clear,
++                    unsigned int flags,
++                    unsigned int alpha) override;
++  bool ConfigChanged(const VideoPicture& picture) override;
++  bool SupportsMultiPassRendering() override { return false; }
++  bool Supports(ERENDERFEATURE feature) const override;
++  bool Supports(ESCALINGMETHOD method) const override
++  {
++    (void)method;
++    return false;
++  }
++  bool IsGuiLayer() override { return false; }
++
++protected:
++  void ManageRenderArea() override;
++
++private:
++  std::shared_ptr<CSTBVideoSession> m_session;
++  std::array<CVideoBuffer*, 4> m_buffers{};
++  CRect m_appliedSource;
++  CRect m_appliedDestination;
++  unsigned int m_displayWidth{0};
++  unsigned int m_displayHeight{0};
++  bool m_configured{false};
++};
+diff --git a/xbmc/cores/VideoPlayer/DVDCodecs/Video/STBVideoSession.cpp b/xbmc/cores/VideoPlayer/DVDCodecs/Video/STBVideoSession.cpp
+new file mode 100644
+index 0000000000..18f47360cd
+--- /dev/null
++++ b/xbmc/cores/VideoPlayer/DVDCodecs/Video/STBVideoSession.cpp
+@@ -0,0 +1,228 @@
++/*
++ *  Copyright (C) 2026 OE-Alliance contributors
++ *  SPDX-License-Identifier: GPL-2.0-or-later
++ */
++
++#include "STBVideoSession.h"
++
++#include "utils/log.h"
++
++#include <chrono>
++#include <utility>
++
++CSTBVideoSession::~CSTBVideoSession()
++{
++  Close();
++}
++
++bool CSTBVideoSession::Load(const std::string& backendName, std::string& error)
++{
++  char loaderError[512]{};
++  struct stbp_host_callbacks host{};
++  enum stbp_result result;
++
++  std::unique_lock lock(m_mutex);
++  if (m_loaded != nullptr)
++  {
++    error = "backend already loaded";
++    return false;
++  }
++
++  result = stbp_backend_load(nullptr, backendName.c_str(), &m_loaded, loaderError,
++                             sizeof(loaderError));
++  if (result != STBP_OK)
++  {
++    error = loaderError;
++    return false;
++  }
++
++  m_api = stbp_backend_api(m_loaded);
++  host.struct_size = sizeof(host);
++  host.userdata = this;
++  host.log = Log;
++  host.monotonic_time_us = MonotonicTimeUs;
++  result = m_api->create(&host, &m_instance);
++  if (result != STBP_OK)
++  {
++    error = stbp_result_string(result);
++    stbp_backend_unload(m_loaded);
++    m_loaded = nullptr;
++    m_api = nullptr;
++    return false;
++  }
++
++  m_capabilities.struct_size = sizeof(m_capabilities);
++  result = m_api->probe(m_instance, &m_capabilities);
++  if (result != STBP_OK)
++  {
++    error = stbp_result_string(result);
++    m_api->destroy(m_instance);
++    m_instance = nullptr;
++    stbp_backend_unload(m_loaded);
++    m_loaded = nullptr;
++    m_api = nullptr;
++    return false;
++  }
++
++  m_backendName = m_api->backend_name;
++  return true;
++}
++
++enum stbp_result CSTBVideoSession::Open(const struct stbp_stream_config& stream,
++                                        const struct stbp_clock_config& clock)
++{
++  std::unique_lock lock(m_mutex);
++  if (m_api == nullptr || m_instance == nullptr || m_open)
++    return STBP_ERROR_BAD_STATE;
++  const enum stbp_result result = m_api->open(m_instance, &stream, &clock);
++  m_open = result == STBP_OK;
++  return result;
++}
++
++enum stbp_result CSTBVideoSession::QueuePacket(const struct stbp_packet& packet)
++{
++  std::unique_lock lock(m_mutex);
++  return m_open ? m_api->queue_packet(m_instance, &packet) : STBP_ERROR_BAD_STATE;
++}
++
++enum stbp_result CSTBVideoSession::GetBufferState(struct stbp_buffer_state& state)
++{
++  std::unique_lock lock(m_mutex);
++  return m_open ? m_api->get_buffer_state(m_instance, &state) : STBP_ERROR_BAD_STATE;
++}
++
++enum stbp_result CSTBVideoSession::GetStatus(struct stbp_status& status)
++{
++  std::unique_lock lock(m_mutex);
++  return m_open ? m_api->get_status(m_instance, &status) : STBP_ERROR_BAD_STATE;
++}
++
++enum stbp_result CSTBVideoSession::Flush(int64_t nextPts90k)
++{
++  std::unique_lock lock(m_mutex);
++  return m_open ? m_api->flush(m_instance, nextPts90k) : STBP_ERROR_BAD_STATE;
++}
++
++enum stbp_result CSTBVideoSession::Drain()
++{
++  std::unique_lock lock(m_mutex);
++  return m_open ? m_api->drain(m_instance) : STBP_ERROR_BAD_STATE;
++}
++
++enum stbp_result CSTBVideoSession::SetSpeed(struct stbp_rational speed)
++{
++  std::unique_lock lock(m_mutex);
++  return m_open ? m_api->set_speed(m_instance, speed) : STBP_ERROR_BAD_STATE;
++}
++
++enum stbp_result CSTBVideoSession::SetPaused(bool paused)
++{
++  std::unique_lock lock(m_mutex);
++  return m_open ? m_api->set_paused(m_instance, paused ? 1 : 0) : STBP_ERROR_BAD_STATE;
++}
++
++enum stbp_result CSTBVideoSession::SetVideoRect(const struct stbp_rect& source,
++                                                const struct stbp_rect& destination)
++{
++  std::unique_lock lock(m_mutex);
++  if (!m_open)
++    return STBP_ERROR_BAD_STATE;
++  if ((m_capabilities.feature_mask & STBP_FEATURE_VIDEO_RECT) == 0)
++    return STBP_ERROR_UNSUPPORTED;
++  return m_api->set_video_rect(m_instance, &source, &destination);
++}
++
++enum stbp_result CSTBVideoSession::SetVisible(bool visible)
++{
++  std::unique_lock lock(m_mutex);
++  if (!m_open)
++    return STBP_ERROR_BAD_STATE;
++  if ((m_capabilities.feature_mask & STBP_FEATURE_VISIBILITY) == 0)
++    return STBP_ERROR_UNSUPPORTED;
++  return m_api->set_visible(m_instance, visible ? 1 : 0);
++}
++
++bool CSTBVideoSession::Supports(uint64_t feature) const
++{
++  std::unique_lock lock(m_mutex);
++  return (m_capabilities.feature_mask & feature) != 0;
++}
++
++void CSTBVideoSession::CloseLocked()
++{
++  if (m_api != nullptr && m_instance != nullptr)
++  {
++    if (m_open)
++      (void)m_api->close(m_instance);
++    m_api->destroy(m_instance);
++    m_instance = nullptr;
++  }
++  if (m_loaded != nullptr)
++    stbp_backend_unload(m_loaded);
++  m_loaded = nullptr;
++  m_api = nullptr;
++  m_open = false;
++  m_backendName.clear();
++  m_capabilities = {};
++}
++
++void CSTBVideoSession::Close()
++{
++  std::unique_lock lock(m_mutex);
++  CloseLocked();
++}
++
++void CSTBVideoSession::Log(void* userdata, enum stbp_log_level level, const char* message)
++{
++  (void)userdata;
++  int kodiLevel = LOGDEBUG;
++  if (level == STBP_LOG_ERROR)
++    kodiLevel = LOGERROR;
++  else if (level == STBP_LOG_WARNING)
++    kodiLevel = LOGWARNING;
++  else if (level == STBP_LOG_INFO)
++    kodiLevel = LOGINFO;
++  CLog::Log(kodiLevel, "stbplayer: {}", message != nullptr ? message : "");
++}
++
++int64_t CSTBVideoSession::MonotonicTimeUs(void* userdata)
++{
++  (void)userdata;
++  const auto now = std::chrono::steady_clock::now().time_since_epoch();
++  return std::chrono::duration_cast<std::chrono::microseconds>(now).count();
++}
++
++CVideoBufferSTB::CVideoBufferSTB(int id, std::shared_ptr<CSTBVideoSession> session)
++  : CVideoBuffer(id), m_session(std::move(session))
++{
++}
++
++CVideoBufferPoolSTB::CVideoBufferPoolSTB(std::shared_ptr<CSTBVideoSession> session)
++  : m_session(std::move(session))
++{
++}
++
++CVideoBuffer* CVideoBufferPoolSTB::Get()
++{
++  std::unique_lock lock(m_mutex);
++  int id;
++  if (m_free.empty())
++  {
++    id = static_cast<int>(m_buffers.size());
++    m_buffers.emplace_back(std::make_unique<CVideoBufferSTB>(id, m_session));
++  }
++  else
++  {
++    id = m_free.front();
++    m_free.pop_front();
++  }
++  m_buffers[id]->Acquire(GetPtr());
++  return m_buffers[id].get();
++}
++
++void CVideoBufferPoolSTB::Return(int id)
++{
++  std::unique_lock lock(m_mutex);
++  if (id >= 0 && static_cast<size_t>(id) < m_buffers.size())
++    m_free.push_back(id);
++}
+diff --git a/xbmc/cores/VideoPlayer/DVDCodecs/Video/STBVideoSession.h b/xbmc/cores/VideoPlayer/DVDCodecs/Video/STBVideoSession.h
+new file mode 100644
+index 0000000000..9d0f1b9167
+--- /dev/null
++++ b/xbmc/cores/VideoPlayer/DVDCodecs/Video/STBVideoSession.h
+@@ -0,0 +1,83 @@
++/*
++ *  Copyright (C) 2026 OE-Alliance contributors
++ *  SPDX-License-Identifier: GPL-2.0-or-later
++ */
++
++#pragma once
++
++#include "cores/VideoPlayer/Buffers/VideoBuffer.h"
++
++#include <stbplayer/loader.h>
++
++#include <memory>
++#include <mutex>
++#include <string>
++#include <deque>
++#include <vector>
++
++class CSTBVideoSession final
++{
++public:
++  CSTBVideoSession() = default;
++  ~CSTBVideoSession();
++
++  CSTBVideoSession(const CSTBVideoSession&) = delete;
++  CSTBVideoSession& operator=(const CSTBVideoSession&) = delete;
++
++  bool Load(const std::string& backendName, std::string& error);
++  enum stbp_result Open(const struct stbp_stream_config& stream,
++                        const struct stbp_clock_config& clock);
++  enum stbp_result QueuePacket(const struct stbp_packet& packet);
++  enum stbp_result GetBufferState(struct stbp_buffer_state& state);
++  enum stbp_result GetStatus(struct stbp_status& status);
++  enum stbp_result Flush(int64_t nextPts90k);
++  enum stbp_result Drain();
++  enum stbp_result SetSpeed(struct stbp_rational speed);
++  enum stbp_result SetPaused(bool paused);
++  enum stbp_result SetVideoRect(const struct stbp_rect& source,
++                                const struct stbp_rect& destination);
++  enum stbp_result SetVisible(bool visible);
++  void Close();
++
++  const struct stbp_capabilities& Capabilities() const { return m_capabilities; }
++  const std::string& BackendName() const { return m_backendName; }
++  bool Supports(uint64_t feature) const;
++
++private:
++  static void Log(void* userdata, enum stbp_log_level level, const char* message);
++  static int64_t MonotonicTimeUs(void* userdata);
++  void CloseLocked();
++
++  mutable std::mutex m_mutex;
++  struct stbp_loaded_backend* m_loaded{nullptr};
++  const struct stbp_backend_api_v1* m_api{nullptr};
++  void* m_instance{nullptr};
++  struct stbp_capabilities m_capabilities{};
++  std::string m_backendName;
++  bool m_open{false};
++};
++
++class CVideoBufferSTB final : public CVideoBuffer
++{
++public:
++  CVideoBufferSTB(int id, std::shared_ptr<CSTBVideoSession> session);
++  AVPixelFormat GetFormat() override { return AV_PIX_FMT_NONE; }
++  const std::shared_ptr<CSTBVideoSession>& Session() const { return m_session; }
++
++private:
++  std::shared_ptr<CSTBVideoSession> m_session;
++};
++
++class CVideoBufferPoolSTB final : public IVideoBufferPool
++{
++public:
++  explicit CVideoBufferPoolSTB(std::shared_ptr<CSTBVideoSession> session);
++  CVideoBuffer* Get() override;
++  void Return(int id) override;
++
++private:
++  std::mutex m_mutex;
++  std::shared_ptr<CSTBVideoSession> m_session;
++  std::vector<std::unique_ptr<CVideoBufferSTB>> m_buffers;
++  std::deque<int> m_free;
++};

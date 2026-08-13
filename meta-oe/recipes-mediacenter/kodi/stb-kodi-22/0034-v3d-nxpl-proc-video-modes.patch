@@ -1,0 +1,337 @@
+From 90c6fb4065326a2e68fb6d4df76bd62ccb7ba4dd Mon Sep 17 00:00:00 2001
+From: OE-Alliance <oe-alliance@users.noreply.github.com>
+Date: Sun, 9 Aug 2026 19:15:00 +0200
+Subject: [PATCH] v3d nxpl: expose and switch real HDMI video modes
+
+The generic Broadcom V3D/NXPL window type advertised only synthetic 50 Hz
+modes and SetNativeResolution never changed the DVB driver's HDMI timing.
+Read the driver's mode choices, expose their physical resolution and refresh
+rate to Kodi, and apply the selected mode through the videomode proc node.
+
+Keep the NXPL GLES surface aligned with the physical output geometry. Unlike
+modern GBM platforms, legacy NXPL does not provide an independent logical GUI
+viewport, so a 1280x720 GUI on its 1920x1080 EGL surface renders only in one
+corner. Never expose modes above the Enigma2 output resolution active when
+Kodi starts, avoiding an unsupported UHD switch on FHD displays.
+---
+ xbmc/windowing/egl/EGLNativeTypeV3DNXPL.cpp | 262 +++++++++++++++++---
+ 1 file changed, 211 insertions(+), 51 deletions(-)
+
+diff --git a/xbmc/windowing/egl/EGLNativeTypeV3DNXPL.cpp b/xbmc/windowing/egl/EGLNativeTypeV3DNXPL.cpp
+index e9396636cf..67857b033d 100644
+--- a/xbmc/windowing/egl/EGLNativeTypeV3DNXPL.cpp
++++ b/xbmc/windowing/egl/EGLNativeTypeV3DNXPL.cpp
+@@ -26,12 +26,116 @@
+ //#include "platform/linux/DllBCM.h"
+ #include "windowing/GraphicContext.h"
+ 
++#include <cstdlib>
++#include <fstream>
++#include <sstream>
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <linux/fb.h>
+ #include <sys/ioctl.h>
+ #include <EGL/egl.h>
+ 
++namespace
++{
++bool ReadProcString(const char* path, std::string& value)
++{
++  std::ifstream input(path);
++  if (!input)
++    return false;
++
++  std::getline(input, value);
++  while (!value.empty() &&
++         (value.back() == '\n' || value.back() == '\r' || value.back() == ' ' ||
++          value.back() == '\t'))
++    value.pop_back();
++  return !value.empty();
++}
++
++bool WriteProcString(const char* path, const std::string& value)
++{
++  std::ofstream output(path);
++  if (!output)
++    return false;
++
++  output << value;
++  return output.good();
++}
++
++bool ParseVideoMode(const std::string& mode,
++                    unsigned int& outputWidth,
++                    unsigned int& outputHeight,
++                    float& refreshRate,
++                    bool& interlaced)
++{
++  if (mode == "pal")
++  {
++    outputWidth = 720;
++    outputHeight = 576;
++    refreshRate = 50.0f;
++    interlaced = true;
++    return true;
++  }
++  if (mode == "ntsc")
++  {
++    outputWidth = 720;
++    outputHeight = 480;
++    refreshRate = 59.94f;
++    interlaced = true;
++    return true;
++  }
++
++  const size_t scanIndex = mode.find_first_of("pi");
++  if (scanIndex == std::string::npos || scanIndex == 0)
++    return false;
++
++  outputHeight = static_cast<unsigned int>(
++      std::strtoul(mode.substr(0, scanIndex).c_str(), nullptr, 10));
++  switch (outputHeight)
++  {
++    case 480:
++    case 576:
++      outputWidth = 720;
++      break;
++    case 720:
++      outputWidth = 1280;
++      break;
++    case 1080:
++      outputWidth = 1920;
++      break;
++    case 2160:
++      outputWidth = 3840;
++      break;
++    default:
++      return false;
++  }
++
++  interlaced = mode[scanIndex] == 'i';
++  const unsigned int namedRate =
++      scanIndex + 1 < mode.size()
++          ? static_cast<unsigned int>(std::strtoul(mode.c_str() + scanIndex + 1, nullptr, 10))
++          : (outputHeight == 576 ? 50U : 60U);
++  switch (namedRate)
++  {
++    case 23:
++    case 24:
++      refreshRate = 23.976f;
++      break;
++    case 29:
++    case 30:
++      refreshRate = 29.97f;
++      break;
++    case 59:
++    case 60:
++      refreshRate = 59.94f;
++      break;
++    default:
++      refreshRate = static_cast<float>(namedRate);
++      break;
++  }
++  return namedRate != 0;
++}
++}
++
+ CEGLNativeTypeV3D::CEGLNativeTypeV3D()
+ {
+   m_nativeDisplay = NULL;
+@@ -115,79 +219,133 @@ bool CEGLNativeTypeV3D::GetNativeResolution(RESOLUTION_INFO *res) const
+ 
+ bool CEGLNativeTypeV3D::SetNativeResolution(const RESOLUTION_INFO &res)
+ {
++  std::string driverMode = res.strId;
++  const size_t stereoSuffix = driverMode.rfind('-');
++  if (stereoSuffix != std::string::npos)
++    driverMode.erase(stereoSuffix);
++
++  std::string currentMode;
++  ReadProcString("/proc/stb/video/videomode", currentMode);
++  if (!driverMode.empty() && driverMode != currentMode &&
++      !WriteProcString("/proc/stb/video/videomode", driverMode))
++  {
++    CLog::Log(LOGERROR, "V3D NXPL: failed to set HDMI mode '{}'", driverMode);
++    return false;
++  }
++
++  CLog::Log(LOGINFO, "V3D NXPL: HDMI mode {} at {:.3f} Hz", driverMode, res.fRefreshRate);
+   m_desktopRes = res;
+   return true;
+ }
+ 
+ bool CEGLNativeTypeV3D::ProbeResolutions(std::vector<RESOLUTION_INFO> &resolutions)
+ {
+-  resolutions.clear();
++  std::string currentMode;
++  std::string modeChoices;
++  ReadProcString("/proc/stb/video/videomode", currentMode);
++  if (!ReadProcString("/proc/stb/video/videomode_choices", modeChoices))
++    modeChoices = "720p50 720p60 1080p24 1080p25 1080p30 1080p50 1080p60";
++
++  unsigned int maximumOutputWidth = 1920;
++  unsigned int maximumOutputHeight = 1080;
++  float currentRefreshRate = 50.0f;
++  bool currentInterlaced = false;
++  if (!ParseVideoMode(currentMode, maximumOutputWidth, maximumOutputHeight, currentRefreshRate,
++                      currentInterlaced))
++  {
++    maximumOutputWidth = 1920;
++    maximumOutputHeight = 1080;
++  }
+ 
+-  m_desktopResAll[0].bFullScreen  = true;
+-  m_desktopResAll[0].iWidth       = 1280;
+-  m_desktopResAll[0].iHeight      = 720;
+-  m_desktopResAll[0].iScreenWidth = 1280;
+-  m_desktopResAll[0].iScreenHeight= 720;
+-  m_desktopResAll[0].dwFlags      = D3DPRESENTFLAG_PROGRESSIVE;
+-  m_desktopResAll[0].fRefreshRate = 50;
+-  m_desktopResAll[0].fPixelRatio   = 1.0f;
+-  m_desktopResAll[0].strMode = StringUtils::Format("{:d}x{:d}", 1280, 720);
+-  m_desktopResAll[0].strMode = StringUtils::Format("{} @ {:.2f}{} - Full Screen", m_desktopResAll[0].strMode.c_str(), (float)50, m_desktopResAll[0].dwFlags & D3DPRESENTFLAG_INTERLACED ? "i" : "");
+-  m_desktopResAll[0].iSubtitles   = static_cast<int>(0.965 * m_desktopResAll[0].iHeight);
+-
+-  CLog::Log(LOGDEBUG, "EGL initial desktop resolution {}\n", m_desktopResAll[0].strMode.c_str());
+-
+-  resolutions.push_back(m_desktopResAll[0]);
+-
+-  m_desktopResAll[1].bFullScreen  = true;
+-  m_desktopResAll[1].iWidth       = 1280;
+-  m_desktopResAll[1].iHeight      = 720;
+-  m_desktopResAll[1].iScreenWidth = 1280;
+-  m_desktopResAll[1].iScreenHeight= 720;
+-  m_desktopResAll[1].dwFlags      = D3DPRESENTFLAG_PROGRESSIVE | D3DPRESENTFLAG_MODE3DSBS;
+-  m_desktopResAll[1].fRefreshRate = 50;
+-  m_desktopResAll[1].fPixelRatio   = 1.0f;
+-  m_desktopResAll[1].strMode = StringUtils::Format("{:d}x{:d}", 1280, 720);
+-  m_desktopResAll[1].strMode = StringUtils::Format("{} @ {:.2f}{} - Full Screen 3DSBS", m_desktopResAll[1].strMode.c_str(), (float)50, m_desktopResAll[1].dwFlags & D3DPRESENTFLAG_INTERLACED ? "i" : "");
+-  m_desktopResAll[1].iSubtitles   = static_cast<int>(0.965 * m_desktopResAll[1].iHeight);
+-
+-  CLog::Log(LOGDEBUG, "EGL initial desktop resolution {}\n", m_desktopResAll[1].strMode.c_str());
++  resolutions.clear();
+ 
++  bool foundCurrent = false;
++  bool foundPreferred = false;
++  std::istringstream choices(modeChoices);
++  std::string modeName;
++  while (choices >> modeName)
++  {
++    unsigned int outputWidth = 0;
++    unsigned int outputHeight = 0;
++    float refreshRate = 0.0f;
++    bool interlaced = false;
++    if (!ParseVideoMode(modeName, outputWidth, outputHeight, refreshRate, interlaced) ||
++        interlaced || outputHeight < 720 || outputWidth > maximumOutputWidth ||
++        outputHeight > maximumOutputHeight)
++      continue;
++
++    if (modeName == "1080p" && modeChoices.find("1080p60") != std::string::npos)
++      continue;
++
++    RESOLUTION_INFO resolution;
++    resolution.bFullScreen = true;
++    // Legacy NXPL has no independent logical GUI viewport. Keep Kodi's
++    // rendering dimensions equal to the EGL/output surface while the DVB
++    // video plane remains independent.
++    resolution.iWidth = outputWidth;
++    resolution.iHeight = outputHeight;
++    resolution.iScreenWidth = outputWidth;
++    resolution.iScreenHeight = outputHeight;
++    resolution.dwFlags = D3DPRESENTFLAG_PROGRESSIVE;
++    resolution.fRefreshRate = refreshRate;
++    resolution.fPixelRatio = 1.0f;
++    resolution.iSubtitles = static_cast<int>(0.965 * resolution.iHeight);
++    resolution.strId = modeName;
++    resolution.strMode = StringUtils::Format("{}x{} @ {:.3f} - Full Screen ({})", outputWidth,
++                                              outputHeight, refreshRate, modeName);
++    resolutions.push_back(resolution);
++
++    if (modeName == currentMode)
++    {
++      m_desktopRes = resolution;
++      foundCurrent = true;
++    }
++    if (modeName == "1080p50" || (!foundPreferred && modeName == currentMode))
++    {
++      m_desktopResAll[0] = resolution;
++      foundPreferred = true;
++    }
++  }
++
++  if (resolutions.empty())
++  {
++    RESOLUTION_INFO fallback;
++    fallback.bFullScreen = true;
++    fallback.iWidth = 1920;
++    fallback.iHeight = 1080;
++    fallback.iScreenWidth = 1920;
++    fallback.iScreenHeight = 1080;
++    fallback.dwFlags = D3DPRESENTFLAG_PROGRESSIVE;
++    fallback.fRefreshRate = 50.0f;
++    fallback.fPixelRatio = 1.0f;
++    fallback.iSubtitles = static_cast<int>(0.965 * fallback.iHeight);
++    fallback.strId = "1080p50";
++    fallback.strMode = "1920x1080 @ 50.000 - Full Screen (1080p50)";
++    resolutions.push_back(fallback);
++    m_desktopResAll[0] = fallback;
++    m_desktopRes = fallback;
++    foundCurrent = true;
++    foundPreferred = true;
++  }
++  if (!foundPreferred)
++    m_desktopResAll[0] = resolutions.front();
++  if (!foundCurrent)
++    m_desktopRes = m_desktopResAll[0];
++
++  m_desktopResAll[1] = m_desktopResAll[0];
++  m_desktopResAll[1].dwFlags |= D3DPRESENTFLAG_MODE3DSBS;
++  m_desktopResAll[1].strId += "-sbs";
++  m_desktopResAll[1].strMode += " 3DSBS";
+   resolutions.push_back(m_desktopResAll[1]);
+ 
+-  m_desktopResAll[2].bFullScreen  = true;
+-  m_desktopResAll[2].iWidth       = 1280;
+-  m_desktopResAll[2].iHeight      = 720;
+-  m_desktopResAll[2].iScreenWidth = 1280;
+-  m_desktopResAll[2].iScreenHeight= 720;
+-  m_desktopResAll[2].dwFlags      = D3DPRESENTFLAG_PROGRESSIVE | D3DPRESENTFLAG_MODE3DTB;
+-  m_desktopResAll[2].fRefreshRate = 50;
+-  m_desktopResAll[2].fPixelRatio   = 1.0f;
+-  m_desktopResAll[2].strMode = StringUtils::Format("{:d}x{:d}", 1280, 720);
+-  m_desktopResAll[2].strMode = StringUtils::Format("{} @ {:.2f}{} - Full Screen 3DTB", m_desktopResAll[2].strMode.c_str(), (float)50, m_desktopResAll[2].dwFlags & D3DPRESENTFLAG_INTERLACED ? "i" : "");
+-  m_desktopResAll[2].iSubtitles   = static_cast<int>(0.965 * m_desktopResAll[2].iHeight);
+-
+-  CLog::Log(LOGDEBUG, "EGL initial desktop resolution {}\n", m_desktopResAll[2].strMode.c_str());
+-
++  m_desktopResAll[2] = m_desktopResAll[0];
++  m_desktopResAll[2].dwFlags |= D3DPRESENTFLAG_MODE3DTB;
++  m_desktopResAll[2].strId += "-tab";
++  m_desktopResAll[2].strMode += " 3DTB";
+   resolutions.push_back(m_desktopResAll[2]);
+ 
+-  m_desktopResAll[3].bFullScreen  = true;
+-  m_desktopResAll[3].iWidth       = 1280;
+-  m_desktopResAll[3].iHeight      = 720;
+-  m_desktopResAll[3].iScreenWidth = 1920;
+-  m_desktopResAll[3].iScreenHeight= 1080;
+-  m_desktopResAll[3].dwFlags      = D3DPRESENTFLAG_PROGRESSIVE;
+-  m_desktopResAll[3].fRefreshRate = 50;
+-  m_desktopResAll[3].fPixelRatio   = 1.0f;
+-  m_desktopResAll[3].strMode = StringUtils::Format("{:d}x{:d}", 1920, 1080);
+-  m_desktopResAll[3].strMode = StringUtils::Format("{} @ {:.2f}{} - Full Screen", m_desktopResAll[3].strMode.c_str(), (float)50, m_desktopResAll[3].dwFlags & D3DPRESENTFLAG_INTERLACED ? "i" : "");
+-  m_desktopResAll[3].iSubtitles   = static_cast<int>(0.965 * m_desktopResAll[3].iHeight);
+-
+-  CLog::Log(LOGDEBUG, "EGL initial desktop resolution {}\n", m_desktopResAll[3].strMode.c_str());
+-
+-  resolutions.push_back(m_desktopResAll[3]);
+-
+-  m_desktopRes = m_desktopResAll[0];
++  CLog::Log(LOGINFO, "V3D NXPL: exposed {} HDMI modes up to {}x{}, current '{}'",
++            resolutions.size(), maximumOutputWidth, maximumOutputHeight, currentMode);
+ 
+   return true;
+ }
+-- 
+2.51.0

@@ -134,3 +134,5 @@ INHIBIT_PACKAGE_STRIP = "1"
 INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
 
 INSANE_SKIP:${PN} += "already-stripped dev-so ldflags"
+
+require dinobot-showiframe-kodi.inc

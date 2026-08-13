@@ -1,0 +1,25 @@
+From: OpenATV STB Kodi Team <oe.patch@openatv.example>
+Date: Sat, 8 Aug 2026 17:05:00 +0200
+Subject: [PATCH] DllLoader: call the real dlopen from the wrapped entry point
+
+The Linux DVD wrapper is linked with --wrap=dlopen. Calling dlopen from
+__wrap_dlopen therefore resolves back to __wrap_dlopen and loops forever when
+libdvdread probes for libdvdcss in dvdinput_setup(). Use the linker-provided
+__real_dlopen entry point to reach glibc's implementation.
+
+diff --git a/xbmc/cores/DllLoader/exports/wrapper.c b/xbmc/cores/DllLoader/exports/wrapper.c
+--- a/xbmc/cores/DllLoader/exports/wrapper.c
++++ b/xbmc/cores/DllLoader/exports/wrapper.c
+@@ -97,9 +97,11 @@ int dll_setvbuf(FILE *stream, char *buf, int type, size_t size);
+ struct mntent *dll_getmntent(FILE *fp);
+ struct mntent* dll_getmntent_r(FILE* fp, struct mntent* result, char* buffer, int bufsize);
+ 
++void *__real_dlopen(const char *filename, int flag);
++
+ void *__wrap_dlopen(const char *filename, int flag)
+ {
+-  return dlopen(filename, flag);
++  return __real_dlopen(filename, flag);
+ }
+ 
+ FILE *__wrap_popen(const char *command, const char *mode)

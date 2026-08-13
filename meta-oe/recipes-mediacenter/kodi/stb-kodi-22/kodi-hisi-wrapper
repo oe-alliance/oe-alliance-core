@@ -1,0 +1,147 @@
+#!/bin/sh
+
+# The legacy HiSilicon SDK objects request an executable process stack.  With
+# modern glibc that permission can only be established during initial program
+# loading, not when libstbplayer later dlopens its backend.  Preloading the two
+# SDK entry libraries retains the old directly-linked HiPlayer behaviour while
+# keeping the Kodi VideoPlayer integration in a loadable platform backend.
+#
+# The GFutures HD60/HD61 family installs the SDK below /usr/lib/hisilicon,
+# whereas Octagon/Dinobot receivers expose the same libraries in /usr/lib.
+# Select the installed layout at runtime so one package remains usable across
+# both HiSilicon driver variants.
+HISI_PRELOAD=""
+HISI_LIBDIR=""
+
+# enigma2.sh kills showiframe after Enigma2 exits on every Dinobot u* model.
+# Those receivers need the vendor process to retain the HDMI/GLES display, so
+# recreate it before Kodi starts.  The patched signal handler below then frees
+# only its unused video decoder while keeping the HDMI owner alive.
+showiframe_is_running()
+{
+    [ -r /dev/si.pid ] || return 1
+    SHOWIFRAME_PID="$(cat /dev/si.pid 2>/dev/null)"
+    case "${SHOWIFRAME_PID}" in
+        ''|*[!0-9]*) return 1 ;;
+    esac
+    [ -d "/proc/${SHOWIFRAME_PID}" ] || return 1
+    [ "$(readlink "/proc/${SHOWIFRAME_PID}/exe" 2>/dev/null)" = "/usr/bin/showiframe" ]
+}
+
+start_dinobot_showiframe()
+{
+    [ -r /proc/stb/info/boxtype ] || return 0
+    case "$(cat /proc/stb/info/boxtype 2>/dev/null)" in
+        u*) ;;
+        *) return 0 ;;
+    esac
+
+    showiframe_is_running && return 0
+    [ -x /usr/bin/showiframe ] || return 1
+
+    # showiframe retains its last decoded frame below Kodi's video plane.
+    # Use Enigma2's neutral frame first so letterbox/pillarbox areas stay
+    # black instead of exposing part of the OpenATV boot logo.
+    SHOWIFRAME_LOGO=""
+    for candidate in \
+        /usr/share/enigma2/black.mvi \
+        /usr/share/bootlogo.mvi \
+        /usr/share/enigma2/bootlogo.mvi \
+        /etc/enigma2/bootlogo.mvi; do
+        if [ -r "${candidate}" ]; then
+            SHOWIFRAME_LOGO="${candidate}"
+            break
+        fi
+    done
+    [ -n "${SHOWIFRAME_LOGO}" ] || return 1
+
+    rm -f /dev/si.pid
+    /usr/bin/showiframe "${SHOWIFRAME_LOGO}" >/tmp/showiframe-kodi.log 2>&1 &
+
+    SHOWIFRAME_WAIT=0
+    while ! showiframe_is_running && [ "${SHOWIFRAME_WAIT}" -lt 30 ]; do
+        sleep 0.1
+        SHOWIFRAME_WAIT=$((SHOWIFRAME_WAIT + 1))
+    done
+    showiframe_is_running
+}
+
+if [ -x /usr/bin/showiframe-release-video ]; then
+    start_dinobot_showiframe || \
+        echo "Kodi: failed to start Dinobot showiframe HDMI keeper" >&2
+    /usr/bin/showiframe-release-video || \
+        echo "Kodi: failed to release showiframe video decoder" >&2
+fi
+
+if [ -r /usr/lib/libhi_common.so ] && [ -r /usr/lib/libhi_msp.so ]; then
+    HISI_LIBDIR="/usr/lib"
+elif [ -r /usr/lib/hisilicon/libhi_common.so ] && [ -r /usr/lib/hisilicon/libhi_msp.so ]; then
+    HISI_LIBDIR="/usr/lib/hisilicon"
+fi
+
+if [ -n "${HISI_LIBDIR}" ]; then
+    HISI_PRELOAD="${HISI_LIBDIR}/libhi_common.so:${HISI_LIBDIR}/libhi_msp.so"
+
+    # AirDigital's MV200/MV310 SDK keeps the Annex K string helpers in a
+    # separate securec object.  libhi_common references them without a DT_NEEDED
+    # entry, so it must be loaded first when this vendor object is present.
+    if [ -r "${HISI_LIBDIR}/libhi_securec.so" ]; then
+        HISI_PRELOAD="${HISI_LIBDIR}/libhi_securec.so:${HISI_PRELOAD}"
+    fi
+
+    if [ -n "${LD_LIBRARY_PATH:-}" ]; then
+        LD_LIBRARY_PATH="${HISI_LIBDIR}:${LD_LIBRARY_PATH}"
+    else
+        LD_LIBRARY_PATH="${HISI_LIBDIR}"
+    fi
+    export LD_LIBRARY_PATH
+fi
+
+if [ -n "${HISI_PRELOAD}" ]; then
+    if [ -n "${LD_PRELOAD:-}" ]; then
+        LD_PRELOAD="${HISI_PRELOAD}:${LD_PRELOAD}"
+    else
+        LD_PRELOAD="${HISI_PRELOAD}"
+    fi
+    export LD_PRELOAD
+fi
+
+# The MV300 SDK and Octagon SX988 MV200 ADVCA stack leave DISPLAY1's virtual
+# screen at 1280x720 even when fb0 and Kodi's EGL surface are 1920x1080. HDMI
+# then shows only the upper-left part of Kodi. Use the vendor display API after
+# its libraries have been preloaded and before the first EGL surface is
+# created. Other already-tested MV200 receivers retain their existing display
+# initialisation.
+if [ -x /usr/bin/stb-hisi-display ] && \
+   { [ "$(cat /proc/stb/info/chipset 2>/dev/null)" = "3798mv300" ] || \
+     [ "$(cat /proc/stb/info/boxtype 2>/dev/null)" = "sx988" ]; }; then
+    /usr/bin/stb-hisi-display 1920 1080 || \
+        echo "Kodi: failed to set HiSilicon virtual screen to 1920x1080" >&2
+fi
+
+# The legacy firedtv audio driver crashes in kernel space when the DVB mixer
+# is touched before its player exists.  Keep the imported Enigma2 level, but
+# let ActiveAE apply it in software until playback has opened the audio path.
+if [ -d /sys/module/firedtv ]; then
+    KODI_STB_SOFTWARE_VOLUME=1
+    export KODI_STB_SOFTWARE_VOLUME
+fi
+
+# The Enigma2 launcher records its live master volume before exit. Pass the
+# state through enigma2.sh's clean environment so Kodi takes over the same
+# DVB mixer level instead of stacking an unrelated software volume.
+if [ -r /tmp/stb-kodi-e2-audio ]; then
+    IFS=' ' read -r KODI_STB_INITIAL_VOLUME KODI_STB_INITIAL_MUTED < /tmp/stb-kodi-e2-audio
+    case "${KODI_STB_INITIAL_VOLUME:-}" in
+        ''|*[!0-9]*) unset KODI_STB_INITIAL_VOLUME ;;
+        *) export KODI_STB_INITIAL_VOLUME ;;
+    esac
+    case "${KODI_STB_INITIAL_MUTED:-}" in
+        0|1) export KODI_STB_INITIAL_MUTED ;;
+        *) unset KODI_STB_INITIAL_MUTED ;;
+    esac
+fi
+
+. /usr/lib/kodi/kodi-stb-runtime.sh
+stb_kodi_run /usr/bin/kodi.real "$@"
+exit $?

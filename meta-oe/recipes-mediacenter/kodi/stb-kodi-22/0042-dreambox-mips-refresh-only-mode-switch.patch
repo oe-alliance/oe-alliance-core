@@ -1,0 +1,97 @@
+From 63da078e67c2ef40e46e4701f864c299f69e9a4d Mon Sep 17 00:00:00 2001
+From: OpenATV STB Kodi <noreply@openatv.local>
+Date: Mon, 10 Aug 2026 19:20:00 +0200
+Subject: [PATCH] Dreambox MIPSel: keep EGL alive for refresh-only switches
+
+DM820/DM7080 use the legacy VideoCore IV fbdev EGL stack. Recreating its EGL
+surface while playback is starting makes Kodi terminate immediately after
+OnLostDisplay. The HDMI mode itself can be changed safely when the framebuffer
+geometry stays unchanged.
+
+Handle refresh-only changes without destroying the window and do not issue a
+redundant FBIOPUT_VSCREENINFO for equal framebuffer dimensions. Resolution or
+stereo changes continue to use the complete window recreation path.
+---
+ xbmc/windowing/egl/EGLNativeTypeDreambox.cpp | 24 ++++++++++++++++++++----
+ xbmc/windowing/egl/WinSystemstb.cpp          | 21 +++++++++++++++++++++
+ 2 files changed, 41 insertions(+), 4 deletions(-)
+
+diff --git a/xbmc/windowing/egl/EGLNativeTypeDreambox.cpp b/xbmc/windowing/egl/EGLNativeTypeDreambox.cpp
+index c9cda83..beed6fb 100644
+--- a/xbmc/windowing/egl/EGLNativeTypeDreambox.cpp
++++ b/xbmc/windowing/egl/EGLNativeTypeDreambox.cpp
+@@ -207,6 +207,11 @@ bool CEGLNativeTypeDreambox::SetDisplayResolution(const char *mode)
+ {
+   // switch display resolution
+   CSysfsPath videomode{"/proc/stb/video/videomode"};
++  const std::string previousMode = videomode.Get<std::string>().value_or("");
++  RESOLUTION_INFO previousResolution;
++  const bool havePreviousResolution =
++      dreambox_mode_to_resolution(previousMode.c_str(), &previousResolution);
++
+   // If caller provided a mode, write it to procfs; otherwise use current mode.
+   if (mode && mode[0] != '\0')
+   {
+@@ -214,13 +219,24 @@ bool CEGLNativeTypeDreambox::SetDisplayResolution(const char *mode)
+     if (vm.is_open())
+       vm << mode;
+   }
+ 
+-  std::string currentMode = videomode.Get<std::string>().value_or("");
+-  const char* activeMode = (mode && mode[0] != '\0') ? mode : currentMode.c_str();
++  const std::string currentMode = videomode.Get<std::string>().value_or("");
++  const char* activeMode = (mode && mode[0] != '\0') ? mode : currentMode.c_str();
+ 
+   RESOLUTION_INFO res;
+-  dreambox_mode_to_resolution(activeMode, &res);
+-  SetFramebufferResolution(res);
++  if (!dreambox_mode_to_resolution(activeMode, &res))
++    return false;
++
++  if (!havePreviousResolution || previousResolution.iWidth != res.iWidth ||
++      previousResolution.iHeight != res.iHeight)
++  {
++    SetFramebufferResolution(res);
++  }
++  else
++  {
++    CLog::Log(LOGINFO, "Dreambox: HDMI refresh-only mode switch {} -> {}; keeping EGL framebuffer {}x{}",
++              previousMode, activeMode, res.iWidth, res.iHeight);
++  }
+ 
+   return true;
+ }
+diff --git a/xbmc/windowing/egl/WinSystemstb.cpp b/xbmc/windowing/egl/WinSystemstb.cpp
+index e1f60eb..90a0228 100644
+--- a/xbmc/windowing/egl/WinSystemstb.cpp
++++ b/xbmc/windowing/egl/WinSystemstb.cpp
+@@ -183,6 +183,27 @@ bool CWinSystemstb::CreateNewWindow(const std::string& name,
+     return true;
+   }
+ 
++  // The legacy Dreambox MIPSel fbdev EGL implementation cannot safely tear
++  // down and recreate its surface while the hardware decoder is starting.
++  // A refresh-only HDMI change keeps the exact same framebuffer geometry, so
++  // switch the physical timing without sending OnLostDisplay or touching EGL.
++  const bool refreshOnlyModeChange =
++      m_bWindowCreated && m_egl && current_resolution.iWidth == res.iWidth &&
++      current_resolution.iHeight == res.iHeight &&
++      current_resolution.iScreenWidth == res.iScreenWidth &&
++      current_resolution.iScreenHeight == res.iScreenHeight && m_bFullScreen == fullScreen &&
++      (current_resolution.dwFlags & D3DPRESENTFLAG_MODEMASK) ==
++          (res.dwFlags & D3DPRESENTFLAG_MODEMASK) &&
++      m_stereo_mode == stereo_mode;
++  if (refreshOnlyModeChange && m_egl->SetNativeResolution(res))
++  {
++    CLog::Log(LOGINFO, "CWinSystemstb: applied refresh-only mode change {:.3f} -> {:.3f} Hz without recreating EGL",
++              current_resolution.fRefreshRate, res.fRefreshRate);
++    m_stereo_mode = stereo_mode;
++    m_bFullScreen = fullScreen;
++    return true;
++  }
++
+   auto delay =
+       std::chrono::milliseconds(CServiceBroker::GetSettingsComponent()->GetSettings()->GetInt(
+                                     "videoscreen.delayrefreshchange") *
+-- 
+2.45.1

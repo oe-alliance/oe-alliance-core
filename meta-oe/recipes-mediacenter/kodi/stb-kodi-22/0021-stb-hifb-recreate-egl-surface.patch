@@ -1,0 +1,148 @@
+From 18bff270a235119d4a89a7dd174db70fc8d68f97 Mon Sep 17 00:00:00 2001
+From: OpenATV <oe-alliance@users.noreply.github.com>
+Date: Sat, 8 Aug 2026 16:00:00 +0200
+Subject: [PATCH] stb: recreate EGL surface after HiSilicon framebuffer sync
+
+HiSilicon hifb only latches the scaler transition reliably after an EGL
+surface has been made current at the temporary framebuffer size.  Delay the
+switch to the physical surface size until that point, then recreate and rebind
+the EGL surface.  This keeps Kodi's GUI and hardware video plane in the same
+1920x1080 coordinate space.
+---
+ xbmc/windowing/egl/WinSystemstb.cpp | 101 +++++++++++++++++++++++-----
+ 1 file changed, 85 insertions(+), 16 deletions(-)
+
+diff --git a/xbmc/windowing/egl/WinSystemstb.cpp b/xbmc/windowing/egl/WinSystemstb.cpp
+index dae44cd..e1f60eb 100644
+--- a/xbmc/windowing/egl/WinSystemstb.cpp
++++ b/xbmc/windowing/egl/WinSystemstb.cpp
+@@ -322,29 +322,13 @@ bool CWinSystemstb::CreateWindow(RESOLUTION_INFO &res)
+   CLog::Log(LOGINFO, "{}: created EGL surface {}x{} for requested GUI {}x{}", __FUNCTION__,
+             width, height, res.iWidth, res.iHeight);
+ 
+-  // Some fbdev/EGL combinations create a fixed physical surface while the
+-  // framebuffer still carries the temporary geometry requested before EGL.
+-  // Restore fbdev to the real surface size before Kodi starts rendering or
+-  // calculates the hardware video destination rectangle.
++  // Keep the initial framebuffer geometry until the first EGL surface has
++  // been made current. HiSilicon's hifb scaler only latches this transition
++  // reliably when the surface is subsequently recreated at the physical size.
+   RESOLUTION_INFO native;
+-  if (m_egl->GetNativeResolution(&native) &&
+-      (native.iWidth != width || native.iHeight != height))
+-  {
+-    RESOLUTION_INFO surfaceResolution = res;
+-    surfaceResolution.iWidth = width;
+-    surfaceResolution.iHeight = height;
+-    surfaceResolution.iScreenWidth = width;
+-    surfaceResolution.iScreenHeight = height;
+-    surfaceResolution.Overscan.left = 0;
+-    surfaceResolution.Overscan.top = 0;
+-    surfaceResolution.Overscan.right = width;
+-    surfaceResolution.Overscan.bottom = height;
+-    surfaceResolution.iSubtitles = static_cast<int>(0.965f * height);
+-    CLog::Log(LOGINFO, "{}: syncing framebuffer {}x{} to EGL surface {}x{}", __FUNCTION__,
+-              native.iWidth, native.iHeight, width, height);
+-    if (!m_egl->SetNativeResolution(surfaceResolution))
+-      CLog::Log(LOGWARNING, "{}: could not synchronize framebuffer to EGL surface", __FUNCTION__);
+-  }
++  const bool synchronizeFramebuffer =
++      m_egl->GetNativeResolution(&native) &&
++      (native.iWidth != width || native.iHeight != height);
+ 
+   if (width != res.iWidth || height != res.iHeight)
+   {
+@@ -405,6 +389,91 @@ bool CWinSystemstb::CreateWindow(RESOLUTION_INFO &res)
+       CLog::Log(LOGDEBUG, "{}: Could not set EGL_SWAP_BEHAVIOR",__FUNCTION__);
+   }
+ 
++  if (synchronizeFramebuffer)
++  {
++    RESOLUTION_INFO surfaceResolution = res;
++    surfaceResolution.iWidth = width;
++    surfaceResolution.iHeight = height;
++    surfaceResolution.iScreenWidth = width;
++    surfaceResolution.iScreenHeight = height;
++    surfaceResolution.Overscan.left = 0;
++    surfaceResolution.Overscan.top = 0;
++    surfaceResolution.Overscan.right = width;
++    surfaceResolution.Overscan.bottom = height;
++    surfaceResolution.iSubtitles = static_cast<int>(0.965f * height);
++
++    CLog::Log(LOGINFO, "{}: syncing framebuffer {}x{} to EGL surface {}x{} after first context bind",
++              __FUNCTION__, native.iWidth, native.iHeight, width, height);
++    if (!m_egl->SetNativeResolution(surfaceResolution))
++    {
++      CLog::Log(LOGWARNING, "{}: could not synchronize framebuffer to EGL surface", __FUNCTION__);
++    }
++    else
++    {
++      CLog::Log(LOGINFO, "{}: recreating EGL surface after framebuffer sync", __FUNCTION__);
++      m_egl->ReleaseContext(m_display);
++      if (!m_egl->DestroySurface(m_surface, m_display))
++      {
++        CLog::Log(LOGERROR, "{}: could not destroy the initial EGL surface", __FUNCTION__);
++        return false;
++      }
++      m_surface = EGL_NO_SURFACE;
++
++      if (!m_egl->CreateSurface(m_display, m_config, &m_surface))
++      {
++        CLog::Log(LOGERROR, "{}: could not recreate EGL surface after framebuffer sync", __FUNCTION__);
++        return false;
++      }
++
++      int recreatedWidth = 0;
++      int recreatedHeight = 0;
++      if (!m_egl->GetSurfaceSize(m_display, m_surface, &recreatedWidth, &recreatedHeight))
++      {
++        CLog::Log(LOGERROR, "{}: recreated EGL surface is invalid", __FUNCTION__);
++        return false;
++      }
++
++      CLog::Log(LOGINFO, "{}: recreated EGL surface is {}x{}", __FUNCTION__, recreatedWidth,
++                recreatedHeight);
++      if (!m_egl->BindContext(m_display, m_surface, m_context))
++      {
++        CLog::Log(LOGERROR, "{}: could not bind context to recreated EGL surface", __FUNCTION__);
++        return false;
++      }
++
++      if (guiAlgorithmDirtyRegions == DIRTYREGION_SOLVER_COST_REDUCTION ||
++          guiAlgorithmDirtyRegions == DIRTYREGION_SOLVER_UNION)
++      {
++        if (!m_egl->SurfaceAttrib(m_display, m_surface, EGL_SWAP_BEHAVIOR, EGL_BUFFER_PRESERVED))
++          CLog::Log(LOGDEBUG, "{}: could not restore EGL_SWAP_BEHAVIOR", __FUNCTION__);
++      }
++
++      width = recreatedWidth;
++      height = recreatedHeight;
++      if (width != res.iWidth || height != res.iHeight)
++      {
++        CLog::Log(LOGWARNING,
++                  "{}: recreated EGL surface differs from GUI size; using actual {}x{}",
++                  __FUNCTION__, width, height);
++        res.iWidth = width;
++        res.iHeight = height;
++        res.iScreenWidth = width;
++        res.iScreenHeight = height;
++        res.Overscan.left = 0;
++        res.Overscan.top = 0;
++        res.Overscan.right = width;
++        res.Overscan.bottom = height;
++        res.iSubtitles = static_cast<int>(0.965f * height);
++        res.strId = std::to_string(width) + "x" + std::to_string(height);
++        res.strMode = res.strId;
++        m_nWidth = width;
++        m_nHeight = height;
++        m_displayWidth = width;
++        m_displayHeight = height;
++      }
++    }
++  }
++
+   m_bWindowCreated = true;
+ 
+   return true;
+-- 
+2.45.2.windows.1

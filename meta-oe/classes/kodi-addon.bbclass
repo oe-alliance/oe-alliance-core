@@ -11,9 +11,9 @@ inherit cmake pkgconfig gettext
 ASNEEDED = ""
 
 EXTRA_OECMAKE = " \
-	  -DADDONS_TO_BUILD=inputstream.adaptive \
+	  -DADDONS_TO_BUILD=${KODIADDONNAME} \
 	  -DADDON_SRC_PREFIX=${UNPACKDIR} \
-	  -DCMAKE_BUILD_TYPE=Debug \
+	  -DCMAKE_BUILD_TYPE=RelWithDebInfo \
 	  -DCMAKE_INSTALL_PREFIX=${datadir}/kodi/addons \
           -DKODI_INCLUDE_DIR=${STAGING_INCDIR}/kodi \
           -DCMAKE_MODULE_PATH='${STAGING_DIR_HOST}${libdir}/kodi;${STAGING_DIR_HOST}${datadir}/kodi/cmake' \

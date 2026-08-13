@@ -1,0 +1,43 @@
+From 7a31c351ac5e05b912d9e4486c00a18c87782ddd Mon Sep 17 00:00:00 2001
+From: OpenATV STB Kodi <noreply@openatv.local>
+Date: Sun, 9 Aug 2026 16:55:00 +0200
+Subject: [PATCH] ALSA: avoid blocking drain on VuPlus sink switches
+
+The VuPlus Broadcom PCM implementation can block in snd_pcm_drain() for about
+ten seconds when the stream was prebuffered but has not consumed all queued
+frames. ActiveAE only waits five seconds for CONFIGURE, so the delayed sink
+reply corrupts the state-machine ordering and the next video cannot create an
+audio stream.
+
+Sink reconfiguration immediately closes the old PCM anyway. Drop its queued
+frames and prepare it instead of waiting in the vendor drain implementation.
+Limit this patch to VuPlus ARM machines in the recipe.
+---
+ xbmc/cores/AudioEngine/Sinks/AESinkALSA.cpp | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
+
+diff --git a/xbmc/cores/AudioEngine/Sinks/AESinkALSA.cpp b/xbmc/cores/AudioEngine/Sinks/AESinkALSA.cpp
+index 872def41f1..7f133325c8 100644
+--- a/xbmc/cores/AudioEngine/Sinks/AESinkALSA.cpp
++++ b/xbmc/cores/AudioEngine/Sinks/AESinkALSA.cpp
+@@ -991,8 +991,16 @@ void CAESinkALSA::Drain()
+   if (!m_pcm)
+     return;
+ 
+-  snd_pcm_drain(m_pcm);
+-  snd_pcm_prepare(m_pcm);
++  /* VuPlus' vendor PCM drain may wait around ten seconds here.  OpenSink()
++   * calls Drain() synchronously while ActiveAE's CONFIGURE request has a
++   * five-second timeout, so a blocking drain leaves both state machines out
++   * of sequence.  The sink is deinitialized immediately afterwards; queued
++   * samples therefore do not need to be played to completion. */
++  const int dropResult = snd_pcm_drop(m_pcm);
++  if (dropResult < 0)
++    CLog::Log(LOGWARNING, "CAESinkALSA::Drain - snd_pcm_drop returned {} ({})", dropResult,
++              snd_strerror(dropResult));
++  snd_pcm_prepare(m_pcm);
+ }
+ 
+ void CAESinkALSA::AppendParams(std::string &device, const std::string &params)
+-- 
+2.50.1

@@ -1,0 +1,54 @@
+From 49c6a27b51e68b6883480c054209db44ae72b3b0 Mon Sep 17 00:00:00 2001
+From: OpenATV STB Kodi <noreply@openatv.local>
+Date: Mon, 10 Aug 2026 22:15:00 +0200
+Subject: [PATCH] Vu+ MIPSel: keep EGL alive for refresh-only switches
+
+The legacy BCM7425 VUGLES stack cannot safely recreate its EGL surface while
+the hardware decoder is starting.  The exposed Vu+ modes all retain the same
+1920x1080 GUI and framebuffer geometry, so a refresh-only change only needs to
+update the physical HDMI timing.
+
+Avoid OnLostDisplay, EGL surface recreation and OnResetDisplay when only the
+refresh rate changes.  Resolution and stereo changes continue to use the full
+window recreation path.
+---
+ xbmc/windowing/egl/WinSystemstb.cpp | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
+
+diff --git a/xbmc/windowing/egl/WinSystemstb.cpp b/xbmc/windowing/egl/WinSystemstb.cpp
+index e1f60eb..d6f8d42 100644
+--- a/xbmc/windowing/egl/WinSystemstb.cpp
++++ b/xbmc/windowing/egl/WinSystemstb.cpp
+@@ -183,6 +183,29 @@ bool CWinSystemstb::CreateNewWindow(const std::string& name,
+     return true;
+   }
+ 
++#if defined(TARGET_VUPLUS_MIPSEL)
++  // VUGLES on legacy Vu+ MIPSel loses the renderer when its EGL surface is
++  // recreated while the hardware decoder starts.  A refresh-only HDMI mode
++  // change keeps the same 1920x1080 GUI and framebuffer geometry.
++  const bool refreshOnlyModeChange =
++      m_bWindowCreated && m_egl && current_resolution.iWidth == res.iWidth &&
++      current_resolution.iHeight == res.iHeight &&
++      current_resolution.iScreenWidth == res.iScreenWidth &&
++      current_resolution.iScreenHeight == res.iScreenHeight && m_bFullScreen == fullScreen &&
++      (current_resolution.dwFlags & D3DPRESENTFLAG_MODEMASK) ==
++          (res.dwFlags & D3DPRESENTFLAG_MODEMASK) &&
++      m_stereo_mode == stereo_mode;
++  if (refreshOnlyModeChange && m_egl->SetNativeResolution(res))
++  {
++    CLog::Log(LOGINFO,
++              "CWinSystemstb: Vu+ MIPSel refresh-only mode change {:.3f} -> {:.3f} Hz; keeping EGL",
++              current_resolution.fRefreshRate, res.fRefreshRate);
++    m_stereo_mode = stereo_mode;
++    m_bFullScreen = fullScreen;
++    return true;
++  }
++#endif
++
+   auto delay =
+       std::chrono::milliseconds(CServiceBroker::GetSettingsComponent()->GetSettings()->GetInt(
+                                     "videoscreen.delayrefreshchange") *
+-- 
+2.51.0
+
