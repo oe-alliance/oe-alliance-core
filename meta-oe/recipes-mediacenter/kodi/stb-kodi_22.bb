@@ -386,7 +386,6 @@ RDEPENDS:${PN} += "${@'libamcodec libstbplayer' if d.getVar('DREAM_AMLOGIC_STB')
     ${@'libstbplayer-backend-dream-aml' if d.getVar('DREAM_AMLOGIC_STB') == '1' else ''} \
     kodi-addon-script-xbmc-lcdproc \
     stb-lcdd \
-    enigma2-plugin-extensions-stb-kodi-launcher \
     xkeyboard-config \
 "
 RDEPENDS:${PN}:append:libc-glibc = " glibc-gconv-unicode glibc-gconv-utf-32"
