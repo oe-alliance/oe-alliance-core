@@ -106,15 +106,13 @@ if [ -n "${HISI_PRELOAD}" ]; then
     export LD_PRELOAD
 fi
 
-# The MV300 SDK and Octagon SX988 MV200 ADVCA stack leave DISPLAY1's virtual
-# screen at 1280x720 even when fb0 and Kodi's EGL surface are 1920x1080. HDMI
-# then shows only the upper-left part of Kodi. Use the vendor display API after
-# its libraries have been preloaded and before the first EGL surface is
-# created. Other already-tested MV200 receivers retain their existing display
-# initialisation.
-if [ -x /usr/bin/stb-hisi-display ] && \
-   { [ "$(cat /proc/stb/info/chipset 2>/dev/null)" = "3798mv300" ] || \
-     [ "$(cat /proc/stb/info/boxtype 2>/dev/null)" = "sx988" ]; }; then
+# HiSilicon SDK/display variants can leave DISPLAY1's virtual screen at
+# 1280x720 even when fb0 and Kodi's EGL surface are 1920x1080. HDMI then shows
+# only the upper-left part of Kodi. Normalise every HiSilicon receiver before
+# the first EGL surface is created. stb-hisi-display reads the current virtual
+# screen first and only calls the vendor setter when the geometry differs, so
+# receivers already initialised at 1920x1080 remain untouched.
+if [ -x /usr/bin/stb-hisi-display ]; then
     /usr/bin/stb-hisi-display 1920 1080 || \
         echo "Kodi: failed to set HiSilicon virtual screen to 1920x1080" >&2
 fi

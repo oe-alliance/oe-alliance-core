@@ -83,7 +83,7 @@ SRCREV = "55d3a2927116283f2288e115a359f8446d56dca1"
 # 'patch' doesn't support binary diffs
 PATCHTOOL = "git"
 
-PR = "r84"
+PR = "r85"
 
 PV = "22.0+gitr"
 # Keep package upgrades monotonic when the pinned master revision advances.
