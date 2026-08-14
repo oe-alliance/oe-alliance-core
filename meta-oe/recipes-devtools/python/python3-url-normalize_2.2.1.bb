@@ -4,6 +4,7 @@ AUTHOR = "Nikolay Panov <github@npanov.com>"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=0355248f9f4025eb234b21ac43b9ad7a"
 
+DEPENDS += "python3-wheel-native"
 RDEPENDS:${PN} += "python3-idna"
 
 PYPI_PACKAGE = "url_normalize"

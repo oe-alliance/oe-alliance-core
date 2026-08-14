@@ -3,7 +3,7 @@ HOMEPAGE = "https://github.com/caronc/apprise"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=d1700c468c259a17fcf7f51af33a4a2e"
 
-DEPENDS = "python3-babel-native"
+DEPENDS = "python3-babel-native python3-wheel-native"
 
 RDEPENDS:${PN} = "python3-pyyaml python3-markdown python3-click"
 

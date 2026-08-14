@@ -5,4 +5,6 @@ PYPI_PACKAGE = "zope_interface"
 SRC_URI:remove = "file://0001-Allow-using-setuptools-74.patch"
 SRC_URI[sha256sum] = "afb20c371a601d261b4f6edb53c3c418c249db1a9717b0baafc9a9bb39ba1224"
 
+DEPENDS += "python3-wheel-native"
+
 include python3-package-split.inc
