@@ -13,6 +13,44 @@
 HISI_PRELOAD=""
 HISI_LIBDIR=""
 
+# Several GFeatures-derived HiSilicon receivers leave Enigma2's last decoded
+# frame below Kodi's hardware video plane.  It becomes visible in letterbox or
+# pillarbox areas because those areas are intentionally not covered by the
+# decoded picture.  Decode the neutral Enigma2 frame once after Enigma2 has
+# exited and make sure showiframe releases video0 before Kodi starts.
+prime_hisi_black_background()
+{
+    [ -r /proc/stb/info/boxtype ] || return 0
+    case "$(cat /proc/stb/info/boxtype 2>/dev/null)" in
+        hd60|hd61|hd66se|\
+        multibox|multiboxpro|multiboxse|\
+        pulse4k|pulse4kmini|\
+        h8se|h9|h9combo|h9combose|h9se|h10|h11|i55plus|i55se) ;;
+        *) return 0 ;;
+    esac
+
+    [ -x /usr/bin/showiframe ] || return 1
+    [ -r /usr/share/enigma2/black.mvi ] || return 1
+
+    /usr/bin/showiframe /usr/share/enigma2/black.mvi \
+        >/tmp/showiframe-kodi-black.log 2>&1 &
+    BLACK_IFRAME_PID=$!
+    BLACK_IFRAME_WAIT=0
+    while kill -0 "${BLACK_IFRAME_PID}" 2>/dev/null && \
+          [ "${BLACK_IFRAME_WAIT}" -lt 30 ]; do
+        sleep 0.1
+        BLACK_IFRAME_WAIT=$((BLACK_IFRAME_WAIT + 1))
+    done
+
+    if kill -0 "${BLACK_IFRAME_PID}" 2>/dev/null; then
+        kill -TERM "${BLACK_IFRAME_PID}" 2>/dev/null || true
+        sleep 0.1
+        kill -KILL "${BLACK_IFRAME_PID}" 2>/dev/null || true
+    fi
+    wait "${BLACK_IFRAME_PID}" 2>/dev/null || true
+    return 0
+}
+
 # enigma2.sh kills showiframe after Enigma2 exits on every Dinobot u* model.
 # Those receivers need the vendor process to retain the HDMI/GLES display, so
 # recreate it before Kodi starts.  The patched signal handler below then frees
@@ -65,6 +103,9 @@ start_dinobot_showiframe()
     done
     showiframe_is_running
 }
+
+prime_hisi_black_background || \
+    echo "Kodi: failed to initialise a neutral HiSilicon video background" >&2
 
 if [ -x /usr/bin/showiframe-release-video ]; then
     start_dinobot_showiframe || \
