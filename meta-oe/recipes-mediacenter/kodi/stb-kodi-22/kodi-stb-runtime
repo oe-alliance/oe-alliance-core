@@ -35,6 +35,16 @@ stb_kodi_prepare_widevine()
     fi
 }
 
+stb_kodi_prepare_profile()
+{
+    # Keep Kodi's complete writable profile off the receiver's limited flash.
+    # This is a new profile location; legacy profiles below /home are not
+    # migrated or linked automatically.
+    HOME=/media/hdd
+    KODI_DATA=/media/hdd/.kodi
+    export HOME KODI_DATA
+}
+
 stb_kodi_stop_lcdd()
 {
     if [ -n "${STB_KODI_LCDD_PID:-}" ] && kill -0 "${STB_KODI_LCDD_PID}" 2>/dev/null; then
@@ -142,6 +152,7 @@ stb_kodi_run()
     STB_KODI_LCDD_PID=""
     STB_KODI_PLAYER_PID=""
 
+    stb_kodi_prepare_profile
     stb_kodi_load_hardware_state
     stb_kodi_prepare_widevine
 
