@@ -58,6 +58,13 @@ unlock() {
 	rm -f $LOCKFILE
 }
 
+enigma2_is_running() {
+	# Match the actual Enigma2 binary, not the persistent enigma2.sh launcher.
+	# The launcher remains alive while standalone Kodi owns the receiver and a
+	# broad process-list grep would therefore incorrectly disable udev mounts.
+	pidof enigma2 >/dev/null 2>&1
+}
+
 notify() {
 	enigma2_running=$1
 	# we don't really depend on the hotplug_e2_helper, but when it exists, call it
@@ -297,7 +304,7 @@ if [ "$ACTION" = "add" ]; then
 		fi
 	fi
 	# Check if the device is already in /etc/fstab
-	if grep -qs "$DEVNAME" /etc/fstab && ! ps aux | grep -v grep | grep -q enigma2; then
+	if grep -qs "$DEVNAME" /etc/fstab && ! enigma2_is_running; then
 		log "Device $DEVNAME is already in /etc/fstab, skipping mount."
 		exit 0
 	fi
@@ -308,7 +315,7 @@ if [ "$ACTION" = "add" ]; then
 		exit 0
 	fi
 
-	if grep -qs "UUID=$ID_FS_UUID" /etc/fstab && ! ps aux | grep -v grep | grep -q enigma2; then
+	if grep -qs "UUID=$ID_FS_UUID" /etc/fstab && ! enigma2_is_running; then
 		log "UUID $ID_FS_UUID is already in /etc/fstab, skipping mount."
 		exit 0
 	fi
@@ -354,7 +361,7 @@ if [ "$ACTION" = "add" ]; then
 		# If the device isn't mounted at this point, it isn't
 		# configured in fstab (note the root filesystem can show up as
 		# /dev/root in /proc/mounts, so check the device number too)
-		if ! ps aux | grep -v grep | grep -q enigma2; then
+		if ! enigma2_is_running; then
 			if expr $MAJOR "*" 256 + $MINOR != `stat -c %d /`; then
 				grep -q "^$DEVNAME " /proc/mounts || automount
 			fi
@@ -365,7 +372,7 @@ if [ "$ACTION" = "add" ]; then
 
 	# inform E2 of the hotplug action only for partitions
 	# Check if enigma2 process is running
-	if ps aux | grep -v grep | grep -q enigma2; then
+	if enigma2_is_running; then
 		log "enigma2 running"
 		notify true
 	else
@@ -393,11 +400,10 @@ if [ "$ACTION" = "remove" ] || [ "$ACTION" = "change" ] && [ -x "$UMOUNT" ] && [
 
 	# inform E2 of the hotplug action only for partitions
 	# Check if enigma2 process is running
-	if ps aux | grep -v grep | grep -q enigma2; then
+	if enigma2_is_running; then
 		log "enigma2 running"
 		notify true
 	else
 		notify false
 	fi
 fi
-
