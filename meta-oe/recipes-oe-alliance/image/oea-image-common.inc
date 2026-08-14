@@ -25,6 +25,13 @@ SSTATE_ALLOW_OVERLAP_FILES += "${DEPLOY_DIR_IMAGE}"
 IMAGE_LOCALES_ARCHIVE = ""
 IMAGE_LINGUAS = ""
 
+# minilocale already provides every locale-base-* an image could ask for,
+# so the IMAGE_LINGUAS-derived request is redundant. Since glibc-locale
+# stopped generating binary locales it would drag in the localedef source
+# tree under /usr/share/i18n (~4 MB). IMAGE_LINGUAS itself stays effective
+# for the gettext catalogs of userland tools.
+LINGUAS_INSTALL = ""
+
 IMAGE_FEATURES += "package-management allow-empty-password empty-root-password allow-root-login"
 
 inherit image
