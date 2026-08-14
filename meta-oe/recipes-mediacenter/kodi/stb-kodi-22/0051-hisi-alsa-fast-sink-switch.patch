@@ -1,0 +1,88 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: OpenATV STB Kodi <noreply@openatv.local>
+Date: Fri, 14 Aug 2026 10:30:00 +0200
+Subject: [PATCH] ALSA: avoid slow HiSilicon probing and blocking sink switches
+
+The vendor HISI-AIAO PCM used by the HiSilicon receivers can take several
+seconds for every unsupported ALSA plugin probe. Kodi's generic enumeration
+tries surround, rate-converter, OSS and USB devices and can therefore keep
+ActiveAE unavailable for more than twenty seconds after startup. These STBs
+have one real playback path, exposed consistently as sysdefault, so enumerate
+that path directly.
+
+The same driver blocks while ActiveAE closes the GUI sound stream before
+opening a movie stream. VideoPlayer then times out while adding its first audio
+packet and waits another ten seconds before resuming. Avoid the redundant
+drain/drop calls before closing the old handle and give the first packet enough
+time for the vendor sink switch to complete.
+
+This patch is selected only for HiSilicon builds by stb-kodi_22.bb.
+---
+ xbmc/cores/AudioEngine/Sinks/AESinkALSA.cpp | 24 +++++++++++++++++++-----
+ xbmc/cores/VideoPlayer/AudioSinkAE.cpp      |  4 +++-
+ 2 files changed, 22 insertions(+), 6 deletions(-)
+
+diff --git a/xbmc/cores/VideoPlayer/AudioSinkAE.cpp b/xbmc/cores/VideoPlayer/AudioSinkAE.cpp
+index d37a7b4c1b..844f9c47f2 100644
+--- a/xbmc/cores/VideoPlayer/AudioSinkAE.cpp
++++ b/xbmc/cores/VideoPlayer/AudioSinkAE.cpp
+@@ -126,6 +126,8 @@ unsigned int CAudioSinkAE::AddPackets(DVDAudioFrame& audioframe)
+   // timeouts when speed dropped below 1.0 during sync adjustments or buffering).
+   // Safety margin accounts for I/O latency and audio engine processing on slow hardware.
+-  constexpr double SAFETY_MARGIN_SECS = 2.0;
++  // HISI-AIAO needs about 2.7 seconds to close the GUI stream and configure
++  // the movie stream. Keep the first packet alive across that sink switch.
++  constexpr double SAFETY_MARGIN_SECS = 5.0;
+   auto deadline =
+       std::chrono::steady_clock::now() +
+       std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::duration<double>(
+diff --git a/xbmc/cores/AudioEngine/Sinks/AESinkALSA.cpp b/xbmc/cores/AudioEngine/Sinks/AESinkALSA.cpp
+index 3d1c9a80d7..c756ad6034 100644
+--- a/xbmc/cores/AudioEngine/Sinks/AESinkALSA.cpp
++++ b/xbmc/cores/AudioEngine/Sinks/AESinkALSA.cpp
+@@ -862,9 +862,13 @@ void CAESinkALSA::Deinitialize()
+ {
+   if (m_pcm)
+   {
+-    Stop();
+-    snd_pcm_close(m_pcm);
+-    m_pcm = NULL;
++    /* ActiveAESink calls Drain() immediately before Deinitialize(). On
++     * HISI-AIAO both drop calls can wait for the vendor buffer. Closing the
++     * nonblocking handle is sufficient to stop and release the old stream. */
++    snd_pcm_t* pcm = m_pcm;
++    m_pcm = NULL;
++    snd_pcm_nonblock(pcm, 1);
++    snd_pcm_close(pcm);
+   }
+ }
+ 
+@@ -988,7 +992,7 @@ void CAESinkALSA::Drain()
+   if (!m_pcm)
+     return;
+ 
+-  snd_pcm_drain(m_pcm);
+-  snd_pcm_prepare(m_pcm);
++  /* Deinitialize() closes this handle immediately. Do not wait for or drop
++   * the vendor buffer here; both operations can block the sink thread. */
+ }
+ 
+@@ -1128,6 +1132,16 @@ void CAESinkALSA::EnumerateDevicesEx(AEDeviceInfoList &list, bool force)
+   controlMonitor->Clear();
+ #endif
+ 
++  /* HiSilicon STBs expose one HISI-AIAO playback device. Generic ALSA hint
++   * enumeration probes unsupported surround and plugin devices; each failed
++   * vendor open can take several seconds. sysdefault is the stable direct
++   * route used by both Enigma2 and Kodi on all supported HiSilicon variants. */
++  EnumerateDevice(list, "sysdefault", "HiSilicon Audio", config.get());
++#if !defined(HAVE_X11)
++  controlMonitor->Start();
++#endif
++  return;
++
+   /* Always enumerate the default device.
+    * Note: If "default" is a stereo device, EnumerateDevice()
+    * will automatically add "@" instead to enable surroundXX mangling.
+-- 
+2.50.1

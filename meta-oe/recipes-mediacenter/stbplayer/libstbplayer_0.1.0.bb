@@ -2,7 +2,7 @@ SUMMARY = "Stable hardware-video backend ABI for STB Kodi"
 DESCRIPTION = "A small C ABI, loader and probe tool for machine-specific STB video backends."
 HOMEPAGE = "https://github.com/oe-alliance"
 
-PR = "r38"
+PR = "r39"
 
 LICENSE = "GPL-2.0-or-later"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=45071750435f2d50d503492ef8e003db"
@@ -24,6 +24,9 @@ BCM_DVB_STB = "${@'1' if (d.getVar('SOC_FAMILY') or '').startswith('bcm') and d.
 DREAM_AMLOGIC_STB = "${@'1' if d.getVar('MACHINE') in ('dreamone', 'dreamtwo') and d.getVar('SOC_FAMILY') == 'meson64' else '0'}"
 BCM_DVB_VARIANT = "${@'dreambox' if (d.getVar('MACHINE') or '').startswith('dm') else ('vuplus' if (d.getVar('MACHINE') or '').startswith('vu') else ('type2' if (d.getVar('MACHINE') or '') in ('xc7362', 'xc7346') else 'normal'))}"
 BCM_DVB_CONFIG = "${@d.getVar('DVBMEDIASINK_CONFIG') or ''}"
+# These receivers use the HiSilicon Linux-DVB/PES driver path used by E2's
+# dvbvideosink. Other HiSilicon families keep the direct AVPLAY backend.
+HISI_LINUX_DVB_MACHINES = "hd60 hd61 hd66se pulse4k pulse4kmini multibox multiboxpro multiboxse h8se h9 h9combo h9combose h9se h10 h11 i55plus i55se"
 
 PACKAGECONFIG ??= "${@'hisi-dvb' if d.getVar('HISI_STB') == '1' else ('bcm-dvb' if d.getVar('BCM_DVB_STB') == '1' else ('dream-aml' if d.getVar('DREAM_AMLOGIC_STB') == '1' else ''))}"
 PACKAGECONFIG[hisi-dvb] = "-DSTBP_BUILD_HISI_DVB_BACKEND=ON,-DSTBP_BUILD_HISI_DVB_BACKEND=OFF"
@@ -34,6 +37,7 @@ EXTRA_OECMAKE = " \
     -DSTBP_BUILD_TESTS=OFF \
     -DSTBP_DEFAULT_BACKEND_DIR=${libdir}/stbplayer \
     -DSTBP_HISI_MV310=${@'ON' if d.getVar('SOC_FAMILY') == 'hisi3798mv310' else 'OFF'} \
+    -DSTBP_HISI_LINUX_DVB=${@'ON' if d.getVar('MACHINE') in d.getVar('HISI_LINUX_DVB_MACHINES').split() else 'OFF'} \
     -DSTBP_BCM_DVB_VARIANT=${BCM_DVB_VARIANT} \
     -DSTBP_BCM_DVB_HAVE_HEVC=${@'ON' if '--with-h265' in d.getVar('BCM_DVB_CONFIG').split() else 'OFF'} \
     -DSTBP_BCM_DVB_HAVE_WMV=${@'ON' if '--with-wmv' in d.getVar('BCM_DVB_CONFIG').split() else 'OFF'} \
