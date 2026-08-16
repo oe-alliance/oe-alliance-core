@@ -1,0 +1,274 @@
+Add key events for IR remote controls of digital TV receivers
+
+Maps the evdev codes a receiver remote sends - KEY_RECORD, KEY_EXIT, KEY_OK,
+KEY_INFO, KEY_EPG, the colour keys and so on - onto SDL scancodes, which SDL
+otherwise reports as SDL_SCANCODE_UNKNOWN.
+
+Originally written by Marc Serdeliuc for SDL 2.0.8 and rebased onto 2.32.x.
+The new scancodes are appended at 291 so the values SDL assigns itself stay
+untouched, and the three renames the original carried (SDLK_AUDIOPLAY to
+SDLK_PLAYPAUSE and friends) are dropped - SDL maps KEY_PLAYPAUSE, KEY_REWIND
+and KEY_FASTFORWARD correctly on its own now.
+
+Upstream-Status: Inappropriate [oe-alliance specific]
+
+--- a/include/SDL_scancode.h
++++ b/include/SDL_scancode.h
+@@ -427,6 +427,42 @@
+ 
+     /* @} *//* Mobile keys */
+ 
++
++    /* Keys found on IR remote controls of digital TV receivers. */
++    SDL_SCANCODE_FILE = 291,
++    SDL_SCANCODE_RECORD = 292,
++    SDL_SCANCODE_EXIT = 293,
++    SDL_SCANCODE_OK = 294,
++    SDL_SCANCODE_OPTION = 295,
++    SDL_SCANCODE_INFO = 296,
++    SDL_SCANCODE_TIME = 297,
++    SDL_SCANCODE_ARCHIVE = 298,
++    SDL_SCANCODE_PROGRAM = 299,
++    SDL_SCANCODE_FAVORITES = 300,
++    SDL_SCANCODE_EPG = 301,
++    SDL_SCANCODE_PVR = 302,
++    SDL_SCANCODE_SUBTITLE = 303,
++    SDL_SCANCODE_SCREEN = 304,
++    SDL_SCANCODE_TV = 305,
++    SDL_SCANCODE_SAT = 306,
++    SDL_SCANCODE_RADIO = 307,
++    SDL_SCANCODE_TEXT = 308,
++    SDL_SCANCODE_AUX = 309,
++    SDL_SCANCODE_AUDIO = 310,
++    SDL_SCANCODE_VIDEO = 311,
++    SDL_SCANCODE_DIRECTORY = 312,
++    SDL_SCANCODE_LIST = 313,
++    SDL_SCANCODE_RED = 314,
++    SDL_SCANCODE_GREEN = 315,
++    SDL_SCANCODE_YELLOW = 316,
++    SDL_SCANCODE_BLUE = 317,
++    SDL_SCANCODE_CHANNELUP = 318,
++    SDL_SCANCODE_CHANNELDOWN = 319,
++    SDL_SCANCODE_LAST = 320,
++    SDL_SCANCODE_NEXT = 321,
++    SDL_SCANCODE_RESTART = 322,
++    SDL_SCANCODE_PREVIOUS = 323,
++
+     /* Add any other keys here. */
+ 
+     SDL_NUM_SCANCODES = 512 /**< not a key, just marks the number of scancodes
+--- a/include/SDL_keycode.h
++++ b/include/SDL_keycode.h
+@@ -323,7 +323,42 @@
+     SDLK_SOFTLEFT = SDL_SCANCODE_TO_KEYCODE(SDL_SCANCODE_SOFTLEFT),
+     SDLK_SOFTRIGHT = SDL_SCANCODE_TO_KEYCODE(SDL_SCANCODE_SOFTRIGHT),
+     SDLK_CALL = SDL_SCANCODE_TO_KEYCODE(SDL_SCANCODE_CALL),
+-    SDLK_ENDCALL = SDL_SCANCODE_TO_KEYCODE(SDL_SCANCODE_ENDCALL)
++    SDLK_ENDCALL = SDL_SCANCODE_TO_KEYCODE(SDL_SCANCODE_ENDCALL),
++
++    /* Keys found on IR remote controls of digital TV receivers. */
++    SDLK_FILE = SDL_SCANCODE_TO_KEYCODE(SDL_SCANCODE_FILE),
++    SDLK_RECORD = SDL_SCANCODE_TO_KEYCODE(SDL_SCANCODE_RECORD),
++    SDLK_EXIT = SDL_SCANCODE_TO_KEYCODE(SDL_SCANCODE_EXIT),
++    SDLK_OK = SDL_SCANCODE_TO_KEYCODE(SDL_SCANCODE_OK),
++    SDLK_OPTION = SDL_SCANCODE_TO_KEYCODE(SDL_SCANCODE_OPTION),
++    SDLK_INFO = SDL_SCANCODE_TO_KEYCODE(SDL_SCANCODE_INFO),
++    SDLK_TIME = SDL_SCANCODE_TO_KEYCODE(SDL_SCANCODE_TIME),
++    SDLK_ARCHIVE = SDL_SCANCODE_TO_KEYCODE(SDL_SCANCODE_ARCHIVE),
++    SDLK_PROGRAM = SDL_SCANCODE_TO_KEYCODE(SDL_SCANCODE_PROGRAM),
++    SDLK_FAVORITES = SDL_SCANCODE_TO_KEYCODE(SDL_SCANCODE_FAVORITES),
++    SDLK_EPG = SDL_SCANCODE_TO_KEYCODE(SDL_SCANCODE_EPG),
++    SDLK_PVR = SDL_SCANCODE_TO_KEYCODE(SDL_SCANCODE_PVR),
++    SDLK_SUBTITLE = SDL_SCANCODE_TO_KEYCODE(SDL_SCANCODE_SUBTITLE),
++    SDLK_SCREEN = SDL_SCANCODE_TO_KEYCODE(SDL_SCANCODE_SCREEN),
++    SDLK_TV = SDL_SCANCODE_TO_KEYCODE(SDL_SCANCODE_TV),
++    SDLK_SAT = SDL_SCANCODE_TO_KEYCODE(SDL_SCANCODE_SAT),
++    SDLK_RADIO = SDL_SCANCODE_TO_KEYCODE(SDL_SCANCODE_RADIO),
++    SDLK_TEXT = SDL_SCANCODE_TO_KEYCODE(SDL_SCANCODE_TEXT),
++    SDLK_AUX = SDL_SCANCODE_TO_KEYCODE(SDL_SCANCODE_AUX),
++    SDLK_AUDIO = SDL_SCANCODE_TO_KEYCODE(SDL_SCANCODE_AUDIO),
++    SDLK_VIDEO = SDL_SCANCODE_TO_KEYCODE(SDL_SCANCODE_VIDEO),
++    SDLK_DIRECTORY = SDL_SCANCODE_TO_KEYCODE(SDL_SCANCODE_DIRECTORY),
++    SDLK_LIST = SDL_SCANCODE_TO_KEYCODE(SDL_SCANCODE_LIST),
++    SDLK_RED = SDL_SCANCODE_TO_KEYCODE(SDL_SCANCODE_RED),
++    SDLK_GREEN = SDL_SCANCODE_TO_KEYCODE(SDL_SCANCODE_GREEN),
++    SDLK_YELLOW = SDL_SCANCODE_TO_KEYCODE(SDL_SCANCODE_YELLOW),
++    SDLK_BLUE = SDL_SCANCODE_TO_KEYCODE(SDL_SCANCODE_BLUE),
++    SDLK_CHANNELUP = SDL_SCANCODE_TO_KEYCODE(SDL_SCANCODE_CHANNELUP),
++    SDLK_CHANNELDOWN = SDL_SCANCODE_TO_KEYCODE(SDL_SCANCODE_CHANNELDOWN),
++    SDLK_LAST = SDL_SCANCODE_TO_KEYCODE(SDL_SCANCODE_LAST),
++    SDLK_NEXT = SDL_SCANCODE_TO_KEYCODE(SDL_SCANCODE_NEXT),
++    SDLK_RESTART = SDL_SCANCODE_TO_KEYCODE(SDL_SCANCODE_RESTART),
++    SDLK_PREVIOUS = SDL_SCANCODE_TO_KEYCODE(SDL_SCANCODE_PREVIOUS)
+ } SDL_KeyCode;
+ 
+ /**
+--- a/src/events/scancodes_linux.h
++++ b/src/events/scancodes_linux.h
+@@ -170,7 +170,7 @@
+     /* 141, 0x08d */    SDL_SCANCODE_UNKNOWN,           /* KEY_SETUP */
+     /* 142, 0x08e */    SDL_SCANCODE_SLEEP,             /* KEY_SLEEP */
+     /* 143, 0x08f */    SDL_SCANCODE_UNKNOWN,           /* KEY_WAKEUP */
+-    /* 144, 0x090 */    SDL_SCANCODE_UNKNOWN,           /* KEY_FILE */
++    /* 144, 0x090 */    SDL_SCANCODE_FILE,           /* KEY_FILE */
+     /* 145, 0x091 */    SDL_SCANCODE_UNKNOWN,           /* KEY_SENDFILE */
+     /* 146, 0x092 */    SDL_SCANCODE_UNKNOWN,           /* KEY_DELETEFILE */
+     /* 147, 0x093 */    SDL_SCANCODE_UNKNOWN,           /* KEY_XFER */
+@@ -193,14 +193,14 @@
+     /* 164, 0x0a4 */    SDL_SCANCODE_AUDIOPLAY,         /* KEY_PLAYPAUSE */
+     /* 165, 0x0a5 */    SDL_SCANCODE_AUDIOPREV,         /* KEY_PREVIOUSSONG */
+     /* 166, 0x0a6 */    SDL_SCANCODE_AUDIOSTOP,         /* KEY_STOPCD */
+-    /* 167, 0x0a7 */    SDL_SCANCODE_UNKNOWN,           /* KEY_RECORD */
++    /* 167, 0x0a7 */    SDL_SCANCODE_RECORD,           /* KEY_RECORD */
+     /* 168, 0x0a8 */    SDL_SCANCODE_AUDIOREWIND,       /* KEY_REWIND */
+     /* 169, 0x0a9 */    SDL_SCANCODE_UNKNOWN,           /* KEY_PHONE */
+     /* 170, 0x0aa */    SDL_SCANCODE_UNKNOWN,           /* KEY_ISO */
+     /* 171, 0x0ab */    SDL_SCANCODE_UNKNOWN,           /* KEY_CONFIG */
+     /* 172, 0x0ac */    SDL_SCANCODE_AC_HOME,           /* KEY_HOMEPAGE */
+     /* 173, 0x0ad */    SDL_SCANCODE_AC_REFRESH,        /* KEY_REFRESH */
+-    /* 174, 0x0ae */    SDL_SCANCODE_UNKNOWN,           /* KEY_EXIT */
++    /* 174, 0x0ae */    SDL_SCANCODE_EXIT,           /* KEY_EXIT */
+     /* 175, 0x0af */    SDL_SCANCODE_UNKNOWN,           /* KEY_MOVE */
+     /* 176, 0x0b0 */    SDL_SCANCODE_UNKNOWN,           /* KEY_EDIT */
+     /* 177, 0x0b1 */    SDL_SCANCODE_UNKNOWN,           /* KEY_SCROLLUP */
+@@ -379,67 +379,67 @@
+     /* 349, 0x15d */    SDL_SCANCODE_UNKNOWN,
+     /* 350, 0x15e */    SDL_SCANCODE_UNKNOWN,
+     /* 351, 0x15f */    SDL_SCANCODE_UNKNOWN,
+-    /* 352, 0x160 */    SDL_SCANCODE_UNKNOWN,            /* KEY_OK */
++    /* 352, 0x160 */    SDL_SCANCODE_OK,            /* KEY_OK */
+     /* 353, 0x161 */    SDL_SCANCODE_UNKNOWN,            /* KEY_SELECT */
+     /* 354, 0x162 */    SDL_SCANCODE_UNKNOWN,            /* KEY_GOTO */
+     /* 355, 0x163 */    SDL_SCANCODE_UNKNOWN,            /* KEY_CLEAR */
+     /* 356, 0x164 */    SDL_SCANCODE_UNKNOWN,            /* KEY_POWER2 */
+-    /* 357, 0x165 */    SDL_SCANCODE_UNKNOWN,            /* KEY_OPTION */
+-    /* 358, 0x166 */    SDL_SCANCODE_UNKNOWN,            /* KEY_INFO */
+-    /* 359, 0x167 */    SDL_SCANCODE_UNKNOWN,            /* KEY_TIME */
++    /* 357, 0x165 */    SDL_SCANCODE_OPTION,            /* KEY_OPTION */
++    /* 358, 0x166 */    SDL_SCANCODE_INFO,            /* KEY_INFO */
++    /* 359, 0x167 */    SDL_SCANCODE_TIME,            /* KEY_TIME */
+     /* 360, 0x168 */    SDL_SCANCODE_UNKNOWN,            /* KEY_VENDOR */
+-    /* 361, 0x169 */    SDL_SCANCODE_UNKNOWN,            /* KEY_ARCHIVE */
+-    /* 362, 0x16a */    SDL_SCANCODE_UNKNOWN,            /* KEY_PROGRAM */
++    /* 361, 0x169 */    SDL_SCANCODE_ARCHIVE,            /* KEY_ARCHIVE */
++    /* 362, 0x16a */    SDL_SCANCODE_PROGRAM,            /* KEY_PROGRAM */
+     /* 363, 0x16b */    SDL_SCANCODE_UNKNOWN,            /* KEY_CHANNEL */
+-    /* 364, 0x16c */    SDL_SCANCODE_UNKNOWN,            /* KEY_FAVORITES */
+-    /* 365, 0x16d */    SDL_SCANCODE_UNKNOWN,            /* KEY_EPG */
+-    /* 366, 0x16e */    SDL_SCANCODE_UNKNOWN,            /* KEY_PVR */
++    /* 364, 0x16c */    SDL_SCANCODE_FAVORITES,            /* KEY_FAVORITES */
++    /* 365, 0x16d */    SDL_SCANCODE_EPG,            /* KEY_EPG */
++    /* 366, 0x16e */    SDL_SCANCODE_PVR,            /* KEY_PVR */
+     /* 367, 0x16f */    SDL_SCANCODE_UNKNOWN,            /* KEY_MHP */
+     /* 368, 0x170 */    SDL_SCANCODE_UNKNOWN,            /* KEY_LANGUAGE */
+     /* 369, 0x171 */    SDL_SCANCODE_UNKNOWN,            /* KEY_TITLE */
+-    /* 370, 0x172 */    SDL_SCANCODE_UNKNOWN,            /* KEY_SUBTITLE */
++    /* 370, 0x172 */    SDL_SCANCODE_SUBTITLE,            /* KEY_SUBTITLE */
+     /* 371, 0x173 */    SDL_SCANCODE_UNKNOWN,            /* KEY_ANGLE */
+     /* 372, 0x174 */    SDL_SCANCODE_UNKNOWN,            /* KEY_FULL_SCREEN */
+-    /* 373, 0x175 */    SDL_SCANCODE_UNKNOWN,            /* KEY_MODE */
++    /* 373, 0x175 */    SDL_SCANCODE_MODE,            /* KEY_MODE */
+     /* 374, 0x176 */    SDL_SCANCODE_UNKNOWN,            /* KEY_KEYBOARD */
+-    /* 375, 0x177 */    SDL_SCANCODE_UNKNOWN,            /* KEY_ASPECT_RATIO */
++    /* 375, 0x177 */    SDL_SCANCODE_SCREEN,            /* KEY_ASPECT_RATIO */
+     /* 376, 0x178 */    SDL_SCANCODE_UNKNOWN,            /* KEY_PC */
+-    /* 377, 0x179 */    SDL_SCANCODE_UNKNOWN,            /* KEY_TV */
++    /* 377, 0x179 */    SDL_SCANCODE_TV,            /* KEY_TV */
+     /* 378, 0x17a */    SDL_SCANCODE_UNKNOWN,            /* KEY_TV2 */
+     /* 379, 0x17b */    SDL_SCANCODE_UNKNOWN,            /* KEY_VCR */
+     /* 380, 0x17c */    SDL_SCANCODE_UNKNOWN,            /* KEY_VCR2 */
+-    /* 381, 0x17d */    SDL_SCANCODE_UNKNOWN,            /* KEY_SAT */
++    /* 381, 0x17d */    SDL_SCANCODE_SAT,            /* KEY_SAT */
+     /* 382, 0x17e */    SDL_SCANCODE_UNKNOWN,            /* KEY_SAT2 */
+     /* 383, 0x17f */    SDL_SCANCODE_UNKNOWN,            /* KEY_CD */
+     /* 384, 0x180 */    SDL_SCANCODE_UNKNOWN,            /* KEY_TAPE */
+-    /* 385, 0x181 */    SDL_SCANCODE_UNKNOWN,            /* KEY_RADIO */
++    /* 385, 0x181 */    SDL_SCANCODE_RADIO,            /* KEY_RADIO */
+     /* 386, 0x182 */    SDL_SCANCODE_UNKNOWN,            /* KEY_TUNER */
+     /* 387, 0x183 */    SDL_SCANCODE_UNKNOWN,            /* KEY_PLAYER */
+-    /* 388, 0x184 */    SDL_SCANCODE_UNKNOWN,            /* KEY_TEXT */
++    /* 388, 0x184 */    SDL_SCANCODE_TEXT,            /* KEY_TEXT */
+     /* 389, 0x185 */    SDL_SCANCODE_UNKNOWN,            /* KEY_DVD */
+-    /* 390, 0x186 */    SDL_SCANCODE_UNKNOWN,            /* KEY_AUX */
++    /* 390, 0x186 */    SDL_SCANCODE_AUX,            /* KEY_AUX */
+     /* 391, 0x187 */    SDL_SCANCODE_UNKNOWN,            /* KEY_MP3 */
+-    /* 392, 0x188 */    SDL_SCANCODE_UNKNOWN,            /* KEY_AUDIO */
+-    /* 393, 0x189 */    SDL_SCANCODE_UNKNOWN,            /* KEY_VIDEO */
+-    /* 394, 0x18a */    SDL_SCANCODE_UNKNOWN,            /* KEY_DIRECTORY */
+-    /* 395, 0x18b */    SDL_SCANCODE_UNKNOWN,            /* KEY_LIST */
++    /* 392, 0x188 */    SDL_SCANCODE_AUDIO,            /* KEY_AUDIO */
++    /* 393, 0x189 */    SDL_SCANCODE_VIDEO,            /* KEY_VIDEO */
++    /* 394, 0x18a */    SDL_SCANCODE_DIRECTORY,            /* KEY_DIRECTORY */
++    /* 395, 0x18b */    SDL_SCANCODE_LIST,            /* KEY_LIST */
+     /* 396, 0x18c */    SDL_SCANCODE_UNKNOWN,            /* KEY_MEMO */
+     /* 397, 0x18d */    SDL_SCANCODE_UNKNOWN,            /* KEY_CALENDAR */
+-    /* 398, 0x18e */    SDL_SCANCODE_UNKNOWN,            /* KEY_RED */
+-    /* 399, 0x18f */    SDL_SCANCODE_UNKNOWN,            /* KEY_GREEN */
+-    /* 400, 0x190 */    SDL_SCANCODE_UNKNOWN,            /* KEY_YELLOW */
+-    /* 401, 0x191 */    SDL_SCANCODE_UNKNOWN,            /* KEY_BLUE */
+-    /* 402, 0x192 */    SDL_SCANCODE_UNKNOWN,            /* KEY_CHANNELUP */
+-    /* 403, 0x193 */    SDL_SCANCODE_UNKNOWN,            /* KEY_CHANNELDOWN */
++    /* 398, 0x18e */    SDL_SCANCODE_RED,            /* KEY_RED */
++    /* 399, 0x18f */    SDL_SCANCODE_GREEN,            /* KEY_GREEN */
++    /* 400, 0x190 */    SDL_SCANCODE_YELLOW,            /* KEY_YELLOW */
++    /* 401, 0x191 */    SDL_SCANCODE_BLUE,            /* KEY_BLUE */
++    /* 402, 0x192 */    SDL_SCANCODE_CHANNELUP,            /* KEY_CHANNELUP */
++    /* 403, 0x193 */    SDL_SCANCODE_CHANNELDOWN,            /* KEY_CHANNELDOWN */
+     /* 404, 0x194 */    SDL_SCANCODE_UNKNOWN,            /* KEY_FIRST */
+-    /* 405, 0x195 */    SDL_SCANCODE_UNKNOWN,            /* KEY_LAST */
++    /* 405, 0x195 */    SDL_SCANCODE_LAST,            /* KEY_LAST */
+     /* 406, 0x196 */    SDL_SCANCODE_UNKNOWN,            /* KEY_AB */
+-    /* 407, 0x197 */    SDL_SCANCODE_UNKNOWN,            /* KEY_NEXT */
+-    /* 408, 0x198 */    SDL_SCANCODE_UNKNOWN,            /* KEY_RESTART */
++    /* 407, 0x197 */    SDL_SCANCODE_NEXT,            /* KEY_NEXT */
++    /* 408, 0x198 */    SDL_SCANCODE_RESTART,            /* KEY_RESTART */
+     /* 409, 0x199 */    SDL_SCANCODE_UNKNOWN,            /* KEY_SLOW */
+     /* 410, 0x19a */    SDL_SCANCODE_UNKNOWN,            /* KEY_SHUFFLE */
+     /* 411, 0x19b */    SDL_SCANCODE_UNKNOWN,            /* KEY_BREAK */
+-    /* 412, 0x19c */    SDL_SCANCODE_UNKNOWN,            /* KEY_PREVIOUS */
++    /* 412, 0x19c */    SDL_SCANCODE_PREVIOUS,            /* KEY_PREVIOUS */
+     /* 413, 0x19d */    SDL_SCANCODE_UNKNOWN,            /* KEY_DIGITS */
+     /* 414, 0x19e */    SDL_SCANCODE_UNKNOWN,            /* KEY_TEEN */
+     /* 415, 0x19f */    SDL_SCANCODE_UNKNOWN,            /* KEY_TWEN */
+--- a/src/events/SDL_keyboard.c
++++ b/src/events/SDL_keyboard.c
+@@ -345,6 +345,39 @@
+     /* 288 */ SDLK_SOFTRIGHT,
+     /* 289 */ SDLK_CALL,
+     /* 290 */ SDLK_ENDCALL,
++    /* 291 */ SDLK_FILE,
++    /* 292 */ SDLK_RECORD,
++    /* 293 */ SDLK_EXIT,
++    /* 294 */ SDLK_OK,
++    /* 295 */ SDLK_OPTION,
++    /* 296 */ SDLK_INFO,
++    /* 297 */ SDLK_TIME,
++    /* 298 */ SDLK_ARCHIVE,
++    /* 299 */ SDLK_PROGRAM,
++    /* 300 */ SDLK_FAVORITES,
++    /* 301 */ SDLK_EPG,
++    /* 302 */ SDLK_PVR,
++    /* 303 */ SDLK_SUBTITLE,
++    /* 304 */ SDLK_SCREEN,
++    /* 305 */ SDLK_TV,
++    /* 306 */ SDLK_SAT,
++    /* 307 */ SDLK_RADIO,
++    /* 308 */ SDLK_TEXT,
++    /* 309 */ SDLK_AUX,
++    /* 310 */ SDLK_AUDIO,
++    /* 311 */ SDLK_VIDEO,
++    /* 312 */ SDLK_DIRECTORY,
++    /* 313 */ SDLK_LIST,
++    /* 314 */ SDLK_RED,
++    /* 315 */ SDLK_GREEN,
++    /* 316 */ SDLK_YELLOW,
++    /* 317 */ SDLK_BLUE,
++    /* 318 */ SDLK_CHANNELUP,
++    /* 319 */ SDLK_CHANNELDOWN,
++    /* 320 */ SDLK_LAST,
++    /* 321 */ SDLK_NEXT,
++    /* 322 */ SDLK_RESTART,
++    /* 323 */ SDLK_PREVIOUS,
+ };
+ 
+ static const char *SDL_scancode_names[SDL_NUM_SCANCODES] = {
