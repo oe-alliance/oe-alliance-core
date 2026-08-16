@@ -93,5 +93,3 @@ require conf/machine/include/arm/armv7a/tune-cortexa15.inc
 require conf/machine/include/soc-family.inc
 require conf/machine/box-hardware.inc
 
-BBMASK = "meta-vuplus/recipes-graphics/"
-BBMASK += "meta-vuplus/recipes-webkit/"

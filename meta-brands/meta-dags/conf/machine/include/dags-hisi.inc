@@ -79,6 +79,4 @@ IMAGE_CMD:dagsemmc:append = "\
     rm -Rf release; \
     "
 
-BBMASK = "meta-vuplus/recipes-graphics/"
-BBMASK += "meta-vuplus/recipes-webkit/"
 
