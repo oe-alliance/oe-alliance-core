@@ -7,3 +7,5 @@ do_install:append() {
 	install -d ${D}${sysconfdir}/init.d
 	install -m 755 ${UNPACKDIR}/mpd.init ${D}${sysconfdir}/init.d/mpd
 }
+
+DEPENDS:remove = "boost"
