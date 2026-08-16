@@ -5,6 +5,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 require conf/license/license-close.inc
 
 PROVIDES = "virtual/libgles2 virtual/egl"
+RPROVIDES:${PN} = "virtual-libgles2 virtual-egl libv3dplatform.so libv3ddriver.so libGLESv2.so libEGL.so"
 
 DEPENDS = "patchelf-native"
 
