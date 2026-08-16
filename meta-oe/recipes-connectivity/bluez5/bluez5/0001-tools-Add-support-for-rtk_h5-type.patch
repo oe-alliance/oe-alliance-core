@@ -1,59 +1,19 @@
-diff --git a/Makefile.in b/Makefile.in
-index 5859d23..c48c06f 100644
---- a/Makefile.in
-+++ b/Makefile.in
-@@ -1331,7 +1331,7 @@ am__tools_hciattach_SOURCES_DIST = tools/hciattach.c tools/hciattach.h \
- 	tools/hciattach_st.c tools/hciattach_ti.c \
- 	tools/hciattach_tialt.c tools/hciattach_ath3k.c \
- 	tools/hciattach_qualcomm.c tools/hciattach_intel.c \
--	tools/hciattach_bcm43xx.c
-+	tools/hciattach_bcm43xx.c tools/hciattach_rtk.c
- @DEPRECATED_TRUE@@TOOLS_TRUE@am_tools_hciattach_OBJECTS =  \
- @DEPRECATED_TRUE@@TOOLS_TRUE@	tools/hciattach.$(OBJEXT) \
- @DEPRECATED_TRUE@@TOOLS_TRUE@	tools/hciattach_st.$(OBJEXT) \
-@@ -1340,7 +1340,8 @@ am__tools_hciattach_SOURCES_DIST = tools/hciattach.c tools/hciattach.h \
- @DEPRECATED_TRUE@@TOOLS_TRUE@	tools/hciattach_ath3k.$(OBJEXT) \
- @DEPRECATED_TRUE@@TOOLS_TRUE@	tools/hciattach_qualcomm.$(OBJEXT) \
- @DEPRECATED_TRUE@@TOOLS_TRUE@	tools/hciattach_intel.$(OBJEXT) \
--@DEPRECATED_TRUE@@TOOLS_TRUE@	tools/hciattach_bcm43xx.$(OBJEXT)
-+@DEPRECATED_TRUE@@TOOLS_TRUE@	tools/hciattach_bcm43xx.$(OBJEXT) \
-+@DEPRECATED_TRUE@@TOOLS_TRUE@	tools/hciattach_rtk.$(OBJEXT)
- tools_hciattach_OBJECTS = $(am_tools_hciattach_OBJECTS)
- @DEPRECATED_TRUE@@TOOLS_TRUE@tools_hciattach_DEPENDENCIES =  \
- @DEPRECATED_TRUE@@TOOLS_TRUE@	lib/libbluetooth-internal.la
-@@ -2783,7 +2784,9 @@ unit_tests = $(am__append_52) unit/test-eir unit/test-uuid \
- @DEPRECATED_TRUE@@TOOLS_TRUE@						tools/hciattach_ath3k.c \
- @DEPRECATED_TRUE@@TOOLS_TRUE@						tools/hciattach_qualcomm.c \
- @DEPRECATED_TRUE@@TOOLS_TRUE@						tools/hciattach_intel.c \
--@DEPRECATED_TRUE@@TOOLS_TRUE@						tools/hciattach_bcm43xx.c
-+@DEPRECATED_TRUE@@TOOLS_TRUE@						tools/hciattach_bcm43xx.c \
-+@DEPRECATED_TRUE@@TOOLS_TRUE@						tools/hciattach_rtk.c
-+
- 
- @DEPRECATED_TRUE@@TOOLS_TRUE@tools_hciattach_LDADD = lib/libbluetooth-internal.la
- @DEPRECATED_TRUE@@TOOLS_TRUE@tools_hciconfig_SOURCES = tools/hciconfig.c tools/csr.h tools/csr.c
-@@ -4860,6 +4863,8 @@ tools/hciattach_intel.$(OBJEXT): tools/$(am__dirstamp) \
- 	tools/$(DEPDIR)/$(am__dirstamp)
- tools/hciattach_bcm43xx.$(OBJEXT): tools/$(am__dirstamp) \
- 	tools/$(DEPDIR)/$(am__dirstamp)
-+tools/hciattach_rtk.$(OBJEXT): tools/$(am__dirstamp) \
-+	tools/$(DEPDIR)/$(am__dirstamp)
- 
- tools/hciattach$(EXEEXT): $(tools_hciattach_OBJECTS) $(tools_hciattach_DEPENDENCIES) $(EXTRA_tools_hciattach_DEPENDENCIES) tools/$(am__dirstamp)
- 	@rm -f tools/hciattach$(EXEEXT)
-@@ -5748,6 +5753,7 @@ distclean-compile:
- @AMDEP_TRUE@@am__include@ @am__quote@tools/$(DEPDIR)/hciattach.Po@am__quote@
- @AMDEP_TRUE@@am__include@ @am__quote@tools/$(DEPDIR)/hciattach_ath3k.Po@am__quote@
- @AMDEP_TRUE@@am__include@ @am__quote@tools/$(DEPDIR)/hciattach_bcm43xx.Po@am__quote@
-+@AMDEP_TRUE@@am__include@ @am__quote@tools/$(DEPDIR)/hciattach_rtk.Po@am__quote@
- @AMDEP_TRUE@@am__include@ @am__quote@tools/$(DEPDIR)/hciattach_intel.Po@am__quote@
- @AMDEP_TRUE@@am__include@ @am__quote@tools/$(DEPDIR)/hciattach_qualcomm.Po@am__quote@
- @AMDEP_TRUE@@am__include@ @am__quote@tools/$(DEPDIR)/hciattach_st.Po@am__quote@
-diff --git a/Makefile.tools b/Makefile.tools
-index 9106c1a..5632a24 100644
+tools: add support for the rtk_h5 UART type
+
+Adds hciattach_rtk.c so hciattach can bring up Realtek Bluetooth controllers
+attached over UART, which receivers with a built-in Realtek module need. BlueZ
+ships attach drivers for ST, TI, Atheros, Qualcomm, Intel and Broadcom, but has
+never carried one for Realtek.
+
+Carried in this layer since bluez 5.50 and rebased onto 5.87. The hunks against
+the generated Makefile.in and against android/Android.mk are dropped - the
+recipe runs autoreconf, so Makefile.tools is what counts.
+
+Upstream-Status: Inappropriate [oe-alliance specific]
+
 --- a/Makefile.tools
 +++ b/Makefile.tools
-@@ -327,7 +327,8 @@ tools_hciattach_SOURCES = tools/hciattach.c tools/hciattach.h \
+@@ -427,7 +427,8 @@
  						tools/hciattach_ath3k.c \
  						tools/hciattach_qualcomm.c \
  						tools/hciattach_intel.c \
@@ -62,24 +22,10 @@ index 9106c1a..5632a24 100644
 +						tools/hciattach_rtk.c
  tools_hciattach_LDADD = lib/libbluetooth-internal.la
  
- tools_hciconfig_SOURCES = tools/hciconfig.c tools/csr.h tools/csr.c
-diff --git a/android/Android.mk b/android/Android.mk
-index 76a826b..39b453f 100644
---- a/android/Android.mk
-+++ b/android/Android.mk
-@@ -699,6 +699,7 @@ LOCAL_SRC_FILES := \
- 	bluez/tools/hciattach_qualcomm.c \
- 	bluez/tools/hciattach_intel.c \
- 	bluez/tools/hciattach_bcm43xx.c \
-+	bluez/tools/hciattach_rtk.c \
- 	bluez/lib/bluetooth.c \
- 	bluez/lib/hci.c \
- 
-diff --git a/tools/hciattach.c b/tools/hciattach.c
-index fad176c..8041156 100644
+ tools_hciconfig_SOURCES = tools/hciconfig.c
 --- a/tools/hciattach.c
 +++ b/tools/hciattach.c
-@@ -278,6 +278,16 @@ static int bcm43xx(int fd, struct uart_t *u, struct termios *ti)
+@@ -267,6 +267,16 @@
  	return bcm43xx_init(fd, u->init_speed, u->speed, ti, u->bdaddr);
  }
  
@@ -96,7 +42,7 @@ index fad176c..8041156 100644
  static int read_check(int fd, void *buf, int count)
  {
  	int res;
-@@ -1109,6 +1119,10 @@ struct uart_t uart[] = {
+@@ -1098,6 +1108,10 @@
  	{ "amp",	0x0000, 0x0000, HCI_UART_H4, 115200, 115200,
  			AMP_DEV, DISABLE_PM, NULL, NULL, NULL },
  
@@ -107,20 +53,15 @@ index fad176c..8041156 100644
  	{ NULL, 0 }
  };
  
-diff --git a/tools/hciattach.h b/tools/hciattach.h
-index 249aab4..42e95b5 100644
 --- a/tools/hciattach.h
 +++ b/tools/hciattach.h
-@@ -69,3 +69,5 @@ int qualcomm_init(int fd, int speed, struct termios *ti, const char *bdaddr);
+@@ -60,3 +60,5 @@
  int intel_init(int fd, int init_speed, int *speed, struct termios *ti);
  int bcm43xx_init(int fd, int def_speed, int speed, struct termios *ti,
  		const char *bdaddr);
 +int rtk_init(int fd, int *speed, struct termios *ti);
 +int rtk_post(int fd, struct termios *ti);
-diff --git a/tools/hciattach_rtk.c b/tools/hciattach_rtk.c
-new file mode 100644
-index 0000000..6ad6c22
---- /dev/null
+--- a/tools/hciattach_rtk.c
 +++ b/tools/hciattach_rtk.c
 @@ -0,0 +1,389 @@
 +/*
@@ -169,9 +110,9 @@ index 0000000..6ad6c22
 +#include <sys/ioctl.h>
 +#include <sys/stat.h>
 +
-+#include "lib/bluetooth.h"
-+#include "lib/hci.h"
-+#include "lib/hci_lib.h"
++#include "bluetooth/bluetooth.h"
++#include "bluetooth/hci.h"
++#include "bluetooth/hci_lib.h"
 +
 +#include "hciattach.h"
 +
