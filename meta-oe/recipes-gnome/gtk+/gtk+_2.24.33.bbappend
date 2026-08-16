@@ -12,3 +12,5 @@ SRC_URI += " \
 	"
 
 PACKAGECONFIG = "directfb"
+
+GTKBASE_RRECOMMENDS:remove = "gnome-theme-adwaita"
