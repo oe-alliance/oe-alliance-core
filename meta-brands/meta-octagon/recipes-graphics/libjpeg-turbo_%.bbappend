@@ -1,6 +1,6 @@
 FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
 
-PACKAGE_ARCH := "${MACHINE_ARCH}"
+PACKAGE_ARCH:octagon = "${MACHINE_ARCH}"
 
 SRC_URI:append:sf8008 = " \
     file://libjpeg.so.62.2.0 \

@@ -110,6 +110,6 @@ IMAGE_CMD:octagonemmc:append = "\
     "
 
 # Add "MACHINEBUILD" override for recipes
-MACHINEOVERRIDES =. "${@['', '${MACHINEBUILD}:']['${MACHINEBUILD}' != '']}"
+MACHINEOVERRIDES =. "octagon:${@['', '${MACHINEBUILD}:']['${MACHINEBUILD}' != '']}"
 
 

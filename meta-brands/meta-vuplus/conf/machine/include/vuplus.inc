@@ -82,4 +82,3 @@ require conf/machine/box-hardware.inc
 # Add "MACHINEBUILD" override for recipes
 MACHINEOVERRIDES =. "${@['', '${MACHINEBUILD}:']['${MACHINEBUILD}' != '']}"
 
-BBMASK = "meta-octagon/"
