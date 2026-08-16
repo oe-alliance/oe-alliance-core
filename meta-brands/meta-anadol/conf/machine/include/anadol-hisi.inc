@@ -104,4 +104,3 @@ IMAGE_CMD:anadolemmc:append = "\
 # Add "MACHINEBUILD" override for recipes
 MACHINEOVERRIDES =. "${@['', '${MACHINEBUILD}:']['${MACHINEBUILD}' != '']}"
 
-BBMASK += "meta-fulan/recipes-graphics/"
