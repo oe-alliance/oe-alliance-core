@@ -17,6 +17,8 @@ GO_IMPORT = "github.com/DNSCrypt/dnscrypt-proxy"
 
 inherit gittag go-mod update-rc.d upx-compress
 
+UPX_ARGS += "--lzma"
+
 export CGO_ENABLED = "0"
 
 INITSCRIPT_NAME = "dnscrypt-proxy"
