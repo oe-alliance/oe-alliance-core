@@ -51,7 +51,40 @@ def _oea_brand_layer(d):
 
 BRAND_LAYER = "${@_oea_brand_layer(d)}"
 
-BUILDCFG_VARS = "DISTRO DISTRO_TYPE DISTRO_VERSION DISTRO_FEED_URI MACHINE MACHINEBUILD BRAND_LAYER TARGET_ARCH TARGET_SYS TUNE_FEATURES YOCTO_CODENAME BB_VERSION BUILD_SYS NATIVELSBSTRING SDKMACHINE"
+# CCACHE_STATUS: where ccache stores, how full it is and how well it hits.
+def _oea_ccache_status(d):
+    import os, subprocess
+    if 'ccache' not in (d.getVar('INHERIT') or '').split():
+        return 'disabled'
+    cdir = d.getVar('CCACHE_DIR') or '<unset>'
+    src = 'host' if 'ccache' in (d.getVar('HOSTTOOLS') or '').split() else 'ccache-native'
+    env = dict(os.environ)
+    env['CCACHE_DIR'] = cdir
+    for v in ('CCACHE_CONFIGPATH', 'CCACHE_MAXSIZE'):
+        val = d.getVar(v)
+        if val:
+            env[v] = val
+    try:
+        out = subprocess.check_output(['ccache', '--print-stats'], env=env,
+                                      stderr=subprocess.DEVNULL, text=True)
+    except Exception:
+        return '%s, %s' % (src, cdir)
+    st = {}
+    for line in out.splitlines():
+        k, _, v = line.partition('	')
+        st[k] = v
+    def size(k):
+        kib = int(st.get(k, 0))
+        return '%.1f GiB' % (kib / 1048576.0) if kib >= 1048576 else '%d MiB' % (kib / 1024.0)
+    hits = int(st.get('direct_cache_hit', 0)) + int(st.get('preprocessed_cache_hit', 0))
+    total = hits + int(st.get('cache_miss', 0))
+    rate = '%.0f%% hits lifetime' % (100.0 * hits / total) if total else 'empty'
+    return '%s, %s, %s of %s, %s' % (src, cdir, size('cache_size_kibibyte'),
+                                     size('max_cache_size_kibibyte'), rate)
+
+CCACHE_STATUS = "${@_oea_ccache_status(d)}"
+
+BUILDCFG_VARS = "DISTRO DISTRO_TYPE DISTRO_VERSION DISTRO_FEED_URI MACHINE MACHINEBUILD BRAND_LAYER TARGET_ARCH TARGET_SYS TUNE_FEATURES YOCTO_CODENAME BB_VERSION BUILD_SYS NATIVELSBSTRING SDKMACHINE CCACHE_STATUS"
 
 BUILDCFG_FUNCS:remove = "get_layers_branch_rev"
 BUILDCFG_FUNCS:append = " oea_repositories_info"
