@@ -1,0 +1,30 @@
+From: WXbet <57314510+WXbet@users.noreply.github.com>
+Subject: [PATCH] configure: add MIPS to the Linux cacheline fallback
+
+TORRENT_CHECK_CACHELINE first tries to read SMP_CACHE_BYTES from linux/cache.h.
+That header is kernel internal and not part of the exported UAPI, so the test
+never succeeds when cross compiling against a sysroot - every architecture ends
+up in the CPU fallback below it. MIPS is missing from that list, so the build
+aborts with "Unrecognized CPU architecture (mipsel) on Linux fallback path"
+while x86 and ARM silently pick their value.
+
+32 bytes is the L1 cacheline of the MIPS32 cores in use here.
+
+Upstream-Status: Pending
+
+---
+diff --git a/scripts/common.m4 b/scripts/common.m4
+index 2d42209..9453b24 100644
+--- a/scripts/common.m4
++++ b/scripts/common.m4
+@@ -126,6 +126,10 @@ AC_DEFUN([TORRENT_CHECK_CACHELINE], [
+             AC_MSG_RESULT([linux fallback LoongArch 64 bytes])
+             AC_DEFINE([LT_SMP_CACHE_BYTES], 64, [Fallback 64-byte alignment for Linux LoongArch hardware.])
+             ;;
++          mips*)
++            AC_MSG_RESULT([linux fallback MIPS 32 bytes])
++            AC_DEFINE([LT_SMP_CACHE_BYTES], 32, [Fallback 32-byte alignment for Linux MIPS hardware.])
++            ;;
+           *)
+             AC_MSG_RESULT([unrecognized CPU arch on Linux header fallback])
+             AC_MSG_FAILURE([Unrecognized CPU architecture ($host_cpu) on Linux fallback path. Aborting build.])
