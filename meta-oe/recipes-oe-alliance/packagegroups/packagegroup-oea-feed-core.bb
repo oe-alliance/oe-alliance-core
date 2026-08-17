@@ -228,6 +228,7 @@ RDEPENDS:${PN} = "\
     smartmontools \
     smbnetfs \
     sshpass \
+    sshx \
     streamproxy \
     strongswan \
     tsniv2ni \
