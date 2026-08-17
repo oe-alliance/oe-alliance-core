@@ -1,25 +1,30 @@
-do_configure:prepend() {
-    # OpenSSL 4.0 support: openssl-sys 0.9.111 rejects OpenSSL >= 4.0.
-    for d in ${RUSTSRC}/vendor/openssl-sys-*; do
-        sed -i 's/if openssl_version >= 0x4_00_00_00_0 {/if false {/' $d/build/main.rs
-        pkg=$(python3 -c "import json; print(json.load(open('$d/.cargo-checksum.json')).get('package',''))")
-        echo "{\"files\":{},\"package\":\"$pkg\"}" > $d/.cargo-checksum.json
-    done
+DEPENDS:append:class-native = " rust-prebuilt-native"
 
-    # OpenSSL 4.0: fix opaque ASN1 types in vendored curl
-    for d in ${RUSTSRC}/vendor/curl-sys-*/curl/lib/vtls/openssl.c; do
-        if [ -f "$d" ]; then
-            sed -i 's/num->type == V_ASN1_NEG_INTEGER/ASN1_STRING_type(num) == V_ASN1_NEG_INTEGER/' "$d"
-            sed -i 's/num->length/ASN1_STRING_length(num)/g' "$d"
-            sed -i 's/num->data/ASN1_STRING_get0_data(num)/g' "$d"
-            sed -i 's/psig->length/ASN1_STRING_length(psig)/g' "$d"
-            sed -i 's/psig->data/ASN1_STRING_get0_data(psig)/g' "$d"
-        fi
-    done
-    for d in ${RUSTSRC}/vendor/curl-sys-*; do
-        if [ -d "$d" ]; then
-            pkg=$(python3 -c "import json; print(json.load(open('$d/.cargo-checksum.json')).get('package',''))")
-            echo "{\"files\":{},\"package\":\"$pkg\"}" > $d/.cargo-checksum.json
-        fi
-    done
+RUST_PREBUILT_STAGE = "${STAGING_DATADIR_NATIVE}/rust-prebuilt"
+RUST_PREBUILT_SYS = "x86_64-unknown-linux-gnu"
+
+python () {
+    if bb.data.inherits_class('native', d):
+        d.setVarFlag('do_configure', 'noexec', '1')
+        d.setVarFlag('do_compile', 'noexec', '1')
+        d.setVarFlag('do_rust_setup_snapshot', 'noexec', '1')
 }
+
+do_install:class-native () {
+    src="${RUST_PREBUILT_STAGE}/cargo-${PV}-${RUST_PREBUILT_SYS}/cargo/bin/cargo"
+    if [ ! -f "$src" ]; then
+        bbfatal "prebuilt cargo not staged at $src"
+    fi
+
+    install -d ${D}${bindir}
+    install -m 755 "$src" ${D}${bindir}/cargo
+
+    if [ -n "${UNINATIVE_LOADER}" ] && [ -e "${UNINATIVE_LOADER}" ]; then
+        patchelf ${D}${bindir}/cargo --set-interpreter ${UNINATIVE_LOADER}
+    fi
+}
+
+do_install[depends] += "patchelf-native:do_populate_sysroot"
+do_install[vardepsexclude] += "UNINATIVE_LOADER"
+
+INSANE_SKIP:${PN}:class-native = "already-stripped"
