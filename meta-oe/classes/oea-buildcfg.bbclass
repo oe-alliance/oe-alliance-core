@@ -51,6 +51,18 @@ def _oea_brand_layer(d):
 
 BRAND_LAYER = "${@_oea_brand_layer(d)}"
 
+# KERNEL_VERSION: version pinned for the kernel this machine builds.
+def _oea_kernel_version(d):
+    localdata = bb.data.createCopy(d)
+    bb.data.expandKeys(localdata)
+    provider = localdata.getVar('PREFERRED_PROVIDER_virtual/kernel') or ''
+    if not provider:
+        return 'unknown'
+    version = localdata.getVar('PREFERRED_VERSION_%s' % provider) or ''
+    return version.strip().rstrip('%.') or 'unknown'
+
+KERNEL_VERSION = "${@_oea_kernel_version(d)}"
+
 # CCACHE_STATUS: where ccache stores, how full it is and how well it hits.
 def _oea_ccache_status(d):
     import os, subprocess
@@ -84,7 +96,7 @@ def _oea_ccache_status(d):
 
 CCACHE_STATUS = "${@_oea_ccache_status(d)}"
 
-BUILDCFG_VARS = "DISTRO DISTRO_TYPE DISTRO_VERSION DISTRO_FEED_URI MACHINE MACHINEBUILD BRAND_LAYER TARGET_ARCH TARGET_SYS TUNE_FEATURES YOCTO_CODENAME BB_VERSION BUILD_SYS NATIVELSBSTRING SDKMACHINE CCACHE_STATUS"
+BUILDCFG_VARS = "DISTRO DISTRO_TYPE DISTRO_VERSION DISTRO_FEED_URI MACHINE MACHINEBUILD KERNEL_VERSION BRAND_LAYER TARGET_ARCH TARGET_SYS TUNE_FEATURES YOCTO_CODENAME BB_VERSION BUILD_SYS NATIVELSBSTRING SDKMACHINE CCACHE_STATUS"
 
 BUILDCFG_FUNCS:remove = "get_layers_branch_rev"
 BUILDCFG_FUNCS:append = " oea_repositories_info"
