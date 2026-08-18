@@ -69,5 +69,11 @@ EOF
     chmod 0755 ${D}${bindir}/rustc
 }
 
+# librustc_driver and libLLVM come from upstream already built for release.
+# Stripping them again uses the host binutils, and an older strip has been seen
+# to produce a rustc that segfaults. Target builds use the cross strip and are
+# not affected.
+INHIBIT_SYSROOT_STRIP:class-native = "1"
+
 do_install[depends] += "patchelf-native:do_populate_sysroot"
 do_install[vardepsexclude] += "UNINATIVE_LOADER"
