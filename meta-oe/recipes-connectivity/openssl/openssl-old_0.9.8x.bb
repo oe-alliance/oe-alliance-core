@@ -190,8 +190,6 @@ SRC_URI[sha256sum] = "7ce0c7f2c451070b4497ea7ca6f23eba6cef1a56db2e86e433f65926a7
 EXTRA_OECONF += "no-idea no-mdc2 no-rc5"
 EXTRA_OECONF:remove = " --disable-static"
 
-# engines/ links against ../libcrypto.so while crypto/ is still writing it.
-PARALLEL_MAKE = ""
 PARALLEL_MAKEINST = ""
 
 INSANE_SKIP:${PN} += "ldflags"
