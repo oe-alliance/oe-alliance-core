@@ -7,7 +7,7 @@ python () {
     if bb.data.inherits_class('native', d):
         d.setVarFlag('do_configure', 'noexec', '1')
         d.setVarFlag('do_compile', 'noexec', '1')
-        d.setVarFlag('do_rust_setup_snapshot', 'noexec', '1')
+        d.setVarFlag('do_cargo_setup_snapshot', 'noexec', '1')
 }
 
 do_install:class-native () {
