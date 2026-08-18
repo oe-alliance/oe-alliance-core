@@ -21,7 +21,7 @@ PKGV = "4.0.+git${GITPKGV}"
 INHIBIT_PACKAGE_STRIP = "1"
 INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
 
-EXTRA_OEMAKE = "'CC=${CC}' 'CFLAGS=${CFLAGS} -I${S}include -I${S}src 'BUILDDIR=${S}'"
+EXTRA_OEMAKE = "'CC=${CC}' 'CFLAGS=${CFLAGS} -I${S}include -I${S}src' 'BUILDDIR=${S}'"
 
 EXTRA_OECONF = " \
         BUILD_SYS=${BUILD_SYS} \
