@@ -1,4 +1,4 @@
-PR = "r1"
+PR = "r2"
 
 RDEPENDS:${PN} = "${PN}-client"
 RDEPENDS:${PN}-client = "rpcbind"
@@ -15,4 +15,7 @@ do_install:append() {
         # export of /media/hdd during service startup if a local hard disk is mounted
         sed -i -e "/^\ttest -r \/etc\/exports && exportfs -r/i \\\ttest -r \/etc\/exports || { grep -q '^/dev.*/media/hdd' \/proc\/mounts && echo '/media/hdd *\(rw,no_root_squash,sync,no_subtree_check\)' > /etc/exports; }" ${D}${sysconfdir}/init.d/nfsserver
     fi
+
+    # STBs have no RDMA hardware; rpc.nfsd otherwise warns on every start
+    sed -i -e 's/^#* *rdma *=.*/rdma=n/' ${D}${sysconfdir}/nfs.conf
 }
