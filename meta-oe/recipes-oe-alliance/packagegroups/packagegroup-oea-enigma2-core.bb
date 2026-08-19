@@ -56,6 +56,7 @@ ENIGMA2_CORE_EXTENDED_RDEPENDS = "\
     ${@bb.utils.contains("MACHINE_FEATURES", "fanctrl", "enigma2-plugin-systemplugins-fancontrol", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "fan", "enigma2-plugin-systemplugins-tempfancontrol", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "inibt", "enigma2-plugin-extensions-btdevicesmanager", "", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "vu2bt", "enigma2-plugin-extensions-vubtdevicesmanager", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "himedia", "enigma2-plugin-systemplugins-servicehisilicon", "", d)} \
     "
 

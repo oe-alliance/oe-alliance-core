@@ -1,0 +1,41 @@
+From 50bf2b6917f72df597b3126b793cc5d750b473d9 Mon Sep 17 00:00:00 2001
+From: CIJOML CIJOMLovic <cijoml@gmail.com>
+Date: Mon, 1 Aug 2016 18:55:52 -0300
+Subject: [PATCH 05/17] Add support for EVOLVEO XtraTV stick
+
+Add a new USB ID for EVOLVEO XtraTV stick.
+
+[mchehab@s-opensource.org: fix patch and make checkpatch happy]
+Cc: Antti Palosaari <crope@iki.fi>
+Signed-off-by: Mauro Carvalho Chehab <mchehab@s-opensource.com>
+---
+ drivers/media/dvb-core/dvb-usb-ids.h  | 1 +
+ drivers/media/usb/dvb-usb-v2/af9035.c | 2 ++
+ 2 files changed, 3 insertions(+)
+
+diff --git a/drivers/media/dvb-core/dvb-usb-ids.h b/drivers/media/dvb-core/dvb-usb-ids.h
+index 232d80d..8cf4c81 100644
+--- a/drivers/media/dvb-core/dvb-usb-ids.h
++++ b/drivers/media/dvb-core/dvb-usb-ids.h
+@@ -389,4 +389,5 @@
+ #define USB_PID_SVEON_STV27                             0xd3af
+ #define USB_PID_TURBOX_DTT_2000                         0xd3a4
+ #define USB_PID_WINTV_SOLOHD                            0x0264
++#define USB_PID_EVOLVEO_XTRATV_STICK                   0xa115
+ #endif
+diff --git a/drivers/media/usb/dvb-usb-v2/af9035.c b/drivers/media/usb/dvb-usb-v2/af9035.c
+index 9e0f8b6..ebcbf16 100644
+--- a/drivers/media/usb/dvb-usb-v2/af9035.c
++++ b/drivers/media/usb/dvb-usb-v2/af9035.c
+@@ -2023,6 +2023,8 @@ static const struct usb_device_id af9035_id_table[] = {
+ 		&af9035_props, "TerraTec Cinergy T Stick (rev. 2)", NULL) },
+ 	{ DVB_USB_DEVICE(USB_VID_AVERMEDIA, 0x0337,
+ 		&af9035_props, "AVerMedia HD Volar (A867)", NULL) },
++       { DVB_USB_DEVICE(USB_VID_GTEK, USB_PID_EVOLVEO_XTRATV_STICK,
++	       &af9035_props, "EVOLVEO XtraTV stick", NULL) },
+ 	/* IT9135 devices */
+ 	{ DVB_USB_DEVICE(USB_VID_ITETECH, USB_PID_ITETECH_IT9135,
+ 		&af9035_props, "ITE 9135 Generic", RC_MAP_IT913X_V1) },
+-- 
+2.1.4
+

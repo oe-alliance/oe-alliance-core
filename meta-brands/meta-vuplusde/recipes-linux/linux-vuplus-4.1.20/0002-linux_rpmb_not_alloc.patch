@@ -1,0 +1,25 @@
+From cdae5306e10c61d77678ed75dabc127fc13d72fa Mon Sep 17 00:00:00 2001
+From: arn354 <arn354@email.de>
+Date: Fri, 15 Feb 2019 21:56:29 +0100
+Subject: [PATCH] linux_rpmb_not_alloc.patch
+
+---
+ drivers/mmc/card/block.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/mmc/card/block.c b/drivers/mmc/card/block.c
+index 198255ef..afee94ca 100644
+--- a/drivers/mmc/card/block.c
++++ b/drivers/mmc/card/block.c
+@@ -2268,7 +2268,7 @@ static int mmc_blk_alloc_parts(struct mmc_card *card, struct mmc_blk_data *md)
+ 		return 0;
+ 
+ 	for (idx = 0; idx < card->nr_parts; idx++) {
+-		if (card->part[idx].size) {
++		if (card->part[idx].size && !(card->part[idx].area_type & MMC_BLK_DATA_AREA_RPMB)) {
+ 			ret = mmc_blk_alloc_part(card, md,
+ 				card->part[idx].part_cfg,
+ 				card->part[idx].size >> 9,
+-- 
+2.20.1.windows.1
+
