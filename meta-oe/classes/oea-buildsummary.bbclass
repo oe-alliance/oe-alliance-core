@@ -69,9 +69,10 @@ def _oea_bs_pressure(bsdir, duration):
         out.append('%s %.1f%%' % (res, 100.0 * stalled / 1e6 / duration))
     return ', '.join(out)
 
-def _oea_bs_report(bsdir, sstatetasks, slowest_n, cc_start, cc_now):
+def _oea_bs_report(bsdir, sstatetasks, slowest_n, cc_start, cc_now, machine, machinebuild):
     import collections, os, time
 
+    now = time.time()
     started = 0.0
     try:
         with open(os.path.join(bsdir, 'build_stats')) as f:
@@ -125,7 +126,7 @@ def _oea_bs_report(bsdir, sstatetasks, slowest_n, cc_start, cc_now):
     rows = []
 
     if started:
-        duration = time.time() - started
+        duration = now - started
         text = _oea_bs_time(duration)
         if cpu and duration > 0:
             text += ', %.1f cores busy on average' % (cpu / duration)
@@ -177,8 +178,19 @@ def _oea_bs_report(bsdir, sstatetasks, slowest_n, cc_start, cc_now):
                 time_width, _oea_bs_time(elapsed), name_width, pf, t)))
 
     width = max(len(label) for label, _ in rows) if rows else 0
+    head = 'Build summary'
+    mb = machinebuild or machine
+    if mb:
+        head += ' for %s' % mb
+        if machine and machinebuild and machine != machinebuild:
+            head += ' (%s)' % machine
+    lt = time.localtime(now)
+    off = time.strftime('%z', lt)
+    off = '(%s:%s)' % (off[:3], off[3:]) if off else ''
+    ts = ' '.join(p for p in (time.strftime('%Y-%m-%d %H:%M:%S', lt), off) if p)
+    head += ' at %s:' % ts
     yield ''
-    yield 'Build summary:'
+    yield head
     for label, text in rows:
         yield '  %-*s  %s' % (width, label, text)
 
@@ -214,7 +226,8 @@ python oea_buildsummary() {
     except ValueError:
         slowest_n = 10
     for line in _oea_bs_report(bsdir, (e.data.getVar('SSTATETASKS') or '').split(),
-                               slowest_n, cc_start, _oea_bs_ccache(e.data)):
+                               slowest_n, cc_start, _oea_bs_ccache(e.data),
+                               e.data.getVar('MACHINE'), e.data.getVar('MACHINEBUILD')):
         bb.plain(line)
 }
 addhandler oea_buildsummary
