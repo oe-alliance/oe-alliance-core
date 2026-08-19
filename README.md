@@ -80,6 +80,8 @@ Zgemma H8.2H            MACHINE:  zgemmah82h
 
 Zgemma H8.2H Plus       MACHINE:  zgemmah82hplus
 
+Zgemma H8se             MACHINE:  zgemmah8se
+
 Zgemma H9S              MACHINE:  zgemmah9s
 
 Zgemma H9T              MACHINE:  zgemmah9t
@@ -831,6 +833,8 @@ VU ZERO4K               MACHINE:  vuzero4k
 VU DUO4K                MACHINE:  vuduo4k
 
 VU DUO4KSE              MACHINE:  vuduo4kse
+
+VU DUO4KLITE            MACHINE:  vuduo4klite
 
 
 ### World Vision
