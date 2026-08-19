@@ -10,8 +10,6 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=f475368924827d06d4b416111c8bdb77"
 
 FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 
-PACKAGE_ARCH = "${MACHINE_ARCH}"
-
 DEPENDS = "hostperl-runtime-native"
 DEPENDS:append:class-target = " openssl-native"
 
