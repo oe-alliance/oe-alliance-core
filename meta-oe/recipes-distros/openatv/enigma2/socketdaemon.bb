@@ -8,10 +8,10 @@ require conf/license/license-gplv2.inc
 inherit gitpkgv autotools update-rc.d
 
 SRCREV = "${AUTOREV}"
-PV = "1.1+git"
-PKGV = "1.1+git${GITPKGV}"
-VER = "1.1"
-PR = "r1"
+PV = "1.2+git"
+PKGV = "1.2+git${GITPKGV}"
+VER = "1.2"
+PR = "r0"
 
 SRC_URI = "git://github.com/openatv/socketdaemon.git;branch=8.0;protocol=https"
 
