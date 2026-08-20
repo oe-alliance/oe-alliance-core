@@ -69,18 +69,31 @@ def _oea_bs_pressure(bsdir, duration):
         out.append('%s %.1f%%' % (res, 100.0 * stalled / 1e6 / duration))
     return ', '.join(out)
 
-def _oea_bs_archs(d):
-    # the package arches that actually hold sstate objects: allarch, the tune,
-    # the machine and the build host. PACKAGE_ARCHS also lists any/noarch/
-    # static-*/private, which no recipe uses.
-    out = []
-    for a in ('all', d.getVar('TUNE_PKGARCH'), d.getVar('MACHINE_ARCH'),
-              d.getVar('BUILD_ARCH')):
-        if a and a not in out:
-            out.append(a)
-    return ' '.join(out)
+def _oea_bs_pnarch(stamps):
+    # stamps are laid out per arch, which is the only place the arch of a
+    # recipe can be read without parsing anything
+    import os, re
+    out = {}
+    try:
+        for arch in os.listdir(stamps):
+            if not os.path.isdir(os.path.join(stamps, arch)):
+                continue
+            name = re.sub(r'(-oe)?-linux[a-z0-9._-]*$', '', arch) or arch
+            for pn in os.listdir(os.path.join(stamps, arch)):
+                out.setdefault(pn, name)
+    except Exception:
+        pass
+    return out
 
-def _oea_bs_report(bsdir, sstatetasks, slowest_n, cc_start, cc_now, machine, machinebuild, archs):
+def _oea_bs_arch_of(pf, pnarch):
+    parts = pf.split('-')
+    for i in range(len(parts), 0, -1):
+        arch = pnarch.get('-'.join(parts[:i]))
+        if arch:
+            return arch
+    return None
+
+def _oea_bs_report(bsdir, sstatetasks, slowest_n, cc_start, cc_now, machine, machinebuild, stamps):
     import collections, os, time
 
     now = time.time()
@@ -168,10 +181,17 @@ def _oea_bs_report(bsdir, sstatetasks, slowest_n, cc_start, cc_now, machine, mac
     if active:
         reused = sum(len(s) for _, (_, s) in active)
         scratch = sum(len(n) for _, (n, _) in active)
+        pnarch = _oea_bs_pnarch(stamps) if stamps else {}
+        if pnarch:
+            per = collections.Counter()
+            for t, (no_sstate, _) in active:
+                for pf in no_sstate:
+                    per[_oea_bs_arch_of(pf, pnarch) or '?'] += 1
+            if per:
+                rows.append(('scratch builds', ',  '.join(
+                    '%s %d' % (a, n) for a, n in per.most_common())))
         rows.append(('sstate reuse', '%.1f%% of %d tasks run (%d setscene, %d scratch)' % (
             100.0 * reused / (reused + scratch), reused + scratch, reused, scratch)))
-        if archs:
-            rows.append(('', 'archs: %s' % archs))
         task_width = max(len(t) for t, _ in active)
         for t, (no_sstate, sstate) in active:
             total = len(sstate) + len(no_sstate)
@@ -241,7 +261,7 @@ python oea_buildsummary() {
     for line in _oea_bs_report(bsdir, (e.data.getVar('SSTATETASKS') or '').split(),
                                slowest_n, cc_start, _oea_bs_ccache(e.data),
                                e.data.getVar('MACHINE'), e.data.getVar('MACHINEBUILD'),
-                               _oea_bs_archs(e.data)):
+                               e.data.getVar('STAMPS_DIR')):
         bb.plain(line)
 }
 addhandler oea_buildsummary
