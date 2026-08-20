@@ -1,4 +1,4 @@
-DEPENDS += " upx-native"
+DEPENDS:append:class-target = " upx-native"
 
 UPX_ARGS ?= "--best"
 
