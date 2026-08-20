@@ -35,6 +35,7 @@ RRECOMMENDS:${PN} = "\
     enigma2-plugin-settings-defaultsat \
     enigma2-plugin-extensions-specialjump \
     enigma2-plugin-extensions-gbipboxclient \
+    enigma2-plugin-extensions-gtiptvplayerpro \
     enigma2-plugin-extensions-blurayplayer \
     enigma2-plugin-extensions-sdgradio \
     enigma2-plugin-extensions-epgimport \
