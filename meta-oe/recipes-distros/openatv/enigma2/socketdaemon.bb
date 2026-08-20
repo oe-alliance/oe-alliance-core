@@ -11,9 +11,9 @@ SRCREV = "${AUTOREV}"
 PV = "1.1+git"
 PKGV = "1.1+git${GITPKGV}"
 VER = "1.1"
-PR = "r0"
+PR = "r1"
 
-SRC_URI = "git://github.com/openatv/socketdaemon.git;branch=main;protocol=https"
+SRC_URI = "git://github.com/openatv/socketdaemon.git;branch=8.0;protocol=https"
 
 B = "${WORKDIR}/build"
 
