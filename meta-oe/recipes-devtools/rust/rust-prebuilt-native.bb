@@ -26,9 +26,17 @@ PV = "${@rust_recipe_version(d)}"
 RUST_PREBUILT_SYS = "${BUILD_ARCH}-unknown-linux-gnu"
 RUST_PREBUILT_BASE = "https://static.rust-lang.org/dist"
 
-SRC_URI[rustc.sha256sum] = "${@'b344b81f0cd4c2246c7da8b197fe7a339d7dd02bb15cb69b2524115d9c75224c' if d.getVar('BUILD_ARCH') == 'aarch64' else '9819d0a32d56bd339585319c80260e332779f5541fd66838ab7e016d6c814819'}"
-SRC_URI[cargo.sha256sum] = "${@'8f70bcaccea5ba4db187c3fd4d64e24592b4e16af513497201f5909d61691dbe' if d.getVar('BUILD_ARCH') == 'aarch64' else 'e1be5f5ff7f7f80ca506fb65770b759edbdc6d303781ed71c5de8ec8a8394779'}"
-SRC_URI[std.sha256sum] = "${@'46aed8e63186350004d8ec6afca798811e6530b514352e5a8a26f3dc4939b3be' if d.getVar('BUILD_ARCH') == 'aarch64' else '1c1e704ae80126b7de34f72ea2825f7fd01736dec20732faed47374b95282fba'}"
+# sha256 of the upstream dist tarballs, per build host arch
+RUST_PREBUILT_SHA256[x86_64-rustc]  = "9819d0a32d56bd339585319c80260e332779f5541fd66838ab7e016d6c814819"
+RUST_PREBUILT_SHA256[x86_64-cargo]  = "e1be5f5ff7f7f80ca506fb65770b759edbdc6d303781ed71c5de8ec8a8394779"
+RUST_PREBUILT_SHA256[x86_64-std]    = "1c1e704ae80126b7de34f72ea2825f7fd01736dec20732faed47374b95282fba"
+RUST_PREBUILT_SHA256[aarch64-rustc] = "b344b81f0cd4c2246c7da8b197fe7a339d7dd02bb15cb69b2524115d9c75224c"
+RUST_PREBUILT_SHA256[aarch64-cargo] = "8f70bcaccea5ba4db187c3fd4d64e24592b4e16af513497201f5909d61691dbe"
+RUST_PREBUILT_SHA256[aarch64-std]   = "46aed8e63186350004d8ec6afca798811e6530b514352e5a8a26f3dc4939b3be"
+
+SRC_URI[rustc.sha256sum] = "${@d.getVarFlag('RUST_PREBUILT_SHA256', d.getVar('BUILD_ARCH') + '-rustc') or ''}"
+SRC_URI[cargo.sha256sum] = "${@d.getVarFlag('RUST_PREBUILT_SHA256', d.getVar('BUILD_ARCH') + '-cargo') or ''}"
+SRC_URI[std.sha256sum] = "${@d.getVarFlag('RUST_PREBUILT_SHA256', d.getVar('BUILD_ARCH') + '-std') or ''}"
 
 SRC_URI = "\
     ${RUST_PREBUILT_BASE}/rustc-${PV}-${RUST_PREBUILT_SYS}.tar.xz;name=rustc \

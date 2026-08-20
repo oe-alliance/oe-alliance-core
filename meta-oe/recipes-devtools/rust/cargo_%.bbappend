@@ -27,4 +27,5 @@ do_install:class-native () {
 do_install[depends] += "patchelf-native:do_populate_sysroot"
 do_install[vardepsexclude] += "UNINATIVE_LOADER"
 
+INHIBIT_SYSROOT_STRIP:class-native = "1"
 INSANE_SKIP:${PN}:class-native = "already-stripped"
