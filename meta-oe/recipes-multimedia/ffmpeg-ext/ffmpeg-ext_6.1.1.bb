@@ -124,6 +124,7 @@ EXTRA_OECONF = " \
     ${EXTRA_FFCONF} \
     --libdir=${libdir}/${PN} \
     --shlibdir=${libdir}/${PN} \
+    --incdir=${includedir}/${PN} \
     --datadir=${datadir}/ffmpeg-ext \
     ${@bb.utils.contains('AVAILTUNES', 'mips32r2', '', '--disable-mipsdsp --disable-mipsdspr2', d)} \
     --cpu=${@cpu(d)} \
@@ -172,7 +173,7 @@ FILES:${PN}-dev += " \
     ${libdir}/${PN}/*.so \
     ${libdir}/${PN}/pkgconfig/* \
     ${datadir}/${PN}/examples/* \
-    ${includedir} \
+    ${includedir}/${PN} \
 "
 
 FILES:${PN} = ""
