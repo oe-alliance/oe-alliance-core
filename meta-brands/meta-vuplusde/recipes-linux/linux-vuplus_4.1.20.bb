@@ -3,6 +3,7 @@ LICENSE = "GPL-2.0-only"
 SECTION = "kernel"
 
 MODULE = "linux-4.1.20"
+KV = "4.1.20"
 
 COMPATIBLE_MACHINE = "^(vuduo4klite)$"
 
@@ -21,6 +22,7 @@ SRC_URI += "https://source.mynonpublic.com/vuplus.de/linux/vuplus-linux-${PV}-${
     file://defconfig_initrd \
     file://initramfs-subdirboot.cpio.gz;unpack=0 \
     file://vufindkerneldevice.py \
+    file://drivers_hid/hid-input.c;unpack=0 \
     file://0002-linux_dvb-core.patch \
     file://0002-bcmgenet-recovery-fix.patch \
     file://0002-linux_4_1_1_9_dvbs2x.patch \
