@@ -10,7 +10,7 @@ DEPENDS = "vuplus-v3ddriver-headers patchelf-native"
 PV = "${SRCDATE}"
 PR = "r1"
 
-SRC_URI = "https://source.mynonpublic.com/vuplus.de/v3ddriver/libgles-${MACHINE}-v3ddriver-${SRCDATE}.${PR}.zip"
+SRC_URI = "https://source.mynonpublic.com/vuplus.de/v3ddriver/libgles-${MACHINE}-v3ddriver-${SRCDATE}.zip"
 
 S = "${UNPACKDIR}"
 
