@@ -6,9 +6,13 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 
 inherit module
 SRCREV = "a246437004417a999aa07be85a9674f3b0bbf4bd"
-SRC_URI = "git://github.com/lwfinger/rtw8852cu.git;protocol=https;branch=main \
+# Use short destsuffix — the driver has ~370 object files whose absolute paths
+# overflow ARG_MAX during kbuild linking on machines with long MACHINE names.
+SRC_URI = "git://github.com/lwfinger/rtw8852cu.git;protocol=https;branch=main;destsuffix=s  \
           file://0001-update-makefile.patch \
 "
+
+S = "${UNPACKDIR}/s"
 
 EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR} KDIR=${STAGING_KERNEL_DIR}"
 
