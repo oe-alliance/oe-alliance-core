@@ -16,6 +16,7 @@ do_install() {
     install -m 0644 ${S}/rescue.bin ${D}/usr/share/rescue.bin
     if [ -e ${S}/boot.bin  ]; then
     install -m 0644 ${S}/boot.bin  ${D}/usr/share/boot.bin
+    install -m 0644 ${S}/gpt.bin  ${D}/usr/share/gpt.bin
     fi
 }
 
@@ -31,6 +32,9 @@ do_deploy() {
     fi
     if [ -e rescue.bin  ]; then
     install -m 0644 rescue.bin  ${DEPLOYDIR}/${MACHINE}_rescue.bin
+    fi
+    if [ -e gpt.bin  ]; then
+    install -m 0644 gpt.bin  ${DEPLOYDIR}/${MACHINE}_gpt.bin
     fi
 }
 
