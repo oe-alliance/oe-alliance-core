@@ -5,7 +5,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PN = "enigma2-plugin-extensions-chromium"
 
-COMPATIBLE_MACHINE = "^(gb7252|gb72604)$"
+COMPATIBLE_MACHINE = "^(gb7252|gb72604|vuduo4klite)$"
 
 RDEPENDS:${PN} = "chromium-browser-${MACHINE}"
 
