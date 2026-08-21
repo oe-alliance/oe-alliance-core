@@ -1,7 +1,7 @@
 DEPENDS:append:class-native = " rust-prebuilt-native"
 
 RUST_PREBUILT_STAGE = "${STAGING_DATADIR_NATIVE}/rust-prebuilt"
-RUST_PREBUILT_SYS = "x86_64-unknown-linux-gnu"
+RUST_PREBUILT_SYS = "${BUILD_ARCH}-unknown-linux-gnu"
 
 python () {
     if bb.data.inherits_class('native', d):
@@ -27,4 +27,5 @@ do_install:class-native () {
 do_install[depends] += "patchelf-native:do_populate_sysroot"
 do_install[vardepsexclude] += "UNINATIVE_LOADER"
 
+INHIBIT_SYSROOT_STRIP:class-native = "1"
 INSANE_SKIP:${PN}:class-native = "already-stripped"

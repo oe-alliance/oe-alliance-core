@@ -21,7 +21,7 @@ DEPENDS:remove:class-native = "llvm"
 DEPENDS:append:class-native = " rust-prebuilt-native"
 
 RUST_PREBUILT_STAGE = "${STAGING_DATADIR_NATIVE}/rust-prebuilt"
-RUST_PREBUILT_SYS = "x86_64-unknown-linux-gnu"
+RUST_PREBUILT_SYS = "${BUILD_ARCH}-unknown-linux-gnu"
 
 # do_configure is a python task upstream, so disable rather than override it.
 python () {
