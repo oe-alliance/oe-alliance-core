@@ -38,6 +38,7 @@ MACHINE_EXTRA_RRECOMMENDS += " \
     gstreamer1.0-plugin-dvbmediasink \
     gstreamer1.0-libav \
     vuplus-initrd-cfe-${MACHINE} \
+    vuplus-ddbootup \
     "
 
 include conf/machine/include/autoload-filesystems.inc
@@ -87,6 +88,7 @@ IMAGE_CMD:tar:prepend = "\
     cp ${DEPLOY_DIR_IMAGE}/${MACHINE}_boot.bin ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/boot.bin; \
     cp ${DEPLOY_DIR_IMAGE}/${MACHINE}_rescue.bin ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/rescue.bin; \
     cp ${DEPLOY_DIR_IMAGE}/${MACHINE}_initrd.bin ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/initrd.bin; \
+    cp ${DEPLOY_DIR_IMAGE}/${MACHINE}_gpt.bin ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/gpt.bin; \
     cp ${DEPLOY_DIR_IMAGE}/zImage ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${KERNEL_FILE}; \
     echo ${DISTRO_NAME}-${DISTRO_VERSION}.${BUILD_VERSION} > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/imageversion; \
     touch ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${MULTIBOOT_STARTUP_DEFAULT}; \

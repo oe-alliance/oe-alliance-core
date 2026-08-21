@@ -1,6 +1,6 @@
-SRCDATE = "20260508r0"
+SRCDATE = "20260729r0"
 
 require vuplus-initrd-cfe.inc
 
-SRC_URI[md5sum] = "fe31923efab515456bb7fa5b09d0456e"
-SRC_URI[sha256sum] = "f806d9e99c82e8c70098f948def94a7094ba8175eb50ad4c54ab8bd4d8f50b69"
+SRC_URI[md5sum] = "813089ee777dfd95934e35019c1f9ef6"
+SRC_URI[sha256sum] = "c85f08d55a00586f9265ecdd5eed7ede8dfe2596de2ae7dbdc335002563d420a"
