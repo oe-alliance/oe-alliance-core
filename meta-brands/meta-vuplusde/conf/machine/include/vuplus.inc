@@ -63,6 +63,8 @@ IMAGE_FSTYPES =+ "tar.bz2"
 
 require conf/machine/include/arm/armv7a/tune-cortexa15.inc
 
+PREFERRED_PROVIDER_virtual/kernel = "linux-vuplus"
+PREFERRED_PROVIDER_virtual/kodi = "stb-kodi-${MACHINE}"
 VIRTUAL-RUNTIME_blindscan_dvbc = "vuplus-blindscan-dvbc-utils"
 VIRTUAL-RUNTIME_blindscan_dvbs = "vuplus-blindscan-dvbs-utils"
 PREFERRED_PROVIDER_virtual/egl = "vuplus-v3ddriver-${MACHINE}"

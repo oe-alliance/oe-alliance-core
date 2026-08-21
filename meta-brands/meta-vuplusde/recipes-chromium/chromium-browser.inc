@@ -13,7 +13,7 @@ PREFERRED_VERSION_nss = "3.17.3"
 
 DEPENDS = "nss"
 RDEPENDS:${PN} = "nspr nss libxslt libcurl libudev libcrypto-compat-1.0.0 libxml2-qt"
-RDEPENDS:${PN} += "vuplus-v3ddriver-${MACHINE_DRIVER}"
+RDEPENDS:${PN} += "vuplus-v3ddriver-${MACHINE}"
 
 S = "${UNPACKDIR}"
 
