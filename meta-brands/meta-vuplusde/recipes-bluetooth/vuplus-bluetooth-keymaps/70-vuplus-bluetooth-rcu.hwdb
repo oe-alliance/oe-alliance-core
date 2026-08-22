@@ -1,0 +1,20 @@
+# Vu+ Duo 4K Lite Bluetooth remote control
+# Keep KEY_ENTER at the Linux input layer so applications such as Chromium
+# receive the standard confirmation key. Enigma2 converts it locally to
+# KEY_OK for this exact input device.
+evdev:name:VUPLUS-BLE-RCU:*
+ KEYBOARD_KEY_c0004=voicecommand
+ KEYBOARD_KEY_c0007=audio
+ KEYBOARD_KEY_c0008=previous
+ KEYBOARD_KEY_c0009=next
+ KEYBOARD_KEY_c000a=text
+ KEYBOARD_KEY_c000b=subtitle
+ KEYBOARD_KEY_c0084=enter
+ KEYBOARD_KEY_c0097=video
+ KEYBOARD_KEY_c00b1=playpause
+ KEYBOARD_KEY_c00b7=stop
+ KEYBOARD_KEY_c016b=info
+ KEYBOARD_KEY_c016c=exit
+ KEYBOARD_KEY_c016d=tv
+ KEYBOARD_KEY_c0221=radio
+

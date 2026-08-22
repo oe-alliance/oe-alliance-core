@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--IR key mapping-->
+<ir_key_map>
+
+    <!--Key mapping description (owner, device name)-->
+	<description>Vu+ Duo 4K Lite IR key mapping</description>
+
+    <!--Key mapping revision-->
+	<revision>1.0</revision>
+
+    <!--Mapping-->
+    <keys>
+        <key name="Select"              code="0xf30c5280" vkey="0x0D"/> <!--VKEY_RETURN-->
+        <key name="Right"               code="0xec135280" vkey="0x27"/> <!--VKEY_RIGHT-->
+        <key name="Left"                code="0xfa055280" vkey="0x25"/> <!--VKEY_LEFT-->
+        <key name="Up"                  code="0xf20d5280" vkey="0x26"/> <!--VKEY_UP-->
+        <key name="Down"                code="0xf40b5280" vkey="0x28"/> <!--VKEY_DOWN-->
+        <key name="Power"               code="0x659a5280" vkey="0x98"/> <!--VKEY_POWER-->
+        <key name="Record"              code="0xea155280" vkey="0x80"/> <!--VKEY_F17-->
+        <key name="Stop"                code="0xf00f5280" vkey="0xB2"/> <!--VKEY_MEDIA_STOP-->
+        <key name="Seek Forward"        code="0xb6495280" vkey="0xB0"/> <!--VKEY_MEDIA_NEXT_TRACK-->
+        <key name="Seek Backward"       code="0xb7485280" vkey="0xB1"/> <!--VKEY_MEDIA_PREV_TRACK-->
+        <key name="Fast Forward"        code="0xe9165280" vkey="0xE4"/> <!--VKEY_OEM_104-->
+        <key name="Fast Rewind"         code="0xfe015280" vkey="0xE3"/> <!--VKEY_OEM_103-->
+        <key name="Volume Up"           code="0xbe415280" vkey="0xAF"/> <!--VKEY_VOLUME_UP-->
+        <key name="Volume Down"         code="0xbd425280" vkey="0xAE"/> <!--VKEY_VOLUME_DOWN-->
+        <key name="Mute"                code="0xdd225280" vkey="0xAD"/> <!--VKEY_VOLUME_MUTE-->
+        <key name="Channel Up"          code="0xe41b5280" vkey="0x7C"/> <!--VKEY_F13-->
+        <key name="Channel Down"        code="0xe6195280" vkey="0x7D"/> <!--VKEY_F14-->
+        <key name="Audio"               code="0xb9465280" vkey="0x77"/> <!--VKEY_F8-->
+        <key name="Video"               code="0xb8475280" vkey="0x78"/> <!--VKEY_F9-->
+        <key name="Subtitles"           code="0xfd025280" vkey="0x79"/> <!--VKEY_F10-->
+        <key name="Menu"                code="0xed125280" vkey="0x12"/> <!--VKEY_MENU-->
+        <key name="Info"                code="0xeb145280" vkey="0x7E"/> <!--VKEY_F15-->
+        <key name="Guide"               code="0xf9065280" vkey="0x7F"/> <!--VKEY_F16-->
+        <key name="Last"                code="0xbf405280" vkey="0x1B"/> <!--VKEY_ESCAPE-->
+        <key name="Exit"                code="0xfb045280" vkey="0xfe"/> <!--VKEY_OEM_CLEAR-->
+        <key name="1"                   code="0x67985280" vkey="0x31"/> <!--VKEY_1-->
+        <key name="2"                   code="0xa45b5280" vkey="0x32"/> <!--VKEY_2-->
+        <key name="3"                   code="0xdf205280" vkey="0x33"/> <!--VKEY_3-->
+        <key name="4"                   code="0x68975280" vkey="0x34"/> <!--VKEY_4-->
+        <key name="5"                   code="0xac535280" vkey="0x35"/> <!--VKEY_5-->
+        <key name="6"                   code="0xe01f5280" vkey="0x36"/> <!--VKEY_6-->
+        <key name="7"                   code="0x6a955280" vkey="0x37"/> <!--VKEY_7-->
+        <key name="8"                   code="0xda255280" vkey="0x38"/> <!--VKEY_8-->
+        <key name="9"                   code="0xe11e5280" vkey="0x39"/> <!--VKEY_9-->
+        <key name="0"                   code="0xdb245280" vkey="0x30"/> <!--VKEY_0-->
+        <key name="prior"               code="0xbc435280" vkey="0x85"/> <!--VKEY_F22-->
+        <key name="next"                code="0x251a5280" vkey="0x86"/> <!--VKEY_F23-->
+        <key name="channelup"           code="0xe41b5280" vkey="0x87"/> <!--VKEY_F24-->
+        <key name="red"                 code="0xbf405280" vkey="0xc0"/> <!--VKEY_OEM_3-->
+        <key name="green"               code="0x6c935280" vkey="0xdb"/> <!--VKEY_OEM_4-->
+        <key name="yellow"              code="0xdc235280" vkey="0xdc"/> <!--VKEY_OEM_5-->
+        <key name="blue"                code="0xe31c5280" vkey="0xdd"/> <!--VKEY_OEM_6-->
+    </keys>
+
+</ir_key_map>

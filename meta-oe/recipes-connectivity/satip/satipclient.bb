@@ -12,12 +12,6 @@ SRC_URI = " \
     file://satipclient.sh \
 "
 
-SRC_URI:arm = " \
-    git://github.com/oe-alliance/satip-client.git;protocol=https;branch=mis \
-    file://satipclient.sh \
-    file://0001-auto-detect-and-avoid-ioctl-conflicts.patch \
-"
-
 inherit gitpkgv autotools update-rc.d
 
 INITSCRIPT_NAME = "satipclient"
