@@ -33,6 +33,7 @@ struct _GstDreamAudioSink
     DreamAvsync  *avsync;
 
     gint     codec_id;          /* FFmpeg AVCodecID, -1 unset */
+    gboolean raw_pcm;           /* input is interleaved S16LE, no FFmpeg */
     guint    sample_rate;
     guint    channels;
     gint64   last_pts_90k;

@@ -11,13 +11,22 @@ SRCREV = "${AUTOREV}"
 PV = "1+git"
 PKGV = "1+git${GITPKGV}"
 BRANCH = "master"
-PR = "r1"
+PR = "r4"
 
-SRC_URI = "git://github.com/Taapat/enigma2-plugin-blurayplayer.git;protocol=https;branch=${BRANCH}"
+SRC_URI = "git://github.com/oe-alliance-mirrors/enigma2-plugin-blurayplayer.git;protocol=https;branch=${BRANCH} \
+    file://aacs/README.openatv \
+"
 
 inherit setuptools3-openplugins
 
 DEPENDS += "python3  libbluray libudfread"
-RDEPENDS:${PN} = "libbluray"
+RDEPENDS:${PN} = "libbluray libaacs"
+
+do_install:append() {
+	install -d ${D}${sysconfdir}/xdg/aacs
+	install -m 0644 ${UNPACKDIR}/aacs/README.openatv ${D}${sysconfdir}/xdg/aacs/README.openatv
+}
+
+FILES:${PN} += "${sysconfdir}/xdg/aacs/README.openatv"
 
 FILES:${PN}-dbg += "/usr/lib/enigma2/python/Plugins/Extensions/BlurayPlayer/.debug"

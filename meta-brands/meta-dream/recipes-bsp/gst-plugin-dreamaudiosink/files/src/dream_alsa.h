@@ -21,6 +21,10 @@ int dream_alsa_set_params(DreamAlsa *a,
                           unsigned int bytes_per_sample,
                           int passthrough);
 
+/* Optional non-blocking mode for callers which must keep feeding a separate
+ * video decoder even when the AMLogic ALSA timer temporarily stalls. */
+void dream_alsa_set_nonblocking(DreamAlsa *a, int enabled);
+
 /* Blocking write with auto XRUN recovery. pts_90k = -1 if unknown.
  * Runs anchor + tier drift correction against /sys/class/tsync/pts_video. */
 int dream_alsa_write(DreamAlsa *a, const uint8_t *data, size_t size, int64_t pts_90k);

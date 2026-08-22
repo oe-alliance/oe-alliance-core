@@ -32,6 +32,8 @@ struct DreamAlsa {
     unsigned int  bytes_per_sample;
     int           passthrough;
     int           configured;
+    int           nonblocking;
+    snd_pcm_uframes_t buffer_size;
     int           volume_q15;     /* 0..32768 - linear gain for S16 PCM */
     uint8_t      *scratch;        /* reusable scaled-PCM buffer */
     size_t        scratch_size;
@@ -126,7 +128,11 @@ static void push_silence_ms(DreamAlsa *a, int ms)
             if (snd_pcm_recover(a->handle, (int)w, 1) < 0) break;
             continue;
         }
-        if (w == 0) { usleep(1000); continue; }
+        if (w == 0) {
+            if (a->nonblocking) break;
+            usleep(1000);
+            continue;
+        }
         frames_total -= (snd_pcm_uframes_t)w;
     }
 }
@@ -148,6 +154,7 @@ static void dream_alsa_close_handle(DreamAlsa *a)
         usleep(10000);
     }
     a->configured = 0;
+    a->buffer_size = 0;
 }
 
 void dream_alsa_free(DreamAlsa *a)
@@ -182,9 +189,23 @@ static int dream_alsa_open_handle(DreamAlsa *a)
     }
     if (!a->handle) return -1;
 
-    err = snd_pcm_nonblock(a->handle, 0);
-    if (err < 0) ALSA_DBG("set block: %s", snd_strerror(err));
+    if (!a->nonblocking) {
+        err = snd_pcm_nonblock(a->handle, 0);
+        if (err < 0) ALSA_DBG("set block: %s", snd_strerror(err));
+    }
     return 0;
+}
+
+void dream_alsa_set_nonblocking(DreamAlsa *a, int enabled)
+{
+    if (!a) return;
+    a->nonblocking = enabled ? 1 : 0;
+    if (a->handle) {
+        int err = snd_pcm_nonblock(a->handle, a->nonblocking);
+        if (err < 0)
+            ALSA_DBG("set %sblocking: %s", a->nonblocking ? "non-" : "",
+                     snd_strerror(err));
+    }
 }
 
 int dream_alsa_set_params(DreamAlsa *a,
@@ -238,6 +259,7 @@ int dream_alsa_set_params(DreamAlsa *a,
     a->bytes_per_sample = bytes_per_sample;
     a->passthrough      = passthrough;
     a->configured       = 1;
+    a->buffer_size      = buffer_size;
     a->anchor_armed     = 1;
     a->skip_bytes_remaining = 0;
     a->last_sync_log_ms = monotonic_ms();
@@ -258,6 +280,26 @@ int dream_alsa_write(DreamAlsa *a, const uint8_t *data, size_t size, int64_t pts
     const size_t frame_bytes = (size_t)a->channels * (a->bytes_per_sample ? a->bytes_per_sample : 2);
     if (frame_bytes == 0 || (size % frame_bytes) != 0)
         return -1;
+
+    /* The AMLogic dmix slave can keep reporting RUNNING after an underrun
+     * while its hardware pointer races far beyond the application pointer.
+     * A blocking snd_pcm_writei() then waits forever on /dev/snd/timer.  The
+     * opt-in non-blocking user resets this impossible ring state and keeps
+     * its video producer alive. */
+    if (a->nonblocking && a->buffer_size > 0) {
+        snd_pcm_sframes_t delay = 0;
+        int err = snd_pcm_delay(a->handle, &delay);
+        if (err < 0) {
+            err = snd_pcm_recover(a->handle, err, 1);
+            if (err < 0) return 0;
+        } else if (delay < -(snd_pcm_sframes_t)a->buffer_size) {
+            ALSA_DBG("invalid ring delay %ld frames, resetting PCM",
+                     (long)delay);
+            snd_pcm_drop(a->handle);
+            if (snd_pcm_prepare(a->handle) < 0) return 0;
+            dream_alsa_reset_anchor(a);
+        }
+    }
 
     /* Drain BEHIND skip budget before any new anchor / drift check fires. */
     if (a->skip_bytes_remaining > 0) {
@@ -396,6 +438,8 @@ int dream_alsa_write(DreamAlsa *a, const uint8_t *data, size_t size, int64_t pts
 
     while (frames_total > 0) {
         snd_pcm_sframes_t n = snd_pcm_writei(a->handle, play_data + offset, frames_total);
+        if (n == -EAGAIN && a->nonblocking)
+            return (int)written;
         if (n < 0) {
             int err = snd_pcm_recover(a->handle, (int)n, 0);
             if (err < 0) {
@@ -404,6 +448,8 @@ int dream_alsa_write(DreamAlsa *a, const uint8_t *data, size_t size, int64_t pts
             }
             continue;
         }
+        if (n == 0 && a->nonblocking)
+            return (int)written;
         offset       += (size_t)n * frame_bytes;
         written      += (size_t)n * frame_bytes;
         frames_total -= (snd_pcm_uframes_t)n;

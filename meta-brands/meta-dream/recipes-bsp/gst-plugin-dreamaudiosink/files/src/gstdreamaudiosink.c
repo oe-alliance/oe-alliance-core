@@ -55,7 +55,11 @@ static GstStaticPadTemplate sink_template = GST_STATIC_PAD_TEMPLATE(
         "audio/x-ac4, framed=(boolean)true; "
         "audio/x-dts, framed=(boolean)true; "
         /* No mlpparse; dream_decoder slices via libavcodec MLP parser. */
-        "audio/x-true-hd"
+        "audio/x-true-hd; "
+        /* AMLogic HDMI PCM is fixed at 48 kHz. Restricting the caps makes
+         * playbin insert audioresample for 44.1 kHz CDDA automatically. */
+        "audio/x-raw, format=(string)S16LE, layout=(string)interleaved, "
+        "rate=(int)48000, channels=(int)2"
     ));
 
 G_DEFINE_TYPE(GstDreamAudioSink, gst_dream_audio_sink, GST_TYPE_BASE_SINK)
@@ -185,6 +189,7 @@ gst_dream_audio_sink_start(GstBaseSink *bsink)
     }
 
     self->codec_id     = -1;
+    self->raw_pcm      = FALSE;
     self->sample_rate  = 0;
     self->channels     = 0;
     self->last_pts_90k = AV_NOPTS_VALUE;
@@ -199,6 +204,7 @@ gst_dream_audio_sink_stop(GstBaseSink *bsink)
     if (self->alsa)    { dream_alsa_free(self->alsa);       self->alsa    = NULL; }
     if (self->avsync)  { dream_avsync_free(self->avsync);   self->avsync  = NULL; }
     self->codec_id = -1;
+    self->raw_pcm  = FALSE;
     return TRUE;
 }
 
@@ -207,15 +213,52 @@ gst_dream_audio_sink_set_caps(GstBaseSink *bsink, GstCaps *caps)
 {
     GstDreamAudioSink *self = GST_DREAM_AUDIO_SINK(bsink);
 
+    if (!caps || gst_caps_get_size(caps) == 0) return FALSE;
+
+    const GstStructure *s = gst_caps_get_structure(caps, 0);
+    const gchar *name = gst_structure_get_name(s);
+    if (g_str_equal(name, "audio/x-raw")) {
+        gint rate = 0, ch = 0;
+        const gchar *format = gst_structure_get_string(s, "format");
+        const gchar *layout = gst_structure_get_string(s, "layout");
+
+        if (!format || !g_str_equal(format, "S16LE") ||
+            !layout || !g_str_equal(layout, "interleaved") ||
+            !gst_structure_get_int(s, "rate", &rate) ||
+            !gst_structure_get_int(s, "channels", &ch) ||
+            rate != 48000 || ch != 2) {
+            GST_WARNING_OBJECT(self, "unsupported raw PCM caps");
+            return FALSE;
+        }
+
+        if (self->decoder) {
+            dream_decoder_free(self->decoder);
+            self->decoder = NULL;
+        }
+        if (!self->alsa || dream_alsa_set_params(self->alsa, rate, ch, 2, 0) < 0) {
+            GST_WARNING_OBJECT(self, "alsa set_params failed for raw PCM");
+            return FALSE;
+        }
+
+        self->raw_pcm     = TRUE;
+        self->codec_id    = AV_CODEC_ID_PCM_S16LE;
+        self->sample_rate = (guint)rate;
+        self->channels    = (guint)ch;
+        GST_INFO_OBJECT(self, "configured raw PCM %d Hz, %d channels", rate, ch);
+        return TRUE;
+    }
+
     gint codec = codec_id_from_caps(caps);
     if (codec < 0) { GST_WARNING_OBJECT(self, "unsupported caps"); return FALSE; }
 
     gint ch = 0;
-    const GstStructure *s = gst_caps_get_structure(caps, 0);
     gst_structure_get_int(s, "channels", &ch);
     if (ch <= 0) ch = 2;
 
-    if (self->decoder && self->codec_id == codec) return TRUE;
+    if (self->decoder && self->codec_id == codec) {
+        self->raw_pcm = FALSE;
+        return TRUE;
+    }
 
     if (self->decoder) { dream_decoder_free(self->decoder); self->decoder = NULL; }
 
@@ -240,6 +283,7 @@ gst_dream_audio_sink_set_caps(GstBaseSink *bsink, GstCaps *caps)
         return FALSE;
     }
     self->codec_id = codec;
+    self->raw_pcm  = FALSE;
     return TRUE;
 }
 
@@ -247,6 +291,21 @@ static GstFlowReturn
 gst_dream_audio_sink_render(GstBaseSink *bsink, GstBuffer *buf)
 {
     GstDreamAudioSink *self = GST_DREAM_AUDIO_SINK(bsink);
+
+    if (self->raw_pcm) {
+        GstMapInfo mi;
+        if (!gst_buffer_map(buf, &mi, GST_MAP_READ)) return GST_FLOW_ERROR;
+
+        const gint64 pts_90k = ns_to_pts90k(GST_BUFFER_PTS(buf));
+        if (pts_90k >= 0) self->last_pts_90k = pts_90k;
+
+        /* Pure audio has no meaningful pts_video. Passing no sync PTS keeps
+         * dream_alsa from correcting against a stale video clock. */
+        const gint64 alsa_pts = self->e2_sync ? -1 : pts_90k;
+        int rc = dream_alsa_write(self->alsa, mi.data, mi.size, alsa_pts);
+        gst_buffer_unmap(buf, &mi);
+        return (rc < 0) ? GST_FLOW_ERROR : GST_FLOW_OK;
+    }
 
     if (!self->decoder) {
         GST_WARNING_OBJECT(self, "no decoder yet");
@@ -404,6 +463,7 @@ gst_dream_audio_sink_init(GstDreamAudioSink *self)
     self->softdecoder_delay_ms = DEFAULT_SOFTDECODER_DELAY_MS;
     self->volume               = 1.0;
     self->codec_id             = -1;
+    self->raw_pcm              = FALSE;
     self->last_pts_90k         = AV_NOPTS_VALUE;
 
     /* max-lateness=-1 + sync=FALSE: BaseSink doesn't drop or wait-clock.

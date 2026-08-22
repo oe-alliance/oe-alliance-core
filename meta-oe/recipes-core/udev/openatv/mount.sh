@@ -225,6 +225,15 @@ automount() {
 
 	# Deal with specific file system exceptions
 	case $ID_FS_TYPE in
+	udf|iso9660)
+		if [ "$OPTICAL_DEVICE" = "true" ]; then
+			# Optical media is read-only and its filesystem is already known from udev.
+			# Avoid probing unrelated writable filesystems before falling back to UDF/ISO9660.
+			MOUNT="$MOUNT -t $ID_FS_TYPE -o ro"
+		else
+			MOUNT="$MOUNT -t auto"
+		fi
+		;;
 	ntfs|exfat)
 		MOUNTPOINT=/sys/fs/fuse/connections
 		mount -t fusectl fusectl $MOUNTPOINT >/dev/null 2>&1
@@ -278,17 +287,43 @@ rm_dir() {
 name="`basename "$DEVNAME"`"
 [ -e /sys/block/$name/device/media ] && media_type=`cat /sys/block/$name/device/media`
 
+# Optical drives send a media-change event when a disc is inserted or removed.
+# Mount data discs at a stable path so Enigma2 and MediaScanner can find them.
+if [ "${name:0:2}" == "sr" ]; then
+	if [ "$ACTION" = "remove" ] || [ "$ACTION" = "change" ]; then
+		for mnt in `grep "^$DEVNAME " /proc/mounts | cut -f 2 -d " "`
+		do
+			$UMOUNT "$mnt"
+		done
+		test -e "/tmp/.automount-$name" && rm_dir "/media/$name"
+		# The generic helper ignores udev's "change" action.  Optical media
+		# must be reported with the CD mode used by bdpoll instead.
+		if [ -x /usr/bin/hotplug_e2_helper ]; then
+			/usr/bin/hotplug_e2_helper remove "/block/$name" "/block/$name/device" 1
+		fi
+	fi
+
+	if [ "$ACTION" = "add" ] || [ "$ACTION" = "change" ]; then
+		if [ -n "$ID_FS_TYPE" ]; then
+			OPTICAL_DEVICE="true"
+			LABEL="$name"
+			automount
+			if grep -q "^$DEVNAME " /proc/mounts && [ -x /usr/bin/hotplug_e2_helper ]; then
+				/usr/bin/hotplug_e2_helper add "/block/$name" "/block/$name/device" 1
+			fi
+		else
+			log "No filesystem detected for optical device $DEVNAME."
+		fi
+	fi
+	exit 0
+fi
+
 if [ "$ACTION" = "add" ]; then
 	FLASHEXPANDERDEV=`cat /proc/mounts | grep '.FlashExpander' | cut -d " " -f1`
 	if [ -n "$FLASHEXPANDERDEV" ]; then
 		MOUNTPOINT=`cat /proc/mounts | grep ${FLASHEXPANDERDEV} | cut -d " " -f2`
 	else
 		MOUNTPOINT=""
-	fi
-
-	if [ ${name:0:2} == "sr" ]; then
-		log "CD/DVD Detectet. $DEVNAME"
-		exit 0
 	fi
 
 	if [ -z "$ID_FS_TYPE" ]; then
@@ -386,11 +421,6 @@ if [ "$ACTION" = "remove" ] || [ "$ACTION" = "change" ] && [ -x "$UMOUNT" ] && [
 		$UMOUNT $mnt
 	done
 	
-
-	if [ ${name:0:2} == "sr" ]; then
-		log "CD/DVD Detectet. $DEVNAME"
-		exit 0
-	fi
 
 	LABEL=`echo $mnt | cut -c 8-`
 	log "!" "remove device $LABEL"

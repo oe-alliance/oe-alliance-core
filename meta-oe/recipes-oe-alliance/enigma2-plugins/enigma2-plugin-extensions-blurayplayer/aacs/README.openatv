@@ -1,0 +1,17 @@
+AACS support for the Enigma2 Blu-ray Player is disabled by default.
+
+To test an AACS-protected disc, place a legally obtained key database at one
+of these locations. The hard disk location is checked first:
+
+    /media/hdd/aacs/KEYDB.cfg
+
+    /etc/xdg/aacs/KEYDB.cfg
+
+Then open the Blu-ray Player, press the blue button for Settings, and enable
+AACS support. openATV does not provide or download decryption keys.
+
+Information about a third-party key database is available at:
+
+    https://fvonline-db.bplaced.net/
+
+Only use keys where this is permitted for you and your disc.
