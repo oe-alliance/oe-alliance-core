@@ -22,7 +22,6 @@ SRC_URI += "https://source.mynonpublic.com/vuplus.de/linux/vuplus-linux-${PV}-${
     file://defconfig_initrd \
     file://initramfs-subdirboot.cpio.gz;unpack=0 \
     file://vufindkerneldevice.py \
-    file://drivers_hid/hid-input.c;unpack=0 \
     file://0002-linux_dvb-core.patch \
     file://0002-bcmgenet-recovery-fix.patch \
     file://0002-linux_4_1_1_9_dvbs2x.patch \
@@ -70,10 +69,6 @@ kernel_do_configure:prepend() {
         if [ -e ${UNPACKDIR}/defconfig_initrd ]; then
             mv ${UNPACKDIR}/defconfig_initrd ${UNPACKDIR}/defconfig
         fi
-        # todo later
-        if [ -f ${THISDIR}/${PN}-${KV}/${MACHINE}/drivers_hid/hid-input.c ]; then
-            cp ${THISDIR}/${PN}-${KV}/${MACHINE}/drivers_hid/hid-input.c ${S}/drivers/hid/hid-input.c
-        fi 
 }
 kernel_do_install:append() {
         install -d ${D}/${KERNEL_IMAGEDEST}

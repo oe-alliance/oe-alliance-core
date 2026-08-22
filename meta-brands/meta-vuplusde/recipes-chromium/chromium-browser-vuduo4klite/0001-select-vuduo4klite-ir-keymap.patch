@@ -1,0 +1,27 @@
+From: OpenATV <openatv@gmail.com>
+Subject: [PATCH] select Duo 4K Lite IR keymap
+
+The Duo 4K Lite reports custom code 8052. Select its matching keymap
+instead of falling back to the 51ae remote layout.
+
+Upstream-Status: Inappropriate [device-specific]
+
+---
+ chromium/run.sh | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/chromium/run.sh b/chromium/run.sh
+index 1111111..2222222 100755
+--- a/chromium/run.sh
++++ b/chromium/run.sh
+@@ -82,6 +82,8 @@ read CUSTOMCODE < /proc/stb/ir/rc/customcode
+ 
+ if [ "$CUSTOMCODE" ==  "50af" ]; then
+         export WEBKITGL_KEYMAP_FILE=$TOP/bin/irkeymap_50af.xml
++elif [ "$CUSTOMCODE" == "8052" ]; then
++        export WEBKITGL_KEYMAP_FILE=$TOP/bin/irkeymap_8052.xml
+ else
+         export WEBKITGL_KEYMAP_FILE=$TOP/bin/irkeymap_51ae.xml
+ fi
+-- 
+2.43.0
