@@ -6,7 +6,7 @@ DEPENDS = "libdvdnav"
 
 inherit gitpkgv
 
-SRCREV = "${AUTOREV}"
+SRCREV = "9536f50ffef25ac33be60bb7dfed2a2db38bb1c8"
 PV = "1.1+git"
 PKGV = "1.1+git${GITPKGV}"
 
