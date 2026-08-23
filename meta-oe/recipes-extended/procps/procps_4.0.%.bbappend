@@ -1,4 +1,4 @@
 FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 
-PR .= ".1"
+PR .= ".2"
 PACKAGE_NO_LOCALE = "1"
