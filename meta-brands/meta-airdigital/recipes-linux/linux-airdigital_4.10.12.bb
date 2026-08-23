@@ -15,14 +15,14 @@ SRC_URI[arm.sha256sum] = "67a3ac98727595a399d5c399d3b66a7fadbe8136ac517e08decba5
 
 LIC_FILES_CHKSUM = "file://${UNPACKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR = "r19"
+MACHINE_KERNEL_PR = "r20"
 
 SRC_URI += "https://source.mynonpublic.com/zgemma/linux-${PV}-${ARCH}.tar.gz;name=${ARCH} \
     file://defconfig \
     ${KERNEL_PATCHES_SERIES_4_10} \
     ${KERNEL_PATCHES_DVB_SI2157} \
     ${KERNEL_PATCHES_DVB_SI2168} \
-    ${KERNEL_PATCHES_DVB_MYGICA_V333} \
+    ${KERNEL_PATCHES_DVB_MYGICA_V333C3} \
     ${KERNEL_PATCHES_DVB_MYGICA_V334} \
     ${KERNEL_PATCHES_DVB_MYGICA_V335} \
     file://0005-xbox-one-tuner-4.10.patch \
