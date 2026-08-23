@@ -54,3 +54,22 @@ python read_subpackage_metadata:append () {
 
     d.setVar('PACKAGES', ' '.join(kept))
 }
+
+# SDK features like dbg-pkgs ask for a whole family of packages through
+# COMPLEMENTARY_GLOB. A family that is dropped cannot be installed and opkg fails
+# the whole SDK over it, so such a feature is taken out here.
+python () {
+    drop = (d.getVar('OEA_PACKAGE_DROP') or '').split()
+    if not drop:
+        return
+
+    globs = d.getVarFlags('COMPLEMENTARY_GLOB') or {}
+    features = (d.getVar('SDKIMAGE_FEATURES') or '').split()
+    kept = [f for f in features
+            if not set(d.expand(globs.get(f, '')).split()) & set(drop)]
+
+    if kept != features:
+        bb.debug(2, 'oea-package-drop: %s not usable in SDKIMAGE_FEATURES' %
+                 ' '.join(f for f in features if f not in kept))
+        d.setVar('SDKIMAGE_FEATURES', ' '.join(kept))
+}
