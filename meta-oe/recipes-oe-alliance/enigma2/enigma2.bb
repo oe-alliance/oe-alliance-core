@@ -15,7 +15,7 @@ DEPENDS = " \
     gettext-native \
     gstreamer1.0-plugins-base gstreamer1.0 \
     jpeg \
-    libdreamdvd libdvbsi++ fribidi libmad libpng giflib libxml2 libxmlccwrap \
+    libbluray libdreamdvd libdvbsi++ fribidi libmad libpng giflib libxml2 libxmlccwrap \
     ${@bb.utils.contains_any("DISTRO_NAME", "openatv openvix openbh openspa teamblue opendroid openhdf", "libsigc++-3" , "libsigc++-2.0", d)} \
     openssl avahi libudfread \
     python3-pillow python3-twisted python3-wifi python3-six-native \
@@ -31,6 +31,7 @@ DEPENDS = " \
 
 RDEPENDS:${PN} = " \
     alsa-conf \
+    libbluray \
     libdreamdvd \
     libudfread \
     enigma2-fonts \
