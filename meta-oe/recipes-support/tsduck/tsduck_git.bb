@@ -5,11 +5,9 @@ MAINTAINER = "https://tsduck.io/"
 LICENSE = "BSD-2-Clause"
 LIC_FILES_CHKSUM = "file://LICENSE.txt;beginline=1;endline=1;md5=c3af740e8628bb461ed34cc1b4bba078"
 
-SRC_URI = "git://github.com/tsduck/tsduck.git;protocol=https;branch=master \
-           file://openssl4-compat.patch \
-           "
+SRC_URI = "git://github.com/tsduck/tsduck.git;protocol=https;branch=master"
 
-SRCREV = "65dfa7eda118317b0b124a63d84ddaea23af4907"
+SRCREV = "958d0726dc7a54cef158fae35b4f3153f43c1599"
 PV = "git"
 PKGV = "${GITPKGVTAG}"
 PR = "r0"
