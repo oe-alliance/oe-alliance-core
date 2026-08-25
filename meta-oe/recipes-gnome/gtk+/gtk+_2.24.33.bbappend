@@ -14,3 +14,7 @@ SRC_URI += " \
 PACKAGECONFIG = "directfb"
 
 GTKBASE_RRECOMMENDS:remove = "gnome-theme-adwaita"
+
+do_install:prepend() {
+    export GIR_EXTRA_LIBS_PATH="${B}/gdk/.libs"
+}
