@@ -1,6 +1,6 @@
 --- a/Lib/importlib/_bootstrap_external.py
 +++ b/Lib/importlib/_bootstrap_external.py
-@@ -271,13 +271,13 @@ def cache_from_source(path, debug_override=None, *, optimization=None):
+@@ -267,13 +267,13 @@ def cache_from_source(path, debug_override=None, *, optimization=None):
      tag = sys.implementation.cache_tag
      if tag is None:
          raise NotImplementedError('sys.implementation.cache_tag is None')
@@ -16,7 +16,7 @@
      if optimization != '':
          if not optimization.isalnum():
              raise ValueError(f'{optimization!r} is not alphanumeric')
-@@ -307,7 +307,7 @@ def cache_from_source(path, debug_override=None, *, optimization=None):
+@@ -304,7 +304,7 @@ def cache_from_source(path, debug_override=None, *, optimization=None):
              head.lstrip(path_separators),
              filename,
          )
@@ -27,7 +27,7 @@
  def source_from_cache(path):
 --- a/Python/initconfig.c
 +++ b/Python/initconfig.c
-@@ -1022,7 +1022,7 @@ _PyConfig_InitCompatConfig(PyConfig *config)
+@@ -1049,7 +1049,7 @@ _PyConfig_InitCompatConfig(PyConfig *config)
      config->warn_default_encoding = 0;
      config->inspect = -1;
      config->interactive = -1;
@@ -36,7 +36,7 @@
      config->parser_debug= -1;
      config->write_bytecode = -1;
      config->verbose = -1;
-@@ -1075,7 +1075,7 @@ config_init_defaults(PyConfig *config)
+@@ -1102,7 +1102,7 @@ config_init_defaults(PyConfig *config)
      config->bytes_warning = 0;
      config->inspect = 0;
      config->interactive = 0;
@@ -45,7 +45,7 @@
      config->parser_debug= 0;
      config->write_bytecode = 1;
      config->verbose = 0;
-@@ -2963,7 +2963,7 @@ config_parse_cmdline(PyConfig *config, PyWideStringList *warnoptions,
+@@ -2992,7 +2992,7 @@ config_parse_cmdline(PyConfig *config, PyWideStringList *warnoptions,
              break;
  
          case 'O':
