@@ -17,7 +17,7 @@ INHIBIT_SYSROOT_STRIP = "1"
 INSANE_SKIP:${PN}:append = " already-stripped"
 
 do_install() {
-    find . -depth -not -path "./patches*" -not -path "./.pc*" -print0 | cpio --null -pdlu ${D}
+    find . -depth -not -path "./patches*" -not -path "./.pc*" -print0 | cpio --null -pdu ${D}
     chown -hR root:root ${D}
 }
 
