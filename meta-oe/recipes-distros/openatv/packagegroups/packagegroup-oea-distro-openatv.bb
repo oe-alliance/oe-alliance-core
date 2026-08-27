@@ -10,7 +10,7 @@ inherit packagegroup
 ALLOW_EMPTY:${PN} = "1"
 
 RDEPENDS:${PN} = "\
-    ${@bb.utils.contains_any("MACHINE_FEATURES", "smallflash singlecore", "", "packagegroup-oea-network-server", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", "packagegroup-oea-network-server", d)} \
     openatv-version-info \
     openatv-bootlogo \
     openatv-spinner \

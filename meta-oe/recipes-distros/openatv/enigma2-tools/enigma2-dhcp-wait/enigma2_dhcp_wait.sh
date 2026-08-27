@@ -57,5 +57,7 @@ log_message "Resolv.conf content:"
 cat /etc/resolv.conf >> "$log_file"
 
 log_message "Checking DNS..."
-ping -c 1 google.com >> "$log_file"
+# This is diagnostic only.  DNS resolution or a blocked ICMP request must not
+# delay Enigma2 after DHCP has already supplied an address.
+ping -c 1 google.com >> "$log_file" 2>&1 &
 fi

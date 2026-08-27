@@ -218,6 +218,9 @@ do_install() {
     printf "scart=${HAVE_SCART}\n" >> ${D}${INFOFILE}
     printf "noscartswitch=${HAVE_NO_SCART_SWITCH}\n" >> ${D}${INFOFILE}
     printf "scartyuv=${HAVE_SCART_YUV}\n" >> ${D}${INFOFILE}
+    if [ "${DISTRO}" = "openatv" ]; then
+        printf "singlecore=${@bb.utils.contains('MACHINE_FEATURES', 'singlecore', 'True', 'False', d)}\n" >> ${D}${INFOFILE}
+    fi
     printf "smallflash=${HAVE_SMALLFLASH}\n" >> ${D}${INFOFILE}
     printf "socfamily='${SOC_FAMILY}'\n" >> ${D}${INFOFILE}
     printf "svideo=${HAVE_SVIDEO}\n" >> ${D}${INFOFILE}

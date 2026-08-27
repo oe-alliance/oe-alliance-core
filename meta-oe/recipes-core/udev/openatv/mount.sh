@@ -331,6 +331,20 @@ if [ "$ACTION" = "add" ]; then
 	#	exit 0
 	fi
 
+	# Swap partitions are not mounted.  Activate them before the fstab,
+	# boot-device and no-mount checks below so a Chkroot swap partition listed
+	# by UUID in /etc/fstab is available before Enigma2 starts.
+	if [ "$ID_FS_TYPE" == "swap" ] ; then
+		if ! grep -qs "^${DEVNAME}[[:space:]]" /proc/swaps ; then
+			if swapon "$DEVNAME" ; then
+				log "Activated swap space: $DEVNAME"
+			else
+				log "Failed to activate swap space: $DEVNAME"
+			fi
+		fi
+		exit 0
+	fi
+
 	# check if already mounted
 	if grep -q "^${DEVNAME} " /proc/mounts ; then
 		if [ ! "${FLASHEXPANDERDEV}" == "${DEVNAME}" ] || [[ "$MOUNTPOINT"  =~ .*"/media/"* ]]; then 
@@ -380,14 +394,6 @@ if [ "$ACTION" = "add" ]; then
 	if [ -f "/dev/nomount.${DEVBASE}" ]; then
 		# blocked
 		log "!" "exit, due to a no-mount flag for $DEVBASE"
-		exit 0
-	fi
-
-	# Activate swap space
-	if [ "$ID_FS_TYPE" == "swap" ] ; then
-		if ! grep -q "^/dev/${NAME} " /proc/swaps ; then
-			swapon /dev/${NAME}
-		fi
 		exit 0
 	fi
 

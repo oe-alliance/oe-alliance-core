@@ -1,0 +1,33 @@
+#!/bin/sh
+
+PATH=/sbin:/bin:/usr/sbin:/usr/bin
+PROGRAM=/usr/sbin/smallbox-wizard
+MARKER=/etc/smallbox-wizard.done
+REBOOT_MARKER=/tmp/smallbox-wizard-rebooting
+LOG=/tmp/smallbox-wizard.log
+
+case "$1" in
+	start)
+		[ -e "$MARKER" ] && exit 0
+		[ -x "$PROGRAM" ] || exit 0
+		[ -c /dev/fb0 ] || [ -c /dev/fb/0 ] || [ -c /dev/fb1 ] || exit 0
+		pidof smallbox-wizard >/dev/null 2>&1 && exit 0
+		if command -v chronyc >/dev/null 2>&1; then
+			chronyc -a online >/dev/null 2>&1 || true
+			chronyc -a makestep >/dev/null 2>&1 || true
+		fi
+		: >"$LOG"
+		while [ ! -e "$MARKER" ] && [ ! -e "$REBOOT_MARKER" ]; do
+			"$PROGRAM" --boot >>"$LOG" 2>&1
+			[ -e "$MARKER" ] || [ -e "$REBOOT_MARKER" ] || sleep 1
+		done
+		exit 0
+		;;
+	stop|restart|reload)
+		exit 0
+		;;
+	*)
+		echo "Usage: $0 start|stop"
+		exit 1
+		;;
+esac
