@@ -5,13 +5,13 @@ HOMEPAGE = "https://mediaarea.net/en/MediaInfo"
 SECTION = "libs"
 PRIORITY = "optional"
 LICENSE = "BSD-2-Clause"
-LIC_FILES_CHKSUM = "file://${UNPACKDIR}/MediaInfoLib/LICENSE;md5=8f93c85175cbc94ea160ad08cc157822"
+LIC_FILES_CHKSUM = "file://${UNPACKDIR}/MediaInfoLib/LICENSE;md5=9e35b82c62a9516c3b6f9846aac29fd0"
 
 DEPENDS += "libtinyxml2 libzen zlib"
 
 SRC_URI = "https://mediaarea.net/download/source/libmediainfo/${PV}/libmediainfo_${PV}.tar.bz2"
-SRC_URI[md5sum] = "dd166e6fa2cb2eafd3a783ccd4da3fcd"
-SRC_URI[sha256sum] = "c1255fb8aa6a505fb3c738c731a327d4966f0e3cbb2bb3b4be89b9ee0263cb74"
+SRC_URI[md5sum] = "991729d962a6fc86ee1fe3b4e281218c"
+SRC_URI[sha256sum] = "736222cb45966412f50276461b7cd50488794948063fadd39c9a675ba20a3f4a"
 
 S = "${UNPACKDIR}/MediaInfoLib/Project/GNU/Library"
 
