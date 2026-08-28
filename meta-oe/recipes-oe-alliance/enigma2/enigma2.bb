@@ -196,6 +196,24 @@ RDEPENDS:enigma2-plugin-extensions-filecommander = "python3-puremagic"
 
 RREPLACES:enigma2-plugin-systemplugins-lcnscanner:openatv = "enigma2-plugin-systemplugins-terrestrialscan"
 RCONFLICTS:enigma2-plugin-systemplugins-lcnscanner:openatv = "enigma2-plugin-systemplugins-terrestrialscan"
+RPROVIDES:${PN}:openatv += " \
+    enigma2-plugin-systemplugins-wirelesslan \
+    enigma2-plugin-systemplugins-networkwizard \
+    enigma2-plugin-systemplugins-networkbrowser \
+"
+
+RREPLACES:${PN}:openatv += " \
+    enigma2-plugin-systemplugins-wirelesslan \
+    enigma2-plugin-systemplugins-networkwizard \
+    enigma2-plugin-systemplugins-networkbrowser \
+"
+
+RCONFLICTS:${PN}:openatv += " \
+    enigma2-plugin-systemplugins-wirelesslan \
+    enigma2-plugin-systemplugins-networkwizard \
+    enigma2-plugin-systemplugins-networkbrowser \
+"
+
 
 inherit autotools-brokensep gitpkgv pkgconfig python3native python3targetconfig upx-compress
 
