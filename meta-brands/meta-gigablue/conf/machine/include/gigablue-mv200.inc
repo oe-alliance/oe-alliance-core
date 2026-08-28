@@ -43,7 +43,7 @@ require conf/machine/include/arm/armv7a/tune-cortexa15.inc
 
 DVBSKYPROVIDER = "kernel"
 
-DVBMEDIASINK_CONFIG = "--with-h265 --with-vb8 --with-vb9 --with-spark --with-wma --with-wmv --with-pcm --with-dts --with-eac3"
+DVBMEDIASINK_CONFIG = "--with-h265 --with-vb8 --with-vb9 --with-spark --with-wma --with-wmv --with-pcm --with-dts --with-eac3 --with-aac-loas"
 
 IMAGE_CMD:gigablueemmc:append = "\
 	mkdir -p ${IMAGE_ROOTFS}/usr/lib; \

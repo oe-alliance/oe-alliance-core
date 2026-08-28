@@ -49,6 +49,8 @@ static GstStaticPadTemplate sink_template = GST_STATIC_PAD_TEMPLATE(
         "audio/mpeg, mpegversion=(int)2, parsed=(boolean)true; "        /* MPEG-2 audio (MP2 ext) */
         "audio/mpeg, mpegversion=(int)2, framed=(boolean)true; "        /* MPEG-2 AAC */
         "audio/mpeg, mpegversion=(int)4, framed=(boolean)true; "        /* MPEG-4 AAC */
+        "audio/mpeg, mpegversion=(int){ 2, 4 }, "
+        "stream-format=(string)loas, framed=(boolean)true; "           /* AAC LOAS/LATM */
         /* framed=true forces ac3parse / dcaparse upstream. */
         "audio/x-ac3, framed=(boolean)true; "
         "audio/x-eac3, framed=(boolean)true; "
@@ -80,6 +82,9 @@ static gint codec_id_from_caps(const GstCaps *caps)
     if (g_str_equal(name, "audio/mpeg")) {
         gint mv = 0;
         gst_structure_get_int(s, "mpegversion", &mv);
+        const gchar *stream_format = gst_structure_get_string(s, "stream-format");
+        if ((mv == 2 || mv == 4) && stream_format && g_str_equal(stream_format, "loas"))
+            return AV_CODEC_ID_AAC_LATM;
         if (mv == 1) {
             gint layer = 0;
             gst_structure_get_int(s, "layer", &layer);

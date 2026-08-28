@@ -129,3 +129,5 @@ IMAGE_CMD:zgemmafastboot8gb:append = " \
 
 require conf/machine/include/arm/armv7a/tune-cortexa15.inc
 require conf/machine/include/airdigital-oem.inc
+
+DVBMEDIASINK_CONFIG += "--with-aac-loas"

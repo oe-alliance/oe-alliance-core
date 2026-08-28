@@ -102,3 +102,5 @@ IMAGE_CMD:maxytecfastboot8gb:append = " \
 
 require conf/machine/include/arm/armv7a/tune-cortexa15.inc
 require conf/machine/include/maxytec-oem.inc
+
+DVBMEDIASINK_CONFIG += "--with-aac-loas"

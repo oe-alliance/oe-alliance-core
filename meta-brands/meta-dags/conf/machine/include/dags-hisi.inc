@@ -1,5 +1,7 @@
 include conf/machine/include/dags-oem.inc
 
+DVBMEDIASINK_CONFIG += "--with-aac-loas"
+
 PACKAGECONFIG_GL:pn-qtbase = " "
 PACKAGECONFIG:append:pn-qtbase = " gles2 linuxfb"
 KERNEL_FILE = "kernel.bin"

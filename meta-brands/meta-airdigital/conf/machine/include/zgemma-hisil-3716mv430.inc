@@ -21,3 +21,5 @@ PREFERRED_VERSION_linux-airdigital = "4.4.176"
 require conf/machine/include/arm/armv7a/tune-cortexa7.inc
 require conf/machine/include/airdigial-ubi-yaffs.inc
 require conf/machine/include/airdigital-oem.inc
+
+DVBMEDIASINK_CONFIG += "--with-aac-loas"
