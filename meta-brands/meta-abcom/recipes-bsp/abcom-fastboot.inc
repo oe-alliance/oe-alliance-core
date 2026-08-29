@@ -1,13 +1,13 @@
-SUMMARY = "${MACHINE} fastboot files"
+SUMMARY = "${MACHINEBUILD} fastboot files"
 SECTION = "base"
 PRIORITY = "required"
 require conf/license/license-close.inc
 PR = "${SRCDATE}"
-PACKAGE_ARCH = "${MACHINE_ARCH}"
+PACKAGE_ARCH = "${MACHINEBUILD}"
 
 inherit deploy
 
-SRC_URI = "https://source.mynonpublic.com/abcom/${MACHINE}-fastboot-${SRCDATE}.zip"
+SRC_URI = "https://source.mynonpublic.com/abcom/${MACHINEBUILD}-fastboot-${SRCDATE}.zip"
 
 S = "${UNPACKDIR}"
 
@@ -20,9 +20,9 @@ do_install() {
 }
 
 do_deploy() {
-    install -d ${DEPLOY_DIR_IMAGE}/abcom-partitions-${MACHINE}/${MACHINE}
-    install -m 0755 ${S}/fastboot.bin ${DEPLOY_DIR_IMAGE}/abcom-partitions-${MACHINE}/fastboot.bin
-    install -m 0755 ${S}/${MACHINE}/fastboot.bin ${DEPLOY_DIR_IMAGE}/abcom-partitions-${MACHINE}/${MACHINE}/fastboot.bin
+    install -d ${DEPLOY_DIR_IMAGE}/abcom-partitions-${MACHINEBUILD}/${MACHINEBUILD}
+    install -m 0755 ${S}/fastboot.bin ${DEPLOY_DIR_IMAGE}/abcom-partitions-${MACHINEBUILD}/fastboot.bin
+    install -m 0755 ${S}/${MACHINEBUILD}/fastboot.bin ${DEPLOY_DIR_IMAGE}/abcom-partitions-${MACHINEBUILD}/${MACHINEBUILD}/fastboot.bin
 }
 
 addtask deploy before do_package after do_install

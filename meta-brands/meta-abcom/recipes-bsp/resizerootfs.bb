@@ -1,7 +1,7 @@
 DESCRIPTION = "Resize Rootfs"
 require conf/license/license-gplv2.inc
 
-COMPATIBLE_MACHINE = "^pulse4k$|^pulse4kmini$"
+COMPATIBLE_MACHINE = "^(abmv200)$"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 RDEPENDS:${PN} = "e2fsprogs-resize2fs"
