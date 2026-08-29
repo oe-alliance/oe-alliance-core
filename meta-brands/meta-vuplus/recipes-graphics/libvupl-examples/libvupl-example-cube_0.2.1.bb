@@ -4,7 +4,7 @@ HOMEPAGE = "https://code.google.com/archive/p/opengles-book-samples/"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=7c01ce978e205f99897d26c061b2c09a"
 
-COMPATIBLE_MACHINE = "^(vuduo2|vuduo4k|vuduo4kse|vusolo2|vusolo4k|vusolose|vuultimo4k|vuuno4k|vuuno4kse|vuzero4k)$"
+COMPATIBLE_MACHINE = "^(vu7376|vu7376duo|vuduo2|vusolo2|vusolose|vuuno4k|vuuno4kse|vuzero4k)$"
 
 PR = "r1"
 
