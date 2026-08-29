@@ -16,4 +16,4 @@ do_install() {
 RDEPENDS:${PN} = "gpgv"
 RRECOMMENDS:${PN} = "gnupg"
 
-COMPATIBLE_MACHINE = "^(dm7405nand|dm500hdv2|dm800sev2|dm7020hd|dm7020hdv2|dm8000|dm520|dm7435|dm7252s)$"
+COMPATIBLE_MACHINE = "^(dm7405nand|dm7405ubi|dm7020hd|dm8000|dm520|dm7435|dm7252s)$"
