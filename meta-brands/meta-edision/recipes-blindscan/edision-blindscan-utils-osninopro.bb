@@ -13,7 +13,7 @@ PACKAGES = "edision-blindscan-dvbs-utils-${MACHINE} edision-blindscan-dvbc-utils
 
 PV = "20190805"
 
-SRC_URI = "https://source.mynonpublic.com/edision/edision-blindscan-utils-${MACHINE}-${PV}.zip"
+SRC_URI = "https://source.mynonpublic.com/edision/edision-blindscan-utils-${MACHINEBUILD}-${PV}.zip"
 
 S = "${UNPACKDIR}"
 
