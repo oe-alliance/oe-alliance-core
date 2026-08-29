@@ -11,7 +11,7 @@ SRCREV = "${AUTOREV}"
 PV = "1.3+git"
 PKGV = "1.3+git${GITPKGV}"
 VER = "1.3"
-PR = "r0
+PR = "r0"
 
 SRC_URI = "git://github.com/openatv/socketdaemon.git;branch=7.6;protocol=https"
 
