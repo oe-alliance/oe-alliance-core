@@ -4,7 +4,7 @@ LICENSE = "GPL-2.0-only"
 
 KERNEL_RELEASE = "4.10.6"
 
-COMPATIBLE_MACHINE = "^(formuler1|formuler1tc|fm7362|formuler4turbo)$"
+COMPATIBLE_MACHINE = "^(fm7356|fm7362|formuler4turbo)$"
 
 PACKAGE_ARCH = "${MACHINEBUILD}"
 
