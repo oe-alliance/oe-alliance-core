@@ -7,7 +7,7 @@ RPROVIDES:${PN} += "vuplus-bluetooth-util"
 PR = "${SRCDATE}.${SRCDATE_PR}"
 
 SRC_URI = " \
-    https://source.mynonpublic.com/vuplus/release/bt/vuplus-bluetooth-util-${MACHINE}-${PR}.tar.gz \
+    https://source.mynonpublic.com/vuplus/release/bt/vuplus-bluetooth-util-${MACHINEBUILD}-${PR}.tar.gz \
 "
 
 S = "${UNPACKDIR}"
@@ -15,20 +15,20 @@ S = "${UNPACKDIR}"
 do_package_qa() {
 }
 
-PACKAGE_ARCH := "${MACHINE_ARCH}"
+PACKAGE_ARCH := "${MACHINEBUILD}"
 FILES:${PN} = "/"
 
 do_install() {
 	install -d ${D}${bindir}
-	install -m 0755 ${UNPACKDIR}/vuplus-bluetooth-util-${MACHINE}/bsa_server ${D}${bindir}
+	install -m 0755 ${UNPACKDIR}/vuplus-bluetooth-util-${MACHINEBUILD}/bsa_server ${D}${bindir}
 
 	install -d ${D}/usr/local/modules
-	install -m 0644 ${UNPACKDIR}/vuplus-bluetooth-util-${MACHINE}/btusb.ko ${D}/usr/local/modules/btusb.ko
-	install -m 0644 ${UNPACKDIR}/vuplus-bluetooth-util-${MACHINE}/bthid.ko ${D}/usr/local/modules/bthid.ko
+	install -m 0644 ${UNPACKDIR}/vuplus-bluetooth-util-${MACHINEBUILD}/btusb.ko ${D}/usr/local/modules/btusb.ko
+	install -m 0644 ${UNPACKDIR}/vuplus-bluetooth-util-${MACHINEBUILD}/bthid.ko ${D}/usr/local/modules/bthid.ko
 
 	if [ -n "${FIRMWARE_FILE}" ]; then
 		install -d ${D}/lib/firmware/${FIRMWARE_PATH}
-		install -m 0644 ${UNPACKDIR}/vuplus-bluetooth-util-${MACHINE}/${FIRMWARE_FILE} ${D}/lib/firmware/${FIRMWARE_PATH}
+		install -m 0644 ${UNPACKDIR}/vuplus-bluetooth-util-${MACHINEBUILD}/${FIRMWARE_FILE} ${D}/lib/firmware/${FIRMWARE_PATH}
 	fi
 }
 INHIBIT_PACKAGE_STRIP = "1"

@@ -15,10 +15,8 @@ PACKAGE_ARCH := "${MACHINE_ARCH}"
 # partial machine list so new HiSilicon machines cannot silently fall back to
 # the unbuffered hw:0 setup.
 EXTRA_ALSA ?= "${@'mv200' if (d.getVar('SOC_FAMILY') or '').startswith('hisi') and 'kodi22' in (d.getVar('MACHINE_FEATURES') or '').split() else 'empty'}"
-EXTRA_ALSA:vuduo4k = "vuplus"
-EXTRA_ALSA:vuduo4kse = "vuplus"
-EXTRA_ALSA:vusolo4k = "vuplus"
-EXTRA_ALSA:vuultimo4k = "vuplus"
+EXTRA_ALSA:vu7376 = "vuplus"
+EXTRA_ALSA:vu7376duo = "vuplus"
 EXTRA_ALSA:vuuno4k = "vuplus"
 EXTRA_ALSA:vuuno4kse = "vuplus"
 EXTRA_ALSA:vuzero4k = "vuplus"

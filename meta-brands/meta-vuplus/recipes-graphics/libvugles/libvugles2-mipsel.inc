@@ -1,7 +1,7 @@
 SRCDATE = "20170905"
 SRCDATE_PR = "r1"
 
-DEPENDS = "vuplus-libgles-${MACHINE}"
+DEPENDS = "vuplus-libgles-${MACHINEBUILD}"
 
 SRC_URI = "https://source.mynonpublic.com/vuplus/release/libvugles2/${BPN}-${PV}-${PR}.tar.gz"
 

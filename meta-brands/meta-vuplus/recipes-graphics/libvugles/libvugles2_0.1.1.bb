@@ -1,7 +1,7 @@
 SUMMARY = "shared library for E2 animation"
 SECTION = "libs"
 require conf/license/license-close.inc
-PACKAGE_ARCH = "${MACHINE_ARCH}"
+PACKAGE_ARCH = "${MACHINEBUILD}"
 
 PR = "${SRCDATE}.${SRCDATE_PR}"
 

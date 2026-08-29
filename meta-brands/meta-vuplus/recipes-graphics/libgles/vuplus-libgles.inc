@@ -1,7 +1,7 @@
 SUMMARY = "libgles for ${MACHINE}"
 SECTION = "base"
 PRIORITY = "required"
-PACKAGE_ARCH = "${MACHINE_ARCH}"
+PACKAGE_ARCH = "${MACHINEBUILD}"
 require conf/license/license-close.inc
 
 PV = "15.1"
@@ -12,9 +12,9 @@ RPROVIDES:${PN} = "virtual-libgles1 virtual-libgles2 virtual-egl libEGL.so libGL
 
 DEPENDS = "patchelf-native"
 
-SRC_URI = "https://source.mynonpublic.com/vuplus/release/libgles/libgles-${MACHINE}-${PV}-${PR}.tar.gz"
+SRC_URI = "https://source.mynonpublic.com/vuplus/release/libgles/libgles-${MACHINEBUILD}-${PV}-${PR}.tar.gz"
 
-S = "${UNPACKDIR}/libgles-${MACHINE}"
+S = "${UNPACKDIR}/libgles-${MACHINEBUILD}"
 
 INSANE_SKIP:${PN} += "already-stripped dev-so ldflags"
 INHIBIT_PACKAGE_STRIP = "1"

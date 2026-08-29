@@ -1,19 +1,19 @@
 DESCRIPTION = "Vu+ API for EGL/OpenGLES"
 SECTION = "libs"
 require conf/license/license-close.inc
-PACKAGE_ARCH := "${MACHINE_ARCH}"
+PACKAGE_ARCH := "${MACHINEBUILD}"
 
-DEPENDS = "vuplus-libgles-${MACHINE}"
-RDEPENDS:${PN} = "vuplus-libgles-${MACHINE}"
+DEPENDS = "vuplus-libgles-${MACHINEBUILD}"
+RDEPENDS:${PN} = "vuplus-libgles-${MACHINEBUILD}"
 
 PROVIDES += "libvupl"
 RPROVIDES:${PN} += "libvupl"
 
 PR = "${SRCDATE}.${SRCDATE_PR}"
 
-SRC_URI = "https://source.mynonpublic.com/vuplus/release/libvupl/libvupl-${PV}-${MACHINE}-${PR}.tar.gz"
+SRC_URI = "https://source.mynonpublic.com/vuplus/release/libvupl/libvupl-${PV}-${MACHINEBUILD}-${PR}.tar.gz"
 
-S = "${UNPACKDIR}/libvupl-${PV}-${MACHINE}"
+S = "${UNPACKDIR}/libvupl-${PV}-${MACHINEBUILD}"
 
 inherit pkgconfig
 
