@@ -4,7 +4,7 @@ include conf/machine/include/build-extras.inc
 BRAND_OEM = "edision"
 MACHINE_BRAND = "Edision"
 
-IMAGEDIR = "${MACHINE}"
+IMAGEDIR = "${MACHINEBUILD}"
 
 MTD_KERNEL = "mtd2"
 MTD_ROOTFS = "mtd0"
@@ -12,7 +12,7 @@ KERNEL_FILE = "kernel.bin"
 ROOTFS_FILE = "rootfs.bin"
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "\
-    edision-dvb-modules-${MACHINE} \
+    edision-dvb-modules-${MACHINEBUILD} \
     "
 
 DVBPROVIDER = "kernel"
@@ -33,8 +33,8 @@ DEFAULTTUNE = "mips32el"
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-edision"
 
-VIRTUAL-RUNTIME_blindscan_dvbs = "edision-blindscan-dvbs-utils-${MACHINE}"
-VIRTUAL-RUNTIME_blindscan_dvbc = "edision-blindscan-dvbc-utils-${MACHINE}"
+VIRTUAL-RUNTIME_blindscan_dvbs = "edision-blindscan-dvbs-utils-${MACHINEBUILD}"
+VIRTUAL-RUNTIME_blindscan_dvbc = "edision-blindscan-dvbc-utils-${MACHINEBUILD}"
 
 KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_OUTPUT = "${KERNEL_IMAGETYPE}"
