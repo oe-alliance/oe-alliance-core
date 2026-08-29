@@ -68,7 +68,7 @@ do_install() {
         install -m 0644 ${S}/boxes/uniboxhd2.png ${D}${datadir}/enigma2/hardware/uniboxhd2_front.png
         install -m 0644 ${S}/boxes/uniboxhd3.png ${D}${datadir}/enigma2/hardware/uniboxhd3_front.png
         install -m 0644 ${S}/png/ini1.png ${D}${datadir}/enigma2/hardware/ini1.png
-    elif [ ${MACHINE} = "et6x00" ]; then
+    elif [ ${MACHINEBUILD} = "et6x00" ]; then
         install -m 0644 ${S}/boxes/et6x00.png ${D}${datadir}/enigma2/hardware/et6x00_front.png
         install -m 0644 ${S}/boxes/et6500.png ${D}${datadir}/enigma2/hardware/et6500_front.png
         install -m 0644 ${S}/png/et6500.png ${D}${datadir}/enigma2/hardware/et6500.png

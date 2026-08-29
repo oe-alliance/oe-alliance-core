@@ -1,9 +1,9 @@
 KV = "3.8.7"
 SRCDATE = "20180412"
 
-SRC_URI = "https://source.mynonpublic.com/xtrend/${MACHINE}-drivers-${KV}-${SRCDATE}.zip"
+SRC_URI = "https://source.mynonpublic.com/xtrend/${MACHINEBUILD}-drivers-${KV}-${SRCDATE}.zip"
 
-RDEPENDS:${PN} += "et-fpupdate-${MACHINE}"
+RDEPENDS:${PN} += "et-fpupdate-${MACHINEBUILD}"
 
 require et-dvb-modules.inc
 
