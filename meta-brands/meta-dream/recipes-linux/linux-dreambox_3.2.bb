@@ -7,7 +7,7 @@ PRECOMPILED_ARCH = "${MACHINEBUILD}"
 PACKAGE_ARCH = "${MACHINEBUILD}"
 PRECOMPILED_ARCH:dm7020hdv2 = "dm7020hd"
 
-COMPATIBLE_MACHINE = "^(dm7405nand|dm500hdv2|dm800sev2|dm7020hd|dm7020hdv2|dm8000)$"
+COMPATIBLE_MACHINE = "^(dm7405nand|dm7405ubi|dm7020hd|dm8000)$"
 
 inherit kernel machine_kernel_pr kernel-fixups
 
