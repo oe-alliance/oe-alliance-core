@@ -9,7 +9,7 @@ MACHINE_BRAND = "Vu+"
 RCHARDWARE = "VU"
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS += " \
-    ${@bb.utils.contains("MACHINE_FEATURES", "dvbproxy", "vuplus-dvb-proxy-${MACHINE} vuplus-libgles-${MACHINE} vuplus-platform-util-${MACHINE}", "vuplus-dvb-modules-${MACHINE}", d)} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "dvbproxy", "vuplus-dvb-proxy-${MACHINEBUILD} vuplus-libgles-${MACHINEBUILD} vuplus-platform-util-${MACHINEBUILD}", "vuplus-dvb-modules-${MACHINEBUILD}", d)} \
     "
 
 DVBPROVIDER = "kernel"
@@ -43,14 +43,14 @@ PREFERRED_PROVIDER_virtual/kernel = "linux-vuplus"
 VIRTUAL-RUNTIME_blindscan_dvbc = "vuplus-blindscan-dvbc-utils"
 VIRTUAL-RUNTIME_blindscan_dvbs = "vuplus-blindscan-dvbs-utils"
 PREFERRED_PROVIDER_virtual/transtreamproxy = "vuplus-transtreamproxy"
-PREFERRED_PROVIDER_virtual/egl ?= "vuplus-libgles-${MACHINE}"
-PREFERRED_PROVIDER_virtual/libgles1 ?= "vuplus-libgles-${MACHINE}"
-PREFERRED_PROVIDER_virtual/libgles2 ?= "vuplus-libgles-${MACHINE}"
-PREFERRED_PROVIDER_virtual/libopencl ?= "vuplus-libgles-${MACHINE}"
-PREFERRED_PROVIDER_virtual/libgbm ?= "vuplus-libgles-${MACHINE}"
+PREFERRED_PROVIDER_virtual/egl ?= "vuplus-libgles-${MACHINEBUILD}"
+PREFERRED_PROVIDER_virtual/libgles1 ?= "vuplus-libgles-${MACHINEBUILD}"
+PREFERRED_PROVIDER_virtual/libgles2 ?= "vuplus-libgles-${MACHINEBUILD}"
+PREFERRED_PROVIDER_virtual/libopencl ?= "vuplus-libgles-${MACHINEBUILD}"
+PREFERRED_PROVIDER_virtual/libgbm ?= "vuplus-libgles-${MACHINEBUILD}"
 PREFERRED_PROVIDER_virtual/libgl ?= "mesa"
 PREFERRED_PROVIDER_virtual/mesa ?= "mesa"
-PREFERRED_PROVIDER_virtual/kodi = "stb-kodi-${MACHINE}"
+PREFERRED_PROVIDER_virtual/kodi = "stb-kodi-${MACHINEBUILD}"
 
 KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_OUTPUT = "${KERNEL_IMAGETYPE}"

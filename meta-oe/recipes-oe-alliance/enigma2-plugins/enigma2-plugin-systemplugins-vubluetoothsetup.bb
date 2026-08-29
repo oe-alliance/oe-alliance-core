@@ -1,14 +1,14 @@
 DESCRIPTION = "VuPLus bluetooth plugin"
 require conf/license/license-gplv2.inc
 require conf/python/python3-compileall.inc
-PACKAGE_ARCH = "${MACHINE_ARCH}"
+PACKAGE_ARCH = "${MACHINEBUILD}"
 
 COMPATIBLE_MACHINE = "^(vusolo4k|vuuno4k|vuzero4k|vuuno4kse|vuultimo4k|vuduo4k|vuduo4kse)$"
 
 PN = "enigma2-plugin-systemplugins-bluetoothsetup"
 
 DEPENDS = "libusb-compat"
-RDEPENDS:${PN} = "libusb-compat vuplus-bluetooth-util-${MACHINE}"
+RDEPENDS:${PN} = "libusb-compat vuplus-bluetooth-util-${MACHINEBUILD}"
 
 inherit gittag
 
@@ -24,7 +24,7 @@ SRC_URI = "git://github.com/oe-alliance-plugins/VuBluetoothSetup.git;protocol=ht
 
 do_install:append() {
     install -d ${D}/usr/lib/enigma2/python/Plugins/SystemPlugins/BluetoothSetup
-    install -m 0755 ${S}/VuBluetoothSetup/${MACHINE}/_vubt.so ${D}/usr/lib/enigma2/python/Plugins/SystemPlugins/BluetoothSetup/_vubt.so
+    install -m 0755 ${S}/VuBluetoothSetup/${MACHINEBUILD}/_vubt.so ${D}/usr/lib/enigma2/python/Plugins/SystemPlugins/BluetoothSetup/_vubt.so
 }
 
 FILES:${PN} += "/usr/lib/enigma2/python/Plugins/SystemPlugins/BluetoothSetup/"

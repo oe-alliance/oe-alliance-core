@@ -58,13 +58,13 @@ DEPENDS = "\
     ${@bb.utils.contains("MACHINE", "vuultimo", "enigma2-plugin-drivers-dvb-usb-turbo", "", d)} \
     ${@bb.utils.contains("MACHINE", "vuuno", "enigma2-plugin-drivers-dvb-usb-turbo", "", d)} \
     ${@bb.utils.contains("MACHINE", "vuzero", "enigma2-plugin-drivers-dvb-usb-turbo enigma2-plugin-drivers-dvb-usb-turbo2", "", d)} \
-    ${@bb.utils.contains("MACHINE", "vusolo4k", "enigma2-plugin-drivers-dvb-usb-turbo enigma2-plugin-drivers-dvb-usb-turbo2", "", d)} \
+    ${@bb.utils.contains("MACHINEBUILD", "vusolo4k", "enigma2-plugin-drivers-dvb-usb-turbo enigma2-plugin-drivers-dvb-usb-turbo2", "", d)} \
     ${@bb.utils.contains("MACHINE", "vuuno4k", "enigma2-plugin-drivers-dvb-usb-turbo enigma2-plugin-drivers-dvb-usb-turbo2", "", d)} \
     ${@bb.utils.contains("MACHINE", "vuuno4kse", "enigma2-plugin-drivers-dvb-usb-turbo enigma2-plugin-drivers-dvb-usb-turbo2", "", d)} \
-    ${@bb.utils.contains("MACHINE", "vuultimo4k", "enigma2-plugin-drivers-dvb-usb-turbo enigma2-plugin-drivers-dvb-usb-turbo2", "", d)} \
+    ${@bb.utils.contains("MACHINEBUILD", "vuultimo4k", "enigma2-plugin-drivers-dvb-usb-turbo enigma2-plugin-drivers-dvb-usb-turbo2", "", d)} \
     ${@bb.utils.contains("MACHINE", "vuzero4k", "enigma2-plugin-drivers-dvb-usb-turbo enigma2-plugin-drivers-dvb-usb-turbo2", "", d)} \
-    ${@bb.utils.contains("MACHINE", "vuduo4k", "enigma2-plugin-drivers-dvb-usb-turbo enigma2-plugin-drivers-dvb-usb-turbo2", "", d)} \
-    ${@bb.utils.contains("MACHINE", "vuduo4kse", "enigma2-plugin-drivers-dvb-usb-turbo enigma2-plugin-drivers-dvb-usb-turbo2", "", d)} \
+    ${@bb.utils.contains("MACHINEBUILD", "vuduo4k", "enigma2-plugin-drivers-dvb-usb-turbo enigma2-plugin-drivers-dvb-usb-turbo2", "", d)} \
+    ${@bb.utils.contains("MACHINEBUILD", "vuduo4kse", "enigma2-plugin-drivers-dvb-usb-turbo enigma2-plugin-drivers-dvb-usb-turbo2", "", d)} \
     ${@bb.utils.contains("MACHINE", "xc7346", "enigma2-plugin-drivers-dvb-edicombo", "", d)} \
     ${@bb.utils.contains("MACHINE", "xc7362", "enigma2-plugin-drivers-dvb-edicombo", "", d)} \
     ${@bb.utils.contains("MACHINE", "dags7335", "enigma2-plugin-drivers-dvb-edicombo", "", d)} \
