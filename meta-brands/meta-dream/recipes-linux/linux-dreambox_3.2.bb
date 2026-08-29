@@ -3,10 +3,11 @@ SECTION = "kernel"
 LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://${UNPACKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-PRECOMPILED_ARCH = "${MACHINE}"
+PRECOMPILED_ARCH = "${MACHINEBUILD}"
+PACKAGE_ARCH = "${MACHINEBUILD}"
 PRECOMPILED_ARCH:dm7020hdv2 = "dm7020hd"
 
-COMPATIBLE_MACHINE = "^(dm500hd|dm500hdv2|dm800se|dm800sev2|dm7020hd|dm7020hdv2|dm8000)$"
+COMPATIBLE_MACHINE = "^(dm7405nand|dm500hdv2|dm800sev2|dm7020hd|dm7020hdv2|dm8000)$"
 
 inherit kernel machine_kernel_pr kernel-fixups
 

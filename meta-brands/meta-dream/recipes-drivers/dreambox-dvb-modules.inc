@@ -5,7 +5,7 @@ PRIORITY = "required"
 INC_PR = "r9"
 require conf/license/license-close.inc
 
-PRECOMPILED_ARCH ?= "${MACHINE}"
+PRECOMPILED_ARCH ?= "${MACHINEBUILD}"
 PRECOMPILED_VERSION ?= "${PV}"
 
 DREAMBOX_DVB_MODULES_MIRROR ?= "https://source.mynonpublic.com/dreambox"
@@ -47,7 +47,7 @@ do_install:append:dm8000() {
 PACKAGES = "${PN}"
 
 RDEPENDS:${PN} += " \
-    dreambox-secondstage-${MACHINE} \
+    dreambox-secondstage-${MACHINEBUILD} \
     kernel-vmlinux \
     kernel-module-snd-pcm \
 "

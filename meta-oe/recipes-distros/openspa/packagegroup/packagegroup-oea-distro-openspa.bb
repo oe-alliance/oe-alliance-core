@@ -57,7 +57,7 @@ OPENSPA_EXTENDED = "\
 "
 
 USBBOOT = "\
-    ${@bb.utils.contains_any("MACHINE", "dm800se dm500hd", "", "enigma2-plugin-extensions-dflash", d)} \
+    ${@bb.utils.contains_any("MACHINEBUILD", "dm800se dm500hd", "", "enigma2-plugin-extensions-dflash", d)} \
     "
 
 RRECOMMENDS:${PN}:append:bre2zet2c = " enigma2-plugin-systemplugins-satipclient"
