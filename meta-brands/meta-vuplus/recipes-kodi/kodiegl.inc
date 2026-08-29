@@ -6,9 +6,9 @@ PR = "${PKGDATE}"
 PROVIDES += "kodiegl"
 RPROVIDES:${PN} += "kodiegl"
 
-SRC_URI = "https://source.mynonpublic.com/vuplus/release/kodi/KodiGLESPL_${MACHINE}_${PKGDATE}.tar.gz"
+SRC_URI = "https://source.mynonpublic.com/vuplus/release/kodi/KodiGLESPL_${MACHINEBUILD}_${PKGDATE}.tar.gz"
 
-S = "${UNPACKDIR}/KodiGLESPL_${MACHINE}"
+S = "${UNPACKDIR}/KodiGLESPL_${MACHINEBUILD}"
 
 do_install() {
 	install -d ${D}/usr/bin
@@ -30,4 +30,4 @@ INHIBIT_PACKAGE_STRIP = "1"
 FILES:${PN} = "${libdir} ${bindir}"
 FILES:${PN}-dev = "${includedir}"
 
-PACKAGE_ARCH = "${MACHINE}"
+PACKAGE_ARCH = "${MACHINEBUILD}"

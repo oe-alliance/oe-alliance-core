@@ -18,13 +18,11 @@ INITSCRIPT_PARAMS = "start 06 S ."
 INITSCRIPT_PARAMS:vuduo2 = "start 70 S ."
 INITSCRIPT_PARAMS:vusolo2 = "start 70 S ."
 INITSCRIPT_PARAMS:vusolose = "start 70 S ."
-INITSCRIPT_PARAMS:vusolo4k = "start 70 S ."
+INITSCRIPT_PARAMS:vu7376 = "start 70 S ."
+INITSCRIPT_PARAMS:vu7376duo = "start 70 S ."
 INITSCRIPT_PARAMS:vuuno4k = "start 70 S ."
 INITSCRIPT_PARAMS:vuuno4kse = "start 70 S ."
-INITSCRIPT_PARAMS:vuultimo4k = "start 70 S ."
 INITSCRIPT_PARAMS:vuzero4k = "start 70 S ."
-INITSCRIPT_PARAMS:vuduo4k = "start 70 S ."
-INITSCRIPT_PARAMS:vuduo4kse = "start 70 S ."
 INITSCRIPT_PARAMS:gb7252 = "start 70 S ."
 INITSCRIPT_PARAMS:gb72604 = "start 70 S ."
 PRECOMPILED_ARCH = "${MACHINE}"
@@ -126,7 +124,7 @@ do_install:append:7215s() {
 
 inherit deploy
 do_deploy() {
-    if [ "${MACHINE}" = "vuduo" ] || [ "${MACHINE}" = "vuduo2" ] || [ "${MACHINE}" = "vuuno" ] || [ "${MACHINE}" = "vusolo" ] || [ "${MACHINE}" = "vusolose" ] || [ "${MACHINE}" = "vuultimo" ] || [ "${MACHINE}" = "vuzero" ] || [ "${MACHINE}" = "vusolo4k" ] || [ "${MACHINE}" = "vuuno4k" ] || [ "${MACHINE}" = "vuuno4kse" ] || [ "${MACHINE}" = "vuultimo4k" ] || [ "${MACHINE}" = "vuzero4k" ] || [ "${MACHINE}" = "vuduo4k" ] || [ "${BRAND_OEM}" = "dags" ]; then
+    if [ "${MACHINE}" = "vuduo" ] || [ "${MACHINE}" = "vuduo2" ] || [ "${MACHINE}" = "vuuno" ] || [ "${MACHINE}" = "vusolo" ] || [ "${MACHINE}" = "vusolose" ] || [ "${MACHINE}" = "vuultimo" ] || [ "${MACHINE}" = "vuzero" ] || [ "${MACHINEBUILD}" = "vusolo4k" ] || [ "${MACHINE}" = "vuuno4k" ] || [ "${MACHINE}" = "vuuno4kse" ] || [ "${MACHINEBUILD}" = "vuultimo4k" ] || [ "${MACHINE}" = "vuzero4k" ] || [ "${MACHINEBUILD}" = "vuduo4k" ] || [ "${BRAND_OEM}" = "dags" ]; then
         install -m 0644 splash480.bmp ${DEPLOYDIR}/${BOOTLOGO_FILENAME}
     else
         install -m 0644 splash576.bmp ${DEPLOYDIR}/${BOOTLOGO_FILENAME}

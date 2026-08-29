@@ -5,7 +5,7 @@ require conf/license/license-close.inc
 
 PV = "1.0"
 PR = "${SRCDATE}"
-SRC_URI = "https://source.mynonpublic.com/vuplus/release/support/webkit-hbbtv-browser_${MACHINE}_${SRCDATE}.tar.gz"
+SRC_URI = "https://source.mynonpublic.com/vuplus/release/support/webkit-hbbtv-browser_${MACHINEBUILD}_${SRCDATE}.tar.gz"
 
 S = "${UNPACKDIR}"
 
@@ -27,7 +27,7 @@ do_package_qa() {
 PROVIDES += "webkit-hbbtv-browser"
 RPROVIDES:${PN} += "webkit-hbbtv-browser"
 
-PACKAGE_ARCH := "${MACHINE_ARCH}"
+PACKAGE_ARCH := "${MACHINEBUILD}"
 
 FILES:${PN} = "/"
 

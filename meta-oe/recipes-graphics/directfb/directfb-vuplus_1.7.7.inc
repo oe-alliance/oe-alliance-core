@@ -33,15 +33,15 @@ GFXPR:vuduo4kse = "20200319.r1"
 SRC_URI[gfxdriver.vuduo4kse.md5sum] = "cfe2e69648d6da8f75e4475d812012d3"
 SRC_URI[gfxdriver.vuduo4kse.sha256sum] = "a1ee8bd434a6aff051503dfe9fdfa784fe1e0c3038a8abdf088bd20c7dba2769"
 
-GFX_FILE = "directfb_1.7-7_gfxdriver_${MACHINE}_${GFXPR}.tar.gz"
+GFX_FILE = "directfb_1.7-7_gfxdriver_${MACHINEBUILD}_${GFXPR}.tar.gz"
 
-DEPENDS:append:class-target = " vuplus-libgles-${MACHINE}"
+DEPENDS:append:class-target = " vuplus-libgles-${MACHINEBUILD}"
 
 SRC_URI:append:class-target = " \
 	file://vuplus-conf.patch \
 	file://vuplus-prevent-VT.patch \
 	file://disable_linux_input_patch.diff \
-	https://source.mynonpublic.com/vuplus/release/directfb/${GFX_FILE};name=gfxdriver.${MACHINE} \
+	https://source.mynonpublic.com/vuplus/release/directfb/${GFX_FILE};name=gfxdriver.${MACHINEBUILD} \
 "
 
 EXTRA_OECONF:append:class-target = "\

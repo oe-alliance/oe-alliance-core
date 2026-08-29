@@ -3,7 +3,7 @@ require conf/license/license-gplv2.inc
 require conf/python/python3-compileall.inc
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-RDEPENDS:${PN} = "vuplus-webkithbbtv-dumpait webkit-hbbtv-browser-${MACHINE} libupnp1.6"
+RDEPENDS:${PN} = "vuplus-webkithbbtv-dumpait webkit-hbbtv-browser-${MACHINEBUILD} libupnp1.6"
 
 COMPATIBLE_MACHINE = "^(vusolo4k|vuuno4k|vuzero4k|vuuno4kse|vuultimo4k|vuduo4k|vuduo4kse)$"
 

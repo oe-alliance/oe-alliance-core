@@ -2,7 +2,7 @@ SUMMARY = "kexec-multiboot"
 PRIORITY = "required"
 MAINTAINER = "Eddi openBH"
 require conf/license/license-gplv2.inc
-PACKAGE_ARCH = "${MACHINE_ARCH}"
+PACKAGE_ARCH = "${MACHINEBUILD}"
 
 inherit gittag
 
@@ -15,8 +15,10 @@ SRC_URI = "git://github.com/oe-alliance/kexec-multiboot.git;protocol=https;branc
 do_install() {
     install -d ${D}${bindir}
     ${@bb.utils.contains_any("DISTRO_NAME", "openvix openbh", "install -d -m 0755 ${D}/etc/init.d", "", d)}    
-    install -m 0755 ${S}/${MACHINE}/kernel_auto.bin ${D}${bindir}/kernel_auto.bin
-    install -m 0755 ${S}/${MACHINE}/STARTUP_cpio.bin ${D}${bindir}/STARTUP.cpio.gz
+    src=${S}/${MACHINEBUILD}
+    [ -d "$src" ] || src=${S}/${MACHINE}
+    install -m 0755 $src/kernel_auto.bin ${D}${bindir}/kernel_auto.bin
+    install -m 0755 $src/STARTUP_cpio.bin ${D}${bindir}/STARTUP.cpio.gz
     ${@bb.utils.contains_any("DISTRO_NAME", "openvix openbh", "install -m 0755 ${S}/kexec-multiboot-recovery ${D}/etc/init.d/kexec-multiboot-recovery", "", d)}
 
     #Other distro might want, openvix and openbh prefers to start "/etc/init.d/kexec-multiboot-recovery start" from inside enigma2
