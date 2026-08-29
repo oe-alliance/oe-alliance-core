@@ -1,0 +1,35 @@
+From: OpenATV STB Kodi Team
+Subject: [PATCH] settings: keep STB profiles on media/hdd
+
+The shell wrapper exports KODI_DATA, but kodi-standalone and direct kodi.bin
+invocations can bypass that wrapper.  Receiver flash is too small for Kodi's
+profile and binary add-on data, so make the STB core default authoritative.
+
+Non-STB Linux builds retain the upstream HOME/KODI_DATA behaviour.
+
+---
+ xbmc/settings/SettingsComponent.cpp | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/xbmc/settings/SettingsComponent.cpp b/xbmc/settings/SettingsComponent.cpp
+index 30b24c8b21..5f3674d87b 100644
+--- a/xbmc/settings/SettingsComponent.cpp
++++ b/xbmc/settings/SettingsComponent.cpp
+@@ -88,6 +88,9 @@ bool InitDirectoriesLinux(UserDirectoriesLocation loc)
+   const char* envAppTemp = "KODI_TEMP";
+ 
+   std::string userHome;
++#if defined(TARGET_STB)
++  userHome = "/media/hdd/.kodi";
++#else
+   if (getenv("KODI_DATA"))
+     userHome = getenv("KODI_DATA");
+   else if (getenv("HOME"))
+@@ -99,6 +102,7 @@ bool InitDirectoriesLinux(UserDirectoriesLocation loc)
+     userHome = "/root";
+     userHome.append("/" + dotLowerAppName);
+   }
++#endif
+ 
+   std::string strTempPath;
+   if (getenv(envAppTemp))

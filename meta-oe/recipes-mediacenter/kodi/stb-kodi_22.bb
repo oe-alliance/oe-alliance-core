@@ -77,13 +77,13 @@ DEPENDS += " \
             ${@'libvupl' if d.getVar('VUPLUS_MIPSEL_STB') == '1' else ''} \
           "
 inherit gitpkgv
-# 22.0 Piers Beta 1, current upstream master HEAD (2026-08-13)
-SRCREV = "55d3a2927116283f2288e115a359f8446d56dca1"
+# 22.0 Piers Beta 1, current upstream master HEAD (2026-08-28)
+SRCREV = "429fdbdf6f8bae1be73c41b623ba55e2eb4892b0"
 
 # 'patch' doesn't support binary diffs
 PATCHTOOL = "git"
 
-PR = "r91"
+PR = "r103"
 
 PV = "22.0+gitr"
 # Keep package upgrades monotonic when the pinned master revision advances.
@@ -133,6 +133,7 @@ SRC_URI = "git://github.com/xbmc/xbmc.git;protocol=https;branch=master \
            file://0025-opengles-allow-forcing-gles2.patch \
            file://0026-smb-default-to-smb2-02.patch \
            file://0028-stb-kodi22-resolution-model.patch \
+           file://0052-stb-force-profile-on-media-hdd.patch \
            file://0103-native-stbplayer-codec.patch \
            file://kodi-stb-wrapper \
            file://kodi-stb-runtime \
@@ -149,6 +150,10 @@ BCM_DVB_STB = "${@'1' if (d.getVar('SOC_FAMILY') or '').startswith('bcm') and d.
 VUPLUS_ARM_STB = "${@'1' if d.getVar('BRAND_OEM') == 'vuplus' and d.getVar('TARGET_ARCH') == 'arm' else '0'}"
 VUPLUS_MIPSEL_STB = "${@'1' if d.getVar('BRAND_OEM') == 'vuplus' and d.getVar('TARGET_ARCH') == 'mipsel' else '0'}"
 VUPLUS_STB = "${@'1' if d.getVar('BRAND_OEM') == 'vuplus' and d.getVar('TARGET_ARCH') in ('arm', 'mipsel') else '0'}"
+VUPLUS_DUO4K_LOCALE_FALLBACK = "${@'1' if d.getVar('MACHINE') in ('vuduo4k', 'vuduo4kse') else '0'}"
+GIGABLUE_NXPL_ARM_STB = "${@'1' if d.getVar('MACHINE') in ('gb7252', 'gb72604') and d.getVar('TARGET_ARCH') == 'arm' else '0'}"
+BRCM_NXPL_ARM_STB = "${@'1' if d.getVar('VUPLUS_ARM_STB') == '1' or d.getVar('GIGABLUE_NXPL_ARM_STB') == '1' else '0'}"
+GB_PLATFORM_NXPL_STB = "${@'1' if d.getVar('MACHINE') in ('gb7252', 'gb72604', 'vuduo4klite') and d.getVar('TARGET_ARCH') == 'arm' else '0'}"
 V3DNXPL_STB = "${@'1' if 'v3d-nxpl' in (d.getVar('MACHINE_FEATURES') or '').split() or (d.getVar('TARGET_ARCH') == 'mipsel' and d.getVar('MACHINE') in ('triplex', 'formuler1')) else '0'}"
 XCORE_MIPSEL_STB = "${@'1' if d.getVar('BRAND_OEM') == 'xcore' and d.getVar('TARGET_ARCH') == 'mipsel' else '0'}"
 DREAM_BCM_STB = "${@'1' if d.getVar('MACHINE') in ('dm7080', 'dm820', 'dm900', 'dm920') else '0'}"
@@ -159,9 +164,11 @@ SRC_URI:append = "${@' file://kodi-hisi-wrapper file://kodi-hisi-appliance.xml f
 SRC_URI:append = "${@' file://kodi-bcm-wrapper' if d.getVar('BCM_DVB_STB') == '1' else ''}"
 SRC_URI:append = "${@' file://kodi-dream-aml-wrapper' if d.getVar('DREAM_AMLOGIC_STB') == '1' else ''}"
 SRC_URI:append = "${@' file://0027-bcm-alsa-hard-recovery.patch' if d.getVar('BCM_DVB_STB') == '1' else ''}"
-SRC_URI:append = "${@' file://0029-vuplus-arm-runtime-nxpl.patch' if d.getVar('VUPLUS_ARM_STB') == '1' else ''}"
-SRC_URI:append = "${@' file://0030-vuplus-alsa-nonblocking-sink-switch.patch' if d.getVar('VUPLUS_STB') == '1' else ''}"
-SRC_URI:append = "${@' file://0031-vuplus-arm-proc-video-modes.patch' if d.getVar('VUPLUS_ARM_STB') == '1' else ''}"
+SRC_URI:append = "${@' file://0029-vuplus-arm-runtime-nxpl.patch' if d.getVar('BRCM_NXPL_ARM_STB') == '1' else ''}"
+SRC_URI:append = "${@' file://0047-vuplus-arm-force-runtime-gles2.patch' if d.getVar('BRCM_NXPL_ARM_STB') == '1' else ''}"
+SRC_URI:append = "${@' file://0030-vuplus-alsa-nonblocking-sink-switch.patch' if d.getVar('VUPLUS_MIPSEL_STB') == '1' or d.getVar('BRCM_NXPL_ARM_STB') == '1' else ''}"
+SRC_URI:append = "${@' file://0031-vuplus-arm-proc-video-modes.patch' if d.getVar('BRCM_NXPL_ARM_STB') == '1' else ''}"
+SRC_URI:append = "${@' file://0053-gigablue-nxpl-lifecycle.patch' if d.getVar('GB_PLATFORM_NXPL_STB') == '1' else ''}"
 SRC_URI:append = " file://0032-vuplus-dvb-master-volume.patch"
 SRC_URI:append = "${@' file://0033-hisi-hifb-proc-video-modes.patch' if d.getVar('HISI_STB') == '1' else ''}"
 SRC_URI:append = "${@' file://0050-hisi-cv200-force-runtime-gles2.patch' if d.getVar('HISI_CV200_STB') == '1' else ''}"
@@ -172,6 +179,7 @@ SRC_URI:append = "${@' file://0035-dreambox-dm9x0-gles-init.patch file://0036-dr
 SRC_URI:append = "${@' file://patch-dm9x0-vc5-query.py' if d.getVar('DREAM_DM9X0_STB') == '1' else ''}"
 SRC_URI:append = "${@' file://0038-vuplus-mips-libvupl-egl.patch' if d.getVar('VUPLUS_MIPSEL_STB') == '1' else ''}"
 SRC_URI:append = "${@' file://0044-vuplus-mips-refresh-only-mode-switch.patch' if d.getVar('VUPLUS_MIPSEL_STB') == '1' else ''}"
+SRC_URI:append = "${@' file://kodi-vuplus-duo4k-advancedsettings.xml' if d.getVar('VUPLUS_DUO4K_LOCALE_FALLBACK') == '1' else ''}"
 SRC_URI:append = "${@' file://0039-xcore-mips-v3d-platform.patch' if d.getVar('XCORE_MIPSEL_STB') == '1' else ''}"
 SRC_URI:append = "${@' file://0042-dreambox-mips-refresh-only-mode-switch.patch' if d.getVar('DREAM_MIPSEL_STB') == '1' else ''}"
 SRC_URI:append = "${@' file://0043-dreambox-mips-alsa-nonblocking-sink-switch.patch' if d.getVar('DREAM_MIPSEL_STB') == '1' else ''}"
@@ -228,7 +236,7 @@ CXXFLAGS:append = "${@' -DTARGET_HISI_CV200' if d.getVar('HISI_CV200_STB') == '1
 LDFLAGS += "${TOOLCHAIN_OPTIONS}"
 LDFLAGS:append:mipsarch = " -latomic"
 EXTRA_OECMAKE:append:mipsarch = " -DWITH_ARCH=${TARGET_ARCH}"
-EXTRA_OECMAKE:append = "${@' -DOPENGLES_FORCE_GLES2=ON' if d.getVar('VUPLUS_STB') == '1' or d.getVar('HISI_CV200_STB') == '1' else ''}"
+EXTRA_OECMAKE:append = "${@' -DOPENGLES_FORCE_GLES2=ON' if d.getVar('VUPLUS_STB') == '1' or d.getVar('GIGABLUE_NXPL_ARM_STB') == '1' or d.getVar('HISI_CV200_STB') == '1' else ''}"
 
 KODI_DISABLE_INTERNAL_LIBRARIES = " \
   -DENABLE_INTERNAL_CROSSGUID=OFF \
@@ -369,6 +377,16 @@ do_install:append() {
             ${RECIPE_SYSROOT}${libdir}/libvc5dream.so.1.0.0 \
             ${D}${libdir}/kodi/dm9x0/libvc5dream.so.1
         chmod 0755 ${D}${libdir}/kodi/dm9x0/libvc5dream.so.1
+    fi
+
+    if [ "${VUPLUS_DUO4K_LOCALE_FALLBACK}" = "1" ]; then
+        # The Duo4K/SE runtime crashes inside the platform wchar_t collation
+        # facet while Kodi sorts its keymaps.  Use Kodi's internal Unicode
+        # accent-folding collation instead of hiding the SIGSEGV with the old
+        # AlphaNumericCompare try/catch patch.
+        install -d ${D}${datadir}/kodi/system
+        install -m 0644 ${UNPACKDIR}/kodi-vuplus-duo4k-advancedsettings.xml \
+            ${D}${datadir}/kodi/system/advancedsettings.xml
     fi
 }
 

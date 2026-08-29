@@ -3,25 +3,29 @@ From: Captain <openatv@gmail.com>
 Date: Sat, 18 May 2024 04:56:50 +0200
 Subject: [PATCH] flatbuffers-22
 
+Use the canonical FlatBuffers scalar names accepted by the receiver build's
+flatc. Keep Kodi HEAD's compressed video and memory savestate fields in sync
+with the original compatibility conversion.
+
 ---
- xbmc/cores/RetroPlayer/messages/savestate.fbs | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ xbmc/cores/RetroPlayer/messages/savestate.fbs | 24 ++++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
 diff --git a/xbmc/cores/RetroPlayer/messages/savestate.fbs b/xbmc/cores/RetroPlayer/messages/savestate.fbs
-index 325ab1c383..beab3ef981 100644
 --- a/xbmc/cores/RetroPlayer/messages/savestate.fbs
 +++ b/xbmc/cores/RetroPlayer/messages/savestate.fbs
-@@ -15,7 +15,7 @@ namespace KODI.RETRO.SAVESTATE;
- 
- file_identifier "SAV_";
- 
+@@ -18,4 +18,4 @@ file_identifier "SAV_";
 -enum SaveType : uint8 {
 +enum SaveType : ubyte {
    Unknown,
    Auto,
    Manual
-@@ -23,11 +23,11 @@ enum SaveType : uint8 {
- 
+@@ -24,3 +24,3 @@ enum SaveType : uint8 {
+-enum CompressionType : uint8 {
++enum CompressionType : ubyte {
+   None,
+ }
+@@ -28,10 +28,10 @@ enum CompressionType : uint8 {
  table Savestate {
    // Schema version
 -  version:uint8 (id: 0);
@@ -34,7 +38,8 @@ index 325ab1c383..beab3ef981 100644
    label:string (id: 3);
    caption:string (id: 11);
    created:string (id: 4); // W3C date time [ISO 8601 : 1988 (E)] with timezone info
-@@ -36,8 +36,8 @@ table Savestate {
+@@ -39,10 +39,10 @@ table Savestate {
+   // Game properties
    game_file_name:string (id: 5);
  
    // Environment properties
@@ -45,12 +50,27 @@ index 325ab1c383..beab3ef981 100644
  
    // Emulator properties
    emulator_addon_id:string (id: 8);
-@@ -58,7 +58,7 @@ table Savestate {
+   emulator_version:string (id: 9); // Semantic version
+@@ -59,16 +59,16 @@ table Savestate {
+   // Video frame properties
+-  video_data:[uint8] (id: 18);
++  video_data:[ubyte] (id: 18);
+   video_width:uint16 (id: 19);
+   video_height:uint16 (id: 20);
+   display_aspect_ratio:float (id: 23);
    rotation_ccw:VideoRotation (id: 21);
+-  video_data_compressed:[uint8] (id: 27);
++  video_data_compressed:[ubyte] (id: 27);
+   video_data_compression:CompressionType = None (id: 28);
+-  video_data_uncompressed_size:uint64 = 0 (id: 29);
++  video_data_uncompressed_size:ulong = 0 (id: 29);
  
    // Memory properties
 -  memory_data:[uint8] (id: 10);
+-  memory_data_compressed:[uint8] (id: 24);
 +  memory_data:[ubyte] (id: 10);
++  memory_data_compressed:[ubyte] (id: 24);
+   memory_data_compression:CompressionType = None (id: 25);
+-  memory_data_uncompressed_size:uint64 = 0 (id: 26);
++  memory_data_uncompressed_size:ulong = 0 (id: 26);
  }
- 
- root_type Savestate;

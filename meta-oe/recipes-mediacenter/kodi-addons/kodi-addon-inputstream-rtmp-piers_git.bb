@@ -7,9 +7,8 @@ inherit kodi-addon
 
 DEPENDS += "expat openssl rtmpdump zlib"
 
-# Published Piers tag used by CoreELEC 22/LibreELEC.  Prefer the released tag
-# over unreleased commits on the moving Piers branch.
-SRCREV = "228dbc36ae2666f6e43f023fa083bd3e612af7a2"
+# Track the Kodi 22 Piers branch.  Its add-on version remains 22.1.2.
+SRCREV = "1b995db747b3f8671e04377e069a7b9d9260944d"
 
 PV = "22.1.2+gitr"
 

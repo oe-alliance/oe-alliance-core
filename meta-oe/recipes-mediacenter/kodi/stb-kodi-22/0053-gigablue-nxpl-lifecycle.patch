@@ -1,0 +1,155 @@
+From 3d1a965167f13d88fcbeea6c53ee305d5435a8bb Mon Sep 17 00:00:00 2001
+From: OE-Alliance <oe-alliance@users.noreply.github.com>
+Date: Fri, 28 Aug 2026 19:20:00 +0200
+Subject: [PATCH] GigaBlue: restore NXPL window lifecycle
+
+The GigaBlue NXPL implementation requires an explicit window visibility call.
+Kodi calls ShowWindow(true) after an HDMI refresh-rate change, but the shared
+Vu+ runtime native type previously returned false without forwarding that call.
+This left the old Enigma2 shutdown framebuffer visible above the running DVB
+video after the first mode switch.
+
+Match the behaviour of GigaBlue's former gles_init helper through public runtime
+symbols. Destroy the native window and unregister the GigaBlue NXPL client when
+Kodi exits so Enigma2 can reacquire video and audio cleanly. Keep the established
+retain-on-exit behaviour on Vu+ where older Nexus stacks cannot be torn down
+safely.
+---
+ xbmc/windowing/egl/EGLNativeTypeVuplus.cpp | 65 +++++++++++++++++++++--
+ 1 file changed, 61 insertions(+), 4 deletions(-)
+
+diff --git a/xbmc/windowing/egl/EGLNativeTypeVuplus.cpp b/xbmc/windowing/egl/EGLNativeTypeVuplus.cpp
+index a0381abe356..a7f02a698b2 100644
+--- a/xbmc/windowing/egl/EGLNativeTypeVuplus.cpp
++++ b/xbmc/windowing/egl/EGLNativeTypeVuplus.cpp
+@@ -49,8 +49,12 @@ namespace
+ using NxClientJoinProc = unsigned (*)(const void*);
+ using NexusJoinProc = int (*)(const void*);
+ using RegisterDisplayProc = void (*)(void**, void*);
++using UnregisterDisplayProc = void (*)(void*);
+ using GetDefaultWindowInfoProc = void (*)(void*);
+ using CreateWindowProc = void* (*)(const void*);
++using DestroyWindowProc = void (*)(void*);
++using ShowWindowProc = void (*)(void*, bool);
++using NxClientUninitProc = void (*)();
+ 
+ enum BcmNexusBlendFactor
+ {
+@@ -84,9 +88,14 @@ struct BcmNxplNativeWindowInfo
+ 
+ void* s_nxplHandle = nullptr;
+ GetDefaultWindowInfoProc s_getDefaultWindowInfo = nullptr;
+ CreateWindowProc s_createWindow = nullptr;
++DestroyWindowProc s_destroyWindow = nullptr;
++ShowWindowProc s_showWindow = nullptr;
++UnregisterDisplayProc s_unregisterDisplay = nullptr;
++NxClientUninitProc s_nxclientUninit = nullptr;
+ bool s_platformReady = false;
+ bool s_platformFailed = false;
++bool s_joinedWithNxClient = false;
+ 
+ bool ReadProcString(const char* path, std::string& value)
+ {
+@@ -208,16 +217,32 @@ bool InitializeBroadcomNxplPlatform()
+   const auto registerDisplay = reinterpret_cast<RegisterDisplayProc>(
+       dlsym(RTLD_DEFAULT, "NXPL_RegisterNexusDisplayPlatform"));
++  s_unregisterDisplay = reinterpret_cast<UnregisterDisplayProc>(
++      dlsym(RTLD_DEFAULT, "NXPL_UnregisterNexusDisplayPlatform"));
+   s_getDefaultWindowInfo = reinterpret_cast<GetDefaultWindowInfoProc>(
+       dlsym(RTLD_DEFAULT, "NXPL_GetDefaultNativeWindowInfoEXT"));
+   s_createWindow = reinterpret_cast<CreateWindowProc>(
+       dlsym(RTLD_DEFAULT, "NXPL_CreateNativeWindowEXT"));
++  s_destroyWindow = reinterpret_cast<DestroyWindowProc>(
++      dlsym(RTLD_DEFAULT, "NXPL_DestroyNativeWindow"));
++  s_showWindow = reinterpret_cast<ShowWindowProc>(
++      dlsym(RTLD_DEFAULT, "NXPL_ShowNativeWindowEXT"));
++  s_nxclientUninit = reinterpret_cast<NxClientUninitProc>(
++      dlsym(RTLD_DEFAULT, "NxClient_Uninit"));
+ 
+   if (!registerDisplay || !s_getDefaultWindowInfo || !s_createWindow)
+   {
+     CLog::Log(LOGERROR, "Broadcom NXPL: required native-window symbols are unavailable");
+     s_platformFailed = true;
+     return false;
+   }
++#if defined(TARGET_GB)
++  if (!s_unregisterDisplay || !s_destroyWindow || !s_showWindow || !s_nxclientUninit)
++  {
++    CLog::Log(LOGERROR, "GigaBlue NXPL: required lifecycle symbols are unavailable");
++    s_platformFailed = true;
++    return false;
++  }
++#endif
+ 
+   bool joined = false;
+   const char* joinMethod = "none";
+@@ -224,7 +249,10 @@ bool InitializeBroadcomNxplPlatform()
+     const unsigned error = nxclientJoin(nullptr);
+     joined = error == 0;
+     if (joined)
++    {
+       joinMethod = "NxClient";
++      s_joinedWithNxClient = true;
++    }
+     else
+       CLog::Log(LOGWARNING, "Broadcom NXPL: NxClient_Join failed: {}", error);
+   }
+@@ -333,8 +361,21 @@ bool CEGLNativeTypeVuplus::GetNativeWindow(XBNativeDisplayType **nativeWindow) c
+ bool CEGLNativeTypeVuplus::DestroyNativeDisplay()
+ {
+ #if defined(TARGET_VUPLUS_ARM)
+-  // Nexus/NXPL belongs to the process lifetime on VU+. Do not unregister or
+-  // unload it after EGL teardown.
++#if defined(TARGET_GB)
++  if (s_platformReady)
++  {
++    s_unregisterDisplay(s_nxplHandle);
++    if (s_joinedWithNxClient)
++      s_nxclientUninit();
++    s_nxplHandle = nullptr;
++    s_platformReady = false;
++    s_joinedWithNxClient = false;
++    CLog::Log(LOGINFO, "GigaBlue NXPL: platform released");
++  }
++#else
++  // Older Vu+ Nexus/NXPL implementations belong to the process lifetime.
++  // Do not unregister or unload them after EGL teardown.
++#endif
+   m_nativeDisplay = 0;
+ #else
+   GLES_Native_DestroyNativeDisplay();
+@@ -345,7 +386,15 @@ bool CEGLNativeTypeVuplus::DestroyNativeDisplay()
+ bool CEGLNativeTypeVuplus::DestroyNativeWindow()
+ {
+ #if defined(TARGET_VUPLUS_ARM)
+-  // See DestroyNativeDisplay(): deliberately retain the vendor object.
++#if defined(TARGET_GB)
++  if (m_nativeWindow && s_destroyWindow)
++  {
++    s_destroyWindow(m_nativeWindow);
++    CLog::Log(LOGDEBUG, "GigaBlue NXPL: native window destroyed");
++  }
++#else
++  // See DestroyNativeDisplay(): deliberately retain the Vu+ vendor object.
++#endif
+   m_nativeWindow = 0;
+ #else
+   GLES_Native_DestroyNativeWindow();
+@@ -558,6 +607,15 @@ bool CEGLNativeTypeVuplus::GetPreferredResolution(RESOLUTION_INFO *res) const
+ 
+ bool CEGLNativeTypeVuplus::ShowWindow(bool show)
+ {
++#if defined(TARGET_GB)
++  if (!m_nativeWindow || !s_showWindow)
++    return false;
++
++  s_showWindow(m_nativeWindow, show);
++  CLog::Log(LOGDEBUG, "GigaBlue NXPL: native window {}", show ? "shown" : "hidden");
++  return true;
++#else
+   return false;
++#endif
+ }
+ 
+-- 
+2.43.0

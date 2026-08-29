@@ -1,12 +1,13 @@
 From 64b29dccb55ed8ca5a2d4e4e297d098176bc148f Mon Sep 17 00:00:00 2001
 From: OE-Alliance <oe-alliance@users.noreply.github.com>
 Date: Sun, 9 Aug 2026 18:45:00 +0200
-Subject: [PATCH] vuplus arm: expose and switch real HDMI video modes
+Subject: [PATCH] Broadcom ARM NXPL: expose and switch real HDMI modes
 
-The legacy VU+ EGL type advertised only a synthetic 50 Hz mode and merely
-updated an in-memory structure when Kodi requested another resolution.  As a
-result 23.976/24 Hz material was always output as 1080p50 and showed severe
-cadence judder even though the video was decoded in hardware.
+The legacy Vu+/GigaBlue NXPL EGL types advertised only a synthetic 50 Hz mode
+and merely updated an in-memory structure when Kodi requested another
+resolution. As a result 23.976/24 Hz material was always output as 1080p50
+and showed severe cadence judder even though the video was decoded in
+hardware.
 
 Read the progressive HD/UHD modes published by the DVB driver, retain a
 1920x1080 logical NXPL surface for the GUI, and use the physical dimensions
@@ -57,7 +58,7 @@ index a0381abe356..520c10153cd 100644
 +  return output.good();
 +}
 +
-+bool ParseVuVideoMode(const std::string& mode,
++bool ParseNxplVideoMode(const std::string& mode,
 +                      unsigned int& outputWidth,
 +                      unsigned int& outputHeight,
 +                      float& refreshRate,
@@ -147,10 +148,10 @@ index a0381abe356..520c10153cd 100644
 +  if (!driverMode.empty() && driverMode != currentDriverMode &&
 +      !WriteProcString("/proc/stb/video/videomode", driverMode))
 +  {
-+    CLog::Log(LOGERROR, "VU+ NXPL: failed to set HDMI mode '{}'", driverMode);
++    CLog::Log(LOGERROR, "Broadcom NXPL: failed to set HDMI mode '{}'", driverMode);
 +    return false;
 +  }
-+  CLog::Log(LOGINFO, "VU+ NXPL: HDMI mode {} at {:.3f} Hz", driverMode, res.fRefreshRate);
++  CLog::Log(LOGINFO, "Broadcom NXPL: HDMI mode {} at {:.3f} Hz", driverMode, res.fRefreshRate);
 +#endif
    m_desktopRes = res;
    return true;
@@ -169,7 +170,7 @@ index a0381abe356..520c10153cd 100644
 +  unsigned int maximumOutputHeight = 1080;
 +  float currentRefreshRate = 50.0f;
 +  bool currentInterlaced = false;
-+  if (!ParseVuVideoMode(currentMode, maximumOutputWidth, maximumOutputHeight,
++  if (!ParseNxplVideoMode(currentMode, maximumOutputWidth, maximumOutputHeight,
 +                        currentRefreshRate, currentInterlaced))
 +  {
 +    maximumOutputWidth = 1920;
@@ -187,7 +188,7 @@ index a0381abe356..520c10153cd 100644
 +    unsigned int outputHeight = 0;
 +    float refreshRate = 0.0f;
 +    bool interlaced = false;
-+    if (!ParseVuVideoMode(modeName, outputWidth, outputHeight, refreshRate, interlaced) ||
++    if (!ParseNxplVideoMode(modeName, outputWidth, outputHeight, refreshRate, interlaced) ||
 +        interlaced || outputHeight < 720 || outputWidth > maximumOutputWidth ||
 +        outputHeight > maximumOutputHeight)
 +      continue;
@@ -261,7 +262,7 @@ index a0381abe356..520c10153cd 100644
 +  m_desktopResAll[2].strMode += " 3DTB";
 +  resolutions.push_back(m_desktopResAll[2]);
 +
-+  CLog::Log(LOGINFO, "VU+ NXPL: exposed {} HDMI modes up to {}x{}, current '{}'",
++  CLog::Log(LOGINFO, "Broadcom NXPL: exposed {} HDMI modes up to {}x{}, current '{}'",
 +            resolutions.size(), maximumOutputWidth, maximumOutputHeight, currentMode);
 +  return true;
 +#else
