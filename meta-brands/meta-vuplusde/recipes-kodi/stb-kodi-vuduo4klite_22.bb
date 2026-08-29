@@ -4,17 +4,8 @@ PROVIDES += "virtual/kodi"
 RPROVIDES:${PN} += "virtual-kodi"
 PROVIDES += "kodi"
 RPROVIDES:${PN} += "kodi"
-RDEPENDS:${PN} += "gb-v3ddriver-${MACHINE_DRIVER}"
-
-FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
-
-SRC_URI:append = " \
-     https://source.mynonpublic.com/gigablue/v3ddriver/xbmc-support_${MACHINE}_${GLPR}.tar.gz;name=xbmc-support \
-"
+RDEPENDS:${PN} += "vuplus-v3ddriver-${MACHINE}"
 
 EXTRA_OECMAKE += " \
     -DWITH_PLATFORM=GB-cortexa15 \
 "
-
-SRC_URI[xbmc-support.md5sum] = "c9e208f1adf4da2afa2f924be9895f81"
-SRC_URI[xbmc-support.sha256sum] = "8496405b70c0ad61e1f3c36abcd126678bfe0c4ece2c1fb24e7e035c141e5d30"

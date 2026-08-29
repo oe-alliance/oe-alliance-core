@@ -1,24 +1,39 @@
 From c56d477982f480977262cb3422f352ebf721452f Mon Sep 17 00:00:00 2001
 From: OE-Alliance <oe-alliance@users.noreply.github.com>
 Date: Sun, 9 Aug 2026 18:00:00 +0200
-Subject: [PATCH] vuplus arm: use runtime NXPL initialization
+Subject: [PATCH] Broadcom ARM: use runtime NXPL initialization
 
-Use the VU+ initialization sequence already proven by the Chromium BCM
-backend.  Join the running Nexus server, register NXPL and create a scalable
-native window without the closed KodiGLESPL compatibility library.
+Use the initialization sequence already proven by the Chromium BCM backend
+for both Vu+ and GigaBlue-style NXPL platforms. Join the running Nexus
+server, register NXPL and create a scalable native window without the closed
+KodiGLESPL/gles_init compatibility libraries.
+
+GigaBlue and Vu+ both use the vendor default z-order zero. Platform-specific
+window visibility and teardown are handled by a follow-up patch because the
+GigaBlue NXPL lifecycle differs from the older Vu+ Nexus implementation.
 
 Keep the vendor platform objects and their dlopen handles alive until process
-exit.  Older VU+ Nexus stacks are not safe to tear down after EGL, so this
+exit. Older Broadcom Nexus stacks are not safe to tear down after EGL, so this
 also removes the legacy explicit native close path.
 ---
- cmake/platform/linux/stb.cmake             |   2 +-
- xbmc/windowing/egl/EGLNativeTypeVuplus.cpp | 201 +++++++++++++++++++--
- 2 files changed, 185 insertions(+), 18 deletions(-)
+ cmake/platform/linux/stb.cmake             |   6 +-
+ xbmc/windowing/egl/EGLNativeTypeVuplus.cpp | 202 +++++++++++++++++++--
+ xbmc/windowing/egl/EGLNativeTypeVuplus.h   |   9 +-
+ 3 files changed, 196 insertions(+), 21 deletions(-)
 
 diff --git a/cmake/platform/linux/stb.cmake b/cmake/platform/linux/stb.cmake
 index b7a5a1be599..1db7e555fbc 100644
 --- a/cmake/platform/linux/stb.cmake
 +++ b/cmake/platform/linux/stb.cmake
+@@ -18,6 +18,6 @@ if(WITH_PLATFORM STREQUAL "GB-cortexa15")
+   set(CPU cortexa15)
+-  list(APPEND PLATFORM_DEFINES "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_STB_EXTEND -DTARGET_V3D -DTARGET_GB")
+-  list(APPEND DEPLIBS ${CMAKE_SOURCE_DIR}/xbmc/windowing/egl/gles_init.a EGL GLESv2 nxpl nexus nxclient)
++  list(APPEND PLATFORM_DEFINES "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_STB_EXTEND -DTARGET_V3D -DTARGET_GB -DTARGET_VUPLUS -DTARGET_VUPLUS_ARM")
++  list(APPEND DEPLIBS EGL GLESv2 ${CMAKE_DL_LIBS})
+ elseif(WITH_PLATFORM STREQUAL "dags-cortexa15")
+   set(CPU cortexa15)
+   list(APPEND PLATFORM_DEFINES "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_STB_EXTEND -DTARGET_V3D -DTARGET_DAGS")
 @@ -31,7 +31,7 @@ elseif(WITH_PLATFORM STREQUAL "dreambox-mipsel")
  elseif(WITH_PLATFORM STREQUAL "vuplus-cortexa15")
    set(CPU cortexa15)
@@ -28,11 +43,39 @@ index b7a5a1be599..1db7e555fbc 100644
  elseif(WITH_PLATFORM STREQUAL "vuplus-mipsel")
    list(APPEND PLATFORM_DEFINES "-DTARGET_POSIX -DTARGET_LINUX -D_LINUX -DTARGET_STB -DTARGET_STB_EXTEND -DTARGET_V3D -DTARGET_VUPLUS -DTARGET_VUPLUS_MIPSEL")
    list(APPEND DEPLIBS ${CMAKE_SOURCE_DIR}/xbmc/windowing/egl/gles_init.a EGL GLESv2 dvb_base nxpl xbmc_base dvb_client)
+diff --git a/xbmc/windowing/egl/CMakeLists.txt b/xbmc/windowing/egl/CMakeLists.txt
+index 10650326d6..03f84b452a 100644
+--- a/xbmc/windowing/egl/CMakeLists.txt
++++ b/xbmc/windowing/egl/CMakeLists.txt
+@@ -10,8 +10,8 @@ set(HEADERS EGLNativeType.h
+             WinEventsSTB.h)
+ 
+ if (WITH_PLATFORM STREQUAL "GB-cortexa15")
+-  list(APPEND SOURCES EGLNativeTypeGB.cpp)
+-  list(APPEND HEADERS EGLNativeTypeGB.h)
++  list(APPEND SOURCES EGLNativeTypeVuplus.cpp)
++  list(APPEND HEADERS EGLNativeTypeVuplus.h)
+ endif()
+ if (WITH_PLATFORM STREQUAL "dags-cortexa15")
+   list(APPEND SOURCES EGLNativeTypeDags.cpp)
+diff --git a/xbmc/windowing/egl/EGLWrapper.cpp b/xbmc/windowing/egl/EGLWrapper.cpp
+index 2441b6b081..1f4246eb3e 100644
+--- a/xbmc/windowing/egl/EGLWrapper.cpp
++++ b/xbmc/windowing/egl/EGLWrapper.cpp
+@@ -46,7 +46,7 @@
+ #if defined(TARGET_DAGS)
+   #include "EGLNativeTypeDags.h"
+ #endif
+-#if defined(TARGET_GB)
++#if defined(TARGET_GB) && !defined(TARGET_VUPLUS_ARM)
+   #include "EGLNativeTypeGB.h"
+ #endif
+ #if defined(TARGET_MALI)
 diff --git a/xbmc/windowing/egl/EGLNativeTypeVuplus.cpp b/xbmc/windowing/egl/EGLNativeTypeVuplus.cpp
 index bf1df30525d..a0381abe356 100644
 --- a/xbmc/windowing/egl/EGLNativeTypeVuplus.cpp
 +++ b/xbmc/windowing/egl/EGLNativeTypeVuplus.cpp
-@@ -32,13 +32,133 @@
+@@ -32,13 +32,134 @@
  #include <stdlib.h>
  #include <string.h>
  #if defined(TARGET_VUPLUS_ARM)
@@ -98,7 +141,7 @@ index bf1df30525d..a0381abe356 100644
 +  dlopen(name, RTLD_LAZY | RTLD_GLOBAL);
 +}
 +
-+bool InitializeVuplusPlatform()
++bool InitializeBroadcomNxplPlatform()
 +{
 +  if (s_platformReady)
 +    return true;
@@ -110,6 +153,7 @@ index bf1df30525d..a0381abe356 100644
 +  LoadOptionalLibrary("libdvb_client.so");
 +  LoadOptionalLibrary("libnxclient.so");
 +  LoadOptionalLibrary("libnxpl.so");
++  LoadOptionalLibrary("libv3ddriver.so");
 +
 +  const auto nxclientJoin =
 +      reinterpret_cast<NxClientJoinProc>(dlsym(RTLD_DEFAULT, "NxClient_Join"));
@@ -124,7 +168,7 @@ index bf1df30525d..a0381abe356 100644
 +
 +  if (!registerDisplay || !s_getDefaultWindowInfo || !s_createWindow)
 +  {
-+    CLog::Log(LOGERROR, "VU+ NXPL: required native-window symbols are unavailable");
++    CLog::Log(LOGERROR, "Broadcom NXPL: required native-window symbols are unavailable");
 +    s_platformFailed = true;
 +    return false;
 +  }
@@ -138,7 +182,7 @@ index bf1df30525d..a0381abe356 100644
 +    if (joined)
 +      joinMethod = "NxClient";
 +    else
-+      CLog::Log(LOGWARNING, "VU+ NXPL: NxClient_Join failed: {}", error);
++      CLog::Log(LOGWARNING, "Broadcom NXPL: NxClient_Join failed: {}", error);
 +  }
 +  if (!joined && nexusJoin)
 +  {
@@ -147,18 +191,18 @@ index bf1df30525d..a0381abe356 100644
 +    if (joined)
 +      joinMethod = "Authenticated";
 +    else
-+      CLog::Log(LOGWARNING, "VU+ NXPL: authenticated join failed: {}", error);
++      CLog::Log(LOGWARNING, "Broadcom NXPL: authenticated join failed: {}", error);
 +  }
 +  if (!joined)
 +  {
-+    CLog::Log(LOGERROR, "VU+ NXPL: unable to join the Nexus server");
++    CLog::Log(LOGERROR, "Broadcom NXPL: unable to join the Nexus server");
 +    s_platformFailed = true;
 +    return false;
 +  }
 +
 +  registerDisplay(&s_nxplHandle, nullptr);
 +  s_platformReady = true;
-+  CLog::Log(LOGINFO, "VU+ NXPL: platform ready using {} join", joinMethod);
++  CLog::Log(LOGINFO, "Broadcom NXPL: platform ready using {} join", joinMethod);
 +  return true;
 +}
 +} // unnamed namespace
@@ -190,7 +234,7 @@ index bf1df30525d..a0381abe356 100644
  bool CEGLNativeTypeVuplus::CreateNativeDisplay()
  {
 +#if defined(TARGET_VUPLUS_ARM)
-+  if (!InitializeVuplusPlatform())
++  if (!InitializeBroadcomNxplPlatform())
 +    return false;
 +  m_nativeDisplay = EGL_DEFAULT_DISPLAY;
 +  return true;
@@ -203,7 +247,7 @@ index bf1df30525d..a0381abe356 100644
  bool CEGLNativeTypeVuplus::CreateNativeWindow()
  {
 +#if defined(TARGET_VUPLUS_ARM)
-+  if (!InitializeVuplusPlatform())
++  if (!InitializeBroadcomNxplPlatform())
 +    return false;
 +
 +  BcmNxplNativeWindowInfo nativeWindow = {};
@@ -216,7 +260,7 @@ index bf1df30525d..a0381abe356 100644
 +  nativeWindow.clientID = 0;
 +  nativeWindow.zOrder = 0;
 +  m_nativeWindow = s_createWindow(&nativeWindow);
-+  CLog::Log(LOGINFO, "VU+ NXPL: native window {}x{} stretch=1", nativeWindow.width,
++  CLog::Log(LOGINFO, "Broadcom NXPL: native window {}x{} stretch=1", nativeWindow.width,
 +            nativeWindow.height);
 +#else
    m_nativeWindow = GLES_Native_CreateNativeWindow();
@@ -312,5 +356,23 @@ index bf1df30525d..a0381abe356 100644
    m_desktopResAll[2].strMode = StringUtils::Format("{} @ {:.2f}{} - Full Screen 3DTB", m_desktopResAll[2].strMode.c_str(), (float)50,m_desktopResAll[2].dwFlags & D3DPRESENTFLAG_INTERLACED ? "i" : "");
  
    m_desktopResAll[2].iSubtitles   = (int)(0.965 * m_desktopResAll[2].iHeight);
+diff --git a/xbmc/windowing/egl/EGLNativeTypeVuplus.h b/xbmc/windowing/egl/EGLNativeTypeVuplus.h
+--- a/xbmc/windowing/egl/EGLNativeTypeVuplus.h
++++ b/xbmc/windowing/egl/EGLNativeTypeVuplus.h
+@@ -36,6 +36,13 @@ public:
+   };
+   virtual ~CEGLNativeTypeVuplus() {};
+-  virtual std::string GetNativeName() const { return "vuplus"; };
++  virtual std::string GetNativeName() const
++  {
++#if defined(TARGET_GB)
++    return "GB";
++#else
++    return "vuplus";
++#endif
++  };
+   virtual bool  CheckCompatibility();
+   virtual void  Initialize();
+   virtual void  Destroy();
 -- 
 2.43.0

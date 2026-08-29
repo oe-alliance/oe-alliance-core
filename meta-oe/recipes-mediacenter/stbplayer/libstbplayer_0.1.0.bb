@@ -2,13 +2,15 @@ SUMMARY = "Stable hardware-video backend ABI for STB Kodi"
 DESCRIPTION = "A small C ABI, loader and probe tool for machine-specific STB video backends."
 HOMEPAGE = "https://github.com/oe-alliance"
 
-PR = "r39"
+PR = "r43"
 
 LICENSE = "GPL-2.0-or-later"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=45071750435f2d50d503492ef8e003db"
 
 SRCREV = "${AUTOREV}"
-SRC_URI = "git://github.com/oe-alliance/stb-kodi-libstbplayer.git;protocol=https;branch=main"
+SRC_URI = "git://github.com/oe-alliance/stb-kodi-libstbplayer.git;protocol=https;branch=main \
+           file://0001-bcm-dvb-add-gigablue-startup-variant.patch \
+"
 
 inherit cmake pkgconfig
 
@@ -22,7 +24,7 @@ PACKAGE_ARCH = "${MACHINE}"
 HISI_STB = "${@'1' if (d.getVar('SOC_FAMILY') or '').startswith('hisi') else '0'}"
 BCM_DVB_STB = "${@'1' if (d.getVar('SOC_FAMILY') or '').startswith('bcm') and d.getVar('TARGET_ARCH') in ('arm', 'mipsel') else '0'}"
 DREAM_AMLOGIC_STB = "${@'1' if d.getVar('MACHINE') in ('dreamone', 'dreamtwo') and d.getVar('SOC_FAMILY') == 'meson64' else '0'}"
-BCM_DVB_VARIANT = "${@'dreambox' if (d.getVar('MACHINE') or '').startswith('dm') else ('vuplus' if (d.getVar('MACHINE') or '').startswith('vu') else ('type2' if (d.getVar('MACHINE') or '') in ('xc7362', 'xc7346') else 'normal'))}"
+BCM_DVB_VARIANT = "${@'dreambox' if (d.getVar('MACHINE') or '').startswith('dm') else ('gigablue' if (d.getVar('MACHINE') or '') in ('gb7252', 'gb72604', 'vuduo4klite') else ('vuplus' if (d.getVar('MACHINE') or '').startswith('vu') else ('type2' if (d.getVar('MACHINE') or '') in ('xc7362', 'xc7346') else 'normal')))}"
 BCM_DVB_CONFIG = "${@d.getVar('DVBMEDIASINK_CONFIG') or ''}"
 # These receivers use the HiSilicon Linux-DVB/PES driver path used by E2's
 # dvbvideosink. Other HiSilicon families keep the direct AVPLAY backend.

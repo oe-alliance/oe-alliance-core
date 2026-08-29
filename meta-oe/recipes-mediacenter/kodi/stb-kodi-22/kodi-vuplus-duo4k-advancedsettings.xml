@@ -1,0 +1,7 @@
+<advancedsettings>
+  <!--
+    The Vu+ Duo4K/SE platform wchar_t collation facet can crash while Kodi
+    sorts its keymaps. Use Kodi's built-in Unicode accent-folding collation.
+  -->
+  <uselocalecollation>false</uselocalecollation>
+</advancedsettings>

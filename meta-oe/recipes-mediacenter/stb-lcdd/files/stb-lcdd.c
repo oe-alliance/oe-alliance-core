@@ -10,6 +10,8 @@
 #include <fcntl.h>
 #include <ft2build.h>
 #include FT_FREETYPE_H
+#include <hb-ft.h>
+#include <hb.h>
 #include <linux/fb.h>
 #include <linux/types.h>
 #include <netinet/in.h>
@@ -699,30 +701,57 @@ static void draw_text(struct display *display, int x, int y, int max_width,
                       const char *text, int pixel_size,
                       uint8_t red, uint8_t green, uint8_t blue)
 {
-  const unsigned char *cursor = (const unsigned char *)text;
   FT_Face face = display->ft_face;
+  hb_font_t *font;
+  hb_buffer_t *buffer;
+  hb_glyph_info_t *glyphs;
+  hb_glyph_position_t *positions;
+  unsigned int glyph_count;
+  unsigned int index;
   int pen_x = x;
   int baseline;
+  int total_advance = 0;
 
   if (!display->ft_ready || !text || !*text)
     return;
   FT_Set_Pixel_Sizes(face, 0, (unsigned int)pixel_size);
   baseline = y + pixel_size;
 
-  while (*cursor)
+  font = hb_ft_font_create_referenced(face);
+  buffer = hb_buffer_create();
+  if (!font || !buffer)
   {
-    uint32_t codepoint = next_utf8(&cursor);
+    if (font)
+      hb_font_destroy(font);
+    if (buffer)
+      hb_buffer_destroy(buffer);
+    return;
+  }
+  hb_buffer_add_utf8(buffer, text, -1, 0, -1);
+  hb_buffer_guess_segment_properties(buffer);
+  hb_shape(font, buffer, NULL, 0);
+  glyphs = hb_buffer_get_glyph_infos(buffer, &glyph_count);
+  positions = hb_buffer_get_glyph_positions(buffer, &glyph_count);
+
+  for (index = 0; index < glyph_count; ++index)
+    total_advance += (int)(positions[index].x_advance >> 6);
+  if (HB_DIRECTION_IS_BACKWARD(hb_buffer_get_direction(buffer)) &&
+      total_advance > 0 && total_advance < max_width)
+    pen_x = x + max_width - total_advance;
+
+  for (index = 0; index < glyph_count; ++index)
+  {
     FT_GlyphSlot glyph;
     int gx;
     int gy;
     int row;
     int column;
-    if (FT_Load_Char(face, codepoint,
-                     FT_LOAD_RENDER | (display->monochrome_text ? FT_LOAD_TARGET_MONO : FT_LOAD_TARGET_NORMAL)))
+    if (FT_Load_Glyph(face, glyphs[index].codepoint,
+                      FT_LOAD_RENDER | (display->monochrome_text ? FT_LOAD_TARGET_MONO : FT_LOAD_TARGET_NORMAL)))
       continue;
     glyph = face->glyph;
-    gx = pen_x + glyph->bitmap_left;
-    gy = baseline - glyph->bitmap_top;
+    gx = pen_x + (int)(positions[index].x_offset >> 6) + glyph->bitmap_left;
+    gy = baseline - (int)(positions[index].y_offset >> 6) - glyph->bitmap_top;
     if (gx >= x + max_width)
       break;
     for (row = 0; row < (int)glyph->bitmap.rows; ++row)
@@ -752,10 +781,12 @@ static void draw_text(struct display *display, int x, int y, int max_width,
         pixel[2] = (uint8_t)((pixel[2] * (255 - alpha) + blue * alpha) / 255);
       }
     }
-    pen_x += (int)(glyph->advance.x >> 6);
+    pen_x += (int)(positions[index].x_advance >> 6);
     if (pen_x >= x + max_width)
       break;
   }
+  hb_buffer_destroy(buffer);
+  hb_font_destroy(font);
 }
 
 static void draw_icon(struct display *display, const struct widget *widget)

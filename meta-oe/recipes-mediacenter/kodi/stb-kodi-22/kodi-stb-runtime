@@ -24,6 +24,27 @@ stb_kodi_add_preload()
 
 stb_kodi_prepare_widevine()
 {
+    _stb_kodi_cdm_dir="${KODI_DATA:-/media/hdd/.kodi}/cdm"
+    _stb_kodi_cdm_link="${_stb_kodi_cdm_dir}/libwidevinecdm.so"
+
+    # Reuse an optional, separately licensed browser/HbbTV CDM.  Do not copy
+    # the proprietary binary into the Kodi package and do not overwrite a CDM
+    # which the user deliberately installed through InputStream Helper.
+    if [ ! -e "${_stb_kodi_cdm_link}" ]; then
+        for _stb_kodi_cdm_source in \
+            /usr/share/netflix/libwidevinecdm.so \
+            /usr/share/chromium2-hbbtv/libwidevinecdm.so \
+            /usr/lib/chromium2/libwidevinecdm.so \
+            /usr/lib/chromium/libwidevinecdm.so; do
+            if [ -r "${_stb_kodi_cdm_source}" ]; then
+                mkdir -p "${_stb_kodi_cdm_dir}" || break
+                [ ! -L "${_stb_kodi_cdm_link}" ] || rm -f "${_stb_kodi_cdm_link}"
+                ln -s "${_stb_kodi_cdm_source}" "${_stb_kodi_cdm_link}"
+                break
+            fi
+        done
+    fi
+
     # ChromeOS AArch64 Widevine CDMs reference two out-of-line GCC atomic
     # helpers which normal libgcc_s does not export. Prefer Kodi's own open
     # compatibility object, while accepting the optional Chromium CDM package
@@ -43,6 +64,14 @@ stb_kodi_prepare_profile()
     HOME=/media/hdd
     KODI_DATA=/media/hdd/.kodi
     export HOME KODI_DATA
+
+    # Create the profile before the upstream kodi launcher derives its temp
+    # and crash-log paths.  Kodi core also carries the same STB default so
+    # direct kodi.bin/kodi-standalone starts cannot fall back below /home.
+    if ! mkdir -p "${KODI_DATA}"; then
+        echo "Kodi: cannot create profile directory ${KODI_DATA}" >&2
+        return 1
+    fi
 }
 
 stb_kodi_stop_lcdd()
@@ -115,6 +144,33 @@ stb_kodi_restore_frontpanel()
     stb_kodi_write_hex /proc/stb/fp/led_fade "${STB_KODI_LED_FADE:-}"
 }
 
+stb_kodi_set_platform_dvb_graphics_alpha()
+{
+    _stb_kodi_alpha="$1"
+
+    # GigaBlue's persistent dvb_init Nexus client keeps Enigma2's last OSD
+    # frame after Enigma2 exits.  Its graphics surface then covers the DVB
+    # decoder fed by Kodi, although the decoded video is running underneath.
+    # Hide only that graphics surface for Kodi's lifetime; do not stop
+    # dvb_init, because the Broadcom DVB decoder devices depend on it.
+    if [ -r /proc/stb/info/gbmodel ]; then
+        :
+    elif [ -r /proc/stb/info/vumodel ] && \
+         [ "$(cat /proc/stb/info/vumodel 2>/dev/null)" = "vuduo4klite" ]; then
+        :
+    else
+        return 0
+    fi
+
+    # The Duo 4K Lite platform package installs the compatible client as part
+    # of its machine-specific recipe.  Using dvb_init is essential: the generic
+    # /proc/stb/video/alpha node also changes Kodi's GLES plane and hides its
+    # OSD instead of only removing Enigma2's retained graphics frame.
+    [ -x /usr/share/platform/config ] || return 0
+    /usr/share/platform/config -c dvb_init -alpha "${_stb_kodi_alpha}" \
+        >/dev/null 2>&1 || true
+}
+
 stb_kodi_restore_amlogic_video()
 {
     stb_kodi_write_number /sys/module/amvdec_h264/parameters/dec_control \
@@ -152,9 +208,13 @@ stb_kodi_run()
     STB_KODI_LCDD_PID=""
     STB_KODI_PLAYER_PID=""
 
-    stb_kodi_prepare_profile
+    stb_kodi_prepare_profile || return 1
     stb_kodi_load_hardware_state
     stb_kodi_prepare_widevine
+
+    # Remove a retained Enigma2 shutdown frame before Kodi opens the decoder.
+    # This is a no-op on non-GigaBlue receivers.
+    stb_kodi_set_platform_dvb_graphics_alpha 0
 
     # Enigma2 may change the Dream front-panel registers while shutting down.
     # Reapply the values captured by the launcher so Kodi keeps the identical
@@ -179,6 +239,9 @@ stb_kodi_run()
     STB_KODI_PLAYER_PID=""
     trap - HUP INT TERM
     stb_kodi_stop_lcdd
+    # Enigma2 needs its Nexus graphics surface opaque again when the init
+    # launcher starts it after Kodi exits (also after a Kodi crash).
+    stb_kodi_set_platform_dvb_graphics_alpha 255
     # Restore the receiver state even if Kodi terminated abnormally.  Normal
     # video closes also restore these controls inside CAMLCodec.
     stb_kodi_restore_amlogic_video
