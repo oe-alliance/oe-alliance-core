@@ -10,7 +10,7 @@ KERNEL_FILE = "kernel.bin"
 ROOTFS_FILE = "rootfs.bin"
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "\
-    et-dvb-modules-${MACHINE} \
+    et-dvb-modules-${MACHINEBUILD} \
     "
 
 DVBPROVIDER = "kernel"
@@ -21,7 +21,7 @@ MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS += "\
 
 MACHINE_EXTRA_RRECOMMENDS += " \
     gstreamer1.0-plugin-dvbmediasink \
-    ${@bb.utils.contains('MACHINE_FEATURES', 'v3d-nxpl', 'xtrend-v3ddriver-${MACHINE}' , '', d)} \
+    ${@bb.utils.contains('MACHINE_FEATURES', 'v3d-nxpl', 'xtrend-v3ddriver-${MACHINEBUILD}' , '', d)} \
     ${@bb.utils.contains('MACHINE_FEATURES', 'oem-info', 'oem-info', '',d)} \
     "
 
@@ -35,17 +35,17 @@ DVBMEDIASINK_CONFIG = "--with-wma --with-wmv --with-pcm --with-dts --with-eac3 -
 TARGET_ARCH = "mipsel"
 DEFAULTTUNE = "mips32el"
 
-PREFERRED_PROVIDER_virtual/egl ?= "xtrend-v3ddriver-${MACHINE}" 
-PREFERRED_PROVIDER_virtual/libgles1 ?= "xtrend-v3ddriver-${MACHINE}"
-PREFERRED_PROVIDER_virtual/libgles2 ?= "xtrend-v3ddriver-${MACHINE}"
-PREFERRED_PROVIDER_virtual/libgbm ?= "xtrend-v3ddriver-${MACHINE}"
+PREFERRED_PROVIDER_virtual/egl ?= "xtrend-v3ddriver-${MACHINEBUILD}" 
+PREFERRED_PROVIDER_virtual/libgles1 ?= "xtrend-v3ddriver-${MACHINEBUILD}"
+PREFERRED_PROVIDER_virtual/libgles2 ?= "xtrend-v3ddriver-${MACHINEBUILD}"
+PREFERRED_PROVIDER_virtual/libgbm ?= "xtrend-v3ddriver-${MACHINEBUILD}"
 PREFERRED_PROVIDER_virtual/libgl ?= "mesa"
 PREFERRED_PROVIDER_virtual/mesa ?= "mesa"
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-etxx00"
 VIRTUAL-RUNTIME_blindscan_dvbs = "et-blindscan-dvbs-utils"
-VIRTUAL-RUNTIME_blindscan_dvbc = "et-blindscan-dvbc-utils-${MACHINE}"
-PREFERRED_PROVIDER_virtual/kodi = "stb-kodi-${MACHINE}"
+VIRTUAL-RUNTIME_blindscan_dvbc = "et-blindscan-dvbc-utils-${MACHINEBUILD}"
+PREFERRED_PROVIDER_virtual/kodi = "stb-kodi-${MACHINEBUILD}"
 
 KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_OUTPUT = "${KERNEL_IMAGETYPE}"
@@ -53,7 +53,7 @@ KERNEL_CONSOLE = "ttyS0,115200n8"
 
 IMAGE_FSTYPES ?= "ubi"
 
-IMAGEDIR ?= "${MACHINE}"
+IMAGEDIR ?= "${MACHINEBUILD}"
 
 IMAGE_CMD:ubifs:prepend = " \
 	mkdir -p ${IMAGE_ROOTFS}/usr/lib; \

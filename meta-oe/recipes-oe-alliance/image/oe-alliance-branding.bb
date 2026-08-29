@@ -193,7 +193,7 @@ do_install:append() {
         ln -sf /usr/share/enigma2/uniboxhd2.png ${D}${libdir}/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/uniboxhd2.png
         install -m 0644 ${S}/BoxBranding/boxes/uniboxhd3.png ${D}/usr/share/enigma2/uniboxhd3.png
         ln -sf /usr/share/enigma2/uniboxhd3.png ${D}${libdir}/enigma2/python/Plugins/Extensions/OpenWebif/public/images/boxes/uniboxhd3.png
-    elif [ ${MACHINE} = "et6x00" ]; then
+    elif [ ${MACHINEBUILD} = "et6x00" ]; then
         for f in ${S}/BoxBranding/boxes/et6*; do
             filename=$(basename "$f")
             extension="${filename##*.}"
