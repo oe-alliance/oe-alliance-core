@@ -4,7 +4,9 @@ LICENSE = "GPL-2.0-only"
 
 KERNEL_RELEASE = "4.10.6"
 
-COMPATIBLE_MACHINE = "^(formuler1|formuler1tc|formuler3|formuler3ip|formuler4|formuler4ip|formuler4turbo)$"
+COMPATIBLE_MACHINE = "^(formuler1|formuler1tc|fm7362|formuler4turbo)$"
+
+PACKAGE_ARCH = "${MACHINEBUILD}"
 
 inherit kernel machine_kernel_pr kernel-fixups
 
