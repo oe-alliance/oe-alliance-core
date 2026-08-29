@@ -7,7 +7,7 @@ PN = "enigma2-plugin-extensions-chromium"
 
 COMPATIBLE_MACHINE = "^(vusolo4k|vuuno4k|vuzero4k|vuuno4kse|vuultimo4k|vuduo4k|vuduo4kse)$"
 
-RDEPENDS:${PN} = "chromium-browser-${MACHINE}"
+RDEPENDS:${PN} = "chromium-browser-${MACHINEBUILD}"
 
 inherit gittag
 

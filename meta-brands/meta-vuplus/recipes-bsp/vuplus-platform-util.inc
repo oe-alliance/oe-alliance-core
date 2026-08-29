@@ -1,7 +1,7 @@
 SUMMARY = "Platform Util drivers for ${MACHINE}"
 SECTION = "base"
 PRIORITY = "required"
-PACKAGE_ARCH := "${MACHINE_ARCH}"
+PACKAGE_ARCH := "${MACHINEBUILD}"
 require conf/license/license-close.inc
 
 RDEPENDS:${PN} += "gptfdisk"
@@ -9,11 +9,11 @@ RDEPENDS:${PN} += "gptfdisk"
 PR = "${SRCDATE}.${SRCDATE_PR}"
 
 SRC_URI = " \
-    https://source.mynonpublic.com/vuplus/release/platform-util/platform-util-${MACHINE}-${PV}-${SRCDATE}.${SRCDATE_PR}.tar.gz \
+    https://source.mynonpublic.com/vuplus/release/platform-util/platform-util-${MACHINEBUILD}-${PV}-${SRCDATE}.${SRCDATE_PR}.tar.gz \
     file://${INITSCRIPT_NAME}.sysvinit \
 "
 
-S = "${UNPACKDIR}/platform-util-${MACHINE}"
+S = "${UNPACKDIR}/platform-util-${MACHINEBUILD}"
 
 do_install() {
     install -d ${D}${bindir}

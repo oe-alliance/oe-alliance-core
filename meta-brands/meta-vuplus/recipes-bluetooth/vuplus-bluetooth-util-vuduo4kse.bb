@@ -11,7 +11,7 @@ CYW4373_FIRMWARE_FILE = "BCM4373A0-04b4-640c.hcd"
 do_install:append() {
     if [ -n "${CYW4373_FIRMWARE_FILE}" ]; then
         install -d ${D}/lib/firmware/${CYW4373_FIRMWARE_PATH}
-        install -m 0644 ${UNPACKDIR}/vuplus-bluetooth-util-${MACHINE}/${CYW4373_FIRMWARE_FILE} ${D}/lib/firmware/${CYW4373_FIRMWARE_PATH}
+        install -m 0644 ${UNPACKDIR}/vuplus-bluetooth-util-${MACHINEBUILD}/${CYW4373_FIRMWARE_FILE} ${D}/lib/firmware/${CYW4373_FIRMWARE_PATH}
     fi
 }
 

@@ -110,7 +110,7 @@ do_install:append:7215s() {
 
 inherit deploy
 do_deploy() {
-    if [ "${MACHINE}" = "vuduo" ] || [ "${MACHINE}" = "vuduo2" ] || [ "${MACHINE}" = "vuuno" ] || [ "${MACHINE}" = "vusolo" ] || [ "${MACHINE}" = "vusolose" ] || [ "${MACHINE}" = "vuultimo" ] || [ "${MACHINE}" = "vuzero" ] || [ "${MACHINE}" = "vusolo4k" ] || [ "${BRAND_OEM}" = "dags" ]; then
+    if [ "${MACHINE}" = "vuduo" ] || [ "${MACHINE}" = "vuduo2" ] || [ "${MACHINE}" = "vuuno" ] || [ "${MACHINE}" = "vusolo" ] || [ "${MACHINE}" = "vusolose" ] || [ "${MACHINE}" = "vuultimo" ] || [ "${MACHINE}" = "vuzero" ] || [ "${MACHINEBUILD}" = "vusolo4k" ] || [ "${BRAND_OEM}" = "dags" ]; then
         install -m 0644 splash480.bmp ${DEPLOYDIR}/${BOOTLOGO_FILENAME}
     else
         install -m 0644 splash576.bmp ${DEPLOYDIR}/${BOOTLOGO_FILENAME}

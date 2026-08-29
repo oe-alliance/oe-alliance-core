@@ -20,12 +20,10 @@ SRC_URI = "git://github.com/oe-mirrors/filestreamproxy.git;protocol=https;branch
 
 inherit autotools
 
-EXTRA_OECONF:vusolo4k += " --enable-ext-pid "
-EXTRA_OECONF:vuultimo4k += " --enable-ext-pid "
+EXTRA_OECONF:vu7376 += " --enable-ext-pid "
+EXTRA_OECONF:vu7376duo += " --enable-ext-pid "
 EXTRA_OECONF:vuuno4k += " --enable-ext-pid "
 EXTRA_OECONF:vuuno4kse += " --enable-ext-pid "
-EXTRA_OECONF:vuduo4k += " --enable-ext-pid "
-EXTRA_OECONF:vuduo4kse += " --enable-ext-pid "
 EXTRA_OECONF:dags7252 += " --enable-ext-pid "
 
 CXXFLAGS += "-std=gnu++11"

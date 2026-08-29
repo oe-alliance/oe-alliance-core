@@ -2,12 +2,12 @@ SUMMARY = "Chromium and YoutubeTV"
 SECTION = "base"
 PRIORITY = "optional"
 require conf/license/license-close.inc
-PACKAGE_ARCH := "${MACHINE_ARCH}"
+PACKAGE_ARCH := "${MACHINEBUILD}"
 
 PV = "1.3"
 PR = "${SRCDATE}-r1"
 
-SRC_URI = "https://source.mynonpublic.com/vuplus/chromium/chromium-vuplus_${MACHINE}_${SRCDATE}.tar.gz \
+SRC_URI = "https://source.mynonpublic.com/vuplus/chromium/chromium-vuplus_${MACHINEBUILD}_${SRCDATE}.tar.gz \
            file://run.patch;striplevel=0"
 
 # Added very old NSS version need only for vuplus

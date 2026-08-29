@@ -145,7 +145,7 @@ BCM_DVB_STB = "${@'1' if (d.getVar('SOC_FAMILY') or '').startswith('bcm') and d.
 VUPLUS_ARM_STB = "${@'1' if d.getVar('BRAND_OEM') == 'vuplus' and d.getVar('TARGET_ARCH') == 'arm' else '0'}"
 VUPLUS_MIPSEL_STB = "${@'1' if d.getVar('BRAND_OEM') == 'vuplus' and d.getVar('TARGET_ARCH') == 'mipsel' else '0'}"
 VUPLUS_STB = "${@'1' if d.getVar('BRAND_OEM') == 'vuplus' and d.getVar('TARGET_ARCH') in ('arm', 'mipsel') else '0'}"
-VUPLUS_DUO4K_LOCALE_FALLBACK = "${@'1' if d.getVar('MACHINE') in ('vuduo4k', 'vuduo4kse') else '0'}"
+VUPLUS_DUO4K_LOCALE_FALLBACK = "${@'1' if d.getVar('MACHINEBUILD') in ('vuduo4k', 'vuduo4kse') else '0'}"
 GIGABLUE_NXPL_ARM_STB = "${@'1' if d.getVar('MACHINE') in ('gb7252', 'gb72604') and d.getVar('TARGET_ARCH') == 'arm' else '0'}"
 BRCM_NXPL_ARM_STB = "${@'1' if d.getVar('VUPLUS_ARM_STB') == '1' or d.getVar('GIGABLUE_NXPL_ARM_STB') == '1' else '0'}"
 GB_PLATFORM_NXPL_STB = "${@'1' if d.getVar('MACHINE') in ('gb7252', 'gb72604', 'vuduo4klite') and d.getVar('TARGET_ARCH') == 'arm' else '0'}"

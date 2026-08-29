@@ -6,7 +6,7 @@ require conf/license/license-close.inc
 PV = "${KV}"
 PR = "r1"
 
-DOWNLOADMACHINE ?= "${MACHINE}"
+DOWNLOADMACHINE ?= "${MACHINEBUILD}"
 SRC_URI = "https://source.mynonpublic.com/vuplus/release/vuplus-dvb-modules/vuplus-dvb-modules-${DOWNLOADMACHINE}-${PV}-${SRCDATE}.tar.gz"
 
 S = "${UNPACKDIR}"
@@ -26,8 +26,8 @@ do_install() {
     done
     install -d ${D}/${sysconfdir}/modules-load.d
     for i in `ls | grep \\.ko | sed -e 's/.ko//g'`; do
-        echo $i >> ${D}/${sysconfdir}/modules-load.d/_${MACHINE}.conf
+        echo $i >> ${D}/${sysconfdir}/modules-load.d/_${MACHINEBUILD}.conf
     done
 }
 
-FILES:${PN} += "${sysconfdir}/modules-load.d/_${MACHINE}.conf /lib/modules/${KV}/extra"
+FILES:${PN} += "${sysconfdir}/modules-load.d/_${MACHINEBUILD}.conf /lib/modules/${KV}/extra"
