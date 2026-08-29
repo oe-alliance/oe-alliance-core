@@ -64,6 +64,8 @@ PR = "r0"
 
 INSANE_SKIP:${PN} += "already-stripped arch"
 
+PACKAGE_ARCH = "${MACHINEBUILD}"
+
 SRC_URI = "git://github.com/oe-alliance/enigma2-plugin-extensions-hbbtv-webkit.git;protocol=https;branch=dev"
 
 do_package_qa() {
