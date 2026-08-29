@@ -1,4 +1,4 @@
-SUMMARY = "Hardware drivers for ${MACHINE}"
+SUMMARY = "Hardware drivers for ${MACHINEBUILD}"
 SECTION = "base"
 PRIORITY = "required"
 require conf/license/license-close.inc
@@ -6,7 +6,7 @@ require conf/license/license-close.inc
 PV = "${KV}+${SRCDATE}"
 PR = "r0"
 
-SRC_URI = "https://source.mynonpublic.com/formuler/${MACHINE}-drivers-${KV}-${SRCDATE}.zip"
+SRC_URI = "https://source.mynonpublic.com/formuler/${MACHINEBUILD}-drivers-${KV}-${SRCDATE}.zip"
 
 S = "${UNPACKDIR}"
 
@@ -21,10 +21,10 @@ do_populate_sysroot() {
 do_install() {
     install -d ${D}/lib/modules/${KV}/extra
     install -d ${D}/${sysconfdir}/modules-load.d
-    for i in ${MACHINE}_1 ${MACHINE}_2 ${MACHINE}_3 ${MACHINE}_4; do
+    for i in ${MACHINEBUILD}_1 ${MACHINEBUILD}_2 ${MACHINEBUILD}_3 ${MACHINEBUILD}_4; do
         install -m 0755 ${S}/$i.ko ${D}/lib/modules/${KV}/extra
-        echo $i >> ${D}/${sysconfdir}/modules-load.d/_${MACHINE}.conf
+        echo $i >> ${D}/${sysconfdir}/modules-load.d/_${MACHINEBUILD}.conf
     done
 }
 
-FILES:${PN} += "${sysconfdir}/modules-load.d/_${MACHINE}.conf /lib/modules/${KV}/extra"
+FILES:${PN} += "${sysconfdir}/modules-load.d/_${MACHINEBUILD}.conf /lib/modules/${KV}/extra"

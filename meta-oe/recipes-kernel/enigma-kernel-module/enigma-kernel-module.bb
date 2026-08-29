@@ -64,10 +64,10 @@ do_configure:prepend(){
     elif [ "${MACHINE}" = "blackbox7405" ]; then
         DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-BLACKBOX-BASE}/recipes-drivers/blackbox-dvb-modules-blackbox7405.bb | cut -b 12-19`
     elif [ "${BRAND_OEM}" = "formuler" ]; then
-        if [ "${MACHINE}" = "formuler1" ] || [ "${MACHINE}" = "formuler3" ] || [ "${MACHINE}" = "formuler4" ]; then
-            DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-FORMULER-BASE}/recipes-drivers/formuler-dvb-modules-${MACHINE}.bb | cut -b 12-19`
+        if [ "${MACHINEBUILD}" = "formuler1" ] || [ "${MACHINEBUILD}" = "formuler3" ] || [ "${MACHINEBUILD}" = "formuler4" ]; then
+            DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-FORMULER-BASE}/recipes-drivers/formuler-dvb-modules-${MACHINEBUILD}.bb | cut -b 12-19`
         else
-            DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-FORMULER-BASE}/recipes-drivers/formuler-dvb-modules-al-${MACHINE}.bb | cut -b 12-19`
+            DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-FORMULER-BASE}/recipes-drivers/formuler-dvb-modules-al-${MACHINEBUILD}.bb | cut -b 12-19`
         fi
     elif [ "${BRAND_OEM}" = "skylake" ]; then
         DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-SKYLAKE-BASE}/recipes-drivers/skylake-dvb-modules-${MACHINE}.bb | cut -b 12-19`

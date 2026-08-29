@@ -13,8 +13,8 @@ KERNEL_FILE = "kernel.bin"
 ROOTFS_FILE = "rootfs.bin"
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "\
-    ${@bb.utils.contains('MACHINE_FEATURES', 'al-driver', 'formuler-dvb-modules-al-${MACHINE}', 'formuler-dvb-modules-${MACHINE}',d)} \
-    ${@bb.utils.contains('MACHINE_FEATURES', 'v3d', 'formuler-v3ddriver-${MACHINE}', '',d)} \
+    ${@bb.utils.contains('MACHINE_FEATURES', 'al-driver', 'formuler-dvb-modules-al-${MACHINEBUILD}', 'formuler-dvb-modules-${MACHINEBUILD}',d)} \
+    ${@bb.utils.contains('MACHINE_FEATURES', 'v3d', 'formuler-v3ddriver-${MACHINEBUILD}', '',d)} \
     "
 
 DVBPROVIDER = "kernel"
@@ -38,9 +38,9 @@ TARGET_ARCH = "mipsel"
 DEFAULTTUNE = "mips32el"
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-formuler"
-PREFERRED_PROVIDER_virtual/egl = "formuler-v3ddriver-${MACHINE}" 
-PREFERRED_PROVIDER_virtual/libgles2 = "formuler-v3ddriver-${MACHINE}"
-PREFERRED_PROVIDER_virtual/kodi = "stb-kodi-${MACHINE}"
+PREFERRED_PROVIDER_virtual/egl = "formuler-v3ddriver-${MACHINEBUILD}"
+PREFERRED_PROVIDER_virtual/libgles2 = "formuler-v3ddriver-${MACHINEBUILD}"
+PREFERRED_PROVIDER_virtual/kodi = "stb-kodi-${MACHINEBUILD}"
 
 KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_OUTPUT = "${KERNEL_IMAGETYPE}"
@@ -48,7 +48,7 @@ KERNEL_CONSOLE = "ttyS0,115200n8"
 
 IMAGE_FSTYPES ?= "ubi"
 
-IMAGEDIR ?= "${MACHINE}"
+IMAGEDIR ?= "${MACHINEBUILD}"
 
 IMAGE_CMD:ubifs:prepend = " \
 	mkdir -p ${IMAGE_ROOTFS}/usr/lib; \
