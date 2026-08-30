@@ -14,12 +14,24 @@ inherit python3-dir python_hatchling gittag
 SRCREV = "${AUTOREV}"
 PV = "git"
 PKGV = "${GITPKGVTAG}"
+PR = "r1"
 
 SRC_URI = "git://github.com/yt-dlp/yt-dlp;protocol=https;branch=master"
 
 EXTRA_OEMAKE = "PYTHON=${PYTHON}"
 
+# yt-dlp enables only deno by default, and no receiver has deno. Make quickjs
+# the default, both for the command line and for the library entry point.
 do_compile:prepend() {
+    sed -i "s/self.params.get('js_runtimes', {'deno': {}})/self.params.get('js_runtimes', {'quickjs': {}})/" ${S}/yt_dlp/YoutubeDL.py
+    sed -i "s/default=\['deno'\],/default=['quickjs'],/" ${S}/yt_dlp/options.py
+    grep -q "js_runtimes', {'quickjs': {}}" ${S}/yt_dlp/YoutubeDL.py || bbfatal "js_runtimes default in YoutubeDL.py no longer matches"
+    grep -q "default=\['quickjs'\]," ${S}/yt_dlp/options.py || bbfatal "--js-runtimes default in options.py no longer matches"
+
+    # Cosmetic, and deliberately unguarded: a reworded help text must not fail the build.
+    sed -i 's/Only "deno" is enabled by default/Only "quickjs" is enabled by default/' ${S}/yt_dlp/options.py
+    sed -i 's/Only deno is enabled by default/Only quickjs is enabled by default/' ${S}/yt_dlp/extractor/youtube/_video.py
+
     cd ${S}
     oe_runmake lazy-extractors yt-dlp completion-bash
 }
@@ -40,6 +52,7 @@ RDEPENDS:${PN} = " \
     python3-unixadmin \
     python3-ctypes \
     python3-html \
+    quickjs \
     "
 
 RDEPENDS:${PN}-src = "${PN}"

@@ -218,6 +218,7 @@ RDEPENDS:${PN} = "\
     python3-pyexecjs \
     python3-scrapy \
     python3-timeout-decorator \
+    quickjs \
     rapidxml \
     rclone \
     rsync \
@@ -257,7 +258,6 @@ STATIC_FEED_BUILD = "\
     ${@bb.utils.contains("MACHINE_FEATURES", "qtstalker", "enigma2-plugin-extensions-stalker-qt libxml2-qt", "", d)} \
     ${@bb.utils.contains_any("MACHINE_FEATURES", "kodi22", "kodi-addons-meta enigma2-plugin-extensions-stbkodilauncher", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "gb-qthbbtv", "enigma2-plugin-extensions-hbbtv-gb", "", d)} \
-    quickjs \
     "
 
 STATIC_FEED_DEPENDS = ""
