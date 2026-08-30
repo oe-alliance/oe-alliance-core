@@ -8,9 +8,11 @@ inherit kodi-addon
 
 DEPENDS += "glm virtual/libgles2"
 
-# The concrete GLES package is added automatically from the linked SONAME.
-# virtual/libgles2 is a build-time provider only and has no matching, portable
-# runtime package name on every machine (notably the Edision GLES stacks).
+# Most GLES stacks add their concrete runtime package automatically from the
+# linked SONAME. Vendor stacks excluded from shlib scanning can provide it via
+# this machine-level hook. Do not use virtual/libgles2 as an RDEPENDS package.
+KODI_VISUALIZATION_GLES_RDEPENDS ??= ""
+RDEPENDS:${PN} += "${KODI_VISUALIZATION_GLES_RDEPENDS}"
 
 KODIADDONBRANCH = "Piers"
 KODIADDONNAME = "visualization.${KODIADDONPLUGIN}"
