@@ -53,6 +53,9 @@ RRECOMMENDS:${PN} = "\
     enigma2-plugin-skins-glamouraurafhd-atv \
     enigma2-plugin-skins-madmax-impossible \
     enigma2-plugin-skins-overlayhd \
+    enigma2-plugin-skins-gradientwqhd \
+    enigma2-plugin-skins-bundesligawqhd \
+    enigma2-plugin-skins-bundesligafhd \
     enigma2-plugin-skincomponents-skincomponents-poster-pli-hd-fullnight \
     enigma2-plugin-extensions-oaweather \
     enigma2-plugin-systemplugins-m3uiptv \
