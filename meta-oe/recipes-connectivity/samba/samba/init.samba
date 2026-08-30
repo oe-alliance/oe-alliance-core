@@ -90,7 +90,7 @@ case "$1" in
     if [ "$WSDD_DISABLED" != "Yes" ]; then
       start-stop-daemon --stop --quiet --exec $WSDD
       sleep 1
-      start-stop-daemon --start --quiet --exec $WSDD
+      start-stop-daemon --start --quiet --exec $WSDD -- -d >/dev/null 2>&1 </dev/null
     fi
     ;;
     
