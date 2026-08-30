@@ -4,8 +4,7 @@ HOMEPAGE = "https://github.com/stein17/Skins-for-openATV"
 MAINTAINER = "stein17"
 SECTION = "skins"
 
-# Upstream currently provides no explicit license grant or SPDX license file.
-LICENSE = "CLOSED"
+require conf/license/license-gplv2.inc
 
 DEPENDS = "gettext-native"
 
