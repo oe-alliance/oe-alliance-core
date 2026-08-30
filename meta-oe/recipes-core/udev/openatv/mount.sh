@@ -136,7 +136,8 @@ samba_share() {
 	if [ $? -eq 0 ]; then
 		# reload samba config
 		log ">" "background reload of samba config"
-		/etc/init.d/samba reload &
+		# detach from the udev worker, it waits for EOF on our stdio
+		/etc/init.d/samba reload >/dev/null 2>&1 </dev/null &
 	fi
 }
 
