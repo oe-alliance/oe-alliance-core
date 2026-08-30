@@ -37,6 +37,9 @@ RDEPENDS:${PN} = " \
     enigma2-fonts \
     font-valis-enigma \
     ethtool \
+    wpa-supplicant \
+    wireless-tools \
+    python3-wifi \
     glibc-gconv-iso8859-15 \
     glibc-gconv-cp1250 \
     ${PYTHON_RDEPS} \
