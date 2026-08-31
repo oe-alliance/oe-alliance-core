@@ -358,6 +358,7 @@ PREFERRED_VERSION_libjpeg-turbo = "2.1.5.1"
 PREFERRED_PROVIDER_virtual/egl = "dinobot-opengl-${SOC_FAMILY}" 
 PREFERRED_PROVIDER_virtual/libgles1 = "dinobot-opengl-${SOC_FAMILY}"
 PREFERRED_PROVIDER_virtual/libgles2 = "dinobot-opengl-${SOC_FAMILY}"
+KODI_VISUALIZATION_GLES_RDEPENDS = "dinobot-opengl-${SOC_FAMILY}"
 PREFERRED_PROVIDER_virtual/kodi = "stb-kodi-${MACHINE}"
 VIRTUAL-RUNTIME_blindscan_dvbs = "dinobot-blindscan-${MACHINE}"
 
@@ -389,5 +390,4 @@ OEM_ARCH = "${MACHINEBUILD}"
 
 # Add "MACHINEBUILD" override for recipes
 MACHINEOVERRIDES =. "${@['', '${MACHINEBUILD}:']['${MACHINEBUILD}' != '']}"
-
 

@@ -5,8 +5,13 @@ HOMEPAGE = "https://github.com/herrnst/script.xbmc.lcdproc"
 LICENSE = "GPL-2.0-or-later"
 LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=fa22e16ebbe6638b2bd253338fbded9f"
 
-SRC_URI = "git://github.com/herrnst/script.xbmc.lcdproc.git;branch=master;protocol=https"
+FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
+
+SRC_URI = "git://github.com/herrnst/script.xbmc.lcdproc.git;branch=master;protocol=https \
+           file://0001-stb-lcdd-default-to-utf8.patch"
 SRCREV = "a64470ac8e87acb1e7b9d2a07c92bac29dee7aac"
+
+PR = "r1"
 
 inherit allarch
 

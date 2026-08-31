@@ -11,13 +11,12 @@ DEPENDS += "expat nlohmann-json nss pugixml"
 RDEPENDS:${PN} += "ldd"
 RRECOMMENDS:${PN} = "kernel-module-ext2"
 
-# Keep the published Piers tag used by CoreELEC 22 and LibreELEC.  The Piers
-# branch can move past a release without changing the add-on version, which is
-# less suitable for a public feed and third-party add-on compatibility.
-SRCREV_default = "0801282232050a8d9d67269ada71b88f795c6889"
+# Track the Piers branch together with Kodi 22 so its binary API and third-party
+# add-on properties match the public STB Kodi build.
+SRCREV_default = "5dd29e38368123f3177177e9ea75c4d7fb862d7c"
 SRCREV_bento4 = "a4a4172467e592c17c7d823f81196e77e4486f91"
 SRCREV_FORMAT = "default_bento4"
-PV = "22.3.19+gitr"
+PV = "22.3.20+gitr"
 
 KODIADDONBRANCH = "Piers"
 

@@ -1,15 +1,15 @@
-DESCRIPTION = "OverlayHD skin and management plugin for Enigma2 PVRs by IanSav"
-SUMMARY = "OverlayHD skin and management plugin for Enigma2 PVRs by IanSav"
+SUMMARY = "OverlayHD skin and management plugin for Enigma2"
+DESCRIPTION = "OverlayHD skin and skin management plugin for Enigma2 receivers."
 SECTION = "skins"
 PRIORITY = "optional"
 MAINTAINER = "IanSav"
 LICENSE = "GPL-2.0-only"
-HOMEPAGE = "https://github.com/IanSav"
-SOURCE = "https://github.com/IanSav/OverlayHD"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=b234ee4d69f5fce4486a80fdaf4a4263"
+HOMEPAGE = "https://github.com/IanSav/OverlayHD"
 
 DEPENDS = "gettext-native"
 
-require conf/license/license-gplv2.inc
+require conf/python/python3-compileall.inc
 
 inherit allarch gittag
 
@@ -19,25 +19,29 @@ PKGV = "${GITPKGVTAG}"
 
 SRC_URI = "git://github.com/IanSav/OverlayHD.git;protocol=https;branch=master"
 
-FILES:${PN} = "${libdir} ${datadir}"
+OVERLAYHD_PLUGIN_DIR = "${libdir}/enigma2/python/Plugins/Extensions/OverlayHD"
+OVERLAYHD_SKIN_DIR = "${datadir}/enigma2/OverlayHD"
+
+FILES:${PN} = "${OVERLAYHD_PLUGIN_DIR} ${OVERLAYHD_SKIN_DIR}"
+FILES:${PN}-src = "${OVERLAYHD_PLUGIN_DIR}/*.py"
+
+do_compile[cleandirs] += "${B}/locale"
 
 do_compile() {
-    # generate translation .mo files
-	mkdir -p ${S}/locale
-	for f in $(find ${S}/po -name *.po ); do
-		l=$(echo ${f%} | sed 's/\.po//' | sed 's/.*po\///')
-		mkdir -p ${S}/locale/${l%}/LC_MESSAGES
-		msgfmt -o ${S}/locale/${l%}/LC_MESSAGES/OverlayHD.mo ${S}/po/$l.po
+	for translation in ${S}/po/*.po; do
+		language=$(basename "$translation" .po)
+		install -d ${B}/locale/$language/LC_MESSAGES
+		msgfmt -o ${B}/locale/$language/LC_MESSAGES/OverlayHD.mo "$translation"
 	done
 }
 
 do_install() {
-    install -d ${D}${libdir}
-    install -d ${D}${datadir}
-    cp -rf ${S}/usr/lib/* ${D}${libdir}/
-    cp -rf ${S}/usr/share/* ${D}${datadir}/
-    install -d ${D}${libdir}/enigma2/python/Plugins/Extensions/OverlayHD/locale/
-    cp -rf ${S}/locale/* ${D}${libdir}/enigma2/python/Plugins/Extensions/OverlayHD/locale/
+	install -d ${D}${OVERLAYHD_PLUGIN_DIR}
+	cp -r --no-preserve=ownership ${S}${OVERLAYHD_PLUGIN_DIR}/. ${D}${OVERLAYHD_PLUGIN_DIR}/
+	install -d ${D}${OVERLAYHD_SKIN_DIR}
+	cp -r --no-preserve=ownership ${S}${OVERLAYHD_SKIN_DIR}/. ${D}${OVERLAYHD_SKIN_DIR}/
+	install -d ${D}${OVERLAYHD_PLUGIN_DIR}/locale
+	cp -r --no-preserve=ownership ${B}/locale/. ${D}${OVERLAYHD_PLUGIN_DIR}/locale/
 }
 
 pkg_postinst:${PN} () {
@@ -77,7 +81,7 @@ exit 0
 pkg_prerm:${PN} () {
 #!/bin/sh
 SKIN=`sed -En 's|config\.skin\.primary_skin=(.+)/skin\.xml|\1|p' /etc/enigma2/settings`
-if [ "${SKIN}" == "OverlayHD" ]; then
+if [ "${SKIN}" = "OverlayHD" ]; then
 	echo ""
 	echo "OverlayHD is the current skin. Please select another"
 	echo "skin as the active skin ASAP."

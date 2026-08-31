@@ -20,7 +20,6 @@ INSANE_SKIP:${PN} += "already-stripped dev-so ldflags"
 INHIBIT_PACKAGE_STRIP = "1"
 INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
 PRIVATE_LIBS:${PN} = "libEGL.so \
-libv3ddriver.so \
 libGLESv2.so"
 
 do_install() {

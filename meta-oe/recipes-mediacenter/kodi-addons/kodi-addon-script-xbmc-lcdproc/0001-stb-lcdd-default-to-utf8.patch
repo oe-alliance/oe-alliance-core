@@ -1,0 +1,49 @@
+From: OpenATV STB Kodi Team
+Subject: [PATCH] default the STB LCDproc bridge to UTF-8
+
+stb-lcdd accepts UTF-8 and renders its graphical panels with a Unicode font.
+The upstream ISO-8859-1 default replaces Arabic and other non-Latin text with
+question marks before it reaches the server.  Keep all explicitly selected
+legacy/HD44780 encodings available, but use UTF-8 when alternate charset is
+disabled.
+
+---
+ resources/lib/lcdbase.py | 2 +-
+ resources/lib/settings.py | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/resources/lib/lcdbase.py b/resources/lib/lcdbase.py
+index 9b61570..19a2973 100644
+--- a/resources/lib/lcdbase.py
++++ b/resources/lib/lcdbase.py
+@@ -67,7 +67,7 @@ class LcdBase():
+     self.m_bProgressbarSurroundings = False
+     self.m_iDimOnPlayDelay = 0
+     self.m_iIconTextOffset = 2
+-    self.m_strLCDEncoding = "iso-8859-1" # LCDproc default is iso-8859-1!
++    self.m_strLCDEncoding = "utf-8" # stb-lcdd uses UTF-8 end to end
+     self.m_strScrollSeparator = " "
+ 
+     # runtime vars/state tracking
+diff --git a/resources/lib/settings.py b/resources/lib/settings.py
+index c8f3e72..a65204c 100644
+--- a/resources/lib/settings.py
++++ b/resources/lib/settings.py
+@@ -31,7 +31,7 @@ class Settings():
+         self._refreshrate         = 1
+         self._hideconnpopups      = True
+         self._usealternatecharset = False
+-        self._charset             = "iso-8859-1"
++        self._charset             = "utf-8"
+         self._useextraelements    = True
+         self._systimeformat       = 3
+ 
+@@ -101,7 +101,7 @@ class Settings():
+ 
+         # if alternatecharset is disabled, return LCDproc's default
+         if self._usealternatecharset == False:
+-            ret = "iso-8859-1"
++            ret = "utf-8"
+         else:
+             # make sure to keep this in sync with settings.xml!
+             if self._charset == "1":

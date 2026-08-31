@@ -105,7 +105,7 @@ new file mode 100644
 index 0000000000..edc64a4e15
 --- /dev/null
 +++ b/xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecSTB.cpp
-@@ -0,0 +1,539 @@
+@@ -0,0 +1,547 @@
 +/*
 + *  Copyright (C) 2026 OE-Alliance contributors
 + *  SPDX-License-Identifier: GPL-2.0-or-later
@@ -136,7 +136,8 @@ index 0000000000..edc64a4e15
 +
 +bool ConvertHEVCDecoderConfiguration(const uint8_t* data,
 +                                     size_t size,
-+                                     std::vector<uint8_t>& annexB)
++                                     std::vector<uint8_t>& annexB,
++                                     bool parameterSetsOnly)
 +{
 +  static constexpr uint8_t startCode[] = {0, 0, 0, 1};
 +  if (data == nullptr || size < 23 || data[0] != 1)
@@ -149,6 +150,7 @@ index 0000000000..edc64a4e15
 +  {
 +    if (offset + 3 > size)
 +      return false;
++    const uint8_t nalType = data[offset] & 0x3f;
 +    ++offset; // array completeness and NAL unit type
 +    const unsigned int nalCount = (static_cast<unsigned int>(data[offset]) << 8) |
 +                                  static_cast<unsigned int>(data[offset + 1]);
@@ -162,8 +164,11 @@ index 0000000000..edc64a4e15
 +      offset += 2;
 +      if (nalSize == 0 || nalSize > size - offset)
 +        return false;
-+      annexB.insert(annexB.end(), startCode, startCode + sizeof(startCode));
-+      annexB.insert(annexB.end(), data + offset, data + offset + nalSize);
++      if (!parameterSetsOnly || nalType == 32 || nalType == 33 || nalType == 34)
++      {
++        annexB.insert(annexB.end(), startCode, startCode + sizeof(startCode));
++        annexB.insert(annexB.end(), data + offset, data + offset + nalSize);
++      }
 +      offset += nalSize;
 +    }
 +  }
@@ -286,7 +291,8 @@ index 0000000000..edc64a4e15
 +bool CDVDVideoCodecSTB::ConfigureBitstream(const CDVDStreamInfo& hints,
 +                                           const uint8_t*& extraData,
 +                                           size_t& extraDataSize,
-+                                           uint32_t& streamFlags)
++                                           uint32_t& streamFlags,
++                                           bool preserveAllHevcArrays)
 +{
 +  extraData = hints.extradata.GetData();
 +  extraDataSize = hints.extradata.GetSize();
@@ -297,7 +303,8 @@ index 0000000000..edc64a4e15
 +  if (extraDataSize > 0)
 +  {
 +    if (hints.codec == AV_CODEC_ID_HEVC && !HasAnnexBStartCode(extraData, extraDataSize) &&
-+        !ConvertHEVCDecoderConfiguration(extraData, extraDataSize, m_codecData))
++        !ConvertHEVCDecoderConfiguration(extraData, extraDataSize, m_codecData,
++                                         !preserveAllHevcArrays))
 +      return false;
 +    m_bitstream = std::make_unique<CBitstreamConverter>();
 +    if (m_bitstream->Open(hints.codec, const_cast<uint8_t*>(extraData),
@@ -357,7 +364,8 @@ index 0000000000..edc64a4e15
 +              "using FFmpeg software decoding");
 +    return false;
 +  }
-+  if (!ConfigureBitstream(hints, extraData, extraDataSize, streamFlags))
++  if (!ConfigureBitstream(hints, extraData, extraDataSize, streamFlags,
++                          backendName == "dream-aml"))
 +    return false;
 +
 +  m_session = std::make_shared<CSTBVideoSession>();
@@ -650,7 +658,7 @@ new file mode 100644
 index 0000000000..53ebb98a45
 --- /dev/null
 +++ b/xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecSTB.h
-@@ -0,0 +1,66 @@
+@@ -0,0 +1,67 @@
 +/*
 + *  Copyright (C) 2026 OE-Alliance contributors
 + *  SPDX-License-Identifier: GPL-2.0-or-later
@@ -699,7 +707,8 @@ index 0000000000..53ebb98a45
 +  bool ConfigureBitstream(const CDVDStreamInfo& hints,
 +                          const uint8_t*& extraData,
 +                          size_t& extraDataSize,
-+                          uint32_t& streamFlags);
++                          uint32_t& streamFlags,
++                          bool preserveAllHevcArrays);
 +
 +  CDVDStreamInfo m_hints;
 +  std::shared_ptr<CSTBVideoSession> m_session;

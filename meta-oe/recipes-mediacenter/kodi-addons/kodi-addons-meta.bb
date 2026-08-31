@@ -12,6 +12,7 @@ RDEPENDS:${PN} = " \
     kodi-addon-visualization-waveform \
     kodi-addon-visualization-shadertoy \
     kodi-addon-inputstream-adaptive-piers \
+    kodi-addon-inputstream-ffmpegdirect-piers \
     kodi-addon-inputstream-rtmp-piers \
     kodi-addon-pvr-demo \
     kodi-addon-pvr-dvblink \

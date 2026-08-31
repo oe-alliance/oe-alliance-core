@@ -4,7 +4,7 @@ DESCRIPTION = "Minimal LCDd protocol server which renders Kodi information direc
 LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/GPL-2.0-only;md5=801f80980d171dd6425610833a22dbe6"
 
-PR = "r10"
+PR = "r11"
 
 SRC_URI = "file://stb-lcdd.c"
 
@@ -12,7 +12,7 @@ S = "${UNPACKDIR}"
 
 inherit pkgconfig
 
-DEPENDS = "freetype libpng"
+DEPENDS = "freetype harfbuzz libpng"
 
 # The generated hardware description differs even between receivers using the
 # same CPU tune, so it must never be reused as a generic architecture package.
@@ -60,9 +60,9 @@ STB_LCD_SECONDARY_BPP = "0"
 STB_LCD_SECONDARY_COLUMNS = "0"
 
 do_compile() {
-    ${CC} ${CFLAGS} ${CPPFLAGS} `pkg-config --cflags freetype2 libpng` \
+    ${CC} ${CFLAGS} ${CPPFLAGS} `pkg-config --cflags freetype2 harfbuzz libpng` \
         ${UNPACKDIR}/stb-lcdd.c -o ${B}/stb-lcdd \
-        ${LDFLAGS} `pkg-config --libs freetype2 libpng`
+        ${LDFLAGS} `pkg-config --libs freetype2 harfbuzz libpng`
 }
 
 do_install() {

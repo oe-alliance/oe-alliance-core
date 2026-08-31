@@ -5,6 +5,17 @@
 KODI_STBPLAYER_BACKEND="bcm-dvb"
 export KODI_STBPLAYER_BACKEND
 
+# GigaBlue's DVB AUDIO_SET_MIXER ioctl reports success but does not attenuate
+# Kodi's separate ALSA PCM stream. Let ActiveAE apply Kodi's volume in software
+# on GigaBlue and the GigaBlue-derived Vu Duo 4K Lite while retaining the
+# Enigma2 volume imported below as its start value. Other Broadcom receivers
+# keep their working hardware master volume.
+if [ -r /proc/stb/info/gbmodel ] || \
+   { [ -r /proc/stb/info/vumodel ] && [ "$(cat /proc/stb/info/vumodel 2>/dev/null)" = "vuduo4klite" ]; }; then
+    KODI_STB_SOFTWARE_VOLUME=1
+    export KODI_STB_SOFTWARE_VOLUME
+fi
+
 # DM900/DM920 use a private, hash-verified libvc5dream 1.0.5 with the
 # bcmSchedQuery NULL-pointer fix.  Keep Enigma2's system copy untouched.
 if [ -r /usr/lib/kodi/dm9x0/libvc5dream.so.1 ]; then
