@@ -2,9 +2,10 @@ DESCRIPTION = "sinric pro client for Alexa"
 SECTION = "devel/python"
 MAINTAINER = "Sinric Pro"
 HOMEPAGE = "https://sinric.pro"
-LICENSE = "GPLv2+"
+LICENSE = "GPL-2.0-or-later"
 require conf/license/license-gplv2.inc
 
+DEPENDS += "python3-wheel-native"
 RDEPENDS:${PN} = "python3-websockets python3-asyncio python3-aiohttp"
 
 PV = "5.2.1"
