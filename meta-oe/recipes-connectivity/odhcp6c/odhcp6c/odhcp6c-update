@@ -156,8 +156,15 @@ setup_interface () {
 
 teardown_interface() {
 	local device="$1"
+	local keep=""
+	for entry in $ADDRESSES $RA_ADDRESSES; do
+		keep="$keep ${entry%%,*}"
+	done
 	OLDADDRS=$(ip -6 addr show scope global dev "$device" | grep ' *inet6 *.*/128 *scope' | awk '{ print $2 }')
 	for oldaddr in $OLDADDRS; do
+		case " $keep " in
+			*" $oldaddr "*) continue ;;
+		esac
 		ip -6 addr delete "$oldaddr" dev "$device"
 	done
 #	ip -6 route replace ff00::/8 dev "$device" metric 256
