@@ -29,6 +29,7 @@ SRC_URI += "https://source.mynonpublic.com/entwopia/${MACHINE}/${MACHINE}-linux-
     file://0005-xbox-one-tuner-4.10.patch \
     file://block2mtd.patch \
     file://initramfs-mipsel.cpio.xz;unpack=0 \
+    ${KERNEL_PATCH_WIFI_EXTAUTH_410} \
     "
 
 S = "${UNPACKDIR}/linux-${PV}-base"

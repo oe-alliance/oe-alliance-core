@@ -6,7 +6,7 @@ MODULE = "linux-4.1.20"
 
 COMPATIBLE_MACHINE = "^(vuuno4kse|vuzero4k)$"
 
-MACHINE_KERNEL_PR = "r8"
+MACHINE_KERNEL_PR = "r9"
 
 RPROVIDES:${KERNEL_PACKAGE_NAME}-image += "kernel-${KERNEL_IMAGETYPE}"
 
@@ -36,6 +36,7 @@ SRC_URI += "https://source.mynonpublic.com/vuplus/release/kernel/stblinux-4.1-${
     ${KERNEL_PATCHES_DVB_STV_SERIES} \
     ${KERNEL_PATCH_BINUTILS241_V2} \
     ${KERNEL_PATCHES_DVB_SI2168_D60} \
+    ${KERNEL_PATCH_WIFI_EXTAUTH_41} \
     "
 
 SRC_URI:append = "${@bb.utils.contains("MACHINE_FEATURES", "dvbproxy", " file://linux_dvb_adapter.patch;striplevel=1", "", d)}"

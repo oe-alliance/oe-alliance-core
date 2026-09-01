@@ -57,6 +57,7 @@ SRC_URI = "https://source.mynonpublic.com/dinobot/dinobot-linux-${PV}-${SRCDATE}
     ${KERNEL_PATCH_BINUTILS241_V3} \
     ${KERNEL_PATCH_WIFI_CFG80211} \
     file://block2mtd.patch \
+    ${KERNEL_PATCH_WIFI_EXTAUTH_44} \
 "
 
 # wireguard v1.0.20220627

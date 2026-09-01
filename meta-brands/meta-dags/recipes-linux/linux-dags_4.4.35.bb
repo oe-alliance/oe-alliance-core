@@ -28,6 +28,7 @@ SRC_URI += "https://source.mynonpublic.com/dags/linux-4.4.35.tar.xz;name=kernel 
 	${KERNEL_PATCH_FIX_LOG2} \
 	${KERNEL_PATCH_BINUTILS241_V3} \
 	${KERNEL_PATCH_WIFI_CFG80211} \
+	${KERNEL_PATCH_WIFI_EXTAUTH_44} \
 	"
 
 # wireguard v1.0.20220627

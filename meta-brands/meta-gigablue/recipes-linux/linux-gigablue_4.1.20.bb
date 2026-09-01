@@ -56,6 +56,7 @@ SRC_URI += "https://source.mynonpublic.com/gigablue/linux/gigablue-linux-${PV}-$
     ${KERNEL_PATCH_GCC_SERIES} \
     file://add-partition-specific-uevent-callbacks-for-partition-info.patch \
     ${KERNEL_PATCH_BINUTILS241_V2} \
+    ${KERNEL_PATCH_WIFI_EXTAUTH_41} \
 "
 
 S = "${UNPACKDIR}/linux-${PV}"

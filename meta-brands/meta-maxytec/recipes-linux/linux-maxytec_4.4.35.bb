@@ -27,6 +27,7 @@ SRC_URI = "https://source.mynonpublic.com/maxytec/linux-${PV}-${SRCDATE}-${ARCH}
 	${KERNEL_PATCH_MISC_MODULES_UNUSED} \
 	${KERNEL_PATCH_MISC_MODULE_INIT} \
 	${KERNEL_PATCH_FIX_ATTRIBUTES_GCC9} \
+	${KERNEL_PATCH_WIFI_EXTAUTH_44} \
 	"
 
 # wireguard v1.0.20220627

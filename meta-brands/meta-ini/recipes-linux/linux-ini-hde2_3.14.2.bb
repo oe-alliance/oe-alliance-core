@@ -39,6 +39,7 @@ SRC_URI += "https://source.mynonpublic.com/ini/bcm7362-linux-${KV}-${SRCDATE}.tg
     file://0004-makefile-disable-warnings.patch \
     file://block2mtd.patch \
     file://initramfs-mipsel.cpio.xz;unpack=0 \
+    ${KERNEL_PATCH_WIFI_EXTAUTH_314} \
     "
 
 export KCFLAGS = " -std=gnu17 \

@@ -23,6 +23,7 @@ SRC_URI += "https://source.mynonpublic.com/gfutures/linux-${PV}-${ARCH}.tar.gz;n
     ${KERNEL_PATCHES_SERIES_4_10} \
     file://t230c2.patch \
     file://0005-xbox-one-tuner-4.10.patch \
+    ${KERNEL_PATCH_WIFI_EXTAUTH_410} \
     "
 
 SRC_URI:append:mipsel = " \

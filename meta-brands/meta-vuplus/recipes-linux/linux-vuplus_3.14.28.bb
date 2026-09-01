@@ -6,7 +6,7 @@ MODULE = "linux-3.14.28"
 
 COMPATIBLE_MACHINE = "^(vusolo4k|vuultimo4k|vuuno4k)$"
 
-MACHINE_KERNEL_PR = "r5"
+MACHINE_KERNEL_PR = "r6"
 
 RPROVIDES:${KERNEL_PACKAGE_NAME}-image += "kernel-${KERNEL_IMAGETYPE}"
 
@@ -45,6 +45,7 @@ SRC_URI += "https://source.mynonpublic.com/vuplus/release/kernel/${KERNELSRC};na
     file://0006-makefile-disable-warnings.patch \
     ${KERNEL_PATCH_MISC_FIX_LINKER} \
     ${KERNEL_PATCH_BINUTILS241_V1} \
+    ${KERNEL_PATCH_WIFI_EXTAUTH_314} \
     "
 
 export KCFLAGS = " -std=gnu17 \

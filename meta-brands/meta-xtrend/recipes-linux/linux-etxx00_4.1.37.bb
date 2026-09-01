@@ -36,6 +36,7 @@ SRC_URI += "https://source.mynonpublic.com/xtrend/linux-${PV}-${SRC}.tar.xz \
     ${KERNEL_PATCH_FIX_LOG2} \
     ${KERNEL_PATCH_BINUTILS241_V2} \
     file://initramfs-chkroot.cpio.xz;unpack=0 \
+    ${KERNEL_PATCH_WIFI_EXTAUTH_41} \
     "
 
 S = "${UNPACKDIR}/linux-${PV}"

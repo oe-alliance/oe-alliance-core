@@ -9,7 +9,7 @@ COMPATIBLE_MACHINE = "^(sf8008|sf8008m)$"
 
 inherit kernel machine_kernel_pr kernel-fixups
 
-MACHINE_KERNEL_PR:append = "34"
+MACHINE_KERNEL_PR:append = "35"
 
 SRC_URI[md5sum] = "ad7eab17a5071a0d5f9ff44eb44e027d"
 SRC_URI[sha256sum] = "0654d5aa21c51eaea46f7203014afe60052ec0990a92b9e289e1ca8a2793907c"
@@ -24,6 +24,7 @@ SRC_URI += "https://source.mynonpublic.com/octagon/octagon-linux-${PV}-${SRCDATE
     file://findkerneldevice.sh \
     file://extend_modules_space.patch \
     file://JMS583.patch \
+    ${KERNEL_PATCH_WIFI_EXTAUTH_44} \
 "
 
 SRC_URI:append:sf8008m = " \

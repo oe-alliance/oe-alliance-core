@@ -32,6 +32,7 @@ SRC_URI += "https://source.mynonpublic.com/xtrend/xtrend-linux-${PV}-${SRCDATE}.
     ${KERNEL_PATCH_WIFI_CFG80211} \
     file://block2mtd.patch \
     file://initramfs-mipsel.cpio.xz;unpack=0 \
+    ${KERNEL_PATCH_WIFI_EXTAUTH_44} \
     "
 
 S = "${UNPACKDIR}/linux-${PV}"

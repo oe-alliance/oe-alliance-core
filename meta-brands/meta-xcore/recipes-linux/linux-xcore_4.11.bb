@@ -33,6 +33,7 @@ SRC_URI += "https://source.mynonpublic.com/xcore/xcore-linux-${PV}-${SRC}.tar.gz
     ${KERNEL_PATCH_BINUTILS241_V5} \
     file://block2mtd.patch \
     file://initramfs-mipsel.cpio.xz;unpack=0 \
+    ${KERNEL_PATCH_WIFI_EXTAUTH_411} \
     "
 
 S = "${UNPACKDIR}/linux-brcmstb-${PV}"

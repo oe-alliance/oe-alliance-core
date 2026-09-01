@@ -22,6 +22,7 @@ SRC_URI = " \
     file://vtbl-ubi.patch \
     file://chkroot-multiboot.cpio.xz;unpack=0 \
     file://initramfs-mipsel.cpio.xz;unpack=0 \
+    ${KERNEL_PATCH_WIFI_EXTAUTH_34} \
 "
 
 export KCFLAGS = " -std=gnu17 \

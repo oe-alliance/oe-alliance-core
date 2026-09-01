@@ -27,6 +27,7 @@ SRC_URI = "https://source.mynonpublic.com/zgemma/linux-${PV}-${SRCDATE}-${ARCH}.
     ${KERNEL_PATCH_MISC_MODULE_INIT} \
     ${KERNEL_PATCH_FIX_ATTRIBUTES_GCC9} \
     file://block2mtd.patch \
+    ${KERNEL_PATCH_WIFI_EXTAUTH_44} \
 "
 
 SRC_URI:append:h8se = " \

@@ -16,7 +16,7 @@ SRC_URI[sha256sum] = "47799db9e2658906e532981ec8111a915426b8453762561029733f2406
 
 LIC_FILES_CHKSUM = "file://${UNPACKDIR}/linux/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR = "r4"
+MACHINE_KERNEL_PR = "r5"
 
 SRC_URI = "https://source.mynonpublic.com/vuplus/release/kernel/stblinux-${KV}.tar.bz2 \
     file://defconfig \
@@ -56,6 +56,7 @@ SRC_URI = "https://source.mynonpublic.com/vuplus/release/kernel/stblinux-${KV}.t
     ${KERNEL_PATCH_BINUTILS241_V1} \
     file://block2mtd.patch \
     file://initramfs-mipsel.cpio.xz;unpack=0 \
+    ${KERNEL_PATCH_WIFI_EXTAUTH_39} \
 "
 
 export KCFLAGS = " -std=gnu17 \

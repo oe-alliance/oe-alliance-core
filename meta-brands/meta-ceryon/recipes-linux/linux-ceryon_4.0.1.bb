@@ -30,6 +30,7 @@ SRC_URI += "https://source.mynonpublic.com/ceryon/ceryon-linux-${PV}.tgz \
         ${KERNEL_PATCH_BINUTILS241_V1} \
         file://block2mtd.patch \
         file://initramfs-mipsel.cpio.xz;unpack=0 \
+        ${KERNEL_PATCH_WIFI_EXTAUTH_40} \
 "
 
 S = "${UNPACKDIR}/linux-${PV}"
