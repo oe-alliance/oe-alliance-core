@@ -35,3 +35,5 @@ pkg_prerm:${PN}() {
 #!/bin/sh
 exit 0
 }
+
+INSANE_SKIP:${PN} += "ldflags"
