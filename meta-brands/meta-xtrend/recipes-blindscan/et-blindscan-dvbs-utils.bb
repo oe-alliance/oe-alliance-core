@@ -24,3 +24,5 @@ do_compile[noexec] = "1"
 deltask do_populate_sysroot
 
 INSANE_SKIP = "32bit-time"
+
+INSANE_SKIP:${PN} += "ldflags"
