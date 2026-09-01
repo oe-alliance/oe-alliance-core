@@ -5,7 +5,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PN = "enigma2-plugin-systemplugins-vfdcontrol"
 
-COMPATIBLE_MACHINE = "^(sf8008|sf8008m|sf8008opt|sfx6008|sx88v2|viper4k|xc7362|xc7358|xc7358ci|osnino|osninoplus)$"
+COMPATIBLE_MACHINE = "^(sf8008|sf8008m|sfx6008|sx88v2|viper4k|xc7362|xc7358|xc7358ci|osnino|osninoplus)$"
 
 inherit gittag
 
