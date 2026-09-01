@@ -334,7 +334,10 @@ CONFIG_PEERKEY=y
 
 # IEEE 802.11w (management frame protection), also known as PMF
 # Driver support is also needed for IEEE 802.11w.
-#CONFIG_IEEE80211W=y
+CONFIG_IEEE80211W=y
+
+# Simultaneous Authentication of Equals (SAE), WPA3-Personal
+CONFIG_SAE=y
 
 # Select TLS implementation
 # openssl = OpenSSL (default)

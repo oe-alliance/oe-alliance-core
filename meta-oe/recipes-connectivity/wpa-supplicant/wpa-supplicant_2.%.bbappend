@@ -1,4 +1,4 @@
-PR .= ".1"
+PR .= ".2"
 
 inherit upx-compress
 

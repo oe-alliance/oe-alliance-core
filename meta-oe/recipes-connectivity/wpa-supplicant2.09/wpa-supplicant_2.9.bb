@@ -19,6 +19,8 @@ inherit pkgconfig systemd
 SYSTEMD_SERVICE:${PN} = "wpa_supplicant.service"
 SYSTEMD_AUTO_ENABLE = "disable"
 
+PR = "r1"
+
 SRC_URI = "http://w1.fi/releases/wpa_supplicant-${PV}.tar.gz  \
            file://defconfig \
            file://wpa-supplicant.sh \
@@ -33,6 +35,10 @@ SRC_URI = "http://w1.fi/releases/wpa_supplicant-${PV}.tar.gz  \
            file://CVE-2021-0326.patch \
            file://CVE-2021-27803.patch \
            file://CVE-2021-30004.patch \
+           file://0001-crypto-add-bignum-and-EC-helper-functions.patch \
+           file://0002-dragonfly-add-sqrt-helper-function.patch \
+           file://0003-SAE-derive-the-y-coordinate-for-PWE-in-own-code.patch \
+           file://0004-EAP-pwd-derive-the-y-coordinate-for-PWE-in-own-code.patch \
           "
 SRC_URI[md5sum] = "2d2958c782576dc9901092fbfecb4190"
 SRC_URI[sha256sum] = "fcbdee7b4a64bea8177973299c8c824419c413ec2e3a95db63dd6a5dc3541f17"
