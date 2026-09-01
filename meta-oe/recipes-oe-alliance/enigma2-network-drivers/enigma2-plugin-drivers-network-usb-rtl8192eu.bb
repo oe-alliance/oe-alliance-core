@@ -4,12 +4,12 @@ inherit allarch
 require conf/license/license-gplv2.inc
 
 RRECOMMENDS:${PN} = " \
-    ${@bb.utils.contains("MACHINE_FEATURES", "linuxwifi", "rtl8192eu-wpa2", "rtl8192eu", d)} \
+    rtl8192eu \
     firmware-rtl8192eu \
     "
 
 PV = "1.0"
-PR = "r1"
+PR = "r2"
 
 ALLOW_EMPTY:${PN} = "1"
 
