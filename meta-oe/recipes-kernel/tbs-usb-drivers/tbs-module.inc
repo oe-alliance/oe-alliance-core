@@ -144,7 +144,15 @@ do_configure() {
 		printf '%s\n' 'ccflags-y += -DTBS_LEGACY_CX25840_HEADER=1' \
 			>> ${B}/tbs-kernel-compat.mk
 	fi
+	# Some vendor kernels contain a partial i2c-mux backport: the core
+	# structure and allocator are present, but the matching add/remove API is
+	# not.  Treat those kernels as legacy too instead of selecting functions
+	# which their headers and kernel image do not provide.
 	if ! grep -q "struct i2c_mux_core" \
+		${STAGING_KERNEL_DIR}/include/linux/i2c-mux.h || \
+		! grep -q "i2c_mux_add_adapter" \
+		${STAGING_KERNEL_DIR}/include/linux/i2c-mux.h || \
+		! grep -q "i2c_mux_del_adapters" \
 		${STAGING_KERNEL_DIR}/include/linux/i2c-mux.h; then
 		printf '%s\n' 'ccflags-y += -DTBS_LEGACY_I2C_MUX_API=1' \
 			>> ${B}/tbs-kernel-compat.mk
