@@ -11,9 +11,7 @@ PR = "r1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 SRCREV = "${AUTOREV}"
-SRC_URI = "git://github.com/atvcaptain/rtl8192eu-5.11.2.3.git;protocol=https;branch=5.11.2.3 \
-           file://0001-add-strscpy-compat-for-kernels-before-4.3.patch \
-"
+SRC_URI = "git://github.com/atvcaptain/rtl8192eu-5.11.2.3.git;protocol=https;branch=5.11.2.3"
 
 EXTRA_OEMAKE = "KSRC=${STAGING_KERNEL_DIR}"
 
