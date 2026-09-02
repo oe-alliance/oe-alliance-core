@@ -33,7 +33,7 @@ MACHINE_EXTRA_RRECOMMENDS += " \
     "
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "\
-    dreambox-dvb-modules-${MACHINE} \
+    dreambox-dvb-modules-${MACHINEBUILD} \
     "
 
 MACHINE_FEATURES += "dreambox alsa usbhost 3dtv switchoff blindscan-dvbs boxmodel"
@@ -41,7 +41,7 @@ MACHINE_FEATURES += "dreambox alsa usbhost 3dtv switchoff blindscan-dvbs boxmode
 MACHINEOVERRIDES .= ":dreambox"
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-dreambox"
-PREFERRED_PROVIDER_virtual/kodi = "stb-kodi-${MACHINE}"
+PREFERRED_PROVIDER_virtual/kodi = "stb-kodi-${MACHINEBUILD}"
 
 VIRTUAL-RUNTIME_blindscan_dvbs = "dreambox-blindscan-utils"
 VIRTUAL-RUNTIME_blindscan_dvbc = "dreambox-blindscan-utils"

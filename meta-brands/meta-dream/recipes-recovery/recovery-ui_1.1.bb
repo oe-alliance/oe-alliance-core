@@ -17,7 +17,7 @@ do_install() {
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-RRECOMMENDS:${PN} = "dreambox-dvb-modules-${MACHINE}-lcd"
+RRECOMMENDS:${PN} = "dreambox-dvb-modules-${MACHINEBUILD}-lcd"
 RRECOMMENDS:${PN}:meson64 = "dreambox-dvb-modules-meson64-lcd"
 
 BRANCH = "master"
