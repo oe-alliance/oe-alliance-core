@@ -10,9 +10,9 @@ SRC_URI[dm520.sha256sum] = "9436ad03565e970f6efde52969a646c82cf61bb3631e8f9f66ff
 SRC_URI[dm900.md5sum] = "b8c5ce8c4047360382609a80fec85d5e"
 SRC_URI[dm900.sha256sum] = "9c75d63d3edebad946c92bab2f72f73513505b24dc95442c82ef04894ff3d12a"
 
-PACKAGE_ARCH = "${MACHINE_ARCH}"
+PACKAGE_ARCH = "${MACHINEBUILD}"
 
-RRECOMMENDS:${PN} = "dreambox-dvb-modules-${MACHINE}-lcd"
+RRECOMMENDS:${PN} = "dreambox-dvb-modules-${MACHINEBUILD}-lcd"
 RPROVIDES:${PN} = "recovery-ui"
 
 INITSCRIPT_NAME = "recovery-ui"

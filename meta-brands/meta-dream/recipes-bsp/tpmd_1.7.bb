@@ -19,4 +19,4 @@ FILES:${PN}-src += " \
 
 INSANE_SKIP:${PN} += "file-rdeps ldflags"
 
-COMPATIBLE_MACHINE = "^(dm520|dm820|dm7080|dm900|dm920)$"
+COMPATIBLE_MACHINE = "^(dm520|dm820|dm7080|dm7252s)$"
