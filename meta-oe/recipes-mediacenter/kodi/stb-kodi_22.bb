@@ -151,8 +151,8 @@ BRCM_NXPL_ARM_STB = "${@'1' if d.getVar('VUPLUS_ARM_STB') == '1' or d.getVar('GI
 GB_PLATFORM_NXPL_STB = "${@'1' if d.getVar('MACHINE') in ('gb7252', 'gb72604', 'vuduo4klite') and d.getVar('TARGET_ARCH') == 'arm' else '0'}"
 V3DNXPL_STB = "${@'1' if 'v3d-nxpl' in (d.getVar('MACHINE_FEATURES') or '').split() or (d.getVar('TARGET_ARCH') == 'mipsel' and d.getVar('MACHINE') in ('triplex', 'formuler1')) else '0'}"
 XCORE_MIPSEL_STB = "${@'1' if d.getVar('BRAND_OEM') == 'xcore' and d.getVar('TARGET_ARCH') == 'mipsel' else '0'}"
-DREAM_BCM_STB = "${@'1' if d.getVar('MACHINE') in ('dm7080', 'dm820', 'dm900', 'dm920') else '0'}"
-DREAM_DM9X0_STB = "${@'1' if d.getVar('MACHINE') in ('dm900', 'dm920') and d.getVar('TARGET_ARCH') == 'arm' else '0'}"
+DREAM_BCM_STB = "${@'1' if d.getVar('MACHINEBUILD') in ('dm7080', 'dm820', 'dm900', 'dm920') else '0'}"
+DREAM_DM9X0_STB = "${@'1' if d.getVar('MACHINEBUILD') in ('dm900', 'dm920') and d.getVar('TARGET_ARCH') == 'arm' else '0'}"
 DREAM_MIPSEL_STB = "${@'1' if d.getVar('MACHINE') in ('dm7080', 'dm820') and d.getVar('TARGET_ARCH') == 'mipsel' else '0'}"
 
 SRC_URI:append = "${@' file://kodi-hisi-wrapper file://kodi-hisi-appliance.xml file://0051-hisi-alsa-fast-sink-switch.patch' if d.getVar('HISI_STB') == '1' else ''}"

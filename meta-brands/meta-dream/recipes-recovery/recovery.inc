@@ -82,7 +82,7 @@ RRECOMMENDS:flash-scripts:meson64 = " \
     dreambox-dvb-modules-meson64-stb-core \
 "
 RRECOMMENDS:flash-scripts = " \
-    dreambox-dvb-modules-${MACHINE}-stb-core \
+    dreambox-dvb-modules-${MACHINEBUILD}-stb-core \
 "
 
 FILES:${PN}-autoflashd = " \
