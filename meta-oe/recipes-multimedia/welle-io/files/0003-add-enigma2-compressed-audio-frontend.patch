@@ -1,0 +1,221 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 5e0ef76..5871f35 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -17,6 +17,7 @@ set(CMAKE_CXX_STANDARD 14)
+ 
+ option(BUILD_WELLE_IO    "Build Welle.io"                        ON  )
+ option(BUILD_WELLE_CLI   "Build welle-cli"                       ON  )
++option(BUILD_WELLE_E2    "Build Enigma2 compressed-audio frontend" OFF )
+ option(WITH_APP_BUNDLE   "Enable Application Bundle for macOS"   ON  )
+ option(KISS_FFT          "KISS FFT instead of FFTW"              OFF )
+ option(PROFILING         "Enable profiling (see README.md)"      OFF )
+@@ -517,6 +518,26 @@ if(BUILD_WELLE_CLI AND NOT ANDROID)
+     endif()
+ endif()
+ 
++if(BUILD_WELLE_E2 AND NOT ANDROID)
++    set(e2ExecutableName dab-rtlsdr-welle-e2)
++    add_executable (${e2ExecutableName}
++        src/welle-e2/welle-e2.cpp
++        ${backend_sources}
++        ${input_sources}
++        ${fft_sources})
++
++    target_link_libraries (${e2ExecutableName}
++        ${FFTW3F_LIBRARIES}
++        ${KISS_LIBRARIES}
++        ${FAAD_LIBRARIES}
++        ${LIBUSB_LIBRARIES}
++        ${LIBRTLSDR_LIBRARIES}
++        ${MPG123_LIBRARIES}
++        Threads::Threads)
++
++    INSTALL (TARGETS ${e2ExecutableName} RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
++endif()
++
+ configure_file(
+     "${CMAKE_CURRENT_SOURCE_DIR}/cmake/cmake_uninstall.cmake.in"
+     "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake"
+diff --git a/src/backend/decoder_adapter.cpp b/src/backend/decoder_adapter.cpp
+index a06046d..f6d22ec 100644
+--- a/src/backend/decoder_adapter.cpp
++++ b/src/backend/decoder_adapter.cpp
+@@ -34,8 +34,12 @@ DecoderAdapter::DecoderAdapter(ProgrammeHandlerInterface &mr, int16_t bitRate, A
+ {
+     if (dabModus == AudioServiceComponentType::DAB)
+         decoder = std::make_unique<MP2Decoder>(this, false);
+-    else if (dabModus == AudioServiceComponentType::DABPlus)
+-        decoder = std::make_unique<SuperframeFilter>(this, true, false);
++    else if (dabModus == AudioServiceComponentType::DABPlus) {
++        auto superframe = std::make_unique<SuperframeFilter>(
++                this, myInterface.needsDecodedAudio(), false);
++        superframe->AddUntouchedStreamConsumer(this);
++        decoder = std::move(superframe);
++    }
+     else
+         throw std::runtime_error("DecoderAdapter: Unknown service component");
+ 
+@@ -140,6 +144,12 @@ void DecoderAdapter::FECInfo(int total_corr_count, bool uncorr_errors)
+     myInterface.onRsErrors(uncorr_errors, total_corr_count);
+ }
+ 
++void DecoderAdapter::ProcessUntouchedStream(const uint8_t *data, size_t len,
++                                            size_t duration_ms)
++{
++    myInterface.onUntouchedStream(data, len, duration_ms);
++}
++
+ void DecoderAdapter::PADChangeDynamicLabel(const DL_STATE &dl)
+ {
+     if (dl.raw.empty()) {
+diff --git a/src/backend/decoder_adapter.h b/src/backend/decoder_adapter.h
+index 00c8118..abca8c5 100644
+--- a/src/backend/decoder_adapter.h
++++ b/src/backend/decoder_adapter.h
+@@ -38,7 +38,8 @@
+ #include "dab_decoder.h"
+ #include "dabplus_decoder.h"
+ 
+-class DecoderAdapter: public DabProcessor, public SubchannelSinkObserver, public PADDecoderObserver
++class DecoderAdapter: public DabProcessor, public SubchannelSinkObserver,
++                      public PADDecoderObserver, public UntouchedStreamConsumer
+ {
+     public:
+         DecoderAdapter(ProgrammeHandlerInterface& mr,
+@@ -57,6 +58,10 @@ class DecoderAdapter: public DabProcessor, public SubchannelSinkObserver, public
+         virtual void ACCFrameError(const unsigned char /* error*/);
+         virtual void FECInfo(int /*total_corr_count*/, bool /*uncorr_errors*/);
+ 
++        // UntouchedStreamConsumer impl
++        virtual void ProcessUntouchedStream(const uint8_t* data, size_t len,
++                                            size_t duration_ms);
++
+         // PADDecoderObserver impl
+         virtual void PADChangeDynamicLabel(const DL_STATE& dl);
+         virtual void PADChangeSlide(const MOT_FILE& slide);
+@@ -77,4 +82,3 @@ class DecoderAdapter: public DabProcessor, public SubchannelSinkObserver, public
+         std::string audioFormat;
+ };
+ #endif // DECODER_ADAPTER_H
+-
+diff --git a/src/backend/radio-controller.h b/src/backend/radio-controller.h
+index 22be22d..4a01dfb 100644
+--- a/src/backend/radio-controller.h
++++ b/src/backend/radio-controller.h
+@@ -143,6 +143,19 @@ class ProgrammeHandlerInterface {
+     public:
+         virtual ~ProgrammeHandlerInterface() { }
+ 
++        /* Some consumers, such as Enigma2, pass the original DAB+ AAC
++         * access units to a hardware decoder.  They do not need the
++         * additional software AAC-to-PCM conversion. */
++        virtual bool needsDecodedAudio(void) const { return true; }
++
++        /* AudioSyncStream (LOAS/LATM) generated directly from the corrected
++         * DAB+ superframe.  The default keeps existing programme handlers
++         * source-compatible. */
++        virtual void onUntouchedStream(const uint8_t* data, size_t len,
++                size_t duration_ms) {
++            (void)data; (void)len; (void)duration_ms;
++        }
++
+         /* Count the number of frame errors from the MP2, AAC or data
+          * decoder.  */
+         virtual void onFrameErrors(int frameErrors) = 0;
+diff --git a/src/input/rtl_sdr.cpp b/src/input/rtl_sdr.cpp
+index 0af7313..ca5be97 100644
+--- a/src/input/rtl_sdr.cpp
++++ b/src/input/rtl_sdr.cpp
+@@ -53,10 +53,12 @@ int __attribute__((weak)) rtlsdr_set_bias_tee(rtlsdr_dev_t *dev, int on)
+     return false;
+ }
+ 
+-CRTL_SDR::CRTL_SDR(RadioControllerInterface& radioController) :
++CRTL_SDR::CRTL_SDR(RadioControllerInterface& radioController,
++                   uint32_t deviceIndex) :
+     radioController(radioController),
+     sampleBuffer(1024 * 1024),
+-    spectrumSampleBuffer(8192)
++    spectrumSampleBuffer(8192),
++    requestedDeviceIndex(deviceIndex)
+ {
+     open_device();
+ }
+@@ -78,7 +80,9 @@ void CRTL_SDR::open_device()
+     }
+ 
+     //	Iterate over all found rtl-sdr devices and try to open it. Stops if one device is successful opened.
+-    for(uint32_t i=0; i<deviceCount; i++) {
++    uint32_t firstDevice = requestedDeviceIndex < deviceCount ? requestedDeviceIndex : 0;
++    uint32_t lastDevice = requestedDeviceIndex < deviceCount ? firstDevice + 1 : deviceCount;
++    for(uint32_t i=firstDevice; i<lastDevice; i++) {
+         ret = rtlsdr_open(&device, i);
+         if (ret >= 0) {
+             std::clog << "RTL_SDR: " << " Opening rtl-sdr device" << i << std::endl;
+@@ -117,6 +121,26 @@ void CRTL_SDR::open_device()
+     rtlsdrUnplugged = false;
+ }
+ 
++bool CRTL_SDR::setFrequencyCorrection(int ppm)
++{
++    return device && rtlsdr_set_freq_correction(device, ppm) == 0;
++}
++
++std::string CRTL_SDR::getTunerName(void) const
++{
++    if (!device)
++        return "Unknown";
++    switch (rtlsdr_get_tuner_type(device)) {
++    case RTLSDR_TUNER_E4000: return "Elonics E4000";
++    case RTLSDR_TUNER_FC0012: return "Fitipower FC0012";
++    case RTLSDR_TUNER_FC0013: return "Fitipower FC0013";
++    case RTLSDR_TUNER_FC2580: return "FCI FC2580";
++    case RTLSDR_TUNER_R820T: return "Rafael Micro R820T";
++    case RTLSDR_TUNER_R828D: return "Rafael Micro R828D";
++    default: return "Unknown";
++    }
++}
++
+ CRTL_SDR::~CRTL_SDR(void)
+ {
+     stop();
+diff --git a/src/input/rtl_sdr.h b/src/input/rtl_sdr.h
+index bfc90db..2732358 100644
+--- a/src/input/rtl_sdr.h
++++ b/src/input/rtl_sdr.h
+@@ -37,6 +37,7 @@
+ #include <thread>
+ #include <string>
+ #include <atomic>
++#include <limits>
+ #include <rtl-sdr.h>
+ 
+ #include "virtual_input.h"
+@@ -50,7 +51,8 @@
+ // It does not do any processing
+ class CRTL_SDR : public CVirtualInput {
+ public:
+-    CRTL_SDR(RadioControllerInterface& radioController);
++    CRTL_SDR(RadioControllerInterface& radioController,
++             uint32_t deviceIndex = std::numeric_limits<uint32_t>::max());
+     ~CRTL_SDR(void);
+     CRTL_SDR(const CRTL_SDR&) = delete;
+     void operator=(const CRTL_SDR&) = delete;
+@@ -71,6 +73,8 @@ public:
+     void setAgc(bool AGC);
+     std::string getDescription(void);
+     bool setDeviceParam(DeviceParam param, int value);
++    bool setFrequencyCorrection(int ppm);
++    std::string getTunerName(void) const;
+ 
+     CDeviceID getID(void);
+ 
+@@ -97,6 +101,7 @@ private:
+     RingBuffer<uint8_t> sampleBuffer;
+     RingBuffer<uint8_t> spectrumSampleBuffer;
+     struct rtlsdr_dev *device = nullptr;
++    uint32_t requestedDeviceIndex;
+     int32_t sampleCounter = 0;
+ 
+     static void rtlsdr_read_callback(uint8_t* buf, uint32_t len, void *ctx);

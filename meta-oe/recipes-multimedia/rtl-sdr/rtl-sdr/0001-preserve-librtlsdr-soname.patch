@@ -1,0 +1,22 @@
+From: OpenATV <info@openatv.org>
+Subject: [PATCH] cmake: preserve the librtlsdr.so.0 ABI name
+
+OpenATV applications already link to the established librtlsdr.so.0
+SONAME.  The old-dab fork does not assign a SONAME to its shared target,
+which would leave only an unversioned development-library filename.
+Keep the existing runtime ABI and package layout when switching drivers.
+
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 0ae6a27..65fab1e 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -38,5 +38,7 @@ endif()
+ set_target_properties(rtlsdr_shared PROPERTIES DEFINE_SYMBOL "rtlsdr_EXPORTS")
+ set_target_properties(rtlsdr_shared PROPERTIES OUTPUT_NAME rtlsdr)
++set_target_properties(rtlsdr_shared PROPERTIES SOVERSION 0)
++set_target_properties(rtlsdr_shared PROPERTIES VERSION 0.0.0)
+ 
+ ########################################################################
+ # Setup static library variant
+-- 
+2.43.0

@@ -1,0 +1,58 @@
+# RTL2832U devices supported by Osmocom rtl-sdr.
+#
+# Keep this list in sync with:
+# https://github.com/osmocom/rtl-sdr/blob/master/rtl-sdr.rules
+#
+# Package installation is intentionally handled asynchronously by Enigma2;
+# never run the network package manager from inside udev.
+
+ACTION!="add", GOTO="dab_rtlsdr_end"
+SUBSYSTEM!="usb", GOTO="dab_rtlsdr_end"
+ENV{DEVTYPE}!="usb_device", GOTO="dab_rtlsdr_end"
+
+ATTR{idVendor}=="0bda", ATTR{idProduct}=="2832", ENV{ID_SOFTWARE_RADIO}="1", ENV{ID_MODEL}="Generic RTL2832U"
+ATTR{idVendor}=="0bda", ATTR{idProduct}=="2838", ENV{ID_SOFTWARE_RADIO}="1", ENV{ID_MODEL}="Generic RTL2832U OEM"
+ATTR{idVendor}=="0413", ATTR{idProduct}=="6680", ENV{ID_SOFTWARE_RADIO}="1", ENV{ID_MODEL}="DigitalNow Quad DVB-T PCI-E card"
+ATTR{idVendor}=="0413", ATTR{idProduct}=="6f0f", ENV{ID_SOFTWARE_RADIO}="1", ENV{ID_MODEL}="Leadtek WinFast DTV Dongle mini D"
+ATTR{idVendor}=="0458", ATTR{idProduct}=="707f", ENV{ID_SOFTWARE_RADIO}="1", ENV{ID_MODEL}="Genius TVGo DVB-T03 USB dongle (Ver. B)"
+ATTR{idVendor}=="0ccd", ATTR{idProduct}=="00a9", ENV{ID_SOFTWARE_RADIO}="1", ENV{ID_MODEL}="Terratec Cinergy T Stick Black rev 1"
+ATTR{idVendor}=="0ccd", ATTR{idProduct}=="00b3", ENV{ID_SOFTWARE_RADIO}="1", ENV{ID_MODEL}="Terratec NOXON DAB/DAB+ USB dongle (rev 1)"
+ATTR{idVendor}=="0ccd", ATTR{idProduct}=="00b4", ENV{ID_SOFTWARE_RADIO}="1", ENV{ID_MODEL}="Terratec Deutschlandradio DAB Stick"
+ATTR{idVendor}=="0ccd", ATTR{idProduct}=="00b5", ENV{ID_SOFTWARE_RADIO}="1", ENV{ID_MODEL}="Terratec NOXON DAB Stick - Radio Energy"
+ATTR{idVendor}=="0ccd", ATTR{idProduct}=="00b7", ENV{ID_SOFTWARE_RADIO}="1", ENV{ID_MODEL}="Terratec Media Broadcast DAB Stick"
+ATTR{idVendor}=="0ccd", ATTR{idProduct}=="00b8", ENV{ID_SOFTWARE_RADIO}="1", ENV{ID_MODEL}="Terratec BR DAB Stick"
+ATTR{idVendor}=="0ccd", ATTR{idProduct}=="00b9", ENV{ID_SOFTWARE_RADIO}="1", ENV{ID_MODEL}="Terratec WDR DAB Stick"
+ATTR{idVendor}=="0ccd", ATTR{idProduct}=="00c0", ENV{ID_SOFTWARE_RADIO}="1", ENV{ID_MODEL}="Terratec MuellerVerlag DAB Stick"
+ATTR{idVendor}=="0ccd", ATTR{idProduct}=="00c6", ENV{ID_SOFTWARE_RADIO}="1", ENV{ID_MODEL}="Terratec Fraunhofer DAB Stick"
+ATTR{idVendor}=="0ccd", ATTR{idProduct}=="00d3", ENV{ID_SOFTWARE_RADIO}="1", ENV{ID_MODEL}="Terratec Cinergy T Stick RC rev 3"
+ATTR{idVendor}=="0ccd", ATTR{idProduct}=="00d7", ENV{ID_SOFTWARE_RADIO}="1", ENV{ID_MODEL}="Terratec T Stick PLUS"
+ATTR{idVendor}=="0ccd", ATTR{idProduct}=="00e0", ENV{ID_SOFTWARE_RADIO}="1", ENV{ID_MODEL}="Terratec NOXON DAB/DAB+ USB dongle (rev 2)"
+ATTR{idVendor}=="1554", ATTR{idProduct}=="5020", ENV{ID_SOFTWARE_RADIO}="1", ENV{ID_MODEL}="PixelView PV-DT235U(RN)"
+ATTR{idVendor}=="15f4", ATTR{idProduct}=="0131", ENV{ID_SOFTWARE_RADIO}="1", ENV{ID_MODEL}="Astrometa DVB-T/DVB-T2"
+ATTR{idVendor}=="15f4", ATTR{idProduct}=="0133", ENV{ID_SOFTWARE_RADIO}="1", ENV{ID_MODEL}="HanfTek DAB+FM+DVB-T"
+ATTR{idVendor}=="185b", ATTR{idProduct}=="0620", ENV{ID_SOFTWARE_RADIO}="1", ENV{ID_MODEL}="Compro Videomate U620F"
+ATTR{idVendor}=="185b", ATTR{idProduct}=="0650", ENV{ID_SOFTWARE_RADIO}="1", ENV{ID_MODEL}="Compro Videomate U650F"
+ATTR{idVendor}=="185b", ATTR{idProduct}=="0680", ENV{ID_SOFTWARE_RADIO}="1", ENV{ID_MODEL}="Compro Videomate U680F"
+ATTR{idVendor}=="1b80", ATTR{idProduct}=="d393", ENV{ID_SOFTWARE_RADIO}="1", ENV{ID_MODEL}="GIGABYTE GT-U7300"
+ATTR{idVendor}=="1b80", ATTR{idProduct}=="d394", ENV{ID_SOFTWARE_RADIO}="1", ENV{ID_MODEL}="DIKOM USB-DVBT HD"
+ATTR{idVendor}=="1b80", ATTR{idProduct}=="d395", ENV{ID_SOFTWARE_RADIO}="1", ENV{ID_MODEL}="Peak 102569AGPK"
+ATTR{idVendor}=="1b80", ATTR{idProduct}=="d397", ENV{ID_SOFTWARE_RADIO}="1", ENV{ID_MODEL}="KWorld KW-UB450-T USB DVB-T Pico TV"
+ATTR{idVendor}=="1b80", ATTR{idProduct}=="d398", ENV{ID_SOFTWARE_RADIO}="1", ENV{ID_MODEL}="Zaapa ZT-MINDVBZP"
+ATTR{idVendor}=="1b80", ATTR{idProduct}=="d39d", ENV{ID_SOFTWARE_RADIO}="1", ENV{ID_MODEL}="SVEON STV20 DVB-T USB & FM"
+ATTR{idVendor}=="1b80", ATTR{idProduct}=="d3a4", ENV{ID_SOFTWARE_RADIO}="1", ENV{ID_MODEL}="Twintech UT-40"
+ATTR{idVendor}=="1b80", ATTR{idProduct}=="d3a8", ENV{ID_SOFTWARE_RADIO}="1", ENV{ID_MODEL}="ASUS U3100MINI_PLUS_V2"
+ATTR{idVendor}=="1b80", ATTR{idProduct}=="d3af", ENV{ID_SOFTWARE_RADIO}="1", ENV{ID_MODEL}="SVEON STV27 DVB-T USB & FM"
+ATTR{idVendor}=="1b80", ATTR{idProduct}=="d3b0", ENV{ID_SOFTWARE_RADIO}="1", ENV{ID_MODEL}="SVEON STV21 DVB-T USB & FM"
+ATTR{idVendor}=="1d19", ATTR{idProduct}=="1101", ENV{ID_SOFTWARE_RADIO}="1", ENV{ID_MODEL}="Dexatek DK DVB-T Dongle (Logilink VG0002A)"
+ATTR{idVendor}=="1d19", ATTR{idProduct}=="1102", ENV{ID_SOFTWARE_RADIO}="1", ENV{ID_MODEL}="Dexatek DK DVB-T Dongle (MSI DigiVox mini II V3.0)"
+ATTR{idVendor}=="1d19", ATTR{idProduct}=="1103", ENV{ID_SOFTWARE_RADIO}="1", ENV{ID_MODEL}="Dexatek Technology Ltd. DK 5217 DVB-T Dongle"
+ATTR{idVendor}=="1d19", ATTR{idProduct}=="1104", ENV{ID_SOFTWARE_RADIO}="1", ENV{ID_MODEL}="MSI DigiVox Micro HD"
+ATTR{idVendor}=="1f4d", ATTR{idProduct}=="a803", ENV{ID_SOFTWARE_RADIO}="1", ENV{ID_MODEL}="Sweex DVB-T USB"
+ATTR{idVendor}=="1f4d", ATTR{idProduct}=="b803", ENV{ID_SOFTWARE_RADIO}="1", ENV{ID_MODEL}="GTek T803"
+ATTR{idVendor}=="1f4d", ATTR{idProduct}=="c803", ENV{ID_SOFTWARE_RADIO}="1", ENV{ID_MODEL}="Lifeview LV5TDeluxe"
+ATTR{idVendor}=="1f4d", ATTR{idProduct}=="d286", ENV{ID_SOFTWARE_RADIO}="1", ENV{ID_MODEL}="MyGica TD312"
+ATTR{idVendor}=="1f4d", ATTR{idProduct}=="d803", ENV{ID_SOFTWARE_RADIO}="1", ENV{ID_MODEL}="PROlectrix DV107669"
+
+ENV{ID_SOFTWARE_RADIO}=="1", RUN+="/usr/bin/hotplug_e2_helper dab-sdr-add %p"
+
+LABEL="dab_rtlsdr_end"

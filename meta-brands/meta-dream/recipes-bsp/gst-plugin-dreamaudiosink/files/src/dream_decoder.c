@@ -51,6 +51,9 @@ struct DreamDecoder {
     AVCodecContext   *codec_ctx;
     AVCodecParserContext *parser;   /* NULL for codecs without parser */
     SwrContext       *swr_ctx;
+    int               swr_in_sample_rate;
+    enum AVSampleFormat swr_in_sample_fmt;
+    AVChannelLayout   swr_in_ch_layout;
     AVFrame          *frame;
     AVPacket         *avpkt;
 
@@ -694,6 +697,7 @@ void dream_decoder_free(DreamDecoder *d)
     if (d->frame)     av_frame_free(&d->frame);
     if (d->avpkt)     av_packet_free(&d->avpkt);
     if (d->swr_ctx)   swr_free(&d->swr_ctx);
+    av_channel_layout_uninit(&d->swr_in_ch_layout);
     free(d);
 }
 
@@ -853,31 +857,62 @@ static int emit_pcm_from_frame(DreamDecoder *d)
 
     AVChannelLayout out_chl = AV_CHANNEL_LAYOUT_STEREO;
 
-    if (!d->swr_ctx) d->swr_ctx = swr_alloc();
-    if (!d->swr_ctx) return -1;
-
-    swr_close(d->swr_ctx);
-    av_opt_set_chlayout   (d->swr_ctx, "in_chlayout",     &in_chl,   0);
-    av_opt_set_int        (d->swr_ctx, "in_sample_rate",   in_rate,  0);
-    av_opt_set_sample_fmt (d->swr_ctx, "in_sample_fmt",    in_fmt,   0);
-    av_opt_set_chlayout   (d->swr_ctx, "out_chlayout",    &out_chl,  0);
-    av_opt_set_int        (d->swr_ctx, "out_sample_rate",  out_rate, 0);
-    av_opt_set_sample_fmt (d->swr_ctx, "out_sample_fmt",   out_fmt,  0);
-    /* Matrix peak cap: 1.0 anti-clips 5.1; 3.0 keeps 7.1.4 audible. */
-    av_opt_set_double     (d->swr_ctx, "rematrix_maxval",
-                           (in_chl.nb_channels >= 10) ? 3.0 : 1.0, 0);
-    if (swr_init(d->swr_ctx) < 0) return -1;
+    const int input_changed = !d->swr_ctx
+        || d->swr_in_sample_rate != in_rate
+        || d->swr_in_sample_fmt != in_fmt
+        || av_channel_layout_compare(&d->swr_in_ch_layout, &in_chl) != 0;
+    if (input_changed) {
+        /* Keep the resampler alive between adjacent audio frames. Recreating
+         * it for every frame discards the filter history; this is especially
+         * audible as crackling with HE-AAC/LATM decoded at 24 kHz and emitted
+         * to the fixed 48 kHz AMLogic PCM device. */
+        swr_free(&d->swr_ctx);
+        d->swr_ctx = swr_alloc();
+        if (!d->swr_ctx) {
+            av_channel_layout_uninit(&in_chl);
+            return -1;
+        }
+        av_opt_set_chlayout   (d->swr_ctx, "in_chlayout",     &in_chl,   0);
+        av_opt_set_int        (d->swr_ctx, "in_sample_rate",   in_rate,  0);
+        av_opt_set_sample_fmt (d->swr_ctx, "in_sample_fmt",    in_fmt,   0);
+        av_opt_set_chlayout   (d->swr_ctx, "out_chlayout",    &out_chl,  0);
+        av_opt_set_int        (d->swr_ctx, "out_sample_rate",  out_rate, 0);
+        av_opt_set_sample_fmt (d->swr_ctx, "out_sample_fmt",   out_fmt,  0);
+        /* Matrix peak cap: 1.0 anti-clips 5.1; 3.0 keeps 7.1.4 audible. */
+        av_opt_set_double     (d->swr_ctx, "rematrix_maxval",
+                               (in_chl.nb_channels >= 10) ? 3.0 : 1.0, 0);
+        if (swr_init(d->swr_ctx) < 0) {
+            swr_free(&d->swr_ctx);
+            av_channel_layout_uninit(&in_chl);
+            return -1;
+        }
+        av_channel_layout_uninit(&d->swr_in_ch_layout);
+        if (av_channel_layout_copy(&d->swr_in_ch_layout, &in_chl) < 0) {
+            swr_free(&d->swr_ctx);
+            av_channel_layout_uninit(&in_chl);
+            return -1;
+        }
+        d->swr_in_sample_rate = in_rate;
+        d->swr_in_sample_fmt = in_fmt;
+        DEC_DBG("resampler configured: %d Hz/%d ch/%s -> %d Hz/stereo/S16",
+                in_rate, in_chl.nb_channels, av_get_sample_fmt_name(in_fmt), out_rate);
+    }
 
     const int out_max = swr_get_out_samples(d->swr_ctx, d->frame->nb_samples);
-    if (out_max <= 0) return 0;
+    if (out_max <= 0) {
+        av_channel_layout_uninit(&in_chl);
+        return 0;
+    }
 
     const int out_nb_ch = out_chl.nb_channels;
     const int out_bps   = av_get_bytes_per_sample(out_fmt);
 
     uint8_t *out = NULL;
     int out_linesize = 0;
-    if (av_samples_alloc(&out, &out_linesize, out_nb_ch, out_max, out_fmt, 0) < 0)
+    if (av_samples_alloc(&out, &out_linesize, out_nb_ch, out_max, out_fmt, 0) < 0) {
+        av_channel_layout_uninit(&in_chl);
         return -1;
+    }
 
     /* extended_data is sized for nb_channels; local AV_NUM_DATA_POINTERS=8
      * copy would overflow for 7.1.4 (12 channels). */
@@ -891,6 +926,7 @@ static int emit_pcm_from_frame(DreamDecoder *d)
               out, bytes, d->last_pts, d->cb_user);
     }
     av_freep(&out);
+    av_channel_layout_uninit(&in_chl);
     return 0;
 }
 

@@ -37,6 +37,7 @@ RRECOMMENDS:${PN} = "\
     enigma2-plugin-extensions-gbipboxclient \
     enigma2-plugin-extensions-blurayplayer \
     enigma2-plugin-extensions-sdgradio \
+    enigma2-plugin-systemplugins-dabusb \
     enigma2-plugin-extensions-epgimport \
     enigma2-plugin-extensions-skymultiview \
     enigma2-plugin-systemplugins-autobouquetsmaker \

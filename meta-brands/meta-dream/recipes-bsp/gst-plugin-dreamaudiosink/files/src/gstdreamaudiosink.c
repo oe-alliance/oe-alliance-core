@@ -136,14 +136,19 @@ gst_dream_audio_sink_decoder_cb(DreamDecoderOutputType type,
     }
 
     if (pts >= 0) self->last_pts_90k = pts;
+    /* e2-sync is enabled for pure audio services. They have no meaningful
+     * video clock, so do not feed their timestamps into the userspace A/V
+     * anchor: pts_video may still contain the previous TV service and would
+     * trigger its 5-second re-anchor cycle. */
+    const int64_t alsa_pts = self->e2_sync ? AV_NOPTS_VALUE : pts;
     /* Report apts_speaker (queue tail − snd_pcm_delay) to pts_audio sysfs. */
-    if (self->avsync && pts >= 0) {
-        int64_t apts_speaker = pts - dream_alsa_get_delay_pts(self->alsa);
+    if (self->avsync && alsa_pts >= 0) {
+        int64_t apts_speaker = alsa_pts - dream_alsa_get_delay_pts(self->alsa);
         if (apts_speaker >= 0)
             dream_avsync_checkin_audio_pts(self->avsync, (uint32_t)apts_speaker);
     }
 
-    dream_alsa_write(self->alsa, data, size, pts);
+    dream_alsa_write(self->alsa, data, size, alsa_pts);
 }
 
 static int read_user_volume_setting(void)

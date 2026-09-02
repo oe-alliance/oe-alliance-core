@@ -1,0 +1,373 @@
+diff --git a/src/welle-e2/welle-e2.cpp b/src/welle-e2/welle-e2.cpp
+new file mode 100644
+index 0000000..139d824
+--- /dev/null
++++ b/src/welle-e2/welle-e2.cpp
+@@ -0,0 +1,367 @@
++/*
++ * Lightweight welle.io frontend for Enigma2 DAB+ USB services.
++ *
++ * Copyright (C) 2026 OpenATV contributors
++ * SPDX-License-Identifier: GPL-2.0-or-later
++ */
++
++#include <algorithm>
++#include <atomic>
++#include <chrono>
++#include <csignal>
++#include <cstdio>
++#include <cstdlib>
++#include <cstring>
++#include <iomanip>
++#include <iostream>
++#include <memory>
++#include <mutex>
++#include <set>
++#include <sstream>
++#include <string>
++#include <thread>
++#include <unistd.h>
++
++#include "backend/radio-receiver.h"
++#include "input/rtl_sdr.h"
++#include "libs/json.hpp"
++#include "various/channels.h"
++
++using nlohmann::json;
++
++namespace {
++
++volatile sig_atomic_t running = 1;
++std::mutex metadataMutex;
++
++void stopSignal(int)
++{
++    running = 0;
++}
++
++void emitMetadata(const json& value)
++{
++    std::lock_guard<std::mutex> lock(metadataMutex);
++    std::cerr << value.dump() << std::endl;
++}
++
++std::string hexId(uint32_t value)
++{
++    std::ostringstream text;
++    text << std::hex << value;
++    return text.str();
++}
++
++std::string trimLabel(std::string value)
++{
++    const auto first = value.find_first_not_of(" \t\r\n");
++    if (first == std::string::npos)
++        return std::string();
++    const auto last = value.find_last_not_of(" \t\r\n");
++    return value.substr(first, last - first + 1);
++}
++
++struct Options {
++    std::string channel;
++    std::string cachePrefix;
++    uint32_t serviceId = 0;
++    uint32_t deviceIndex = 0;
++    int ppm = 0;
++    int gainPercent = 35;
++    bool automaticGain = true;
++};
++
++bool parseOptions(int argc, char **argv, Options& options)
++{
++    int option;
++    while ((option = getopt(argc, argv, "C:p:D:Z:QG:S:h")) != -1) {
++        switch (option) {
++        case 'C': options.channel = optarg; break;
++        case 'p': options.ppm = std::atoi(optarg); break;
++        case 'D': options.deviceIndex = std::strtoul(optarg, nullptr, 10); break;
++        case 'Z': options.cachePrefix = optarg; break;
++        case 'Q': options.automaticGain = true; break;
++        case 'G':
++            options.automaticGain = false;
++            options.gainPercent = std::max(0, std::min(100, std::atoi(optarg)));
++            break;
++        case 'S': options.serviceId = std::strtoul(optarg, nullptr, 16); break;
++        case 'h':
++        default:
++            std::cerr << "Usage: dab-rtlsdr-welle-e2 -C CHANNEL [-D DEVICE] "
++                         "[-p PPM] [-Q|-G PERCENT] [-S SID] [-Z CACHE_PREFIX]"
++                      << std::endl;
++            return false;
++        }
++    }
++    return !options.channel.empty();
++}
++
++class EnigmaRadioController : public RadioControllerInterface {
++public:
++    void onSNR(float value) override
++    {
++        std::lock_guard<std::mutex> lock(rfMutex);
++        snr = value;
++        publishRF(false);
++    }
++
++    void onFrequencyCorrectorChange(int fine, int coarse) override
++    {
++        std::lock_guard<std::mutex> lock(rfMutex);
++        correction = fine + coarse;
++    }
++
++    void onSyncChange(char value) override
++    {
++        std::lock_guard<std::mutex> lock(rfMutex);
++        const bool newState = value != 0;
++        const bool changed = synced != newState;
++        synced = newState;
++        publishRF(changed);
++    }
++
++    void onSignalPresence(bool) override { }
++    void onServiceDetected(uint32_t) override { }
++
++    void onNewEnsemble(uint16_t value) override
++    {
++        ensembleId = value;
++    }
++
++    void onSetEnsembleLabel(DabLabel& label) override
++    {
++        const std::string value = trimLabel(label.utf8_label());
++        if (value.empty() || value == lastEnsembleLabel)
++            return;
++        lastEnsembleLabel = value;
++        std::lock_guard<std::mutex> lock(metadataMutex);
++        std::cerr << "ensemble " << value << " is ("
++                  << std::hex << ensembleId.load() << std::dec
++                  << ") recognized" << std::endl;
++    }
++
++    void onDateTimeUpdate(const dab_date_time_t&) override { }
++    void onFIBDecodeSuccess(bool, const uint8_t*) override { }
++    void onNewImpulseResponse(std::vector<float>&&) override { }
++    void onConstellationPoints(std::vector<DSPCOMPLEX>&&) override { }
++    void onNewNullSymbol(std::vector<DSPCOMPLEX>&&) override { }
++    void onTIIMeasurement(tii_measurement_t&&) override { }
++
++    void onMessage(message_level_t level, const std::string& text,
++                   const std::string& text2 = std::string()) override
++    {
++        std::lock_guard<std::mutex> lock(metadataMutex);
++        std::cerr << (level == message_level_t::Error ? "Error: " : "Info: ")
++                  << text << text2 << std::endl;
++    }
++
++    void onInputFailure(void) override
++    {
++        running = 0;
++    }
++
++private:
++    void publishRF(bool force)
++    {
++        const auto now = std::chrono::steady_clock::now();
++        if (!force && now - lastPublish < std::chrono::milliseconds(500))
++            return;
++        lastPublish = now;
++
++        std::ostringstream snrText;
++        snrText << std::fixed << std::setprecision(1) << snr;
++        json value;
++        value["snr"] = snrText.str();
++        value["synced"] = synced ? "true" : "false";
++        value["offset"] = std::to_string(correction);
++        emitMetadata(value);
++    }
++
++    std::mutex rfMutex;
++    std::atomic<uint16_t> ensembleId{0};
++    std::chrono::steady_clock::time_point lastPublish{};
++    float snr = 0.0f;
++    int correction = 0;
++    bool synced = false;
++    std::string lastEnsembleLabel;
++};
++
++class EnigmaProgrammeHandler : public ProgrammeHandlerInterface {
++public:
++    EnigmaProgrammeHandler(uint32_t serviceId, const std::string& cachePrefix)
++        : serviceId(serviceId), cachePrefix(cachePrefix) { }
++
++    bool needsDecodedAudio(void) const override { return false; }
++
++    void onUntouchedStream(const uint8_t* data, size_t len,
++                           size_t) override
++    {
++        if (data && len)
++            std::fwrite(data, 1, len, stdout);
++    }
++
++    void onFrameErrors(int) override { }
++    void onNewAudio(std::vector<int16_t>&&, int, const std::string&) override { }
++
++    void onRsErrors(bool uncorrectedErrors, int correctedErrors) override
++    {
++        const auto now = std::chrono::steady_clock::now();
++        if (now - lastQualityPublish < std::chrono::seconds(1))
++            return;
++        lastQualityPublish = now;
++        int quality = uncorrectedErrors ? 0 : std::max(0, 100 - correctedErrors * 2);
++        json value;
++        value["msc_quality"] = std::to_string(quality);
++        emitMetadata(value);
++    }
++
++    void onAacErrors(int) override { }
++
++    void onNewDynamicLabel(const std::string& label) override
++    {
++        if (label.empty())
++            return;
++        json value;
++        value["radiotext"] = label;
++        emitMetadata(value);
++    }
++
++    void onMOT(const mot_file_t& mot) override
++    {
++        if (mot.data.empty() || (mot.content_sub_type != 1 && mot.content_sub_type != 3))
++            return;
++
++        const std::string prefix = cachePrefix.empty() ? "/tmp/dab-welle-mot" : cachePrefix;
++        const std::string path = prefix + "-" + hexId(serviceId) +
++                (mot.content_sub_type == 3 ? ".png" : ".jpg");
++        const std::string temporary = path + ".new";
++        FILE *file = std::fopen(temporary.c_str(), "wb");
++        if (!file)
++            return;
++        const bool complete = std::fwrite(mot.data.data(), 1, mot.data.size(), file) == mot.data.size();
++        std::fclose(file);
++        if (!complete || std::rename(temporary.c_str(), path.c_str()) != 0) {
++            std::remove(temporary.c_str());
++            return;
++        }
++
++        json value;
++        value["mot"] = path;
++        emitMetadata(value);
++    }
++
++    void onPADLengthError(size_t, size_t) override { }
++
++private:
++    uint32_t serviceId;
++    std::string cachePrefix;
++    std::chrono::steady_clock::time_point lastQualityPublish{};
++};
++
++void announceService(RadioReceiver& receiver, const Service& service)
++{
++    (void)receiver;
++    json value;
++    value["programName"] = trimLabel(service.serviceLabel.utf8_label());
++    value["programId"] = hexId(service.serviceId);
++    emitMetadata(value);
++}
++
++void announceSelectedService(RadioReceiver& receiver, const Service& service)
++{
++    for (const auto& component : receiver.getComponents(service)) {
++        if (component.transportMode() != TransportMode::Audio)
++            continue;
++        const auto& subchannel = receiver.getSubchannel(component);
++        if (!subchannel.valid())
++            continue;
++
++        json name;
++        name["ps"] = trimLabel(service.serviceLabel.utf8_label());
++        emitMetadata(name);
++
++        json format;
++        format["bitrate"] = std::to_string(subchannel.bitrate());
++        format["dabType"] = component.audioType() == AudioServiceComponentType::DABPlus ? "DAB+" : "DAB";
++        format["language"] = "Unknown";
++        format["programType"] = "Unknown";
++        format["protectionLevel"] = "Unknown";
++        emitMetadata(format);
++        return;
++    }
++}
++
++} // namespace
++
++int main(int argc, char **argv)
++{
++    Options options;
++    if (!parseOptions(argc, argv, options))
++        return 2;
++
++    std::signal(SIGINT, stopSignal);
++    std::signal(SIGTERM, stopSignal);
++    std::setvbuf(stdout, nullptr, _IONBF, 0);
++
++    EnigmaRadioController controller;
++    try {
++        CRTL_SDR input(controller, options.deviceIndex);
++        input.setFrequencyCorrection(options.ppm);
++        std::cerr << "Found " << input.getTunerName() << " tuner" << std::endl;
++
++        Channels channels;
++        const int frequency = channels.getFrequency(options.channel);
++        if (frequency <= 0) {
++            std::cerr << "Unknown DAB channel " << options.channel << std::endl;
++            return 3;
++        }
++
++        input.setFrequency(frequency);
++        if (options.automaticGain) {
++            input.setAgc(true);
++        }
++        else {
++            input.setAgc(false);
++            const int maximum = std::max(0, input.getGainCount());
++            input.setGain((options.gainPercent * maximum + 50) / 100);
++        }
++
++        RadioReceiverOptions receiverOptions;
++        receiverOptions.decodeTII = false;
++        RadioReceiver receiver(controller, input, receiverOptions);
++        receiver.restart(false);
++
++        std::set<uint32_t> announced;
++        std::unique_ptr<EnigmaProgrammeHandler> programme;
++        bool selected = false;
++
++        while (running) {
++            for (const auto& service : receiver.getServiceList()) {
++                if (!receiver.serviceHasAudioComponent(service))
++                    continue;
++                const std::string label = trimLabel(service.serviceLabel.utf8_label());
++                if (!label.empty() && announced.insert(service.serviceId).second)
++                    announceService(receiver, service);
++
++                if (!selected && !label.empty() && options.serviceId && service.serviceId == options.serviceId) {
++                    programme.reset(new EnigmaProgrammeHandler(service.serviceId, options.cachePrefix));
++                    announceSelectedService(receiver, service);
++                    selected = receiver.playSingleProgramme(*programme, std::string(), service);
++                    if (!selected)
++                        programme.reset();
++                }
++            }
++            std::this_thread::sleep_for(std::chrono::milliseconds(100));
++        }
++
++        receiver.stop();
++        input.stop();
++    }
++    catch (...) {
++        std::cerr << "Unable to start welle.io Enigma2 DAB receiver" << std::endl;
++        return 1;
++    }
++
++    return 0;
++}

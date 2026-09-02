@@ -1,0 +1,46 @@
+diff --git a/src/backend/pad_decoder.cpp b/src/backend/pad_decoder.cpp
+index 2099fa9..0e7e631 100644
+--- a/src/backend/pad_decoder.cpp
++++ b/src/backend/pad_decoder.cpp
+@@ -302,6 +302,7 @@ bool DynamicLabelDecoder::DecodeDataGroup() {
+ 
+ 	size_t field_len = 0;
+ 	bool cmd_remove_label = false;
++	bool cmd_dl_plus = false;
+ 
+ 	// handle command/segment
+ 	if(command) {
+@@ -309,6 +310,10 @@ bool DynamicLabelDecoder::DecodeDataGroup() {
+ 		case 0x01:	// remove label
+ 			cmd_remove_label = true;
+ 			break;
++		case 0x02:	// DL Plus tags command
++			cmd_dl_plus = true;
++			field_len = (dg_raw[1] & 0x0F) + 1;
++			break;
+ 		default:
+ 			// ignore command
+ 			DataGroup::Reset();
+@@ -335,6 +340,22 @@ bool DynamicLabelDecoder::DecodeDataGroup() {
+ 		return true;
+ 	}
+ 
++	// Keep this CLI useful as a transport analyser even though its UI does not
++	// expose DL Plus.  Log only CRC-valid command groups, including segmentation
++	// and the untouched command payload, so transmitter and decoder behaviour can
++	// be compared without interpreting ordinary DLS as programme information.
++	if(cmd_dl_plus) {
++		fprintf(stderr, "DLPlusGroup: first=%u last=%u segment=%u link=%u payload=",
++				(dg_raw[0] & 0x40) != 0, (dg_raw[0] & 0x20) != 0,
++				(dg_raw[0] & 0x40) ? 0 : ((dg_raw[1] & 0x70) >> 4),
++				(dg_raw[1] & 0x80) != 0);
++		for(size_t i = 0; i < field_len; ++i)
++			fprintf(stderr, "%02x", dg_raw[2 + i]);
++		fprintf(stderr, "\n");
++		DataGroup::Reset();
++		return false;
++	}
++
+ 	// create new segment
+ 	DL_SEG dl_seg;
+ 	memcpy(dl_seg.prefix, &dg_raw[0], 2);

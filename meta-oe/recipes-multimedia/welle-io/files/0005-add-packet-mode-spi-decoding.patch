@@ -1,0 +1,506 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 5871f35..bc02a23 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -224,6 +224,7 @@ include_directories(
+ 
+ set(backend_sources
+     src/backend/dab-audio.cpp
++    src/backend/dab-data.cpp
+     src/backend/decoder_adapter.cpp
+     src/backend/dab_decoder.cpp
+     src/backend/dabplus_decoder.cpp
+diff --git a/src/backend/dab-data.h b/src/backend/dab-data.h
+new file mode 100644
+index 0000000..dae99d0
+--- /dev/null
++++ b/src/backend/dab-data.h
+@@ -0,0 +1,59 @@
++/*
++ * Packet-mode MSC subchannel decoder for welle.io.
++ *
++ * Copyright (C) 2026 OpenATV contributors
++ * SPDX-License-Identifier: GPL-2.0-or-later
++ */
++
++#ifndef __DAB_DATA_H
++#define __DAB_DATA_H
++
++#include "dab-virtual.h"
++#include "energy_dispersal.h"
++#include "ringbuffer.h"
++
++#include <atomic>
++#include <condition_variable>
++#include <cstddef>
++#include <cstdint>
++#include <functional>
++#include <memory>
++#include <mutex>
++#include <thread>
++#include <vector>
++
++class Protection;
++
++class DabData : public DabVirtual
++{
++public:
++    using DataCallback = std::function<void(const uint8_t *, size_t)>;
++
++    DabData(int16_t fragmentSize, int16_t bitRate,
++            ProtectionSettings protection, const DataCallback& callback);
++    ~DabData() override;
++
++    DabData(const DabData&) = delete;
++    DabData& operator=(const DabData&) = delete;
++
++    int32_t process(const softbit_t *data, int16_t count) override;
++
++private:
++    void run();
++
++    std::atomic<bool> running;
++    int16_t fragmentSize;
++    int16_t bitRate;
++    DataCallback callback;
++    std::vector<uint8_t> outputBits;
++    std::vector<softbit_t> interleaveData[16];
++    EnergyDispersal energyDispersal;
++    std::unique_ptr<Protection> protectionHandler;
++
++    std::condition_variable dataAvailable;
++    std::mutex mutex;
++    std::thread worker;
++    RingBuffer<softbit_t> inputBuffer;
++};
++
++#endif
+diff --git a/src/backend/dab-data.cpp b/src/backend/dab-data.cpp
+new file mode 100644
+index 0000000..63d6942
+--- /dev/null
++++ b/src/backend/dab-data.cpp
+@@ -0,0 +1,103 @@
++/*
++ * Packet-mode MSC subchannel decoder for welle.io.
++ *
++ * Copyright (C) 2026 OpenATV contributors
++ * SPDX-License-Identifier: GPL-2.0-or-later
++ */
++
++#include "dab-data.h"
++
++#include "eep-protection.h"
++#include "uep-protection.h"
++
++namespace {
++const int16_t interleaveMap[] = {0, 8, 4, 12, 2, 10, 6, 14,
++                                 1, 9, 5, 13, 3, 11, 7, 15};
++}
++
++DabData::DabData(int16_t fragmentSize, int16_t bitRate,
++        ProtectionSettings protection, const DataCallback& callback) :
++    running(true),
++    fragmentSize(fragmentSize),
++    bitRate(bitRate),
++    callback(callback),
++    inputBuffer(64 * 32768)
++{
++    outputBits.resize(bitRate * 24);
++    for (auto& entry : interleaveData)
++        entry.resize(fragmentSize);
++
++    if (protection.shortForm) {
++        protectionHandler.reset(new UEPProtection(bitRate, protection.uepLevel));
++    }
++    else {
++        const bool profileA = protection.eepProfile == EEPProtectionProfile::EEP_A;
++        protectionHandler.reset(new EEPProtection(
++                bitRate, profileA, static_cast<int>(protection.eepLevel)));
++    }
++
++    worker = std::thread(&DabData::run, this);
++}
++
++DabData::~DabData()
++{
++    running = false;
++    dataAvailable.notify_all();
++    if (worker.joinable())
++        worker.join();
++}
++
++int32_t DabData::process(const softbit_t *data, int16_t count)
++{
++    /* Packet carousels repeat. Dropping a CIF is preferable to blocking the
++     * OFDM dispatcher and therefore the selected audio service. */
++    const int32_t available = inputBuffer.GetRingBufferWriteAvailable();
++    if (!running || available < count)
++        return 0;
++    inputBuffer.putDataIntoBuffer(data, count);
++    dataAvailable.notify_one();
++    return available;
++}
++
++void DabData::run()
++{
++    int countForInterleaver = 0;
++    int interleaverIndex = 0;
++    std::vector<softbit_t> input(fragmentSize);
++    std::vector<softbit_t> deinterleaved(fragmentSize);
++    std::vector<uint8_t> bytes(outputBits.size() / 8);
++
++    while (running) {
++        std::unique_lock<std::mutex> lock(mutex);
++        dataAvailable.wait(lock, [this]() {
++            return !running || inputBuffer.GetRingBufferReadAvailable() >= fragmentSize;
++        });
++        if (!running)
++            break;
++        lock.unlock();
++
++        inputBuffer.getDataFromBuffer(input.data(), fragmentSize);
++        for (int index = 0; index < fragmentSize; ++index) {
++            deinterleaved[index] = interleaveData[(interleaverIndex +
++                    interleaveMap[index & 0x0f]) & 0x0f][index];
++            interleaveData[interleaverIndex][index] = input[index];
++        }
++        interleaverIndex = (interleaverIndex + 1) & 0x0f;
++        if (countForInterleaver++ <= 15)
++            continue;
++
++        protectionHandler->deconvolve(
++                deinterleaved.data(), fragmentSize, outputBits.data());
++        energyDispersal.dedisperse(outputBits);
++
++        for (size_t byte = 0; byte < bytes.size(); ++byte) {
++            uint8_t value = 0;
++            for (int bit = 0; bit < 8; ++bit)
++                value = static_cast<uint8_t>((value << 1) |
++                        (outputBits[byte * 8 + bit] & 1));
++            bytes[byte] = value;
++        }
++        if (callback && !bytes.empty())
++            callback(bytes.data(), bytes.size());
++    }
++}
+diff --git a/src/backend/msc-handler.h b/src/backend/msc-handler.h
+index 8fa0ed0..d44c690 100644
+--- a/src/backend/msc-handler.h
++++ b/src/backend/msc-handler.h
+@@ -33,6 +33,7 @@
+ #include <mutex>
+ #include <list>
+ #include <memory>
++#include <functional>
+ #include <vector>
+ #include <cstdio>
+ #include <cstdint>
+@@ -57,6 +58,11 @@ class MscHandler
+                 const std::string& dumpFileName,
+                 const Subchannel& sub);
+ 
++        typedef std::function<void(const uint8_t *, size_t)> PacketDataCallback;
++        bool addPacketSubchannel(
++                const PacketDataCallback& callback,
++                const Subchannel& sub);
++
+         bool removeSubchannel(const Subchannel& sub);
+ 
+     private:
+@@ -69,12 +75,17 @@ class MscHandler
+                 AudioServiceComponentType ascty,
+                 const std::string& dumpFileName,
+                 const Subchannel& subCh) :
+-                    handler(handler),
++                    handler(&handler),
+                     audioType(ascty),
+                     dumpFileName(dumpFileName),
+                     subCh(subCh) {}
+ 
+-            ProgrammeHandlerInterface& handler;
++            explicit SelectedStream(const Subchannel& subCh) :
++                    handler(nullptr),
++                    audioType(AudioServiceComponentType::Unknown),
++                    subCh(subCh) {}
++
++            ProgrammeHandlerInterface* handler;
+ 
+             AudioServiceComponentType audioType;
+             const std::string dumpFileName;
+@@ -97,4 +108,3 @@ class MscHandler
+ };
+ 
+ #endif
+-
+diff --git a/src/backend/msc-handler.cpp b/src/backend/msc-handler.cpp
+index 4c4b661..9bc3c37 100644
+--- a/src/backend/msc-handler.cpp
++++ b/src/backend/msc-handler.cpp
+@@ -26,6 +26,7 @@
+ #include "msc-handler.h"
+ #include "dab-virtual.h"
+ #include "dab-audio.h"
++#include "dab-data.h"
+ 
+ //  Interface program for processing the MSC.
+ //  Merely a dispatcher for the selected service
+@@ -102,6 +103,28 @@ bool MscHandler::addSubchannel(
+     return true;
+ }
+ 
++bool MscHandler::addPacketSubchannel(
++        const PacketDataCallback& callback,
++        const Subchannel& sub)
++{
++    std::lock_guard<std::mutex> lock(mutex);
++
++    for (const auto& stream : streams) {
++        if (stream.subCh.subChId == sub.subChId)
++            return true;
++    }
++
++    SelectedStream stream(sub);
++    stream.dabHandler = std::make_shared<DabData>(
++            sub.length * CUSize,
++            sub.bitrate(),
++            sub.protectionSettings,
++            callback);
++    streams.push_back(std::move(stream));
++    work_to_be_done = true;
++    return true;
++}
++
+ bool MscHandler::removeSubchannel(const Subchannel& sub)
+ {
+     std::lock_guard<std::mutex> lock(mutex);
+@@ -163,4 +186,3 @@ void MscHandler::stopProcessing()
+     work_to_be_done = false;
+     streams.clear();
+ }
+-
+diff --git a/src/backend/radio-receiver.h b/src/backend/radio-receiver.h
+index 2e0c6e9..90c3cbf 100644
+--- a/src/backend/radio-receiver.h
++++ b/src/backend/radio-receiver.h
+@@ -78,6 +78,9 @@ class RadioReceiver {
+         bool addServiceToDecode(ProgrammeHandlerInterface& handler,
+                 const std::string& dumpFileName, const Service& s);
+ 
++        bool addPacketComponent(const ServiceComponent& component,
++                const MscHandler::PacketDataCallback& callback);
++
+         bool removeServiceToDecode(const Service& s);
+ 
+         uint16_t getEnsembleId(void) const;
+diff --git a/src/backend/radio-receiver.cpp b/src/backend/radio-receiver.cpp
+index 4bd9a35..fe8daa3 100644
+--- a/src/backend/radio-receiver.cpp
++++ b/src/backend/radio-receiver.cpp
+@@ -129,6 +129,15 @@ bool RadioReceiver::addServiceToDecode(ProgrammeHandlerInterface& handler,
+     return playProgramme(handler, s, dumpFileName, false);
+ }
+ 
++bool RadioReceiver::addPacketComponent(const ServiceComponent& component,
++        const MscHandler::PacketDataCallback& callback)
++{
++    if (component.transportMode() != TransportMode::PacketData)
++        return false;
++    const auto& subchannel = ficHandler.fibProcessor.getSubchannel(component);
++    return subchannel.valid() && mscHandler.addPacketSubchannel(callback, subchannel);
++}
++
+ bool RadioReceiver::removeServiceToDecode(const Service& s)
+ {
+     const auto comps = ficHandler.fibProcessor.getComponents(s);
+diff --git a/src/welle-e2/welle-e2.cpp b/src/welle-e2/welle-e2.cpp
+index 139d824..efeba8c 100644
+--- a/src/welle-e2/welle-e2.cpp
++++ b/src/welle-e2/welle-e2.cpp
+@@ -52,6 +52,27 @@ std::string hexId(uint32_t value)
+     return text.str();
+ }
+ 
++std::string hexData(const uint8_t *data, size_t length)
++{
++    static const char digits[] = "0123456789abcdef";
++    std::string text(length * 2, '0');
++    for (size_t index = 0; index < length; ++index) {
++        text[index * 2] = digits[data[index] >> 4];
++        text[index * 2 + 1] = digits[data[index] & 0x0f];
++    }
++    return text;
++}
++
++void emitPacketStream(int subchannel, const uint8_t *data, size_t length)
++{
++    if (!data || !length)
++        return;
++    json value;
++    value["packet_stream"] = hexData(data, length);
++    value["subchannel"] = std::to_string(subchannel);
++    emitMetadata(value);
++}
++
+ std::string trimLabel(std::string value)
+ {
+     const auto first = value.find_first_not_of(" \t\r\n");
+@@ -334,6 +355,8 @@ int main(int argc, char **argv)
+         receiver.restart(false);
+ 
+         std::set<uint32_t> announced;
++        std::set<uint64_t> announcedPacketComponents;
++        std::set<int> packetSubchannels;
+         std::unique_ptr<EnigmaProgrammeHandler> programme;
+         bool selected = false;
+ 
+@@ -353,6 +376,52 @@ int main(int argc, char **argv)
+                         programme.reset();
+                 }
+             }
++
++            /* SPI is normally carried by a separate packet-mode service, not
++             * by the selected audio service. Decode each MOT packet
++             * subchannel in parallel and let Enigma2 associate packet
++             * addresses with the resulting stream. */
++            if (selected) {
++                for (const auto& service : receiver.getServiceList()) {
++                    for (const auto& component : receiver.getComponents(service)) {
++                        if (component.transportMode() != TransportMode::PacketData)
++                            continue;
++                        const auto& subchannel = receiver.getSubchannel(component);
++                        const uint64_t componentKey =
++                                (static_cast<uint64_t>(component.SCId) << 32) |
++                                (static_cast<uint64_t>(component.DSCTy & 0x3f) << 26) |
++                                (static_cast<uint64_t>(component.subchannelId & 0x3f) << 20) |
++                                static_cast<uint64_t>(component.packetAddress & 0x3ff);
++                        if (announcedPacketComponents.insert(componentKey).second) {
++                            json value;
++                            const std::string label = trimLabel(service.serviceLabel.utf8_label());
++                            value["data_service"] = label.empty() ? hexId(service.serviceId) : label;
++                            value["service_id"] = hexId(service.serviceId);
++                            value["scid"] = std::to_string(component.SCId);
++                            if (component.DSCTy == 60)
++                                value["spi_service"] = value["data_service"];
++                            value["dsc_type"] = std::to_string(component.DSCTy);
++                            value["app_type"] = "7";
++                            value["packet_address"] = std::to_string(component.packetAddress);
++                            value["subchannel"] = std::to_string(component.subchannelId);
++                            value["resolved"] = subchannel.valid() ? "true" : "false";
++                            value["fec_scheme"] = std::to_string(subchannel.fecScheme);
++                            emitMetadata(value);
++                        }
++
++                        if (component.DSCTy == 60 && component.packetAddress > 0 &&
++                                subchannel.valid() &&
++                                packetSubchannels.insert(subchannel.subChId).second) {
++                            const int id = subchannel.subChId;
++                            if (!receiver.addPacketComponent(component,
++                                    [id](const uint8_t *data, size_t length) {
++                                        emitPacketStream(id, data, length);
++                                    }))
++                                packetSubchannels.erase(id);
++                        }
++                    }
++                }
++            }
+             std::this_thread::sleep_for(std::chrono::milliseconds(100));
+         }
+
+diff --git a/src/backend/fib-processor.h b/src/backend/fib-processor.h
+index 921b01c..f313dfa 100644
+--- a/src/backend/fib-processor.h
++++ b/src/backend/fib-processor.h
+@@ -60,6 +60,13 @@ class FIBProcessor {
+         ServiceComponent *findComponent(uint32_t serviceId, int16_t SCIdS);
+         ServiceComponent *findPacketComponent(int16_t SCId);
+ 
++        struct PacketComponentDetails {
++            int16_t subchannelId = 0;
++            int16_t DSCTy = 0;
++            int16_t DGflag = 0;
++            int16_t packetAddress = 0;
++        };
++
+         void bindAudioService(
+                 int8_t TMid,
+                 uint32_t SId,
+@@ -129,10 +136,10 @@ class FIBProcessor {
+         std::vector<Subchannel> subChannels;
+         std::vector<ServiceComponent> components;
+         std::vector<Service> services;
++        std::unordered_map<int16_t, PacketComponentDetails> packetComponentDetails;
+         std::unordered_map<uint32_t, uint8_t> serviceRepeatCount;
+         std::chrono::steady_clock::time_point timeLastServiceDecrement;
+         std::chrono::system_clock::time_point timeLastFCT0Frame;
+ };
+ 
+ #endif
+-
+diff --git a/src/backend/fib-processor.cpp b/src/backend/fib-processor.cpp
+index 3cd1872..7aaad88 100644
+--- a/src/backend/fib-processor.cpp
++++ b/src/backend/fib-processor.cpp
+@@ -376,21 +376,32 @@ void FIBProcessor::FIG0Extension3 (uint8_t *d)
+ int16_t FIBProcessor::HandleFIG0Extension3(uint8_t *d, int16_t used)
+ {
+     int16_t SCId            = getBits (d, used * 8, 12);
+-    //int16_t CAOrgflag       = getBits_1 (d, used * 8 + 15);
++    int16_t CAOrgflag       = getBits_1 (d, used * 8 + 15);
+     int16_t DGflag          = getBits_1 (d, used * 8 + 16);
+     int16_t DSCTy           = getBits_6 (d, used * 8 + 18);
+     int16_t SubChId         = getBits_6 (d, used * 8 + 24);
+     int16_t packetAddress   = getBits (d, used * 8 + 30, 10);
+-    //uint16_t        CAOrg   = getBits (d, used * 8 + 40, 16);
++    const PacketComponentDetails details = {
++        SubChId,
++        DSCTy,
++        DGflag,
++        packetAddress
++    };
++    packetComponentDetails[SCId] = details;
+ 
+     ServiceComponent *packetComp = findPacketComponent(SCId);
+ 
+-    used += 56 / 8;
++    // FIG 0/3 has a five-byte fixed part.  CAOrg is an optional two-byte
++    // field, so treating every entry as seven bytes skips a following packet
++    // component when CAOrg is absent.
++    used += 40 / 8;
++    if (CAOrgflag)
++        used += 16 / 8;
+     if (packetComp) {
+-        packetComp->subchannelId = SubChId;
+-        packetComp->DSCTy = DSCTy;
+-        packetComp->DGflag = DGflag;
+-        packetComp->packetAddress = packetAddress;
++        packetComp->subchannelId = details.subchannelId;
++        packetComp->DSCTy = details.DSCTy;
++        packetComp->DGflag = details.DGflag;
++        packetComp->packetAddress = details.packetAddress;
+     }
+     return used;
+ }
+@@ -1213,6 +1224,14 @@ void FIBProcessor::bindPacketService(
+         newcomp.SCId        = SCId;
+         newcomp.PS_flag     = ps_flag;
+         newcomp.CAflag      = CAflag;
++
++        const auto details = packetComponentDetails.find(SCId);
++        if (details != packetComponentDetails.end()) {
++            newcomp.subchannelId = details->second.subchannelId;
++            newcomp.DSCTy = details->second.DSCTy;
++            newcomp.DGflag = details->second.DGflag;
++            newcomp.packetAddress = details->second.packetAddress;
++        }
+         components.push_back(newcomp);
+ 
+         //  std::clog << "fib-processor:" << "service %8x (comp %d) is packet\n", SId, compnr) << std::endl;
+@@ -1265,6 +1284,7 @@ void FIBProcessor::clearEnsemble()
+ {
+     std::lock_guard<std::mutex> lock(mutex);
+     components.clear();
++    packetComponentDetails.clear();
+     subChannels.resize(64);
+     services.clear();
+     serviceRepeatCount.clear();
