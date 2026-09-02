@@ -55,6 +55,7 @@ SRC_URI = " \
     ${KERNEL_PATCH_BINUTILS241_V6} \
     file://vtbl-ubi.patch \
     file://initramfs-mipsel.cpio.xz;unpack=0 \
+    ${KERNEL_PATCH_WIFI_EXTAUTH_32} \
 "
 
 export KCFLAGS = " -std=gnu17 \

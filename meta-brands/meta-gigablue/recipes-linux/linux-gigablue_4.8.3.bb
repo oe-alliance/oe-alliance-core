@@ -30,6 +30,7 @@ SRC_URI += "https://source.mynonpublic.com/gigablue/linux/gigablue-linux-${PV}-m
     ${KERNEL_PATCH_BINUTILS241_V4} \
     file://block2mtd.patch \
     file://initramfs-mipsel.cpio.xz;unpack=0 \
+    ${KERNEL_PATCH_WIFI_EXTAUTH_48} \
     "
 
 S = "${UNPACKDIR}/linux-${PV}"

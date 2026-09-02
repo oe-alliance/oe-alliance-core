@@ -48,6 +48,7 @@ SRC_URI += "https://source.mynonpublic.com/ini/bcm7358-linux-${KV}-${SRCDATE}.tg
     ${KERNEL_PATCH_BINUTILS241_V1} \
     file://block2mtd.patch \
     file://initramfs-mipsel.cpio.xz;unpack=0 \
+    ${KERNEL_PATCH_WIFI_EXTAUTH_312} \
     "
 
 export KCFLAGS = " -std=gnu17 \

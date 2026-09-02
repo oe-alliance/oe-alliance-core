@@ -1,0 +1,303 @@
+cfg80211: backport external authentication offload for WPA3-SAE
+
+Out-of-tree WiFi drivers hand SAE authentication to wpa_supplicant through
+NL80211_CMD_EXTERNAL_AUTH, which upstream only gained in v4.17. Without it
+WPA3 is unusable on these kernels even though the drivers support it.
+
+Backport of:
+  cfg80211/nl80211: Optional authentication offload to userspace
+    https://git.kernel.org/linus/40cbfa90218b
+  nl80211: Allow SAE Authentication for NL80211_CMD_CONNECT
+    https://git.kernel.org/linus/10773a7c09b3
+  nl80211: Fix external_auth check for offloaded authentication
+    https://git.kernel.org/linus/db8d93a7a355
+
+Differences from upstream, required by the 3.6 code base:
+  - conn_owner_nlportid is added to struct wireless_dev and set from
+    NL80211_ATTR_SOCKET_OWNER; upstream gained that field in v4.11.
+  - NL80211_ATTR_BSSID is added; the external auth handler needs it and
+    it does not exist before v4.15.
+  - NL80211_ATTR_SOCKET_OWNER itself does not exist yet and is added.
+  - SAE itself does not exist before v3.8. NL80211_AUTHTYPE_SAE and the
+    NL80211_FEATURE_SAE bit are added at their upstream values.
+  - net/wireless/rdev-ops.h does not exist yet, so the handler calls
+    rdev->ops->external_auth() directly instead of through a wrapper.
+  - net/wireless/trace.h does not exist yet, so the trace event is left
+    out.
+  - nl80211_valid_auth_type() takes no command here and only checks the
+    range, so adding the auth type is enough and no separate case for
+    NL80211_CMD_CONNECT is needed. AP mode accepts SAE as well as a
+    result, which upstream rejects.
+  - nl80211_connect() has no wdev_lock() here, so the connection owner is
+    recorded right after a successful cfg80211_connect().
+  - GENL_SET_ERR_MSG() is not available before v4.12 and is dropped.
+  - Upstream also stores disconnect_bssid when taking connection ownership.
+    That field does not exist here, and the netlink notifier that consumes
+    it is not backported either, so it is left out.
+  - Command and attribute numbers are pinned to their upstream values.
+    User space carries its own copy of these headers, so appending them at
+    the end of the enums would build fine and never interoperate.
+
+Upstream-Status: Backport
+
+--- a/include/linux/nl80211.h
++++ b/include/linux/nl80211.h
+@@ -708,6 +708,8 @@
+ 
+ 	NL80211_CMD_CH_SWITCH_NOTIFY,
+ 
++	NL80211_CMD_EXTERNAL_AUTH = 127,
++
+ 	/* add new commands above here */
+ 
+ 	/* used to define NL80211_CMD_MAX below */
+@@ -1506,6 +1508,13 @@
+ 
+ 	NL80211_ATTR_USER_REG_HINT_TYPE,
+ 
++	NL80211_ATTR_SOCKET_OWNER = 204,
++
++	NL80211_ATTR_BSSID = 245,
++
++	NL80211_ATTR_EXTERNAL_AUTH_ACTION = 260,
++	NL80211_ATTR_EXTERNAL_AUTH_SUPPORT,
++
+ 	/* add attributes here, update the policy in nl80211.c */
+ 
+ 	__NL80211_ATTR_AFTER_LAST,
+@@ -2471,6 +2480,7 @@
+ 	NL80211_AUTHTYPE_SHARED_KEY,
+ 	NL80211_AUTHTYPE_FT,
+ 	NL80211_AUTHTYPE_NETWORK_EAP,
++	NL80211_AUTHTYPE_SAE,
+ 
+ 	/* keep last */
+ 	__NL80211_AUTHTYPE_NUM,
+@@ -3000,6 +3010,7 @@
+ 	NL80211_FEATURE_HT_IBSS		= 1 << 1,
+ 	NL80211_FEATURE_INACTIVITY_TIMER = 1 << 2,
+ 	NL80211_FEATURE_CELL_BASE_REG_HINTS = 1 << 3,
++	NL80211_FEATURE_SAE				= 1 << 5,
+ };
+ 
+ /**
+@@ -3023,4 +3034,15 @@
+ 	NL80211_PROBE_RESP_OFFLOAD_SUPPORT_80211U =	1<<3,
+ };
+ 
++/**
++ * enum nl80211_external_auth_action - Action to perform with external
++ *     authentication request. Used by NL80211_ATTR_EXTERNAL_AUTH_ACTION.
++ * @NL80211_EXTERNAL_AUTH_START: Start the authentication.
++ * @NL80211_EXTERNAL_AUTH_ABORT: Abort the ongoing authentication.
++ */
++enum nl80211_external_auth_action {
++	NL80211_EXTERNAL_AUTH_START,
++	NL80211_EXTERNAL_AUTH_ABORT,
++};
++
+ #endif /* __LINUX_NL80211_H */
+--- a/include/net/cfg80211.h
++++ b/include/net/cfg80211.h
+@@ -1167,7 +1167,8 @@
+  * @ASSOC_REQ_DISABLE_HT:  Disable HT (802.11n)
+  */
+ enum cfg80211_assoc_req_flags {
+-	ASSOC_REQ_DISABLE_HT		= BIT(0),
++	ASSOC_REQ_DISABLE_HT			= BIT(0),
++	CONNECT_REQ_EXTERNAL_AUTH_SUPPORT	= BIT(3),
+ };
+ 
+ /**
+@@ -1416,6 +1417,23 @@
+ };
+ 
+ /**
++ * struct cfg80211_external_auth_params - Trigger External authentication.
++ *
++ * @action: action type / trigger for external authentication
++ * @bssid: BSSID of the peer to authenticate with
++ * @ssid: SSID of the AP
++ * @key_mgmt_suite: AKM suite of the respective authentication
++ * @status: status code, %WLAN_STATUS_SUCCESS for successful authentication
++ */
++struct cfg80211_external_auth_params {
++	enum nl80211_external_auth_action action;
++	u8 bssid[ETH_ALEN] __aligned(2);
++	struct cfg80211_ssid ssid;
++	unsigned int key_mgmt_suite;
++	u16 status;
++};
++
++/**
+  * struct cfg80211_ops - backend description for wireless configuration
+  *
+  * This struct is registered by fullmac card drivers and/or wireless stacks
+@@ -1834,6 +1852,8 @@
+ 		(*get_channel)(struct wiphy *wiphy,
+ 			       struct wireless_dev *wdev,
+ 			       enum nl80211_channel_type *type);
++	int	(*external_auth)(struct wiphy *wiphy, struct net_device *dev,
++				 struct cfg80211_external_auth_params *params);
+ };
+ 
+ /*
+@@ -2446,6 +2466,7 @@
+ 	int beacon_interval;
+ 
+ 	u32 ap_unexpected_nlpid;
++	u32 conn_owner_nlportid;
+ 
+ #ifdef CONFIG_CFG80211_WEXT
+ 	/* wext data */
+@@ -3576,4 +3597,15 @@
+ #define wiphy_WARN(wiphy, format, args...)			\
+ 	WARN(1, "wiphy: %s\n" format, wiphy_name(wiphy), ##args);
+ 
++/**
++ * cfg80211_external_auth_request - userspace request for authentication
++ * @netdev: network device
++ * @params: External authentication parameters
++ * @gfp: allocation flags
++ * Returns: 0 on success, < 0 on error
++ */
++int cfg80211_external_auth_request(struct net_device *netdev,
++				   struct cfg80211_external_auth_params *params,
++				   gfp_t gfp);
++
+ #endif /* __NET_CFG80211_H */
+--- a/net/wireless/nl80211.c
++++ b/net/wireless/nl80211.c
+@@ -355,6 +355,8 @@
+ 	[NL80211_ATTR_BG_SCAN_PERIOD] = { .type = NLA_U16 },
+ 	[NL80211_ATTR_WDEV] = { .type = NLA_U64 },
+ 	[NL80211_ATTR_USER_REG_HINT_TYPE] = { .type = NLA_U32 },
++	[NL80211_ATTR_SOCKET_OWNER] = { .type = NLA_FLAG },
++	[NL80211_ATTR_EXTERNAL_AUTH_SUPPORT] = { .type = NLA_FLAG },
+ };
+ 
+ /* policy for the key attributes */
+@@ -5642,7 +5644,18 @@
+ 		       sizeof(connect.ht_capa));
+ 	}
+ 
++	if (nla_get_flag(info->attrs[NL80211_ATTR_EXTERNAL_AUTH_SUPPORT])) {
++		if (!info->attrs[NL80211_ATTR_SOCKET_OWNER]) {
++			kfree(connkeys);
++			return -EINVAL;
++		}
++		connect.flags |= CONNECT_REQ_EXTERNAL_AUTH_SUPPORT;
++	}
++
+ 	err = cfg80211_connect(rdev, dev, &connect, connkeys);
++
++	if (!err && info->attrs[NL80211_ATTR_SOCKET_OWNER])
++		dev->ieee80211_ptr->conn_owner_nlportid = info->snd_pid;
+ 	if (err)
+ 		kfree(connkeys);
+ 	return err;
+@@ -6812,6 +6825,41 @@
+ 	return 0;
+ }
+ 
++static int nl80211_external_auth(struct sk_buff *skb, struct genl_info *info)
++{
++	struct cfg80211_registered_device *rdev = info->user_ptr[0];
++	struct net_device *dev = info->user_ptr[1];
++	struct cfg80211_external_auth_params params;
++
++	if (!rdev->ops->external_auth)
++		return -EOPNOTSUPP;
++
++	if (!info->attrs[NL80211_ATTR_SSID])
++		return -EINVAL;
++
++	if (!info->attrs[NL80211_ATTR_BSSID])
++		return -EINVAL;
++
++	if (!info->attrs[NL80211_ATTR_STATUS_CODE])
++		return -EINVAL;
++
++	memset(&params, 0, sizeof(params));
++
++	params.ssid.ssid_len = nla_len(info->attrs[NL80211_ATTR_SSID]);
++	if (params.ssid.ssid_len == 0 ||
++	    params.ssid.ssid_len > IEEE80211_MAX_SSID_LEN)
++		return -EINVAL;
++	memcpy(params.ssid.ssid, nla_data(info->attrs[NL80211_ATTR_SSID]),
++	       params.ssid.ssid_len);
++
++	memcpy(params.bssid, nla_data(info->attrs[NL80211_ATTR_BSSID]),
++	       ETH_ALEN);
++
++	params.status = nla_get_u16(info->attrs[NL80211_ATTR_STATUS_CODE]);
++
++	return rdev->ops->external_auth(&rdev->wiphy, dev, &params);
++}
++
+ #define NL80211_FLAG_NEED_WIPHY		0x01
+ #define NL80211_FLAG_NEED_NETDEV	0x02
+ #define NL80211_FLAG_NEED_RTNL		0x04
+@@ -7442,6 +7490,14 @@
+ 				  NL80211_FLAG_NEED_RTNL,
+ 	},
+ 
++	{
++		.cmd = NL80211_CMD_EXTERNAL_AUTH,
++		.doit = nl80211_external_auth,
++		.policy = nl80211_policy,
++		.flags = GENL_ADMIN_PERM,
++		.internal_flags = NL80211_FLAG_NEED_NETDEV_UP |
++				  NL80211_FLAG_NEED_RTNL,
++	},
+ };
+ 
+ static struct genl_multicast_group nl80211_mlme_mcgrp = {
+@@ -8759,6 +8815,47 @@
+ 	.notifier_call = nl80211_netlink_notify,
+ };
+ 
++int cfg80211_external_auth_request(struct net_device *dev,
++				   struct cfg80211_external_auth_params *params,
++				   gfp_t gfp)
++{
++	struct wireless_dev *wdev = dev->ieee80211_ptr;
++	struct cfg80211_registered_device *rdev = wiphy_to_dev(wdev->wiphy);
++	struct sk_buff *msg;
++	void *hdr;
++
++	if (!wdev->conn_owner_nlportid)
++		return -EINVAL;
++
++	msg = nlmsg_new(NLMSG_DEFAULT_SIZE, gfp);
++	if (!msg)
++		return -ENOMEM;
++
++	hdr = nl80211hdr_put(msg, 0, 0, 0, NL80211_CMD_EXTERNAL_AUTH);
++	if (!hdr)
++		goto nla_put_failure;
++
++	if (nla_put_u32(msg, NL80211_ATTR_WIPHY, rdev->wiphy_idx) ||
++	    nla_put_u32(msg, NL80211_ATTR_IFINDEX, dev->ifindex) ||
++	    nla_put_u32(msg, NL80211_ATTR_AKM_SUITES, params->key_mgmt_suite) ||
++	    nla_put_u32(msg, NL80211_ATTR_EXTERNAL_AUTH_ACTION,
++			params->action) ||
++	    nla_put(msg, NL80211_ATTR_BSSID, ETH_ALEN, params->bssid) ||
++	    nla_put(msg, NL80211_ATTR_SSID, params->ssid.ssid_len,
++		    params->ssid.ssid))
++		goto nla_put_failure;
++
++	genlmsg_end(msg, hdr);
++	genlmsg_unicast(wiphy_net(&rdev->wiphy), msg,
++			wdev->conn_owner_nlportid);
++	return 0;
++
++ nla_put_failure:
++	nlmsg_free(msg);
++	return -ENOBUFS;
++}
++EXPORT_SYMBOL(cfg80211_external_auth_request);
++
+ /* initialisation/exit functions */
+ 
+ int nl80211_init(void)

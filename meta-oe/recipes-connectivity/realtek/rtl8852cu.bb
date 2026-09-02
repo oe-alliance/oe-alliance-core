@@ -2,19 +2,21 @@ SUMMARY = "Realtek rtw8852cu"
 HOMEPAGE = "http://www.realtek.com.tw"
 SECTION = "kernel/modules"
 LICENSE = "GPL-2.0-only"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=b234ee4d69f5fce4486a80fdaf4a4263"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=b1918d7d89f091725a3188ff95f7c72b"
 
 inherit module
-SRCREV = "a246437004417a999aa07be85a9674f3b0bbf4bd"
+
+PR = "r1"
+SRCREV = "${AUTOREV}"
 # Use short destsuffix — the driver has ~370 object files whose absolute paths
 # overflow ARG_MAX during kbuild linking on machines with long MACHINE names.
-SRC_URI = "git://github.com/lwfinger/rtw8852cu.git;protocol=https;branch=main;destsuffix=s \
-          file://0001-update-makefile.patch \
-"
+SRC_URI = "git://github.com/atvcaptain/rtl8852cu-wpa3.git;protocol=https;branch=main;destsuffix=s"
 
 S = "${UNPACKDIR}/s"
 
-EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR} KDIR=${STAGING_KERNEL_DIR}"
+# WPA3-SAE; the driver leaves this path disabled unless we ask for it
+EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR} KDIR=${STAGING_KERNEL_DIR} \
+    USER_EXTRA_CFLAGS=-DCONFIG_KERNEL_PATCH_EXTERNAL_AUTH"
 
 do_compile () {
     unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS CC LD CPP

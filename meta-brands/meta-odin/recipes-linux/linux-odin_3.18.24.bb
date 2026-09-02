@@ -26,6 +26,7 @@ SRC_URI += "https://source.mynonpublic.com/download/odin-linux-${PV}.tar.xz \
     ${KERNEL_PATCH_BINUTILS241_V1} \
     file://block2mtd.patch \
     file://initramfs-mipsel.cpio.xz;unpack=0 \
+    ${KERNEL_PATCH_WIFI_EXTAUTH_318} \
 "
 
 export KCFLAGS = " -Wno-error=incompatible-pointer-types \

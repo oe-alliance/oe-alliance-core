@@ -24,6 +24,7 @@ SRC_URI += "https://source.mynonpublic.com/amiko/amiko-linux-${PV}-${SRCDATE}.ta
     file://initramfs-subdirboot.cpio.gz;unpack=0 \
     file://findkerneldevice.sh \
     file://extend_modules_space.patch \
+    ${KERNEL_PATCH_WIFI_EXTAUTH_44} \
 "
 
 S = "${UNPACKDIR}/linux-${PV}"

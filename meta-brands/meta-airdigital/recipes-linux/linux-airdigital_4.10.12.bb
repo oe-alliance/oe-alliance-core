@@ -29,6 +29,7 @@ SRC_URI += "https://source.mynonpublic.com/zgemma/linux-${PV}-${ARCH}.tar.gz;nam
     file://Hauppauge-dualHD.patch \
     file://quirks.patch \
     file://dib0700.patch \
+    ${KERNEL_PATCH_WIFI_EXTAUTH_410} \
     "
 
 SRC_URI:append:mipsel = " \

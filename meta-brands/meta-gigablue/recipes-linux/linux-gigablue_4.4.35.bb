@@ -24,6 +24,7 @@ SRC_URI += "https://source.mynonpublic.com/gigablue/mv200/gigablue-linux-${PV}-$
     file://findkerneldevice.sh \
     file://fix_highspeed_sdio.patch \
     file://extend_modules_space.patch \
+    ${KERNEL_PATCH_WIFI_EXTAUTH_44} \
 "
 
 SRC_URI:append:gbtrio4k = " \

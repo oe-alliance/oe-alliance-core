@@ -33,6 +33,7 @@ SRC_URI += "https://source.mynonpublic.com/broadmedia/broadmedia-linux-${PV}-${S
     ${KERNEL_PATCH_BINUTILS241_V2} \
     file://block2mtd.patch \
     file://initramfs-mipsel.cpio.xz;unpack=0 \
+    ${KERNEL_PATCH_WIFI_EXTAUTH_41} \
     "
 
 S = "${UNPACKDIR}/linux-${PV}"

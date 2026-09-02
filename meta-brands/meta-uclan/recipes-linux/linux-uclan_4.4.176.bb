@@ -28,6 +28,7 @@ SRC_URI += "https://source.mynonpublic.com/uclan/uclan-linux-${PV}-${SRCDATE}.ta
     file://findkerneldevice.sh \
     ${KERNEL_PATCH_BINUTILS241_V3} \
     ${KERNEL_PATCH_WIFI_CFG80211} \
+    ${KERNEL_PATCH_WIFI_EXTAUTH_44} \
 "
 
 S = "${UNPACKDIR}/linux-${PV}"

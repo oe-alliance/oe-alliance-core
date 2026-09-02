@@ -24,6 +24,7 @@ SRC_URI = "https://source.mynonpublic.com/zgemma/linux-${PV}-${SRCDATE}-${ARCH}.
 	${KERNEL_PATCH_BINUTILS241_V3} \
 	${KERNEL_PATCH_WIFI_CFG80211} \
 	file://block2mtd.patch \
+	${KERNEL_PATCH_WIFI_EXTAUTH_44} \
 "
 
 SRC_URI:append:h8 = " file://0101-hi3716mv430-dts-move-aon-gpio7-gpio5.patch"

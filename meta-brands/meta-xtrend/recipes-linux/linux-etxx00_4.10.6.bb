@@ -38,6 +38,7 @@ SRC_URI += "https://source.mynonpublic.com/xtrend/linux-${PV}-${ARCH}.tar.gz \
     ${KERNEL_PATCH_BINUTILS241_V5} \
     file://block2mtd.patch \
     file://initramfs-mipsel.cpio.xz;unpack=0 \
+    ${KERNEL_PATCH_WIFI_EXTAUTH_410} \
     "
 
 S = "${UNPACKDIR}/linux-${PV}"

@@ -1,17 +1,26 @@
-SUMMARY = "Ralink RTL8192EU WPA2"
-HOMEPAGE = "http://www.realtek.com.tw"
+SUMMARY = "Realtek RTL8192EU USB wireless driver"
+HOMEPAGE = "http://www.realtek.com/"
 SECTION = "kernel/modules"
 LICENSE = "LGPL-3.0-only"
 LIC_FILES_CHKSUM = "file://README.md;md5=cab676681a0415e7c5d9a42fd47514df"
 
 inherit module
 
+PR = "r1"
+
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 SRCREV = "${AUTOREV}"
-SRC_URI = "git://github.com/atvcaptain/rtl8192eu-5.11.2.3.git;protocol=https;branch=5.11.2.3"
+SRC_URI = "git://github.com/atvcaptain/rtl8192eu-5.11.2.3.git;protocol=https;branch=5.11.2.3 \
+           file://0001-add-strscpy-compat-for-kernels-before-4.3.patch \
+"
 
 EXTRA_OEMAKE = "KSRC=${STAGING_KERNEL_DIR}"
+
+require kcflags.inc
+
+# WPA3-SAE, through KCFLAGS because this Makefile has no USER_EXTRA_CFLAGS hook
+KCFLAGS:append = " -DCONFIG_KERNEL_PATCH_EXTERNAL_AUTH"
 
 do_install() {
     install -d ${D}${nonarch_base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/net/wireless

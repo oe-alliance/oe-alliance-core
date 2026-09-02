@@ -24,6 +24,7 @@ SRC_URI += "https://source.mynonpublic.com/beyonwiz/beyonwiz-linux-${PV}-${SRCDA
     file://initramfs-subdirboot.cpio.gz;unpack=0 \
     file://findkerneldevice.sh \
     file://extend_modules_space.patch \
+    ${KERNEL_PATCH_WIFI_EXTAUTH_44} \
 "
 
 S = "${UNPACKDIR}/linux-${PV}"

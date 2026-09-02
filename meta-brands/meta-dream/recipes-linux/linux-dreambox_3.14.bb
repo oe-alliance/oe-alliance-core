@@ -27,6 +27,7 @@ SRC_URI = " \
     ${KERNEL_PATCH_BINUTILS241_V6} \
     ${KERNEL_PATCH_GCC_SERIES} \
     file://chkroot-multiboot.cpio.xz;unpack=0 \
+    ${KERNEL_PATCH_WIFI_EXTAUTH_314} \
 "
 
 SRC_URI[kernel.md5sum] = "b621207b3f6ecbb67db18b13258f8ea8"

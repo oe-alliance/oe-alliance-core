@@ -28,6 +28,7 @@ SRC_URI += "https://source.mynonpublic.com/ceryon/ceryon-linux-${PV}-${ARCH}.tar
     ${KERNEL_PATCHES_DVB_MYGICA_V335} \
     file://0002-cp1emu-do-not-use-bools-for-arithmetic.patch \
     file://0005-xbox-one-tuner-4.10.patch \
+    ${KERNEL_PATCH_WIFI_EXTAUTH_410} \
     "
 
 SRC_URI:append:arm = " \

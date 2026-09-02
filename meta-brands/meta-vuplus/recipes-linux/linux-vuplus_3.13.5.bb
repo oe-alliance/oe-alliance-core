@@ -9,7 +9,7 @@ RPROVIDES:${KERNEL_PACKAGE_NAME}-image += "kernel-${KERNEL_IMAGETYPE}"
 
 inherit kernel machine_kernel_pr kernel-fixups
 
-MACHINE_KERNEL_PR = "r6"
+MACHINE_KERNEL_PR = "r7"
 
 SRC_URI[md5sum] = "19e9956653437b99b4fa6ec3e16a3e99"
 SRC_URI[sha256sum] = "ef7fb307582ff243aacff8a13025fe028634aaf650ada309991ae03622962f61"
@@ -50,6 +50,7 @@ SRC_URI = "https://source.mynonpublic.com/vuplus/release/kernel/stblinux-${KV}.t
     file://CONFIG_DVB_SP2.patch \
     file://dvbsky.patch \
     ${KERNEL_PATCH_BINUTILS241_V1} \
+    ${KERNEL_PATCH_WIFI_EXTAUTH_313} \
     file://block2mtd.patch \
     file://initramfs-mipsel.cpio.xz;unpack=0 \
     "

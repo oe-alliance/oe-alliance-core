@@ -23,6 +23,7 @@ SRC_URI = "https://source.mynonpublic.com/dreambox/${BPN}-v${PV}.tar.xz \
            ${KERNEL_PATCH_BINUTILS241_V4} \
            ${KERNEL_PATCH_FIX_HEADER} \
            ${KERNEL_PATCH_FIX_CONSTEXPR} \
+           ${KERNEL_PATCH_WIFI_EXTAUTH_49} \
 "
 
 SRC_URI[md5sum] = "2b77df9bf64f825925172790c54f8ead"

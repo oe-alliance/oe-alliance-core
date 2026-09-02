@@ -32,6 +32,7 @@ SRC_URI += "https://source.mynonpublic.com/unibox/linux-${KV}-${SRCDATE}.tar.gz 
     ${KERNEL_PATCH_BINUTILS241_V1} \
     file://block2mtd.patch \
     file://initramfs-mipsel.cpio.xz;unpack=0 \
+    ${KERNEL_PATCH_WIFI_EXTAUTH_314} \
     "
 
 export KCFLAGS = " -std=gnu17 \

@@ -54,6 +54,7 @@ SRC_URI += "https://source.mynonpublic.com/tripledot/${MACHINE}-linux-${PV}-base
         file://0004-makefile-disable-warnings.patch \
         file://block2mtd.patch \
         file://initramfs-mipsel.cpio.xz;unpack=0 \
+        ${KERNEL_PATCH_WIFI_EXTAUTH_314} \
         "
 
 export KCFLAGS = " -std=gnu17 \
