@@ -1,0 +1,21 @@
+From: OpenATV <info@openatv.org>
+Subject: [PATCH] cmake: do not strip the libraries while linking
+
+The old-dab fork links both library variants with -s, so the symbols are
+gone before OpenEmbedded gets to split the debug information off.  Leave
+stripping to the build system that packages the result.
+
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 0ae6a27..7c9d3f1 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -34,3 +34,3 @@ endif()
+ add_library(rtlsdr_shared SHARED ${rtlsdr_srcs})
+-target_link_libraries(rtlsdr_shared ${LIBUSB_LIBRARIES} -Wl,-s)
++target_link_libraries(rtlsdr_shared ${LIBUSB_LIBRARIES})
+ if(WIN32)
+@@ -45,3 +45,3 @@ endif()
+ add_library(rtlsdr_static STATIC ${rtlsdr_srcs})
+-target_link_libraries(rtlsdr_static ${LIBUSB_LIBRARIES} -s)
++target_link_libraries(rtlsdr_static ${LIBUSB_LIBRARIES})
+ if(WIN32)
