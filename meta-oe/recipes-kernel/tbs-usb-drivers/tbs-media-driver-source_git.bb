@@ -26,6 +26,7 @@ SRC_URI = " \
     file://0019-media-support-transitional-regmap-and-si2157-APIs.patch \
     file://0020-dvb-usb-guard-si2157-if_port-on-legacy-kernels.patch \
     file://0021-av201x-support-legacy-tuner-release-callback.patch \
+    file://0022-tbs5881-guard-si2168-ts-clock-inversion.patch \
 "
 SRCREV = "2ce787de9f6e81b4294692a45de15596ae2e1322"
 

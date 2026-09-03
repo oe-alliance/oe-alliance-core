@@ -1,0 +1,29 @@
+From 9bbd3a2cadf34d4d4a845fc69791d5cb30e3562b Mon Sep 17 00:00:00 2001
+From: Codex <codex@local>
+Date: Thu, 3 Sep 2026 14:00:00 +0200
+Subject: [PATCH] tbs5881: guard si2168 TS clock inversion on old kernels
+
+Some receiver kernels provide an early si2168 configuration structure
+without the ts_clock_inv member.  Keep using that kernel's matching private
+header and omit the optional setting there.
+
+---
+ drivers/media/usb/dvb-usb/tbs5881.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/media/usb/dvb-usb/tbs5881.c b/drivers/media/usb/dvb-usb/tbs5881.c
+index d90b349..6692f9a 100644
+--- a/drivers/media/usb/dvb-usb/tbs5881.c
++++ b/drivers/media/usb/dvb-usb/tbs5881.c
+@@ -508,7 +508,9 @@ static int tbs5881_frontend_attach(struct dvb_usb_adapter *adap)
+ #ifndef TBS_NO_SI2168_TS_CLOCK_GAPPED
+ 	si2168_config.ts_clock_gapped = true;
+ #endif
++#ifndef TBS_NO_SI2168_TS_CLOCK_INV
+ 	si2168_config.ts_clock_inv = true;
++#endif
+ 	memset(&info, 0, sizeof(struct i2c_board_info));
+ 	strscpy(info.type, "si2168", I2C_NAME_SIZE);
+ 	info.addr = 0x64;
+-- 
+2.45.2.windows.1

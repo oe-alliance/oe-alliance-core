@@ -23,6 +23,7 @@ B = "${WORKDIR}/build"
 TBS_SOURCE_ROOT = "${STAGING_DATADIR}/tbs-media-driver-source"
 
 TBS_SOURCE_FILES ?= ""
+TBS_FALLBACK_HEADERS ?= ""
 TBS_KBUILD_MODULES ?= ""
 TBS_COMPOSITE_MODULE ?= ""
 TBS_COMPOSITE_OBJECTS ?= ""
@@ -194,22 +195,63 @@ do_configure() {
 			'ccflags-y += -DTBS_LEGACY_REG_SEQUENCE=1' \
 			>> ${B}/tbs-kernel-compat.mk
 	fi
-	if [ -f ${STAGING_KERNEL_DIR}/drivers/media/dvb-frontends/si2168.h ] && \
-		! grep -q 'ts_clock_gapped' \
-		${STAGING_KERNEL_DIR}/drivers/media/dvb-frontends/si2168.h; then
-		printf '%s\n' \
-			'ccflags-y += -DTBS_NO_SI2168_TS_CLOCK_GAPPED=1' \
-			>> ${B}/tbs-kernel-compat.mk
+	si2168_header=""
+	for candidate in \
+		${STAGING_KERNEL_DIR}/drivers/media/dvb-frontends/si2168.h \
+		${STAGING_KERNEL_DIR}/drivers/media/dvb/frontends/si2168.h; do
+		if [ -f "$candidate" ]; then
+			si2168_header=$candidate
+			break
+		fi
+	done
+	if [ -n "$si2168_header" ]; then
+		if ! grep -q 'ts_clock_gapped' "$si2168_header"; then
+			printf '%s\n' \
+				'ccflags-y += -DTBS_NO_SI2168_TS_CLOCK_GAPPED=1' \
+				>> ${B}/tbs-kernel-compat.mk
+		fi
+		if ! grep -q 'ts_clock_inv' "$si2168_header"; then
+			printf '%s\n' \
+				'ccflags-y += -DTBS_NO_SI2168_TS_CLOCK_INV=1' \
+				>> ${B}/tbs-kernel-compat.mk
+		fi
 	fi
-	if [ -f ${STAGING_KERNEL_DIR}/drivers/media/tuners/si2157.h ] && \
-		! grep -q 'if_port' \
-		${STAGING_KERNEL_DIR}/drivers/media/tuners/si2157.h; then
+	si2157_header=""
+	for candidate in \
+		${STAGING_KERNEL_DIR}/drivers/media/tuners/si2157.h \
+		${STAGING_KERNEL_DIR}/drivers/media/dvb/frontends/si2157.h; do
+		if [ -f "$candidate" ]; then
+			si2157_header=$candidate
+			break
+		fi
+	done
+	if [ -n "$si2157_header" ] && \
+		! grep -q 'if_port' "$si2157_header"; then
 		printf '%s\n' \
 			'ccflags-y += -DTBS_NO_SI2157_IF_PORT=1' \
 			>> ${B}/tbs-kernel-compat.mk
 	fi
 	for source in ${TBS_SOURCE_FILES}; do
 		install -m 0644 ${TBS_SOURCE_ROOT}/$source ${B}/
+	done
+	# Use the source-tree copy only when the selected machine kernel does not
+	# provide this private frontend/tuner configuration header.  A header from
+	# a newer TBS tree must never override the ABI of an existing kernel module.
+	for header in ${TBS_FALLBACK_HEADERS}; do
+		header_name=${header##*/}
+		kernel_header=""
+		for kernel_dir in \
+			drivers/media/dvb-frontends \
+			drivers/media/dvb/frontends \
+			drivers/media/tuners; do
+			if [ -f ${STAGING_KERNEL_DIR}/$kernel_dir/$header_name ]; then
+				kernel_header=${STAGING_KERNEL_DIR}/$kernel_dir/$header_name
+				break
+			fi
+		done
+		if [ -z "$kernel_header" ]; then
+			install -m 0644 ${TBS_SOURCE_ROOT}/$header ${B}/
+		fi
 	done
 }
 
