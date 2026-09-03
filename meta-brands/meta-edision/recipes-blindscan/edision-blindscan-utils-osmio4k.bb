@@ -13,7 +13,7 @@ PACKAGES = "edision-blindscan-dvbs-utils-osmio4k edision-blindscan-dvbc-utils-os
 
 PV = "20200313"
 
-SRC_URI = "https://source.mynonpublic.com/edision/edision-blindscan-utils-${MACHINE}-${PV}.zip"
+SRC_URI = "https://source.mynonpublic.com/edision/edision-blindscan-utils-${MACHINEBUILD}-${PV}.zip"
 
 S = "${UNPACKDIR}"
 
