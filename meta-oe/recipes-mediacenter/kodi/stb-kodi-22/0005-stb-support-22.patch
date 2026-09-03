@@ -38,7 +38,7 @@ Subject: [PATCH] stb-support-22
  xbmc/windowing/egl/EGLNativeTypeVuplus.cpp    |  177 ++
  xbmc/windowing/egl/EGLNativeTypeVuplus.h      |   60 +
  xbmc/windowing/egl/EGLQuirks.h                |   42 +
- xbmc/windowing/egl/EGLWrapper.cpp             |  489 +++++
+ xbmc/windowing/egl/EGLWrapper.cpp             |  492 +++++
  xbmc/windowing/egl/EGLWrapper.h               |   76 +
  xbmc/windowing/egl/WinEventsSTB.cpp           |   92 +
  xbmc/windowing/egl/WinEventsSTB.h             |   47 +
@@ -2163,7 +2163,7 @@ index 1832271663..77d91ccd55 100644
      X(EGL_CONTEXT_LOST),
  });
  
-+#if !defined(TARGET_STB)
++#if defined(EGL_KHR_debug)
  constexpr auto eglErrorType = make_map<EGLint, std::string_view>({
      X(EGL_DEBUG_MSG_CRITICAL_KHR),
      X(EGL_DEBUG_MSG_ERROR_KHR),
@@ -2175,7 +2175,7 @@ index 1832271663..77d91ccd55 100644
  
  } // namespace
  
-+#if !defined(TARGET_STB)
++#if defined(EGL_KHR_debug)
  void EglErrorCallback(EGLenum error,
                        const char* command,
                        EGLint messageType,
@@ -2191,7 +2191,7 @@ index 1832271663..77d91ccd55 100644
  CEGLContextUtils::CEGLContextUtils(EGLenum platform, std::string const& platformExtension)
  : m_platform{platform}
  {
-+#if !defined(TARGET_STB)
++#if defined(EGL_KHR_debug)
    if (CEGLUtils::HasClientExtension("EGL_KHR_debug"))
    {
      auto eglDebugMessageControl = CEGLUtils::GetRequiredProcAddress<PFNEGLDEBUGMESSAGECONTROLKHRPROC>("eglDebugMessageControlKHR");
@@ -2207,7 +2207,7 @@ index 1832271663..77d91ccd55 100644
    if (CEGLUtils::HasExtension(m_eglDisplay, "EGL_IMG_context_priority"))
      contextAttribs.Add({{EGL_CONTEXT_PRIORITY_LEVEL_IMG, EGL_CONTEXT_PRIORITY_HIGH_IMG}});
  
-+#if !defined(TARGET_STB)
++#if defined(EGL_KHR_create_context)
    if (CEGLUtils::HasExtension(m_eglDisplay, "EGL_KHR_create_context") &&
        CServiceBroker::GetSettingsComponent()->GetAdvancedSettings()->m_openGlDebugging)
    {
@@ -5365,7 +5365,7 @@ new file mode 100644
 index 0000000000..3eb1f9b42a
 --- /dev/null
 +++ b/xbmc/windowing/egl/EGLWrapper.cpp
-@@ -0,0 +1,489 @@
+@@ -0,0 +1,492 @@
 +/*
 + *      Copyright (C) 2005-2013 Team XBMC
 + *      http://xbmc.org
@@ -5385,6 +5385,7 @@ index 0000000000..3eb1f9b42a
 + *  <http://www.gnu.org/licenses/>.
 + *
 + */
++#include "EGLNativeType.h"
 +#include "system.h"
 +
 +#if defined(TARGET_DREAMBOX)
@@ -5508,6 +5509,8 @@ index 0000000000..3eb1f9b42a
 +      (nativeGuess = CreateEGLNativeType<CEGLNativeTypeMali>(implementation))
 +#elif defined(TARGET_EDISION)
 +      (nativeGuess = CreateEGLNativeType<CEGLNativeTypeV3D>(implementation))
++#else
++      false
 +#endif
 +    )
 +  {

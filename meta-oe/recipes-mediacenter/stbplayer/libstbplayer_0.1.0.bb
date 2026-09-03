@@ -2,7 +2,7 @@ SUMMARY = "Stable hardware-video backend ABI for STB Kodi"
 DESCRIPTION = "A small C ABI, loader and probe tool for machine-specific STB video backends."
 HOMEPAGE = "https://github.com/oe-alliance"
 
-PR = "r43"
+PR = "r58"
 
 LICENSE = "GPL-2.0-or-later"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=45071750435f2d50d503492ef8e003db"
@@ -10,6 +10,9 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=45071750435f2d50d503492ef8e003db"
 SRCREV = "${AUTOREV}"
 SRC_URI = "git://github.com/oe-alliance/stb-kodi-libstbplayer.git;protocol=https;branch=main \
            file://0001-bcm-dvb-add-gigablue-startup-variant.patch \
+           file://0002-bcm-dvb-sync-kodi-master-clock.patch \
+           file://0003-bcm-dvb-add-nexus-host-stc.patch \
+           file://0004-bcm-dvb-catch-up-startup-preroll.patch \
 "
 
 inherit cmake pkgconfig
@@ -23,6 +26,7 @@ PACKAGE_ARCH = "${MACHINE}"
 # across all Kodi-capable HiSi receivers and avoids maintaining model lists.
 HISI_STB = "${@'1' if (d.getVar('SOC_FAMILY') or '').startswith('hisi') else '0'}"
 BCM_DVB_STB = "${@'1' if (d.getVar('SOC_FAMILY') or '').startswith('bcm') and d.getVar('TARGET_ARCH') in ('arm', 'mipsel') else '0'}"
+VUPLUS_MIPSEL_STB = "${@'1' if d.getVar('BRAND_OEM') == 'vuplus' and d.getVar('TARGET_ARCH') == 'mipsel' else '0'}"
 DREAM_AMLOGIC_STB = "${@'1' if d.getVar('MACHINE') in ('dreamone', 'dreamtwo') and d.getVar('SOC_FAMILY') == 'meson64' else '0'}"
 BCM_DVB_VARIANT = "${@'dreambox' if (d.getVar('MACHINE') or '').startswith('dm') else ('gigablue' if (d.getVar('MACHINE') or '') in ('gb7252', 'gb72604', 'vuduo4klite') else ('vuplus' if (d.getVar('MACHINE') or '').startswith('vu') else ('type2' if (d.getVar('MACHINE') or '') in ('xc7362', 'xc7346') else 'normal')))}"
 BCM_DVB_CONFIG = "${@d.getVar('DVBMEDIASINK_CONFIG') or ''}"
@@ -48,6 +52,7 @@ EXTRA_OECMAKE = " \
     -DSTBP_BCM_DVB_HAVE_VP9=${@'ON' if '--with-vb9' in d.getVar('BCM_DVB_CONFIG').split() else 'OFF'} \
     -DSTBP_BCM_DVB_HAVE_SPARK=${@'ON' if '--with-spark' in d.getVar('BCM_DVB_CONFIG').split() else 'OFF'} \
     -DSTBP_BCM_DVB_LIMITED_MPEG4V2=${@'ON' if '--with-limited-mpeg4v2' in d.getVar('BCM_DVB_CONFIG').split() else 'OFF'} \
+    -DSTBP_BCM_DVB_NEXUS_STC=${@'ON' if d.getVar('BCM_DVB_STB') == '1' else 'OFF'} \
 "
 
 PACKAGES += "${PN}-backend-hisi-dvb ${PN}-backend-bcm-dvb ${PN}-backend-dream-aml"
@@ -56,6 +61,10 @@ FILES:${PN}-dev += "${includedir}/stbplayer"
 FILES:${PN}-backend-hisi-dvb = "${libdir}/stbplayer/libstbplayer-backend-hisi-dvb.so"
 RDEPENDS:${PN}-backend-hisi-dvb = "${PN}"
 FILES:${PN}-backend-bcm-dvb = "${libdir}/stbplayer/libstbplayer-backend-bcm-dvb.so"
-RDEPENDS:${PN}-backend-bcm-dvb = "${PN}"
+# The old Vu+ MIPSel DVB driver owns the only full Nexus STC channel and does
+# not export an accessor for its decoder-associated SimpleStcChannel.  The
+# bridge can therefore load but cannot drive that channel (writes return
+# ENODEV).  These receivers use the proven decoder-PTS fallback instead.
+RDEPENDS:${PN}-backend-bcm-dvb = "${PN}${@' stb-stc-host' if d.getVar('BCM_DVB_STB') == '1' and d.getVar('VUPLUS_MIPSEL_STB') != '1' else ''}"
 FILES:${PN}-backend-dream-aml = "${libdir}/stbplayer/libstbplayer-backend-dream-aml.so"
 RDEPENDS:${PN}-backend-dream-aml = "${PN}"

@@ -1,0 +1,47 @@
+From 6fe4511c5a3dc14c837232d0bf67a17ff67cf510 Mon Sep 17 00:00:00 2001
+From: OpenATV <openatv@gmail.com>
+Date: Wed, 2 Sep 2026 21:00:00 +0200
+Subject: [PATCH] inputstream.adaptive: clamp VOD seeks to a valid position
+
+Kodi can request a seek exactly at, or slightly beyond, the duration shown
+by the inputstream. CSession::SeekTime cannot select a segment for that
+position. The failed seek may also make restoring the previous readers fail,
+after which PosTime deletes all streams and playback ends as if EOF had been
+reached.
+
+Clamp finite VOD seeks to the final millisecond before the reported end. This
+keeps the request inside the last segment and lets playback finish normally.
+Live streams retain their existing live-window handling in CSession.
+
+Upstream-Status: Pending
+---
+ src/main.cpp | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+
+diff --git a/src/main.cpp b/src/main.cpp
+index 9a7da10..e6807f1 100644
+--- a/src/main.cpp
++++ b/src/main.cpp
+@@ -459,6 +459,20 @@ bool CInputStreamAdaptive::PosTime(int ms)
+   if (!m_session)
+     return false;
+ 
++  if (!m_session->IsLive())
++  {
++    const uint64_t totalTimeMs = m_session->GetTotalTimeMs();
++    if (totalTimeMs > 0 && ms >= 0 && static_cast<uint64_t>(ms) >= totalTimeMs)
++    {
++      const int requestedTimeMs = ms;
++      ms = static_cast<int>(totalTimeMs - 1);
++      LOG::Log(LOGDEBUG,
++               "PosTime - Requested position %d ms is at or beyond VOD end %llu ms, "
++               "clamping to %d ms.",
++               requestedTimeMs, static_cast<unsigned long long>(totalTimeMs), ms);
++    }
++  }
++
+   LOG::Log(LOGINFO, "PosTime (%d)", ms);
+ 
+   const uint64_t currentTimeMs = m_session->GetElapsedTimeMs();
+-- 
+2.43.0

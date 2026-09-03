@@ -1,0 +1,154 @@
+From: OpenATV Kodi Team <kodi@openatv.org>
+Subject: [PATCH] stbplayer: normalize Broadcom H.264 SPS timing
+
+Some Matroska files carry authoritative 25 fps timestamps while their H.264
+SPS still advertises 23.976 fps. Broadcom DVB decoders pace pictures from the
+SPS even when fallback_framerate is set, so ALSA audio advances about four
+percent faster than video. Rewrite the avcC SPS timing from Kodi's demuxer
+framerate before the existing Annex-B conversion on the bcm-dvb backend.
+
+diff --git a/xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecSTB.cpp b/xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecSTB.cpp
+--- a/xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecSTB.cpp
++++ b/xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecSTB.cpp
+@@ -10,9 +10,17 @@
+ #include "utils/BitstreamConverter.h"
+ #include "utils/log.h"
+ 
++extern "C"
++{
++#include <libavcodec/bsf.h>
++#include <libavutil/mem.h>
++#include <libavutil/opt.h>
++}
++
+ #include <algorithm>
+ #include <cmath>
+ #include <cstdlib>
++#include <cstring>
+ #include <limits>
+ #include <mutex>
+ #include <vector>
+@@ -26,6 +34,69 @@ bool HasAnnexBStartCode(const uint8_t* data, size_t size)
+           (size >= 3 && data[0] == 0 && data[1] == 0 && data[2] == 1));
+ }
+ 
++bool RewriteH264ExtradataFrameRate(const CDVDStreamInfo& hints,
++                                   const uint8_t* data,
++                                   size_t size,
++                                   std::vector<uint8_t>& rewritten)
++{
++  if (data == nullptr || size == 0 || size > static_cast<size_t>(std::numeric_limits<int>::max()) ||
++      hints.fpsrate <= 0 || hints.fpsscale <= 0)
++    return false;
++
++  const AVBitStreamFilter* filter = av_bsf_get_by_name("h264_metadata");
++  AVBSFContext* context = nullptr;
++  if (filter == nullptr || av_bsf_alloc(filter, &context) < 0 || context == nullptr)
++    return false;
++
++  bool success = false;
++  context->par_in->codec_type = AVMEDIA_TYPE_VIDEO;
++  context->par_in->codec_id = AV_CODEC_ID_H264;
++  context->par_in->width = hints.width;
++  context->par_in->height = hints.height;
++  context->time_base_in = AVRational{hints.fpsscale, hints.fpsrate};
++  const std::string tickRate = std::to_string(static_cast<int64_t>(hints.fpsrate) * 2) + "/" +
++                               std::to_string(hints.fpsscale);
++  context->par_in->extradata =
++      static_cast<uint8_t*>(av_mallocz(size + AV_INPUT_BUFFER_PADDING_SIZE));
++  if (context->par_in->extradata == nullptr)
++    goto done;
++  std::memcpy(context->par_in->extradata, data, size);
++  context->par_in->extradata_size = static_cast<int>(size);
++
++  if (av_opt_set(context->priv_data, "tick_rate", tickRate.c_str(), 0) < 0 ||
++      av_opt_set_int(context->priv_data, "fixed_frame_rate_flag", 1, 0) < 0 ||
++      av_bsf_init(context) < 0 || context->par_out->extradata == nullptr ||
++      context->par_out->extradata_size <= 0)
++    goto done;
++
++  rewritten.assign(context->par_out->extradata,
++                   context->par_out->extradata + context->par_out->extradata_size);
++  if (HasAnnexBStartCode(rewritten.data(), rewritten.size()))
++  {
++    CBitstreamConverter annexBToAvcc;
++    if (rewritten.size() > static_cast<size_t>(std::numeric_limits<int>::max()) ||
++        !annexBToAvcc.Open(AV_CODEC_ID_H264, rewritten.data(),
++                           static_cast<int>(rewritten.size()), false))
++    {
++      rewritten.clear();
++    }
++    else
++    {
++      const uint8_t* avcc = annexBToAvcc.GetExtraData();
++      const int avccSize = annexBToAvcc.GetExtraSize();
++      if (avcc == nullptr || avccSize < 7)
++        rewritten.clear();
++      else
++        rewritten.assign(avcc, avcc + avccSize);
++    }
++  }
++  success = rewritten.size() >= 7 && rewritten[0] == 1;
++
++done:
++  av_bsf_free(&context);
++  return success;
++}
++
+ bool ConvertHEVCDecoderConfiguration(const uint8_t* data,
+                                      size_t size,
+                                      std::vector<uint8_t>& annexB,
+@@ -184,7 +255,8 @@ bool CDVDVideoCodecSTB::ConfigureBitstream(const CDVDStreamInfo& hints,
+                                            const uint8_t*& extraData,
+                                            size_t& extraDataSize,
+                                            uint32_t& streamFlags,
+-                                           bool preserveAllHevcArrays)
++                                           bool preserveAllHevcArrays,
++                                           bool rewriteH264FrameRate)
+ {
+   extraData = hints.extradata.GetData();
+   extraDataSize = hints.extradata.GetSize();
+@@ -194,6 +266,21 @@ bool CDVDVideoCodecSTB::ConfigureBitstream(const CDVDStreamInfo& hints,
+   streamFlags |= STBP_STREAM_ANNEX_B;
+   if (extraDataSize > 0)
+   {
++    if (hints.codec == AV_CODEC_ID_H264 && rewriteH264FrameRate)
++    {
++      if (RewriteH264ExtradataFrameRate(hints, extraData, extraDataSize, m_codecData))
++      {
++        extraData = m_codecData.data();
++        extraDataSize = m_codecData.size();
++        CLog::Log(LOGINFO, "CDVDVideoCodecSTB: H.264 SPS timing normalized to {}/{} fps",
++                  hints.fpsrate, hints.fpsscale);
++      }
++      else
++      {
++        CLog::Log(LOGWARNING,
++                  "CDVDVideoCodecSTB: unable to normalize H.264 SPS timing; using stream metadata");
++      }
++    }
+     if (hints.codec == AV_CODEC_ID_HEVC && !HasAnnexBStartCode(extraData, extraDataSize) &&
+         !ConvertHEVCDecoderConfiguration(extraData, extraDataSize, m_codecData,
+                                          !preserveAllHevcArrays))
+@@ -257,7 +344,7 @@ bool CDVDVideoCodecSTB::Open(CDVDStreamInfo& hints, CDVDCodecOptions& options)
+     return false;
+   }
+   if (!ConfigureBitstream(hints, extraData, extraDataSize, streamFlags,
+-                          backendName == "dream-aml"))
++                          backendName == "dream-aml", backendName == "bcm-dvb"))
+     return false;
+ 
+   m_session = std::make_shared<CSTBVideoSession>();
+diff --git a/xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecSTB.h b/xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecSTB.h
+--- a/xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecSTB.h
++++ b/xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecSTB.h
+@@ -48,7 +48,8 @@ private:
+                           const uint8_t*& extraData,
+                           size_t& extraDataSize,
+                           uint32_t& streamFlags,
+-                          bool preserveAllHevcArrays);
++                          bool preserveAllHevcArrays,
++                          bool rewriteH264FrameRate);
+ 
+   CDVDStreamInfo m_hints;
+   std::shared_ptr<CSTBVideoSession> m_session;

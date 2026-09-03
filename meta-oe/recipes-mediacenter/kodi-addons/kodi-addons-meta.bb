@@ -6,6 +6,8 @@ require conf/license/license-gplv2.inc
 ALLOW_EMPTY:${PN} = "1"
 
 RDEPENDS:${PN} = " \
+    kodi-addon-repository-kodinerds \
+    kodi-addon-repository-kus-allinone \
     kodi-addon-visualization-fishbmc \
     kodi-addon-visualization-pictureit \
     kodi-addon-visualization-matrix \

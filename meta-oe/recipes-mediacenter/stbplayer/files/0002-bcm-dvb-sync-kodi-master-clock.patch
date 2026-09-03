@@ -1,0 +1,437 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: OpenATV STB Kodi <noreply@openatv.local>
+Date: Thu, 3 Sep 2026 12:00:00 +0200
+Subject: [PATCH] stbplayer: synchronize Broadcom video with Kodi master clock
+
+Expose a backend clock-sync operation and use the optional stb-stc-host
+bridge on Broadcom receivers.  GigaBlue receivers also pin the driver HDMI
+mode aliases for the decoder lifetime, preventing elementary-stream metadata
+from overriding Kodi's selected output mode.
+
+Backends without a host-clock bridge report the operation as unsupported.
+---
+diff --git a/backends/bcm_dvb.c b/backends/bcm_dvb.c
+index 7f04461..c93d8f9 100644
+--- a/backends/bcm_dvb.c
++++ b/backends/bcm_dvb.c
+@@ -23,6 +23,14 @@
+ 
+ #define BCM_VIDEO_DEVICE "/dev/dvb/adapter0/video0"
+ #define BCM_FALLBACK_FRAMERATE "/proc/stb/vmpeg/0/fallback_framerate"
++#define BCM_STC_HOST_DEVICE "/dev/stb-stc-host"
++#if defined(STBP_BCM_DVB_VARIANT_GIGABLUE)
++#define BCM_VIDEO_MODE "/proc/stb/video/videomode"
++#define BCM_VIDEO_MODE_24HZ "/proc/stb/video/videomode_24hz"
++#define BCM_VIDEO_MODE_50HZ "/proc/stb/video/videomode_50hz"
++#define BCM_VIDEO_MODE_60HZ "/proc/stb/video/videomode_60hz"
++#define BCM_VIDEO_MODE_SIZE 64U
++#endif
+ #define BCM_STREAMTYPE_MPEG2 0
+ #define BCM_STREAMTYPE_H264 1
+ #define BCM_STREAMTYPE_H263 2
+@@ -81,6 +89,14 @@ struct bcm_instance
+   uint64_t packets_queued;
+   uint64_t packets_dropped;
+   int64_t last_pts_90k;
++  int stc_host_enabled;
++  int stc_needs_seed;
++#if defined(STBP_BCM_DVB_VARIANT_GIGABLUE)
++  int video_modes_pinned;
++  char video_mode_24hz[BCM_VIDEO_MODE_SIZE];
++  char video_mode_50hz[BCM_VIDEO_MODE_SIZE];
++  char video_mode_60hz[BCM_VIDEO_MODE_SIZE];
++#endif
+ };
+ 
+ static void bcm_log(struct bcm_instance* instance,
+@@ -102,6 +118,127 @@ static void bcm_log_errno(struct bcm_instance* instance,
+   bcm_log(instance, level, message);
+ }
+ 
++static int write_stc_command(struct bcm_instance* instance, const char* command)
++{
++  const size_t size = strlen(command);
++  int fd;
++  ssize_t written;
++
++  fd = open(BCM_STC_HOST_DEVICE, O_WRONLY | O_CLOEXEC);
++  if (fd < 0)
++    return 0;
++  do
++  {
++    written = write(fd, command, size);
++  } while (written < 0 && errno == EINTR);
++  (void)close(fd);
++  if (written != (ssize_t)size)
++  {
++    bcm_log_errno(instance, STBP_LOG_WARNING, "setting Broadcom host STC");
++    return 0;
++  }
++  return 1;
++}
++
++#if defined(STBP_BCM_DVB_VARIANT_GIGABLUE)
++static int read_proc_value(const char* path, char* value, size_t capacity)
++{
++  ssize_t length;
++  int fd;
++
++  if (value == NULL || capacity < 2U)
++    return 0;
++  fd = open(path, O_RDONLY | O_CLOEXEC);
++  if (fd < 0)
++    return 0;
++  do
++  {
++    length = read(fd, value, capacity - 1U);
++  } while (length < 0 && errno == EINTR);
++  (void)close(fd);
++  if (length <= 0)
++    return 0;
++  while (length > 0 && (value[length - 1] == '\n' || value[length - 1] == '\r' ||
++                        value[length - 1] == ' ' || value[length - 1] == '\t'))
++    --length;
++  value[length] = '\0';
++  return length > 0;
++}
++
++static int write_proc_value(const char* path, const char* value)
++{
++  const size_t length = strlen(value);
++  ssize_t written;
++  int fd;
++
++  fd = open(path, O_WRONLY | O_CLOEXEC);
++  if (fd < 0)
++    return 0;
++  do
++  {
++    written = write(fd, value, length);
++  } while (written < 0 && errno == EINTR);
++  (void)close(fd);
++  return written == (ssize_t)length;
++}
++
++static void restore_gigablue_video_modes(struct bcm_instance* instance)
++{
++  if (!instance->video_modes_pinned)
++    return;
++  (void)write_proc_value(BCM_VIDEO_MODE_24HZ, instance->video_mode_24hz);
++  (void)write_proc_value(BCM_VIDEO_MODE_50HZ, instance->video_mode_50hz);
++  (void)write_proc_value(BCM_VIDEO_MODE_60HZ, instance->video_mode_60hz);
++  instance->video_modes_pinned = 0;
++  bcm_log(instance, STBP_LOG_INFO, "GigaBlue automatic HDMI modes restored");
++}
++
++static int pin_gigablue_video_modes(struct bcm_instance* instance)
++{
++  char current_mode[BCM_VIDEO_MODE_SIZE];
++
++  if (!read_proc_value(BCM_VIDEO_MODE, current_mode, sizeof(current_mode)) ||
++      !read_proc_value(BCM_VIDEO_MODE_24HZ, instance->video_mode_24hz,
++                       sizeof(instance->video_mode_24hz)) ||
++      !read_proc_value(BCM_VIDEO_MODE_50HZ, instance->video_mode_50hz,
++                       sizeof(instance->video_mode_50hz)) ||
++      !read_proc_value(BCM_VIDEO_MODE_60HZ, instance->video_mode_60hz,
++                       sizeof(instance->video_mode_60hz)))
++    return 0;
++
++  instance->video_modes_pinned = 1;
++  if (!write_proc_value(BCM_VIDEO_MODE_24HZ, current_mode) ||
++      !write_proc_value(BCM_VIDEO_MODE_50HZ, current_mode) ||
++      !write_proc_value(BCM_VIDEO_MODE_60HZ, current_mode))
++  {
++    restore_gigablue_video_modes(instance);
++    return 0;
++  }
++  bcm_log(instance, STBP_LOG_INFO, "GigaBlue automatic HDMI modes pinned to Kodi output");
++  return 1;
++}
++#endif
++
++static int seed_host_stc(struct bcm_instance* instance, int64_t pts_90k)
++{
++  char command[48];
++  int length;
++
++  if (pts_90k == STBP_PTS_NONE)
++    return 0;
++  length = snprintf(command, sizeof(command), "host %u", (uint32_t)pts_90k);
++  if (length <= 0 || (size_t)length >= sizeof(command) ||
++      !write_stc_command(instance, command))
++  {
++    instance->stc_needs_seed = 0;
++    return 0;
++  }
++  instance->stc_host_enabled = 1;
++  instance->stc_needs_seed = 0;
++  bcm_log(instance, STBP_LOG_INFO, "Broadcom video clock switched to host STC");
++  return 1;
++}
++
+ static int codec_to_stream_type(enum stbp_codec codec)
+ {
+   switch (codec)
+@@ -671,6 +808,10 @@ static enum stbp_result close_locked(struct bcm_instance* instance)
+   release_pending(instance);
+   if (instance->video_fd >= 0)
+   {
++    if (instance->stc_host_enabled)
++      (void)write_stc_command(instance, "auto");
++    instance->stc_host_enabled = 0;
++    instance->stc_needs_seed = 0;
+     if (ioctl(instance->video_fd, VIDEO_STOP) < 0 && errno != EINVAL)
+     {
+       bcm_log_errno(instance, STBP_LOG_WARNING, "VIDEO_STOP");
+@@ -683,6 +824,9 @@ static enum stbp_result close_locked(struct bcm_instance* instance)
+     (void)close(instance->video_fd);
+     instance->video_fd = -1;
+   }
++#if defined(STBP_BCM_DVB_VARIANT_GIGABLUE)
++  restore_gigablue_video_modes(instance);
++#endif
+ 
+   release_codec_data(instance);
+   instance->state = STBP_STATE_CLOSED;
+@@ -842,6 +986,15 @@ static enum stbp_result bcm_open(void* opaque,
+     bcm_log_errno(instance, STBP_LOG_ERROR, "VIDEO_SET_STREAMTYPE");
+     goto failed;
+   }
++#if defined(STBP_BCM_DVB_VARIANT_GIGABLUE)
++  /* This Nexus DVB driver independently selects one of its 24/50/60 Hz mode
++   * aliases from the elementary-stream header after VIDEO_PLAY.  That can
++   * override Kodi's container-PTS based choice (for example a 25 fps MKV with
++   * a stale 23.976 SPS). Pin every alias to Kodi's current output for the
++   * decoder lifetime; close_locked restores Enigma2's original mappings. */
++  if (!pin_gigablue_video_modes(instance))
++    bcm_log(instance, STBP_LOG_WARNING, "GigaBlue automatic HDMI modes could not be pinned");
++#endif
+   if (ioctl(instance->video_fd, VIDEO_PLAY) < 0)
+   {
+     bcm_log_errno(instance, STBP_LOG_ERROR, "VIDEO_PLAY");
+@@ -864,6 +1017,8 @@ static enum stbp_result bcm_open(void* opaque,
+   instance->state = STBP_STATE_OPEN;
+   instance->last_error = STBP_OK;
+   instance->last_pts_90k = STBP_PTS_NONE;
++  instance->stc_host_enabled = 0;
++  instance->stc_needs_seed = access(BCM_STC_HOST_DEVICE, W_OK) == 0;
+   bcm_log(instance, STBP_LOG_INFO, "Broadcom Linux-DVB PES video path opened");
+   final_result = STBP_OK;
+   goto done;
+@@ -908,9 +1063,15 @@ static enum stbp_result bcm_queue_packet(void* opaque, const struct stbp_packet*
+       goto done;
+     }
+     instance->send_codec_data = instance->codec_data_size != 0;
++    instance->stc_needs_seed = access(BCM_STC_HOST_DEVICE, W_OK) == 0;
+   }
+ 
+   pts = packet->pts_90k != STBP_PTS_NONE ? packet->pts_90k : packet->dts_90k;
++  /* Keep accurate-seek preroll in the decoder so H.264/HEVC reference state
++   * is rebuilt. Backends with a presentation-clock bridge decide when their
++   * clock can be bootstrapped. Kodi's GENERAL_RESYNC later supplies audio and
++   * video with one common clock after both stream players have entered their
++   * synchronized state. */
+   result = codec_uses_bcmv(instance->codec)
+                ? prepare_bcmv_packet_locked(instance, packet, pts)
+                : prepare_standard_packet_locked(instance, packet, pts);
+@@ -927,7 +1088,8 @@ static enum stbp_result bcm_queue_packet(void* opaque, const struct stbp_packet*
+     ++instance->packets_queued;
+     if ((packet->flags & STBP_PACKET_DROP) != 0)
+       ++instance->packets_dropped;
+-    instance->last_pts_90k = pts;
++    if ((packet->flags & STBP_PACKET_DROP) == 0)
++      instance->last_pts_90k = pts;
+   }
+ 
+ done:
+@@ -1018,6 +1180,7 @@ static enum stbp_result bcm_flush(void* opaque, int64_t next_pts_90k)
+       instance->state = STBP_STATE_OPEN;
+       instance->send_codec_data = instance->codec_data_size != 0;
+       instance->last_pts_90k = next_pts_90k;
++      instance->stc_needs_seed = access(BCM_STC_HOST_DEVICE, W_OK) == 0;
+     }
+   }
+   (void)pthread_mutex_unlock(&instance->mutex);
+@@ -1056,6 +1219,25 @@ static enum stbp_result bcm_reset(void* opaque)
+   return result;
+ }
+ 
++static enum stbp_result bcm_sync_clock(void* opaque, int64_t pts_90k)
++{
++  struct bcm_instance* instance = (struct bcm_instance*)opaque;
++  enum stbp_result result = STBP_OK;
++
++  if (instance == NULL || pts_90k == STBP_PTS_NONE)
++    return STBP_ERROR_INVALID_ARGUMENT;
++  (void)pthread_mutex_lock(&instance->mutex);
++  if (instance->state != STBP_STATE_OPEN && instance->state != STBP_STATE_PAUSED)
++    result = STBP_ERROR_BAD_STATE;
++  else if (access(BCM_STC_HOST_DEVICE, W_OK) != 0)
++    result = STBP_ERROR_UNSUPPORTED;
++  else if (!seed_host_stc(instance, pts_90k))
++    result = STBP_ERROR_IO;
++  instance->last_error = result;
++  (void)pthread_mutex_unlock(&instance->mutex);
++  return result;
++}
++
+ static enum stbp_result bcm_set_speed(void* opaque, struct stbp_rational speed)
+ {
+   (void)opaque;
+@@ -1080,7 +1262,11 @@ static enum stbp_result bcm_set_paused(void* opaque, int paused)
+     result = STBP_ERROR_IO;
+   }
+   else
++  {
+     instance->state = paused ? STBP_STATE_PAUSED : STBP_STATE_OPEN;
++    if (instance->stc_host_enabled)
++      (void)write_stc_command(instance, paused ? "freeze 1" : "freeze 0");
++  }
+   (void)pthread_mutex_unlock(&instance->mutex);
+   return result;
+ }
+@@ -1122,6 +1308,7 @@ static const struct stbp_backend_api_v1 bcm_api = {
+     bcm_flush,
+     bcm_drain,
+     bcm_reset,
++    bcm_sync_clock,
+     bcm_set_speed,
+     bcm_set_paused,
+     bcm_set_video_rect,
+diff --git a/backends/dream_aml.c b/backends/dream_aml.c
+index d7ad94c..4c1fa90 100644
+--- a/backends/dream_aml.c
++++ b/backends/dream_aml.c
+@@ -992,6 +992,13 @@ static enum stbp_result dream_reset(void* opaque)
+   return result;
+ }
+ 
++static enum stbp_result dream_sync_clock(void* opaque, int64_t pts_90k)
++{
++  if (opaque == NULL || pts_90k == STBP_PTS_NONE)
++    return STBP_ERROR_INVALID_ARGUMENT;
++  return STBP_ERROR_UNSUPPORTED;
++}
++
+ static enum stbp_result dream_set_speed(void* opaque, struct stbp_rational speed)
+ {
+   (void)opaque;
+@@ -1092,6 +1099,7 @@ static const struct stbp_backend_api_v1 dream_api = {
+     dream_flush,
+     dream_drain,
+     dream_reset,
++    dream_sync_clock,
+     dream_set_speed,
+     dream_set_paused,
+     dream_set_video_rect,
+diff --git a/backends/hisi_dvb.c b/backends/hisi_dvb.c
+index 1395e63..001372a 100644
+--- a/backends/hisi_dvb.c
++++ b/backends/hisi_dvb.c
+@@ -1583,6 +1583,13 @@ static enum stbp_result hisi_reset(void* opaque)
+   return result;
+ }
+ 
++static enum stbp_result hisi_sync_clock(void* opaque, int64_t pts_90k)
++{
++  if (opaque == NULL || pts_90k == STBP_PTS_NONE)
++    return STBP_ERROR_INVALID_ARGUMENT;
++  return STBP_ERROR_UNSUPPORTED;
++}
++
+ static enum stbp_result hisi_set_speed(void* opaque, struct stbp_rational speed)
+ {
+   (void)opaque;
+@@ -1715,6 +1722,7 @@ static const struct stbp_backend_api_v1 hisi_api = {
+     hisi_flush,
+     hisi_drain,
+     hisi_reset,
++    hisi_sync_clock,
+     hisi_set_speed,
+     hisi_set_paused,
+     hisi_set_video_rect,
+diff --git a/include/stbplayer/backend.h b/include/stbplayer/backend.h
+index d3523e3..66510c0 100644
+--- a/include/stbplayer/backend.h
++++ b/include/stbplayer/backend.h
+@@ -223,6 +223,9 @@ struct stbp_backend_api_v1
+   enum stbp_result (*flush)(void* instance, int64_t next_pts_90k);
+   enum stbp_result (*drain)(void* instance);
+   enum stbp_result (*reset)(void* instance);
++  /* Align the hardware presentation clock to the frontend master clock
++   * without flushing queued decoder data. */
++  enum stbp_result (*sync_clock)(void* instance, int64_t pts_90k);
+   enum stbp_result (*set_speed)(void* instance, struct stbp_rational speed);
+   enum stbp_result (*set_paused)(void* instance, int paused);
+   enum stbp_result (*set_video_rect)(void* instance,
+diff --git a/src/loader.c b/src/loader.c
+index 61e53c7..9b7867a 100644
+--- a/src/loader.c
++++ b/src/loader.c
+@@ -51,7 +51,8 @@ static int api_has_required_functions(const struct stbp_backend_api_v1* api)
+   return api->create != NULL && api->destroy != NULL && api->probe != NULL &&
+          api->open != NULL && api->queue_packet != NULL && api->get_buffer_state != NULL &&
+          api->get_status != NULL && api->flush != NULL && api->drain != NULL &&
+-         api->reset != NULL && api->set_speed != NULL && api->set_paused != NULL &&
++         api->reset != NULL && api->sync_clock != NULL && api->set_speed != NULL &&
++         api->set_paused != NULL &&
+          api->set_video_rect != NULL && api->set_visible != NULL && api->close != NULL;
+ }
+ 
+diff --git a/tests/fake_backend.c b/tests/fake_backend.c
+index 26f9d7f..72b01b5 100644
+--- a/tests/fake_backend.c
++++ b/tests/fake_backend.c
+@@ -137,6 +137,17 @@ static enum stbp_result fake_reset(void* instance)
+   return STBP_OK;
+ }
+ 
++static enum stbp_result fake_sync_clock(void* instance, int64_t pts_90k)
++{
++  struct fake_instance* fake = (struct fake_instance*)instance;
++  if (fake == NULL || pts_90k == STBP_PTS_NONE)
++    return STBP_ERROR_INVALID_ARGUMENT;
++  if (fake->status.state == STBP_STATE_CLOSED)
++    return STBP_ERROR_BAD_STATE;
++  fake->status.presentation_pts_90k = pts_90k;
++  return STBP_OK;
++}
++
+ static enum stbp_result fake_set_speed(void* instance, struct stbp_rational speed)
+ {
+   if (instance == NULL || speed.denominator == 0)
+@@ -192,6 +203,7 @@ static const struct stbp_backend_api_v1 fake_api = {
+     fake_flush,
+     fake_drain,
+     fake_reset,
++    fake_sync_clock,
+     fake_set_speed,
+     fake_set_paused,
+     fake_set_video_rect,
+@@ -205,4 +217,3 @@ STBP_EXPORT const struct stbp_backend_api_v1* stbp_backend_get_api(uint32_t host
+     return NULL;
+   return &fake_api;
+ }
+-
+diff --git a/tests/loader_test.c b/tests/loader_test.c
+index 0aa945f..1ddf4ab 100644
+--- a/tests/loader_test.c
++++ b/tests/loader_test.c
+@@ -75,6 +75,12 @@ int main(int argc, char** argv)
+   if (!require_result(api->get_status(instance, &status), STBP_OK, "status") ||
+       status.presentation_pts_90k != packet.pts_90k || status.packets_queued != 1)
+     return 1;
++  if (!require_result(api->sync_clock(instance, 225000), STBP_OK, "sync clock"))
++    return 1;
++  status.struct_size = sizeof(status);
++  if (!require_result(api->get_status(instance, &status), STBP_OK, "status after clock sync") ||
++      status.presentation_pts_90k != 225000)
++    return 1;
+   if (!require_result(api->flush(instance, 270000), STBP_OK, "flush"))
+     return 1;
+   if (!require_result(api->close(instance), STBP_OK, "close"))
+@@ -84,4 +90,3 @@ int main(int argc, char** argv)
+   stbp_backend_unload(loaded);
+   return 0;
+ }
+-

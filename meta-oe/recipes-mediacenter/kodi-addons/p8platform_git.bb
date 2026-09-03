@@ -9,7 +9,7 @@ LIC_FILES_CHKSUM = "file://src/os.h;md5=91686c8014183e8b66aa3a582d9bfd9b"
 PV = "2.2.0"
 
 SRC_URI = "git://github.com/Pulse-Eight/platform.git;branch=master;protocol=https"
-SRCREV = "2748be52ae27e6007ef548b697d4a03ff7de4291"
+SRCREV = "97332651ddfb3df9240dfd4227ac35484f8c4341"
 
 inherit cmake pkgconfig
 

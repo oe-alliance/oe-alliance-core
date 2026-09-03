@@ -10,7 +10,7 @@ DEPENDS = "libtinyxml virtual/kodi"
 
 PV = "22.0.0"
 
-SRCREV = "280ff8a72696bcc8b2907000086afbda714b840c"
+SRCREV = "844cf3ef5ad0649b8d97894d422928ec8a7a7d71"
 SRC_URI = "git://github.com/xbmc/kodi-platform.git;protocol=https;branch=master \
            file://kodi-platform-01_crosscompile-badness.patch \
            file://kodi-platform-02_no-multi-lib.patch \

@@ -1,0 +1,83 @@
+From 8f3a4370bf20ce5e5992c4cc3f19f69573b68570 Mon Sep 17 00:00:00 2001
+From: OpenATV <openatv@gmail.com>
+Date: Wed, 2 Sep 2026 18:00:00 +0200
+Subject: [PATCH] VideoPlayer: apply Kodi audio offset to STB hardware
+
+Native STB video decoders present frames directly on the hardware video
+plane, so RenderManager's software delay does not affect their A/V sync.
+Mirror Enigma2's hardware-delay handling and write Kodi's GUI audio offset
+to both PCM and bitstream delay controls when a hardware decoder is active.
+
+Kodi expresses a negative offset as "audio delayed", while the STB proc
+interface uses a positive audio-delay value.  Convert seconds to the signed
+90 kHz value expected by the kernel and preserve its two's-complement hex
+representation for negative offsets.
+---
+ xbmc/cores/VideoPlayer/VideoPlayer.cpp | 40 +++++++++++++++++++++++++++
+ 1 file changed, 40 insertions(+)
+
+diff --git a/xbmc/cores/VideoPlayer/VideoPlayer.cpp b/xbmc/cores/VideoPlayer/VideoPlayer.cpp
+index 077b4e01cd..51183f1d5f 100644
+--- a/xbmc/cores/VideoPlayer/VideoPlayer.cpp
++++ b/xbmc/cores/VideoPlayer/VideoPlayer.cpp
+@@ -69,5 +69,8 @@
+ #include <cassert>
+ #include <chrono>
++#include <cmath>
++#include <cstdint>
++#include <fstream>
+ #include <iterator>
+ #include <limits>
+ #include <memory>
+@@ -92,6 +95,36 @@ bool IsKnownLanguage(const CLanguageTag& language)
+ {
+   return !language.IsUndetermined();
+ }
++
++#if defined(HAVE_STBPLAYER)
++bool SetSTBHardwareAudioDelay(float kodiOffsetSeconds)
++{
++  // Kodi: negative means audio delayed.  Enigma2/STB: positive means
++  // audio delayed and the proc value is expressed in 90 kHz ticks.
++  const auto delayMs = static_cast<int32_t>(std::lround(-kodiOffsetSeconds * 1000.0f));
++  const auto delay90k = static_cast<uint32_t>(delayMs * 90);
++  bool applied = false;
++
++  for (const char* path : {"/proc/stb/audio/audio_delay_pcm",
++                           "/proc/stb/audio/audio_delay_bitstream"})
++  {
++    std::ofstream output(path);
++    if (!output)
++      continue;
++
++    output << std::hex << delay90k;
++    applied = output.good() || output.eof();
++  }
++
++  if (applied)
++  {
++    CLog::Log(LOGDEBUG,
++              "CVideoPlayer::SetAVDelay - applied STB hardware audio delay: {} ms",
++              delayMs);
++  }
++  return applied;
++}
++#endif
+ } // unnamed namespace
+ 
+ class PredicateSubtitleFilter
+@@ -3927,5 +3960,12 @@ void CVideoPlayer::SetAVDelay(float fValue)
+ {
+   m_processInfo->GetVideoSettingsLocked().SetAudioDelay(fValue);
++#if defined(HAVE_STBPLAYER)
++  // Hardware video bypasses Kodi's software renderer timing.  The same proc
++  // controls are provided by the Enigma2 DVB decoders and the Dream Amlogic
++  // compatibility layer.
++  if (m_processInfo->IsVideoHwDecoder())
++    SetSTBHardwareAudioDelay(fValue);
++#endif
+   m_renderManager.SetDelay(static_cast<int>(fValue * 1000.0f));
+ }
+ 
+-- 
+2.43.0

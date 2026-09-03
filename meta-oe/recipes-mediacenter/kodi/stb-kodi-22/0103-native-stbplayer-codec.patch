@@ -105,7 +105,7 @@ new file mode 100644
 index 0000000000..edc64a4e15
 --- /dev/null
 +++ b/xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecSTB.cpp
-@@ -0,0 +1,547 @@
+@@ -0,0 +1,560 @@
 +/*
 + *  Copyright (C) 2026 OE-Alliance contributors
 + *  SPDX-License-Identifier: GPL-2.0-or-later
@@ -640,6 +640,19 @@ index 0000000000..edc64a4e15
 +    CLog::Log(LOGWARNING, "CDVDVideoCodecSTB: speed change failed: {}", stbp_result_string(result));
 +}
 +
++void CDVDVideoCodecSTB::SetClock(double pts)
++{
++  if (!m_open)
++    return;
++  const int64_t pts90k = To90k(pts);
++  if (pts90k == STBP_PTS_NONE)
++    return;
++  const enum stbp_result result = m_session->SyncClock(pts90k);
++  if (result != STBP_OK && result != STBP_ERROR_UNSUPPORTED)
++    CLog::Log(LOGWARNING, "CDVDVideoCodecSTB: clock synchronization failed: {}",
++              stbp_result_string(result));
++}
++
 +bool CDVDVideoCodecSTB::GetCodecStats(double& pts, int& droppedFrames, int& skippedPics)
 +{
 +  struct stbp_status status{};
@@ -658,7 +671,7 @@ new file mode 100644
 index 0000000000..53ebb98a45
 --- /dev/null
 +++ b/xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecSTB.h
-@@ -0,0 +1,67 @@
+@@ -0,0 +1,68 @@
 +/*
 + *  Copyright (C) 2026 OE-Alliance contributors
 + *  SPDX-License-Identifier: GPL-2.0-or-later
@@ -688,6 +701,7 @@ index 0000000000..53ebb98a45
 +  void Reset() override;
 +  VCReturn GetPicture(VideoPicture* picture) override;
 +  void SetSpeed(int speed) override;
++  void SetClock(double pts) override;
 +  const char* GetName() override { return m_name.c_str(); }
 +  bool GetCodecStats(double& pts, int& droppedFrames, int& skippedPics) override;
 +  void SetCodecControl(int flags) override { m_codecControl = flags; }
@@ -961,7 +975,7 @@ new file mode 100644
 index 0000000000..18f47360cd
 --- /dev/null
 +++ b/xbmc/cores/VideoPlayer/DVDCodecs/Video/STBVideoSession.cpp
-@@ -0,0 +1,228 @@
+@@ -0,0 +1,234 @@
 +/*
 + *  Copyright (C) 2026 OE-Alliance contributors
 + *  SPDX-License-Identifier: GPL-2.0-or-later
@@ -1071,6 +1085,12 @@ index 0000000000..18f47360cd
 +{
 +  std::unique_lock lock(m_mutex);
 +  return m_open ? m_api->drain(m_instance) : STBP_ERROR_BAD_STATE;
++}
++
++enum stbp_result CSTBVideoSession::SyncClock(int64_t pts90k)
++{
++  std::unique_lock lock(m_mutex);
++  return m_open ? m_api->sync_clock(m_instance, pts90k) : STBP_ERROR_BAD_STATE;
 +}
 +
 +enum stbp_result CSTBVideoSession::SetSpeed(struct stbp_rational speed)
@@ -1195,7 +1215,7 @@ new file mode 100644
 index 0000000000..9d0f1b9167
 --- /dev/null
 +++ b/xbmc/cores/VideoPlayer/DVDCodecs/Video/STBVideoSession.h
-@@ -0,0 +1,83 @@
+@@ -0,0 +1,84 @@
 +/*
 + *  Copyright (C) 2026 OE-Alliance contributors
 + *  SPDX-License-Identifier: GPL-2.0-or-later
@@ -1230,6 +1250,7 @@ index 0000000000..9d0f1b9167
 +  enum stbp_result GetStatus(struct stbp_status& status);
 +  enum stbp_result Flush(int64_t nextPts90k);
 +  enum stbp_result Drain();
++  enum stbp_result SyncClock(int64_t pts90k);
 +  enum stbp_result SetSpeed(struct stbp_rational speed);
 +  enum stbp_result SetPaused(bool paused);
 +  enum stbp_result SetVideoRect(const struct stbp_rect& source,
@@ -1279,3 +1300,29 @@ index 0000000000..9d0f1b9167
 +  std::vector<std::unique_ptr<CVideoBufferSTB>> m_buffers;
 +  std::deque<int> m_free;
 +};
+diff --git a/xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodec.h b/xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodec.h
+--- a/xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodec.h
++++ b/xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodec.h
+@@ -173,6 +173,9 @@ public:
+    */
+   virtual void SetSpeed(int iSpeed) {}
+ 
++  /** Synchronize an external hardware decoder to the player master clock. */
++  virtual void SetClock(double pts) {}
++
+   /**
+    * should return codecs name
+    */
+diff --git a/xbmc/cores/VideoPlayer/VideoPlayerVideo.cpp b/xbmc/cores/VideoPlayer/VideoPlayerVideo.cpp
+--- a/xbmc/cores/VideoPlayer/VideoPlayerVideo.cpp
++++ b/xbmc/cores/VideoPlayer/VideoPlayerVideo.cpp
+@@ -427,6 +427,9 @@ void CVideoPlayerVideo::Process()
+     {
+       pts = std::static_pointer_cast<CDVDMsgDouble>(pMsg)->m_value;
+ 
++      if (m_pVideoCodec)
++        m_pVideoCodec->SetClock(pts);
++
+       m_syncState = IDVDStreamPlayer::SYNC_INSYNC;
+       m_droppingStats.Reset();
+       m_rewindStalled = false;

@@ -4,12 +4,12 @@ Date: Sat, 18 May 2024 04:56:50 +0200
 Subject: [PATCH] flatbuffers-22
 
 Use the canonical FlatBuffers scalar names accepted by the receiver build's
-flatc. Keep Kodi HEAD's compressed video and memory savestate fields in sync
-with the original compatibility conversion.
+flatc. Keep Kodi HEAD's compressed video, memory and achievement savestate
+fields in sync with the original compatibility conversion.
 
 ---
- xbmc/cores/RetroPlayer/messages/savestate.fbs | 24 ++++++++++++------------
- 1 file changed, 12 insertions(+), 12 deletions(-)
+ xbmc/cores/RetroPlayer/messages/savestate.fbs | 26 +++++++++++++-------------
+ 1 file changed, 13 insertions(+), 13 deletions(-)
 
 diff --git a/xbmc/cores/RetroPlayer/messages/savestate.fbs b/xbmc/cores/RetroPlayer/messages/savestate.fbs
 --- a/xbmc/cores/RetroPlayer/messages/savestate.fbs
@@ -73,4 +73,9 @@ diff --git a/xbmc/cores/RetroPlayer/messages/savestate.fbs b/xbmc/cores/RetroPla
    memory_data_compression:CompressionType = None (id: 25);
 -  memory_data_uncompressed_size:uint64 = 0 (id: 26);
 +  memory_data_uncompressed_size:ulong = 0 (id: 26);
+ 
+@@ -75,3 +75,3 @@ table Savestate {
+   // Achievement properties
+-  achievement_data:[uint8] (id: 30);
++  achievement_data:[ubyte] (id: 30);
  }

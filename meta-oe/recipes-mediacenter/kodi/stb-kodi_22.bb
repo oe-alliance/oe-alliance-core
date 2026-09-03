@@ -77,13 +77,13 @@ DEPENDS += " \
             ${@'libvupl' if d.getVar('VUPLUS_MIPSEL_STB') == '1' else ''} \
           "
 inherit gitpkgv
-# 22.0 Piers Beta 1, current upstream master HEAD (2026-08-28)
-SRCREV = "429fdbdf6f8bae1be73c41b623ba55e2eb4892b0"
+# 22.0 Piers Beta 1, current upstream master HEAD (2026-09-02)
+SRCREV = "2c7ed4e159af2c44574d315396522cea8dcd8715"
 
 # 'patch' doesn't support binary diffs
 PATCHTOOL = "git"
 
-PR = "r103"
+PR = "r108"
 
 PV = "22.0+gitr"
 # Keep package upgrades monotonic when the pinned master revision advances.
@@ -135,6 +135,8 @@ SRC_URI = "git://github.com/xbmc/xbmc.git;protocol=https;branch=master \
            file://0028-stb-kodi22-resolution-model.patch \
            file://0052-stb-force-profile-on-media-hdd.patch \
            file://0103-native-stbplayer-codec.patch \
+           file://0104-bcm-h264-container-framerate.patch \
+           file://0054-stb-hardware-audio-delay.patch \
            file://kodi-stb-wrapper \
            file://kodi-stb-runtime \
            "
@@ -163,7 +165,11 @@ DREAM_MIPSEL_STB = "${@'1' if d.getVar('MACHINE') in ('dm7080', 'dm820') and d.g
 SRC_URI:append = "${@' file://kodi-hisi-wrapper file://kodi-hisi-appliance.xml file://0051-hisi-alsa-fast-sink-switch.patch' if d.getVar('HISI_STB') == '1' else ''}"
 SRC_URI:append = "${@' file://kodi-bcm-wrapper' if d.getVar('BCM_DVB_STB') == '1' else ''}"
 SRC_URI:append = "${@' file://kodi-dream-aml-wrapper' if d.getVar('DREAM_AMLOGIC_STB') == '1' else ''}"
-SRC_URI:append = "${@' file://0027-bcm-alsa-hard-recovery.patch' if d.getVar('BCM_DVB_STB') == '1' else ''}"
+# The old Vu+ MIPSel PCM requires Kodi's immediate explicit start.  Applying
+# the large-buffer Broadcom prefill path leaves these drivers permanently in
+# PREPARED state and every write returns EPIPE.  Keep the prefill/recovery fix
+# for the other Broadcom implementations where it was validated.
+SRC_URI:append = "${@' file://0027-bcm-alsa-hard-recovery.patch' if d.getVar('BCM_DVB_STB') == '1' and d.getVar('VUPLUS_MIPSEL_STB') != '1' else ''}"
 SRC_URI:append = "${@' file://0029-vuplus-arm-runtime-nxpl.patch' if d.getVar('BRCM_NXPL_ARM_STB') == '1' else ''}"
 SRC_URI:append = "${@' file://0047-vuplus-arm-force-runtime-gles2.patch' if d.getVar('BRCM_NXPL_ARM_STB') == '1' else ''}"
 SRC_URI:append = "${@' file://0030-vuplus-alsa-nonblocking-sink-switch.patch' if d.getVar('VUPLUS_MIPSEL_STB') == '1' or d.getVar('BRCM_NXPL_ARM_STB') == '1' else ''}"
@@ -419,6 +425,8 @@ RRECOMMENDS:${PN}:append = " libcec \
                              libnfs \
                              nss \
                              os-release \
+                             kodi-addon-repository-kodinerds \
+                             kodi-addon-repository-kus-allinone \
                              ${PYTHON_PN} \
                              ${PYTHON_PN}-ctypes \
                              ${PYTHON_PN}-netclient \

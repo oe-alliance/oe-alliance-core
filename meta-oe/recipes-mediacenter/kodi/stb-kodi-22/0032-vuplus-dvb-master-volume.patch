@@ -15,12 +15,13 @@ diff --git a/xbmc/application/ApplicationVolumeHandling.cpp b/xbmc/application/A
 index 25229be7da..1f28e15246 100644
 --- a/xbmc/application/ApplicationVolumeHandling.cpp
 +++ b/xbmc/application/ApplicationVolumeHandling.cpp
-@@ -21,9 +21,124 @@
+@@ -21,11 +21,126 @@
  #include "settings/lib/Setting.h"
  #include "utils/Variant.h"
  #include "utils/XMLUtils.h"
 +#include "utils/log.h"
  
+ #include <cmath>
 +#include <cstdlib>
 +#if defined(TARGET_AMLOGIC)
 +#include <alsa/asoundlib.h>
@@ -30,6 +31,7 @@ index 25229be7da..1f28e15246 100644
 +#include <sys/ioctl.h>
 +#include <unistd.h>
 +#endif
+ 
  #include <tinyxml.h>
  
 +namespace
