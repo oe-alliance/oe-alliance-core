@@ -5,7 +5,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 KERNEL_RELEASE = "5.15"
 
-COMPATIBLE_MACHINE = "^(osmini4k|osmio4k|osmio4kplus)$"
+COMPATIBLE_MACHINE = "^(ed72604)$"
 
 inherit kernel machine_kernel_pr kernel-fixups
 

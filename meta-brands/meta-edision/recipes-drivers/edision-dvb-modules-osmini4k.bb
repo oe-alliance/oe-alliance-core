@@ -1,6 +1,6 @@
 KV = "5.15.0"
 SRCDATE = "20211228"
-KOFILES = "brcmstb-${MACHINE} ci si2183 avl6862 avl6261"
+KOFILES = "brcmstb-${MACHINEBUILD} ci si2183 avl6862 avl6261"
 
 require edision-dvb-modules.inc
 SRC_URI[md5sum] = "9a8076a57ede632e0d6ecb7b5c08b366"

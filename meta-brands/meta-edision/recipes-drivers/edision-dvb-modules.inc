@@ -2,12 +2,12 @@ SUMMARY = "Hardware drivers for ${MACHINE}"
 SECTION = "base"
 PRIORITY = "required"
 require conf/license/license-close.inc
-PACKAGE_ARCH = "${MACHINE}"
+PACKAGE_ARCH = "${MACHINEBUILD}"
 
 PV = "${KV}+${SRCDATE}"
 PR = "r0"
 
-SRC_URI = "https://source.mynonpublic.com/edision/${MACHINE}-drivers-${KV}-${SRCDATE}.zip"
+SRC_URI = "https://source.mynonpublic.com/edision/${MACHINEBUILD}-drivers-${KV}-${SRCDATE}.zip"
 
 S = "${UNPACKDIR}"
 
@@ -24,8 +24,8 @@ do_install() {
     install -d ${D}/${sysconfdir}/modules-load.d
     for i in ${KOFILES} ; do
         install -m 0755 ${S}/${i}.ko ${D}/lib/modules/${KV}/extra/${i}.ko
-        echo ${i} >> ${D}/${sysconfdir}/modules-load.d/_${MACHINE}.conf
+        echo ${i} >> ${D}/${sysconfdir}/modules-load.d/_${MACHINEBUILD}.conf
     done
 }
 
-FILES:${PN} += "${sysconfdir}/modules-load.d/_${MACHINE}.conf /lib/modules/${KV}/extra"
+FILES:${PN} += "${sysconfdir}/modules-load.d/_${MACHINEBUILD}.conf /lib/modules/${KV}/extra"

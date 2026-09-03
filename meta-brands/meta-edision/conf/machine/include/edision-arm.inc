@@ -14,10 +14,10 @@ include conf/machine/include/build-extras.inc
 
 BRAND_OEM = "edision"
 MACHINE_BRAND = "Edision"
-IMAGEDIR = "${MACHINE}"
+IMAGEDIR = "${MACHINEBUILD}"
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "\
-    edision-dvb-modules-${MACHINE} \
+    edision-dvb-modules-${MACHINEBUILD} \
     resizerootfs \
     "
 
@@ -37,8 +37,8 @@ MACHINE_EXTRA_RRECOMMENDS += " \
 include conf/machine/include/autoload-filesystems.inc
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-edision"
-VIRTUAL-RUNTIME_blindscan_dvbs = "edision-blindscan-dvbs-utils-${MACHINE}"
-VIRTUAL-RUNTIME_blindscan_dvbc = "edision-blindscan-dvbc-utils-${MACHINE}"
+VIRTUAL-RUNTIME_blindscan_dvbs = "edision-blindscan-dvbs-utils-${MACHINEBUILD}"
+VIRTUAL-RUNTIME_blindscan_dvbc = "edision-blindscan-dvbc-utils-${MACHINEBUILD}"
 
 KERNEL_CONSOLE = "ttyS0,115200n8"
 
@@ -46,17 +46,17 @@ IMAGE_CLASSES += "osmio4k-emmcimg"
 IMAGE_FSTYPES ?= "emmcimg"
 IMAGE_OVERHEAD_FACTOR = "1.0"
 
-IMAGEDIRRECOVERY ?= "${MACHINE}-recovery"
+IMAGEDIRRECOVERY ?= "${MACHINEBUILD}-recovery"
 
 IMAGE_CMD:emmcimg:append = "\
     mkdir -p ${DEPLOY_DIR_IMAGE}/${IMAGEDIRRECOVERY}/${IMAGEDIR}; \
     cp ${DEPLOY_DIR_IMAGE}/splash.bin ${DEPLOY_DIR_IMAGE}/${IMAGEDIRRECOVERY}/${IMAGEDIR}/splash.bin; \
     mv ${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.emmc ${DEPLOY_DIR_IMAGE}/${IMAGEDIRRECOVERY}/${IMAGEDIR}/emmc.img; \
     echo "***** ACHTUNG *****" >${DEPLOY_DIR_IMAGE}/${IMAGEDIRRECOVERY}/${IMAGEDIR}/recovery_${MACHINEBUILD}_lies.mich; \
-    echo "Das RECOVERY wird nur benötigt für Neuinstallation der ${MACHINE}" >>${DEPLOY_DIR_IMAGE}/${IMAGEDIRRECOVERY}/${IMAGEDIR}/recovery_${MACHINEBUILD}_lies.mich; \
+    echo "Das RECOVERY wird nur benötigt für Neuinstallation der ${MACHINEBUILD}" >>${DEPLOY_DIR_IMAGE}/${IMAGEDIRRECOVERY}/${IMAGEDIR}/recovery_${MACHINEBUILD}_lies.mich; \
     echo "Das ${IMAGE_NAME}_recovery_emmc.zip löscht alle Images auch die Multiboot Images" >>${DEPLOY_DIR_IMAGE}/${IMAGEDIRRECOVERY}/${IMAGEDIR}/recovery_${MACHINEBUILD}_lies.mich; \
     echo "***** ATTENTION *****" >${DEPLOY_DIR_IMAGE}/${IMAGEDIRRECOVERY}/${IMAGEDIR}/recovery_${MACHINEBUILD}_READ.ME; \
-    echo "The RECOVERY is only required for new installation of the ${MACHINE}" >>${DEPLOY_DIR_IMAGE}/${IMAGEDIRRECOVERY}/${IMAGEDIR}/recovery_${MACHINEBUILD}_READ.ME; \
+    echo "The RECOVERY is only required for new installation of the ${MACHINEBUILD}" >>${DEPLOY_DIR_IMAGE}/${IMAGEDIRRECOVERY}/${IMAGEDIR}/recovery_${MACHINEBUILD}_READ.ME; \
     echo "The ${IMAGE_NAME}_recovery_emmc.zip deletes all images including the multiboot images" >>${DEPLOY_DIR_IMAGE}/${IMAGEDIRRECOVERY}/${IMAGEDIR}/recovery_${MACHINEBUILD}_READ.ME; \
     echo ${IMAGE_VER_STRING} > ${DEPLOY_DIR_IMAGE}/${IMAGEDIRRECOVERY}/${IMAGEDIR}/imageversion; \
     echo "rename this file to 'force' to force an update without confirmation" > ${DEPLOY_DIR_IMAGE}/${IMAGEDIRRECOVERY}/${IMAGEDIR}/noforce; \
@@ -93,3 +93,5 @@ require conf/machine/include/arm/armv7a/tune-cortexa15.inc
 require conf/machine/include/soc-family.inc
 require conf/machine/box-hardware.inc
 
+# Add "MACHINEBUILD" override for recipes
+MACHINEOVERRIDES =. "${@['', '${MACHINEBUILD}:']['${MACHINEBUILD}' != '']}"
