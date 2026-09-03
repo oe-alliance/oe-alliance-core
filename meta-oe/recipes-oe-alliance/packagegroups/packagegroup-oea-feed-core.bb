@@ -257,7 +257,7 @@ RDEPENDS:${PN} = "\
     zerotier \
     "
 
-WIREGUARD_MODULE = "${@bb.utils.contains_any("MACHINE", "osmini4k osmio4k osmio4kplus u5pvr", "", "wireguard-module", d)}"
+WIREGUARD_MODULE = "${@bb.utils.contains_any("MACHINE", "ed72604 u5pvr", "", "wireguard-module", d)}"
 
 # Normal feed packages, independent of STATIC_FEED; OpenATV rollout is gated above.
 RETROGAMING_FEED_PACKAGES = "\
