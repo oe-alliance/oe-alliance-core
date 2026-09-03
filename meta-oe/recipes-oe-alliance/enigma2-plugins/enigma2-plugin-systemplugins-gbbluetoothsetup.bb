@@ -3,6 +3,8 @@ require conf/license/license-gplv2.inc
 require conf/python/python3-compileall.inc
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
+RDEPENDS:${PN} = "gb-bluetooth-util-${MACHINE}"
+
 COMPATIBLE_MACHINE = "^(gb7252|gb72604)$"
 
 PN = "enigma2-plugin-systemplugins-bluetoothsetup"
