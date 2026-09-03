@@ -9,6 +9,7 @@ TBS_SOURCE_FILES = " \
     drivers/media/dvb-frontends/si2183.h \
     drivers/media/tuners/av201x.h \
 "
+TBS_FALLBACK_HEADERS = "drivers/media/tuners/si2157.h"
 TBS_KBUILD_MODULES = "dvb-usb-tbs5580.o"
 TBS_COMPOSITE_MODULE = "dvb-usb-tbs5580"
 TBS_COMPOSITE_OBJECTS = "tbs5580.o"
