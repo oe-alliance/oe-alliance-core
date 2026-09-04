@@ -1,43 +1,30 @@
-SUMMARY = "Ralink 8814AU v4.3.21"
+SUMMARY = "Realtek RTL8814AU"
 HOMEPAGE = "http://www.realtek.com.tw"
 SECTION = "kernel/modules"
 LICENSE = "GPL-2.0-only"
-LIC_FILES_CHKSUM = "file://ifcfg-wlan0;md5=a84acae65af4b2d44d5035aa9f63cd85"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=ab842b299d0a92fb908d6eb122cd6de9"
+
+DEPENDS = "bc-native"
 
 inherit module
 
-SRC_URI = "https://source.mynonpublic.com/rtl8814AU-driver-4.3.21-20211103.zip"
+PR = "r1"
 
-EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR} KDIR=${STAGING_KERNEL_DIR}"
+SRCREV = "${AUTOREV}"
+SRC_URI = "git://github.com/oe-alliance-drivers/rtl8814au.git;protocol=https;branch=master;destsuffix=s"
+# The default unpack directory "sources" costs six more characters on every
+# object path.
+UNPACKDIR = "${WORKDIR}/u"
 
-S = "${UNPACKDIR}/rtl8814AU"
-
-do_compile () {
-    unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS CC LD CPP
-    oe_runmake 'M={D}${base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/net/wireless' \
-        'KERNEL_SOURCE=${STAGING_KERNEL_DIR}' \
-        'LINUX_SRC=${STAGING_KERNEL_DIR}' \
-        'KDIR=${STAGING_KERNEL_DIR}' \
-        'KERNDIR=${STAGING_KERNEL_DIR}' \
-        'KSRC=${STAGING_KERNEL_DIR}' \
-        'KERNEL_VERSION=${KERNEL_VERSION}' \
-        'KVER=${KERNEL_VERSION}' \
-        'CC=${KERNEL_CC}' \
-        'AR=${KERNEL_AR}' \
-        'LD=${KERNEL_LD}'
-}
+S = "${UNPACKDIR}/s"
 
 require kcflags.inc
+
+# WPA3-SAE; the driver leaves this path disabled unless we ask for it.
+EXTRA_OEMAKE = "KSRC=${STAGING_KERNEL_DIR} LINUX_SRC=${STAGING_KERNEL_DIR} KDIR=${STAGING_KERNEL_DIR} \
+    USER_EXTRA_CFLAGS=-DCONFIG_KERNEL_PATCH_EXTERNAL_AUTH"
 
 do_install() {
     install -d ${D}${nonarch_base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/net/wireless
     install -m 0644 ${S}/8814au.ko ${D}${nonarch_base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/net/wireless
-
 }
-
-do_package_qa() {
-}
-
-SRC_URI[md5sum] = "acf7e361f6c1b3a87c5da5befb81cde6"
-SRC_URI[sha256sum] = "d090e8b93d64ed33e96274ef68382643ef4a94d9904f5d68fc1444298e020c75"
-
