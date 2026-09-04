@@ -1,15 +1,15 @@
 SUMMARY = "WiFi devices for Realtek 8192EU chipsets."
-inherit allarch
+inherit allarch oea-wifi-driver
 
 require conf/license/license-gplv2.inc
 
 RRECOMMENDS:${PN} = " \
-    rtl8192eu \
+    ${@wifi_driver(d, 'rtl8xxxu', 'kernel-module-rtl8xxxu', 'rtl8192eu')} \
     firmware-rtl8192eu \
     "
 
 PV = "1.0"
-PR = "r2"
+PR = "r3"
 
 ALLOW_EMPTY:${PN} = "1"
 

@@ -1,49 +1,15 @@
 SUMMARY = "mediatek 7601u"
-inherit allarch
+inherit allarch oea-wifi-driver
 
 require conf/license/license-gplv2.inc
 
 RRECOMMENDS:${PN} = " \
-    ${@bb.utils.contains("LINUX_WIFI_mt7106u", "kernel-module-mt7601u", "kernel-module-mt7601u", "mt7601u", d)} \
+    ${@wifi_driver(d, 'mt7601u', 'kernel-module-mt7601u', 'mt7601u')} \
     firmware-mt7601u \
     "
 
-LINUX_WIFI_mt7106u = " \
-    ${@bb.utils.contains("MACHINE_FEATURES", "linuxwifi", "kernel-module-mt7601u", "", d)} \
-    ${@bb.utils.contains("MACHINE", "sf8008", "kernel-module-mt7601u", "", d)} \
-    ${@bb.utils.contains("MACHINE", "sf8008m", "kernel-module-mt7601u", "", d)} \
-    ${@bb.utils.contains("MACHINE", "sx988", "kernel-module-mt7601u", "", d)} \
-    ${@bb.utils.contains("MACHINE", "sx88v2", "kernel-module-mt7601u", "", d)} \
-    ${@bb.utils.contains("MACHINE", "sfx6008", "kernel-module-mt7601u", "", d)} \
-    ${@bb.utils.contains("MACHINE", "gbmv200", "kernel-module-mt7601u", "", d)} \
-    ${@bb.utils.contains("MACHINE", "ustym4kpro", "kernel-module-mt7601u", "", d)} \
-    ${@bb.utils.contains("MACHINE", "ustym4kottpremium", "kernel-module-mt7601u", "", d)} \
-    ${@bb.utils.contains("MACHINE", "ustym4ks2ottx", "kernel-module-mt7601u", "", d)} \
-    ${@bb.utils.contains("MACHINE", "og2ott4k", "kernel-module-mt7601u", "", d)} \
-    ${@bb.utils.contains("MACHINE", "og2s4k", "kernel-module-mt7601u", "", d)} \
-    ${@bb.utils.contains("MACHINE", "h9", "kernel-module-mt7601u", "", d)} \
-    ${@bb.utils.contains("MACHINE", "h9se", "kernel-module-mt7601u", "", d)} \
-    ${@bb.utils.contains("MACHINE", "h8", "kernel-module-mt7601u", "", d)} \
-    ${@bb.utils.contains("MACHINE", "hzero", "kernel-module-mt7601u", "", d)} \
-    ${@bb.utils.contains("MACHINE", "h9combo", "kernel-module-mt7601u", "", d)} \
-    ${@bb.utils.contains("MACHINE", "h9combose", "kernel-module-mt7601u", "", d)} \
-    ${@bb.utils.contains("MACHINE", "h10", "kernel-module-mt7601u", "", d)} \
-    ${@bb.utils.contains("MACHINE", "h11", "kernel-module-mt7601u", "", d)} \
-    ${@bb.utils.contains("MACHINE", "i55plus", "kernel-module-mt7601u", "", d)} \
-    ${@bb.utils.contains("MACHINE", "i55se", "kernel-module-mt7601u", "", d)} \
-    ${@bb.utils.contains("MACHINE", "hd60", "kernel-module-mt7601u", "", d)} \
-    ${@bb.utils.contains("MACHINE", "hd61", "kernel-module-mt7601u", "", d)} \
-    ${@bb.utils.contains("MACHINE", "multibox", "kernel-module-mt7601u", "", d)} \
-    ${@bb.utils.contains("MACHINE", "multiboxse", "kernel-module-mt7601u", "", d)} \
-    ${@bb.utils.contains("MACHINE", "pulse4k", "kernel-module-mt7601u", "", d)} \
-    ${@bb.utils.contains("MACHINE", "pulse4kmini", "kernel-module-mt7601u", "", d)} \
-    ${@bb.utils.contains("MACHINE", "viper4k", "kernel-module-mt7601u", "", d)} \
-    ${@bb.utils.contains("MACHINE", "dagsmv200", "kernel-module-mt7601u", "", d)} \
-    ${@bb.utils.contains("MACHINE", "ip8", "kernel-module-mt7601u", "", d)} \
-    "
-
 PV = "1.0"
-PR = "r2"
+PR = "r3"
 
 ALLOW_EMPTY:${PN} = "1"
 

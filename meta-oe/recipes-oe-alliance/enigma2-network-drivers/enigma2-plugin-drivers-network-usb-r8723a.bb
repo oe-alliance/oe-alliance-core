@@ -1,15 +1,15 @@
 SUMMARY = "WiFi devices for Realtek RTL8723a chipsets."
-inherit allarch
+inherit allarch oea-wifi-driver
 
 require conf/license/license-gplv2.inc
 
 RRECOMMENDS:${PN} = " \
-    rt8723a \
+    ${@wifi_driver(d, 'rtl8xxxu', 'kernel-module-rtl8xxxu', 'rt8723a')} \
     firmware-rtl8723a \
 "
 
 PV = "1.0"
-PR = "r0"
+PR = "r1"
 
 ALLOW_EMPTY:${PN} = "1"
 
