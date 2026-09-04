@@ -4,7 +4,7 @@ inherit allarch
 require conf/license/license-gplv2.inc
 
 RRECOMMENDS:${PN} = " \
-        rt8812au \
+        rtl88xxau \
 "
 
 PV = "1.0"

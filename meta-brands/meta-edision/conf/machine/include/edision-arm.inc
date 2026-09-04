@@ -83,7 +83,7 @@ IMAGE_CMD:emmcimg:append = "\
     rm -Rf ${IMAGEDIR}; \
     "
 
-MACHINE_FEATURES += "alsa 3dtv switchoff hdmicec bootsplash omb blindscan-tbs linuxwifi linux4extra wifiusbmodule mmc emmc v3d-eglfs event0"
+MACHINE_FEATURES += "alsa 3dtv switchoff hdmicec bootsplash omb blindscan-tbs linux4extra wifiusbmodule mmc emmc v3d-eglfs event0"
 
 BOOTLOGO_FILENAME = "splash.bin"
 

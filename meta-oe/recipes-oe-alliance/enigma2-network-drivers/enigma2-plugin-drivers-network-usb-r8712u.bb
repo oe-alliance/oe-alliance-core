@@ -6,12 +6,12 @@ require conf/license/license-gplv2.inc
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 RRECOMMENDS:${PN} = " \
-    ${@bb.utils.contains("MACHINE_FEATURES", "wifiusblegacy", "rtl871x", "kernel-module-r8712u", d)} \
+    kernel-module-r8712u \
     firmware-rtl8712u \
     "
 
 PV = "1.0"
-PR = "r0"
+PR = "r1"
 
 ALLOW_EMPTY:${PN} = "1"
 

@@ -76,7 +76,7 @@ IMAGE_CMD:ubi:append = "\
     rm -Rf ${IMAGEDIR}; \
     "
 
-MACHINE_FEATURES += "ci 3dtv alsa hdmicec switchoff omb boxmodel feature1 blindscan-tbs skins1080 ${E2EGL_WQHD_FEATURE} linuxwifi"
+MACHINE_FEATURES += "ci 3dtv alsa hdmicec switchoff omb boxmodel feature1 blindscan-tbs skins1080 ${E2EGL_WQHD_FEATURE}"
 
 BOOTLOGO_FILENAME = "splash.bin"
 

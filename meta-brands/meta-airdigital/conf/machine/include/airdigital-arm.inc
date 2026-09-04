@@ -1,7 +1,7 @@
 PACKAGECONFIG_GL:pn-qtbase = " "
 PACKAGECONFIG:append:pn-qtbase = " gles2 linuxfb"
 
-MACHINE_FEATURES += "qthbbtv qtstalker linuxwifi"
+MACHINE_FEATURES += "qthbbtv qtstalker"
 
 IMAGE_FSTYPES += "airdigitalemmc"
 IMAGE_ROOTFS_SIZE ?= "589824"
