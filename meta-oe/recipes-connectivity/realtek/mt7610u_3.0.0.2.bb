@@ -6,19 +6,10 @@ LIC_FILES_CHKSUM = "file://iwpriv_usage.txt;md5=8876ae2c103446a442658f1cc2a01b76
 
 inherit module
 
-SRC_URI = "file://mt7610u_wifi_sta_v3002_dpo_20130916.tar.bz2 \
-	file://config.patch \
-	file://change_device_name.patch \
-	file://firmware_file_rename.patch \
-	file://new_devices.patch \
-	file://buildfix.patch \
-	"
+SRCREV = "${AUTOREV}"
+SRC_URI = "git://github.com/oe-alliance-drivers/mt7610u.git;protocol=https;branch=master;destsuffix=s"
 
-SRC_URI:append:dm900 = " file://fix_build_arm.patch"
-SRC_URI:append:dm920 = " file://fix_build_arm.patch"
-
-S = "${UNPACKDIR}/mt7610u_wifi_sta_v3002_dpo_20130916"
-
+S = "${UNPACKDIR}/s"
 EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR}"
 
 require kcflags.inc
@@ -33,9 +24,6 @@ do_install() {
 }
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
-
-SRC_URI[md5sum] = "2b552aff1bbd4effe94185e222eb761e"
-SRC_URI[sha256sum] = "c0061b9010b80c1fc09d78786317957044bde43e2a127ecefd66d4faa12d2906"
 
 FILES:${PN} += "${sysconfdir}/Wireless/mt7610uSTA/mt7610uSTACard.dat ${sysconfdir}/Wireless/mt7610uSTA/mt7610uSTA.dat ${sysconfdir}/Wireless/mt7610uSTA/SingleSKU.dat"
 

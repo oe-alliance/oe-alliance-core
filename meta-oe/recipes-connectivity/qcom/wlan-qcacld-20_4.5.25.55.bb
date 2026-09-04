@@ -7,13 +7,12 @@ inherit module
 
 COMPATIBLE_MACHINE = "osmio4k|osmio4kplus|xc7439"
 
-SRC_URI = "https://source.mynonpublic.com/qcacld-2.0-${PV}.tar.gz \
-    file://qcacld-2.0-support.patch \
-"
+SRCREV = "${AUTOREV}"
+SRC_URI = "git://github.com/oe-alliance-drivers/qcacld-2.0.git;protocol=https;branch=master;destsuffix=s"
 
 SRC_URI:append:xc7439 = " file://qcacld-2.0-support-xc7439.patch"
 
-S = "${UNPACKDIR}/qcacld-2.0-${PV}"
+S = "${UNPACKDIR}/s"
 
 EXTRA_OEMAKE:append:xc7439 = " CONFIG_CLD_HL_SDIO_CORE=y"
 
@@ -27,5 +26,3 @@ python do_package:prepend() {
     d.appendVar('PKGV', d.getVar("KERNEL_VERSION", True).split("-")[0])
 }
 
-SRC_URI[md5sum] = "639660ec3ead1dc59e4ca20bfce7b4c9"
-SRC_URI[sha256sum] = "870b0e762e8ee885938eaf7da9dea0b6505a40a0eae7ce8c6409b53e015faa7a"

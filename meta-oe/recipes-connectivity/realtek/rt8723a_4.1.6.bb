@@ -8,25 +8,15 @@ inherit module
 
 MACHINE_KERNEL_PR:append = ".0"
 
-SRC_URI = "https://source.mynonpublic.com/ini/rtl8723A_WiFi_linux_v4.1.6_7336.20140624.tar.gz \
-    file://rt8723a-gcc5.patch \
-    file://0001-add-kernel-4.11-support.patch \
-    file://0001-add-kernel-4.15-support.patch \
-    file://0001-add-kernel-4.19-support.patch \
-    file://0001-add-kernel-5.1-support.patch \
-    file://0001-add-kernel-5.2-support.patch \
-    file://0001-add-kernel-5.8-support.patch \
-    file://add-5.15-support.patch \
-    "
-
+SRCREV = "${AUTOREV}"
+SRC_URI = "git://github.com/oe-alliance-drivers/rtl8723a.git;protocol=https;branch=master;destsuffix=s"
 inherit module
 
 EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR} KDIR=${STAGING_KERNEL_DIR}"
 
 require kcflags.inc
 
-S = "${UNPACKDIR}/rtl8723A_WiFi_linux_v4.1.6_7336.20140624"
-
+S = "${UNPACKDIR}/s"
 do_compile () {
     unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS CC LD CPP
     oe_runmake 'MODPATH={D}${base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/net/wireless' \
@@ -47,7 +37,4 @@ do_install() {
     install -m 0644 ${S}/8723au.ko ${D}${nonarch_base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/net/wireless
 
 }
-
-SRC_URI[md5sum] = "922f8fb001ee8d58f87737453834e2b7"
-SRC_URI[sha256sum] = "b6efcb3f2100065117ed910a7e1fbba1fec2b7b968441719b75c4a3f7b12a7e0"
 

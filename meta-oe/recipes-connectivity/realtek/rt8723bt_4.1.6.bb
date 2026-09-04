@@ -8,16 +8,15 @@ inherit module
 
 MACHINE_KERNEL_PR:append = ".0"
 
-SRC_URI = "https://source.mynonpublic.com/ini/8723AE_8723AU_Linux_BT_20140623.tar.gz"
-
+SRCREV = "${AUTOREV}"
+SRC_URI = "git://github.com/oe-alliance-drivers/rtl8723bt.git;protocol=https;branch=master;destsuffix=s"
 inherit module
 
 EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR} KDIR=${STAGING_KERNEL_DIR}"
 
 require kcflags.inc
 
-S = "${UNPACKDIR}/8723AE_8723AU_Linux_BT_20140623"
-
+S = "${UNPACKDIR}/s"
 FILES:${PN} = "${nonarch_base_libdir}/firmware/"
 
 do_install() {
@@ -28,7 +27,4 @@ do_install() {
     install -d ${D}${nonarch_base_libdir}/firmware/rtk_bt
     install -m 0644 ${S}/rlt8723a_chip_b_cut_bt40_fw_asic_rom_patch-svn8909-0x002DF4E9-20130118-LINUX_USB_NOLPS.bin ${D}${nonarch_base_libdir}/firmware/rtk_bt/rtk8723a.bin
 }
-
-SRC_URI[md5sum] = "729ccdc7e70b17af6d835ea79ffea551"
-SRC_URI[sha256sum] = "5af8ee1bf54cd427c0629f15a3ae2d20d20255770a290479afa7423dc341cc7f"
 

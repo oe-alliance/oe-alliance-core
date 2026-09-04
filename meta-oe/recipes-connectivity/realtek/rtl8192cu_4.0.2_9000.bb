@@ -3,18 +3,9 @@ HOMEPAGE = "http://www.realtek.com/"
 LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://os_dep/linux/os_intfs.c;endline=19;md5=72c75de415f1e8a42587d170459677e2"
 
-SRC_URI = " \
-    file://rtl8188C_8192C_usb_linux_v4.0.2_9000.20130911.tar.gz \
-    file://r8192cu_remove_debug.patch \
-    file://rt8192cu-strncasecmp.patch \
-    file://rtl8192cu-makefile.patch \
-    file://rtl8192cu-gcc5.patch \
-    file://rtl8192cu-fix_ndo_select_queue.patch \
-    file://CHECKSM_IPV6_H.patch \
-    "
-
-S = "${UNPACKDIR}/rtl8188C_8192C_usb_linux_v4.0.2_9000.20130911"
-
+SRCREV = "${AUTOREV}"
+SRC_URI = "git://github.com/oe-alliance-drivers/rtl8192cu.git;protocol=https;branch=master;destsuffix=s"
+S = "${UNPACKDIR}/s"
 inherit module siteinfo
 
 EXTRA_OEMAKE = "CONFIG_RTL8192CU=m KDIR=${STAGING_KERNEL_DIR}"

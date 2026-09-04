@@ -7,31 +7,9 @@ inherit module
 
 LIC_FILES_CHKSUM = "file://readme;endline=19;md5=f87a675da5e11ab9def922704bdda58b"
 
-SRC_URI = "https://source.mynonpublic.com/ini/AX88179_178A_LINUX_DRIVER_v1.4.1_SOURCE.tar.gz"
-
-SRC_URI:append:dm500hd = " \
-            file://dreambox.patch \
-            "
-SRC_URI:append:dm8000 = " \
-            file://dreambox.patch \
-            "
-SRC_URI:append:dm7020hd = " \
-            file://dreambox.patch \
-            "
-SRC_URI:append:dm7020hdv2 = " \
-            file://dreambox.patch \
-            "
-SRC_URI:append:dm800se = " \
-            file://dreambox.patch \
-            "
-SRC_URI:append:dm500hdv2 = " \
-            file://dreambox.patch \
-            "
-SRC_URI:append:dm800sev2 = " \
-            file://dreambox.patch \
-            "
-S = "${UNPACKDIR}/AX88179_178A_LINUX_DRIVER_v1.4.1_SOURCE"
-
+SRCREV = "${AUTOREV}"
+SRC_URI = "git://github.com/oe-alliance-drivers/ax88179.git;protocol=https;branch=master;destsuffix=s"
+S = "${UNPACKDIR}/s"
 EXTRA_OEMAKE = "KDIR=${STAGING_KERNEL_DIR}"
 
 export KCFLAGS += " -std=gnu17"
@@ -46,5 +24,3 @@ do_install() {
     install -m 0644 ${S}/*.ko ${D}${nonarch_base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/net
 }
 
-SRC_URI[md5sum] = "584c80be94c4d945cee30881c410b58d"
-SRC_URI[sha256sum] = "e084fbe1b4de7b4dd703a92e643642e876d2757e8936619f99864e9ad6ffb582"
