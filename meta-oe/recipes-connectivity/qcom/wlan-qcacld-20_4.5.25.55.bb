@@ -5,16 +5,12 @@ CAF_MIRROR = "https://source.codeaurora.org/external/wlan"
 
 inherit module
 
-COMPATIBLE_MACHINE = "osmio4k|osmio4kplus|xc7439"
+COMPATIBLE_MACHINE = "osmio4k|osmio4kplus"
 
 SRCREV = "${AUTOREV}"
 SRC_URI = "git://github.com/oe-alliance-drivers/qcacld-2.0.git;protocol=https;branch=master;destsuffix=s"
 
-SRC_URI:append:xc7439 = " file://qcacld-2.0-support-xc7439.patch"
-
 S = "${UNPACKDIR}/s"
-
-EXTRA_OEMAKE:append:xc7439 = " CONFIG_CLD_HL_SDIO_CORE=y"
 
 do_install() {
     install -d ${D}${nonarch_base_libdir}/modules/${KERNEL_VERSION}/extra

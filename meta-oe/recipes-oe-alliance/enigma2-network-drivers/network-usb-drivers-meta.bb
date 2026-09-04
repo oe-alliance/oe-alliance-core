@@ -5,7 +5,6 @@ inherit packagegroup
 require conf/license/license-gplv2.inc
 
 DEPENDS = "\
-    ${@bb.utils.contains("MACHINE_FEATURES", "wifiusblegacy", "", " \
     enigma2-plugin-drivers-network-usb-ath9k-htc \
     enigma2-plugin-drivers-network-usb-carl9170 \
     enigma2-plugin-drivers-network-usb-rt2500 \
@@ -24,7 +23,6 @@ DEPENDS = "\
     enigma2-plugin-drivers-network-usb-rtl8192eu \
     enigma2-plugin-drivers-network-usb-rtl8192fu \
     enigma2-plugin-drivers-network-usb-rtl8821cu \
-    ", d)} \
     enigma2-plugin-drivers-network-usb-asix \
     enigma2-plugin-drivers-network-usb-ax88179-178a \
     enigma2-plugin-drivers-network-usb-rt73 \
@@ -33,7 +31,6 @@ DEPENDS = "\
     enigma2-plugin-drivers-network-usb-rt5572 \
     enigma2-plugin-drivers-network-usb-r8712u \
     enigma2-plugin-drivers-network-usb-rtl8192cu \
-    enigma2-plugin-drivers-network-usb-rtl8192cu-rev2 \
     enigma2-plugin-drivers-network-usb-rtl8192ce \
     enigma2-plugin-drivers-network-usb-r8188eu \
     enigma2-plugin-drivers-network-usb-rtl8152 \
@@ -42,7 +39,6 @@ DEPENDS = "\
     "
 
 OPTIONAL_WIFI_PACKAGES = "\
-    ${@ 'enigma2-plugin-drivers-network-usb-rtl88xxau'     if bb.utils.vercmp_string_op('${PREFERRED_VERSION_${PREFERRED_PROVIDER_virtual/kernel}}', '4.4', '>=') else '' } \
     ${@ 'enigma2-plugin-drivers-network-usb-rtl8821au'     if bb.utils.vercmp_string_op('${PREFERRED_VERSION_${PREFERRED_PROVIDER_virtual/kernel}}', '4.4', '>=') else '' } \
     ${@ 'enigma2-plugin-drivers-network-usb-rtl8156'       if bb.utils.vercmp_string_op('${PREFERRED_VERSION_${PREFERRED_PROVIDER_virtual/kernel}}', '3.18', '>=') else '' } \
     ${@ 'enigma2-plugin-drivers-network-usb-rtl8852cu'     if bb.utils.vercmp_string_op('${PREFERRED_VERSION_${PREFERRED_PROVIDER_virtual/kernel}}', '3.10', '>=') else '' } \

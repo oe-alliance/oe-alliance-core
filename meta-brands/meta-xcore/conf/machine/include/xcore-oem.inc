@@ -118,7 +118,6 @@ DVBMEDIASINK_CONFIG = "--with-wma --with-wmv --with-pcm --with-dts --with-eac3  
     ${@bb.utils.contains('MACHINEBUILD', 'osminiplus', '--with-h265 --with-vb6 --with-vb8 --with-spark' , '', d)} \
     ${@bb.utils.contains('MACHINEBUILD', 'spycatminiplus', '--with-h265 --with-vb6 --with-vb8 --with-spark' , '', d)} \
     ${@bb.utils.contains('MACHINEBUILD', 'osmega', '--with-h265 --with-vb6 --with-vb8 --with-spark' , '', d)} \
-    ${@bb.utils.contains('MACHINE', 'xc7439', '--with-h265 --with-vb6 --with-vb8 --with-vb9 --with-spark' , '', d)} \
 "
 
 VIRTUAL-RUNTIME_blindscan_dvbs = "xcore-blindscan-dvbs-utils"
