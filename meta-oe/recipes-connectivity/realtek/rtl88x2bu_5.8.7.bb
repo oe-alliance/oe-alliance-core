@@ -1,17 +1,33 @@
-SUMMARY = "Ralink 88x2BU v5.8.7"
+SUMMARY = "Realtek RTL8812BU and RTL8822BU"
 HOMEPAGE = "http://www.realtek.com.tw"
 SECTION = "kernel/modules"
 LICENSE = "GPL-2.0-only"
-LIC_FILES_CHKSUM = "file://README.md;md5=19249119cf93fa4094b7f61f7f11b0c2"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=ab842b299d0a92fb908d6eb122cd6de9"
+
+DEPENDS = "bc-native"
+
+# some of these sticks come up as a CD-ROM first
+RDEPENDS:${PN} = "usb-modeswitch"
 
 inherit module
 
+PR = "r2"
+
 SRCREV = "${AUTOREV}"
-SRC_URI = "git://github.com/atvcaptain/rtl88x2bu.git;protocol=https;branch=main"
+SRC_URI = "git://github.com/oe-alliance-drivers/rtl8822bu.git;protocol=https;branch=master;destsuffix=s"
+# The default unpack directory "sources" costs six more characters on every
+# object path.
+UNPACKDIR = "${WORKDIR}/u"
+
+S = "${UNPACKDIR}/s"
 
 require kcflags.inc
 
-EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR} KDIR=${STAGING_KERNEL_DIR} KSRC=${STAGING_KERNEL_DIR}"
+# WPA3-SAE; the driver leaves this path disabled unless we ask for it.
+# USER_MODULE_NAME keeps the module named 8822bu, this tree would call it
+# 88x2bu and rename the package with it.
+EXTRA_OEMAKE = "KSRC=${STAGING_KERNEL_DIR} LINUX_SRC=${STAGING_KERNEL_DIR} KDIR=${STAGING_KERNEL_DIR} \
+    USER_MODULE_NAME=8822bu USER_EXTRA_CFLAGS=-DCONFIG_KERNEL_PATCH_EXTERNAL_AUTH"
 
 do_install() {
     install -d ${D}${nonarch_base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/net/wireless
