@@ -105,7 +105,7 @@ new file mode 100644
 index 0000000000..edc64a4e15
 --- /dev/null
 +++ b/xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecSTB.cpp
-@@ -0,0 +1,560 @@
+@@ -0,0 +1,593 @@
 +/*
 + *  Copyright (C) 2026 OE-Alliance contributors
 + *  SPDX-License-Identifier: GPL-2.0-or-later
@@ -119,6 +119,7 @@ index 0000000000..edc64a4e15
 +#include "utils/log.h"
 +
 +#include <algorithm>
++#include <chrono>
 +#include <cmath>
 +#include <cstdlib>
 +#include <limits>
@@ -429,6 +430,8 @@ index 0000000000..edc64a4e15
 +                          : 0.0;
 +  m_name = "stbplayer/" + m_session->BackendName();
 +  m_feedAheadPictures = m_session->BackendName() == "dream-aml" ? 48U : 0U;
++  m_gateStartupPts = (m_session->Capabilities().feature_mask &
++                      STBP_FEATURE_STARTUP_PTS_GATE) != 0;
 +  m_processInfo.SetVideoDecoderName(m_name, true);
 +  m_processInfo.SetVideoDimensions(hints.width, hints.height);
 +  m_processInfo.SetVideoFps(hints.fpsrate > 0 && hints.fpsscale > 0
@@ -529,6 +532,8 @@ index 0000000000..edc64a4e15
 +{
 +  if (!m_open)
 +    return;
++  const bool initialEmptyReset =
++      m_lastSubmittedPts90k == STBP_PTS_NONE && !m_firstPictureOutput;
 +  const enum stbp_result result = m_session->Flush(STBP_PTS_NONE);
 +  if (result != STBP_OK)
 +  {
@@ -541,6 +546,9 @@ index 0000000000..edc64a4e15
 +  m_lastSubmittedPts90k = STBP_PTS_NONE;
 +  m_drainStarted = false;
 +  m_firstPictureOutput = false;
++  m_waitForHardwareStart = initialEmptyReset && m_gateStartupPts;
++  if (m_waitForHardwareStart)
++    m_startupPtsGateDeadline = std::chrono::steady_clock::now() + std::chrono::seconds(15);
 +  if (m_bitstream)
 +    m_bitstream->ResetStartDecode();
 +}
@@ -553,6 +561,31 @@ index 0000000000..edc64a4e15
 +    return VC_ERROR;
 +  if (!m_pictures.empty())
 +  {
++    if (m_waitForHardwareStart)
++    {
++      struct stbp_status status{};
++      status.struct_size = sizeof(status);
++      const int64_t firstPicturePts90k = To90k(m_pictures.front().pts);
++      const bool haveStatus = m_session->GetStatus(status) == STBP_OK;
++      const bool caughtUp =
++          haveStatus && status.presentation_pts_90k != STBP_PTS_NONE &&
++          firstPicturePts90k != STBP_PTS_NONE &&
++          status.presentation_pts_90k + 4500 >= firstPicturePts90k;
++      const bool timedOut = std::chrono::steady_clock::now() >= m_startupPtsGateDeadline;
++      if (!caughtUp && !timedOut)
++      {
++        struct stbp_buffer_state state{};
++        state.struct_size = sizeof(state);
++        if (m_session->GetBufferState(state) == STBP_OK && state.can_accept_packet)
++          return VC_BUFFER;
++        return VC_NONE;
++      }
++      CLog::Log(LOGINFO,
++                "CDVDVideoCodecSTB: startup PTS gate {} at hardware={} first-picture={}",
++                caughtUp ? "ready" : "timed out", status.presentation_pts_90k,
++                firstPicturePts90k);
++      m_waitForHardwareStart = false;
++    }
 +    if (m_firstPictureOutput && m_feedAheadPictures != 0U &&
 +        (m_codecControl & DVD_CODEC_CTRL_DRAIN) == 0 &&
 +        m_pictures.size() <= m_feedAheadPictures)
@@ -671,7 +704,7 @@ new file mode 100644
 index 0000000000..53ebb98a45
 --- /dev/null
 +++ b/xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecSTB.h
-@@ -0,0 +1,68 @@
+@@ -0,0 +1,72 @@
 +/*
 + *  Copyright (C) 2026 OE-Alliance contributors
 + *  SPDX-License-Identifier: GPL-2.0-or-later
@@ -683,6 +716,7 @@ index 0000000000..53ebb98a45
 +#include "STBVideoSession.h"
 +#include "cores/VideoPlayer/DVDStreamInfo.h"
 +
++#include <chrono>
 +#include <deque>
 +#include <memory>
 +#include <string>
@@ -731,6 +765,9 @@ index 0000000000..53ebb98a45
 +  std::vector<uint8_t> m_codecData;
 +  std::deque<PictureInfo> m_pictures;
 +  size_t m_feedAheadPictures{0U};
++  bool m_gateStartupPts{false};
++  bool m_waitForHardwareStart{false};
++  std::chrono::steady_clock::time_point m_startupPtsGateDeadline{};
 +  std::string m_name{"stbplayer"};
 +  int m_codecControl{0};
 +  double m_defaultDuration{0.0};

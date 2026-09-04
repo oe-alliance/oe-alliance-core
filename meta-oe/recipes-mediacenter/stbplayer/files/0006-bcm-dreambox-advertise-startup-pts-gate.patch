@@ -1,0 +1,59 @@
+From: OE-Alliance contributors
+Subject: [PATCH] bcm-dvb: advertise Dreambox startup PTS gate
+
+Dreambox BCM decoders expose a useful hardware presentation PTS, but Kodi's
+first post-resume synchronization can run before that clock reaches the first
+displayable picture. Advertise this behavior and preserve a not-yet-started
+PTS instead of substituting the last queued packet.
+
+diff --git a/include/stbplayer/backend.h b/include/stbplayer/backend.h
+--- a/include/stbplayer/backend.h
++++ b/include/stbplayer/backend.h
+@@ -82,7 +82,9 @@ enum stbp_feature
+   STBP_FEATURE_DRAIN = UINT64_C(1) << 6,
+   STBP_FEATURE_INTERLACED = UINT64_C(1) << 7,
+   STBP_FEATURE_HDR10 = UINT64_C(1) << 8,
+-  STBP_FEATURE_HLG = UINT64_C(1) << 9
++  STBP_FEATURE_HLG = UINT64_C(1) << 9,
++  /* Delay Kodi's first post-reset picture until hardware PTS reaches it. */
++  STBP_FEATURE_STARTUP_PTS_GATE = UINT64_C(1) << 10
+ };
+ 
+ enum stbp_packet_flag
+diff --git a/backends/bcm_dvb.c b/backends/bcm_dvb.c
+--- a/backends/bcm_dvb.c
++++ b/backends/bcm_dvb.c
+@@ -1092,6 +1092,9 @@ static enum stbp_result bcm_probe(void* opaque, struct stbp_capabilities* capabi
+                                STBP_FEATURE_PRESENTATION_CLOCK |
+                                STBP_FEATURE_DRAIN |
+                                STBP_FEATURE_INTERLACED;
++#if defined(STBP_BCM_DVB_VARIANT_DREAMBOX)
++  capabilities->feature_mask |= STBP_FEATURE_STARTUP_PTS_GATE;
++#endif
+   capabilities->max_width = 4096;
+   capabilities->max_height = 2160;
+   capabilities->max_packet_size = BCM_MAX_PACKET_SIZE;
+@@ -1404,6 +1407,15 @@ static enum stbp_result bcm_get_status(void* opaque, struct stbp_status* status)
+   (void)pthread_mutex_lock(&instance->mutex);
+   status->state = instance->state;
+   status->last_error = instance->last_error;
++#if defined(STBP_BCM_DVB_VARIANT_DREAMBOX)
++  /* Dreambox exposes a useful decoder presentation PTS. Do not replace a
++   * not-yet-started zero value with the last queued packet: Kodi uses the
++   * distinction to defer its first post-resume A/V synchronization. */
++  status->presentation_pts_90k = STBP_PTS_NONE;
++  if (instance->video_fd >= 0 && ioctl(instance->video_fd, VIDEO_GET_PTS, &decoder_pts) == 0 &&
++      decoder_pts != 0)
++    status->presentation_pts_90k = (int64_t)decoder_pts;
++#else
+   status->presentation_pts_90k = instance->last_pts_90k;
+   /* Some VU+ Broadcom drivers report a successful VIDEO_GET_PTS ioctl but
+    * return zero for the complete memory-source session.  Zero is not useful
+@@ -1413,6 +1425,7 @@ static enum stbp_result bcm_get_status(void* opaque, struct stbp_status* status)
+   if (instance->video_fd >= 0 && ioctl(instance->video_fd, VIDEO_GET_PTS, &decoder_pts) == 0 &&
+       (decoder_pts != 0 || instance->last_pts_90k == 0))
+     status->presentation_pts_90k = (int64_t)decoder_pts;
++#endif
+ #if defined(STBP_BCM_DVB_VARIANT_NORMAL)
+   if (instance->startup_catchup_active &&
+       instance->startup_catchup_target_pts_90k != STBP_PTS_NONE)

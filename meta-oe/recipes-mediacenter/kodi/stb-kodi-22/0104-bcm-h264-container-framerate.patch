@@ -10,7 +10,7 @@ framerate before the existing Annex-B conversion on the bcm-dvb backend.
 diff --git a/xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecSTB.cpp b/xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecSTB.cpp
 --- a/xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecSTB.cpp
 +++ b/xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecSTB.cpp
-@@ -10,9 +10,17 @@
+@@ -10,10 +10,18 @@
  #include "utils/BitstreamConverter.h"
  #include "utils/log.h"
  
@@ -22,6 +22,7 @@ diff --git a/xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecSTB.cpp b/xbmc/
 +}
 +
  #include <algorithm>
+ #include <chrono>
  #include <cmath>
  #include <cstdlib>
 +#include <cstring>

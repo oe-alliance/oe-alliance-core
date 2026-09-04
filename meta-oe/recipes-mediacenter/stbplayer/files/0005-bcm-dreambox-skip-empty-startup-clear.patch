@@ -1,0 +1,121 @@
+From: OE-Alliance contributors
+Subject: [PATCH] bcm-dvb: keep empty Dreambox decoder running for resume
+
+Kodi seeks to a saved resume point immediately after opening a fresh decoder.
+Dreambox Broadcom drivers can stop presenting permanently when
+VIDEO_CLEAR_BUFFER is issued between VIDEO_PLAY and the first PES packet.
+
+Track whether the current decoder has accepted data. Leave an initial empty
+flush completely inside libstbplayer, without issuing speed or continue
+commands to the device. Retain VIDEO_CLEAR_BUFFER and the existing controls
+for every ordinary seek after playback has started.
+
+--- a/backends/bcm_dvb.c
++++ b/backends/bcm_dvb.c
+@@ -106,6 +106,9 @@ struct bcm_instance
+   int64_t last_pts_90k;
+   int stc_host_enabled;
+   int stc_needs_seed;
++#if defined(STBP_BCM_DVB_VARIANT_DREAMBOX)
++  int decoder_has_data;
++#endif
+   int startup_preroll;
+   uint32_t startup_preroll_packets;
+   int64_t startup_preroll_first_pts_90k;
+@@ -999,6 +1002,9 @@ static enum stbp_result close_locked(struct bcm_instance* instance)
+   instance->state = STBP_STATE_CLOSED;
+   instance->codec = STBP_CODEC_UNKNOWN;
+   instance->last_pts_90k = STBP_PTS_NONE;
++#if defined(STBP_BCM_DVB_VARIANT_DREAMBOX)
++  instance->decoder_has_data = 0;
++#endif
+   instance->startup_preroll = 0;
+   instance->startup_preroll_packets = 0U;
+   instance->startup_preroll_first_pts_90k = STBP_PTS_NONE;
+@@ -1201,6 +1207,9 @@ static enum stbp_result bcm_open(void* opaque,
+   instance->last_pts_90k = STBP_PTS_NONE;
+   instance->stc_host_enabled = 0;
+   instance->stc_needs_seed = host_stc_available(instance);
++#if defined(STBP_BCM_DVB_VARIANT_DREAMBOX)
++  instance->decoder_has_data = 0;
++#endif
+   instance->startup_preroll = 1;
+   instance->startup_preroll_packets = 0U;
+   instance->startup_preroll_first_pts_90k = STBP_PTS_NONE;
+@@ -1357,5 +1366,8 @@ static enum stbp_result bcm_queue_packet(void* opaque, const struct stbp_packet*
+   if (result == STBP_OK)
+   {
++#if defined(STBP_BCM_DVB_VARIANT_DREAMBOX)
++    instance->decoder_has_data = 1;
++#endif
+     ++instance->packets_queued;
+     if ((packet->flags & STBP_PACKET_DROP) != 0)
+       ++instance->packets_dropped;
+@@ -1433,6 +1445,9 @@ static enum stbp_result bcm_flush(void* opaque, int64_t next_pts_90k)
+ {
+   struct bcm_instance* instance = (struct bcm_instance*)opaque;
+   enum stbp_result result = STBP_OK;
++#if defined(STBP_BCM_DVB_VARIANT_DREAMBOX)
++  int clear_decoder;
++#endif
+ 
+   if (instance == NULL)
+     return STBP_ERROR_INVALID_ARGUMENT;
+@@ -1442,27 +1457,57 @@ static enum stbp_result bcm_flush(void* opaque, int64_t next_pts_90k)
+     result = STBP_ERROR_BAD_STATE;
+   else
+   {
++#if defined(STBP_BCM_DVB_VARIANT_DREAMBOX)
++    /* Kodi seeks to a saved resume point immediately after opening a fresh
++     * decoder. Dreambox BCM drivers can stop presenting permanently when an
++     * empty decoder is cleared between VIDEO_PLAY and its first PES packet.
++     * Once data has entered the decoder, ordinary seek flushes retain the
++     * established VIDEO_CLEAR_BUFFER path. */
++    clear_decoder = instance->decoder_has_data;
++#endif
+     release_pending(instance);
++#if defined(STBP_BCM_DVB_VARIANT_DREAMBOX)
++    if (!clear_decoder)
++    {
++      /* Keep the just-opened decoder completely untouched. Even nominally
++       * harmless speed/continue ioctls before its first PES timestamp can
++       * establish a wrong internal time mapping on Dreambox BCM drivers. */
++      instance->state = STBP_STATE_OPEN;
++      instance->send_codec_data = instance->codec_data_size != 0;
++      instance->last_pts_90k = next_pts_90k;
++      instance->stc_needs_seed = host_stc_available(instance);
++      instance->decoder_has_data = 0;
++      bcm_log(instance, STBP_LOG_INFO,
++              "Dreambox initial resume flush left the empty decoder untouched");
++      goto flush_done;
++    }
++#endif
+     if (ioctl(instance->video_fd, VIDEO_CLEAR_BUFFER) < 0)
+     {
+       bcm_log_errno(instance, STBP_LOG_ERROR, "VIDEO_CLEAR_BUFFER");
+       result = STBP_ERROR_IO;
+     }
+     else
+     {
+ #if defined(STBP_BCM_DVB_VARIANT_NORMAL)
+       stop_startup_catchup_locked(instance,
+                                   "Broadcom startup preroll catch-up cancelled by flush");
+ #endif
+       (void)ioctl(instance->video_fd, VIDEO_FAST_FORWARD, 0);
+       (void)ioctl(instance->video_fd, VIDEO_SLOWMOTION, 0);
+       (void)ioctl(instance->video_fd, VIDEO_CONTINUE);
+       instance->state = STBP_STATE_OPEN;
+       instance->send_codec_data = instance->codec_data_size != 0;
+       instance->last_pts_90k = next_pts_90k;
+       instance->stc_needs_seed = host_stc_available(instance);
++#if defined(STBP_BCM_DVB_VARIANT_DREAMBOX)
++      instance->decoder_has_data = 0;
++#endif
+     }
+   }
++#if defined(STBP_BCM_DVB_VARIANT_DREAMBOX)
++flush_done:
++#endif
+   (void)pthread_mutex_unlock(&instance->mutex);
+   return result;
+ }
