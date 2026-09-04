@@ -1,0 +1,24 @@
+#!/bin/sh
+
+MODULE_DIR=/usr/local/lib/modules
+LOCK_DIR=/run/gb-bluetooth-load-modules.lock
+
+# A Broadcom composite dongle emits several USB add events. Only one loader
+# may run at a time; the first invocation loads both modules for all events.
+if ! mkdir "$LOCK_DIR" 2>/dev/null; then
+	exit 0
+fi
+trap 'rmdir "$LOCK_DIR"' EXIT HUP INT TERM
+
+load_module() {
+	module="$1"
+	grep -q "^${module} " /proc/modules && return 0
+	[ -r "$MODULE_DIR/${module}.ko" ] || return 1
+	/sbin/insmod "$MODULE_DIR/${module}.ko"
+}
+
+# btusb exposes /dev/btusb0; bthid must be available first for HID devices.
+load_module bthid
+load_module btusb
+
+exit 0

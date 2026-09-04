@@ -1,0 +1,4 @@
+# The vendor BSA stack uses its own bthid and btusb modules outside the
+# standard kernel module tree. Load them when a Broadcom USB Bluetooth device
+# is enumerated, including devices already present during udev coldplug.
+ACTION=="add", SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ATTR{idVendor}=="0a5c", RUN+="/usr/sbin/gb-bluetooth-load-modules"
