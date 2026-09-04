@@ -4,7 +4,9 @@ require conf/license/license-close.inc
 
 inherit module
 SRCREV = "${AUTOREV}"
-SRC_URI = "git://github.com/atvcaptain/LINUX_BT_USB_DRIVER.git;protocol=https;branch=main"
+SRC_URI = "git://github.com/oe-alliance-drivers/rtk-btusb.git;protocol=https;branch=master;destsuffix=s"
+
+S = "${UNPACKDIR}/s"
 
 EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR} KDIR=${STAGING_KERNEL_DIR}"
 
