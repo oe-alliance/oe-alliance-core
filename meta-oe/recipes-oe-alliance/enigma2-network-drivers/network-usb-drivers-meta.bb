@@ -43,8 +43,9 @@ DEPENDS = "\
 
 OPTIONAL_WIFI_PACKAGES = "\
     ${@ 'enigma2-plugin-drivers-network-usb-rtl88xxau'     if bb.utils.vercmp_string_op('${PREFERRED_VERSION_${PREFERRED_PROVIDER_virtual/kernel}}', '4.4', '>=') else '' } \
+    ${@ 'enigma2-plugin-drivers-network-usb-rtl8821au'     if bb.utils.vercmp_string_op('${PREFERRED_VERSION_${PREFERRED_PROVIDER_virtual/kernel}}', '4.4', '>=') else '' } \
     ${@ 'enigma2-plugin-drivers-network-usb-rtl8852cu'     if bb.utils.vercmp_string_op('${PREFERRED_VERSION_${PREFERRED_PROVIDER_virtual/kernel}}', '3.10', '>=') else '' } \
     ${@ 'enigma2-plugin-drivers-network-usb-rtl8852bu'     if bb.utils.vercmp_string_op('${PREFERRED_VERSION_${PREFERRED_PROVIDER_virtual/kernel}}', '3.10', '>=') else '' } \
 "
 
-PR = "r2"
+PR = "r3"
