@@ -2,21 +2,13 @@ SUMMARY = "Stable hardware-video backend ABI for STB Kodi"
 DESCRIPTION = "A small C ABI, loader and probe tool for machine-specific STB video backends."
 HOMEPAGE = "https://github.com/oe-alliance"
 
-PR = "r64"
+PR = "r65"
 
 LICENSE = "GPL-2.0-or-later"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=45071750435f2d50d503492ef8e003db"
 
 SRCREV = "${AUTOREV}"
-SRC_URI = "git://github.com/oe-alliance/stb-kodi-libstbplayer.git;protocol=https;branch=main \
-           file://0001-bcm-dvb-add-gigablue-startup-variant.patch \
-           file://0002-bcm-dvb-sync-kodi-master-clock.patch \
-           file://0003-bcm-dvb-add-nexus-host-stc.patch \
-           file://0004-bcm-dvb-catch-up-startup-preroll.patch \
-           file://0005-bcm-dreambox-skip-empty-startup-clear.patch \
-           file://0006-bcm-dreambox-advertise-startup-pts-gate.patch \
-           file://0007-bcm-dreambox-defer-resume-startup-pause.patch \
-"
+SRC_URI = "git://github.com/oe-alliance/stb-kodi-libstbplayer.git;protocol=https;branch=main"
 
 inherit cmake pkgconfig
 
