@@ -18,8 +18,10 @@ SRC_URI += " \
 "
 
 do_configure:append() {
-        sed -e '/^CONFIG_TLS = gnutls/d' -i wpa_supplicant/.config
-        echo "CONFIG_DEBUG_SYSLOG=y" >> wpa_supplicant/.config
+        grep -q '^CONFIG_DEBUG_SYSLOG=y' wpa_supplicant/.config || echo "CONFIG_DEBUG_SYSLOG=y" >> wpa_supplicant/.config
+        if grep -q '^CONFIG_TLS=openssl' wpa_supplicant/.config; then
+                grep -q '^CONFIG_SAE=y' wpa_supplicant/.config || echo "CONFIG_SAE=y" >> wpa_supplicant/.config
+        fi
 }
 do_install:append() {
         rm -rf ${D}${sysconfdir}/network/if-*.d
