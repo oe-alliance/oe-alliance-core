@@ -20,6 +20,11 @@ UNPACKDIR = "${WORKDIR}/u"
 
 S = "${UNPACKDIR}/s"
 
+# kbuild links every object in one shell command, and an absolute M puts the
+# full work path in front of each of them. Relative keeps that command short
+# enough on machines whose name makes the path long.
+EXTRA_OEMAKE:append = " M=${@os.path.relpath(d.getVar('S'), d.getVar('STAGING_KERNEL_DIR'))}"
+
 require kcflags.inc
 
 # WPA3-SAE; the driver leaves this path disabled unless we ask for it
