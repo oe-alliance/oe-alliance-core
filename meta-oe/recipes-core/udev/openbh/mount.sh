@@ -317,7 +317,15 @@ if [ "$ACTION" = "add" ]; then
 	fi
 
 	if grep -qs "UUID=$ID_FS_UUID" /etc/fstab && ! enigma2_is_running; then
-		log "UUID $ID_FS_UUID is already in /etc/fstab, skipping mount."
+		FSTAB_MP=`awk -v s="UUID=$ID_FS_UUID" '$1 == s && $2 ~ /^\/media\// {print $2; exit}' /etc/fstab`
+		if [ -n "$FSTAB_MP" ] && ! grep -qs " $FSTAB_MP " /proc/mounts; then
+			# The mount at boot time can run before the device is ready.
+			log "The mount at boot time had missed [$FSTAB_MP], mounting it now."
+			! test -d "$FSTAB_MP" && mkdir -p "$FSTAB_MP"
+			$MOUNT "$FSTAB_MP"
+		else
+			log "UUID $ID_FS_UUID is already in /etc/fstab, skipping mount."
+		fi
 		exit 0
 	fi
 
