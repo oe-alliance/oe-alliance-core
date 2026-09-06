@@ -12,12 +12,73 @@
 
 #include <linux/fs.h>
 #include <linux/kallsyms.h>
+#include <linux/kprobes.h>
 #include <linux/miscdevice.h>
 #include <linux/module.h>
 #include <linux/mutex.h>
 #include <linux/slab.h>
 #include <linux/string.h>
 #include <linux/uaccess.h>
+#include <linux/version.h>
+
+/*
+ * kallsyms_lookup_name() stopped being exported to modules in Linux 5.7
+ * (commit 0bd476e6c671, "kallsyms: unexport kallsyms_lookup_name() and
+ * kallsyms_on_each_symbol()"). Since this driver only ever uses it to
+ * resolve symbols from an already loaded, closed-source DVB module (never
+ * to reach into arbitrary kernel internals), we recover the same
+ * functionality on newer kernels by placing a kprobe on
+ * kallsyms_lookup_name itself: the kprobe's kp.addr gives us the
+ * function's address without needing it to be exported, after which we
+ * call it exactly as before.
+ *
+ * Older kernels (< 5.7) still export the symbol directly, so we keep
+ * using it as-is there rather than depending on CONFIG_KPROBES, which may
+ * not be enabled on every receiver's defconfig.
+ */
+#if LINUX_VERSION_CODE < KERNEL_VERSION(5, 7, 0)
+
+static inline int gb_resolve_kallsyms_lookup_name(void)
+{
+	return 0;
+}
+
+static inline unsigned long gb_do_kallsyms_lookup_name(const char *name)
+{
+	return kallsyms_lookup_name(name);
+}
+
+#else
+
+typedef unsigned long (*gb_kallsyms_lookup_name_t)(const char *name);
+static gb_kallsyms_lookup_name_t gb_kallsyms_lookup_name_fn;
+
+static int __init gb_resolve_kallsyms_lookup_name(void)
+{
+	struct kprobe kp = { .symbol_name = "kallsyms_lookup_name" };
+	int ret;
+
+	ret = register_kprobe(&kp);
+	if (ret < 0) {
+		pr_err("gb_stc_host: could not resolve kallsyms_lookup_name (%d)\n",
+		       ret);
+		return ret;
+	}
+	gb_kallsyms_lookup_name_fn = (gb_kallsyms_lookup_name_t)kp.addr;
+	unregister_kprobe(&kp);
+	if (!gb_kallsyms_lookup_name_fn) {
+		pr_err("gb_stc_host: kallsyms_lookup_name address not found\n");
+		return -ENOENT;
+	}
+	return 0;
+}
+
+static inline unsigned long gb_do_kallsyms_lookup_name(const char *name)
+{
+	return gb_kallsyms_lookup_name_fn(name);
+}
+
+#endif /* LINUX_VERSION_CODE < KERNEL_VERSION(5, 7, 0) */
 
 #define GB_STC_SETTINGS_BYTES 512
 #define GB_STC_MODE_AUTO 1U
@@ -215,36 +276,42 @@ static struct miscdevice gb_stc_device = {
 
 static int __init gb_stc_init(void)
 {
+	int ret;
+
+	ret = gb_resolve_kallsyms_lookup_name();
+	if (ret)
+		return ret;
+
 	gb_platform_get_channel = (gb_platform_get_channel_fn)
-		kallsyms_lookup_name("platform_get_stc_channel");
+		gb_do_kallsyms_lookup_name("platform_get_stc_channel");
 	if (!gb_platform_get_channel)
 		gb_primer_get_channel = (gb_primer_get_channel_fn)
-			kallsyms_lookup_name("video_primer_get_stc_channel");
+			gb_do_kallsyms_lookup_name("video_primer_get_stc_channel");
 	if (!gb_platform_get_channel && !gb_primer_get_channel) {
 		gb_get_default_settings = (gb_get_default_settings_fn)
-			kallsyms_lookup_name("NEXUS_StcChannel_GetDefaultSettings");
+			gb_do_kallsyms_lookup_name("NEXUS_StcChannel_GetDefaultSettings");
 		gb_open_channel = (gb_open_channel_fn)
-			kallsyms_lookup_name("NEXUS_StcChannel_Open");
+			gb_do_kallsyms_lookup_name("NEXUS_StcChannel_Open");
 		gb_close_channel = (gb_close_channel_fn)
-			kallsyms_lookup_name("NEXUS_StcChannel_Close");
+			gb_do_kallsyms_lookup_name("NEXUS_StcChannel_Close");
 		if (!gb_get_default_settings || !gb_open_channel || !gb_close_channel) {
 			pr_err("gb_stc_host: supported DVB STC accessor not found\n");
 			return -ENODEV;
 		}
 	}
-	gb_get_settings = (gb_get_settings_fn)kallsyms_lookup_name(
+	gb_get_settings = (gb_get_settings_fn)gb_do_kallsyms_lookup_name(
 		gb_platform_get_channel ? "NEXUS_SimpleStcChannel_GetSettings" :
 					  "NEXUS_StcChannel_GetSettings");
-	gb_set_settings = (gb_set_settings_fn)kallsyms_lookup_name(
+	gb_set_settings = (gb_set_settings_fn)gb_do_kallsyms_lookup_name(
 		gb_platform_get_channel ? "NEXUS_SimpleStcChannel_SetSettings" :
 					  "NEXUS_StcChannel_SetSettings");
-	gb_set_stc = (gb_set_stc_fn)kallsyms_lookup_name(
+	gb_set_stc = (gb_set_stc_fn)gb_do_kallsyms_lookup_name(
 		gb_platform_get_channel ? "NEXUS_SimpleStcChannel_SetStc" :
 					  "NEXUS_StcChannel_SetStc");
-	gb_freeze = (gb_freeze_fn)kallsyms_lookup_name(
+	gb_freeze = (gb_freeze_fn)gb_do_kallsyms_lookup_name(
 		gb_platform_get_channel ? "NEXUS_SimpleStcChannel_Freeze" :
 					  "NEXUS_StcChannel_Freeze");
-	gb_set_rate = (gb_set_rate_fn)kallsyms_lookup_name(
+	gb_set_rate = (gb_set_rate_fn)gb_do_kallsyms_lookup_name(
 		gb_platform_get_channel ? "NEXUS_SimpleStcChannel_SetRate" :
 					  "NEXUS_StcChannel_SetRate");
 	if (!gb_get_settings || !gb_set_settings || !gb_set_stc || !gb_freeze ||
