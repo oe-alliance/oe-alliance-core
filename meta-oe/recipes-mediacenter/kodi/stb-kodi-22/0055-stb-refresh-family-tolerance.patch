@@ -1,0 +1,90 @@
+From 7c1b0ca82e967c719f868496da15ba11d3c95a73 Mon Sep 17 00:00:00 2001
+From: OE-Alliance <oe-alliance@users.noreply.github.com>
+Date: Sun, 6 Sep 2026 20:30:00 +0200
+Subject: [PATCH] STB: match integer and fractional refresh-rate families
+
+Receiver video-mode APIs commonly expose a single 24/30/60 Hz family mode as
+23.976/29.970/59.940 Hz.  Kodi's 0.01 Hz exact-match tolerance rejects 24.000
+fps against 23.976 Hz and may leave the previous 50 Hz desktop mode active.
+Use a 0.1 Hz tolerance for STB builds so the matching family is selected while
+retaining Kodi's strict comparison on other platforms.
+---
+ xbmc/windowing/Resolution.cpp | 16 ++++++++++++----
+ 1 file changed, 12 insertions(+), 4 deletions(-)
+
+diff --git a/xbmc/windowing/Resolution.cpp b/xbmc/windowing/Resolution.cpp
+index 2c559a8144..94a7e8cc3a 100644
+--- a/xbmc/windowing/Resolution.cpp
++++ b/xbmc/windowing/Resolution.cpp
+@@ -28,6 +28,12 @@ const char* SETTING_VIDEOSCREEN_WHITELIST_PULLDOWN{"videoscreen.whitelistpulld
+ const char* SETTING_VIDEOSCREEN_WHITELIST_DOUBLEREFRESHRATE{
+     "videoscreen.whitelistdoublerefreshrate"};
+ 
++#if defined(TARGET_STB)
++constexpr float REFRESH_RATE_MATCH_TOLERANCE{0.1f};
++#else
++constexpr float REFRESH_RATE_MATCH_TOLERANCE{0.01f};
++#endif
++
+ } // namespace
+ 
+ EdgeInsets::EdgeInsets(float l, float t, float r, float b) : left(l), top(t), right(r), bottom(b)
+@@ -122,7 +128,7 @@ void CResolutionUtils::FindResolutionFromWhitelist(float fps, int width, int he
+     if (((height == info.iScreenHeight && width <= info.iScreenWidth + 8) ||
+          (width == info.iScreenWidth && height <= info.iScreenHeight + 32)) &&
+         (info.dwFlags & D3DPRESENTFLAG_MODEMASK) == (curr.dwFlags & D3DPRESENTFLAG_MODEMASK) &&
+-        MathUtils::FloatEquals(info.fRefreshRate, fps, 0.01f))
++        MathUtils::FloatEquals(info.fRefreshRate, fps, REFRESH_RATE_MATCH_TOLERANCE))
+     {
+       CLog::Log(LOGDEBUG,
+                 "[WHITELIST] Matched an exact resolution with an exact refresh rate {} ({})",
+@@ -157,7 +163,7 @@ void CResolutionUtils::FindResolutionFromWhitelist(float fps, int width, int he
+       if (((height == info.iScreenHeight && width <= info.iScreenWidth + 8) ||
+            (width == info.iScreenWidth && height <= info.iScreenHeight + 32)) &&
+           (info.dwFlags & D3DPRESENTFLAG_MODEMASK) == (curr.dwFlags & D3DPRESENTFLAG_MODEMASK) &&
+-          MathUtils::FloatEquals(info.fRefreshRate, fps * 2, 0.01f))
++          MathUtils::FloatEquals(info.fRefreshRate, fps * 2, REFRESH_RATE_MATCH_TOLERANCE))
+       {
+         CLog::Log(LOGDEBUG,
+                   "[WHITELIST] Matched an exact resolution with double the refresh rate {} ({})",
+@@ -197,7 +203,8 @@ void CResolutionUtils::FindResolutionFromWhitelist(float fps, int width, int he
+       if (((height == info.iScreenHeight && width <= info.iScreenWidth + 8) ||
+            (width == info.iScreenWidth && height <= info.iScreenHeight + 32)) &&
+           (info.dwFlags & D3DPRESENTFLAG_MODEMASK) == (curr.dwFlags & D3DPRESENTFLAG_MODEMASK) &&
+-          MathUtils::FloatEquals(info.fRefreshRate, fps * 2.5f, 0.01f))
++          MathUtils::FloatEquals(info.fRefreshRate, fps * 2.5f,
++                                 REFRESH_RATE_MATCH_TOLERANCE))
+       {
+         CLog::Log(
+             LOGDEBUG,
+@@ -231,7 +238,7 @@ void CResolutionUtils::FindResolutionFromWhitelist(float fps, int width, int he
+     // allow resolutions that are desktop resolution but have the correct refresh rate
+     if (info.iScreenWidth == desktop_info.iScreenWidth &&
+         (info.dwFlags & D3DPRESENTFLAG_MODEMASK) == (desktop_info.dwFlags & D3DPRESENTFLAG_MODEMASK) &&
+-        MathUtils::FloatEquals(info.fRefreshRate, fps, 0.01f))
++        MathUtils::FloatEquals(info.fRefreshRate, fps, REFRESH_RATE_MATCH_TOLERANCE))
+     {
+       CLog::Log(LOGDEBUG,
+                 "[WHITELIST] Matched a desktop resolution with an exact refresh rate {} ({})",
+@@ -258,7 +265,7 @@ void CResolutionUtils::FindResolutionFromWhitelist(float fps, int width, int he
+       if (info.iScreenWidth == desktop_info.iScreenWidth &&
+           (info.dwFlags & D3DPRESENTFLAG_MODEMASK) ==
+               (desktop_info.dwFlags & D3DPRESENTFLAG_MODEMASK) &&
+-          MathUtils::FloatEquals(info.fRefreshRate, fps * 2, 0.01f))
++          MathUtils::FloatEquals(info.fRefreshRate, fps * 2, REFRESH_RATE_MATCH_TOLERANCE))
+       {
+         CLog::Log(LOGDEBUG,
+                   "[WHITELIST] Matched a desktop resolution with double the refresh rate {} ({})",
+@@ -287,7 +294,8 @@ void CResolutionUtils::FindResolutionFromWhitelist(float fps, int width, int he
+       if (info.iScreenWidth == desktop_info.iScreenWidth &&
+           (info.dwFlags & D3DPRESENTFLAG_MODEMASK) ==
+               (desktop_info.dwFlags & D3DPRESENTFLAG_MODEMASK) &&
+-          MathUtils::FloatEquals(info.fRefreshRate, fps * 2.5f, 0.01f))
++          MathUtils::FloatEquals(info.fRefreshRate, fps * 2.5f,
++                                 REFRESH_RATE_MATCH_TOLERANCE))
+       {
+         CLog::Log(
+             LOGDEBUG,
+-- 
+2.51.0
+

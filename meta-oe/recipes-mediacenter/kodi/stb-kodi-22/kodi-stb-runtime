@@ -74,6 +74,31 @@ stb_kodi_prepare_profile()
     fi
 }
 
+stb_kodi_prepare_stc_host()
+{
+    # Official Vu+ drivers keep the decoder channel private. Remove an
+    # orphaned bridge loaded by an older image/feed before Kodi opens the
+    # decoder. The community Duo 4K Lite reports a Vu model but uses the
+    # supported GigaBlue platform driver.
+    if [ -r /proc/stb/info/vumodel ] && \
+       [ "$(cat /proc/stb/info/vumodel 2>/dev/null)" != "vuduo4klite" ]; then
+        if [ -c /dev/stb-stc-host ] && command -v modprobe >/dev/null 2>&1; then
+            modprobe -r gb_stc_host >/dev/null 2>&1 || true
+        fi
+        return 0
+    fi
+
+    # The Broadcom bridge resolves entry points exported by the closed DVB
+    # driver.  Loading it through modules-load.d is too early on receivers
+    # such as Vu+ Zero 4K: gb_stc_host is attempted before nexus.ko and its
+    # init fails permanently for that boot.  Retry immediately before Kodi,
+    # after Enigma2 has initialized the complete decoder stack.
+    [ -c /dev/stb-stc-host ] && return 0
+
+    command -v modprobe >/dev/null 2>&1 || return 0
+    modprobe gb_stc_host >/dev/null 2>&1 || true
+}
+
 stb_kodi_stop_lcdd()
 {
     if [ -n "${STB_KODI_LCDD_PID:-}" ] && kill -0 "${STB_KODI_LCDD_PID}" 2>/dev/null; then
@@ -211,6 +236,7 @@ stb_kodi_run()
     stb_kodi_prepare_profile || return 1
     stb_kodi_load_hardware_state
     stb_kodi_prepare_widevine
+    stb_kodi_prepare_stc_host
 
     # Remove a retained Enigma2 shutdown frame before Kodi opens the decoder.
     # This is a no-op on non-GigaBlue receivers.

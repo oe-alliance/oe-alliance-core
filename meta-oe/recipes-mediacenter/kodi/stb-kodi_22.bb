@@ -83,7 +83,7 @@ SRCREV = "2c7ed4e159af2c44574d315396522cea8dcd8715"
 # 'patch' doesn't support binary diffs
 PATCHTOOL = "git"
 
-PR = "r110"
+PR = "r111"
 
 PV = "22.0+gitr"
 # Keep package upgrades monotonic when the pinned master revision advances.
@@ -137,6 +137,7 @@ SRC_URI = "git://github.com/xbmc/xbmc.git;protocol=https;branch=master \
            file://0103-native-stbplayer-codec.patch \
            file://0104-bcm-h264-container-framerate.patch \
            file://0054-stb-hardware-audio-delay.patch \
+           file://0055-stb-refresh-family-tolerance.patch \
            file://kodi-stb-wrapper \
            file://kodi-stb-runtime \
            "

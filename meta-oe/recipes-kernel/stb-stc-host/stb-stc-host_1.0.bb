@@ -2,7 +2,7 @@ SUMMARY = "Broadcom Nexus host-STC bridge for STB Kodi"
 DESCRIPTION = "Exposes the closed Broadcom DVB decoder STC to userspace so Kodi can synchronize hardware video with its audio master clock."
 SECTION = "kernel/modules"
 
-PR = "r3"
+PR = "r4"
 
 require conf/license/license-gplv2.inc
 
@@ -31,12 +31,4 @@ do_compile() {
 do_install() {
     install -d ${D}${nonarch_base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/media/stb
     install -m 0644 ${S}/gb_stc_host.ko ${D}${nonarch_base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/media/stb/
-    install -d ${D}${sysconfdir}/modules-load.d
-    echo gb_stc_host > ${D}${sysconfdir}/modules-load.d/stb-stc-host.conf
-}
-
-FILES:${PN} += "${sysconfdir}/modules-load.d/stb-stc-host.conf"
-
-pkg_postinst_ontarget:${PN}() {
-    modprobe gb_stc_host >/dev/null 2>&1 || true
 }

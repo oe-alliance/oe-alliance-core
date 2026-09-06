@@ -2,7 +2,7 @@ SUMMARY = "Stable hardware-video backend ABI for STB Kodi"
 DESCRIPTION = "A small C ABI, loader and probe tool for machine-specific STB video backends."
 HOMEPAGE = "https://github.com/oe-alliance"
 
-PR = "r65"
+PR = "r66"
 
 LICENSE = "GPL-2.0-or-later"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=45071750435f2d50d503492ef8e003db"
@@ -22,6 +22,12 @@ PACKAGE_ARCH = "${MACHINE}"
 HISI_STB = "${@'1' if (d.getVar('SOC_FAMILY') or '').startswith('hisi') else '0'}"
 BCM_DVB_STB = "${@'1' if (d.getVar('SOC_FAMILY') or '').startswith('bcm') and d.getVar('TARGET_ARCH') in ('arm', 'mipsel') else '0'}"
 VUPLUS_MIPSEL_STB = "${@'1' if d.getVar('BRAND_OEM') == 'vuplus' and d.getVar('TARGET_ARCH') == 'mipsel' else '0'}"
+VUPLUS_ARM_STB = "${@'1' if d.getVar('BRAND_OEM') == 'vuplus' and d.getVar('TARGET_ARCH') == 'arm' and d.getVar('MACHINE') != 'vuduo4klite' else '0'}"
+# Official Vu+ DVB drivers own their decoder STC channel but expose neither
+# platform_get_stc_channel nor video_primer_get_stc_channel. Opening channel
+# zero again therefore fails with ENODEV on both ARM and MIPSel generations.
+# The community Duo 4K Lite uses the GigaBlue platform driver and is excluded.
+VUPLUS_STC_FALLBACK_STB = "${@'1' if d.getVar('BRAND_OEM') == 'vuplus' and d.getVar('MACHINE') != 'vuduo4klite' else '0'}"
 DREAM_BCM_STB = "${@'1' if (d.getVar('MACHINE') or '').startswith('dm') and d.getVar('BCM_DVB_STB') == '1' else '0'}"
 DREAM_AMLOGIC_STB = "${@'1' if d.getVar('MACHINE') in ('dreamone', 'dreamtwo') and d.getVar('SOC_FAMILY') == 'meson64' else '0'}"
 BCM_DVB_VARIANT = "${@'dreambox' if (d.getVar('MACHINE') or '').startswith('dm') else ('gigablue' if (d.getVar('MACHINE') or '') in ('gb7252', 'gb72604', 'vuduo4klite') else ('vuplus' if (d.getVar('MACHINE') or '').startswith('vu') else ('type2' if (d.getVar('MACHINE') or '') in ('xc7362', 'xc7346') else 'normal')))}"
@@ -48,7 +54,8 @@ EXTRA_OECMAKE = " \
     -DSTBP_BCM_DVB_HAVE_VP9=${@'ON' if '--with-vb9' in d.getVar('BCM_DVB_CONFIG').split() else 'OFF'} \
     -DSTBP_BCM_DVB_HAVE_SPARK=${@'ON' if '--with-spark' in d.getVar('BCM_DVB_CONFIG').split() else 'OFF'} \
     -DSTBP_BCM_DVB_LIMITED_MPEG4V2=${@'ON' if '--with-limited-mpeg4v2' in d.getVar('BCM_DVB_CONFIG').split() else 'OFF'} \
-    -DSTBP_BCM_DVB_NEXUS_STC=${@'ON' if d.getVar('BCM_DVB_STB') == '1' else 'OFF'} \
+    -DSTBP_BCM_DVB_NEXUS_STC=${@'ON' if d.getVar('BCM_DVB_STB') == '1' and d.getVar('VUPLUS_STC_FALLBACK_STB') != '1' and d.getVar('DREAM_BCM_STB') != '1' else 'OFF'} \
+    -DSTBP_BCM_DVB_STARTUP_CATCHUP=${@'ON' if d.getVar('BCM_DVB_VARIANT') == 'normal' or d.getVar('VUPLUS_ARM_STB') == '1' else 'OFF'} \
 "
 
 PACKAGES += "${PN}-backend-hisi-dvb ${PN}-backend-bcm-dvb ${PN}-backend-dream-aml"
@@ -57,12 +64,12 @@ FILES:${PN}-dev += "${includedir}/stbplayer"
 FILES:${PN}-backend-hisi-dvb = "${libdir}/stbplayer/libstbplayer-backend-hisi-dvb.so"
 RDEPENDS:${PN}-backend-hisi-dvb = "${PN}"
 FILES:${PN}-backend-bcm-dvb = "${libdir}/stbplayer/libstbplayer-backend-bcm-dvb.so"
-# The old Vu+ MIPSel DVB driver owns the only full Nexus STC channel and does
-# not export an accessor for its decoder-associated SimpleStcChannel.  The
-# bridge can therefore load but cannot drive that channel (writes return
-# ENODEV).  These receivers use the proven decoder-PTS fallback instead.
+# Official Vu+ DVB drivers own the only full Nexus STC channel and do not
+# export an accessor for their decoder-associated SimpleStcChannel. The bridge
+# can therefore load but cannot drive that channel (writes return ENODEV).
+# These receivers use the proven decoder-PTS fallback instead.
 # Dreambox BCM kernels expose neither that decoder accessor nor the full Nexus
 # STC symbols, so they use the same fallback without installing a dead module.
-RDEPENDS:${PN}-backend-bcm-dvb = "${PN}${@' stb-stc-host' if d.getVar('BCM_DVB_STB') == '1' and d.getVar('VUPLUS_MIPSEL_STB') != '1' and d.getVar('DREAM_BCM_STB') != '1' else ''}"
+RDEPENDS:${PN}-backend-bcm-dvb = "${PN}${@' stb-stc-host' if d.getVar('BCM_DVB_STB') == '1' and d.getVar('VUPLUS_STC_FALLBACK_STB') != '1' and d.getVar('DREAM_BCM_STB') != '1' else ''}"
 FILES:${PN}-backend-dream-aml = "${libdir}/stbplayer/libstbplayer-backend-dream-aml.so"
 RDEPENDS:${PN}-backend-dream-aml = "${PN}"
