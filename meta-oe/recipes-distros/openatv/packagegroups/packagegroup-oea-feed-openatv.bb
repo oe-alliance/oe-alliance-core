@@ -30,6 +30,7 @@ RRECOMMENDS:${PN} = "\
     openssl-old \
     make \
     ${@bb.utils.contains_any('TARGET_ARCH', 'arm aarch64', 'sysbench', '', d)} \
+    ${@bb.utils.contains_any('DEFAULTTUNE', 'cortexa15hf-neon-vfpv4 aarch64', 'enigma2-plugin-extensions-telerising', '', d)} \
     enigma2-plugin-extensions-enhancedmoviecenter \
     enigma2-plugin-extensions-bmediacenter \
     enigma2-plugin-settings-defaultsat \
