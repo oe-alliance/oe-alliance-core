@@ -16,7 +16,7 @@ LIC_FILES_CHKSUM = "file://${UNPACKDIR}/linux-brcmstb-${PV}/COPYING;md5=6bc538ed
 
 DEPENDS += "flex-native bison-native openssl-native coreutils-native"
 
-MACHINE_KERNEL_PR:append = "0"
+MACHINE_KERNEL_PR:append = "1"
 
 SRC_URI += "https://source.mynonpublic.com/edision/linux-edision-${PV}.tar.gz \
     file://defconfig \
