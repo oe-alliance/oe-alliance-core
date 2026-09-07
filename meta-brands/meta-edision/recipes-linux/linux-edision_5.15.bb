@@ -16,12 +16,13 @@ LIC_FILES_CHKSUM = "file://${UNPACKDIR}/linux-brcmstb-${PV}/COPYING;md5=6bc538ed
 
 DEPENDS += "flex-native bison-native openssl-native coreutils-native"
 
-MACHINE_KERNEL_PR:append = "0"
+MACHINE_KERNEL_PR:append = "1"
 
 SRC_URI += "https://source.mynonpublic.com/edision/linux-edision-${PV}.tar.gz \
     file://defconfig \
     file://findkerneldevice.py \
     file://0001-ata-ahci-fix-enum-constants-for-gcc-13.patch \
+    file://0002-kallsyms-re-export-kallsyms_lookup_name-for-out-of-.patch \
     file://openssl.patch \
     "
 
