@@ -19,13 +19,15 @@ PR = "r1"
 
 METRIX_URI ?= "git://github.com/openatv/MetrixHD.git;branch=8.0;protocol=https"
 
-PACKAGES =+ "enigma2-plugin-skins-metrix-atv-fhd-icons enigma2-plugin-skins-metrix-atv-weather-icons"
-PROVIDES =+ "enigma2-plugin-skins-metrix-atv-fhd-icons enigma2-plugin-skins-metrix-atv-weather-icons"
-RPROVIDES:enigma2-plugin-skins-metrix-atv-fhd-icons += "enigma2-plugin-skins-metrix-atv-fhd-icons"
+PACKAGES =+ "enigma2-plugin-skins-metrix-atv-weather-icons"
+PROVIDES =+ "enigma2-plugin-skins-metrix-atv-weather-icons"
 RPROVIDES:enigma2-plugin-skins-metrix-atv-weather-icons += "enigma2-plugin-skins-metrix-atv-weather-icons"
+RPROVIDES:${PN} += "enigma2-plugin-skins-metrix-atv-fhd-icons"
+RREPLACES:${PN} += "enigma2-plugin-skins-metrix-atv-fhd-icons"
+RCONFLICTS:${PN} += "enigma2-plugin-skins-metrix-atv-fhd-icons"
+
 SRC_URI = "${METRIX_URI}"
 
-FILES:enigma2-plugin-skins-metrix-atv-fhd-icons = "/usr/share/enigma2/MetrixHD/FHD"
 FILES:enigma2-plugin-skins-metrix-atv-weather-icons = "/usr/share/enigma2/MetrixHD/animated_weather_icons"
 
 FILES:${PN} = "${libdir} /usr/share"
