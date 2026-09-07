@@ -93,6 +93,7 @@ RRECOMMENDS:${PN} = "\
     enigma2-plugin-extensions-epgexport \
     enigma2-plugin-extensions-esame \
     enigma2-plugin-extensions-partnerbox \
+    enigma2-plugin-extensions-netatmo \
     enigma2-plugin-systemplugins-aspectratioswitch \
     enigma2-plugin-systemplugins-automaticcleanup \
     enigma2-plugin-systemplugins-automatictimerlistcleanup \
