@@ -1,0 +1,12 @@
+diff --git a/kernel/kallsyms.c b/kernel/kallsyms.c
+index 5c11c4e17..a3f2b91d4 100644
+--- a/kernel/kallsyms.c
++++ b/kernel/kallsyms.c
+@@ -203,6 +203,7 @@
+ 	}
+ 	return module_kallsyms_lookup_name(name);
+ }
++EXPORT_SYMBOL_GPL(kallsyms_lookup_name);
+ 
+ #ifdef CONFIG_LIVEPATCH
+ /*
