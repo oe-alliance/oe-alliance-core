@@ -74,7 +74,10 @@ BRCM_PATCHLEVEL = "4.0"
 
 LINUX_VERSION = "${PV}-${BRCM_PATCHLEVEL}-${MACHINE}"
 KERNEL_IMAGETYPE = "${@bb.utils.contains('MACHINE', 'dm520', 'vmlinux.gz', 'vmlinux.bin', d)}"
-KERNEL_IMAGETYPES = "${@bb.utils.contains('MACHINE', 'dm520', '', 'vmlinux.gz', d)}"
+# kernel.bbclass adds KERNEL_IMAGETYPE. DM820/DM7080 only need the raw
+# vmlinux.bin for flash-kernel/ofgwrite; do not install a second gzip image.
+# DM520 keeps vmlinux.gz as its primary image type.
+KERNEL_IMAGETYPES = ""
 
 KERNEL_ENABLE_CGROUPS = "1"
 
