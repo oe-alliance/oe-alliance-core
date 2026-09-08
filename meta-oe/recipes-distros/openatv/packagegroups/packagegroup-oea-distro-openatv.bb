@@ -28,6 +28,7 @@ RDEPENDS:${PN} = "\
     e2-route-metric \
     enigma2-plugin-systemplugins-hotplug \
     enigma2-plugin-systemplugins-softwaremanager \
+    enigma2-plugin-extensions-piconbrowser \
     ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", "${OPENATV_EXTENDED}", d)} \
     "
 
