@@ -1,6 +1,6 @@
 require gigablue-platform-util-pro.inc
 
-SRCDATE = "20260526.r0"
+SRCDATE = "20260807.r0"
 
 KV = "4.1.20"
 
@@ -18,5 +18,5 @@ do_install:append() {
     install -m 0755 ${UNPACKDIR}/config ${D}/home/root/platform/config
 }
 
-SRC_URI[md5sum] = "a9b3f9b11029805276724a1315c31cf0"
-SRC_URI[sha256sum] = "4fd486a8d1ab5dbd4456caddea237454f1bb636ae3ea3417e8de8b99c2650042"
+SRC_URI[md5sum] = "ba836ae5cd3ae177445e3275571a15b4"
+SRC_URI[sha256sum] = "14641bc40d2ad014b2419bb46939973a827683bae51bf0f493da7b8fe7403325"
