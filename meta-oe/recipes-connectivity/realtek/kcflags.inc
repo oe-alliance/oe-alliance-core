@@ -1,5 +1,7 @@
 # need for dreambox linux-meson64 4.9 and gcc-15
-export KCFLAGS += " -std=gnu17 \
+# Under gnu17 a bare "inline" emits no out-of-line copy, leaving calls from
+# other files unresolved at module load; -fgnu89-inline emits one again.
+export KCFLAGS += " -std=gnu17 -fgnu89-inline \
                     -Wno-error=misleading-indentation \
                     -Wno-error=aggressive-loop-optimizations \
                     -Wno-error=int-to-pointer-cast \
@@ -14,3 +16,5 @@ export KCFLAGS += " -std=gnu17 \
                     -Wno-error=return-mismatch \
                     -Wno-error \
 "
+
+PR .= ".1"
