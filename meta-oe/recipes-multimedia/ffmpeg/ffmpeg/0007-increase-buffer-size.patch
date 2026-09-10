@@ -1,6 +1,6 @@
 --- a/libavformat/aviobuf.c
 +++ b/libavformat/aviobuf.c
-@@ -32,7 +32,7 @@
+@@ -33,7 +33,7 @@
  #include "internal.h"
  #include <stdarg.h>
  
@@ -9,7 +9,7 @@
  
  /**
   * Do seeks within this distance ahead of the current buffer by skipping
-@@ -532,16 +532,15 @@ static void fill_buffer(AVIOContext *s)
+@@ -536,16 +536,15 @@ static void fill_buffer(AVIOContext *s)
      }
  
      /* make buffer smaller in case it ended up large after probing */

@@ -1,4 +1,4 @@
-From 2df3d49d1ab25446fa3c43441d945e15ccd12432 Mon Sep 17 00:00:00 2001
+From 028fde357dc7c39e23446f1e11f16981f25d7335 Mon Sep 17 00:00:00 2001
 From: "liberato@chromium.org" <liberato@chromium.org>
 Date: Wed, 7 Jul 2021 19:01:22 -0700
 Subject: [PATCH] Add av_stream_get_first_dts for Chromium
@@ -10,10 +10,10 @@ Subject: [PATCH] Add av_stream_get_first_dts for Chromium
  2 files changed, 11 insertions(+)
 
 diff --git a/libavformat/avformat.h b/libavformat/avformat.h
-index de40397..dc6ff7f 100644
+index ef2b08c..9c8b4dc 100644
 --- a/libavformat/avformat.h
 +++ b/libavformat/avformat.h
-@@ -1170,6 +1170,10 @@ typedef struct AVStreamGroup {
+@@ -1229,6 +1229,10 @@ typedef struct AVStreamGroup {
  
  struct AVCodecParserContext *av_stream_get_parser(const AVStream *s);
  
@@ -25,10 +25,10 @@ index de40397..dc6ff7f 100644
  
  /**
 diff --git a/libavformat/utils.c b/libavformat/utils.c
-index c722743..ce10c51 100644
+index cb0ae74..793dd63 100644
 --- a/libavformat/utils.c
 +++ b/libavformat/utils.c
-@@ -100,6 +100,13 @@ static int append_packet_chunked(AVIOContext *s, AVPacket *pkt, int size)
+@@ -95,6 +95,13 @@ static int append_packet_chunked(AVIOContext *s, AVPacket *pkt, int size)
      return pkt->size > orig_size ? pkt->size - orig_size : ret;
  }
  

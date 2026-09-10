@@ -1,6 +1,6 @@
 --- a/libavformat/mov.c
 +++ b/libavformat/mov.c
-@@ -3771,8 +3771,10 @@ static void mov_fix_index(MOVContext *mov, AVStream *st)
+@@ -4518,8 +4518,10 @@ static void mov_fix_index(MOVContext *mov, AVStream *st)
  
              if (tts_data_old && tts_index_old < tts_count_old) {
                  curr_ctts = tts_data_old[tts_index_old].offset;

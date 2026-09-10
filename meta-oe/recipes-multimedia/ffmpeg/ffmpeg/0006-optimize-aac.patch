@@ -1,6 +1,6 @@
 --- a/libavcodec/aac/aacdec.h
 +++ b/libavcodec/aac/aacdec.h
-@@ -418,7 +418,7 @@ typedef struct AACDecDSP {
+@@ -470,7 +470,7 @@ typedef struct AACDecDSP {
      void (*apply_intensity_stereo)(AACDecContext *ac, ChannelElement *cpe,
                                     int ms_present);
  

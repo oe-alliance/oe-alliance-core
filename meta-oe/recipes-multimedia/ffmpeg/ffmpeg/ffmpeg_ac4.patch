@@ -1,5 +1,5 @@
 diff --git a/libavcodec/Makefile b/libavcodec/Makefile
-index 113adb2..75d8867 100644
+index 95ba308..3c095a2 100644
 --- a/libavcodec/Makefile
 +++ b/libavcodec/Makefile
 @@ -65,6 +65,7 @@ OBJS = ac3_parser.o                                                     \
@@ -10,7 +10,7 @@ index 113adb2..75d8867 100644
              timecode_internal.o                                         \
  
  # subsystems
-@@ -219,6 +219,7 @@
+@@ -219,6 +220,7 @@ OBJS-$(CONFIG_AC3_ENCODER)             += ac3enc_float.o ac3enc.o ac3tab.o \
                                            ac3.o kbdwin.o
  OBJS-$(CONFIG_AC3_FIXED_ENCODER)       += ac3enc_fixed.o ac3enc.o ac3tab.o ac3.o kbdwin.o
  OBJS-$(CONFIG_AC3_MF_ENCODER)          += mfenc.o mf_utils.o
@@ -20,7 +20,7 @@ index 113adb2..75d8867 100644
  OBJS-$(CONFIG_AHX_DECODER)             += mpegaudiodec_float.o
 diff --git a/libavcodec/ac4dec.c b/libavcodec/ac4dec.c
 new file mode 100644
-index 00000000..ae54b819
+index 0000000..6623214
 --- /dev/null
 +++ b/libavcodec/ac4dec.c
 @@ -0,0 +1,6761 @@
@@ -6787,7 +6787,7 @@ index 00000000..ae54b819
 +};
 diff --git a/libavcodec/ac4dec_data.h b/libavcodec/ac4dec_data.h
 new file mode 100644
-index 00000000..85001d14
+index 0000000..6cad200
 --- /dev/null
 +++ b/libavcodec/ac4dec_data.h
 @@ -0,0 +1,1688 @@
@@ -8480,10 +8480,10 @@ index 00000000..85001d14
 +
 +#endif /* AVCODEC_AC4DEC_DATA_H */
 diff --git a/libavcodec/allcodecs.c b/libavcodec/allcodecs.c
-index 2386b45..da6c152 100644
+index 47eded2..98098e4 100644
 --- a/libavcodec/allcodecs.c
 +++ b/libavcodec/allcodecs.c
-@@ -438,6 +438,7 @@
+@@ -428,6 +428,7 @@ extern const FFCodec ff_ac3_encoder;
  extern const FFCodec ff_ac3_decoder;
  extern const FFCodec ff_ac3_fixed_encoder;
  extern const FFCodec ff_ac3_fixed_decoder;
@@ -8493,7 +8493,7 @@ index 2386b45..da6c152 100644
  extern const FFCodec ff_alac_encoder;
 diff --git a/libavcodec/float_fmul_reverse.c b/libavcodec/float_fmul_reverse.c
 new file mode 100644
-index 00000000..ae54b819
+index 0000000..6d7a96f
 --- /dev/null
 +++ b/libavcodec/float_fmul_reverse.c
 @@ -0,0 +1,19 @@
@@ -8530,10 +8530,10 @@ index 4185c42..2ea35e1 100644
  /**
   * Generate a Kaiser-Bessel Derived Window.
 diff --git a/libavutil/Makefile b/libavutil/Makefile
-index 113adb2..75d8867 100644
+index 3948122..cbbf1be 100644
 --- a/libavutil/Makefile
 +++ b/libavutil/Makefile
-@@ -141,6 +141,7 @@ OBJS = adler32.o                                                        \
+@@ -142,6 +142,7 @@ OBJS = adler32.o                                                        \
         file.o                                                           \
         file_open.o                                                      \
         float_dsp.o                                                      \
@@ -8542,10 +8542,10 @@ index 113adb2..75d8867 100644
         film_grain_params.o                                              \
         fixed_dsp.o                                                      \
 diff --git a/libavutil/float_dsp.c b/libavutil/float_dsp.c
-index 4185c42..2ea35e1 100644
+index 5bfa100..33c1fd6 100644
 --- a/libavutil/float_dsp.c
 +++ b/libavutil/float_dsp.c
-@@ -99,16 +99,6 @@ static void vector_dmul_add_c(double *dst, const double *src0, const double *src
+@@ -99,16 +99,6 @@ static void vector_fmul_add_c(float *dst, const float *src0, const float *src1,
          dst[i] = src0[i] * src1[i] + src2[i];
  }
  
@@ -8562,7 +8562,7 @@ index 4185c42..2ea35e1 100644
  static void butterflies_float_c(float *restrict v1, float *restrict v2,
                                  int len)
  {
-@@ -146,7 +146,7 @@ av_cold AVFloatDSPContext *avpriv_float_dsp_alloc(int bit_exact)
+@@ -146,7 +136,7 @@ av_cold AVFloatDSPContext *avpriv_float_dsp_alloc(int bit_exact)
      fdsp->vector_dmul_scalar = vector_dmul_scalar_c;
      fdsp->vector_fmul_window = vector_fmul_window_c;
      fdsp->vector_fmul_add = vector_fmul_add_c;
@@ -8572,7 +8572,7 @@ index 4185c42..2ea35e1 100644
      fdsp->scalarproduct_float = ff_scalarproduct_float_c;
      fdsp->scalarproduct_double = ff_scalarproduct_double_c;
 diff --git a/libavutil/float_dsp.h b/libavutil/float_dsp.h
-index 4185c42..2ea35e1 100644
+index ab34277..4e2a340 100644
 --- a/libavutil/float_dsp.h
 +++ b/libavutil/float_dsp.h
 @@ -229,6 +229,19 @@ float ff_scalarproduct_float_c(const float *v1, const float *v2, int len);
@@ -8597,7 +8597,7 @@ index 4185c42..2ea35e1 100644
  void ff_float_dsp_init_ppc(AVFloatDSPContext *fdsp, int strict);
 diff --git a/libavutil/float_fmul_reverse.c b/libavutil/float_fmul_reverse.c
 new file mode 100644
-index 00000000..ae54b819
+index 0000000..8227dfe
 --- /dev/null
 +++ b/libavutil/float_fmul_reverse.c
 @@ -0,0 +1,29 @@
