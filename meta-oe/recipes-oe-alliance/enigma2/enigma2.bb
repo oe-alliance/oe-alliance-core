@@ -44,7 +44,7 @@ RDEPENDS:${PN} = " \
     glibc-gconv-cp1250 \
     ${PYTHON_RDEPS} \
     ${@bb.utils.contains("DISTRO_FEATURES", "e2hotplug", "" , "hotplug-e2-helper", d)} \
-    ${@bb.utils.contains("DISTRO_NAME", "openatv", "openatv-autorestore socketdaemon" , "", d)} \
+    ${@bb.utils.contains("DISTRO_NAME", "openatv", "openatv-autorestore socketdaemon iw" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "hiaccel", "dinobot-libs-${MACHINE}" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "e2egl", bb.utils.contains_any("MACHINE", "vuduo2 vusolo2 vusolose", "libvupl-${MACHINE}" , "", d), "", d)} \
     oe-alliance-branding \
