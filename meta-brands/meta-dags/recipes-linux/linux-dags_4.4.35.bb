@@ -8,7 +8,7 @@ COMPATIBLE_MACHINE = "dagsmv200"
 
 inherit kernel machine_kernel_pr kernel-fixups
 
-MACHINE_KERNEL_PR:append = "2"
+MACHINE_KERNEL_PR:append = "3"
 
 SRCREV_FORMAT = "kernel_wireguard"
 
@@ -29,6 +29,7 @@ SRC_URI += "https://source.mynonpublic.com/dags/linux-4.4.35.tar.xz;name=kernel 
 	${KERNEL_PATCH_BINUTILS241_V3} \
 	${KERNEL_PATCH_WIFI_CFG80211} \
 	${KERNEL_PATCH_WIFI_EXTAUTH_44} \
+	${KERNEL_PATCH_WIFI_MT7601U_MFP} \
 	"
 
 # wireguard v1.0.20220627

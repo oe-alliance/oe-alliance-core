@@ -15,7 +15,7 @@ SRC_URI[sha256sum] = "91a363188077ddbae2337910ea070c9e7a54d2cf3a4793507706d4b469
 
 LIC_FILES_CHKSUM = "file://${UNPACKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR:append = ".0"
+MACHINE_KERNEL_PR:append = ".1"
 
 RPROVIDES:${KERNEL_PACKAGE_NAME}-image += "kernel-${KERNEL_IMAGETYPE}"
 
@@ -27,6 +27,7 @@ SRC_URI += "https://source.mynonpublic.com/xtrend/linux-${PV}-${SRC}.tar.xz \
     ${KERNEL_PATCH_BINUTILS241_V5} \
     file://initramfs-chkroot.cpio.xz;unpack=0 \
     ${KERNEL_PATCH_WIFI_EXTAUTH_49} \
+    ${KERNEL_PATCH_WIFI_MT7601U_MFP} \
     "
 
 S = "${UNPACKDIR}/linux-${PV}"

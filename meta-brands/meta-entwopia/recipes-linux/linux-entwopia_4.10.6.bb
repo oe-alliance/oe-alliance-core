@@ -14,7 +14,7 @@ SRC_URI[sha256sum] = "a147b639445206ce85a56e155667ada38db1512e1c78fe9d4fd6d4be6f
 
 LIC_FILES_CHKSUM = "file://${UNPACKDIR}/linux-${PV}-base/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR = "r4"
+MACHINE_KERNEL_PR = "r5"
 
 RPROVIDES:${KERNEL_PACKAGE_NAME}-image += "kernel-${KERNEL_IMAGETYPE}"
 
@@ -30,6 +30,7 @@ SRC_URI += "https://source.mynonpublic.com/entwopia/${MACHINE}/${MACHINE}-linux-
     file://block2mtd.patch \
     file://initramfs-mipsel.cpio.xz;unpack=0 \
     ${KERNEL_PATCH_WIFI_EXTAUTH_410} \
+    ${KERNEL_PATCH_WIFI_MT7601U_MFP} \
     "
 
 S = "${UNPACKDIR}/linux-${PV}-base"

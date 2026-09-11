@@ -11,7 +11,7 @@ COMPATIBLE_MACHINE = "^(sfx6008|sx988|sx88v2)$"
 
 inherit kernel machine_kernel_pr kernel-fixups
 
-MACHINE_KERNEL_PR:append = "2"
+MACHINE_KERNEL_PR:append = "3"
 
 KVTYPE = "mv200"
 KVTYPE:sx88v2 = "mv300"
@@ -31,6 +31,7 @@ SRC_URI += "https://source.mynonpublic.com/octagon/octagon-linux-${PV}-${SRCDATE
     ${KERNEL_PATCH_BINUTILS241_V7} \
     ${KERNEL_PATCH_WIFI_CFG80211} \
     ${KERNEL_PATCH_WIFI_EXTAUTH_44} \
+    ${KERNEL_PATCH_WIFI_MT7601U_MFP} \
 "
 
 S = "${UNPACKDIR}/linux-${PV}"

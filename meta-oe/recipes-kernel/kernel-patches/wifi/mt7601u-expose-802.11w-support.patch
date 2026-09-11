@@ -1,0 +1,24 @@
+mt7601u: expose 802.11w support
+
+mac80211 strips the management frame protection ciphers from the suites it
+advertises when the driver does not set MFP_CAPABLE, so wpa_supplicant finds no
+BIP cipher and WPA3-SAE is unreachable: SAE requires PMF. mac80211 protects the
+frames in software, the driver only has to allow it.
+
+Backport of:
+  mt7601u: expose 802.11w support
+    https://git.kernel.org/linus/53c2cb8df327
+
+Upstream carries this from v4.19 on. The surrounding code is unchanged between
+4.4 and 4.18, so this one patch fits every kernel here that builds the driver.
+
+--- a/drivers/net/wireless/mediatek/mt7601u/init.c
++++ b/drivers/net/wireless/mediatek/mt7601u/init.c
+@@ -601,6 +601,7 @@ int mt7601u_register_device(struct mt7601u_dev *dev)
+ 	ieee80211_hw_set(hw, SUPPORTS_HT_CCK_RATES);
+ 	ieee80211_hw_set(hw, AMPDU_AGGREGATION);
+ 	ieee80211_hw_set(hw, SUPPORTS_RC_TABLE);
++	ieee80211_hw_set(hw, MFP_CAPABLE);
+ 	hw->max_rates = 1;
+ 	hw->max_report_rates = 7;
+ 	hw->max_rate_tries = 1;

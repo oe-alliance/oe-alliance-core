@@ -10,7 +10,7 @@ COMPATIBLE_MACHINE = "^(ustym4kottpremium|ustym4ks2ottx)$"
 
 inherit kernel machine_kernel_pr kernel-fixups
 
-MACHINE_KERNEL_PR:append = "0"
+MACHINE_KERNEL_PR:append = "1"
 
 KVTYPE = "mv200"
 KVTYPE:ustym4ks2ottx = "mv300"
@@ -29,6 +29,7 @@ SRC_URI += "https://source.mynonpublic.com/uclan/uclan-linux-${PV}-${SRCDATE}.ta
     ${KERNEL_PATCH_BINUTILS241_V3} \
     ${KERNEL_PATCH_WIFI_CFG80211} \
     ${KERNEL_PATCH_WIFI_EXTAUTH_44} \
+    ${KERNEL_PATCH_WIFI_MT7601U_MFP} \
 "
 
 S = "${UNPACKDIR}/linux-${PV}"

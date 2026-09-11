@@ -15,7 +15,7 @@ SRC_URI[arm.sha256sum] = "67a3ac98727595a399d5c399d3b66a7fadbe8136ac517e08decba5
 
 LIC_FILES_CHKSUM = "file://${UNPACKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR = "r20"
+MACHINE_KERNEL_PR = "r21"
 
 SRC_URI += "https://source.mynonpublic.com/zgemma/linux-${PV}-${ARCH}.tar.gz;name=${ARCH} \
     file://defconfig \
@@ -30,6 +30,7 @@ SRC_URI += "https://source.mynonpublic.com/zgemma/linux-${PV}-${ARCH}.tar.gz;nam
     file://quirks.patch \
     file://dib0700.patch \
     ${KERNEL_PATCH_WIFI_EXTAUTH_410} \
+    ${KERNEL_PATCH_WIFI_MT7601U_MFP} \
     "
 
 SRC_URI:append:mipsel = " \

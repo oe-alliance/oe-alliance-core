@@ -13,7 +13,7 @@ SRC_URI[sha256sum] = "2997b825996beabc25d2428d37d680f56e4fa971500eabd2033a6fc13c
 
 LIC_FILES_CHKSUM = "file://${UNPACKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR = "r6"
+MACHINE_KERNEL_PR = "r7"
 
 RPROVIDES:${KERNEL_PACKAGE_NAME}-image += "kernel-${KERNEL_IMAGETYPE}"
 
@@ -39,6 +39,7 @@ SRC_URI += "https://source.mynonpublic.com/xtrend/linux-${PV}-${ARCH}.tar.gz \
     file://block2mtd.patch \
     file://initramfs-mipsel.cpio.xz;unpack=0 \
     ${KERNEL_PATCH_WIFI_EXTAUTH_410} \
+    ${KERNEL_PATCH_WIFI_MT7601U_MFP} \
     "
 
 S = "${UNPACKDIR}/linux-${PV}"

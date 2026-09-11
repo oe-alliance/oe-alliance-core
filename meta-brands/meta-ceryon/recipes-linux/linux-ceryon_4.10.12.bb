@@ -15,7 +15,7 @@ SRC_URI[arm.sha256sum] = "67a3ac98727595a399d5c399d3b66a7fadbe8136ac517e08decba5
 
 LIC_FILES_CHKSUM = "file://${UNPACKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR:append = "6"
+MACHINE_KERNEL_PR:append = "7"
 
 SRC_URI += "https://source.mynonpublic.com/ceryon/ceryon-linux-${PV}-${ARCH}.tar.gz;name=${ARCH} \
     file://defconfig \
@@ -29,6 +29,7 @@ SRC_URI += "https://source.mynonpublic.com/ceryon/ceryon-linux-${PV}-${ARCH}.tar
     file://0002-cp1emu-do-not-use-bools-for-arithmetic.patch \
     file://0005-xbox-one-tuner-4.10.patch \
     ${KERNEL_PATCH_WIFI_EXTAUTH_410} \
+    ${KERNEL_PATCH_WIFI_MT7601U_MFP} \
     "
 
 SRC_URI:append:arm = " \

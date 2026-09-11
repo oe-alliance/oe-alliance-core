@@ -11,7 +11,7 @@ SRCDATE = "20200219"
 
 inherit kernel machine_kernel_pr kernel-fixups
 
-MACHINE_KERNEL_PR:append = "5"
+MACHINE_KERNEL_PR:append = "6"
 
 SRCREV_FORMAT = "kernel_wireguard"
 
@@ -28,6 +28,7 @@ SRC_URI = "https://source.mynonpublic.com/abcom/abcom-linux-${PV}-${SRCDATE}-${A
 	${KERNEL_PATCH_MISC_MODULE_INIT} \
 	${KERNEL_PATCH_FIX_ATTRIBUTES_GCC9} \
 	${KERNEL_PATCH_WIFI_EXTAUTH_44} \
+	${KERNEL_PATCH_WIFI_MT7601U_MFP} \
 	"
 
 # wireguard v1.0.20220627

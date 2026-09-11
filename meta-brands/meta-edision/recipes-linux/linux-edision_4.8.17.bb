@@ -14,7 +14,7 @@ SRC_URI[sha256sum] = "21a2db8e25d8eab13674cc45f8b102d7fa126b950648a02590daef4ff4
 
 LIC_FILES_CHKSUM = "file://${UNPACKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR = "r2"
+MACHINE_KERNEL_PR = "r3"
 
 RPROVIDES:${KERNEL_PACKAGE_NAME}-image += "kernel-${KERNEL_IMAGETYPE}"
 
@@ -30,6 +30,7 @@ SRC_URI += "https://source.mynonpublic.com/edision/linux-edision-${PV}.tar.xz \
     file://block2mtd.patch \
     file://initramfs-mipsel.cpio.xz;unpack=0 \
     ${KERNEL_PATCH_WIFI_EXTAUTH_48} \
+    ${KERNEL_PATCH_WIFI_MT7601U_MFP} \
     "
 
 S = "${UNPACKDIR}/linux-${PV}"
