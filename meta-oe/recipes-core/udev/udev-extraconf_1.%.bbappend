@@ -2,6 +2,12 @@ FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
 FILESEXTRAPATHS:prepend := "${THISDIR}/${DISTRO_NAME}:"
 
 PR .= ".38"
+PR:append:openatv = ".2"
+PR:append:openspa = ".1"
+
+RDEPENDS:${PN}-autonet:append = "${@bb.utils.contains_any('DISTRO_NAME', 'openatv openspa', ' util-linux-flock', '', d)}"
+SRC_URI:append:openatv = " file://network-async.sh"
+SRC_URI:append:openspa = " file://network-async.sh"
 
 SRC_URI += " \
     file://mount.sh \
@@ -26,15 +32,13 @@ do_install:append() {
     install -m 0644 ${S}/40-realtek-zerocd.rules   ${D}${sysconfdir}/udev/rules.d/40-realtek-zerocd.rules
     install -m 0644 ${S}/99-dab-rtlsdr.rules       ${D}${sysconfdir}/udev/rules.d/99-dab-rtlsdr.rules
 
-# OpenVix, OpenBh:
-# We only want udev to bring up interfaces marked as auto
-# (If every distro want this an edit of the base network.sh script
-# should be done, and this removed).
-#
+    # These distros use parallel rc startup; retain synchronous policy elsewhere.
+    if ${@bb.utils.contains_any('DISTRO_NAME','openatv openspa','true','false',d)}; then
+        install -m 0755 ${S}/network-async.sh ${D}${sysconfdir}/udev/scripts/network.sh
+    fi
+
+    # Preserve OpenViX/OpenBH's policy in the original network helper.
     if ${@bb.utils.contains_any('DISTRO_NAME','openvix openbh','true','false',d)}; then
-# \ needs escaping even within ''
-# and the + (for 1-or-more) needs quoting for "normal" regexes.
-#
         sed -i 's/iface \\+$INTERFACE/auto \\+$INTERFACE/' ${D}${sysconfdir}/udev/scripts/network.sh
     fi
 }

@@ -1,8 +1,12 @@
 PR .= ".8"
+PR:append:openatv = ".2"
+PR:append:openspa = ".1"
 
 FILESEXTRAPATHS:prepend := "${THISDIR}/${P}:"
 
-RDEPENDS:${PN}:append = " sdparm bash"
+RDEPENDS:${PN}:append = " sdparm bash${@bb.utils.contains_any('DISTRO_NAME', 'openatv openspa', ' util-linux-flock', '', d)}"
+SRC_URI:append:openatv = " file://mountnfs-async.sh"
+SRC_URI:append:openspa = " file://mountnfs-async.sh"
 RPROVIDES:${BPN} += "softcam-support cardserver-support"
 RREPLACES:${BPN} += "softcam-support cardserver-support"
 RCONFLICTS:${BPN} += "softcam-support cardserver-support"
@@ -15,6 +19,10 @@ SRC_URI += "file://hotplug.sh \
 "
 
 do_install:append() {
+    if ${@bb.utils.contains_any('DISTRO_NAME','openatv openspa','true','false',d)}; then
+        install -m 0755 ${S}/mountnfs-async.sh ${D}${sysconfdir}/init.d/mountnfs.sh
+    fi
+
     # umountnfs should run before network stops (which is at K40)
     ln -sf        ../init.d/umountnfs.sh    ${D}${sysconfdir}/rc6.d/K31umountnfs.sh
     ln -sf        ../init.d/umountnfs.sh    ${D}${sysconfdir}/rc0.d/K31umountnfs.sh

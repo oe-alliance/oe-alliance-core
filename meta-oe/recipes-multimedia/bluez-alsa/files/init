@@ -10,7 +10,7 @@
 DAEMON=/usr/bin/bluealsa
 NAME=bluealsa
 DESC="Bluetooth Audio ALSA Backend"
-ARGS="-p a2dp-source -p a2dp-sink"
+ARGS="-S -p a2dp-source -p a2dp-sink"
 
 test -f $DAEMON || exit 0
 
@@ -19,17 +19,41 @@ set -e
 case "$1" in
     start)
         echo -n "* starting $DESC: $NAME... "
+        if pidof "$NAME" >/dev/null; then
+            echo "already running."
+            exit 0
+        fi
+        # A crashed or previously broken daemon can leave its socket behind.
+        # Never remove a socket still registered by a running process.
+        for socket in /var/run/bluealsa/hci[0-9]*; do
+            [ -S "$socket" ] || continue
+            if awk -v socket="$socket" '$NF == socket { found = 1 } END { exit !found }' /proc/net/unix; then
+                echo "socket still in use: $socket"
+                exit 1
+            fi
+            rm -f "$socket"
+        done
         start-stop-daemon -S -b -x $DAEMON -- $ARGS
         echo "done."
         ;;
     stop)
         echo -n "* stopping $DESC: $NAME... "
-        start-stop-daemon -K -x $DAEMON
+        if pidof "$NAME" >/dev/null; then
+            start-stop-daemon -K -x $DAEMON
+            for attempt in 1 2 3 4 5 6 7 8 9 10; do
+                pidof "$NAME" >/dev/null || break
+                sleep 1
+            done
+            if pidof "$NAME" >/dev/null; then
+                echo "failed to stop."
+                exit 1
+            fi
+        fi
         echo "done."
         ;;
     restart)
         echo "* restarting $DESC: $NAME... "
-        $0 stop || true
+        $0 stop
         $0 start
         echo "done."
         ;;

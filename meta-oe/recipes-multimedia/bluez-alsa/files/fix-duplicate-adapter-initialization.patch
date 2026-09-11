@@ -1,0 +1,77 @@
+From: OE-Alliance <oe-alliance@users.noreply.github.com>
+Subject: [PATCH] Fix duplicate BlueZ adapter initialization at startup
+
+GetManagedObjects and a queued InterfacesAdded signal can report the same
+adapter. Creating it twice fails to bind its controller socket, then the
+failed adapter's cleanup clears the existing registry entry. Subsequent
+SetConfiguration calls fail with InvalidArgs despite valid codec settings.
+
+Reuse existing adapters, only detach the instance being freed, and skip
+endpoint registration if adapter creation failed. Add a regression check
+for duplicate initialization and removal/recreation.
+
+Upstream-Status: Pending
+
+diff --git a/src/ba-adapter.c b/src/ba-adapter.c
+index 32e8ba0..757de1f 100644
+--- a/src/ba-adapter.c
++++ b/src/ba-adapter.c
+@@ -41,6 +41,10 @@ struct ba_adapter *ba_adapter_new(int dev_id, const char *name) {
+ 		return NULL;
+ 	}
+ 
++	/* Initial enumeration and InterfacesAdded can report the same adapter. */
++	if ((a = ba_adapter_lookup(dev_id)) != NULL)
++		return a;
++
+ 	if ((a = calloc(1, sizeof(*a))) == NULL)
+ 		return NULL;
+ 
+@@ -74,7 +78,8 @@ struct ba_adapter *ba_adapter_lookup(int dev_id) {
+ void ba_adapter_free(struct ba_adapter *a) {
+ 
+ 	/* detach adapter from global configuration */
+-	config.adapters[a->hci_dev_id] = NULL;
++	if (config.adapters[a->hci_dev_id] == a)
++		config.adapters[a->hci_dev_id] = NULL;
+ 
+ 	if (a->devices != NULL) {
+ 
+diff --git a/src/bluez.c b/src/bluez.c
+index 4593b25..33e9278 100644
+--- a/src/bluez.c
++++ b/src/bluez.c
+@@ -1208,8 +1208,11 @@ void bluez_register(void) {
+ 
+ 	size_t i;
+ 	for (i = 0; i < HCI_MAX_DEV; i++)
+-		if (adapters[i])
+-			bluez_register_a2dp(ba_adapter_new(i, NULL));
++		if (adapters[i]) {
++			struct ba_adapter *a = ba_adapter_new(i, NULL);
++			if (a != NULL)
++				bluez_register_a2dp(a);
++		}
+ 
+ 	/* HFP has to be registered globally */
+ 	bluez_register_hfp();
+diff --git a/test/test-ba.c b/test/test-ba.c
+index 0a043f6..4869590 100644
+--- a/test/test-ba.c
++++ b/test/test-ba.c
+@@ -43,6 +43,14 @@ START_TEST(test_ba_adapter) {
+ 
+ 	ck_assert_ptr_ne(a = ba_adapter_new(0, NULL), NULL);
+ 	ck_assert_str_eq(a->hci_name, "hci0");
++	ck_assert_ptr_eq(ba_adapter_new(0, NULL), a);
++	ck_assert_ptr_eq(ba_adapter_lookup(0), a);
++	ba_adapter_free(a);
++	ck_assert_ptr_eq(ba_adapter_lookup(0), NULL);
++
++	/* Re-adding a removed adapter must still create a working instance. */
++	ck_assert_ptr_ne(a = ba_adapter_new(0, NULL), NULL);
++	ck_assert_ptr_eq(ba_adapter_lookup(0), a);
+ 	ba_adapter_free(a);
+ 
+ 	ck_assert_ptr_ne(a = ba_adapter_new(5, "test"), NULL);
+

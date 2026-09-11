@@ -2,7 +2,7 @@ DESCRIPTION = "this is bt devices manger to pair e.x keyboard or mouse"
 require conf/license/license-gplv2.inc
 require conf/python/python3-compileall.inc
 
-RDEPENDS:${PN} = "btinit bluez5-testtools bluez5 bluez-hcidump bluez-conf bluez-hidd bluez-alsa alsa-utils-aplay python3-pexpect"
+RDEPENDS:${PN} = "btinit bluez5-testtools bluez5 bluez-hcidump bluez-conf bluez-hidd bluez-alsa alsa-utils-aplay python3-pexpect util-linux-flock"
 
 inherit gittag
 

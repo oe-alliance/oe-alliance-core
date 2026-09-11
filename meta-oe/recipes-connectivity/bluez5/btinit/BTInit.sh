@@ -20,6 +20,13 @@ BLUETOOTH_INIT=/etc/init.d/bluetooth
 DBUS_WAS_STARTED=0
 RETRY_SECONDS=30
 
+# This script is sourced synchronously by rc. Detach before reading settings,
+# loading optional modules or waiting for the controller/D-Bus to become ready.
+if [ "$1" = start ]; then
+    start-stop-daemon --start --background --exec /etc/init.d/BTInit.sh -- start-background
+    exit $?
+fi
+
 log() {
     logger -t "$LOG_TAG" "$1"
 }
@@ -173,7 +180,7 @@ stop() {
 }
 
 case "$1" in
-    start)
+    start-background)
         start
         ;;
     stop)
