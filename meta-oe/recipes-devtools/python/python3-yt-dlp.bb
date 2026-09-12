@@ -14,11 +14,13 @@ inherit python3-dir python_hatchling gittag
 SRCREV = "${AUTOREV}"
 PV = "git"
 PKGV = "${GITPKGVTAG}"
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "git://github.com/yt-dlp/yt-dlp;protocol=https;branch=master"
 
 EXTRA_OEMAKE = "PYTHON=${PYTHON}"
+
+require recipes-devtools/python/python3-yt-dlp-ejs.inc
 
 # yt-dlp enables only deno by default, and no receiver has deno. Make quickjs
 # the default, both for the command line and for the library entry point.
@@ -27,6 +29,14 @@ do_compile:prepend() {
     sed -i "s/default=\['deno'\],/default=['quickjs'],/" ${S}/yt_dlp/options.py
     grep -q "js_runtimes', {'quickjs': {}}" ${S}/yt_dlp/YoutubeDL.py || bbfatal "js_runtimes default in YoutubeDL.py no longer matches"
     grep -q "default=\['quickjs'\]," ${S}/yt_dlp/options.py || bbfatal "--js-runtimes default in options.py no longer matches"
+
+    # yt-dlp accepts only one version of the solver package.
+    ejs_pv=$(sed -n 's/.*"yt-dlp-ejs==\([^"]*\)".*/\1/p' ${S}/pyproject.toml | head -1)
+    if [ -z "$ejs_pv" ]; then
+        bbfatal "no yt-dlp-ejs pin found in pyproject.toml, the solver check needs a new anchor"
+    elif [ "$ejs_pv" != "${YT_DLP_EJS_PV}" ]; then
+        bbfatal "yt-dlp wants yt-dlp-ejs $ejs_pv, python3-yt-dlp-ejs carries ${YT_DLP_EJS_PV}"
+    fi
 
     # Cosmetic, and deliberately unguarded: a reworded help text must not fail the build.
     sed -i 's/Only "deno" is enabled by default/Only "quickjs" is enabled by default/' ${S}/yt_dlp/options.py
@@ -52,6 +62,7 @@ RDEPENDS:${PN} = " \
     python3-unixadmin \
     python3-ctypes \
     python3-html \
+    python3-yt-dlp-ejs \
     quickjs \
     "
 
