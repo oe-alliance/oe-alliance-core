@@ -1,6 +1,12 @@
 # OpenATV image hooks
 MAINTAINER = "openATV team"
 
+inherit openatv-image-info
+
+# The SmallBox companion has its own rootfs and writes its own information.
+# Do not let the internal image's prefix wildcard pick up that separate ZIP.
+OPENATV_IMAGE_INFO_EXCLUDE = "${DISTRO_NAME}-${IMAGE_VERSION}-${MACHINEBUILD}-${DATE}_multiboot.zip"
+
 # Apply the native SmallBox bootstrap only to OpenATV's main image recipe.
 # Other OE-Alliance distributions retain their existing SmallFlash images.
 OPENATV_SMALLBOX_BOOTSTRAP = "${@'1' if d.getVar('PN') == 'oea-image' and bb.utils.contains('MACHINE_FEATURES', 'smallflash', True, False, d) else '0'}"

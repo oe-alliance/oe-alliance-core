@@ -18,6 +18,8 @@ IMAGE_INSTALL:append = " packagegroup-oea-smallflash-openatv ofgwrite"
 export IMAGE_BASENAME = "${DISTRO}-smallbox-multiboot"
 IMAGE_NAME = "${DISTRO_NAME}-${IMAGE_VERSION}-${MACHINEBUILD}-${DATE}-smallbox-rootfs"
 SMALLBOX_MULTIBOOT_ARCHIVE = "${DISTRO_NAME}-${IMAGE_VERSION}-${MACHINEBUILD}-${DATE}_multiboot.zip"
+OPENATV_IMAGE_INFO_ARCHIVES = "${SMALLBOX_MULTIBOOT_ARCHIVE}"
+OPENATV_IMAGE_INFO_EXCLUDE = ""
 # OE-Alliance normally shares ${TMPDIR}/rootfs/${MACHINE} between image
 # recipes. The bootstrap and full Chkroot image are deliberately built in one
 # graph, so the full image needs a private root tree to avoid opkg/rootfs races.
@@ -102,3 +104,6 @@ do_smallbox_multiboot_archive() {
 }
 
 addtask smallbox_multiboot_archive after do_image_complete before do_build
+
+# This ZIP is created after the normal image post-processing hook.
+do_smallbox_multiboot_archive[postfuncs] += "openatv_image_info"
