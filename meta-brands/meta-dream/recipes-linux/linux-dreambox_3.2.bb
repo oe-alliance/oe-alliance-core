@@ -10,7 +10,7 @@ COMPATIBLE_MACHINE = "^(dm500hd|dm500hdv2|dm800se|dm800sev2|dm7020hd|dm7020hdv2|
 
 inherit kernel machine_kernel_pr kernel-fixups
 
-MACHINE_KERNEL_PR = "r8"
+MACHINE_KERNEL_PR = "r9"
 
 PATCHREV = "3c7230bc0819495db75407c365f4d1db70008044"
 PATCHLEVEL = "68"

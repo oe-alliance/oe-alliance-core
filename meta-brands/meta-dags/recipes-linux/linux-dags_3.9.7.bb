@@ -16,7 +16,7 @@ SRC_URI[sha256sum] = "c8c139148e099ed3ec88103f7d2dbd0420ec6156b4ac9adc4b7e6d7d95
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR = "r2"
+MACHINE_KERNEL_PR = "r3"
 
 SRC_URI = "https://source.mynonpublic.com/dags/linux-${KV}-${SRCDATE}.tar.gz \
     file://defconfig \

@@ -12,7 +12,7 @@ SRC_URI[sha256sum] = "badb5446dad5f9d4454b300677c760c388751867c7728fe9cc1a1b3098
 
 LIC_FILES_CHKSUM = "file://${UNPACKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR = "r2"
+MACHINE_KERNEL_PR = "r3"
 
 inherit kernel machine_kernel_pr kernel-fixups
 

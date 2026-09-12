@@ -4,7 +4,7 @@ PE = "1"
 
 inherit kernel machine_kernel_pr kernel-fixups
 
-MACHINE_KERNEL_PR = "r4"
+MACHINE_KERNEL_PR = "r5"
 
 require linux-dreambox-4.9.inc
 

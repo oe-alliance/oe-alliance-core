@@ -12,7 +12,7 @@ COMPATIBLE_MACHINE = "^(ch62lc|ew7356|ew7358|ew7362)$"
 
 inherit kernel machine_kernel_pr kernel-fixups
 
-MACHINE_KERNEL_PR = "r4"
+MACHINE_KERNEL_PR = "r5"
 
 SRC_URI[ew7356.md5sum] = "15f56eb97fcc3512b031fffec7046f99"
 SRC_URI[ew7356.sha256sum] = "060093585e4de86cf5c1f717d1f6fca486a633675e94fa5a07fab566ec074e33"

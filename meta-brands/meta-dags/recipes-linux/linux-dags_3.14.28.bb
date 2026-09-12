@@ -3,7 +3,7 @@ LICENSE = "GPL-2.0-only"
 SECTION = "kernel"
 
 KV = "3.14.28"
-MACHINE_KERNEL_PR = "r12"
+MACHINE_KERNEL_PR = "r13"
 
 COMPATIBLE_MACHINE = "dags7252"
 

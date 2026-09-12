@@ -4,7 +4,7 @@ LICENSE = "GPL-2.0-only"
 
 inherit kernel machine_kernel_pr kernel-fixups
 
-MACHINE_KERNEL_PR = "r3"
+MACHINE_KERNEL_PR = "r4"
 KERNEL_RELEASE = "3.8.7"
 
 COMPATIBLE_MACHINE = "^(et5x00|et6x00|et9x00)$"

@@ -8,7 +8,7 @@ COMPATIBLE_MACHINE = "^(gb7252|gb72604)$"
 
 inherit kernel machine_kernel_pr kernel-fixups
 
-MACHINE_KERNEL_PR = "r12"
+MACHINE_KERNEL_PR = "r13"
 
 SRC_DATE = "20180206"
 SRC_DATE:gbquad4kpro = "20250410"
