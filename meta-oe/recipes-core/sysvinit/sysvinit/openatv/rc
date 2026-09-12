@@ -42,6 +42,27 @@ startup_progress() {
 
 
 #
+# Runlevel 3 starts scripts in parallel. Scripts requiring $network wait
+# until the networking script has finished; rc holds the lock until then.
+#
+start_parallel() {
+  case "$1" in
+	*S[0-9][0-9]networking)
+		network_started=1
+		( "$@" 7>&-; flock -u 7 ) &
+		;;
+	*)
+		if grep -q -E '^# Required-Start:.*\$network([[:space:]]|$)' "$1"
+		then
+			( flock -s /run/rc-network.lock true; "$@" ) 7>&- &
+		else
+			"$@" 7>&- &
+		fi
+		;;
+  esac
+}
+
+#
 # Start script or program.
 #
 startup() {
@@ -58,6 +79,7 @@ startup() {
 		# Source shell script for speed.
 		(
 			trap - INT QUIT TSTP
+			exec 7>&-
 			scriptname=$1
 			shift
 			. $scriptname
@@ -66,7 +88,7 @@ startup() {
 	*)
 		if [ $RUNLEVEL = "3" ]
 		then
-			"$@" &
+			start_parallel "$@"
 		else
 			"$@"
 		fi
@@ -157,6 +179,12 @@ startup() {
 		done
 	fi
 
+	if [ $RUNLEVEL = "3" ]
+	then
+		exec 7>/run/rc-network.lock
+		flock -x 7
+	fi
+
 	# Now run the START scripts for this runlevel.
 	for i in /etc/rc$runlevel.d/S*
 	do
@@ -187,6 +215,13 @@ startup() {
 				;;
 		esac
 	done
+
+	if [ $RUNLEVEL = "3" ]
+	then
+		# networking was not started in this runlevel change
+		[ -n "$network_started" ] || flock -u 7
+		exec 7>&-
+	fi
   fi
 
 #Uncomment to cause psplash to exit manually, otherwise it exits when it sees a VC switch
