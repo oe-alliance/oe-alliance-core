@@ -1,20 +1,20 @@
-Subject: [PATCH] ARM: extend the module address space for H7 and H17
+Subject: [PATCH] ARM: extend the module address space
 
-The proprietary H7 driver and the networking/filesystem modules consume
-most of the 14 MiB module area. Loading rtl8852cu needs another 6.1 MiB
-and fails in module_alloc() despite sufficient physical memory.
+Large proprietary receiver drivers and the networking and filesystem modules
+exhaust the 14 MiB module area. Loading rtl8852cu needs another 6.1 MiB and
+fails in module_alloc() despite sufficient physical memory.
 
-Reserve 24 MiB below PAGE_OFFSET instead of 16 MiB. With CONFIG_HIGHMEM,
-the existing 2 MiB pkmap reservation leaves 22 MiB for modules.
+Reserve 24 MiB below PAGE_OFFSET instead of 16 MiB. With CONFIG_HIGHMEM, the
+existing 2 MiB pkmap reservation leaves 22 MiB for modules.
 
 Lower TASK_SIZE to PAGE_OFFSET - SZ_32M, not MODULES_VADDR: svc_entry in
-entry-armv.S loads it with a single ARM MOV immediate. On H7/H17,
-0xbe800000 is not encodable, while 0xbe000000 is. The 8 MiB virtual gap
-between TASK_SIZE and MODULES_VADDR does not reserve physical RAM.
+entry-armv.S loads it with a single ARM MOV immediate. With a PAGE_OFFSET of
+0xc0000000, 0xbe800000 is not encodable, while 0xbe000000 is. The 8 MiB
+virtual gap below MODULES_VADDR does not reserve physical RAM.
 
-Keep PAGE_OFFSET and the module end unchanged. Do not enable module PLTs
-or change the vendor module ABI. This patch is only used by the ARM
-variants of the Airdigital 4.10.12 recipe (H7 and H17).
+A module at MODULES_VADDR has to reach the end of the kernel text with a
+32 MiB branch, so the kernel text must stay below 8 MiB. Module PLTs stay
+disabled, so the vendor module ABI does not change.
 
 Upstream-Status: Inappropriate [machine-specific address-space layout]
 

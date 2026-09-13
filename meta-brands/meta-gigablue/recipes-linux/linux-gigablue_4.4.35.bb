@@ -23,7 +23,7 @@ SRC_URI += "https://source.mynonpublic.com/gigablue/mv200/gigablue-linux-${PV}-$
     file://initramfs-subdirboot.cpio.gz;unpack=0 \
     file://findkerneldevice.sh \
     file://fix_highspeed_sdio.patch \
-    file://extend_modules_space.patch \
+    ${KERNEL_PATCH_ARM_MODULES_SPACE_44} \
     ${KERNEL_PATCH_WIFI_EXTAUTH_44} \
     ${KERNEL_PATCH_WIFI_MT7601U_MFP} \
 "

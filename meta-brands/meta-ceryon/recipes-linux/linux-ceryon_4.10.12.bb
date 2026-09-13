@@ -33,7 +33,7 @@ SRC_URI += "https://source.mynonpublic.com/ceryon/ceryon-linux-${PV}-${ARCH}.tar
     "
 
 SRC_URI:append:arm = " \
-    file://extend_modules_space.patch \
+    ${KERNEL_PATCH_ARM_MODULES_SPACE_410} \
     file://findkerneldevice.sh \
     file://initramfs-subdirboot.cpio.gz;unpack=0 \
     ${KERNEL_PATCH_DVB_RESERVE} \

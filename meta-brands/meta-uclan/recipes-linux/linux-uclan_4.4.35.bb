@@ -22,7 +22,7 @@ SRC_URI += "https://source.mynonpublic.com/uclan/uclan-linux-${PV}-${SRCDATE}.ta
     ${KERNEL_PATCH_DVB_CORE_FIX} \
     file://initramfs-subdirboot.cpio.gz;unpack=0 \
     file://findkerneldevice.sh \
-    file://extend_modules_space.patch \
+    ${KERNEL_PATCH_ARM_MODULES_SPACE_44} \
     ${KERNEL_PATCH_WIFI_EXTAUTH_44} \
     ${KERNEL_PATCH_WIFI_MT7601U_MFP} \
 "

@@ -43,7 +43,7 @@ SRC_URI:append:mipsel = " \
 
 SRC_URI:append:arm = " \
     file://export_pmpoweroffprepare.patch \
-    file://extend_modules_space.patch \
+    ${KERNEL_PATCH_ARM_MODULES_SPACE_410} \
     file://findkerneldevice.sh \
     ${KERNEL_PATCH_DVB_RESERVE} \
     file://blacklist_mmc0.patch \
