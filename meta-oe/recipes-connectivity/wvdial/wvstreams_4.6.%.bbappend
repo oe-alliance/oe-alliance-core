@@ -1,8 +1,3 @@
-FILESEXTRAPATHS:prepend := "${THISDIR}/${BPN}:"
-
-# OpenSSL 4.0 removed the APIs this uses; see the patch header.
-SRC_URI += "file://openssl40-compat.patch"
-
 DEPENDS:append = " virtual/crypt"
 # configure takes boost only as the alternative to TR1, which the toolchain has.
 DEPENDS:remove = "boost"
