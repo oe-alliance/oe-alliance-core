@@ -41,6 +41,7 @@ RRECOMMENDS:${PN} = "\
     enigma2-plugin-extensions-iptv-org-playlists \
     enigma2-plugin-extensions-logomanager \
     enigma2-plugin-extensions-mediadownloader \
+    enigma2-plugin-extensions-mediaplayer3 \
     enigma2-plugin-extensions-moviecut \
     enigma2-plugin-extensions-movieorganisor \
     enigma2-plugin-extensions-movietagger \
