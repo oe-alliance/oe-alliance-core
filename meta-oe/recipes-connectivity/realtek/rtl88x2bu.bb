@@ -9,11 +9,13 @@ DEPENDS = "bc-native"
 # some of these sticks come up as a CD-ROM first
 RDEPENDS:${PN} = "usb-modeswitch"
 
-inherit module
+inherit gitpkgv module
 
 PR = "r2"
 
 SRCREV = "${AUTOREV}"
+PV = "5.8.7+git"
+PKGV = "5.8.7+git${GITPKGV}"
 SRC_URI = "git://github.com/oe-alliance-drivers/rtl8822bu.git;protocol=https;branch=master;destsuffix=s"
 # The default unpack directory "sources" costs six more characters on every
 # object path.

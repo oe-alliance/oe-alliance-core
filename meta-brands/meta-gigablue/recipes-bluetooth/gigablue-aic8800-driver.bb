@@ -4,11 +4,12 @@ PRIORITY = "optional"
 require conf/license/license-close.inc
 PACKAGE_ARCH = "${MACHINEBUILD}"
 
-inherit module-base
+inherit gitpkgv module-base
 
 KV = "${KERNEL_VERSION}"
 
-PV = "5.0"
+PV = "5.0+git"
+PKGV = "5.0+git${GITPKGV}"
 PR = "r0"
 
 SRC_URI = "git://github.com/oe-alliance-drivers/aic8800.git;protocol=https;branch=master;destsuffix=s"

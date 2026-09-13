@@ -1,17 +1,22 @@
-SUMMARY = "Realtek RTL8811AU and RTL8821AU"
+SUMMARY = "Realtek RTL8811CU and RTL8821CU"
 HOMEPAGE = "http://www.realtek.com.tw"
 SECTION = "kernel/modules"
 LICENSE = "GPL-2.0-only"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=b1918d7d89f091725a3188ff95f7c72b"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=ab842b299d0a92fb908d6eb122cd6de9"
 
 DEPENDS = "bc-native"
 
 inherit gitpkgv module
 
+PR = "r1"
+
 SRCREV = "${AUTOREV}"
-PV = "1.0+git"
-PKGV = "1.0+git${GITPKGV}"
-SRC_URI = "git://github.com/oe-alliance-drivers/rtl8821au.git;protocol=https;branch=master;destsuffix=s"
+PV = "5.8.1+git"
+PKGV = "5.8.1+git${GITPKGV}"
+# Use short destsuffix - the driver has several hundred object files whose
+# absolute paths overflow ARG_MAX during kbuild linking on machines with long
+# MACHINE names.
+SRC_URI = "git://github.com/oe-alliance-drivers/rtl8821cu.git;protocol=https;branch=master;destsuffix=s"
 # The default unpack directory "sources" costs six more characters on every
 # object path.
 UNPACKDIR = "${WORKDIR}/u"
@@ -26,5 +31,5 @@ EXTRA_OEMAKE = "KSRC=${STAGING_KERNEL_DIR} LINUX_SRC=${STAGING_KERNEL_DIR} KDIR=
 
 do_install() {
     install -d ${D}${nonarch_base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/net/wireless
-    install -m 0644 ${S}/8821au.ko ${D}${nonarch_base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/net/wireless
+    install -m 0644 ${S}/8821cu.ko ${D}${nonarch_base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/net/wireless
 }

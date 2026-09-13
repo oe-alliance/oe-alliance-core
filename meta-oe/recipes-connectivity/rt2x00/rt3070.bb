@@ -3,9 +3,11 @@ SECTION = "kernel/modules"
 LICENSE = "GPL-2.0-or-later"
 LIC_FILES_CHKSUM = "file://os/linux/rt_linux.c;endline=25;md5=21ed2a5918a3062a6c0323ef549f0803"
 
-inherit module
+inherit gitpkgv module
 
 SRCREV = "${AUTOREV}"
+PV = "2.5.0.4+git"
+PKGV = "2.5.0.4+git${GITPKGV}"
 SRC_URI = "git://github.com/oe-alliance-drivers/rt3070.git;protocol=https;branch=master;destsuffix=s"
 
 S = "${UNPACKDIR}/s"

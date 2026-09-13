@@ -4,9 +4,11 @@ LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://os_dep/linux/os_intfs.c;endline=19;md5=72c75de415f1e8a42587d170459677e2"
 
 SRCREV = "${AUTOREV}"
+PV = "4.0.2+git"
+PKGV = "4.0.2+git${GITPKGV}"
 SRC_URI = "git://github.com/oe-alliance-drivers/rtl8192cu.git;protocol=https;branch=master;destsuffix=s"
 S = "${UNPACKDIR}/s"
-inherit module siteinfo
+inherit gitpkgv module siteinfo
 
 EXTRA_OEMAKE = "CONFIG_RTL8192CU=m KDIR=${STAGING_KERNEL_DIR}"
 

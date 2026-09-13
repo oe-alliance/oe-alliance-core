@@ -3,11 +3,13 @@ LICENSE = "BSD-3-Clause"
 LIC_FILES_CHKSUM = "file://Android.mk;md5=235cc8d87e0fb1c956be4af0d07074fb"
 CAF_MIRROR = "https://source.codeaurora.org/external/wlan"
 
-inherit module
+inherit gitpkgv module
 
 COMPATIBLE_MACHINE = "osmio4k|osmio4kplus"
 
 SRCREV = "${AUTOREV}"
+PV = "4.5.25.55+git"
+PKGV = "4.5.25.55+git${GITPKGV}"
 SRC_URI = "git://github.com/oe-alliance-drivers/qcacld-2.0.git;protocol=https;branch=master;destsuffix=s"
 
 S = "${UNPACKDIR}/s"

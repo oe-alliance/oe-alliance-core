@@ -10,8 +10,10 @@ SRC_URI = "git://github.com/oe-alliance-drivers/rtl8723ds.git;protocol=https;bra
 S = "${UNPACKDIR}/s"
 
 SRCREV = "${AUTOREV}"
+PV = "5.10.1+git"
+PKGV = "5.10.1+git${GITPKGV}"
 
-inherit module
+inherit gitpkgv module
 
 PR = "r1"
 

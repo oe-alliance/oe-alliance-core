@@ -10,8 +10,10 @@ SRC_URI = "git://github.com/oe-alliance-drivers/rtl8192fu.git;protocol=https;bra
 S = "${UNPACKDIR}/s"
 
 SRCREV = "${AUTOREV}"
+PV = "1.0+git"
+PKGV = "1.0+git${GITPKGV}"
 
-inherit module
+inherit gitpkgv module
 
 PR = "r1"
 

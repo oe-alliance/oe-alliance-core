@@ -4,11 +4,13 @@ SECTION = "kernel/modules"
 LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://Makefile;md5=6325fabe3996c2783285cc021ee13c96"
 
-inherit module
+inherit gitpkgv module
 
 MACHINE_KERNEL_PR:append = ".0"
 
 SRCREV = "${AUTOREV}"
+PV = "4.1.6+git"
+PKGV = "4.1.6+git${GITPKGV}"
 SRC_URI = "git://github.com/oe-alliance-drivers/rtl8723a.git;protocol=https;branch=master;destsuffix=s"
 inherit module
 

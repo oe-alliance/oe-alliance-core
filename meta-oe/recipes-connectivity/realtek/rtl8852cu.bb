@@ -4,10 +4,12 @@ SECTION = "kernel/modules"
 LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=b7e6779b3b112ee657a10f5a3e1a4beb"
 
-inherit module
+inherit gitpkgv module
 
 PR = "r2"
 SRCREV = "${AUTOREV}"
+PV = "1.0+git"
+PKGV = "1.0+git${GITPKGV}"
 # Use short destsuffix — the driver has ~370 object files whose absolute paths
 # overflow ARG_MAX during kbuild linking on machines with long MACHINE names.
 SRC_URI = "git://github.com/oe-alliance-drivers/rtl8852cu.git;protocol=https;branch=master;destsuffix=s"

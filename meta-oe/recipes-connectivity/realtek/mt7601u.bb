@@ -4,11 +4,13 @@ SECTION = "kernel/modules"
 LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://iwpriv_usage.txt;md5=8876ae2c103446a442658f1cc2a01b76"
 
-inherit module
+inherit gitpkgv module
 
 PR = "r1"
 
 SRCREV = "${AUTOREV}"
+PV = "3.0.0.4+git"
+PKGV = "3.0.0.4+git${GITPKGV}"
 SRC_URI = "git://github.com/oe-alliance-drivers/mt7601u.git;protocol=https;branch=master;destsuffix=s"
 EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR} KDIR=${STAGING_KERNEL_DIR}"
 

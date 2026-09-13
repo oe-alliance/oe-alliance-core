@@ -6,11 +6,13 @@ LIC_FILES_CHKSUM = "file://ifcfg-wlan0;md5=a84acae65af4b2d44d5035aa9f63cd85"
 
 DEPENDS = "bc-native"
 
-inherit module
+inherit gitpkgv module
 
 PR = "r1"
 
 SRCREV = "${AUTOREV}"
+PV = "1.0+git"
+PKGV = "1.0+git${GITPKGV}"
 SRC_URI = "git://github.com/oe-alliance-drivers/rtl8822cu.git;protocol=https;branch=master;destsuffix=s"
 
 UNPACKDIR = "${WORKDIR}/u"

@@ -4,9 +4,11 @@ SECTION = "kernel/modules"
 LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://iwpriv_usage.txt;md5=8876ae2c103446a442658f1cc2a01b76"
 
-inherit module
+inherit gitpkgv module
 
 SRCREV = "${AUTOREV}"
+PV = "3.0.0.2+git"
+PKGV = "3.0.0.2+git${GITPKGV}"
 SRC_URI = "git://github.com/oe-alliance-drivers/mt7610u.git;protocol=https;branch=master;destsuffix=s"
 
 S = "${UNPACKDIR}/s"
