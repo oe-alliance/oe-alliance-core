@@ -1,0 +1,16 @@
+#!/bin/sh
+# Start a wpa_cli action daemon on wireless interfaces, so that a move to
+# another known network also renews the DHCP lease.
+
+[ -e "/sys/class/net/$IFACE/wireless" ] || exit 0
+[ -S "/var/run/wpa_supplicant/$IFACE" ] || exit 0
+
+PIDFILE="/var/run/wpa_cli-$IFACE.pid"
+OLD=$(cat "$PIDFILE" 2>/dev/null)
+if [ -n "$OLD" ] && [ "$(cat /proc/$OLD/comm 2>/dev/null)" = "wpa_cli" ]; then
+	kill "$OLD" 2>/dev/null
+	for i in 1 2 3 4 5; do kill -0 "$OLD" 2>/dev/null || break; sleep 1; done
+fi
+
+/usr/sbin/wpa_cli -i "$IFACE" -a /etc/wpa_supplicant/dhcp-renew.sh -B -P "$PIDFILE" >/dev/null 2>&1
+exit 0
