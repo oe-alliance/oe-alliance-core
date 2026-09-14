@@ -1,8 +1,8 @@
 FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}/${DISTRO_NAME}:"
 FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 PR .= ".2"
-PR:append:openatv = ".1"
-PR:append:openspa = ".1"
+PR:append:openatv = ".2"
+PR:append:openspa = ".2"
 
 PACKAGE_ARCH := "${MACHINE_ARCH}"
 
