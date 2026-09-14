@@ -10,7 +10,7 @@ SRCDATE = "20160504"
 
 COMPATIBLE_MACHINE = "^(et7x00|et8500)$"
 
-MACHINE_KERNEL_PR = "r3"
+MACHINE_KERNEL_PR = "r4"
 
 SRC_URI[md5sum] = "8b67a95176111385270ed3276436193a"
 SRC_URI[sha256sum] = "571438a1c94f5a72903b310682a344757cbf97028e1e5dfbe980472f04a4e9a2"
@@ -33,6 +33,7 @@ SRC_URI += "https://source.mynonpublic.com/xtrend/xtrend-linux-${PV}-${SRCDATE}.
     file://block2mtd.patch \
     file://initramfs-mipsel.cpio.xz;unpack=0 \
     ${KERNEL_PATCH_WIFI_EXTAUTH_44} \
+    ${KERNEL_PATCH_WIFI_RT2800_MFP_44} \
     "
 
 S = "${UNPACKDIR}/linux-${PV}"

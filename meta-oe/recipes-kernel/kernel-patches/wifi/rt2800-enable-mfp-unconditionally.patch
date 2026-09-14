@@ -1,0 +1,43 @@
+rt2800: enable MFP support unconditionally
+
+rt2800lib sets MFP_CAPABLE only when hardware crypto is disabled through the
+nohwcrypt module parameter. Without it, mac80211 strips the management frame
+protection ciphers from the suites it advertises, so wpa_supplicant finds no
+BIP cipher and WPA3-SAE is unreachable: SAE requires PMF. The driver now always
+sets MFP_CAPABLE and refuses hardware keys for stations that negotiated MFP, so
+mac80211 protects those connections in software while all others keep hardware
+crypto.
+
+Backport of:
+  rt2800: enable MFP support unconditionally
+    https://git.kernel.org/linus/b6b15e20421f
+
+Upstream carries this from v5.8 on. The conditional MFP_CAPABLE it replaces
+arrived in v4.7, so this one patch fits every kernel here from 4.7 on that
+builds the driver.
+
+--- a/drivers/net/wireless/ralink/rt2x00/rt2800lib.c
++++ b/drivers/net/wireless/ralink/rt2x00/rt2800lib.c
+@@ -7488,9 +7488,7 @@ static int rt2800_probe_hw_mode(struct rt2x00_dev *rt2x00dev)
+ 	if (!rt2x00_is_usb(rt2x00dev))
+ 		ieee80211_hw_set(rt2x00dev->hw, HOST_BROADCAST_PS_BUFFERING);
+ 
+-	/* Set MFP if HW crypto is disabled. */
+-	if (rt2800_hwcrypt_disabled(rt2x00dev))
+-		ieee80211_hw_set(rt2x00dev->hw, MFP_CAPABLE);
++	ieee80211_hw_set(rt2x00dev->hw, MFP_CAPABLE);
+ 
+ 	SET_IEEE80211_DEV(rt2x00dev->hw, rt2x00dev->dev);
+ 	SET_IEEE80211_PERM_ADDR(rt2x00dev->hw,
+--- a/drivers/net/wireless/ralink/rt2x00/rt2x00mac.c
++++ b/drivers/net/wireless/ralink/rt2x00/rt2x00mac.c
+@@ -468,7 +468,8 @@ int rt2x00mac_set_key(struct ieee80211_hw *hw, enum set_key_cmd cmd,
+ 	if (!test_bit(DEVICE_STATE_PRESENT, &rt2x00dev->flags))
+ 		return 0;
+ 
+-	if (!rt2x00_has_cap_hw_crypto(rt2x00dev))
++	/* The hardware can't do MFP */
++	if (!rt2x00_has_cap_hw_crypto(rt2x00dev) || (sta && sta->mfp))
+ 		return -EOPNOTSUPP;
+ 
+ 	/*

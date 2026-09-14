@@ -15,7 +15,7 @@ SRC_URI[sha256sum] = "ed11d537b1e19d59b132fd643bebc7469bf20e115bdc23e949e2ce14ae
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR = "r5"
+MACHINE_KERNEL_PR = "r6"
 
 SRC_URI += "https://source.mynonpublic.com/dags/dags-linux-${PV}-${SRCDATE}.tar.gz \
     file://defconfig \
@@ -31,6 +31,7 @@ SRC_URI += "https://source.mynonpublic.com/dags/dags-linux-${PV}-${SRCDATE}.tar.
     file://block2mtd.patch \
     file://initramfs-mipsel.cpio.xz;unpack=0 \
     ${KERNEL_PATCH_WIFI_EXTAUTH_41} \
+    ${KERNEL_PATCH_WIFI_RT2800_MFP_44} \
     "
 
 S = "${UNPACKDIR}/linux-${PV}"

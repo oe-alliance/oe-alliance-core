@@ -11,7 +11,7 @@ COMPATIBLE_MACHINE = "^(h8se|h8|h9|h9se|h9combo|h9combose|h10|hzero|i55plus|i55s
 
 inherit kernel machine_kernel_pr kernel-fixups
 
-MACHINE_KERNEL_PR:append = "35"
+MACHINE_KERNEL_PR:append = "36"
 
 SRC_URI[md5sum] = "f9e67e2d0ceab518510413f8f4315bc3"
 SRC_URI[sha256sum] = "45ae717b966a74326fd7297d81b3a17fd5b3962b7704170682a615ca7cdec644"
@@ -29,6 +29,7 @@ SRC_URI = "https://source.mynonpublic.com/zgemma/linux-${PV}-${SRCDATE}-${ARCH}.
     file://block2mtd.patch \
     ${KERNEL_PATCH_WIFI_EXTAUTH_44} \
     ${KERNEL_PATCH_WIFI_MT7601U_MFP} \
+    ${KERNEL_PATCH_WIFI_RT2800_MFP_44} \
 "
 
 SRC_URI:append:h8se = " \

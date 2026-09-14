@@ -12,7 +12,7 @@ COMPATIBLE_MACHINE = "^(hd60|hd61|hd66se)$"
 
 inherit kernel machine_kernel_pr kernel-fixups
 
-MACHINE_KERNEL_PR:append = "21"
+MACHINE_KERNEL_PR:append = "22"
 
 SRCREV_FORMAT = "kernel_wireguard"
 
@@ -30,6 +30,7 @@ SRC_URI = "https://source.mynonpublic.com/gfutures/linux-${PV}-${SRCDATE}-${ARCH
 	${KERNEL_PATCH_FIX_ATTRIBUTES_GCC9} \
 	${KERNEL_PATCH_WIFI_EXTAUTH_44} \
 	${KERNEL_PATCH_WIFI_MT7601U_MFP} \
+	${KERNEL_PATCH_WIFI_RT2800_MFP_44} \
 	"
 
 # wireguard v1.0.20220627

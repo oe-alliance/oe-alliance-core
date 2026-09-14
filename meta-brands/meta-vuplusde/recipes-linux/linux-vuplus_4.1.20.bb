@@ -9,7 +9,7 @@ COMPATIBLE_MACHINE = "^(vuduo4klite)$"
 
 inherit kernel machine_kernel_pr kernel-fixups
 
-MACHINE_KERNEL_PR = "r13"
+MACHINE_KERNEL_PR = "r14"
 
 SRC_DATE = "20250410"
 
@@ -51,6 +51,7 @@ SRC_URI += "https://source.mynonpublic.com/vuplus.de/linux/vuplus-linux-${PV}-${
     file://add-partition-specific-uevent-callbacks-for-partition-info.patch \
     ${KERNEL_PATCH_BINUTILS241_V2} \
     ${KERNEL_PATCH_WIFI_EXTAUTH_41} \
+    ${KERNEL_PATCH_WIFI_RT2800_MFP_41} \
 "
 
 S = "${UNPACKDIR}/linux-${PV}"
