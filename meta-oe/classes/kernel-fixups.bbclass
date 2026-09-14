@@ -99,3 +99,14 @@ kernel_fixups_apply() {
         fi
     fi
 }
+
+# oe-core links the kernel image in the postinst of kernel-image-<type> relative
+# to the current directory, which opkg inherits from its caller. Anchor it at /.
+python populate_packages:prepend () {
+    kname = d.getVar('KERNEL_PACKAGE_NAME') or 'kernel'
+    for imagetype in (d.getVar('KERNEL_IMAGETYPES') or '').split():
+        pkg = '%s-image-%s' % (kname, imagetype.lower())
+        postinst = d.getVar('pkg_postinst:%s' % pkg, False)
+        if postinst:
+            d.setVar('pkg_postinst:%s' % pkg, postinst.replace(' ${KERNEL_IMAGEDEST}/', ' /${KERNEL_IMAGEDEST}/'))
+}
