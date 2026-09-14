@@ -5,10 +5,11 @@ require conf/license/license-gplv2.inc
 
 RRECOMMENDS:${PN} = " \
         rtl88xxau \
+        rtl8821au \
 "
 
 PV = "1.0"
-PR = "r0"
+PR = "r1"
 
 ALLOW_EMPTY:${PN} = "1"
 
