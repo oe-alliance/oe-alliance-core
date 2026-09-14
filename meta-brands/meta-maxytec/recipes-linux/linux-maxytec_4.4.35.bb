@@ -11,7 +11,7 @@ COMPATIBLE_MACHINE = "^(multibox|multiboxse|multiboxpro)$"
 
 inherit kernel machine_kernel_pr kernel-fixups
 
-MACHINE_KERNEL_PR:append = "21"
+MACHINE_KERNEL_PR:append = "22"
 
 SRCREV_FORMAT = "kernel_wireguard"
 
@@ -64,7 +64,7 @@ pkg_postinst:kernel-image() {
 	if [ "x$D" == "x" ]; then
 		if [ -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE} ] ; then
 			/${KERNEL_IMAGEDEST}/./findkerneldevice.sh
-			dd if=${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE} of=/dev/kernel
+			dd if=/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE} of=/dev/kernel
 		fi
 	fi
 	true
