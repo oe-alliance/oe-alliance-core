@@ -11,6 +11,7 @@ MACHINE_KERNEL_PR:append = ".0"
 SRCREV = "${AUTOREV}"
 PV = "4.1.6+git"
 PKGV = "4.1.6+git${GITPKGV}"
+PR = "r1"
 SRC_URI = "git://github.com/oe-alliance-drivers/rtl8723a.git;protocol=https;branch=master;destsuffix=s"
 inherit module
 

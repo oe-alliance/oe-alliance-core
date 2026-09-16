@@ -11,6 +11,7 @@ inherit gitpkgv module
 SRCREV = "${AUTOREV}"
 PV = "1.0+git"
 PKGV = "1.0+git${GITPKGV}"
+PR = "r1"
 SRC_URI = "git://github.com/oe-alliance-drivers/rtl8821au.git;protocol=https;branch=master;destsuffix=s"
 # The default unpack directory "sources" costs six more characters on every
 # object path.

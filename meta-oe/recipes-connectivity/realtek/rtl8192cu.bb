@@ -6,6 +6,7 @@ LIC_FILES_CHKSUM = "file://os_dep/linux/os_intfs.c;endline=19;md5=72c75de415f1e8
 SRCREV = "${AUTOREV}"
 PV = "4.0.2+git"
 PKGV = "4.0.2+git${GITPKGV}"
+PR = "r1"
 SRC_URI = "git://github.com/oe-alliance-drivers/rtl8192cu.git;protocol=https;branch=master;destsuffix=s"
 S = "${UNPACKDIR}/s"
 inherit gitpkgv module siteinfo

@@ -6,7 +6,7 @@ MODULE = "linux-3.14.28"
 
 COMPATIBLE_MACHINE = "^(vusolo4k|vuultimo4k|vuuno4k)$"
 
-MACHINE_KERNEL_PR = "r6"
+MACHINE_KERNEL_PR = "r7"
 
 RPROVIDES:${KERNEL_PACKAGE_NAME}-image += "kernel-${KERNEL_IMAGETYPE}"
 

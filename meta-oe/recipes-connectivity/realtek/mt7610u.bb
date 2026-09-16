@@ -9,6 +9,7 @@ inherit gitpkgv module
 SRCREV = "${AUTOREV}"
 PV = "3.0.0.2+git"
 PKGV = "3.0.0.2+git${GITPKGV}"
+PR = "r1"
 SRC_URI = "git://github.com/oe-alliance-drivers/mt7610u.git;protocol=https;branch=master;destsuffix=s"
 
 S = "${UNPACKDIR}/s"

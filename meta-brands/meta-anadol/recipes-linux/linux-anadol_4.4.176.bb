@@ -10,7 +10,7 @@ SRCDATE = "20220302"
 
 inherit kernel machine_kernel_pr kernel-fixups
 
-MACHINE_KERNEL_PR:append = "3"
+MACHINE_KERNEL_PR:append = "4"
 
 SRC_URI[md5sum] = "96c57616c9e0121a57b34c93e6453824"
 SRC_URI[sha256sum] = "fd113f78998a63702e6e0ea62e9133d7865edb0e5172f79ab2779c5ae850fb71"

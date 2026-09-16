@@ -10,7 +10,7 @@ COMPATIBLE_MACHINE = "^(u41|u42|u43|u45|u5|u51|u52|u53|u54|u55|u56|u57|u532|u533
 
 inherit kernel machine_kernel_pr kernel-fixups
 
-MACHINE_KERNEL_PR:append = "35"
+MACHINE_KERNEL_PR:append = "36"
 
 SRCREV_FORMAT = "kernel_wireguard"
 

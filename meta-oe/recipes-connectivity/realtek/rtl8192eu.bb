@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://README.md;md5=1a805122b9d7a745997090ae83a2a4de"
 
 inherit gitpkgv module
 
-PR = "r1"
+PR = "r2"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 

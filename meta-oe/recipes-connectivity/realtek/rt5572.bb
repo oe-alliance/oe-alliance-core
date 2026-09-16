@@ -9,6 +9,7 @@ inherit gitpkgv module
 SRCREV = "${AUTOREV}"
 PV = "2.6.1.3+git"
 PKGV = "2.6.1.3+git${GITPKGV}"
+PR = "r1"
 SRC_URI = "git://github.com/oe-alliance-drivers/rt5572.git;protocol=https;branch=master;destsuffix=s"
 EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR} KDIR=${STAGING_KERNEL_DIR}"
 

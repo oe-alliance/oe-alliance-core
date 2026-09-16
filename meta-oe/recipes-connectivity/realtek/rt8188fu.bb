@@ -10,6 +10,7 @@ inherit gitpkgv module
 SRCREV = "${AUTOREV}"
 PV = "git"
 PKGV = "git${GITPKGV}"
+PR = "r1"
 SRC_URI = "git://github.com/oe-alliance-drivers/rtl8188fu.git;protocol=https;branch=master;destsuffix=s"
 
 S = "${UNPACKDIR}/s"

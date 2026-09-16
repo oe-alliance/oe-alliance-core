@@ -15,7 +15,7 @@ PKGV = "5.10.1+git${GITPKGV}"
 
 inherit gitpkgv module
 
-PR = "r1"
+PR = "r2"
 
 # WPA3-SAE; the driver leaves this path disabled unless we ask for it.
 EXTRA_OEMAKE = 'KSRC="${STAGING_KERNEL_BUILDDIR}" USER_EXTRA_CFLAGS="-Wno-date-time -DCONFIG_KERNEL_PATCH_EXTERNAL_AUTH" CONFIG_RTW_DEBUG=n'

@@ -6,7 +6,7 @@ MODULE = "linux-4.1.45"
 
 COMPATIBLE_MACHINE = "^(vuduo4k|vuduo4kse)$"
 
-MACHINE_KERNEL_PR = "r10"
+MACHINE_KERNEL_PR = "r11"
 
 inherit kernel machine_kernel_pr kernel-fixups
 

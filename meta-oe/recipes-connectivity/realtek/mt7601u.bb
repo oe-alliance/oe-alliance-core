@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://iwpriv_usage.txt;md5=8876ae2c103446a442658f1cc2a01b76
 
 inherit gitpkgv module
 
-PR = "r1"
+PR = "r2"
 
 SRCREV = "${AUTOREV}"
 PV = "3.0.0.4+git"

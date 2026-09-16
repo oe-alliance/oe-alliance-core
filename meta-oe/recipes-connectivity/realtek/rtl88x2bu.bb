@@ -11,7 +11,7 @@ RDEPENDS:${PN} = "usb-modeswitch"
 
 inherit gitpkgv module
 
-PR = "r2"
+PR = "r3"
 
 SRCREV = "${AUTOREV}"
 PV = "5.8.7+git"

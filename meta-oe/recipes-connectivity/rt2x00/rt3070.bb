@@ -8,6 +8,7 @@ inherit gitpkgv module
 SRCREV = "${AUTOREV}"
 PV = "2.5.0.4+git"
 PKGV = "2.5.0.4+git${GITPKGV}"
+PR = "r1"
 SRC_URI = "git://github.com/oe-alliance-drivers/rt3070.git;protocol=https;branch=master;destsuffix=s"
 
 S = "${UNPACKDIR}/s"

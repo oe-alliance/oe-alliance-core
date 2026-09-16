@@ -13,8 +13,11 @@ Backport of:
     https://git.kernel.org/linus/db8d93a7a355
 
 Differences from upstream, required by the 4.4 code base:
-  - conn_owner_nlportid is added to struct wireless_dev and set from
-    NL80211_ATTR_SOCKET_OWNER; upstream gained that field in v4.11.
+  - The connection owner set from NL80211_ATTR_SOCKET_OWNER is kept in
+    struct cfg80211_registered_device together with its wireless_dev.
+    Upstream has conn_owner_nlportid in struct wireless_dev (v4.11), but
+    drivers embed that structure, and prebuilt vendor modules built against
+    the unpatched header would see every later field shifted.
   - NL80211_ATTR_BSSID is added; the external auth handler needs it and it
     does not exist before v4.15.
   - GENL_SET_ERR_MSG() is not available before v4.12 and is dropped.
@@ -118,15 +121,7 @@ Upstream-Status: Backport
  };
  
  /*
-@@ -3533,6 +3553,7 @@
- 	int beacon_interval;
- 
- 	u32 ap_unexpected_nlportid;
-+	u32 conn_owner_nlportid;
- 
- 	bool cac_started;
- 	unsigned long cac_start_time;
-@@ -5375,4 +5396,15 @@
+@@ -5375,4 +5395,15 @@
  #define wiphy_WARN(wiphy, format, args...)			\
  	WARN(1, "wiphy: %s\n" format, wiphy_name(wiphy), ##args);
  
@@ -142,6 +137,19 @@ Upstream-Status: Backport
 +				   gfp_t gfp);
 +
  #endif /* __NET_CFG80211_H */
+--- a/net/wireless/core.h
++++ b/net/wireless/core.h
+@@ -90,6 +90,10 @@
+ 	/* netlink port which started critical protocol (0 means not started) */
+ 	u32 crit_proto_nlportid;
+
++	/* netlink port owning the connection of conn_owner_wdev (0 means none) */
++	u32 conn_owner_nlportid;
++	struct wireless_dev *conn_owner_wdev;
++
+ 	struct cfg80211_coalesce *coalesce;
+
+ 	spinlock_t destroy_list_lock;
 --- a/net/wireless/nl80211.c
 +++ b/net/wireless/nl80211.c
 @@ -401,6 +401,7 @@
@@ -163,7 +171,7 @@ Upstream-Status: Backport
  	case NL80211_CMD_START_AP:
  		/* SAE not supported yet */
  		if (auth_type == NL80211_AUTHTYPE_SAE)
-@@ -7948,8 +7953,19 @@
+@@ -7948,8 +7953,21 @@
  		connect.flags |= ASSOC_REQ_USE_RRM;
  	}
  
@@ -178,12 +186,14 @@ Upstream-Status: Backport
  	wdev_lock(dev->ieee80211_ptr);
  	err = cfg80211_connect(rdev, dev, &connect, connkeys, NULL);
 +
-+	if (!err && info->attrs[NL80211_ATTR_SOCKET_OWNER])
-+		dev->ieee80211_ptr->conn_owner_nlportid = info->snd_portid;
++	if (!err && info->attrs[NL80211_ATTR_SOCKET_OWNER]) {
++		rdev->conn_owner_nlportid = info->snd_portid;
++		rdev->conn_owner_wdev = dev->ieee80211_ptr;
++	}
  	wdev_unlock(dev->ieee80211_ptr);
  	if (err)
  		kzfree(connkeys);
-@@ -10600,6 +10616,41 @@
+@@ -10600,6 +10618,41 @@
  	return 0;
  }
  
@@ -225,7 +235,7 @@ Upstream-Status: Backport
  #define NL80211_FLAG_NEED_WIPHY		0x01
  #define NL80211_FLAG_NEED_NETDEV	0x02
  #define NL80211_FLAG_NEED_RTNL		0x04
-@@ -11418,6 +11469,14 @@
+@@ -11418,6 +11471,14 @@
  		.internal_flags = NL80211_FLAG_NEED_NETDEV_UP |
  				  NL80211_FLAG_NEED_RTNL,
  	},
@@ -240,7 +250,7 @@ Upstream-Status: Backport
  };
  
  /* notification functions */
-@@ -13340,6 +13399,47 @@
+@@ -13340,6 +13401,47 @@
  	nlmsg_free(msg);
  }
  
@@ -253,7 +263,7 @@ Upstream-Status: Backport
 +	struct sk_buff *msg;
 +	void *hdr;
 +
-+	if (!wdev->conn_owner_nlportid)
++	if (!rdev->conn_owner_nlportid || rdev->conn_owner_wdev != wdev)
 +		return -EINVAL;
 +
 +	msg = nlmsg_new(NLMSG_DEFAULT_SIZE, gfp);
@@ -276,7 +286,7 @@ Upstream-Status: Backport
 +
 +	genlmsg_end(msg, hdr);
 +	genlmsg_unicast(wiphy_net(&rdev->wiphy), msg,
-+			wdev->conn_owner_nlportid);
++			rdev->conn_owner_nlportid);
 +	return 0;
 +
 + nla_put_failure:

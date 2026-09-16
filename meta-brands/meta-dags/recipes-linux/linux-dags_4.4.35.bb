@@ -8,7 +8,7 @@ COMPATIBLE_MACHINE = "dagsmv200"
 
 inherit kernel machine_kernel_pr kernel-fixups
 
-MACHINE_KERNEL_PR:append = "4"
+MACHINE_KERNEL_PR:append = "5"
 
 SRCREV_FORMAT = "kernel_wireguard"
 

@@ -8,7 +8,7 @@ DEPENDS = "bc-native"
 
 inherit gitpkgv module
 
-PR = "r1"
+PR = "r2"
 
 SRCREV = "${AUTOREV}"
 PV = "1.0+git"

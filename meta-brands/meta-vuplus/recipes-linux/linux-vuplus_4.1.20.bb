@@ -6,7 +6,7 @@ MODULE = "linux-4.1.20"
 
 COMPATIBLE_MACHINE = "^(vuuno4kse|vuzero4k)$"
 
-MACHINE_KERNEL_PR = "r10"
+MACHINE_KERNEL_PR = "r11"
 
 RPROVIDES:${KERNEL_PACKAGE_NAME}-image += "kernel-${KERNEL_IMAGETYPE}"
 

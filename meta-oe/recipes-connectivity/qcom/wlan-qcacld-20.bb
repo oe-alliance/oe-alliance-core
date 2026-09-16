@@ -10,6 +10,7 @@ COMPATIBLE_MACHINE = "osmio4k|osmio4kplus"
 SRCREV = "${AUTOREV}"
 PV = "4.5.25.55+git"
 PKGV = "4.5.25.55+git${GITPKGV}"
+PR = "r1"
 SRC_URI = "git://github.com/oe-alliance-drivers/qcacld-2.0.git;protocol=https;branch=master;destsuffix=s"
 
 S = "${UNPACKDIR}/s"
