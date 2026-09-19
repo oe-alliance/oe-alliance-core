@@ -11,7 +11,7 @@ COMPATIBLE_MACHINE = "^(sfx6008|sx988|sx88v2)$"
 
 inherit kernel machine_kernel_pr kernel-fixups
 
-MACHINE_KERNEL_PR:append = "5"
+MACHINE_KERNEL_PR:append = "6"
 
 KVTYPE = "mv200"
 KVTYPE:sx88v2 = "mv300"
