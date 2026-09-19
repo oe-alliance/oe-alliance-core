@@ -13,7 +13,7 @@ fi
 case "$1" in
     start)
 	echo -n "Starting satpi:"
-	start-stop-daemon -S -x /usr/bin/satpi -p /var/lock/SatPI.lock -- --http-path /usr/share/satpi/web $SATPI_OPTS > /dev/null
+	start-stop-daemon -S -x /usr/bin/satpi -p /var/lock/SatPI.lock -- --http-path /usr/share/satpi/web --app-data-path /var/lib/satpi $SATPI_OPTS > /dev/null
 	echo "."
 	;;
     stop)
