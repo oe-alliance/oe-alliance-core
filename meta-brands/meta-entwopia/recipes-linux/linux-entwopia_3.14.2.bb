@@ -12,7 +12,7 @@ COMPATIBLE_MACHINE = "^(ch62lc|ew7356|ew7358|ew7362)$"
 
 inherit kernel machine_kernel_pr kernel-fixups
 
-MACHINE_KERNEL_PR = "r6"
+MACHINE_KERNEL_PR = "r7"
 
 SRC_URI[ew7356.md5sum] = "15f56eb97fcc3512b031fffec7046f99"
 SRC_URI[ew7356.sha256sum] = "060093585e4de86cf5c1f717d1f6fca486a633675e94fa5a07fab566ec074e33"
@@ -51,6 +51,7 @@ SRC_URI += "https://source.mynonpublic.com/entwopia/${MACHINE}/${MACHINE}-linux-
     file://initramfs-mipsel.cpio.xz;unpack=0 \
     file://procfs.patch \
     ${KERNEL_PATCH_WIFI_EXTAUTH_314} \
+    ${KERNEL_PATCH_WIFI_RT2800_MFP_314} \
     "
 
 export KCFLAGS = " -std=gnu17 \

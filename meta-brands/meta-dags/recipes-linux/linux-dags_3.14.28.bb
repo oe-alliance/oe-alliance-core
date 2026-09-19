@@ -3,7 +3,7 @@ LICENSE = "GPL-2.0-only"
 SECTION = "kernel"
 
 KV = "3.14.28"
-MACHINE_KERNEL_PR = "r14"
+MACHINE_KERNEL_PR = "r15"
 
 COMPATIBLE_MACHINE = "dags7252"
 
@@ -35,6 +35,7 @@ SRC_URI += "https://source.mynonpublic.com/dags/linux-3.14.28.tar.xz \
     ${KERNEL_PATCH_MISC_FIX_LINKER} \
     ${KERNEL_PATCH_BINUTILS241_V1} \
     ${KERNEL_PATCH_WIFI_EXTAUTH_314} \
+    ${KERNEL_PATCH_WIFI_RT2800_MFP_314} \
 "
 
 export KCFLAGS = " -std=gnu17 \

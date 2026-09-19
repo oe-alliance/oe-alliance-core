@@ -1,6 +1,6 @@
 inherit kernel machine_kernel_pr kernel-fixups
 
-MACHINE_KERNEL_PR:append = ".30"
+MACHINE_KERNEL_PR:append = ".31"
 
 COMPATIBLE_MACHINE = "^(dm900|dm920)$"
 
@@ -28,6 +28,7 @@ SRC_URI = " \
     ${KERNEL_PATCH_GCC_SERIES} \
     file://chkroot-multiboot.cpio.xz;unpack=0 \
     ${KERNEL_PATCH_WIFI_EXTAUTH_314} \
+    ${KERNEL_PATCH_WIFI_RT2800_MFP_314} \
 "
 
 SRC_URI[kernel.md5sum] = "b621207b3f6ecbb67db18b13258f8ea8"
