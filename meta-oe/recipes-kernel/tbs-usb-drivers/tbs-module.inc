@@ -10,6 +10,66 @@ inherit module
 # collisions when a kernel also enables a module with the same basename.
 KERNEL_MODULE_PACKAGE_PREFIX = "tbs-"
 
+# kernel-module-split uses KERNEL_MODULE_PACKAGE_PREFIX for both the modules
+# produced by this recipe and every dependency reported by modinfo.  The
+# latter is wrong for common in-kernel modules: for example, dvb-usb is
+# provided by kernel-module-dvb-usb-${KERNEL_VERSION}, not by a TBS package.
+# Correct those dependencies after the module packages have been split while
+# retaining the prefix for modules supplied by the TBS recipes themselves.
+PACKAGESPLITFUNCS += "tbs_fix_kernel_module_rdepends"
+
+python tbs_fix_kernel_module_rdepends () {
+    tbs_prefix = d.getVar("KERNEL_MODULE_PACKAGE_PREFIX") or ""
+    kernel_name = d.getVar("KERNEL_PACKAGE_NAME") or "kernel"
+    suffix = d.getVar("KERNEL_MODULE_PACKAGE_SUFFIX") or ""
+    tbs_module_prefix = "%s%s-module-" % (tbs_prefix, kernel_name)
+    kernel_module_prefix = "%s-module-" % kernel_name
+
+    # Module names installed by this recipe and by its declared TBS module
+    # dependencies must keep the TBS package prefix.
+    tbs_modules = {
+        module.replace("_", "-")
+        for module in (d.getVar("TBS_INSTALL_MODULES") or "").split()
+    }
+    recipe_prefixes = ("tbs-frontend-", "tbs-tuner-")
+    for recipe in (d.getVar("TBS_MODULE_DEPENDS") or "").split():
+        for recipe_prefix in recipe_prefixes:
+            if recipe.startswith(recipe_prefix):
+                tbs_modules.add(recipe[len(recipe_prefix):].replace("_", "-"))
+                break
+
+    for package in (d.getVar("PACKAGES") or "").split():
+        if not package.startswith(tbs_module_prefix):
+            continue
+
+        rdepends = bb.utils.explode_dep_versions2(
+            d.getVar("RDEPENDS:" + package) or ""
+        )
+        changed = False
+        for dependency in list(rdepends):
+            if not dependency.startswith(tbs_module_prefix):
+                continue
+            if suffix and not dependency.endswith(suffix):
+                continue
+
+            module_end = -len(suffix) if suffix else None
+            module = dependency[len(tbs_module_prefix):module_end]
+            if module in tbs_modules:
+                continue
+
+            replacement = kernel_module_prefix + module + suffix
+            constraints = rdepends.pop(dependency)
+            if replacement not in rdepends:
+                rdepends[replacement] = constraints
+            changed = True
+
+        if changed:
+            d.setVar(
+                "RDEPENDS:" + package,
+                bb.utils.join_deps(rdepends, commasep=False),
+            )
+}
+
 DEPENDS += "virtual/kernel tbs-media-driver-source ${TBS_MODULE_DEPENDS}"
 
 SRC_URI = " \
