@@ -1,0 +1,91 @@
+From 50e847c4f4c467ddb123c24ab09dc8b83c31a79a Mon Sep 17 00:00:00 2001
+From: WXbet <57314510+WXbet@users.noreply.github.com>
+Date: Mon, 14 Sep 2026 16:01:01 +0200
+Subject: [PATCH] udhcpc: keep errno of poll() across monotonic_sec()
+
+The main loop checks errno for EINTR only after monotonic_sec() has run.
+A successful clock_gettime() may still change errno: on 32-bit targets
+glibc tries clock_gettime64 first and leaves ENOSYS behind when it falls
+back to clock_gettime on kernels older than 5.1. A signal that interrupts
+poll() then no longer looks like EINTR, and udhcpc exits with
+"poll: Function not implemented" instead of handling SIGUSR1, SIGUSR2 or
+SIGTERM.
+
+Save errno right after poll() and use that copy. udhcpc6 has the same
+loop and gets the same change.
+
+Upstream-Status: Submitted [https://lists.busybox.net/pipermail/busybox/2026-September/092478.html]
+
+Signed-off-by: WXbet <57314510+WXbet@users.noreply.github.com>
+---
+ networking/udhcp/d6_dhcpc.c | 5 ++++-
+ networking/udhcp/dhcpc.c    | 5 ++++-
+ 2 files changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/networking/udhcp/d6_dhcpc.c b/networking/udhcp/d6_dhcpc.c
+index 7233c5f..8145c6a 100644
+--- a/networking/udhcp/d6_dhcpc.c
++++ b/networking/udhcp/d6_dhcpc.c
+@@ -1387,12 +1387,14 @@ int udhcpc6_main(int argc UNUSED_PARAM, char **argv)
+ 		/* If we already timed out, fall through with retval = 0, else... */
+ 		if (timeout > 0) {
+ 			unsigned diff;
++			int poll_errno;
+ 
+ 			if (timeout > INT_MAX/1000)
+ 				timeout = INT_MAX/1000;
+ 			log1("waiting %u seconds", timeout);
+ 			diff = (unsigned)monotonic_sec();
+ 			retval = poll(pfds, 2, timeout * 1000);
++			poll_errno = errno;
+ 			diff = (unsigned)monotonic_sec() - diff;
+ 			lease_remaining -= diff;
+ 			if (lease_remaining < 0)
+@@ -1403,10 +1405,11 @@ int udhcpc6_main(int argc UNUSED_PARAM, char **argv)
+ 
+ 			if (retval < 0) {
+ 				/* EINTR? A signal was caught, don't panic */
+-				if (errno == EINTR) {
++				if (poll_errno == EINTR) {
+ 					continue;
+ 				}
+ 				/* Else: an error occurred, panic! */
++				errno = poll_errno;
+ 				bb_simple_perror_msg_and_die("poll");
+ 			}
+ 		}
+diff --git a/networking/udhcp/dhcpc.c b/networking/udhcp/dhcpc.c
+index e44086c..17a21f2 100644
+--- a/networking/udhcp/dhcpc.c
++++ b/networking/udhcp/dhcpc.c
+@@ -1387,12 +1387,14 @@ int udhcpc_main(int argc UNUSED_PARAM, char **argv)
+ 		/* If we already timed out, fall through with retval = 0, else... */
+ 		if (timeout > 0) {
+ 			unsigned diff;
++			int poll_errno;
+ 
+ 			if (timeout > INT_MAX/1000)
+ 				timeout = INT_MAX/1000;
+ 			log1("waiting %u seconds", timeout);
+ 			diff = (unsigned)monotonic_sec();
+ 			retval = poll(pfds, 2, timeout * 1000);
++			poll_errno = errno;
+ 			diff = (unsigned)monotonic_sec() - diff;
+ 			lease_remaining -= diff;
+ 			if (lease_remaining < 0)
+@@ -1403,10 +1405,11 @@ int udhcpc_main(int argc UNUSED_PARAM, char **argv)
+ 
+ 			if (retval < 0) {
+ 				/* EINTR? A signal was caught, don't panic */
+-				if (errno == EINTR) {
++				if (poll_errno == EINTR) {
+ 					continue;
+ 				}
+ 				/* Else: an error occurred, panic! */
++				errno = poll_errno;
+ 				bb_simple_perror_msg_and_die("poll");
+ 			}
+ 		}
+-- 
+2.39.5
+
