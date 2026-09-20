@@ -1,0 +1,1160 @@
+Revert "input-selector: implement a two-phase sinkpad switch" and its
+five upstream follow-up fixes, back to the single-mutex active-pad
+design GStreamer used before 1.26.11.
+
+Upstream introduced a two-phase active-pad switch protected by a
+GRWLock (active_sinkpad_lock) plus a pending_active_sinkpad/
+maybe_commit_active_pad() commit step, replacing the previous design
+where the whole element state (including the active pad) was
+protected by a single GMutex (GST_INPUT_SELECTOR_LOCK). This is meant
+to let a buffer/event already in flight on the streaming thread keep
+using a stable "current" active pad while a property change
+(current-text on playbin, etc.) is pending, only "committing" the
+switch at a safe point.
+
+In practice this two-phase RWLock design is deadlock-prone: GStreamer
+issue #5150 ("input-selector: Deadlock when releasing an inactive
+sinkpad while srcpad receives an upstream event during a buffer push")
+documents a real deadlock between a writer-lock request and two
+readers already in flight, and the reporter notes their libc's rwlock
+writer-preference behaviour affects how reliably it reproduces -
+exactly the kind of fairness/ordering variance embedded Linux libc
+implementations differ on too, not something specific to their
+platform.
+
+On this OpenViX build, selecting a text (subtitle) track on a file
+with more than one embedded subtitle track deadlocks any later
+flushing seek on playbin's internal text input-selector: the main
+thread blocks inside gst_element_seek() (which needs the
+active_sinkpad_lock via a property set on current-text), while the
+streaming thread pushing a subtitle buffer already holds a reader lock
+through gst_selector_pad_chain(). Neither subsink's sync/async
+properties nor sync-streams affect this, since the block is in
+input-selector's own locking, not anything sink-side.
+
+Reverting to the pre-1.26.11 single-mutex design removes the RWLock
+and the pending/commit indirection entirely - the active pad is read
+and written directly under the one GST_INPUT_SELECTOR_LOCK mutex,
+same as every other piece of this element's state, matching the
+"it just works" design GStreamer core carried for years before this
+rework.
+
+This reverts, as a set, gstreamer commits:
+  dd0c2e3ebadb55341900f88091ccd6f9bebcea30 "input-selector: implement a two-phase sinkpad switch"
+  b7cabc85f2cc02d55bdbc822fde4c112e618aa26 "input-selector: fix race condition selecting next active pad"
+  192632b3121712c5a0e2cc283265fcdf6e65e210 "input-selector: gracefully handle active pad disappearance"
+  2842f2aa1d962b21ee78062e003ab1fed217eba4 "input-selector: don't consider pad being released checking for eos"
+  81125657be1500977c4b3d0f9d76c2a965084b11 "input-selector: fix regression receiving eos event"
+  215d8a5ac4939d794e76738e394bf4d6f73b9ae3 "input-selector: don't wait for active pad when eos (active-segment mode)"
+  06a28619acd994b21c98301e9f411d7d7366d52f "inputselector: Hold active-pad during allocation query"
+  0eafdffcf68c386b94629c2e863d837d443a9d16 "inputselector: Add 2 more calls to check for active pad switch"
+
+Verified against gstinputselector.c/.h as shipped in GStreamer 1.28.6
+(the version this recipe builds): applying this patch to the 1.28.6
+source and diffing the result against gstinputselector.c/.h at commit
+735f21a4c99d60fda474a1b7651dcc33a1215198 (the parent of dd0c2e3e,
+i.e. the last commit before any of the above landed) shows no
+differences - this patch reproduces that pre-rework file exactly, and
+no other, unrelated commit touched this file in between.
+
+Upstream-Status: Inappropriate [OpenViX-specific workaround for a real,
+still-unresolved upstream design issue - see
+https://gitlab.freedesktop.org/gstreamer/gstreamer/-/issues/5150.
+Revisit if upstream reworks input-selector's locking again.]
+
+--- a/plugins/elements/gstinputselector.h	2026-09-20 10:02:51.613887300 +0300
++++ b/plugins/elements/gstinputselector.h	2026-09-20 10:02:50.955178500 +0300
+@@ -18,7 +18,7 @@
+  * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+  * Boston, MA 02110-1301, USA.
+  */
+-
++
+ #ifndef __GST_INPUT_SELECTOR_H__
+ #define __GST_INPUT_SELECTOR_H__
+
+@@ -65,39 +65,8 @@
+
+   GstPad *srcpad;
+
+-  /* Acquire this lock when reading / writing / locking active_sinkpad.
+-   *
+-   * Make sure to always use the following order:
+-   *
+-   * 1. `g_rw_lock_reader_lock (&sel->active_sinkpad_lock)`, exactly once.
+-   *    Acquisition in writer mode is limited to `maybe_commit_active_pad ()`
+-   *    see below.
+-   * 2. `GST_INPUT_SELECTOR_LOCK (sel)`
+-   *
+-   * The `SELECTOR_LOCK` can be locked / unlocked while the
+-   * `active_sinkpad_lock` is kept locked in reader mode.
+-   *
+-   * The RW lock allows preventing the active_pad from being changed while we
+-   * are processing a buffer or event.
+-   * Only `gst_input_selector_maybe_commit_active_pad ()` can get this lock in
+-   * writer mode for a short period of time (committing the `pending_active_pad`
+-   * to `active_pad`). Other concurrent code paths lock it in reader mode.
+-   *
+-   * When a `pending_active_pad` is available (and only in that case),
+-   * code paths calling `gst_input_selector_maybe_commit_active_pad ()` would
+-   * hang until the lock is available for writer mode, which is expected since
+-   * their processing should be performed with respect to the expected
+-   * `active_pad`.
+-   *
+-   * Note that a `GRecMutex` was also considered to prevent possible deadlocks
+-   * in callbacks, but only a `GRWLock` can deal with the concurrency which
+-   * occurs during preroll.
+-   */
+-  GRWLock active_sinkpad_lock;
+-  GstPad* active_sinkpad;
+-
+   gboolean active_sinkpad_from_user;
+-  GstPad* pending_active_sinkpad;
++  GstPad* active_sinkpad;
+   guint n_pads;           /* number of pads */
+   guint padcount;         /* sequence number for pads */
+   gboolean sync_streams;
+--- a/plugins/elements/gstinputselector.c	2026-09-20 10:02:50.983516400 +0300
++++ b/plugins/elements/gstinputselector.c	2026-09-20 10:02:50.917353800 +0300
+@@ -124,10 +124,9 @@
+     GParamSpec * pspec, gpointer user_data);
+ static inline gboolean gst_input_selector_is_active_sinkpad (GstInputSelector *
+     sel, GstPad * pad);
++static GstPad *gst_input_selector_get_active_sinkpad (GstInputSelector * sel);
+ static GstPad *gst_input_selector_get_linked_pad (GstInputSelector * sel,
+     GstPad * pad, gboolean strict);
+-static void
+-gst_input_selector_maybe_commit_active_pad (GstInputSelector * self);
+
+ #define GST_TYPE_SELECTOR_PAD \
+   (gst_selector_pad_get_type())
+@@ -158,7 +157,6 @@
+   gboolean eos_sent;            /* when EOS was sent downstream */
+   gboolean discont;             /* after switching we create a discont */
+   gboolean flushing;            /* set after flush-start and before flush-stop */
+-  gboolean being_released;      /* set just before deactivation & removal */
+   gboolean always_ok;
+   GstTagList *tags;             /* last tags received on the pad */
+
+@@ -348,7 +346,6 @@
+   pad->events_pending = FALSE;
+   pad->discont = FALSE;
+   pad->flushing = FALSE;
+-  pad->being_released = FALSE;
+   gst_segment_init (&pad->segment, GST_FORMAT_UNDEFINED);
+   pad->sending_cached_buffers = FALSE;
+   gst_selector_pad_free_cached_buffers (pad);
+@@ -434,11 +431,11 @@
+ }
+
+ static gboolean
+-store_sticky_events (GstPad * sinkpad, GstEvent ** event, gpointer user_data)
++forward_sticky_events (GstPad * sinkpad, GstEvent ** event, gpointer user_data)
+ {
+   GstInputSelector *sel = GST_INPUT_SELECTOR (user_data);
+
+-  GST_DEBUG_OBJECT (sinkpad, "storing sticky event %" GST_PTR_FORMAT, *event);
++  GST_DEBUG_OBJECT (sinkpad, "forward sticky event %" GST_PTR_FORMAT, *event);
+
+   if (GST_EVENT_TYPE (*event) == GST_EVENT_SEGMENT) {
+     GstSegment *seg = &GST_SELECTOR_PAD (sinkpad)->segment;
+@@ -447,9 +444,7 @@
+     e = gst_event_new_segment (seg);
+     gst_event_set_seqnum (e, GST_SELECTOR_PAD_CAST (sinkpad)->segment_seqnum);
+
+-    gst_pad_store_sticky_event (sel->srcpad, e);
+-
+-    gst_event_unref (e);
++    gst_pad_push_event (sel->srcpad, e);
+   } else if (GST_EVENT_TYPE (*event) == GST_EVENT_STREAM_START
+       && !sel->have_group_id) {
+     GstEvent *tmp =
+@@ -457,39 +452,37 @@
+
+     /* Only push stream-start once if not all our streams have a stream-id */
+     if (!tmp) {
+-      gst_pad_store_sticky_event (sel->srcpad, *event);
++      gst_pad_push_event (sel->srcpad, gst_event_ref (*event));
+     } else {
+       gst_event_unref (tmp);
+     }
+   } else {
+-    gst_pad_store_sticky_event (sel->srcpad, *event);
++    gst_pad_push_event (sel->srcpad, gst_event_ref (*event));
+   }
+
+   return TRUE;
+ }
+
+-/* Must be called with `active_sinkpad_lock` locked in reader mode */
+ static gboolean
+ gst_input_selector_eos_wait (GstInputSelector * self, GstSelectorPad * pad,
+     GstEvent * eos_event)
+ {
+-  while (!self->eos && !self->flushing && !pad->flushing
+-      && !pad->being_released) {
+-    if (pad == GST_SELECTOR_PAD_CAST (self->active_sinkpad) && pad->eos
++  while (!self->eos && !self->flushing && !pad->flushing) {
++    GstPad *active_sinkpad;
++    active_sinkpad = gst_input_selector_get_active_sinkpad (self);
++    if (pad == GST_SELECTOR_PAD_CAST (active_sinkpad) && pad->eos
+         && !pad->eos_sent) {
+       GST_DEBUG_OBJECT (pad, "send EOS event");
+-      /* if we have pending events, push them now */
++      GST_INPUT_SELECTOR_UNLOCK (self);
++      /* if we have a pending events, push them now */
+       if (pad->events_pending) {
+         gst_pad_sticky_events_foreach (GST_PAD_CAST (pad),
+-            store_sticky_events, self);
+-
++            forward_sticky_events, self);
+         pad->events_pending = FALSE;
+       }
+
+-      GST_INPUT_SELECTOR_UNLOCK (self);
+       gst_pad_push_event (self->srcpad, gst_event_ref (eos_event));
+       GST_INPUT_SELECTOR_LOCK (self);
+-
+       if (pad->clock_id) {
+         GST_DEBUG_OBJECT (pad, "unlock clock wait");
+         gst_clock_id_unschedule (pad->clock_id);
+@@ -500,17 +493,9 @@
+       GST_INPUT_SELECTOR_BROADCAST (self);
+       pad->eos_sent = TRUE;
+     } else {
+-      g_rw_lock_reader_unlock (&self->active_sinkpad_lock);
+       /* we can be unlocked here when we are shutting down (flushing) or when we
+        * get unblocked */
+       GST_INPUT_SELECTOR_WAIT (self);
+-
+-      GST_INPUT_SELECTOR_UNLOCK (self);
+-      g_rw_lock_reader_lock (&self->active_sinkpad_lock);
+-      GST_INPUT_SELECTOR_LOCK (self);
+-
+-      /* Might have changed while waiting */
+-      gst_input_selector_maybe_commit_active_pad (self);
+     }
+   }
+
+@@ -528,7 +513,7 @@
+     GstSelectorPad *selpad;
+
+     selpad = GST_SELECTOR_PAD_CAST (walk->data);
+-    if (!selpad->eos && !selpad->being_released) {
++    if (!selpad->eos) {
+       ret = FALSE;
+       break;
+     }
+@@ -546,17 +531,35 @@
+   gboolean new_tags = FALSE;
+   GstInputSelector *sel;
+   GstSelectorPad *selpad;
++  GstPad *prev_active_sinkpad;
++  GstPad *active_sinkpad;
+
+   sel = GST_INPUT_SELECTOR (parent);
+   selpad = GST_SELECTOR_PAD_CAST (pad);
+   GST_DEBUG_OBJECT (selpad, "received event %" GST_PTR_FORMAT, event);
+
+-  g_rw_lock_reader_lock (&sel->active_sinkpad_lock);
+   GST_INPUT_SELECTOR_LOCK (sel);
+-  gst_input_selector_maybe_commit_active_pad (sel);
++  prev_active_sinkpad =
++      sel->active_sinkpad ? gst_object_ref (sel->active_sinkpad) : NULL;
++  active_sinkpad = gst_input_selector_get_active_sinkpad (sel);
++  gst_object_ref (active_sinkpad);
++  GST_INPUT_SELECTOR_UNLOCK (sel);
++
++  if (prev_active_sinkpad != active_sinkpad) {
++    if (prev_active_sinkpad)
++      g_object_notify (G_OBJECT (prev_active_sinkpad), "active");
++    g_object_notify (G_OBJECT (active_sinkpad), "active");
++    g_object_notify (G_OBJECT (sel), "active-pad");
++  }
++  if (prev_active_sinkpad)
++    gst_object_unref (prev_active_sinkpad);
++  gst_object_unref (active_sinkpad);
++
++  GST_INPUT_SELECTOR_LOCK (sel);
++  active_sinkpad = gst_input_selector_get_active_sinkpad (sel);
+
+   /* only forward if we are dealing with the active sinkpad */
+-  forward = pad == sel->active_sinkpad;
++  forward = (pad == active_sinkpad);
+
+   switch (GST_EVENT_TYPE (event)) {
+     case GST_EVENT_STREAM_START:{
+@@ -636,7 +639,7 @@
+         GST_OBJECT_LOCK (pad);
+         selpad->segment.position = ts;
+         GST_OBJECT_UNLOCK (pad);
+-        if (sel->sync_streams && sel->active_sinkpad == pad)
++        if (sel->sync_streams && active_sinkpad == pad)
+           GST_INPUT_SELECTOR_BROADCAST (sel);
+       }
+
+@@ -647,20 +650,13 @@
+           GST_OBJECT_NAME (selpad));
+       gst_event_parse_stream_group_done (event, &selpad->group_id);
+       selpad->group_done = TRUE;
+-      if (sel->sync_streams && sel->active_sinkpad == pad)
++      if (sel->sync_streams && active_sinkpad == pad)
+         GST_INPUT_SELECTOR_BROADCAST (sel);
+       break;
+     }
+     default:
+       break;
+   }
+-
+-  if (forward && selpad->events_pending) {
+-    gst_pad_sticky_events_foreach (pad, store_sticky_events, sel);
+-
+-    selpad->events_pending = FALSE;
+-  }
+-
+   GST_INPUT_SELECTOR_UNLOCK (sel);
+   if (new_tags)
+     g_object_notify (G_OBJECT (selpad), "tags");
+@@ -679,8 +675,6 @@
+     gst_event_unref (event);
+   }
+
+-  g_rw_lock_reader_unlock (&sel->active_sinkpad_lock);
+-
+   return res;
+ }
+
+@@ -700,6 +694,7 @@
+       res = gst_pad_peer_query (self->srcpad, query);
+       break;
+     case GST_QUERY_ALLOCATION:{
++      GstPad *active_sinkpad;
+       GstInputSelector *sel = GST_INPUT_SELECTOR (parent);
+
+       /* Only do the allocation query for the active sinkpad,
+@@ -707,18 +702,14 @@
+        * should reconfigure and do a new allocation query
+        */
+       if (GST_PAD_DIRECTION (pad) == GST_PAD_SINK) {
+-        gboolean is_active_pad;
+-        g_rw_lock_reader_lock (&sel->active_sinkpad_lock);
+-        is_active_pad = pad == sel->active_sinkpad;
+-        g_rw_lock_reader_unlock (&self->active_sinkpad_lock);
++        GST_INPUT_SELECTOR_LOCK (sel);
++        active_sinkpad = gst_input_selector_get_active_sinkpad (sel);
++        GST_INPUT_SELECTOR_UNLOCK (sel);
+
+-        if (!is_active_pad) {
++        if (pad != active_sinkpad) {
+           res = FALSE;
+           goto done;
+         }
+-
+-        res = gst_pad_query_default (pad, parent, query);
+-        break;
+       }
+     }
+       /* fall through */
+@@ -750,12 +741,8 @@
+   return gst_segment_to_running_time (seg, GST_FORMAT_TIME, running_time);
+ }
+
+-/* Will wait until the running time of the active pad
+- * is after this pad or return TRUE when flushing.
+- * Must be called:
+- * * with `active_sinkpad_lock` locked in reader mode,
+- * * without the SELECTOR_LOCK.
+- */
++/* must be called without the SELECTOR_LOCK, will wait until the running time
++ * of the active pad is after this pad or return TRUE when flushing */
+ static gboolean
+ gst_input_selector_wait_running_time (GstInputSelector * sel,
+     GstSelectorPad * selpad, GstBuffer * buf)
+@@ -782,18 +769,13 @@
+
+   GST_INPUT_SELECTOR_LOCK (sel);
+   while (TRUE) {
++    GstPad *active_sinkpad;
+     GstSelectorPad *active_selpad;
+     gint64 cur_running_time;
+     GstClockTime running_time;
+
+-    if (!sel->active_sinkpad) {
+-      GST_DEBUG_OBJECT (selpad,
+-          "Not waiting because there are no active sink pads");
+-      GST_INPUT_SELECTOR_UNLOCK (sel);
+-      break;
+-    }
+-
+-    active_selpad = GST_SELECTOR_PAD_CAST (sel->active_sinkpad);
++    active_sinkpad = gst_input_selector_get_active_sinkpad (sel);
++    active_selpad = GST_SELECTOR_PAD_CAST (active_sinkpad);
+
+     if (seg->format != GST_FORMAT_TIME) {
+       GST_DEBUG_OBJECT (selpad,
+@@ -843,7 +825,7 @@
+     }
+
+     if (selpad == active_selpad || sel->eos || sel->flushing
+-        || selpad->flushing || selpad->being_released) {
++        || selpad->flushing) {
+       GST_DEBUG_OBJECT (selpad, "Waiting aborted. Unblocking");
+       GST_INPUT_SELECTOR_UNLOCK (sel);
+       break;
+@@ -859,49 +841,22 @@
+
+       if (!sel->playing) {
+         GST_DEBUG_OBJECT (selpad, "Waiting for playing");
+-
+-        g_rw_lock_reader_unlock (&sel->active_sinkpad_lock);
+         GST_INPUT_SELECTOR_WAIT (sel);
+         GST_DEBUG_OBJECT (selpad, "Done waiting");
+-
+-        GST_INPUT_SELECTOR_UNLOCK (sel);
+-        g_rw_lock_reader_lock (&sel->active_sinkpad_lock);
+-        GST_INPUT_SELECTOR_LOCK (sel);
+-
+-        /* Might have changed while waiting */
+-        gst_input_selector_maybe_commit_active_pad (sel);
+         continue;
+       }
+
+       base_time = gst_element_get_base_time (GST_ELEMENT_CAST (sel));
+       if (!GST_CLOCK_TIME_IS_VALID (base_time)) {
+         GST_DEBUG_OBJECT (selpad, "sync-mode=clock but no base time. Blocking");
+-
+-        g_rw_lock_reader_unlock (&sel->active_sinkpad_lock);
+         GST_INPUT_SELECTOR_WAIT (sel);
+-
+-        GST_INPUT_SELECTOR_UNLOCK (sel);
+-        g_rw_lock_reader_lock (&sel->active_sinkpad_lock);
+-        GST_INPUT_SELECTOR_LOCK (sel);
+-
+-        /* Might have changed while waiting */
+-        gst_input_selector_maybe_commit_active_pad (sel);
+         continue;
+       }
+
+       clock = gst_element_get_clock (GST_ELEMENT_CAST (sel));
+       if (!clock) {
+         GST_DEBUG_OBJECT (selpad, "sync-mode=clock but no clock. Blocking");
+-
+-        g_rw_lock_reader_unlock (&sel->active_sinkpad_lock);
+         GST_INPUT_SELECTOR_WAIT (sel);
+-
+-        GST_INPUT_SELECTOR_UNLOCK (sel);
+-        g_rw_lock_reader_lock (&sel->active_sinkpad_lock);
+-        GST_INPUT_SELECTOR_LOCK (sel);
+-
+-        /* Might have changed while waiting */
+-        gst_input_selector_maybe_commit_active_pad (sel);
+         continue;
+       }
+
+@@ -910,9 +865,7 @@
+           gst_clock_new_single_shot_id (clock,
+           running_time + base_time + sel->upstream_latency);
+       selpad->clock_id = gst_clock_id_ref (clock_id);
+-
+       GST_INPUT_SELECTOR_UNLOCK (sel);
+-      g_rw_lock_reader_unlock (&sel->active_sinkpad_lock);
+
+       gst_object_unref (clock);
+       cret = gst_clock_id_wait (clock_id, &jitter);
+@@ -921,7 +874,6 @@
+       GST_DEBUG_OBJECT (sel, "Clock returned %d, jitter %" GST_STIME_FORMAT,
+           cret, GST_STIME_ARGS (jitter));
+
+-      g_rw_lock_reader_lock (&sel->active_sinkpad_lock);
+       GST_INPUT_SELECTOR_LOCK (sel);
+       if (selpad->clock_id) {
+         gst_clock_id_unref (selpad->clock_id);
+@@ -932,30 +884,21 @@
+         GST_INPUT_SELECTOR_UNLOCK (sel);
+         break;
+       }
+-    } else if (!active_selpad->eos
+-        && (!GST_CLOCK_TIME_IS_VALID (cur_running_time)
+-            || running_time >= cur_running_time)) {
++    } else if (!GST_CLOCK_TIME_IS_VALID (cur_running_time)
++        || running_time >= cur_running_time) {
+       GST_DEBUG_OBJECT (selpad,
+-          "Waiting for active stream to advance. %" GST_TIME_FORMAT " >= %"
++          "Waiting for active streams to advance. %" GST_TIME_FORMAT " >= %"
+           GST_TIME_FORMAT, GST_TIME_ARGS (running_time),
+           GST_TIME_ARGS (cur_running_time));
+-
+-      g_rw_lock_reader_unlock (&sel->active_sinkpad_lock);
+       GST_INPUT_SELECTOR_WAIT (sel);
+-
+-      GST_INPUT_SELECTOR_UNLOCK (sel);
+-      g_rw_lock_reader_lock (&sel->active_sinkpad_lock);
+-      GST_INPUT_SELECTOR_LOCK (sel);
+-
+-      /* Might have changed while waiting */
+-      gst_input_selector_maybe_commit_active_pad (sel);
+     } else {
+       GST_INPUT_SELECTOR_UNLOCK (sel);
+       break;
+     }
+   }
+
+-  return (sel->flushing || selpad->flushing || selpad->being_released);
++  /* Return TRUE if the selector or the pad is flushing */
++  return (sel->flushing || selpad->flushing);
+ }
+
+ #if DEBUG_CACHED_BUFFERS
+@@ -993,10 +936,7 @@
+ }
+ #endif
+
+-/* must be called with:
+- * * with `active_sinkpad_lock` locked in reader mode,
+- * * without the SELECTOR_LOCK.
+- */
++/* must be called with the SELECTOR_LOCK */
+ static void
+ gst_input_selector_cleanup_old_cached_buffers (GstInputSelector * sel,
+     GstPad * pad)
+@@ -1021,10 +961,12 @@
+       gst_object_unref (clock);
+     }
+   } else {
++    GstPad *active_sinkpad;
+     GstSelectorPad *active_selpad;
+     GstSegment *active_seg;
+
+-    active_selpad = GST_SELECTOR_PAD_CAST (sel->active_sinkpad);
++    active_sinkpad = gst_input_selector_get_active_sinkpad (sel);
++    active_selpad = GST_SELECTOR_PAD_CAST (active_sinkpad);
+     active_seg = &active_selpad->segment;
+
+     /* Get active pad's running time, if no configured segment yet keep at -1 */
+@@ -1114,6 +1056,8 @@
+ {
+   GstInputSelector *sel;
+   GstFlowReturn res;
++  GstPad *active_sinkpad;
++  GstPad *prev_active_sinkpad = NULL;
+   GstSelectorPad *selpad;
+   GstSegment seg;
+   GstClockTime running_time = GST_CLOCK_TIME_NONE;
+@@ -1125,23 +1069,25 @@
+       "entering chain for buf %p with timestamp %" GST_TIME_FORMAT, buf,
+       GST_TIME_ARGS (GST_BUFFER_PTS (buf)));
+
+-  GST_LOG_OBJECT (pad, "getting active pad");
+-
+-  g_rw_lock_reader_lock (&sel->active_sinkpad_lock);
+   GST_INPUT_SELECTOR_LOCK (sel);
+-  gst_input_selector_maybe_commit_active_pad (sel);
+
+-  if (sel->flushing || selpad->being_released) {
++  if (sel->flushing) {
+     GST_INPUT_SELECTOR_UNLOCK (sel);
+     goto flushing;
+   }
+
++  GST_LOG_OBJECT (pad, "getting active pad");
++
++  prev_active_sinkpad =
++      sel->active_sinkpad ? gst_object_ref (sel->active_sinkpad) : NULL;
++  active_sinkpad = gst_input_selector_get_active_sinkpad (sel);
++
+   /* In sync mode wait until the active pad has advanced
+    * after the running time of the current buffer */
+   if (sel->sync_streams) {
+     /* call chain for each cached buffer if we are not the active pad
+      * or if we are the active pad but didn't push anything yet. */
+-    if (sel->active_sinkpad != pad || !selpad->pushed) {
++    if (active_sinkpad != pad || !selpad->pushed) {
+       /* no need to check for sel->cache_buffers as selpad->cached_buffers
+        * will only be valid if cache_buffers is TRUE */
+       if (selpad->cached_buffers && !selpad->sending_cached_buffers) {
+@@ -1151,22 +1097,15 @@
+         saved_segment = selpad->segment;
+
+         selpad->sending_cached_buffers = TRUE;
+-        while (!sel->eos && !sel->flushing && !selpad->flushing
+-            && !selpad->being_released
+-            && (cached_buffer = g_queue_pop_head (selpad->cached_buffers))) {
+-          GST_DEBUG_OBJECT (pad,
+-              "Cached buffers found, " "invoking chain for cached buffer %p",
+-              cached_buffer->buffer);
++        while (!sel->eos && !sel->flushing && !selpad->flushing &&
++            (cached_buffer = g_queue_pop_head (selpad->cached_buffers))) {
++          GST_DEBUG_OBJECT (pad, "Cached buffers found, "
++              "invoking chain for cached buffer %p", cached_buffer->buffer);
+
+           selpad->segment = cached_buffer->segment;
+           selpad->events_pending = TRUE;
+-
+           GST_INPUT_SELECTOR_UNLOCK (sel);
+-          g_rw_lock_reader_unlock (&sel->active_sinkpad_lock);
+-
+           gst_selector_pad_chain (pad, parent, cached_buffer->buffer);
+-
+-          g_rw_lock_reader_lock (&sel->active_sinkpad_lock);
+           GST_INPUT_SELECTOR_LOCK (sel);
+
+           /* We just passed the ownership of the buffer to the chain function */
+@@ -1186,16 +1125,19 @@
+         selpad->events_pending = TRUE;
+
+         /* Might have changed while calling chain for cached buffers */
+-        gst_input_selector_maybe_commit_active_pad (sel);
++        active_sinkpad = gst_input_selector_get_active_sinkpad (sel);
+       }
+     }
+
+-    if (sel->active_sinkpad != pad) {
++    if (active_sinkpad != pad) {
+       GST_INPUT_SELECTOR_UNLOCK (sel);
+       if (gst_input_selector_wait_running_time (sel, selpad, buf))
+         goto flushing;
+       GST_INPUT_SELECTOR_LOCK (sel);
+     }
++
++    /* Might have changed while waiting */
++    active_sinkpad = gst_input_selector_get_active_sinkpad (sel);
+   }
+
+   /* update the segment on the srcpad */
+@@ -1214,23 +1156,35 @@
+   }
+
+   /* Ignore buffers from pads except the selected one */
+-  if (pad != sel->active_sinkpad) {
+-    GST_DEBUG_OBJECT (pad, "Pad not active, discard buffer %p", buf);
++  if (pad != active_sinkpad)
+     goto ignore;
+-  }
+
+   /* Tell all non-active pads that we advanced the running time */
+   if (sel->sync_streams)
+     GST_INPUT_SELECTOR_BROADCAST (sel);
+
+-  /* if we have pending events, push them now */
+-  if (G_UNLIKELY (selpad->events_pending)) {
+-    gst_pad_sticky_events_foreach (GST_PAD_CAST (selpad),
+-        store_sticky_events, sel);
++  GST_INPUT_SELECTOR_UNLOCK (sel);
+
++  if (prev_active_sinkpad != active_sinkpad) {
++    if (prev_active_sinkpad)
++      g_object_notify (G_OBJECT (prev_active_sinkpad), "active");
++    g_object_notify (G_OBJECT (active_sinkpad), "active");
++    g_object_notify (G_OBJECT (sel), "active-pad");
++  }
++
++  /* if we have a pending events, push them now */
++  if (G_UNLIKELY (prev_active_sinkpad != active_sinkpad
++          || selpad->events_pending)) {
++    gst_pad_sticky_events_foreach (GST_PAD_CAST (selpad), forward_sticky_events,
++        sel);
+     selpad->events_pending = FALSE;
+   }
+
++  if (prev_active_sinkpad) {
++    gst_object_unref (prev_active_sinkpad);
++    prev_active_sinkpad = NULL;
++  }
++
+   seg = selpad->segment;
+   if (seg.format == GST_FORMAT_TIME)
+     running_time =
+@@ -1238,6 +1192,7 @@
+         GST_BUFFER_DTS_OR_PTS (buf));
+
+   if (selpad->discont) {
++    GST_INPUT_SELECTOR_LOCK (sel);
+     if (sel->sync_streams && sel->drop_backwards
+         && GST_CLOCK_TIME_IS_VALID (running_time)) {
+       /* Just switched. Make sure timestamps don't go backwards */
+@@ -1248,6 +1203,7 @@
+         goto ignore;
+       }
+     }
++    GST_INPUT_SELECTOR_UNLOCK (sel);
+     buf = gst_buffer_make_writable (buf);
+
+     GST_DEBUG_OBJECT (pad, "Marking discont buffer %p", buf);
+@@ -1263,35 +1219,40 @@
+   /* Only make the buffer read-only when necessary */
+   if (sel->sync_streams && sel->cache_buffers)
+     buf = gst_buffer_ref (buf);
+-
+-  GST_INPUT_SELECTOR_UNLOCK (sel);
+-
+   res = gst_pad_push (sel->srcpad, buf);
+   GST_LOG_OBJECT (pad, "Buffer %p forwarded result=%d", buf, res);
+
+   GST_INPUT_SELECTOR_LOCK (sel);
+
+   if (sel->sync_streams && sel->cache_buffers) {
++    /* Might have changed while pushing */
++    active_sinkpad = gst_input_selector_get_active_sinkpad (sel);
++    /* only set pad to pushed if we are still the active pad */
++    if (active_sinkpad == pad)
++      selpad->pushed = TRUE;
++
+     /* cache buffer as we may need it again if we change pads */
+     gst_selector_pad_cache_buffer (selpad, buf);
+     gst_input_selector_cleanup_old_cached_buffers (sel, pad);
++  } else {
++    selpad->pushed = TRUE;
+   }
+-
+-  selpad->pushed = TRUE;
+-
+   GST_INPUT_SELECTOR_UNLOCK (sel);
+
+ done:
+-  g_rw_lock_reader_unlock (&sel->active_sinkpad_lock);
++
++  if (prev_active_sinkpad)
++    gst_object_unref (prev_active_sinkpad);
++  prev_active_sinkpad = NULL;
+
+   return res;
+
+   /* dropped buffers */
+ ignore:
+   {
+-    gboolean active_pad_pushed = sel->active_sinkpad &&
+-        GST_SELECTOR_PAD_CAST (sel->active_sinkpad)->pushed;
++    gboolean active_pad_pushed = GST_SELECTOR_PAD_CAST (active_sinkpad)->pushed;
+
++    GST_DEBUG_OBJECT (pad, "Pad not active, discard buffer %p", buf);
+     /* when we drop a buffer, we're creating a discont on this pad */
+     selpad->discont = TRUE;
+     GST_INPUT_SELECTOR_UNLOCK (sel);
+@@ -1469,10 +1430,7 @@
+   GST_OBJECT_FLAG_SET (sel->srcpad, GST_PAD_FLAG_PROXY_CAPS);
+   gst_element_add_pad (GST_ELEMENT (sel), sel->srcpad);
+   /* sinkpad management */
+-  g_rw_lock_init (&sel->active_sinkpad_lock);
+   sel->active_sinkpad = NULL;
+-  sel->pending_active_sinkpad = NULL;
+-  sel->active_sinkpad_from_user = FALSE;
+   sel->padcount = 0;
+   sel->sync_streams = DEFAULT_SYNC_STREAMS;
+   sel->sync_mode = DEFAULT_SYNC_MODE;
+@@ -1498,8 +1456,10 @@
+ {
+   GstInputSelector *sel = GST_INPUT_SELECTOR (object);
+
+-  gst_clear_object (&sel->active_sinkpad);
+-  gst_clear_object (&sel->pending_active_sinkpad);
++  if (sel->active_sinkpad) {
++    gst_object_unref (sel->active_sinkpad);
++    sel->active_sinkpad = NULL;
++  }
+   G_OBJECT_CLASS (parent_class)->dispose (object);
+ }
+
+@@ -1508,188 +1468,63 @@
+ {
+   GstInputSelector *sel = GST_INPUT_SELECTOR (object);
+
+-  g_rw_lock_clear (&sel->active_sinkpad_lock);
+   g_mutex_clear (&sel->lock);
+   g_cond_clear (&sel->cond);
+
+   G_OBJECT_CLASS (parent_class)->finalize (object);
+ }
+
+-/* Returns TRUE when the active pad change is validated but pending. */
++/* this function must be called with the SELECTOR_LOCK. It returns TRUE when the
++ * active pad changed. */
+ static gboolean
+-gst_input_selector_set_active_pad (GstInputSelector * sel, GstPad * pad)
++gst_input_selector_set_active_pad (GstInputSelector * self, GstPad * pad)
+ {
+-  GstPad **pending_active_pad_p;
+-  gboolean res;
++  GstSelectorPad *old, *new;
++  GstPad **active_pad_p;
++
++  if (pad == self->active_sinkpad)
++    return FALSE;
+
+   /* guard against users setting a src pad or foreign pad as active pad */
+   if (pad != NULL) {
+     g_return_val_if_fail (GST_PAD_IS_SINK (pad), FALSE);
+     g_return_val_if_fail (GST_IS_SELECTOR_PAD (pad), FALSE);
+-    g_return_val_if_fail (GST_PAD_PARENT (pad) == GST_ELEMENT_CAST (sel),
++    g_return_val_if_fail (GST_PAD_PARENT (pad) == GST_ELEMENT_CAST (self),
+         FALSE);
+   }
+
+-  GST_INPUT_SELECTOR_LOCK (sel);
+-
+-  if (pad == sel->pending_active_sinkpad) {
+-    res = FALSE;
+-    goto done;
+-  }
+-
+-  sel->active_sinkpad_from_user = !!pad;
++  old = GST_SELECTOR_PAD_CAST (self->active_sinkpad);
++  new = GST_SELECTOR_PAD_CAST (pad);
+
+-#if DEBUG_CACHED_BUFFERS
+-  gst_input_selector_debug_cached_buffers (sel);
+-#endif
+-
+-  if (sel->pending_active_sinkpad)
+-    GST_DEBUG_OBJECT (sel,
+-        "replacing current pending active pad %s:%s with %s:%s",
+-        GST_DEBUG_PAD_NAME (sel->pending_active_sinkpad),
+-        GST_DEBUG_PAD_NAME (pad));
+-  else
+-    GST_DEBUG_OBJECT (sel, "setting pending active pad to %s:%s",
+-        GST_DEBUG_PAD_NAME (pad));
+-
+-  pending_active_pad_p = &sel->pending_active_sinkpad;
+-  gst_object_replace ((GstObject **) pending_active_pad_p,
+-      GST_OBJECT_CAST (pad));
+-
+-  GST_INPUT_SELECTOR_BROADCAST (sel);
+-
+-  res = TRUE;
+-
+-done:
+-  GST_INPUT_SELECTOR_UNLOCK (sel);
+-  return res;
+-}
+-
+-/* Commits the pending sinkpad as active pad if any
+- * or creates the active sinkpad.
+- * Must be called (in the following order):
+- * * with `active_sinkpad_lock` locked in reader mode, but only exactly once,
+- * * with the SELECTOR_LOCK.
+- *
+- * See the documentation for `active_sinkpad_lock` in the header file.
+- * */
+-static void
+-gst_input_selector_maybe_commit_active_pad (GstInputSelector * sel)
+-{
+-  GstSelectorPad *old, *new;
+-
+-  if (G_LIKELY (!sel->pending_active_sinkpad)) {
+-    if (G_LIKELY (sel->active_sinkpad))
+-      return;
+-  } else if (G_UNLIKELY (sel->pending_active_sinkpad == sel->active_sinkpad)) {
+-    gst_clear_object (&sel->pending_active_sinkpad);
+-    return;
+-  }
+-
+-  GST_INPUT_SELECTOR_UNLOCK (sel);
+-  g_rw_lock_reader_unlock (&sel->active_sinkpad_lock);
+-  g_rw_lock_writer_lock (&sel->active_sinkpad_lock);
+-  GST_INPUT_SELECTOR_LOCK (sel);
+-
+-  if (!sel->pending_active_sinkpad) {
+-    if (sel->active_sinkpad)
+-      goto skip;
+-    else {
+-      /* Create the new active sinkpad */
+-      GValue item = G_VALUE_INIT;
+-      GstIterator *iter =
+-          gst_element_iterate_sink_pads (GST_ELEMENT_CAST (sel));
+-      GstIteratorResult ires;
+-
+-      while (!sel->pending_active_sinkpad) {
+-        while ((ires = gst_iterator_next (iter, &item)) == GST_ITERATOR_RESYNC)
+-          gst_iterator_resync (iter);
+-        if (ires == GST_ITERATOR_OK) {
+-          /* If no pad is currently selected, we return the first usable pad to
+-           * guarantee consistency */
+-
+-          GstSelectorPad *selpad =
+-              GST_SELECTOR_PAD (g_value_dup_object (&item));
+-          g_value_reset (&item);
+-
+-          if (!selpad->being_released)
+-            sel->pending_active_sinkpad = GST_PAD (selpad);
+-          else
+-            gst_object_unref (selpad);
+-        } else {
+-          break;
+-        }
+-      }
+-      gst_iterator_free (iter);
+-
+-      if (!sel->pending_active_sinkpad) {
+-        GST_WARNING_OBJECT (sel, "Couldn't find a default sink pad");
+-        goto skip;
+-      }
+-    }
+-  } else if (sel->pending_active_sinkpad == sel->active_sinkpad) {
+-    gst_clear_object (&sel->pending_active_sinkpad);
+-    goto skip;
+-  }
+-
+-  old = GST_SELECTOR_PAD_CAST (sel->active_sinkpad);
+-  new = GST_SELECTOR_PAD_CAST (sel->pending_active_sinkpad);
+-
+-  g_assert (old != new);
+-
+-  GST_DEBUG_OBJECT (sel, "setting active pad to %s:%s",
++  GST_DEBUG_OBJECT (self, "setting active pad to %s:%s",
+       GST_DEBUG_PAD_NAME (new));
+
+   if (old)
+     old->pushed = FALSE;
++  if (new)
++    new->pushed = FALSE;
+
+-  gst_object_ref (new);
+-  new->pushed = FALSE;
+-  new->events_pending = TRUE;
+-
+-  if (old)
+-    gst_pad_push_event (GST_PAD_CAST (old), gst_event_new_reconfigure ());
++  /* Send a new SEGMENT event on the new pad next */
++  if (old != new && new)
++    new->events_pending = TRUE;
+
+-  gst_pad_push_event (GST_PAD_CAST (new), gst_event_new_reconfigure ());
++  active_pad_p = &self->active_sinkpad;
++  gst_object_replace ((GstObject **) active_pad_p, GST_OBJECT_CAST (pad));
+
+-  sel->active_sinkpad = sel->pending_active_sinkpad;
+-  sel->pending_active_sinkpad = NULL;
++  if (old && old != new)
++    gst_pad_push_event (GST_PAD_CAST (old), gst_event_new_reconfigure ());
++  if (new)
++    gst_pad_push_event (GST_PAD_CAST (new), gst_event_new_reconfigure ());
+
+-  GST_DEBUG_OBJECT (sel, "New active pad is %" GST_PTR_FORMAT,
+-      sel->active_sinkpad);
++  GST_DEBUG_OBJECT (self, "New active pad is %" GST_PTR_FORMAT,
++      self->active_sinkpad);
+
+-  if (new->eos) {
++  if (old != new && new && new->eos) {
+     new->eos_sent = FALSE;
+-    GST_INPUT_SELECTOR_BROADCAST (sel);
++    GST_INPUT_SELECTOR_BROADCAST (self);
+   }
+-#if DEBUG_CACHED_BUFFERS
+-  gst_input_selector_debug_cached_buffers (sel);
+-#endif
+-
+-  GST_INPUT_SELECTOR_UNLOCK (sel);
+-  g_rw_lock_writer_unlock (&sel->active_sinkpad_lock);
+
+-  if (old) {
+-    g_object_notify (G_OBJECT (old), "active");
+-    gst_object_unref (GST_PAD_CAST (old));
+-  }
+-
+-  g_object_notify (G_OBJECT (new), "active");
+-  g_object_notify (G_OBJECT (sel), "active-pad");
+-
+-  gst_object_unref (new);
+-
+-  g_rw_lock_reader_lock (&sel->active_sinkpad_lock);
+-  GST_INPUT_SELECTOR_LOCK (sel);
+-
+-  return;
+-
+-skip:
+-  GST_INPUT_SELECTOR_UNLOCK (sel);
+-  g_rw_lock_writer_unlock (&sel->active_sinkpad_lock);
+-  g_rw_lock_reader_lock (&sel->active_sinkpad_lock);
+-  GST_INPUT_SELECTOR_LOCK (sel);
+-  return;
++  return TRUE;
+ }
+
+ static void
+@@ -1701,8 +1536,24 @@
+   switch (prop_id) {
+     case PROP_ACTIVE_PAD:
+     {
+-      GstPad *pad = g_value_get_object (value);
++      GstPad *pad;
++
++      pad = g_value_get_object (value);
++
++      GST_INPUT_SELECTOR_LOCK (sel);
++
++      sel->active_sinkpad_from_user = !!pad;
++#if DEBUG_CACHED_BUFFERS
++      gst_input_selector_debug_cached_buffers (sel);
++#endif
++
+       gst_input_selector_set_active_pad (sel, pad);
++
++#if DEBUG_CACHED_BUFFERS
++      gst_input_selector_debug_cached_buffers (sel);
++#endif
++
++      GST_INPUT_SELECTOR_UNLOCK (sel);
+       break;
+     }
+     case PROP_SYNC_STREAMS:
+@@ -1754,9 +1605,9 @@
+       GST_INPUT_SELECTOR_UNLOCK (object);
+       break;
+     case PROP_ACTIVE_PAD:
+-      g_rw_lock_reader_lock (&sel->active_sinkpad_lock);
++      GST_INPUT_SELECTOR_LOCK (object);
+       g_value_set_object (value, sel->active_sinkpad);
+-      g_rw_lock_reader_unlock (&sel->active_sinkpad_lock);
++      GST_INPUT_SELECTOR_UNLOCK (object);
+       break;
+     case PROP_SYNC_STREAMS:
+       GST_INPUT_SELECTOR_LOCK (object);
+@@ -1790,14 +1641,14 @@
+ {
+   GstPad *otherpad = NULL;
+
+-  g_rw_lock_reader_lock (&sel->active_sinkpad_lock);
++  GST_INPUT_SELECTOR_LOCK (sel);
+   if (pad == sel->srcpad)
+     otherpad = sel->active_sinkpad;
+   else if (pad == sel->active_sinkpad || !strict)
+     otherpad = sel->srcpad;
+   if (otherpad)
+     gst_object_ref (otherpad);
+-  g_rw_lock_reader_unlock (&sel->active_sinkpad_lock);
++  GST_INPUT_SELECTOR_UNLOCK (sel);
+
+   return otherpad;
+ }
+@@ -1817,15 +1668,7 @@
+   /* Send upstream events to all sinkpads */
+   iter = gst_element_iterate_sink_pads (GST_ELEMENT_CAST (sel));
+
+-  g_rw_lock_reader_lock (&sel->active_sinkpad_lock);
+   GST_INPUT_SELECTOR_LOCK (sel);
+-  /* Only consider sinkpad change for serialized event travelling downstream
+-   * otherwise, the event is most probably reacting to a buffer
+-   * being pushed by current active sinkpad and we might end up in a deadlock.
+-   */
+-  if (GST_EVENT_IS_SERIALIZED (event) && GST_EVENT_IS_DOWNSTREAM (event))
+-    gst_input_selector_maybe_commit_active_pad (sel);
+-
+   if (sel->active_sinkpad) {
+     eventpad = gst_object_ref (sel->active_sinkpad);
+     GST_INPUT_SELECTOR_UNLOCK (sel);
+@@ -1838,8 +1681,6 @@
+     GST_INPUT_SELECTOR_UNLOCK (sel);
+   }
+
+-  g_rw_lock_reader_unlock (&sel->active_sinkpad_lock);
+-
+   /* This is now essentially a copy of gst_pad_event_default_dispatch
+    * with a different iterator */
+   while (!done) {
+@@ -1874,7 +1715,6 @@
+         break;
+     }
+   }
+-
+   g_value_unset (&item);
+   gst_iterator_free (iter);
+
+@@ -2032,13 +1872,43 @@
+ {
+   gboolean res;
+
+-  g_rw_lock_reader_lock (&sel->active_sinkpad_lock);
++  GST_INPUT_SELECTOR_LOCK (sel);
+   res = (pad == sel->active_sinkpad);
+-  g_rw_lock_reader_unlock (&sel->active_sinkpad_lock);
++  GST_INPUT_SELECTOR_UNLOCK (sel);
+
+   return res;
+ }
+
++/* Get or create the active sinkpad, must be called with SELECTOR_LOCK */
++static GstPad *
++gst_input_selector_get_active_sinkpad (GstInputSelector * sel)
++{
++  GstPad *active_sinkpad;
++
++  active_sinkpad = sel->active_sinkpad;
++  if (active_sinkpad == NULL) {
++    GValue item = G_VALUE_INIT;
++    GstIterator *iter = gst_element_iterate_sink_pads (GST_ELEMENT_CAST (sel));
++    GstIteratorResult ires;
++
++    while ((ires = gst_iterator_next (iter, &item)) == GST_ITERATOR_RESYNC)
++      gst_iterator_resync (iter);
++    if (ires == GST_ITERATOR_OK) {
++      /* If no pad is currently selected, we return the first usable pad to
++       * guarantee consistency */
++
++      active_sinkpad = sel->active_sinkpad = g_value_dup_object (&item);
++      g_value_reset (&item);
++      GST_DEBUG_OBJECT (sel, "Activating pad %s:%s",
++          GST_DEBUG_PAD_NAME (active_sinkpad));
++    } else
++      GST_WARNING_OBJECT (sel, "Couldn't find a default sink pad");
++    gst_iterator_free (iter);
++  }
++
++  return active_sinkpad;
++}
++
+ static GstPad *
+ gst_input_selector_request_new_pad (GstElement * element,
+     GstPadTemplate * templ, const gchar * unused, const GstCaps * caps)
+@@ -2088,16 +1958,7 @@
+   selpad = GST_SELECTOR_PAD (pad);
+   GST_LOG_OBJECT (sel, "Releasing pad %s:%s", GST_DEBUG_PAD_NAME (pad));
+
+-  g_rw_lock_writer_lock (&sel->active_sinkpad_lock);
+   GST_INPUT_SELECTOR_LOCK (sel);
+-
+-  if (sel->pending_active_sinkpad == pad) {
+-    GST_DEBUG_OBJECT (sel, "Removing pending active pad %s:%s",
+-        GST_DEBUG_PAD_NAME (pad));
+-    gst_object_unref (sel->pending_active_sinkpad);
+-    sel->pending_active_sinkpad = NULL;
+-  }
+-
+   /* if the pad was the active pad, makes us select a new one */
+   if (sel->active_sinkpad == pad) {
+     GST_DEBUG_OBJECT (sel, "Deactivating pad %s:%s", GST_DEBUG_PAD_NAME (pad));
+@@ -2109,12 +1970,11 @@
+   /* wake up the pad if it's currently waiting for EOS or a running time to be
+    * reached. Otherwise we'll deadlock on the streaming thread further below
+    * when deactivating the pad. */
+-  selpad->being_released = TRUE;
++  selpad->flushing = TRUE;
+   GST_INPUT_SELECTOR_BROADCAST (sel);
+
+   sel->n_pads--;
+   GST_INPUT_SELECTOR_UNLOCK (sel);
+-  g_rw_lock_writer_unlock (&sel->active_sinkpad_lock);
+
+   gst_pad_set_active (pad, FALSE);
+   gst_element_remove_pad (GST_ELEMENT (sel), pad);
+@@ -2125,11 +1985,7 @@
+ {
+   GList *walk;
+
+-  g_rw_lock_writer_lock (&sel->active_sinkpad_lock);
+   GST_INPUT_SELECTOR_LOCK (sel);
+-
+-  gst_clear_object (&sel->pending_active_sinkpad);
+-
+   /* clear active pad */
+   if (sel->active_sinkpad && !sel->active_sinkpad_from_user) {
+     gst_object_unref (sel->active_sinkpad);
+@@ -2154,9 +2010,7 @@
+   sel->have_group_id = TRUE;
+   sel->upstream_latency = 0;
+   sel->last_output_ts = GST_CLOCK_TIME_NONE;
+-
+   GST_INPUT_SELECTOR_UNLOCK (sel);
+-  g_rw_lock_writer_unlock (&sel->active_sinkpad_lock);
+ }
+
+ static GstStateChangeReturn
