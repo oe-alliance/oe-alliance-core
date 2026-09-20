@@ -11,7 +11,7 @@ COMPATIBLE_MACHINE = "^(multibox|multiboxse|multiboxpro)$"
 
 inherit kernel machine_kernel_pr kernel-fixups
 
-MACHINE_KERNEL_PR:append = "21"
+MACHINE_KERNEL_PR:append = "25"
 
 SRCREV_FORMAT = "kernel_wireguard"
 
@@ -29,6 +29,7 @@ SRC_URI = "https://source.mynonpublic.com/maxytec/linux-${PV}-${SRCDATE}-${ARCH}
 	${KERNEL_PATCH_FIX_ATTRIBUTES_GCC9} \
 	${KERNEL_PATCH_WIFI_EXTAUTH_44} \
 	${KERNEL_PATCH_WIFI_MT7601U_MFP} \
+	${KERNEL_PATCH_WIFI_RT2800_MFP_44} \
 	"
 
 # wireguard v1.0.20220627
@@ -64,7 +65,7 @@ pkg_postinst:kernel-image() {
 	if [ "x$D" == "x" ]; then
 		if [ -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE} ] ; then
 			/${KERNEL_IMAGEDEST}/./findkerneldevice.sh
-			dd if=${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE} of=/dev/kernel
+			dd if=/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE} of=/dev/kernel
 		fi
 	fi
 	true

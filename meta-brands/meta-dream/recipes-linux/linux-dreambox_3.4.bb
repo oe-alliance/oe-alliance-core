@@ -1,6 +1,6 @@
 inherit kernel machine_kernel_pr kernel-fixups
 
-MACHINE_KERNEL_PR:append = ".17"
+MACHINE_KERNEL_PR:append = ".18"
 
 COMPATIBLE_MACHINE = "^(dm520|dm820|dm7080)$"
 

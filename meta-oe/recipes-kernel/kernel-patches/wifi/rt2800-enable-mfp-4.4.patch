@@ -1,0 +1,42 @@
+rt2800: enable MFP support unconditionally
+
+rt2800lib never sets MFP_CAPABLE on these kernels, so mac80211 strips the
+management frame protection ciphers from the suites it advertises,
+wpa_supplicant finds no BIP cipher and WPA3-SAE is unreachable: SAE requires
+PMF. The driver now always sets MFP_CAPABLE and refuses hardware keys for
+stations that negotiated MFP, so mac80211 protects those connections in
+software while all others keep hardware crypto.
+
+Backport of:
+  rt2800lib: enable MFP if hw crypt is disabled
+    https://git.kernel.org/linus/2557654df14b
+  rt2800: enable MFP support unconditionally
+    https://git.kernel.org/linus/b6b15e20421f
+
+Upstream carries the first from v4.7 and the second from v5.8 on. This
+variant covers 4.2 to 4.4, where the driver still sits in
+drivers/net/wireless/rt2x00 and sets its flags through ieee80211_hw_set.
+
+--- a/drivers/net/wireless/rt2x00/rt2800lib.c
++++ b/drivers/net/wireless/rt2x00/rt2800lib.c
+@@ -7491,6 +7491,8 @@ static int rt2800_probe_hw_mode(struct rt2x00_dev *rt2x00dev)
+ 	if (!rt2x00_is_usb(rt2x00dev))
+ 		ieee80211_hw_set(rt2x00dev->hw, HOST_BROADCAST_PS_BUFFERING);
+ 
++	ieee80211_hw_set(rt2x00dev->hw, MFP_CAPABLE);
++
+ 	SET_IEEE80211_DEV(rt2x00dev->hw, rt2x00dev->dev);
+ 	SET_IEEE80211_PERM_ADDR(rt2x00dev->hw,
+ 				rt2800_eeprom_addr(rt2x00dev,
+--- a/drivers/net/wireless/rt2x00/rt2x00mac.c
++++ b/drivers/net/wireless/rt2x00/rt2x00mac.c
+@@ -463,7 +463,8 @@ int rt2x00mac_set_key(struct ieee80211_hw *hw, enum set_key_cmd cmd,
+ 	if (!test_bit(DEVICE_STATE_PRESENT, &rt2x00dev->flags))
+ 		return 0;
+ 
+-	if (!rt2x00_has_cap_hw_crypto(rt2x00dev))
++	/* The hardware can't do MFP */
++	if (!rt2x00_has_cap_hw_crypto(rt2x00dev) || (sta && sta->mfp))
+ 		return -EOPNOTSUPP;
+ 
+ 	/*

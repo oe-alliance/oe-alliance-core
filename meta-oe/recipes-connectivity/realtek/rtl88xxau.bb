@@ -6,11 +6,13 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=b1918d7d89f091725a3188ff95f7c72b"
 
 DEPENDS = "bc-native"
 
-inherit module
+inherit gitpkgv module
 
-PR = "r1"
+PR = "r2"
 
 SRCREV = "${AUTOREV}"
+PV = "5.6.4.2+git"
+PKGV = "5.6.4.2+git${GITPKGV}"
 SRC_URI = "git://github.com/oe-alliance-drivers/rtl8812au.git;protocol=https;branch=master;destsuffix=s"
 # The default unpack directory "sources" costs six more characters on every
 # object path.

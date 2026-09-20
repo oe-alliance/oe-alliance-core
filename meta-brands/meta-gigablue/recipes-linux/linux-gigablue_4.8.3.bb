@@ -13,7 +13,7 @@ SRC_URI[sha256sum] = "db6dbddb0f3fe757c1bcc4685b56f3aaf83c7c07ecd9e4c6a994226406
 
 LIC_FILES_CHKSUM = "file://${UNPACKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR = "r6"
+MACHINE_KERNEL_PR = "r9"
 
 RPROVIDES:${KERNEL_PACKAGE_NAME}-image += "kernel-${KERNEL_IMAGETYPE}"
 
@@ -32,6 +32,7 @@ SRC_URI += "https://source.mynonpublic.com/gigablue/linux/gigablue-linux-${PV}-m
     file://initramfs-mipsel.cpio.xz;unpack=0 \
     ${KERNEL_PATCH_WIFI_EXTAUTH_48} \
     ${KERNEL_PATCH_WIFI_MT7601U_MFP} \
+    ${KERNEL_PATCH_WIFI_RT2800_MFP} \
     "
 
 S = "${UNPACKDIR}/linux-${PV}"
@@ -60,10 +61,10 @@ kernel_do_install:append() {
 
 pkg_postinst:kernel-image () {
     if [ "x$D" == "x" ]; then
-        if [ -f ${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz ] ; then
+        if [ -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz ] ; then
             flash_erase /dev/${MTD_KERNEL} 0 0
-            nandwrite -p /dev/${MTD_KERNEL} ${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz
-            rm -f ${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz
+            nandwrite -p /dev/${MTD_KERNEL} /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz
+            rm -f /${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz
         fi
     fi
     true

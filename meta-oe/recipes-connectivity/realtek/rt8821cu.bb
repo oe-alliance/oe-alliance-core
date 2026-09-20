@@ -6,11 +6,13 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=ab842b299d0a92fb908d6eb122cd6de9"
 
 DEPENDS = "bc-native"
 
-inherit module
+inherit gitpkgv module
 
-PR = "r1"
+PR = "r2"
 
 SRCREV = "${AUTOREV}"
+PV = "5.8.1+git"
+PKGV = "5.8.1+git${GITPKGV}"
 # Use short destsuffix - the driver has several hundred object files whose
 # absolute paths overflow ARG_MAX during kbuild linking on machines with long
 # MACHINE names.

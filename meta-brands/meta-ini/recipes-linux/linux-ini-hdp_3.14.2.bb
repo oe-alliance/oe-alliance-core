@@ -12,7 +12,7 @@ SRC_URI[sha256sum] = "81effcef755b6b0fe5a930b5bfc058ea1f5195b410819df1585dc52aff
 
 LIC_FILES_CHKSUM = "file://${UNPACKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR = "r3"
+MACHINE_KERNEL_PR = "r5"
 
 inherit kernel machine_kernel_pr kernel-fixups
 
@@ -39,6 +39,7 @@ SRC_URI += "https://source.mynonpublic.com/ini/bcm7425-linux-${KV}-${SRCDATE}.tg
     file://block2mtd.patch \
     file://initramfs-mipsel.cpio.xz;unpack=0 \
     ${KERNEL_PATCH_WIFI_EXTAUTH_314} \
+    ${KERNEL_PATCH_WIFI_RT2800_MFP_314} \
 "
 
 export KCFLAGS = " -std=gnu17 \

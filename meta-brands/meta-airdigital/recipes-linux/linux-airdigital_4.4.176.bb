@@ -11,7 +11,7 @@ SRCDATE = "20210920"
 
 inherit kernel machine_kernel_pr kernel-fixups
 
-MACHINE_KERNEL_PR:append = ".2"
+MACHINE_KERNEL_PR:append = ".5"
 
 SRC_URI[md5sum] = "261fd4b3d11cf2e593abb1706033fe1c"
 SRC_URI[sha256sum] = "6448ea7093cea5e30fcd9ceea357eee3ad98d1b3e7a2367a41fae990f39468e8"
@@ -26,6 +26,7 @@ SRC_URI = "https://source.mynonpublic.com/zgemma/linux-${PV}-${SRCDATE}-${ARCH}.
 	file://block2mtd.patch \
 	${KERNEL_PATCH_WIFI_EXTAUTH_44} \
 	${KERNEL_PATCH_WIFI_MT7601U_MFP} \
+	${KERNEL_PATCH_WIFI_RT2800_MFP_44} \
 "
 
 SRC_URI:append:h8 = " file://0101-hi3716mv430-dts-move-aon-gpio7-gpio5.patch"

@@ -1,3 +1,14 @@
+Subject: [PATCH] ARM: extend the module address space
+
+These vendor trees reserve 20 MiB below PAGE_OFFSET for modules, and larger
+WiFi modules fail to load once that area is used up. Reserve 23 MiB instead.
+
+TASK_SIZE has to stay at or below the new MODULES_VADDR. A module at
+MODULES_VADDR has to reach the end of the kernel text with a 32 MiB branch,
+so the kernel text must stay below 9 MiB.
+
+Upstream-Status: Inappropriate [machine-specific address-space layout]
+
 diff -uNr a/arch/arm/include/asm/memory.h b/arch/arm/include/asm/memory.h
 --- a/arch/arm/include/asm/memory.h	2018-08-01 11:13:19.000000000 +0800
 +++ b/arch/arm/include/asm/memory.h	2022-11-07 17:33:40.488610900 +0800

@@ -1,4 +1,4 @@
-PR .= ".2"
+PR .= ".3"
 
 inherit upx-compress
 
@@ -10,6 +10,8 @@ DEPENDS += "openssl"
 
 SRC_URI += " \
         file://action_wpa.sh \
+        file://dhcp-renew.sh \
+        file://wpa-cli-dhcp \
         file://functions.sh \
         file://ifupdown.sh \
         file://wpa_action \
@@ -28,6 +30,7 @@ do_install:append() {
 
         install -d ${D}${sysconfdir}/wpa_supplicant
         install -m 755 ${UNPACKDIR}/action_wpa.sh ${D}${sysconfdir}/wpa_supplicant
+        install -m 755 ${UNPACKDIR}/dhcp-renew.sh ${D}${sysconfdir}/wpa_supplicant
         install -m 755 ${UNPACKDIR}/functions.sh ${D}${sysconfdir}/wpa_supplicant
         install -m 755 ${UNPACKDIR}/ifupdown.sh ${D}${sysconfdir}/wpa_supplicant
 
@@ -41,6 +44,7 @@ do_install:append() {
         install -d ${D}${sysconfdir}/network/if-post-down.d
         install -d ${D}${sysconfdir}/network/if-pre-up.d
         install -d ${D}${sysconfdir}/network/if-up.d
+        install -m 755 ${UNPACKDIR}/wpa-cli-dhcp ${D}${sysconfdir}/network/if-up.d/wpa-cli-dhcp
         ln -s ../../wpa_supplicant/ifupdown.sh ${D}${sysconfdir}/network/if-down.d/${PN}
         ln -s ../../wpa_supplicant/ifupdown.sh ${D}${sysconfdir}/network/if-post-down.d/${PN}
         ln -s ../../wpa_supplicant/ifupdown.sh ${D}${sysconfdir}/network/if-pre-up.d/${PN}

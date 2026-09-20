@@ -4,12 +4,14 @@ SECTION = "kernel/modules"
 LICENSE = "GPL-2.0-only"
 require conf/license/license-gplv2.inc
 
-PR = "r3"
+PR = "r4"
 
 SRCREV = "${AUTOREV}"
+PV = "4.4.1+git"
+PKGV = "4.4.1+git${GITPKGV}"
 
 SRC_URI = "git://github.com/oe-alliance-drivers/rtl8723bs.git;protocol=https;branch=master;destsuffix=s"
-inherit module
+inherit gitpkgv module
 
 S = "${UNPACKDIR}/s"
 

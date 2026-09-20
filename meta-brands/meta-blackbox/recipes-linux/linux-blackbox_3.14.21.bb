@@ -15,7 +15,7 @@ SRC_URI[md5sum] = "f7edd5923ead4c334840c62eab3e79f0"
 SRC_URI[sha256sum] = "05c7315ec1703db9598f641b9ee5483218f89e207217e5b9c7d52300d123d88e"
 LIC_FILES_CHKSUM = "file://${UNPACKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
-MACHINE_KERNEL_PR = "r4"
+MACHINE_KERNEL_PR = "r6"
 
 RPROVIDES:${KERNEL_PACKAGE_NAME}-image += "kernel-${KERNEL_IMAGETYPE}"
 
@@ -33,6 +33,7 @@ SRC_URI += "https://source.mynonpublic.com/unibox/linux-${KV}-${SRCDATE}.tar.gz 
     file://block2mtd.patch \
     file://initramfs-mipsel.cpio.xz;unpack=0 \
     ${KERNEL_PATCH_WIFI_EXTAUTH_314} \
+    ${KERNEL_PATCH_WIFI_RT2800_MFP_314} \
     "
 
 export KCFLAGS = " -std=gnu17 \

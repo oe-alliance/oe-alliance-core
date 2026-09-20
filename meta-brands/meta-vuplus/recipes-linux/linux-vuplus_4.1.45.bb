@@ -6,7 +6,7 @@ MODULE = "linux-4.1.45"
 
 COMPATIBLE_MACHINE = "^(vuduo4k|vuduo4kse)$"
 
-MACHINE_KERNEL_PR = "r9"
+MACHINE_KERNEL_PR = "r11"
 
 inherit kernel machine_kernel_pr kernel-fixups
 
@@ -53,6 +53,7 @@ SRC_URI += "https://source.mynonpublic.com/vuplus/release/kernel/stblinux-${KSRC
     ${KERNEL_PATCH_BINUTILS241_V1} \
     ${KERNEL_PATCHES_DVB_SI2168_D60} \
     ${KERNEL_PATCH_WIFI_EXTAUTH_41} \
+    ${KERNEL_PATCH_WIFI_RT2800_MFP_41} \
     "
 
 S = "${UNPACKDIR}/linux"

@@ -1,4 +1,4 @@
-PR = "r2"
+PR = "r3"
 
 RDEPENDS:${PN} = "${PN}-client"
 RDEPENDS:${PN}-client = "rpcbind"
@@ -17,5 +17,5 @@ do_install:append() {
     fi
 
     # STBs have no RDMA hardware; rpc.nfsd otherwise warns on every start
-    sed -i -e 's/^#* *rdma *=.*/rdma=n/' ${D}${sysconfdir}/nfs.conf
+    sed -i -e 's/^rdma[[:space:]]*=/# &/' ${D}${sysconfdir}/nfs.conf
 }

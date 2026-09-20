@@ -10,7 +10,7 @@ COMPATIBLE_MACHINE = "^(u41|u42|u43|u45|u5|u51|u52|u53|u54|u55|u56|u57|u532|u533
 
 inherit kernel machine_kernel_pr kernel-fixups
 
-MACHINE_KERNEL_PR:append = "34"
+MACHINE_KERNEL_PR:append = "36"
 
 SRCREV_FORMAT = "kernel_wireguard"
 
@@ -40,6 +40,7 @@ SRC_URI:u5pvr += "https://source.mynonpublic.com/dinobot/dinobot-linux-${PV}-${S
     ${KERNEL_PATCH_BINUTILS241_V3} \
     ${KERNEL_PATCH_WIFI_CFG80211} \
     ${KERNEL_PATCH_WIFI_EXTAUTH_44} \
+    ${KERNEL_PATCH_WIFI_RT2800_MFP_44} \
 "
 
 SRC_URI = "https://source.mynonpublic.com/dinobot/dinobot-linux-${PV}-${SRCDATE}.tar.gz;name=new \
@@ -59,6 +60,7 @@ SRC_URI = "https://source.mynonpublic.com/dinobot/dinobot-linux-${PV}-${SRCDATE}
     ${KERNEL_PATCH_WIFI_CFG80211} \
     file://block2mtd.patch \
     ${KERNEL_PATCH_WIFI_EXTAUTH_44} \
+    ${KERNEL_PATCH_WIFI_RT2800_MFP_44} \
 "
 
 # wireguard v1.0.20220627

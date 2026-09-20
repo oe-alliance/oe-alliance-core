@@ -5,7 +5,7 @@ SECTION = "kernel"
 KV = "4.1.20"
 DATETIME = "20180321"
 
-MACHINE_KERNEL_PR = "r3"
+MACHINE_KERNEL_PR = "r5"
 
 COMPATIBLE_MACHINE = "dags72604"
 
@@ -23,6 +23,7 @@ SRC_URI = "https://source.mynonpublic.com/dags/linux-${KV}-${DATETIME}.tar.xz \
     ${KERNEL_PATCH_GCC_SERIES} \
     ${KERNEL_PATCH_BINUTILS241_V2} \
     ${KERNEL_PATCH_WIFI_EXTAUTH_41} \
+    ${KERNEL_PATCH_WIFI_RT2800_MFP_41} \
 "
 
 S = "${UNPACKDIR}/linux"

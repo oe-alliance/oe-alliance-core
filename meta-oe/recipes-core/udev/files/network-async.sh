@@ -7,6 +7,14 @@ export PATH
 
 case "$1" in
     --worker)
+        # Coldplug events arrive before populate-volatile has created the
+        # target of /var/run, where ifup, wpa_supplicant and udhcpc keep
+        # their state; utmp is one of the files it puts there.
+        wait=120
+        while [ ! -e /var/run/utmp ] && [ "$wait" -gt 0 ]; do
+            sleep 1
+            wait=$((wait - 1))
+        done
         exec flock --close --wait 180 /run/oe-network.lock "$0" --locked "$2" "$3"
         ;;
     --locked)

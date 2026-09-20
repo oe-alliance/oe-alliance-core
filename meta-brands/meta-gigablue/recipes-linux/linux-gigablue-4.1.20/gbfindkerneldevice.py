@@ -2,18 +2,16 @@
 
 import os
 
-file = '/boot/STARTUP'
-myfile = open(file, 'r')
-data = myfile.read().replace('\n', '')
-myfile.close()
+cmdline = open('/proc/cmdline', 'r').read().split()
+args = dict(arg.split('=', 1) for arg in cmdline if '=' in arg)
 
-rootfsdevice = data.split("=", 1)[1].split(" ", 1)[0]
-kerneldevice = rootfsdevice[:-1] + str(int(rootfsdevice[-1:]) - 1)
+kerneldevice = args.get('kernel')
+if not kerneldevice:
+    # Layouts without kernel= keep each kernel right before its rootfs.
+    rootfsdevice = args['root']
+    digits = len(rootfsdevice) - len(rootfsdevice.rstrip('0123456789'))
+    kerneldevice = rootfsdevice[:-digits] + str(int(rootfsdevice[-digits:]) - 1)
 
-if os.access('/dev/kernel', os.R_OK):
-	os.remove('/dev/kernel')
-	os.symlink(kerneldevice, '/dev/kernel')
-else:
-	os.symlink(kerneldevice, '/dev/kernel')
-
-# print kerneldevice
+if os.path.lexists('/dev/kernel'):
+    os.remove('/dev/kernel')
+os.symlink(kerneldevice, '/dev/kernel')
