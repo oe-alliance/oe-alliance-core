@@ -28,8 +28,9 @@ RDEPENDS:${PN} += " \
 
 SKIN_DIR = "${datadir}/enigma2/Umbra"
 PLUGIN_DIR = "${libdir}/enigma2/python/Plugins/Extensions/UmbraSettings"
-FILES:${PN} = "${SKIN_DIR} ${PLUGIN_DIR}"
-FILES:${PN}-src = "${PLUGIN_DIR}/*.py"
+CONVERTER = "${libdir}/enigma2/python/Components/Converter/UmbraEcmInfo"
+FILES:${PN} = "${SKIN_DIR} ${PLUGIN_DIR} ${CONVERTER}.pyc"
+FILES:${PN}-src = "${PLUGIN_DIR}/*.py ${CONVERTER}.py"
 FILES:${PN}-doc += "${datadir}/doc/enigma2-plugin-skins-umbra"
 
 do_configure[noexec] = "1"
