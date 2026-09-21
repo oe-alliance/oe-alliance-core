@@ -4,6 +4,7 @@ PACKAGE_NO_LOCALE = "1"
 SRC_URI:append = " file://0001-revert-use-new-gst-adapter-get-buffer.patch"
 
 # OpenBh / OpenViX only, see 0001-input-selector-revert-two-phase-sinkpad-switch.patch
+SRC_URI:append:openbh = " file://0001-input-selector-revert-two-phase-sinkpad-switch.patch"
 SRC_URI:append:openvix = " file://0001-input-selector-revert-two-phase-sinkpad-switch.patch"
 
 PV = "1.28.6"
