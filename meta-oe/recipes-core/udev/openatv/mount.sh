@@ -1,4 +1,5 @@
 #!/bin/sh
+export PATH
 #
 # Called from udev
 #
@@ -238,7 +239,7 @@ automount() {
 	ntfs|exfat)
 		MOUNTPOINT=/sys/fs/fuse/connections
 		mount -t fusectl fusectl $MOUNTPOINT >/dev/null 2>&1
-		MOUNT="$MOUNT -t fuseblk"
+		MOUNT="$MOUNT -t $ID_FS_TYPE"
 		;;
 	ext2|ext3)
 		# ext2 and ext3 devices need to be mounted with the ext4 driver

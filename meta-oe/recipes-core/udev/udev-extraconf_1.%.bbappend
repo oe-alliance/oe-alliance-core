@@ -1,7 +1,7 @@
 FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
 FILESEXTRAPATHS:prepend := "${THISDIR}/${DISTRO_NAME}:"
 
-PR .= ".38"
+PR .= ".39"
 PR:append:openatv = ".3"
 PR:append:openspa = ".2"
 
