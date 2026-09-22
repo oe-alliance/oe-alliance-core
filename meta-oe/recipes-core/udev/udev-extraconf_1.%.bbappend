@@ -2,8 +2,8 @@ FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
 FILESEXTRAPATHS:prepend := "${THISDIR}/${DISTRO_NAME}:"
 
 PR .= ".39"
-PR:append:openatv = ".3"
-PR:append:openspa = ".2"
+PR:append:openatv = ".4"
+PR:append:openspa = ".3"
 
 RDEPENDS:${PN}-autonet:append = "${@bb.utils.contains_any('DISTRO_NAME', 'openatv openspa', ' util-linux-flock', '', d)}"
 SRC_URI:append:openatv = " file://network-async.sh"
