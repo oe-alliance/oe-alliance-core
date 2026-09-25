@@ -4,6 +4,8 @@ require conf/license/license-gplv2.inc
 COMPATIBLE_MACHINE = "^(dreamone|dreamtwo)$"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
+PR = "r1"
+
 SRC_URI = "file://startup.sh \
     file://dream-data.sh \
 "

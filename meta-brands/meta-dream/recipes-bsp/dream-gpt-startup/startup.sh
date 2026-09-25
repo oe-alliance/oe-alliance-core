@@ -9,5 +9,6 @@
 ### END INIT INFO
 
 echo -n "start dream-data.sh"
+grep -qs " /data " /proc/mounts || mount /data
 /etc/init.d/dream-data.sh &
 : exit 0
