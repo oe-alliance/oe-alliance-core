@@ -1,0 +1,37 @@
+Make a module that does not compile fail the build
+
+py_compile.compile() without doraise reports to stderr and returns, so the loop
+walks on and the build carries a package whose byte code is missing. The stderr
+of the interpreter is thrown away on top of that, leaving nothing in the log
+either. A merge that went into enigma2 with its conflict markers still in place
+was packaged this way, and every receiver flashed with it stopped at "No module
+named" and restarted, over and over.
+
+Upstream-Status: Inappropriate [embedded specific]
+
+Signed-off-by: WXbet <57314510+WXbet@users.noreply.github.com>
+
+--- a/lib/py-compile
++++ b/lib/py-compile
+@@ -196,8 +196,8 @@
+         continue
+     sys.stdout.write(file + ' ')
+     sys.stdout.flush()
+-    py_compile.compile(filepath, destpath(filepath), path)
+-sys.stdout.write('\n')" "$@" 2>/dev/null || exit $?
++    py_compile.compile(filepath, destpath(filepath), path, doraise=True)
++sys.stdout.write('\n')" "$@" || exit $?
+ 
+ # Then byte compile w/more optimization.
+ # Only do this for Python 3.5+, see https://bugs.gnu.org/38043 for background.
+@@ -220,8 +220,8 @@
+         continue
+     sys.stdout.write(file + ' ')
+     sys.stdout.flush()
+-    py_compile.compile(filepath, importlib.util.cache_from_source(filepath), path)
+-sys.stdout.write('\n')" "$@" 2>/dev/null || exit $?
++    py_compile.compile(filepath, importlib.util.cache_from_source(filepath), path, doraise=True)
++sys.stdout.write('\n')" "$@" || exit $?
+   ;;
+ esac
+ 
