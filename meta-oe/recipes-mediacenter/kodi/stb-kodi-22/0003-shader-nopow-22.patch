@@ -57,7 +57,7 @@ index a82de9d8db..e5078ad8c2 100644
  uniform sampler2D m_sampU;
  uniform sampler2D m_sampV;
 @@ -84,9 +84,27 @@ void main()
-   rgb = mix(rgb, rgbBelow, 0.5);
+   rgb = mix(rgbAbove, rgbBelow, 0.5);
  
  #if defined(XBMC_COL_CONVERSION)
 -  rgb.rgb = pow(max(vec3(0), rgb.rgb), vec3(m_gammaSrc));

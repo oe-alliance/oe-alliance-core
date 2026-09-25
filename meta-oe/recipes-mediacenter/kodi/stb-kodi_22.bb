@@ -77,33 +77,23 @@ DEPENDS += " \
             ${@'libvupl' if d.getVar('VUPLUS_MIPSEL_STB') == '1' else ''} \
           "
 inherit gitpkgv
-# 22.0 Piers Beta 1, current upstream master HEAD (2026-09-02)
-SRCREV = "2c7ed4e159af2c44574d315396522cea8dcd8715"
+# 22.0 Piers Beta 2 (released 2026-09-05), current upstream master HEAD (2026-09-25)
+SRCREV = "9076c3af25d5e9a74af0506eadfdb761c680a580"
 
 # 'patch' doesn't support binary diffs
 PATCHTOOL = "git"
 
-PR = "r111"
+PR = "r112"
 
 PV = "22.0+gitr"
 # Keep package upgrades monotonic when the pinned master revision advances.
 # gitpkgv expands this to the commit count plus abbreviated source revision.
 PKGV = "22.0+git${GITPKGV}"
-PV_groovy = "4.0.27"
-PV_commons-lang3 = "3.20.0"
-PV_commons-text = "1.15.0"
-
-SRC_URI[groovy.sha256sum] = "bc917c8bb01b2832f124a7bd63a3c72ba5e83ef7f056650dfd9a2f7944960685"
-SRC_URI[commons-lang.sha256sum] = "a77875dbc8b7b687e49d914cf00cf7237a548f4163c2a64565b3da999d8b024f"
-SRC_URI[commons-text.sha256sum] = "af36d019def06a31b4d5accf60b13c4de817ec8569af1ffb410eb5ab16b39721"
 SRC_URI[libdvdcss.sha256sum] = "f204a9d8ac8a8414095d556373e5af9b95bb7cc72bf1467d936a48c961e8c474"
 SRC_URI[libdvdread.sha256sum] = "b69f74d9ceea1ed173b579deba99f669c2cb42f3fd06d7d23b33ff222aa63763"
 SRC_URI[libdvdnav.sha256sum] = "1363cdfaf6e92c0b574579299b5480f5867fb32989451468a28f3f402ec48787"
 
 SRC_URI = "git://github.com/xbmc/xbmc.git;protocol=https;branch=master \
-           https://archive.apache.org/dist/groovy/${PV_groovy}/distribution/apache-groovy-binary-${PV_groovy}.zip;name=groovy \
-           https://dlcdn.apache.org/commons/lang/binaries/commons-lang3-${PV_commons-lang3}-bin.tar.gz;name=commons-lang \
-           https://dlcdn.apache.org/commons/text/binaries/commons-text-${PV_commons-text}-bin.tar.gz;name=commons-text \
            https://mirrors.kodi.tv/build-deps/sources/libdvdcss-1.5.0.tar.bz2;name=libdvdcss;downloadfilename=libdvdcss.tar.bz2;unpack=0 \
            https://mirrors.kodi.tv/build-deps/sources/libdvdread-7.0.1.tar.bz2;name=libdvdread;downloadfilename=libdvdread.tar.bz2;unpack=0 \
            https://mirrors.kodi.tv/build-deps/sources/libdvdnav-7.0.0.tar.bz2;name=libdvdnav;downloadfilename=libdvdnav.tar.bz2;unpack=0 \
@@ -182,8 +172,8 @@ SRC_URI:append = "${@' file://0050-hisi-cv200-force-runtime-gles2.patch' if d.ge
 SRC_URI:append = "${@' file://0034-v3d-nxpl-proc-video-modes.patch' if d.getVar('V3DNXPL_STB') == '1' else ''}"
 SRC_URI:append = "${@' file://0045-v3d-nxpl-gui-above-video.patch' if d.getVar('V3DNXPL_STB') == '1' else ''}"
 SRC_URI:append = "${@' file://0046-v3d-nxpl-stable-gui-surface.patch' if d.getVar('V3DNXPL_STB') == '1' else ''}"
-SRC_URI:append = "${@' file://0035-dreambox-dm9x0-gles-init.patch file://0036-dreambox-dm9x0-alsa-nonblocking-open.patch file://0037-dreambox-cap-hdmi-mode.patch' if d.getVar('DREAM_BCM_STB') == '1' else ''}"
-SRC_URI:append = "${@' file://patch-dm9x0-vc5-query.py' if d.getVar('DREAM_DM9X0_STB') == '1' else ''}"
+SRC_URI:append = "${@' file://0035-dreambox-dm9x0-gles-init.patch file://0037-dreambox-cap-hdmi-mode.patch' if d.getVar('DREAM_BCM_STB') == '1' else ''}"
+SRC_URI:append = "${@' file://0036-dreambox-dm9x0-alsa-nonblocking-open.patch file://patch-dm9x0-vc5-query.py' if d.getVar('DREAM_DM9X0_STB') == '1' else ''}"
 SRC_URI:append = "${@' file://0038-vuplus-mips-libvupl-egl.patch' if d.getVar('VUPLUS_MIPSEL_STB') == '1' else ''}"
 SRC_URI:append = "${@' file://0044-vuplus-mips-refresh-only-mode-switch.patch' if d.getVar('VUPLUS_MIPSEL_STB') == '1' else ''}"
 SRC_URI:append = "${@' file://kodi-vuplus-duo4k-advancedsettings.xml' if d.getVar('VUPLUS_DUO4K_LOCALE_FALLBACK') == '1' else ''}"
@@ -267,7 +257,6 @@ EXTRA_OECMAKE = " \
     ${KODI_DISABLE_INTERNAL_LIBRARIES} \
     -DAPP_RENDER_SYSTEM=${APPRENDERSYSTEM} \
     \
-    -DJava_JAVA_EXECUTABLE=/usr/bin/java \
     -DCLANG_TIDY_EXECUTABLE=${STAGING_BINDIR_NATIVE}/clang-tidy \
     -DCLANG_FORMAT_EXECUTABLE=${STAGING_BINDIR_NATIVE}/clang-format \
     \
@@ -275,6 +264,7 @@ EXTRA_OECMAKE = " \
     -DWITH_JSONSCHEMABUILDER=${STAGING_BINDIR_NATIVE}/JsonSchemaBuilder \
     \
     -DENABLE_STATIC_LIBS=FALSE \
+    -DENABLE_INTERNAL_SWIG=ON \
     -DCMAKE_NM=${STAGING_BINDIR_NATIVE}/${TARGET_SYS}/${RUNTIME_NM} \
     \
     -DFFMPEG_PATH=${RECIPE_SYSROOT}${prefix} \
@@ -288,9 +278,6 @@ EXTRA_OECMAKE = " \
     -DENABLE_DVDCSS=OFF \
     -DENABLE_DEBUGFISSION=OFF \
     -DCMAKE_BUILD_TYPE=RelWithDebInfo \
-    -Dgroovy_SOURCE_DIR=${UNPACKDIR}/groovy-${PV_groovy} \
-    -Dapache-commons-lang_SOURCE_DIR=${UNPACKDIR}/commons-lang3-${PV_commons-lang3} \
-    -Dapache-commons-text_SOURCE_DIR=${UNPACKDIR}/commons-text-${PV_commons-text} \
     -DLIBDVDNAV_URL=${UNPACKDIR}/libdvdnav.tar.bz2 \
     -DLIBDVDREAD_URL=${UNPACKDIR}/libdvdread.tar.bz2 \
     -DLIBDVDCSS_URL=${UNPACKDIR}/libdvdcss.tar.bz2 \

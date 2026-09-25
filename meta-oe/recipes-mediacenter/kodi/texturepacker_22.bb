@@ -2,7 +2,11 @@ SUMMARY = "Kodi texture packer"
 LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM ?= "file:///${UNPACKDIR}/${BB_GIT_DEFAULT_DESTSUFFIX}/LICENSE.md;md5=7b423f1c9388eae123332e372451a4f7"
 
-SRCREV = "${AUTOREV}"
+# Keep the native skin packer on the exact Kodi source revision used by
+# stb-kodi. Mixing a later TexturePacker HEAD with an older target binary can
+# silently produce an incompatible Textures.xbt during otherwise reproducible
+# image builds.
+SRCREV = "9076c3af25d5e9a74af0506eadfdb761c680a580"
 PV = "22.0+gitr"
 SRC_URI = "git://github.com/xbmc/xbmc.git;protocol=https;branch=master"
 
