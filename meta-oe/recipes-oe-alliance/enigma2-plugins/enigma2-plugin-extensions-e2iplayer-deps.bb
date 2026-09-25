@@ -21,7 +21,7 @@ RRECOMMENDS:${PN} = " \
 SRCREV = "${AUTOREV}"
 PV = "1.0+git"
 PKGV = "1.0+git${GITPKGV}"
-PR = "r4"
+PR = "r5"
 
 SRC_URI = "git://github.com/oe-mirrors/e2iplayer-deps.git;protocol=https;branch=master"
 
@@ -29,11 +29,13 @@ S1 = "${UNPACKDIR}/${PN}-${PV}/e2isubparser"
 SOURCE_FILES1 = "src/subparsermodule.c"
 SOURCE_FILES1 =+ "src/vlc/src/subtitle.c"
 SOURCE_FILES1 =+ "src/ffmpeg/src/htmlsubtitles.c"
-SOURCE_FILES1 =+ "src/expat-2.2.0/xmlparse.c"
-SOURCE_FILES1 =+ "src/expat-2.2.0/xmlrole.c"
-SOURCE_FILES1 =+ "src/expat-2.2.0/xmltok.c"
-SOURCE_FILES1 =+ "src/expat-2.2.0/xmltok_impl.c"
-SOURCE_FILES1 =+ "src/expat-2.2.0/xmltok_ns.c"
+SOURCE_FILES1 =+ "$EXPAT/xmlparse.c"
+SOURCE_FILES1 =+ "$EXPAT/xmlrole.c"
+SOURCE_FILES1 =+ "$EXPAT/xmltok.c"
+SOURCE_FILES1 =+ "$EXPAT/xmltok_impl.c"
+SOURCE_FILES1 =+ "$EXPAT/xmltok_ns.c"
+# shell variables set in do_compile (no braces, so bitbake leaves them alone)
+SOURCE_FILES1 =+ "$EXPAT_RANDOM"
 SOURCE_FILES1 =+ "src/ttml/src/ttmlparser.c"
 SOURCE_FILES1 =+ "src/html/src/htmlcleaner.c"
 
@@ -77,7 +79,13 @@ SOURCE_FILES6 =+ "src/tinyxml2.cpp"
 
 do_compile() {
     cd ${S1}
-    ${CC} ${SOURCE_FILES1} -shared -pipe -D_FILE_OFFSET_BITS=64 -D_LARGEFILE64_SOURCE -D_LARGEFILE_SOURCE -D_GNU_SOURCE=1 -DNDEBUG -Os -shared -Wall -Wstrict-prototypes -fPIC -DMAJOR_VERSION=0 -DMINOR_VERSION=2 -DHAVE_EXPAT_CONFIG_H -I${S1}/src -I${S1}/src/vlc/include -I${S1}/src/ffmpeg/include -I${S1}/src/expat-2.2.0 -I${S1}/src/ttml/include -I${S1}/src/html/include -I${D}/${libdir} -I${D}/${includedir} -I${STAGING_DIR_TARGET}/${includedir}/${PYTHON_DIR} -lm -l${PYTHON_DIR} -o _subparser.so -Wl,--gc-sections ${LDFLAGS}
+    # Expat lives in src/expat since e2iplayer-deps ships Expat 2.8 (was src/expat-2.2.0);
+    # 2.8 also needs its /dev/urandom entropy source compiled as a separate file
+    EXPAT=src/expat
+    [ -d "$EXPAT" ] || EXPAT=src/expat-2.2.0
+    EXPAT_RANDOM=""
+    [ -f "$EXPAT/random_dev_urandom.c" ] && EXPAT_RANDOM="$EXPAT/random_dev_urandom.c"
+    ${CC} ${SOURCE_FILES1} -shared -pipe -D_FILE_OFFSET_BITS=64 -D_LARGEFILE64_SOURCE -D_LARGEFILE_SOURCE -D_GNU_SOURCE=1 -DNDEBUG -Os -shared -Wall -Wstrict-prototypes -fPIC -DMAJOR_VERSION=0 -DMINOR_VERSION=2 -DHAVE_EXPAT_CONFIG_H -I${S1}/src -I${S1}/src/vlc/include -I${S1}/src/ffmpeg/include -I${S1}/$EXPAT -I${S1}/src/ttml/include -I${S1}/src/html/include -I${D}/${libdir} -I${D}/${includedir} -I${STAGING_DIR_TARGET}/${includedir}/${PYTHON_DIR} -lm -l${PYTHON_DIR} -o _subparser.so -Wl,--gc-sections -Wl,-Bsymbolic ${LDFLAGS}
     cd ${S2}
     ${CC} ${SOURCE_FILES2} -D_FILE_OFFSET_BITS=64 -D_LARGEFILE64_SOURCE -D_LARGEFILE_SOURCE -D_GNU_SOURCE=1 -DWITH_FFMPEG -Wall -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -Wno-deprecated-declarations -Wshadow -Wpointer-arith -Wcast-qual -Wsign-compare -DPREFIX="/usr" -std=gnu99 -I${S2}/src -I${D}/${libdir} -I${D}/${includedir} -lrt -lpthread -lz -lssl -lcrypto -lcurl -lavcodec -lavformat -lavutil -o hlsdl ${LDFLAGS}
     cd ${S3}
