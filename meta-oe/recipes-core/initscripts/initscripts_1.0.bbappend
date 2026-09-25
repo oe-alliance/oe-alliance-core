@@ -1,4 +1,4 @@
-PR .= ".8"
+PR .= ".9"
 PR:append:openatv = ".2"
 PR:append:openspa = ".1"
 
@@ -19,6 +19,15 @@ SRC_URI += "file://hotplug.sh \
 "
 
 do_install:append() {
+    # reboot only returns when the kernel refused to reset, e.g. after a crash
+    # in a driver's shutdown hook. Force it; umountfs has already run.
+    cat >> ${D}${sysconfdir}/init.d/reboot <<'EOS'
+
+sleep 2
+echo "Reset refused, forcing emergency restart..."
+echo b > /proc/sysrq-trigger 2>/dev/null
+EOS
+
     if ${@bb.utils.contains_any('DISTRO_NAME','openatv openspa','true','false',d)}; then
         install -m 0755 ${S}/mountnfs-async.sh ${D}${sysconfdir}/init.d/mountnfs.sh
     fi
