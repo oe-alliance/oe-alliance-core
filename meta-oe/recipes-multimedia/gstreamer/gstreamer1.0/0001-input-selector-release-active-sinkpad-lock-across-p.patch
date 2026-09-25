@@ -1,0 +1,76 @@
+input-selector: release active_sinkpad_lock around the srcpad push
+
+gst_selector_pad_chain() takes active_sinkpad_lock in reader mode at
+entry and only releases it at the very end of the function (the
+`done:` label), spanning the call to gst_pad_push() that forwards the
+buffer to a downstream sink. For a synced subtitle sink this push can
+block for a long, unbounded time waiting for a sparse cue's display
+time.
+
+Any writer that needs to commit a pending active-pad switch
+(gst_input_selector_maybe_commit_active_pad(), triggered from e.g. a
+flushing seek's FLUSH_START via gst_input_selector_event()) has to
+wait for that reader to release the lock first. With the reader stuck
+in a downstream sink's clock wait, the writer -- and therefore the
+thread issuing the seek -- blocks for as long as that wait takes,
+which for a sparse external subtitle stream can be many seconds or
+longer. Confirmed via full-thread wchan/backtrace dump: the seeking
+thread parks on the writer-lock futex while the streaming thread for
+the active text pad sits in the sink's clock wait, both blocked on
+active_sinkpad_lock. Matches upstream issue #5150.
+
+Every other blocking wait in this file (gst_input_selector_wait_
+running_time(), the recursive gst_selector_pad_chain() call used to
+flush cached buffers) already releases active_sinkpad_lock before
+blocking and reacquires it after. The final push in
+gst_selector_pad_chain() is the one place that does not.
+
+Release the reader lock around the push, mirroring the pattern already
+used everywhere else in this file. Since the active pad can now change
+while we're unlocked, only mark this pad as having pushed if it is
+still the active one when we regain the lock -- the same guard the
+single-mutex design used before the two-phase active-pad switch was
+introduced (dd0c2e3ebadb "input-selector: implement a two-phase
+sinkpad switch").
+
+This is a minimal, targeted fix: it does not touch the pending/commit
+machinery, EOS handling, allocation-query handling or active-pad
+disappearance handling added by the two-phase rework and its five
+follow-up fixes -- only the one lock scope that can deadlock against a
+concurrent seek.
+
+Upstream-Status: Inappropriate [downstream deadlock workaround for
+https://gitlab.freedesktop.org/gstreamer/gstreamer/-/issues/5150,
+narrower than reverting the two-phase switch outright. Revisit if
+upstream fixes the lock scope itself.]
+
+--- a/plugins/elements/gstinputselector.c
++++ b/plugins/elements/gstinputselector.c
+@@ -1266,7 +1266,16 @@ gst_selector_pad_chain (GstPad * pad, GstObject * parent, GstBuffer * buf)
+
+   GST_INPUT_SELECTOR_UNLOCK (sel);
+
++  /* Do not hold active_sinkpad_lock across the push: gst_pad_push() can
++   * block for a long, unbounded time inside a synced sink (e.g. a subtitle
++   * sink waiting for a sparse cue's display time), and holding a reader
++   * lock for that whole span starves any writer trying to commit a pending
++   * active-pad switch (gst_input_selector_maybe_commit_active_pad(), called
++   * e.g. from a flushing seek's FLUSH_START), deadlocking it against this
++   * chain function. See https://gitlab.freedesktop.org/gstreamer/gstreamer/-/issues/5150 */
++  g_rw_lock_reader_unlock (&sel->active_sinkpad_lock);
+   res = gst_pad_push (sel->srcpad, buf);
++  g_rw_lock_reader_lock (&sel->active_sinkpad_lock);
+   GST_LOG_OBJECT (pad, "Buffer %p forwarded result=%d", buf, res);
+
+   GST_INPUT_SELECTOR_LOCK (sel);
+@@ -1277,7 +1286,10 @@ gst_selector_pad_chain (GstPad * pad, GstObject * parent, GstBuffer * buf)
+     gst_input_selector_cleanup_old_cached_buffers (sel, pad);
+   }
+
+-  selpad->pushed = TRUE;
++  /* the active pad may have been committed to a different sinkpad while we
++   * were unlocked above; only mark this pad as pushed if it still is one */
++  if (sel->active_sinkpad == pad)
++    selpad->pushed = TRUE;
+
+   GST_INPUT_SELECTOR_UNLOCK (sel);
