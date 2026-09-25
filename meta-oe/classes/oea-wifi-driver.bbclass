@@ -11,9 +11,11 @@
 #
 # FORCE_OOT_WIFI names out-of-tree recipes that win anyway. It is there for
 # the chips where the out-of-tree driver does more than the in-tree one:
-# rtl8192eu is the only one of the two that can do WPA3, for instance.
+# rtl8192eu is the only one of the two that can do WPA3, for instance. A chip
+# whose driver a brand ships as a binary module belongs here too, and then the
+# recipe carrying that blob asks forced_oot_wifi() and leaves its module out.
 
-FORCE_OOT_WIFI ?= "rtl8192eu"
+FORCE_OOT_WIFI ?= "rtl8192eu bcmdhd"
 
 WIFI_CONFIG_SYMBOLS = "\
     RTL8XXXU:rtl8xxxu RTL8192CU:rtl8192cu RTL8192CE:rtl8192ce \
@@ -53,8 +55,11 @@ def intree_wifi(d):
             out.append(name)
     return ' '.join(sorted(out))
 
+def forced_oot_wifi(d, oot_recipe):
+    return oot_recipe in (d.getVar('FORCE_OOT_WIFI') or '').split()
+
 def wifi_driver(d, intree_modules, intree_packages, oot_recipe):
-    if oot_recipe in (d.getVar('FORCE_OOT_WIFI') or '').split():
+    if forced_oot_wifi(d, oot_recipe):
         return oot_recipe
     have = (d.getVar('INTREE_WIFI') or '').split()
     for module, package in zip(intree_modules.split(), intree_packages.split()):
