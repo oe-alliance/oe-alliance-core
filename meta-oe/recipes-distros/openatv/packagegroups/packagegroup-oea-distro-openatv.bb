@@ -29,6 +29,7 @@ RDEPENDS:${PN} = "\
     enigma2-plugin-systemplugins-hotplug \
     enigma2-plugin-systemplugins-softwaremanager \
     enigma2-plugin-extensions-piconbrowser \
+    enigma2-plugin-extensions-crashreport \
     ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", "${OPENATV_EXTENDED}", d)} \
     "
 
