@@ -13,7 +13,6 @@ DREAM_AMLOGIC_STB = "${@'1' if d.getVar('MACHINE') in ('dreamone', 'dreamtwo') a
 
 DEPENDS += " \
             autoconf-native automake-native \
-            bison-native \
             fmt \
             flatbuffers flatbuffers-native \
             fstrcmp \
@@ -28,7 +27,7 @@ DEPENDS += " \
             meson-native \
             ninja-native \
             nasm-native \
-            swig-native \
+            kodi-swig-native \
             unzip-native \
             nasm-native \
             zip-native \
@@ -84,7 +83,7 @@ SRCREV = "9076c3af25d5e9a74af0506eadfdb761c680a580"
 # 'patch' doesn't support binary diffs
 PATCHTOOL = "git"
 
-PR = "r113"
+PR = "r114"
 
 PV = "22.0+gitr"
 # Keep package upgrades monotonic when the pinned master revision advances.
@@ -265,7 +264,8 @@ EXTRA_OECMAKE = " \
     -DWITH_JSONSCHEMABUILDER=${STAGING_BINDIR_NATIVE}/JsonSchemaBuilder \
     \
     -DENABLE_STATIC_LIBS=FALSE \
-    -DENABLE_INTERNAL_SWIG=ON \
+    -DENABLE_INTERNAL_SWIG=OFF \
+    -DSWIG_EXECUTABLE=${STAGING_BINDIR_NATIVE}/swig \
     -DCMAKE_NM=${STAGING_BINDIR_NATIVE}/${TARGET_SYS}/${RUNTIME_NM} \
     \
     -DFFMPEG_PATH=${RECIPE_SYSROOT}${prefix} \
