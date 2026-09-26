@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=d54f298b276b8cc5f20168e43a0e8103"
 DEPENDS = "curl libevent gnutls openssl libtool intltool-native glib-2.0-native"
 
 
-SRCREV = "e51d77e202206ee1389cbd6d9ab154421942b530"
+SRCREV = "838877323facc4cc2b677fe817e203779c437bb1"
 
 SRC_URI = "gitsm://github.com/transmission/transmission;protocol=https;branch=4.1.x \
         file://init \
