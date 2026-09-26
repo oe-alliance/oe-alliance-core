@@ -28,3 +28,6 @@ require ${BPN}-crates.inc
 
 # lzma keeps the compression time sane on a binary this size
 UPX_ARGS += "--lzma"
+
+# used by the remote support screen of enigma2
+RRECOMMENDS:${PN} += "python3-cbor2 python3-cryptography python3-pyte python3-qrcode python3-websocket-client"
