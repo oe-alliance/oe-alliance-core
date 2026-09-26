@@ -7,7 +7,7 @@ ALLOW_EMPTY:${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r0"
+PR = "r1"
 
 inherit packagegroup
 
@@ -69,6 +69,7 @@ RRECOMMENDS:${PN} = "\
     enigma2-plugin-extensions-ardmediathek \
     enigma2-plugin-extensions-autotimer \
     enigma2-plugin-extensions-birthdayreminder \
+    enigma2-plugin-extensions-e2mdb \
     enigma2-plugin-extensions-epgrefresh \
     enigma2-plugin-extensions-epgsearch \
     enigma2-plugin-extensions-fritzcall \
