@@ -201,6 +201,7 @@ RDEPENDS:${PN} = "\
     python3-psutil \
     python3-pyasn1-modules \
     python3-pyte \
+    python3-qrcode \
     python3-requests \
     python3-requests-cache \
     python3-service-identity \
