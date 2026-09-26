@@ -16,7 +16,7 @@ PKGV = "${GITPKGVTAG}"
 
 SRC_URI = "git://github.com/openatv/enigma2-plugin-extensions-crashreport.git;protocol=https;branch=master"
 
-RDEPENDS:${PN} = "python3-compression python3-json python3-netclient python3-misc python3-subprocess python3-twisted-core python3-qrcode python3-pillow"
+RDEPENDS:${PN} = "python3-compression python3-json python3-netclient python3-misc python3-twisted-core python3-qrcode python3-pillow"
 
 PLUGIN_DIR = "${libdir}/enigma2/python/Plugins/Extensions/CrashReport"
 FILES:${PN} = "${PLUGIN_DIR}/*.pyc ${PLUGIN_DIR}/*.png ${PLUGIN_DIR}/locale"
