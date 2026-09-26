@@ -13,6 +13,7 @@ DREAM_AMLOGIC_STB = "${@'1' if d.getVar('MACHINE') in ('dreamone', 'dreamtwo') a
 
 DEPENDS += " \
             autoconf-native automake-native \
+            bison-native \
             fmt \
             flatbuffers flatbuffers-native \
             fstrcmp \
@@ -83,7 +84,7 @@ SRCREV = "9076c3af25d5e9a74af0506eadfdb761c680a580"
 # 'patch' doesn't support binary diffs
 PATCHTOOL = "git"
 
-PR = "r112"
+PR = "r113"
 
 PV = "22.0+gitr"
 # Keep package upgrades monotonic when the pinned master revision advances.
