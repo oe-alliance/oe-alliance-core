@@ -5,9 +5,11 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/GPL-2.0-only;md5=801f80980d171d
 
 DEPENDS = "gstreamer1.0 gstreamer1.0-plugins-base"
 
-inherit pkgconfig
+inherit pkgconfig gitpkgv
 
 SRCREV = "${AUTOREV}"
+PV = "0.2+git"
+PKGV = "0.2+git${GITPKGV}"
 
 SRC_URI = "git://github.com/oe-mirrors/iptvplayer-bin-components.git;protocol=https;branch=master"
 
