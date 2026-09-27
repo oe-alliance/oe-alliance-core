@@ -10,7 +10,7 @@ COMPATIBLE_MACHINE = "^(og2ott4k|og2s4k)$"
 
 inherit kernel machine_kernel_pr kernel-fixups
 
-MACHINE_KERNEL_PR:append = "4"
+MACHINE_KERNEL_PR:append = "5"
 
 KVTYPE = "mv200"
 KVTYPE:og2s4k = "mv300"

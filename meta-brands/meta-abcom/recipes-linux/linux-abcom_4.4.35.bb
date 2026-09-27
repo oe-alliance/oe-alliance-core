@@ -11,7 +11,7 @@ SRCDATE = "20200219"
 
 inherit kernel machine_kernel_pr kernel-fixups
 
-MACHINE_KERNEL_PR:append = "10"
+MACHINE_KERNEL_PR:append = "11"
 
 SRCREV_FORMAT = "kernel_wireguard"
 
