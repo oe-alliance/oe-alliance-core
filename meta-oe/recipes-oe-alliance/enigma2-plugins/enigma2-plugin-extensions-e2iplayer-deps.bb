@@ -10,6 +10,7 @@ RRECOMMENDS:${PN} = " \
     ffmpeg \
     exteplayer3 \
     gstplayer \
+    gstplayer2 \
     wget \
     gst-ifdsrc \
     rtmpdump \
@@ -21,7 +22,7 @@ RRECOMMENDS:${PN} = " \
 SRCREV = "${AUTOREV}"
 PV = "1.0+git"
 PKGV = "1.0+git${GITPKGV}"
-PR = "r5"
+PR = "r6"
 
 SRC_URI = "git://github.com/oe-mirrors/e2iplayer-deps.git;protocol=https;branch=master"
 
