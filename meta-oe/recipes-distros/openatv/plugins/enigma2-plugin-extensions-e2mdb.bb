@@ -7,6 +7,8 @@ RDEPENDS:${PN} = "python3-sqlite3"
 
 S = "${UNPACKDIR}/${BP}/src"
 
+inherit gittag
+
 SRCREV = "${AUTOREV}"
 PV = "git"
 PKGV = "V${GITPKGVTAG}"
