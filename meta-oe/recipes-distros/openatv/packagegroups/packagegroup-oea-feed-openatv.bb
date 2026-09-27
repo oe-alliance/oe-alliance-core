@@ -101,6 +101,7 @@ RRECOMMENDS:${PN} = "\
     enigma2-plugin-systemplugins-automatictimerlistcleanup \
     enigma2-plugin-systemplugins-autoresolution \
     enigma2-plugin-systemplugins-mphelp \
+    enigma2-plugin-systemplugins-remotesupport \
     enigma2-plugin-systemplugins-toolkit \
     enigma2-plugin-extensions-moviecut \
     enigma2-plugin-extensions-fstabeditor \
