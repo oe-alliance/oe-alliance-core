@@ -16,6 +16,7 @@ SRC_URI = "git://github.com/AlbrechtL/welle.io.git;protocol=https;branch=master 
            file://0003-add-enigma2-compressed-audio-frontend.patch \
            file://0004-add-enigma2-frontend-source.patch \
            file://0005-add-packet-mode-spi-decoding.patch \
+           file://0006-add-separate-pcm-output.patch \
 "
 
 DEPENDS = "alsa-lib faad2 fftw lame libusb1 mpg123 rtl-sdr xxd-native"

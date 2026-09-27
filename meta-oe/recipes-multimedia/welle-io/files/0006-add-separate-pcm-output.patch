@@ -1,0 +1,124 @@
+diff --git a/src/welle-e2/welle-e2.cpp b/src/welle-e2/welle-e2.cpp
+--- a/src/welle-e2/welle-e2.cpp
++++ b/src/welle-e2/welle-e2.cpp
+@@ -7,6 +7,7 @@
+ 
+ #include <algorithm>
+ #include <atomic>
++#include <cerrno>
+ #include <chrono>
+ #include <csignal>
+ #include <cstdio>
+@@ -88,13 +89,14 @@ struct Options {
+     uint32_t deviceIndex = 0;
+     int ppm = 0;
+     int gainPercent = 35;
++    int pcmFd = -1;
+     bool automaticGain = true;
+ };
+ 
+ bool parseOptions(int argc, char **argv, Options& options)
+ {
+     int option;
+-    while ((option = getopt(argc, argv, "C:p:D:Z:QG:S:h")) != -1) {
++    while ((option = getopt(argc, argv, "C:p:D:Z:QG:S:P:h")) != -1) {
+         switch (option) {
+         case 'C': options.channel = optarg; break;
+         case 'p': options.ppm = std::atoi(optarg); break;
+@@ -108,10 +110,12 @@ bool parseOptions(int argc, char **argv, Options& options)
+             options.gainPercent = std::max(0, std::min(100, std::atoi(optarg)));
+             break;
+         case 'S': options.serviceId = std::strtoul(optarg, nullptr, 16); break;
++        case 'P': options.pcmFd = std::atoi(optarg); break;
+         case 'h':
+         default:
+             std::cerr << "Usage: dab-rtlsdr-welle-e2 -C CHANNEL [-D DEVICE] "
+-                         "[-p PPM] [-Q|-G PERCENT] [-S SID] [-Z CACHE_PREFIX]"
++                         "[-p PPM] [-Q|-G PERCENT] [-S SID] [-Z CACHE_PREFIX] "
++                         "[-P PCM_FD]"
+                       << std::endl;
+             return false;
+         }
+@@ -210,10 +214,11 @@ private:
+ 
+ class EnigmaProgrammeHandler : public ProgrammeHandlerInterface {
+ public:
+-    EnigmaProgrammeHandler(uint32_t serviceId, const std::string& cachePrefix)
+-        : serviceId(serviceId), cachePrefix(cachePrefix) { }
++    EnigmaProgrammeHandler(uint32_t serviceId, const std::string& cachePrefix,
++                           int pcmFd)
++        : serviceId(serviceId), cachePrefix(cachePrefix), pcmFd(pcmFd) { }
+ 
+-    bool needsDecodedAudio(void) const override { return false; }
++    bool needsDecodedAudio(void) const override { return pcmFd >= 0; }
+ 
+     void onUntouchedStream(const uint8_t* data, size_t len,
+                            size_t) override
+@@ -223,7 +228,28 @@ public:
+     }
+ 
+     void onFrameErrors(int) override { }
+-    void onNewAudio(std::vector<int16_t>&&, int, const std::string&) override { }
++    void onNewAudio(std::vector<int16_t>&& audio, int rate,
++                    const std::string&) override
++    {
++        if (pcmFd < 0 || audio.empty() || rate <= 0)
++            return;
++        const uint32_t payloadLength = static_cast<uint32_t>(audio.size() * sizeof(int16_t));
++        const uint32_t sampleRate = static_cast<uint32_t>(rate);
++        const uint8_t header[12] = {
++            'D', 'P', 'C', 'M',
++            static_cast<uint8_t>(sampleRate >> 24),
++            static_cast<uint8_t>(sampleRate >> 16),
++            static_cast<uint8_t>(sampleRate >> 8),
++            static_cast<uint8_t>(sampleRate),
++            static_cast<uint8_t>(payloadLength >> 24),
++            static_cast<uint8_t>(payloadLength >> 16),
++            static_cast<uint8_t>(payloadLength >> 8),
++            static_cast<uint8_t>(payloadLength)
++        };
++        if (!writeAll(header, sizeof(header)) ||
++                !writeAll(reinterpret_cast<const uint8_t *>(audio.data()), payloadLength))
++            running = 0;
++    }
+ 
+     void onRsErrors(bool uncorrectedErrors, int correctedErrors) override
+     {
+@@ -275,8 +301,27 @@ public:
+     void onPADLengthError(size_t, size_t) override { }
+ 
+ private:
++    bool writeAll(const uint8_t *data, size_t length)
++    {
++        while (length) {
++            const ssize_t written = ::write(pcmFd, data, length);
++            if (written > 0) {
++                data += written;
++                length -= static_cast<size_t>(written);
++            }
++            else if (written < 0 && errno == EINTR) {
++                continue;
++            }
++            else {
++                return false;
++            }
++        }
++        return true;
++    }
++
+     uint32_t serviceId;
+     std::string cachePrefix;
++    int pcmFd;
+     std::chrono::steady_clock::time_point lastQualityPublish{};
+ };
+ 
+@@ -386,7 +433,8 @@ int main(int argc, char **argv)
+                     announceService(receiver, service);
+ 
+                 if (!selected && !label.empty() && options.serviceId && service.serviceId == options.serviceId) {
+-                    programme.reset(new EnigmaProgrammeHandler(service.serviceId, options.cachePrefix));
++                    programme.reset(new EnigmaProgrammeHandler(
++                            service.serviceId, options.cachePrefix, options.pcmFd));
+                     announceSelectedService(receiver, service);
+                     selected = receiver.playSingleProgramme(*programme, std::string(), service);
+                     if (!selected)
