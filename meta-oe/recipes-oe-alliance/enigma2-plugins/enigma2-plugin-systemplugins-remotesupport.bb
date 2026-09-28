@@ -19,4 +19,8 @@ SRC_URI = "git://github.com/oe-alliance-plugins/RemoteSupport.git;protocol=https
 
 RDEPENDS:${PN} = "sshx python3-cbor2 python3-cryptography python3-pyte python3-qrcode python3-websocket-client"
 
-RPROVIDES:${PN} += "remote-support"
+RPROVIDES:${PN} += "remotesupport"
+
+do_install:append() {
+	chmod 0755 ${D}${bindir}/remotesupport
+}
