@@ -1,0 +1,172 @@
+Subject: [PATCH] dash: expose adaptation-set labels as stream titles
+
+Retain the first non-empty supplied Label and expose it through the
+standard stream-scoped GST_TAG_TITLE. This distinguishes same-language
+audio tracks without fetching or guessing metadata in the application.
+Absent/empty labels do not add a tag or change language selection.
+Cover supplied labels, missing values, whitespace, UTF-8, escaped XML,
+multiple labels, and node serialization in the existing MPD tests.
+
+Upstream-Status: Pending
+AI-Generated: OpenAI Codex
+---
+--- a/ext/dash/gstmpdadaptationsetnode.h
++++ b/ext/dash/gstmpdadaptationsetnode.h
+@@ -73,6 +73,7 @@
+ 
+   gchar *xlink_href;
+   GstMPDXLinkActuate actuate;
++  gchar *label;                    /* First non-empty user-facing Label */
+ };
+ 
+ GstMPDAdaptationSetNode * gst_mpd_adaptation_set_node_new (void);
+--- a/ext/dash/gstmpdadaptationsetnode.c
++++ b/ext/dash/gstmpdadaptationsetnode.c
+@@ -77,6 +77,7 @@
+ 
+   if (self->lang)
+     xmlFree (self->lang);
++  g_free (self->label);
+   g_free (self->contentType);
+   g_slice_free (GstXMLRatio, self->par);
+   g_slice_free (GstXMLConditionalUintType, self->segmentAlignment);
+@@ -122,6 +123,10 @@
+   if (self->lang)
+     gst_xml_helper_set_prop_string (adaptation_set_xml_node, "lang",
+         self->lang);
++
++  if (self->label)
++    xmlNewTextChild (adaptation_set_xml_node, NULL, (xmlChar *) "Label",
++        (xmlChar *) self->label);
+ 
+   if (self->contentType)
+     gst_xml_helper_set_prop_string (adaptation_set_xml_node, "contentType",
+@@ -256,6 +261,7 @@
+ 
+   self->xlink_href = NULL;
+   self->actuate = GST_MPD_XLINK_ACTUATE_ON_REQUEST;
++  self->label = NULL;
+ }
+ 
+ GstMPDAdaptationSetNode *
+--- a/ext/dash/gstmpdparser.c
++++ b/ext/dash/gstmpdparser.c
+@@ -707,7 +707,24 @@
+   /* explore children nodes */
+   for (cur_node = a_node->children; cur_node; cur_node = cur_node->next) {
+     if (cur_node->type == XML_ELEMENT_NODE) {
+-      if (xmlStrcmp (cur_node->name, (xmlChar *) "Accessibility") == 0) {
++      if (xmlStrcmp (cur_node->name, (xmlChar *) "Label") == 0) {
++        /* Preserve the supplied name; do not infer it from language or role.
++         * Multiple localized labels are allowed. Retain the first non-empty
++         * one without depending on the receiver's locale. */
++        if (!new_adap_set->label) {
++          xmlChar *content = xmlNodeGetContent (cur_node);
++
++          if (content) {
++            gchar *label = g_strstrip (g_strdup ((const gchar *) content));
++
++            xmlFree (content);
++            if (*label)
++              new_adap_set->label = label;
++            else
++              g_free (label);
++          }
++        }
++      } else if (xmlStrcmp (cur_node->name, (xmlChar *) "Accessibility") == 0) {
+         gst_mpdparser_parse_descriptor_type (&new_adap_set->Accessibility,
+             cur_node);
+       } else if (xmlStrcmp (cur_node->name, (xmlChar *) "Role") == 0) {
+--- a/ext/dash/gstdashdemux.c
++++ b/ext/dash/gstdashdemux.c
+@@ -863,6 +863,13 @@
+       GstMPDAdaptationSetNode *adp_set = active_stream->cur_adapt_set;
+       lang = adp_set->lang;
+ 
++      if (adp_set->label) {
++        if (!tags)
++          tags = gst_tag_list_new_empty ();
++        gst_tag_list_add (tags, GST_TAG_MERGE_REPLACE, GST_TAG_TITLE,
++            adp_set->label, NULL);
++      }
++
+       /* Fallback to the language in ContentComponent node */
+       if (lang == NULL) {
+         GList *it;
+--- a/tests/check/elements/dash_mpd.c
++++ b/tests/check/elements/dash_mpd.c
+@@ -1231,9 +1231,63 @@
+ GST_END_TEST;
+ 
+ /*
+- * Test parsing Period AdaptationSet RepresentationBase attributes
+- *
+- */
++ * Test supplied adaptation-set labels and unchanged missing metadata.
++ *
++ */
++GST_START_TEST (dash_mpdparser_adaptation_set_labels)
++{
++  const gchar *xml =
++      "<MPD xmlns=\"urn:mpeg:dash:schema:mpd:2011\" "
++      "profiles=\"urn:mpeg:dash:profile:isoff-live:2011\"><Period>"
++      "<AdaptationSet lang=\"ger\"><Label>TV Ton</Label></AdaptationSet>"
++      "<AdaptationSet lang=\"ger\"><Label>Originalton</Label></AdaptationSet>"
++      "<AdaptationSet lang=\"ger\"><Label>Audiodeskription</Label></AdaptationSet>"
++      "<AdaptationSet lang=\"ger\"><Label>Klare Sprache</Label></AdaptationSet>"
++      "<AdaptationSet lang=\"ger\"/>"
++      "<AdaptationSet><Label/><Label> \n\t </Label></AdaptationSet>"
++      "<AdaptationSet><Label/><Label lang=\"de\">  H&#246;rfilm &amp; Ton  </Label>"
++      "<Label lang=\"en\">Audio description</Label></AdaptationSet>"
++      "</Period></MPD>";
++  const gchar *expected[] = { "TV Ton", "Originalton", "Audiodeskription",
++    "Klare Sprache", NULL, NULL, "H\303\266rfilm & Ton"
++  };
++  GstMPDClient *client = gst_mpd_client_new ();
++  GstMPDPeriodNode *period;
++  guint i;
++
++  fail_unless (gst_mpd_client_parse (client, xml, strlen (xml)));
++  period = client->mpd_root_node->Periods->data;
++  assert_equals_int (g_list_length (period->AdaptationSets),
++      G_N_ELEMENTS (expected));
++  for (i = 0; i < G_N_ELEMENTS (expected); i++) {
++    GstMPDAdaptationSetNode *set =
++        g_list_nth_data (period->AdaptationSets, i);
++    xmlNodePtr node = gst_mpd_node_get_xml_pointer (GST_MPD_NODE (set));
++    xmlNodePtr child;
++    gchar *serialized_label = NULL;
++
++    fail_unless (g_strcmp0 (set->label, expected[i]) == 0);
++    if (i < 5) {
++      assert_equals_string (set->lang, "ger");
++    } else {
++      fail_unless (set->lang == NULL);
++    }
++    for (child = node->children; child; child = child->next) {
++      if (xmlStrcmp (child->name, (xmlChar *) "Label") == 0) {
++        fail_unless (serialized_label == NULL);
++        serialized_label = (gchar *) xmlNodeGetContent (child);
++      }
++    }
++    fail_unless (g_strcmp0 (serialized_label, expected[i]) == 0);
++    xmlFree (serialized_label);
++    xmlFreeNode (node);
++  }
++  gst_mpd_client_free (client);
++}
++
++GST_END_TEST;
++
++/* Test parsing Period AdaptationSet RepresentationBase attributes. */
+ GST_START_TEST (dash_mpdparser_period_adaptationSet_representationBase)
+ {
+   GstMPDPeriodNode *periodNode;
+@@ -6678,6 +6732,7 @@
+   tcase_add_test (tc_simpleMPD,
+       dash_mpdparser_period_segmentTemplate_multipleSegmentBaseType_bitstreamSwitching);
+   tcase_add_test (tc_simpleMPD, dash_mpdparser_period_adaptationSet);
++  tcase_add_test (tc_simpleMPD, dash_mpdparser_adaptation_set_labels);
+   tcase_add_test (tc_simpleMPD,
+       dash_mpdparser_period_adaptationSet_representationBase);
+   tcase_add_test (tc_simpleMPD,

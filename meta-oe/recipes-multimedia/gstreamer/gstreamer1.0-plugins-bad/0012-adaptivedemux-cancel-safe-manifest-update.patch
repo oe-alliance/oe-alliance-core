@@ -1,0 +1,94 @@
+Subject: [PATCH] adaptivedemux: release manifest lock during HTTP teardown
+
+The default manifest fetch stops/joins its HTTP source before returning.
+Holding manifest_lock across that operation deadlocks when another HTTP
+callback needs the same lock. Reproduced during rapid DVB-I channel changes:
+the GUI waits in PAUSED_TO_READY while the manifest update task holds the
+lock and waits in gst_pad_stop_task inside gst_uri_downloader_fetch_uri.
+
+Copy the URI, release the lock for the fetch, then reject responses across
+a stop/seek. Treat cancellation as flushing, not a retryable stream error.
+Also release the lock when forwarding an error from an unrecognised source.
+Keep the public ABI and normal redirect/update behaviour unchanged.
+
+Upstream-Status: Pending
+AI-Generated: OpenAI Codex
+---
+--- a/gst-libs/gst/adaptivedemux/gstadaptivedemux.c
++++ b/gst-libs/gst/adaptivedemux/gstadaptivedemux.c
+@@ -180,6 +180,7 @@
+   gint update_failed_count;
+ 
+   guint32 segment_seqnum;       /* protected by manifest_lock */
++  guint manifest_generation;    /* protected by manifest_lock */
+ 
+   /* main lock used to protect adaptive demux and all its streams.
+    * It serializes the adaptive demux public API.
+@@ -879,6 +880,7 @@
+         if (stream == NULL) {
+           GST_WARNING_OBJECT (demux,
+               "Failed to locate stream for errored element");
++          GST_MANIFEST_UNLOCK (demux);
+           break;
+         }
+       }
+@@ -2132,6 +2134,9 @@
+ 
+   GST_LOG_OBJECT (demux, "Stopping tasks");
+ 
++  /* Invalidate manifest downloads that temporarily dropped manifest_lock. */
++  demux->priv->manifest_generation++;
++
+   if (stop_updates)
+     gst_adaptive_demux_stop_manifest_update_task (demux);
+ 
+@@ -4088,7 +4093,10 @@
+ 
+     ret = gst_adaptive_demux_update_manifest (demux);
+ 
+-    if (ret == GST_FLOW_EOS) {
++    if (ret == GST_FLOW_FLUSHING) {
++      GST_MANIFEST_UNLOCK (demux);
++      goto quit;
++    } else if (ret == GST_FLOW_EOS) {
+     } else if (ret != GST_FLOW_OK) {
+       /* update_failed_count is used only here, no need to protect it */
+       demux->priv->update_failed_count++;
+@@ -4400,9 +4408,26 @@
+   GstBuffer *buffer;
+   GstFlowReturn ret;
+   GError *error = NULL;
+-
++  gchar *manifest_uri = g_strdup (demux->manifest_uri);
++  guint generation = demux->priv->manifest_generation;
++
++  /* Fetching also stops/joins the HTTP source. Its callbacks can need the
++   * manifest lock, so holding it here can deadlock a concurrent state change. */
++  GST_MANIFEST_UNLOCK (demux);
+   download = gst_uri_downloader_fetch_uri (demux->downloader,
+-      demux->manifest_uri, NULL, TRUE, TRUE, TRUE, &error);
++      manifest_uri, NULL, TRUE, TRUE, TRUE, &error);
++  g_free (manifest_uri);
++  GST_MANIFEST_LOCK (demux);
++
++  /* A stop or seek may have cancelled the tasks while the lock was dropped.
++   * Do not apply an old response or report cancellation as a download error. */
++  if (!g_atomic_int_get (&demux->running) ||
++      generation != demux->priv->manifest_generation) {
++    g_clear_object (&download);
++    g_clear_error (&error);
++    return GST_FLOW_FLUSHING;
++  }
++
+   if (download) {
+     g_free (demux->manifest_uri);
+     g_free (demux->manifest_base_uri);
+@@ -4422,7 +4447,7 @@
+      * values if updating fails? */
+   } else {
+     GST_WARNING_OBJECT (demux, "Failed to download manifest: %s",
+-        error->message);
++        error ? error->message : "download cancelled");
+     ret = GST_FLOW_NOT_LINKED;
+   }
+   g_clear_error (&error);

@@ -5,6 +5,7 @@ PACKAGE_NO_LOCALE = "1"
 SRC_URI:append = " \
            file://0001-gstrtpmp4gpay-set-dafault-value-for-MPEG4-without-co.patch \
            file://0002-Revert-souphttpsrc-Always-use-the-content-decoder.patch \
+           file://0003-qtdemux-preserve-adaptive-track-title.patch \
 "
 
 PACKAGECONFIG:remove = "soup3"
@@ -24,5 +25,6 @@ PACKAGECONFIG_CONFARGS:remove = "-Dsoup=disabled"
 EXTRA_OEMESON:append = " -Dsoup=enabled"
 
 PV = "1.28.6"
+PR:append = ".1"
  
 SRC_URI[sha256sum] = "b0c620a4b18b6ee931b4c43bbf1760d308666dc37f730a7e7f1ad327e59ce2df"
