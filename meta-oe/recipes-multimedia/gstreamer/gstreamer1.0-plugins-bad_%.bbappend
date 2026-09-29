@@ -11,6 +11,9 @@ SRC_URI:append = " \
         file://0007-hls-main-thread-block.patch \
         file://0008-gsthlsaudiometa.patch \
         file://0009-tsdemux-cc-recovery-hls.patch \
+        file://0010-dash-fix-sliding-window-seek.patch \
+        file://0011-dash-expose-track-labels.patch \
+        file://0012-adaptivedemux-cancel-safe-manifest-update.patch \
 "
 
 PACKAGECONFIG:append = " \
@@ -20,5 +23,6 @@ PACKAGECONFIG:append = " \
 PACKAGECONFIG:remove = "rsvg"
 
 PV = "1.28.4"
+PR:append = ".1"
  
 SRC_URI[sha256sum] = "332b7320f30c60f2d5941446d03b9d05e3781f2c2561befbe88718bd777f0e47"

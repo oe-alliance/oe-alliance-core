@@ -1,0 +1,208 @@
+Subject: [PATCH] qtdemux: preserve early adaptive stream titles
+
+Keep a supplied stream title that arrives before moov exposes source pads.
+Use it only for single-track, time-driven fragmented input, and never
+override an in-band title. Clear it on new streams and hard resets.
+No extra manifest requests, decoder changes or track-index mapping.
+
+Upstream-Status: Pending
+AI-Generated: OpenAI Codex
+---
+--- a/gst/isomp4/qtdemux.c
++++ b/gst/isomp4/qtdemux.c
+@@ -484,6 +484,7 @@
+   GstQTDemux *qtdemux = GST_QTDEMUX (object);
+ 
+   g_free (qtdemux->redirect_location);
++  g_free (qtdemux->upstream_title);
+   g_free (qtdemux->cenc_aux_info_sizes);
+   g_mutex_clear (&qtdemux->expose_lock);
+ 
+@@ -809,15 +810,27 @@
+ gst_qtdemux_push_tags (GstQTDemux * qtdemux, QtDemuxStream * stream)
+ {
+   if (G_LIKELY (stream->pad)) {
++    GstTagList *tags = gst_tag_list_ref (stream->stream_tags);
++
+     GST_DEBUG_OBJECT (qtdemux, "Checking pad %s:%s for tags",
+         GST_DEBUG_PAD_NAME (stream->pad));
+ 
+-    if (!gst_tag_list_is_empty (stream->stream_tags)) {
++    /* Adaptive demuxers can supply a track title before moov creates our
++     * source pad. It only identifies a track unambiguously for single-track
++     * fragmented input. An in-band track title still takes precedence. */
++    if (qtdemux->upstream_title && qtdemux->fragmented
++        && qtdemux->upstream_format_is_time && QTDEMUX_N_STREAMS (qtdemux) == 1) {
++      tags = gst_tag_list_make_writable (tags);
++      gst_tag_list_add (tags, GST_TAG_MERGE_KEEP, GST_TAG_TITLE,
++          qtdemux->upstream_title, NULL);
++    }
++
++    if (!gst_tag_list_is_empty (tags)) {
+       GST_DEBUG_OBJECT (qtdemux, "Sending tags %" GST_PTR_FORMAT,
+-          stream->stream_tags);
+-      gst_pad_push_event (stream->pad,
+-          gst_event_new_tag (gst_tag_list_ref (stream->stream_tags)));
+-    }
++          tags);
++      gst_pad_push_event (stream->pad, gst_event_new_tag (tags));
++    } else
++      gst_tag_list_unref (tags);
+ 
+     if (G_UNLIKELY (stream->send_global_tags)) {
+       GST_DEBUG_OBJECT (qtdemux, "Sending global tags %" GST_PTR_FORMAT,
+@@ -2098,6 +2111,7 @@
+   qtdemux->need_segment = TRUE;
+ 
+   if (hard) {
++    g_clear_pointer (&qtdemux->upstream_title, g_free);
+     qtdemux->segment_seqnum = GST_SEQNUM_INVALID;
+     qtdemux->trickmode_interval = 0;
+     g_ptr_array_set_size (qtdemux->active_streams, 0);
+@@ -2427,6 +2441,19 @@
+       res = TRUE;
+       goto drop;
+     }
++    case GST_EVENT_TAG:
++    {
++      GstTagList *tags;
++      gchar *title = NULL;
++
++      gst_event_parse_tag (event, &tags);
++      if (gst_tag_list_get_scope (tags) == GST_TAG_SCOPE_STREAM
++          && gst_tag_list_get_string (tags, GST_TAG_TITLE, &title)) {
++        g_free (demux->upstream_title);
++        demux->upstream_title = title;
++      }
++      break;
++    }
+     case GST_EVENT_STREAM_START:
+     {
+       res = TRUE;
+@@ -2434,6 +2461,7 @@
+ 
+       /* Drain all the buffers */
+       gst_qtdemux_process_adapter (demux, TRUE);
++      g_clear_pointer (&demux->upstream_title, g_free);
+       gst_qtdemux_reset (demux, FALSE);
+       /* We expect new moov box after new stream-start event */
+       if (demux->exposed) {
+--- a/gst/isomp4/qtdemux.h
++++ b/gst/isomp4/qtdemux.h
+@@ -171,6 +171,7 @@
+   guint header_size;
+ 
+   GstTagList *tag_list;
++  gchar *upstream_title;
+ 
+   /* configured playback region. Note that this is a seek segment, not to be
+    * confused with an edit list segment. Seeks are done for global time (i.e.
+--- a/tests/check/elements/qtdemux.c
++++ b/tests/check/elements/qtdemux.c
+@@ -464,6 +464,98 @@
+     data->sinkpad = sinkpad;
+   }
+ }
++
++typedef struct
++{
++  GstPad *sinkpad;
++  gchar *title;
++} TitleTestData;
++
++static gboolean
++title_test_event (GstPad * pad, GstObject * parent, GstEvent * event)
++{
++  TitleTestData *data = gst_pad_get_element_private (pad);
++
++  if (GST_EVENT_TYPE (event) == GST_EVENT_TAG) {
++    GstTagList *tags;
++    gchar *title = NULL;
++
++    gst_event_parse_tag (event, &tags);
++    if (gst_tag_list_get_scope (tags) == GST_TAG_SCOPE_STREAM
++        && gst_tag_list_get_string (tags, GST_TAG_TITLE, &title)) {
++      g_free (data->title);
++      data->title = title;
++    }
++  }
++  gst_event_unref (event);
++  return TRUE;
++}
++
++static void
++title_test_pad_added (GstElement * element, GstPad * pad, TitleTestData * data)
++{
++  fail_unless (data->sinkpad == NULL);
++  data->sinkpad = gst_pad_new_from_static_template (&sinktemplate, "sink");
++  gst_pad_set_element_private (data->sinkpad, data);
++  gst_pad_set_event_function (data->sinkpad, title_test_event);
++  gst_pad_set_chain_function (data->sinkpad, _sink_chain);
++  gst_pad_set_active (data->sinkpad, TRUE);
++  fail_unless (gst_pad_link (pad, data->sinkpad) == GST_PAD_LINK_OK);
++}
++
++GST_START_TEST (test_qtdemux_early_adaptive_title)
++{
++  guint i;
++
++  load_files ();
++  for (i = 0; i < 4; i++) {
++    GstElement *demux = gst_element_factory_make ("qtdemux", NULL);
++    GstPad *sinkpad = gst_element_get_static_pad (demux, "sink");
++    GstSegment segment;
++    GstBuffer *buffer;
++    TitleTestData data = { 0, };
++
++    g_signal_connect (demux, "pad-added", G_CALLBACK (title_test_pad_added),
++        &data);
++    gst_element_set_state (demux, GST_STATE_PLAYING);
++    fail_unless (gst_pad_send_event (sinkpad, gst_event_new_stream_start ("a")));
++    gst_segment_init (&segment, GST_FORMAT_TIME);
++    fail_unless (gst_pad_send_event (sinkpad, gst_event_new_segment (&segment)));
++    if (i != 1) {
++      GstTagList *tags = gst_tag_list_new (GST_TAG_TITLE, "Klare Sprache", NULL);
++
++      if (i == 2)
++        gst_tag_list_set_scope (tags, GST_TAG_SCOPE_GLOBAL);
++      fail_unless (gst_pad_send_event (sinkpad, gst_event_new_tag (tags)));
++    }
++    if (i == 3) {
++      /* A new stream without a label must not inherit the previous title. */
++      fail_unless (gst_pad_send_event (sinkpad, gst_event_new_stream_start ("b")));
++      fail_unless (gst_pad_send_event (sinkpad, gst_event_new_segment (&segment)));
++    }
++    buffer = gst_buffer_new_and_alloc (init_mp4_len);
++    gst_buffer_fill (buffer, 0, init_mp4, init_mp4_len);
++    GST_BUFFER_PTS (buffer) = 0;
++    GST_BUFFER_OFFSET (buffer) = 0;
++    fail_unless (gst_pad_chain (sinkpad, buffer) == GST_FLOW_OK);
++    buffer = gst_buffer_new_and_alloc (seg_1_m4f_len);
++    gst_buffer_fill (buffer, 0, seg_1_m4f, seg_1_m4f_len);
++    GST_BUFFER_PTS (buffer) = 0;
++    GST_BUFFER_OFFSET (buffer) = 0;
++    fail_unless (gst_pad_chain (sinkpad, buffer) == GST_FLOW_OK);
++    fail_unless (data.sinkpad != NULL);
++    fail_unless (g_strcmp0 (data.title, i == 0 ? "Klare Sprache" : NULL) == 0);
++    gst_element_set_state (demux, GST_STATE_NULL);
++    gst_pad_set_active (data.sinkpad, FALSE);
++    gst_object_unref (data.sinkpad);
++    gst_object_unref (sinkpad);
++    gst_object_unref (demux);
++    g_free (data.title);
++  }
++  unload_files ();
++}
++
++GST_END_TEST;
+ 
+ GST_START_TEST (test_qtdemux_duplicated_moov)
+ {
+@@ -1846,6 +1938,7 @@
+   tcase_add_test (tc_chain, test_qtdemux_fuzzed1);
+   tcase_add_test (tc_chain, test_qtdemux_input_gap);
+   tcase_add_test (tc_chain, test_qtdemux_duplicated_moov);
++  tcase_add_test (tc_chain, test_qtdemux_early_adaptive_title);
+   tcase_add_test (tc_chain, test_qtdemux_stream_change);
+   tcase_add_test (tc_chain, test_qtdemux_pad_names);
+   tcase_add_test (tc_chain, test_qtdemux_compensate_data_offset);

@@ -1,0 +1,97 @@
+Subject: [PATCH] dash: avoid doubling the sliding-window origin on seek
+
+Both the requested timestamp and segment start are already in MPD
+presentation time. Adding the first segment start again creates a repeat
+index far outside the segment and stalls live playback waiting for future
+fragments. Clamp seeks before the current window to its first fragment.
+
+Reproduced with the clear DVB-I muenchen.tv MPD on openATV/HiSilicon,
+where a 28-hour-old presentation resulted in a 28-hour download wait.
+Include regression coverage for non-zero origins, repeated and following
+segments, reverse boundaries, and seeks before the current window.
+
+Upstream-Status: Pending
+AI-Generated: OpenAI Codex
+---
+--- a/ext/dash/gstmpdclient.c
++++ b/ext/dash/gstmpdclient.c
+@@ -1705,10 +1705,9 @@
+         GstClockTime chunk_time;
+ 
+         selectedChunk = segment;
+-        repeat_index =
+-            ((ts - segment->start) +
+-            ((GstMediaSegment *) stream->segments->pdata[0])->start) /
+-            segment->duration;
++        /* Both times already include the sliding window's origin. */
++        repeat_index = ts > segment->start ?
++            (ts - segment->start) / segment->duration : 0;
+ 
+         chunk_time = segment->start + segment->duration * repeat_index;
+ 
+--- a/tests/check/elements/dash_mpd.c
++++ b/tests/check/elements/dash_mpd.c
+@@ -6556,6 +6556,55 @@
+   g_free (new_xml);
+ 
+   gst_mpd_client_free (mpdclient);
++}
++
++GST_END_TEST;
++
++GST_START_TEST (dash_mpdparser_seek_sliding_window)
++{
++  GstMPDClient *client = gst_mpd_client_new ();
++  GstActiveStream stream = { 0 };
++  GstMediaSegment repeated = { 0 }, following = { 0 };
++  GstClockTime actual;
++  guint window;
++
++  stream.segments = g_ptr_array_new ();
++  g_ptr_array_add (stream.segments, &repeated);
++  g_ptr_array_add (stream.segments, &following);
++  repeated.duration = following.duration = 6 * GST_SECOND;
++  repeated.repeat = 2;
++
++  /* A live MPD can start many hours into the presentation. Seeking must
++   * not add that non-zero origin a second time to the repeat index. */
++  for (window = 0; window < 2; window++) {
++    repeated.start = window * 28 * 60 * 60 * GST_SECOND;
++    following.start = repeated.start + 18 * GST_SECOND;
++
++    fail_unless (gst_mpd_client_stream_seek (client, &stream, TRUE, 0,
++            repeated.start + 7 * GST_SECOND, &actual));
++    assert_equals_int (stream.segment_index, 0);
++    assert_equals_int (stream.segment_repeat_index, 1);
++    assert_equals_uint64 (actual, repeated.start + 6 * GST_SECOND);
++
++    fail_unless (gst_mpd_client_stream_seek (client, &stream, TRUE, 0,
++            following.start, &actual));
++    assert_equals_int (stream.segment_index, 1);
++    assert_equals_int (stream.segment_repeat_index, 0);
++    assert_equals_uint64 (actual, following.start);
++
++    fail_unless (gst_mpd_client_stream_seek (client, &stream, FALSE, 0,
++            repeated.start + 12 * GST_SECOND, &actual));
++    assert_equals_int (stream.segment_repeat_index, 1);
++    assert_equals_uint64 (actual, repeated.start + 6 * GST_SECOND);
++
++    fail_unless (gst_mpd_client_stream_seek (client, &stream, TRUE, 0,
++            0, &actual));
++    assert_equals_int (stream.segment_repeat_index, 0);
++    assert_equals_uint64 (actual, repeated.start);
++  }
++
++  g_ptr_array_unref (stream.segments);
++  gst_mpd_client_free (client);
+ }
+ 
+ GST_END_TEST;
+@@ -6742,6 +6791,7 @@
+   tcase_add_test (tc_complexMPD, dash_mpdparser_segment_list);
+   tcase_add_test (tc_complexMPD, dash_mpdparser_segment_template);
+   tcase_add_test (tc_complexMPD, dash_mpdparser_segment_timeline);
++  tcase_add_test (tc_complexMPD, dash_mpdparser_seek_sliding_window);
+   tcase_add_test (tc_complexMPD, dash_mpdparser_multiple_inherited_segmentURL);
+ 
+   /* tests checking the parsing of missing/incomplete attributes of xml */
