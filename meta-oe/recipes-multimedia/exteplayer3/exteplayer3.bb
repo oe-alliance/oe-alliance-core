@@ -10,8 +10,8 @@ RDEPENDS:${PN} += "ffmpeg-ext-libs libxml2 zlib bzip2 liblzma libbluray openssl 
 inherit gitpkgv autotools pkgconfig upx-compress
 
 SRCREV = "${AUTOREV}"
-PV = "181+git"
-PKGV = "181+git${GITPKGV}"
+PV = "183+git"
+PKGV = "183+git${GITPKGV}"
 
 SRC_URI = "git://github.com/oe-alliance/exteplayer3.git;branch=master;protocol=https"
 
