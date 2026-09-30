@@ -45,7 +45,7 @@ index 7ef2e03ca6..9ce6d445c1 100644
                                            aacenc_quantization.h         \
                                            aacenc_quantization_misc.h    \
                                            bitstream_template.h          \
--                                          vulkan_video_codec_av1std.h   \
+-                                          vulkan_video_codec_av1std_mesa.h \
 -                                          $(ARCH)/vpx_arith.h          \
 +                                          $(ARCH)/vpx_arith.h           \
  
@@ -55,7 +55,7 @@ index 7ef2e03ca6..9ce6d445c1 100644
  SKIPHEADERS-$(CONFIG_VAAPI)            += vaapi_decode.h vaapi_hevc.h vaapi_encode.h
  SKIPHEADERS-$(CONFIG_VDPAU)            += vdpau.h vdpau_internal.h
  SKIPHEADERS-$(CONFIG_VIDEOTOOLBOX)     += videotoolbox.h vt_internal.h
--SKIPHEADERS-$(CONFIG_VULKAN)           += vulkan.h vulkan_video.h vulkan_decode.h vulkan_video_codec_av1std_decode.h
+-SKIPHEADERS-$(CONFIG_VULKAN)           += vulkan.h vulkan_video.h vulkan_decode.h vulkan_video_codec_av1std_decode_mesa.h
 +SKIPHEADERS-$(CONFIG_VULKAN)           += vulkan.h vulkan_video.h vulkan_decode.h
  SKIPHEADERS-$(CONFIG_V4L2_M2M)         += v4l2_buffers.h v4l2_context.h v4l2_m2m.h
  SKIPHEADERS-$(CONFIG_ZLIB)             += zlib_wrapper.h
@@ -870,15 +870,14 @@ index bb69e920bb..01a1de7d9d 100644
  #include "vulkan.h"
  
  #include <vk_video/vulkan_video_codecs_common.h>
--#include "vulkan_video_codec_av1std.h"
--#include "vulkan_video_codec_av1std_decode.h"
+-#include "vulkan_video_codec_av1std_mesa.h"
+-#include "vulkan_video_codec_av1std_decode_mesa.h"
  
  #define CODEC_VER_MAJ(ver) (ver >> 22)
  #define CODEC_VER_MIN(ver) ((ver >> 12) & ((1 << 10) - 1))
-diff --git a/libavcodec/vulkan_video_codec_av1std_decode.h b/libavcodec/vulkan_video_codec_av1std_decode.h
+diff --git a/libavcodec/vulkan_video_codec_av1std_decode_mesa.h b/libavcodec/vulkan_video_codec_av1std_decode_mesa.h
 deleted file mode 100644
-index e2f37b4e6e..0000000000
---- a/libavcodec/vulkan_video_codec_av1std_decode.h
+--- a/libavcodec/vulkan_video_codec_av1std_decode_mesa.h
 +++ /dev/null
 @@ -1,36 +0,0 @@
 -/* Copyright 2023 Lynne
@@ -897,8 +896,8 @@ index e2f37b4e6e..0000000000
 - * limitations under the License.
 - */
 -
--#ifndef VULKAN_VIDEO_CODEC_AV1STD_DECODE_H_
--#define VULKAN_VIDEO_CODEC_AV1STD_DECODE_H_ 1
+-#ifndef VULKAN_VIDEO_CODEC_AV1STD_DECODE_MESA_H_
+-#define VULKAN_VIDEO_CODEC_AV1STD_DECODE_MESA_H_ 1
 -
 -/*
 -** This header is NOT YET generated from the Khronos Vulkan XML API Registry.
@@ -917,10 +916,9 @@ index e2f37b4e6e..0000000000
 -#endif
 -
 -#endif
-diff --git a/libavcodec/vulkan_video_codec_av1std.h b/libavcodec/vulkan_video_codec_av1std.h
+diff --git a/libavcodec/vulkan_video_codec_av1std_mesa.h b/libavcodec/vulkan_video_codec_av1std_mesa.h
 deleted file mode 100644
-index c91589eee2..0000000000
---- a/libavcodec/vulkan_video_codec_av1std.h
+--- a/libavcodec/vulkan_video_codec_av1std_mesa.h
 +++ /dev/null
 @@ -1,403 +0,0 @@
 -/* Copyright 2023 Lynne
@@ -939,8 +937,8 @@ index c91589eee2..0000000000
 - * limitations under the License.
 - */
 -
--#ifndef VULKAN_VIDEO_CODEC_AV1STD_H_
--#define VULKAN_VIDEO_CODEC_AV1STD_H_ 1
+-#ifndef VULKAN_VIDEO_CODEC_AV1STD_MESA_H_
+-#define VULKAN_VIDEO_CODEC_AV1STD_MESA_H_ 1
 -
 -/*
 -** This header is NOT YET generated from the Khronos Vulkan XML API Registry.

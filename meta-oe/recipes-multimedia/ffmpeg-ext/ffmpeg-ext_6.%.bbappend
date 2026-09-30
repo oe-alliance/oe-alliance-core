@@ -1,9 +1,6 @@
 FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
-FILESEXTRAPATHS:prepend := "${THISDIR}/skyjet18:"
 
-PR = "r0"
-
-S = "${UNPACKDIR}/ffmpeg-${PV}"
+PR = "r1"
 
 SRC_URI += "file://0002-fix-mpegts.patch \
             file://0003-allow-to-choose-rtmp-impl-at-runtime.patch \
@@ -16,41 +13,7 @@ SRC_URI += "file://0002-fix-mpegts.patch \
             file://0012-dxva2.patch \
             file://0013-add-av_stream_get_first_dts-for-chromium.patch \
             file://ffmpeg_ac4.patch \
-            file://ffmpeg-armv5te-binutils-2.4.patch \
             \
-            file://0001-avformat-mov-add-support-for-multiple-decryption-key.patch \
-            file://0002-added-debug-logs-for-multiple-decryption-keys.patch \
-            file://0003-added-support-for-parsing-cenc-key-s-from-MPD-playli.patch \
-            file://0004-added-possibility-to-set-decryption-keys-directly-in.patch \
-            file://0005-changed-default-user-agent.patch \
-            file://0006-options-to-replace-parts-of-key-uri-in-HLS.patch \
-            file://0007-fixed-parsing-webvtt-with-STYLE-and-REGION-block.patch \
-            file://0008-FFmpeg-devel-1-2-avformat-hls-fix-to-seek-logic.patch \
-            file://0009-FFmpeg-devel-2-2-avformat-mov-fix-to-detect-if-strea.patch \
-            file://0010-FFmpeg-devel-v2-1-2-avformat-webvttdec-Add-support-f.patch \
-            file://0011-FFmpeg-devel-v2-2-2-avformat-hls-Add-subtitle-suppor.patch \
-            file://0012-fixed-segfault-in-hls-subtitle-handling.patch \
-            file://0013-avformat-dashdec-don-t-reload-manifest-often-then-ne.patch \
-            file://0014-avformat-dashdec-fixed-subtitles-segments-update.patch \
-            file://0015-avformat-dashdec-don-t-read-new-segments-too-fast-to.patch \
-            file://0016-avformat-hls-don-t-use-byterange-when-loading-subtit.patch \
-            file://0017-dashdec-use-min-buffer-time-when-selecting-start-off.patch \
-            file://0018-webvttdec-option-to-insert-fake-subtitle-at-the-end.patch \
-            file://0019-dashdec-improved-handling-manifests-with-one-segment.patch \
-            file://0020-subtitles-fixed-subtitle-search-after-seek.patch \
-            file://0021-dashdec-fixed-proper-segment-number-calculation.patch \
-            file://0022-dashdec-allow-setting-restart-in-reopen_demux_.patch \
-            file://0023-dashdec-ensure-that-pts-always-starts-from-zero.patch \
-            file://0024-dashdec-set-optimal-http-settings-based-on-media-typ.patch \
-            file://0025-dashdec-don-t-skip-first-segment.patch \
-            file://0026-dashdec-fix-integer-overflow-by-seeking.patch \
-            file://0027-dashdec-added-startover-attribute-to-manifest.patch \
-            file://0028-dashdec-check-borders-when-seeking-in-live-mode.patch \
-            file://0029-hls-improved-handling-of-event-type-playlist.patch \
-            file://0030-dashdec-fixed-playback-of-DASH-with-ampersand-in-Bas.patch \
-            file://0031-add-X-DRM-Api-Level-header-when-using-with-archivczs.patch \
-            file://0032-dashdec-fixed-splitted-subtitles.patch \
-            file://0033-dashdec-fixed-playback-of-some-live-streams.patch \
             file://0001-decryption-key-extention.patch \
             "
 

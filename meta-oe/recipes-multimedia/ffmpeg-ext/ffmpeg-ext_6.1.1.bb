@@ -19,16 +19,17 @@ LICENSE_FLAGS = "commercial"
 
 LIC_FILES_CHKSUM = "file://COPYING.GPLv2;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
                     file://COPYING.GPLv3;md5=d32239bcb673463ab874e80d47fae504 \
-                    file://COPYING.LGPLv2.1;md5=bd7a443320af8c812e4c18d1b79df004 \
+                    file://COPYING.LGPLv2.1;md5=eed22b3456132611e3d4aa7a7ec64dac \
                     file://COPYING.LGPLv3;md5=e6a600fd5e1d9cbde2d983680233ad02"
 
 SRC_URI = " \
-    https://www.ffmpeg.org/releases/ffmpeg-${PV}.tar.xz \
+    git://github.com/skyjet18/FFmpeg.git;protocol=https;branch=release/6.1-patched \
     file://av1_ordering_info.patch \
     file://vulkan_av1_stable_API.patch \
 "
 
-SRC_URI[sha256sum] = "8684f4b00f94b85461884c3719382f1261f0d9eb3d59640a1f4ac0873616f968"
+# FFmpeg 6.1 maintenance updates and skyjet18 playback fixes.
+SRCREV = "ea4d5204424fa53de15dbc2781424af7223b3bb9"
 
 # https://nvd.nist.gov/vuln/detail/CVE-2023-39018
 # https://github.com/bramp/ffmpeg-cli-wrapper/issues/291
