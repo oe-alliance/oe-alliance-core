@@ -9,11 +9,14 @@ DEPENDS = "freetype"
 inherit gitpkgv
 
 SRC_URI = "git://github.com/oe-alliance/e2plugins.git;protocol=https;branch=python3"
+SRC_URI += "file://0001-dvbi-hbbtv-ip-context.patch;patchdir=${S}"
 
 PV = "1.0+git"
+PR = "r1"
 PKGV = "1.0+git${GITPKGV}"
 SRCREV = "${AUTOREV}"
-QVERSION ?= "${@bb.utils.contains('MACHINE_FEATURES', 'hisil', '-v2', '', d)}"
+# HiSilicon machines advertise the chipset (e.g. hisil-3798mv200), not just hisil.
+QVERSION ?= "${@'-v2' if any(feature == 'hisil' or feature.startswith('hisil-') for feature in d.getVar('MACHINE_FEATURES').split()) else ''}"
 
 RDEPENDS:${PN}  = "qtwebkit libxml2-qt"
 

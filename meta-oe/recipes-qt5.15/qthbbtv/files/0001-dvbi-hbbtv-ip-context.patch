@@ -1,0 +1,101 @@
+Subject: [PATCH] qthbbtv: support broadband service context and preserve DVB-I playback
+
+Use the optional OpenATV DVB-I navigation state without importing image-specific
+interfaces. Native DVB and images without that state keep their launch/return path.
+For active DVB-I, remove the dvbi app-mode parameter for all broadcasters to use
+the legacy OIPF path, and correct the obsolete 3sat redButton.php spelling to
+its working broadcast AIT entry. Stored service-list URLs are unchanged.
+
+Upstream-Status: Pending
+
+--- a/plugin/browser.py
++++ b/plugin/browser.py
+@@ -1,6 +1,7 @@
+ from __future__ import absolute_import
+ import os
+ import struct
++from six.moves.urllib.parse import urlsplit, urlunsplit
+ from enigma import eConsoleAppContainer, getDesktop
+ from Components.VolumeControl import VolumeControl
+ from . import datasocket
+@@ -84,13 +85,15 @@
+ 		self.sendCommand(2)
+ 
+ 	def setServiceInfo(self, pmt, tsid, onid, ssid, chantype, chanid):
+-		self.sendCommand(3, struct.pack('!IIIIII', int(pmt), int(tsid), int(onid), int(ssid), int(chantype), int(chanid)))
++		# Broadband services have no PMT; E2 reports unavailable DVB fields as -1.
++		self.sendCommand(3, struct.pack('!IIIIII', *(max(0, int(value)) for value in (pmt, tsid, onid, ssid, chantype, chanid))))
+ 
+ 	def sendAitData(self, ait):
+-		s = ''
+-		s = struct.pack('b', len(ait))
+-		for x in ait:
+-			s += struct.pack("II%ds" % (len(x[1]) + 1,), x[0], len(x[1]) + 1, (x[1] + '\x00').encode())
++		applications = (ait or [])[:127]
++		s = struct.pack('b', len(applications))
++		for appId, url in applications:
++			encodedUrl = url.encode('utf-8') + b'\x00'
++			s += struct.pack("II%ds" % len(encodedUrl), appId, len(encodedUrl), encodedUrl)
+ 		self.sendCommand(4, s)
+ 
+ 	def StopMediaPlayback(self):
+@@ -138,3 +141,18 @@
+ 				file.close()
+ 		except:
+ 			return
++
++
++def getCompatibleApplicationUrl(url):
++	# This legacy browser needs the broadcast/OIPF app mode for every sender.
++	# Only call this for DVB-I; leave stored metadata and native DVB unchanged.
++	if url:
++		parts = urlsplit(url)
++		if parts.scheme in ("http", "https"):
++			# The published 3sat XML-AIT uses a case-sensitive, obsolete spelling.
++			# Match the working broadcast AIT entry, preserving query/fragment.
++			if parts.netloc.lower() == "hbbtv.zdf.de" and parts.path == "/3satm/redButton.php":
++				parts = parts._replace(path="/3satm/redbutton.php")
++			query = [item for item in parts.query.split("&") if item.partition("=")[0] != "dvbi"]
++			return urlunsplit(parts._replace(query="&".join(query)))
++	return url
+--- a/plugin/hbbtv.py
++++ b/plugin/hbbtv.py
+@@ -5,7 +5,7 @@
+ from enigma import eTimer, iPlayableService
+ import os
+ from enigma import fbClass, eRCInput
+-from .browser import Browser
++from .browser import Browser, getCompatibleApplicationUrl
+ from enigma import fbClass, eRCInput, eServiceReference
+ import struct
+ import six
+@@ -44,8 +44,16 @@
+ 		self.width = width
+ 		self.height = height
+ 		self.lastservice = self.session.nav.getCurrentlyPlayingServiceReference()
++		self.lastDvbiService = None
++		self.ait = ait
++		# Optional OpenATV navigation extension; other images keep the DVB path.
++		if getattr(self.session.nav, "isCurrentServiceDVBI", False):
++			self.lastDvbiService = getattr(self.session.nav, "dvbiPlaybackService", None)
++		if self.lastDvbiService is not None:
++			self.lastservice = self.session.nav.getCurrentlyPlayingServiceOrGroup()
++			self._url = getCompatibleApplicationUrl(url)
++			self.ait = [(appId, getCompatibleApplicationUrl(appUrl)) for appId, appUrl in (ait or [])]
+ 		self.mediastate = 0
+-		self.ait = ait
+ 
+ 		global browserinstance
+ 		if not browserinstance:
+@@ -117,7 +125,10 @@
+ 		browserinstance.setPosition(0, 0, self.width, self.height, 0)
+ 		self.mediatimer.stop()
+ 		global g_session
+-		g_session.nav.playService(self.lastservice)
++		if self.lastDvbiService is not None:
++			g_session.nav.playService(self.lastservice, dvbiTarget=self.lastDvbiService)
++		else:
++			g_session.nav.playService(self.lastservice)
+ 		self.close()
+ 
+ 	def onMediaUrlChanged(self, url):
