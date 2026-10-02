@@ -38,6 +38,7 @@ RDEPENDS:${PN} = " \
     init-ifupdown \
     oe-alliance-feeds-configs \
     opkg \
+    udev-extraconf \
     util-linux-blkid \
     util-linux-mkswap \
     util-linux-sfdisk \

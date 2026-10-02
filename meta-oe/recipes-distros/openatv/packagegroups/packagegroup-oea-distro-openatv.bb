@@ -9,29 +9,41 @@ inherit packagegroup
 
 ALLOW_EMPTY:${PN} = "1"
 
-RDEPENDS:${PN} = "\
-    ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", "packagegroup-oea-network-server", d)} \
+OPENATV_COMMON = "\
     openatv-version-info \
     openatv-bootlogo \
     openatv-spinner \
     enigma-info \
-    enigma2-dhcp-wait \
-    oe-alliance-picon-feed \
-    fstrim-cron \
     chrony \
-    dosfstools \
-    hdparm \
-    smartmontools \
     enigma2-skindefault \
     socketdaemon \
-    coreutils-stdbuf \
     e2-route-metric \
     enigma2-plugin-systemplugins-hotplug \
     enigma2-plugin-systemplugins-softwaremanager \
+    "
+
+OPENATV_SMALLBOX = "\
+    enigma2-plugin-skins-umbra \
+    "
+
+OPENATV_STANDARD = "\
+    packagegroup-oea-network-server \
+    enigma2-dhcp-wait \
+    oe-alliance-picon-feed \
+    fstrim-cron \
+    dosfstools \
+    hdparm \
+    smartmontools \
+    coreutils-stdbuf \
     enigma2-plugin-extensions-piconbrowser \
     enigma2-plugin-extensions-crashreport \
     recoverymanager \
-    ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", "${OPENATV_EXTENDED}", d)} \
+    ${OPENATV_EXTENDED} \
+    "
+
+RDEPENDS:${PN} = "\
+    ${OPENATV_COMMON} \
+    ${@d.getVar('OPENATV_SMALLBOX') if bb.utils.contains('MACHINE_FEATURES', 'smallflash', True, False, d) else d.getVar('OPENATV_STANDARD')} \
     "
 
 OPENATV_EXTENDED = "\

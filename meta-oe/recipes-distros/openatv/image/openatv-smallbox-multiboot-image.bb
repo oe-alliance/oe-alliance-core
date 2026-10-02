@@ -11,6 +11,7 @@ require ../../../recipes-oe-alliance/image/oea-image-distro.inc
 # Chkroot runs from external storage and is not constrained by the receiver's
 # internal flash. Include the packages which the FlashExpander path normally
 # installs later through the packagegroup-openatv-small compatibility name.
+# Optional services and plugins remain available from the OpenATV feed.
 IMAGE_INSTALL:append = " packagegroup-oea-smallflash-openatv ofgwrite"
 
 # Keep every intermediate artifact separate from the small internal bootstrap

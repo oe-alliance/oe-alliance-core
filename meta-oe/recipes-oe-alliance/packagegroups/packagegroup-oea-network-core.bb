@@ -8,13 +8,11 @@ inherit packagegroup
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 ALLOW_EMPTY:${PN} = "1"
 
-RDEPENDS:${PN} = "\
-    dropbear \
-    openssh-sftp-server \
+NETWORK_CORE_BASE = "\
+    packagegroup-oea-network-ssh \
     wget \
     avahi-daemon \
     llmnrd \
-    ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", "${NETWORK_CORE_EXTENDED}", d)} \
     "
 
 NETWORK_CORE_EXTENDED = "\
@@ -25,3 +23,27 @@ NETWORK_CORE_EXTENDED = "\
     iproute2 \
     ca-certificates \
     "
+
+# SmallBox must remain reachable while its first-run setup is incomplete, but
+# SSH/SFTP and discovery daemons are not needed for watching TV or IPTV.  FTP
+# and Telnet deliberately remain installed for recovery/support.  Restrict
+# this exception to OpenATV; all other distributions keep their existing set.
+OPENATV_SMALLBOX_NETWORK_CORE = "\
+    wget \
+    vsftpd \
+    busybox-telnetd \
+    iproute2 \
+    ca-certificates \
+    "
+
+def get_network_core_packages(d):
+    smallflash = bb.utils.contains("MACHINE_FEATURES", "smallflash", True, False, d)
+    if d.getVar("DISTRO") == "openatv" and smallflash:
+        return d.getVar("OPENATV_SMALLBOX_NETWORK_CORE")
+
+    packages = d.getVar("NETWORK_CORE_BASE")
+    if not smallflash:
+        packages += " " + d.getVar("NETWORK_CORE_EXTENDED")
+    return packages
+
+RDEPENDS:${PN} = "${@get_network_core_packages(d)}"
