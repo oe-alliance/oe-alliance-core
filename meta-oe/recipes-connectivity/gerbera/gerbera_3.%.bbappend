@@ -24,6 +24,3 @@ FILES:${PN} += "${sysconfdir}"
 CONFFILES:${PN} = "${sysconfdir}/gerbera/config.xml"
 
 DEPENDS += "libzip libzippp cxxopts"
-
-PV = "3.2.1"
-SRCREV = "a6a2bb2991d197a52755a488fc943566d654d3bd"
