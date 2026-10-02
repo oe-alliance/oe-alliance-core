@@ -22,7 +22,7 @@ EXTRA_OEMAKE = "LOCALEDIR=${datadir}/locale"
 
 PACKAGE_NO_LOCALE = "1"
 FILES:${PN}-locale = ""
-FILES:${PN} += "${datadir}/locale"
+FILES:${PN} += "${datadir}/locale ${libdir}/enigma2/python/Plugins/SystemPlugins/RecoveryManager"
 
 RPROVIDES:${PN} += "orm"
 
