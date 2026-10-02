@@ -1,8 +1,8 @@
 SUMMARY = "Native framebuffer first-boot wizard for OE-Alliance SmallBox receivers"
 DESCRIPTION = "Creates either a USB /usr FlashExpander or a Chkroot Multiboot rootfs, exact 512 MiB swap, wired networking and a complete Enigma2 installation before Enigma2 starts."
 HOMEPAGE = "https://github.com/oe-alliance/SmallBoxWizard"
-LICENSE = "MIT"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=a067a4afd955d5a9dd14fbc7bc14e4b4"
+LICENSE = "GPL-3.0-only"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=1ebbd3e34237af26da5dc08a4e440464"
 
 COMPATIBLE_MACHINE = "${@'.*' if d.getVar('DISTRO') == 'openatv' else '^$'}"
 
