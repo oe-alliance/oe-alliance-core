@@ -23,6 +23,8 @@ RDEPENDS:${PN} = " \
     packagegroup-oea-enigma2-plugins \
     packagegroup-oea-distro-openatv \
     packagegroup-oea-network-server \
+    busybox-telnetd \
+    vsftpd \
     dhrystone \
     streambench \
     ntfs-3g \

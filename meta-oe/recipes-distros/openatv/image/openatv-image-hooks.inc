@@ -22,7 +22,7 @@ OPENATV_SMALLBOX_DEFERRED_IMAGE_PACKAGES = " \
 "
 
 IMAGE_INSTALL:remove = "${@d.getVar('OPENATV_SMALLBOX_DEFERRED_IMAGE_PACKAGES') if d.getVar('OPENATV_SMALLBOX_BOOTSTRAP') == '1' else ''}"
-IMAGE_INSTALL:append = "${@' smallbox-wizard' if d.getVar('OPENATV_SMALLBOX_BOOTSTRAP') == '1' else ''}"
+IMAGE_INSTALL:append = "${@' smallbox-wizard vsftpd busybox-telnetd' if d.getVar('OPENATV_SMALLBOX_BOOTSTRAP') == '1' else ''}"
 
 # One OpenATV SmallBox build also creates a complete rootfs-only Chkroot
 # archive. Package compilation is shared; only do_rootfs/do_image run again.
@@ -66,19 +66,25 @@ openatv_singlecore_disable_optional_services() {
 		return
 	fi
 
+	services="\
+		autofs \
+		avahi-daemon \
+		llmnrd \
+		nfsserver \
+		samba \
+		smartd \
+		wsdd \
+		wsdd2"
+
+	# Keep remote support access available throughout SmallBox setup.  The
+	# native wizard runs before Enigma2, so Enigma2 cannot recover disabled
+	# FTP or Telnet services when first-boot setup fails.
+	if [ "${@bb.utils.contains('MACHINE_FEATURES', 'smallflash', '1', '0', d)}" != "1" ]; then
+		services="$services telnetd.busybox vsftpd"
+	fi
+
 	for runlevel in 2 3 4 5; do
-		for service in \
-			autofs \
-			avahi-daemon \
-			llmnrd \
-			nfsserver \
-			samba \
-			smartd \
-			telnetd.busybox \
-			vsftpd \
-			wsdd \
-			wsdd2
-		do
+		for service in $services; do
 			rm -f "${IMAGE_ROOTFS}/etc/rc${runlevel}.d/S"*"${service}"
 		done
 	done
