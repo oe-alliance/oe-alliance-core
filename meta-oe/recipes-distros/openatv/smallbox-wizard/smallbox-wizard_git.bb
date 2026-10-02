@@ -6,14 +6,14 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=a067a4afd955d5a9dd14fbc7bc14e4b4"
 
 COMPATIBLE_MACHINE = "${@'.*' if d.getVar('DISTRO') == 'openatv' else '^$'}"
 
-inherit gitpkgv update-rc.d
+inherit gittag update-rc.d
 
 SRCREV = "${AUTOREV}"
-PV = "0.2.0+git"
-PKGV = "0.2.0+git${GITPKGV}"
+PV = "git"
+PKGV = "${GITPKGVTAG}"
 
 SRC_URI = " \
-    git://github.com/oe-alliance/SmallBoxWizard.git;protocol=https;branch=main \
+    gitsm://github.com/oe-alliance/SmallBoxWizard.git;protocol=https;branch=main \
     file://smallbox-wizard.init \
 "
 
@@ -43,14 +43,6 @@ RDEPENDS:${PN} = " \
     util-linux-sfdisk \
     ${@'dosfstools ofgwrite unzip wget' if d.getVar('SMALLBOX_CHKROOT_ENABLED') == '1' else ''} \
 "
-
-do_compile() {
-    oe_runmake \
-        'CC=${CC}' \
-        'CPPFLAGS=${CPPFLAGS} -I${S}/include' \
-        'CFLAGS=${CFLAGS}' \
-        'LDFLAGS=${LDFLAGS}'
-}
 
 do_install() {
     install -d ${D}${sbindir} ${D}${sysconfdir}/init.d ${D}${sysconfdir}
