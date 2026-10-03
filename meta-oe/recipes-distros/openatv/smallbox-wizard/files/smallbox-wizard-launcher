@@ -1,0 +1,37 @@
+#!/bin/sh
+
+# The SmallBox bootstrap does not contain Enigma2 yet. This inittab GUI entry
+# is the single owner of the mandatory wizard; starting it from an S99 link as
+# well would race this process and make init disable the respawning GUI entry.
+
+PATH=/sbin:/bin:/usr/sbin:/usr/bin
+INIT=/etc/init.d/smallbox-wizard
+MARKER=/etc/smallbox-wizard.done
+REBOOT_MARKER=/tmp/smallbox-wizard-rebooting
+
+while :; do
+	if [ -e "$MARKER" ] && [ -x /usr/bin/enigma2.sh ]; then
+		exec /usr/bin/enigma2.sh
+	fi
+
+	if [ ! -e "$MARKER" ] && [ ! -e "$REBOOT_MARKER" ] && [ -x "$INIT" ]; then
+		"$INIT" start
+		if [ -e "$MARKER" ] && [ -x /usr/bin/enigma2.sh ]; then
+			continue
+		fi
+	fi
+
+	# A Chkroot installation reboots from the wizard. If that reboot is
+	# delayed, or setup failed before Enigma2 was installed, stay alive so
+	# inittab never enters its "respawning too fast" failure path.
+	if [ -c /dev/console ]; then
+		if [ -e "$REBOOT_MARKER" ]; then
+			echo "[smallbox-wizard] Waiting for the receiver to restart." >/dev/console
+		elif [ -e "$MARKER" ]; then
+			echo "[smallbox-wizard] Setup is complete, but /usr/bin/enigma2.sh is missing." >/dev/console
+		else
+			echo "[smallbox-wizard] Setup is incomplete; Enigma2 remains blocked." >/dev/console
+		fi
+	fi
+	sleep 30
+done

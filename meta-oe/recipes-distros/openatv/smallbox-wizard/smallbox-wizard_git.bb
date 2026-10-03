@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=1ebbd3e34237af26da5dc08a4e440464"
 
 COMPATIBLE_MACHINE = "${@'.*' if d.getVar('DISTRO') == 'openatv' else '^$'}"
 
-inherit gittag update-rc.d
+inherit gittag
 
 SRCREV = "${AUTOREV}"
 PV = "git"
@@ -15,10 +15,8 @@ PKGV = "${GITPKGVTAG}"
 SRC_URI = " \
     gitsm://github.com/oe-alliance/SmallBoxWizard.git;protocol=https;branch=main \
     file://smallbox-wizard.init \
+    file://smallbox-wizard-launcher \
 "
-
-INITSCRIPT_NAME = "smallbox-wizard"
-INITSCRIPT_PARAMS = "start 99 3 ."
 
 # FLASHSIZE is an image budget on several old receivers, not necessarily the
 # physical NAND size. Only machines explicitly marked Chkroot-only suppress
@@ -34,6 +32,7 @@ SMALLBOX_WIZARD_MAXIMUM_SLOTS ?= "4"
 RDEPENDS:${PN} = " \
     chrony \
     chronyc \
+    coreutils-truefalse \
     e2fsprogs-mke2fs \
     init-ifupdown \
     oe-alliance-feeds-configs \
@@ -48,6 +47,8 @@ RDEPENDS:${PN} = " \
 do_install() {
     install -d ${D}${sbindir} ${D}${sysconfdir}/init.d ${D}${sysconfdir}
     install -m 0755 ${S}/smallbox-wizard ${D}${sbindir}/smallbox-wizard
+    install -m 0755 ${UNPACKDIR}/smallbox-wizard-launcher \
+        ${D}${sbindir}/smallbox-wizard-launcher
     install -m 0755 ${UNPACKDIR}/smallbox-wizard.init \
         ${D}${sysconfdir}/init.d/smallbox-wizard
     printf '%s\n' \

@@ -1,0 +1,48 @@
+From 6e57c14bf05a66b4a7b477397a784a86ee963580 Mon Sep 17 00:00:00 2001
+From: OpenATV <openatv@gmail.com>
+Date: Sat, 3 Oct 2026 11:15:00 +0200
+Subject: [PATCH] flock: fall back to POSIX locks on old kernels
+
+The --fcntl implementation uses F_OFD_SETLK and F_OFD_SETLKW.  These
+commands were added in Linux 3.15, while several supported receivers still
+run older vendor kernels.  Such kernels return EINVAL and run-postinsts
+cannot check the OPKG lock during first boot.
+
+Retry with the traditional POSIX fcntl commands when the OFD command is not
+supported.  Both lock types conflict with OPKG's POSIX lock, while current
+kernels retain the OFD behavior.
+
+Upstream-Status: Inappropriate [OE-Alliance supports pre-3.15 vendor kernels]
+
+Signed-off-by: OpenATV <openatv@gmail.com>
+---
+ sys-utils/flock.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
+
+diff --git a/sys-utils/flock.c b/sys-utils/flock.c
+index dcfb1f0..52da32a 100644
+--- a/sys-utils/flock.c
++++ b/sys-utils/flock.c
+@@ -164,8 +164,18 @@ static int fcntl_lock(int fd, int op, int block, off_t start, off_t len)
+ 		.l_start = start,
+ 		.l_len = len,
+ 	};
++	int result;
+ 	int cmd = (block & LOCK_NB) ? F_OFD_SETLK : F_OFD_SETLKW;
+-	return fcntl(fd, cmd, &arg);
++
++	result = fcntl(fd, cmd, &arg);
++	if (result < 0 && errno == EINVAL) {
++		/* F_OFD_SETLK(W) was added in Linux 3.15.  POSIX record
++		 * locks provide the required interoperability with OPKG on
++		 * receivers using an older vendor kernel. */
++		cmd = (block & LOCK_NB) ? F_SETLK : F_SETLKW;
++		result = fcntl(fd, cmd, &arg);
++	}
++	return result;
+ }
+ 
+ static int do_lock(int api, int fd, int op, int block, off_t start, off_t len)
+-- 
+2.51.0
+

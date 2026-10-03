@@ -6,6 +6,116 @@ MARKER=/etc/smallbox-wizard.done
 REBOOT_MARKER=/tmp/smallbox-wizard-rebooting
 LOG=/tmp/smallbox-wizard.log
 
+log_console() {
+	echo "$*" >>"$LOG"
+	[ ! -c /dev/console ] || echo "$*" >/dev/console
+}
+
+log_network() {
+	found=0
+	for device in /sys/class/net/*; do
+		[ -e "$device" ] || continue
+		interface=${device##*/}
+		[ "$interface" != "lo" ] || continue
+		found=1
+		state=unknown
+		[ ! -r "$device/operstate" ] || read -r state <"$device/operstate"
+		address=$(ip -4 -o address show dev "$interface" scope global 2>/dev/null |
+			awk 'NR == 1 { sub(/\/.*/, "", $4); print $4 }')
+		[ -n "$address" ] || address="not assigned"
+		log_console "[smallbox-wizard] Network: $interface link=$state IPv4=$address"
+	done
+	[ "$found" -ne 0 ] || log_console "[smallbox-wizard] Network: no interface found"
+}
+
+ipv4_address() {
+	ip -4 -o address show dev "$1" scope global 2>/dev/null |
+		awk 'NR == 1 { sub(/\/.*/, "", $4); print $4 }'
+}
+
+# The bootstrap has no Enigma2 or bootlogo service to select an HDMI mode.
+# Choose a mode the driver explicitly advertises and tell the native wizard
+# which OSD geometry to request with FBIOPUT_VSCREENINFO.
+prepare_video_output() {
+	choices_file=/proc/stb/video/videomode_choices
+	mode_file=/proc/stb/video/videomode
+	[ -r "$choices_file" ] && [ -w "$mode_file" ] || return
+	choices=$(cat "$choices_file" 2>/dev/null)
+	mode=
+	case " $choices " in
+		*" 720p50 "*) mode=720p50 ;;
+		*" 720p "*) mode=720p ;;
+	esac
+	[ -n "$mode" ] || return
+
+	if [ -w /proc/stb/video/videomode_50hz ]; then
+		case " $(cat /proc/stb/video/videomode_50hz_choices 2>/dev/null) " in
+			*" 720p50 "*) printf '%s\n' 720p50 >/proc/stb/video/videomode_50hz ;;
+		esac
+	fi
+	if [ -w /proc/stb/video/videomode_60hz ]; then
+		case " $(cat /proc/stb/video/videomode_60hz_choices 2>/dev/null) " in
+			*" 720p "*) printf '%s\n' 720p >/proc/stb/video/videomode_60hz ;;
+		esac
+	fi
+	printf '%s\n' "$mode" >"$mode_file" || return
+	SMALLBOX_FB_WIDTH=1280
+	SMALLBOX_FB_HEIGHT=720
+	export SMALLBOX_FB_WIDTH SMALLBOX_FB_HEIGHT
+	log_console "[smallbox-wizard] Video: selected $mode, requesting a 1280x720 OSD."
+}
+
+# ifupdown records an interface as configured even when udhcpc did not obtain
+# a lease. A later ifup then only reports "already configured" and never
+# retries DHCP. Give normal boot networking time first, then reset only the
+# broken wired state and make one clean DHCP attempt.
+recover_wired_network() {
+	interface=eth0
+	[ -d "/sys/class/net/$interface" ] || return
+
+	waited=0
+	while [ "$waited" -lt 10 ]; do
+		[ -n "$(ipv4_address "$interface")" ] && return
+		sleep 1
+		waited=$((waited + 1))
+	done
+
+	carrier=0
+	[ ! -r "/sys/class/net/$interface/carrier" ] || read -r carrier <"/sys/class/net/$interface/carrier"
+	if [ "$carrier" != "1" ]; then
+		log_console "[smallbox-wizard] Network: $interface has no carrier; DHCP will wait for a cable."
+		return
+	fi
+
+	log_console "[smallbox-wizard] Network: $interface has carrier but no IPv4 address; retrying DHCP."
+	mkdir -p /run /var/run
+	(
+		exec 9>/run/oe-network.lock
+		if command -v flock >/dev/null 2>&1; then
+			flock -x -w 30 9 || exit 1
+		fi
+		[ -n "$(ipv4_address "$interface")" ] && exit 0
+		ifdown -f "$interface" >/dev/null 2>&1 || true
+		if [ -f /var/run/ifstate ]; then
+			grep -v "^${interface}=" /var/run/ifstate >"/var/run/ifstate.$$" || true
+			mv "/var/run/ifstate.$$" /var/run/ifstate
+		fi
+		ifup "$interface" >/dev/console 2>&1 || true
+	)
+
+	waited=0
+	while [ "$waited" -lt 30 ]; do
+		address=$(ipv4_address "$interface")
+		if [ -n "$address" ]; then
+			log_console "[smallbox-wizard] Network: DHCP assigned $address to $interface."
+			return
+		fi
+		sleep 1
+		waited=$((waited + 1))
+	done
+	log_console "[smallbox-wizard] Network: DHCP retry finished without an IPv4 address."
+}
+
 case "$1" in
 	start)
 		[ -e "$MARKER" ] && exit 0
@@ -17,8 +127,16 @@ case "$1" in
 			chronyc -a makestep >/dev/null 2>&1 || true
 		fi
 		: >"$LOG"
+		log_console "[smallbox-wizard] Starting mandatory first-boot setup."
+		prepare_video_output
+		recover_wired_network
+		log_network
 		while [ ! -e "$MARKER" ] && [ ! -e "$REBOOT_MARKER" ]; do
-			"$PROGRAM" --boot >>"$LOG" 2>&1
+			if [ -c /dev/console ] && command -v tee >/dev/null 2>&1; then
+				"$PROGRAM" --boot 2>&1 | tee -a "$LOG" >/dev/console
+			else
+				"$PROGRAM" --boot >>"$LOG" 2>&1
+			fi
 			[ -e "$MARKER" ] || [ -e "$REBOOT_MARKER" ] || sleep 1
 		done
 		exit 0

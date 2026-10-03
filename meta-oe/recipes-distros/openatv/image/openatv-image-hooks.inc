@@ -56,6 +56,47 @@ python __anonymous() {
                      d.getVar('MACHINE'))
 }
 
+# The bootstrap has no Enigma2 launcher until the wizard installs the full
+# package set.  Point inittab at a wrapper which enforces setup even if an old
+# receiver cannot run update-rc.d's deferred package post-installation.  This
+# is deliberately restricted to OpenATV's SmallBox bootstrap image.
+openatv_smallbox_install_gui_launcher() {
+	if [ "${OPENATV_SMALLBOX_BOOTSTRAP}" != "1" ]; then
+		return
+	fi
+
+	inittab="${IMAGE_ROOTFS}${sysconfdir}/inittab"
+	if [ ! -f "$inittab" ]; then
+		bbfatal "OpenATV SmallBox bootstrap has no /etc/inittab"
+	fi
+	if [ ! -x "${IMAGE_ROOTFS}${sbindir}/smallbox-wizard-launcher" ]; then
+		bbfatal "OpenATV SmallBox bootstrap has no SmallBox GUI launcher"
+	fi
+
+	# Package post-install scripts may run on the first boot before the
+	# volatile init script. Seed their targets in the immutable image so opkg,
+	# cron and the wizard always have usable runtime directories.
+	install -d -m 1777 "${IMAGE_ROOTFS}/var/volatile/tmp"
+	install -d -m 0755 "${IMAGE_ROOTFS}/var/volatile/run"
+	# tuxbox-links later owns /var/spool/cron as a symlink to /etc/cron.
+	# Seed the symlink target, never the packaged path itself, otherwise opkg
+	# cannot replace the bootstrap directory during the Enigma2 installation.
+	install -d -m 0770 "${IMAGE_ROOTFS}/etc/cron/crontabs"
+	if [ -L "${IMAGE_ROOTFS}/tmp" ]; then
+		ln -snf /var/volatile/tmp "${IMAGE_ROOTFS}/tmp"
+	elif [ -d "${IMAGE_ROOTFS}/tmp" ]; then
+		chmod 1777 "${IMAGE_ROOTFS}/tmp"
+	elif [ ! -e "${IMAGE_ROOTFS}/tmp" ]; then
+		ln -s /var/volatile/tmp "${IMAGE_ROOTFS}/tmp"
+	else
+		bbfatal "OpenATV SmallBox bootstrap /tmp is neither a directory nor a symlink"
+	fi
+
+	sed -i 's#^gui:3:respawn:.*#gui:3:respawn:/usr/sbin/smallbox-wizard-launcher#' "$inittab"
+}
+
+ROOTFS_POSTPROCESS_COMMAND:append = " openatv_smallbox_install_gui_launcher;"
+
 # Single-core receivers remain responsive once Enigma2 is running, but their
 # sequential SysV boot is slowed down by optional discovery and file-server
 # daemons.  Keep the packages available in the image/feed and let Enigma2's

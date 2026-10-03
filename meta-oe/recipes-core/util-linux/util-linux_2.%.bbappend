@@ -1,3 +1,11 @@
+FILESEXTRAPATHS:prepend := "${THISDIR}/${BPN}:"
+
+# util-linux 2.41 switched `flock --fcntl` to open-file-description locks,
+# which require Linux 3.15 or newer.  OE-Alliance still supports receivers
+# with older vendor kernels, so retain an OPKG-compatible POSIX fcntl fallback
+# for every distribution.
+SRC_URI:append = " file://0001-flock-fallback-to-posix-locks-on-old-kernels.patch"
+
 PACKAGES =+ "util-linux-flock"
 FILES:util-linux-flock = "${base_sbindir}/flock.${BPN}"
 

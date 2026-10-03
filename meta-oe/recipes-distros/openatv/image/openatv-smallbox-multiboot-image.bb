@@ -57,7 +57,17 @@ smallbox_multiboot_boxinfo() {
 	printf 'checksum=%s\n' "$checksum" >> "$info"
 }
 
-ROOTFS_POSTPROCESS_COMMAND:append = " smallbox_multiboot_boxinfo;"
+smallbox_multiboot_completion_marker() {
+	install -d "${IMAGE_ROOTFS}${sysconfdir}"
+	printf '%s\n' \
+		"version=${PV}" \
+		"mode=chkroot" \
+		"source=build" \
+		> "${IMAGE_ROOTFS}${sysconfdir}/smallbox-wizard.done"
+	chmod 0644 "${IMAGE_ROOTFS}${sysconfdir}/smallbox-wizard.done"
+}
+
+ROOTFS_POSTPROCESS_COMMAND:append = " smallbox_multiboot_boxinfo; smallbox_multiboot_completion_marker;"
 
 do_smallbox_multiboot_archive() {
 	stage="${WORKDIR}/smallbox-multiboot-archive"
@@ -85,6 +95,10 @@ do_smallbox_multiboot_archive() {
 
 	install -m 0644 "$root_image" \
 		"$stage/smallbox/${MACHINEBUILD}/rootfs.tar.bz2"
+	# Chkroot keeps the shared internal kernel and ofgwrite does not flash it.
+	# FlashManager still requires a conventional kernel name when validating a
+	# ZIP, so provide an empty compatibility entry beside the rootfs tarball.
+	: > "$stage/smallbox/${MACHINEBUILD}/kernel.bin"
 	printf '%s\n' \
 		"${DISTRO_NAME}-${DISTRO_VERSION}.${BUILD_VERSION}" \
 		"SmallBox Chkroot Multiboot rootfs-only tar image" \
