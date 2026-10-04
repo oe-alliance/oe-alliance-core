@@ -30,6 +30,7 @@ MACHINE_EXTRA_RRECOMMENDS += " \
     kernel-module-fuse \
     kernel-module-nfsd \
     kernel-module-exportfs \
+    kernel-module-snd-pcm \
     kernel-module-snd-oss \
     kernel-module-snd-pcm-oss \
     ${@bb.utils.contains('MACHINE_FEATURES', 'v3d', 'libvc5dream', '',d)} \
