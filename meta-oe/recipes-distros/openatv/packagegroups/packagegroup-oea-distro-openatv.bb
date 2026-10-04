@@ -28,7 +28,6 @@ OPENATV_SMALLBOX = "\
 
 OPENATV_STANDARD = "\
     packagegroup-oea-network-server \
-    enigma2-dhcp-wait \
     oe-alliance-picon-feed \
     fstrim-cron \
     dosfstools \
