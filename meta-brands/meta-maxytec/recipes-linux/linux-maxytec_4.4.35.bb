@@ -11,7 +11,7 @@ COMPATIBLE_MACHINE = "^(multibox|multiboxse|multiboxpro)$"
 
 inherit kernel machine_kernel_pr kernel-fixups
 
-MACHINE_KERNEL_PR:append = "26"
+MACHINE_KERNEL_PR:append = "27"
 
 SRCREV_FORMAT = "kernel_wireguard"
 

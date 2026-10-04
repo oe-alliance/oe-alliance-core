@@ -10,7 +10,7 @@ COMPATIBLE_MACHINE = "^(ustym4kottpremium|ustym4ks2ottx)$"
 
 inherit kernel machine_kernel_pr kernel-fixups
 
-MACHINE_KERNEL_PR:append = "5"
+MACHINE_KERNEL_PR:append = "6"
 
 KVTYPE = "mv200"
 KVTYPE:ustym4ks2ottx = "mv300"

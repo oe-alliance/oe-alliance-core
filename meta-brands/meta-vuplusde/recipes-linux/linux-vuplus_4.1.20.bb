@@ -9,7 +9,7 @@ COMPATIBLE_MACHINE = "^(vuduo4klite)$"
 
 inherit kernel machine_kernel_pr kernel-fixups
 
-MACHINE_KERNEL_PR = "r17"
+MACHINE_KERNEL_PR = "r18"
 
 SRC_DATE = "20250410"
 
