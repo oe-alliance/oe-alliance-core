@@ -60,7 +60,7 @@ case "$1" in
     
     if [ "$WSDD_DISABLED" != "Yes" ]; then
       echo -n " wsdd2"
-      /etc/init.d/wsdd2 &
+      /etc/init.d/wsdd2 start
     fi
     
     echo "."
@@ -74,7 +74,7 @@ case "$1" in
     start-stop-daemon --stop --quiet --pidfile /var/run/nmbd.pid
     
     echo -n " wsdd2"
-    start-stop-daemon --stop --quiet --exec $WSDD
+    /etc/init.d/wsdd2 stop
     
     echo "."
     ;;
@@ -88,9 +88,7 @@ case "$1" in
     start-stop-daemon --stop --quiet --signal 1 --exec $NMBD
     
     if [ "$WSDD_DISABLED" != "Yes" ]; then
-      start-stop-daemon --stop --quiet --exec $WSDD
-      sleep 1
-      start-stop-daemon --start --quiet --exec $WSDD -- -d >/dev/null 2>&1 </dev/null
+      /etc/init.d/wsdd2 restart
     fi
     ;;
     

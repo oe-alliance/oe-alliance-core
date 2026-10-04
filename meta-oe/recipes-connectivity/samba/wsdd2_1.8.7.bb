@@ -14,6 +14,8 @@ SRC_URI[sha256sum] = "2b1e7720435a1e067388660ec3edb321a4c91b4f9d0928ba27d0a8d89b
 
 S = "${UNPACKDIR}/${BPN}-${PV}"
 
+PR = "r1"
+
 inherit update-rc.d
 
 EXTRA_OEMAKE = "CC='${CC}' CFLAGS='${CFLAGS}' LDFLAGS='${LDFLAGS}'"
