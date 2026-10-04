@@ -1,0 +1,47 @@
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides:          stc_boot
+# Required-Start:    $rootfs
+# Default-Start:     3
+# Default-Stop:      0 1 6
+# Short-Description: Load stcbind using the supplied boot timing
+### END INIT INFO
+
+STCBIND_TB=0
+STCBIND_START_DELAY=5
+STCBIND_UNLOAD_DELAY=70
+[ ! -r /etc/default/stcbind ] || . /etc/default/stcbind
+PIDFILE=/var/run/stc_boot.pid
+
+case "$1" in
+    start)
+        if [ -r "$PIDFILE" ] && kill -0 "$(cat "$PIDFILE")" 2>/dev/null; then
+            exit 0
+        fi
+        (
+            trap 'rm -f "$PIDFILE"; exit 0' TERM INT
+            sleep "$STCBIND_START_DELAY"
+            modprobe stcbind tb="$STCBIND_TB" || { rm -f "$PIDFILE"; exit 1; }
+            if [ "$STCBIND_UNLOAD_DELAY" -gt 0 ]; then
+                sleep "$STCBIND_UNLOAD_DELAY"
+                rmmod stcbind
+            fi
+            rm -f "$PIDFILE"
+        ) &
+        echo $! > "$PIDFILE"
+        ;;
+    stop)
+        if [ -r "$PIDFILE" ]; then
+            kill "$(cat "$PIDFILE")" 2>/dev/null || :
+            rm -f "$PIDFILE"
+        fi
+        if [ -d /sys/module/stcbind ]; then
+            rmmod stcbind
+        fi
+        ;;
+    restart)
+        "$0" stop
+        "$0" start
+        ;;
+    *) echo "Usage: $0 {start|stop|restart}"; exit 1 ;;
+esac
