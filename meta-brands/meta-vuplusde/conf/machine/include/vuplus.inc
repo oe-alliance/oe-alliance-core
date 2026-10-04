@@ -16,6 +16,7 @@ MULTIBOOT_STARTUP_DEFAULT ?= "STARTUP_1"
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS += " \
     vuplus-platform-util-${MACHINE} \
+    enigma2-plugin-systemplugins-remotecontrolcode \
     "
 
 DVBPROVIDER = "kernel"
