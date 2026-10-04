@@ -1,0 +1,43 @@
+#!/bin/sh
+#
+# SPDX-License-Identifier: GPL-2.0-only
+#
+
+### BEGIN INIT INFO
+# Provides:          sendsigs
+# Required-Start:    
+# Required-Stop:     umountnfs
+# Default-Start:
+# Default-Stop:      0 6
+# Short-Description: Kill all remaining processes.
+# Description: 
+### END INIT INFO
+
+PATH=/sbin:/bin:/usr/sbin:/usr/bin
+
+# Kill all processes.
+echo "Sending all processes the TERM signal..."
+killall5 -15
+
+# Wait until they ended, at most 5 s. Init, kernel threads, zombies and this
+# session are left out, like killall5 does.
+others_left() {
+	for d in /proc/[0-9]*; do
+		read -r line < "$d/stat" || continue
+		set -- ${line##*) }
+		[ "${d#/proc/}" = 1 ] || [ "$2" = 0 ] || [ "$2" = 2 ] || [ "$1" = Z ] || [ "$4" = "$sid" ] || return 0
+	done 2>/dev/null
+	return 1
+}
+read -r line < /proc/$$/stat
+set -- ${line##*) }
+sid=$4
+i=0
+while [ $i -lt 50 ] && others_left; do
+	sleep 0.1
+	i=$(($i + 1))
+done
+echo "Sending all processes the KILL signal..."
+killall5 -9
+
+: exit 0
