@@ -45,3 +45,7 @@ FILES:${PN}-cli = "${bindir}/curl-cffi ${PYTHON_SITEPACKAGES_DIR}/curl_cffi/cli"
 RDEPENDS:${PN}-cli = "${PN} python3-rich"
 
 include python3-package-split.inc
+
+# curl_cffi reads its version via importlib.metadata on import
+FILES:${PN}-doc:remove = "${PYTHON_SITEPACKAGES_DIR}/*-info"
+FILES:${PN} += "${PYTHON_SITEPACKAGES_DIR}/curl_cffi-${PV}.dist-info"
