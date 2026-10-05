@@ -18,12 +18,13 @@ RRECOMMENDS:${PN} = " \
     quickjs \
     uchardet \
     python3-pycurl \
+    curl-impersonate \
     "
 
 SRCREV = "${AUTOREV}"
 PV = "1.0+git"
 PKGV = "1.0+git${GITPKGV}"
-PR = "r6"
+PR = "r7"
 
 SRC_URI = "git://github.com/oe-mirrors/e2iplayer-deps.git;protocol=https;branch=master"
 
