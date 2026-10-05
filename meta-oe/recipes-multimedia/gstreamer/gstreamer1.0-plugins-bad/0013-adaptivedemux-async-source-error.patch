@@ -1,0 +1,177 @@
+Subject: [PATCH] adaptivedemux: handle source errors off the HTTP session thread
+
+souphttpsrc posts HTTP errors from its session thread, which all sources
+in the pipeline share. The ERROR handler took manifest_lock there, while
+a manifest/playlist update holds that lock and waits for its download on
+the same session thread. Both block forever; the following state change
+to NULL then hangs joining the update task.
+
+Reproduced with HLS live streams whose segments return 403 (geoblock)
+while the playlists still load.
+
+Handle stream source errors via gst_element_call_async() so the session
+thread never waits for manifest_lock.
+
+Upstream-Status: Pending
+---
+--- a/gst-libs/gst/adaptivedemux/gstadaptivedemux.c
++++ b/gst-libs/gst/adaptivedemux/gstadaptivedemux.c
+@@ -845,84 +845,93 @@
+ }
+ 
+ static void
+-gst_adaptive_demux_handle_message (GstBin * bin, GstMessage * msg)
++gst_adaptive_demux_handle_source_error (GstElement * element,
++    gpointer user_data)
+ {
+-  GstAdaptiveDemux *demux = GST_ADAPTIVE_DEMUX_CAST (bin);
+-
+-  switch (GST_MESSAGE_TYPE (msg)) {
+-    case GST_MESSAGE_ERROR:{
+-      GList *iter;
+-      GstAdaptiveDemuxStream *stream = NULL;
+-      GError *err = NULL;
+-      gchar *debug = NULL;
+-      gchar *new_error = NULL;
+-      const GstStructure *details = NULL;
+-
+-      GST_MANIFEST_LOCK (demux);
+-
+-      for (iter = demux->streams; iter; iter = g_list_next (iter)) {
+-        GstAdaptiveDemuxStream *cur = iter->data;
+-        if (gst_object_has_as_ancestor (GST_MESSAGE_SRC (msg),
+-                GST_OBJECT_CAST (cur->src))) {
+-          stream = cur;
+-          break;
+-        }
+-      }
+-      if (stream == NULL) {
+-        for (iter = demux->prepared_streams; iter; iter = g_list_next (iter)) {
+-          GstAdaptiveDemuxStream *cur = iter->data;
+-          if (gst_object_has_as_ancestor (GST_MESSAGE_SRC (msg),
+-                  GST_OBJECT_CAST (cur->src))) {
+-            stream = cur;
+-            break;
+-          }
+-        }
+-        if (stream == NULL) {
+-          GST_WARNING_OBJECT (demux,
+-              "Failed to locate stream for errored element");
+-          GST_MANIFEST_UNLOCK (demux);
+-          break;
+-        }
++  GstAdaptiveDemux *demux = GST_ADAPTIVE_DEMUX_CAST (element);
++  GstMessage *msg = user_data;
++  GList *iter;
++  GstAdaptiveDemuxStream *stream = NULL;
++  GError *err = NULL;
++  gchar *debug = NULL;
++  gchar *new_error = NULL;
++  const GstStructure *details = NULL;
++
++  GST_MANIFEST_LOCK (demux);
++
++  for (iter = demux->streams; iter; iter = g_list_next (iter)) {
++    GstAdaptiveDemuxStream *cur = iter->data;
++    if (gst_object_has_as_ancestor (GST_MESSAGE_SRC (msg),
++            GST_OBJECT_CAST (cur->src))) {
++      stream = cur;
++      break;
++    }
++  }
++  if (stream == NULL) {
++    for (iter = demux->prepared_streams; iter; iter = g_list_next (iter)) {
++      GstAdaptiveDemuxStream *cur = iter->data;
++      if (gst_object_has_as_ancestor (GST_MESSAGE_SRC (msg),
++              GST_OBJECT_CAST (cur->src))) {
++        stream = cur;
++        break;
+       }
++    }
++    if (stream == NULL) {
++      GST_WARNING_OBJECT (demux,
++          "Failed to locate stream for errored element");
++      GST_MANIFEST_UNLOCK (demux);
++      GST_BIN_CLASS (parent_class)->handle_message (GST_BIN_CAST (demux),
++          gst_message_ref (msg));
++      return;
++    }
++  }
+ 
+-      gst_message_parse_error (msg, &err, &debug);
++  gst_message_parse_error (msg, &err, &debug);
+ 
+-      GST_WARNING_OBJECT (GST_ADAPTIVE_DEMUX_STREAM_PAD (stream),
+-          "Source posted error: %d:%d %s (%s)", err->domain, err->code,
+-          err->message, debug);
+-
+-      if (debug)
+-        new_error = g_strdup_printf ("%s: %s\n", err->message, debug);
+-      if (new_error) {
+-        g_free (err->message);
+-        err->message = new_error;
+-      }
++  GST_WARNING_OBJECT (GST_ADAPTIVE_DEMUX_STREAM_PAD (stream),
++      "Source posted error: %d:%d %s (%s)", err->domain, err->code,
++      err->message, debug);
++
++  if (debug)
++    new_error = g_strdup_printf ("%s: %s\n", err->message, debug);
++  if (new_error) {
++    g_free (err->message);
++    err->message = new_error;
++  }
+ 
+-      gst_message_parse_error_details (msg, &details);
+-      if (details) {
+-        gst_structure_get_uint (details, "http-status-code",
+-            &stream->last_status_code);
+-      }
++  gst_message_parse_error_details (msg, &details);
++  if (details) {
++    gst_structure_get_uint (details, "http-status-code",
++        &stream->last_status_code);
++  }
+ 
+-      /* error, but ask to retry */
+-      gst_adaptive_demux_stream_fragment_download_finish (stream,
+-          GST_FLOW_CUSTOM_ERROR, err);
++  /* error, but ask to retry */
++  gst_adaptive_demux_stream_fragment_download_finish (stream,
++      GST_FLOW_CUSTOM_ERROR, err);
+ 
+-      g_error_free (err);
+-      g_free (debug);
++  g_error_free (err);
++  g_free (debug);
+ 
+-      GST_MANIFEST_UNLOCK (demux);
++  GST_MANIFEST_UNLOCK (demux);
++}
+ 
+-      gst_message_unref (msg);
+-      msg = NULL;
+-    }
+-      break;
++static void
++gst_adaptive_demux_handle_message (GstBin * bin, GstMessage * msg)
++{
++  switch (GST_MESSAGE_TYPE (msg)) {
++    case GST_MESSAGE_ERROR:
++      /* Source errors are posted from the shared HTTP session thread. A
++       * manifest update holds manifest_lock while waiting for a download on
++       * that thread, so taking the lock here would deadlock. */
++      gst_element_call_async (GST_ELEMENT_CAST (bin),
++          gst_adaptive_demux_handle_source_error, msg,
++          (GDestroyNotify) gst_message_unref);
++      return;
+     default:
+       break;
+   }
+ 
+-  if (msg)
+-    GST_BIN_CLASS (parent_class)->handle_message (bin, msg);
++  GST_BIN_CLASS (parent_class)->handle_message (bin, msg);
+ }
+ 
+ void
