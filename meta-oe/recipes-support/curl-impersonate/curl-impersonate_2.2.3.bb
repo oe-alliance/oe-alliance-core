@@ -11,6 +11,7 @@ LIC_FILES_CHKSUM = " \
     file://oe-licenses/ngtcp2;md5=de0966c8ff4f62661a3da92967a75434 \
     file://oe-licenses/nghttp3;md5=2005b8c7595329cc8ab211085467600a \
     file://oe-licenses/curl;md5=0515352b285b9c3f66464b135c9c0fdc \
+    file://oe-licenses/cares;md5=d3e72a10e08191f2ca1be3f3228d78f3 \
 "
 
 DEPENDS = "go-native perl-native patch-native python3-native"
@@ -26,9 +27,10 @@ SRC_URI = " \
     https://github.com/nghttp2/nghttp2/releases/download/v1.63.0/nghttp2-1.63.0.tar.bz2;name=nghttp2;unpack=0 \
     https://github.com/ngtcp2/ngtcp2/releases/download/v1.20.0/ngtcp2-1.20.0.tar.bz2;name=ngtcp2;unpack=0 \
     https://github.com/ngtcp2/nghttp3/releases/download/v1.15.0/nghttp3-1.15.0.tar.bz2;name=nghttp3;unpack=0 \
+    https://github.com/c-ares/c-ares/releases/download/v1.34.8/c-ares-1.34.8.tar.gz;name=cares;unpack=0 \
     git://github.com/curl/curl.git;protocol=https;nobranch=1;name=curl;destsuffix=sources/curl \
 "
-SRCREV_impersonate = "107d67f9f7a518334b1b11e4810637e70b2671a7"
+SRCREV_impersonate = "6e8f87760a4dd96771e96fc9d55440dcd8845243"
 SRC_URI[zlib.sha256sum] = "9a93b2b7dfdac77ceba5a558a580e74667dd6fede4585b91eefb60f03b72df23"
 SRC_URI[zstd.sha256sum] = "eb33e51f49a15e023950cd7825ca74a4a2b43db8354825ac24fc1b7ee09e6fa3"
 SRCREV_brotli = "028fb5a23661f123017c060daa546b55cf4bde29"
@@ -36,12 +38,13 @@ SRCREV_boringssl = "156c7b75ae9b8c3b3f847acf264f17594c3859fb"
 SRC_URI[nghttp2.sha256sum] = "607b174554d22a828bc532d1d734fe0f729b5d5ed207f2f12e96a62e83f29c55"
 SRC_URI[ngtcp2.sha256sum] = "871ec97ad86803cf312901b0c393b0ee70163e25a87c9b2894d1234341ce4e97"
 SRC_URI[nghttp3.sha256sum] = "c6c491a52804814098e446630e6efc459afc0d3da7952ffe6cbdc0b3f99b2b62"
-SRCREV_curl = "68720b4837284335b2d63cb358f8f6ce65f5bc55"
+SRC_URI[cares.sha256sum] = "c222b6d681096f9444d2c4863d2c1174019e27cacca0a4a5c114d36dd7d7bf78"
+SRCREV_curl = "01346829096c61b372692f6dc43ffa778c6caccd"
 
 SRCREV_FORMAT = "impersonate_brotli_boringssl_curl"
 S = "${UNPACKDIR}/impersonate"
 
-inherit cmake python3native
+inherit cmake python3native upx-compress
 
 export GOTOOLCHAIN = "local"
 export GOPROXY = "off"
@@ -61,6 +64,7 @@ python do_unpack:append() {
         'nghttp2': ('nghttp2-1.63.0.tar.bz2', 'COPYING'),
         'ngtcp2': ('ngtcp2-1.20.0.tar.bz2', 'COPYING'),
         'nghttp3': ('nghttp3-1.15.0.tar.bz2', 'COPYING'),
+        'cares': ('c-ares-1.34.8.tar.gz', 'LICENSE.md'),
         'curl': ('sources/curl', 'COPYING'),
     }
     destination = Path(d.getVar('S')) / 'oe-licenses'
@@ -85,6 +89,7 @@ python do_unpack:append() {
 COMPATIBLE_HOST = "(arm|aarch64|i.86|x86_64|riscv64|mipsel|mips64el).*-linux.*"
 
 EXTRA_OECMAKE += " \
+    -DCURL_IMPERSONATE_VERSION=${PV} \
     -DUSE_LIBIDN2=OFF \
     -DSUBJOBS=${@oe.utils.parallel_make(d, False)} \
     -DCURL_CA_BUNDLE=${sysconfdir}/ssl/certs/ca-certificates.crt \
@@ -112,6 +117,7 @@ python do_prepare_impersonate_build() {
         "NGHTTP2": "nghttp2-1.63.0.tar.bz2",
         "NGTCP2": "ngtcp2-1.20.0.tar.bz2",
         "NGHTTP3": "nghttp3-1.15.0.tar.bz2",
+        "CARES": "c-ares-1.34.8.tar.gz",
     }
     overrides = [marker]
     for name, archive in archives.items():

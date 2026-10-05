@@ -99,6 +99,7 @@ RDEPENDS:${PN} = " \
     chrpath \
     ctorrent \
     cups \
+    curl-impersonate \
     davfs2 \
     cdtextinfo \
     dabstreamer \
