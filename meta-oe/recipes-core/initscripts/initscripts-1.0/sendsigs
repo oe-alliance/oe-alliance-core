@@ -15,14 +15,25 @@
 
 PATH=/sbin:/bin:/usr/sbin:/usr/bin
 
+# The nexus server uninitializes the platform when it is asked to stop, while
+# the driver's kernel threads keep running against it. That takes the box down
+# before it can reset. Leave it to the KILL signal, which runs no handler.
+keep=
+omit=
+for pid in $(pidof nxserver 2>/dev/null); do
+	keep="$keep $pid"
+	omit="$omit -o $pid"
+done
+
 # Kill all processes.
 echo "Sending all processes the TERM signal..."
-killall5 -15
+killall5 -15 $omit
 
-# Wait until they ended, at most 5 s. Init, kernel threads, zombies and this
-# session are left out, like killall5 does.
+# Wait until they ended. Init, kernel threads, zombies, this session and the
+# processes kept above are left out.
 others_left() {
 	for d in /proc/[0-9]*; do
+		case "$keep " in *" ${d#/proc/} "*) continue ;; esac
 		read -r line < "$d/stat" || continue
 		set -- ${line##*) }
 		[ "${d#/proc/}" = 1 ] || [ "$2" = 0 ] || [ "$2" = 2 ] || [ "$1" = Z ] || [ "$4" = "$sid" ] || return 0
