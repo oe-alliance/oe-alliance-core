@@ -168,6 +168,7 @@ RDEPENDS:${PN} = " \
     python3-attrs \
     python3-aws-iot-device-sdk-python \
     python3-cattrs \
+    python3-curl-cffi \
     python3-autobahn \
     python3-bluetool \
     python3-circuits \
