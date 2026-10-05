@@ -39,9 +39,18 @@ python do_prepare_cffi_build() {
 }
 addtask prepare_cffi_build after do_patch do_prepare_recipe_sysroot before do_configure
 
+# cffi 2.0 is only required for Python 3.14, this oe-core ships cffi 1.17 with Python 3.13
+do_configure:prepend() {
+    sed -i 's/"cffi>=2.0.0"/"cffi>=1.17"/g' ${S}/pyproject.toml
+}
+
 # The optional command-line frontend imports rich.
 PACKAGES =+ "${PN}-cli"
 FILES:${PN}-cli = "${bindir}/curl-cffi ${PYTHON_SITEPACKAGES_DIR}/curl_cffi/cli"
 RDEPENDS:${PN}-cli = "${PN} python3-rich"
 
 include python3-package-split.inc
+
+# curl_cffi reads its version via importlib.metadata on import
+FILES:${PN}-doc:remove = "${PYTHON_SITEPACKAGES_DIR}/*-info"
+FILES:${PN} += "${PYTHON_SITEPACKAGES_DIR}/curl_cffi-${PV}.dist-info"
