@@ -12,12 +12,11 @@ DAEMON=/usr/sbin/wsdd2
 
 case "$1" in
 	start)
-		# -d forks off a child, but only after it bound its sockets. Give samba
-		# a moment and keep that wait out of the boot.
-		( sleep 5; $DAEMON -d > /dev/null 2>&1 ) &
+		# samba's init starts this too, so a second call must do nothing
+		pidof wsdd2 > /dev/null && exit 0
+		$DAEMON -d > /dev/null 2>&1
 		;;
 	stop)
-		# the old script left an extra instance behind on every runlevel change
 		for pid in $(pidof wsdd2); do
 			kill -TERM $pid 2>/dev/null
 		done

@@ -14,7 +14,7 @@ SRC_URI[sha256sum] = "2b1e7720435a1e067388660ec3edb321a4c91b4f9d0928ba27d0a8d89b
 
 S = "${UNPACKDIR}/${BPN}-${PV}"
 
-PR = "r1"
+PR = "r2"
 
 inherit update-rc.d
 
@@ -29,7 +29,7 @@ do_install() {
 }
 
 INITSCRIPT_NAME = "wsdd2"
-INITSCRIPT_PARAMS = "start 99 2 3 4 5 . stop 20 0 1 6 ."
+INITSCRIPT_PARAMS = "defaults 21"
 
 RPROVIDES:${PN}  = "wsdd"
 RREPLACES:${PN}  = "wsdd"

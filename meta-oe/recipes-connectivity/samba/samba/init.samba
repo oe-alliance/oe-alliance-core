@@ -7,18 +7,27 @@
 # Default-Stop:      0 1 6
 # Should-Start:      slapd cups
 # Should-Stop:       slapd cups
-# Short-Description: start Samba SMB daemons (smbd/wsdd2/nmbd)
+# Short-Description: start Samba SMB daemons (smbd/nmbd)
 ### END INIT INFO
 
-WSDD_DISABLED="Yes"
 SMBD="/usr/sbin/smbd"
 NMBD="/usr/sbin/nmbd"
-WSDD="/usr/sbin/wsdd2"
+
+# Services that announce the shares and follow samba's state. They read
+# the config samba writes below, so they run after it.
+DEPENDENTS="wsdd2"
+
+dependents() {
+	for dep in $DEPENDENTS; do
+		[ -x "/etc/init.d/$dep" ] || continue
+		echo -n " $dep"
+		"/etc/init.d/$dep" "$1"
+	done
+}
 
 # Check if executables exist
 [ -x "$SMBD" ] || exit 0
 [ -x "$NMBD" ] || exit 0
-[ -x "$WSDD" ] && WSDD_DISABLED="No"
 
 # Ensure the log directory exists
 [ -d /var/log/samba ] || mkdir /var/log/samba
@@ -58,10 +67,7 @@ case "$1" in
       start-stop-daemon --start --quiet --exec $NMBD
     fi
     
-    if [ "$WSDD_DISABLED" != "Yes" ]; then
-      echo -n " wsdd2"
-      /etc/init.d/wsdd2 start
-    fi
+    dependents start
     
     echo "."
     ;;
@@ -73,8 +79,7 @@ case "$1" in
     echo -n " nmbd"
     start-stop-daemon --stop --quiet --pidfile /var/run/nmbd.pid
     
-    echo -n " wsdd2"
-    /etc/init.d/wsdd2 stop
+    dependents stop
     
     echo "."
     ;;
@@ -87,9 +92,9 @@ case "$1" in
     start-stop-daemon --stop --quiet --signal 1 --exec $SMBD
     start-stop-daemon --stop --quiet --signal 1 --exec $NMBD
     
-    if [ "$WSDD_DISABLED" != "Yes" ]; then
-      /etc/init.d/wsdd2 restart
-    fi
+    echo -n "Restarting:"
+    dependents restart
+    echo "."
     ;;
     
   restart)
