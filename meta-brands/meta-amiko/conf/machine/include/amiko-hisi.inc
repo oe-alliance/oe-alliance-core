@@ -42,7 +42,7 @@ MACHINE_FEATURES += "hisil switchoff 7segment hdmicec skins1080 ${E2EGL_WQHD_FEA
 
 IMAGE_CLASSES  += "amiko-emmc_image"
 IMAGE_FSTYPES += "amikoemmc"
-IMAGE_ROOTFS_SIZE ?= "524288"
+IMAGE_ROOTFS_SIZE ?= "624288"
 
 TARGET_ARCH = "arm"
 DEFAULTTUNE = "cortexa15hf-neon-vfpv4"
