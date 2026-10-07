@@ -210,6 +210,7 @@ MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS += "\
 
 MACHINE_EXTRA_RRECOMMENDS += " \
     gstreamer1.0-plugin-dvbmediasink \
+    ${@bb.utils.contains_any('MACHINEBUILD', 'beyonwizt2 beyonwizt3 beyonwizt4', 'enigma2-plugin-systemplugins-remotecontrolcode', '', d)} \
     ${@bb.utils.contains('MACHINE_FEATURES', 'oem-info', 'oem-info', '',d)} \
     "
 
