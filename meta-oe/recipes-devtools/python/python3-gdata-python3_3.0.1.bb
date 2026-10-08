@@ -8,6 +8,8 @@ SRC_URI[sha256sum] = "b77301becfb3bf42e9a459169e75e6ff4c20cc7b7e247d4d84988e8c8a
 
 S = "${UNPACKDIR}/gdata-python3-${PV}"
 
+PYPI_PACKAGE_SDIST = "gdata-python3"
+
 inherit pypi setuptools3
 
 SRC_URI += "file://0001-fix-compile-warning.patch"

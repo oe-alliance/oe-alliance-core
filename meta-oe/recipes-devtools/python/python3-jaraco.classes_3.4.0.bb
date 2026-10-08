@@ -8,6 +8,7 @@ DEPENDS += "python3-setuptools-scm-native"
 SRC_URI[md5sum] = "994fb3f2ce9bb538ca6e8abf6ebbdf9c"
 SRC_URI[sha256sum] = "47a024b51d0239c0dd8c8540c6c7f484be3b8fcf0b2d85c13825780d3b3f3acd"
 
+PYPI_PACKAGE_SDIST = "jaraco.classes"
 inherit pypi python_setuptools_build_meta
 
 include python3-package-split.inc

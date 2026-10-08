@@ -7,6 +7,7 @@ LIC_FILES_CHKSUM = "file://MANIFEST.in;md5=4d9aa6a7d22a4cf4bd70d3f680ebf4c0"
 SRC_URI[md5sum] = "8545649e70b3ca43bcff11f08a996c3e"
 SRC_URI[sha256sum] = "6a2f2f58db1c5b24a2cc79de6345760377ad8bdc13813f5265f6c3e63d16b3d7"
 
+PYPI_PACKAGE_SDIST = "timeout-decorator"
 inherit pypi setuptools3
 
 include python3-package-split.inc
