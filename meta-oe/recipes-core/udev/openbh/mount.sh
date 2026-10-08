@@ -230,7 +230,11 @@ automount() {
 	ntfs|exfat)
 		MOUNTPOINT=/sys/fs/fuse/connections
 		mount -t fusectl fusectl $MOUNTPOINT >/dev/null 2>&1
-		MOUNT="$MOUNT -t $ID_FS_TYPE"
+		if [ "$ID_FS_TYPE" = "ntfs" ] && [ -x /sbin/mount.ntfs-3g ]; then
+			MOUNT="$MOUNT -t ntfs-3g"
+		else
+			MOUNT="$MOUNT -t $ID_FS_TYPE"
+		fi
 		;;
 	ext2|ext3)
 		# ext2 and ext3 devices need to be mounted with the ext4 driver
@@ -239,7 +243,7 @@ automount() {
 	vfat|fat|msdos)
 		# If filesystem type is vfat, change the ownership group to 'disk', and
 		# grant it with  w/r/x permissions.
-		MOUNT="$MOUNT -t auto -o umask=007,gid=`awk -F':' '/^disk/{print $3}' /etc/group`"
+		MOUNT="$MOUNT -t auto -o umask=007,utf8,gid=`awk -F':' '/^disk/{print $3}' /etc/group`"
 		;;
 	*)
 		# Let mount figure it out
