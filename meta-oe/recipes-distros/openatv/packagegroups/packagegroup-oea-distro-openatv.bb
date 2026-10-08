@@ -35,7 +35,7 @@ OPENATV_STANDARD = "\
     smartmontools \
     coreutils-stdbuf \
     enigma2-plugin-extensions-piconbrowser \
-    enigma2-plugin-extensions-crashreport \
+    enigma2-plugin-extensions-crashreporter \
     recoverymanager \
     ${OPENATV_EXTENDED} \
     "

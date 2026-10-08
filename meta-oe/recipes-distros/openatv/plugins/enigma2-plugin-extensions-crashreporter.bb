@@ -18,12 +18,14 @@ SRC_URI = "git://github.com/openatv/enigma2-plugin-extensions-crashreport.git;pr
 
 RDEPENDS:${PN} = "python3-compression python3-json python3-netclient python3-misc python3-twisted-core python3-qrcode python3-pillow"
 
-PLUGIN_DIR = "${libdir}/enigma2/python/Plugins/Extensions/CrashReport"
-FILES:${PN} = "${PLUGIN_DIR}/*.pyc ${PLUGIN_DIR}/*.png ${PLUGIN_DIR}/locale ${bindir}/crashreport"
+PLUGIN_DIR = "${libdir}/enigma2/python/Plugins/Extensions/CrashReporter"
+FILES:${PN} = "${PLUGIN_DIR}/*.pyc ${PLUGIN_DIR}/*.png ${PLUGIN_DIR}/*.xml ${PLUGIN_DIR}/locale ${bindir}/crashreporter"
 FILES:${PN}-src = "${PLUGIN_DIR}/*.py"
 
-RPROVIDES:${PN} += "crashreport"
+RPROVIDES:${PN} += "crashreporter enigma2-plugin-extensions-crashreport"
+RREPLACES:${PN} += "enigma2-plugin-extensions-crashreport"
+RCONFLICTS:${PN} += "enigma2-plugin-extensions-crashreport"
 
 do_install:append() {
-	chmod 0755 ${D}${bindir}/crashreport
+	chmod 0755 ${D}${bindir}/crashreporter
 }
