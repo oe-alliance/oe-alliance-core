@@ -14,9 +14,10 @@ SRC_URI = " \
     git://github.com/libretro/scummvm.git;protocol=https;branch=master;name=scummvm \
     git://github.com/libretro/libretro-deps;protocol=https;nobranch=1;name=libretro_deps;destsuffix=${BP}/backends/platform/libretro/deps/libretro-deps \
     git://github.com/libretro/libretro-common;protocol=https;nobranch=1;name=libretro_common;destsuffix=${BP}/backends/platform/libretro/deps/libretro-common \
+    file://0001-libretro-allow-externally-managed-dependencies.patch \
 "
 PV = "0.1+git20261008.${SRCPV}"
-PR = "r1"
+PR = "r2"
 
 require libretro-core.inc
 
@@ -27,13 +28,19 @@ LIBRETRO_CORE_PATH = "${S}/backends/platform/libretro/${LIBRETRO_CORE_FILE}"
 SCUMMVM_LITE = "${@bb.utils.contains('MACHINE_FEATURES', 'retrogaming-highperformance', '0', '1', d)}"
 
 do_configure() {
-    :
+    # BitBake fetches and pins both dependencies. Upstream's helper otherwise
+    # deletes them and fetches different commits during make, outside do_fetch.
+    test -f ${S}/backends/platform/libretro/deps/libretro-common/include/libretro.h || \
+        bbfatal "The BitBake-fetched libretro-common sources are missing"
+    test -f ${S}/backends/platform/libretro/deps/libretro-deps/libogg/include/ogg/ogg.h || \
+        bbfatal "The BitBake-fetched libretro-deps sources are missing"
 }
 
 do_compile() {
     oe_runmake -C ${S}/backends/platform/libretro \
         platform=unix \
         LITE=${SCUMMVM_LITE} \
+        FETCH_SUBMODULES=0 \
         FORCE_OPENGLNONE=1
 
     install -d ${B}/libretro-system-data

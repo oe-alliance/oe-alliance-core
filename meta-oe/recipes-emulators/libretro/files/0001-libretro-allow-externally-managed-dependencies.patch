@@ -1,0 +1,38 @@
+From: OpenATV Team <info@opena.tv>
+Subject: [PATCH] libretro: allow externally managed dependencies
+
+OpenEmbedded fetches libretro-deps and libretro-common at the recipe's
+pinned revisions before configuration. The upstream helper discards these
+checkouts when their origin or revision differs, then runs git fetch during
+compilation. This fails in offline/sandboxed builds and can silently replace
+the recipe's pinned sources in builds where network access is available.
+
+Allow the caller to disable this helper for externally supplied sources.
+Keep the existing standalone make behavior unless explicitly disabled.
+
+Upstream-Status: Inappropriate [OpenEmbedded fetches dependency sources]
+---
+ backends/platform/libretro/dependencies.mk | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/backends/platform/libretro/dependencies.mk b/backends/platform/libretro/dependencies.mk
+--- a/backends/platform/libretro/dependencies.mk
++++ b/backends/platform/libretro/dependencies.mk
+@@ -13,6 +13,7 @@ DEPS_FOLDER_libretro-common := libretro-common
+ DEPS_URL_libretro-common    := https://github.com/libretro/libretro-common
+ DEPS_COMMIT_libretro-common := 879c8d507b0b52e77e27d759239c2b5df1e26dfd
+ 
++ifneq ($(FETCH_SUBMODULES),0)
+ submodule_test  = $(if $(shell result=$$($(SCRIPTS_PATH)/configure_submodules.sh $(DEPS_URL_$(1)) $(DEPS_COMMIT_$(1)) $(DEPS_PATH) $(DEBUG_ALLOW_DIRTY_SUBMODULES) $(DEPS_FOLDER_$(1))) ; { [ -z $$result ] || [ ! $$result = 0 ] ; } && printf error),$(1))
+ $(info Configuring submodules...)
+ SUBMODULE_FAILED = $(strip $(findstring $(foreach SUBMODULE,$(DEPS_SUBMODULES),$(call submodule_test,$(SUBMODULE))),$(DEPS_SUBMODULES)))
+@@ -22,6 +23,9 @@ ifneq ($(SUBMODULE_FAILED),)
+ else
+    $(info - Submodules configured)
+ endif
++else
++   $(info - Using externally provided submodules)
++endif
+ 
+ # Shared libs functions
+ this_lib_available := no
