@@ -4,7 +4,10 @@ SRCDATE = "20260911"
 
 KV = "4.1.20"
 
-PR = "r1"
+PR = "r2"
+
+VENDOR_DRIVER_FIX_PROFILE = "platform"
+require recipes-bsp/vendor-driver-fixes/vendor-driver-fixes.inc
 
 # The Duo 4K Lite dvb_init service exposes the same RPC interface as the
 # GigaBlue BCM7252 platform.  Vu's archive creates /usr/bin/config in its init

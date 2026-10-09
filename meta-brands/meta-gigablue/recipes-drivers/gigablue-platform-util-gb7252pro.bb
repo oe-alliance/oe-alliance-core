@@ -4,7 +4,10 @@ SRCDATE = "20260807.r0"
 
 KV = "4.1.20"
 
-PR = "r1"
+PR = "r2"
+
+VENDOR_DRIVER_FIX_PROFILE = "platform"
+require recipes-bsp/vendor-driver-fixes/vendor-driver-fixes.inc
 
 # The current gb7252pro platform archive no longer ships the small `config`
 # RPC client although its init script still creates /usr/bin/config and Kodi

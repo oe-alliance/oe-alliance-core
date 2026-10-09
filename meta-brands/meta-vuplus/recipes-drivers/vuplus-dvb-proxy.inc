@@ -6,7 +6,8 @@ require conf/license/license-close.inc
 PR = "${SRCDATE}.${SRCDATE_PR}"
 
 #SRC_URI = "https://source.mynonpublic.com/vuplus/release/vuplus-dvb-proxy/vuplus-dvb-proxy-${MACHINE}-${PV}-${PR}.tar.gz "
-SRC_URI = "https://source.mynonpublic.com/vuplus/vuplus-dvb-proxy-${MACHINE}-${PV}-${PR}.tar.gz "
+# Keep vendor archive names independent of local package revision bumps.
+SRC_URI = "https://source.mynonpublic.com/vuplus/vuplus-dvb-proxy-${MACHINE}-${PV}-${SRCDATE}.${SRCDATE_PR}.tar.gz "
 
 S = "${UNPACKDIR}"
 
