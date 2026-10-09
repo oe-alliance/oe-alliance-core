@@ -1,0 +1,258 @@
+#!/bin/sh
+
+# This program runs only after Enigma2 has exited with the dedicated
+# RetroGaming mainloop code.  Never execute text from the request as a shell
+# command: both applications and all command lines are fixed below.
+
+set -u
+
+RETRO_DATA_ROOT=""
+for RETRO_MOUNT in /media/hdd /media/usb; do
+	if grep -qs " ${RETRO_MOUNT} " /proc/mounts && [ -w "${RETRO_MOUNT}" ]; then
+		RETRO_DATA_ROOT="${RETRO_MOUNT}/retrogaming"
+		break
+	fi
+done
+if [ -z "${RETRO_DATA_ROOT}" ]; then
+	RETRO_DATA_ROOT="/tmp/retrogaming"
+fi
+RETRO_LOG_DIR="${RETRO_DATA_ROOT}/logs"
+. /usr/share/retrogaming/logging.sh
+retro_debug_start standalone
+
+RETRO_REQUEST="/tmp/openatv-retrogaming-standalone"
+
+if [ ! -r "${RETRO_REQUEST}" ]; then
+	echo "No RetroGaming standalone request is available." >&2
+	exit 64
+fi
+
+RETRO_APP=""
+RETRO_CONTENT=""
+{
+	IFS= read -r RETRO_APP || true
+	IFS= read -r RETRO_CONTENT || true
+} < "${RETRO_REQUEST}"
+
+# A request is one-shot.  Removing it before validation prevents an emulator
+# from being launched again if Enigma2 or its service is restarted later.
+rm -f "${RETRO_REQUEST}"
+
+RETRO_CONTENT_OPTIONAL=false
+case "${RETRO_APP}" in
+	libretro:menu|libretro:2048|libretro:mrboom|libretro:scummvm)
+		RETRO_CONTENT_OPTIONAL=true
+		;;
+esac
+
+if [ -z "${RETRO_CONTENT}" ]; then
+	if [ "${RETRO_CONTENT_OPTIONAL}" != true ]; then
+		echo "The selected emulator requires a game file." >&2
+		exit 64
+	fi
+else
+	case "${RETRO_CONTENT}" in
+		/media/*)
+			;;
+		*)
+			echo "Emulator content must be below /media." >&2
+			exit 64
+			;;
+	esac
+
+	if [ ! -r "${RETRO_CONTENT}" ] || [ ! -f "${RETRO_CONTENT}" ]; then
+		echo "Emulator content is not a readable file: ${RETRO_CONTENT}" >&2
+		exit 66
+	fi
+
+	RETRO_CANONICAL_CONTENT="$(readlink -f "${RETRO_CONTENT}" 2>/dev/null || true)"
+	case "${RETRO_CANONICAL_CONTENT}" in
+		/media/*)
+			RETRO_CONTENT="${RETRO_CANONICAL_CONTENT}"
+			;;
+		*)
+			echo "Emulator content resolves outside /media." >&2
+			exit 64
+			;;
+	esac
+fi
+
+RETRO_RUNTIME_DIR="/tmp/retrogaming-runtime"
+mkdir -p "${RETRO_LOG_DIR}" "${RETRO_RUNTIME_DIR}"
+chmod 0700 "${RETRO_RUNTIME_DIR}"
+
+run_emulator() {
+	RETRO_RUN_LOG="${1}"
+	shift
+	retro_prepare_log "${RETRO_RUN_LOG}"
+	retro_prepare_log "${RETRO_EXIT_LOG}"
+	"$@" >"${RETRO_RUN_LOG}" 2>&1 &
+	RETRO_EMULATOR_PID=$!
+	RETRO_MONITOR_PID=""
+	if [ -x /usr/bin/openatv-retrogaming-exit-monitor ]; then
+		/usr/bin/openatv-retrogaming-exit-monitor "${RETRO_EMULATOR_PID}" \
+			>>"${RETRO_EXIT_LOG}" 2>&1 &
+		RETRO_MONITOR_PID=$!
+	fi
+	wait "${RETRO_EMULATOR_PID}"
+	RETRO_RESULT=$?
+	printf 'Emulator process exit status: %s\n' "${RETRO_RESULT}" >>"${RETRO_RUN_LOG}"
+	if [ -n "${RETRO_MONITOR_PID}" ]; then
+		kill "${RETRO_MONITOR_PID}" 2>/dev/null || true
+		wait "${RETRO_MONITOR_PID}" 2>/dev/null || true
+	fi
+	return "${RETRO_RESULT}"
+}
+
+# Update one value inside an INI section without replacing the user's other
+# Dolphin settings.  This also migrates configurations created by older
+# RetroGaming releases.
+set_ini_value() {
+	RETRO_INI_FILE="${1}"
+	RETRO_INI_SECTION="${2}"
+	RETRO_INI_KEY="${3}"
+	RETRO_INI_VALUE="${4}"
+	RETRO_INI_TMP="${RETRO_INI_FILE}.retrogaming.tmp"
+	awk -v section="[${RETRO_INI_SECTION}]" -v key="${RETRO_INI_KEY}" -v value="${RETRO_INI_VALUE}" '
+		BEGIN { in_section = 0; section_seen = 0; key_written = 0 }
+		$0 == section {
+			in_section = 1
+			section_seen = 1
+			print
+			next
+		}
+		/^\[/ {
+			if (in_section && !key_written) {
+				print key " = " value
+				key_written = 1
+			}
+			in_section = 0
+			print
+			next
+		}
+		in_section && $0 ~ "^[[:space:]]*" key "[[:space:]]*=" {
+			if (!key_written) {
+				print key " = " value
+				key_written = 1
+			}
+			next
+		}
+		{ print }
+		END {
+			if (in_section && !key_written)
+				print key " = " value
+			else if (!section_seen) {
+				print ""
+				print section
+				print key " = " value
+			}
+		}
+	' "${RETRO_INI_FILE}" > "${RETRO_INI_TMP}" && mv "${RETRO_INI_TMP}" "${RETRO_INI_FILE}"
+}
+
+# Enigma2's exit animation may leave the Dream front-panel LED blinking while
+# a standalone emulator owns the screen. Keep it steadily lit, as Kodi does;
+# Enigma2 restores the configured LED state when it starts again.
+if [ -w /proc/stb/fp/led_blink ]; then
+	echo 00000000 > /proc/stb/fp/led_blink
+fi
+if [ -w /proc/stb/fp/led_fade ]; then
+	echo 00000000 > /proc/stb/fp/led_fade
+fi
+if [ -w /proc/stb/fp/led_brightness ]; then
+	echo 000000ff > /proc/stb/fp/led_brightness
+fi
+
+case "${RETRO_APP}" in
+	libretro:*)
+		RETRO_CORE="${RETRO_APP#libretro:}"
+		case "${RETRO_CORE}" in
+			menu)
+				/usr/bin/openatv-retrogaming-launch --menu
+				exit $?
+				;;
+			2048|mrboom|scummvm)
+				/usr/bin/openatv-retrogaming-launch --core "${RETRO_CORE}"
+				exit $?
+				;;
+			snes9x|snes9x2010|mednafen_supafaust|fceumm|nestopia|gambatte|mgba|stella2014|virtualjaguar|gearsystem|clownmdemu|genesis_plus_gx|picodrive|mednafen_pce_fast|fbneo|mame2003_plus|pcsx_rearmed|dosbox_pure|puae|vice_x64|prboom|mupen64plus_next|mupen64plus_next_gles3|ppsspp|flycast)
+				/usr/bin/openatv-retrogaming-launch --core "${RETRO_CORE}" --content "${RETRO_CONTENT}"
+				exit $?
+				;;
+			*)
+				echo "Unsupported RetroGaming Libretro core: ${RETRO_CORE}" >&2
+				exit 64
+				;;
+		esac
+		;;
+	ppsspp)
+		RETRO_EXECUTABLE="/usr/bin/PPSSPPSDL"
+		RETRO_HOME="${RETRO_DATA_ROOT}/standalone/ppsspp"
+		[ -x "${RETRO_EXECUTABLE}" ] || {
+			echo "PPSSPP Standalone is not installed." >&2
+			exit 69
+		}
+		mkdir -p "${RETRO_HOME}/.config"
+		cd /usr/bin || exit 72
+		set --
+		if [ "${RETRO_DEBUG}" = true ]; then
+			set -- -d
+		fi
+		run_emulator "${RETRO_LOG_DIR}/${RETRO_LOG_PREFIX}ppsspp-standalone.log" env \
+			HOME="${RETRO_HOME}" \
+			XDG_CONFIG_HOME="${RETRO_HOME}/.config" \
+			XDG_RUNTIME_DIR="${RETRO_RUNTIME_DIR}" \
+			SDL_AUDIODRIVER=alsa \
+			"${RETRO_EXECUTABLE}" "$@" --fullscreen "${RETRO_CONTENT}"
+		exit $?
+		;;
+	dolphin)
+		RETRO_EXECUTABLE="/usr/bin/dolphin-emu-nogui"
+		RETRO_HOME="${RETRO_DATA_ROOT}/standalone/dolphin"
+		RETRO_DEFAULTS="/usr/share/dolphin-emu/openatv-defaults"
+		[ -x "${RETRO_EXECUTABLE}" ] || {
+			echo "Dolphin Standalone is not installed." >&2
+			exit 69
+		}
+		mkdir -p "${RETRO_HOME}/Config"
+		for RETRO_CONFIG in Dolphin.ini GFX.ini GCPadNew.ini WiimoteNew.ini; do
+			if [ ! -e "${RETRO_HOME}/Config/${RETRO_CONFIG}" ] && [ -r "${RETRO_DEFAULTS}/${RETRO_CONFIG}" ]; then
+				cp "${RETRO_DEFAULTS}/${RETRO_CONFIG}" "${RETRO_HOME}/Config/${RETRO_CONFIG}"
+			fi
+		done
+		# Dream's HDMI/ALSA path is stable at 48 kHz but needs a larger queue.
+		# Dolphin's time stretcher absorbs short scheduling variations without
+		# changing the emulation speed, avoiding the same rattling heard in the
+		# Libretro and PPSSPP paths before their audio fixes.
+		RETRO_DOLPHIN_INI="${RETRO_HOME}/Config/Dolphin.ini"
+		if [ -r "${RETRO_DOLPHIN_INI}" ] && [ -w "${RETRO_DOLPHIN_INI}" ]; then
+			set_ini_value "${RETRO_DOLPHIN_INI}" Core AudioLatency 128
+			set_ini_value "${RETRO_DOLPHIN_INI}" Core AudioStretch True
+			set_ini_value "${RETRO_DOLPHIN_INI}" Core AudioStretchMaxLatency 128
+		fi
+		if [ -x /usr/bin/openatv-dolphin-autoconfig ]; then
+			/usr/bin/openatv-dolphin-autoconfig "${RETRO_HOME}/Config/GCPadNew.ini"
+		fi
+		set --
+		if [ "${RETRO_DEBUG}" = true ]; then
+			# Command-line overrides are limited to this run. Enable useful
+			# startup/audio/video/controller diagnostics, not per-instruction traces.
+			set -- -C Logger.Options.WriteToConsole=True -C Logger.Options.WriteToFile=False \
+				-C Logger.Options.Verbosity=4 -C Logger.Logs.COMMON=True \
+				-C Logger.Logs.BOOT=True -C Logger.Logs.CORE=True \
+				-C Logger.Logs.Audio=True -C Logger.Logs.Video=True -C Logger.Logs.CI=True
+		fi
+		run_emulator "${RETRO_LOG_DIR}/${RETRO_LOG_PREFIX}dolphin-standalone.log" env \
+			HOME="${RETRO_HOME}" \
+			XDG_CONFIG_HOME="${RETRO_HOME}" \
+			XDG_DATA_HOME="${RETRO_HOME}" \
+			XDG_RUNTIME_DIR="${RETRO_RUNTIME_DIR}" \
+			SDL_AUDIODRIVER=alsa \
+			"${RETRO_EXECUTABLE}" "$@" -p fbdev -u "${RETRO_HOME}" -e "${RETRO_CONTENT}"
+		exit $?
+		;;
+	*)
+		echo "Unsupported RetroGaming standalone application: ${RETRO_APP}" >&2
+		exit 64
+		;;
+esac

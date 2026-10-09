@@ -1,0 +1,504 @@
+#!/bin/sh
+
+set -u
+
+RETRO_DATA_ROOT=""
+for RETRO_MOUNT in /media/hdd /media/usb; do
+    if grep -qs " ${RETRO_MOUNT} " /proc/mounts && [ -w "${RETRO_MOUNT}" ]; then
+        RETRO_DATA_ROOT="${RETRO_MOUNT}/retrogaming"
+        break
+    fi
+done
+
+if [ -z "${RETRO_DATA_ROOT}" ]; then
+    RETRO_DATA_ROOT="/tmp/retrogaming"
+fi
+
+RETRO_CONFIG_DIR="${RETRO_DATA_ROOT}/config"
+RETRO_LOG_DIR="${RETRO_DATA_ROOT}/logs"
+. /usr/share/retrogaming/logging.sh
+retro_debug_start launcher
+
+# NexTV needs the image's graphics-capable DVB stack and platform server.
+# Never start that server, replace a kernel module or reboot from a game.
+if [ -f /usr/share/retrogaming/bcm-nextv ] && ! pidof nxserver >/dev/null 2>&1; then
+    echo 'NexTV graphics server is not running. Configure the SF4008 graphics/DVB support and reboot before starting RetroGaming.' >&2
+    exit 1
+fi
+RETRO_SAVE_DIR="${RETRO_DATA_ROOT}/saves"
+RETRO_SCREENSHOT_DIR="${RETRO_DATA_ROOT}/screenshots"
+RETRO_STATE_DIR="${RETRO_DATA_ROOT}/states"
+RETRO_SYSTEM_DIR="${RETRO_DATA_ROOT}/system"
+RETRO_ROM_DIR="${RETRO_DATA_ROOT}/roms/snes"
+RETRO_MEDIA_ROOT="${RETRO_DATA_ROOT%/retrogaming}"
+RETRO_SCUMMVM_ROM_DIR="${RETRO_MEDIA_ROOT}/roms/scummvm"
+
+mkdir -p "${RETRO_CONFIG_DIR}" "${RETRO_LOG_DIR}" "${RETRO_SAVE_DIR}" "${RETRO_SCREENSHOT_DIR}" "${RETRO_STATE_DIR}" "${RETRO_SYSTEM_DIR}" "${RETRO_ROM_DIR}" "${RETRO_SCUMMVM_ROM_DIR}"
+
+if [ -d /usr/share/libretro/PPSSPP ] && [ ! -e "${RETRO_SYSTEM_DIR}/PPSSPP" ]; then
+    ln -s /usr/share/libretro/PPSSPP "${RETRO_SYSTEM_DIR}/PPSSPP"
+fi
+
+# ScummVM keeps its writable scummvm.ini in the frontend system directory,
+# while the version-matched, redistributable core assets live in the IPK.
+# Link only missing asset subdirectories so user configuration is preserved.
+if [ -d /usr/share/libretro/scummvm ]; then
+    mkdir -p "${RETRO_SYSTEM_DIR}/scummvm"
+    for RETRO_SCUMMVM_DATA in theme extra; do
+        if [ -d "/usr/share/libretro/scummvm/${RETRO_SCUMMVM_DATA}" ] && \
+           [ ! -e "${RETRO_SYSTEM_DIR}/scummvm/${RETRO_SCUMMVM_DATA}" ]; then
+            ln -s "/usr/share/libretro/scummvm/${RETRO_SCUMMVM_DATA}" \
+                "${RETRO_SYSTEM_DIR}/scummvm/${RETRO_SCUMMVM_DATA}"
+        fi
+    done
+fi
+
+RETRO_USER_CONFIG="${RETRO_CONFIG_DIR}/retroarch.cfg"
+RETRO_RUNTIME_CONFIG="${RETRO_CONFIG_DIR}/runtime.cfg"
+RETRO_N64_OPTIONS="${RETRO_CONFIG_DIR}/mupen64plus-next-lowpower.opt"
+RETRO_SCUMMVM_OPTIONS="${RETRO_CONFIG_DIR}/scummvm-openatv.opt"
+RETRO_DOSBOX_OPTIONS="/home/root/.config/retroarch/config/DOSBox-pure/DOSBox-pure.opt"
+
+if [ ! -f "${RETRO_USER_CONFIG}" ]; then
+    cp /etc/retroarch/retroarch.cfg "${RETRO_USER_CONFIG}"
+fi
+
+{
+    printf 'savefile_directory = "%s"\n' "${RETRO_SAVE_DIR}"
+    printf 'savestate_directory = "%s"\n' "${RETRO_STATE_DIR}"
+    printf 'screenshot_directory = "%s"\n' "${RETRO_SCREENSHOT_DIR}"
+    printf 'system_directory = "%s"\n' "${RETRO_SYSTEM_DIR}"
+    printf 'log_dir = "%s"\n' "${RETRO_LOG_DIR}"
+    printf 'log_to_file = "false"\n'
+    printf 'log_verbosity = "%s"\n' "${RETRO_DEBUG}"
+    if [ "${RETRO_DEBUG}" = true ]; then
+        printf 'frontend_log_level = "0"\nlibretro_log_level = "0"\n'
+    else
+        printf 'frontend_log_level = "2"\nlibretro_log_level = "2"\n'
+    fi
+    printf 'video_refresh_rate = "60.000000"\n'
+    # A portable USB stick must not carry the previous receiver's native ABI
+    # into the next machine. Always override it from the installed package.
+    if [ -f /usr/share/retrogaming/dream-vc5 ]; then
+        printf 'video_context_driver = "dream_vc5"\n'
+        printf 'audio_device = "hw:0,0"\n'
+    elif [ -f /usr/share/retrogaming/bcm-v3d ]; then
+        printf 'video_context_driver = "bcm_v3d"\n'
+        printf 'audio_device = "hw:0,0"\n'
+    elif [ -f /usr/share/retrogaming/bcm-nxpl ]; then
+        printf 'video_context_driver = "bcm_nxpl"\n'
+        # The GigaBlue default plug converts float samples through an MMAP
+        # hardware slave. Use native PCM with RetroArch's RW_INTERLEAVED
+        # writes instead; keep other receiver audio configurations untouched.
+        printf 'audio_device = "hw:0,0"\n'
+    else
+        printf 'video_context_driver = "fbdev_mali"\n'
+    fi
+    printf 'video_vsync = "true"\n'
+    printf 'audio_out_rate = "48000"\n'
+    if [ -f /usr/share/retrogaming/bcm-nextv ]; then
+        # SF4008 hardware counter-test: compare Kodi-sized 9600-frame PCM
+        # buffering at 48 kHz. This is not yet a confirmed crackle fix.
+        printf 'audio_latency = "200"\n'
+    else
+        printf 'audio_latency = "128"\n'
+    fi
+    printf 'audio_sync = "true"\n'
+    printf 'input_menu_toggle_gamepad_combo = "4"\n'
+    printf 'input_quit_gamepad_combo = "0"\n'
+    printf 'input_menu_toggle = "clear"\n'
+    printf 'input_exit_emulator = "power"\n'
+    printf 'input_volume_up = "add"\n'
+    printf 'input_volume_down = "subtract"\n'
+    printf 'input_audio_mute = "f9"\n'
+    printf 'input_pause_toggle = "p"\n'
+    printf 'menu_pause_libretro = "true"\n'
+} > "${RETRO_RUNTIME_CONFIG}"
+
+# Kodi validation showed that inherited preload tricks are harmful on vendor
+# EGL stacks. RetroArch links only against the image's selected vendor libs.
+unset LD_PRELOAD
+
+# DM9x0's scheduler fix is private to this child process. Enigma2 continues
+# to use the unchanged system library. Reject incomplete installations.
+if [ -f /usr/share/retrogaming/dream-vc5 ]; then
+    if [ ! -f /usr/lib/retroarch/dm9x0/libvc5dream.so.1 ]; then
+        echo 'RetroArch DM9x0 runtime is missing.' >&2
+        exit 1
+    fi
+    export LD_LIBRARY_PATH="/usr/lib/retroarch/dm9x0${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
+    export MESA_EXTENSION_OVERRIDE="${MESA_EXTENSION_OVERRIDE:+${MESA_EXTENSION_OVERRIDE} }-GL_EXT_discard_framebuffer"
+fi
+
+# HiSilicon is not one homogeneous graphics target. Keep the SoC generation
+# visible in the log and handle both SDK library layouts used by the 4K boxes.
+# The CV200 GLES2 restriction is compiled into RetroArch; the launcher still
+# identifies it separately so later platform work cannot silently merge it
+# with MV200/MV300/MV310.
+RETRO_HISI_PROFILE="none"
+RETRO_HISI_CHIPSET=""
+if [ -r /proc/stb/info/chipset ]; then
+    RETRO_HISI_CHIPSET="$(sed -n '1p' /proc/stb/info/chipset 2>/dev/null)"
+fi
+case "${RETRO_HISI_CHIPSET}" in
+    hi3798mv200advca|hisi3798mv200advca) RETRO_HISI_PROFILE="mv200-advca" ;;
+    hi3798mv200|hisi3798mv200) RETRO_HISI_PROFILE="mv200" ;;
+    hi3798mv300|hisi3798mv300) RETRO_HISI_PROFILE="mv300" ;;
+    hi3798mv310|hisi3798mv310) RETRO_HISI_PROFILE="mv310" ;;
+    hi3798cv200|hisi3798cv200) RETRO_HISI_PROFILE="cv200-gles2" ;;
+esac
+
+RETRO_HISI_LIBDIR=""
+if [ -r /usr/lib/libhi_common.so ] && [ -r /usr/lib/libhi_msp.so ]; then
+    RETRO_HISI_LIBDIR="/usr/lib"
+elif [ -r /usr/lib/hisilicon/libhi_common.so ] && \
+     [ -r /usr/lib/hisilicon/libhi_msp.so ]; then
+    RETRO_HISI_LIBDIR="/usr/lib/hisilicon"
+fi
+
+RETRO_HISI_PRELOAD=""
+if [ -n "${RETRO_HISI_LIBDIR}" ]; then
+    RETRO_HISI_PRELOAD="${RETRO_HISI_LIBDIR}/libhi_common.so:${RETRO_HISI_LIBDIR}/libhi_msp.so"
+    if [ -r "${RETRO_HISI_LIBDIR}/libhi_securec.so" ]; then
+        RETRO_HISI_PRELOAD="${RETRO_HISI_LIBDIR}/libhi_securec.so:${RETRO_HISI_PRELOAD}"
+    fi
+fi
+
+RETRO_HISI_DISPLAY_HELPER="/usr/bin/openatv-retrogaming-hisi-display"
+RETRO_HISI_ORIGINAL_WIDTH=""
+RETRO_HISI_ORIGINAL_HEIGHT=""
+
+run_hisi_display()
+{
+    if [ -n "${LD_LIBRARY_PATH:-}" ]; then
+        env LD_LIBRARY_PATH="${RETRO_HISI_LIBDIR}:${LD_LIBRARY_PATH}" \
+            LD_PRELOAD="${RETRO_HISI_PRELOAD}" \
+            "${RETRO_HISI_DISPLAY_HELPER}" "$@"
+    else
+        env LD_LIBRARY_PATH="${RETRO_HISI_LIBDIR}" \
+            LD_PRELOAD="${RETRO_HISI_PRELOAD}" \
+            "${RETRO_HISI_DISPLAY_HELPER}" "$@"
+    fi
+}
+
+prepare_hisi_display()
+{
+    [ "${RETRO_HISI_PROFILE}" != "none" ] || return 0
+    [ "$(sed -n '1p' /sys/class/graphics/fb0/name 2>/dev/null)" = "hifb" ] || return 0
+    [ -x "${RETRO_HISI_DISPLAY_HELPER}" ] || return 0
+    [ -n "${RETRO_HISI_LIBDIR}" ] && [ -n "${RETRO_HISI_PRELOAD}" ] || return 0
+
+    RETRO_HISI_FRAMEBUFFER_SIZE="$(${RETRO_HISI_DISPLAY_HELPER} --fb-get 2>>"${RETRO_PLATFORM_LOG}")" || return 0
+    RETRO_HISI_DISPLAY_SIZE="$(run_hisi_display --get 2>>"${RETRO_PLATFORM_LOG}")" || return 0
+
+    set -- ${RETRO_HISI_FRAMEBUFFER_SIZE}
+    [ "$#" -eq 2 ] || return 0
+    RETRO_HISI_FRAMEBUFFER_WIDTH="$1"
+    RETRO_HISI_FRAMEBUFFER_HEIGHT="$2"
+    set -- ${RETRO_HISI_DISPLAY_SIZE}
+    [ "$#" -eq 2 ] || return 0
+    RETRO_HISI_ORIGINAL_WIDTH="$1"
+    RETRO_HISI_ORIGINAL_HEIGHT="$2"
+
+    printf 'HiSilicon profile=%s chipset=%s SDK=%s framebuffer=%sx%s DISPLAY1=%sx%s\n' \
+        "${RETRO_HISI_PROFILE}" "${RETRO_HISI_CHIPSET}" "${RETRO_HISI_LIBDIR}" \
+        "${RETRO_HISI_FRAMEBUFFER_WIDTH}" "${RETRO_HISI_FRAMEBUFFER_HEIGHT}" \
+        "${RETRO_HISI_ORIGINAL_WIDTH}" "${RETRO_HISI_ORIGINAL_HEIGHT}" \
+        >> "${RETRO_PLATFORM_LOG}"
+
+    # STB-Kodi established that HIFB and DISPLAY1 are intentionally different
+    # coordinate systems on these receivers. Mali may create a nominal 720p
+    # surface after DISPLAY1 is reduced, but crashes on the first buffer swap.
+    # Keep the vendor display at its stable Full-HD virtual geometry and let
+    # RetroArch query the resulting EGL surface instead of trusting fb0.
+    RETRO_HISI_TARGET_WIDTH="1920"
+    RETRO_HISI_TARGET_HEIGHT="1080"
+    if [ "${RETRO_HISI_TARGET_WIDTH}" != "${RETRO_HISI_ORIGINAL_WIDTH}" ] || \
+       [ "${RETRO_HISI_TARGET_HEIGHT}" != "${RETRO_HISI_ORIGINAL_HEIGHT}" ]; then
+        if run_hisi_display "${RETRO_HISI_TARGET_WIDTH}" \
+                "${RETRO_HISI_TARGET_HEIGHT}" >>"${RETRO_PLATFORM_LOG}" 2>&1; then
+            printf 'Normalised HiSilicon DISPLAY1 to the stable 1920x1080 EGL geometry.\n' \
+                >> "${RETRO_PLATFORM_LOG}"
+        else
+            RETRO_HISI_ORIGINAL_WIDTH=""
+            RETRO_HISI_ORIGINAL_HEIGHT=""
+        fi
+    else
+        RETRO_HISI_ORIGINAL_WIDTH=""
+        RETRO_HISI_ORIGINAL_HEIGHT=""
+    fi
+}
+
+restore_hisi_display()
+{
+    if [ -n "${RETRO_HISI_ORIGINAL_WIDTH}" ] && \
+       [ -n "${RETRO_HISI_ORIGINAL_HEIGHT}" ]; then
+        run_hisi_display "${RETRO_HISI_ORIGINAL_WIDTH}" \
+            "${RETRO_HISI_ORIGINAL_HEIGHT}" >>"${RETRO_ARCH_LOG}" 2>&1 || true
+        RETRO_HISI_ORIGINAL_WIDTH=""
+        RETRO_HISI_ORIGINAL_HEIGHT=""
+    fi
+}
+
+# NexTV can still report 720p50 after Enigma2's 60-Hz request and the black
+# background handover. Reassert the progressive 60-Hz timing immediately
+# before RetroArch. Bare mode names (e.g. 720p) mean 60 Hz on this driver.
+# Keep this separate from all other BCM, Dreambox and HiSilicon profiles.
+RETRO_NEXTV_VIDEO_DIR="/proc/stb/video"
+RETRO_NEXTV_RESTORE=""
+RETRO_NEXTV_MODE=""
+RETRO_NEXTV_MODE_50=""
+RETRO_NEXTV_MODE_60=""
+
+prepare_nextv_display()
+{
+    [ -f /usr/share/retrogaming/bcm-nextv ] || return 0
+    for RETRO_NEXTV_NODE in videomode videomode_50hz videomode_60hz; do
+        if [ ! -r "${RETRO_NEXTV_VIDEO_DIR}/${RETRO_NEXTV_NODE}" ] || \
+           [ ! -w "${RETRO_NEXTV_VIDEO_DIR}/${RETRO_NEXTV_NODE}" ]; then
+            echo 'NexTV video mode controls are unavailable.' >&2
+            return 1
+        fi
+    done
+    RETRO_NEXTV_MODE="$(cat "${RETRO_NEXTV_VIDEO_DIR}/videomode")" || return 1
+    RETRO_NEXTV_MODE_50="$(cat "${RETRO_NEXTV_VIDEO_DIR}/videomode_50hz")" || return 1
+    RETRO_NEXTV_MODE_60="$(cat "${RETRO_NEXTV_VIDEO_DIR}/videomode_60hz")" || return 1
+    [ -n "${RETRO_NEXTV_MODE}" ] && [ -n "${RETRO_NEXTV_MODE_50}" ] && \
+        [ -n "${RETRO_NEXTV_MODE_60}" ] || return 1
+
+    case "${RETRO_NEXTV_MODE}" in
+        720p|720p50) RETRO_NEXTV_TARGET="720p" ;;
+        1080p|1080p50) RETRO_NEXTV_TARGET="1080p" ;;
+        2160p|2160p50) RETRO_NEXTV_TARGET="2160p" ;;
+        480p) RETRO_NEXTV_TARGET="480p" ;;
+        *)
+            printf 'Unsupported NexTV emulator video mode: %s\n' "${RETRO_NEXTV_MODE}" >&2
+            return 1
+            ;;
+    esac
+    if ! tr ' \t' '\n' < "${RETRO_NEXTV_VIDEO_DIR}/videomode_choices" | \
+            grep -qx "${RETRO_NEXTV_TARGET}"; then
+        echo 'NexTV does not advertise the requested 60-Hz mode.' >&2
+        return 1
+    fi
+    printf 'NexTV HDMI before=%s 50hz=%s 60hz=%s target=%s (60 Hz)\n' \
+        "${RETRO_NEXTV_MODE}" "${RETRO_NEXTV_MODE_50}" "${RETRO_NEXTV_MODE_60}" \
+        "${RETRO_NEXTV_TARGET}"
+    # The caller installs the exit trap before this first write, so even a
+    # partial failure restores all three original values.
+    RETRO_NEXTV_RESTORE="yes"
+    for RETRO_NEXTV_NODE in videomode_50hz videomode_60hz videomode; do
+        printf '%s' "${RETRO_NEXTV_TARGET}" > "${RETRO_NEXTV_VIDEO_DIR}/${RETRO_NEXTV_NODE}" || return 1
+    done
+    RETRO_NEXTV_ACTUAL="$(cat "${RETRO_NEXTV_VIDEO_DIR}/videomode")" || return 1
+    printf 'NexTV HDMI before RetroArch=%s\n' "${RETRO_NEXTV_ACTUAL}"
+    [ "${RETRO_NEXTV_ACTUAL}" = "${RETRO_NEXTV_TARGET}" ] || {
+        echo 'NexTV did not accept the requested 60-Hz mode.' >&2
+        return 1
+    }
+}
+
+restore_nextv_display()
+{
+    [ "${RETRO_NEXTV_RESTORE}" = "yes" ] || return 0
+    {
+        printf '%s' "${RETRO_NEXTV_MODE_50}" > "${RETRO_NEXTV_VIDEO_DIR}/videomode_50hz" || true
+        printf '%s' "${RETRO_NEXTV_MODE_60}" > "${RETRO_NEXTV_VIDEO_DIR}/videomode_60hz" || true
+        printf '%s' "${RETRO_NEXTV_MODE}" > "${RETRO_NEXTV_VIDEO_DIR}/videomode" || true
+        printf 'NexTV HDMI restored=%s\n' "$(cat "${RETRO_NEXTV_VIDEO_DIR}/videomode")"
+    } >> "${RETRO_ARCH_LOG}" 2>&1
+    RETRO_NEXTV_RESTORE=""
+}
+
+case "${1:-}" in
+    --core)
+        case "${2:-}" in
+            2048|mrboom)
+                [ "$#" -eq 2 ] || {
+                    echo "The selected core does not accept content." >&2
+                    exit 64
+                }
+                RETRO_CORE_PATH="/usr/lib/libretro/${2}_libretro.so"
+                set -- -L "${RETRO_CORE_PATH}"
+                ;;
+            scummvm)
+                [ "$#" -eq 2 ] || {
+                    echo "The selected core does not accept content." >&2
+                    exit 64
+                }
+                RETRO_CORE_PATH="/usr/lib/libretro/scummvm_libretro.so"
+                RETRO_SCUMMVM_CONFIG="${RETRO_SYSTEM_DIR}/scummvm/scummvm.ini"
+
+                # The ScummVM file browser otherwise opens in /home/root. Set a
+                # useful first-run location, but preserve paths selected later
+                # by the user. Also migrate the old, unusable default.
+                mkdir -p "${RETRO_SYSTEM_DIR}/scummvm" "${RETRO_SCUMMVM_ROM_DIR}"
+                if [ ! -f "${RETRO_SCUMMVM_CONFIG}" ]; then
+                    {
+                        printf '[scummvm]\n'
+                        printf 'browser_lastpath=%s\n' "${RETRO_SCUMMVM_ROM_DIR}"
+                    } > "${RETRO_SCUMMVM_CONFIG}"
+                elif grep -Eq '^browser_lastpath=/home/root/*$' "${RETRO_SCUMMVM_CONFIG}"; then
+                    sed -i "s|^browser_lastpath=/home/root/*$|browser_lastpath=${RETRO_SCUMMVM_ROM_DIR}|" \
+                        "${RETRO_SCUMMVM_CONFIG}"
+                elif ! grep -q '^browser_lastpath=' "${RETRO_SCUMMVM_CONFIG}"; then
+                    RETRO_SCUMMVM_CONFIG_TMP="${RETRO_SCUMMVM_CONFIG}.tmp.$$"
+                    awk -v browser_path="${RETRO_SCUMMVM_ROM_DIR}" '
+                        BEGIN { inserted = 0 }
+                        {
+                            print
+                            if (!inserted && $0 == "[scummvm]") {
+                                print "browser_lastpath=" browser_path
+                                inserted = 1
+                            }
+                        }
+                        END {
+                            if (!inserted) {
+                                print "[scummvm]"
+                                print "browser_lastpath=" browser_path
+                            }
+                        }
+                    ' "${RETRO_SCUMMVM_CONFIG}" > "${RETRO_SCUMMVM_CONFIG_TMP}" && \
+                        mv "${RETRO_SCUMMVM_CONFIG_TMP}" "${RETRO_SCUMMVM_CONFIG}"
+                fi
+
+                {
+                    # ScummVM is a point-and-click engine. Make its launcher and
+                    # games fully usable with the appliance RetroPad alone.
+                    printf 'scummvm_pointer_device = "retropad"\n'
+                    printf 'scummvm_gamepad_cursor_speed = "2.0"\n'
+                    printf 'scummvm_gamepad_cursor_acceleration_time = "0.1"\n'
+                    printf 'scummvm_analog_response = "quadratic"\n'
+                    printf 'scummvm_analog_deadzone = "15"\n'
+                    printf 'scummvm_mapper_a = "RETROKE_LEFT_BUTTON"\n'
+                    printf 'scummvm_mapper_b = "RETROKE_RIGHT_BUTTON"\n'
+                    printf 'scummvm_mapper_x = "RETROK_F5"\n'
+                    printf 'scummvm_mapper_y = "RETROK_ESCAPE"\n'
+                    printf 'scummvm_mapper_select = "RETROKE_VKBD"\n'
+                    printf 'scummvm_mapper_start = "RETROKE_SCUMMVM_GUI"\n'
+                    printf 'scummvm_mapper_l = "RETROKE_LEFT_BUTTON"\n'
+                    printf 'scummvm_mapper_r = "RETROKE_RIGHT_BUTTON"\n'
+                } > "${RETRO_SCUMMVM_OPTIONS}"
+                printf 'core_options_path = "%s"\n' "${RETRO_SCUMMVM_OPTIONS}" >> "${RETRO_RUNTIME_CONFIG}"
+                set -- -L "${RETRO_CORE_PATH}"
+                ;;
+            snes9x|snes9x2010|mednafen_supafaust|fceumm|nestopia|gambatte|mgba|stella2014|virtualjaguar|gearsystem|clownmdemu|genesis_plus_gx|picodrive|mednafen_pce_fast|fbneo|mame2003_plus|pcsx_rearmed|dosbox_pure|puae|vice_x64|prboom|mupen64plus_next|mupen64plus_next_gles3|ppsspp|flycast)
+                [ "${3:-}" = "--content" ] && [ -n "${4:-}" ] && [ "$#" -eq 4 ] || {
+                    echo "The selected core requires --content GAME_FILE." >&2
+                    exit 64
+                }
+                [ -r "${4}" ] || {
+                    echo "Game file is not readable: ${4}" >&2
+                    exit 66
+                }
+                RETRO_CORE_PATH="/usr/lib/libretro/${2}_libretro.so"
+                if [ "${2}" = "mupen64plus_next" ]; then
+                    {
+                        printf 'mupen64plus-rdp-plugin = "gliden64"\n'
+                        printf 'mupen64plus-rsp-plugin = "hle"\n'
+                        printf 'mupen64plus-cpucore = "dynamic_recompiler"\n'
+                        printf 'mupen64plus-43screensize = "320x240"\n'
+                        printf 'mupen64plus-aspect = "4:3"\n'
+                        printf 'mupen64plus-EnableNativeResFactor = "0"\n'
+                        # Low-power HiSilicon Mali/EGL stacks hang before the first game
+                        # frame when GLideN64 creates its threaded GL context.
+                        printf 'mupen64plus-ThreadedRenderer = "False"\n'
+                        printf 'mupen64plus-HybridFilter = "False"\n'
+                        printf 'mupen64plus-EnableLODEmulation = "True"\n'
+                        printf 'mupen64plus-EnableFBEmulation = "True"\n'
+                        printf 'mupen64plus-FrameDuping = "True"\n'
+                        printf 'mupen64plus-Framerate = "Original"\n'
+                    } > "${RETRO_N64_OPTIONS}"
+                    printf 'core_options_path = "%s"\n' "${RETRO_N64_OPTIONS}" >> "${RETRO_RUNTIME_CONFIG}"
+                elif [ "${2}" = "dosbox_pure" ]; then
+                    # This appliance-oriented controller has no analog sticks.
+                    # Present its Select button as L3 as well so DOSBox Pure's
+                    # built-in on-screen keyboard remains reachable in games
+                    # which ask for keyboard input (for example Y/N prompts).
+                    printf 'input_player1_l3_btn = "8"\n' >> "${RETRO_RUNTIME_CONFIG}"
+                    mkdir -p /home/root/.config/retroarch/config/DOSBox-pure
+                    touch "${RETRO_DOSBOX_OPTIONS}"
+                    sed -i \
+                        -e '/^dosbox_pure_voodoo_perf =/d' \
+                        -e '/^dosbox_pure_midi =/d' \
+                        -e '/^dosbox_pure_on_screen_keyboard =/d' \
+                        "${RETRO_DOSBOX_OPTIONS}"
+                    {
+                        # RetroArch on these receivers provides OpenGLES, while
+                        # DOSBox Pure's accelerated Voodoo path requests
+                        # desktop OpenGL. Keep Voodoo available through its
+                        # multithreaded software renderer instead.
+                        printf 'dosbox_pure_voodoo_perf = "1"\n'
+                        # The appliance has no ALSA sequencer/MIDI endpoint.
+                        printf 'dosbox_pure_midi = "disabled"\n'
+                        printf 'dosbox_pure_on_screen_keyboard = "true"\n'
+                    } >> "${RETRO_DOSBOX_OPTIONS}"
+                fi
+                set -- -L "${RETRO_CORE_PATH}" "${4}"
+                ;;
+            *)
+                echo "Unsupported RetroGaming core: ${2:-}" >&2
+                exit 64
+                ;;
+        esac
+        ;;
+    --menu)
+        [ "$#" -eq 1 ] || {
+            echo "The menu mode does not accept additional arguments." >&2
+            exit 64
+        }
+        shift
+        set -- --menu
+        ;;
+    *)
+        echo "Usage: $0 --menu | --core CORE [--content GAME_FILE]" >&2
+        exit 64
+        ;;
+esac
+
+[ "${1:-}" = "--menu" ] || [ -r "${2:-}" ] || {
+    echo "Libretro core is not installed: ${2:-}" >&2
+    exit 69
+}
+
+retro_prepare_log "${RETRO_PLATFORM_LOG}"
+retro_prepare_log "${RETRO_ARCH_LOG}"
+retro_prepare_log "${RETRO_EXIT_LOG}"
+: > "${RETRO_PLATFORM_LOG}"
+trap 'restore_nextv_display; restore_hisi_display' EXIT
+trap 'exit 143' HUP INT TERM
+prepare_hisi_display
+if ! prepare_nextv_display >> "${RETRO_PLATFORM_LOG}" 2>&1; then
+    cp "${RETRO_PLATFORM_LOG}" "${RETRO_ARCH_LOG}"
+    cat "${RETRO_PLATFORM_LOG}" >&2
+    exit 70
+fi
+
+cp "${RETRO_PLATFORM_LOG}" "${RETRO_ARCH_LOG}"
+if [ "${RETRO_DEBUG}" = true ]; then
+    set -- --verbose "$@"
+fi
+
+/usr/bin/retroarch \
+    --config "${RETRO_USER_CONFIG}" \
+    --appendconfig "${RETRO_RUNTIME_CONFIG}" \
+    "$@" >> "${RETRO_ARCH_LOG}" 2>&1 &
+RETROARCH_PID=$!
+RETROARCH_MONITOR_PID=""
+if [ -x /usr/bin/openatv-retrogaming-exit-monitor ]; then
+    /usr/bin/openatv-retrogaming-exit-monitor "${RETROARCH_PID}" \
+        >>"${RETRO_EXIT_LOG}" 2>&1 &
+    RETROARCH_MONITOR_PID=$!
+fi
+wait "${RETROARCH_PID}"
+RETROARCH_RESULT=$?
+printf 'RetroArch process exit status: %s\n' "${RETROARCH_RESULT}" \
+    >> "${RETRO_ARCH_LOG}"
+if [ -n "${RETROARCH_MONITOR_PID}" ]; then
+    kill "${RETROARCH_MONITOR_PID}" 2>/dev/null || true
+    wait "${RETROARCH_MONITOR_PID}" 2>/dev/null || true
+fi
+restore_nextv_display
+restore_hisi_display
+trap - EXIT HUP INT TERM
+exit "${RETROARCH_RESULT}"

@@ -1,0 +1,33 @@
+From: OpenATV RetroGaming <noreply@openatv.org>
+Subject: [PATCH] cmake: do not require unrequested FFmpeg components
+
+FindFFmpeg probes every known FFmpeg library so that imported targets can be
+created when they are available.  The pkg-config fallback incorrectly marks
+each probe REQUIRED, including optional and unrequested libraries such as
+libpostproc.  FFmpeg 8 no longer ships libpostproc, while PPSSPP only requests
+avcodec, avformat, avutil, swresample and swscale.
+
+Keep the probe quiet and optional.  find_package_handle_standard_args already
+checks the components requested by find_package(FFmpeg REQUIRED ...), so a
+genuinely required component still fails configuration.
+
+Upstream-Status: Pending
+
+---
+ cmake/Modules/FindFFmpeg.cmake | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/cmake/Modules/FindFFmpeg.cmake b/cmake/Modules/FindFFmpeg.cmake
+index 4f038c0..899d775 100644
+--- a/cmake/Modules/FindFFmpeg.cmake
++++ b/cmake/Modules/FindFFmpeg.cmake
+@@ -106,6 +106,6 @@ function(find_ffmpeg LIBNAME)
+     # Didn't find it in the usual paths, try pkg-config
+     find_package(PkgConfig QUIET)
+-    pkg_check_modules(FFmpeg_PKGCONFIG_${LIBNAME} REQUIRED QUIET lib${LIBNAME})
++    pkg_check_modules(FFmpeg_PKGCONFIG_${LIBNAME} QUIET lib${LIBNAME})
+ 
+     find_path(FFmpeg_INCLUDE_${LIBNAME} lib${LIBNAME}/${_FFmpeg_HEADER_${LIBNAME}}.h
+       ${FFmpeg_PKGCONFIG_${LIBNAME}_INCLUDE_DIRS}
+-- 
+2.43.0

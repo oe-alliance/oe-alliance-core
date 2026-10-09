@@ -1,0 +1,71 @@
+From 6f72d1bf9a6d2dce7ca5cfef263d0b2e7689a081 Mon Sep 17 00:00:00 2001
+From: OpenATV RetroGaming <noreply@openatv.org>
+Date: Sun, 16 Aug 2026 10:25:00 +0200
+Subject: [PATCH] SDL: use Kodi's proven Dream Mali EGL window config
+
+The generic PPSSPP scorer may choose a GLES3 or non-window Mali config on the
+Dream One/Two.  The proprietary driver accepts such a surface and renders to
+it, but it is not necessarily connected to OSD HDMI scanout.  For fbdev use
+the exact RGBA8888, depth16, GLES2 window attributes used by the tested Kodi
+port, and log the selected config for hardware diagnostics.
+
+Upstream-Status: Inappropriate [OpenATV Dream fbdev EGL integration]
+
+---
+diff --git a/SDL/SDLGLGraphicsContext.cpp b/SDL/SDLGLGraphicsContext.cpp
+index 0acb3af..e57745c 100644
+--- a/SDL/SDLGLGraphicsContext.cpp
++++ b/SDL/SDLGLGraphicsContext.cpp
+@@ -143,6 +143,50 @@ static int8_t EGL_Open(SDL_Window *window) {
+ #endif
+ 
+ EGLConfig EGL_FindConfig(int *contextVersion) {
++#if defined(USING_FBDEV)
++	const EGLint configAttrs[] = {
++		EGL_RED_SIZE, 8,
++		EGL_GREEN_SIZE, 8,
++		EGL_BLUE_SIZE, 8,
++		EGL_ALPHA_SIZE, 8,
++		EGL_DEPTH_SIZE, 16,
++		EGL_STENCIL_SIZE, 0,
++		EGL_SAMPLE_BUFFERS, 0,
++		EGL_SAMPLES, 0,
++		EGL_SURFACE_TYPE, EGL_WINDOW_BIT,
++		EGL_RENDERABLE_TYPE, EGL_OPENGL_ES2_BIT,
++		EGL_NONE,
++	};
++	EGLConfig config = nullptr;
++	EGLint configCount = 0;
++	if (eglChooseConfig(g_eglDisplay, configAttrs, &config, 1, &configCount) != EGL_TRUE ||
++		configCount < 1 || !config) {
++		fprintf(stderr, "OpenATV Mali EGL: Kodi-compatible window config unavailable\n");
++		return nullptr;
++	}
++
++	auto readConfig = [&](EGLint attr) -> EGLint {
++		EGLint value = 0;
++		eglGetConfigAttrib(g_eglDisplay, config, attr, &value);
++		return value;
++	};
++	fprintf(stderr,
++		"OpenATV Mali EGL config: id=%d rgba=%d/%d/%d/%d depth=%d stencil=%d "
++		"samples=%d surface=0x%x renderable=0x%x\n",
++		readConfig(EGL_CONFIG_ID),
++		readConfig(EGL_RED_SIZE),
++		readConfig(EGL_GREEN_SIZE),
++		readConfig(EGL_BLUE_SIZE),
++		readConfig(EGL_ALPHA_SIZE),
++		readConfig(EGL_DEPTH_SIZE),
++		readConfig(EGL_STENCIL_SIZE),
++		readConfig(EGL_SAMPLES),
++		readConfig(EGL_SURFACE_TYPE),
++		readConfig(EGL_RENDERABLE_TYPE));
++	*contextVersion = 2;
++	return config;
++#endif
++
+ 	std::vector<EGLConfig> configs;
+ 	EGLint numConfigs = 0;
+ 
+-- 
+2.51.0

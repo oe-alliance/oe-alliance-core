@@ -1,0 +1,29 @@
+From: OpenATV RetroGaming Maintainers <noreply@openatv.org>
+Subject: [PATCH] libmpeg2: preserve toolchain file offset selection
+
+OpenEmbedded builds 32-bit targets with 64-bit time and file offsets.  The
+bundled generated config header unconditionally undefines
+_FILE_OFFSET_BITS after the compiler has set it, which glibc correctly
+rejects when _TIME_BITS remains 64.
+
+Upstream-Status: Inappropriate [OpenEmbedded toolchain integration]
+
+---
+ deps/libmpeg2/include/config.h | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/deps/libmpeg2/include/config.h b/deps/libmpeg2/include/config.h
+index eb15f8d..f6c4d22 100644
+--- a/deps/libmpeg2/include/config.h
++++ b/deps/libmpeg2/include/config.h
+@@ -145,8 +145,6 @@
+ /* Define to 1 if the X Window System is missing or not being used. */
+ #undef X_DISPLAY_MISSING
+ 
+-/* Number of bits in a file offset, on hosts where this is settable. */
+-#undef _FILE_OFFSET_BITS
+ 
+ /* Define for large files, on AIX-style hosts. */
+ #undef _LARGE_FILES
+-- 
+2.43.0

@@ -1,0 +1,46 @@
+From 2bb146702700203896fac1e2245639ef9c2ddc64 Mon Sep 17 00:00:00 2001
+From: OpenATV RetroGaming <noreply@openatv.org>
+Date: Sat, 15 Aug 2026 09:20:00 +0200
+Subject: [PATCH] libretro: fix ARMv7 GLES platform selection
+
+The libretro platform block uses armv7 as TARGET_ARCH so that the bundled
+FFmpeg path resolves to ffmpeg/linux/armv7.  Makefile.common only recognizes
+the shorter arm spelling and otherwise enables the x86 dynarec, including
+-msse, -msse2 and -m32.  Treat both spellings as the 32-bit ARM target.
+
+GLES framebuffer targets also have no X11 platform.  Do not request Vulkan's
+Xlib surface types for those builds; they pull in X11/Xlib.h even though this
+core is built for EGL/GLES2.
+
+Upstream-Status: Pending
+
+---
+ libretro/Makefile.common | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/libretro/Makefile.common b/libretro/Makefile.common
+index 5946131..77ff7fe 100644
+--- a/libretro/Makefile.common
++++ b/libretro/Makefile.common
+@@ -668,8 +668,10 @@ else ifeq ($(PLATFORM_EXT), android)
+ SOURCES_CXX += $(COMMONDIR)/MemArenaAndroid.cpp \
+ 	       $(EXTDIR)/glslang/glslang/OSDependent/Unix/ossource.cpp \
+ 		   $(COMMONDIR)/Render/Text/draw_text_android.cpp
+ else
++ifneq ($(GLES),1)
+ COREFLAGS += -DVK_USE_PLATFORM_XLIB_KHR
++endif
+ SOURCES_CXX += $(COMMONDIR)/MemArenaPosix.cpp \
+ 	       $(EXTDIR)/glslang/glslang/OSDependent/Unix/ossource.cpp
+ endif
+@@ -906,7 +908,7 @@ SOURCES_CXX += $(COREDIR)/HLE/__sceAudio.cpp
+ ### DYNAREC ###
+ ifeq ($(WITH_DYNAREC),1)
+    DYNAFLAGS += -DDYNAREC
+-   ifeq ($(TARGET_ARCH),arm)
++   ifneq (,$(filter arm armv7,$(TARGET_ARCH)))
+       DYNAFLAGS += -D_ARCH_32
+ 		SOURCES_CXX += $(COMMONDIR)/ArmEmitter.cpp \
+ 			       $(COREDIR)/MIPS/ARM/ArmAsm.cpp \
+-- 
+2.43.0

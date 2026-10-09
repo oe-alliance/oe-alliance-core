@@ -1,0 +1,84 @@
+From: OpenATV RetroGaming <noreply@openatv.org>
+Subject: [PATCH] SDL: omit unused DirectFB SysWM ABI for FBDEV EGL
+
+OpenATV's SDL2 enables the DirectFB video backend, so SDL_syswm.h normally
+includes directfb.h.  DirectFB exports global s64/u64 typedefs whose
+underlying types conflict with PPSSPP's CommonTypes.h on AArch64.
+
+The OpenATV Dream path uses its explicit FBDEV EGL native window and never
+reads SDL's DirectFB SysWM union member.  Undefine only the DirectFB video
+driver macro after SDL.h has loaded its configuration and before SDL_syswm.h
+declares backend-specific structures.  Other SDL video backends remain
+unchanged.
+
+Upstream-Status: Inappropriate [OpenATV FBDEV EGL integration]
+
+---
+ SDL/SDLGLGraphicsContext.h     | 6 ++++++
+ SDL/SDLMain.cpp                | 6 ++++++
+ SDL/SDLVulkanGraphicsContext.h | 6 ++++++
+ 3 files changed, 18 insertions(+)
+
+diff --git a/SDL/SDLGLGraphicsContext.h b/SDL/SDLGLGraphicsContext.h
+index d50ddb4..c6b60ad 100644
+--- a/SDL/SDLGLGraphicsContext.h
++++ b/SDL/SDLGLGraphicsContext.h
+@@ -1,9 +1,15 @@
+ #include "ppsspp_config.h"
+ #if PPSSPP_PLATFORM(MAC)
+ #include "SDL2/SDL.h"
++#if defined(OPENATV_AMLOGIC_FBDEV)
++#undef SDL_VIDEO_DRIVER_DIRECTFB
++#endif
+ #include "SDL2/SDL_syswm.h"
+ #else
+ #include "SDL.h"
++#if defined(OPENATV_AMLOGIC_FBDEV)
++#undef SDL_VIDEO_DRIVER_DIRECTFB
++#endif
+ #include "SDL_syswm.h"
+ #endif
+ 
+diff --git a/SDL/SDLMain.cpp b/SDL/SDLMain.cpp
+index 98753b1..1c3e4ac 100644
+--- a/SDL/SDLMain.cpp
++++ b/SDL/SDLMain.cpp
+@@ -5,10 +5,16 @@
+ #include "ppsspp_config.h"
+ #if PPSSPP_PLATFORM(MAC)
+ #include "SDL2/SDL.h"
++#if defined(OPENATV_AMLOGIC_FBDEV)
++#undef SDL_VIDEO_DRIVER_DIRECTFB
++#endif
+ #include "SDL2/SDL_syswm.h"
+ #include "SDL2/SDL_mouse.h"
+ #else
+ #include "SDL.h"
++#if defined(OPENATV_AMLOGIC_FBDEV)
++#undef SDL_VIDEO_DRIVER_DIRECTFB
++#endif
+ #include "SDL_syswm.h"
+ #include "SDL_mouse.h"
+ #endif
+diff --git a/SDL/SDLVulkanGraphicsContext.h b/SDL/SDLVulkanGraphicsContext.h
+index be047a8..52a315d 100644
+--- a/SDL/SDLVulkanGraphicsContext.h
++++ b/SDL/SDLVulkanGraphicsContext.h
+@@ -1,9 +1,15 @@
+ #include "ppsspp_config.h"
+ #if PPSSPP_PLATFORM(MAC)
+ #include "SDL2/SDL.h"
++#if defined(OPENATV_AMLOGIC_FBDEV)
++#undef SDL_VIDEO_DRIVER_DIRECTFB
++#endif
+ #include "SDL2/SDL_syswm.h"
+ #else
+ #include "SDL.h"
++#if defined(OPENATV_AMLOGIC_FBDEV)
++#undef SDL_VIDEO_DRIVER_DIRECTFB
++#endif
+ #include "SDL_syswm.h"
+ #endif
+ 
+-- 
+2.43.0

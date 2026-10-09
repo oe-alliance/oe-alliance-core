@@ -1,0 +1,29 @@
+From: OE-Alliance <oe-alliance@users.noreply.github.com>
+Subject: [PATCH] fbdev: select machine-specific BCM or Dream VC5 context
+
+Do not pass Mali fbdev window structures to Broadcom EGL. Keep the existing
+Mali/HiSilicon implementation unchanged without a BCM/Dream profile.
+
+Upstream-Status: Inappropriate [STB vendor native-window ABI]
+
+--- a/gfx/drivers_context/mali_fbdev_ctx.c
++++ b/gfx/drivers_context/mali_fbdev_ctx.c
+@@ -14,6 +14,13 @@
+  *  If not, see <http://www.gnu.org/licenses/>.
+  */
+ 
++#if defined(HAVE_DREAM_VC5)
++#include "dream_vc5_ctx.c"
++#elif defined(HAVE_BCM_V3D)
++#include "bcm_v3d_ctx.c"
++#elif defined(HAVE_BCM_NXPL)
++#include "bcm_nxpl_ctx.c"
++#else
+ #include <stdlib.h>
+ #include <unistd.h>
+ 
+@@ -472,3 +479,4 @@
+    NULL,
+    NULL
+ };
++#endif /* Broadcom native context */

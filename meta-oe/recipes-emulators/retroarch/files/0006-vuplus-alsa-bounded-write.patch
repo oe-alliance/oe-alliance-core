@@ -1,0 +1,63 @@
+From: OpenATV RetroGaming <noreply@openatv.local>
+Subject: [PATCH] alsa: avoid unbounded playback polling on classic Vu+
+
+The Uno 4K SE vendor PCM can leave the main emulation thread asleep in
+poll(..., -1) with the PCM RUNNING, delay zero and all 32768 frames available.
+Video then stalls as well; a delayed wakeup only resumes it temporarily.
+
+The PCM is already opened with SND_PCM_NONBLOCK. Try writing before waiting
+for POLLOUT and wait at most 20 ms only after EAGAIN. Keep the existing retry
+limit and recovery path, and handle zero progress without spinning. This
+patch is selected only for the classic Vu+ machine feature. Microphone,
+other platforms, audio synchronisation and volume remain unchanged.
+
+Upstream-Status: Inappropriate [classic Vu+ vendor PCM workaround]
+--- a/audio/drivers/alsa.c
++++ b/audio/drivers/alsa.c
+@@ -328,6 +328,7 @@ static void *alsa_init(const char *device, unsigned rate, unsigned latency,
+    if (alsa_init_pcm(&alsa->pcm, device, SND_PCM_STREAM_PLAYBACK, rate,
+             latency, 2, &alsa->stream_info, new_rate, SND_PCM_NONBLOCK) < 0)
+       goto error;
++   RARCH_LOG("[ALSA] Vu+ write-first playback with bounded 20 ms waits.\n");
+ 
+    return alsa;
+ 
+@@ -391,7 +392,7 @@ static ssize_t alsa_write(void *data, const void *buf_, size_t len)
+ 
+             break;
+          }
+-         else if (frames == -EAGAIN)
++         else if (frames == -EAGAIN || frames == 0)
+             break;
+          else if (frames < 0)
+             return -1;
+@@ -407,17 +408,22 @@ static ssize_t alsa_write(void *data, const void *buf_, size_t len)
+ 
+       while (size)
+       {
+-         snd_pcm_sframes_t frames;
+-         int rc = snd_pcm_wait(alsa->pcm, -1);
++         /* The descriptor is nonblocking. A missed vendor POLLOUT wakeup
++          * must not stall the emulation thread when it can already write. */
++         snd_pcm_sframes_t frames = snd_pcm_writei(alsa->pcm, buf, size);
+ 
+-         if (rc == -EPIPE || rc == -ESTRPIPE || rc == -EINTR)
++         if (frames == -EAGAIN)
+          {
+-            if (snd_pcm_recover(alsa->pcm, rc, 1) < 0)
+-               return -1;
+-            continue;
++            int rc = snd_pcm_wait(alsa->pcm, 20);
++            /* On timeout, retry the nonblocking write: the vendor PCM can
++             * have space without signalling its poll descriptor. Negative
++             * results use the same bounded recovery path as write errors. */
++            frames = rc < 0 ? rc : snd_pcm_writei(alsa->pcm, buf, size);
+          }
+ 
+-         frames = snd_pcm_writei(alsa->pcm, buf, size);
++         /* A broken or disappearing PCM must not trap the main loop. */
++         if (frames == 0)
++            break;
+ 
+          if (frames == -EPIPE || frames == -EINTR || frames == -ESTRPIPE)
+          {

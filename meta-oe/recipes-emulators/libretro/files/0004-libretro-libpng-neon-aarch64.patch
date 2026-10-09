@@ -1,0 +1,30 @@
+From: OpenATV RetroGaming <noreply@openatv.org>
+Subject: [PATCH] libretro: include libpng NEON sources on AArch64
+
+The build enables libpng's NEON filter dispatch on AArch64, but the libretro
+Makefile only compiles the corresponding implementation in its 32-bit ARM
+branch.  Add the portable NEON intrinsics implementation and dispatcher to
+the arm64 branch.  The handwritten filter_neon.S remains ARM32-only.
+
+Upstream-Status: Pending
+
+---
+ libretro/Makefile.common | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/libretro/Makefile.common b/libretro/Makefile.common
+index 5fcfb44..7e9d15a 100644
+--- a/libretro/Makefile.common
++++ b/libretro/Makefile.common
+@@ -931,6 +931,9 @@ ifeq ($(WITH_DYNAREC),1)
+ 		endif
+ 	else ifeq ($(TARGET_ARCH),arm64)
+       DYNAFLAGS += -D_ARCH_64
++      SOURCES_C += $(EXTDIR)/libpng17/arm/arm_init.c \
++                   $(EXTDIR)/libpng17/arm/filter_neon_intrinsics.c
++
+       SOURCES_CXX += $(COMMONDIR)/Arm64Emitter.cpp \
+ 		     $(COREDIR)/MIPS/ARM64/Arm64Asm.cpp \
+ 		     $(COREDIR)/MIPS/ARM64/Arm64CompALU.cpp \
+-- 
+2.43.0

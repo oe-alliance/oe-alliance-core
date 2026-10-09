@@ -1,0 +1,36 @@
+From f91aa6a4c8b1ad5d2e81067a6b7d340d5e4c3e10 Mon Sep 17 00:00:00 2001
+From: OpenATV RetroGaming <noreply@openatv.org>
+Date: Sat, 15 Aug 2026 09:34:00 +0200
+Subject: [PATCH] OpenGL: provide clip/cull enum fallbacks for old GLES2 headers
+
+Older vendor GLES2 development headers do not expose the EXT_clip_cull_distance
+enumerants.  PPSSPP still needs them at compile time, while the runtime queries
+remain guarded by extension detection.  Use the values from the Khronos EXT
+specification, which are also present in PPSSPP's bundled GLEW header.
+
+Upstream-Status: Inappropriate [old vendor headers]
+
+---
+ Common/GPU/OpenGL/GLFeatures.cpp | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/Common/GPU/OpenGL/GLFeatures.cpp b/Common/GPU/OpenGL/GLFeatures.cpp
+index 3cb1d21..d1ba952 100644
+--- a/Common/GPU/OpenGL/GLFeatures.cpp
++++ b/Common/GPU/OpenGL/GLFeatures.cpp
+@@ -14,5 +14,12 @@
+ #endif
+ 
+ #include "Common/GPU/OpenGL/GLFeatures.h"
++#ifndef GL_MAX_CLIP_DISTANCES_EXT
++#define GL_MAX_CLIP_DISTANCES_EXT 0x0D32
++#endif
++
++#ifndef GL_MAX_CULL_DISTANCES_EXT
++#define GL_MAX_CULL_DISTANCES_EXT 0x82F9
++#endif
+ 
+ #include "Common/Log.h"
+-- 
+2.43.0
+

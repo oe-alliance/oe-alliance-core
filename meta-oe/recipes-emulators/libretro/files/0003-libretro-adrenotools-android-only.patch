@@ -1,0 +1,29 @@
+From: OpenATV RetroGaming <noreply@openatv.org>
+Subject: [PATCH] libretro: build adrenotools only for Android arm64
+
+libadrenotools uses Android platform headers and APIs.  The libretro Makefile
+currently adds its sources to every arm64 target, which breaks Linux AArch64
+builds at android/api-level.h.  Match the CMake build and restrict these
+sources to Android arm64.
+
+Upstream-Status: Pending
+
+---
+ libretro/Makefile.common | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/libretro/Makefile.common b/libretro/Makefile.common
+index 6fa95f9..5fcfb44 100644
+--- a/libretro/Makefile.common
++++ b/libretro/Makefile.common
+@@ -677,7 +677,7 @@ SOURCES_CXX += $(COMMONDIR)/MemArenaPosix.cpp \
+ endif
+ 
+ 
+-ifeq ($(TARGET_ARCH),arm64)
++ifeq ($(TARGET_ARCH)-$(PLATFORM_EXT),arm64-android)
+ SOURCES_CXX += \
+ 	  $(EXTDIR)/libadrenotools/src/driver.cpp \
+ 	  $(EXTDIR)/libadrenotools/lib/linkernsbypass/android_linker_ns.cpp \
+-- 
+2.43.0

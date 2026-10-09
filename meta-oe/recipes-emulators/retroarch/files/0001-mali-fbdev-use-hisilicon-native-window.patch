@@ -1,0 +1,88 @@
+From 6e53ca72e865d86f9a53757d51e07180137d1371 Mon Sep 17 00:00:00 2001
+From: OpenATV RetroGaming Team <noreply@openatv.org>
+Date: Fri, 14 Aug 2026 12:00:00 +0200
+Subject: [PATCH] mali-fbdev: use HiSilicon STB native window
+
+The HiSilicon 4K libMali implementations use EGL_DEFAULT_DISPLAY for both the
+native display and native window. This is the same ABI exercised by the
+working STB-Kodi HiSilicon backends.
+
+Do not modify the Enigma2 framebuffer y-offset and do not perform Linux VT
+screen clearing on this appliance path. Enigma2 owns repainting after the
+external process releases EGL and the framebuffer.
+
+Upstream-Status: Inappropriate [OpenATV HiSilicon vendor EGL ABI]
+---
+ gfx/drivers_context/mali_fbdev_ctx.c | 18 +++++++++++++++++-
+ 1 file changed, 17 insertions(+), 1 deletion(-)
+
+diff --git a/gfx/drivers_context/mali_fbdev_ctx.c b/gfx/drivers_context/mali_fbdev_ctx.c
+index 9522007..09eb163 100644
+--- a/gfx/drivers_context/mali_fbdev_ctx.c
++++ b/gfx/drivers_context/mali_fbdev_ctx.c
+@@ -81,12 +81,14 @@ static int gfx_ctx_mali_fbdev_get_vinfo(void *data)
+       goto error;
+ 
+    /*Workaround to reset yoffset when returned >0 from driver */
++#ifndef HAVE_HISI_STB
+    if (vinfo.yoffset != 0)
+    {
+       vinfo.yoffset = 0;
+       if (ioctl(fd, FBIOPUT_VSCREENINFO, &vinfo))
+          RARCH_ERR("[Mali] Error resetting yoffset to 0.\n");
+    }
++#endif
+ 
+    close(fd);
+    fd = -1;
+@@ -140,6 +142,10 @@ error:
+ 
+ static void gfx_ctx_mali_fbdev_clear_screen(void)
+ {
++#ifdef HAVE_HISI_STB
++   RARCH_LOG("[Mali] Leaving framebuffer repaint to Enigma2.\n");
++   return;
++#else
+    long buffer_size;
+    struct fb_var_screeninfo vinfo;
+    void *buffer          = NULL;
+@@ -160,6 +166,7 @@ static void gfx_ctx_mali_fbdev_clear_screen(void)
+       close(fd);
+       system("setterm -cursor on");
+    }
++#endif
+ }
+ 
+ static void gfx_ctx_mali_fbdev_destroy_really(void)
+@@ -234,6 +241,7 @@ static void *gfx_ctx_mali_fbdev_init(void *video_driver)
+    EGLint n;
+    EGLint major, minor;
+    EGLint format;
++   void *native_window;
+    EGLint attribs_init[] = {
+       EGL_RENDERABLE_TYPE, EGL_OPENGL_ES2_BIT,
+       EGL_SURFACE_TYPE, EGL_WINDOW_BIT,
+@@ -258,12 +266,20 @@ static void *gfx_ctx_mali_fbdev_init(void *video_driver)
+        goto error;
+ 
+ #ifdef HAVE_EGL
++   native_window = &mali->native_window;
++#ifdef HAVE_HISI_STB
++   /* HiSilicon's vendor libMali expects the same zero/default handle used by
++    * STB-Kodi, not the generic fbdev width/height structure. */
++   native_window = (void*)EGL_DEFAULT_DISPLAY;
++   RARCH_LOG("[Mali] Using HiSilicon EGL_DEFAULT_DISPLAY native window.\n");
++#endif
++
+    frontend_driver_install_signal_handler();
+    mali->egl.use_hw_ctx = true;
+    if (!egl_init_context(&mali->egl, EGL_NONE, EGL_DEFAULT_DISPLAY,
+             &major, &minor, &n, attribs_init, NULL) ||
+    !egl_create_context(&mali->egl, attribs_create) ||
+-   !egl_create_surface(&mali->egl, &mali->native_window))
++   !egl_create_surface(&mali->egl, native_window))
+       goto error;
+ #endif
+ 
+-- 
+2.45.2

@@ -1,0 +1,45 @@
+From 8ae777ea7211d191f39f61f6e96d81dabca5e441 Mon Sep 17 00:00:00 2001
+From: OpenATV RetroGaming <noreply@openatv.org>
+Date: Sun, 16 Aug 2026 18:10:00 +0200
+Subject: [PATCH] SDL: prefer a window-capable EGL config on fbdev
+
+The Dream Mali driver returns EGL_BAD_MATCH when eglCreateWindowSurface is
+called with a config that lacks EGL_WINDOW_BIT.  Upstream deliberately omits
+the surface-type score for generic fbdev, which can select such a config.
+Dream One/Two render directly to a native window surface, so retain the normal
+window-config preference for this platform.
+
+Upstream-Status: Inappropriate [OpenATV Dream fbdev EGL integration]
+
+---
+ SDL/SDLGLGraphicsContext.cpp | 4 ----
+ 1 file changed, 4 deletions(-)
+
+diff --git a/SDL/SDLGLGraphicsContext.cpp b/SDL/SDLGLGraphicsContext.cpp
+index 058d46e..8f13c83 100644
+--- a/SDL/SDLGLGraphicsContext.cpp
++++ b/SDL/SDLGLGraphicsContext.cpp
+@@ -193,11 +193,9 @@ EGLConfig EGL_FindConfig(int *contextVersion) {
+ 		// Let's assume that non-conformant configs aren't so awful.
+ 		int caveatScore = caveat == EGL_NONE ? 100 : (caveat == EGL_NON_CONFORMANT_CONFIG ? 95 : 0);
+ 
+-#ifndef USING_FBDEV
+ 		EGLint surfaceType = readConfig(EGL_SURFACE_TYPE);
+ 		// Only try a non-Window config in the worst case when there are only non-Window configs.
+ 		int surfaceScore = (surfaceType & EGL_WINDOW_BIT) ? 1000 : 0;
+-#endif
+ 
+ 		EGLint renderable = readConfig(EGL_RENDERABLE_TYPE);
+ 		bool renderableGLES3 = (renderable & EGL_OPENGL_ES3_BIT_KHR) != 0;
+@@ -222,9 +220,7 @@ EGLConfig EGL_FindConfig(int *contextVersion) {
+ 		score += levelScore + samplesScore + sampleBufferScore + transparentScore;
+ 		score += caveatScore + renderableScoreGLES + renderableScoreGL;
+ 
+-#ifndef USING_FBDEV
+ 		score += surfaceScore;
+-#endif
+ 
+ 		if (score > bestScore) {
+ 			bestScore = score;
+-- 
+2.51.0

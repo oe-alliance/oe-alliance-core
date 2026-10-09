@@ -1,0 +1,45 @@
+From 0000000000000000000000000000000000000002 Mon Sep 17 00:00:00 2001
+From: OpenATV RetroGaming <noreply@openatv.invalid>
+Date: Sat, 15 Aug 2026 00:15:00 +0200
+Subject: [PATCH] input: map HiSilicon receiver keys to RetroPad defaults
+
+Linux DVB remotes expose their coloured and transport buttons through key
+codes which have no equivalent in the libretro keyboard enum.  Map them to
+the keyboard defaults already used for RetroPad player one.  Keep this
+receiver-specific so normal keyboards and joypads remain unchanged.
+
+The colour mapping follows the European SNES button colours:
+red=A, yellow=B, blue=X and green=Y.  Previous/rewind and next/fast-forward
+act as the left and right shoulder buttons.
+---
+ input/input_keymaps.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
+
+diff --git a/input/input_keymaps.c b/input/input_keymaps.c
+index 4e425ac10d..ec32c5e63b 100644
+--- a/input/input_keymaps.c
++++ b/input/input_keymaps.c
+@@ -1358,6 +1358,21 @@ const struct rarch_key_map rarch_key_map_linux[] = {
+    { KEY_UNDO, RETROK_UNDO },
+    { KEY_102ND, RETROK_OEM_102 },
+ 
++#ifdef HAVE_HISI_STB
++   /* Match RetroArch's default player-one keyboard bindings. */
++   { KEY_RED,           RETROK_x }, /* RetroPad A */
++   { KEY_YELLOW,        RETROK_z }, /* RetroPad B */
++   { KEY_BLUE,          RETROK_s }, /* RetroPad X */
++   { KEY_GREEN,         RETROK_a }, /* RetroPad Y */
++
++   /* Receiver models use either navigation or transport key codes for
++    * their physical previous/next (< and >) buttons. */
++   { KEY_PREVIOUS,      RETROK_q }, /* RetroPad L */
++   { KEY_REWIND,        RETROK_q }, /* RetroPad L */
++   { KEY_NEXT,          RETROK_w }, /* RetroPad R */
++   { KEY_FASTFORWARD,   RETROK_w }, /* RetroPad R */
++#endif
++
+ #ifndef ANDROID
+    { KEY_MUTE,         RETROK_VOLUME_MUTE },
+    { KEY_VOLUMEDOWN,   RETROK_VOLUME_DOWN },
+-- 
+2.43.0

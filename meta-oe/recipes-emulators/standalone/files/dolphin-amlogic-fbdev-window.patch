@@ -1,0 +1,68 @@
+From 2de0e42450d25795c3e456601aca96522f8c7688 Mon Sep 17 00:00:00 2001
+From: OpenATV RetroGaming <noreply@openatv.org>
+Date: Sat, 15 Aug 2026 10:30:00 +0200
+Subject: [PATCH] DolphinNoGUI: create the Dream Mali fbdev native window
+
+The proprietary EGL implementation used by Dream One/Two expects a native
+window beginning with 16-bit width and height values.  This is the same ABI
+already proven by OpenATV's Amlogic Kodi window-system port.
+
+---
+ Source/Core/DolphinNoGUI/PlatformFBDev.cpp | 19 ++++++++++++++++++-
+ 1 file changed, 18 insertions(+), 1 deletion(-)
+
+diff --git a/Source/Core/DolphinNoGUI/PlatformFBDev.cpp b/Source/Core/DolphinNoGUI/PlatformFBDev.cpp
+index c166c06c40..02b60f3841 100644
+--- a/Source/Core/DolphinNoGUI/PlatformFBDev.cpp
++++ b/Source/Core/DolphinNoGUI/PlatformFBDev.cpp
+@@ -13,6 +13,8 @@
+ #include <cstdio>
+ #include <thread>
+ 
++#include <linux/fb.h>
++#include <sys/ioctl.h>
+ #include <fcntl.h>
+ #include <unistd.h>
+ 
+@@ -37,6 +37,12 @@ private:
+   bool OpenFramebuffer();
+ 
+   int m_fb_fd = -1;
++  struct AmlogicFbdevWindow
++  {
++    unsigned short width;
++    unsigned short height;
++  };
++  AmlogicFbdevWindow m_fbdev_window{1280, 720};
+ };
+ 
+ PlatformFBDev::~PlatformFBDev()
+@@ -61,6 +67,17 @@ bool PlatformFBDev::OpenFramebuffer()
+     return false;
+   }
+ 
++  fb_var_screeninfo vinfo{};
++  if (ioctl(m_fb_fd, FBIOGET_VSCREENINFO, &vinfo) < 0 || !vinfo.xres || !vinfo.yres)
++  {
++    std::fprintf(stderr, "FBIOGET_VSCREENINFO failed\n");
++    close(m_fb_fd);
++    m_fb_fd = -1;
++    return false;
++  }
++
++  m_fbdev_window.width = static_cast<unsigned short>(vinfo.xres);
++  m_fbdev_window.height = static_cast<unsigned short>(vinfo.yres);
+   return true;
+ }
+ 
+@@ -191,7 +209,7 @@ WindowSystemInfo PlatformFBDev::GetWindowSystemInfo() const
+ {
+   WindowSystemInfo wsi;
+   wsi.type = WindowSystemType::FBDev;
+-  wsi.display_connection = nullptr;  // EGL_DEFAULT_DISPLAY
++  wsi.display_connection = const_cast<AmlogicFbdevWindow*>(&m_fbdev_window);
+   wsi.render_window = nullptr;
+   wsi.render_surface = nullptr;
+   return wsi;
+-- 
+2.51.0

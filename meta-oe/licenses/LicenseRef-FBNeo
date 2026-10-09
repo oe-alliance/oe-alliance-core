@@ -1,0 +1,15 @@
+You may freely use, modify, and distribute both the FB Neo source code and
+binary, however the following restrictions apply to the FB Neo original
+material:
+
+* You may not sell, lease, rent or otherwise seek to gain monetary profit from
+  FB Neo.
+* You must make public any changes you make to the source code.
+* You must include, verbatim, the full text of the upstream license.
+* You may not distribute FB Neo with ROM images unless you have the legal right
+  to distribute them.
+* You may not ask for donations to support work on a project that uses FB Neo.
+
+The complete license, including the licenses of incorporated components, is in
+src/license.txt in the FB Neo source distribution and must accompany any
+redistribution.

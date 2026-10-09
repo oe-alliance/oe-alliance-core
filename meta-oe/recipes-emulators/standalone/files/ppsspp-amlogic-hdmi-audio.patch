@@ -1,0 +1,89 @@
+From e08f0d5ad87f65c3dc18315a4cbdb2db30eaad90 Mon Sep 17 00:00:00 2001
+From: OpenATV RetroGaming <noreply@openatv.org>
+Date: Sun, 16 Aug 2026 11:05:00 +0200
+Subject: [PATCH] SDL: match fbdev audio to 48 kHz HDMI
+
+Dream's HDMI PCM endpoint runs at 48 kHz with 1024-sample periods.  Asking
+SDL/ALSA for PPSSPP's desktop defaults (44.1 kHz and 256 samples) adds a
+resampling layer and caused underruns and crackling on the receiver.
+
+Use the native HDMI rate and period size for fbdev builds.  Also feed the
+rate actually negotiated by SDL back to NativeMix, so audio stays correct
+on drivers which substitute another supported rate.
+
+Upstream-Status: Inappropriate [OpenATV fbdev HDMI integration]
+
+---
+diff --git a/Core/Config.cpp b/Core/Config.cpp
+index 04dbb7b..20e915a 100644
+--- a/Core/Config.cpp
++++ b/Core/Config.cpp
+@@ -824,13 +824,23 @@ std::string DefaultProAdhocServer() {
+ 	return "socom.cc";
+ }
+ 
++#if defined(USING_FBDEV)
++static constexpr bool kDefaultExtraAudioBuffering = true;
++static constexpr int kDefaultSDLAudioBufferSize = 1024;
++static constexpr AudioSyncMode kDefaultAudioSyncMode = AudioSyncMode::GRANULAR;
++#else
++static constexpr bool kDefaultExtraAudioBuffering = false;
++static constexpr int kDefaultSDLAudioBufferSize = 256;
++static constexpr AudioSyncMode kDefaultAudioSyncMode = AudioSyncMode::CLASSIC_PITCH;
++#endif
++
+ static const ConfigSetting soundSettings[] = {
+ 	ConfigSetting("Enable", SETTING(g_Config, bEnableSound), true, CfgFlag::PER_GAME),
+-	ConfigSetting("ExtraAudioBuffering", SETTING(g_Config, bExtraAudioBuffering), false, CfgFlag::DEFAULT),
+-	ConfigSetting("AudioBufferSize", SETTING(g_Config, iSDLAudioBufferSize), 256, CfgFlag::DEFAULT),
++	ConfigSetting("ExtraAudioBuffering", SETTING(g_Config, bExtraAudioBuffering), kDefaultExtraAudioBuffering, CfgFlag::DEFAULT),
++	ConfigSetting("AudioBufferSize", SETTING(g_Config, iSDLAudioBufferSize), kDefaultSDLAudioBufferSize, CfgFlag::DEFAULT),
+ 
+ 	ConfigSetting("FillAudioGaps", SETTING(g_Config, bFillAudioGaps), true, CfgFlag::DEFAULT),
+-	ConfigSetting("AudioSyncMode", SETTING(g_Config, iAudioPlaybackMode), (int)AudioSyncMode::CLASSIC_PITCH, CfgFlag::DEFAULT),
++	ConfigSetting("AudioSyncMode", SETTING(g_Config, iAudioPlaybackMode), (int)kDefaultAudioSyncMode, CfgFlag::DEFAULT),
+ 
+ 	// Legacy volume settings, these get auto upgraded through default handlers on the new settings. NOTE: Must be before the new ones in the order here.
+ 	// The default settings here are still relevant, they will get propagated into the new ones.
+diff --git a/SDL/SDLMain.cpp b/SDL/SDLMain.cpp
+index 9566071..03c2848 100644
+--- a/SDL/SDLMain.cpp
++++ b/SDL/SDLMain.cpp
+@@ -98,7 +98,13 @@ static int g_DesktopHeight = 0;
+ static float g_DesktopDPI = 1.0f;
+ static float g_ForcedDPI = 0.0f; // if this is 0.0f, use g_DesktopDPI
+ static float g_RefreshRate = 60.f;
++#if defined(USING_FBDEV)
++static int g_sampleRate = 48000;
++static constexpr int kMinSDLAudioBufferSamples = 1024;
++#else
+ static int g_sampleRate = 44100;
++static constexpr int kMinSDLAudioBufferSamples = 128;
++#endif
+ 
+ static bool g_rebootEmuThread = false;
+ 
+@@ -147,7 +153,7 @@ static void InitSDLAudioDevice(const std::string &name = "") {
+ 	fmt.freq = g_sampleRate;
+ 	fmt.format = AUDIO_S16;
+ 	fmt.channels = 2;
+-	fmt.samples = std::max(g_Config.iSDLAudioBufferSize, 128);
++	fmt.samples = std::max(g_Config.iSDLAudioBufferSize, kMinSDLAudioBufferSamples);
+ 	fmt.callback = &sdl_mixaudio_callback;
+ 	fmt.userdata = nullptr;
+ 
+@@ -188,6 +194,12 @@ static void InitSDLAudioDevice(const std::string &name = "") {
+ 	if (audioDev <= 0) {
+ 		ERROR_LOG(Log::Audio, "Failed to open audio device '%s', second try. Giving up.", SDL_GetError());
+ 	} else {
++		INFO_LOG(Log::Audio, "SDL audio negotiated: %d Hz, %d channels, %d samples (requested: %d Hz, %d samples)",
++			g_retFmt.freq, g_retFmt.channels, g_retFmt.samples, fmt.freq, fmt.samples);
++		if (g_retFmt.freq > 0) {
++			// NativeMix must generate the rate consumed by the opened SDL device.
++			g_sampleRate = g_retFmt.freq;
++		}
+ 		if (g_retFmt.samples != fmt.samples) // Notify, but still use it
+ 			ERROR_LOG(Log::Audio, "Output audio samples: %d (requested: %d)", g_retFmt.samples, fmt.samples);
+ 		if (g_retFmt.format != fmt.format || g_retFmt.channels != fmt.channels) {
+-- 
+2.51.0

@@ -1,0 +1,30 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: OpenATV RetroGaming <noreply@openatv.org>
+Date: Sat, 15 Aug 2026 20:30:00 +0200
+Subject: [PATCH] dosbox-pure: slow TV gamepad OSK cursor by default
+
+Low-cost USB gamepads used with set-top boxes commonly expose their D-pad as
+digital axes and have no analog stick.  The default cursor speed can cross
+several keys during a normal button press.  Start at the core's existing slow
+speed; L2 can still accelerate the cursor when desired.
+
+Upstream-Status: Inappropriate [OpenATV appliance input policy]
+
+---
+ dosbox_pure_osd.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/dosbox_pure_osd.h b/dosbox_pure_osd.h
+index 0000000..1111111 100644
+--- a/dosbox_pure_osd.h
++++ b/dosbox_pure_osd.h
+@@ -180,6 +180,6 @@ struct DBP_MenuMouse
+ 	float x, y, jx1, jy1, jx2, jy2; Bit16u bw, bh; Bit16s mx, my; Bit8s kx, ky, mspeed; Bit8u realmouse : 1, left_pressed : 1, click : 1, right_up : 1, wheel_down : 1, wheel_up : 1, ignoremove : 1;
+ 	DBP_MenuMouse() { memset(this, 0, sizeof(*this)); }
+-	void Reset() { mspeed = 2; left_pressed = false; if (realmouse) Input(DBPET_MOUSEMOVE, 0, 0, false); }
++	void Reset() { mspeed = 1; left_pressed = false; if (realmouse) Input(DBPET_MOUSEMOVE, 0, 0, false); }
+ 
+ 	void Input(DBP_Event_Type type, int val, int val2, bool joykbd)
+ 	{
+-- 
+2.50.1

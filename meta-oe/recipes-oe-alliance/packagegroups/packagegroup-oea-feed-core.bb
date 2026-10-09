@@ -62,6 +62,8 @@ RDEPENDS:${PN} = "\
     enigma2-plugin-extensions-planerfs \
     enigma2-plugin-extensions-ppanel \
     enigma2-plugin-extensions-remotechannelstreamconverter \
+    ${@bb.utils.contains("MACHINE_FEATURES", "retrogaming", d.getVar("RETROGAMING_FEED_PACKAGES"), "", d) if d.getVar('DISTRO') == 'openatv' else ''} \
+    ${@bb.utils.contains("MACHINE_FEATURES", "retrogaming-highperformance", d.getVar("RETROGAMING_HIGH_PERFORMANCE_FEED_PACKAGES"), "", d) if d.getVar('DISTRO') == 'openatv' else ''} \
     enigma2-plugin-extensions-serienrecorder \
     enigma2-plugin-extensions-setpicon \
     enigma2-plugin-extensions-shootyourscreen \
@@ -255,6 +257,44 @@ RDEPENDS:${PN} = "\
     "
 
 WIREGUARD_MODULE = "${@bb.utils.contains_any("MACHINE", "osmini4k osmio4k osmio4kplus u5pvr", "", "wireguard-module", d)}"
+
+# Normal feed packages, independent of STATIC_FEED; OpenATV rollout is gated above.
+RETROGAMING_FEED_PACKAGES = "\
+    enigma2-plugin-extensions-retrogaming \
+    libretro-2048 \
+    libretro-snes9x \
+    libretro-snes9x2010 \
+    libretro-supafaust \
+    libretro-fceumm \
+    libretro-nestopia \
+    libretro-gambatte \
+    libretro-mgba \
+    libretro-stella2014 \
+    libretro-gearsystem \
+    libretro-clownmdemu \
+    libretro-genesis-plus-gx \
+    libretro-picodrive \
+    libretro-beetle-pce-fast \
+    libretro-fbneo \
+    libretro-mame2003-plus \
+    libretro-pcsx-rearmed \
+    libretro-dosbox-pure \
+    libretro-scummvm \
+    libretro-puae \
+    libretro-vice-x64 \
+    libretro-prboom \
+    libretro-mrboom \
+    libretro-mupen64plus-next \
+    libretro-ppsspp \
+    libretro-flycast \
+    "
+
+RETROGAMING_HIGH_PERFORMANCE_FEED_PACKAGES = "\
+    dolphin-standalone \
+    libretro-mupen64plus-next-gles3 \
+    libretro-virtualjaguar \
+    ppsspp-standalone \
+    "
 
 STATIC_FEED_BUILD = "\
     ${@bb.utils.contains("MACHINE_FEATURES", "openhbbtv", "enigma2-plugin-extensions-openhbbtvbrowser", "", d)} \

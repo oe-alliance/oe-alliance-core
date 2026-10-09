@@ -1,0 +1,114 @@
+From da667768366322272307359bf85338736ed79e50 Mon Sep 17 00:00:00 2001
+From: OpenATV RetroGaming <noreply@openatv.org>
+Date: Sat, 15 Aug 2026 10:20:00 +0200
+Subject: [PATCH] SDL: create the Dream fbdev EGL context without SDL video
+
+Dream One/Two use the proprietary Amlogic Mali fbdev EGL platform. SDL's
+DirectFB backend owns a black software framebuffer which races with and can
+cover the native GLES plane. Do not create or show an SDL video window on
+FBDev; EGL owns the native Mali window while SDL remains available for input
+events and audio. Dream's Mali library requires the persistent two-field
+fbdev window ABI used by the tested Kodi and Chromium ports.
+
+Upstream-Status: Inappropriate [OpenATV Dream fbdev EGL integration]
+
+---
+diff --git a/SDL/SDLGLGraphicsContext.cpp b/SDL/SDLGLGraphicsContext.cpp
+index 54756b7..0acb3af 100644
+--- a/SDL/SDLGLGraphicsContext.cpp
++++ b/SDL/SDLGLGraphicsContext.cpp
+@@ -29,6 +29,15 @@ static bool                     g_XDisplayOpen  = false;
+ static EGLNativeWindowType      g_Window        = (EGLNativeWindowType)nullptr;
+ static bool useEGLSwap = false;
+ 
++#if defined(USING_FBDEV)
++struct OpenATVFbdevWindow
++{
++	unsigned short width = 1280;
++	unsigned short height = 720;
++};
++static OpenATVFbdevWindow g_fbdevWindow;
++#endif
++
+ int CheckEGLErrors(const char *file, int line) {
+ 	EGLenum error;
+ 	const char *errortext = "unknown";
+@@ -79,7 +88,9 @@ static bool EGL_OpenInit() {
+ static int8_t EGL_Open(SDL_Window *window) {
+ #if defined(USING_FBDEV)
+ 	g_Display = (EGLNativeDisplayType)nullptr;
+-	g_Window = (EGLNativeWindowType)nullptr;
++	g_Window = reinterpret_cast<EGLNativeWindowType>(&g_fbdevWindow);
++	fprintf(stderr, "OpenATV Mali fbdev window: %ux%u\n",
++		g_fbdevWindow.width, g_fbdevWindow.height);
+ #elif defined(__APPLE__)
+ 	g_Display = (EGLNativeDisplayType)XOpenDisplay(nullptr);
+ 	g_XDisplayOpen = g_Display != nullptr;
+@@ -302,7 +313,9 @@ void EGL_Close() {
+ bool SDLGLGraphicsContext::InitFromRenderThread(std::string *errorMessage) {
+ 	bool retval = GraphicsContext::InitFromRenderThread(errorMessage);
+ 	// HACK: Ensure that the swap interval is set after context creation (needed for kmsdrm)
++#if !defined(USING_FBDEV)
+ 	SDL_GL_SetSwapInterval(1);
++#endif
+ 	return retval;
+ }
+ 
+@@ -323,9 +336,20 @@ int SDLGLGraphicsContext::Init(SDL_Window *&window, int x, int y, int w, int h,
+ 
+ 	// We start hidden because we have to try several windows.
+ 	// On Mac, full screen animates so each attempt is slow.
++#if defined(USING_FBDEV) && defined(USING_EGL)
++	mode |= SDL_WINDOW_HIDDEN;
++#else
+ 	mode |= SDL_WINDOW_OPENGL | SDL_WINDOW_HIDDEN;
++#endif
+ 
+ 	SDL_GLContext glContext = nullptr;
++#if defined(USING_FBDEV) && defined(USING_EGL)
++	if (w > 0 && w <= 65535 && h > 0 && h <= 65535) {
++		g_fbdevWindow.width = static_cast<unsigned short>(w);
++		g_fbdevWindow.height = static_cast<unsigned short>(h);
++	}
++	window = nullptr;
++#else
+ 	for (size_t i = 0; i < ARRAY_SIZE(attemptVersions); ++i) {
+ 		const auto &ver = attemptVersions[i];
+ 		// If we force a specific OpenGL version, skip the ones
+@@ -388,15 +412,24 @@ int SDLGLGraphicsContext::Init(SDL_Window *&window, int x, int y, int w, int h,
+ 			return 2;
+ 		}
+ 	}
++#endif
+ 
+ 	// At this point, we have a window that we can show finally.
++#if !defined(USING_FBDEV)
+ 	SDL_ShowWindow(window);
++#endif
+ 
+ #ifdef USING_EGL
+ 	if (EGL_Open(window) != 0) {
+ 		fprintf(stderr, "EGL_Open() failed\n");
++#if defined(USING_FBDEV)
++		return 2;
++#endif
+ 	} else if (EGL_Init(window) != 0) {
+ 		fprintf(stderr, "EGL_Init() failed\n");
++#if defined(USING_FBDEV)
++		return 2;
++#endif
+ 	} else {
+ 		useEGLSwap = true;
+ 	}
+@@ -447,7 +480,10 @@ int SDLGLGraphicsContext::Init(SDL_Window *&window, int x, int y, int w, int h,
+ 
+ 	renderManager_->SetSwapIntervalFunction([&](int interval) {
+ 		INFO_LOG(Log::G3D, "SDL SwapInterval: %d", interval);
+-		SDL_GL_SetSwapInterval(interval);
++		if (useEGLSwap)
++			eglSwapInterval(g_eglDisplay, interval);
++		else
++			SDL_GL_SetSwapInterval(interval);
+ 	});
+ 
+ 	window_ = window;

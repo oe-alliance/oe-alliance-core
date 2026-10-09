@@ -1,0 +1,38 @@
+From 0000000000000000000000000000000000000003 Mon Sep 17 00:00:00 2001
+From: OpenATV RetroGaming <noreply@openatv.invalid>
+Date: Sat, 15 Aug 2026 16:25:00 +0200
+Subject: [PATCH] input: route HiSilicon system keys to hotkeys
+
+RetroArch maps Linux receiver keys to media-key enums, while its default
+meta actions use keypad plus/minus, F9 and P.  Normalize volume, mute and
+play/pause keys in the udev path so they control RetroArch while a game owns
+the framebuffer.  Keep the change limited to HiSilicon STBs.
+---
+ input/drivers/udev_input.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+diff --git a/input/drivers/udev_input.c b/input/drivers/udev_input.c
+index b14010d459..835232b09c 100644
+--- a/input/drivers/udev_input.c
++++ b/input/drivers/udev_input.c
+@@ -601,6 +601,18 @@ static unsigned input_unify_ev_key_code(unsigned code)
+          return KEY_BACKSPACE;
+       case KEY_EXIT:
+          return KEY_CLEAR;
++#ifdef HAVE_HISI_STB
++      case KEY_VOLUMEUP:
++         return KEY_KPPLUS;
++      case KEY_VOLUMEDOWN:
++         return KEY_KPMINUS;
++      case KEY_MUTE:
++         return KEY_F9;
++      case KEY_PLAYPAUSE:
++      case KEY_PLAY:
++      case KEY_PAUSE:
++         return KEY_P;
++#endif
+       default:
+          break;
+    }
+-- 
+2.43.0

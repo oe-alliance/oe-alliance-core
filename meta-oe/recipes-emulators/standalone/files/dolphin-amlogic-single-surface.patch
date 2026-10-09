@@ -1,0 +1,35 @@
+From 9a9b7250ee69997b43f1ebd5c654077483bbb23b Mon Sep 17 00:00:00 2001
+From: OpenATV RetroGaming <noreply@openatv.org>
+Date: Sun, 16 Aug 2026 12:00:00 +0200
+Subject: [PATCH] OGL: keep one visible EGL surface on Dream FBDev
+
+Dolphin normally probes backend capabilities with a temporary OpenGL context
+before creating the real renderer. Dream's proprietary Mali FBDev WSI keeps
+scanning out black after that visible surface is destroyed. Skip only this
+temporary FBDev probe; Initialize() fills the same backend information using
+the real context.
+
+Upstream-Status: Inappropriate [OpenATV Dream fbdev EGL integration]
+
+---
+diff --git a/Source/Core/VideoBackends/OGL/OGLMain.cpp b/Source/Core/VideoBackends/OGL/OGLMain.cpp
+index 13f47a0..7a122d0 100644
+--- a/Source/Core/VideoBackends/OGL/OGLMain.cpp
++++ b/Source/Core/VideoBackends/OGL/OGLMain.cpp
+@@ -76,6 +76,15 @@ std::string VideoBackend::GetDisplayName() const
+ 
+ void VideoBackend::InitBackendInfo(const WindowSystemInfo& wsi)
+ {
++  // The proprietary Dream Mali FBDev WSI allows only one visible window
++  // surface for a native fbdev window.  The normal capability probe creates
++  // and destroys a temporary surface before the real renderer starts; after
++  // that sequence the driver keeps scanning out black.  Initialize() calls
++  // FillBackendInfo() again with the real context, so skipping the temporary
++  // probe is safe and leaves one EGL window surface for the whole session.
++  if (wsi.type == WindowSystemType::FBDev)
++    return;
++
+   std::unique_ptr<GLContext> temp_gl_context =
+       GLContext::Create(wsi, g_Config.stereo_mode == StereoMode::QuadBuffer, true,
+                         Config::Get(Config::GFX_PREFER_GLES));
+

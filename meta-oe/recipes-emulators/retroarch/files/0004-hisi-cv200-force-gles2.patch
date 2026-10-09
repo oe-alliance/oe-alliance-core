@@ -1,0 +1,35 @@
+From: OpenATV RetroGaming Team <noreply@openatv.org>
+Date: Sun, 16 Aug 2026 16:00:00 +0200
+Subject: [PATCH] mali-fbdev: force GLES2 on HiSilicon CV200
+
+The CV200 Mali-T720 advertises GLES 3.1 but its STB composition path is only
+reliable through GLES2, matching the separate STB-Kodi CV200 backend. Do not
+query EGL surface geometry here: the legacy MV200 Mali-450 blob crashes on
+its first swap after eglQuerySurface.
+
+Upstream-Status: Inappropriate [OpenATV HiSilicon vendor EGL ABI]
+---
+ gfx/drivers_context/mali_fbdev_ctx.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/gfx/drivers_context/mali_fbdev_ctx.c b/gfx/drivers_context/mali_fbdev_ctx.c
+--- a/gfx/drivers_context/mali_fbdev_ctx.c
++++ b/gfx/drivers_context/mali_fbdev_ctx.c
+@@ -356,4 +356,15 @@ static bool gfx_ctx_mali_fbdev_bind_api(void *data,
+    unsigned version = major * 100 + minor;
++#ifdef HAVE_HISI_CV200
++   /* CV200's Mali-T720 advertises GLES 3.1 but its STB composition path is
++    * only reliable with the GLES2 renderer, matching the Kodi backend. */
++   if (version >= 300)
++   {
++      RARCH_LOG("[Mali] HiSilicon CV200: forcing the GLES2 renderer path.\n");
++      version = 200;
++   }
++#endif
+    if (version >= 300)
+       mali_flags |= GFX_CTX_MALI_FBDEV_FLAG_GLES3;
++   else
++      mali_flags &= ~GFX_CTX_MALI_FBDEV_FLAG_GLES3;
+    return (api == GFX_CTX_OPENGL_ES_API);
+-- 
+2.45.2

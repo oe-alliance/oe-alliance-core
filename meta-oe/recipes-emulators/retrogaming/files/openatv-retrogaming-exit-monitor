@@ -1,0 +1,114 @@
+#!/usr/bin/python3
+
+from glob import glob
+from os import O_CLOEXEC, O_NONBLOCK, O_RDONLY, close, kill, open as osOpen, read
+from os.path import exists, join
+from selectors import EVENT_READ, DefaultSelector
+from signal import SIGTERM
+from struct import Struct
+from sys import argv
+from time import monotonic
+
+
+class ExitMonitor:
+	EV_KEY = 0x01
+	SELECT_CODES = {0x13A, 296}
+	START_CODES = {0x13B, 297}
+	EXIT_CODES = SELECT_CODES | START_CODES
+	HOLD_SECONDS = 2.0
+	INPUT_EVENT = Struct("@llHHi")
+
+	@staticmethod
+	def openDevices(selector, devices):
+		for path in glob("/dev/input/event*"):
+			if path in devices:
+				continue
+			try:
+				descriptor = osOpen(path, O_RDONLY | O_NONBLOCK | O_CLOEXEC)
+				selector.register(descriptor, EVENT_READ, path)
+				devices[path] = {"fd": descriptor, "pressed": set(), "since": None}
+			except (OSError, PermissionError):
+				continue
+
+	@staticmethod
+	def closeDevice(selector, devices, path):
+		state = devices.pop(path, None)
+		if state is None:
+			return
+		try:
+			selector.unregister(state["fd"])
+		except (KeyError, OSError):
+			pass
+		try:
+			close(state["fd"])
+		except OSError:
+			pass
+
+	@staticmethod
+	def run():
+		if len(argv) != 2:
+			return 64
+		try:
+			emulatorPid = int(argv[1])
+		except ValueError:
+			return 64
+		if emulatorPid <= 1:
+			return 64
+
+		selector = DefaultSelector()
+		devices = {}
+		lastScan = 0.0
+
+		while exists(join("/proc", str(emulatorPid))):
+			now = monotonic()
+			if now - lastScan >= 2.0:
+				exitMonitor.openDevices(selector, devices)
+				lastScan = now
+
+			for key, unusedMask in selector.select(0.1):
+				path = key.data
+				state = devices.get(path)
+				if state is None:
+					continue
+				try:
+					payload = read(state["fd"], exitMonitor.INPUT_EVENT.size * 32)
+				except BlockingIOError:
+					continue
+				except OSError:
+					exitMonitor.closeDevice(selector, devices, path)
+					continue
+				if not payload:
+					exitMonitor.closeDevice(selector, devices, path)
+					continue
+
+				usable = len(payload) - (len(payload) % exitMonitor.INPUT_EVENT.size)
+				for offset in range(0, usable, exitMonitor.INPUT_EVENT.size):
+					unusedSec, unusedUsec, eventType, code, value = exitMonitor.INPUT_EVENT.unpack_from(payload, offset)
+					if eventType != exitMonitor.EV_KEY or code not in exitMonitor.EXIT_CODES:
+						continue
+					if value:
+						state["pressed"].add(code)
+					else:
+						state["pressed"].discard(code)
+					if state["pressed"] & exitMonitor.SELECT_CODES and state["pressed"] & exitMonitor.START_CODES:
+						if state["since"] is None:
+							state["since"] = monotonic()
+					else:
+						state["since"] = None
+
+			now = monotonic()
+			for state in devices.values():
+				if state["since"] is not None and now - state["since"] >= exitMonitor.HOLD_SECONDS:
+					try:
+						kill(emulatorPid, SIGTERM)
+						print(f"SELECT+START held: stopping emulator PID {emulatorPid}", flush=True)
+					except ProcessLookupError:
+						pass
+					return 0
+
+		return 0
+
+
+exitMonitor = ExitMonitor()
+if __name__ == "__main__":
+	raise SystemExit(exitMonitor.run())

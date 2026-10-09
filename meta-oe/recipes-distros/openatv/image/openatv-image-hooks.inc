@@ -1,6 +1,9 @@
 # OpenATV image hooks
 MAINTAINER = "openATV team"
 
+# Emulator cores remain separate feed packages, managed by RetroGaming setup.
+IMAGE_INSTALL:append = "${@bb.utils.contains('MACHINE_FEATURES', 'retrogaming', ' enigma2-plugin-extensions-retrogaming', '', d)}"
+
 inherit openatv-image-info
 
 # The SmallBox companion has its own rootfs and writes its own information.

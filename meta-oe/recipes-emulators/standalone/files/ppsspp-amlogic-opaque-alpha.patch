@@ -1,0 +1,40 @@
+From 54b71815bfac0fb64e3b1a39011eab5e3f96a740 Mon Sep 17 00:00:00 2001
+From: OpenATV RetroGaming <noreply@openatv.org>
+Date: Sun, 16 Aug 2026 10:40:00 +0200
+Subject: [PATCH] SDL: make Dream fbdev presentation alpha opaque
+
+PPSSPP's final PSP framebuffer commonly contains zero alpha.  Dream's ARGB
+OSD plane honors that channel, making the otherwise correct RGB image fully
+transparent on HDMI.  Before each fbdev EGL swap, clear only the alpha channel
+to one and preserve the caller's color-mask and clear-color state.
+
+Upstream-Status: Inappropriate [OpenATV Dream fbdev OSD integration]
+
+---
+diff --git a/SDL/SDLGLGraphicsContext.cpp b/SDL/SDLGLGraphicsContext.cpp
+index e57745c..9076581 100644
+--- a/SDL/SDLGLGraphicsContext.cpp
++++ b/SDL/SDLGLGraphicsContext.cpp
+@@ -471,7 +471,19 @@ int SDLGLGraphicsContext::Init(SDL_Window *&window, int x, int y, int w, int h,
+ 	renderManager_->SetSwapFunction([&]() {
+ #ifdef USING_EGL
+-		if (useEGLSwap)
++		if (useEGLSwap) {
++#if defined(USING_FBDEV)
++			GLboolean colorMask[4];
++			GLfloat clearColor[4];
++			glGetBooleanv(GL_COLOR_WRITEMASK, colorMask);
++			glGetFloatv(GL_COLOR_CLEAR_VALUE, clearColor);
++			glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_TRUE);
++			glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
++			glClear(GL_COLOR_BUFFER_BIT);
++			glColorMask(colorMask[0], colorMask[1], colorMask[2], colorMask[3]);
++			glClearColor(clearColor[0], clearColor[1], clearColor[2], clearColor[3]);
++#endif
+ 			eglSwapBuffers(g_eglDisplay, g_eglSurface);
++		}
+ 		else
+ 			SDL_GL_SwapWindow(window_);
+ #else
+-- 
+2.51.0

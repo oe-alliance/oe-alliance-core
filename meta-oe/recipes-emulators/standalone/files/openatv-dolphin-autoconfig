@@ -1,0 +1,50 @@
+#!/bin/sh
+
+set -u
+
+OUTPUT="${1:-}"
+[ -n "${OUTPUT}" ] || exit 64
+[ -s "${OUTPUT}" ] && exit 0
+
+PAD_NAME=""
+for NAME_FILE in /sys/class/input/js*/device/name; do
+	if [ -r "${NAME_FILE}" ]; then
+		PAD_NAME="$(tr '\r\n' '  ' < "${NAME_FILE}")"
+		break
+	fi
+done
+
+[ -n "${PAD_NAME}" ] || exit 0
+
+mkdir -p "$(dirname "${OUTPUT}")"
+{
+	printf '[GCPad1]\n'
+	printf 'Device = evdev/0/%s\n' "${PAD_NAME}"
+	printf 'Buttons/A = `Button 1`\n'
+	printf 'Buttons/B = `Button 0`\n'
+	printf 'Buttons/X = `Button 3`\n'
+	printf 'Buttons/Y = `Button 2`\n'
+	printf 'Buttons/Z = `Button 10`|`Button 5`\n'
+	printf 'Buttons/Start = `Button 6`|`Button 9`\n'
+	printf 'Buttons/Hotkey = `Button 4`|`Button 8`\n'
+	printf 'Main Stick/Up = `Axis 1-`\n'
+	printf 'Main Stick/Down = `Axis 1+`\n'
+	printf 'Main Stick/Left = `Axis 0-`\n'
+	printf 'Main Stick/Right = `Axis 0+`\n'
+	printf 'Main Stick/Dead Zone = 20.000000000000000\n'
+	printf 'C-Stick/Up = `Axis 3-`\n'
+	printf 'C-Stick/Down = `Axis 3+`\n'
+	printf 'C-Stick/Left = `Axis 2-`\n'
+	printf 'C-Stick/Right = `Axis 2+`\n'
+	printf 'C-Stick/Dead Zone = 20.000000000000000\n'
+	printf 'Triggers/L = `Axis 4+`|`Button 4`|`Button 9`\n'
+	printf 'Triggers/R = `Axis 5+`|`Button 5`|`Button 10`\n'
+	printf 'Triggers/L-Analog = `Axis 4+`\n'
+	printf 'Triggers/R-Analog = `Axis 5+`\n'
+	printf 'D-Pad/Up = `Hat 0 N`|`Axis 5-`|`Button 11`\n'
+	printf 'D-Pad/Down = `Hat 0 S`|`Axis 5+`|`Button 12`\n'
+	printf 'D-Pad/Left = `Hat 0 W`|`Axis 4-`|`Button 13`\n'
+	printf 'D-Pad/Right = `Hat 0 E`|`Axis 4+`|`Button 14`\n'
+	printf 'Rumble/Motor = `Strong`|`Weak`\n'
+} > "${OUTPUT}"
+

@@ -1,0 +1,92 @@
+From b8455115554661045374075392395932f779aa20 Mon Sep 17 00:00:00 2001
+From: OpenATV RetroGaming <noreply@openatv.org>
+Date: Sun, 16 Aug 2026 10:05:00 +0200
+Subject: [PATCH] EGL: select an opaque FBDev config on Dream Mali
+
+The proprietary Dream Mali driver exposes EGL window configs that create and
+swap successfully but remain black when composed.  Select the lowest-alpha,
+non-MSAA FBDev config, matching the working PPSSPP native path.
+
+Upstream-Status: Inappropriate [OpenATV Dream fbdev EGL integration]
+
+---
+diff --git a/Source/Core/Common/GL/GLInterface/EGL.cpp b/Source/Core/Common/GL/GLInterface/EGL.cpp
+index 30230e7..cd3287f 100644
+--- a/Source/Core/Common/GL/GLInterface/EGL.cpp
++++ b/Source/Core/Common/GL/GLInterface/EGL.cpp
+@@ -4,5 +4,6 @@
+ #include "Common/GL/GLInterface/EGL.h"
+ 
+ #include <array>
++#include <cstdio>
+ #include <sstream>
+ #include <vector>
+@@ -175,6 +176,8 @@ bool GLContextEGL::Initialize(const WindowSystemInfo& wsi, bool stereo, bool cor
+                    8,
+                    EGL_BLUE_SIZE,
+                    8,
++                   EGL_DEPTH_SIZE,
++                   16,
+                    EGL_SURFACE_TYPE,
+                    IsHeadless() ? 0 : EGL_WINDOW_BIT,
+                    EGL_NONE};
+@@ -195,7 +198,57 @@ bool GLContextEGL::Initialize(const WindowSystemInfo& wsi, bool stereo, bool cor
+     return false;
+   }
+ 
+-  if (!eglChooseConfig(m_egl_display, attribs, &m_config, 1, &num_configs))
++  if (m_wsi.type == WindowSystemType::FBDev)
++  {
++    if (!eglChooseConfig(m_egl_display, attribs, nullptr, 0, &num_configs) || num_configs <= 0)
++    {
++      INFO_LOG_FMT(VIDEO, "Error: couldn't get an EGL FBDev visual config");
++      return false;
++    }
++
++    std::vector<EGLConfig> configs(static_cast<size_t>(num_configs));
++    if (!eglChooseConfig(m_egl_display, attribs, configs.data(), num_configs, &num_configs) ||
++        num_configs <= 0)
++    {
++      INFO_LOG_FMT(VIDEO, "Error: couldn't enumerate EGL FBDev visual configs");
++      return false;
++    }
++
++    // The proprietary Dream Mali driver exposes several otherwise compatible
++    // window configs.  Alpha/MSAA configs can be created successfully but are
++    // composed as a black surface.  Prefer the same opaque, non-MSAA class of
++    // config selected by PPSSPP's working native FBDev path.
++    int best_score = 0x7fffffff;
++    EGLint selected_alpha = 0;
++    EGLint selected_samples = 0;
++    for (int i = 0; i < num_configs; ++i)
++    {
++      EGLint alpha = 0;
++      EGLint sample_buffers = 0;
++      EGLint samples = 0;
++      EGLint level = 0;
++      EGLint transparent = EGL_NONE;
++      eglGetConfigAttrib(m_egl_display, configs[i], EGL_ALPHA_SIZE, &alpha);
++      eglGetConfigAttrib(m_egl_display, configs[i], EGL_SAMPLE_BUFFERS, &sample_buffers);
++      eglGetConfigAttrib(m_egl_display, configs[i], EGL_SAMPLES, &samples);
++      eglGetConfigAttrib(m_egl_display, configs[i], EGL_LEVEL, &level);
++      eglGetConfigAttrib(m_egl_display, configs[i], EGL_TRANSPARENT_TYPE, &transparent);
++
++      const int score = alpha * 100000 + sample_buffers * 10000 + samples * 100 +
++                        (level != 0 ? 10 : 0) + (transparent != EGL_NONE ? 1 : 0);
++      if (score < best_score)
++      {
++        best_score = score;
++        m_config = configs[i];
++        selected_alpha = alpha;
++        selected_samples = samples;
++      }
++    }
++    std::fprintf(stderr, "OpenATV Dolphin EGL FBDev config: alpha=%d samples=%d\n",
++                 selected_alpha, selected_samples);
++  }
++  else if (!eglChooseConfig(m_egl_display, attribs, &m_config, 1, &num_configs) ||
++           num_configs <= 0)
+   {
+     INFO_LOG_FMT(VIDEO, "Error: couldn't get an EGL visual config");
+     return false;
+

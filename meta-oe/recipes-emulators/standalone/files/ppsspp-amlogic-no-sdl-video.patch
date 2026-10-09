@@ -1,0 +1,162 @@
+From 0f5c9244b990769730bb655d99343f5a4bd8430d Mon Sep 17 00:00:00 2001
+From: OpenATV RetroGaming <noreply@openatv.org>
+Date: Sun, 16 Aug 2026 11:00:00 +0200
+Subject: [PATCH] SDL: avoid DirectFB video ownership on native FBDev EGL
+
+The Dream Mali EGL plane must own video output. Initializing SDL's DirectFB
+video backend creates a software framebuffer and cursor which can cover the
+GLES surface after a game starts. On FBDev initialize only SDL events, game
+controllers and audio, use the fixed 720p native EGL size, and skip all SDL
+window operations.
+
+Upstream-Status: Inappropriate [OpenATV Dream fbdev EGL integration]
+
+---
+diff --git a/SDL/SDLMain.cpp b/SDL/SDLMain.cpp
+index 7bd757b..6a326e5 100644
+--- a/SDL/SDLMain.cpp
++++ b/SDL/SDLMain.cpp
+@@ -209,6 +209,10 @@ static void StopSDLAudioDevice() {
+ }
+ 
+ static void UpdateScreenDPI(SDL_Window *window) {
++#if defined(USING_FBDEV)
++	g_DesktopDPI = 1.0f;
++	return;
++#else
+ 	int drawable_width, window_width, window_height;
+ 	SDL_GetWindowSize(window, &window_width, &window_height);
+ 
+@@ -224,6 +228,7 @@ static void UpdateScreenDPI(SDL_Window *window) {
+ 	// Round up a little otherwise there would be a gap sometimes
+ 	// in fractional scaling
+ 	g_DesktopDPI = ((float) drawable_width + 1.0f) / window_width;
++#endif
+ }
+ 
+ // Simple implementations of System functions
+@@ -820,6 +825,10 @@ static float parseFloat(const char *str) {
+ }
+ 
+ void UpdateWindowState(SDL_Window *window) {
++#if defined(USING_FBDEV)
++	g_windowState.update = false;
++	return;
++#else
+ 	SDL_SetWindowTitle(window, g_windowState.title.c_str());
+ 	if (g_windowState.applyFullScreenNextFrame) {
+ 		g_windowState.applyFullScreenNextFrame = false;
+@@ -840,6 +849,7 @@ void UpdateWindowState(SDL_Window *window) {
+ 		g_windowState.clipboardString.clear();
+ 	}
+ 	g_windowState.update = false;
++#endif
+ }
+ 
+ enum class EmuThreadState {
+@@ -1327,6 +1337,10 @@ static void ProcessSDLEvent(SDL_Window *window, const SDL_Event &event, InputSta
+ }
+ 
+ void UpdateTextFocus() {
++#if defined(USING_FBDEV)
++	g_textFocusChanged = false;
++	return;
++#else
+ 	if (g_textFocusChanged) {
+ 		DEBUG_LOG(Log::System, "Updating text focus: %d", g_textFocus);
+ 		if (g_textFocus) {
+@@ -1336,9 +1350,13 @@ void UpdateTextFocus() {
+ 		}
+ 		g_textFocusChanged = false;
+ 	}
++#endif
+ }
+ 
+ void UpdateSDLCursor() {
++#if defined(USING_FBDEV)
++	return;
++#else
+ #if !defined(MOBILE_DEVICE)
+ 	if (lastUIState != GetUIState()) {
+ 		lastUIState = GetUIState();
+@@ -1348,6 +1366,7 @@ void UpdateSDLCursor() {
+ 			SDL_ShowCursor(SDL_ENABLE);
+ 	}
+ #endif
++#endif
+ }
+ 
+ static int printUsage(const char *progname)
+@@ -1525,10 +1544,17 @@ int main(int argc, char *argv[]) {
+ 	NativeGetAppInfo(&app_name, &app_name_nice, &landscape, &version);
+ 
+ 	bool joystick_enabled = true;
+-	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK | SDL_INIT_GAMECONTROLLER | SDL_INIT_AUDIO) < 0) {
++#if defined(USING_FBDEV)
++	const Uint32 sdlInitFlags = SDL_INIT_EVENTS | SDL_INIT_JOYSTICK | SDL_INIT_GAMECONTROLLER | SDL_INIT_AUDIO;
++	const Uint32 sdlFallbackFlags = SDL_INIT_EVENTS | SDL_INIT_AUDIO;
++#else
++	const Uint32 sdlInitFlags = SDL_INIT_VIDEO | SDL_INIT_JOYSTICK | SDL_INIT_GAMECONTROLLER | SDL_INIT_AUDIO;
++	const Uint32 sdlFallbackFlags = SDL_INIT_VIDEO | SDL_INIT_AUDIO;
++#endif
++	if (SDL_Init(sdlInitFlags) < 0) {
+ 		fprintf(stderr, "Failed to initialize SDL with joystick support. Retrying without.\n");
+ 		joystick_enabled = false;
+-		if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0) {
++		if (SDL_Init(sdlFallbackFlags) < 0) {
+ 			fprintf(stderr, "Unable to initialize SDL: %s\n", SDL_GetError());
+ 			return 1;
+ 		}
+@@ -1545,6 +1571,13 @@ int main(int argc, char *argv[]) {
+ 
+ 	// Get the video info before doing anything else, so we don't get skewed resolution results.
+ 	// TODO: support multiple displays correctly
++#if defined(USING_FBDEV)
++	// The native Mali surface is independent of SDL video.  Keep the standalone
++	// renderer at the proven 720p mode unless explicit dimensions were passed.
++	g_DesktopWidth = set_xres > 0 ? set_xres : 1280;
++	g_DesktopHeight = set_yres > 0 ? set_yres : 720;
++	g_RefreshRate = 60.0f;
++#else
+ 	SDL_DisplayMode displayMode;
+ 	int should_be_zero = SDL_GetCurrentDisplayMode(0, &displayMode);
+ 	if (should_be_zero != 0) {
+@@ -1554,6 +1587,7 @@ int main(int argc, char *argv[]) {
+ 	g_DesktopWidth = displayMode.w;
+ 	g_DesktopHeight = displayMode.h;
+ 	g_RefreshRate = displayMode.refresh_rate;
++#endif
+ 
+ 	SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
+ 	SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
+@@ -1719,8 +1753,11 @@ int main(int argc, char *argv[]) {
+ 
+ 	bool mainThreadIsRender = g_Config.iGPUBackend == (int)GPUBackend::OPENGL;
+ 
++#if !defined(USING_FBDEV)
+ 	SDL_SetWindowTitle(window, (app_name_nice + " " + PPSSPP_GIT_VERSION).c_str());
++#endif
+ 
++#if !defined(USING_FBDEV)
+ 	char iconPath[PATH_MAX];
+ #if defined(ASSETS_DIR)
+ 	snprintf(iconPath, PATH_MAX, "%sui_images/icon.png", ASSETS_DIR);
+@@ -1740,6 +1777,7 @@ int main(int argc, char *argv[]) {
+ 		free(imageData);
+ 		imageData = NULL;
+ 	}
++#endif
+ 
+ 	// Since we render from the main thread, there's nothing done here, but we call it to avoid confusion.
+ 	if (!graphicsContext->InitFromRenderThread(&error_message)) {
+@@ -1757,7 +1795,9 @@ int main(int argc, char *argv[]) {
+ 	// Avoid the IME popup when holding keys. This doesn't affect all versions of SDL.
+ 	// Note: We re-enable it in text input fields! This is necessary otherwise we don't receive
+ 	// KeyInputFlags::CHAR events.
++#if !defined(USING_FBDEV)
+ 	SDL_StopTextInput();
++#endif
+ 
+ 	InitSDLAudioDevice();
+ 	g_audioStartTime = time_now_d();
+

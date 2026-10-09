@@ -1,0 +1,37 @@
+From 9cd6cb7f3844e2e8d058f326a9d0750daf64538c Mon Sep 17 00:00:00 2001
+From: OpenATV RetroGaming <noreply@openatv.org>
+Date: Sat, 15 Aug 2026 15:00:00 +0200
+Subject: [PATCH] build: enable format warnings for hardened toolchains
+
+OpenEmbedded enables -Wformat-security. GCC diagnoses that option when the
+upstream Makefile later disables all format checks with -Wno-format. Keep
+format checks enabled so the hardening flags remain valid.
+
+Upstream-Status: Inappropriate [OpenEmbedded toolchain integration]
+---
+ Makefile | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/Makefile b/Makefile
+index 427dc45..b5bd36d 100644
+--- a/Makefile
++++ b/Makefile
+@@ -173,6 +173,6 @@ else
+   OUTNAME := dosbox_pure_libretro.so
+   CXX     ?= g++
+-  LDFLAGS := -Wl,--gc-sections -fno-ident
++  LDFLAGS += -Wl,--gc-sections -fno-ident
+   COMMONFLAGS += -pthread
+   ifeq ($(CPUFLAGS),)
+     # ARM optimizations
+@@ -224,7 +224,7 @@ else
+   LDFLAGS  += -O2
+ endif
+ 
+-CFLAGS  += $(CPUFLAGS) -std=gnu++11 -fomit-frame-pointer -fexceptions -Wno-address-of-packed-member -Wno-format -Wno-switch -Wno-psabi
++CFLAGS  += $(CPUFLAGS) -std=gnu++11 -fomit-frame-pointer -fexceptions -Wno-address-of-packed-member -Wformat -Wno-switch -Wno-psabi
+ ifneq ($(STATIC_LINKING), 1)
+   CFLAGS  += -fpic
+ else
+-- 
+2.50.1
