@@ -4,7 +4,7 @@ HOMEPAGE = "https://www.retroarch.com/"
 BUGTRACKER = "https://github.com/libretro/RetroArch/issues"
 
 LICENSE = "GPL-3.0-only"
-PR = "r19"
+PR = "r20"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 
 SRC_URI = "git://github.com/libretro/RetroArch.git;protocol=https;branch=master \
@@ -45,6 +45,10 @@ CFLAGS:append = "${@bb.utils.contains('MACHINE_FEATURES', 'retrogaming-bcm-nextv
 CFLAGS:append = "${@bb.utils.contains('MACHINE_FEATURES', 'retrogaming-bcm-dags', ' -DHAVE_BCM_DAGS=1', '', d)}"
 CFLAGS:append = "${@bb.utils.contains('MACHINE_FEATURES', 'retrogaming-bcm-v3d', ' -DHAVE_BCM_V3D=1', '', d)}"
 CFLAGS:append = "${@bb.utils.contains('MACHINE_FEATURES', 'retrogaming-dream-vc5', ' -DHAVE_DREAM_VC5=1', '', d)}"
+# Some vendor GLES packages opt out of automatic shared-library dependencies.
+# Let the machine specify their runtime package without disabling file-rdeps QA.
+RETROARCH_GLES_RDEPENDS ??= ""
+RDEPENDS:${PN} += "${RETROARCH_GLES_RDEPENDS}"
 RDEPENDS:${PN}:append = "${@bb.utils.contains('MACHINE_FEATURES', 'retrogaming-dream-vc5', ' retroarch-dm9x0-runtime', '', d)}"
 
 # RetroArch's explicit NEON option adds ARM32-only compiler flags

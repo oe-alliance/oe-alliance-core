@@ -359,6 +359,8 @@ PREFERRED_PROVIDER_virtual/egl = "dinobot-opengl-${SOC_FAMILY}"
 PREFERRED_PROVIDER_virtual/libgles1 = "dinobot-opengl-${SOC_FAMILY}"
 PREFERRED_PROVIDER_virtual/libgles2 = "dinobot-opengl-${SOC_FAMILY}"
 KODI_VISUALIZATION_GLES_RDEPENDS = "dinobot-opengl-${SOC_FAMILY}"
+# dinobot-opengl excludes automatic shared-library dependency generation.
+RETROARCH_GLES_RDEPENDS = "dinobot-opengl-${SOC_FAMILY}"
 PREFERRED_PROVIDER_virtual/kodi = "stb-kodi-${MACHINE}"
 VIRTUAL-RUNTIME_blindscan_dvbs = "dinobot-blindscan-${MACHINE}"
 
