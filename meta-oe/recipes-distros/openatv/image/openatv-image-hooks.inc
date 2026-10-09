@@ -120,12 +120,7 @@ openatv_singlecore_disable_optional_services() {
 		wsdd \
 		wsdd2"
 
-	# Keep remote support access available throughout SmallBox setup.  The
-	# native wizard runs before Enigma2, so Enigma2 cannot recover disabled
-	# FTP or Telnet services when first-boot setup fails.
-	if [ "${@bb.utils.contains('MACHINE_FEATURES', 'smallflash', '1', '0', d)}" != "1" ]; then
-		services="$services telnetd.busybox vsftpd"
-	fi
+	# Keep Telnet and FTP available for remote support on all boxes.
 
 	for runlevel in 2 3 4 5; do
 		for service in $services; do
