@@ -14,5 +14,5 @@ require libretro-core.inc
 LIBRETRO_CORE_FILE = "pcsx_rearmed_libretro.so"
 
 do_compile() {
-    oe_runmake -f Makefile.libretro platform=unix
+    oe_runmake -f Makefile.libretro platform=unix ARCH_DETECTED="${TARGET_ARCH}"
 }
