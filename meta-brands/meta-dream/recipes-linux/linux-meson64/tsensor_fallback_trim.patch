@@ -1,0 +1,58 @@
+diff -Naur a/arch/arm64/boot/dts/amlogic/dreamone.dts b/arch/arm64/boot/dts/amlogic/dreamone.dts
+--- a/arch/arm64/boot/dts/amlogic/dreamone.dts	2026-10-09 09:32:06.000000000 +0200
++++ b/arch/arm64/boot/dts/amlogic/dreamone.dts	2026-10-09 14:30:51.837741500 +0200
+@@ -1536,5 +1536,26 @@
+ 	cs-gpios = <&gpio GPIOH_6 0>;
+ };
+ 
++/* hw trim efuse is empty, enable tsensor with uncalibrated defaults */
++&p_tsensor {
++	amlogic,fallback-trim-info = <0x84000000>;
++};
++
++&d_tsensor {
++	amlogic,fallback-trim-info = <0x84000000>;
++};
++
++/* cpufreq cooling has fewer states than the g12b reference, use THERMAL_NO_LIMIT */
++&soc_thermal {
++	cooling-maps {
++		cpufreq_cooling_map0 {
++			cooling-device = <&cpufreq_cool0 0 0xffffffff>;
++		};
++		cpufreq_cooling_map1 {
++			cooling-device = <&cpufreq_cool1 0 0xffffffff>;
++		};
++	};
++};
++
+ #include "dreambox-partitions.dtsi"
+ #include "dreambox-rc.dtsi"
+diff -Naur a/drivers/amlogic/thermal/meson_tsensor.c b/drivers/amlogic/thermal/meson_tsensor.c
+--- a/drivers/amlogic/thermal/meson_tsensor.c	2021-10-29 12:55:38.000000000 +0200
++++ b/drivers/amlogic/thermal/meson_tsensor.c	2026-10-09 14:30:51.836226500 +0200
+@@ -343,7 +343,7 @@
+ 	struct meson_tsensor_data *data = platform_get_drvdata(pdev);
+ 	struct meson_tsensor_platform_data *pdata = data->pdata;
+ 	struct thermal_zone_device *tz = data->tzd;
+-	u32 trim_info = 0;
++	u32 trim_info = 0, fallback_trim;
+ 	u32 rising_threshold = 0, falling_threshold = 0;
+ 	u32 reboot_reg = 0xffff, con = 0;
+ 	int ret = 0, threshold_code, i;
+@@ -355,6 +355,15 @@
+ 	trim_info = readl(data->base_e + R1P1_TRIM_INFO);
+ 	pr_info("tsensor trim info: 0x%x!\n", trim_info);
+ 	ver = (trim_info >> 24) & 0xff;
++	/* untrimmed chips (DreamOne/DreamTwo): use calibration from DT */
++	if ((((ver & 0xf) >> 2) == 0 || (ver & 0x80) == 0) &&
++	    !of_property_read_u32(pdev->dev.of_node,
++				  "amlogic,fallback-trim-info", &fallback_trim)) {
++		pr_info("tsensor hw trim invalid, using fallback 0x%x\n",
++			fallback_trim);
++		trim_info = fallback_trim;
++		ver = (trim_info >> 24) & 0xff;
++	}
+ 	/*r1p1 tsensor ver to doing*/
+ 	if (((ver & 0xf) >> 2) == 0) {
+ 		ret = ERANGE;
