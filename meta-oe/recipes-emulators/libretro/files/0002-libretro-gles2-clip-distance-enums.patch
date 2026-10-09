@@ -15,10 +15,9 @@ Upstream-Status: Inappropriate [old vendor headers]
  1 file changed, 7 insertions(+)
 
 diff --git a/Common/GPU/OpenGL/GLFeatures.cpp b/Common/GPU/OpenGL/GLFeatures.cpp
-index 3cb1d21..d1ba952 100644
 --- a/Common/GPU/OpenGL/GLFeatures.cpp
 +++ b/Common/GPU/OpenGL/GLFeatures.cpp
-@@ -14,5 +14,12 @@
+@@ -14,6 +14,13 @@
  #endif
  
  #include "Common/GPU/OpenGL/GLFeatures.h"
@@ -31,6 +30,6 @@ index 3cb1d21..d1ba952 100644
 +#endif
  
  #include "Common/Log.h"
+ 
 -- 
 2.43.0
-

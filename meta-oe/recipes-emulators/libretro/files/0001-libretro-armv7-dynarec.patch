@@ -19,11 +19,9 @@ Upstream-Status: Pending
  1 file changed, 3 insertions(+), 2 deletions(-)
 
 diff --git a/libretro/Makefile.common b/libretro/Makefile.common
-index 5946131..77ff7fe 100644
 --- a/libretro/Makefile.common
 +++ b/libretro/Makefile.common
-@@ -668,8 +668,10 @@ else ifeq ($(PLATFORM_EXT), android)
- SOURCES_CXX += $(COMMONDIR)/MemArenaAndroid.cpp \
+@@ -667,7 +667,9 @@
  	       $(EXTDIR)/glslang/glslang/OSDependent/Unix/ossource.cpp \
  		   $(COMMONDIR)/Render/Text/draw_text_android.cpp
  else
@@ -33,7 +31,7 @@ index 5946131..77ff7fe 100644
  SOURCES_CXX += $(COMMONDIR)/MemArenaPosix.cpp \
  	       $(EXTDIR)/glslang/glslang/OSDependent/Unix/ossource.cpp
  endif
-@@ -906,7 +908,7 @@ SOURCES_CXX += $(COREDIR)/HLE/__sceAudio.cpp
+@@ -916,7 +918,7 @@
  ### DYNAREC ###
  ifeq ($(WITH_DYNAREC),1)
     DYNAFLAGS += -DDYNAREC

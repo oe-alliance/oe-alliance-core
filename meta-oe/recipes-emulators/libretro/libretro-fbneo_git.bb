@@ -14,6 +14,8 @@ require libretro-core.inc
 LIBRETRO_CORE_FILE = "fbneo_libretro.so"
 LIBRETRO_CORE_PATH = "${S}/src/burner/libretro/${LIBRETRO_CORE_FILE}"
 
+CLEANBROKEN = "1"
+
 do_compile() {
     oe_runmake -C ${S}/src/burner/libretro platform=unix
 }

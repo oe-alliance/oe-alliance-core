@@ -1,0 +1,30 @@
+From: OpenATV Team <info@opena.tv>
+Subject: [PATCH] libretro: honour externally supplied link flags
+
+The makefile starts LDFLAGS from scratch, so the flags of a cross build
+environment never reach the link of the core. On OpenEmbedded that drops the
+distribution's hardening and optimisation options, among them -Wl,--hash-style
+which the packaging QA asks for.
+
+Setting LDFLAGS on the make command line is no way out, since the platform
+blocks only append to it and the core would lose -shared and its version
+script. Seed the variable from EXTRA_LDFLAGS instead, which keeps the
+standalone build unchanged.
+
+Upstream-Status: Pending
+---
+ backends/platform/libretro/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/backends/platform/libretro/Makefile b/backends/platform/libretro/Makefile
+--- a/backends/platform/libretro/Makefile
++++ b/backends/platform/libretro/Makefile
+@@ -36,7 +36,7 @@
+ CP       := cp
+ 
+ 
+-LDFLAGS :=
++LDFLAGS := $(EXTRA_LDFLAGS)
+ 
+ 
+ # Raspberry Pi 1

@@ -15,9 +15,10 @@ SRC_URI = " \
     git://github.com/libretro/libretro-deps;protocol=https;nobranch=1;name=libretro_deps;destsuffix=${BP}/backends/platform/libretro/deps/libretro-deps \
     git://github.com/libretro/libretro-common;protocol=https;nobranch=1;name=libretro_common;destsuffix=${BP}/backends/platform/libretro/deps/libretro-common \
     file://0001-libretro-allow-externally-managed-dependencies.patch \
+    file://0002-libretro-honour-external-ldflags.patch \
 "
 PV = "0.1+git20261008.${SRCPV}"
-PR = "r2"
+PR = "r3"
 
 require libretro-core.inc
 
@@ -41,7 +42,8 @@ do_compile() {
         platform=unix \
         LITE=${SCUMMVM_LITE} \
         FETCH_SUBMODULES=0 \
-        FORCE_OPENGLNONE=1
+        FORCE_OPENGLNONE=1 \
+        EXTRA_LDFLAGS="${LDFLAGS}"
 
     install -d ${B}/libretro-system-data
     bash ${S}/backends/platform/libretro/scripts/bundle_datafiles.sh \
