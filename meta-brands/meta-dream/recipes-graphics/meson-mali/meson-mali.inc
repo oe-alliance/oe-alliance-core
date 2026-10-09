@@ -1,9 +1,10 @@
 SUMMARY = "amlogic mali opengl provider"
+PR = "r1"
 PROVIDES = "virtual/egl virtual/libgles2"
 
 RRECOMMENDS:${PN} = "${PN}-module-bifrost-r12p0"
 
-RPROVIDES:${PN} = "libegl libegl1 libgles2 libglesv2-2 virtual-libgles2"
+RPROVIDES:${PN} = "libegl libegl1 libgles2 libglesv2-2 virtual-libgles2 virtual-egl"
 RPROVIDES:${PN}-dev = "libegl-dev libgles2-dev"
 
 RCONFLICTS:${PN} = "libegl libegl1 libgles2 libglesv2-2"

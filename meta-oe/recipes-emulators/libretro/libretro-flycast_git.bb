@@ -3,6 +3,7 @@ DESCRIPTION = "Experimental Sega Dreamcast, Naomi and Atomiswave emulator core."
 HOMEPAGE = "https://github.com/flyinghead/flycast"
 
 LICENSE = "GPL-2.0-only"
+PR = "r1"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 
 SRC_URI = "gitsm://github.com/flyinghead/flycast.git;protocol=https;branch=master"
@@ -13,6 +14,7 @@ inherit cmake
 require libretro-core.inc
 
 DEPENDS = "libzip virtual/egl virtual/libgles2 zlib"
+RDEPENDS:${PN} += "virtual-libgles2 virtual-egl"
 
 LIBRETRO_CORE_FILE = "flycast_libretro.so"
 LIBRETRO_CORE_PATH = "${B}/${LIBRETRO_CORE_FILE}"

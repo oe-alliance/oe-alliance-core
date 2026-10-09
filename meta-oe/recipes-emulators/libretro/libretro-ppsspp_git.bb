@@ -3,7 +3,7 @@ DESCRIPTION = "Experimental Sony PlayStation Portable emulator core."
 HOMEPAGE = "https://github.com/hrydgard/ppsspp"
 
 LICENSE = "GPL-2.0-or-later"
-PR = "r2"
+PR = "r3"
 LIC_FILES_CHKSUM = "file://LICENSE.TXT;md5=e336f8162cddec7981e240f46825d8a2"
 
 SRC_URI = "gitsm://github.com/hrydgard/ppsspp.git;protocol=https;branch=master \
@@ -18,6 +18,7 @@ PV = "0.1+git20261008.${SRCPV}"
 require libretro-core.inc
 
 DEPENDS = "virtual/egl virtual/libgles2 zlib"
+RDEPENDS:${PN} += "virtual-libgles2 virtual-egl"
 
 LIBRETRO_CORE_FILE = "ppsspp_libretro.so"
 LIBRETRO_CORE_PATH = "${S}/libretro/${LIBRETRO_CORE_FILE}"

@@ -3,6 +3,7 @@ DESCRIPTION = "Nintendo 64 emulator core with ARM and AArch64 dynamic recompiler
 HOMEPAGE = "https://github.com/libretro/mupen64plus-libretro-nx"
 
 LICENSE = "GPL-2.0-only"
+PR = "r1"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 
 SRC_URI = "git://github.com/libretro/mupen64plus-libretro-nx.git;protocol=https;branch=develop"
@@ -18,6 +19,7 @@ MUPEN_HAVE_NEON = "${@'0' if d.getVar('TARGET_ARCH') == 'aarch64' else '1'}"
 MUPEN_GRAPHICS ??= "FORCE_GLES=1"
 
 DEPENDS = "virtual/libgles2 zlib"
+RDEPENDS:${PN} += "virtual-libgles2 virtual-egl"
 
 do_compile() {
     oe_runmake \
