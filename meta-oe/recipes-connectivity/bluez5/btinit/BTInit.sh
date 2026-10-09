@@ -76,11 +76,11 @@ connect_audio() {
     ensure_bluetooth_stack || return 0
 
     i=0
-    while [ ! -f "$BTAUDIO_FILE" ] && [ $i -lt 10 ]; do
+    while [ ! -f "$BTAUDIO_FILE" ] && [ "$SOFT_BTAUDIO" != "1" ] && [ $i -lt 10 ]; do
         sleep 1
         i=$((i+1))
     done
-    if [ -f "$BTAUDIO_FILE" ]; then
+    if [ -f "$BTAUDIO_FILE" ] || [ "$SOFT_BTAUDIO" = "1" ]; then
         if [ "$AUDIO_CONNECT" = "True" ]; then
             log "Connecting to audio device: $AUDIO_ADDRESS"
             "$COMMANDCONNECT" "$AUDIO_ADDRESS" &
@@ -122,6 +122,32 @@ if [ "$MODEL" = "inihdp" ]; then
     modprobe rtk_btusb &
 fi
 
+# Dreambox One/Two: audio is decoded in software, enigma2 plays to the
+# Bluetooth ALSA sink itself (no /proc/stb/audio/btaudio).
+case "$MODEL" in
+    dreamone|dreamtwo) SOFT_BTAUDIO=1 ;;
+esac
+
+attach_uart_controller() {
+    # Internal BCM4356 on ttyS1, powered through the bt_rfkill GPIO.
+    [ -d /sys/class/bluetooth/hci0 ] && return 0
+    for rfkill in /sys/class/rfkill/rfkill*; do
+        [ "$(cat "$rfkill/type" 2>/dev/null)" = bluetooth ] || continue
+        echo 1 > "$rfkill/soft"
+        sleep 1
+        echo 0 > "$rfkill/soft"
+    done
+    sleep 1
+    if ! hciattach -t 30 /dev/ttyS1 bcm43xx 1500000 flow >/dev/null 2>&1; then
+        log "$MODEL: hciattach failed"
+        return 1
+    fi
+    log "$MODEL: internal controller attached"
+    # bluealsa exits when no adapter exists at boot
+    [ -x /etc/init.d/bluealsa ] && /etc/init.d/bluealsa start >/dev/null 2>&1
+    return 0
+}
+
 start() {
     log "Starting..."
 
@@ -134,6 +160,10 @@ start() {
             log "gbquad4kpro: set /proc/stb/audio/btaudio to off"
             echo off > /proc/stb/audio/btaudio
         fi
+    fi
+
+    if [ "$SOFT_BTAUDIO" = "1" ]; then
+        attach_uart_controller
     fi
 
     hciconfig hci0 up > /dev/null 2>&1 && log "Attaching hci0"

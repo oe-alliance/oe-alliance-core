@@ -53,13 +53,14 @@ MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS = "\
     fbset-modes \
     dp-device \
     dream-gpt-startup \
+    bcm4356-bt-firmware \
 "
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "\
     u-boot-bin \
 "
 
-MACHINE_FEATURES += "dreambox alsa usbhost 3dtv switchoff blindscan-dvbs kodi22"
+MACHINE_FEATURES += "dreambox alsa usbhost 3dtv switchoff blindscan-dvbs kodi22 inibt"
 # Add "dreambox" override for recipes
 MACHINEOVERRIDES .= ":dreambox"
 
