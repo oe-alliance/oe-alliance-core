@@ -2,7 +2,7 @@ SUMMARY = "Hardware drivers for Dreambox"
 SECTION = "base"
 DEPENDS = "virtual/kernel ${MLPREFIX}gcc-cross-${TARGET_ARCH}"
 PRIORITY = "required"
-INC_PR = "r8"
+INC_PR = "r9"
 require conf/license/license-close.inc
 
 PRECOMPILED_ARCH ?= "${MACHINE}"
@@ -13,6 +13,11 @@ DREAMBOX_DVB_MODULES_MIRROR ?= "https://source.mynonpublic.com/dreambox"
 SRC_URI = " \
             ${DREAMBOX_DVB_MODULES_MIRROR}/dreambox-dvb-modules-${PRECOMPILED_ARCH}-${DM_LOCALVERSION}-${DRIVERDATE}.tar.bz2;name=modules \
             file://modules \
+"
+
+SRC_URI:append:dm8000 = " \
+    file://dm8000-bcm7400-load \
+    file://dm8000-bcm7400-watchdog.conf \
 "
 
 S = "${UNPACKDIR}"
@@ -33,9 +38,19 @@ do_install() {
     install -m 0644 ${UNPACKDIR}/*.ko ${D}/lib/modules/${DM_LOCALVERSION}/extra
 }
 
+do_install:append:dm8000() {
+    install -d ${D}${sbindir} ${D}${sysconfdir}/modprobe.d
+    install -m 0755 ${UNPACKDIR}/dm8000-bcm7400-load ${D}${sbindir}/dm8000-bcm7400-load
+    install -m 0644 ${UNPACKDIR}/dm8000-bcm7400-watchdog.conf ${D}${sysconfdir}/modprobe.d/dm8000-bcm7400-watchdog.conf
+}
+
 PACKAGES = "${PN}"
 
-RDEPENDS:${PN} += "dreambox-secondstage-${MACHINE} kernel-vmlinux"
+RDEPENDS:${PN} += " \
+    dreambox-secondstage-${MACHINE} \
+    kernel-vmlinux \
+    kernel-module-snd-pcm \
+"
 
 # We don't use KERNEL_VERSION in this recipe, because the
 # precompiled modules depend on a specific version.

@@ -1,0 +1,26 @@
+#!/bin/sh
+
+# The old proprietary DM8000 driver blocks scheduling for about 26 seconds
+# during initialisation. Temporarily relax the soft-lockup watchdog so this
+# known delay is not reported as a kernel BUG, then restore the normal value.
+watchdog_thresh=/proc/sys/kernel/watchdog_thresh
+saved_thresh=
+
+if [ -r "$watchdog_thresh" ] && [ -w "$watchdog_thresh" ]; then
+    saved_thresh=$(cat "$watchdog_thresh")
+    case "$saved_thresh" in
+        ''|*[!0-9]*) saved_thresh= ;;
+        *) echo 30 > "$watchdog_thresh" ;;
+    esac
+fi
+
+/sbin/modprobe --ignore-install --force-modversion bcm7400 "$@"
+status=$?
+
+if [ -n "$saved_thresh" ]; then
+    # Give the watchdog thread time to refresh before restoring its threshold.
+    sleep 1
+    echo "$saved_thresh" > "$watchdog_thresh"
+fi
+
+exit "$status"
