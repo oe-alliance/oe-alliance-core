@@ -17,7 +17,7 @@ inherit setuptools3-openplugins
 
 SRC_URI = "git://github.com/oe-alliance-plugins/RemoteSupport.git;protocol=https;branch=main"
 
-RDEPENDS:${PN} = "sshx python3-cbor2 python3-cryptography python3-pyte python3-qrcode python3-websocket-client"
+RDEPENDS:${PN} = "sshx python3-cbor2 python3-cryptography python3-pyte python3-websocket-client"
 
 RPROVIDES:${PN} += "remotesupport"
 
