@@ -6,7 +6,7 @@ FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 # several seconds during Kodi startup.
 RRECOMMENDS:alsa-state:append = "${@'' if (d.getVar('SOC_FAMILY') or '').startswith('hisi') and 'kodi22' in (d.getVar('MACHINE_FEATURES') or '').split() else ' libasound-module-ctl-oss libasound-module-pcm-oss'}"
 
-PR:append = ".9"
+PR:append = ".10"
 PACKAGE_ARCH := "${MACHINE_ARCH}"
 
 # All Kodi-capable HiSilicon variants expose the same HISI-AIAO card. The

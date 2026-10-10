@@ -1,0 +1,70 @@
+DAB: forward MPEG Layer II to Enigma2 and skip unused PCM decoding
+
+Keep PAD extraction and CRC checking for MP2 hardware playback. Register
+both decoder types for untouched frames, including PCM-mode recordings.
+
+Upstream-Status: Inappropriate [OpenATV Enigma2 frontend]
+
+--- a/src/backend/dab_decoder.h
++++ b/src/backend/dab_decoder.h
+@@ -39,6 +39,7 @@
+ class MP2Decoder : public SubchannelSink {
+ private:
+ 	bool float32;
++	bool decodeAudio;
+ 	mpg123_handle *handle;
+ 
+ 	int scf_crc_len;
+@@ -56,7 +57,7 @@
+ 	static const int* tables_nbal[];
+ 	static const int sblimits[];
+ public:
+-	MP2Decoder(SubchannelSinkObserver* observer, bool float32);
++	MP2Decoder(SubchannelSinkObserver* observer, bool float32, bool decodeAudio = true);
+ 	~MP2Decoder();
+ 
+ 	void Feed(const uint8_t *data, size_t len);
+--- a/src/backend/dab_decoder.cpp
++++ b/src/backend/dab_decoder.cpp
+@@ -48,8 +48,9 @@
+ };
+ 
+ 
+-MP2Decoder::MP2Decoder(SubchannelSinkObserver* observer, bool float32) : SubchannelSink(observer, "mp2") {
++MP2Decoder::MP2Decoder(SubchannelSinkObserver* observer, bool float32, bool decodeAudio) : SubchannelSink(observer, "mp2") {
+ 	this->float32 = float32;
++	this->decodeAudio = decodeAudio;
+ 
+ 	scf_crc_len = -1;
+ 	lsf = false;
+@@ -163,6 +164,8 @@
+ 	}
+ 
+ 	ProcessUntouchedStream(header, body_data, body_bytes);
++	if (!decodeAudio)
++		return 0;
+ 
+ 	size_t frame_len;
+ 	mpg_result = mpg123_framebyframe_decode(handle, nullptr, data, &frame_len);
+--- a/src/backend/decoder_adapter.cpp
++++ b/src/backend/decoder_adapter.cpp
+@@ -33,15 +33,17 @@
+     padDecoder(this, true)
+ {
+     if (dabModus == AudioServiceComponentType::DAB)
+-        decoder = std::make_unique<MP2Decoder>(this, false);
++        decoder = std::make_unique<MP2Decoder>(this, false, myInterface.needsDecodedAudio());
+     else if (dabModus == AudioServiceComponentType::DABPlus) {
+         auto superframe = std::make_unique<SuperframeFilter>(
+                 this, myInterface.needsDecodedAudio(), false);
+-        superframe->AddUntouchedStreamConsumer(this);
+         decoder = std::move(superframe);
+     }
+     else
+         throw std::runtime_error("DecoderAdapter: Unknown service component");
++
++    // Forward both MPEG Layer II and LOAS to compressed-audio consumers.
++    decoder->AddUntouchedStreamConsumer(this);
+ 
+     // Open a dump file (XPADxpert) if the user defined it
+     if (!dumpFileName.empty()) {
