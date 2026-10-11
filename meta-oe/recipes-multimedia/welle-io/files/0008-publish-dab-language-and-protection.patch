@@ -1,0 +1,79 @@
+From: OpenATV contributors
+Subject: [PATCH] welle-e2: publish FIC language and protection metadata
+
+Prefer the audio SubChId language from FIG 0/5, with optional service
+language from FIG 0/17 as fallback. Forward the existing UEP/EEP protection
+string and refresh format metadata when later FIC data changes it.
+
+Upstream-Status: Pending
+
+diff --git a/src/welle-e2/welle-e2.cpp b/src/welle-e2/welle-e2.cpp
+index 8fd4b6d..779d6a0 100644
+--- a/src/welle-e2/welle-e2.cpp
++++ b/src/welle-e2/welle-e2.cpp
+@@ -334,7 +334,8 @@ void announceService(RadioReceiver& receiver, const Service& service)
+     emitMetadata(value);
+ }
+ 
+-void announceSelectedService(RadioReceiver& receiver, const Service& service)
++void announceSelectedService(RadioReceiver& receiver, const Service& service,
++                             std::string& lastFormat)
+ {
+     for (const auto& component : receiver.getComponents(service)) {
+         if (component.transportMode() != TransportMode::Audio)
+@@ -343,17 +344,24 @@ void announceSelectedService(RadioReceiver& receiver, const Service& service)
+         if (!subchannel.valid())
+             continue;
+ 
+-        json name;
+-        name["ps"] = trimLabel(service.serviceLabel.utf8_label());
+-        emitMetadata(name);
+-
+         json format;
+         format["bitrate"] = std::to_string(subchannel.bitrate());
+         format["dabType"] = component.audioType() == AudioServiceComponentType::DABPlus ? "DAB+" : "DAB";
+-        format["language"] = "Unknown";
++        /* FIG 0/5 describes the audio subchannel. FIG 0/17 language is
++         * optional and many ensembles (including ERT) do not carry it. */
++        const int language = subchannel.language ? subchannel.language : service.language;
++        const char *languageName = DABConstants::getLanguageName(language);
++        format["language"] = languageName[0] ? languageName : "Unknown";
+         format["programType"] = "Unknown";
+-        format["protectionLevel"] = "Unknown";
+-        emitMetadata(format);
++        format["protectionLevel"] = subchannel.protection();
++        const std::string serialized = format.dump();
++        if (serialized != lastFormat) {
++            json name;
++            name["ps"] = trimLabel(service.serviceLabel.utf8_label());
++            emitMetadata(name);
++            emitMetadata(format);
++            lastFormat = serialized;
++        }
+         return;
+     }
+ }
+@@ -403,6 +411,7 @@ int main(int argc, char **argv)
+         std::set<int> packetSubchannels;
+         std::unique_ptr<EnigmaProgrammeHandler> programme;
+         bool selected = false;
++        std::string lastFormat;
+ 
+         while (running) {
+             for (const auto& service : receiver.getServiceList()) {
+@@ -415,11 +424,14 @@ int main(int argc, char **argv)
+                 if (!selected && !label.empty() && options.serviceId && service.serviceId == options.serviceId) {
+                     programme.reset(new EnigmaProgrammeHandler(
+                             service.serviceId, options.cachePrefix, options.pcmFd));
+-                    announceSelectedService(receiver, service);
++                    announceSelectedService(receiver, service, lastFormat);
+                     selected = receiver.playSingleProgramme(*programme, std::string(), service);
+                     if (!selected)
+                         programme.reset();
+                 }
++                /* FIC language/protection may arrive after audio starts. */
++                if (selected && service.serviceId == options.serviceId)
++                    announceSelectedService(receiver, service, lastFormat);
+             }
+ 
+             /* SPI is normally carried by a separate packet-mode service, not
