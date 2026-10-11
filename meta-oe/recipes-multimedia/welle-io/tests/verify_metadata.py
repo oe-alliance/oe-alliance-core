@@ -85,7 +85,7 @@ int main(int argc, char **argv) {
   announceSelectedService(receiver,service,last);
   assert(messages.size()==2);
   const auto metadata=messages.back();
-  assert(metadata["language"]=="Greek");
+  assert(metadata["language"]=="112");
   assert(metadata["protectionLevel"]==((service.serviceId==0x1206||service.serviceId==0x1332)?"EEP 3-A":"EEP 2-A"));
   announceSelectedService(receiver,service,last);
   assert(messages.size()==2); // unchanged metadata is not resent
@@ -95,7 +95,7 @@ int main(int argc, char **argv) {
   // Simulate a first announcement before FIC language has arrived, then refresh.
   last="{\"language\":\"Unknown\"}";
   announceSelectedService(receiver,service,last);
-  assert(messages.size()==4 && messages.back()["language"]=="Greek");
+  assert(messages.size()==4 && messages.back()["language"]=="112");
   std::cout<<std::hex<<service.serviceId<<std::dec<<" "<<metadata.dump()<<"\n";
  }
  assert(tested==14);
