@@ -1,11 +1,6 @@
 #!/bin/sh
-is_mounted() {
-  mount | grep "$1"
-}
-
-while ! is_mounted "/dev/dreambox-data"; do
-  sleep 1
-done
+# startup.sh mounts /data first; mount lists it by its mmcblk name, not by /dev/dreambox-data
+grep -qs " /data " /proc/mounts || exit 0
 
 # Slot 1's GPT label is 'dreambox-rootfs' (no suffix); slots 2+ have a numeric suffix.
 emmc_parts=""
