@@ -3,11 +3,13 @@ SECTION = "base"
 DEPENDS += "virtual/kernel"
 PRIORITY = "required"
 
-inherit opendreambox-precompiled-binary4
+inherit opendreambox-precompiled-binary4 update-rc.d
+
+SRC_URI += "file://dvb-modules-early.sh"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-PACKAGES =+ "${PN}-firmware ${PN}-fp ${PN}-lcd ${PN}-stb-core"
+PACKAGES =+ "${PN}-early ${PN}-firmware ${PN}-fp ${PN}-lcd ${PN}-stb-core"
 
 RDEPENDS:${PN} = "${PN}-fp ${PN}-lcd ${PN}-stb-core"
 RDEPENDS:${PN}-firmware = "${PN}-firmware"
@@ -20,7 +22,17 @@ RDEPENDS:${PN}-lcd = "${PN}-fp ${PN}-stb-core"
 RREPLACES:${PN}-lcd = "${PN} (< 4.9-20201130r0-r0.0)"
 RBREAKS:${PN}-lcd = "${PN} (< 4.9-20201130r0-r0.0)"
 
-RRECOMMENDS:${PN} = "${PN}-firmware"
+RRECOMMENDS:${PN} = "${PN}-early ${PN}-firmware"
+
+FILES:${PN}-early = "${sysconfdir}/init.d/dvb-modules-early"
+INITSCRIPT_PACKAGES = "${PN}-early"
+INITSCRIPT_NAME:${PN}-early = "dvb-modules-early"
+INITSCRIPT_PARAMS:${PN}-early = "start 03 S ."
+
+do_install:append() {
+	install -d ${D}${sysconfdir}/init.d
+	install -m 0755 ${UNPACKDIR}/dvb-modules-early.sh ${D}${sysconfdir}/init.d/dvb-modules-early
+}
 
 FILES:${PN}-src = "${sysconfdir}/modules-load.d/03-${PRECOMPILED_NAME}-lcd.conf"
 
