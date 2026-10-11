@@ -2,9 +2,9 @@ SUMMARY = "Bootlogo support"
 require conf/license/license-close.inc
 
 SRCREV = "a0bf37c5b20c1db4dc0008882cc5494b475be0c1"
-SRC_URI += " file://bootlogo.scr"
+SRC_URI += " file://bootlogo.scr file://osdclear.sh"
 
-inherit allarch opendreambox-git
+inherit allarch opendreambox-git update-rc.d
 
 DEPENDS += "u-boot-tools-native"
 
@@ -18,16 +18,23 @@ do_install () {
     install -m 0644 ${UNPACKDIR}/bootlogo.scr ${D}${sysconfdir}/u-boot.scr.d
     install -d ${D}/boot
     install -m 0644 ${S}/bootlogo.bmp ${D}/boot/bootlogo.bmp
+    install -d ${D}${sysconfdir}/init.d
+    install -m 0755 ${UNPACKDIR}/osdclear.sh ${D}${sysconfdir}/init.d/osdclear
 }
 
-PACKAGES =+ "${PN}-u-boot"
+PACKAGES =+ "${PN}-u-boot ${PN}-osdclear"
 
 FILES:${PN}-u-boot = "${sysconfdir}/u-boot.scr.d /boot/autoexec.img"
+FILES:${PN}-osdclear = "${sysconfdir}/init.d/osdclear"
 FILES:${PN} = "/boot/bootlogo.bmp"
 
 RDEPENDS:${PN}-u-boot = "flash-scripts"
 
-RRECOMMENDS:${PN} = " ${PN}-u-boot"
+RRECOMMENDS:${PN} = " ${PN}-u-boot ${PN}-osdclear"
+
+INITSCRIPT_PACKAGES = "${PN}-osdclear"
+INITSCRIPT_NAME:${PN}-osdclear = "osdclear"
+INITSCRIPT_PARAMS:${PN}-osdclear = "start 03 S ."
 
 do_install:append() {
     LC_ALL=C grep -h "^[a-zA-Z0-9]" ${D}${sysconfdir}/u-boot.scr.d/bootlogo.scr > ${B}/autoexec.in
