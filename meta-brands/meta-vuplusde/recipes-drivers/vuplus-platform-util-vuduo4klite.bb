@@ -4,7 +4,12 @@ SRCDATE = "20260911"
 
 KV = "4.1.20"
 
-PR = "r2"
+PR = "r3"
+
+# V3D owns the Nexus libraries copied to /usr/lib by the platform init script.
+# Keep them while the boot-critical platform is installed, even when the last
+# optional EGL application (RetroGaming, Kodi or Chromium) is auto-removed.
+RDEPENDS:${PN} += "vuplus-v3ddriver-vuduo4klite"
 
 VENDOR_DRIVER_FIX_PROFILE = "platform"
 require recipes-bsp/vendor-driver-fixes/vendor-driver-fixes.inc
