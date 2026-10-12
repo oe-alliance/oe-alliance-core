@@ -5,7 +5,12 @@ PACKAGE_ARCH = "${MACHINEBUILD}"
 require conf/license/license-close.inc
 
 PV = "${KV}+${SRCDATE}"
-PR = "r6"
+PR = "r7"
+
+# V3D owns the Nexus libraries copied to /usr/lib by the platform init script.
+# Keep the matching provider for Quad/UE 4K and X3 4K when optional EGL
+# applications are removed, including framebuffer-only Enigma2 images.
+RDEPENDS:${PN} += "gb-v3ddriver-${MACHINE_DRIVER}"
 
 INHIBIT_PACKAGE_STRIP = "1"
 INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
