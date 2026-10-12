@@ -152,6 +152,7 @@ RRECOMMENDS:${PN} = "\
     packagegroup-oea-network-ssh \
     ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "packagegroup-oea-smallflash-openatv", "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "dreamboxv2", "enigma2-plugin-extensions-dbackup", "", d)} \
+    ${@bb.utils.contains('MACHINE_FEATURES', 'retrogaming', ' enigma2-plugin-extensions-retrogaming', '', d)} \
     "
 
 RRECOMMENDS:${PN}:append:gb800solo = " enigma2-plugin-extensions-gbipboxclient"
