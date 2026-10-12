@@ -7,10 +7,10 @@ inherit kodi-addon
 
 DEPENDS += "expat openssl rtmpdump zlib"
 
-# Track the Kodi 22 Piers branch.  Its add-on version remains 22.1.2.
-SRCREV = "1b995db747b3f8671e04377e069a7b9d9260944d"
+# Track the Kodi 22 Piers branch.
+SRCREV = "de59f7862fe677b91a6453f522a5292e9836d0f6"
 
-PV = "22.1.2+gitr"
+PV = "22.1.3+gitr"
 
 KODIADDONBRANCH = "Piers"
 

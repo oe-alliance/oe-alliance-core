@@ -77,13 +77,13 @@ DEPENDS += " \
             ${@'libvupl' if d.getVar('VUPLUS_MIPSEL_STB') == '1' else ''} \
           "
 inherit gitpkgv
-# 22.0 Piers Beta 2 (released 2026-09-05), current upstream master HEAD (2026-09-25)
-SRCREV = "9076c3af25d5e9a74af0506eadfdb761c680a580"
+# 22.0 Piers RC 1, current upstream master HEAD (2026-10-12)
+SRCREV = "f414b1bbce4b3be0e2416ec5319a03cb9c86ebbe"
 
 # 'patch' doesn't support binary diffs
 PATCHTOOL = "git"
 
-PR = "r114"
+PR = "r115"
 
 PV = "22.0+gitr"
 # Keep package upgrades monotonic when the pinned master revision advances.

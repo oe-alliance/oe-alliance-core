@@ -1,4 +1,5 @@
 require kodi-addon-visualization.inc
 
 KODIADDONPLUGIN = "fishbmc"
-SRCREV = "760ce046a2cbc85a8b5a46ce2c9afb988b1126b1"
+SRCREV = "ad159c5ad481f1f55ad0851502f0883ca54596c9"
+PV = "22.1.2+gitr"

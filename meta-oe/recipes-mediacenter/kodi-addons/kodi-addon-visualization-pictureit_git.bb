@@ -1,4 +1,5 @@
 require kodi-addon-visualization.inc
 
 KODIADDONPLUGIN = "pictureit"
-SRCREV = "3bc8da3e242e37c191890e9c76b3816b7e9e7986"
+SRCREV = "407b20c1ea2ed73599473efed5eab98bfcb2e245"
+PV = "22.1.1+gitr"

@@ -116,25 +116,27 @@ diff --git a/xbmc/cores/VideoPlayer/VideoRenderers/CMakeLists.txt b/xbmc/cores/V
 index 5467be87ef..7e017f7e28 100644
 --- a/xbmc/cores/VideoPlayer/VideoRenderers/CMakeLists.txt
 +++ b/xbmc/cores/VideoPlayer/VideoRenderers/CMakeLists.txt
-@@ -41,6 +41,7 @@ if(TARGET ${APP_NAME_LC}::OpenGLES AND ("android" IN_LIST CORE_PLATFORM_NAME_LC
+@@ -41,7 +41,8 @@ if(TARGET ${APP_NAME_LC}::OpenGLES AND ("android" IN_LIST CORE_PLATFORM_NAME_LC
                              "ios" IN_LIST CORE_PLATFORM_NAME_LC OR
                              "tvos" IN_LIST CORE_PLATFORM_NAME_LC OR
                              "gbm" IN_LIST CORE_PLATFORM_NAME_LC OR
 +                            "stb" IN_LIST CORE_PLATFORM_NAME_LC OR
                              "x11" IN_LIST CORE_PLATFORM_NAME_LC OR
-                             "wayland" IN_LIST CORE_PLATFORM_NAME_LC))
+                             "wayland" IN_LIST CORE_PLATFORM_NAME_LC OR
+                             "wasm" IN_LIST CORE_PLATFORM_NAME_LC))
    list(APPEND SOURCES LinuxRendererGLES.cpp
 diff --git a/xbmc/cores/VideoPlayer/VideoRenderers/VideoShaders/CMakeLists.txt b/xbmc/cores/VideoPlayer/VideoRenderers/VideoShaders/CMakeLists.txt
 index 4cf1269214..6301c7d583 100644
 --- a/xbmc/cores/VideoPlayer/VideoRenderers/VideoShaders/CMakeLists.txt
 +++ b/xbmc/cores/VideoPlayer/VideoRenderers/VideoShaders/CMakeLists.txt
-@@ -34,6 +34,7 @@ if(TARGET ${APP_NAME_LC}::OpenGLES AND ("android" IN_LIST CORE_PLATFORM_NAME_LC
+@@ -34,7 +34,8 @@ if(TARGET ${APP_NAME_LC}::OpenGLES AND ("android" IN_LIST CORE_PLATFORM_NAME_LC
                              "ios" IN_LIST CORE_PLATFORM_NAME_LC OR
                              "tvos" IN_LIST CORE_PLATFORM_NAME_LC OR
                              "gbm" IN_LIST CORE_PLATFORM_NAME_LC OR
 +                            "stb" IN_LIST CORE_PLATFORM_NAME_LC OR
                              "x11" IN_LIST CORE_PLATFORM_NAME_LC OR
-                             "wayland" IN_LIST CORE_PLATFORM_NAME_LC))
+                             "wayland" IN_LIST CORE_PLATFORM_NAME_LC OR
+                             "wasm" IN_LIST CORE_PLATFORM_NAME_LC))
    list(APPEND SOURCES VideoFilterShaderGLES.cpp
 diff --git a/xbmc/cores/VideoPlayer/VideoRenderers/VideoShaders/VideoFilterShaderGLES.cpp b/xbmc/cores/VideoPlayer/VideoRenderers/VideoShaders/VideoFilterShaderGLES.cpp
 index c1cb6aa9a6..ed6c086381 100644
