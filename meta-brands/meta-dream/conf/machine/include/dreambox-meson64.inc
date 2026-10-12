@@ -60,6 +60,7 @@ MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS = "\
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "\
     u-boot-bin \
+    dreamaudiod \
 "
 
 MACHINE_FEATURES += "dreambox alsa usbhost 3dtv switchoff blindscan-dvbs kodi22 inibt"

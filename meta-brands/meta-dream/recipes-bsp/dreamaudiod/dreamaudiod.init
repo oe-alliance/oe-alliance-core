@@ -1,0 +1,41 @@
+#!/bin/sh
+#
+# Audio decoding service: the SoC has no audio decoder, the player drives
+# the kernel's audio decoder device and this service decodes for it.
+
+PIDFILE=/run/dreamaudiod.pid
+
+case "$1" in
+start)
+	[ -f $PIDFILE ] && kill -0 $(cat $PIDFILE) 2>/dev/null && exit 0
+	# restarted if it ends; the reason goes to the syslog. A session of
+	# its own keeps the loop out of the process group of the boot scripts.
+	setsid /bin/sh -c '
+		while true; do
+			/usr/bin/dreamaudiod
+			rc=$?
+			if [ $rc -gt 128 ]; then
+				logger -p daemon.err -t dreamaudiod "killed by signal $((rc - 128)), restarting"
+			else
+				logger -p daemon.err -t dreamaudiod "exited with code $rc, restarting"
+			fi
+			sleep 1
+		done' </dev/null >/dev/null 2>&1 &
+	echo $! > $PIDFILE
+	;;
+stop)
+	[ -f $PIDFILE ] && kill $(cat $PIDFILE) 2>/dev/null
+	rm -f $PIDFILE
+	start-stop-daemon -K -q -x /usr/bin/dreamaudiod
+	;;
+restart)
+	$0 stop
+	$0 start
+	;;
+*)
+	echo "Usage: $0 {start|stop|restart}"
+	exit 1
+	;;
+esac
+
+exit 0
