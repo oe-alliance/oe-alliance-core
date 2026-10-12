@@ -1,0 +1,97 @@
+From: MCelliotG <mcelliotg@gmail.com>
+Subject: [PATCH] welle-e2: publish language and protection changes
+
+Adapted for change-only JSON updates and independent label updates.
+Based on b409370d55c1e116feb15878e08db8058f8887e0.
+
+Upstream-Status: Inappropriate [OpenATV frontend]
+
+--- a/src/welle-e2/welle-e2.cpp
++++ b/src/welle-e2/welle-e2.cpp
+@@ -334,7 +334,16 @@
+     emitMetadata(value);
+ }
+ 
+-void announceSelectedService(RadioReceiver& receiver, const Service& service)
++struct SelectedServiceMetadata {
++    std::string label;
++    std::string protection;
++    int bitrate = -1;
++    int language = -1;
++    bool dabPlus = false;
++};
++
++void announceSelectedService(RadioReceiver& receiver, const Service& service,
++                             SelectedServiceMetadata& previous)
+ {
+     for (const auto& component : receiver.getComponents(service)) {
+         if (component.transportMode() != TransportMode::Audio)
+@@ -343,17 +352,33 @@
+         if (!subchannel.valid())
+             continue;
+ 
+-        json name;
+-        name["ps"] = trimLabel(service.serviceLabel.utf8_label());
+-        emitMetadata(name);
+-
+-        json format;
+-        format["bitrate"] = std::to_string(subchannel.bitrate());
+-        format["dabType"] = component.audioType() == AudioServiceComponentType::DABPlus ? "DAB+" : "DAB";
+-        format["language"] = "Unknown";
+-        format["programType"] = "Unknown";
+-        format["protectionLevel"] = "Unknown";
+-        emitMetadata(format);
++        const std::string label = trimLabel(service.serviceLabel.utf8_label());
++        if (label != previous.label) {
++            json name;
++            name["ps"] = label;
++            emitMetadata(name);
++            previous.label = label;
++        }
++
++        // FIG 0/5 describes the audio subchannel; optional FIG 0/17 is a fallback.
++        // Preserve the ETSI code. Enigma2 supplies translated language names.
++        const int language = subchannel.language ? subchannel.language : service.language;
++        const int bitrate = subchannel.bitrate();
++        const bool dabPlus = component.audioType() == AudioServiceComponentType::DABPlus;
++        const std::string protection = subchannel.protection();
++        if (language != previous.language || bitrate != previous.bitrate ||
++                dabPlus != previous.dabPlus || protection != previous.protection) {
++            json format;
++            format["bitrate"] = std::to_string(bitrate);
++            format["dabType"] = dabPlus ? "DAB+" : "DAB";
++            format["language"] = language > 0 ? std::to_string(language) : "";
++            format["protectionLevel"] = protection;
++            emitMetadata(format);
++            previous.language = language;
++            previous.bitrate = bitrate;
++            previous.dabPlus = dabPlus;
++            previous.protection = protection;
++        }
+         return;
+     }
+ }
+@@ -403,6 +428,7 @@
+         std::set<int> packetSubchannels;
+         std::unique_ptr<EnigmaProgrammeHandler> programme;
+         bool selected = false;
++        SelectedServiceMetadata selectedMetadata;
+ 
+         while (running) {
+             for (const auto& service : receiver.getServiceList()) {
+@@ -415,11 +441,14 @@
+                 if (!selected && !label.empty() && options.serviceId && service.serviceId == options.serviceId) {
+                     programme.reset(new EnigmaProgrammeHandler(
+                             service.serviceId, options.cachePrefix, options.pcmFd));
+-                    announceSelectedService(receiver, service);
+                     selected = receiver.playSingleProgramme(*programme, std::string(), service);
+                     if (!selected)
+                         programme.reset();
+                 }
++                // Language and protection may arrive after audio starts. Only
++                // publish changes; do not serialize unchanged JSON every loop.
++                if (selected && service.serviceId == options.serviceId)
++                    announceSelectedService(receiver, service, selectedMetadata);
+             }
+ 
+             /* SPI is normally carried by a separate packet-mode service, not
