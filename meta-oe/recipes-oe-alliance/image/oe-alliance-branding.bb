@@ -12,7 +12,7 @@ SRCREV = "${AUTOREV}"
 PV = "${IMAGE_VERSION}+git"
 PKGV = "${IMAGE_VERSION}+git${GITPKGV}"
 PR = "${@bb.utils.contains_any("DISTRO_NAME", "openvix openhdf", "${IMAGE_BUILD}-${MACHINEBUILD}" , "r${DATE}-${MACHINEBUILD}", d)}"
-PR:openatv = "r3-${MACHINEBUILD}"
+PR:openatv = "r4-${MACHINEBUILD}"
 
 SSTATE_SKIP_CREATION = "1"
 
@@ -171,9 +171,9 @@ do_configure:prepend() {
         elif [ "${MACHINE}" = "dm920" ]; then
             DRIVERSDATE="20200321"
         elif [ "${MACHINE}" = "dreamone" ]; then
-            DRIVERSDATE="20210518"
+            DRIVERSDATE="20230404"
         elif [ "${MACHINE}" = "dreamtwo" ]; then
-            DRIVERSDATE="20210518"
+            DRIVERSDATE="20230404"
         else
             DRIVERSDATE="20150618"
         fi
