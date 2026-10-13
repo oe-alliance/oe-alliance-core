@@ -8,12 +8,21 @@ WARN_QA:remove = "patch-fuzz"
 do_patch[postfuncs] += "kernel_fixups_apply"
 
 kernel_fixups_apply() {
-    # Fix multiple definitions of yylloc (affects kernels with dtc-parser.tab.c_shipped)
+    # Fix multiple definitions of yylloc (affects kernels with dtc-parser.tab.c_shipped);
+    # only where the lexer defines it too, kernels with the upstream fix define it once
     if [ -f "${S}/scripts/dtc/dtc-parser.tab.c_shipped" ]; then
-        if grep -q '^YYLTYPE yylloc' "${S}/scripts/dtc/dtc-parser.tab.c_shipped"; then
+        if grep -q '^YYLTYPE yylloc' "${S}/scripts/dtc/dtc-parser.tab.c_shipped" && \
+           grep -q '^YYLTYPE yylloc' "${S}/scripts/dtc/dtc-lexer.lex.c_shipped" "${S}/scripts/dtc/dtc-lexer.l" 2>/dev/null; then
             sed -i 's/^YYLTYPE yylloc/extern YYLTYPE yylloc/' "${S}/scripts/dtc/dtc-parser.tab.c_shipped"
             bbnote "kernel-fixups: applied yyloc fix"
         fi
+    fi
+
+    # Fix unifdef with C23 host compilers: constexpr is a keyword there
+    # (upstream renamed the variable to constexpression)
+    if [ -f "${S}/scripts/unifdef.c" ] && grep -q '^static bool[[:space:]]*constexpr;' "${S}/scripts/unifdef.c"; then
+        sed -i 's/\bconstexpr\b/constexpression/g' "${S}/scripts/unifdef.c"
+        bbnote "kernel-fixups: applied unifdef constexpr fix"
     fi
 
     # Fix ARM assembler Solaris-style section flags (ARM: 8933/1)
