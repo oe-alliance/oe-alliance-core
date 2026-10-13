@@ -1,9 +1,5 @@
 require linux-4.9.inc
 
-do_configure:prepend() {
-        sed -e "/^SUBLEVEL = /d" -i ${S}/Makefile
-}
-
 KERNEL_ENABLE_CGROUPS = "1"
 
 RDEPENDS:${KERNEL_PACKAGE_NAME}-image = "kernel-devicetree flash-scripts"
