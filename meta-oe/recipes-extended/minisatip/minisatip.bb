@@ -12,7 +12,7 @@ SRC_URI = " \
     file://minisatip.init \
     "
 
-SRCREV = "${AUTOREV}"
+SRCREV = "27acb68833e9b243a5ad3fd22b5104e8ce215342"
 PV = "git"
 PKGV = "${GITPKGVTAG}"
 
