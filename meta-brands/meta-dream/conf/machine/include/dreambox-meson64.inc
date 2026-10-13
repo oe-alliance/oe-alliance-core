@@ -7,6 +7,10 @@ MACHINE_BRAND = "Dreambox"
 
 DVBSKYPROVIDER = "kernel"
 
+# the audio decoder of the dreamaudiod service, the video through the Dream decoder interface;
+# H.263 and Sorenson Spark reach the MPEG-4 decoder through the flv2mpeg4 element
+DVBMEDIASINK_CONFIG = "--with-pcm --with-eac3 --with-dts --with-aac-loas --with-audio-device=/dev/dvb/adapter0/dreamaudio0 --with-h265 --with-wmv --with-vb9 --with-vb6=no --with-vb8=no --with-spark=no --with-h263=no"
+
 GLIBC_EXTRA_OECONF = "--with-tls --with-__thread"
 TARGET_ARCH = "aarch64"
 DEFAULTTUNE = "aarch64"
@@ -23,8 +27,8 @@ require conf/machine/include/arm/arch-armv8a.inc
 MACHINE_EXTRA_RRECOMMENDS += "\
     ffmpeg \
     enigma2-plugin-systemplugins-serviceapp \
-    gst-plugin-dreamaudiosink \
-    gstreamer1.0-dreamsinks \
+    gstreamer1.0-plugin-dvbmediasink \
+    gstreamer1.0-plugins-ugly-realmedia \
     gstreamer1.0-libav \
     gstreamer1.0-plugins-ugly-dvdlpcmdec \
     gstreamer1.0-plugins-ugly-realmedia \
