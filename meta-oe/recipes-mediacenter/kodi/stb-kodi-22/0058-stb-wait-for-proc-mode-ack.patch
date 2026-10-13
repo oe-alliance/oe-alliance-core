@@ -1,0 +1,44 @@
+From: OE-Alliance <oe-alliance@users.noreply.github.com>
+Subject: [PATCH] stb: wait for asynchronous proc mode acknowledgement
+
+HiSilicon enqueues audio mode changes for libreader. An immediate read still
+returns the old mode and falsely triggers rollback. Wait for bounded readback
+confirmation, including when restoring the original E2 values. Synchronous
+drivers complete on the first read; failed writes still fail immediately.
+
+Upstream-Status: Inappropriate [STB hardware integration]
+---
+diff --git a/xbmc/settings/STBAVControl.cpp b/xbmc/settings/STBAVControl.cpp
+--- a/xbmc/settings/STBAVControl.cpp
++++ b/xbmc/settings/STBAVControl.cpp
+@@ -7,8 +7,10 @@
+ #include <algorithm>
+ #include <cerrno>
++#include <chrono>
+ #include <fcntl.h>
+ #include <fstream>
+ #include <sstream>
++#include <thread>
+ #include <unistd.h>
+ #include <utility>
+ 
+@@ -139,7 +141,18 @@ bool CSTBAVControl::WritePath(const std::string& path, const std::string& value)
+     count = write(fd, line.data(), line.size());
+   while (count < 0 && errno == EINTR);
+   close(fd);
+-  return count == static_cast<ssize_t>(line.size()) && ReadPath(path) == value;
++  if (count != static_cast<ssize_t>(line.size()))
++    return false;
++  // HiSilicon applies queued proc commands in its userspace DVB service.
++  const auto deadline = std::chrono::steady_clock::now() + std::chrono::milliseconds(500);
++  do
++  {
++    if (ReadPath(path) == value)
++      return true;
++    if (std::chrono::steady_clock::now() >= deadline)
++      return false;
++    std::this_thread::sleep_for(std::chrono::milliseconds(10));
++  } while (true);
+ }
+ 
+ bool CSTBAVControl::Set(const std::string& id, const std::string& value)

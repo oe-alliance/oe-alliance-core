@@ -77,23 +77,25 @@ DEPENDS += " \
             ${@'libvupl' if d.getVar('VUPLUS_MIPSEL_STB') == '1' else ''} \
           "
 inherit gitpkgv
-# 22.0 Piers RC 1, current upstream master HEAD (2026-10-12)
-SRCREV = "f414b1bbce4b3be0e2416ec5319a03cb9c86ebbe"
+# 22.0 Piers RC 1, upstream Piers HEAD (2026-10-13).
+SRCREV = "3fb49388899387fc2f1cd958dc33166b8c7bb292"
 
 # 'patch' doesn't support binary diffs
 PATCHTOOL = "git"
 
-PR = "r115"
+PR = "r121"
 
 PV = "22.0+gitr"
-# Keep package upgrades monotonic when the pinned master revision advances.
+# Piers has fewer commits than the previous master pin; keep upgrades monotonic.
+PE = "1"
+# Keep package upgrades monotonic when the pinned Piers revision advances.
 # gitpkgv expands this to the commit count plus abbreviated source revision.
 PKGV = "22.0+git${GITPKGV}"
 SRC_URI[libdvdcss.sha256sum] = "f204a9d8ac8a8414095d556373e5af9b95bb7cc72bf1467d936a48c961e8c474"
 SRC_URI[libdvdread.sha256sum] = "b69f74d9ceea1ed173b579deba99f669c2cb42f3fd06d7d23b33ff222aa63763"
 SRC_URI[libdvdnav.sha256sum] = "1363cdfaf6e92c0b574579299b5480f5867fb32989451468a28f3f402ec48787"
 
-SRC_URI = "git://github.com/xbmc/xbmc.git;protocol=https;branch=master \
+SRC_URI = "git://github.com/xbmc/xbmc.git;protocol=https;branch=Piers \
            https://mirrors.kodi.tv/build-deps/sources/libdvdcss-1.5.0.tar.bz2;name=libdvdcss;downloadfilename=libdvdcss.tar.bz2;unpack=0 \
            https://mirrors.kodi.tv/build-deps/sources/libdvdread-7.0.1.tar.bz2;name=libdvdread;downloadfilename=libdvdread.tar.bz2;unpack=0 \
            https://mirrors.kodi.tv/build-deps/sources/libdvdnav-7.0.0.tar.bz2;name=libdvdnav;downloadfilename=libdvdnav.tar.bz2;unpack=0 \
@@ -154,6 +156,7 @@ DREAM_DM9X0_STB = "${@'1' if d.getVar('MACHINE') in ('dm900', 'dm920') and d.get
 DREAM_MIPSEL_STB = "${@'1' if d.getVar('MACHINE') in ('dm7080', 'dm820') and d.getVar('TARGET_ARCH') == 'mipsel' else '0'}"
 
 SRC_URI:append = "${@' file://kodi-hisi-wrapper file://kodi-hisi-appliance.xml file://0051-hisi-alsa-fast-sink-switch.patch' if d.getVar('HISI_STB') == '1' else ''}"
+SRC_URI:append = "${@' file://kodi-hisi-reader' if d.getVar('HISI_STB') == '1' else ''}"
 SRC_URI:append = "${@' file://kodi-bcm-wrapper' if d.getVar('BCM_DVB_STB') == '1' else ''}"
 SRC_URI:append = "${@' file://kodi-dream-aml-wrapper' if d.getVar('DREAM_AMLOGIC_STB') == '1' else ''}"
 # The old Vu+ MIPSel PCM requires Kodi's immediate explicit start.  Applying
@@ -182,6 +185,9 @@ SRC_URI:append = "${@' file://0042-dreambox-mips-refresh-only-mode-switch.patch'
 SRC_URI:append = "${@' file://0043-dreambox-mips-alsa-nonblocking-sink-switch.patch' if d.getVar('DREAM_MIPSEL_STB') == '1' else ''}"
 SRC_URI:append = " file://0049-dream-amlogic-audio-stream-state.patch"
 SRC_URI:append = "${@' file://0041-amlogic-meson64-native-codec.patch file://0048-dream-amlogic-hdmi-modes.patch file://amlogic/AMLCodec.cpp file://amlogic/AMLCodec.h file://amlogic/DVDVideoCodecAmlogic.cpp file://amlogic/DVDVideoCodecAmlogic.h file://amlogic/RendererAML.cpp file://amlogic/RendererAML.h file://amlogic/AMLUtils.cpp file://amlogic/AMLUtils.h' if d.getVar('DREAM_AMLOGIC_STB') == '1' else ''}"
+SRC_URI:append = " file://0056-stb-hardware-audio-sink.patch file://0058-stb-wait-for-proc-mode-ack.patch file://0060-stb-audio-media-timestamps.patch"
+SRC_URI:append = "${@' file://0059-hisi-match-desktop-hdmi-mode.patch' if d.getVar('HISI_STB') == '1' else ''}"
+SRC_URI:append = " file://0057-stb-cec-handover-defaults.patch"
 
 ACCEL ?= ""
 ACCEL:x86 = "vaapi vdpau"
@@ -352,6 +358,7 @@ do_install:append() {
     elif [ "${HISI_STB}" = "1" ]; then
         mv ${D}${bindir}/kodi ${D}${bindir}/kodi.real
         install -m 0755 ${UNPACKDIR}/kodi-hisi-wrapper ${D}${bindir}/kodi
+        install -m 0755 ${UNPACKDIR}/kodi-hisi-reader ${D}${libdir}/kodi/kodi-hisi-reader
         install -d ${D}${datadir}/kodi/system/settings
         install -m 0644 ${UNPACKDIR}/kodi-hisi-appliance.xml \
             ${D}${datadir}/kodi/system/settings/appliance.xml

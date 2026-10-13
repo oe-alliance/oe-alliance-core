@@ -1,0 +1,54 @@
+#!/bin/sh
+
+# Octagon-style HiSilicon DVB devices are serviced by libreader, not by E2.
+# Its /dev/phi session owns shared state used by hi_dvb's audio proc handlers.
+# Reading those handlers after libreader exits can Oops the kernel. Never use
+# an audio proc read as a readiness probe; check the service's open FDs instead.
+# Install this helper only for the native hardware-audio build. Its presence
+# also tells enigma2.sh to retain libreader during the standalone handover.
+[ -x /usr/bin/libreader ] || exit 0
+if [ ! -c /dev/phi ]; then
+    echo "Kodi: libreader control device /dev/phi is missing" >&2
+    exit 1
+fi
+
+reader_is_running()
+{
+    for reader_pid in $(pidof libreader 2>/dev/null); do
+        if [ "$(readlink "/proc/${reader_pid}/exe" 2>/dev/null)" = /usr/bin/libreader ]; then
+            return 0
+        fi
+    done
+    return 1
+}
+
+reader_is_ready()
+{
+    reader_is_running || return 1
+    reader_control=0
+    reader_audio=0
+    for reader_fd in /proc/"${reader_pid}"/fd/*; do
+        case "$(readlink "${reader_fd}" 2>/dev/null)" in
+            /dev/phi) reader_control=1 ;;
+            /dev/dvb/adapter0/audio0) reader_audio=1 ;;
+        esac
+    done
+    [ "${reader_control}" = 1 ] && [ "${reader_audio}" = 1 ]
+}
+
+if ! reader_is_running; then
+    # Match the vendor's normal boot invocation. On older images enigma2.sh
+    # still stops the service; direct standalone launches need this too.
+    /usr/bin/libreader 720P_50 >/tmp/kodi-libreader.log 2>&1 &
+fi
+
+reader_wait=0
+while ! reader_is_ready; do
+    reader_wait=$((reader_wait + 1))
+    if [ "${reader_wait}" -ge 100 ]; then
+        echo "Kodi: libreader is not ready; refusing unsafe HiSilicon audio access" >&2
+        exit 1
+    fi
+    sleep 0.1
+done
+echo "Kodi: HiSilicon DVB service ready (libreader ${reader_pid})"

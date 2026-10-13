@@ -15,17 +15,12 @@ diff --git a/xbmc/application/ApplicationVolumeHandling.cpp b/xbmc/application/A
 index 25229be7da..1f28e15246 100644
 --- a/xbmc/application/ApplicationVolumeHandling.cpp
 +++ b/xbmc/application/ApplicationVolumeHandling.cpp
-@@ -27,15 +27,130 @@
+@@ -23,11 +23,126 @@
  #include "settings/lib/Setting.h"
  #include "utils/Variant.h"
  #include "utils/XMLUtils.h"
 +#include "utils/log.h"
  
- #if defined(TARGET_ANDROID)
- #include "platform/android/activity/XBMCApp.h"
- #endif
--
-+
  #include <cmath>
 +#include <cstdlib>
 +#if defined(TARGET_AMLOGIC)

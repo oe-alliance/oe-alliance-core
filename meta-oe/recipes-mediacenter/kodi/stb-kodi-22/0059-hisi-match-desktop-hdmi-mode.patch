@@ -1,0 +1,43 @@
+From: OE-Alliance <oe-alliance@users.noreply.github.com>
+Subject: [PATCH] hisi: report desktop HDMI mode separately from HIFB geometry
+
+libreader retains a 720p HIFB surface on a 1080p HDMI output. The current
+desktop must use the same physical dimensions and mode ID as the probed
+HDMI modes, otherwise opening system settings selects a different mode
+and triggers an unwanted resolution confirmation. Keep the EGL GUI size.
+
+Upstream-Status: Inappropriate [STB hardware integration]
+---
+diff --git a/xbmc/windowing/egl/EGLNativeTypeMali.cpp b/xbmc/windowing/egl/EGLNativeTypeMali.cpp
+--- a/xbmc/windowing/egl/EGLNativeTypeMali.cpp
++++ b/xbmc/windowing/egl/EGLNativeTypeMali.cpp
+@@ -21,6 +21,7 @@
+ #include <EGL/egl.h>
+ #include "utils/StringUtils.h"
+ #include "utils/log.h"
++#include "windowing/GraphicContext.h"
+ 
+ #include <algorithm>
+ #include <cstdio>
+@@ -200,6 +201,21 @@ bool CEGLNativeTypeMali::_GetNativeResolution(RESOLUTION_INFO *res) const {
+ 
+   FillResolution(*res, vinfo.xres, vinfo.yres);
+ 
++  if (IsHiSiliconHifb())
++  {
++    std::string mode;
++    unsigned int outputWidth = 0;
++    unsigned int outputHeight = 0;
++    float refreshRate = 0.0f;
++    bool interlaced = false;
++    if (ReadProcString("/proc/stb/video/videomode", mode) &&
++        ParseOutputMode(mode, outputWidth, outputHeight, refreshRate, interlaced))
++    {
++      FillHiSiliconResolution(*res, vinfo.xres, vinfo.yres, outputWidth, outputHeight,
++                             refreshRate, mode);
++      res->dwFlags = interlaced ? D3DPRESENTFLAG_INTERLACED : 0;
++    }
++  }
+   return true;
+ }
+ 

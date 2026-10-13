@@ -13,6 +13,13 @@
 HISI_PRELOAD=""
 HISI_LIBDIR=""
 
+# Native DVB audio and its proc controls require the vendor service even
+# though Enigma2 itself is stopped. Fail before Kodi reads any audio modes
+# if the service could not be initialised safely.
+if [ -x /usr/lib/kodi/kodi-hisi-reader ]; then
+    /usr/lib/kodi/kodi-hisi-reader || exit 1
+fi
+
 # Several GFeatures-derived HiSilicon receivers leave Enigma2's last decoded
 # frame below Kodi's hardware video plane.  It becomes visible in letterbox or
 # pillarbox areas because those areas are intentionally not covered by the

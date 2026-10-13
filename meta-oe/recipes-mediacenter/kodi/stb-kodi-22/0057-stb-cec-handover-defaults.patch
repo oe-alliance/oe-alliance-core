@@ -1,0 +1,30 @@
+From: OE-Alliance <oe-alliance@users.noreply.github.com>
+Subject: [PATCH] Use CEC power defaults suitable for standalone STB handover
+
+Leaving Kodi returns to Enigma2 on the same HDMI source. Do not put the TV
+in standby or report an inactive source by default. Keep explicit CEC power
+actions available in the peripheral settings without changing saved settings.
+
+Upstream-Status: Inappropriate [STB standalone integration]
+
+diff --git a/system/peripherals.xml b/system/peripherals.xml
+--- a/system/peripherals.xml
++++ b/system/peripherals.xml
+@@ -11,12 +11,12 @@
+   <peripheral bus="cec" name="CEC Adapter" mapTo="cec">
+     <setting key="enabled" type="bool" value="1" label="305" order="1" />
+     <setting key="activate_source" type="bool" value="1" label="36020" order="2" />
+-    <setting key="wake_devices" type="enum" value="36037" label="36007" lvalues="36037|36038|36039|231" order="3" />
+-    <setting key="standby_devices" type="enum" value="36037" label="36008" lvalues="36037|36038|36039|231" order="4" />
+-    <setting key="send_inactive_source" type="bool" value="1" label="36025" order="5" />
++    <setting key="wake_devices" type="enum" value="231" label="36007" lvalues="36037|36038|36039|231" order="3" />
++    <setting key="standby_devices" type="enum" value="231" label="36008" lvalues="36037|36038|36039|231" order="4" />
++    <setting key="send_inactive_source" type="bool" value="0" label="36025" order="5" />
+     <setting key="cec_standby_screensaver" type="bool" value="0" label="36009" configurable="0" />
+     <setting key="cec_standby_screensaver_mode" type="enum" value="231" label="36009" order="6" lvalues="231|36055|36056" />
+     <setting key="cec_wake_screensaver" type="bool" value="1" label="36010" order="7" />
+-    <setting key="standby_pc_on_tv_standby" type="enum" value="13011" label="36029" order="8" lvalues="36028|13005|13011|13010|13009|36044|36045" />
+-    <setting key="standby_tv_on_pc_standby" type="bool" value="1" label="36026" order="9" />
++    <setting key="standby_pc_on_tv_standby" type="enum" value="36028" label="36029" order="8" lvalues="36028|13005|13011|13010|13009|36044|36045" />
++    <setting key="standby_tv_on_pc_standby" type="bool" value="0" label="36026" order="9" />
+     <setting key="use_tv_menu_language" type="bool" value="1" label="36018" order="10" />

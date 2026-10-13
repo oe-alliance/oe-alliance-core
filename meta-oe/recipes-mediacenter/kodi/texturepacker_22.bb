@@ -6,9 +6,9 @@ LIC_FILES_CHKSUM ?= "file:///${UNPACKDIR}/${BB_GIT_DEFAULT_DESTSUFFIX}/LICENSE.m
 # stb-kodi. Mixing a later TexturePacker HEAD with an older target binary can
 # silently produce an incompatible Textures.xbt during otherwise reproducible
 # image builds.
-SRCREV = "f414b1bbce4b3be0e2416ec5319a03cb9c86ebbe"
+SRCREV = "3fb49388899387fc2f1cd958dc33166b8c7bb292"
 PV = "22.0+gitr"
-SRC_URI = "git://github.com/xbmc/xbmc.git;protocol=https;branch=master"
+SRC_URI = "git://github.com/xbmc/xbmc.git;protocol=https;branch=Piers"
 
 inherit cmake gettext python3-dir python3native
 

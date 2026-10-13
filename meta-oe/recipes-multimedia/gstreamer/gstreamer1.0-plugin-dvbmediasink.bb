@@ -8,8 +8,10 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=7fbc338309ac38fefcd64b04bb903e34"
 DEPENDS = "glib-2.0-native gstreamer1.0 gstreamer1.0-plugins-base libdca"
 
 GSTVERSION = "1.0"
+PR = "r1"
 
 SRC_URI = "git://github.com/christophecvr/gstreamer1.0-plugin-multibox-dvbmediasink;branch=openatv-dev;protocol=https"
+SRC_URI:append = "${@' file://0001-dreambox-hardware-dts.patch' if d.getVar('MACHINE') in ('dm900', 'dm920', 'dm820', 'dm7080') else ''}"
 
 inherit gitpkgv
 

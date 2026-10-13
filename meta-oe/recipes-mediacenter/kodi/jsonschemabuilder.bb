@@ -2,10 +2,10 @@ SUMMARY = "Kodi json schema builder"
 LICENSE = "GPL-2.0-or-later"
 LIC_FILES_CHKSUM = "file://JsonSchemaBuilder.cpp;beginline=2;endline=18;md5=1f67721215c03f66545390f6e45b99c7"
 
-SRCREV = "${AUTOREV}"
+SRCREV = "3fb49388899387fc2f1cd958dc33166b8c7bb292"
 
 PV = "22.0+gitr"
-SRC_URI = "git://github.com/xbmc/xbmc.git;branch=master;protocol=https"
+SRC_URI = "git://github.com/xbmc/xbmc.git;branch=Piers;protocol=https"
 
 inherit autotools-brokensep gettext native
 

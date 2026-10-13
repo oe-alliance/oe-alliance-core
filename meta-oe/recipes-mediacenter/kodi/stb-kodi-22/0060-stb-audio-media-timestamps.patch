@@ -1,0 +1,18 @@
+From: OE-Alliance <build@oe-alliance.org>
+Subject: [PATCH] STB: distinguish media audio timestamps from GUI timing
+
+The HiSi hardware audio clock path must only follow video for media-timed
+packets. Keep GUI/keepalive audio independent of the video decoder.
+
+Upstream-Status: Inappropriate [STB hardware integration]
+
+--- a/xbmc/cores/AudioEngine/Sinks/AESinkSTB.cpp
++++ b/xbmc/cores/AudioEngine/Sinks/AESinkSTB.cpp
+@@ -285,6 +285,7 @@ unsigned int CAESinkSTB::AddPackets(uint8_t** data,
+   packet.size = static_cast<size_t>(frames) * m_format.m_frameSize;
+   packet.pts_90k = m_nextPts90k;
+   packet.duration_90k = duration90k;
++  packet.flags = m_hasMediaTimestamp ? STBP_AUDIO_PACKET_MEDIA_PTS : 0;
+   result = stbp_audio_queue_packet(m_device, &packet);
+   if (result == STBP_AGAIN)
+     return 0;

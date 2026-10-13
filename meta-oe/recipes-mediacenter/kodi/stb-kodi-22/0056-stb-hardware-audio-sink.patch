@@ -1,0 +1,2511 @@
+From: OE-Alliance <oe-alliance@users.noreply.github.com>
+Subject: [PATCH] AudioEngine: add DVB hardware audio and STB driver settings
+
+Use libstbplayer for PCM and native compressed audio with hardware A/V
+clock feedback. Preserve timestamped packets and bound decoder retries.
+Expose receiver audio/video modes in system and playback settings using
+existing driver interfaces. Inherit Enigma2 state by default and optionally
+retain separate Kodi preferences. Restore the previous driver state on
+exit and confirm video mode changes.
+
+Upstream-Status: Inappropriate [STB hardware integration]
+
+---
+diff --git a/addons/resource.language.en_gb/resources/strings.po b/addons/resource.language.en_gb/resources/strings.po
+index de9f113cf2..45e16d4701 100644
+--- a/addons/resource.language.en_gb/resources/strings.po
++++ b/addons/resource.language.en_gb/resources/strings.po
+@@ -25868,3 +25868,290 @@ msgstr ""
+ msgctxt "#40804"
+ msgid "{0:.1f} dB"
+ msgstr ""
++
++#. STB receiver driver settings
++#: system/settings/settings.xml
++msgctxt "#54000"
++msgid "STB driver settings"
++msgstr ""
++
++#. STB receiver driver settings
++#: system/settings/settings.xml
++msgctxt "#54001"
++msgid "STB audio output"
++msgstr ""
++
++#. STB receiver driver settings
++#: system/settings/settings.xml
++msgctxt "#54002"
++msgid "STB video output"
++msgstr ""
++
++#. STB receiver driver settings
++#: system/settings/settings.xml
++msgctxt "#54003"
++msgid "Save separate Kodi settings"
++msgstr ""
++
++#. STB receiver driver settings
++#: system/settings/settings.xml
++msgctxt "#54004"
++msgid "Off: take the current Enigma2 / driver settings at every Kodi start. On: save and apply separate Kodi settings for this section. The original driver settings are restored when Kodi exits."
++msgstr ""
++
++#. STB receiver driver settings
++#: system/settings/settings.xml
++msgctxt "#54005"
++msgid "Select an output mode advertised by this receiver's driver. Kodi sends supported compressed formats to the hardware decoder; downmix, passthrough and conversion are controlled here. The choice does not change Enigma2's saved configuration."
++msgstr ""
++
++#. STB receiver driver settings
++#: system/settings/settings.xml
++msgctxt "#54006"
++msgid "Keep this video setting? The previous driver value will be restored after 15 seconds unless you confirm."
++msgstr ""
++
++#. STB receiver driver settings
++#: system/settings/settings.xml
++msgctxt "#54007"
++msgid "Current driver setting. This compressed format is not yet sent natively by the STB audio sink, so this control is read-only. Software-decoded audio uses the PCM path. A driver option alone does not enable codec support."
++msgstr ""
++
++#. STB receiver driver settings
++#: system/settings/settings.xml
++msgctxt "#54008"
++msgid "Select a mode supported by the receiver driver and your display. Changes require confirmation within 15 seconds. Resolution and refresh rate remain controlled by Kodi's display settings."
++msgstr ""
++
++#. STB receiver driver settings
++#: system/settings/settings.xml
++msgctxt "#54100"
++msgid "Downmix to stereo"
++msgstr ""
++
++#. STB receiver driver settings
++#: system/settings/settings.xml
++msgctxt "#54101"
++msgid "Passthrough"
++msgstr ""
++
++#. STB receiver driver settings
++#: system/settings/settings.xml
++msgctxt "#54102"
++msgid "Convert to multichannel PCM"
++msgstr ""
++
++#. STB receiver driver settings
++#: system/settings/settings.xml
++msgctxt "#54103"
++msgid "Convert to AC3"
++msgstr ""
++
++#. STB receiver driver settings
++#: system/settings/settings.xml
++msgctxt "#54104"
++msgid "Convert to DTS"
++msgstr ""
++
++#. STB receiver driver settings
++#: system/settings/settings.xml
++msgctxt "#54105"
++msgid "Force E-AC3"
++msgstr ""
++
++#. STB receiver driver settings
++#: system/settings/settings.xml
++msgctxt "#54106"
++msgid "Automatic / HDMI capabilities"
++msgstr ""
++
++#. STB receiver driver settings
++#: system/settings/settings.xml
++msgctxt "#54107"
++msgid "Off"
++msgstr ""
++
++#. STB receiver driver settings
++#: system/settings/settings.xml
++msgctxt "#54108"
++msgid "On"
++msgstr ""
++
++#. STB receiver driver settings
++#: system/settings/settings.xml
++msgctxt "#54109"
++msgid "Centre"
++msgstr ""
++
++#. STB receiver driver settings
++#: system/settings/settings.xml
++msgctxt "#54110"
++msgid "Wide"
++msgstr ""
++
++#. STB receiver driver settings
++#: system/settings/settings.xml
++msgctxt "#54111"
++msgid "Extra wide"
++msgstr ""
++
++#. STB receiver driver settings
++#: system/settings/settings.xml
++msgctxt "#54200"
++msgid "AC3 output mode"
++msgstr ""
++
++#. STB receiver driver settings
++#: system/settings/settings.xml
++msgctxt "#54201"
++msgid "E-AC3 / AC3+ output mode"
++msgstr ""
++
++#. STB receiver driver settings
++#: system/settings/settings.xml
++msgctxt "#54202"
++msgid "DTS output mode"
++msgstr ""
++
++#. STB receiver driver settings
++#: system/settings/settings.xml
++msgctxt "#54203"
++msgid "DTS-HD driver mode"
++msgstr ""
++
++#. STB receiver driver settings
++#: system/settings/settings.xml
++msgctxt "#54204"
++msgid "AAC driver mode"
++msgstr ""
++
++#. STB receiver driver settings
++#: system/settings/settings.xml
++msgctxt "#54205"
++msgid "AAC+ driver mode"
++msgstr ""
++
++#. STB receiver driver settings
++#: system/settings/settings.xml
++msgctxt "#54206"
++msgid "AAC transcoding"
++msgstr ""
++
++#. STB receiver driver settings
++#: system/settings/settings.xml
++msgctxt "#54207"
++msgid "WMA Pro driver mode"
++msgstr ""
++
++#. STB receiver driver settings
++#: system/settings/settings.xml
++msgctxt "#54208"
++msgid "Hardware multichannel PCM"
++msgstr ""
++
++#. STB receiver driver settings
++#: system/settings/settings.xml
++msgctxt "#54209"
++msgid "HDMI audio source"
++msgstr ""
++
++#. STB receiver driver settings
++#: system/settings/settings.xml
++msgctxt "#54210"
++msgid "Amlogic digital audio mode"
++msgstr ""
++
++#. STB receiver driver settings
++#: system/settings/settings.xml
++msgctxt "#54211"
++msgid "3D surround"
++msgstr ""
++
++#. STB receiver driver settings
++#: system/settings/settings.xml
++msgctxt "#54212"
++msgid "3D surround speaker position"
++msgstr ""
++
++#. STB receiver driver settings
++#: system/settings/settings.xml
++msgctxt "#54213"
++msgid "Automatic volume level"
++msgstr ""
++
++#. STB receiver driver settings
++#: system/settings/settings.xml
++msgctxt "#54214"
++msgid "Bluetooth audio"
++msgstr ""
++
++#. STB receiver driver settings
++#: system/settings/settings.xml
++msgctxt "#54250"
++msgid "HDMI colour space"
++msgstr ""
++
++#. STB receiver driver settings
++#: system/settings/settings.xml
++msgctxt "#54251"
++msgid "HDMI colourimetry"
++msgstr ""
++
++#. STB receiver driver settings
++#: system/settings/settings.xml
++msgctxt "#54252"
++msgid "HDMI colour depth"
++msgstr ""
++
++#. STB receiver driver settings
++#: system/settings/settings.xml
++msgctxt "#54253"
++msgid "HDMI HDR type"
++msgstr ""
++
++#. STB receiver driver settings
++#: system/settings/settings.xml
++msgctxt "#54254"
++msgid "HLG support"
++msgstr ""
++
++#. STB receiver driver settings
++#: system/settings/settings.xml
++msgctxt "#54255"
++msgid "HDR10 support"
++msgstr ""
++
++#. STB receiver driver settings
++#: system/settings/settings.xml
++msgctxt "#54256"
++msgid "Allow 10-bit HDMI output"
++msgstr ""
++
++#. STB receiver driver settings
++#: system/settings/settings.xml
++msgctxt "#54257"
++msgid "Allow 12-bit HDMI output"
++msgstr ""
++
++#. STB receiver driver settings
++#: system/settings/settings.xml
++msgctxt "#54258"
++msgid "Decoder start picture"
++msgstr ""
++
++#. STB receiver driver settings
++#: system/settings/settings.xml
++msgctxt "#54259"
++msgid "Hardware deinterlacing"
++msgstr ""
++
++#. Vu receivers share the AC3 output mode with DTS
++#: xbmc/settings/STBAVSettings.cpp
++msgctxt "#54215"
++msgid "Dolby Digital / DTS mode"
++msgstr ""
++
++#: xbmc/settings/STBAVSettings.cpp
++msgctxt "#54216"
++msgid "This receiver uses one mode for Dolby Digital and DTS. Downmix decodes DTS to stereo PCM; passthrough sends DTS to a compatible receiver."
++msgstr ""
+diff --git a/cmake/modules/FindStbplayer.cmake b/cmake/modules/FindStbplayer.cmake
+index 6a0f7eab41..fd50ee69b7 100644
+--- a/cmake/modules/FindStbplayer.cmake
++++ b/cmake/modules/FindStbplayer.cmake
+@@ -20,6 +20,8 @@ if(NOT TARGET ${APP_NAME_LC}::${CMAKE_FIND_PACKAGE_NAME})
+                                     REQUIRED_VARS STBPLAYER_LIBRARY STBPLAYER_INCLUDE_DIR)
+ 
+   if(Stbplayer_FOUND)
++    list(APPEND AUDIO_BACKENDS_LIST "stb")
++    set(AUDIO_BACKENDS_LIST ${AUDIO_BACKENDS_LIST} PARENT_SCOPE)
+     add_library(${APP_NAME_LC}::${CMAKE_FIND_PACKAGE_NAME} UNKNOWN IMPORTED)
+     set_target_properties(${APP_NAME_LC}::${CMAKE_FIND_PACKAGE_NAME} PROPERTIES
+       IMPORTED_LOCATION "${STBPLAYER_LIBRARY}"
+diff --git a/system/settings/settings.xml b/system/settings/settings.xml
+index 78eec2f8da..6847267cbd 100755
+--- a/system/settings/settings.xml
++++ b/system/settings/settings.xml
+@@ -3332,6 +3332,146 @@
+           <control type="button" format="action" />
+         </setting>
+       </group>
++      <group id="6" label="54002">
++        <setting id="stbvideo.save" type="boolean" label="54003" help="54004">
++          <level>1</level>
++          <default>false</default>
++          <dependencies>
++            <dependency type="visible" on="property" name="stbavavailable">stbvideo</dependency>
++          </dependencies>
++          <control type="toggle" />
++        </setting>
++        <setting id="stbvideo.hdmi_colorspace" type="string" label="54250" help="54008">
++          <level>1</level>
++          <default></default>
++          <dependencies>
++            <dependency type="visible" on="property" name="stbavavailable">stbvideo.hdmi_colorspace</dependency>
++            <dependency type="enable" on="property" name="stbavenabled">stbvideo.hdmi_colorspace</dependency>
++          </dependencies>
++          <constraints>
++            <allowempty>true</allowempty>
++            <options>stbavmodes</options>
++          </constraints>
++          <control type="list" format="string" />
++        </setting>
++        <setting id="stbvideo.hdmi_colorimetry" type="string" label="54251" help="54008">
++          <level>1</level>
++          <default></default>
++          <dependencies>
++            <dependency type="visible" on="property" name="stbavavailable">stbvideo.hdmi_colorimetry</dependency>
++            <dependency type="enable" on="property" name="stbavenabled">stbvideo.hdmi_colorimetry</dependency>
++          </dependencies>
++          <constraints>
++            <allowempty>true</allowempty>
++            <options>stbavmodes</options>
++          </constraints>
++          <control type="list" format="string" />
++        </setting>
++        <setting id="stbvideo.hdmi_colordepth" type="string" label="54252" help="54008">
++          <level>1</level>
++          <default></default>
++          <dependencies>
++            <dependency type="visible" on="property" name="stbavavailable">stbvideo.hdmi_colordepth</dependency>
++            <dependency type="enable" on="property" name="stbavenabled">stbvideo.hdmi_colordepth</dependency>
++          </dependencies>
++          <constraints>
++            <allowempty>true</allowempty>
++            <options>stbavmodes</options>
++          </constraints>
++          <control type="list" format="string" />
++        </setting>
++        <setting id="stbvideo.hdmi_hdrtype" type="string" label="54253" help="54008">
++          <level>1</level>
++          <default></default>
++          <dependencies>
++            <dependency type="visible" on="property" name="stbavavailable">stbvideo.hdmi_hdrtype</dependency>
++            <dependency type="enable" on="property" name="stbavenabled">stbvideo.hdmi_hdrtype</dependency>
++          </dependencies>
++          <constraints>
++            <allowempty>true</allowempty>
++            <options>stbavmodes</options>
++          </constraints>
++          <control type="list" format="string" />
++        </setting>
++        <setting id="stbvideo.hlg_support" type="string" label="54254" help="54008">
++          <level>1</level>
++          <default></default>
++          <dependencies>
++            <dependency type="visible" on="property" name="stbavavailable">stbvideo.hlg_support</dependency>
++            <dependency type="enable" on="property" name="stbavenabled">stbvideo.hlg_support</dependency>
++          </dependencies>
++          <constraints>
++            <allowempty>true</allowempty>
++            <options>stbavmodes</options>
++          </constraints>
++          <control type="list" format="string" />
++        </setting>
++        <setting id="stbvideo.hdr10_support" type="string" label="54255" help="54008">
++          <level>1</level>
++          <default></default>
++          <dependencies>
++            <dependency type="visible" on="property" name="stbavavailable">stbvideo.hdr10_support</dependency>
++            <dependency type="enable" on="property" name="stbavenabled">stbvideo.hdr10_support</dependency>
++          </dependencies>
++          <constraints>
++            <allowempty>true</allowempty>
++            <options>stbavmodes</options>
++          </constraints>
++          <control type="list" format="string" />
++        </setting>
++        <setting id="stbvideo.allow_10bit" type="string" label="54256" help="54008">
++          <level>1</level>
++          <default></default>
++          <dependencies>
++            <dependency type="visible" on="property" name="stbavavailable">stbvideo.allow_10bit</dependency>
++            <dependency type="enable" on="property" name="stbavenabled">stbvideo.allow_10bit</dependency>
++          </dependencies>
++          <constraints>
++            <allowempty>true</allowempty>
++            <options>stbavmodes</options>
++          </constraints>
++          <control type="list" format="string" />
++        </setting>
++        <setting id="stbvideo.allow_12bit" type="string" label="54257" help="54008">
++          <level>1</level>
++          <default></default>
++          <dependencies>
++            <dependency type="visible" on="property" name="stbavavailable">stbvideo.allow_12bit</dependency>
++            <dependency type="enable" on="property" name="stbavenabled">stbvideo.allow_12bit</dependency>
++          </dependencies>
++          <constraints>
++            <allowempty>true</allowempty>
++            <options>stbavmodes</options>
++          </constraints>
++          <control type="list" format="string" />
++        </setting>
++        <setting id="stbvideo.sync_mode" type="string" label="54258" help="54008">
++          <level>1</level>
++          <default></default>
++          <dependencies>
++            <dependency type="visible" on="property" name="stbavavailable">stbvideo.sync_mode</dependency>
++            <dependency type="enable" on="property" name="stbavenabled">stbvideo.sync_mode</dependency>
++          </dependencies>
++          <constraints>
++            <allowempty>true</allowempty>
++            <options>stbavmodes</options>
++          </constraints>
++          <control type="list" format="string" />
++        </setting>
++        <setting id="stbvideo.deinterlace" type="string" label="54259" help="54008">
++          <level>1</level>
++          <default></default>
++          <dependencies>
++            <dependency type="visible" on="property" name="stbavavailable">stbvideo.deinterlace</dependency>
++            <dependency type="enable" on="property" name="stbavenabled">stbvideo.deinterlace</dependency>
++          </dependencies>
++          <constraints>
++            <allowempty>true</allowempty>
++            <options>stbavmodes</options>
++          </constraints>
++          <control type="list" format="string" />
++        </setting>
++      </group>
+     </category>
+     <category id="audio" label="14221" help="36360">
+       <group id="1" label="14250">
+@@ -3371,6 +3511,9 @@
+         <setting id="audiooutput.config" type="integer" label="337" help="36361">
+           <level>2</level>
+           <default>2</default>
++          <dependencies>
++            <dependency type="visible" on="property" name="aesettingvisible">audiooutput.config</dependency>
++          </dependencies>
+           <constraints>
+             <options>
+               <option label="338">1</option>
+@@ -3516,7 +3659,7 @@
+       <group id="3" label="14252">
+         <setting id="audiooutput.passthrough" type="boolean" label="348" help="36368">
+           <level>1</level>
+-          <default>false</default>
++          <default>true</default>
+           <dependencies>
+             <dependency type="visible">
+               <and>
+@@ -3662,6 +3805,211 @@
+           <control type="toggle" />
+         </setting>
+       </group>
++      <group id="4" label="54001">
++        <setting id="stbaudio.save" type="boolean" label="54003" help="54004">
++          <level>1</level>
++          <default>false</default>
++          <dependencies>
++            <dependency type="visible" on="property" name="stbavavailable">stbaudio</dependency>
++          </dependencies>
++          <control type="toggle" />
++        </setting>
++        <setting id="stbaudio.ac3" type="string" label="54200" help="54005">
++          <level>1</level>
++          <default></default>
++          <dependencies>
++            <dependency type="visible" on="property" name="stbavavailable">stbaudio.ac3</dependency>
++            <dependency type="enable" on="property" name="stbavenabled">stbaudio.ac3</dependency>
++          </dependencies>
++          <constraints>
++            <allowempty>true</allowempty>
++            <options>stbavmodes</options>
++          </constraints>
++          <control type="list" format="string" />
++        </setting>
++        <setting id="stbaudio.ac3plus" type="string" label="54201" help="54005">
++          <level>1</level>
++          <default></default>
++          <dependencies>
++            <dependency type="visible" on="property" name="stbavavailable">stbaudio.ac3plus</dependency>
++            <dependency type="enable" on="property" name="stbavenabled">stbaudio.ac3plus</dependency>
++          </dependencies>
++          <constraints>
++            <allowempty>true</allowempty>
++            <options>stbavmodes</options>
++          </constraints>
++          <control type="list" format="string" />
++        </setting>
++        <setting id="stbaudio.dts" type="string" label="54202" help="54005">
++          <level>1</level>
++          <default></default>
++          <dependencies>
++            <dependency type="visible" on="property" name="stbavavailable">stbaudio.dts</dependency>
++            <dependency type="enable" on="property" name="stbavenabled">stbaudio.dts</dependency>
++          </dependencies>
++          <constraints>
++            <allowempty>true</allowempty>
++            <options>stbavmodes</options>
++          </constraints>
++          <control type="list" format="string" />
++        </setting>
++        <setting id="stbaudio.dtshd" type="string" label="54203" help="54007">
++          <level>1</level>
++          <default></default>
++          <dependencies>
++            <dependency type="visible" on="property" name="stbavavailable">stbaudio.dtshd</dependency>
++            <dependency type="enable" on="property" name="stbavenabled">stbaudio.dtshd</dependency>
++          </dependencies>
++          <constraints>
++            <allowempty>true</allowempty>
++            <options>stbavmodes</options>
++          </constraints>
++          <control type="list" format="string" />
++        </setting>
++        <setting id="stbaudio.aac" type="string" label="54204" help="54007">
++          <level>1</level>
++          <default></default>
++          <dependencies>
++            <dependency type="visible" on="property" name="stbavavailable">stbaudio.aac</dependency>
++            <dependency type="enable" on="property" name="stbavenabled">stbaudio.aac</dependency>
++          </dependencies>
++          <constraints>
++            <allowempty>true</allowempty>
++            <options>stbavmodes</options>
++          </constraints>
++          <control type="list" format="string" />
++        </setting>
++        <setting id="stbaudio.aacplus" type="string" label="54205" help="54007">
++          <level>1</level>
++          <default></default>
++          <dependencies>
++            <dependency type="visible" on="property" name="stbavavailable">stbaudio.aacplus</dependency>
++            <dependency type="enable" on="property" name="stbavenabled">stbaudio.aacplus</dependency>
++          </dependencies>
++          <constraints>
++            <allowempty>true</allowempty>
++            <options>stbavmodes</options>
++          </constraints>
++          <control type="list" format="string" />
++        </setting>
++        <setting id="stbaudio.aac_transcode" type="string" label="54206" help="54007">
++          <level>1</level>
++          <default></default>
++          <dependencies>
++            <dependency type="visible" on="property" name="stbavavailable">stbaudio.aac_transcode</dependency>
++            <dependency type="enable" on="property" name="stbavenabled">stbaudio.aac_transcode</dependency>
++          </dependencies>
++          <constraints>
++            <allowempty>true</allowempty>
++            <options>stbavmodes</options>
++          </constraints>
++          <control type="list" format="string" />
++        </setting>
++        <setting id="stbaudio.wmapro" type="string" label="54207" help="54007">
++          <level>1</level>
++          <default></default>
++          <dependencies>
++            <dependency type="visible" on="property" name="stbavavailable">stbaudio.wmapro</dependency>
++            <dependency type="enable" on="property" name="stbavenabled">stbaudio.wmapro</dependency>
++          </dependencies>
++          <constraints>
++            <allowempty>true</allowempty>
++            <options>stbavmodes</options>
++          </constraints>
++          <control type="list" format="string" />
++        </setting>
++        <setting id="stbaudio.multichannel_pcm" type="string" label="54208" help="54005">
++          <level>1</level>
++          <default></default>
++          <dependencies>
++            <dependency type="visible" on="property" name="stbavavailable">stbaudio.multichannel_pcm</dependency>
++            <dependency type="enable" on="property" name="stbavenabled">stbaudio.multichannel_pcm</dependency>
++          </dependencies>
++          <constraints>
++            <allowempty>true</allowempty>
++            <options>stbavmodes</options>
++          </constraints>
++          <control type="list" format="string" />
++        </setting>
++        <setting id="stbaudio.audio_source" type="string" label="54209" help="54005">
++          <level>1</level>
++          <default></default>
++          <dependencies>
++            <dependency type="visible" on="property" name="stbavavailable">stbaudio.audio_source</dependency>
++            <dependency type="enable" on="property" name="stbavenabled">stbaudio.audio_source</dependency>
++          </dependencies>
++          <constraints>
++            <allowempty>true</allowempty>
++            <options>stbavmodes</options>
++          </constraints>
++          <control type="list" format="string" />
++        </setting>
++        <setting id="stbaudio.digital_raw" type="string" label="54210" help="54005">
++          <level>1</level>
++          <default></default>
++          <dependencies>
++            <dependency type="visible" on="property" name="stbavavailable">stbaudio.digital_raw</dependency>
++            <dependency type="enable" on="property" name="stbavenabled">stbaudio.digital_raw</dependency>
++          </dependencies>
++          <constraints>
++            <allowempty>true</allowempty>
++            <options>stbavmodes</options>
++          </constraints>
++          <control type="list" format="string" />
++        </setting>
++        <setting id="stbaudio.3d_surround" type="string" label="54211" help="54005">
++          <level>1</level>
++          <default></default>
++          <dependencies>
++            <dependency type="visible" on="property" name="stbavavailable">stbaudio.3d_surround</dependency>
++            <dependency type="enable" on="property" name="stbavenabled">stbaudio.3d_surround</dependency>
++          </dependencies>
++          <constraints>
++            <allowempty>true</allowempty>
++            <options>stbavmodes</options>
++          </constraints>
++          <control type="list" format="string" />
++        </setting>
++        <setting id="stbaudio.3d_surround_speaker_position" type="string" label="54212" help="54005">
++          <level>1</level>
++          <default></default>
++          <dependencies>
++            <dependency type="visible" on="property" name="stbavavailable">stbaudio.3d_surround_speaker_position</dependency>
++            <dependency type="enable" on="property" name="stbavenabled">stbaudio.3d_surround_speaker_position</dependency>
++          </dependencies>
++          <constraints>
++            <allowempty>true</allowempty>
++            <options>stbavmodes</options>
++          </constraints>
++          <control type="list" format="string" />
++        </setting>
++        <setting id="stbaudio.avl" type="string" label="54213" help="54005">
++          <level>1</level>
++          <default></default>
++          <dependencies>
++            <dependency type="visible" on="property" name="stbavavailable">stbaudio.avl</dependency>
++            <dependency type="enable" on="property" name="stbavenabled">stbaudio.avl</dependency>
++          </dependencies>
++          <constraints>
++            <allowempty>true</allowempty>
++            <options>stbavmodes</options>
++          </constraints>
++          <control type="list" format="string" />
++        </setting>
++        <setting id="stbaudio.btaudio" type="string" label="54214" help="54005">
++          <level>1</level>
++          <default></default>
++          <dependencies>
++            <dependency type="visible" on="property" name="stbavavailable">stbaudio.btaudio</dependency>
++            <dependency type="enable" on="property" name="stbavenabled">stbaudio.btaudio</dependency>
++          </dependencies>
++          <constraints>
++            <allowempty>true</allowempty>
++            <options>stbavmodes</options>
++          </constraints>
++          <control type="list" format="string" />
++        </setting>
++      </group>
+     </category>
+     <category id="input" label="14125" help="36374">
+       <group id="1" label="35000">
+diff --git a/xbmc/application/Application.cpp b/xbmc/application/Application.cpp
+--- a/xbmc/application/Application.cpp
++++ b/xbmc/application/Application.cpp
+@@ -48,6 +48,9 @@
+ #include "application/ApplicationStackHelper.h"
+ #include "application/ApplicationVolumeHandling.h"
+ #include "cores/AudioEngine/Engines/ActiveAE/ActiveAE.h"
++#if defined(HAVE_STBPLAYER)
++#include "cores/AudioEngine/Sinks/AESinkSTB.h"
++#endif
+ #include "cores/FFmpeg.h"
+ #include "cores/playercorefactory/PlayerCoreFactory.h"
+ #include "dialogs/GUIDialogBusy.h"
+@@ -1447,6 +1450,10 @@ bool CApplication::OnAction(const CAction& action)
+   {
+     const auto appVolume = GetComponent<CApplicationVolumeHandling>();
+-    if (!appPlayer->IsPassthrough())
++    if (!appPlayer->IsPassthrough()
++#if defined(HAVE_STBPLAYER)
++        || CAESinkSTB::IsSelected()
++#endif
++    )
+     {
+       if (appVolume->IsMuted())
+         appVolume->UnMute();
+diff --git a/xbmc/application/ApplicationVolumeHandling.cpp b/xbmc/application/ApplicationVolumeHandling.cpp
+index 354653ac8b..eebbd396d4 100644
+--- a/xbmc/application/ApplicationVolumeHandling.cpp
++++ b/xbmc/application/ApplicationVolumeHandling.cpp
+@@ -27,6 +27,9 @@
+ #include "settings/lib/Setting.h"
+ #include "utils/Variant.h"
+ #include "utils/XMLUtils.h"
++#if defined(HAVE_STBPLAYER)
++#include "cores/AudioEngine/Sinks/AESinkSTB.h"
++#endif
+ #include "utils/log.h"
+ 
+ #include <cmath>
+@@ -136,6 +139,11 @@ bool SetStbDvbVolume(float volume)
+ 
+ bool SetStbPlatformVolume(float volume)
+ {
++#if defined(HAVE_STBPLAYER) && !defined(TARGET_AMLOGIC)
++  // The DVB sink applies volume through its exclusive audio0 handle.
++  if (CAESinkSTB::IsSelected())
++    return false;
++#endif
+   // Some legacy HiSilicon firedtv drivers dereference an uninitialised audio
+   // player when AUDIO_SET_MIXER is issued before playback.  Their wrapper
+   // requests ActiveAE software volume so Kodi can still import and track the
+diff --git a/xbmc/cores/AudioEngine/CMakeLists.txt b/xbmc/cores/AudioEngine/CMakeLists.txt
+index dc08ff75de..81a2d5cf8a 100644
+--- a/xbmc/cores/AudioEngine/CMakeLists.txt
++++ b/xbmc/cores/AudioEngine/CMakeLists.txt
+@@ -99,6 +99,11 @@ if(TARGET ${APP_NAME_LC}::Sndio)
+   list(APPEND HEADERS Sinks/AESinkSNDIO.h)
+ endif()
+ 
++if(TARGET ${APP_NAME_LC}::Stbplayer)
++  list(APPEND SOURCES Sinks/AESinkSTB.cpp)
++  list(APPEND HEADERS Sinks/AESinkSTB.h)
++endif()
++
+ if(TARGET ${APP_NAME_LC}::FFMPEG)
+   list(APPEND SOURCES Engines/ActiveAE/ActiveAEResampleFFMPEG.cpp)
+   list(APPEND HEADERS Engines/ActiveAE/ActiveAEResampleFFMPEG.h)
+diff --git a/xbmc/cores/AudioEngine/Engines/ActiveAE/ActiveAE.cpp b/xbmc/cores/AudioEngine/Engines/ActiveAE/ActiveAE.cpp
+index e63a3eab72..aef26db9de 100644
+--- a/xbmc/cores/AudioEngine/Engines/ActiveAE/ActiveAE.cpp
++++ b/xbmc/cores/AudioEngine/Engines/ActiveAE/ActiveAE.cpp
+@@ -16,6 +16,9 @@
+ #include "cores/AudioEngine/AEResampleFactory.h"
+ #include "cores/AudioEngine/Encoders/AEEncoderFFmpeg.h"
+ #include "cores/AudioEngine/Interfaces/IAudioCallback.h"
++#if defined(HAVE_STBPLAYER)
++#include "cores/AudioEngine/Sinks/AESinkSTB.h"
++#endif
+ #include "cores/AudioEngine/Utils/AEStreamData.h"
+ #include "cores/AudioEngine/Utils/AEStreamInfo.h"
+ #include "cores/AudioEngine/Utils/AEUtil.h"
+@@ -407,10 +410,14 @@ void CActiveAE::StateMachine(int signal, Protocol *port, Message *msg)
+           m_volume = *(float*)msg->data;
+           m_volumeScaled = CAEUtil::GainToScale(CAEUtil::PercentToGain(m_volume));
+           if (m_sinkHasVolume)
+-            m_sink.m_controlPort.SendOutMessage(CSinkControlProtocol::VOLUME, &m_volume, sizeof(float));
++            UpdateSinkVolume();
+           return;
+         case CActiveAEControlProtocol::MUTE:
+           m_muted = *(bool*)msg->data;
++#if defined(HAVE_STBPLAYER)
++          if (m_sinkHasVolume && CAESinkSTB::IsSelected())
++            UpdateSinkVolume();
++#endif
+           return;
+         case CActiveAEControlProtocol::KEEPCONFIG:
+           m_extKeepConfig = std::chrono::milliseconds(*reinterpret_cast<unsigned int*>(msg->data));
+@@ -1281,7 +1288,7 @@ void CActiveAE::Configure(AEAudioFormat *desiredFmt)
+         requestedDefaultDevice || !IsSameDevice(m_openedDriver, m_openedDevice, dev);
+     initSink = true;
+     m_stats.Reset(m_sinkFormat.m_sampleRate, m_mode == MODE_PCM);
+-    m_sink.m_controlPort.SendOutMessage(CSinkControlProtocol::VOLUME, &m_volume, sizeof(float));
++    UpdateSinkVolume();
+ 
+     if (m_sinkRequestFormat.m_dataFormat != AE_FMT_RAW)
+     {
+@@ -2584,6 +2591,21 @@ CSampleBuffer* CActiveAE::SyncStream(CActiveAEStream *stream)
+                                           : stream->GetErrorInterval();
+   bool newerror = stream->m_syncError.Get(error, timeout);
+ 
++#if defined(HAVE_STBPLAYER)
++  // The DVB decoder schedules media-timed packets by PTS; feed its clock back
++  // to VideoPlayer without creating timestamp gaps by dropping or pausing audio.
++  if (CAESinkSTB::IsSelected() &&
++      (m_mode == MODE_RAW || (m_mode == MODE_PCM && CAESinkSTB::UsesPcmMediaClock())))
++  {
++    if (stream->m_syncState != CAESyncInfo::AESyncState::SYNC_INSYNC)
++    {
++      stream->m_syncState = CAESyncInfo::AESyncState::SYNC_INSYNC;
++      CLog::Log(LOGDEBUG, "ActiveAE - STB media-timed audio uses hardware clock feedback");
++    }
++    return ret;
++  }
++#endif
++
+   if (newerror && fabs(error) > threshold && stream->m_syncState == CAESyncInfo::AESyncState::SYNC_INSYNC)
+   {
+     stream->m_syncState = CAESyncInfo::AESyncState::SYNC_ADJUST;
+@@ -2843,6 +2865,16 @@ void CActiveAE::LoadSettings()
+   m_settings.usesdtscorefallback =
+       settings->GetBool(CSettings::SETTING_AUDIOOUTPUT_DTSHDCOREFALLBACK);
+ 
++#if defined(HAVE_STBPLAYER)
++  if (CAESinkSTB::IsSelected())
++  {
++    // The receiver, not the HDMI capability toggles, controls native decoding.
++    m_settings.config = AE_CONFIG_AUTO;
++    m_settings.ac3transcode = false;
++    m_settings.usesdtscorefallback = true;
++  }
++#endif
++
+   m_settings.resampleQuality = static_cast<AEQuality>(settings->GetInt(CSettings::SETTING_AUDIOOUTPUT_PROCESSQUALITY));
+   m_settings.atempoThreshold = settings->GetInt(CSettings::SETTING_AUDIOOUTPUT_ATEMPOTHRESHOLD) / 100.0;
+   m_settings.streamNoise = settings->GetBool(CSettings::SETTING_AUDIOOUTPUT_STREAMNOISE);
+@@ -2984,6 +3016,10 @@ void CActiveAE::OnSettingsChange()
+ 
+ bool CActiveAE::SupportsRaw(AEAudioFormat &format)
+ {
++#if defined(HAVE_STBPLAYER)
++  if (CAESinkSTB::IsSelected())
++    return CAESinkSTB::WantsRaw(format) && m_sink.SupportsFormat("STB:default", format);
++#endif
+   // check if passthrough is enabled
+   if (!CServiceBroker::GetSettingsComponent()->GetSettings()->GetBool(CSettings::SETTING_AUDIOOUTPUT_PASSTHROUGH))
+     return false;
+@@ -3055,6 +3091,26 @@ bool CActiveAE::SupportsQualityLevel(enum AEQuality level)
+ 
+ bool CActiveAE::IsSettingVisible(const std::string &settingId)
+ {
++  if (settingId == CSettings::SETTING_AUDIOOUTPUT_CONFIG)
++  {
++#if defined(HAVE_STBPLAYER)
++    return !CAESinkSTB::IsSelected();
++#else
++    return true;
++#endif
++  }
++#if defined(HAVE_STBPLAYER)
++  if (CAESinkSTB::IsSelected() &&
++      (settingId == CSettings::SETTING_AUDIOOUTPUT_PASSTHROUGH ||
++       settingId == CSettings::SETTING_AUDIOOUTPUT_AC3TRANSCODE ||
++       settingId == CSettings::SETTING_AUDIOOUTPUT_EAC3PASSTHROUGH ||
++       settingId == CSettings::SETTING_AUDIOOUTPUT_DTSPASSTHROUGH ||
++       settingId == CSettings::SETTING_AUDIOOUTPUT_DTSHDPASSTHROUGH ||
++       settingId == CSettings::SETTING_AUDIOOUTPUT_TRUEHDPASSTHROUGH ||
++       settingId == CSettings::SETTING_AUDIOOUTPUT_CHANNELS ||
++       settingId == CSettings::SETTING_AUDIOOUTPUT_STEREOUPMIX))
++    return false;
++#endif
+   if (settingId == CSettings::SETTING_AUDIOOUTPUT_SAMPLERATE)
+   {
+     const std::shared_ptr<CSettings> settings = CServiceBroker::GetSettingsComponent()->GetSettings();
+@@ -3207,6 +3263,16 @@ void CActiveAE::SetVolume(const float volume)
+   m_controlPort.SendOutMessage(CActiveAEControlProtocol::VOLUME, &m_aeVolume, sizeof(float));
+ }
+ 
++void CActiveAE::UpdateSinkVolume()
++{
++  float volume = m_volume;
++#if defined(HAVE_STBPLAYER)
++  if (CAESinkSTB::IsSelected() && m_muted)
++    volume = 0.0f;
++#endif
++  m_sink.m_controlPort.SendOutMessage(CSinkControlProtocol::VOLUME, &volume, sizeof(volume));
++}
++
+ void CActiveAE::SetMute(const bool enabled)
+ {
+   m_aeMuted = enabled;
+diff --git a/xbmc/cores/AudioEngine/Engines/ActiveAE/ActiveAE.h b/xbmc/cores/AudioEngine/Engines/ActiveAE/ActiveAE.h
+index 56e6e09f7c..cce18e6055 100644
+--- a/xbmc/cores/AudioEngine/Engines/ActiveAE/ActiveAE.h
++++ b/xbmc/cores/AudioEngine/Engines/ActiveAE/ActiveAE.h
+@@ -326,6 +326,7 @@ protected:
+                              const AudioSettings& settings,
+                              int* mode = NULL);
+   void Configure(AEAudioFormat *desiredFmt = NULL);
++  void UpdateSinkVolume();
+   AEAudioFormat GetInputFormat(AEAudioFormat *desiredFmt = NULL);
+   CActiveAEStream* CreateStream(MsgStreamNew *streamMsg);
+   void DiscardStream(CActiveAEStream *stream);
+diff --git a/xbmc/cores/AudioEngine/Engines/ActiveAE/ActiveAESink.cpp b/xbmc/cores/AudioEngine/Engines/ActiveAE/ActiveAESink.cpp
+index ad939b739a..5bee2c863f 100644
+--- a/xbmc/cores/AudioEngine/Engines/ActiveAE/ActiveAESink.cpp
++++ b/xbmc/cores/AudioEngine/Engines/ActiveAE/ActiveAESink.cpp
+@@ -18,6 +18,10 @@
+ #include "utils/MemUtils.h"
+ #include "utils/log.h"
+ 
++#if defined(HAVE_STBPLAYER)
++#include "cores/AudioEngine/Sinks/AESinkSTB.h"
++#endif
++
+ #include <algorithm>
+ #include <new> // for std::bad_alloc
+ #include <sstream>
+@@ -99,7 +103,12 @@ bool CActiveAESink::HasPassthroughDevice()
+ 
+ bool CActiveAESink::SupportsFormat(const std::string &device, AEAudioFormat &format)
+ {
+-  const AESinkDevice dev = CAESinkFactory::ParseDevice(device);
++  AESinkDevice dev = CAESinkFactory::ParseDevice(device);
++#if defined(HAVE_STBPLAYER)
++  if (CAESinkSTB::IsSelected())
++    dev = CAESinkFactory::ParseDevice(
++        ValidateOuputDevice(device, format.m_dataFormat == AE_FMT_RAW));
++#endif
+ 
+   for (auto itt = m_sinkInfoList.begin(); itt != m_sinkInfoList.end(); ++itt)
+   {
+@@ -303,6 +312,8 @@ void CActiveAESink::StateMachine(int signal, Protocol *port, Message *msg)
+ 
+         case CSinkControlProtocol::FLUSH:
+           ReturnBuffers();
++          if (m_sink)
++            m_sink->Flush();
+           msg->Reply(CSinkControlProtocol::ACC);
+           return;
+ 
+@@ -925,6 +936,12 @@ void CActiveAESink::OpenSink()
+ {
+   bool passthrough = (m_requestedFormat.m_dataFormat == AE_FMT_RAW);
+ 
++#if defined(HAVE_STBPLAYER)
++  // Resolve saved aliases before deciding whether the device needs IEC packing.
++  if (CAESinkSTB::IsSelected())
++    m_device = ValidateOuputDevice(m_device, passthrough);
++#endif
++
+   AESinkDevice dev = CAESinkFactory::ParseDevice(m_device);
+ 
+   if (dev.driver.empty() && m_sink)
+@@ -1081,6 +1098,13 @@ unsigned int CActiveAESink::OutputSamples(CSampleBuffer* samples)
+   unsigned int written = 0;
+   AEDelayStatus status;
+ 
++  int64_t timestamp = samples->timestamp;
++  if (timestamp && m_requestedFormat.m_dataFormat != AE_FMT_RAW)
++    timestamp -= static_cast<int64_t>(samples->pkt_start_offset) * 1000 /
++                 samples->pkt->config.sample_rate;
++  m_sink->SetTimestamp(timestamp, m_extStreaming && samples != &m_sampleOfSilence &&
++                                      samples->timestamp != 0);
++
+   if (m_requestedFormat.m_dataFormat == AE_FMT_RAW)
+   {
+     bool skipSwap = false;
+@@ -1137,6 +1161,9 @@ unsigned int CActiveAESink::OutputSamples(CSampleBuffer* samples)
+   }
+ 
+   int framesOrPackets;
++#if defined(HAVE_STBPLAYER)
++  const auto retryDeadline = std::chrono::steady_clock::now() + 1s;
++#endif
+ 
+   while (frames > 0)
+   {
+@@ -1144,10 +1171,23 @@ unsigned int CActiveAESink::OutputSamples(CSampleBuffer* samples)
+     written = m_sink->AddPackets(buffer, maxFrames, totalFrames - frames);
+     if (written == 0)
+     {
+-      CThread::Sleep(
+-          std::chrono::milliseconds(500 * m_sinkFormat.m_frames / m_sinkFormat.m_sampleRate));
++      auto retryDelay =
++          std::chrono::milliseconds(500 * m_sinkFormat.m_frames / m_sinkFormat.m_sampleRate);
++#if defined(HAVE_STBPLAYER)
++      // RAW frames count bytes, not PCM samples; wait for half an audio packet.
++      if (CAESinkSTB::IsSelected() && m_requestedFormat.m_dataFormat == AE_FMT_RAW)
++        retryDelay = std::chrono::milliseconds(
++            std::max(1, static_cast<int>(m_sinkFormat.m_streamInfo.GetDuration() / 2)));
++#endif
++      CThread::Sleep(retryDelay);
+       retry++;
+-      if (retry > 4)
++      bool retryTimedOut = retry > 4;
++#if defined(HAVE_STBPLAYER)
++      // Both PCM and RAW hardware decoders need time to finish preroll.
++      if (CAESinkSTB::IsSelected())
++        retryTimedOut = std::chrono::steady_clock::now() >= retryDeadline;
++#endif
++      if (retryTimedOut)
+       {
+         m_extError = true;
+         CLog::Log(LOGERROR, "CActiveAESink::OutputSamples - failed");
+diff --git a/xbmc/cores/AudioEngine/Interfaces/AESink.h b/xbmc/cores/AudioEngine/Interfaces/AESink.h
+index 5637c691e3..b3f0e2fd89 100644
+--- a/xbmc/cores/AudioEngine/Interfaces/AESink.h
++++ b/xbmc/cores/AudioEngine/Interfaces/AESink.h
+@@ -55,6 +55,15 @@ public:
+   */
+   virtual unsigned int AddPackets(uint8_t **data, unsigned int frames, unsigned int offset) = 0;
+ 
++  /*
++   * Pass the media timestamp of the next packet to sinks which drive a
++   * hardware A/V clock. The default keeps existing sinks source compatible.
++   */
++  virtual void SetTimestamp(int64_t timestampMs, bool valid) {}
++
++  // Discard queued hardware audio on seek; existing sinks keep their lifecycle.
++  virtual void Flush() {}
++
+   /*!
+    * @brief instruct the sink to add a pause
+    * @param millis ms to pause
+diff --git a/xbmc/cores/AudioEngine/Sinks/AESinkSTB.cpp b/xbmc/cores/AudioEngine/Sinks/AESinkSTB.cpp
+new file mode 100644
+index 0000000000..ca7a75cae0
+--- /dev/null
++++ b/xbmc/cores/AudioEngine/Sinks/AESinkSTB.cpp
+@@ -0,0 +1,438 @@
++/*
++ *  Copyright (C) 2026 OE-Alliance contributors
++ *  SPDX-License-Identifier: GPL-2.0-or-later
++ */
++
++#include "AESinkSTB.h"
++
++#include "cores/AudioEngine/AESinkFactory.h"
++#include "cores/AudioEngine/Utils/AEUtil.h"
++#include "settings/STBAVControl.h"
++#include "utils/log.h"
++
++extern "C"
++{
++#include <stbplayer/loader.h>
++}
++
++#include <algorithm>
++#include <atomic>
++#include <chrono>
++#include <cmath>
++#include <limits>
++#include <thread>
++#include <utility>
++
++namespace
++{
++constexpr int64_t PTS_HZ = 90000;
++constexpr int64_t PTS_WRAP = INT64_C(1) << 33;
++constexpr int64_t PTS_HALF_WRAP = PTS_WRAP / 2;
++bool selected = false;
++std::atomic<bool> pcmMediaClock{false};
++std::atomic<unsigned int> dtsModeRevision{0};
++
++int64_t PtsDistance(int64_t end, int64_t start)
++{
++  int64_t distance = (end - start) & (PTS_WRAP - 1);
++  if (distance >= PTS_HALF_WRAP)
++    distance -= PTS_WRAP;
++  return distance;
++}
++} // namespace
++
++CAESinkSTB::~CAESinkSTB()
++{
++  Deinitialize();
++}
++
++void CAESinkSTB::Register()
++{
++  AE::AESinkRegEntry entry;
++  entry.sinkName = "STB";
++  entry.createFunc = CAESinkSTB::Create;
++  entry.enumerateFunc = CAESinkSTB::EnumerateDevicesEx;
++  AE::CAESinkFactory::RegisterSink(entry);
++  selected = true;
++}
++
++bool CAESinkSTB::IsSelected()
++{
++  return selected;
++}
++
++bool CAESinkSTB::UsesPcmMediaClock()
++{
++  return pcmMediaClock.load();
++}
++
++bool CAESinkSTB::DtsUsesAc3Mode()
++{
++  stbp_audio_device* device = nullptr;
++  stbp_host_callbacks host{};
++  host.struct_size = sizeof(host);
++  stbp_audio_capabilities capabilities{};
++  capabilities.struct_size = sizeof(capabilities);
++  if (stbp_audio_create(&host, &device) != STBP_OK)
++    return false;
++  const bool shared = stbp_audio_probe(device, &capabilities) == STBP_OK &&
++                      (capabilities.feature_mask & STBP_AUDIO_FEATURE_DTS_SHARED_AC3) != 0;
++  stbp_audio_destroy(device);
++  return shared;
++}
++
++bool CAESinkSTB::WantsRaw(const AEAudioFormat& format)
++{
++  if (CodecForFormat(format) == STBP_AUDIO_CODEC_DTS && DtsUsesAc3Mode())
++    return CSTBAVControl{}.Read("stbaudio.ac3") == "passthrough";
++  return true;
++}
++
++void CAESinkSTB::NotifyDtsModeChanged()
++{
++  if (DtsUsesAc3Mode())
++    ++dtsModeRevision;
++}
++
++unsigned int CAESinkSTB::GetDtsModeRevision()
++{
++  return dtsModeRevision.load();
++}
++
++std::unique_ptr<IAESink> CAESinkSTB::Create(std::string& device, AEAudioFormat& desiredFormat)
++{
++  auto sink = std::make_unique<CAESinkSTB>();
++  if (sink->Initialize(desiredFormat, device))
++    return sink;
++  return {};
++}
++
++enum stbp_audio_codec CAESinkSTB::CodecForFormat(const AEAudioFormat& format)
++{
++  if (format.m_dataFormat != AE_FMT_RAW)
++    return STBP_AUDIO_CODEC_PCM;
++
++  switch (format.m_streamInfo.m_type)
++  {
++    case CAEStreamInfo::STREAM_TYPE_AC3:
++      return STBP_AUDIO_CODEC_AC3;
++    case CAEStreamInfo::STREAM_TYPE_EAC3:
++      return STBP_AUDIO_CODEC_EAC3;
++    case CAEStreamInfo::STREAM_TYPE_DTS_512:
++    case CAEStreamInfo::STREAM_TYPE_DTS_1024:
++    case CAEStreamInfo::STREAM_TYPE_DTS_2048:
++    case CAEStreamInfo::STREAM_TYPE_DTSHD_CORE:
++      return STBP_AUDIO_CODEC_DTS;
++    default:
++      return STBP_AUDIO_CODEC_UNKNOWN;
++  }
++}
++
++void CAESinkSTB::Log(void* /*userdata*/, enum stbp_log_level level, const char* message)
++{
++  int kodiLevel = LOGDEBUG;
++  switch (level)
++  {
++    case STBP_LOG_ERROR:
++      kodiLevel = LOGERROR;
++      break;
++    case STBP_LOG_WARNING:
++      kodiLevel = LOGWARNING;
++      break;
++    case STBP_LOG_INFO:
++      kodiLevel = LOGINFO;
++      break;
++    case STBP_LOG_DEBUG:
++    case STBP_LOG_TRACE:
++      break;
++  }
++  CLog::Log(kodiLevel, "libstbplayer audio: {}", message != nullptr ? message : "");
++}
++
++bool CAESinkSTB::Initialize(AEAudioFormat& format, std::string& device)
++{
++  struct stbp_host_callbacks host = {};
++  struct stbp_audio_capabilities capabilities = {};
++  struct stbp_audio_config config = {};
++  const enum stbp_audio_codec codec = CodecForFormat(format);
++
++  Deinitialize();
++  if (codec == STBP_AUDIO_CODEC_UNKNOWN)
++  {
++    CLog::LogF(LOGERROR, "unsupported raw stream type {}",
++               static_cast<int>(format.m_streamInfo.m_type));
++    return false;
++  }
++
++  host.struct_size = sizeof(host);
++  host.log = Log;
++  if (stbp_audio_create(&host, &m_device) != STBP_OK)
++    return false;
++
++  capabilities.struct_size = sizeof(capabilities);
++  if (stbp_audio_probe(m_device, &capabilities) != STBP_OK ||
++      (capabilities.codec_mask & STBP_AUDIO_CODEC_BIT(codec)) == 0)
++  {
++    Deinitialize();
++    return false;
++  }
++
++  m_format = format;
++  config.struct_size = sizeof(config);
++  config.codec = codec;
++  if (m_format.m_dataFormat == AE_FMT_RAW)
++  {
++    config.sample_rate = m_format.m_streamInfo.m_sampleRate;
++    config.channels = m_format.m_streamInfo.m_channels;
++    m_format.m_channelLayout = AE_CH_LAYOUT_2_0;
++    m_format.m_frameSize = 1;
++    m_format.m_frames = std::min(capabilities.max_packet_size, 61440U);
++  }
++  else
++  {
++    m_format.m_dataFormat = AE_FMT_S16NE;
++    m_format.m_channelLayout = AE_CH_LAYOUT_2_0;
++    m_format.m_frameSize = 4;
++    m_format.m_frames = capabilities.preferred_period_frames;
++    config.sample_format = STBP_AUDIO_SAMPLE_S16_NATIVE;
++    config.sample_rate = m_format.m_sampleRate;
++    config.channels = 2;
++    config.bits_per_sample = 16;
++  }
++
++  if (config.sample_rate == 0 || config.channels == 0 || m_format.m_frames == 0)
++  {
++    Deinitialize();
++    return false;
++  }
++
++  if (stbp_audio_open(m_device, &config) != STBP_OK)
++  {
++    Deinitialize();
++    return false;
++  }
++
++  format = m_format;
++  device = "default";
++  m_nextPts90k = 0;
++  m_pcmSampleClock = codec == STBP_AUDIO_CODEC_PCM &&
++                    (capabilities.feature_mask & STBP_AUDIO_FEATURE_PCM_SAMPLE_CLOCK) != 0;
++  pcmMediaClock = codec == STBP_AUDIO_CODEC_PCM && !m_pcmSampleClock;
++  CLog::LogF(LOGINFO, "opened STB hardware audio output for codec {} at {} Hz",
++             static_cast<int>(codec), config.sample_rate);
++  if (m_pcmSampleClock)
++    CLog::LogF(LOGINFO, "PCM decoder clock uses elapsed samples, not media PTS");
++  return true;
++}
++
++void CAESinkSTB::Deinitialize()
++{
++  pcmMediaClock = false;
++  if (m_device != nullptr)
++  {
++    stbp_audio_destroy(m_device);
++    m_device = nullptr;
++  }
++  m_nextPts90k = 0;
++  m_firstPts90k = STBP_AUDIO_PTS_NONE;
++  m_hasMediaTimestamp = false;
++  m_clockStarted = false;
++  m_pcmSampleClock = false;
++  m_pcmFrames = 0;
++}
++
++void CAESinkSTB::SetTimestamp(int64_t timestampMs, bool valid)
++{
++  // Untimed GUI/keepalive audio still needs PES timestamps to start the decoder.
++  if (!valid || m_pcmSampleClock)
++    return;
++
++  if (!m_hasMediaTimestamp)
++  {
++    Flush();
++    m_hasMediaTimestamp = true;
++  }
++  m_nextPts90k = timestampMs * 90;
++}
++
++unsigned int CAESinkSTB::AddPackets(uint8_t** data,
++                                    unsigned int frames,
++                                    unsigned int offset)
++{
++  struct stbp_audio_packet packet = {};
++  int64_t duration90k;
++  enum stbp_result result;
++
++  if (m_device == nullptr || data == nullptr || data[0] == nullptr || frames == 0)
++    return 0;
++
++  if (m_format.m_dataFormat == AE_FMT_RAW)
++  {
++    duration90k = static_cast<int64_t>(std::llround(m_format.m_streamInfo.GetDuration() * 90.0));
++  }
++  else
++  {
++    duration90k = static_cast<int64_t>(frames) * PTS_HZ / m_format.m_sampleRate;
++  }
++
++  AEDelayStatus delay;
++  GetDelay(delay);
++  if (delay.delay + static_cast<double>(duration90k) / PTS_HZ > GetCacheTotal())
++    return 0;
++
++  packet.struct_size = sizeof(packet);
++  packet.data = data[0] + static_cast<size_t>(offset) * m_format.m_frameSize;
++  packet.size = static_cast<size_t>(frames) * m_format.m_frameSize;
++  packet.pts_90k = m_nextPts90k;
++  packet.duration_90k = duration90k;
++  result = stbp_audio_queue_packet(m_device, &packet);
++  if (result == STBP_AGAIN)
++    return 0;
++  if (result != STBP_OK)
++  {
++    CLog::LogF(LOGERROR, "failed to queue STB hardware audio: {}", stbp_result_string(result));
++    return std::numeric_limits<unsigned int>::max();
++  }
++
++  if (m_firstPts90k == STBP_AUDIO_PTS_NONE)
++    m_firstPts90k = m_nextPts90k;
++  if (m_pcmSampleClock)
++    m_pcmFrames += frames;
++  m_nextPts90k += duration90k;
++  return frames;
++}
++
++void CAESinkSTB::AddPause(unsigned int millis)
++{
++  std::this_thread::sleep_for(std::chrono::milliseconds(millis));
++}
++
++void CAESinkSTB::GetDelay(AEDelayStatus& status)
++{
++  struct stbp_audio_status audioStatus = {};
++  double delay = 0.0;
++
++  if (m_device != nullptr)
++  {
++    audioStatus.struct_size = sizeof(audioStatus);
++    if (stbp_audio_get_status(m_device, &audioStatus) == STBP_OK &&
++        audioStatus.presentation_pts_90k != STBP_AUDIO_PTS_NONE &&
++        audioStatus.queued_end_pts_90k != STBP_AUDIO_PTS_NONE)
++    {
++      if (m_pcmSampleClock)
++      {
++        const double queuedSeconds = static_cast<double>(m_pcmFrames) / m_format.m_sampleRate;
++        delay = std::max(queuedSeconds -
++                             static_cast<double>(audioStatus.presentation_pts_90k) / PTS_HZ,
++                         0.0);
++      }
++      else
++      {
++        if (!m_clockStarted && m_firstPts90k != STBP_AUDIO_PTS_NONE &&
++            audioStatus.presentation_pts_90k != 0)
++        {
++          const int64_t played = PtsDistance(audioStatus.presentation_pts_90k, m_firstPts90k);
++          const int64_t queued = PtsDistance(audioStatus.queued_end_pts_90k, m_firstPts90k);
++          m_clockStarted = played >= 0 && played <= queued;
++        }
++        // The driver can retain an old PTS until the new decoder has enough input.
++        const int64_t presented = !m_clockStarted && m_firstPts90k != STBP_AUDIO_PTS_NONE
++                                      ? m_firstPts90k
++                                      : audioStatus.presentation_pts_90k;
++        const int64_t delay90k = PtsDistance(audioStatus.queued_end_pts_90k, presented);
++        delay = std::max(static_cast<double>(delay90k) / PTS_HZ, 0.0);
++      }
++    }
++  }
++  status.SetDelay(delay);
++}
++
++void CAESinkSTB::Drain()
++{
++  if (m_device != nullptr)
++    stbp_audio_drain(m_device);
++}
++
++void CAESinkSTB::Flush()
++{
++  if (m_device != nullptr)
++  {
++    if (m_pcmSampleClock)
++    {
++      // CLEAR_BUFFER leaves the old sample counter visible until decoding resumes.
++      struct stbp_audio_config config = {};
++      config.struct_size = sizeof(config);
++      config.codec = STBP_AUDIO_CODEC_PCM;
++      config.sample_format = STBP_AUDIO_SAMPLE_S16_NATIVE;
++      config.sample_rate = m_format.m_sampleRate;
++      config.channels = 2;
++      config.bits_per_sample = 16;
++      stbp_audio_close(m_device);
++      if (stbp_audio_open(m_device, &config) != STBP_OK)
++        CLog::LogF(LOGERROR, "failed to reset PCM sample clock");
++#if !defined(TARGET_AMLOGIC)
++      SetVolume(m_volume);
++#endif
++    }
++    else
++      stbp_audio_flush(m_device, STBP_AUDIO_PTS_NONE);
++  }
++  m_nextPts90k = 0;
++  m_firstPts90k = STBP_AUDIO_PTS_NONE;
++  m_hasMediaTimestamp = false;
++  m_clockStarted = false;
++  m_pcmFrames = 0;
++}
++
++#if !defined(TARGET_AMLOGIC)
++void CAESinkSTB::SetVolume(float volume)
++{
++  m_volume = volume;
++  if (m_device == nullptr)
++    return;
++
++  const auto percentage =
++      static_cast<uint32_t>(std::lround(std::clamp(volume, 0.0f, 1.0f) * 100.0f));
++  const enum stbp_result result = stbp_audio_set_volume(m_device, percentage, percentage);
++  if (result != STBP_OK)
++    CLog::LogF(LOGWARNING, "failed to set STB hardware audio volume: {}",
++               stbp_result_string(result));
++}
++#endif
++
++void CAESinkSTB::EnumerateDevicesEx(AEDeviceInfoList& list, bool /*force*/)
++{
++  struct stbp_host_callbacks host = {};
++  struct stbp_audio_capabilities capabilities = {};
++  struct stbp_audio_device* device = nullptr;
++
++  host.struct_size = sizeof(host);
++  capabilities.struct_size = sizeof(capabilities);
++  if (stbp_audio_create(&host, &device) != STBP_OK)
++    return;
++  const enum stbp_result result = stbp_audio_probe(device, &capabilities);
++  stbp_audio_destroy(device);
++  if (result != STBP_OK)
++    return;
++
++  CAEDeviceInfo info;
++  info.m_deviceName = "default";
++  info.m_displayName = "STB hardware audio";
++  info.m_deviceType = AE_DEVTYPE_HDMI;
++  info.m_wantsIECPassthrough = false;
++  info.m_channels = AE_CH_LAYOUT_2_0;
++  info.m_sampleRates = {32000, 44100, 48000};
++  info.m_dataFormats = {AE_FMT_S16NE, AE_FMT_RAW};
++  if ((capabilities.codec_mask & STBP_AUDIO_CODEC_BIT(STBP_AUDIO_CODEC_AC3)) != 0)
++    info.m_streamTypes.emplace_back(CAEStreamInfo::STREAM_TYPE_AC3);
++  if ((capabilities.codec_mask & STBP_AUDIO_CODEC_BIT(STBP_AUDIO_CODEC_EAC3)) != 0)
++    info.m_streamTypes.emplace_back(CAEStreamInfo::STREAM_TYPE_EAC3);
++  if ((capabilities.codec_mask & STBP_AUDIO_CODEC_BIT(STBP_AUDIO_CODEC_DTS)) != 0)
++  {
++    info.m_streamTypes.emplace_back(CAEStreamInfo::STREAM_TYPE_DTS_512);
++    info.m_streamTypes.emplace_back(CAEStreamInfo::STREAM_TYPE_DTS_1024);
++    info.m_streamTypes.emplace_back(CAEStreamInfo::STREAM_TYPE_DTS_2048);
++    info.m_streamTypes.emplace_back(CAEStreamInfo::STREAM_TYPE_DTSHD_CORE);
++  }
++  list.emplace_back(std::move(info));
++}
+diff --git a/xbmc/cores/AudioEngine/Sinks/AESinkSTB.h b/xbmc/cores/AudioEngine/Sinks/AESinkSTB.h
+new file mode 100644
+index 0000000000..f04dc1ba2a
+--- /dev/null
++++ b/xbmc/cores/AudioEngine/Sinks/AESinkSTB.h
+@@ -0,0 +1,62 @@
++/*
++ *  Copyright (C) 2026 OE-Alliance contributors
++ *  SPDX-License-Identifier: GPL-2.0-or-later
++ */
++
++#pragma once
++
++#include "cores/AudioEngine/Interfaces/AESink.h"
++#include "cores/AudioEngine/Utils/AEDeviceInfo.h"
++
++#include <memory>
++
++extern "C"
++{
++#include <stbplayer/audio.h>
++}
++
++class CAESinkSTB : public IAESink
++{
++public:
++  CAESinkSTB() = default;
++  ~CAESinkSTB() override;
++
++  static void Register();
++  static bool IsSelected();
++  static bool UsesPcmMediaClock();
++  static bool DtsUsesAc3Mode();
++  static bool WantsRaw(const AEAudioFormat& format);
++  static void NotifyDtsModeChanged();
++  static unsigned int GetDtsModeRevision();
++  static std::unique_ptr<IAESink> Create(std::string& device, AEAudioFormat& desiredFormat);
++  static void EnumerateDevicesEx(AEDeviceInfoList& list, bool force);
++
++  const char* GetName() override { return "STB"; }
++  bool Initialize(AEAudioFormat& format, std::string& device) override;
++  void Deinitialize() override;
++  double GetCacheTotal() override { return 0.5; }
++  unsigned int AddPackets(uint8_t** data, unsigned int frames, unsigned int offset) override;
++  void AddPause(unsigned int millis) override;
++  void SetTimestamp(int64_t timestampMs, bool valid) override;
++  void GetDelay(AEDelayStatus& status) override;
++  void Drain() override;
++  void Flush() override;
++#if !defined(TARGET_AMLOGIC)
++  bool HasVolume() override { return true; }
++  void SetVolume(float volume) override;
++#endif
++
++private:
++  static enum stbp_audio_codec CodecForFormat(const AEAudioFormat& format);
++  static void Log(void* userdata, enum stbp_log_level level, const char* message);
++
++  struct stbp_audio_device* m_device{nullptr};
++  AEAudioFormat m_format{};
++  int64_t m_nextPts90k{0};
++  int64_t m_firstPts90k{STBP_AUDIO_PTS_NONE};
++  bool m_hasMediaTimestamp{false};
++  bool m_clockStarted{false};
++  bool m_pcmSampleClock{false};
++  uint64_t m_pcmFrames{0};
++  float m_volume{1.0f};
++};
+diff --git a/xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecSTB.cpp b/xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecSTB.cpp
+index e212e88f1f..777559809f 100644
+--- a/xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecSTB.cpp
++++ b/xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecSTB.cpp
+@@ -6,6 +6,7 @@
+ #include "DVDVideoCodecSTB.h"
+ 
+ #include "RendererSTB.h"
++#include "cores/AudioEngine/Sinks/AESinkSTB.h"
+ #include "cores/VideoPlayer/Interface/TimingConstants.h"
+ #include "utils/BitstreamConverter.h"
+ #include "utils/log.h"
+@@ -388,7 +389,7 @@ bool CDVDVideoCodecSTB::Open(CDVDStreamInfo& hints, CDVDCodecOptions& options)
+   stream.extra_data_size = extraDataSize;
+   clock.struct_size = sizeof(clock);
+   clock.initial_pts_90k = STBP_PTS_NONE;
+-  clock.kodi_is_clock_master = 1;
++  clock.kodi_is_clock_master = backendName != "bcm-dvb" || !CAESinkSTB::IsSelected();
+ 
+   const enum stbp_result openResult = m_session->Open(stream, clock);
+   if (openResult != STBP_OK)
+@@ -409,7 +410,7 @@ bool CDVDVideoCodecSTB::Open(CDVDStreamInfo& hints, CDVDCodecOptions& options)
+                           : 0.0;
+   m_name = "stbplayer/" + m_session->BackendName();
+   m_feedAheadPictures = m_session->BackendName() == "dream-aml" ? 48U : 0U;
+-  m_gateStartupPts = (m_session->Capabilities().feature_mask &
++  m_gateStartupPts = clock.kodi_is_clock_master && (m_session->Capabilities().feature_mask &
+                       STBP_FEATURE_STARTUP_PTS_GATE) != 0;
+   m_processInfo.SetVideoDecoderName(m_name, true);
+   m_processInfo.SetVideoDimensions(hints.width, hints.height);
+diff --git a/xbmc/platform/linux/OptionalsReg.cpp b/xbmc/platform/linux/OptionalsReg.cpp
+index 3992f2a0d0..638601c50a 100644
+--- a/xbmc/platform/linux/OptionalsReg.cpp
++++ b/xbmc/platform/linux/OptionalsReg.cpp
+@@ -27,6 +27,24 @@ bool OPTIONALS::ALSARegister()
+ }
+ #endif
+ 
++//-----------------------------------------------------------------------------
++// STB hardware audio
++//-----------------------------------------------------------------------------
++
++#ifdef HAVE_STBPLAYER
++#include "cores/AudioEngine/Sinks/AESinkSTB.h"
++bool OPTIONALS::STBRegister()
++{
++  CAESinkSTB::Register();
++  return true;
++}
++#else
++bool OPTIONALS::STBRegister()
++{
++  return false;
++}
++#endif
++
+ //-----------------------------------------------------------------------------
+ // PulseAudio
+ //-----------------------------------------------------------------------------
+diff --git a/xbmc/platform/linux/OptionalsReg.h b/xbmc/platform/linux/OptionalsReg.h
+index 3a777b7003..88f32991a8 100644
+--- a/xbmc/platform/linux/OptionalsReg.h
++++ b/xbmc/platform/linux/OptionalsReg.h
+@@ -44,6 +44,15 @@ namespace OPTIONALS
+ bool SndioRegister();
+ }
+ 
++//-----------------------------------------------------------------------------
++// STB hardware audio
++//-----------------------------------------------------------------------------
++
++namespace OPTIONALS
++{
++bool STBRegister();
++}
++
+ //-----------------------------------------------------------------------------
+ // Lirc
+ //-----------------------------------------------------------------------------
+diff --git a/xbmc/platform/linux/PlatformLinux.cpp b/xbmc/platform/linux/PlatformLinux.cpp
+index da1a6cf74c..c0db289fb9 100644
+--- a/xbmc/platform/linux/PlatformLinux.cpp
++++ b/xbmc/platform/linux/PlatformLinux.cpp
+@@ -107,7 +107,11 @@ bool CPlatformLinux::InitStageOne()
+ 
+   std::string_view sink = CServiceBroker::GetAppParams()->GetAudioBackend();
+ 
+-  if (sink == "alsa")
++  if (sink == "stb")
++  {
++    OPTIONALS::STBRegister();
++  }
++  else if (sink == "alsa")
+   {
+     OPTIONALS::ALSARegister();
+   }
+@@ -130,6 +134,9 @@ bool CPlatformLinux::InitStageOne()
+   }
+   else
+   {
++#if defined(HAVE_STBPLAYER)
++    OPTIONALS::STBRegister();
++#else
+     if (!OPTIONALS::PulseAudioRegister(false))
+     {
+       if (!OPTIONALS::PipewireRegister())
+@@ -140,6 +147,7 @@ bool CPlatformLinux::InitStageOne()
+         }
+       }
+     }
++#endif
+   }
+ 
+   m_lirc.reset(OPTIONALS::LircRegister());
+diff --git a/xbmc/settings/CMakeLists.txt b/xbmc/settings/CMakeLists.txt
+index 72e0ffdc4b..baf880d8ca 100644
+--- a/xbmc/settings/CMakeLists.txt
++++ b/xbmc/settings/CMakeLists.txt
+@@ -52,4 +52,9 @@ if(TARGET ${APP_NAME_LC}::Bluray)
+   list(APPEND SOURCES DiscSettings.cpp)
+ endif()
+ 
++if(TARGET ${APP_NAME_LC}::Stbplayer)
++  list(APPEND SOURCES STBAVControl.cpp STBAVSettings.cpp)
++  list(APPEND HEADERS STBAVControl.h STBAVSettings.h)
++endif()
++
+ core_add_library(settings)
+diff --git a/xbmc/settings/STBAVControl.cpp b/xbmc/settings/STBAVControl.cpp
+new file mode 100644
+index 0000000000..d3edaffba6
+--- /dev/null
++++ b/xbmc/settings/STBAVControl.cpp
+@@ -0,0 +1,193 @@
++/*
++ * Copyright (C) 2026 OE-Alliance contributors
++ * SPDX-License-Identifier: GPL-2.0-or-later
++ */
++#include "STBAVControl.h"
++
++#include <algorithm>
++#include <cerrno>
++#include <fcntl.h>
++#include <fstream>
++#include <sstream>
++#include <unistd.h>
++#include <utility>
++
++CSTBAVControl::CSTBAVControl(std::string root) : m_root(std::move(root))
++{
++}
++
++const std::vector<CSTBAVControl::Control>& CSTBAVControl::Controls()
++{
++  // Prefer the driver's choices. Fallbacks are fixed interfaces used by E2.
++  static const std::vector<Control> controls{
++      {"stbaudio.ac3", "/proc/stb/audio/ac3", ""},
++      {"stbaudio.ac3plus", "/proc/stb/audio/ac3plus", ""},
++      {"stbaudio.dts", "/proc/stb/audio/dts", ""},
++      {"stbaudio.dtshd", "/proc/stb/audio/dtshd", ""},
++      {"stbaudio.aac", "/proc/stb/audio/aac", ""},
++      {"stbaudio.aacplus", "/proc/stb/audio/aacplus", ""},
++      {"stbaudio.aac_transcode", "/proc/stb/audio/aac_transcode", ""},
++      {"stbaudio.wmapro", "/proc/stb/audio/wmapro", ""},
++      {"stbaudio.multichannel_pcm", "/proc/stb/audio/multichannel_pcm", "disable enable"},
++      {"stbaudio.audio_source", "/proc/stb/hdmi/audio_source", "pcm spdif"},
++      {"stbaudio.digital_raw", "/sys/class/audiodsp/digital_raw", "0 1 2"},
++      {"stbaudio.3d_surround", "/proc/stb/audio/3d_surround", ""},
++      {"stbaudio.3d_surround_speaker_position", "/proc/stb/audio/3d_surround_speaker_position", ""},
++      {"stbaudio.avl", "/proc/stb/audio/avl", ""},
++      {"stbaudio.btaudio", "/proc/stb/audio/btaudio", "off on"},
++      {"stbvideo.hdmi_colorspace", "/proc/stb/video/hdmi_colorspace", ""},
++      {"stbvideo.hdmi_colorimetry", "/proc/stb/video/hdmi_colorimetry", ""},
++      {"stbvideo.hdmi_colordepth", "/proc/stb/video/hdmi_colordepth", "auto 8bit 10bit 12bit"},
++      {"stbvideo.hdmi_hdrtype", "/proc/stb/video/hdmi_hdrtype", "auto dolby none hdr10 hdr10+ hlg"},
++      {"stbvideo.hlg_support", "/proc/stb/hdmi/hlg_support", ""},
++      {"stbvideo.hdr10_support", "/proc/stb/hdmi/hdr10_support", ""},
++      {"stbvideo.allow_10bit", "/proc/stb/video/disable_10bit", "0 1"},
++      {"stbvideo.allow_12bit", "/proc/stb/video/disable_12bit", "0 1"},
++      {"stbvideo.sync_mode", "/proc/stb/video/sync_mode", ""},
++      {"stbvideo.deinterlace", "/proc/stb/vmpeg/deinterlace", "off auto on bob"}};
++  return controls;
++}
++
++std::string CSTBAVControl::Path(const std::string& id) const
++{
++  for (const auto& control : Controls())
++  {
++    if (id == control.id)
++    {
++      // Dream uses dtshd for DTS core routing as well, without a separate dts node.
++      const auto dtsHD = m_root + "/proc/stb/audio/dtshd";
++      if (id == "stbaudio.dts" && access((m_root + control.path).c_str(), F_OK) != 0 &&
++          access(dtsHD.c_str(), R_OK | W_OK) == 0)
++      {
++        std::istringstream choices(ReadPath(dtsHD + "_choices"));
++        for (std::string choice; choices >> choice;)
++          if (choice == "force_dts")
++            return dtsHD;
++      }
++      if (id == "stbaudio.dtshd" && Path("stbaudio.dts") == dtsHD)
++        return {};
++      if (id == "stbaudio.audio_source" &&
++          access((m_root + "/sys/devices/virtual/amhdmitx/amhdmitx0/audio_source").c_str(),
++                 R_OK | W_OK) == 0)
++        return m_root + "/sys/devices/virtual/amhdmitx/amhdmitx0/audio_source";
++      return m_root + control.path;
++    }
++  }
++  return {};
++}
++
++std::string CSTBAVControl::ReadPath(const std::string& path)
++{
++  std::ifstream file(path);
++  std::string value;
++  std::getline(file, value);
++  const auto start = value.find_first_not_of(" \t\r\n");
++  if (start == std::string::npos)
++    return {};
++  return value.substr(start, value.find_last_not_of(" \t\r\n") - start + 1);
++}
++
++std::string CSTBAVControl::Read(const std::string& id) const
++{
++  return ReadPath(Path(id));
++}
++
++std::vector<std::string> CSTBAVControl::Choices(const std::string& id) const
++{
++  const auto path = Path(id);
++  if (path.empty() || access(path.c_str(), R_OK | W_OK) != 0 || ReadPath(path).empty())
++    return {};
++  auto choices = ReadPath(path + "_choices");
++  if (choices.empty())
++  {
++    for (const auto& control : Controls())
++      if (id == control.id)
++        choices = control.fallback;
++    if (id == "stbaudio.audio_source" && path.find("/sys/") != std::string::npos)
++      choices = "0 1 2";
++  }
++  std::istringstream tokens(choices);
++  std::vector<std::string> result;
++  for (std::string value; tokens >> value;)
++    if (std::find(result.begin(), result.end(), value) == result.end())
++      result.push_back(value);
++  return result;
++}
++
++bool CSTBAVControl::Available(const std::string& id) const
++{
++  return !Choices(id).empty();
++}
++
++void CSTBAVControl::Capture()
++{
++  Clear();
++  for (const auto& control : Controls())
++    if (Available(control.id))
++      m_original.emplace(control.id, Read(control.id));
++}
++
++bool CSTBAVControl::WritePath(const std::string& path, const std::string& value)
++{
++  // Never create a missing control node.
++  const int fd = open(path.c_str(), O_WRONLY | O_CLOEXEC | O_TRUNC);
++  if (fd < 0)
++    return false;
++  const auto line = value + "\n";
++  ssize_t count;
++  do
++    count = write(fd, line.data(), line.size());
++  while (count < 0 && errno == EINTR);
++  close(fd);
++  return count == static_cast<ssize_t>(line.size()) && ReadPath(path) == value;
++}
++
++bool CSTBAVControl::Set(const std::string& id, const std::string& value)
++{
++  const auto original = m_original.find(id);
++  if (original == m_original.end() || value.empty())
++    return false;
++  const auto previous = Read(id);
++  if (previous == value)
++    return true;
++  const auto choices = Choices(id);
++  if (value != original->second && std::find(choices.begin(), choices.end(), value) == choices.end())
++    return false;
++  const auto path = Path(id);
++  if (!WritePath(path, value))
++  {
++    WritePath(path, previous);
++    return false;
++  }
++  m_written[id] = value;
++  return true;
++}
++
++bool CSTBAVControl::Restore(const std::string& group)
++{
++  bool success = true;
++  for (auto it = m_written.begin(); it != m_written.end();)
++  {
++    if (it->first.compare(0, group.size(), group) != 0)
++    {
++      ++it;
++      continue;
++    }
++    // Do not overwrite a mode subsequently changed by another owner.
++    if (Read(it->first) == it->second &&
++        !WritePath(Path(it->first), m_original.at(it->first)))
++    {
++      success = false;
++      ++it;
++    }
++    else
++      it = m_written.erase(it);
++  }
++  return success;
++}
++
++void CSTBAVControl::Clear()
++{
++  m_original.clear();
++  m_written.clear();
++}
+diff --git a/xbmc/settings/STBAVControl.h b/xbmc/settings/STBAVControl.h
+new file mode 100644
+index 0000000000..fafab33df0
+--- /dev/null
++++ b/xbmc/settings/STBAVControl.h
+@@ -0,0 +1,38 @@
++/*
++ * Copyright (C) 2026 OE-Alliance contributors
++ * SPDX-License-Identifier: GPL-2.0-or-later
++ */
++#pragma once
++
++#include <map>
++#include <string>
++#include <vector>
++
++class CSTBAVControl
++{
++public:
++  struct Control
++  {
++    const char* id;
++    const char* path;
++    const char* fallback;
++  };
++
++  explicit CSTBAVControl(std::string root = "");
++  static const std::vector<Control>& Controls();
++  void Capture();
++  std::string Read(const std::string& id) const;
++  std::vector<std::string> Choices(const std::string& id) const;
++  bool Available(const std::string& id) const;
++  bool Set(const std::string& id, const std::string& value);
++  bool Restore(const std::string& group);
++  void Clear();
++
++private:
++  std::string Path(const std::string& id) const;
++  static std::string ReadPath(const std::string& path);
++  static bool WritePath(const std::string& path, const std::string& value);
++  std::string m_root;
++  std::map<std::string, std::string> m_original;
++  std::map<std::string, std::string> m_written;
++};
+diff --git a/xbmc/settings/STBAVSettings.cpp b/xbmc/settings/STBAVSettings.cpp
+new file mode 100644
+index 0000000000..c2e88bdfe4
+--- /dev/null
++++ b/xbmc/settings/STBAVSettings.cpp
+@@ -0,0 +1,247 @@
++/*
++ * Copyright (C) 2026 OE-Alliance contributors
++ * SPDX-License-Identifier: GPL-2.0-or-later
++ */
++#include "STBAVSettings.h"
++
++#include "ServiceBroker.h"
++#include "cores/AudioEngine/Sinks/AESinkSTB.h"
++#include "dialogs/GUIDialogYesNo.h"
++#include "resources/LocalizeStrings.h"
++#include "resources/ResourcesComponent.h"
++#include "settings/lib/Setting.h"
++#include "settings/lib/SettingsManager.h"
++#include "utils/log.h"
++
++#include <algorithm>
++#include <map>
++#include <utility>
++
++CSTBAVSettings& CSTBAVSettings::GetInstance()
++{
++  static CSTBAVSettings instance;
++  return instance;
++}
++
++void CSTBAVSettings::Initialize(CSettingsManager* manager)
++{
++  m_manager = manager;
++  manager->RegisterSettingOptionsFiller("stbavmodes", FillOptions);
++  manager->AddDynamicCondition("stbavavailable", IsAvailable);
++  manager->AddDynamicCondition("stbavenabled", IsEnabled);
++  manager->RegisterSettingsHandler(this);
++  SettingsContainer ids{"stbaudio.save", "stbvideo.save"};
++  for (const auto& control : CSTBAVControl::Controls())
++    ids.emplace(control.id);
++  manager->RegisterCallback(this, ids);
++}
++
++void CSTBAVSettings::Uninitialize()
++{
++  OnSettingsUnloaded();
++  m_manager->UnregisterCallback(this);
++  m_manager->UnregisterSettingsHandler(this);
++  m_manager->UnregisterSettingOptionsFiller("stbavmodes");
++  m_manager->RemoveDynamicCondition("stbavavailable");
++  m_manager->RemoveDynamicCondition("stbavenabled");
++  m_manager = nullptr;
++}
++
++void CSTBAVSettings::LoadGroup(const std::string& group, bool applySaved)
++{
++  m_updating = true;
++  for (const auto& control : CSTBAVControl::Controls())
++  {
++    const std::string id = control.id;
++    if (id.compare(0, group.size(), group) != 0 || !m_controls.Available(id))
++      continue;
++    auto setting = std::dynamic_pointer_cast<CSettingString>(m_manager->GetSetting(id));
++    if (!setting)
++      continue;
++    if (applySaved && IsEnabled({}, id, setting) && !setting->GetValue().empty() &&
++        !m_controls.Set(id, setting->GetValue()))
++      CLog::Log(LOGWARNING, "STB AV: cannot apply saved {}={}; keeping driver value", id,
++                setting->GetValue());
++    setting->SetValue(m_controls.Read(id));
++  }
++  m_updating = false;
++  if (group == "stbaudio")
++    CAESinkSTB::NotifyDtsModeChanged();
++}
++
++void CSTBAVSettings::OnSettingsLoaded()
++{
++  m_controls.Capture();
++  if (CAESinkSTB::DtsUsesAc3Mode())
++  {
++    if (const auto setting = m_manager->GetSetting("stbaudio.ac3"))
++    {
++      setting->SetLabel(54215);
++      setting->SetHelp(54216);
++    }
++  }
++  for (const std::string group : {"stbaudio", "stbvideo"})
++  {
++    const auto save = std::dynamic_pointer_cast<CSettingBool>(m_manager->GetSetting(group + ".save"));
++    LoadGroup(group, save && save->GetValue());
++  }
++  CLog::Log(LOGINFO, "STB AV: captured current driver settings; unsaved modes follow Enigma2");
++}
++
++void CSTBAVSettings::OnSettingsUnloaded()
++{
++  m_updating = true;
++  if (!m_controls.Restore(""))
++    CLog::Log(LOGERROR, "STB AV: failed to restore one or more original driver settings");
++  m_controls.Clear();
++}
++
++bool CSTBAVSettings::IsAvailable(const std::string&, const std::string& value,
++                                 const std::shared_ptr<const CSetting>&)
++{
++  if (value.compare(0, 8, "stbaudio") == 0 && !CAESinkSTB::IsSelected())
++    return false;
++  auto& controls = GetInstance().m_controls;
++  if (value == "stbaudio" || value == "stbvideo")
++  {
++    for (const auto& control : CSTBAVControl::Controls())
++      if (std::string(control.id).compare(0, value.size(), value) == 0 &&
++          controls.Available(control.id))
++        return true;
++    return false;
++  }
++  return controls.Available(value);
++}
++
++bool CSTBAVSettings::IsEnabled(const std::string&, const std::string& value,
++                               const std::shared_ptr<const CSetting>& setting)
++{
++  if (!IsAvailable({}, value, setting))
++    return false;
++  // A driver mode does not add a compressed format to the Kodi audio sink.
++  if (value == "stbaudio.aac" || value == "stbaudio.aacplus" ||
++      value == "stbaudio.aac_transcode" || value == "stbaudio.dtshd" ||
++      value == "stbaudio.wmapro")
++    return false;
++  if (value == "stbaudio.ac3" || value == "stbaudio.ac3plus" || value == "stbaudio.dts")
++  {
++    AEDeviceInfoList devices;
++    CAESinkSTB::EnumerateDevicesEx(devices, false);
++    const auto type = value == "stbaudio.ac3" ? CAEStreamInfo::STREAM_TYPE_AC3
++                      : value == "stbaudio.ac3plus" ? CAEStreamInfo::STREAM_TYPE_EAC3
++                                                   : CAEStreamInfo::STREAM_TYPE_DTS_512;
++    return std::any_of(devices.begin(), devices.end(), [type](const auto& device)
++                       { return std::find(device.m_streamTypes.begin(), device.m_streamTypes.end(),
++                                          type) != device.m_streamTypes.end(); });
++  }
++  return true;
++}
++
++std::vector<std::shared_ptr<CSettingString>> CSTBAVSettings::GetPlaybackSettings(
++    const std::string& group) const
++{
++  std::vector<std::shared_ptr<CSettingString>> settings;
++  if (!m_manager)
++    return settings;
++  for (const auto& control : CSTBAVControl::Controls())
++  {
++    const std::string id = control.id;
++    if (id.compare(0, group.size() + 1, group + ".") != 0 || !IsAvailable({}, id, {}))
++      continue;
++    if (auto setting = std::dynamic_pointer_cast<CSettingString>(m_manager->GetSetting(id)))
++      settings.emplace_back(std::move(setting));
++  }
++  return settings;
++}
++
++bool CSTBAVSettings::SetPlaybackValue(const std::shared_ptr<const CSetting>& setting)
++{
++  const auto value = std::dynamic_pointer_cast<const CSettingString>(setting);
++  if (!m_manager || !value || !IsEnabled({}, value->GetId(), value))
++    return false;
++  const auto target =
++      std::dynamic_pointer_cast<CSettingString>(m_manager->GetSetting(value->GetId()));
++  // Use the global callback for validation, video confirmation and E2 restore tracking.
++  return target && target->SetValue(value->GetValue());
++}
++
++bool CSTBAVSettings::OnSettingChanging(const std::shared_ptr<const CSetting>& setting)
++{
++  if (m_updating)
++    return true;
++  const auto& id = setting->GetId();
++  if (id == "stbaudio.save" || id == "stbvideo.save")
++  {
++    if (!std::static_pointer_cast<const CSettingBool>(setting)->GetValue())
++    {
++      const auto group = id.substr(0, id.find('.'));
++      if (!m_controls.Restore(group))
++        return false;
++      LoadGroup(group, false);
++    }
++    return true;
++  }
++  const auto value = std::static_pointer_cast<const CSettingString>(setting)->GetValue();
++  const auto previous = m_controls.Read(id);
++  if (previous == value)
++    return true;
++  if (!IsEnabled({}, id, setting) || !m_controls.Set(id, value))
++  {
++    CLog::Log(LOGERROR, "STB AV: rejected {}={}; driver remains {}", id, value, previous);
++    return false;
++  }
++  if (id.compare(0, 8, "stbvideo") == 0)
++  {
++    bool cancelled = false;
++    if (!CGUIDialogYesNo::ShowAndGetInput(CVariant{54000}, CVariant{54006}, cancelled,
++                                         CVariant{222}, CVariant{186}, 15000))
++    {
++      if (!m_controls.Set(id, previous))
++        CLog::Log(LOGERROR, "STB AV: failed to revert {} to {}", id, previous);
++      return false;
++    }
++  }
++  CLog::Log(LOGINFO, "STB AV: changed {} from {} to {}", id, previous, value);
++  if (id == "stbaudio.ac3")
++    CAESinkSTB::NotifyDtsModeChanged();
++  return true;
++}
++
++std::string CSTBAVSettings::Label(const std::string& id, const std::string& value)
++{
++  static const std::map<std::string, int> labels{
++      {"downmix", 54100}, {"passthrough", 54101}, {"multichannel", 54102},
++      {"force_ac3", 54103}, {"force_dts", 54104}, {"force_ddp", 54105},
++      {"use_hdmi_caps", 54106}, {"hdmi_best", 54106}, {"auto", 54106},
++      {"Edid(Auto)", 54106}, {"auto(EDID)", 54106},
++      {"none", 54107}, {"off", 54107}, {"disable", 54107}, {"no", 54107},
++      {"on", 54108}, {"enable", 54108}, {"yes", 54108},
++      {"center", 54109}, {"wide", 54110}, {"extrawide", 54111}};
++  int label = 0;
++  if (id == "stbaudio.digital_raw")
++    label = value == "0" ? 54100 : value == "1" ? 54101 : 54106;
++  else if (id == "stbvideo.allow_10bit" || id == "stbvideo.allow_12bit")
++    label = value == "0" ? 54108 : 54107;
++  else if (id == "stbaudio.audio_source" && value == "2")
++    return "Bluetooth";
++  else if (id == "stbaudio.audio_source" && (value == "0" || value == "pcm"))
++    return "PCM";
++  else if (id == "stbaudio.audio_source" && (value == "1" || value == "spdif"))
++    return "S/PDIF";
++  else if (const auto it = labels.find(value); it != labels.end())
++    label = it->second;
++  return label ? CServiceBroker::GetResourcesComponent().GetLocalizeStrings().Get(label) : value;
++}
++
++void CSTBAVSettings::FillOptions(const std::shared_ptr<const CSetting>& setting,
++                                 std::vector<StringSettingOption>& options, std::string& current)
++{
++  auto& controls = GetInstance().m_controls;
++  const auto& id = setting->GetId();
++  const auto values = controls.Choices(id);
++  current = controls.Read(id);
++  for (const auto& value : values)
++    options.emplace_back(Label(id, value), value);
++  if (!current.empty() && std::find(values.begin(), values.end(), current) == values.end())
++    options.emplace_back(current, current);
++}
+diff --git a/xbmc/settings/STBAVSettings.h b/xbmc/settings/STBAVSettings.h
+new file mode 100644
+index 0000000000..63f8840968
+--- /dev/null
++++ b/xbmc/settings/STBAVSettings.h
+@@ -0,0 +1,42 @@
++/*
++ * Copyright (C) 2026 OE-Alliance contributors
++ * SPDX-License-Identifier: GPL-2.0-or-later
++ */
++#pragma once
++
++#include "STBAVControl.h"
++#include "settings/lib/ISettingCallback.h"
++#include "settings/lib/ISettingsHandler.h"
++
++#include <string>
++#include <vector>
++
++class CSettingsManager;
++class CSettingString;
++struct StringSettingOption;
++
++class CSTBAVSettings : public ISettingCallback, public ISettingsHandler
++{
++public:
++  static CSTBAVSettings& GetInstance();
++  void Initialize(CSettingsManager* manager);
++  void Uninitialize();
++  void OnSettingsLoaded() override;
++  void OnSettingsUnloaded() override;
++  bool OnSettingChanging(const std::shared_ptr<const CSetting>& setting) override;
++  std::vector<std::shared_ptr<CSettingString>> GetPlaybackSettings(const std::string& group) const;
++  bool SetPlaybackValue(const std::shared_ptr<const CSetting>& setting);
++  static bool IsAvailable(const std::string& condition, const std::string& value,
++                          const std::shared_ptr<const CSetting>& setting);
++  static bool IsEnabled(const std::string& condition, const std::string& value,
++                        const std::shared_ptr<const CSetting>& setting);
++  static void FillOptions(const std::shared_ptr<const CSetting>& setting,
++                          std::vector<StringSettingOption>& options, std::string& current);
++
++private:
++  void LoadGroup(const std::string& group, bool applySaved);
++  static std::string Label(const std::string& id, const std::string& value);
++  CSettingsManager* m_manager{nullptr};
++  CSTBAVControl m_controls;
++  bool m_updating{true};
++};
+diff --git a/xbmc/settings/Settings.cpp b/xbmc/settings/Settings.cpp
+index b3e0829dfc..81060400cf 100644
+--- a/xbmc/settings/Settings.cpp
++++ b/xbmc/settings/Settings.cpp
+@@ -7,6 +7,9 @@
+  */
+ 
+ #include "Settings.h"
++#if defined(HAVE_STBPLAYER)
++#include "STBAVSettings.h"
++#endif
+ 
+ #include "Autorun.h"
+ #include "GUIPassword.h"
+@@ -373,6 +376,9 @@ void CSettings::InitializeDefaults()
+ 
+ void CSettings::InitializeOptionFillers()
+ {
++#if defined(HAVE_STBPLAYER)
++  CSTBAVSettings::GetInstance().Initialize(GetSettingsManager());
++#endif
+   // register setting option fillers
+ #ifdef HAS_OPTICAL_DRIVE
+   GetSettingsManager()->RegisterSettingOptionsFiller(
+@@ -460,6 +466,9 @@ void CSettings::InitializeOptionFillers()
+ 
+ void CSettings::UninitializeOptionFillers()
+ {
++#if defined(HAVE_STBPLAYER)
++  CSTBAVSettings::GetInstance().Uninitialize();
++#endif
+   GetSettingsManager()->UnregisterSettingOptionsFiller("audiocdactions");
+   GetSettingsManager()->UnregisterSettingOptionsFiller("videodiscactions");
+   GetSettingsManager()->UnregisterSettingOptionsFiller("audiocdencoders");
+diff --git a/xbmc/video/dialogs/GUIDialogAudioSettings.cpp b/xbmc/video/dialogs/GUIDialogAudioSettings.cpp
+index 4d850e7415..5b257dcd19 100644
+--- a/xbmc/video/dialogs/GUIDialogAudioSettings.cpp
++++ b/xbmc/video/dialogs/GUIDialogAudioSettings.cpp
+@@ -35,6 +35,11 @@
+ #include "video/VideoDatabase.h"
+ #include "video/VideoStreamSelect.h"
+ 
++#if defined(HAVE_STBPLAYER)
++#include "cores/AudioEngine/Sinks/AESinkSTB.h"
++#include "settings/STBAVSettings.h"
++#endif
++
+ #include <memory>
+ #include <string>
+ #include <utility>
+@@ -72,7 +77,8 @@ void CGUIDialogAudioSettings::FrameMove()
+     //! @todo (needs special handling): m_settingsManager->SetInt(SETTING_AUDIO_STREAM, g_application.GetAppPlayer().GetAudioStream());
+     GetSettingsManager()->SetNumber(SETTING_AUDIO_DELAY,
+                                     static_cast<double>(videoSettings.m_AudioDelay));
+-    GetSettingsManager()->SetBool(SETTING_AUDIO_PASSTHROUGH, CServiceBroker::GetSettingsComponent()->GetSettings()->GetBool(CSettings::SETTING_AUDIOOUTPUT_PASSTHROUGH));
++    if (GetSetting(SETTING_AUDIO_PASSTHROUGH))
++      GetSettingsManager()->SetBool(SETTING_AUDIO_PASSTHROUGH, CServiceBroker::GetSettingsComponent()->GetSettings()->GetBool(CSettings::SETTING_AUDIOOUTPUT_PASSTHROUGH));
+   }
+ 
+   CGUIDialogSettingsManualBase::FrameMove();
+@@ -104,6 +110,15 @@ std::string CGUIDialogAudioSettings::FormatPercentAsDecibel(float value)
+       CAEUtil::PercentToGain(value));
+ }
+ 
++bool CGUIDialogAudioSettings::OnSettingChanging(const std::shared_ptr<const CSetting>& setting)
++{
++#if defined(HAVE_STBPLAYER)
++  if (setting && setting->GetId().compare(0, 9, "stbaudio.") == 0)
++    return CSTBAVSettings::GetInstance().SetPlaybackValue(setting);
++#endif
++  return CGUIDialogSettingsManualBase::OnSettingChanging(setting);
++}
++
+ void CGUIDialogAudioSettings::OnSettingChanged(const std::shared_ptr<const CSetting>& setting)
+ {
+   if (setting == NULL)
+@@ -228,6 +243,24 @@ void CGUIDialogAudioSettings::InitializeSettings()
+     CLog::Log(LOGERROR, "CGUIDialogAudioSettings: unable to setup settings");
+     return;
+   }
++#if defined(HAVE_STBPLAYER)
++  const bool stbAudio = CAESinkSTB::IsSelected();
++  const auto stbSettings = CSTBAVSettings::GetInstance().GetPlaybackSettings("stbaudio");
++  if (!stbSettings.empty())
++  {
++    const auto groupSTB = AddGroup(category, 54001);
++    for (const auto& source : stbSettings)
++    {
++      auto setting = AddList(groupSTB, source->GetId(), source->GetLabel(), SettingLevel::Basic,
++                             source->GetValue(), CSTBAVSettings::FillOptions, source->GetLabel(),
++                             true, source->GetHelp());
++      if (setting)
++        setting->SetEnabled(CSTBAVSettings::IsEnabled({}, source->GetId(), source));
++    }
++  }
++#else
++  const bool stbAudio = false;
++#endif
+   const std::shared_ptr<CSettingGroup> groupSaveAsDefault = AddGroup(category);
+   if (groupSaveAsDefault == NULL)
+   {
+@@ -251,10 +284,12 @@ void CGUIDialogAudioSettings::InitializeSettings()
+   GetSettingsManager()->AddDynamicCondition("IsPlayingPassthrough", IsPlayingPassthrough);
+ 
+   CSettingDependency dependencyAudioOutputPassthroughDisabled(SettingDependencyType::Enable, GetSettingsManager());
+-  dependencyAudioOutputPassthroughDisabled.Or()
+-      ->Add(std::make_shared<CSettingDependencyCondition>(SETTING_AUDIO_PASSTHROUGH, "false",
++  if (!stbAudio)
++    dependencyAudioOutputPassthroughDisabled.Or()
++        ->Add(std::make_shared<CSettingDependencyCondition>(SETTING_AUDIO_PASSTHROUGH, "false",
+                                                           SettingDependencyOperator::Equals, false,
+-                                                          GetSettingsManager()))
++                                                          GetSettingsManager()));
++  dependencyAudioOutputPassthroughDisabled.Or()
+       ->Add(std::make_shared<CSettingDependencyCondition>("IsPlayingPassthrough", "", "", true,
+                                                           GetSettingsManager()));
+   SettingDependencies depsAudioOutputPassthroughDisabled;
+@@ -269,7 +304,8 @@ void CGUIDialogAudioSettings::InitializeSettings()
+                 CApplicationVolumeHandling::VOLUME_MINIMUM,
+                 CApplicationVolumeHandling::VOLUME_MAXIMUM / 100.0f,
+                 CApplicationVolumeHandling::VOLUME_MAXIMUM);
+-  settingAudioVolume->SetDependencies(depsAudioOutputPassthroughDisabled);
++  if (!stbAudio)
++    settingAudioVolume->SetDependencies(depsAudioOutputPassthroughDisabled);
+   std::static_pointer_cast<CSettingControlSlider>(settingAudioVolume->GetControl())->SetFormatter(SettingFormatterPercentAsDecibel);
+ 
+   // audio volume amplification setting
+@@ -303,7 +339,7 @@ void CGUIDialogAudioSettings::InitializeSettings()
+     AddAudioStreams(groupAudio, SETTING_AUDIO_STREAM);
+ 
+   // audio digital/analog setting
+-  if (SupportsAudioFeature(IPlayerAudioCaps::SELECT_OUTPUT))
++  if (!stbAudio && SupportsAudioFeature(IPlayerAudioCaps::SELECT_OUTPUT))
+   {
+     m_passthrough = CServiceBroker::GetSettingsComponent()->GetSettings()->GetBool(CSettings::SETTING_AUDIOOUTPUT_PASSTHROUGH);
+     AddToggle(groupAudio, SETTING_AUDIO_PASSTHROUGH, 348, SettingLevel::Basic, m_passthrough);
+diff --git a/xbmc/video/dialogs/GUIDialogAudioSettings.h b/xbmc/video/dialogs/GUIDialogAudioSettings.h
+index c7d03f7eb3..7609a108a4 100644
+--- a/xbmc/video/dialogs/GUIDialogAudioSettings.h
++++ b/xbmc/video/dialogs/GUIDialogAudioSettings.h
+@@ -34,6 +34,7 @@ public:
+ 
+ protected:
+   // implementations of ISettingCallback
++  bool OnSettingChanging(const std::shared_ptr<const CSetting>& setting) override;
+   void OnSettingChanged(const std::shared_ptr<const CSetting>& setting) override;
+   void OnSettingAction(const std::shared_ptr<const CSetting>& setting) override;
+ 
+diff --git a/xbmc/video/dialogs/GUIDialogVideoSettings.cpp b/xbmc/video/dialogs/GUIDialogVideoSettings.cpp
+index 4f4275922b..9f30fd7eb7 100644
+--- a/xbmc/video/dialogs/GUIDialogVideoSettings.cpp
++++ b/xbmc/video/dialogs/GUIDialogVideoSettings.cpp
+@@ -33,6 +33,10 @@
+ #include "video/ViewModeSettings.h"
+ #include "windowing/WinSystem.h"
+ 
++#if defined(HAVE_STBPLAYER)
++#include "settings/STBAVSettings.h"
++#endif
++
+ #include <utility>
+ 
+ #define SETTING_VIDEO_VIEW_MODE           "video.viewmode"
+@@ -67,6 +71,15 @@ CGUIDialogVideoSettings::CGUIDialogVideoSettings()
+ 
+ CGUIDialogVideoSettings::~CGUIDialogVideoSettings() = default;
+ 
++bool CGUIDialogVideoSettings::OnSettingChanging(const std::shared_ptr<const CSetting>& setting)
++{
++#if defined(HAVE_STBPLAYER)
++  if (setting && setting->GetId().compare(0, 9, "stbvideo.") == 0)
++    return CSTBAVSettings::GetInstance().SetPlaybackValue(setting);
++#endif
++  return CGUIDialogSettingsManualBase::OnSettingChanging(setting);
++}
++
+ void CGUIDialogVideoSettings::OnSettingChanged(const std::shared_ptr<const CSetting>& setting)
+ {
+   if (setting == NULL)
+@@ -317,6 +330,21 @@ void CGUIDialogVideoSettings::InitializeSettings()
+     CLog::Log(LOGERROR, "CGUIDialogVideoSettings: unable to setup settings");
+     return;
+   }
++#if defined(HAVE_STBPLAYER)
++  const auto stbSettings = CSTBAVSettings::GetInstance().GetPlaybackSettings("stbvideo");
++  if (!stbSettings.empty())
++  {
++    const auto groupSTB = AddGroup(category, 54002);
++    for (const auto& source : stbSettings)
++    {
++      auto setting = AddList(groupSTB, source->GetId(), source->GetLabel(), SettingLevel::Basic,
++                             source->GetValue(), CSTBAVSettings::FillOptions, source->GetLabel(),
++                             true, source->GetHelp());
++      if (setting)
++        setting->SetEnabled(CSTBAVSettings::IsEnabled({}, source->GetId(), source));
++    }
++  }
++#endif
+   const std::shared_ptr<CSettingGroup> groupSaveAsDefault = AddGroup(category);
+   if (groupSaveAsDefault == NULL)
+   {
+diff --git a/xbmc/video/dialogs/GUIDialogVideoSettings.h b/xbmc/video/dialogs/GUIDialogVideoSettings.h
+index 2689815e1a..c5b92d6ee2 100644
+--- a/xbmc/video/dialogs/GUIDialogVideoSettings.h
++++ b/xbmc/video/dialogs/GUIDialogVideoSettings.h
+@@ -25,6 +25,7 @@ public:
+ 
+ protected:
+   // implementations of ISettingCallback
++  bool OnSettingChanging(const std::shared_ptr<const CSetting>& setting) override;
+   void OnSettingChanged(const std::shared_ptr<const CSetting>& setting) override;
+   void OnSettingAction(const std::shared_ptr<const CSetting>& setting) override;
+ 
+diff --git a/xbmc/windowing/egl/WinSystemstb.cpp b/xbmc/windowing/egl/WinSystemstb.cpp
+index 0663574746..722ee30fd9 100644
+--- a/xbmc/windowing/egl/WinSystemstb.cpp
++++ b/xbmc/windowing/egl/WinSystemstb.cpp
+@@ -59,21 +59,7 @@ CWinSystemstb::CWinSystemstb():
+ 
+   m_egl = new CEGLWrapper;
+ 
+-//  AE::CAESinkFactory::ClearSinks();
+-
+-//  CAESinkPi::Register();
+-  std::string envSink;
+-  if (getenv("KODI_AE_SINK"))
+-    envSink = getenv("KODI_AE_SINK");
+-
+-  if (StringUtils::EqualsNoCase(envSink, "PULSE"))
+-  {
+-    OPTIONALS::PulseAudioRegister(true);
+-  }
+-  else
+-  {
+-    OPTIONALS::ALSARegister();
+-  }
++  // CPlatformLinux selects the audio backend before window-system creation.
+ 
+   CLinuxPowerSyscall::Register();
+   m_winEvents.reset(new CWinEventsSTB());
+diff --git a/xbmc/cores/VideoPlayer/VideoPlayerAudio.cpp b/xbmc/cores/VideoPlayer/VideoPlayerAudio.cpp
+index b271caa675..8f4c36f096 100644
+--- a/xbmc/cores/VideoPlayer/VideoPlayerAudio.cpp
++++ b/xbmc/cores/VideoPlayer/VideoPlayerAudio.cpp
+@@ -21,6 +21,10 @@
+ 
+ #include <mutex>
+ 
++#if defined(HAVE_STBPLAYER)
++#include "cores/AudioEngine/Sinks/AESinkSTB.h"
++#endif
++
+ #ifdef TARGET_RASPBERRY_PI
+ #include "platform/linux/RBP.h"
+ #endif
+@@ -509,6 +513,20 @@ bool CVideoPlayerAudio::ProcessDecoderOutput(DVDAudioFrame &audioframe)
+       }
+     }
+ 
++#if defined(HAVE_STBPLAYER)
++    if (CAESinkSTB::IsSelected() && m_streaminfo.codec == AV_CODEC_ID_DTS &&
++        m_stbDtsModeRevision != CAESinkSTB::GetDtsModeRevision())
++    {
++      m_stbDtsModeRevision = CAESinkSTB::GetDtsModeRevision();
++      if (SwitchCodecIfNeeded())
++      {
++        CLog::Log(LOGINFO, "STB audio: switched DTS between software downmix and passthrough");
++        audioframe.nb_frames = 0;
++        return false;
++      }
++    }
++#endif
++
+     // demuxer reads metatags that influence channel layout
+     if (m_streaminfo.codec == AV_CODEC_ID_FLAC && m_streaminfo.channellayout)
+       audioframe.format.m_channelLayout = CAEUtil::GetAEChannelLayout(m_streaminfo.channellayout);
+diff --git a/xbmc/cores/VideoPlayer/VideoPlayerAudio.h b/xbmc/cores/VideoPlayer/VideoPlayerAudio.h
+index e0309f2f3c..dc7244680b 100644
+--- a/xbmc/cores/VideoPlayer/VideoPlayerAudio.h
++++ b/xbmc/cores/VideoPlayer/VideoPlayerAudio.h
+@@ -118,6 +118,9 @@ protected:
+   SInfo            m_info;
+ 
+   bool m_displayReset = false;
++#if defined(HAVE_STBPLAYER)
++  unsigned int m_stbDtsModeRevision{0};
++#endif
+   unsigned int m_disconAdjustTimeMs = 50; // maximum sync-off before adjusting
+   int m_disconAdjustCounter = 0;
+ };

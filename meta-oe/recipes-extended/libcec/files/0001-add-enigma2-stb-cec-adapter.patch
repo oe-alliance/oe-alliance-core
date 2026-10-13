@@ -1,0 +1,715 @@
+From: OE-Alliance <oe-alliance@users.noreply.github.com>
+Subject: [PATCH] Add legacy Enigma2 STB CEC adapters
+
+Use the BCM and Dream driver ABIs alongside Linux CEC and USB adapters.
+Retain the kernel-owned logical address, do not fake poll acknowledgements,
+and keep E2 handover independent from CEC power control.
+
+Upstream-Status: Pending
+
+diff --git a/include/cectypes.h b/include/cectypes.h
+index 7986ef1..4a316b4 100644
+--- a/include/cectypes.h
++++ b/include/cectypes.h
+@@ -922,6 +922,7 @@ typedef enum cec_adapter_type
+   ADAPTERTYPE_TDA995x          = 0x200,
+   ADAPTERTYPE_EXYNOS           = 0x300,
+   ADAPTERTYPE_LINUX            = 0x400,
++  ADAPTERTYPE_STB              = 0x800,
+   ADAPTERTYPE_AOCEC            = 0x500,
+   ADAPTERTYPE_IMX              = 0x600,
+   ADAPTERTYPE_TEGRA            = 0x700
+diff --git a/src/libcec/CECClient.cpp b/src/libcec/CECClient.cpp
+index ca061c3..f2b1afc 100644
+--- a/src/libcec/CECClient.cpp
++++ b/src/libcec/CECClient.cpp
+@@ -329,6 +329,23 @@ bool CCECClient::AllocateLogicalAddresses(void)
+   // reset all previous LAs that were set
+   m_configuration.logicalAddresses.Clear();
+ 
++  // The E2 driver already allocated this address on the bus. Do not poll for
++  // another address or let a TV-specific handler replace its device type.
++  const cec_logical_address fixedAddress = m_processor->GetFixedLogicalAddress();
++  if (fixedAddress != CECDEVICE_UNKNOWN)
++  {
++    CCECBusDevice *device = m_processor->GetDevice(fixedAddress);
++    if (!device || fixedAddress == CECDEVICE_UNREGISTERED)
++      return false;
++    m_configuration.deviceTypes.Clear();
++    m_configuration.deviceTypes.Add(device->GetType());
++    m_configuration.logicalAddresses.Set(fixedAddress);
++    device->SetDeviceStatus(CEC_DEVICE_STATUS_HANDLED_BY_LIBCEC, m_configuration.cecVersion);
++    LIB_CEC->AddLog(CEC_LOG_NOTICE, "using driver-owned STB logical address %X", fixedAddress);
++    SaveConfiguration(m_configuration);
++    return true;
++  }
++
+   // get the supported device types from the command handler of the TV
+   SetSupportedDeviceTypes();
+ 
+diff --git a/src/libcec/CECProcessor.cpp b/src/libcec/CECProcessor.cpp
+index 54ad956..7533de1 100644
+--- a/src/libcec/CECProcessor.cpp
++++ b/src/libcec/CECProcessor.cpp
+@@ -210,6 +210,16 @@ void CCECProcessor::SetCECInitialised(bool bSetTo /* = true */)
+     UnregisterClients();
+ }
+ 
++cec_logical_address CCECProcessor::GetFixedLogicalAddress(void) const
++{
++  return m_communication ? m_communication->GetFixedLogicalAddress() : CECDEVICE_UNKNOWN;
++}
++
++bool CCECProcessor::SupportsPolling(void) const
++{
++  return m_communication && m_communication->SupportsPolling();
++}
++
+ bool CCECProcessor::TryLogicalAddress(cec_logical_address address, cec_version libCECSpecVersion /* = CEC_VERSION_1_4 */)
+ {
+   // find the device
+@@ -276,6 +286,8 @@ void *CCECProcessor::Process(void)
+     if (m_inBuffer.Pop(command, timeout))
+       ProcessCommand(command);
+ 
++    m_communication->ProcessEvents();
++
+     if (CECInitialised() && !IsStopped())
+     {
+       // check clients for keypress timeouts
+@@ -297,7 +309,7 @@ void *CCECProcessor::Process(void)
+       {
+         CECClientPtr primary = GetPrimaryClient();
+         // only check whether the tv responds to polls when a client is connected and not in monitoring mode
+-        if (primary && primary->GetConfiguration()->bMonitorOnly != 1)
++        if (primary && primary->GetConfiguration()->bMonitorOnly != 1 && SupportsPolling())
+         {
+           if (!m_busDevices->At(CECDEVICE_TV)->IsPresent())
+           {
+@@ -537,7 +549,8 @@ bool CCECProcessor::Transmit(const cec_command &data, bool bIsReply)
+ 
+   return bIsReply ?
+       adapterState == ADAPTER_MESSAGE_STATE_SENT_ACKED || adapterState == ADAPTER_MESSAGE_STATE_SENT || adapterState == ADAPTER_MESSAGE_STATE_WAITING_TO_BE_SENT :
+-      adapterState == ADAPTER_MESSAGE_STATE_SENT_ACKED;
++      adapterState == ADAPTER_MESSAGE_STATE_SENT_ACKED ||
++      (data.opcode_set && !SupportsPolling() && adapterState == ADAPTER_MESSAGE_STATE_SENT);
+ }
+ 
+ void CCECProcessor::TransmitAbort(cec_logical_address source, cec_logical_address destination, cec_opcode opcode, cec_abort_reason reason /* = CEC_ABORT_REASON_UNRECOGNIZED_OPCODE */)
+@@ -865,7 +878,9 @@ bool CCECProcessor::RegisterClient(CECClientPtr client)
+ 
+   // source logical address for requests
+   cec_logical_address sourceAddress(CECDEVICE_UNREGISTERED);
+-  if (!m_communication->SupportsSourceLogicalAddress(CECDEVICE_UNREGISTERED))
++  if (GetFixedLogicalAddress() != CECDEVICE_UNKNOWN)
++    sourceAddress = GetFixedLogicalAddress();
++  else if (!m_communication->SupportsSourceLogicalAddress(CECDEVICE_UNREGISTERED))
+   {
+     if (m_communication->SupportsSourceLogicalAddress(CECDEVICE_FREEUSE))
+       sourceAddress = CECDEVICE_FREEUSE;
+@@ -878,6 +893,9 @@ bool CCECProcessor::RegisterClient(CECClientPtr client)
+ 
+   // ensure that we know the vendor id of the TV
+   CCECBusDevice *tv = GetTV();
++  // A real reply, not an invented poll ACK, establishes presence on STB ABIs.
++  if (!SupportsPolling())
++    tv->RequestVendorId(sourceAddress);
+   cec_vendor_id tvVendor(tv->GetVendorId(sourceAddress));
+ 
+   // wait until the handler is replaced, to avoid double registrations
+diff --git a/src/libcec/CECProcessor.h b/src/libcec/CECProcessor.h
+index f30da46..db8e746 100644
+--- a/src/libcec/CECProcessor.h
++++ b/src/libcec/CECProcessor.h
+@@ -108,6 +108,8 @@ namespace CEC
+       CCECBusDevice *       GetPrimaryDevice(void);
+       cec_logical_address   GetLogicalAddress(void);
+       cec_logical_addresses GetLogicalAddresses(void);
++      cec_logical_address   GetFixedLogicalAddress(void) const;
++      bool                  SupportsPolling(void) const;
+       bool                  IsPresentDevice(cec_logical_address address);
+       bool                  IsPresentDeviceType(cec_device_type type);
+       uint16_t              GetDetectedPhysicalAddress(void) const;
+diff --git a/src/libcec/CECTypeUtils.h b/src/libcec/CECTypeUtils.h
+index cef3afd..7f633ef 100644
+--- a/src/libcec/CECTypeUtils.h
++++ b/src/libcec/CECTypeUtils.h
+@@ -776,6 +776,8 @@ namespace CEC
+         return "i.MX";
+       case ADAPTERTYPE_LINUX:
+         return "Linux";
++      case ADAPTERTYPE_STB:
++        return "Enigma2 STB";
+       case ADAPTERTYPE_TEGRA:
+         return "Tegra";
+       default:
+diff --git a/src/libcec/adapter/AdapterCommunication.h b/src/libcec/adapter/AdapterCommunication.h
+index f887d89..2de3d9a 100644
+--- a/src/libcec/adapter/AdapterCommunication.h
++++ b/src/libcec/adapter/AdapterCommunication.h
+@@ -148,6 +148,13 @@ namespace CEC
+ 
+     virtual cec_logical_addresses GetLogicalAddresses(void) const = 0;
+ 
++    // Legacy STB drivers own their logical address and do not expose poll ACKs.
++    virtual cec_logical_address GetFixedLogicalAddress(void) const { return CECDEVICE_UNKNOWN; }
++    virtual bool SupportsPolling(void) const { return true; }
++    // Dispatch address changes on the processor thread, never from an RX thread
++    // which Close() may join while holding the processor lock.
++    virtual void ProcessEvents(void) {}
++
+     /*!
+      * @brief Check whether the CEC adapter responds
+      * @return True when the ping was sent and acked, false otherwise.
+diff --git a/src/libcec/adapter/AdapterFactory.cpp b/src/libcec/adapter/AdapterFactory.cpp
+index a721e95..4f89fb2 100644
+--- a/src/libcec/adapter/AdapterFactory.cpp
++++ b/src/libcec/adapter/AdapterFactory.cpp
+@@ -68,6 +68,10 @@
+ #include "Linux/LinuxCECAdapterCommunication.h"
+ #endif
+ 
++#if defined(HAVE_STB_API)
++#include "STB/STBCECAdapterCommunication.h"
++#endif
++
+ #if defined(HAVE_AOCEC_API)
+ #include "AOCEC/AOCECAdapterDetection.h"
+ #include "AOCEC/AOCECAdapterCommunication.h"
+@@ -251,6 +255,20 @@ int8_t CAdapterFactory::DetectAdapters(cec_adapter_descriptor *deviceList, uint8
+   }
+ #endif
+ 
++#if defined(HAVE_STB_API)
++  for (const char *path : {"/dev/hdmi_cec", "/dev/misc/hdmi_cec0"})
++  {
++    if (iAdaptersFound >= iBufSize || (strDevicePath && strcmp(strDevicePath, path)) ||
++        !CSTBCECAdapterCommunication::IsDevicePath(path))
++      continue;
++    cec_adapter_descriptor &descriptor = deviceList[iAdaptersFound++];
++    memset(&descriptor, 0, sizeof(descriptor));
++    snprintf(descriptor.strComPath, sizeof(descriptor.strComPath), "%s", path);
++    snprintf(descriptor.strComName, sizeof(descriptor.strComName), "%s", path);
++    descriptor.adapterType = ADAPTERTYPE_STB;
++  }
++#endif
++
+ #if defined(HAVE_IMX_API)
+   if (iAdaptersFound < iBufSize && CIMXCECAdapterDetection::FindAdapter() &&
+       (!strDevicePath || !strcmp(strDevicePath, CEC_IMX_VIRTUAL_COM)))
+@@ -283,7 +301,7 @@ int8_t CAdapterFactory::DetectAdapters(cec_adapter_descriptor *deviceList, uint8
+ //   iAdaptersFound++;
+ // #endif
+ 
+-#if !defined(HAVE_RPI_API) && !defined(HAVE_P8_USB) && !defined(HAVE_TDA995X_API) && !defined(HAVE_EXYNOS_API) && !defined(HAVE_LINUX_API) && !defined(HAVE_AOCEC_API) && !defined(HAVE_IMX_API) && !defined(HAVE_TEGRA_API)
++#if !defined(HAVE_RPI_API) && !defined(HAVE_P8_USB) && !defined(HAVE_TDA995X_API) && !defined(HAVE_EXYNOS_API) && !defined(HAVE_LINUX_API) && !defined(HAVE_AOCEC_API) && !defined(HAVE_IMX_API) && !defined(HAVE_TEGRA_API) && !defined(HAVE_STB_API)
+ #error "libCEC doesn't have support for any type of adapter. please check your build system or configuration"
+ #endif
+ 
+@@ -295,6 +313,10 @@ int8_t CAdapterFactory::DetectAdapters(cec_adapter_descriptor *deviceList, uint8
+ 
+ IAdapterCommunication *CAdapterFactory::GetInstance(const char *strPort, uint16_t iBaudRate)
+ {
++#if defined(HAVE_STB_API)
++  if (!strcmp(strPort, "/dev/hdmi_cec") || !strcmp(strPort, "/dev/misc/hdmi_cec0"))
++    return new CSTBCECAdapterCommunication(m_lib->m_cec, strPort);
++#endif
+ #if defined(HAVE_TDA995X_API)
+   if (!strcmp(strPort, CEC_TDA995x_VIRTUAL_COM))
+     return new CTDA995xCECAdapterCommunication(m_lib->m_cec);
+diff --git a/src/libcec/adapter/STB/STBCECAdapterCommunication.cpp b/src/libcec/adapter/STB/STBCECAdapterCommunication.cpp
+new file mode 100644
+index 0000000..13890e8
+--- /dev/null
++++ b/src/libcec/adapter/STB/STBCECAdapterCommunication.cpp
+@@ -0,0 +1,259 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++#include "STBCECAdapterCommunication.h"
++#if defined(HAVE_STB_API)
++#include "STBCECProtocol.h"
++#include "LibCEC.h"
++#include <cerrno>
++#include <chrono>
++#include <cstring>
++#include <fcntl.h>
++#include <poll.h>
++#include <sys/ioctl.h>
++#include <sys/stat.h>
++#include <unistd.h>
++
++using namespace CEC;
++using namespace CEC::STBCEC;
++
++bool CSTBCECAdapterCommunication::IsDevicePath(const std::string &path)
++{
++  if (path != "/dev/hdmi_cec" && path != "/dev/misc/hdmi_cec0")
++    return false;
++  struct stat st;
++  // Detection must not open/flush a queue that Enigma2 may still own.
++  return stat(path.c_str(), &st) == 0 && S_ISCHR(st.st_mode);
++}
++
++CSTBCECAdapterCommunication::CSTBCECAdapterCommunication(
++    IAdapterCommunicationCallback *callback, const std::string &path) :
++  IAdapterCommunication(callback), m_path(path), m_dream(path == "/dev/misc/hdmi_cec0")
++{
++}
++
++bool CSTBCECAdapterCommunication::Open(uint32_t, bool, bool startListening)
++{
++  Close();
++  if (!IsDevicePath(m_path))
++    return false;
++  m_fd = open(m_path.c_str(), O_RDWR | O_NONBLOCK | O_CLOEXEC);
++  m_failed = false;
++  if (m_fd < 0 || !RefreshAddress() || (startListening && !Flush()))
++  {
++    m_callback->GetLib()->AddLog(CEC_LOG_ERROR, "STB CEC: cannot open %s: %s",
++                                m_path.c_str(), strerror(errno));
++    Close();
++    return false;
++  }
++  m_callback->GetLib()->AddLog(CEC_LOG_NOTICE,
++      "STB CEC: %s, driver-owned logical address %X, physical address %04X; no poll ACK API",
++      m_path.c_str(), static_cast<int>(m_logical.load()), m_physical.load());
++  m_stop = false;
++  m_reportedLogical = m_logical;
++  m_reportedPhysical = m_physical;
++  if (startListening)
++    m_reader = std::thread(&CSTBCECAdapterCommunication::Process, this);
++  return true;
++}
++
++void CSTBCECAdapterCommunication::Close(void)
++{
++  m_stop = true;
++  if (m_reader.joinable())
++    m_reader.join();
++  std::lock_guard<std::mutex> lock(m_writeMutex);
++  const int fd = m_fd.exchange(-1);
++  if (fd >= 0)
++    close(fd);
++  // Do not clear the driver's address or send Standby on handover to Enigma2.
++  m_logical = CECDEVICE_UNKNOWN;
++  m_physical = CEC_INVALID_PHYSICAL_ADDRESS;
++}
++
++bool CSTBCECAdapterCommunication::Flush(void)
++{
++  unsigned int clear = 0;
++  return (m_dream ? ioctl(m_fd, 4, &clear) : ioctl(m_fd, 0)) >= 0;
++}
++
++bool CSTBCECAdapterCommunication::RefreshAddress(void)
++{
++  BcmAddress address{};
++  if (m_dream)
++  {
++    DreamAddress dream{};
++    if (ioctl(m_fd, 1, &dream) < 0)
++      return false;
++    address.logical = dream.logical;
++    memcpy(address.physical, dream.physical, 2);
++  }
++  else if (ioctl(m_fd, 1, &address) < 0)
++    return false;
++  if (!IsLogicalAddress(address.logical))
++    return false;
++  const cec_logical_address logical = static_cast<cec_logical_address>(address.logical);
++  const uint16_t physical = (address.physical[0] << 8) | address.physical[1];
++  m_logical = logical;
++  m_physical = physical;
++  return true;
++}
++
++void CSTBCECAdapterCommunication::ProcessEvents(void)
++{
++  const cec_logical_address logical = m_logical;
++  const uint16_t physical = m_physical;
++  if (m_stop || logical == CECDEVICE_UNKNOWN)
++    return;
++  if (m_reportedLogical != logical)
++  {
++    const cec_logical_address previous = m_reportedLogical;
++    m_reportedLogical = logical;
++    m_callback->HandleLogicalAddressLost(previous);
++  }
++  if (m_reportedPhysical != physical)
++  {
++    m_reportedPhysical = physical;
++    m_callback->HandlePhysicalAddressChanged(physical);
++  }
++}
++
++cec_logical_addresses CSTBCECAdapterCommunication::GetLogicalAddresses(void) const
++{
++  cec_logical_addresses addresses;
++  addresses.Clear();
++  if (m_logical != CECDEVICE_UNKNOWN)
++    addresses.Set(m_logical);
++  return addresses;
++}
++
++bool CSTBCECAdapterCommunication::SetLogicalAddresses(const cec_logical_addresses &addresses)
++{
++  // Clearing libCEC's client map must not unregister the kernel-owned address.
++  if (addresses.IsEmpty())
++    return true;
++  const cec_logical_address logical = m_logical;
++  if (logical == CECDEVICE_UNKNOWN)
++    return false;
++  for (int i = 0; i < 16; ++i)
++    if (addresses.IsSet(static_cast<cec_logical_address>(i)) && i != logical)
++      return false;
++  return addresses.IsSet(logical);
++}
++
++cec_adapter_message_state CSTBCECAdapterCommunication::Write(
++    const cec_command &data, bool &retry, uint8_t, bool)
++{
++  retry = false;
++  if (!data.opcode_set || data.parameters.size > 14 ||
++      data.destination < CECDEVICE_TV || data.destination > CECDEVICE_BROADCAST ||
++      !SupportsSourceLogicalAddress(data.initiator))
++    return ADAPTER_MESSAGE_STATE_ERROR;
++  std::lock_guard<std::mutex> lock(m_writeMutex);
++  if (!IsOpen())
++    return ADAPTER_MESSAGE_STATE_ERROR;
++  BcmMessage message{};
++  message.address = data.destination;
++  message.length = data.parameters.size + 1;
++  message.data[0] = data.opcode;
++  memcpy(message.data + 1, data.parameters.data, data.parameters.size);
++  int result;
++  if (m_dream)
++  {
++    DreamTx dream{};
++    dream.address = message.address;
++    dream.length = message.length;
++    dream.flag = 1;
++    memcpy(dream.data, message.data, message.length);
++    result = ioctl(m_fd, 3, &dream);
++    if (result >= 0)
++      return ADAPTER_MESSAGE_STATE_SENT;
++  }
++  else
++  {
++    result = write(m_fd, &message, message.length + 2);
++    if (result == message.length + 2)
++      return ADAPTER_MESSAGE_STATE_SENT;
++  }
++  // There is no ACK result in either ABI. Never report SENT_ACKED or infer
++  // device presence from a successful write, especially for address polls.
++  m_callback->GetLib()->AddLog(CEC_LOG_WARNING, "STB CEC: transmit failed (%d): %s",
++                              result, result < 0 ? strerror(errno) : "short write");
++  return ADAPTER_MESSAGE_STATE_ERROR;
++}
++
++bool CSTBCECAdapterCommunication::ReadExact(uint8_t *buffer, size_t length)
++{
++  const auto deadline = std::chrono::steady_clock::now() + std::chrono::milliseconds(200);
++  size_t offset = 0;
++  while (offset < length && !m_stop)
++  {
++    const ssize_t count = read(m_fd, buffer + offset, length - offset);
++    if (count > 0)
++      offset += count;
++    else if (count == 0 || (errno != EAGAIN && errno != EWOULDBLOCK && errno != EINTR))
++      return false;
++    if (std::chrono::steady_clock::now() >= deadline)
++      return false;
++    if (count < 0)
++    {
++      pollfd event{m_fd, POLLIN, 0};
++      poll(&event, 1, 10);
++    }
++  }
++  return offset == length;
++}
++
++void CSTBCECAdapterCommunication::Receive(void)
++{
++  cec_command command;
++  bool valid = false;
++  if (m_dream)
++  {
++    DreamRx message{};
++    if (ioctl(m_fd, 2, &message) < 0)
++      return;
++    Flush();
++    valid = Decode(message.address, message.destination, message.data, message.length, command);
++  }
++  else
++  {
++    BcmMessage message{};
++    if (!ReadExact(reinterpret_cast<uint8_t *>(&message), 2) ||
++        !ReadExact(message.data, message.length))
++    {
++      Flush();
++      return;
++    }
++    const uint8_t destination = IsBroadcastOpcode(message.data[0]) ?
++        static_cast<uint8_t>(CECDEVICE_BROADCAST) : static_cast<uint8_t>(m_logical.load());
++    valid = Decode(message.address, destination, message.data, message.length, command);
++  }
++  if (valid)
++    m_callback->OnCommandReceived(command);
++}
++
++void CSTBCECAdapterCommunication::Process(void)
++{
++  auto addressCheck = std::chrono::steady_clock::now();
++  while (!m_stop)
++  {
++    pollfd event{m_fd, POLLIN | POLLPRI, 0};
++    const int result = poll(&event, 1, 250);
++    if (m_stop)
++      break;
++    if ((result < 0 && errno != EINTR) || (event.revents & (POLLERR | POLLHUP | POLLNVAL)))
++    {
++      m_failed = true;
++      m_callback->GetLib()->AddLog(CEC_LOG_ERROR, "STB CEC: device disconnected");
++      break;
++    }
++    const auto now = std::chrono::steady_clock::now();
++    if ((event.revents & POLLPRI) || now >= addressCheck)
++    {
++      RefreshAddress();
++      addressCheck = now + std::chrono::seconds(1);
++    }
++    if (event.revents & POLLIN)
++      Receive();
++  }
++}
++#endif
+diff --git a/src/libcec/adapter/STB/STBCECAdapterCommunication.h b/src/libcec/adapter/STB/STBCECAdapterCommunication.h
+new file mode 100644
+index 0000000..c484031
+--- /dev/null
++++ b/src/libcec/adapter/STB/STBCECAdapterCommunication.h
+@@ -0,0 +1,72 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++#pragma once
++
++#include "env.h"
++#if defined(HAVE_STB_API)
++#include "../AdapterCommunication.h"
++#include <atomic>
++#include <mutex>
++#include <thread>
++
++namespace CEC
++{
++class CSTBCECAdapterCommunication : public IAdapterCommunication
++{
++public:
++  static bool IsDevicePath(const std::string &path);
++  CSTBCECAdapterCommunication(IAdapterCommunicationCallback *callback, const std::string &path);
++  ~CSTBCECAdapterCommunication(void) override { Close(); }
++
++  bool Open(uint32_t timeout = CEC_DEFAULT_CONNECT_TIMEOUT, bool skipChecks = false,
++            bool startListening = true) override;
++  void Close(void) override;
++  bool IsOpen(void) override { return m_fd >= 0 && !m_failed; }
++  cec_adapter_message_state Write(const cec_command &data, bool &retry,
++                                 uint8_t lineTimeout, bool isReply) override;
++  bool SetLineTimeout(uint8_t) override { return true; }
++  bool StartBootloader(void) override { return false; }
++  bool SetLogicalAddresses(const cec_logical_addresses &addresses) override;
++  cec_logical_addresses GetLogicalAddresses(void) const override;
++  cec_logical_address GetFixedLogicalAddress(void) const override { return m_logical; }
++  bool SupportsPolling(void) const override { return false; }
++  void ProcessEvents(void) override;
++  bool PingAdapter(void) override { return IsOpen(); }
++  uint16_t GetFirmwareVersion(void) override { return 0; }
++  uint32_t GetFirmwareBuildDate(void) override { return 0; }
++  bool IsRunningLatestFirmware(void) override { return true; }
++  bool SetControlledMode(bool) override { return true; }
++  bool SaveConfiguration(const libcec_configuration &) override { return false; }
++  bool SetAutoMode(bool) override { return false; }
++  bool GetConfiguration(libcec_configuration &) override { return false; }
++  std::string GetPortName(void) override { return m_path; }
++  uint16_t GetPhysicalAddress(void) override { return m_physical; }
++  cec_vendor_id GetVendorId(void) override { return CEC_VENDOR_UNKNOWN; }
++  bool SupportsSourceLogicalAddress(cec_logical_address address) override
++  { return address == m_logical && address != CECDEVICE_UNKNOWN; }
++  cec_adapter_type GetAdapterType(void) override { return ADAPTERTYPE_STB; }
++  uint16_t GetAdapterVendorId(void) const override { return 0; }
++  uint16_t GetAdapterProductId(void) const override { return 0; }
++  void SetActiveSource(bool, bool) override {}
++  bool GetStats(cec_adapter_stats *) override { return false; }
++
++private:
++  bool RefreshAddress(void);
++  bool Flush(void);
++  bool ReadExact(uint8_t *buffer, size_t length);
++  void Receive(void);
++  void Process(void);
++
++  const std::string m_path;
++  const bool m_dream;
++  std::atomic<int> m_fd{-1};
++  std::atomic<bool> m_stop{false};
++  std::atomic<bool> m_failed{false};
++  std::atomic<cec_logical_address> m_logical{CECDEVICE_UNKNOWN};
++  std::atomic<uint16_t> m_physical{CEC_INVALID_PHYSICAL_ADDRESS};
++  cec_logical_address m_reportedLogical{CECDEVICE_UNKNOWN};
++  uint16_t m_reportedPhysical{CEC_INVALID_PHYSICAL_ADDRESS};
++  std::mutex m_writeMutex;
++  std::thread m_reader;
++};
++}
++#endif
+diff --git a/src/libcec/adapter/STB/STBCECProtocol.h b/src/libcec/adapter/STB/STBCECProtocol.h
+new file mode 100644
+index 0000000..2f92088
+--- /dev/null
++++ b/src/libcec/adapter/STB/STBCECProtocol.h
+@@ -0,0 +1,65 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++#pragma once
++
++#include "cectypes.h"
++#include <cstddef>
++#include <cstdint>
++
++namespace CEC
++{
++namespace STBCEC
++{
++// These are the two different legacy Enigma2 driver ABIs, not linux/cec.h.
++struct BcmAddress { uint8_t logical, physical[2], type; };
++struct DreamAddress { uint8_t physical[2], logical, type; };
++struct BcmMessage { uint8_t address, length, data[256]; };
++struct DreamTx { uint8_t address, data[16], length, flag; };
++struct DreamRx { uint8_t address, destination, data[16], length; };
++static_assert(sizeof(BcmAddress) == 4 && sizeof(DreamAddress) == 4, "CEC address ABI");
++static_assert(sizeof(BcmMessage) == 258 && sizeof(DreamTx) == 19 &&
++              sizeof(DreamRx) == 19, "CEC message ABI");
++
++inline bool IsLogicalAddress(uint8_t address)
++{
++  return address > CECDEVICE_TV && address < CECDEVICE_BROADCAST;
++}
++
++inline bool IsBroadcastOpcode(uint8_t opcode)
++{
++  // The BCM receive ABI discards the destination nibble. Directed messages
++  // delivered by its address filter belong to us; infer mandatory broadcasts.
++  switch (opcode)
++  {
++    case 0x32: // Set Menu Language
++    case 0x72: // Set System Audio Mode (also valid as a direct reply)
++    case 0x80: // Routing Change
++    case 0x81: // Routing Information
++    case 0x82: // Active Source
++    case 0x84: // Report Physical Address
++    case 0x85: // Request Active Source
++    case 0x86: // Set Stream Path
++    case 0x87: // Device Vendor ID
++    case 0xa6: // Report Features
++    case 0xa7: // Request Current Latency
++    case 0xa8: // Report Current Latency
++    case 0xf8: // CDC Message
++      return true;
++    default:
++      return false;
++  }
++}
++
++inline bool Decode(uint8_t initiator, uint8_t destination, const uint8_t *payload,
++                   size_t length, cec_command &command)
++{
++  if (initiator > 15 || destination > 15 || length == 0 || length > 15)
++    return false;
++  cec_command::Format(command, static_cast<cec_logical_address>(initiator),
++                      static_cast<cec_logical_address>(destination),
++                      static_cast<cec_opcode>(payload[0]));
++  for (size_t i = 1; i < length; ++i)
++    command.parameters.PushBack(payload[i]);
++  return true;
++}
++}
++}
+diff --git a/src/libcec/cmake/CheckPlatformSupport.cmake b/src/libcec/cmake/CheckPlatformSupport.cmake
+index f43ce9c..5cb51bc 100644
+--- a/src/libcec/cmake/CheckPlatformSupport.cmake
++++ b/src/libcec/cmake/CheckPlatformSupport.cmake
+@@ -166,6 +166,11 @@ else()
+     list(APPEND CEC_SOURCES ${CEC_SOURCES_ADAPTER_LINUX})
+   endif()
+ 
++  # Legacy Enigma2 STB
++  if (HAVE_STB_API)
++    list(APPEND CEC_SOURCES adapter/STB/STBCECAdapterCommunication.cpp)
++  endif()
++
+   # Tegra
+   if (HAVE_TEGRA_API)
+     set(CEC_SOURCES_ADAPTER_TEGRA adapter/Tegra/TegraCECAdapterDetection.cpp
+@@ -269,6 +274,12 @@ else()
+   SET(HAVE_AOCEC_API OFF CACHE BOOL "AOCEC (Odroid C2/Amlogic S905) SoC supported")
+ endif()
+ 
++if (HAVE_STB_API)
++  set(LIB_INFO "${LIB_INFO}, Enigma2_STB")
++else()
++  set(HAVE_STB_API OFF CACHE BOOL "Legacy Enigma2 STB CEC supported")
++endif()
++
+ if (HAVE_IMX_API)
+   set(LIB_INFO "${LIB_INFO}, 'i.MX6'")
+ else()
+diff --git a/src/libcec/cmake/DisplayPlatformSupport.cmake b/src/libcec/cmake/DisplayPlatformSupport.cmake
+index e7643db..06633ac 100644
+--- a/src/libcec/cmake/DisplayPlatformSupport.cmake
++++ b/src/libcec/cmake/DisplayPlatformSupport.cmake
+@@ -56,6 +56,12 @@ else()
+   message(STATUS "Tegra support:                          no")
+ endif()
+ 
++if (HAVE_STB_API)
++  message(STATUS "Legacy Enigma2 STB CEC support:          yes")
++else()
++  message(STATUS "Legacy Enigma2 STB CEC support:          no")
++endif()
++
+ if (HAVE_AOCEC_API)
+   message(STATUS "AOCEC (Odroid C2) SoC support:          yes")
+ else()
+diff --git a/src/libcec/devices/CECBusDevice.cpp b/src/libcec/devices/CECBusDevice.cpp
+index ebab741..d846011 100644
+--- a/src/libcec/devices/CECBusDevice.cpp
++++ b/src/libcec/devices/CECBusDevice.cpp
+@@ -870,7 +870,7 @@ cec_bus_device_status CCECBusDevice::GetStatus(bool bForcePoll /* = false */, bo
+   {
+     CLockObject lock(m_mutex);
+     status = m_deviceStatus;
+-    bNeedsPoll = !bSuppressPoll &&
++    bNeedsPoll = !bSuppressPoll && m_processor->SupportsPolling() &&
+         m_deviceStatus != CEC_DEVICE_STATUS_HANDLED_BY_LIBCEC &&
+         // don't poll Samsung TVs because they can power on randomly
+         (m_processor->GetDevice(CECDEVICE_TV)->GetCurrentVendorId() != CEC_VENDOR_SAMSUNG || m_iLogicalAddress != CECDEVICE_TV) &&
+@@ -978,6 +978,8 @@ bool CCECBusDevice::TransmitPoll(const cec_logical_address dest, bool bUpdateDev
+     destination = m_iLogicalAddress;
+ 
+   CCECBusDevice *destDevice = m_processor->GetDevice(destination);
++  if (!m_processor->SupportsPolling())
++    return destDevice && destDevice->GetStatus(false, true) == CEC_DEVICE_STATUS_PRESENT;
+   if (destDevice->m_deviceStatus == CEC_DEVICE_STATUS_HANDLED_BY_LIBCEC)
+     return bReturn;
+ 
+diff --git a/src/libcec/env.h.in b/src/libcec/env.h.in
+index 99e6553..ad83ed6 100644
+--- a/src/libcec/env.h.in
++++ b/src/libcec/env.h.in
+@@ -82,6 +82,9 @@
+ /* Define to 1 for Linux support */
+ #cmakedefine HAVE_LINUX_API @HAVE_LINUX_API@
+ 
++/* Define to 1 for legacy Enigma2 STB CEC devices */
++#cmakedefine HAVE_STB_API @HAVE_STB_API@
++
+ /* Define to 1 for Tegra support */
+ #cmakedefine HAVE_TEGRA_API @HAVE_TEGRA_API@
+ 

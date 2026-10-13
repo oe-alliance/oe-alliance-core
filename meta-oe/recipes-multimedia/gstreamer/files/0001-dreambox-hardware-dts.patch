@@ -1,0 +1,247 @@
+From: OE-Alliance <oe-alliance@users.noreply.github.com>
+Subject: [PATCH] dvbaudiosink: enable native Dreambox DTS and normalize core frames
+
+Expose DTS independently of the legacy software downmixer and convert 16LE
+and 14-bit packed DTS to the 16BE input used by the Dream decoder. Preserve
+buffer metadata and keep legacy software-downmix markers out of native builds.
+
+Upstream-Status: Pending
+
+diff --git a/Makefile.am b/Makefile.am
+index 6b7525a..267baf4 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -12,6 +12,10 @@ CLEANFILES = $(BUILT_SOURCES)
+ 
+ EXTRA_DIST = gstdvbsink-marshal.list
+ 
++check_PROGRAMS = dtsframe-test
++TESTS = $(check_PROGRAMS)
++dtsframe_test_SOURCES = tests/dtsframe_test.c
++
+ plugin_LTLIBRARIES = libgstdvbvideosink.la libgstdvbaudiosink.la
+ 
+ # for the next set of variables, rename the prefix if you renamed the .la
+@@ -31,7 +35,7 @@ libgstdvbaudiosink_la_LIBADD = $(GST_LIBS) -lgstbase-$(GST_MAJORMINOR) $(GST_PLU
+ libgstdvbaudiosink_la_LDFLAGS = $(GST_PLUGIN_LDFLAGS)
+ 
+ # headers we need but don't want installed
+-noinst_HEADERS = gstdvbvideosink.h gstdvbaudiosink.h gstdtsdownmix.h gstmpeg4p2unpack.h
++noinst_HEADERS = gstdvbvideosink.h gstdvbaudiosink.h gstdtsdownmix.h gstmpeg4p2unpack.h dtsframe.h
+ 
+ plugin_LTLIBRARIES += libgstmpeg4p2unpack.la
+ 
+diff --git a/dtsframe.h b/dtsframe.h
+new file mode 100644
+index 0000000..d1eca3d
+--- /dev/null
++++ b/dtsframe.h
+@@ -0,0 +1,52 @@
++/* SPDX-License-Identifier: MIT */
++#ifndef DVB_DTS_FRAME_H
++#define DVB_DTS_FRAME_H
++
++#include <stddef.h>
++#include <stdint.h>
++#include <string.h>
++
++/* Normalize the four DTS core wire formats to the Dream decoder's 16BE input. */
++static inline size_t dvb_dts_normalize(uint8_t *output, size_t capacity,
++	const uint8_t *input, size_t size)
++{
++	uint32_t sync, bits = 0;
++	unsigned int bit_count = 0;
++	size_t written = 0;
++	int little_endian, packed;
++
++	if (!output || !input || size < 4 || capacity < size)
++		return 0;
++	sync = (uint32_t)input[0] << 24 | (uint32_t)input[1] << 16 |
++		(uint32_t)input[2] << 8 | input[3];
++	if (sync == UINT32_C(0x7ffe8001))
++	{
++		memcpy(output, input, size);
++		return size;
++	}
++	little_endian = sync == UINT32_C(0xfe7f0180) || sync == UINT32_C(0xff1f00e8);
++	packed = sync == UINT32_C(0x1fffe800) || sync == UINT32_C(0xff1f00e8);
++	if ((!little_endian && !packed) || (size & 1))
++		return 0;
++	for (size_t i = 0; i < size; i += 2)
++	{
++		uint32_t word = little_endian ? (uint32_t)input[i + 1] << 8 | input[i]
++			: (uint32_t)input[i] << 8 | input[i + 1];
++		if (!packed)
++		{
++			output[written++] = (uint8_t)(word >> 8);
++			output[written++] = (uint8_t)word;
++			continue;
++		}
++		bits = (bits << 14) | (word & 0x3fff);
++		bit_count += 14;
++		while (bit_count >= 8)
++		{
++			bit_count -= 8;
++			output[written++] = (uint8_t)(bits >> bit_count);
++		}
++	}
++	return written;
++}
++
++#endif
+diff --git a/gstdvbaudiosink.c b/gstdvbaudiosink.c
+index 3b1003f..ff8506a 100644
+--- a/gstdvbaudiosink.c
++++ b/gstdvbaudiosink.c
+@@ -76,6 +76,9 @@
+ #include "common.h"
+ #include "gstdvbaudiosink.h"
+ #include "gstdvbsink-marshal.h"
++#ifdef DREAMBOX
++#include "dtsframe.h"
++#endif
+ 
+ GST_DEBUG_CATEGORY_STATIC(dvbaudiosink_debug);
+ #define GST_CAT_DEFAULT dvbaudiosink_debug
+@@ -164,7 +167,12 @@ static guint gst_dvbaudiosink_signals[LAST_SIGNAL] = { 0 };
+ * One some stb's also a frame-size off 2013 is not supported max is 2012 like mutant51
+ * For those stb's we limit to 2012 frame-size, higher is trough gst-libav
+ */
+-#ifdef MAX_DTS_FRAMESIZE_2012
++#ifdef DREAMBOX
++#define DTSCAPS \
++		"audio/x-dts, framed = (boolean) true, " \
++		"endianness = (int) { 1234, 4321 }, depth = (int) { 14, 16 }; " \
++		"audio/x-private1-dts, framed = (boolean) true; "
++#elif defined(MAX_DTS_FRAMESIZE_2012)
+ #define DTSCAPS \
+ 		"audio/x-dts, " \
+ 		"framed =(boolean) true, " \
+@@ -603,7 +611,7 @@ static GstCaps *gst_dvbaudiosink_get_caps(GstBaseSink *basesink, GstCaps *filter
+ #endif
+ 	);
+ 
+-#if defined(HAVE_DTS) && ((!defined(DREAMBOX) && !defined(VUPLUS) && !defined(OSMIO4K)) || (defined(VUPLUS) && !defined(HAVE_DTSDOWNMIX)))
++#if defined(HAVE_DTS) && ((!defined(DREAMBOX) && !defined(VUPLUS) && !defined(OSMIO4K)) || ((defined(DREAMBOX) || defined(VUPLUS)) && !defined(HAVE_DTSDOWNMIX)))
+ 	/* for the time the static cap has been limited to not be used in case of dts_audio_cd media */
+ 	gst_caps_append(caps, gst_caps_from_string(DTSCAPS));
+ #endif
+@@ -1520,6 +1528,34 @@ error:
+ 	}
+ }
+ 
++#ifdef DREAMBOX
++static GstBuffer *gst_dvbaudiosink_dts_buffer(GstBuffer *buffer)
++{
++	GstMapInfo input, output;
++	GstBuffer *converted;
++	gsize size;
++	if (!gst_buffer_map(buffer, &input, GST_MAP_READ))
++		return NULL;
++	converted = gst_buffer_new_allocate(NULL, input.size, NULL);
++	if (!converted || !gst_buffer_map(converted, &output, GST_MAP_WRITE))
++	{
++		if (converted) gst_buffer_unref(converted);
++		gst_buffer_unmap(buffer, &input);
++		return NULL;
++	}
++	size = dvb_dts_normalize(output.data, output.size, input.data, input.size);
++	gst_buffer_unmap(converted, &output);
++	gst_buffer_unmap(buffer, &input);
++	if (!size || !gst_buffer_copy_into(converted, buffer, GST_BUFFER_COPY_METADATA, 0, -1))
++	{
++		gst_buffer_unref(converted);
++		return NULL;
++	}
++	gst_buffer_resize(converted, 0, size);
++	return converted;
++}
++#endif
++
+ static GstFlowReturn gst_dvbaudiosink_render(GstBaseSink *sink, GstBuffer *buffer)
+ {
+ 	GstDVBAudioSink *self = GST_DVBAUDIOSINK(sink);
+@@ -1584,6 +1620,22 @@ static GstFlowReturn gst_dvbaudiosink_render(GstBaseSink *sink, GstBuffer *buffe
+ 		self->cache = NULL;
+ 	}
+ 
++#ifdef DREAMBOX
++	if (self->bypass == AUDIOTYPE_DTS)
++	{
++		GstBuffer *converted = gst_dvbaudiosink_dts_buffer(buffer);
++		if (!converted)
++		{
++			gst_buffer_unref(disposebuffer);
++			GST_ELEMENT_ERROR(self, STREAM, FORMAT, (NULL), ("Invalid DTS core frame"));
++			return GST_FLOW_ERROR;
++		}
++		gst_buffer_unref(disposebuffer);
++		buffer = disposebuffer = converted;
++		buffersize = gst_buffer_get_size(buffer);
++	}
++#endif
++
+ 	if (buffer)
+ 	{
+ 		if (self->fixed_buffersize)
+@@ -1808,7 +1860,7 @@ static GstStateChangeReturn gst_dvbaudiosink_change_state(GstElement *element, G
+ 			}
+ 		}
+ // dreambox driver issue patch
+-#ifdef DREAMBOX
++#if defined(DREAMBOX) && defined(HAVE_DTSDOWNMIX)
+ 		if(get_downmix_ready())
+ 			self->using_dts_downmix = TRUE;
+ #endif
+diff --git a/tests/dtsframe_test.c b/tests/dtsframe_test.c
+new file mode 100644
+index 0000000..9d195fc
+--- /dev/null
++++ b/tests/dtsframe_test.c
+@@ -0,0 +1,46 @@
++/* SPDX-License-Identifier: MIT */
++#include "../dtsframe.h"
++#include <stdio.h>
++
++int main(void)
++{
++	const uint8_t be[] = {0x7f, 0xfe, 0x80, 0x01, 0xfc, 0x11, 0x22,
++		0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99};
++	const uint8_t packed[] = {0x1f, 0xff, 0xe8, 0x00, 0x07, 0xf0, 0x11, 0x22,
++		0x0c, 0xd1, 0x05, 0x56, 0x19, 0xde, 0x08, 0x99};
++	uint8_t le[sizeof(be)], packed_le[sizeof(packed)], output[sizeof(packed)];
++	const uint8_t *inputs[] = {be, le, packed, packed_le};
++	const size_t sizes[] = {sizeof(be), sizeof(le), sizeof(packed), sizeof(packed_le)};
++	const uint8_t invalid[] = {0, 0, 0, 0};
++	for (size_t i = 0; i < sizeof(be); i += 2)
++	{
++		le[i] = be[i + 1];
++		le[i + 1] = be[i];
++	}
++	for (size_t i = 0; i < sizeof(packed); i += 2)
++	{
++		packed_le[i] = packed[i + 1];
++		packed_le[i + 1] = packed[i];
++	}
++	for (size_t i = 0; i < sizeof(inputs) / sizeof(inputs[0]); ++i)
++	{
++		size_t size = dvb_dts_normalize(output, sizeof(output), inputs[i], sizes[i]);
++		if (size != sizeof(be) || memcmp(output, be, sizeof(be)) ||
++			dvb_dts_normalize(output, 3, inputs[i], sizes[i]))
++		{
++			fprintf(stderr, "DTS normalization failed for format %zu\n", i);
++			return 1;
++		}
++	}
++	if (dvb_dts_normalize(output, sizeof(output), invalid, sizeof(invalid)) ||
++		dvb_dts_normalize(output, sizeof(output), le, 3) ||
++		dvb_dts_normalize(output, sizeof(output), le, 5) ||
++		dvb_dts_normalize(output, sizeof(output), packed, 5) ||
++		dvb_dts_normalize(NULL, sizeof(output), be, sizeof(be)) ||
++		dvb_dts_normalize(output, sizeof(output), NULL, sizeof(be)))
++	{
++		fprintf(stderr, "DTS accepted malformed input\n");
++		return 1;
++	}
++	return 0;
++}
