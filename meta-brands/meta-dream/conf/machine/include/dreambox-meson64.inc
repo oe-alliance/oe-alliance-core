@@ -48,6 +48,7 @@ MACHINE_EXTRA_RRECOMMENDS += "\
 MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS = "\
     bcmdhd \
     dreambox-dvb-modules-${SOC_FAMILY} \
+    dreammosaic \
     meson-mali-module-bifrost-r12p0 \
     flash-nrf52 \
     nrf52-firmware-${MACHINE} \
