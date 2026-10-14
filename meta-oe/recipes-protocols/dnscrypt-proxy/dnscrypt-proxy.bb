@@ -26,6 +26,11 @@ INITSCRIPT_PARAMS = "defaults 20"
 
 RDEPENDS:${PN} += "ca-certificates"
 
+# Upstream pins a patch release of Go in go.mod, which oe-core trails behind.
+do_configure:prepend() {
+    sed -i -E 's/^go ([0-9]+\.[0-9]+)\.[0-9]+$/go \1/' ${UNPACKDIR}/${GO_SRCURI_DESTSUFFIX}/go.mod
+}
+
 do_compile() {
     cd ${UNPACKDIR}/${GO_SRCURI_DESTSUFFIX}
     ${GO} build -trimpath -ldflags="-s -w" -mod=vendor -o ${B}/dnscrypt-proxy ./dnscrypt-proxy
