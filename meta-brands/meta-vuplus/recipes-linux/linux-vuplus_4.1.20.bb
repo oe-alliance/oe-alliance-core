@@ -6,7 +6,7 @@ MODULE = "linux-4.1.20"
 
 COMPATIBLE_MACHINE = "^(vuuno4kse|vuzero4k)$"
 
-MACHINE_KERNEL_PR = "r11"
+MACHINE_KERNEL_PR = "r12"
 
 RPROVIDES:${KERNEL_PACKAGE_NAME}-image += "kernel-${KERNEL_IMAGETYPE}"
 
@@ -21,6 +21,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
 SRC_URI += "https://source.mynonpublic.com/vuplus/release/kernel/stblinux-4.1-${KERNEL_SRC_VERSION}.tar.bz2 \
     file://defconfig \
+    file://0001-input-xpad-backport-linux-4.4.302.patch \
     file://linux_dvb-core.patch \
     file://bcmgenet-recovery-fix.patch \
     file://linux_4_1_1_9_dvbs2x.patch \

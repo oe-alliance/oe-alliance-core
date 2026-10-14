@@ -15,7 +15,7 @@ S = "${UNPACKDIR}/${BP}/src"
 SRCREV = "${AUTOREV}"
 PV = "git"
 PKGV = "V${GITPKGVTAG}"
-PR = "r1"
+PR = "r2"
 
 SRC_URI = "git://github.com/oe-alliance-plugins/RetroGaming.git;protocol=https;branch=main \
            file://openatv-retrogaming-launch \
@@ -40,6 +40,9 @@ RDEPENDS:${PN} += " \
 # Module packages are optional when a machine already builds the support in.
 # HID_DRAGONRISE builds hid-dr.ko, not a module named hid-dragonrise.
 RRECOMMENDS:${PN} += "kernel-module-joydev kernel-module-hid-dr"
+# These Vu+ kernels carry the Xbox One S backport as a loadable module.
+RRECOMMENDS:${PN}:append:vuzero4k = " kernel-module-xpad"
+RRECOMMENDS:${PN}:append:vuuno4kse = " kernel-module-xpad"
 
 # Installing this frontend must not replace a live DVB kernel module.
 # The image's NexTV graphics mode is checked separately before launching.
