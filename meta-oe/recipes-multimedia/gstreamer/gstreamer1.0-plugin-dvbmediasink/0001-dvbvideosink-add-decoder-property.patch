@@ -1,0 +1,131 @@
+diff --git a/gstdvbvideosink.c b/gstdvbvideosink.c
+index cd5f5b1..7ed3f12 100644
+--- a/gstdvbvideosink.c
++++ b/gstdvbvideosink.c
+@@ -144,6 +144,7 @@ enum
+ 	PROP_SYNC_E2PLAYER,
+ 	PROP_ASYNC_E2PLAYER,
+ 	PROP_RENDER_DELAY,
++	PROP_DECODER,
+ 	PROP_LAST
+ };
+ 
+@@ -302,6 +303,20 @@ static GstStateChangeReturn gst_dvbvideosink_change_state (GstElement * element,
+ static gint64 gst_dvbvideosink_get_decoder_time (GstDVBVideoSink *self);
+ static gint64 gst_dvbvideosink_get_video_codec (GstDVBVideoSink *self);
+ 
++/* The hardware decoder index is selectable (property "decoder") so a second
++ * instance can drive the PiP decoder (video1, /proc/stb/vmpeg/1). */
++static const char *video_device_path(GstDVBVideoSink *self, char *buf)
++{
++	sprintf(buf, "/dev/dvb/adapter0/video%u", self->decoder);
++	return buf;
++}
++
++static const char *fallback_framerate_path(GstDVBVideoSink *self, char *buf)
++{
++	sprintf(buf, "/proc/stb/vmpeg/%u/fallback_framerate", self->decoder);
++	return buf;
++}
++
+ /* initialize the plugin's class */
+ static void gst_dvbvideosink_class_init(GstDVBVideoSinkClass *self)
+ {
+@@ -338,6 +353,9 @@ static void gst_dvbvideosink_class_init(GstDVBVideoSinkClass *self)
+ 	g_object_class_install_property (gobject_class, PROP_RENDER_DELAY,
+ 			g_param_spec_uint64 ("render-delay", "Renderdelay", "Render-delay increase latency",
+ 					0, G_MAXUINT64, 0, G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
++	g_object_class_install_property (gobject_class, PROP_DECODER,
++			g_param_spec_uint ("decoder", "Decoder", "Index of the hardware video decoder (/dev/dvb/adapter0/videoN), 0 = primary, 1 = PiP",
++					0, 7, 0, G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
+ 
+ 	gstbasesink_class->start = GST_DEBUG_FUNCPTR (gst_dvbvideosink_start);
+ 	gstbasesink_class->stop = GST_DEBUG_FUNCPTR (gst_dvbvideosink_stop);
+@@ -466,6 +484,10 @@ static void gst_dvbvideosink_set_property (GObject * object, guint prop_id, cons
+ 			else
+ 				GST_WARNING_OBJECT(self, "Renderdelay change to  %" G_GUINT64_FORMAT " FAILURE", g_value_get_uint64(value));
+ 			break;
++		case PROP_DECODER:
++			self->decoder = g_value_get_uint(value);
++			GST_INFO_OBJECT(self, "decoder set to %u", self->decoder);
++			break;
+ 		default:
+ 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+ 			break;
+@@ -490,6 +512,9 @@ static void gst_dvbvideosink_get_property (GObject * object, guint prop_id, GVal
+ 			g_value_set_uint64(value, gst_base_sink_get_render_delay(GST_BASE_SINK(object)));
+ 			GST_INFO_OBJECT(self, "Requested by other element RENDER DELAY = %" G_GUINT64_FORMAT , g_value_get_uint64(value));
+ 			break;
++		case PROP_DECODER:
++			g_value_set_uint(value, self->decoder);
++			break;
+ 		default:
+ 			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+ 			break;
+@@ -1776,9 +1801,10 @@ static gboolean gst_dvbvideosink_set_caps(GstBaseSink *basesink, GstCaps *caps)
+ 	if (self->stream_type != STREAMTYPE_UNKNOWN)
+ 	{
+ 		gint numerator, denominator;
++		char path_buf[64];
+ 		if (gst_structure_get_fraction (structure, "framerate", &numerator, &denominator))
+ 		{
+-			FILE *f = fopen("/proc/stb/vmpeg/0/fallback_framerate", "w");
++			FILE *f = fopen(fallback_framerate_path(self, path_buf), "w");
+ 			if (f)
+ 			{
+ 				int valid_framerates[] = { 23976, 24000, 25000, 29970, 30000, 50000, 59940, 60000 };
+@@ -1944,6 +1970,7 @@ static gboolean gst_dvbvideosink_start(GstBaseSink *basesink)
+ 
+ 	GST_DEBUG_OBJECT(self, "start");
+ 	FILE *f;
++	char path_buf[64];
+ 
+ 	if (socketpair(PF_UNIX, SOCK_STREAM, 0, self->unlockfd) < 0)
+ 	{
+@@ -1956,7 +1983,7 @@ static gboolean gst_dvbvideosink_start(GstBaseSink *basesink)
+ 
+ 	self->pesheader_buffer = gst_buffer_new_and_alloc(2048);
+ 
+-	f = fopen("/proc/stb/vmpeg/0/fallback_framerate", "r");
++	f = fopen(fallback_framerate_path(self, path_buf), "r");
+ 	if (f)
+ 	{
+ 		fgets(self->saved_fallback_framerate, sizeof(self->saved_fallback_framerate), f);
+@@ -1964,7 +1991,7 @@ static gboolean gst_dvbvideosink_start(GstBaseSink *basesink)
+ 		f = NULL;
+ 	}
+ 
+-	self->fd = open("/dev/dvb/adapter0/video0", O_RDWR | O_NONBLOCK);
++	self->fd = open(video_device_path(self, path_buf), O_RDWR | O_NONBLOCK);
+ 
+ 	self->pts_written = FALSE;
+ 	self->lastpts = 0;
+@@ -1982,6 +2009,7 @@ static gboolean gst_dvbvideosink_stop(GstBaseSink *basesink)
+ {
+ 	GstDVBVideoSink *self = GST_DVBVIDEOSINK(basesink);
+ 	FILE *f = NULL;
++	char path_buf[64];
+ 	GST_INFO_OBJECT(self, "stop");
+ 	if (self->fd >= 0)
+ 	{
+@@ -2008,7 +2036,7 @@ static gboolean gst_dvbvideosink_stop(GstBaseSink *basesink)
+ 		queue_pop(&self->queue);
+ 	}
+ 
+-	f = fopen("/proc/stb/vmpeg/0/fallback_framerate", "w");
++	f = fopen(fallback_framerate_path(self, path_buf), "w");
+ 	if (f)
+ 	{
+ 		fputs(self->saved_fallback_framerate, f);
+diff --git a/gstdvbvideosink.h b/gstdvbvideosink.h
+index 2966da5..aa118d2 100644
+--- a/gstdvbvideosink.h
++++ b/gstdvbvideosink.h
+@@ -151,6 +151,7 @@ struct _GstDVBVideoSink
+ 	GstBaseSink element;
+ 
+ 	int fd;
++	unsigned int decoder;
+ 	int unlockfd[2];
+ 
+ 	gint h264_nal_len_size;
