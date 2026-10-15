@@ -9,6 +9,8 @@ PN = "enigma2-plugin-systemplugins-bluetoothsetup"
 
 RDEPENDS:${PN}:append:dm900 = " flash-nrf52"
 RDEPENDS:${PN}:append:dm920 = " flash-nrf52"
+RDEPENDS:${PN}:append:dreamone = " nrf52-firmware-rcu"
+RDEPENDS:${PN}:append:dreamtwo = " nrf52-firmware-rcu"
 
 inherit gittag
 
