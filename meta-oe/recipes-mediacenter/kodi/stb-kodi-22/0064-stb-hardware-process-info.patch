@@ -1,0 +1,22 @@
+From: OE-Alliance contributors
+Subject: [PATCH] STB: identify hardware-managed video in player information
+
+The STB codec uses an opaque hardware video plane and leaves deinterlacing
+to the platform driver. Populate the process-information labels instead of
+leaving them unknown, without claiming a particular pixel layout or active
+deinterlacing algorithm. Keep the internal picture format unchanged.
+
+Upstream-Status: Inappropriate [STB-specific player integration]
+
+diff --git a/xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecSTB.cpp b/xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecSTB.cpp
+--- a/xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecSTB.cpp
++++ b/xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecSTB.cpp
+@@ -437,6 +437,8 @@ bool CDVDVideoCodecSTB::Open(CDVDStreamInfo& hints, CDVDCodecOptions& options)
+   m_processInfo.SetVideoDAR(hints.aspect > 0.0 ? static_cast<float>(hints.aspect)
+                                                : static_cast<float>(hints.width) / hints.height);
+   m_processInfo.SetVideoInterlaced(hints.interlaced);
++  m_processInfo.SetVideoPixelFormat("STB hardware");
++  m_processInfo.SetVideoDeintMethod("STB driver-managed");
+   m_open = true;
+   m_failed = false;
+   CLog::Log(LOGINFO, "CDVDVideoCodecSTB: using backend '{}' for codec {}", m_session->BackendName(),

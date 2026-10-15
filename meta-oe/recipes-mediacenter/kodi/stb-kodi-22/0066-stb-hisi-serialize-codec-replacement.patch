@@ -1,0 +1,33 @@
+From: OE-Alliance <oe-alliance@users.noreply.github.com>
+Subject: [PATCH] VideoPlayer: defer HiSi STB codec replacement until the old codec closes
+
+Late H.264 extradata in TS recordings can replace the video codec. HiSi
+instances share video0: preopening the replacement lets the old codec's
+VIDEO_STOP/VIDEO_SELECT_SOURCE teardown disable the new decoder. Use the
+existing video-thread deferred creation path for this backend only.
+
+Upstream-Status: Inappropriate [STB hardware backend integration]
+
+diff --git a/xbmc/cores/VideoPlayer/VideoPlayerVideo.cpp b/xbmc/cores/VideoPlayer/VideoPlayerVideo.cpp
+--- a/xbmc/cores/VideoPlayer/VideoPlayerVideo.cpp
++++ b/xbmc/cores/VideoPlayer/VideoPlayerVideo.cpp
+@@ -136,10 +136,16 @@ bool CVideoPlayerVideo::OpenStream(CDVDStreamInfo hint)
+       hint.codecOptions |= CODEC_ALLOW_FALLBACK;
+     }
+ 
+-    std::unique_ptr<CDVDVideoCodec> codec = CDVDFactoryCodec::CreateVideoCodec(hint, m_processInfo);
+-    if (!codec)
++    std::unique_ptr<CDVDVideoCodec> codec;
++    // HiSi instances share one video channel. Open the replacement on the video
++    // thread after the old codec closes, or its teardown stops the new decoder.
++    if (m_processInfo.GetVideoDecoderName() != "stbplayer/hisi-dvb")
+     {
+-      CLog::Log(LOGINFO, "CVideoPlayerVideo::OpenStream - could not open video codec");
++      codec = CDVDFactoryCodec::CreateVideoCodec(hint, m_processInfo);
++      if (!codec)
++      {
++        CLog::Log(LOGINFO, "CVideoPlayerVideo::OpenStream - could not open video codec");
++      }
+     }
+ 
+     SendMessage(std::make_shared<CDVDMsgVideoCodecChange>(hint, std::move(codec)), 0);

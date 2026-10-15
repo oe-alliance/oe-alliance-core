@@ -1,0 +1,432 @@
+From: OE-Alliance contributors
+Subject: [PATCH] Add one-switch STB verbose diagnostics to System logging
+
+Expose player diagnostics at Basic settings level without an OSD overlay.
+Preserve existing debug preferences and include bounded hardware clock/status
+snapshots, decoder lifecycle and video plane placement in the normal Kodi log.
+
+Upstream-Status: Inappropriate [STB-specific player integration]
+
+diff --git a/addons/resource.language.en_gb/resources/strings.po b/addons/resource.language.en_gb/resources/strings.po
+index 63dc055..b594df2 100644
+--- a/addons/resource.language.en_gb/resources/strings.po
++++ b/addons/resource.language.en_gb/resources/strings.po
+@@ -26147,3 +26147,14 @@ msgstr ""
+ msgctxt "#54216"
+ msgid "This receiver uses one mode for Dolby Digital and DTS. Downmix decodes DTS to stereo PCM; passthrough sends DTS to a compatible receiver."
+ msgstr ""
++
++#. STB player diagnostics, available at the Basic settings level
++#: system/settings/settings.xml
++msgctxt "#54300"
++msgid "Enable STB verbose debug logging"
++msgstr ""
++
++#: system/settings/settings.xml
++msgctxt "#54301"
++msgid "Logs audio, video, FFmpeg, A/V timing, PVR, add-ons and hardware player status without a screen overlay. Enable before reproducing the problem. For startup problems, restart Kodi once. Save /media/hdd/.kodi/temp/kodi.log before restarting again; the previous log is kodi.old.log. Logs can contain private paths and stream URLs. Disable after testing: verbose logs grow quickly. Existing debug settings are preserved."
++msgstr ""
+diff --git a/system/settings/settings.xml b/system/settings/settings.xml
+index ef926b1..c2712f0 100755
+--- a/system/settings/settings.xml
++++ b/system/settings/settings.xml
+@@ -4264,6 +4264,11 @@
+     </category>
+     <category id="logging" label="14092" help="36391">
+       <group id="1" label="14260">
++        <setting id="debug.stbverbose" type="boolean" label="54300" help="54301">
++          <level>0</level>
++          <default>false</default>
++          <control type="toggle" />
++        </setting>
+         <setting id="debug.showloginfo" type="boolean" label="20191" help="36392">
+           <level>1</level>
+           <default>false</default>
+diff --git a/xbmc/cores/AudioEngine/Sinks/AESinkSTB.cpp b/xbmc/cores/AudioEngine/Sinks/AESinkSTB.cpp
+index 6c3d526..8c8adce 100644
+--- a/xbmc/cores/AudioEngine/Sinks/AESinkSTB.cpp
++++ b/xbmc/cores/AudioEngine/Sinks/AESinkSTB.cpp
+@@ -5,6 +5,7 @@
+ 
+ #include "AESinkSTB.h"
+ 
++#include "ServiceBroker.h"
+ #include "cores/AudioEngine/AESinkFactory.h"
+ #include "cores/AudioEngine/Utils/AEUtil.h"
+ #include "settings/STBAVControl.h"
+@@ -311,12 +312,14 @@ void CAESinkSTB::AddPause(unsigned int millis)
+ void CAESinkSTB::GetDelay(AEDelayStatus& status)
+ {
+   struct stbp_audio_status audioStatus = {};
++  enum stbp_result statusResult = STBP_ERROR_BAD_STATE;
+   double delay = 0.0;
+ 
+   if (m_device != nullptr)
+   {
+     audioStatus.struct_size = sizeof(audioStatus);
+-    if (stbp_audio_get_status(m_device, &audioStatus) == STBP_OK &&
++    statusResult = stbp_audio_get_status(m_device, &audioStatus);
++    if (statusResult == STBP_OK &&
+         audioStatus.presentation_pts_90k != STBP_AUDIO_PTS_NONE &&
+         audioStatus.queued_end_pts_90k != STBP_AUDIO_PTS_NONE)
+     {
+@@ -346,6 +349,22 @@ void CAESinkSTB::GetDelay(AEDelayStatus& status)
+     }
+   }
+   status.SetDelay(delay);
++  if (m_device != nullptr && CServiceBroker::GetLogging().IsSTBVerbose())
++  {
++    const auto now = std::chrono::steady_clock::now();
++    if (now >= m_nextDiagnostic)
++    {
++      m_nextDiagnostic = now + std::chrono::seconds(2);
++      CLog::Log(LOGDEBUG,
++                "STB audio status: result={} state={} error={} hwPts90k={} queuedEnd90k={} "
++                "nextPts90k={} delay={:.3f}s packets={} bytes={} pcmSampleClock={} mediaPts={} "
++                "clockStarted={}",
++                stbp_result_string(statusResult), static_cast<int>(audioStatus.state),
++                stbp_result_string(audioStatus.last_error), audioStatus.presentation_pts_90k,
++                audioStatus.queued_end_pts_90k, m_nextPts90k, delay, audioStatus.packets_queued,
++                audioStatus.bytes_queued, m_pcmSampleClock, m_hasMediaTimestamp, m_clockStarted);
++    }
++  }
+ }
+ 
+ void CAESinkSTB::Drain()
+@@ -356,6 +375,10 @@ void CAESinkSTB::Drain()
+ 
+ void CAESinkSTB::Flush()
+ {
++  CLog::Log(LOGDEBUG, LOGAUDIO,
++            "STB audio flush: nextPts90k={} pcmSampleClock={} mediaPts={}",
++            m_nextPts90k, m_pcmSampleClock, m_hasMediaTimestamp);
++  m_nextDiagnostic = {};
+   if (m_device != nullptr)
+   {
+     if (m_pcmSampleClock)
+diff --git a/xbmc/cores/AudioEngine/Sinks/AESinkSTB.h b/xbmc/cores/AudioEngine/Sinks/AESinkSTB.h
+index 934dc4d..1709725 100644
+--- a/xbmc/cores/AudioEngine/Sinks/AESinkSTB.h
++++ b/xbmc/cores/AudioEngine/Sinks/AESinkSTB.h
+@@ -8,6 +8,7 @@
+ #include "cores/AudioEngine/Interfaces/AESink.h"
+ #include "cores/AudioEngine/Utils/AEDeviceInfo.h"
+ 
++#include <chrono>
+ #include <memory>
+ 
+ extern "C"
+@@ -58,5 +59,6 @@ private:
+   bool m_clockStarted{false};
+   bool m_pcmSampleClock{false};
+   uint64_t m_pcmFrames{0};
++  std::chrono::steady_clock::time_point m_nextDiagnostic{};
+   float m_volume{1.0f};
+ };
+diff --git a/xbmc/cores/FFmpeg.cpp b/xbmc/cores/FFmpeg.cpp
+index 2a281e1..00de8b3 100644
+--- a/xbmc/cores/FFmpeg.cpp
++++ b/xbmc/cores/FFmpeg.cpp
+@@ -94,7 +94,8 @@ void ff_avutil_log(void* ptr, int level, const char* format, va_list va)
+ 
+   if (level > maxLevel && !CServiceBroker::GetLogging().CanLogComponent(LOGFFMPEG))
+     return;
+-  else if (CServiceBroker::GetSettingsComponent()->GetAdvancedSettings()->m_logLevel <= LOG_LEVEL_NORMAL)
++  else if (CServiceBroker::GetSettingsComponent()->GetAdvancedSettings()->m_logLevel <= LOG_LEVEL_NORMAL &&
++           !CServiceBroker::GetLogging().IsSTBVerbose())
+     return;
+ 
+   int type;
+diff --git a/xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecSTB.cpp b/xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecSTB.cpp
+index 7775598..950177a 100644
+--- a/xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecSTB.cpp
++++ b/xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecSTB.cpp
+@@ -6,6 +6,7 @@
+ #include "DVDVideoCodecSTB.h"
+ 
+ #include "RendererSTB.h"
++#include "ServiceBroker.h"
+ #include "cores/AudioEngine/Sinks/AESinkSTB.h"
+ #include "cores/VideoPlayer/Interface/TimingConstants.h"
+ #include "utils/BitstreamConverter.h"
+@@ -171,7 +172,11 @@ CDVDVideoCodecSTB::~CDVDVideoCodecSTB()
+   // construct the codec for the next file first and /dev/dvb/.../video0 is exclusive.
+   // Close the backend here while the session object remains safe for stale buffers.
+   if (m_session)
++  {
++    CLog::Log(LOGDEBUG, LOGVIDEO, "STB video close: session={} backend={}",
++              fmt::ptr(m_session.get()), m_session->BackendName());
+     m_session->Close();
++  }
+   m_open = false;
+   m_pictures.clear();
+   m_bufferPool.reset();
+@@ -392,6 +397,12 @@ bool CDVDVideoCodecSTB::Open(CDVDStreamInfo& hints, CDVDCodecOptions& options)
+   clock.kodi_is_clock_master = backendName != "bcm-dvb" || !CAESinkSTB::IsSelected();
+ 
+   const enum stbp_result openResult = m_session->Open(stream, clock);
++  CLog::Log(LOGDEBUG, LOGVIDEO,
++            "STB video open: session={} backend={} codec={} profile={} level={} size={}x{} fps={}/{} "
++            "flags={} extradata={} kodiClockMaster={} result={}",
++            fmt::ptr(m_session.get()), backendName, static_cast<int>(codec), hints.profile,
++            hints.level, hints.width, hints.height, hints.fpsrate, hints.fpsscale, streamFlags,
++            extraDataSize, clock.kodi_is_clock_master, stbp_result_string(openResult));
+   if (openResult != STBP_OK)
+   {
+     CLog::Log(LOGWARNING, "CDVDVideoCodecSTB: opening '{}' failed: {}", backendName,
+@@ -492,7 +503,11 @@ bool CDVDVideoCodecSTB::AddData(const DemuxPacket& packet)
+     return false;
+   if (result != STBP_OK)
+   {
+-    CLog::Log(LOGERROR, "CDVDVideoCodecSTB: queue failed: {}", stbp_result_string(result));
++    CLog::Log(LOGERROR,
++              "CDVDVideoCodecSTB: queue failed: {} (session={} backend={} size={} pts90k={} "
++              "dts90k={} flags={})",
++              stbp_result_string(result), fmt::ptr(m_session.get()), m_session->BackendName(),
++              backendPacket.size, backendPacket.pts_90k, backendPacket.dts_90k, backendPacket.flags);
+     m_failed = true;
+     return true;
+   }
+@@ -515,6 +530,9 @@ void CDVDVideoCodecSTB::Reset()
+   const bool initialEmptyReset =
+       m_lastSubmittedPts90k == STBP_PTS_NONE && !m_firstPictureOutput;
+   const enum stbp_result result = m_session->Flush(STBP_PTS_NONE);
++  CLog::Log(LOGDEBUG, LOGVIDEO, "STB video reset: submittedPts90k={} pictures={} result={}",
++            m_lastSubmittedPts90k, m_pictures.size(), stbp_result_string(result));
++  m_nextDiagnostic = {};
+   if (result != STBP_OK)
+   {
+     CLog::Log(LOGWARNING, "CDVDVideoCodecSTB: flush failed: {}", stbp_result_string(result));
+@@ -670,7 +688,25 @@ bool CDVDVideoCodecSTB::GetCodecStats(double& pts, int& droppedFrames, int& skip
+ {
+   struct stbp_status status{};
+   status.struct_size = sizeof(status);
+-  if (!m_open || m_session->GetStatus(status) != STBP_OK)
++  if (!m_open)
++    return false;
++  const enum stbp_result result = m_session->GetStatus(status);
++  if (CServiceBroker::GetLogging().IsSTBVerbose())
++  {
++    const auto now = std::chrono::steady_clock::now();
++    if (now >= m_nextDiagnostic)
++    {
++      m_nextDiagnostic = now + std::chrono::seconds(2);
++      CLog::Log(LOGDEBUG,
++                "STB video status: backend={} result={} state={} error={} hwPts90k={} "
++                "submittedPts90k={} queuedPackets={} dropped={} startupGate={} failed={}",
++                m_session->BackendName(), stbp_result_string(result), static_cast<int>(status.state),
++                stbp_result_string(status.last_error), status.presentation_pts_90k,
++                m_lastSubmittedPts90k, status.packets_queued, status.packets_dropped,
++                m_waitForHardwareStart, m_failed);
++    }
++  }
++  if (result != STBP_OK)
+     return false;
+   pts = From90k(status.presentation_pts_90k);
+   droppedFrames = status.packets_dropped > static_cast<uint64_t>(std::numeric_limits<int>::max())
+diff --git a/xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecSTB.h b/xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecSTB.h
+index 57e39ed..977d103 100644
+--- a/xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecSTB.h
++++ b/xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecSTB.h
+@@ -62,6 +62,7 @@ private:
+   bool m_gateStartupPts{false};
+   bool m_waitForHardwareStart{false};
+   std::chrono::steady_clock::time_point m_startupPtsGateDeadline{};
++  std::chrono::steady_clock::time_point m_nextDiagnostic{};
+   std::string m_name{"stbplayer"};
+   int m_codecControl{0};
+   double m_defaultDuration{0.0};
+diff --git a/xbmc/cores/VideoPlayer/DVDCodecs/Video/RendererSTB.cpp b/xbmc/cores/VideoPlayer/DVDCodecs/Video/RendererSTB.cpp
+index a5703d2..b891de5 100644
+--- a/xbmc/cores/VideoPlayer/DVDCodecs/Video/RendererSTB.cpp
++++ b/xbmc/cores/VideoPlayer/DVDCodecs/Video/RendererSTB.cpp
+@@ -8,6 +8,7 @@
+ #include "cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodec.h"
+ #include "cores/VideoPlayer/VideoRenderers/RenderFactory.h"
+ #include "cores/VideoPlayer/VideoRenderers/RenderFlags.h"
++#include "utils/log.h"
+ 
+ #include <cmath>
+ 
+@@ -46,7 +47,10 @@ bool CRendererSTB::Configure(const VideoPicture& picture, float fps, unsigned in
+   CalculateFrameAspectRatio(picture.iDisplayWidth, picture.iDisplayHeight);
+   SetViewMode(m_videoSettings.m_ViewMode);
+   ManageRenderArea();
+-  (void)m_session->SetVisible(true);
++  const auto visibleResult = m_session->SetVisible(true);
++  CLog::Log(LOGDEBUG, LOGVIDEO, "STB renderer visible: session={} size={}x{} result={}",
++            fmt::ptr(m_session.get()), m_sourceWidth, m_sourceHeight,
++            stbp_result_string(visibleResult));
+   m_configured = true;
+   return true;
+ }
+@@ -70,7 +74,11 @@ void CRendererSTB::UnInit()
+   for (size_t index = 0; index < m_buffers.size(); ++index)
+     ReleaseBuffer(static_cast<int>(index));
+   if (m_session)
+-    (void)m_session->SetVisible(false);
++  {
++    const auto visibleResult = m_session->SetVisible(false);
++    CLog::Log(LOGDEBUG, LOGVIDEO, "STB renderer hidden: session={} result={}",
++              fmt::ptr(m_session.get()), stbp_result_string(visibleResult));
++  }
+   m_session.reset();
+   m_configured = false;
+ }
+@@ -159,4 +167,10 @@ void CRendererSTB::ManageRenderArea()
+-  if (m_session->SetVideoRect(source, destination) == STBP_OK)
++  const auto result = m_session->SetVideoRect(source, destination);
++  CLog::Log(LOGDEBUG, LOGVIDEO,
++            "STB renderer rect: session={} source={},{},{}x{} destination={},{},{}x{} result={}",
++            fmt::ptr(m_session.get()), source.x, source.y, source.width, source.height,
++            destination.x, destination.y, destination.width, destination.height,
++            stbp_result_string(result));
++  if (result == STBP_OK)
+   {
+     m_appliedSource = m_sourceRect;
+     m_appliedDestination = m_destRect;
+diff --git a/xbmc/cores/VideoPlayer/VideoPlayerSubtitle.cpp b/xbmc/cores/VideoPlayer/VideoPlayerSubtitle.cpp
+index 6529b01..20aaa16 100644
+--- a/xbmc/cores/VideoPlayer/VideoPlayerSubtitle.cpp
++++ b/xbmc/cores/VideoPlayer/VideoPlayerSubtitle.cpp
+@@ -69,6 +69,10 @@ void CVideoPlayerSubtitle::SendMessage(std::shared_ptr<CDVDMsg> pMsg, int priori
+       {
+         if (std::shared_ptr<CDVDOverlay> overlay{m_pOverlayCodec->GetOverlay()}; overlay != nullptr)
+         {
++          CLog::Log(LOGDEBUG, LOGVIDEO,
++                    "STB embedded subtitle decoded: codec={} packetPtsUs={} startUs={} stopUs={} forced={}",
++                    static_cast<int>(m_streaminfo.codec), pPacket->pts, overlay->iPTSStartTime,
++                    overlay->iPTSStopTime, overlay->bForced);
+           auto group{InitialiseNewOverlayGroup(overlay)};
+           while ((overlay = m_pOverlayCodec->GetOverlay()) != nullptr)
+           {
+diff --git a/xbmc/settings/Settings.h b/xbmc/settings/Settings.h
+index 9524c12..1f44c95 100644
+--- a/xbmc/settings/Settings.h
++++ b/xbmc/settings/Settings.h
+@@ -453,6 +453,7 @@ public:
+   static constexpr auto SETTING_POWERMANAGEMENT_WAITFORNETWORK = "powermanagement.waitfornetwork";
+   static constexpr auto SETTING_POWERMANAGEMENT_RESTARTPLAYER = "powermanagement.restartplayer";
+   static constexpr auto SETTING_DEBUG_SHOWLOGINFO = "debug.showloginfo";
++  static constexpr auto SETTING_DEBUG_STBVERBOSE = "debug.stbverbose";
+   static constexpr auto SETTING_DEBUG_EXTRALOGGING = "debug.extralogging";
+   static constexpr auto SETTING_DEBUG_SETEXTRALOGLEVEL = "debug.setextraloglevel";
+   static constexpr auto SETTING_DEBUG_SCREENSHOTPATH = "debug.screenshotpath";
+diff --git a/xbmc/utils/log.cpp b/xbmc/utils/log.cpp
+index 14e75b8..03cd511 100644
+--- a/xbmc/utils/log.cpp
++++ b/xbmc/utils/log.cpp
+@@ -23,6 +23,7 @@
+ #include "utils/StringUtils.h"
+ #include "utils/URIUtils.h"
+ 
++#include <algorithm>
+ #include <cstring>
+ #include <set>
+ 
+@@ -115,6 +116,7 @@ void CLog::OnSettingsLoaded()
+   const std::shared_ptr<CSettings> settings = CServiceBroker::GetSettingsComponent()->GetSettings();
+   m_componentLogEnabled = settings->GetBool(CSettings::SETTING_DEBUG_EXTRALOGGING);
+   SetComponentLogLevel(settings->GetList(CSettings::SETTING_DEBUG_SETEXTRALOGLEVEL));
++  SetSTBVerbose(settings->GetBool(CSettings::SETTING_DEBUG_STBVERBOSE));
+ }
+ 
+ void CLog::OnSettingChanged(const std::shared_ptr<const CSetting>& setting)
+@@ -123,7 +125,9 @@ void CLog::OnSettingChanged(const std::shared_ptr<const CSetting>& setting)
+     return;
+ 
+   const std::string& settingId = setting->GetId();
+-  if (settingId == CSettings::SETTING_DEBUG_EXTRALOGGING)
++  if (settingId == CSettings::SETTING_DEBUG_STBVERBOSE)
++    SetSTBVerbose(std::static_pointer_cast<const CSettingBool>(setting)->GetValue());
++  else if (settingId == CSettings::SETTING_DEBUG_EXTRALOGGING)
+     m_componentLogEnabled = std::static_pointer_cast<const CSettingBool>(setting)->GetValue();
+   else if (settingId == CSettings::SETTING_DEBUG_SETEXTRALOGLEVEL)
+     SetComponentLogLevel(
+@@ -142,7 +146,8 @@ void CLog::Initialize(const std::string& path)
+                                                 SettingOptionsLoggingComponentsFiller);
+   settingsManager->RegisterSettingsHandler(this);
+   settingsManager->RegisterCallback(
+-      this, {CSettings::SETTING_DEBUG_EXTRALOGGING, CSettings::SETTING_DEBUG_SETEXTRALOGLEVEL});
++      this, {CSettings::SETTING_DEBUG_EXTRALOGGING, CSettings::SETTING_DEBUG_SETEXTRALOGLEVEL,
++             CSettings::SETTING_DEBUG_STBVERBOSE});
+ 
+   if (path.empty())
+     return;
+@@ -209,6 +214,9 @@ void CLog::SetLogLevel(int level)
+   if (level < LOG_LEVEL_NONE || level > LOG_LEVEL_MAX)
+     return;
+ 
++  m_requestedLogLevel = level;
++  if (IsSTBVerbose())
++    level = std::max(level, LOG_LEVEL_DEBUG);
+   m_logLevel = level;
+ 
+   auto spdLevel = spdlog::level::info;
+@@ -240,12 +248,29 @@ bool CLog::CanLogComponent(uint32_t component) const
+   if (component == LOG_COMPONENT_GENERAL)
+     return true;
+ 
++  // Keep the user's component selection intact; do not enable HTTP header dumps.
++  constexpr uint32_t stbComponents =
++      LOGAUDIO | LOGVIDEO | LOGFFMPEG | LOGAVTIMING | LOGWINDOWING | LOGPVR | LOGADDONS;
++  if (IsSTBVerbose() && (stbComponents & component) == component)
++    return true;
++
+   if (!m_componentLogEnabled)
+     return false;
+ 
+   return ((m_componentLogLevels & component) == component);
+ }
+ 
++void CLog::SetSTBVerbose(bool enabled)
++{
++  const bool changed = m_stbVerbose.exchange(enabled) != enabled;
++  SetLogLevel(m_requestedLogLevel);
++  if (enabled || changed)
++    CLog::Log(LOGINFO,
++              "STB verbose diagnostics {}: audio, video, FFmpeg, A/V timing, windowing, PVR, add-ons and "
++              "hardware status. Reproduce the problem and save kodi.log before restarting.",
++              enabled ? "enabled" : "disabled");
++}
++
+ void CLog::SettingOptionsLoggingComponentsFiller(const SettingConstPtr& setting,
+                                                  std::vector<IntegerSettingOption>& list,
+                                                  int& current)
+diff --git a/xbmc/utils/log.h b/xbmc/utils/log.h
+index 9cc6282..bdfee9c 100644
+--- a/xbmc/utils/log.h
++++ b/xbmc/utils/log.h
+@@ -30,6 +30,7 @@
+ #include "utils/IPlatformLog.h"
+ #include "utils/logtypes.h"
+ 
++#include <atomic>
+ #include <source_location>
+ #include <string>
+ #include <vector>
+@@ -80,6 +81,7 @@ public:
+   bool IsLogLevelLogged(int loglevel) const;
+ 
+   bool CanLogComponent(uint32_t component) const;
++  bool IsSTBVerbose() const { return m_stbVerbose.load(); }
+   static void SettingOptionsLoggingComponentsFiller(const std::shared_ptr<const CSetting>& setting,
+                                                     std::vector<IntegerSettingOption>& list,
+                                                     int& current);
+@@ -173,6 +175,7 @@ private:
+   Logger GetLoggerById(uint32_t component);
+ 
+   void SetComponentLogLevel(const std::vector<CVariant>& components);
++  void SetSTBVerbose(bool enabled);
+ 
+   void FormatLineBreaks(std::string& message) const;
+ 
+@@ -183,6 +186,8 @@ private:
+   std::shared_ptr<spdlog::sinks::sink> m_fileSink;
+ 
+   int m_logLevel{LOG_LEVEL_DEBUG};
++  int m_requestedLogLevel{LOG_LEVEL_DEBUG};
++  std::atomic<bool> m_stbVerbose{false};
+ 
+   bool m_componentLogEnabled{false};
+   uint32_t m_componentLogLevels{0};

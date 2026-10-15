@@ -1,0 +1,52 @@
+From: OE-Alliance contributors
+Subject: [PATCH] STB: preserve Annex-B framing when normalizing H.264 timing
+
+DVB recordings provide Annex-B parameter sets and packets. Rewriting their
+SPS timing must not turn only the extradata into avcC: that selects the
+length-prefixed converter and rejects every TS video packet. Keep Annex-B
+configuration native while retaining avcC conversion for MP4/MKV streams.
+
+Upstream-Status: Inappropriate [STB-specific player integration]
+
+diff --git a/xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecSTB.cpp b/xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecSTB.cpp
+index 950177a..71ccbd6 100644
+--- a/xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecSTB.cpp
++++ b/xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecSTB.cpp
+@@ -51,6 +51,7 @@ bool RewriteH264ExtradataFrameRate(const CDVDStreamInfo& hints,
+   if (filter == nullptr || av_bsf_alloc(filter, &context) < 0 || context == nullptr)
+     return false;
+ 
++  const bool annexB = HasAnnexBStartCode(data, size);
+   bool success = false;
+   context->par_in->codec_type = AVMEDIA_TYPE_VIDEO;
+   context->par_in->codec_id = AV_CODEC_ID_H264;
+@@ -74,7 +75,9 @@ bool RewriteH264ExtradataFrameRate(const CDVDStreamInfo& hints,
+ 
+   rewritten.assign(context->par_out->extradata,
+                    context->par_out->extradata + context->par_out->extradata_size);
+-  if (HasAnnexBStartCode(rewritten.data(), rewritten.size()))
++  // Keep the configuration format aligned with the demuxed packets. TS remains
++  // Annex-B; converting only its SPS/PPS to avcC would select a length-prefixed parser.
++  if (!annexB && HasAnnexBStartCode(rewritten.data(), rewritten.size()))
+   {
+     CBitstreamConverter annexBToAvcc;
+     if (rewritten.size() > static_cast<size_t>(std::numeric_limits<int>::max()) ||
+@@ -93,7 +96,8 @@ bool RewriteH264ExtradataFrameRate(const CDVDStreamInfo& hints,
+         rewritten.assign(avcc, avcc + avccSize);
+     }
+   }
+-  success = rewritten.size() >= 7 && rewritten[0] == 1;
++  success = annexB ? HasAnnexBStartCode(rewritten.data(), rewritten.size())
++                   : rewritten.size() >= 7 && rewritten[0] == 1;
+ 
+ done:
+   av_bsf_free(&context);
+@@ -288,6 +292,8 @@ bool CDVDVideoCodecSTB::ConfigureBitstream(const CDVDStreamInfo& hints,
+                   "CDVDVideoCodecSTB: unable to normalize H.264 SPS timing; using stream metadata");
+       }
+     }
++    if (hints.codec == AV_CODEC_ID_H264 && HasAnnexBStartCode(extraData, extraDataSize))
++      return true;
+     if (hints.codec == AV_CODEC_ID_HEVC && !HasAnnexBStartCode(extraData, extraDataSize) &&
+         !ConvertHEVCDecoderConfiguration(extraData, extraDataSize, m_codecData,
+                                          !preserveAllHevcArrays))

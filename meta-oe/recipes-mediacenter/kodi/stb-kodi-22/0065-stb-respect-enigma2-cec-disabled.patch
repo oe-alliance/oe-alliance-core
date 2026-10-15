@@ -1,0 +1,69 @@
+From: OE-Alliance contributors
+Subject: [PATCH] STB: respect Enigma2's disabled HDMI-CEC setting
+
+Do not enumerate or open CEC adapters when Enigma2 explicitly disabled CEC.
+Some legacy drivers reject address queries in that state, causing repeated
+activation errors. Preserve Kodi's saved peripheral settings and the existing
+enabled behaviour when the Enigma2 setting is absent.
+
+Upstream-Status: Inappropriate [STB standalone integration]
+
+diff --git a/xbmc/peripherals/bus/virtual/PeripheralBusCEC.cpp b/xbmc/peripherals/bus/virtual/PeripheralBusCEC.cpp
+--- a/xbmc/peripherals/bus/virtual/PeripheralBusCEC.cpp
++++ b/xbmc/peripherals/bus/virtual/PeripheralBusCEC.cpp
+@@ -10,15 +10,45 @@
+ 
+ #include "input/InputManager.h"
+ #include "peripherals/Peripherals.h"
++#include "utils/log.h"
++
++#include <fstream>
++#include <string>
+ 
+ #include <libcec/cec.h>
+ 
+ using namespace PERIPHERALS;
+ using namespace CEC;
+ 
++namespace
++{
++bool IsEnigma2CECEnabled(std::istream& settings)
++{
++  bool enabled = true;
++  std::string line;
++  while (std::getline(settings, line))
++  {
++    if (!line.empty() && line.back() == '\r')
++      line.pop_back();
++    if (line == "config.hdmicec.enabled=False")
++      enabled = false;
++    else if (line == "config.hdmicec.enabled=True")
++      enabled = true;
++  }
++  return enabled;
++}
++} // namespace
++
+ CPeripheralBusCEC::CPeripheralBusCEC(CPeripherals& manager)
+   : CPeripheralBus("PeripBusCEC", manager, PERIPHERAL_BUS_CEC)
+ {
++  std::ifstream settings("/etc/enigma2/settings");
++  if (!IsEnigma2CECEnabled(settings))
++  {
++    m_cecAdapter = nullptr;
++    CLog::Log(LOGINFO, "STB CEC: disabled in Enigma2; skipping CEC adapter activation");
++    return;
++  }
+   m_cecAdapter = CECInitialise(&m_configuration);
+ }
+ 
+@@ -35,6 +65,9 @@ void CPeripheralBusCEC::ProcessEvents()
+ 
+ bool CPeripheralBusCEC::PerformDeviceScan(PeripheralScanResults& results)
+ {
++  if (!m_cecAdapter)
++    return true;
++
+   cec_adapter_descriptor deviceList[10];
+   int8_t iFound = m_cecAdapter->DetectAdapters(deviceList, 10, NULL, true);
+ 

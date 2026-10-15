@@ -1,0 +1,25 @@
+From: OE-Alliance contributors
+Subject: [PATCH] STB: feed BCM H.264 ahead of presentation scheduling
+
+Keep a bounded look-ahead for reordered H.264 pictures. Otherwise waiting
+for the presentation timestamp of a reference picture can starve the
+hardware decoder of the following B pictures needed for smooth output.
+Existing backend backpressure, drain and first-picture handling are retained.
+
+Upstream-Status: Inappropriate [STB-specific player integration]
+
+diff --git a/xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecSTB.cpp b/xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecSTB.cpp
+index 71ccbd6..bbbd86b 100644
+--- a/xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecSTB.cpp
++++ b/xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecSTB.cpp
+@@ -427,6 +427,10 @@ bool CDVDVideoCodecSTB::Open(CDVDStreamInfo& hints, CDVDCodecOptions& options)
+                           : 0.0;
+   m_name = "stbplayer/" + m_session->BackendName();
+   m_feedAheadPictures = m_session->BackendName() == "dream-aml" ? 48U : 0U;
++  // H.264 reference pictures arrive before the B pictures they predict. Keep
++  // feeding the decoder while Kodi waits for their later presentation time.
++  if (backendName == "bcm-dvb" && hints.codec == AV_CODEC_ID_H264)
++    m_feedAheadPictures = 16U;
+   m_gateStartupPts = clock.kodi_is_clock_master && (m_session->Capabilities().feature_mask &
+                       STBP_FEATURE_STARTUP_PTS_GATE) != 0;
+   m_processInfo.SetVideoDecoderName(m_name, true);

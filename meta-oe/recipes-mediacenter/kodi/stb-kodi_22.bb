@@ -83,7 +83,7 @@ SRCREV = "3fb49388899387fc2f1cd958dc33166b8c7bb292"
 # 'patch' doesn't support binary diffs
 PATCHTOOL = "git"
 
-PR = "r121"
+PR = "r127"
 
 PV = "22.0+gitr"
 # Piers has fewer commits than the previous master pin; keep upgrades monotonic.
@@ -186,6 +186,12 @@ SRC_URI:append = "${@' file://0043-dreambox-mips-alsa-nonblocking-sink-switch.pa
 SRC_URI:append = " file://0049-dream-amlogic-audio-stream-state.patch"
 SRC_URI:append = "${@' file://0041-amlogic-meson64-native-codec.patch file://0048-dream-amlogic-hdmi-modes.patch file://amlogic/AMLCodec.cpp file://amlogic/AMLCodec.h file://amlogic/DVDVideoCodecAmlogic.cpp file://amlogic/DVDVideoCodecAmlogic.h file://amlogic/RendererAML.cpp file://amlogic/RendererAML.h file://amlogic/AMLUtils.cpp file://amlogic/AMLUtils.h' if d.getVar('DREAM_AMLOGIC_STB') == '1' else ''}"
 SRC_URI:append = " file://0056-stb-hardware-audio-sink.patch file://0058-stb-wait-for-proc-mode-ack.patch file://0060-stb-audio-media-timestamps.patch"
+SRC_URI:append = " file://0061-stb-verbose-diagnostics.patch"
+SRC_URI:append = " file://0062-stb-h264-preserve-annexb-framing.patch"
+SRC_URI:append = "${@' file://0063-stb-bcm-h264-decode-ahead.patch' if d.getVar('BCM_DVB_STB') == '1' else ''}"
+SRC_URI:append = " file://0064-stb-hardware-process-info.patch"
+SRC_URI:append = " file://0065-stb-respect-enigma2-cec-disabled.patch"
+SRC_URI:append = "${@' file://0066-stb-hisi-serialize-codec-replacement.patch' if d.getVar('HISI_STB') == '1' else ''}"
 SRC_URI:append = "${@' file://0059-hisi-match-desktop-hdmi-mode.patch' if d.getVar('HISI_STB') == '1' else ''}"
 SRC_URI:append = " file://0057-stb-cec-handover-defaults.patch"
 

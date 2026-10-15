@@ -2,7 +2,7 @@ SUMMARY = "Stable hardware-media backend ABI for STB Kodi"
 DESCRIPTION = "A small C ABI, loader and probe tool for machine-specific STB video backends and DVB hardware audio output."
 HOMEPAGE = "https://github.com/oe-alliance"
 
-PR = "r73"
+PR = "r74"
 
 LICENSE = "GPL-2.0-or-later"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=45071750435f2d50d503492ef8e003db"
