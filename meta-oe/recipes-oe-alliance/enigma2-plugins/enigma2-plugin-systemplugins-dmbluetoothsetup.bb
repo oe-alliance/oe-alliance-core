@@ -3,9 +3,12 @@ require conf/license/license-gplv2.inc
 require conf/python/python3-compileall.inc
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-COMPATIBLE_MACHINE = "^(dreamone|dreamtwo)$"
+COMPATIBLE_MACHINE = "^(dm900|dm920|dreamone|dreamtwo)$"
 
 PN = "enigma2-plugin-systemplugins-bluetoothsetup"
+
+RDEPENDS:${PN}:append:dm900 = " flash-nrf52"
+RDEPENDS:${PN}:append:dm920 = " flash-nrf52"
 
 inherit gittag
 
