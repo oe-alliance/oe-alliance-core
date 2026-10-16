@@ -4,7 +4,7 @@ HOMEPAGE = "https://www.retroarch.com/"
 BUGTRACKER = "https://github.com/libretro/RetroArch/issues"
 
 LICENSE = "GPL-3.0-only"
-PR = "r20"
+PR = "r21"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 
 SRC_URI = "git://github.com/libretro/RetroArch.git;protocol=https;branch=master \
@@ -13,6 +13,7 @@ SRC_URI = "git://github.com/libretro/RetroArch.git;protocol=https;branch=master 
            file://0003-hisi-route-volume-keys-to-hotkeys.patch \
            file://0004-hisi-cv200-force-gles2.patch \
            file://0005-bcm-nxpl-context.patch \
+           file://0007-udev-remote-exit-menu-back.patch \
            file://bcm_nxpl_ctx.c \
            file://bcm_v3d_ctx.c \
            file://dream_vc5_ctx.c \
