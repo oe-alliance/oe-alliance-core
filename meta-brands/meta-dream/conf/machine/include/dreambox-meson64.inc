@@ -26,6 +26,8 @@ MACHINE_EXTRA_RRECOMMENDS += "\
     gst-plugin-dreamaudiosink \
     gstreamer1.0-dreamsinks \
     gstreamer1.0-libav \
+    gstreamer1.0-plugins-ugly-dvdlpcmdec \
+    gstreamer1.0-plugins-ugly-realmedia \
     kernel-module-cifs \
     kernel-module-autofs4 \
     kernel-module-hmac \

@@ -1,0 +1,281 @@
+Dream One/Two video codec support and remaining parity work
+==========================================================
+
+Scope and honesty
+-----------------
+The target is the complete original dreamvideosink feature set. This file is a
+gap ledger, not a declaration that full release parity or hardware validation has
+been achieved. "Implemented" below means a bounded software framing path and
+regression tests exist. Receiver results are recorded separately; passing a
+software conversion test does not establish decoded picture correctness.
+
+Reference artifact: gstreamer1.0-dreamsinks 1.17 aarch64 / libgstdreamsinks.so.
+SHA256: 994ea5cc997739fd81f936c75f5b4636ec67840b828e5a936f89fcd421c2ecc9
+REA Ghidra 12.1.4; image base 0x100000; static analysis, not source recovery.
+The main codec layer is a new implementation of observed interfaces and standard
+framing. The internal-only H.263 converter is separately derived from pinned
+Amlogic source and retains its restrictive license; see LICENSE.amlogic.
+Decompiler pseudocode was not pasted into the implementation. The combined
+internal candidate must not be represented as redistributable LGPL software.
+
+Implemented codec paths
+-----------------------
+Codec                  sysinfo.format / vformat / DVB stream type
+MPEG-1/2               0 / 0 / 0
+MPEG-4, Xvid, DivX5/6   3 / 1 / 4
+DivX4                  2 / 1 / 4
+DivX3, MSMPEG4.3        1 / 1 / 4
+H.264                  4 / 2 / 1
+HEVC                   15 / 11 / 22
+VP9                    16 / 14 / 23
+CAVS (unverified)      13 / 7 / 16
+MJPEG                  5 / 3 / 5
+RealVideo3             8 / 4 / 7
+RealVideo4             9 / 4 / 7
+WMV3, WVC3             10 / 6 / 3
+WVC1                   11 / 6 / 3
+H.263 / Sorenson Spark  7 / 1 / 4
+
+H.264 AVC/AVC3 and HEVC HVC1/HEV1:
+- Validate configuration-record sizes, reserved bits, parameter set types and
+  required arrays. Convert codec_data and length-prefixed access units to Annex B.
+- AVC NAL lengths 1, 2 and 4; HEVC 1..4. Byte-stream AUs are supported.
+- Input must be access-unit aligned. Upstream parsers supply timing.
+- Header/frame bounds apply after conversion, not only before it.
+
+MPEG elementary video:
+- Parsed MPEG1/2/4 AUs, not program/system streams.
+- Start-code validation, optional codec_data, unchanged buffers referenced.
+- Xvid/DivX4+ use MPEG4 elementary syntax. DivX6 uses the MPEG4/DivX5 decoder
+  format; this is a standards-based inference beyond the original version switch.
+
+DivX3/MSMPEG4.3:
+- Decoder global 10-byte dimension header and per-frame DIVX3.11 size header.
+- Reject dimensions above 4095 because that header uses 12-bit fields.
+
+VP9:
+- Convert one frame or a validated superframe (up to eight frames) into AMLV
+  packets, each with BE length, inverse length, start code, and AMLV signature.
+- Check index markers, little-endian size fields, exact payload coverage,
+  nonzero frame sizes and all output bounds.
+
+WMV3/WVC3:
+- Require at least four codec_data bytes.
+- Emit the Dream sequence and frame packets for each AU, including duplicated
+  checksums and escaped 24-bit sizes; reject oversized fields.
+- Embed codec_data only inside the per-frame sequence packet, including the
+  first frame and after flush. Do not prepend raw codec_data separately.
+- Runtime original/replacement comparison of the Nokia WMV9 fixture identified
+  and removed a redundant four-byte first-frame prefix. This is a framing
+  parity correction, not a claimed synchronization fix: both sinks showed
+  slower decoder-PTS progression on that fixture. Sustained A/V synchronization
+  and the corrected framing still require the separate hardware comparison.
+
+WVC1:
+- Remove the leading ASF configuration byte and preserve the sequence data.
+- Add the frame start code only when absent. Re-send available sequence data
+  after initialization/flush even if the AU already has a frame start code.
+- In-band start-coded data can omit codec_data. Raw first frames cannot.
+- Preserve supplied PTS/DTS. The streaming push/drain API has one-AU lookahead
+  for repairing missing PTS, using the original B-picture/reference ordering.
+  The first B fraction 1/2 .. 1/8 moves the preceding reference forward by
+  1..7 frames; buffered B pictures move back one decode ordinal.
+- Use bounded GStreamer sequence/entry parsing, a bounded picture-prefix
+  reader, and caps frame rate or explicitly signalled sequence frame rate.
+  The first DTS anchors a DTS-only stream, as in the original writer. No PTS/DTS
+  anchor or no trustworthy picture header means no invented timestamp.
+- Header insertion happens before queueing. Flush drops the delayed AU and
+  timestamp anchor; EOS drain emits the final AU exactly once.
+
+MJPEG:
+- Check SOI and emit the decoder's initialization DHT prefix before the first AU
+  and after flush. Subsequent AUs are passed through.
+- The numerical Huffman codebooks are the default baseline JPEG tables from
+  ITU-T T.81 Annex K. The table serialization was checked against the shipped
+  artifact at 0x113b68 (422 bytes, SOI+DHT). These are normative numerical
+  codebook data, not imported third-party JPEG program implementation. The JPEG
+  path contains no copied Amlogic implementation; the separate H.263 provenance
+  and restrictions are described below.
+
+CAVS and RealVideo:
+- CAVS uses start-coded AUs; Real3/4 uses demuxed buffers with codec_data prefix.
+- The original advertises CAVS, but the receiver comparison rejects its
+  vformat7 caps with "unhandled video_type 7". Its omission of a stream-type
+  ioctl is therefore NOT evidence of a working SYSINFO-only CAVS path.
+- The v12 stream type16 mapping is retained, not claimed as validated: the
+  test driver accepted that ioctl but did not produce a decoded picture.
+  The experimental v13 SYSINFO-only alternative was not established either
+  and has been removed. CAVS TS packet/AU alignment remains to be checked;
+  this codec layer is not a transport-stream parser.
+
+H.263 and Flash/Sorenson Spark (internal candidate only):
+- Full VLC/macroblock, motion-vector and coefficient conversion, not passthrough.
+- ITU H.263 requires parsed caps from h263parse so decoder initialization uses
+  coded dimensions instead of potentially incorrect container display sizes.
+- Spark dimensions come from the validated picture header, since flvdemux can
+  supply caps without width/height. The worker applies the queued picture's
+  size to decoder SYSINFO before submission, without trusting container size
+  or inferring a fixed framerate. Repeated frames and seeks at the same size
+  do not cause additional decoder reconfiguration.
+- Baseline Annex D unrestricted motion vectors use the extended predictor
+  ranges. SAC, advanced prediction and PB pictures remain rejected. This
+  does not add H.263+ UMV support or change Sorenson syntax.
+- Source pinned to hardkernel libplayer commit
+  a242536ca027738c8df423e8398435174390005a, amplayer/player/h263vld.c.
+- The user explicitly requested inclusion for internal tests. Its Amlogic
+  copyright and restrictive license are retained. Internal use does not confer
+  redistribution rights; this code must not enter a public release without
+  separate permission or replacement with license-cleared code.
+- Hardened input-bit consumption, bounded output writes and dimensions, fixed
+  negative VLC indexes, no signed-left-shift undefined behavior, per-instance
+  state instead of shared globals, and atomic two-pass conversion.
+- Output is measured before allocation; malformed input does not update the
+  retained H.263+ picture configuration. Flush resets that configuration.
+
+Full-scope items NOT implemented or not yet proven
+--------------------------------------------------
+1. H.263 release licensing and device compatibility:
+   Generated compressed H.263/Sorenson fixtures now exercise real VLC payloads
+   in software tests, alongside synthetic skip frames. Hardware comparisons
+   and broader picture-mode coverage remain necessary. A public release
+   requires license-cleared source or permission.
+
+2. Original WMV1 advertisement:
+   The original template advertises wmvversion1 and3. Its actual initializer
+   recognizes only WVC1 (format11), WVC3 and WMV3 (format10). No independent WMV1
+   decoder mapping was established. The replacement does not advertise WMV1
+   on the basis of that inconsistent template alone.
+
+3. WVC1 timing validation:
+   One-frame lookahead and the observed reference/B-picture ordinal adjustment
+   are implemented and covered with synthetic prefix sequences for 1..7 B
+   pictures. The progressive WVC1 locomotive fixture (1440x576,25fps,58.04s)
+   now passes v12 receiver playback, pause/resume, backward/forward seek and
+   natural EOS, including a second uninterrupted run. It has no audio, so
+   this does not validate A/V synchronization or interlaced VC1. The original
+   sink repeats the initial title: it replaces valid container25fps with
+   rate96096 (1.001s/frame) when the sequence lacks an explicit frame rate.
+   Its runtime initialization log corroborates the saved binary analysis.
+   A separate 1080i/B-picture M2TS completes with stable decoder timing.
+   The 720p59.94 FlightSim reference has growing lag at1080p50hz output, but
+   stable timing and user-confirmed A/V at1080p60hz. Output-rate interaction
+   remains an integration/release gate; it is not fixed by this codec path.
+   Supplied PTS is deliberately preserved rather than overwritten by the
+   original's unconditional synthesis. Field-interlaced paired pictures keep
+   their supplied timing; missing field-order PTS is not guessed. Malformed or
+   unsupported timing headers also keep supplied timing. This is not a claim
+   of repairing every incorrectly timestamped VC-1 stream.
+
+4. Device validation:
+   Decoder acceptance, seek/flush behavior, segment changes, late configuration,
+   pathological files, audio/video synchronization and actual legacy codec
+   coverage all require hardware tests. Synthetic framing tests cannot prove
+   any of these.
+
+5. AVS2 experiment rejected; no AVS2/AVS3 caps in the production candidate:
+   The v13 experiment used parsed AVS2 AUs, SYSINFO format17 / VFORMAT15 and
+   no VIDEO_SET_STREAMTYPE override. Configuration returned successfully,
+   but no frame was submitted and the decoder timed out after ten seconds.
+   VIDEO_STOP then triggered a kernel NULL pointer dereference in the
+   proprietary meson64 decoder_stop+0x18/0x70, via dvb_video_ioctl.
+   The receiver's advertised AVS2 profile and mappings from related Amlogic
+   code do not establish a valid Dream VIDEO_SET_FRAME initialization path.
+   All v13 codec/device changes and their tests were reverted to v12. The
+   isolated source-v13.tar.gz and diagnostic logs remain as evidence only;
+   do not deploy that experiment or add a runtime fallback to it. AVS2 needs
+   a verified Dream-specific mapping before another implementation. AVS3
+   has no advertised receiver profile and must not be relabelled as AVS2.
+
+VP8 software decoding / output gap
+---------------------------------
+VP8 is not currently supported by this compressed-video sink. The Dream Two
+test driver (kernel 4.9) does not advertise VP8 in vcodec_profile and has no
+installed VP8 decoder module. The original 1.17 sink's advertised caps also
+omit VP8 (REA ev_96df886e8f7023436e9b0297f4775c3b96739bd18039750aacd71c9f1b3b9932,
+caps literal at 0x112e30; corroborated by original runtime get_caps logs).
+This is a boundary of the tested software/driver stack, not proof that every
+Dream hardware or driver revision is incapable of VP8.
+The supplied big-buck-bunny_trailer.webm (640x360,25fps) decodes completely
+through avdec_vp8 to I420 and fakesink on the receiver. That headless check
+validates decoding, not display or A/V synchronization. Supporting it here
+would require a verified hardware path or a separate raw-video output path
+for software-decoded frames; advertising VP8 alone cannot provide a picture.
+
+SYSINFO ABI
+-----------
+At 0x106b90..0x106bb4 the original zeroes the complete 48-byte sysinfo structure
+at instance + 0x400 before codec initialization. The codec initializer writes
+format, width, height and rate; vformat is at +0x430, outside sysinfo. The generic
+initializer at 0x10d3b8 sets dimensions and 96000*denominator/numerator frame
+duration. The ioctl at 0x10711c..0x10712c passes the same 48 bytes.
+
+No writes of extra, status, ratio, param or ratio64 were observed in these
+initialization paths. They remain zero. Do not introduce guessed external-PTS
+flag bits. Missing dimensions use the original 1920x1080 fallback; explicitly
+invalid dimensions fail configuration.
+
+Defensive limits
+----------------
+Headers: 1 MiB after normalization.
+Input and output AU: 32 MiB; WMV packet length additionally limited to 24 bits.
+Failed reconfiguration leaves the previous configuration intact.
+Zero-length buffers remain empty.
+No ownership transfer of the input buffer; output owns its reference.
+The caller must serialize reconfiguration/clear against transformation.
+
+Regression coverage
+-------------------
+tests/test_codec.c contains GLib tests covering AVC/HEVC headers and AUs,
+truncation, invalid caps and NALs, atomic reconfiguration, expansion limits,
+metadata, zero-copy, MPEG and extended mappings, VP9 superframes, DivX3,
+WMV checksums and first/subsequent/post-flush header parity, WVC1 header retry,
+JPEG and Real framing, H.263/Sorenson skip
+frames and truncation, and seeded malformed configuration/VP9/H.263 inputs.
+VC-1 tests cover all seven observed B-frame offsets, header-derived frame rate,
+valid timestamps, DTS-only input, flush/EOS and seeded malformed timing headers. Endian loads
+and stores use byte-safe helpers at arbitrary compressed-header offsets.
+Test outcomes are reported by the build/test log,
+not inferred from their presence. Hardware results are recorded separately.
+The optional legacy-compressed-fixtures test uses DREAM_CODEC_FIXTURE_DIR with
+test-h263.h263 and test-sorenson.flv (FFmpeg testsrc2 128x96, 25 fps, five frames).
+It checks that every real compressed AU converts successfully with dimensions
+and timestamps intact; it does not establish decoder picture correctness.
+An additional optional test-annex-d.h263 fixture exercises the full 817-picture
+352x288 stream extracted without re-encoding from the real H.263 MOV test clip.
+Synthetic vectors independently check both normal and Annex D wrap boundaries,
+state isolation across frames/flushes and rejection of unsupported picture modes.
+
+Evidence and provenance
+-----------------------
+Workspace rea-dreamone/results:
+- primaryCodecBatch.json:
+  ev_f820ad863f0b276d8a69aa9ae403ecceab3fd61a736ce67aec11555c39d495f0
+- codecInitBatch.json:
+  ev_3cc773789eb900ac5166e629c729b1340982de0b2a66a6900b144bf6ce179dce
+- release-codecExtendedConstructors.json:
+  ev_f28a61bc7e60d050025966df6f2a4df59b078f1a5bef25428b67a1ee7bdb60c4
+- release-codecExtendedInit.json:
+  ev_5b8cdd3ec841cf4d317c43b04470a0e3cf589d2a1cb86a46ab35c319a3faec47
+- release-codecLegacyHelpers.json:
+  ev_3194ef6c247f30732f3bc69a4a62efc5697322da024394c7afc4cbc047bc6dce
+- release-vp9Bytes.json:
+  ev_8ee0afe713ff97d727423ec45d5bc5b8ad20cf5d14b7cf7390a2c7c854446bd0
+- release-jpegHeader.json:
+  ev_6382e404beb3562f500aea736befe20b9eef0fbbe07723e4ce52cfd46512c0dd
+- release-vc1Prefix.json:
+  ev_9b2ea837f407c47cc90fa99f9587c969297fadf73e1ef1813545fd4ecd23af14
+- release-vc1Reorder.json:
+  ev_4ed6a00218f90de1e3ad0006e35dd3fdd34a8a4333b4b9f2a1190fbc4b3a7460
+- setCapsBytes.json / setCapsBytes.asm.txt:
+  ev_7d5edd3ab69597425466cf2f43e62fc691c58a62da0a361305a782f4c20b4903
+- avs2-mapping-contract-20261016.txt: historical mapping research, not a
+  validated decoder contract; the v13 hardware result rejected that experiment.
+
+AVS2 rejection evidence outside this source tree:
+build-artifacts/dreamvideosink-20261016/source-v13.tar.gz
+build-artifacts/dreamvideosink-20261016/receiver-logs/v13-avs2-kernel-oops.log
+
+Public source provenance (H.263 source is incorporated for internal use only):
+https://github.com/khadas/buildroot_multimedia_gst-aml-plugins1
+https://github.com/Stane1983/amlogic-libplayer/tree/ecad10ea356a503d156f3e9847c1ee1e04c0fd20
+https://github.com/hardkernel/buildroot_platform_packages_amlogic_LibPlayer/blob/a242536ca027738c8df423e8398435174390005a/LICENSE

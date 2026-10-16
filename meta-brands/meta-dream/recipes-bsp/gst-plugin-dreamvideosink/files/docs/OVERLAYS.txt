@@ -1,0 +1,137 @@
+Dream videosink: subtitles and application-surface overlays
+==========================================================
+
+The replacement implements the original application-surface compositor
+protocol. It does not assume a framebuffer device, a kernel graphics ioctl,
+or ownership of a host's gSurface. The application remains responsible for
+allocating and presenting the overlay surface. A generic gst-launch pipeline
+without that host integration cannot display this surface on its own.
+
+Public protocol
+---------------
+
+The sink's get-overlay-compositor action returns a borrowed pointer to its
+GstDreamOverlayCompositor. The signal type is G_TYPE_POINTER, not G_TYPE_OBJECT;
+emitting it does not acquire a reference. The compositor is owned by the sink.
+A client retaining it beyond the immediate call must take an explicit GstObject
+reference, and must stop using it when its sink is stopped or disposed.
+
+The compositor implements:
+
+  have-overlay (G_TYPE_POINTER): notification from the rendering clock thread.
+    The argument is a transferred GList of heap-allocated four-integer records
+    {x, y, width, height}. Exactly one host handler must consume and free this
+    list and its records; dream_overlay_rectangles_free() is provided for this.
+    NULL means a full clear. Notifications carry changed rectangles, not pixels.
+    A host which needs UI-thread dispatch must copy/retain the list until its
+    own dispatch has consumed it. Callbacks may arrive on non-UI threads.
+
+  set-pointer (G_TYPE_POINTER, action): provide borrowed raw surface bytes.
+    Pass gSurface.data, NOT the address of a gSurface object. The compositor
+    never allocates, frees, resizes or replaces the host's allocation. Passing
+    NULL detaches the surface and synchronizes with active drawing; do this
+    before freeing its storage. Detaching from a have-overlay handler is safe.
+
+The first compositor field following GstObject remains GstVideoInfo *vinfo,
+matching the observed host-facing layout. Its width, first-plane stride and
+size describe the native premultiplied ARGB surface (BGRA byte order on Dream
+One/Two), with rows aligned to 256 bytes and width rounded up to 64 pixels.
+Other fields retain the negotiated video information, as in the original;
+in particular its format field can be ENCODED, not the overlay byte format.
+The host must allocate at least vinfo->size bytes. This pointer-only historical
+API cannot validate the length of a foreign allocation; supplying a short
+allocation is a host error. Private implementation fields are not an API.
+Hosts which snapshot vinfo or the pixel surface outside a notification can
+use GST_OBJECT_LOCK/UNLOCK on the compositor to serialize with writes. Do not
+emit compositor actions while holding that non-recursive inherited lock.
+
+When video dimensions change, the old surface is cleared and detached. The
+host must bind storage sized for the updated vinfo before further rendering.
+This avoids writing a new resolution into an old, smaller allocation. The host
+can continue using the same allocation only if it is large enough and explicitly
+rebinds it. Dimensions are available after caps configuration and size events.
+
+Metadata, rendering and timing
+-----------------------------
+
+Caps expose both plain and meta:GstVideoOverlayComposition alternatives, and
+allocation queries advertise GST_VIDEO_OVERLAY_COMPOSITION_META_API_TYPE. The
+compositor retains composition references while a buffer is scheduled, so the
+upstream buffer may be released immediately after submission.
+
+GStreamer's overlay helpers perform scaling and premultiplication. Global alpha
+is applied to the destination bytes only, avoiding a shared-rectangle
+writability failure in GStreamer helper versions which apply it internally.
+The compositor clips to the logical video area, validates mapped lengths and
+strides, and copies native ARGB rows into the host surface.
+Rectangle layering uses ordered replacement, matching the original row-copy
+implementation; this is not a new multi-layer alpha-blending engine. Previous
+rectangles are cleared when the composition changes or metadata disappears.
+Dirty notifications cover the old and new visible rectangle areas.
+
+Scheduling converts stream timestamps through GstSegment, including segment
+start and rate. A valid decoder timestamp determines relative presentation
+time; otherwise the pipeline base time and running time are used. The original
+50 ms render lead is retained for host-surface presentation latency and clamped
+at the current clock time; its real display timing still needs hardware checks.
+Pending changes are ordered and the queue is bounded. Invalid or excessively distant
+timestamps fail explicitly instead of causing unbounded storage or an early
+subtitle display. Repeated buffers carrying the same composition are coalesced.
+
+Pause keeps the currently displayed overlay and suspends pending changes.
+Resume restores their remaining delays. Flush, stop and discontinuity cancel
+pending clock IDs, release composition references and clear the surface.
+Generation/ID checks discard callbacks which raced with cancellation. The
+pending list and clock callbacks own separate references, avoiding a cycle
+between clock ID, compositor and scheduled composition.
+
+The implementation does not write /dev/fb*, use private graphics ioctls, or
+pretend that a hostless surface was displayed. Visible overlay composition on
+Dream One/Two remains a required receiver/application integration check.
+
+OpenATV Enigma2 subtitle path
+----------------------------
+
+Current OpenATV servicemp3.cpp creates a separate subsink element and assigns
+it to playbin's text-sink property. Its new-buffer callback feeds Enigma2's
+text, WebVTT, DVB and PGS handling, displayed by eSubtitleWidget. These paths
+do not consume this compositor; timing still depends on get-decoder-time.
+That signal uses G_TYPE_INT64, with -1 for an unavailable decoder timestamp.
+
+The separate E2 path is not a reason to omit the original overlay protocol:
+applications using composition metadata and an application surface need it.
+Neither path has yet been declared receiver-tested by this source document.
+
+Evidence and verification
+-------------------------
+
+Reference artifact: libgstdreamsinks.so, SHA256
+994ea5cc997739fd81f936c75f5b4636ec67840b828e5a936f89fcd421c2ecc9.
+Saved static evidence in rea-dreamone/results:
+
+  implementation-overlay-batch.json
+    ev_94084a1c2be392b98f442e6714b4004f939967eb775853281dc24821224554f0
+    0x10bd68 dimensions/stride, 0x10beb8 tracking/timing, 0x10ce98 cancellation.
+  implementation-overlay-helpers.json
+    ev_0f0eaad55b731899c06cc8b288d305a8693213d372e4a5829307ace567d2c864
+    GObject signals, surface-pointer handler and rectangle allocation.
+  overlay-sync-build-bytes.json and overlay-sync-build.asm.txt
+    ev_c4418573906380b3bc874499bb25330061d42cc644bb4af67060bd5be97432b0
+    0x10b6c8 callback: clear/copy rows, construct and transfer dirty GList.
+  overlay-callback-build.json
+    ev_6cad349a7ae9a5ac8609c7707e84e43749b2ffd2618d2a18c798daa38e0958c2
+    0x10d028 compositor teardown.
+  class-init-bytes.json, 0x104a68..0x104ab8
+    Original POINTER/INT64 action return types. Earlier analysis notes which
+    labelled these OBJECT/UINT64 are superseded by the instruction bytes.
+
+These are analysis addresses, not addresses to use at runtime. Decompiled
+output was used as behavioral evidence, not copied as replacement source.
+The new implementation uses standard GStreamer/GLib ownership primitives and
+adds explicit bounds, clipping, segment conversion and pause-safe scheduling.
+
+tests/test_overlay.c covers the public signal contract, caps/allocation,
+scheduled rendering and hiding, alpha/clipping, segment rate conversion,
+pause/resume, reentrant surface detachment and cancellation/refcount cleanup.
+Tests use a deterministic GstTestClock and an ordinary memory surface. They
+never open decoder devices and do not establish hardware display correctness.

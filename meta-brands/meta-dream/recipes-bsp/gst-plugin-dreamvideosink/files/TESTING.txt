@@ -1,0 +1,72 @@
+Dream One/Two hardware gate
+==========================
+
+This file is a test plan, not a record of tests already passed. Freeze the
+candidate source and record its SHA256, image, GStreamer version and kernel
+before testing. Native/mock results do not count as receiver tests.
+
+1. Installation and rollback
+----------------------------
+Use the dedicated Dream Two test receiver, not a production receiver. Back up
+the installed sink package/library and record opkg status first. Stop Enigma2
+before replacing the video sink; audio sink and firmware remain unchanged.
+Use one video sink implementation at a time. Keep a console/SSH rollback path.
+Do not upgrade unrelated packages as part of this test.
+
+Check factory selection:
+  gst-inspect-1.0 dreamvideosink
+Expected: source-built plugin version, compressed caps, signed decoder-time
+action and pointer compositor action. A second plugin exporting the same
+factory makes the result ambiguous. Use a fresh test GST_REGISTRY_1_0 if needed.
+
+2. First decoder validation (stop here if unsuccessful)
+------------------------------------------------------
+Run a known-good local H.264 MP4, HEVC MP4 and MPEG-2 TS using the same audio
+sink as the reference. Confirm immediate picture/sound, aspect ratio, framerate
+and stop back to live TV. Compare old/new in separate runs with identical files.
+Record complete GST_DEBUG=dreamvideosink:6,dreamoverlaycompositor:6 logs and
+kernel messages. Avoid logging private stream tokens or URLs in public reports.
+
+Example while Enigma2 is stopped, with a real local file substituted:
+  GST_DEBUG_NO_COLOR=1 GST_DEBUG=dreamvideosink:6,dreamoverlaycompositor:6 \
+    gst-launch-1.0 -e playbin uri=file:///media/hdd/test/h264.mp4 \
+    video-sink=dreamvideosink audio-sink=dreamaudiosink
+
+Only run this after confirming both factories exist. Do not run gst-launch
+while E2 owns the same decoder. Select a local unprotected test file.
+
+3. Timing, control and failures
+-------------------------------
+Compare first-frame delay, at least 30 minutes A/V sync, pause/resume, +/- seeks,
+fast/slow/reverse playback, end-of-file, repeated start/stop and zaps back to DVB.
+Repeat with MPEG-2/4, AVC/AVC3, HVC1/HEV1, VP9, DivX/MSMPEG, WMV/VC1, MJPEG and
+RealVideo samples; include H.263/Flash when their conversion path is present.
+Use missing/irregular timestamps and B pictures for VC1 comparisons.
+For Spark, include an FLV with no width, height or framerate in demux caps.
+Check automatic picture dimensions, pause/seek and native E2 playback without
+manually adding caps. Also test incorrect and already-correct container sizes.
+
+Verify no duplicate first-frame submission after initial preroll/seek. Watch
+queued-bytes and submitted-frames/bytes, CPU use, RSS and decoder error messages.
+Include a Matroska file with reordered startup pictures: non-flushing segment
+corrections and DISCONT buffer flags must not discard the first GOP. Confirm
+picture from the beginning, not only smooth playback after the next keyframe.
+Test a paused full queue, EOS while paused, seek near EOF, and user Stop during
+backpressure. A permanent write error must stop retries and leave UI teardown
+responsive. Do not deliberately destabilize kernel/driver state on a daily box.
+
+4. Overlays and future E2 integration
+-------------------------------------
+Current E2 subtitles may use a separate subtitle sink; that does not exercise
+the compositor. Use a host binding the get-overlay-compositor/set-pointer/
+have-overlay interface described in docs/OVERLAYS.txt. Verify text, DVB bitmap
+and ASS/SSA overlays, alpha, clipping, resize, pause, flush and stream change.
+The host must detach its pixel pointer before freeing/reallocating storage.
+Compare actual rendered output with the original compositor.
+
+5. Acceptance
+-------------
+No crash, hang, growing queue, repeated error storm or stale overlay. Picture,
+audio, synchronization, metadata and supported format coverage match the old
+sink for the tested corpus. Resolve remaining CODECS.txt entries explicitly.
+Only then switch the machine image dependency and call the package release-ready.
