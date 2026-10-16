@@ -1,0 +1,44 @@
+Subject: [PATCH] hlsdemux2: take the exact time of MPEG-TS and packed audio segments
+
+hlsdemux2 compares the stream time a segment got from the summed EXTINF
+durations with the one from its MPEG time, and only takes the latter above
+100 ms. The first buffer of a fragment carries the stream time. Below the
+tolerance a packed audio rendition stays shifted against the variant, ZDF
+lists its audio segments as 2.005 s, and after a variant switch tsdemux
+anchors the new variant on an estimate that is off by the change of the
+PTS/DTS distance.
+
+Take the exact time for MPEG-TS and packed audio segments within half a
+segment duration, for the segment and the fragment.
+
+Upstream-Status: Pending
+---
+--- a/ext/adaptivedemux2/hls/gsthlsdemux-stream.c
++++ b/ext/adaptivedemux2/hls/gsthlsdemux-stream.c
+@@ -572,6 +572,26 @@
+       " difference against expected : %" GST_STIME_FORMAT,
+       GST_STIME_ARGS (real_stream_time), GST_STIME_ARGS (difference));
+ 
++  /* MPEG-TS and packed audio carry the exact time of each segment while the
++   * playlist durations are rounded. Within the tolerance below the stream
++   * time estimated from the durations would stay. A fragment is timed from its
++   * first buffer on, after a variant switch or for a packed audio rendition
++   * the estimate would shift audio and video against each other. */
++  if ((hls_stream->parser_type == GST_HLS_PARSER_ID3
++          || hls_stream->parser_type == GST_HLS_PARSER_MPEGTS) && difference != 0
++      && !hls_stream->in_partial_segments
++      && ABS (difference) <= (GstClockTimeDiff) (current_segment->duration / 2)) {
++    GST_DEBUG_OBJECT (hls_stream,
++        "Exact segment time, updating current stream time to %" GST_STIME_FORMAT,
++        GST_STIME_ARGS (real_stream_time));
++    current_segment->stream_time = real_stream_time;
++    gst_hls_media_playlist_recalculate_stream_time (hls_stream->playlist,
++        current_segment);
++    GST_ADAPTIVE_DEMUX2_STREAM_CAST (hls_stream)->fragment.stream_time =
++        real_stream_time;
++    return GST_HLS_PARSER_RESULT_DONE;
++  }
++
+   /* We allow a tolerance of 3-4 frames between the estimated and observed
+    * stream time. */
+   if (ABS (difference) > 100 * GST_MSECOND) {
