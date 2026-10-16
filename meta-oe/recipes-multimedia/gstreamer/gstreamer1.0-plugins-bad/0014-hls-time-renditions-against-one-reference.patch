@@ -1,0 +1,174 @@
+Subject: [PATCH] hls: time renditions against one MPEG time reference
+
+hlsdemux times a fragment that starts a stream, or follows a discontinuity
+or a variant switch, by its position in the playlist. The positions sum up
+the rounded EXTINF durations of each playlist on its own. A rendition with
+its own playlist drifts against the variant: ZDF lists its packed audio
+segments as 2.005 s, 2.000 s on average, and the audio came up to 200 ms
+early, depending on where playback started.
+
+Keep one reference of a stream time and an MPEG time, the first PCR of an
+MPEG-TS fragment or the ID3 PTS of packed audio, and time such fragments of
+all streams by their MPEG time against it. The first stream sets it; a
+rendition adds a second so the variant does not start before the segment.
+A seek, a reset and a discontinuity of the variant playlist clear it.
+
+Upstream-Status: Pending
+---
+--- a/ext/hls/gsthlsdemux.h
++++ b/ext/hls/gsthlsdemux.h
+@@ -121,6 +121,9 @@
+ 
+   GstHLSTSReader tsreader;
+   GstTagList *pending_tags;
++
++  /* the fragment start was matched against the shared time reference */
++  gboolean time_ref_done;
+ };
+ 
+ typedef struct {
+@@ -153,6 +156,12 @@
+   GstHLSVariantStream  *previous_variant;
+ 
+   gboolean streams_aware;
++
++  /* Shared time reference of all streams: a stream time and the MPEG time
++   * (first PCR, or the ID3 PTS of packed audio) of the same instant */
++  GMutex time_ref_lock;
++  GstClockTime time_ref_ts;
++  GstClockTime time_ref_mpeg;
+ };
+ 
+ struct _GstHLSDemuxClass
+--- a/ext/hls/gsthlsdemux.c
++++ b/ext/hls/gsthlsdemux.c
+@@ -112,6 +112,7 @@
+ static gboolean gst_hls_demux_select_bitrate (GstAdaptiveDemuxStream * stream,
+     guint64 bitrate);
+ static void gst_hls_demux_reset (GstAdaptiveDemux * demux);
++static void gst_hls_demux_clear_time_ref (GstHLSDemux * demux);
+ static gboolean gst_hls_demux_get_live_seek_range (GstAdaptiveDemux * demux,
+     gint64 * start, gint64 * stop);
+ static GstM3U8 *gst_hls_demux_stream_get_m3u8 (GstHLSDemuxStream * hls_stream);
+@@ -130,6 +131,7 @@
+ 
+   gst_hls_demux_reset (GST_ADAPTIVE_DEMUX_CAST (demux));
+   g_mutex_clear (&demux->keys_lock);
++  g_mutex_clear (&demux->time_ref_lock);
+   if (demux->keys) {
+     g_hash_table_unref (demux->keys);
+     demux->keys = NULL;
+@@ -197,6 +199,9 @@
+ 
+   demux->keys = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, g_free);
+   g_mutex_init (&demux->keys_lock);
++  g_mutex_init (&demux->time_ref_lock);
++  demux->time_ref_ts = GST_CLOCK_TIME_NONE;
++  demux->time_ref_mpeg = GST_CLOCK_TIME_NONE;
+ }
+ 
+ static GstStateChangeReturn
+@@ -329,6 +334,9 @@
+   GstClockTime current_pos, target_pos, final_pos;
+   guint64 bitrate;
+ 
++  /* the fragments after the seek set a new time reference */
++  gst_hls_demux_clear_time_ref (hlsdemux);
++
+   gst_event_parse_seek (seek, &rate, &format, &flags, &start_type, &start,
+       &stop_type, &stop);
+ 
+@@ -962,6 +970,62 @@
+   return GST_HLS_TSREADER_NONE;
+ }
+ 
++static void
++gst_hls_demux_clear_time_ref (GstHLSDemux * demux)
++{
++  g_mutex_lock (&demux->time_ref_lock);
++  demux->time_ref_ts = GST_CLOCK_TIME_NONE;
++  demux->time_ref_mpeg = GST_CLOCK_TIME_NONE;
++  g_mutex_unlock (&demux->time_ref_lock);
++}
++
++/* A fragment that starts a stream, or follows a discontinuity or a variant
++ * switch, is timed by its position in the playlist. The playlist durations
++ * are rounded, and each playlist sums up its own: renditions with their own
++ * playlist drift against the variant. Time such a fragment by its MPEG time
++ * against the time reference of all streams instead. */
++static void
++gst_hls_demux_stream_apply_time_ref (GstHLSDemux * demux,
++    GstAdaptiveDemuxStream * stream, GstClockTime mpeg_time)
++{
++  GstHLSDemuxStream *hls_stream = GST_HLS_DEMUX_STREAM_CAST (stream);
++  GstClockTimeDiff ts;
++
++  if (hls_stream->time_ref_done)
++    return;
++  hls_stream->time_ref_done = TRUE;
++
++  if (!stream->first_fragment_buffer
++      || !GST_CLOCK_TIME_IS_VALID (stream->fragment.timestamp)
++      || !GST_CLOCK_TIME_IS_VALID (mpeg_time)
++      || demux->parent.segment.rate < 0.0)
++    return;
++
++  g_mutex_lock (&demux->time_ref_lock);
++  if (!GST_CLOCK_TIME_IS_VALID (demux->time_ref_ts)) {
++    /* The MPEG time of a rendition, the ID3 PTS of packed audio, can be up to
++     * a second later than the first PCR of the variant: keep the variant
++     * from starting before the segment */
++    demux->time_ref_ts = stream->fragment.timestamp +
++        (hls_stream->is_primary_playlist ? 0 : GST_SECOND);
++    demux->time_ref_mpeg = mpeg_time;
++    stream->fragment.timestamp = demux->time_ref_ts;
++    GST_DEBUG_OBJECT (stream->pad, "Time reference %" GST_TIME_FORMAT
++        " at MPEG time %" GST_TIME_FORMAT, GST_TIME_ARGS (demux->time_ref_ts),
++        GST_TIME_ARGS (mpeg_time));
++  } else {
++    ts = (GstClockTimeDiff) demux->time_ref_ts +
++        GST_CLOCK_DIFF (demux->time_ref_mpeg, mpeg_time);
++    GST_DEBUG_OBJECT (stream->pad, "Fragment at MPEG time %" GST_TIME_FORMAT
++        " timed %" GST_STIME_FORMAT " instead of %" GST_TIME_FORMAT,
++        GST_TIME_ARGS (mpeg_time), GST_STIME_ARGS (ts),
++        GST_TIME_ARGS (stream->fragment.timestamp));
++    if (ts >= 0)
++      stream->fragment.timestamp = ts;
++  }
++  g_mutex_unlock (&demux->time_ref_lock);
++}
++
+ static GstFlowReturn
+ gst_hls_demux_handle_buffer (GstAdaptiveDemux * demux,
+     GstAdaptiveDemuxStream * stream, GstBuffer * buffer, gboolean at_eos)
+@@ -1042,6 +1106,9 @@
+     return GST_FLOW_OK;
+   }
+ 
++  if (GST_CLOCK_TIME_IS_VALID (first_pcr))
++    gst_hls_demux_stream_apply_time_ref (hlsdemux, stream, first_pcr);
++
+   if (tags) {
+     gst_adaptive_demux_stream_set_tags (stream, tags);
+     /* run typefind again on the trimmed buffer */
+@@ -1281,6 +1348,11 @@
+     discont = TRUE;
+ 
+   /* set up our source for download */
++  hlsdemux_stream->time_ref_done = FALSE;
++  /* a discontinuity of the variant starts a new MPEG timeline */
++  if (discont && hlsdemux_stream->is_primary_playlist && !stream->discont)
++    gst_hls_demux_clear_time_ref (hlsdemux);
++
+   if (hlsdemux_stream->reset_pts || discont
+       || stream->demux->segment.rate < 0.0) {
+     stream->fragment.timestamp = sequence_pos;
+@@ -1350,6 +1422,8 @@
+ 
+   GST_DEBUG_OBJECT (demux, "resetting");
+ 
++  gst_hls_demux_clear_time_ref (demux);
++
+   GST_M3U8_CLIENT_LOCK (hlsdemux->client);
+   if (demux->master) {
+     gst_hls_master_playlist_unref (demux->master);
