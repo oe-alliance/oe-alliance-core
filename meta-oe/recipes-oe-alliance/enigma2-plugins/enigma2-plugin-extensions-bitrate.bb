@@ -15,6 +15,7 @@ PKGV = "V${GITPKGVTAG}"
 inherit setuptools3-openplugins pkgconfig
 
 SRC_URI = "git://github.com/oe-alliance-plugins/Bitrate.git;protocol=https;branch=main"
+SRC_URI:openbh = "git://github.com/oe-alliance-plugins/Bitrate.git;protocol=https;branch=bitrate-servicemp3"
 SRC_URI:openvix = "git://github.com/oe-alliance-plugins/Bitrate.git;protocol=https;branch=bitrate-servicemp3"
 
 FILES:${PN} += "${bindir}"
