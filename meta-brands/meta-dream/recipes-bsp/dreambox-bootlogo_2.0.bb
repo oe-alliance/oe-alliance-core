@@ -2,6 +2,7 @@ SUMMARY = "Bootlogo support"
 require conf/license/license-close.inc
 
 SRCREV = "a0bf37c5b20c1db4dc0008882cc5494b475be0c1"
+PR = "r1"
 SRC_URI += " file://bootlogo.scr file://osdclear.sh"
 
 inherit allarch opendreambox-git update-rc.d
