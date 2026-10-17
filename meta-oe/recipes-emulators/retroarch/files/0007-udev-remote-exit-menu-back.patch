@@ -1,0 +1,54 @@
+From: OE-Alliance <oe-alliance@users.noreply.github.com>
+Subject: [PATCH] input: use receiver EXIT as back while the menu is open
+
+The udev driver normalizes KEY_EXIT to RETROK_CLEAR. Our launcher binds
+this to menu_toggle, which cannot pop a submenu and does nothing without
+running content. Translate this keyboard hotkey to the menu's cancel
+button while the menu is alive; keep its existing toggle action in-game.
+
+Do this on the collected input state, not the evdev key events: changing
+the key translation when the menu opens would mismatch press/release and
+could leave a key stuck. The normal menu input flushing and edge detection
+handle held keys. Respect swapped confirm/cancel buttons and dismiss the
+on-screen keyboard using its existing Select action. Gamepad menu combos
+are added later by the runloop and are not changed.
+
+Upstream-Status: Inappropriate [receiver remote-control policy]
+
+--- a/input/input_driver.c
++++ b/input/input_driver.c
+@@ -6922,6 +6922,34 @@ void input_driver_collect_system_input(input_driver_state_t *input_st,
+    }
+ 
+ #ifdef HAVE_MENU
++#ifdef HAVE_UDEV
++   /* Receiver EXIT opens the menu in-game, but goes back inside it. */
++   if (     menu_is_alive
++         && current_input
++         && current_input->input_state
++         && string_is_equal(current_input->ident, "udev")
++         && input_config_binds[0][RARCH_MENU_TOGGLE].key == RETROK_CLEAR
++         && current_input->input_state(
++               input_st->current_data,
++               joypad,
++               sec_joypad,
++               &joypad_info,
++               (const retro_keybind_set *)input_config_binds,
++               (input_st->flags & INP_FLAG_KB_MAPPING_BLOCKED) ? true : false,
++               0,
++               RETRO_DEVICE_KEYBOARD, 0, RETROK_CLEAR))
++   {
++      unsigned cancel_btn = settings->bools.input_menu_swap_ok_cancel_buttons
++            ? RETRO_DEVICE_ID_JOYPAD_A : RETRO_DEVICE_ID_JOYPAD_B;
++
++      BIT256_CLEAR_PTR(current_bits, RARCH_MENU_TOGGLE);
++      if (display_kb)
++         BIT256_SET_PTR(current_bits, RETRO_DEVICE_ID_JOYPAD_SELECT);
++      else
++         BIT256_SET_PTR(current_bits, cancel_btn);
++   }
++#endif /* HAVE_UDEV */
++
+    if (menu_input_active)
+    {
+       /* Gather keyboard input, if enabled
