@@ -1,6 +1,6 @@
 FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 
-PR = "r1"
+PR = "r2"
 
 SRC_URI += "file://0002-fix-mpegts.patch \
             file://0003-allow-to-choose-rtmp-impl-at-runtime.patch \
@@ -15,6 +15,7 @@ SRC_URI += "file://0002-fix-mpegts.patch \
             file://ffmpeg_ac4.patch \
             \
             file://0001-decryption-key-extention.patch \
+            file://0014-dashdec-segment-template-not-seekable.patch \
             "
 
 PACKAGECONFIG:append = " gpl libbluray dav1d libfreetype librtmp libxml2 openssl x264"
