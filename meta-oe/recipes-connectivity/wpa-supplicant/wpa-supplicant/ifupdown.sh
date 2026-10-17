@@ -57,6 +57,15 @@ if [ ! -x "$WPA_SUP_BIN" ] || [ ! -x "$WPA_CLI_BIN" ]; then
 	exit 0
 fi
 
+# a wireless interface without wpa- options and without a network in its
+# configuration cannot connect; do not bring it up and wait for DHCP
+if [ "$MODE" = "start" ] && [ "$PHASE" = "pre-up" ] && \
+   [ -d "/sys/class/net/$WPA_IFACE/wireless" ] && ! set | grep -q "^IF_WPA" && \
+   ! grep -q -E "^[[:space:]]*ssid=" "/etc/wpa_supplicant.$WPA_IFACE.conf" 2>/dev/null; then
+	wpa_msg stderr "no network configured for $WPA_IFACE, not bringing it up"
+	exit 1
+fi
+
 do_start () {
 	if test_wpa_cli; then
 		# if wpa_action is active for this IFACE, do nothing
