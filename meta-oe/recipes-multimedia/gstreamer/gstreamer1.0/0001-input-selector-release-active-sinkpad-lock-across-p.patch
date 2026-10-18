@@ -1,4 +1,4 @@
-input-selector: release active_sinkpad_lock around the srcpad push
+input-selector: release active_sinkpad_lock around the srcpad push and the upstream event push
 
 gst_selector_pad_chain() takes active_sinkpad_lock in reader mode at
 entry and only releases it at the very end of the function (the
@@ -33,10 +33,21 @@ single-mutex design used before the two-phase active-pad switch was
 introduced (dd0c2e3ebadb "input-selector: implement a two-phase
 sinkpad switch").
 
+gst_input_selector_event() has the same lock scope for upstream events:
+it holds active_sinkpad_lock as reader while it pushes the event to the
+active sinkpad. For a flushing seek the demuxer pushes FLUSH_STOP
+downstream from that same thread. When decodebin removes a pad on it,
+playbin resets the selector and gst_input_selector_reset() takes the
+lock as writer: the seeking thread blocks on the reader lock it holds
+itself. Seen with HLS live streams seeked to the live edge right after
+the start; a backtrace shows gst_input_selector_reset() waiting in
+g_rw_lock_writer_lock() above gst_input_selector_event(). Release the
+lock before that push as well, the ref on the pad keeps it alive.
+
 This is a minimal, targeted fix: it does not touch the pending/commit
 machinery, EOS handling, allocation-query handling or active-pad
 disappearance handling added by the two-phase rework and its five
-follow-up fixes -- only the one lock scope that can deadlock against a
+follow-up fixes -- only the two lock scopes that can deadlock against a
 concurrent seek.
 
 Upstream-Status: Inappropriate [downstream deadlock workaround for
@@ -74,3 +85,28 @@ upstream fixes the lock scope itself.]
 +    selpad->pushed = TRUE;
 
    GST_INPUT_SELECTOR_UNLOCK (sel);
+
+@@ -1829,6 +1841,11 @@ gst_input_selector_event (GstPad * pad, GstObject * parent, GstEvent * event)
+   if (sel->active_sinkpad) {
+     eventpad = gst_object_ref (sel->active_sinkpad);
+     GST_INPUT_SELECTOR_UNLOCK (sel);
++    /* Do not hold active_sinkpad_lock across the upstream push: a flushing
++     * seek makes the demuxer push FLUSH_STOP downstream in this thread, and
++     * a decodebin pad removed on it lets playbin reset this selector, which
++     * takes the lock as writer: a self-deadlock. The ref keeps the pad. */
++    g_rw_lock_reader_unlock (&sel->active_sinkpad_lock);
+
+     gst_event_ref (event);
+     result |= gst_pad_push_event (eventpad, event);
+@@ -1836,10 +1853,9 @@ gst_input_selector_event (GstPad * pad, GstObject * parent, GstEvent * event)
+     gst_object_unref (eventpad);
+   } else {
+     GST_INPUT_SELECTOR_UNLOCK (sel);
++    g_rw_lock_reader_unlock (&sel->active_sinkpad_lock);
+   }
+
+-  g_rw_lock_reader_unlock (&sel->active_sinkpad_lock);
+-
+   /* This is now essentially a copy of gst_pad_event_default_dispatch
+    * with a different iterator */
+   while (!done) {

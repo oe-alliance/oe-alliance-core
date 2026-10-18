@@ -14,6 +14,6 @@ PV = "1.28.6"
 
 PR:append:openbh = ".1"
 PR:append:openvix = ".1"
-PR:append:openatv = ".1"
+PR:append:openatv = ".2"
 
 SRC_URI[sha256sum] = "62b6b9f0ad3147a6dd6420ac64a91180b14e990695bddd353b96041611d052ca"
