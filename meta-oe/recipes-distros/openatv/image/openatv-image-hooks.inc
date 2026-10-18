@@ -18,11 +18,13 @@ OPENATV_SMALLBOX_DEFERRED_IMAGE_PACKAGES = " \
     packagegroup-oea-enigma2-core \
     packagegroup-oea-enigma2-plugins \
     packagegroup-oea-distro-openatv \
-    enigma2-plugin-settings-defaultsat \
 "
 
 IMAGE_INSTALL:remove = "${@d.getVar('OPENATV_SMALLBOX_DEFERRED_IMAGE_PACKAGES') if d.getVar('OPENATV_SMALLBOX_BOOTSTRAP') == '1' else ''}"
-IMAGE_INSTALL:append = "${@' smallbox-wizard vsftpd busybox-telnetd' if d.getVar('OPENATV_SMALLBOX_BOOTSTRAP') == '1' else ''}"
+# Keep remote support in every OpenATV image, including the SmallBox bootstrap,
+# Chkroot and single-core images. Keep the normal dvbc-only exclusion for the
+# default satellite list from oea-image-distro.inc; do not defer that package.
+IMAGE_INSTALL:append = " vsftpd busybox-telnetd${@' smallbox-wizard' if d.getVar('OPENATV_SMALLBOX_BOOTSTRAP') == '1' else ''}"
 
 # One OpenATV SmallBox build also creates a complete rootfs-only Chkroot
 # archive. Package compilation is shared; only do_rootfs/do_image run again.

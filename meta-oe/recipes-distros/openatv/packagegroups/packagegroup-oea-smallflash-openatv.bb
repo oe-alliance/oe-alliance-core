@@ -26,6 +26,7 @@ RDEPENDS:${PN} = " \
     packagegroup-openatv-smallbox-iptv \
     busybox-telnetd \
     vsftpd \
+    ${@bb.utils.contains('MACHINE_FEATURES', 'dvbc-only', '', 'enigma2-plugin-settings-defaultsat', d)} \
     tar \
     ofgwrite \
     enigma2-plugin-systemplugins-hotplug \
@@ -33,7 +34,3 @@ RDEPENDS:${PN} = " \
     ${@bb.utils.contains('MACHINE_FEATURES', 'dreamboxv1', 'mtd-utils-jffs2', '', d)} \
     ${@bb.utils.contains('MACHINE_FEATURES', 'dreamboxv2', 'e2fsprogs-badblocks', '', d)} \
 "
-
-RRECOMMENDS:${PN} = "\
-    ${@bb.utils.contains('MACHINE_FEATURES', 'dvbc-only', '', 'enigma2-plugin-settings-defaultsat', d)} \
-    "
