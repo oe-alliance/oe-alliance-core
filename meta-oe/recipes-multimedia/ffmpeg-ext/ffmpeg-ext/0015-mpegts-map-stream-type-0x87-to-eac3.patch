@@ -1,0 +1,21 @@
+From: boingbasti <117715317+boingbasti@users.noreply.github.com>
+Subject: [PATCH] avformat/mpegts: map stream type 0x87 to E-AC3
+
+ATSC A/52 declares Enhanced AC-3 as stream type 0x87 in the PMT. Without
+the entry such a stream stays without codec when probing is limited, and
+the audio track is missing.
+
+---
+ libavformat/mpegts.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/libavformat/mpegts.c b/libavformat/mpegts.c
+--- a/libavformat/mpegts.c
++++ b/libavformat/mpegts.c
+@@ -855,5 +855,6 @@
+ static const StreamType MISC_types[] = {
+     { 0x81, AVMEDIA_TYPE_AUDIO, AV_CODEC_ID_AC3 },
++    { 0x87, AVMEDIA_TYPE_AUDIO, AV_CODEC_ID_EAC3 },
+     { 0x8a, AVMEDIA_TYPE_AUDIO, AV_CODEC_ID_DTS },
+     { 0 },
+ };
