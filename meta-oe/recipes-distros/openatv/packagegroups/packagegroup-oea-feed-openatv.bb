@@ -75,6 +75,7 @@ RRECOMMENDS:${PN} = "\
     enigma2-plugin-extensions-epgsearch \
     enigma2-plugin-extensions-fritzcall \
     enigma2-plugin-extensions-imdb \
+    enigma2-plugin-extensions-jukebox \
     enigma2-plugin-extensions-netzkino \
     enigma2-plugin-extensions-schiffe \
     enigma2-plugin-extensions-shoutcast \
