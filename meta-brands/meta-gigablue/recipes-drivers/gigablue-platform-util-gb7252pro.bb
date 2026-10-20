@@ -1,10 +1,10 @@
 require gigablue-platform-util-pro.inc
 
-SRCDATE = "20260807.r0"
+SRCDATE = "20261020.r0"
 
 KV = "4.1.20"
 
-PR = "r3"
+PR = "r0"
 
 # V3D owns the Nexus libraries copied to /usr/lib by the platform init script.
 # Keep them while the boot-critical platform is installed, even when the last
@@ -26,5 +26,5 @@ do_install:append() {
     install -m 0755 ${UNPACKDIR}/config ${D}/home/root/platform/config
 }
 
-SRC_URI[md5sum] = "ba836ae5cd3ae177445e3275571a15b4"
-SRC_URI[sha256sum] = "14641bc40d2ad014b2419bb46939973a827683bae51bf0f493da7b8fe7403325"
+SRC_URI[md5sum] = "f70c47b9b2d31158792d36d85ecb4855"
+SRC_URI[sha256sum] = "f7d8bfafe7940c33354b3c1cce879038f5730e0ea3423ef8cc6f6bfc6e292c12"
