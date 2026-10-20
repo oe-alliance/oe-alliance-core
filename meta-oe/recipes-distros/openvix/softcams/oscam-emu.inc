@@ -4,6 +4,7 @@ DESCRIPTION:${PN} = "OSCam Open Source Softcam\n \
 - with emu support"
 
 SRC_URI += "gitsm://github.com/oscam-mirror/oscam-emu.git;protocol=https;branch=master"
+SRC_URI:append:openvix = " file://oscam-emu-stale-ecm-info.patch"
 
 CAMNAME = "oscam-emu"
 
@@ -18,7 +19,7 @@ inherit gittag
 SRCREV = "${AUTOREV}"
 
 PKGV = "${GITPKGVTAG}"
-PR = "r3"
+PR = "r4"
 
 RPROVIDES:${PN} += "enigma2-plugin-softcams-oscam-openvix-emu"
 RREPLACES:${PN} += "enigma2-plugin-softcams-oscam-openvix-emu"

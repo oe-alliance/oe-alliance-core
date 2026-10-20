@@ -4,6 +4,7 @@ DESCRIPTION:${PN} = "OSCam Open Source Softcam\n \
 - latest trunk"
 
 SRC_URI += "gitsm://github.com/oscam-mirror/oscam.git;protocol=https;branch=master"
+SRC_URI:append:openvix = " file://oscam-latest-stale-ecm-info.patch"
 
 CAMNAME = "oscam-latest"
 
@@ -18,7 +19,7 @@ inherit gittag
 SRCREV = "${AUTOREV}"
 
 PKGV = "${GITPKGVTAG}"
-PR = "r4"
+PR = "r5"
 
 RPROVIDES:${PN} += "enigma2-plugin-softcams-oscam-openvix"
 RREPLACES:${PN} += "enigma2-plugin-softcams-oscam-openvix"

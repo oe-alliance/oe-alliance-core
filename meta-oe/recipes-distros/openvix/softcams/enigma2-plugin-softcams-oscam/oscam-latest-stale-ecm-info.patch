@@ -1,0 +1,79 @@
+From b84604b382d51d54faa5aac4aaa8f559553b4c16 Mon Sep 17 00:00:00 2001
+From: DimitarCC <DimitarCC@github.com>
+Date: Tue, 20 Oct 2026 10:56:03 +0200
+Subject: [PATCH] oscam-latest-stale-ecm-info-patch
+
+---
+ module-dvbapi.c | 48 ++++++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 46 insertions(+), 2 deletions(-)
+
+diff --git a/module-dvbapi.c b/module-dvbapi.c
+index f40f5825..40923fb5 100644
+--- a/module-dvbapi.c
++++ b/module-dvbapi.c
+@@ -1426,6 +1426,32 @@ int32_t dvbapi_open_device(int32_t type, int32_t num, int32_t adapter)
+ 	else
+ 	{
+ 		dmx_fd = ret = open(device_path, O_RDWR | O_NONBLOCK);
++
++		// The requested CA device could not be opened: only now try the remaining ones.
++		if(ret < 0 && type != 0)
++		{
++			uint32_t idx;
++			for(idx = ca_offset; idx < ca_descramblers_total + ca_offset; idx++)
++			{
++				if(idx == (uint32_t)(num + ca_offset))
++				{
++					continue; // already tried
++				}
++
++				snprintf(device_path2, sizeof(device_path2), devices[selected_box].ca_device, idx);
++				snprintf(device_path, sizeof(device_path), devices[selected_box].path, adapter);
++				if(!cs_strncat(device_path, device_path2, sizeof(device_path)))
++				{
++					continue;
++				}
++
++				dmx_fd = ret = open(device_path, O_RDWR | O_NONBLOCK);
++				if(ret >= 0)
++				{
++					break;
++				}
++			}
++		}
+ 	}
+ 
+ 	if(ret < 0)
+@@ -2588,9 +2614,27 @@ void dvbapi_stop_descrambling(int32_t demux_id, uint32_t msgid)
+ 	demux[demux_id].curindex = -1;
+ 	demux[demux_id].srvtype = -1;
+ 
+-	if(!dvbapi_listenport_active && cfg.dvbapi_boxtype != BOXTYPE_PC_NODMX)
++	if(cfg.dvbapi_boxtype != BOXTYPE_PC_NODMX)
+ 	{
+-		unlink(ECMINFO_FILE);
++		bool others_active = false;
++		if(dvbapi_listenport_active)
++		{
++			// Network mode (e.g. PMT mode 6): other programs may still be descrambling
++			// and rewrite the file themselves, so only remove it when none is left.
++			for(i = 0; i < MAX_DEMUX; i++)
++			{
++				if(demux[i].program_number != 0 && demux[i].pidindex >= 0)
++				{
++					others_active = true;
++					break;
++				}
++			}
++		}
++
++		if(!others_active)
++		{
++			unlink(ECMINFO_FILE);
++		}
+ 	}
+ 	return;
+ }
+-- 
+2.35.0.windows.1
+
