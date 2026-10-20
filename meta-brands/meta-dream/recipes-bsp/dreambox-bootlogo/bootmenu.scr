@@ -1,0 +1,4 @@
+# dreambox-bootmenu - https://github.com/oe-alliance/dreambox-bootmenu
+# Copyright (C) 2026 OE-Alliance, GPL-3.0-only
+# Runs the boot menu script from /data/bootmenu; without it nothing happens.
+if ext4load mmc 1:4 0x03900000 /bootmenu/bootmenu.img; then autoscr 0x03900000; fi
