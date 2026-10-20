@@ -22,13 +22,13 @@ Ultimo's package revision has a local .1 suffix. The shared DVB proxy download
 URL uses SRCDATE.SRCDATE_PR instead of PR so package revisions do not change the
 vendor archive name. Other proxy recipes retain their current download names.
 
-Supplied patchers, retained unchanged for auditing:
+Supplied patchers and their source references:
   patch_dvb_init.py, patch_dvb_acm.py:
     from "lite and pro patched drivers.rar"
   patch_dvb_gamma.py:
     from "pro - lite -patch_dvb_gamma (2).py"
   patch_nexus_hlg.py:
-    from "patch_nexus_hlg.py"
+    from "patch_nexus_hlg.py", extended for Pro 20261020 as documented below
   patch_dvb_bcm7444_gamma.py:
     from "patch_dvb_bcm7444_gamma Ultimo4K.py"
 
@@ -78,3 +78,34 @@ For subsequent vendor updates, rerun do_install for each configured machine,
 inspect log.do_install and test the hardware. A changed instruction pattern
 must be reviewed before accepting or modifying a patcher. Do not downgrade a
 patch failure to a warning or substitute a module from another receiver.
+
+Nexus HLG validation on 2026-10-20
+--------------------------------
+Pro 20261020.r0 expands NEXUS_P_TransferCharacteristicsToEotf_isrsafe from
+32 to 104 bytes and adds transfer-value validation and error logging. It still
+misses HLG signalled only by the primary transfer value. The patcher accepts
+this exact additional function layout and keeps the old Pro/Lite layout.
+Combining AND/CMP into ANDS creates space for the HLG comparison without moving
+the logging call, literal pool or relocations. Both function size and complete
+function bytes are checked, including when detecting an already-patched module.
+
+Local validation against the downloaded Pro archive and existing original
+Pro 20260807.r0 / Lite 20260911 archives:
+  - All four patch commands passed in the order used by vendor-driver-fixes.inc.
+  - Old Pro and Lite outputs match all three reference hashes above exactly.
+  - ARM emulation passed 2592 input pairs across both layouts, checking HLG,
+    PQ/HDR10, SDR, invalid values, error logging and stack/register preservation.
+    The external logging call was stubbed; the receiver driver was not loaded.
+  - Check-only mode and repeated patching preserve the input.
+  - Modified/unknown original and patched functions are rejected without writes.
+  - Only the intended function bytes change; original input files stay unchanged.
+  - Python syntax, import review, Ruff and git diff whitespace checks passed.
+This is local patch-chain and instruction validation, not a complete BitBake
+image build or a hardware HDR test.
+
+Pro 20261020.r0 archive SHA256:
+  f7d8bfafe7940c33354b3c1cce879038f5730e0ea3423ef8cc6f6bfc6e292c12
+Original nexus.ko SHA256:
+  0aa67d870bb27dbb2d2399e0bb8a286ee747cc2613ceeba03068bdcbc38fcc58
+Patched nexus.ko SHA256:
+  baa947b9c199497836e85e0765ed1fe8f8a0360c833a15e402e104acbc54d056
