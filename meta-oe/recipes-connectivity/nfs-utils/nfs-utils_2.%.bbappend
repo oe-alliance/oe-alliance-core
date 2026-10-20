@@ -1,4 +1,11 @@
-PR = "r3"
+FILESEXTRAPATHS:prepend := "${THISDIR}/${BPN}:"
+
+PR = "r4"
+
+SRC_URI += " \
+    file://0001-cache_flush-do-not-flush-ahead-of-time-on-kernels-be.patch \
+    file://0002-nfsd-only-disable-v4.0-by-default-where-the-kernel-c.patch \
+"
 
 RDEPENDS:${PN} = "${PN}-client"
 RDEPENDS:${PN}-client = "rpcbind"

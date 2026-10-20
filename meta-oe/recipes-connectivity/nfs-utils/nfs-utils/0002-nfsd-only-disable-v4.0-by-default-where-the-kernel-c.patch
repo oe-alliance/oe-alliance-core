@@ -1,0 +1,62 @@
+From 9b29c7488a3107ee22d2eb0ede9a03ec6bdd4586 Mon Sep 17 00:00:00 2001
+From: WXbet <57314510+WXbet@users.noreply.github.com>
+Date: Mon, 19 Oct 2026 23:25:01 +0200
+Subject: [PATCH 2/2] nfsd: only disable v4.0 by default where the kernel can
+ express it
+
+bb3f98c8 ("nfsd: disable v4.0 by default") clears the 4.0 bit before the
+version string is written.  nfssvc_print_vers() writes that bit as a
+bare "4" on kernels before v4.11, because only from there on can 4.0 be
+addressed individually; earlier kernels reject the "4.0" token in
+__write_versions() outright.
+
+A bare "4" is the major version, so "-4" switches off all of NFSv4 on
+such a kernel, and the "+4.1 +4.2" that follow are masked by the major
+being off:
+
+    # cat /proc/fs/nfsd/versions
+    -2 +3 -4 -4.1 -4.2
+
+That is NFSv4 gone from every server on a kernel older than v4.11, which
+is where embedded systems live: a Dreambox DM920 with its 3.14 vendor
+kernel lost NFSv4 entirely on the step from 2.8.7 to 2.9.2, while NFSv3
+kept working.
+
+Apply the new default only on kernels that can express it, using the
+same version check nfssvc_print_vers() already makes.
+
+Signed-off-by: WXbet <57314510+WXbet@users.noreply.github.com>
+---
+ utils/nfsd/nfsd.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/utils/nfsd/nfsd.c b/utils/nfsd/nfsd.c
+index e3fcdde4..2d9c036a 100644
+--- a/utils/nfsd/nfsd.c
++++ b/utils/nfsd/nfsd.c
+@@ -29,6 +29,7 @@
+ #include "nfslib.h"
+ #include "nfssvc.h"
+ #include "xlog.h"
++#include "version.h"
+ #include "xcommon.h"
+ 
+ #ifndef NFSD_NPROC
+@@ -135,9 +136,12 @@ main(int argc, char **argv)
+ 	}
+ 
+ 	/* We assume the kernel will default all minor versions besides '0'
+-	 * to 'on', and allow the config file to disable some.
++	 * to 'on', and allow the config file to disable some.  Clearing '0'
++	 * is only expressible to kernels that understand the "4.0" token;
++	 * older ones read a bare "4" as the major version.
+ 	 */
+-	NFSCTL_MINORUNSET(minorvers, 0);
++	if (linux_version_code() >= MAKE_VERSION(4, 11, 0))
++		NFSCTL_MINORUNSET(minorvers, 0);
+ 	for (i = NFS4_MINMINOR; i <= NFS4_MAXMINOR; i++) {
+ 		char tag[20];
+ 		sprintf(tag, "vers4.%d", i);
+-- 
+2.53.0
+

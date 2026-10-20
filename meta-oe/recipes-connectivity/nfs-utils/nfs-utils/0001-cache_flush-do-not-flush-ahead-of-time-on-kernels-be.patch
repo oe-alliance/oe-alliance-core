@@ -1,0 +1,68 @@
+From 3a385ff94b636ac267d8e3827997b6af23d701a3 Mon Sep 17 00:00:00 2001
+From: WXbet <57314510+WXbet@users.noreply.github.com>
+Date: Mon, 19 Oct 2026 23:25:01 +0200
+Subject: [PATCH 1/2] cache_flush: do not flush ahead of time on kernels before
+ v4.3
+
+Writing one second beyond the current time relies on the kernel keeping
+newly added cache entries valid across a flush, which arrived in v4.3
+with 778620364ef5 ("sunrpc/cache: make cache flushing more reliable.")
+by pushing their last_refresh past the flush time.  The same commit also
+made a flush that writes the current second reliable, and since v4.16
+the value written here is ignored altogether.
+
+On older kernels neither applies.  There cache_is_expired() treats every
+entry whose last_refresh is not newer than flush_time as expired, so
+flushing one second ahead expires the entries mountd writes immediately
+afterwards in cache_export() for the request it is serving.  The
+nfsd.export entry never becomes valid, nfsd denies the access, and every
+NFSv3 mount fails with "access denied by server".  A Dreambox DM920
+set-top box on its 3.14 vendor kernel does exactly that with nfs-utils
+2.9.2, while 2.5.3 still works on the same box with the same
+configuration.
+
+Keep today's behaviour where the kernel supports it and write the
+current second otherwise, which is what nfs-utils did before 7a4e2d1d
+("Remove 'force' arg from cache_flush()").
+
+Signed-off-by: WXbet <57314510+WXbet@users.noreply.github.com>
+---
+ support/export/cache_flush.c | 14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
+
+diff --git a/support/export/cache_flush.c b/support/export/cache_flush.c
+index 046e6917..d28d39f9 100644
+--- a/support/export/cache_flush.c
++++ b/support/export/cache_flush.c
+@@ -19,6 +19,7 @@
+ 
+ #include "nfslib.h"
+ #include "xlog.h"
++#include "version.h"
+ 
+ extern int no_netlink;
+ 
+@@ -136,12 +137,15 @@ static void cache_proc_flush(void)
+ 	};
+ 	now = time(0);
+ 
+-	/* Since v4.16-rc2-3-g3b68e6ee3cbd the timestamp written is ignored.
+-	 * It is safest always to flush caches if there is any doubt.
+-	 * For earlier kernels, writing the next second from now is
+-	 * the best we can do.
++	/* Kernels from v4.3 keep entries added after a flush valid and from
++	 * v4.16 ignore this timestamp, but older ones expire everything whose
++	 * last_refresh is not newer than it -- including the entries written
++	 * right afterwards for the request being served.
+ 	 */
+-	sprintf(stime, "%" PRId64 "\n", (int64_t)now+1);
++	if (linux_version_code() >= MAKE_VERSION(4, 3, 0))
++		now++;
++
++	sprintf(stime, "%" PRId64 "\n", (int64_t)now);
+ 	for (c=0; cachelist[c]; c++) {
+ 		int fd;
+ 		sprintf(path, "/proc/net/rpc/%s/flush", cachelist[c]);
+-- 
+2.53.0
+
