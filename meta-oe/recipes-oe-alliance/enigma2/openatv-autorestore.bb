@@ -6,7 +6,7 @@ require conf/license/license-gplv2.inc
 
 FILES:${PN} = "/etc /usr/bin"
 
-SRCREV = "${AUTOREV}"
+SRCREV = "bdc7a5ecfc89b0d6cd5002780929b92f18d59872"
 PV = "git"
 PKGV = "git${GITPKGV}"
 PR = "r1"
