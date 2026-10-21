@@ -11,7 +11,6 @@ inherit gitpkgv allarch gettext
 SRCREV = "${AUTOREV}"
 PV = "7.x+git"
 PKGV = "7.x+git${GITPKGV}"
-VER = "7.x"
 
 SRC_URI = "git://github.com/atvcaptain/KravenFHD.git;protocol=https;branch=master"
 

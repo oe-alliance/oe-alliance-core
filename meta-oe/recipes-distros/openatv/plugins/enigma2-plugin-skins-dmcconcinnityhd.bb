@@ -11,7 +11,6 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "3.0+git"
 PKGV = "3.0+git${GITPKGV}"
-VER = "3.0"
 PR = "r0"
 
 SRC_URI = "git://github.com/openatv/enigma2-plugin-skins-dmcconcinnityhd.git;protocol=https;branch=master"

@@ -10,7 +10,6 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "0.0+git"
 PKGV = "0.0+git${GITPKGV}"
-VER = "0.0"
 PR = "r0"
 
 SRC_URI = "git://github.com/openatv/SpecialJump.git;branch=python3;protocol=https"

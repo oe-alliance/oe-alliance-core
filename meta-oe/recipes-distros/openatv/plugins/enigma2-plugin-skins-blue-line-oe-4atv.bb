@@ -9,7 +9,6 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "1.8+git"
 PKGV = "1.8+git${GITPKGV}"
-VER = "1.8"
 
 RDEPENDS:${PN} = "enigma2-plugin-systemplugins-weathercomponenthandler, enigma2-plugin-skincomponents-weathercomponent"
 

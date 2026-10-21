@@ -15,7 +15,6 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "1.0+git"
 PKGV = "1.0+git${GITPKGV}"
-VER = "1.0"
 PR = "r3"
 
 SRC_URI = "git://github.com/openhdf/hdftoolbox.git;protocol=https;branch=master"

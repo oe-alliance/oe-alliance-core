@@ -9,7 +9,6 @@ SRCREV = "${AUTOREV}"
 
 PV = "14.x+git"
 PKGV = "14.x+git${GITPKGV}"
-VER = "14.x"
 
 RRECOMMENDS:${PN} = "enigma2-plugin-extensions-weathermsn enigma2-plugin-extensions-bitrate"
 

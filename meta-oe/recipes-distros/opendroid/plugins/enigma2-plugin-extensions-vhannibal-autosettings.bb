@@ -11,7 +11,6 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "1.4+git${SRCPV}"
 PKGV = "1.4+git${GITPKGV}"
-VER = "1.4"
 PR = "r4"
 
 SRC_URI = "git://github.com/opendroid-Team/vhannibal-autosettings.git;protocol=https;branch=master"

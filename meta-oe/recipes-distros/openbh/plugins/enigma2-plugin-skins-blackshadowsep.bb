@@ -11,7 +11,6 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "3.0+git"
 PKGV = "3.0+git${GITPKGV}"
-VER = "3.0"
 PR = "r3"
 
 SRC_URI = "git://github.com/BlackHole/skins.git;protocol=https;branch=master"

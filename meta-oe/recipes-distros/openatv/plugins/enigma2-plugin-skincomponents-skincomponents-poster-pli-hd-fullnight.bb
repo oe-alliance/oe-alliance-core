@@ -10,7 +10,6 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "5.2.1"
 PKGV = "5.2.1"
-VER = "5.2.1"
 PR = "r0"
 
 SRC_URI = "git://github.com/stein17/Skins-for-openATV.git;branch=python3;protocol=https"

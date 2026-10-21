@@ -11,7 +11,6 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "${IMAGE_VERSION}+git"
 PKGV = "${IMAGE_VERSION}+git${GITPKGV}"
-VER = "${IMAGE_VERSION}"
 PR = "r1"
 
 RDEPENDS:${PN} = "python3-requests \

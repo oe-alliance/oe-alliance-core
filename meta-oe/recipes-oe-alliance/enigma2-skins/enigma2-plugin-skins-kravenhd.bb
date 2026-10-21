@@ -9,7 +9,6 @@ inherit gitpkgv allarch gettext
 SRCREV = "${AUTOREV}"
 PV = "7.9.30+git"
 PKGV = "7.9.30+git${GITPKGV}"
-VER = "7.9.30"
 
 DEPENDS += "gettext-native"
 RDEPENDS:${PN} = "enigma2-plugin-extensions-oaweather python3-requests python3-pillow enigma2-plugin-systemplugins-mphelp python3-lxml"

@@ -12,7 +12,6 @@ inherit gitpkgv
 SRCREV = "${AUTOREV}"
 PV = "13.8+git${SRCPV}"
 PKGV = "13.8+git${GITPKGV}"
-VER = "13.8"
 PR = "r0"
 
 SRC_URI = "git://github.com/openatv/enigma2-plugin-extensions-dflash.git;branch=python3;protocol=https"
