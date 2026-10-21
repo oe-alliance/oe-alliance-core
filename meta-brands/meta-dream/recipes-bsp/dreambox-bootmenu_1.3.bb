@@ -12,7 +12,7 @@ inherit github-releases
 
 GITHUB_BASE_URI = "https://github.com/oe-alliance/dreambox-bootmenu/releases/"
 SRC_URI = "${GITHUB_BASE_URI}download/v${PV}/${BPN}.tar.gz;downloadfilename=${BP}.tar.gz"
-SRC_URI[sha256sum] = "a1a315471f857620afb3f9a222ba3b4afb14a6fcc6b05bf1059635be9fb4f9af"
+SRC_URI[sha256sum] = "c1b8cb0dec8b561ad1a63f1ceabfeaee4f3cc6889f6e6be4ec9af2ee81968972"
 S = "${UNPACKDIR}/${BPN}"
 
 RDEPENDS:${PN} = "u-boot-tools-mkimage"
