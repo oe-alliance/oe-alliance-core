@@ -12,7 +12,7 @@ inherit github-releases
 
 GITHUB_BASE_URI = "https://github.com/oe-alliance/dreambox-bootmenu/releases/"
 SRC_URI = "${GITHUB_BASE_URI}download/v${PV}/${BPN}.tar.gz;downloadfilename=${BP}.tar.gz"
-SRC_URI[sha256sum] = "c1b8cb0dec8b561ad1a63f1ceabfeaee4f3cc6889f6e6be4ec9af2ee81968972"
+SRC_URI[sha256sum] = "b754286e3a4b8a0cd2e2554364003801a55d6fee88bf9910392a3c1a03c60cb0"
 S = "${UNPACKDIR}/${BPN}"
 
 RDEPENDS:${PN} = "u-boot-tools-mkimage"
@@ -49,7 +49,8 @@ fi
 }
 
 # Puts the stub into the image in the second slot, if it has none yet, and
-# rebuilds its autoexec.img; install.sh checks the layout and the slot first.
+# rebuilds its autoexec.img; install.sh checks the layout and the slot first
+# and keeps a copy of bootconfig.txt for the menu to fall back on.
 pkg_postinst:${PN}() {
 #!/bin/sh
 [ -n "$D" ] && exit 0
