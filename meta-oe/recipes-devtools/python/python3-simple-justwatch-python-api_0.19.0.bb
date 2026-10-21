@@ -14,4 +14,9 @@ SRC_URI[sha256sum] = "7b93b45b86e0a37ae9bafac8c318bd3c1354bb9c6a6c921fbffd55cbe1
 
 inherit pypi python_pep517
 
+# The sdist caps uv_build below the version oe-core ships.
+do_configure:prepend() {
+    sed -i -E 's/(uv_build>=[0-9.]+),<[0-9.]+/\1/' ${S}/pyproject.toml
+}
+
 include python3-package-split.inc
