@@ -19,7 +19,7 @@ inherit gittag
 SRCREV = "${AUTOREV}"
 
 PKGV = "${GITPKGVTAG}"
-PR = "r4"
+PR = "r5"
 
 RPROVIDES:${PN} += "enigma2-plugin-softcams-oscam-openvix-emu"
 RREPLACES:${PN} += "enigma2-plugin-softcams-oscam-openvix-emu"

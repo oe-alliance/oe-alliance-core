@@ -1,30 +1,59 @@
-From b84604b382d51d54faa5aac4aaa8f559553b4c16 Mon Sep 17 00:00:00 2001
-From: DimitarCC <DimitarCC@github.com>
-Date: Tue, 20 Oct 2026 10:56:03 +0200
-Subject: [PATCH] oscam-latest-stale-ecm-info-patch
-
----
- module-dvbapi.c | 48 ++++++++++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 46 insertions(+), 2 deletions(-)
-
 diff --git a/module-dvbapi.c b/module-dvbapi.c
-index f40f5825..40923fb5 100644
+index f40f5825..cb294edb 100644
 --- a/module-dvbapi.c
 +++ b/module-dvbapi.c
-@@ -1426,6 +1426,32 @@ int32_t dvbapi_open_device(int32_t type, int32_t num, int32_t adapter)
+@@ -29,6 +29,10 @@
+ extern int32_t exit_oscam;
+ 
+ static int32_t dvbapi_listenport_active = 0;
++static volatile int32_t ecminfo_owner_demux = -1; // demux that wrote the current ecm.info
++static volatile time_t ecminfo_last_write = 0; // when ecm.info was last written
++#define ECM_INTERVAL_DEFAULT 12 // seconds, assumed crypto period until the real one is measured
++#define ECM_SILENCE_MIN 15 // never declare an ecm pid silent before this many seconds
+ 
+ #if defined (__CYGWIN__)
+ #define F_NOTIFY 0
+@@ -385,6 +389,7 @@ static char *last_client_name = NULL;
+ static uint32_t ca_descramblers_total = 0; // total number of available descramblers in box
+ static uint32_t ca_descramblers_used = 0; // total number of used descramblers during decoding
+ static int32_t ca_fd[CA_MAX]; // holds fd handle of all ca devices (0 not in use)
++static int32_t ca_node[CA_MAX]; // physical ca node behind logical ca device i while open (-1 = node i itself)
+ static LLIST *ll_activestreampids; // list of all enabled streampids on ca devices
+ static int32_t assoc_fd[MAX_ASSOC_FD]; // list of all client sockets
+ static uint8_t ca_soft_csa[MAX_DEMUX] = {0};
+@@ -1426,6 +1431,53 @@ int32_t dvbapi_open_device(int32_t type, int32_t num, int32_t adapter)
  	else
  	{
  		dmx_fd = ret = open(device_path, O_RDWR | O_NONBLOCK);
 +
-+		// The requested CA device could not be opened: only now try the remaining ones.
-+		if(ret < 0 && type != 0)
++		if(type != 0)
 +		{
-+			uint32_t idx;
-+			for(idx = ca_offset; idx < ca_descramblers_total + ca_offset; idx++)
++			ca_node[num] = -1;
++		}
++
++		// The requested CA node is not available (e.g. locked by a CI module): route this
++		// logical ca device to the next free node. The caller keeps the fd as ca_fd[num], so
++		// CA_SET_PID and all control words of this logical ca go to the same node.
++		if(ret < 0 && type != 0 && num >= 0 && num < CA_MAX)
++		{
++			int32_t idx;
++			for(idx = ca_offset; idx < CA_MAX + ca_offset; idx++)
 +			{
-+				if(idx == (uint32_t)(num + ca_offset))
++				int32_t j;
++				bool in_use = (idx == num + ca_offset);
++
++				// skip nodes already serving another logical ca device
++				for(j = 0; j < CA_MAX && !in_use; j++)
 +				{
-+					continue; // already tried
++					if(j != num && ca_fd[j] > 0 && (ca_node[j] >= 0 ? ca_node[j] : j + ca_offset) == idx)
++					{
++						in_use = true;
++					}
++				}
++
++				if(in_use)
++				{
++					continue;
 +				}
 +
 +				snprintf(device_path2, sizeof(device_path2), devices[selected_box].ca_device, idx);
@@ -37,6 +66,8 @@ index f40f5825..40923fb5 100644
 +				dmx_fd = ret = open(device_path, O_RDWR | O_NONBLOCK);
 +				if(ret >= 0)
 +				{
++					ca_node[num] = idx;
++					cs_log("ca%d is not available, using %s instead", num, device_path);
 +					break;
 +				}
 +			}
@@ -44,7 +75,49 @@ index f40f5825..40923fb5 100644
  	}
  
  	if(ret < 0)
-@@ -2588,9 +2614,27 @@ void dvbapi_stop_descrambling(int32_t demux_id, uint32_t msgid)
+@@ -1437,6 +1489,33 @@ int32_t dvbapi_open_device(int32_t type, int32_t num, int32_t adapter)
+ 	return dmx_fd;
+ }
+ 
++/*
++ * Get the fd of logical ca device <num>, opening it when needed. dvbapi_open_device() may route
++ * it to another free node if ca<num> is locked; the fd stays in ca_fd[num], so CA_SET_PID and
++ * control words always use the same node.
++ */
++static int32_t dvbapi_get_ca_fd(int32_t num, int32_t adapter)
++{
++	if(ca_fd[num] <= 0)
++	{
++		ca_fd[num] = dvbapi_open_device(1, num, adapter);
++	}
++	return ca_fd[num];
++}
++
++/*
++ * How long (seconds) the active ecm pid of a demuxer may stay silent before we consider
++ * decoding stopped: two missed ecms, based on the measured crypto period of the channel.
++ * The host tells us nothing when it leaves a DVB service for a non-DVB one (iptv), so
++ * silence is the only sign.
++ */
++static int32_t dvbapi_ecm_silence_limit(int32_t demux_id)
++{
++	int32_t interval = demux[demux_id].ecm_interval > 0 ? demux[demux_id].ecm_interval : ECM_INTERVAL_DEFAULT;
++	int32_t limit = 2 * interval + 4;
++	return limit < ECM_SILENCE_MIN ? ECM_SILENCE_MIN : limit;
++}
++
+ uint16_t tunemm_caid_map(uint8_t direct, uint16_t caid, uint16_t srvid)
+ {
+ 	int32_t i;
+@@ -2481,6 +2560,7 @@ void dvbapi_set_pid(int32_t demux_id, int32_t num, uint32_t idx, bool enable, bo
+ 											cs_log("ERROR: Could not close demuxer fd (errno=%d %s)", errno, strerror(errno));
+ 										}
+ 										ca_fd[i] = 0;
++										ca_node[i] = -1; // next open tries the exact node again
+ 									}
+ 								}
+ 							}
+@@ -2588,9 +2668,38 @@ void dvbapi_stop_descrambling(int32_t demux_id, uint32_t msgid)
  	demux[demux_id].curindex = -1;
  	demux[demux_id].srvtype = -1;
  
@@ -57,6 +130,8 @@ index f40f5825..40923fb5 100644
 +		{
 +			// Network mode (e.g. PMT mode 6): other programs may still be descrambling
 +			// and rewrite the file themselves, so only remove it when none is left.
++			// pidindex >= 0 means an ECM pid is actually decoding (ecm.info gets written for it);
++			// a program merely announced via CA PMT does not count.
 +			for(i = 0; i < MAX_DEMUX; i++)
 +			{
 +				if(demux[i].program_number != 0 && demux[i].pidindex >= 0)
@@ -67,13 +142,481 @@ index f40f5825..40923fb5 100644
 +			}
 +		}
 +
-+		if(!others_active)
++		// The demux that wrote the current ecm.info always removes it when it stops, even if
++		// another program is still active: that one rewrites it with its next ECM, whereas
++		// a stale file would otherwise stay if the other demux is never stopped properly.
++		if(!others_active || ecminfo_owner_demux == demux_id)
 +		{
 +			unlink(ECMINFO_FILE);
++			ecminfo_owner_demux = -1;
++			cs_log_dbg(D_DVBAPI, "Demuxer %d stopped -> removed %s", demux_id, ECMINFO_FILE);
++		}
++		else
++		{
++			cs_log_dbg(D_DVBAPI, "Demuxer %d stopped -> kept %s (another demuxer is decoding)", demux_id, ECMINFO_FILE);
 +		}
  	}
  	return;
  }
--- 
-2.35.0.windows.1
-
+@@ -4165,6 +4274,18 @@ static void dvbapi_parse_pmt_info(int32_t demux_id, const uint8_t *buffer, uint1
+ {
+ 	uint16_t i, program_info_length, video_pid = 0;
+ 
++	// An update of a program that is already descrambling must not make its ECM pids look
++	// brand new, otherwise the active pid is "found" again and its stream pid / ca index
++	// bookkeeping gets out of step with the descrambler (CA_SET_DESCR then fails with EINVAL).
++	// So remember the runtime state of the current ECM pids and restore it for those that remain.
++	ECMPIDTYPE old_ecmpids[MAX_ECM_PIDS];
++	int32_t old_ecmpidcount = 0, old_pidindex = demux[demux_id].pidindex;
++	if(demux[demux_id].running && demux[demux_id].ECMpidcount > 0)
++	{
++		old_ecmpidcount = demux[demux_id].ECMpidcount;
++		memcpy(old_ecmpids, demux[demux_id].ECMpids, sizeof(old_ecmpids));
++	}
++
+ 	// Cleanout demuxer from possible stale info
+ 	// (reset ECM pids and streams)
+ 	for(i = 0; i < demux[demux_id].ECMpidcount; i++)
+@@ -4233,6 +4354,56 @@ static void dvbapi_parse_pmt_info(int32_t demux_id, const uint8_t *buffer, uint1
+ 		dvbapi_priority_read_entry_map(demux_id);
+ 		dvbapi_priority_read_entry_extra(demux_id);
+ 	}
++
++	if(old_ecmpidcount > 0)
++	{
++		int32_t n, o, f, newpos[MAX_ECM_PIDS];
++		for(o = 0; o < MAX_ECM_PIDS; o++)
++		{
++			newpos[o] = -1;
++		}
++
++		for(n = 0; n < demux[demux_id].ECMpidcount; n++)
++		{
++			ECMPIDTYPE *e = &demux[demux_id].ECMpids[n];
++			for(o = 0; o < old_ecmpidcount; o++)
++			{
++				if(old_ecmpids[o].CAID != e->CAID || old_ecmpids[o].ECM_PID != e->ECM_PID
++					|| old_ecmpids[o].PROVID != e->PROVID)
++				{
++					continue;
++				}
++
++				newpos[o] = n;
++				e->CHID = old_ecmpids[o].CHID;
++				e->irdeto_maxindex = old_ecmpids[o].irdeto_maxindex;
++				e->irdeto_curindex = old_ecmpids[o].irdeto_curindex;
++				e->irdeto_cycle = old_ecmpids[o].irdeto_cycle;
++				e->checked = old_ecmpids[o].checked;
++				e->status = old_ecmpids[o].status;
++				e->tries = old_ecmpids[o].tries;
++				e->table = old_ecmpids[o].table;
++				e->useMultipleIndices = old_ecmpids[o].useMultipleIndices;
++				memcpy(e->index, old_ecmpids[o].index, sizeof(e->index));
++				break;
++			}
++		}
++
++		// ECM pids may have moved: follow the active pid and the running ECM filters
++		for(f = 0; f < MAX_FILTER; f++)
++		{
++			if(demux[demux_id].demux_fd[f].type == TYPE_ECM && demux[demux_id].demux_fd[f].pidindex >= 0
++				&& demux[demux_id].demux_fd[f].pidindex < old_ecmpidcount)
++			{
++				demux[demux_id].demux_fd[f].pidindex = newpos[demux[demux_id].demux_fd[f].pidindex];
++			}
++		}
++
++		if(old_pidindex >= 0 && old_pidindex < old_ecmpidcount)
++		{
++			demux[demux_id].pidindex = newpos[old_pidindex];
++		}
++	}
+ }
+ 
+ typedef struct demux_parameters
+@@ -4520,9 +4691,50 @@ int32_t dvbapi_parse_capmt(const uint8_t *buffer, uint32_t length, int32_t connf
+ 	// in order to get adapter, demux, ca, pmt pid and more.
+ 	get_demux_parameters(buffer, &parameters);
+ 
+-	cs_log_dbg(D_DVBAPI, "Received CA PMT list management %d for program %04X (pmt pid: %04X adapter: %d demux: %d camask: %d)",
++	cs_log("Received CA PMT list management %d for program %04X (pmt pid: %04X adapter: %d demux: %d camask: %d ens: %08X tsid: %04X onid: %04X)",
+ 		ca_pmt_list_management, parameters.program_number, parameters.pmtpid, parameters.adapter_index,
+-		parameters.demux_index, parameters.ca_mask);
++		parameters.demux_index, parameters.ca_mask, parameters.ens, parameters.tsid, parameters.onid);
++
++	// The host (enigma2) stops a service by sending its CA PMT again with ca_pmt_cmd_id
++	// "not selected". This has to be honoured also for a program that is already running;
++	// the matching below only passes new programs and updates on to the command evaluation,
++	// so a "not selected" for a running program would be ignored (and keep ecm.info alive).
++	// The command byte is the first byte of the program info, which is present when
++	// program_info_length is not 0.
++	if(length > 6 && (b2i(2, buffer + 4) & 0x0FFF) != 0 && buffer[6] == CA_PMT_CMD_NOT_SELECTED)
++	{
++		bool stopped = false;
++		for(i = 0; i < MAX_DEMUX; i++)
++		{
++			if(demux[i].program_number == 0 || demux[i].socket_fd != connfd
++				|| demux[i].program_number != parameters.program_number
++				|| demux[i].demux_index != parameters.demux_index)
++			{
++				continue;
++			}
++
++			cs_log("Demuxer %d: program %04X is not selected any longer -> stop descrambling",
++				i, demux[i].program_number);
++			dvbapi_stop_descrambling(i, msgid);
++			stopped = true;
++		}
++
++		if(stopped)
++		{
++			// same as the end of a CA PMT list: stop what the host did not list again
++			if(ca_pmt_list_management != CA_PMT_LIST_FIRST && ca_pmt_list_management != CA_PMT_LIST_MORE)
++			{
++				for(i = 0; i < MAX_DEMUX; i++)
++				{
++					if(demux[i].program_number != 0 && demux[i].stop_descrambling)
++					{
++						dvbapi_stop_descrambling(i, msgid);
++					}
++				}
++			}
++			return -1;
++		}
++	}
+ 
+ 	// Search current demuxers for having the same program
+ 	// as the one we received in this CA PMT object.
+@@ -4571,6 +4783,19 @@ int32_t dvbapi_parse_capmt(const uint8_t *buffer, uint32_t length, int32_t connf
+ 				}
+ 			}
+ 
++			// A new selection (not an update) of a program whose ecm filter has been silent for a while:
++			// the host left the service (e.g. zapped to iptv) without us noticing, so the old demuxer
++			// is dead. Drop it and start the program from scratch below.
++			if((ca_pmt_list_management == CA_PMT_LIST_ONLY || ca_pmt_list_management == CA_PMT_LIST_FIRST)
++				&& demux[i].running && demux[i].pidindex >= 0 && demux[i].ecm_rx_time != 0
++				&& time((time_t *)0) - demux[i].ecm_rx_time > dvbapi_ecm_silence_limit(i))
++			{
++				cs_log("Demuxer %d has had no ecm data for %d s -> restarting program %04X",
++					i, (int32_t)(time((time_t *)0) - demux[i].ecm_rx_time), demux[i].program_number);
++				dvbapi_stop_descrambling(i, msgid);
++				continue;
++			}
++
+ 			// A program update is normally signaled by either a list management:
+ 			// 1. UPDATE for an existing program
+ 			// 2. ADD for an existing program (which according to the specifications should be treated as an UPDATE)
+@@ -5605,6 +5830,19 @@ void dvbapi_process_input(int32_t demux_id, int32_t filter_num, uint8_t *buffer,
+ 		uint32_t chid = 0x10000;
+ 		ECM_REQUEST *er;
+ 
++		// measure the crypto period (ignore duplicates and gaps caused by stalls)
++		time_t rx_now = time((time_t *)0);
++		if(demux[demux_id].ecm_rx_time != 0)
++		{
++			int32_t delta = (int32_t)(rx_now - demux[demux_id].ecm_rx_time);
++			if(delta >= 3 && delta <= 60)
++			{
++				demux[demux_id].ecm_interval = demux[demux_id].ecm_interval > 0
++					? (demux[demux_id].ecm_interval * 3 + delta) / 4 : delta;
++			}
++		}
++		demux[demux_id].ecm_rx_time = rx_now;
++
+ 		if(len != 0) // len = 0 receiver encountered an internal bufferoverflow!
+ 		{
+ 			cs_log_dump_dbg(D_DVBAPI, buffer, sctlen, "Demuxer %d filter %d fetched ECM data (length = 0x%03X):",
+@@ -6296,8 +6534,11 @@ static void dvbapi_handlesockmsg(uint8_t *mbuf, uint16_t chunksize, uint16_t dat
+ 
+ 		case DVBAPI_AOT_CA_STOP:
+ 		{
+-			cs_log_dbg(D_DVBAPI, "Received DVBAPI_AOT_CA_STOP object on socket %d:", connfd);
+-			if(cfg.dvbapi_boxtype == BOXTYPE_IPBOX || cfg.dvbapi_boxtype == BOXTYPE_PC_NODMX || dvbapi_listenport_active)
++			cs_log("Received DVBAPI_AOT_CA_STOP on socket %d for demux index %d", connfd, mbuf[7]);
++			// PMT mode 6 connects to enigma's camd.socket as a client (no listenport), but the
++			// host still sends CA_STOP there when a service is stopped, e.g. when zapping to an FTA channel.
++			if(cfg.dvbapi_boxtype == BOXTYPE_IPBOX || cfg.dvbapi_boxtype == BOXTYPE_PC_NODMX || dvbapi_listenport_active
++				|| cfg.dvbapi_pmtmode == 6)
+ 			{
+ 				int32_t i;
+ 				int32_t demux_index = mbuf[7];
+@@ -6311,7 +6552,8 @@ static void dvbapi_handlesockmsg(uint8_t *mbuf, uint16_t chunksize, uint16_t dat
+ 							dvbapi_stop_descrambling(i, msgid);
+ 						}
+ 					}
+-					else if(demux[i].demux_index == demux_index)
++					else if(demux[i].program_number != 0 && demux[i].demux_index == demux_index
++						&& demux[i].socket_fd == connfd)
+ 					{
+ 						dvbapi_stop_descrambling(i, msgid);
+ 						break;
+@@ -6551,6 +6793,13 @@ static void *dvbapi_main_local(void *cli)
+ 	}
+ 
+ 	memset(ca_fd, 0, sizeof(ca_fd));
++	memset(ca_node, -1, sizeof(ca_node));
++
++	// a file left behind by a previous run (restart, crash) would never be refreshed or removed
++	if(cfg.dvbapi_boxtype != BOXTYPE_PC_NODMX)
++	{
++		unlink(ECMINFO_FILE);
++	}
+ 	memset(assoc_fd, 0, sizeof(assoc_fd));
+ 	dvbapi_read_priority();
+ 	dvbapi_load_channel_cache();
+@@ -6707,6 +6956,19 @@ static void *dvbapi_main_local(void *cli)
+ 			}
+ 		}
+ 
++		// Safety net: whatever stop path was missed (zap to FTA, lost CA_STOP, ...), a decoding
++		// channel refreshes ecm.info with every ECM, so a file nobody refreshes is stale.
++		if(ecminfo_owner_demux >= 0)
++		{
++			int32_t stale_sec = dvbapi_ecm_silence_limit(ecminfo_owner_demux) + 2; // + cw delay after the ecm
++			if(time((time_t *)0) - ecminfo_last_write > stale_sec)
++			{
++				cs_log_dbg(D_DVBAPI, "ecm.info not refreshed for %d s -> removing stale file", stale_sec);
++				unlink(ECMINFO_FILE);
++				ecminfo_owner_demux = -1;
++			}
++		}
++
+ 		for(i = 0; i < MAX_DEMUX; i++)
+ 		{
+ 			if(demux[i].program_number == 0)
+@@ -6769,6 +7031,52 @@ static void *dvbapi_main_local(void *cli)
+ 				demux[i].old_emmfiltercount = emmcounter; // save new amount of emm filters
+ 			}
+ 
++			// Some drivers silently stop delivering sections of a running ecm filter (seen after the
++			// host re-applied its PMT state on a CA PMT update). Nothing notices that, so the channel
++			// freezes until the next zap. If the active ecm pid hasn't delivered anything for much
++			// longer than a crypto period, restart its filter; the existing "no ecm filters left"
++			// logic below then starts decoding again with a fresh filter.
++			if(demux[i].running && demux[i].pidindex >= 0 && ecmcounter > 0)
++			{
++				time_t now_t = time((time_t *)0);
++				if(demux[i].ecm_rx_time == 0)
++				{
++					demux[i].ecm_rx_time = now_t;
++				}
++				else if(now_t - demux[i].ecm_rx_time > 4 * dvbapi_ecm_silence_limit(i))
++				{
++					// e.g. the host zapped to a non-DVB (iptv) service and never told us
++					cs_log("Demuxer %d no ecm data for %d s -> service is gone, stopping descrambling for program %04X",
++						i, (int32_t)(now_t - demux[i].ecm_rx_time), demux[i].program_number);
++					dvbapi_stop_descrambling(i, 0);
++					continue;
++				}
++				else if(now_t - demux[i].ecm_rx_time > dvbapi_ecm_silence_limit(i)
++					&& now_t - demux[i].ecm_restart_time > dvbapi_ecm_silence_limit(i))
++				{
++					cs_log_dbg(D_DVBAPI, "Demuxer %d no ecm data for %d s on ecmpid %d -> restarting ecm filter",
++						i, (int32_t)(now_t - demux[i].ecm_rx_time), demux[i].pidindex);
++
++					for(g = 0; g < maxfilter; g++)
++					{
++						if(demux[i].demux_fd[g].fd > 0 && demux[i].demux_fd[g].type == TYPE_ECM
++							&& demux[i].demux_fd[g].pidindex == demux[i].pidindex)
++						{
++							dvbapi_stop_filternum(i, g, 0);
++						}
++					}
++
++					ECMPIDTYPE *stalled = &demux[i].ECMpids[demux[i].pidindex];
++					stalled->checked = 0; // make the restart logic pick it up again
++					stalled->table = 0; // accept odd and even ecm
++					stalled->tries = 0xFE;
++					stalled->irdeto_curindex = 0xFE;
++					stalled->irdeto_cycle = 0xFE;
++					demux[i].ecm_restart_time = now_t;
++					ecmcounter = 0;
++				}
++			}
++
+ 			// delayed emm start for non irdeto caids,
+ 			// start emm cat if not already done for this demuxer!
+ 			struct timeb now;
+@@ -7183,6 +7491,64 @@ static void *dvbapi_main_local(void *cli)
+ 	return NULL;
+ }
+ 
++/*
++ * Write a control word related ioctl to the ca device. Some drivers drop the pid -> index
++ * (keyslot) binding when the host re-applies its PMT state (e.g. after a CA PMT update),
++ * after which every key write for that index fails with EINVAL although oscam still lists
++ * the stream pids as enabled. In that case bind the stream pids active on this index again
++ * and retry once.
++ */
++static int32_t dvbapi_cw_ioctl(int32_t demux_id, int32_t pid, int32_t ca, uint32_t idx, int32_t cwfd,
++								uint32_t request, void *arg, const char *name)
++{
++	int32_t ret = dvbapi_ioctl(cwfd, request, arg);
++	if(ret < 0 && errno == EINVAL)
++	{
++		int32_t k, rebound = 0;
++		for(k = 0; k < demux[demux_id].STREAMpidcount; k++)
++		{
++			if(demux[demux_id].ECMpids[pid].streams
++				&& !(demux[demux_id].ECMpids[pid].streams & (1 << k)))
++			{
++				continue; // stream is not handled by this ecm pid
++			}
++
++			if(is_ca_used(ca, demux[demux_id].STREAMpids[k]) != idx)
++			{
++				continue; // stream pid isn't enabled on this index
++			}
++
++			ca_pid_t ca_pid2;
++			memset(&ca_pid2, 0, sizeof(ca_pid2));
++			ca_pid2.pid = demux[demux_id].STREAMpids[k];
++			ca_pid2.index = idx;
++			if(dvbapi_ioctl(cwfd, CA_SET_PID, &ca_pid2) == -1)
++			{
++				cs_log_dbg(D_DVBAPI, "Demuxer %d CA_SET_PID rebind pid=0x%04x index=%d on ca%d failed (errno=%d %s)",
++					demux_id, ca_pid2.pid, ca_pid2.index, ca, errno, strerror(errno));
++			}
++			else
++			{
++				rebound++;
++			}
++		}
++
++		cs_log_dbg(D_DVBAPI, "Demuxer %d ioctl(%s) failed with EINVAL -> rebound %d stream pids to index %d on ca%d, retrying",
++			demux_id, name, rebound, idx, ca);
++
++		if(rebound > 0)
++		{
++			ret = dvbapi_ioctl(cwfd, request, arg);
++		}
++	}
++
++	if(ret < 0)
++	{
++		cs_log("ERROR: ioctl(%s): %s", name, strerror(errno));
++	}
++	return ret;
++}
++
+ void dvbapi_write_cw(int32_t demux_id, int32_t pid, int32_t stream_id, uint8_t *cw, uint8_t cw_length, uint8_t *iv,
+ 					uint8_t iv_length, enum ca_descr_algo algo, enum ca_descr_cipher_mode cipher_mode, uint32_t msgid)
+ {
+@@ -7326,16 +7692,10 @@ void dvbapi_write_cw(int32_t demux_id, int32_t pid, int32_t stream_id, uint8_t *
+ 						}
+ 						else
+ 						{
+-							if(ca_fd[i] <= 0)
+-							{
+-								ca_fd[i] = dvbapi_open_device(1, i, demux[demux_id].adapter_index);
+-								if(ca_fd[i] <= 0) { continue; }
+-							}
++							int32_t cwfd = dvbapi_get_ca_fd(i, demux[demux_id].adapter_index);
++							if(cwfd <= 0) { continue; }
+ 
+-							if(dvbapi_ioctl(ca_fd[i], CA_SET_DESCR_MODE, &ca_descr_mode) < 0)
+-							{
+-								cs_log("ERROR: ioctl(CA_SET_DESCR_MODE): %s", strerror(errno));
+-							}
++							dvbapi_cw_ioctl(demux_id, pid, i, usedidx, cwfd, CA_SET_DESCR_MODE, &ca_descr_mode, "CA_SET_DESCR_MODE");
+ 						}
+ 					}
+ 
+@@ -7355,9 +7715,10 @@ void dvbapi_write_cw(int32_t demux_id, int32_t pid, int32_t stream_id, uint8_t *
+ 						}
+ 						else
+ 						{
+-							if(dvbapi_ioctl(ca_fd[i], CA_SET_DESCR_DATA, &ca_descr_data) < 0)
++							int32_t cwfd = dvbapi_get_ca_fd(i, demux[demux_id].adapter_index);
++							if(cwfd > 0)
+ 							{
+-								cs_log("ERROR: ioctl(CA_SET_DESCR_DATA): %s", strerror(errno));
++								dvbapi_cw_ioctl(demux_id, pid, i, usedidx, cwfd, CA_SET_DESCR_DATA, &ca_descr_data, "CA_SET_DESCR_DATA");
+ 							}
+ 						}
+ 
+@@ -7375,9 +7736,10 @@ void dvbapi_write_cw(int32_t demux_id, int32_t pid, int32_t stream_id, uint8_t *
+ 						}
+ 						else
+ 						{
+-							if(dvbapi_ioctl(ca_fd[i], CA_SET_DESCR_DATA, &ca_descr_data) < 0)
++							int32_t cwfd = dvbapi_get_ca_fd(i, demux[demux_id].adapter_index);
++							if(cwfd > 0)
+ 							{
+-								cs_log("ERROR: ioctl(CA_SET_DESCR_DATA): %s", strerror(errno));
++								dvbapi_cw_ioctl(demux_id, pid, i, usedidx, cwfd, CA_SET_DESCR_DATA, &ca_descr_data, "CA_SET_DESCR_DATA");
+ 							}
+ 						}
+ 					}
+@@ -7391,19 +7753,13 @@ void dvbapi_write_cw(int32_t demux_id, int32_t pid, int32_t stream_id, uint8_t *
+ 						}
+ 						else
+ 						{
+-							if(ca_fd[i] <= 0)
++							int32_t cwfd = dvbapi_get_ca_fd(i, demux[demux_id].adapter_index);
++							if(cwfd <= 0)
+ 							{
+-								ca_fd[i] = dvbapi_open_device(1, i, demux[demux_id].adapter_index);
+-								if(ca_fd[i] <= 0)
+-								{
+-									continue;
+-								}
++								continue;
+ 							}
+ 
+-							if(dvbapi_ioctl(ca_fd[i], CA_SET_DESCR, &ca_descr) < 0)
+-							{
+-								cs_log("ERROR: ioctl(CA_SET_DESCR): %s", strerror(errno));
+-							}
++							dvbapi_cw_ioctl(demux_id, pid, i, usedidx, cwfd, CA_SET_DESCR, &ca_descr, "CA_SET_DESCR");
+ 						}
+ 					}
+ 				}
+@@ -7914,8 +8270,14 @@ void dvbapi_send_dcw(struct s_client *client, ECM_REQUEST *er)
+ 			dvbapi_net_send(DVBAPI_ECM_INFO, demux[i].socket_fd, er->msgid, i, 0, NULL, client, er, demux[i].client_proto_version);
+ 		}
+ 
+-		if(cfg.dvbapi_ecminfo_file != 0 && cfg.dvbapi_boxtype != BOXTYPE_SAMYGO)
++		// The demux may have been stopped (and ecm.info removed) while this response
++		// was delayed or the CW was being written; don't resurrect the file then.
++		if(cfg.dvbapi_ecminfo_file != 0 && cfg.dvbapi_boxtype != BOXTYPE_SAMYGO
++			&& demux[i].program_number == er->srvid && demux[i].pidindex >= 0)
+ 		{
++			ecminfo_owner_demux = i;
++			ecminfo_last_write = time((time_t *)0);
++			cs_log_dbg(D_DVBAPI, "Demuxer %d writes %s for program %04X", i, ECMINFO_FILE, demux[i].program_number);
+ #ifdef WITH_EXTENDED_CW
+ 			// Only print CWs for index 0 in ecm.info file
+ 			if(er->cw_ex.algo == CA_ALGO_AES128)
+@@ -7962,8 +8324,15 @@ void dvbapi_write_ecminfo_file(struct s_client *client, ECM_REQUEST *er, uint8_t
+ #define ECMINFO_TYPE_CAMD3    5
+ #define ECMINFO_TYPE_GBOX     6
+ 
++	// Don't open (create/truncate) the file for a failed ECM, otherwise a late
++	// "not found" response re-creates an empty ecm.info after it was removed.
++	if(er->rc >= E_NOTFOUND)
++	{
++		return;
++	}
++
+ 	FILE *ecmtxt = fopen(ECMINFO_FILE, "w");
+-	if(ecmtxt != NULL && er->rc < E_NOTFOUND)
++	if(ecmtxt != NULL)
+ 	{
+ 		char tmp[49]; // holds 16 byte cw - (2 hex digits + 1 space) * 16 byte + string termination)
+ 		const char *reader_name = NULL, *from_name = NULL, *proto_name = NULL, *from_device= NULL ;
+diff --git a/module-dvbapi.h b/module-dvbapi.h
+index df2f20a4..672b19e9 100644
+--- a/module-dvbapi.h
++++ b/module-dvbapi.h
+@@ -416,6 +416,9 @@ typedef struct demux_s
+ 	enum stream_type STREAMpidsType[MAX_STREAM_PIDS];    // type (audio, video, subtitle, etc) of the corresponding stream pid
+ 	int16_t          pidindex;                           // ECMpid used for descrambling - holds index of the ECMpids[] array
+ 	int16_t          curindex;
++	time_t           ecm_rx_time;                        // last time the active ecm pid filter delivered data (stall watchdog)
++	time_t           ecm_restart_time;                   // last time the ecm filter was restarted by the stall watchdog
++	int32_t          ecm_interval;                       // measured seconds between ecms of the active ecm pid (0 = unknown)
+ 	int8_t           max_status;
+ 	uint16_t         program_number;                     // also called service id (srvid)
+ 	uint16_t         onid;                               // original network id
