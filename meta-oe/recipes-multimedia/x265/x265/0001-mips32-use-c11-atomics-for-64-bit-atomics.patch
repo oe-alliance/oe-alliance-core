@@ -1,0 +1,32 @@
+Use C11 atomics for the 64-bit atomics on 32-bit MIPS
+
+There are no 64-bit __sync builtins on that target, so libx265 ends up with
+undefined references to __sync_fetch_and_add_8, __sync_add_and_fetch_8 and
+__sync_lock_test_and_set_8. The __atomic builtins resolve to libatomic, which
+the recipe links in for mipsarch.
+
+Upstream-Status: Pending
+
+--- a/common/threading.h
++++ b/common/threading.h
+@@ -89,11 +89,19 @@
+ #define ATOMIC_AND(ptr, mask) __sync_fetch_and_and(ptr, mask)
+ #define ATOMIC_INC(ptr)       __sync_add_and_fetch(reinterpret_cast<volatile int32_t*>(ptr), 1)
+ #define ATOMIC_DEC(ptr)       __sync_add_and_fetch(reinterpret_cast<volatile int32_t*>(ptr), -1)
++#if defined(__mips__) && !defined(__mips64)
++/* No 64-bit __sync builtins here, the __atomic ones come from libatomic. */
++#define ATOMIC_ADD(ptr, val)      __atomic_fetch_add(reinterpret_cast<volatile __typeof__(*(ptr))*>(ptr), (__typeof__(*(ptr) + 0))(val), __ATOMIC_SEQ_CST)
++#define ATOMIC64_LOAD(ptr)        __atomic_load_n(reinterpret_cast<volatile int64_t*>(ptr), __ATOMIC_SEQ_CST)
++#define ATOMIC64_STORE(ptr, val)  __atomic_store_n(reinterpret_cast<volatile int64_t*>(ptr), (int64_t)(val), __ATOMIC_SEQ_CST)
++#define ATOMIC64_ADD(ptr, val)    __atomic_fetch_add(reinterpret_cast<volatile int64_t*>(ptr), val, __ATOMIC_SEQ_CST)
++#else
+ #define ATOMIC_ADD(ptr, val)  __sync_fetch_and_add(reinterpret_cast<volatile __typeof__(*(ptr))*>(ptr), (__typeof__(*(ptr) + 0))(val))
+-#define ATOMIC_STORE(ptr, val)    __sync_lock_test_and_set(reinterpret_cast<volatile int32_t*>(ptr), (int32_t)(val))
+ #define ATOMIC64_LOAD(ptr)        __sync_fetch_and_add(reinterpret_cast<volatile int64_t*>(ptr), 0)
+ #define ATOMIC64_STORE(ptr, val)  __sync_lock_test_and_set(reinterpret_cast<volatile int64_t*>(ptr), val)
+ #define ATOMIC64_ADD(ptr, val)    __sync_fetch_and_add(reinterpret_cast<volatile int64_t*>(ptr), val)
++#endif
++#define ATOMIC_STORE(ptr, val)    __sync_lock_test_and_set(reinterpret_cast<volatile int32_t*>(ptr), (int32_t)(val))
+ #define GIVE_UP_TIME()        usleep(0)
+ 
+ #elif defined(_MSC_VER)       /* Windows atomic intrinsics */
