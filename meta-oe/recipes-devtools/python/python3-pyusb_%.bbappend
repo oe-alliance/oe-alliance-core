@@ -1,9 +1,9 @@
 RDEPENDS:${PN} += "libusb1"
 
-# setuptools_scm is already pulled in via DEPENDS; drop setup.py's
-# setup_requires call which triggers a setuptools/Python 3.14 metadata crash.
+# setuptools_scm is already pulled in via DEPENDS. Drop setup_requires from
+# both setup files to avoid the setuptools/Python 3.14 metadata crash.
 do_configure:prepend() {
-    sed -i "/setup_requires=/d" ${S}/setup.py
+    sed -i "/^[[:space:]]*setup_requires[[:space:]]*=/d" ${S}/setup.py ${S}/setup.cfg
 }
 
 include python3-package-split.inc
