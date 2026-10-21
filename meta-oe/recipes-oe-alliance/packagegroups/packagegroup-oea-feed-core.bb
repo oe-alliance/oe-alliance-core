@@ -127,6 +127,7 @@ RDEPENDS:${PN} = "\
     dvblast \
     dvbsnoop \
     dvdfs \
+    ${@bb.utils.contains_any("MACHINEBUILD", "dreamone dreamtwo", "dreambox-bootmenu", "", d)} \
     edid-decode \
     eti-tools \
     extundelete \
