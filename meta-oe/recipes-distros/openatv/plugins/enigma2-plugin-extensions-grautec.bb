@@ -2,7 +2,6 @@ SUMMARY = "drivers for grautec oleed display for dreambox"
 MAINTAINER = "grautec"
 SECTION = "base"
 PRIORITY = "required"
-LICENSE = "LicenseRef-proprietary"
 PACKAGE_ARCH = "${MACHINEBUILD}"
 
 require conf/license/license-gplv2.inc

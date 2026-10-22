@@ -1,7 +1,6 @@
 SUMMARY = "Init script for Bluetooth Manager"
 SECTION = "base"
 PRIORITY = "optional"
-LICENSE = "LicenseRef-proprietary"
 require conf/license/license-gplv2.inc
 
 inherit update-rc.d

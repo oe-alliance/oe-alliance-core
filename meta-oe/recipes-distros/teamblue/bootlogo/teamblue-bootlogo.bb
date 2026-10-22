@@ -1,7 +1,6 @@
 SUMMARY = "teamBlue bootlogo"
 SECTION = "base"
 PRIORITY = "required"
-LICENSE = "LicenseRef-proprietary"
 MAINTAINER = "teamBlue"
 PACKAGE_ARCH = "${MACHINEBUILD}"
 

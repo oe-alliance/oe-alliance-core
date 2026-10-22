@@ -1,7 +1,6 @@
 SUMMARY = "SNES Game Manager"
 MAINTAINER = "open alliance"
 SECTION = "base"
-LICENSE = "LicenseRef-proprietary"
 inherit allarch
 
 RDEPENDS:${PN} += "directfb libsdl snes9x-sdl snes-init"

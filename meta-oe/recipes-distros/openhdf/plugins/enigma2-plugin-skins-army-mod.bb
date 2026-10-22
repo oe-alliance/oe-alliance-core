@@ -3,7 +3,6 @@ SUMMARY = "HDFreaks.cc Army-Mod"
 MAINTAINER = "HDFreaks"
 SECTION = "base"
 PRIORITY = "required"
-LICENSE = "LicenseRef-proprietary"
 inherit allarch
 
 require conf/license/license-gplv2.inc

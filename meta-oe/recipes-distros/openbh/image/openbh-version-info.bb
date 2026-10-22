@@ -2,7 +2,6 @@ SUMMARY = "OpenBh Version Info"
 MAINTAINER = "OpenBh"
 SECTION = "base"
 PRIORITY = "required"
-LICENSE = "LicenseRef-proprietary"
 
 require conf/license/license-gplv2.inc
 

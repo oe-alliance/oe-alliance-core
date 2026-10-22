@@ -2,7 +2,6 @@ SUMMARY = "direct Flashing and Backup for Enigma2"
 MAINTAINER = "gutemine <gutemine@oozoon.de>"
 SECTION = "base"
 PRIORITY = "required"
-LICENSE = "LicenseRef-proprietary"
 RDEPENDS:${PN} = "dreambox-buildimage"
 
 require conf/license/license-gplv2.inc

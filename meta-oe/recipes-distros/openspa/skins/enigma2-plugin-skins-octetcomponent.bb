@@ -2,7 +2,6 @@ SUMMARY = "Components OctEtSkins"
 MAINTAINER = "norhap"
 SECTION = "base"
 PRIORITY = "required"
-LICENSE = "LicenseRef-proprietary"
 
 require conf/license/license-gplv2.inc
 require conf/python/python3-compileall.inc

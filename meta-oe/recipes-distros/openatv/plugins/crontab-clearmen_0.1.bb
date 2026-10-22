@@ -1,7 +1,6 @@
 SUMMARY = "crontab Clearmen"
 MAINTAINER = "openATV Team"
 SECTION = "base"
-LICENSE = "LicenseRef-proprietary"
 inherit allarch
 require conf/license/license-gplv2.inc
 

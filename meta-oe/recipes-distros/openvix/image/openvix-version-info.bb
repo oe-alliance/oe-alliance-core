@@ -2,7 +2,6 @@ SUMMARY = "OpenViX Version Info"
 MAINTAINER = "OpenViX"
 SECTION = "base"
 PRIORITY = "required"
-LICENSE = "LicenseRef-proprietary"
 
 require conf/license/license-gplv2.inc
 

@@ -1,7 +1,6 @@
 SUMMARY = "Config files to EPG MHW2"
 MAINTAINER = "OpenSPA"
 SECTION = "base"
-LICENSE = "LicenseRef-proprietary"
 
 inherit allarch
 

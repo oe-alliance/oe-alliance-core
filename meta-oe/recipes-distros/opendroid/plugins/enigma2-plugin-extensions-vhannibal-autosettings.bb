@@ -2,7 +2,6 @@ DESCRIPTION = "vhannibal autosettings plugin"
 MAINTAINER = "opendroid-Team"
 SECTION = "base"
 PRIORITY = "required"
-LICENSE = "LicenseRef-proprietary"
 inherit allarch
 
 require conf/license/license-gplv2.inc

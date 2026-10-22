@@ -1,7 +1,6 @@
 SUMMARY = "Ceryon LCD Splash Files"
 SECTION = "base"
 PRIORITY = "required"
-LICENSE = "LicenseRef-proprietary"
 MAINTAINER = "ceryon"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 

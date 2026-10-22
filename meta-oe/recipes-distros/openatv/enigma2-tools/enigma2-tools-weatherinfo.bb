@@ -2,7 +2,6 @@ SUMMARY = "get weather forecasts from MSN-Weather and/or OpenWeatherMap (OWM)"
 MAINTAINER = "Mr.Servo and jbleyel"
 SECTION = "base"
 PRIORITY = "required"
-LICENSE = "LicenseRef-proprietary"
 require conf/license/license-gplv2.inc
 require conf/python/python3-compileall.inc
 

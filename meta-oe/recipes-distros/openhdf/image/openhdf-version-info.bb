@@ -1,7 +1,6 @@
 SUMMARY = "OpenHDF version info"
 SECTION = "base"
 PRIORITY = "required"
-LICENSE = "LicenseRef-proprietary"
 MAINTAINER = "OpenHDF"
 
 require conf/license/license-gplv2.inc

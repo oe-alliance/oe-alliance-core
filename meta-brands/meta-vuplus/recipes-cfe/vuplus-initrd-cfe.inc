@@ -2,7 +2,6 @@ SUMMARY = "2nd bootloader support"
 SECTION = "base"
 PRIORITY = "required"
 MAINTAINER = "vuplus"
-LICENSE = "LicenseRef-proprietary"
 PACKAGE_ARCH := "${MACHINE_ARCH}"
 
 require conf/license/license-gplv2.inc

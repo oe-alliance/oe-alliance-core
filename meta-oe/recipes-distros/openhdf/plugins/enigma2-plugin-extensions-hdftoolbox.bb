@@ -3,7 +3,6 @@ SUMMARY = "HDFreaks.cc Toolbox"
 MAINTAINER = "HDFreaks"
 SECTION = "base"
 PRIORITY = "required"
-LICENSE = "LicenseRef-proprietary"
 inherit allarch
 
 DEPENDS = "enigma2"
