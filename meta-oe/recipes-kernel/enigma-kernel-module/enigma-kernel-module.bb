@@ -102,9 +102,9 @@ do_configure:prepend(){
     elif [ "${BRAND_OEM}" = "anadol" ]; then
         DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-ANADOL-BASE}/recipes-drivers/anadol-dvb-modules-${MACHINE}.bb | cut -b 12-19`
     elif [ "${BRAND_OEM}" = "dreambox" ]; then
-        if [ "${MACHINE}" = "dm7080" ]; then
+        if [ "${MACHINEBUILD}" = "dm7080" ]; then
             DRIVERSDATE="20190502"
-        elif [ "${MACHINE}" = "dm820" ]; then
+        elif [ "${MACHINEBUILD}" = "dm820" ]; then
             DRIVERSDATE="20181018"
         elif [ "${MACHINE}" = "dm520" ]; then
             DRIVERSDATE="20180222"

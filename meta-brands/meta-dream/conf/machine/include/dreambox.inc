@@ -5,7 +5,7 @@ include conf/machine/include/build-extras.inc
 BRAND_OEM = "dreambox"
 MACHINE_BRAND = "Dreambox"
 
-EXTRA_IMAGEDEPENDS += "dreambox-secondstage-${MACHINE}"
+EXTRA_IMAGEDEPENDS += "dreambox-secondstage-${MACHINEBUILD}"
 
 GLIBC_EXTRA_OECONF = "--with-tls --with-__thread"
 
@@ -41,7 +41,7 @@ MACHINE_FEATURES += "dreambox alsa usbhost 3dtv switchoff tpm blindscan-dvbs box
 # Add "dreambox" override for recipes
 MACHINEOVERRIDES .= ":dreambox"
 
-PREFERRED_PROVIDER_virtual/bootloader = "dreambox-secondstage-${MACHINE}"
+PREFERRED_PROVIDER_virtual/bootloader = "dreambox-secondstage-${MACHINEBUILD}"
 PREFERRED_PROVIDER_virtual/kernel = "linux-dreambox"
 PREFERRED_PROVIDER_virtual/kodi = "stb-kodi-${MACHINE}"
 

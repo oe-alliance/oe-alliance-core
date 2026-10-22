@@ -24,10 +24,9 @@ MTD_KERNEL:dm500hdv2 = "mtd2"
 MTD_KERNEL:dm520 = "mtd2"
 MTD_KERNEL:dm800se = "mtd2"
 MTD_KERNEL:dm800sev2 = "mtd2"
-MTD_KERNEL:dm820 = "mtd2"
+MTD_KERNEL:dm7435 = "mtd2"
 MTD_KERNEL:dm7020hd = "mtd2"
 MTD_KERNEL:dm7020hdv2 = "mtd2"
-MTD_KERNEL:dm7080 = "mtd2"
 MTD_KERNEL:dm8000 = "mtd2"
 
 EXTRA_OEMAKE = " \

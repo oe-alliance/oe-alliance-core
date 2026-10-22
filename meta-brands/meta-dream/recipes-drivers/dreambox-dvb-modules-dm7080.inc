@@ -6,9 +6,11 @@ require conf/license/license-close.inc
 
 DREAMBOX_DVB_MODULES_MIRROR ?= "https://source.mynonpublic.com/dreambox"
 
-SRC_URI = "${DREAMBOX_DVB_MODULES_MIRROR}/dreambox-dvb-modules_${KV}-${MACHINE}-${DRIVERDATE}_${MACHINE}.tar.xz;name=${MACHINE}"
+SRC_URI = "${DREAMBOX_DVB_MODULES_MIRROR}/dreambox-dvb-modules_${KV}-${MACHINEBUILD}-${DRIVERDATE}_${MACHINEBUILD}.tar.xz;name=${MACHINEBUILD}"
 
-S = "${UNPACKDIR}/dreambox-dvb-modules_${KV}-${MACHINE}-${DRIVERDATE}_${MACHINE}"
+S = "${UNPACKDIR}/dreambox-dvb-modules_${KV}-${MACHINEBUILD}-${DRIVERDATE}_${MACHINEBUILD}"
+
+PACKAGE_ARCH = "${MACHINEBUILD}"
 
 INHIBIT_PACKAGE_STRIP = "1"
 INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
@@ -39,7 +41,7 @@ do_install:append() {
 
 PACKAGES =+ "${PN}-lcd ${PN}-stb-core"
 
-RDEPENDS:${PN} = "dreambox-secondstage-${MACHINE} ${PN}-stb-core"
+RDEPENDS:${PN} = "dreambox-secondstage-${MACHINEBUILD} ${PN}-stb-core"
 RDEPENDS:${PN}-lcd = "${PN}-stb-core"
 RRECOMMENDS:${PN} = "${PN}-lcd"
 
@@ -54,7 +56,7 @@ FILES:${PN}-stb-core = "${sysconfdir}/modules-load.d/01-${BPN}-stb-core.conf \
 
 # We don't use KERNEL_VERSION in this recipe, because the
 # precompiled modules depend on a specific version.
-DM_LOCALVERSION = "${@'-'.join('${PV}'.split('-')[:-1])}-${MACHINE}"
+DM_LOCALVERSION = "${@'-'.join('${PV}'.split('-')[:-1])}-${MACHINEBUILD}"
 DRIVERDATE = "${@'${PV}'.split('-')[-1]}"
 MD5SUM = "${@d.getVarFlag('SRC_URI', 'dm7080.md5sum', True)}"
 

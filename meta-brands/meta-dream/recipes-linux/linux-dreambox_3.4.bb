@@ -2,7 +2,11 @@ inherit kernel machine_kernel_pr kernel-fixups
 
 MACHINE_KERNEL_PR:append = ".18"
 
-COMPATIBLE_MACHINE = "^(dm520|dm820|dm7080)$"
+COMPATIBLE_MACHINE = "^(dm520|dm7435)$"
+
+# Kernel differs per MACHINEBUILD (CONFIG_DREAMBOX_DM820 vs DM7080), so
+# scope build/deploy per MACHINEBUILD instead of MACHINE_ARCH.
+PACKAGE_ARCH = "${MACHINEBUILD}"
 
 PATCHREV = "30070c78a23d461935d9db0b6ce03afc70a10c51"
 PATCHLEVEL = "113"
@@ -72,7 +76,7 @@ kernel_do_configure:prepend() {
 
 BRCM_PATCHLEVEL = "4.0"
 
-LINUX_VERSION = "${PV}-${BRCM_PATCHLEVEL}-${MACHINE}"
+LINUX_VERSION = "${PV}-${BRCM_PATCHLEVEL}-${MACHINEBUILD}"
 KERNEL_IMAGETYPE = "${@bb.utils.contains('MACHINE', 'dm520', 'vmlinux.gz', 'vmlinux.bin', d)}"
 # kernel.bbclass adds KERNEL_IMAGETYPE. DM820/DM7080 only need the raw
 # vmlinux.bin for flash-kernel/ofgwrite; do not install a second gzip image.
@@ -90,7 +94,7 @@ if [ -z "$D" ]; then
 fi
 }
 
-COMPATIBLE_MACHINE = "^(dm520|dm820|dm7080)$"
+COMPATIBLE_MACHINE = "^(dm520|dm7435)$"
 
 do_rm_work() {
 }

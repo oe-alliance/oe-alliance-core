@@ -9,6 +9,6 @@ require conf/machine/include/dreambox.inc
 require conf/machine/include/mips/tune-mips32.inc
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "\
-    dreambox-dvb-modules-${MACHINE} \
+    dreambox-dvb-modules-${MACHINEBUILD} \
     kernel-module-stv0299 \
     "
