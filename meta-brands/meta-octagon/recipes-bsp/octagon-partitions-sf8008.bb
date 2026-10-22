@@ -2,7 +2,7 @@ SUMMARY = "SF8008 partitions files"
 SECTION = "base"
 PRIORITY = "required"
 require conf/license/license-close.inc
-PACKAGE_ARCH = "${MACHINE_ARCH}"
+PACKAGE_ARCH = "${MACHINEBUILD}"
 
 inherit deploy
 
@@ -11,7 +11,7 @@ PR = "${SRCDATE}"
 
 S = "${UNPACKDIR}"
 
-SRC_URI = "https://source.mynonpublic.com/octagon/${MACHINE}-partitions-${SRCDATE}.zip \
+SRC_URI = "https://source.mynonpublic.com/octagon/${MACHINEBUILD}-partitions-${SRCDATE}.zip \
   file://flash-apploader \
 "
 
@@ -35,16 +35,16 @@ do_install() {
 FILES:${PN} = "/usr/share ${sysconfdir}"
 
 do_deploy() {
-    install -d ${DEPLOY_DIR_IMAGE}/${MACHINE}-partitions
-    install -m 0755 ${UNPACKDIR}/patitions/bootargs.bin ${DEPLOY_DIR_IMAGE}/${MACHINE}-partitions
-    install -m 0755 ${UNPACKDIR}/patitions/boot.img ${DEPLOY_DIR_IMAGE}/${MACHINE}-partitions
-    install -m 0755 ${UNPACKDIR}/patitions/fastboot.bin ${DEPLOY_DIR_IMAGE}/${MACHINE}-partitions
-    install -m 0755 ${UNPACKDIR}/patitions/apploader.bin ${DEPLOY_DIR_IMAGE}/${MACHINE}-partitions
-    install -m 0755 ${UNPACKDIR}/patitions/pq_param.bin ${DEPLOY_DIR_IMAGE}/${MACHINE}-partitions
-    install -m 0755 ${UNPACKDIR}/patitions/emmc_partitions.xml ${DEPLOY_DIR_IMAGE}/${MACHINE}-partitions
-    install -m 0755 ${UNPACKDIR}/patitions/baseparam.img ${DEPLOY_DIR_IMAGE}/${MACHINE}-partitions
-    install -m 0755 ${UNPACKDIR}/patitions/logo.img ${DEPLOY_DIR_IMAGE}/${MACHINE}-partitions
-    install -m 0755 ${UNPACKDIR}/patitions/deviceinfo.bin ${DEPLOY_DIR_IMAGE}/${MACHINE}-partitions
+    install -d ${DEPLOY_DIR_IMAGE}/${MACHINEBUILD}-partitions
+    install -m 0755 ${UNPACKDIR}/patitions/bootargs.bin ${DEPLOY_DIR_IMAGE}/${MACHINEBUILD}-partitions
+    install -m 0755 ${UNPACKDIR}/patitions/boot.img ${DEPLOY_DIR_IMAGE}/${MACHINEBUILD}-partitions
+    install -m 0755 ${UNPACKDIR}/patitions/fastboot.bin ${DEPLOY_DIR_IMAGE}/${MACHINEBUILD}-partitions
+    install -m 0755 ${UNPACKDIR}/patitions/apploader.bin ${DEPLOY_DIR_IMAGE}/${MACHINEBUILD}-partitions
+    install -m 0755 ${UNPACKDIR}/patitions/pq_param.bin ${DEPLOY_DIR_IMAGE}/${MACHINEBUILD}-partitions
+    install -m 0755 ${UNPACKDIR}/patitions/emmc_partitions.xml ${DEPLOY_DIR_IMAGE}/${MACHINEBUILD}-partitions
+    install -m 0755 ${UNPACKDIR}/patitions/baseparam.img ${DEPLOY_DIR_IMAGE}/${MACHINEBUILD}-partitions
+    install -m 0755 ${UNPACKDIR}/patitions/logo.img ${DEPLOY_DIR_IMAGE}/${MACHINEBUILD}-partitions
+    install -m 0755 ${UNPACKDIR}/patitions/deviceinfo.bin ${DEPLOY_DIR_IMAGE}/${MACHINEBUILD}-partitions
 }
 
 addtask deploy before do_package after do_install

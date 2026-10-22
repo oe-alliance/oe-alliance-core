@@ -5,7 +5,9 @@ LICENSE = "GPL-2.0-only"
 KERNEL_RELEASE = "4.4.35"
 SRCDATE = "20181224"
 
-COMPATIBLE_MACHINE = "^(sf8008|sf8008m)$"
+COMPATIBLE_MACHINE = "^(ocmv200)$"
+
+PACKAGE_ARCH = "${MACHINEBUILD}"
 
 inherit kernel machine_kernel_pr kernel-fixups
 

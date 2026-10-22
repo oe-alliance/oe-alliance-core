@@ -2,12 +2,12 @@ SUMMARY = "Hardware drivers for ${MACHINE}"
 SECTION = "base"
 PRIORITY = "required"
 require conf/license/license-close.inc
-PACKAGE_ARCH = "${MACHINE}"
+PACKAGE_ARCH = "${MACHINEBUILD}"
 
 PV = "${KV}+${SRCDATE}"
 PR = "r2"
 
-SRC_URI = "https://source.mynonpublic.com/octagon/${MACHINE}-drivers-${KV}-${GCCREV}-${SRCDATE}.zip"
+SRC_URI = "https://source.mynonpublic.com/octagon/${MACHINEBUILD}-drivers-${KV}-${GCCREV}-${SRCDATE}.zip"
 
 S = "${UNPACKDIR}"
 
@@ -23,7 +23,7 @@ do_install() {
     install -d ${D}/lib/modules/${KV}/extra
     install -d ${D}/${sysconfdir}/modules-load.d
     install -m 0755 ${S}/linuxtv.ko ${D}/lib/modules/${KV}/extra/linuxtv.ko
-    echo linuxtv >> ${D}/${sysconfdir}/modules-load.d/_${MACHINE}.conf
+    echo linuxtv >> ${D}/${sysconfdir}/modules-load.d/_${MACHINEBUILD}.conf
 }
 
-FILES:${PN} += "${sysconfdir}/modules-load.d/_${MACHINE}.conf /lib/modules/${KV}/extra"
+FILES:${PN} += "${sysconfdir}/modules-load.d/_${MACHINEBUILD}.conf /lib/modules/${KV}/extra"
