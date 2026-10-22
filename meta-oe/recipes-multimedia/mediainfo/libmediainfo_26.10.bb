@@ -10,8 +10,8 @@ LIC_FILES_CHKSUM = "file://${UNPACKDIR}/MediaInfoLib/LICENSE;md5=9e35b82c62a9516
 DEPENDS += "libtinyxml2 libzen zlib"
 
 SRC_URI = "https://mediaarea.net/download/source/libmediainfo/${PV}/libmediainfo_${PV}.tar.bz2"
-SRC_URI[md5sum] = "991729d962a6fc86ee1fe3b4e281218c"
-SRC_URI[sha256sum] = "736222cb45966412f50276461b7cd50488794948063fadd39c9a675ba20a3f4a"
+SRC_URI[md5sum] = "f15b7ebc2fab7f54142f6a498184ed3f"
+SRC_URI[sha256sum] = "ba40d76b365053d9aeb7bd98d852993acaa53b9d63a3d84bddedd90150dcdbf8"
 
 S = "${UNPACKDIR}/MediaInfoLib/Project/GNU/Library"
 
