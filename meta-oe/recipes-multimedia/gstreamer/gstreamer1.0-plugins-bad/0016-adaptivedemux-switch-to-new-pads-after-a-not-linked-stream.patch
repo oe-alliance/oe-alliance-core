@@ -1,0 +1,110 @@
+Subject: [PATCH] adaptivedemux: switch to new pads after a not-linked stream
+
+A variant switch of hlsdemux replaces all pads. The new pads are exposed
+by the stream that advances last, once all other streams are cancelled
+or finished downloading. A stream that stops as not-linked, an unselected
+audio rendition behind an input-selector, does not advance. When it was
+the last one to finish, nothing exposed the new pads and playback stalled
+for good. With several audio renditions this happened on a switch shortly
+after the start.
+
+Check for the pending switch also when a stream stops as not-linked.
+
+Upstream-Status: Pending
+---
+--- a/gst-libs/gst/adaptivedemux/gstadaptivedemux.c
++++ b/gst-libs/gst/adaptivedemux/gstadaptivedemux.c
+@@ -300,6 +300,8 @@
+ static GstFlowReturn
+ gst_adaptive_demux_stream_advance_fragment_unlocked (GstAdaptiveDemux * demux,
+     GstAdaptiveDemuxStream * stream, GstClockTime duration);
++static void gst_adaptive_demux_switch_streams (GstAdaptiveDemux * demux,
++    GstAdaptiveDemuxStream * stream);
+ static gboolean
+ gst_adaptive_demux_wait_until (GstClock * clock, GCond * cond, GMutex * mutex,
+     GstClockTime end_time);
+@@ -3910,6 +3912,13 @@
+       GstFlowReturn ret;
+       gst_task_stop (stream->download_task);
+ 
++      /* a not-linked stream does not advance: it can be the last one
++       * a pending switch to new pads waits for */
++      if (G_UNLIKELY (demux->next_streams)) {
++        gst_adaptive_demux_switch_streams (demux, stream);
++        break;
++      }
++
+       ret = gst_adaptive_demux_combine_flows (demux);
+       if (ret == GST_FLOW_NOT_LINKED) {
+         GST_ELEMENT_FLOW_ERROR (demux, ret);
+@@ -4247,6 +4256,36 @@
+   return ret;
+ }
+ 
++/* Expose the new pads the subclass wants once all other streams are
++ * cancelled or finished downloading.
++ * must be called with manifest_lock taken */
++static void
++gst_adaptive_demux_switch_streams (GstAdaptiveDemux * demux,
++    GstAdaptiveDemuxStream * stream)
++{
++  GList *iter;
++  gboolean can_expose = TRUE;
++
++  for (iter = demux->streams; iter; iter = g_list_next (iter)) {
++    GstAdaptiveDemuxStream *other = iter->data;
++    if (other != stream) {
++      g_mutex_lock (&other->fragment_download_lock);
++      can_expose &= (other->cancelled == TRUE
++          || other->download_finished == TRUE);
++      g_mutex_unlock (&other->fragment_download_lock);
++    }
++  }
++
++  if (can_expose) {
++    GST_DEBUG_OBJECT (demux, "Subclass wants new pads "
++        "to do bitrate switching");
++    gst_adaptive_demux_prepare_streams (demux, FALSE);
++    gst_adaptive_demux_start_tasks (demux, TRUE);
++  } else {
++    GST_LOG_OBJECT (demux, "Not switching yet - ongoing downloads");
++  }
++}
++
+ /* must be called with manifest_lock taken */
+ GstFlowReturn
+ gst_adaptive_demux_stream_advance_fragment_unlocked (GstAdaptiveDemux * demux,
+@@ -4326,32 +4365,11 @@
+ 
+     /* the subclass might want to switch pads */
+     if (G_UNLIKELY (demux->next_streams)) {
+-      GList *iter;
+-      gboolean can_expose = TRUE;
+-
+       gst_task_stop (stream->download_task);
+ 
+       ret = GST_FLOW_EOS;
+ 
+-      for (iter = demux->streams; iter; iter = g_list_next (iter)) {
+-        /* Only expose if all streams are now cancelled or finished downloading */
+-        GstAdaptiveDemuxStream *other = iter->data;
+-        if (other != stream) {
+-          g_mutex_lock (&other->fragment_download_lock);
+-          can_expose &= (other->cancelled == TRUE
+-              || other->download_finished == TRUE);
+-          g_mutex_unlock (&other->fragment_download_lock);
+-        }
+-      }
+-
+-      if (can_expose) {
+-        GST_DEBUG_OBJECT (demux, "Subclass wants new pads "
+-            "to do bitrate switching");
+-        gst_adaptive_demux_prepare_streams (demux, FALSE);
+-        gst_adaptive_demux_start_tasks (demux, TRUE);
+-      } else {
+-        GST_LOG_OBJECT (demux, "Not switching yet - ongoing downloads");
+-      }
++      gst_adaptive_demux_switch_streams (demux, stream);
+     }
+   }
+ 
