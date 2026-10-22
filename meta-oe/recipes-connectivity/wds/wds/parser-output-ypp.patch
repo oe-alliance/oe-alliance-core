@@ -1,0 +1,33 @@
+Drop in-file %output / %defines so modern bison accepts the file names
+
+Bison 3.8+ rejects both %output "gen/parser.cpp" and %defines "gen/parser.h"
+when a path component is present (invalid file name ignored). CMake's
+BISON_TARGET already feeds the output on the command line, and the extra
+--defines=... below writes the header right next to it, so both in-file
+directives become redundant.
+
+Upstream-Status: Pending
+
+Signed-off-by: WXbet <57314510+WXbet@users.noreply.github.com>
+
+--- a/libwds/rtsp/parser.ypp
++++ b/libwds/rtsp/parser.ypp
+@@ -1,7 +1,5 @@
+ %pure-parser
+ %no-lines
+-%output "gen/parser.cpp"
+-%defines "gen/parser.h"
+
+ %code requires {
+ /*
+--- a/libwds/rtsp/CMakeLists.txt
++++ b/libwds/rtsp/CMakeLists.txt
+@@ -14,7 +14,7 @@ if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+ endif (CMAKE_BUILD_TYPE STREQUAL "Debug")
+
+ find_package(BISON REQUIRED)
+-BISON_TARGET(Parser parser.ypp ${PARSER_GEN_DIR}/parser.cpp COMPILE_FLAGS "-l -p wds_ ${PARSER_DEBUG_OPTIONS}")
++BISON_TARGET(Parser parser.ypp ${PARSER_GEN_DIR}/parser.cpp COMPILE_FLAGS "-l -p wds_ --defines=${PARSER_GEN_DIR}/parser.h ${PARSER_DEBUG_OPTIONS}")
+
+ find_package(FLEX REQUIRED)
+ FLEX_TARGET(MessageLexer messagelexer.l ${PARSER_GEN_DIR}/messagescanner.cpp COMPILE_FLAGS "-L -P message_ ${PARSER_DEBUG_OPTIONS}")

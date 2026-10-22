@@ -13,7 +13,9 @@ PV = "1.1.0+git"
 PKGV = "1.1.0+git${GITPKGV}"
 PR = "r1"
 
-SRC_URI = "git://github.com/01org/wds.git;protocol=https;branch=master"
+SRC_URI = "git://github.com/01org/wds.git;protocol=https;branch=master \
+           file://parser-output-ypp.patch \
+"
 SRCREV = "${AUTOREV}"
 
 do_install:append() {
