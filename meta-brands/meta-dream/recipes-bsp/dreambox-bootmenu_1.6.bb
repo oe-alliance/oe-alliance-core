@@ -1,5 +1,6 @@
 SUMMARY = "Boot menu for the Dreambox One and Two"
 DESCRIPTION = "Replaces the boot menu built into u-boot on boxes with the GPT multiboot layout"
+SECTION = "utils"
 LICENSE = "GPL-3.0-only AND Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=c79ff39f19dfec6d293b95dea7b07891 \
     file://LICENSE.fonts;md5=89aea4e17d99a7cacdbeed46a0096b10 \
