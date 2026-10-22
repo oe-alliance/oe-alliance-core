@@ -1,7 +1,7 @@
 DESCRIPTION = "MultibootSelection startup files for dreambox"
 require conf/license/license-gplv2.inc
 
-COMPATIBLE_MACHINE = "^(dreamone|dreamtwo)$"
+COMPATIBLE_MACHINE = "^(dms922x)$"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PR = "r2"

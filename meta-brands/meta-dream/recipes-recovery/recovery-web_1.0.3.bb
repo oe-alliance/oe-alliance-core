@@ -20,4 +20,4 @@ BRANCH:dm7080 = "dm7080"
 BRANCH:dreamone = "dreamone"
 BRANCH:dreamtwo = "dreamone"
 
-COMPATIBLE_MACHINE = "^(dm520|dm820|dm900|dm920|dm7080|dreamone|dreamtwo)$"
+COMPATIBLE_MACHINE = "^(dm520|dm820|dm900|dm920|dm7080|dms922x)$"

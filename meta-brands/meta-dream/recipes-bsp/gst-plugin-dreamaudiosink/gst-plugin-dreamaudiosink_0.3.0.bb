@@ -9,7 +9,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=053f8b6b820e73326cbf1feaece6909e"
 DEPENDS = "glib-2.0-native gstreamer1.0 gstreamer1.0-plugins-base alsa-lib ffmpeg"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
-COMPATIBLE_MACHINE = "^(dreamone|dreamtwo)$"
+COMPATIBLE_MACHINE = "^(dms922x)$"
 
 SRC_URI = " \
     file://README.md;subdir=${BP} \

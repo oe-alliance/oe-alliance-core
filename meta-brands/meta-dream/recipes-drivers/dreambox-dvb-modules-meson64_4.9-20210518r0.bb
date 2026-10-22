@@ -11,4 +11,4 @@ RREPLACES:${PN} += "dreamframeinject"
 RPROVIDES:${PN} += "dreamframeinject"
 RCONFLICTS:${PN} += "dreamframeinject"
 
-COMPATIBLE_MACHINE = "^(dreamone|dreamtwo)$"
+COMPATIBLE_MACHINE = "^(dms922x)$"

@@ -9,7 +9,7 @@ PACKAGE_ARCH = "${MACHINE}"
 
 inherit ccache cmake gettext pkgconfig python3targetconfig
 
-DREAM_AMLOGIC_STB = "${@'1' if d.getVar('MACHINE') in ('dreamone', 'dreamtwo') and d.getVar('SOC_FAMILY') == 'meson64' else '0'}"
+DREAM_AMLOGIC_STB = "${@'1' if d.getVar('MACHINEBUILD') in ('dreamone', 'dreamtwo') and d.getVar('SOC_FAMILY') == 'meson64' else '0'}"
 
 DEPENDS += " \
             autoconf-native automake-native \

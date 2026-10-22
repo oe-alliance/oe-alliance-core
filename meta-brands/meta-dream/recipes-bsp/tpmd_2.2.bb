@@ -28,4 +28,4 @@ FILES:${PN}-src += " \
 
 INSANE_SKIP:${PN} += "file-rdeps ldflags"
 
-COMPATIBLE_MACHINE = "^(dreamone|dreamtwo)$"
+COMPATIBLE_MACHINE = "^(dms922x)$"

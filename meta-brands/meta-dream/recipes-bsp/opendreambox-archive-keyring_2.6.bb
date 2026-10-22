@@ -16,4 +16,4 @@ do_install() {
 RDEPENDS:${PN} = "gpgv"
 RRECOMMENDS:${PN} = "gnupg"
 
-COMPATIBLE_MACHINE = "^(dreamone|dreamtwo)$"
+COMPATIBLE_MACHINE = "^(dms922x)$"

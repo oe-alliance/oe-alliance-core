@@ -46,7 +46,7 @@ MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS = "\
     dreambox-dvb-modules-${SOC_FAMILY} \
     meson-mali-module-bifrost-r12p0 \
     flash-nrf52 \
-    nrf52-firmware-${MACHINE} \
+    nrf52-firmware-${MACHINEBUILD} \
     nrf52-firmware-rcu \
     tpmd \
     tpm-ca \
