@@ -8,6 +8,6 @@ inherit opendreambox-precompiled-binary4
 
 FILES:${PN} = "${libdir}/gstreamer-1.0/*.so"
 
-COMPATIBLE_MACHINE = "^(dreamone|dreamtwo)$"
+COMPATIBLE_MACHINE = "^(dms922x)$"
 
 INSANE_SKIP:${PN} = "file-rdeps"

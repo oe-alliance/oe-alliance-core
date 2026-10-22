@@ -20,8 +20,7 @@ SRC_URI = "git://github.com/oe-alliance/exteplayer3.git;branch=master;protocol=h
 EXTRA_OECONF = ""
 
 PACKAGECONFIG ??= ""
-PACKAGECONFIG:append:dreamone = " dreamnextgen"
-PACKAGECONFIG:append:dreamtwo = " dreamnextgen"
+PACKAGECONFIG:append:dms922x = " dreamnextgen"
 PACKAGECONFIG[dreamnextgen] = "--enable-dreamnextgen,--disable-dreamnextgen,alsa-lib"
 
 LDFLAGS:append = " \

@@ -7,7 +7,7 @@ inherit opendreambox-precompiled-binary4 update-rc.d
 
 SRC_URI += "file://dvb-modules-early.sh"
 
-PACKAGE_ARCH = "${MACHINE_ARCH}"
+PACKAGE_ARCH = "${MACHINEBUILD}"
 
 PACKAGES =+ "${PN}-early ${PN}-firmware ${PN}-fp ${PN}-lcd ${PN}-stb-core"
 

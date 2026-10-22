@@ -19,4 +19,4 @@ do_install() {
 
 FILES:${PN} = "/usr/share/nrf52-firmware-rcu"
 
-COMPATIBLE_MACHINE = "^(dreamone|dreamtwo)$"
+COMPATIBLE_MACHINE = "^(dms922x)$"

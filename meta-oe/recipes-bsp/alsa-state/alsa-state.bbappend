@@ -28,7 +28,6 @@ EXTRA_ALSA:vusolose = "vuplus"
 EXTRA_ALSA:AMLS905 = "amls905"
 EXTRA_ALSA:AML905D = "aml905d"
 EXTRA_ALSA:AML8726 = "aml8726"
-EXTRA_ALSA:dreamone = "meson64"
-EXTRA_ALSA:dreamtwo = "meson64"
+EXTRA_ALSA:dms922x = "meson64"
 
 require alsa-state-${EXTRA_ALSA}.inc
