@@ -78,8 +78,8 @@ do_install:append() {
     # browser
     install -m 0755 ${S}/run.sh ${D}${bindir}
     install -m 0755 ${S}/none.html ${D}/home/root
-    install -m 0755 ${S}/${MACHINE}/directfbrc ${D}/etc/
-    install -m 0755 ${S}/${MACHINE}/fb.modes ${D}/etc/
+    install -m 0755 ${S}/${MACHINEBUILD}/directfbrc ${D}/etc/
+    install -m 0755 ${S}/${MACHINEBUILD}/fb.modes ${D}/etc/
     install -m 0755 ${S}/cert.pem ${D}/etc/pki/tls/
 
     # 32bit binary
