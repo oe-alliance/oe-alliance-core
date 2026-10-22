@@ -4,7 +4,7 @@ SECTION = "multimedia"
 # Newly authored code is LGPL-2.1-or-later. The included Amlogic-derived H.263
 # converter has restrictive terms: this combined candidate is internal only,
 # not a redistributable LGPL release. Retain both notices and their provenance.
-LICENSE = "CLOSED"
+require conf/license/license-close.inc
 LIC_FILES_CHKSUM = " \
     file://COPYING;md5=771782cb6245c7fbbe74bc0ec059beff \
     file://LICENSE.amlogic;md5=a0df61d14f0879e56c573c6938dd72f2 \
