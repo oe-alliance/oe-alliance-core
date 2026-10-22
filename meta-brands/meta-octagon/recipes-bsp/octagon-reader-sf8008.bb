@@ -2,7 +2,7 @@ SUMMARY = "libreader for Octagon Model ${MACHINE}"
 SECTION = "base"
 PRIORITY = "optional"
 require conf/license/license-close.inc
-PACKAGE_ARCH = "${MACHINE_ARCH}"
+PACKAGE_ARCH = "${MACHINEBUILD}"
 
 RDEPENDS:${PN} = "libsdl"
 
@@ -13,7 +13,7 @@ SRCDATE = "20230802"
 PV = "${SRCDATE}"
 PR = "r0"
 
-SRC_URI = "https://source.mynonpublic.com/octagon/${MACHINE}-libreader-${SRCDATE}.tar.gz"
+SRC_URI = "https://source.mynonpublic.com/octagon/${MACHINEBUILD}-libreader-${SRCDATE}.tar.gz"
 
 S = "${UNPACKDIR}"
 

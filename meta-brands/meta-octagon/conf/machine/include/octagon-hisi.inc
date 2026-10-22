@@ -17,19 +17,19 @@ MTD_BLACK  = "mmcblk0"
 VER = "-sf8008"
 
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "\
-    octagon-dvb-modules-${MACHINE} \
-    octagon-loadmodules-${SOC_FAMILY} \ 
+    octagon-dvb-modules-${MACHINEBUILD} \
+    octagon-loadmodules-${SOC_FAMILY} \
     octagon-opengl-${SOC_FAMILY} \
-    octagon-libs-${MACHINE} \
+    octagon-libs-${MACHINEBUILD} \
     octagon-hihalt-${SOC_FAMILY} \
-    octagon-reader-${MACHINE} \
+    octagon-reader-${MACHINEBUILD} \
     octagon-libreader-${SOC_FAMILY} \
-    octagon-partitions-${MACHINE} \
+    octagon-partitions-${MACHINEBUILD} \
     octagon-tntfs-${HICHIPSET} \
     octagon-buildimage \
     e2fsprogs-resize2fs \
     gptfdisk \
-    ${@bb.utils.contains('MACHINE', 'sf8008', 'octagon-bluetooth-keymaps' , '', d)} \
+    ${@bb.utils.contains('MACHINEBUILD', 'sf8008', 'octagon-bluetooth-keymaps' , '', d)} \
 "
 
 MACHINE_FEATURES += "hisil switchoff hdmicec skins1080 ${E2EGL_WQHD_FEATURE} emmc mmc kodi22 alsa hbbtv-browser-webkit qtstalker qtnetflix openhbbtv event0 hisichromium mali HDMISTANDBY ${E2EGL_MACHINE_FEATURE}"
@@ -47,7 +47,7 @@ PREFERRED_PROVIDER_virtual/kernel = "linux-octagon"
 PREFERRED_PROVIDER_virtual/egl = "octagon-opengl-${SOC_FAMILY}" 
 PREFERRED_PROVIDER_virtual/libgles1 = "octagon-opengl-${SOC_FAMILY}"
 PREFERRED_PROVIDER_virtual/libgles2 = "octagon-opengl-${SOC_FAMILY}"
-PREFERRED_PROVIDER_virtual/kodi = "stb-kodi-${MACHINE}"
+PREFERRED_PROVIDER_virtual/kodi = "stb-kodi-${MACHINEBUILD}"
 VIRTUAL-RUNTIME_blindscan_dvbs = "octagon-blindscan-${SOC_FAMILY}"
 
 PREFERRED_RPROVIDER_showiframe = "octagon-showiframe-${SOC_FAMILY}"
@@ -80,24 +80,24 @@ IMAGE_CMD:octagonemmc:append = "\
         cp ${IMAGE_MANIFEST} ${IMAGE_ROOTFS}/usr/lib/package.lst; \
     fi; \
     mkdir -p ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}; \
-    cp -f ${IMGDEPLOYDIR}/${IMAGE_NAME}.ext4 ${DEPLOY_DIR_IMAGE}/${MACHINE}-partitions/rootfs.ext4; \
+    cp -f ${IMGDEPLOYDIR}/${IMAGE_NAME}.ext4 ${DEPLOY_DIR_IMAGE}/${MACHINEBUILD}-partitions/rootfs.ext4; \
     cd ${IMAGE_ROOTFS}; \
     tar -cvf ${DEPLOY_DIR_IMAGE}/rootfs.tar -C ${IMAGE_ROOTFS} .; \
     mv ${DEPLOY_DIR_IMAGE}/rootfs.tar ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/rootfs.tar; \
     bzip2 ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/rootfs.tar; \
     cp ${DEPLOY_DIR_IMAGE}/uImage ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/${KERNEL_FILE}; \
-    cp ${DEPLOY_DIR_IMAGE}/uImage ${DEPLOY_DIR_IMAGE}/${MACHINE}-partitions/${KERNEL_FILE}; \
+    cp ${DEPLOY_DIR_IMAGE}/uImage ${DEPLOY_DIR_IMAGE}/${MACHINEBUILD}-partitions/${KERNEL_FILE}; \
     if [ -e ${DEPLOY_DIR_IMAGE}/logo-${DISTRO_NAME}.img ]; then \
-        cp -f ${DEPLOY_DIR_IMAGE}/logo-${DISTRO_NAME}.img ${DEPLOY_DIR_IMAGE}/${MACHINE}-partitions/logo.img; \
+        cp -f ${DEPLOY_DIR_IMAGE}/logo-${DISTRO_NAME}.img ${DEPLOY_DIR_IMAGE}/${MACHINEBUILD}-partitions/logo.img; \
     fi; \
     echo ${IMAGE_VER_STRING} > ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/imageversion; \
-    cd ${DEPLOY_DIR_IMAGE}/${MACHINE}-partitions; \
-    mkupdate -s 00000003-00000001-01010101 -f ${DEPLOY_DIR_IMAGE}/${MACHINE}-partitions/emmc_partitions.xml -d ${DEPLOY_DIR_IMAGE}/usb_update.bin; \ 
+    cd ${DEPLOY_DIR_IMAGE}/${MACHINEBUILD}-partitions; \
+    mkupdate -s 00000003-00000001-01010101 -f ${DEPLOY_DIR_IMAGE}/${MACHINEBUILD}-partitions/emmc_partitions.xml -d ${DEPLOY_DIR_IMAGE}/usb_update.bin; \
     cd ${DEPLOY_DIR_IMAGE}; \
     cp ${IMGDEPLOYDIR}/${IMAGE_NAME}.manifest ${IMAGE_NAME}_usb.zip.manifest; \
-    zip -j ${IMAGE_NAME}_recovery_emmc.zip ${DEPLOY_DIR_IMAGE}/usb_update.bin ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/imageversion ${DEPLOY_DIR_IMAGE}/${MACHINE}-partitions/bootargs.bin ${DEPLOY_DIR_IMAGE}/${MACHINE}-partitions/fastboot.bin ${DEPLOY_DIR_IMAGE}/${MACHINE}-partitions/apploader.bin; \
-    if [ -e ${DEPLOY_DIR_IMAGE}/${MACHINE}-partitions/6605s.upg ]; then \
-        zip -j ${IMAGE_NAME}_recovery_emmc.zip ${DEPLOY_DIR_IMAGE}/${MACHINE}-partitions/6605s.upg; \
+    zip -j ${IMAGE_NAME}_recovery_emmc.zip ${DEPLOY_DIR_IMAGE}/usb_update.bin ${DEPLOY_DIR_IMAGE}/${IMAGEDIR}/imageversion ${DEPLOY_DIR_IMAGE}/${MACHINEBUILD}-partitions/bootargs.bin ${DEPLOY_DIR_IMAGE}/${MACHINEBUILD}-partitions/fastboot.bin ${DEPLOY_DIR_IMAGE}/${MACHINEBUILD}-partitions/apploader.bin; \
+    if [ -e ${DEPLOY_DIR_IMAGE}/${MACHINEBUILD}-partitions/6605s.upg ]; then \
+        zip -j ${IMAGE_NAME}_recovery_emmc.zip ${DEPLOY_DIR_IMAGE}/${MACHINEBUILD}-partitions/6605s.upg; \
     fi; \
     zip ${IMAGE_NAME}_mmc.zip ${IMAGEDIR}/*; \
     rm -f ${DEPLOY_DIR_IMAGE}/*.ext4; \
