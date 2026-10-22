@@ -3,7 +3,7 @@ SECTION = "base"
 PRIORITY = "required"
 require conf/license/license-close.inc
 
-PACKAGE_ARCH = "${MACHINE_ARCH}"
+PACKAGE_ARCH = "${MACHINEBUILD}"
 
 RDEPENDS:${PN} = "curl"
 
@@ -17,7 +17,7 @@ INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
 SOLIBS = ".so"
 FILES_SOLIBSDEV = ""
 
-SRC_URI = "https://source.mynonpublic.com/octagon/${MACHINE}-hilib-${SRCDATE}.tar.gz"
+SRC_URI = "https://source.mynonpublic.com/octagon/${MACHINEBUILD}-hilib-${SRCDATE}.tar.gz"
 
 S = "${UNPACKDIR}/hilib"
 
