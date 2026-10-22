@@ -2,11 +2,7 @@ FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
 
 PACKAGE_ARCH:octagon = "${MACHINE_ARCH}"
 
-SRC_URI:append:sf8008 = " \
-    file://libjpeg.so.62.2.0 \
-"
-
-SRC_URI:append:sf8008m = " \
+SRC_URI:append:ocmv200 = " \
     file://libjpeg.so.62.2.0 \
 "
 
@@ -22,12 +18,7 @@ SRC_URI:append:sfx6008 = " \
     file://libjpeg.so.8.2.2 \
 "
 
-do_install:append:sf8008() {
-    install -d ${D}${libdir}
-    install -m 0755 ${UNPACKDIR}/libjpeg.so.62.2.0 ${D}${libdir}/
-}
-
-do_install:append:sf8008m() {
+do_install:append:ocmv200() {
     install -d ${D}${libdir}
     install -m 0755 ${UNPACKDIR}/libjpeg.so.62.2.0 ${D}${libdir}/
 }
