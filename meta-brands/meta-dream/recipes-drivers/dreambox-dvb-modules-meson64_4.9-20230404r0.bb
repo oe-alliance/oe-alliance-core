@@ -11,7 +11,7 @@ RREPLACES:${PN} += "dreamframeinject"
 RPROVIDES:${PN} += "dreamframeinject"
 RCONFLICTS:${PN} += "dreamframeinject"
 
-COMPATIBLE_MACHINE = "^(dreamone|dreamtwo)$"
+COMPATIBLE_MACHINE = "^(dms922x)$"
 
 # The multi instance H.264 and MPEG-2 decoders arm their check timer for
 # every run without STAT_TIMER_ARM, and their remove deletes the timer only
