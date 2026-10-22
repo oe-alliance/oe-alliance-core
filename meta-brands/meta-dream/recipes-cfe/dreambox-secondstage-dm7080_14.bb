@@ -3,18 +3,20 @@ SECTION = "base"
 PRIORITY = "required"
 PROVIDES = "virtual/bootloader"
 RPROVIDES:${PN} += "dreambox-secondstage"
-MD5SUM = "${@d.getVarFlag('SRC_URI', '%s.md5sum' % MACHINE, True)}"
-PACKAGE_ARCH := "${MACHINE_ARCH}"
+MD5SUM = "${@d.getVarFlag('SRC_URI', '%s.md5sum' % d.getVar('MACHINEBUILD'), True)}"
+PACKAGE_ARCH := "${MACHINEBUILD}"
+
+COMPATIBLE_MACHINE = "^(dm7435)$"
 require conf/license/license-close.inc
 
 PR = "r7"
 
-S = "${UNPACKDIR}/dreambox-secondstage_${PV}_${MACHINE}"
+S = "${UNPACKDIR}/dreambox-secondstage_${PV}_${MACHINEBUILD}"
 
 SRC_URI[dm7080.md5sum] = "ef12410e7944e23cffaa6753531d7bdd"
 SRC_URI[dm7080.sha256sum] = "c50354e66d6f247ab533a518b9df42c2067f6711cd210f9e25983233018df016"
 
-SRC_URI = "https://source.mynonpublic.com/dreambox/dreambox-secondstage_${PV}_${MACHINE}.tar.xz;name=${MACHINE}"
+SRC_URI = "https://source.mynonpublic.com/dreambox/dreambox-secondstage_${PV}_${MACHINEBUILD}.tar.xz;name=${MACHINEBUILD}"
 
 RDEPENDS:${PN} = "flash-scripts"
 
