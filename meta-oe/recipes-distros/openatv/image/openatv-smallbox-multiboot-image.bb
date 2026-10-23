@@ -67,7 +67,7 @@ smallbox_multiboot_completion_marker() {
 	chmod 0644 "${IMAGE_ROOTFS}${sysconfdir}/smallbox-wizard.done"
 }
 
-ROOTFS_POSTPROCESS_COMMAND:append = " smallbox_multiboot_boxinfo; smallbox_multiboot_completion_marker;"
+ROOTFS_POSTPROCESS_COMMAND:append = " smallbox_multiboot_boxinfo smallbox_multiboot_completion_marker"
 
 do_smallbox_multiboot_archive() {
 	stage="${WORKDIR}/smallbox-multiboot-archive"

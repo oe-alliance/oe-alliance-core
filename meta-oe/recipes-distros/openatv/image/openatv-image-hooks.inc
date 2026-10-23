@@ -97,7 +97,7 @@ openatv_smallbox_install_gui_launcher() {
 	sed -i 's#^gui:3:respawn:.*#gui:3:respawn:/usr/sbin/smallbox-wizard-launcher#' "$inittab"
 }
 
-ROOTFS_POSTPROCESS_COMMAND:append = " openatv_smallbox_install_gui_launcher;"
+ROOTFS_POSTPROCESS_COMMAND:append = " openatv_smallbox_install_gui_launcher"
 
 # Single-core receivers remain responsive once Enigma2 is running, but their
 # sequential SysV boot is slowed down by optional discovery and file-server
@@ -128,4 +128,4 @@ openatv_singlecore_disable_optional_services() {
 	done
 }
 
-ROOTFS_POSTPROCESS_COMMAND:append = " openatv_singlecore_disable_optional_services;"
+ROOTFS_POSTPROCESS_COMMAND:append = " openatv_singlecore_disable_optional_services"
