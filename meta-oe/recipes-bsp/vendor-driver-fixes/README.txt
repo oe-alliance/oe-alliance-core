@@ -2,8 +2,8 @@ Build-time vendor driver fixes
 =============================
 
 Enabled only by these recipes:
-  gigablue-platform-util-gb7252pro: dvb_init judder, DVB ACM/gamma, Nexus HLG
-  vuplus-platform-util-vuduo4klite: dvb_init judder, DVB ACM/gamma, Nexus HLG
+  gigablue-platform-util-gb7252pro: dvb_init judder, DVB ACM/gamma/IR repeat, Nexus HLG
+  vuplus-platform-util-vuduo4klite: dvb_init judder, DVB ACM/gamma/IR repeat, Nexus HLG
   vuplus-dvb-proxy-vuultimo4k: DVB gamma
 
 The recipes require vendor-driver-fixes.inc and select a fix profile.
@@ -27,6 +27,8 @@ Supplied patchers and their source references:
     from "lite and pro patched drivers.rar"
   patch_dvb_gamma.py:
     from "pro - lite -patch_dvb_gamma (2).py"
+  patch_dvb_ir.py:
+    smooth IR key autorepeat (kernel software autorepeat), see its docstring
   patch_nexus_hlg.py:
     from "patch_nexus_hlg.py", extended for Pro 20261020 as documented below
   patch_dvb_bcm7444_gamma.py:
