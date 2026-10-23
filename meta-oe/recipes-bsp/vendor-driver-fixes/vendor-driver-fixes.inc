@@ -6,6 +6,7 @@ SRC_URI += " \
     file://patch_dvb_init.py \
     file://patch_dvb_acm.py \
     file://patch_dvb_gamma.py \
+    file://patch_dvb_ir.py \
     file://patch_nexus_hlg.py \
     file://patch_dvb_bcm7444_gamma.py \
 "
@@ -26,6 +27,7 @@ do_install:append() {
             vendor_driver_apply_patch patch_dvb_init.py "$platform_dir/dvb_init"
             vendor_driver_apply_patch patch_dvb_acm.py "$platform_dir/dvb.ko"
             vendor_driver_apply_patch patch_dvb_gamma.py "$platform_dir/dvb.ko"
+            vendor_driver_apply_patch patch_dvb_ir.py "$platform_dir/dvb.ko"
             vendor_driver_apply_patch patch_nexus_hlg.py "$platform_dir/nexus.ko" -o "$platform_dir/nexus.ko"
             bbnote "Vendor driver hashes after fixes (${PN})"
             sha256sum "$platform_dir/dvb_init" "$platform_dir/dvb.ko" "$platform_dir/nexus.ko"
