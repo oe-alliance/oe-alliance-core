@@ -1,0 +1,26 @@
+Subject: [PATCH] networking: respect wrapped regex attribute lookup
+
+Streamlink 8.6.1 wraps urllib3.util.url._PERCENT_RE and forwards regex
+methods through __getattr__. If Streamlink is imported before yt-dlp,
+Urllib3PercentREOverride wraps that object instead of a re.Pattern.
+
+Calling __getattribute__ directly bypasses Streamlink's __getattr__.
+urllib3 >= 2.8.0 then fails when normalizing a hostname with _PERCENT_RE.sub,
+breaking requests for every plugin in the same Python process.
+
+Use normal attribute lookup so the wrapped object's forwarding is honored.
+The subn override that preserves percent-encoding case remains unchanged.
+
+Upstream-Status: Pending
+
+--- a/yt_dlp/networking/_requests.py
++++ b/yt_dlp/networking/_requests.py
+@@ -89,7 +89,7 @@ class Urllib3PercentREOverride:
+ 
+     # pass through all other attribute calls to the original re
+     def __getattr__(self, item):
+-        return self.re.__getattribute__(item)
++        return getattr(self.re, item)
+ 
+     def subn(self, repl, string, *args, **kwargs):
+         return string, self.re.subn(repl, string, *args, **kwargs)[1]

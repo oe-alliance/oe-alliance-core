@@ -14,9 +14,10 @@ inherit python3-dir python_hatchling gittag
 SRCREV = "${AUTOREV}"
 PV = "git"
 PKGV = "${GITPKGVTAG}"
-PR = "r2"
+PR = "r3"
 
-SRC_URI = "git://github.com/yt-dlp/yt-dlp;protocol=https;branch=master"
+SRC_URI = "git://github.com/yt-dlp/yt-dlp;protocol=https;branch=master \
+           file://0001-networking-respect-wrapped-regex-attribute-lookup.patch"
 
 EXTRA_OEMAKE = "PYTHON=${PYTHON}"
 
