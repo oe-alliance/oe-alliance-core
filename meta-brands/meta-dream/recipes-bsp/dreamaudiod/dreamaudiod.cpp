@@ -374,7 +374,14 @@ public:
 		snd_pcm_hw_params_any(m_pcm, hw);
 		snd_pcm_hw_params_set_access(m_pcm, hw, SND_PCM_ACCESS_RW_INTERLEAVED);
 		snd_pcm_hw_params_set_format(m_pcm, hw, SND_PCM_FORMAT_S16_LE);
-		snd_pcm_hw_params_set_channels(m_pcm, hw, channels);
+		/* the S/PDIF outputs take two channels: no eight channel high
+		 * bitrate audio there */
+		err = snd_pcm_hw_params_set_channels(m_pcm, hw, channels);
+		if (err < 0) {
+			LOG("%s takes no %u channels", device, channels);
+			close();
+			return err;
+		}
 		snd_pcm_hw_params_set_rate(m_pcm, hw, rate, 0);
 		snd_pcm_uframes_t period = (snd_pcm_uframes_t)rate * 1024 / 48000;
 		/* Bluetooth holds the whole lead of the stream (up to ~1 s);
@@ -1276,8 +1283,20 @@ class Stream
 	{
 		if (m_codec == AV_CODEC_ID_AAC_LATM && !m_passthrough && faadLatm(pkt))
 			return;
-		if (m_passthrough) {
-			if (!m_spdif && !openPassthrough(m_codec, m_parseCtx->sample_rate ? m_parseCtx->sample_rate : 48000)) {
+		if (m_passthrough && !m_spdif) {
+			int rate = m_parseCtx->sample_rate ? m_parseCtx->sample_rate : 48000;
+			bool open = openPassthrough(m_codec, rate);
+			/* no high bitrate output: DTS passes its core as plain DTS,
+			 * TrueHD is decoded */
+			if (!open && m_hbr) {
+				closePassthrough();
+				m_hbr = false;
+				if (m_codec == AV_CODEC_ID_DTS) {
+					LOG("stream dts, passthrough of the core");
+					open = openPassthrough(m_codec, rate);
+				}
+			}
+			if (!open) {
 				closePassthrough();
 				m_passthrough = false;
 				if (!openDecoder())
