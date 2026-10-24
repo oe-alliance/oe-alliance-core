@@ -3,14 +3,17 @@ SUMMARY = "NFS client library"
 LICENSE = "GPL-3.0-only AND LGPL-2.1-only"
 LIC_FILES_CHKSUM = "file://COPYING;md5=825301ba17efc9d188ee0abd4b924ada"
 
-PV = "16.2.0+git"
-SRCREV = "20971deebdf0e0468521bf5b892c4154fc85ec42"
+PV = "18.0.0+git"
+SRCREV = "9e301e90e47902e340e88a79e7fedc289fef1a66"
 
 SRC_URI = "git://github.com/sahlberg/libnfs.git;protocol=https;branch=master"
 
 inherit cmake
 
-EXTRA_OECMAKE = "-DBASE_LIB_PATH=${baselib}  -DCMAKE_POLICY_VERSION_MINIMUM=3.5"
+# Do not auto-detect optional security libraries from the cross-build sysroot.
+PACKAGECONFIG ??= ""
+PACKAGECONFIG[tls] = "-DENABLE_TLS=ON,-DENABLE_TLS=OFF,gnutls"
+PACKAGECONFIG[krb5] = "-DENABLE_KRB5=ON,-DENABLE_KRB5=OFF,krb5"
 
 # The upstream CMake export embeds ${libdir} as an absolute target path.  It is
 # not relocatable into an OpenEmbedded recipe sysroot, while libnfs.pc is.

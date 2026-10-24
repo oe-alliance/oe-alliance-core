@@ -2,7 +2,7 @@ SUMMARY = "Stable hardware-media backend ABI for STB Kodi"
 DESCRIPTION = "A small C ABI, loader and probe tool for machine-specific STB video backends and DVB hardware audio output."
 HOMEPAGE = "https://github.com/oe-alliance"
 
-PR = "r74"
+PR = "r75"
 
 LICENSE = "GPL-2.0-or-later"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=45071750435f2d50d503492ef8e003db"
@@ -38,9 +38,11 @@ HISI_LINUX_DVB_MACHINES = "hd60 hd61 hd66se pulse4k pulse4kmini multibox multibo
 # The original DVB-driver family can retain stale AUDIO_GET_PTS after seek.
 # Keep the SF8008/libreader and other SDK families on their confirmed audio clock.
 HISI_DVB_AUDIO_VIDEO_CLOCK = "${@'1' if d.getVar('MACHINE') in d.getVar('HISI_LINUX_DVB_MACHINES').split() else '0'}"
-# This family needs a native HiSi PCM track; its DVB RAW-PCM path stalls.
-# Compressed audio keeps the tested DVB decoder and media-clock feedback.
-HISI_DVB_AUDIO_PCM_TRACK = "${HISI_DVB_AUDIO_VIDEO_CLOCK}"
+# Use native PCM for both Linux-DVB families and DAGS/Dinobot's AVPLAY path.
+# RAW-PCM can stall; libreader audio resets also reset video, delaying MP4
+# startup and seek. Do not change video drivers or compressed-audio clocks.
+HISI_AVPLAY_PCM_MACHINES = "dagsmv200 u5 u51 u52 u53 u532 u533 u54 u55 u56 u57 u571 u5pvr"
+HISI_DVB_AUDIO_PCM_TRACK = "${@'1' if d.getVar('HISI_USE_LINUX_DVB') == '1' or d.getVar('MACHINE') in d.getVar('HISI_AVPLAY_PCM_MACHINES').split() else '0'}"
 # With native audio, libreader must own both decoders and their shared clock.
 # gbmv200 covers gbip4k, gbtrio4k and gbtrio4kpro; viper4k is not Dinobot u571.
 # DAGS app_init and Dinobot showiframe are different service/SDK families.

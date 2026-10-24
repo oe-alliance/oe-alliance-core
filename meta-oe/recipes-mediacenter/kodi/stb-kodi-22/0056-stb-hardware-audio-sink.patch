@@ -807,7 +807,7 @@ index e63a3eab72..aef26db9de 100644
  
      if (m_sinkRequestFormat.m_dataFormat != AE_FMT_RAW)
      {
-@@ -2584,6 +2591,21 @@ CSampleBuffer* CActiveAE::SyncStream(CActiveAEStream *stream)
+@@ -2595,6 +2602,21 @@ CSampleBuffer* CActiveAE::SyncStream(CActiveAEStream *stream)
                                            : stream->GetErrorInterval();
    bool newerror = stream->m_syncError.Get(error, timeout);
  
@@ -826,9 +826,9 @@ index e63a3eab72..aef26db9de 100644
 +  }
 +#endif
 +
-   if (newerror && fabs(error) > threshold && stream->m_syncState == CAESyncInfo::AESyncState::SYNC_INSYNC)
+   if (newerror && stream->m_lateStartHandedOver)
    {
-     stream->m_syncState = CAESyncInfo::AESyncState::SYNC_ADJUST;
+     // Mostly averaged before the player moved its clock to the late audio, so neither acted upon
 @@ -2843,6 +2865,16 @@ void CActiveAE::LoadSettings()
    m_settings.usesdtscorefallback =
        settings->GetBool(CSettings::SETTING_AUDIOOUTPUT_DTSHDCOREFALLBACK);

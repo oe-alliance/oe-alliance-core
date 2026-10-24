@@ -11,6 +11,7 @@ DEPENDS += "bzip2 ffmpeg zlib"
 
 SRCREV = "70c378da893cdcfb031b54f84811c17c14b4fb2d"
 PV = "22.2.10+gitr"
+PR = "r1"
 
 KODIADDONBRANCH = "Piers"
 KODIADDONNAME = "inputstream.ffmpegdirect"

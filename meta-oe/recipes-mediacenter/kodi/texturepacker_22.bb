@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM ?= "file:///${UNPACKDIR}/${BB_GIT_DEFAULT_DESTSUFFIX}/LICENSE.m
 # stb-kodi. Mixing a later TexturePacker HEAD with an older target binary can
 # silently produce an incompatible Textures.xbt during otherwise reproducible
 # image builds.
-SRCREV = "3fb49388899387fc2f1cd958dc33166b8c7bb292"
+SRCREV = "8c36cc7f2699baa1f55bdbc52f12e90e73546795"
 PV = "22.0+gitr"
 SRC_URI = "git://github.com/xbmc/xbmc.git;protocol=https;branch=Piers"
 

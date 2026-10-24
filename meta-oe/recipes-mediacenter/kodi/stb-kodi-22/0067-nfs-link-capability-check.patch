@@ -1,0 +1,29 @@
+From: OE-Alliance <oe-alliance@users.noreply.github.com>
+Subject: [PATCH] cmake: link the discovered NFS target in capability checks
+
+Package discovery provides an imported CMake or pkg-config target, not
+necessarily LIBNFS_LIBRARY. Link that target when testing for
+mount_getexports_timeout so an empty legacy variable does not disable
+the available bounded export lookup.
+
+Upstream-Status: Pending
+
+---
+diff --git a/cmake/modules/FindNFS.cmake b/cmake/modules/FindNFS.cmake
+--- a/cmake/modules/FindNFS.cmake
++++ b/cmake/modules/FindNFS.cmake
+@@ -68,7 +68,13 @@ if(NOT TARGET ${APP_NAME_LC}::${CMAKE_FIND_PACKAGE_NAME})
+     # Pre existing lib, so we can run checks
+     if(NOT TARGET ${${${CMAKE_FIND_PACKAGE_NAME}_MODULE}_BUILD_NAME})
+       set(CMAKE_REQUIRED_INCLUDES "${${${CMAKE_FIND_PACKAGE_NAME}_MODULE}_INCLUDE_DIR}")
+-      set(CMAKE_REQUIRED_LIBRARIES ${${${CMAKE_FIND_PACKAGE_NAME}_MODULE}_LIBRARY})
++      if(TARGET libnfs::nfs)
++        set(CMAKE_REQUIRED_LIBRARIES libnfs::nfs)
++      elseif(TARGET PkgConfig::${${CMAKE_FIND_PACKAGE_NAME}_SEARCH_NAME})
++        set(CMAKE_REQUIRED_LIBRARIES PkgConfig::${${CMAKE_FIND_PACKAGE_NAME}_SEARCH_NAME})
++      else()
++        set(CMAKE_REQUIRED_LIBRARIES ${${${CMAKE_FIND_PACKAGE_NAME}_MODULE}_LIBRARY})
++      endif()
+ 
+       if(CMAKE_SYSTEM_NAME MATCHES "Windows")
+         set(CMAKE_REQUIRED_LIBRARIES ${CMAKE_REQUIRED_LIBRARIES} "ws2_32.lib")

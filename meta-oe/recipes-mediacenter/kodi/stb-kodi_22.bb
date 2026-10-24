@@ -77,13 +77,13 @@ DEPENDS += " \
             ${@'libvupl' if d.getVar('VUPLUS_MIPSEL_STB') == '1' else ''} \
           "
 inherit gitpkgv
-# 22.0 Piers RC 1, upstream Piers HEAD (2026-10-13).
-SRCREV = "3fb49388899387fc2f1cd958dc33166b8c7bb292"
+# 22.0 Piers RC 1, upstream Piers HEAD (2026-10-24).
+SRCREV = "8c36cc7f2699baa1f55bdbc52f12e90e73546795"
 
 # 'patch' doesn't support binary diffs
 PATCHTOOL = "git"
 
-PR = "r127"
+PR = "r130"
 
 PV = "22.0+gitr"
 # Piers has fewer commits than the previous master pin; keep upgrades monotonic.
@@ -191,6 +191,7 @@ SRC_URI:append = " file://0062-stb-h264-preserve-annexb-framing.patch"
 SRC_URI:append = "${@' file://0063-stb-bcm-h264-decode-ahead.patch' if d.getVar('BCM_DVB_STB') == '1' else ''}"
 SRC_URI:append = " file://0064-stb-hardware-process-info.patch"
 SRC_URI:append = " file://0065-stb-respect-enigma2-cec-disabled.patch"
+SRC_URI:append = " file://0067-nfs-link-capability-check.patch"
 SRC_URI:append = "${@' file://0066-stb-hisi-serialize-codec-replacement.patch' if d.getVar('HISI_STB') == '1' else ''}"
 SRC_URI:append = "${@' file://0059-hisi-match-desktop-hdmi-mode.patch' if d.getVar('HISI_STB') == '1' else ''}"
 SRC_URI:append = " file://0057-stb-cec-handover-defaults.patch"

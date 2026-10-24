@@ -24,7 +24,7 @@ index 63dc055..b594df2 100644
 +
 +#: system/settings/settings.xml
 +msgctxt "#54301"
-+msgid "Logs audio, video, FFmpeg, A/V timing, PVR, add-ons and hardware player status without a screen overlay. Enable before reproducing the problem. For startup problems, restart Kodi once. Save /media/hdd/.kodi/temp/kodi.log before restarting again; the previous log is kodi.old.log. Logs can contain private paths and stream URLs. Disable after testing: verbose logs grow quickly. Existing debug settings are preserved."
++msgid "Logs audio, video, FFmpeg debug messages, hardware A/V clocks, PVR, add-ons and player status without a screen overlay or high-volume trace dumps. Enable before reproducing the problem. For startup problems, restart Kodi once. Save /media/hdd/.kodi/temp/kodi.log before restarting again; the previous log is kodi.old.log. Logs can contain private paths and stream URLs. Disable after testing: verbose logs grow quickly. Existing debug settings are preserved."
 +msgstr ""
 diff --git a/system/settings/settings.xml b/system/settings/settings.xml
 index ef926b1..c2712f0 100755
@@ -127,7 +127,17 @@ diff --git a/xbmc/cores/FFmpeg.cpp b/xbmc/cores/FFmpeg.cpp
 index 2a281e1..00de8b3 100644
 --- a/xbmc/cores/FFmpeg.cpp
 +++ b/xbmc/cores/FFmpeg.cpp
-@@ -94,7 +94,8 @@ void ff_avutil_log(void* ptr, int level, const char* format, va_list va)
+@@ -81,5 +81,9 @@
+ void ff_avutil_log(void* ptr, int level, const char* format, va_list va)
+ {
++  // Trace dumps every MP4 sample-table entry before the demuxer can start.
++  if (level > AV_LOG_DEBUG && CServiceBroker::GetLogging().IsSTBVerbose())
++    return;
++
+   std::unique_lock lock(m_logSection);
+   const CThread* threadId = CThread::GetCurrentThread();
+   std::string &buffer = g_logbuffer[threadId];
+@@ -94,7 +98,8 @@ void ff_avutil_log(void* ptr, int level, const char* format, va_list va)
  
    if (level > maxLevel && !CServiceBroker::GetLogging().CanLogComponent(LOGFFMPEG))
      return;
@@ -367,9 +377,9 @@ index 14e75b8..03cd511 100644
    if (component == LOG_COMPONENT_GENERAL)
      return true;
  
-+  // Keep the user's component selection intact; do not enable HTTP header dumps.
++  // Preserve user components; omit HTTP headers and per-render-loop A/V timing dumps.
 +  constexpr uint32_t stbComponents =
-+      LOGAUDIO | LOGVIDEO | LOGFFMPEG | LOGAVTIMING | LOGWINDOWING | LOGPVR | LOGADDONS;
++      LOGAUDIO | LOGVIDEO | LOGFFMPEG | LOGWINDOWING | LOGPVR | LOGADDONS;
 +  if (IsSTBVerbose() && (stbComponents & component) == component)
 +    return true;
 +
@@ -385,8 +395,8 @@ index 14e75b8..03cd511 100644
 +  SetLogLevel(m_requestedLogLevel);
 +  if (enabled || changed)
 +    CLog::Log(LOGINFO,
-+              "STB verbose diagnostics {}: audio, video, FFmpeg, A/V timing, windowing, PVR, add-ons and "
-+              "hardware status. Reproduce the problem and save kodi.log before restarting.",
++              "STB verbose diagnostics {}: audio, video, FFmpeg debug, windowing, PVR, add-ons and "
++              "hardware A/V clocks. Reproduce the problem and save kodi.log before restarting.",
 +              enabled ? "enabled" : "disabled");
 +}
 +
