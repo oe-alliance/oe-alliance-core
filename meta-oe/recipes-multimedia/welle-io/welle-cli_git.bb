@@ -8,7 +8,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=211626514f1461d76feb728b8caf0a9c"
 # Pin the diagnostic decoder so results remain comparable across image builds.
 SRCREV = "512558d1f8ac4c524d3c63e97510ea36c1bd7a70"
 PV = "2.7+git"
-PR = "r6"
+PR = "r7"
 
 SRC_URI = "git://github.com/AlbrechtL/welle.io.git;protocol=https;branch=master \
            file://0001-mpg123-use-openembedded-largefile-api.patch \
@@ -20,6 +20,7 @@ SRC_URI = "git://github.com/AlbrechtL/welle.io.git;protocol=https;branch=master 
            file://0007-forward-mp2-compressed-audio.patch \
            file://0008-publish-dab-language-and-protection.patch \
            file://0009-publish-dab-programme-type.patch \
+           file://0010-switch-enigma2-programme-without-retuning.patch \
 "
 
 DEPENDS = "alsa-lib faad2 fftw lame libusb1 mpg123 rtl-sdr xxd-native"

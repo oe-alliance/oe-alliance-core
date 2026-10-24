@@ -1,0 +1,178 @@
+Subject: [PATCH] welle-e2: switch programmes without retuning the ensemble
+
+Add a generation-aware SELECT/READY/START handshake over stdin and metadata.
+Keep the SDR input, OFDM/FIC receiver and packet services alive while replacing
+the selected audio decoder.
+
+Upstream-Status: Pending
+
+diff --git a/src/welle-e2/welle-e2.cpp b/src/welle-e2/welle-e2.cpp
+index 7942b35..9812914 100644
+--- a/src/welle-e2/welle-e2.cpp
++++ b/src/welle-e2/welle-e2.cpp
+@@ -17,6 +17,7 @@
+ #include <iostream>
+ #include <memory>
+ #include <mutex>
++#include <poll.h>
+ #include <set>
+ #include <sstream>
+ #include <string>
+@@ -27,6 +28,7 @@
+ #include "input/rtl_sdr.h"
+ #include "libs/json.hpp"
+ #include "various/channels.h"
++#include "service-control.h"
+ 
+ using nlohmann::json;
+ 
+@@ -438,8 +440,52 @@ int main(int argc, char **argv)
+         std::unique_ptr<EnigmaProgrammeHandler> programme;
+         bool selected = false;
+         SelectedServiceMetadata selectedMetadata;
++        ServiceControl control;
++        uint64_t generation = 0;
++        bool awaitingStart = false;
++        bool controlOpen = true;
++        emitMetadata({{"serviceControl", "1"}});
+ 
+         while (running) {
++            struct pollfd commandFd = {};
++            commandFd.fd = controlOpen ? STDIN_FILENO : -1;
++            commandFd.events = POLLIN;
++            if (poll(&commandFd, 1, 100) > 0 && commandFd.revents) {
++                char data[512];
++                const ssize_t length = read(STDIN_FILENO, data, sizeof(data));
++                if (length == 0 || (length < 0 && errno != EINTR && errno != EAGAIN))
++                    controlOpen = false;
++                if (length > 0) for (const auto& command : control.feed(data, length)) {
++                    if (command.select && command.generation > generation) {
++                        // Join the old audio decoder before destroying its callbacks.
++                        // The input, OFDM synchronisation, FIC and packet services stay alive.
++                        if (selected && !receiver.removeServiceToDecode(receiver.getService(options.serviceId))) {
++                            emitMetadata({{"switchError", std::to_string(command.generation)}});
++                            running = 0;
++                            break;
++                        }
++                        programme.reset();
++                        selected = false;
++                        selectedMetadata = SelectedServiceMetadata();
++                        options.serviceId = command.serviceId;
++                        options.cachePrefix = command.cachePrefix;
++                        generation = command.generation;
++                        awaitingStart = true;
++                        announced.clear();
++                        announcedPacketComponents.clear();
++                        // Enigma2 drains the old compressed/PCM pipes before START.
++                        emitMetadata({{"switchReady", std::to_string(generation)}});
++                    }
++                    else if (!command.select && awaitingStart && command.generation == generation) {
++                        emitMetadata({{"switchStarted", std::to_string(generation)}});
++                        awaitingStart = false;
++                    }
++                }
++            }
++            if (!running)
++                break;
++            if (awaitingStart)
++                continue;
+             for (const auto& service : receiver.getServiceList()) {
+                 if (!receiver.serviceHasAudioComponent(service))
+                     continue;
+@@ -450,7 +496,7 @@ int main(int argc, char **argv)
+                 if (!selected && !label.empty() && options.serviceId && service.serviceId == options.serviceId) {
+                     programme.reset(new EnigmaProgrammeHandler(
+                             service.serviceId, options.cachePrefix, options.pcmFd));
+-                    selected = receiver.playSingleProgramme(*programme, std::string(), service);
++                    selected = receiver.addServiceToDecode(*programme, std::string(), service);
+                     if (!selected)
+                         programme.reset();
+                 }
+@@ -505,7 +551,6 @@ int main(int argc, char **argv)
+                     }
+                 }
+             }
+-            std::this_thread::sleep_for(std::chrono::milliseconds(100));
+         }
+ 
+         receiver.stop();
+diff --git a/src/welle-e2/service-control.h b/src/welle-e2/service-control.h
+new file mode 100644
+--- /dev/null
++++ b/src/welle-e2/service-control.h
+@@ -0,0 +1,75 @@
++/* Same-ensemble service selection protocol used by Enigma2. */
++#ifndef WELLE_E2_SERVICE_CONTROL_H
++#define WELLE_E2_SERVICE_CONTROL_H
++
++#include <cerrno>
++#include <cstdint>
++#include <cstdlib>
++#include <sstream>
++#include <string>
++#include <vector>
++
++class ServiceControl
++{
++public:
++    struct Command {
++        bool select = false;
++        uint64_t generation = 0;
++        uint32_t serviceId = 0;
++        std::string cachePrefix;
++    };
++
++    std::vector<Command> feed(const char *data, size_t length)
++    {
++        std::vector<Command> commands;
++        for (size_t index = 0; index < length; ++index) {
++            if (data[index] == '\n') {
++                Command command;
++                if (!overflow && parse(line, command))
++                    commands.push_back(command);
++                line.clear();
++                overflow = false;
++            }
++            else if (!overflow) {
++                if (line.size() == 512) {
++                    line.clear();
++                    overflow = true;
++                }
++                else
++                    line += data[index];
++            }
++        }
++        return commands;
++    }
++
++private:
++    static bool parse(const std::string& line, Command& command)
++    {
++        std::istringstream input(line);
++        std::string action, generation, serviceId, extra;
++        if (!(input >> action >> generation) ||
++                (action != "SELECT" && action != "START") ||
++                generation.empty() || generation.find_first_not_of("0123456789") != std::string::npos)
++            return false;
++        errno = 0;
++        command.generation = std::strtoull(generation.c_str(), nullptr, 10);
++        if (errno == ERANGE || !command.generation)
++            return false;
++        command.select = action == "SELECT";
++        if (command.select) {
++            if (!(input >> serviceId >> command.cachePrefix) || serviceId.empty() || serviceId.size() > 8 ||
++                    serviceId.find_first_not_of("0123456789abcdefABCDEF") != std::string::npos ||
++                    command.cachePrefix.find_first_of("\"\\") != std::string::npos)
++                return false;
++            command.serviceId = std::strtoul(serviceId.c_str(), nullptr, 16);
++            if (!command.serviceId)
++                return false;
++        }
++        return !(input >> extra);
++    }
++
++    std::string line;
++    bool overflow = false;
++};
++
++#endif
