@@ -1,0 +1,500 @@
+From: MCelliotG <mcelliotg@gmail.com>
+Subject: [PATCH] welle-e2: publish FIG programme type separately from genre
+
+Retain early and late FIG 0/17 PTY and the FIG 0/9 International Table
+Identifier. Publish numeric pty/ptyTable snapshots only when metadata changes.
+Keep translated names in Enigma2 and preserve legacy programType semantics.
+
+Upstream-Status: Inappropriate [OpenATV frontend]
+
+diff --git a/src/backend/dab-constants.cpp b/src/backend/dab-constants.cpp
+--- a/src/backend/dab-constants.cpp
++++ b/src/backend/dab-constants.cpp
+@@ -181,6 +181,7 @@ const char* DABConstants::getProgramTypeName(int type)
+ {
+     const char* typeName = "";
+     switch (type) {
++        case -1: // PTY has not been received yet.
+         case 0: typeName = ""; break;
+         case 1: typeName = QT_TR_NOOP("News"); break;
+         case 2: typeName = QT_TR_NOOP("Current Affairs"); break;
+diff --git a/src/backend/dab-constants.h b/src/backend/dab-constants.h
+--- a/src/backend/dab-constants.h
++++ b/src/backend/dab-constants.h
+@@ -124,7 +124,7 @@
+ 
+     DabLabel serviceLabel;
+     int16_t  language = 0;
+-    int16_t  programType = 0; // PTy, FIG0/17
++    int16_t  programType = -1; // PTy, FIG0/17; zero is a transmitted value.
+ };
+ 
+ //      The service component describes the actual service
+diff --git a/src/backend/fib-processor.cpp b/src/backend/fib-processor.cpp
+--- a/src/backend/fib-processor.cpp
++++ b/src/backend/fib-processor.cpp
+@@ -324,6 +324,9 @@
+ 
+     if (findServiceId(SId) == nullptr and serviceRepeatCount[SId] >= 2) {
+         services.emplace_back(SId);
++        const auto pty = programmeTypes.find(SId);
++        if (pty != programmeTypes.end())
++            services.back().programType = pty->second;
+         myRadioInterface.onServiceDetected(SId);
+     }
+ 
+@@ -491,6 +494,8 @@
+ //  Michael Hoehn
+ void FIBProcessor::FIG0Extension9(uint8_t *d)
+ {
++    if (getBits_5(d, 3) < 4 || getBits_1(d, 8) || getBits_1(d, 9) || getBits_1(d, 10))
++        return;
+     int16_t offset  = 16;
+ 
+     dateTime.hourOffset = (getBits_1 (d, offset + 2) == 1) ?
+@@ -500,6 +505,7 @@
+     timeOffsetReceived = true;
+ 
+     ensembleEcc = getBits(d, offset + 8, 8);
++    programmeTypeTable = getBits_8(d, offset + 16);
+ }
+ 
+ void FIBProcessor::FIG0Extension10(uint8_t *fig)
+@@ -640,35 +646,28 @@
+ 
+ void FIBProcessor::FIG0Extension17(uint8_t *d)
+ {
+-    int16_t length  = getBits_5 (d, 3);
+-    int16_t offset  = 16;
+-    Service *s;
+-
+-    while (offset < length * 8) {
+-        uint16_t    SId = getBits (d, offset, 16);
+-        bool    L_flag  = getBits_1 (d, offset + 18);
+-        bool    CC_flag = getBits_1 (d, offset + 19);
+-        int16_t type;
+-        int16_t Language = 0x00;    // init with unknown language
+-        s = findServiceId(SId);
+-        if (L_flag) {       // language field present
+-            Language = getBits_8 (d, offset + 24);
+-            if (s) {
+-                s->language = Language;
+-            }
+-            offset += 8;
+-        }
+-
+-        type = getBits_5 (d, offset + 27);
++    if (getBits_1(d, 8) || getBits_1(d, 9) || getBits_1(d, 10))
++        return;
++    const int end = (getBits_5(d, 3) + 1) * 8;
++    int offset = 16;
++    while (offset + 32 <= end) {
++        const uint16_t sid = getBits(d, offset, 16);
++        const bool languagePresent = getBits_1(d, offset + 18);
++        const bool complementaryPresent = getBits_1(d, offset + 19);
++        const int recordBits = 32 + (languagePresent ? 8 : 0) + (complementaryPresent ? 8 : 0);
++        if (offset + recordBits > end)
++            return;
++        const int type = getBits_5(d, offset + 27 + (languagePresent ? 8 : 0));
++        // FIG 0/17 can precede FIG 0/2. Do not create a spurious service,
++        // but retain its PTY for the later service announcement.
++        programmeTypes[sid] = type;
++        Service *s = findServiceId(sid);
+         if (s) {
+             s->programType = type;
+-        }
+-        if (CC_flag) {          // cc flag
+-            offset += 40;
+-        }
+-        else {
+-            offset += 32;
+-        }
++            if (languagePresent)
++                s->language = getBits_8(d, offset + 24);
++        }
++        offset += recordBits;
+     }
+ }
+ 
+@@ -1287,6 +1286,8 @@
+     packetComponentDetails.clear();
+     subChannels.resize(64);
+     services.clear();
++    programmeTypes.clear();
++    programmeTypeTable = -1;
+     serviceRepeatCount.clear();
+     timeLastServiceDecrement = std::chrono::steady_clock::now();
+     timeLastFCT0Frame = std::chrono::system_clock::now();
+@@ -1346,6 +1347,12 @@
+     return ensembleEcc;
+ }
+ 
++int FIBProcessor::getProgrammeTypeTable() const
++{
++    std::lock_guard<std::mutex> lock(mutex);
++    return programmeTypeTable;
++}
++
+ DabLabel FIBProcessor::getEnsembleLabel() const
+ {
+     std::lock_guard<std::mutex> lock(mutex);
+diff --git a/src/backend/fib-processor.h b/src/backend/fib-processor.h
+--- a/src/backend/fib-processor.h
++++ b/src/backend/fib-processor.h
+@@ -47,6 +47,7 @@
+         // Called from the frontend
+         uint16_t getEnsembleId() const;
+         uint8_t getEnsembleEcc() const;
++        int getProgrammeTypeTable() const;
+         DabLabel getEnsembleLabel() const;
+         std::vector<Service> getServiceList() const;
+         Service getService(uint32_t sId) const;
+@@ -132,6 +133,8 @@
+         mutable std::mutex mutex;
+         uint16_t ensembleId = 0;
+         uint8_t ensembleEcc = 0;
++        int programmeTypeTable = -1;
++        std::unordered_map<uint16_t, int16_t> programmeTypes;
+         DabLabel ensembleLabel;
+         std::vector<Subchannel> subChannels;
+         std::vector<ServiceComponent> components;
+diff --git a/src/backend/radio-receiver.cpp b/src/backend/radio-receiver.cpp
+--- a/src/backend/radio-receiver.cpp
++++ b/src/backend/radio-receiver.cpp
+@@ -188,6 +188,11 @@
+     return ficHandler.fibProcessor.getEnsembleEcc();
+ }
+ 
++int RadioReceiver::getProgrammeTypeTable(void) const
++{
++    return ficHandler.fibProcessor.getProgrammeTypeTable();
++}
++
+ DabLabel RadioReceiver::getEnsembleLabel(void) const
+ {
+     return ficHandler.fibProcessor.getEnsembleLabel();
+diff --git a/src/backend/radio-receiver.h b/src/backend/radio-receiver.h
+--- a/src/backend/radio-receiver.h
++++ b/src/backend/radio-receiver.h
+@@ -85,6 +85,7 @@
+ 
+         uint16_t getEnsembleId(void) const;
+         uint8_t getEnsembleEcc(void) const;
++        int getProgrammeTypeTable(void) const;
+         DabLabel getEnsembleLabel(void) const;
+         std::vector<Service> getServiceList(void) const;
+ 
+diff --git a/src/welle-e2/welle-e2.cpp b/src/welle-e2/welle-e2.cpp
+--- a/src/welle-e2/welle-e2.cpp
++++ b/src/welle-e2/welle-e2.cpp
+@@ -339,6 +339,8 @@
+     std::string protection;
+     int bitrate = -1;
+     int language = -1;
++    int programmeType = -1;
++    int programmeTypeTable = -1;
+     bool dabPlus = false;
+ };
+ 
+@@ -366,15 +368,22 @@
+         const int bitrate = subchannel.bitrate();
+         const bool dabPlus = component.audioType() == AudioServiceComponentType::DABPlus;
+         const std::string protection = subchannel.protection();
++        const int programmeType = service.programType;
++        const int programmeTypeTable = receiver.getProgrammeTypeTable();
+         if (language != previous.language || bitrate != previous.bitrate ||
++                programmeType != previous.programmeType || programmeTypeTable != previous.programmeTypeTable ||
+                 dabPlus != previous.dabPlus || protection != previous.protection) {
+             json format;
+             format["bitrate"] = std::to_string(bitrate);
+             format["dabType"] = dabPlus ? "DAB+" : "DAB";
+             format["language"] = language > 0 ? std::to_string(language) : "";
+             format["protectionLevel"] = protection;
++            format["pty"] = std::to_string(programmeType);
++            format["ptyTable"] = std::to_string(programmeTypeTable);
+             emitMetadata(format);
+             previous.language = language;
++            previous.programmeType = programmeType;
++            previous.programmeTypeTable = programmeTypeTable;
+             previous.bitrate = bitrate;
+             previous.dabPlus = dabPlus;
+             previous.protection = protection;
+diff --git a/tests/pty/README.md b/tests/pty/README.md
+new file mode 100644
+--- /dev/null
++++ b/tests/pty/README.md
+@@ -0,0 +1,30 @@
++# PTY checks after the OpenATV patches
++
++```sh
++g++ -std=c++17 -g -O1 -fsanitize=address,undefined -fno-omit-frame-pointer \
++  -ffunction-sections -fdata-sections -Isrc -Isrc/backend -Isrc/various \
++  -Wl,--gc-sections tests/pty/test_pty.cpp src/backend/fib-processor.cpp \
++  -o /tmp/test-rtl-pty
++/tmp/test-rtl-pty
++python3 tests/pty/test_frontend.py
++```
++
++The production FIB processor is compiled; unused RF/audio decoding code is
++discarded at link time. The frontend test compiles the production selected-service
++publisher with an in-memory receiver and its bundled JSON implementation.
++It checks initial, late, changed, missing and unchanged metadata snapshots.
++The decoding test covers early FIG 0/17 before service announcement, dynamic
++changes, legacy language/complementary fields, truncation and ensemble reset.
++
++Optional replay of the same ERT ETI-NI used for the DVB checks:
++
++```sh
++python3 tests/pty/extract_eti_fic.py /path/to/ert.eti /tmp/ert.fib
++/tmp/test-rtl-pty /tmp/ert.fib
++```
++
++Expected: 22,461 CRC-checked FIBs, matching PTY values for 14 services, table 1.
++The capture is not included. SHA-256:
++`923acf1bf43dabf0e284624726db81e93bab98b12159291d478179ea36874814`.
++
++These host checks do not replace a complete OE image build or live RTL-SDR test.
+diff --git a/tests/pty/extract_eti_fic.py b/tests/pty/extract_eti_fic.py
+new file mode 100644
+--- /dev/null
++++ b/tests/pty/extract_eti_fic.py
+@@ -0,0 +1,30 @@
++"""Extract CRC-checked FIBs: python3 extract_eti_fic.py ert.eti ert.fib."""
++import sys
++from pathlib import Path
++
++
++def valid_crc(block):
++    crc = 0xffff
++    for value in block:
++        crc ^= value << 8
++        for _ in range(8):
++            crc = ((crc << 1) ^ (0x1021 if crc & 0x8000 else 0)) & 0xffff
++    return crc == 0x1d0f
++
++
++capture = Path(sys.argv[1]).read_bytes()
++assert len(capture) % 6144 == 0
++fibs = bytearray()
++for offset in range(0, len(capture), 6144):
++    frame = capture[offset:offset + 6144]
++    assert frame[:4] in (b"\xff\x07\x3a\xb6", b"\xff\xf8\xc5\x49")
++    if not frame[5] & 0x80:
++        continue
++    start = 12 + (frame[5] & 127) * 4
++    length = 128 if (frame[6] >> 3) & 3 == 3 else 96
++    for index in range(start, start + length, 32):
++        fib = frame[index:index + 32]
++        assert valid_crc(fib), (offset, index)
++        fibs.extend(fib)
++Path(sys.argv[2]).write_bytes(fibs)
++print(len(fibs) // 32, "CRC-checked FIBs extracted")
+diff --git a/tests/pty/test_frontend.py b/tests/pty/test_frontend.py
+new file mode 100644
+--- /dev/null
++++ b/tests/pty/test_frontend.py
+@@ -0,0 +1,84 @@
++"""Compile the production metadata publisher with an in-memory receiver.
++
++Run from a patched welle.io checkout: python3 tests/pty/test_frontend.py
++The decoder itself is exercised separately by test_pty.cpp.
++"""
++import subprocess
++import tempfile
++from pathlib import Path
++
++root = Path(__file__).resolve().parents[2]
++source = (root / "src/welle-e2/welle-e2.cpp").read_text()
++
++
++def function(signature):
++    start = source.index(signature)
++    return source[start:source.index("\n}", start) + 2]
++
++
++start = source.index("struct SelectedServiceMetadata {")
++metadata = source[start:source.index("\n};", start) + 3]
++test = r'''
++#include <cassert>
++#include <string>
++#include <vector>
++#include "libs/json.hpp"
++using nlohmann::json;
++std::vector<json> updates;
++void emitMetadata(const json& value) { updates.push_back(value); }
++enum class TransportMode { Audio };
++enum class AudioServiceComponentType { DABPlus };
++struct Component {
++    TransportMode transportMode() const { return TransportMode::Audio; }
++    AudioServiceComponentType audioType() const { return AudioServiceComponentType::DABPlus; }
++};
++struct Label { std::string utf8_label() const { return "ERT"; } };
++struct Service { Label serviceLabel; int language=112; int programType=-1; };
++struct Subchannel {
++    int language=112;
++    bool valid() const { return true; }
++    int bitrate() const { return 96; }
++    std::string protection() const { return "EEP 2-A"; }
++};
++struct RadioReceiver {
++    int table=-1;
++    Subchannel subchannel;
++    std::vector<Component> getComponents(const Service&) { return {Component()}; }
++    const Subchannel& getSubchannel(const Component&) { return subchannel; }
++    int getProgrammeTypeTable() const { return table; }
++};
++'''
++test += function("std::string trimLabel(") + "\n" + metadata + "\n" + function("void announceSelectedService(")
++test += r'''
++int main() {
++    RadioReceiver receiver;
++    Service service;
++    SelectedServiceMetadata previous;
++    announceSelectedService(receiver,service,previous);
++    assert(updates.size()==2);
++    assert(updates.back()["pty"]=="-1");
++    assert(updates.back().count("programType")==0);
++    announceSelectedService(receiver,service,previous);
++    assert(updates.size()==2);
++    service.programType=1;
++    announceSelectedService(receiver,service,previous);
++    assert(updates.size()==3 && updates.back()["pty"]=="1");
++    receiver.table=1;
++    announceSelectedService(receiver,service,previous);
++    assert(updates.size()==4 && updates.back()["ptyTable"]=="1");
++    service.programType=24;
++    announceSelectedService(receiver,service,previous);
++    assert(updates.size()==5 && updates.back()["pty"]=="24");
++    service.programType=-1;
++    announceSelectedService(receiver,service,previous);
++    assert(updates.size()==6 && updates.back()["pty"]=="-1");
++    announceSelectedService(receiver,service,previous);
++    assert(updates.size()==6);
++}
++'''
++with tempfile.TemporaryDirectory() as directory:
++    path = Path(directory)
++    (path / "test.cpp").write_text(test)
++    subprocess.run(["g++", "-std=c++17", "-I" + str(root / "src"), str(path / "test.cpp"), "-o", str(path / "test")], check=True)
++    subprocess.run([str(path / "test")], check=True)
++print("RTL production metadata publisher: late/change/unavailable/change-only checks passed")
+diff --git a/tests/pty/test_pty.cpp b/tests/pty/test_pty.cpp
+new file mode 100644
+--- /dev/null
++++ b/tests/pty/test_pty.cpp
+@@ -0,0 +1,115 @@
++#include <cassert>
++#include <iostream>
++#include <fstream>
++#include <array>
++#include <chrono>
++#include <mutex>
++#include <unordered_map>
++#include "backend/msc-handler.h"
++#define private public
++#include "backend/fib-processor.h"
++#undef private
++
++struct Controller : RadioControllerInterface {
++    void onSNR(float) override {}
++    void onFrequencyCorrectorChange(int, int) override {}
++    void onSyncChange(char) override {}
++    void onSignalPresence(bool) override {}
++    void onServiceDetected(uint32_t) override {}
++    void onNewEnsemble(uint16_t) override {}
++    void onSetEnsembleLabel(DabLabel&) override {}
++    void onDateTimeUpdate(const dab_date_time_t&) override {}
++    void onFIBDecodeSuccess(bool, const uint8_t*) override {}
++    void onNewImpulseResponse(std::vector<float>&&) override {}
++    void onConstellationPoints(std::vector<DSPCOMPLEX>&&) override {}
++    void onNewNullSymbol(std::vector<DSPCOMPLEX>&&) override {}
++    void onTIIMeasurement(tii_measurement_t&&) override {}
++    void onMessage(message_level_t, const std::string&, const std::string&) override {}
++};
++
++static std::array<uint8_t, 256> bits(std::initializer_list<uint8_t> bytes)
++{
++    std::array<uint8_t, 256> result{};
++    size_t pos=0;
++    for (const auto byte : bytes)
++        for (int bit=7; bit>=0; --bit)
++            result[pos++] = (byte >> bit) & 1;
++    return result;
++}
++
++int main(int argc, char **argv)
++{
++    Controller controller;
++    FIBProcessor decoder(controller);
++    assert(decoder.getProgrammeTypeTable() == -1);
++    auto early = bits({5,17,0x12,1,0,1});
++    decoder.FIG0Extension17(early.data());
++    assert(decoder.programmeTypes.at(0x1201) == 1);
++    assert(decoder.services.empty());
++    // The second FIG 0/2 announces the service, retaining its early PTY.
++    auto service = bits({6,2,0x12,1,1,0x3f,2});
++    decoder.FIG0Extension2(service.data());
++    decoder.FIG0Extension2(service.data());
++    assert(decoder.getService(0x1201).programType == 1);
++    auto table = bits({4,9,0,0xe1,1});
++    decoder.FIG0Extension9(table.data());
++    assert(decoder.getProgrammeTypeTable() == 1);
++    auto change = bits({5,17,0x12,1,0x80,24});
++    decoder.FIG0Extension17(change.data());
++    assert(decoder.getService(0x1201).programType == 24);
++    auto legacy = bits({7,17,0x12,1,0x30,112,14,0});
++    decoder.FIG0Extension17(legacy.data());
++    assert(decoder.getService(0x1201).programType == 14);
++    assert(decoder.getService(0x1201).language == 112);
++    auto truncated = bits({6,17,0x12,1,0x30,112,4});
++    decoder.FIG0Extension17(truncated.data());
++    assert(decoder.getService(0x1201).programType == 14);
++    auto zero = bits({5,17,0x12,1,0,0});
++    decoder.FIG0Extension17(zero.data());
++    assert(decoder.getService(0x1201).programType == 0);
++    decoder.clearEnsemble();
++    assert(decoder.programmeTypes.empty());
++    assert(decoder.getProgrammeTypeTable() == -1);
++    assert(decoder.getService(0x1201).programType == -1);
++    std::cout << "RTL FIG PTY cases passed\n";
++    if (argc == 2) {
++        std::ifstream input(argv[1], std::ios::binary);
++        assert(input);
++        std::array<uint8_t,32> fib{};
++        size_t count=0;
++        while (input.read(reinterpret_cast<char*>(fib.data()), fib.size())) {
++            std::array<uint8_t,256> data{};
++            for (size_t i=0;i<fib.size();++i)
++                for (int bit=7;bit>=0;--bit)
++                    data[i*8+7-bit]=(fib[i]>>bit)&1;
++            size_t offset=0;
++            while (offset<30) {
++                const int length=fib[offset]&31;
++                if (fib[offset]==0xff || offset+length+1>30)
++                    break;
++                if ((fib[offset]>>5)==0 && length) {
++                    const int extension=fib[offset+1]&31;
++                    auto start=data.data()+offset*8;
++                    if (extension==2)
++                        decoder.FIG0Extension2(start);
++                    else if (extension==9)
++                        decoder.FIG0Extension9(start);
++                    else if (extension==17)
++                        decoder.FIG0Extension17(start);
++                }
++                offset+=length+1;
++            }
++            ++count;
++        }
++        const std::vector<std::pair<uint16_t,int>> expected={
++            {0x1201,1},{0x1202,15},{0x1203,14},{0x1204,4},{0x1205,15},
++            {0x1206,9},{0x1207,11},{0x1208,24},{0x1209,28},{0x120a,13},
++            {0x120b,28},{0x120c,12},{0x120d,27},{0x1332,9}
++        };
++        for (const auto &entry:expected) {
++            assert(decoder.getService(entry.first).programType==entry.second);
++        }
++        assert(decoder.getProgrammeTypeTable()==1);
++        std::cout << "ERT: " << count << " FIBs, 14 service PTYs passed\n";
++    }
++}
