@@ -16,6 +16,10 @@ SRC_URI:append = " \
         file://0012-adaptivedemux-cancel-safe-manifest-update.patch \
         file://0013-adaptivedemux-async-source-error.patch \
         file://0014-hls-time-renditions-against-one-reference.patch \
+        file://0015-adaptivedemux-time-bitrate-from-first-byte.patch \
+        file://0016-adaptivedemux-switch-to-new-pads-after-a-not-linked-stream.patch \
+        file://0017-mpegpsdemux-avs.patch \
+        file://0018-hls-one-time-reference-per-discontinuity-sequence.patch \
 "
 
 PACKAGECONFIG:append = " \
@@ -25,6 +29,6 @@ PACKAGECONFIG:append = " \
 PACKAGECONFIG:remove = "rsvg openssl"
 
 PV = "1.28.6"
-PR:append = ".3"
+PR:append = ".8"
  
 SRC_URI[sha256sum] = "6636f2c2289ceda52c4aba971338c81e2b5780d3381bd3673c1c116ec87587c3"

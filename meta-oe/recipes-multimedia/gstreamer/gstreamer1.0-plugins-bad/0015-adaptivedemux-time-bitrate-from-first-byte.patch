@@ -1,0 +1,48 @@
+Subject: [PATCH] adaptivedemux: time the fragment bitrate from the first byte
+
+The bitrate of a fragment is its size over the time since the request.
+With small fragments the request latency is most of that time: a live
+HLS stream with 2 s CMAF fragments of 30-90 KB and 50-200 ms until the
+first byte measured 1-5 Mbit/s on a much faster line. The estimate
+followed the size of the variant being played, so the stream stayed on
+or fell back to the lowest variants.
+
+Time the data from its first byte. A fragment that arrives at once
+still counts a quarter of the download time.
+
+Upstream-Status: Pending
+---
+--- a/gst-libs/gst/adaptivedemux/gstadaptivedemux.c
++++ b/gst-libs/gst/adaptivedemux/gstadaptivedemux.c
+@@ -2878,17 +2878,26 @@
+         break;
+       case GST_EVENT_EOS:
+       {
++        GstClockTime data_time;
++
+         stream->last_download_time =
+             gst_adaptive_demux_get_monotonic_time (stream->demux) -
+             (stream->download_start_time * GST_USECOND);
++        /* Calculate bitrate since the first byte: the request latency is
++         * most of the download time of a small fragment, the bitrate would
++         * follow the size of the variant being played. A fragment that
++         * arrives at once still counts a quarter of the download time. */
++        data_time = stream->last_download_time > stream->last_latency ?
++            stream->last_download_time - stream->last_latency : 0;
++        data_time = MAX (data_time, stream->last_download_time / 4);
+         stream->last_bitrate =
+             gst_util_uint64_scale (stream->fragment_bytes_downloaded,
+-            8 * GST_SECOND, stream->last_download_time);
++            8 * GST_SECOND, data_time);
+         GST_DEBUG_OBJECT (pad,
+-            "EOS since download_start %" GST_TIME_FORMAT " bitrate %"
+-            G_GUINT64_FORMAT " bps", GST_TIME_ARGS (stream->last_download_time),
+-            stream->last_bitrate);
+-        /* Calculate bitrate since URI request */
++            "EOS since download_start %" GST_TIME_FORMAT " first byte %"
++            GST_TIME_FORMAT " bitrate %" G_GUINT64_FORMAT " bps",
++            GST_TIME_ARGS (stream->last_download_time),
++            GST_TIME_ARGS (stream->last_latency), stream->last_bitrate);
+       }
+         break;
+       default:
