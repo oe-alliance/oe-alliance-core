@@ -5,8 +5,8 @@ SRCDATE_PR = "r2"
 
 require vuplus-dvb-proxy.inc
 
-PR:append = ".1"
-VENDOR_DRIVER_FIX_PROFILE = "ultimo"
+PR:append = ".2"
+VENDOR_DRIVER_FIX_PROFILE = "ultimo4k"
 require recipes-bsp/vendor-driver-fixes/vendor-driver-fixes.inc
 
 SRC_URI[md5sum] = "ad0c4376a29abb9ba57efb39ec97f38c"

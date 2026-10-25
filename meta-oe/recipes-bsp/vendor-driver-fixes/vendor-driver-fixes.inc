@@ -20,7 +20,7 @@ vendor_driver_apply_patch() {
 
 do_install:append() {
     case "${VENDOR_DRIVER_FIX_PROFILE}" in
-        platform)
+        gigablue)
             platform_dir="${D}/home/root/platform"
             bbnote "Vendor driver hashes before fixes (${PN})"
             sha256sum "$platform_dir/dvb_init" "$platform_dir/dvb.ko" "$platform_dir/nexus.ko"
@@ -32,7 +32,18 @@ do_install:append() {
             bbnote "Vendor driver hashes after fixes (${PN})"
             sha256sum "$platform_dir/dvb_init" "$platform_dir/dvb.ko" "$platform_dir/nexus.ko"
             ;;
-        ultimo)
+		vuduo4klite)
+			platform_dir="${D}/home/root/platform"
+            bbnote "Vendor driver hashes before fixes (${PN})"
+            sha256sum "$platform_dir/dvb_init" "$platform_dir/dvb.ko" "$platform_dir/nexus.ko"
+            vendor_driver_apply_patch patch_dvb_init.py "$platform_dir/dvb_init"
+            vendor_driver_apply_patch patch_dvb_acm.py "$platform_dir/dvb.ko"
+            vendor_driver_apply_patch patch_dvb_gamma.py "$platform_dir/dvb.ko"
+            vendor_driver_apply_patch patch_nexus_hlg.py "$platform_dir/nexus.ko" -o "$platform_dir/nexus.ko"
+            bbnote "Vendor driver hashes after fixes (${PN})"
+            sha256sum "$platform_dir/dvb_init" "$platform_dir/dvb.ko" "$platform_dir/nexus.ko"
+			;;
+        ultimo4k)
             driver_file="${D}/lib/modules/${KV}/extra/dvb-bcm7444.ko"
             bbnote "Vendor driver hash before fixes (${PN})"
             sha256sum "$driver_file"

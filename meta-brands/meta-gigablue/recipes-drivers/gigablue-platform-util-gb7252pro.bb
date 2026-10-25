@@ -4,14 +4,14 @@ SRCDATE = "20261020.r0"
 
 KV = "4.1.20"
 
-PR = "r0"
+PR = "r1"
 
 # V3D owns the Nexus libraries copied to /usr/lib by the platform init script.
 # Keep them while the boot-critical platform is installed, even when the last
 # optional EGL application (RetroGaming, Kodi or Chromium) is auto-removed.
 RDEPENDS:${PN} += "gb-v3ddriver-gb7252pro"
 
-VENDOR_DRIVER_FIX_PROFILE = "platform"
+VENDOR_DRIVER_FIX_PROFILE = "gigablue"
 require recipes-bsp/vendor-driver-fixes/vendor-driver-fixes.inc
 
 # The current gb7252pro platform archive no longer ships the small `config`
