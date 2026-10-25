@@ -7,6 +7,9 @@ SRC_URI:append = " \
            file://0002-Revert-souphttpsrc-Always-use-the-content-decoder.patch \
            file://0003-qtdemux-preserve-adaptive-track-title.patch \
            file://0004-hlsdemux2-exact-segment-time.patch \
+           file://0005-matroskademux-avs2.patch \
+           file://0006-qtdemux-avs.patch \
+           file://0007-aacparse-wait-for-the-rest-of-a-split-frame.patch \
 "
 
 PACKAGECONFIG:remove = "soup3"
@@ -26,6 +29,6 @@ PACKAGECONFIG_CONFARGS:remove = "-Dsoup=disabled"
 EXTRA_OEMESON:append = " -Dsoup=enabled"
 
 PV = "1.28.6"
-PR:append = ".2"
+PR:append = ".5"
  
 SRC_URI[sha256sum] = "b0c620a4b18b6ee931b4c43bbf1760d308666dc37f730a7e7f1ad327e59ce2df"

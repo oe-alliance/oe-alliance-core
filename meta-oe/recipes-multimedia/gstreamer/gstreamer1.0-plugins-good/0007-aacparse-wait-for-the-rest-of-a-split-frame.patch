@@ -1,0 +1,27 @@
+Subject: [PATCH] aacparse: wait for the rest of a split ADTS frame
+
+In sync, an ADTS header passes the check without looking at the
+available data. When a download chunk ends inside a frame and the part
+already there reaches the minimum frame size, the frame is short and
+the parser skips one byte into it: sync is lost and the whole frame is
+dropped. The timestamps go on, so every dropped frame moves the audio
+21 ms ahead of the video. Ask for the whole frame instead.
+
+--- a/gst/audioparsers/gstaacparse.c
++++ b/gst/audioparsers/gstaacparse.c
+@@ -1488,6 +1488,15 @@
+ 
+   ret = framesize <= map.size;
+ 
++  if (!ret && aacparse->header_type == DSPAAC_HEADER_ADTS && !lost_sync
++      && !GST_BASE_PARSE_DRAINING (parse)) {
++    /* the frame goes on in the next buffer: wait for it, skipping into it
++     * would lose sync and the whole frame */
++    gst_base_parse_set_min_frame_size (GST_BASE_PARSE (aacparse), framesize);
++    *skipsize = 0;
++    goto exit;
++  }
++
+   if (aacparse->header_type == DSPAAC_HEADER_ADTS) {
+     /* see above */
+     frame->overhead = 7;

@@ -1,0 +1,61 @@
+Subject: [PATCH] mpegpsdemux: AVS video
+
+A program stream without stream map gives every video stream as MPEG-1/2,
+the parser then finds no frames in AVS video. Take a stream that starts
+with an AVS sequence header as video/x-cavs (an MPEG-4 visual object
+sequence has 0x0001 at the same place), and the stream type 0x42 of a
+stream map as well.
+
+diff --git a/gst/mpegdemux/gstmpegdefs.h b/gst/mpegdemux/gstmpegdefs.h
+index 95ac901..d346b96 100644
+--- a/gst/mpegdemux/gstmpegdefs.h
++++ b/gst/mpegdemux/gstmpegdefs.h
+@@ -165,6 +165,7 @@
+ #define ST_VIDEO_MPEG4                  0x10
+ #define ST_VIDEO_H264                   0x1b
+ #define ST_VIDEO_H265                   0x24
++#define ST_VIDEO_AVS                    0x42
+ 
+ /* Un-official Dirac extension */
+ #define ST_VIDEO_DIRAC                  0xd1
+diff --git a/gst/mpegdemux/gstmpegdemux.c b/gst/mpegdemux/gstmpegdemux.c
+index da7c3cb..8bbd8b0 100644
+--- a/gst/mpegdemux/gstmpegdemux.c
++++ b/gst/mpegdemux/gstmpegdemux.c
+@@ -115,7 +115,7 @@ static GstStaticPadTemplate video_template =
+         "mpegversion = (int) { 1, 2, 4 }, " "systemstream = (boolean) FALSE, "
+         "parsed = (boolean) FALSE; " "video/x-h264, "
+         "stream-format=(string)byte-stream; " "video/x-h265, "
+-        "stream-format=(string)byte-stream;")
++        "stream-format=(string)byte-stream; " "video/x-cavs;")
+     );
+ 
+ static GstStaticPadTemplate audio_template =
+@@ -452,6 +452,12 @@ gst_ps_demux_create_stream (GstPsDemux * demux, gint id, gint stream_type,
+       gap_threshold = VIDEO_GAP_THRESHOLD;
+       break;
+     }
++    case ST_VIDEO_AVS:
++      template = klass->video_template;
++      name = g_strdup_printf ("video_%02x", id);
++      caps = gst_caps_new_empty_simple ("video/x-cavs");
++      gap_threshold = VIDEO_GAP_THRESHOLD;
++      break;
+     case ST_AUDIO_MPEG1:
+     case ST_AUDIO_MPEG2:
+       template = klass->audio_template;
+@@ -2454,6 +2460,14 @@ gst_ps_demux_data_cb (GstPESFilter * filter, gboolean first,
+       }
+       if (stream_type == -1)
+         goto unknown_stream_type;
++    } else if (stream_type == ST_GST_VIDEO_MPEG1_OR_2 &&
++        demux->streams[id] == NULL && datalen >= 8 &&
++        GST_READ_UINT32_BE (map.data) == 0x000001b0 &&
++        (map.data[6] != 0 || map.data[7] != 1)) {
++      /* a video stream without stream map that starts with an AVS sequence
++       * header; an MPEG-4 visual object sequence has 0x0001 there */
++      stream_type = demux->psm[id] = ST_VIDEO_AVS;
++      GST_DEBUG_OBJECT (demux, "stream 0x%02x is AVS video", id);
+     } else if (stream_type == ST_AUDIO_MPEG1 || stream_type == ST_AUDIO_MPEG2) {
+       if (datalen >= 2) {
+         guint hdr = GST_READ_UINT16_BE (map.data);

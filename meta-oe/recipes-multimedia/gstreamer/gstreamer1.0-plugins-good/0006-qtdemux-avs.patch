@@ -1,0 +1,169 @@
+Subject: [PATCH] qtdemux: AVS video
+
+The AVS1-P9 sample entry avs2 came out as video/x-unknown. Map it to
+video/x-cavs and turn its samples into a byte stream: every unit carries
+a 32 bit length and a type byte in front of the start code value. The
+sequence header of the avss box goes in front of an I picture without
+one, so playback can start at every key frame. The sequence end goes.
+
+diff --git a/gst/isomp4/fourcc.h b/gst/isomp4/fourcc.h
+index 18b3cc2..113e424 100644
+--- a/gst/isomp4/fourcc.h
++++ b/gst/isomp4/fourcc.h
+@@ -294,6 +294,8 @@ G_BEGIN_DECLS
+ #define FOURCC_uuid     GST_MAKE_FOURCC('u','u','i','d')
+ #define FOURCC_v210     GST_MAKE_FOURCC('v','2','1','0')
+ #define FOURCC_vc_1     GST_MAKE_FOURCC('v','c','-','1')
++#define FOURCC_avs2     GST_MAKE_FOURCC('a','v','s','2')
++#define FOURCC_avss     GST_MAKE_FOURCC('a','v','s','s')
+ #define FOURCC_vide     GST_MAKE_FOURCC('v','i','d','e')
+ #define FOURCC_vmhd     GST_MAKE_FOURCC('v','m','h','d')
+ #define FOURCC_vp08     GST_MAKE_FOURCC('v','p','0','8')
+diff --git a/gst/isomp4/qtdemux.c b/gst/isomp4/qtdemux.c
+index 4d6171d..b2e702e 100644
+--- a/gst/isomp4/qtdemux.c
++++ b/gst/isomp4/qtdemux.c
+@@ -6549,6 +6549,80 @@ gst_qtdemux_process_buffer_clcp (GstQTDemux * qtdemux, QtDemuxStream * stream,
+   return outbuf;
+ }
+ 
++/* AVS1-P9 samples: units with a 32 bit length and a type byte in front of
++ * the start code value. Make a byte stream of them and put the sequence
++ * header from the avss box in front of an I picture without one, so the
++ * decoder can start at every key frame. The sequence end goes. */
++static GstBuffer *
++gst_qtdemux_process_buffer_avs (GstQTDemux * qtdemux, QtDemuxStream * stream,
++    GstBuffer * buf, guint64 dts, guint64 pts, guint64 duration,
++    gboolean round_up_duration)
++{
++  GstBuffer *outbuf, *header = NULL;
++  GstMapInfo map, hmap;
++  gboolean has_seq = FALSE, has_i = FALSE;
++  gsize pos, len, outlen = 0, out = 0;
++  guint8 *data;
++
++  gst_buffer_map (buf, &map, GST_MAP_READ);
++  for (pos = 0; pos + 4 < map.size; pos += 4 + len) {
++    len = QT_UINT32 (map.data + pos);
++    if (len < 2 || len > map.size - pos - 4) {
++      GST_WARNING_OBJECT (qtdemux, "invalid AVS unit, sample as it is");
++      gst_buffer_unmap (buf, &map);
++      return buf;
++    }
++    if (map.data[pos + 5] == 0xb0)
++      has_seq = TRUE;
++    else if (map.data[pos + 5] == 0xb3)
++      has_i = TRUE;
++    if (map.data[pos + 5] != 0xb7)
++      outlen += len + 2;
++  }
++
++  if (has_i && !has_seq && CUR_STREAM (stream)->caps) {
++    const GValue *value =
++        gst_structure_get_value (gst_caps_get_structure (CUR_STREAM
++            (stream)->caps, 0), "codec_data");
++
++    if (value && GST_VALUE_HOLDS_BUFFER (value)) {
++      header = gst_value_get_buffer (value);
++      outlen += gst_buffer_get_size (header);
++    }
++  }
++
++  if (!outlen) {
++    gst_buffer_unmap (buf, &map);
++    gst_buffer_unref (buf);
++    return NULL;
++  }
++
++  data = g_malloc (outlen);
++  if (header) {
++    gst_buffer_map (header, &hmap, GST_MAP_READ);
++    memcpy (data, hmap.data, hmap.size);
++    out = hmap.size;
++    gst_buffer_unmap (header, &hmap);
++  }
++  for (pos = 0; pos + 4 < map.size; pos += 4 + len) {
++    len = QT_UINT32 (map.data + pos);
++    if (map.data[pos + 5] == 0xb7)
++      continue;
++    data[out++] = 0x00;
++    data[out++] = 0x00;
++    data[out++] = 0x01;
++    memcpy (data + out, map.data + pos + 5, len - 1);
++    out += len - 1;
++  }
++  gst_buffer_unmap (buf, &map);
++
++  outbuf = _gst_buffer_new_wrapped (data, outlen, g_free);
++  gst_buffer_copy_into (outbuf, buf, GST_BUFFER_COPY_METADATA, 0, -1);
++  gst_buffer_unref (buf);
++
++  return outbuf;
++}
++
+ /* DVD subpicture specific sample handling.
+  * the input buffer metadata must be writable,
+  * but time/duration etc not yet set and need not be preserved */
+@@ -15967,6 +16041,50 @@ qtdemux_parse_trak (GstQTDemux * qtdemux, GNode * trak, guint32 * mvhd_matrix)
+             }
+             break;
+           }
++          case FOURCC_avs2:
++          {
++            const guint8 *box = (const guint8 *) stsd_entry->data;
++            guint32 end = QT_UINT32 (box), pos = 86, size = 0;
++            GstByteWriter writer;
++            guint i, count;
++
++            /* the avss box: 5 bytes, then the sequence headers, each with
++             * a 16 bit length and without its start code prefix */
++            for (; pos + 8 <= end; pos += size) {
++              size = QT_UINT32 (box + pos);
++              if (size < 8 || size > end - pos)
++                break;
++              if (QT_FOURCC (box + pos + 4) == FOURCC_avss)
++                break;
++            }
++            if (pos + 8 > end || size < 8 + 5 || size > end - pos
++                || QT_FOURCC (box + pos + 4) != FOURCC_avss)
++              break;
++
++            gst_byte_writer_init (&writer);
++            count = box[pos + 12] & 0x1f;
++            end = pos + size;
++            pos += 13;
++            for (i = 0; i < count && pos + 2 <= end; i++) {
++              size = QT_UINT16 (box + pos);
++              if (!size || size > end - pos - 2)
++                break;
++              gst_byte_writer_put_data (&writer, (const guint8 *) "\0\0\1", 3);
++              gst_byte_writer_put_data (&writer, box + pos + 2, size);
++              pos += 2 + size;
++            }
++            if (gst_byte_writer_get_size (&writer)) {
++              GstBuffer *buf = gst_byte_writer_reset_and_get_buffer (&writer);
++
++              GST_DEBUG_OBJECT (qtdemux, "found avss sequence header");
++              gst_caps_set_simple (entry->caps,
++                  "codec_data", GST_TYPE_BUFFER, buf, NULL);
++              gst_buffer_unref (buf);
++            } else {
++              gst_byte_writer_reset (&writer);
++            }
++            break;
++          }
+           case FOURCC_ovc1:
+           {
+             guint8 *ovc1_data;
+@@ -19349,6 +19467,11 @@ qtdemux_video_caps (GstQTDemux * qtdemux, QtDemuxStream * stream,
+       _codec ("GoPro CineForm");
+       caps = gst_caps_from_string ("video/x-cineform");
+       break;
++    case FOURCC_avs2:
++      _codec ("AVS");
++      caps = gst_caps_new_empty_simple ("video/x-cavs");
++      stream->process_func = gst_qtdemux_process_buffer_avs;
++      break;
+     case FOURCC_vc_1:
+     case FOURCC_ovc1:
+       _codec ("VC-1");

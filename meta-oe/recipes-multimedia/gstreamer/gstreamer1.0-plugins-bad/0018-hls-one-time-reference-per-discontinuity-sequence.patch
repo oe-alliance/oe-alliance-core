@@ -1,0 +1,118 @@
+Subject: [PATCH] hls: one time reference per discontinuity sequence
+
+0014 keeps one time reference for all streams and clears it at a
+discontinuity of the variant. A rendition that reached the discontinuity
+first was timed against the reference of the timeline before it: with the
+ads Pluto TV inserts, every ad moved the audio further off the picture.
+Timing such fragments by their playlist position instead puts the audio a
+second early, the audio segments start their PCR a second later than the
+video segments.
+
+Number the discontinuity sequence of each media file and keep the
+reference for one sequence: the first stream to enter a sequence sets it,
+the others are timed by their MPEG time against it, also an audio
+rendition that restarts within the sequence.
+
+Upstream-Status: Pending
+---
+diff --git a/ext/hls/gsthlsdemux.c b/ext/hls/gsthlsdemux.c
+index c03f57a..3c45933 100644
+--- a/ext/hls/gsthlsdemux.c
++++ b/ext/hls/gsthlsdemux.c
+@@ -1032,7 +1032,11 @@ gst_hls_demux_stream_apply_time_ref (GstHLSDemux * demux,
+     return;
+ 
+   g_mutex_lock (&demux->time_ref_lock);
+-  if (!GST_CLOCK_TIME_IS_VALID (demux->time_ref_ts)) {
++  /* Each discontinuity sequence has an MPEG timeline of its own: the streams
++   * enter it one after the other, the first one sets its reference */
++  if (!GST_CLOCK_TIME_IS_VALID (demux->time_ref_ts)
++      || demux->time_ref_discont_sequence != hls_stream->discont_sequence) {
++    demux->time_ref_discont_sequence = hls_stream->discont_sequence;
+     /* The MPEG time of a rendition, the ID3 PTS of packed audio, can be up to
+      * a second later than the first PCR of the variant: keep the variant
+      * from starting before the segment */
+@@ -1379,9 +1383,7 @@ gst_hls_demux_update_fragment_info (GstAdaptiveDemuxStream * stream)
+ 
+   /* set up our source for download */
+   hlsdemux_stream->time_ref_done = FALSE;
+-  /* a discontinuity of the variant starts a new MPEG timeline */
+-  if (discont && hlsdemux_stream->is_primary_playlist && !stream->discont)
+-    gst_hls_demux_clear_time_ref (hlsdemux);
++  hlsdemux_stream->discont_sequence = file->discont_sequence;
+ 
+   if (hlsdemux_stream->reset_pts || discont
+       || stream->demux->segment.rate < 0.0) {
+diff --git a/ext/hls/gsthlsdemux.h b/ext/hls/gsthlsdemux.h
+index a68e8dd..6741921 100644
+--- a/ext/hls/gsthlsdemux.h
++++ b/ext/hls/gsthlsdemux.h
+@@ -124,6 +124,8 @@ struct _GstHLSDemuxStream
+ 
+   /* the fragment start was matched against the shared time reference */
+   gboolean time_ref_done;
++  /* the discontinuity sequence of the fragment */
++  gint discont_sequence;
+ };
+ 
+ typedef struct {
+@@ -162,6 +164,7 @@ struct _GstHLSDemux
+   GMutex time_ref_lock;
+   GstClockTime time_ref_ts;
+   GstClockTime time_ref_mpeg;
++  gint time_ref_discont_sequence;
+ };
+ 
+ struct _GstHLSDemuxClass
+diff --git a/ext/hls/m3u8.c b/ext/hls/m3u8.c
+index eb0cef7..dcec61e 100644
+--- a/ext/hls/m3u8.c
++++ b/ext/hls/m3u8.c
+@@ -491,6 +491,7 @@ gst_m3u8_update (GstM3U8 * self, gchar * data)
+   GstClockTime duration;
+   gchar *title, *end;
+   gboolean discontinuity = FALSE;
++  gint discont_sequence = 0;
+   gchar *current_key = NULL;
+   gboolean have_iv = FALSE;
+   guint8 iv[16] = { 0, };
+@@ -599,6 +600,7 @@ gst_m3u8_update (GstM3U8 * self, gchar * data)
+         }
+ 
+         file->discont = discontinuity;
++        file->discont_sequence = discont_sequence;
+         if (last_init_file)
+           file->init_file = gst_m3u8_init_file_ref (last_init_file);
+ 
+@@ -646,12 +648,15 @@ gst_m3u8_update (GstM3U8 * self, gchar * data)
+           have_mediasequence = TRUE;
+         }
+       } else if (g_str_has_prefix (data_ext_x, "DISCONTINUITY-SEQUENCE:")) {
+-        if (int_from_string (data + 30, &data, &val)
+-            && val != self->discont_sequence) {
+-          self->discont_sequence = val;
+-          discontinuity = TRUE;
++        if (int_from_string (data + 30, &data, &val)) {
++          discont_sequence = val;
++          if (val != self->discont_sequence) {
++            self->discont_sequence = val;
++            discontinuity = TRUE;
++          }
+         }
+       } else if (g_str_has_prefix (data_ext_x, "DISCONTINUITY")) {
++        discont_sequence++;
+         self->discont_sequence++;
+         discontinuity = TRUE;
+       } else if (g_str_has_prefix (data_ext_x, "PROGRAM-DATE-TIME:")) {
+diff --git a/ext/hls/m3u8.h b/ext/hls/m3u8.h
+index 4a8d926..80d0924 100644
+--- a/ext/hls/m3u8.h
++++ b/ext/hls/m3u8.h
+@@ -96,6 +96,7 @@ struct _GstM3U8MediaFile
+   gchar *uri;
+   gint64 sequence;               /* the sequence nb of this file */
+   gboolean discont;             /* this file marks a discontinuity */
++  gint discont_sequence;        /* the discontinuity sequence the file belongs to */
+   gchar *key;
+   guint8 iv[16];
+   gint64 offset, size;

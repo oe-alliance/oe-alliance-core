@@ -10,7 +10,7 @@ DEPENDS = "glib-2.0-native gstreamer1.0 gstreamer1.0-plugins-base libdca"
 GSTVERSION = "1.0"
 PR = "r1"
 
-SRC_URI = "git://github.com/christophecvr/gstreamer1.0-plugin-multibox-dvbmediasink;branch=openatv-dev;protocol=https"
+SRC_URI = "git://github.com/oe-alliance/gstreamer1.0-plugin-dvbmediasink;branch=openatv-dev;protocol=https"
 
 inherit gitpkgv
 
