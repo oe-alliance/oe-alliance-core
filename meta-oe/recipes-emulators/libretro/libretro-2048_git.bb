@@ -13,6 +13,8 @@ require libretro-core.inc
 
 LIBRETRO_CORE_FILE = "2048_libretro.so"
 
+CLEANBROKEN = "1"
+
 do_compile() {
     oe_runmake -f Makefile.libretro \
         platform=unix \
