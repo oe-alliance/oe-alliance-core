@@ -7,7 +7,7 @@ ALLOW_EMPTY:${PN} = "1"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PV = "${IMAGE_VERSION}"
-PR = "r1"
+PR = "r2"
 
 inherit packagegroup
 
@@ -21,6 +21,7 @@ RRECOMMENDS:${PN} = "\
     crontab-clearmen \
     enigma2-display-skins \
     openatv-skinparts \
+    openatv-spinner \
     enigma2-skins \
     enigma2-plugin-systemplugins-crossepg \
     curlftpfs-ng \
