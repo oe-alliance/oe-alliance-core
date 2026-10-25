@@ -3,7 +3,7 @@ DESCRIPTION = "Native fullscreen Dolphin NoGUI launcher for Dream One and Dream 
 HOMEPAGE = "https://dolphin-emu.org/"
 
 LICENSE = "GPL-2.0-or-later"
-PR = "r8"
+PR = "r9"
 LIC_FILES_CHKSUM = "file://COPYING;md5=42dac715b05c09ace95c14324cdfd147"
 
 # EmuELEC's current Amlogic-ng standalone baseline.  It is official Dolphin
@@ -21,7 +21,7 @@ SRC_URI = "gitsm://github.com/dolphin-emu/dolphin.git;protocol=https;branch=mast
 SRCREV = "f84df02055ab9610feec48e65648cac5a3c098fa"
 PV = "2609+git${SRCPV}"
 
-DEPENDS = "alsa-lib bzip2 libevdev libusb1 udev virtual/egl virtual/libgles2 zlib"
+DEPENDS = "alsa-lib bzip2 curl libevdev libusb1 udev virtual/egl virtual/libgles2 zlib"
 
 inherit cmake pkgconfig
 
