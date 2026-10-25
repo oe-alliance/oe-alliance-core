@@ -50,7 +50,6 @@ OPENVIX_EXTENDED = "\
     enigma2-plugin-systemplugins-xmlupdate \
     enigma2-plugin-drivers-ntfs-3g \
     enigma2-plugin-drivers-exfat \
-    ${@bb.utils.contains("MACHINE_FEATURES", "webkithbbtv", "enigma2-plugin-extensions-webkithbbtv", "", d)} \
     "
 
 RRECOMMENDS:${PN}:append:tmnanoseplus = " enigma2-plugin-systemplugins-tempfancontrol"
