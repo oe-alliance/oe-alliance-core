@@ -11,6 +11,7 @@ PV = "0.1+git20261008.${SRCPV}"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 COMPATIBLE_MACHINE = "${@bb.utils.contains('MACHINE_FEATURES', 'retrogaming', '.*', '^$', d)}"
 
+do_configure[noexec] = "1"
 do_compile[noexec] = "1"
 
 do_install() {
