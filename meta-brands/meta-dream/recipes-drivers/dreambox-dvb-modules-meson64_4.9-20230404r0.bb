@@ -38,6 +38,8 @@ COMPATIBLE_MACHINE = "^(dreamone|dreamtwo)$"
 # callers retry as before; the _mcount call becomes the msleep call.
 patch_ko() {
     ko=${D}/lib/modules/${DM_LOCALVERSION}/extra/$1
+    # do_install hard links ${D} to ${S}, patch a copy of our own
+    cp $ko $ko.tmp && mv $ko.tmp $ko
     test "$(od -An -tx1 -j $2 -N4 $ko | tr -d ' \n')" = "$3"
     printf "$4" | dd of=$ko bs=1 seek=$2 conv=notrunc
 }
