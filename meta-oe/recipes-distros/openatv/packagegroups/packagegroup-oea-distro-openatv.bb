@@ -4,6 +4,7 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
+PR = "r1"
 
 inherit packagegroup
 
@@ -19,7 +20,6 @@ OPENATV_COMMON = "\
     socketdaemon \
     e2-route-metric \
     enigma2-plugin-systemplugins-hotplug \
-    enigma2-plugin-systemplugins-softwaremanager \
     "
 
 OPENATV_SMALLBOX = "\

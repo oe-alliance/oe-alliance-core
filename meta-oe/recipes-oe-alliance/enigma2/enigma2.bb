@@ -199,22 +199,31 @@ RDEPENDS:enigma2-plugin-extensions-filecommander = "python3-puremagic"
 
 RREPLACES:enigma2-plugin-systemplugins-lcnscanner:openatv = "enigma2-plugin-systemplugins-terrestrialscan"
 RCONFLICTS:enigma2-plugin-systemplugins-lcnscanner:openatv = "enigma2-plugin-systemplugins-terrestrialscan"
+
+# OpenATV's QuadPip is split from Enigma2 under Extensions, not SystemPlugins.
+RPROVIDES:enigma2-plugin-extensions-quadpip:openatv = "enigma2-plugin-systemplugins-quadpip"
+RREPLACES:enigma2-plugin-extensions-quadpip:openatv = "enigma2-plugin-systemplugins-quadpip"
+RCONFLICTS:enigma2-plugin-extensions-quadpip:openatv = "enigma2-plugin-systemplugins-quadpip"
+
 RPROVIDES:${PN}:openatv += " \
     enigma2-plugin-systemplugins-wirelesslan \
     enigma2-plugin-systemplugins-networkwizard \
     enigma2-plugin-systemplugins-networkbrowser \
+    enigma2-plugin-systemplugins-softwaremanager \
 "
 
 RREPLACES:${PN}:openatv += " \
     enigma2-plugin-systemplugins-wirelesslan \
     enigma2-plugin-systemplugins-networkwizard \
     enigma2-plugin-systemplugins-networkbrowser \
+    enigma2-plugin-systemplugins-softwaremanager \
 "
 
 RCONFLICTS:${PN}:openatv += " \
     enigma2-plugin-systemplugins-wirelesslan \
     enigma2-plugin-systemplugins-networkwizard \
     enigma2-plugin-systemplugins-networkbrowser \
+    enigma2-plugin-systemplugins-softwaremanager \
 "
 
 
