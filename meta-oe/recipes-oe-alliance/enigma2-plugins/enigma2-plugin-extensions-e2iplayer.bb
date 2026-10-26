@@ -1,9 +1,10 @@
 SUMMARY = "E2iPlayer"
-DESCRIPTION = "Watch Videos Online"
-HOMEPAGE = "https://gitlab.com/iptvplayer-for-e2/"
+DESCRIPTION = "Watch videos and live streams online - the oe-mirrors E2iPlayer, based on E2iPlayer by samsamsam"
+HOMEPAGE = "https://github.com/oe-mirrors/e2iplayer"
+MAINTAINER = "openATV team"
 SECTION = "multimedia"
-LICENSE = "GPL-2.0-only"
-require conf/license/license-gplv2.inc
+LICENSE = "GPL-3.0-only"
+LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/GPL-3.0-only;md5=c79ff39f19dfec6d293b95dea7b07891"
 require conf/python/python3-compileall.inc
 
 SRC_URI = "git://github.com/oe-mirrors/e2iplayer.git;protocol=https;branch=python3"

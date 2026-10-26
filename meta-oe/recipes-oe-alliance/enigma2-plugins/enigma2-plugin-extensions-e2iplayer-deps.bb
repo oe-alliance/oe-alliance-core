@@ -1,11 +1,16 @@
-SUMMARY = "Meta package for installing all dependencies for SSS' E2iPlayer"
-MAINTAINER = "samsamsam"
-require conf/license/license-gplv2.inc
+SUMMARY = "Native tools and the subtitle parser for E2iPlayer"
+DESCRIPTION = "hlsdl, e2ipow, exteplayer3png, lsdir, cmdwrap, f4mdump and the _subparser module of the oe-mirrors E2iPlayer, based on the E2iPlayer tools by samsamsam"
+HOMEPAGE = "https://github.com/oe-mirrors/e2iplayer-deps"
+MAINTAINER = "openATV team"
+# GPLv3 for the E2iPlayer tools, MIT for hlsdl and the vendored Expat, LGPL for the vendored
+# VLC/FFmpeg snippets and librtmp, zlib for the vendored TinyXML-2
+LICENSE = "GPL-3.0-only & MIT & LGPL-2.1-or-later & Zlib"
+LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/GPL-3.0-only;md5=c79ff39f19dfec6d293b95dea7b07891"
 require conf/python/python3-compileall.inc
 
 inherit gitpkgv python3-dir
 
-DEPENDS = "python3 curl ffmpeg openssl zlib"
+DEPENDS = "python3 curl ffmpeg openssl zlib libpng"
 RRECOMMENDS:${PN} = " \
     ffmpeg \
     exteplayer3 \
@@ -24,7 +29,7 @@ RRECOMMENDS:${PN} = " \
 SRCREV = "${AUTOREV}"
 PV = "1.0+git"
 PKGV = "1.0+git${GITPKGV}"
-PR = "r7"
+PR = "r8"
 
 SRC_URI = "git://github.com/oe-mirrors/e2iplayer-deps.git;protocol=https;branch=master"
 
@@ -80,6 +85,12 @@ SOURCE_FILES6 =+ "src/main.cpp"
 SOURCE_FILES6 =+ "src/parser.cpp"
 SOURCE_FILES6 =+ "src/tinyxml2.cpp"
 
+S7 = "${UNPACKDIR}/${PN}-${PV}/e2ipow"
+SOURCE_FILES7 = "src/e2ipow.c"
+
+S8 = "${UNPACKDIR}/${PN}-${PV}/exteplayer3png"
+SOURCE_FILES8 = "src/png.c"
+
 do_compile() {
     cd ${S1}
     # Expat lives in src/expat since e2iplayer-deps ships Expat 2.8 (was src/expat-2.2.0);
@@ -99,6 +110,16 @@ do_compile() {
     ${CC} ${SOURCE_FILES5} -c -fdata-sections -ffunction-sections -Os -Wno-incompatible-pointer-types -Wl,--gc-sections -I${D}/${libdir} -I${D}/${includedir} -I${S5}/ext/librtmp -lz ${LDFLAGS}
     cd ${S6}
     ${CXX} ${SOURCE_FILES6} -Os -Wno-narrowing -lssl -lcrypto -lz -std=c++0x -I${S6}/inc -I${S5}/ext -I${S5}/ext/librtmp *.o -o f4mdump ${LDFLAGS}
+    # proof of work solvers (Byse player, ...) and the PNG plugin exteplayer3 loads for
+    # graphic subtitles (PGS/DVB); only built when the e2iplayer-deps checkout has them
+    if [ -d ${S7} ]; then
+        cd ${S7}
+        ${CC} ${SOURCE_FILES7} -O2 -Wall -o e2ipow ${LDFLAGS}
+    fi
+    if [ -d ${S8} ]; then
+        cd ${S8}
+        ${CC} ${SOURCE_FILES8} -shared -fPIC -O2 -Wall -lpng -o exteplayer3png.so ${LDFLAGS}
+    fi
 }
 
 do_install() {
@@ -109,6 +130,13 @@ do_install() {
     install -m 0755 ${S3}/lsdir ${D}${bindir}/
     install -m 0755 ${S4}/cmdwrap ${D}${bindir}/
     install -m 0755 ${S6}/f4mdump ${D}${bindir}/
+    if [ -f ${S7}/e2ipow ]; then
+        install -m 0755 ${S7}/e2ipow ${D}${bindir}/
+    fi
+    if [ -f ${S8}/exteplayer3png.so ]; then
+        install -d ${D}${libdir}
+        install -m 0755 ${S8}/exteplayer3png.so ${D}${libdir}/
+    fi
 }
 
-FILES:${PN} = "${libdir}/enigma2/python/Plugins/Extensions/IPTVPlayer/libs/iptvsubparser ${bindir}"
+FILES:${PN} = "${libdir}/enigma2/python/Plugins/Extensions/IPTVPlayer/libs/iptvsubparser ${bindir} ${libdir}/exteplayer3png.so"
