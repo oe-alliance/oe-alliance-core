@@ -2,7 +2,7 @@ DEPENDS = "libgcc"
 PROVIDES = "linux-dreambox"
 PE = "1"
 
-inherit kernel machine_kernel_pr kernel-fixups
+inherit kernel machine_kernel_pr kernel-fixups gitpkgv
 
 MACHINE_KERNEL_PR = "r0"
 
@@ -14,6 +14,7 @@ SRC_URI = "git://github.com/oe-alliance-kernels/linux-dreambox-meson64.git;proto
 
 SRCREV = "${AUTOREV}"
 PV = "4.9.269+git"
+PKGV = "4.9.269+git${GITPKGV}"
 
 KERNEL_CC += "${TOOLCHAIN_OPTIONS}"
 KERNEL_LD += "${TOOLCHAIN_OPTIONS}"
