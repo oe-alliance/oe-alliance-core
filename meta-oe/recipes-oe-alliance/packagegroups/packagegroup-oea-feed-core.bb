@@ -287,7 +287,7 @@ RETROGAMING_FEED_PACKAGES = "\
     libretro-mrboom \
     libretro-mupen64plus-next \
     libretro-ppsspp \
-    libretro-flycast \
+    ${@bb.utils.contains_any("MACHINE_FEATURES", "retrogaming-hisi4k retrogaming-highperformance", "libretro-flycast", "", d)} \
     "
 
 RETROGAMING_HIGH_PERFORMANCE_FEED_PACKAGES = "\
