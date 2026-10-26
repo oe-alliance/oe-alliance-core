@@ -1,8 +1,8 @@
 diff --git a/gstdvbvideosink.c b/gstdvbvideosink.c
-index cd5f5b1..7ed3f12 100644
+index 40546b0..645a404 100644
 --- a/gstdvbvideosink.c
 +++ b/gstdvbvideosink.c
-@@ -144,6 +144,7 @@ enum
+@@ -838,6 +838,7 @@ enum
  	PROP_SYNC_E2PLAYER,
  	PROP_ASYNC_E2PLAYER,
  	PROP_RENDER_DELAY,
@@ -10,7 +10,7 @@ index cd5f5b1..7ed3f12 100644
  	PROP_LAST
  };
  
-@@ -302,6 +303,20 @@ static GstStateChangeReturn gst_dvbvideosink_change_state (GstElement * element,
+@@ -1004,6 +1005,20 @@ static GstStateChangeReturn gst_dvbvideosink_change_state (GstElement * element,
  static gint64 gst_dvbvideosink_get_decoder_time (GstDVBVideoSink *self);
  static gint64 gst_dvbvideosink_get_video_codec (GstDVBVideoSink *self);
  
@@ -31,7 +31,7 @@ index cd5f5b1..7ed3f12 100644
  /* initialize the plugin's class */
  static void gst_dvbvideosink_class_init(GstDVBVideoSinkClass *self)
  {
-@@ -338,6 +353,9 @@ static void gst_dvbvideosink_class_init(GstDVBVideoSinkClass *self)
+@@ -1040,6 +1055,9 @@ static void gst_dvbvideosink_class_init(GstDVBVideoSinkClass *self)
  	g_object_class_install_property (gobject_class, PROP_RENDER_DELAY,
  			g_param_spec_uint64 ("render-delay", "Renderdelay", "Render-delay increase latency",
  					0, G_MAXUINT64, 0, G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
@@ -41,7 +41,7 @@ index cd5f5b1..7ed3f12 100644
  
  	gstbasesink_class->start = GST_DEBUG_FUNCPTR (gst_dvbvideosink_start);
  	gstbasesink_class->stop = GST_DEBUG_FUNCPTR (gst_dvbvideosink_stop);
-@@ -466,6 +484,10 @@ static void gst_dvbvideosink_set_property (GObject * object, guint prop_id, cons
+@@ -1174,6 +1192,10 @@ static void gst_dvbvideosink_set_property (GObject * object, guint prop_id, cons
  			else
  				GST_WARNING_OBJECT(self, "Renderdelay change to  %" G_GUINT64_FORMAT " FAILURE", g_value_get_uint64(value));
  			break;
@@ -52,7 +52,7 @@ index cd5f5b1..7ed3f12 100644
  		default:
  			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
  			break;
-@@ -490,6 +512,9 @@ static void gst_dvbvideosink_get_property (GObject * object, guint prop_id, GVal
+@@ -1198,6 +1220,9 @@ static void gst_dvbvideosink_get_property (GObject * object, guint prop_id, GVal
  			g_value_set_uint64(value, gst_base_sink_get_render_delay(GST_BASE_SINK(object)));
  			GST_INFO_OBJECT(self, "Requested by other element RENDER DELAY = %" G_GUINT64_FORMAT , g_value_get_uint64(value));
  			break;
@@ -62,7 +62,7 @@ index cd5f5b1..7ed3f12 100644
  		default:
  			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
  			break;
-@@ -1776,9 +1801,10 @@ static gboolean gst_dvbvideosink_set_caps(GstBaseSink *basesink, GstCaps *caps)
+@@ -2568,9 +2593,10 @@ static gboolean gst_dvbvideosink_set_caps(GstBaseSink *basesink, GstCaps *caps)
  	if (self->stream_type != STREAMTYPE_UNKNOWN)
  	{
  		gint numerator, denominator;
@@ -74,7 +74,7 @@ index cd5f5b1..7ed3f12 100644
  			if (f)
  			{
  				int valid_framerates[] = { 23976, 24000, 25000, 29970, 30000, 50000, 59940, 60000 };
-@@ -1944,6 +1970,7 @@ static gboolean gst_dvbvideosink_start(GstBaseSink *basesink)
+@@ -2746,6 +2772,7 @@ static gboolean gst_dvbvideosink_start(GstBaseSink *basesink)
  
  	GST_DEBUG_OBJECT(self, "start");
  	FILE *f;
@@ -82,7 +82,7 @@ index cd5f5b1..7ed3f12 100644
  
  	if (socketpair(PF_UNIX, SOCK_STREAM, 0, self->unlockfd) < 0)
  	{
-@@ -1956,7 +1983,7 @@ static gboolean gst_dvbvideosink_start(GstBaseSink *basesink)
+@@ -2758,7 +2785,7 @@ static gboolean gst_dvbvideosink_start(GstBaseSink *basesink)
  
  	self->pesheader_buffer = gst_buffer_new_and_alloc(2048);
  
@@ -91,16 +91,16 @@ index cd5f5b1..7ed3f12 100644
  	if (f)
  	{
  		fgets(self->saved_fallback_framerate, sizeof(self->saved_fallback_framerate), f);
-@@ -1964,7 +1991,7 @@ static gboolean gst_dvbvideosink_start(GstBaseSink *basesink)
+@@ -2766,7 +2793,7 @@ static gboolean gst_dvbvideosink_start(GstBaseSink *basesink)
  		f = NULL;
  	}
  
 -	self->fd = open("/dev/dvb/adapter0/video0", O_RDWR | O_NONBLOCK);
 +	self->fd = open(video_device_path(self, path_buf), O_RDWR | O_NONBLOCK);
- 
- 	self->pts_written = FALSE;
- 	self->lastpts = 0;
-@@ -1982,6 +2009,7 @@ static gboolean gst_dvbvideosink_stop(GstBaseSink *basesink)
+ #ifdef DREAMNEXTGEN
+ 	self->poll_fd = open("/dev/amvideo_poll", O_RDWR | O_NONBLOCK);
+ 	f = fopen("/sys/class/video/disable_video", "w");
+@@ -2806,6 +2833,7 @@ static gboolean gst_dvbvideosink_stop(GstBaseSink *basesink)
  {
  	GstDVBVideoSink *self = GST_DVBVIDEOSINK(basesink);
  	FILE *f = NULL;
@@ -108,9 +108,9 @@ index cd5f5b1..7ed3f12 100644
  	GST_INFO_OBJECT(self, "stop");
  	if (self->fd >= 0)
  	{
-@@ -2008,7 +2036,7 @@ static gboolean gst_dvbvideosink_stop(GstBaseSink *basesink)
- 		queue_pop(&self->queue);
- 	}
+@@ -2841,7 +2869,7 @@ static gboolean gst_dvbvideosink_stop(GstBaseSink *basesink)
+ 	self->headers = NULL;
+ #endif
  
 -	f = fopen("/proc/stb/vmpeg/0/fallback_framerate", "w");
 +	f = fopen(fallback_framerate_path(self, path_buf), "w");
@@ -118,10 +118,10 @@ index cd5f5b1..7ed3f12 100644
  	{
  		fputs(self->saved_fallback_framerate, f);
 diff --git a/gstdvbvideosink.h b/gstdvbvideosink.h
-index 2966da5..aa118d2 100644
+index 0f76c9c..58fb0a0 100644
 --- a/gstdvbvideosink.h
 +++ b/gstdvbvideosink.h
-@@ -151,6 +151,7 @@ struct _GstDVBVideoSink
+@@ -161,6 +161,7 @@ struct _GstDVBVideoSink
  	GstBaseSink element;
  
  	int fd;
