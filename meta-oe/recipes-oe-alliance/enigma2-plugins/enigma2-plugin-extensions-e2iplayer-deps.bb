@@ -4,7 +4,7 @@ HOMEPAGE = "https://github.com/oe-mirrors/e2iplayer-deps"
 MAINTAINER = "openATV team"
 # GPLv3 for the E2iPlayer tools, MIT for hlsdl and the vendored Expat, LGPL for the vendored
 # VLC/FFmpeg snippets and librtmp, zlib for the vendored TinyXML-2
-LICENSE = "GPL-3.0-only & MIT & LGPL-2.1-or-later & Zlib"
+LICENSE = "GPL-3.0-only AND LGPL-2.1-or-later AND MIT AND Zlib"
 LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/GPL-3.0-only;md5=c79ff39f19dfec6d293b95dea7b07891"
 require conf/python/python3-compileall.inc
 
