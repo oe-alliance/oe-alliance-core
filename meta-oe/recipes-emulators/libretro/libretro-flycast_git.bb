@@ -3,7 +3,7 @@ DESCRIPTION = "Experimental Sega Dreamcast, Naomi and Atomiswave emulator core."
 HOMEPAGE = "https://github.com/flyinghead/flycast"
 
 LICENSE = "GPL-2.0-only"
-PR = "r1"
+PR = "r2"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 
 SRC_URI = "gitsm://github.com/flyinghead/flycast.git;protocol=https;branch=master"
@@ -12,6 +12,10 @@ PV = "0.1+git20261008.${SRCPV}"
 
 inherit cmake
 require libretro-core.inc
+
+# Keep Dreamcast on HiSilicon 4K and the high-performance Dream profile.
+# In particular, do not offer it on the classic Broadcom ARM receivers.
+COMPATIBLE_MACHINE = "${@bb.utils.contains_any('MACHINE_FEATURES', 'retrogaming-hisi4k retrogaming-highperformance', '.*', '^$', d)}"
 
 DEPENDS = "libzip virtual/egl virtual/libgles2 zlib"
 RDEPENDS:${PN} += "virtual-libgles2 virtual-egl"

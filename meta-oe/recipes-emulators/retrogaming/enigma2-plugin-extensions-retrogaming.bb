@@ -15,7 +15,7 @@ S = "${UNPACKDIR}/${BP}/src"
 SRCREV = "${AUTOREV}"
 PV = "git"
 PKGV = "V${GITPKGVTAG}"
-PR = "r2"
+PR = "r3"
 
 SRC_URI = "git://github.com/oe-alliance-plugins/RetroGaming.git;protocol=https;branch=main \
            file://openatv-retrogaming-launch \
@@ -71,6 +71,11 @@ do_install:append() {
     if ${@bb.utils.contains('MACHINE_FEATURES', 'retrogaming-highperformance', 'true', 'false', d)}; then
         install -d ${D}${datadir}/retrogaming
         touch ${D}${datadir}/retrogaming/high-performance
+    fi
+
+    # Keep the plugin's Flycast catalogue in sync with the core recipe.
+    if ${@bb.utils.contains_any('MACHINE_FEATURES', 'retrogaming-hisi4k retrogaming-highperformance', 'true', 'false', d)}; then
+        touch ${D}${datadir}/retrogaming/flycast
     fi
 
     if ${@bb.utils.contains('MACHINE_FEATURES', 'retrogaming-bcm-nxpl', 'true', 'false', d)}; then
