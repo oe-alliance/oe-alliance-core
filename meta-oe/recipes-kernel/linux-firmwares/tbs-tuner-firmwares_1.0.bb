@@ -2,6 +2,8 @@ SUMMARY = "Firmware collection for TBS USB DVB tuners"
 HOMEPAGE = "https://www.tbsdtv.com/"
 require conf/license/license-close.inc
 
+PR = "r1"
+
 SRC_URI = "https://www.tbsdtv.com/download/document/linux/tbs-tuner-firmwares_v1.0.tar.bz2"
 SRC_URI[md5sum] = "701d6cca4a3480d203890eef82fd80e6"
 SRC_URI[sha256sum] = "23ecf817383dc29881ac9cb6f704239969e5f711270ad2073497653ba08791cc"
@@ -24,7 +26,6 @@ PACKAGES = " \
     firmware-dvb-usb-tbs5980 \
     firmware-dvb-demod-m88rs6060 \
     firmware-dvb-demod-si2183 \
-    firmware-tbs-cx231xx \
 "
 
 ALLOW_EMPTY:${PN} = "1"
@@ -41,7 +42,7 @@ RRECOMMENDS:${PN} = " \
     firmware-dvb-usb-tbs5980 \
     firmware-dvb-demod-m88rs6060 \
     firmware-dvb-demod-si2183 \
-    firmware-tbs-cx231xx \
+    firmware-cx231xx \
 "
 
 FILES:firmware-dvb-usb-tbs5931 = "${nonarch_base_libdir}/firmware/dvb-usb-id5931.fw"
@@ -56,7 +57,6 @@ FILES:firmware-dvb-usb-tbs5925 = "${nonarch_base_libdir}/firmware/dvb-usb-tbsqbo
 FILES:firmware-dvb-usb-tbs5980 = "${nonarch_base_libdir}/firmware/dvb-usb-tbsqbox-id5980.fw"
 FILES:firmware-dvb-demod-m88rs6060 = "${nonarch_base_libdir}/firmware/dvb-demod-m88rs6060.fw"
 FILES:firmware-dvb-demod-si2183 = "${nonarch_base_libdir}/firmware/dvb-demod-si2183-b60-01.fw"
-FILES:firmware-tbs-cx231xx = "${nonarch_base_libdir}/firmware/v4l-cx231xx-avcore-01.fw"
 
 do_install() {
 	install -d ${D}${nonarch_base_libdir}/firmware
@@ -72,8 +72,7 @@ do_install() {
 		dvb-usb-tbsqbox-id5925.fw \
 		dvb-usb-tbsqbox-id5980.fw \
 		dvb-demod-m88rs6060.fw \
-		dvb-demod-si2183-b60-01.fw \
-		v4l-cx231xx-avcore-01.fw; do
+		dvb-demod-si2183-b60-01.fw; do
 		install -m 0644 ${S}/$firmware ${D}${nonarch_base_libdir}/firmware/
 	done
 }

@@ -2,6 +2,8 @@ SUMMARY = "TBS-modified CX231xx stack for the TBS5990 dual DVB-S/S2 CI tuner"
 
 require tbs-module.inc
 
+PR = "r1"
+
 TBS_MODULE_DEPENDS = "tbs-frontend-tas2101 tbs-tuner-av201x"
 TBS_SOURCE_FILES = " \
     drivers/media/usb/cx231xx/cx231xx-i2c.c \
@@ -31,4 +33,4 @@ TBS_INSTALL_MODULES = "cx231xx cx231xx-dvb-ci"
 TBS_CCFLAGS = "-DCONFIG_DVB_TAS2101=1 -DCONFIG_MEDIA_TUNER_AV201X=1 -DTBS_CX231XX_5990_ONLY=1"
 TBS_KBUILD_EXTRA_SYMBOLS = "${STAGING_DATADIR}/tbs-module-symvers/tbs-frontend-tas2101/Module.symvers ${STAGING_DATADIR}/tbs-module-symvers/tbs-tuner-av201x/Module.symvers"
 
-RDEPENDS:${PN} += "tbs-frontend-tas2101 tbs-tuner-av201x firmware-tbs-cx231xx"
+RDEPENDS:${PN} += "tbs-frontend-tas2101 tbs-tuner-av201x firmware-cx231xx"
