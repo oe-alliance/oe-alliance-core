@@ -3,8 +3,8 @@ HOMEPAGE = "https://www.tbsdtv.com/"
 require conf/license/license-close.inc
 
 SRC_URI = "https://www.tbsdtv.com/download/document/linux/tbs-tuner-firmwares_v1.0.tar.bz2"
-SRC_URI[md5sum] = "43e9cb4f0bb97e60213774169dab4c86"
-SRC_URI[sha256sum] = "972f3e26c88c51252655f028e79abb3c53f085cfb96551f86a8a678c963e2d4e"
+SRC_URI[md5sum] = "701d6cca4a3480d203890eef82fd80e6"
+SRC_URI[sha256sum] = "23ecf817383dc29881ac9cb6f704239969e5f711270ad2073497653ba08791cc"
 
 S = "${UNPACKDIR}"
 
