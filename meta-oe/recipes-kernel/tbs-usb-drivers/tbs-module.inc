@@ -70,7 +70,8 @@ python tbs_fix_kernel_module_rdepends () {
             )
 }
 
-DEPENDS += "virtual/kernel tbs-media-driver-source ${TBS_MODULE_DEPENDS}"
+TBS_DRIVER_SOURCE ?= "tbs-media-driver-source"
+DEPENDS += "virtual/kernel ${TBS_DRIVER_SOURCE} ${TBS_MODULE_DEPENDS}"
 
 SRC_URI = " \
     file://Makefile \
@@ -80,7 +81,7 @@ SRC_URI = " \
 PV = "1.0+git"
 S = "${UNPACKDIR}"
 B = "${WORKDIR}/build"
-TBS_SOURCE_ROOT = "${STAGING_DATADIR}/tbs-media-driver-source"
+TBS_SOURCE_ROOT = "${STAGING_DATADIR}/${TBS_DRIVER_SOURCE}"
 
 TBS_SOURCE_FILES ?= ""
 TBS_FALLBACK_HEADERS ?= ""

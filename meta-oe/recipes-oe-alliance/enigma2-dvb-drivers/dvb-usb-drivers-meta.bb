@@ -12,6 +12,7 @@ TBS_OUT_OF_TREE_USB_DRIVERS_SUPPORTED = " \
     enigma2-plugin-drivers-dvb-usb-tbs5881 \
     enigma2-plugin-drivers-dvb-usb-tbs5925 \
     enigma2-plugin-drivers-dvb-usb-tbs5927 \
+    enigma2-plugin-drivers-dvb-usb-tbs5927se \
     enigma2-plugin-drivers-dvb-usb-tbs5930-lite \
     enigma2-plugin-drivers-dvb-usb-tbs5980 \
     enigma2-plugin-drivers-dvb-usb-tbs5990 \

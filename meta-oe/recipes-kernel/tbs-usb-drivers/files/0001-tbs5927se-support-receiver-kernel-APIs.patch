@@ -1,0 +1,266 @@
+From: OE-Alliance <info@oe-alliance.com>
+Subject: [PATCH] tbs5927se: support receiver DVB APIs and release demod firmware
+
+Use the existing feature checks for legacy frequency units, frontend and
+tuner callbacks, and PLS values encoded in stream_id. Keep the property
+cache unchanged when converting a legacy root PLS code to a gold index.
+
+Check the firmware version header size and release the retained demodulator
+firmware on detach and failed attachment. Use the USB firmware supplied by
+the DVB core without requesting a second copy; bound the final transfer and
+propagate short transfers as errors.
+
+Upstream-Status: Inappropriate [receiver kernel compatibility]
+---
+--- a/frontends/avl62x1.c
++++ b/frontends/avl62x1.c
+@@ -3523,6 +3523,7 @@
+ 	struct avl62x1_priv *priv = fe->demodulator_priv;
+ 
+ 
++	release_firmware(priv->fw);
+ 	kfree(priv->chip->chip_pub);
+ 	kfree(priv->chip->chip_priv);
+ 	kfree(priv->chip);
+@@ -3556,6 +3557,7 @@
+ 	u16 sig_strength;
+ 	s16 snr_db_x100, sqi;
+ 	u32 tuner_status;
++	u32 scrambling_sequence_index = 0;
+ 	int ret;
+ /*
+ 	if (refcount_read(&state->running)) {
+@@ -3613,18 +3615,21 @@
+ 		}
+ 		break;
+ 	case avl62x1_tune_state_demod_trylock:
++#ifndef TBS_NO_SCRAMBLING_SEQUENCE_INDEX
++		scrambling_sequence_index = c->scrambling_sequence_index;
++#endif
+ 		if (c->stream_id != NO_STREAM_ID_FILTER &&
+ 		    c->stream_id & 0xfffff00) {
+-			c->scrambling_sequence_index = (c->stream_id >> 8) & 0x3ffff;
++			scrambling_sequence_index = (c->stream_id >> 8) & 0x3ffff;
+ 			if (((c->stream_id >> 26) & 0x3) == 0)
+-				__avl62x1_conv_xlfsr_state_to_n(c->scrambling_sequence_index, &c->scrambling_sequence_index);
++				__avl62x1_conv_xlfsr_state_to_n(scrambling_sequence_index, &scrambling_sequence_index);
+ 		}
+ 
+ 		carrier_info.rf_freq_khz = c->frequency;
+ 		carrier_info.carrier_freq_offset_hz = 0;
+ 		carrier_info.symbol_rate_hz = c->symbol_rate;
+-		if (c->scrambling_sequence_index)
+-			carrier_info.pl_scrambling = c->scrambling_sequence_index;
++		if (scrambling_sequence_index)
++			carrier_info.pl_scrambling = scrambling_sequence_index;
+ 		else
+ 			carrier_info.pl_scrambling = AVL62X1_PL_SCRAM_AUTO;
+ 
+@@ -3726,9 +3731,16 @@
+ 	return DVBFE_ALGO_HW;
+ }
+ 
++#ifdef TBS_LEGACY_GET_FRONTEND_CALLBACK
++static int avl62x1_get_frontend(struct dvb_frontend *fe)
++#else
+ static int avl62x1_get_frontend(struct dvb_frontend *fe,
+ 				struct dtv_frontend_properties *c)
+-{
++#endif
++{
++#ifdef TBS_LEGACY_GET_FRONTEND_CALLBACK
++	struct dtv_frontend_properties *c = &fe->dtv_property_cache;
++#endif
+ 	struct avl62x1_priv *priv = fe->demodulator_priv;
+ 	enum avl62x1_lock_status lock;
+ 	struct avl62x1_carrier_info carrier_info;
+@@ -4035,7 +4047,11 @@
+ 		.frequency_min_hz =  950 * MHz,
+ 		.frequency_max_hz = 2150 * MHz,
+ 		.frequency_stepsize_hz =  1011 * kHz,
++#ifdef TBS_LEGACY_DVB_FREQUENCY_API
++		.frequency_tolerance = 5 * MHz,
++#else
+ 		.frequency_tolerance_hz = 5 * MHz,
++#endif
+ 		.symbol_rate_min = 0,
+ 		.symbol_rate_max = 60000000,
+ 		.caps = FE_CAN_INVERSION_AUTO |
+@@ -4090,6 +4106,12 @@
+ 		return fw_status;
+ 	}
+ 
++	if (priv->fw->size < 28) {
++		release_firmware(priv->fw);
++		priv->fw = NULL;
++		return -EINVAL;
++	}
++
+ 	priv->chip->chip_priv->patch_data = (unsigned char *)(priv->fw->data);
+ 
+ 	fw_maj = priv->chip->chip_priv->patch_data[24]; //major rev
+@@ -4100,7 +4122,8 @@
+ 		pr_info("Firmware version %d.%d.%d incompatible with this driver version", fw_maj, fw_min, fw_build);
+ 		pr_info("Firmware minor version must be %d", 8);
+ 		release_firmware(priv->fw);
+-		return 1;
++		priv->fw = NULL;
++		return -EINVAL;
+ 	}
+ 
+ 	return 0;
+@@ -4150,16 +4173,16 @@
+ 	printk("chip id =0x%x",chip_id);
+ 	if(ret|(chip_id!=0x62615ca8)){
+ 	    printk("i2c errors or get the wrong chip ids");
+-	    goto err_free_chip_pub;
++	    goto err_release_firmware;
+ 	 }
+ 	 
+ 	ret = avl62x1_initialize(priv->chip);
+ 	if(ret)
+-	    goto err_free_chip_pub;
++	    goto err_release_firmware;
+ 
+ 	ret = avl62x1_get_version(&ver_info, priv->chip);
+ 	if(ret)
+-	    goto err_free_chip_pub;
++	    goto err_release_firmware;
+ 	printk("Firmware Version %d.%d.%d (%d.%d.%d)",
+ 		ver_info.firmware.major, ver_info.firmware.minor, ver_info.firmware.build,
+ 		ver_info.driver.major, ver_info.driver.minor, ver_info.driver.build);
+--- a/tuners/rda5815.c
++++ b/tuners/rda5815.c
+@@ -329,12 +329,19 @@
+ 	return ret;
+ }
+ 
++#ifdef TBS_LEGACY_TUNER_RELEASE_CALLBACK
++static int rda5815_release(struct dvb_frontend* fe)
++#else
+ static void rda5815_release(struct dvb_frontend* fe)
++#endif
+ {
+ 	struct rda5815_priv*priv = fe->tuner_priv;
+ 
+ 	kfree(priv);
+-	priv= NULL;
++	fe->tuner_priv = NULL;
++#ifdef TBS_LEGACY_TUNER_RELEASE_CALLBACK
++	return 0;
++#endif
+ }
+ static int rda5815_get_rf_strength(struct dvb_frontend* fe,u16 *rssi)
+ {
+--- a/dvb-usb/tbs5927se.c
++++ b/dvb-usb/tbs5927se.c
+@@ -209,60 +209,56 @@
+ MODULE_DEVICE_TABLE(usb, tbs5927se_table);
+ 
+ static int tbs5927se_load_firmware(struct usb_device *dev,
+-			const struct firmware *frmwr)
+-{
+-	u8 *b, *p;
+-	int ret = 0, i;
+-	u8 reset;
+-	const struct firmware *fw;
+-	switch (dev->descriptor.idProduct) {
+-	case 0x5929:
+-		ret = request_firmware(&fw, tbs5927se_properties.firmware, &dev->dev);
+-		if (ret != 0) {
+-			err("did not find the firmware file. (%s) "
+-			"Please see linux/Documentation/dvb/ for more details "
+-			"on firmware-problems.", tbs5927se_properties.firmware);
+-			return ret;
++			const struct firmware *fw)
++{
++	u8 buffer[64], reset;
++	int ret, restart_ret;
++	size_t offset, len;
++
++	/* DVB USB owns fw and releases it after this callback. */
++	if (!fw || !fw->size || fw->size > 0x10000)
++		return -EINVAL;
++
++	info("start downloading TBS5927SE firmware");
++	reset = 1;
++	ret = tbs5927se_op_rw(dev, 0xa0, 0x7f92, 0, &reset, 1,
++			TBS5927SE_WRITE_MSG);
++	if (ret != 1) {
++		ret = ret < 0 ? ret : -EIO;
++		goto restart;
++	}
++	ret = tbs5927se_op_rw(dev, 0xa0, 0xe600, 0, &reset, 1,
++			TBS5927SE_WRITE_MSG);
++	if (ret != 1) {
++		ret = ret < 0 ? ret : -EIO;
++		goto restart;
++	}
++
++	for (offset = 0; offset < fw->size; offset += len) {
++		len = min_t(size_t, sizeof(buffer), fw->size - offset);
++		memcpy(buffer, fw->data + offset, len);
++		ret = tbs5927se_op_rw(dev, 0xa0, offset, 0, buffer, len,
++				TBS5927SE_WRITE_MSG);
++		if (ret != (int)len) {
++			ret = ret < 0 ? ret : -EIO;
++			goto restart;
+ 		}
+-		break;
+-	default:
+-		fw = frmwr;
+-		break;
+-	}
+-	info("start downloading TBS5927SE firmware");
+-	p = kmalloc(fw->size, GFP_KERNEL);
+-	reset = 1;
+-	/*stop the CPU*/
+-	tbs5927se_op_rw(dev, 0xa0, 0x7f92, 0, &reset, 1, TBS5927SE_WRITE_MSG);
+-	tbs5927se_op_rw(dev, 0xa0, 0xe600, 0, &reset, 1, TBS5927SE_WRITE_MSG);
+-
+-	if (p != NULL) {
+-		memcpy(p, fw->data, fw->size);
+-		for (i = 0; i < fw->size; i += 0x40) {
+-			b = (u8 *) p + i;
+-			if (tbs5927se_op_rw(dev, 0xa0, i, 0, b , 0x40,
+-					TBS5927SE_WRITE_MSG) != 0x40) {
+-				err("error while transferring firmware");
+-				ret = -EINVAL;
+-				break;
+-			}
+-		}
+-		/* restart the CPU */
+-		reset = 0;
+-		if (ret || tbs5927se_op_rw(dev, 0xa0, 0x7f92, 0, &reset, 1,
+-					TBS5927SE_WRITE_MSG) != 1) {
+-			err("could not restart the USB controller CPU.");
+-			ret = -EINVAL;
+-		}
+-		if (ret || tbs5927se_op_rw(dev, 0xa0, 0xe600, 0, &reset, 1,
+-					TBS5927SE_WRITE_MSG) != 1) {
+-			err("could not restart the USB controller CPU.");
+-			ret = -EINVAL;
+-		}
+-
+-		msleep(100);
+-		kfree(p);
+-	}
++	}
++	ret = 0;
++
++restart:
++	if (ret > 0)
++		ret = -EIO;
++	reset = 0;
++	restart_ret = tbs5927se_op_rw(dev, 0xa0, 0x7f92, 0, &reset, 1,
++			TBS5927SE_WRITE_MSG);
++	if (!ret && restart_ret != 1)
++		ret = restart_ret < 0 ? restart_ret : -EIO;
++	restart_ret = tbs5927se_op_rw(dev, 0xa0, 0xe600, 0, &reset, 1,
++			TBS5927SE_WRITE_MSG);
++	if (!ret && restart_ret != 1)
++		ret = restart_ret < 0 ? restart_ret : -EIO;
++	msleep(100);
+ 	return ret;
+ }
+ 
