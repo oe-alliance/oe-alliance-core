@@ -1,0 +1,62 @@
+Subject: [PATCH] welle-e2: report source codec, sample rate and channel mode
+
+Forward format changes before PCM conversion, also when the hardware decoder
+consumes the compressed stream. Suppress duplicate reports and include the
+service ID so Enigma2 can reject metadata from a different programme.
+
+Requested in https://github.com/openatv/enigma2/issues/4037
+Upstream-Status: Inappropriate [Enigma2 frontend metadata protocol]
+
+diff --git a/src/backend/radio-controller.h b/src/backend/radio-controller.h
+--- a/src/backend/radio-controller.h
++++ b/src/backend/radio-controller.h
+@@ -147,6 +147,12 @@
+          * access units to a hardware decoder.  They do not need the
+          * additional software AAC-to-PCM conversion. */
+         virtual bool needsDecodedAudio(void) const { return true; }
++
++        /* Source format is available even without PCM decoding. */
++        virtual void onAudioFormat(const std::string& codec, int sampleRate,
++                const std::string& mode) {
++            (void)codec; (void)sampleRate; (void)mode;
++        }
+ 
+         /* AudioSyncStream (LOAS/LATM) generated directly from the corrected
+          * DAB+ superframe.  The default keeps existing programme handlers
+diff --git a/src/backend/decoder_adapter.cpp b/src/backend/decoder_adapter.cpp
+--- a/src/backend/decoder_adapter.cpp
++++ b/src/backend/decoder_adapter.cpp
+@@ -84,7 +84,11 @@
+ 
+ void DecoderAdapter::FormatChange(const AUDIO_SERVICE_FORMAT& format)
+ {
+-    audioFormat = format.GetSummary();
++    const std::string summary = format.GetSummary();
++    if (summary != audioFormat) {
++        audioFormat = summary;
++        myInterface.onAudioFormat(format.codec, format.samplerate_khz * 1000, format.mode);
++    }
+ }
+ 
+ void DecoderAdapter::StartAudio(int samplerate, int channels, bool float32)
+diff --git a/src/welle-e2/welle-e2.cpp b/src/welle-e2/welle-e2.cpp
+--- a/src/welle-e2/welle-e2.cpp
++++ b/src/welle-e2/welle-e2.cpp
+@@ -221,6 +221,17 @@
+         : serviceId(serviceId), cachePrefix(cachePrefix), pcmFd(pcmFd) { }
+ 
+     bool needsDecodedAudio(void) const override { return pcmFd >= 0; }
++
++    void onAudioFormat(const std::string& codec, int sampleRate,
++                       const std::string& mode) override
++    {
++        emitMetadata({
++            {"audioServiceId", std::to_string(serviceId)},
++            {"audioCodec", codec},
++            {"audioSampleRate", std::to_string(sampleRate)},
++            {"audioChannelMode", mode}
++        });
++    }
+ 
+     void onUntouchedStream(const uint8_t* data, size_t len,
+                            size_t) override
