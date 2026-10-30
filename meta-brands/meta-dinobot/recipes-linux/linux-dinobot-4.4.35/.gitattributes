@@ -1,0 +1,2 @@
+# Keep CRLF in hunks matching the original vendor HiFB header.
+hifb-wqhd.patch -text

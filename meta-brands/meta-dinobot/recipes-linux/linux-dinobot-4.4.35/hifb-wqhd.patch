@@ -1,0 +1,38 @@
+Subject: [PATCH] hifb: allow WQHD OSD on u5pvr
+
+The u5pvr kernel builds HiFB from source. Allow a 2560-pixel HD layer
+so the existing height limit also accepts a 2560x1440 EGL framebuffer.
+Keep the existing height limit and the other layer capabilities.
+
+Raise HD0 VRAM from 40500 KiB (set by accelmem.patch) to 43200 KiB,
+which fits three 2560x1440 buffers at 32 bits per pixel.
+
+This patch is applied after accelmem.patch and only for u5pvr with e2egl.
+The HiFB header uses CRLF; preserve its line endings in the patch hunks.
+
+Upstream-Status: Inappropriate [vendor kernel, u5pvr-specific configuration]
+
+diff --git a/base.mak b/base.mak
+--- a/base.mak
++++ b/base.mak
+@@ -114,7 +114,7 @@
+ # CFG_HI_GFX_DEBUG_LOG_SUPPORT is not set
+ CFG_HI_TDE_CSCTMPBUFFER_SIZE=0x0
+ CFG_HI_JPEG6B_STREAMBUFFER_SIZE=0x100000
+-CFG_HI_HD0_FB_VRAM_SIZE=40500
++CFG_HI_HD0_FB_VRAM_SIZE=43200
+ CFG_HI_HD1_FB_VRAM_SIZE=0
+ CFG_HI_HD2_FB_VRAM_SIZE=0
+ CFG_HI_SD0_FB_VRAM_SIZE=0
+diff --git a/drivers/msp/drv/hifb/inc/drv_hifb_config.h b/drivers/msp/drv/hifb/inc/drv_hifb_config.h
+--- a/drivers/msp/drv/hifb/inc/drv_hifb_config.h
++++ b/drivers/msp/drv/hifb/inc/drv_hifb_config.h
+@@ -405,7 +405,7 @@
+     #define CONFIG_HIFB_CURSOR_LAYER_MAXHEIGHT    1080
+ #elif defined(CHIP_TYPE_hi3798cv200)   || defined(CHIP_TYPE_hi3798mv200) \
+    || defined(CHIP_TYPE_hi3798mv200_a) || defined(CHIP_TYPE_hi3796mv200)
+-    #define CONFIG_HIFB_HD_LAYER_MAXWIDTH         1920
++    #define CONFIG_HIFB_HD_LAYER_MAXWIDTH         2560
+     #define CONFIG_HIFB_HD_LAYER_MAXHEIGHT        1920/** support vr fmt defined by customer self **/
+     #define CONFIG_HIFB_SD_LAYER_MAXWIDTH         720
+     #define CONFIG_HIFB_SD_LAYER_MAXHEIGHT        576
