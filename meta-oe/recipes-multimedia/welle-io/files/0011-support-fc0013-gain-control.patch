@@ -1,0 +1,274 @@
+Subject: [PATCH] rtl-sdr: drive FC0013 hardware AGC and periodic LNA control
+
+The old-dab driver updates the FC0013 LNA from RSSI when tuner registers
+are read. rtl_tcp performs this periodically, but the direct Welle input
+did not. Run this control in the existing worker for automatic and manual
+IF gain. Use tuner hardware AGC together with RTL2832 digital AGC for the
+FC0013 automatic setting; leave other tuners on their existing gain path.
+
+Serialize tuner control transfers against the periodic I2C access. Publish
+amplitude measurements atomically and report input ring-buffer losses at
+most once per five seconds, plus any remainder when reception stops.
+This helps distinguish reception failure from decoder overload on MIPS.
+
+References:
+https://github.com/old-dab/rtlsdr/blob/64ff2ac8e9ecf35af28e1ccdf86d842037da3133/src/controlThread.c
+https://github.com/old-dab/rtlsdr/blob/64ff2ac8e9ecf35af28e1ccdf86d842037da3133/src/tuner_fc001x.c
+https://github.com/old-dab/rtlsdr/blob/64ff2ac8e9ecf35af28e1ccdf86d842037da3133/README_improvements.md
+
+Upstream-Status: Inappropriate [uses the old-dab RTL-SDR API selected by OpenATV]
+
+diff --git a/src/input/rtl_sdr.cpp b/src/input/rtl_sdr.cpp
+--- a/src/input/rtl_sdr.cpp
++++ b/src/input/rtl_sdr.cpp
+@@ -112,8 +112,10 @@
+         std::clog << "RTL_SDR: " << " gain " << (gains[i - 1] / 10.0) << std::endl;
+     }
+ 
+-    // Always use manual gain, the AGC is implemented in software
+-    rtlsdr_set_tuner_gain_mode(device, 1);
++    isFC0013 = rtlsdr_get_tuner_type(device) == RTLSDR_TUNER_FC0013;
++    // Other tuners keep the existing software AGC.
++    if (!isFC0013)
++        rtlsdr_set_tuner_gain_mode(device, 1);
+ 
+     // Enable AGC by default
+     setAgc(true);
+@@ -123,6 +125,7 @@
+ 
+ bool CRTL_SDR::setFrequencyCorrection(int ppm)
+ {
++    std::lock_guard<std::mutex> lock(tunerMutex);
+     return device && rtlsdr_set_freq_correction(device, ppm) == 0;
+ }
+ 
+@@ -213,14 +216,22 @@
+     if (rtlsdrThread.joinable()) {
+         rtlsdrThread.join();
+     }
++    reportInputOverrun();
+ }
+ 
+ float CRTL_SDR::getGain() const
+ {
++    std::lock_guard<std::mutex> lock(tunerMutex);
+     return currentGain / 10.0;
+ }
+ 
+ float CRTL_SDR::setGain(int gain_index)
++{
++    std::lock_guard<std::mutex> lock(tunerMutex);
++    return setGainLocked(gain_index);
++}
++
++float CRTL_SDR::setGainLocked(int gain_index)
+ {
+     if ((size_t)gain_index >= gains.size()) {
+         std::clog << "RTL_SDR: " << "Unknown gain count" << gain_index << std::endl;
+@@ -232,7 +243,8 @@
+ 
+     //std::clog << "RTL_SDR: " << "Set gain to" << currentGain / 10.0 << "db" << std::endl;
+ 
+-    int ret = rtlsdr_set_tuner_gain(device, currentGain);
++    // The GUI may update its remembered manual gain while hardware AGC runs.
++    int ret = isHwAGC ? 0 : rtlsdr_set_tuner_gain(device, currentGain);
+     if (ret != 0) {
+         std::clog << "RTL_SDR: " << "Setting gain failed" << std::endl;
+     }
+@@ -247,13 +259,33 @@
+ 
+ void CRTL_SDR::setAgc(bool AGC)
+ {
+-    if (AGC == true) {
+-        isAGC = true;
+-    }
+-    else {
+-        isAGC = false;
+-        setGain(currentGainIndex);
+-    }
++    std::lock_guard<std::mutex> lock(tunerMutex);
++    if (isFC0013) {
++        // The FC0013 has I/Q outputs. old-dab requires digital AGC together
++        // with its tuner hardware AGC to avoid overloading the RTL2832 ADC.
++        int ret;
++        if (AGC) {
++            ret = rtlsdr_set_agc_mode(device, 1);
++            if (!ret)
++                ret = rtlsdr_set_tuner_gain_mode(device, 0);
++        }
++        else {
++            ret = rtlsdr_set_tuner_gain_mode(device, 1);
++            if (!ret)
++                ret = rtlsdr_set_agc_mode(device, 0);
++        }
++        if (ret) {
++            std::clog << "RTL_SDR: FC0013 gain mode failed: " << ret << std::endl;
++            return;
++        }
++        if (isHwAGC != AGC)
++            std::clog << "RTL_SDR: FC0013 " << (AGC ? "hardware AGC" : "manual IF gain")
++                      << ", periodic LNA control enabled" << std::endl;
++        isHwAGC = AGC;
++    }
++    isAGC = AGC;
++    if (!AGC)
++        setGainLocked(currentGainIndex);
+ }
+ 
+ bool CRTL_SDR::setDeviceParam(DeviceParam param, int value)
+@@ -261,6 +293,7 @@
+     switch(param) {
+         case DeviceParam::BiasTee:
+         {
++            std::lock_guard<std::mutex> lock(tunerMutex);
+             std::clog << "RTL_SDR: "<< "Set bias tee to " << value << std::endl;
+             rtlsdr_set_bias_tee(device, value);
+         }
+@@ -296,15 +329,47 @@
+ 
+ void CRTL_SDR::agc_timer_thread(void)
+ {
++    auto nextTunerUpdate = std::chrono::steady_clock::now();
++    auto nextOverrunReport = nextTunerUpdate + std::chrono::seconds(5);
++    bool tunerReadFailed = false;
+     while (rtlsdrRunning && not rtlsdrUnplugged) {
+         std::this_thread::sleep_for(std::chrono::milliseconds(50));
++        if (!rtlsdrRunning || rtlsdrUnplugged)
++            break;
++
++        const auto now = std::chrono::steady_clock::now();
++        if (now >= nextOverrunReport) {
++            reportInputOverrun();
++            nextOverrunReport = now + std::chrono::seconds(5);
++        }
++
++        std::lock_guard<std::mutex> lock(tunerMutex);
++        if (isFC0013 && now >= nextTunerUpdate) {
++            // In old-dab this read also adjusts the FC0013 LNA from RSSI.
++            // rtl_tcp does the same even without a connected status client.
++            // It is needed with both automatic and manual IF gain.
++            unsigned char registers[256] = {};
++            int length = 0, gain = 0;
++            const int ret = rtlsdr_get_tuner_i2c_register(device, registers, &length, &gain);
++            if (ret && !tunerReadFailed)
++                std::clog << "RTL_SDR: FC0013 LNA control failed: " << ret << std::endl;
++            tunerReadFailed = ret != 0;
++            nextTunerUpdate = now + std::chrono::milliseconds(500);
++        }
++
++        if (isHwAGC)
++            continue;
++
++        const uint16_t range = amplitudeRange.load(std::memory_order_relaxed);
++        const uint8_t minAmplitude = range >> 8;
++        const uint8_t maxAmplitude = range & 0xff;
+ 
+         if (isAGC) {
+             // Check for overloading
+             if (minAmplitude == 0 || maxAmplitude == 255) {
+                 // We have to decrease the gain
+                 if (currentGainIndex > 0) {
+-                    setGain(currentGainIndex - 1);
++                    setGainLocked(currentGainIndex - 1);
+                     //std::clog << "RTL_SDR: " << "Decreased gain to " << (float)currentGain / 10.0f << std::endl;
+                 }
+             }
+@@ -320,7 +385,7 @@
+ 
+                     // We have to increase the gain
+                     if(NewMinValue >= 0 && NewMaxValue <= 255) {
+-                        setGain(currentGainIndex + 1);
++                        setGainLocked(currentGainIndex + 1);
+                         //std::clog << "RTL_SDR: " << "Increased gain to " << (float) currentGain / 10 << std::endl;
+                     }
+                 }
+@@ -336,6 +401,14 @@
+     }
+ }
+ 
++void CRTL_SDR::reportInputOverrun()
++{
++    const uint32_t bytes = droppedBytes.exchange(0, std::memory_order_relaxed);
++    if (bytes)
++        std::clog << "RTL_SDR: input buffer overrun, discarded " << bytes / 2
++                  << " I/Q samples (decoder cannot keep up)" << std::endl;
++}
++
+ int32_t CRTL_SDR::getSamples(DSPCOMPLEX *buffer, int32_t size)
+ {
+     std::vector<uint8_t> tempBuffer(2 * size);
+@@ -394,22 +467,24 @@
+ 
+         int32_t tmp = rtlsdr->sampleBuffer.putDataIntoBuffer(buf, len);
+         if ((len - tmp) > 0)
+-            rtlsdr->sampleCounter += len - tmp;
++            rtlsdr->droppedBytes.fetch_add(len - tmp, std::memory_order_relaxed);
+ 
+         rtlsdr->spectrumSampleBuffer.putDataIntoBuffer(buf, len);
+         rtlsdr->putIntoRecordBuffer(*buf, len);
+ 
+         // Check if device is overloaded
+-        rtlsdr->minAmplitude = 255;
+-        rtlsdr->maxAmplitude = 0;
++        uint8_t minAmplitude = 255;
++        uint8_t maxAmplitude = 0;
+ 
+         for (uint32_t i=0;i<len;i++) {
+-            if (rtlsdr->minAmplitude > buf[i])
+-                rtlsdr->minAmplitude = buf[i];
+-
+-            if (rtlsdr->maxAmplitude < buf[i])
+-                rtlsdr->maxAmplitude = buf[i];
+-        }
++            if (minAmplitude > buf[i])
++                minAmplitude = buf[i];
++
++            if (maxAmplitude < buf[i])
++                maxAmplitude = buf[i];
++        }
++        rtlsdr->amplitudeRange.store((uint16_t(minAmplitude) << 8) | maxAmplitude,
++                                    std::memory_order_relaxed);
+     }
+     else {
+         std::clog << "RTL_SDR: " << "ERROR no ctx in RTLSDR callback" << std::endl;
+diff --git a/src/input/rtl_sdr.h b/src/input/rtl_sdr.h
+--- a/src/input/rtl_sdr.h
++++ b/src/input/rtl_sdr.h
+@@ -38,6 +38,7 @@
+ #include <string>
+ #include <atomic>
+ #include <limits>
++#include <mutex>
+ #include <rtl-sdr.h>
+ 
+ #include "virtual_input.h"
+@@ -86,6 +87,9 @@
+     int currentGain = 0;
+     bool isAGC = false;
+     bool isHwAGC = false;
++    bool isFC0013 = false;
++    mutable std::mutex tunerMutex;
++    float setGainLocked(int gainIndex);
+     std::thread rtlsdrThread;
+     void rtlsdr_read_async_wrapper(void);
+     std::atomic<bool> rtlsdrRunning = ATOMIC_VAR_INIT(false);
+@@ -93,8 +97,7 @@
+ 
+     std::vector<int> gains;
+     int currentGainIndex = 0;
+-    uint8_t minAmplitude = 255;
+-    uint8_t maxAmplitude = 0;
++    std::atomic<uint32_t> amplitudeRange{0xff00};
+ 
+     void agc_timer_thread(void);
+ 
+@@ -102,7 +105,8 @@
+     RingBuffer<uint8_t> spectrumSampleBuffer;
+     struct rtlsdr_dev *device = nullptr;
+     uint32_t requestedDeviceIndex;
+-    int32_t sampleCounter = 0;
++    std::atomic<uint32_t> droppedBytes{0};
++    void reportInputOverrun();
+ 
+     static void rtlsdr_read_callback(uint8_t* buf, uint32_t len, void *ctx);
+     void open_device();
