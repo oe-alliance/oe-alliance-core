@@ -290,7 +290,9 @@ PREFERRED_PROVIDER_virtual/kodi = "stb-kodi-${MACHINE}"
 KERNEL_OUTPUT = "${KERNEL_IMAGETYPE}"
 KERNEL_CONSOLE = "ttyS0,115200n8"
 
-MACHINE_FEATURES += "3dtv alsa hdmicec switchoff bootsplash skins1080 blindscan-tbs HDMI \
+# The BCM7325 framebuffer supports HD skins, not Full HD (800 SE/UE/Solo).
+MACHINE_FEATURES += "3dtv alsa hdmicec switchoff bootsplash blindscan-tbs HDMI \
+${@bb.utils.contains('SOC_FAMILY', 'bcm7325', '', 'skins1080', d)} \
 ${@bb.utils.contains('MACHINEBUILD', 'gb800se', 'SCART YUV RCA' , '', d)} \
 ${@bb.utils.contains('MACHINEBUILD', 'gb800seplus', 'YUV RCA NO_SCART_SWITCH' , '', d)} \
 ${@bb.utils.contains('MACHINEBUILD', 'gb800solo', 'SCART YUV RCA' , '', d)} \

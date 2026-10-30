@@ -99,6 +99,23 @@ openatv_smallbox_install_gui_launcher() {
 
 ROOTFS_POSTPROCESS_COMMAND:append = " openatv_smallbox_install_gui_launcher"
 
+# Seed the HD variant for receivers without a Full-HD framebuffer. This also
+# covers the bootstrap whose Enigma2 packages are installed after expansion.
+# Keep a skin explicitly selected by an image customization.
+openatv_smallbox_default_skin() {
+	if [ "${HAVE_SMALLFLASH}" != "True" ] || [ "${HAVE_FHDSKIN}" = "True" ]; then
+		return
+	fi
+
+	settings="${IMAGE_ROOTFS}${sysconfdir}/enigma2/settings"
+	install -d "${IMAGE_ROOTFS}${sysconfdir}/enigma2"
+	if [ ! -f "$settings" ] || ! grep -q '^config\.skin\.primary_skin=' "$settings"; then
+		printf '\nconfig.skin.primary_skin=Umbra/HD/skin.xml\n' >> "$settings"
+	fi
+}
+
+ROOTFS_POSTPROCESS_COMMAND:append = " openatv_smallbox_default_skin"
+
 # Single-core receivers remain responsive once Enigma2 is running, but their
 # sequential SysV boot is slowed down by optional discovery and file-server
 # daemons.  Keep the packages available in the image/feed and let Enigma2's

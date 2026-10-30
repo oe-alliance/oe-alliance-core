@@ -102,6 +102,9 @@ PYTHON_RDEPS = " \
     python3-treq \
 "
 
+# OpenATV imports twisted.internet.ssl through Tools/Downloader during startup.
+PYTHON_RDEPS:append:openatv = " python3-pyopenssl"
+
 GST_BASE_RDEPS = "\
     gstreamer1.0-plugins-base-alsa \
     gstreamer1.0-plugins-base-app \
