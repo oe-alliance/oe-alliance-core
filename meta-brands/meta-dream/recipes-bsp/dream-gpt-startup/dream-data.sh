@@ -3,15 +3,12 @@
 grep -qs " /data " /proc/mounts || exit 0
 
 # Slot 1's GPT label is 'dreambox-rootfs' (no suffix); slots 2+ have a numeric suffix.
+# The SD card slots are labelled 'dreambox-rootfs' too, so /dev/disk/by-partlabel
+# may point to one of them; ask the eMMC partitions directly.
 emmc_parts=""
-for dev in /dev/disk/by-partlabel/dreambox-rootfs*; do
-  [ -L "$dev" ] || continue
-  resolved=$(readlink -f "$dev" 2>/dev/null)
-  case "$resolved" in
-    /dev/mmcblk0p*)
-      partno=${resolved##/dev/mmcblk0p}
-      emmc_parts="$emmc_parts $partno"
-      ;;
+for dev in /dev/mmcblk0p*; do
+  case "$(blkid -s PARTLABEL -o value "$dev")" in
+    dreambox-rootfs|dreambox-rootfs[0-9]*) emmc_parts="$emmc_parts ${dev##/dev/mmcblk0p}" ;;
   esac
 done
 emmc_parts=$(echo "$emmc_parts" | tr ' ' '\n' | sort -nu | tr '\n' ' ')
@@ -30,20 +27,24 @@ if [ -b /dev/mmcblk1p1 ] && \
   done
 fi
 
+# STARTUP_<n> is rewritten only when its root= names another partition, e.g.
+# after an older version of this script missed a slot; other changes stay.
+write_startup() {
+  [ "$(grep -o 'root=[^ ]*' "$1" 2>/dev/null | head -n 1)" = "${2%% *}" ] || echo "$2" > "$1"
+}
+
 # /data/STARTUP holds the active slot's cmdline; e2 rewrites it on slot switch.
 n=0
 for partno in $emmc_parts; do
   n=$((n + 1))
   cmdline="root=/dev/mmcblk0p${partno} rootfstype=ext4 kernel=/boot/kernel.img"
-  startup="/data/STARTUP_${n}"
-  [ -f "$startup" ] || echo "$cmdline" > "$startup"
+  write_startup "/data/STARTUP_${n}" "$cmdline"
   [ "$n" = "1" ] && [ ! -f /data/STARTUP ] && echo "$cmdline" > /data/STARTUP
 done
 for partno in $sd_parts; do
   n=$((n + 1))
   cmdline="root=/dev/mmcblk1p${partno} rootfstype=ext4 kernel=/kernel${partno}.img"
-  startup="/data/STARTUP_${n}"
-  [ -f "$startup" ] || echo "$cmdline" > "$startup"
+  write_startup "/data/STARTUP_${n}" "$cmdline"
 done
 total_slots=$n
 
