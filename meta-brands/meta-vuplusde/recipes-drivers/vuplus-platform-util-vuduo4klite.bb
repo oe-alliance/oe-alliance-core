@@ -1,6 +1,6 @@
 require vuplus-platform-util.inc
 
-SRCDATE = "20260911"
+SRCDATE = "20261026"
 
 KV = "4.1.20"
 
@@ -26,5 +26,5 @@ do_install:append() {
     install -m 0755 ${UNPACKDIR}/config ${D}/home/root/platform/config
 }
 
-SRC_URI[md5sum] = "ef99c20ee47698e5800a31099720f8e9"
-SRC_URI[sha256sum] = "239dc10f9abdce9d963bd2e94cc0111bfb3ee2d545e501f62a1b18d9dd7de1f8"
+SRC_URI[md5sum] = "b7e5d2421ef06ddcf15203e41f529d30"
+SRC_URI[sha256sum] = "24f34ab13d4c21a87e6191861d13a39264d4fd079e1ab1369d6bb004ec3aaf77"

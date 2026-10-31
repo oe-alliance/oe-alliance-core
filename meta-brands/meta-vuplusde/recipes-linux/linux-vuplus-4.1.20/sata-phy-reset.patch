@@ -1,0 +1,13 @@
+diff -urN a/drivers/ata/ahci_brcmstb.c b/drivers/ata/ahci_brcmstb.c
+--- a/drivers/ata/ahci_brcmstb.c	2024-10-02 15:07:51.000000000 +0900
++++ b/drivers/ata/ahci_brcmstb.c	2026-10-22 16:09:49.775838897 +0900
+@@ -171,6 +171,9 @@
+ 	reg &= ~SATA_TOP_CTRL_2_PHY_GLOBAL_RESET;
+ 	brcm_sata_writereg(reg, p);
+ 	(void)brcm_sata_readreg(p);
++
++	/* Wait for stabilization after releasing PHY reset */
++	udelay(20);
+ }
+ 
+ static void brcm_sata_phy_disable(struct brcm_ahci_priv *priv, int port)

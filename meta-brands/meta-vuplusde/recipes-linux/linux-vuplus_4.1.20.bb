@@ -30,6 +30,7 @@ SRC_URI += "https://source.mynonpublic.com/vuplus.de/linux/vuplus-linux-${PV}-${
     file://0003-Add-support-for-dvb-usb-stick-Hauppauge-WinTV-soloHD.patch \
     file://0004-af9035-add-USB-ID-07ca-0337-AVerMedia-HD-Volar-A867.patch \
     file://0005-Add-support-for-EVOLVEO-XtraTV-stick.patch \
+    file://sata-phy-reset.patch \
     ${KERNEL_PATCH_DVB_DIB8000} \
     ${KERNEL_PATCH_DVB_DIB0700} \
     ${KERNEL_PATCH_DVB_HAMA} \
