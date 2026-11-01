@@ -8,7 +8,7 @@ PV = "1.0+git"
 PKGV = "1.0+git${GITPKGV}"
 
 SRC_URI = " \
-    git://github.com/oe-alliance/satip-client.git;protocol=https;branch=mis \
+    git://github.com/oe-alliance/satip-client.git;protocol=https;branch=6.0-next \
     file://satipclient.sh \
 "
 
