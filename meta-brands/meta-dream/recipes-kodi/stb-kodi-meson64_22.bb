@@ -5,7 +5,7 @@ SUMMARY:append = " for Dreambox Amlogic"
 PROVIDES += "virtual/kodi kodi"
 RPROVIDES:${PN} += "virtual-kodi kodi"
 
-COMPATIBLE_MACHINE = "^(dreamone|dreamtwo)$"
+COMPATIBLE_MACHINE = "^(dms922x)$"
 
 EXTRA_OECMAKE += " \
     -DWITH_PLATFORM=amlogic-meson64 \

@@ -45,7 +45,7 @@ PREFERRED_PROVIDER_virtual/mesa ?= "mesa"
 PREFERRED_PROVIDER_virtual/kernel = "linux-etxx00"
 VIRTUAL-RUNTIME_blindscan_dvbs = "et-blindscan-dvbs-utils"
 VIRTUAL-RUNTIME_blindscan_dvbc = "et-blindscan-dvbc-utils-${MACHINEBUILD}"
-PREFERRED_PROVIDER_virtual/kodi = "stb-kodi-${MACHINEBUILD}"
+PREFERRED_PROVIDER_virtual/kodi = "stb-kodi-${MACHINE}"
 
 KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_OUTPUT = "${KERNEL_IMAGETYPE}"

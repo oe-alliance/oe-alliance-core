@@ -5,8 +5,9 @@ RPROVIDES:${PN} += "virtual-kodi"
 PROVIDES += "kodi"
 RPROVIDES:${PN} += "kodi"
 
-INSANE_SKIP:${PN} += "file-rdeps"
+RDEPENDS:${PN} += "octagon-opengl-${SOC_FAMILY}"
 
 EXTRA_OECMAKE += " \
-    -DWITH_PLATFORM=edision-cortexa15 \
+    -DWITH_PLATFORM=clap-cortexa15 \
 "
+

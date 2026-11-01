@@ -19,7 +19,7 @@ PREFERRED_PROVIDER_virtual/libgbm ?= "abcom-mali-${HICHIPSET}"
 PREFERRED_PROVIDER_virtual/libgl ?= "mesa"
 PREFERRED_PROVIDER_virtual/mesa ?= "mesa"
 PREFERRED_PROVIDER_virtual/kernel = "linux-abcom"
-PREFERRED_PROVIDER_virtual/kodi = "stb-kodi-${MACHINEBUILD}"
+PREFERRED_PROVIDER_virtual/kodi = "stb-kodi-${MACHINE}"
 
 # Add "MACHINEBUILD" override for recipes
 MACHINEOVERRIDES =. "${@['', '${MACHINEBUILD}:']['${MACHINEBUILD}' != '']}"

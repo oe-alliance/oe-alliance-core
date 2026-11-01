@@ -40,7 +40,7 @@ DEFAULTTUNE = "mips32el"
 PREFERRED_PROVIDER_virtual/kernel = "linux-formuler"
 PREFERRED_PROVIDER_virtual/egl = "formuler-v3ddriver-${MACHINEBUILD}"
 PREFERRED_PROVIDER_virtual/libgles2 = "formuler-v3ddriver-${MACHINEBUILD}"
-PREFERRED_PROVIDER_virtual/kodi = "stb-kodi-${MACHINEBUILD}"
+PREFERRED_PROVIDER_virtual/kodi = "stb-kodi-${MACHINE}"
 
 KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_OUTPUT = "${KERNEL_IMAGETYPE}"
