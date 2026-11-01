@@ -82,7 +82,7 @@ do_configure:prepend() {
     elif [ "${BRAND_OEM}" = "LinkDroid" ]; then
         DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-LINKDROID-BASE}/recipes-drivers/linkdroid-stb-${MACHINE}.bb | cut -b 12-19`
     elif [ "${BRAND_OEM}" = "xtrend" ]; then
-        DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-XTREND-BASE}/recipes-drivers/et-dvb-modules-${MACHINE}.bb | cut -b 12-19`
+        DRIVERSDATE=`grep -h "SRCDATE = " ${OEA-META-XTREND-BASE}/recipes-drivers/et-dvb-modules-${MACHINEBUILD}.bb ${OEA-META-XTREND-BASE}/recipes-drivers/et-dvb-modules-${MACHINE}.bb 2>/dev/null | head -n 1 | cut -b 12-19`
     elif [ "${BRAND_OEM}" = "entwopia" ]; then
         DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-ENTWOPIA-BASE}/recipes-drivers/entwopia-dvb-modules-${MACHINE}.bb | cut -b 12-19`
     elif [ "${BRAND_OEM}" = "dinobot" ]; then
@@ -96,7 +96,7 @@ do_configure:prepend() {
     elif [ "${BRAND_OEM}" = "odin" ]; then
         DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-ODIN-BASE}/recipes-drivers/odin-dvb-modules-${MACHINE_DRIVER}.bb | cut -b 12-19`
     elif [ "${BRAND_OEM}" = "octagon" ]; then
-        DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-OCTAGON-BASE}/recipes-drivers/octagon-dvb-modules-${MACHINE}.bb | cut -b 12-19`
+        DRIVERSDATE=`grep -h "SRCDATE = " ${OEA-META-OCTAGON-BASE}/recipes-drivers/octagon-dvb-modules-${MACHINEBUILD}.bb ${OEA-META-OCTAGON-BASE}/recipes-drivers/octagon-dvb-modules-${MACHINE}.bb 2>/dev/null | head -n 1 | cut -b 12-19`
     elif [ "${BRAND_OEM}" = "uclan" ]; then
         DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-UCLAN-BASE}/recipes-drivers/uclan-dvb-modules-${MACHINE}.bb | cut -b 12-19`
     elif [ "${BRAND_OEM}" = "ini" ]; then
@@ -146,7 +146,7 @@ do_configure:prepend() {
     elif [ "${BRAND_OEM}" = "maxytec" ]; then
         DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-MAXYTEC-BASE}/recipes-drivers/maxytec-dvb-modules-${MACHINE}.bb | cut -b 12-19`
     elif [ "${BRAND_OEM}" = "abcom" ]; then
-        DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-ABCOM-BASE}/recipes-drivers/abcom-dvb-modules-${MACHINE}.bb | cut -b 12-19`
+        DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-ABCOM-BASE}/recipes-drivers/abcom-dvb-modules-${MACHINEBUILD}.bb | cut -b 12-19`
     elif [ "${BRAND_OEM}" = "anadol" ]; then
         DRIVERSDATE=`grep "SRCDATE = " ${OEA-META-ANADOL-BASE}/recipes-drivers/anadol-dvb-modules-${MACHINE}.bb | cut -b 12-19`
     elif [ "${BRAND_OEM}" = "dreambox" ]; then
@@ -160,11 +160,11 @@ do_configure:prepend() {
             DRIVERSDATE="20131228"
         elif [ "${MACHINE}" = "dm8000" ]; then
             DRIVERSDATE="20140604"
-        elif [ "${MACHINE}" = "dm7020hd" ] || [ "${MACHINE}" = "dm7020hdv2" ]; then
+        elif [ "${MACHINE}" = "dm7020hd" ] || [ "${MACHINEBUILD}" = "dm7020hdv2" ]; then
             DRIVERSDATE="20161019"
-        elif [ "${MACHINE}" = "dm800se" ]; then
+        elif [ "${MACHINEBUILD}" = "dm800se" ]; then
             DRIVERSDATE="20151201"
-        elif [ "${MACHINE}" = "dm800sev2" ]; then
+        elif [ "${MACHINEBUILD}" = "dm800sev2" ]; then
             DRIVERSDATE="20151201"
         elif [ "${MACHINEBUILD}" = "dm900" ]; then
             DRIVERSDATE="20200226"
