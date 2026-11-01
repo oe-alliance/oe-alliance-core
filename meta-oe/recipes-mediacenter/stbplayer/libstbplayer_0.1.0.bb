@@ -29,12 +29,12 @@ VUPLUS_ARM_STB = "${@'1' if d.getVar('BRAND_OEM') == 'vuplus' and d.getVar('TARG
 # The community Duo 4K Lite uses the GigaBlue platform driver and is excluded.
 VUPLUS_STC_FALLBACK_STB = "${@'1' if d.getVar('BRAND_OEM') == 'vuplus' and d.getVar('MACHINE') != 'vuduo4klite' else '0'}"
 DREAM_BCM_STB = "${@'1' if (d.getVar('MACHINE') or '').startswith('dm') and d.getVar('BCM_DVB_STB') == '1' else '0'}"
-DREAM_AMLOGIC_STB = "${@'1' if d.getVar('MACHINE') in ('dreamone', 'dreamtwo') and d.getVar('SOC_FAMILY') == 'meson64' else '0'}"
+DREAM_AMLOGIC_STB = "${@'1' if d.getVar('MACHINE') == 'dms922x' else '0'}"
 BCM_DVB_VARIANT = "${@'dreambox' if (d.getVar('MACHINE') or '').startswith('dm') else ('gigablue' if (d.getVar('MACHINE') or '') in ('gb7252', 'gb72604', 'vuduo4klite') else ('vuplus' if (d.getVar('MACHINE') or '').startswith('vu') else ('type2' if (d.getVar('MACHINE') or '') in ('xc7362', 'xc7346') else 'normal')))}"
 BCM_DVB_CONFIG = "${@d.getVar('DVBMEDIASINK_CONFIG') or ''}"
-DVB_AUDIO_VARIANT = "${@'dreambox' if (d.getVar('MACHINE') or '').startswith('dm') else ('dags' if '--with-dags' in (d.getVar('DVBMEDIASINK_CONFIG') or '').split() else 'normal')}"
+DVB_AUDIO_VARIANT = "${@'dreambox' if d.getVar('DREAM_BCM_STB') == '1' else ('dags' if '--with-dags' in (d.getVar('DVBMEDIASINK_CONFIG') or '').split() else 'normal')}"
 # These receivers always use E2's Linux-DVB/PES video driver path.
-HISI_LINUX_DVB_MACHINES = "hd60 hd61 hd66se pulse4k pulse4kmini multibox multiboxpro multiboxse h8se h9 h9combo h9combose h9se h10 h11 i55plus i55se"
+HISI_LINUX_DVB_MACHINES = "hd60 hd61 hd66se abmv200 multibox multiboxpro multiboxse h8se h9 h9combo h9combose h9se h10 h11 i55plus i55se"
 # The original DVB-driver family can retain stale AUDIO_GET_PTS after seek.
 # Keep the SF8008/libreader and other SDK families on their confirmed audio clock.
 HISI_DVB_AUDIO_VIDEO_CLOCK = "${@'1' if d.getVar('MACHINE') in d.getVar('HISI_LINUX_DVB_MACHINES').split() else '0'}"
@@ -46,7 +46,7 @@ HISI_DVB_AUDIO_PCM_TRACK = "${@'1' if d.getVar('HISI_USE_LINUX_DVB') == '1' or d
 # With native audio, libreader must own both decoders and their shared clock.
 # gbmv200 covers gbip4k, gbtrio4k and gbtrio4kpro; viper4k is not Dinobot u571.
 # DAGS app_init and Dinobot showiframe are different service/SDK families.
-HISI_LIBREADER_MACHINES = "beyonwizv2 gbmv200 ip8 og2ott4k og2s4k sf8008 sf8008m sx88v2 sx988 ustym4kottpremium ustym4kpro ustym4ks2ottx viper4k"
+HISI_LIBREADER_MACHINES = "beyonwizv2 gbmv200 ip8 og2ott4k og2s4k ocmv200 sx88v2 sx988 ustym4kottpremium ustym4kpro ustym4ks2ottx viper4k"
 HISI_USE_LINUX_DVB = "${@'1' if d.getVar('MACHINE') in d.getVar('HISI_LINUX_DVB_MACHINES').split() or d.getVar('MACHINE') in d.getVar('HISI_LIBREADER_MACHINES').split() else '0'}"
 
 PACKAGECONFIG ??= "${@'hisi-dvb' if d.getVar('HISI_STB') == '1' else ('bcm-dvb' if d.getVar('BCM_DVB_STB') == '1' else ('dream-aml' if d.getVar('DREAM_AMLOGIC_STB') == '1' else ''))}"
