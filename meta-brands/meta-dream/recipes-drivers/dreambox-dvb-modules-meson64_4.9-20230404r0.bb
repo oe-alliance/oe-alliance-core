@@ -5,6 +5,8 @@ PRECOMPILED_NAME = "dreambox-dvb-modules"
 # one driver build for the Dreambox One and Two
 PRECOMPILED_ARCH = "meson64"
 
+PR = "r1"
+
 require dreambox-dvb-modules-meson64.inc
 
 RREPLACES:${PN} += "dreamframeinject"
@@ -36,6 +38,12 @@ COMPATIBLE_MACHINE = "^(dreamone|dreamtwo)$"
 # taking data, at the first PTS jump. decoder_wait_free_space now only
 # checks for room and sleeps 1 ms outside the buffer when there is none, the
 # callers retry as before; the _mcount call becomes the msleep call.
+#
+# That retry loop in dvb_video_write ends only on the abort flag of the
+# decoder, not on a signal. A dvr write into a paused, full decoder then
+# blocks for good, and stopping the writer (end of a paused timeshift)
+# hangs. decoder_should_abort also reports a pending signal, so the write
+# returns -EINTR as with an interruptible wait; its _mcount relocation goes.
 patch_ko() {
     ko=${D}/lib/modules/${DM_LOCALVERSION}/extra/$1
     # do_install hard links ${D} to ${S}, patch a copy of our own
@@ -73,4 +81,9 @@ do_install:append() {
     # its relocation at .text+0x7950: symbol _mcount (1397) -> msleep (1402)
     patch_ko core/meson64.ko 1269664 1b010000 '\033\001\000\000\172\005'
     echo "404cce0f3c13acf9335df234a35018c1  $core/meson64.ko" | md5sum -c -
+    # decoder_should_abort: abort flag or TIF_SIGPENDING, .text+0x7820
+    patch_ko core/meson64.ko 30856 fd7bbea9 '\001\240\100\271\002\101\070\325\102\000\100\371\102\000\000\022\040\000\002\052\037\040\003\325\300\003\137\326\037\040\003\325\037\040\003\325\037\040\003\325'
+    # its relocation at .text+0x7834: _mcount -> R_AARCH64_NONE
+    patch_ko core/meson64.ko 1269592 1b010000 '\000\000\000\000\000\000\000\000'
+    echo "1176b7ddc25e29e0a3acae44548d801a  $core/meson64.ko" | md5sum -c -
 }
