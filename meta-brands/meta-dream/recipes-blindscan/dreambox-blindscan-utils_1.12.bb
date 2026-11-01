@@ -1,7 +1,7 @@
 SUMMARY = "Utilities needed to do transponder blindscan with dreambox dvb receivers"
 require conf/license/license-close.inc
 
-PACKAGE_ARCH = "${MACHINE_ARCH}"
+PACKAGE_ARCH = "${MACHINEBUILD}"
 
 DEPENDS = "ncurses"
 
