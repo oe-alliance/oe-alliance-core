@@ -9,7 +9,7 @@ COMPATIBLE_MACHINE = "^(vuduo4klite)$"
 
 inherit kernel machine_kernel_pr kernel-fixups
 
-MACHINE_KERNEL_PR = "r18"
+MACHINE_KERNEL_PR = "r19"
 
 SRC_DATE = "20250410"
 
@@ -23,6 +23,7 @@ SRC_URI += "https://source.mynonpublic.com/vuplus.de/linux/vuplus-linux-${PV}-${
     file://initramfs-subdirboot.cpio.gz;unpack=0 \
     file://vufindkerneldevice.py \
     file://0002-linux_dvb-core.patch \
+    file://0002-linux_dvb_adapter.patch \
     file://0002-bcmgenet-recovery-fix.patch \
     file://0002-linux_4_1_1_9_dvbs2x.patch \
     file://0002-linux_rpmb_not_alloc.patch \
