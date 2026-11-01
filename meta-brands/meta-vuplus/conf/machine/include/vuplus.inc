@@ -50,7 +50,7 @@ PREFERRED_PROVIDER_virtual/libopencl ?= "vuplus-libgles-${MACHINEBUILD}"
 PREFERRED_PROVIDER_virtual/libgbm ?= "vuplus-libgles-${MACHINEBUILD}"
 PREFERRED_PROVIDER_virtual/libgl ?= "mesa"
 PREFERRED_PROVIDER_virtual/mesa ?= "mesa"
-PREFERRED_PROVIDER_virtual/kodi = "stb-kodi-${MACHINEBUILD}"
+PREFERRED_PROVIDER_virtual/kodi = "stb-kodi-${MACHINE}"
 
 KERNEL_IMAGETYPE = "vmlinux"
 KERNEL_OUTPUT = "${KERNEL_IMAGETYPE}"

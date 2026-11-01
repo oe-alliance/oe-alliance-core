@@ -1,0 +1,27 @@
+require vuplus-libgles.inc
+
+SUMMARY = "Vu+ 17.1 EGL/GLES link base for packages shared by several models"
+
+COMPATIBLE_MACHINE = "^(vu7376|vu7376duo)$"
+
+PROVIDES = ""
+PACKAGE_ARCH = "${MACHINE_ARCH}"
+
+SRCDATE = "20190424"
+SRCDATE_PR = "r0"
+PV = "17.1"
+
+SRC_URI = "https://source.mynonpublic.com/vuplus/release/libgles/libgles-vusolo4k-${PV}-${PR}.tar.gz"
+S = "${UNPACKDIR}/libgles-vusolo4k"
+
+SRC_URI[md5sum] = "6686ec2be5cc5fef8b55545fee2bf700"
+SRC_URI[sha256sum] = "58f8c45bbf1bf42dbb7d3304ee67a2d0da95e2cc8ae00aa01ce19183b5ae7be0"
+
+inherit nopackages
+
+# Private location, so it can share a sysroot with the per-model vuplus-libgles.
+do_install:append() {
+    install -d ${D}${libdir}/${BPN}
+    mv ${D}${libdir}/*.so ${D}${includedir} ${D}${libdir}/${BPN}/
+    rm -rf ${D}${libdir}/pkgconfig
+}
