@@ -8,9 +8,9 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=7fbc338309ac38fefcd64b04bb903e34"
 DEPENDS = "glib-2.0-native gstreamer1.0 gstreamer1.0-plugins-base libdca"
 
 GSTVERSION = "1.0"
-PR = "r1"
+PR = "r2"
 
-SRC_URI = "git://github.com/oe-alliance/gstreamer1.0-plugin-dvbmediasink;branch=openatv-dev;protocol=https"
+SRC_URI = "git://github.com/oe-alliance/gstreamer1.0-plugin-dvbmediasink;branch=8.0-next;protocol=https"
 
 inherit gitpkgv
 
