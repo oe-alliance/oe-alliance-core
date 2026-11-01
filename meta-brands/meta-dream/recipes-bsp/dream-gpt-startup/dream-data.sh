@@ -2,6 +2,13 @@
 # startup.sh mounts /data first; mount lists it by its mmcblk name, not by /dev/dreambox-data
 grep -qs " /data " /proc/mounts || exit 0
 
+# A card without the DREAMCARD marker (e.g. dumbo) boots without bootconfig.txt;
+# /data belongs to the images in the eMMC then.
+case " $(cat /proc/cmdline) " in
+  *" root=/dev/mmcblk1p"*)
+    [ "$(blkid -s LABEL -o value /dev/mmcblk1p1 2>/dev/null)" = "DREAMCARD" ] || exit 0 ;;
+esac
+
 # Slot 1's GPT label is 'dreambox-rootfs' (no suffix); slots 2+ have a numeric suffix.
 # The SD card slots are labelled 'dreambox-rootfs' too, so /dev/disk/by-partlabel
 # may point to one of them; ask the eMMC partitions directly.
@@ -50,9 +57,14 @@ total_slots=$n
 
 [ -f /data/STARTUP_RECOVERY ] || echo "bootcmd= recovery" > /data/STARTUP_RECOVERY
 
-input_file="/data/bootconfig.txt"
+# The boot menu forgets the entry started last whenever bootconfig.txt is written
+# (new inode or ctime), so all changes go to a copy and the file is replaced only
+# when the copy differs.
+bootconfig="/data/bootconfig.txt"
+input_file="/tmp/bootconfig.txt"
 temp_file="/tmp/temp_file.txt"
-[ -f "$input_file" ] && chmod 755 "$input_file" && chown root:root "$input_file"
+rm -f "$input_file"
+[ -f "$bootconfig" ] && cp "$bootconfig" "$input_file"
 
 is_unlocked=1
 if [ -f "$input_file" ] && grep -q -i '^lock=' "$input_file" && ! grep -q -i '^lock=0' "$input_file"; then
@@ -162,8 +174,6 @@ if [ "$is_unlocked" = "1" ]; then
   fi
 fi
 
-input_file="/data/bootconfig.txt"
-temp_file="/data/bootconfig_temp.txt"
 desired_arg="arg=\${bootargs} logo=osd0,loaded,0x7f800000 vout=1080p50hz,enable hdmimode=1080p50hz fb_width=1280 fb_height=720 panel_type=lcd_4"
 awk -v desired_arg="$desired_arg" '
 {
@@ -185,5 +195,11 @@ awk -v desired_arg="$desired_arg" '
 }
 ' "$input_file" > "$temp_file"
 mv "$temp_file" "$input_file"
+
+if ! cmp -s "$input_file" "$bootconfig"; then
+  cp "$input_file" /data/bootconfig_temp.txt && mv /data/bootconfig_temp.txt "$bootconfig"
+fi
+rm -f "$input_file"
+[ "$(stat -c %a:%U "$bootconfig")" = "755:root" ] || { chmod 755 "$bootconfig"; chown root:root "$bootconfig"; }
 
 : exit 0
