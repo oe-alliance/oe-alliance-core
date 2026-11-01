@@ -175,10 +175,37 @@ static void trim(char *value)
   *end = '\0';
 }
 
+/* Machines shared by several receivers ship one profile per machinebuild. */
+static void config_path(char *path, size_t size)
+{
+  FILE *file = fopen("/usr/lib/enigma.info", "r");
+  char line[256];
+  snprintf(path, size, "/etc/stb-lcdd.conf");
+  if (!file)
+    return;
+  while (fgets(line, sizeof(line), file))
+  {
+    char *value;
+    char candidate[160];
+    if (strncmp(line, "machinebuild=", 13))
+      continue;
+    value = line + 13;
+    if (*value == '\'')
+      ++value;
+    value[strcspn(value, "'\r\n")] = '\0';
+    snprintf(candidate, sizeof(candidate), "/etc/stb-lcdd/%s.conf", value);
+    if (*value && !access(candidate, R_OK))
+      snprintf(path, size, "%s", candidate);
+    break;
+  }
+  fclose(file);
+}
+
 static void load_config(struct config *cfg)
 {
   FILE *file;
   char line[512];
+  char path[160];
   memset(cfg, 0, sizeof(*cfg));
   strcpy(cfg->mode, "none");
   strcpy(cfg->format, "native");
@@ -187,7 +214,8 @@ static void load_config(struct config *cfg)
   strcpy(cfg->secondary_format, "native");
   strcpy(cfg->secondary_device, "auto");
 
-  file = fopen("/etc/stb-lcdd.conf", "r");
+  config_path(path, sizeof(path));
+  file = fopen(path, "r");
   if (!file)
     return;
 

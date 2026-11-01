@@ -19,7 +19,7 @@ DEPENDS = "freetype harfbuzz libpng"
 PACKAGE_ARCH = "${MACHINE}"
 
 STB_LCD_MODE = "${@'color' if any(x.startswith('colorlcd') or x.startswith('bwlcd') or x.startswith('gigabluelcd') or x == 'displayvfd' for x in (d.getVar('MACHINE_FEATURES') or '').split()) else 'text' if 'textlcd' in (d.getVar('MACHINE_FEATURES') or '').split() else '7segment' if '7segment' in (d.getVar('MACHINE_FEATURES') or '').split() else 'none'}"
-RDEPENDS:${PN} = "${@'ttf-dejavu-sans' if d.getVar('STB_LCD_MODE') == 'color' else ''}"
+RDEPENDS:${PN} = "${@'ttf-dejavu-sans' if 'color' in [stb_lcdd_localdata(d, x).getVar('STB_LCD_MODE') for x in stb_lcdd_machinebuilds(d) or [d.getVar('MACHINEBUILD')]] else ''}"
 STB_LCD_FORMAT = "native"
 STB_LCD_FORMAT:dreamtwo = "rgb565-byteswap"
 STB_LCD_FORMAT:dm900 = "dm9x0"
@@ -87,4 +87,48 @@ do_install() {
         > ${D}${sysconfdir}/stb-lcdd.conf
 }
 
-FILES:${PN} = "${bindir}/stb-lcdd ${sysconfdir}/stb-lcdd.conf"
+# A consolidated MACHINE ships one profile per machinebuild, stb-lcdd picks
+# its own at runtime from enigma.info.
+def stb_lcdd_machine_conf(d):
+    return bb.utils.which(d.getVar('BBPATH'), 'conf/machine/%s.conf' % d.getVar('MACHINE')) or ''
+
+def stb_lcdd_machinebuilds(d):
+    conf = stb_lcdd_machine_conf(d)
+    if conf:
+        with open(conf) as f:
+            for line in f:
+                if line.startswith('# MACHINEBUILDS:'):
+                    return line.split(':', 1)[1].split()
+    return []
+
+def stb_lcdd_localdata(d, build):
+    current = d.getVar('MACHINEBUILD')
+    localdata = bb.data.createCopy(d)
+    localdata.setVar('MACHINEBUILD', build)
+    localdata.setVar('OVERRIDES', ':'.join(build if x == current else x for x in d.getVar('OVERRIDES').split(':')))
+    return localdata
+
+python stb_lcdd_write_profiles() {
+    import os
+    builds = stb_lcdd_machinebuilds(d)
+    if len(builds) < 2:
+        return
+    keys = (('mode', 'STB_LCD_MODE'), ('pixel_format', 'STB_LCD_FORMAT'), ('device', 'STB_LCD_DEVICE'),
+            ('width', 'STB_LCD_WIDTH'), ('height', 'STB_LCD_HEIGHT'), ('bpp', 'STB_LCD_BPP'), ('columns', 'STB_LCD_COLUMNS'),
+            ('secondary_mode', 'STB_LCD_SECONDARY_MODE'), ('secondary_pixel_format', 'STB_LCD_SECONDARY_FORMAT'),
+            ('secondary_device', 'STB_LCD_SECONDARY_DEVICE'), ('secondary_width', 'STB_LCD_SECONDARY_WIDTH'),
+            ('secondary_height', 'STB_LCD_SECONDARY_HEIGHT'), ('secondary_bpp', 'STB_LCD_SECONDARY_BPP'),
+            ('secondary_columns', 'STB_LCD_SECONDARY_COLUMNS'))
+    outdir = d.getVar('D') + d.getVar('sysconfdir') + '/stb-lcdd'
+    os.makedirs(outdir, exist_ok=True)
+    for build in builds:
+        localdata = stb_lcdd_localdata(d, build)
+        with open('%s/%s.conf' % (outdir, build), 'w') as f:
+            f.write('machine=%s\n' % build)
+            for key, var in keys:
+                f.write('%s=%s\n' % (key, localdata.getVar(var)))
+}
+do_install[postfuncs] += "stb_lcdd_write_profiles"
+do_install[file-checksums] += "${@stb_lcdd_machine_conf(d) + ':True' if stb_lcdd_machine_conf(d) else ''}"
+
+FILES:${PN} = "${bindir}/stb-lcdd ${sysconfdir}/stb-lcdd.conf ${sysconfdir}/stb-lcdd"
