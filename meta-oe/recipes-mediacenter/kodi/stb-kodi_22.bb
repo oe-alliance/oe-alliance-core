@@ -192,6 +192,7 @@ SRC_URI:append = "${@' file://0063-stb-bcm-h264-decode-ahead.patch' if d.getVar(
 SRC_URI:append = " file://0064-stb-hardware-process-info.patch"
 SRC_URI:append = " file://0065-stb-respect-enigma2-cec-disabled.patch"
 SRC_URI:append = " file://0067-nfs-link-capability-check.patch"
+SRC_URI:append = " file://0068-retroplayer-egl14-headers.patch"
 SRC_URI:append = "${@' file://0066-stb-hisi-serialize-codec-replacement.patch' if d.getVar('HISI_STB') == '1' else ''}"
 SRC_URI:append = "${@' file://0059-hisi-match-desktop-hdmi-mode.patch' if d.getVar('HISI_STB') == '1' else ''}"
 SRC_URI:append = " file://0057-stb-cec-handover-defaults.patch"

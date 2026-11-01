@@ -1,0 +1,35 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: WXbet <57314510+WXbet@users.noreply.github.com>
+Date: Sun, 1 Nov 2026 20:02:06 +0100
+Subject: [PATCH] RetroPlayer: build with EGL 1.4 headers
+
+Mali and other EGL 1.4 headers lack EGL_OPENGL_ES3_BIT and
+EGL_CONTEXT_OPENGL_DEBUG. Define them with the EGL_KHR_create_context
+and EGL 1.5 values; the debug attribute is only used when the display
+reports EGL 1.5.
+---
+ .../rendering/contexts/HwRenderingContextEGLUtils.h       | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/xbmc/cores/RetroPlayer/rendering/contexts/HwRenderingContextEGLUtils.h b/xbmc/cores/RetroPlayer/rendering/contexts/HwRenderingContextEGLUtils.h
+index 54695f5062e..311f825e41b 100644
+--- a/xbmc/cores/RetroPlayer/rendering/contexts/HwRenderingContextEGLUtils.h
++++ b/xbmc/cores/RetroPlayer/rendering/contexts/HwRenderingContextEGLUtils.h
+@@ -19,6 +19,14 @@
+ 
+ #include <EGL/egl.h>
+ #include <EGL/eglext.h>
++
++// EGL 1.4 headers (Mali and others) lack these EGL 1.5 names.
++#ifndef EGL_OPENGL_ES3_BIT
++#define EGL_OPENGL_ES3_BIT EGL_OPENGL_ES3_BIT_KHR
++#endif
++#ifndef EGL_CONTEXT_OPENGL_DEBUG
++#define EGL_CONTEXT_OPENGL_DEBUG 0x31B0
++#endif
+ #endif
+ 
+ namespace KODI::RETRO
+-- 
+2.53.0
+
