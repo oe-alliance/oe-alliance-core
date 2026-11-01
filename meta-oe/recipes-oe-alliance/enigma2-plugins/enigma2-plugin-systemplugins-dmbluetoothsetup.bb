@@ -1,7 +1,7 @@
 DESCRIPTION = "Dreambox bluetooth plugin"
 require conf/license/license-gplv2.inc
 require conf/python/python3-compileall.inc
-PACKAGE_ARCH = "${MACHINE_ARCH}"
+PACKAGE_ARCH = "${MACHINEBUILD}"
 
 COMPATIBLE_MACHINE = "^(dm7080|dm900|dm920|dms922x)$"
 
