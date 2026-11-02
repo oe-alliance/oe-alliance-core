@@ -5,7 +5,7 @@ PRECOMPILED_NAME = "dreambox-dvb-modules"
 # one driver build for the Dreambox One and Two
 PRECOMPILED_ARCH = "meson64"
 
-PR = "r1"
+PR = "r2"
 
 require dreambox-dvb-modules-meson64.inc
 
@@ -44,6 +44,11 @@ COMPATIBLE_MACHINE = "^(dreamone|dreamtwo)$"
 # blocks for good, and stopping the writer (end of a paused timeshift)
 # hangs. decoder_should_abort also reports a pending signal, so the write
 # returns -EINTR as with an interruptible wait; its _mcount relocation goes.
+#
+# Both functions keep their entry in __mcount_loc, while their _mcount call
+# is gone. ftrace finds no call to _mcount there when the module loads and
+# warns with a backtrace; the two entries become R_AARCH64_NONE, ftrace
+# skips a location of 0.
 patch_ko() {
     ko=${D}/lib/modules/${DM_LOCALVERSION}/extra/$1
     # do_install hard links ${D} to ${S}, patch a copy of our own
@@ -86,4 +91,8 @@ do_install:append() {
     # its relocation at .text+0x7834: _mcount -> R_AARCH64_NONE
     patch_ko core/meson64.ko 1269592 1b010000 '\000\000\000\000\000\000\000\000'
     echo "1176b7ddc25e29e0a3acae44548d801a  $core/meson64.ko" | md5sum -c -
+    # __mcount_loc entries for .text+0x7834 and .text+0x7950 -> R_AARCH64_NONE
+    patch_ko core/meson64.ko 1303936 01010000 '\000\000\000\000\000\000\000\000'
+    patch_ko core/meson64.ko 1303984 01010000 '\000\000\000\000\000\000\000\000'
+    echo "a8d37f971518ee44c8181f2051cd46fe  $core/meson64.ko" | md5sum -c -
 }
