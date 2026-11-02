@@ -1,7 +1,7 @@
 From 717eee97a570dee619239c6b41c5152e118f1a85 Mon Sep 17 00:00:00 2001
 From: Tillmann Severin <tillmann.severin@mailbox.org>
 Date: Sat, 19 Sep 2026 11:26:31 +0200
-Subject: [PATCH 21/22] phy: hisi-inno-usb2: wait long enough for the UTMI
+Subject: [PATCH 21/24] phy: hisi-inno-usb2: wait long enough for the UTMI
  reset
 
 UTMI_RST_COMPLETE_TIME is documented as a millisecond value but is

@@ -1,7 +1,7 @@
 From 6db59f768d8e555de6a11d37299e1b21c974ba8d Mon Sep 17 00:00:00 2001
 From: Tillmann Severin <tillmann.severin@mailbox.org>
 Date: Sun, 2 Aug 2026 01:26:48 +0200
-Subject: [PATCH 17/22] net: hix5hd2_gmac: hold the MAC core reset long enough
+Subject: [PATCH 17/24] net: hix5hd2_gmac: hold the MAC core reset long enough
 
 hix5hd2_mac_core_reset() asserts and immediately deasserts the MAC core
 reset.  Both operations are a single read-modify-write of one CRG

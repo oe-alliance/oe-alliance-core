@@ -34,6 +34,9 @@ SRC_URI += "https://www.kernel.org/pub/linux/kernel/v6.x/linux-${PV}.tar.gz \
     file://0019-dt-bindings-phy-hisilicon-inno-usb2-phy-add-Hi3798MV.patch \
     file://0020-phy-hisi-inno-usb2-add-Hi3798MV200-support.patch \
     file://0021-phy-hisi-inno-usb2-wait-long-enough-for-the-UTMI-res.patch \
+    file://0022-ARM-dts-hisilicon-describe-the-SF8008-bootloader-fra.patch \
+    file://0023-net-hix5hd2_gmac-support-the-four-word-descriptor-la.patch \
+    file://0024-net-hix5hd2_gmac-do-not-claim-TSO-on-the-Hi3798MV200.patch \
 "
 SRC_URI[sha256sum] = "ec7efb5ce8406adfcf681cae40cfad58c2f91eea97736c2ef66124e9d2cf3cb7"
 

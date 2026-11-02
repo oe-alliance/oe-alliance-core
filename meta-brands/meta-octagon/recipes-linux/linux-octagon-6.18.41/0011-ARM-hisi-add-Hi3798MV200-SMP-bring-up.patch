@@ -1,7 +1,7 @@
 From 915d792908e8b72aa577a7de29e926cf32712e54 Mon Sep 17 00:00:00 2001
 From: Tillmann Severin <tillmann.severin@mailbox.org>
 Date: Sat, 1 Aug 2026 20:00:31 +0200
-Subject: [PATCH 11/22] ARM: hisi: add Hi3798MV200 SMP bring-up
+Subject: [PATCH 11/24] ARM: hisi: add Hi3798MV200 SMP bring-up
 
 The 32-bit boot chain on Hi3798MV200 provides no PSCI implementation, so
 the secondary cores have to be released by the kernel.

@@ -1,0 +1,52 @@
+From eac5738fbf050b1ccffc69a888f5ee1a794fc19d Mon Sep 17 00:00:00 2001
+From: Tillmann Severin <tillmann.severin@mailbox.org>
+Date: Tue, 3 Nov 2026 13:20:10 +0100
+Subject: [PATCH 24/24] net: hix5hd2_gmac: do not claim TSO on the Hi3798MV200
+
+The Hi3798MV200 GMAC was matched as a GEMAC_V2 part, which sets
+HW_CAP_TSO and so makes the driver advertise NETIF_F_SG and send
+fragmented skbs through the scatter-gather descriptor format.
+
+That controller does not implement scatter-gather.  The version field in
+bits [29:28] of CRF_MIN_PACKET reads 0, VER_NO_TSO, where the
+scatter-gather and TSO capable variants read 2 and 3 respectively.
+
+The effect was subtle because only skbs carrying fragments take the
+scatter-gather path.  ICMP and small UDP datagrams are linear and were
+transmitted fine, as was the TCP handshake, since SYN and ACK carry no
+payload.  TCP data however is placed in page fragments whenever
+NETIF_F_SG is advertised, so every data segment was built in a
+descriptor format the hardware does not understand and was never put on
+the wire.  A connection would establish and then stall forever.
+
+Match the controller as GEMAC_V1 so that only the four word descriptor
+capability remains.  The driver then uses the full frame descriptor for
+every skb and the stack linearises fragmented ones.
+
+Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>
+---
+ drivers/net/ethernet/hisilicon/hix5hd2_gmac.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/net/ethernet/hisilicon/hix5hd2_gmac.c b/drivers/net/ethernet/hisilicon/hix5hd2_gmac.c
+index 29330bffd709..7327f2ccd639 100644
+--- a/drivers/net/ethernet/hisilicon/hix5hd2_gmac.c
++++ b/drivers/net/ethernet/hisilicon/hix5hd2_gmac.c
+@@ -1351,8 +1351,13 @@ static const struct of_device_id hix5hd2_of_match[] = {
+ 	{ .compatible = "hisilicon,hisi-gmac-v2", .data = (void *)GEMAC_V2 },
+ 	{ .compatible = "hisilicon,hix5hd2-gmac", .data = (void *)GEMAC_V1 },
+ 	{ .compatible = "hisilicon,hi3798cv200-gmac", .data = (void *)GEMAC_V2 },
++	/*
++	 * The Hi3798MV200 GMAC reports VER_NO_TSO in the version field of
++	 * CRF_MIN_PACKET, so it implements neither TSO nor the scatter-gather
++	 * descriptor format.  It only supports the four word descriptor layout.
++	 */
+ 	{ .compatible = "hisilicon,hi3798mv200-gmac",
+-	  .data = (void *)(GEMAC_V2 | HW_CAP_DESC_4WORD) },
++	  .data = (void *)(GEMAC_V1 | HW_CAP_DESC_4WORD) },
+ 	{ .compatible = "hisilicon,hi3516a-gmac", .data = (void *)GEMAC_V2 },
+ 	{},
+ };
+-- 
+2.56.0
+

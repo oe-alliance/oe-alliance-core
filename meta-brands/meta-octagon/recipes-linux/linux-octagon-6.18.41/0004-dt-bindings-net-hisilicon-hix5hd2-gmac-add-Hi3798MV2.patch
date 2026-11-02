@@ -1,7 +1,7 @@
 From 614706bc05409c1f74e9b889995a9e1a2917ccc0 Mon Sep 17 00:00:00 2001
 From: Tillmann Severin <tillmann.severin@mailbox.org>
 Date: Sat, 1 Aug 2026 15:17:30 +0200
-Subject: [PATCH 04/22] dt-bindings: net: hisilicon-hix5hd2-gmac: add
+Subject: [PATCH 04/24] dt-bindings: net: hisilicon-hix5hd2-gmac: add
  Hi3798MV200
 
 The Hi3798MV200 gigabit MAC is the same IP as the one on the

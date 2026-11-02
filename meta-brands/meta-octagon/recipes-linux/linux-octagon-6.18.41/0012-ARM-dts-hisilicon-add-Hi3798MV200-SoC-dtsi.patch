@@ -1,7 +1,7 @@
 From 9180afab05cc8920db9bb7f1d343a84341d643bd Mon Sep 17 00:00:00 2001
 From: Tillmann Severin <tillmann.severin@mailbox.org>
 Date: Sat, 1 Aug 2026 20:01:16 +0200
-Subject: [PATCH 12/22] ARM: dts: hisilicon: add Hi3798MV200 SoC dtsi
+Subject: [PATCH 12/24] ARM: dts: hisilicon: add Hi3798MV200 SoC dtsi
 
 Describe the Hi3798MV200 for AArch32.  This is the same hardware as the
 arm64 arch/arm64/boot/dts/hisilicon/hi3798mv200.dtsi and everything from

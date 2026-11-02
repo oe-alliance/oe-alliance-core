@@ -1,7 +1,7 @@
 From 7a6a53c284158c6a6f313328d626bd4144e683c2 Mon Sep 17 00:00:00 2001
 From: Tillmann Severin <tillmann.severin@mailbox.org>
 Date: Sat, 1 Aug 2026 15:29:49 +0200
-Subject: [PATCH 08/22] arm64: dts: hisilicon: add Octagon SF8008 board
+Subject: [PATCH 08/24] arm64: dts: hisilicon: add Octagon SF8008 board
 
 The Octagon SF8008 is a satellite receiver built around a HiSilicon
 Hi3798MV200 with 1 GiB of DDR3 and 8 GiB of eMMC.

@@ -1,7 +1,7 @@
 From d56802182e0daf0a2b07175ab7f7de954224f91e Mon Sep 17 00:00:00 2001
 From: Tillmann Severin <tillmann.severin@mailbox.org>
 Date: Sat, 1 Aug 2026 17:16:39 +0200
-Subject: [PATCH 09/22] arm64: defconfig: enable Hi3798MV200 peripherals
+Subject: [PATCH 09/24] arm64: defconfig: enable Hi3798MV200 peripherals
 
 Enable the drivers needed by the Hi3798MV200 that were not already
 selected: the SoC specific dw_mmc extension for the SD and eMMC hosts,

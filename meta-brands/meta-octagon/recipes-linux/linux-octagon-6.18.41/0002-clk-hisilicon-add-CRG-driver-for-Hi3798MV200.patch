@@ -1,7 +1,7 @@
 From 2803eab7ba9b38e8fa0a484c26d7ba44ecc0603b Mon Sep 17 00:00:00 2001
 From: Tillmann Severin <tillmann.severin@mailbox.org>
 Date: Sat, 1 Aug 2026 15:15:51 +0200
-Subject: [PATCH 02/22] clk: hisilicon: add CRG driver for Hi3798MV200
+Subject: [PATCH 02/24] clk: hisilicon: add CRG driver for Hi3798MV200
 
 Add clock and reset support for the HiSilicon Hi3798MV200 SoC, covering
 both the CRG (0xf8a22000) and the sysctrl (0xf8000000) register blocks.

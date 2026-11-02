@@ -1,7 +1,7 @@
 From c2d8d5987d5254b7d755bbb03a989ec92c99e2be Mon Sep 17 00:00:00 2001
 From: Tillmann Severin <tillmann.severin@mailbox.org>
 Date: Sat, 1 Aug 2026 15:17:30 +0200
-Subject: [PATCH 03/22] net: hix5hd2_gmac: accept the RGMII internal delay
+Subject: [PATCH 03/24] net: hix5hd2_gmac: accept the RGMII internal delay
  modes
 
 hix5hd2_set_desc_depth()'s caller configures the MAC interface from

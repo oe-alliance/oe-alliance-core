@@ -1,0 +1,168 @@
+From a1aec75be5eba89c87aeaf45b9b82cb7f0029628 Mon Sep 17 00:00:00 2001
+From: Tillmann Severin <tillmann.severin@mailbox.org>
+Date: Mon, 2 Nov 2026 23:49:01 +0100
+Subject: [PATCH 22/24] ARM: dts: hisilicon: describe the SF8008 bootloader
+ framebuffer
+
+The stock bootloader brings up the display controller and the HDMI
+transmitter to show its splash screen, and leaves both running when it
+hands control to the kernel.  There is no driver for the Hi3798MV200
+display controller, so without any description that framebuffer is lost
+and the board has no display output at all.
+
+Describe it as a simple-framebuffer instead.  The geometry is read back
+from the graphics layer the bootloader leaves enabled, G0 at 0xf8cc7000:
+G0_CTRL reports input format 0x68 (ARGB8888) with the surface enabled,
+G0_IRESO reports 1920x1080, and G0_STRIDE reports 0x1e0 units of 16
+bytes, i.e. 7680 bytes per line.
+
+The buffer sits at 0x3ef3b000, just below the top of the gigabyte of DDR
+the board has, and so falls inside the region described by /memory.  The
+display controller keeps reading from it after the handover, so reserve
+it as well, or it gets handed to the page allocator and the picture
+dissolves as soon as the system is under memory pressure.  Reserve it
+no-map so that it leaves the linear mapping and the framebuffer driver
+can map it write combining.
+
+Point at the reserved region by phandle rather than repeating the
+address in a reg property.  /chosen is not a bus node and carries no
+ranges, so an address placed there cannot be translated into the root
+address space, and the framebuffer ends up without a memory resource.
+
+Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>
+---
+ .../hisilicon/hi3798mv200-octagon-sf8008.dts  | 53 +++++++++++++++++++
+ .../hisilicon/hi3798mv200-octagon-sf8008.dts  | 53 +++++++++++++++++++
+ 2 files changed, 106 insertions(+)
+
+diff --git a/arch/arm/boot/dts/hisilicon/hi3798mv200-octagon-sf8008.dts b/arch/arm/boot/dts/hisilicon/hi3798mv200-octagon-sf8008.dts
+index bef8aee39076..86ba0998659e 100644
+--- a/arch/arm/boot/dts/hisilicon/hi3798mv200-octagon-sf8008.dts
++++ b/arch/arm/boot/dts/hisilicon/hi3798mv200-octagon-sf8008.dts
+@@ -42,6 +42,59 @@ aliases {
+ 
+ 	chosen {
+ 		stdout-path = "serial0:115200n8";
++
++		/*
++		 * The bootloader initialises the display controller and the
++		 * HDMI transmitter to put its splash screen on screen, and
++		 * leaves both running when it hands over.  Describe the
++		 * scanout buffer so the framebuffer stays usable until there
++		 * is a real driver for the display controller.
++		 *
++		 * The geometry is read back from the graphics layer that is
++		 * left enabled, G0 at 0xf8cc7000: G0_CTRL reports input
++		 * format 0x68 (ARGB8888), G0_IRESO 1920x1080, and G0_STRIDE
++		 * 0x1e0 lines of 16 bytes, i.e. 7680 bytes per line.
++		 *
++		 * The buffer is referred to by phandle rather than described
++		 * with a reg property, because /chosen is not a bus node and
++		 * carries no ranges, so an address placed here cannot be
++		 * translated into the root address space.
++		 */
++		framebuffer0: framebuffer {
++			compatible = "simple-framebuffer";
++			memory-region = <&bootloader_fb>;
++			width = <1920>;
++			height = <1080>;
++			stride = <7680>;
++			format = "a8r8g8b8";
++		};
++	};
++
++	reserved-memory {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
++
++		/*
++		 * The buffer the bootloader scans out of sits just below the
++		 * top of DDR, inside the region described by /memory.  The
++		 * display controller keeps reading it after the handover, so
++		 * it must not be handed to the page allocator.  Map nothing,
++		 * so that the framebuffer driver is free to map it write
++		 * combining.
++		 *
++		 * The region deliberately extends past the single 1920x1080x4
++		 * page that is scanned out.  simplefb reports the whole region
++		 * as smem_len, and userspace carves its working surfaces out
++		 * of whatever follows the visible page; sized to exactly one
++		 * page there is nothing left and every such allocation fails.
++		 * The tail runs towards the top of DDR, which is otherwise
++		 * ordinary memory.
++		 */
++		bootloader_fb: framebuffer@3ef3b000 {
++			reg = <0x3ef3b000 0x1000000>;
++			no-map;
++		};
+ 	};
+ 
+ 	/* SF8008 ships 1 GiB of DDR3; normally fixed up by the bootloader. */
+diff --git a/arch/arm64/boot/dts/hisilicon/hi3798mv200-octagon-sf8008.dts b/arch/arm64/boot/dts/hisilicon/hi3798mv200-octagon-sf8008.dts
+index 6aaff6bcc345..9f8cbfa94a21 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi3798mv200-octagon-sf8008.dts
++++ b/arch/arm64/boot/dts/hisilicon/hi3798mv200-octagon-sf8008.dts
+@@ -37,6 +37,59 @@ aliases {
+ 
+ 	chosen {
+ 		stdout-path = "serial0:115200n8";
++
++		/*
++		 * The bootloader initialises the display controller and the
++		 * HDMI transmitter to put its splash screen on screen, and
++		 * leaves both running when it hands over.  Describe the
++		 * scanout buffer so the framebuffer stays usable until there
++		 * is a real driver for the display controller.
++		 *
++		 * The geometry is read back from the graphics layer that is
++		 * left enabled, G0 at 0xf8cc7000: G0_CTRL reports input
++		 * format 0x68 (ARGB8888), G0_IRESO 1920x1080, and G0_STRIDE
++		 * 0x1e0 lines of 16 bytes, i.e. 7680 bytes per line.
++		 *
++		 * The buffer is referred to by phandle rather than described
++		 * with a reg property, because /chosen is not a bus node and
++		 * carries no ranges, so an address placed here cannot be
++		 * translated into the root address space.
++		 */
++		framebuffer0: framebuffer {
++			compatible = "simple-framebuffer";
++			memory-region = <&bootloader_fb>;
++			width = <1920>;
++			height = <1080>;
++			stride = <7680>;
++			format = "a8r8g8b8";
++		};
++	};
++
++	reserved-memory {
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++
++		/*
++		 * The buffer the bootloader scans out of sits just below the
++		 * top of DDR, inside the region described by /memory.  The
++		 * display controller keeps reading it after the handover, so
++		 * it must not be handed to the page allocator.  Map nothing,
++		 * so that the framebuffer driver is free to map it write
++		 * combining.
++		 *
++		 * The region deliberately extends past the single 1920x1080x4
++		 * page that is scanned out.  simplefb reports the whole region
++		 * as smem_len, and userspace carves its working surfaces out
++		 * of whatever follows the visible page; sized to exactly one
++		 * page there is nothing left and every such allocation fails.
++		 * The tail runs towards the top of DDR, which is otherwise
++		 * ordinary memory.
++		 */
++		bootloader_fb: framebuffer@3ef3b000 {
++			reg = <0x0 0x3ef3b000 0x0 0x1000000>;
++			no-map;
++		};
+ 	};
+ 
+ 	/* SF8008 ships 1 GiB of DDR3; normally fixed up by the bootloader. */
+-- 
+2.56.0
+
