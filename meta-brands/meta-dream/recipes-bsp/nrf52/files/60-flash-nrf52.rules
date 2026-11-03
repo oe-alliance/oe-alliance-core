@@ -1,0 +1,4 @@
+# flash-nrf52 checks the U-Boot version through /dev/bootloader. Without
+# GPT the kernel names the bootloader partition so itself, with GPT U-Boot
+# is in the first boot partition.
+KERNEL=="mmcblk0boot0", TEST!="/sys/class/block/bootloader", SYMLINK+="bootloader"

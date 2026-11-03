@@ -7,6 +7,22 @@ COMPATIBLE_MACHINE = "^(dreamone|dreamtwo)$"
 
 inherit opendreambox-precompiled-binary4
 
+PR = "r1"
+
+SRC_URI += "file://60-flash-nrf52.rules"
+
 RDEPENDS:${PN} = "libcrypto10"
 
 INSANE_SKIP:${PN} += "file-rdeps ldflags"
+
+do_install:append() {
+	install -d ${D}${sysconfdir}/udev/rules.d
+	install -m 0644 ${UNPACKDIR}/60-flash-nrf52.rules ${D}${sysconfdir}/udev/rules.d/
+}
+
+pkg_postinst:${PN}() {
+if [ -z "$D" ]; then
+	udevadm trigger --action=add --sysname-match=mmcblk0boot0
+	udevadm settle
+fi
+}
