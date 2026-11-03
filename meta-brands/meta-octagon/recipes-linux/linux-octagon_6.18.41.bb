@@ -37,6 +37,8 @@ SRC_URI += "https://www.kernel.org/pub/linux/kernel/v6.x/linux-${PV}.tar.gz \
     file://0022-ARM-dts-hisilicon-describe-the-SF8008-bootloader-fra.patch \
     file://0023-net-hix5hd2_gmac-support-the-four-word-descriptor-la.patch \
     file://0024-net-hix5hd2_gmac-do-not-claim-TSO-on-the-Hi3798MV200.patch \
+    file://0025-media-rc-add-keymap-for-the-Octagon-SF8008-remote.patch \
+    file://0026-media-rc-ir-hix5hd2-report-a-real-duration-for-the-t.patch \
 "
 SRC_URI[sha256sum] = "ec7efb5ce8406adfcf681cae40cfad58c2f91eea97736c2ef66124e9d2cf3cb7"
 

@@ -1,7 +1,7 @@
 From 56c8ac892875481b3d72c7039abd14e6393b606e Mon Sep 17 00:00:00 2001
 From: Tillmann Severin <tillmann.severin@mailbox.org>
 Date: Sun, 2 Aug 2026 17:30:40 +0200
-Subject: [PATCH 18/24] ARM: hisi: join Hi3798MV200 secondaries to the
+Subject: [PATCH 18/26] ARM: hisi: join Hi3798MV200 secondaries to the
  coherency domain
 
 The secondary cores are entered directly at secondary_startup(), which

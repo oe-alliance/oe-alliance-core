@@ -1,0 +1,162 @@
+From 7e03310af8d1b5fdabf6ec2b9b54719eee9c7f88 Mon Sep 17 00:00:00 2001
+From: Tillmann Severin <tillmann.severin@mailbox.org>
+Date: Tue, 3 Nov 2026 19:48:30 +0100
+Subject: [PATCH 25/26] media: rc: add keymap for the Octagon SF8008 remote
+
+The Octagon SF8008 ships with a NEC remote control using address 0x05.
+Add a keytable for it and select it from the board device trees so that
+the on-SoC IR receiver reports usable key events out of the box.
+
+Without a keymap the hix5hd2 IR receiver registers with RC_MAP_EMPTY,
+which leaves no protocol enabled and maps every scancode to
+KEY_RESERVED. Naming the map in the device tree also makes rc-core
+enable the NEC decoder at registration time.
+
+Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>
+---
+ .../hisilicon/hi3798mv200-octagon-sf8008.dts  |  1 +
+ .../hisilicon/hi3798mv200-octagon-sf8008.dts  |  1 +
+ drivers/media/rc/keymaps/Makefile             |  1 +
+ drivers/media/rc/keymaps/rc-octagon-sf8008.c  | 81 +++++++++++++++++++
+ include/media/rc-map.h                        |  1 +
+ 5 files changed, 85 insertions(+)
+ create mode 100644 drivers/media/rc/keymaps/rc-octagon-sf8008.c
+
+diff --git a/arch/arm/boot/dts/hisilicon/hi3798mv200-octagon-sf8008.dts b/arch/arm/boot/dts/hisilicon/hi3798mv200-octagon-sf8008.dts
+index 86ba0998659e..9c0e7d0e8b1f 100644
+--- a/arch/arm/boot/dts/hisilicon/hi3798mv200-octagon-sf8008.dts
++++ b/arch/arm/boot/dts/hisilicon/hi3798mv200-octagon-sf8008.dts
+@@ -214,6 +214,7 @@ eth_phy0: phy@3 {
+ 
+ /* IR receiver behind the front panel window. */
+ &ir {
++	linux,rc-map-name = "rc-octagon-sf8008";
+ 	status = "okay";
+ };
+ 
+diff --git a/arch/arm64/boot/dts/hisilicon/hi3798mv200-octagon-sf8008.dts b/arch/arm64/boot/dts/hisilicon/hi3798mv200-octagon-sf8008.dts
+index 9f8cbfa94a21..9c6c196e748f 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi3798mv200-octagon-sf8008.dts
++++ b/arch/arm64/boot/dts/hisilicon/hi3798mv200-octagon-sf8008.dts
+@@ -209,6 +209,7 @@ eth_phy0: phy@3 {
+ 
+ /* IR receiver behind the front panel window. */
+ &ir {
++	linux,rc-map-name = "rc-octagon-sf8008";
+ 	status = "okay";
+ };
+ 
+diff --git a/drivers/media/rc/keymaps/Makefile b/drivers/media/rc/keymaps/Makefile
+index d04572627cdd..4365a0c88e41 100644
+--- a/drivers/media/rc/keymaps/Makefile
++++ b/drivers/media/rc/keymaps/Makefile
+@@ -89,6 +89,7 @@ obj-$(CONFIG_RC_MAP) += \
+ 			rc-nec-terratec-cinergy-xs.o \
+ 			rc-norwood.o \
+ 			rc-npgtech.o \
++			rc-octagon-sf8008.o \
+ 			rc-odroid.o \
+ 			rc-pctv-sedna.o \
+ 			rc-pine64.o \
+diff --git a/drivers/media/rc/keymaps/rc-octagon-sf8008.c b/drivers/media/rc/keymaps/rc-octagon-sf8008.c
+new file mode 100644
+index 000000000000..11403d2a0b6b
+--- /dev/null
++++ b/drivers/media/rc/keymaps/rc-octagon-sf8008.c
+@@ -0,0 +1,81 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/* rc-octagon-sf8008.c - Keytable for the Octagon SF8008 remote control
++ *
++ * The SF8008 ships with a NEC remote using address 0x05.
++ */
++
++#include <media/rc-map.h>
++#include <linux/module.h>
++
++static struct rc_map_table octagon_sf8008[] = {
++	{ 0x0514, KEY_POWER },
++	{ 0x051c, KEY_MUTE },
++
++	{ 0x0509, KEY_1 },
++	{ 0x051d, KEY_2 },
++	{ 0x051f, KEY_3 },
++	{ 0x050d, KEY_4 },
++	{ 0x0519, KEY_5 },
++	{ 0x051b, KEY_6 },
++	{ 0x0511, KEY_7 },
++	{ 0x0515, KEY_8 },
++	{ 0x0517, KEY_9 },
++	{ 0x0512, KEY_0 },
++
++	{ 0x0503, KEY_UP },
++	{ 0x0502, KEY_DOWN },
++	{ 0x050e, KEY_LEFT },
++	{ 0x051a, KEY_RIGHT },
++	{ 0x0507, KEY_OK },
++	{ 0x0500, KEY_MENU },
++	{ 0x0513, KEY_EXIT },
++
++	{ 0x0541, KEY_VOLUMEUP },
++	{ 0x0542, KEY_VOLUMEDOWN },
++	{ 0x05ef, KEY_CHANNELUP },
++	{ 0x05ee, KEY_CHANNELDOWN },
++
++	{ 0x051e, KEY_INFO },
++	{ 0x0563, KEY_EPG },
++	{ 0x055d, KEY_TV2 },
++	{ 0x0554, KEY_AUDIO },
++	{ 0x054d, KEY_SUBTITLE },
++	{ 0x05ea, KEY_TEXT },
++
++	{ 0x0510, KEY_RED },
++	{ 0x0516, KEY_GREEN },
++	{ 0x0505, KEY_YELLOW },
++	{ 0x0562, KEY_BLUE },
++
++	{ 0x0550, KEY_PLAY },
++	{ 0x050a, KEY_PAUSE },
++	{ 0x0558, KEY_STOP },
++	{ 0x0548, KEY_RECORD },
++	{ 0x0506, KEY_REWIND },
++	{ 0x0553, KEY_FASTFORWARD },
++};
++
++static struct rc_map_list octagon_sf8008_map = {
++	.map = {
++		.scan     = octagon_sf8008,
++		.size     = ARRAY_SIZE(octagon_sf8008),
++		.rc_proto = RC_PROTO_NEC,
++		.name     = RC_MAP_OCTAGON_SF8008,
++	}
++};
++
++static int __init init_rc_map(void)
++{
++	return rc_map_register(&octagon_sf8008_map);
++}
++
++static void __exit exit_rc_map(void)
++{
++	rc_map_unregister(&octagon_sf8008_map);
++}
++
++module_init(init_rc_map)
++module_exit(exit_rc_map)
++
++MODULE_LICENSE("GPL");
++MODULE_DESCRIPTION("Octagon SF8008 remote controller keytable");
+diff --git a/include/media/rc-map.h b/include/media/rc-map.h
+index d90e4611b066..be6aa18ed9dd 100644
+--- a/include/media/rc-map.h
++++ b/include/media/rc-map.h
+@@ -295,6 +295,7 @@ struct rc_map *rc_map_get(const char *name);
+ #define RC_MAP_NEC_TERRATEC_CINERGY_XS   "rc-nec-terratec-cinergy-xs"
+ #define RC_MAP_NORWOOD                   "rc-norwood"
+ #define RC_MAP_NPGTECH                   "rc-npgtech"
++#define RC_MAP_OCTAGON_SF8008            "rc-octagon-sf8008"
+ #define RC_MAP_ODROID                    "rc-odroid"
+ #define RC_MAP_PCTV_SEDNA                "rc-pctv-sedna"
+ #define RC_MAP_PINE64                    "rc-pine64"
+-- 
+2.56.0
+

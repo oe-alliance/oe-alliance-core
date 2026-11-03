@@ -1,7 +1,7 @@
 From f973f4f8c7249718a574f69c627e8ff8c88c8136 Mon Sep 17 00:00:00 2001
 From: Tillmann Severin <tillmann.severin@mailbox.org>
 Date: Sat, 1 Aug 2026 15:15:28 +0200
-Subject: [PATCH 01/24] dt-bindings: clock: hisi-crg: add Hi3798MV200
+Subject: [PATCH 01/26] dt-bindings: clock: hisi-crg: add Hi3798MV200
  compatibles
 
 Document "hisilicon,hi3798mv200-crg" and "hisilicon,hi3798mv200-sysctrl".

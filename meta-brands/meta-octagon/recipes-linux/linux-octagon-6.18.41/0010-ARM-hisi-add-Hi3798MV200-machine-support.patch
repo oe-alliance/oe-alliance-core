@@ -1,7 +1,7 @@
 From b12b48bff52af86550eeb541204dfdaaf6e337cf Mon Sep 17 00:00:00 2001
 From: Tillmann Severin <tillmann.severin@mailbox.org>
 Date: Sat, 1 Aug 2026 20:00:31 +0200
-Subject: [PATCH 10/24] ARM: hisi: add Hi3798MV200 machine support
+Subject: [PATCH 10/26] ARM: hisi: add Hi3798MV200 machine support
 
 Hi3798MV200 is a quad Cortex-A53 set-top box SoC.  It is capable of
 running in AArch64 and is described for that case in

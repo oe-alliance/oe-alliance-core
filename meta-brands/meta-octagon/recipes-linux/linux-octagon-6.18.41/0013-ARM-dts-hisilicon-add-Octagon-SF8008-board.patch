@@ -1,7 +1,7 @@
 From 634fef58451e6d6a464b57efaf551b8ad809ec87 Mon Sep 17 00:00:00 2001
 From: Tillmann Severin <tillmann.severin@mailbox.org>
 Date: Sat, 1 Aug 2026 20:01:16 +0200
-Subject: [PATCH 13/24] ARM: dts: hisilicon: add Octagon SF8008 board
+Subject: [PATCH 13/26] ARM: dts: hisilicon: add Octagon SF8008 board
 
 32-bit variant of the Octagon SF8008 description.  This is the form the
 box can actually boot, because its stock HiSilicon "Fastboot" bootloader

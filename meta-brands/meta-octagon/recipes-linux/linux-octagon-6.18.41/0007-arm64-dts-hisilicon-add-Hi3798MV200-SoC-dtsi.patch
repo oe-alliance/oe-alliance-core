@@ -1,7 +1,7 @@
 From bb179202e80a60a267f9f7561fd8d102b0d50753 Mon Sep 17 00:00:00 2001
 From: Tillmann Severin <tillmann.severin@mailbox.org>
 Date: Sat, 1 Aug 2026 15:29:25 +0200
-Subject: [PATCH 07/24] arm64: dts: hisilicon: add Hi3798MV200 SoC dtsi
+Subject: [PATCH 07/26] arm64: dts: hisilicon: add Hi3798MV200 SoC dtsi
 
 The Hi3798MV200 is a quad Cortex-A53 set-top box SoC and a close
 relative of the Hi3798CV200: the two share the same peripheral memory

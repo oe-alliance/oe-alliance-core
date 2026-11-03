@@ -1,7 +1,7 @@
 From 772e0e9bcaf7e4b5e7396781d842adc30bc23ebc Mon Sep 17 00:00:00 2001
 From: Tillmann Severin <tillmann.severin@mailbox.org>
 Date: Tue, 3 Nov 2026 12:01:35 +0100
-Subject: [PATCH 23/24] net: hix5hd2_gmac: support the four word descriptor
+Subject: [PATCH 23/26] net: hix5hd2_gmac: support the four word descriptor
  layout
 
 The DMA descriptor is four words wide on the Hi3798MV200 and eight words

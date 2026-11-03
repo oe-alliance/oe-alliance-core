@@ -1,7 +1,7 @@
 From d3fef9937671667cb7d05164fbdf942939268fa0 Mon Sep 17 00:00:00 2001
 From: Tillmann Severin <tillmann.severin@mailbox.org>
 Date: Sat, 1 Aug 2026 15:29:01 +0200
-Subject: [PATCH 05/24] dt-bindings: vendor-prefixes: add Octagon
+Subject: [PATCH 05/26] dt-bindings: vendor-prefixes: add Octagon
 
 Octagon builds set-top boxes and satellite receivers, among them the
 SF8008 which is based on a HiSilicon Hi3798MV200.

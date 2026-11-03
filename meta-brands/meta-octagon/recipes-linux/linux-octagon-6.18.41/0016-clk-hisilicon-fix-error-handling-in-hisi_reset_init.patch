@@ -1,7 +1,7 @@
 From c06bf29b2e6ae9accc8ea15cdb6a6ba2365453a7 Mon Sep 17 00:00:00 2001
 From: Tillmann Severin <tillmann.severin@mailbox.org>
 Date: Sat, 1 Aug 2026 23:12:34 +0200
-Subject: [PATCH 16/24] clk: hisilicon: fix error handling in hisi_reset_init()
+Subject: [PATCH 16/26] clk: hisilicon: fix error handling in hisi_reset_init()
 
 hisi_reset_init() allocates the controller with devm_kmalloc(), which
 does not zero the allocation, and then ignores the return value of

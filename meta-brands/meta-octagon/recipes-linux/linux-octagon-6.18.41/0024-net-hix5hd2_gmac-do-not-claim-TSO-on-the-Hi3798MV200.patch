@@ -1,7 +1,7 @@
 From eac5738fbf050b1ccffc69a888f5ee1a794fc19d Mon Sep 17 00:00:00 2001
 From: Tillmann Severin <tillmann.severin@mailbox.org>
 Date: Tue, 3 Nov 2026 13:20:10 +0100
-Subject: [PATCH 24/24] net: hix5hd2_gmac: do not claim TSO on the Hi3798MV200
+Subject: [PATCH 24/26] net: hix5hd2_gmac: do not claim TSO on the Hi3798MV200
 
 The Hi3798MV200 GMAC was matched as a GEMAC_V2 part, which sets
 HW_CAP_TSO and so makes the driver advertise NETIF_F_SG and send
