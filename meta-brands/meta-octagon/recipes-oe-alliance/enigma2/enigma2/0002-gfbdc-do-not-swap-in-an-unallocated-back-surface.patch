@@ -1,0 +1,24 @@
+From: Octagon SF8008 port
+Subject: [PATCH] gfbdc: do not swap in an unallocated back surface
+
+The CONFIG_HISILICON_FB block at the end of setResolution() swaps
+surface and surface_back unconditionally. When the framebuffer only
+provides a single page, setResolution() has just set surface_back.data
+and surface_back.data_phys to 0, so the swap installs a NULL pointer as
+the live drawing surface and the next gPixmap::fill() dereferences
+address 0.
+
+Only perform the swap when the back surface actually has memory.
+
+Upstream-Status: Pending
+--- a/lib/gdi/gfbdc.cpp
++++ b/lib/gdi/gfbdc.cpp
+@@ -523,7 +523,7 @@
+ #endif
+ 
+ #if defined(CONFIG_HISILICON_FB)
+-	if(islocked()==0)
++	if(islocked()==0 && surface_back.data)
+ 	{
+ 		gUnmanagedSurface s(surface);
+ 		surface = surface_back;
