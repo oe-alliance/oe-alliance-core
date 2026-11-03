@@ -1,0 +1,107 @@
+--- a/gstdvbvideosink.c	2026-10-25 21:52:00.466665129 +0000
++++ b/gstdvbvideosink.c	2026-11-02 21:40:21.928209764 +0000
+@@ -1484,12 +1484,13 @@
+ 			guint8 *data;
+ 			gsize cd_len;
+ 			unsigned int cd_pos = 0;
++			unsigned int num_sps, num_pps;
+ 			GstMapInfo codecdatamap;
+ 			gst_buffer_map(codec_data, &codecdatamap, GST_MAP_READ);
+ 			data = codecdatamap.data;
+ 			cd_len = codecdatamap.size;
+ 			GST_INFO_OBJECT (self, "H264 have codec data..!");
+-			if (cd_len > 7 && data[0] == 1)
++			if (cd_len > 7 && ((data[5] & 0x1F) != 0)) //Make sure we have SPS
+ 			{
+ 				unsigned short len = (data[6] << 8) | data[7];
+ 				if (cd_len >= (len + 8))
+@@ -1537,7 +1538,71 @@
+ 						}
+ 						else
+ 						{
+-							GST_WARNING_OBJECT (self, "codec_data too short(4)");
++							if ((data[5] & 0x1F) > 1) //multiple SPS here
++							{
++								GST_INFO_OBJECT (self, "Multiple SPS Found..!");
++								num_sps = data[5] & 0x1F;
++								cd_pos -= 3;
++								for (i = 1; i < num_sps; ++i) //first SPS has already been copied
++								{
++									if (cd_pos + 2 > cd_len)
++									{
++										break;
++									}
++									len = (data[cd_pos] << 8) | data[cd_pos + 1];
++									cd_pos += 2;
++									if (len > cd_len - cd_pos)
++									{
++										break;
++									}
++									if (tmp_len + 4 + len > sizeof(tmp))
++									{
++										break;
++									}
++									memcpy(tmp + tmp_len, "\x00\x00\x00\x01", 4);
++									tmp_len += 4;
++									memcpy(tmp + tmp_len, data + cd_pos, len);
++									tmp_len += len;
++
++									cd_pos += len;
++								}
++								if (cd_pos < cd_len)
++								{
++									num_pps = data[cd_pos++];
++									if (num_pps > 0)
++									{
++										for (i = 0; i < num_pps; ++i)
++										{
++											if (cd_pos + 2 > cd_len)
++											{
++												break;
++											}
++											len = (data[cd_pos] << 8) | data[cd_pos + 1];
++											cd_pos += 2;
++											if (len > cd_len - cd_pos)
++											{
++												break;
++											}
++											if (tmp_len + 4 + len > sizeof(tmp))
++											{
++												break;
++											}
++											memcpy(tmp + tmp_len, "\x00\x00\x00\x01", 4);
++											tmp_len += 4;
++											memcpy(tmp + tmp_len, data + cd_pos, len);
++											tmp_len += len;
++											cd_pos += len;
++										}
++									}
++								}
++								self->codec_data = gst_buffer_new_and_alloc(tmp_len);
++								gst_buffer_fill(self->codec_data, 0, tmp, tmp_len);
++								self->h264_nal_len_size = (data[4] & 0x03) + 1;
++							}
++							else
++							{
++								GST_WARNING_OBJECT (self, "codec_data too short(4)");
++							}
+ 						}
+ 					}
+ 					else
+@@ -1550,9 +1615,14 @@
+ 					GST_WARNING_OBJECT (self, "codec_data too short(2)");
+ 				}
+ 			}
+-			else if (cd_len <= 7)
++			else if (((data[5] & 0x03) == 0)  && (data[0] == 1))//AVC3
+ 			{
+-				GST_WARNING_OBJECT (self, "codec_data too short(1)");
++				GST_INFO_OBJECT (self, "AVC3 Found..!");
++				memcpy(tmp, "\x00\x00\x00\x01", 4);
++				tmp_len +=4;
++				self->codec_data = gst_buffer_new_and_alloc(tmp_len);
++				gst_buffer_fill(self->codec_data, 0, tmp, tmp_len);
++				self->h264_nal_len_size = (data[4] & 0x03) + 1;
+ 			}
+ 			else
+ 			{

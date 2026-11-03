@@ -1,10 +1,11 @@
 FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 
-# OpenBh / OpenViX only: add a "decoder" property to dvbvideosink so a second instance can
+# OpenBh / OpenViX: add a "decoder" property to dvbvideosink so a second instance can
 # drive the PiP decoder (/dev/dvb/adapter0/video1) - used by servicemp3 PiP.
 # Default is decoder 0, so playback without the property set is unchanged.
-SRC_URI:append:openbh = " file://0001-dvbvideosink-add-decoder-property.patch"
+# OpenBh only: add AVC3 and Multiple SPS support.
+SRC_URI:append:openbh = " file://0001-dvbvideosink-add-decoder-property.patch file://0002-dvbvideosink-h264-avc3-multiple-sps.patch"
 SRC_URI:append:openvix = " file://0001-dvbvideosink-add-decoder-property.patch"
 
-PR:append:openbh = ".1"
+PR:append:openbh = ".2"
 PR:append:openvix = ".1"
