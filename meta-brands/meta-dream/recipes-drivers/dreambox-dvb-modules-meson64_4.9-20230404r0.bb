@@ -5,7 +5,7 @@ PRECOMPILED_NAME = "dreambox-dvb-modules"
 # one driver build for the Dreambox One and Two
 PRECOMPILED_ARCH = "meson64"
 
-PR = "r2"
+PR = "r3"
 
 require dreambox-dvb-modules-meson64.inc
 
@@ -49,6 +49,15 @@ COMPATIBLE_MACHINE = "^(dreamone|dreamtwo)$"
 # is gone. ftrace finds no call to _mcount there when the module loads and
 # warns with a backtrace; the two entries become R_AARCH64_NONE, ftrace
 # skips a location of 0.
+#
+# aml_vtuner_pid_action stops a PID on the vtuner the demux is fed from
+# now, not on the one it was started on. A section filter started while the
+# demux was fed by a tuner and stopped after the switch to a vtuner (a zap
+# from a descrambled satellite channel to a USB tuner, the softcam closes
+# its ECM filter late) is not in the PID list: the function hits BUG() with
+# the vtuner mutex held, and every later PID change on that vtuner blocks.
+# The BUG() becomes the regular exit, which unlocks the mutex; the log of
+# the PID list stays.
 patch_ko() {
     ko=${D}/lib/modules/${DM_LOCALVERSION}/extra/$1
     # do_install hard links ${D} to ${S}, patch a copy of our own
@@ -95,4 +104,7 @@ do_install:append() {
     patch_ko core/meson64.ko 1303936 01010000 '\000\000\000\000\000\000\000\000'
     patch_ko core/meson64.ko 1303984 01010000 '\000\000\000\000\000\000\000\000'
     echo "a8d37f971518ee44c8181f2051cd46fe  $core/meson64.ko" | md5sum -c -
+    # aml_vtuner_pid_action: brk #0x800 -> b .text+0xac60, .text+0xad1c
+    patch_ko core/meson64.ko 44420 000021d4 '\321\377\377\027'
+    echo "3fde08003c13e88572bf586f17276449  $core/meson64.ko" | md5sum -c -
 }
