@@ -56,6 +56,3 @@ RRECOMMENDS:${PN}:append:tmnanoseplus = " enigma2-plugin-systemplugins-tempfanco
 RRECOMMENDS:${PN}:append:tmnanosem2 = " enigma2-plugin-systemplugins-tempfancontrol"
 RRECOMMENDS:${PN}:append:tmnanosem2plus = " enigma2-plugin-systemplugins-tempfancontrol"
 RRECOMMENDS:${PN}:append:tmtwin4k = " enigma2-plugin-systemplugins-tempfancontrol"
-RRECOMMENDS:${PN}:append:osmio4k = " enigma2-plugin-extensions-hbbtv-webkit"
-RRECOMMENDS:${PN}:append:osmio4kplus = " enigma2-plugin-extensions-hbbtv-webkit"
-RRECOMMENDS:${PN}:append:osmini4k = " enigma2-plugin-extensions-hbbtv-webkit"
