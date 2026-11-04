@@ -3,7 +3,7 @@ SECTION = "base"
 PRIORITY = "optional"
 RDEPENDS:${PN} = "ncurses"
 
-COMPATIBLE_MACHINE = "osmio4k"
+COMPATIBLE_MACHINE = "^osmio4k$"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 

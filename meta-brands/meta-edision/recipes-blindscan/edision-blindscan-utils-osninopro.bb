@@ -9,7 +9,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 require conf/license/license-close.inc
 
-PACKAGES = "edision-blindscan-dvbs-utils-${MACHINE} edision-blindscan-dvbc-utils-${MACHINE}"
+PACKAGES = "edision-blindscan-dvbs-utils-osninopro edision-blindscan-dvbc-utils-osninopro"
 
 PV = "20190805"
 
@@ -34,6 +34,6 @@ INHIBIT_PACKAGE_STRIP = "1"
 INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
 do_compile[noexec] = "1"
 deltask do_populate_sysroot
-INSANE_SKIP:edision-blindscan-dvbs-utils-${MACHINE} = "file-rdeps already-stripped"
-INSANE_SKIP:edision-blindscan-dvbc-utils-${MACHINE} = "file-rdeps already-stripped"
+INSANE_SKIP:edision-blindscan-dvbs-utils-osninopro = "file-rdeps already-stripped"
+INSANE_SKIP:edision-blindscan-dvbc-utils-osninopro = "file-rdeps already-stripped"
 INSANE_SKIP = "32bit-time"
