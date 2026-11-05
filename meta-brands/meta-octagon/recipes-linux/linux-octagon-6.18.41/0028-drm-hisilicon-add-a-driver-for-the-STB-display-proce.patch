@@ -1,0 +1,623 @@
+From 0eaff2a78e1605f86881196890c76cdb857e1490 Mon Sep 17 00:00:00 2001
+From: Tillmann Severin <tillmann.severin@mailbox.org>
+Date: Thu, 5 Nov 2026 17:42:49 +0100
+Subject: [PATCH] drm: hisilicon: add a driver for the STB display processor
+
+The video display processor found on HiSilicon set-top-box SoCs composes
+several video and graphics layers into one or more display channels.  Add
+a driver that takes over the first graphics layer of the first display
+channel, which is the one the bootloader leaves scanning out.
+
+The display timing is not programmed.  Both the channel and the HDMI
+transmitter are already running by the time Linux starts, and neither the
+pixel clock nor the transmitter is described yet, so the mode is read back
+out of the timing registers and offered as the only mode of a fixed
+connector.  Everything the bootloader put into the layer control register
+beyond the pixel format is preserved, because the blending and bus request
+settings it holds are not otherwise known.
+
+That is enough for a framebuffer console and for page flipping against a
+real vertical blank, which the display channel reports through its first
+vertical timing threshold.
+
+Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>
+---
+ drivers/gpu/drm/hisilicon/Kconfig             |   1 +
+ drivers/gpu/drm/hisilicon/Makefile            |   1 +
+ drivers/gpu/drm/hisilicon/histb/Kconfig       |  15 +
+ drivers/gpu/drm/hisilicon/histb/Makefile      |   4 +
+ .../gpu/drm/hisilicon/histb/histb_vdp_drv.c   | 458 ++++++++++++++++++
+ .../gpu/drm/hisilicon/histb/histb_vdp_reg.h   |  63 +++
+ 6 files changed, 542 insertions(+)
+ create mode 100644 drivers/gpu/drm/hisilicon/histb/Kconfig
+ create mode 100644 drivers/gpu/drm/hisilicon/histb/Makefile
+ create mode 100644 drivers/gpu/drm/hisilicon/histb/histb_vdp_drv.c
+ create mode 100644 drivers/gpu/drm/hisilicon/histb/histb_vdp_reg.h
+
+diff --git a/drivers/gpu/drm/hisilicon/Kconfig b/drivers/gpu/drm/hisilicon/Kconfig
+index cc5a244db252..3994010b6a1c 100644
+--- a/drivers/gpu/drm/hisilicon/Kconfig
++++ b/drivers/gpu/drm/hisilicon/Kconfig
+@@ -4,4 +4,5 @@
+ # Please keep this list sorted alphabetically
+ 
+ source "drivers/gpu/drm/hisilicon/hibmc/Kconfig"
++source "drivers/gpu/drm/hisilicon/histb/Kconfig"
+ source "drivers/gpu/drm/hisilicon/kirin/Kconfig"
+diff --git a/drivers/gpu/drm/hisilicon/Makefile b/drivers/gpu/drm/hisilicon/Makefile
+index 69dec6084b04..7048729c687e 100644
+--- a/drivers/gpu/drm/hisilicon/Makefile
++++ b/drivers/gpu/drm/hisilicon/Makefile
+@@ -4,4 +4,5 @@
+ # Please keep this list sorted alphabetically
+ 
+ obj-$(CONFIG_DRM_HISI_HIBMC) += hibmc/
++obj-$(CONFIG_DRM_HISI_HISTB) += histb/
+ obj-$(CONFIG_DRM_HISI_KIRIN) += kirin/
+diff --git a/drivers/gpu/drm/hisilicon/histb/Kconfig b/drivers/gpu/drm/hisilicon/histb/Kconfig
+new file mode 100644
+index 000000000000..6f0d944b4a67
+--- /dev/null
++++ b/drivers/gpu/drm/hisilicon/histb/Kconfig
+@@ -0,0 +1,15 @@
++# SPDX-License-Identifier: GPL-2.0-only
++config DRM_HISI_HISTB
++	tristate "DRM support for HiSilicon STB display processor"
++	depends on DRM && OF
++	depends on ARCH_HISI || COMPILE_TEST
++	select DRM_CLIENT_SELECTION
++	select DRM_GEM_DMA_HELPER
++	select DRM_KMS_HELPER
++	help
++	  Choose this option if you have a HiSilicon set-top-box SoC such as
++	  the Hi3798MV200.
++
++	  This driver takes over the graphics layer the bootloader leaves
++	  scanning out and exposes it as a KMS device.  Say Y if you want a
++	  framebuffer console or a DRM based user space on these boards.
+diff --git a/drivers/gpu/drm/hisilicon/histb/Makefile b/drivers/gpu/drm/hisilicon/histb/Makefile
+new file mode 100644
+index 000000000000..c267f0acdcc8
+--- /dev/null
++++ b/drivers/gpu/drm/hisilicon/histb/Makefile
+@@ -0,0 +1,4 @@
++# SPDX-License-Identifier: GPL-2.0-only
++histb-vdp-y := histb_vdp_drv.o
++
++obj-$(CONFIG_DRM_HISI_HISTB) += histb-vdp.o
+diff --git a/drivers/gpu/drm/hisilicon/histb/histb_vdp_drv.c b/drivers/gpu/drm/hisilicon/histb/histb_vdp_drv.c
+new file mode 100644
+index 000000000000..04a191a8a864
+--- /dev/null
++++ b/drivers/gpu/drm/hisilicon/histb/histb_vdp_drv.c
+@@ -0,0 +1,458 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * DRM driver for the HiSilicon STB video display processor.
++ *
++ * The VDP composes several video and graphics layers into one or more display
++ * channels.  This driver only drives the first graphics layer, G0, on the
++ * first display channel, DHD0, which is enough to take over the framebuffer
++ * the bootloader leaves scanning out.
++ *
++ * The display timing itself is not programmed.  The bootloader has already
++ * brought up DHD0 and the HDMI transmitter, so the mode is read back out of
++ * the timing registers and exposed as the only mode of a fixed connector.
++ */
++
++#include <linux/aperture.h>
++#include <linux/bitfield.h>
++#include <linux/dma-mapping.h>
++#include <linux/interrupt.h>
++#include <linux/io.h>
++#include <linux/module.h>
++#include <linux/of_reserved_mem.h>
++#include <linux/platform_device.h>
++
++#include <drm/clients/drm_client_setup.h>
++#include <drm/drm_atomic.h>
++#include <drm/drm_atomic_helper.h>
++#include <drm/drm_drv.h>
++#include <drm/drm_fb_dma_helper.h>
++#include <drm/drm_fbdev_dma.h>
++#include <drm/drm_fourcc.h>
++#include <drm/drm_framebuffer.h>
++#include <drm/drm_gem_dma_helper.h>
++#include <drm/drm_gem_framebuffer_helper.h>
++#include <drm/drm_modeset_helper_vtables.h>
++#include <drm/drm_probe_helper.h>
++#include <drm/drm_simple_kms_helper.h>
++#include <drm/drm_vblank.h>
++
++#include "histb_vdp_reg.h"
++
++struct histb_vdp {
++	struct drm_device drm;
++	void __iomem *regs;
++	struct drm_simple_display_pipe pipe;
++	struct drm_connector connector;
++	struct drm_display_mode mode;
++};
++
++static inline struct histb_vdp *drm_to_vdp(struct drm_device *drm)
++{
++	return container_of(drm, struct histb_vdp, drm);
++}
++
++static inline struct histb_vdp *pipe_to_vdp(struct drm_simple_display_pipe *pipe)
++{
++	return container_of(pipe, struct histb_vdp, pipe);
++}
++
++static inline struct histb_vdp *connector_to_vdp(struct drm_connector *connector)
++{
++	return container_of(connector, struct histb_vdp, connector);
++}
++
++/*
++ * The graphics layer latches the shadow copy of its registers when regup is
++ * written, so every register update has to be followed by one.
++ */
++static void histb_vdp_commit(struct histb_vdp *vdp)
++{
++	writel(VDP_G0_UPD_REGUP, vdp->regs + VDP_G0_UPD);
++}
++
++static u32 histb_vdp_ifmt(u32 format)
++{
++	switch (format) {
++	case DRM_FORMAT_XRGB8888:
++		return VDP_G0_IFMT_KRGB_888;
++	default:
++		return VDP_G0_IFMT_ARGB_8888;
++	}
++}
++
++static void histb_vdp_set_scanout(struct histb_vdp *vdp,
++				  struct drm_plane_state *state)
++{
++	dma_addr_t addr = drm_fb_dma_get_gem_addr(state->fb, state, 0);
++
++	writel(addr, vdp->regs + VDP_G0_ADDR);
++	histb_vdp_commit(vdp);
++}
++
++/* Read the mode the bootloader programmed back out of the timing registers. */
++static void histb_vdp_read_mode(struct histb_vdp *vdp,
++				struct drm_display_mode *mode)
++{
++	u32 vsync = readl(vdp->regs + VDP_DHD0_VSYNC);
++	u32 hsync1 = readl(vdp->regs + VDP_DHD0_HSYNC1);
++	u32 hsync2 = readl(vdp->regs + VDP_DHD0_HSYNC2);
++	u32 pwr = readl(vdp->regs + VDP_DHD0_PWR);
++	u32 hact = FIELD_GET(VDP_DHD0_HSYNC1_HACT, hsync1) + 1;
++	u32 hbb = FIELD_GET(VDP_DHD0_HSYNC1_HBB, hsync1) + 1;
++	u32 hfb = FIELD_GET(VDP_DHD0_HSYNC2_HFB, hsync2) + 1;
++	u32 vact = FIELD_GET(VDP_DHD0_VSYNC_VACT, vsync) + 1;
++	u32 vbb = FIELD_GET(VDP_DHD0_VSYNC_VBB, vsync) + 1;
++	u32 vfb = FIELD_GET(VDP_DHD0_VSYNC_VFB, vsync) + 1;
++
++	memset(mode, 0, sizeof(*mode));
++
++	/*
++	 * The back blank covers both the sync pulse and the back porch, so the
++	 * totals come out right even though only the pulse width is known.
++	 */
++	mode->hdisplay = hact;
++	mode->hsync_start = hact + hfb;
++	mode->hsync_end = mode->hsync_start + FIELD_GET(VDP_DHD0_PWR_HPW, pwr);
++	mode->htotal = hact + hfb + hbb;
++	mode->vdisplay = vact;
++	mode->vsync_start = vact + vfb;
++	mode->vsync_end = mode->vsync_start + FIELD_GET(VDP_DHD0_PWR_VPW, pwr);
++	mode->vtotal = vact + vfb + vbb;
++
++	/*
++	 * Nothing reports the pixel clock, and the VDP PLL is set up before
++	 * Linux runs, so assume the refresh rate every bootloader mode uses.
++	 */
++	mode->clock = DIV_ROUND_CLOSEST(mode->htotal * mode->vtotal * 60, 1000);
++	mode->type = DRM_MODE_TYPE_DRIVER | DRM_MODE_TYPE_PREFERRED;
++	drm_mode_set_name(mode);
++}
++
++static int histb_vdp_connector_get_modes(struct drm_connector *connector)
++{
++	struct histb_vdp *vdp = connector_to_vdp(connector);
++	struct drm_display_mode *mode;
++
++	mode = drm_mode_duplicate(connector->dev, &vdp->mode);
++	if (!mode)
++		return 0;
++
++	drm_mode_probed_add(connector, mode);
++
++	return 1;
++}
++
++static const struct drm_connector_helper_funcs histb_vdp_connector_helper_funcs = {
++	.get_modes = histb_vdp_connector_get_modes,
++};
++
++static const struct drm_connector_funcs histb_vdp_connector_funcs = {
++	.reset = drm_atomic_helper_connector_reset,
++	.fill_modes = drm_helper_probe_single_connector_modes,
++	.destroy = drm_connector_cleanup,
++	.atomic_duplicate_state = drm_atomic_helper_connector_duplicate_state,
++	.atomic_destroy_state = drm_atomic_helper_connector_destroy_state,
++};
++
++static int histb_vdp_pipe_check(struct drm_simple_display_pipe *pipe,
++				struct drm_plane_state *plane_state,
++				struct drm_crtc_state *crtc_state)
++{
++	struct drm_framebuffer *fb = plane_state->fb;
++
++	if (!fb)
++		return 0;
++
++	/* The layer only understands strides that are a whole number of
++	 * fetch chunks.
++	 */
++	if (fb->pitches[0] % VDP_G0_STRIDE_ALIGN)
++		return -EINVAL;
++
++	return 0;
++}
++
++static void histb_vdp_pipe_enable(struct drm_simple_display_pipe *pipe,
++				  struct drm_crtc_state *crtc_state,
++				  struct drm_plane_state *plane_state)
++{
++	struct histb_vdp *vdp = pipe_to_vdp(pipe);
++	struct drm_framebuffer *fb = plane_state->fb;
++	struct drm_display_mode *mode = &crtc_state->adjusted_mode;
++	u32 ctrl;
++
++	writel(FIELD_PREP(VDP_G0_STRIDE_MASK,
++			  fb->pitches[0] / VDP_G0_STRIDE_ALIGN),
++	       vdp->regs + VDP_G0_STRIDE);
++
++	writel(FIELD_PREP(VDP_XY_X, mode->hdisplay - 1) |
++	       FIELD_PREP(VDP_XY_Y, mode->vdisplay - 1),
++	       vdp->regs + VDP_G0_IRESO);
++
++	writel(0, vdp->regs + VDP_G0_DFPOS);
++	writel(FIELD_PREP(VDP_XY_X, mode->hdisplay - 1) |
++	       FIELD_PREP(VDP_XY_Y, mode->vdisplay - 1),
++	       vdp->regs + VDP_G0_DLPOS);
++
++	/*
++	 * Everything else in this register, in particular the blending and
++	 * bus request settings, is left exactly as the bootloader set it.
++	 */
++	ctrl = readl(vdp->regs + VDP_G0_CTRL);
++	ctrl &= ~VDP_G0_CTRL_IFMT;
++	ctrl |= FIELD_PREP(VDP_G0_CTRL_IFMT, histb_vdp_ifmt(fb->format->format));
++	ctrl |= VDP_G0_CTRL_SURFACE_EN;
++	writel(ctrl, vdp->regs + VDP_G0_CTRL);
++
++	histb_vdp_set_scanout(vdp, plane_state);
++
++	drm_crtc_vblank_on(&pipe->crtc);
++}
++
++static void histb_vdp_pipe_disable(struct drm_simple_display_pipe *pipe)
++{
++	struct histb_vdp *vdp = pipe_to_vdp(pipe);
++	u32 ctrl;
++
++	drm_crtc_vblank_off(&pipe->crtc);
++
++	ctrl = readl(vdp->regs + VDP_G0_CTRL);
++	ctrl &= ~VDP_G0_CTRL_SURFACE_EN;
++	writel(ctrl, vdp->regs + VDP_G0_CTRL);
++	histb_vdp_commit(vdp);
++}
++
++static void histb_vdp_pipe_update(struct drm_simple_display_pipe *pipe,
++				  struct drm_plane_state *old_state)
++{
++	struct histb_vdp *vdp = pipe_to_vdp(pipe);
++	struct drm_plane_state *state = pipe->plane.state;
++	struct drm_crtc *crtc = &pipe->crtc;
++	struct drm_pending_vblank_event *event;
++
++	if (state->fb)
++		histb_vdp_set_scanout(vdp, state);
++
++	event = crtc->state->event;
++	if (!event)
++		return;
++
++	crtc->state->event = NULL;
++
++	spin_lock_irq(&crtc->dev->event_lock);
++	if (drm_crtc_vblank_get(crtc) == 0)
++		drm_crtc_arm_vblank_event(crtc, event);
++	else
++		drm_crtc_send_vblank_event(crtc, event);
++	spin_unlock_irq(&crtc->dev->event_lock);
++}
++
++static int histb_vdp_pipe_enable_vblank(struct drm_simple_display_pipe *pipe)
++{
++	struct histb_vdp *vdp = pipe_to_vdp(pipe);
++	u32 mask = readl(vdp->regs + VDP_VOINTMSK);
++
++	writel(mask | VDP_INT_DHD0_VTTHD1, vdp->regs + VDP_VOINTMSK);
++
++	return 0;
++}
++
++static void histb_vdp_pipe_disable_vblank(struct drm_simple_display_pipe *pipe)
++{
++	struct histb_vdp *vdp = pipe_to_vdp(pipe);
++	u32 mask = readl(vdp->regs + VDP_VOINTMSK);
++
++	writel(mask & ~VDP_INT_DHD0_VTTHD1, vdp->regs + VDP_VOINTMSK);
++}
++
++static const struct drm_simple_display_pipe_funcs histb_vdp_pipe_funcs = {
++	.check = histb_vdp_pipe_check,
++	.enable = histb_vdp_pipe_enable,
++	.disable = histb_vdp_pipe_disable,
++	.update = histb_vdp_pipe_update,
++	.enable_vblank = histb_vdp_pipe_enable_vblank,
++	.disable_vblank = histb_vdp_pipe_disable_vblank,
++};
++
++static const u32 histb_vdp_formats[] = {
++	DRM_FORMAT_ARGB8888,
++	DRM_FORMAT_XRGB8888,
++};
++
++static irqreturn_t histb_vdp_irq(int irq, void *data)
++{
++	struct histb_vdp *vdp = data;
++	u32 status = readl(vdp->regs + VDP_VOMSKINTSTA);
++
++	if (!status)
++		return IRQ_NONE;
++
++	/* Status bits are cleared by writing them back. */
++	writel(status, vdp->regs + VDP_VOMSKINTSTA);
++
++	if (status & VDP_INT_DHD0_VTTHD1)
++		drm_crtc_handle_vblank(&vdp->pipe.crtc);
++
++	return IRQ_HANDLED;
++}
++
++static const struct drm_mode_config_funcs histb_vdp_mode_config_funcs = {
++	.fb_create = drm_gem_fb_create,
++	.atomic_check = drm_atomic_helper_check,
++	.atomic_commit = drm_atomic_helper_commit,
++};
++
++DEFINE_DRM_GEM_DMA_FOPS(histb_vdp_fops);
++
++static const struct drm_driver histb_vdp_drm_driver = {
++	.driver_features = DRIVER_MODESET | DRIVER_GEM | DRIVER_ATOMIC,
++	.name = "histb-vdp",
++	.desc = "HiSilicon STB video display processor",
++	.major = 1,
++	.minor = 0,
++	.fops = &histb_vdp_fops,
++	DRM_GEM_DMA_DRIVER_OPS,
++	DRM_FBDEV_DMA_DRIVER_OPS,
++};
++
++/* Evict whatever is scanning out of the framebuffer we are about to take. */
++static int histb_vdp_remove_conflicts(struct device *dev)
++{
++	struct device_node *np __free(device_node) =
++		of_parse_phandle(dev->of_node, "memory-region", 0);
++	struct reserved_mem *rmem;
++
++	if (!np)
++		return aperture_remove_all_conflicting_devices(histb_vdp_drm_driver.name);
++
++	rmem = of_reserved_mem_lookup(np);
++	if (!rmem)
++		return aperture_remove_all_conflicting_devices(histb_vdp_drm_driver.name);
++
++	return aperture_remove_conflicting_devices(rmem->base, rmem->size,
++						   histb_vdp_drm_driver.name);
++}
++
++static int histb_vdp_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct histb_vdp *vdp;
++	struct drm_device *drm;
++	int irq, ret;
++
++	vdp = devm_drm_dev_alloc(dev, &histb_vdp_drm_driver, struct histb_vdp, drm);
++	if (IS_ERR(vdp))
++		return PTR_ERR(vdp);
++
++	drm = &vdp->drm;
++
++	vdp->regs = devm_platform_ioremap_resource(pdev, 0);
++	if (IS_ERR(vdp->regs))
++		return PTR_ERR(vdp->regs);
++
++	irq = platform_get_irq(pdev, 0);
++	if (irq < 0)
++		return irq;
++
++	if (!(readl(vdp->regs + VDP_DHD0_CTRL) & VDP_DHD0_CTRL_INTF_EN))
++		return dev_err_probe(dev, -ENODEV,
++				     "display channel is not running\n");
++
++	histb_vdp_read_mode(vdp, &vdp->mode);
++	drm_dbg_kms(drm, "inherited mode %s from the bootloader\n",
++		    vdp->mode.name);
++
++	ret = of_reserved_mem_device_init(dev);
++	if (ret && ret != -ENODEV)
++		return dev_err_probe(dev, ret, "cannot claim the framebuffer pool\n");
++
++	ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(32));
++	if (ret)
++		return ret;
++
++	/* Mask every source until a vblank is actually asked for. */
++	writel(0, vdp->regs + VDP_VOINTMSK);
++	writel(~0u, vdp->regs + VDP_VOMSKINTSTA);
++
++	ret = devm_request_irq(dev, irq, histb_vdp_irq, 0, "histb-vdp", vdp);
++	if (ret)
++		return ret;
++
++	ret = drmm_mode_config_init(drm);
++	if (ret)
++		return ret;
++
++	drm->mode_config.min_width = 32;
++	drm->mode_config.min_height = 32;
++	drm->mode_config.max_width = FIELD_MAX(VDP_XY_X) + 1;
++	drm->mode_config.max_height = FIELD_MAX(VDP_XY_Y) + 1;
++	drm->mode_config.funcs = &histb_vdp_mode_config_funcs;
++	drm->mode_config.preferred_depth = 32;
++
++	drm_connector_helper_add(&vdp->connector,
++				 &histb_vdp_connector_helper_funcs);
++	ret = drm_connector_init(drm, &vdp->connector, &histb_vdp_connector_funcs,
++				 DRM_MODE_CONNECTOR_HDMIA);
++	if (ret)
++		return ret;
++
++	ret = drm_vblank_init(drm, 1);
++	if (ret)
++		return ret;
++
++	ret = drm_simple_display_pipe_init(drm, &vdp->pipe, &histb_vdp_pipe_funcs,
++					   histb_vdp_formats,
++					   ARRAY_SIZE(histb_vdp_formats),
++					   NULL, &vdp->connector);
++	if (ret)
++		return ret;
++
++	drm_mode_config_reset(drm);
++
++	ret = histb_vdp_remove_conflicts(dev);
++	if (ret)
++		return ret;
++
++	ret = drm_dev_register(drm, 0);
++	if (ret)
++		return ret;
++
++	platform_set_drvdata(pdev, drm);
++
++	drm_client_setup_with_fourcc(drm, DRM_FORMAT_ARGB8888);
++
++	return 0;
++}
++
++static void histb_vdp_remove(struct platform_device *pdev)
++{
++	struct drm_device *drm = platform_get_drvdata(pdev);
++
++	drm_dev_unregister(drm);
++	drm_atomic_helper_shutdown(drm);
++}
++
++static void histb_vdp_shutdown(struct platform_device *pdev)
++{
++	drm_atomic_helper_shutdown(platform_get_drvdata(pdev));
++}
++
++static const struct of_device_id histb_vdp_of_match[] = {
++	{ .compatible = "hisilicon,hi3798mv200-vdp" },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, histb_vdp_of_match);
++
++static struct platform_driver histb_vdp_platform_driver = {
++	.probe = histb_vdp_probe,
++	.remove = histb_vdp_remove,
++	.shutdown = histb_vdp_shutdown,
++	.driver = {
++		.name = "histb-vdp",
++		.of_match_table = histb_vdp_of_match,
++	},
++};
++module_platform_driver(histb_vdp_platform_driver);
++
++MODULE_DESCRIPTION("HiSilicon STB video display processor DRM driver");
++MODULE_LICENSE("GPL");
+diff --git a/drivers/gpu/drm/hisilicon/histb/histb_vdp_reg.h b/drivers/gpu/drm/hisilicon/histb/histb_vdp_reg.h
+new file mode 100644
+index 000000000000..d547724869a5
+--- /dev/null
++++ b/drivers/gpu/drm/hisilicon/histb/histb_vdp_reg.h
+@@ -0,0 +1,63 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Register definitions for the HiSilicon STB video display processor.
++ */
++
++#ifndef __HISTB_VDP_REG_H__
++#define __HISTB_VDP_REG_H__
++
++#include <linux/bits.h>
++
++/* Global interrupt block. */
++#define VDP_VOCTRL			0x0000
++#define VDP_VOINTSTA			0x0004
++#define VDP_VOMSKINTSTA			0x0008
++#define VDP_VOINTMSK			0x000c
++
++/* Vertical timing threshold 1 of the first display channel, used as vblank. */
++#define VDP_INT_DHD0_VTTHD1		BIT(0)
++
++/* First graphics layer. */
++#define VDP_G0_CTRL			0x7000
++#define VDP_G0_CTRL_IFMT		GENMASK(7, 0)
++#define VDP_G0_CTRL_SURFACE_EN		BIT(31)
++#define VDP_G0_UPD			0x7004
++#define VDP_G0_UPD_REGUP		BIT(0)
++#define VDP_G0_ADDR			0x7010
++#define VDP_G0_STRIDE			0x701c
++#define VDP_G0_STRIDE_MASK		GENMASK(15, 0)
++#define VDP_G0_IRESO			0x7020
++#define VDP_G0_DFPOS			0x7080
++#define VDP_G0_DLPOS			0x7084
++
++/* Pixel formats understood by VDP_G0_CTRL_IFMT. */
++#define VDP_G0_IFMT_KRGB_888		0x60
++#define VDP_G0_IFMT_ARGB_8888		0x68
++
++/* The layer fetches whole 16 byte chunks, so the stride is scaled down. */
++#define VDP_G0_STRIDE_ALIGN		16
++
++/* First display channel. */
++#define VDP_DHD0_CTRL			0xc000
++#define VDP_DHD0_CTRL_INTF_EN		BIT(31)
++#define VDP_DHD0_VSYNC			0xc004
++#define VDP_DHD0_VSYNC_VACT		GENMASK(11, 0)
++#define VDP_DHD0_VSYNC_VBB		GENMASK(21, 12)
++#define VDP_DHD0_VSYNC_VFB		GENMASK(31, 22)
++#define VDP_DHD0_HSYNC1			0xc008
++#define VDP_DHD0_HSYNC1_HACT		GENMASK(15, 0)
++#define VDP_DHD0_HSYNC1_HBB		GENMASK(31, 16)
++#define VDP_DHD0_HSYNC2			0xc00c
++#define VDP_DHD0_HSYNC2_HFB		GENMASK(15, 0)
++#define VDP_DHD0_PWR			0xc014
++#define VDP_DHD0_PWR_HPW		GENMASK(15, 0)
++#define VDP_DHD0_PWR_VPW		GENMASK(23, 16)
++
++/*
++ * Positions and resolutions are stored as a pair of 12 bit coordinates, each
++ * holding the value minus one.
++ */
++#define VDP_XY_X			GENMASK(11, 0)
++#define VDP_XY_Y			GENMASK(23, 12)
++
++#endif /* __HISTB_VDP_REG_H__ */
+-- 
+2.56.0
+

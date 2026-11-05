@@ -1,0 +1,59 @@
+From 8779f7b025e9fd1845124edcae61dd9fd8da5b64 Mon Sep 17 00:00:00 2001
+From: Tillmann Severin <tillmann.severin@mailbox.org>
+Date: Thu, 5 Nov 2026 17:00:44 +0100
+Subject: [PATCH] ARM: dts: hi3798mv200: add a syscon-reboot node
+
+Restarting the board left it halted in an idle loop instead of
+resetting the SoC.  ARCH_HISI selects POWER_RESET_HISI, but that driver
+only binds "hisilicon,sysctrl", so nothing ever registered a restart
+handler for this SoC and machine_restart() had nowhere to go.
+
+The system controller exposes a soft reset request register at offset
+0x4, the same one that hi3519 and hisi-x5hd2 drive through the generic
+syscon-reboot binding.  Describe it the same way.
+
+Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>
+---
+ arch/arm/boot/dts/hisilicon/hi3798mv200.dtsi   | 7 +++++++
+ arch/arm64/boot/dts/hisilicon/hi3798mv200.dtsi | 7 +++++++
+ 2 files changed, 14 insertions(+)
+
+diff --git a/arch/arm/boot/dts/hisilicon/hi3798mv200.dtsi b/arch/arm/boot/dts/hisilicon/hi3798mv200.dtsi
+index c26e0065a2ee..3bf7af6dbbcc 100644
+--- a/arch/arm/boot/dts/hisilicon/hi3798mv200.dtsi
++++ b/arch/arm/boot/dts/hisilicon/hi3798mv200.dtsi
+@@ -133,6 +133,13 @@ sysctrl: system-controller@8000000 {
+ 			#reset-cells = <2>;
+ 		};
+ 
++		reboot {
++			compatible = "syscon-reboot";
++			regmap = <&sysctrl>;
++			offset = <0x4>;
++			mask = <0xdeadbeef>;
++		};
++
+ 		perictrl: peripheral-controller@8a20000 {
+ 			compatible = "hisilicon,hi3798cv200-perictrl", "syscon",
+ 				     "simple-mfd";
+diff --git a/arch/arm64/boot/dts/hisilicon/hi3798mv200.dtsi b/arch/arm64/boot/dts/hisilicon/hi3798mv200.dtsi
+index 05b53d996d4c..2ecb33bf2764 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi3798mv200.dtsi
++++ b/arch/arm64/boot/dts/hisilicon/hi3798mv200.dtsi
+@@ -135,6 +135,13 @@ sysctrl: system-controller@8000000 {
+ 			#reset-cells = <2>;
+ 		};
+ 
++		reboot {
++			compatible = "syscon-reboot";
++			regmap = <&sysctrl>;
++			offset = <0x4>;
++			mask = <0xdeadbeef>;
++		};
++
+ 		perictrl: peripheral-controller@8a20000 {
+ 			compatible = "hisilicon,hi3798cv200-perictrl", "syscon",
+ 				     "simple-mfd";
+-- 
+2.56.0
+

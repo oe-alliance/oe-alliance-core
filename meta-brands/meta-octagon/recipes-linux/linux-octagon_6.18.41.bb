@@ -39,6 +39,9 @@ SRC_URI += "https://www.kernel.org/pub/linux/kernel/v6.x/linux-${PV}.tar.gz \
     file://0024-net-hix5hd2_gmac-do-not-claim-TSO-on-the-Hi3798MV200.patch \
     file://0025-media-rc-add-keymap-for-the-Octagon-SF8008-remote.patch \
     file://0026-media-rc-ir-hix5hd2-report-a-real-duration-for-the-t.patch \
+    file://0027-ARM-dts-hi3798mv200-add-a-syscon-reboot-node.patch \
+    file://0028-drm-hisilicon-add-a-driver-for-the-STB-display-proce.patch \
+    file://0029-ARM-dts-hi3798mv200-describe-the-video-display-proce.patch \
 "
 SRC_URI[sha256sum] = "ec7efb5ce8406adfcf681cae40cfad58c2f91eea97736c2ef66124e9d2cf3cb7"
 
