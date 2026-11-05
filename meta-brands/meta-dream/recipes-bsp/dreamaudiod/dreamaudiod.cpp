@@ -137,12 +137,23 @@ public:
 
 static Settings g_settings;
 
-/* the EDID line of a codec the HDMI sink decodes, empty if it does not */
+/* the output of a codec as the driver holds it, else as enigma2 saved it
+ * or its default in the audio setup */
+static std::string audioMode(const char *name, const char *key, const char *def)
+{
+	std::string value = readFile((std::string("/proc/stb/audio/") + name).c_str());
+	value.erase(value.find_last_not_of(" \n") + 1);
+	return value.empty() ? g_settings.get(key, def) : value;
+}
+
+/* the EDID line of a codec the HDMI sink decodes, empty if it does not;
+ * the driver appends "/ATMOS" to Dolby Digital+ with Atmos */
 static std::string sinkLine(const char *name)
 {
 	std::string cap = readFile("/sys/class/amhdmitx/amhdmitx0/aud_cap");
 	for (size_t pos = 0; (pos = cap.find(name, pos)) != std::string::npos; pos++)
-		if ((pos == 0 || cap[pos - 1] == '\n') && cap[pos + strlen(name)] == ',')
+		if ((pos == 0 || cap[pos - 1] == '\n') &&
+		    (cap[pos + strlen(name)] == ',' || cap[pos + strlen(name)] == '/'))
 			return cap.substr(pos, cap.find('\n', pos) - pos);
 	return std::string();
 }
@@ -655,6 +666,10 @@ class Stream
 	bool m_passthrough = false;
 	bool m_hbr = false;
 	int m_port = -1;
+	/* what the settings and the sink asked for when the codec was opened */
+	bool m_wantPassthrough = false;
+	bool m_wantTranscode = false;
+	int64_t m_routeChecked = 0;
 	/* when the codec last gave frames; a misprobed stream gives none */
 	int64_t m_lastFrames = 0;
 	AVCodecParserContext *m_parser = nullptr;
@@ -798,10 +813,10 @@ class Stream
 		std::string override;
 		switch (codec) {
 		case AV_CODEC_ID_AC3: break;
-		case AV_CODEC_ID_EAC3: override = g_settings.get("config.av.transcodeac3plus"); break;
-		case AV_CODEC_ID_DTS: override = g_settings.get("config.av.dtshd"); break;
-		case AV_CODEC_ID_TRUEHD: override = g_settings.get("config.av.truehd"); break;
-		case AV_CODEC_ID_AC4: override = g_settings.get("config.av.ac4"); break;
+		case AV_CODEC_ID_EAC3: override = audioMode("ac3plus", "config.av.transcodeac3plus", "force_ac3"); break;
+		case AV_CODEC_ID_DTS: override = audioMode("dtshd", "config.av.dtshd", "downmix"); break;
+		case AV_CODEC_ID_TRUEHD: override = audioMode("truehd", "config.av.truehd", "downmix"); break;
+		case AV_CODEC_ID_AC4: override = audioMode("ac4", "config.av.ac4", "hdmi_best"); break;
 		default: return false;
 		}
 		bool want = readInt("/sys/class/audiodsp/digital_raw", 0) != 0;
@@ -822,9 +837,9 @@ class Stream
 	{
 		std::string value;
 		if (codec == AV_CODEC_ID_AAC || codec == AV_CODEC_ID_AAC_LATM)
-			value = g_settings.get("config.av.transcodeaac");
+			value = audioMode("aac_transcode", "config.av.transcodeaac", "off");
 		else if (codec == AV_CODEC_ID_EAC3)
-			value = g_settings.get("config.av.transcodeac3plus");
+			value = audioMode("ac3plus", "config.av.transcodeac3plus", "force_ac3");
 		if (value != "force_ac3" || Output::port() == 2)
 			return false;
 		return Output::port() == 1 || sinkDecodes(AV_CODEC_ID_AC3);
@@ -948,12 +963,15 @@ class Stream
 		if (!m_parseCtx)
 			return false;
 		m_port = Output::port();
-		m_passthrough = wantPassthrough(m_codec);
+		m_wantPassthrough = wantPassthrough(m_codec);
+		m_wantTranscode = wantTranscode(m_codec);
+		m_routeChecked = nowMs();
+		m_passthrough = m_wantPassthrough;
 		m_hbr = m_passthrough && Output::port() == 0 &&
 			(m_codec == AV_CODEC_ID_TRUEHD || m_codec == AV_CODEC_ID_DTS) && sinkHbr(m_codec);
 		if (m_codec == AV_CODEC_ID_TRUEHD && m_passthrough && !m_hbr)
 			m_passthrough = false;
-		m_transcode = !m_passthrough && wantTranscode(m_codec);
+		m_transcode = !m_passthrough && m_wantTranscode;
 		LOG("stream %s, %s", avcodec_get_name(m_codec),
 		    m_hbr ? "high bitrate passthrough" : m_passthrough ? "passthrough" :
 		    m_transcode ? "to AC-3" : "decode");
@@ -1583,8 +1601,8 @@ class Stream
 		if ((p[7] & 0x80) && n >= 14)
 			m_pesPts = ((int64_t)(p[9] & 0x0e) << 29) | (p[10] << 22) |
 				((p[11] & 0xfe) << 14) | (p[12] << 7) | (p[13] >> 1);
-		/* passthrough and transcoding depend on the output */
-		if (m_codec != AV_CODEC_ID_NONE && Output::port() != m_port)
+		/* passthrough and transcoding depend on the output and the settings */
+		if (m_codec != AV_CODEC_ID_NONE && routeChanged())
 			resetCodec();
 		/* a player writes the header apart from the payload: the PTS
 		 * goes with the payload that follows */
@@ -1593,6 +1611,19 @@ class Stream
 			m_pesPts = NOPTS;
 		}
 		return true;
+	}
+
+	/* the output at once, the settings and the sink once a second */
+	bool routeChanged()
+	{
+		if (Output::port() != m_port)
+			return true;
+		int64_t now = nowMs();
+		if (now - m_routeChecked < 1000)
+			return false;
+		m_routeChecked = now;
+		return wantPassthrough(m_codec) != m_wantPassthrough ||
+			wantTranscode(m_codec) != m_wantTranscode;
 	}
 
 	void resetCodec()
@@ -1621,6 +1652,8 @@ class Stream
 		m_passthrough = false;
 		m_hbr = false;
 		m_transcode = false;
+		m_wantPassthrough = false;
+		m_wantTranscode = false;
 	}
 
 public:
