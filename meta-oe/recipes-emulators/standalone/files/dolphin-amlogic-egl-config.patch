@@ -11,17 +11,18 @@ Upstream-Status: Inappropriate [OpenATV Dream fbdev EGL integration]
 
 ---
 diff --git a/Source/Core/Common/GL/GLInterface/EGL.cpp b/Source/Core/Common/GL/GLInterface/EGL.cpp
-index 30230e7..cd3287f 100644
+index a0bf6dcbab..ee3ee95098 100644
 --- a/Source/Core/Common/GL/GLInterface/EGL.cpp
 +++ b/Source/Core/Common/GL/GLInterface/EGL.cpp
-@@ -4,5 +4,6 @@
+@@ -4,6 +4,7 @@
  #include "Common/GL/GLInterface/EGL.h"
  
  #include <array>
 +#include <cstdio>
  #include <sstream>
  #include <vector>
-@@ -175,6 +176,8 @@ bool GLContextEGL::Initialize(const WindowSystemInfo& wsi, bool stereo, bool cor
+ 
+@@ -174,6 +175,8 @@ bool GLContextEGL::Initialize(const WindowSystemInfo& wsi, bool stereo, bool cor
                     8,
                     EGL_BLUE_SIZE,
                     8,
@@ -30,7 +31,7 @@ index 30230e7..cd3287f 100644
                     EGL_SURFACE_TYPE,
                     IsHeadless() ? 0 : EGL_WINDOW_BIT,
                     EGL_NONE};
-@@ -195,7 +198,57 @@ bool GLContextEGL::Initialize(const WindowSystemInfo& wsi, bool stereo, bool cor
+@@ -194,7 +197,57 @@ bool GLContextEGL::Initialize(const WindowSystemInfo& wsi, bool stereo, bool cor
      return false;
    }
  
@@ -89,4 +90,3 @@ index 30230e7..cd3287f 100644
    {
      INFO_LOG_FMT(VIDEO, "Error: couldn't get an EGL visual config");
      return false;
-

@@ -1,8 +1,8 @@
 diff --git a/Source/Core/Core/HW/GCPadEmu.cpp b/Source/Core/Core/HW/GCPadEmu.cpp
-index fbbcbc630e..9dc3641bfc 100644
+index dff79653c3..9197aceb2a 100644
 --- a/Source/Core/Core/HW/GCPadEmu.cpp
 +++ b/Source/Core/Core/HW/GCPadEmu.cpp
-@@ -26,6 +26,7 @@ static const u16 button_bitmasks[] = {
+@@ -24,6 +24,7 @@ static const u16 button_bitmasks[] = {
      PAD_BUTTON_Y,
      PAD_TRIGGER_Z,
      PAD_BUTTON_START,
@@ -10,7 +10,7 @@ index fbbcbc630e..9dc3641bfc 100644
      0  // MIC HAX
  };
  
-@@ -50,6 +51,9 @@ GCPad::GCPad(const unsigned int index) : m_index(index)
+@@ -49,6 +50,9 @@ GCPad::GCPad(const unsigned int index) : m_index(index)
    // i18n: The START/PAUSE button on GameCube controllers
    m_buttons->AddInput(Translatability::Translate, START_BUTTON, _trans("START"));
  
@@ -21,10 +21,10 @@ index fbbcbc630e..9dc3641bfc 100644
    groups.emplace_back(m_main_stick = new ControllerEmu::OctagonAnalogStick(
                            MAIN_STICK_GROUP, _trans("Control Stick"), MAIN_STICK_GATE_RADIUS));
 diff --git a/Source/Core/Core/HW/GCPadEmu.h b/Source/Core/Core/HW/GCPadEmu.h
-index 2555ee05b1..c2230a606a 100644
+index 906f7750f3..f666709451 100644
 --- a/Source/Core/Core/HW/GCPadEmu.h
 +++ b/Source/Core/Core/HW/GCPadEmu.h
-@@ -68,6 +68,7 @@ public:
+@@ -70,6 +70,7 @@ public:
    static constexpr const char* Y_BUTTON = "Y";
    static constexpr const char* Z_BUTTON = "Z";
    static constexpr const char* START_BUTTON = "Start";
@@ -33,10 +33,10 @@ index 2555ee05b1..c2230a606a 100644
    // Special Triforce buttons
    static constexpr const char* TEST_BUTTON = _trans("Test");
 diff --git a/Source/Core/DolphinNoGUI/PlatformFBDev.cpp b/Source/Core/DolphinNoGUI/PlatformFBDev.cpp
-index 53312bfa08..c166c06c40 100644
+index 249ef20a03..0b665ef8bb 100644
 --- a/Source/Core/DolphinNoGUI/PlatformFBDev.cpp
 +++ b/Source/Core/DolphinNoGUI/PlatformFBDev.cpp
-@@ -11,5 +11,13 @@
+@@ -10,6 +10,14 @@
  #include "Core/State.h"
  #include "Core/System.h"
  
@@ -50,7 +50,8 @@ index 53312bfa08..c166c06c40 100644
 +
  #include <cstdio>
  #include <thread>
-@@ -78,9 +85,111 @@ void PlatformFBDev::MainLoop()
+ 
+@@ -70,9 +78,111 @@ void PlatformFBDev::MainLoop()
  {
    while (IsRunning())
    {
@@ -163,7 +164,7 @@ index 53312bfa08..c166c06c40 100644
      std::this_thread::sleep_for(std::chrono::milliseconds(1));
    }
 diff --git a/Source/Core/InputCommon/GCPadStatus.h b/Source/Core/InputCommon/GCPadStatus.h
-index 74849e5594..029ade5824 100644
+index e126654b31..91973e9db5 100644
 --- a/Source/Core/InputCommon/GCPadStatus.h
 +++ b/Source/Core/InputCommon/GCPadStatus.h
 @@ -26,6 +26,7 @@ enum PadButton
