@@ -1,0 +1,49 @@
+From 8616f22d31d2ffbd1a7a25b95328c52e8799e786 Mon Sep 17 00:00:00 2001
+From: Tillmann Severin <tillmann.severin@mailbox.org>
+Date: Thu, 5 Nov 2026 20:32:47 +0100
+Subject: [PATCH] drm/fb-helper: reject a change of the visible resolution
+
+drm_fb_helper_set_par() does not look at the variable screen info at
+all, it only restores the mode the fbdev client has configured. A
+request for a different visible resolution is therefore acknowledged
+without ever reaching the screen, and user space is left believing it
+drives a smaller display than the one being scanned out.
+
+Applications that size their drawing from the returned resolution then
+work on a geometry that does not exist, which places their output at
+the wrong offset.
+
+The comment above the existing test already states that settings which
+are not pushed back to KMS have to fail, but the test only catches a
+resolution that does not fit the framebuffer. Reject a differing
+visible resolution as well.
+
+Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>
+---
+ drivers/gpu/drm/drm_fb_helper.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
+
+diff --git a/drivers/gpu/drm/drm_fb_helper.c b/drivers/gpu/drm/drm_fb_helper.c
+index f1bb87f27dd1..0e9ff0d7857a 100644
+--- a/drivers/gpu/drm/drm_fb_helper.c
++++ b/drivers/gpu/drm/drm_fb_helper.c
+@@ -1271,6 +1271,19 @@ int drm_fb_helper_check_var(struct fb_var_screeninfo *var,
+ 		return -EINVAL;
+ 	}
+ 
++	/*
++	 * fb_set_par() cannot change the display mode, so a request for a
++	 * different visible resolution would be acknowledged without ever
++	 * reaching the screen. Reject it rather than leave user space with a
++	 * framebuffer whose geometry does not match what is scanned out.
++	 */
++	if (var->xres != info->var.xres || var->yres != info->var.yres) {
++		drm_dbg_kms(dev, "fbdev emulation doesn't support changing the resolution, "
++			    "request %dx%d != %dx%d\n",
++			    var->xres, var->yres, info->var.xres, info->var.yres);
++		return -EINVAL;
++	}
++
+ 	__fill_var(var, info, fb);
+ 
+ 	/*
