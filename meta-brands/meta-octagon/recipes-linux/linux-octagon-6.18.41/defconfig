@@ -521,7 +521,7 @@ CONFIG_ARM_APPENDED_DTB=y
 CONFIG_ARM_ATAG_DTB_COMPAT=y
 # CONFIG_ARM_ATAG_DTB_COMPAT_CMDLINE_FROM_BOOTLOADER is not set
 CONFIG_ARM_ATAG_DTB_COMPAT_CMDLINE_EXTEND=y
-CONFIG_CMDLINE="earlyprintk drm_kms_helper.drm_leak_fbdev_smem=1 histb_vdp.osd_width=1280 histb_vdp.osd_height=720"
+CONFIG_CMDLINE="earlyprintk drm_kms_helper.drm_leak_fbdev_smem=1"
 # CONFIG_CMDLINE_FROM_BOOTLOADER is not set
 CONFIG_CMDLINE_EXTEND=y
 # CONFIG_CMDLINE_FORCE is not set
