@@ -49,6 +49,7 @@ SRC_URI += "https://www.kernel.org/pub/linux/kernel/v6.x/linux-${PV}.tar.gz \
     file://0034-drm-fb-helper-let-a-driver-offer-a-resized-framebuff.patch \
     file://0035-drm-histb-vdp-take-the-graphics-layer-size-from-fbde.patch \
     file://0036-drm-histb-vdp-smooth-the-scaled-graphics-layer.patch \
+    file://0037-ARM-dts-hi3798mv200-octagon-sf8008-enable-the-second.patch \
 "
 SRC_URI[sha256sum] = "ec7efb5ce8406adfcf681cae40cfad58c2f91eea97736c2ef66124e9d2cf3cb7"
 
