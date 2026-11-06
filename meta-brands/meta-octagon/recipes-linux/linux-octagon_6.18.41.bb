@@ -45,6 +45,7 @@ SRC_URI += "https://www.kernel.org/pub/linux/kernel/v6.x/linux-${PV}.tar.gz \
     file://0030-drm-fb-helper-let-a-client-ask-for-an-exact-pixel-fo.patch \
     file://0031-drm-fb-helper-reject-a-change-of-the-visible-resolut.patch \
     file://0032-media-rc-ir-hix5hd2-give-the-receiver-a-descriptive-.patch \
+    file://0033-drm-histb-vdp-scale-the-graphics-layer-up-to-the-dis.patch \
 "
 SRC_URI[sha256sum] = "ec7efb5ce8406adfcf681cae40cfad58c2f91eea97736c2ef66124e9d2cf3cb7"
 

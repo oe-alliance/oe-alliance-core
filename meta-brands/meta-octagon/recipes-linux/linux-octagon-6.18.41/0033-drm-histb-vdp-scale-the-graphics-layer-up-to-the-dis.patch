@@ -1,0 +1,190 @@
+From d557b5ac8f375331fda138b16ff8fb5bd5d4c99e Mon Sep 17 00:00:00 2001
+From: Tillmann Severin <tillmann.severin@mailbox.org>
+Date: Fri, 6 Nov 2026 11:14:50 +0100
+Subject: [PATCH] drm/histb-vdp: scale the graphics layer up to the display
+
+The graphics port between the graphics layer and the display channel
+carries a scaler.  The bootloader leaves it bypassed, so the layer has
+to fetch a full screen of pixels and a user interface drawn for a
+smaller resolution only covers part of the display.
+
+Program the scaler so the layer can fetch a smaller picture that is
+stretched over the whole screen, and take the size of that picture from
+the osd_width and osd_height parameters.  Without them the layer keeps
+fetching a full screen and the scaler stays bypassed.
+
+The filter taps stay switched off.  Their coefficients are read from
+memory that nothing fills in, and running the filter without them
+smears the picture rather than sharpening it.
+---
+ .../gpu/drm/hisilicon/histb/histb_vdp_drv.c   | 81 ++++++++++++++++++-
+ .../gpu/drm/hisilicon/histb/histb_vdp_reg.h   | 24 ++++++
+ 2 files changed, 103 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/gpu/drm/hisilicon/histb/histb_vdp_drv.c b/drivers/gpu/drm/hisilicon/histb/histb_vdp_drv.c
+index 04a191a8a864..69269a79119d 100644
+--- a/drivers/gpu/drm/hisilicon/histb/histb_vdp_drv.c
++++ b/drivers/gpu/drm/hisilicon/histb/histb_vdp_drv.c
+@@ -17,6 +17,7 @@
+ #include <linux/dma-mapping.h>
+ #include <linux/interrupt.h>
+ #include <linux/io.h>
++#include <linux/math64.h>
+ #include <linux/module.h>
+ #include <linux/of_reserved_mem.h>
+ #include <linux/platform_device.h>
+@@ -44,8 +45,20 @@ struct histb_vdp {
+ 	struct drm_simple_display_pipe pipe;
+ 	struct drm_connector connector;
+ 	struct drm_display_mode mode;
++	unsigned int osd_width;
++	unsigned int osd_height;
+ };
+ 
++static unsigned int osd_width;
++module_param(osd_width, uint, 0444);
++MODULE_PARM_DESC(osd_width,
++		 "width of the graphics layer, scaled up to the display width");
++
++static unsigned int osd_height;
++module_param(osd_height, uint, 0444);
++MODULE_PARM_DESC(osd_height,
++		 "height of the graphics layer, scaled up to the display height");
++
+ static inline struct histb_vdp *drm_to_vdp(struct drm_device *drm)
+ {
+ 	return container_of(drm, struct histb_vdp, drm);
+@@ -89,6 +102,46 @@ static void histb_vdp_set_scanout(struct histb_vdp *vdp,
+ 	histb_vdp_commit(vdp);
+ }
+ 
++/*
++ * The graphics port sits between the layer and the display channel and scales
++ * what the layer fetched up to the size the channel sends out.
++ *
++ * The filter taps are deliberately left switched off.  Their coefficients are
++ * fetched from memory the bootloader never fills in, and running the filter
++ * without them visibly smears the picture.
++ */
++static void histb_vdp_set_scaler(struct histb_vdp *vdp,
++				 unsigned int in_width, unsigned int in_height,
++				 unsigned int out_width, unsigned int out_height)
++{
++	u32 hratio = div_u64((u64)in_width * VDP_GP0_ZME_HRATIO_ONE, out_width);
++	u32 vratio = div_u64((u64)in_height * VDP_GP0_ZME_VRATIO_ONE, out_height);
++	u32 hsp = FIELD_PREP(VDP_GP0_ZME_HSP_HRATIO, hratio);
++	u32 vsp = 0;
++
++	writel(FIELD_PREP(VDP_XY_X, in_width - 1) |
++	       FIELD_PREP(VDP_XY_Y, in_height - 1),
++	       vdp->regs + VDP_GP0_IRESO);
++	writel(FIELD_PREP(VDP_XY_X, out_width - 1) |
++	       FIELD_PREP(VDP_XY_Y, out_height - 1),
++	       vdp->regs + VDP_GP0_ORESO);
++
++	if (in_width != out_width) {
++		hsp |= VDP_GP0_ZME_HSP_HSC_EN;
++		if (hratio < VDP_GP0_ZME_HRATIO_ONE)
++			hsp |= VDP_GP0_ZME_HSP_HFIR_ORDER;
++	}
++	if (in_height != out_height)
++		vsp |= VDP_GP0_ZME_VSP_VSC_EN;
++
++	writel(hsp, vdp->regs + VDP_GP0_ZME_HSP);
++	writel(FIELD_PREP(VDP_GP0_ZME_VSR_VRATIO, vratio),
++	       vdp->regs + VDP_GP0_ZME_VSR);
++	writel(vsp, vdp->regs + VDP_GP0_ZME_VSP);
++
++	writel(VDP_GP0_UPD_REGUP, vdp->regs + VDP_GP0_UPD);
++}
++
+ /* Read the mode the bootloader programmed back out of the timing registers. */
+ static void histb_vdp_read_mode(struct histb_vdp *vdp,
+ 				struct drm_display_mode *mode)
+@@ -185,15 +238,23 @@ static void histb_vdp_pipe_enable(struct drm_simple_display_pipe *pipe,
+ 			  fb->pitches[0] / VDP_G0_STRIDE_ALIGN),
+ 	       vdp->regs + VDP_G0_STRIDE);
+ 
+-	writel(FIELD_PREP(VDP_XY_X, mode->hdisplay - 1) |
+-	       FIELD_PREP(VDP_XY_Y, mode->vdisplay - 1),
++	writel(FIELD_PREP(VDP_XY_X, vdp->osd_width - 1) |
++	       FIELD_PREP(VDP_XY_Y, vdp->osd_height - 1),
+ 	       vdp->regs + VDP_G0_IRESO);
+ 
++	/*
++	 * The layer is positioned in the coordinates the display channel
++	 * sends out, so it always covers the whole screen, however much of
++	 * the framebuffer the scaler is fed with.
++	 */
+ 	writel(0, vdp->regs + VDP_G0_DFPOS);
+ 	writel(FIELD_PREP(VDP_XY_X, mode->hdisplay - 1) |
+ 	       FIELD_PREP(VDP_XY_Y, mode->vdisplay - 1),
+ 	       vdp->regs + VDP_G0_DLPOS);
+ 
++	histb_vdp_set_scaler(vdp, vdp->osd_width, vdp->osd_height,
++			     mode->hdisplay, mode->vdisplay);
++
+ 	/*
+ 	 * Everything else in this register, in particular the blending and
+ 	 * bus request settings, is left exactly as the bootloader set it.
+@@ -362,6 +423,22 @@ static int histb_vdp_probe(struct platform_device *pdev)
+ 	drm_dbg_kms(drm, "inherited mode %s from the bootloader\n",
+ 		    vdp->mode.name);
+ 
++	vdp->osd_width = vdp->mode.hdisplay;
++	vdp->osd_height = vdp->mode.vdisplay;
++	if (osd_width && osd_height) {
++		if (osd_width > vdp->mode.hdisplay ||
++		    osd_height > vdp->mode.vdisplay)
++			dev_warn(dev, "ignoring a graphics layer larger than the display\n");
++		else {
++			vdp->osd_width = osd_width;
++			vdp->osd_height = osd_height;
++			dev_info(dev, "scaling the graphics layer from %ux%u\n",
++				 vdp->osd_width, vdp->osd_height);
++		}
++	} else if (osd_width || osd_height) {
++		dev_warn(dev, "both osd_width and osd_height have to be given\n");
++	}
++
+ 	ret = of_reserved_mem_device_init(dev);
+ 	if (ret && ret != -ENODEV)
+ 		return dev_err_probe(dev, ret, "cannot claim the framebuffer pool\n");
+diff --git a/drivers/gpu/drm/hisilicon/histb/histb_vdp_reg.h b/drivers/gpu/drm/hisilicon/histb/histb_vdp_reg.h
+index d547724869a5..323cf16f9475 100644
+--- a/drivers/gpu/drm/hisilicon/histb/histb_vdp_reg.h
++++ b/drivers/gpu/drm/hisilicon/histb/histb_vdp_reg.h
+@@ -37,6 +37,30 @@
+ /* The layer fetches whole 16 byte chunks, so the stride is scaled down. */
+ #define VDP_G0_STRIDE_ALIGN		16
+ 
++/*
++ * The graphics port the first graphics layer feeds into.  It carries the
++ * scaler that turns the resolution the layer fetches into the resolution the
++ * display channel sends out.
++ */
++#define VDP_GP0_UPD			0x8004
++#define VDP_GP0_UPD_REGUP		BIT(0)
++#define VDP_GP0_ORESO			0x8008
++#define VDP_GP0_IRESO			0x800c
++#define VDP_GP0_ZME_HSP			0x8140
++#define VDP_GP0_ZME_HSP_HRATIO		GENMASK(23, 0)
++#define VDP_GP0_ZME_HSP_HFIR_ORDER	BIT(24)
++#define VDP_GP0_ZME_HSP_HFIR_EN		BIT(26)
++#define VDP_GP0_ZME_HSP_HSC_EN		BIT(31)
++#define VDP_GP0_ZME_VSP			0x814c
++#define VDP_GP0_ZME_VSP_VFIR_EN		BIT(24)
++#define VDP_GP0_ZME_VSP_VSC_EN		BIT(31)
++#define VDP_GP0_ZME_VSR			0x8150
++#define VDP_GP0_ZME_VSR_VRATIO		GENMASK(15, 0)
++
++/* Both scaling ratios are fixed point numbers, of different precision. */
++#define VDP_GP0_ZME_HRATIO_ONE		(1 << 20)
++#define VDP_GP0_ZME_VRATIO_ONE		(1 << 12)
++
+ /* First display channel. */
+ #define VDP_DHD0_CTRL			0xc000
+ #define VDP_DHD0_CTRL_INTF_EN		BIT(31)
+-- 
+2.56.0
+
