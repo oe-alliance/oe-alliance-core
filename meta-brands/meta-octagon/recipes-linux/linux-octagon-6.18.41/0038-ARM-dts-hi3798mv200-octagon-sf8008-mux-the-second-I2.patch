@@ -1,0 +1,69 @@
+From 25a09a1bebd352f67f6ab07dcd36deaf143d79af Mon Sep 17 00:00:00 2001
+From: Tillmann Severin <tillmann.severin@mailbox.org>
+Date: Fri, 6 Nov 2026 16:54:13 +0100
+Subject: [PATCH] ARM: dts: hi3798mv200-octagon-sf8008: mux the second I2C bus
+
+The DVB-T2/C demodulator on this board, an AltoBeam ATBM7821, sits at
+address 0x40 on the second I2C controller.  Enabling the controller is
+not enough to reach it: the boot loader leaves both bus pads in GPIO
+mode, so the bus is electrically dead and scanning it finds nothing.
+
+Describe the two pads as a pin group and attach it to the controller.
+Note that the clock and data lines do not share a mux setting, which is
+easy to get wrong.  The pair and their settings were found by muxing
+candidate pads one pair at a time on a running board until the
+demodulator acknowledged its address.
+
+With this the demodulator shows up in a bus scan straight after boot.
+
+Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>
+---
+ .../hisilicon/hi3798mv200-octagon-sf8008.dts  | 21 +++++++++++++++++++
+ 1 file changed, 21 insertions(+)
+
+diff --git a/arch/arm/boot/dts/hisilicon/hi3798mv200-octagon-sf8008.dts b/arch/arm/boot/dts/hisilicon/hi3798mv200-octagon-sf8008.dts
+index e97e38ab0eb5..992e41e38e36 100644
+--- a/arch/arm/boot/dts/hisilicon/hi3798mv200-octagon-sf8008.dts
++++ b/arch/arm/boot/dts/hisilicon/hi3798mv200-octagon-sf8008.dts
+@@ -24,6 +24,7 @@
+ /dts-v1/;
+ 
+ #include "hi3798mv200.dtsi"
++#include <dt-bindings/pinctrl/hisi.h>
+ 
+ / {
+ 	model = "Octagon SF8008";
+@@ -198,9 +199,14 @@ &i2c0 {
+  * The DVB-T2/C demodulator (an AltoBeam ATBM7821) answers at 0x40 on this
+  * bus.  No driver for it exists outside the vendor's binary modules, but the
+  * controller is enabled so that the device can at least be probed.
++ *
++ * The boot loader leaves both pads in GPIO mode, so the bus is electrically
++ * dead until they are muxed here.
+  */
+ &i2c1 {
+ 	status = "okay";
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c1_pins>;
+ };
+ 
+ /*
+@@ -258,3 +264,18 @@ &vdp {
+ 	memory-region = <&bootloader_fb>;
+ 	status = "okay";
+ };
++
++/*
++ * The second I2C controller reaches the DVB-T2/C demodulator.  Its two pads
++ * are left in GPIO mode by the boot loader and use different mux settings
++ * from one another, which was determined by muxing them one pair at a time
++ * on a running board until the demodulator acknowledged its address.
++ */
++&pmx0 {
++	i2c1_pins: i2c1-pins {
++		pinctrl-single,pins = <
++			0x08c MUX_M3
++			0x090 MUX_M6
++		>;
++	};
++};
