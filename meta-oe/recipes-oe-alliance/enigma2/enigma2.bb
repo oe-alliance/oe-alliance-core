@@ -189,7 +189,7 @@ DESCRIPTION:append:enigma2-plugin-systemplugins-networkwizard = "provides easy s
 # Note that these tools lack recipes
 RDEPENDS:enigma2-plugin-extensions-dvdburn = "dvd+rw-tools dvdauthor mjpegtools genisoimage replex"
 RRECOMMENDS:enigma2-plugin-extensions-dvdburn = "kernel-module-sg"
-RRECOMMENDS:enigma2-plugin-extensions-dvdplayer = "kernel-module-cdrom kernel-module-sr-mod"
+RRECOMMENDS:enigma2-plugin-extensions-dvdplayer = "kernel-module-cdrom kernel-module-sr-mod kernel-module-isofs kernel-module-udf"
 RDEPENDS:enigma2-plugin-systemplugins-hotplug = "${@bb.utils.contains("DISTRO_FEATURES", "e2hotplug", "" , "hotplug-e2-helper", d)}"
 DESCRIPTION:enigma2-plugin-font-wqy-microhei = "Font wqy-microhei add support for China EPG"
 SUMMARY:enigma2-plugin-extensions-streamlinkwrapper = "Enables support for streamlink url scheme in bouquet list."

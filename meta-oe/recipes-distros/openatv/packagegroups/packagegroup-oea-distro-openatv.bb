@@ -4,7 +4,7 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda
                     file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
-PR = "r2"
+PR = "r3"
 
 inherit packagegroup
 
@@ -23,6 +23,7 @@ OPENATV_COMMON = "\
 
 OPENATV_SMALLBOX = "\
     enigma2-plugin-skins-umbra \
+    ${@bb.utils.contains('MACHINE_FEATURES', 'dvd', 'enigma2-plugin-extensions-dvdplayer', '', d)} \
     "
 
 OPENATV_STANDARD = "\
