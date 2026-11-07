@@ -32,40 +32,37 @@ diff -uNr a/drivers/mmc/core/mmc.c b/drivers/mmc/core/mmc.c
  static int mmc_reset(struct mmc_host *host)
  {
  	struct mmc_card *card = host->card;
-diff -uNr a/kernel/reboot.c b/kernel/reboot.c
---- a/kernel/reboot.c	2017-07-31 21:25:19.000000000 +0800
-+++ b/kernel/reboot.c	2022-11-07 17:13:48.989796160 +0800
-@@ -211,6 +211,12 @@
-  *	Shutdown everything and perform a clean reboot.
-  *	This is not safe to call in interrupt context.
-  */
-+static void (*suspend_for_reboot)(void) = NULL;
+--- a/kernel/reboot.c
++++ b/kernel/reboot.c
+@@ -203,6 +203,14 @@
+ 	set_cpus_allowed_ptr(current, cpumask_of(cpu));
+ }
+ 
++static void (*suspend_for_reboot)(void);
++
 +void kernel_set_callback_for_reboot(void (*callback)(void))
 +{
 +	suspend_for_reboot = callback;
 +}
-+
- void kernel_restart(char *cmd)
- {
- 	kernel_restart_prepare(cmd);
-@@ -221,9 +227,19 @@
- 	else
- 		pr_emerg("Restarting system with command '%s'\n", cmd);
- 	kmsg_dump(KMSG_DUMP_RESTART);
--	machine_restart(cmd);
-+	if(suspend_for_reboot)
-+	{
-+		(suspend_for_reboot)();
-+		pm_suspend(PM_SUSPEND_STANDBY);
-+	}
-+	else
-+	{
-+		machine_restart(cmd);
-+	}
- }
- EXPORT_SYMBOL_GPL(kernel_restart);
 +EXPORT_SYMBOL_GPL(kernel_set_callback_for_reboot);
 +
- 
- static void kernel_shutdown_prepare(enum system_states state)
+ /**
+  *	kernel_restart - reboot the system
+  *	@cmd: pointer to buffer containing command to execute for restart
+@@ -213,6 +221,16 @@
+  */
+ void kernel_restart(char *cmd)
  {
++	if (suspend_for_reboot) {
++		int ret;
++
++		/* Suspend must sync and suspend devices before device_shutdown(). */
++		pr_emerg("Restarting system through standby\n");
++		suspend_for_reboot();
++		ret = pm_suspend(PM_SUSPEND_STANDBY);
++		pr_emerg("Standby restart returned (%d), using normal restart\n", ret);
++	}
++
+ 	kernel_restart_prepare(cmd);
+ 	migrate_to_reboot_cpu();
+ 	syscore_shutdown();
