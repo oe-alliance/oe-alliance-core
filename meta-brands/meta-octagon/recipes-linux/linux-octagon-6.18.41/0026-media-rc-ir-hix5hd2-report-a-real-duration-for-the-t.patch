@@ -1,0 +1,48 @@
+From 8ad1ab7eb5af3a96f754310d76760886bc7fc70b Mon Sep 17 00:00:00 2001
+From: Tillmann Severin <tillmann.severin@mailbox.org>
+Date: Tue, 3 Nov 2026 19:55:36 +0100
+Subject: [PATCH 26/26] media: rc: ir-hix5hd2: report a real duration for the
+ trailing space
+
+When a received symbol is wider than IR_CFG_SYMBOL_MAXWIDTH the driver
+marks the receiver idle via ir_raw_event_set_idle(). That helper submits
+dev->raw->this_ev, but this_ev is only ever populated by
+ir_raw_event_store_edge() and ir_raw_event_store_with_filter(), neither
+of which this driver uses. The event therefore always carries a zero
+duration, which makes rc-core complain
+
+  rc rc0: nonsensical timing event of duration 0
+
+and, more importantly, breaks decoding of trailing spaces. An NEC repeat
+frame ends on such a symbol, so its trailer space arrives as 0us and
+fails the decoder's geq_margin() check, meaning a held-down key never
+repeats.
+
+Store an explicit timeout event using the receiver timeout instead. The
+idle flag itself is not used by this driver, as it only calls
+ir_raw_event_store() and never leaves idle mode again.
+
+Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>
+---
+ drivers/media/rc/ir-hix5hd2.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/media/rc/ir-hix5hd2.c b/drivers/media/rc/ir-hix5hd2.c
+index bb0f95833df5..916d3ee5bc42 100644
+--- a/drivers/media/rc/ir-hix5hd2.c
++++ b/drivers/media/rc/ir-hix5hd2.c
+@@ -225,7 +225,10 @@ static irqreturn_t hix5hd2_ir_rx_interrupt(int irq, void *data)
+ 				ev.pulse = false;
+ 				ir_raw_event_store(priv->rdev, &ev);
+ 			} else {
+-				ir_raw_event_set_idle(priv->rdev, true);
++				ev.duration = priv->rdev->timeout;
++				ev.pulse = false;
++				ev.timeout = true;
++				ir_raw_event_store(priv->rdev, &ev);
+ 			}
+ 		}
+ 
+-- 
+2.56.0
+

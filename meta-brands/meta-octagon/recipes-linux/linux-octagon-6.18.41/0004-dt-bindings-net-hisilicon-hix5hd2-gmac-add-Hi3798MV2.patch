@@ -1,0 +1,37 @@
+From 614706bc05409c1f74e9b889995a9e1a2917ccc0 Mon Sep 17 00:00:00 2001
+From: Tillmann Severin <tillmann.severin@mailbox.org>
+Date: Sat, 1 Aug 2026 15:17:30 +0200
+Subject: [PATCH 04/26] dt-bindings: net: hisilicon-hix5hd2-gmac: add
+ Hi3798MV200
+
+The Hi3798MV200 gigabit MAC is the same IP as the one on the
+Hi3798CV200, so it is a "hisilicon,hisi-gmac-v2" and needs no driver
+change.  Document the SoC specific compatible string.
+
+Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>
+---
+ .../devicetree/bindings/net/hisilicon-hix5hd2-gmac.txt         | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/net/hisilicon-hix5hd2-gmac.txt b/Documentation/devicetree/bindings/net/hisilicon-hix5hd2-gmac.txt
+index cddf46bf6b63..4b0976a12ec6 100644
+--- a/Documentation/devicetree/bindings/net/hisilicon-hix5hd2-gmac.txt
++++ b/Documentation/devicetree/bindings/net/hisilicon-hix5hd2-gmac.txt
+@@ -4,12 +4,13 @@ Required properties:
+ - compatible: should contain one of the following SoC strings:
+ 	* "hisilicon,hix5hd2-gmac"
+ 	* "hisilicon,hi3798cv200-gmac"
++	* "hisilicon,hi3798mv200-gmac"
+ 	* "hisilicon,hi3516a-gmac"
+ 	and one of the following version string:
+ 	* "hisilicon,hisi-gmac-v1"
+ 	* "hisilicon,hisi-gmac-v2"
+   The version v1 includes SoCs hix5hd2.
+-  The version v2 includes SoCs hi3798cv200, hi3516a.
++  The version v2 includes SoCs hi3798cv200, hi3798mv200, hi3516a.
+ - reg: specifies base physical address(s) and size of the device registers.
+   The first region is the MAC register base and size.
+   The second region is external interface control register.
+-- 
+2.56.0
+

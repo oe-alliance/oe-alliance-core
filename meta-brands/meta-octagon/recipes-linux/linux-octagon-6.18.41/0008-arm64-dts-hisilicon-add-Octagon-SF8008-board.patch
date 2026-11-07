@@ -1,0 +1,226 @@
+From 7a6a53c284158c6a6f313328d626bd4144e683c2 Mon Sep 17 00:00:00 2001
+From: Tillmann Severin <tillmann.severin@mailbox.org>
+Date: Sat, 1 Aug 2026 15:29:49 +0200
+Subject: [PATCH 08/26] arm64: dts: hisilicon: add Octagon SF8008 board
+
+The Octagon SF8008 is a satellite receiver built around a HiSilicon
+Hi3798MV200 with 1 GiB of DDR3 and 8 GiB of eMMC.
+
+Enabled are the console on UART0, eMMC, the front panel SD slot, GPIO,
+I2C0 and I2C2, the IR receiver, USB 2.0, the watchdog and the gigabit
+Ethernet port.
+
+The Ethernet link is described as "rgmii-id" rather than the "rgmii" the
+vendor device tree uses.  The vendor tree compensates for its own
+description in board code: rtl8211f_phy_fix() force-enables the PHY's
+2 ns TX delay and leaves the pin-strapped RX delay alone.  In mainline
+terms that end state is rgmii-id; describing it as plain "rgmii" would
+make the Realtek PHY driver clear both delay bits and silently corrupt
+gigabit traffic.
+
+The vendor device tree is board agnostic and takes its memory layout
+from the bootloader, so no board specific GPIO data (front panel
+display, LEDs, card detect, Wi-Fi enable) could be recovered from it.
+Rather than guess, those are left out.
+
+Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>
+---
+ arch/arm64/boot/dts/hisilicon/Makefile        |   1 +
+ .../hisilicon/hi3798mv200-octagon-sf8008.dts  | 173 ++++++++++++++++++
+ 2 files changed, 174 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/hisilicon/hi3798mv200-octagon-sf8008.dts
+
+diff --git a/arch/arm64/boot/dts/hisilicon/Makefile b/arch/arm64/boot/dts/hisilicon/Makefile
+index f4d68caeba83..ca1dc0f3ea0b 100644
+--- a/arch/arm64/boot/dts/hisilicon/Makefile
++++ b/arch/arm64/boot/dts/hisilicon/Makefile
+@@ -2,6 +2,7 @@
+ dtb-$(CONFIG_ARCH_HISI) += hi3660-hikey960.dtb
+ dtb-$(CONFIG_ARCH_HISI) += hi3670-hikey970.dtb
+ dtb-$(CONFIG_ARCH_HISI) += hi3798cv200-poplar.dtb
++dtb-$(CONFIG_ARCH_HISI) += hi3798mv200-octagon-sf8008.dtb
+ dtb-$(CONFIG_ARCH_HISI) += hi6220-hikey.dtb
+ dtb-$(CONFIG_ARCH_HISI) += hip05-d02.dtb
+ dtb-$(CONFIG_ARCH_HISI) += hip06-d03.dtb
+diff --git a/arch/arm64/boot/dts/hisilicon/hi3798mv200-octagon-sf8008.dts b/arch/arm64/boot/dts/hisilicon/hi3798mv200-octagon-sf8008.dts
+new file mode 100644
+index 000000000000..6aaff6bcc345
+--- /dev/null
++++ b/arch/arm64/boot/dts/hisilicon/hi3798mv200-octagon-sf8008.dts
+@@ -0,0 +1,173 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * DTS file for the Octagon SF8008 satellite receiver (HiSilicon Hi3798MV200).
++ *
++ * The vendor Linux 4.4 tree ships a single, board agnostic
++ * arch/arm/boot/dts/hi3798mv200.dts and relies on the bootloader for the
++ * memory layout, so no board specific GPIO data (front panel display, LEDs,
++ * card detect) could be recovered from it.  Those are left out here rather
++ * than guessed; only hardware that could be confirmed is described.  The
++ * Wi-Fi enable line was identified by toggling it on a running board.
++ *
++ * The console baud rate is taken from the vendor defconfig:
++ * CONFIG_CMDLINE="mem=128M console=ttyAMA0,115200 ...".
++ *
++ * Note that the SF8008 USB 3.0 port is not usable yet - see the comment in
++ * hi3798mv200.dtsi for why.  The gigabit Ethernet port works.
++ */
++
++/dts-v1/;
++
++#include "hi3798mv200.dtsi"
++
++/ {
++	model = "Octagon SF8008";
++	compatible = "octagon,sf8008", "hisilicon,hi3798mv200";
++
++	aliases {
++		serial0 = &uart0;
++		/*
++		 * The boot loader passes a command line that refers to the
++		 * eMMC as mmcblk0, so pin the controller indices instead of
++		 * letting them depend on probe order.
++		 */
++		mmc0 = &emmc;
++		mmc1 = &sd0;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++
++	/* SF8008 ships 1 GiB of DDR3; normally fixed up by the bootloader. */
++	memory@0 {
++		device_type = "memory";
++		reg = <0x0 0x0 0x0 0x40000000>;
++	};
++};
++
++&uart0 {
++	status = "okay";
++};
++
++/* 8 GiB soldered eMMC - the rootfs device. */
++&emmc {
++	status = "okay";
++	bus-width = <8>;
++	fifo-depth = <256>;
++	clock-frequency = <200000000>;
++	cap-mmc-highspeed;
++	mmc-ddr-1_8v;
++	non-removable;
++};
++
++/* Front panel micro SD slot, using the controller's own card detect. */
++&sd0 {
++	status = "okay";
++	bus-width = <4>;
++	fifo-depth = <32>;
++	cap-sd-highspeed;
++};
++
++&gpio0 {
++	status = "okay";
++
++	/*
++	 * Line 0 gates the supply of the on-board Realtek RTL8192EU Wi-Fi
++	 * module, which hangs off the second port of the on-chip USB 2.0
++	 * host controller.  The bootloader configures the pin as an output
++	 * but leaves it low, so the module stays powered down and the port
++	 * never sees a connect.
++	 */
++	wifi_power_hog: wifi-power-hog {
++		gpio-hog;
++		gpios = <0 GPIO_ACTIVE_HIGH>;
++		output-high;
++		line-name = "wifi-power";
++	};
++};
++
++&gpio1 {
++	status = "okay";
++};
++
++&gpio2 {
++	status = "okay";
++};
++
++&gpio3 {
++	status = "okay";
++};
++
++&gpio4 {
++	status = "okay";
++};
++
++&gpio5 {
++	status = "okay";
++};
++
++&gpio6 {
++	status = "okay";
++};
++
++&gpio7 {
++	status = "okay";
++};
++
++&gpio8 {
++	status = "okay";
++};
++
++&gpio9 {
++	status = "okay";
++};
++
++&i2c0 {
++	status = "okay";
++};
++
++&i2c2 {
++	status = "okay";
++};
++
++/*
++ * Gigabit Ethernet.  The vendor device tree wires the external RGMII PHY at
++ * MDIO address 3 and resets it through CRG 0xcc bit 5.
++ *
++ * The PHY is a Motorcomm YT8521 (id 0x0000011a).  Neither the vendor kernel
++ * nor mainline programs its RGMII delays here, so both ends of the link rely
++ * on the delays the PHY applies from its pin straps.  The MAC adds none, so
++ * "rgmii-id" is the description that matches the hardware.
++ */
++&gmac0 {
++	status = "okay";
++	#address-cells = <1>;
++	#size-cells = <0>;
++	phy-handle = <&eth_phy0>;
++	phy-mode = "rgmii-id";
++	/* Pre, pulse and post delays as used by the vendor driver. */
++	hisilicon,phy-reset-delays-us = <10000 20000 50000>;
++
++	eth_phy0: phy@3 {
++		reg = <3>;
++	};
++};
++
++/* IR receiver behind the front panel window. */
++&ir {
++	status = "okay";
++};
++
++/* Rear USB 2.0 port.  The USB 3.0 port needs a DWC3 CRG that is missing. */
++&ohci {
++	status = "okay";
++};
++
++&ehci {
++	status = "okay";
++};
++
++&watchdog0 {
++	status = "okay";
++};
+-- 
+2.56.0
+

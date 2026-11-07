@@ -1,0 +1,34 @@
+From: Octagon SF8008 port
+Subject: [PATCH] bcm: reset the display list when exec_list() cannot flush
+
+exec_list() returns early when no framebuffer is open, without clearing
+ptr. Callers such as dreambcm_bcm_ensure_space() and bcm_accel_blit()
+call it precisely to make room in displaylist[] and then keep appending
+through the P() macro, which does no bounds checking. On a machine
+without the proprietary hifb accel ioctl this overflows the 1024 entry
+array and corrupts adjacent static data, crashing enigma2 as soon as
+fonts are rendered.
+
+Drop the queued operations in that path so ptr stays within bounds.
+
+Upstream-Status: Pending
+--- a/lib/gdi/bcm.cpp
++++ b/lib/gdi/bcm.cpp
+@@ -524,7 +524,16 @@
+ 		int len;
+ 	} l;
+ 
+-	if (fb_fd < 0) return -1;
++	if (fb_fd < 0)
++	{
++		/* Nothing can be flushed without a framebuffer, but the queued
++		 * operations must still be dropped. Callers use exec_list() to
++		 * make room in displaylist[] and keep appending with P()
++		 * regardless of the return value, so leaving ptr untouched
++		 * overflows the array. */
++		ptr = 0;
++		return -1;
++	}
+ 
+ 	l.ptr = displaylist;
+ 	l.len = ptr;

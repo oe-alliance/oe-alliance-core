@@ -1,0 +1,47 @@
+From f973f4f8c7249718a574f69c627e8ff8c88c8136 Mon Sep 17 00:00:00 2001
+From: Tillmann Severin <tillmann.severin@mailbox.org>
+Date: Sat, 1 Aug 2026 15:15:28 +0200
+Subject: [PATCH 01/26] dt-bindings: clock: hisi-crg: add Hi3798MV200
+ compatibles
+
+Document "hisilicon,hi3798mv200-crg" and "hisilicon,hi3798mv200-sysctrl".
+
+The Hi3798MV200 CRG is register compatible with the Hi3798CV200 one for
+most peripherals (UART, I2C, SPI, SDIO0, eMMC, USB2), but the Ethernet
+block at offset 0xcc uses a completely different bit layout, so it cannot
+reuse the CV200 compatible.
+
+Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>
+---
+ Documentation/devicetree/bindings/clock/hisi-crg.txt | 2 ++
+ include/dt-bindings/clock/histb-clock.h              | 1 +
+ 2 files changed, 3 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/clock/hisi-crg.txt b/Documentation/devicetree/bindings/clock/hisi-crg.txt
+index cc60b3d423f3..275bddedc002 100644
+--- a/Documentation/devicetree/bindings/clock/hisi-crg.txt
++++ b/Documentation/devicetree/bindings/clock/hisi-crg.txt
+@@ -15,6 +15,8 @@ Required Properties:
+   - "hisilicon,hi3519-crg"
+   - "hisilicon,hi3798cv200-crg"
+   - "hisilicon,hi3798cv200-sysctrl"
++  - "hisilicon,hi3798mv200-crg"
++  - "hisilicon,hi3798mv200-sysctrl"
+ 
+ - reg: physical base address of the controller and length of memory mapped
+   region.
+diff --git a/include/dt-bindings/clock/histb-clock.h b/include/dt-bindings/clock/histb-clock.h
+index e64e5770ada6..03c3e46efef9 100644
+--- a/include/dt-bindings/clock/histb-clock.h
++++ b/include/dt-bindings/clock/histb-clock.h
+@@ -58,6 +58,7 @@
+ #define HISTB_USB3_UTMI_CLK1		48
+ #define HISTB_USB3_PIPE_CLK1		49
+ #define HISTB_USB3_SUSPEND_CLK1		50
++#define HISTB_USB2_UTMI1_CLK		51
+ 
+ /* clocks provided by mcu CRG */
+ #define HISTB_MCE_CLK			1
+-- 
+2.56.0
+
