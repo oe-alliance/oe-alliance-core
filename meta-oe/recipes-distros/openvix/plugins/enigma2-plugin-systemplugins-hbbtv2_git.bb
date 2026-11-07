@@ -108,7 +108,7 @@ PR = "r33"
 # r31: the orb:// scheme is registered as secure, so that an https application's orb://player iframe (the video/ads player) is not blocked as mixed content
 
 # wpewebkit: the browser engine and its headers; orb: the engine, orb_host.h and the libraries wpe_fb is linked against
-DEPENDS = "wpewebkit orb glib-2.0 libsoup"
+DEPENDS = "wpewebkit orb glib-2.0 libsoup gettext-native"
 # wpe_fb loads the web process extension and the platform library of ORB by path (dlopen), which the shared library dependencies do not show.
 # No "enigma2" here: it is always there on a box, and bitbake would build everything a package runtime-depends on (a whole enigma2 build).
 # orb r4 or later: orb_host_key_set_mask (r3: orb_host_service_selected / orb_host_ait_section) (r2: orb_host_set_components / orb_host_set_component_handler).
@@ -149,6 +149,14 @@ do_install() {
     install -m 0644 ${S}/src/fonts.conf ${D}${PLUGINDIR}/fonts.conf
     install -m 0644 ${S}/src/pages/orb_hello.html ${D}${PLUGINDIR}/pages/orb_hello.html
     install -m 0644 ${S}/src/pages/video_test.html ${D}${PLUGINDIR}/pages/video_test.html
+
+    find ${S}/po/ -maxdepth 1 -type f -name '*.po' | while read po ; do
+        filename=${po##*/}
+        cc=${filename%%.*}
+        folder=${D}${PLUGINDIR}/locale/${cc}/LC_MESSAGES
+        install -d ${folder}
+        msgfmt -o ${folder}/hbbtv2.mo ${po}
+    done
 }
 
 FILES:${PN} = "${bindir}/wpe_fb ${PLUGINDIR}"
