@@ -142,8 +142,7 @@ do_install() {
     install -m 0755 ${B}/wpe_fb ${D}${bindir}/wpe_fb
 
     install -d ${D}${PLUGINDIR}/pages
-    install -m 0644 ${S}/src/__init__.py ${D}${PLUGINDIR}/__init__.py
-    install -m 0644 ${S}/src/plugin.py ${D}${PLUGINDIR}/plugin.py
+    install -m 0644 ${S}/src/*.py ${D}${PLUGINDIR}/
     install -m 0644 ${S}/src/keymap.xml ${D}${PLUGINDIR}/keymap.xml
     install -m 0755 ${S}/src/run_wpe.sh ${D}${PLUGINDIR}/run_wpe.sh
     install -m 0644 ${S}/src/fonts.conf ${D}${PLUGINDIR}/fonts.conf
