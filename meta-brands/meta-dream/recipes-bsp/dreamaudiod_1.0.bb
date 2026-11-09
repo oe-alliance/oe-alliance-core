@@ -5,7 +5,7 @@ require conf/license/license-gplv2.inc
 COMPATIBLE_MACHINE = "^(dreamone|dreamtwo)$"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-PR = "r1"
+PR = "r2"
 
 DEPENDS = "alsa-lib faad2 ffmpeg virtual/kernel"
 

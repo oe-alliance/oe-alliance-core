@@ -679,6 +679,8 @@ class Stream
 	AVChannelLayout m_swrLayout = {};
 	int m_swrRate = 0;
 	AVSampleFormat m_swrFormat = AV_SAMPLE_FMT_NONE;
+	bool m_ac3Surround = false;
+	double m_downmixLimit = 1.0;
 	AVFrame *m_frame = nullptr;
 	AVPacket *m_pkt = nullptr;
 	std::vector<int16_t> m_pcm;
@@ -1089,6 +1091,32 @@ class Stream
 		return sum > sum51 ? sum / sum51 : 1.0;
 	}
 
+	/* AC-3 or E-AC-3 frame with more than two full band channels */
+	static bool ac3Surround(const AVPacket *pkt)
+	{
+		if (pkt->size < 7 || pkt->data[0] != 0x0b || pkt->data[1] != 0x77)
+			return false;
+		int acmod = pkt->data[5] >> 3 > 10 ? (pkt->data[4] >> 1) & 7 : pkt->data[6] >> 5;
+		return acmod > 2;
+	}
+
+	/* the normalized downmix is 6 dB up, peaks are limited */
+	void boostDownmix(int n)
+	{
+		for (int i = 0; i < n; i++) {
+			int l = m_pcm[i * 2], r = m_pcm[i * 2 + 1];
+			int peak = abs(l) > abs(r) ? abs(l) : abs(r);
+			m_downmixLimit += (1.0 - m_downmixLimit) * 1e-4;
+			double gain = 2.0 * m_downmixLimit;
+			if (peak * gain > 32767.0) {
+				gain = 32767.0 / peak;
+				m_downmixLimit = gain / 2.0;
+			}
+			m_pcm[i * 2] = (int16_t)lrint(l * gain);
+			m_pcm[i * 2 + 1] = (int16_t)lrint(r * gain);
+		}
+	}
+
 	void pushPcm(AVFrame *f)
 	{
 		m_lastFrames = nowMs();
@@ -1131,6 +1159,8 @@ class Stream
 		int n = swr_convert(m_swr, &out, max, (const uint8_t **)f->extended_data, f->nb_samples);
 		if (n <= 0)
 			return;
+		if (m_ac3Surround)
+			boostDownmix(n);
 
 		double gain = m_out.gain();
 		for (int i = 0; i < n; i++) {
@@ -1325,6 +1355,7 @@ class Stream
 			writeBurst(pkt);
 			return;
 		}
+		m_ac3Surround = (m_codec == AV_CODEC_ID_AC3 || m_codec == AV_CODEC_ID_EAC3) && ac3Surround(pkt);
 		if (!m_dec || avcodec_send_packet(m_dec, pkt) < 0)
 			return;
 		while (avcodec_receive_frame(m_dec, m_frame) == 0) {
@@ -1639,6 +1670,7 @@ class Stream
 		av_channel_layout_uninit(&m_swrLayout);
 		m_swrRate = 0;
 		m_codec = AV_CODEC_ID_NONE;
+		m_ac3Surround = false;
 		closeFaad();
 		m_latmAsc.clear();
 		m_probeChunks.clear();
