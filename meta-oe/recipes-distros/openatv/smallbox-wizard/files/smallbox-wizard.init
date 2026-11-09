@@ -6,9 +6,15 @@ MARKER=/etc/smallbox-wizard.done
 REBOOT_MARKER=/tmp/smallbox-wizard-rebooting
 LOG=/tmp/smallbox-wizard.log
 
+console_available() {
+	[ -c /dev/console ] && (: >/dev/console) 2>/dev/null
+}
+
 log_console() {
 	echo "$*" >>"$LOG"
-	[ ! -c /dev/console ] || echo "$*" >/dev/console
+	if console_available; then
+		echo "$*" >/dev/console
+	fi
 }
 
 log_network() {
@@ -100,7 +106,11 @@ recover_wired_network() {
 			grep -v "^${interface}=" /var/run/ifstate >"/var/run/ifstate.$$" || true
 			mv "/var/run/ifstate.$$" /var/run/ifstate
 		fi
-		ifup "$interface" >/dev/console 2>&1 || true
+		if console_available; then
+			ifup "$interface" >/dev/console 2>&1 || true
+		else
+			ifup "$interface" >>"$LOG" 2>&1 || true
+		fi
 	)
 
 	waited=0
@@ -132,7 +142,7 @@ case "$1" in
 		recover_wired_network
 		log_network
 		while [ ! -e "$MARKER" ] && [ ! -e "$REBOOT_MARKER" ]; do
-			if [ -c /dev/console ] && command -v tee >/dev/null 2>&1; then
+			if console_available && command -v tee >/dev/null 2>&1; then
 				"$PROGRAM" --boot 2>&1 | tee -a "$LOG" >/dev/console
 			else
 				"$PROGRAM" --boot >>"$LOG" 2>&1
