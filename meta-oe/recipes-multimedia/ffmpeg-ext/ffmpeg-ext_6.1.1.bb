@@ -29,7 +29,7 @@ SRC_URI = " \
 "
 
 # FFmpeg 6.1 maintenance updates and skyjet18 playback fixes.
-SRCREV = "ea4d5204424fa53de15dbc2781424af7223b3bb9"
+SRCREV = "0da0223cd1add40eabaad04e1ce609f05670a1de"
 
 # https://nvd.nist.gov/vuln/detail/CVE-2023-39018
 # https://github.com/bramp/ffmpeg-cli-wrapper/issues/291
