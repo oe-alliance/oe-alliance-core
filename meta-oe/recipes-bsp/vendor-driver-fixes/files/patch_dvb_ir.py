@@ -27,7 +27,14 @@ store the timer override after it.
 Anything unexpected => exit status 2 and the file is left untouched.  Already patched files are
 reported and left alone (exit 0).  The file size does not change.
 
-Usage: patch_dvb_ir.py [--check] [--no-fresh-press] [--delay MS] [--period MS] [--keyup MS] <path/to/dvb.ko>
+Follow mode (default, needs the fresh-press patch): instead of a fixed key-up timeout the
+'no IR frame => key released' timer is set to clamp(rep[REP_PERIOD] + --follow-margin, --keyup,
+--keyup-max) ms, computed by a small stub placed in the (dead) driver-repeat path of
+input_p_callback, so the key-up timeout follows the autorepeat period.  The fixed --keyup value
+(default 130 in follow mode) stays the minimum and the timeout of the other paths.
+
+Usage: patch_dvb_ir.py [--check] [--no-fresh-press] [--no-follow] [--delay MS] [--period MS]
+                       [--keyup MS] [--keyup-max MS] [--follow-margin MS] <path/to/dvb.ko>
   defaults: --delay 600 --period 100; --keyup (optional) changes the 150 ms 'no IR frame => key
   released' timeout. NEC repeat frames come every ~108 ms, so one lost frame already exceeds 150 ms,
   releases the key and costs a new --delay before repeating (the 'scroll stops' symptom); 240 survives
@@ -341,11 +348,116 @@ def plan_fresh(d):
     return [(base + 4 * (i + k), words[i + k], new[k]) for k in range(4)], False
 
 
+def arm_imm(v):
+    """ARM modified-immediate encoding (rot << 8 | imm8) of v, or None."""
+    for rot in range(16):
+        r = 2 * rot
+        x = ((v << r) | (v >> (32 - r))) & 0xffffffff if r else v
+        if x < 256:
+            return (rot << 8) | x
+    return None
+
+
+def branch_target(words, k):
+    """Index targeted by the b/bl at words[k], or None if it is not a branch."""
+    if (words[k] & 0x0e000000) != 0x0a000000:
+        return None
+    off = words[k] & 0xffffff
+    off = off - (1 << 24) if off & 0x800000 else off
+    return k + 2 + off
+
+
+def plan_follow(d, minms, maxms, margin):
+    """Key-up timeout that follows the repeat period (see the module docstring).
+
+    The fixed-timeout site is   ldr rc,=jiffies ; mov r0,#keyup ; strh rX,[rn,#0x38] ; ... msecs_to_jiffies
+    A branch reaches it from the "no repeat IR frame" check.  That branch is redirected to a stub
+    written over the dead driver-repeat block that follows the fresh-press site:
+        ldr rc,=jiffies                 ; same literal as the fixed site
+        ldr r0,[rn,#0x18]              ; state->dev
+        ldr r0,[r0,#0xe8]               ; dev->rep[REP_PERIOD]
+        add r0,r0,#margin
+        cmp r0,#minms ; movlt r0,#minms
+        cmp r0,#maxms ; movgt r0,#maxms
+        b   <strh after the fixed mov>
+    """
+    text_off, fstart, fsize = func_range(d, "input_p_callback")
+    relocs = parse_elf(d)[3]
+    base = text_off + fstart
+    words = [u32(d, base + 4 * i) for i in range(fsize // 4)]
+    n = len(words)
+
+    # fixed key-up site: [ldr rc,=<jiffies>] [mov r0,#150|minms] [strh] ... ldr rx,=msecs_to_jiffies
+    def is_msecs(j):
+        w = words[j]
+        return ((w & 0xff7f0000) == 0xe51f0000 and (w & 0x00800000)
+                and relocs.get(fstart + 4 * j + 8 + (w & 0xfff)) == "msecs_to_jiffies")
+
+    sites = []
+    for k in range(1, n - 5):
+        w = words[k - 1]
+        if mov_imm_value(words[k], 0) in (150, minms) and (w & 0xff7f0000) == 0xe51f0000 \
+                and (w & 0x00800000) and any(is_msecs(j) for j in range(k + 1, k + 6)):
+            sites.append(k)
+    if len(sites) != 1:
+        raise Refuse("follow: key-up site not found (%d candidates)" % len(sites))
+    k = sites[0]
+    m = k - 1
+    strh = words[k + 1]
+    if (strh & 0xfff000f0) != 0xe1c000b0 or (((strh >> 4) & 0xf0) | (strh & 0xf)) != 0x38:
+        raise Refuse("follow: strh to state+0x38 not after the key-up site")
+    rn = (strh >> 16) & 0xf
+
+    # same-key site written by the fresh-press patch: ldrb,cmp,beq,b ; the stub goes right after it
+    fresh = [i for i in range(n - 4)
+             if (words[i] & 0xfffff000) == 0xe5dd2000 and words[i + 1] == 0xe3520000
+             and (words[i + 2] & 0xff000000) == 0x0a000000 and (words[i + 3] & 0xff000000) == 0xea000000]
+    if len(fresh) != 1:
+        raise Refuse("follow: needs the fresh-press patch (%d same-key sites)" % len(fresh))
+    c = fresh[0] + 4
+    size = 9
+    if c + size >= n:
+        raise Refuse("follow: stub does not fit")
+
+    lit = fstart + 4 * m + 8 + (words[m] & 0xfff)
+    disp = lit - (fstart + 4 * c + 8)
+    cmp_min, cmp_max, add_m = arm_imm(minms), arm_imm(maxms), arm_imm(margin)
+    if disp < 0 or disp > 0xfff or None in (cmp_min, cmp_max, add_m):
+        raise Refuse("follow: values not encodable")
+    stub = [(words[m] & 0xfffff000) | disp,
+            0xe5900018 | (rn << 16),                        # ldr r0,[rn,#0x18]
+            0xe59000e8,                                     # ldr r0,[r0,#0xe8]
+            0xe2800000 | add_m,                             # add r0,r0,#margin
+            0xe3500000 | cmp_min,                           # cmp r0,#minms
+            0xb3a00000 | cmp_min,                           # movlt r0,#minms
+            0xe3500000 | cmp_max,                           # cmp r0,#maxms
+            0xc3a00000 | cmp_max,                           # movgt r0,#maxms
+            branch(0xea000000, base + 4 * (c + 8), base + 4 * (k + 1))]
+    if words[c:c + size] == stub:
+        return [], True
+
+    # the stub must replace dead code only: nothing outside it may branch into it
+    for i in range(n):
+        t = branch_target(words, i)
+        if t is not None and c <= t < c + size and not (c <= i < c + size):
+            raise Refuse("follow: branch into the area for the stub")
+    # redirect the (single) branch that reaches the fixed site
+    srcs = [i for i in range(n) if branch_target(words, i) == m]
+    if len(srcs) != 1:
+        raise Refuse("follow: branch to the key-up site not found (%d candidates)" % len(srcs))
+    b = srcs[0]
+    edits = [(base + 4 * (c + j), words[c + j], stub[j]) for j in range(size)]
+    edits.append((base + 4 * b, words[b], branch(words[b] & 0xff000000, base + 4 * b, base + 4 * c)))
+    return edits, False
+
+
 def main(argv):
     check = False
     fresh = True
+    follow = True
     delay, period = 600, 100
     keyup = None
+    keyup_max, margin = 400, 30
     args = list(argv)
     path = None
     while args:
@@ -358,8 +470,14 @@ def main(argv):
             period = int(args.pop(0))
         elif a == "--no-fresh-press":
             fresh = False
+        elif a == "--no-follow":
+            follow = False
         elif a == "--keyup":
             keyup = int(args.pop(0))
+        elif a == "--keyup-max":
+            keyup_max = int(args.pop(0))
+        elif a == "--follow-margin":
+            margin = int(args.pop(0))
         elif path is None:
             path = a
         else:
@@ -368,6 +486,9 @@ def main(argv):
     if path is None or not (0 < period < 4096 and 0 < delay < 4096):
         print(__doc__)
         return 1
+    follow = follow and fresh
+    if follow and keyup is None:
+        keyup = 130
     d = bytearray(open(path, "rb").read())
     try:
         edits, done = plan(bytes(d), delay, period)
@@ -390,6 +511,18 @@ def main(argv):
             return 2
         edits += e2
         done = done and done2
+    if follow:
+        # the stub is planned on the image with the fresh-press edits applied
+        tmp = bytearray(d)
+        for off, _old, new in edits:
+            struct.pack_into("<I", tmp, off, new)
+        try:
+            e4, done4 = plan_follow(bytes(tmp), keyup, keyup_max, margin)
+        except Refuse as e:
+            print("REFUSED: %s" % e)
+            return 2
+        edits += e4
+        done = done and done4
     if done:
         print("already patched, nothing to do")
         return 0
@@ -414,6 +547,9 @@ def main(argv):
         return 2
     if keyup is not None and not plan_keyup(bytes(d), keyup)[1]:
         print("REFUSED: key-up patch does not verify")
+        return 2
+    if follow and not plan_follow(bytes(d), keyup, keyup_max, margin)[1]:
+        print("REFUSED: follow patch does not verify")
         return 2
     open(path, "wb").write(d)
     print("patched %s: kernel autorepeat restored, delay %d ms, period %d ms%s"
