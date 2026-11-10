@@ -5,7 +5,7 @@ PRECOMPILED_NAME = "dreambox-dvb-modules"
 # one driver build for the Dreambox One and Two
 PRECOMPILED_ARCH = "meson64"
 
-PR = "r3"
+PR = "r4"
 
 require dreambox-dvb-modules-meson64.inc
 
@@ -58,6 +58,12 @@ COMPATIBLE_MACHINE = "^(dreamone|dreamtwo)$"
 # the vtuner mutex held, and every later PID change on that vtuner blocks.
 # The BUG() becomes the regular exit, which unlocks the mutex; the log of
 # the PID list stays.
+#
+# decoder_poll reads the vdec of the decoder twice, without a lock and
+# without a check. A poll of the dvr while the decoder closes finds it NULL
+# and crashes in stbuf_level. The vdec is now read once and checked; the
+# _mcount call makes room for that, its relocation and __mcount_loc entry
+# become R_AARCH64_NONE.
 patch_ko() {
     ko=${D}/lib/modules/${DM_LOCALVERSION}/extra/$1
     # do_install hard links ${D} to ${S}, patch a copy of our own
@@ -107,4 +113,14 @@ do_install:append() {
     # aml_vtuner_pid_action: brk #0x800 -> b .text+0xac60, .text+0xad1c
     patch_ko core/meson64.ko 44420 000021d4 '\321\377\377\027'
     echo "3fde08003c13e88572bf586f17276449  $core/meson64.ko" | md5sum -c -
+    # decoder_poll: read the vdec once and check it, .text+0x785c
+    patch_ko core/meson64.ko 30916 e0031eaa '\365\003\001\252\364\003\002\252\277\002\000\361\204\032\100\372\200\001\000\124\203\002\100\371\141\002\002\221\177\000\000\361\044\030\100\372\200\000\000\124\342\003\024\252\340\003\025\252\140\000\077\326\140\172\100\271\037\004\000\161\300\004\000\124\024\000\200\122\165\012\100\371\225\001\000\264\240\102\001\221\037\040\003\325'
+    # the second read, .text+0x78c0
+    patch_ko core/meson64.ko 31016 610a40f9 '\341\003\025\252'
+    # the branch back to the read, .text+0x7934
+    patch_ko core/meson64.ko 31132 ddffff17 '\333\377\377\027'
+    # relocation and __mcount_loc entry of .text+0x7868 -> R_AARCH64_NONE
+    patch_ko core/meson64.ko 1269616 1b010000 '\000\000\000\000\000\000\000\000'
+    patch_ko core/meson64.ko 1303960 01010000 '\000\000\000\000\000\000\000\000'
+    echo "5ba6953e2f622d7281fe1460a199dd96  $core/meson64.ko" | md5sum -c -
 }
