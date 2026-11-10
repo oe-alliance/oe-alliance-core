@@ -5,7 +5,7 @@ HOMEPAGE = "https://repo.kodinerds.net/"
 require conf/license/license-gplv2.inc
 
 SRC_URI = "https://repo.kodinerds.net/addons/repository.kodinerds/repository.kodinerds-${PV}.zip"
-SRC_URI[sha256sum] = "6adba4acc198cde6055926e4495565549f9f5f453db68f73389646223aadd412"
+SRC_URI[sha256sum] = "690771ac6c21a7b726a58401de172799cbacc257c73b8ca17885d1bd5345e8ea"
 
 inherit allarch
 

@@ -9,8 +9,8 @@ inherit kodi-addon
 
 DEPENDS += "bzip2 ffmpeg zlib"
 
-SRCREV = "70c378da893cdcfb031b54f84811c17c14b4fb2d"
-PV = "22.2.10+gitr"
+SRCREV = "6982117566a501d60b388269ef4d7a72cb0e63a2"
+PV = "22.2.11+gitr"
 PR = "r1"
 
 KODIADDONBRANCH = "Piers"

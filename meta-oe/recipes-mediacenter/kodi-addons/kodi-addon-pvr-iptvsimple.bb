@@ -1,7 +1,7 @@
 SUMMARY = "Kodi Media Center PVR plugins"
 
 PKGV = "${PV}"
-PR = "r1"
+PR = "r2"
 
 KODIADDONPLUGIN = "iptvsimple"
 

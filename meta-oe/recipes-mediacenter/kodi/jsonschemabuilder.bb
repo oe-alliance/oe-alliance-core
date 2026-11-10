@@ -2,7 +2,7 @@ SUMMARY = "Kodi json schema builder"
 LICENSE = "GPL-2.0-or-later"
 LIC_FILES_CHKSUM = "file://JsonSchemaBuilder.cpp;beginline=2;endline=18;md5=1f67721215c03f66545390f6e45b99c7"
 
-SRCREV = "8c36cc7f2699baa1f55bdbc52f12e90e73546795"
+SRCREV = "d686683a55d50e576dd282f53fb2bf9914931b38"
 
 PV = "22.0+gitr"
 SRC_URI = "git://github.com/xbmc/xbmc.git;branch=Piers;protocol=https"
