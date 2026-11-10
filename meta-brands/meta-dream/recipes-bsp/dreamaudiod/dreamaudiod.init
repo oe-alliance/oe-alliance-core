@@ -3,11 +3,14 @@
 # Audio decoding service: the SoC has no audio decoder, the player drives
 # the kernel's audio decoder device and this service decodes for it.
 
-PIDFILE=/run/dreamaudiod.pid
+PIDFILE=/var/run/dreamaudiod.pid
 
 case "$1" in
 start)
-	[ -f $PIDFILE ] && kill -0 $(cat $PIDFILE) 2>/dev/null && exit 0
+	if [ -f $PIDFILE ]; then
+		grep -qs dreamaudiod /proc/$(cat $PIDFILE)/cmdline && exit 0
+		rm -f $PIDFILE
+	fi
 	# restarted if it ends; the reason goes to the syslog. A session of
 	# its own keeps the loop out of the process group of the boot scripts.
 	setsid /bin/sh -c '
