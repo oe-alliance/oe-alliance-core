@@ -6,7 +6,7 @@ FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 # several seconds during Kodi startup.
 RRECOMMENDS:alsa-state:append = "${@'' if (d.getVar('SOC_FAMILY') or '').startswith('hisi') and 'kodi22' in (d.getVar('MACHINE_FEATURES') or '').split() else ' libasound-module-ctl-oss libasound-module-pcm-oss'}"
 
-PR:append = ".10"
+PR:append = ".11"
 PACKAGE_ARCH := "${MACHINE_ARCH}"
 
 # All Kodi-capable HiSilicon variants expose the same HISI-AIAO card. The
@@ -32,3 +32,16 @@ EXTRA_ALSA:dreamone = "meson64"
 EXTRA_ALSA:dreamtwo = "meson64"
 
 require alsa-state-${EXTRA_ALSA}.inc
+
+# The generated postinst runs under "set -e" and the update-rc.d call follows
+# this function, so a state file that does not match the present card would
+# also cost the runlevel links, not just the package status.
+pkg_postinst:${PN}() {
+	if test -z "$D"
+	then
+		if test -x ${sbindir}/alsactl
+		then
+			${sbindir}/alsactl -g -f ${localstatedir}/lib/alsa/asound.state restore || true
+		fi
+	fi
+}
