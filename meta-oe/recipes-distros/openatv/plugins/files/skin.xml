@@ -1,0 +1,391 @@
+<skin>
+	<!-- =======================================================
+	     Tmavě modrý Full HD skin Elektro pro OpenATV (Enigma2)
+	     Rozlišení: 1920x1080
+	     Autor: vytvořeno na míru uživateli
+	     ======================================================= -->
+
+	<colors>
+		<!-- Elektro: hluboká námořnická modř, bílý text a jasně modré zvýraznění -->
+		<color name="black" value="#00000000" />
+		<color name="white" value="#00ffffff" />
+		<color name="accentOrange" value="#000b8fff" />
+		<color name="accentBlue" value="#003ebcff" />
+		<color name="accentPurple" value="#00b75cff" />
+		<color name="accentGreen" value="#0000c8ff" />
+		<color name="accentRed" value="#00ff5367" />
+		<color name="bgDark" value="#0006101e" />
+		<color name="bgPanel" value="#000d1a2b" />
+		<color name="bgPanelLight" value="#00182a42" />
+		<color name="bgPanelGlass" value="#c0081729" />
+		<color name="bgPanelGlassLight" value="#d0162a43" />
+		<color name="textNormal" value="#00f4f7ff" />
+		<color name="textShadow" value="#00030a13" />
+		<color name="textSelected" value="#00ffffff" />
+		<color name="listMain" value="#00101e31" />
+		<color name="listMarked" value="#00354361" />
+		<color name="listSelected" value="#000b78e8" />
+		<color name="ButtonText" value="#00ffffff" />
+		<color name="ButtonTextDisabled" value="#00778292" />
+		<color name="LabelForeground" value="#00f4f7ff" />
+		<color name="WindowTitleForeground" value="#00ffffff" />
+	</colors>
+
+	<fonts>
+		<!-- OpenATV standardně obsahuje font "Regular"/"nmsbd" - ponecháváme systémové cesty -->
+		<font filename="nmsbd.ttf" name="Regular" scale="100" />
+		<font filename="nmsbd.ttf" name="Bold" scale="100" />
+		<font filename="mkbank.ttf" name="Digital" scale="100" />
+	</fonts>
+
+	<subtitles>
+		<eSubtitleWidget zPosition="2" font="Regular;42" haloColor="black" foregroundColor="white" borderColor="black" borderWidth="2" />
+	</subtitles>
+
+	<windowstyle type="skinned">
+		<color name="Background" color="bgDark" />
+		<color name="LabelForeground" color="textNormal" />
+		<color name="ListboxBackground" color="listMain" />
+		<color name="ListboxSelectedBackground" color="listSelected" />
+		<color name="ListboxMarkedBackground" color="listMarked" />
+		<color name="ListboxSelectedForeground" color="textSelected" />
+		<color name="ListboxMarkedForeground" color="black" />
+		<color name="WindowTitleForeground" color="WindowTitleForeground" />
+
+		<font name="Title" font="Bold;28" />
+
+		<windowstyle>
+			<title offset="10,4" font="Bold;30" />
+			<border size="2" color="accentOrange" />
+		</windowstyle>
+	</windowstyle>
+
+	<!-- =======================================================
+	     INFOBAR – hlavní lišta při přepínání kanálů
+	     (poloprůhledný "glass" panel + logo kanálu vlevo)
+	     ======================================================= -->
+	<screen name="InfoBar" position="0,930" size="1920,150" flags="wfNoBorder" backgroundColor="bgPanelGlass">
+		<!-- Moderní dolní lišta s odděleným kanálem, programy a stavem přijímače -->
+		<eLabel position="0,0" size="1920,6" backgroundColor="accentOrange" zPosition="5" />
+		<eLabel position="282,14" size="2,122" backgroundColor="bgPanelLight" zPosition="2" />
+		<eLabel position="1365,14" size="2,122" backgroundColor="bgPanelLight" zPosition="2" />
+
+		<widget source="session.CurrentService" render="Picon" position="24,15" size="238,120"
+			zPosition="2" transparent="1" alphatest="blend" />
+
+		<widget source="session.CurrentService" render="Label" position="310,12" size="1010,36"
+			font="Bold;30" foregroundColor="textSelected" backgroundColor="bgPanelGlass" transparent="1"
+			noWrap="1" valign="center">
+			<convert type="ServiceName" />
+		</widget>
+
+		<widget source="session.Event_Now" render="Label" position="310,52" size="1010,30"
+			font="Bold;23" foregroundColor="textNormal" backgroundColor="bgPanelGlass" transparent="1"
+			noWrap="1">
+			<convert type="EventName">Name</convert>
+		</widget>
+
+		<widget source="session.Event_Now" render="Progress" position="310,88" size="1000,10"
+			backgroundColor="bgPanelGlassLight" foregroundColor="accentGreen" borderWidth="1" borderColor="accentBlue">
+			<convert type="EventTime">Progress</convert>
+		</widget>
+
+		<widget source="session.Event_Next" render="Label" position="310,105" size="1010,28"
+			font="Regular;19" foregroundColor="accentBlue" backgroundColor="bgPanelGlass" transparent="1"
+			noWrap="1">
+			<convert type="EventName">Name</convert>
+		</widget>
+
+		<widget source="global.CurrentTime" render="Label" position="1400,13" size="470,48"
+			font="Digital;38" foregroundColor="textSelected" backgroundColor="bgPanelGlass" transparent="1"
+			halign="center" valign="center">
+			<convert type="ClockToText" />
+		</widget>
+
+		<eLabel text="KVALITA" position="1390,70" size="116,26" font="Regular;17"
+			foregroundColor="accentBlue" backgroundColor="bgPanelGlass" transparent="1" />
+		<widget source="session.FrontendInfo" render="Label" position="1505,68" size="360,28"
+			font="Bold;19" foregroundColor="textNormal" backgroundColor="bgPanelGlass" transparent="1" halign="right">
+			<convert type="FrontendInfo">SNRdB</convert>
+		</widget>
+		<widget source="session.FrontendInfo" render="Progress" position="1390,92" size="475,6"
+			backgroundColor="bgPanelGlassLight" foregroundColor="accentBlue">
+			<convert type="FrontendInfo">SNRBar</convert>
+		</widget>
+		<eLabel text="SÍLA" position="1390,104" size="116,26" font="Regular;17"
+			foregroundColor="accentBlue" backgroundColor="bgPanelGlass" transparent="1" />
+		<widget source="session.FrontendInfo" render="Label" position="1505,102" size="360,28"
+			font="Bold;19" foregroundColor="textNormal" backgroundColor="bgPanelGlass" transparent="1" halign="right">
+			<convert type="FrontendInfo">AGC</convert>
+		</widget>
+		<widget source="session.FrontendInfo" render="Progress" position="1390,126" size="475,6"
+			backgroundColor="bgPanelGlassLight" foregroundColor="accentGreen">
+			<convert type="FrontendInfo">AGCBar</convert>
+		</widget>
+	</screen>
+
+	<!-- =======================================================
+	     EPG – detailní přehled programů pro vybraný kanál
+	     Tmavý panel s jasným modrým pruhem, logem kanálu a aktivním pořadem,
+	     poloprůhledná hlavička, zvýrazněný právě běžící pořad
+	     ======================================================= -->
+	<screen name="EPGSelection" position="center,center" size="1700,1000" title="Přehled programů (EPG)" backgroundColor="bgPanel">
+
+		<!-- horní cyan akcentový pruh -->
+		<eLabel position="0,0" size="1700,6" backgroundColor="accentOrange" zPosition="5" />
+
+		<!-- poloprůhledná hlavička s logem kanálu -->
+		<eLabel position="0,6" size="1700,110" backgroundColor="bgPanelGlass" zPosition="1" />
+		<eLabel position="0,6" size="8,110" backgroundColor="accentBlue" zPosition="3" />
+		<widget source="Service" render="Picon" position="30,20" size="150,84"
+			zPosition="2" transparent="1" alphatest="blend" />
+		<widget source="Service" render="Label" position="200,20" size="1100,50"
+			font="Bold;36" foregroundColor="textSelected" backgroundColor="bgPanelGlass" transparent="1">
+			<convert type="ServiceName" />
+		</widget>
+		<eLabel text="Přehled programů" position="200,68" size="1100,32"
+			font="Regular;22" foregroundColor="accentOrange" backgroundColor="bgPanelGlass" transparent="1" />
+		<widget source="global.CurrentTime" render="Label" position="1380,20" size="290,84"
+			font="Digital;40" foregroundColor="accentBlue" backgroundColor="bgPanelGlass" transparent="1"
+			halign="right" valign="center">
+			<convert type="ClockToText" />
+		</widget>
+
+		<!-- oddělovací cyan linka pod hlavičkou -->
+		<eLabel position="0,116" size="1700,3" backgroundColor="accentOrange" zPosition="5" />
+
+		<!-- seznam pořadů -->
+		<widget name="list" position="30,140" size="1640,800" itemHeight="68"
+			backgroundColor="listMain" backgroundColorSelected="listSelected"
+			foregroundColorSelected="textSelected" foregroundColor="textNormal"
+			scrollbarMode="showOnDemand" font="Regular;30" transparent="0" />
+
+		<!-- spodní nápověda -->
+		<eLabel position="0,960" size="1700,3" backgroundColor="accentOrange" zPosition="5" />
+		<eLabel text="OK = přepnout na pořad   •   INFO = detail pořadu   •   EXIT = zpět" position="30,970" size="1640,28"
+			font="Regular;20" foregroundColor="accentPurple" backgroundColor="bgPanel" transparent="1" halign="center" />
+	</screen>
+
+	<!-- =======================================================
+	     DETAIL POŘADU (info o vybraném pořadu z EPG)
+	     ======================================================= -->
+	<screen name="EventViewSimple" position="center,center" size="1500,900" title="Informace o pořadu" backgroundColor="bgPanel">
+		<eLabel position="0,0" size="1500,6" backgroundColor="accentOrange" zPosition="5" />
+
+		<!-- hlavička s logem kanálu -->
+		<eLabel position="0,6" size="1500,120" backgroundColor="bgPanelGlass" zPosition="1" />
+		<eLabel position="30,22" size="150,88" backgroundColor="accentGreen" zPosition="2" />
+		<widget source="Event0" render="Label" position="210,20" size="1260,54"
+			font="Bold;40" foregroundColor="textSelected" backgroundColor="bgPanelGlass" transparent="1">
+			<convert type="EventName">Name</convert>
+		</widget>
+		<widget source="Event0" render="Label" position="210,78" size="1260,36"
+			font="Regular;24" foregroundColor="accentBlue" backgroundColor="bgPanelGlass" transparent="1">
+			<convert type="EventTime">Duration</convert>
+		</widget>
+
+		<eLabel position="0,126" size="1500,3" backgroundColor="accentOrange" zPosition="5" />
+
+		<!-- popis pořadu -->
+		<eLabel position="30,150" size="1440,3" backgroundColor="accentPurple" zPosition="2" />
+		<widget source="Event0" render="Label" position="30,170" size="1440,650"
+			font="Regular;28" foregroundColor="textNormal" backgroundColor="bgPanel" transparent="1">
+			<convert type="EventName">ExtendedDescription</convert>
+		</widget>
+
+		<eLabel position="0,850" size="1500,3" backgroundColor="accentOrange" zPosition="5" />
+		<eLabel text="EXIT = zpět na přehled programů" position="30,860" size="1440,28"
+			font="Regular;20" foregroundColor="accentPurple" backgroundColor="bgPanel" transparent="1" halign="center" />
+	</screen>
+
+	<screen name="EventViewEPGSelect" position="center,center" size="1500,900" title="Informace o pořadu" backgroundColor="bgPanel">
+		<eLabel position="0,0" size="1500,6" backgroundColor="accentOrange" zPosition="5" />
+
+		<eLabel position="0,6" size="1500,120" backgroundColor="bgPanelGlass" zPosition="1" />
+		<eLabel position="30,22" size="150,88" backgroundColor="accentGreen" zPosition="2" />
+		<widget source="Event0" render="Label" position="210,20" size="1260,54"
+			font="Bold;40" foregroundColor="textSelected" backgroundColor="bgPanelGlass" transparent="1">
+			<convert type="EventName">Name</convert>
+		</widget>
+		<widget source="Event0" render="Label" position="210,78" size="1260,36"
+			font="Regular;24" foregroundColor="accentBlue" backgroundColor="bgPanelGlass" transparent="1">
+			<convert type="EventTime">Duration</convert>
+		</widget>
+
+		<eLabel position="0,126" size="1500,3" backgroundColor="accentOrange" zPosition="5" />
+
+		<eLabel position="30,150" size="1440,3" backgroundColor="accentPurple" zPosition="2" />
+		<widget source="Event0" render="Label" position="30,170" size="1440,600"
+			font="Regular;28" foregroundColor="textNormal" backgroundColor="bgPanel" transparent="1">
+			<convert type="EventName">ExtendedDescription</convert>
+		</widget>
+
+		<eLabel position="0,850" size="1500,3" backgroundColor="accentOrange" zPosition="5" />
+		<eLabel text="◀ předchozí pořad          další pořad ▶          EXIT = zpět" position="30,860" size="1440,28"
+			font="Regular;20" foregroundColor="accentPurple" backgroundColor="bgPanel" transparent="1" halign="center" />
+	</screen>
+
+	<!-- =======================================================
+	     VÝBĚR KANÁLU (Channel selection list)
+	     Loga kanálů (picon) se zobrazí automaticky, pokud jsou PNG
+	     soubory nahrané v /usr/share/enigma2/picon/ - viz NAVOD.md
+	     ======================================================= -->
+	<screen name="ChannelSelection" position="center,center" size="1400,900" title="Výběr kanálu" backgroundColor="bgPanel">
+		<eLabel position="0,0" size="1400,7" backgroundColor="accentBlue" zPosition="5" />
+		<eLabel text="VÝBĚR STANICE" position="30,20" size="1340,56"
+			font="Bold;34" foregroundColor="textSelected" backgroundColor="bgPanel" transparent="1" />
+		<widget name="list" position="20,90" size="1360,790" scrollbarMode="showOnDemand"
+			itemHeight="60" backgroundColor="listMain" backgroundColorSelected="listSelected"
+			foregroundColorSelected="textSelected" foregroundColor="textNormal" />
+	</screen>
+
+	<!-- =======================================================
+	     VOLUME (hlasitost)
+	     ======================================================= -->
+	<screen name="Volume" position="center,900" size="600,90" title="Hlasitost" flags="wfNoBorder" backgroundColor="bgPanel">
+		<eLabel position="0,0" size="600,4" backgroundColor="accentOrange" />
+		<widget source="Volume" render="Label" position="20,10" size="150,50"
+			font="Bold;30" foregroundColor="textNormal" transparent="1" />
+		<widget source="Volume" render="Progress" position="180,25" size="400,30"
+			backgroundColor="bgPanelLight" foregroundColor="accentBlue" borderWidth="1" borderColor="accentPurple" />
+	</screen>
+
+	<!-- =======================================================
+	     ZÁKLADNÍ HLAVNÍ MENU
+	     ======================================================= -->
+	<screen name="MainMenu" position="center,center" size="1450,900" title="Hlavní nabídka" backgroundColor="bgPanelGlass">
+		<eLabel position="0,0" size="1450,8" backgroundColor="accentBlue" zPosition="5" />
+		<eLabel position="24,26" size="410,846" backgroundColor="bgPanelGlassLight" zPosition="0" />
+		<widget name="Standby" pixmap="servisnik.png" position="48,52" size="362,350" zPosition="2" alphatest="on" />
+		<eLabel text="ELEKTRO SLABÝ" position="50,425" size="360,48" font="Bold;30"
+			foregroundColor="textSelected" backgroundColor="bgPanelGlassLight" transparent="1" />
+		<eLabel text="604 522 940" position="50,476" size="360,42" font="Bold;29"
+			foregroundColor="accentBlue" backgroundColor="bgPanelGlassLight" transparent="1" />
+		<eLabel position="48,540" size="362,2" backgroundColor="bgPanelLight" />
+		<eLabel position="48,564" size="6,248" backgroundColor="accentRed" />
+		<eLabel text="POZOR" position="66,566" size="330,34" font="Bold;23"
+			foregroundColor="accentRed" backgroundColor="bgPanelGlassLight" transparent="1" />
+		<eLabel text="Než začnete tady něco měnit, volejte servis." position="66,610" size="330,100" font="Bold;22"
+			foregroundColor="textNormal" backgroundColor="bgPanelGlassLight" transparent="1" />
+		<eLabel text="Elektro Slabý • 604 522 940" position="66,742" size="330,50" font="Bold;21"
+			foregroundColor="accentBlue" backgroundColor="bgPanelGlassLight" transparent="1" />
+		<eLabel position="456,26" size="970,846" backgroundColor="bgPanel" zPosition="0" />
+		<eLabel text="HLAVNÍ NABÍDKA" position="490,48" size="900,60" font="Bold;34"
+			foregroundColor="textSelected" backgroundColor="bgPanel" transparent="1" />
+		<eLabel position="490,116" size="900,3" backgroundColor="bgPanelLight" />
+		<widget name="menu" position="480,142" size="920,700" itemHeight="68"
+			backgroundColor="listMain" backgroundColorSelected="listSelected"
+			foregroundColorSelected="textSelected" foregroundColor="textNormal"
+			font="Bold;28" />
+	</screen>
+
+	<!-- Nastavení: servisní kontakt a upozornění jsou viditelné vedle seznamu voleb -->
+	<screen name="Setup" position="center,center" size="1450,900" title="Nastavení" backgroundColor="bgPanelGlass">
+		<eLabel position="0,0" size="1450,8" backgroundColor="accentBlue" zPosition="5" />
+		<eLabel position="24,26" size="410,846" backgroundColor="bgPanelGlassLight" zPosition="0" />
+		<widget name="Standby" pixmap="servisnik.png" position="48,52" size="362,350" zPosition="2" alphatest="on" />
+		<eLabel text="ELEKTRO SLABÝ" position="50,425" size="360,48" font="Bold;30"
+			foregroundColor="textSelected" backgroundColor="bgPanelGlassLight" transparent="1" />
+		<eLabel text="TEL. 604 522 940" position="50,476" size="360,42" font="Bold;29"
+			foregroundColor="accentBlue" backgroundColor="bgPanelGlassLight" transparent="1" />
+		<eLabel position="48,540" size="362,2" backgroundColor="bgPanelLight" />
+		<eLabel position="48,564" size="6,248" backgroundColor="accentRed" />
+		<eLabel text="NEŽ ZAČNETE TADY NĚCO MĚNIT, VOLEJTE SERVIS." position="66,566" size="330,152" font="Bold;22"
+			foregroundColor="textNormal" backgroundColor="bgPanelGlassLight" transparent="1" />
+		<eLabel text="Elektro Slabý • 604 522 940" position="66,742" size="330,50" font="Bold;21"
+			foregroundColor="accentBlue" backgroundColor="bgPanelGlassLight" transparent="1" />
+		<eLabel position="456,26" size="970,846" backgroundColor="bgPanel" zPosition="0" />
+		<eLabel text="NASTAVENÍ" position="490,48" size="900,60" font="Bold;34"
+			foregroundColor="textSelected" backgroundColor="bgPanel" transparent="1" />
+		<eLabel position="490,116" size="900,3" backgroundColor="bgPanelLight" />
+		<widget name="config" position="480,142" size="920,700" itemHeight="58" scrollbarMode="showOnDemand"
+			backgroundColor="listMain" backgroundColorSelected="listSelected"
+			foregroundColorSelected="textSelected" foregroundColor="textNormal" font="Regular;25" />
+	</screen>
+
+	<!-- =======================================================
+	     MESSAGEBOX (dialogová okna, potvrzení)
+	     ======================================================= -->
+	<screen name="MessageBox" position="center,center" size="800,400" title="Zpráva" flags="wfNoBorder" backgroundColor="bgPanelGlass">
+		<eLabel position="0,0" size="800,6" backgroundColor="accentRed" zPosition="5" />
+		<widget name="text" position="30,40" size="740,220" font="Regular;30" foregroundColor="textNormal" transparent="1" />
+		<widget name="list" position="30,270" size="740,100" zPosition="1"
+			backgroundColorSelected="listSelected" foregroundColorSelected="textSelected" transparent="1" />
+	</screen>
+
+	<!-- =======================================================
+	     CHOICEBOX (nabídka voleb - dlouhý stisk OK apod.)
+	     ======================================================= -->
+	<screen name="ChoiceBox" position="center,center" size="700,600" title="Volba" flags="wfNoBorder" backgroundColor="bgPanelGlass">
+		<eLabel position="0,0" size="700,6" backgroundColor="accentBlue" zPosition="5" />
+		<widget name="text" position="20,20" size="660,60" font="Bold;30" foregroundColor="textNormal" transparent="1" />
+		<widget name="list" position="20,90" size="660,490"
+			backgroundColorSelected="listSelected" foregroundColorSelected="textSelected" itemHeight="48" />
+	</screen>
+
+	<!-- =======================================================
+	     INPUTBOX (zadávání textu/čísel)
+	     ======================================================= -->
+	<screen name="InputBox" position="center,center" size="700,200" title="Zadejte hodnotu" flags="wfNoBorder" backgroundColor="bgPanel">
+		<eLabel position="0,0" size="700,6" backgroundColor="accentGreen" zPosition="5" />
+		<widget name="text" position="20,20" size="660,50" font="Regular;28" foregroundColor="textNormal" transparent="1" />
+		<widget name="input" position="20,90" size="660,60" font="Bold;34"
+			foregroundColor="accentOrange" backgroundColor="bgPanelLight" halign="center" />
+	</screen>
+
+	<!-- =======================================================
+	     VIRTUÁLNÍ KLÁVESNICE
+	     ======================================================= -->
+	<screen name="VirtualKeyBoard" position="center,center" size="1400,500" title="Klávesnice" flags="wfNoBorder" backgroundColor="bgPanel">
+		<eLabel position="0,0" size="1400,6" backgroundColor="accentPurple" zPosition="5" />
+		<widget name="text" position="20,20" size="1360,60" font="Bold;32" foregroundColor="textNormal" transparent="1" />
+		<widget name="list" position="20,100" size="1360,380" itemHeight="60"
+			backgroundColorSelected="listSelected" foregroundColorSelected="textSelected" />
+	</screen>
+
+	<!-- =======================================================
+	     PLUGIN BROWSER
+	     ======================================================= -->
+	<screen name="PluginBrowser" position="center,center" size="1200,800" title="Pluginy">
+		<widget name="list" position="10,10" size="1180,750" itemHeight="90"
+			backgroundColorSelected="listSelected" foregroundColorSelected="textSelected" />
+	</screen>
+
+	<!-- =======================================================
+	     STANDBY (klidový režim) – vizitka servisního technika
+	     Soubor "servisnik.png" musí ležet ve stejné složce jako skin.xml
+	     ======================================================= -->
+	<screen name="Standby" position="0,0" size="1920,1080" flags="wfNoBorder" backgroundColor="bgDark">
+
+		<!-- fotka technika -->
+		<widget name="Standby" pixmap="servisnik.png" position="150,150" size="514,520" zPosition="1" alphatest="on" />
+
+		<!-- Jemný stříbrný rámeček fotografie -->
+		<eLabel position="126,126" size="562,568" backgroundColor="accentBlue" zPosition="0" />
+
+		<!-- Název skinu / značky -->
+		<eLabel text="ELEKTRO" position="800,205" size="950,100"
+			font="Bold;76" foregroundColor="white" backgroundColor="bgDark" transparent="1" />
+		<eLabel position="800,315" size="700,3" backgroundColor="accentOrange" />
+
+		<!-- Nabízené služby -->
+		<eLabel text="SERVIS SATELITŮ A ANTÉN" position="800,355" size="950,58"
+			font="Bold;36" foregroundColor="textNormal" backgroundColor="bgDark" transparent="1" />
+		<eLabel text="SERVIS POČÍTAČŮ" position="800,425" size="950,58"
+			font="Bold;36" foregroundColor="textNormal" backgroundColor="bgDark" transparent="1" />
+
+		<!-- Telefon -->
+		<eLabel text="604 522 940" position="800,545" size="950,80"
+			font="Bold;56" foregroundColor="white" backgroundColor="bgDark" transparent="1" />
+
+		<!-- Hodiny ve standby -->
+		<widget source="global.CurrentTime" render="Label" position="800,670" size="950,115"
+			font="Digital;82" foregroundColor="accentBlue" backgroundColor="bgDark" transparent="1">
+			<convert type="ClockToText">Format:%H:%M</convert>
+		</widget>
+
+		<eLabel text="ELEKTRO  •  STISKNĚTE PRO PROBUZENÍ" position="150,990" size="1620,50"
+			font="Regular;26" foregroundColor="textNormal" backgroundColor="bgDark" transparent="1" halign="center" />
+	</screen>
+
+</skin>
