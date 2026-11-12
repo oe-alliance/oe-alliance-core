@@ -13,10 +13,10 @@ RRECOMMENDS:${PN} = "kernel-module-ext2"
 
 # Track the Piers branch together with Kodi 22 so its binary API and third-party
 # add-on properties match the public STB Kodi build.
-SRCREV_default = "e7418d4e8441dc53316657faf34c2f353c901a7e"
+SRCREV_default = "4bbfbc67f97b5c06760c7b40bfc51b787e4bd542"
 SRCREV_bento4 = "a4a4172467e592c17c7d823f81196e77e4486f91"
 SRCREV_FORMAT = "default_bento4"
-PV = "22.3.23+gitr"
+PV = "22.3.24+gitr"
 PR = "r1"
 
 KODIADDONBRANCH = "Piers"

@@ -1,0 +1,27 @@
+From 6d408bf30e2351a6623c49ce446473fa0d139b01 Mon Sep 17 00:00:00 2001
+From: Pablo Saavedra <psaavedra@igalia.com>
+Date: Thu, 8 May 2025 14:58:23 +0200
+Subject: Fix compilation errors by including <cstdint>
+
+Add missing #include <cstdint> in output.h to define uint8_t
+This resolve errors related to undefined uint8_t type
+---
+ include/woff2/output.h | 1 +
+ 1 file changed, 1 insertion(+)
+
+Upstream-Status: Submitted [https://github.com/google/woff2/pull/176]
+
+Signed-off-by: Pablo Saavedra <psaavedra@igalia.com>
+
+diff --git a/include/woff2/output.h b/include/woff2/output.h
+index c325f67..5c4dc4d 100644
+--- a/include/woff2/output.h
++++ b/include/woff2/output.h
+@@ -10,6 +10,7 @@
+ #define WOFF2_WOFF2_OUT_H_
+ 
+ #include <algorithm>
++#include <cstdint>
+ #include <cstring>
+ #include <memory>
+ #include <string>

@@ -942,15 +942,6 @@ index ad939b739a..5bee2c863f 100644
  
    for (auto itt = m_sinkInfoList.begin(); itt != m_sinkInfoList.end(); ++itt)
    {
-@@ -303,6 +312,8 @@ void CActiveAESink::StateMachine(int signal, Protocol *port, Message *msg)
- 
-         case CSinkControlProtocol::FLUSH:
-           ReturnBuffers();
-+          if (m_sink)
-+            m_sink->Flush();
-           msg->Reply(CSinkControlProtocol::ACC);
-           return;
- 
 @@ -925,6 +936,12 @@ void CActiveAESink::OpenSink()
  {
    bool passthrough = (m_requestedFormat.m_dataFormat == AE_FMT_RAW);
@@ -1019,7 +1010,7 @@ diff --git a/xbmc/cores/AudioEngine/Interfaces/AESink.h b/xbmc/cores/AudioEngine
 index 5637c691e3..b3f0e2fd89 100644
 --- a/xbmc/cores/AudioEngine/Interfaces/AESink.h
 +++ b/xbmc/cores/AudioEngine/Interfaces/AESink.h
-@@ -55,6 +55,15 @@ public:
+@@ -55,6 +55,12 @@ public:
    */
    virtual unsigned int AddPackets(uint8_t **data, unsigned int frames, unsigned int offset) = 0;
  
@@ -1028,9 +1019,6 @@ index 5637c691e3..b3f0e2fd89 100644
 +   * hardware A/V clock. The default keeps existing sinks source compatible.
 +   */
 +  virtual void SetTimestamp(int64_t timestampMs, bool valid) {}
-+
-+  // Discard queued hardware audio on seek; existing sinks keep their lifecycle.
-+  virtual void Flush() {}
 +
    /*!
     * @brief instruct the sink to add a pause

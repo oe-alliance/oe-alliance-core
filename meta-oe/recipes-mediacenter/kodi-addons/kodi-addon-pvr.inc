@@ -25,6 +25,11 @@ SRC_URI = "git://github.com/${PVRGIT}/pvr.${KODIADDONPLUGIN}.git;destsuffix=pvr.
 
 inherit cmake pkgconfig gettext gitpkgv
 
+# PV ends in +git; use the commit count instead of hash ordering for updates.
+# A stable count requires the complete repository history.
+BB_GIT_SHALLOW = "0"
+PKGV = "${PV}${GITPKGV}"
+
 S = "${UNPACKDIR}/pvr.${KODIADDONPLUGIN}"
 
 OECMAKE_GENERATOR = "Unix Makefiles"
