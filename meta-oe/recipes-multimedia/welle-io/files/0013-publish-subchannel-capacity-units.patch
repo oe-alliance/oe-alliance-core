@@ -1,0 +1,47 @@
+Subject: [PATCH] welle-e2: publish selected audio subchannel and capacity units
+
+Forward the existing FIG subchannel ID, CU start and CU size with selected
+service metadata. Include the service ID and report changes without adding
+any polling or hardware queries.
+
+Refs: https://github.com/openatv/enigma2/issues/4078
+Upstream-Status: Inappropriate [Enigma2 frontend metadata protocol]
+
+--- a/src/welle-e2/welle-e2.cpp
++++ b/src/welle-e2/welle-e2.cpp
+@@ -348,6 +348,9 @@
+ }
+ 
+ struct SelectedServiceMetadata {
++    int subchannelId = -1;
++    int capacityUnitStart = -1;
++    int capacityUnitSize = -1;
+     std::string label;
+     std::string protection;
+     int bitrate = -1;
+@@ -384,9 +387,15 @@
+         const int programmeType = service.programType;
+         const int programmeTypeTable = receiver.getProgrammeTypeTable();
+         if (language != previous.language || bitrate != previous.bitrate ||
++                subchannel.subChId != previous.subchannelId ||
++                subchannel.startAddr != previous.capacityUnitStart || subchannel.length != previous.capacityUnitSize ||
+                 programmeType != previous.programmeType || programmeTypeTable != previous.programmeTypeTable ||
+                 dabPlus != previous.dabPlus || protection != previous.protection) {
+             json format;
++            format["serviceId"] = std::to_string(service.serviceId);
++            format["subchannelId"] = std::to_string(subchannel.subChId);
++            format["capacityUnitStart"] = std::to_string(subchannel.startAddr);
++            format["capacityUnitSize"] = std::to_string(subchannel.length);
+             format["bitrate"] = std::to_string(bitrate);
+             format["dabType"] = dabPlus ? "DAB+" : "DAB";
+             format["language"] = language > 0 ? std::to_string(language) : "";
+@@ -394,6 +403,9 @@
+             format["pty"] = std::to_string(programmeType);
+             format["ptyTable"] = std::to_string(programmeTypeTable);
+             emitMetadata(format);
++            previous.subchannelId = subchannel.subChId;
++            previous.capacityUnitStart = subchannel.startAddr;
++            previous.capacityUnitSize = subchannel.length;
+             previous.language = language;
+             previous.programmeType = programmeType;
+             previous.programmeTypeTable = programmeTypeTable;
