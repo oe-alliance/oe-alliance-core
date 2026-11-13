@@ -1,0 +1,62 @@
+From b12b48bff52af86550eeb541204dfdaaf6e337cf Mon Sep 17 00:00:00 2001
+From: Tillmann Severin <tillmann.severin@mailbox.org>
+Date: Sat, 1 Aug 2026 20:00:31 +0200
+Subject: [PATCH 10/26] ARM: hisi: add Hi3798MV200 machine support
+
+Hi3798MV200 is a quad Cortex-A53 set-top box SoC.  It is capable of
+running in AArch64 and is described for that case in
+arch/arm64/boot/dts/hisilicon/, but shipping products such as the
+Octagon SF8008 come with a 32-bit only boot chain (HiSilicon
+"Fastboot"), which leaves the CPUs in AArch32.  Add a machine
+descriptor so those boards can run a mainline ARM kernel.
+
+Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>
+---
+ arch/arm/mach-hisi/Kconfig     | 13 +++++++++++++
+ arch/arm/mach-hisi/hisilicon.c |  9 +++++++++
+ 2 files changed, 22 insertions(+)
+
+diff --git a/arch/arm/mach-hisi/Kconfig b/arch/arm/mach-hisi/Kconfig
+index 7b3440687176..0260446e6f9e 100644
+--- a/arch/arm/mach-hisi/Kconfig
++++ b/arch/arm/mach-hisi/Kconfig
+@@ -24,6 +24,19 @@ config ARCH_HI3xxx
+ 	help
+ 	  Support for Hisilicon Hi36xx SoC family
+ 
++config ARCH_HI3798MV200
++	bool "Hisilicon Hi3798MV200 family"
++	depends on ARCH_MULTI_V7
++	select HAVE_ARM_ARCH_TIMER
++	select PINCTRL
++	select PINCTRL_SINGLE
++	help
++	  Support for Hisilicon Hi3798MV200 SoC family, a quad Cortex-A53
++	  set-top box SoC running in 32-bit mode.  Found for example in the
++	  Octagon SF8008 satellite receiver.  The same SoC is described for
++	  AArch64 under arch/arm64; this option is for boards whose boot
++	  chain only ever enters AArch32.
++
+ config ARCH_HIP01
+ 	bool "Hisilicon HIP01 family"
+ 	depends on ARCH_MULTI_V7
+diff --git a/arch/arm/mach-hisi/hisilicon.c b/arch/arm/mach-hisi/hisilicon.c
+index b8d14b369cc9..f4bf65b5018e 100644
+--- a/arch/arm/mach-hisi/hisilicon.c
++++ b/arch/arm/mach-hisi/hisilicon.c
+@@ -50,3 +50,12 @@ DT_MACHINE_START(HI3620, "Hisilicon Hi3620 (Flattened Device Tree)")
+ 	.map_io		= hi3620_map_io,
+ 	.dt_compat	= hi3xxx_compat,
+ MACHINE_END
++
++static const char *const hi3798mv200_compat[] __initconst = {
++	"hisilicon,hi3798mv200",
++	NULL,
++};
++
++DT_MACHINE_START(HI3798MV200, "Hisilicon Hi3798MV200 (Flattened Device Tree)")
++	.dt_compat	= hi3798mv200_compat,
++MACHINE_END
+-- 
+2.56.0
+

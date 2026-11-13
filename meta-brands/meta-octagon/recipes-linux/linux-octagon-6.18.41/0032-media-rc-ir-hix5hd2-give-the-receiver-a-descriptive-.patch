@@ -1,0 +1,28 @@
+From 61e17e07b574d878f9d8ad75852f3afa94b3a09b Mon Sep 17 00:00:00 2001
+From: Tillmann Severin <tillmann.severin@mailbox.org>
+Date: Thu, 5 Nov 2026 20:40:05 +0100
+Subject: [PATCH] media: rc: ir-hix5hd2: give the receiver a descriptive name
+
+The input device is presented to user space as "hix5hd2-ir", which says
+what the driver is rather than what the device does. Describe it as the
+infrared remote control receiver that it is, the way the other receivers
+on the same bus are named.
+
+Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>
+---
+ drivers/media/rc/ir-hix5hd2.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/media/rc/ir-hix5hd2.c b/drivers/media/rc/ir-hix5hd2.c
+index 916d3ee5bc42..8d3558270caf 100644
+--- a/drivers/media/rc/ir-hix5hd2.c
++++ b/drivers/media/rc/ir-hix5hd2.c
+@@ -306,7 +306,7 @@ static int hix5hd2_ir_probe(struct platform_device *pdev)
+ 	rdev->driver_name = IR_HIX5HD2_NAME;
+ 	map_name = of_get_property(node, "linux,rc-map-name", NULL);
+ 	rdev->map_name = map_name ?: RC_MAP_EMPTY;
+-	rdev->device_name = IR_HIX5HD2_NAME;
++	rdev->device_name = "hix5hd2 infrared remote control";
+ 	rdev->input_phys = IR_HIX5HD2_NAME "/input0";
+ 	rdev->input_id.bustype = BUS_HOST;
+ 	rdev->input_id.vendor = 0x0001;

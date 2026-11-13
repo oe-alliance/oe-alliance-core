@@ -1,0 +1,33 @@
+From: Octagon SF8008 port
+Subject: [PATCH] gfbdc: present the page that was just rendered
+
+The flip opcode swaps surface and surface_back, so once the swap has
+been done surface_back is the page that has just been rendered into and
+surface is the page the next frame will be drawn to. The display has to
+be panned to surface_back, but the code picks the opposite page: when
+the new drawing target is the higher of the two it pans to the second
+page, and otherwise back to the first one.
+
+The result is that the contents of a frame only become visible one flip
+later, and on a framebuffer whose page height differs from the height of
+the scanout the image is left sitting at the wrong offset altogether.
+
+Use getSurfaceOffset() on the finished surface instead. It computes the
+offset from the physical address, so it stays correct no matter which
+page the renderer started on, and returns 0 for an unallocated surface.
+
+Upstream-Status: Pending
+--- a/lib/gdi/gfbdc.cpp
++++ b/lib/gdi/gfbdc.cpp
+@@ -195,10 +195,7 @@
+ 			surface = surface_back;
+ 			surface_back = s;
+ 
+-			if (surface.data_phys > surface_back.data_phys)
+-				fb->setOffset(surface_back.y);
+-			else
+-				fb->setOffset(0);
++			fb->setOffset(getSurfaceOffset(surface_back));
+ 		}
+ #endif
+ 		break;

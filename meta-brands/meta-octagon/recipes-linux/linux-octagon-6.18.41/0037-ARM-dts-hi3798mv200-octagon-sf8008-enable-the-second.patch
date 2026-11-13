@@ -1,0 +1,65 @@
+From fbc6feace322980bd0eafdf76f2e555574db738d Mon Sep 17 00:00:00 2001
+From: Tillmann Severin <tillmann.severin@mailbox.org>
+Date: Fri, 6 Nov 2026 14:11:32 +0100
+Subject: [PATCH] ARM: dts: hi3798mv200-octagon-sf8008: enable the second I2C
+ controller
+
+The Octagon SF8008 carries two demodulators, and each one hangs off a
+different I2C controller: the Silicon Labs Si2166D used for DVB-S2X
+answers at 0x64 on i2c2, and the AltoBeam ATBM7821 used for DVB-T2/C
+answers at 0x40 on i2c1.  Only i2c2 was enabled, so the terrestrial
+demodulator could not be reached at all.
+
+Enable i2c1 as well and pin all three controllers to fixed bus numbers
+with aliases.  Without the aliases the numbering follows probe order,
+which makes an address quoted against "bus 1" ambiguous when comparing
+against the vendor kernel.
+
+This only makes the devices reachable; neither demodulator has a driver
+yet.
+
+Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>
+---
+ .../hisilicon/hi3798mv200-octagon-sf8008.dts  | 22 +++++++++++++++++++
+ 1 file changed, 22 insertions(+)
+
+diff --git a/arch/arm/boot/dts/hisilicon/hi3798mv200-octagon-sf8008.dts b/arch/arm/boot/dts/hisilicon/hi3798mv200-octagon-sf8008.dts
+index 9fbc643d2100..e97e38ab0eb5 100644
+--- a/arch/arm/boot/dts/hisilicon/hi3798mv200-octagon-sf8008.dts
++++ b/arch/arm/boot/dts/hisilicon/hi3798mv200-octagon-sf8008.dts
+@@ -38,6 +38,14 @@ aliases {
+ 		 */
+ 		mmc0 = &emmc;
+ 		mmc1 = &sd0;
++		/*
++		 * Keep the I2C bus numbers identical to the vendor kernel so
++		 * that addresses quoted in the vendor documentation and in the
++		 * tuner probing notes refer to the same controller here.
++		 */
++		i2c0 = &i2c0;
++		i2c1 = &i2c1;
++		i2c2 = &i2c2;
+ 	};
+ 
+ 	chosen {
+@@ -186,6 +194,20 @@ &i2c0 {
+ 	status = "okay";
+ };
+ 
++/*
++ * The DVB-T2/C demodulator (an AltoBeam ATBM7821) answers at 0x40 on this
++ * bus.  No driver for it exists outside the vendor's binary modules, but the
++ * controller is enabled so that the device can at least be probed.
++ */
++&i2c1 {
++	status = "okay";
++};
++
++/*
++ * The DVB-S2X demodulator (a Silicon Labs Si2166D) answers at 0x64 here.  Its
++ * RF tuner and the LNB supply sit behind the demodulator's own I2C gate and
++ * are therefore invisible until that gate is opened.
++ */
+ &i2c2 {
+ 	status = "okay";
+ };

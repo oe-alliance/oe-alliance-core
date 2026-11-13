@@ -1,0 +1,89 @@
+From de8ad5f608094662dab019000401bf979178e0ec Mon Sep 17 00:00:00 2001
+From: Tillmann Severin <tillmann.severin@mailbox.org>
+Date: Sat, 19 Sep 2026 11:25:54 +0200
+Subject: [PATCH 19/26] dt-bindings: phy: hisilicon,inno-usb2-phy: add
+ Hi3798MV200
+
+The Hi3798MV200 uses the same INNO USB2 PHY as its siblings, but instead
+of reaching the PHY register file through a single configuration register
+in the peripheral controller it maps the register file into the address
+space of its own, one 32bit word per PHY register and the second port at
+a fixed offset from the first one.
+
+The PHY device therefore hangs off the SoC bus rather than off the
+peripheral controller, and the reset of the test logic that clocks the
+register file has to be described in addition to the power on reset.
+
+Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>
+---
+ .../bindings/phy/hisilicon,inno-usb2-phy.yaml | 35 ++++++++++++++++++-
+ 1 file changed, 34 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/phy/hisilicon,inno-usb2-phy.yaml b/Documentation/devicetree/bindings/phy/hisilicon,inno-usb2-phy.yaml
+index 51ea0e54ce35..5a149b412949 100644
+--- a/Documentation/devicetree/bindings/phy/hisilicon,inno-usb2-phy.yaml
++++ b/Documentation/devicetree/bindings/phy/hisilicon,inno-usb2-phy.yaml
+@@ -14,11 +14,19 @@ description:
+   contains the PHY configuration register, and each device supports up to 2 PHY
+   ports which are represented as child nodes of INNO USB2 PHY device.
+ 
++  On Hi3798MV200 the PHY register file is mapped into the address space of its
++  own instead of being reached through a configuration register, so there the
++  PHY device is a child of the SoC bus and needs the resets of the test logic
++  in addition to the power on reset.  The SoC has two INNO USB2 PHY instances
++  with one test logic reset each, and the vendor code releases both of them
++  before touching either register file.
++
+ properties:
+   compatible:
+     enum:
+       - hisilicon,hi3798cv200-usb2-phy
+       - hisilicon,hi3798mv100-usb2-phy
++      - hisilicon,hi3798mv200-usb2-phy
+       - hisilicon,inno-usb2-phy
+ 
+   reg:
+@@ -28,7 +36,15 @@ properties:
+     maxItems: 1
+ 
+   resets:
+-    maxItems: 1
++    minItems: 1
++    maxItems: 3
++
++  reset-names:
++    minItems: 1
++    items:
++      - const: por
++      - const: test
++      - const: test2
+ 
+   "#address-cells":
+     const: 1
+@@ -65,6 +81,23 @@ required:
+   - "#address-cells"
+   - "#size-cells"
+ 
++allOf:
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: hisilicon,hi3798mv200-usb2-phy
++    then:
++      properties:
++        resets:
++          minItems: 3
++      required:
++        - reset-names
++    else:
++      properties:
++        resets:
++          maxItems: 1
++
+ additionalProperties: false
+ 
+ examples:
+-- 
+2.56.0
+

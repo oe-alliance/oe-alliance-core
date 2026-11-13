@@ -1,0 +1,101 @@
+From dcd3cb09aa1ea7f52d0c76e1f8342666c3f24132 Mon Sep 17 00:00:00 2001
+From: Tillmann Severin <tillmann.severin@mailbox.org>
+Date: Thu, 5 Nov 2026 17:42:58 +0100
+Subject: [PATCH] ARM: dts: hi3798mv200: describe the video display processor
+
+Add the display processor node and enable it on the SF8008, pointing it
+at the region the bootloader scans out of.
+
+The region gains a shared-dma-pool compatible so the display driver can
+allocate its scanout buffers from it.  It already carries no-map, which
+reserved memory on arm requires before it will set such a pool up.
+
+Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>
+---
+ arch/arm/boot/dts/hisilicon/hi3798mv200-octagon-sf8008.dts | 6 ++++++
+ arch/arm/boot/dts/hisilicon/hi3798mv200.dtsi               | 7 +++++++
+ .../boot/dts/hisilicon/hi3798mv200-octagon-sf8008.dts      | 6 ++++++
+ arch/arm64/boot/dts/hisilicon/hi3798mv200.dtsi             | 7 +++++++
+ 4 files changed, 26 insertions(+)
+
+diff --git a/arch/arm/boot/dts/hisilicon/hi3798mv200-octagon-sf8008.dts b/arch/arm/boot/dts/hisilicon/hi3798mv200-octagon-sf8008.dts
+index 9c0e7d0e8b1f..9fbc643d2100 100644
+--- a/arch/arm/boot/dts/hisilicon/hi3798mv200-octagon-sf8008.dts
++++ b/arch/arm/boot/dts/hisilicon/hi3798mv200-octagon-sf8008.dts
+@@ -92,6 +92,7 @@ reserved-memory {
+ 		 * ordinary memory.
+ 		 */
+ 		bootloader_fb: framebuffer@3ef3b000 {
++			compatible = "shared-dma-pool";
+ 			reg = <0x3ef3b000 0x1000000>;
+ 			no-map;
+ 		};
+@@ -230,3 +231,8 @@ &ehci {
+ &watchdog0 {
+ 	status = "okay";
+ };
++
++&vdp {
++	memory-region = <&bootloader_fb>;
++	status = "okay";
++};
+diff --git a/arch/arm/boot/dts/hisilicon/hi3798mv200.dtsi b/arch/arm/boot/dts/hisilicon/hi3798mv200.dtsi
+index 3bf7af6dbbcc..300421c60855 100644
+--- a/arch/arm/boot/dts/hisilicon/hi3798mv200.dtsi
++++ b/arch/arm/boot/dts/hisilicon/hi3798mv200.dtsi
+@@ -412,6 +412,13 @@ watchdog0: watchdog@8a2c000 {
+ 			status = "disabled";
+ 		};
+ 
++		vdp: display@8cc0000 {
++			compatible = "hisilicon,hi3798mv200-vdp";
++			reg = <0x8cc0000 0x10000>;
++			interrupts = <GIC_SPI 90 IRQ_TYPE_LEVEL_HIGH>;
++			status = "disabled";
++		};
++
+ 		gmac0: ethernet@9840000 {
+ 			compatible = "hisilicon,hi3798mv200-gmac";
+ 			reg = <0x9840000 0x1000>,
+diff --git a/arch/arm64/boot/dts/hisilicon/hi3798mv200-octagon-sf8008.dts b/arch/arm64/boot/dts/hisilicon/hi3798mv200-octagon-sf8008.dts
+index 9c6c196e748f..87bdf8942f9c 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi3798mv200-octagon-sf8008.dts
++++ b/arch/arm64/boot/dts/hisilicon/hi3798mv200-octagon-sf8008.dts
+@@ -87,6 +87,7 @@ reserved-memory {
+ 		 * ordinary memory.
+ 		 */
+ 		bootloader_fb: framebuffer@3ef3b000 {
++			compatible = "shared-dma-pool";
+ 			reg = <0x0 0x3ef3b000 0x0 0x1000000>;
+ 			no-map;
+ 		};
+@@ -225,3 +226,8 @@ &ehci {
+ &watchdog0 {
+ 	status = "okay";
+ };
++
++&vdp {
++	memory-region = <&bootloader_fb>;
++	status = "okay";
++};
+diff --git a/arch/arm64/boot/dts/hisilicon/hi3798mv200.dtsi b/arch/arm64/boot/dts/hisilicon/hi3798mv200.dtsi
+index 2ecb33bf2764..f061cd1c2dc7 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi3798mv200.dtsi
++++ b/arch/arm64/boot/dts/hisilicon/hi3798mv200.dtsi
+@@ -414,6 +414,13 @@ watchdog0: watchdog@8a2c000 {
+ 			status = "disabled";
+ 		};
+ 
++		vdp: display@8cc0000 {
++			compatible = "hisilicon,hi3798mv200-vdp";
++			reg = <0x8cc0000 0x10000>;
++			interrupts = <GIC_SPI 90 IRQ_TYPE_LEVEL_HIGH>;
++			status = "disabled";
++		};
++
+ 		gmac0: ethernet@9840000 {
+ 			compatible = "hisilicon,hi3798mv200-gmac";
+ 			reg = <0x9840000 0x1000>,
+-- 
+2.56.0
+

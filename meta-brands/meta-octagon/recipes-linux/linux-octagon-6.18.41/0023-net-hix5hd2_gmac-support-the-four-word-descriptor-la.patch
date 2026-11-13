@@ -1,0 +1,351 @@
+From 772e0e9bcaf7e4b5e7396781d842adc30bc23ebc Mon Sep 17 00:00:00 2001
+From: Tillmann Severin <tillmann.severin@mailbox.org>
+Date: Tue, 3 Nov 2026 12:01:35 +0100
+Subject: [PATCH 23/26] net: hix5hd2_gmac: support the four word descriptor
+ layout
+
+The DMA descriptor is four words wide on the Hi3798MV200 and eight words
+wide on the SoCs supported so far.  The two layouts agree on the words
+the driver uses, so only the ring stride differs, but that stride is
+baked into the driver in three places: the descriptor type is padded to
+32 bytes and indexed with pointer arithmetic, the queue pointer
+registers are converted to and from descriptor indices by a fixed shift
+of five, and the queue depth registers are programmed in words with a
+fixed shift of three.
+
+Driving a four word part with the wide stride leaves the hardware write
+pointer permanently half a descriptor ahead of the software read
+pointer.  The pointer difference is then rounded down to zero, so the
+last received frame stays invisible until the next one arrives and
+carries it over the rounding boundary.  Every frame is delivered one
+frame late, which is hard to spot with a ping but deadlocks a bulk
+transfer as soon as the peer waits for an acknowledgement that the
+driver is sitting on.
+
+Describe the descriptor in its narrow form, derive the pointer and depth
+shifts from a new capability bit, and compute descriptor addresses from
+that shift rather than from the size of the type.
+
+Because the layouts differ, a four word part is not compatible with the
+hisi-gmac-v2 devices, so match it on its own compatible string and drop
+the version string from its device tree nodes.
+
+Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>
+---
+ .../bindings/net/hisilicon-hix5hd2-gmac.txt   |  5 +-
+ arch/arm/boot/dts/hisilicon/hi3798mv200.dtsi  |  3 +-
+ .../arm64/boot/dts/hisilicon/hi3798mv200.dtsi |  3 +-
+ drivers/net/ethernet/hisilicon/hix5hd2_gmac.c | 88 +++++++++++++------
+ 4 files changed, 69 insertions(+), 30 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/net/hisilicon-hix5hd2-gmac.txt b/Documentation/devicetree/bindings/net/hisilicon-hix5hd2-gmac.txt
+index 4b0976a12ec6..eb3c83c14fdb 100644
+--- a/Documentation/devicetree/bindings/net/hisilicon-hix5hd2-gmac.txt
++++ b/Documentation/devicetree/bindings/net/hisilicon-hix5hd2-gmac.txt
+@@ -10,7 +10,10 @@ Required properties:
+ 	* "hisilicon,hisi-gmac-v1"
+ 	* "hisilicon,hisi-gmac-v2"
+   The version v1 includes SoCs hix5hd2.
+-  The version v2 includes SoCs hi3798cv200, hi3798mv200, hi3516a.
++  The version v2 includes SoCs hi3798cv200, hi3516a.
++  hi3798mv200 uses four-word DMA descriptors instead of the eight-word
++  descriptors of v1 and v2, so it is not compatible with either version
++  string and must be matched on its SoC string alone.
+ - reg: specifies base physical address(s) and size of the device registers.
+   The first region is the MAC register base and size.
+   The second region is external interface control register.
+diff --git a/arch/arm/boot/dts/hisilicon/hi3798mv200.dtsi b/arch/arm/boot/dts/hisilicon/hi3798mv200.dtsi
+index 250e3111abe5..c26e0065a2ee 100644
+--- a/arch/arm/boot/dts/hisilicon/hi3798mv200.dtsi
++++ b/arch/arm/boot/dts/hisilicon/hi3798mv200.dtsi
+@@ -406,8 +406,7 @@ watchdog0: watchdog@8a2c000 {
+ 		};
+ 
+ 		gmac0: ethernet@9840000 {
+-			compatible = "hisilicon,hi3798mv200-gmac",
+-				     "hisilicon,hisi-gmac-v2";
++			compatible = "hisilicon,hi3798mv200-gmac";
+ 			reg = <0x9840000 0x1000>,
+ 			      <0x984300c 0x4>;
+ 			interrupts = <GIC_SPI 71 IRQ_TYPE_LEVEL_HIGH>;
+diff --git a/arch/arm64/boot/dts/hisilicon/hi3798mv200.dtsi b/arch/arm64/boot/dts/hisilicon/hi3798mv200.dtsi
+index ab7f463009bc..05b53d996d4c 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi3798mv200.dtsi
++++ b/arch/arm64/boot/dts/hisilicon/hi3798mv200.dtsi
+@@ -408,8 +408,7 @@ watchdog0: watchdog@8a2c000 {
+ 		};
+ 
+ 		gmac0: ethernet@9840000 {
+-			compatible = "hisilicon,hi3798mv200-gmac",
+-				     "hisilicon,hisi-gmac-v2";
++			compatible = "hisilicon,hi3798mv200-gmac";
+ 			reg = <0x9840000 0x1000>,
+ 			      <0x984300c 0x4>;
+ 			interrupts = <GIC_SPI 71 IRQ_TYPE_LEVEL_HIGH>;
+diff --git a/drivers/net/ethernet/hisilicon/hix5hd2_gmac.c b/drivers/net/ethernet/hisilicon/hix5hd2_gmac.c
+index 89ab8dfe128d..29330bffd709 100644
+--- a/drivers/net/ethernet/hisilicon/hix5hd2_gmac.c
++++ b/drivers/net/ethernet/hisilicon/hix5hd2_gmac.c
+@@ -187,13 +187,23 @@
+ 
+ /* DMA descriptor ring helpers */
+ #define dma_ring_incr(n, s)		(((n) + 1) & ((s) - 1))
+-#define dma_cnt(n)			((n) >> 5)
+-#define dma_byte(n)			((n) << 5)
+ 
+ #define HW_CAP_TSO			BIT(0)
++#define HW_CAP_DESC_4WORD		BIT(1)
+ #define GEMAC_V1			0
+ #define GEMAC_V2			(GEMAC_V1 | HW_CAP_TSO)
+ #define HAS_CAP_TSO(hw_cap)		((hw_cap) & HW_CAP_TSO)
++#define HAS_CAP_DESC_4WORD(hw_cap)	((hw_cap) & HW_CAP_DESC_4WORD)
++
++/*
++ * Descriptors are four words wide on newer GMAC revisions and eight words
++ * wide on older ones.  Only the ring stride differs: the words this driver
++ * uses occupy the same position in both layouts, and the extra words of the
++ * wide layout are reserved.  The queue pointer registers and the queue depth
++ * registers are both expressed in units derived from that stride.
++ */
++#define DESC_SHIFT_4WORD		4
++#define DESC_SHIFT_8WORD		5
+ 
+ #define PHY_RESET_DELAYS_PROPERTY	"hisilicon,phy-reset-delays-us"
+ 
+@@ -207,7 +217,8 @@ enum phy_reset_delays {
+ struct hix5hd2_desc {
+ 	__le32 buff_addr;
+ 	__le32 cmd;
+-} __aligned(32);
++	__le32 reserved[2];
++};
+ 
+ struct hix5hd2_desc_sw {
+ 	struct hix5hd2_desc *desc;
+@@ -259,6 +270,7 @@ struct hix5hd2_priv {
+ 	phy_interface_t	phy_mode;
+ 
+ 	unsigned long hw_cap;
++	unsigned int desc_shift;
+ 	unsigned int speed;
+ 	unsigned int duplex;
+ 
+@@ -273,6 +285,25 @@ struct hix5hd2_priv {
+ 	struct work_struct tx_timeout_task;
+ };
+ 
++/* Convert a queue pointer register value into a descriptor index. */
++static inline u32 dma_cnt(struct hix5hd2_priv *priv, u32 val)
++{
++	return val >> priv->desc_shift;
++}
++
++/* Convert a descriptor index into a queue pointer register value. */
++static inline u32 dma_byte(struct hix5hd2_priv *priv, u32 pos)
++{
++	return pos << priv->desc_shift;
++}
++
++static inline struct hix5hd2_desc *hix5hd2_get_desc(struct hix5hd2_priv *priv,
++						    struct hix5hd2_desc_sw *pool,
++						    u32 pos)
++{
++	return (struct hix5hd2_desc *)((u8 *)pool->desc + dma_byte(priv, pos));
++}
++
+ static inline void hix5hd2_mac_interface_reset(struct hix5hd2_priv *priv)
+ {
+ 	if (!priv->mac_ifc_rst)
+@@ -333,20 +364,23 @@ static void hix5hd2_config_port(struct net_device *dev, u32 speed, u32 duplex)
+ 
+ static void hix5hd2_set_desc_depth(struct hix5hd2_priv *priv, int rx, int tx)
+ {
++	/* The depth registers count descriptors in words. */
++	unsigned int depth_shift = priv->desc_shift - 2;
++
+ 	writel_relaxed(BITS_RX_FQ_DEPTH_EN, priv->base + RX_FQ_REG_EN);
+-	writel_relaxed(rx << 3, priv->base + RX_FQ_DEPTH);
++	writel_relaxed(rx << depth_shift, priv->base + RX_FQ_DEPTH);
+ 	writel_relaxed(0, priv->base + RX_FQ_REG_EN);
+ 
+ 	writel_relaxed(BITS_RX_BQ_DEPTH_EN, priv->base + RX_BQ_REG_EN);
+-	writel_relaxed(rx << 3, priv->base + RX_BQ_DEPTH);
++	writel_relaxed(rx << depth_shift, priv->base + RX_BQ_DEPTH);
+ 	writel_relaxed(0, priv->base + RX_BQ_REG_EN);
+ 
+ 	writel_relaxed(BITS_TX_BQ_DEPTH_EN, priv->base + TX_BQ_REG_EN);
+-	writel_relaxed(tx << 3, priv->base + TX_BQ_DEPTH);
++	writel_relaxed(tx << depth_shift, priv->base + TX_BQ_DEPTH);
+ 	writel_relaxed(0, priv->base + TX_BQ_REG_EN);
+ 
+ 	writel_relaxed(BITS_TX_RQ_DEPTH_EN, priv->base + TX_RQ_REG_EN);
+-	writel_relaxed(tx << 3, priv->base + TX_RQ_DEPTH);
++	writel_relaxed(tx << depth_shift, priv->base + TX_RQ_DEPTH);
+ 	writel_relaxed(0, priv->base + TX_RQ_REG_EN);
+ }
+ 
+@@ -474,9 +508,9 @@ static void hix5hd2_rx_refill(struct hix5hd2_priv *priv)
+ 	dma_addr_t addr;
+ 
+ 	/* software write pointer */
+-	start = dma_cnt(readl_relaxed(priv->base + RX_FQ_WR_ADDR));
++	start = dma_cnt(priv, readl_relaxed(priv->base + RX_FQ_WR_ADDR));
+ 	/* logic read pointer */
+-	end = dma_cnt(readl_relaxed(priv->base + RX_FQ_RD_ADDR));
++	end = dma_cnt(priv, readl_relaxed(priv->base + RX_FQ_RD_ADDR));
+ 	num = CIRC_SPACE(start, end, RX_DESC_NUM);
+ 
+ 	for (i = 0, pos = start; i < num; i++) {
+@@ -494,7 +528,7 @@ static void hix5hd2_rx_refill(struct hix5hd2_priv *priv)
+ 			break;
+ 		}
+ 
+-		desc = priv->rx_fq.desc + pos;
++		desc = hix5hd2_get_desc(priv, &priv->rx_fq, pos);
+ 		desc->buff_addr = cpu_to_le32(addr);
+ 		priv->rx_skb[pos] = skb;
+ 		desc->cmd = cpu_to_le32(DESC_VLD_FREE |
+@@ -506,7 +540,7 @@ static void hix5hd2_rx_refill(struct hix5hd2_priv *priv)
+ 	wmb();
+ 
+ 	if (pos != start)
+-		writel_relaxed(dma_byte(pos), priv->base + RX_FQ_WR_ADDR);
++		writel_relaxed(dma_byte(priv, pos), priv->base + RX_FQ_WR_ADDR);
+ }
+ 
+ static int hix5hd2_rx(struct net_device *dev, int limit)
+@@ -518,9 +552,9 @@ static int hix5hd2_rx(struct net_device *dev, int limit)
+ 	u32 start, end, num, pos, i, len;
+ 
+ 	/* software read pointer */
+-	start = dma_cnt(readl_relaxed(priv->base + RX_BQ_RD_ADDR));
++	start = dma_cnt(priv, readl_relaxed(priv->base + RX_BQ_RD_ADDR));
+ 	/* logic write pointer */
+-	end = dma_cnt(readl_relaxed(priv->base + RX_BQ_WR_ADDR));
++	end = dma_cnt(priv, readl_relaxed(priv->base + RX_BQ_WR_ADDR));
+ 	num = CIRC_CNT(end, start, RX_DESC_NUM);
+ 	if (num > limit)
+ 		num = limit;
+@@ -535,7 +569,7 @@ static int hix5hd2_rx(struct net_device *dev, int limit)
+ 		}
+ 		priv->rx_skb[pos] = NULL;
+ 
+-		desc = priv->rx_bq.desc + pos;
++		desc = hix5hd2_get_desc(priv, &priv->rx_bq, pos);
+ 		len = (le32_to_cpu(desc->cmd) >> DESC_DATA_LEN_OFF) &
+ 		       DESC_DATA_MASK;
+ 		addr = le32_to_cpu(desc->buff_addr);
+@@ -560,7 +594,7 @@ static int hix5hd2_rx(struct net_device *dev, int limit)
+ 	}
+ 
+ 	if (pos != start)
+-		writel_relaxed(dma_byte(pos), priv->base + RX_BQ_RD_ADDR);
++		writel_relaxed(dma_byte(priv, pos), priv->base + RX_BQ_RD_ADDR);
+ 
+ 	hix5hd2_rx_refill(priv);
+ 
+@@ -600,9 +634,9 @@ static void hix5hd2_xmit_reclaim(struct net_device *dev)
+ 	netif_tx_lock(dev);
+ 
+ 	/* software read */
+-	start = dma_cnt(readl_relaxed(priv->base + TX_RQ_RD_ADDR));
++	start = dma_cnt(priv, readl_relaxed(priv->base + TX_RQ_RD_ADDR));
+ 	/* logic write */
+-	end = dma_cnt(readl_relaxed(priv->base + TX_RQ_WR_ADDR));
++	end = dma_cnt(priv, readl_relaxed(priv->base + TX_RQ_WR_ADDR));
+ 	num = CIRC_CNT(end, start, TX_DESC_NUM);
+ 
+ 	for (i = 0, pos = start; i < num; i++) {
+@@ -614,7 +648,7 @@ static void hix5hd2_xmit_reclaim(struct net_device *dev)
+ 
+ 		pkts_compl++;
+ 		bytes_compl += skb->len;
+-		desc = priv->tx_rq.desc + pos;
++		desc = hix5hd2_get_desc(priv, &priv->tx_rq, pos);
+ 
+ 		if (skb_shinfo(skb)->nr_frags) {
+ 			hix5hd2_clean_sg_desc(priv, skb, pos);
+@@ -630,7 +664,7 @@ static void hix5hd2_xmit_reclaim(struct net_device *dev)
+ 	}
+ 
+ 	if (pos != start)
+-		writel_relaxed(dma_byte(pos), priv->base + TX_RQ_RD_ADDR);
++		writel_relaxed(dma_byte(priv, pos), priv->base + TX_RQ_RD_ADDR);
+ 
+ 	netif_tx_unlock(dev);
+ 
+@@ -746,7 +780,7 @@ static netdev_tx_t hix5hd2_net_xmit(struct sk_buff *skb, struct net_device *dev)
+ 	int ret;
+ 
+ 	/* software write pointer */
+-	pos = dma_cnt(readl_relaxed(priv->base + TX_BQ_WR_ADDR));
++	pos = dma_cnt(priv, readl_relaxed(priv->base + TX_BQ_WR_ADDR));
+ 	if (unlikely(priv->tx_skb[pos])) {
+ 		dev->stats.tx_dropped++;
+ 		dev->stats.tx_fifo_errors++;
+@@ -754,7 +788,7 @@ static netdev_tx_t hix5hd2_net_xmit(struct sk_buff *skb, struct net_device *dev)
+ 		return NETDEV_TX_BUSY;
+ 	}
+ 
+-	desc = priv->tx_bq.desc + pos;
++	desc = hix5hd2_get_desc(priv, &priv->tx_bq, pos);
+ 
+ 	cmd = hix5hd2_get_desc_cmd(skb, priv->hw_cap);
+ 	desc->cmd = cpu_to_le32(cmd);
+@@ -784,7 +818,7 @@ static netdev_tx_t hix5hd2_net_xmit(struct sk_buff *skb, struct net_device *dev)
+ 	wmb();
+ 
+ 	pos = dma_ring_incr(pos, TX_DESC_NUM);
+-	writel_relaxed(dma_byte(pos), priv->base + TX_BQ_WR_ADDR);
++	writel_relaxed(dma_byte(priv, pos), priv->base + TX_BQ_WR_ADDR);
+ 
+ 	netif_trans_update(dev);
+ 	dev->stats.tx_packets++;
+@@ -805,7 +839,7 @@ static void hix5hd2_free_dma_desc_rings(struct hix5hd2_priv *priv)
+ 		if (skb == NULL)
+ 			continue;
+ 
+-		desc = priv->rx_fq.desc + i;
++		desc = hix5hd2_get_desc(priv, &priv->rx_fq, i);
+ 		addr = le32_to_cpu(desc->buff_addr);
+ 		dma_unmap_single(priv->dev, addr,
+ 				 MAC_MAX_FRAME_SIZE, DMA_FROM_DEVICE);
+@@ -818,7 +852,7 @@ static void hix5hd2_free_dma_desc_rings(struct hix5hd2_priv *priv)
+ 		if (skb == NULL)
+ 			continue;
+ 
+-		desc = priv->tx_rq.desc + i;
++		desc = hix5hd2_get_desc(priv, &priv->tx_rq, i);
+ 		addr = le32_to_cpu(desc->buff_addr);
+ 		dma_unmap_single(priv->dev, addr, skb->len, DMA_TO_DEVICE);
+ 		dev_kfree_skb_any(skb);
+@@ -1005,7 +1039,7 @@ static int hix5hd2_init_hw_desc_queue(struct hix5hd2_priv *priv)
+ 	priv->tx_rq.count = TX_DESC_NUM;
+ 
+ 	for (i = 0; i < QUEUE_NUMS; i++) {
+-		size = priv->pool[i].count * sizeof(struct hix5hd2_desc);
++		size = dma_byte(priv, priv->pool[i].count);
+ 		virt_addr = dma_alloc_coherent(dev, size, &phys_addr,
+ 					       GFP_KERNEL);
+ 		if (virt_addr == NULL)
+@@ -1126,6 +1160,8 @@ static int hix5hd2_dev_probe(struct platform_device *pdev)
+ 	priv->netdev = ndev;
+ 
+ 	priv->hw_cap = (unsigned long)device_get_match_data(dev);
++	priv->desc_shift = HAS_CAP_DESC_4WORD(priv->hw_cap) ?
++			   DESC_SHIFT_4WORD : DESC_SHIFT_8WORD;
+ 
+ 	priv->base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(priv->base)) {
+@@ -1315,6 +1351,8 @@ static const struct of_device_id hix5hd2_of_match[] = {
+ 	{ .compatible = "hisilicon,hisi-gmac-v2", .data = (void *)GEMAC_V2 },
+ 	{ .compatible = "hisilicon,hix5hd2-gmac", .data = (void *)GEMAC_V1 },
+ 	{ .compatible = "hisilicon,hi3798cv200-gmac", .data = (void *)GEMAC_V2 },
++	{ .compatible = "hisilicon,hi3798mv200-gmac",
++	  .data = (void *)(GEMAC_V2 | HW_CAP_DESC_4WORD) },
+ 	{ .compatible = "hisilicon,hi3516a-gmac", .data = (void *)GEMAC_V2 },
+ 	{},
+ };
+-- 
+2.56.0
+

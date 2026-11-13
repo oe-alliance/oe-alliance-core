@@ -1,0 +1,106 @@
+From a65ff5275a08d6e229b5f8c1d4da94e17795365e Mon Sep 17 00:00:00 2001
+From: Tillmann Severin <tillmann.severin@mailbox.org>
+Date: Fri, 6 Nov 2026 11:30:06 +0100
+Subject: [PATCH 35/35] drm/histb-vdp: take the graphics layer size from fbdev
+
+The size the graphics layer fetches no longer has to be configured on
+the command line. Implement the fb_resize hook so a user interface that
+draws at a smaller resolution than the display simply asks for it, and
+drop the parameters that were standing in for that.
+
+The display keeps sending out the mode the bootloader programmed, so
+only the layer and the scaler are reprogrammed.
+---
+ .../gpu/drm/hisilicon/histb/histb_vdp_drv.c   | 58 +++++++++++--------
+ 1 file changed, 35 insertions(+), 23 deletions(-)
+
+diff --git a/drivers/gpu/drm/hisilicon/histb/histb_vdp_drv.c b/drivers/gpu/drm/hisilicon/histb/histb_vdp_drv.c
+index 69269a79119d..826e92df9bd4 100644
+--- a/drivers/gpu/drm/hisilicon/histb/histb_vdp_drv.c
++++ b/drivers/gpu/drm/hisilicon/histb/histb_vdp_drv.c
+@@ -49,16 +49,6 @@ struct histb_vdp {
+ 	unsigned int osd_height;
+ };
+ 
+-static unsigned int osd_width;
+-module_param(osd_width, uint, 0444);
+-MODULE_PARM_DESC(osd_width,
+-		 "width of the graphics layer, scaled up to the display width");
+-
+-static unsigned int osd_height;
+-module_param(osd_height, uint, 0444);
+-MODULE_PARM_DESC(osd_height,
+-		 "height of the graphics layer, scaled up to the display height");
+-
+ static inline struct histb_vdp *drm_to_vdp(struct drm_device *drm)
+ {
+ 	return container_of(drm, struct histb_vdp, drm);
+@@ -357,10 +347,45 @@ static irqreturn_t histb_vdp_irq(int irq, void *data)
+ 	return IRQ_HANDLED;
+ }
+ 
++/*
++ * Let fbdev emulation pick the resolution it draws at. The display keeps
++ * sending out the mode the bootloader programmed, and the scaler stretches
++ * whatever is drawn over the whole screen.
++ */
++static int histb_vdp_fb_resize(struct drm_device *drm, unsigned int width,
++			       unsigned int height)
++{
++	struct histb_vdp *vdp = drm_to_vdp(drm);
++
++	if (width < drm->mode_config.min_width ||
++	    height < drm->mode_config.min_height ||
++	    width > vdp->mode.hdisplay || height > vdp->mode.vdisplay)
++		return -EINVAL;
++
++	if (width == vdp->osd_width && height == vdp->osd_height)
++		return 0;
++
++	vdp->osd_width = width;
++	vdp->osd_height = height;
++
++	writel(FIELD_PREP(VDP_XY_X, width - 1) |
++	       FIELD_PREP(VDP_XY_Y, height - 1),
++	       vdp->regs + VDP_G0_IRESO);
++	histb_vdp_commit(vdp);
++
++	histb_vdp_set_scaler(vdp, width, height,
++			     vdp->mode.hdisplay, vdp->mode.vdisplay);
++
++	drm_dbg_kms(drm, "graphics layer now fetches %ux%u\n", width, height);
++
++	return 0;
++}
++
+ static const struct drm_mode_config_funcs histb_vdp_mode_config_funcs = {
+ 	.fb_create = drm_gem_fb_create,
+ 	.atomic_check = drm_atomic_helper_check,
+ 	.atomic_commit = drm_atomic_helper_commit,
++	.fb_resize = histb_vdp_fb_resize,
+ };
+ 
+ DEFINE_DRM_GEM_DMA_FOPS(histb_vdp_fops);
+@@ -425,19 +450,6 @@ static int histb_vdp_probe(struct platform_device *pdev)
+ 
+ 	vdp->osd_width = vdp->mode.hdisplay;
+ 	vdp->osd_height = vdp->mode.vdisplay;
+-	if (osd_width && osd_height) {
+-		if (osd_width > vdp->mode.hdisplay ||
+-		    osd_height > vdp->mode.vdisplay)
+-			dev_warn(dev, "ignoring a graphics layer larger than the display\n");
+-		else {
+-			vdp->osd_width = osd_width;
+-			vdp->osd_height = osd_height;
+-			dev_info(dev, "scaling the graphics layer from %ux%u\n",
+-				 vdp->osd_width, vdp->osd_height);
+-		}
+-	} else if (osd_width || osd_height) {
+-		dev_warn(dev, "both osd_width and osd_height have to be given\n");
+-	}
+ 
+ 	ret = of_reserved_mem_device_init(dev);
+ 	if (ret && ret != -ENODEV)
+-- 
+2.56.0
+

@@ -1,0 +1,99 @@
+From bc8d54876d7741f33ee5a6c4aa882c6572fc35d6 Mon Sep 17 00:00:00 2001
+From: Tillmann Severin <tillmann.severin@mailbox.org>
+Date: Fri, 6 Nov 2026 12:03:18 +0100
+Subject: [PATCH] drm/histb-vdp: smooth the scaled graphics layer
+
+The graphics port scales by picking the nearest source pixel, which
+leaves visible steps on the diagonals of an upscaled on-screen display.
+
+Enable the median filters the port carries alongside its FIR taps.  They
+suppress the steps without any setup of their own, whereas the FIR taps
+convolve against a coefficient RAM that only ever gets filled over DMA
+from GP0_HCOEFAD/VCOEFAD.  Nothing fills it, so switching them on just
+attenuates the picture, the more taps the darker it gets.
+
+Pin the sampling phases to zero at the same time rather than keep
+whatever the boot firmware left behind.
+---
+ .../gpu/drm/hisilicon/histb/histb_vdp_drv.c   | 22 +++++++++++++++++--
+ .../gpu/drm/hisilicon/histb/histb_vdp_reg.h   | 13 +++++++++++
+ 2 files changed, 33 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/gpu/drm/hisilicon/histb/histb_vdp_drv.c b/drivers/gpu/drm/hisilicon/histb/histb_vdp_drv.c
+index 826e92df9bd4..6f5333ae05b6 100644
+--- a/drivers/gpu/drm/hisilicon/histb/histb_vdp_drv.c
++++ b/drivers/gpu/drm/hisilicon/histb/histb_vdp_drv.c
+@@ -100,6 +100,13 @@ static void histb_vdp_set_scanout(struct histb_vdp *vdp,
+  * fetched from memory the bootloader never fills in, and running the filter
+  * without them visibly smears the picture.
+  */
++/*
++ * The FIR taps are deliberately left disabled.  Their coefficients live in a
++ * RAM the graphics port only ever reads over DMA from GP0_HCOEFAD/VCOEFAD, and
++ * nothing programs those, so the filter would convolve with zeroes and darken
++ * the picture.  The median filters need no coefficients and take the edge off
++ * the nearest-neighbour steps on their own.
++ */
+ static void histb_vdp_set_scaler(struct histb_vdp *vdp,
+ 				 unsigned int in_width, unsigned int in_height,
+ 				 unsigned int out_width, unsigned int out_height)
+@@ -117,12 +124,23 @@ static void histb_vdp_set_scaler(struct histb_vdp *vdp,
+ 	       vdp->regs + VDP_GP0_ORESO);
+ 
+ 	if (in_width != out_width) {
+-		hsp |= VDP_GP0_ZME_HSP_HSC_EN;
++		hsp |= VDP_GP0_ZME_HSP_HSC_EN |
++		       VDP_GP0_ZME_HSP_HAMID_EN |
++		       VDP_GP0_ZME_HSP_HLMID_EN |
++		       VDP_GP0_ZME_HSP_HCHMID_EN;
+ 		if (hratio < VDP_GP0_ZME_HRATIO_ONE)
+ 			hsp |= VDP_GP0_ZME_HSP_HFIR_ORDER;
+ 	}
+ 	if (in_height != out_height)
+-		vsp |= VDP_GP0_ZME_VSP_VSC_EN;
++		vsp |= VDP_GP0_ZME_VSP_VSC_EN |
++		       VDP_GP0_ZME_VSP_VAMID_EN |
++		       VDP_GP0_ZME_VSP_VLMID_EN |
++		       VDP_GP0_ZME_VSP_VCHMID_EN;
++
++	/* Sample on the pixel centres rather than at some inherited phase. */
++	writel(0, vdp->regs + VDP_GP0_ZME_HLOFFSET);
++	writel(0, vdp->regs + VDP_GP0_ZME_HCOFFSET);
++	writel(0, vdp->regs + VDP_GP0_ZME_VOFFSET);
+ 
+ 	writel(hsp, vdp->regs + VDP_GP0_ZME_HSP);
+ 	writel(FIELD_PREP(VDP_GP0_ZME_VSR_VRATIO, vratio),
+diff --git a/drivers/gpu/drm/hisilicon/histb/histb_vdp_reg.h b/drivers/gpu/drm/hisilicon/histb/histb_vdp_reg.h
+index 323cf16f9475..c8bcb3a9c25d 100644
+--- a/drivers/gpu/drm/hisilicon/histb/histb_vdp_reg.h
++++ b/drivers/gpu/drm/hisilicon/histb/histb_vdp_reg.h
+@@ -49,13 +49,26 @@
+ #define VDP_GP0_ZME_HSP			0x8140
+ #define VDP_GP0_ZME_HSP_HRATIO		GENMASK(23, 0)
+ #define VDP_GP0_ZME_HSP_HFIR_ORDER	BIT(24)
++#define VDP_GP0_ZME_HSP_HAFIR_EN	BIT(25)
+ #define VDP_GP0_ZME_HSP_HFIR_EN		BIT(26)
++#define VDP_GP0_ZME_HSP_HCHMID_EN	BIT(28)
++#define VDP_GP0_ZME_HSP_HLMID_EN	BIT(29)
++#define VDP_GP0_ZME_HSP_HAMID_EN	BIT(30)
+ #define VDP_GP0_ZME_HSP_HSC_EN		BIT(31)
++#define VDP_GP0_ZME_HLOFFSET		0x8144
++#define VDP_GP0_ZME_HCOFFSET		0x8148
+ #define VDP_GP0_ZME_VSP			0x814c
++#define VDP_GP0_ZME_VSP_VAFIR_EN	BIT(23)
+ #define VDP_GP0_ZME_VSP_VFIR_EN		BIT(24)
++#define VDP_GP0_ZME_VSP_VFIR_1TAP_EN	BIT(25)
++#define VDP_GP0_ZME_VSP_VFIR_2TAP_EN	BIT(26)
++#define VDP_GP0_ZME_VSP_VCHMID_EN	BIT(28)
++#define VDP_GP0_ZME_VSP_VLMID_EN	BIT(29)
++#define VDP_GP0_ZME_VSP_VAMID_EN	BIT(30)
+ #define VDP_GP0_ZME_VSP_VSC_EN		BIT(31)
+ #define VDP_GP0_ZME_VSR			0x8150
+ #define VDP_GP0_ZME_VSR_VRATIO		GENMASK(15, 0)
++#define VDP_GP0_ZME_VOFFSET		0x8154
+ 
+ /* Both scaling ratios are fixed point numbers, of different precision. */
+ #define VDP_GP0_ZME_HRATIO_ONE		(1 << 20)
+-- 
+2.56.0
+

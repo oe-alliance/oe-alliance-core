@@ -1,0 +1,125 @@
+From 915d792908e8b72aa577a7de29e926cf32712e54 Mon Sep 17 00:00:00 2001
+From: Tillmann Severin <tillmann.severin@mailbox.org>
+Date: Sat, 1 Aug 2026 20:00:31 +0200
+Subject: [PATCH 11/26] ARM: hisi: add Hi3798MV200 SMP bring-up
+
+The 32-bit boot chain on Hi3798MV200 provides no PSCI implementation, so
+the secondary cores have to be released by the kernel.
+
+The sequence mirrors the one the vendor Linux 4.4 tree uses in
+arch/arm/mach-hi3798mv2x/platsmp.c.  Like on Hix5hd2 the reset vector is
+remapped to 0xffff0000 and a two instruction trampoline is planted there,
+so hix5hd2_set_scu_boot_addr() is reused.  Releasing a core is then a
+CRG operation: clear the arm_por_srst_req and the core reset bit for
+that CPU.  The vendor code drops the cluster to 400MHz for the duration
+of the reset release and restores the previous setting afterwards, which
+is reproduced here.
+
+Register offsets come from the vendor
+arch/arm/mach-hi3798mv2x/include/mach/platform.h (REG_BASE_CPU_LP
+0xf8a22048, CPU_REG_BASE_RST 0xf8a22050), and are expressed as offsets
+into the CRG block.
+
+Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>
+---
+ arch/arm/mach-hisi/platsmp.c | 84 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 84 insertions(+)
+
+diff --git a/arch/arm/mach-hisi/platsmp.c b/arch/arm/mach-hisi/platsmp.c
+index 9ce93e0b6cdc..e275e4acf091 100644
+--- a/arch/arm/mach-hisi/platsmp.c
++++ b/arch/arm/mach-hisi/platsmp.c
+@@ -182,6 +182,90 @@ static const struct smp_operations hip01_smp_ops __initconst = {
+ 	.smp_boot_secondary     = hip01_boot_secondary,
+ };
+ 
++/*
++ * Hi3798MV200 holds the secondary cores in reset and remaps their reset
++ * vector to HI3798MV200_BOOT_ADDRESS, so the boot trampoline is planted the
++ * same way as on Hix5hd2.  Releasing a core is a CRG operation: the vendor
++ * code drops the cluster to 400MHz for the duration of the reset release and
++ * restores the previous setting afterwards.
++ *
++ * Register offsets are relative to the CRG block and were taken from
++ * arch/arm/mach-hi3798mv2x/include/mach/platform.h of the vendor Linux 4.4
++ * tree (REG_BASE_CPU_LP 0xf8a22048, CPU_REG_BASE_RST 0xf8a22050).
++ */
++#define HI3798MV200_BOOT_ADDRESS	0xffff0000
++#define HI3798MV200_CRG_CPU_LP		0x48
++#define HI3798MV200_CRG_CPU_RST		0x50
++#define HI3798MV200_CPU_LP_SW_BEGIN	BIT(10)
++#define HI3798MV200_CPU_LP_400MHZ	0x206
++#define HI3798MV200_CPU_LP_SW_400MHZ	0x606
++#define HI3798MV200_COREPO_SRST_SHIFT	12
++#define HI3798MV200_CORE_SRST_SHIFT	8
++
++static void __iomem *hi3798mv200_crg_base;
++
++static void __init hi3798mv200_smp_prepare_cpus(unsigned int max_cpus)
++{
++	struct device_node *np;
++
++	np = of_find_compatible_node(NULL, NULL, "hisilicon,hi3798mv200-crg");
++	if (!np) {
++		pr_err("failed to find hisilicon,hi3798mv200-crg node\n");
++		return;
++	}
++
++	hi3798mv200_crg_base = of_iomap(np, 0);
++	of_node_put(np);
++	if (!hi3798mv200_crg_base)
++		pr_err("failed to map Hi3798MV200 CRG registers\n");
++}
++
++static void hi3798mv200_clear_reset(unsigned int shift, unsigned int cpu)
++{
++	u32 regval;
++
++	regval = readl_relaxed(hi3798mv200_crg_base + HI3798MV200_CRG_CPU_RST);
++	regval &= ~BIT(cpu + shift);
++	writel_relaxed(regval, hi3798mv200_crg_base + HI3798MV200_CRG_CPU_RST);
++}
++
++static int hi3798mv200_boot_secondary(unsigned int cpu, struct task_struct *idle)
++{
++	u32 lp;
++
++	if (!hi3798mv200_crg_base)
++		return -ENODEV;
++
++	hix5hd2_set_scu_boot_addr(HI3798MV200_BOOT_ADDRESS,
++				  __pa_symbol(secondary_startup));
++
++	/* Select 400MHz before starting the slave core. */
++	lp = readl_relaxed(hi3798mv200_crg_base + HI3798MV200_CRG_CPU_LP);
++	writel_relaxed(HI3798MV200_CPU_LP_400MHZ,
++		       hi3798mv200_crg_base + HI3798MV200_CRG_CPU_LP);
++	writel_relaxed(HI3798MV200_CPU_LP_SW_400MHZ,
++		       hi3798mv200_crg_base + HI3798MV200_CRG_CPU_LP);
++
++	hi3798mv200_clear_reset(HI3798MV200_COREPO_SRST_SHIFT, cpu);
++	hi3798mv200_clear_reset(HI3798MV200_CORE_SRST_SHIFT, cpu);
++
++	/* Restore the previous cluster frequency. */
++	writel_relaxed(lp & ~HI3798MV200_CPU_LP_SW_BEGIN,
++		       hi3798mv200_crg_base + HI3798MV200_CRG_CPU_LP);
++	writel_relaxed(lp, hi3798mv200_crg_base + HI3798MV200_CRG_CPU_LP);
++
++	arch_send_wakeup_ipi_mask(cpumask_of(cpu));
++
++	return 0;
++}
++
++static const struct smp_operations hi3798mv200_smp_ops __initconst = {
++	.smp_prepare_cpus	= hi3798mv200_smp_prepare_cpus,
++	.smp_boot_secondary	= hi3798mv200_boot_secondary,
++};
++
+ CPU_METHOD_OF_DECLARE(hi3xxx_smp, "hisilicon,hi3620-smp", &hi3xxx_smp_ops);
+ CPU_METHOD_OF_DECLARE(hix5hd2_smp, "hisilicon,hix5hd2-smp", &hix5hd2_smp_ops);
+ CPU_METHOD_OF_DECLARE(hip01_smp, "hisilicon,hip01-smp", &hip01_smp_ops);
++CPU_METHOD_OF_DECLARE(hi3798mv200_smp, "hisilicon,hi3798mv200-smp",
++		      &hi3798mv200_smp_ops);
+-- 
+2.56.0
+

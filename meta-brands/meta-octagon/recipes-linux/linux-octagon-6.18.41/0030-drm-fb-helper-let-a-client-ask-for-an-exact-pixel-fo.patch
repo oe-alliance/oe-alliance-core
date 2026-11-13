@@ -1,0 +1,119 @@
+From b9e94729158932910709f71d3f4238f0eb976a8b Mon Sep 17 00:00:00 2001
+From: Tillmann Severin <tillmann.severin@mailbox.org>
+Date: Thu, 5 Nov 2026 20:32:27 +0100
+Subject: [PATCH] drm/fb-helper: let a client ask for an exact pixel format
+
+drm_client_setup_with_fourcc() takes a fourcc, but the fbdev client
+immediately reduces it to a colour mode and hands that to
+drm_driver_color_mode_format(), which maps a colour mode of 32 to depth
+24 and therefore always to XRGB8888. A driver that asks for ARGB8888
+silently ends up with an opaque format, and fbdev emulation then reports
+a transparency field of zero length to user space.
+
+A colour mode cannot express the difference, so carry the format the
+client asked for in the helper and prefer it in __drm_fb_helper_find_sizes()
+whenever the plane really does support it. The existing colour mode
+based selection is left as the fallback.
+
+Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>
+---
+ drivers/gpu/drm/clients/drm_fbdev_client.c |  1 +
+ drivers/gpu/drm/drm_fb_helper.c            | 33 ++++++++++++++++++----
+ include/drm/drm_fb_helper.h                |  9 ++++++
+ 3 files changed, 38 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/gpu/drm/clients/drm_fbdev_client.c b/drivers/gpu/drm/clients/drm_fbdev_client.c
+index f894ba52bdb5..8aabe1134fd5 100644
+--- a/drivers/gpu/drm/clients/drm_fbdev_client.c
++++ b/drivers/gpu/drm/clients/drm_fbdev_client.c
+@@ -149,6 +149,7 @@ int drm_fbdev_client_setup(struct drm_device *dev, const struct drm_format_info
+ 	if (!fb_helper)
+ 		return -ENOMEM;
+ 	drm_fb_helper_prepare(dev, fb_helper, color_mode, NULL);
++	fb_helper->preferred_format = format;
+ 
+ 	ret = drm_client_init(dev, &fb_helper->client, "fbdev", &drm_fbdev_client_funcs);
+ 	if (ret) {
+diff --git a/drivers/gpu/drm/drm_fb_helper.c b/drivers/gpu/drm/drm_fb_helper.c
+index 0b3ee008523d..f1bb87f27dd1 100644
+--- a/drivers/gpu/drm/drm_fb_helper.c
++++ b/drivers/gpu/drm/drm_fb_helper.c
+@@ -1450,12 +1450,24 @@ int drm_fb_helper_pan_display(struct fb_var_screeninfo *var,
+ }
+ EXPORT_SYMBOL(drm_fb_helper_pan_display);
+ 
++static bool drm_fb_helper_format_supported(const uint32_t *formats, size_t format_count,
++					   uint32_t format)
++{
++	size_t i;
++
++	for (i = 0; i < format_count; ++i) {
++		if (formats[i] == format)
++			return true;
++	}
++
++	return false;
++}
++
+ static uint32_t drm_fb_helper_find_format(struct drm_fb_helper *fb_helper, const uint32_t *formats,
+ 					  size_t format_count, unsigned int color_mode)
+ {
+ 	struct drm_device *dev = fb_helper->dev;
+ 	uint32_t format;
+-	size_t i;
+ 
+ 	format = drm_driver_color_mode_format(dev, color_mode);
+ 	if (!format) {
+@@ -1463,10 +1475,9 @@ static uint32_t drm_fb_helper_find_format(struct drm_fb_helper *fb_helper, const
+ 		return DRM_FORMAT_INVALID;
+ 	}
+ 
+-	for (i = 0; i < format_count; ++i) {
+-		if (formats[i] == format)
+-			return format;
+-	}
++	if (drm_fb_helper_format_supported(formats, format_count, format))
++		return format;
++
+ 	drm_warn(dev, "format %p4cc not supported\n", &format);
+ 
+ 	return DRM_FORMAT_INVALID;
+@@ -1494,6 +1505,18 @@ static int __drm_fb_helper_find_sizes(struct drm_fb_helper *fb_helper,
+ 
+ 		drm_dbg_kms(dev, "test CRTC %u primary plane\n", drm_crtc_index(crtc));
+ 
++		/*
++		 * A format the driver asked for by name is used as is.  Colour
++		 * modes cannot name a format that carries alpha, so going
++		 * through one would silently drop the alpha channel.
++		 */
++		if (fb_helper->preferred_format &&
++		    drm_fb_helper_format_supported(plane->format_types, plane->format_count,
++						   fb_helper->preferred_format->format)) {
++			surface_format = fb_helper->preferred_format->format;
++			break;
++		}
++
+ 		drm_connector_list_iter_begin(fb_helper->dev, &conn_iter);
+ 		drm_client_for_each_connector_iter(connector, &conn_iter) {
+ 			struct drm_cmdline_mode *cmdline_mode = &connector->cmdline_mode;
+diff --git a/include/drm/drm_fb_helper.h b/include/drm/drm_fb_helper.h
+index c1d38d54a112..45ba62cc8bb0 100644
+--- a/include/drm/drm_fb_helper.h
++++ b/include/drm/drm_fb_helper.h
+@@ -205,6 +205,15 @@ struct drm_fb_helper {
+ 	 */
+ 	int preferred_bpp;
+ 
++	/**
++	 * @preferred_format:
++	 *
++	 * Pixel format the driver asked for, if it named one.  Takes
++	 * precedence over @preferred_bpp, which cannot describe a format
++	 * with an alpha channel.
++	 */
++	const struct drm_format_info *preferred_format;
++
+ #ifdef CONFIG_FB_DEFERRED_IO
+ 	/**
+ 	 * @fbdefio:
