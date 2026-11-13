@@ -51,7 +51,7 @@
 +
  #endif
 --- a/gstdvbaudiosink.c	2026-11-12 15:42:36.629026685 +0000
-+++ b/gstdvbaudiosink.c	2026-11-13 15:06:41.972050525 +0000
++++ b/gstdvbaudiosink.c	2026-11-13 15:10:10.376335321 +0000
 @@ -76,9 +76,7 @@
  #include "common.h"
  #include "gstdvbaudiosink.h"
@@ -62,11 +62,10 @@
  
  GST_DEBUG_CATEGORY_STATIC(dvbaudiosink_debug);
  #define GST_CAT_DEFAULT dvbaudiosink_debug
-@@ -636,6 +634,62 @@
+@@ -636,6 +634,60 @@
  	return caps;
  }
  
-+#ifndef DREAMBOX
 +/*
 + * Some drivers pass DTS-HD MA and DTS:X through in full only in their
 + * DTS-HD mode (bypass mode 0x10); in plain DTS mode (2) they send the core
@@ -83,12 +82,12 @@
 + */
 +static gboolean gst_dvbaudiosink_dts_hd_mode_usable(void)
 +{
-+	if (access("/proc/stb/audio/dtshd", F_OK) == 0)
-+		return TRUE;
-+#ifdef machine
-+	return !strcmp(machine, "vuultimo4k") || !strcmp(machine, "vuduo4kse");
-+#else
++#if defined(DREAMBOX) || !defined(machine)
++	/* Dreambox: DTS is handled by gst_dvbaudiosink_dts_buffer() */
 +	return FALSE;
++#else
++	return access("/proc/stb/audio/dtshd", F_OK) == 0 ||
++		!strcmp(machine, "vuultimo4k") || !strcmp(machine, "vuduo4kse");
 +#endif
 +}
 +
@@ -120,12 +119,11 @@
 +	GST_OBJECT_UNLOCK(self);
 +	return TRUE;
 +}
-+#endif
 +
  static gboolean gst_dvbaudiosink_set_caps(GstBaseSink *basesink, GstCaps *caps)
  {
  	GstDVBAudioSink *self = GST_DVBAUDIOSINK(basesink);
-@@ -643,6 +697,7 @@
+@@ -643,6 +695,7 @@
  	const char *type = gst_structure_get_name(structure);
  	t_audio_type previous_bypass = self->bypass;
  	self->bypass = AUDIOTYPE_UNKNOWN;
@@ -133,23 +131,20 @@
  
  	self->skip = 0;
  	self->aac_adts_header_valid = FALSE;
-@@ -829,6 +884,11 @@
+@@ -829,6 +882,9 @@
  		else
  			self->bypass = AUDIOTYPE_DTS;
  
-+#ifndef DREAMBOX
 +		/* plain DTS or the driver's DTS-HD mode: decided on the first frame */
 +		self->dts_start_pending = !self->dts_cd && gst_dvbaudiosink_dts_hd_mode_usable();
-+#endif
 +
  		GST_INFO_OBJECT(self, "MIMETYPE %s",type);
  	}
  	else if (!strcmp(type, "audio/x-wma"))
-@@ -972,6 +1032,21 @@
+@@ -972,6 +1028,19 @@
  	if (!self->playing)
  		GST_INFO_OBJECT(self, "set bypass 0x%02x", self->bypass);
  
-+#ifndef DREAMBOX
 +	if (self->dts_start_pending)
 +	{
 +		/* gst_dvbaudiosink_dts_start() sets the bypass mode and starts the
@@ -162,19 +157,17 @@
 +		self->playing = FALSE;
 +		return TRUE;
 +	}
-+#endif
 +
  	if (self->playing && self->bypass != previous_bypass)
  	{
  		if (self->fd >= 0)
-@@ -1584,9 +1659,12 @@
+@@ -1584,11 +1653,17 @@
  }
  #endif
  
 -#ifdef VUPLUS
 -/* Returns a padded copy of a lone DTS core frame the driver would otherwise
 - * not lock onto (see dvb_dts_aligned_size), or NULL to use the buffer as is. */
-+#ifndef DREAMBOX
 +/* Returns a padded copy of a lone DTS core frame whose size is not a multiple
 + * of 4 bytes (see dvb_dts_aligned_size), or NULL to use the buffer as is.
 + * Done on every box: drivers of several chipsets cannot handle such frames
@@ -182,14 +175,29 @@
 + * is valid DTS that decodes to the same audio. */
  static GstBuffer *gst_dvbaudiosink_dts_align_buffer(GstBuffer *buffer)
  {
++#ifdef DREAMBOX
++	/* Dreambox: DTS is handled by gst_dvbaudiosink_dts_buffer() */
++	return NULL;
++#else
  	GstMapInfo input, output;
-@@ -1703,8 +1781,13 @@
+ 	GstBuffer *aligned;
+ 	gsize padded;
+@@ -1616,8 +1691,8 @@
+ 		return NULL;
+ 	}
+ 	return aligned;
+-}
+ #endif
++}
+ 
+ static GstFlowReturn gst_dvbaudiosink_render(GstBaseSink *sink, GstBuffer *buffer)
+ {
+@@ -1703,8 +1778,12 @@
  	}
  #endif
  
 -#ifdef VUPLUS
 -	if (self->bypass == AUDIOTYPE_DTS && !self->skip && !self->dts_cd)
-+#ifndef DREAMBOX
 +	if (self->dts_start_pending && !gst_dvbaudiosink_dts_start(self, buffer))
 +	{
 +		gst_buffer_unref(disposebuffer);
@@ -199,6 +207,14 @@
  	{
  		GstBuffer *aligned = gst_dvbaudiosink_dts_align_buffer(buffer);
  		if (aligned)
+@@ -1714,7 +1793,6 @@
+ 			buffersize = gst_buffer_get_size(buffer);
+ 		}
+ 	}
+-#endif
+ 
+ 	if (buffer)
+ 	{
 --- a/gstdvbaudiosink.h	2026-11-12 15:42:36.629059325 +0000
 +++ b/gstdvbaudiosink.h	2026-11-13 10:48:44.143956585 +0000
 @@ -137,6 +137,8 @@
