@@ -1,0 +1,212 @@
+--- a/configure.ac	2026-11-12 15:42:36.626438393 +0000
++++ b/configure.ac	2026-11-13 15:06:41.970922684 +0000
+@@ -316,7 +316,7 @@
+ 	AC_DEFINE([TYPE2],[1],[build bybass TYPE2])
+ fi
+ 
+-if test "$machine" == "hd51" -o "$machine" == "vs1500" -o "$machine" == "h7" -o "$machine" == "h17" -o "$machine" == "8100s"; then
++if test "$machine" == "hd51" -o "$machine" == "vs1500" -o "$machine" == "8100s"; then
+ 	AC_DEFINE([MAX_DTS_FRAMESIZE_2012],[1],[max dts framesize supported by driver])
+ fi
+ 
+--- a/dtsframe.h	2026-11-12 15:42:36.626455058 +0000
++++ b/dtsframe.h	2026-11-13 15:06:41.972608463 +0000
+@@ -50,10 +50,11 @@
+ }
+ 
+ /*
+- * Broadcom's DTS frame sync (found on the Vu+ Ultimo 4K) only locks onto core
+- * frames whose size is a multiple of four bytes.  DVD style full rate DTS
+- * uses 2013 byte frames, so the box opens the bitstream output and then sends
+- * nothing a receiver can decode.  Blu-ray cores (2012 bytes) are unaffected.
++ * The drivers of several chipsets (Broadcom: Vu+ and GigaBlue 4K; HiSilicon:
++ * SF8008) only handle DTS core frames whose size is a multiple of four bytes.
++ * DVD style full rate DTS uses 2013 byte frames, and the box then sends
++ * nothing a receiver can decode, or noise.  Blu-ray cores (2012 bytes) are
++ * unaffected.
+  *
+  * A core frame may carry padding after its audio data: the decoder finds the
+  * next frame through the FSIZE header field and ignores what is left over.
+@@ -139,4 +140,22 @@
+ 	}
+ }
+ 
++/* Whether a framed DTS buffer carries a DTS-HD extension substream (DTS-HD
++ * HRA, DTS-HD MA, DTS:X, DTS Express): it starts with one, or one follows a
++ * 16 bit big endian core frame. */
++static inline int dvb_dts_has_hd_extension(const uint8_t *input, size_t size)
++{
++	static const uint8_t exss[4] = { 0x64, 0x58, 0x20, 0x25 };
++	size_t frame_size;
++
++	if (!input || size < 8)
++		return 0;
++	if (!memcmp(input, exss, 4))
++		return 1;
++	if (input[0] != 0x7f || input[1] != 0xfe || input[2] != 0x80 || input[3] != 0x01)
++		return 0;
++	frame_size = (((size_t)input[5] & 0x03) << 12 | (size_t)input[6] << 4 | input[7] >> 4) + 1;
++	return size >= frame_size + 4 && !memcmp(input + frame_size, exss, 4);
++}
++
+ #endif
+--- a/gstdvbaudiosink.c	2026-11-12 15:42:36.629026685 +0000
++++ b/gstdvbaudiosink.c	2026-11-13 15:06:41.972050525 +0000
+@@ -76,9 +76,7 @@
+ #include "common.h"
+ #include "gstdvbaudiosink.h"
+ #include "gstdvbsink-marshal.h"
+-#if defined(DREAMBOX) || defined(VUPLUS)
+ #include "dtsframe.h"
+-#endif
+ 
+ GST_DEBUG_CATEGORY_STATIC(dvbaudiosink_debug);
+ #define GST_CAT_DEFAULT dvbaudiosink_debug
+@@ -636,6 +634,62 @@
+ 	return caps;
+ }
+ 
++#ifndef DREAMBOX
++/*
++ * Some drivers pass DTS-HD MA and DTS:X through in full only in their
++ * DTS-HD mode (bypass mode 0x10); in plain DTS mode (2) they send the core
++ * alone.  The caps do not say whether a stream carries the HD extension, so
++ * for DTS the decoder is not started from set_caps but on the first frame,
++ * in the mode that frame calls for.
++ *
++ * Only where the driver's DTS-HD mode is known to cope with a receiver that
++ * has no DTS-HD: the drivers with /proc/stb/audio/dtshd (e.g. the Vu+ Duo 4K
++ * Lite's dvb.ko / nexus.ko, GigaBlue), and the dvb-bcm7444.ko of the Vu+
++ * Ultimo 4K and Duo 4K SE, which images patch
++ * for this (vuplus-driver-fix.py).  An unpatched dvb-bcm7444.ko would give
++ * such a receiver no sound at all, so everything else stays on plain DTS.
++ */
++static gboolean gst_dvbaudiosink_dts_hd_mode_usable(void)
++{
++	if (access("/proc/stb/audio/dtshd", F_OK) == 0)
++		return TRUE;
++#ifdef machine
++	return !strcmp(machine, "vuultimo4k") || !strcmp(machine, "vuduo4kse");
++#else
++	return FALSE;
++#endif
++}
++
++static gboolean gst_dvbaudiosink_dts_start(GstDVBAudioSink *self, GstBuffer *buffer)
++{
++	GstMapInfo map;
++	gboolean hd = FALSE;
++	self->dts_start_pending = FALSE;
++	if (gst_buffer_map(buffer, &map, GST_MAP_READ))
++	{
++		hd = dvb_dts_has_hd_extension(map.data, map.size);
++		gst_buffer_unmap(buffer, &map);
++	}
++	self->bypass = hd ? AUDIOTYPE_DTS_HD : AUDIOTYPE_DTS;
++	GST_INFO_OBJECT(self, "DTS %s, set bypass 0x%02x", hd ? "with HD extension" : "core only", self->bypass);
++	if (self->fd < 0 || ioctl(self->fd, AUDIO_SET_BYPASS_MODE, self->bypass) < 0)
++	{
++		GST_ELEMENT_ERROR(self, STREAM, TYPE_NOT_FOUND,(NULL),("hardware decoder can't be set to bypass mode 0x%02x", self->bypass));
++		return FALSE;
++	}
++	ioctl(self->fd, AUDIO_PLAY);
++	/* the state change to PLAYING may have gone by with nothing to continue */
++	if (!self->paused)
++		ioctl(self->fd, AUDIO_CONTINUE);
++	self->playing = TRUE;
++
++	GST_OBJECT_LOCK(self);
++	gst_dvbaudiosink_apply_audio_channel(self, self->audio_channel);
++	GST_OBJECT_UNLOCK(self);
++	return TRUE;
++}
++#endif
++
+ static gboolean gst_dvbaudiosink_set_caps(GstBaseSink *basesink, GstCaps *caps)
+ {
+ 	GstDVBAudioSink *self = GST_DVBAUDIOSINK(basesink);
+@@ -643,6 +697,7 @@
+ 	const char *type = gst_structure_get_name(structure);
+ 	t_audio_type previous_bypass = self->bypass;
+ 	self->bypass = AUDIOTYPE_UNKNOWN;
++	self->dts_start_pending = FALSE;
+ 
+ 	self->skip = 0;
+ 	self->aac_adts_header_valid = FALSE;
+@@ -829,6 +884,11 @@
+ 		else
+ 			self->bypass = AUDIOTYPE_DTS;
+ 
++#ifndef DREAMBOX
++		/* plain DTS or the driver's DTS-HD mode: decided on the first frame */
++		self->dts_start_pending = !self->dts_cd && gst_dvbaudiosink_dts_hd_mode_usable();
++#endif
++
+ 		GST_INFO_OBJECT(self, "MIMETYPE %s",type);
+ 	}
+ 	else if (!strcmp(type, "audio/x-wma"))
+@@ -972,6 +1032,21 @@
+ 	if (!self->playing)
+ 		GST_INFO_OBJECT(self, "set bypass 0x%02x", self->bypass);
+ 
++#ifndef DREAMBOX
++	if (self->dts_start_pending)
++	{
++		/* gst_dvbaudiosink_dts_start() sets the bypass mode and starts the
++		 * decoder once the first frame shows which mode it has to be */
++		if (self->playing && self->fd >= 0)
++		{
++			ioctl(self->fd, AUDIO_STOP, 0);
++			ioctl(self->fd, AUDIO_CLEAR_BUFFER);
++		}
++		self->playing = FALSE;
++		return TRUE;
++	}
++#endif
++
+ 	if (self->playing && self->bypass != previous_bypass)
+ 	{
+ 		if (self->fd >= 0)
+@@ -1584,9 +1659,12 @@
+ }
+ #endif
+ 
+-#ifdef VUPLUS
+-/* Returns a padded copy of a lone DTS core frame the driver would otherwise
+- * not lock onto (see dvb_dts_aligned_size), or NULL to use the buffer as is. */
++#ifndef DREAMBOX
++/* Returns a padded copy of a lone DTS core frame whose size is not a multiple
++ * of 4 bytes (see dvb_dts_aligned_size), or NULL to use the buffer as is.
++ * Done on every box: drivers of several chipsets cannot handle such frames
++ * (silence on Vu+ and GigaBlue 4K, noise on the SF8008), and a padded frame
++ * is valid DTS that decodes to the same audio. */
+ static GstBuffer *gst_dvbaudiosink_dts_align_buffer(GstBuffer *buffer)
+ {
+ 	GstMapInfo input, output;
+@@ -1703,8 +1781,13 @@
+ 	}
+ #endif
+ 
+-#ifdef VUPLUS
+-	if (self->bypass == AUDIOTYPE_DTS && !self->skip && !self->dts_cd)
++#ifndef DREAMBOX
++	if (self->dts_start_pending && !gst_dvbaudiosink_dts_start(self, buffer))
++	{
++		gst_buffer_unref(disposebuffer);
++		return GST_FLOW_ERROR;
++	}
++	if ((self->bypass == AUDIOTYPE_DTS || self->bypass == AUDIOTYPE_DTS_HD) && !self->skip && !self->dts_cd)
+ 	{
+ 		GstBuffer *aligned = gst_dvbaudiosink_dts_align_buffer(buffer);
+ 		if (aligned)
+--- a/gstdvbaudiosink.h	2026-11-12 15:42:36.629059325 +0000
++++ b/gstdvbaudiosink.h	2026-11-13 10:48:44.143956585 +0000
+@@ -137,6 +137,8 @@
+ 	gdouble rate;
+ 	gboolean playing, paused, flushing, unlocking;
+ 	gboolean pts_written, synchronized, pass_eos, dts_cd;
++	/* DTS: the decoder is started on the first frame, see gst_dvbaudiosink_dts_start() */
++	gboolean dts_start_pending;
+ 	gboolean flushed, using_dts_downmix, first_paused;
+ 	gint64 lastpts;
+ 	gint64 timestamp_offset;
