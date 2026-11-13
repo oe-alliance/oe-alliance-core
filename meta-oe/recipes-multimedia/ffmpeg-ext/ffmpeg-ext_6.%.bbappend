@@ -65,6 +65,7 @@ EXTRA_FFCONF = " \
     --enable-muxer=spdif \
     --disable-encoders \
     --enable-encoder=ac3 \
+    --enable-encoder=eac3 \
     --enable-encoder=aac \
     --enable-encoder=mpeg1video \
     --enable-encoder=libx264 \
