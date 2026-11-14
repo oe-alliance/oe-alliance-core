@@ -6,7 +6,7 @@ include conf/machine/include/build-extras.inc
 
 BRAND_OEM = "octagon"
 
-IMAGEDIR = "octagon/${MACHINE}"
+IMAGEDIR = "octagon/${MACHINEBUILD}"
 
 MACHINE_BRAND = "Octagon"
 

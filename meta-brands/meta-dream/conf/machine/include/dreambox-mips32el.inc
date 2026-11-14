@@ -3,7 +3,7 @@
 TARGET_ARCH = "mipsel"
 DEFAULTTUNE = "mips32el"
 
-IMAGEDIR ?= "${MACHINE}"
+IMAGEDIR ?= "${MACHINEBUILD}"
 
 require conf/machine/include/dreambox.inc
 require conf/machine/include/mips/tune-mips32.inc
