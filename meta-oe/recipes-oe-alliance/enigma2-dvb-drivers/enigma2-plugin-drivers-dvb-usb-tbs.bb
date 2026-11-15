@@ -1,6 +1,8 @@
 SUMMARY = "Legacy USB DVB driver package for TBS tuners"
 DESCRIPTION = "Compatibility package for older TBS USB tuners supported by the in-kernel dvb-usb-tbsusb driver. New TBS models use separate per-device packages."
-inherit allarch
+
+# RRECOMMENDS depend on the machine, so this is machine specific
+PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 require conf/license/license-gplv2.inc
 

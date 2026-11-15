@@ -1,5 +1,7 @@
 SUMMARY = "ASIX AX88179_178A USB 3.0/2.0 Gigabit Ethernet Network Adapter"
-inherit allarch
+
+# RRECOMMENDS depend on the machine, so this is machine specific
+PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 require conf/license/license-gplv2.inc
 

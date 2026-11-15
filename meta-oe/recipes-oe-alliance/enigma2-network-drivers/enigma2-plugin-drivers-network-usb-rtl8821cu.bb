@@ -1,5 +1,7 @@
 SUMMARY = "WiFi devices for Realtek 88x1CU chipsets."
-inherit allarch
+
+# RRECOMMENDS depend on the machine, so this is machine specific
+PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 require conf/license/license-gplv2.inc
 
