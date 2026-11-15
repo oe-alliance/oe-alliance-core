@@ -21,12 +21,13 @@ DVBMEDIASINK_PATCHES = " \
     file://0002-dvbvideosink-h264-avc3-multiple-sps.patch \
     file://0003-dvbaudiosink-vuplus-pad-dts-core-frames.patch \
     file://0004-dvbaudiosink-dts-driver-fixes.patch \
+    file://0005-dvbaudiosink-ddplus-switch-keep-decoder.patch \
 "
 SRC_URI:append:openbh = " ${DVBMEDIASINK_PATCHES}"
 SRC_URI:append:openvix = " ${DVBMEDIASINK_PATCHES}"
 
-PR:append:openbh = ".5"
-PR:append:openvix = ".5"
+PR:append:openbh = ".6"
+PR:append:openvix = ".6"
 
 inherit gitpkgv
 

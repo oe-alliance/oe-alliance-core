@@ -1,0 +1,28 @@
+--- a/gstdvbaudiosink.c
++++ b/gstdvbaudiosink.c
+@@ -1041,6 +1041,17 @@ static gboolean gst_dvbaudiosink_set_caps(GstBaseSink *basesink, GstCaps *caps)
+ 		return TRUE;
+ 	}
+ 
++	/* A new caps event that does not change the codec must not re-issue
++	 * AUDIO_SET_BYPASS_MODE while the decoder is already playing: on the
++	 * Vu+ Ultimo 4K / Duo 4K SE that reconfigures the HDMI output and drops
++	 * the (e)ARC lock, which silences a DD+ -> DD+ switch (native Atmos <->
++	 * transcoded TrueHD, both AUDIOTYPE_AC3_PLUS, carry different caps so the
++	 * sink is handed new caps even though the bypass mode is unchanged). The
++	 * AUDIO_STOP below is already gated on the codec changing; the reconfigure
++	 * has to be gated the same way, otherwise it runs on its own and re-locks
++	 * the output. Keeping the decoder running mirrors the exteplayer3 fix. */
++	if (!(self->playing && self->bypass == previous_bypass))
++	{
+ 	if (self->playing && self->bypass != previous_bypass)
+ 	{
+ 		if (self->fd >= 0)
+@@ -1079,6 +1090,7 @@ static gboolean gst_dvbaudiosink_set_caps(GstBaseSink *basesink, GstCaps *caps)
+ 		if(!self->playing && self->fd >= 0)
+ 			ioctl(self->fd, AUDIO_PLAY);
+ 		self->playing = TRUE;
++	}
+ 
+ 	/* Changing the codec can reset the driver's channel selection. */
+ 	GST_OBJECT_LOCK(self);
