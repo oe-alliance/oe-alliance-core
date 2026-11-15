@@ -1,5 +1,8 @@
 SUMMARY = "802.11a/b/g/n 2T2R 2.4/5 GHz USB Single Chip"
-inherit allarch oea-wifi-driver
+inherit oea-wifi-driver
+
+# wifi_driver() picks the driver from this machine's kernel, so this is machine specific
+PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 require conf/license/license-gplv2.inc
 
