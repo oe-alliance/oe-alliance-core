@@ -1,0 +1,466 @@
+From d48470e753259049a2acad87d2125d0a22be37e1 Mon Sep 17 00:00:00 2001
+From: Tillmann Severin <tillmann.severin@mailbox.org>
+Date: Mon, 9 Nov 2026 23:12:25 +0100
+Subject: [PATCH 49/49] drm/histb-vdp: add the video overlay plane
+
+The display processor has a video layer beside the graphics layer the
+driver already drives.  It fetches semi planar YUV straight from memory,
+which is what a video decoder produces, so expose it as an overlay plane
+below the primary one.
+
+The layer is reached through a mixer of its own and then a video port,
+neither of which the bootloader leaves in a useful state.  Until the
+layer is selected into that mixer nothing written to it latches at all,
+which looks exactly like a layer refusing writes, and both the layer and
+the port come up fully transparent.  Programming the fetch address,
+geometry and format is then straightforward, except that 4:2:0 has to
+run the vertical chroma half of the scaler even at one to one scaling,
+because the hardware expects the chroma lines to be doubled there rather
+than by the interpolation filter.
+
+The layer fetches through an address translator that nothing sets up, so
+put it in bypass and hand it physical addresses.
+
+Enlarge the reserved region the driver allocates from while here.
+Buffers come out of it in whole power of two blocks, so a 1920x1080x4
+framebuffer takes a full eight megabytes rather than the just under
+eight it needs, and sixteen megabytes left too little behind it for a
+video buffer of any size at all.
+
+Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>
+---
+ .../hisilicon/hi3798mv200-octagon-sf8008.dts  |  17 +-
+ .../gpu/drm/hisilicon/histb/histb_vdp_drv.c   | 242 +++++++++++++++++-
+ .../gpu/drm/hisilicon/histb/histb_vdp_reg.h   | 105 ++++++++
+ 3 files changed, 359 insertions(+), 5 deletions(-)
+
+diff --git a/arch/arm/boot/dts/hisilicon/hi3798mv200-octagon-sf8008.dts b/arch/arm/boot/dts/hisilicon/hi3798mv200-octagon-sf8008.dts
+index eecd113eada8..a4113a691772 100644
+--- a/arch/arm/boot/dts/hisilicon/hi3798mv200-octagon-sf8008.dts
++++ b/arch/arm/boot/dts/hisilicon/hi3798mv200-octagon-sf8008.dts
+@@ -107,12 +107,21 @@ reserved-memory {
+ 		 * as smem_len, and userspace carves its working surfaces out
+ 		 * of whatever follows the visible page; sized to exactly one
+ 		 * page there is nothing left and every such allocation fails.
+-		 * The tail runs towards the top of DDR, which is otherwise
+-		 * ordinary memory.
++		 *
++		 * It also backs every buffer the display driver hands out, so
++		 * it has to be a good deal larger than the picture it scans
++		 * out.  Buffers come from it in whole power of two blocks at
++		 * power of two offsets, so a 1920x1080x4 framebuffer does not
++		 * occupy its own size of just under eight megabytes but a
++		 * full eight megabyte block, and a sixteen megabyte region is
++		 * left with a single block that the video layer and, later,
++		 * the decoder's reference frames all have to come out of.
++		 * Start it low enough to hold all of them and let it run to
++		 * the top of DDR.
+ 		 */
+-		bootloader_fb: framebuffer@3ef3b000 {
++		bootloader_fb: framebuffer@3c000000 {
+ 			compatible = "shared-dma-pool";
+-			reg = <0x3ef3b000 0x1000000>;
++			reg = <0x3c000000 0x4000000>;
+ 			no-map;
+ 		};
+ 	};
+diff --git a/drivers/gpu/drm/hisilicon/histb/histb_vdp_drv.c b/drivers/gpu/drm/hisilicon/histb/histb_vdp_drv.c
+index cf497f2378b7..cc00995e99aa 100644
+--- a/drivers/gpu/drm/hisilicon/histb/histb_vdp_drv.c
++++ b/drivers/gpu/drm/hisilicon/histb/histb_vdp_drv.c
+@@ -29,6 +29,7 @@
+ #include <drm/clients/drm_client_setup.h>
+ #include <drm/drm_atomic.h>
+ #include <drm/drm_atomic_helper.h>
++#include <drm/drm_blend.h>
+ #include <drm/drm_crtc_helper.h>
+ #include <drm/drm_drv.h>
+ #include <drm/drm_fb_dma_helper.h>
+@@ -48,6 +49,7 @@ struct histb_vdp {
+ 	struct drm_device drm;
+ 	void __iomem *regs;
+ 	struct drm_plane primary;
++	struct drm_plane overlay;
+ 	struct drm_crtc crtc;
+ 	struct drm_encoder encoder;
+ 	struct drm_connector connector;
+@@ -68,7 +70,7 @@ static inline struct histb_vdp *crtc_to_vdp(struct drm_crtc *crtc)
+ 
+ static inline struct histb_vdp *plane_to_vdp(struct drm_plane *plane)
+ {
+-	return container_of(plane, struct histb_vdp, primary);
++	return drm_to_vdp(plane->dev);
+ }
+ 
+ static inline struct histb_vdp *connector_to_vdp(struct drm_connector *connector)
+@@ -344,6 +346,225 @@ static const struct drm_plane_funcs histb_vdp_plane_funcs = {
+ 	.atomic_destroy_state = drm_atomic_helper_plane_destroy_state,
+ };
+ 
++
++/*
++ * The video layer, presented as an overlay plane.
++ *
++ * This is the layer a decoded picture lands on.  It is a separate path from
++ * the graphics layer all the way to the display channel: its own scaler, its
++ * own mixer, and its own port.  The channel's mixer already has the video
++ * port below the graphics port, so the overlay is always under the user
++ * interface and its position in the stack is not something userspace can
++ * change.
++ */
++static const u32 histb_vdp_overlay_formats[] = {
++	DRM_FORMAT_NV12,
++	DRM_FORMAT_NV16,
++};
++
++static u32 histb_vdp_vid_ifmt(u32 format)
++{
++	switch (format) {
++	case DRM_FORMAT_NV16:
++		return VDP_V0_IFMT_SP_422;
++	default:
++		return VDP_V0_IFMT_SP_420;
++	}
++}
++
++static int histb_vdp_overlay_atomic_check(struct drm_plane *plane,
++					  struct drm_atomic_state *state)
++{
++	struct drm_plane_state *new_state =
++		drm_atomic_get_new_plane_state(state, plane);
++	struct drm_framebuffer *fb = new_state->fb;
++	struct drm_crtc_state *crtc_state;
++	int ret;
++
++	if (!fb || !new_state->crtc)
++		return 0;
++
++	crtc_state = drm_atomic_get_new_crtc_state(state, new_state->crtc);
++	if (!crtc_state)
++		return -EINVAL;
++
++	/*
++	 * The layer has a scaler, but driving it needs filter coefficients
++	 * fetched from memory that nothing here fills in, so only refuse
++	 * rather than silently show a smeared picture.
++	 */
++	ret = drm_atomic_helper_check_plane_state(new_state, crtc_state,
++						  DRM_PLANE_NO_SCALING,
++						  DRM_PLANE_NO_SCALING,
++						  true, true);
++	if (ret)
++		return ret;
++
++	if (!new_state->visible)
++		return 0;
++
++	/* Both planes are fetched in whole chunks of sixteen bytes. */
++	if (fb->pitches[0] % 16 || fb->pitches[1] % 16)
++		return -EINVAL;
++
++	/*
++	 * A subsampled format has no way to express an odd number of pixels
++	 * or, for 4:2:0, an odd number of lines.
++	 */
++	if (drm_rect_width(&new_state->src) >> 16 & 1)
++		return -EINVAL;
++	if (fb->format->format == DRM_FORMAT_NV12 &&
++	    (drm_rect_height(&new_state->src) >> 16 & 1))
++		return -EINVAL;
++
++	return 0;
++}
++
++static void histb_vdp_overlay_atomic_update(struct drm_plane *plane,
++					    struct drm_atomic_state *state)
++{
++	struct histb_vdp *vdp = plane_to_vdp(plane);
++	struct drm_plane_state *new_state =
++		drm_atomic_get_new_plane_state(state, plane);
++	struct drm_framebuffer *fb = new_state->fb;
++	struct drm_crtc_state *crtc_state;
++	const struct drm_display_mode *mode;
++	unsigned int src_w, src_h, x1, y1, x2, y2;
++	bool subsampled;
++	u32 ctrl, vsp;
++
++	if (!fb || !new_state->crtc || !new_state->visible)
++		return;
++
++	crtc_state = drm_atomic_get_new_crtc_state(state, new_state->crtc);
++	if (!crtc_state)
++		return;
++
++	mode = &crtc_state->adjusted_mode;
++	src_w = drm_rect_width(&new_state->src) >> 16;
++	src_h = drm_rect_height(&new_state->src) >> 16;
++	x1 = new_state->dst.x1;
++	y1 = new_state->dst.y1;
++	x2 = new_state->dst.x2 - 1;
++	y2 = new_state->dst.y2 - 1;
++	subsampled = fb->format->format == DRM_FORMAT_NV12;
++
++	/*
++	 * The layer fetches through an address translator that nothing sets
++	 * up, so point it straight at physical memory.  The per region bits
++	 * only take effect on a latch, the global one takes effect at once.
++	 */
++	writel(readl(vdp->regs + VDP_SMMU_SCR) | VDP_SMMU_SCR_GLB_BYPASS,
++	       vdp->regs + VDP_SMMU_SCR);
++	writel(U32_MAX, vdp->regs + VDP_V0_SMMU_BYPASS0);
++
++	/*
++	 * Select the layer into the mixer that feeds the video port.  Until
++	 * this is done the port has no input, and nothing written to the
++	 * layer will latch either.
++	 */
++	writel(FIELD_PREP(VDP_MIXV0_MIX_PRIO1, VDP_MIXV0_LAYER_V0),
++	       vdp->regs + VDP_MIXV0_MIX);
++	writel(FIELD_PREP(VDP_MIXV0_BKG_Y, VDP_MIXV0_BKG_BLACK_Y) |
++	       FIELD_PREP(VDP_MIXV0_BKG_CB, VDP_MIXV0_BKG_BLACK_C) |
++	       FIELD_PREP(VDP_MIXV0_BKG_CR, VDP_MIXV0_BKG_BLACK_C),
++	       vdp->regs + VDP_MIXV0_BKG);
++
++	/* Both the layer and the port come up fully transparent. */
++	writel(0xff, vdp->regs + VDP_V0_ALPHA);
++	writel(0xff, vdp->regs + VDP_VP0_ALPHA);
++
++	/* One picture, not a mosaic. */
++	writel(0, vdp->regs + VDP_V0_MULTI_MODE);
++
++	writel(drm_fb_dma_get_gem_addr(fb, new_state, 0),
++	       vdp->regs + VDP_V0_P0LADDR);
++	writel(drm_fb_dma_get_gem_addr(fb, new_state, 1),
++	       vdp->regs + VDP_V0_P0CADDR);
++	writel(FIELD_PREP(VDP_V0_P0STRIDE_LUMA, fb->pitches[0]) |
++	       FIELD_PREP(VDP_V0_P0STRIDE_CHROMA, fb->pitches[1]),
++	       vdp->regs + VDP_V0_P0STRIDE);
++
++	writel(FIELD_PREP(VDP_XY_X, src_w - 1) |
++	       FIELD_PREP(VDP_XY_Y, src_h - 1), vdp->regs + VDP_V0_IRESO);
++	writel(FIELD_PREP(VDP_XY_X, src_w - 1) |
++	       FIELD_PREP(VDP_XY_Y, src_h - 1), vdp->regs + VDP_V0_ORESO);
++
++	/*
++	 * The scaler is left at one to one, but 4:2:0 still has to run its
++	 * vertical chroma half of it: the hardware expects the chroma lines
++	 * to be doubled there rather than by the interpolation filter, and
++	 * with it off the chroma fetch stalls.
++	 */
++	vsp = 0;
++	if (subsampled) {
++		writel(VDP_V0_HRATIO_ONE | VDP_V0_HSP_HFIR_ORDER,
++		       vdp->regs + VDP_V0_HSP);
++		vsp = FIELD_PREP(VDP_V0_VSP_ZME_IN_FMT, VDP_V0_PROC_FMT_420) |
++		      VDP_V0_VSP_VCHFIR_EN | VDP_V0_VSP_VCHMSC_EN;
++	} else {
++		writel(VDP_V0_HRATIO_ONE, vdp->regs + VDP_V0_HSP);
++	}
++	writel(vsp, vdp->regs + VDP_V0_VSP);
++	writel(VDP_V0_VRATIO_ONE, vdp->regs + VDP_V0_VSR);
++
++	/*
++	 * The layer draws into the whole canvas of the port, at the position
++	 * the display channel sends out.
++	 */
++	writel(0, vdp->regs + VDP_V0_DFPOS);
++	writel(FIELD_PREP(VDP_XY_X, mode->hdisplay - 1) |
++	       FIELD_PREP(VDP_XY_Y, mode->vdisplay - 1),
++	       vdp->regs + VDP_V0_DLPOS);
++	writel(FIELD_PREP(VDP_XY_X, x1) | FIELD_PREP(VDP_XY_Y, y1),
++	       vdp->regs + VDP_V0_VFPOS);
++	writel(FIELD_PREP(VDP_XY_X, x2) | FIELD_PREP(VDP_XY_Y, y2),
++	       vdp->regs + VDP_V0_VLPOS);
++
++	ctrl = readl(vdp->regs + VDP_V0_CTRL);
++	ctrl &= ~(VDP_V0_CTRL_IFMT | VDP_V0_CTRL_CHM_RMODE |
++		  VDP_V0_CTRL_LM_RMODE | VDP_V0_CTRL_IFIR_MODE);
++	ctrl |= FIELD_PREP(VDP_V0_CTRL_IFMT,
++			   histb_vdp_vid_ifmt(fb->format->format));
++	ctrl |= FIELD_PREP(VDP_V0_CTRL_CHM_RMODE, VDP_V0_RMODE_PROGRESSIVE);
++	ctrl |= FIELD_PREP(VDP_V0_CTRL_LM_RMODE, VDP_V0_RMODE_PROGRESSIVE);
++	ctrl |= FIELD_PREP(VDP_V0_CTRL_IFIR_MODE, VDP_V0_IFIRMODE_6TAPFIR);
++	ctrl |= VDP_V0_CTRL_SURFACE_EN;
++	writel(ctrl, vdp->regs + VDP_V0_CTRL);
++
++	writel(FIELD_PREP(VDP_XY_X, mode->hdisplay - 1) |
++	       FIELD_PREP(VDP_XY_Y, mode->vdisplay - 1),
++	       vdp->regs + VDP_VP0_IRESO);
++	writel(0, vdp->regs + VDP_VP0_DFPOS);
++	writel(FIELD_PREP(VDP_XY_X, mode->hdisplay - 1) |
++	       FIELD_PREP(VDP_XY_Y, mode->vdisplay - 1),
++	       vdp->regs + VDP_VP0_DLPOS);
++	writel(FIELD_PREP(VDP_XY_X, x1) | FIELD_PREP(VDP_XY_Y, y1),
++	       vdp->regs + VDP_VP0_VFPOS);
++	writel(FIELD_PREP(VDP_XY_X, x2) | FIELD_PREP(VDP_XY_Y, y2),
++	       vdp->regs + VDP_VP0_VLPOS);
++
++	writel(VDP_V0_UPD_REGUP, vdp->regs + VDP_V0_UPD);
++	writel(VDP_VP0_UPD_REGUP, vdp->regs + VDP_VP0_UPD);
++}
++
++static void histb_vdp_overlay_atomic_disable(struct drm_plane *plane,
++					     struct drm_atomic_state *state)
++{
++	struct histb_vdp *vdp = plane_to_vdp(plane);
++	u32 ctrl = readl(vdp->regs + VDP_V0_CTRL);
++
++	writel(ctrl & ~VDP_V0_CTRL_SURFACE_EN, vdp->regs + VDP_V0_CTRL);
++	writel(VDP_V0_UPD_REGUP, vdp->regs + VDP_V0_UPD);
++	writel(VDP_VP0_UPD_REGUP, vdp->regs + VDP_VP0_UPD);
++}
++
++static const struct drm_plane_helper_funcs histb_vdp_overlay_helper_funcs = {
++	.atomic_check = histb_vdp_overlay_atomic_check,
++	.atomic_update = histb_vdp_overlay_atomic_update,
++	.atomic_disable = histb_vdp_overlay_atomic_disable,
++};
++
+ static void histb_vdp_crtc_atomic_enable(struct drm_crtc *crtc,
+ 					 struct drm_atomic_state *state)
+ {
+@@ -602,6 +823,25 @@ static int histb_vdp_probe(struct platform_device *pdev)
+ 
+ 	drm_crtc_helper_add(&vdp->crtc, &histb_vdp_crtc_helper_funcs);
+ 
++	ret = drm_universal_plane_init(drm, &vdp->overlay,
++				       drm_crtc_mask(&vdp->crtc),
++				       &histb_vdp_plane_funcs,
++				       histb_vdp_overlay_formats,
++				       ARRAY_SIZE(histb_vdp_overlay_formats),
++				       NULL, DRM_PLANE_TYPE_OVERLAY, NULL);
++	if (ret)
++		return ret;
++
++	drm_plane_helper_add(&vdp->overlay, &histb_vdp_overlay_helper_funcs);
++
++	/*
++	 * The order of the two is fixed in the mixer the display channel
++	 * reads, so tell userspace rather than letting it ask for the
++	 * picture on top of the user interface.
++	 */
++	drm_plane_create_zpos_immutable_property(&vdp->overlay, 0);
++	drm_plane_create_zpos_immutable_property(&vdp->primary, 1);
++
+ 	ret = drm_simple_encoder_init(drm, &vdp->encoder,
+ 				      DRM_MODE_ENCODER_NONE);
+ 	if (ret)
+diff --git a/drivers/gpu/drm/hisilicon/histb/histb_vdp_reg.h b/drivers/gpu/drm/hisilicon/histb/histb_vdp_reg.h
+index c8bcb3a9c25d..79683f534412 100644
+--- a/drivers/gpu/drm/hisilicon/histb/histb_vdp_reg.h
++++ b/drivers/gpu/drm/hisilicon/histb/histb_vdp_reg.h
+@@ -74,6 +74,111 @@
+ #define VDP_GP0_ZME_HRATIO_ONE		(1 << 20)
+ #define VDP_GP0_ZME_VRATIO_ONE		(1 << 12)
+ 
++/*
++ * First video layer.  This is the layer a decoded picture is written into,
++ * and it is independent of the graphics layer that carries the user
++ * interface.
++ */
++#define VDP_V0_CTRL			0x0800
++#define VDP_V0_CTRL_IFMT		GENMASK(3, 0)
++#define VDP_V0_CTRL_CHM_RMODE		GENMASK(13, 12)
++#define VDP_V0_CTRL_LM_RMODE		GENMASK(15, 14)
++#define VDP_V0_CTRL_IFIR_MODE		GENMASK(19, 18)
++#define VDP_V0_CTRL_SURFACE_EN		BIT(31)
++#define VDP_V0_UPD			0x0804
++#define VDP_V0_UPD_REGUP		BIT(0)
++#define VDP_V0_IRESO			0x0828
++#define VDP_V0_ORESO			0x082c
++#define VDP_V0_DFPOS			0x0860
++#define VDP_V0_DLPOS			0x0864
++#define VDP_V0_VFPOS			0x0868
++#define VDP_V0_VLPOS			0x086c
++#define VDP_V0_ALPHA			0x0874
++#define VDP_V0_HSP			0x08c0
++#define VDP_V0_HSP_HRATIO		GENMASK(23, 0)
++#define VDP_V0_HSP_HFIR_ORDER		BIT(24)
++#define VDP_V0_VSP			0x08d8
++#define VDP_V0_VSP_ZME_IN_FMT		GENMASK(20, 19)
++#define VDP_V0_VSP_ZME_OUT_FMT		GENMASK(22, 21)
++#define VDP_V0_VSP_VCHFIR_EN		BIT(23)
++#define VDP_V0_VSP_VCHMSC_EN		BIT(30)
++#define VDP_V0_VSR			0x08dc
++#define VDP_V0_VSR_VRATIO		GENMASK(15, 0)
++#define VDP_V0_SMMU_BYPASS0		0x09a0
++#define VDP_V0_MULTI_MODE		0x0e30
++
++/*
++ * The layer has no regions of its own; only the second video layer has
++ * those.  It still takes the address and stride of its single surface from
++ * the first region's registers.
++ */
++#define VDP_V0_P0LADDR			0x0a04
++#define VDP_V0_P0CADDR			0x0a08
++#define VDP_V0_P0STRIDE			0x0a0c
++#define VDP_V0_P0STRIDE_LUMA		GENMASK(15, 0)
++#define VDP_V0_P0STRIDE_CHROMA		GENMASK(31, 16)
++
++/* Pixel formats understood by VDP_V0_CTRL_IFMT. */
++#define VDP_V0_IFMT_SP_420		0x3
++#define VDP_V0_IFMT_SP_422		0x4
++
++/*
++ * Both planes come up set to read interlaced fields, which is not what a
++ * decoder writing whole frames produces.
++ */
++#define VDP_V0_RMODE_PROGRESSIVE	0x1
++
++/*
++ * Subsampled formats must have the chroma interpolation filter switched on.
++ * With it disabled the layer fetches luma and silently drops chroma.  The
++ * coefficients it uses are already in the register file at reset.
++ */
++#define VDP_V0_IFIRMODE_6TAPFIR		0x3
++
++/* Chroma formats the scaler converts between. */
++#define VDP_V0_PROC_FMT_422		0x0
++#define VDP_V0_PROC_FMT_420		0x1
++
++#define VDP_V0_HRATIO_ONE		(1 << 20)
++#define VDP_V0_VRATIO_ONE		(1 << 12)
++
++/* The video port the first video layer feeds into. */
++#define VDP_VP0_UPD			0x6004
++#define VDP_VP0_UPD_REGUP		BIT(0)
++#define VDP_VP0_IRESO			0x6008
++#define VDP_VP0_DFPOS			0x6040
++#define VDP_VP0_DLPOS			0x6044
++#define VDP_VP0_VFPOS			0x6048
++#define VDP_VP0_VLPOS			0x604c
++#define VDP_VP0_ALPHA			0x6054
++
++/*
++ * The video layers have a mixer of their own, ahead of the one that combines
++ * the video and graphics ports.  It comes up with no layer selected, and
++ * until one is nothing in the layer will latch at all.
++ */
++#define VDP_MIXV0_BKG			0xb000
++#define VDP_MIXV0_MIX			0xb008
++#define VDP_MIXV0_MIX_PRIO0		GENMASK(3, 0)
++#define VDP_MIXV0_MIX_PRIO1		GENMASK(7, 4)
++
++/* Layers are named in the mixer one higher than their index. */
++#define VDP_MIXV0_LAYER_V0		0x1
++
++/*
++ * The mixer background is ten bit YUV and comes up as all zeroes, which is a
++ * strong green rather than black.
++ */
++#define VDP_MIXV0_BKG_CR		GENMASK(9, 0)
++#define VDP_MIXV0_BKG_CB		GENMASK(19, 10)
++#define VDP_MIXV0_BKG_Y			GENMASK(29, 20)
++#define VDP_MIXV0_BKG_BLACK_Y		64
++#define VDP_MIXV0_BKG_BLACK_C		512
++
++/* Address translator.  This driver feeds the layer physical addresses. */
++#define VDP_SMMU_SCR			0xf000
++#define VDP_SMMU_SCR_GLB_BYPASS		BIT(0)
++
+ /* First display channel. */
+ #define VDP_DHD0_CTRL			0xc000
+ #define VDP_DHD0_CTRL_INTF_EN		BIT(31)
+-- 
+2.56.1
+

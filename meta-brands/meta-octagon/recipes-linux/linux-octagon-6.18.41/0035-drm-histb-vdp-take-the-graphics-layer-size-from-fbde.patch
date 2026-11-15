@@ -1,7 +1,7 @@
 From a65ff5275a08d6e229b5f8c1d4da94e17795365e Mon Sep 17 00:00:00 2001
 From: Tillmann Severin <tillmann.severin@mailbox.org>
 Date: Fri, 6 Nov 2026 11:30:06 +0100
-Subject: [PATCH 35/35] drm/histb-vdp: take the graphics layer size from fbdev
+Subject: [PATCH 35/49] drm/histb-vdp: take the graphics layer size from fbdev
 
 The size the graphics layer fetches no longer has to be configured on
 the command line. Implement the fb_resize hook so a user interface that
@@ -102,5 +102,5 @@ index 69269a79119d..826e92df9bd4 100644
  	ret = of_reserved_mem_device_init(dev);
  	if (ret && ret != -ENODEV)
 -- 
-2.56.0
+2.56.1
 

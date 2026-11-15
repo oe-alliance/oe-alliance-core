@@ -1,7 +1,7 @@
 From a1aec75be5eba89c87aeaf45b9b82cb7f0029628 Mon Sep 17 00:00:00 2001
 From: Tillmann Severin <tillmann.severin@mailbox.org>
 Date: Mon, 2 Nov 2026 23:49:01 +0100
-Subject: [PATCH 22/26] ARM: dts: hisilicon: describe the SF8008 bootloader
+Subject: [PATCH 22/49] ARM: dts: hisilicon: describe the SF8008 bootloader
  framebuffer
 
 The stock bootloader brings up the display controller and the HDMI
@@ -164,5 +164,5 @@ index 6aaff6bcc345..9f8cbfa94a21 100644
  
  	/* SF8008 ships 1 GiB of DDR3; normally fixed up by the bootloader. */
 -- 
-2.56.0
+2.56.1
 

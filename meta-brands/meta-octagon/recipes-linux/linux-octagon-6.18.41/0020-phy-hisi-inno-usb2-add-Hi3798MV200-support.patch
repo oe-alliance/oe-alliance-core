@@ -1,7 +1,7 @@
 From 91a6b46aee23e94671b8684f52d2e00ecf90d98e Mon Sep 17 00:00:00 2001
 From: Tillmann Severin <tillmann.severin@mailbox.org>
 Date: Sat, 19 Sep 2026 11:26:22 +0200
-Subject: [PATCH 20/26] phy: hisi-inno-usb2: add Hi3798MV200 support
+Subject: [PATCH 20/49] phy: hisi-inno-usb2: add Hi3798MV200 support
 
 The Hi3798MV200 does not have the serial test interface the other SoCs
 use to get at the INNO PHY register file.  Its register file is mapped
@@ -174,5 +174,5 @@ index c843923252aa..71917f88aa55 100644
  };
  MODULE_DEVICE_TABLE(of, hisi_inno_phy_of_match);
 -- 
-2.56.0
+2.56.1
 

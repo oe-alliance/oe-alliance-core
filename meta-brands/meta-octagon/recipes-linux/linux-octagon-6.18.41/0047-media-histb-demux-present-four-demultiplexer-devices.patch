@@ -1,0 +1,234 @@
+From 58cee93cef5dc73c8d74a17f1f73f7ac70d05ad7 Mon Sep 17 00:00:00 2001
+From: Tillmann Severin <tillmann.severin@mailbox.org>
+Date: Mon, 9 Nov 2026 07:48:44 +0100
+Subject: [PATCH 47/49] media: histb-demux: present four demultiplexer devices
+
+Set top box software asks the resource manager for a demultiplexer each
+time it starts watching, recording or streaming a service, and will share
+one that is already open on the same frontend only if the demultiplexer
+agrees that is where its packets come from.  It asks with DMX_SET_SOURCE,
+which left the kernel in 4.14, so the question can no longer be answered
+and the sharing test never matches.  With a single device, already held by
+whatever is reading the tables of the tuned channel, nothing else can ever
+start: streaming a tuned service fails with no free demux found.
+
+Present the captured stream through four devices instead, which is as many
+as the core gives an adapter.  The hardware still captures once; each
+device filters the packets asked of it.
+
+Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>
+---
+ .../media/platform/hisilicon/histb-demux.c    | 134 ++++++++++++------
+ 1 file changed, 91 insertions(+), 43 deletions(-)
+
+diff --git a/drivers/media/platform/hisilicon/histb-demux.c b/drivers/media/platform/hisilicon/histb-demux.c
+index e3b05875c804..2215a9008ecd 100644
+--- a/drivers/media/platform/hisilicon/histb-demux.c
++++ b/drivers/media/platform/hisilicon/histb-demux.c
+@@ -192,6 +192,24 @@ struct histb_demux_fq_desc {
+  */
+ #define HISTB_DMX_POLL_INTERVAL		msecs_to_jiffies(200)
+ 
++/*
++ * The hardware captures one transport stream, but set top box software
++ * expects an adapter to offer several demultiplexer devices and hands one
++ * to each thing it is doing at once: watching, recording, streaming to the
++ * network.  It will not share a device between two of them, because the
++ * test it uses to decide whether sharing is safe depends on an ioctl that
++ * was removed from the kernel years ago.  So present the stream through
++ * four devices, which is as many as the core gives an adapter, and let
++ * each one filter the packets it was asked for.
++ */
++#define HISTB_DMX_DEMUXES		4
++
++struct histb_demux_dvb {
++	struct dvb_demux demux;
++	struct dmxdev dmxdev;
++	struct dmx_frontend mem_frontend;
++};
++
+ struct histb_demux {
+ 	struct device *dev;
+ 	void __iomem *base;
+@@ -210,9 +228,8 @@ struct histb_demux {
+ 	dma_addr_t blocks_phys;
+ 
+ 	struct dvb_adapter adapter;
+-	struct dvb_demux demux;
+-	struct dmxdev dmxdev;
+-	struct dmx_frontend mem_frontend;
++	struct histb_demux_dvb dvb[HISTB_DMX_DEMUXES];
++	unsigned int dvb_count;
+ 	struct dvb_frontend *fe;
+ 	bool dvb_registered;
+ 
+@@ -458,13 +475,18 @@ static void histb_demux_collect(struct histb_demux *dmx)
+ 		u32 off = addr - dmx->blocks_phys;
+ 
+ 		if (off < depth * HISTB_DMX_BLOCK_SIZE &&
+-		    len <= HISTB_DMX_BLOCK_SIZE && len % 188 == 0)
+-			dvb_dmx_swfilter_packets(&dmx->demux,
+-						 dmx->blocks + off, len / 188);
+-		else
++		    len <= HISTB_DMX_BLOCK_SIZE && len % 188 == 0) {
++			unsigned int i;
++
++			for (i = 0; i < dmx->dvb_count; i++)
++				dvb_dmx_swfilter_packets(&dmx->dvb[i].demux,
++							 dmx->blocks + off,
++							 len / 188);
++		} else {
+ 			dev_warn_ratelimited(dmx->dev,
+ 					     "ignoring block at %08x of %u bytes\n",
+ 					     addr, len);
++		}
+ 
+ 		dmx->fq[fq_write].start_addr = desc->start_addr;
+ 		dmx->fq[fq_write].buflen = cpu_to_le32(buflen);
+@@ -587,34 +609,37 @@ static int histb_demux_find_frontend(struct histb_demux *dmx)
+ 	return 0;
+ }
+ 
+-static int histb_demux_register_dvb(struct histb_demux *dmx)
++static void histb_demux_release_one(struct histb_demux_dvb *dvb)
+ {
+-	int ret;
++	dvb->demux.dmx.remove_frontend(&dvb->demux.dmx, &dvb->mem_frontend);
++	dvb_dmxdev_release(&dvb->dmxdev);
++	dvb_dmx_release(&dvb->demux);
++}
+ 
+-	ret = dvb_register_adapter(&dmx->adapter, "histb-demux", THIS_MODULE,
+-				   dmx->dev, adapter_nr);
+-	if (ret < 0)
+-		return dev_err_probe(dmx->dev, ret, "cannot register adapter\n");
++static int histb_demux_register_one(struct histb_demux *dmx,
++				    struct histb_demux_dvb *dvb)
++{
++	int ret;
+ 
+-	dmx->demux.dmx.capabilities = DMX_TS_FILTERING | DMX_SECTION_FILTERING;
+-	dmx->demux.priv = dmx;
+-	dmx->demux.filternum = 256;
+-	dmx->demux.feednum = 256;
+-	dmx->demux.start_feed = histb_demux_start_feed;
+-	dmx->demux.stop_feed = histb_demux_stop_feed;
++	dvb->demux.dmx.capabilities = DMX_TS_FILTERING | DMX_SECTION_FILTERING;
++	dvb->demux.priv = dmx;
++	dvb->demux.filternum = 256;
++	dvb->demux.feednum = 256;
++	dvb->demux.start_feed = histb_demux_start_feed;
++	dvb->demux.stop_feed = histb_demux_stop_feed;
+ 
+-	ret = dvb_dmx_init(&dmx->demux);
+-	if (ret < 0) {
+-		dev_err_probe(dmx->dev, ret, "cannot create demultiplexer\n");
+-		goto err_adapter;
+-	}
++	ret = dvb_dmx_init(&dvb->demux);
++	if (ret < 0)
++		return dev_err_probe(dmx->dev, ret,
++				     "cannot create demultiplexer\n");
+ 
+-	dmx->dmxdev.filternum = dmx->demux.filternum;
+-	dmx->dmxdev.demux = &dmx->demux.dmx;
++	dvb->dmxdev.filternum = dvb->demux.filternum;
++	dvb->dmxdev.demux = &dvb->demux.dmx;
+ 
+-	ret = dvb_dmxdev_init(&dmx->dmxdev, &dmx->adapter);
++	ret = dvb_dmxdev_init(&dvb->dmxdev, &dmx->adapter);
+ 	if (ret < 0) {
+-		dev_err_probe(dmx->dev, ret, "cannot create demultiplexer device\n");
++		dev_err_probe(dmx->dev, ret,
++			      "cannot create demultiplexer device\n");
+ 		goto err_dmx;
+ 	}
+ 
+@@ -622,22 +647,50 @@ static int histb_demux_register_dvb(struct histb_demux *dmx)
+ 	 * The core insists on a source even though ours is simply the
+ 	 * input port, so give it the usual in-memory one.
+ 	 */
+-	dmx->mem_frontend.source = DMX_MEMORY_FE;
+-	ret = dmx->demux.dmx.add_frontend(&dmx->demux.dmx, &dmx->mem_frontend);
++	dvb->mem_frontend.source = DMX_MEMORY_FE;
++	ret = dvb->demux.dmx.add_frontend(&dvb->demux.dmx, &dvb->mem_frontend);
+ 	if (ret < 0)
+ 		goto err_dmxdev;
+ 
+-	ret = dmx->demux.dmx.connect_frontend(&dmx->demux.dmx,
+-					      &dmx->mem_frontend);
++	ret = dvb->demux.dmx.connect_frontend(&dvb->demux.dmx,
++					      &dvb->mem_frontend);
+ 	if (ret < 0)
+ 		goto err_frontend;
+ 
++	return 0;
++
++err_frontend:
++	dvb->demux.dmx.remove_frontend(&dvb->demux.dmx, &dvb->mem_frontend);
++err_dmxdev:
++	dvb_dmxdev_release(&dvb->dmxdev);
++err_dmx:
++	dvb_dmx_release(&dvb->demux);
++
++	return ret;
++}
++
++static int histb_demux_register_dvb(struct histb_demux *dmx)
++{
++	int ret;
++
++	ret = dvb_register_adapter(&dmx->adapter, "histb-demux", THIS_MODULE,
++				   dmx->dev, adapter_nr);
++	if (ret < 0)
++		return dev_err_probe(dmx->dev, ret, "cannot register adapter\n");
++
++	while (dmx->dvb_count < HISTB_DMX_DEMUXES) {
++		ret = histb_demux_register_one(dmx, &dmx->dvb[dmx->dvb_count]);
++		if (ret < 0)
++			goto err_dvb;
++		dmx->dvb_count++;
++	}
++
+ 	if (dmx->fe) {
+ 		ret = dvb_register_frontend(&dmx->adapter, dmx->fe);
+ 		if (ret < 0) {
+ 			dev_err_probe(dmx->dev, ret,
+ 				      "cannot register front end\n");
+-			goto err_frontend;
++			goto err_dvb;
+ 		}
+ 	}
+ 
+@@ -645,13 +698,9 @@ static int histb_demux_register_dvb(struct histb_demux *dmx)
+ 
+ 	return 0;
+ 
+-err_frontend:
+-	dmx->demux.dmx.remove_frontend(&dmx->demux.dmx, &dmx->mem_frontend);
+-err_dmxdev:
+-	dvb_dmxdev_release(&dmx->dmxdev);
+-err_dmx:
+-	dvb_dmx_release(&dmx->demux);
+-err_adapter:
++err_dvb:
++	while (dmx->dvb_count--)
++		histb_demux_release_one(&dmx->dvb[dmx->dvb_count]);
+ 	dvb_unregister_adapter(&dmx->adapter);
+ 
+ 	return ret;
+@@ -664,9 +713,8 @@ static void histb_demux_unregister_dvb(struct histb_demux *dmx)
+ 
+ 	if (dmx->fe)
+ 		dvb_unregister_frontend(dmx->fe);
+-	dmx->demux.dmx.remove_frontend(&dmx->demux.dmx, &dmx->mem_frontend);
+-	dvb_dmxdev_release(&dmx->dmxdev);
+-	dvb_dmx_release(&dmx->demux);
++	while (dmx->dvb_count--)
++		histb_demux_release_one(&dmx->dvb[dmx->dvb_count]);
+ 	dvb_unregister_adapter(&dmx->adapter);
+ }
+ 
+-- 
+2.56.1
+

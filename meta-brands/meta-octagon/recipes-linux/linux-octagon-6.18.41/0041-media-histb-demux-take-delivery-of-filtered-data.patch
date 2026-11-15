@@ -1,0 +1,418 @@
+From e361d7c7ce9cf3688e79ed6cb3bcaf4eb1c16f44 Mon Sep 17 00:00:00 2001
+From: Tillmann Severin <tillmann.severin@mailbox.org>
+Date: Sun, 8 Nov 2026 18:46:26 +0100
+Subject: [PATCH 41/49] media: histb-demux: take delivery of filtered data
+
+The output side of the block is not a ring of bytes but two rings of
+descriptors: the driver hands over empty blocks through a free queue
+and the hardware hands back full ones through an output queue, sixteen
+bytes of descriptor each.
+
+There is an address translator in front of all this, and the useful
+discovery is that it need not be used.  Its enable register is active
+low, one bit per queue, and every bit is set out of reset - so a queue
+left alone addresses memory physically and ordinary coherent
+allocations work.  The vendor clears one bit and maintains a page
+table; we do not have to.
+
+Input ports reach the demultiplexer instances through a switch, a byte
+of configuration each holding the port number plus one.
+
+For now this is driven from debugfs: write a PID to start a capture and
+read the data back out.  That makes the remaining unknowns - which
+channel type yields whole transport packets, and what the hardware puts
+in the descriptor fields - answerable without a new kernel each time,
+the same way the front end was worked out.
+
+Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>
+---
+ .../media/platform/hisilicon/histb-demux.c    | 313 ++++++++++++++++++
+ 1 file changed, 313 insertions(+)
+
+diff --git a/drivers/media/platform/hisilicon/histb-demux.c b/drivers/media/platform/hisilicon/histb-demux.c
+index 296276fda0c4..b50074a2c5b0 100644
+--- a/drivers/media/platform/hisilicon/histb-demux.c
++++ b/drivers/media/platform/hisilicon/histb-demux.c
+@@ -15,6 +15,8 @@
+ #include <linux/bitfield.h>
+ #include <linux/clk.h>
+ #include <linux/debugfs.h>
++#include <linux/delay.h>
++#include <linux/dma-mapping.h>
+ #include <linux/io.h>
+ #include <linux/mfd/syscon.h>
+ #include <linux/module.h>
+@@ -41,6 +43,35 @@
+ #define HISTB_DMX_TS_BIT_SEL		BIT(30)
+ #define HISTB_DMX_TS_PORT_SEL		BIT(31)
+ 
++#define HISTB_DMX_SWITCH_CFG0		0x3a00
++#define HISTB_DMX_SWITCH_DMX(n)		GENMASK(7 + 8 * (n), 8 * (n))
++
++#define HISTB_DMX_PID_CTRL(ch)		(0x3000 + ((ch) << 2))
++#define HISTB_DMX_PID_EN(ch)		(0x3200 + ((ch) << 2))
++#define HISTB_DMX_PID_VALUE(ch)		(0x3400 + ((ch) << 2))
++#define HISTB_DMX_PID_PLAY_BUF(ch)	(0x3800 + ((ch) << 2))
++
++#define HISTB_DMX_PID_PLAY_DMX_ID	GENMASK(2, 0)
++#define HISTB_DMX_PID_PLAY_OQ		GENMASK(6, 0)
++#define HISTB_DMX_PID_VALUE_PID		GENMASK(12, 0)
++
++#define HISTB_DMX_PID_DATA_TYPE		GENMASK(1, 0)
++#define HISTB_DMX_PID_CH_ATTRI		GENMASK(25, 23)
++
++#define HISTB_DMX_FQ_WORD(q, w)		(0xd000 + ((q) << 4) + ((w) << 2))
++#define HISTB_DMX_OQ_WORD(q, w)		(((w) < 4 ? 0xe000 : 0xe800 - 16) + \
++					 ((q) << 4) + ((w) << 2))
++#define HISTB_DMX_OQ_ENA		0xc130
++#define HISTB_DMX_FQ_ENA		0xc140
++#define HISTB_DMX_OQ_SMMU		0xcf30
++
++#define HISTB_DMX_FQ_ALMOST_OVERFLOW	8
++#define HISTB_DMX_OQ_ALMOST_OVERFLOW	4
++#define HISTB_DMX_OQ_INT_COUNT		1
++
++#define HISTB_DMX_QUEUE_DEPTH		64
++#define HISTB_DMX_BLOCK_SIZE		4096
++
+ #define HISTB_DMX_COUNT_RESET		0
+ #define HISTB_DMX_COUNT_START		1
+ #define HISTB_DMX_COUNT_STOP		2
+@@ -54,6 +85,25 @@
+ #define HISTB_CRG_DEMUX_CLK_SEL		0x100
+ #define HISTB_CRG_TS0_CLK_SEL		GENMASK(13, 12)
+ 
++/*
++ * A filled block is reported by a sixteen byte descriptor written into
++ * the output ring.  The hardware takes empty blocks from a second ring,
++ * the free queue, whose descriptors are only an address and a length.
++ */
++struct histb_demux_oq_desc {
++	__le32 start_addr;
++	__le32 cactrl_buflen;
++	__le32 pvrctrl_datalen;
++	__le32 carsv;
++};
++
++struct histb_demux_fq_desc {
++	__le32 start_addr;
++	__le32 buflen;
++};
++
++#define HISTB_DMX_DESC_DATALEN		GENMASK(15, 0)
++
+ struct histb_demux {
+ 	struct device *dev;
+ 	void __iomem *base;
+@@ -62,6 +112,18 @@ struct histb_demux {
+ 	struct reset_control *rst;
+ 	struct dentry *debugfs;
+ 	u32 input_port;
++
++	struct histb_demux_oq_desc *oq;
++	dma_addr_t oq_phys;
++	struct histb_demux_fq_desc *fq;
++	dma_addr_t fq_phys;
++	void *blocks;
++	dma_addr_t blocks_phys;
++
++	struct mutex lock;
++	bool capturing;
++	u32 pid;
++	u32 pid_ctrl;
+ };
+ 
+ static void histb_demux_write(struct histb_demux *dmx, u32 reg, u32 val)
+@@ -129,6 +191,235 @@ static int histb_demux_select_ts_clock(struct histb_demux *dmx)
+ 				  FIELD_PREP(HISTB_CRG_TS0_CLK_SEL, 1));
+ }
+ 
++/*
++ * The hardware demultiplexer instances are fed from the input ports
++ * through a switch, one byte of configuration each, where the value is
++ * the port number plus one.  Instance n is given port n, matching what
++ * the vendor software sets up.
++ */
++static void histb_demux_attach_port(struct histb_demux *dmx)
++{
++	u32 val = histb_demux_read(dmx, HISTB_DMX_SWITCH_CFG0);
++	u32 inst = dmx->input_port;
++
++	val &= ~HISTB_DMX_SWITCH_DMX(inst);
++	val |= (dmx->input_port + 1) << (8 * inst);
++	histb_demux_write(dmx, HISTB_DMX_SWITCH_CFG0, val);
++}
++
++static void histb_demux_capture_stop(struct histb_demux *dmx)
++{
++	int w;
++
++	histb_demux_write(dmx, HISTB_DMX_PID_EN(0), 0);
++	histb_demux_write(dmx, HISTB_DMX_PID_CTRL(0), 0);
++	histb_demux_write(dmx, HISTB_DMX_OQ_ENA, 0);
++	histb_demux_write(dmx, HISTB_DMX_FQ_ENA, 0);
++
++	for (w = 0; w < 8; w++)
++		histb_demux_write(dmx, HISTB_DMX_OQ_WORD(0, w), 0);
++	for (w = 0; w < 4; w++)
++		histb_demux_write(dmx, HISTB_DMX_FQ_WORD(0, w), 0);
++
++	dmx->capturing = false;
++}
++
++/*
++ * Hand the hardware a ring of empty blocks and a ring in which to
++ * report the full ones, then point one PID channel at it.  The address
++ * translator is left disabled, which is its state out of reset, so the
++ * addresses in the descriptors are physical ones.
++ */
++static void histb_demux_capture_start(struct histb_demux *dmx)
++{
++	u32 depth = HISTB_DMX_QUEUE_DEPTH;
++	u32 i;
++
++	histb_demux_capture_stop(dmx);
++
++	memset(dmx->oq, 0, depth * sizeof(*dmx->oq));
++	memset(dmx->fq, 0, depth * sizeof(*dmx->fq));
++
++	/* The free queue holds one fewer block than it has room for. */
++	for (i = 0; i < depth - 1; i++) {
++		dmx->fq[i].start_addr =
++			cpu_to_le32(dmx->blocks_phys + i * HISTB_DMX_BLOCK_SIZE);
++		dmx->fq[i].buflen = cpu_to_le32(HISTB_DMX_BLOCK_SIZE);
++	}
++
++	histb_demux_write(dmx, HISTB_DMX_FQ_WORD(0, 0),
++			  HISTB_DMX_FQ_ALMOST_OVERFLOW << 24);
++	histb_demux_write(dmx, HISTB_DMX_FQ_WORD(0, 1), 0);
++	histb_demux_write(dmx, HISTB_DMX_FQ_WORD(0, 2),
++			  (depth << 16) | (depth - 1));
++	histb_demux_write(dmx, HISTB_DMX_FQ_WORD(0, 3), dmx->fq_phys);
++
++	for (i = 0; i < 6; i++)
++		histb_demux_write(dmx, HISTB_DMX_OQ_WORD(0, i), 0);
++	histb_demux_write(dmx, HISTB_DMX_OQ_WORD(0, 6),
++			  HISTB_DMX_OQ_INT_COUNT << 26 | depth << 16 |
++			  HISTB_DMX_OQ_ALMOST_OVERFLOW << 8 | 0);
++	histb_demux_write(dmx, HISTB_DMX_OQ_WORD(0, 7), dmx->oq_phys);
++
++	histb_demux_write(dmx, HISTB_DMX_FQ_ENA, BIT(0));
++	histb_demux_write(dmx, HISTB_DMX_OQ_ENA, BIT(0));
++
++	histb_demux_write(dmx, HISTB_DMX_PID_VALUE(0),
++			  FIELD_PREP(HISTB_DMX_PID_VALUE_PID, dmx->pid));
++	histb_demux_write(dmx, HISTB_DMX_PID_PLAY_BUF(0),
++			  FIELD_PREP(HISTB_DMX_PID_PLAY_OQ, 0));
++	histb_demux_write(dmx, HISTB_DMX_PID_CTRL(0), dmx->pid_ctrl);
++	histb_demux_write(dmx, HISTB_DMX_PID_EN(0),
++			  FIELD_PREP(HISTB_DMX_PID_PLAY_DMX_ID,
++				     dmx->input_port));
++
++	dmx->capturing = true;
++}
++
++static int histb_demux_pid_set(void *data, u64 val)
++{
++	struct histb_demux *dmx = data;
++
++	if (val > 0x1fff && val != U64_MAX)
++		return -EINVAL;
++
++	guard(mutex)(&dmx->lock);
++
++	if (val == U64_MAX) {
++		histb_demux_capture_stop(dmx);
++		return 0;
++	}
++
++	dmx->pid = val;
++	histb_demux_capture_start(dmx);
++
++	return 0;
++}
++
++static int histb_demux_pid_get(void *data, u64 *val)
++{
++	struct histb_demux *dmx = data;
++
++	*val = dmx->capturing ? dmx->pid : U64_MAX;
++
++	return 0;
++}
++DEFINE_DEBUGFS_ATTRIBUTE(histb_demux_pid_fops, histb_demux_pid_get,
++			 histb_demux_pid_set, "%llu\n");
++
++/*
++ * Returns whatever the hardware has deposited so far, as one flat run
++ * of bytes.  This is a bring-up aid: the capture is one shot and stops
++ * when the free queue runs dry.
++ */
++static ssize_t histb_demux_data_read(struct file *file, char __user *buf,
++				     size_t count, loff_t *ppos)
++{
++	struct histb_demux *dmx = file->private_data;
++	loff_t pos = *ppos;
++	size_t copied = 0;
++	u32 i;
++
++	guard(mutex)(&dmx->lock);
++
++	for (i = 0; i < HISTB_DMX_QUEUE_DEPTH && copied < count; i++) {
++		u32 addr = le32_to_cpu(dmx->oq[i].start_addr);
++		u32 len = FIELD_GET(HISTB_DMX_DESC_DATALEN,
++				    le32_to_cpu(dmx->oq[i].pvrctrl_datalen));
++		size_t off, chunk;
++
++		if (!len)
++			break;
++
++		off = addr - dmx->blocks_phys;
++		if (off >= HISTB_DMX_QUEUE_DEPTH * HISTB_DMX_BLOCK_SIZE ||
++		    len > HISTB_DMX_BLOCK_SIZE)
++			break;
++
++		/* Skip the descriptors the reader has already seen. */
++		if (pos >= len) {
++			pos -= len;
++			continue;
++		}
++
++		off += pos;
++		len -= pos;
++		pos = 0;
++
++		chunk = min(count - copied, (size_t)len);
++		if (copy_to_user(buf + copied, dmx->blocks + off, chunk))
++			return -EFAULT;
++
++		copied += chunk;
++	}
++
++	*ppos += copied;
++
++	return copied;
++}
++
++static const struct file_operations histb_demux_data_fops = {
++	.owner = THIS_MODULE,
++	.open = simple_open,
++	.read = histb_demux_data_read,
++};
++
++static int histb_demux_queues_show(struct seq_file *s, void *unused)
++{
++	struct histb_demux *dmx = s->private;
++	u32 i, filled = 0, bytes = 0;
++
++	seq_printf(s, "capturing %u  pid %u  pid_ctrl %08x\n",
++		   dmx->capturing, dmx->pid, dmx->pid_ctrl);
++
++	for (i = 0; i < 8; i++)
++		seq_printf(s, "oq word%u %08x\n", i,
++			   histb_demux_read(dmx, HISTB_DMX_OQ_WORD(0, i)));
++	for (i = 0; i < 4; i++)
++		seq_printf(s, "fq word%u %08x\n", i,
++			   histb_demux_read(dmx, HISTB_DMX_FQ_WORD(0, i)));
++
++	for (i = 0; i < HISTB_DMX_QUEUE_DEPTH; i++) {
++		u32 len = FIELD_GET(HISTB_DMX_DESC_DATALEN,
++				    le32_to_cpu(dmx->oq[i].pvrctrl_datalen));
++
++		if (!len)
++			continue;
++		filled++;
++		bytes += len;
++	}
++
++	seq_printf(s, "descriptors filled %u  bytes %u\n", filled, bytes);
++
++	for (i = 0; i < 4; i++)
++		seq_printf(s, "desc%u %08x %08x %08x %08x\n", i,
++			   le32_to_cpu(dmx->oq[i].start_addr),
++			   le32_to_cpu(dmx->oq[i].cactrl_buflen),
++			   le32_to_cpu(dmx->oq[i].pvrctrl_datalen),
++			   le32_to_cpu(dmx->oq[i].carsv));
++
++	return 0;
++}
++DEFINE_SHOW_ATTRIBUTE(histb_demux_queues);
++
++static int histb_demux_alloc_queues(struct histb_demux *dmx)
++{
++	struct device *dev = dmx->dev;
++	u32 depth = HISTB_DMX_QUEUE_DEPTH;
++
++	dmx->oq = dmam_alloc_coherent(dev, depth * sizeof(*dmx->oq),
++				      &dmx->oq_phys, GFP_KERNEL);
++	dmx->fq = dmam_alloc_coherent(dev, depth * sizeof(*dmx->fq),
++				      &dmx->fq_phys, GFP_KERNEL);
++	dmx->blocks = dmam_alloc_coherent(dev, depth * HISTB_DMX_BLOCK_SIZE,
++					  &dmx->blocks_phys, GFP_KERNEL);
++
++	if (!dmx->oq || !dmx->fq || !dmx->blocks)
++		return -ENOMEM;
++
++	return 0;
++}
++
+ static int histb_demux_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+@@ -141,6 +432,15 @@ static int histb_demux_probe(struct platform_device *pdev)
+ 
+ 	dmx->dev = dev;
+ 	platform_set_drvdata(pdev, dmx);
++	mutex_init(&dmx->lock);
++
++	/* A PES channel carrying whole packets, as the vendor sets up. */
++	dmx->pid_ctrl = FIELD_PREP(HISTB_DMX_PID_DATA_TYPE, 1) |
++			FIELD_PREP(HISTB_DMX_PID_CH_ATTRI, 3);
++
++	ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(32));
++	if (ret)
++		return ret;
+ 
+ 	dmx->base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(dmx->base))
+@@ -163,6 +463,10 @@ static int histb_demux_probe(struct platform_device *pdev)
+ 	if (IS_ERR(dmx->rst))
+ 		return dev_err_probe(dev, PTR_ERR(dmx->rst), "no reset\n");
+ 
++	ret = histb_demux_alloc_queues(dmx);
++	if (ret)
++		return ret;
++
+ 	ret = clk_bulk_prepare_enable(dmx->num_clks, dmx->clks);
+ 	if (ret)
+ 		return dev_err_probe(dev, ret, "cannot start clocks\n");
+@@ -183,10 +487,18 @@ static int histb_demux_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	histb_demux_setup_port(dmx, dmx->input_port);
++	histb_demux_attach_port(dmx);
+ 
+ 	dmx->debugfs = debugfs_create_dir(dev_name(dev), NULL);
+ 	debugfs_create_file("ports", 0444, dmx->debugfs, dmx,
+ 			    &histb_demux_ports_fops);
++	debugfs_create_file("pid", 0644, dmx->debugfs, dmx,
++			    &histb_demux_pid_fops);
++	debugfs_create_file("data", 0400, dmx->debugfs, dmx,
++			    &histb_demux_data_fops);
++	debugfs_create_file("queues", 0444, dmx->debugfs, dmx,
++			    &histb_demux_queues_fops);
++	debugfs_create_x32("pid_ctrl", 0644, dmx->debugfs, &dmx->pid_ctrl);
+ 
+ 	dev_info(dev, "transport stream input on port %u\n", dmx->input_port);
+ 
+@@ -202,6 +514,7 @@ static void histb_demux_remove(struct platform_device *pdev)
+ 	struct histb_demux *dmx = platform_get_drvdata(pdev);
+ 
+ 	debugfs_remove_recursive(dmx->debugfs);
++	histb_demux_capture_stop(dmx);
+ 	histb_demux_write(dmx, HISTB_DMX_TS_COUNT_CTRL(dmx->input_port),
+ 			  HISTB_DMX_COUNT_STOP);
+ 	reset_control_assert(dmx->rst);
+-- 
+2.56.1
+

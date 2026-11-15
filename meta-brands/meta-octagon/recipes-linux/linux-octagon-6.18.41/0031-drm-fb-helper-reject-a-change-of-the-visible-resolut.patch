@@ -1,7 +1,8 @@
 From 8616f22d31d2ffbd1a7a25b95328c52e8799e786 Mon Sep 17 00:00:00 2001
 From: Tillmann Severin <tillmann.severin@mailbox.org>
 Date: Thu, 5 Nov 2026 20:32:47 +0100
-Subject: [PATCH] drm/fb-helper: reject a change of the visible resolution
+Subject: [PATCH 31/49] drm/fb-helper: reject a change of the visible
+ resolution
 
 drm_fb_helper_set_par() does not look at the variable screen info at
 all, it only restores the mode the fbdev client has configured. A
@@ -47,3 +48,6 @@ index f1bb87f27dd1..0e9ff0d7857a 100644
  	__fill_var(var, info, fb);
  
  	/*
+-- 
+2.56.1
+

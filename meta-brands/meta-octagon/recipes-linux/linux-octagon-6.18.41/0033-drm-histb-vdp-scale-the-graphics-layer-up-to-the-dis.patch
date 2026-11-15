@@ -1,7 +1,8 @@
 From d557b5ac8f375331fda138b16ff8fb5bd5d4c99e Mon Sep 17 00:00:00 2001
 From: Tillmann Severin <tillmann.severin@mailbox.org>
 Date: Fri, 6 Nov 2026 11:14:50 +0100
-Subject: [PATCH] drm/histb-vdp: scale the graphics layer up to the display
+Subject: [PATCH 33/49] drm/histb-vdp: scale the graphics layer up to the
+ display
 
 The graphics port between the graphics layer and the display channel
 carries a scaler.  The bootloader leaves it bypassed, so the layer has
@@ -186,5 +187,5 @@ index d547724869a5..323cf16f9475 100644
  #define VDP_DHD0_CTRL			0xc000
  #define VDP_DHD0_CTRL_INTF_EN		BIT(31)
 -- 
-2.56.0
+2.56.1
 

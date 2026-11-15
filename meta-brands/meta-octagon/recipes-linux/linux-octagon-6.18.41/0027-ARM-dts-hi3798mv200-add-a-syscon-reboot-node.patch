@@ -1,7 +1,7 @@
 From 8779f7b025e9fd1845124edcae61dd9fd8da5b64 Mon Sep 17 00:00:00 2001
 From: Tillmann Severin <tillmann.severin@mailbox.org>
 Date: Thu, 5 Nov 2026 17:00:44 +0100
-Subject: [PATCH] ARM: dts: hi3798mv200: add a syscon-reboot node
+Subject: [PATCH 27/49] ARM: dts: hi3798mv200: add a syscon-reboot node
 
 Restarting the board left it halted in an idle loop instead of
 resetting the SoC.  ARCH_HISI selects POWER_RESET_HISI, but that driver
@@ -55,5 +55,5 @@ index 05b53d996d4c..2ecb33bf2764 100644
  			compatible = "hisilicon,hi3798cv200-perictrl", "syscon",
  				     "simple-mfd";
 -- 
-2.56.0
+2.56.1
 

@@ -1,7 +1,7 @@
 From 7e03310af8d1b5fdabf6ec2b9b54719eee9c7f88 Mon Sep 17 00:00:00 2001
 From: Tillmann Severin <tillmann.severin@mailbox.org>
 Date: Tue, 3 Nov 2026 19:48:30 +0100
-Subject: [PATCH 25/26] media: rc: add keymap for the Octagon SF8008 remote
+Subject: [PATCH 25/49] media: rc: add keymap for the Octagon SF8008 remote
 
 The Octagon SF8008 ships with a NEC remote control using address 0x05.
 Add a keytable for it and select it from the board device trees so that
@@ -158,5 +158,5 @@ index d90e4611b066..be6aa18ed9dd 100644
  #define RC_MAP_PCTV_SEDNA                "rc-pctv-sedna"
  #define RC_MAP_PINE64                    "rc-pine64"
 -- 
-2.56.0
+2.56.1
 

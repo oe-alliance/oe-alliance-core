@@ -51,6 +51,17 @@ SRC_URI += "https://www.kernel.org/pub/linux/kernel/v6.x/linux-${PV}.tar.gz \
     file://0036-drm-histb-vdp-smooth-the-scaled-graphics-layer.patch \
     file://0037-ARM-dts-hi3798mv200-octagon-sf8008-enable-the-second.patch \
     file://0038-ARM-dts-hi3798mv200-octagon-sf8008-mux-the-second-I2.patch \
+    file://0039-media-dvb-frontends-add-a-driver-for-the-AltoBeam-AT.patch \
+    file://0040-media-platform-bring-up-the-HiSilicon-set-top-box-de.patch \
+    file://0041-media-histb-demux-take-delivery-of-filtered-data.patch \
+    file://0042-media-histb-demux-capture-the-whole-transport-stream.patch \
+    file://0043-media-histb-demux-present-the-demultiplexer-to-the-D.patch \
+    file://0044-media-histb-demux-collect-blocks-on-an-interrupt.patch \
+    file://0045-media-describe-tuner-sockets-to-set-top-box-userspac.patch \
+    file://0046-media-atbm7821-report-signal-strength.patch \
+    file://0047-media-histb-demux-present-four-demultiplexer-devices.patch \
+    file://0048-drm-histb-vdp-model-the-display-channel-as-a-crtc-wi.patch \
+    file://0049-drm-histb-vdp-add-the-video-overlay-plane.patch \
 "
 SRC_URI[sha256sum] = "ec7efb5ce8406adfcf681cae40cfad58c2f91eea97736c2ef66124e9d2cf3cb7"
 

@@ -1,0 +1,334 @@
+From 0f500484e486e790229e3e2b48abd81ff7fd5e68 Mon Sep 17 00:00:00 2001
+From: Tillmann Severin <tillmann.severin@mailbox.org>
+Date: Mon, 9 Nov 2026 21:17:07 +0100
+Subject: [PATCH 48/49] drm/histb-vdp: model the display channel as a crtc with
+ planes
+
+The simple display pipe is one plane and one crtc welded together, which
+suits a driver that will only ever scan out a framebuffer.  This display
+channel has more layers than that: the decoded picture arrives on a video
+layer of the same block, composed underneath the graphics layer the user
+interface is drawn on.
+
+Split the pipe into a crtc, a primary plane for graphics layer G0 and an
+encoder tying the crtc to the existing connector.  The register writes are
+unchanged, and the layer is still only reprogrammed in full when the
+framebuffer changes shape, so a page flip remains a single write of the
+scanout address.
+---
+ .../gpu/drm/hisilicon/histb/histb_vdp_drv.c   | 203 +++++++++++++-----
+ 1 file changed, 151 insertions(+), 52 deletions(-)
+
+diff --git a/drivers/gpu/drm/hisilicon/histb/histb_vdp_drv.c b/drivers/gpu/drm/hisilicon/histb/histb_vdp_drv.c
+index 6f5333ae05b6..cf497f2378b7 100644
+--- a/drivers/gpu/drm/hisilicon/histb/histb_vdp_drv.c
++++ b/drivers/gpu/drm/hisilicon/histb/histb_vdp_drv.c
+@@ -3,9 +3,13 @@
+  * DRM driver for the HiSilicon STB video display processor.
+  *
+  * The VDP composes several video and graphics layers into one or more display
+- * channels.  This driver only drives the first graphics layer, G0, on the
+- * first display channel, DHD0, which is enough to take over the framebuffer
+- * the bootloader leaves scanning out.
++ * channels.  This driver drives the first display channel, DHD0, and presents
++ * its first graphics layer, G0, as the primary plane.  That is enough to take
++ * over the framebuffer the bootloader leaves scanning out.
++ *
++ * The channel is modelled as a CRTC with planes rather than as a simple
++ * display pipe, because the layers the decoded picture will arrive on are
++ * further planes of this same channel.
+  *
+  * The display timing itself is not programmed.  The bootloader has already
+  * brought up DHD0 and the HDMI transmitter, so the mode is read back out of
+@@ -25,6 +29,7 @@
+ #include <drm/clients/drm_client_setup.h>
+ #include <drm/drm_atomic.h>
+ #include <drm/drm_atomic_helper.h>
++#include <drm/drm_crtc_helper.h>
+ #include <drm/drm_drv.h>
+ #include <drm/drm_fb_dma_helper.h>
+ #include <drm/drm_fbdev_dma.h>
+@@ -42,7 +47,9 @@
+ struct histb_vdp {
+ 	struct drm_device drm;
+ 	void __iomem *regs;
+-	struct drm_simple_display_pipe pipe;
++	struct drm_plane primary;
++	struct drm_crtc crtc;
++	struct drm_encoder encoder;
+ 	struct drm_connector connector;
+ 	struct drm_display_mode mode;
+ 	unsigned int osd_width;
+@@ -54,9 +61,14 @@ static inline struct histb_vdp *drm_to_vdp(struct drm_device *drm)
+ 	return container_of(drm, struct histb_vdp, drm);
+ }
+ 
+-static inline struct histb_vdp *pipe_to_vdp(struct drm_simple_display_pipe *pipe)
++static inline struct histb_vdp *crtc_to_vdp(struct drm_crtc *crtc)
++{
++	return container_of(crtc, struct histb_vdp, crtc);
++}
++
++static inline struct histb_vdp *plane_to_vdp(struct drm_plane *plane)
+ {
+-	return container_of(pipe, struct histb_vdp, pipe);
++	return container_of(plane, struct histb_vdp, primary);
+ }
+ 
+ static inline struct histb_vdp *connector_to_vdp(struct drm_connector *connector)
+@@ -215,16 +227,18 @@ static const struct drm_connector_funcs histb_vdp_connector_funcs = {
+ 	.atomic_destroy_state = drm_atomic_helper_connector_destroy_state,
+ };
+ 
+-static int histb_vdp_pipe_check(struct drm_simple_display_pipe *pipe,
+-				struct drm_plane_state *plane_state,
+-				struct drm_crtc_state *crtc_state)
++static int histb_vdp_plane_atomic_check(struct drm_plane *plane,
++					struct drm_atomic_state *state)
+ {
+-	struct drm_framebuffer *fb = plane_state->fb;
++	struct drm_plane_state *new_state =
++		drm_atomic_get_new_plane_state(state, plane);
++	struct drm_framebuffer *fb = new_state->fb;
+ 
+ 	if (!fb)
+ 		return 0;
+ 
+-	/* The layer only understands strides that are a whole number of
++	/*
++	 * The layer only understands strides that are a whole number of
+ 	 * fetch chunks.
+ 	 */
+ 	if (fb->pitches[0] % VDP_G0_STRIDE_ALIGN)
+@@ -233,13 +247,17 @@ static int histb_vdp_pipe_check(struct drm_simple_display_pipe *pipe,
+ 	return 0;
+ }
+ 
+-static void histb_vdp_pipe_enable(struct drm_simple_display_pipe *pipe,
+-				  struct drm_crtc_state *crtc_state,
+-				  struct drm_plane_state *plane_state)
++/*
++ * Everything the layer needs told to it before it can fetch: how wide a line
++ * is, how much of the framebuffer to read, where on the screen the result
++ * goes, and in which format.  A page flip changes none of that, so it is only
++ * done when the plane comes up or the framebuffer changes shape.
++ */
++static void histb_vdp_plane_setup(struct histb_vdp *vdp,
++				  struct drm_plane_state *new_state,
++				  const struct drm_display_mode *mode)
+ {
+-	struct histb_vdp *vdp = pipe_to_vdp(pipe);
+-	struct drm_framebuffer *fb = plane_state->fb;
+-	struct drm_display_mode *mode = &crtc_state->adjusted_mode;
++	struct drm_framebuffer *fb = new_state->fb;
+ 	u32 ctrl;
+ 
+ 	writel(FIELD_PREP(VDP_G0_STRIDE_MASK,
+@@ -272,37 +290,88 @@ static void histb_vdp_pipe_enable(struct drm_simple_display_pipe *pipe,
+ 	ctrl |= FIELD_PREP(VDP_G0_CTRL_IFMT, histb_vdp_ifmt(fb->format->format));
+ 	ctrl |= VDP_G0_CTRL_SURFACE_EN;
+ 	writel(ctrl, vdp->regs + VDP_G0_CTRL);
++}
++
++static void histb_vdp_plane_atomic_update(struct drm_plane *plane,
++					  struct drm_atomic_state *state)
++{
++	struct histb_vdp *vdp = plane_to_vdp(plane);
++	struct drm_plane_state *new_state =
++		drm_atomic_get_new_plane_state(state, plane);
++	struct drm_plane_state *old_state =
++		drm_atomic_get_old_plane_state(state, plane);
++	struct drm_framebuffer *fb = new_state->fb;
++	struct drm_crtc_state *crtc_state;
++
++	if (!fb || !new_state->crtc)
++		return;
+ 
+-	histb_vdp_set_scanout(vdp, plane_state);
++	crtc_state = drm_atomic_get_new_crtc_state(state, new_state->crtc);
++	if (!crtc_state)
++		return;
++
++	if (!old_state->fb || old_state->crtc != new_state->crtc ||
++	    old_state->fb->format != fb->format ||
++	    old_state->fb->pitches[0] != fb->pitches[0])
++		histb_vdp_plane_setup(vdp, new_state,
++				      &crtc_state->adjusted_mode);
+ 
+-	drm_crtc_vblank_on(&pipe->crtc);
++	histb_vdp_set_scanout(vdp, new_state);
+ }
+ 
+-static void histb_vdp_pipe_disable(struct drm_simple_display_pipe *pipe)
++static void histb_vdp_plane_atomic_disable(struct drm_plane *plane,
++					   struct drm_atomic_state *state)
+ {
+-	struct histb_vdp *vdp = pipe_to_vdp(pipe);
+-	u32 ctrl;
++	struct histb_vdp *vdp = plane_to_vdp(plane);
++	u32 ctrl = readl(vdp->regs + VDP_G0_CTRL);
+ 
+-	drm_crtc_vblank_off(&pipe->crtc);
+-
+-	ctrl = readl(vdp->regs + VDP_G0_CTRL);
+-	ctrl &= ~VDP_G0_CTRL_SURFACE_EN;
+-	writel(ctrl, vdp->regs + VDP_G0_CTRL);
++	writel(ctrl & ~VDP_G0_CTRL_SURFACE_EN, vdp->regs + VDP_G0_CTRL);
+ 	histb_vdp_commit(vdp);
+ }
+ 
+-static void histb_vdp_pipe_update(struct drm_simple_display_pipe *pipe,
+-				  struct drm_plane_state *old_state)
++static const struct drm_plane_helper_funcs histb_vdp_plane_helper_funcs = {
++	.atomic_check = histb_vdp_plane_atomic_check,
++	.atomic_update = histb_vdp_plane_atomic_update,
++	.atomic_disable = histb_vdp_plane_atomic_disable,
++};
++
++static const struct drm_plane_funcs histb_vdp_plane_funcs = {
++	.update_plane = drm_atomic_helper_update_plane,
++	.disable_plane = drm_atomic_helper_disable_plane,
++	.destroy = drm_plane_cleanup,
++	.reset = drm_atomic_helper_plane_reset,
++	.atomic_duplicate_state = drm_atomic_helper_plane_duplicate_state,
++	.atomic_destroy_state = drm_atomic_helper_plane_destroy_state,
++};
++
++static void histb_vdp_crtc_atomic_enable(struct drm_crtc *crtc,
++					 struct drm_atomic_state *state)
++{
++	drm_crtc_vblank_on(crtc);
++}
++
++static void histb_vdp_crtc_atomic_disable(struct drm_crtc *crtc,
++					  struct drm_atomic_state *state)
+ {
+-	struct histb_vdp *vdp = pipe_to_vdp(pipe);
+-	struct drm_plane_state *state = pipe->plane.state;
+-	struct drm_crtc *crtc = &pipe->crtc;
+-	struct drm_pending_vblank_event *event;
++	drm_crtc_vblank_off(crtc);
+ 
+-	if (state->fb)
+-		histb_vdp_set_scanout(vdp, state);
++	/*
++	 * Nothing will arrive to complete a flip that was still outstanding
++	 * when the channel went down, so release it here.
++	 */
++	if (crtc->state->event) {
++		spin_lock_irq(&crtc->dev->event_lock);
++		drm_crtc_send_vblank_event(crtc, crtc->state->event);
++		crtc->state->event = NULL;
++		spin_unlock_irq(&crtc->dev->event_lock);
++	}
++}
++
++static void histb_vdp_crtc_atomic_flush(struct drm_crtc *crtc,
++					struct drm_atomic_state *state)
++{
++	struct drm_pending_vblank_event *event = crtc->state->event;
+ 
+-	event = crtc->state->event;
+ 	if (!event)
+ 		return;
+ 
+@@ -316,9 +385,16 @@ static void histb_vdp_pipe_update(struct drm_simple_display_pipe *pipe,
+ 	spin_unlock_irq(&crtc->dev->event_lock);
+ }
+ 
+-static int histb_vdp_pipe_enable_vblank(struct drm_simple_display_pipe *pipe)
++static const struct drm_crtc_helper_funcs histb_vdp_crtc_helper_funcs = {
++	.atomic_check = drm_crtc_helper_atomic_check,
++	.atomic_enable = histb_vdp_crtc_atomic_enable,
++	.atomic_disable = histb_vdp_crtc_atomic_disable,
++	.atomic_flush = histb_vdp_crtc_atomic_flush,
++};
++
++static int histb_vdp_crtc_enable_vblank(struct drm_crtc *crtc)
+ {
+-	struct histb_vdp *vdp = pipe_to_vdp(pipe);
++	struct histb_vdp *vdp = crtc_to_vdp(crtc);
+ 	u32 mask = readl(vdp->regs + VDP_VOINTMSK);
+ 
+ 	writel(mask | VDP_INT_DHD0_VTTHD1, vdp->regs + VDP_VOINTMSK);
+@@ -326,21 +402,23 @@ static int histb_vdp_pipe_enable_vblank(struct drm_simple_display_pipe *pipe)
+ 	return 0;
+ }
+ 
+-static void histb_vdp_pipe_disable_vblank(struct drm_simple_display_pipe *pipe)
++static void histb_vdp_crtc_disable_vblank(struct drm_crtc *crtc)
+ {
+-	struct histb_vdp *vdp = pipe_to_vdp(pipe);
++	struct histb_vdp *vdp = crtc_to_vdp(crtc);
+ 	u32 mask = readl(vdp->regs + VDP_VOINTMSK);
+ 
+ 	writel(mask & ~VDP_INT_DHD0_VTTHD1, vdp->regs + VDP_VOINTMSK);
+ }
+ 
+-static const struct drm_simple_display_pipe_funcs histb_vdp_pipe_funcs = {
+-	.check = histb_vdp_pipe_check,
+-	.enable = histb_vdp_pipe_enable,
+-	.disable = histb_vdp_pipe_disable,
+-	.update = histb_vdp_pipe_update,
+-	.enable_vblank = histb_vdp_pipe_enable_vblank,
+-	.disable_vblank = histb_vdp_pipe_disable_vblank,
++static const struct drm_crtc_funcs histb_vdp_crtc_funcs = {
++	.reset = drm_atomic_helper_crtc_reset,
++	.destroy = drm_crtc_cleanup,
++	.set_config = drm_atomic_helper_set_config,
++	.page_flip = drm_atomic_helper_page_flip,
++	.atomic_duplicate_state = drm_atomic_helper_crtc_duplicate_state,
++	.atomic_destroy_state = drm_atomic_helper_crtc_destroy_state,
++	.enable_vblank = histb_vdp_crtc_enable_vblank,
++	.disable_vblank = histb_vdp_crtc_disable_vblank,
+ };
+ 
+ static const u32 histb_vdp_formats[] = {
+@@ -360,7 +438,7 @@ static irqreturn_t histb_vdp_irq(int irq, void *data)
+ 	writel(status, vdp->regs + VDP_VOMSKINTSTA);
+ 
+ 	if (status & VDP_INT_DHD0_VTTHD1)
+-		drm_crtc_handle_vblank(&vdp->pipe.crtc);
++		drm_crtc_handle_vblank(&vdp->crtc);
+ 
+ 	return IRQ_HANDLED;
+ }
+@@ -507,10 +585,31 @@ static int histb_vdp_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		return ret;
+ 
+-	ret = drm_simple_display_pipe_init(drm, &vdp->pipe, &histb_vdp_pipe_funcs,
+-					   histb_vdp_formats,
+-					   ARRAY_SIZE(histb_vdp_formats),
+-					   NULL, &vdp->connector);
++	ret = drm_universal_plane_init(drm, &vdp->primary, 1,
++				       &histb_vdp_plane_funcs,
++				       histb_vdp_formats,
++				       ARRAY_SIZE(histb_vdp_formats),
++				       NULL, DRM_PLANE_TYPE_PRIMARY, NULL);
++	if (ret)
++		return ret;
++
++	drm_plane_helper_add(&vdp->primary, &histb_vdp_plane_helper_funcs);
++
++	ret = drm_crtc_init_with_planes(drm, &vdp->crtc, &vdp->primary, NULL,
++					&histb_vdp_crtc_funcs, NULL);
++	if (ret)
++		return ret;
++
++	drm_crtc_helper_add(&vdp->crtc, &histb_vdp_crtc_helper_funcs);
++
++	ret = drm_simple_encoder_init(drm, &vdp->encoder,
++				      DRM_MODE_ENCODER_NONE);
++	if (ret)
++		return ret;
++
++	vdp->encoder.possible_crtcs = drm_crtc_mask(&vdp->crtc);
++
++	ret = drm_connector_attach_encoder(&vdp->connector, &vdp->encoder);
+ 	if (ret)
+ 		return ret;
+ 
+-- 
+2.56.1
+

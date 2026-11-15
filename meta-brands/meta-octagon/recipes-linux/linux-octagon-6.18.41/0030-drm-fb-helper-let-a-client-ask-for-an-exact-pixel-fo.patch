@@ -1,7 +1,8 @@
 From b9e94729158932910709f71d3f4238f0eb976a8b Mon Sep 17 00:00:00 2001
 From: Tillmann Severin <tillmann.severin@mailbox.org>
 Date: Thu, 5 Nov 2026 20:32:27 +0100
-Subject: [PATCH] drm/fb-helper: let a client ask for an exact pixel format
+Subject: [PATCH 30/49] drm/fb-helper: let a client ask for an exact pixel
+ format
 
 drm_client_setup_with_fourcc() takes a fourcc, but the fbdev client
 immediately reduces it to a colour mode and hands that to
@@ -117,3 +118,6 @@ index c1d38d54a112..45ba62cc8bb0 100644
  #ifdef CONFIG_FB_DEFERRED_IO
  	/**
  	 * @fbdefio:
+-- 
+2.56.1
+

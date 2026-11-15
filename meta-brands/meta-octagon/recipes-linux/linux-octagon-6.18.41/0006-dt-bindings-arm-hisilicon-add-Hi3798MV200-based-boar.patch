@@ -1,7 +1,7 @@
 From 9fb25dc3178d168fa235486deadf204b63f60ad6 Mon Sep 17 00:00:00 2001
 From: Tillmann Severin <tillmann.severin@mailbox.org>
 Date: Sat, 1 Aug 2026 15:29:01 +0200
-Subject: [PATCH 06/26] dt-bindings: arm: hisilicon: add Hi3798MV200 based
+Subject: [PATCH 06/49] dt-bindings: arm: hisilicon: add Hi3798MV200 based
  boards
 
 Add the root compatible for the Hi3798MV200 SoC and its first user, the
@@ -29,5 +29,5 @@ index 540876322040..38ee16e2ebe5 100644
          items:
            - const: hisilicon,hi3620-hi4511
 -- 
-2.56.0
+2.56.1
 

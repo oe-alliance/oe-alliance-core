@@ -1,7 +1,7 @@
 From 4530416fbb7a5f14e0c9819121379582c855dd23 Mon Sep 17 00:00:00 2001
 From: Tillmann Severin <tillmann.severin@mailbox.org>
 Date: Fri, 6 Nov 2026 11:30:06 +0100
-Subject: [PATCH 34/35] drm/fb-helper: let a driver offer a resized framebuffer
+Subject: [PATCH 34/49] drm/fb-helper: let a driver offer a resized framebuffer
 
 fbdev emulation cannot change the display mode, so a request for a
 different visible resolution is rejected. Hardware that can scale the
@@ -92,5 +92,5 @@ index 2e848b816218..16218262b4cd 100644
  
  /**
 -- 
-2.56.0
+2.56.1
 

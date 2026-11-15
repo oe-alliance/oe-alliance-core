@@ -1,7 +1,7 @@
 From 9ad8f372b2bb6a5765c8d756fe690e7754857a09 Mon Sep 17 00:00:00 2001
 From: Tillmann Severin <tillmann.severin@mailbox.org>
 Date: Sat, 1 Aug 2026 20:01:16 +0200
-Subject: [PATCH 14/26] ARM: multi_v7_defconfig: enable Hi3798MV200
+Subject: [PATCH 14/49] ARM: multi_v7_defconfig: enable Hi3798MV200
 
 Enable the machine and the peripherals it needs that were not already
 selected: the SoC specific dw_mmc extension for SD and eMMC, the hix5hd2
@@ -64,5 +64,5 @@ index 2707c4c50226..7f304368d2d3 100644
  CONFIG_PHY_BERLIN_SATA=y
  CONFIG_PHY_BERLIN_USB=y
 -- 
-2.56.0
+2.56.1
 

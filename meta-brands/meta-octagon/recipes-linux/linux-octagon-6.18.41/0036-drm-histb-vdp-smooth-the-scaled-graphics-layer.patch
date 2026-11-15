@@ -1,7 +1,7 @@
 From bc8d54876d7741f33ee5a6c4aa882c6572fc35d6 Mon Sep 17 00:00:00 2001
 From: Tillmann Severin <tillmann.severin@mailbox.org>
 Date: Fri, 6 Nov 2026 12:03:18 +0100
-Subject: [PATCH] drm/histb-vdp: smooth the scaled graphics layer
+Subject: [PATCH 36/49] drm/histb-vdp: smooth the scaled graphics layer
 
 The graphics port scales by picking the nearest source pixel, which
 leaves visible steps on the diagonals of an upscaled on-screen display.
@@ -95,5 +95,5 @@ index 323cf16f9475..c8bcb3a9c25d 100644
  /* Both scaling ratios are fixed point numbers, of different precision. */
  #define VDP_GP0_ZME_HRATIO_ONE		(1 << 20)
 -- 
-2.56.0
+2.56.1
 

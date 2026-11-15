@@ -1,7 +1,7 @@
 From 8ad1ab7eb5af3a96f754310d76760886bc7fc70b Mon Sep 17 00:00:00 2001
 From: Tillmann Severin <tillmann.severin@mailbox.org>
 Date: Tue, 3 Nov 2026 19:55:36 +0100
-Subject: [PATCH 26/26] media: rc: ir-hix5hd2: report a real duration for the
+Subject: [PATCH 26/49] media: rc: ir-hix5hd2: report a real duration for the
  trailing space
 
 When a received symbol is wider than IR_CFG_SYMBOL_MAXWIDTH the driver
@@ -44,5 +44,5 @@ index bb0f95833df5..916d3ee5bc42 100644
  		}
  
 -- 
-2.56.0
+2.56.1
 

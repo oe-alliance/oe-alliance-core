@@ -1,7 +1,8 @@
 From 25a09a1bebd352f67f6ab07dcd36deaf143d79af Mon Sep 17 00:00:00 2001
 From: Tillmann Severin <tillmann.severin@mailbox.org>
 Date: Fri, 6 Nov 2026 16:54:13 +0100
-Subject: [PATCH] ARM: dts: hi3798mv200-octagon-sf8008: mux the second I2C bus
+Subject: [PATCH 38/49] ARM: dts: hi3798mv200-octagon-sf8008: mux the second
+ I2C bus
 
 The DVB-T2/C demodulator on this board, an AltoBeam ATBM7821, sits at
 address 0x40 on the second I2C controller.  Enabling the controller is
@@ -67,3 +68,6 @@ index e97e38ab0eb5..992e41e38e36 100644
 +		>;
 +	};
 +};
+-- 
+2.56.1
+

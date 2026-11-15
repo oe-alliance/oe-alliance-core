@@ -1,7 +1,7 @@
 From de8ad5f608094662dab019000401bf979178e0ec Mon Sep 17 00:00:00 2001
 From: Tillmann Severin <tillmann.severin@mailbox.org>
 Date: Sat, 19 Sep 2026 11:25:54 +0200
-Subject: [PATCH 19/26] dt-bindings: phy: hisilicon,inno-usb2-phy: add
+Subject: [PATCH 19/49] dt-bindings: phy: hisilicon,inno-usb2-phy: add
  Hi3798MV200
 
 The Hi3798MV200 uses the same INNO USB2 PHY as its siblings, but instead
@@ -85,5 +85,5 @@ index 51ea0e54ce35..5a149b412949 100644
  
  examples:
 -- 
-2.56.0
+2.56.1
 

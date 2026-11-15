@@ -1,0 +1,181 @@
+From c8682371e641f6a0020848229d813d3324a58cc3 Mon Sep 17 00:00:00 2001
+From: Tillmann Severin <tillmann.severin@mailbox.org>
+Date: Sun, 8 Nov 2026 20:32:06 +0100
+Subject: [PATCH 42/49] media: histb-demux: capture the whole transport stream
+
+Filtering a single PID in hardware works, but a DVB demultiplexer
+wants the complete multiplex so that the software filters can do
+their job.  The block offers exactly that: a per-instance recording
+mode whose type four means every packet the instance receives.
+
+Setting it up has three parts that must all be present.  The type
+lives in four bits per instance in the function control register --
+a pause control and then the type itself, with the vendor header
+numbering the instances from one, so its dmx1 fields belong to
+instance zero.  Beyond that a recording is a separate object with
+its own identifier: it has to be given an output queue, and it has
+to be listed in the instance's set of recordings.  Omit either and
+the instance records diligently into nowhere, with every register
+reading back exactly as written.
+
+The hardware packs twenty-one packets into each four kilobyte block
+and never straddles the boundary, so a block is always a whole
+number of packets and can be handed straight to a software filter.
+
+Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>
+---
+ .../media/platform/hisilicon/histb-demux.c    | 93 ++++++++++++++++++-
+ 1 file changed, 90 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/media/platform/hisilicon/histb-demux.c b/drivers/media/platform/hisilicon/histb-demux.c
+index b50074a2c5b0..7ba8521d7343 100644
+--- a/drivers/media/platform/hisilicon/histb-demux.c
++++ b/drivers/media/platform/hisilicon/histb-demux.c
+@@ -58,6 +58,39 @@
+ #define HISTB_DMX_PID_DATA_TYPE		GENMASK(1, 0)
+ #define HISTB_DMX_PID_CH_ATTRI		GENMASK(25, 23)
+ 
++/*
++ * Recording is configured per demultiplexer instance, four bits each:
++ * a pause control at the bottom and then a three bit type.  The vendor
++ * header numbers the instances from one, so its dmx1 fields are
++ * instance zero's.  Type four is every packet the instance receives,
++ * which is what a software demultiplexer wants.
++ */
++#define HISTB_DMX_CTRL_FUNC		0x3a30
++#define HISTB_DMX_REC_CTRL_SHIFT(inst)	(4 * (inst) + 1)
++#define HISTB_DMX_REC_CTRL(inst)	(7u << HISTB_DMX_REC_CTRL_SHIFT(inst))
++#define HISTB_DMX_REC_ALL_TS		4
++
++#define HISTB_DMX_GLB_CTRL2(inst)	(0x3b04 + ((inst) << 4))
++#define HISTB_DMX_TSREC_BUF		GENMASK(14, 8)
++#define HISTB_DMX_TSREC_PIDBUF_EN	BIT(16)
++
++/*
++ * A recording is not simply a property of an instance: it is a separate
++ * object with its own identifier, which has to be given an output queue
++ * and then listed in the instance's set of recordings.  Leave either
++ * step out and the instance records diligently into nowhere.  We only
++ * ever need one, so it is always recording zero.
++ */
++#define HISTB_DMX_REC_ID		0
++#define HISTB_DMX_REC_BUF_SET(rec)	(0x8400 + ((rec) << 2))
++#define HISTB_DMX_REC_BUF_ID		GENMASK(7, 0)
++#define HISTB_DMX_REC_BUF_VLD		BIT(12)
++#define HISTB_DMX_REC_SET(inst)		(0x84d0 + ((inst) << 2))
++
++#define HISTB_DMX_MODE_PES		0
++#define HISTB_DMX_MODE_RECORD		1
++#define HISTB_DMX_MODE_RECORD_PIDBUF	2
++
+ #define HISTB_DMX_FQ_WORD(q, w)		(0xd000 + ((q) << 4) + ((w) << 2))
+ #define HISTB_DMX_OQ_WORD(q, w)		(((w) < 4 ? 0xe000 : 0xe800 - 16) + \
+ 					 ((q) << 4) + ((w) << 2))
+@@ -124,6 +157,7 @@ struct histb_demux {
+ 	bool capturing;
+ 	u32 pid;
+ 	u32 pid_ctrl;
++	u32 mode;
+ };
+ 
+ static void histb_demux_write(struct histb_demux *dmx, u32 reg, u32 val)
+@@ -210,9 +244,21 @@ static void histb_demux_attach_port(struct histb_demux *dmx)
+ static void histb_demux_capture_stop(struct histb_demux *dmx)
+ {
+ 	int w;
++	u32 val;
+ 
+ 	histb_demux_write(dmx, HISTB_DMX_PID_EN(0), 0);
+ 	histb_demux_write(dmx, HISTB_DMX_PID_CTRL(0), 0);
++	histb_demux_write(dmx, HISTB_DMX_GLB_CTRL2(dmx->input_port), 0);
++
++	val = histb_demux_read(dmx, HISTB_DMX_REC_SET(dmx->input_port));
++	val &= ~BIT(HISTB_DMX_REC_ID);
++	histb_demux_write(dmx, HISTB_DMX_REC_SET(dmx->input_port), val);
++	histb_demux_write(dmx, HISTB_DMX_REC_BUF_SET(HISTB_DMX_REC_ID), 0);
++
++	val = histb_demux_read(dmx, HISTB_DMX_CTRL_FUNC);
++	val &= ~HISTB_DMX_REC_CTRL(dmx->input_port);
++	histb_demux_write(dmx, HISTB_DMX_CTRL_FUNC, val);
++
+ 	histb_demux_write(dmx, HISTB_DMX_OQ_ENA, 0);
+ 	histb_demux_write(dmx, HISTB_DMX_FQ_ENA, 0);
+ 
+@@ -264,14 +310,47 @@ static void histb_demux_capture_start(struct histb_demux *dmx)
+ 	histb_demux_write(dmx, HISTB_DMX_FQ_ENA, BIT(0));
+ 	histb_demux_write(dmx, HISTB_DMX_OQ_ENA, BIT(0));
+ 
++	if (dmx->mode != HISTB_DMX_MODE_PES) {
++		u32 val;
++
++		/* Give recording zero our only output queue... */
++		histb_demux_write(dmx, HISTB_DMX_REC_BUF_SET(HISTB_DMX_REC_ID),
++				  FIELD_PREP(HISTB_DMX_REC_BUF_ID, 0) |
++				  HISTB_DMX_REC_BUF_VLD);
++
++		/* ...and tell the instance that recording belongs to it. */
++		val = histb_demux_read(dmx, HISTB_DMX_REC_SET(dmx->input_port));
++		val |= BIT(HISTB_DMX_REC_ID);
++		histb_demux_write(dmx, HISTB_DMX_REC_SET(dmx->input_port), val);
++
++		val = FIELD_PREP(HISTB_DMX_TSREC_BUF, 0);
++		if (dmx->mode == HISTB_DMX_MODE_RECORD_PIDBUF)
++			val |= HISTB_DMX_TSREC_PIDBUF_EN;
++		histb_demux_write(dmx, HISTB_DMX_GLB_CTRL2(dmx->input_port),
++				  val);
++
++		val = histb_demux_read(dmx, HISTB_DMX_CTRL_FUNC);
++		val &= ~HISTB_DMX_REC_CTRL(dmx->input_port);
++		val |= HISTB_DMX_REC_ALL_TS <<
++		       HISTB_DMX_REC_CTRL_SHIFT(dmx->input_port);
++		histb_demux_write(dmx, HISTB_DMX_CTRL_FUNC, val);
++
++		dmx->capturing = true;
++		return;
++	}
++
+ 	histb_demux_write(dmx, HISTB_DMX_PID_VALUE(0),
+ 			  FIELD_PREP(HISTB_DMX_PID_VALUE_PID, dmx->pid));
+ 	histb_demux_write(dmx, HISTB_DMX_PID_PLAY_BUF(0),
+ 			  FIELD_PREP(HISTB_DMX_PID_PLAY_OQ, 0));
+ 	histb_demux_write(dmx, HISTB_DMX_PID_CTRL(0), dmx->pid_ctrl);
++	/*
++	 * Zero in this field means the channel is off, so the instance
++	 * is recorded one higher than it is numbered everywhere else.
++	 */
+ 	histb_demux_write(dmx, HISTB_DMX_PID_EN(0),
+ 			  FIELD_PREP(HISTB_DMX_PID_PLAY_DMX_ID,
+-				     dmx->input_port));
++				     dmx->input_port + 1));
+ 
+ 	dmx->capturing = true;
+ }
+@@ -369,8 +448,15 @@ static int histb_demux_queues_show(struct seq_file *s, void *unused)
+ 	struct histb_demux *dmx = s->private;
+ 	u32 i, filled = 0, bytes = 0;
+ 
+-	seq_printf(s, "capturing %u  pid %u  pid_ctrl %08x\n",
+-		   dmx->capturing, dmx->pid, dmx->pid_ctrl);
++	seq_printf(s, "capturing %u  mode %u  pid %u  pid_ctrl %08x\n",
++		   dmx->capturing, dmx->mode, dmx->pid, dmx->pid_ctrl);
++	seq_printf(s, "ctrl_func %08x  glb_ctrl2 %08x\n",
++		   histb_demux_read(dmx, HISTB_DMX_CTRL_FUNC),
++		   histb_demux_read(dmx, HISTB_DMX_GLB_CTRL2(dmx->input_port)));
++	seq_printf(s, "rec_set %08x  rec_buf_set %08x\n",
++		   histb_demux_read(dmx, HISTB_DMX_REC_SET(dmx->input_port)),
++		   histb_demux_read(dmx,
++				    HISTB_DMX_REC_BUF_SET(HISTB_DMX_REC_ID)));
+ 
+ 	for (i = 0; i < 8; i++)
+ 		seq_printf(s, "oq word%u %08x\n", i,
+@@ -499,6 +585,7 @@ static int histb_demux_probe(struct platform_device *pdev)
+ 	debugfs_create_file("queues", 0444, dmx->debugfs, dmx,
+ 			    &histb_demux_queues_fops);
+ 	debugfs_create_x32("pid_ctrl", 0644, dmx->debugfs, &dmx->pid_ctrl);
++	debugfs_create_u32("mode", 0644, dmx->debugfs, &dmx->mode);
+ 
+ 	dev_info(dev, "transport stream input on port %u\n", dmx->input_port);
+ 
+-- 
+2.56.1
+

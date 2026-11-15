@@ -1,7 +1,7 @@
 From 1f7c42bcd182d9519bd4e4063efb515143c6499d Mon Sep 17 00:00:00 2001
 From: Tillmann Severin <tillmann.severin@mailbox.org>
 Date: Sat, 1 Aug 2026 20:25:38 +0200
-Subject: [PATCH 15/26] ARM: hisi_defconfig: enable Hi3798MV200
+Subject: [PATCH 15/49] ARM: hisi_defconfig: enable Hi3798MV200
 
 Add the Hi3798MV200 machine to the HiSilicon family defconfig, along
 with the peripheral drivers the Octagon SF8008 board needs that were
@@ -74,5 +74,5 @@ index e19c1039fb93..d7bf421c6755 100644
  CONFIG_EXT4_FS=y
  CONFIG_TMPFS=y
 -- 
-2.56.0
+2.56.1
 

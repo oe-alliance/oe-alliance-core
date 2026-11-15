@@ -1,7 +1,8 @@
 From 0eaff2a78e1605f86881196890c76cdb857e1490 Mon Sep 17 00:00:00 2001
 From: Tillmann Severin <tillmann.severin@mailbox.org>
 Date: Thu, 5 Nov 2026 17:42:49 +0100
-Subject: [PATCH] drm: hisilicon: add a driver for the STB display processor
+Subject: [PATCH 28/49] drm: hisilicon: add a driver for the STB display
+ processor
 
 The video display processor found on HiSilicon set-top-box SoCs composes
 several video and graphics layers into one or more display channels.  Add
@@ -619,5 +620,5 @@ index 000000000000..d547724869a5
 +
 +#endif /* __HISTB_VDP_REG_H__ */
 -- 
-2.56.0
+2.56.1
 

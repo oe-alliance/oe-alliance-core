@@ -1,8 +1,8 @@
 From fbc6feace322980bd0eafdf76f2e555574db738d Mon Sep 17 00:00:00 2001
 From: Tillmann Severin <tillmann.severin@mailbox.org>
 Date: Fri, 6 Nov 2026 14:11:32 +0100
-Subject: [PATCH] ARM: dts: hi3798mv200-octagon-sf8008: enable the second I2C
- controller
+Subject: [PATCH 37/49] ARM: dts: hi3798mv200-octagon-sf8008: enable the second
+ I2C controller
 
 The Octagon SF8008 carries two demodulators, and each one hangs off a
 different I2C controller: the Silicon Labs Si2166D used for DVB-S2X
@@ -63,3 +63,6 @@ index 9fbc643d2100..e97e38ab0eb5 100644
  &i2c2 {
  	status = "okay";
  };
+-- 
+2.56.1
+

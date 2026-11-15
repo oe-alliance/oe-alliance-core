@@ -1,7 +1,8 @@
 From 61e17e07b574d878f9d8ad75852f3afa94b3a09b Mon Sep 17 00:00:00 2001
 From: Tillmann Severin <tillmann.severin@mailbox.org>
 Date: Thu, 5 Nov 2026 20:40:05 +0100
-Subject: [PATCH] media: rc: ir-hix5hd2: give the receiver a descriptive name
+Subject: [PATCH 32/49] media: rc: ir-hix5hd2: give the receiver a descriptive
+ name
 
 The input device is presented to user space as "hix5hd2-ir", which says
 what the driver is rather than what the device does. Describe it as the
@@ -26,3 +27,6 @@ index 916d3ee5bc42..8d3558270caf 100644
  	rdev->input_phys = IR_HIX5HD2_NAME "/input0";
  	rdev->input_id.bustype = BUS_HOST;
  	rdev->input_id.vendor = 0x0001;
+-- 
+2.56.1
+

@@ -1,7 +1,8 @@
 From dcd3cb09aa1ea7f52d0c76e1f8342666c3f24132 Mon Sep 17 00:00:00 2001
 From: Tillmann Severin <tillmann.severin@mailbox.org>
 Date: Thu, 5 Nov 2026 17:42:58 +0100
-Subject: [PATCH] ARM: dts: hi3798mv200: describe the video display processor
+Subject: [PATCH 29/49] ARM: dts: hi3798mv200: describe the video display
+ processor
 
 Add the display processor node and enable it on the SF8008, pointing it
 at the region the bootloader scans out of.
@@ -97,5 +98,5 @@ index 2ecb33bf2764..f061cd1c2dc7 100644
  			compatible = "hisilicon,hi3798mv200-gmac";
  			reg = <0x9840000 0x1000>,
 -- 
-2.56.0
+2.56.1
 
