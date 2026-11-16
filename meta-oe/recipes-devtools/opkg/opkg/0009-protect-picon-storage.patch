@@ -1,0 +1,271 @@
+From: OpenATV
+Subject: [PATCH] opkg: protect flash when installing legacy picon packages
+
+Count the real IPK payload before changing files or running package scripts.
+Limit internal flash to 1000 files and 10 MiB with space/inode reserves;
+allow larger packages only on an actual HDD or USB-backed filesystem.
+Do not apply runtime storage policy while constructing an offline rootfs.
+
+Upstream-Status: Inappropriate [OpenATV receiver storage policy]
+
+diff --git a/libopkg/CMakeLists.txt b/libopkg/CMakeLists.txt
+--- a/libopkg/CMakeLists.txt
++++ b/libopkg/CMakeLists.txt
+@@ -104,6 +104,7 @@
+     opkg_utils.c
+     opkg_verify.c
+     parse_util.c
++    picon_storage.c
+     pkg.c
+     pkg_depends.c
+     pkg_dest.c
+diff --git a/libopkg/opkg_install.h b/libopkg/opkg_install.h
+--- a/libopkg/opkg_install.h
++++ b/libopkg/opkg_install.h
+@@ -28,6 +28,8 @@
+ extern "C" {
+ #endif
+ 
++int opkg_check_picon_storage(pkg_t *pkg);
++
+ int opkg_install_pkg(pkg_t * pkg, pkg_t * old_pkg);
+ 
+ #ifdef __cplusplus
+diff --git a/libopkg/opkg_install.c b/libopkg/opkg_install.c
+--- a/libopkg/opkg_install.c
++++ b/libopkg/opkg_install.c
+@@ -38,6 +38,7 @@
+ 
+ #include "opkg_utils.h"
+ #include "opkg_message.h"
++#include "opkg_install.h"
+ #include "opkg_cmd.h"
+ #include "opkg_conf.h"
+ 
+@@ -111,6 +112,11 @@
+     unsigned long kbs_available, pkg_size_kbs;
+     char *root_dir = NULL;
+     struct stat s;
++
++    /* Picon payloads may live behind /picon on another filesystem. Their
++     * actual destinations and archive sizes are checked before installation. */
++    if (!strncmp(pkg->name, "enigma2-plugin-picons-", 22) && !opkg_config->offline_root)
++        return 0;
+ 
+     if (opkg_config->force_space || pkg->installed_size == 0)
+         return 0;
+@@ -891,6 +897,7 @@
+     int err = 0;
+     abstract_pkg_t *ab_pkg = NULL;
+     int old_state_flag;
++    pkg_state_want_t previous_want = pkg->state_want, old_want = SW_UNKNOWN;
+     sigset_t newset, oldset;
+ 
+     opkg_msg(DEBUG2, "Calling pkg_arch_supported.\n");
+@@ -911,6 +918,7 @@
+ 
+     pkg->state_want = SW_INSTALL;
+     if (old_pkg) {
++        old_want = old_pkg->state_want;
+         old_pkg->state_want = SW_DEINSTALL;
+         /* needed for check_data_file_clashes of dependencies */
+     }
+@@ -942,6 +950,13 @@
+ 
+     if (opkg_config->download_only)
+         return 0;
++
++    if (opkg_check_picon_storage(pkg)) {
++        pkg->state_want = previous_want;
++        if (old_pkg)
++            old_pkg->state_want = old_want;
++        return -1;
++    }
+ 
+     if (pkg->tmp_unpack_dir == NULL) {
+         err = unpack_pkg_control_files(pkg);
+diff --git a/libopkg/picon_storage.c b/libopkg/picon_storage.c
+new file mode 100644
+--- /dev/null
++++ b/libopkg/picon_storage.c
+@@ -0,0 +1,180 @@
++/* SPDX-License-Identifier: GPL-2.0-or-later */
++/* Protect receiver flash from large legacy picon packages, including upgrades. */
++#include "config.h"
++#include <archive.h>
++#include <archive_entry.h>
++#include <errno.h>
++#include <limits.h>
++#include <stdint.h>
++#include <stdio.h>
++#include <stdlib.h>
++#include <string.h>
++#include <sys/stat.h>
++#include <sys/statvfs.h>
++#include <sys/sysmacros.h>
++#include <unistd.h>
++
++#include "opkg_archive.h"
++#include "opkg_conf.h"
++#include "opkg_message.h"
++#include "pkg.h"
++
++#define PICON_MAX_FILES 1000
++#define PICON_MAX_BYTES (10ULL * 1024 * 1024)
++#define PICON_FLASH_RESERVE (32ULL * 1024 * 1024)
++#define PICON_MAX_DEVICES 8
++
++struct picon_space {
++    dev_t device;
++    struct statvfs space;
++    uint64_t files, bytes;
++    int disk;
++};
++
++static int picon_disk(dev_t device)
++{
++    char name[PATH_MAX], path[PATH_MAX], subsystem[PATH_MAX], link[PATH_MAX];
++    char *end;
++    ssize_t length;
++
++    snprintf(name, sizeof(name), "/sys/dev/block/%u:%u", major(device), minor(device));
++    if (!realpath(name, path))
++        return 0;
++    while (!strncmp(path, "/sys/devices/", 13)) {
++        if (snprintf(subsystem, sizeof(subsystem), "%s/subsystem", path) >= (int)sizeof(subsystem))
++            return 0;
++        length = readlink(subsystem, link, sizeof(link) - 1);
++        if (length >= 0) {
++            link[length] = '\0';
++            end = strrchr(link, '/');
++            if (end && (!strcmp(end + 1, "usb") || !strcmp(end + 1, "ata_port") ||
++                        !strcmp(end + 1, "ide") || !strcmp(end + 1, "nvme")))
++                return 1;
++        }
++        end = strrchr(path, '/');
++        if (!end)
++            break;
++        *end = '\0';
++    }
++    return 0;
++}
++
++/* Resolve each existing ancestor separately: a missing disk behind a symlink
++ * must not be mistaken for an ordinary missing directory on the rootfs. */
++static int picon_parent(const char *root, const char *name, char *parent)
++{
++    char path[PATH_MAX], resolved[PATH_MAX];
++    const char *part = name;
++    struct stat st;
++    size_t length;
++
++    if (!realpath(root, parent))
++        return -1;
++    while (*part) {
++        while (*part == '/')
++            ++part;
++        length = strcspn(part, "/");
++        if (!length)
++            break;
++        if (length == 1 && part[0] == '.') {
++            part += length;
++            continue;
++        }
++        if (length == 2 && !strncmp(part, "..", 2))
++            return -1;
++        if (snprintf(path, sizeof(path), "%s/%.*s", parent, (int)length, part) >= (int)sizeof(path))
++            return -1;
++        if (lstat(path, &st)) {
++            if (errno == ENOENT)
++                return 0;
++            return -1;
++        }
++        /* The final entry is overwritten by opkg. Only follow its parent links. */
++        if (!part[length] || (part[length] == '/' && !part[length + 1]))
++            return 0;
++        if (!realpath(path, resolved) || stat(resolved, &st) || !S_ISDIR(st.st_mode))
++            return -1;
++        strcpy(parent, resolved);
++        part += length;
++    }
++    return 0;
++}
++
++int opkg_check_picon_storage(pkg_t *pkg)
++{
++    struct opkg_ar *ar;
++    struct archive_entry *entry;
++    struct picon_space devices[PICON_MAX_DEVICES] = {0};
++    struct stat st;
++    char parent[PATH_MAX];
++    unsigned int count = 0, index;
++    uint64_t files = 0, bytes = 0, size, reserve;
++    const char *name;
++    int status, result = -1, flash = 0;
++    struct statvfs root_space;
++
++    if (strncmp(pkg->name, "enigma2-plugin-picons-", 22) || opkg_config->offline_root)
++        return 0; /* Image construction must not depend on the build host's disks. */
++    /* Opkg must still be able to save its metadata when the icons live on USB. */
++    if (statvfs(pkg->dest->root_dir, &root_space) || !root_space.f_frsize ||
++        (root_space.f_flag & ST_RDONLY) || root_space.f_bavail < 1048576 / root_space.f_frsize + 1 ||
++        (root_space.f_files && root_space.f_favail < 64))
++        goto failed;
++    ar = ar_open_pkg_data_archive(pkg->local_filename);
++    if (!ar)
++        goto failed;
++    while ((status = archive_read_next_header(ar->ar, &entry)) == ARCHIVE_OK) {
++        if (archive_entry_filetype(entry) == AE_IFDIR)
++            continue;
++        name = archive_entry_pathname(entry);
++        if (!name || picon_parent(pkg->dest->root_dir, name, parent) || stat(parent, &st))
++            goto close;
++        for (index = 0; index < count; ++index)
++            if (devices[index].device == st.st_dev)
++                break;
++        if (index == count) {
++            if (count == PICON_MAX_DEVICES || statvfs(parent, &devices[index].space))
++                goto close;
++            devices[index].device = st.st_dev;
++            devices[index].disk = picon_disk(st.st_dev);
++            ++count;
++        }
++        size = archive_entry_size(entry) > 0 ? (uint64_t)archive_entry_size(entry) : 0;
++        if (UINT64_MAX - bytes < size)
++            goto close;
++        ++files;
++        bytes += size;
++        ++devices[index].files;
++        /* Include per-file allocation rounding, even for tiny logos. */
++        if (!devices[index].space.f_frsize || size > UINT64_MAX - devices[index].space.f_frsize)
++            goto close;
++        size = (size / devices[index].space.f_frsize + 1) * devices[index].space.f_frsize;
++        if (UINT64_MAX - devices[index].bytes < size)
++            goto close;
++        devices[index].bytes += size;
++        flash |= !devices[index].disk;
++        if (flash && (files > PICON_MAX_FILES || bytes > PICON_MAX_BYTES))
++            goto close;
++    }
++    if (status != ARCHIVE_EOF)
++        goto close;
++    for (index = 0; index < count; ++index) {
++        struct picon_space *device = &devices[index];
++        reserve = device->disk ? 1024 * 1024 : PICON_FLASH_RESERVE;
++        if ((device->space.f_flag & ST_RDONLY) ||
++            device->space.f_bavail < (device->bytes + reserve) / device->space.f_frsize + 1)
++            goto close;
++        reserve = device->disk ? 64 : 2048;
++        if (!device->disk && device->space.f_files / 10 > reserve)
++            reserve = device->space.f_files / 10;
++        if (device->space.f_files && device->space.f_favail < device->files + reserve)
++            goto close;
++    }
++    result = 0;
++close:
++    ar_close(ar);
++failed:
++    if (result)
++        opkg_msg(ERROR, "PICON_STORAGE: Cannot install %s. Connect an HDD or USB device and select it as the picon install location. Internal flash allows at most 1000 files and 10 MiB per package, with free space and inode reserves. Check that the selected device is mounted and writable.\n", pkg->name);
++    return result;
++}
