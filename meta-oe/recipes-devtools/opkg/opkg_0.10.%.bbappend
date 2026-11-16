@@ -20,4 +20,6 @@ do_install:prepend() {
     install -m 755 ${UNPACKDIR}/modprobe ${D}${datadir}/opkg/intercept/
 }
 
-PR = "r11"
+SRC_URI:append:openatv:class-target = " file://0009-protect-picon-storage.patch"
+
+PR = "r12"
