@@ -1,0 +1,44 @@
+From: OpenATV <info@opena.tv>
+Subject: [PATCH] avrcp: restore address input names for legacy libreader
+
+The proprietary SF8008 and GB Trio 4K Pro libreader versions read virtual
+input device names and use them as Bluetooth addresses in bluetoothctl
+queries and the BlueALSA PCM configuration. The human-readable name with
+an AVRCP suffix is not an address, so connected headsets are no longer
+selected as audio outputs.
+
+Restore the remote address as the AVRCP input device name for these receivers.
+Keep the actual device name for the existing key quirks, and preserve the
+adapter address, input identity and key handling used by bt_uinput.
+
+This is a receiver compatibility workaround, not a general BlueZ change.
+The build recipe applies it only to SF8008 and GB Trio 4K Pro, whose
+libreader versions require the legacy naming convention.
+
+Upstream-Status: Inappropriate [compatibility with proprietary libreader]
+Bug: https://github.com/openatv/enigma2/issues/4086
+---
+ profiles/audio/avctp.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/profiles/audio/avctp.c b/profiles/audio/avctp.c
+--- a/profiles/audio/avctp.c
++++ b/profiles/audio/avctp.c
+@@ -1140,6 +1140,7 @@ static void init_uinput(struct avctp *session)
+ {
+ 	struct btd_adapter *adapter = device_get_adapter(session->device);
+ 	char name[UINPUT_MAX_NAME_SIZE];
++	char address[18];
+ 	struct input_id id;
+ 	int err;
+ 
+@@ -1156,7 +1157,8 @@ static void init_uinput(struct avctp *session)
+ 	id.product = btd_device_get_product(session->device);
+ 	id.version = btd_device_get_version(session->device);
+ 
+-	session->uinput = bt_uinput_new(name, " (AVRCP)",
++	ba2str(device_get_address(session->device), address);
++	session->uinput = bt_uinput_new(address, NULL,
+ 				btd_adapter_get_address(adapter), &id);
+ 	bt_uinput_set_debug(session->uinput, uinput_debug, NULL);
+ 
