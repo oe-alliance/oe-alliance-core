@@ -4,6 +4,15 @@ FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 # but none for Realtek, which receivers with a built-in Realtek module need.
 SRC_URI:append = " file://0001-tools-Add-support-for-rtk_h5-type.patch"
 
+# These libreader versions identify Bluetooth audio devices by their AVRCP
+# input name, which must contain the remote Bluetooth address.
+SRC_URI:append:sf8008 = " file://0002-avrcp-restore-address-input-name-for-libreader.patch"
+SRC_URI:append:gbtrio4kpro = " file://0002-avrcp-restore-address-input-name-for-libreader.patch"
+PACKAGE_ARCH:sf8008 = "${MACHINE_ARCH}"
+PACKAGE_ARCH:gbtrio4kpro = "${MACHINEBUILD}"
+PR:append:sf8008 = ".1"
+PR:append:gbtrio4kpro = ".1"
+
 # enigma2-plugin-extensions-btdevicesmanager depends on bluez-hcidump.
 PROVIDES += "bluez-hcidump"
 RPROVIDES:${PN} += "bluez-hcidump"
