@@ -2,7 +2,7 @@ From: OpenATV
 Subject: [PATCH] opkg: protect flash when installing legacy picon packages
 
 Count the real IPK payload before changing files or running package scripts.
-Limit internal flash to 1000 files and 10 MiB with space/inode reserves;
+Limit internal flash to 1500 files and 10 MiB with space/inode reserves;
 allow larger packages only on an actual HDD or USB-backed filesystem.
 Do not apply runtime storage policy while constructing an offline rootfs.
 
@@ -110,7 +110,7 @@ new file mode 100644
 +#include "opkg_message.h"
 +#include "pkg.h"
 +
-+#define PICON_MAX_FILES 1000
++#define PICON_MAX_FILES 1500
 +#define PICON_MAX_BYTES (10ULL * 1024 * 1024)
 +#define PICON_FLASH_RESERVE (32ULL * 1024 * 1024)
 +#define PICON_MAX_DEVICES 8
