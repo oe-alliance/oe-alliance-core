@@ -1,6 +1,6 @@
 inherit kernel machine_kernel_pr kernel-fixups
 
-MACHINE_KERNEL_PR:append = ".18"
+MACHINE_KERNEL_PR:append = ".19"
 
 COMPATIBLE_MACHINE = "^(dm520|dm820|dm7080)$"
 
@@ -18,6 +18,7 @@ SRC_URI = " \
     file://0002-cp1emu-do-not-use-bools-for-arithmetic.patch \
     file://0003-makefile-silence-packed-not-aligned-warn.patch \
     file://0004-fcrypt-fix-bitoperation-for-gcc.patch \
+    file://posix-timers-return-timex-on-success.patch \
     ${KERNEL_PATCH_BINUTILS241_V6} \
     file://vtbl-ubi.patch \
     file://chkroot-multiboot.cpio.xz;unpack=0 \
