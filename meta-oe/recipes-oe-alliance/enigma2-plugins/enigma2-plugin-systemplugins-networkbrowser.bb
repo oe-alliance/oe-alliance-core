@@ -9,6 +9,7 @@ LDFLAGS += "-ltirpc"
 CXXFLAGS = " -std=c++11"
 
 RDEPENDS:${PN} = "autofs smbclient"
+RDEPENDS:${PN}:remove:openvix = "smbclient"
 
 inherit gittag
 

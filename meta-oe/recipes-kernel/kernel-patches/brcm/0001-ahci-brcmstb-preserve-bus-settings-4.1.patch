@@ -1,0 +1,48 @@
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: [PATCH] ata: ahci_brcmstb: preserve SATA bus settings
+
+Backport the SATA_TOP_CTRL_BUS_CTRL read/modify/write fix to the vendor
+4.1 driver. The old blind write clears the SATA_SCB_BURST_SIZE and
+SATA_FIFO_SIZE fields along with the endian configuration.
+
+Keep the existing non-endian fields when initializing the controller,
+including after resume. This vendor driver has no NSP variant.
+
+Upstream-Status: Backport [https://github.com/torvalds/linux/commit/36fffd6a1f19dcd935851fd6c724957727d2760e]
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: Tejun Heo <tj@kernel.org>
+---
+ drivers/ata/ahci_brcmstb.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/ata/ahci_brcmstb.c b/drivers/ata/ahci_brcmstb.c
+--- a/drivers/ata/ahci_brcmstb.c
++++ b/drivers/ata/ahci_brcmstb.c
+@@ -70,6 +70,10 @@
+ 	(DATA_ENDIAN << DMADESC_ENDIAN_SHIFT) |		\
+ 	(MMIO_ENDIAN << MMIO_ENDIAN_SHIFT))
+ 
++#define BUS_CTRL_ENDIAN_CONF_MASK			\
++	(0x3 << MMIO_ENDIAN_SHIFT | 0x3 << DMADESC_ENDIAN_SHIFT |	\
++	 0x3 << DMADATA_ENDIAN_SHIFT | 0x3 << PIODATA_ENDIAN_SHIFT)
++
+ enum brcm_ahci_quirks {
+ 	BRCM_AHCI_QUIRK_NONCQ		= BIT(0),
+ 	BRCM_AHCI_QUIRK_SKIP_PHY_ENABLE	= BIT(1),
+@@ -266,9 +270,14 @@
+ 
+ static void brcm_sata_init(struct brcm_ahci_priv *priv)
+ {
++	void __iomem *ctrl = priv->top_ctrl + SATA_TOP_CTRL_BUS_CTRL;
++	u32 data;
++
+ 	/* Configure endianness */
+-	brcm_sata_writereg(BUS_CTRL_ENDIAN_CONF,
+-			   priv->top_ctrl + SATA_TOP_CTRL_BUS_CTRL);
++	data = brcm_sata_readreg(ctrl);
++	data &= ~BUS_CTRL_ENDIAN_CONF_MASK;
++	data |= BUS_CTRL_ENDIAN_CONF;
++	brcm_sata_writereg(data, ctrl);
+ }
+ 
+ #ifdef CONFIG_PM_SLEEP

@@ -107,5 +107,8 @@ IMAGE_CMD:tar:prepend = "\
     rm -Rf vuplus; \
 "
 
+# IMAGE_CMD:tar copies ${MACHINE}_*.bin out of deploy, so make sure they are deployed first
+do_image_tar[depends] += "vuplus-initrd-cfe-${MACHINE}:do_deploy"
+
 # Add "MACHINEBUILD" override for recipes
 MACHINEOVERRIDES =. "${@['', '${MACHINEBUILD}:']['${MACHINEBUILD}' != '']}"

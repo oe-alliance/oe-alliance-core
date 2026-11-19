@@ -11,7 +11,7 @@ COMPATIBLE_MACHINE = "^(dm7405nand|dm7405ubi|dm7020hd|dm8000)$"
 
 inherit kernel machine_kernel_pr kernel-fixups
 
-MACHINE_KERNEL_PR = "r10"
+MACHINE_KERNEL_PR = "r11"
 
 PATCHREV = "3c7230bc0819495db75407c365f4d1db70008044"
 PATCHLEVEL = "68"
@@ -52,6 +52,7 @@ SRC_URI = " \
     file://0013-cp1emu-do-not-use-bools-for-arithmetic.patch \
     file://0014-makefile-silence-packed-not-aligned-warn.patch \
     file://0015-fcrypt-fix-bitoperation-for-gcc.patch \
+    file://posix-timers-return-timex-on-success.patch \
     ${KERNEL_PATCH_FIX_DEVINITDATA} \
     ${KERNEL_PATCH_BINUTILS241_V6} \
     file://vtbl-ubi.patch \

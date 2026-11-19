@@ -1,5 +1,8 @@
 SUMMARY = "mediatek 7610u"
-inherit allarch oea-wifi-driver
+inherit oea-wifi-driver
+
+# wifi_driver() picks the driver from this machine's kernel, so this is machine specific
+PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 require conf/license/license-gplv2.inc
 

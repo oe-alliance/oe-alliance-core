@@ -12,6 +12,23 @@ PR = "r2"
 
 SRC_URI = "git://github.com/oe-alliance/gstreamer1.0-plugin-dvbmediasink;branch=8.0-next;protocol=https"
 
+# OpenBh / OpenViX: add a "decoder" property to dvbvideosink so a second instance can
+# drive the PiP decoder (/dev/dvb/adapter0/video1) - used by servicemp3 PiP.
+# Default is decoder 0, so playback without the property set is unchanged.
+# Add AVC3 & multiple sps, fix dts core frames and driver playback issues.
+DVBMEDIASINK_PATCHES = " \
+    file://0001-dvbvideosink-add-decoder-property.patch \
+    file://0002-dvbvideosink-h264-avc3-multiple-sps.patch \
+    file://0003-dvbaudiosink-vuplus-pad-dts-core-frames.patch \
+    file://0004-dvbaudiosink-dts-driver-fixes.patch \
+    file://0005-dvbaudiosink-ddplus-switch-keep-decoder.patch \
+"
+SRC_URI:append:openbh = " ${DVBMEDIASINK_PATCHES}"
+SRC_URI:append:openvix = " ${DVBMEDIASINK_PATCHES}"
+
+PR:append:openbh = ".6"
+PR:append:openvix = ".6"
+
 inherit gitpkgv
 
 PV = "${GSTVERSION}+git"

@@ -1,5 +1,7 @@
 SUMMARY = "USB DVB driver for DVB-SKY Family"
-inherit allarch
+
+# RRECOMMENDS depend on the machine, so this is machine specific
+PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 require conf/license/license-gplv2.inc
 

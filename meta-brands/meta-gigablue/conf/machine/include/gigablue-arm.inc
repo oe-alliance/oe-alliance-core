@@ -53,3 +53,6 @@ IMAGE_CMD:tar:prepend = "\
     rm -f ${DEPLOY_DIR_IMAGE}/.manifest; \
     rm -Rf gigablue; \
 "
+
+# IMAGE_CMD:tar copies ${MACHINEBUILD}_*.bin out of deploy, so make sure they are deployed first
+do_image_tar[depends] += "gigablue-initrd-cfe-${MACHINEBUILD}:do_deploy"

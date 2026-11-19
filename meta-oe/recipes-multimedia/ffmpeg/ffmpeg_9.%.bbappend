@@ -78,6 +78,7 @@ EXTRA_FFCONF = " \
     --enable-muxer=rtsp \
     --disable-encoders \
     --enable-encoder=ac3 \
+    --enable-encoder=eac3 \
     --enable-encoder=aac \
     --enable-encoder=mp2 \
     --enable-encoder=mpeg1video \

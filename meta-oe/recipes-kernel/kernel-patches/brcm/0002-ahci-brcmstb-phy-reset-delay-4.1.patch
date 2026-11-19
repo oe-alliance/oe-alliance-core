@@ -1,0 +1,35 @@
+Subject: [PATCH] ata: ahci_brcmstb: wait after releasing PHY reset
+
+Share the existing VU Duo 4K Lite PHY reset delay with the GigaBlue Quad
+4K Pro, which uses the same BCM7252S vendor kernel. Allow the PHY digital
+logic to settle after releasing reset before continuing initialization.
+
+Keep this delay in the PHY initialization path, not the I/O path.
+Include linux/delay.h explicitly instead of relying on indirect includes.
+
+Upstream-Status: Inappropriate [vendor kernel PHY reset workaround]
+---
+ drivers/ata/ahci_brcmstb.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/drivers/ata/ahci_brcmstb.c b/drivers/ata/ahci_brcmstb.c
+--- a/drivers/ata/ahci_brcmstb.c
++++ b/drivers/ata/ahci_brcmstb.c
+@@ -16,6 +16,7 @@
+ 
+ #include <linux/ahci_platform.h>
+ #include <linux/compiler.h>
++#include <linux/delay.h>
+ #include <linux/device.h>
+ #include <linux/init.h>
+ #include <linux/interrupt.h>
+@@ -175,6 +176,9 @@
+ 	reg &= ~SATA_TOP_CTRL_2_PHY_GLOBAL_RESET;
+ 	brcm_sata_writereg(reg, p);
+ 	(void)brcm_sata_readreg(p);
++
++	/* Wait for stabilization after releasing PHY reset */
++	udelay(20);
+ }
+ 
+ static void brcm_sata_phy_disable(struct brcm_ahci_priv *priv, int port)

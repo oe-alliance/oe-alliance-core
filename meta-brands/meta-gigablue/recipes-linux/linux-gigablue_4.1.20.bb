@@ -9,6 +9,7 @@ COMPATIBLE_MACHINE = "^(gb7252|gb72604)$"
 inherit kernel machine_kernel_pr kernel-fixups
 
 MACHINE_KERNEL_PR = "r20"
+MACHINE_KERNEL_PR:gbquad4kpro = "r21"
 
 SRC_DATE = "20180206"
 SRC_DATE:gbquad4kpro = "20250410"
@@ -58,6 +59,12 @@ SRC_URI += "https://source.mynonpublic.com/gigablue/linux/gigablue-linux-${PV}-$
     ${KERNEL_PATCH_BINUTILS241_V2} \
     ${KERNEL_PATCH_WIFI_EXTAUTH_41} \
     ${KERNEL_PATCH_WIFI_RT2800_MFP_41} \
+"
+
+SRC_URI:append:gbquad4kpro = " \
+    ${KERNEL_PATCH_BRCM_AHCI_BUS_CTRL_41} \
+    ${KERNEL_PATCH_BRCM_AHCI_PHY_RESET_41} \
+    ${KERNEL_PATCH_ATA_CRUCIAL_BX_LPM_41} \
 "
 
 S = "${UNPACKDIR}/linux-${PV}"

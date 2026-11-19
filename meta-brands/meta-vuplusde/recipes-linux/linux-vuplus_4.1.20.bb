@@ -9,7 +9,7 @@ COMPATIBLE_MACHINE = "^(vuduo4klite)$"
 
 inherit kernel machine_kernel_pr kernel-fixups
 
-MACHINE_KERNEL_PR = "r19"
+MACHINE_KERNEL_PR = "r20"
 
 SRC_DATE = "20250410"
 
@@ -31,7 +31,9 @@ SRC_URI += "https://source.mynonpublic.com/vuplus.de/linux/vuplus-linux-${PV}-${
     file://0003-Add-support-for-dvb-usb-stick-Hauppauge-WinTV-soloHD.patch \
     file://0004-af9035-add-USB-ID-07ca-0337-AVerMedia-HD-Volar-A867.patch \
     file://0005-Add-support-for-EVOLVEO-XtraTV-stick.patch \
-    file://sata-phy-reset.patch \
+    ${KERNEL_PATCH_BRCM_AHCI_BUS_CTRL_41} \
+    ${KERNEL_PATCH_BRCM_AHCI_PHY_RESET_41} \
+    ${KERNEL_PATCH_ATA_CRUCIAL_BX_LPM_41} \
     ${KERNEL_PATCH_DVB_DIB8000} \
     ${KERNEL_PATCH_DVB_DIB0700} \
     ${KERNEL_PATCH_DVB_HAMA} \

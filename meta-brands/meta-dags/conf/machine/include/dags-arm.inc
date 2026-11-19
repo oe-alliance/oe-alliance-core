@@ -41,6 +41,9 @@ IMAGE_CMD:tar:prepend = "\
     rm -Rf update; \
 "
 
+# IMAGE_CMD:tar copies ${MACHINEBUILD}_initrd_run.bin out of deploy, so make sure it is deployed first
+do_image_tar[depends] += "dags-initrd-cfe-${MACHINEBUILD}:do_deploy"
+
 EXTRA_IMAGEDEPENDS = "\
     dags-initrd-cfe-${MACHINEBUILD}"
 

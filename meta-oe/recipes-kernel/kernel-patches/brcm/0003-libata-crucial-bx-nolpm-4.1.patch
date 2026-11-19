@@ -1,0 +1,29 @@
+From: Niklas Cassel <cassel@kernel.org>
+Subject: [PATCH] ata: libata-core: disable LPM for Crucial BX SSD1 models
+
+Backport the Crucial BX SSD1 family quirk to the vendor 4.1 kernel,
+which does not yet have the older individual BX model entries either.
+These drives can time out when link power management is enabled.
+
+The upstream model pattern includes CT2000BX500SSD1. Leave NCQ, queue
+depth, link speed and unrelated drive models unchanged.
+
+Upstream-Status: Backport [https://github.com/torvalds/linux/commit/1066fe825987da007669d7c25306b4dbb50bd7dd]
+Signed-off-by: Niklas Cassel <cassel@kernel.org>
+---
+ drivers/ata/libata-core.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/drivers/ata/libata-core.c b/drivers/ata/libata-core.c
+--- a/drivers/ata/libata-core.c
++++ b/drivers/ata/libata-core.c
+@@ -4218,6 +4218,9 @@
+ 	{ "PIONEER DVD-RW  DVR-212D",	NULL,	ATA_HORKAGE_NOSETXFER },
+ 	{ "PIONEER DVD-RW  DVR-216D",	NULL,	ATA_HORKAGE_NOSETXFER },
+ 
++	/* Crucial devices with broken LPM support */
++	{ "CT*0BX*00SSD1",		NULL,	ATA_HORKAGE_NOLPM },
++
+ 	/* devices that don't properly handle queued TRIM commands */
+ 	{ "Micron_M500_*",		NULL,	ATA_HORKAGE_NO_NCQ_TRIM |
+ 						ATA_HORKAGE_ZERO_AFTER_TRIM, },
