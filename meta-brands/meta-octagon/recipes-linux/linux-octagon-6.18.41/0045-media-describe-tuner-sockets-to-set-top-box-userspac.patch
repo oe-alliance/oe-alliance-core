@@ -1,0 +1,351 @@
+From d7cc87fd5693736dde9ae2c06e0eb2fc53498bb8 Mon Sep 17 00:00:00 2001
+From: Tillmann Severin <tillmann.severin@mailbox.org>
+Date: Sun, 8 Nov 2026 22:00:31 +0100
+Subject: [PATCH 45/49] media: describe tuner sockets to set-top box userspace
+
+Enigma2 and its relatives learn which tuners a receiver has from
+/proc/bus/nim_sockets rather than from the DVB devices themselves.
+The file was invented by a vendor kernel and has been copied from one
+set-top box to the next ever since; nothing in the DVB subsystem knows
+about it, and nothing should.
+
+Reproduce it, so that the stock userspace of such a box can drive a
+mainline tuner, and keep it well away from the drivers that do the
+actual work.  Everything in the file is derived from the frontends the
+board points at, so the shim carries no knowledge of any particular
+tuner, and a board that does not want it simply leaves the node out.
+
+Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>
+---
+ .../hisilicon/hi3798mv200-octagon-sf8008.dts  |  10 +
+ drivers/media/platform/hisilicon/Kconfig      |  18 ++
+ drivers/media/platform/hisilicon/Makefile     |   1 +
+ .../media/platform/hisilicon/nim-sockets.c    | 260 ++++++++++++++++++
+ 4 files changed, 289 insertions(+)
+ create mode 100644 drivers/media/platform/hisilicon/nim-sockets.c
+
+diff --git a/arch/arm/boot/dts/hisilicon/hi3798mv200-octagon-sf8008.dts b/arch/arm/boot/dts/hisilicon/hi3798mv200-octagon-sf8008.dts
+index 2ec0c8f3123c..eecd113eada8 100644
+--- a/arch/arm/boot/dts/hisilicon/hi3798mv200-octagon-sf8008.dts
++++ b/arch/arm/boot/dts/hisilicon/hi3798mv200-octagon-sf8008.dts
+@@ -79,6 +79,16 @@ framebuffer0: framebuffer {
+ 		};
+ 	};
+ 
++	/*
++	 * Set-top box userspace reads the list of tuners out of procfs
++	 * instead of asking the DVB devices, so tell it where the one
++	 * tuner on this board is.
++	 */
++	nim-sockets {
++		compatible = "linux,dvb-nim-sockets";
++		dvb-frontends = <&demod_c>;
++	};
++
+ 	reserved-memory {
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+diff --git a/drivers/media/platform/hisilicon/Kconfig b/drivers/media/platform/hisilicon/Kconfig
+index 62e558633ca4..31c9caadb3e2 100644
+--- a/drivers/media/platform/hisilicon/Kconfig
++++ b/drivers/media/platform/hisilicon/Kconfig
+@@ -16,3 +16,21 @@ config VIDEO_HISTB_DEMUX
+ 
+ 	  To compile this driver as a module, choose M here: the module will
+ 	  be called histb-demux.
++
++config DVB_NIM_SOCKETS
++	tristate "Tuner sockets described to set-top box userspace"
++	depends on OF && I2C && PROC_FS
++	depends on DVB_CORE
++	help
++	  Set-top box userspace such as Enigma2 learns which tuners a
++	  receiver has from /proc/bus/nim_sockets rather than from the
++	  DVB devices themselves.  The file was invented by a vendor
++	  kernel and nothing in the DVB subsystem knows about it.  Say
++	  Y here to describe the frontends the board points at in that
++	  form, so that the stock userspace of such a box can drive a
++	  mainline tuner.
++
++	  If you are not running set-top box software, say N.
++
++	  To compile this driver as a module, choose M here: the module
++	  will be called nim-sockets.
+diff --git a/drivers/media/platform/hisilicon/Makefile b/drivers/media/platform/hisilicon/Makefile
+index e124c3eb1112..fea5c64ebc34 100644
+--- a/drivers/media/platform/hisilicon/Makefile
++++ b/drivers/media/platform/hisilicon/Makefile
+@@ -1,3 +1,4 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ 
+ obj-$(CONFIG_VIDEO_HISTB_DEMUX) += histb-demux.o
++obj-$(CONFIG_DVB_NIM_SOCKETS) += nim-sockets.o
+diff --git a/drivers/media/platform/hisilicon/nim-sockets.c b/drivers/media/platform/hisilicon/nim-sockets.c
+new file mode 100644
+index 000000000000..775cb45b93ee
+--- /dev/null
++++ b/drivers/media/platform/hisilicon/nim-sockets.c
+@@ -0,0 +1,260 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * /proc/bus/nim_sockets, for set-top-box userspace
++ *
++ * Enigma2 and its relatives learn which tuners a receiver has from a
++ * file in procfs rather than from the DVB devices themselves.  The
++ * file was invented by a vendor kernel and has been copied from one
++ * set-top box to the next ever since; nothing in the DVB subsystem
++ * knows about it, and nothing should.  It is reproduced here so that
++ * the stock userspace of such a box can drive a mainline tuner, and
++ * it is kept well away from the drivers that do the actual work.
++ *
++ * Everything in the file is derived from the frontends the board
++ * points at, so the shim carries no knowledge of any particular
++ * tuner.  A socket is one frontend, numbered in the order the board
++ * lists them.
++ */
++
++#include <linux/i2c.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
++#include <linux/proc_fs.h>
++#include <linux/seq_file.h>
++#include <linux/string_choices.h>
++
++#include <media/dvb_frontend.h>
++
++#define NIM_SOCKETS_PATH	"bus/nim_sockets"
++
++struct nim_socket {
++	struct dvb_frontend *fe;
++	struct device *dev;
++	int i2c;
++};
++
++struct nim_sockets {
++	struct nim_socket *socket;
++	unsigned int count;
++	struct proc_dir_entry *proc;
++};
++
++/*
++ * Userspace wants the family rather than the exact standard, and it
++ * wants the most capable member of the family it is offered: a tuner
++ * announced as DVB-S will never be asked to find a DVB-S2 transponder.
++ */
++static const char *nim_sockets_type(enum fe_delivery_system delsys)
++{
++	switch (delsys) {
++	case SYS_DVBC_ANNEX_A:
++	case SYS_DVBC_ANNEX_B:
++	case SYS_DVBC_ANNEX_C:
++		return "DVB-C";
++	case SYS_DVBT:
++		return "DVB-T";
++	case SYS_DVBT2:
++		return "DVB-T2";
++	case SYS_DVBS:
++		return "DVB-S";
++	case SYS_DVBS2:
++		return "DVB-S2";
++	case SYS_ATSC:
++		return "ATSC";
++	default:
++		return NULL;
++	}
++}
++
++static int nim_sockets_rank(const char *type)
++{
++	static const char * const better[] = {
++		"DVB-T2", "DVB-S2",
++	};
++	unsigned int i;
++
++	for (i = 0; i < ARRAY_SIZE(better); i++)
++		if (!strcmp(type, better[i]))
++			return 1;
++
++	return 0;
++}
++
++static unsigned int nim_sockets_types(struct dvb_frontend *fe,
++				      const char **type, unsigned int max)
++{
++	unsigned int count = 0, i, j;
++
++	for (i = 0; i < MAX_DELSYS && fe->ops.delsys[i]; i++) {
++		const char *name = nim_sockets_type(fe->ops.delsys[i]);
++
++		if (!name)
++			continue;
++
++		/*
++		 * A frontend that offers both DVB-T and DVB-T2 is one
++		 * kind of tuner to userspace, not two, so keep only the
++		 * most capable member of each family.  Five characters
++		 * are enough to tell the families apart.
++		 */
++		for (j = 0; j < count; j++) {
++			if (strncmp(type[j], name, 5))
++				continue;
++			if (nim_sockets_rank(name) > nim_sockets_rank(type[j]))
++				type[j] = name;
++			break;
++		}
++
++		if (j == count && count < max)
++			type[count++] = name;
++	}
++
++	return count;
++}
++
++static int nim_sockets_show(struct seq_file *s, void *data)
++{
++	struct nim_sockets *nim = s->private;
++	const char *type[MAX_DELSYS];
++	unsigned int i, j, count;
++
++	for (i = 0; i < nim->count; i++) {
++		struct dvb_frontend *fe = nim->socket[i].fe;
++
++		seq_printf(s, "NIM Socket %u:\n", i);
++
++		count = nim_sockets_types(fe, type, ARRAY_SIZE(type));
++		if (!count) {
++			seq_puts(s, "\tempty\n");
++			continue;
++		}
++
++		seq_printf(s, "\tType: %s\n", type[0]);
++		seq_printf(s, "\tName: %s\n", fe->ops.info.name);
++		seq_printf(s, "\tFrontend_Device: %d\n", fe->dvb->num);
++		if (nim->socket[i].i2c >= 0)
++			seq_printf(s, "\tI2C_Device: %d\n", nim->socket[i].i2c);
++		seq_puts(s, "\tHas_Outputs: no\n");
++
++		/* One tuner that speaks several standards is told apart by mode. */
++		if (count > 1)
++			for (j = 0; j < count; j++)
++				seq_printf(s, "\tMode %u: %s\n", j, type[j]);
++	}
++
++	return 0;
++}
++
++static int nim_sockets_add(struct device *dev, struct nim_sockets *nim,
++			   unsigned int index)
++{
++	struct nim_socket *socket = &nim->socket[index];
++	struct device_node *node;
++	struct i2c_client *client;
++
++	node = of_parse_phandle(dev->of_node, "dvb-frontends", index);
++	if (!node)
++		return -EINVAL;
++
++	client = of_find_i2c_device_by_node(node);
++	of_node_put(node);
++
++	if (!client)
++		return -EPROBE_DEFER;
++
++	/*
++	 * A frontend driver publishes its struct dvb_frontend as the
++	 * client data once it has registered with a DVB adapter, so an
++	 * empty pointer means it simply has not got there yet.
++	 */
++	socket->fe = i2c_get_clientdata(client);
++	if (!socket->fe || !socket->fe->dvb) {
++		put_device(&client->dev);
++		return -EPROBE_DEFER;
++	}
++
++	socket->i2c = client->adapter->nr;
++	socket->dev = &client->dev;
++
++	return 0;
++}
++
++static void nim_sockets_release(struct nim_sockets *nim)
++{
++	unsigned int i;
++
++	for (i = 0; i < nim->count; i++)
++		if (nim->socket[i].dev)
++			put_device(nim->socket[i].dev);
++}
++
++static int nim_sockets_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct nim_sockets *nim;
++	int count, i, ret;
++
++	count = of_count_phandle_with_args(dev->of_node, "dvb-frontends", NULL);
++	if (count <= 0)
++		return dev_err_probe(dev, -EINVAL,
++				     "board must list its frontends\n");
++
++	nim = devm_kzalloc(dev, sizeof(*nim), GFP_KERNEL);
++	if (!nim)
++		return -ENOMEM;
++
++	nim->socket = devm_kcalloc(dev, count, sizeof(*nim->socket), GFP_KERNEL);
++	if (!nim->socket)
++		return -ENOMEM;
++
++	nim->count = count;
++
++	for (i = 0; i < count; i++) {
++		ret = nim_sockets_add(dev, nim, i);
++		if (ret) {
++			nim_sockets_release(nim);
++			return ret;
++		}
++	}
++
++	nim->proc = proc_create_single_data(NIM_SOCKETS_PATH, 0444, NULL,
++					    nim_sockets_show, nim);
++	if (!nim->proc) {
++		nim_sockets_release(nim);
++		return -ENOMEM;
++	}
++
++	platform_set_drvdata(pdev, nim);
++	dev_info(dev, "%d tuner socket%s described to userspace\n",
++		 count, str_plural(count));
++
++	return 0;
++}
++
++static void nim_sockets_remove(struct platform_device *pdev)
++{
++	struct nim_sockets *nim = platform_get_drvdata(pdev);
++
++	proc_remove(nim->proc);
++	nim_sockets_release(nim);
++}
++
++static const struct of_device_id nim_sockets_of_match[] = {
++	{ .compatible = "linux,dvb-nim-sockets" },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, nim_sockets_of_match);
++
++static struct platform_driver nim_sockets_driver = {
++	.probe = nim_sockets_probe,
++	.remove = nim_sockets_remove,
++	.driver = {
++		.name = "nim-sockets",
++		.of_match_table = nim_sockets_of_match,
++	},
++};
++module_platform_driver(nim_sockets_driver);
++
++MODULE_DESCRIPTION("Tuner sockets described to set-top-box userspace");
++MODULE_LICENSE("GPL");
+-- 
+2.56.1
+

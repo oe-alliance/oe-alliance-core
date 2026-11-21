@@ -1,0 +1,441 @@
+From e81c6580893dfd4e4254a9ac59747d27c7a3bc86 Mon Sep 17 00:00:00 2001
+From: Tillmann Severin <tillmann.severin@mailbox.org>
+Date: Sun, 8 Nov 2026 18:14:36 +0100
+Subject: [PATCH 40/49] media: platform: bring up the HiSilicon set-top box
+ demultiplexer input
+
+The demultiplexer is switched off at boot: its reset is asserted and
+none of its clocks run, so every register in the block reads back as
+zero.  That is indistinguishable from an idle block, and it is why the
+hardware appeared to be absent.
+
+Start the clocks, release the reset, put the four pads that carry the
+serial transport stream into their transport mode, and tell the input
+port what to expect.  The block then counts the packets arriving on
+each port, which is reported through debugfs.  A tuned front end shows
+up there as a steady packet rate with no errors, so the input path can
+be confirmed before any filtering exists.
+
+Filtering and delivery to the DVB stack are not here yet.  The output
+side is a descriptor ring rather than a simple buffer and deserves to
+be a change of its own.
+
+The transport clock source for input group 0 is selected in the clock
+and reset controller, on a path the clock framework cannot describe,
+so the driver reaches it through a syscon reference.
+
+Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>
+---
+ .../hisilicon/hi3798mv200-octagon-sf8008.dts  |  18 ++
+ arch/arm/boot/dts/hisilicon/hi3798mv200.dtsi  |  20 ++
+ drivers/clk/hisilicon/crg-hi3798mv200.c       |  19 ++
+ drivers/media/platform/Kconfig                |   1 +
+ drivers/media/platform/Makefile               |   1 +
+ drivers/media/platform/hisilicon/Kconfig      |  16 ++
+ drivers/media/platform/hisilicon/Makefile     |   3 +
+ .../media/platform/hisilicon/histb-demux.c    | 228 ++++++++++++++++++
+ include/dt-bindings/clock/histb-clock.h       |   9 +
+ 9 files changed, 315 insertions(+)
+ create mode 100644 drivers/media/platform/hisilicon/Kconfig
+ create mode 100644 drivers/media/platform/hisilicon/Makefile
+ create mode 100644 drivers/media/platform/hisilicon/histb-demux.c
+
+diff --git a/arch/arm/boot/dts/hisilicon/hi3798mv200-octagon-sf8008.dts b/arch/arm/boot/dts/hisilicon/hi3798mv200-octagon-sf8008.dts
+index e758b34434dc..042cee04bf10 100644
+--- a/arch/arm/boot/dts/hisilicon/hi3798mv200-octagon-sf8008.dts
++++ b/arch/arm/boot/dts/hisilicon/hi3798mv200-octagon-sf8008.dts
+@@ -284,4 +284,22 @@ i2c1_pins: i2c1-pins {
+ 			0x090 MUX_M6
+ 		>;
+ 	};
++
++	/* serial transport stream from the demodulator: clock, sync, valid, data */
++	ts_pins: ts-pins {
++		pinctrl-single,pins = <
++			0x078 MUX_M3
++			0x07c MUX_M3
++			0x080 MUX_M3
++			0x084 MUX_M3
++		>;
++	};
++};
++
++/* The demodulator feeds input port 1; the other three ports are unused. */
++&demux {
++	status = "okay";
++	pinctrl-names = "default";
++	pinctrl-0 = <&ts_pins>;
++	hisilicon,input-port = <1>;
+ };
+diff --git a/arch/arm/boot/dts/hisilicon/hi3798mv200.dtsi b/arch/arm/boot/dts/hisilicon/hi3798mv200.dtsi
+index 300421c60855..94419734cf78 100644
+--- a/arch/arm/boot/dts/hisilicon/hi3798mv200.dtsi
++++ b/arch/arm/boot/dts/hisilicon/hi3798mv200.dtsi
+@@ -499,5 +499,25 @@ ehci: usb@9890000 {
+ 			phy-names = "usb";
+ 			status = "disabled";
+ 		};
++
++		demux: demux@9c00000 {
++			compatible = "hisilicon,hi3798mv200-demux";
++			reg = <0x9c00000 0x10000>;
++			interrupts = <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&crg HISTB_DEMUX_BUS_CLK>,
++				 <&crg HISTB_DEMUX_CLK>,
++				 <&crg HISTB_DEMUX_27M_CLK>,
++				 <&crg HISTB_DEMUX_TSI0_CLK>,
++				 <&crg HISTB_DEMUX_TSI1_CLK>,
++				 <&crg HISTB_DEMUX_TSI2_CLK>,
++				 <&crg HISTB_DEMUX_TSI3_CLK>,
++				 <&crg HISTB_DEMUX_TS0_CLK>,
++				 <&crg HISTB_DEMUX_TSOUT0_CLK>;
++			clock-names = "bus", "dmx", "27m", "tsi0", "tsi1",
++				      "tsi2", "tsi3", "ts0", "tsout0";
++			resets = <&crg 0xfc 24>;
++			hisilicon,crg = <&crg>;
++			status = "disabled";
++		};
+ 	};
+ };
+diff --git a/drivers/clk/hisilicon/crg-hi3798mv200.c b/drivers/clk/hisilicon/crg-hi3798mv200.c
+index 9af553231fa3..4351a03e2753 100644
+--- a/drivers/clk/hisilicon/crg-hi3798mv200.c
++++ b/drivers/clk/hisilicon/crg-hi3798mv200.c
+@@ -114,6 +114,25 @@ static const struct hisi_gate_clock hi3798mv200_gate_clks[] = {
+ 	/* SPI */
+ 	{ HISTB_SPI0_CLK, "clk_spi0", "clk_apb",
+ 		CLK_SET_RATE_PARENT, 0x70, 0, 0, },
++	/* Demux */
++	{ HISTB_DEMUX_BUS_CLK, "clk_dmx_bus", NULL,
++		CLK_SET_RATE_PARENT, 0xfc, 0, 0, },
++	{ HISTB_DEMUX_CLK, "clk_dmx", NULL,
++		CLK_SET_RATE_PARENT, 0xfc, 1, 0, },
++	{ HISTB_DEMUX_27M_CLK, "clk_dmx_27m", NULL,
++		CLK_SET_RATE_PARENT, 0xfc, 2, 0, },
++	{ HISTB_DEMUX_TSI0_CLK, "clk_dmx_tsi0", NULL,
++		CLK_SET_RATE_PARENT, 0xfc, 3, 0, },
++	{ HISTB_DEMUX_TSI1_CLK, "clk_dmx_tsi1", NULL,
++		CLK_SET_RATE_PARENT, 0xfc, 4, 0, },
++	{ HISTB_DEMUX_TSI2_CLK, "clk_dmx_tsi2", NULL,
++		CLK_SET_RATE_PARENT, 0xfc, 5, 0, },
++	{ HISTB_DEMUX_TSI3_CLK, "clk_dmx_tsi3", NULL,
++		CLK_SET_RATE_PARENT, 0xfc, 6, 0, },
++	{ HISTB_DEMUX_TS0_CLK, "clk_dmx_ts0", NULL,
++		CLK_SET_RATE_PARENT, 0xfc, 10, 0, },
++	{ HISTB_DEMUX_TSOUT0_CLK, "clk_dmx_tsout0", NULL,
++		CLK_SET_RATE_PARENT, 0xfc, 12, 0, },
+ 	/* SDIO */
+ 	{ HISTB_SDIO0_BIU_CLK, "clk_sdio0_biu", "200m",
+ 		CLK_SET_RATE_PARENT, 0x9c, 0, 0, },
+diff --git a/drivers/media/platform/Kconfig b/drivers/media/platform/Kconfig
+index 9287faafdce5..0f650a9d13a4 100644
+--- a/drivers/media/platform/Kconfig
++++ b/drivers/media/platform/Kconfig
+@@ -70,6 +70,7 @@ source "drivers/media/platform/atmel/Kconfig"
+ source "drivers/media/platform/broadcom/Kconfig"
+ source "drivers/media/platform/cadence/Kconfig"
+ source "drivers/media/platform/chips-media/Kconfig"
++source "drivers/media/platform/hisilicon/Kconfig"
+ source "drivers/media/platform/imagination/Kconfig"
+ source "drivers/media/platform/intel/Kconfig"
+ source "drivers/media/platform/marvell/Kconfig"
+diff --git a/drivers/media/platform/Makefile b/drivers/media/platform/Makefile
+index 6fd7db0541c7..028b1dcd7b1b 100644
+--- a/drivers/media/platform/Makefile
++++ b/drivers/media/platform/Makefile
+@@ -13,6 +13,7 @@ obj-y += atmel/
+ obj-y += broadcom/
+ obj-y += cadence/
+ obj-y += chips-media/
++obj-y += hisilicon/
+ obj-y += imagination/
+ obj-y += intel/
+ obj-y += marvell/
+diff --git a/drivers/media/platform/hisilicon/Kconfig b/drivers/media/platform/hisilicon/Kconfig
+new file mode 100644
+index 000000000000..bf7ba740733b
+--- /dev/null
++++ b/drivers/media/platform/hisilicon/Kconfig
+@@ -0,0 +1,16 @@
++# SPDX-License-Identifier: GPL-2.0-only
++
++comment "HiSilicon media platform drivers"
++
++config VIDEO_HISTB_DEMUX
++	tristate "HiSilicon set-top box transport stream demultiplexer"
++	depends on ARCH_HISI || COMPILE_TEST
++	depends on OF
++	select MFD_SYSCON
++	help
++	  Support for the transport stream demultiplexer found on HiSilicon
++	  set-top box SoCs such as the Hi3798MV200.  It receives a transport
++	  stream from a demodulator and filters it.
++
++	  To compile this driver as a module, choose M here: the module will
++	  be called histb-demux.
+diff --git a/drivers/media/platform/hisilicon/Makefile b/drivers/media/platform/hisilicon/Makefile
+new file mode 100644
+index 000000000000..e124c3eb1112
+--- /dev/null
++++ b/drivers/media/platform/hisilicon/Makefile
+@@ -0,0 +1,3 @@
++# SPDX-License-Identifier: GPL-2.0-only
++
++obj-$(CONFIG_VIDEO_HISTB_DEMUX) += histb-demux.o
+diff --git a/drivers/media/platform/hisilicon/histb-demux.c b/drivers/media/platform/hisilicon/histb-demux.c
+new file mode 100644
+index 000000000000..296276fda0c4
+--- /dev/null
++++ b/drivers/media/platform/hisilicon/histb-demux.c
+@@ -0,0 +1,228 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Transport stream demultiplexer found on HiSilicon set-top box SoCs.
++ *
++ * This stage brings the input side up: the block is taken out of reset,
++ * its clocks are started, and one of the four input ports is told what
++ * shape of transport stream to expect.  The hardware then counts the
++ * packets it receives on each port, which is reported through debugfs
++ * and is enough to tell whether a tuned front end is actually feeding
++ * the demultiplexer.
++ *
++ * Filtering and delivery to the DVB stack are not here yet.
++ */
++
++#include <linux/bitfield.h>
++#include <linux/clk.h>
++#include <linux/debugfs.h>
++#include <linux/io.h>
++#include <linux/mfd/syscon.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
++#include <linux/regmap.h>
++#include <linux/reset.h>
++#include <linux/seq_file.h>
++
++#define HISTB_DMX_PORTS			4
++
++#define HISTB_DMX_TS_INTERFACE(p)	(0x1100 + ((p) << 8))
++#define HISTB_DMX_TS_COUNT(p)		(0x1104 + ((p) << 8))
++#define HISTB_DMX_TS_COUNT_CTRL(p)	(0x1108 + ((p) << 8))
++#define HISTB_DMX_ETS_COUNT(p)		(0x110c + ((p) << 8))
++
++#define HISTB_DMX_TS_SYNCON_TH		GENMASK(2, 0)
++#define HISTB_DMX_TS_SYNCOFF_TH		GENMASK(5, 4)
++#define HISTB_DMX_TS_SYNC_MODE		GENMASK(21, 20)
++#define HISTB_DMX_TS_SYNC_POL		BIT(23)
++#define HISTB_DMX_TS_VLD_POL		BIT(24)
++#define HISTB_DMX_TS_ERR_POL		BIT(25)
++#define HISTB_DMX_TS_SERIAL		BIT(29)
++#define HISTB_DMX_TS_BIT_SEL		BIT(30)
++#define HISTB_DMX_TS_PORT_SEL		BIT(31)
++
++#define HISTB_DMX_COUNT_RESET		0
++#define HISTB_DMX_COUNT_START		1
++#define HISTB_DMX_COUNT_STOP		2
++
++/*
++ * The transport clock for input group 0 is selected in the clock and
++ * reset controller rather than in the demultiplexer itself, and the
++ * clock framework has no way to express a mux that feeds a block
++ * through a path it does not otherwise manage.
++ */
++#define HISTB_CRG_DEMUX_CLK_SEL		0x100
++#define HISTB_CRG_TS0_CLK_SEL		GENMASK(13, 12)
++
++struct histb_demux {
++	struct device *dev;
++	void __iomem *base;
++	struct clk_bulk_data *clks;
++	int num_clks;
++	struct reset_control *rst;
++	struct dentry *debugfs;
++	u32 input_port;
++};
++
++static void histb_demux_write(struct histb_demux *dmx, u32 reg, u32 val)
++{
++	writel(val, dmx->base + reg);
++}
++
++static u32 histb_demux_read(struct histb_demux *dmx, u32 reg)
++{
++	return readl(dmx->base + reg);
++}
++
++/*
++ * A serial transport stream arrives on four pins: clock, sync, valid and
++ * one data line.  The thresholds say how many consecutive packets must
++ * carry a sync byte before the port declares itself synchronised, and
++ * how many must lack one before it gives up.
++ */
++static void histb_demux_setup_port(struct histb_demux *dmx, u32 port)
++{
++	u32 val;
++
++	val = HISTB_DMX_TS_SERIAL | HISTB_DMX_TS_BIT_SEL |
++	      HISTB_DMX_TS_PORT_SEL;
++	val |= FIELD_PREP(HISTB_DMX_TS_SYNC_MODE, 0);
++	val |= FIELD_PREP(HISTB_DMX_TS_SYNCOFF_TH, 1);
++	val |= FIELD_PREP(HISTB_DMX_TS_SYNCON_TH, 5);
++
++	histb_demux_write(dmx, HISTB_DMX_TS_INTERFACE(port), val);
++
++	histb_demux_write(dmx, HISTB_DMX_TS_COUNT_CTRL(port),
++			  HISTB_DMX_COUNT_RESET);
++	histb_demux_write(dmx, HISTB_DMX_TS_COUNT_CTRL(port),
++			  HISTB_DMX_COUNT_START);
++}
++
++static int histb_demux_ports_show(struct seq_file *s, void *unused)
++{
++	struct histb_demux *dmx = s->private;
++	u32 port;
++
++	for (port = 0; port < HISTB_DMX_PORTS; port++)
++		seq_printf(s, "port %u  cfg %08x  packets %-10u errors %u\n",
++			   port,
++			   histb_demux_read(dmx, HISTB_DMX_TS_INTERFACE(port)),
++			   histb_demux_read(dmx, HISTB_DMX_TS_COUNT(port)),
++			   histb_demux_read(dmx, HISTB_DMX_ETS_COUNT(port)));
++
++	return 0;
++}
++DEFINE_SHOW_ATTRIBUTE(histb_demux_ports);
++
++static int histb_demux_select_ts_clock(struct histb_demux *dmx)
++{
++	struct regmap *crg;
++
++	crg = syscon_regmap_lookup_by_phandle(dmx->dev->of_node,
++					      "hisilicon,crg");
++	if (IS_ERR(crg))
++		return dev_err_probe(dmx->dev, PTR_ERR(crg),
++				     "no clock and reset controller\n");
++
++	return regmap_update_bits(crg, HISTB_CRG_DEMUX_CLK_SEL,
++				  HISTB_CRG_TS0_CLK_SEL,
++				  FIELD_PREP(HISTB_CRG_TS0_CLK_SEL, 1));
++}
++
++static int histb_demux_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct histb_demux *dmx;
++	int ret;
++
++	dmx = devm_kzalloc(dev, sizeof(*dmx), GFP_KERNEL);
++	if (!dmx)
++		return -ENOMEM;
++
++	dmx->dev = dev;
++	platform_set_drvdata(pdev, dmx);
++
++	dmx->base = devm_platform_ioremap_resource(pdev, 0);
++	if (IS_ERR(dmx->base))
++		return PTR_ERR(dmx->base);
++
++	if (of_property_read_u32(dev->of_node, "hisilicon,input-port",
++				 &dmx->input_port))
++		return dev_err_probe(dev, -EINVAL,
++				     "board must say which input port is wired\n");
++
++	if (dmx->input_port >= HISTB_DMX_PORTS)
++		return dev_err_probe(dev, -EINVAL, "input port %u does not exist\n",
++				     dmx->input_port);
++
++	dmx->num_clks = devm_clk_bulk_get_all(dev, &dmx->clks);
++	if (dmx->num_clks < 0)
++		return dev_err_probe(dev, dmx->num_clks, "no clocks\n");
++
++	dmx->rst = devm_reset_control_get_exclusive(dev, NULL);
++	if (IS_ERR(dmx->rst))
++		return dev_err_probe(dev, PTR_ERR(dmx->rst), "no reset\n");
++
++	ret = clk_bulk_prepare_enable(dmx->num_clks, dmx->clks);
++	if (ret)
++		return dev_err_probe(dev, ret, "cannot start clocks\n");
++
++	ret = histb_demux_select_ts_clock(dmx);
++	if (ret)
++		goto err_clks;
++
++	/*
++	 * The boot loader leaves the block in reset, in which state every
++	 * one of its registers reads back as zero - which is indis-
++	 * tinguishable from a block that is simply idle.
++	 */
++	ret = reset_control_deassert(dmx->rst);
++	if (ret) {
++		dev_err_probe(dev, ret, "cannot release reset\n");
++		goto err_clks;
++	}
++
++	histb_demux_setup_port(dmx, dmx->input_port);
++
++	dmx->debugfs = debugfs_create_dir(dev_name(dev), NULL);
++	debugfs_create_file("ports", 0444, dmx->debugfs, dmx,
++			    &histb_demux_ports_fops);
++
++	dev_info(dev, "transport stream input on port %u\n", dmx->input_port);
++
++	return 0;
++
++err_clks:
++	clk_bulk_disable_unprepare(dmx->num_clks, dmx->clks);
++	return ret;
++}
++
++static void histb_demux_remove(struct platform_device *pdev)
++{
++	struct histb_demux *dmx = platform_get_drvdata(pdev);
++
++	debugfs_remove_recursive(dmx->debugfs);
++	histb_demux_write(dmx, HISTB_DMX_TS_COUNT_CTRL(dmx->input_port),
++			  HISTB_DMX_COUNT_STOP);
++	reset_control_assert(dmx->rst);
++	clk_bulk_disable_unprepare(dmx->num_clks, dmx->clks);
++}
++
++static const struct of_device_id histb_demux_of_match[] = {
++	{ .compatible = "hisilicon,hi3798mv200-demux" },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, histb_demux_of_match);
++
++static struct platform_driver histb_demux_driver = {
++	.probe = histb_demux_probe,
++	.remove = histb_demux_remove,
++	.driver = {
++		.name = "histb-demux",
++		.of_match_table = histb_demux_of_match,
++	},
++};
++module_platform_driver(histb_demux_driver);
++
++MODULE_DESCRIPTION("HiSilicon set-top box transport stream demultiplexer");
++MODULE_LICENSE("GPL");
+diff --git a/include/dt-bindings/clock/histb-clock.h b/include/dt-bindings/clock/histb-clock.h
+index 03c3e46efef9..7a81b761eac9 100644
+--- a/include/dt-bindings/clock/histb-clock.h
++++ b/include/dt-bindings/clock/histb-clock.h
+@@ -59,6 +59,15 @@
+ #define HISTB_USB3_PIPE_CLK1		49
+ #define HISTB_USB3_SUSPEND_CLK1		50
+ #define HISTB_USB2_UTMI1_CLK		51
++#define HISTB_DEMUX_BUS_CLK		52
++#define HISTB_DEMUX_CLK			53
++#define HISTB_DEMUX_27M_CLK		54
++#define HISTB_DEMUX_TSI0_CLK		55
++#define HISTB_DEMUX_TSI1_CLK		56
++#define HISTB_DEMUX_TSI2_CLK		57
++#define HISTB_DEMUX_TSI3_CLK		58
++#define HISTB_DEMUX_TS0_CLK		59
++#define HISTB_DEMUX_TSOUT0_CLK		60
+ 
+ /* clocks provided by mcu CRG */
+ #define HISTB_MCE_CLK			1
+-- 
+2.56.1
+

@@ -1,0 +1,301 @@
+From ce0837e6a6bbd4a20d5769894f6336d249f6d95f Mon Sep 17 00:00:00 2001
+From: Tillmann Severin <tillmann.severin@mailbox.org>
+Date: Sun, 8 Nov 2026 21:49:02 +0100
+Subject: [PATCH 44/49] media: histb-demux: collect blocks on an interrupt
+
+Polling the output queue every two hundred milliseconds costs a
+whole ring of descriptors whenever the stream runs faster than the
+timer, so ask the hardware to say when a block is ready instead.
+
+End of packet is the obvious candidate and the wrong one: it fires
+when a section or a PES packet is complete, and recording a whole
+multiplex produces neither, so the raw status sits at zero forever.
+The descriptor interrupt is the one that matters, as it fires once
+the hardware has finished filling a block.
+
+Reaching the processor takes four enables, not three.  Past the
+queue, the class and the queue block there is one more gate on the
+way out of the device, and without it every register involved reads
+back exactly as programmed and the summary still shows an interrupt
+outstanding while nothing at all arrives.
+
+The timer stays as a backstop.
+
+Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>
+---
+ .../media/platform/hisilicon/histb-demux.c    | 163 ++++++++++++++++--
+ 1 file changed, 152 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/media/platform/hisilicon/histb-demux.c b/drivers/media/platform/hisilicon/histb-demux.c
+index cd418afe5862..e3b05875c804 100644
+--- a/drivers/media/platform/hisilicon/histb-demux.c
++++ b/drivers/media/platform/hisilicon/histb-demux.c
+@@ -20,6 +20,7 @@
+ #include <linux/delay.h>
+ #include <linux/dma-mapping.h>
+ #include <linux/i2c.h>
++#include <linux/interrupt.h>
+ #include <linux/io.h>
+ #include <linux/mfd/syscon.h>
+ #include <linux/module.h>
+@@ -101,6 +102,41 @@ DVB_DEFINE_MOD_OPT_ADAPTER_NR(adapter_nr);
+ #define HISTB_DMX_FQ_WORD(q, w)		(0xd000 + ((q) << 4) + ((w) << 2))
+ #define HISTB_DMX_OQ_WORD(q, w)		(((w) < 4 ? 0xe000 : 0xe800 - 16) + \
+ 					 ((q) << 4) + ((w) << 2))
++/*
++ * Interrupts are enabled at four levels: the individual queue, the
++ * class of interrupt, the queue block as a whole, and finally the pin
++ * that leaves the device.  Each class enable is four bits, one for
++ * every group of thirty-two queues.
++ *
++ * Two classes matter here.  End of packet fires when a packet or
++ * section is complete, which never happens while recording a whole
++ * multiplex, so recording needs the descriptor interrupt instead:
++ * that one fires when the hardware has finished filling a block.
++ *
++ * The outermost gate is easy to miss.  Every one of the enables below
++ * can read back exactly as written, and the summary registers can show
++ * an interrupt outstanding, while the processor sees nothing at all,
++ * because the signal still has to get past HISTB_DMX_PVR_INT_ENA.
++ */
++#define HISTB_DMX_PVR_INT_STA		0x0000
++#define HISTB_DMX_PVR_INT_DAV		BIT(8)
++#define HISTB_DMX_PVR_INT_ENA		0x0004
++#define HISTB_DMX_PVR_INT		BIT(0)
++
++#define HISTB_DMX_INT_TYPE_STA		0xc100
++#define HISTB_DMX_INT_TYPE_ENA		0xc104
++#define HISTB_DMX_INT_DESC_O		GENMASK(7, 4)
++#define HISTB_DMX_INT_EOP_O		GENMASK(11, 8)
++#define HISTB_DMX_INT_ALL_STA		0xc110
++#define HISTB_DMX_INT_ALL_ENA		0xc114
++#define HISTB_DMX_INT_ALL		BIT(0)
++
++#define HISTB_DMX_OQ_DESC_RAW(n)	(0xc040 + ((n) << 2))
++#define HISTB_DMX_OQ_DESC_INT(n)	(0xc050 + ((n) << 2))
++#define HISTB_DMX_OQ_DESC_ENA(n)	(0xc060 + ((n) << 2))
++#define HISTB_DMX_OQ_EOP_RAW(n)		(0xc070 + ((n) << 2))
++#define HISTB_DMX_OQ_EOP_INT(n)		(0xc080 + ((n) << 2))
++#define HISTB_DMX_OQ_EOP_ENA(n)		(0xc090 + ((n) << 2))
+ #define HISTB_DMX_OQ_ENA		0xc130
+ #define HISTB_DMX_FQ_ENA		0xc140
+ #define HISTB_DMX_OQ_SMMU		0xcf30
+@@ -148,7 +184,13 @@ struct histb_demux_fq_desc {
+ /* Both rings carry their pointers in the low bits of a queue word. */
+ #define HISTB_DMX_QUEUE_PTR		GENMASK(9, 0)
+ 
+-#define HISTB_DMX_POLL_INTERVAL		msecs_to_jiffies(5)
++/*
++ * Blocks are collected when the hardware says one is finished.  The
++ * timer is only a backstop: if an interrupt were ever missed the ring
++ * would fill, the hardware would stop, and no further interrupt would
++ * come to restart it, so the stream would be wedged for good.
++ */
++#define HISTB_DMX_POLL_INTERVAL		msecs_to_jiffies(200)
+ 
+ struct histb_demux {
+ 	struct device *dev;
+@@ -156,6 +198,7 @@ struct histb_demux {
+ 	struct clk_bulk_data *clks;
+ 	int num_clks;
+ 	struct reset_control *rst;
++	int irq;
+ 	struct dentry *debugfs;
+ 	u32 input_port;
+ 
+@@ -277,6 +320,20 @@ static void histb_demux_capture_stop(struct histb_demux *dmx)
+ 	val &= ~HISTB_DMX_REC_CTRL(dmx->input_port);
+ 	histb_demux_write(dmx, HISTB_DMX_CTRL_FUNC, val);
+ 
++	val = histb_demux_read(dmx, HISTB_DMX_PVR_INT_ENA);
++	val &= ~HISTB_DMX_PVR_INT;
++	histb_demux_write(dmx, HISTB_DMX_PVR_INT_ENA, val);
++
++	val = histb_demux_read(dmx, HISTB_DMX_INT_TYPE_ENA);
++	val &= ~FIELD_PREP(HISTB_DMX_INT_DESC_O, BIT(0));
++	val &= ~FIELD_PREP(HISTB_DMX_INT_EOP_O, BIT(0));
++	histb_demux_write(dmx, HISTB_DMX_INT_TYPE_ENA, val);
++
++	histb_demux_write(dmx, HISTB_DMX_OQ_DESC_ENA(0), 0);
++	histb_demux_write(dmx, HISTB_DMX_OQ_DESC_RAW(0), BIT(0));
++	histb_demux_write(dmx, HISTB_DMX_OQ_EOP_ENA(0), 0);
++	histb_demux_write(dmx, HISTB_DMX_OQ_EOP_RAW(0), BIT(0));
++
+ 	histb_demux_write(dmx, HISTB_DMX_OQ_ENA, 0);
+ 	histb_demux_write(dmx, HISTB_DMX_FQ_ENA, 0);
+ 
+@@ -330,6 +387,24 @@ static void histb_demux_capture_start(struct histb_demux *dmx)
+ 	histb_demux_write(dmx, HISTB_DMX_FQ_ENA, BIT(0));
+ 	histb_demux_write(dmx, HISTB_DMX_OQ_ENA, BIT(0));
+ 
++	histb_demux_write(dmx, HISTB_DMX_OQ_DESC_RAW(0), BIT(0));
++	histb_demux_write(dmx, HISTB_DMX_OQ_DESC_ENA(0), BIT(0));
++	histb_demux_write(dmx, HISTB_DMX_OQ_EOP_RAW(0), BIT(0));
++	histb_demux_write(dmx, HISTB_DMX_OQ_EOP_ENA(0), BIT(0));
++
++	val = histb_demux_read(dmx, HISTB_DMX_INT_TYPE_ENA);
++	val |= FIELD_PREP(HISTB_DMX_INT_DESC_O, BIT(0));
++	val |= FIELD_PREP(HISTB_DMX_INT_EOP_O, BIT(0));
++	histb_demux_write(dmx, HISTB_DMX_INT_TYPE_ENA, val);
++
++	val = histb_demux_read(dmx, HISTB_DMX_INT_ALL_ENA);
++	histb_demux_write(dmx, HISTB_DMX_INT_ALL_ENA,
++			  val | HISTB_DMX_INT_ALL);
++
++	val = histb_demux_read(dmx, HISTB_DMX_PVR_INT_ENA);
++	histb_demux_write(dmx, HISTB_DMX_PVR_INT_ENA,
++			  val | HISTB_DMX_PVR_INT);
++
+ 	/* Give recording zero our only output queue... */
+ 	histb_demux_write(dmx, HISTB_DMX_REC_BUF_SET(HISTB_DMX_REC_ID),
+ 			  FIELD_PREP(HISTB_DMX_REC_BUF_ID, 0) |
+@@ -358,17 +433,12 @@ static void histb_demux_capture_start(struct histb_demux *dmx)
+  * the block is put back on the free queue for reuse.  Forgetting that
+  * last step is how a capture quietly stops after one ring's worth.
+  */
+-static void histb_demux_deliver(struct work_struct *work)
++static void histb_demux_collect(struct histb_demux *dmx)
+ {
+-	struct histb_demux *dmx = container_of(to_delayed_work(work),
+-					       struct histb_demux, poll);
+ 	u32 depth = HISTB_DMX_QUEUE_DEPTH;
+ 	u32 oq_write, fq_write;
+ 
+-	guard(mutex)(&dmx->lock);
+-
+-	if (!dmx->capturing)
+-		return;
++	lockdep_assert_held(&dmx->lock);
+ 
+ 	oq_write = histb_demux_read(dmx, HISTB_DMX_OQ_WORD(0, 5)) &
+ 		   HISTB_DMX_QUEUE_PTR;
+@@ -376,7 +446,7 @@ static void histb_demux_deliver(struct work_struct *work)
+ 		   HISTB_DMX_QUEUE_PTR;
+ 
+ 	if (oq_write >= depth)
+-		goto again;
++		return;
+ 
+ 	while (dmx->oq_read != oq_write) {
+ 		struct histb_demux_oq_desc *desc = &dmx->oq[dmx->oq_read];
+@@ -409,8 +479,50 @@ static void histb_demux_deliver(struct work_struct *work)
+ 	histb_demux_write(dmx, HISTB_DMX_OQ_WORD(0, 5), dmx->oq_read << 16);
+ 	histb_demux_write(dmx, HISTB_DMX_FQ_WORD(0, 2),
+ 			  (depth << 16) | fq_write);
++}
++
++static irqreturn_t histb_demux_isr(int irq, void *data)
++{
++	struct histb_demux *dmx = data;
++	bool ours = false;
++
++	/* A raw register is cleared by writing the bit back into it. */
++	if (histb_demux_read(dmx, HISTB_DMX_OQ_DESC_INT(0)) & BIT(0)) {
++		histb_demux_write(dmx, HISTB_DMX_OQ_DESC_RAW(0), BIT(0));
++		ours = true;
++	}
+ 
+-again:
++	if (histb_demux_read(dmx, HISTB_DMX_OQ_EOP_INT(0)) & BIT(0)) {
++		histb_demux_write(dmx, HISTB_DMX_OQ_EOP_RAW(0), BIT(0));
++		ours = true;
++	}
++
++	return ours ? IRQ_WAKE_THREAD : IRQ_NONE;
++}
++
++static irqreturn_t histb_demux_thread(int irq, void *data)
++{
++	struct histb_demux *dmx = data;
++
++	guard(mutex)(&dmx->lock);
++
++	if (dmx->capturing)
++		histb_demux_collect(dmx);
++
++	return IRQ_HANDLED;
++}
++
++static void histb_demux_poll_work(struct work_struct *work)
++{
++	struct histb_demux *dmx = container_of(to_delayed_work(work),
++					       struct histb_demux, poll);
++
++	guard(mutex)(&dmx->lock);
++
++	if (!dmx->capturing)
++		return;
++
++	histb_demux_collect(dmx);
+ 	schedule_delayed_work(&dmx->poll, HISTB_DMX_POLL_INTERVAL);
+ }
+ 
+@@ -568,6 +680,22 @@ static int histb_demux_queues_show(struct seq_file *s, void *unused)
+ 	seq_printf(s, "ctrl_func %08x  glb_ctrl2 %08x\n",
+ 		   histb_demux_read(dmx, HISTB_DMX_CTRL_FUNC),
+ 		   histb_demux_read(dmx, HISTB_DMX_GLB_CTRL2(dmx->input_port)));
++	seq_printf(s, "desc raw %08x  int %08x  ena %08x\n",
++		   histb_demux_read(dmx, HISTB_DMX_OQ_DESC_RAW(0)),
++		   histb_demux_read(dmx, HISTB_DMX_OQ_DESC_INT(0)),
++		   histb_demux_read(dmx, HISTB_DMX_OQ_DESC_ENA(0)));
++	seq_printf(s, "eop raw %08x  int %08x  ena %08x\n",
++		   histb_demux_read(dmx, HISTB_DMX_OQ_EOP_RAW(0)),
++		   histb_demux_read(dmx, HISTB_DMX_OQ_EOP_INT(0)),
++		   histb_demux_read(dmx, HISTB_DMX_OQ_EOP_ENA(0)));
++	seq_printf(s, "int type sta %08x ena %08x  all sta %08x ena %08x\n",
++		   histb_demux_read(dmx, HISTB_DMX_INT_TYPE_STA),
++		   histb_demux_read(dmx, HISTB_DMX_INT_TYPE_ENA),
++		   histb_demux_read(dmx, HISTB_DMX_INT_ALL_STA),
++		   histb_demux_read(dmx, HISTB_DMX_INT_ALL_ENA));
++	seq_printf(s, "pvr int sta %08x ena %08x\n",
++		   histb_demux_read(dmx, HISTB_DMX_PVR_INT_STA),
++		   histb_demux_read(dmx, HISTB_DMX_PVR_INT_ENA));
+ 	seq_printf(s, "rec_set %08x  rec_buf_set %08x\n",
+ 		   histb_demux_read(dmx, HISTB_DMX_REC_SET(dmx->input_port)),
+ 		   histb_demux_read(dmx,
+@@ -634,7 +762,7 @@ static int histb_demux_probe(struct platform_device *pdev)
+ 	dmx->dev = dev;
+ 	platform_set_drvdata(pdev, dmx);
+ 	mutex_init(&dmx->lock);
+-	INIT_DELAYED_WORK(&dmx->poll, histb_demux_deliver);
++	INIT_DELAYED_WORK(&dmx->poll, histb_demux_poll_work);
+ 
+ 	ret = histb_demux_find_frontend(dmx);
+ 	if (ret)
+@@ -665,6 +793,10 @@ static int histb_demux_probe(struct platform_device *pdev)
+ 	if (IS_ERR(dmx->rst))
+ 		return dev_err_probe(dev, PTR_ERR(dmx->rst), "no reset\n");
+ 
++	dmx->irq = platform_get_irq(pdev, 0);
++	if (dmx->irq < 0)
++		return dmx->irq;
++
+ 	ret = histb_demux_alloc_queues(dmx);
+ 	if (ret)
+ 		return ret;
+@@ -691,6 +823,14 @@ static int histb_demux_probe(struct platform_device *pdev)
+ 	histb_demux_setup_port(dmx, dmx->input_port);
+ 	histb_demux_attach_port(dmx);
+ 
++	ret = devm_request_threaded_irq(dev, dmx->irq, histb_demux_isr,
++					histb_demux_thread, 0,
++					dev_name(dev), dmx);
++	if (ret) {
++		dev_err_probe(dev, ret, "cannot take the interrupt\n");
++		goto err_reset;
++	}
++
+ 	dmx->debugfs = debugfs_create_dir(dev_name(dev), NULL);
+ 	debugfs_create_file("ports", 0444, dmx->debugfs, dmx,
+ 			    &histb_demux_ports_fops);
+@@ -707,6 +847,7 @@ static int histb_demux_probe(struct platform_device *pdev)
+ 
+ err_debugfs:
+ 	debugfs_remove_recursive(dmx->debugfs);
++err_reset:
+ 	reset_control_assert(dmx->rst);
+ 
+ err_clks:
+-- 
+2.56.1
+

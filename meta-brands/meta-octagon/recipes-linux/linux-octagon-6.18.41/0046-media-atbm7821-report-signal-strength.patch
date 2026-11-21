@@ -1,0 +1,85 @@
+From 85bbd3f17bc2b1c476bc21c644cec5c12e620725 Mon Sep 17 00:00:00 2001
+From: Tillmann Severin <tillmann.severin@mailbox.org>
+Date: Sun, 8 Nov 2026 22:28:25 +0100
+Subject: [PATCH 46/49] media: atbm7821: report signal strength
+
+The frontend answered FE_READ_SIGNAL_STRENGTH with -ENOTSUPP, which set
+top box userspace asks for once a second, so the log filled with failures
+and the signal meter stayed empty.
+
+The vendor driver reads a pair of registers directly after every status
+poll.  Measured against a live cable plant the value falls as the signal
+gets stronger and rises to a plateau with the input unplugged, which makes
+it the gain the automatic gain control has settled on.  Invert it over the
+range that was actually measured.
+
+Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>
+---
+ drivers/media/dvb-frontends/atbm7821.c | 37 ++++++++++++++++++++++++++
+ 1 file changed, 37 insertions(+)
+
+diff --git a/drivers/media/dvb-frontends/atbm7821.c b/drivers/media/dvb-frontends/atbm7821.c
+index 69a6ec2550b0..1ced913c9a28 100644
+--- a/drivers/media/dvb-frontends/atbm7821.c
++++ b/drivers/media/dvb-frontends/atbm7821.c
+@@ -43,6 +43,20 @@
+ #define ATBM7821_REG_WIN_ADDR_H	0x1503
+ #define ATBM7821_REG_WIN_DATA	0x1508	/* four bytes, little endian */
+ 
++/*
++ * The gain the automatic gain control has settled on, little endian, read
++ * straight out of the chip rather than through the window above.  It is a
++ * gain and not a level, so it falls as the signal gets stronger: with the
++ * cable unplugged it sits around 0x360, and a healthy cable channel brings
++ * it down to between 0x1d0 and 0x230.  The bounds below are the quietest
++ * and loudest readings measured on a live cable plant, and only have to be
++ * good enough to order signals sensibly.
++ */
++#define ATBM7821_REG_AGC_L	0x1028
++#define ATBM7821_REG_AGC_H	0x1029
++#define ATBM7821_AGC_LOUD	0x1a0
++#define ATBM7821_AGC_QUIET	0x370
++
+ /* Addresses within the DVB-C core, reached through the window above. */
+ #define ATBM7821_DVBC_STATUS	0x008
+ #define ATBM7821_DVBC_SNR	0x3c4
+@@ -385,6 +399,28 @@ static int atbm7821_read_snr(struct dvb_frontend *fe, u16 *snr)
+ 	return 0;
+ }
+ 
++static int atbm7821_read_signal_strength(struct dvb_frontend *fe, u16 *strength)
++{
++	struct atbm7821_dev *dev = fe->demodulator_priv;
++	u8 lo, hi;
++	u16 gain;
++	int ret;
++
++	ret = atbm7821_rd(dev, ATBM7821_REG_AGC_L, &lo);
++	if (!ret)
++		ret = atbm7821_rd(dev, ATBM7821_REG_AGC_H, &hi);
++	if (ret)
++		return ret;
++
++	gain = hi << 8 | lo;
++	gain = clamp(gain, ATBM7821_AGC_LOUD, ATBM7821_AGC_QUIET);
++
++	*strength = (ATBM7821_AGC_QUIET - gain) * 0xffff /
++		    (ATBM7821_AGC_QUIET - ATBM7821_AGC_LOUD);
++
++	return 0;
++}
++
+ static const struct dvb_frontend_ops atbm7821_ops = {
+ 	.delsys = { SYS_DVBC_ANNEX_A },
+ 	.info = {
+@@ -404,6 +440,7 @@ static const struct dvb_frontend_ops atbm7821_ops = {
+ 	.set_frontend		= atbm7821_set_frontend,
+ 	.read_status		= atbm7821_read_status,
+ 	.read_snr		= atbm7821_read_snr,
++	.read_signal_strength	= atbm7821_read_signal_strength,
+ };
+ 
+ static int atbm7821_probe(struct i2c_client *client)
+-- 
+2.56.1
+

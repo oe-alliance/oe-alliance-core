@@ -1,0 +1,40 @@
+From: Octagon SF8008 port
+Subject: [PATCH] gfbdc: start drawing on the page that is displayed
+
+setResolution() ends by swapping surface and surface_back, so rendering
+starts on the second page of the framebuffer. That is only correct if
+something afterwards pans the display to that page, but flip() is
+issued from eWidgetDesktop::redrawComposition(), which returns straight
+away unless the desktop runs in buffered composition mode. In the
+immediate mode used for normal operation no flip is ever submitted, the
+display keeps scanning out the first page and everything that is drawn
+lands on a page that is never shown.
+
+It also leaves the live drawing surface pointing at nothing when the
+framebuffer provides a single page only, because the swap then installs
+the null pointer that was just stored in surface_back, and the next
+gPixmap::fill() dereferences address 0.
+
+Drop the swap and keep rendering on the page the framebuffer starts on.
+The flip handler swaps the two surfaces itself, so buffered composition
+is unaffected.
+
+Upstream-Status: Pending
+--- a/lib/gdi/gfbdc.cpp
++++ b/lib/gdi/gfbdc.cpp
+@@ -522,15 +522,6 @@
+ 	dreamGE2DRegisterFramebuffer(fb->lfb, base_phys, surface.x, surface.y, surface.stride, m_number_of_pages);
+ #endif
+ 
+-#if defined(CONFIG_HISILICON_FB)
+-	if(islocked()==0)
+-	{
+-		gUnmanagedSurface s(surface);
+-		surface = surface_back;
+-		surface_back = s;
+-	}
+-#endif
+-
+ 	m_pixmap = new gPixmap(&surface);
+ 	invalidateNativeSpinner();
+ 
