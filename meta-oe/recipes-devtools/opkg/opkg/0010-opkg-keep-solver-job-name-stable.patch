@@ -1,0 +1,36 @@
+Subject: [PATCH] opkg: keep iterator names valid while adding libsolv jobs
+
+The matched name can point into libsolv's string pool. After
+pool_createwhatprovides() drops the ID hashes, the next string lookup
+can resize that pool before hashing its argument. Keep a private copy
+until the job is queued, including the later upgrade name checks.
+
+Upstream-Status: Pending
+
+diff --git a/libopkg/solvers/libsolv/opkg_solver_libsolv.c b/libopkg/solvers/libsolv/opkg_solver_libsolv.c
+--- a/libopkg/solvers/libsolv/opkg_solver_libsolv.c
++++ b/libopkg/solvers/libsolv/opkg_solver_libsolv.c
+@@ -784,12 +784,14 @@
+ }
+ 
+ static void libsolv_solver_add_job(libsolv_solver_t *libsolv_solver,
+-                                   job_action_t action, const char *pkg_name,
++                                   job_action_t action, const char *matched_name,
+                                    const char *pkg_version,
+                                    version_constraint_t constraint)
+ {
+     Id what = 0;
+     Id how = 0;
++    /* An iterator match may point into the string pool that pool_str2id resizes. */
++    char *pkg_name = xstrdup(matched_name);
+ 
+     if (pkg_version) {
+         what = pool_rel2id(libsolv_solver->pool,
+@@ -840,6 +842,7 @@
+         queue_push2(&libsolv_solver->solver_jobs,
+                     SOLVER_FAVOR | SOLVER_SOLVABLE_NAME, what);
+     }
++    free(pkg_name);
+ }
+ 
+ static void libsolv_print_all_problem_rules(libsolv_solver_t *libsolv_solver, Id problem)
