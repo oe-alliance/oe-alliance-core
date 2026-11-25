@@ -28,6 +28,7 @@ def dmxcsa_module_src(d):
     return " %s/dmxcsa-%s;downloadfilename=dmxcsa-%s-%s" % (d.getVar("DMXCSA_MODULE_URI"), ko, d.getVar("PV"), ko)
 
 do_fetch[depends] += "virtual/kernel:do_shared_workdir"
+do_unpack[depends] += "virtual/kernel:do_shared_workdir"
 
 # one module per box and release: the recipe keeps no checksums for them
 BB_STRICT_CHECKSUM = "ignore"
@@ -52,10 +53,11 @@ python do_unpack:prepend() {
 }
 
 # Packages with the module are cached as usual. Empty ones are not, so the next
-# build looks into the release again.
+# build looks into the release again. Some of these tasks run before do_fetch,
+# with no kernel sources yet, so look for the unpacked module, not the version.
 python dmxcsa_cache_only_with_module() {
-    uri = dmxcsa_module_src(d)
-    if not os.path.exists(bb.fetch2.Fetch([uri], d).localpath(uri)):
+    import glob
+    if not glob.glob(d.expand("${UNPACKDIR}/dmxcsa-${PV}-${MACHINEBUILD}-*.ko")):
         d.setVar("SSTATE_SKIP_CREATION", "1")
 }
 
