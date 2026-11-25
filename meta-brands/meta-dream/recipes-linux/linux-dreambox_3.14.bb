@@ -1,6 +1,6 @@
 inherit kernel machine_kernel_pr kernel-fixups
 
-MACHINE_KERNEL_PR:append = ".31"
+MACHINE_KERNEL_PR:append = ".32"
 
 COMPATIBLE_MACHINE = "^(dm900|dm920)$"
 

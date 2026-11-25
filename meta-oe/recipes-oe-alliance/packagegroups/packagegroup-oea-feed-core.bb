@@ -122,6 +122,7 @@ RDEPENDS:${PN} = "\
     cdtextinfo \
     dabstreamer \
     djmount \
+    dmxcsa \
     dosfstools \
     dvb-apps \
     dvblast \

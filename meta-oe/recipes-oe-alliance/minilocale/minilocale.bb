@@ -247,4 +247,7 @@ do_install() {
 
 FILES:${PN} = "${LOCALEDIR} ${LOCALEDIR2} ${sysconfdir}/profile.d"
 
+# do_install depends on FLASHSIZE, which is set per machine
+PACKAGE_ARCH = "${MACHINE_ARCH}"
+
 do_package_qa[noexec] = "1"
