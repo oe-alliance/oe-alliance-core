@@ -11,7 +11,7 @@ inherit github-releases module-base kernel-module-split update-rc.d
 PACKAGE_ARCH = "${MACHINEBUILD}"
 
 GITHUB_BASE_URI = "https://github.com/oe-alliance-kernels/dmxcsa-modules/releases/"
-DMXCSA_MODULE_URI ?= "${GITHUB_BASE_URI}download/v${PV}"
+DMXCSA_MODULE_URI ?= "${GITHUB_BASE_URI}download/${PV}"
 
 SRC_URI = "file://dmxcsa.init"
 
@@ -99,6 +99,13 @@ RCONFLICTS:kernel-module-dmxcsa-${KERNEL_VERSION} = "kernel-module-dmxcsa"
 
 INITSCRIPT_NAME = "dmxcsa"
 INITSCRIPT_PARAMS = "start 66 S ."
+
+# update-rc.d starts it only for the running runlevel, never for S
+pkg_postinst:${PN}() {
+if [ -z "$D" ] && [ -x /etc/init.d/dmxcsa ]; then
+	/etc/init.d/dmxcsa start
+fi
+}
 
 # without a module there is no init script to register either
 ALLOW_EMPTY:${PN} = "1"
