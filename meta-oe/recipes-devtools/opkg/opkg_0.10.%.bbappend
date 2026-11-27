@@ -21,5 +21,6 @@ do_install:prepend() {
 }
 
 SRC_URI:append:openatv:class-target = " file://0009-protect-picon-storage.patch"
+SRC_URI:append:class-native = " file://0010-opkg-keep-solver-job-name-stable.patch"
 
 PR = "r12"
