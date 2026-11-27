@@ -1,0 +1,12 @@
+#!/bin/sh
+# Load dmxcsa once the DVB demux is there. The DVB driver comes up at a
+# different point of the boot on each platform, so wait for its node instead
+# of relying on the load order.
+[ "$1" = start ] || exit 0
+i=0
+while [ ! -e /dev/dvb/adapter0/demux0 ] && [ $i -lt 30 ]; do
+	sleep 1
+	i=$((i+1))
+done
+modprobe dmxcsa
+exit 0
