@@ -1,0 +1,17 @@
+Subject: [PATCH] rtl8192eu: import the GTX VFS namespace
+
+The GTX kernel exports filesystem helpers in a namespace. Declare the
+import required by modpost and the module loader. Applied only for gtxcombo.
+
+Upstream-Status: Inappropriate [GTX vendor kernel API]
+
+--- a/os_dep/linux/os_intfs.c
++++ b/os_dep/linux/os_intfs.c
+@@ -18,6 +18,7 @@
+ #include <hal_data.h>
+ 
+ MODULE_LICENSE("GPL");
++MODULE_IMPORT_NS(VFS_internal_I_am_really_a_filesystem_and_am_NOT_a_driver);
+ MODULE_DESCRIPTION("Realtek Wireless Lan Driver");
+ MODULE_AUTHOR("Realtek Semiconductor Corp.");
+ MODULE_VERSION(DRIVERVERSION);

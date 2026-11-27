@@ -1,0 +1,15 @@
+#!/bin/sh
+# The input event must exist before ir-keytable opens the rc device.
+rcdir=${1%/input*/event*}
+rc=${rcdir##*/}
+case "$rc" in rc[0-9]*) ;; *) exit 1 ;; esac
+/sbin/modprobe ir-nec-decoder || exit 1
+/usr/bin/ir-keytable -s "$rc" -c -p nec -w /etc/rc_keymaps/gtxcombo.toml || exit 1
+
+# The raw NEC decoder timestamps edges in the interrupt handler. DVB and
+# video interrupts on CPU 0 can delay a 560 us edge beyond its tolerance.
+controller=$(readlink -f "/sys/class/rc/$rc/device") || exit 0
+irq=$(awk -v name="${controller##*/}" '$NF == name { sub(/:$/, "", $1); print $1; exit }' /proc/interrupts)
+if [ -n "$irq" ] && [ -w "/proc/irq/$irq/smp_affinity_list" ] && [ "$(cat /sys/devices/system/cpu/cpu3/online 2>/dev/null)" = 1 ]; then
+	echo 3 > "/proc/irq/$irq/smp_affinity_list"
+fi

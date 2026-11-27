@@ -1,0 +1,16 @@
+Subject: [PATCH] Recognise the GTX IR receiver when TuxTxt takes input
+
+The Linux input name of the receiver is meson-ir. A substring match
+for "key" selects the unrelated voice-activity keypad on this board.
+
+Upstream-Status: Inappropriate [GTX-specific input assignment]
+
+--- a/tuxtxt.c
++++ b/tuxtxt.c
+@@ -225,5 +225,5 @@
+ 		}
+ 		if (ioctl(rc[rc_num], EVIOCGNAME(128), tmp) < 0)
+ 			perror("EVIOCGNAME failed");
+-		if (!strstr(tmp, "remote control") && !strstr(tmp, "key"))
++		if (strcmp(tmp, "meson-ir") && !strstr(tmp, "remote control"))
+ 		{

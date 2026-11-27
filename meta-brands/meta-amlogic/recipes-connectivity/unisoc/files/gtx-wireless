@@ -1,0 +1,31 @@
+#!/bin/sh
+
+pidfile=/run/gtx-hciattach.pid
+attach=/usr/bin/hciattach
+
+case "$1" in
+start)
+	modprobe uwe5621_bsp_sdio || exit 1
+	modprobe sprdwl_ng || exit 1
+	modprobe sprdbt_tty || exit 1
+	modprobe hci_uart || exit 1
+	for n in 1 2 3 4 5; do
+		[ -c /dev/ttyBT0 ] && break
+		sleep 1
+	done
+	[ -c /dev/ttyBT0 ] || exit 1
+	# The vendor TTY transport starts soft-blocked. BlueZ owns the HCI radio switch.
+	for block in /sys/devices/platform/mtty.*/rfkill/rfkill*/soft; do
+		[ ! -f "$block" ] || echo 0 > "$block" || exit 1
+	done
+	[ -d /sys/class/tty/ttyBT0/hci0 ] && exit 0
+	start-stop-daemon -S -b -m -p "$pidfile" -x "$attach" -- -n -s 1500000 /dev/ttyBT0 sprd
+	;;
+stop)
+	if [ -f "$pidfile" ]; then
+		start-stop-daemon -K -p "$pidfile" -x "$attach"
+		rm -f "$pidfile"
+	fi
+	;;
+*) exit 2 ;;
+esac

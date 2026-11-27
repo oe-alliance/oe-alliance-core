@@ -15,6 +15,10 @@ PV = "5.11.2.3+git"
 PKGV = "5.11.2.3+git${GITPKGV}"
 SRC_URI = "git://github.com/oe-alliance-drivers/rtl8192eu.git;protocol=https;branch=master;destsuffix=s"
 
+# GTX vendor kernel compatibility.
+SRC_URI:append:gtxcombo = " file://0001-rtl8192eu-gtx-cfg80211-backport.patch file://0002-rtl8192eu-import-vfs-namespace.patch"
+PR:append:gtxcombo = ".gtx1"
+
 S = "${UNPACKDIR}/s"
 
 EXTRA_OEMAKE = "KSRC=${STAGING_KERNEL_DIR}"

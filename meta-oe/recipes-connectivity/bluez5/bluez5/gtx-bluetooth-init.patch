@@ -1,0 +1,23 @@
+Subject: [PATCH] sysv: wait for the GTX HCI UART and system bus at boot
+
+OpenATV launches runlevel 3 services in parallel. On a GTX the UniSoc
+firmware registers hci0 after the BlueZ startup script has already run.
+
+Upstream-Status: Inappropriate [GTX-specific parallel SysV startup]
+
+--- a/bluetooth
++++ b/bluetooth
+@@ -29,6 +29,13 @@
+ 		echo "disabled (see /etc/default/bluetooth)."
+ 		exit 0
+ 	fi
++	# Runlevel 3 starts D-Bus and gtx-wireless concurrently with bluetoothd.
++	for attempt in $(seq 1 15); do
++		if [ -d /sys/class/bluetooth/hci0 ] && [ -S /run/dbus/system_bus_socket ]; then
++			break
++		fi
++		sleep 1
++	done
+ 	start-stop-daemon --start --background $SSD_OPTIONS
+ 	echo "${DAEMON##*/}."
+   ;;

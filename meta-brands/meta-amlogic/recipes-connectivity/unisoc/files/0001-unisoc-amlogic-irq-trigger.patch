@@ -1,0 +1,45 @@
+Subject: [PATCH] Use Linux IRQ trigger flags from the Amlogic Wi-Fi driver
+
+Upstream-Status: Pending
+
+--- a/BSP/platform/wcn_boot.c
++++ b/BSP/platform/wcn_boot.c
+@@ -56,6 +56,7 @@
+ #endif
+ 
+ #ifdef CONFIG_AML_BOARD
++#include <linux/interrupt.h>
+ #include <linux/amlogic/aml_gpio_consumer.h>
+ 
+ extern int wifi_irq_trigger_level(void);
+@@ -2126,7 +2127,7 @@
+ 	 */
+ 	if (sprdwcn_bus_get_irq_type() == 0) {
+ #if defined(CONFIG_AML_BOARD)
+-		if (wifi_irq_trigger_level() == GPIO_IRQ_LOW) {
++		if (wifi_irq_trigger_level() == IRQF_TRIGGER_LOW) {
+ 			sdio_cfg.cfg.sdio_irq_trigger_type = 0;
+ 			WCN_INFO("sdio_config sdio_irq trigger:[low]\n");
+ 		} else {
+@@ -2157,7 +2158,7 @@
+ 		sdio_cfg.cfg.wl_wake_host_trigger_type = 0;
+ 		WCN_INFO("sdio_config wl_wake_host trigger:[low]\n");
+ #elif defined(CONFIG_AML_BOARD)
+-		if (wifi_irq_trigger_level() == GPIO_IRQ_LOW) {
++		if (wifi_irq_trigger_level() == IRQF_TRIGGER_LOW) {
+ 			sdio_cfg.cfg.wl_wake_host_trigger_type = 0;
+ 			WCN_INFO("sdio_config wl_wake_host trigger:[low]\n");
+ 		} else {
+--- a/BSP/sdio/sdiohal_main.c
++++ b/BSP/sdio/sdiohal_main.c
+@@ -1263,9 +1263,8 @@
+ 	sdiohal_debug("%s enter\n", __func__);
+ 
+ #ifdef CONFIG_AML_BOARD
+-	/* As for amlogic platform, gpio trigger type low will request fail. */
+ 	p_data->irq_num = wifi_irq_num();
+-	if (wifi_irq_trigger_level() == GPIO_IRQ_LOW)
++	if (wifi_irq_trigger_level() == IRQF_TRIGGER_LOW)
+ 		p_data->irq_trigger_type = IRQF_TRIGGER_LOW;
+ 	else
+ 		p_data->irq_trigger_type = IRQF_TRIGGER_HIGH;

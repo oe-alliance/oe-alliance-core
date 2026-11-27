@@ -16,3 +16,7 @@ LIBRETRO_CORE_FILE = "prboom_libretro.so"
 do_compile() {
     oe_runmake platform=linux-portable
 }
+
+do_compile:gtxcombo() {
+    oe_runmake platform=unix
+}

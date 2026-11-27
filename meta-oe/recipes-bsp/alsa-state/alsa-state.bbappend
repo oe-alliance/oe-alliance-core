@@ -30,6 +30,7 @@ EXTRA_ALSA:AML905D = "aml905d"
 EXTRA_ALSA:AML8726 = "aml8726"
 EXTRA_ALSA:dreamone = "meson64"
 EXTRA_ALSA:dreamtwo = "meson64"
+EXTRA_ALSA:gtxcombo = "gtxcombo"
 
 require alsa-state-${EXTRA_ALSA}.inc
 

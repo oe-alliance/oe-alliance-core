@@ -1,0 +1,1 @@
+ACTION=="add", SUBSYSTEM=="input", KERNEL=="event*", ATTRS{name}=="meson-ir", RUN+="/usr/sbin/gtx-ir-keymap %p"

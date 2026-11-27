@@ -94,6 +94,12 @@ do_install:append() {
     fi
 }
 
+do_install:append:gtxcombo() {
+    if ! grep -Eq '^[^#[:space:]]+[[:space:]]+/run[[:space:]]' ${D}${sysconfdir}/fstab; then
+        printf '%s\n' 'tmpfs /run tmpfs mode=0755,nosuid,nodev 0 0' >> ${D}${sysconfdir}/fstab
+    fi
+}
+
 # For Classic Dreambox Inject the /boot partition into /etc/fstab. At image creation time,
 # this is done by IMAGE_CMD:ubi.nfi (image_types_nfi.bbclass).
 pkg_postinst:${PN}:dreamboxv1() {

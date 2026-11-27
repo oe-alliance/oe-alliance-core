@@ -14,6 +14,10 @@ SRCREV = "${AUTOREV}"
 PV = "4.3.21+git"
 PKGV = "4.3.21+git${GITPKGV}"
 SRC_URI = "git://github.com/oe-alliance-drivers/rtl8814au.git;protocol=https;branch=master;destsuffix=s"
+
+# GTX vendor kernel compatibility.
+SRC_URI:append:gtxcombo = " file://0001-rt8814au-gtx-cfg80211-backport.patch"
+PR:append:gtxcombo = ".gtx1"
 # The default unpack directory "sources" costs six more characters on every
 # object path.
 UNPACKDIR = "${WORKDIR}/u"

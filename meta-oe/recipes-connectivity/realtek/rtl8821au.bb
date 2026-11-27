@@ -13,6 +13,9 @@ PV = "1.0+git"
 PKGV = "1.0+git${GITPKGV}"
 PR = "r1"
 SRC_URI = "git://github.com/oe-alliance-drivers/rtl8821au.git;protocol=https;branch=master;destsuffix=s"
+
+# GTX vendor kernel compatibility.
+SRC_URI:append:gtxcombo = " file://0001-gtx-cfg80211-backport.patch"
 # The default unpack directory "sources" costs six more characters on every
 # object path.
 UNPACKDIR = "${WORKDIR}/u"

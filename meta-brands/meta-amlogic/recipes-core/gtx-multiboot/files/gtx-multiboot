@@ -1,0 +1,108 @@
+#!/bin/sh
+# Publish the running raw-kernel system through the standard OE boot devices.
+set -eu
+[ "${1:-}" = start ] || exit 0
+rootNumber=$(awk '$5 == "/" {print $3; exit}' /proc/self/mountinfo)
+rootPath=$(readlink -f "/sys/dev/block/$rootNumber")
+root=/dev/${rootPath##*/}
+internal=
+case "$rootPath" in
+    */usb*/*/sd*/sd*2)
+        boot=${root%2}1
+        kernel=${root%2}4
+        [ "$(blkid -s LABEL -o value "$root")" = GTX_OPENATV_USB ]
+        [ "$(blkid -s LABEL -o value "$boot")" = GTXBOOT ]
+        [ "$(cat "/sys/class/block/${kernel##*/}/start")" = 919552 ]
+        [ "$(cat "$rootPath/start")" = 1050624 ] ;;
+    */mmcblk0/mmcblk0p10)
+        internal=1
+        boot=/dev/mmcblk0p1
+        kernel=/dev/mmcblk0p9
+        [ "$(blkid -s LABEL -o value "$root")" = GTXDATA ]
+        [ "$(blkid -s LABEL -o value "$boot")" = GTXSTARTUP ]
+        [ "$(cat /sys/class/block/mmcblk0p9/start)" = 2162688 ]
+        [ "$(cat "$rootPath/start")" = 2293760 ] ;;
+    *) exit 0 ;;
+esac
+[ "$(cat "/sys/class/block/${kernel##*/}/size")" = 131072 ]
+[ "$(head -c 8 "$kernel")" = 'ANDROID!' ]
+[ "$(blkid -s TYPE -o value "$boot")" = vfat ]
+uuid=$(blkid -s UUID -o value "$root")
+[ -n "$uuid" ]
+dir=/run/gtx-boot
+mkdir -p "$dir"
+if ! awk -v dev="$boot" -v dir="$dir" '$2 == dir {ok=($1==dev && $3=="vfat")} END {exit !ok}' /proc/mounts; then
+    ! mountpoint -q "$dir" || exit 1
+    mount -t vfat -o rw,nosuid,nodev,noexec,umask=077 "$boot" "$dir"
+fi
+[ "$(cat "$dir/gtx/raw-kernel-v1")" = 'GTX raw kernel v1' ]
+if [ "$internal" = 1 ] && [ -f "$dir/gtx/grow-internal-rootfs" ]; then
+    marker=$dir/gtx/grow-internal-rootfs
+    [ "$(cat "$marker")" = "$uuid" ]
+    resize2fs "$root"
+    rm "$marker"
+fi
+[ -f "$dir/STARTUP" ] && [ -f "$dir/STARTUP_1" ] || exit 0
+# USB disk names can change. Update only records belonging to this marked image.
+for path in "$dir"/STARTUP "$dir"/STARTUP_[0-9]*; do
+    [ -f "$path" ] || continue
+    line=$(cat "$path")
+    case "$line" in
+        "root=UUID=$uuid rootsubdir=linuxrootfs"*' kernelpolicy=slot1 '*)
+            value=$(printf '%s\n' "$line" | sed "s@ kernel=[^ ]* @ kernel=$kernel @") ;;
+        *) continue ;;
+    esac
+    [ "$value" != "$line" ] || continue
+    tmp=$(mktemp "$dir/.startup.XXXXXX")
+    printf '%s\n' "$value" > "$tmp"
+    mv -f "$tmp" "$path"
+done
+grep -qw "kernel=$kernel" "$dir/STARTUP_1" || exit 1
+# cmdline.txt identifies this boot; STARTUP remains the user's saved default.
+slot=$(awk '$5 == "/" {sub("^/", "", $4); print $4; exit}' /proc/self/mountinfo)
+case "$slot" in linuxrootfs[1-9]|linuxrootfs[12][0-9]|linuxrootfs3[0-2]) ;; *) exit 1;; esac
+record=$dir/STARTUP_${slot#linuxrootfs}
+grep -qw "root=UUID=$uuid" "$record"
+grep -qw "rootsubdir=$slot" "$record"
+cp "$record" "$dir/cmdline.txt"
+# Reuse Enigma2's Dream bootconfig.txt name/rename support on the FAT partition.
+[ -f "$dir/bootconfig.txt" ]
+mkdir -p /data
+if [ ! -e /data/bootconfig.txt ] || [ -L /data/bootconfig.txt ]; then
+    ln -sfn "$dir/bootconfig.txt" /data/bootconfig.txt
+else
+    echo 'Refusing to replace an existing /data/bootconfig.txt' >&2
+    exit 1
+fi
+mkdir -p /dev/block/by-name
+ln -sfn "$boot" /dev/block/by-name/bootoptions
+ln -sfn "$kernel" /dev/block/by-name/linuxkernel
+/etc/udev/scripts/startup.sh add "$root" rootfs
+[ "$internal" != 1 ] || exit 0
+
+# Only the factory-sized Rufus slot layout gets this one-time marker.
+marker=$dir/gtx/grow-slot-data
+[ -f "$marker" ] && [ "$(cat "$marker")" = 'GTX raw slot data v1' ] || exit 0
+disk=${root%2}
+sys=/sys/class/block/${disk##*/}
+[ "$(cat "$sys/queue/logical_block_size")" = 512 ]
+[ "$(cat "$rootPath/start")" = 1050624 ]
+[ "$(cat "/sys/class/block/${boot##*/}/start")" = 2048 ]
+bootSize=$(cat "/sys/class/block/${boot##*/}/size")
+case "$bootSize" in 262144|819200|843776) ;; *) exit 1 ;; esac
+[ "$(cat "/sys/class/block/${disk##*/}3/start")" = "$((2048 + bootSize))" ]
+[ "$(cat "/sys/class/block/${disk##*/}3/size")" = "$((919552 - 2048 - bootSize))" ]
+[ "$(cat "/sys/class/block/${disk##*/}4/start")" = 919552 ]
+[ "$(cat "/sys/class/block/${disk##*/}4/size")" = 131072 ]
+[ ! -e "/sys/class/block/${disk##*/}5" ]
+[ "$(blkid -s LABEL -o value "${disk}3")" = GTXORM ]
+end=$(cat "$sys/size")
+size=$(cat "$rootPath/size")
+[ "$end" -le 4294967295 ] && [ "$size" -ge 3145728 ]
+if [ $((1050624 + size)) -lt "$end" ]; then
+    printf 'start=1050624,size=%s,type=83\n' "$((end - 1050624))" | sfdisk --no-reread --no-tell-kernel -N 2 "$disk"
+    partx --update --nr 2 "$disk"
+fi
+[ "$(cat "$rootPath/size")" -eq "$((end - 1050624))" ]
+resize2fs "$root"
+rm "$marker"

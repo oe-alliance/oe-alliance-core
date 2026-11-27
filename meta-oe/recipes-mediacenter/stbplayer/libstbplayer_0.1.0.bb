@@ -48,6 +48,8 @@ HISI_DVB_AUDIO_PCM_TRACK = "${@'1' if d.getVar('HISI_USE_LINUX_DVB') == '1' or d
 # DAGS app_init and Dinobot showiframe are different service/SDK families.
 HISI_LIBREADER_MACHINES = "beyonwizv2 gbmv200 ip8 og2ott4k og2s4k sf8008 sf8008m sx88v2 sx988 ustym4kottpremium ustym4kpro ustym4ks2ottx viper4k"
 HISI_USE_LINUX_DVB = "${@'1' if d.getVar('MACHINE') in d.getVar('HISI_LINUX_DVB_MACHINES').split() or d.getVar('MACHINE') in d.getVar('HISI_LIBREADER_MACHINES').split() else '0'}"
+DREAM_AMLOGIC_STB:gtxcombo = "1"
+DVB_AUDIO_VARIANT:gtxcombo = "dreambox"
 
 PACKAGECONFIG ??= "${@'hisi-dvb' if d.getVar('HISI_STB') == '1' else ('bcm-dvb' if d.getVar('BCM_DVB_STB') == '1' else ('dream-aml' if d.getVar('DREAM_AMLOGIC_STB') == '1' else ''))}"
 PACKAGECONFIG[hisi-dvb] = "-DSTBP_BUILD_HISI_DVB_BACKEND=ON,-DSTBP_BUILD_HISI_DVB_BACKEND=OFF"

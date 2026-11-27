@@ -17,6 +17,11 @@ SRCREV = "${AUTOREV}"
 PV = "5.8.7+git"
 PKGV = "5.8.7+git${GITPKGV}"
 SRC_URI = "git://github.com/oe-alliance-drivers/rtl8822bu.git;protocol=https;branch=master;destsuffix=s"
+
+# GTX vendor kernel compatibility.
+# The GTX 5.15 kernel carries newer cfg80211 interfaces.
+SRC_URI:append:gtxcombo = " file://0001-rtl88x2bu-gtx-cfg80211-backport.patch"
+PR:append:gtxcombo = ".gtx1"
 # The default unpack directory "sources" costs six more characters on every
 # object path.
 UNPACKDIR = "${WORKDIR}/u"

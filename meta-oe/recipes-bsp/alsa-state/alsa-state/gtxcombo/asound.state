@@ -1,0 +1,19 @@
+state.AMLAUGESOUND {
+	control.1 {
+		iface MIXER
+		name Master
+		value.0 195
+		value.1 195
+		comment {
+			access 'read write user'
+			type INTEGER
+			count 2
+			range '0 - 255'
+			tlv '0000000100000008ffffec1400000014'
+			dbmin -5100
+			dbmax 0
+			dbvalue.0 -1200
+			dbvalue.1 -1200
+		}
+	}
+}

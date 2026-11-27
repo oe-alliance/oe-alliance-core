@@ -1,0 +1,87 @@
+Subject: [PATCH] Match SM1 hardware queues and use the GTX audio mode controls
+
+Upstream-Status: Inappropriate [GTX hardware integration]
+
+--- a/xbmc/cores/AudioEngine/Sinks/AESinkSTB.cpp
++++ b/xbmc/cores/AudioEngine/Sinks/AESinkSTB.cpp
+@@ -278,8 +278,17 @@
+ 
+   AEDelayStatus delay;
+   GetDelay(delay);
+-  if (delay.delay + static_cast<double>(duration90k) / PTS_HZ > GetCacheTotal())
+-    return 0;
++  // The SM1 output can hold preroll until the first video PTS. Wait on the
++  // sink thread so ordinary backpressure does not reopen the audio device.
++  const auto deadline = std::chrono::steady_clock::now() + std::chrono::milliseconds(250);
++  const double packetSeconds = static_cast<double>(duration90k) / PTS_HZ;
++  while (delay.delay + packetSeconds > GetCacheTotal())
++  {
++    if (std::chrono::steady_clock::now() >= deadline)
++      return 0;
++    std::this_thread::sleep_for(std::chrono::milliseconds(10));
++    GetDelay(delay);
++  }
+ 
+   packet.struct_size = sizeof(packet);
+   packet.data = data[0] + static_cast<size_t>(offset) * m_format.m_frameSize;
+@@ -320,8 +329,9 @@
+     audioStatus.struct_size = sizeof(audioStatus);
+     statusResult = stbp_audio_get_status(m_device, &audioStatus);
+     if (statusResult == STBP_OK &&
+-        audioStatus.presentation_pts_90k != STBP_AUDIO_PTS_NONE &&
+-        audioStatus.queued_end_pts_90k != STBP_AUDIO_PTS_NONE)
++        audioStatus.queued_end_pts_90k != STBP_AUDIO_PTS_NONE &&
++        (audioStatus.presentation_pts_90k != STBP_AUDIO_PTS_NONE ||
++         (!m_pcmSampleClock && m_firstPts90k != STBP_AUDIO_PTS_NONE)))
+     {
+       if (m_pcmSampleClock)
+       {
+@@ -333,14 +343,15 @@
+       else
+       {
+         if (!m_clockStarted && m_firstPts90k != STBP_AUDIO_PTS_NONE &&
+-            audioStatus.presentation_pts_90k != 0)
++            audioStatus.presentation_pts_90k != STBP_AUDIO_PTS_NONE && audioStatus.presentation_pts_90k != 0)
+         {
+           const int64_t played = PtsDistance(audioStatus.presentation_pts_90k, m_firstPts90k);
+           const int64_t queued = PtsDistance(audioStatus.queued_end_pts_90k, m_firstPts90k);
+           m_clockStarted = played >= 0 && played <= queued;
+         }
+         // The driver can retain an old PTS until the new decoder has enough input.
+-        const int64_t presented = !m_clockStarted && m_firstPts90k != STBP_AUDIO_PTS_NONE
++        const int64_t presented = (!m_clockStarted || audioStatus.presentation_pts_90k == STBP_AUDIO_PTS_NONE) &&
++                                          m_firstPts90k != STBP_AUDIO_PTS_NONE
+                                       ? m_firstPts90k
+                                       : audioStatus.presentation_pts_90k;
+         const int64_t delay90k = PtsDistance(audioStatus.queued_end_pts_90k, presented);
+--- a/xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecSTB.cpp
++++ b/xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecSTB.cpp
+@@ -426,7 +426,7 @@
+                           ? static_cast<double>(DVD_TIME_BASE) * hints.fpsscale / hints.fpsrate
+                           : 0.0;
+   m_name = "stbplayer/" + m_session->BackendName();
+-  m_feedAheadPictures = m_session->BackendName() == "dream-aml" ? 48U : 0U;
++  m_feedAheadPictures = m_session->BackendName() == "dream-aml" ? 8U : 0U;
+   m_gateStartupPts = clock.kodi_is_clock_master && (m_session->Capabilities().feature_mask &
+                       STBP_FEATURE_STARTUP_PTS_GATE) != 0;
+   m_processInfo.SetVideoDecoderName(m_name, true);
+--- a/xbmc/settings/STBAVControl.cpp
++++ b/xbmc/settings/STBAVControl.cpp
+@@ -22,13 +22,13 @@
+ {
+   // Prefer the driver's choices. Fallbacks are fixed interfaces used by E2.
+   static const std::vector<Control> controls{
+-      {"stbaudio.ac3", "/proc/stb/audio/ac3", ""},
+-      {"stbaudio.ac3plus", "/proc/stb/audio/ac3plus", ""},
++      {"stbaudio.ac3", "/var/run/gtx-audio-ac3", "downmix passthrough"},
++      {"stbaudio.ac3plus", "/var/run/gtx-audio-ac3plus", "hdmi_best downmix passthrough force_ac3"},
+       {"stbaudio.dts", "/proc/stb/audio/dts", ""},
+-      {"stbaudio.dtshd", "/proc/stb/audio/dtshd", ""},
++      {"stbaudio.dtshd", "/var/run/gtx-audio-dtshd", "hdmi_best downmix dts_core passthrough"},
+       {"stbaudio.aac", "/proc/stb/audio/aac", ""},
+       {"stbaudio.aacplus", "/proc/stb/audio/aacplus", ""},
+-      {"stbaudio.aac_transcode", "/proc/stb/audio/aac_transcode", ""},
++      {"stbaudio.aac_transcode", "/var/run/gtx-audio-aac_transcode", "off force_ac3"},
+       {"stbaudio.wmapro", "/proc/stb/audio/wmapro", ""},
+       {"stbaudio.multichannel_pcm", "/proc/stb/audio/multichannel_pcm", "disable enable"},
+       {"stbaudio.audio_source", "/proc/stb/hdmi/audio_source", "pcm spdif"},

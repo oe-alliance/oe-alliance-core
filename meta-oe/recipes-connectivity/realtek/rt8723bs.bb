@@ -11,6 +11,10 @@ PV = "4.4.1+git"
 PKGV = "4.4.1+git${GITPKGV}"
 
 SRC_URI = "git://github.com/oe-alliance-drivers/rtl8723bs.git;protocol=https;branch=master;destsuffix=s"
+
+# GTX vendor kernel compatibility.
+SRC_URI:append:gtxcombo = " file://0001-rt8723bs-gtx-cfg80211-backport.patch file://0002-rt8723bs-import-vfs-namespace.patch"
+PR:append:gtxcombo = ".gtx1"
 inherit gitpkgv module
 
 S = "${UNPACKDIR}/s"

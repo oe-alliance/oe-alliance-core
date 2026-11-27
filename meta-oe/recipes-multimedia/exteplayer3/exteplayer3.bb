@@ -22,6 +22,7 @@ EXTRA_OECONF = ""
 PACKAGECONFIG ??= ""
 PACKAGECONFIG:append:dreamone = " dreamnextgen"
 PACKAGECONFIG:append:dreamtwo = " dreamnextgen"
+PACKAGECONFIG:append:gtxcombo = " dreamnextgen"
 PACKAGECONFIG[dreamnextgen] = "--enable-dreamnextgen,--disable-dreamnextgen,alsa-lib"
 
 LDFLAGS:append = " \

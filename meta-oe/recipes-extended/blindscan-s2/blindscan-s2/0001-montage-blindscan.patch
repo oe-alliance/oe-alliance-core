@@ -1,0 +1,327 @@
+Subject: [PATCH] Add optional Montage hardware carrier search to blindscan-s2
+
+Upstream-Status: Pending
+
+--- a/blindscan-s2.c
++++ b/blindscan-s2.c
+@@ -19,6 +19,7 @@
+ 
+ 
+ #include "blindscan-s2.h"
++#include "montage.h"
+ 
+ int open_frontend (unsigned int adapter, unsigned int frontend, int verbose);
+ 
+@@ -58,6 +59,7 @@
+ 	int startfreq = STARTFREQ;
+ 	int endfreq = ENDFREQ;
+ 	int symrate = SYMRATE;
++	int montage = 0, progress = 0, min_ks = 1000, max_ks = 45000;
+ 	int step = STEP;
+ 	int lof = LOF;
+ 	int fec = FEC;
+@@ -73,7 +75,7 @@
+ 
+ 	static char *usage =
+ 	"\nBlindscan tool for the Linux DVB S2 API\n"
+-	"\nModified by SatDreamGr for Enigma2\n"
++	"\nModified by SatDreamGr for Enigma2\n\t-B Montage blind acquisition, -j/-k min/max ksym/s, -P report search progress\n"
+ 	"\nusage: blindscan-s2\n"
+ 	"	-b        : run blind scan\n"
+ 	"	-T        : Tune a specific transponder\n"
+@@ -107,13 +109,17 @@
+ 	"	Scan 11700-11900 vertical in steps of 10, and calculate for lof\n"
+ 	"	blindscan-s2 -b -s 11700 -e 11900 -V -t 10 -l 10750\n";
+ 
+-	while ((opt = getopt(argc, argv, "2a:A:bc:d:e:f:F:G:hHil:mMNr:R:s:t:T:u:U:VvW:")) != -1) {
++	while ((opt = getopt(argc, argv, "2a:A:bBPj:k:c:d:e:f:F:G:hHil:mMNr:R:s:t:T:u:U:VvW:")) != -1) {
+ 		switch (opt) {
+ 		case '?':
+ 
+ 		default:
+ 			printf("%s\n", usage);
+ 			exit(1);
++		case 'B': montage = 1; break;
++		case 'P': progress = 1; break;
++		case 'j': min_ks = atoi(optarg); break;
++		case 'k': max_ks = atoi(optarg); break;
+ 		case 'b':
+ 			run_blindscan = 1;
+ 			break;
+@@ -202,11 +208,24 @@
+ 
+ 	if (run_blindscan) {
+ 		convert_freq (lof, &startfreq, &endfreq, &symrate, &step);
+-		fefd = open_frontend (adapter, frontend, verbose);
+-
++		/* Allow Enigma2 to finish releasing the frontend. */
++		for (int retry = 0; ; ++retry) {
++			fefd = open_frontend(adapter, frontend, verbose);
++			if (fefd >= 0 || !montage || errno != EBUSY || retry == 60)
++				break;
++			usleep(100000);
++		}
++
++		if (fefd < 0) { perror("open frontend"); return 1; }
+ 		if (sat_long)
+ 			motor_usals(fefd, site_lat, site_long, sat_long, verbose, motor_wait_time);
+ 
++		if (montage) {
++			int result = montage_scan(fefd, startfreq, endfreq, min_ks, max_ks,
++						  lof, scan_h, scan_v, tone, committed, uncommitted, verbose, progress);
++			close(fefd);
++			return result;
++		}
+ 		if (scan_h) {
+ 			if (committed || uncommitted)
+ 				setup_switch (fefd, HORIZONTAL, tone, committed, uncommitted, verbose);
+@@ -250,10 +269,14 @@
+ 	char fedev[128];
+ 	snprintf(fedev, sizeof(fedev), FEDEV, adapter, frontend);
+ 	fefd = open(fedev, O_RDWR | O_NONBLOCK);
++	if (fefd < 0)
++		return -1;
+ 
+         struct dvb_frontend_info info;
+         if ((ioctl(fefd, FE_GET_INFO, &info)) == -1) {
+-                if (verbose) perror("FE_GET_INFO failed\n");
++                int saved_errno = errno;
++                close(fefd);
++                errno = saved_errno;
+                 return -1;
+         }
+         if (verbose) printf("frontend: (%s) \nfmin %d MHz \nfmax %d MHz \nmin_sr %d Ksps\nmax_sr %d Ksps\n\n", info.name,
+--- a/Makefile
++++ b/Makefile
+@@ -1,8 +1,8 @@
+ CC?=gcc
+ CFLG=-O -g -W
+ SRC=diseqc.c blindscan-s2.c
+-HED=diseqc.h blindscan-s2.h
+-OBJ=diseqc.o blindscan-s2.o
++HED=diseqc.h blindscan-s2.h montage.h
++OBJ=diseqc.o blindscan-s2.o montage.o
+ 
+ BIND=/usr/local/bin/
+ #INCLUDE=-I../s2-liplianin-v37/linux/include
+@@ -13,7 +13,7 @@
+ all: $(TARGET)
+ 
+ $(TARGET): $(OBJ)
+-	$(CC) $(CFLG) $(OBJ) -o $(TARGET) $(CLIB) -lm
++	$(CC) $(CFLG) $(LDFLAGS) $(OBJ) -o $(TARGET) $(CLIB) -lm
+ 
+ $(OBJ): $(HED)
+ 
+--- /dev/null
++++ b/montage.h
+@@ -0,0 +1,6 @@
++/* SPDX-License-Identifier: GPL-2.0-or-later */
++#ifndef MONTAGE_BLINDSCAN_H
++#define MONTAGE_BLINDSCAN_H
++int montage_scan(int fd, int start, int end, int min_ks, int max_ks, int lof,
++		 int scan_h, int scan_v, int tone, int committed, int uncommitted, int verbose, int progress);
++#endif
+--- /dev/null
++++ b/montage.c
+@@ -0,0 +1,200 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++#include "blindscan-s2.h"
++#include "montage.h"
++#include <signal.h>
++#include <string.h>
++#include <time.h>
++
++static volatile sig_atomic_t stopping;
++
++static void stop_scan(int signum)
++{
++	(void)signum;
++	stopping = 1;
++}
++
++struct carrier {
++	int freq, rate, system, modulation, fec, pilot, rolloff;
++};
++
++static int acquire(int fd, int center, int width, struct carrier *found)
++{
++	struct dtv_property tune[] = {
++		{ .cmd = DTV_CLEAR }, { .cmd = DTV_DELIVERY_SYSTEM, .u.data = SYS_DVBS2 },
++		{ .cmd = DTV_FREQUENCY, .u.data = center }, { .cmd = DTV_SYMBOL_RATE, .u.data = 0 },
++		{ .cmd = DTV_BANDWIDTH_HZ, .u.data = width * 1000 }, { .cmd = DTV_INNER_FEC, .u.data = FEC_AUTO },
++		{ .cmd = DTV_STREAM_ID, .u.data = NO_STREAM_ID_FILTER }, { .cmd = DTV_TUNE },
++	};
++	struct dtv_property result[] = {
++		{ .cmd = DTV_FREQUENCY }, { .cmd = DTV_SYMBOL_RATE }, { .cmd = DTV_DELIVERY_SYSTEM },
++		{ .cmd = DTV_MODULATION }, { .cmd = DTV_INNER_FEC }, { .cmd = DTV_PILOT }, { .cmd = DTV_ROLLOFF },
++	};
++	struct dtv_properties request = { sizeof(tune) / sizeof(*tune), tune };
++	fe_status_t status;
++
++	if (ioctl(fd, FE_SET_PROPERTY, &request) < 0)
++		return -1;
++	/* Allow the frontend thread to program the new center before polling. */
++	usleep(90000);
++	for (int i = 0; !stopping && i < 10; ++i) {
++		if (ioctl(fd, FE_READ_STATUS, &status) < 0)
++			return -1;
++		if (status & FE_HAS_LOCK) {
++			request.num = sizeof(result) / sizeof(*result);
++			request.props = result;
++			if (ioctl(fd, FE_GET_PROPERTY, &request) < 0)
++				return -1;
++			*found = (struct carrier) { result[0].u.data, result[1].u.data, result[2].u.data,
++				result[3].u.data, result[4].u.data, result[5].u.data, result[6].u.data };
++			return 1;
++		}
++		usleep(35000);
++	}
++	return 0;
++}
++
++static int rf_khz(int lof, int frequency)
++{
++	return lof * 1000 + ((lof && lof <= CBAND_LOF) ? -frequency : frequency);
++}
++
++static void report(const struct carrier *c, int lof, int horizontal)
++{
++	static const char *const fec[] = {
++		"FEC_AUTO", "FEC_1_2", "FEC_2_3", "FEC_3_4", "FEC_4_5", "FEC_5_6",
++		"FEC_6_7", "FEC_7_8", "FEC_8_9", "FEC_AUTO", "FEC_3_5", "FEC_9_10"
++	};
++	const char *mod = c->modulation == PSK_8 ? "8PSK" : c->modulation == APSK_16 ? "16APSK" :
++		c->modulation == APSK_32 ? "32APSK" : "QPSK";
++	int rf = rf_khz(lof, c->freq);
++
++	printf("OK %s %d %d %s INVERSION_AUTO %s %s %s %s\n",
++	       horizontal ? "HORIZONTAL" : "VERTICAL", rf, c->rate,
++	       c->system == SYS_DVBS ? "DVB-S" : "DVB-S2", c->pilot == PILOT_ON ? "PILOT_ON" : "PILOT_OFF",
++	       (unsigned)c->fec < sizeof(fec) / sizeof(*fec) ? fec[c->fec] : "FEC_AUTO", mod,
++	       c->rolloff == ROLLOFF_20 ? "ROLLOFF_20" : c->rolloff == ROLLOFF_25 ? "ROLLOFF_25" : "ROLLOFF_35");
++	fflush(stdout);
++}
++
++static int next_width(int width, int minimum)
++{
++	if (width == minimum)
++		return 0;
++	width = width * 2 / 3;
++	return width < minimum ? minimum : width;
++}
++
++static int band_intervals(int start, int end, int width)
++{
++	int step = width / 3;
++	return (end - start + step - 1) / step;
++}
++
++/* Clock recovery starts with an approximate bandwidth. Sweep successively narrower
++ * acquisition windows over parts of the band not already occupied by a carrier. */
++static int scan_band(int fd, int start, int end, int min_ks, int max_ks, int lof, int horizontal, int verbose, int progress)
++{
++	struct carrier *seen = NULL;
++	size_t count = 0;
++	int total = 0, visited = 0;
++	time_t next_update = 0;
++	int result = 0;
++
++	for (int width = max_ks; width; width = next_width(width, min_ks))
++		total += band_intervals(start, end, width) + 1;
++
++	for (int width = max_ks; width; width = next_width(width, min_ks)) {
++		int step = width / 3;
++		int intervals = band_intervals(start, end, width);
++		for (int slot = 0; slot <= intervals; ++slot) {
++			int f = slot == intervals ? end : start + slot * step;
++			if (stopping) {
++				result = 2;
++				goto out;
++			}
++			struct timespec now;
++			if (progress && clock_gettime(CLOCK_MONOTONIC, &now) == 0 && now.tv_sec >= next_update) {
++				printf("PROGRESS %d %d %zu\n", visited * 100 / total, rf_khz(lof, f), count);
++				fflush(stdout);
++				next_update = now.tv_sec + 2;
++			}
++			++visited;
++			int covered = 0;
++			for (size_t i = 0; i < count; ++i) {
++				if (abs(f - seen[i].freq) < seen[i].rate / 2000) {
++					covered = 1;
++					break;
++				}
++			}
++			if (covered)
++				continue;
++			struct carrier current;
++			int locked = acquire(fd, f, width, &current);
++			if (locked < 0) {
++				perror("M88RS6060 acquisition");
++				result = 1;
++				goto out;
++			}
++			if (verbose && locked)
++				fprintf(stderr, "IF %d kHz, window %d ksym/s, lock %d kHz %d sym/s\n",
++					f, width, current.freq, current.rate);
++			if (!locked || current.freq < start || current.freq > end ||
++			    current.rate < min_ks * 1000 - 10000 || current.rate > max_ks * 1000 + 10000)
++				continue;
++			size_t i;
++			for (i = 0; i < count; ++i)
++				if (abs(current.freq - seen[i].freq) < current.rate / 6000 &&
++				    abs(current.rate - seen[i].rate) < current.rate / 15)
++					break;
++			if (i != count)
++				continue;
++			struct carrier *more = realloc(seen, (count + 1) * sizeof(*seen));
++			if (!more) {
++				result = 1;
++				goto out;
++			}
++			seen = more;
++			seen[count++] = current;
++			report(&current, lof, horizontal);
++		}
++	}
++	if (progress) {
++		printf("PROGRESS 100 %d %zu\n", rf_khz(lof, end), count);
++		fflush(stdout);
++	}
++out:
++	free(seen);
++	return result;
++}
++
++int montage_scan(int fd, int start, int end, int min_ks, int max_ks, int lof,
++		 int scan_h, int scan_v, int tone, int committed, int uncommitted, int verbose, int progress)
++{
++	struct sigaction action = { .sa_handler = stop_scan };
++	sigemptyset(&action.sa_mask);
++	sigaction(SIGINT, &action, NULL);
++	sigaction(SIGTERM, &action, NULL);
++	struct dvb_frontend_info info;
++	if (ioctl(fd, FE_GET_INFO, &info) < 0 || strcmp(info.name, "Montage m88rs6060") ||
++	    start < 950000 || end > 2150000 || end < start || min_ks < 1000 || max_ks > 45000 ||
++	    min_ks > max_ks || (!scan_h && !scan_v)) {
++		fprintf(stderr, "Invalid montage tuner or scan range\n");
++		return 1;
++	}
++	for (int horizontal = 1; horizontal >= 0; --horizontal) {
++		if ((horizontal && !scan_h) || (!horizontal && !scan_v))
++			continue;
++		int voltage = horizontal ? SEC_VOLTAGE_18 : SEC_VOLTAGE_13;
++		if (committed || uncommitted)
++			setup_switch(fd, voltage, tone, committed, uncommitted, verbose);
++		if (ioctl(fd, FE_SET_VOLTAGE, voltage) < 0 ||
++		    ioctl(fd, FE_SET_TONE, tone) < 0) {
++			perror("LNB");
++			return 1;
++		}
++		usleep(100000);
++		if (scan_band(fd, start, end, min_ks, max_ks, lof, horizontal, verbose, progress))
++			return 1;
++	}
++	return 0;
++}

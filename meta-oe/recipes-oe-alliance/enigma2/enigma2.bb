@@ -27,6 +27,7 @@ DEPENDS = " \
     ${@bb.utils.contains("MACHINE_FEATURES", "alsamixer", "ffmpeg" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "e2egl", "virtual/egl virtual/libgles2" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "e2egl", bb.utils.contains_any("MACHINE", "vuduo2 vusolo2 vusolose", "libvupl" , "", d), "", d)} \
+    ${@bb.utils.contains("MACHINE", "gtxcombo", "alsa-lib" , "", d)} \
     "
 
 RDEPENDS:${PN} = " \
@@ -49,6 +50,7 @@ RDEPENDS:${PN} = " \
     ${@bb.utils.contains("MACHINE_FEATURES", "e2egl", bb.utils.contains_any("MACHINE", "vuduo2 vusolo2 vusolose", "libvupl-${MACHINE}" , "", d), "", d)} \
     oe-alliance-branding \
     ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", "${NORMAL_IMAGE_DEPEND}", d)} \
+    ${@bb.utils.contains("MACHINE", "gtxcombo", "gtx-dreamaudiod gtx-transcode gtx-hdmimode", "", d)} \
 "
 
 NORMAL_IMAGE_DEPEND = "\
@@ -199,6 +201,7 @@ RDEPENDS:enigma2-plugin-extensions-ytdlwrapper = "python3-youtube-dl"
 SUMMARY:enigma2-plugin-extensions-ytdlpwrapper = "Enables support for YT-DLP url scheme in bouquet list."
 RDEPENDS:enigma2-plugin-extensions-ytdlpwrapper = "python3-yt-dlp"
 RDEPENDS:enigma2-plugin-extensions-filecommander = "python3-puremagic"
+RDEPENDS:enigma2-plugin-extensions-quadpip:append:gtxcombo = " gtx-mosaic"
 
 RREPLACES:enigma2-plugin-systemplugins-lcnscanner:openatv = "enigma2-plugin-systemplugins-terrestrialscan"
 RCONFLICTS:enigma2-plugin-systemplugins-lcnscanner:openatv = "enigma2-plugin-systemplugins-terrestrialscan"
@@ -312,9 +315,11 @@ EXTRA_OECONF = " \
     ${@bb.utils.contains("MACHINE_FEATURES", "7segment", "--with-7segment" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "hiaccel", "--with-libhiaccel" , "", d)} \
     ${@bb.utils.contains("MACHINE_FEATURES", "e2egl", "--with-egl" , "", d)} \
+    ${@bb.utils.contains("MACHINE", "gtxcombo", "--with-amlogic --with-alsa" , "", d)} \
     "
 
 CPPFLAGS += "-Wno-error=format-security"
+CPPFLAGS:append:gtxcombo = " -DGTX_DVB_AV -idirafter ${STAGING_KERNEL_DIR}/common_drivers/include/uapi/amlogic"
 LDFLAGS:prepend = "${@bb.utils.contains('GST_VERSION', '1.0', ' -lxml2 ', '', d)}"
 # Swig generated 200k enigma.py file has no purpose for end users
 FILES:${PN}-dbg += "\

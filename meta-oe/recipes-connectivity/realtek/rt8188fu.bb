@@ -13,6 +13,10 @@ PKGV = "git${GITPKGV}"
 PR = "r1"
 SRC_URI = "git://github.com/oe-alliance-drivers/rtl8188fu.git;protocol=https;branch=master;destsuffix=s"
 
+# GTX vendor kernel compatibility.
+SRC_URI:append:gtxcombo = " file://0001-rt8188fu-gtx-cfg80211-backport.patch"
+PR:append:gtxcombo = ".gtx1"
+
 S = "${UNPACKDIR}/s"
 
 EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR} KDIR=${STAGING_KERNEL_DIR}"

@@ -17,6 +17,9 @@ PKGV = "5.8.1+git${GITPKGV}"
 # absolute paths overflow ARG_MAX during kbuild linking on machines with long
 # MACHINE names.
 SRC_URI = "git://github.com/oe-alliance-drivers/rtl8821cu.git;protocol=https;branch=master;destsuffix=s"
+
+# GTX vendor kernel compatibility.
+SRC_URI:append:gtxcombo = " file://0001-gtx-cfg80211-backport.patch"
 # The default unpack directory "sources" costs six more characters on every
 # object path.
 UNPACKDIR = "${WORKDIR}/u"

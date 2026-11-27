@@ -163,6 +163,20 @@ if [ -w /proc/stb/fp/led_brightness ]; then
 	echo 000000ff > /proc/stb/fp/led_brightness
 fi
 
+# SM1 keeps the last DVB frame under transparent pixels in the games' borders.
+if [ -e /sys/class/misc/gtx-player-video0 ] && [ -w /sys/class/video/disable_video ]; then
+	RETRO_VIDEO_PLANE=/sys/class/video/disable_video
+	if IFS= read -r RETRO_VIDEO_STATE < "${RETRO_VIDEO_PLANE}"; then
+		case "${RETRO_VIDEO_STATE}" in
+			0|2)
+				if printf '1\n' > "${RETRO_VIDEO_PLANE}"; then
+					trap 'printf "%s\n" "${RETRO_VIDEO_STATE}" > "${RETRO_VIDEO_PLANE}"' EXIT
+				fi
+				;;
+		esac
+	fi
+fi
+
 case "${RETRO_APP}" in
 	libretro:*)
 		RETRO_CORE="${RETRO_APP#libretro:}"

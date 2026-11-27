@@ -3,6 +3,8 @@ FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 # BlueZ ships attach drivers for ST, TI, Atheros, Qualcomm, Intel and Broadcom
 # but none for Realtek, which receivers with a built-in Realtek module need.
 SRC_URI:append = " file://0001-tools-Add-support-for-rtk_h5-type.patch"
+SRC_URI:append:gtxcombo = " file://bluez-40-Add-support-for-sprd-type-in-hciattach.patch"
+SRC_URI:append:gtxcombo = " file://gtx-bluetooth-init.patch;apply=no"
 
 # These libreader versions identify Bluetooth audio devices by their AVRCP
 # input name, which must contain the remote Bluetooth address.
@@ -38,4 +40,8 @@ do_install:append() {
     install -m 0644 ${S}/profiles/network/network.conf ${D}${sysconfdir}/bluetooth/
     install -m 0644 ${S}/profiles/input/input.conf ${D}${sysconfdir}/bluetooth/
     rm -f ${D}${sysconfdir}/bluetooth/main.conf
+}
+
+do_install:append:gtxcombo() {
+    patch -p1 -d "${D}${sysconfdir}/init.d" < "${UNPACKDIR}/gtx-bluetooth-init.patch"
 }

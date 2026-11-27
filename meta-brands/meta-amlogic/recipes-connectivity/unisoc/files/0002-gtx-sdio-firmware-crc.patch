@@ -1,0 +1,69 @@
+Subject: [PATCH] Retry GTX SDIO firmware RAM writes at a lower clock after CRC failure
+
+Upstream-Status: Inappropriate [GTMedia GTX Combo board workaround]
+
+--- a/BSP/include/wcn_bus.h
++++ b/BSP/include/wcn_bus.h
+@@ -5,6 +5,9 @@
+ 
+ #ifdef CONFIG_WCN_SDIO
+ #define PUB_HEAD_RSV 4
++#ifdef CONFIG_AML_BOARD
++void sdiohal_reduce_fw_clock(void);
++#endif
+ #else
+ #define PUB_HEAD_RSV 0
+ #endif
+--- a/BSP/platform/wcn_boot.c
++++ b/BSP/platform/wcn_boot.c
+@@ -1016,6 +1016,13 @@
+ 
+ 		memcpy(kbuf, buf + offset, temp_size);
+ 		ret = sprdwcn_bus_direct_write(addr + offset, kbuf, temp_size);
++#if defined(CONFIG_AML_BOARD) && defined(CONFIG_WCN_SDIO)
++		if (ret == -EILSEQ && of_machine_is_compatible("gtmedia,gtx-combo")) {
++			/* Reprogram the absolute address before replaying this RAM block. */
++			sdiohal_reduce_fw_clock();
++			ret = sprdwcn_bus_direct_write(addr + offset, kbuf, temp_size);
++		}
++#endif
+ 		if (ret < 0)
+ 			goto OUT;
+ 
+--- a/BSP/sdio/sdiohal_main.c
++++ b/BSP/sdio/sdiohal_main.c
+@@ -980,6 +980,34 @@
+ 	return min(mval, 512u);
+ }
+ 
++#ifdef CONFIG_AML_BOARD
++/* Exported by the Amlogic MMC core. The host must be claimed. */
++extern void mmc_set_clock(struct mmc_host *host, unsigned int hz);
++
++void sdiohal_reduce_fw_clock(void)
++{
++	struct sdiohal_data_t *data = sdiohal_get_data();
++	struct sdio_func *func;
++	struct mmc_host *host;
++	unsigned int hz;
++
++	if (!data || sdiohal_card_lock(data, __func__))
++		return;
++	func = data->sdio_func[FUNC_1];
++	sdio_claim_host(func);
++	host = func->card->host;
++	/* 50 MHz requested can already mean a 24 MHz wire clock on SM1. */
++	hz = max(host->f_min, 12000000U);
++	if (host->ios.clock > hz && (!host->actual_clock || host->actual_clock > hz)) {
++		mmc_set_clock(host, hz);
++		sdiohal_info("firmware CRC: retry at %u Hz (actual %u Hz)\n",
++			     host->ios.clock, host->actual_clock);
++	}
++	sdio_release_host(func);
++	sdiohal_card_unlock(data);
++}
++#endif
++
+ int sdiohal_dt_write(unsigned int system_addr,
+ 			    void *buf, unsigned int len)
+ {

@@ -213,6 +213,10 @@ do_deploy() {
     fi
 }
 
+do_deploy:append:gtxcombo() {
+    install -m 0644 ${S}/splash1280.jpg ${DEPLOYDIR}/${BOOTLOGO_FILENAME}
+}
+
 addtask deploy before do_package after do_install
 
 pkg_preinst:${PN}:dreamboxv1() {

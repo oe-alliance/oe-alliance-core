@@ -16,6 +16,7 @@ SRCREV = "${AUTOREV}"
 PV = "git"
 PKGV = "V${GITPKGVTAG}"
 PR = "r3"
+PR:append:gtxcombo = ".1"
 
 SRC_URI = "git://github.com/oe-alliance-plugins/RetroGaming.git;protocol=https;branch=main \
            file://openatv-retrogaming-launch \

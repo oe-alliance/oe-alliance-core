@@ -1,0 +1,202 @@
+Subject: [PATCH] SM1: use allocated pool offsets and already scaled NV21 frames
+
+Upstream-Status: Inappropriate [SM1 vendor ABI]
+
+--- a/h264/bjunion_enc/libvpcodec.cpp
++++ b/h264/bjunion_enc/libvpcodec.cpp
+@@ -10,9 +10,7 @@
+ #include "include/AML_HWEncoder.h"
+ #include "include/enc_define.h"
+ 
+-#ifndef __ANDROID__
+-#include <h264bitstream/h264_stream.h>
+-#endif
++
+ 
+ #define LOG_LINE() printf("[%s:%d]\n", __FUNCTION__, __LINE__)
+ const char version[] = "Amlogic libvpcodec version 1.0";
+@@ -311,90 +309,19 @@
+     AMVEncHandle *handle = (AMVEncHandle *)codec_handle;
+     if (!handle->mSpsPpsHeaderReceived)
+     {
+-        ret = AML_HWEncNAL(handle, (unsigned char *)out, (unsigned int *)&in_size/*should be out size*/, &type);
++        unsigned int headerSize = in_size;
++        ret = AML_HWEncNAL(handle, (unsigned char *)out, &headerSize, &type);
+         if (ret == AMVENC_SUCCESS)
+         {
+             handle->mSPSPPSDataSize = 0;
+-            handle->mSPSPPSData = (uint8_t *)malloc(in_size);
++            handle->mSPSPPSData = (uint8_t *)malloc(headerSize);
+ 
+             if (handle->mSPSPPSData)
+             {
+-                handle->mSPSPPSDataSize = in_size;
++                handle->mSPSPPSDataSize = headerSize;
+                 memcpy(handle->mSPSPPSData, (unsigned char *)out, handle->mSPSPPSDataSize);
+                 LOGAPI("get mSPSPPSData size= %d at line %d \n", handle->mSPSPPSDataSize, __LINE__);
+-#ifndef __ANDROID__
+-                size_t merge_size = sizeof(sps_t) + sizeof(pps_t) + 5 + 5;
+-				uint8_t *merge_buf = (uint8_t *) malloc(merge_size);
+-				size_t merge_pos = 0;
+-
+-				uint8_t *aux_buf = (uint8_t *) malloc(handle->mSPSPPSDataSize + 5);
+-
+-				if (!merge_buf || !aux_buf)
+-					return -1;
+-
+-				memset(merge_buf, 0, merge_size);
+-				memset(aux_buf, 0, handle->mSPSPPSDataSize + 5);
+-
+-				memcpy(aux_buf, handle->mSPSPPSData, handle->mSPSPPSDataSize);
+-
+-				*((int *)(aux_buf + handle->mSPSPPSDataSize)) = 0x01000000;  // add trailing nal delimeter
+-
+-				h264_stream_t* h = h264_new();
+-				uint8_t* p = aux_buf;
+-				int nal_start, nal_end, nal_size;
+-				int64_t off = 0;
+-				size_t sz = handle->mSPSPPSDataSize + 5;
+-				size_t cursor = 0;
+-
+-				uint8_t *sps_buf = (uint8_t *) malloc(sizeof(sps_t) + 5);
+-				uint8_t *pps_buf = (uint8_t *) malloc(sizeof(pps_t) + 5);
+-				memset(sps_buf, 0, sizeof(sps_t) + 5);
+-				memset(pps_buf, 0, sizeof(pps_t) + 5);
+-
+-				while (find_nal_unit(p, sz, &nal_start, &nal_end) > 0) {
+-				   printf("!! Found NAL at offset %lld (0x%04llX), size %lld (0x%04llX) \n",
+-						  (long long int)(off + (p - aux_buf) + nal_start),
+-						  (long long int)(off + (p - aux_buf) + nal_start),
+-						  (long long int)(nal_end - nal_start),
+-						  (long long int)(nal_end - nal_start) );
+-
+-		            p += nal_start;
+-		            read_nal_unit(h, p, nal_end - nal_start);
+-
+-		            p += (nal_end - nal_start);
+-		            sz -= nal_end;
+-
+-		            if (h->nal->nal_unit_type == NAL_UNIT_TYPE_SPS) {
+-						h->sps->vui_parameters_present_flag = 1;
+-						h->sps->vui.timing_info_present_flag = 1;
+-						h->sps->vui.num_units_in_tick = 1;
+-						h->sps->vui.time_scale = handle->mEncParams.frame_rate / 500;
+-
+-						nal_size = write_nal_unit(h, sps_buf, sizeof(sps_t) + 5);
+-
+-		                *((int*)(merge_buf + merge_pos)) = 0x01000000;
+-		                merge_pos += 4;
+-		                memcpy(merge_buf + merge_pos, sps_buf + 1, nal_size);
+-		                merge_pos += nal_size;
+-
+-		                free(sps_buf);
+-		            } else if (h->nal->nal_unit_type == NAL_UNIT_TYPE_PPS) {
+-		                nal_size = write_nal_unit(h, pps_buf, sizeof(pps_t) + 5);
+-
+-		                *((int*)(merge_buf + merge_pos)) = 0x01000000;
+-		                merge_pos += 4;
+-		                memcpy(merge_buf + merge_pos, pps_buf + 1, nal_size);
+-		                merge_pos += nal_size;
+-
+-		                free(pps_buf);
+-		            }
+-				}
+-	            free(handle->mSPSPPSData);
+-	            handle->mSPSPPSData = merge_buf;
+-	            handle->mSPSPPSDataSize = merge_pos;
+-	            free(aux_buf);
+-	            h264_free(h);
+-#endif
++
+             }
+ 
+             handle->mNumInputFrames = 0;
+--- a/h265/EncoderAPI-HEVC/hevc_enc/AML_HEVCEncoder.cpp
++++ b/h265/EncoderAPI-HEVC/hevc_enc/AML_HEVCEncoder.cpp
+@@ -50,7 +50,7 @@
+ #define FIOWrite(CORE, ADDR, DATA)             vdi_fio_write_register(CORE, ADDR, DATA)
+ #define FIORead(CORE, ADDR)                        vdi_fio_read_register(CORE, ADDR)
+ 
+-#define SUPPORT_SCALE 1
++#define SUPPORT_SCALE 0
+ extern s32 vdi_init(u32 core_idx);
+ extern s32 vdi_release(u32 core_idx);
+ 
+@@ -1681,6 +1681,7 @@
+     return AMVENC_SUCCESS;
+ }
+ 
++#if SUPPORT_SCALE
+ AMVEnc_Status ge2d_colorFormat(AMVEncFrameFmt format) {
+     switch (format) {
+         case AMVENC_RGB888:
+@@ -1696,6 +1697,7 @@
+             return AMVENC_FAIL;
+     }
+ }
++#endif
+ 
+ AMVEnc_Status AML_HEVCInitialize(AMVHEVCEncHandle *Handle, AMVHEVCEncParams *encParam, bool* has_mix, int force_mode) {
+     AMVEnc_Status ret;
+@@ -1794,6 +1796,7 @@
+     Handle->op_flag = input->op_flag;
+     Handle->fmt = input->fmt;
+     if (Handle->fmt != AMVENC_NV12 && Handle->fmt != AMVENC_NV21 && Handle->fmt != AMVENC_YUV420) {
++#if SUPPORT_SCALE
+         if (INIT_GE2D) {
+ #if SUPPORT_SCALE
+             if (ge2d_colorFormat(Handle->fmt) == AMVENC_SUCCESS) {
+@@ -1804,6 +1807,9 @@
+                 return AMVENC_NOT_SUPPORTED;
+             }
+         }
++#else
++        return AMVENC_NOT_SUPPORTED;
++#endif
+     }
+     if (Handle->fmt == AMVENC_NV12) {
+         Handle->mUvSwap = 0;
+--- a/h265/EncoderAPI-HEVC/hevc_enc/vdi.cpp
++++ b/h265/EncoderAPI-HEVC/hevc_enc/vdi.cpp
+@@ -224,6 +224,18 @@
+     return 0;
+ }
+ 
++static void *mapEncoderBuffer(int fd, const vpu_buffer_t &buffer)
++{
++    vpu_buffer_t pool = {};
++    if (ioctl(fd, VDI_IOCTL_GET_RESERVED_VIDEO_MEMORY_INFO, &pool) < 0 ||
++        buffer.phys_addr < pool.phys_addr || buffer.size > pool.size)
++        return MAP_FAILED;
++    unsigned long offset = buffer.phys_addr - pool.phys_addr;
++    if (offset > pool.size - buffer.size)
++        return MAP_FAILED;
++    return mmap(NULL, buffer.size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, offset);
++}
++
+ s32 allocate_common_memory(u32 core_idx) {
+     vdi_info_t *vdi;
+     vpu_buffer_t vdb;
+@@ -245,12 +257,7 @@
+         return -1;
+     }
+ 
+-    vdb.virt_addr = (ulong) mmap(NULL,
+-                                 vdb.size,
+-                                 PROT_READ | PROT_WRITE,
+-                                 MAP_SHARED,
+-                                 vdi->vpu_fd,
+-                                 vdb.phys_addr);
++    vdb.virt_addr = (ulong) mapEncoderBuffer(vdi->vpu_fd, vdb);
+     if ((void *) vdb.virt_addr == MAP_FAILED) {
+         VLOG(ERR, "[VDI] fail to map common memory phyaddr=0x%lx, size = 0x%x", vdb.phys_addr, vdb.size);
+         return -1;
+@@ -625,7 +632,7 @@
+     vb->base = (ulong) vdb.base;
+ 
+     //map to virtual address
+-    vdb.virt_addr = (ulong) mmap(NULL, vdb.size, PROT_READ | PROT_WRITE, MAP_SHARED, vdi->vpu_fd, vdb.phys_addr);
++    vdb.virt_addr = (ulong) mapEncoderBuffer(vdi->vpu_fd, vdb);
+     if ((void *) vdb.virt_addr == MAP_FAILED) {
+         memset(vb, 0x00, sizeof(vpu_buffer_t));
+         return -1;

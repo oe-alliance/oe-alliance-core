@@ -1,0 +1,1 @@
+SUBSYSTEM=="misc", KERNEL=="dreamaudio[0-1]", SYMLINK+="dvb/adapter0/audio%n"

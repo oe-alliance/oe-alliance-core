@@ -10,7 +10,7 @@ SRC_URI[sha256sum] = "53134b39125ac5c3d4338cde57c6ec444154628fe17dc1a808a98ef171
 S = "${UNPACKDIR}/libamcodec-aarch64-${LIBAMCODEC_REV}"
 
 PACKAGE_ARCH = "${TUNE_PKGARCH}"
-COMPATIBLE_MACHINE = "^(dreamone|dreamtwo)$"
+COMPATIBLE_MACHINE = "^(dreamone|dreamtwo|gtxcombo)$"
 
 do_configure[noexec] = "1"
 do_compile[noexec] = "1"

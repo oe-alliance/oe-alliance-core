@@ -7,6 +7,10 @@ DEPENDS = "bc-native"
 
 SRC_URI = "git://github.com/oe-alliance-drivers/rtl8192fu.git;protocol=https;branch=master;destsuffix=s"
 
+# GTX vendor kernel compatibility.
+SRC_URI:append:gtxcombo = " file://0001-rtl8192fu-gtx-cfg80211-backport.patch file://0002-rtl8192fu-import-vfs-namespace.patch"
+PR:append:gtxcombo = ".gtx1"
+
 S = "${UNPACKDIR}/s"
 
 SRCREV = "${AUTOREV}"

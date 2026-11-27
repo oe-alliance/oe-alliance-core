@@ -1,0 +1,2 @@
+# Keep the CRLF context required by the upstream rtl8723bs source files.
+0001-rt8723bs-gtx-cfg80211-backport.patch -text

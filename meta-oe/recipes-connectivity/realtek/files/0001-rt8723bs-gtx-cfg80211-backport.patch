@@ -1,0 +1,75 @@
+Subject: [PATCH] rt8723bs: match the GTX 5.15 cfg80211 backports
+
+The GTX vendor kernel has link-aware cfg80211 interfaces despite its
+5.15 version number. Adapt roaming, BSS state and the callback signatures
+to the actual kernel API. This patch is only applied for gtxcombo.
+
+Upstream-Status: Inappropriate [GTX vendor kernel API]
+
+--- a/os_dep/linux/ioctl_cfg80211.c
++++ b/os_dep/linux/ioctl_cfg80211.c
+@@ -819,8 +819,8 @@
+ #if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 12, 0)
+ 		{
+ 		struct cfg80211_roam_info roam_info = {
+-			.channel = notify_channel,
+-			.bssid = cur_network->network.MacAddress,
++			.links[0].channel = notify_channel,
++			.links[0].bssid = cur_network->network.MacAddress,
+ 			.req_ie = pmlmepriv->assoc_req+sizeof(struct rtw_ieee80211_hdr_3addr)+2,
+ 			.req_ie_len = pmlmepriv->assoc_req_len-sizeof(struct rtw_ieee80211_hdr_3addr)-2,
+ 			.resp_ie = pmlmepriv->assoc_rsp+sizeof(struct rtw_ieee80211_hdr_3addr)+6,
+@@ -1536,7 +1536,7 @@
+ 	return ret;	
+ }
+ 
+-static int cfg80211_rtw_add_key(struct wiphy *wiphy, struct net_device *ndev,
++static int cfg80211_rtw_add_key(struct wiphy *wiphy, struct net_device *ndev, int link_id,
+ #if (LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,37)) || defined(COMPAT_KERNEL_RELEASE)
+ 				u8 key_index, bool pairwise, const u8 *mac_addr,
+ #else	// (LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,37))
+@@ -1687,7 +1687,7 @@
+ 
+ }
+ 
+-static int cfg80211_rtw_get_key(struct wiphy *wiphy, struct net_device *ndev,
++static int cfg80211_rtw_get_key(struct wiphy *wiphy, struct net_device *ndev, int link_id,
+ #if (LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,37)) || defined(COMPAT_KERNEL_RELEASE)
+ 				u8 key_index, bool pairwise, const u8 *mac_addr,
+ #else	// (LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,37))
+@@ -1720,7 +1720,7 @@
+ 	return 0;
+ }
+ 
+-static int cfg80211_rtw_del_key(struct wiphy *wiphy, struct net_device *ndev,
++static int cfg80211_rtw_del_key(struct wiphy *wiphy, struct net_device *ndev, int link_id,
+ #if (LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,37)) || defined(COMPAT_KERNEL_RELEASE)
+ 				u8 key_index, bool pairwise, const u8 *mac_addr)
+ #else	// (LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,37))
+@@ -1742,7 +1742,7 @@
+ }
+ 
+ static int cfg80211_rtw_set_default_key(struct wiphy *wiphy,
+-	struct net_device *ndev, u8 key_index
++	struct net_device *ndev, int link_id, u8 key_index
+ 	#if (LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,38)) || defined(COMPAT_KERNEL_RELEASE)
+ 	, bool unicast, bool multicast
+ 	#endif
+@@ -4337,7 +4337,7 @@
+ 	return ret;
+ }
+ 
+-static int cfg80211_rtw_stop_ap(struct wiphy *wiphy, struct net_device *ndev)
++static int cfg80211_rtw_stop_ap(struct wiphy *wiphy, struct net_device *ndev, unsigned int link_id)
+ {
+ 	DBG_871X(FUNC_NDEV_FMT"\n", FUNC_NDEV_ARG(ndev));
+ 	return 0;
+@@ -6845,7 +6845,7 @@
+ 	rtw_cfg80211_indicate_scan_done(adapter, _TRUE);
+ 
+ 	#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 2, 0))
+-	if (wdev->current_bss) {
++	if (wdev->links[0].client.current_bss) {
+ 		u8 locally_generated = 1;
+ 		DBG_871X(FUNC_ADPT_FMT" clear current_bss by cfg80211_disconnected\n", FUNC_ADPT_ARG(adapter));
+ 		cfg80211_disconnected(adapter->pnetdev, 0, NULL, 0, locally_generated, GFP_ATOMIC);

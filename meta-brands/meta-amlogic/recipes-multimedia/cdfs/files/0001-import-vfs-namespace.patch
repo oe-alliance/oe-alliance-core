@@ -1,0 +1,18 @@
+Subject: [PATCH] cdfs: import the GTX kernel VFS namespace
+
+The GTX vendor kernel exports filesystem helpers in the VFS internal
+namespace. Declare the import so modpost accepts the CDFS module.
+
+Upstream-Status: Inappropriate [GTX vendor kernel API]
+
+--- a/root.c
++++ b/root.c
+@@ -689,6 +689,8 @@
+ 
++MODULE_IMPORT_NS(VFS_internal_I_am_really_a_filesystem_and_am_NOT_a_driver);
++
+ #ifdef OLD_KERNEL
+ EXPORT_NO_SYMBOLS;
+ #endif
+ 
+ /******************************************************************/

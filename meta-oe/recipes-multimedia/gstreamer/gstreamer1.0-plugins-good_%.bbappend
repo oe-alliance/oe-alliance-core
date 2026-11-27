@@ -10,6 +10,7 @@ SRC_URI:append = " \
            file://0005-matroskademux-avs2.patch \
            file://0006-qtdemux-avs.patch \
            file://0007-aacparse-wait-for-the-rest-of-a-split-frame.patch \
+           file://0008-matroska-alac-codec-private.patch \
 "
 
 PACKAGECONFIG:remove = "soup3"

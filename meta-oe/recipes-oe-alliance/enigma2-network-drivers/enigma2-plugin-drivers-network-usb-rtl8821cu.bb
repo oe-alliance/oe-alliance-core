@@ -10,6 +10,8 @@ RRECOMMENDS:${PN} = " \
 		linux-firmware-8821cu \
 		${@bb.utils.contains_any("MACHINE", "inihdp sf8008", "", "rtk-btusb", d)} \
 "
+RRECOMMENDS:${PN}:remove:gtxcombo = "rtk-btusb"
+RRECOMMENDS:${PN}:append:gtxcombo = " kernel-module-btusb"
 
 PV = "1.0"
 PR = "r3"

@@ -9,6 +9,7 @@ RRECOMMENDS:${PN} += "${@bb.utils.contains('MACHINE_FEATURES', 'blindscan-dvbs',
 # Plugin-only upgrades also need the PnP helper on Quad 4K, Quad 4K Pro and UE 4K.
 RDEPENDS:${PN}:append:gb7252 = " gbbs"
 PR:gb7252 = "r1"
+RDEPENDS:${PN}:append:gtxcombo = " blindscan-s2"
 
 inherit gittag
 

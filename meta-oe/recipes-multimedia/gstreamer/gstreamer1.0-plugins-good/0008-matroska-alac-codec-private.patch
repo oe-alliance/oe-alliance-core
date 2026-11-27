@@ -1,0 +1,43 @@
+Subject: [PATCH] matroskademux: expose Apple Lossless tracks and decoder configuration
+
+Upstream-Status: Pending
+
+--- a/gst/matroska/matroska-ids.h
++++ b/gst/matroska/matroska-ids.h
+@@ -408,6 +408,7 @@
+ #define GST_MATROSKA_CODEC_ID_AUDIO_TRUEHD         "A_TRUEHD"
+ #define GST_MATROSKA_CODEC_ID_AUDIO_DTS            "A_DTS"
+ #define GST_MATROSKA_CODEC_ID_AUDIO_VORBIS         "A_VORBIS"
++#define GST_MATROSKA_CODEC_ID_AUDIO_ALAC           "A_ALAC"
+ #define GST_MATROSKA_CODEC_ID_AUDIO_FLAC           "A_FLAC"
+ /* FIXME: not yet in the spec */
+ #define GST_MATROSKA_CODEC_ID_AUDIO_SPEEX          "A_SPEEX"
+--- a/gst/matroska/matroska-demux.c
++++ b/gst/matroska/matroska-demux.c
+@@ -7424,6 +7424,26 @@
+         context->codec_priv_size);
+     /* FIXME: mark stream as broken and skip if there are no stream headers */
+     context->send_stream_headers = TRUE;
++  } else if (!strcmp (codec_id, GST_MATROSKA_CODEC_ID_AUDIO_ALAC)) {
++    /* Matroska stores the 24-byte ALACSpecificConfig followed by an optional
++     * channel layout. Expose the same alac atom as qtdemux to the decoder. */
++    static const guint8 atom_header[12] =
++        { 0, 0, 0, 36, 'a', 'l', 'a', 'c', 0, 0, 0, 0 };
++    const guint8 *cookie = context->codec_priv;
++    gsize length = context->codec_priv_size;
++    GstBuffer *config;
++
++    if (!cookie || length < 24 || length > G_MAXSIZE - sizeof (atom_header))
++      return NULL;
++
++    config = gst_buffer_new_allocate (NULL, sizeof (atom_header) + length, NULL);
++    gst_buffer_fill (config, 0, atom_header, sizeof (atom_header));
++    gst_buffer_fill (config, sizeof (atom_header), cookie, length);
++    caps = gst_caps_new_simple ("audio/x-alac",
++        "codec_data", GST_TYPE_BUFFER, config,
++        "samplesize", G_TYPE_INT, (gint) cookie[5], NULL);
++    gst_buffer_unref (config);
++    *codec_name = g_strdup ("Apple Lossless Audio Codec");
+   } else if (!strcmp (codec_id, GST_MATROSKA_CODEC_ID_AUDIO_FLAC)) {
+     caps = gst_caps_new_empty_simple ("audio/x-flac");
+     context->stream_headers =

@@ -67,6 +67,7 @@ RRECOMMENDS:${PN} = "\
     enigma2-plugin-systemplugins-networkwizard \
     enigma2-plugin-systemplugins-wirelesslan \
     ${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", "${ENIGMA2_CORE_EXTENDED_RRECOMMENDS}", d)} \
+    ${@bb.utils.contains("MACHINEBUILD", "gtxcombo", "enigma2-plugin-systemplugins-amlfrq", "", d)} \
     "
 
 ENIGMA2_CORE_EXTENDED_RRECOMMENDS = "\

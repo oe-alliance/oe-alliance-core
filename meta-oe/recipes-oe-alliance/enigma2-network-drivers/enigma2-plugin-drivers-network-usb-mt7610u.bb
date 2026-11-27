@@ -8,6 +8,7 @@ require conf/license/license-gplv2.inc
 
 RRECOMMENDS:${PN} = " \
     ${@wifi_driver(d, 'mt76x0u', 'kernel-module-mt76x0u', 'mt7610u')} \
+    gtx-mt7610u-firmware \
     "
 
 PV = "1.0"

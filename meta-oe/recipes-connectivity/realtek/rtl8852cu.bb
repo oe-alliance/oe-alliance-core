@@ -14,6 +14,13 @@ PKGV = "1.0+git${GITPKGV}"
 # overflow ARG_MAX during kbuild linking on machines with long MACHINE names.
 SRC_URI = "git://github.com/oe-alliance-drivers/rtl8852cu.git;protocol=https;branch=master;destsuffix=s"
 
+# GTX vendor kernel compatibility.
+SRC_URI:append:gtxcombo = " file://0001-rtl8852cu-import-vfs-namespace.patch"
+
+# Select the driver's support for the Android 5.15 cfg80211 backports.
+KCFLAGS:append:gtxcombo = " -DCONFIG_ACK_5_15_LTS_KERNEL"
+PR:append:gtxcombo = ".gtx1"
+
 # The default unpack directory "sources" costs six more characters on every
 # object path, and this driver has several hundred of them.
 UNPACKDIR = "${WORKDIR}/u"
