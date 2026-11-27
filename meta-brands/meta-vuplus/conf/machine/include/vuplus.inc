@@ -29,6 +29,7 @@ MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS += "\
     kernel-module-cifs \
     kernel-module-usbhid \
     kernel-module-exportfs \
+    kernel-module-netconsole \
     "
 
 MACHINE_EXTRA_RRECOMMENDS += " \
