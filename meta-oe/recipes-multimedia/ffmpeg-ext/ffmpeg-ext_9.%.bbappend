@@ -2,7 +2,7 @@ FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 
 PR = "r0"
 
-PACKAGECONFIG:append = " gpl libbluray dav1d libfreetype librtmp libxml2 openssl x264"
+PACKAGECONFIG:append = " gpl libbluray dav1d libfreetype librtmp libxml2 openssl x264 srt"
 
 PACKAGECONFIG[libbluray] = "--enable-libbluray --enable-protocol=bluray,--disable-libbluray,libbluray"
 PACKAGECONFIG[dav1d] = "--enable-libdav1d,--disable-libdav1d,dav1d"
