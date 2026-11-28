@@ -12,6 +12,8 @@ inherit gitpkgv autotools pkgconfig upx-compress
 SRCREV = "${AUTOREV}"
 PV = "185+git"
 PKGV = "185+git${GITPKGV}"
+# r1: rebuilt against ffmpeg-ext 9 (libavformat.so.63 ... instead of .so.60)
+PR = "r1"
 
 SRC_URI:openbh = "git://github.com/BlackHole/exteplayer3.git;branch=master;protocol=https"
 SRC_URI:openvix = "git://github.com/OpenViX/exteplayer3.git;branch=master;protocol=https"
@@ -38,3 +40,9 @@ do_configure:prepend() {
 }
 
 INSANE_SKIP:${PN} += "ldflags rpaths"
+
+# ffmpeg-ext has the sonames of the system FFmpeg 9 and is not registered as
+# their shlib provider: the player depends on ffmpeg-ext-libs (above), not on
+# the libav* packages of the system FFmpeg.
+PRIVATE_LIBS = "libavcodec.so.* libavdevice.so.* libavfilter.so.* libavformat.so.* \
+                libavutil.so.* libswresample.so.* libswscale.so.*"
