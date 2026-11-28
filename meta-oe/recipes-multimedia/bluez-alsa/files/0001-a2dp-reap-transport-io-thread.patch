@@ -1,0 +1,89 @@
+A2DP: keep the I/O thread ID until it can be joined
+
+Backport the thread ownership rule to the 1.4.0 transport code.
+Keep the existing SCO and RFCOMM cleanup and PCM interface.
+Reap a naturally exited A2DP worker before starting its replacement.
+
+Upstream-Status: Backport [https://github.com/arkq/bluez-alsa/commit/18cf06cb9965ce672be6271ebb4dd85361c7b2b8]
+
+--- a/src/ba-transport.c
++++ b/src/ba-transport.c
+@@ -542,10 +542,41 @@
+ 	return 0;
+ }
+ 
++/* The A2DP control paths serialize thread creation and reaping with the
++ * adapter devices mutex. The worker keeps its ID intact during cleanup. */
++static int transport_a2dp_thread_join(struct ba_transport *t, bool cancel) {
++	const pthread_t thread = t->thread;
++	if (pthread_equal(thread, config.main_thread))
++		return 0;
++	if (pthread_equal(thread, pthread_self())) {
++		warn("Couldn't join A2DP transport thread: %s", strerror(EDEADLK));
++		return EDEADLK;
++	}
++
++	int err;
++	if (cancel) {
++		if ((err = pthread_cancel(thread)) != 0 && err != ESRCH) {
++			warn("Couldn't cancel A2DP transport thread: %s", strerror(err));
++			return err;
++		}
++		err = pthread_join(thread, NULL);
++	}
++	else
++		err = pthread_tryjoin_np(thread, NULL);
++
++	if (err == 0)
++		t->thread = config.main_thread;
++	else if (cancel || err != EBUSY)
++		warn("Couldn't join A2DP transport thread: %s", strerror(err));
++	return err;
++}
++
+ int transport_set_state(struct ba_transport *t, enum ba_transport_state state) {
+ 	debug("State transition: %d -> %d", t->state, state);
+ 
++	const bool a2dp = t->type.profile & BA_TRANSPORT_PROFILE_MASK_A2DP;
++	if (t->state == state &&
++			(!a2dp || (state != TRANSPORT_ACTIVE && state != TRANSPORT_PAUSED)))
+-	if (t->state == state)
+ 		return 0;
+ 
+ 	/* For the A2DP sink profile, the IO thread can not be created until the
+@@ -560,6 +591,8 @@
+ 
+ 	switch (state) {
+ 	case TRANSPORT_IDLE:
++		if (a2dp)
++			return transport_a2dp_thread_join(t, true) == 0 ? 0 : -1;
+ 		transport_pthread_cancel(t->thread);
+ 		break;
+ 	case TRANSPORT_PENDING:
+@@ -571,6 +604,13 @@
+ 		break;
+ 	case TRANSPORT_ACTIVE:
+ 	case TRANSPORT_PAUSED:
++		if (a2dp) {
++			/* Reap a worker that exited before an idle transition. A live
++			 * worker must keep its ID and transport. */
++			const int err = transport_a2dp_thread_join(t, false);
++			if (err != 0)
++				return err == EBUSY ? 0 : -1;
++		}
+ 		if (pthread_equal(t->thread, config.main_thread))
+ 			ret = io_thread_create(t);
+ 		break;
+@@ -856,9 +896,9 @@
+ 	if (t->release != NULL)
+ 		t->release(t);
+ 
++	/* A2DP thread IDs remain valid until reaped by the control path. */
++	if (!(t->type.profile & BA_TRANSPORT_PROFILE_MASK_A2DP))
++		t->thread = config.main_thread;
+-	/* Make sure, that after termination, this thread handler will not
+-	 * be used anymore. */
+-	t->thread = config.main_thread;
+ 
+ 	transport_pthread_cleanup_unlock(t);
+ 
