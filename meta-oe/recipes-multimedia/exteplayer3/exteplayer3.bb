@@ -7,11 +7,17 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/GPL-2.0-only;md5=801f80980d171d
 DEPENDS = "ffmpeg-ext zlib bzip2 libxml2 xz libbluray openssl librtmp libudfread"
 RDEPENDS:${PN} += "ffmpeg-ext-libs libxml2 zlib bzip2 liblzma libbluray openssl librtmp libudfread"
 
-inherit gitpkgv autotools pkgconfig upx-compress
+inherit gittag autotools pkgconfig upx-compress
 
 SRCREV = "${AUTOREV}"
-PV = "185+git"
-PKGV = "185+git${GITPKGV}"
+# version from the git tag of the player (v188 ...); the OpenBH and OpenViX
+# repositories have no tags yet and keep the fixed version
+PV = "git"
+PKGV = "${GITPKGVTAG}"
+PV:openbh = "185+git"
+PKGV:openbh = "185+git${GITPKGV}"
+PV:openvix = "185+git"
+PKGV:openvix = "185+git${GITPKGV}"
 # r1: rebuilt against ffmpeg-ext 9 (libavformat.so.63 ... instead of .so.60)
 PR = "r1"
 
