@@ -1,6 +1,5 @@
 SUMMARY = "GTMedia GTX Combo C21 transport router firmware and board profile"
 require conf/license/license-close.inc
-COMPATIBLE_MACHINE = "^gtxcombo$"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 SRC_URI = "${AMLOGIC_SOURCE_MIRROR}/gtx-c21-cimax-usbdvb.bin;name=firmware \

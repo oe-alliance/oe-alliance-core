@@ -6,8 +6,6 @@ NO_GENERIC_LICENSE[Firmware-mediatek] = "LICENCE.mediatek-${PV}"
 
 inherit allarch
 
-COMPATIBLE_MACHINE = "^gtxcombo$"
-
 FIRMWARE_BASE_URI = "https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git/plain"
 SRC_URI = " \
     ${FIRMWARE_BASE_URI}/mediatek/mt7610u.bin?h=${PV};name=mt7610u;downloadfilename=mt7610u-${PV}.bin \

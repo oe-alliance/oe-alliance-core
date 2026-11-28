@@ -1,6 +1,5 @@
 SUMMARY = "Montage M88RS6060 satellite demodulator firmware"
 require conf/license/license-close.inc
-COMPATIBLE_MACHINE = "^gtxcombo$"
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 SRC_URI = "${AMLOGIC_SOURCE_MIRROR}/dvb-demod-m88rs6060.fw"
