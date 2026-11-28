@@ -1,0 +1,1284 @@
+From a4a1444e5fe8f202c0942cd73a666bc573d714e9 Mon Sep 17 00:00:00 2001
+From: Tillmann Severin <tillmann.severin@mailbox.org>
+Date: Sun, 8 Nov 2026 17:07:33 +0100
+Subject: [PATCH 39/49] media: dvb-frontends: add a driver for the AltoBeam
+ ATBM7821
+
+The ATBM7821 is the DVB-T2/T/C demodulator in Hi3798MV200 receivers
+such as the Octagon SF8008, with a MaxLinear MxL608 tuner in front of
+it.  Neither part is publicly documented and no source for either
+exists outside a vendor binary, so the register sequences here were
+recorded from the I2C bus while the vendor's driver tuned a channel.
+Those captures are published with the tooling that made them.
+
+Three things about this hardware shape the driver.
+
+The tuner sits behind a gate inside the demodulator and the
+demodulator takes its clock from the tuner's crystal, so the two
+cannot usefully be separate drivers: stopping the tuner's digital core
+stops the demodulator, which closes the gate, which removes the only
+route back to the tuner.  Only removing power recovers from that, so
+there is no power-down path here at all and sleep does nothing.
+
+The demodulator is never told the symbol rate or the constellation.
+It searches for both.  It is not told the frequency either; only the
+tuner is.  A tune is therefore a tuner operation followed by the
+restart of a search that configures itself, and a channel reaches the
+hardware through four tuner registers - a frequency in sixty-fourths
+of a megahertz and two band thresholds.
+
+Reads of the DVB-C core go through a window which has to be latched
+first, or the four bytes are sampled as they change and do not belong
+together.  The related ATBM888X latches elsewhere, which is worth
+stating because following that part's documentation returns bytes that
+are not the register at all.
+
+The adapter is registered by the frontend driver, which is not where
+it belongs.  This receiver has no driver for its demultiplexer yet, so
+there is nothing to attach to, and this at least makes the frontend
+reachable.  It should move once that driver exists.
+
+DVB-C only for now; the chip also does T and T2.
+
+Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>
+---
+ .../hisilicon/hi3798mv200-octagon-sf8008.dts  |  12 +-
+ drivers/media/dvb-frontends/Kconfig           |  10 +
+ drivers/media/dvb-frontends/Makefile          |   1 +
+ drivers/media/dvb-frontends/atbm7821.c        | 505 ++++++++++++++
+ drivers/media/dvb-frontends/atbm7821_tables.h | 648 ++++++++++++++++++
+ 5 files changed, 1173 insertions(+), 3 deletions(-)
+ create mode 100644 drivers/media/dvb-frontends/atbm7821.c
+ create mode 100644 drivers/media/dvb-frontends/atbm7821_tables.h
+
+diff --git a/arch/arm/boot/dts/hisilicon/hi3798mv200-octagon-sf8008.dts b/arch/arm/boot/dts/hisilicon/hi3798mv200-octagon-sf8008.dts
+index 992e41e38e36..e758b34434dc 100644
+--- a/arch/arm/boot/dts/hisilicon/hi3798mv200-octagon-sf8008.dts
++++ b/arch/arm/boot/dts/hisilicon/hi3798mv200-octagon-sf8008.dts
+@@ -196,9 +196,10 @@ &i2c0 {
+ };
+ 
+ /*
+- * The DVB-T2/C demodulator (an AltoBeam ATBM7821) answers at 0x40 on this
+- * bus.  No driver for it exists outside the vendor's binary modules, but the
+- * controller is enabled so that the device can at least be probed.
++ * The DVB-T2/C front end.  The demodulator is an AltoBeam ATBM7821 and the
++ * tuner in front of it is a MaxLinear MxL608, which is not described here
++ * because it answers only through a gate inside the demodulator and is
++ * driven as part of it.
+  *
+  * The boot loader leaves both pads in GPIO mode, so the bus is electrically
+  * dead until they are muxed here.
+@@ -207,6 +208,11 @@ &i2c1 {
+ 	status = "okay";
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&i2c1_pins>;
++
++	dvb-frontend@40 {
++		compatible = "altobeam,atbm7821";
++		reg = <0x40>;
++	};
+ };
+ 
+ /*
+diff --git a/drivers/media/dvb-frontends/Kconfig b/drivers/media/dvb-frontends/Kconfig
+index bcc97ca86ed5..4f61ad5f6c3b 100644
+--- a/drivers/media/dvb-frontends/Kconfig
++++ b/drivers/media/dvb-frontends/Kconfig
+@@ -89,6 +89,16 @@ config DVB_DRXK
+ 
+ 	  Say Y when you want to support this frontend.
+ 
++config DVB_ATBM7821
++	tristate "AltoBeam ATBM7821"
++	depends on DVB_CORE && I2C
++	default m if !MEDIA_SUBDRV_AUTOSELECT
++	help
++	  AltoBeam ATBM7821 DVB-T2/T/C demodulator with an integral
++	  MaxLinear MxL608 tuner, as fitted to Hi3798MV200 receivers.
++
++	  Say Y when you want to support this frontend.
++
+ config DVB_MN88472
+ 	tristate "Panasonic MN88472"
+ 	depends on DVB_CORE && I2C
+diff --git a/drivers/media/dvb-frontends/Makefile b/drivers/media/dvb-frontends/Makefile
+index a93146cb428c..60119beba14a 100644
+--- a/drivers/media/dvb-frontends/Makefile
++++ b/drivers/media/dvb-frontends/Makefile
+@@ -75,6 +75,7 @@ obj-$(CONFIG_DVB_M88RS2000) += m88rs2000.o
+ obj-$(CONFIG_DVB_MB86A16) += mb86a16.o
+ obj-$(CONFIG_DVB_MB86A20S) += mb86a20s.o
+ obj-$(CONFIG_DVB_MN88443X) += mn88443x.o
++obj-$(CONFIG_DVB_ATBM7821) += atbm7821.o
+ obj-$(CONFIG_DVB_MN88472) += mn88472.o
+ obj-$(CONFIG_DVB_MN88473) += mn88473.o
+ obj-$(CONFIG_DVB_MT312) += mt312.o
+diff --git a/drivers/media/dvb-frontends/atbm7821.c b/drivers/media/dvb-frontends/atbm7821.c
+new file mode 100644
+index 000000000000..9b02b1fcebdd
+--- /dev/null
++++ b/drivers/media/dvb-frontends/atbm7821.c
+@@ -0,0 +1,505 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * AltoBeam ATBM7821 DVB-T2/T/C demodulator with a MaxLinear MxL608 tuner,
++ * as fitted to the Octagon SF8008 and other Hi3798MV200 receivers.
++ *
++ * Neither part is publicly documented and no source for either exists
++ * outside a vendor binary.  Everything here was established by watching the
++ * vendor's driver talk to the hardware over I2C and by experiment on the
++ * bench; the captures are published alongside this driver.
++ *
++ * Two things are worth knowing before reading on.
++ *
++ * The tuner sits behind a gate inside the demodulator, and the demodulator
++ * takes its clock from the tuner's crystal.  Turning the tuner's digital
++ * core off therefore stops the demodulator, which closes the gate, which
++ * removes the only route back to the tuner.  Nothing short of a power cycle
++ * recovers from that, so the bit that does it is never cleared here.
++ *
++ * The demodulator is never told the symbol rate or the constellation.  It
++ * searches for both, and it is never told the frequency either - only the
++ * tuner is.  A retune is consequently a tuner operation followed by a
++ * restart of a search that configures itself.
++ */
++
++#include <linux/delay.h>
++#include <linux/i2c.h>
++#include <linux/module.h>
++#include <linux/slab.h>
++
++#include <media/dvb_frontend.h>
++#include <media/dvbdev.h>
++
++#include "atbm7821_tables.h"
++
++#define ATBM7821_CHIP_ID	0xa8
++
++/* Demodulator registers that this driver reasons about by name. */
++#define ATBM7821_REG_CHIP_ID	0x0000
++#define ATBM7821_REG_I2C_GATE	0x0103	/* 1 opens the path to the tuner */
++#define ATBM7821_REG_LATCH	0x010d	/* freezes a multi-byte read */
++#define ATBM7821_REG_WIN_ADDR_L	0x1501
++#define ATBM7821_REG_WIN_ADDR_M	0x1502
++#define ATBM7821_REG_WIN_ADDR_H	0x1503
++#define ATBM7821_REG_WIN_DATA	0x1508	/* four bytes, little endian */
++
++/* Addresses within the DVB-C core, reached through the window above. */
++#define ATBM7821_DVBC_STATUS	0x008
++#define ATBM7821_DVBC_SNR	0x3c4
++#define ATBM7821_DVBC_SNR_EXP	0x3d0
++
++/*
++ * The status word counts up as the search succeeds.  0x1f means the chip has
++ * found a carrier and is working on the rest; 0x3f means it is done.
++ */
++#define ATBM7821_DVBC_PARTIAL	0x1f
++#define ATBM7821_DVBC_LOCKED	0x3f
++
++/* The tuner answers at a fixed address on the far side of the gate. */
++#define MXL608_I2C_ADDR		0x60
++
++#define MXL608_REG_FREQ_L	0x10
++#define MXL608_REG_FREQ_H	0x11
++#define MXL608_REG_RF_BAND	0x31
++#define MXL608_REG_RF_GAIN	0xa9
++
++/*
++ * Where the tuner changes its mind about the front end it uses.  Both
++ * thresholds were read off the bus across ninety tunes spanning 106 to
++ * 802 MHz, so they are known to within the 8 MHz raster of that sweep.
++ */
++#define MXL608_RF_GAIN_SPLIT_HZ	354000000
++#define MXL608_RF_BAND_SPLIT_HZ	698000000
++
++struct atbm7821_dev {
++	struct i2c_client *client;
++	struct i2c_adapter *tuner_adap;
++	struct dvb_adapter adapter;
++	struct dvb_frontend fe;
++	bool warm;
++};
++
++DVB_DEFINE_MOD_OPT_ADAPTER_NR(adapter_nr);
++
++/* ---------------------------------------------------------------- bus */
++
++/*
++ * A demodulator register is addressed by sixteen bits, high byte first.
++ * The vendor's own naming splits that into a page and an offset, and the
++ * tables keep to it, but nothing in the protocol cares.
++ */
++static int atbm7821_wr(struct atbm7821_dev *dev, u16 reg, u8 val)
++{
++	u8 buf[3] = { reg >> 8, reg & 0xff, val };
++	struct i2c_msg msg = {
++		.addr = dev->client->addr,
++		.flags = 0,
++		.len = sizeof(buf),
++		.buf = buf,
++	};
++	int ret;
++
++	ret = i2c_transfer(dev->client->adapter, &msg, 1);
++	if (ret != 1) {
++		dev_dbg(&dev->client->dev, "write %04x failed (%d)\n", reg, ret);
++		return ret < 0 ? ret : -EIO;
++	}
++
++	return 0;
++}
++
++static int atbm7821_rd(struct atbm7821_dev *dev, u16 reg, u8 *val)
++{
++	u8 addr[2] = { reg >> 8, reg & 0xff };
++	struct i2c_msg msg[2] = {
++		{
++			.addr = dev->client->addr,
++			.flags = 0,
++			.len = sizeof(addr),
++			.buf = addr,
++		}, {
++			.addr = dev->client->addr,
++			.flags = I2C_M_RD,
++			.len = 1,
++			.buf = val,
++		},
++	};
++	int ret;
++
++	ret = i2c_transfer(dev->client->adapter, msg, 2);
++	if (ret != 2) {
++		dev_dbg(&dev->client->dev, "read %04x failed (%d)\n", reg, ret);
++		return ret < 0 ? ret : -EIO;
++	}
++
++	return 0;
++}
++
++static int atbm7821_wr_tab(struct atbm7821_dev *dev,
++			   const struct atbm7821_regval *tab, unsigned int len)
++{
++	unsigned int i;
++	int ret;
++
++	for (i = 0; i < len; i++) {
++		ret = atbm7821_wr(dev, tab[i].reg, tab[i].val);
++		if (ret)
++			return ret;
++		if (tab[i].delay_ms)
++			msleep(tab[i].delay_ms);
++	}
++
++	return 0;
++}
++
++static int atbm7821_gate(struct atbm7821_dev *dev, bool open)
++{
++	return atbm7821_wr(dev, ATBM7821_REG_I2C_GATE, open ? 0x01 : 0x00);
++}
++
++/*
++ * The DVB-C core is not on the register map.  Its address goes into a window
++ * on page 0x15 and the result appears as four bytes which have to be frozen
++ * first, or they are sampled as they change and do not belong together.
++ */
++static int atbm7821_dvbc_rd(struct atbm7821_dev *dev, u16 addr, u32 *val)
++{
++	u8 b[4];
++	int ret, i;
++
++	ret = atbm7821_wr(dev, ATBM7821_REG_WIN_ADDR_H, (addr >> 16) & 0xff);
++	if (!ret)
++		ret = atbm7821_wr(dev, ATBM7821_REG_WIN_ADDR_L, addr & 0xff);
++	if (!ret)
++		ret = atbm7821_wr(dev, ATBM7821_REG_WIN_ADDR_M, (addr >> 8) & 0xff);
++	if (!ret)
++		ret = atbm7821_wr(dev, ATBM7821_REG_LATCH, 0x01);
++	if (ret)
++		return ret;
++
++	for (i = 0; i < 4; i++) {
++		ret = atbm7821_rd(dev, ATBM7821_REG_WIN_DATA + i, &b[i]);
++		if (ret)
++			break;
++	}
++
++	atbm7821_wr(dev, ATBM7821_REG_LATCH, 0x00);
++	if (ret)
++		return ret;
++
++	*val = b[0] | b[1] << 8 | b[2] << 16 | b[3] << 24;
++
++	return 0;
++}
++
++/* -------------------------------------------------------------- tuner */
++
++static int mxl608_wr(struct atbm7821_dev *dev, u8 reg, u8 val)
++{
++	u8 buf[2] = { reg, val };
++	struct i2c_msg msg = {
++		.addr = MXL608_I2C_ADDR,
++		.flags = 0,
++		.len = sizeof(buf),
++		.buf = buf,
++	};
++	int ret;
++
++	ret = i2c_transfer(dev->tuner_adap, &msg, 1);
++	if (ret != 1) {
++		dev_dbg(&dev->client->dev, "tuner write %02x failed (%d)\n",
++			reg, ret);
++		return ret < 0 ? ret : -EIO;
++	}
++
++	return 0;
++}
++
++/*
++ * Writes a tuner table, substituting the channel into the four registers
++ * that carry it.  Everything else in a tune is the same at every frequency,
++ * which is why the table can be a constant at all.
++ */
++static int mxl608_wr_tab(struct atbm7821_dev *dev,
++			 const struct mxl608_regval *tab, unsigned int len,
++			 u32 frequency)
++{
++	unsigned int i;
++	int ret;
++
++	for (i = 0; i < len; i++) {
++		u8 val = tab[i].val;
++
++		switch (tab[i].reg) {
++		case MXL608_REG_FREQ_L:
++			/* The tuner counts in sixty-fourths of a megahertz. */
++			val = DIV_ROUND_CLOSEST(frequency, 15625) & 0xff;
++			break;
++		case MXL608_REG_FREQ_H:
++			val = (DIV_ROUND_CLOSEST(frequency, 15625) >> 8) & 0xff;
++			break;
++		case MXL608_REG_RF_GAIN:
++			val = frequency < MXL608_RF_GAIN_SPLIT_HZ ? 0x59 : 0x37;
++			break;
++		case MXL608_REG_RF_BAND:
++			val = frequency < MXL608_RF_BAND_SPLIT_HZ ? 0xc1 : 0xd1;
++			break;
++		}
++
++		ret = mxl608_wr(dev, tab[i].reg, val);
++		if (ret)
++			return ret;
++		if (tab[i].delay_ms)
++			msleep(tab[i].delay_ms);
++	}
++
++	return 0;
++}
++
++/* ----------------------------------------------------------- frontend */
++
++static int atbm7821_init(struct dvb_frontend *fe)
++{
++	struct atbm7821_dev *dev = fe->demodulator_priv;
++	int ret;
++
++	ret = atbm7821_wr_tab(dev, atbm7821_init_tab,
++			      ARRAY_SIZE(atbm7821_init_tab));
++	if (ret) {
++		dev_err(&dev->client->dev, "initialisation failed (%d)\n", ret);
++		return ret;
++	}
++
++	dev->warm = true;
++
++	return 0;
++}
++
++static int atbm7821_sleep(struct dvb_frontend *fe)
++{
++	struct atbm7821_dev *dev = fe->demodulator_priv;
++
++	/*
++	 * There is deliberately no power-down here.  The only sequence known
++	 * to stop this part also stops the clock it feeds back to itself, and
++	 * recovering from that needs the power removed.  Idling is cheap
++	 * enough that the risk is not worth taking.
++	 */
++	dev->warm = false;
++
++	return 0;
++}
++
++static int atbm7821_set_frontend(struct dvb_frontend *fe)
++{
++	struct dtv_frontend_properties *c = &fe->dtv_property_cache;
++	struct atbm7821_dev *dev = fe->demodulator_priv;
++	int ret;
++
++	if (c->delivery_system != SYS_DVBC_ANNEX_A)
++		return -EINVAL;
++
++	dev_dbg(&dev->client->dev, "tuning to %u Hz\n", c->frequency);
++
++	/* Wake the tuner and let its crystal settle. */
++	ret = atbm7821_gate(dev, true);
++	if (!ret)
++		ret = mxl608_wr_tab(dev, mxl608_setup_tab,
++				    ARRAY_SIZE(mxl608_setup_tab), c->frequency);
++	if (!ret)
++		ret = atbm7821_gate(dev, false);
++	if (ret)
++		goto err;
++
++	/*
++	 * The demodulator half of a tune, which carries no channel
++	 * information; it is the same every time.
++	 */
++	ret = atbm7821_wr_tab(dev, atbm7821_tune_tab,
++			      ARRAY_SIZE(atbm7821_tune_tab));
++	if (ret)
++		goto err;
++
++	/* The only step that knows which channel was asked for. */
++	ret = atbm7821_gate(dev, true);
++	if (!ret)
++		ret = mxl608_wr_tab(dev, mxl608_tune_tab,
++				    ARRAY_SIZE(mxl608_tune_tab), c->frequency);
++	if (!ret)
++		ret = atbm7821_gate(dev, false);
++	if (ret)
++		goto err;
++
++	/* Start the search.  The chip works out the rest for itself. */
++	ret = atbm7821_wr_tab(dev, atbm7821_start_tab,
++			      ARRAY_SIZE(atbm7821_start_tab));
++	if (ret)
++		goto err;
++
++	return 0;
++
++err:
++	dev_dbg(&dev->client->dev, "tune failed (%d)\n", ret);
++	return ret;
++}
++
++static int atbm7821_read_status(struct dvb_frontend *fe,
++				enum fe_status *status)
++{
++	struct atbm7821_dev *dev = fe->demodulator_priv;
++	u32 val;
++	int ret;
++
++	*status = 0;
++
++	ret = atbm7821_dvbc_rd(dev, ATBM7821_DVBC_STATUS, &val);
++	if (ret)
++		return ret;
++
++	if ((val & ATBM7821_DVBC_LOCKED) == ATBM7821_DVBC_LOCKED)
++		*status = FE_HAS_SIGNAL | FE_HAS_CARRIER | FE_HAS_VITERBI |
++			  FE_HAS_SYNC | FE_HAS_LOCK;
++	else if ((val & ATBM7821_DVBC_PARTIAL) == ATBM7821_DVBC_PARTIAL)
++		*status = FE_HAS_SIGNAL | FE_HAS_CARRIER;
++
++	return 0;
++}
++
++static int atbm7821_read_snr(struct dvb_frontend *fe, u16 *snr)
++{
++	struct atbm7821_dev *dev = fe->demodulator_priv;
++	u32 mant, exp;
++	int ret;
++
++	ret = atbm7821_dvbc_rd(dev, ATBM7821_DVBC_SNR, &mant);
++	if (!ret)
++		ret = atbm7821_dvbc_rd(dev, ATBM7821_DVBC_SNR_EXP, &exp);
++	if (ret)
++		return ret;
++
++	/*
++	 * The scaling the vendor applies to these two is not known.  What is
++	 * known is the pair it reports against a good channel, so they are
++	 * passed through in a way that at least orders signals correctly.
++	 */
++	*snr = min_t(u32, mant, 0xffff);
++
++	return 0;
++}
++
++static const struct dvb_frontend_ops atbm7821_ops = {
++	.delsys = { SYS_DVBC_ANNEX_A },
++	.info = {
++		.name			= "AltoBeam ATBM7821",
++		.frequency_min_hz	=  51 * MHz,
++		.frequency_max_hz	= 860 * MHz,
++		.symbol_rate_min	= 1000000,
++		.symbol_rate_max	= 7200000,
++		.caps = FE_CAN_QAM_16 | FE_CAN_QAM_32 | FE_CAN_QAM_64 |
++			FE_CAN_QAM_128 | FE_CAN_QAM_256 | FE_CAN_QAM_AUTO |
++			FE_CAN_FEC_AUTO | FE_CAN_INVERSION_AUTO |
++			FE_CAN_RECOVER,
++	},
++
++	.init			= atbm7821_init,
++	.sleep			= atbm7821_sleep,
++	.set_frontend		= atbm7821_set_frontend,
++	.read_status		= atbm7821_read_status,
++	.read_snr		= atbm7821_read_snr,
++};
++
++static int atbm7821_probe(struct i2c_client *client)
++{
++	struct atbm7821_dev *dev;
++	u8 chip_id;
++	int ret;
++
++	dev = kzalloc(sizeof(*dev), GFP_KERNEL);
++	if (!dev)
++		return -ENOMEM;
++
++	dev->client = client;
++	dev->tuner_adap = client->adapter;
++
++	ret = atbm7821_rd(dev, ATBM7821_REG_CHIP_ID, &chip_id);
++	if (ret) {
++		dev_err(&client->dev, "no answer from the demodulator\n");
++		goto err;
++	}
++
++	if (chip_id != ATBM7821_CHIP_ID) {
++		dev_err(&client->dev, "unexpected chip id 0x%02x\n", chip_id);
++		ret = -ENODEV;
++		goto err;
++	}
++
++	memcpy(&dev->fe.ops, &atbm7821_ops, sizeof(dev->fe.ops));
++	dev->fe.demodulator_priv = dev;
++	i2c_set_clientdata(client, dev);
++
++	/*
++	 * A frontend driver would not normally own an adapter; the bridge or
++	 * the demultiplexer it belongs to does.  This receiver has no driver
++	 * for its demultiplexer yet, so there is nothing to attach to, and an
++	 * adapter registered here at least makes the frontend reachable and
++	 * testable.  It should move once that driver exists.
++	 */
++	ret = dvb_register_adapter(&dev->adapter, "atbm7821", THIS_MODULE,
++				   &client->dev, adapter_nr);
++	if (ret < 0) {
++		dev_err(&client->dev, "cannot register adapter (%d)\n", ret);
++		goto err;
++	}
++
++	ret = dvb_register_frontend(&dev->adapter, &dev->fe);
++	if (ret < 0) {
++		dev_err(&client->dev, "cannot register frontend (%d)\n", ret);
++		dvb_unregister_adapter(&dev->adapter);
++		goto err;
++	}
++
++	dev_info(&client->dev, "AltoBeam ATBM7821 with a MaxLinear MxL608\n");
++
++	return 0;
++
++err:
++	kfree(dev);
++	return ret;
++}
++
++static void atbm7821_remove(struct i2c_client *client)
++{
++	struct atbm7821_dev *dev = i2c_get_clientdata(client);
++
++	dvb_unregister_frontend(&dev->fe);
++	dvb_unregister_adapter(&dev->adapter);
++	kfree(dev);
++}
++
++static const struct i2c_device_id atbm7821_id_table[] = {
++	{ "atbm7821" },
++	{}
++};
++MODULE_DEVICE_TABLE(i2c, atbm7821_id_table);
++
++static const struct of_device_id atbm7821_of_match[] = {
++	{ .compatible = "altobeam,atbm7821" },
++	{}
++};
++MODULE_DEVICE_TABLE(of, atbm7821_of_match);
++
++static struct i2c_driver atbm7821_driver = {
++	.driver = {
++		.name = "atbm7821",
++		.of_match_table = atbm7821_of_match,
++		.suppress_bind_attrs = true,
++	},
++	.probe		= atbm7821_probe,
++	.remove		= atbm7821_remove,
++	.id_table	= atbm7821_id_table,
++};
++
++module_i2c_driver(atbm7821_driver);
++
++MODULE_DESCRIPTION("AltoBeam ATBM7821 DVB-T2/T/C demodulator driver");
++MODULE_LICENSE("GPL");
+diff --git a/drivers/media/dvb-frontends/atbm7821_tables.h b/drivers/media/dvb-frontends/atbm7821_tables.h
+new file mode 100644
+index 000000000000..19dc18d90360
+--- /dev/null
++++ b/drivers/media/dvb-frontends/atbm7821_tables.h
+@@ -0,0 +1,648 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Register sequences for the AltoBeam ATBM7821 demodulator and the
++ * MaxLinear MxL608 tuner in front of it, as fitted to the Octagon SF8008.
++ *
++ * Neither part is publicly documented.  These tables were recorded from
++ * the I2C bus while the vendor's driver tuned a DVB-C channel, and they
++ * are reproduced here because that is the only description of the
++ * hardware that exists.  No vendor source was used.
++ *
++ * The capture they come from is published alongside this driver.
++ */
++
++#ifndef ATBM7821_TABLES_H
++#define ATBM7821_TABLES_H
++
++struct atbm7821_regval { u16 reg; u8 val; u16 delay_ms; };
++struct mxl608_regval { u8 reg; u8 val; u16 delay_ms; };
++
++/* Brings the demodulator out of reset: clocks, PLL, housekeeping. */
++static const struct atbm7821_regval atbm7821_init_tab[] = {
++	{ 0x010c, 0x00, 2 },
++	{ 0x0601, 0x00 },
++	{ 0x0600, 0x00 },
++	{ 0x0602, 0x00 },
++	{ 0x0603, 0x00 },
++	{ 0x0631, 0x00 },
++	{ 0x0623, 0x00 },
++	{ 0x0609, 0x48 },
++	{ 0x0608, 0x10 },
++	{ 0x0611, 0x00 },
++	{ 0x0612, 0x00 },
++	{ 0x0613, 0x00 },
++	{ 0x0606, 0x32 },
++	{ 0x060a, 0x50 },
++	{ 0x060b, 0x45 },
++	{ 0x0624, 0x48 },
++	{ 0x0607, 0x00 },
++	{ 0x0609, 0x41 },
++	{ 0x060c, 0x19 },
++	{ 0x060e, 0x08 },
++	{ 0x060f, 0x00 },
++	{ 0x0610, 0x44 },
++	{ 0x0617, 0x00 },
++	{ 0x0619, 0x20 },
++	{ 0x061b, 0x0c },
++	{ 0x0620, 0x44, 6 },
++	{ 0x0621, 0x7b },
++	{ 0x0621, 0x73, 6 },
++	{ 0x0608, 0x28 },
++	{ 0x0632, 0x01 },
++	{ 0x0632, 0x00 },
++	{ 0x0601, 0x05 },
++	{ 0x0004, 0x00 },
++	{ 0x0003, 0x01 },
++	{ 0x010c, 0x00, 2 },
++	{ 0x0601, 0x00 },
++	{ 0x0600, 0x00 },
++	{ 0x0602, 0x00 },
++	{ 0x0603, 0x00 },
++	{ 0x0631, 0x00 },
++	{ 0x0623, 0x00 },
++	{ 0x0609, 0x48 },
++	{ 0x0608, 0x10 },
++	{ 0x0611, 0x00 },
++	{ 0x0612, 0x00 },
++	{ 0x0613, 0x00 },
++	{ 0x0606, 0x32 },
++	{ 0x060a, 0x50 },
++	{ 0x060b, 0x45 },
++	{ 0x0624, 0x48 },
++	{ 0x0607, 0x00 },
++	{ 0x0609, 0x41 },
++	{ 0x060c, 0x19 },
++	{ 0x060e, 0x08 },
++	{ 0x060f, 0x00 },
++	{ 0x0610, 0x44 },
++	{ 0x0617, 0x00 },
++	{ 0x0619, 0x20 },
++	{ 0x061b, 0x0c },
++	{ 0x0620, 0x44, 6 },
++	{ 0x0621, 0x7b },
++	{ 0x0621, 0x73, 6 },
++	{ 0x0608, 0x28 },
++	{ 0x0632, 0x01 },
++	{ 0x0632, 0x00 },
++	{ 0x0601, 0x05 },
++	{ 0x0a00, 0x55 },
++	{ 0x0a01, 0x55 },
++	{ 0x0a02, 0x55 },
++	{ 0x0a03, 0x55 },
++	{ 0x0a04, 0x03 },
++	{ 0x0abc, 0x00 },
++	{ 0x0abd, 0x00 },
++	{ 0x0abe, 0x05 },
++	{ 0x1802, 0x01 },
++	{ 0x1803, 0x00 },
++	{ 0x2624, 0x05 },
++	{ 0x2625, 0xff },
++	{ 0x2626, 0x07 },
++	{ 0x1801, 0x01 },
++	{ 0x1804, 0x00 },
++	{ 0x2627, 0x00 },
++	{ 0x2629, 0x03 },
++	{ 0x0023, 0x00 },
++	{ 0x0021, 0x00 },
++	{ 0x0021, 0x00 },
++	{ 0x0022, 0x01 },
++	{ 0x0037, 0x00 },
++	{ 0x0037, 0x00 },
++	{ 0x0302, 0x01 },
++	{ 0x0016, 0x00 },
++	{ 0x002a, 0x03 },
++	{ 0x0f78, 0x00 },
++	{ 0x722e, 0x00 },
++	{ 0x882f, 0xff },
++	{ 0x0f79, 0x20 },
++	{ 0x9520, 0x00 },
++	{ 0x9521, 0x08 },
++	{ 0x1816, 0x00 },
++	{ 0x1817, 0x04 },
++	{ 0x1818, 0x00 },
++	{ 0x0afb, 0x01 },
++	{ 0x0abf, 0x00 },
++	{ 0x0ac0, 0x00 },
++	{ 0x0ac1, 0x18 },
++	{ 0x0ab9, 0x00 },
++	{ 0x0a05, 0x00 },
++	{ 0x0a06, 0x00 },
++	{ 0x0a07, 0x00 },
++	{ 0x0a08, 0x15 },
++	{ 0x8831, 0x60 },
++	{ 0x882f, 0xb7 },
++	{ 0x188f, 0x72 },
++	{ 0x17bb, 0xf1 },
++	{ 0x17f9, 0x02 },
++	{ 0x17d9, 0xef },
++	{ 0x17db, 0x20 },
++	{ 0x17dd, 0x20 },
++	{ 0x17df, 0x20 },
++	{ 0x2812, 0x01 },
++	{ 0x0e7e, 0x12 },
++	{ 0x7220, 0x13 },
++	{ 0x100c, 0x02 },
++	{ 0x003e, 0x00 },
++	{ 0x0e12, 0x02 },
++	{ 0x0e0e, 0x02 },
++	{ 0x7206, 0x30 },
++	{ 0x7207, 0x55 },
++	{ 0x0e16, 0x80 },
++	{ 0x1730, 0x00 },
++	{ 0x1750, 0xc0 },
++	{ 0x1751, 0x00 },
++	{ 0x1752, 0x01 },
++	{ 0x0f70, 0x02 },
++	{ 0x1753, 0xaa },
++	{ 0x020d, 0x6d },
++	{ 0x020e, 0x7b },
++	{ 0x0004, 0x01 },
++	{ 0x0005, 0x01 },
++	{ 0x0005, 0x00 },
++	{ 0x17c3, 0x20 },
++	{ 0x17c4, 0x00 },
++	{ 0x1817, 0x04 },
++	{ 0x1816, 0x00 },
++	{ 0x0005, 0x01 },
++	{ 0x8802, 0x08 },
++	{ 0x8803, 0x08 },
++	{ 0x8804, 0x08 },
++	{ 0x8805, 0x08 },
++	{ 0x880a, 0x07 },
++	{ 0x8806, 0x08 },
++	{ 0x8807, 0x1a },
++	{ 0x8808, 0x2c },
++	{ 0x0822, 0x23 },
++	{ 0x17d8, 0x0a },
++	{ 0x0005, 0x00 },
++};
++
++/* Tuner power-up and crystal calibration.  Runs with the gate open. */
++static const struct mxl608_regval mxl608_setup_tab[] = {
++	{ 0xff, 0x00 },
++	{ 0x14, 0x13 },
++	{ 0x6d, 0x8a },
++	{ 0x6d, 0x0a },
++	{ 0xdf, 0x19 },
++	{ 0x45, 0x1b },
++	{ 0xa9, 0x59 },
++	{ 0xaa, 0x6a },
++	{ 0xbe, 0x4c },
++	{ 0xcf, 0x25 },
++	{ 0xd0, 0x34 },
++	{ 0x77, 0xe7 },
++	{ 0x78, 0xe3 },
++	{ 0x6f, 0x51 },
++	{ 0x7b, 0x84 },
++	{ 0x7c, 0x9f },
++	{ 0x56, 0x41 },
++	{ 0xcd, 0x64 },
++	{ 0xc3, 0x2c },
++	{ 0x9d, 0x61 },
++	{ 0xf7, 0x52 },
++	{ 0x58, 0x81 },
++	{ 0x00, 0x01 },
++	{ 0x62, 0x02 },
++	{ 0x00, 0x00 },
++	{ 0x00, 0x01 },
++	{ 0x31, 0xd1 },
++	{ 0x00, 0x00 },
++	{ 0x0e, 0x04 },
++	{ 0x01, 0xbe },
++	{ 0x02, 0x00 },
++	{ 0x6d, 0x0a },
++	{ 0x0e, 0x14 },
++	{ 0x0b, 0x01 },
++	{ 0x12, 0x01 },
++	{ 0x00, 0x01 },
++	{ 0x60, 0x37 },
++	{ 0x00, 0x00 },
++	{ 0x00, 0x01 },
++	{ 0x96, 0x00 },
++	{ 0x00, 0x00 },
++	{ 0x04, 0x06 },
++	{ 0x05, 0x2b },
++	{ 0x08, 0x05 },
++	{ 0x09, 0x42 },
++	{ 0x5e, 0x00 },
++	{ 0x5b, 0x10 },
++	{ 0x5c, 0xb1 },
++};
++
++/* Demodulator configuration for a tune.  Carries no channel information. */
++static const struct atbm7821_regval atbm7821_tune_tab[] = {
++	{ 0x0003, 0x01 },
++	{ 0x010c, 0x00, 2 },
++	{ 0x0601, 0x00 },
++	{ 0x0600, 0x00 },
++	{ 0x0602, 0x00 },
++	{ 0x0603, 0x00 },
++	{ 0x0631, 0x00 },
++	{ 0x0623, 0x00 },
++	{ 0x0609, 0x48 },
++	{ 0x0608, 0x10 },
++	{ 0x0611, 0x00 },
++	{ 0x0612, 0x00 },
++	{ 0x0613, 0x00 },
++	{ 0x0606, 0x28 },
++	{ 0x060a, 0x0f },
++	{ 0x060b, 0x04 },
++	{ 0x060c, 0x14 },
++	{ 0x0607, 0x00 },
++	{ 0x0609, 0x41 },
++	{ 0x060e, 0x08 },
++	{ 0x060f, 0x00 },
++	{ 0x0610, 0x44 },
++	{ 0x0617, 0x00 },
++	{ 0x0619, 0x20 },
++	{ 0x061b, 0x0c },
++	{ 0x0620, 0x45 },
++	{ 0x0624, 0x88, 6 },
++	{ 0x0621, 0x7b },
++	{ 0x0621, 0x73, 6 },
++	{ 0x0608, 0x28 },
++	{ 0x0632, 0x01 },
++	{ 0x0632, 0x00 },
++	{ 0x0601, 0x05 },
++	{ 0x0004, 0x00 },
++	{ 0x0102, 0x01 },
++	{ 0x10fb, 0x00 },
++	{ 0x0a00, 0x55 },
++	{ 0x0a01, 0x55 },
++	{ 0x0a02, 0x55 },
++	{ 0x0a03, 0x55 },
++	{ 0x0a04, 0x03 },
++	{ 0x0abc, 0x00 },
++	{ 0x0abd, 0x00 },
++	{ 0x0abe, 0x05 },
++	{ 0x0abf, 0x00 },
++	{ 0x0ac0, 0x00 },
++	{ 0x0ac1, 0x18 },
++	{ 0x0013, 0x01 },
++	{ 0x09f7, 0x01 },
++	{ 0x0a6f, 0xe8 },
++	{ 0x0a70, 0x02 },
++	{ 0x0a75, 0xfa },
++	{ 0x0a76, 0x14 },
++	{ 0x0a78, 0xfa },
++	{ 0x0a83, 0x40 },
++	{ 0x0ab2, 0x20 },
++	{ 0x0ab3, 0x20 },
++	{ 0x0ab8, 0x80 },
++	{ 0x0ab9, 0x05 },
++	{ 0x0acf, 0x28 },
++	{ 0x1390, 0x01 },
++	{ 0x1391, 0x01 },
++	{ 0x17c3, 0x80 },
++	{ 0x17c4, 0x00 },
++	{ 0x1816, 0x00 },
++	{ 0x1817, 0x02 },
++	{ 0x1818, 0x00 },
++	{ 0x1855, 0x20 },
++	{ 0x8800, 0x00 },
++	{ 0x0016, 0x01 },
++	{ 0x002a, 0x00 },
++	{ 0x1802, 0x01 },
++	{ 0x1803, 0x00 },
++	{ 0x2624, 0x05 },
++	{ 0x2625, 0xff },
++	{ 0x2626, 0x07 },
++	{ 0x1801, 0x01 },
++	{ 0x1804, 0x00 },
++	{ 0x2627, 0x00 },
++	{ 0x2629, 0x03 },
++	{ 0x0023, 0x00 },
++	{ 0x0021, 0x00 },
++	{ 0x0021, 0x00 },
++	{ 0x0022, 0x01 },
++	{ 0x0037, 0x00 },
++	{ 0x0037, 0x00 },
++	{ 0x1503, 0x00 },
++	{ 0x1501, 0x04 },
++	{ 0x1502, 0x00 },
++	{ 0x1504, 0x01 },
++	{ 0x1505, 0x00 },
++	{ 0x1506, 0x00 },
++	{ 0x1507, 0x00 },
++	{ 0x1503, 0x01 },
++	{ 0x1503, 0x00 },
++	{ 0x1503, 0x00 },
++	{ 0x1501, 0x00 },
++	{ 0x1502, 0x01 },
++	{ 0x1504, 0x01 },
++	{ 0x1505, 0x00 },
++	{ 0x1506, 0x00 },
++	{ 0x1507, 0x00 },
++	{ 0x1503, 0x01 },
++	{ 0x1503, 0x00 },
++	{ 0x1503, 0x00 },
++	{ 0x1501, 0x04 },
++	{ 0x1502, 0x01 },
++	{ 0x1504, 0x01 },
++	{ 0x1505, 0x00 },
++	{ 0x1506, 0x00 },
++	{ 0x1507, 0x00 },
++	{ 0x1503, 0x01 },
++	{ 0x1503, 0x00 },
++	{ 0x1503, 0x00 },
++	{ 0x1501, 0x04 },
++	{ 0x1502, 0x03 },
++	{ 0x1504, 0x05 },
++	{ 0x1505, 0x00 },
++	{ 0x1506, 0x00 },
++	{ 0x1507, 0x00 },
++	{ 0x1503, 0x01 },
++	{ 0x1503, 0x00 },
++	{ 0x1503, 0x00 },
++	{ 0x1501, 0x18 },
++	{ 0x1502, 0x01 },
++	{ 0x1504, 0xaa },
++	{ 0x1505, 0xaa },
++	{ 0x1506, 0x2a },
++	{ 0x1507, 0x07 },
++	{ 0x1503, 0x01 },
++	{ 0x1503, 0x00 },
++	{ 0x1503, 0x00 },
++	{ 0x1501, 0xb4 },
++	{ 0x1502, 0x03 },
++	{ 0x1504, 0x00 },
++	{ 0x1505, 0x00 },
++	{ 0x1506, 0x2c },
++	{ 0x1507, 0x00 },
++	{ 0x1503, 0x01 },
++	{ 0x1503, 0x00 },
++	{ 0x1503, 0x00 },
++	{ 0x1501, 0xb0 },
++	{ 0x1502, 0x03 },
++	{ 0x1504, 0xaa },
++	{ 0x1505, 0xaa },
++	{ 0x1506, 0x0e },
++	{ 0x1507, 0x00 },
++	{ 0x1503, 0x01 },
++	{ 0x1503, 0x00 },
++	{ 0x1503, 0x00 },
++	{ 0x1501, 0x88 },
++	{ 0x1502, 0x03 },
++	{ 0x1504, 0x14 },
++	{ 0x1505, 0x00 },
++	{ 0x1506, 0x00 },
++	{ 0x1507, 0x00 },
++	{ 0x1503, 0x01 },
++	{ 0x1503, 0x00 },
++	{ 0x1503, 0x00 },
++	{ 0x1501, 0x8c },
++	{ 0x1502, 0x03 },
++	{ 0x1504, 0x27 },
++	{ 0x1505, 0x00 },
++	{ 0x1506, 0x00 },
++	{ 0x1507, 0x00 },
++	{ 0x1503, 0x01 },
++	{ 0x1503, 0x00 },
++	{ 0x1503, 0x00 },
++	{ 0x1501, 0x48 },
++	{ 0x1502, 0x03 },
++	{ 0x1504, 0x04 },
++	{ 0x1505, 0x00 },
++	{ 0x1506, 0x00 },
++	{ 0x1507, 0x00 },
++	{ 0x1503, 0x01 },
++	{ 0x1503, 0x00 },
++	{ 0x1503, 0x00 },
++	{ 0x1501, 0x10 },
++	{ 0x1502, 0x02 },
++	{ 0x1504, 0x55 },
++	{ 0x1505, 0x49 },
++	{ 0x1506, 0x00 },
++	{ 0x1507, 0x00 },
++	{ 0x1503, 0x01 },
++	{ 0x1503, 0x00 },
++	{ 0x1503, 0x00 },
++	{ 0x1501, 0x14 },
++	{ 0x1502, 0x02 },
++	{ 0x1504, 0xed },
++	{ 0x1505, 0x1b },
++	{ 0x1506, 0x00 },
++	{ 0x1507, 0x00 },
++	{ 0x1503, 0x01 },
++	{ 0x1503, 0x00 },
++	{ 0x1503, 0x00 },
++	{ 0x1501, 0x28 },
++	{ 0x1502, 0x01 },
++	{ 0x1504, 0x01 },
++	{ 0x1505, 0x00 },
++	{ 0x1506, 0x00 },
++	{ 0x1507, 0x00 },
++	{ 0x1503, 0x01 },
++	{ 0x1503, 0x00 },
++	{ 0x1503, 0x00 },
++	{ 0x1501, 0x24 },
++	{ 0x1502, 0x01 },
++	{ 0x1504, 0x00 },
++	{ 0x1505, 0x00 },
++	{ 0x1506, 0x00 },
++	{ 0x1507, 0x00 },
++	{ 0x1503, 0x01 },
++	{ 0x1503, 0x00 },
++	{ 0x1503, 0x00 },
++	{ 0x1501, 0xbc },
++	{ 0x1502, 0x03 },
++	{ 0x1504, 0x04 },
++	{ 0x1505, 0x00 },
++	{ 0x1506, 0x00 },
++	{ 0x1507, 0x00 },
++	{ 0x1503, 0x01 },
++	{ 0x1503, 0x00 },
++	{ 0x1503, 0x00 },
++	{ 0x1501, 0xcc },
++	{ 0x1502, 0x03 },
++	{ 0x1504, 0xf8 },
++	{ 0x1505, 0x03 },
++	{ 0x1506, 0x00 },
++	{ 0x1507, 0x00 },
++	{ 0x1503, 0x01 },
++	{ 0x1503, 0x00 },
++	{ 0x1503, 0x00 },
++	{ 0x1501, 0x64 },
++	{ 0x1502, 0x03 },
++	{ 0x1504, 0x0e },
++	{ 0x1505, 0x00 },
++	{ 0x1506, 0x00 },
++	{ 0x1507, 0x00 },
++	{ 0x1503, 0x01 },
++	{ 0x1503, 0x00 },
++	{ 0x1503, 0x00 },
++	{ 0x1501, 0x94 },
++	{ 0x1502, 0x03 },
++	{ 0x1504, 0xc7 },
++	{ 0x1505, 0x00 },
++	{ 0x1506, 0x00 },
++	{ 0x1507, 0x00 },
++	{ 0x1503, 0x01 },
++	{ 0x1503, 0x00 },
++	{ 0x1503, 0x00 },
++	{ 0x1501, 0x9c },
++	{ 0x1502, 0x03 },
++	{ 0x1504, 0x36 },
++	{ 0x1505, 0x00 },
++	{ 0x1506, 0x00 },
++	{ 0x1507, 0x00 },
++	{ 0x1503, 0x01 },
++	{ 0x1503, 0x00 },
++	{ 0x1503, 0x00 },
++	{ 0x1501, 0x0c },
++	{ 0x1502, 0x02 },
++	{ 0x1504, 0x10 },
++	{ 0x1505, 0x00 },
++	{ 0x1506, 0x00 },
++	{ 0x1507, 0x00 },
++	{ 0x1503, 0x01 },
++	{ 0x1503, 0x00 },
++	{ 0x1503, 0x00 },
++	{ 0x1501, 0x04 },
++	{ 0x1502, 0x02 },
++	{ 0x1504, 0x00 },
++	{ 0x1505, 0x04 },
++	{ 0x1506, 0x00 },
++	{ 0x1507, 0x00 },
++	{ 0x1503, 0x01 },
++	{ 0x1503, 0x00 },
++	{ 0x1503, 0x00 },
++	{ 0x1501, 0x04 },
++	{ 0x1502, 0x00 },
++	{ 0x1504, 0x00 },
++	{ 0x1505, 0x00 },
++	{ 0x1506, 0x00 },
++	{ 0x1507, 0x00 },
++	{ 0x1503, 0x01 },
++	{ 0x1503, 0x00 },
++	{ 0x17d8, 0x0f },
++	{ 0x188f, 0x72 },
++	{ 0x882b, 0x01 },
++	{ 0x1538, 0x00 },
++	{ 0x1539, 0x06 },
++	{ 0x0040, 0xae },
++	{ 0x0041, 0x04 },
++	{ 0x0302, 0x01 },
++	{ 0x100c, 0x02 },
++	{ 0x020d, 0x6d },
++	{ 0x020e, 0x7b },
++	{ 0x0004, 0x01 },
++	{ 0x0005, 0x01 },
++	{ 0x0005, 0x00 },
++	{ 0x0005, 0x01 },
++};
++
++/*
++ * Tuner channel programming.  The frequency itself is patched into this
++ * table at run time; see mxl608_set_params().
++ */
++static const struct mxl608_regval mxl608_tune_tab[] = {
++	{ 0x0c, 0x00 },
++	{ 0x13, 0x04 },
++	{ 0x53, 0x7e },
++	{ 0x57, 0x91 },
++	{ 0x5c, 0xb1 },
++	{ 0x62, 0xf2 },
++	{ 0x6e, 0x03 },
++	{ 0x6f, 0xd1 },
++	{ 0x87, 0x77 },
++	{ 0x88, 0x55 },
++	{ 0x93, 0x33 },
++	{ 0x97, 0x03 },
++	{ 0xba, 0x40 },
++	{ 0x98, 0xaf },
++	{ 0x9b, 0x20 },
++	{ 0x9c, 0x1e },
++	{ 0xa0, 0x18 },
++	{ 0xa5, 0x09 },
++	{ 0xc2, 0xa9 },
++	{ 0xc5, 0x7c },
++	{ 0xcd, 0x64 },
++	{ 0xce, 0x7c },
++	{ 0xd5, 0x04 },
++	{ 0xd9, 0x00 },
++	{ 0xea, 0x00 },
++	{ 0xdc, 0x1c },
++	{ 0x5a, 0xfe },
++	{ 0x5b, 0x10 },
++	{ 0x8a, 0x00 },
++	{ 0xea, 0x0e },
++	{ 0x03, 0x00 },
++	{ 0x03, 0x01, 50 },
++	{ 0x12, 0x00 },
++	{ 0x7c, 0x1f },
++	{ 0x00, 0x01 },
++	{ 0x31, 0xc1 },
++	{ 0x00, 0x00 },
++	{ 0xa9, 0x59 },
++	{ 0xea, 0x0e },
++	{ 0xeb, 0xd8 },
++	{ 0x0f, 0x02 },
++	{ 0x10, 0x80 },
++	{ 0x11, 0x56 },
++	{ 0x0b, 0x01 },
++	{ 0x00, 0x01 },
++	{ 0x00, 0x00 },
++	{ 0x00, 0x01 },
++	{ 0x60, 0x37 },
++	{ 0x5f, 0x37 },
++	{ 0x00, 0x00 },
++	{ 0xb6, 0x40 },
++	{ 0x12, 0x01, 16 },
++	{ 0xb6, 0x40, 16 },
++};
++
++/* Starts the DVB-C search.  The chip finds symbol rate and constellation. */
++static const struct atbm7821_regval atbm7821_start_tab[] = {
++	{ 0x0005, 0x00 },
++	{ 0x9520, 0x00 },
++	{ 0x9521, 0x20 },
++	{ 0x0005, 0x01 },
++	{ 0x0005, 0x00 },
++	{ 0x0005, 0x01 },
++	{ 0x0005, 0x00 },
++	{ 0x1503, 0x00 },
++	{ 0x1501, 0x08 },
++	{ 0x1502, 0x00 },
++	{ 0x010d, 0x01 },
++	{ 0x010d, 0x00 },
++	{ 0x1503, 0x00 },
++	{ 0x1501, 0x08 },
++	{ 0x1502, 0x00 },
++	{ 0x010d, 0x01 },
++	{ 0x010d, 0x00, 51 },
++	{ 0x1503, 0x00 },
++	{ 0x1501, 0x08 },
++	{ 0x1502, 0x00 },
++	{ 0x010d, 0x01 },
++	{ 0x010d, 0x00, 51 },
++	{ 0x1503, 0x00 },
++	{ 0x1501, 0x08 },
++	{ 0x1502, 0x00 },
++	{ 0x010d, 0x01 },
++	{ 0x010d, 0x00, 50 },
++	{ 0x1503, 0x00 },
++	{ 0x1501, 0x08 },
++	{ 0x1502, 0x00 },
++	{ 0x010d, 0x01 },
++	{ 0x010d, 0x00 },
++	{ 0x1503, 0x00 },
++	{ 0x1501, 0xc4 },
++	{ 0x1502, 0x03 },
++	{ 0x010d, 0x01 },
++	{ 0x010d, 0x00 },
++	{ 0x1503, 0x00 },
++	{ 0x1501, 0xd0 },
++	{ 0x1502, 0x03 },
++	{ 0x010d, 0x01 },
++	{ 0x010d, 0x00 },
++	{ 0x1503, 0x00 },
++	{ 0x1501, 0x08 },
++	{ 0x1502, 0x00 },
++	{ 0x010d, 0x01 },
++	{ 0x010d, 0x00 },
++	{ 0x010d, 0x01 },
++	{ 0x010d, 0x00 },
++};
++
++#endif /* ATBM7821_TABLES_H */
+-- 
+2.56.1
+

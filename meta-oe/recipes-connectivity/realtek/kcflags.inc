@@ -18,3 +18,17 @@ export KCFLAGS += " -std=gnu17 -fgnu89-inline \
 "
 
 PR .= ".1"
+# Kbuild dropped the deprecated EXTRA_*FLAGS variables in v6.15, see commit
+# e966ad0edd00 ("kbuild: remove EXTRA_*FLAGS support"). They are now silently
+# ignored rather than diagnosed, so out-of-tree Makefiles that still use them
+# lose their -I flags and fail with "drv_types.h: No such file or directory"
+# (drv_types.h is what pulls in drv_conf.h). Rewrite them to the ccflags-y
+# family that replaced them back in 2007.
+do_configure:append() {
+    find "${S}" \( -name Makefile -o -name Kbuild -o -name 'Makefile.*' \) -type f \
+        -exec sed -i \
+            -e 's/\bEXTRA_CFLAGS\b/ccflags-y/g' \
+            -e 's/\bEXTRA_AFLAGS\b/asflags-y/g' \
+            -e 's/\bEXTRA_LDFLAGS\b/ldflags-y/g' \
+            -e 's/\bEXTRA_CPPFLAGS\b/cppflags-y/g' {} +
+}
