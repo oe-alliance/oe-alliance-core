@@ -19,12 +19,17 @@ SRC_URI:teamblue = "git://github.com/teamblue-e2/serviceapp.git;branch=7.4;proto
 SRC_URI:opendroid = "git://github.com/opendroid-Team/serviceapp.git;branch=sig3;protocol=https"
 SRC_URI:openhdf = "git://github.com/teamblue-e2/serviceapp.git;branch=7.4;protocol=https"
 
-inherit autotools gitpkgv python3native pkgconfig gettext python3targetconfig
+inherit autotools gittag python3native pkgconfig gettext python3targetconfig
 
 CXXFLAGS += "${@bb.utils.contains_any("DISTRO_NAME", "openatv openspa openvix openbh teamblue opendroid openhdf", "" , " -std=c++11", d)}"
 
 PV = "0.5+git"
 PKGV = "0.5+git${GITPKGV}"
+# the openATV branch is tagged (v0.6 ...): version from the git tag
+PV:openatv = "git"
+PKGV:openatv = "${GITPKGVTAG}"
+PV:openspa = "git"
+PKGV:openspa = "${GITPKGVTAG}"
 
 PR = "r7"
 
